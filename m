@@ -2,215 +2,199 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E982BEC2A1
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Nov 2019 13:18:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D735FEC390
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Nov 2019 14:16:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730583AbfKAMSI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 1 Nov 2019 08:18:08 -0400
-Received: from foss.arm.com ([217.140.110.172]:34540 "EHLO foss.arm.com"
+        id S1726554AbfKANQx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 1 Nov 2019 09:16:53 -0400
+Received: from foss.arm.com ([217.140.110.172]:35328 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727989AbfKAMSI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 1 Nov 2019 08:18:08 -0400
+        id S1725878AbfKANQx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 1 Nov 2019 09:16:53 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 314F31F1;
-        Fri,  1 Nov 2019 05:18:07 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C13E31F1;
+        Fri,  1 Nov 2019 06:16:52 -0700 (PDT)
 Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8BBFD3F6C4;
-        Fri,  1 Nov 2019 05:18:06 -0700 (PDT)
-Date:   Fri, 1 Nov 2019 12:18:04 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 275203F71E;
+        Fri,  1 Nov 2019 06:16:51 -0700 (PDT)
+Date:   Fri, 1 Nov 2019 13:16:50 +0000
 From:   Andrew Murray <andrew.murray@arm.com>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, davem@davemloft.net,
-        robh+dt@kernel.org, mark.rutland@arm.com, axboe@kernel.dk,
-        peppe.cavallaro@st.com, alexandre.torgue@st.com,
-        joabreu@synopsys.com, bhelgaas@google.com, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH 2/5] net: stmmac: Split devicetree parse
-Message-ID: <20191101121802.GD9723@e119886-lin.cambridge.arm.com>
-References: <20191030135347.3636-1-jiaxun.yang@flygoat.com>
- <20191030135347.3636-3-jiaxun.yang@flygoat.com>
+To:     Jon Derrick <jonathan.derrick@intel.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        Pawel Baldysiak <pawel.baldysiak@intel.com>,
+        Artur Paszkiewicz <artur.paszkiewicz@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Dave Fugate <david.fugate@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>
+Subject: Re: [PATCH 2/3] PCI: vmd: Expose VMD details from BIOS
+Message-ID: <20191101131649.GE9723@e119886-lin.cambridge.arm.com>
+References: <1571245488-3549-1-git-send-email-jonathan.derrick@intel.com>
+ <1571245488-3549-3-git-send-email-jonathan.derrick@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191030135347.3636-3-jiaxun.yang@flygoat.com>
+In-Reply-To: <1571245488-3549-3-git-send-email-jonathan.derrick@intel.com>
 User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 09:53:44PM +0800, Jiaxun Yang wrote:
-> PCI based devices can share devicetree info parse with platform
-> device based devices after split dt parse frpm dt probe.
-
-s/frpm/from/
-
+On Wed, Oct 16, 2019 at 11:04:47AM -0600, Jon Derrick wrote:
+> When some VMDs are enabled and others are not, it's difficult to
+> determine which IIO stack corresponds to the enabled VMD.
 > 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> To assist userspace with management tasks, VMD BIOS will write the VMD
+> instance number and socket number into the first enabled root port's IO
+> Base/Limit registers prior to OS handoff. VMD driver can capture this
+> information and expose it to userspace.
+> 
+> Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > ---
->  .../ethernet/stmicro/stmmac/stmmac_platform.c | 63 ++++++++++++++-----
->  .../ethernet/stmicro/stmmac/stmmac_platform.h |  3 +
->  2 files changed, 49 insertions(+), 17 deletions(-)
+>  drivers/pci/controller/vmd.c | 79 ++++++++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 77 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-> index 170c3a052b14..7e29bc76b7c3 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-> @@ -385,25 +385,19 @@ static int stmmac_of_get_mac_mode(struct device_node *np)
->  }
+> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+> index 959c7c7..dbe1bff 100644
+> --- a/drivers/pci/controller/vmd.c
+> +++ b/drivers/pci/controller/vmd.c
+> @@ -98,6 +98,8 @@ struct vmd_dev {
+>  	struct irq_domain	*irq_domain;
+>  	struct pci_bus		*bus;
+>  	u8			busn_start;
+> +	u8			socket_nr;
+> +	u8			instance_nr;
 >  
->  /**
-> - * stmmac_probe_config_dt - parse device-tree driver parameters
-> - * @pdev: platform_device structure
-> - * @mac: MAC address to use
-> + * stmmac_parse_config_dt - parse device-tree driver parameters
-> + * @np: device_mode structure
-> + * @plat: plat_stmmacenet_data structure
->   * Description:
->   * this function is to read the driver parameters from device-tree and
->   * set some private fields that will be used by the main at runtime.
->   */
-> -struct plat_stmmacenet_data *
-> -stmmac_probe_config_dt(struct platform_device *pdev, const char **mac)
-> +int stmmac_parse_config_dt(struct device_node *np,
-> +				struct plat_stmmacenet_data *plat)
->  {
-> -	struct device_node *np = pdev->dev.of_node;
-> -	struct plat_stmmacenet_data *plat;
->  	struct stmmac_dma_cfg *dma_cfg;
->  	int rc;
+>  	struct dma_map_ops	dma_ops;
+>  	struct dma_domain	dma_domain;
+> @@ -543,6 +545,74 @@ static int vmd_pci_write(struct pci_bus *bus, unsigned int devfn, int reg,
+>  	.write		= vmd_pci_write,
+>  };
 >  
-> -	plat = devm_kzalloc(&pdev->dev, sizeof(*plat), GFP_KERNEL);
-> -	if (!plat)
-> -		return ERR_PTR(-ENOMEM);
-> -
->  	*mac = of_get_mac_address(np);
->  	if (IS_ERR(*mac)) {
->  		if (PTR_ERR(*mac) == -EPROBE_DEFER)
-> @@ -414,7 +408,7 @@ stmmac_probe_config_dt(struct platform_device *pdev, const char **mac)
->  
->  	plat->phy_interface = of_get_phy_mode(np);
->  	if (plat->phy_interface < 0)
-> -		return ERR_PTR(plat->phy_interface);
-> +		return plat->phy_interface;
->  
->  	plat->interface = stmmac_of_get_mac_mode(np);
->  	if (plat->interface < 0)
-> @@ -453,7 +447,7 @@ stmmac_probe_config_dt(struct platform_device *pdev, const char **mac)
->  	/* To Configure PHY by using all device-tree supported properties */
->  	rc = stmmac_dt_phy(plat, np, &pdev->dev);
->  	if (rc)
-> -		return ERR_PTR(rc);
-> +		return rc;
->  
->  	of_property_read_u32(np, "tx-fifo-depth", &plat->tx_fifo_size);
->  
-> @@ -531,7 +525,7 @@ stmmac_probe_config_dt(struct platform_device *pdev, const char **mac)
->  			       GFP_KERNEL);
->  	if (!dma_cfg) {
->  		stmmac_remove_config_dt(pdev, plat);
-> -		return ERR_PTR(-ENOMEM);
-> +		return -ENOMEM;
->  	}
->  	plat->dma_cfg = dma_cfg;
->  
-> @@ -560,7 +554,7 @@ stmmac_probe_config_dt(struct platform_device *pdev, const char **mac)
->  	rc = stmmac_mtl_setup(pdev, plat);
->  	if (rc) {
->  		stmmac_remove_config_dt(pdev, plat);
-> -		return ERR_PTR(rc);
-> +		return rc;
->  	}
->  
->  	/* clock setup */
-> @@ -604,14 +598,43 @@ stmmac_probe_config_dt(struct platform_device *pdev, const char **mac)
->  		plat->stmmac_rst = NULL;
->  	}
->  
-> -	return plat;
+> +/**
+> + * for_each_vmd_root_port - iterate over all enabled VMD Root Ports
+> + * @vmd: &struct vmd_dev VMD device descriptor
+> + * @rp: int iterator cursor
+> + * @temp: u32 temporary value for config read
+> + *
+> + * VMD Root Ports are located in the VMD PCIe Domain at 00:[0-3].0, and config
+> + * space can be determinately accessed through the VMD Config BAR. Because VMD
+> + * Root Ports can be individually disabled, it's important to iterate for the
+> + * first enabled Root Port as determined by reading the Vendor/Device register.
+> + */
+> +#define for_each_vmd_root_port(vmd, rp, temp)				\
+> +	for (rp = 0; rp < 4; rp++)					\
+> +		if (vmd_cfg_read(vmd, 0, PCI_DEVFN(root_port, 0),	\
+> +				 PCI_VENDOR_ID, 4, &temp) ||		\
+> +		    temp == 0xffffffff) {} else
+
+You may want to consider using PCI_ERROR_RESPONSE here instead of 0xffffffff.
+Though this hasn't yet been merged:
+
+https://patchwork.ozlabs.org/project/linux-pci/list/?series=126820
+
+> +
+> +static int vmd_parse_domain(struct vmd_dev *vmd)
+> +{
+> +	int root_port, ret;
+> +	u32 temp, iobase;
+> +
+> +	vmd->socket_nr = -1;
+> +	vmd->instance_nr = -1;
+> +
+> +	for_each_vmd_root_port(vmd, root_port, temp) {
+> +		ret = vmd_cfg_read(vmd, 0, PCI_DEVFN(root_port, 0),
+> +				   PCI_IO_BASE, 2, &iobase);
+> +		if (ret)
+> +			return ret;
+> +
+> +		vmd->socket_nr = (iobase >> 4) & 0xf;
+> +		vmd->instance_nr = (iobase >> 14) & 0x3;
+
+I'm not familiar with VMD - however how can you be sure that the VMD BIOS
+will always populate these values here? Is it possible that earlier BIOS's
+won't do this and something will go wrong here?
+
+Is there any sanity checking that can happen here?
+
+> +
+> +		/* First available will be used */
+> +		break;
+> +	}
+> +
 > +	return 0;
->  
->  error_hw_init:
->  	clk_disable_unprepare(plat->pclk);
->  error_pclk_get:
->  	clk_disable_unprepare(plat->stmmac_clk);
->  
-> -	return ERR_PTR(-EPROBE_DEFER);
-> +	return -EPROBE_DEFER;
 > +}
 > +
-> +/**
-> + * stmmac_probe_config_dt - probe and setup stmmac platform data by devicetree
-> + * @pdev: platform_device structure
-> + * @mac: MAC address to use
-> + * Description:
-> + * this function is to set up plat_stmmacenet_data  private structure
-> + * for platform drivers.
-> + */
-> +struct plat_stmmacenet_data *
-> +stmmac_probe_config_dt(struct platform_device *pdev, const char **mac)
+> +static ssize_t socket_nr_show(struct device *dev,
+> +			      struct device_attribute *attr, char *buf)
 > +{
-> +	struct device_node *np = pdev->dev.of_node;
-> +	struct plat_stmmacenet_data *plat;
-> +	int rc;
+> +	struct pci_dev *pdev = to_pci_dev(dev);
+> +	struct vmd_dev *vmd = pci_get_drvdata(pdev);
 > +
-> +	plat = devm_kzalloc(&pdev->dev, sizeof(*plat), GFP_KERNEL);
-> +	if (!plat)
-> +		return ERR_PTR(-ENOMEM);
+> +	return sprintf(buf, "%u\n", vmd->socket_nr);
+> +}
+> +static DEVICE_ATTR_RO(socket_nr);
 > +
-> +	rc = stmmac_parse_config_dt(np, plat);
+> +static ssize_t instance_nr_show(struct device *dev,
+> +			      struct device_attribute *attr, char *buf)
+> +{
+> +	struct pci_dev *pdev = to_pci_dev(dev);
+> +	struct vmd_dev *vmd = pci_get_drvdata(pdev);
 > +
-> +	if (rc) {
-> +		free(plat);
+> +	return sprintf(buf, "%u\n", vmd->instance_nr);
+> +}
+> +static DEVICE_ATTR_RO(instance_nr);
+> +
+> +static struct attribute *vmd_dev_attrs[] = {
+> +	&dev_attr_socket_nr.attr,
+> +	&dev_attr_instance_nr.attr,
+> +	NULL
+> +};
+> +ATTRIBUTE_GROUPS(vmd_dev);
+> +
+>  static void vmd_attach_resources(struct vmd_dev *vmd)
+>  {
+>  	vmd->dev->resource[VMD_MEMBAR1].child = &vmd->resources[1];
+> @@ -582,6 +652,11 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+>  	resource_size_t offset[2] = {0};
+>  	resource_size_t membar2_offset = 0x2000;
+>  	struct pci_bus *child;
+> +	int ret;
+> +
+> +	ret = vmd_parse_domain(vmd);
+> +	if (ret)
+> +		return ret;
 
-Given the devm_kzalloc - is the free really needed here?
+This always will succeed. But what happens if this function returns yet
+socket_nr/instance_nr hasn't been written to? Is that OK?
 
 Thanks,
 
 Andrew Murray
 
-> +		return ERR_PTR(rc);
-> +	}
-> +
-> +	return plat;
->  }
 >  
->  /**
-> @@ -628,6 +651,11 @@ void stmmac_remove_config_dt(struct platform_device *pdev,
->  	of_node_put(plat->mdio_node);
->  }
->  #else
-> +int stmmac_parse_config_dt(struct device_node *np,
-> +				struct plat_stmmacenet_data *plat)
-> +{
-> +	return -EINVAL;
-> +}
->  struct plat_stmmacenet_data *
->  stmmac_probe_config_dt(struct platform_device *pdev, const char **mac)
->  {
-> @@ -639,6 +667,7 @@ void stmmac_remove_config_dt(struct platform_device *pdev,
->  {
->  }
->  #endif /* CONFIG_OF */
-> +EXPORT_SYMBOL_GPL(stmmac_parse_config_dt);
->  EXPORT_SYMBOL_GPL(stmmac_probe_config_dt);
->  EXPORT_SYMBOL_GPL(stmmac_remove_config_dt);
+>  	/*
+>  	 * Shadow registers may exist in certain VMD device ids which allow
+> @@ -591,7 +666,6 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+>  	 */
+>  	if (features & VMD_FEAT_HAS_MEMBAR_SHADOW) {
+>  		u32 vmlock;
+> -		int ret;
 >  
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.h b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.h
-> index 3a4663b7b460..0e4aec1f502a 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.h
-> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.h
-> @@ -11,6 +11,9 @@
->  
->  #include "stmmac.h"
->  
-> +int stmmac_parse_config_dt(struct device_node *np,
-> +				struct plat_stmmacenet_data *plat);
-> +
->  struct plat_stmmacenet_data *
->  stmmac_probe_config_dt(struct platform_device *pdev, const char **mac);
->  void stmmac_remove_config_dt(struct platform_device *pdev,
+>  		membar2_offset = MB2_SHADOW_OFFSET + MB2_SHADOW_SIZE;
+>  		ret = pci_read_config_dword(vmd->dev, PCI_REG_VMLOCK, &vmlock);
+> @@ -876,7 +950,8 @@ static int vmd_resume(struct device *dev)
+>  	.probe		= vmd_probe,
+>  	.remove		= vmd_remove,
+>  	.driver		= {
+> -		.pm	= &vmd_dev_pm_ops,
+> +		.pm		= &vmd_dev_pm_ops,
+> +		.dev_groups	= vmd_dev_groups,
+>  	},
+>  };
+>  module_pci_driver(vmd_drv);
 > -- 
-> 2.23.0
+> 1.8.3.1
 > 
