@@ -2,150 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 24D3BEDBCA
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2019 10:41:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B2ABEDC83
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2019 11:29:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726364AbfKDJlb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 4 Nov 2019 04:41:31 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:40675 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726633AbfKDJlb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 Nov 2019 04:41:31 -0500
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1iRYrU-0001Jf-Ra; Mon, 04 Nov 2019 10:41:24 +0100
-Message-ID: <776ec4265217cc83e9e847ff3c80a52a86390b1b.camel@pengutronix.de>
-Subject: Re: [PATCH v2 2/2] PCI: qcom: Add support for SDM845 PCIe controller
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 04 Nov 2019 10:41:23 +0100
-In-Reply-To: <20191102002721.4091180-3-bjorn.andersson@linaro.org>
-References: <20191102002721.4091180-1-bjorn.andersson@linaro.org>
-         <20191102002721.4091180-3-bjorn.andersson@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        id S1728321AbfKDK3R (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 4 Nov 2019 05:29:17 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:40149 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726364AbfKDK3R (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 Nov 2019 05:29:17 -0500
+Received: by mail-oi1-f194.google.com with SMTP id r27so13610195oij.7;
+        Mon, 04 Nov 2019 02:29:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SMaIK5rI7m/XaGA7nbAfirt41zqNOSaQ5u4JanEnkug=;
+        b=BYetKR2HRiOchQmzTF7hw1EeVCQSvJaafGLuWrzhQjiRXSyU5E8ZTEfOHJSpSzrgVa
+         WHv3i4hEPNa7TN2Bt0HHBc1SYCaSbsu8yfmg3paUGLGNPBtn39QHDiA448eHK7Z6VJEM
+         dDdUT82I5itLJJC4J1qnzyWD6OGAuviyRjnBiiJ5MXboWORNYkFQc02cW7qvbTjk97jR
+         zhBAwhHH4tvfLh6KholtORK7KDI8cK4Z2riRB5cbaGTaO1evhz3FgelExIoHG1adAYnq
+         SQNFxr0DYJSW25NvuWztfXc0jtoU/+ArVmXTlxHixKKL6bliQVX6fEOm5bHq6NSbtaT+
+         azvw==
+X-Gm-Message-State: APjAAAXUKoQMynYHi1mxBVzxxbZhDmmZMwjWLd8uG0eFVUy8168lNe+j
+        STcZl8iPGeh4YkcHzgW0WsqjCyiVwBYV9wBotfm90Q==
+X-Google-Smtp-Source: APXvYqxQUk0WYQBzPpqoGAwgt5HqYDWNnE/GxSDuAM84IjirBT0shkbB8HKRCkoo58R/wbA9vlSePjd7Oefh6i5mh4g=
+X-Received: by 2002:aca:fdd8:: with SMTP id b207mr8222796oii.57.1572863354723;
+ Mon, 04 Nov 2019 02:29:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
+References: <20191101204558.210235-1-helgaas@kernel.org> <20191101204558.210235-2-helgaas@kernel.org>
+In-Reply-To: <20191101204558.210235-2-helgaas@kernel.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 4 Nov 2019 11:29:03 +0100
+Message-ID: <CAJZ5v0ihZTc_e7ORcAWFOYvLdc9keO2evRYxr9qz-w8WkQtEhQ@mail.gmail.com>
+Subject: Re: [PATCH 1/6] PCI/PM: Apply D2 delay as milliseconds, not microseconds
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Linux PCI <linux-pci@vger.kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
+On Fri, Nov 1, 2019 at 9:46 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> From: Bjorn Helgaas <bhelgaas@google.com>
+>
+> PCI_PM_D2_DELAY is defined as 200, which is milliseconds, but previously we
+> used udelay(), which only waited for 200 microseconds.  Use msleep()
+> instead so we wait the correct amount of time.  See PCIe r5.0, sec 5.9.
+>
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 
-On Fri, 2019-11-01 at 17:27 -0700, Bjorn Andersson wrote:
-> The SDM845 has one Gen2 and one Gen3 controller, add support for these.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+
 > ---
-> 
-> Changes since v1:
-> - Style changes requested by Stan
-> - Tested with second PCIe controller as well
-> 
->  drivers/pci/controller/dwc/pcie-qcom.c | 152 +++++++++++++++++++++++++
->  1 file changed, 152 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 7e581748ee9f..35f4980480bb 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -54,6 +54,7 @@
-[...]
-> +static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
-> +{
-> +	struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
-> +	struct dw_pcie *pci = pcie->pci;
-> +	struct device *dev = pci->dev;
-> +	u32 val;
-> +	int ret;
-> +
-> +	ret = regulator_bulk_enable(ARRAY_SIZE(res->supplies), res->supplies);
-> +	if (ret < 0) {
-> +		dev_err(dev, "cannot enable regulators\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = clk_bulk_prepare_enable(ARRAY_SIZE(res->clks), res->clks);
-> +	if (ret < 0)
-> +		goto err_disable_regulators;
-> +
-> +	ret = reset_control_assert(res->pci_reset);
-> +	if (ret < 0) {
-> +		dev_err(dev, "cannot deassert pci reset\n");
-> +		goto err_disable_clocks;
-> +	}
-
-If for any of the above fails, the reset line is left in its default
-state, presumably unasserted. Is there a reason to assert and keep it
-asserted if enabling the clocks fails below?
-
-> +	msleep(20);
-> +
-> +	ret = reset_control_deassert(res->pci_reset);
-> +	if (ret < 0) {
-> +		dev_err(dev, "cannot deassert pci reset\n");
-> +		goto err_assert_resets;
-
-Nitpick: this seems superfluous since the reset line was just asserted
-20 ms before. Maybe just:
-
-		goto err_disable_clocks;
-
-> +	}
-> +
-> +	ret = clk_prepare_enable(res->pipe_clk);
-> +	if (ret) {
-> +		dev_err(dev, "cannot prepare/enable pipe clock\n");
-> +		goto err_assert_resets;
-> +	}
-> +
-> +	/* configure PCIe to RC mode */
-> +	writel(DEVICE_TYPE_RC, pcie->parf + PCIE20_PARF_DEVICE_TYPE);
-> +
-> +	/* enable PCIe clocks and resets */
-> +	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
-> +	val &= ~BIT(0);
-> +	writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
-> +
-> +	/* change DBI base address */
-> +	writel(0, pcie->parf + PCIE20_PARF_DBI_BASE_ADDR);
-> +
-> +	/* MAC PHY_POWERDOWN MUX DISABLE  */
-> +	val = readl(pcie->parf + PCIE20_PARF_SYS_CTRL);
-> +	val &= ~BIT(29);
-> +	writel(val, pcie->parf + PCIE20_PARF_SYS_CTRL);
-> +
-> +	val = readl(pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
-> +	val |= BIT(4);
-> +	writel(val, pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
-> +
-> +	if (IS_ENABLED(CONFIG_PCI_MSI)) {
-> +		val = readl(pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT);
-> +		val |= BIT(31);
-> +		writel(val, pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT);
-> +	}
-> +
-> +	return 0;
-> +err_assert_resets:
-> +	reset_control_assert(res->pci_reset);
-
-So maybe this can just be removed. The reset isn't asserted in deinit
-either.
-
-regards
-Philipp
-
+>  drivers/pci/pci.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index e7982af9a5d8..cd96874ae76d 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -886,7 +886,7 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
+>         if (state == PCI_D3hot || dev->current_state == PCI_D3hot)
+>                 pci_dev_d3_sleep(dev);
+>         else if (state == PCI_D2 || dev->current_state == PCI_D2)
+> -               udelay(PCI_PM_D2_DELAY);
+> +               msleep(PCI_PM_D2_DELAY);
+>
+>         pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
+>         dev->current_state = (pmcsr & PCI_PM_CTRL_STATE_MASK);
+> --
+> 2.24.0.rc1.363.gb1bccd3e3d-goog
+>
