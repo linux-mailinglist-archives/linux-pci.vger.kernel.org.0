@@ -2,91 +2,151 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ACCEAED675
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2019 00:38:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4AA1BED968
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2019 07:58:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728223AbfKCXif (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 3 Nov 2019 18:38:35 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:46024 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728100AbfKCXif (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 3 Nov 2019 18:38:35 -0500
-Received: by mail-io1-f65.google.com with SMTP id s17so16438887iol.12;
-        Sun, 03 Nov 2019 15:38:35 -0800 (PST)
+        id S1728056AbfKDG54 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 4 Nov 2019 01:57:56 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46472 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726018AbfKDG54 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 Nov 2019 01:57:56 -0500
+Received: by mail-pf1-f193.google.com with SMTP id 193so10221199pfc.13;
+        Sun, 03 Nov 2019 22:57:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wefieWfVXRUmsFQFvnmJ+ImMxYqnpmfAgbzmiqaDkVw=;
-        b=iPuiMxC0DxIEHfVnhFcSH1oPop1EawM1Y+X/5CvZcuyNsWF0QalnLJxE3PgZx1XfEo
-         Zo/VcoXYpf71GJ0e6K49dz88lyj4jGfeC9AeqXqZ5tjXW77IHZCLBrkev49qIKxvXS+J
-         ezbttOo5HVj7h9j+x4TJMlf9MaOVpVxqYI4wsef+v1nM4nV+JbnzyS3SN0VDGKJUOyYV
-         auKXpCep7njbi3GdtzmGSHVaWom4OcjPPoYBNDaxiZDou+DV9G4mcav/HFq2N0zici6Y
-         5TShkRWuzy9HvEAmWS91TPf83GBwpMWkyUu35T4QqlFJ+DVHnOfihZXyeli4lCThdbmp
-         P04g==
+        h=from:to:cc:subject:date:message-id;
+        bh=5e303ed1MF4p7zVkraxYDUxrGD23hQsLGv9jCmd4szc=;
+        b=LNARHNUHLOP+RJTqasVXtMjn6XIvB9yyy445v5o5VpGuhGCOIxrcDD9oHRF4vQbWD5
+         OS6d0rgPERnaAK30Pd4WTdTu3J7qWtxHfFeosfzLSOyJP8FhWl9U7oI8HqTzvt0x6Bax
+         oJXeNi6gzv7uhY5k68AYKsjNmky3jiBmhk3FcffSHIoRLi9TWkOE3gGD7NDqupA3/3fe
+         WU/QCdn4qB5oFC3uu5UMXojl08lWKuVxVXP+6X/xjO/GzVWt4v1DTf6zVqDvTRcSYAWf
+         Hy3QOC609QswdAlhQ9w2LkEHv0Lca9q8qzeU+VOzgEplB/ZekO8h/OqWgka2kqculkMB
+         YzVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wefieWfVXRUmsFQFvnmJ+ImMxYqnpmfAgbzmiqaDkVw=;
-        b=N9UbWEbQO+8bSR2vVgYeDVWs5JkoJXw643qvueuaRU22j/PAsklkgwk3o0FHzH97kK
-         l35qmV0Lvtb8jBjqJ1EgT3FBIRnXC3Mj2uoUXlD7fjumDiutogTgrrfvFIRcL2ib8v2i
-         aC4Y4ziuRQ5lKWOb5wJFrzqqOjGK5JRn63kNq/+CfzeyytZA9mpbOtHE5YlvPg7GaHxe
-         mUtqET43ND8mHOPSVqxMuLax3q9guCb7Y5QV5RTYkJbM69pgr7O8e6u+x4MhGr73tbaY
-         X6cL4o1ePkq9AzKtQRhiDJUjaZQMzpoAYCn5ySg4KhwFscbrpvzwerM5JRDE12muLb4W
-         PhIg==
-X-Gm-Message-State: APjAAAVO8YBPwZUv64KMUfoV9FKDl9n5SNo/MPsihhM74LOB/El9KRBC
-        jA74DZLv5YMN6un1AMKGNB7exwbAVTyGyEcibgk=
-X-Google-Smtp-Source: APXvYqwiK+MZRpUAnFnSJakJwzQcxVUrHRRlILr3AcPOqISHEvMncac1YAGrLNuARG22iDwUYsQFcnicgI7jhfs+KXc=
-X-Received: by 2002:a05:6638:928:: with SMTP id 8mr5239100jak.124.1572824314443;
- Sun, 03 Nov 2019 15:38:34 -0800 (PST)
-MIME-Version: 1.0
-References: <CAG=yYwmQHyp62qKDoiM091iXKs5iP8rNBLs9kc7Wi_PDCgMrbw@mail.gmail.com>
-In-Reply-To: <CAG=yYwmQHyp62qKDoiM091iXKs5iP8rNBLs9kc7Wi_PDCgMrbw@mail.gmail.com>
-From:   "Oliver O'Halloran" <oohall@gmail.com>
-Date:   Mon, 4 Nov 2019 10:38:23 +1100
-Message-ID: <CAOSf1CFn7F_3gLk4sCetDd3JGUiTv50=KSqQuicpPkcRZPVKNQ@mail.gmail.com>
-Subject: Re: PROBLEM: PCIe Bus Error atleast
-To:     Jeffrin Thalakkottoor <jeffrin@rajagiritech.edu.in>
-Cc:     Russell Currey <ruscur@russell.cc>,
-        Sam Bobroff <sbobroff@linux.ibm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-pci@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=5e303ed1MF4p7zVkraxYDUxrGD23hQsLGv9jCmd4szc=;
+        b=gk2R7NEpgFDAVUp0Bu9lTCDjf604N4fdlanfJY0yhmZ12u4ia975b175MS3QVobyns
+         Ikz3mBLVTMfTri4vyicZqZBo702UxKCVSnUCOd63zH0yGjRhm/HejIYCN8JxxjCNhCkw
+         pz5BtjU9i6VRa0wnJArAECE1HXlei4NndqVJMkqShhugawVPb6AzbbF6sXVS37mKmzbs
+         +FskVl18+EiiTLKDYuTwgYhheoG3fmZ2+397lFRhBoEnTkG93LIVilGHzY4tb4IyI/fs
+         YPh8eFZN/ixstBhchYMxlDCE64zmy6T9b8CVOTA9/2584ALgUHDd7/me+ectArmBN5mE
+         2o+w==
+X-Gm-Message-State: APjAAAV68YDqZFBsn8zaUO4xb/ZNv6AruF3lUcgm1CQ3KjGuIfRuMkyl
+        bGu8vbQQH/tCXwrUydZHv4a5+/b0
+X-Google-Smtp-Source: APXvYqxKyigsdF6rPBjZQuLRna36jaAVhqAT5919gQ7ng0TPscOhYbvhrnxCplXPxVgsS6CkiJckow==
+X-Received: by 2002:a62:18d8:: with SMTP id 207mr19844761pfy.15.1572850675242;
+        Sun, 03 Nov 2019 22:57:55 -0800 (PST)
+Received: from hyd1358.marvell.com ([115.113.156.2])
+        by smtp.googlemail.com with ESMTPSA id x9sm19154497pje.27.2019.11.03.22.57.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sun, 03 Nov 2019 22:57:54 -0800 (PST)
+From:   sundeep.lkml@gmail.com
+To:     helgaas@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     stable@vger.kernel.org, sgoutham@marvell.com,
+        Subbaraya Sundeep <sbhatta@marvell.com>
+Subject: [v2 PATCH] PCI: Do not use bus number zero from EA capability
+Date:   Mon,  4 Nov 2019 12:27:44 +0530
+Message-Id: <1572850664-9861-1-git-send-email-sundeep.lkml@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Nov 2, 2019 at 5:46 AM Jeffrin Thalakkottoor
-<jeffrin@rajagiritech.edu.in> wrote:
->
-> hello ,
->
-> i found a error message  as the output of "sudo dmesg -l err"
-> i have attached related to that in this email.
-> i  think i found this in 5.3.8 kernel
+From: Subbaraya Sundeep <sbhatta@marvell.com>
 
-Use "uname -a" to get the current kernel version, architecture.
+As per the spec, "Enhanced Allocation (EA) for Memory
+and I/O Resources" ECN, approved 23 October 2014,
+sec 6.9.1.2, fixed bus numbers of a bridge must be zero
+when no function that uses EA is located behind it.
+Hence assign bus numbers normally instead of assigning
+zeroes from EA capability. Failing to do this and using
+zeroes from EA would make the bridges non-functional.
 
-> But i think when i tried again today i could not reproduce it
+Fixes: '2dbce5901179 ("PCI: Assign bus numbers present in
+EA capability for bridges")'
+Signed-off-by: Subbaraya Sundeep <sbhatta@marvell.com>
+Cc: stable@vger.kernel.org	# v5.2+
+---
+ drivers/pci/probe.c | 25 +++++++++++++------------
+ 1 file changed, 13 insertions(+), 12 deletions(-)
 
-That's unfortunate, but it might have just been a transient problem.
-The log has a pile of these AER errors:
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 3d5271a..116b276 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1090,27 +1090,28 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
+  * @sub: updated with subordinate bus number from EA
+  *
+  * If @dev is a bridge with EA capability, update @sec and @sub with
+- * fixed bus numbers from the capability and return true.  Otherwise,
+- * return false.
++ * fixed bus numbers from the capability. Otherwise @sec and @sub
++ * will be zeroed.
+  */
+-static bool pci_ea_fixed_busnrs(struct pci_dev *dev, u8 *sec, u8 *sub)
++static void pci_ea_fixed_busnrs(struct pci_dev *dev, u8 *sec, u8 *sub)
+ {
+ 	int ea, offset;
+ 	u32 dw;
+ 
++	*sec = *sub = 0;
++
+ 	if (dev->hdr_type != PCI_HEADER_TYPE_BRIDGE)
+-		return false;
++		return;
+ 
+ 	/* find PCI EA capability in list */
+ 	ea = pci_find_capability(dev, PCI_CAP_ID_EA);
+ 	if (!ea)
+-		return false;
++		return;
+ 
+ 	offset = ea + PCI_EA_FIRST_ENT;
+ 	pci_read_config_dword(dev, offset, &dw);
+ 	*sec =  dw & PCI_EA_SEC_BUS_MASK;
+ 	*sub = (dw & PCI_EA_SUB_BUS_MASK) >> PCI_EA_SUB_BUS_SHIFT;
+-	return true;
+ }
+ 
+ /*
+@@ -1146,7 +1147,6 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+ 	u16 bctl;
+ 	u8 primary, secondary, subordinate;
+ 	int broken = 0;
+-	bool fixed_buses;
+ 	u8 fixed_sec, fixed_sub;
+ 	int next_busnr;
+ 
+@@ -1249,11 +1249,12 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+ 		pci_write_config_word(dev, PCI_STATUS, 0xffff);
+ 
+ 		/* Read bus numbers from EA Capability (if present) */
+-		fixed_buses = pci_ea_fixed_busnrs(dev, &fixed_sec, &fixed_sub);
+-		if (fixed_buses)
++		pci_ea_fixed_busnrs(dev, &fixed_sec, &fixed_sub);
++
++		next_busnr = max + 1;
++		/* Use secondary bus number in EA */
++		if (fixed_sec)
+ 			next_busnr = fixed_sec;
+-		else
+-			next_busnr = max + 1;
+ 
+ 		/*
+ 		 * Prevent assigning a bus number that already exists.
+@@ -1331,7 +1332,7 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+ 		 * If fixed subordinate bus number exists from EA
+ 		 * capability then use it.
+ 		 */
+-		if (fixed_buses)
++		if (fixed_sub)
+ 			max = fixed_sub;
+ 		pci_bus_update_busn_res_end(child, max);
+ 		pci_write_config_byte(dev, PCI_SUBORDINATE_BUS, max);
+-- 
+2.7.4
 
-[  283.723848] pcieport 0000:00:1c.5: AER: PCIe Bus Error:
-severity=Corrected, type=Data Link Layer, (Transmitter ID)
-[  283.723855] pcieport 0000:00:1c.5: AER:   device [8086:9d15] error
-status/mask=00001000/00002000
-[  283.723859] pcieport 0000:00:1c.5: AER:    [12] Timeout
-
-Which looks like a root port is getting a timeouts while trying to
-talk to its downstream device. It's hard to say anything more without
-knowing what the downstream device is, or what the system is. If this
-is a laptop it might be due to buggy power management, but it might
-just be flakey hardware.
-
-Can you provide the full dmesg and the output of lspci -vv?
-
-Oliver
