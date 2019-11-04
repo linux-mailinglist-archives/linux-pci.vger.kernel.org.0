@@ -2,143 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E4ABAEE637
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2019 18:39:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D4E07EE6E9
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2019 19:07:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728971AbfKDRjJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 4 Nov 2019 12:39:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56698 "EHLO mail.kernel.org"
+        id S1728188AbfKDSHF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 4 Nov 2019 13:07:05 -0500
+Received: from foss.arm.com ([217.140.110.172]:48638 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728957AbfKDRjI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 4 Nov 2019 12:39:08 -0500
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9568020869;
-        Mon,  4 Nov 2019 17:39:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572889147;
-        bh=N4a9nPp4BuN3cqKQ7aWdLaMqDg3klueBElHrgvRDDjg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=hT/qMgZX9xf4YyQ6Rlbs2MST38ZPkJB2iZMa0FvXDzbA42X5MPM3U8wUV2w6swWei
-         9ENMlOat8xISKb+TIXo/O1OLLBBbNtqR4Jyz2O47YtK2cbZ/c+J/fB/q++2A4KRcy0
-         AZ38vnSlErlvBT7rDEdEg7GIecrE9gHHGEZowe9I=
-Date:   Mon, 4 Nov 2019 11:39:04 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     Sinan Kaya <okaya@kernel.org>, Thierry Reding <treding@nvidia.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        jonathanh@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-pci@vger.kernel.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Lukas Wunner <lukas@wunner.de>
-Subject: Re: [PATCH] PCI: Add CRS timeout for pci_device_is_present()
-Message-ID: <20191104173904.GA122794@google.com>
+        id S1728012AbfKDSHF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 4 Nov 2019 13:07:05 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3A34F1F1;
+        Mon,  4 Nov 2019 10:07:04 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F3E503F71A;
+        Mon,  4 Nov 2019 10:07:02 -0800 (PST)
+Date:   Mon, 4 Nov 2019 18:07:00 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     "Derrick, Jonathan" <jonathan.derrick@intel.com>
+Cc:     "helgaas@kernel.org" <helgaas@kernel.org>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "Paszkiewicz, Artur" <artur.paszkiewicz@intel.com>,
+        "Baldysiak, Pawel" <pawel.baldysiak@intel.com>,
+        "Fugate, David" <david.fugate@intel.com>,
+        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "Busch, Keith" <keith.busch@intel.com>
+Subject: Re: [PATCH 2/3] PCI: vmd: Expose VMD details from BIOS
+Message-ID: <20191104180700.GB26409@e121166-lin.cambridge.arm.com>
+References: <20191101215302.GA217821@google.com>
+ <5c4521d26f45cfe01631d14c3d7edc9a10f99245.camel@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <85267afb-c08e-5625-d3ee-bd32af9ecb12@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <5c4521d26f45cfe01631d14c3d7edc9a10f99245.camel@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Andrew, Lukas]
-
-On Tue, Oct 15, 2019 at 05:44:47PM +0530, Vidya Sagar wrote:
-> On 10/15/2019 4:40 PM, Sinan Kaya wrote:
-> > ...
-> > I think the PCI core should be putting the device back D0 state as one
-> > of the first actions before enumerating. Wake up could be a combination
-> > of ACPI and/or PCI wake up depending on where your device sits in the
-> > topology.
->
-> Yup. It is indeed doing it as part of pci_power_up() in pci.c file.
-> But, what is confusing to me is the order of the calls.
-> pci_power_up() has following calls in the same order.
-> 	pci_raw_set_power_state(dev, PCI_D0);
-> 	pci_update_current_state(dev, PCI_D0);
-> But, pci_raw_set_power_state() is accessing config space without calling
-> pci_device_is_present() whereas pci_update_current_state() which is called
-> later in the flow is calling pci_device_is_present()...!
-
-A device should always respond to config reads unless it is in D3cold
-or it is initializing after a reset.  IIUC you're doing a resume, not
-a reset, so I think your device must be coming out of D3cold.  That's
-typically done via ACPI, and I think we are missing some kind of delay
-before our first config access:
-
-  pci_power_up
-    platform_pci_set_power_state(PCI_D0)    # eg, ACPI
-    pci_raw_set_power_state
-      pci_read_config_word(PCI_PM_CTRL)     # <-- first config access
-      pci_write_config_word(PCI_PM_CTRL)
-      pci_read_config_word(PCI_PM_CTRL)
-    pci_update_current_state
-      if (... || !pci_device_is_present())
-
-Mika is working on some delays for the transition out of D3cold [1].
-He's more concerned with a secondary bus behind a bridge, so I don't
-think his patch addresses this case, but he's certainly familiar with
-this area.
-
-Huh, I'm really confused about this, too.  I don't
-understand how resume ever works without any delay between
-platform_pci_power_manageable() and the config reads in
-pci_raw_set_power_state().  I must be missing something.
-
-The pci_device_is_present() call in pci_update_current_state() was
-added by a6a64026c0cd ("PCI: Recognize D3cold in
-pci_update_current_state()") [2].  The purpose there is not to wait
-for a device to become ready; it is to learn whether the device is in
-D3cold.  I don't think we'd want a delay in this path because it would
-slow down all transitions into D3cold.
-
-[1] https://lore.kernel.org/r/20191004123947.11087-1-mika.westerberg@linux.intel.com
-[2] https://git.kernel.org/linus/a6a64026c0cd
-
-> > On the other hand, wake up code doesn't perform the CRS wait. CRS
-> > wait is deferred until the first vendor id read in pci_scan_device().
-> > I see that it already waits for 60 seconds.
-> > 
-> > Going back to the patch...
-> > 
-> > I think we need to find the path that actually needs this sleep and
-> > put pci_dev_wait() there.
->
-> Following is the path in resume() flow.
-> [   36.380726] Call trace:
-> [   36.383270]  dump_backtrace+0x0/0x158
-> [   36.386802]  show_stack+0x14/0x20
-> [   36.389749]  dump_stack+0xb0/0xf8
-> [   36.393451]  pci_update_current_state+0x58/0xe0
-> [   36.398178]  pci_power_up+0x60/0x70
-> [   36.401672]  pci_pm_resume_noirq+0x6c/0x130
-> [   36.405669]  dpm_run_callback.isra.16+0x20/0x70
-> [   36.410248]  device_resume_noirq+0x120/0x238
-> [   36.414364]  async_resume_noirq+0x24/0x58
-> [   36.418364]  async_run_entry_fn+0x40/0x148
-> [   36.422418]  process_one_work+0x1e8/0x360
-> [   36.426525]  worker_thread+0x40/0x488
-> [   36.430201]  kthread+0x118/0x120
-> [   36.433843]  ret_from_fork+0x10/0x1c
+On Fri, Nov 01, 2019 at 10:16:39PM +0000, Derrick, Jonathan wrote:
+> Hi Bjorn,
 > 
+> On Fri, 2019-11-01 at 16:53 -0500, Bjorn Helgaas wrote:
+> > [+cc Andrew]
 > > 
-> > +++ b/drivers/pci/pci.c
-> > @@ -5905,7 +5905,8 @@ bool pci_device_is_present(struct pci_dev *pdev)
+> > On Wed, Oct 16, 2019 at 11:04:47AM -0600, Jon Derrick wrote:
+> > > When some VMDs are enabled and others are not, it's difficult to
+> > > determine which IIO stack corresponds to the enabled VMD.
+> > > 
+> > > To assist userspace with management tasks, VMD BIOS will write the VMD
+> > > instance number and socket number into the first enabled root port's IO
+> > > Base/Limit registers prior to OS handoff. VMD driver can capture this
+> > > information and expose it to userspace.
 > > 
-> >   	if (pci_dev_is_disconnected(pdev))
-> >   		return false;
-> > -	return pci_bus_read_dev_vendor_id(pdev->bus, pdev->devfn, &v, 0);
-> > +	return pci_bus_read_dev_vendor_id(pdev->bus, pdev->devfn, &v,
-> > +					  PCI_CRS_TIMEOUT);
-> >   }
-> > 
-> > pci_device_is_present() is a too low-level function and it may not
-> > be allowed to sleep. It uses 0 as timeout value.
-> > 
+> > Hmmm, I'm not sure I understand this, but it sounds possibly fragile.
+> > Are these Root Ports visible to the generic PCI core device
+> > enumeration?  If so, it will find them and read these I/O window
+> > registers.  Maybe today the PCI core doesn't change them, but I'm not
+> > sure we should rely on them always being preserved until the vmd
+> > driver can claim the device.
 > > 
 > 
+> The Root Ports are on the VMD PCI domain, and this IO BASE/LIMIT
+> parsing occurs before this PCI domain is exposed to the generic PCI
+> scancode with pci_scan_child_bus(). Until that point the VMD PCI domain
+> is invisible to the kernel outside of /dev/mem or resource0.
+
+That's because the VMD controller is a PCI device itself and its
+BARs values are used to configure the VMD host controller.
+
+Interesting.
+
+To add to Bjorn's question, this reasoning assumes that whatever
+code enumerates the PCI device representing the VMD host controller
+does not overwrite its BARs upon bus enumeration otherwise the VMD
+controller configuration would be lost. Am I reading the current
+code correctly ?
+
+I assume there is not anything you can do to add firmware bindings to
+the VMD host controller PCI device to describe these properties you are
+exporting, so config space is the only available conduit to report them
+to an OS.
+
+Lorenzo
+
+> However, yes, it is somewhat fragile in that a third-party driver could
+> attach to the VMD endpoint prior to the VMD driver and modify the
+> values. A /dev/mem or resource0 user could also do this on an
+> unattached VMD endpoint.
+> 
+> I'm wondering if this would also be better suited for a special reset
+> in quirks.c, but it would need to expose a bit of VMD config accessing
+> in quirks.c to do that.
+> 
+> > But I guess you're using a special config accessor (vmd_cfg_read()),
+> > so these are probably invisible to the generic enumeration?
+> > 
+> 
+> Yes the VMD domain is invisible to generic PCI until the domain is
+> enumerated late in vmd_enable_domain().
+> 
+> > > + * for_each_vmd_root_port - iterate over all enabled VMD Root Ports
+> > > + * @vmd: &struct vmd_dev VMD device descriptor
+> > > + * @rp: int iterator cursor
+> > > + * @temp: u32 temporary value for config read
+> > > + *
+> > > + * VMD Root Ports are located in the VMD PCIe Domain at 00:[0-3].0, and config
+> > > + * space can be determinately accessed through the VMD Config BAR. Because VMD
+> > 
+> > I'm not sure how to parse "determinately accessed".  Maybe this config
+> > space can *only* be accessed via the VMD Config BAR?
+> 
+> Perhaps it should instead say determinately addressed, as each Root
+> Port config space is addressable at some offset of N * 0x8000 from the
+> base of the VMD endpoint config bar. I can see the comment may not be
+> helpful as that detail is abstracted using the vmd_cfg_read() helper.
+> 
+> 
+> > 
+> > > + * Root Ports can be individually disabled, it's important to iterate for the
+> > > + * first enabled Root Port as determined by reading the Vendor/Device register.
+> > > + */
+> > > +#define for_each_vmd_root_port(vmd, rp, temp)				\
+> > > +	for (rp = 0; rp < 4; rp++)					\
+> > > +		if (vmd_cfg_read(vmd, 0, PCI_DEVFN(root_port, 0),	\
+> > > +				 PCI_VENDOR_ID, 4, &temp) ||		\
+> > > +		    temp == 0xffffffff) {} else
