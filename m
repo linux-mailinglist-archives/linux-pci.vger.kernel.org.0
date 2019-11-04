@@ -2,93 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7DFBBEDDD3
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2019 12:43:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 651E8EE09E
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Nov 2019 14:07:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727782AbfKDLn6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 4 Nov 2019 06:43:58 -0500
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:13413 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726441AbfKDLn6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 Nov 2019 06:43:58 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dc00f030000>; Mon, 04 Nov 2019 03:44:03 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 04 Nov 2019 03:43:57 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 04 Nov 2019 03:43:57 -0800
-Received: from [10.25.75.8] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 4 Nov
- 2019 11:43:53 +0000
-Subject: Re: [PATCH] PCI: Add CRS timeout for pci_device_is_present()
-To:     Sinan Kaya <okaya@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, <bhelgaas@google.com>
-CC:     Thierry Reding <treding@nvidia.com>, <lorenzo.pieralisi@arm.com>,
-        <jonathanh@nvidia.com>, <linux-tegra@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20191005182129.32538-1-vidyas@nvidia.com>
- <20191014082023.GA232162@ulmo>
- <ce411d27-5b92-8dae-fccd-73c63aa30f1c@kernel.org>
- <20191015093053.GA5778@ulmo>
- <4953b718-8818-575e-2ec1-8197e6b32593@kernel.org>
- <85267afb-c08e-5625-d3ee-bd32af9ecb12@nvidia.com>
- <afa16546-e63d-6eba-8be0-8e52339cd100@nvidia.com>
- <aed391af-f54c-c25e-43b9-ed9db01bd3cf@nvidia.com>
- <4424cd45-e441-0d8d-548e-5c025f48bb03@kernel.org>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <065d1b8a-29e1-9282-27ba-5512f9f4f1d4@nvidia.com>
-Date:   Mon, 4 Nov 2019 17:13:50 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        id S1727998AbfKDNHf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 4 Nov 2019 08:07:35 -0500
+Received: from ns.mm-sol.com ([37.157.136.199]:49179 "EHLO extserv.mm-sol.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727663AbfKDNHf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 4 Nov 2019 08:07:35 -0500
+X-Greylist: delayed 443 seconds by postgrey-1.27 at vger.kernel.org; Mon, 04 Nov 2019 08:07:33 EST
+Received: from [192.168.27.209] (unknown [37.157.136.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by extserv.mm-sol.com (Postfix) with ESMTPSA id EF598CF18;
+        Mon,  4 Nov 2019 15:00:08 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
+        t=1572872408; bh=oVopT+MD93ZbAJmCMweF+pEr53zTDaEbQfDd0ZNB/VY=;
+        h=Subject:To:Cc:From:Date:From;
+        b=mEF8S8HHPDZ4Yz8rH6fPfjO+5QXGkvNenzKvUBrtzVnGYxll8RDR8RLs1sEE/RgI+
+         8y6tEHwCkxYX/a2xdLiUTNfs34XxncrjdWtHcv6MIzv6DXmbQXOu4PCsNNxusIovHP
+         mEAZVpGaV2f+GnqYBXFTEUABHbtuL+ixIASObQp/WTdaFSP6uaOdrJ2gT60iRELVH6
+         JuNjXKNBhECAgGOLBkrp6nEqvduwYBxDvBP4HwU9EgITLnJv5xzCp1B0unta7V4dnU
+         lLPbASTID05k2P4U+F72ic3OurussykFH3KXzC6biVaUIcvMYBsWNWSX1+qGhZKzMm
+         25ikT+RZgT+Iw==
+Subject: Re: [PATCH] PCI: qcom: Fix the fixup of PCI_VENDOR_ID_QCOM
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20191102002420.4091061-1-bjorn.andersson@linaro.org>
+From:   Stanimir Varbanov <svarbanov@mm-sol.com>
+Message-ID: <f1e89dcc-4d5f-cc1f-8036-dcb062645cb0@mm-sol.com>
+Date:   Mon, 4 Nov 2019 15:00:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <4424cd45-e441-0d8d-548e-5c025f48bb03@kernel.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+In-Reply-To: <20191102002420.4091061-1-bjorn.andersson@linaro.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1572867843; bh=gcy2haXpNW5l0d5bnASisCYz6bV/g3KmIK8t0wh0Pjs=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=eJ2t/pG6AtJ3pZAw84zry50ncfS++CgjZ+sawxj7CgRuWOV59SQ00NHCkEQfxxeNM
-         ekFuZK4PPNbdHYxwAJjYi5FXIuA1d6jpklX6PxlKr/O6FOgDxUWIS6qEzG0xVmtBLA
-         HtMRLKONlrkLwfnjT47xBMHvX3GKZaaNLP5P85pvDu0wn0bLAhspLDVPKYcc5FlOHT
-         2BQve3GeQnygDfJI1vt9qKlMaQzMiMh2lrAmVjB/a0KfoWZ0xgTaUCmjWviCZR0z/o
-         H7WAl6QsB7XJz4E8zqBLe90xFCI6SqJnbRIlpw2PL1TUpajaju3U925PlKLCSbytKv
-         XZMYAboxUNwHQ==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 10/26/2019 7:29 PM, Sinan Kaya wrote:
-> On 10/25/2019 7:58 AM, Vidya Sagar wrote:
->> On 10/21/2019 11:13 AM, Vidya Sagar wrote:
->>
->> Hi Sinan / Rafael,
->> Apologies for the ping again.
->> Do you guys have any further comments on this?
->>
->> -Vidya Sagar
-> 
-> I think you'll need some attention from Bjorn here to see the complete
-> picture.
-> 
-> As I said, changing pci_device_is_present() is not right. This needs to
-> be done at one level higher.
-
 Hi Bjorn,
-Could you please help me understand why this change can't be done in pci_device_is_present()
-API?
 
-- Vidya Sagar
+Thanks for the fix!
+
+On 11/2/19 2:24 AM, Bjorn Andersson wrote:
+> There exists non-bridge PCIe devices with PCI_VENDOR_ID_QCOM, so limit
+> the fixup to only affect the PCIe 2.0 (0x106) and PCIe 3.0 (0x107)
+> bridges.
+
+Are you sure that this will not break ops_1_0_0 (Qcom IP rev.: 1.0.0
+Synopsys IP rev.: 4.11a) i.e. apq8084 ?
 
 > 
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 3 ++-
+>  include/linux/pci_ids.h                | 2 ++
+>  2 files changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 35f4980480bb..b91abf4d4905 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -1441,7 +1441,8 @@ static void qcom_fixup_class(struct pci_dev *dev)
+>  {
+>  	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
+>  }
+> -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCI_ANY_ID, qcom_fixup_class);
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCIE_DEVICE_ID_QCOM_PCIE20, qcom_fixup_class);
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCIE_DEVICE_ID_QCOM_PCIE30, qcom_fixup_class);
+>  
+>  static struct platform_driver qcom_pcie_driver = {
+>  	.probe = qcom_pcie_probe,
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 21a572469a4e..3d0724ee4d2f 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -2413,6 +2413,8 @@
+>  #define PCI_VENDOR_ID_LENOVO		0x17aa
+>  
+>  #define PCI_VENDOR_ID_QCOM		0x17cb
+> +#define PCIE_DEVICE_ID_QCOM_PCIE20	0x0106
+> +#define PCIE_DEVICE_ID_QCOM_PCIE30	0x0107
+>  
+>  #define PCI_VENDOR_ID_CDNS		0x17cd
+>  
+> 
 
+-- 
+regards,
+Stan
