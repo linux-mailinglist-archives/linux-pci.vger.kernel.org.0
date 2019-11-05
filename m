@@ -2,88 +2,73 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 69EF7EF3B1
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2019 03:48:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 100BEEF77D
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2019 09:46:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729913AbfKECsP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 4 Nov 2019 21:48:15 -0500
-Received: from relmlor1.renesas.com ([210.160.252.171]:43264 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729863AbfKECsP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 Nov 2019 21:48:15 -0500
-X-IronPort-AV: E=Sophos;i="5.68,269,1569250800"; 
-   d="scan'208";a="30832177"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 05 Nov 2019 11:48:13 +0900
-Received: from localhost.localdomain (unknown [10.166.17.210])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 445524151D53;
-        Tue,  5 Nov 2019 11:48:13 +0900 (JST)
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org
-Cc:     linux-renesas-soc@vger.kernel.org, stable@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v3 2/2] PCI: rcar: Fix missing MACCTLR register setting in initialize sequence
-Date:   Tue,  5 Nov 2019 11:48:12 +0900
-Message-Id: <1572922092-12323-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1572922092-12323-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+        id S1727401AbfKEIqe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 Nov 2019 03:46:34 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:34619 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725806AbfKEIqe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Nov 2019 03:46:34 -0500
+Received: by mail-ot1-f65.google.com with SMTP id t4so5471438otr.1;
+        Tue, 05 Nov 2019 00:46:34 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MyKOhk0LoBuQhEYb9KFuzXqL5I8+dPurov3bPqiyxKA=;
+        b=IV8Ysd61vx5rujwStE3sYWm1yJmXkRFfrFSDD1lc9QIP/y22ET9ma6r4yY1LdZISIC
+         JjXGqxmnmIonHK3YdRdyMLAQPDvGse+J8pfU2YYo4wnNBMMewGJFyPRIaX/hzIxuTdbg
+         7j1c+TLICOC9ZeH7SHw657nGFLcwKtifMpTv1lwdZgYre6SNB5WOeur90Bk+IK/HEZqy
+         H0yn2bjOOZoLuqFKw5R0PI3cVRlAeTp7HQZgZtILlzhR98XFNHxclbpongcVIwwuAREi
+         NzCPKbrz+KXfMSzarn7SeXAoc3qRFszTG8HdgbkZa/6zS8eEbrcBzDhdg3C0TdO9+vmh
+         /93Q==
+X-Gm-Message-State: APjAAAWPkCQWU6tnXjFLOdZE7YjtEsDqVWbXf1voVHYGTbfBOkoPerzn
+        n+hQq1UVK/ppVnGgr7dFq4mQWhpCMDmUVehatDYoqQ==
+X-Google-Smtp-Source: APXvYqyoKPt2sRuOVs5Ee4m3vs18Mr40EkrrhLwu5WtKCYg4srR5SdNJrOEQ13JmYG5w9JIgf9kRW93t24Y6XRdKeBk=
+X-Received: by 2002:a9d:191e:: with SMTP id j30mr12264213ota.297.1572943593688;
+ Tue, 05 Nov 2019 00:46:33 -0800 (PST)
+MIME-Version: 1.0
 References: <1572922092-12323-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1572922092-12323-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <1572922092-12323-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 5 Nov 2019 09:46:22 +0100
+Message-ID: <CAMuHMdXn2ua9G6OY-zd54EC12b07kd=cECbkfgUPAPEE7j_3fQ@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] Revert "PCI: rcar: Fix missing MACCTLR register
+ setting in rcar_pcie_hw_init()"
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-According to the R-Car Gen2/3 manual, "Be sure to write the initial
-value (= H'80FF 0000) to MACCTLR before enabling PCIETCTLR.CFINIT".
-To avoid unexpected behaviors, this patch fixes it. Note that
-the SPCHG bit of MACCTLR register description said "Only writing 1
-is valid and writing 0 is invalid" but this "invalid" means
-"ignored", not "prohibited". So, any documentation conflict doesn't
-exist about writing the MACCTLR register.
+On Tue, Nov 5, 2019 at 3:48 AM Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+> This reverts commit 175cc093888ee74a17c4dd5f99ba9a6bc86de5be.
+>
+> The commit description/code don't follow the manual accurately,
+> it's difficult to understand. So, this patch reverts the commit.
+>
+> Fixes: 175cc093888e ("PCI: rcar: Fix missing MACCTLR register setting in rcar_pcie_hw_init()"
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-Reported-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-Fixes: c25da4778803 ("PCI: rcar: Add Renesas R-Car PCIe driver")
-Fixes: be20bbcb0a8c ("PCI: rcar: Add the initialization of PCIe link in resume_noirq()")
-Cc: <stable@vger.kernel.org> # v5.2+
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- drivers/pci/controller/pcie-rcar.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/drivers/pci/controller/pcie-rcar.c b/drivers/pci/controller/pcie-rcar.c
-index 40d8c54..1bfec1f 100644
---- a/drivers/pci/controller/pcie-rcar.c
-+++ b/drivers/pci/controller/pcie-rcar.c
-@@ -91,8 +91,12 @@
- #define  LINK_SPEED_2_5GTS	(1 << 16)
- #define  LINK_SPEED_5_0GTS	(2 << 16)
- #define MACCTLR			0x011058
-+#define  MACCTLR_RESERVED23_16	GENMASK(23, 16)
- #define  SPEED_CHANGE		BIT(24)
- #define  SCRAMBLE_DISABLE	BIT(27)
-+#define  LTSMDIS		BIT(31)
-+	 /* Be sure to write the initial value (H'80FF 0000) to MACCTLR */
-+#define  MACCTLR_INIT_VAL	(LTSMDIS | MACCTLR_RESERVED23_16)
- #define PMSR			0x01105c
- #define MACS2R			0x011078
- #define MACCGSPSETR		0x011084
-@@ -613,6 +617,8 @@ static int rcar_pcie_hw_init(struct rcar_pcie *pcie)
- 	if (IS_ENABLED(CONFIG_PCI_MSI))
- 		rcar_pci_write_reg(pcie, 0x801f0000, PCIEMSITXR);
- 
-+	rcar_pci_write_reg(pcie, MACCTLR_INIT_VAL, MACCTLR);
-+
- 	/* Finish initialization - establish a PCI Express link */
- 	rcar_pci_write_reg(pcie, CFINIT, PCIETCTLR);
- 
-@@ -1235,6 +1241,7 @@ static int rcar_pcie_resume_noirq(struct device *dev)
- 		return 0;
- 
- 	/* Re-establish the PCIe link */
-+	rcar_pci_write_reg(pcie, MACCTLR_INIT_VAL, MACCTLR);
- 	rcar_pci_write_reg(pcie, CFINIT, PCIETCTLR);
- 	return rcar_pcie_wait_for_dl(pcie);
- }
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.7.4
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
