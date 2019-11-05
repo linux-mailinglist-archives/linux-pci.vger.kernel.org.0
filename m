@@ -2,106 +2,76 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F78AF0163
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2019 16:28:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4042CF025A
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2019 17:09:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389893AbfKEP2i (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 Nov 2019 10:28:38 -0500
-Received: from mga12.intel.com ([192.55.52.136]:20980 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389546AbfKEP2h (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 5 Nov 2019 10:28:37 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Nov 2019 07:28:37 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,271,1569308400"; 
-   d="scan'208";a="212559786"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 05 Nov 2019 07:28:33 -0800
-Received: by lahna (sSMTP sendmail emulation); Tue, 05 Nov 2019 17:28:32 +0200
-Date:   Tue, 5 Nov 2019 17:28:32 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] PCI: Add missing link delays required by the PCIe
- spec
-Message-ID: <20191105152832.GC2552@lahna.fi.intel.com>
-References: <20191105095428.GR2552@lahna.fi.intel.com>
- <20191105150013.GA202873@google.com>
+        id S2390073AbfKEQJo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 Nov 2019 11:09:44 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:60118 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390035AbfKEQJo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Nov 2019 11:09:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=zYj73f1UT7gOij9GCCcNrorE4sfMx2ngwu5XUOipz28=; b=icIN7PqFV7lEMwnaLNKG7bxBF
+        D3oYIWzLqeG4iMGvdsbIM2GeR9041rEZBJiqBPeznRMvwpUeOWEgaCnyAZ6A66J5qZws2AGah9rke
+        x4sP8yJLok3HX448lZB7ah2qcA7SZWua53CWYlhSAH1KhCdwPti+ikajFdRD+HeNU5Hwvx+8RfHWf
+        yQtCuFLP5wBsKI8iz55oSNtq0pQmmcyXgFZS3eKUF1Tnwn810bw0yVCGxJZ7AQRh2g1GBg0TgdaT2
+        SGimOUiWNsppaBBdQVAQKftbxcec2ULbOy/DjnG8PGBbdR5y8igtL3GemlMDBIXPFuo6MYFKrQpQ5
+        tEvuJmxyg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iS1Op-0005lQ-NQ; Tue, 05 Nov 2019 16:09:43 +0000
+Date:   Tue, 5 Nov 2019 08:09:43 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH 5/5] PCI: PM: Fold __pci_complete_power_transition() into
+ its caller
+Message-ID: <20191105160943.GA19190@infradead.org>
+References: <2771503.n70vfTtcVb@kreacher>
+ <1769241.yKxyosiRnQ@kreacher>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191105150013.GA202873@google.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <1769241.yKxyosiRnQ@kreacher>
 User-Agent: Mutt/1.12.1 (2019-06-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 09:00:13AM -0600, Bjorn Helgaas wrote:
-> On Tue, Nov 05, 2019 at 11:54:28AM +0200, Mika Westerberg wrote:
-> > On Mon, Nov 04, 2019 at 06:00:00PM -0600, Bjorn Helgaas wrote:
-> 
-> > > > If you think it is fine to do the delay before we have restored
-> > > > everything I can move it inside pci_power_up() or call it after
-> > > > pci_pm_default_resume_early() as above. I think at least we should make
-> > > > sure all the saved registers are restored before so that the link
-> > > > activation check actually works.
-> > > 
-> > > What needs to be restored to make pcie_wait_for_link_delay() work?
-> > 
-> > I'm not entirely sure. I think that pci_restore_state() at least should
-> > be called so that the PCIe capability gets restored. Maybe not even
-> > that because Data Link Layer Layer Active always reflects the DL_Active
-> > or not and it does not need to be enabled separately.
-> > 
-> > > And what event does the restore need to be ordered with?
-> > 
-> > Not sure I follow you here.
-> 
-> You're suggesting that we should restore saved registers first so
-> pcie_wait_for_link_delay() works.  If the link activation depends on
-> something being restored and we don't enforce an ordering, the
-> activation might succeed or fail depending on whether it happens
-> before or after the restore.  So if there is a dependency, we should
-> make it explicit to avoid a race like that.
+On Tue, Nov 05, 2019 at 11:32:02AM +0100, Rafael J. Wysocki wrote:
+>  	if (state > PCI_D3cold)
+> @@ -1132,10 +1112,12 @@ int pci_set_power_state(struct pci_dev *
+>  	error = pci_raw_set_power_state(dev, state > PCI_D3hot ?
+>  					PCI_D3hot : state);
+>  
+> -	if (!__pci_complete_power_transition(dev, state))
+> -		error = 0;
+> +	ret = pci_platform_power_transition(dev, state);
+> +	/* Powering off a bridge may power off the whole hierarchy */
+> +	if (!ret && state == PCI_D3cold)
+> +		pci_bus_set_current_state(dev->subordinate, PCI_D3cold);
+>  
+> -	return error;
+> +	return ret ? error : 0;
 
-OK thanks. By explicit you mean document it in the code, right?
+Total nitpick, but why not:
 
-> But I'm not saying we *shouldn't* do the restore before the wait; only
-> that any dependency should be explicit.  Even if there is no actual
-> dependency it probably makes sense to do the restore first so it can
-> overlap with the hardware link training, which may reduce the time
-> pcie_wait_for_link_delay() has to wait when we do call it, e.g.,
-> 
->   |-----------------|          link activation
->      |-----|                   restore state
->            |--------|          pcie_wait_for_link_delay()
-> 
-> whereas if we do the restore after waiting for the link to come up, it
-> probably takes longer:
-> 
->   |-----------------|          link activation
->      |--------------|          pcie_wait_for_link_delay()
->                     |-----|    restore state
-> 
-> I actually suspect there *is* a dependency -- we should respect the
-> Target Link Speed and and width so the link resumes in the same
-> configuration it was before suspend.  And I suspect that may require
-> an explicit retrain after restoring PCI_EXP_LNKCTL2.
+	if (pci_platform_power_transition(dev, state))
+		return error;
 
-According the PCIe spec the PCI_EXP_LNKCTL2 Target Link Speed is marked
-as RWS (S for sticky) so I suspect its value is retained after reset in
-the same way as PME bits. Assuming I understood it correctly.
+	/* Powering off a bridge may power off the whole hierarchy */
+	if (state == PCI_D3cold)
+		pci_bus_set_current_state(dev->subordinate, PCI_D3cold);
+	return 0;
+
