@@ -2,114 +2,115 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 24A57F0752
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2019 21:54:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E49FAF0868
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2019 22:32:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727888AbfKEUy5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 Nov 2019 15:54:57 -0500
-Received: from foss.arm.com ([217.140.110.172]:53458 "EHLO foss.arm.com"
+        id S1729934AbfKEVcK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 Nov 2019 16:32:10 -0500
+Received: from mga14.intel.com ([192.55.52.115]:46836 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725806AbfKEUy5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 5 Nov 2019 15:54:57 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 36D7C30E;
-        Tue,  5 Nov 2019 12:54:56 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6A0CB4014A;
-        Tue,  5 Nov 2019 04:37:41 -0800 (PST)
-Date:   Tue, 5 Nov 2019 12:37:39 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Andrew Murray <andrew.murray@arm.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "lorenzo.pieralisi@arm.co" <lorenzo.pieralisi@arm.co>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        id S1729830AbfKEVcJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 5 Nov 2019 16:32:09 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Nov 2019 13:32:09 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,271,1569308400"; 
+   d="scan'208";a="214033521"
+Received: from orsmsx104.amr.corp.intel.com ([10.22.225.131])
+  by orsmga002.jf.intel.com with ESMTP; 05 Nov 2019 13:32:08 -0800
+Received: from orsmsx101.amr.corp.intel.com ([169.254.8.212]) by
+ ORSMSX104.amr.corp.intel.com ([169.254.4.167]) with mapi id 14.03.0439.000;
+ Tue, 5 Nov 2019 13:32:07 -0800
+From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
+To:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
+CC:     "helgaas@kernel.org" <helgaas@kernel.org>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "Paszkiewicz, Artur" <artur.paszkiewicz@intel.com>,
+        "Baldysiak, Pawel" <pawel.baldysiak@intel.com>,
+        "Fugate, David" <david.fugate@intel.com>,
+        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCH v2 07/10] PCI: layerscape: Modify the MSIX to the
- doorbell way
-Message-ID: <20191105123739.GB26960@e121166-lin.cambridge.arm.com>
-References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
- <20190822112242.16309-7-xiaowei.bao@nxp.com>
- <20190823135816.GH14582@e119886-lin.cambridge.arm.com>
- <AM5PR04MB3299E50BA5D7579D41B8B4F9F5A70@AM5PR04MB3299.eurprd04.prod.outlook.com>
- <20190827132504.GL14582@e119886-lin.cambridge.arm.com>
- <e64a484c-7cf5-5f65-400c-47128ab45e52@ti.com>
+        "Busch, Keith" <keith.busch@intel.com>
+Subject: Re: [PATCH 2/3] PCI: vmd: Expose VMD details from BIOS
+Thread-Topic: [PATCH 2/3] PCI: vmd: Expose VMD details from BIOS
+Thread-Index: AQHVhHZYe7i9MHwHgU2a4PswmMHji6d3aeMAgAAGmACABIIDAIABDacAgAC9+wA=
+Date:   Tue, 5 Nov 2019 21:32:07 +0000
+Message-ID: <5a87add6071259c45522001648b29c9e597ebd69.camel@intel.com>
+References: <20191101215302.GA217821@google.com>
+         <5c4521d26f45cfe01631d14c3d7edc9a10f99245.camel@intel.com>
+         <20191104180700.GB26409@e121166-lin.cambridge.arm.com>
+         <20191105101208.GA21113@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20191105101208.GA21113@e121166-lin.cambridge.arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.232.115.129]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B82F98BF3DF8D646BADB51811C056B81@intel.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e64a484c-7cf5-5f65-400c-47128ab45e52@ti.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 10:43:18AM +0530, Kishon Vijay Abraham I wrote:
-> Gustavo,
-> 
-> On 27/08/19 6:55 PM, Andrew Murray wrote:
-> > On Sat, Aug 24, 2019 at 12:08:40AM +0000, Xiaowei Bao wrote:
-> >>
-> >>
-> >>> -----Original Message-----
-> >>> From: Andrew Murray <andrew.murray@arm.com>
-> >>> Sent: 2019年8月23日 21:58
-> >>> To: Xiaowei Bao <xiaowei.bao@nxp.com>
-> >>> Cc: bhelgaas@google.com; robh+dt@kernel.org; mark.rutland@arm.com;
-> >>> shawnguo@kernel.org; Leo Li <leoyang.li@nxp.com>; kishon@ti.com;
-> >>> lorenzo.pieralisi@arm.co; arnd@arndb.de; gregkh@linuxfoundation.org; M.h.
-> >>> Lian <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; Roy
-> >>> Zang <roy.zang@nxp.com>; jingoohan1@gmail.com;
-> >>> gustavo.pimentel@synopsys.com; linux-pci@vger.kernel.org;
-> >>> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
-> >>> linux-arm-kernel@lists.infradead.org; linuxppc-dev@lists.ozlabs.org
-> >>> Subject: Re: [PATCH v2 07/10] PCI: layerscape: Modify the MSIX to the
-> >>> doorbell way
-> >>>
-> >>> On Thu, Aug 22, 2019 at 07:22:39PM +0800, Xiaowei Bao wrote:
-> >>>> The layerscape platform use the doorbell way to trigger MSIX interrupt
-> >>>> in EP mode.
-> >>>>
-> >>>
-> >>> I have no problems with this patch, however...
-> >>>
-> >>> Are you able to add to this message a reason for why you are making this
-> >>> change? Did dw_pcie_ep_raise_msix_irq not work when func_no != 0? Or did
-> >>> it work yet dw_pcie_ep_raise_msix_irq_doorbell is more efficient?
-> >>
-> >> The fact is that, this driver is verified in ls1046a platform of NXP before, and ls1046a don't
-> >> support MSIX feature, so I set the msix_capable of pci_epc_features struct is false,
-> >> but in other platform, e.g. ls1088a, it support the MSIX feature, I verified the MSIX
-> >> feature in ls1088a, it is not OK, so I changed to another way. Thanks.
-> > 
-> > Right, so the existing pci-layerscape-ep.c driver never supported MSIX yet it
-> > erroneously had a switch case statement to call dw_pcie_ep_raise_msix_irq which
-> > would never get used.
-> > 
-> > Now that we're adding a platform with MSIX support the existing
-> > dw_pcie_ep_raise_msix_irq doesn't work (for this platform) so we are adding a
-> > different method.
-> 
-> Gustavo, can you confirm dw_pcie_ep_raise_msix_irq() works for
-> designware as it didn't work for both me and Xiaowei?
-
-This question needs an answer.
-
-Thanks,
-Lorenzo
+T24gVHVlLCAyMDE5LTExLTA1IGF0IDEwOjEyICswMDAwLCBMb3JlbnpvIFBpZXJhbGlzaSB3cm90
+ZToNCj4gT24gTW9uLCBOb3YgMDQsIDIwMTkgYXQgMDY6MDc6MDBQTSArMDAwMCwgTG9yZW56byBQ
+aWVyYWxpc2kgd3JvdGU6DQo+ID4gT24gRnJpLCBOb3YgMDEsIDIwMTkgYXQgMTA6MTY6MzlQTSAr
+MDAwMCwgRGVycmljaywgSm9uYXRoYW4gd3JvdGU6DQo+ID4gPiBIaSBCam9ybiwNCj4gPiA+IA0K
+PiA+ID4gT24gRnJpLCAyMDE5LTExLTAxIGF0IDE2OjUzIC0wNTAwLCBCam9ybiBIZWxnYWFzIHdy
+b3RlOg0KPiA+ID4gPiBbK2NjIEFuZHJld10NCj4gPiA+ID4gDQo+ID4gPiA+IE9uIFdlZCwgT2N0
+IDE2LCAyMDE5IGF0IDExOjA0OjQ3QU0gLTA2MDAsIEpvbiBEZXJyaWNrIHdyb3RlOg0KPiA+ID4g
+PiA+IFdoZW4gc29tZSBWTURzIGFyZSBlbmFibGVkIGFuZCBvdGhlcnMgYXJlIG5vdCwgaXQncyBk
+aWZmaWN1bHQgdG8NCj4gPiA+ID4gPiBkZXRlcm1pbmUgd2hpY2ggSUlPIHN0YWNrIGNvcnJlc3Bv
+bmRzIHRvIHRoZSBlbmFibGVkIFZNRC4NCj4gPiA+ID4gPiANCj4gPiA+ID4gPiBUbyBhc3Npc3Qg
+dXNlcnNwYWNlIHdpdGggbWFuYWdlbWVudCB0YXNrcywgVk1EIEJJT1Mgd2lsbCB3cml0ZSB0aGUg
+Vk1EDQo+ID4gPiA+ID4gaW5zdGFuY2UgbnVtYmVyIGFuZCBzb2NrZXQgbnVtYmVyIGludG8gdGhl
+IGZpcnN0IGVuYWJsZWQgcm9vdCBwb3J0J3MgSU8NCj4gPiA+ID4gPiBCYXNlL0xpbWl0IHJlZ2lz
+dGVycyBwcmlvciB0byBPUyBoYW5kb2ZmLiBWTUQgZHJpdmVyIGNhbiBjYXB0dXJlIHRoaXMNCj4g
+PiA+ID4gPiBpbmZvcm1hdGlvbiBhbmQgZXhwb3NlIGl0IHRvIHVzZXJzcGFjZS4NCj4gPiA+ID4g
+DQo+ID4gPiA+IEhtbW0sIEknbSBub3Qgc3VyZSBJIHVuZGVyc3RhbmQgdGhpcywgYnV0IGl0IHNv
+dW5kcyBwb3NzaWJseSBmcmFnaWxlLg0KPiA+ID4gPiBBcmUgdGhlc2UgUm9vdCBQb3J0cyB2aXNp
+YmxlIHRvIHRoZSBnZW5lcmljIFBDSSBjb3JlIGRldmljZQ0KPiA+ID4gPiBlbnVtZXJhdGlvbj8g
+IElmIHNvLCBpdCB3aWxsIGZpbmQgdGhlbSBhbmQgcmVhZCB0aGVzZSBJL08gd2luZG93DQo+ID4g
+PiA+IHJlZ2lzdGVycy4gIE1heWJlIHRvZGF5IHRoZSBQQ0kgY29yZSBkb2Vzbid0IGNoYW5nZSB0
+aGVtLCBidXQgSSdtIG5vdA0KPiA+ID4gPiBzdXJlIHdlIHNob3VsZCByZWx5IG9uIHRoZW0gYWx3
+YXlzIGJlaW5nIHByZXNlcnZlZCB1bnRpbCB0aGUgdm1kDQo+ID4gPiA+IGRyaXZlciBjYW4gY2xh
+aW0gdGhlIGRldmljZS4NCj4gPiA+ID4gDQo+ID4gPiANCj4gPiA+IFRoZSBSb290IFBvcnRzIGFy
+ZSBvbiB0aGUgVk1EIFBDSSBkb21haW4sIGFuZCB0aGlzIElPIEJBU0UvTElNSVQNCj4gPiA+IHBh
+cnNpbmcgb2NjdXJzIGJlZm9yZSB0aGlzIFBDSSBkb21haW4gaXMgZXhwb3NlZCB0byB0aGUgZ2Vu
+ZXJpYyBQQ0kNCj4gPiA+IHNjYW5jb2RlIHdpdGggcGNpX3NjYW5fY2hpbGRfYnVzKCkuIFVudGls
+IHRoYXQgcG9pbnQgdGhlIFZNRCBQQ0kgZG9tYWluDQo+ID4gPiBpcyBpbnZpc2libGUgdG8gdGhl
+IGtlcm5lbCBvdXRzaWRlIG9mIC9kZXYvbWVtIG9yIHJlc291cmNlMC4NCj4gPiANCj4gPiBUaGF0
+J3MgYmVjYXVzZSB0aGUgVk1EIGNvbnRyb2xsZXIgaXMgYSBQQ0kgZGV2aWNlIGl0c2VsZiBhbmQg
+aXRzDQo+ID4gQkFScyB2YWx1ZXMgYXJlIHVzZWQgdG8gY29uZmlndXJlIHRoZSBWTUQgaG9zdCBj
+b250cm9sbGVyLg0KPiA+IA0KPiA+IEludGVyZXN0aW5nLg0KPiA+IA0KPiA+IFRvIGFkZCB0byBC
+am9ybidzIHF1ZXN0aW9uLCB0aGlzIHJlYXNvbmluZyBhc3N1bWVzIHRoYXQgd2hhdGV2ZXINCj4g
+PiBjb2RlIGVudW1lcmF0ZXMgdGhlIFBDSSBkZXZpY2UgcmVwcmVzZW50aW5nIHRoZSBWTUQgaG9z
+dCBjb250cm9sbGVyDQo+ID4gZG9lcyBub3Qgb3ZlcndyaXRlIGl0cyBCQVJzIHVwb24gYnVzIGVu
+dW1lcmF0aW9uIG90aGVyd2lzZSB0aGUgVk1EDQo+ID4gY29udHJvbGxlciBjb25maWd1cmF0aW9u
+IHdvdWxkIGJlIGxvc3QuIEFtIEkgcmVhZGluZyB0aGUgY3VycmVudA0KPiA+IGNvZGUgY29ycmVj
+dGx5ID8NCj4gDQo+IFNvcnJ5LCBJIGp1c3Qgd2VudCB0aHJvdWdoIHRoZSBjb2RlIGFnYWluLCBJ
+IHRoaW5rIHRoZSBWTUQgY29udHJvbGxlcg0KPiBQQ0kgZGV2aWNlIEJBUnMgY2FuIGFuZCBhcmUg
+YWxsb3dlZCB0byBiZSByZWFzc2lnbmVkIGJ5IHRoZSBQQ0kNCj4gZW51bWVyYXRpb24gY29kZSAt
+IEkgbWlzcmVhZCB0aGUgY29kZSwgc28gSSByYWlzZWQgYSBub24tZXhpc3RlbnQgaXNzdWUNCj4g
+aGVyZSwgdGhleSBhcmUgbGlrZSBhbnkgb3RoZXIgUENJIGRldmljZSBNRU0vSU8gQkFScyBpbiB0
+aGlzIHJlc3BlY3QuDQo+IA0KPiBMb3JlbnpvDQo+IA0KDQpZZXMgdGhlIFZNRCBlbmRwb2ludCBp
+dHNlbGYgZXhwb3NlcyB0aGUgZG9tYWluIGNvbnRhaW5pbmcgdGhlIFJvb3QNClBvcnRzLiBJdCdz
+IHRoZSBSb290IFBvcnRzIHdoaWNoIGdldCBlbnVtZXJhdGVkIGJ5IGdlbmVyaWMgUENJDQpzY2Fu
+Y29kZSwgYW5kIGFsc28gdGhlIFJvb3QgUG9ydCBjb25maWcgc3BhY2Ugd2hlcmUgdGhpcyBkb21h
+aW4gaW5mbyBpcw0Kc3VwcGxpZWQuIFdpdGhvdXQgYSBWTUQgZHJpdmVyLCB0aGUgb25seSBhcGVy
+dHVyZSB0byBhY2Nlc3MgdGhlIFJvb3QNClBvcnQgY29uZmlnIHNwYWNlIGlzIE1NSU8gdGhyb3Vn
+aCB0aGUgVk1EIGVuZHBvaW50J3MgJ0NvbmZpZycgQkFSIChha2ENCk1FTUJBUjApLg0KDQpXaXRo
+b3V0IHRoaXMgcGF0Y2gsIGEgL2Rldi9tZW0sIHJlc291cmNlMCwgb3IgdGhpcmQtcGFydHkgZHJp
+dmVyIGNvdWxkDQpvdmVyd3JpdGUgdGhlc2UgdmFsdWVzIGlmIHRoZXkgZG9uJ3QgYWxzbyByZXN0
+b3JlIHRoZW0gb24gY2xvc2UvdW5iaW5kLg0KSSBpbWFnaW5lIGEga2V4ZWMgdXNlciB3b3VsZCBh
+bHNvIG92ZXJ3cml0ZSB0aGVzZSB2YWx1ZXMuDQoNClRoaXMgaXMgb25lIG9mIHRoZSByZWFzb25z
+IEkgd2FzIGFsc28gdGhpbmtpbmcgaXQgY291bGQgbGl2ZSBpbiBkZXZpY2UNCnNwZWNpZmljIHJl
+c2V0IGNvZGUgYXMgbG9uZyBhcyBpdCBjYW4gY2FsbCBpbnRvIFZNRCBmb3IgdGhlIHNwZWNpZmlj
+cy4NCk1hbnkga2VybmVsIHZlbmRvcnMgYWxyZWFkeSBzaGlwIHdpdGggVk1EPXksIHNvIEkgYW0g
+dGVtcHRlZCB0byBzaW1wbHkNCm1ha2UgdGhhdCBwZXJtYW5lbnQgYW5kIGV4cG9ydCBhIHJlc2V0
+IGNhbGwgdG8gYSBkZXYgc3BlY2lmaWMgcmVzZXQgaW4NCnF1aXJrcy5jLg0K
