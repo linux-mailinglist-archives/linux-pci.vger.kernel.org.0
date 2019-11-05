@@ -2,144 +2,140 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DD067F068B
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2019 21:01:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 84ED9F073B
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2019 21:50:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726219AbfKEUBI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 Nov 2019 15:01:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60980 "EHLO mail.kernel.org"
+        id S1729810AbfKEUt6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 Nov 2019 15:49:58 -0500
+Received: from foss.arm.com ([217.140.110.172]:32792 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726208AbfKEUBI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 5 Nov 2019 15:01:08 -0500
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 738D6217F5;
-        Tue,  5 Nov 2019 20:01:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572984067;
-        bh=a5LN7NuMdOkHQh+h++8Cg/SsMhKTo2CCP+g8v63uk7w=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=aKYJfLjcj/QY2WciTrgEYmAGYtqC3rar3SN93SG5N0ZS/p3wnt+TJOKieOVTnqavB
-         mpUhos9pAawaF82R4up5ho6qg4eTmrjI0lUM8jlwSbPrFCimBIfKFHHsFT4FI5cJDD
-         GYi2/x4C03F0CLSGyN/6UEKND7XE1LJeXSUwlyak=
-Date:   Tue, 5 Nov 2019 14:01:05 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] PCI: Add missing link delays required by the PCIe
- spec
-Message-ID: <20191105200105.GA239884@google.com>
+        id S1729724AbfKEUt5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 5 Nov 2019 15:49:57 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DEAE111D4;
+        Tue,  5 Nov 2019 12:49:56 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 16CE73FCD9;
+        Tue,  5 Nov 2019 02:12:14 -0800 (PST)
+Date:   Tue, 5 Nov 2019 10:12:08 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     "Derrick, Jonathan" <jonathan.derrick@intel.com>
+Cc:     "helgaas@kernel.org" <helgaas@kernel.org>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "Paszkiewicz, Artur" <artur.paszkiewicz@intel.com>,
+        "Baldysiak, Pawel" <pawel.baldysiak@intel.com>,
+        "Fugate, David" <david.fugate@intel.com>,
+        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "Busch, Keith" <keith.busch@intel.com>
+Subject: Re: [PATCH 2/3] PCI: vmd: Expose VMD details from BIOS
+Message-ID: <20191105101208.GA21113@e121166-lin.cambridge.arm.com>
+References: <20191101215302.GA217821@google.com>
+ <5c4521d26f45cfe01631d14c3d7edc9a10f99245.camel@intel.com>
+ <20191104180700.GB26409@e121166-lin.cambridge.arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191105125818.GW2552@lahna.fi.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191104180700.GB26409@e121166-lin.cambridge.arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 02:58:18PM +0200, Mika Westerberg wrote:
-> On Tue, Nov 05, 2019 at 11:54:33AM +0200, Mika Westerberg wrote:
-> > > For understandability, I think the wait needs to go in some function
-> > > that contains "PCI_D0", e.g., platform_pci_set_power_state() or
-> > > pci_power_up(), so it's connected with the transition from D3cold to
-> > > D0.
-> > > 
-> > > Since pci_pm_default_resume_early() is the only caller of
-> > > pci_power_up(), maybe we should just inline pci_power_up(), e.g.,
-> > > something like this:
-> > > 
-> > >   static void pci_pm_default_resume_early(struct pci_dev *pci_dev)
-> > >   {
-> > >     pci_power_state_t prev_state = pci_dev->current_state;
-> > > 
-> > >     if (platform_pci_power_manageable(pci_dev))
-> > >       platform_pci_set_power_state(pci_dev, PCI_D0);
-> > > 
-> > >     pci_raw_set_power_state(pci_dev, PCI_D0);
-> > >     pci_update_current_state(pci_dev, PCI_D0);
-> > > 
-> > >     pci_restore_state(pci_dev);
-> > >     pci_pme_restore(pci_dev);
-> > > 
-> > >     if (prev_state == PCI_D3cold)
-> > >       pci_bridge_wait_for_secondary_bus(dev);
-> > >   }
+On Mon, Nov 04, 2019 at 06:07:00PM +0000, Lorenzo Pieralisi wrote:
+> On Fri, Nov 01, 2019 at 10:16:39PM +0000, Derrick, Jonathan wrote:
+> > Hi Bjorn,
 > > 
-> > OK, I'll see if this works.
+> > On Fri, 2019-11-01 at 16:53 -0500, Bjorn Helgaas wrote:
+> > > [+cc Andrew]
+> > > 
+> > > On Wed, Oct 16, 2019 at 11:04:47AM -0600, Jon Derrick wrote:
+> > > > When some VMDs are enabled and others are not, it's difficult to
+> > > > determine which IIO stack corresponds to the enabled VMD.
+> > > > 
+> > > > To assist userspace with management tasks, VMD BIOS will write the VMD
+> > > > instance number and socket number into the first enabled root port's IO
+> > > > Base/Limit registers prior to OS handoff. VMD driver can capture this
+> > > > information and expose it to userspace.
+> > > 
+> > > Hmmm, I'm not sure I understand this, but it sounds possibly fragile.
+> > > Are these Root Ports visible to the generic PCI core device
+> > > enumeration?  If so, it will find them and read these I/O window
+> > > registers.  Maybe today the PCI core doesn't change them, but I'm not
+> > > sure we should rely on them always being preserved until the vmd
+> > > driver can claim the device.
+> > > 
+> > 
+> > The Root Ports are on the VMD PCI domain, and this IO BASE/LIMIT
+> > parsing occurs before this PCI domain is exposed to the generic PCI
+> > scancode with pci_scan_child_bus(). Until that point the VMD PCI domain
+> > is invisible to the kernel outside of /dev/mem or resource0.
 > 
-> Well, I think we want to execute pci_fixup_resume_early before we delay
-> for the downstream component (same for runtime resume path). Currently
-> nobody is using that for root/downstream ports but in theory at least
-> some port may need it before it works properly. Also probably good idea
-> to disable wake as soon as possible to avoid possible extra PME messages
-> coming from the port.
-
-OK, I wish we could connect it more closely with the actual power-on,
-but I guess that makes sense.
-
-> I feel that the following is the right place to perform the delay but if
-> you think we can ignore the above, I will just do what you say and do it
-> in pci_pm_default_resume_early() (and pci_restore_standard_config() for
-> runtime path).
+> That's because the VMD controller is a PCI device itself and its
+> BARs values are used to configure the VMD host controller.
 > 
-> [The below diff does not have check for pci_dev->skip_bus_pm because I
->  was planning to move it inside pci_bridge_wait_for_secondary_bus() itself.]
+> Interesting.
+> 
+> To add to Bjorn's question, this reasoning assumes that whatever
+> code enumerates the PCI device representing the VMD host controller
+> does not overwrite its BARs upon bus enumeration otherwise the VMD
+> controller configuration would be lost. Am I reading the current
+> code correctly ?
 
-What do you gain by moving it?  IIUC we want them to be the same
-condition, and if one is in pci_pm_resume_noirq() and another is
-inside pci_bridge_wait_for_secondary_bus(), it's hard to see that
-they're connected.  I'd rather have pci_pm_resume_noirq() check it
-once, save the result, and test that result before calling
-pci_pm_default_resume_early() and pci_bridge_wait_for_secondary_bus().
+Sorry, I just went through the code again, I think the VMD controller
+PCI device BARs can and are allowed to be reassigned by the PCI
+enumeration code - I misread the code, so I raised a non-existent issue
+here, they are like any other PCI device MEM/IO BARs in this respect.
 
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index 08d3bdbc8c04..3c0e52aaef79 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -890,6 +890,7 @@ static int pci_pm_resume_noirq(struct device *dev)
->  {
->  	struct pci_dev *pci_dev = to_pci_dev(dev);
->  	const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
-> +	pci_power_t prev_state = pci_dev->current_state;
->  
->  	if (dev_pm_may_skip_resume(dev))
->  		return 0;
-> @@ -914,6 +915,9 @@ static int pci_pm_resume_noirq(struct device *dev)
->  	pci_fixup_device(pci_fixup_resume_early, pci_dev);
->  	pcie_pme_root_status_cleanup(pci_dev);
->  
-> +	if (prev_state == PCI_D3cold)
-> +		pci_bridge_wait_for_secondary_bus(pci_dev);
-> +
->  	if (pci_has_legacy_pm_support(pci_dev))
->  		return 0;
->  
-> @@ -1299,6 +1303,7 @@ static int pci_pm_runtime_resume(struct device *dev)
->  {
->  	struct pci_dev *pci_dev = to_pci_dev(dev);
->  	const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
-> +	pci_power_t prev_state = pci_dev->current_state;
->  	int error = 0;
->  
->  	/*
-> @@ -1314,6 +1319,9 @@ static int pci_pm_runtime_resume(struct device *dev)
->  	pci_fixup_device(pci_fixup_resume_early, pci_dev);
->  	pci_pm_default_resume(pci_dev);
->  
-> +	if (prev_state == PCI_D3cold)
-> +		pci_bridge_wait_for_secondary_bus(pci_dev);
-> +
->  	if (pm && pm->runtime_resume)
->  		error = pm->runtime_resume(dev);
->  
+Lorenzo
+
+> I assume there is not anything you can do to add firmware bindings to
+> the VMD host controller PCI device to describe these properties you are
+> exporting, so config space is the only available conduit to report them
+> to an OS.
+> 
+> Lorenzo
+> 
+> > However, yes, it is somewhat fragile in that a third-party driver could
+> > attach to the VMD endpoint prior to the VMD driver and modify the
+> > values. A /dev/mem or resource0 user could also do this on an
+> > unattached VMD endpoint.
+> > 
+> > I'm wondering if this would also be better suited for a special reset
+> > in quirks.c, but it would need to expose a bit of VMD config accessing
+> > in quirks.c to do that.
+> > 
+> > > But I guess you're using a special config accessor (vmd_cfg_read()),
+> > > so these are probably invisible to the generic enumeration?
+> > > 
+> > 
+> > Yes the VMD domain is invisible to generic PCI until the domain is
+> > enumerated late in vmd_enable_domain().
+> > 
+> > > > + * for_each_vmd_root_port - iterate over all enabled VMD Root Ports
+> > > > + * @vmd: &struct vmd_dev VMD device descriptor
+> > > > + * @rp: int iterator cursor
+> > > > + * @temp: u32 temporary value for config read
+> > > > + *
+> > > > + * VMD Root Ports are located in the VMD PCIe Domain at 00:[0-3].0, and config
+> > > > + * space can be determinately accessed through the VMD Config BAR. Because VMD
+> > > 
+> > > I'm not sure how to parse "determinately accessed".  Maybe this config
+> > > space can *only* be accessed via the VMD Config BAR?
+> > 
+> > Perhaps it should instead say determinately addressed, as each Root
+> > Port config space is addressable at some offset of N * 0x8000 from the
+> > base of the VMD endpoint config bar. I can see the comment may not be
+> > helpful as that detail is abstracted using the vmd_cfg_read() helper.
+> > 
+> > 
+> > > 
+> > > > + * Root Ports can be individually disabled, it's important to iterate for the
+> > > > + * first enabled Root Port as determined by reading the Vendor/Device register.
+> > > > + */
+> > > > +#define for_each_vmd_root_port(vmd, rp, temp)				\
+> > > > +	for (rp = 0; rp < 4; rp++)					\
+> > > > +		if (vmd_cfg_read(vmd, 0, PCI_DEVFN(root_port, 0),	\
+> > > > +				 PCI_VENDOR_ID, 4, &temp) ||		\
+> > > > +		    temp == 0xffffffff) {} else
