@@ -2,63 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 04D5BF093B
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2019 23:22:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 04663F099B
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Nov 2019 23:35:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730043AbfKEWW4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 Nov 2019 17:22:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58276 "EHLO mail.kernel.org"
+        id S1729680AbfKEWfY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 Nov 2019 17:35:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729906AbfKEWWz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 5 Nov 2019 17:22:55 -0500
-Received: from redsun51.ssa.fujisawa.hgst.com (unknown [199.255.47.7])
+        id S1728515AbfKEWfX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 5 Nov 2019 17:35:23 -0500
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5DCC2087E;
-        Tue,  5 Nov 2019 22:22:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C87F82084D;
+        Tue,  5 Nov 2019 22:35:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572992575;
-        bh=X2dk5pNl0pwxIawV4SFXg/etTfwZkCm6skEqJQvm4SQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Te9/1/x3j9xUBfAQqUE9W9hYknsnxtBMHpNatwis7EZe5UpIDA6Ys4+GRFYZ0Pipo
-         9ULzNhhDbdz2be8IIxy/TgHZuFB49yyR1L7/peYUKXyQjyJPOCigQ4Eu3iWtDnYJVL
-         MGIkoQ1ABodv3bKSJUx7aI6ruQa/63vD2vmfR+wQ=
-Date:   Wed, 6 Nov 2019 07:22:47 +0900
-From:   Keith Busch <kbusch@kernel.org>
-To:     "Derrick, Jonathan" <jonathan.derrick@intel.com>
-Cc:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>,
-        "Paszkiewicz, Artur" <artur.paszkiewicz@intel.com>,
-        "Baldysiak, Pawel" <pawel.baldysiak@intel.com>,
-        "Fugate, David" <david.fugate@intel.com>,
-        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "Busch, Keith" <keith.busch@intel.com>
-Subject: Re: [PATCH 2/3] PCI: vmd: Expose VMD details from BIOS
-Message-ID: <20191105222247.GA890@redsun51.ssa.fujisawa.hgst.com>
-References: <20191101215302.GA217821@google.com>
- <5c4521d26f45cfe01631d14c3d7edc9a10f99245.camel@intel.com>
- <20191104180700.GB26409@e121166-lin.cambridge.arm.com>
- <20191105101208.GA21113@e121166-lin.cambridge.arm.com>
- <5a87add6071259c45522001648b29c9e597ebd69.camel@intel.com>
+        s=default; t=1572993323;
+        bh=obXGr+HMrmxd7Nmv6mAkE997rAhvMoJlZpQK/LBMCVg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=pUFZzO3CGkdSQICBgk9ndn6MvjXjomf/SYb2AlmxvtI6UOeu4T1otst591nBPw7oG
+         dyB6L9sResxmZwPC9HexXIfU0XghcGTCFnwuGptcJBaORk68x/49t9t/2H7XWY44th
+         pVHyWfll2MYSoSmXgKRLNxWmCucEYg+1O0N507sc=
+Date:   Tue, 5 Nov 2019 16:35:21 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH 0/5] PCI: PM: Cleanups related to power state changes
+Message-ID: <20191105223521.GA42216@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5a87add6071259c45522001648b29c9e597ebd69.camel@intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <3568330.mzdaIbGaoM@kreacher>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 09:32:07PM +0000, Derrick, Jonathan wrote:
-> Without this patch, a /dev/mem, resource0, or third-party driver could
-> overwrite these values if they don't also restore them on close/unbind.
-> I imagine a kexec user would also overwrite these values.
+On Tue, Nov 05, 2019 at 12:28:47PM +0100, Rafael J. Wysocki wrote:
+> On Tuesday, November 5, 2019 11:11:57 AM CET Rafael J. Wysocki wrote:
+> > Hi,
+> > 
+> > This series rearranges some PCI power management code to make it somewhat
+> > easier to follow and explicitly consolidate the power-up (transitions to
+> > D0) code path.
+> > 
+> > It is not intended to change the functionality of the code.
+> 
+> This series applies on top of 5.4-rc6 with your pci/pm-2 branch from today
+> merged on top of it.
+> 
+> I guess I can make it apply on top of pci/pm-2, but there were some PCI PM
+> changes in 5.4-rc later than -rc1 in that area and they need to be taken
+> into account anyway.
 
-Don't you have the same problem with the in-kernel driver? It
-looks like pci core will clear the PCI_IO_BASE config registers in
-pci_setup_bridge_io() because VMD doesn't provide an IORESOURCE_IO
-resource. If you reload the driver, it'll read the wrong values on the
-second probing.
+I applied the commits from pci/pm-2 to pci/pm (pci/pm-2 was really
+just to get the 0-day robot to build test it).
+
+pci/pm is based on v5.4-rc1, which doesn't have 45144d42f299 ("PCI:
+PM: Fix pci_power_up()"), which appeared in -rc4.
+
+All my branches are based on -rc1.  I *could* rebase them all to -rc4,
+but that's quite a bit of work and affects Lorenzo as well, so I'd
+rather not.  What's the git expert's way of doing this?
+
+I guess worst case I could rebase this series to apply on pci/pm
+(-rc1-based), accept that Linus will see a conflict, and resolve it
+during his merge.
+
+Bjorn
