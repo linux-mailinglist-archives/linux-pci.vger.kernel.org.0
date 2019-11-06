@@ -2,165 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F153CF160A
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2019 13:28:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B71EDF170C
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2019 14:29:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727961AbfKFM2c (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 Nov 2019 07:28:32 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:61985 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727391AbfKFM2c (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Nov 2019 07:28:32 -0500
-Received: from 79.184.254.83.ipv4.supernova.orange.pl (79.184.254.83) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
- id 1cbb818cf7d190ce; Wed, 6 Nov 2019 13:28:28 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Len Brown <lenb@kernel.org>,
-        Valerio Passini <passini.valerio@gmail.com>,
-        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] ACPI / hotplug / PCI: Allocate resources directly under the non-hotplug bridge
-Date:   Wed, 06 Nov 2019 13:28:27 +0100
-Message-ID: <4228135.D2MuoWt6n7@kreacher>
-In-Reply-To: <20191030150545.19885-1-mika.westerberg@linux.intel.com>
-References: <20191030150545.19885-1-mika.westerberg@linux.intel.com>
+        id S1726845AbfKFN3L (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 Nov 2019 08:29:11 -0500
+Received: from mga03.intel.com ([134.134.136.65]:35175 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731876AbfKFN3L (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 6 Nov 2019 08:29:11 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 05:29:10 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,274,1569308400"; 
+   d="scan'208";a="212773427"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 06 Nov 2019 05:29:05 -0800
+Received: by lahna (sSMTP sendmail emulation); Wed, 06 Nov 2019 15:29:04 +0200
+Date:   Wed, 6 Nov 2019 15:29:04 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+        Keith Busch <keith.busch@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] PCI: Add missing link delays required by the PCIe
+ spec
+Message-ID: <20191106132904.GL2552@lahna.fi.intel.com>
+References: <20191105152832.GC2552@lahna.fi.intel.com>
+ <20191105161017.GA219591@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191105161017.GA219591@google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wednesday, October 30, 2019 4:05:45 PM CET Mika Westerberg wrote:
-> Valerio and others reported that commit 84c8b58ed3ad ("ACPI / hotplug /
-> PCI: Don't scan bridges managed by native hotplug") prevents some recent
-> LG and HP laptops from booting with endless loop of:
+On Tue, Nov 05, 2019 at 10:10:17AM -0600, Bjorn Helgaas wrote:
+> > > I actually suspect there *is* a dependency -- we should respect the
+> > > Target Link Speed and and width so the link resumes in the same
+> > > configuration it was before suspend.  And I suspect that may require
+> > > an explicit retrain after restoring PCI_EXP_LNKCTL2.
+> > 
+> > According the PCIe spec the PCI_EXP_LNKCTL2 Target Link Speed is marked
+> > as RWS (S for sticky) so I suspect its value is retained after reset in
+> > the same way as PME bits. Assuming I understood it correctly.
 > 
->   [   26.237796] ACPI Error: No handler or method for GPE 08, disabling event (20190215/evgpe-835)
->   [   26.238699] ACPI Error: No handler or method for GPE 09, disabling event (20190215/evgpe-835)
->   [   26.239306] ACPI Error: No handler or method for GPE 0A, disabling event (20190215/evgpe-835)
->   ...
-> 
-> What seems to happen is that during boot, after the initial PCI
-> enumeration when EC is enabled the platform triggers ACPI Notify() to
-> one of the root ports. The root port itself looks like this:
-> 
->   [    0.723757] pci 0000:00:1b.0: PCI bridge to [bus 02-3a]
->   [    0.723765] pci 0000:00:1b.0:   bridge window [mem 0xc4000000-0xda0fffff]
->   [    0.723773] pci 0000:00:1b.0:   bridge window [mem 0x80000000-0xa1ffffff 64bit pref]
-> 
-> The BIOS has configured the root port so that it does not have I/O
-> bridge window.
-> 
-> Now when the ACPI Notify() is triggered ACPI hotplug handler calls
-> acpiphp_native_scan_bridge() for each non-hotplug bridge (as this system
-> is using native PCIe hotplug) and pci_assign_unassigned_bridge_resources()
-> to allocate resources.
-> 
-> The device connected to the root port is a PCIe switch (Thunderbolt
-> controller) with two hotplug downstream ports. Because of the hotplug
-> ports __pci_bus_size_bridges() tries to add "additional I/O" of 256
-> bytes to each (DEFAULT_HOTPLUG_IO_SIZE). This gets further aligned to 4k
-> as that's the minimum I/O window size so each hotplug port gets 4k I/O
-> window and the same happens for the root port (which is also hotplug
-> port). This means 3 * 4k = 12k I/O window.
-> 
-> Because of this pci_assign_unassigned_bridge_resources() ends up opening
-> a I/O bridge window for the root port at first available I/O address
-> which seems to be in range 0x1000 - 0x3fff. Normally this range is used
-> for ACPI stuff such as GPE bits (below is part of /proc/ioports):
-> 
->     1800-1803 : ACPI PM1a_EVT_BLK
->     1804-1805 : ACPI PM1a_CNT_BLK
->     1808-180b : ACPI PM_TMR
->     1810-1815 : ACPI CPU throttle
->     1850-1850 : ACPI PM2_CNT_BLK
->     1854-1857 : pnp 00:05
->     1860-187f : ACPI GPE0_BLK
-> 
-> However, when the ACPI Notify() happened this range was not yet reserved
-> for ACPI/PNP (that happens later) so PCI gets it. It then starts writing
-> to this range and accidentally stomps over GPE bits among other things
-> causing the endless stream of messages about missing GPE handler.
-> 
-> This problem does not happen if "pci=hpiosize=0" is passed in the kernel
-> command line. The reason is that then the kernel does not try to
-> allocate the additional 256 bytes for each hotplug port.
-> 
-> Fix this by allocating resources directly below the non-hotplug bridges
-> where a new device may appear as a result of ACPI Notify(). This avoids
-> the hotplug bridges and prevents opening the additional I/O window.
-> 
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=203617
-> Fixes: 84c8b58ed3ad ("ACPI / hotplug / PCI: Don't scan bridges managed by native hotplug")
-> Cc: stable@vger.kernel.org
-> Reported-by: Valerio Passini <passini.valerio@gmail.com>
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> This patch is about coming from D3cold, isn't it?  I don't think we
+> can assume sticky bits are preserved in D3cold (except maybe when
+> auxiliary power is enabled).
 
-That should work:
+Indeed, good point. I see some GPU drivers are programming Target Link
+Speed which will not be retained after the hierarchy is put into D3cold
+and back. I think this potential problem is not related to the missing
+link delays this patch is addressing, though. It has been existing in
+pci_restore_pcie_state() already (where it restores PCI_EXP_LNKCTL2).
 
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+I think this can be solved as a separate patch by doing something
+like:
 
-Bjorn, if you want me to take this, please let me know.
+  1. In pci_restore_pcie_state() check if the saved Target Link Speed
+     differs from what is in the register currently.
 
-> ---
-> I was able to reproduce this without access to the affected system by
-> forcing ACPI core to send Notify() to the TBT root port like this:
-> 
-> void acpi_notify_rp(void)
-> {
-> 	struct acpi_device *adev;
-> 	acpi_handle handle;
-> 
-> 	if (ACPI_FAILURE(acpi_get_handle(NULL, "\\_SB.PCI0.RP17", &handle)))
-> 		return;
-> 
-> 	if (acpi_bus_get_device(handle, &adev))
-> 		return;
-> 
-> 	dev_info(&adev->dev, "queueing hotplug\n");
-> 	acpiphp_hotplug_notify(adev, ACPI_NOTIFY_BUS_CHECK);
-> }
-> 
-> and calling it from acpi_init() directly after acpi_ec_init().
-> 
->  drivers/pci/hotplug/acpiphp_glue.c | 12 +++++++++---
->  1 file changed, 9 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/hotplug/acpiphp_glue.c b/drivers/pci/hotplug/acpiphp_glue.c
-> index e4c46637f32f..b3869951c0eb 100644
-> --- a/drivers/pci/hotplug/acpiphp_glue.c
-> +++ b/drivers/pci/hotplug/acpiphp_glue.c
-> @@ -449,8 +449,15 @@ static void acpiphp_native_scan_bridge(struct pci_dev *bridge)
->  
->  	/* Scan non-hotplug bridges that need to be reconfigured */
->  	for_each_pci_bridge(dev, bus) {
-> -		if (!hotplug_is_native(dev))
-> -			max = pci_scan_bridge(bus, dev, max, 1);
-> +		if (hotplug_is_native(dev))
-> +			continue;
-> +
-> +		max = pci_scan_bridge(bus, dev, max, 1);
-> +		if (dev->subordinate) {
-> +			pcibios_resource_survey_bus(dev->subordinate);
-> +			pci_bus_size_bridges(dev->subordinate);
-> +			pci_bus_assign_resources(dev->subordinate);
-> +		}
->  	}
->  }
->  
-> @@ -480,7 +487,6 @@ static void enable_slot(struct acpiphp_slot *slot, bool bridge)
->  			if (PCI_SLOT(dev->devfn) == slot->device)
->  				acpiphp_native_scan_bridge(dev);
->  		}
-> -		pci_assign_unassigned_bridge_resources(bus->self);
->  	} else {
->  		LIST_HEAD(add_list);
->  		int max, pass;
-> 
+  2. Restore the value as we already do now.
 
+  3. If there the speed differs then trigger link retrain.
 
+  4. Restore rest of the root/downstream port state.
 
+It is not clear if we need to do anything for upstream ports (PCIe 5.0
+sec 6.11 talks about doing this on upstream component e.g downstream
+port). After this there will be the link delay (added by this patch)
+which takes care of waiting for the downstream component to be
+accessible (even after retrain).
 
+However, I'm not sure how this can be properly tested. Maybe hacking
+some downstream port to lower the speed, enter D3cold and then resume it
+and see if the Target Link Speed gets updated correctly.
