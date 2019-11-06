@@ -2,197 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 235FFF227F
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2019 00:24:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 98FFDF22F6
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2019 00:59:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727409AbfKFXYI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 Nov 2019 18:24:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39048 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727316AbfKFXYH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 6 Nov 2019 18:24:07 -0500
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E0852178F;
-        Wed,  6 Nov 2019 23:24:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573082646;
-        bh=fFvrwJdZVGd4C5JTzcFAx3oTWr1pEZQyQg9VLSTqmWA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Os5Ic3dGnqFLY7zkiy1TTHcIfgHDXsPNcaxI9G+TsWvTYp5n+XSrOAg1ZypQwqES/
-         WH1/97obGci71mrgooPY05J1CBuReuTOvjbOuP8q5gnYWR3pd/C3Jb7pG8JjL+xafs
-         Qz5kFcaaz/ztT9roFNDDOisKmpJniFP2yQLalJ+k=
-Date:   Wed, 6 Nov 2019 17:24:05 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Valerio Passini <passini.valerio@gmail.com>,
-        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH] ACPI / hotplug / PCI: Allocate resources directly under
- the non-hotplug bridge
-Message-ID: <20191106232405.GA242013@google.com>
+        id S1727504AbfKFX7b (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 Nov 2019 18:59:31 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:33910 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727369AbfKFX7a (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Nov 2019 18:59:30 -0500
+Received: by mail-wm1-f68.google.com with SMTP id v3so3513360wmh.1;
+        Wed, 06 Nov 2019 15:59:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=pYc1ZEuv8q0KG5E79mea0IAenws1iMJ4L6QA4R1lfVY=;
+        b=kvK67h3fYcWBmNBhk+w65SIcEgm9PvCe2zJ3e1TJO+o52SeF8hx8GgnX1DBB/LT2SD
+         j0Z5CqFHdmnXMj5sx0Tu5/dZpVKiSAMIWMl+3HsoVyrmmeFi09faiDu8OEM63Dzozlkn
+         YNN1jnyWillG0L2GjgMQN3zd8oyqjkijdV+fNQia7msX8wxRR+6jMUIyyM0xzweHLG+J
+         g7T1fy/i5yTLBGgg2zxLBYqJ6Ym6HUryLgrSEfB/jNuAP0/pJbIfLG4VRKffyNGYYa5Z
+         TBSFPEK6Xd4fwELoaG/HOLCIPvnPyAF4ee/0rBJ7m3/dpeTVZbrQ0wH9JIZDW47VDuHJ
+         SiXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pYc1ZEuv8q0KG5E79mea0IAenws1iMJ4L6QA4R1lfVY=;
+        b=E5fLs5myd++UfXnbcJ8E0E8z8Zl1JUwWBGSU0/GclSlvK6IhVX6hNt7BKaasGRrMQJ
+         tQW929DNbTfnASTAGtsGBhdQ8aeDX2HzFyBMDPMoZPGnE/o8S9P+ksvlbt0O5CWyEKTg
+         LZGKzlKIIIWR8fBqL09EsVZI5RzoOloGBhLNENBeQR8WbF2zC0fTWp05LH9Kd3dFP6dv
+         bxCd05iSbuq55iILcbqVD/MR6js2i+jllzll7dwFWqLxSHW9VAOYb423pJanEFwbnEpd
+         RdT1FmYPEgDytOCznuk9VtwlQtAfjx1VSSQtQnXneQIOlyUVy2IiZtuZfHJhyeC6jSqB
+         Raog==
+X-Gm-Message-State: APjAAAU0LrnWCNrCRhruyJA8uIuxidY5BI0efrZQc+T/5hLegm5yB9wS
+        AKhfC2PSqlsTqy2enksiwGQ=
+X-Google-Smtp-Source: APXvYqz4a4H5Uoy7rSYdGlqvNJE0lcHmzcfZs1JsT4P7wLXGRdWcJdrlLQZT3eQTWfwnQcTYVH7EJw==
+X-Received: by 2002:a1c:2dd0:: with SMTP id t199mr181746wmt.58.1573084768367;
+        Wed, 06 Nov 2019 15:59:28 -0800 (PST)
+Received: from [192.168.1.4] (ip-86-49-35-8.net.upcbroadband.cz. [86.49.35.8])
+        by smtp.gmail.com with ESMTPSA id d11sm423476wrf.80.2019.11.06.15.59.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 06 Nov 2019 15:59:27 -0800 (PST)
+Subject: Re: [PATCH V3 2/3] PCI: rcar: Do not abort on too many inbound
+ dma-ranges
+To:     Andrew Murray <andrew.murray@arm.com>
+Cc:     Simon Horman <horms@verge.net.au>, linux-pci@vger.kernel.org,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        linux-renesas-soc@vger.kernel.org, Robin.Murphy@arm.com
+References: <20190809175741.7066-1-marek.vasut@gmail.com>
+ <20190809175741.7066-2-marek.vasut@gmail.com>
+ <20190816132305.gyyml5r3xsimmoor@verge.net.au>
+ <8f1871ed-4820-1985-0090-bb9e2d8803d8@gmail.com>
+ <20191021101805.GM47056@e119886-lin.cambridge.arm.com>
+ <fef9502f-d51c-b922-afb3-8891267ae6c3@gmail.com>
+ <20191026203627.GA47056@e119886-lin.cambridge.arm.com>
+From:   Marek Vasut <marek.vasut@gmail.com>
+Message-ID: <9c46a2d2-00bd-3854-8060-fc7389751f3f@gmail.com>
+Date:   Thu, 7 Nov 2019 00:37:44 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191030150545.19885-1-mika.westerberg@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191026203627.GA47056@e119886-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Ben]
+On 10/26/19 10:36 PM, Andrew Murray wrote:
+[...]>> But this still leaves me with one open question -- how do I
+figure out
+>> what to program into the PCI controller inbound windows, so that the
+>> controller correctly filters inbound transfers which are targetting
+>> nonexisting memory ?
+> 
+> Your driver should program into the RC->CPU windows, the exact ranges
+> described in the dma-ranges. Whilst also respecting the alignment and
+> max-size rules your controller has (e.g. the existing upstream logic
+> and also the new logic that recalculates the alignment per entry).
+> 
+> As far as I can tell from looking at your U-Boot patch, I think I'd expect
+> a single dma-range to be presented in the DT, that describes
+> 0:0xFFFFFFFF => 0:0xFFFFFFFF. This is because 1) I understand your
+> controller is limited to 32 bits. And 2) there is a linear mapping between
+> PCI and CPU addresses (given that the second and third arguments on
+> pci_set_region are both the same).
+> 
+> As you point out, this range includes lots of things that you don't
+> want the RC to touch - such as non-existent memory. This is OK, when
+> Linux programs addresses into the various EP's for them to DMA to host
+> memory, it uses its own logic to select addresses that are in RAM, the
+> purpose of the dma-range is to describe what the CPU RAM address looks
+> like from the perspective of the RC (for example if the RC was wired
+> with an offset such that made memory writes from the RC made to
+> 0x00000000 end up on the system map at 0x80000000, we need to tell Linux
+> about this offset. Otherwise when a EP device driver programs a DMA
+> address of a RAM buffer at 0x90000000, it'll end up targetting
+> 0x110000000. Thankfully our dma-range will tell Linux to apply an offset
+> such that the actual address written to the EP is 0x10000000.).
 
-On Wed, Oct 30, 2019 at 06:05:45PM +0300, Mika Westerberg wrote:
-> Valerio and others reported that commit 84c8b58ed3ad ("ACPI / hotplug /
-> PCI: Don't scan bridges managed by native hotplug") prevents some recent
-> LG and HP laptops from booting with endless loop of:
-> 
->   [   26.237796] ACPI Error: No handler or method for GPE 08, disabling event (20190215/evgpe-835)
->   [   26.238699] ACPI Error: No handler or method for GPE 09, disabling event (20190215/evgpe-835)
->   [   26.239306] ACPI Error: No handler or method for GPE 0A, disabling event (20190215/evgpe-835)
->   ...
-> 
-> What seems to happen is that during boot, after the initial PCI
-> enumeration when EC is enabled the platform triggers ACPI Notify() to
-> one of the root ports. The root port itself looks like this:
-> 
->   [    0.723757] pci 0000:00:1b.0: PCI bridge to [bus 02-3a]
->   [    0.723765] pci 0000:00:1b.0:   bridge window [mem 0xc4000000-0xda0fffff]
->   [    0.723773] pci 0000:00:1b.0:   bridge window [mem 0x80000000-0xa1ffffff 64bit pref]
->
-> The BIOS has configured the root port so that it does not have I/O
-> bridge window.
-> 
-> Now when the ACPI Notify() is triggered ACPI hotplug handler calls
-> acpiphp_native_scan_bridge() for each non-hotplug bridge (as this system
-> is using native PCIe hotplug) and pci_assign_unassigned_bridge_resources()
-> to allocate resources.
-> 
-> The device connected to the root port is a PCIe switch (Thunderbolt
-> controller) with two hotplug downstream ports. Because of the hotplug
-> ports __pci_bus_size_bridges() tries to add "additional I/O" of 256
-> bytes to each (DEFAULT_HOTPLUG_IO_SIZE). This gets further aligned to 4k
-> as that's the minimum I/O window size so each hotplug port gets 4k I/O
-> window and the same happens for the root port (which is also hotplug
-> port). This means 3 * 4k = 12k I/O window.
-> 
-> Because of this pci_assign_unassigned_bridge_resources() ends up opening
-> a I/O bridge window for the root port at first available I/O address
-> which seems to be in range 0x1000 - 0x3fff. Normally this range is used
-> for ACPI stuff such as GPE bits (below is part of /proc/ioports):
-> 
->     1800-1803 : ACPI PM1a_EVT_BLK
->     1804-1805 : ACPI PM1a_CNT_BLK
->     1808-180b : ACPI PM_TMR
->     1810-1815 : ACPI CPU throttle
->     1850-1850 : ACPI PM2_CNT_BLK
->     1854-1857 : pnp 00:05
->     1860-187f : ACPI GPE0_BLK
+I understand that Linux programs the endpoints correctly. However this
+still doesn't prevent the endpoint from being broken and from sending a
+transaction to that non-existent memory. The PCI controller can prevent
+that and in an automotive SoC, I would very much like the PCI controller
+to do just that, rather than hope that the endpoint would always work.
 
-Nice debugging work!
+> In your case the dma-range also serves to describe a limit to the range
+> of addresses we can reach.
 
-> However, when the ACPI Notify() happened this range was not yet reserved
-> for ACPI/PNP (that happens later) so PCI gets it. 
+[...]
 
-I think this is really the underlying problem.  IMO those ACPI/PNP
-resources ought to be reserved before we start assigning resources to
-PCI devices.  That would be a huge problem to fix, though.
-
-> It then starts writing
-> to this range and accidentally stomps over GPE bits among other things
-> causing the endless stream of messages about missing GPE handler.
->
-> This problem does not happen if "pci=hpiosize=0" is passed in the kernel
-> command line. The reason is that then the kernel does not try to
-> allocate the additional 256 bytes for each hotplug port.
-> 
-> Fix this by allocating resources directly below the non-hotplug bridges
-> where a new device may appear as a result of ACPI Notify(). This avoids
-> the hotplug bridges and prevents opening the additional I/O window.
-
-Looking at [1], here's the topology I see:
-
-  00:1b.0: Root Port to [bus 02-3a]                   # pciehp
-  02:00.0: Switch Upstream Port to [bus 03-3a]        # thunderbolt
-  03:00.0: Switch Downstream Port to [bus 04]         # thunderbolt
-  03:01.0: Switch Downstream Port to [bus 05-39]      # thunderbolt, pciehp
-  03:02.0: Switch Downstream Port to [bus 3a]         # thunderbolt
-  04:00.0: reg 0x10: [mem 0xda000000-0xda03ffff]
-  04:00.0: reg 0x14: [mem 0xda040000-0xda040fff]
-  3a:00.0: reg 0x10: [mem 0xd9f00000-0xd9f0ffff]
-
-In this topology, I guess the non-hotplug bridges would be 03:00.0
-and 03:02.0?  And we skip 03:01.0 because hotplug_is_native() is true
-for that?
-
-What would happen if a device below one of the non-hotplug bridges,
-e.g., 3a:00.0, had an I/O BAR?  Would this patch still work?
-
-[1] https://bugzilla.kernel.org/show_bug.cgi?id=203617#c49
-
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=203617
-> Fixes: 84c8b58ed3ad ("ACPI / hotplug / PCI: Don't scan bridges managed by native hotplug")
-> Cc: stable@vger.kernel.org
-> Reported-by: Valerio Passini <passini.valerio@gmail.com>
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> ---
-> I was able to reproduce this without access to the affected system by
-> forcing ACPI core to send Notify() to the TBT root port like this:
-> 
-> void acpi_notify_rp(void)
-> {
-> 	struct acpi_device *adev;
-> 	acpi_handle handle;
-> 
-> 	if (ACPI_FAILURE(acpi_get_handle(NULL, "\\_SB.PCI0.RP17", &handle)))
-> 		return;
-> 
-> 	if (acpi_bus_get_device(handle, &adev))
-> 		return;
-> 
-> 	dev_info(&adev->dev, "queueing hotplug\n");
-> 	acpiphp_hotplug_notify(adev, ACPI_NOTIFY_BUS_CHECK);
-> }
-> 
-> and calling it from acpi_init() directly after acpi_ec_init().
-> 
->  drivers/pci/hotplug/acpiphp_glue.c | 12 +++++++++---
->  1 file changed, 9 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/hotplug/acpiphp_glue.c b/drivers/pci/hotplug/acpiphp_glue.c
-> index e4c46637f32f..b3869951c0eb 100644
-> --- a/drivers/pci/hotplug/acpiphp_glue.c
-> +++ b/drivers/pci/hotplug/acpiphp_glue.c
-> @@ -449,8 +449,15 @@ static void acpiphp_native_scan_bridge(struct pci_dev *bridge)
->  
->  	/* Scan non-hotplug bridges that need to be reconfigured */
->  	for_each_pci_bridge(dev, bus) {
-> -		if (!hotplug_is_native(dev))
-> -			max = pci_scan_bridge(bus, dev, max, 1);
-> +		if (hotplug_is_native(dev))
-> +			continue;
-> +
-> +		max = pci_scan_bridge(bus, dev, max, 1);
-> +		if (dev->subordinate) {
-> +			pcibios_resource_survey_bus(dev->subordinate);
-> +			pci_bus_size_bridges(dev->subordinate);
-> +			pci_bus_assign_resources(dev->subordinate);
-> +		}
->  	}
->  }
->  
-> @@ -480,7 +487,6 @@ static void enable_slot(struct acpiphp_slot *slot, bool bridge)
->  			if (PCI_SLOT(dev->devfn) == slot->device)
->  				acpiphp_native_scan_bridge(dev);
->  		}
-> -		pci_assign_unassigned_bridge_resources(bus->self);
->  	} else {
->  		LIST_HEAD(add_list);
->  		int max, pass;
-> -- 
-> 2.23.0
-> 
+-- 
+Best regards,
+Marek Vasut
