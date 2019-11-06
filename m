@@ -2,142 +2,155 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 03BD3F1B20
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2019 17:25:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B8D6F1B7B
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2019 17:41:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727275AbfKFQZ3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 Nov 2019 11:25:29 -0500
-Received: from mga06.intel.com ([134.134.136.31]:54391 "EHLO mga06.intel.com"
+        id S1727149AbfKFQlw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 Nov 2019 11:41:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48812 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727149AbfKFQZ2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 6 Nov 2019 11:25:28 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 08:25:27 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,275,1569308400"; 
-   d="scan'208";a="402412207"
-Received: from orsmsx105.amr.corp.intel.com ([10.22.225.132])
-  by fmsmga005.fm.intel.com with ESMTP; 06 Nov 2019 08:25:27 -0800
-Received: from orsmsx126.amr.corp.intel.com (10.22.240.126) by
- ORSMSX105.amr.corp.intel.com (10.22.225.132) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 6 Nov 2019 08:25:26 -0800
-Received: from orsmsx101.amr.corp.intel.com ([169.254.8.212]) by
- ORSMSX126.amr.corp.intel.com ([169.254.4.48]) with mapi id 14.03.0439.000;
- Wed, 6 Nov 2019 08:25:26 -0800
-From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
-To:     "paulmck@kernel.org" <paulmck@kernel.org>
-CC:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "helgaas@kernel.org" <helgaas@kernel.org>
-Subject: Re: [PATCH v2] PCI: vmd: Add indirection layer to vmd irq lists
-Thread-Topic: [PATCH v2] PCI: vmd: Add indirection layer to vmd irq lists
-Thread-Index: AQHVkB7j0q30tk564k6l6sATXqWN2qd11iQAgAkNUIA=
-Date:   Wed, 6 Nov 2019 16:25:25 +0000
-Message-ID: <14aa0466567ebf9bff1301c81214a449c581c998.camel@intel.com>
-References: <1572527333-6212-1-git-send-email-jonathan.derrick@intel.com>
-         <20191031231126.GG20975@paulmck-ThinkPad-P72>
-In-Reply-To: <20191031231126.GG20975@paulmck-ThinkPad-P72>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.232.115.131]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <FE76303483BED645B6E73356860D89D6@intel.com>
-Content-Transfer-Encoding: base64
+        id S1727285AbfKFQlw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 6 Nov 2019 11:41:52 -0500
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E45892087E;
+        Wed,  6 Nov 2019 16:41:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573058511;
+        bh=jQwOhTG9AiSFb4Z6+UeBpDvC86RGByjQu5fty6XUdyM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=I5K1NYNzikHDXgKFNN+cMrr9y9hB54GdRboHVHwfylaYJF9f9XDbCr+U2nstKHOB/
+         KZ84kFmAThwL3D1VVOo1nSjP76FTvabSM9zOM0L4bChuVPlCyp8cWRj6XPbbX7HXBG
+         plMBSIiEJGCU7pzSM10uHMiGU94RNIZRtJZp+OUM=
+Date:   Wed, 6 Nov 2019 10:41:48 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Vidya Sagar <vidyas@nvidia.com>, Sinan Kaya <okaya@kernel.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        jonathanh@nvidia.com, linux-tegra@vger.kernel.org,
+        linux-pci@vger.kernel.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com,
+        Andrew Murray <andrew.murray@arm.com>,
+        Lukas Wunner <lukas@wunner.de>
+Subject: Re: [PATCH] PCI: Add CRS timeout for pci_device_is_present()
+Message-ID: <20191106164148.GA62969@google.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <11429373.7ySiFsEkgL@kreacher>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-T24gVGh1LCAyMDE5LTEwLTMxIGF0IDE2OjExIC0wNzAwLCBQYXVsIEUuIE1jS2VubmV5IHdyb3Rl
-Og0KPiBPbiBUaHUsIE9jdCAzMSwgMjAxOSBhdCAwNzowODo1M0FNIC0wNjAwLCBKb24gRGVycmlj
-ayB3cm90ZToNCj4gPiBXaXRoIENPTkZJR19NQVhTTVAgYW5kIENPTkZJR19QUk9WRV9MT0NLSU5H
-LCB0aGUgc2l6ZSBvZiBhbiBzcmN1X3N0cnVjdCBjYW4NCj4gPiBncm93IHF1aXRlIGxhcmdlLiBJ
-biBvbmUgY29tcGlsYXRpb24gaW5zdGFuY2UgaXQgcHJvZHVjZWQgYSA3NEtpQiBkYXRhDQo+ID4g
-c3RydWN0dXJlLiBUaGVzZSBhcmUgZW1iZWRkZWQgaW4gdGhlIHZtZF9pcnFfbGlzdCBzdHJ1Y3Qs
-IGFuZCBhIE49NjQgYWxsb2NhdGlvbg0KPiA+IGNhbiBleGNlZWQgTUFYX09SREVSLCB2aW9sYXRp
-bmcgcmVjbGFpbSBydWxlcy4NCj4gPiANCj4gPiAgIHN0cnVjdCBzcmN1X3N0cnVjdCB7DQo+ID4g
-ICAgICAgICAgIHN0cnVjdCBzcmN1X25vZGUgICBub2RlWzUyMV07ICAgICAgICAgICAgICAgICAg
-ICAvKiAgICAgMCA3NTAyNCAqLw0KPiA+ICAgICAgICAgICAvKiAtLS0gY2FjaGVsaW5lIDExNzIg
-Ym91bmRhcnkgKDc1MDA4IGJ5dGVzKSB3YXMgMTYgYnl0ZXMgYWdvIC0tLSAqLw0KPiA+ICAgICAg
-ICAgICBzdHJ1Y3Qgc3JjdV9ub2RlICogICAgICAgICBsZXZlbFs0XTsgICAgICAgICAgICAgLyog
-NzUwMjQgICAgMzIgKi8NCj4gPiAgICAgICAgICAgc3RydWN0IG11dGV4ICAgICAgIHNyY3VfY2Jf
-bXV0ZXg7ICAgICAgICAgICAgICAgIC8qIDc1MDU2ICAgMTI4ICovDQo+ID4gICAgICAgICAgIC8q
-IC0tLSBjYWNoZWxpbmUgMTE3NCBib3VuZGFyeSAoNzUxMzYgYnl0ZXMpIHdhcyA0OCBieXRlcyBh
-Z28gLS0tICovDQo+ID4gICAgICAgICAgIHNwaW5sb2NrX3QgICAgICAgICAgICAgICAgIGxvY2s7
-ICAgICAgICAgICAgICAgICAvKiA3NTE4NCAgICA1NiAqLw0KPiA+ICAgICAgICAgICAvKiAtLS0g
-Y2FjaGVsaW5lIDExNzUgYm91bmRhcnkgKDc1MjAwIGJ5dGVzKSB3YXMgNDAgYnl0ZXMgYWdvIC0t
-LSAqLw0KPiA+ICAgICAgICAgICBzdHJ1Y3QgbXV0ZXggICAgICAgc3JjdV9ncF9tdXRleDsgICAg
-ICAgICAgICAgICAgLyogNzUyNDAgICAxMjggKi8NCj4gPiAgICAgICAgICAgLyogLS0tIGNhY2hl
-bGluZSAxMTc3IGJvdW5kYXJ5ICg3NTMyOCBieXRlcykgd2FzIDQwIGJ5dGVzIGFnbyAtLS0gKi8N
-Cj4gPiAgICAgICAgICAgdW5zaWduZWQgaW50ICAgICAgICAgICAgICAgc3JjdV9pZHg7ICAgICAg
-ICAgICAgIC8qIDc1MzY4ICAgICA0ICovDQo+ID4gDQo+ID4gICAgICAgICAgIC8qIFhYWCA0IGJ5
-dGVzIGhvbGUsIHRyeSB0byBwYWNrICovDQo+ID4gDQo+ID4gICAgICAgICAgIGxvbmcgdW5zaWdu
-ZWQgaW50ICAgICAgICAgIHNyY3VfZ3Bfc2VxOyAgICAgICAgICAvKiA3NTM3NiAgICAgOCAqLw0K
-PiA+ICAgICAgICAgICBsb25nIHVuc2lnbmVkIGludCAgICAgICAgICBzcmN1X2dwX3NlcV9uZWVk
-ZWQ7ICAgLyogNzUzODQgICAgIDggKi8NCj4gPiAgICAgICAgICAgLyogLS0tIGNhY2hlbGluZSAx
-MTc4IGJvdW5kYXJ5ICg3NTM5MiBieXRlcykgLS0tICovDQo+ID4gICAgICAgICAgIGxvbmcgdW5z
-aWduZWQgaW50ICAgICAgICAgIHNyY3VfZ3Bfc2VxX25lZWRlZF9leHA7IC8qIDc1MzkyICAgICA4
-ICovDQo+ID4gICAgICAgICAgIGxvbmcgdW5zaWduZWQgaW50ICAgICAgICAgIHNyY3VfbGFzdF9n
-cF9lbmQ7ICAgICAvKiA3NTQwMCAgICAgOCAqLw0KPiA+ICAgICAgICAgICBzdHJ1Y3Qgc3JjdV9k
-YXRhICogICAgICAgICBzZGE7ICAgICAgICAgICAgICAgICAgLyogNzU0MDggICAgIDggKi8NCj4g
-PiAgICAgICAgICAgbG9uZyB1bnNpZ25lZCBpbnQgICAgICAgICAgc3JjdV9iYXJyaWVyX3NlcTsg
-ICAgIC8qIDc1NDE2ICAgICA4ICovDQo+ID4gICAgICAgICAgIHN0cnVjdCBtdXRleCAgICAgICBz
-cmN1X2JhcnJpZXJfbXV0ZXg7ICAgICAgICAgICAvKiA3NTQyNCAgIDEyOCAqLw0KPiA+ICAgICAg
-ICAgICAvKiAtLS0gY2FjaGVsaW5lIDExODAgYm91bmRhcnkgKDc1NTIwIGJ5dGVzKSB3YXMgMzIg
-Ynl0ZXMgYWdvIC0tLSAqLw0KPiA+ICAgICAgICAgICBzdHJ1Y3QgY29tcGxldGlvbiAgc3JjdV9i
-YXJyaWVyX2NvbXBsZXRpb247ICAgICAgLyogNzU1NTIgICAgODAgKi8NCj4gPiAgICAgICAgICAg
-LyogLS0tIGNhY2hlbGluZSAxMTgxIGJvdW5kYXJ5ICg3NTU4NCBieXRlcykgd2FzIDQ4IGJ5dGVz
-IGFnbyAtLS0gKi8NCj4gPiAgICAgICAgICAgYXRvbWljX3QgICAgICAgICAgICAgICAgICAgc3Jj
-dV9iYXJyaWVyX2NwdV9jbnQ7IC8qIDc1NjMyICAgICA0ICovDQo+ID4gDQo+ID4gICAgICAgICAg
-IC8qIFhYWCA0IGJ5dGVzIGhvbGUsIHRyeSB0byBwYWNrICovDQo+ID4gDQo+ID4gICAgICAgICAg
-IHN0cnVjdCBkZWxheWVkX3dvcmsgd29yazsgICAgICAgICAgICAgICAgICAgICAgICAvKiA3NTY0
-MCAgIDE1MiAqLw0KPiA+IA0KPiA+ICAgICAgICAgICAvKiBYWFggbGFzdCBzdHJ1Y3QgaGFzIDQg
-Ynl0ZXMgb2YgcGFkZGluZyAqLw0KPiA+IA0KPiA+ICAgICAgICAgICAvKiAtLS0gY2FjaGVsaW5l
-IDExODQgYm91bmRhcnkgKDc1Nzc2IGJ5dGVzKSB3YXMgMTYgYnl0ZXMgYWdvIC0tLSAqLw0KPiA+
-ICAgICAgICAgICBzdHJ1Y3QgbG9ja2RlcF9tYXAgZGVwX21hcDsgICAgICAgICAgICAgICAgICAg
-ICAgLyogNzU3OTIgICAgMzIgKi8NCj4gPiANCj4gPiAgICAgICAgICAgLyogc2l6ZTogNzU4MjQs
-IGNhY2hlbGluZXM6IDExODUsIG1lbWJlcnM6IDE3ICovDQo+ID4gICAgICAgICAgIC8qIHN1bSBt
-ZW1iZXJzOiA3NTgxNiwgaG9sZXM6IDIsIHN1bSBob2xlczogOCAqLw0KPiA+ICAgICAgICAgICAv
-KiBwYWRkaW5nczogMSwgc3VtIHBhZGRpbmdzOiA0ICovDQo+ID4gICAgICAgICAgIC8qIGxhc3Qg
-Y2FjaGVsaW5lOiA0OCBieXRlcyAqLw0KPiA+ICAgfTsNCj4gPiANCj4gPiBXaXRoIE49NjQgVk1E
-IElSUSBsaXN0cywgdGhpcyB3b3VsZCBhbGxvY2F0ZSA0LjZNaUIgaW4gYSBzaW5nbGUgY2FsbC4g
-VGhpcw0KPiA+IHZpb2xhdGVzIE1BWF9PUkRFUiByZWNsYWltIHJ1bGVzIHdoZW4gUEFHRV9TSVpF
-PTQwOTYgYW5kDQo+ID4gTUFYX09SREVSX05SX1BBR0VTPTEwMjQsIGFuZCBpbnZva2VzIHRoZSBm
-b2xsb3dpbmcgd2FybmluZyBpbiBtbS9wYWdlX2FsbG9jLmM6DQo+ID4gDQo+ID4gICAvKg0KPiA+
-ICAgICogVGhlcmUgYXJlIHNldmVyYWwgcGxhY2VzIHdoZXJlIHdlIGFzc3VtZSB0aGF0IHRoZSBv
-cmRlciB2YWx1ZSBpcyBzYW5lDQo+ID4gICAgKiBzbyBiYWlsIG91dCBlYXJseSBpZiB0aGUgcmVx
-dWVzdCBpcyBvdXQgb2YgYm91bmQuDQo+ID4gICAgKi8NCj4gPiAgIGlmICh1bmxpa2VseShvcmRl
-ciA+PSBNQVhfT1JERVIpKSB7DQo+ID4gICAJV0FSTl9PTl9PTkNFKCEoZ2ZwX21hc2sgJiBfX0dG
-UF9OT1dBUk4pKTsNCj4gPiAgIAlyZXR1cm4gTlVMTDsNCj4gPiAgIH0NCj4gPiANCj4gPiBUaGlz
-IHBhdGNoIGNoYW5nZXMgdGhlIGlycSBsaXN0IGFycmF5IGludG8gYW4gYXJyYXkgb2YgcG9pbnRl
-cnMgdG8gaXJxDQo+ID4gbGlzdHMgdG8gYXZvaWQgYWxsb2NhdGlvbiBmYWlsdXJlcyB3aXRoIGdy
-ZWF0ZXIgbXNpeCBjb3VudHMuDQo+ID4gDQo+ID4gVGhpcyBwYXRjaCBhbHNvIHJldmVydHMgY29t
-bWl0IGIzMTgyMjI3N2FiY2Q3YzgzZDFjMWMwYWY4NzZkYTljY2RmM2I3ZDYuDQo+ID4gVGhlIGlu
-ZGV4X2Zyb21faXJxcygpIGhlbHBlciB3YXMgYWRkZWQgdG8gY2FsY3VsYXRlIHRoZSBpcnEgbGlz
-dCBpbmRleA0KPiA+IGZyb20gdGhlIGFycmF5IG9mIGlycXMsIGluIG9yZGVyIHRvIHNocmluayB2
-bWRfaXJxX2xpc3QgZm9yIHBlcmZvcm1hbmNlLg0KPiA+IA0KPiA+IER1ZSB0byB0aGUgZW1iZWRk
-ZWQgc3JjdV9zdHJ1Y3Qgd2l0aGluIHRoZSB2bWRfaXJxX2xpc3Qgc3RydWN0IGhhdmluZyBhDQo+
-ID4gdmFyeWluZyBzaXplIGRlcGVuZGluZyBvbiBhIG51bWJlciBvZiBmYWN0b3JzLCB0aGUgdm1k
-X2lycV9saXN0IHN0cnVjdA0KPiA+IG5vIGxvbmdlciBndWFyYW50ZWVzIG9wdGltYWwgZGF0YSBz
-dHJ1Y3R1cmUgc2l6ZSBhbmQgZ3JhbnVsYXJpdHkuDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTog
-Sm9uIERlcnJpY2sgPGpvbmF0aGFuLmRlcnJpY2tAaW50ZWwuY29tPg0KPiA+IC0tLQ0KPiA+IEFk
-ZGVkIFBhdWwgdG8gbWFrZSBoaW0gYXdhcmUgb2Ygc3JjdV9zdHJ1Y3Qgc2l6ZSB3aXRoIHRoZXNl
-IG9wdGlvbnMNCj4gDQo+IFRoZXJlIHdhcyBzb21lIGRpc2N1c3Npb24gb2YgbWFraW5nIHRoZSBz
-cmN1X3N0cnVjdCBzdHJ1Y3R1cmUncyAtPm5vZGVbXQ0KPiBhcnJheSBiZSBzZXBhcmF0ZWx5IGFs
-bG9jYXRlZCwgd2hpY2ggd291bGQgYWxsb3cgdGhpcyBhcnJheSB0byBiZQ0KPiByaWdodHNpemUg
-Zm9yIHRoZSBzeXN0ZW0gaW4gcXVlc3Rpb24uICBIb3dldmVyLCBJIGJlbGlldmUgdGhleSBlbmRl
-ZCB1cA0KPiBpbnN0ZWFkIHNlcGFyYXRlbHkgYWxsb2NhdGluZyB0aGUgc3JjdV9zdHJ1Y3Qgc3Ry
-dWN0dXJlIGl0c2VsZi4NCj4gDQo+IFdpdGhvdXQgZG9pbmcgc29tZXRoaW5nIGxpa2UgdGhhdCwg
-SSBhbSBraW5kIG9mIHN0dWNrLiAgQWZ0ZXIgYWxsLA0KPiBhdCBjb21waWxlIHRpbWUsIHRoZSBr
-ZXJuZWwgYnVpbGQgc3lzdGVtIHRlbGxzIFNSQ1UgdGhhdCBpdCBuZWVkcyB0bw0KPiBiZSBwcmVw
-YXJlZCB0byBydW4gb24gc3lzdGVtcyB3aXRoIHRob3VzYW5kcyBvZiBDUFVzLiAgV2hpY2ggcmVx
-dWlyZXMNCj4gc3Vic3RhbnRpYWwgbWVtb3J5IHRvIGtlZXAgdHJhY2sgb2YgYWxsIHRob3NlIENQ
-VXMuICBXaGljaCBhcmUgbm90DQo+IHByZXNlbnQgb24gbW9zdCBzeXN0ZW1zLg0KPiANCj4gVGhv
-dWdodHM/DQo+IA0KPiAJCQkJCQkJVGhhbngsIFBhdWwNCj4gDQoNClllcyBJIGhhdmVuJ3Qgc2Vl
-biBhbiBlbGVnYW50IHNvbHV0aW9uIG90aGVyIHRoYW4gbWFraW5nIHVzZXJzIGF3YXJlIG9mDQp0
-aGUgc2l0dWF0aW9uLg0KDQpUaGFua3MgZm9yIHlvdXIgaW5wdXQNCg==
+On Tue, Nov 05, 2019 at 11:55:45AM +0100, Rafael J. Wysocki wrote:
+> On Monday, November 4, 2019 6:39:04 PM CET Bjorn Helgaas wrote:
+> > [+cc Andrew, Lukas]
+> > 
+> > On Tue, Oct 15, 2019 at 05:44:47PM +0530, Vidya Sagar wrote:
+> > > On 10/15/2019 4:40 PM, Sinan Kaya wrote:
+> > > > ...
+> > > > I think the PCI core should be putting the device back D0 state as one
+> > > > of the first actions before enumerating. Wake up could be a combination
+> > > > of ACPI and/or PCI wake up depending on where your device sits in the
+> > > > topology.
+> > >
+> > > Yup. It is indeed doing it as part of pci_power_up() in pci.c file.
+> > > But, what is confusing to me is the order of the calls.
+> > > pci_power_up() has following calls in the same order.
+> > > 	pci_raw_set_power_state(dev, PCI_D0);
+> > > 	pci_update_current_state(dev, PCI_D0);
+> > > But, pci_raw_set_power_state() is accessing config space without calling
+> > > pci_device_is_present() whereas pci_update_current_state() which is called
+> > > later in the flow is calling pci_device_is_present()...!
+> > 
+> > A device should always respond to config reads unless it is in D3cold
+> > or it is initializing after a reset.  IIUC you're doing a resume, not
+> > a reset, so I think your device must be coming out of D3cold.  That's
+> > typically done via ACPI, and I think we are missing some kind of delay
+> > before our first config access:
+> > 
+> >   pci_power_up
+> >     platform_pci_set_power_state(PCI_D0)    # eg, ACPI
+> >     pci_raw_set_power_state
+> >       pci_read_config_word(PCI_PM_CTRL)     # <-- first config access
+> >       pci_write_config_word(PCI_PM_CTRL)
+> >       pci_read_config_word(PCI_PM_CTRL)
+> >     pci_update_current_state
+> >       if (... || !pci_device_is_present())
+> > 
+> > Mika is working on some delays for the transition out of D3cold [1].
+> > He's more concerned with a secondary bus behind a bridge, so I don't
+> > think his patch addresses this case, but he's certainly familiar with
+> > this area.
+> > 
+> > Huh, I'm really confused about this, too.  I don't
+> > understand how resume ever works without any delay between
+> > platform_pci_power_manageable() and the config reads in
+> > pci_raw_set_power_state().  I must be missing something.
+> 
+> There is a delay in the runtime_d3cold case, see
+> __pci_start_power_transition().
+
+I see the delay in __pci_start_power_transition(), but I don't see how
+it's relevant.  It's only called by pci_set_power_state(), and while
+many drivers call pci_set_power_state() from legacy .resume() methods,
+the pci_pm_resume_noirq() path where Vidya is seeing problems doesn't
+use it.
+
+> But overall platform_pci_power_manageable() only checks whether or
+> not the platform firmware can change the power state of the device.
+> If it can, it is expected to take care of any necessary delays while
+> doing that (because there may be delays required by this particular
+> instance of the platform firmware, beyond what is mandated by the
+> PCI spec, or there may not be any need to wait at all). ...
+
+That sounds like a reasonable argument for why firmware should be
+responsible for this delay, but I don't think that's very clear in the
+ACPI spec, so I wouldn't be surprised if it got missed.
+
+Based on Vidya's backtrace, I think the resume path with problems is
+this:
+
+  pci_pm_resume_noirq
+    pci_pm_default_resume_early
+      pci_power_up
+        if (platform_pci_power_manageable(dev))
+          platform_pci_set_power_state(dev, PCI_D0)  # <-- FW delay here?
+        pci_raw_set_power_state
+        pci_update_current_state
+          pci_device_is_present        # <-- config read returns CRS
+
+So I think your suggestion is that Vidya's firmware should be doing
+the delay inside platform_pci_set_power_state()?
+
+Vidya, you typically work on Tegra, so I assume this is on an arm64
+system?  Does it have ACPI?  Do you have access to the firmware
+developers to ask about who they expect to do the delays?
+
+> In any case, I'm not sure how useful it is to add delays for
+> everyone in the cases in which a specific system needs a delay
+> because of its own PM implementation limitations.  It may be better
+> to quirk such systems explicitly as long as there are not too many
+> quirks in there, or we'll end up adding more and more *implicit*
+> quirks in the form of general delays.
+
+I agree, a general delay doesn't sound good.  Are you thinking
+something like this?
+
+  void pci_power_up(struct pci_dev *dev)
+  {
+    if (platform_pci_power_manageable(dev)) {
+      platform_pci_set_power_state(dev, PCI_D0);
+      if (dev->XXX)
+        msleep(dev->XXX);
+    }
+    ...
+
+We already have dev->d3_delay and d3cold_delay, so it's getting a bit
+messy to keep them all straight.
+
+Bjorn
