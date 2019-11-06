@@ -2,120 +2,190 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E1F6EF12F2
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2019 10:53:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5FCEEF133D
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2019 11:04:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726129AbfKFJxp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 Nov 2019 04:53:45 -0500
-Received: from foss.arm.com ([217.140.110.172]:36852 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731554AbfKFJxp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 6 Nov 2019 04:53:45 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 700D9328;
-        Wed,  6 Nov 2019 01:53:44 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CA2DE3F6C4;
-        Wed,  6 Nov 2019 01:53:43 -0800 (PST)
-Date:   Wed, 6 Nov 2019 09:53:41 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Anvesh Salveru <anvesh.s@samsung.com>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bhelgaas@google.com, gustavo.pimentel@synopsys.com,
-        jingoohan1@gmail.com, pankaj.dubey@samsung.com,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: PCI: designware: Add binding for
- ZRX-DC PHY property
-Message-ID: <20191106095340.GO9723@e119886-lin.cambridge.arm.com>
-References: <1572264988-17455-1-git-send-email-anvesh.s@samsung.com>
- <CGME20191028121748epcas5p3054c9583c14a2edde9f725d005895a04@epcas5p3.samsung.com>
- <1572264988-17455-2-git-send-email-anvesh.s@samsung.com>
- <20191105215332.GA19296@bogus>
+        id S1728271AbfKFKEZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 Nov 2019 05:04:25 -0500
+Received: from mail-eopbgr80082.outbound.protection.outlook.com ([40.107.8.82]:50709
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728364AbfKFKEZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 6 Nov 2019 05:04:25 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lsCQsNsGBDI6GUTJI3f2dLO+Upqbl2Rqbr4GS5ujHvAAD3I+0Cb1VtOMSpFJyWu+78cLdwdOrGTXmT1Ej8cmEmhNMVZqCD/y935JqC0C4/VJD82JfDXuBi3z8zoJxB06vc+1Vnf+HfuU3HedLoXnc0Tw1csV2NBys1zHbvNn4C6eTOLTIgD9MYGcXtFoDfKzS5Iqp7UPDvZNLu57AQ2iagXFqLCMgcvkvNwQ3rQXwKIFZfEcyky7wnPt6E4VtYLQsFw3+E4ejTH8dWMqTL7V5yMrEHP2MNmABl6wk3QYnlbvnUx97PdgPXmpy7MRifkvaWWpwfZaBru649yJiKI8Bg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nAoT+wxhSRm0Hgk3dwWx3cTQuy4Xk+IB7waESxySWm8=;
+ b=hK/d4EnDU/M6+LM39OAKPwwl3IYGQjOE1l/jeX25c/5cEhoCispwZaF679JXt4/K11RLN1Cze+mKP8gS9uJO01D/9q+wtIqaB4fVUGfNI41BPx3IK39iFUh+Ae/7yqxPxUY68NAzdueUSwxrGZcc4KxRKQ25FkPy8dcPeB3VSg1xy6rzZ6/FMoNdAtsybdZvY9Ts8FHelGmhkTNvddOtMypjbUgMwyiVSMX1LbV+2ImdDRKugxyei88cBxzZ1NvDTsytqKTPK7sx+4AhIBDaCkQ3NzoyURghPSEt4IWpUHGVkD38tnSjZNwhCCkchZWO/Y/dSkBylU0Jb+DAmlmuQg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nAoT+wxhSRm0Hgk3dwWx3cTQuy4Xk+IB7waESxySWm8=;
+ b=rjANmQlBRavWR5AppaOxfd0vDQOO1gNOyd0AwHeIg3rU+lhPkWF8jx37x9eVP8+/NnVumAaZrvpA613XVYkrGnFGVLGr1ejAI266IwpcXfIAXLnnNDBGNcpeL5iPVck4NXv5AIKckXX3/y4/pxsNHw4y6z+wi+cLLz+TeR/J4i4=
+Received: from AM5PR04MB3299.eurprd04.prod.outlook.com (10.173.255.158) by
+ AM5PR04MB3073.eurprd04.prod.outlook.com (10.167.171.152) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2408.24; Wed, 6 Nov 2019 10:03:40 +0000
+Received: from AM5PR04MB3299.eurprd04.prod.outlook.com
+ ([fe80::8ce8:9eaf:3916:4bc9]) by AM5PR04MB3299.eurprd04.prod.outlook.com
+ ([fe80::8ce8:9eaf:3916:4bc9%6]) with mapi id 15.20.2408.025; Wed, 6 Nov 2019
+ 10:03:40 +0000
+From:   Xiaowei Bao <xiaowei.bao@nxp.com>
+To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Andrew Murray <andrew.murray@arm.com>
+CC:     "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "lorenzo.pieralisi@arm.co" <lorenzo.pieralisi@arm.co>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Subject: RE: [PATCH v2 07/10] PCI: layerscape: Modify the MSIX to the doorbell
+ way
+Thread-Topic: [PATCH v2 07/10] PCI: layerscape: Modify the MSIX to the
+ doorbell way
+Thread-Index: AQHVWN1daYnbY17h2k2o9Z3qkBZ1lKcIw+QAgACoZvCABZeogIACm0MAgGy7coCAAASG0A==
+Date:   Wed, 6 Nov 2019 10:03:40 +0000
+Message-ID: <AM5PR04MB32992FD517575C26685845ADF5790@AM5PR04MB3299.eurprd04.prod.outlook.com>
+References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
+ <20190822112242.16309-7-xiaowei.bao@nxp.com>
+ <20190823135816.GH14582@e119886-lin.cambridge.arm.com>
+ <AM5PR04MB3299E50BA5D7579D41B8B4F9F5A70@AM5PR04MB3299.eurprd04.prod.outlook.com>
+ <20190827132504.GL14582@e119886-lin.cambridge.arm.com>
+ <e64a484c-7cf5-5f65-400c-47128ab45e52@ti.com>
+ <DM6PR12MB40107A9B97A8DAF32A4C651EDA790@DM6PR12MB4010.namprd12.prod.outlook.com>
+In-Reply-To: <DM6PR12MB40107A9B97A8DAF32A4C651EDA790@DM6PR12MB4010.namprd12.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=xiaowei.bao@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: aee5ad05-330d-4eeb-41d1-08d762a0997b
+x-ms-traffictypediagnostic: AM5PR04MB3073:|AM5PR04MB3073:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM5PR04MB3073A7FF8D06159573C955D6F5790@AM5PR04MB3073.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 02135EB356
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(396003)(376002)(39860400002)(346002)(189003)(199004)(13464003)(6116002)(71200400001)(76176011)(71190400001)(7416002)(102836004)(33656002)(86362001)(486006)(446003)(11346002)(6436002)(74316002)(305945005)(53546011)(66066001)(14454004)(7736002)(8676002)(478600001)(229853002)(316002)(476003)(44832011)(3846002)(81156014)(81166006)(110136005)(99286004)(54906003)(25786009)(6506007)(9686003)(55016002)(6246003)(7696005)(186003)(26005)(66556008)(66946007)(52536014)(2906002)(66476007)(76116006)(5660300002)(64756008)(66446008)(8936002)(256004)(14444005)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR04MB3073;H:AM5PR04MB3299.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 4jqkvF67ynA/OOXjI8fdrmnVdmKscUlVcHmGNDFUMQntE3lUhHXpNTF/RM4QCrrw+3LFsO0HS11wtD9COL8K1TVaviua0YfdgvKQHmYDE8qeYj4f+fn02nYkV160MAYbx9D9px9HbgnNL3TJ6yLZKPdo8qYAjTOeyhpAW2Apj4uLDmKRVSNRJWKsHvR3xdN2XOYU+cWMPgaAom80LBpiQka6hjf+yDcM+dW0mjcubzCyCkz8cQZ7emsxrIfKZeXyE35SGF4LBiGgVIkEs8AWz+/9cxcl5oewHsZF/CHml2F4MA+NM8fhqEYyaparkcFt3X+9WI4VwFjRwLNjDuFR8euyG/RF2WDFphatgkhW7vgAZh1+J9KF7SPoGowv/X31eSruFE2ZN58uoA+SpFm85/DRpn9PPD5iWVU5j8sMlKu94WuKaOCAi1VaR4tERr40
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191105215332.GA19296@bogus>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: aee5ad05-330d-4eeb-41d1-08d762a0997b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Nov 2019 10:03:40.3267
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: e8PdAgcgpGHuAcNbw2s5vQYR6O54/UiNlzTw66AioMcpllYkVl/usp88sgfM6V8G8C6dW2QeyTY5CHFfqTN7PQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR04MB3073
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 03:53:32PM -0600, Rob Herring wrote:
-> On Mon, Oct 28, 2019 at 05:46:27PM +0530, Anvesh Salveru wrote:
-> > Add support for ZRX-DC compliant PHYs. If PHY is not compliant to ZRX-DC
-> > specification, then after every 100ms link should transition to recovery
-> > state during the low power states which increases power consumption.
-> > 
-> > Platforms with ZRX-DC compliant PHY can use "snps,phy-zrxdc-compliant"
-> > property in DesignWare controller DT node.
-> > 
-> > CC: Rob Herring <robh+dt@kernel.org>
-> > CC: Mark Rutland <mark.rutland@arm.com>
-> > Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
-> > Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
-> > Reviewed-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> > ---
-> > Change in v2: None
-> > 
-> >  Documentation/devicetree/bindings/pci/designware-pcie.txt | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> > index 78494c4050f7..9507ac38ac89 100644
-> > --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> > +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> > @@ -38,6 +38,8 @@ Optional properties:
-> >     for data corruption. CDM registers include standard PCIe configuration
-> >     space registers, Port Logic registers, DMA and iATU (internal Address
-> >     Translation Unit) registers.
-> > +- snps,phy-zrxdc-compliant: This property is needed if phy complies with the
-> > +  ZRX-DC specification.
-> 
-> If this is a property of the phy, then it belongs in the phy node or 
-> should just be implied by the phy's compatible. 
-
-As suggested in the previous revision of this series [1], this is absolutely a
-property of the phy.
-
-> IOW, you should be able 
-> to support this or not without changing DTs.
-> 
-> Is this spec Synopys specific? (About the only thing Google turns up are 
-> your patches.) If not, then probably shouldn't have a 'snps' prefix.
-
-This was also unfamiliar to me, however my current understanding is that
-Zrx-dc describes the 'Receiver DC single ended impedance' limits, this is
-specified in the PCI specification (table 'Common Receiver Parameters'),
-with a different limit for each speed.
-
-I believe the purpose of this series is to to satisfy the following
-implementation note in the spec "Ports that meet the Zrx-dc specification
-for 2.5 GT/s while in the L1.Idle state are therefore not required to
-implement the 100 ms timeout and transition to Recovery should avoid
-implementing it, since it will reduce the power savings expected from the
-L1 state".
-
-In other words, if it is known that the phy is compliant then an
-unnecessary transition to a higher energy state can be avoided. Though it's
-the PCI controller (in this case) that must action this and must find out
-about the phy it is connected to.
-
-So in my view 'phy-zrxdc-compliant' should be a property of a phy (without
-snps prefix), and if a controller wants to determine if it is compliant then
-there must be a phandle to the phy so the controller can find out.
-
-[1] https://patchwork.kernel.org/patch/11202121/
-
-Thanks,
-
-Andrew Murray
-
-> 
-> >  RC mode:
-> >  - num-viewport: number of view ports configured in hardware. If a platform
-> >    does not specify it, the driver assumes 2.
-> > -- 
-> > 2.17.1
-> > 
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogR3VzdGF2byBQaW1lbnRl
+bCA8R3VzdGF2by5QaW1lbnRlbEBzeW5vcHN5cy5jb20+DQo+IFNlbnQ6IDIwMTnlubQxMeaciDbm
+l6UgMTc6NDANCj4gVG86IEtpc2hvbiBWaWpheSBBYnJhaGFtIEkgPGtpc2hvbkB0aS5jb20+OyBB
+bmRyZXcgTXVycmF5DQo+IDxhbmRyZXcubXVycmF5QGFybS5jb20+OyBYaWFvd2VpIEJhbyA8eGlh
+b3dlaS5iYW9AbnhwLmNvbT47DQo+IGd1c3Rhdm8ucGltZW50ZWxAc3lub3BzeXMuY29tDQo+IENj
+OiBiaGVsZ2Fhc0Bnb29nbGUuY29tOyByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBh
+cm0uY29tOw0KPiBzaGF3bmd1b0BrZXJuZWwub3JnOyBMZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNv
+bT47DQo+IGxvcmVuem8ucGllcmFsaXNpQGFybS5jbzsgYXJuZEBhcm5kYi5kZTsgZ3JlZ2toQGxp
+bnV4Zm91bmRhdGlvbi5vcmc7IE0uaC4NCj4gTGlhbiA8bWluZ2h1YW4ubGlhbkBueHAuY29tPjsg
+TWluZ2thaSBIdSA8bWluZ2thaS5odUBueHAuY29tPjsgUm95DQo+IFphbmcgPHJveS56YW5nQG54
+cC5jb20+OyBqaW5nb29oYW4xQGdtYWlsLmNvbTsNCj4gbGludXgtcGNpQHZnZXIua2VybmVsLm9y
+ZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5l
+bC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gbGludXhwcGMt
+ZGV2QGxpc3RzLm96bGFicy5vcmcNCj4gU3ViamVjdDogUkU6IFtQQVRDSCB2MiAwNy8xMF0gUENJ
+OiBsYXllcnNjYXBlOiBNb2RpZnkgdGhlIE1TSVggdG8gdGhlDQo+IGRvb3JiZWxsIHdheQ0KPiAN
+Cj4gT24gVGh1LCBBdWcgMjksIDIwMTkgYXQgNjoxMzoxOCwgS2lzaG9uIFZpamF5IEFicmFoYW0g
+SSA8a2lzaG9uQHRpLmNvbT4NCj4gd3JvdGU6DQo+IA0KPiBIaSwgdGhpcyBlbWFpbCBzbGlwIGF3
+YXkgZnJvbSBteSBhdHRlbnRpb24uLi4NCj4gDQo+ID4gR3VzdGF2bywNCj4gPg0KPiA+IE9uIDI3
+LzA4LzE5IDY6NTUgUE0sIEFuZHJldyBNdXJyYXkgd3JvdGU6DQo+ID4gPiBPbiBTYXQsIEF1ZyAy
+NCwgMjAxOSBhdCAxMjowODo0MEFNICswMDAwLCBYaWFvd2VpIEJhbyB3cm90ZToNCj4gPiA+Pg0K
+PiA+ID4+DQo+ID4gPj4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPj4+IEZyb206
+IEFuZHJldyBNdXJyYXkgPGFuZHJldy5tdXJyYXlAYXJtLmNvbT4NCj4gPiA+Pj4gU2VudDogMjAx
+OeW5tDjmnIgyM+aXpSAyMTo1OA0KPiA+ID4+PiBUbzogWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFv
+QG54cC5jb20+DQo+ID4gPj4+IENjOiBiaGVsZ2Fhc0Bnb29nbGUuY29tOyByb2JoK2R0QGtlcm5l
+bC5vcmc7DQo+IG1hcmsucnV0bGFuZEBhcm0uY29tOw0KPiA+ID4+PiBzaGF3bmd1b0BrZXJuZWwu
+b3JnOyBMZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNvbT47IGtpc2hvbkB0aS5jb207DQo+ID4gPj4+
+IGxvcmVuem8ucGllcmFsaXNpQGFybS5jbzsgYXJuZEBhcm5kYi5kZTsgZ3JlZ2toQGxpbnV4Zm91
+bmRhdGlvbi5vcmc7DQo+IE0uaC4NCj4gPiA+Pj4gTGlhbiA8bWluZ2h1YW4ubGlhbkBueHAuY29t
+PjsgTWluZ2thaSBIdSA8bWluZ2thaS5odUBueHAuY29tPjsNCj4gUm95DQo+ID4gPj4+IFphbmcg
+PHJveS56YW5nQG54cC5jb20+OyBqaW5nb29oYW4xQGdtYWlsLmNvbTsNCj4gPiA+Pj4gZ3VzdGF2
+by5waW1lbnRlbEBzeW5vcHN5cy5jb207IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7DQo+ID4g
+Pj4+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwu
+b3JnOw0KPiA+ID4+PiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+ID4g
+Pj4+IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnDQo+ID4gPj4+IFN1YmplY3Q6IFJlOiBb
+UEFUQ0ggdjIgMDcvMTBdIFBDSTogbGF5ZXJzY2FwZTogTW9kaWZ5IHRoZSBNU0lYIHRvDQo+ID4g
+Pj4+IHRoZSBkb29yYmVsbCB3YXkNCj4gPiA+Pj4NCj4gPiA+Pj4gT24gVGh1LCBBdWcgMjIsIDIw
+MTkgYXQgMDc6MjI6MzlQTSArMDgwMCwgWGlhb3dlaSBCYW8gd3JvdGU6DQo+ID4gPj4+PiBUaGUg
+bGF5ZXJzY2FwZSBwbGF0Zm9ybSB1c2UgdGhlIGRvb3JiZWxsIHdheSB0byB0cmlnZ2VyIE1TSVgN
+Cj4gPiA+Pj4+IGludGVycnVwdCBpbiBFUCBtb2RlLg0KPiA+ID4+Pj4NCj4gPiA+Pj4NCj4gPiA+
+Pj4gSSBoYXZlIG5vIHByb2JsZW1zIHdpdGggdGhpcyBwYXRjaCwgaG93ZXZlci4uLg0KPiA+ID4+
+Pg0KPiA+ID4+PiBBcmUgeW91IGFibGUgdG8gYWRkIHRvIHRoaXMgbWVzc2FnZSBhIHJlYXNvbiBm
+b3Igd2h5IHlvdSBhcmUNCj4gPiA+Pj4gbWFraW5nIHRoaXMgY2hhbmdlPyBEaWQgZHdfcGNpZV9l
+cF9yYWlzZV9tc2l4X2lycSBub3Qgd29yayB3aGVuDQo+ID4gPj4+IGZ1bmNfbm8gIT0gMD8gT3Ig
+ZGlkIGl0IHdvcmsgeWV0IGR3X3BjaWVfZXBfcmFpc2VfbXNpeF9pcnFfZG9vcmJlbGwgaXMNCj4g
+bW9yZSBlZmZpY2llbnQ/DQo+ID4gPj4NCj4gPiA+PiBUaGUgZmFjdCBpcyB0aGF0LCB0aGlzIGRy
+aXZlciBpcyB2ZXJpZmllZCBpbiBsczEwNDZhIHBsYXRmb3JtIG9mDQo+ID4gPj4gTlhQIGJlZm9y
+ZSwgYW5kIGxzMTA0NmEgZG9uJ3Qgc3VwcG9ydCBNU0lYIGZlYXR1cmUsIHNvIEkgc2V0IHRoZQ0K
+PiA+ID4+IG1zaXhfY2FwYWJsZSBvZiBwY2lfZXBjX2ZlYXR1cmVzIHN0cnVjdCBpcyBmYWxzZSwg
+YnV0IGluIG90aGVyDQo+ID4gPj4gcGxhdGZvcm0sIGUuZy4gbHMxMDg4YSwgaXQgc3VwcG9ydCB0
+aGUgTVNJWCBmZWF0dXJlLCBJIHZlcmlmaWVkIHRoZSBNU0lYDQo+IGZlYXR1cmUgaW4gbHMxMDg4
+YSwgaXQgaXMgbm90IE9LLCBzbyBJIGNoYW5nZWQgdG8gYW5vdGhlciB3YXkuIFRoYW5rcy4NCj4g
+PiA+DQo+ID4gPiBSaWdodCwgc28gdGhlIGV4aXN0aW5nIHBjaS1sYXllcnNjYXBlLWVwLmMgZHJp
+dmVyIG5ldmVyIHN1cHBvcnRlZA0KPiA+ID4gTVNJWCB5ZXQgaXQgZXJyb25lb3VzbHkgaGFkIGEg
+c3dpdGNoIGNhc2Ugc3RhdGVtZW50IHRvIGNhbGwNCj4gPiA+IGR3X3BjaWVfZXBfcmFpc2VfbXNp
+eF9pcnEgd2hpY2ggd291bGQgbmV2ZXIgZ2V0IHVzZWQuDQo+ID4gPg0KPiA+ID4gTm93IHRoYXQg
+d2UncmUgYWRkaW5nIGEgcGxhdGZvcm0gd2l0aCBNU0lYIHN1cHBvcnQgdGhlIGV4aXN0aW5nDQo+
+ID4gPiBkd19wY2llX2VwX3JhaXNlX21zaXhfaXJxIGRvZXNuJ3Qgd29yayAoZm9yIHRoaXMgcGxh
+dGZvcm0pIHNvIHdlIGFyZQ0KPiA+ID4gYWRkaW5nIGEgZGlmZmVyZW50IG1ldGhvZC4NCj4gPg0K
+PiA+IEd1c3Rhdm8sIGNhbiB5b3UgY29uZmlybSBkd19wY2llX2VwX3JhaXNlX21zaXhfaXJxKCkg
+d29ya3MgZm9yDQo+ID4gZGVzaWdud2FyZSBhcyBpdCBkaWRuJ3Qgd29yayBmb3IgYm90aCBtZSBh
+bmQgWGlhb3dlaT8NCj4gDQo+IFdoZW4gSSBpbXBsZW1lbnRlZCB0aGUgZHdfcGNpZV9lcF9yYWlz
+ZV9tc2l4X2lycSgpLCB0aGUgaW1wbGVtZW50YXRpb24NCj4gd2FzIHdvcmtpbmcgcXVpdGUgZmlu
+ZSBvbiBEZXNpZ25XYXJlIHNvbHV0aW9uLiBPdGhlcndpc2UsIEkgd291bGRuJ3Qgc3VibWl0DQo+
+IGl0IHRvIHRoZSBrZXJuZWwuDQo+IEZyb20gd2hhdCBJIGhhdmUgc2VlbiBhbmQgaWYgSSByZWNh
+bGwgd2VsbCwgWGlhb3dlaSBpbXBsZW1lbnRhdGlvbiB3YXMgZG9uZQ0KPiBoYXZpbmcgUEYncyBj
+b25maWd1cmF0ZWQgb24gaGlzIHNvbHV0aW9uLCB3aGljaCBpcyBhIGNvbmZpZ3VyYXRpb24gdGhh
+dCBJIGRvbid0DQo+IGhhdmUgaW4gbXkgc29sdXRpb24sIEkgYmVsaWV2ZSB0aGlzIGNvdWxkIGJl
+IHRoZSBtaXNzaW5nIHBpZWNlIHRoYXQgZGlmZmVycw0KPiBiZXR3ZWVuIG91ciAyIGltcGxlbWVu
+dGF0aW9ucy4NCj4gDQo+IFNpbmNlIHBhdGNoIHN1Ym1pc3Npb24gaW50byB0aGUga2VybmVsIHJl
+bGF0ZWQgdG8gbXNpeCBmZWF0dXJlIG9uIHBjaXRlc3QgdG9vbCwgSQ0KPiBkaWRuJ3QgdG91Y2gg
+b3IgcmUtdGVzdGVkIHRoZSBtc2l4IGZlYXR1cmUgYnkgbGFjayBvZiB0aW1lIChvdGhlciBwcm9q
+ZWN0cw0KPiByZXF1aXJlcyBteSBmdWxsIGF0dGVudGlvbiBmb3Igbm93KS4gSG93ZXZlciBpcyBv
+biBteSByb2FkbWFwIHRvIGNhbWUgYmFjaw0KPiB0byBhZGQgc29tZSBvdGhlciBmZWF0dXJlcyBv
+biBEZXNpZ25XYXJlIGVETUEgZHJpdmVyIGFuZCBJIGNhbiBkbyBhdCB0aGF0DQo+IHRpbWUgc29t
+ZSB0ZXN0cyB0byBzZWUgaWYgdGhlDQo+IGR3X3BjaWVfZXBfcmFpc2VfbXNpeF9pcnFfZG9vcmJl
+bGwoKSBpcyBjb21wYXRpYmxlIG9yIG5vdCB3aXRoIG15IHNvbHV0aW9uLg0KPiBJZiBzbywgSSBj
+YW4gZG8gc29tZSBwYXRjaCB0byBzaW1wbGlmeSBhbmQgdXNlIHRoZQ0KPiBkd19wY2llX2VwX3Jh
+aXNlX21zaXhfaXJxX2Rvb3JiZWxsKCkgaWYgaXQgc3RpbGwgd29ya3MgYXMgZXhwZWN0ZWQgbGlr
+ZSBvbg0KPiBkd19wY2llX2VwX3JhaXNlX21zaXhfaXJxKCkuIEFncmVlPw0KPiANCg0KVGhhbmtz
+IEd1c3Rhdm8sIGl0IGxvb2tzIHdlbGwgZm9yIG1lLg0KDQpUaGFua3MNClhpYW93ZWkNCg0KPiBH
+dXN0YXZvDQo+IA0KPiA+DQo+ID4gVGhhbmtzDQo+ID4gS2lzaG9uDQo+IA0KDQo=
