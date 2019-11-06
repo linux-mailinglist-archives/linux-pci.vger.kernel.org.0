@@ -2,275 +2,165 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 78CCEF15FF
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2019 13:24:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F153CF160A
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Nov 2019 13:28:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729659AbfKFMY6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 Nov 2019 07:24:58 -0500
-Received: from mga14.intel.com ([192.55.52.115]:33358 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728716AbfKFMY5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 6 Nov 2019 07:24:57 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 04:24:56 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,274,1569308400"; 
-   d="scan'208";a="402339963"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga005.fm.intel.com with ESMTP; 06 Nov 2019 04:24:53 -0800
-Received: from andy by smile with local (Exim 4.93-RC1)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1iSKMm-0002Vi-JG; Wed, 06 Nov 2019 14:24:52 +0200
-Date:   Wed, 6 Nov 2019 14:24:52 +0200
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Dilip Kota <eswara.kota@linux.intel.com>
-Cc:     gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
-        andrew.murray@arm.com, helgaas@kernel.org, jingoohan1@gmail.com,
-        robh@kernel.org, martin.blumenstingl@googlemail.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
-Subject: Re: [PATCH v5 2/3] dwc: PCI: intel: PCIe RC controller driver
-Message-ID: <20191106122452.GA32742@smile.fi.intel.com>
-References: <cover.1572950559.git.eswara.kota@linux.intel.com>
- <ac63d9856323555736c5b361612df3ee49b0f998.1572950559.git.eswara.kota@linux.intel.com>
+        id S1727961AbfKFM2c (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 Nov 2019 07:28:32 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:61985 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727391AbfKFM2c (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Nov 2019 07:28:32 -0500
+Received: from 79.184.254.83.ipv4.supernova.orange.pl (79.184.254.83) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
+ id 1cbb818cf7d190ce; Wed, 6 Nov 2019 13:28:28 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Len Brown <lenb@kernel.org>,
+        Valerio Passini <passini.valerio@gmail.com>,
+        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] ACPI / hotplug / PCI: Allocate resources directly under the non-hotplug bridge
+Date:   Wed, 06 Nov 2019 13:28:27 +0100
+Message-ID: <4228135.D2MuoWt6n7@kreacher>
+In-Reply-To: <20191030150545.19885-1-mika.westerberg@linux.intel.com>
+References: <20191030150545.19885-1-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ac63d9856323555736c5b361612df3ee49b0f998.1572950559.git.eswara.kota@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 11:44:02AM +0800, Dilip Kota wrote:
-> Add support to PCIe RC controller on Intel Gateway SoCs.
-> PCIe controller is based of Synopsys DesignWare PCIe core.
+On Wednesday, October 30, 2019 4:05:45 PM CET Mika Westerberg wrote:
+> Valerio and others reported that commit 84c8b58ed3ad ("ACPI / hotplug /
+> PCI: Don't scan bridges managed by native hotplug") prevents some recent
+> LG and HP laptops from booting with endless loop of:
 > 
-> Intel PCIe driver requires Upconfigure support, fast training
-> sequence and link speed configuration. So adding the respective
-> helper functions in the PCIe DesignWare framework.
-> It also programs hardware autonomous speed during speed
-> configuration so defining it in pci_regs.h.
+>   [   26.237796] ACPI Error: No handler or method for GPE 08, disabling event (20190215/evgpe-835)
+>   [   26.238699] ACPI Error: No handler or method for GPE 09, disabling event (20190215/evgpe-835)
+>   [   26.239306] ACPI Error: No handler or method for GPE 0A, disabling event (20190215/evgpe-835)
+>   ...
+> 
+> What seems to happen is that during boot, after the initial PCI
+> enumeration when EC is enabled the platform triggers ACPI Notify() to
+> one of the root ports. The root port itself looks like this:
+> 
+>   [    0.723757] pci 0000:00:1b.0: PCI bridge to [bus 02-3a]
+>   [    0.723765] pci 0000:00:1b.0:   bridge window [mem 0xc4000000-0xda0fffff]
+>   [    0.723773] pci 0000:00:1b.0:   bridge window [mem 0x80000000-0xa1ffffff 64bit pref]
+> 
+> The BIOS has configured the root port so that it does not have I/O
+> bridge window.
+> 
+> Now when the ACPI Notify() is triggered ACPI hotplug handler calls
+> acpiphp_native_scan_bridge() for each non-hotplug bridge (as this system
+> is using native PCIe hotplug) and pci_assign_unassigned_bridge_resources()
+> to allocate resources.
+> 
+> The device connected to the root port is a PCIe switch (Thunderbolt
+> controller) with two hotplug downstream ports. Because of the hotplug
+> ports __pci_bus_size_bridges() tries to add "additional I/O" of 256
+> bytes to each (DEFAULT_HOTPLUG_IO_SIZE). This gets further aligned to 4k
+> as that's the minimum I/O window size so each hotplug port gets 4k I/O
+> window and the same happens for the root port (which is also hotplug
+> port). This means 3 * 4k = 12k I/O window.
+> 
+> Because of this pci_assign_unassigned_bridge_resources() ends up opening
+> a I/O bridge window for the root port at first available I/O address
+> which seems to be in range 0x1000 - 0x3fff. Normally this range is used
+> for ACPI stuff such as GPE bits (below is part of /proc/ioports):
+> 
+>     1800-1803 : ACPI PM1a_EVT_BLK
+>     1804-1805 : ACPI PM1a_CNT_BLK
+>     1808-180b : ACPI PM_TMR
+>     1810-1815 : ACPI CPU throttle
+>     1850-1850 : ACPI PM2_CNT_BLK
+>     1854-1857 : pnp 00:05
+>     1860-187f : ACPI GPE0_BLK
+> 
+> However, when the ACPI Notify() happened this range was not yet reserved
+> for ACPI/PNP (that happens later) so PCI gets it. It then starts writing
+> to this range and accidentally stomps over GPE bits among other things
+> causing the endless stream of messages about missing GPE handler.
+> 
+> This problem does not happen if "pci=hpiosize=0" is passed in the kernel
+> command line. The reason is that then the kernel does not try to
+> allocate the additional 256 bytes for each hotplug port.
+> 
+> Fix this by allocating resources directly below the non-hotplug bridges
+> where a new device may appear as a result of ACPI Notify(). This avoids
+> the hotplug bridges and prevents opening the additional I/O window.
+> 
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=203617
+> Fixes: 84c8b58ed3ad ("ACPI / hotplug / PCI: Don't scan bridges managed by native hotplug")
+> Cc: stable@vger.kernel.org
+> Reported-by: Valerio Passini <passini.valerio@gmail.com>
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-My comments below, though I may miss the discussion and comment on the settled
-things.
+That should work:
 
-> +config PCIE_INTEL_GW
-> +        bool "Intel Gateway PCIe host controller support"
-> +	depends on OF && (X86 || COMPILE_TEST)
-> +	select PCIE_DW_HOST
-> +	help
-> +          Say 'Y' here to enable PCIe Host controller support on Intel
-> +	  Gateway SoCs.
-> +	  The PCIe controller uses the DesignWare core plus Intel-specific
-> +	  hardware wrappers.
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Above has indentation issues.
+Bjorn, if you want me to take this, please let me know.
 
-> +void dw_pcie_upconfig_setup(struct dw_pcie *pci)
-> +{
-> +	u32 val;
+> ---
+> I was able to reproduce this without access to the affected system by
+> forcing ACPI core to send Notify() to the TBT root port like this:
+> 
+> void acpi_notify_rp(void)
+> {
+> 	struct acpi_device *adev;
+> 	acpi_handle handle;
+> 
+> 	if (ACPI_FAILURE(acpi_get_handle(NULL, "\\_SB.PCI0.RP17", &handle)))
+> 		return;
+> 
+> 	if (acpi_bus_get_device(handle, &adev))
+> 		return;
+> 
+> 	dev_info(&adev->dev, "queueing hotplug\n");
+> 	acpiphp_hotplug_notify(adev, ACPI_NOTIFY_BUS_CHECK);
+> }
+> 
+> and calling it from acpi_init() directly after acpi_ec_init().
+> 
+>  drivers/pci/hotplug/acpiphp_glue.c | 12 +++++++++---
+>  1 file changed, 9 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pci/hotplug/acpiphp_glue.c b/drivers/pci/hotplug/acpiphp_glue.c
+> index e4c46637f32f..b3869951c0eb 100644
+> --- a/drivers/pci/hotplug/acpiphp_glue.c
+> +++ b/drivers/pci/hotplug/acpiphp_glue.c
+> @@ -449,8 +449,15 @@ static void acpiphp_native_scan_bridge(struct pci_dev *bridge)
+>  
+>  	/* Scan non-hotplug bridges that need to be reconfigured */
+>  	for_each_pci_bridge(dev, bus) {
+> -		if (!hotplug_is_native(dev))
+> -			max = pci_scan_bridge(bus, dev, max, 1);
+> +		if (hotplug_is_native(dev))
+> +			continue;
 > +
-> +	val = dw_pcie_readl_dbi(pci, PCIE_PORT_MULTI_LANE_CTRL);
-> +	dw_pcie_writel_dbi(pci, PCIE_PORT_MULTI_LANE_CTRL,
-> +			   val | PORT_MLTI_UPCFG_SUPPORT);
+> +		max = pci_scan_bridge(bus, dev, max, 1);
+> +		if (dev->subordinate) {
+> +			pcibios_resource_survey_bus(dev->subordinate);
+> +			pci_bus_size_bridges(dev->subordinate);
+> +			pci_bus_assign_resources(dev->subordinate);
+> +		}
+>  	}
+>  }
+>  
+> @@ -480,7 +487,6 @@ static void enable_slot(struct acpiphp_slot *slot, bool bridge)
+>  			if (PCI_SLOT(dev->devfn) == slot->device)
+>  				acpiphp_native_scan_bridge(dev);
+>  		}
+> -		pci_assign_unassigned_bridge_resources(bus->self);
+>  	} else {
+>  		LIST_HEAD(add_list);
+>  		int max, pass;
+> 
 
-Why not to use similar pattern as below?
 
-	val = dw_pcie_readl_dbi(pci, PCIE_PORT_MULTI_LANE_CTRL);
-	val |= PORT_MLTI_UPCFG_SUPPORT;
-	dw_pcie_writel_dbi(pci, PCIE_PORT_MULTI_LANE_CTRL, val);
-
-> +}
-
-> +void dw_pcie_link_set_max_speed(struct dw_pcie *pci, u32 link_gen)
-> +{
-> +	u32 reg, val;
-> +	u8 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-> +
-> +	reg = dw_pcie_readl_dbi(pci, offset + PCI_EXP_LNKCTL2);
-> +	reg &= ~PCI_EXP_LNKCTL2_TLS;
-> +
-> +	switch (pcie_link_speed[link_gen]) {
-> +	case PCIE_SPEED_2_5GT:
-> +		reg |= PCI_EXP_LNKCTL2_TLS_2_5GT;
-
-> +	break;
-
-Is this a style or indentation issue?
-
-> +	case PCIE_SPEED_5_0GT:
-> +		reg |= PCI_EXP_LNKCTL2_TLS_5_0GT;
-> +	break;
-
-Ditto.
-
-> +	case PCIE_SPEED_8_0GT:
-> +		reg |= PCI_EXP_LNKCTL2_TLS_8_0GT;
-
-> +	break;
-
-Ditto.
-
-> +	case PCIE_SPEED_16_0GT:
-> +		reg |= PCI_EXP_LNKCTL2_TLS_16_0GT;
-
-> +	break;
-
-Ditto.
-
-> +	default:
-
-> +	/* Use hardware capability */
-
-Ditto.
-
-> +		val = dw_pcie_readl_dbi(pci, offset + PCI_EXP_LNKCAP);
-> +		val = FIELD_GET(PCI_EXP_LNKCAP_SLS, val);
-> +		reg &= ~PCI_EXP_LNKCTL2_HASD;
-> +		reg |= FIELD_PREP(PCI_EXP_LNKCTL2_TLS, val);
-
-> +	break;
-
-Ditto.
-
-> +	}
-> +
-> +	dw_pcie_writel_dbi(pci, offset + PCI_EXP_LNKCTL2, reg);
-> +}
-
-> +void dw_pcie_link_set_n_fts(struct dw_pcie *pci, u32 n_fts)
-> +{
-> +	u32 val;
-> +
-> +	val = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
-
-> +	val &= ~PORT_LOGIC_N_FTS;
-> +	val |= n_fts;
-
-What if somebody supplies bits outside of the mask? I guess you need to apply
-proper masks to both values.
-
-> +	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
-> +}
-
-> +#define PORT_LOGIC_N_FTS		GENMASK(7, 0)
-
-Shouldn't you use _MASK suffix here?
-
-> +#define BUS_IATU_OFFS			SZ_256M
-
-Perhaps less cryptic name?
-
-> +#define RST_INTRVL_DFT_MS		100
-
-Less cryptic name would be
-
-	RESET_INTERVAL_MS
-
-
-> +static void pcie_update_bits(void __iomem *base, u32 mask, u32 val, u32 ofs)
-> +{
-> +	u32 old, new;
-> +
-> +	old = readl(base + ofs);
-
-> +	new = old & ~mask;
-> +	new |= val & mask;
-
-Standard pattern
-
-	new = (old & ~mask) | (val & mask);
-
-And actually you may re-use 'val' variable and get rid of 'new' one.
-
-> +
-> +	if (new != old)
-> +		writel(new, base + ofs);
-> +}
-
-> +static int intel_pcie_get_resources(struct platform_device *pdev)
-> +{
-
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
-
-> +
-
-No need to have this blank line.
-
-> +	pci->dbi_base = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(pci->dbi_base))
-> +		return PTR_ERR(pci->dbi_base);
-
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "app");
-
-> +
-
-Ditto.
-
-> +	lpp->app_base = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(lpp->app_base))
-> +		return PTR_ERR(lpp->app_base);
-
-> +	return 0;
-> +}
-
-> +	/* Read PMC status and wait for falling into L2 link state */
-> +	ret = readl_poll_timeout(lpp->app_base + PCIE_APP_PMC, value,
-
-> +				 (value & PCIE_APP_PMC_IN_L2), 20,
-
-Too many parentheses.
-
-> +				 jiffies_to_usecs(5 * HZ));
-
-> +	if (!lpp->pcie_cap_ofst) {
-> +		lpp->pcie_cap_ofst = dw_pcie_find_capability(&lpp->pci,
-> +							     PCI_CAP_ID_EXP);
-> +	}
-
-Wouldn't be slightly better to have something like
-
-	ret = dw_pcie_find_capability(&lpp->pci, PCI_CAP_ID_EXP);
-	if (ret >= 0 && !lpp->pcie_cap_ofst)
-		lpp->pcie_cap_ofst = ret;
-
-?
-
-(It can be expanded to print error / warning messages if needed)
-
-> +	return ret;
-> +}
-
-> +	platform_set_drvdata(pdev, lpp);
-
-I think it makes sense to setup at the end of the function (before dev_info()
-call).
-
-> +	data = device_get_match_data(dev);
-
-Perhaps
-	if (!data)
-		return -ENODEV; // -EINVAL?
-
-> +	/*
-> +	 * Intel PCIe doesn't configure IO region, so set viewport
-> +	 * to not to perform IO region access.
-> +	 */
-> +	pci->num_viewport = data->num_viewport;
-
-Missed blank line?
-
-> +	dev_info(dev, "Intel PCIe Root Complex Port init done\n");
-
--- 
-With Best Regards,
-Andy Shevchenko
 
 
