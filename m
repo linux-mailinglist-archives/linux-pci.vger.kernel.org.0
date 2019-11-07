@@ -2,65 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8ECE3F2ADE
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2019 10:39:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 743C5F2AE3
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2019 10:40:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387596AbfKGJjy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 Nov 2019 04:39:54 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:50234 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726734AbfKGJjx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 Nov 2019 04:39:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=GKBY9R45D3jLjHPP9vTN8xezy3kWbDosv9Dt0qppl+Q=; b=ManZYR0eplbkfL4+Ypqtvgcid
-        PrXa9JSfiHL7p9zWb1z2yZVj2Afuvr+qMunpdmTPmmRVWziF27ttyzgJgCLSpp9H++t3cb/ucyIJb
-        JqZF3ZSd020m22FaTU/4UvuPai/YmWkjwIw/WzaH3s33D4nPhS2UH4ejDhGBoVKMqCY2zXSV9F69M
-        3yFsHfTz5xSz3i6wVCMhv+slMhraPiGP5CummmAC/dylT0S19vhi+kOO+KZJO+Cv6u+sJbOev5K6f
-        K+Nrl+0WZKPRR0NJqi4aSEcwDUpl9dzxQD35mivaqA1QFbLVuzY40JUWwrztOrr1/WI7EMqW3QkP/
-        A6UpH9ikw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iSeGe-0003pH-8b; Thu, 07 Nov 2019 09:39:52 +0000
-Date:   Thu, 7 Nov 2019 01:39:52 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Jon Derrick <jonathan.derrick@intel.com>
+        id S1733151AbfKGJkY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 Nov 2019 04:40:24 -0500
+Received: from ns.mm-sol.com ([37.157.136.199]:49536 "EHLO extserv.mm-sol.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726734AbfKGJkY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 7 Nov 2019 04:40:24 -0500
+Received: from [192.168.27.209] (unknown [37.157.136.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by extserv.mm-sol.com (Postfix) with ESMTPSA id E3ED6CF14;
+        Thu,  7 Nov 2019 11:40:20 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
+        t=1573119620; bh=eBmqfUd/4ZBra2T7wKhywMoYF6nMhDd13uPF9iVNRds=;
+        h=Subject:From:To:Cc:Date:From;
+        b=PCr5ssze63Ie8kxLNYet0aQKWa/6hC3i04PTSKY2u/f99yNLkoEvos+CjK63vgIe0
+         cA3N0sAtASn4H1WgfHliB5K+OiZ7eUsL/U46mqgqlgxEo5jjuL3LXrJcFuq8FtTzln
+         eR3YrhWsGg1xQ09PMA+46ql0SVEK5TynfyNt3f+U3fJhNOKDj5kpnOp3Ad8xITHxv7
+         m/MvE8lL+xw8JfQlhbrsJlTcQ7tBkajC5EBySEi7+URtuBeJ6WBhtzIMU1nMjJ8tSl
+         NrwvyBBZ3osNXtrPuZsPwXB18oIP/T2Ir8W00U6uxRcYT8rRIXJ4NOmfGk8VwxQUPE
+         XLulgHadoFrWQ==
+Subject: Re: [PATCH] PCI: qcom: Fix the fixup of PCI_VENDOR_ID_QCOM
+From:   Stanimir Varbanov <svarbanov@mm-sol.com>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
 Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 0/3] PCI: vmd: Reducing tail latency by affining to the
- storage stack
-Message-ID: <20191107093952.GA13826@infradead.org>
-References: <1573040408-3831-1-git-send-email-jonathan.derrick@intel.com>
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20191102002420.4091061-1-bjorn.andersson@linaro.org>
+ <f1e89dcc-4d5f-cc1f-8036-dcb062645cb0@mm-sol.com>
+ <20191106202351.GE36595@minitux>
+ <87b791db-6e03-b1ab-934c-068521652117@mm-sol.com>
+Message-ID: <e93522bc-aa6e-5b6d-8dd0-c9c926d292c5@mm-sol.com>
+Date:   Thu, 7 Nov 2019 11:40:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1573040408-3831-1-git-send-email-jonathan.derrick@intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <87b791db-6e03-b1ab-934c-068521652117@mm-sol.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 04:40:05AM -0700, Jon Derrick wrote:
-> This patchset optimizes VMD performance through the storage stack by locating
-> commonly-affined NVMe interrupts on the same VMD interrupt handler lists.
-> 
-> The current strategy of round-robin assignment to VMD IRQ lists can be
-> suboptimal when vectors with different affinities are assigned to the same VMD
-> IRQ list. VMD is an NVMe storage domain and this set aligns the vector
-> allocation and affinity strategy with that of the NVMe driver. This invokes the
-> kernel to do the right thing when affining NVMe submission cpus to NVMe
-> completion vectors as serviced through the VMD interrupt handler lists.
-> 
-> This set greatly reduced tail latency when testing 8 threads of random 4k reads
-> against two drives at queue depth=128. After pinning the tasks to reduce test
-> variability, the tests also showed a moderate tail latency reduction. A
-> one-drive configuration also shows improvements due to the alignment of VMD IRQ
-> list affinities with NVMe affinities.
+Hi,
 
-How does this compare to simplify disabling VMD?
+On 11/7/19 11:32 AM, Stanimir Varbanov wrote:
+> Hi Bjorn,
+> 
+> On 11/6/19 10:23 PM, Bjorn Andersson wrote:
+>> On Mon 04 Nov 05:00 PST 2019, Stanimir Varbanov wrote:
+>>
+>>> Hi Bjorn,
+>>>
+>>> Thanks for the fix!
+>>>
+>>> On 11/2/19 2:24 AM, Bjorn Andersson wrote:
+>>>> There exists non-bridge PCIe devices with PCI_VENDOR_ID_QCOM, so limit
+>>>> the fixup to only affect the PCIe 2.0 (0x106) and PCIe 3.0 (0x107)
+>>>> bridges.
+>>>
+>>> Are you sure that this will not break ops_1_0_0 (Qcom IP rev.: 1.0.0
+>>> Synopsys IP rev.: 4.11a) i.e. apq8084 ?
+> 
+> OK, I've checked DEVICE IDs for all supported SoCs in pcie-qcom driver:
+> 
+> apq8084 0x101
+> ipq8064 0x101
+> apq8064 0x101
+> msm8996 0x104
+> ipq8074 0x302
+> ipq4019 0x1001
+> qcs404  ??? (can you check for this SoC)
+> 
+> As you can see they are various, so I don't think we have to expose them
+> in pci_ids.h. See my proposal below.
+> 
+> Of course the last word will be from PCI maintainers.
+> 
+>>>
+>>
+>> I am not, I've only tested this on db820c and db845c. Unfortunately I'm
+>> unable to find a branch with the necessary dts snippets to test it. Do
+>> you perhaps have a branch somewhere?
+>>
+>> Regards,
+>> Bjorn
+>>
+>>>>
+>>>> Cc: stable@vger.kernel.org
+>>>> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>>>> ---
+>>>>  drivers/pci/controller/dwc/pcie-qcom.c | 3 ++-
+>>>>  include/linux/pci_ids.h                | 2 ++
+>>>>  2 files changed, 4 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+>>>> index 35f4980480bb..b91abf4d4905 100644
+>>>> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+>>>> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+>>>> @@ -1441,7 +1441,8 @@ static void qcom_fixup_class(struct pci_dev *dev)
+>>>>  {
+>>>>  	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
+>>>>  }
+>>>> -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCI_ANY_ID, qcom_fixup_class);
+>>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCIE_DEVICE_ID_QCOM_PCIE20, qcom_fixup_class);
+>>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCIE_DEVICE_ID_QCOM_PCIE30, qcom_fixup_class);
+> 
+> DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0101, qcom_fixup_class);
+> DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0104, qcom_fixup_class);
+> DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0106, qcom_fixup_class);
+> DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0107, qcom_fixup_class);
+> DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0302, qcom_fixup_class);
+> DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1001, qcom_fixup_class);
+> 
+>>>>  
+>>>>  static struct platform_driver qcom_pcie_driver = {
+>>>>  	.probe = qcom_pcie_probe,
+>>>> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+>>>> index 21a572469a4e..3d0724ee4d2f 100644
+>>>> --- a/include/linux/pci_ids.h
+>>>> +++ b/include/linux/pci_ids.h
+>>>> @@ -2413,6 +2413,8 @@
+>>>>  #define PCI_VENDOR_ID_LENOVO		0x17aa
+>>>>  
+>>>>  #define PCI_VENDOR_ID_QCOM		0x17cb
+>>>> +#define PCIE_DEVICE_ID_QCOM_PCIE20	0x0106
+>>>> +#define PCIE_DEVICE_ID_QCOM_PCIE30	0x0107
+
+I looked in pci_ids.h, and it looks like this is the right place for
+DEVICE_IDs so instead of pcie gen we could list the SoCs names?
+
+#define PCIE_DEVICE_ID_QCOM_APQ8084	0x0101
+#define PCIE_DEVICE_ID_QCOM_APQ8064	0x0101
+....
+
+-- 
+regards,
+Stan
