@@ -2,159 +2,189 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EDA38F36FC
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2019 19:24:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 01A39F391B
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2019 21:02:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725862AbfKGSYK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 Nov 2019 13:24:10 -0500
-Received: from mx2.suse.de ([195.135.220.15]:42680 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725823AbfKGSYK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 7 Nov 2019 13:24:10 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 707D4ACA5;
-        Thu,  7 Nov 2019 18:24:07 +0000 (UTC)
-Message-ID: <2dcc3fca914a454006bcf2e9bd4479a30228e9fa.camel@suse.de>
-Subject: Re: [PATCH 2/4] ARM: dts: bcm2711: Enable PCIe controller
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Stefan Wahren <wahrenst@gmx.net>,
-        Andrew Murray <andrew.murray@arm.com>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Eric Anholt <eric@anholt.net>
-Cc:     f.fainelli@gmail.com, phil@raspberrypi.org,
-        linux-kernel@vger.kernel.org, mbrugger@suse.com,
-        james.quinlan@broadcom.com
-Date:   Thu, 07 Nov 2019 19:24:03 +0100
-In-Reply-To: <50074e33-17bf-d555-cbf6-4ec079472ecd@gmx.net>
-References: <20191106214527.18736-1-nsaenzjulienne@suse.de>
-         <20191106214527.18736-3-nsaenzjulienne@suse.de>
-         <50074e33-17bf-d555-cbf6-4ec079472ecd@gmx.net>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-TlMxNcfADV/A26dcLaFO"
-User-Agent: Evolution 3.34.1 
+        id S1726853AbfKGUCN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 Nov 2019 15:02:13 -0500
+Received: from mga11.intel.com ([192.55.52.93]:38138 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725844AbfKGUCN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 7 Nov 2019 15:02:13 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Nov 2019 12:02:12 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,279,1569308400"; 
+   d="scan'208";a="353896399"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga004.jf.intel.com with ESMTP; 07 Nov 2019 12:02:12 -0800
+Received: from [10.54.74.33] (skuppusw-desk.jf.intel.com [10.54.74.33])
+        by linux.intel.com (Postfix) with ESMTP id 7058C580108;
+        Thu,  7 Nov 2019 12:02:12 -0800 (PST)
+Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH] PCI/DPC: Add pcie_ports=dpc-native parameter to bring
+ back old behavior
+To:     Bjorn Helgaas <helgaas@kernel.org>, Olof Johansson <olof@lixom.net>
+Cc:     Keith Busch <keith.busch@intel.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191025202004.GA147688@google.com>
+From:   Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Organization: Intel
+Message-ID: <1ade6a9f-9532-c400-9bb0-4e68ed5752ce@linux.intel.com>
+Date:   Thu, 7 Nov 2019 11:59:57 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20191025202004.GA147688@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi,
 
---=-TlMxNcfADV/A26dcLaFO
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On 10/25/19 1:20 PM, Bjorn Helgaas wrote:
+> On Wed, Oct 23, 2019 at 12:22:05PM -0700, Olof Johansson wrote:
+>> In commit eed85ff4c0da7 ("PCI/DPC: Enable DPC only if AER is available"),
+>> the behavior was changed such that native (kernel) handling of DPC
+>> got tied to whether the kernel also handled AER. While this is what
+>> the standard recommends, there are BIOSes out there that lack the DPC
+>> handling since it was never required in the past.
+> Some systems do not grant OS control of AER via _OSC.  I guess the
+> problem is that on those systems, the OS DPC driver used to work, but
+> after eed85ff4c0da7, it does not.  Right?
 
-On Thu, 2019-11-07 at 18:44 +0100, Stefan Wahren wrote:
-> Hi Nicolas,
->=20
-> please move this patch behind the driver patches, which is the better ord=
-er.
->=20
-> Am 06.11.19 um 22:45 schrieb Nicolas Saenz Julienne:
-> > This enables bcm2711's PCIe bus, wich is hardwired to a VIA Technologie=
-s
-> > XHCI USB 3.0 controller.
-> AFAIU this only applies to the Raspberry Pi 4, since the VIA is outside
-> of the SoC.
-> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > ---
-> >  arch/arm/boot/dts/bcm2711.dtsi | 47 ++++++++++++++++++++++++++++++++++
-> >  1 file changed, 47 insertions(+)
-> >=20
-> > diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711=
-.dtsi
-> > index a9d84e28f245..c7b2e7b57da6 100644
-> > --- a/arch/arm/boot/dts/bcm2711.dtsi
-> > +++ b/arch/arm/boot/dts/bcm2711.dtsi
-> > @@ -288,6 +288,53 @@
-> >  		arm,cpu-registers-not-fw-configured;
-> >  	};
-> >=20
-> > +	scb {
-> > +		compatible =3D "simple-bus";
-> > +		#address-cells =3D <2>;
-> > +		#size-cells =3D <1>;
-> > +
-> > +		ranges =3D <0x0 0x7c000000  0x0 0xfc000000  0x03800000>,
-> > +			 <0x6 0x00000000  0x6 0x00000000  0x40000000>;
-> > +
-> > +		pcie_0: pcie@7d500000 {
-> > +			compatible =3D "brcm,bcm2711-pcie";
-> > +			reg =3D <0x0 0x7d500000 0x9310>;
-> > +			msi-controller;
-> > +			msi-parent =3D <&pcie_0>;
-> > +			#address-cells =3D <3>;
-> > +			#interrupt-cells =3D <1>;
-> > +			#size-cells =3D <2>;
-> > +			linux,pci-domain =3D <0>;
-> > +			brcm,enable-ssc;
-> > +			interrupts =3D <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
-> > +				     <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
-> > +			interrupt-names =3D "pcie", "msi";
-> > +			interrupt-map-mask =3D <0x0 0x0 0x0 0x7>;
-> > +			interrupt-map =3D <0 0 0 1 &gicv2 GIC_SPI 143
-> > +							IRQ_TYPE_LEVEL_HIGH
-> > +					 0 0 0 2 &gicv2 GIC_SPI 144
-> > +							IRQ_TYPE_LEVEL_HIGH
-> > +					 0 0 0 3 &gicv2 GIC_SPI 145
-> > +							IRQ_TYPE_LEVEL_HIGH
-> > +					 0 0 0 4 &gicv2 GIC_SPI 146
-> > +							IRQ_TYPE_LEVEL_HIGH>;
-> > +
-> > +			ranges =3D <0x02000000 0x0 0xf8000000 0x6 0x00000000
-> > +				  0x0 0x04000000>;
-> > +			/*
-> > +			 * The wrapper around the PCIe block has a bug
-> > +			 * preventing it from accessing beyond the first 3GB of
-> > +			 * memory. As the bus DMA mask is rounded up to the
-> > +			 * closest power of two of the dma-range size, we're
-> > +			 * forced to set the limit at 2GB. This can be
-> > +			 * harmlessly changed in the future once the DMA code
-> > +			 * handles non power of two DMA limits.
-> > +			 */
-> > +			dma-ranges =3D <0x02000000 0x0 0x00000000 0x0 0x00000000
-> > +				      0x0 0x80000000>;
-> In case this bug will ever be fixed, do you see this as a future proof
-> practical solution?
+I need some clarification on this issue. Do you mean in these systems,
+firmware expects OS to handle DPC and AER, but it does not let OS know
+about it via _OSC ?
 
-The dts I provide should work on any bcm2711 (fixed or not) and any future
-kernel, with the downside that we'll perform some unnecessary buffer bounci=
-ng.
-
-If we were able to address the whole 32bit address space on some future bcm=
-2711
-we'd be forced to update the dma-ranges in the bootloader based on the SoC
-revision.
-
-The driver should work with any sensible dma-range, I even did a test emula=
-ting
-the 4GB inbound memory setup.
-
-Regards,
-Nicolas
-
-
---=-TlMxNcfADV/A26dcLaFO
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3EYUMACgkQlfZmHno8
-x/7I8gf+Krf4eAVjY+gGoFj4B/+Wk2M4/i71Ubp+SIWiZarPgzumoZIAaDv91+YO
-qwHAuQGIEnx8YvltDs3CkbNUJBzwuQAZQ9Ve652E8P/f4+wM+XVegdIWTk3M1G2/
-t2N8OH87E+Ag8pGV9bfAtFi7oyFC3a+HDGLTAN1RezBLzlnn1EhN7fr4xXT7lQA7
-HPmn9BjtUkQaXDMSghNPH9TaEVpEVxeRx9pXrDVaNQGeQN3RtfpznjbQj7GFHnG/
-HYtWFf8ha82VlW+9EoWIXxKx0GQgZq9pehmr3cFgETyxUFf0AQCgVE0yhOXW/f5X
-4xQXvqZLhwYBafJgw6LKn6qwz0vlpw==
-=9wr0
------END PGP SIGNATURE-----
-
---=-TlMxNcfADV/A26dcLaFO--
+>
+> We should also update negotiate_os_control() to request control of DPC
+> via _OSC.  Kuppuswamy's patch [1] does that but hasn't been merged
+> yet.  That will conflict with this, but I can resolve that.
+>
+> I applied this as below (with the nits Keith noticed) to pci/aer for
+> v5.5, thanks!
+>
+> [1] https://lore.kernel.org/r/b638cbd3e122b4c7a58b949d7224230d2c4b34d4.1570145778.git.sathyanarayanan.kuppuswamy@linux.intel.com
+>
+> commit 35a0b2378c19
+> Author: Olof Johansson <olof@lixom.net>
+> Date:   Wed Oct 23 12:22:05 2019 -0700
+>
+>      PCI/DPC: Add "pcie_ports=dpc-native" to allow DPC without AER control
+>      
+>      Prior to eed85ff4c0da7 ("PCI/DPC: Enable DPC only if AER is available"),
+>      Linux handled DPC events regardless of whether firmware had granted it
+>      ownership of AER or DPC, e.g., via _OSC.
+>      
+>      PCIe r5.0, sec 6.2.10, recommends that the OS link control of DPC to
+>      control of AER, so after eed85ff4c0da7, Linux handles DPC events only if it
+>      has control of AER.
+>      
+>      On platforms that do not grant OS control of AER via _OSC, Linux DPC
+>      handling worked before eed85ff4c0da7 but not after.
+>      
+>      To make Linux DPC handling work on those platforms the same way they did
+>      before, add a "pcie_ports=dpc-native" kernel parameter that makes Linux
+>      handle DPC events regardless of whether it has control of AER.
+>      
+>      [bhelgaas: commit log, move pcie_ports_dpc_native to drivers/pci/]
+>      Link: https://lore.kernel.org/r/20191023192205.97024-1-olof@lixom.net
+>      Signed-off-by: Olof Johansson <olof@lixom.net>
+>      Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+>
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index c7ac2f3ac99f..806c89f79be8 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -3540,6 +3540,8 @@
+>   			even if the platform doesn't give the OS permission to
+>   			use them.  This may cause conflicts if the platform
+>   			also tries to use these services.
+> +		dpc-native	Use native PCIe service for DPC only.  May
+> +				cause conflicts if firmware uses AER or DPC.
+>   		compat	Disable native PCIe services (PME, AER, DPC, PCIe
+>   			hotplug).
+>   
+> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+> index a32ec3487a8d..e06f42f58d3d 100644
+> --- a/drivers/pci/pcie/dpc.c
+> +++ b/drivers/pci/pcie/dpc.c
+> @@ -291,7 +291,7 @@ static int dpc_probe(struct pcie_device *dev)
+>   	int status;
+>   	u16 ctl, cap;
+>   
+> -	if (pcie_aer_get_firmware_first(pdev))
+> +	if (pcie_aer_get_firmware_first(pdev) && !pcie_ports_dpc_native)
+>   		return -ENOTSUPP;
+>   
+>   	dpc = devm_kzalloc(device, sizeof(*dpc), GFP_KERNEL);
+> diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
+> index 944827a8c7d3..1e673619b101 100644
+> --- a/drivers/pci/pcie/portdrv.h
+> +++ b/drivers/pci/pcie/portdrv.h
+> @@ -25,6 +25,8 @@
+>   
+>   #define PCIE_PORT_DEVICE_MAXSERVICES   5
+>   
+> +extern bool pcie_ports_dpc_native;
+> +
+>   #ifdef CONFIG_PCIEAER
+>   int pcie_aer_init(void);
+>   #else
+> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+> index 1b330129089f..5075cb9e850c 100644
+> --- a/drivers/pci/pcie/portdrv_core.c
+> +++ b/drivers/pci/pcie/portdrv_core.c
+> @@ -250,8 +250,13 @@ static int get_port_device_capability(struct pci_dev *dev)
+>   		pcie_pme_interrupt_enable(dev, false);
+>   	}
+>   
+> +	/*
+> +	 * With dpc-native, allow Linux to use DPC even if it doesn't have
+> +	 * permission to use AER.
+> +	 */
+>   	if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC) &&
+> -	    pci_aer_available() && services & PCIE_PORT_SERVICE_AER)
+> +	    pci_aer_available() &&
+> +	    (pcie_ports_dpc_native || (services & PCIE_PORT_SERVICE_AER)))
+>   		services |= PCIE_PORT_SERVICE_DPC;
+>   
+>   	if (pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
+> diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
+> index 0a87091a0800..160d67c59310 100644
+> --- a/drivers/pci/pcie/portdrv_pci.c
+> +++ b/drivers/pci/pcie/portdrv_pci.c
+> @@ -29,12 +29,20 @@ bool pcie_ports_disabled;
+>    */
+>   bool pcie_ports_native;
+>   
+> +/*
+> + * If the user specified "pcie_ports=dpc-native", use the Linux DPC PCIe
+> + * service even if the platform hasn't given us permission.
+> + */
+> +bool pcie_ports_dpc_native;
+> +
+>   static int __init pcie_port_setup(char *str)
+>   {
+>   	if (!strncmp(str, "compat", 6))
+>   		pcie_ports_disabled = true;
+>   	else if (!strncmp(str, "native", 6))
+>   		pcie_ports_native = true;
+> +	else if (!strncmp(str, "dpc-native", 10))
+> +		pcie_ports_dpc_native = true;
+>   
+>   	return 1;
+>   }
+>
+-- 
+Sathyanarayanan Kuppuswamy
+Linux kernel developer
 
