@@ -2,76 +2,82 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 35854F2AEB
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2019 10:41:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C1DD3F2B75
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2019 10:52:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727693AbfKGJls (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 Nov 2019 04:41:48 -0500
-Received: from foss.arm.com ([217.140.110.172]:52772 "EHLO foss.arm.com"
+        id S2387703AbfKGJw6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 Nov 2019 04:52:58 -0500
+Received: from foss.arm.com ([217.140.110.172]:52982 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726866AbfKGJls (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 7 Nov 2019 04:41:48 -0500
+        id S1726734AbfKGJw6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 7 Nov 2019 04:52:58 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D388F46A;
-        Thu,  7 Nov 2019 01:41:47 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7D10846A;
+        Thu,  7 Nov 2019 01:52:57 -0800 (PST)
 Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 391723F71A;
-        Thu,  7 Nov 2019 01:41:47 -0800 (PST)
-Date:   Thu, 7 Nov 2019 09:41:45 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D62023F71A;
+        Thu,  7 Nov 2019 01:52:56 -0800 (PST)
+Date:   Thu, 7 Nov 2019 09:52:54 +0000
 From:   Andrew Murray <andrew.murray@arm.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 5/5] PCI: Allow building PCIe things without PCIEPORTBUS
-Message-ID: <20191107094144.GT9723@e119886-lin.cambridge.arm.com>
-References: <20191106222420.10216-1-helgaas@kernel.org>
- <20191106222420.10216-6-helgaas@kernel.org>
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+Subject: Re: [PATCH 1/2] PCI: uniphier: Set mode register to host mode
+Message-ID: <20191107095254.GU9723@e119886-lin.cambridge.arm.com>
+References: <1573102695-7018-1-git-send-email-hayashi.kunihiko@socionext.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191106222420.10216-6-helgaas@kernel.org>
+In-Reply-To: <1573102695-7018-1-git-send-email-hayashi.kunihiko@socionext.com>
 User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 04:24:21PM -0600, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
+On Thu, Nov 07, 2019 at 01:58:14PM +0900, Kunihiko Hayashi wrote:
+> In order to avoid effect of the initial mode depending on SoCs,
+> this patch sets the mode register to host(RC) mode.
 > 
-> Some things in drivers/pci/pcie (aspm.c and ptm.c) do not depend on the
-> PCIe portdrv, so we should be able to build them even if PCIEPORTBUS is not
-> selected.  Remove the PCIEPORTBUS guard from building pcie/.
-> 
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 > ---
->  drivers/pci/Makefile | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  drivers/pci/controller/dwc/pcie-uniphier.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 > 
-> diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
-> index 28cdd8c0213a..522d2b974e91 100644
-> --- a/drivers/pci/Makefile
-> +++ b/drivers/pci/Makefile
-> @@ -7,6 +7,8 @@ obj-$(CONFIG_PCI)		+= access.o bus.o probe.o host-bridge.o \
->  				   pci-sysfs.o rom.o setup-res.o irq.o vpd.o \
->  				   setup-bus.o vc.o mmap.o setup-irq.o
+> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
+> index 3f30ee4..8fd7bad 100644
+> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
+> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
+> @@ -33,6 +33,10 @@
+>  #define PCL_PIPEMON			0x0044
+>  #define PCL_PCLK_ALIVE			BIT(15)
 >  
-> +obj-$(CONFIG_PCI)		+= pcie/
+> +#define PCL_MODE			0x8000
+> +#define PCL_MODE_REGEN			BIT(8)
+> +#define PCL_MODE_REGVAL			BIT(0)
 > +
->  ifdef CONFIG_PCI
->  obj-$(CONFIG_PROC_FS)		+= proc.o
->  obj-$(CONFIG_SYSFS)		+= slot.o
-> @@ -15,7 +17,6 @@ endif
+>  #define PCL_APP_READY_CTRL		0x8008
+>  #define PCL_APP_LTSSM_ENABLE		BIT(0)
 >  
->  obj-$(CONFIG_OF)		+= of.o
->  obj-$(CONFIG_PCI_QUIRKS)	+= quirks.o
-> -obj-$(CONFIG_PCIEPORTBUS)	+= pcie/
->  obj-$(CONFIG_HOTPLUG_PCI)	+= hotplug/
->  obj-$(CONFIG_PCI_MSI)		+= msi.o
->  obj-$(CONFIG_PCI_ATS)		+= ats.o
+> @@ -85,6 +89,12 @@ static void uniphier_pcie_init_rc(struct uniphier_pcie_priv *priv)
+>  {
+>  	u32 val;
+>  
+> +	/* set RC MODE */
+> +	val = readl(priv->base + PCL_MODE);
+> +	val |= PCL_MODE_REGEN;
+> +	val &= ~PCL_MODE_REGVAL;
+> +	writel(val, priv->base + PCL_MODE);
+> +
 
 Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 
+>  	/* use auxiliary power detection */
+>  	val = readl(priv->base + PCL_APP_PM0);
+>  	val |= PCL_SYS_AUX_PWR_DET;
 > -- 
-> 2.24.0.rc1.363.gb1bccd3e3d-goog
+> 2.7.4
 > 
