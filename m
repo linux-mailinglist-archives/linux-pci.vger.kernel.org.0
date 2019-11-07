@@ -2,104 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E310F2BB8
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2019 11:02:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A93AF2BEE
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2019 11:15:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727604AbfKGKCL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 Nov 2019 05:02:11 -0500
-Received: from foss.arm.com ([217.140.110.172]:53192 "EHLO foss.arm.com"
+        id S1733232AbfKGKPa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 Nov 2019 05:15:30 -0500
+Received: from ns.iliad.fr ([212.27.33.1]:37428 "EHLO ns.iliad.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726866AbfKGKCL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 7 Nov 2019 05:02:11 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A05B146A;
-        Thu,  7 Nov 2019 02:02:10 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0535F3F71A;
-        Thu,  7 Nov 2019 02:02:09 -0800 (PST)
-Date:   Thu, 7 Nov 2019 10:02:08 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+        id S1733142AbfKGKPa (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 7 Nov 2019 05:15:30 -0500
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id 3AA3C2022D;
+        Thu,  7 Nov 2019 11:15:27 +0100 (CET)
+Received: from [192.168.108.51] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id 1ADA120189;
+        Thu,  7 Nov 2019 11:15:27 +0100 (CET)
+Subject: Re: [PATCH] PCI: qcom: Fix the fixup of PCI_VENDOR_ID_QCOM
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-Subject: Re: [PATCH 2/2] PCI: uniphier: Add checking whether PERST# is
- deasserted
-Message-ID: <20191107100207.GV9723@e119886-lin.cambridge.arm.com>
-References: <1573102695-7018-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1573102695-7018-2-git-send-email-hayashi.kunihiko@socionext.com>
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>
+References: <20191102002420.4091061-1-bjorn.andersson@linaro.org>
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Message-ID: <8f15abf9-80bc-9767-e61c-6e0455effbf0@free.fr>
+Date:   Thu, 7 Nov 2019 11:15:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1573102695-7018-2-git-send-email-hayashi.kunihiko@socionext.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <20191102002420.4091061-1-bjorn.andersson@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Thu Nov  7 11:15:27 2019 +0100 (CET)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 07, 2019 at 01:58:15PM +0900, Kunihiko Hayashi wrote:
-> When PERST# is asserted once, EP configuration will be initialized.
+On 02/11/2019 01:24, Bjorn Andersson wrote:
 
-I don't quite understand this - does the EP/RC mode depend on how often
-PERST# is toggled?
+> There exists non-bridge PCIe devices with PCI_VENDOR_ID_QCOM, so limit
+> the fixup to only affect the PCIe 2.0 (0x106) and PCIe 3.0 (0x107)
+> bridges.
 
-> If PERST# has been already deasserted, it isn't necessary to assert
-> here.
+Hey, git blames me! Why didn't you CC me? :-)
 
-What is the motativation for this patch? Is it to avoid a delay during
-boot, or to fix some bug? Isn't it nice to always reset the IP before
-use anyway?
+Commit 322f03436692481993d389f539c016d20bb0fa1d
+PCI: qcom: Use default config space read function
 
-> 
-> This checks whether PERST# is deasserted using PCL_PINMON register,
-> and adds omit controlling PERST#.
+The patch's history is of interest:
+https://lkml.org/lkml/2019/3/11/614
+https://www.spinics.net/lists/linux-arm-msm/msg49090.html
 
-Should this read 'and omits controlling PERST#'?
-
-> 
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > ---
->  drivers/pci/controller/dwc/pcie-uniphier.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
+>  drivers/pci/controller/dwc/pcie-qcom.c | 3 ++-
+>  include/linux/pci_ids.h                | 2 ++
+>  2 files changed, 4 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
-> index 8fd7bad..1ea4220 100644
-> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
-> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
-> @@ -22,6 +22,9 @@
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 35f4980480bb..b91abf4d4905 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -1441,7 +1441,8 @@ static void qcom_fixup_class(struct pci_dev *dev)
+>  {
+>  	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
+>  }
+> -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCI_ANY_ID, qcom_fixup_class);
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCIE_DEVICE_ID_QCOM_PCIE20, qcom_fixup_class);
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCIE_DEVICE_ID_QCOM_PCIE30, qcom_fixup_class);
 >  
->  #include "pcie-designware.h"
+>  static struct platform_driver qcom_pcie_driver = {
+>  	.probe = qcom_pcie_probe,
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 21a572469a4e..3d0724ee4d2f 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -2413,6 +2413,8 @@
+>  #define PCI_VENDOR_ID_LENOVO		0x17aa
 >  
-> +#define PCL_PINMON			0x0028
-> +#define PCL_PINMON_PERST_OUT		BIT(16)
-> +
->  #define PCL_PINCTRL0			0x002c
->  #define PCL_PERST_PLDN_REGEN		BIT(12)
->  #define PCL_PERST_NOE_REGEN		BIT(11)
-> @@ -100,6 +103,11 @@ static void uniphier_pcie_init_rc(struct uniphier_pcie_priv *priv)
->  	val |= PCL_SYS_AUX_PWR_DET;
->  	writel(val, priv->base + PCL_APP_PM0);
->  
-> +	/* return if PERST# is already deasserted */
+>  #define PCI_VENDOR_ID_QCOM		0x17cb
+> +#define PCIE_DEVICE_ID_QCOM_PCIE20	0x0106
+> +#define PCIE_DEVICE_ID_QCOM_PCIE30	0x0107
 
-This comment just describes what the following line does which may be
-self-explanatory, perhaps a better comment would describe why we avoid
-a reset.
+I don't think the fixup is required for 0x106 and 0x107...
 
-Thanks,
+In v1, I wrote:
+FWIW, this quirk is no longer required on recent chips:
+msm8996 (tested by Stanimir), msm8998 (tested by me), sdm845 (untested) are unaffected
+apq/ipq8064 is affected => what is the device ID for these chips?
+others?
 
-Andrew Murray
+IIRC, 0x0101 requires the fixup because
+dw_pcie_wr_own_conf(pp, PCI_CLASS_DEVICE, 2, PCI_CLASS_BRIDGE_PCI);
+is broken on that platform (grrr, HW devs)
+(See my v3, tested by Srinivas)
 
-> +	val = readl(priv->base + PCL_PINMON);
-> +	if (val & PCL_PINMON_PERST_OUT)
-> +		return;
-> +
->  	/* assert PERST# */
->  	val = readl(priv->base + PCL_PINCTRL0);
->  	val &= ~(PCL_PERST_NOE_REGVAL | PCL_PERST_OUT_REGVAL
-> -- 
-> 2.7.4
-> 
+Stan wrote:
+
+Yes it is good but to avoid breaking another SoCs could you add fixups
+for the following SoCs:
+
+SoC		device ID
+ipq4019 	0x1001
+ipq8064		0x101
+ipq8074		0x108
+
+ipq8064 has the same device ID as apq8064, but I'm not sure do we need
+defines per SoC or just rename DEV_ID_8064 ? I'm fine with both ways.
+
+
+In conclusion, my analysis in v5 was wrong
+"Changes from v4 to v5: Apply fixup to all qcom chips, the same way it was before
+(thus the code remains functionally equivalent)"
+=> The fixup was applied *more widely* than before, so not functionally equivalent.
+
+Regards.
