@@ -2,132 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 304A6F2DBC
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2019 12:52:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 619D7F2E0B
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2019 13:19:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387958AbfKGLwm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 Nov 2019 06:52:42 -0500
-Received: from mx.socionext.com ([202.248.49.38]:58147 "EHLO mx.socionext.com"
+        id S2388384AbfKGMSy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 Nov 2019 07:18:54 -0500
+Received: from mga06.intel.com ([134.134.136.31]:62176 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727178AbfKGLwm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 7 Nov 2019 06:52:42 -0500
-Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 07 Nov 2019 20:52:40 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 11A78605F8;
-        Thu,  7 Nov 2019 20:52:40 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Thu, 7 Nov 2019 20:52:50 +0900
-Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id D23A61A04FC;
-        Thu,  7 Nov 2019 20:52:39 +0900 (JST)
-Received: from [10.213.132.48] (unknown [10.213.132.48])
-        by yuzu.css.socionext.com (Postfix) with ESMTP id A4AD7120C15;
-        Thu,  7 Nov 2019 20:52:39 +0900 (JST)
-Date:   Thu, 07 Nov 2019 20:52:39 +0900
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To:     Andrew Murray <andrew.murray@arm.com>
-Subject: Re: [PATCH 2/2] PCI: uniphier: Add checking whether PERST# is deasserted
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-In-Reply-To: <20191107100207.GV9723@e119886-lin.cambridge.arm.com>
-References: <1573102695-7018-2-git-send-email-hayashi.kunihiko@socionext.com> <20191107100207.GV9723@e119886-lin.cambridge.arm.com>
-Message-Id: <20191107205239.65C1.4A936039@socionext.com>
+        id S1727458AbfKGMSy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 7 Nov 2019 07:18:54 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Nov 2019 04:18:53 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,278,1569308400"; 
+   d="scan'208";a="213008221"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 07 Nov 2019 04:18:49 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id 184A1115; Thu,  7 Nov 2019 14:18:47 +0200 (EET)
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+        Keith Busch <keith.busch@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/2] PCI: Add missing link delays
+Date:   Thu,  7 Nov 2019 15:18:45 +0300
+Message-Id: <20191107121847.24781-1-mika.westerberg@linux.intel.com>
+X-Mailer: git-send-email 2.24.0.rc1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Becky! ver. 2.70 [ja]
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Andrew,
-Thank you for your comments.
+Hi,
 
-On Thu, 7 Nov 2019 10:02:08 +0000 <andrew.murray@arm.com> wrote:
+This is third version of the reworked PCIe link delay patch posted earlier
+here:
 
-> On Thu, Nov 07, 2019 at 01:58:15PM +0900, Kunihiko Hayashi wrote:
-> > When PERST# is asserted once, EP configuration will be initialized.
-> 
-> I don't quite understand this - does the EP/RC mode depend on how often
-> PERST# is toggled?
+  v2: https://lore.kernel.org/linux-pci/20191004123947.11087-1-mika.westerberg@linux.intel.com/
+  v1: https://patchwork.kernel.org/patch/11106611/
 
-I think of connecting this RC controller and EP based on `Linux PCI
-endpoint framework' in another machine.
+Changes from v2:
 
-While this RC driver is probing, the EP driver might be also probing and
-configurating itself using configfs. If PERST# is toggled after the EP
-has done its configuration, this configuration will be lost.
+  * Rebased on top of pci.git/pci/pm.
+  * Update references to PCIe 5.0 spec.
+  * Take d3cold_delay if child devices into account. This allows ACPI _DSM
+    to lower the delay.
+  * Check for pci_dev->skip_bus_pm in pci_pm_resume_noirq().
+  * Drop comment that mentions pciehp where
+    pci_bridge_wait_for_secondary_bus() is called.
+  * Use pcie_downstream_port() in pci_bridge_wait_for_secondary_bus().
 
-I expect that the EP configurates after RC has toggled PERST#, however,
-there is no way to synchronize both of them.
+Based on the discussion around v2 there is a potential issue when restoring
+PCI_EXP_LNKCTL2 (regardless these patches) that we may need to retrain the
+link. This series does not include fix for that since it is not yet clear
+how we solve it. I can do that as a separate patch once we agree on the
+solution.
 
+I'm submitting these two now in hopes that we can get them included for
+v5.5 because there are systems out there that need them in order to
+function properly.
 
-> 
-> > If PERST# has been already deasserted, it isn't necessary to assert
-> > here.
-> 
-> What is the motativation for this patch? Is it to avoid a delay during
-> boot, or to fix some bug? Isn't it nice to always reset the IP before
-> use anyway?
+Changes from v1:
 
-Since EP device usually works without its configuration after PERST#,
-deassering PERST# here is no problem. Since bus reset breaks configuration
-of EP as shown above, bus reset should be done before EP has probed.
-Maybe boot sequence in host machine will do.
+  * Introduce pcie_wait_for_link_delay() in a separate patch
+  * Tidy up changelog, remove some debug output
+  * Rename pcie_wait_downstream_accessible() to
+    pci_bridge_wait_for_secondary_bus() and make it generic to all PCI
+    bridges.
+  * Handle Tpvrh + Trhfa for conventional PCI even though we don't do PM
+    for them right now.
+  * Use pci_dbg() instead of dev_dbg().
+  * Dropped check for pm_suspend_no_platform() and only check for D3cold.
+  * Drop pcie_get_downstream_delay(), same delay applies equally to all
+    devices (it is not entirely clear from the spec).
 
+Mika Westerberg (2):
+  PCI: Introduce pcie_wait_for_link_delay()
+  PCI: Add missing link delays required by the PCIe spec
 
->
-> > 
-> > This checks whether PERST# is deasserted using PCL_PINMON register,
-> > and adds omit controlling PERST#.
-> 
-> Should this read 'and omits controlling PERST#'?
+ drivers/pci/pci-driver.c |  11 +++-
+ drivers/pci/pci.c        | 139 ++++++++++++++++++++++++++++++++++++---
+ drivers/pci/pci.h        |   1 +
+ 3 files changed, 141 insertions(+), 10 deletions(-)
 
-Yes, I'll fix it.
-
-
-> 
-> > 
-> > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> > ---
-> >  drivers/pci/controller/dwc/pcie-uniphier.c | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
-> > index 8fd7bad..1ea4220 100644
-> > --- a/drivers/pci/controller/dwc/pcie-uniphier.c
-> > +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
-> > @@ -22,6 +22,9 @@
-> >  
-> >  #include "pcie-designware.h"
-> >  
-> > +#define PCL_PINMON			0x0028
-> > +#define PCL_PINMON_PERST_OUT		BIT(16)
-> > +
-> >  #define PCL_PINCTRL0			0x002c
-> >  #define PCL_PERST_PLDN_REGEN		BIT(12)
-> >  #define PCL_PERST_NOE_REGEN		BIT(11)
-> > @@ -100,6 +103,11 @@ static void uniphier_pcie_init_rc(struct uniphier_pcie_priv *priv)
-> >  	val |= PCL_SYS_AUX_PWR_DET;
-> >  	writel(val, priv->base + PCL_APP_PM0);
-> >  
-> > +	/* return if PERST# is already deasserted */
-> 
-> This comment just describes what the following line does which may be
-> self-explanatory, perhaps a better comment would describe why we avoid
-> a reset.
-
-Indeed. I'll write the reason here.
-
-Thank you,
-
----
-Best Regards,
-Kunihiko Hayashi
+-- 
+2.24.0.rc1
 
