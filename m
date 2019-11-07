@@ -2,134 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A93C0F32DF
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2019 16:21:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BE07F337E
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2019 16:37:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388868AbfKGPVm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 Nov 2019 10:21:42 -0500
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:35941 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729877AbfKGPVl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 Nov 2019 10:21:41 -0500
-Received: by mail-yb1-f194.google.com with SMTP id v17so1072410ybs.3
-        for <linux-pci@vger.kernel.org>; Thu, 07 Nov 2019 07:21:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=softbankrobotics.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=HJLa0gPMAUv5bPhTtGaJLnlnj68hKkWBcQTQp2Y8E34=;
-        b=B+ofl552YPgYG6agLUogYSqjMLA2umxOSGn21yV1uEwT31g7O/XQa+bfA7zal3lIlY
-         n9FXKNbKV2UT5TdYkLKYcZGqkawb6fbGuxNB33XRqxyHnMdeSGvV1SKbkTwxOM29YHdK
-         CTrk65dnI2YI5M4ulWsWC41tW6TfgkvudMBFZV5zKvTuWt1b90gCuBZhce45pu1S6RSs
-         eJ4hxSJDrze95oS+eMpi8ZNIl7HKN76svCna85rwnt3IK9gDHoK/o5xm7E3YXvvjqKfz
-         zEfyMTwyNPUxJf3CRAuhXBm+RFlTF3JObOTVrzUSSy0OtEK3Fh5b6UnIiz4+n3DZYdru
-         9LLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=HJLa0gPMAUv5bPhTtGaJLnlnj68hKkWBcQTQp2Y8E34=;
-        b=O7TRRwGC8qM9+XIPQExaUNKu33eWval8wQYpglOmE6tXq7ToJKO29i3+RgoUhEaV7M
-         +F4ymsGDoUumdKh+D4RYjJVnVYh4NGbbzqTyQpIW7rweZPoferWYD8RTb5qyghLQTqcT
-         vjQIxsiLEj5iisJxAG34sHeQWtoZ9UVSNTiX1jlV5j3sxbrCE5zSd/6RikItXzgK+cBh
-         pwRorDe00H6X4hqzliX+FxX5AMFwVS9cDHmrSUVxEa4LtY7jSS1gsosR60zh4zbbiY/L
-         fF8g/fsmm8vdPT0V/XWWb7KFRb1iLkZw1eKE1NJqA7nCFdXzIk2K9PBKVRX1tpykD8HW
-         v47w==
-X-Gm-Message-State: APjAAAXhwVumet2LLhavcWAjRaUxsKoYKuDtUWft4VvS+2cO6KGuur0t
-        4Kmp+HEbaYKcYNTU2IBEbLITaouMnsukit05NOQC0J5dFwMlJGwBT6uHwFt/DPq61J2yCxzImoB
-        lzuf9TGN5oURUNsAcIzn+ObYvyko=
-X-Google-Smtp-Source: APXvYqzRuP0KRS6kNgXL+k/rx599gZ4zi3AP+E1yvYWTX39dSFoKRwBgmZ5zlQmRjqF3lwYHFQD1X1VHI+OdjPHCIg4=
-X-Received: by 2002:a25:3b56:: with SMTP id i83mr3914294yba.496.1573140099285;
- Thu, 07 Nov 2019 07:21:39 -0800 (PST)
+        id S1727020AbfKGPhh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 Nov 2019 10:37:37 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:33820 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbfKGPhh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 Nov 2019 10:37:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=nGydLSsGxxmYrXGAw15Q8ycWDwl66hdCC3wCq7d7wXo=; b=bb6vI2fUQXVprSJX8mvHLWV0T
+        qchAtG7zVD0aBCE9cQ+hgInMVqiVVtfX09jGUsqDkk4NpqCn09loxwLv48gsLbQnWgPvHf3HXF98s
+        N//TD6YaMcBV4UPlu7REWBJxd2xHSwAbEQ5dXBj/5wgh31RbTeOS/IV/5We12Pb/N2b1qLZmr/GgF
+        aF/uuUF8mixSFtrk0UomvYF2r8RGsCodfdc93wVqdE1mcC32D+9G2T9Xpx246w76UfWmze2sSwbZb
+        /mri3tMLAjoALYoJGSskZk+GKM9qTPURjvcEGNYKRWvTnyeyr864SiOj8WMKYmPL24A6g2rQ6SSTj
+        GyJ+2GijA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iSjqq-0004Fj-2m; Thu, 07 Nov 2019 15:37:36 +0000
+Date:   Thu, 7 Nov 2019 07:37:36 -0800
+From:   "hch@infradead.org" <hch@infradead.org>
+To:     "Derrick, Jonathan" <jonathan.derrick@intel.com>
+Cc:     "hch@infradead.org" <hch@infradead.org>,
+        "kbusch@kernel.org" <kbusch@kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "helgaas@kernel.org" <helgaas@kernel.org>
+Subject: Re: [PATCH 0/3] PCI: vmd: Reducing tail latency by affining to the
+ storage stack
+Message-ID: <20191107153736.GA16006@infradead.org>
+References: <1573040408-3831-1-git-send-email-jonathan.derrick@intel.com>
+ <20191107093952.GA13826@infradead.org>
+ <bfc69a54dc394ffb7580d14818047ec6a647536f.camel@intel.com>
 MIME-Version: 1.0
-References: <20191107001642.1127561-1-bjorn.andersson@linaro.org>
-In-Reply-To: <20191107001642.1127561-1-bjorn.andersson@linaro.org>
-From:   Julien Massot <jmassot@softbankrobotics.com>
-Date:   Thu, 7 Nov 2019 16:21:28 +0100
-Message-ID: <CADGp=QcwM8MhkRCjKz0wwHuz5vZGdfHOn0qYp4g_TBjHWzY6CA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] PCI: qcom: Add support for SDM845 PCIe
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bfc69a54dc394ffb7580d14818047ec6a647536f.camel@intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
+On Thu, Nov 07, 2019 at 02:12:50PM +0000, Derrick, Jonathan wrote:
+> > How does this compare to simplify disabling VMD?
+> 
+> It's a moot point since Keith pointed out a few flaws with this set,
+> however disabling VMD is not an option for users who wish to
+> passthrough VMD
 
-On Thu, Nov 7, 2019 at 1:16 AM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> This adds support necessary for the two PCIe controllers found in Qualcom=
-m
-> SDM845.
-
-Thanks a lot the gen 3 PCIE works on my 845 platform.
-Tested-by: Julien Massot <jmassot@softbankrobotics.com>
-
---=20
-
-
-*This email and any attachment thereto are confidential and intended=20
-solely for the use of the individual or entity to whom they are addressed.
-
-If you are not the intended recipient, please be advised that disclosing,=
-=20
-copying, distributing or taking any action in reliance on the contents of=
-=20
-this email is strictly prohibited. In such case, please immediately advise=
-=20
-the sender, and delete all copies and attachment from your system.
-This=20
-email shall not be construed and is not tantamount to an offer, an=20
-acceptance of offer, or an agreement by SoftBank Robotics Europe on any=20
-discussion or contractual document whatsoever. No employee or agent is=20
-authorized to represent or bind SoftBank Robotics Europe to third parties=
-=20
-by email, or act on behalf of SoftBank Robotics Europe by email, without=20
-express written confirmation by SoftBank Robotics Europe=E2=80=99 duly auth=
-orized=20
-representatives.
-*
-
-
-
-*Ce message =C3=A9lectronique et =C3=A9ventuelles pi=C3=A8ces=20
-jointes sont confidentiels, et exclusivement destin=C3=A9s =C3=A0 la person=
-ne ou=20
-l'entit=C3=A9 =C3=A0 qui ils sont adress=C3=A9s.
-Si vous n'=C3=AAtes pas le destinataire vis=C3=A9,=20
-vous =C3=AAtes pri=C3=A9 de ne pas divulguer, copier, distribuer ou prendre=
- toute=20
-d=C3=A9cision sur la foi de ce message =C3=A9lectronique. Merci d'en aviser=
-=20
-imm=C3=A9diatement l'exp=C3=A9diteur et de supprimer toutes les copies et =
-=C3=A9ventuelles=20
-pi=C3=A8ces jointes de votre syst=C3=A8me.
-Ce message =C3=A9lectronique n'=C3=A9quivaut pas =C3=A0=20
-une offre, =C3=A0 une acceptation d=E2=80=99offre, ou =C3=A0 un accord de S=
-oftBank Robotics=20
-Europe sur toute discussion ou document contractuel quel qu=E2=80=99il soit=
-, et ne=20
-peut =C3=AAtre interpr=C3=A9t=C3=A9 comme tel. Aucun employ=C3=A9 ou agent =
-de SoftBank Robotics=20
-Europe n'est autoris=C3=A9 =C3=A0 repr=C3=A9senter ou =C3=A0 engager la soc=
-i=C3=A9t=C3=A9 par email, ou =C3=A0=20
-agir au nom et pour le compte de la soci=C3=A9t=C3=A9 par email, sans qu=E2=
-=80=99une=20
-confirmation =C3=A9crite soit donn=C3=A9e par le repr=C3=A9sentant l=C3=A9g=
-al de SoftBank=20
-Robotics Europe ou par toute autre personne ayant re=C3=A7u d=C3=A9l=C3=A9g=
-ation de=20
-pouvoir appropri=C3=A9e.
-*
-
-**
+And why would you ever pass through vmd instead of the actual device?
+That just makes things go slower and adds zero value.
