@@ -2,54 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B121F2F76
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2019 14:33:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CF810F2FEC
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2019 14:38:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388582AbfKGNdw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 Nov 2019 08:33:52 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:50720 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730985AbfKGNdw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 Nov 2019 08:33:52 -0500
-Received: from 79.184.254.83.ipv4.supernova.orange.pl (79.184.254.83) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
- id aec6358fbcca9be9; Thu, 7 Nov 2019 14:33:50 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH 0/5] PCI: PM: Cleanups related to power state changes
-Date:   Thu, 07 Nov 2019 14:33:44 +0100
-Message-ID: <1774412.xs4Eg1OkIx@kreacher>
-In-Reply-To: <20191106190250.GA238633@google.com>
-References: <20191106190250.GA238633@google.com>
+        id S1731028AbfKGNiL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 Nov 2019 08:38:11 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:36759 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730833AbfKGNiL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 Nov 2019 08:38:11 -0500
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1iShzC-0004zE-Mq; Thu, 07 Nov 2019 14:38:06 +0100
+Message-ID: <0dd26db315afb3ac0c0fd162e7d36494eaf46f3d.camel@pengutronix.de>
+Subject: Re: [PATCH v3 2/2] PCI: qcom: Add support for SDM845 PCIe controller
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>
+Cc:     linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vinod Koul <vkoul@kernel.org>
+Date:   Thu, 07 Nov 2019 14:38:04 +0100
+In-Reply-To: <20191107001642.1127561-3-bjorn.andersson@linaro.org>
+References: <20191107001642.1127561-1-bjorn.andersson@linaro.org>
+         <20191107001642.1127561-3-bjorn.andersson@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pci@vger.kernel.org
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wednesday, November 6, 2019 8:02:50 PM CET Bjorn Helgaas wrote:
-> On Tue, Nov 05, 2019 at 11:11:57AM +0100, Rafael J. Wysocki wrote:
-> > Hi,
-> > 
-> > This series rearranges some PCI power management code to make it somewhat
-> > easier to follow and explicitly consolidate the power-up (transitions to
-> > D0) code path.
-> > 
-> > It is not intended to change the functionality of the code.
+On Wed, 2019-11-06 at 16:16 -0800, Bjorn Andersson wrote:
+> The SDM845 has one Gen2 and one Gen3 controller, add support for these.
 > 
-> Applied with Mika's reviewed-by to pci/pm for v5.5, thanks!
+> Reviewed-by: Vinod Koul <vkoul@kernel.org>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Thank you!
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 
-> Thanks for the git tips, too!
-
-You're vwelcome. :-)
-
-
+regards
+Philipp
 
