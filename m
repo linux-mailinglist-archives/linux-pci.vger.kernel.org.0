@@ -2,189 +2,173 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 01A39F391B
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2019 21:02:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D48BF3932
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2019 21:08:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbfKGUCN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 Nov 2019 15:02:13 -0500
-Received: from mga11.intel.com ([192.55.52.93]:38138 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725844AbfKGUCN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 7 Nov 2019 15:02:13 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Nov 2019 12:02:12 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,279,1569308400"; 
-   d="scan'208";a="353896399"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga004.jf.intel.com with ESMTP; 07 Nov 2019 12:02:12 -0800
-Received: from [10.54.74.33] (skuppusw-desk.jf.intel.com [10.54.74.33])
-        by linux.intel.com (Postfix) with ESMTP id 7058C580108;
-        Thu,  7 Nov 2019 12:02:12 -0800 (PST)
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH] PCI/DPC: Add pcie_ports=dpc-native parameter to bring
- back old behavior
-To:     Bjorn Helgaas <helgaas@kernel.org>, Olof Johansson <olof@lixom.net>
-Cc:     Keith Busch <keith.busch@intel.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191025202004.GA147688@google.com>
-From:   Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Organization: Intel
-Message-ID: <1ade6a9f-9532-c400-9bb0-4e68ed5752ce@linux.intel.com>
-Date:   Thu, 7 Nov 2019 11:59:57 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1725818AbfKGUIs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 Nov 2019 15:08:48 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:39136 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725785AbfKGUIs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 Nov 2019 15:08:48 -0500
+Received: by mail-ot1-f67.google.com with SMTP id e17so3145756otk.6;
+        Thu, 07 Nov 2019 12:08:47 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/M+7NEa9F4hcyStwS+O2CXj/DuZPkBH6ed1KATiGvQk=;
+        b=omHjvu5KFGKoYehYkC8YwWbXVcn8rQVcbHCMfAOVwwvc/Nj76Xrfb0/3ebuFWxlTeg
+         7TPhEzajt4CqzSa/NRdE+GjpCNhCn2jQirxMKmo6Mu4uIAR8kjJYlXe6JZnxAXZaWHWX
+         k5CjQNz8wMjIjE5GvuXMvFlplx3dojJKFX2QgLl2WLyAca2pmtojXlqS2d/pQBEKpazz
+         ywBl3PJkCX03gJByBPA+2QX9tJ1TAbme655RrsgATtWAgX/IYYI2LpM4lxoruopGRCI+
+         Q+7ASZR5ayBvm7l15D4gj4+SRenZcBfD8QsMJeDcon39iyRNOEeOV2wkfPxKd5ogoV/x
+         hb1Q==
+X-Gm-Message-State: APjAAAW74l/99Zoun8ZextOX5Uu3//9UcKIqKc9LFdBF5+v2zrVZJzrD
+        Nfco9z3U5T2m5YAfLwO4rph0sSz5p66fgrOv3ao=
+X-Google-Smtp-Source: APXvYqxSdxE5q8o7kot3Q3VPWpmjiPKminjmiI4HTAqtu6579k67BzPvoy6LhYBLhEbydlStEWo7/83897A46FJL54w=
+X-Received: by 2002:a9d:73cd:: with SMTP id m13mr4644863otk.145.1573157326980;
+ Thu, 07 Nov 2019 12:08:46 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191025202004.GA147688@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20191106193609.19645-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20191106193609.19645-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdVZwgVnq2kwjNJQHfvUH0sk6M7Hz-AJR82jMOsCNfW9wQ@mail.gmail.com> <CA+V-a8swtOUaxKnCdiTV5wvvxLEJ6XdODL=7bvQmFKY0zQTj2w@mail.gmail.com>
+In-Reply-To: <CA+V-a8swtOUaxKnCdiTV5wvvxLEJ6XdODL=7bvQmFKY0zQTj2w@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 7 Nov 2019 21:08:35 +0100
+Message-ID: <CAMuHMdXkbWkQgswMNL7Dw7_jucH+MsuAW+-CjoGVYsm=tjShRw@mail.gmail.com>
+Subject: Re: [PATCH 3/5] PCI: rcar: Add R-Car PCIe endpoint device tree bindings
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Murray <andrew.murray@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+Hi Prabhakar,
 
-On 10/25/19 1:20 PM, Bjorn Helgaas wrote:
-> On Wed, Oct 23, 2019 at 12:22:05PM -0700, Olof Johansson wrote:
->> In commit eed85ff4c0da7 ("PCI/DPC: Enable DPC only if AER is available"),
->> the behavior was changed such that native (kernel) handling of DPC
->> got tied to whether the kernel also handled AER. While this is what
->> the standard recommends, there are BIOSes out there that lack the DPC
->> handling since it was never required in the past.
-> Some systems do not grant OS control of AER via _OSC.  I guess the
-> problem is that on those systems, the OS DPC driver used to work, but
-> after eed85ff4c0da7, it does not.  Right?
+On Thu, Nov 7, 2019 at 10:26 AM Lad, Prabhakar
+<prabhakar.csengg@gmail.com> wrote:
+> On Thu, Nov 7, 2019 at 8:44 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > On Wed, Nov 6, 2019 at 8:36 PM Lad Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> > > From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > >
+> > > This patch adds the bindings for the R-Car PCIe endpoint driver.
+> > >
+> > > Signed-off-by: Lad, Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > Thanks for your patch!
+> >
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
+> > > @@ -0,0 +1,43 @@
+> > > +* Renesas R-Car PCIe Endpoint Controller DT description
+> > > +
+> > > +Required properties:
+> > > +           "renesas,pcie-ep-r8a774c0" for the R8A774C0 SoC;
+> > > +           "renesas,pcie-ep-rcar-gen3" for a generic R-Car Gen3 or
+> > > +                                    RZ/G2 compatible device.
+> >
+> > Unless I'm missing something, this is for the exact same hardware block as
+> > Documentation/devicetree/bindings/pci/rcar-pci.txt?
+> > So shouldn't you amend those bindings, instead of adding new compatible
+> > values?
+> > Please remember that DT describes hardware, not software policy.
+> > So IMHO choosing between host and endpoint is purely a configuration
+> > issue, and could be indicated by the presence or lack of some DT properties.
+> > E.g. host mode requires both "bus-range" and "device_type" properties,
+> > so their absence could indicate endpoint mode.
+> >
+> yes its the same hardware block as described in the rcar-pci.txt, I
+> did think about amending it
+> but  it might turn out to be bit messy,
+>
+> required properties host ======required properties Endpoint
+> ====================||==================
+> 1: reg                                || reg
+> 2:bus-range                      || reg names
+> 3: device_type                  || resets
+> 4: ranges                          || clocks
+> 5: dma-ranges                  || clock-names
+> 6: interrupts                      ||
+> 7: interrupt-cells               ||
+> 8: interrupt-map-mask     ||
+> 9: clocks                          ||
+> 10: clock-names             ||
 
-I need some clarification on this issue. Do you mean in these systems,
-firmware expects OS to handle DPC and AER, but it does not let OS know
-about it via _OSC ?
+We have a similar situation with SPI, where a controller can operate in
+master or slave mode, based on the absence or presence of the
+"spi-slave" DT property.
 
->
-> We should also update negotiate_os_control() to request control of DPC
-> via _OSC.  Kuppuswamy's patch [1] does that but hasn't been merged
-> yet.  That will conflict with this, but I can resolve that.
->
-> I applied this as below (with the nits Keith noticed) to pci/aer for
-> v5.5, thanks!
->
-> [1] https://lore.kernel.org/r/b638cbd3e122b4c7a58b949d7224230d2c4b34d4.1570145778.git.sathyanarayanan.kuppuswamy@linux.intel.com
->
-> commit 35a0b2378c19
-> Author: Olof Johansson <olof@lixom.net>
-> Date:   Wed Oct 23 12:22:05 2019 -0700
->
->      PCI/DPC: Add "pcie_ports=dpc-native" to allow DPC without AER control
->      
->      Prior to eed85ff4c0da7 ("PCI/DPC: Enable DPC only if AER is available"),
->      Linux handled DPC events regardless of whether firmware had granted it
->      ownership of AER or DPC, e.g., via _OSC.
->      
->      PCIe r5.0, sec 6.2.10, recommends that the OS link control of DPC to
->      control of AER, so after eed85ff4c0da7, Linux handles DPC events only if it
->      has control of AER.
->      
->      On platforms that do not grant OS control of AER via _OSC, Linux DPC
->      handling worked before eed85ff4c0da7 but not after.
->      
->      To make Linux DPC handling work on those platforms the same way they did
->      before, add a "pcie_ports=dpc-native" kernel parameter that makes Linux
->      handle DPC events regardless of whether it has control of AER.
->      
->      [bhelgaas: commit log, move pcie_ports_dpc_native to drivers/pci/]
->      Link: https://lore.kernel.org/r/20191023192205.97024-1-olof@lixom.net
->      Signed-off-by: Olof Johansson <olof@lixom.net>
->      Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
->
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index c7ac2f3ac99f..806c89f79be8 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -3540,6 +3540,8 @@
->   			even if the platform doesn't give the OS permission to
->   			use them.  This may cause conflicts if the platform
->   			also tries to use these services.
-> +		dpc-native	Use native PCIe service for DPC only.  May
-> +				cause conflicts if firmware uses AER or DPC.
->   		compat	Disable native PCIe services (PME, AER, DPC, PCIe
->   			hotplug).
->   
-> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-> index a32ec3487a8d..e06f42f58d3d 100644
-> --- a/drivers/pci/pcie/dpc.c
-> +++ b/drivers/pci/pcie/dpc.c
-> @@ -291,7 +291,7 @@ static int dpc_probe(struct pcie_device *dev)
->   	int status;
->   	u16 ctl, cap;
->   
-> -	if (pcie_aer_get_firmware_first(pdev))
-> +	if (pcie_aer_get_firmware_first(pdev) && !pcie_ports_dpc_native)
->   		return -ENOTSUPP;
->   
->   	dpc = devm_kzalloc(device, sizeof(*dpc), GFP_KERNEL);
-> diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
-> index 944827a8c7d3..1e673619b101 100644
-> --- a/drivers/pci/pcie/portdrv.h
-> +++ b/drivers/pci/pcie/portdrv.h
-> @@ -25,6 +25,8 @@
->   
->   #define PCIE_PORT_DEVICE_MAXSERVICES   5
->   
-> +extern bool pcie_ports_dpc_native;
-> +
->   #ifdef CONFIG_PCIEAER
->   int pcie_aer_init(void);
->   #else
-> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
-> index 1b330129089f..5075cb9e850c 100644
-> --- a/drivers/pci/pcie/portdrv_core.c
-> +++ b/drivers/pci/pcie/portdrv_core.c
-> @@ -250,8 +250,13 @@ static int get_port_device_capability(struct pci_dev *dev)
->   		pcie_pme_interrupt_enable(dev, false);
->   	}
->   
-> +	/*
-> +	 * With dpc-native, allow Linux to use DPC even if it doesn't have
-> +	 * permission to use AER.
-> +	 */
->   	if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC) &&
-> -	    pci_aer_available() && services & PCIE_PORT_SERVICE_AER)
-> +	    pci_aer_available() &&
-> +	    (pcie_ports_dpc_native || (services & PCIE_PORT_SERVICE_AER)))
->   		services |= PCIE_PORT_SERVICE_DPC;
->   
->   	if (pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
-> diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
-> index 0a87091a0800..160d67c59310 100644
-> --- a/drivers/pci/pcie/portdrv_pci.c
-> +++ b/drivers/pci/pcie/portdrv_pci.c
-> @@ -29,12 +29,20 @@ bool pcie_ports_disabled;
->    */
->   bool pcie_ports_native;
->   
-> +/*
-> + * If the user specified "pcie_ports=dpc-native", use the Linux DPC PCIe
-> + * service even if the platform hasn't given us permission.
-> + */
-> +bool pcie_ports_dpc_native;
-> +
->   static int __init pcie_port_setup(char *str)
->   {
->   	if (!strncmp(str, "compat", 6))
->   		pcie_ports_disabled = true;
->   	else if (!strncmp(str, "native", 6))
->   		pcie_ports_native = true;
-> +	else if (!strncmp(str, "dpc-native", 10))
-> +		pcie_ports_dpc_native = true;
->   
->   	return 1;
->   }
->
+> and if I go ahead with the same compatible string that would mean to
+> add support for endpoint
+> mode in the host driver itself. I did follow the examples of
+
+You can still have two separate drivers, binding against the same
+compatible value.  Just let the .probe() function return -ENODEV if it
+discovers (by looking at DT properties) if the node is configured for
+the other mode.
+Which brings us to my next questions: is there any code that could be
+shared between the drivers for the two modes?
+
+> rockchip/cadence/designware where
+> its the same hardware block but has two different binding files one
+> for host mode and other for
+> endpoint mode.
+
+Having two separate DT binding documents sounds fine to me, if unifying
+them makes things too complex.
+However, I think they should use the same compatible value, because the
+hardware block is the same, but just used in a different mode.
+
+Rob/Mark: Any input from the DT maintainers?
+
+> > > +- reg: Five register ranges as listed in the reg-names property
+> > > +- reg-names: Must include the following names
+> > > +       - "apb-base"
+> > > +       - "memory0"
+> > > +       - "memory1"
+> > > +       - "memory2"
+> > > +       - "memory3"
+> >
+> > What is the purpose of the last 4 regions?
+> > Can they be chosen by the driver, at runtime?
+> >
+> no the driver cannot choose them at runtime, as these are the only
+> PCIE memory(0/1/2/3) ranges
+> in the AXI address space where host memory can be mapped.
+
+Are they fixed by the PCIe hardware, i.e. could they be looked up by the
+driver based on the compatible value?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
