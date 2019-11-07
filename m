@@ -2,75 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 024F5F2AA3
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2019 10:29:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 65540F2ABD
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2019 10:32:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733035AbfKGJ3r (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 Nov 2019 04:29:47 -0500
-Received: from foss.arm.com ([217.140.110.172]:52564 "EHLO foss.arm.com"
+        id S1733185AbfKGJcy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 Nov 2019 04:32:54 -0500
+Received: from ns.mm-sol.com ([37.157.136.199]:49136 "EHLO extserv.mm-sol.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727610AbfKGJ3q (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 7 Nov 2019 04:29:46 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3A02746A;
-        Thu,  7 Nov 2019 01:29:46 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 947BD3F71A;
-        Thu,  7 Nov 2019 01:29:45 -0800 (PST)
-Date:   Thu, 7 Nov 2019 09:29:43 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 4/5] PCI: Remove PCIe Kconfig dependencies on PCI
-Message-ID: <20191107092943.GS9723@e119886-lin.cambridge.arm.com>
-References: <20191106222420.10216-1-helgaas@kernel.org>
- <20191106222420.10216-5-helgaas@kernel.org>
+        id S1727278AbfKGJcy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 7 Nov 2019 04:32:54 -0500
+Received: from [192.168.27.209] (unknown [37.157.136.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by extserv.mm-sol.com (Postfix) with ESMTPSA id 465E0CF1E;
+        Thu,  7 Nov 2019 11:32:51 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
+        t=1573119171; bh=kHCNDH66hYlQtqftCtURnCy/XixN+D9RTn5mqQoeSzY=;
+        h=Subject:To:Cc:From:Date:From;
+        b=D0a+2FTc4psh6bsO4T9FUYhg7mG5YDf1aEfIlRIvcfXTZsmIKH5WyTIzqDE0t0+Cc
+         J4zSI7KivfBujtK2moHGJxM6RM20gjNbxZ+wouyi0loUMlSICQyu6et4xvAZpumziM
+         97YC3WVq74A1ZuffQzgPnH53fuAgKi8KTPc5kM5Mi1JYF/Sf3gtOtD5AxjZXbx4iPY
+         6FqSytF/MW+WN36brasmgubMTXQxL7S/w8086nTC6GHWOZwXg0JDOfTepqgqkh9OhA
+         g6TMkT8XrojIHVdd0IDa8zRiUsWZe7vAi5xs5yP1LNJX5APndP3CnL1sn6nPy4bYs0
+         dRLAFjxZvTsFw==
+Subject: Re: [PATCH] PCI: qcom: Fix the fixup of PCI_VENDOR_ID_QCOM
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20191102002420.4091061-1-bjorn.andersson@linaro.org>
+ <f1e89dcc-4d5f-cc1f-8036-dcb062645cb0@mm-sol.com>
+ <20191106202351.GE36595@minitux>
+From:   Stanimir Varbanov <svarbanov@mm-sol.com>
+Message-ID: <87b791db-6e03-b1ab-934c-068521652117@mm-sol.com>
+Date:   Thu, 7 Nov 2019 11:32:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191106222420.10216-5-helgaas@kernel.org>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <20191106202351.GE36595@minitux>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 04:24:20PM -0600, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> drivers/pci/pcie/Kconfig is only sourced by drivers/pci/Kconfig, and only
-> when PCI is defined, so there's no need to depend on PCI again.  Remove the
-> unnecessary dependencies.
-> 
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> ---
->  drivers/pci/pcie/Kconfig | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/drivers/pci/pcie/Kconfig b/drivers/pci/pcie/Kconfig
-> index b196ad816129..207dac2fd588 100644
-> --- a/drivers/pci/pcie/Kconfig
-> +++ b/drivers/pci/pcie/Kconfig
-> @@ -4,7 +4,6 @@
->  #
->  config PCIEPORTBUS
->  	bool "PCI Express Port Bus support"
-> -	depends on PCI
->  	help
->  	  This enables PCI Express Port Bus support. Users can then enable
->  	  support for Native Hot-Plug, Advanced Error Reporting, Power
-> @@ -63,7 +62,6 @@ config PCIE_ECRC
->  #
->  config PCIEASPM
->  	bool "PCI Express ASPM control" if EXPERT
-> -	depends on PCI
->  	default y
->  	help
->  	  This enables OS control over PCI Express ASPM (Active State
+Hi Bjorn,
 
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-
-> -- 
-> 2.24.0.rc1.363.gb1bccd3e3d-goog
+On 11/6/19 10:23 PM, Bjorn Andersson wrote:
+> On Mon 04 Nov 05:00 PST 2019, Stanimir Varbanov wrote:
 > 
+>> Hi Bjorn,
+>>
+>> Thanks for the fix!
+>>
+>> On 11/2/19 2:24 AM, Bjorn Andersson wrote:
+>>> There exists non-bridge PCIe devices with PCI_VENDOR_ID_QCOM, so limit
+>>> the fixup to only affect the PCIe 2.0 (0x106) and PCIe 3.0 (0x107)
+>>> bridges.
+>>
+>> Are you sure that this will not break ops_1_0_0 (Qcom IP rev.: 1.0.0
+>> Synopsys IP rev.: 4.11a) i.e. apq8084 ?
+
+OK, I've checked DEVICE IDs for all supported SoCs in pcie-qcom driver:
+
+apq8084 0x101
+ipq8064 0x101
+apq8064 0x101
+msm8996 0x104
+ipq8074 0x302
+ipq4019 0x1001
+qcs404  ??? (can you check for this SoC)
+
+As you can see they are various, so I don't think we have to expose them
+in pci_ids.h. See my proposal below.
+
+Of course the last word will be from PCI maintainers.
+
+>>
+> 
+> I am not, I've only tested this on db820c and db845c. Unfortunately I'm
+> unable to find a branch with the necessary dts snippets to test it. Do
+> you perhaps have a branch somewhere?
+> 
+> Regards,
+> Bjorn
+> 
+>>>
+>>> Cc: stable@vger.kernel.org
+>>> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>>> ---
+>>>  drivers/pci/controller/dwc/pcie-qcom.c | 3 ++-
+>>>  include/linux/pci_ids.h                | 2 ++
+>>>  2 files changed, 4 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+>>> index 35f4980480bb..b91abf4d4905 100644
+>>> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+>>> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+>>> @@ -1441,7 +1441,8 @@ static void qcom_fixup_class(struct pci_dev *dev)
+>>>  {
+>>>  	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
+>>>  }
+>>> -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCI_ANY_ID, qcom_fixup_class);
+>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCIE_DEVICE_ID_QCOM_PCIE20, qcom_fixup_class);
+>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCIE_DEVICE_ID_QCOM_PCIE30, qcom_fixup_class);
+
+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0101, qcom_fixup_class);
+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0104, qcom_fixup_class);
+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0106, qcom_fixup_class);
+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0107, qcom_fixup_class);
+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0302, qcom_fixup_class);
+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1001, qcom_fixup_class);
+
+>>>  
+>>>  static struct platform_driver qcom_pcie_driver = {
+>>>  	.probe = qcom_pcie_probe,
+>>> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+>>> index 21a572469a4e..3d0724ee4d2f 100644
+>>> --- a/include/linux/pci_ids.h
+>>> +++ b/include/linux/pci_ids.h
+>>> @@ -2413,6 +2413,8 @@
+>>>  #define PCI_VENDOR_ID_LENOVO		0x17aa
+>>>  
+>>>  #define PCI_VENDOR_ID_QCOM		0x17cb
+>>> +#define PCIE_DEVICE_ID_QCOM_PCIE20	0x0106
+>>> +#define PCIE_DEVICE_ID_QCOM_PCIE30	0x0107
+
+... and drop these additions.
+
+>>>  
+>>>  #define PCI_VENDOR_ID_CDNS		0x17cd
+>>>  
+>>>
+>>
+>> -- 
+>> regards,
+>> Stan
+
+-- 
+regards,
+Stan
