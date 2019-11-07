@@ -2,147 +2,200 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C7DFF2A11
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2019 10:03:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4998AF2A90
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2019 10:26:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733112AbfKGJDj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 Nov 2019 04:03:39 -0500
-Received: from mga04.intel.com ([192.55.52.120]:43039 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727715AbfKGJDi (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 7 Nov 2019 04:03:38 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Nov 2019 01:03:37 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,277,1569308400"; 
-   d="scan'208";a="212978735"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 07 Nov 2019 01:03:34 -0800
-Received: by lahna (sSMTP sendmail emulation); Thu, 07 Nov 2019 11:03:33 +0200
-Date:   Thu, 7 Nov 2019 11:03:33 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Valerio Passini <passini.valerio@gmail.com>,
-        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH] ACPI / hotplug / PCI: Allocate resources directly under
- the non-hotplug bridge
-Message-ID: <20191107090333.GG2552@lahna.fi.intel.com>
-References: <20191030150545.19885-1-mika.westerberg@linux.intel.com>
- <20191106232405.GA242013@google.com>
+        id S1733228AbfKGJ0K (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 Nov 2019 04:26:10 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:39918 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726734AbfKGJ0K (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 Nov 2019 04:26:10 -0500
+Received: by mail-oi1-f193.google.com with SMTP id v138so1361665oif.6;
+        Thu, 07 Nov 2019 01:26:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=svJecAxqhlBawitftrz5LXbFY8d5ATbDsx3obREbmBk=;
+        b=JaRiVyVnWoErWMwSLJsT3edCIFkLrM3bw9K+3t2YOtpGSIe5jPWeSfJJ3zV3UcGXyj
+         wwR2NS63eTI2jFJYHyvrY1LIrbvvYORCOjhiH8sOou1LG6PPH6s0hxYi668s+Ia/fGNp
+         mD+dKjP+i/vpXdma4xZtepheZ7yutdc9rzN+mceieTuhWlkhAMrPEFb/Jt3ett6SzSg9
+         ELmfrBZVVLKH9oU9mvJlKOogzz4Xf2ygwEAneNX6k9Q9/CL4uLnu6olfZ/Y8MyINIPDf
+         l05fDkGxYqctkz/xtGJFKge5gK+fg8G8ZLe5jNs9w3+fRrpZp6HQVuJW4G6WswW642hk
+         BRQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=svJecAxqhlBawitftrz5LXbFY8d5ATbDsx3obREbmBk=;
+        b=eWvCLpGlJ2B931V8o+ejF2ZRR2cbg1lISYEndpgZJ2HzTVpWuQbR8IeuDWUjFtDd+o
+         6fucU+L5TPQzoHalkxOKuWrHUWq3DW3hvU4RadKH45FcP6X1JusIKHClZVKqU3ytBsP7
+         Lf6oV+qc0CifUt1nbzAW1A6tJmc2+I6eqF9MO+1Dp82LcUumI0GhMXsHe0O8GATUBj/G
+         Sg76/eVBJvXJmdY6Ppd2S5uLd7NDVwdObjzqta5rMcIk4MB5vGoJQcKb+qrp1EMEz2AW
+         yHTQ52Po1a2DkT+hmHGuEgmNOhSxlfBYg//Lqxzr1pDWPKt7yG02osWQXo18lVm31Zie
+         Xqrw==
+X-Gm-Message-State: APjAAAVOi6G9kEFp7kl8s1QvE3I/qjfTyaL3ll1VKlwF/a3T8sKOj8E9
+        h25vMlN+mS/0reJgR4/SybIHS630Vv3sR252mBoSP8QtILzD0w==
+X-Google-Smtp-Source: APXvYqzl/mjJb58YCZv+1rPoz9YmBODStqICfxXp/t7vlm94pbfdzMz/foObeQbkPEnjt5Qa5497EWxx2Gk87u9uMzM=
+X-Received: by 2002:aca:5cc6:: with SMTP id q189mr2405318oib.101.1573118768684;
+ Thu, 07 Nov 2019 01:26:08 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191106232405.GA242013@google.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20191106193609.19645-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20191106193609.19645-4-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdVZwgVnq2kwjNJQHfvUH0sk6M7Hz-AJR82jMOsCNfW9wQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdVZwgVnq2kwjNJQHfvUH0sk6M7Hz-AJR82jMOsCNfW9wQ@mail.gmail.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Thu, 7 Nov 2019 09:25:42 +0000
+Message-ID: <CA+V-a8swtOUaxKnCdiTV5wvvxLEJ6XdODL=7bvQmFKY0zQTj2w@mail.gmail.com>
+Subject: Re: [PATCH 3/5] PCI: rcar: Add R-Car PCIe endpoint device tree bindings
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Murray <andrew.murray@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 05:24:05PM -0600, Bjorn Helgaas wrote:
-> [+cc Ben]
-> 
-> On Wed, Oct 30, 2019 at 06:05:45PM +0300, Mika Westerberg wrote:
-> > Valerio and others reported that commit 84c8b58ed3ad ("ACPI / hotplug /
-> > PCI: Don't scan bridges managed by native hotplug") prevents some recent
-> > LG and HP laptops from booting with endless loop of:
-> > 
-> >   [   26.237796] ACPI Error: No handler or method for GPE 08, disabling event (20190215/evgpe-835)
-> >   [   26.238699] ACPI Error: No handler or method for GPE 09, disabling event (20190215/evgpe-835)
-> >   [   26.239306] ACPI Error: No handler or method for GPE 0A, disabling event (20190215/evgpe-835)
-> >   ...
-> > 
-> > What seems to happen is that during boot, after the initial PCI
-> > enumeration when EC is enabled the platform triggers ACPI Notify() to
-> > one of the root ports. The root port itself looks like this:
-> > 
-> >   [    0.723757] pci 0000:00:1b.0: PCI bridge to [bus 02-3a]
-> >   [    0.723765] pci 0000:00:1b.0:   bridge window [mem 0xc4000000-0xda0fffff]
-> >   [    0.723773] pci 0000:00:1b.0:   bridge window [mem 0x80000000-0xa1ffffff 64bit pref]
+Hi Geert,
+
+Thank you for the review.
+
+On Thu, Nov 7, 2019 at 8:44 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Wed, Nov 6, 2019 at 8:36 PM Lad Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> > From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > >
-> > The BIOS has configured the root port so that it does not have I/O
-> > bridge window.
-> > 
-> > Now when the ACPI Notify() is triggered ACPI hotplug handler calls
-> > acpiphp_native_scan_bridge() for each non-hotplug bridge (as this system
-> > is using native PCIe hotplug) and pci_assign_unassigned_bridge_resources()
-> > to allocate resources.
-> > 
-> > The device connected to the root port is a PCIe switch (Thunderbolt
-> > controller) with two hotplug downstream ports. Because of the hotplug
-> > ports __pci_bus_size_bridges() tries to add "additional I/O" of 256
-> > bytes to each (DEFAULT_HOTPLUG_IO_SIZE). This gets further aligned to 4k
-> > as that's the minimum I/O window size so each hotplug port gets 4k I/O
-> > window and the same happens for the root port (which is also hotplug
-> > port). This means 3 * 4k = 12k I/O window.
-> > 
-> > Because of this pci_assign_unassigned_bridge_resources() ends up opening
-> > a I/O bridge window for the root port at first available I/O address
-> > which seems to be in range 0x1000 - 0x3fff. Normally this range is used
-> > for ACPI stuff such as GPE bits (below is part of /proc/ioports):
-> > 
-> >     1800-1803 : ACPI PM1a_EVT_BLK
-> >     1804-1805 : ACPI PM1a_CNT_BLK
-> >     1808-180b : ACPI PM_TMR
-> >     1810-1815 : ACPI CPU throttle
-> >     1850-1850 : ACPI PM2_CNT_BLK
-> >     1854-1857 : pnp 00:05
-> >     1860-187f : ACPI GPE0_BLK
-> 
-> Nice debugging work!
-> 
-> > However, when the ACPI Notify() happened this range was not yet reserved
-> > for ACPI/PNP (that happens later) so PCI gets it. 
-> 
-> I think this is really the underlying problem.  IMO those ACPI/PNP
-> resources ought to be reserved before we start assigning resources to
-> PCI devices.  That would be a huge problem to fix, though.
-
-I agree, changing the order would probably open another can of worms.
-
-> > It then starts writing
-> > to this range and accidentally stomps over GPE bits among other things
-> > causing the endless stream of messages about missing GPE handler.
+> > This patch adds the bindings for the R-Car PCIe endpoint driver.
 > >
-> > This problem does not happen if "pci=hpiosize=0" is passed in the kernel
-> > command line. The reason is that then the kernel does not try to
-> > allocate the additional 256 bytes for each hotplug port.
-> > 
-> > Fix this by allocating resources directly below the non-hotplug bridges
-> > where a new device may appear as a result of ACPI Notify(). This avoids
-> > the hotplug bridges and prevents opening the additional I/O window.
-> 
-> Looking at [1], here's the topology I see:
-> 
->   00:1b.0: Root Port to [bus 02-3a]                   # pciehp
->   02:00.0: Switch Upstream Port to [bus 03-3a]        # thunderbolt
->   03:00.0: Switch Downstream Port to [bus 04]         # thunderbolt
->   03:01.0: Switch Downstream Port to [bus 05-39]      # thunderbolt, pciehp
->   03:02.0: Switch Downstream Port to [bus 3a]         # thunderbolt
->   04:00.0: reg 0x10: [mem 0xda000000-0xda03ffff]
->   04:00.0: reg 0x14: [mem 0xda040000-0xda040fff]
->   3a:00.0: reg 0x10: [mem 0xd9f00000-0xd9f0ffff]
-> 
-> In this topology, I guess the non-hotplug bridges would be 03:00.0
-> and 03:02.0?  And we skip 03:01.0 because hotplug_is_native() is true
-> for that?
+> > Signed-off-by: Lad, Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Thanks for your patch!
+>
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
+> > @@ -0,0 +1,43 @@
+> > +* Renesas R-Car PCIe Endpoint Controller DT description
+> > +
+> > +Required properties:
+> > +           "renesas,pcie-ep-r8a774c0" for the R8A774C0 SoC;
+> > +           "renesas,pcie-ep-rcar-gen3" for a generic R-Car Gen3 or
+> > +                                    RZ/G2 compatible device.
+>
+> Unless I'm missing something, this is for the exact same hardware block as
+> Documentation/devicetree/bindings/pci/rcar-pci.txt?
+> So shouldn't you amend those bindings, instead of adding new compatible
+> values?
+> Please remember that DT describes hardware, not software policy.
+> So IMHO choosing between host and endpoint is purely a configuration
+> issue, and could be indicated by the presence or lack of some DT properties.
+> E.g. host mode requires both "bus-range" and "device_type" properties,
+> so their absence could indicate endpoint mode.
+>
+yes its the same hardware block as described in the rcar-pci.txt, I
+did think about amending it
+but  it might turn out to be bit messy,
 
-Yes.
+required properties host ======required properties Endpoint
+====================||==================
+1: reg                                || reg
+2:bus-range                      || reg names
+3: device_type                  || resets
+4: ranges                          || clocks
+5: dma-ranges                  || clock-names
+6: interrupts                      ||
+7: interrupt-cells               ||
+8: interrupt-map-mask     ||
+9: clocks                          ||
+10: clock-names             ||
 
-> What would happen if a device below one of the non-hotplug bridges,
-> e.g., 3a:00.0, had an I/O BAR?  Would this patch still work?
+and if I go ahead with the same compatible string that would mean to
+add support for endpoint
+mode in the host driver itself. I did follow the examples of
+rockchip/cadence/designware where
+its the same hardware block but has two different binding files one
+for host mode and other for
+endpoint mode.
 
-I think it would still work because now we call pci_bus_size_bridges()
-only for non-hotplug bridge which do not have I/O window open so
-pbus_size_io() fails to find the "free" I/O resource on that bus and the
-kernel then fails to assign that I/O resource for the device.
+> > +- reg: Five register ranges as listed in the reg-names property
+> > +- reg-names: Must include the following names
+> > +       - "apb-base"
+> > +       - "memory0"
+> > +       - "memory1"
+> > +       - "memory2"
+> > +       - "memory3"
+>
+> What is the purpose of the last 4 regions?
+> Can they be chosen by the driver, at runtime?
+>
+no the driver cannot choose them at runtime, as these are the only
+PCIE memory(0/1/2/3) ranges
+in the AXI address space where host memory can be mapped.
 
-This is based on reading the code - I cannot verify this on real
-hardware, though.
+> > +- resets: Must contain phandles to PCIe-related reset lines exposed by IP block
+> > +- clocks: from common clock binding: clock specifiers for the PCIe controller
+> > +        clock.
+> > +- clock-names: from common clock binding: should be "pcie".
+> > +
+> > +Optional Property:
+> > +- max-functions: Maximum number of functions that can be configured (default 1).
+> > +
+> > +Example:
+> > +
+> > +SoC-specific DT Entry:
+> > +
+> > +       pcie_ep: pcie_ep@fe000000 {
+> > +               compatible = "renesas,pcie-r8a7791", "renesas,pcie-rcar-gen2";
+>
+> These compatible values do not match with the ones above
+> (but they match with what I'd like to see ;-)
+>
+my bad I'll update them to reflect the above.
+
+Cheers,
+--Prabhakar
+
+> > +               reg = <0 0xfe000000 0 0x80000>,
+> > +                       <0x0 0xfe100000 0 0x100000>,
+> > +                       <0x0 0xfe200000 0 0x200000>,
+> > +                       <0x0 0x30000000 0 0x8000000>,
+> > +                       <0x0 0x38000000 0 0x8000000>;
+> > +               reg-names = "apb-base", "memory0", "memory1", "memory2", "memory3";
+> > +               clocks = <&cpg CPG_MOD 319>;
+> > +               clock-names = "pcie";
+> > +               power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
+> > +               resets = <&cpg 319>;
+> > +       };
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
