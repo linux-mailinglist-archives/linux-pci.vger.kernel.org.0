@@ -2,200 +2,132 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A4A66F2CDC
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2019 11:53:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 304A6F2DBC
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2019 12:52:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388044AbfKGKxj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 Nov 2019 05:53:39 -0500
-Received: from mx2.suse.de ([195.135.220.15]:59998 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727278AbfKGKxj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 7 Nov 2019 05:53:39 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E3269B2CD;
-        Thu,  7 Nov 2019 10:53:36 +0000 (UTC)
-Message-ID: <df7a30583436589449ec9cb587b5ab5e8985d3d7.camel@suse.de>
-Subject: Re: [PATCH 1/4] dt-bindings: pci: add bindings for brcmstb's PCIe
- device
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+        id S2387958AbfKGLwm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 Nov 2019 06:52:42 -0500
+Received: from mx.socionext.com ([202.248.49.38]:58147 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727178AbfKGLwm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 7 Nov 2019 06:52:42 -0500
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 07 Nov 2019 20:52:40 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 11A78605F8;
+        Thu,  7 Nov 2019 20:52:40 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Thu, 7 Nov 2019 20:52:50 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id D23A61A04FC;
+        Thu,  7 Nov 2019 20:52:39 +0900 (JST)
+Received: from [10.213.132.48] (unknown [10.213.132.48])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id A4AD7120C15;
+        Thu,  7 Nov 2019 20:52:39 +0900 (JST)
+Date:   Thu, 07 Nov 2019 20:52:39 +0900
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 To:     Andrew Murray <andrew.murray@arm.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        mbrugger@suse.com, linux-pci@vger.kernel.org, phil@raspberrypi.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org, james.quinlan@broadcom.com,
+Subject: Re: [PATCH 2/2] PCI: uniphier: Add checking whether PERST# is deasserted
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        linux-arm-kernel@lists.infradead.org, wahrenst@gmx.net
-Date:   Thu, 07 Nov 2019 11:53:34 +0100
-In-Reply-To: <20191107103235.GW9723@e119886-lin.cambridge.arm.com>
-References: <20191106214527.18736-1-nsaenzjulienne@suse.de>
-         <20191106214527.18736-2-nsaenzjulienne@suse.de>
-         <20191107103235.GW9723@e119886-lin.cambridge.arm.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-lSQQztMt1wJEBprNfTIe"
-User-Agent: Evolution 3.34.1 
+        <linux-pci@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+In-Reply-To: <20191107100207.GV9723@e119886-lin.cambridge.arm.com>
+References: <1573102695-7018-2-git-send-email-hayashi.kunihiko@socionext.com> <20191107100207.GV9723@e119886-lin.cambridge.arm.com>
+Message-Id: <20191107205239.65C1.4A936039@socionext.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Becky! ver. 2.70 [ja]
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi Andrew,
+Thank you for your comments.
 
---=-lSQQztMt1wJEBprNfTIe
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Thu, 7 Nov 2019 10:02:08 +0000 <andrew.murray@arm.com> wrote:
 
-On Thu, 2019-11-07 at 10:32 +0000, Andrew Murray wrote:
-> On Wed, Nov 06, 2019 at 10:45:23PM +0100, Nicolas Saenz Julienne wrote:
-> > From: Jim Quinlan <james.quinlan@broadcom.com>
->=20
-> Nit: Looking at past git history, ideally the patch subject would be
-> 'dt-bindings: *PCI*: *A*dd bindings for brcmstb's PCIe.
+> On Thu, Nov 07, 2019 at 01:58:15PM +0900, Kunihiko Hayashi wrote:
+> > When PERST# is asserted once, EP configuration will be initialized.
+> 
+> I don't quite understand this - does the EP/RC mode depend on how often
+> PERST# is toggled?
 
-Noted.
+I think of connecting this RC controller and EP based on `Linux PCI
+endpoint framework' in another machine.
 
-> > The DT bindings description of the brcmstb PCIe device is described.
-> > This node can only be used for now on the Raspberry Pi 4.
-> >=20
-> > This was based on Jim's original submission[1], converted to yaml and
-> > adapted to the RPi4 case.
->=20
-> Thanks for picking this up.
->=20
-> > [1] https://patchwork.kernel.org/patch/10605937/
-> >=20
-> > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> > Co-developed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+While this RC driver is probing, the EP driver might be also probing and
+configurating itself using configfs. If PERST# is toggled after the EP
+has done its configuration, this configuration will be lost.
+
+I expect that the EP configurates after RC has toggled PERST#, however,
+there is no way to synchronize both of them.
+
+
+> 
+> > If PERST# has been already deasserted, it isn't necessary to assert
+> > here.
+> 
+> What is the motativation for this patch? Is it to avoid a delay during
+> boot, or to fix some bug? Isn't it nice to always reset the IP before
+> use anyway?
+
+Since EP device usually works without its configuration after PERST#,
+deassering PERST# here is no problem. Since bus reset breaks configuration
+of EP as shown above, bus reset should be done before EP has probed.
+Maybe boot sequence in host machine will do.
+
+
+>
+> > 
+> > This checks whether PERST# is deasserted using PCL_PINMON register,
+> > and adds omit controlling PERST#.
+> 
+> Should this read 'and omits controlling PERST#'?
+
+Yes, I'll fix it.
+
+
+> 
+> > 
+> > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 > > ---
-> >  .../bindings/pci/brcm,stb-pcie.yaml           | 116 ++++++++++++++++++
-> >  1 file changed, 116 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/pci/brcm,stb-pcie=
-.yaml
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > new file mode 100644
-> > index 000000000000..0b81c26f8568
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > @@ -0,0 +1,116 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/pci/brcm,stb-pcie.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >  drivers/pci/controller/dwc/pcie-uniphier.c | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
+> > index 8fd7bad..1ea4220 100644
+> > --- a/drivers/pci/controller/dwc/pcie-uniphier.c
+> > +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
+> > @@ -22,6 +22,9 @@
+> >  
+> >  #include "pcie-designware.h"
+> >  
+> > +#define PCL_PINMON			0x0028
+> > +#define PCL_PINMON_PERST_OUT		BIT(16)
 > > +
-> > +title: Brcmstb PCIe Host Controller Device Tree Bindings
-> > +
-> > +maintainers:
-> > +  - Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: brcm,bcm2711-pcie # The Raspberry Pi 4
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    minItems: 1
-> > +    maxItems: 2
-> > +    items:
-> > +      - description: PCIe host controller
-> > +      - description: builtin MSI controller
-> > +
-> > +  interrupt-names:
-> > +    minItems: 1
-> > +    maxItems: 2
-> > +    items:
-> > +      - const: pcie
-> > +      - const: msi
-> > +
-> > +  "#address-cells":
-> > +    const: 3
-> > +
-> > +  "#size-cells":
-> > +    const: 2
-> > +
-> > +  "#interrupt-cells":
-> > +    const: 1
-> > +
-> > +  interrupt-map-mask: true
-> > +
-> > +  interrupt-map: true
-> > +
-> > +  ranges: true
-> > +
-> > +  dma-ranges: true
-> > +
-> > +  clocks:
-> > +    maxItems: 1
-> > +
-> > +  clock-names:
-> > +    items:
-> > +      - const: sw_pcie
-> > +
-> > +  msi-controller:	/* We use the domain number as our controller number=
- */
-> > 	pcie->id =3D of_get_pci_domain_nr(dn);
-> > 	if (pcie->id < 0)
-> > 		return pcie->id;
-> > +    description: Identifies the node as an MSI controller.
-> > +    type: boolean
-> > +
-> > +  msi-parent:
-> > +    description: MSI controller the device is capable of using.
-> > +    $ref: /schemas/types.yaml#/definitions/phandle
-> > +
-> > +  linux,pci-domain:
-> > +    description: PCI domain ID. Should be unique for each host control=
-ler.
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +
-> > +  brcm,enable-ssc:
-> > +    description: Indicates usage of spread-spectrum clocking.
-> > +    type: boolean
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - "#address-cells"
-> > +  - "#size-cells"
-> > +  - "#interrupt-cells"
-> > +  - interrupt-map-mask
-> > +  - interrupt-map
-> > +  - ranges
-> > +  - dma-ranges
-> > +  - linux,pci-domain
->=20
-> I don't think pci-domain is *required* is it?
+> >  #define PCL_PINCTRL0			0x002c
+> >  #define PCL_PERST_PLDN_REGEN		BIT(12)
+> >  #define PCL_PERST_NOE_REGEN		BIT(11)
+> > @@ -100,6 +103,11 @@ static void uniphier_pcie_init_rc(struct uniphier_pcie_priv *priv)
+> >  	val |= PCL_SYS_AUX_PWR_DET;
+> >  	writel(val, priv->base + PCL_APP_PM0);
+> >  
+> > +	/* return if PERST# is already deasserted */
+> 
+> This comment just describes what the following line does which may be
+> self-explanatory, perhaps a better comment would describe why we avoid
+> a reset.
 
-You're right, I missed that one. It was needed on some of the STB devices b=
-ut
-not in the RPi4's case. I'll remove it in v2.
+Indeed. I'll write the reason here.
 
-Regards,
-Nicolas
+Thank you,
 
-
---=-lSQQztMt1wJEBprNfTIe
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3D964ACgkQlfZmHno8
-x/6Dlgf9F45I7R8USQ8gJmC9ajqlrRMvsDHlY81jEgVLxDCZbF0PRe59u1wFyB3G
-/FikTo9UHzdlxoh53V+s79l0sfIUfivDe1QA6OHUBOLl5DjK4db9igX6SnEX7EQi
-baB5K6bwJgtqYOyOmwkyHoxBrkTCUkURwqQ6Qn49s9Q2mNzgjAe1VHredXV6BvT8
-ZcUDwz6voiY4wSEZen9tHqVoKQdSRgq8GGrohiHPzvyShfv515AckbEMKzR0Z5cf
-f73H4sNp9/P/2fk4Rtvujc22rSvHPLcHIUGZalz8tcxdGIKX02Lh1Fjx9hAzdxJZ
-0i/rcLENlxAAYJW2YCYp5ILND4hVEg==
-=Sc3w
------END PGP SIGNATURE-----
-
---=-lSQQztMt1wJEBprNfTIe--
+---
+Best Regards,
+Kunihiko Hayashi
 
