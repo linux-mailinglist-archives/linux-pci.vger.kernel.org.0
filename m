@@ -2,137 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 71B13F25CF
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2019 04:07:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A794AF26B3
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2019 05:59:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733068AbfKGDHc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 Nov 2019 22:07:32 -0500
-Received: from mail-eopbgr50069.outbound.protection.outlook.com ([40.107.5.69]:39553
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727581AbfKGDHc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 6 Nov 2019 22:07:32 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nLDUQjTtoyRLBx1ZvunQzBeW57MhmRPV9jMPXST6HVtXMKoQilbA0ON8+Rd3n1lL2F3umBu7IpE2ly3SQKs0FKputKrVWvkQpFp/et2SFLXVscX7Q/cQ9MT076FgrYSkpo32O6FVjlMDyq0Wd3wnv0k4TJfzCTe1f5GOBQACPLnuT0nK7Xw50StrGfsVARhF7ilCajzA+/1bMGHtJniXOnJhYUmFkzHK/FTCoP1rfqHlEIC9F1ifsw/lv4hZ3TUmb2Noz8EdgM3E3KzqIjHDqA1Gd7ZkOTcJpd4eEeRXAPkZ9txgbpigrmps9tO19GfovdNDzuC60DB4AVjrNslkXA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/o8uxsOxDgjwOufndZ4Ak3zs3P3NBF2ssjyhtubcu4c=;
- b=Ba56W2lxWOtPLIs94evsGYbowqZa90BQTwodJ2+PKP25Nu2+6WpnNQZadgtFhYlHum8VcHxyhZLfkQFMXte3E9PZsdkJqSR15UVexRT8bLJUKooVEa9ver+HKT9gl5kG74eZgEUJPVE6azN6FTd/PBeB7uD7F5ttNjfyBLCaoof1bKIKo8GGqgohjGa99poMnGbLCr4j/ey2C7I9VySW/YuW8/6e9l/180B+0QU+JI6y/USyMYg1a3KiyD8sjJQahgLEDj/dcz7qZ6r1Av2BfNWoWA27JDsiR7+drsIco76qJLCn8OJSP1adZ0TNB4SYMbEv4FoxBuEmnlpV438J0w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/o8uxsOxDgjwOufndZ4Ak3zs3P3NBF2ssjyhtubcu4c=;
- b=KhBeJtaz1af9/aOj4blawz98aTdDH6GFaLN/AH5dCR7qtRPH2fMtWnzX/B6b7WjrSm5uzX981O5ZK+roQDshavNfmZRKvWDoBwhvqgpun5nuKaC+p5/7HQJgRWNwpDaI4LBB8U+az0pOXptGgliOgutN3Qx7Qaw7xXmylU4brKA=
-Received: from AM5PR04MB3299.eurprd04.prod.outlook.com (10.173.255.158) by
- AM5PR04MB3011.eurprd04.prod.outlook.com (10.173.254.138) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2430.20; Thu, 7 Nov 2019 03:07:27 +0000
-Received: from AM5PR04MB3299.eurprd04.prod.outlook.com
- ([fe80::8ce8:9eaf:3916:4bc9]) by AM5PR04MB3299.eurprd04.prod.outlook.com
- ([fe80::8ce8:9eaf:3916:4bc9%6]) with mapi id 15.20.2430.023; Thu, 7 Nov 2019
- 03:07:27 +0000
-From:   Xiaowei Bao <xiaowei.bao@nxp.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: RE: [PATCH v6 1/3] dt-bindings: pci: layerscape-pci: add compatible
- strings "fsl,ls1028a-pcie"
-Thread-Topic: [PATCH v6 1/3] dt-bindings: pci: layerscape-pci: add compatible
- strings "fsl,ls1028a-pcie"
-Thread-Index: AQHVYUH/DvJxlnvIeUC5Po3WZALzrKd+tqiAgAC23gA=
-Date:   Thu, 7 Nov 2019 03:07:26 +0000
-Message-ID: <AM5PR04MB3299603C8DD13CC25BDFBEBAF5780@AM5PR04MB3299.eurprd04.prod.outlook.com>
-References: <20190902034319.14026-1-xiaowei.bao@nxp.com>
- <20191106160937.GB23381@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20191106160937.GB23381@e121166-lin.cambridge.arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=xiaowei.bao@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 8eb60dc1-703a-452f-4bde-08d7632f9e91
-x-ms-traffictypediagnostic: AM5PR04MB3011:|AM5PR04MB3011:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM5PR04MB301154E87D4E293462B05A6BF5780@AM5PR04MB3011.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 0214EB3F68
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(136003)(39860400002)(376002)(346002)(13464003)(199004)(189003)(256004)(5660300002)(71190400001)(66946007)(66476007)(66446008)(71200400001)(54906003)(66556008)(99286004)(52536014)(14454004)(316002)(6916009)(7736002)(7416002)(76116006)(478600001)(186003)(305945005)(26005)(2906002)(25786009)(6246003)(55016002)(64756008)(6116002)(102836004)(8936002)(81156014)(66066001)(6436002)(81166006)(53546011)(7696005)(446003)(9686003)(44832011)(476003)(6506007)(8676002)(33656002)(86362001)(486006)(4326008)(229853002)(11346002)(3846002)(74316002)(76176011)(142933001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR04MB3011;H:AM5PR04MB3299.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Fy8vzLlu1GOQVoZdtbRlUSTZQVGD87odtQw3yS3w6OFIRXgW5/Si6h4Efksw9tCh38g4sGuANav6VZNzZBKqtfkum2BVYgr8xBKDgA101MxI1qmF+wcYRHEQpxO42tj1sLo9g+1DDGzfGWIwXkI7/RZ8XrbSHfx6tk6Or9xVclLtuo8r79nWflqXiQR9ztrQziPwxVNj5fxl9Cx6bStgo2LSMtuUXioMLIPPlumOjHHwvkWOeolJwfd69Ls0UfyzZz0+4Y0IjeXnHxyl6s36JhsILe7hIJzyTUx5clLNijMrPxp7R+cBxerGa/fKE22MyGuhTTiNotnOYVE/DQPk2vJk4LpcwnABIbWpmPB9FvgraFVWuQPrP1FWi1Qo5iimGFwfnlAqeqY1/eoPzIAKulvW54MIKyug4TimKyiap5FPowY3GlORuGTRLm+UYenA
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8eb60dc1-703a-452f-4bde-08d7632f9e91
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Nov 2019 03:07:27.0070
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 8XGMrF4jYALHTbi+3NUD5GeRpKW48ETcD7pqfAl4JPY6dfxqKfnvdt8rFmkC54rSqlSMVQE6IkLZbNzQciyr6Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR04MB3011
+        id S1733094AbfKGE7F (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 Nov 2019 23:59:05 -0500
+Received: from mx.socionext.com ([202.248.49.38]:53324 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726582AbfKGE7F (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 6 Nov 2019 23:59:05 -0500
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 07 Nov 2019 13:59:04 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 6CFD8605F8;
+        Thu,  7 Nov 2019 13:59:04 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Thu, 7 Nov 2019 13:59:11 +0900
+Received: from plum.e01.socionext.com (unknown [10.213.132.32])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id EC4601A0E9F;
+        Thu,  7 Nov 2019 13:59:03 +0900 (JST)
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH 1/2] PCI: uniphier: Set mode register to host mode
+Date:   Thu,  7 Nov 2019 13:58:14 +0900
+Message-Id: <1573102695-7018-1-git-send-email-hayashi.kunihiko@socionext.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTG9yZW56byBQaWVyYWxp
-c2kgPGxvcmVuem8ucGllcmFsaXNpQGFybS5jb20+DQo+IFNlbnQ6IDIwMTnE6jEx1MI3yNUgMDox
-MA0KPiBUbzogWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54cC5jb20+DQo+IENjOiByb2JoK2R0
-QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOyBzaGF3bmd1b0BrZXJuZWwub3JnOyBM
-ZW8NCj4gTGkgPGxlb3lhbmcubGlAbnhwLmNvbT47IE0uaC4gTGlhbiA8bWluZ2h1YW4ubGlhbkBu
-eHAuY29tPjsgTWluZ2thaSBIdQ0KPiA8bWluZ2thaS5odUBueHAuY29tPjsgUm95IFphbmcgPHJv
-eS56YW5nQG54cC5jb20+Ow0KPiBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOyBkZXZpY2V0cmVl
-QHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgt
-YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiBsaW51eHBwYy1kZXZAbGlzdHMub3ps
-YWJzLm9yZzsgYmhlbGdhYXNAZ29vZ2xlLmNvbTsgWi5xLiBIb3UNCj4gPHpoaXFpYW5nLmhvdUBu
-eHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHY2IDEvM10gZHQtYmluZGluZ3M6IHBjaTog
-bGF5ZXJzY2FwZS1wY2k6IGFkZCBjb21wYXRpYmxlDQo+IHN0cmluZ3MgImZzbCxsczEwMjhhLXBj
-aWUiDQo+IA0KPiBPbiBNb24sIFNlcCAwMiwgMjAxOSBhdCAxMTo0MzoxN0FNICswODAwLCBYaWFv
-d2VpIEJhbyB3cm90ZToNCj4gPiBBZGQgdGhlIFBDSWUgY29tcGF0aWJsZSBzdHJpbmcgZm9yIExT
-MTAyOEENCj4gDQo+IFNlbnRlbmNlcyBtdXN0IGJlIHRlcm1pbmF0ZWQgd2l0aCBhIHBlcmlvZC4N
-Cj4gDQo+ID4gU2lnbmVkLW9mZi1ieTogWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54cC5jb20+
-DQo+ID4gU2lnbmVkLW9mZi1ieTogSG91IFpoaXFpYW5nIDxaaGlxaWFuZy5Ib3VAbnhwLmNvbT4N
-Cj4gPiBSZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4NCj4gPiAtLS0N
-Cj4gPiB2MjoNCj4gPiAgLSBObyBjaGFuZ2UuDQo+ID4gdjM6DQo+ID4gIC0gTm8gY2hhbmdlLg0K
-PiA+IHY0Og0KPiA+ICAtIE5vIGNoYW5nZS4NCj4gPiB2NToNCj4gPiAgLSBObyBjaGFuZ2UuDQo+
-ID4gdjY6DQo+ID4gIC0gTm8gY2hhbmdlLg0KPiA+DQo+ID4gIERvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9wY2kvbGF5ZXJzY2FwZS1wY2kudHh0IHwgMSArDQo+ID4gIDEgZmlsZSBj
-aGFuZ2VkLCAxIGluc2VydGlvbigrKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvbGF5ZXJzY2FwZS1wY2kudHh0DQo+IGIvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9sYXllcnNjYXBlLXBjaS50eHQNCj4gPiBp
-bmRleCBlMjBjZWFhLi45OWEzODZlIDEwMDY0NA0KPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9wY2kvbGF5ZXJzY2FwZS1wY2kudHh0DQo+ID4gKysrIGIvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9sYXllcnNjYXBlLXBjaS50eHQNCj4gPiBA
-QCAtMjEsNiArMjEsNyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ICAgICAgICAgICJmc2ws
-bHMxMDQ2YS1wY2llIg0KPiA+ICAgICAgICAgICJmc2wsbHMxMDQzYS1wY2llIg0KPiA+ICAgICAg
-ICAgICJmc2wsbHMxMDEyYS1wY2llIg0KPiA+ICsgICAgICAgICJmc2wsbHMxMDI4YS1wY2llIg0K
-PiA+ICAgIEVQIG1vZGU6DQo+ID4gIAkiZnNsLGxzMTA0NmEtcGNpZS1lcCIsICJmc2wsbHMtcGNp
-ZS1lcCINCj4gPiAgLSByZWc6IGJhc2UgYWRkcmVzc2VzIGFuZCBsZW5ndGhzIG9mIHRoZSBQQ0ll
-IGNvbnRyb2xsZXIgcmVnaXN0ZXIgYmxvY2tzLg0KPiANCj4gSSBoYXZlIGFwcGxpZWQgdGhpcyBz
-ZXJpZXMgdG8gcGNpL2xheWVyc2NhcGUsIHRoYW5rcy4NCg0KVGhhbmsgeW91IGZvciB5b3VyIGNv
-cnJlY3Rpb25zIGFuZCBjb21tZW50cywgSSB3aWxsIHBheSBhdHRlbnRpb24gdG8gdGhlIGRldGFp
-bHMNCmFuZCBxdWFsaXR5IG9mIGVhY2ggcGF0Y2ggaW4gdGhlIGZ1dHVyZS4NCg0KPiANCj4gTG9y
-ZW56bw0K
+In order to avoid effect of the initial mode depending on SoCs,
+this patch sets the mode register to host(RC) mode.
+
+Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+---
+ drivers/pci/controller/dwc/pcie-uniphier.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
+index 3f30ee4..8fd7bad 100644
+--- a/drivers/pci/controller/dwc/pcie-uniphier.c
++++ b/drivers/pci/controller/dwc/pcie-uniphier.c
+@@ -33,6 +33,10 @@
+ #define PCL_PIPEMON			0x0044
+ #define PCL_PCLK_ALIVE			BIT(15)
+ 
++#define PCL_MODE			0x8000
++#define PCL_MODE_REGEN			BIT(8)
++#define PCL_MODE_REGVAL			BIT(0)
++
+ #define PCL_APP_READY_CTRL		0x8008
+ #define PCL_APP_LTSSM_ENABLE		BIT(0)
+ 
+@@ -85,6 +89,12 @@ static void uniphier_pcie_init_rc(struct uniphier_pcie_priv *priv)
+ {
+ 	u32 val;
+ 
++	/* set RC MODE */
++	val = readl(priv->base + PCL_MODE);
++	val |= PCL_MODE_REGEN;
++	val &= ~PCL_MODE_REGVAL;
++	writel(val, priv->base + PCL_MODE);
++
+ 	/* use auxiliary power detection */
+ 	val = readl(priv->base + PCL_APP_PM0);
+ 	val |= PCL_SYS_AUX_PWR_DET;
+-- 
+2.7.4
+
