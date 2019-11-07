@@ -2,190 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9447EF3BB0
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2019 23:47:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 59260F3C60
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Nov 2019 00:59:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbfKGWq4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 Nov 2019 17:46:56 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:34184 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725992AbfKGWq4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 Nov 2019 17:46:56 -0500
-Received: by mail-oi1-f195.google.com with SMTP id l202so3565738oig.1;
-        Thu, 07 Nov 2019 14:46:55 -0800 (PST)
+        id S1727926AbfKGX74 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 Nov 2019 18:59:56 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:34237 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725940AbfKGX74 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 Nov 2019 18:59:56 -0500
+Received: by mail-io1-f67.google.com with SMTP id q83so4369814iod.1
+        for <linux-pci@vger.kernel.org>; Thu, 07 Nov 2019 15:59:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=amQWDmlGdEk6VIZvnzvC3PXl4QjX449VLWxbEA+kkns=;
-        b=hX/QIOjtVkzlExtn1LqyXrmyI9I9vZhyZHkCpvmC5Ale44vry7ayGIKDeCOW9S9eWE
-         JpeUDWKn0dzomnJvGQC6UlsW56ZHBQcAFlz9OGRK5JKMmF8OQJCvygqW3vGmRflED+jd
-         7TVoAMvk/E/hCIVf+TF4Rw15L3pIjoLxe6vzgKi3MMKtHJGRkQ4P3udSwk7lQ/KkFi1q
-         4+JwIHOVSXZPmO22hcGzdgMMwdD5dIgcqbDpY2MUuiExDnrRclHY9cxPzrywI1OJf+je
-         DHDOJuou1WQXs1iIbJn26gQ/7aneup7yHphtwjJ2VHCPP00fXPXSMgDrk47Jvp42ikcP
-         rLIg==
+        bh=8Wl8N9CZlB2xlpKHMXK6nBkiP4gpcI53AmfhmdY7Ye0=;
+        b=qJ6+3nX2A0cxXp5ywWmFmELron2FyoN3FDc1ffUYMSP1vQyxNNpAwPSnIE5uLNzHPq
+         yyTkSrkV4O5kQntMue3g7+nconlzJcFJaaHJJvfJhYiZk1qUc6eQ7eSGlcWwJjDZxSRI
+         7S/mzRsyDqgZuUtoTd4Nl/Yt1BDw/i2DmXmPOTsRh50NUe/3/3QtgZHdZFheYVUikA7M
+         N+9OqwsvL5vJn14W36FB7KmRrDoQ5hyXXvKRhWwjTE1IpQ+HN47iJQHz64V389iY1Cde
+         pazLb/um+PtgdVcge3dhBcECyUDnNWvzK6hGd+wFsEi3EaLHfwIrCnq7ZBaYeiJrTqA1
+         C3tg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=amQWDmlGdEk6VIZvnzvC3PXl4QjX449VLWxbEA+kkns=;
-        b=kv5ry7P3CeYs2IUNiDHYP1YoOzaU5l4sYTVpZH8hQ6mfcbT9GSwEydPgovRgDYiOJr
-         KpbZxreDfnrxM6Uj86w1jiJtXy1AarpWdyKUVH+8BQGPYLY8aUBobu8a8xuS3llDdkES
-         1AvF2EuW/P5r82gi+UuqXvN5TjIVchPhHRTH4+/V1LrusDy2QODYKnujW2/mb1+nQLW9
-         wJEPYnofNSil0K5wKeEkbGl68xkUOQ6AyLgZd7C4JHdIQKiIyYyoi1WriIydc3duL0SH
-         mETUV88V7JmxobhLVdynCwkGc6TA7mEyiuz7hPETg5iJM1PeajhsiYVH8yFm+qoJKfuK
-         pN8g==
-X-Gm-Message-State: APjAAAXBlZqSjuNjvVcn+ckiUScICr1+JHxC3Sy2bvqnTJmcz2mokQXk
-        XGRY7qgn3NGZinFGDMFGQL49QPWyChzozKXEgfY=
-X-Google-Smtp-Source: APXvYqy7X5y3xi+caVjj34JWeqvFAD42ny9HBvVuYNQgKnsmmxiFAbNuD/jPPDzS6BjPiNY4G/MO7hwzdru7pOmcrd8=
-X-Received: by 2002:aca:2303:: with SMTP id e3mr5878670oie.162.1573166814674;
- Thu, 07 Nov 2019 14:46:54 -0800 (PST)
+        bh=8Wl8N9CZlB2xlpKHMXK6nBkiP4gpcI53AmfhmdY7Ye0=;
+        b=COzfNkEhbgLbR6a0rvUkUuD1zjdmxyFdjobwjdUj7LNGScrSI1A8XEVxDkFiGllp26
+         JPzmOEL3hXWXKd6D7Aaw446tzDUAhqu4tPGbSgApUNAzBI8KiHHCyu50u/C6nBJ0+22g
+         7Rm2riQRX4XjFZsHF1ADCgi+zQsJLBxQZWoHqSCkJfHfUZYM1wlF39hxXw8mXzr0MxOa
+         5cKfjwJeB8zLROudY831bX93OqYqcJl1v5nsthoY8tWkXji8j92hs10Rid0bXTfh4kTt
+         MXgU0ER5WJaR2O6fQpTkVY3b/X8qM+GAT9wRDyf21zVH3Cgqz95uTFqRih7Sgv59mkvs
+         r/2A==
+X-Gm-Message-State: APjAAAVPpHCtt13674IzINOAI4N9OphcfarSxbZj8xCbnoldJwJaLrIa
+        kRlpyJtdq/YCu8ZMaKxs4xz8MH56Cxlt5m2w5Q3prw==
+X-Google-Smtp-Source: APXvYqwdhyG4PRd2KuyuhMDVRxc8TrIjKm0QEGmFDeLDmPvQFWLzeehD5bVsnZtjSW2ZuPfUI6UWw5ZPpD3feEOMNM8=
+X-Received: by 2002:a5e:8202:: with SMTP id l2mr6723828iom.207.1573171195298;
+ Thu, 07 Nov 2019 15:59:55 -0800 (PST)
 MIME-Version: 1.0
-References: <20191106193609.19645-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20191106193609.19645-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdVZwgVnq2kwjNJQHfvUH0sk6M7Hz-AJR82jMOsCNfW9wQ@mail.gmail.com>
- <CA+V-a8swtOUaxKnCdiTV5wvvxLEJ6XdODL=7bvQmFKY0zQTj2w@mail.gmail.com> <CAMuHMdXkbWkQgswMNL7Dw7_jucH+MsuAW+-CjoGVYsm=tjShRw@mail.gmail.com>
-In-Reply-To: <CAMuHMdXkbWkQgswMNL7Dw7_jucH+MsuAW+-CjoGVYsm=tjShRw@mail.gmail.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 7 Nov 2019 22:46:28 +0000
-Message-ID: <CA+V-a8sS4gX8o__R_pHK2Otb=s_aAWbtvDLfOhAQAJb77Jz_Sw@mail.gmail.com>
-Subject: Re: [PATCH 3/5] PCI: rcar: Add R-Car PCIe endpoint device tree bindings
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20191025202004.GA147688@google.com> <1ade6a9f-9532-c400-9bb0-4e68ed5752ce@linux.intel.com>
+ <CAOesGMhdAUKj9f0=sVwH7kffr=P-LqWWqKxKK3N3e0MpcjLExw@mail.gmail.com> <43b431b6-f544-f9f0-d6f3-f383d7b882b9@linux.intel.com>
+In-Reply-To: <43b431b6-f544-f9f0-d6f3-f383d7b882b9@linux.intel.com>
+From:   Olof Johansson <olof@lixom.net>
+Date:   Thu, 7 Nov 2019 15:59:43 -0800
+Message-ID: <CAOesGMi2hnEhZvvcWg44LzjAr44LhzQ58s=u=THpfn=RRLLA7w@mail.gmail.com>
+Subject: Re: [PATCH] PCI/DPC: Add pcie_ports=dpc-native parameter to bring
+ back old behavior
+To:     sathyanarayanan.kuppuswamy@linux.intel.com
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Keith Busch <keith.busch@intel.com>, linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Geert,
-
-On Thu, Nov 7, 2019 at 8:08 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+On Thu, Nov 7, 2019 at 2:07 PM Kuppuswamy Sathyanarayanan
+<sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
 >
-> Hi Prabhakar,
 >
-> On Thu, Nov 7, 2019 at 10:26 AM Lad, Prabhakar
-> <prabhakar.csengg@gmail.com> wrote:
-> > On Thu, Nov 7, 2019 at 8:44 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > On Wed, Nov 6, 2019 at 8:36 PM Lad Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> > > > From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > >
-> > > > This patch adds the bindings for the R-Car PCIe endpoint driver.
-> > > >
-> > > > Signed-off-by: Lad, Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > >
-> > > Thanks for your patch!
-> > >
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
-> > > > @@ -0,0 +1,43 @@
-> > > > +* Renesas R-Car PCIe Endpoint Controller DT description
-> > > > +
-> > > > +Required properties:
-> > > > +           "renesas,pcie-ep-r8a774c0" for the R8A774C0 SoC;
-> > > > +           "renesas,pcie-ep-rcar-gen3" for a generic R-Car Gen3 or
-> > > > +                                    RZ/G2 compatible device.
-> > >
-> > > Unless I'm missing something, this is for the exact same hardware block as
-> > > Documentation/devicetree/bindings/pci/rcar-pci.txt?
-> > > So shouldn't you amend those bindings, instead of adding new compatible
-> > > values?
-> > > Please remember that DT describes hardware, not software policy.
-> > > So IMHO choosing between host and endpoint is purely a configuration
-> > > issue, and could be indicated by the presence or lack of some DT properties.
-> > > E.g. host mode requires both "bus-range" and "device_type" properties,
-> > > so their absence could indicate endpoint mode.
-> > >
-> > yes its the same hardware block as described in the rcar-pci.txt, I
-> > did think about amending it
-> > but  it might turn out to be bit messy,
+> On 11/7/19 12:09 PM, Olof Johansson wrote:
+> > On Thu, Nov 7, 2019 at 12:02 PM Kuppuswamy Sathyanarayanan
+> > <sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
+> >> Hi,
+> >>
+> >> On 10/25/19 1:20 PM, Bjorn Helgaas wrote:
+> >>> On Wed, Oct 23, 2019 at 12:22:05PM -0700, Olof Johansson wrote:
+> >>>> In commit eed85ff4c0da7 ("PCI/DPC: Enable DPC only if AER is available"),
+> >>>> the behavior was changed such that native (kernel) handling of DPC
+> >>>> got tied to whether the kernel also handled AER. While this is what
+> >>>> the standard recommends, there are BIOSes out there that lack the DPC
+> >>>> handling since it was never required in the past.
+> >>> Some systems do not grant OS control of AER via _OSC.  I guess the
+> >>> problem is that on those systems, the OS DPC driver used to work, but
+> >>> after eed85ff4c0da7, it does not.  Right?
+> >> I need some clarification on this issue. Do you mean in these systems,
+> >> firmware expects OS to handle DPC and AER, but it does not let OS know
+> >> about it via _OSC ?
+> > The OS and BIOS both assumed behavior as before eed85ff4c0da7 -- AER
+> > handled by firmware but DPC handled by kernel.
 > >
-> > required properties host ======required properties Endpoint
-> > ====================||==================
-> > 1: reg                                || reg
-> > 2:bus-range                      || reg names
-> > 3: device_type                  || resets
-> > 4: ranges                          || clocks
-> > 5: dma-ranges                  || clock-names
-> > 6: interrupts                      ||
-> > 7: interrupt-cells               ||
-> > 8: interrupt-map-mask     ||
-> > 9: clocks                          ||
-> > 10: clock-names             ||
+> > I.e. a classic case of "Sure, the spec says this, but in reality
+> > implementations relied on actual behavior", and someone had a
+> > regression and need a way to restore previous behavior.
 >
-> We have a similar situation with SPI, where a controller can operate in
-> master or slave mode, based on the absence or presence of the
-> "spi-slave" DT property.
->
-> > and if I go ahead with the same compatible string that would mean to
-> > add support for endpoint
-> > mode in the host driver itself. I did follow the examples of
->
-> You can still have two separate drivers, binding against the same
-> compatible value.  Just let the .probe() function return -ENODEV if it
-> discovers (by looking at DT properties) if the node is configured for
-> the other mode.
-> Which brings us to my next questions: is there any code that could be
-> shared between the drivers for the two modes?
->
-agreed driver probe could handle depending on the DT properties.
-yes there is bit of common code and the first patch of the series prepares
-for handling host and endpoint mode.
+> Got it. I don't know whether its good to add hacks to support products
+> that does not follow spec.
+> But, do you think it would be useful to add some kind of warning message
+> when this option is
+> enabled ? May be it could be useful in debugging.
 
-> > rockchip/cadence/designware where
-> > its the same hardware block but has two different binding files one
-> > for host mode and other for
-> > endpoint mode.
->
-> Having two separate DT binding documents sounds fine to me, if unifying
-> them makes things too complex.
-> However, I think they should use the same compatible value, because the
-> hardware block is the same, but just used in a different mode.
->
-agreed.
+It's not a "hack", it is fixing a regression in behavior because of
+changed assumptions by the kernel.
 
-> Rob/Mark: Any input from the DT maintainers?
->
-> > > > +- reg: Five register ranges as listed in the reg-names property
-> > > > +- reg-names: Must include the following names
-> > > > +       - "apb-base"
-> > > > +       - "memory0"
-> > > > +       - "memory1"
-> > > > +       - "memory2"
-> > > > +       - "memory3"
-> > >
-> > > What is the purpose of the last 4 regions?
-> > > Can they be chosen by the driver, at runtime?
-> > >
-> > no the driver cannot choose them at runtime, as these are the only
-> > PCIE memory(0/1/2/3) ranges
-> > in the AXI address space where host memory can be mapped.
->
-> Are they fixed by the PCIe hardware, i.e. could they be looked up by the
-> driver based on the compatible value?
->
-yes they are fixed by the PCIe hardware and could be looked up by the driver
-based on the compatible value.
+We're pretty clear as a kernel community: We don't regress our users.
+So, in cases like these, we need to make sure we allow people to use
+their hardware the same way they used it with an older kernel.
 
-Cheers,
---Prabhakar
+A printk() to indicate that this mode is enabled could be useful, if
+nothing else to make sure that the pre-eed85ff4c0da7 behavior is
+enabled without having to grep /proc/cmdline.
+
+
+-Olof
