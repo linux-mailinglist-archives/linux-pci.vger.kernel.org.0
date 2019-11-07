@@ -2,251 +2,156 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B96B7F3073
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2019 14:51:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 14A74F309A
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2019 14:52:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389057AbfKGNvE convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Thu, 7 Nov 2019 08:51:04 -0500
-Received: from mail-oln040092255021.outbound.protection.outlook.com ([40.92.255.21]:11229
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388982AbfKGNvD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 7 Nov 2019 08:51:03 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cFufD2IaSmEay0lU1KaW54GmoYbBI9q72K5quGTPcy++UVL6U+a2gCA5iy5e/X/vVaNh8AxCIFUrJCtL7l26wR18ebQMkLEGw0dBRyOHK6nKqDGUQQPRJfiP6xCC2SvqnYQgU1QniSH0PPeXlbOO9pqOm3G1MTc1uw+Zs9invVEq9VNaZcJzZSoeyjwfmS4FIAsj2e0ZFdQ6QFqM/9GRUaWOsWo9U0FqxingiPhaO9lAFQVpmzRnK21K1uevzRj53qA218yLPlqSyzfF93T3Rsu/gtDLU99kKqx8ri8U0uuDyvzT+l1boJafRixliCxc79KsiS0KwE6oqrzwdyZT2g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YI+uufuPP9sC6LXTJYNWkFbGvGXFQCkOzWtMJCqcTMU=;
- b=LLr/ohQEFqITjrZG7yG9Pjvn+t9LFvX2gVQmfPFn0CkMvdx8TrOKc5KcDmbXQZs27TZQpGr/XfkGfeLIembQcjh96MOAGngpN3h6ERavXa1WpDaARd5cdVXUpsmgz9dhzLKhZ665Hg3rFSShQuXgyPxpwLUvooaedSEBm1m5BpZl5gV4zmDcxM6sKzD3ATiqYPOu+a9R2AKVq3O4VzWKn1tTPyFGTXoGNo8zThcaDpoTKvk8Xs1ieuRBWhLOxfgqlrySs8zusxrzguKCMgp2or2ClRWvi1/XL98b3zKb/bQCMlOVQydJyixTgKHlAw8mZbzDkzU5XELa0Acumum42Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from PU1APC01FT033.eop-APC01.prod.protection.outlook.com
- (10.152.252.55) by PU1APC01HT215.eop-APC01.prod.protection.outlook.com
- (10.152.253.165) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2387.20; Thu, 7 Nov
- 2019 13:50:58 +0000
-Received: from PS2P216MB0755.KORP216.PROD.OUTLOOK.COM (10.152.252.57) by
- PU1APC01FT033.mail.protection.outlook.com (10.152.252.223) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2387.20 via Frontend Transport; Thu, 7 Nov 2019 13:50:58 +0000
-Received: from PS2P216MB0755.KORP216.PROD.OUTLOOK.COM
- ([fe80::44f5:f4bb:1601:2602]) by PS2P216MB0755.KORP216.PROD.OUTLOOK.COM
- ([fe80::44f5:f4bb:1601:2602%9]) with mapi id 15.20.2430.020; Thu, 7 Nov 2019
- 13:50:58 +0000
-From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "logang@deltatee.com" <logang@deltatee.com>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Subject: [PATCH 1/1] PCI: Fix bug resulting in double hpmemsize being assigned
- to MMIO window
-Thread-Topic: [PATCH 1/1] PCI: Fix bug resulting in double hpmemsize being
- assigned to MMIO window
-Thread-Index: AQHVlXJhu/GZEUU1TEqW4eFw21Odow==
-Date:   Thu, 7 Nov 2019 13:50:57 +0000
-Message-ID: <PS2P216MB07554FF63C34AFBCE04BD55D80780@PS2P216MB0755.KORP216.PROD.OUTLOOK.COM>
-Accept-Language: en-AU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SYXPR01CA0094.ausprd01.prod.outlook.com
- (2603:10c6:0:2e::27) To PS2P216MB0755.KORP216.PROD.OUTLOOK.COM
- (2603:1096:300:1c::13)
-x-incomingtopheadermarker: OriginalChecksum:1BD63F89AF17C8A985E24271CA4C6FA43429E886C298EEEBB2F5A7C5CD2C4D15;UpperCasedChecksum:1A0B6C98FC573AEB5216C9CE327B7BD283149DE138FDD99C2047F96123CBA6BD;SizeAsReceived:7698;Count:47
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [5+85QQlwJLUPeNZKHoIE2V95Ql8OOACjhImoPMbK4sCzt4wmOrgWSscWGHhOqUR3QHxlGd8o9hQ=]
-x-microsoft-original-message-id: <20191107135049.GA2226@nicholas-dell-linux>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 47
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: 938733c8-0ce4-4bd4-5592-08d76389842f
-x-ms-exchange-slblob-mailprops: =?us-ascii?Q?apgo5D0uMOH7R4Jh+Ss+wm6YNDg3QpWRKuL1spoRVb5kRv9dXynUE0daLHK7?=
- =?us-ascii?Q?1jVuYM6OQ6RDcJ7wWAKrhlUNuR67h/lWuzLmWaL6lhHKFEOs6J0Q5hjpmgzQ?=
- =?us-ascii?Q?F52nOGRYYViY/2yu8NqhpZj4Vm/OsvDcPzLdZGNl9Jlo0bmTxwECIYeSLxMW?=
- =?us-ascii?Q?T+Xs5517Sn5rm8Ct4AqcbsgjLwgGuR57HWgLOjk4mtU5vaNDFLr2A8HoC15e?=
- =?us-ascii?Q?3pBLJwbKsd3kBoOYsFcvbZ04Kl5WA1TDzMoa16Z1iC6p0RXn9Ec6XK5htaf/?=
- =?us-ascii?Q?3atCIadwK/N7cVXZYDi1Nsg4YGGocpyVvd6ib2Sr83Oae+Q40zCsGl8nUUgH?=
- =?us-ascii?Q?BF1SqDg+v9b1z4NEyFTjH6YsODtDC7vflzLf3gdHiQXzkD8ADMWl5VpQiPH9?=
- =?us-ascii?Q?DkzCvD8Ung02MlorRS22dDo1JEFta3QxRqXwE49Xg5SuC1ZAmT3GLzsPrh8T?=
- =?us-ascii?Q?CgGU1F6kLA59YB/Kf2gaqfLANt+rENPv/xNzbNhkExyGuzv47qM23RWJxMRZ?=
- =?us-ascii?Q?t5SMfkqAbwTO+vSPNZoneBurbO0lLfHnKCiyWz0lMjUelEDcTaw3kXRonRRJ?=
- =?us-ascii?Q?tXvM6schKU1mBcSRy+TmHckUsH2fFnYiO08MADCHMUOfybEraEJW0hXSk4bl?=
- =?us-ascii?Q?bd/W0rc6HN5I9tiZ2tQqLP6Avn05dabFRjwbniqBH2tW2TBfNkVUA2LYGCWR?=
- =?us-ascii?Q?Divb4z51D4XOtHKBFAkmfyNZRA/1BBh7ZuwAbWL12n1w/Xa0lO5TEEXdgOag?=
- =?us-ascii?Q?mo5EBU9ThbHYCoeVM5MZjpIZ6VuP0rC1v9XgOJDHROPpfHf6hpy1vTIZgd/r?=
- =?us-ascii?Q?y6hvx2UKQmFc0TTh2k8cAOCDG55K1jLQHp1WvXVdBLcTWRepxv0gsa49j+DI?=
- =?us-ascii?Q?R0vRq5kApvrUUhTA/fFXsOf63LTLZJw/K4Li3nHPmUef+Fe8l+HrK8nlC2i7?=
- =?us-ascii?Q?IdHJu/z9NIJEFXABxs7de5xfGL0MT665bOpfVCj4LKMxhVrl9WFSZQ=3D=3D?=
-x-ms-traffictypediagnostic: PU1APC01HT215:
-x-ms-exchange-purlcount: 2
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: BOeN1wcc3lRnrCLTF5IsqeMmWgNr//yGXtzBgmb3AoD0imzFyO6bJWQSv6oULE+s72HgGNxxD0KSj+jqCKxaSwmxqVE+CxvKdwpk6IB2T7Q+LuCFG5FksXYsswZ9Sa2cv70/aSj2HeMkAwoRLt27BWXQRDHMBup96uqIoigyEJHGphiGyXuSUMbp0UtIHfv1Gy3zlSzg3uXB2ie61+eMaxnlB4rqSpQqPw4YIkLJbG4=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <A2E581EF043F344F96E7C3795F3B5FB9@KORP216.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8BIT
+        id S2389469AbfKGNwu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 Nov 2019 08:52:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38860 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729047AbfKGNwt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 7 Nov 2019 08:52:49 -0500
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35B54214D8;
+        Thu,  7 Nov 2019 13:52:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573134768;
+        bh=qhZdqtOz0nM4M7A7HUcNffK7YOO5QCFYaeM5owCPM04=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=FutzLcMrZPnKe7vrDP+qo8uZPGO/OMJJFU10wxIeqJjDd3JMtWjYh7jKZ/u5AD3Jp
+         iYnL4mtb1DP2Nb8Sq7GMT+mC8/lSQnTNwwil9tyWsXtpbJ2cNdtbo17K/axcUH/hGH
+         w2UghMVT3FaOBTjrsv+b3iPnzTG/Ew1ygIgW/exA=
+Date:   Thu, 7 Nov 2019 07:52:46 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Valerio Passini <passini.valerio@gmail.com>,
+        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH] ACPI / hotplug / PCI: Allocate resources directly under
+ the non-hotplug bridge
+Message-ID: <20191107135246.GA90684@google.com>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 938733c8-0ce4-4bd4-5592-08d76389842f
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Nov 2019 13:50:57.8967
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT215
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191107090333.GG2552@lahna.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Currently, the kernel can sometimes assign the MMIO_PREF window
-additional size into the MMIO window, resulting in extra MMIO additional
-size, despite the MMIO_PREF additional size being assigned successfully
-into the MMIO_PREF window.
+On Thu, Nov 07, 2019 at 11:03:33AM +0200, Mika Westerberg wrote:
+> On Wed, Nov 06, 2019 at 05:24:05PM -0600, Bjorn Helgaas wrote:
+> > On Wed, Oct 30, 2019 at 06:05:45PM +0300, Mika Westerberg wrote:
+> > > Valerio and others reported that commit 84c8b58ed3ad ("ACPI / hotplug /
+> > > PCI: Don't scan bridges managed by native hotplug") prevents some recent
+> > > LG and HP laptops from booting with endless loop of:
+> > > 
+> > >   [   26.237796] ACPI Error: No handler or method for GPE 08, disabling event (20190215/evgpe-835)
+> > >   [   26.238699] ACPI Error: No handler or method for GPE 09, disabling event (20190215/evgpe-835)
+> > >   [   26.239306] ACPI Error: No handler or method for GPE 0A, disabling event (20190215/evgpe-835)
+> > >   ...
+> > > 
+> > > What seems to happen is that during boot, after the initial PCI
+> > > enumeration when EC is enabled the platform triggers ACPI Notify() to
+> > > one of the root ports. The root port itself looks like this:
+> > > 
+> > >   [    0.723757] pci 0000:00:1b.0: PCI bridge to [bus 02-3a]
+> > >   [    0.723765] pci 0000:00:1b.0:   bridge window [mem 0xc4000000-0xda0fffff]
+> > >   [    0.723773] pci 0000:00:1b.0:   bridge window [mem 0x80000000-0xa1ffffff 64bit pref]
+> > >
+> > > The BIOS has configured the root port so that it does not have I/O
+> > > bridge window.
+> > > 
+> > > Now when the ACPI Notify() is triggered ACPI hotplug handler calls
+> > > acpiphp_native_scan_bridge() for each non-hotplug bridge (as this system
+> > > is using native PCIe hotplug) and pci_assign_unassigned_bridge_resources()
+> > > to allocate resources.
+> > > 
+> > > The device connected to the root port is a PCIe switch (Thunderbolt
+> > > controller) with two hotplug downstream ports. Because of the hotplug
+> > > ports __pci_bus_size_bridges() tries to add "additional I/O" of 256
+> > > bytes to each (DEFAULT_HOTPLUG_IO_SIZE). This gets further aligned to 4k
+> > > as that's the minimum I/O window size so each hotplug port gets 4k I/O
+> > > window and the same happens for the root port (which is also hotplug
+> > > port). This means 3 * 4k = 12k I/O window.
+> > > 
+> > > Because of this pci_assign_unassigned_bridge_resources() ends up opening
+> > > a I/O bridge window for the root port at first available I/O address
+> > > which seems to be in range 0x1000 - 0x3fff. Normally this range is used
+> > > for ACPI stuff such as GPE bits (below is part of /proc/ioports):
+> > > 
+> > >     1800-1803 : ACPI PM1a_EVT_BLK
+> > >     1804-1805 : ACPI PM1a_CNT_BLK
+> > >     1808-180b : ACPI PM_TMR
+> > >     1810-1815 : ACPI CPU throttle
+> > >     1850-1850 : ACPI PM2_CNT_BLK
+> > >     1854-1857 : pnp 00:05
+> > >     1860-187f : ACPI GPE0_BLK
+> > 
+> > Nice debugging work!
+> > 
+> > > However, when the ACPI Notify() happened this range was not yet reserved
+> > > for ACPI/PNP (that happens later) so PCI gets it. 
+> > 
+> > I think this is really the underlying problem.  IMO those ACPI/PNP
+> > resources ought to be reserved before we start assigning resources to
+> > PCI devices.  That would be a huge problem to fix, though.
+> 
+> I agree, changing the order would probably open another can of worms.
 
-This happens if in the first pass, the MMIO_PREF succeeds but the MMIO
-fails. In the next pass, because MMIO_PREF is already assigned, the
-attempt to assign MMIO_PREF returns an error code instead of success
-(nothing more to do, already allocated). Hence, the size which is
-actually allocated, but thought to have failed, is placed in the MMIO
-window.
+Just for the record, I think it's even worse than just reserving them
+in the wrong order.  IIRC, we don't reserve ACPI/PNP resources *at
+all* except for PNP0C01 and PNP0C02 (drivers/pnp/system.c) and
+whatever individual drivers reserve.  This is like pretending that
+devices don't respond to their address space until a driver claims
+them.  But I'm not suggesting opening this can of worms for *this*
+problem.
 
-Example of problem (more context can be found in the bug report URL):
+> > > It then starts writing
+> > > to this range and accidentally stomps over GPE bits among other things
+> > > causing the endless stream of messages about missing GPE handler.
+> > >
+> > > This problem does not happen if "pci=hpiosize=0" is passed in the kernel
+> > > command line. The reason is that then the kernel does not try to
+> > > allocate the additional 256 bytes for each hotplug port.
+> > > 
+> > > Fix this by allocating resources directly below the non-hotplug bridges
+> > > where a new device may appear as a result of ACPI Notify(). This avoids
+> > > the hotplug bridges and prevents opening the additional I/O window.
+> > 
+> > Looking at [1], here's the topology I see:
+> > 
+> >   00:1b.0: Root Port to [bus 02-3a]                   # pciehp
+> >   02:00.0: Switch Upstream Port to [bus 03-3a]        # thunderbolt
+> >   03:00.0: Switch Downstream Port to [bus 04]         # thunderbolt
+> >   03:01.0: Switch Downstream Port to [bus 05-39]      # thunderbolt, pciehp
+> >   03:02.0: Switch Downstream Port to [bus 3a]         # thunderbolt
+> >   04:00.0: reg 0x10: [mem 0xda000000-0xda03ffff]
+> >   04:00.0: reg 0x14: [mem 0xda040000-0xda040fff]
+> >   3a:00.0: reg 0x10: [mem 0xd9f00000-0xd9f0ffff]
+> > 
+> > In this topology, I guess the non-hotplug bridges would be 03:00.0
+> > and 03:02.0?  And we skip 03:01.0 because hotplug_is_native() is true
+> > for that?
+> 
+> Yes.
+> 
+> > What would happen if a device below one of the non-hotplug bridges,
+> > e.g., 3a:00.0, had an I/O BAR?  Would this patch still work?
+> 
+> I think it would still work because now we call pci_bus_size_bridges()
+> only for non-hotplug bridge which do not have I/O window open so
+> pbus_size_io() fails to find the "free" I/O resource on that bus and the
+> kernel then fails to assign that I/O resource for the device.
 
-Mainline kernel:
-pci 0000:06:01.0: BAR 14: assigned [mem 0x90100000-0xa00fffff] = 256M
-pci 0000:06:04.0: BAR 14: assigned [mem 0xa0200000-0xb01fffff] = 256M
+Not sure I understand; are you saying that we wouldn't have the EC/GPE
+issue, but we'd be unable to use a device below 3a:00.0 that happened
+to have an I/O BAR?  That doesn't sound optimal because there is I/O
+space available that could be routed to 3a:00.0
 
-Patched kernel:
-pci 0000:06:01.0: BAR 14: assigned [mem 0x90100000-0x980fffff] = 128M
-pci 0000:06:04.0: BAR 14: assigned [mem 0x98200000-0xa01fffff] = 128M
-
-This was using pci=realloc,hpmemsize=128M,nocrs - on the same machine
-with the same configuration, with a Ubuntu mainline kernel and a kernel
-patched with this patch.
-
-The bug results in the MMIO_PREF being added to the MMIO window, which
-means doubling if MMIO_PREF size = MMIO size. With a large MMIO_PREF,
-the MMIO window will likely fail to be assigned altogether due to lack
-of 32-bit address space.
-
-Change find_free_bus_resource() to do the following:
-- Return first unassigned resource of the correct type.
-- If none of the above, return first assigned resource of the correct type.
-- If none of the above, return NULL.
-
-Returning an assigned resource of the correct type allows the caller to
-distinguish between already assigned and no resource of the correct type.
-
-Rename find_free_bus_resource to find_bus_resource_of_type().
-
-Add checks in pbus_size_io() and pbus_size_mem() to return success if
-resource returned from find_free_bus_resource() is already allocated.
-
-This avoids pbus_size_io() and pbus_size_mem() returning error code to
-__pci_bus_size_bridges() when a resource has been successfully assigned
-in a previous pass. This fixes the existing behaviour where space for a
-resource could be reserved multiple times in different parent bridge
-windows.
-
-Link: https://lore.kernel.org/lkml/20190531171216.20532-2-logang@deltatee.com/T/#u
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=203243
-
-Reported-by: Kit Chow <kchow@gigaio.com>
-Reported-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
----
- drivers/pci/setup-bus.c | 34 +++++++++++++++++++++++-----------
- 1 file changed, 23 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index e7dbe2170..f97c36a1e 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -752,24 +752,32 @@ static void pci_bridge_check_ranges(struct pci_bus *bus)
- }
- 
- /*
-- * Helper function for sizing routines: find first available bus resource
-- * of a given type.  Note: we intentionally skip the bus resources which
-- * have already been assigned (that is, have non-NULL parent resource).
-+ * Helper function for sizing routines.
-+ * Assigned resources have non-NULL parent resource.
-+ *
-+ * Return first unassigned resource of the correct type.
-+ * If none of the above, return first assigned resource of the correct type.
-+ * If none of the above, return NULL.
-+ *
-+ * Returning an assigned resource of the correct type allows the caller to
-+ * distinguish between already assigned and no resource of the correct type.
-  */
--static struct resource *find_free_bus_resource(struct pci_bus *bus,
--					       unsigned long type_mask,
--					       unsigned long type)
-+static struct resource *find_bus_resource_of_type(struct pci_bus *bus,
-+						  unsigned long type_mask,
-+						  unsigned long type)
- {
- 	int i;
--	struct resource *r;
-+	struct resource *r, *r_assigned = NULL;
- 
- 	pci_bus_for_each_resource(bus, r, i) {
- 		if (r == &ioport_resource || r == &iomem_resource)
- 			continue;
- 		if (r && (r->flags & type_mask) == type && !r->parent)
- 			return r;
-+		if (r && (r->flags & type_mask) == type && !r_assigned)
-+			r_assigned = r;
- 	}
--	return NULL;
-+	return r_assigned;
- }
- 
- static resource_size_t calculate_iosize(resource_size_t size,
-@@ -866,14 +874,16 @@ static void pbus_size_io(struct pci_bus *bus, resource_size_t min_size,
- 			 struct list_head *realloc_head)
- {
- 	struct pci_dev *dev;
--	struct resource *b_res = find_free_bus_resource(bus, IORESOURCE_IO,
--							IORESOURCE_IO);
-+	struct resource *b_res = find_bus_resource_of_type(bus, IORESOURCE_IO,
-+								IORESOURCE_IO);
- 	resource_size_t size = 0, size0 = 0, size1 = 0;
- 	resource_size_t children_add_size = 0;
- 	resource_size_t min_align, align;
- 
- 	if (!b_res)
- 		return;
-+	if (b_res->parent)
-+		return;
- 
- 	min_align = window_alignment(bus, IORESOURCE_IO);
- 	list_for_each_entry(dev, &bus->devices, bus_list) {
-@@ -978,7 +988,7 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
- 	resource_size_t min_align, align, size, size0, size1;
- 	resource_size_t aligns[18]; /* Alignments from 1MB to 128GB */
- 	int order, max_order;
--	struct resource *b_res = find_free_bus_resource(bus,
-+	struct resource *b_res = find_bus_resource_of_type(bus,
- 					mask | IORESOURCE_PREFETCH, type);
- 	resource_size_t children_add_size = 0;
- 	resource_size_t children_add_align = 0;
-@@ -986,6 +996,8 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
- 
- 	if (!b_res)
- 		return -ENOSPC;
-+	if (b_res->parent)
-+		return 0;
- 
- 	memset(aligns, 0, sizeof(aligns));
- 	max_order = 0;
--- 
-2.23.0
-
+Bjorn
