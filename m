@@ -2,60 +2,67 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6BE07F337E
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2019 16:37:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 89236F338C
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2019 16:40:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbfKGPhh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 Nov 2019 10:37:37 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:33820 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726231AbfKGPhh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 Nov 2019 10:37:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=nGydLSsGxxmYrXGAw15Q8ycWDwl66hdCC3wCq7d7wXo=; b=bb6vI2fUQXVprSJX8mvHLWV0T
-        qchAtG7zVD0aBCE9cQ+hgInMVqiVVtfX09jGUsqDkk4NpqCn09loxwLv48gsLbQnWgPvHf3HXF98s
-        N//TD6YaMcBV4UPlu7REWBJxd2xHSwAbEQ5dXBj/5wgh31RbTeOS/IV/5We12Pb/N2b1qLZmr/GgF
-        aF/uuUF8mixSFtrk0UomvYF2r8RGsCodfdc93wVqdE1mcC32D+9G2T9Xpx246w76UfWmze2sSwbZb
-        /mri3tMLAjoALYoJGSskZk+GKM9qTPURjvcEGNYKRWvTnyeyr864SiOj8WMKYmPL24A6g2rQ6SSTj
-        GyJ+2GijA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iSjqq-0004Fj-2m; Thu, 07 Nov 2019 15:37:36 +0000
-Date:   Thu, 7 Nov 2019 07:37:36 -0800
-From:   "hch@infradead.org" <hch@infradead.org>
-To:     "Derrick, Jonathan" <jonathan.derrick@intel.com>
-Cc:     "hch@infradead.org" <hch@infradead.org>,
-        "kbusch@kernel.org" <kbusch@kernel.org>,
+        id S1730041AbfKGPkR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 Nov 2019 10:40:17 -0500
+Received: from mga17.intel.com ([192.55.52.151]:38354 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726810AbfKGPkQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 7 Nov 2019 10:40:16 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Nov 2019 07:40:16 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,278,1569308400"; 
+   d="scan'208";a="201069529"
+Received: from orsmsx106.amr.corp.intel.com ([10.22.225.133])
+  by fmsmga008.fm.intel.com with ESMTP; 07 Nov 2019 07:40:16 -0800
+Received: from orsmsx101.amr.corp.intel.com ([169.254.8.212]) by
+ ORSMSX106.amr.corp.intel.com ([169.254.1.210]) with mapi id 14.03.0439.000;
+ Thu, 7 Nov 2019 07:40:16 -0800
+From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
+To:     "hch@infradead.org" <hch@infradead.org>
+CC:     "kbusch@kernel.org" <kbusch@kernel.org>,
         "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "helgaas@kernel.org" <helgaas@kernel.org>
 Subject: Re: [PATCH 0/3] PCI: vmd: Reducing tail latency by affining to the
  storage stack
-Message-ID: <20191107153736.GA16006@infradead.org>
+Thread-Topic: [PATCH 0/3] PCI: vmd: Reducing tail latency by affining to the
+ storage stack
+Thread-Index: AQHVlMmF1+r/rt0/GUWDTuwxcG2u7ad/+yUAgABMKgCAABfJAIAAALSA
+Date:   Thu, 7 Nov 2019 15:40:15 +0000
+Message-ID: <c0d62e0f1f8d1d6f31b2a63757aad471ced1df28.camel@intel.com>
 References: <1573040408-3831-1-git-send-email-jonathan.derrick@intel.com>
- <20191107093952.GA13826@infradead.org>
- <bfc69a54dc394ffb7580d14818047ec6a647536f.camel@intel.com>
+         <20191107093952.GA13826@infradead.org>
+         <bfc69a54dc394ffb7580d14818047ec6a647536f.camel@intel.com>
+         <20191107153736.GA16006@infradead.org>
+In-Reply-To: <20191107153736.GA16006@infradead.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.255.7.176]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <26B8398982F08B479E81D6C050549F12@intel.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bfc69a54dc394ffb7580d14818047ec6a647536f.camel@intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 07, 2019 at 02:12:50PM +0000, Derrick, Jonathan wrote:
-> > How does this compare to simplify disabling VMD?
-> 
-> It's a moot point since Keith pointed out a few flaws with this set,
-> however disabling VMD is not an option for users who wish to
-> passthrough VMD
-
-And why would you ever pass through vmd instead of the actual device?
-That just makes things go slower and adds zero value.
+T24gVGh1LCAyMDE5LTExLTA3IGF0IDA3OjM3IC0wODAwLCBoY2hAaW5mcmFkZWFkLm9yZyB3cm90
+ZToNCj4gT24gVGh1LCBOb3YgMDcsIDIwMTkgYXQgMDI6MTI6NTBQTSArMDAwMCwgRGVycmljaywg
+Sm9uYXRoYW4gd3JvdGU6DQo+ID4gPiBIb3cgZG9lcyB0aGlzIGNvbXBhcmUgdG8gc2ltcGxpZnkg
+ZGlzYWJsaW5nIFZNRD8NCj4gPiANCj4gPiBJdCdzIGEgbW9vdCBwb2ludCBzaW5jZSBLZWl0aCBw
+b2ludGVkIG91dCBhIGZldyBmbGF3cyB3aXRoIHRoaXMgc2V0LA0KPiA+IGhvd2V2ZXIgZGlzYWJs
+aW5nIFZNRCBpcyBub3QgYW4gb3B0aW9uIGZvciB1c2VycyB3aG8gd2lzaCB0bw0KPiA+IHBhc3N0
+aHJvdWdoIFZNRA0KPiANCj4gQW5kIHdoeSB3b3VsZCB5b3UgZXZlciBwYXNzIHRocm91Z2ggdm1k
+IGluc3RlYWQgb2YgdGhlIGFjdHVhbCBkZXZpY2U/DQo+IFRoYXQganVzdCBtYWtlcyB0aGluZ3Mg
+Z28gc2xvd2VyIGFuZCBhZGRzIHplcm8gdmFsdWUuDQoNCkFiaWxpdHkgdG8gdXNlIHBoeXNpY2Fs
+IFJvb3QgUG9ydHMvRFNQcy9ldGMgaW4gYSBndWVzdC4gU2xvd2VyIGlzDQphY2NlcHRhYmxlIGZv
+ciBtYW55IHVzZXJzIGlmIGl0IGZpdHMgd2l0aGluIGEgcGVyZm9ybWFuY2Ugd2luZG93DQo=
