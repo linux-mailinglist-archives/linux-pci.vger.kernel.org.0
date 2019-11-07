@@ -2,38 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F805F3069
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2019 14:50:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B96B7F3073
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Nov 2019 14:51:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731107AbfKGNuk convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Thu, 7 Nov 2019 08:50:40 -0500
-Received: from mail-oln040092255024.outbound.protection.outlook.com ([40.92.255.24]:26028
+        id S2389057AbfKGNvE convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Thu, 7 Nov 2019 08:51:04 -0500
+Received: from mail-oln040092255021.outbound.protection.outlook.com ([40.92.255.21]:11229
         "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726754AbfKGNuk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 7 Nov 2019 08:50:40 -0500
+        id S2388982AbfKGNvD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 7 Nov 2019 08:51:03 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hyW4jD7c4aNhyBGCA/O9xmIUYbXzW79slfSIlIJUKIXVdnvj5fkuJsV2MsTorKxbrbJsTaEkDem+rRT82Bz4IGpwJuYx8jR4b1kSAFxfOClldRuqTKBO/81zLtZvopSsaWaoMhMvWDbh+ijuogkwtDUTTazcsqmvJXUrj3nFdZQu9ZQ/aN9ZbI5zl04+yKKCT1TIe03oLAVdAQ//t0AeFFnxryOQHujl+jEV7xxInwwd6Pl94q2BmrjTxR7ZKzRNFie6VCoNzacfzMVhbVd3YLyZoY96kd3B7w9bsB28Ct/mHIRldNVgvDd1eqSRYzbAj5Q685PETwSINBRuKDuzDA==
+ b=cFufD2IaSmEay0lU1KaW54GmoYbBI9q72K5quGTPcy++UVL6U+a2gCA5iy5e/X/vVaNh8AxCIFUrJCtL7l26wR18ebQMkLEGw0dBRyOHK6nKqDGUQQPRJfiP6xCC2SvqnYQgU1QniSH0PPeXlbOO9pqOm3G1MTc1uw+Zs9invVEq9VNaZcJzZSoeyjwfmS4FIAsj2e0ZFdQ6QFqM/9GRUaWOsWo9U0FqxingiPhaO9lAFQVpmzRnK21K1uevzRj53qA218yLPlqSyzfF93T3Rsu/gtDLU99kKqx8ri8U0uuDyvzT+l1boJafRixliCxc79KsiS0KwE6oqrzwdyZT2g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lL1zA+7xxsDjv1AoC7YE0ERD3trobstTIUiXUuSMPvY=;
- b=gNZhEnmpHBJiIylDBqRKk4CxNTrS8LNyh0PeCCwJyTjAlHlvcbAAkkRJSis5YNikKxSUnMX1kaqZYHmINZ/ujJSCYtc0+H8siT4AhrmMIiTuzCT2NpfyDa/NLNjJwl5wS0YRJn94SOuxoOvdbcfAzCeJmlQGdpBIsUj7hS732iW78r6fP99xzQ2/HBNRtyqV6Om1QWu3RrgikTb5k2C5NVpUXC83VHW/u5PlHZyL4olQTCR1a654jhtxshqZ5pqGNfSXTlSGZGaoUbZ/vzto65KjdC9u+AHl/S6xsRQFnX9KTz+zQkcm6TPeCrSTX/UzxtXWAvnQUpAxvUhzs2dUkA==
+ bh=YI+uufuPP9sC6LXTJYNWkFbGvGXFQCkOzWtMJCqcTMU=;
+ b=LLr/ohQEFqITjrZG7yG9Pjvn+t9LFvX2gVQmfPFn0CkMvdx8TrOKc5KcDmbXQZs27TZQpGr/XfkGfeLIembQcjh96MOAGngpN3h6ERavXa1WpDaARd5cdVXUpsmgz9dhzLKhZ665Hg3rFSShQuXgyPxpwLUvooaedSEBm1m5BpZl5gV4zmDcxM6sKzD3ATiqYPOu+a9R2AKVq3O4VzWKn1tTPyFGTXoGNo8zThcaDpoTKvk8Xs1ieuRBWhLOxfgqlrySs8zusxrzguKCMgp2or2ClRWvi1/XL98b3zKb/bQCMlOVQydJyixTgKHlAw8mZbzDkzU5XELa0Acumum42Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 Received: from PU1APC01FT033.eop-APC01.prod.protection.outlook.com
- (10.152.252.53) by PU1APC01HT128.eop-APC01.prod.protection.outlook.com
- (10.152.253.57) with Microsoft SMTP Server (version=TLS1_2,
+ (10.152.252.55) by PU1APC01HT215.eop-APC01.prod.protection.outlook.com
+ (10.152.253.165) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2387.20; Thu, 7 Nov
- 2019 13:50:35 +0000
+ 2019 13:50:58 +0000
 Received: from PS2P216MB0755.KORP216.PROD.OUTLOOK.COM (10.152.252.57) by
  PU1APC01FT033.mail.protection.outlook.com (10.152.252.223) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2387.20 via Frontend Transport; Thu, 7 Nov 2019 13:50:35 +0000
+ 15.20.2387.20 via Frontend Transport; Thu, 7 Nov 2019 13:50:58 +0000
 Received: from PS2P216MB0755.KORP216.PROD.OUTLOOK.COM
  ([fe80::44f5:f4bb:1601:2602]) by PS2P216MB0755.KORP216.PROD.OUTLOOK.COM
  ([fe80::44f5:f4bb:1601:2602%9]) with mapi id 15.20.2430.020; Thu, 7 Nov 2019
- 13:50:35 +0000
+ 13:50:58 +0000
 From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
 To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
@@ -43,74 +43,210 @@ CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
         "logang@deltatee.com" <logang@deltatee.com>,
         Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Subject: [PATCH 0/1] Fix bug resulting in double hpmemsize being assigned to
- MMIO window
-Thread-Topic: [PATCH 0/1] Fix bug resulting in double hpmemsize being assigned
+Subject: [PATCH 1/1] PCI: Fix bug resulting in double hpmemsize being assigned
  to MMIO window
-Thread-Index: AQHVlXJUhp9PbcoR4kC5jZUBBr2m9A==
-Date:   Thu, 7 Nov 2019 13:50:35 +0000
-Message-ID: <PS2P216MB075530CB1B7B099AAF9F42D580780@PS2P216MB0755.KORP216.PROD.OUTLOOK.COM>
+Thread-Topic: [PATCH 1/1] PCI: Fix bug resulting in double hpmemsize being
+ assigned to MMIO window
+Thread-Index: AQHVlXJhu/GZEUU1TEqW4eFw21Odow==
+Date:   Thu, 7 Nov 2019 13:50:57 +0000
+Message-ID: <PS2P216MB07554FF63C34AFBCE04BD55D80780@PS2P216MB0755.KORP216.PROD.OUTLOOK.COM>
 Accept-Language: en-AU, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: SYBPR01CA0005.ausprd01.prod.outlook.com (2603:10c6:10::17)
- To PS2P216MB0755.KORP216.PROD.OUTLOOK.COM (2603:1096:300:1c::13)
-x-incomingtopheadermarker: OriginalChecksum:4833630A5206E2BAAC844A20D74826C8B87B72E8CBF726BD549D133F4CD81F1B;UpperCasedChecksum:FA45B66410C2BB9C971AAE5F699130F017D86B9B335BFF3ECCF08B5CD4F4FB00;SizeAsReceived:7665;Count:47
+x-clientproxiedby: SYXPR01CA0094.ausprd01.prod.outlook.com
+ (2603:10c6:0:2e::27) To PS2P216MB0755.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:300:1c::13)
+x-incomingtopheadermarker: OriginalChecksum:1BD63F89AF17C8A985E24271CA4C6FA43429E886C298EEEBB2F5A7C5CD2C4D15;UpperCasedChecksum:1A0B6C98FC573AEB5216C9CE327B7BD283149DE138FDD99C2047F96123CBA6BD;SizeAsReceived:7698;Count:47
 x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [sbY4bW8gD5e+lSTvcFKb3azynKVSSTW4AH2T0YYK5b2xG4aQW+WS1YK5zYc5883REpecftTRPBo=]
-x-microsoft-original-message-id: <20191107135020.GA2223@nicholas-dell-linux>
+x-tmn:  [5+85QQlwJLUPeNZKHoIE2V95Ql8OOACjhImoPMbK4sCzt4wmOrgWSscWGHhOqUR3QHxlGd8o9hQ=]
+x-microsoft-original-message-id: <20191107135049.GA2226@nicholas-dell-linux>
 x-ms-publictraffictype: Email
 x-incomingheadercount: 47
 x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: 06c526d2-e7b6-4704-6efd-08d7638976c0
-x-ms-exchange-slblob-mailprops: q+fD6XS3/UJ+cHfC79vTglgpmgHPQ8pO7kwHZOy/nL5Q8v/5m2RBRNEo5e0DEaYdXl7DHjrsOykSjswkNYnOLYaPlG6UExHe2D7YOu8hF48y1VPw54zXW6H3q/HnT98o7VwJUV8AUrNnTZPSJ+rPZFbk2MwFjtsmPgZbzQt6ur9H3H9/dt9w2QK+F/FImWMw9vFo7qCxaSE6kOl/3lfmcuvPqyaRkcjk2MC7P8IC3LsyS7B9k8t06nlcUchSLdel5OKg86m7OOYV7VnR10op8l8+g+0UA4rCCZUQMrAgD/djNHbGQ8nmVeaTK7OR51SW0gHsjb516qW3raae1us+jXya0sGTx9M3FQ3MmHST785eU96x8fsCB+ArPRa3+JGJzpr7hVcYsckwcEU6prTndFVwYpfBD8wII8MDn5oeJYh2ntx29dDMMpVcIarUz6r6DQntg1VdI0KC514kktC7ku4oOIzk6nR9uzsAI3L5mUNdUvaKxgT/qjUYpZoAi1NloRY0Q+QIwax42kkGYE2GBxqZmCJj8TXuZdYgzPfux7mGAN+oM9mV+ZCpjlFwMUhabGARcYwqtcT6Z1T8gH/oGu9qRBIvt5vCrZlm3yzfdAKsrOo1aheZ+7OE7QO0GwzBoH3WUkasY+Rx+sakJQwfKPy1tpWtzo1PSM48v5C4rwKHKNZ4CTCGGb7aY4eoH6KxEhDoFvfMS8ZtO7fNofC31A==
-x-ms-traffictypediagnostic: PU1APC01HT128:
+x-ms-office365-filtering-correlation-id: 938733c8-0ce4-4bd4-5592-08d76389842f
+x-ms-exchange-slblob-mailprops: =?us-ascii?Q?apgo5D0uMOH7R4Jh+Ss+wm6YNDg3QpWRKuL1spoRVb5kRv9dXynUE0daLHK7?=
+ =?us-ascii?Q?1jVuYM6OQ6RDcJ7wWAKrhlUNuR67h/lWuzLmWaL6lhHKFEOs6J0Q5hjpmgzQ?=
+ =?us-ascii?Q?F52nOGRYYViY/2yu8NqhpZj4Vm/OsvDcPzLdZGNl9Jlo0bmTxwECIYeSLxMW?=
+ =?us-ascii?Q?T+Xs5517Sn5rm8Ct4AqcbsgjLwgGuR57HWgLOjk4mtU5vaNDFLr2A8HoC15e?=
+ =?us-ascii?Q?3pBLJwbKsd3kBoOYsFcvbZ04Kl5WA1TDzMoa16Z1iC6p0RXn9Ec6XK5htaf/?=
+ =?us-ascii?Q?3atCIadwK/N7cVXZYDi1Nsg4YGGocpyVvd6ib2Sr83Oae+Q40zCsGl8nUUgH?=
+ =?us-ascii?Q?BF1SqDg+v9b1z4NEyFTjH6YsODtDC7vflzLf3gdHiQXzkD8ADMWl5VpQiPH9?=
+ =?us-ascii?Q?DkzCvD8Ung02MlorRS22dDo1JEFta3QxRqXwE49Xg5SuC1ZAmT3GLzsPrh8T?=
+ =?us-ascii?Q?CgGU1F6kLA59YB/Kf2gaqfLANt+rENPv/xNzbNhkExyGuzv47qM23RWJxMRZ?=
+ =?us-ascii?Q?t5SMfkqAbwTO+vSPNZoneBurbO0lLfHnKCiyWz0lMjUelEDcTaw3kXRonRRJ?=
+ =?us-ascii?Q?tXvM6schKU1mBcSRy+TmHckUsH2fFnYiO08MADCHMUOfybEraEJW0hXSk4bl?=
+ =?us-ascii?Q?bd/W0rc6HN5I9tiZ2tQqLP6Avn05dabFRjwbniqBH2tW2TBfNkVUA2LYGCWR?=
+ =?us-ascii?Q?Divb4z51D4XOtHKBFAkmfyNZRA/1BBh7ZuwAbWL12n1w/Xa0lO5TEEXdgOag?=
+ =?us-ascii?Q?mo5EBU9ThbHYCoeVM5MZjpIZ6VuP0rC1v9XgOJDHROPpfHf6hpy1vTIZgd/r?=
+ =?us-ascii?Q?y6hvx2UKQmFc0TTh2k8cAOCDG55K1jLQHp1WvXVdBLcTWRepxv0gsa49j+DI?=
+ =?us-ascii?Q?R0vRq5kApvrUUhTA/fFXsOf63LTLZJw/K4Li3nHPmUef+Fe8l+HrK8nlC2i7?=
+ =?us-ascii?Q?IdHJu/z9NIJEFXABxs7de5xfGL0MT665bOpfVCj4LKMxhVrl9WFSZQ=3D=3D?=
+x-ms-traffictypediagnostic: PU1APC01HT215:
+x-ms-exchange-purlcount: 2
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: P7bipwHuplET77EHetdtuQFj+/2uGv4vwSXEQdLajNzjn9jnMf7uPFryZGGoxX2SFB09pbCJ7KZg8O0jhLCZ4clOzOHNyFf8TfKo9xW/WLuW2mMSOHzu/ENyAp+g4Fr2y1nSp59+vaKe1dNYMbN6FxY8SgYJXs6ElnVWCxmYa6htbcXoOyRx1sTJHYIC4yXK
+x-microsoft-antispam-message-info: BOeN1wcc3lRnrCLTF5IsqeMmWgNr//yGXtzBgmb3AoD0imzFyO6bJWQSv6oULE+s72HgGNxxD0KSj+jqCKxaSwmxqVE+CxvKdwpk6IB2T7Q+LuCFG5FksXYsswZ9Sa2cv70/aSj2HeMkAwoRLt27BWXQRDHMBup96uqIoigyEJHGphiGyXuSUMbp0UtIHfv1Gy3zlSzg3uXB2ie61+eMaxnlB4rqSpQqPw4YIkLJbG4=
 x-ms-exchange-transport-forked: True
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <190531C10E9ACD4091B7CD6D3345C048@KORP216.PROD.OUTLOOK.COM>
+Content-ID: <A2E581EF043F344F96E7C3795F3B5FB9@KORP216.PROD.OUTLOOK.COM>
 Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
 X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 06c526d2-e7b6-4704-6efd-08d7638976c0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 938733c8-0ce4-4bd4-5592-08d76389842f
 X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Nov 2019 13:50:35.3355
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Nov 2019 13:50:57.8967
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Internet
 X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT128
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT215
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-I have split this patch off my main series, as I realised that it does 
-not need to be part of that series.
+Currently, the kernel can sometimes assign the MMIO_PREF window
+additional size into the MMIO window, resulting in extra MMIO additional
+size, despite the MMIO_PREF additional size being assigned successfully
+into the MMIO_PREF window.
 
-I have made some recent improvements to add assurance against it 
-breaking existing behaviour. Instead of returning the first resource of 
-the desired type regardless of it being assigned, now it goes through 
-all of the resources and returns only those of type that are not 
-assigned. Only then does it go through and return the first resource of 
-desired type that is assigned. If none are found then it returns NULL as 
-usual.
+This happens if in the first pass, the MMIO_PREF succeeds but the MMIO
+fails. In the next pass, because MMIO_PREF is already assigned, the
+attempt to assign MMIO_PREF returns an error code instead of success
+(nothing more to do, already allocated). Hence, the size which is
+actually allocated, but thought to have failed, is placed in the MMIO
+window.
 
-I have made extensive changes to the patch notes, also.
+Example of problem (more context can be found in the bug report URL):
 
-Logan Gunthorpe <logang@deltatee.com> has an alternative method of 
-fixing this same bug. Please also consider his patch and accept 
-whichever is best for Linux. All I care is that the bug be fixed.
+Mainline kernel:
+pci 0000:06:01.0: BAR 14: assigned [mem 0x90100000-0xa00fffff] = 256M
+pci 0000:06:04.0: BAR 14: assigned [mem 0xa0200000-0xb01fffff] = 256M
 
-Nicholas Johnson (1):
-  PCI: Fix bug resulting in double hpmemsize being assigned to MMIO
-    window
+Patched kernel:
+pci 0000:06:01.0: BAR 14: assigned [mem 0x90100000-0x980fffff] = 128M
+pci 0000:06:04.0: BAR 14: assigned [mem 0x98200000-0xa01fffff] = 128M
 
+This was using pci=realloc,hpmemsize=128M,nocrs - on the same machine
+with the same configuration, with a Ubuntu mainline kernel and a kernel
+patched with this patch.
+
+The bug results in the MMIO_PREF being added to the MMIO window, which
+means doubling if MMIO_PREF size = MMIO size. With a large MMIO_PREF,
+the MMIO window will likely fail to be assigned altogether due to lack
+of 32-bit address space.
+
+Change find_free_bus_resource() to do the following:
+- Return first unassigned resource of the correct type.
+- If none of the above, return first assigned resource of the correct type.
+- If none of the above, return NULL.
+
+Returning an assigned resource of the correct type allows the caller to
+distinguish between already assigned and no resource of the correct type.
+
+Rename find_free_bus_resource to find_bus_resource_of_type().
+
+Add checks in pbus_size_io() and pbus_size_mem() to return success if
+resource returned from find_free_bus_resource() is already allocated.
+
+This avoids pbus_size_io() and pbus_size_mem() returning error code to
+__pci_bus_size_bridges() when a resource has been successfully assigned
+in a previous pass. This fixes the existing behaviour where space for a
+resource could be reserved multiple times in different parent bridge
+windows.
+
+Link: https://lore.kernel.org/lkml/20190531171216.20532-2-logang@deltatee.com/T/#u
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=203243
+
+Reported-by: Kit Chow <kchow@gigaio.com>
+Reported-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+---
  drivers/pci/setup-bus.c | 34 +++++++++++++++++++++++-----------
  1 file changed, 23 insertions(+), 11 deletions(-)
 
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index e7dbe2170..f97c36a1e 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -752,24 +752,32 @@ static void pci_bridge_check_ranges(struct pci_bus *bus)
+ }
+ 
+ /*
+- * Helper function for sizing routines: find first available bus resource
+- * of a given type.  Note: we intentionally skip the bus resources which
+- * have already been assigned (that is, have non-NULL parent resource).
++ * Helper function for sizing routines.
++ * Assigned resources have non-NULL parent resource.
++ *
++ * Return first unassigned resource of the correct type.
++ * If none of the above, return first assigned resource of the correct type.
++ * If none of the above, return NULL.
++ *
++ * Returning an assigned resource of the correct type allows the caller to
++ * distinguish between already assigned and no resource of the correct type.
+  */
+-static struct resource *find_free_bus_resource(struct pci_bus *bus,
+-					       unsigned long type_mask,
+-					       unsigned long type)
++static struct resource *find_bus_resource_of_type(struct pci_bus *bus,
++						  unsigned long type_mask,
++						  unsigned long type)
+ {
+ 	int i;
+-	struct resource *r;
++	struct resource *r, *r_assigned = NULL;
+ 
+ 	pci_bus_for_each_resource(bus, r, i) {
+ 		if (r == &ioport_resource || r == &iomem_resource)
+ 			continue;
+ 		if (r && (r->flags & type_mask) == type && !r->parent)
+ 			return r;
++		if (r && (r->flags & type_mask) == type && !r_assigned)
++			r_assigned = r;
+ 	}
+-	return NULL;
++	return r_assigned;
+ }
+ 
+ static resource_size_t calculate_iosize(resource_size_t size,
+@@ -866,14 +874,16 @@ static void pbus_size_io(struct pci_bus *bus, resource_size_t min_size,
+ 			 struct list_head *realloc_head)
+ {
+ 	struct pci_dev *dev;
+-	struct resource *b_res = find_free_bus_resource(bus, IORESOURCE_IO,
+-							IORESOURCE_IO);
++	struct resource *b_res = find_bus_resource_of_type(bus, IORESOURCE_IO,
++								IORESOURCE_IO);
+ 	resource_size_t size = 0, size0 = 0, size1 = 0;
+ 	resource_size_t children_add_size = 0;
+ 	resource_size_t min_align, align;
+ 
+ 	if (!b_res)
+ 		return;
++	if (b_res->parent)
++		return;
+ 
+ 	min_align = window_alignment(bus, IORESOURCE_IO);
+ 	list_for_each_entry(dev, &bus->devices, bus_list) {
+@@ -978,7 +988,7 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
+ 	resource_size_t min_align, align, size, size0, size1;
+ 	resource_size_t aligns[18]; /* Alignments from 1MB to 128GB */
+ 	int order, max_order;
+-	struct resource *b_res = find_free_bus_resource(bus,
++	struct resource *b_res = find_bus_resource_of_type(bus,
+ 					mask | IORESOURCE_PREFETCH, type);
+ 	resource_size_t children_add_size = 0;
+ 	resource_size_t children_add_align = 0;
+@@ -986,6 +996,8 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
+ 
+ 	if (!b_res)
+ 		return -ENOSPC;
++	if (b_res->parent)
++		return 0;
+ 
+ 	memset(aligns, 0, sizeof(aligns));
+ 	max_order = 0;
 -- 
 2.23.0
 
