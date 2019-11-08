@@ -2,108 +2,115 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 59260F3C60
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Nov 2019 00:59:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 86B43F3D3C
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Nov 2019 02:12:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727926AbfKGX74 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 Nov 2019 18:59:56 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:34237 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725940AbfKGX74 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 Nov 2019 18:59:56 -0500
-Received: by mail-io1-f67.google.com with SMTP id q83so4369814iod.1
-        for <linux-pci@vger.kernel.org>; Thu, 07 Nov 2019 15:59:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8Wl8N9CZlB2xlpKHMXK6nBkiP4gpcI53AmfhmdY7Ye0=;
-        b=qJ6+3nX2A0cxXp5ywWmFmELron2FyoN3FDc1ffUYMSP1vQyxNNpAwPSnIE5uLNzHPq
-         yyTkSrkV4O5kQntMue3g7+nconlzJcFJaaHJJvfJhYiZk1qUc6eQ7eSGlcWwJjDZxSRI
-         7S/mzRsyDqgZuUtoTd4Nl/Yt1BDw/i2DmXmPOTsRh50NUe/3/3QtgZHdZFheYVUikA7M
-         N+9OqwsvL5vJn14W36FB7KmRrDoQ5hyXXvKRhWwjTE1IpQ+HN47iJQHz64V389iY1Cde
-         pazLb/um+PtgdVcge3dhBcECyUDnNWvzK6hGd+wFsEi3EaLHfwIrCnq7ZBaYeiJrTqA1
-         C3tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8Wl8N9CZlB2xlpKHMXK6nBkiP4gpcI53AmfhmdY7Ye0=;
-        b=COzfNkEhbgLbR6a0rvUkUuD1zjdmxyFdjobwjdUj7LNGScrSI1A8XEVxDkFiGllp26
-         JPzmOEL3hXWXKd6D7Aaw446tzDUAhqu4tPGbSgApUNAzBI8KiHHCyu50u/C6nBJ0+22g
-         7Rm2riQRX4XjFZsHF1ADCgi+zQsJLBxQZWoHqSCkJfHfUZYM1wlF39hxXw8mXzr0MxOa
-         5cKfjwJeB8zLROudY831bX93OqYqcJl1v5nsthoY8tWkXji8j92hs10Rid0bXTfh4kTt
-         MXgU0ER5WJaR2O6fQpTkVY3b/X8qM+GAT9wRDyf21zVH3Cgqz95uTFqRih7Sgv59mkvs
-         r/2A==
-X-Gm-Message-State: APjAAAVPpHCtt13674IzINOAI4N9OphcfarSxbZj8xCbnoldJwJaLrIa
-        kRlpyJtdq/YCu8ZMaKxs4xz8MH56Cxlt5m2w5Q3prw==
-X-Google-Smtp-Source: APXvYqwdhyG4PRd2KuyuhMDVRxc8TrIjKm0QEGmFDeLDmPvQFWLzeehD5bVsnZtjSW2ZuPfUI6UWw5ZPpD3feEOMNM8=
-X-Received: by 2002:a5e:8202:: with SMTP id l2mr6723828iom.207.1573171195298;
- Thu, 07 Nov 2019 15:59:55 -0800 (PST)
+        id S1726320AbfKHBMN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 Nov 2019 20:12:13 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:38140 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725928AbfKHBMN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 7 Nov 2019 20:12:13 -0500
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 191CBEA3289722D713FD;
+        Fri,  8 Nov 2019 09:12:11 +0800 (CST)
+Received: from [127.0.0.1] (10.133.224.57) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Fri, 8 Nov 2019
+ 09:12:04 +0800
+Subject: Re: [PATCH] pci: lock the pci_cfg_wait queue for the consistency of
+ data
+From:   Xiang Zheng <zhengxiang9@huawei.com>
+To:     Matthew Wilcox <willy@infradead.org>
+CC:     <bhelgaas@google.com>, <wangxiongfeng2@huawei.com>,
+        <wanghaibin.wang@huawei.com>, <guoheyi@huawei.com>,
+        <yebiaoxiang@huawei.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <rjw@rjwysocki.net>,
+        <tglx@linutronix.de>, <guohanjun@huawei.com>,
+        <yangyingliang@huawei.com>
+References: <20191028091809.35212-1-zhengxiang9@huawei.com>
+ <20191028163041.GA8257@bombadil.infradead.org>
+ <14e7d02e-215d-30dc-548c-e605f3ffdf1e@huawei.com>
+Message-ID: <5692a244-d6c7-8bd4-c7c4-e4532e7ff07c@huawei.com>
+Date:   Fri, 8 Nov 2019 09:12:03 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-References: <20191025202004.GA147688@google.com> <1ade6a9f-9532-c400-9bb0-4e68ed5752ce@linux.intel.com>
- <CAOesGMhdAUKj9f0=sVwH7kffr=P-LqWWqKxKK3N3e0MpcjLExw@mail.gmail.com> <43b431b6-f544-f9f0-d6f3-f383d7b882b9@linux.intel.com>
-In-Reply-To: <43b431b6-f544-f9f0-d6f3-f383d7b882b9@linux.intel.com>
-From:   Olof Johansson <olof@lixom.net>
-Date:   Thu, 7 Nov 2019 15:59:43 -0800
-Message-ID: <CAOesGMi2hnEhZvvcWg44LzjAr44LhzQ58s=u=THpfn=RRLLA7w@mail.gmail.com>
-Subject: Re: [PATCH] PCI/DPC: Add pcie_ports=dpc-native parameter to bring
- back old behavior
-To:     sathyanarayanan.kuppuswamy@linux.intel.com
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Keith Busch <keith.busch@intel.com>, linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <14e7d02e-215d-30dc-548c-e605f3ffdf1e@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.224.57]
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 7, 2019 at 2:07 PM Kuppuswamy Sathyanarayanan
-<sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
->
->
-> On 11/7/19 12:09 PM, Olof Johansson wrote:
-> > On Thu, Nov 7, 2019 at 12:02 PM Kuppuswamy Sathyanarayanan
-> > <sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
-> >> Hi,
-> >>
-> >> On 10/25/19 1:20 PM, Bjorn Helgaas wrote:
-> >>> On Wed, Oct 23, 2019 at 12:22:05PM -0700, Olof Johansson wrote:
-> >>>> In commit eed85ff4c0da7 ("PCI/DPC: Enable DPC only if AER is available"),
-> >>>> the behavior was changed such that native (kernel) handling of DPC
-> >>>> got tied to whether the kernel also handled AER. While this is what
-> >>>> the standard recommends, there are BIOSes out there that lack the DPC
-> >>>> handling since it was never required in the past.
-> >>> Some systems do not grant OS control of AER via _OSC.  I guess the
-> >>> problem is that on those systems, the OS DPC driver used to work, but
-> >>> after eed85ff4c0da7, it does not.  Right?
-> >> I need some clarification on this issue. Do you mean in these systems,
-> >> firmware expects OS to handle DPC and AER, but it does not let OS know
-> >> about it via _OSC ?
-> > The OS and BIOS both assumed behavior as before eed85ff4c0da7 -- AER
-> > handled by firmware but DPC handled by kernel.
-> >
-> > I.e. a classic case of "Sure, the spec says this, but in reality
-> > implementations relied on actual behavior", and someone had a
-> > regression and need a way to restore previous behavior.
->
-> Got it. I don't know whether its good to add hacks to support products
-> that does not follow spec.
-> But, do you think it would be useful to add some kind of warning message
-> when this option is
-> enabled ? May be it could be useful in debugging.
+Ping...
 
-It's not a "hack", it is fixing a regression in behavior because of
-changed assumptions by the kernel.
+On 2019/10/29 11:34, Xiang Zheng wrote:
+> 
+> 
+> On 2019/10/29 0:30, Matthew Wilcox wrote:
+>> On Mon, Oct 28, 2019 at 05:18:09PM +0800, Xiang Zheng wrote:
+>>> Commit "7ea7e98fd8d0" suggests that the "pci_lock" is sufficient,
+>>> and all the callers of pci_wait_cfg() are wrapped with the "pci_lock".
+>>>
+>>> However, since the commit "cdcb33f98244" merged, the accesses to
+>>> the pci_cfg_wait queue are not safe anymore. A "pci_lock" is
+>>> insufficient and we need to hold an additional queue lock while
+>>> read/write the wait queue.
+>>>
+>>> So let's use the add_wait_queue()/remove_wait_queue() instead of
+>>> __add_wait_queue()/__remove_wait_queue().
+>>
+>> As I said earlier, this reintroduces the deadlock addressed by
+>> cdcb33f9824429a926b971bf041a6cec238f91ff
+>>
+> 
+> Thanks Matthew, sorry for that I did not understand the way to reintroduce
+> the deadlock and sent this patch. If what I think is right, the possible
+> deadlock may be caused by the condition in which there are three processes:
+> 
+>    *Process*                          *Acquired*         *Wait For*
+>    wake_up_all()                      wq_head->lock      pi_lock
+>    snbep_uncore_pci_read_counter()    pi_lock            pci_lock
+>    pci_wait_cfg()                     pci_lock           wq_head->lock
+> 
+> These processes suffer from the nested locks.:)
+> 
+> But for this problem, what do you think about the solution below:
+> 
+> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+> index 2fccb5762c76..09342a74e5ea 100644
+> --- a/drivers/pci/access.c
+> +++ b/drivers/pci/access.c
+> @@ -207,14 +207,14 @@ static noinline void pci_wait_cfg(struct pci_dev *dev)
+>  {
+>         DECLARE_WAITQUEUE(wait, current);
+> 
+> -       __add_wait_queue(&pci_cfg_wait, &wait);
+>         do {
+>                 set_current_state(TASK_UNINTERRUPTIBLE);
+>                 raw_spin_unlock_irq(&pci_lock);
+> +               add_wait_queue(&pci_cfg_wait, &wait);
+>                 schedule();
+> +               remove_wait_queue(&pci_cfg_wait, &wait);
+>                 raw_spin_lock_irq(&pci_lock);
+>         } while (dev->block_cfg_access);
+> -       __remove_wait_queue(&pci_cfg_wait, &wait);
+>  }
+> 
+>  /* Returns 0 on success, negative values indicate error. */
+> 
+> 
+> 
+>> .
+>>
+> 
 
-We're pretty clear as a kernel community: We don't regress our users.
-So, in cases like these, we need to make sure we allow people to use
-their hardware the same way they used it with an older kernel.
+-- 
 
-A printk() to indicate that this mode is enabled could be useful, if
-nothing else to make sure that the pre-eed85ff4c0da7 behavior is
-enabled without having to grep /proc/cmdline.
+Thanks,
+Xiang
 
-
--Olof
