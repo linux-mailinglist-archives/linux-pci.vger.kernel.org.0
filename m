@@ -2,40 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F381F63B6
-	for <lists+linux-pci@lfdr.de>; Sun, 10 Nov 2019 03:54:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0625DF66FA
+	for <lists+linux-pci@lfdr.de>; Sun, 10 Nov 2019 04:17:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729749AbfKJCug (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 9 Nov 2019 21:50:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34282 "EHLO mail.kernel.org"
+        id S1727784AbfKJDRN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 9 Nov 2019 22:17:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729746AbfKJCug (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:50:36 -0500
+        id S1726808AbfKJCkY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:40:24 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9F4122790;
-        Sun, 10 Nov 2019 02:50:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E12FF21924;
+        Sun, 10 Nov 2019 02:40:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354235;
-        bh=iuc+CW/MwNh7Z3Nj4jlGrhbfNy6HZQZso3XrQC80OqA=;
+        s=default; t=1573353623;
+        bh=o/TOvQIheBmK4/IOoKUhlIn3DScWwrc2sRd+jGer1Oo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QdiMwsVZwVePbsIIxtX07h1/sFJa3PlQg1l0aPPZZs6Q0zjMK+/5L5YWXNxDA7Z8s
-         oidI/vC7Ie2cE3ZtIHEpD9Hema8iQpbTFbj5s2hWiVae7CEhvwHORMcPmhkKr30sL3
-         eyDG94AyWaup14X5O2VOVH5DlcgSYYC0gf7rsB7E=
+        b=NyltAoaciBfm5ddlZwsGAxCOEh8U8735I6GlCmx4d+8DSKJtHPqTR8doth6yzdO4s
+         zS/9eFgoH7jk570QZyHvB+np+Q4m+OjFYTpVdtHohnnHyfnbcTOPLt/mSVHTyA8qRR
+         qt05YafNZSNAmX9fxwtILOZlHGv3bOidE9O8zGVA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sinan Kaya <okaya@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Honghui Zhang <honghui.zhang@mediatek.com>,
         Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 02/40] PCI/ACPI: Correct error message for ASPM disabling
-Date:   Sat,  9 Nov 2019 21:49:54 -0500
-Message-Id: <20191110025032.827-2-sashal@kernel.org>
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 008/191] PCI: mediatek: Fix unchecked return value
+Date:   Sat,  9 Nov 2019 21:37:10 -0500
+Message-Id: <20191110024013.29782-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191110025032.827-1-sashal@kernel.org>
-References: <20191110025032.827-1-sashal@kernel.org>
+In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
+References: <20191110024013.29782-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -45,41 +45,36 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Sinan Kaya <okaya@kernel.org>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 
-[ Upstream commit 1ad61b612b95980a4d970c52022aa01dfc0f6068 ]
+[ Upstream commit 17a0a1e5f6c4bd6df17834312ff577c1373d87b8 ]
 
-If _OSC execution fails today for platforms without an _OSC entry, code is
-printing a misleading message saying disabling ASPM as follows:
+Check return value of devm_pci_remap_iospace().
 
-  acpi PNP0A03:00: _OSC failed (AE_NOT_FOUND); disabling ASPM
-
-We need to ensure that platform supports ASPM to begin with.
-
-Reported-by: Michael Kelley <mikelley@microsoft.com>
-Signed-off-by: Sinan Kaya <okaya@kernel.org>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Addresses-Coverity-ID: 1471965 ("Unchecked return value")
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Honghui Zhang <honghui.zhang@mediatek.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/pci_root.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/pci/controller/pcie-mediatek.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-index 3b0b4bd67b71b..4031ec8024cee 100644
---- a/drivers/acpi/pci_root.c
-+++ b/drivers/acpi/pci_root.c
-@@ -454,8 +454,9 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm)
- 	decode_osc_support(root, "OS supports", support);
- 	status = acpi_pci_osc_support(root, support);
- 	if (ACPI_FAILURE(status)) {
--		dev_info(&device->dev, "_OSC failed (%s); disabling ASPM\n",
--			 acpi_format_exception(status));
-+		dev_info(&device->dev, "_OSC failed (%s)%s\n",
-+			 acpi_format_exception(status),
-+			 pcie_aspm_support_enabled() ? "; disabling ASPM" : "");
- 		*no_aspm = 1;
- 		return;
- 	}
+diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+index c5ff6ca65eab2..0d100f56cb884 100644
+--- a/drivers/pci/controller/pcie-mediatek.c
++++ b/drivers/pci/controller/pcie-mediatek.c
+@@ -1120,7 +1120,9 @@ static int mtk_pcie_request_resources(struct mtk_pcie *pcie)
+ 	if (err < 0)
+ 		return err;
+ 
+-	devm_pci_remap_iospace(dev, &pcie->pio, pcie->io.start);
++	err = devm_pci_remap_iospace(dev, &pcie->pio, pcie->io.start);
++	if (err)
++		return err;
+ 
+ 	return 0;
+ }
 -- 
 2.20.1
 
