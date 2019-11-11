@@ -2,66 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6CC82F796C
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Nov 2019 18:03:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F0CE5F796D
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Nov 2019 18:04:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbfKKRDn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Nov 2019 12:03:43 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:39994 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726845AbfKKRDn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Nov 2019 12:03:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=jJ2XSvmWYSjH8U6K0+cFtVLMQGHVRVlZ4wb+eJcs2bM=; b=nTy5/J5uQXmgXT+1+meEgmTgk
-        nnyQfpjO2QGevTyl3/hTL0I2Koi3cmSrTVF7BUorhPZKaE5uhy662x8TNptxqnuR91U6XDYT40Ocf
-        3bG3ui4+MdL8a3mpsVLGBO3Td0CZ5AVOjddPs58Kyt0WQZu/8Rp0WYq0UI7pde8hnhPcXyZzWKfWA
-        /eiTfW2E4pwg9Y6AFjPg4fTkdGo5N46BZTaD1XxxZUAxdv79kBMNbeHjUBWaD1BJ7fYeoxCHZd7vl
-        NQumPCDdcvcopw2Jwj8DRHjb0b00RIhKLDZlFUnc9vh8+mIxFatKHthRxHjPUESO07J3h4o4ZsHwx
-        1yZHdRSxg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iUD6K-00076k-EO; Mon, 11 Nov 2019 17:03:40 +0000
-Date:   Mon, 11 Nov 2019 09:03:40 -0800
-From:   "hch@infradead.org" <hch@infradead.org>
-To:     "Derrick, Jonathan" <jonathan.derrick@intel.com>
-Cc:     "hch@infradead.org" <hch@infradead.org>,
-        "kbusch@kernel.org" <kbusch@kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "helgaas@kernel.org" <helgaas@kernel.org>
-Subject: Re: [PATCH 0/3] PCI: vmd: Reducing tail latency by affining to the
- storage stack
-Message-ID: <20191111170340.GA26474@infradead.org>
-References: <1573040408-3831-1-git-send-email-jonathan.derrick@intel.com>
- <20191107093952.GA13826@infradead.org>
- <bfc69a54dc394ffb7580d14818047ec6a647536f.camel@intel.com>
- <20191107153736.GA16006@infradead.org>
- <c0d62e0f1f8d1d6f31b2a63757aad471ced1df28.camel@intel.com>
- <20191107154224.GA26224@infradead.org>
- <784d25a41399472e80a0b384f88eccab29b01cc1.camel@intel.com>
+        id S1726916AbfKKREa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Nov 2019 12:04:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57470 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726845AbfKKREa (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 11 Nov 2019 12:04:30 -0500
+Received: from redsun51.ssa.fujisawa.hgst.com (unknown [199.255.47.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2FD3214DB;
+        Mon, 11 Nov 2019 17:04:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573491869;
+        bh=doNb8eOz52l8tpt0P5xoKExErKIHHIONmaeF0kCCE/Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=S7zVdakTisUdglShgl9MfvKGht11oUKCRalKuhpVr5dNblS7aSNr7Xa7XUkPzreTM
+         4jKtMpIYdcOpYPnlUBgTGZp+LSJU735eyMZTZw77U+nZ4bg6yat0khhbEARpCcPjPV
+         Kfm5pUzD7B+LCJPl7fg7MQ59vNUZ6XCsDTTu0yAE=
+Date:   Tue, 12 Nov 2019 02:04:22 +0900
+From:   Keith Busch <kbusch@kernel.org>
+To:     Jon Derrick <jonathan.derrick@intel.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
+        Keith Busch <kbusch@kernel.com>
+Subject: Re: [PATCH 1/2] PCI: vmd: Add bus 224-255 restriction decode
+Message-ID: <20191111170422.GB10851@redsun51.ssa.fujisawa.hgst.com>
+References: <20191111165302.29636-1-jonathan.derrick@intel.com>
+ <20191111165302.29636-2-jonathan.derrick@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <784d25a41399472e80a0b384f88eccab29b01cc1.camel@intel.com>
+In-Reply-To: <20191111165302.29636-2-jonathan.derrick@intel.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 07, 2019 at 03:47:09PM +0000, Derrick, Jonathan wrote:
-> A cloud service provider might have several VMs on a single system and
-> wish to provide surprise hotplug functionality within the guests so
-> that they don't need to bring the whole server down or migrate VMs in
-> order to swap disks.
+On Mon, Nov 11, 2019 at 09:53:01AM -0700, Jon Derrick wrote:
+> VMD bus restrictions are required when IO fabric is multiplexed such
+> that VMD cannot use the entire bus range. This patch adds another bus
+> restriction decode bit that can be set by firmware to restrict the VMD
+> bus range from 224-255.
 
-And how does the vmd mechanism help with that?  Maybe qemu is missing
-a memremap to not access the remove device right now, but adding that
-is way simpler than having to deal with a device that makes everyones
-life complicated.
+The code suggests that such a device is restricted *to* that range,
+not from it.
+ 
+> +			switch (BUS_RESTRICT_CFG(reg16)) {
+> +			case(1):
+> +				vmd->busn_start = 128;
+> +				break;
+> +			case(2):
+> +				vmd->busn_start = 224;
+> +				break;
+> +			case(3):
+> +				pci_err(vmd->dev, "Unknown Bus Offset Setting\n");
+> +				return -ENODEV;
+> +			default:
+> +				break;
+> +			}
 
+Just a nit for consistent sytle, every other switch case looks like:
+
+	case 1:
+		...
+	case 2:
+		...
+	case 3:
+		...
