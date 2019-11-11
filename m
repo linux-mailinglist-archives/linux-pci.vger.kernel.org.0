@@ -2,119 +2,115 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D393BF6F8B
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Nov 2019 09:10:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 843CEF7045
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Nov 2019 10:16:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbfKKIKc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Nov 2019 03:10:32 -0500
-Received: from mga01.intel.com ([192.55.52.88]:24265 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726768AbfKKIKc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 11 Nov 2019 03:10:32 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Nov 2019 00:10:31 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,291,1569308400"; 
-   d="scan'208";a="354710033"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga004.jf.intel.com with ESMTP; 11 Nov 2019 00:10:31 -0800
-Received: from [10.226.39.46] (ekotax-mobl.gar.corp.intel.com [10.226.39.46])
-        by linux.intel.com (Postfix) with ESMTP id 31F0A5803A5;
-        Mon, 11 Nov 2019 00:10:24 -0800 (PST)
-Subject: Re: [PATCH v5 3/3] PCI: artpec6: Configure FTS with dwc helper
- function
-To:     Andrew Murray <andrew.murray@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>
-Cc:     "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "martin.blumenstingl@googlemail.com" 
-        <martin.blumenstingl@googlemail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "andriy.shevchenko@intel.com" <andriy.shevchenko@intel.com>,
-        "cheol.yong.kim@intel.com" <cheol.yong.kim@intel.com>,
-        "chuanhua.lei@linux.intel.com" <chuanhua.lei@linux.intel.com>,
-        "qi-ming.wu@intel.com" <qi-ming.wu@intel.com>
-References: <cover.1572950559.git.eswara.kota@linux.intel.com>
- <90a64d72a32dbc75c03a58a1813f50e547170ff4.1572950559.git.eswara.kota@linux.intel.com>
- <SL2P216MB010527F9E1C142F0A347ED63AA780@SL2P216MB0105.KORP216.PROD.OUTLOOK.COM>
- <20191108104338.GG43905@e119886-lin.cambridge.arm.com>
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <913f3aa2-708e-ceee-217a-5a0a1b1dfca4@linux.intel.com>
-Date:   Mon, 11 Nov 2019 16:10:24 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726906AbfKKJQb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Nov 2019 04:16:31 -0500
+Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:47113 "EHLO
+        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726768AbfKKJQa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Nov 2019 04:16:30 -0500
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.west.internal (Postfix) with ESMTP id D10C34BB;
+        Mon, 11 Nov 2019 04:16:28 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Mon, 11 Nov 2019 04:16:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=767pSBRJ5shuYMbgPGJ/NNfiJLw
+        uGxahyROFUAPFCyc=; b=QL7E7y/EkKZiIaXtSdO5xlErh7sWmESOBvYArr7CVfp
+        eQzc3UERDa9ID9hdy2lFIlSKG6qxAErTf3njeANYlVShDy6UuKgA7ijVOvSazPcr
+        g3wjoXv9ZEYeqkbXvf0xTRSWRhXoa1JYrOQt2QjNXGY0UjKrpaPoCwunhc7kKjpb
+        /frGGcTi8OBPNTf8rvHE3WO9zkj3pDCRuchNBLsC22DpVKVMK6qSAL+QAJF0ZvId
+        utlEu3dYSA+MdZeJj/OfIlrYwLTu+kHwKlBxe0T/sjFJirwbVVtvZg9tz2skBtgb
+        uIRhrA1vAjindtTZDdMuPzbNunRo9atznS0r8/pQOhQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=767pSB
+        RJ5shuYMbgPGJ/NNfiJLwuGxahyROFUAPFCyc=; b=bDztKrrAvA8V+7wLK3MLVe
+        m8W/bcOJD8KxIyKB8OkXlQb0Y3RFA6OsgJx61wa5oIIG5+hDfQVPgsl7LWhb0p/+
+        CT+mslvrBRj7y02GVeqDbQxbQquw6kAu7SXKQrHIr36J5XLqTphRRnaHX2zJKrLw
+        3Du7MBVCEO7FZh58iviSUnQ9aA2j/QYYn9KDTo4a3JdK/+Z3yrKKPdciuyhU5crQ
+        3LWP5KfWvJZ4dxW4zBxAXjNSxkKfjlqolNIGNH/8oH88a1nWMsEoD8yWATMpcd8X
+        A+gaQo3VAbFQXhxOkPn9ubd42Yyj/3VBXnDOW/SoYSsYkQGIgiRVKAFeL6ey8jVw
+        ==
+X-ME-Sender: <xms:6ybJXeu0x1QJJObgsILvHQe3sOcXCVOvVrYyrT1UytIqV59h2uVRsQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedruddvjedgtdduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepifhrvghg
+    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecukfhppeekfedrkeeirdekledrud
+    dtjeenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhmnecu
+    vehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:6ybJXZfJyvDt3neyds_yxO2il2OqimVf6hPU5EQM6QAV3J2PtmykCA>
+    <xmx:6ybJXXZ18rQyPBzQhbADNALFi019tBRuNUERxXgmFmzdQVC9g2o3Ww>
+    <xmx:6ybJXUVQZqXp4-UBlASkwi0BVT8d-IaH2XgMqMnhdOezzcBG0xRdbg>
+    <xmx:7CbJXe0xMG9EQdfRsehkw-9hE_MmqmKB8aUY2nxGKil6KH1KfHK83w>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 0FF8F3060060;
+        Mon, 11 Nov 2019 04:16:26 -0500 (EST)
+Date:   Mon, 11 Nov 2019 10:16:24 +0100
+From:   Greg KH <greg@kroah.com>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     "# 4 . 7" <stable@vger.kernel.org>, linux-usb@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-mtd@lists.infradead.org
+Subject: Re: [BACKPORT 4.14.y 04/18] usb: dwc3: Allow disabling of
+ metastability workaround
+Message-ID: <20191111091624.GA4139389@kroah.com>
+References: <20190905161759.28036-1-mathieu.poirier@linaro.org>
+ <20190905161759.28036-5-mathieu.poirier@linaro.org>
+ <20190910143601.GD3362@kroah.com>
+ <CANLsYkwkq2fLWsGXHxr2tSBLHdfe4JXgu8ehuD1FOEQeDAPNnA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191108104338.GG43905@e119886-lin.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANLsYkwkq2fLWsGXHxr2tSBLHdfe4JXgu8ehuD1FOEQeDAPNnA@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Wed, Sep 11, 2019 at 08:01:40AM -0600, Mathieu Poirier wrote:
+> On Tue, 10 Sep 2019 at 08:36, Greg KH <greg@kroah.com> wrote:
+> >
+> > On Thu, Sep 05, 2019 at 10:17:45AM -0600, Mathieu Poirier wrote:
+> > > From: Roger Quadros <rogerq@ti.com>
+> > >
+> > > commit 42bf02ec6e420e541af9a47437d0bdf961ca2972 upstream
+> > >
+> > > Some platforms (e.g. TI's DRA7 USB2 instance) have more trouble
+> > > with the metastability workaround as it supports only
+> > > a High-Speed PHY and the PHY can enter into an Erratic state [1]
+> > > when the controller is set in SuperSpeed mode as part of
+> > > the metastability workaround.
+> > >
+> > > This causes upto 2 seconds delay in enumeration on DRA7's USB2
+> > > instance in gadget mode.
+> > >
+> > > If these platforms can be better off without the workaround,
+> > > provide a device tree property to suggest that so the workaround
+> > > is avoided.
+> > >
+> > > [1] Device mode enumeration trace showing PHY Erratic Error.
+> > >      irq/90-dwc3-969   [000] d...    52.323145: dwc3_event: event (00000901): Erratic Error [U0]
+> > >      irq/90-dwc3-969   [000] d...    52.560646: dwc3_event: event (00000901): Erratic Error [U0]
+> > >      irq/90-dwc3-969   [000] d...    52.798144: dwc3_event: event (00000901): Erratic Error [U0]
+> >
+> > Does the DT also need to get updated with this new id for this?  Is that
+> > a separate patch somewhere?
+> 
+> The upstream commit is:
+> 
+> b8c9c6fa2002 ARM: dts: dra7: Disable USB metastability workaround for USB2
+> 
+> Should I just send the latter or you prefer a resend with both patches?
 
-On 11/8/2019 6:43 PM, Andrew Murray wrote:
-> On Thu, Nov 07, 2019 at 09:03:46PM +0000, Jingoo Han wrote:
->> On 11/5/19, 10:44 PM, Dilip Kota wrote:
->>> Utilize DesugnWare helper functions to configure Fast Training
->> Nitpicking: Fix typo (DesugnWare --> DesignWare)
->>
->> If possible, how about the following?
->> Utilize DesignWare --> Use DesignWare
->>
->> Best regards,
->> Jingoo Han
->>
->>> Sequence. Drop the respective code in the driver.
->>>
->>> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
-> With the changes suggested in this thread, you can add:
->
-> Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-Sure.
+I've queued this up now, along with the rest of this series, thanks.
 
-Thanks a lot for reviewing patch and giving inputs,
-
-Regards,
-Dilip
-
->
->>> ---
->>>   drivers/pci/controller/dwc/pcie-artpec6.c | 8 +-------
->>>   1 file changed, 1 insertion(+), 7 deletions(-)
->>>
->>> diff --git a/drivers/pci/controller/dwc/pcie-artpec6.c b/drivers/pci/controller/dwc/pcie-artpec6.c
->>> index d00252bd8fae..02d93b8c7942 100644
->>> --- a/drivers/pci/controller/dwc/pcie-artpec6.c
->>> +++ b/drivers/pci/controller/dwc/pcie-artpec6.c
->>> @@ -51,9 +51,6 @@ static const struct of_device_id artpec6_pcie_of_match[];
->>>   #define ACK_N_FTS_MASK			GENMASK(15, 8)
->>>   #define ACK_N_FTS(x)			(((x) << 8) & ACK_N_FTS_MASK)
->>>   
->>> -#define FAST_TRAINING_SEQ_MASK		GENMASK(7, 0)
->>> -#define FAST_TRAINING_SEQ(x)		(((x) << 0) & FAST_TRAINING_SEQ_MASK)
->>> -
->>>   /* ARTPEC-6 specific registers */
->>>   #define PCIECFG				0x18
->>>   #define  PCIECFG_DBG_OEN		BIT(24)
->>> @@ -313,10 +310,7 @@ static void artpec6_pcie_set_nfts(struct artpec6_pcie *artpec6_pcie)
->>>   	 * Set the Number of Fast Training Sequences that the core
->>>   	 * advertises as its N_FTS during Gen2 or Gen3 link training.
->>>   	 */
->>> -	val = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
->>> -	val &= ~FAST_TRAINING_SEQ_MASK;
->>> -	val |= FAST_TRAINING_SEQ(180);
->>> -	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
->>> +	dw_pcie_link_set_n_fts(pci, 180);
->>>   }
->>>
->>>   static void artpec6_pcie_assert_core_reset(struct artpec6_pcie *artpec6_pcie)
->>> -- 
->>> 2.11.0
+greg k-h
