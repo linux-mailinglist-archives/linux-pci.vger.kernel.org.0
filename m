@@ -2,90 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E3C9AF82E9
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Nov 2019 23:32:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7781BF8328
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2019 00:01:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726916AbfKKWcj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Nov 2019 17:32:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53588 "EHLO mail.kernel.org"
+        id S1726939AbfKKXB1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Nov 2019 18:01:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726845AbfKKWci (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 11 Nov 2019 17:32:38 -0500
+        id S1726923AbfKKXB1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 11 Nov 2019 18:01:27 -0500
 Received: from localhost (unknown [69.71.4.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D84920659;
-        Mon, 11 Nov 2019 22:32:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C07520659;
+        Mon, 11 Nov 2019 23:01:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573511557;
-        bh=6nJHdaOx51l52K83j2un8QsW4MPpN5Rp/d7y6ySsr2k=;
+        s=default; t=1573513284;
+        bh=JFxEFsp8SH9GIQGjEH29Lu9t7CrAzCO21L2Jo49Iqjg=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=k/qXTDPFNSK8ZDXI16rnOlhJC60EOlHfdE3TGJvYKN/02ZmTGggqrPwPcR91GXLs8
-         tBI/isvV1LcMleEQHlaHnAgbnNniFSbYxlb+1wOaBpCgS+gUDmxcXbYkL5e7SMRdEi
-         MotnVaaQyEgJ5q+w2II8TX+tU9dX4wf25Gv3Gk74=
-Date:   Mon, 11 Nov 2019 16:32:35 -0600
+        b=BBAvP0bADluuJ3FY6aFPdNf2HinFuck1j6MxCiaWn9Hc0AkLpiwHcAe7hDPx2yLtd
+         +Uq0SXExbe33MPmFOhGfXzjDdV34QO8KN8D3eTZocqf5UYodN5ma61t8W8T0OOxcq1
+         5Wt6bKQ9FsU1IuE93N52x6u5/Ly5T9b892aiSeG0=
+Date:   Mon, 11 Nov 2019 17:01:22 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Sinan Kaya <okaya@kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        jonathanh@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-pci@vger.kernel.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com,
-        Andrew Murray <andrew.murray@arm.com>,
-        Lukas Wunner <lukas@wunner.de>
-Subject: Re: [PATCH] PCI: Add CRS timeout for pci_device_is_present()
-Message-ID: <20191111223235.GA38578@google.com>
+To:     George Cherian <george.cherian@marvell.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "shannon.zhao@linux.alibaba.com" <shannon.zhao@linux.alibaba.com>,
+        Robert Richter <rrichter@marvell.com>,
+        George Cherian <gcherian@marvell.com>
+Subject: Re: [PATCH v2] PCI: Enhance the ACS quirk for Cavium devices
+Message-ID: <20191111230122.GA59296@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <71f545f7-f14a-d2d9-215c-b3fb22000a5c@nvidia.com>
+In-Reply-To: <20191111024243.GA11408@dc5-eodlnx05.marvell.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 11:31:18AM +0530, Vidya Sagar wrote:
-> On 11/6/2019 10:11 PM, Bjorn Helgaas wrote:
+On Mon, Nov 11, 2019 at 02:43:03AM +0000, George Cherian wrote:
+> Enhance the ACS quirk for Cavium Processors. Add the root port
+> vendor ID's for ThunderX2 and ThunderX3 series  of processors.
+> 
+> Signed-off-by: George Cherian <george.cherian@marvell.com>
+> Reviewed-by: Robert Richter <rrichter@marvell.com>
 
-> > Based on Vidya's backtrace, I think the resume path with problems
-> > is this:
-> > 
-> >    pci_pm_resume_noirq
-> >      pci_pm_default_resume_early
-> >        pci_power_up
-> >          if (platform_pci_power_manageable(dev))
-> >            platform_pci_set_power_state(dev, PCI_D0)  # <-- FW delay here?
-> >          pci_raw_set_power_state
-> >          pci_update_current_state
-> >            pci_device_is_present        # <-- config read returns CRS
-> > 
-> > So I think your suggestion is that Vidya's firmware should be
-> > doing the delay inside platform_pci_set_power_state()?
-> > 
-> > Vidya, you typically work on Tegra, so I assume this is on an
-> > arm64 system?  Does it have ACPI?  Do you have access to the
-> > firmware developers to ask about who they expect to do the delays?
->
-> Yes. This is on arm64 (Tegra) and we don't have any ACPI or any
-> other firmware for that matter. PCIe is brought up directly in the
-> kernel.
+Applied to pci/virtualization for v5.5, thanks!
 
-I assume that your device is coming out of D3cold because apparently
-you're seeing a CRS status from the config read when
-pci_update_current_state() calls pci_device_is_present().  CRS status
-should only happen after reset or power-on from D3cold, and you're not
-doing a reset.
+I added a Fixes: f2ddaf8dfd4a ("PCI: Apply Cavium ThunderX ACS quirk
+to more Root Ports") since it refines that patch, and also a stable
+tag (like f2ddaf8dfd4a).
 
-I'm pretty sure platform_pci_power_manageable() returns false on
-your system (can you confirm that?) because the only scenarios with
-platform power management are MID (Intel platform) and ACPI (which you
-don't have).
-
-Maybe you have some other platform-specific mechanism that controls
-power to PCI devices, and it's not integrated into the
-platform_pci_*() framework?
-
-Bjorn
+> ---
+>  drivers/pci/quirks.c | 20 +++++++++++++-------
+>  1 file changed, 13 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 44c4ae1abd00..19821d5d0ef3 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -4243,15 +4243,21 @@ static int pci_quirk_amd_sb_acs(struct pci_dev *dev, u16 acs_flags)
+>  
+>  static bool pci_quirk_cavium_acs_match(struct pci_dev *dev)
+>  {
+> +	if (!pci_is_pcie(dev) || pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT)
+> +		return false;
+> +
+> +	switch (dev->device) {
+>  	/*
+> -	 * Effectively selects all downstream ports for whole ThunderX 1
+> -	 * family by 0xf800 mask (which represents 8 SoCs), while the lower
+> -	 * bits of device ID are used to indicate which subdevice is used
+> -	 * within the SoC.
+> +	 * Effectively selects all downstream ports for whole ThunderX1
+> +	 * (which represents 8 SoCs).
+>  	 */
+> -	return (pci_is_pcie(dev) &&
+> -		(pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT) &&
+> -		((dev->device & 0xf800) == 0xa000));
+> +	case 0xa000 ... 0xa7ff: /* ThunderX1 */
+> +	case 0xaf84:  /* ThunderX2 */
+> +	case 0xb884:  /* ThunderX3 */
+> +		return true;
+> +	default:
+> +		return false;
+> +	}
+>  }
+>  
+>  static int pci_quirk_cavium_acs(struct pci_dev *dev, u16 acs_flags)
+> -- 
+> 2.17.1
+> 
