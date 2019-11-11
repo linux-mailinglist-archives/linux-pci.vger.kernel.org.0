@@ -2,1241 +2,2298 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 68B97F80C3
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Nov 2019 21:01:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B207BF8134
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Nov 2019 21:28:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726995AbfKKUBE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Nov 2019 15:01:04 -0500
-Received: from foss.arm.com ([217.140.110.172]:51234 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726962AbfKKUBE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 11 Nov 2019 15:01:04 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1D90F1FB;
-        Mon, 11 Nov 2019 12:01:02 -0800 (PST)
-Received: from [192.168.122.166] (U201426.austin.arm.com [10.118.28.31])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 78C443F52E;
-        Mon, 11 Nov 2019 12:01:01 -0800 (PST)
-Subject: Re: [PATCH 3/4] PCI: brcmstb: add Broadcom STB PCIe host controller
- driver
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Andrew Murray <andrew.murray@arm.com>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Cc:     james.quinlan@broadcom.com, mbrugger@suse.com,
-        phil@raspberrypi.org, wahrenst@gmx.net,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org
-References: <20191106214527.18736-1-nsaenzjulienne@suse.de>
- <20191106214527.18736-4-nsaenzjulienne@suse.de>
- <7d1d2257-f36b-c55f-17a8-1c5579d8f707@arm.com>
- <94213d9b5fa2b4916bcada49ff938e394f0c859e.camel@suse.de>
-From:   Jeremy Linton <jeremy.linton@arm.com>
-Message-ID: <a5586548-350f-35c2-cee1-eb8c06a7e508@arm.com>
-Date:   Mon, 11 Nov 2019 14:00:55 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        id S1727618AbfKKU2B (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Nov 2019 15:28:01 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:36890 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727148AbfKKU17 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Nov 2019 15:27:59 -0500
+Received: by mail-lj1-f194.google.com with SMTP id d5so5731801ljl.4
+        for <linux-pci@vger.kernel.org>; Mon, 11 Nov 2019 12:27:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=Cok4vuNrWMa9ObCC+g9TLuz/pn7nRlm4dRmGnb/5UnA=;
+        b=KB9G51SeKxW4lLuyyEP3NEhJgN6dsnOoWByBVy+iOzw6oAKSFoLwRAtMuDDd13pPTQ
+         wjZEbyAdyDH31O7U7+iwNlfwTP0GmWu59d4zqZQkGlMH3goNc5s5pQXB+QFYNr+Pmv1a
+         +XrTz4/O0Vuoa5KuhLvCJZW/CySl+Cl7j8lKyb07PYXm0MrdBbVXtiPrQHDSPTpoIjJN
+         /lfDcZ0Td5DJg7c/Jl378DB6F6EN2JKdf1T/SSq2ROfBu3bjzfIJd+c9f4ONKXZ4yhAZ
+         GjIfjfu1A6ciGb1mKmMJM5JqNTvUMt+OrbOI7WOtfHSKFE+7JE87W+22lry+wGR5nX+e
+         im3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=Cok4vuNrWMa9ObCC+g9TLuz/pn7nRlm4dRmGnb/5UnA=;
+        b=WRBDaY5WcJDXRaGK+f1KcHRFRklcdzbubO9jB0/l3VGmiBz+vw7uckvzV3UTePYA+7
+         U649Scy/17/9IpJW+z6rWJnoz++Vy75ux3sUa0VAwZbmpIdnl0FUKEcfmvleN4lUrlat
+         +upOfxdIk+MEl15A62FHcoqYSgPqlWtZkZlPJjmw0xsAXj5FaK9jLSCppLPwtW1hiSQq
+         EZhGdQw48ynhm0pYsojdXihAtz5OUjDaPszxtj6PsQkYoMMoz/+16qtm6wyGAx0oTlid
+         f3LAEal1JaxAZiNnRNEs5K8+GEMChQ5EHLSh+rKvHuU9LgWZMct55ourREH1syhdBdZP
+         4UxQ==
+X-Gm-Message-State: APjAAAV1nHg9uONeQkMpD5aS5NufqixHovgff1eF+053nYVV119kOKRP
+        gu9iM6apYQnghc+G8Rp0+F5kCaniNPwY/0ky//d4rQ==
+X-Google-Smtp-Source: APXvYqxD4n8vStPPmwNYgpU3TJsuvVE+pZhZ+FOxAdmCNWMCvJy6EVgzQcsjCK5Z3EoigFVFCJgcl5pVXSiMjGnllPs=
+X-Received: by 2002:a2e:9449:: with SMTP id o9mr5930678ljh.75.1573504069780;
+ Mon, 11 Nov 2019 12:27:49 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <94213d9b5fa2b4916bcada49ff938e394f0c859e.camel@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1573493889-22336-1-git-send-email-alan.mikhak@sifive.com>
+In-Reply-To: <1573493889-22336-1-git-send-email-alan.mikhak@sifive.com>
+From:   Alan Mikhak <alan.mikhak@sifive.com>
+Date:   Mon, 11 Nov 2019 12:27:38 -0800
+Message-ID: <CABEDWGyow+OeNgXXUtVekr6hrXAVuH45GXCQGxNGv3q5nGs3qA@mail.gmail.com>
+Subject: Re: [PATCH RFC] PCI: endpoint: Add NVMe endpoint function driver
+To:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-nvme@lists.infradead.org,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        lorenzo.pieralisi@arm.com, Bjorn Helgaas <bhelgaas@google.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
-
-On 11/11/19 9:29 AM, Nicolas Saenz Julienne wrote:
-> Hi Jeremy,
-> thanks for the review.
-> 
-> On Mon, 2019-11-11 at 01:10 -0600, Jeremy Linton wrote:
->> Hi,
->>
->>
->> On 11/6/19 3:45 PM, Nicolas Saenz Julienne wrote:
->>> From: Jim Quinlan <james.quinlan@broadcom.com>
->>>
->>> This commit adds the basic Broadcom STB PCIe controller.  Missing is the
->>> ability to process MSI. This functionality is added in a subsequent
->>> commit.
->>>
->>> The PCIe block contains an MDIO interface.  This is a local interface
->>> only accessible by the PCIe controller.  It cannot be used or shared
->>> by any other HW.  As such, the small amount of code for this
->>> controller is included in this driver as there is little upside to put
->>> it elsewhere.
->>>
->>> This is based on Jim's original submission[1] but adapted and tailored
->>> specifically to bcm2711's needs (that's the Raspberry Pi 4). Support for
->>> the rest of the brcmstb family will soon follow once we get support for
->>> multiple dma-ranges in dma/direct.
->>>
->>> [1] https://patchwork.kernel.org/patch/10605959/
->>>
->>> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
->>> Co-developed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
->>> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
->>> ---
->>>    drivers/pci/controller/Kconfig        |  12 +
->>>    drivers/pci/controller/Makefile       |   1 +
->>>    drivers/pci/controller/pcie-brcmstb.c | 973 ++++++++++++++++++++++++++
->>>    3 files changed, 986 insertions(+)
->>>    create mode 100644 drivers/pci/controller/pcie-brcmstb.c
->>>
->>> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
->>> index f5de9119e8d3..8b3aae91d8af 100644
->>> --- a/drivers/pci/controller/Kconfig
->>> +++ b/drivers/pci/controller/Kconfig
->>> @@ -281,6 +281,18 @@ config VMD
->>>    	  To compile this driver as a module, choose M here: the
->>>    	  module will be called vmd.
->>>    
->>> +config PCIE_BRCMSTB
->>> +	bool "Broadcom Brcmstb PCIe host controller"
->>> +	depends on ARCH_BRCMSTB || BMIPS_GENERIC
->>> +	depends on OF
->>> +	depends on SOC_BRCMSTB
->>> +	default ARCH_BRCMSTB || BMIPS_GENERIC
->>> +	help
->>> +	  Say Y here to enable PCIe host controller support for
->>> +	  Broadcom Settop Box SOCs.  A Broadcom SOC will may have
->>> +	  multiple host controllers as opposed to a single host
->>> +	  controller with multiple ports.
->>> +
->>>    config PCI_HYPERV_INTERFACE
->>>    	tristate "Hyper-V PCI Interface"
->>>    	depends on X86 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && X86_64
->>> diff --git a/drivers/pci/controller/Makefile
->>> b/drivers/pci/controller/Makefile
->>> index a2a22c9d91af..3fc0b0cf5b5b 100644
->>> --- a/drivers/pci/controller/Makefile
->>> +++ b/drivers/pci/controller/Makefile
->>> @@ -30,6 +30,7 @@ obj-$(CONFIG_PCIE_MEDIATEK) += pcie-mediatek.o
->>>    obj-$(CONFIG_PCIE_MOBIVEIL) += pcie-mobiveil.o
->>>    obj-$(CONFIG_PCIE_TANGO_SMP8759) += pcie-tango.o
->>>    obj-$(CONFIG_VMD) += vmd.o
->>> +obj-$(CONFIG_PCIE_BRCMSTB) += pcie-brcmstb.o
->>>    # pcie-hisi.o quirks are needed even without CONFIG_PCIE_DW
->>>    obj-y				+= dwc/
->>>    
->>> diff --git a/drivers/pci/controller/pcie-brcmstb.c
->>> b/drivers/pci/controller/pcie-brcmstb.c
->>> new file mode 100644
->>> index 000000000000..880ec11d06a1
->>> --- /dev/null
->>> +++ b/drivers/pci/controller/pcie-brcmstb.c
->>> @@ -0,0 +1,973 @@
->>> +// SPDX-License-Identifier: GPL-2.0
->>> +/* Copyright (C) 2009 - 2019 Broadcom */
->>> +
->>> +#include <linux/clk.h>
->>> +#include <linux/compiler.h>
->>> +#include <linux/delay.h>
->>> +#include <linux/init.h>
->>> +#include <linux/interrupt.h>
->>> +#include <linux/io.h>
->>> +#include <linux/ioport.h>
->>> +#include <linux/irqdomain.h>
->>> +#include <linux/kernel.h>
->>> +#include <linux/list.h>
->>> +#include <linux/log2.h>
->>> +#include <linux/module.h>
->>> +#include <linux/of_address.h>
->>> +#include <linux/of_irq.h>
->>> +#include <linux/of_pci.h>
->>> +#include <linux/of_platform.h>
->>> +#include <linux/pci.h>
->>> +#include <linux/printk.h>
->>> +#include <linux/sizes.h>
->>> +#include <linux/slab.h>
->>> +#include <linux/string.h>
->>> +#include <linux/types.h>
->>> +
->>> +#include "../pci.h"
->>> +
->>> +/* BRCM_PCIE_CAP_REGS - Offset for the mandatory capability config regs */
->>> +#define BRCM_PCIE_CAP_REGS				0x00ac
->>> +
->>> +/*
->>> + * Broadcom Settop Box PCIe Register Offsets. The names are from
->>> + * the chip's RDB and we use them here so that a script can correlate
->>> + * this code and the RDB to prevent discrepancies.
->>> + */
->>> +#define PCIE_RC_CFG_VENDOR_VENDOR_SPECIFIC_REG1		0x0188
->>> +#define PCIE_RC_CFG_PRIV1_ID_VAL3			0x043c
->>> +#define PCIE_RC_DL_MDIO_ADDR				0x1100
->>> +#define PCIE_RC_DL_MDIO_WR_DATA				0x1104
->>> +#define PCIE_RC_DL_MDIO_RD_DATA				0x1108
->>> +#define PCIE_MISC_MISC_CTRL				0x4008
->>> +#define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_LO		0x400c
->>> +#define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_HI		0x4010
->>> +#define PCIE_MISC_RC_BAR1_CONFIG_LO			0x402c
->>> +#define PCIE_MISC_RC_BAR2_CONFIG_LO			0x4034
->>> +#define PCIE_MISC_RC_BAR2_CONFIG_HI			0x4038
->>> +#define PCIE_MISC_RC_BAR3_CONFIG_LO			0x403c
->>> +#define PCIE_MISC_PCIE_CTRL				0x4064
->>> +#define PCIE_MISC_PCIE_STATUS				0x4068
->>> +#define PCIE_MISC_REVISION				0x406c
->>> +#define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_BASE_LIMIT	0x4070
->>> +#define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_BASE_HI		0x4080
->>> +#define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_LIMIT_HI		0x4084
->>> +#define PCIE_MISC_HARD_PCIE_HARD_DEBUG			0x4204
->>> +#define PCIE_INTR2_CPU_BASE				0x4300
->>> +
->>> +/*
->>> + * Broadcom Settop Box PCIe Register Field shift and mask info. The
->>> + * names are from the chip's RDB and we use them here so that a script
->>> + * can correlate this code and the RDB to prevent discrepancies.
->>> + */
->>> +#define PCIE_RC_CFG_VENDOR_VENDOR_SPECIFIC_REG1_ENDIAN_MODE_BAR2_MASK	
->>> 0xc
->>> +#define PCIE_RC_CFG_VENDOR_VENDOR_SPECIFIC_REG1_ENDIAN_MODE_BAR2_SHIFT	
->>> 0x2
->>> +#define PCIE_RC_CFG_PRIV1_ID_VAL3_CLASS_CODE_MASK		0xffffff
->>> +#define PCIE_RC_CFG_PRIV1_ID_VAL3_CLASS_CODE_SHIFT		0x0
->>> +#define PCIE_MISC_MISC_CTRL_SCB_ACCESS_EN_MASK			0x1000
->>> +#define PCIE_MISC_MISC_CTRL_SCB_ACCESS_EN_SHIFT			0xc
->>> +#define PCIE_MISC_MISC_CTRL_CFG_READ_UR_MODE_MASK		0x2000
->>> +#define PCIE_MISC_MISC_CTRL_CFG_READ_UR_MODE_SHIFT		0xd
->>> +#define PCIE_MISC_MISC_CTRL_MAX_BURST_SIZE_MASK			0x300000
->>> +#define PCIE_MISC_MISC_CTRL_MAX_BURST_SIZE_SHIFT		0x14
->>> +#define PCIE_MISC_MISC_CTRL_SCB0_SIZE_MASK			0xf8000000
->>> +#define PCIE_MISC_MISC_CTRL_SCB0_SIZE_SHIFT			0x1b
->>> +#define PCIE_MISC_MISC_CTRL_SCB1_SIZE_MASK			0x7c00000
->>> +#define PCIE_MISC_MISC_CTRL_SCB1_SIZE_SHIFT			0x16
->>> +#define PCIE_MISC_MISC_CTRL_SCB2_SIZE_MASK			0x1f
->>> +#define PCIE_MISC_MISC_CTRL_SCB2_SIZE_SHIFT			0x0
->>> +#define PCIE_MISC_RC_BAR1_CONFIG_LO_SIZE_MASK			0x1f
->>> +#define PCIE_MISC_RC_BAR1_CONFIG_LO_SIZE_SHIFT			0x0
->>> +#define PCIE_MISC_RC_BAR2_CONFIG_LO_SIZE_MASK			0x1f
->>> +#define PCIE_MISC_RC_BAR2_CONFIG_LO_SIZE_SHIFT			0x0
->>> +#define PCIE_MISC_RC_BAR3_CONFIG_LO_SIZE_MASK			0x1f
->>> +#define PCIE_MISC_RC_BAR3_CONFIG_LO_SIZE_SHIFT			0x0
->>> +#define PCIE_MISC_PCIE_CTRL_PCIE_PERSTB_MASK			0x4
->>> +#define PCIE_MISC_PCIE_CTRL_PCIE_PERSTB_SHIFT			0x2
->>> +#define PCIE_MISC_PCIE_CTRL_PCIE_L23_REQUEST_MASK		0x1
->>> +#define PCIE_MISC_PCIE_CTRL_PCIE_L23_REQUEST_SHIFT		0x0
->>> +#define PCIE_MISC_PCIE_STATUS_PCIE_PORT_MASK			0x80
->>> +#define PCIE_MISC_PCIE_STATUS_PCIE_PORT_SHIFT			0x7
->>> +#define PCIE_MISC_PCIE_STATUS_PCIE_DL_ACTIVE_MASK		0x20
->>> +#define PCIE_MISC_PCIE_STATUS_PCIE_DL_ACTIVE_SHIFT		0x5
->>> +#define PCIE_MISC_PCIE_STATUS_PCIE_PHYLINKUP_MASK		0x10
->>> +#define PCIE_MISC_PCIE_STATUS_PCIE_PHYLINKUP_SHIFT		0x4
->>> +#define PCIE_MISC_PCIE_STATUS_PCIE_LINK_IN_L23_MASK		0x40
->>> +#define PCIE_MISC_PCIE_STATUS_PCIE_LINK_IN_L23_SHIFT		0x6
->>> +#define PCIE_MISC_REVISION_MAJMIN_MASK				0xffff
->>> +#define PCIE_MISC_REVISION_MAJMIN_SHIFT				0
->>> +#define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_BASE_LIMIT_LIMIT_MASK	0xfff000
->>> 00
->>> +#define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_BASE_LIMIT_LIMIT_SHIFT	0x14
->>> +#define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_BASE_LIMIT_BASE_MASK	0xfff0
->>> +#define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_BASE_LIMIT_BASE_SHIFT	0x4
->>> +#define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_BASE_LIMIT_NUM_MASK_BITS	0xc
->>> +#define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_BASE_HI_BASE_MASK		0xff
->>> +#define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_BASE_HI_BASE_SHIFT	0x0
->>> +#define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_LIMIT_HI_LIMIT_MASK	0xff
->>> +#define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_LIMIT_HI_LIMIT_SHIFT	0x0
->>> +#define PCIE_MISC_HARD_PCIE_HARD_DEBUG_CLKREQ_DEBUG_ENABLE_MASK	0x2
->>> +#define PCIE_MISC_HARD_PCIE_HARD_DEBUG_CLKREQ_DEBUG_ENABLE_SHIFT 0x1
->>> +#define PCIE_MISC_HARD_PCIE_HARD_DEBUG_SERDES_IDDQ_MASK		0x080000
->>> 00
->>> +#define PCIE_MISC_HARD_PCIE_HARD_DEBUG_SERDES_IDDQ_SHIFT	0x1b
->>> +#define PCIE_RGR1_SW_INIT_1_PERST_MASK				0x1
->>> +#define PCIE_RGR1_SW_INIT_1_PERST_SHIFT				0x0
->>> +
->>> +#define BRCM_NUM_PCIE_OUT_WINS		0x4
->>> +#define BRCM_MAX_SCB			0x4
->>> +
->>> +#define BRCM_MSI_TARGET_ADDR_LT_4GB	0x0fffffffcULL
->>> +#define BRCM_MSI_TARGET_ADDR_GT_4GB	0xffffffffcULL
->>> +
->>> +#define BURST_SIZE_128			0
->>> +#define BURST_SIZE_256			1
->>> +#define BURST_SIZE_512			2
->>> +
->>> +/* Offsets from PCIE_INTR2_CPU_BASE */
->>> +#define STATUS				0x0
->>> +#define SET				0x4
->>> +#define CLR				0x8
->>> +#define MASK_STATUS			0xc
->>> +#define MASK_SET			0x10
->>> +#define MASK_CLR			0x14
->>> +
->>> +#define PCIE_BUSNUM_SHIFT		20
->>> +#define PCIE_SLOT_SHIFT			15
->>> +#define PCIE_FUNC_SHIFT			12
->>> +
->>> +#if defined(__BIG_ENDIAN)
->>> +#define	DATA_ENDIAN			2	/* PCIe->DDR inbound
-> traffic
->>> */
->>> +#define MMIO_ENDIAN			2	/* CPU->PCIe outbound
->>> traffic */
->>> +#else
->>> +#define	DATA_ENDIAN			0
->>> +#define MMIO_ENDIAN			0
->>> +#endif
->>> +
->>> +#define MDIO_PORT0			0x0
->>> +#define MDIO_DATA_MASK			0x7fffffff
->>> +#define MDIO_DATA_SHIFT			0x0
->>> +#define MDIO_PORT_MASK			0xf0000
->>> +#define MDIO_PORT_SHIFT			0x16
->>> +#define MDIO_REGAD_MASK			0xffff
->>> +#define MDIO_REGAD_SHIFT		0x0
->>> +#define MDIO_CMD_MASK			0xfff00000
->>> +#define MDIO_CMD_SHIFT			0x14
->>> +#define MDIO_CMD_READ			0x1
->>> +#define MDIO_CMD_WRITE			0x0
->>> +#define MDIO_DATA_DONE_MASK		0x80000000
->>> +#define MDIO_RD_DONE(x)			(((x) & MDIO_DATA_DONE_MASK) ? 1
->>> : 0)
->>> +#define MDIO_WT_DONE(x)			(((x) & MDIO_DATA_DONE_MASK) ? 0
->>> : 1)
->>> +#define SSC_REGS_ADDR			0x1100
->>> +#define SET_ADDR_OFFSET			0x1f
->>> +#define SSC_CNTL_OFFSET			0x2
->>> +#define SSC_CNTL_OVRD_EN_MASK		0x8000
->>> +#define SSC_CNTL_OVRD_EN_SHIFT		0xf
->>> +#define SSC_CNTL_OVRD_VAL_MASK		0x4000
->>> +#define SSC_CNTL_OVRD_VAL_SHIFT		0xe
->>> +#define SSC_STATUS_OFFSET		0x1
->>> +#define SSC_STATUS_SSC_MASK		0x400
->>> +#define SSC_STATUS_SSC_SHIFT		0xa
->>> +#define SSC_STATUS_PLL_LOCK_MASK	0x800
->>> +#define SSC_STATUS_PLL_LOCK_SHIFT	0xb
->>> +
->>> +#define IDX_ADDR(pcie)	\
->>> +	((pcie)->reg_offsets[EXT_CFG_INDEX])
->>> +#define DATA_ADDR(pcie)	\
->>> +	((pcie)->reg_offsets[EXT_CFG_DATA])
->>> +#define PCIE_RGR1_SW_INIT_1(pcie) \
->>> +	((pcie)->reg_offsets[RGR1_SW_INIT_1])
->>> +
->>> +enum {
->>> +	RGR1_SW_INIT_1,
->>> +	EXT_CFG_INDEX,
->>> +	EXT_CFG_DATA,
->>> +};
->>> +
->>> +enum {
->>> +	RGR1_SW_INIT_1_INIT_MASK,
->>> +	RGR1_SW_INIT_1_INIT_SHIFT,
->>> +	RGR1_SW_INIT_1_PERST_MASK,
->>> +	RGR1_SW_INIT_1_PERST_SHIFT,
->>> +};
->>> +
->>> +enum pcie_type {
->>> +	BCM2711,
->>> +};
->>> +
->>> +struct brcm_window {
->>> +	dma_addr_t pcie_addr;
->>> +	phys_addr_t cpu_addr;
->>> +	dma_addr_t size;
->>> +};
->>> +
->>> +/* Internal PCIe Host Controller Information.*/
->>> +struct brcm_pcie {
->>> +	struct device		*dev;
->>> +	void __iomem		*base;
->>> +	int			irq;
->>> +	struct clk		*clk;
->>> +	struct pci_bus		*root_bus;
->>> +	struct device_node	*dn;
->>> +	int			id;
->>> +	bool			suspended;
->>> +	bool			ssc;
->>> +	int			gen;
->>> +	struct brcm_window	out_wins[BRCM_NUM_PCIE_OUT_WINS];
->>> +	unsigned int		rev;
->>> +	const int		*reg_offsets;
->>> +	const int		*reg_field_info;
->>> +	enum pcie_type		type;
->>> +};
->>> +
->>> +struct pcie_cfg_data {
->>> +	const int		*reg_field_info;
->>> +	const int		*offsets;
->>> +	const enum pcie_type	type;
->>> +};
->>> +
->>> +static const int pcie_reg_field_info[] = {
->>> +	[RGR1_SW_INIT_1_INIT_MASK] = 0x2,
->>> +	[RGR1_SW_INIT_1_INIT_SHIFT] = 0x1,
->>> +};
->>> +
->>> +static const int pcie_offset_bcm2711[] = {
->>> +	[RGR1_SW_INIT_1] = 0x9210,
->>> +	[EXT_CFG_INDEX]  = 0x9000,
->>> +	[EXT_CFG_DATA]   = 0x8000,
->>> +};
->>
->> Given that there is currently only a single set of register offsets,
->> this seems like it could be simpler.
-> 
-> You're right, there is no need for it as of this series. But since we know
-> we'll be supporting other SoCs in the near future I figured it was harmless to
-> leave this as a dt dependent config.
-> 
->>> +
->>> +static const struct pcie_cfg_data bcm2711_cfg = {
->>> +	.reg_field_info	= pcie_reg_field_info,
->>> +	.offsets	= pcie_offset_bcm2711,
->>> +	.type		= BCM2711,
->>> +};
->>> +
->>> +static void __iomem *brcm_pcie_map_conf(struct pci_bus *bus, unsigned int
->>> devfn,
->>> +					int where);
->>> +
->>> +static struct pci_ops brcm_pcie_ops = {
->>> +	.map_bus = brcm_pcie_map_conf,
->>> +	.read = pci_generic_config_read,
->>> +	.write = pci_generic_config_write,
->>> +};
->>> +
->>> +#define bcm_readl(a)		readl(a)
->>> +#define bcm_writel(d, a)	writel(d, a)
->>> +#define bcm_readw(a)		readw(a)
->>> +#define bcm_writew(d, a)	writew(d, a)
->>> +
->>> +/* These macros extract/insert fields to host controller's register set. */
->>> +#define RD_FLD(base, reg, field) \
->>> +	rd_fld((base) + reg, reg##_##field##_MASK, reg##_##field##_SHIFT)
->>> +#define WR_FLD(base, reg, field, val) \
->>> +	wr_fld((base) + reg, reg##_##field##_MASK, reg##_##field##_SHIFT, val)
->>> +#define WR_FLD_RB(base, reg, field, val) \
->>> +	wr_fld_rb((base) + reg, reg##_##field##_MASK, \
->>> +		reg##_##field##_SHIFT, val)
->>> +#define WR_FLD_WITH_OFFSET(base, off, reg, field, val) \
->>> +	wr_fld((base) + reg + (off), reg##_##field##_MASK, \
->>> +	       reg##_##field##_SHIFT, val)
->>> +#define EXTRACT_FIELD(val, reg, field) \
->>> +	(((val) & reg##_##field##_MASK) >> reg##_##field##_SHIFT)
->>> +#define INSERT_FIELD(val, reg, field, field_val) \
->>> +	(((val) & ~reg##_##field##_MASK) | \
->>> +	 (reg##_##field##_MASK & (field_val << reg##_##field##_SHIFT)))
->>> +
->>> +static u32 rd_fld(void __iomem *p, u32 mask, int shift)
->>> +{
->>> +	return (bcm_readl(p) & mask) >> shift;
->>> +}
->>> +
->>> +static void wr_fld(void __iomem *p, u32 mask, int shift, u32 val)
->>> +{
->>> +	u32 reg = bcm_readl(p);
->>> +
->>> +	reg = (reg & ~mask) | ((val << shift) & mask);
->>> +	bcm_writel(reg, p);
->>> +}
->>> +
->>> +static void wr_fld_rb(void __iomem *p, u32 mask, int shift, u32 val)
->>> +{
->>> +	wr_fld(p, mask, shift, val);
->>> +	(void)bcm_readl(p);
->>> +}
->>> +
->>> +static const char *link_speed_to_str(int s)
->>> +{
->>> +	switch (s) {
->>> +	case 1:
->>> +		return "2.5";
->>> +	case 2:
->>> +		return "5.0";
->>> +	case 3:
->>> +		return "8.0";
->>> +	default:
->>> +		break;
->>> +	}
->>> +	return "???";
->>> +}
->>> +
->>> +/*
->>> + * The roundup_pow_of_two() from log2.h invokes
->>> + * __roundup_pow_of_two(unsigned long), but we really need a
->>> + * such a function to take a native u64 since unsigned long
->>> + * is 32 bits on some configurations.  So we provide this helper
->>> + * function below.
->>> + */
->>> +static u64 roundup_pow_of_two_64(u64 n)
->>> +{
->>> +	return 1ULL << fls64(n - 1);
->>> +}
->>> +
->>> +/*
->>> + * This is to convert the size of the inbound "BAR" region to the
->>> + * non-linear values of PCIE_X_MISC_RC_BAR[123]_CONFIG_LO.SIZE
->>> + */
->>> +int encode_ibar_size(u64 size)
->>> +{
->>> +	int log2_in = ilog2(size);
->>> +
->>> +	if (log2_in >= 12 && log2_in <= 15)
->>> +		/* Covers 4KB to 32KB (inclusive) */
->>> +		return (log2_in - 12) + 0x1c;
->>> +	else if (log2_in >= 16 && log2_in <= 37)
->>> +		/* Covers 64KB to 32GB, (inclusive) */
->>> +		return log2_in - 15;
->>> +	/* Something is awry so disable */
->>> +	return 0;
->>> +}
->>> +
->>> +static u32 mdio_form_pkt(int port, int regad, int cmd)
->>> +{
->>> +	u32 pkt = 0;
->>> +
->>> +	pkt |= (port << MDIO_PORT_SHIFT) & MDIO_PORT_MASK;
->>> +	pkt |= (regad << MDIO_REGAD_SHIFT) & MDIO_REGAD_MASK;
->>> +	pkt |= (cmd << MDIO_CMD_SHIFT) & MDIO_CMD_MASK;
->>> +
->>> +	return pkt;
->>> +}
->>> +
->>> +/* negative return value indicates error */
->>> +static int mdio_read(void __iomem *base, u8 port, u8 regad)
->>> +{
->>> +	int tries;
->>> +	u32 data;
->>> +
->>> +	bcm_writel(mdio_form_pkt(port, regad, MDIO_CMD_READ),
->>> +		   base + PCIE_RC_DL_MDIO_ADDR);
->>> +	bcm_readl(base + PCIE_RC_DL_MDIO_ADDR);
->>> +
->>> +	data = bcm_readl(base + PCIE_RC_DL_MDIO_RD_DATA);
->>> +	for (tries = 0; !MDIO_RD_DONE(data) && tries < 10; tries++) {
->>> +		udelay(10);
->>> +		data = bcm_readl(base + PCIE_RC_DL_MDIO_RD_DATA);
->>> +	}
->>> +
->>> +	return MDIO_RD_DONE(data)
->>> +		? (data & MDIO_DATA_MASK) >> MDIO_DATA_SHIFT
->>> +		: -EIO;
->>> +}
->>> +
->>> +/* negative return value indicates error */
->>> +static int mdio_write(void __iomem *base, u8 port, u8 regad, u16 wrdata)
->>> +{
->>> +	int tries;
->>> +	u32 data;
->>> +
->>> +	bcm_writel(mdio_form_pkt(port, regad, MDIO_CMD_WRITE),
->>> +		   base + PCIE_RC_DL_MDIO_ADDR);
->>> +	bcm_readl(base + PCIE_RC_DL_MDIO_ADDR);
->>> +	bcm_writel(MDIO_DATA_DONE_MASK | wrdata,
->>> +		   base + PCIE_RC_DL_MDIO_WR_DATA);
->>> +
->>> +	data = bcm_readl(base + PCIE_RC_DL_MDIO_WR_DATA);
->>> +	for (tries = 0; !MDIO_WT_DONE(data) && tries < 10; tries++) {
->>> +		udelay(10);
->>> +		data = bcm_readl(base + PCIE_RC_DL_MDIO_WR_DATA);
->>> +	}
->>> +
->>> +	return MDIO_WT_DONE(data) ? 0 : -EIO;
->>> +}
->>> +
->>> +/*
->>> + * Configures device for Spread Spectrum Clocking (SSC) mode; a negative
->>> + * return value indicates error.
->>> + */
->>> +static int set_ssc(void __iomem *base)
->>> +{
->>> +	int tmp;
->>> +	u16 wrdata;
->>> +	int pll, ssc;
->>> +
->>> +	tmp = mdio_write(base, MDIO_PORT0, SET_ADDR_OFFSET, SSC_REGS_ADDR);
->>> +	if (tmp < 0)
->>> +		return tmp;
->>> +
->>> +	tmp = mdio_read(base, MDIO_PORT0, SSC_CNTL_OFFSET);
->>> +	if (tmp < 0)
->>> +		return tmp;
->>> +
->>> +	wrdata = INSERT_FIELD(tmp, SSC_CNTL_OVRD, EN, 1);
->>> +	wrdata = INSERT_FIELD(wrdata, SSC_CNTL_OVRD, VAL, 1);
->>> +	tmp = mdio_write(base, MDIO_PORT0, SSC_CNTL_OFFSET, wrdata);
->>> +	if (tmp < 0)
->>> +		return tmp;
->>> +
->>> +	usleep_range(1000, 2000);
->>> +	tmp = mdio_read(base, MDIO_PORT0, SSC_STATUS_OFFSET);
->>> +	if (tmp < 0)
->>> +		return tmp;
->>> +
->>> +	ssc = EXTRACT_FIELD(tmp, SSC_STATUS, SSC);
->>> +	pll = EXTRACT_FIELD(tmp, SSC_STATUS, PLL_LOCK);
->>
->> This is actually the PCIe phy?
-> 
-> I'll let Jim reply this one.
-> 
->>> +
->>> +	return (ssc && pll) ? 0 : -EIO;
->>> +}
->>> +
->>> +/* Limits operation to a specific generation (1, 2, or 3) */
->>> +static void set_gen(void __iomem *base, int gen)
->>> +{
->>> +	u32 lnkcap = bcm_readl(base + BRCM_PCIE_CAP_REGS + PCI_EXP_LNKCAP);
->>> +	u16 lnkctl2 = bcm_readw(base + BRCM_PCIE_CAP_REGS + PCI_EXP_LNKCTL2);
->>> +
->>> +	lnkcap = (lnkcap & ~PCI_EXP_LNKCAP_SLS) | gen;
->>> +	bcm_writel(lnkcap, base + BRCM_PCIE_CAP_REGS + PCI_EXP_LNKCAP);
->>> +
->>> +	lnkctl2 = (lnkctl2 & ~0xf) | gen;
->>> +	bcm_writew(lnkctl2, base + BRCM_PCIE_CAP_REGS + PCI_EXP_LNKCTL2);
->>> +}
->>> +
->>> +static void brcm_pcie_set_outbound_win(struct brcm_pcie *pcie,
->>> +				       unsigned int win, phys_addr_t cpu_addr,
->>> +				       dma_addr_t  pcie_addr, dma_addr_t size)
->>> +{
->>> +	void __iomem *base = pcie->base;
->>> +	phys_addr_t cpu_addr_mb, limit_addr_mb;
->>> +	u32 tmp;
->>> +
->>> +	/* Set the base of the pcie_addr window */
->>> +	bcm_writel(lower_32_bits(pcie_addr) + MMIO_ENDIAN,
->>> +		   base + PCIE_MISC_CPU_2_PCIE_MEM_WIN0_LO + (win * 8));
->>> +	bcm_writel(upper_32_bits(pcie_addr),
->>> +		   base + PCIE_MISC_CPU_2_PCIE_MEM_WIN0_HI + (win * 8));
->>> +
->>> +	cpu_addr_mb = cpu_addr >> 20;
->>> +	limit_addr_mb = (cpu_addr + size - 1) >> 20;
->>> +
->>> +	/* Write the addr base low register */
->>> +	WR_FLD_WITH_OFFSET(base, (win * 4),
->>> +			   PCIE_MISC_CPU_2_PCIE_MEM_WIN0_BASE_LIMIT,
->>> +			   BASE, cpu_addr_mb);
->>> +	/* Write the addr limit low register */
->>> +	WR_FLD_WITH_OFFSET(base, (win * 4),
->>> +			   PCIE_MISC_CPU_2_PCIE_MEM_WIN0_BASE_LIMIT,
->>> +			   LIMIT, limit_addr_mb);
->>> +
->>> +	/* Write the cpu addr high register */
->>> +	tmp = (u32)(cpu_addr_mb >>
->>> +		PCIE_MISC_CPU_2_PCIE_MEM_WIN0_BASE_LIMIT_NUM_MASK_BITS);
->>> +	WR_FLD_WITH_OFFSET(base, (win * 8),
->>> +			   PCIE_MISC_CPU_2_PCIE_MEM_WIN0_BASE_HI,
->>> +			   BASE, tmp);
->>> +	/* Write the cpu limit high register */
->>> +	tmp = (u32)(limit_addr_mb >>
->>> +		PCIE_MISC_CPU_2_PCIE_MEM_WIN0_BASE_LIMIT_NUM_MASK_BITS);
->>> +	WR_FLD_WITH_OFFSET(base, (win * 8),
->>> +			   PCIE_MISC_CPU_2_PCIE_MEM_WIN0_LIMIT_HI,
->>> +			   LIMIT, tmp);
->>> +}
->>
->> So this is translating a high CPU address to a <32-bit PCI MMIO window?
-> 
-> Yes, for the record, this is what the RPi4 uses:
-> 
->    ranges = <0x02000000 0x0 0xf8000000 0x6 0x00000000 0x0 0x04000000>;
-> 
->> I thought there was some kind of 32-bit limitation in front of this root
->> port?
-> 
-> We have a limitation for DMA accesses (can't access the 0xc0000000-0xffffffff
-> area) due to a bug on the PCIe core integration, not a limitation on the
-> interconnect. But this doesn't apply for BAR accesses. Though....
-> 
->> This makes it sound like the root port can recieve 64-bit MMIO
->> writes just fine.
-> 
-> ...I've been told we have to imperatively place the outbound memory area in the
-> lower 4GB. This is a shortcoming on the PCIe controller side.
-
-So its CPU 0x600000000->0x600400000 being translated to PCIe 
-0xf800000->0xF8400000. Which looks to be reserved in the lower 4G 
-address space on the CPU as well (can't really tell without docs). So, 
-Ideally it would just be a 1:1 translation @ 0xf8000000 on both the CPU 
-and PCI side, but presumably it can't decode that? And the PCIe side can 
-recieve 64-bit transactions @0x600000000, but can't form large MMIO TLPs 
-at that address?
-
-> 
->> IIRC XHCI can run with just two 64-bit BARS, so it
->> sounds like the translation here isn't strictly nessisary until someone
->> wants a 32-bit non-prefechable bar. No?
->>> +
->>> +/* Configuration space read/write support */
->>> +static int cfg_index(int busnr, int devfn, int reg)
->>> +{
->>> +	return ((PCI_SLOT(devfn) & 0x1f) << PCIE_SLOT_SHIFT)
->>> +		| ((PCI_FUNC(devfn) & 0x07) << PCIE_FUNC_SHIFT)
->>> +		| (busnr << PCIE_BUSNUM_SHIFT)
->>> +		| (reg & ~3);
->>> +}
->>> +
->>> +/* The controller is capable of serving in both RC and EP roles */
->>> +static bool brcm_pcie_rc_mode(struct brcm_pcie *pcie)
->>> +{
->>> +	void __iomem *base = pcie->base;
->>> +	u32 val = bcm_readl(base + PCIE_MISC_PCIE_STATUS);
->>> +
->>> +	return !!EXTRACT_FIELD(val, PCIE_MISC_PCIE_STATUS, PCIE_PORT);
->>> +}
->>> +
->>> +static bool brcm_pcie_link_up(struct brcm_pcie *pcie)
->>> +{
->>> +	void __iomem *base = pcie->base;
->>> +	u32 val = bcm_readl(base + PCIE_MISC_PCIE_STATUS);
->>> +	u32 dla = EXTRACT_FIELD(val, PCIE_MISC_PCIE_STATUS, PCIE_DL_ACTIVE);
->>> +	u32 plu = EXTRACT_FIELD(val, PCIE_MISC_PCIE_STATUS, PCIE_PHYLINKUP);
->>> +
->>> +	return  (dla && plu) ? true : false;
->>> +}
->>> +
->>> +static void __iomem *brcm_pcie_map_conf(struct pci_bus *bus, unsigned int
->>> devfn,
->>> +					int where)
->>> +{
->>> +	struct brcm_pcie *pcie = bus->sysdata;
->>> +	void __iomem *base = pcie->base;
->>> +	int idx;
->>> +
->>> +	/* Accesses to the RC go right to the RC registers if slot==0 */
->>> +	if (pci_is_root_bus(bus))
->>> +		return PCI_SLOT(devfn) ? NULL : base + where;
->>> +
->>> +	/* For devices, write to the config space index register */
->>> +	idx = cfg_index(bus->number, devfn, 0);
->>> +	bcm_writel(idx, pcie->base + IDX_ADDR(pcie));
->>> +	return base + DATA_ADDR(pcie) + where;
->>> +}
->>
->> So, each pci cfg space access requires a cfg register write, so that the
->> data space for the bdf can be accessed?
-> 
-> Yes, that's it.
-> 
->> Using map_bus() to setup the cfg region rather than overriding the
->> generic read/write callbacks means that in the future we can't enable
->> PCI_LOCKLESS_CONFIG in a generic arm64 kernel.
-> 
-> That'd be hard anyways, it seems to me that a lot of arm64 devices depend on
-> this, right?
-
-I'm not really sure, the lock removal appeared fairly recently as a perf 
-optimization. Which makes sense for ECAM (which should be the goal of 
-all the ARM SOCs these days to avoid the need for PCIe host drivers) 
-platforms.
-
-Quite a number of ARM platforms shouldn't need the lock as their CFG 
-accessors are only quirked for alignment or address mapping. Which means 
-that we are penalizing platforms that dont need the lock for the ones 
-that do.
-
-> 
->>> +
->>> +static inline void brcm_pcie_bridge_sw_init_set(struct brcm_pcie *pcie,
->>> +						unsigned int val)
->>> +{
->>> +	unsigned int shift = pcie->reg_field_info[RGR1_SW_INIT_1_INIT_SHIFT];
->>> +	u32 mask =  pcie->reg_field_info[RGR1_SW_INIT_1_INIT_MASK];
->>> +
->>> +	wr_fld_rb(pcie->base + PCIE_RGR1_SW_INIT_1(pcie), mask, shift, val);
->>> +}
->>> +
->>> +static inline void brcm_pcie_perst_set(struct brcm_pcie *pcie,
->>> +				       unsigned int val)
->>> +{
->>> +	wr_fld_rb(pcie->base + PCIE_RGR1_SW_INIT_1(pcie),
->>> +		  PCIE_RGR1_SW_INIT_1_PERST_MASK,
->>> +		  PCIE_RGR1_SW_INIT_1_PERST_SHIFT, val);
->>> +}
->>> +
->>> +static inline int brcm_pcie_get_rc_bar2_size_and_offset(struct brcm_pcie
->>> *pcie,
->>> +							u64 *rc_bar2_size,
->>> +							u64 *rc_bar2_offset)
->>> +{
->>> +	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
->>> +	struct device *dev = pcie->dev;
->>> +	struct resource_entry *entry;
->>> +	u64 total_mem_size = 0;
->>> +
->>> +	*rc_bar2_offset = -1;
->>> +
->>> +	resource_list_for_each_entry(entry, &bridge->dma_ranges) {
->>> +		/*
->>> +		 * We're promissed the RC will provide a contiguous view of
->>> +		 * memory to downstream devices. We can then infer the
->>> +		 * rc_bar2_offset from the lower avaiable dma-range offset.
->>> +		 */
->>> +		if (entry->offset < *rc_bar2_offset)
->>> +			*rc_bar2_offset = entry->offset;
->>> +
->>> +		total_mem_size += entry->res->end - entry->res->start + 1;
->>> +	}
->>> +
->>> +	*rc_bar2_size = roundup_pow_of_two_64(total_mem_size);
->>> +
->>> +	/*
->>> +	 * Validate the results:
->>> +	 *
->>> +	 * The PCIe host controller by design must set the inbound viewport to
->>> +	 * be a contiguous arrangement of all of the system's memory.  In
->>> +	 * addition, its size mut be a power of two.  To further complicate
->>> +	 * matters, the viewport must start on a pcie-address that is aligned
->>> +	 * on a multiple of its size.  If a portion of the viewport does not
->>> +	 * represent system memory -- e.g. 3GB of memory requires a 4GB
->>> +	 * viewport -- we can map the outbound memory in or after 3GB and even
->>> +	 * though the viewport will overlap the outbound memory the controller
->>> +	 * will know to send outbound memory downstream and everything else
->>> +	 * upstream.
->>> +	 *
->>> +	 * For example:
->>> +	 *
->>> +	 * - The best-case scenario, memory up to 3GB, is to place the inbound
->>> +	 *   region in the first 4GB of pcie-space, as some legacy devices can
->>> +	 *   only address 32bits. We would also like to put the MSI under 4GB
->>> +	 *   as well, since some devices require a 32bit MSI target address.
->>> +	 *
->>> +	 * - If the system memory is 4GB or larger we cannot start the inbound
->>> +	 *   region at location 0 (since we have to allow some space for
->>> +	 *   outbound memory @ 3GB). So instead it will  start at the 1x
->>> +	 *   multiple of its size
->>> +	 */
->>> +	if (!*rc_bar2_size || *rc_bar2_offset % *rc_bar2_size ||
->>> +	    (*rc_bar2_offset < SZ_4G && *rc_bar2_offset > SZ_2G)) {
->>> +		dev_err(dev, "Invalid rc_bar2_offset/size: size 0x%llx, off
->>> 0x%llx\n",
->>> +			*rc_bar2_size, *rc_bar2_offset);
->>> +		return -EINVAL;
->>> +	}
->>
->> If the MMIO window isn't translated and is left high
-> 
-> Sadly, as I commented in the outbound memory config code, this is not possible.
-> 
->> does it work to just use a single 0->$TOP_OF_RAM mapping, even with the
->> 32-bit limitation? Or is the 32-bit limitation comming from this programming?
-> 
-> We can use that 1:1 mapping as long as we leave some space for the outbound
-> memory and follow the alignment rules stated above. It's a HW limitation.
-> 
-> Just let me stress that in the end I'm just validating whatever the firmware
-> provided, I'm not really modifying anything here. I could do away with the
-> check as it'd be plain silly if the FW provided wrong dma-ranges. But since
-> people are likely to play around with RPi's dtb, I figured it's worthwhile.
-> 
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +static int brcm_pcie_setup(struct brcm_pcie *pcie)
->>> +{
->>> +	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
->>> +	u64 rc_bar2_offset, rc_bar2_size;
->>> +	void __iomem *base = pcie->base;
->>> +	struct resource_entry *entry;
->>> +	unsigned int scb_size_val;
->>> +	struct resource *res;
->>> +	int num_out_wins = 0;
->>> +	u32 tmp;
->>> +	int i, j, ret, limit;
->>> +	u16 nlw, cls, lnksta;
->>> +	bool ssc_good = false;
->>> +	struct device *dev = pcie->dev;
->>> +
->>> +	/* Reset the bridge */
->>> +	brcm_pcie_bridge_sw_init_set(pcie, 1);
->>> +
->>> +	usleep_range(100, 200);
->>> +
->>> +	/* Take the bridge out of reset */
->>> +	brcm_pcie_bridge_sw_init_set(pcie, 0);
->>> +
->>> +	WR_FLD_RB(base, PCIE_MISC_HARD_PCIE_HARD_DEBUG, SERDES_IDDQ, 0);
->>> +	/* Wait for SerDes to be stable */
->>> +	usleep_range(100, 200);
->>> +
->>> +	/* Grab the PCIe hw revision number */
->>> +	tmp = bcm_readl(base + PCIE_MISC_REVISION);
->>> +	pcie->rev = EXTRACT_FIELD(tmp, PCIE_MISC_REVISION, MAJMIN);
->>> +
->>> +	/* Set SCB_MAX_BURST_SIZE, CFG_READ_UR_MODE, SCB_ACCESS_EN */
->>> +	tmp = INSERT_FIELD(0, PCIE_MISC_MISC_CTRL, SCB_ACCESS_EN, 1);
->>> +	tmp = INSERT_FIELD(tmp, PCIE_MISC_MISC_CTRL, CFG_READ_UR_MODE, 1);
->>> +	tmp = INSERT_FIELD(tmp, PCIE_MISC_MISC_CTRL, MAX_BURST_SIZE,
->>> +			   BURST_SIZE_128);
->>> +	bcm_writel(tmp, base + PCIE_MISC_MISC_CTRL);
->>
->> Presumablly users will want to use PCIe at some point in the future for
->> booting/etc. That means the firmware will perform sufficient setup that
->> you shouldn't need much of the code in this function if the address
->> windows, serdes, etc are functional when linux boots. Similarly for
->> suspend/resume.
-> 
-> I see what you mean, although it's not the case for now as RPi's firmware
-> doesn't initialize anything. Though I can imagine some people might want this
-> if the RPi4 compute module ever comes out.
-> 
-> If it's OK with you I think we can let it be for now.
-
-Well this is actually why I commented on the whole set. A large part of 
-this driver appears to be working around the shortcommings in the 
-current firmware when it comes to programming the bridge. Once the 
-firmware integrates that functionality (there appear to be rpi ports 
-underway in uboot/edk2/atf) large parts of this driver will become 
-unessisary. Not to mention the other OS's that have historically wanted 
-to support the rpi will have an easier time of it as well.
-
-
-> 
->>> +
->>> +	ret = brcm_pcie_get_rc_bar2_size_and_offset(pcie, &rc_bar2_size,
->>> +						    &rc_bar2_offset);
->>> +	if (ret)
->>> +		return ret;
->>> +
->>> +	tmp = lower_32_bits(rc_bar2_offset);
->>> +	tmp = INSERT_FIELD(tmp, PCIE_MISC_RC_BAR2_CONFIG_LO, SIZE,
->>> +			   encode_ibar_size(rc_bar2_size));
->>> +	bcm_writel(tmp, base + PCIE_MISC_RC_BAR2_CONFIG_LO);
->>> +	bcm_writel(upper_32_bits(rc_bar2_offset),
->>> +		   base + PCIE_MISC_RC_BAR2_CONFIG_HI);
->>> +
->>> +	scb_size_val = rc_bar2_size ?
->>> +		       ilog2(rc_bar2_size) - 15 : 0xf; /* 0xf is 1GB */
->>> +	WR_FLD(base, PCIE_MISC_MISC_CTRL, SCB0_SIZE, scb_size_val);
->>> +
->>> +	/* disable the PCIe->GISB memory window (RC_BAR1) */
->>> +	WR_FLD(base, PCIE_MISC_RC_BAR1_CONFIG_LO, SIZE, 0);
->>> +
->>> +	/* disable the PCIe->SCB memory window (RC_BAR3) */
->>> +	WR_FLD(base, PCIE_MISC_RC_BAR3_CONFIG_LO, SIZE, 0);
->>> +
->>> +	if (!pcie->suspended) {
->>> +		/* clear any interrupts we find on boot */
->>> +		bcm_writel(0xffffffff, base + PCIE_INTR2_CPU_BASE + CLR);
->>> +		(void)bcm_readl(base + PCIE_INTR2_CPU_BASE + CLR);
->>> +	}
->>> +
->>> +	/* Mask all interrupts since we are not handling any yet */
->>> +	bcm_writel(0xffffffff, base + PCIE_INTR2_CPU_BASE + MASK_SET);
->>> +	(void)bcm_readl(base + PCIE_INTR2_CPU_BASE + MASK_SET);
->>> +
->>> +	if (pcie->gen)
->>> +		set_gen(base, pcie->gen);
->>> +
->>> +	/* Unassert the fundamental reset */
->>> +	brcm_pcie_perst_set(pcie, 0);
->>> +
->>> +	/*
->>> +	 * Give the RC/EP time to wake up, before trying to configure RC.
->>> +	 * Intermittently check status for link-up, up to a total of 100ms
->>> +	 * when we don't know if the device is there, and up to 1000ms if
->>> +	 * we do know the device is there.
->>> +	 */
->>> +	limit = pcie->suspended ? 1000 : 100;
->>> +	for (i = 1, j = 0; j < limit && !brcm_pcie_link_up(pcie);
->>> +	     j += i, i = i * 2)
->>> +		msleep(i + j > limit ? limit - j : i);
->>> +
->>> +	if (!brcm_pcie_link_up(pcie)) {
->>> +		dev_info(dev, "link down\n");
->>> +		return -ENODEV;
->>> +	}
->>> +
->>> +	if (!brcm_pcie_rc_mode(pcie)) {
->>> +		dev_err(dev, "PCIe misconfigured; is in EP mode\n");
->>> +		return -EINVAL;
->>> +	}
->>> +
->>> +	resource_list_for_each_entry(entry, &bridge->windows) {
->>> +		res = entry->res;
->>> +
->>> +		if (resource_type(res) != IORESOURCE_MEM)
->>> +			continue;
->>> +
->>> +		if (num_out_wins >= BRCM_NUM_PCIE_OUT_WINS) {
->>> +			dev_err(pcie->dev, "too many outbound wins\n");
->>> +			return -EINVAL;
->>> +		}
->>> +
->>> +		brcm_pcie_set_outbound_win(pcie, num_out_wins, res->start,
->>> +					   res->start - entry->offset,
->>> +					   res->end - res->start + 1);
->>> +		num_out_wins++;
->>> +	}
->>> +
->>> +	/*
->>> +	 * For config space accesses on the RC, show the right class for
->>> +	 * a PCIe-PCIe bridge (the default setting is to be EP mode).
->>> +	 */
->>> +	WR_FLD_RB(base, PCIE_RC_CFG_PRIV1_ID_VAL3, CLASS_CODE, 0x060400);
->>> +
->>> +	if (pcie->ssc) {
->>> +		ret = set_ssc(base);
->>> +		if (ret == 0)
->>> +			ssc_good = true;
->>> +		else
->>> +			dev_err(dev, "failed attempt to enter ssc mode\n");
->>> +	}
->>> +
->>> +	lnksta = bcm_readw(base + BRCM_PCIE_CAP_REGS + PCI_EXP_LNKSTA);
->>> +	cls = lnksta & PCI_EXP_LNKSTA_CLS;
->>> +	nlw = (lnksta & PCI_EXP_LNKSTA_NLW) >> PCI_EXP_LNKSTA_NLW_SHIFT;
->>> +	dev_info(dev, "link up, %s Gbps x%u %s\n", link_speed_to_str(cls),
->>> +		 nlw, ssc_good ? "(SSC)" : "(!SSC)");
->>> +
->>> +	/* PCIe->SCB endian mode for BAR */
->>> +	/* field ENDIAN_MODE_BAR2 = DATA_ENDIAN */
->>> +	WR_FLD_RB(base, PCIE_RC_CFG_VENDOR_VENDOR_SPECIFIC_REG1,
->>> +		  ENDIAN_MODE_BAR2, DATA_ENDIAN);
->>> +
->>> +	/*
->>> +	 * Refclk from RC should be gated with CLKREQ# input when ASPM L0s,L1
->>> +	 * is enabled =>  setting the CLKREQ_DEBUG_ENABLE field to 1.
->>> +	 */
->>> +	WR_FLD_RB(base, PCIE_MISC_HARD_PCIE_HARD_DEBUG, CLKREQ_DEBUG_ENABLE, 1);
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +/* L23 is a low-power PCIe link state */
->>> +static void enter_l23(struct brcm_pcie *pcie)
->>> +{
->>> +	void __iomem *base = pcie->base;
->>> +	int l23, i;
->>> +
->>> +	/* assert request for L23 */
->>> +	WR_FLD_RB(base, PCIE_MISC_PCIE_CTRL, PCIE_L23_REQUEST, 1);
->>> +
->>> +	/* Wait up to 30 msec for L23 */
->>> +	l23 = RD_FLD(base, PCIE_MISC_PCIE_STATUS, PCIE_LINK_IN_L23);
->>> +	for (i = 0; i < 15 && !l23; i++) {
->>> +		usleep_range(2000, 2400);
->>> +		l23 = RD_FLD(base, PCIE_MISC_PCIE_STATUS, PCIE_LINK_IN_L23);
->>> +	}
->>> +
->>> +	if (!l23)
->>> +		dev_err(pcie->dev, "failed to enter L23\n");
->>> +}
->>> +
->>> +static void turn_off(struct brcm_pcie *pcie)
->>> +{
->>> +	void __iomem *base = pcie->base;
->>> +
->>> +	if (brcm_pcie_link_up(pcie))
->>> +		enter_l23(pcie);
->>> +	/* Assert fundamental reset */
->>> +	brcm_pcie_perst_set(pcie, 1);
->>> +	/* Deassert request for L23 in case it was asserted */
->>> +	WR_FLD_RB(base, PCIE_MISC_PCIE_CTRL, PCIE_L23_REQUEST, 0);
->>> +	/* Turn off SerDes */
->>> +	WR_FLD_RB(base, PCIE_MISC_HARD_PCIE_HARD_DEBUG, SERDES_IDDQ, 1);
->>> +	/* Shutdown PCIe bridge */
->>> +	brcm_pcie_bridge_sw_init_set(pcie, 1);
->>> +}
->>> +
->>> +static int brcm_pcie_suspend(struct device *dev)
->>> +{
->>> +	struct brcm_pcie *pcie = dev_get_drvdata(dev);
->>> +
->>> +	turn_off(pcie);
->>> +	clk_disable_unprepare(pcie->clk);
->>> +	pcie->suspended = true;
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +static int brcm_pcie_resume(struct device *dev)
->>> +{
->>> +	struct brcm_pcie *pcie = dev_get_drvdata(dev);
->>> +	void __iomem *base;
->>> +	int ret;
->>> +
->>> +	base = pcie->base;
->>> +	clk_prepare_enable(pcie->clk);
->>> +
->>> +	/* Take bridge out of reset so we can access the SerDes reg */
->>> +	brcm_pcie_bridge_sw_init_set(pcie, 0);
->>> +
->>> +	/* Turn on SerDes */
->>> +	WR_FLD_RB(base, PCIE_MISC_HARD_PCIE_HARD_DEBUG, SERDES_IDDQ, 0);
->>> +	/* Wait for SerDes to be stable */
->>> +	usleep_range(100, 200);
->>> +
->>> +	ret = brcm_pcie_setup(pcie);
->>> +	if (ret)
->>> +		return ret;
->>> +
->>> +	pcie->suspended = false;
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +static void _brcm_pcie_remove(struct brcm_pcie *pcie)
->>> +{
->>> +	turn_off(pcie);
->>> +	clk_disable_unprepare(pcie->clk);
->>> +	clk_put(pcie->clk);
->>> +}
->>> +
->>> +static int brcm_pcie_remove(struct platform_device *pdev)
->>> +{
->>> +	struct brcm_pcie *pcie = platform_get_drvdata(pdev);
->>> +
->>> +	pci_stop_root_bus(pcie->root_bus);
->>> +	pci_remove_root_bus(pcie->root_bus);
->>> +	_brcm_pcie_remove(pcie);
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +static const struct of_device_id brcm_pcie_match[] = {
->>> +	{ .compatible = "brcm,bcm2711-pcie", .data = &bcm2711_cfg },
->>> +	{},
->>> +};
->>> +MODULE_DEVICE_TABLE(of, brcm_pcie_match);
->>> +
->>> +static int brcm_pcie_probe(struct platform_device *pdev)
->>> +{
->>> +	struct device_node *dn = pdev->dev.of_node;
->>> +	const struct of_device_id *of_id;
->>> +	const struct pcie_cfg_data *data;
->>> +	struct resource *res;
->>> +	int ret;
->>> +	struct brcm_pcie *pcie;
->>> +	void __iomem *base;
->>> +	struct pci_host_bridge *bridge;
->>> +	struct pci_bus *child;
->>> +
->>> +	bridge = devm_pci_alloc_host_bridge(&pdev->dev, sizeof(*pcie));
->>> +	if (!bridge)
->>> +		return -ENOMEM;
->>> +
->>> +	pcie = pci_host_bridge_priv(bridge);
->>> +
->>> +	of_id = of_match_node(brcm_pcie_match, dn);
->>> +	if (!of_id) {
->>> +		dev_err(&pdev->dev, "failed to look up compatible string\n");
->>> +		return -EINVAL;
->>> +	}
->>> +
->>> +	data = of_id->data;
->>> +	pcie->reg_offsets = data->offsets;
->>> +	pcie->reg_field_info = data->reg_field_info;
->>> +	pcie->type = data->type;
->>> +	pcie->dn = dn;
->>> +	pcie->dev = &pdev->dev;
->>> +
->>> +	/* We use the domain number as our controller number */
->>> +	pcie->id = of_get_pci_domain_nr(dn);
->>> +	if (pcie->id < 0)
->>> +		return pcie->id;
->>> +
->>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>> +	if (!res)
->>> +		return -EINVAL;
->>> +
->>> +	base = devm_ioremap_resource(&pdev->dev, res);
->>> +	if (IS_ERR(base))
->>> +		return PTR_ERR(base);
->>> +
->>> +	pcie->clk = of_clk_get_by_name(dn, "sw_pcie");
->>> +	if (IS_ERR(pcie->clk)) {
->>> +		dev_err(&pdev->dev, "could not get clock\n");
->>> +		pcie->clk = NULL;
->>> +	}
->>
->> Is there a sw_pcie clock in the system?
-> 
-> AFAIK it's there and there's a firmware interface available. That said, if
-> possible (i.e. not clashing with some firmware routine) it would be nice to
-> integrate it into the memory mapped clock driver. It's always the preferred
-> solution. Though to do so we need more documentation.
-> 
-> Overall it's not really needed for now.
-> 
->>> +	pcie->base = base;
->>> +
->>> +	ret = of_pci_get_max_link_speed(dn);
->>> +	pcie->gen = (ret < 0) ? 0 : ret;
->>> +
->>> +	pcie->ssc = of_property_read_bool(dn, "brcm,enable-ssc");
->>> +
->>> +	ret = irq_of_parse_and_map(pdev->dev.of_node, 0);
->>> +	if (ret == 0)
->>> +		/* keep going, as we don't use this intr yet */
->>> +		dev_warn(pcie->dev, "cannot get PCIe interrupt\n");
->>> +	else
->>> +		pcie->irq = ret;
->>> +
->>> +	ret = pci_parse_request_of_pci_ranges(pcie->dev, &bridge->windows,
->>> +					      &bridge->dma_ranges, NULL);
->>> +	if (ret)
->>> +		return ret;
->>> +
->>> +	ret = clk_prepare_enable(pcie->clk);
->>> +	if (ret) {
->>> +		dev_err(&pdev->dev, "could not enable clock\n");
->>> +		return ret;
->>> +	}
->>> +
->>> +	ret = brcm_pcie_setup(pcie);
->>> +	if (ret)
->>> +		goto fail;
->>> +
->>> +	bridge->dev.parent = &pdev->dev;
->>> +	bridge->busnr = 0;
->>> +	bridge->ops = &brcm_pcie_ops;
->>> +	bridge->sysdata = pcie;
->>> +	bridge->map_irq = of_irq_parse_and_map_pci;
->>> +	bridge->swizzle_irq = pci_common_swizzle;
->>> +
->>> +	ret = pci_scan_root_bus_bridge(bridge);
->>> +	if (ret < 0) {
->>> +		dev_err(pcie->dev, "Scanning root bridge failed\n");
->>> +		goto fail;
->>> +	}
->>> +
->>> +	pci_assign_unassigned_bus_resources(bridge->bus);
->>> +	list_for_each_entry(child, &bridge->bus->children, node)
->>> +		pcie_bus_configure_settings(child);
->>> +	pci_bus_add_devices(bridge->bus);
->>> +	platform_set_drvdata(pdev, pcie);
->>> +	pcie->root_bus = bridge->bus;
->>> +
->>> +	return 0;
->>> +
->>> +fail:
->>> +	_brcm_pcie_remove(pcie);
->>> +	return ret;
->>> +}
->>> +
->>> +static const struct dev_pm_ops brcm_pcie_pm_ops = {
->>> +	.suspend_noirq = brcm_pcie_suspend,
->>> +	.resume_noirq = brcm_pcie_resume,
->>> +};
->>> +
->>> +static struct platform_driver brcm_pcie_driver = {
->>> +	.probe = brcm_pcie_probe,
->>> +	.remove = brcm_pcie_remove,
->>> +	.driver = {
->>> +		.name = "brcm-pcie",
->>> +		.owner = THIS_MODULE,
->>> +		.of_match_table = brcm_pcie_match,
->>> +		.pm = &brcm_pcie_pm_ops,
->>> +	},
->>> +};
->>> +
->>> +module_platform_driver(brcm_pcie_driver);
->>> +
->>> +MODULE_LICENSE("GPL v2");
->>> +MODULE_DESCRIPTION("Broadcom STB PCIe RC driver");
->>> +MODULE_AUTHOR("Broadcom");
->>>
-> 
-
+On Mon, Nov 11, 2019 at 9:38 AM Alan Mikhak <alan.mikhak@sifive.com> wrote:
+>
+> From: Alan Mikhak <alan.mikhak@sifive.com>
+>
+> Add a Linux PCI Endpoint Framework function driver to bring-up a
+> NVMe endpoint device over the PCIe bus. NVMe endpoint function
+> driver runs on a PCIe endpoint device and connects to an x86_64
+> or other root-complex host across the PCIe bus. On the endpoint
+> device side, the NVMe endpoint function driver connects to the
+> unmodified Linux NVMe target driver running on the embedded CPU.
+> The Linux NVMe target operates a NVMe namespace suitable for
+> the application. For example, Linux NVMe target code can be
+> configured to operate a file-based namespace which is backed
+> by the loop device. The application may be expanded in the
+> future to operate on non-volatile storage such as flash or
+> battery-backed RAM.
+>
+> With its current implementation, I am able to mount such a NVMe
+> namespace from a x86_64 Debian Linux host across PCIe using the
+> Disks App and perform Partition Benchmarking. I am also able to
+> save and load files on NVMe namespace partition nvme0n1p1 using
+> the Debian Files app. One such possible example usage is to store
+> and load trace files for debugging NVMe endpoint devices from
+> the host side with KernelShark.
+>
+> This RFC patch presents an implementation that is still work in
+> progress. It is not stable yet for reliable use or upstream
+> submission. It is stable enough for me to see it work from a
+> Debian host desktop to capture screenshots of NVMe partition
+> benchmarking, formatting, mounting, file storage and retrieval
+> activity such as I mentioned.
+>
+> A design goal is to not modify the Linux NVMe target driver
+> at all. The NVMe endpoint function driver should implement the
+> functionality that is required for the scope of its application
+> in order to interface with Linux NVMe target driver. It maps
+> NVMe Physical Region Pages (PRP) and PRP Lists from the host,
+> formats a scatterlist that NVMe target driver can consume, and
+> executes the NVMe command with the scatterlist on the NVMe target
+> controller on behalf of the host. The NVMe target controller can
+> therefore read and write directly to host buffers using the
+> scatterlist as it does if the scatterlist had arrived over an
+> NVMe fabric.
+>
+> NVMe endpoint function driver currently creates the admin ACQ and
+> ASQ on startup. When the NVMe host connects over PCIe, NVMe
+> endpoint function driver handles the Create/Delete SQ/CQ commands
+> and any other commands that cannot go to the NVMe target on behalf
+> of the host. For example, it creates a pair of I/O CQ and SQ as
+> requested by the Linux host kernel nvme.ko driver. The NVMe endpoint
+> function driver supports Controller Memory Buffer (CMB). The I/O SQ
+> is therefore located in CMB as requested by host nvme.ko.
+>
+> An n:1 relationship between SQs and CQs has not been implemented
+> yet since no such request was made so far from the Linux host
+> nvme.ko. It needs to be implemented at some point. Feedback
+> received elsewhere indicates this is desirable.
+>
+> NVMe endpoint function driver needs to map PRP that sit across
+> the PCIe bus anywhere in host memory. PRPs are typically 4KB pages
+> which may be scattered throughout host memory. The PCIe address
+> space of NVMe endpoint is larger than its local physical memory
+> space or that of the host system. PCIe address space of an NVMe
+> endpoint needs to address much larger regions than physical memory
+> populated on either side of the PCIe bus. The NVMe endpoint device
+> must be prepared to be plugged into other hosts with differing
+> memory arrangements over its lifetime.
+>
+> NVMe endpoint function driver access to host PRPs is not BAR-based.
+> NVMe endpoint accesses host memory as PCIe bus master. PCIe hosts,
+> on the other hand, typically access endpoint memory using BARs.
+>
+> Finding an economical solution for page struct backing for a large
+> PCIe address space, which is not itself backed by physical memory,
+> is desirable. Page structs are a requirement for using scatterlists.
+> Since scatterlists are the mechanism that Linux NVMe target driver
+> uses, the NVMe endpoint function driver needs to convert PRPs to
+> scatterlist using mappings that have proper page struct backing.
+> As suggested by Christoph Hellwig elsewhere, devm_memremap_pages()
+> may be a solution if the kernel supports ZONE_DEVICE.
+>
+> I submit this RFC patch to request early review comments and
+> feedback. This implementation is not in a polished state yet.
+> I hope to receive early feedback to improve it. I look forward
+> to and appreciate your responses.
+>
+> Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
+> ---
+>  drivers/pci/endpoint/functions/Kconfig         |   10 +
+>  drivers/pci/endpoint/functions/Makefile        |    1 +
+>  drivers/pci/endpoint/functions/pci-epf-debug.h |   59 +
+>  drivers/pci/endpoint/functions/pci-epf-map.h   |  151 ++
+>  drivers/pci/endpoint/functions/pci-epf-nvme.c  | 1880 ++++++++++++++++++++++++
+>  5 files changed, 2101 insertions(+)
+>  create mode 100644 drivers/pci/endpoint/functions/pci-epf-debug.h
+>  create mode 100644 drivers/pci/endpoint/functions/pci-epf-map.h
+>  create mode 100644 drivers/pci/endpoint/functions/pci-epf-nvme.c
+>
+> diff --git a/drivers/pci/endpoint/functions/Kconfig b/drivers/pci/endpoint/functions/Kconfig
+> index 8820d0f7ec77..35c2570f97ac 100644
+> --- a/drivers/pci/endpoint/functions/Kconfig
+> +++ b/drivers/pci/endpoint/functions/Kconfig
+> @@ -12,3 +12,13 @@ config PCI_EPF_TEST
+>            for PCI Endpoint.
+>
+>            If in doubt, say "N" to disable Endpoint test driver.
+> +
+> +config PCI_EPF_NVME
+> +       tristate "PCI Endpoint NVMe function driver"
+> +       depends on PCI_ENDPOINT
+> +       select CRC32
+> +       help
+> +          Enable this configuration option to enable the NVMe function
+> +          driver for PCI Endpoint.
+> +
+> +          If in doubt, say "N" to disable Endpoint NVMe function driver.
+> diff --git a/drivers/pci/endpoint/functions/Makefile b/drivers/pci/endpoint/functions/Makefile
+> index d6fafff080e2..e8a60f0fcfa1 100644
+> --- a/drivers/pci/endpoint/functions/Makefile
+> +++ b/drivers/pci/endpoint/functions/Makefile
+> @@ -4,3 +4,4 @@
+>  #
+>
+>  obj-$(CONFIG_PCI_EPF_TEST)             += pci-epf-test.o
+> +obj-$(CONFIG_PCI_EPF_NVME)             += pci-epf-nvme.o
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-debug.h b/drivers/pci/endpoint/functions/pci-epf-debug.h
+> new file mode 100644
+> index 000000000000..8fbd31b017fc
+> --- /dev/null
+> +++ b/drivers/pci/endpoint/functions/pci-epf-debug.h
+> @@ -0,0 +1,59 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/**
+> + * Debug functions header file for
+> + * PCI Endpoint Function (EPF) drivers.
+> + *
+> + * Copyright (C) 2019 SiFive
+> + */
+> +
+> +#ifndef _PCI_EPF_DEBUG_H
+> +#define _PCI_EPF_DEBUG_H
+> +
+> +static bool pci_epf_debug;
+> +
+> +static __always_inline bool pci_epf_debug_is_enabled(void)
+> +{
+> +       return pci_epf_debug;
+> +}
+> +
+> +static __always_inline bool pci_epf_debug_enable(void)
+> +{
+> +       if (pci_epf_debug)
+> +               return true;
+> +
+> +       pci_epf_debug = true;
+> +       return false;
+> +}
+> +
+> +static __always_inline bool pci_epf_debug_disable(void)
+> +{
+> +       if (!pci_epf_debug)
+> +               return false;
+> +
+> +       pci_epf_debug = false;
+> +       return true;
+> +}
+> +
+> +static __always_inline void pci_epf_debug_print(const char *text)
+> +{
+> +       if (pci_epf_debug && text)
+> +               pr_info("%s\n", text);
+> +}
+> +
+> +static void pci_epf_debug_dump(void *data, size_t size, const char *label)
+> +{
+> +       if (pci_epf_debug && data && size) {
+> +               unsigned char *p = (unsigned char *)data;
+> +
+> +               if (label)
+> +                       pr_info("%s:\n", label);
+> +               while (size >= 8) {
+> +                       pr_info("%02x %02x %02x %02x %02x %02x %02x %02x\n",
+> +                               p[0], p[1], p[2], p[3], p[4], p[5], p[6], p[7]);
+> +                       p += 8;
+> +                       size -= 8;
+> +               }
+> +       }
+> +}
+> +
+> +#endif /* _PCI_EPF_DEBUG_H */
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-map.h b/drivers/pci/endpoint/functions/pci-epf-map.h
+> new file mode 100644
+> index 000000000000..09e54a45c69f
+> --- /dev/null
+> +++ b/drivers/pci/endpoint/functions/pci-epf-map.h
+> @@ -0,0 +1,151 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/**
+> + * Map helper functions header file for
+> + * PCI Endpoint Function (EPF) drivers.
+> + *
+> + * Copyright (C) 2019 SiFive
+> + */
+> +
+> +#ifndef _PCI_EPF_MAP_H
+> +#define _PCI_EPF_MAP_H
+> +
+> +#include <linux/pci-epc.h>
+> +#include <linux/pci-epf.h>
+> +
+> +struct pci_epf_map {
+> +       size_t size;
+> +       size_t align;
+> +       off_t offset;
+> +       struct {
+> +               u64 phys_addr;
+> +               u64 phys_base;
+> +               u64 phys_end;
+> +       } host;
+> +       struct {
+> +               size_t size;
+> +               void __iomem *virt_addr;
+> +               void __iomem *virt_base;
+> +               phys_addr_t phys_addr;
+> +               phys_addr_t phys_base;
+> +       } pci;
+> +       struct pci_epf *epf;
+> +};
+> +
+> +static int pci_epf_map_alloc_region(struct pci_epf_map *map,
+> +                                   struct pci_epf *epf,
+> +                                   const struct pci_epc_features *features)
+> +{
+> +       phys_addr_t phys_base;
+> +       void __iomem *virt_base;
+> +       size_t align, size;
+> +
+> +       if (map->pci.phys_base)
+> +               return -EALREADY;
+> +
+> +       align = (features && features->align) ? features->align : PAGE_SIZE;
+> +       size = (map->size < align) ? (align << 1) : map->size;
+> +
+> +       virt_base = pci_epc_mem_alloc_addr(epf->epc, &phys_base, size);
+> +       if (!virt_base)
+> +               return -ENOMEM;
+> +
+> +       map->epf = epf;
+> +       map->align = align;
+> +       map->pci.size = size;
+> +       map->pci.virt_base = virt_base;
+> +       map->pci.phys_base = phys_base;
+> +       return 0;
+> +}
+> +
+> +static __always_inline void pci_epf_map_free_region(struct pci_epf_map *map)
+> +{
+> +       if (map->pci.phys_base) {
+> +               pci_epc_mem_free_addr(map->epf->epc,
+> +                                     map->pci.phys_base,
+> +                                     map->pci.virt_base,
+> +                                     map->pci.size);
+> +               map->pci.phys_base = 0;
+> +       }
+> +}
+> +
+> +static int pci_epf_map_enable(struct pci_epf_map *map)
+> +{
+> +       int ret;
+> +
+> +       if (!map->pci.phys_base)
+> +               return -ENOMEM;
+> +
+> +       if (map->pci.phys_addr)
+> +               return -EALREADY;
+> +
+> +       map->host.phys_base = map->host.phys_addr;
+> +       if (map->align > PAGE_SIZE)
+> +               map->host.phys_base &= ~(map->align-1);
+> +
+> +       map->host.phys_end = map->host.phys_base + map->pci.size - 1;
+> +
+> +       map->offset = map->host.phys_addr - map->host.phys_base;
+> +       if (map->offset + map->size > map->pci.size)
+> +               return -ERANGE;
+> +
+> +       ret = pci_epc_map_addr(map->epf->epc, map->epf->func_no,
+> +                              map->pci.phys_base, map->host.phys_base,
+> +                              map->pci.size);
+> +       if (ret)
+> +               return ret;
+> +
+> +       map->pci.virt_addr = map->pci.virt_base + map->offset;
+> +       map->pci.phys_addr = map->pci.phys_base + map->offset;
+> +       return 0;
+> +}
+> +
+> +static __always_inline void pci_epf_map_disable(struct pci_epf_map *map)
+> +{
+> +       if (map->pci.phys_addr) {
+> +               pci_epc_unmap_addr(map->epf->epc,
+> +                                  map->epf->func_no,
+> +                                  map->pci.phys_base);
+> +               map->pci.phys_addr = 0;
+> +       }
+> +}
+> +
+> +static void pci_epf_unmap(struct pci_epf_map *map)
+> +{
+> +       pci_epf_map_disable(map);
+> +       pci_epf_map_free_region(map);
+> +       memset(map, 0, sizeof(*map));
+> +}
+> +
+> +static int pci_epf_map(struct pci_epf_map *map,
+> +                      struct pci_epf *epf,
+> +                      const struct pci_epc_features *features)
+> +{
+> +       int ret;
+> +
+> +       ret = pci_epf_map_alloc_region(map, epf, features);
+> +       if (ret) {
+> +               dev_err(&epf->dev, "Failed to allocate address map\n");
+> +               return ret;
+> +       }
+> +
+> +       ret = pci_epf_map_enable(map);
+> +       if (ret) {
+> +               dev_err(&epf->dev, "Failed to enable address map\n");
+> +               pci_epf_map_free_region(map);
+> +       }
+> +       return ret;
+> +}
+> +
+> +static __always_inline int
+> +pci_epf_map_check_fit(struct pci_epf_map *map, u64 addr, u64 end)
+> +{
+> +       return addr >= map->host.phys_base && end <= map->host.phys_end;
+> +}
+> +
+> +static __always_inline void __iomem *
+> +pci_epf_map_get(struct pci_epf_map *map, u64 addr)
+> +{
+> +       return addr - map->host.phys_base + map->pci.virt_base;
+> +}
+> +
+> +#endif /* _PCI_EPF_MAP_H */
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-nvme.c b/drivers/pci/endpoint/functions/pci-epf-nvme.c
+> new file mode 100644
+> index 000000000000..5dd9d6796fce
+> --- /dev/null
+> +++ b/drivers/pci/endpoint/functions/pci-epf-nvme.c
+> @@ -0,0 +1,1880 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/**
+> + * NVMe function driver for PCI Endpoint Framework
+> + *
+> + * Copyright (C) 2019 SiFive
+> + */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/slab.h>
+> +#include <linux/pci_ids.h>
+> +#include <linux/pci-epc.h>
+> +#include <linux/pci-epf.h>
+> +#include <linux/pci_regs.h>
+> +#include <linux/io-64-nonatomic-lo-hi.h>
+> +#include <linux/nvme.h>
+> +#include "../../../nvme/host/nvme.h"
+> +#include "../../../nvme/target/nvmet.h"
+> +#include "pci-epf-map.h"
+> +#include "pci-epf-debug.h"
+> +
+> +#define TIMER_RESOLUTION               1
+> +
+> +/* maximum page size (MPSMAX): 4K */
+> +#define PCI_EPF_NVME_MPSMAX            0ULL
+> +/* minimum page size (MPSMIN): 4K is current upper limit from Linux kernel */
+> +#define PCI_EPF_NVME_MPSMIN            0ULL
+> +/* command sets supported (CSS): NVMe command set */
+> +#define PCI_EPF_NVME_CSS               1ULL
+> +/* CC.EN timeout in 500msec units (TO) */
+> +#define PCI_EPF_NVME_TO                        15ULL
+> +/* zero-based maximum queue entries (MQES) */
+> +#define PCI_EPF_NVME_MQES              (NVME_AQ_DEPTH - 1)
+> +/* maximum queue id */
+> +#define PCI_EPF_NVME_QIDMAX            4
+> +/* keepalive ticks */
+> +#define PCI_EPF_NVME_KA_TICKS          1000
+> +
+> +/* # of address maps */
+> +#define PRP_MAPS                       12
+> +/* size of address map: 1G = 2^30 */
+> +#define PRP_MAP_SIZE                   0x0000000040000000ULL
+> +/* flag bit to indicate when a prp is mapped */
+> +#define PRP_MAP_FLAG                   (1 << 0)
+> +
+> +/* no prp marker */
+> +#define PRP_NONE                       0xffffffffffffffffULL
+> +/* size of prp */
+> +#define PRP_SIZE                       sizeof(__le64)
+> +/* maximum # of prps in a page per nvme */
+> +#define PRP_PER_PAGE                   (PAGE_SIZE / PRP_SIZE)
+> +
+> +/* # of prp lists supported */
+> +#define PRP_LISTS                      1
+> +/* # of prp list entries supported */
+> +#define PRP_LIST_ENTRIES               (PRP_LISTS * PRP_PER_PAGE)
+> +
+> +static struct workqueue_struct *epf_nvme_workqueue;
+> +
+> +enum pci_epf_nvme_status {
+> +       PCI_EPF_NVME_SYNC = -1,
+> +       PCI_EPF_NVME_ASYNC = -2
+> +};
+> +
+> +struct pci_epf_nvme_queue {
+> +       u16 qid;
+> +       u16 size;
+> +       u16 depth;
+> +       u16 flags;
+> +       u16 vector;
+> +       u16 head;
+> +       u16 tail;
+> +       u16 phase;
+> +       u32 db;
+> +       struct pci_epf_map map;
+> +};
+> +
+> +struct pci_epf_nvme_cmb {
+> +       size_t size;
+> +       enum pci_barno bar;
+> +       void *virt_dma_addr;
+> +       u64 phys_dma_addr;
+> +};
+> +
+> +struct pci_epf_nvme_features {
+> +       u32 aec;
+> +};
+> +
+> +struct pci_epf_nvme_prplist {
+> +       unsigned int count;
+> +       unsigned int index;
+> +       size_t align;
+> +       u64 min;
+> +       u64 max;
+> +       u64 prp[PRP_LIST_ENTRIES];
+> +};
+> +
+> +struct pci_epf_nvme_host {
+> +       void __iomem *reg;
+> +       int msi;
+> +       u64 cap;
+> +       u32 vs;
+> +       u32 intms;
+> +       u32 intmc;
+> +       u32 cc;
+> +       u32 csts;
+> +       u32 cmbsz;
+> +       u32 cmbloc;
+> +       u32 aqa;
+> +       u64 asq;
+> +       u64 acq;
+> +       struct pci_epf_nvme_queue sq[PCI_EPF_NVME_QIDMAX + 1];
+> +       struct pci_epf_nvme_queue cq[PCI_EPF_NVME_QIDMAX + 1];
+> +       struct pci_epf_nvme_cmb cmb;
+> +       struct pci_epf_nvme_features features;
+> +};
+> +
+> +struct pci_epf_nvme_target {
+> +       struct device *dev;
+> +       struct nvmet_host host;
+> +       struct nvmet_host_link host_link;
+> +       struct nvmet_subsys subsys;
+> +       struct nvmet_subsys_link subsys_link;
+> +       struct nvmet_port port;
+> +       enum nvme_ana_state port_ana_state[NVMET_MAX_ANAGRPS + 1];
+> +       struct nvmet_ns ns;
+> +       struct nvmet_ctrl *nvmet_ctrl;
+> +       struct nvmet_sq sq[PCI_EPF_NVME_QIDMAX + 1];
+> +       struct nvmet_cq cq[PCI_EPF_NVME_QIDMAX + 1];
+> +       struct nvmet_req req;
+> +       struct nvme_command cmd;
+> +       struct nvme_completion rsp;
+> +       struct completion done;
+> +       struct sg_table sg_table;
+> +       struct scatterlist sgl[PRP_LIST_ENTRIES + 2];
+> +       struct pci_epf_map map[PRP_MAPS];
+> +       struct pci_epf_nvme_prplist prplist;
+> +       size_t buffer_size;
+> +       u8 *buffer;
+> +       int keepalive;
+> +};
+> +
+> +struct pci_epf_nvme {
+> +       void *reg[6];
+> +       struct pci_epf *epf;
+> +       enum pci_barno reg_bar;
+> +       struct delayed_work poll;
+> +       const struct pci_epc_features *epc_features;
+> +       struct pci_epf_nvme_host host;
+> +       struct pci_epf_nvme_target target;
+> +       int tick;
+> +};
+> +
+> +static void __iomem *
+> +pci_epf_nvme_map_find(struct pci_epf_nvme *nvme, u64 addr, size_t size)
+> +{
+> +       int slot;
+> +       struct pci_epf_map *map;
+> +       u64 end = addr + size - 1;
+> +
+> +       for (slot = 0; slot < PRP_MAPS; slot++) {
+> +               map = &nvme->target.map[slot];
+> +               if (!map->pci.virt_addr)
+> +                       break;
+> +               else if (pci_epf_map_check_fit(map, addr, end))
+> +                       return pci_epf_map_get(map, addr);
+> +       }
+> +
+> +       return NULL;
+> +}
+> +
+> +static int
+> +pci_epf_nvme_map(struct pci_epf_nvme *nvme, int slot, u64 addr, size_t size)
+> +{
+> +       if (addr && size && slot < PRP_MAPS) {
+> +               struct pci_epf_map *map = &nvme->target.map[slot];
+> +
+> +               map->size = size;
+> +               map->host.phys_addr = addr;
+> +               return pci_epf_map(map, nvme->epf, nvme->epc_features);
+> +       }
+> +
+> +       return -EINVAL;
+> +}
+> +
+> +static __always_inline int
+> +pci_epf_nvme_map_sgl(struct pci_epf_nvme *nvme,
+> +                    struct nvme_sgl_desc *sgl)
+> +{
+> +       return pci_epf_nvme_map(nvme, 0,
+> +                               le64_to_cpu(sgl->addr),
+> +                               le32_to_cpu(sgl->length)) == 0;
+> +}
+> +
+> +static __always_inline int
+> +pci_epf_nvme_map_ksgl(struct pci_epf_nvme *nvme,
+> +                     struct nvme_keyed_sgl_desc *ksgl)
+> +{
+> +       return pci_epf_nvme_map(nvme, 0,
+> +                               le64_to_cpu(ksgl->addr),
+> +                               PAGE_SIZE) == 0;
+> +}
+> +
+> +static __always_inline int
+> +pci_epf_nvme_map_prp(struct pci_epf_nvme *nvme, int slot, u64 prp)
+> +{
+> +       if (!prp)
+> +               return 0;
+> +
+> +       return pci_epf_nvme_map(nvme, slot, prp, PAGE_SIZE) == 0;
+> +}
+> +
+> +static __always_inline int
+> +pci_epf_nvme_map_prp1(struct pci_epf_nvme *nvme, struct nvme_command *cmd)
+> +{
+> +       u64 prp = le64_to_cpu(cmd->common.dptr.prp1);
+> +
+> +       return pci_epf_nvme_map_prp(nvme, 0, prp);
+> +}
+> +
+> +static __always_inline int
+> +pci_epf_nvme_map_prp2(struct pci_epf_nvme *nvme, struct nvme_command *cmd)
+> +{
+> +       u64 prp = le64_to_cpu(cmd->common.dptr.prp2);
+> +
+> +       return pci_epf_nvme_map_prp(nvme, 1, prp);
+> +}
+> +
+> +static int
+> +pci_epf_nvme_map_dptr(struct pci_epf_nvme *nvme, struct nvme_command *cmd)
+> +{
+> +       u8 psdt = (cmd->common.flags & NVME_CMD_SGL_ALL);
+> +
+> +       if (psdt == 0) {
+> +               int result = pci_epf_nvme_map_prp1(nvme, cmd);
+> +
+> +               if (result && cmd->common.dptr.prp2)
+> +                       result = pci_epf_nvme_map_prp2(nvme, cmd);
+> +               return result;
+> +       } else if (psdt == NVME_CMD_SGL_METABUF) {
+> +               return pci_epf_nvme_map_sgl(nvme, &cmd->common.dptr.sgl);
+> +       } else if (psdt == NVME_CMD_SGL_METASEG) {
+> +               return pci_epf_nvme_map_ksgl(nvme, &cmd->common.dptr.ksgl);
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int
+> +pci_epf_nvme_expand_prplist(struct pci_epf_nvme *nvme, unsigned int more)
+> +{
+> +       struct pci_epf_nvme_prplist *list = &nvme->target.prplist;
+> +       u64 prp;
+> +
+> +       list->count += more;
+> +
+> +       while (more--) {
+> +               prp = le64_to_cpu(list->prp[list->index]);
+> +               if (!prp || (prp & (PAGE_SIZE - 1)))
+> +                       return -EINVAL;
+> +
+> +               if (prp > list->max)
+> +                       list->max = prp;
+> +               if (prp < list->min)
+> +                       list->min = prp;
+> +
+> +               list->prp[list->index++] = prp;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int
+> +pci_epf_nvme_transfer_prplist(struct pci_epf_nvme *nvme,
+> +                             int slot, unsigned int count)
+> +{
+> +       struct pci_epf_nvme_prplist *list = &nvme->target.prplist;
+> +       struct pci_epf_map *map = &nvme->target.map[slot];
+> +       unsigned int more;
+> +       size_t size;
+> +       u64 nextlist;
+> +
+> +       list->align = map->align;
+> +       list->min = PRP_NONE;
+> +       list->max = 0;
+> +       list->index = 0;
+> +
+> +       while (count) {
+> +               if (count <= PRP_PER_PAGE) {
+> +                       more = count;
+> +                       size = more * PRP_SIZE;
+> +               } else {
+> +                       more = PRP_PER_PAGE - 1;
+> +                       size = PAGE_SIZE;
+> +               }
+> +
+> +               pci_epf_debug_dump(map->pci.virt_addr, size, "prplist");
+> +               memcpy_fromio(&list->prp[list->index],
+> +                             map->pci.virt_addr, size);
+> +               pci_epf_unmap(map);
+> +
+> +               if (pci_epf_nvme_expand_prplist(nvme, more)) {
+> +                       pr_info("pci epf nvme: prplist invalid prp\n");
+> +                       return -EINVAL;
+> +               }
+> +
+> +               if (count <= PRP_PER_PAGE)
+> +                       break;
+> +
+> +               count -= PRP_PER_PAGE - 1;
+> +
+> +               nextlist = le64_to_cpu(list->prp[list->index]);
+> +               if (!nextlist || (nextlist & (PAGE_SIZE - 1))) {
+> +                       pr_info("pci epf nvme: invalid next prplist\n");
+> +                       return -EINVAL;
+> +               }
+> +
+> +               if (!pci_epf_nvme_map_prp(nvme, slot, nextlist)) {
+> +                       pr_info("pci epf nvme: next prplist map error\n");
+> +                       return -ENOMEM;
+> +               }
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static void
+> +pci_epf_nvme_review_prplist(struct pci_epf_nvme *nvme)
+> +{
+> +       struct pci_epf_nvme_prplist *list = &nvme->target.prplist;
+> +       unsigned int index;
+> +       u64 prp;
+> +
+> +       list->min = PRP_NONE;
+> +       for (index = 0; index < list->count; index++) {
+> +               prp = list->prp[index];
+> +               if (prp & PRP_MAP_FLAG)
+> +                       continue;
+> +               else if (pci_epf_nvme_map_find(nvme, prp, PAGE_SIZE))
+> +                       list->prp[index] |= PRP_MAP_FLAG;
+> +               else if (prp < list->min)
+> +                       list->min = prp;
+> +       }
+> +}
+> +
+> +static int
+> +pci_epf_nvme_map_prplist(struct pci_epf_nvme *nvme, int slot)
+> +{
+> +       struct pci_epf_nvme_prplist *list = &nvme->target.prplist;
+> +       size_t span;
+> +       u64 base, mask;
+> +
+> +       if (list->min == PRP_NONE) {
+> +               pr_info("pci epf nvme: unexpected empty prplist\n");
+> +               return -ENOMEM;
+> +       }
+> +
+> +       if (pci_epf_nvme_map_find(nvme, list->min, PAGE_SIZE)) {
+> +               pci_epf_nvme_review_prplist(nvme);
+> +               if (list->min == PRP_NONE)
+> +                       return 0;
+> +       }
+> +
+> +       mask = ~(list->align - 1);
+> +       base = list->min & mask;
+> +       span = list->max + PAGE_SIZE - base;
+> +
+> +       while (span) {
+> +               if (pci_epf_nvme_map(nvme, slot, base, PRP_MAP_SIZE)) {
+> +                       pr_info("pci epf nvme: prplist map region error\n");
+> +                       return -ENOMEM;
+> +               }
+> +
+> +               if (span <= PRP_MAP_SIZE)
+> +                       return 0;
+> +
+> +               span -= PRP_MAP_SIZE;
+> +
+> +               if (++slot == PRP_MAPS) {
+> +                       pr_info("pci epf nvme: prplist map out of resources\n");
+> +                       return -ENOMEM;
+> +               }
+> +
+> +               pci_epf_nvme_review_prplist(nvme);
+> +               if (list->min == PRP_NONE)
+> +                       return 0;
+> +
+> +               base = list->min & mask;
+> +               span = list->max + PAGE_SIZE - base;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static void
+> +pci_epf_nvme_unmap_dptr(struct pci_epf_nvme *nvme)
+> +{
+> +       struct pci_epf_map *map = nvme->target.map;
+> +       int slot;
+> +
+> +       for (slot = 0; slot < PRP_MAPS; slot++) {
+> +               if (map->pci.virt_addr)
+> +                       pci_epf_unmap(map);
+> +               map++;
+> +       }
+> +}
+> +
+> +static int
+> +pci_epf_nvmet_write32(struct pci_epf_nvme_target *target, u32 off, u32 val)
+> +{
+> +       struct nvmet_ctrl *nvmet_ctrl = target->nvmet_ctrl;
+> +
+> +       if (!nvmet_ctrl)
+> +               return -ENXIO;
+> +
+> +       switch (off) {
+> +       case NVME_REG_CC:
+> +               nvmet_update_cc(nvmet_ctrl, val);
+> +               return 0;
+> +       default:
+> +               return -EIO;
+> +       }
+> +}
+> +
+> +static int
+> +pci_epf_nvmet_read32(struct pci_epf_nvme_target *target, u32 off, u32 *val)
+> +{
+> +       struct nvmet_ctrl *nvmet_ctrl = target->nvmet_ctrl;
+> +       u32 reg;
+> +
+> +       if (!nvmet_ctrl)
+> +               return -ENXIO;
+> +
+> +       switch (off) {
+> +       case NVME_REG_VS:
+> +               reg = nvmet_ctrl->subsys->ver;
+> +               break;
+> +       case NVME_REG_CC:
+> +               reg = nvmet_ctrl->cc;
+> +               break;
+> +       case NVME_REG_CSTS:
+> +               reg = nvmet_ctrl->csts;
+> +               break;
+> +       default:
+> +               return -EIO;
+> +       }
+> +
+> +       if (val)
+> +               *val = reg;
+> +       return 0;
+> +}
+> +
+> +static int
+> +pci_epf_nvmet_read64(struct pci_epf_nvme_target *target, u32 off, u64 *val)
+> +{
+> +       struct nvmet_ctrl *nvmet_ctrl = target->nvmet_ctrl;
+> +       u64 reg;
+> +
+> +       if (!nvmet_ctrl)
+> +               return -ENXIO;
+> +
+> +       switch (off) {
+> +       case NVME_REG_CAP:
+> +               reg = nvmet_ctrl->cap;
+> +               break;
+> +       default:
+> +               return -EIO;
+> +       }
+> +
+> +       if (val)
+> +               *val = reg;
+> +       return 0;
+> +}
+> +
+> +static int pci_epf_nvmet_add_port(struct nvmet_port *nvmet_port)
+> +{
+> +       pr_err("pci epf nvme: unexpected call to add port\n");
+> +       return 0;
+> +}
+> +
+> +static void pci_epf_nvmet_remove_port(struct nvmet_port *nvmet_port)
+> +{
+> +       pr_err("pci epf nvme: unexpected call to remove port\n");
+> +}
+> +
+> +static void pci_epf_nvmet_queue_response(struct nvmet_req *req)
+> +{
+> +       struct pci_epf_nvme_target *target;
+> +
+> +       if (req->cqe->status)
+> +               pr_err("pci epf nvme: queue_response status 0x%x\n",
+> +                       le16_to_cpu(req->cqe->status));
+> +
+> +       target = container_of(req, struct pci_epf_nvme_target, req);
+> +       complete(&target->done);
+> +       target->keepalive = 0;
+> +}
+> +
+> +static void pci_epf_nvmet_delete_ctrl(struct nvmet_ctrl *nvmet_ctrl)
+> +{
+> +       pr_err("pci epf nvme: unexpected call to delete controller\n");
+> +}
+> +
+> +static struct nvmet_fabrics_ops pci_epf_nvmet_fabrics_ops = {
+> +       .owner          = THIS_MODULE,
+> +       .type           = NVMF_TRTYPE_LOOP,
+> +       .add_port       = pci_epf_nvmet_add_port,
+> +       .remove_port    = pci_epf_nvmet_remove_port,
+> +       .queue_response = pci_epf_nvmet_queue_response,
+> +       .delete_ctrl    = pci_epf_nvmet_delete_ctrl,
+> +};
+> +
+> +static void *
+> +pci_epf_nvmet_buffer(struct pci_epf_nvme_target *target, size_t size)
+> +{
+> +       if (target->buffer) {
+> +               if (size <= target->buffer_size)
+> +                       return target->buffer;
+> +
+> +               devm_kfree(target->dev, target->buffer);
+> +       }
+> +
+> +       target->buffer = devm_kzalloc(target->dev, size, GFP_KERNEL);
+> +       target->buffer_size = target->buffer ? size : 0;
+> +       return target->buffer;
+> +}
+> +
+> +static int
+> +pci_epf_nvmet_execute(struct pci_epf_nvme_target *target)
+> +{
+> +       struct nvmet_req *req = &target->req;
+> +
+> +       req->execute(req);
+> +
+> +       if (req->cmd->common.opcode != nvme_admin_async_event)
+> +               wait_for_completion(&target->done);
+> +
+> +       return req->cqe->status ? -EIO : NVME_SC_SUCCESS;
+> +}
+> +
+> +static int
+> +pci_epf_nvmet_execute_sg_table(struct pci_epf_nvme_target *target,
+> +                              struct scatterlist *sg)
+> +{
+> +       struct nvmet_req *req = &target->req;
+> +
+> +       req->sg = target->sgl;
+> +       req->sg_cnt = sg - target->sgl;
+> +       sg_init_marker(req->sg, req->sg_cnt);
+> +
+> +       target->sg_table.sgl = req->sg;
+> +       target->sg_table.nents = req->sg_cnt;
+> +       target->sg_table.orig_nents = req->sg_cnt;
+> +       return pci_epf_nvmet_execute(target);
+> +}
+> +
+> +static size_t
+> +pci_epf_nvmet_set_sg(struct scatterlist *sg, const void *buffer, size_t size)
+> +{
+> +       sg_set_page(sg, virt_to_page(buffer), size, offset_in_page(buffer));
+> +       return size;
+> +}
+> +
+> +static size_t
+> +pci_epf_nvmet_set_sg_page(struct scatterlist *sg, const void *page)
+> +{
+> +       return pci_epf_nvmet_set_sg(sg, page, PAGE_SIZE);
+> +}
+> +
+> +static size_t
+> +pci_epf_nvmet_set_sg_map(struct scatterlist *sg, const struct pci_epf_map *map)
+> +{
+> +       return pci_epf_nvmet_set_sg(sg, map->pci.virt_addr, map->size);
+> +}
+> +
+> +static int
+> +pci_epf_nvmet_execute_buffer(struct pci_epf_nvme_target *target)
+> +{
+> +       struct nvmet_req *req = &target->req;
+> +       struct scatterlist *sg = target->sgl;
+> +       void *buffer;
+> +
+> +       buffer = pci_epf_nvmet_buffer(target, req->data_len);
+> +       if (!buffer)
+> +               return -ENOMEM;
+> +
+> +       req->transfer_len = pci_epf_nvmet_set_sg(sg++, buffer, req->data_len);
+> +       return pci_epf_nvmet_execute_sg_table(target, sg);
+> +}
+> +
+> +static int
+> +pci_epf_nvmet_execute_sgl_ksgl(struct pci_epf_nvme_target *target)
+> +{
+> +       struct nvmet_req *req = &target->req;
+> +       struct scatterlist *sg = target->sgl;
+> +       struct pci_epf_map *map = target->map;
+> +
+> +       pci_epf_debug_dump(map->pci.virt_addr, 64, "sgl");
+> +       req->transfer_len = pci_epf_nvmet_set_sg_map(sg++, map);
+> +       return pci_epf_nvmet_execute_sg_table(target, sg);
+> +}
+> +
+> +static int
+> +pci_epf_nvmet_execute_prp1_prp2(struct pci_epf_nvme_target *target)
+> +{
+> +       struct nvmet_req *req = &target->req;
+> +       struct scatterlist *sg = target->sgl;
+> +       struct pci_epf_map *map = target->map;
+> +
+> +       req->transfer_len  = pci_epf_nvmet_set_sg_map(sg++, map++);
+> +       req->transfer_len += pci_epf_nvmet_set_sg_map(sg++, map);
+> +       return pci_epf_nvmet_execute_sg_table(target, sg);
+> +}
+> +
+> +static int
+> +pci_epf_nvmet_execute_prp1(struct pci_epf_nvme_target *target)
+> +{
+> +       struct nvmet_req *req = &target->req;
+> +       struct scatterlist *sg = target->sgl;
+> +       struct pci_epf_map *map = target->map;
+> +
+> +       req->transfer_len = pci_epf_nvmet_set_sg_map(sg++, map);
+> +       return pci_epf_nvmet_execute_sg_table(target, sg);
+> +}
+> +
+> +static int
+> +pci_epf_nvmet_execute_prplist(struct pci_epf_nvme_target *target,
+> +                             int slot, size_t list_data_len)
+> +{
+> +       struct pci_epf_nvme_prplist *list = &target->prplist;
+> +       struct pci_epf_nvme *nvme;
+> +       struct scatterlist *sg;
+> +       struct nvmet_req *req;
+> +       void __iomem *virt_addr;
+> +       unsigned int index, count;
+> +       int status;
+> +       u64 prp;
+> +
+> +       memset(list, 0, sizeof(*list));
+> +
+> +       if (slot < 0 || slot > 1)
+> +               return -EINVAL;
+> +
+> +       count = list_data_len >> PAGE_SHIFT;
+> +
+> +       if (count == 0 || count > PRP_LIST_ENTRIES) {
+> +               pr_info("pci epf nvme: prplist invalid length 0x%x\n", count);
+> +               return -EINVAL;
+> +       }
+> +
+> +       nvme = container_of(target, struct pci_epf_nvme, target);
+> +
+> +       status = pci_epf_nvme_transfer_prplist(nvme, slot, count);
+> +       if (status)
+> +               return status;
+> +
+> +       status = pci_epf_nvme_map_prplist(nvme, slot);
+> +       if (status)
+> +               return status;
+> +
+> +       sg = &target->sgl[slot];
+> +       req = &target->req;
+> +
+> +       for (index = 0; index < list->count; index++) {
+> +               prp = list->prp[index] & ~(PRP_MAP_FLAG);
+> +               virt_addr = pci_epf_nvme_map_find(nvme, prp, PAGE_SIZE);
+> +               if (unlikely(!virt_addr)) {
+> +                       pr_info("pci epf nvme: prplist map find error\n");
+> +                       return -ENOMEM;
+> +               }
+> +
+> +               req->transfer_len += pci_epf_nvmet_set_sg_page(sg++, virt_addr);
+> +       }
+> +
+> +       if (req->transfer_len != req->data_len) {
+> +               pr_info("pci epf nvme: prplist map length error\n");
+> +               return -ENOMEM;
+> +       }
+> +
+> +       return pci_epf_nvmet_execute_sg_table(target, sg);
+> +}
+> +
+> +static int
+> +pci_epf_nvmet_execute_prp1_prp2list(struct pci_epf_nvme_target *target)
+> +{
+> +       struct nvmet_req *req = &target->req;
+> +       size_t list_data_len = req->data_len - target->map[0].size;
+> +
+> +       req->transfer_len = pci_epf_nvmet_set_sg_map(target->sgl, target->map);
+> +       return pci_epf_nvmet_execute_prplist(target, 1, list_data_len);
+> +}
+> +
+> +static int
+> +pci_epf_nvmet_execute_prp1list(struct pci_epf_nvme_target *target)
+> +{
+> +       return pci_epf_nvmet_execute_prplist(target, 0, target->req.data_len);
+> +}
+> +
+> +static int
+> +pci_epf_nvmet_execute_request(struct pci_epf_nvme_target *target, int qid)
+> +{
+> +       struct pci_epf_map *map = target->map;
+> +       struct nvmet_req *req = &target->req;
+> +       struct nvme_command *cmd = req->cmd;
+> +       u8 psdt = (cmd->common.flags & NVME_CMD_SGL_ALL);
+> +       int status;
+> +
+> +       cmd->common.flags &= ~(NVME_CMD_SGL_ALL);
+> +       cmd->common.flags |= NVME_CMD_SGL_METABUF;
+> +
+> +       if (!nvmet_req_init(req, &target->cq[qid], &target->sq[qid],
+> +                           &pci_epf_nvmet_fabrics_ops))
+> +               return -EIO;
+> +
+> +       memset(target->sgl, 0, sizeof(target->sgl));
+> +
+> +       if (req->data_len == 0)
+> +               status = pci_epf_nvmet_execute(target);
+> +       else if (req->cmd->common.opcode == nvme_fabrics_command)
+> +               status = pci_epf_nvmet_execute_buffer(target);
+> +       else if (!map[0].pci.virt_addr || !map[0].size)
+> +               status = -ENOMEM;
+> +       else if (psdt)
+> +               status = pci_epf_nvmet_execute_sgl_ksgl(target);
+> +       else if (req->data_len <= PAGE_SIZE)
+> +               status = pci_epf_nvmet_execute_prp1(target);
+> +       else if (!map[1].pci.virt_addr || !map[1].size)
+> +               status = pci_epf_nvmet_execute_prp1list(target);
+> +       else if (req->data_len <= (2 * PAGE_SIZE))
+> +               status = pci_epf_nvmet_execute_prp1_prp2(target);
+> +       else
+> +               status = pci_epf_nvmet_execute_prp1_prp2list(target);
+> +
+> +       if (status == NVME_SC_SUCCESS)
+> +               return NVME_SC_SUCCESS;
+> +       else if (status == -EIO)
+> +               return -EIO;
+> +
+> +       status = NVME_SC_DATA_XFER_ERROR | NVME_SC_DNR;
+> +       req->cqe->status = cpu_to_le16(status << 1);
+> +       return -EIO;
+> +}
+> +
+> +static struct nvme_command *
+> +pci_epf_nvmet_init_request(struct pci_epf_nvme_target *target)
+> +{
+> +       memset(&target->cmd, 0, sizeof(target->cmd));
+> +       memset(&target->rsp, 0, sizeof(target->rsp));
+> +       memset(&target->req, 0, sizeof(target->req));
+> +
+> +       target->req.cmd = &target->cmd;
+> +       target->req.cqe = &target->rsp;
+> +       target->req.port = &target->port;
+> +
+> +       return target->req.cmd;
+> +}
+> +
+> +static int pci_epf_nvmet_connect(struct pci_epf_nvme_target *target,
+> +                                u16 qid, u16 qsize, u16 command_id)
+> +{
+> +       struct nvmf_connect_data *data;
+> +       struct nvme_command *cmd;
+> +       char *subsysnqn;
+> +       char *hostnqn;
+> +       void *buffer;
+> +       u16 cntlid;
+> +       u32 kato;
+> +
+> +       buffer = pci_epf_nvmet_buffer(target, sizeof(*data));
+> +       if (!buffer)
+> +               return -ENOMEM;
+> +
+> +       subsysnqn = target->subsys.subsysnqn;
+> +       hostnqn = nvmet_host_name(target->host_link.host);
+> +       cntlid = qid ? target->nvmet_ctrl->cntlid : 0xffff;
+> +       kato = (NVME_DEFAULT_KATO + NVME_KATO_GRACE) * 1000;
+> +
+> +       data = (struct nvmf_connect_data *)buffer;
+> +       strncpy(data->hostnqn, hostnqn, NVMF_NQN_SIZE);
+> +       strncpy(data->subsysnqn, subsysnqn, NVMF_NQN_SIZE);
+> +       uuid_gen(&data->hostid);
+> +       data->cntlid = cpu_to_le16(cntlid);
+> +
+> +       cmd = pci_epf_nvmet_init_request(target);
+> +       cmd->connect.command_id = command_id;
+> +       cmd->connect.opcode = nvme_fabrics_command;
+> +       cmd->connect.fctype = nvme_fabrics_type_connect;
+> +       cmd->connect.qid = cpu_to_le16(qid);
+> +       cmd->connect.sqsize = cpu_to_le16(qsize);
+> +       cmd->connect.kato = cpu_to_le32(kato);
+> +
+> +       target->req.port = &target->port;
+> +
+> +       if (pci_epf_nvmet_execute_request(target, qid))
+> +               return -EIO;
+> +
+> +       return 0;
+> +}
+> +
+> +static int
+> +pci_epf_nvmet_connect_admin_queue(struct pci_epf_nvme_target *target)
+> +{
+> +       if (pci_epf_nvmet_connect(target, 0, (NVME_AQ_DEPTH - 1), 0))
+> +               return -EIO;
+> +
+> +       target->nvmet_ctrl = target->sq[0].ctrl;
+> +       if (target->nvmet_ctrl)
+> +               pr_info("connected to target controller %p id %d\n",
+> +                       target->nvmet_ctrl, target->nvmet_ctrl->cntlid);
+> +
+> +       return 0;
+> +}
+> +
+> +static void pci_epf_nvme_target_keep_alive(struct pci_epf_nvme *nvme)
+> +{
+> +       struct nvme_command *cmd;
+> +
+> +       if (++nvme->target.keepalive < PCI_EPF_NVME_KA_TICKS)
+> +               return;
+> +
+> +       cmd = pci_epf_nvmet_init_request(&nvme->target);
+> +       cmd->common.opcode = nvme_admin_keep_alive;
+> +       pci_epf_nvmet_execute_request(&nvme->target, 0);
+> +}
+> +
+> +static void pci_epf_nvme_target_stop(struct pci_epf_nvme *nvme)
+> +{
+> +       struct pci_epf_nvme_target *target = &nvme->target;
+> +       struct nvmet_sq *sq = target->sq;
+> +       int qid;
+> +
+> +       nvmet_ns_disable(&target->ns);
+> +
+> +       for (qid = 0; qid <= PCI_EPF_NVME_QIDMAX; qid++)
+> +               nvmet_sq_destroy(sq++);
+> +
+> +       target->nvmet_ctrl = NULL;
+> +}
+> +
+> +static void pci_epf_nvme_target_start(struct pci_epf_nvme *nvme)
+> +{
+> +       struct pci_epf_nvme_target *target = &nvme->target;
+> +       struct pci_epf_nvme_host *host = &nvme->host;
+> +       struct nvmet_sq *sq = target->sq;
+> +       int qid;
+> +
+> +       for (qid = 0; qid <= PCI_EPF_NVME_QIDMAX; qid++)
+> +               nvmet_sq_init(sq++);
+> +
+> +       if (pci_epf_nvmet_connect_admin_queue(target))
+> +               dev_err(&nvme->epf->dev, "Failed to connect target ASQ\n");
+> +
+> +       else if (pci_epf_nvmet_write32(target, NVME_REG_CC, host->cc))
+> +               dev_err(&nvme->epf->dev, "Failed to write target CC\n");
+> +}
+> +
+> +static void pci_epf_nvme_target_init(struct pci_epf_nvme *nvme)
+> +{
+> +       static u8 nguid[16] = {
+> +               0xef, 0x90, 0x68, 0x9c, 0x6c, 0x46, 0xd4, 0x4c,
+> +               0x89, 0xc1, 0x40, 0x67, 0x80, 0x13, 0x09, 0xa8
+> +       };
+> +       struct pci_epf_nvme_target *target = &nvme->target;
+> +       struct nvmet_host *host = &target->host;
+> +       struct nvmet_host_link *host_link = &target->host_link;
+> +       struct nvmet_subsys *subsys = &target->subsys;
+> +       struct nvmet_subsys_link *subsys_link = &target->subsys_link;
+> +       struct nvmet_port *port = &target->port;
+> +       struct nvmet_ns *ns = &target->ns;
+> +       struct nvmet_cq *cq = target->cq;
+> +       struct nvmet_sq *sq = target->sq;
+> +       int qid, gid;
+> +
+> +       target->dev = &nvme->epf->dev;
+> +       target->keepalive = PCI_EPF_NVME_KA_TICKS - 1;
+> +       init_completion(&target->done);
+> +
+> +       host->group.cg_item.ci_name = "hostnqn";
+> +
+> +       subsys->subsysnqn = "testnqn";
+> +       subsys->type = NVME_NQN_NVME;
+> +       subsys->max_qid = PCI_EPF_NVME_QIDMAX;
+> +       kref_init(&subsys->ref);
+> +       mutex_init(&subsys->lock);
+> +       INIT_LIST_HEAD(&subsys->namespaces);
+> +       INIT_LIST_HEAD(&subsys->ctrls);
+> +       INIT_LIST_HEAD(&subsys->hosts);
+> +
+> +       port->ana_state = target->port_ana_state;
+> +       for (gid = 0; gid <= NVMET_MAX_ANAGRPS; gid++)
+> +               port->ana_state[gid] = NVME_ANA_INACCESSIBLE;
+> +       port->ana_state[NVMET_DEFAULT_ANA_GRPID] = NVME_ANA_OPTIMIZED;
+> +       port->ana_default_group.port = port;
+> +       port->ana_default_group.grpid = NVMET_DEFAULT_ANA_GRPID;
+> +       nvmet_ana_group_enabled[NVMET_DEFAULT_ANA_GRPID] = 1;
+> +
+> +       port->disc_addr.trtype = NVMF_TRTYPE_LOOP;
+> +       port->disc_addr.treq = NVMF_TREQ_DISABLE_SQFLOW;
+> +       memset(&port->disc_addr.tsas, 0, NVMF_TSAS_SIZE);
+> +       INIT_LIST_HEAD(&port->global_entry);
+> +       INIT_LIST_HEAD(&port->entry);
+> +       INIT_LIST_HEAD(&port->referrals);
+> +       INIT_LIST_HEAD(&port->subsystems);
+> +       port->inline_data_size = 0;
+> +
+> +       INIT_LIST_HEAD(&host_link->entry);
+> +       host_link->host = host;
+> +       list_add_tail(&host_link->entry, &subsys->hosts);
+> +
+> +       INIT_LIST_HEAD(&subsys_link->entry);
+> +       subsys_link->subsys = subsys;
+> +       list_add_tail(&subsys_link->entry, &port->subsystems);
+> +
+> +       INIT_LIST_HEAD(&ns->dev_link);
+> +       init_completion(&ns->disable_done);
+> +       ns->nsid = 1;
+> +       ns->subsys = subsys;
+> +       ns->device_path = "/dev/loop0";
+> +       ns->anagrpid = NVMET_DEFAULT_ANA_GRPID;
+> +       ns->buffered_io = false;
+> +       memcpy(&ns->nguid, nguid, sizeof(ns->nguid));
+> +       uuid_gen(&ns->uuid);
+> +
+> +       for (qid = 0; qid <= PCI_EPF_NVME_QIDMAX; qid++) {
+> +               cq->qid = 0;
+> +               cq->size = 0;
+> +               cq++;
+> +
+> +               sq->sqhd = 0;
+> +               sq->qid = 0;
+> +               sq->size = 0;
+> +               sq->ctrl = NULL;
+> +               sq++;
+> +       }
+> +}
+> +
+> +static u64 pci_epf_nvme_cap(struct pci_epf_nvme *nvme)
+> +{
+> +       u64 cap;
+> +
+> +       if (pci_epf_nvmet_read64(&nvme->target, NVME_REG_CAP, &cap)) {
+> +               /* maximum queue entries supported (MQES) */
+> +               cap = PCI_EPF_NVME_MQES;
+> +               /* CC.EN timeout in 500msec units (TO) */
+> +               cap |= (PCI_EPF_NVME_TO << 24);
+> +               /* command sets supported (CSS) */
+> +               cap |= (PCI_EPF_NVME_CSS << 37);
+> +       }
+> +
+> +       if (NVME_CAP_MPSMIN(cap) != PCI_EPF_NVME_MPSMIN) {
+> +               /* minimum page size (MPSMIN) */
+> +               cap &= ~(0x0fULL << 48);
+> +               cap |= (PCI_EPF_NVME_MPSMIN << 48);
+> +       }
+> +
+> +       if (NVME_CAP_MPSMAX(cap) != PCI_EPF_NVME_MPSMAX) {
+> +               /* maximum page size (MPSMAX) */
+> +               cap &= ~(0x0fULL << 52);
+> +               cap |= (PCI_EPF_NVME_MPSMAX << 52);
+> +       }
+> +
+> +       return cap;
+> +}
+> +
+> +static u32 pci_epf_nvme_vs(struct pci_epf_nvme *nvme)
+> +{
+> +       u32 vs;
+> +
+> +       if (pci_epf_nvmet_read32(&nvme->target, NVME_REG_VS, &vs))
+> +               vs = NVME_VS(1, 3, 0);
+> +
+> +       /* CMB supported on NVMe versions 1.2+ */
+> +       else if (vs < NVME_VS(1, 2, 0))
+> +               vs = NVME_VS(1, 2, 0);
+> +
+> +       return vs;
+> +}
+> +
+> +static u32 pci_epf_nvme_csts(struct pci_epf_nvme *nvme)
+> +{
+> +       u32 csts;
+> +
+> +       if (pci_epf_nvmet_read32(&nvme->target, NVME_REG_CSTS, &csts))
+> +               csts = 0;
+> +
+> +       return csts;
+> +}
+> +
+> +static u32 pci_epf_nvme_cmbloc(struct pci_epf_nvme *nvme)
+> +{
+> +       u32 cmbloc = 0;
+> +
+> +       if (nvme->host.cmb.size)
+> +               cmbloc = nvme->host.cmb.bar;
+> +
+> +       return cmbloc;
+> +}
+> +
+> +static u32 pci_epf_nvme_cmbsz(struct pci_epf_nvme *nvme)
+> +{
+> +       u32 cmbsz = 0;
+> +
+> +       if (nvme->host.cmb.size) {
+> +               cmbsz = NVME_CMBSZ_SQS |   /* Submission Queue Support (SQS) */
+> +                       NVME_CMBSZ_CQS;    /* Completion Queue Support (CQS) */
+> +
+> +               /* Size (SZ) in Size Units (SZU) of 4KiB */
+> +               cmbsz |= (nvme->host.cmb.size << NVME_CMBSZ_SZ_SHIFT);
+> +       }
+> +
+> +       return cmbsz;
+> +}
+> +
+> +static size_t bar_size[] = { SZ_4K, SZ_4K, SZ_4K, SZ_4K, SZ_4K, SZ_4K };
+> +
+> +static u32 pci_epf_nvme_host_read32(struct pci_epf_nvme_host *host, u32 reg)
+> +{
+> +       return readl(host->reg + reg);
+> +}
+> +
+> +static void pci_epf_nvme_host_write32(struct pci_epf_nvme_host *host,
+> +                                     u32 reg, u32 val)
+> +{
+> +       writel(val, host->reg + reg);
+> +}
+> +
+> +static u64 pci_epf_nvme_host_read64(struct pci_epf_nvme_host *host, u32 reg)
+> +{
+> +       return lo_hi_readq(host->reg + reg);
+> +}
+> +
+> +static void pci_epf_nvme_host_write64(struct pci_epf_nvme_host *host,
+> +                                     u32 reg, u64 val)
+> +{
+> +       lo_hi_writeq(val, host->reg + reg);
+> +}
+> +
+> +static void pci_epf_nvme_host_emit(struct pci_epf_nvme *nvme)
+> +{
+> +       struct pci_epf_nvme_host *host = &nvme->host;
+> +
+> +       host->cap = pci_epf_nvme_cap(nvme);
+> +       host->vs = pci_epf_nvme_vs(nvme);
+> +       host->cmbloc = pci_epf_nvme_cmbloc(nvme);
+> +       host->cmbsz = pci_epf_nvme_cmbsz(nvme);
+> +       host->csts = pci_epf_nvme_csts(nvme);
+> +
+> +       pci_epf_nvme_host_write64(host, NVME_REG_CAP, host->cap);
+> +       pci_epf_nvme_host_write32(host, NVME_REG_VS, host->vs);
+> +       pci_epf_nvme_host_write32(host, NVME_REG_CMBLOC, host->cmbloc);
+> +       pci_epf_nvme_host_write32(host, NVME_REG_CMBSZ, host->cmbsz);
+> +       pci_epf_nvme_host_write32(host, NVME_REG_CSTS, host->csts);
+> +}
+> +
+> +static void pci_epf_nvme_host_queue_reset(struct pci_epf_nvme_queue *queue)
+> +{
+> +       memset(queue, 0, sizeof(*queue));
+> +}
+> +
+> +static void pci_epf_nvme_host_queue_unmap(struct pci_epf_nvme_queue *queue)
+> +{
+> +       pci_epf_unmap(&queue->map);
+> +       pci_epf_nvme_host_queue_reset(queue);
+> +}
+> +
+> +static int pci_epf_nvme_host_queue_map(struct pci_epf_nvme_queue *queue,
+> +                                      struct pci_epf_nvme *nvme)
+> +{
+> +       return pci_epf_map(&queue->map, nvme->epf, nvme->epc_features);
+> +}
+> +
+> +static int pci_epf_nvme_host_queue_pair(struct pci_epf_nvme *nvme,
+> +                                       u16 sqid, u16 cqid)
+> +{
+> +       struct pci_epf_nvme_queue *sq = &nvme->host.sq[sqid];
+> +       struct pci_epf_nvme_queue *cq = &nvme->host.cq[cqid];
+> +       struct pci_epf *epf = nvme->epf;
+> +       int ret;
+> +
+> +       sq->qid = sqid;
+> +       sq->depth = sq->size + 1;
+> +       sq->vector = 0;
+> +       sq->map.size = sq->depth * sizeof(struct nvme_command);
+> +       sq->db = NVME_REG_DBS + (sqid * 2 * sizeof(u32));
+> +
+> +       cq->qid = cqid;
+> +       cq->depth = cq->size + 1;
+> +       cq->vector = 0;
+> +       cq->map.size = cq->depth * sizeof(struct nvme_completion);
+> +       cq->db = NVME_REG_DBS + (((cqid * 2) + 1) * sizeof(u32));
+> +       cq->phase = 1;
+> +
+> +       if (!sq->map.pci.virt_addr) {
+> +               ret = pci_epf_nvme_host_queue_map(sq, nvme);
+> +               if (ret) {
+> +                       dev_err(&epf->dev, "Failed to map host SQ%d\n", sqid);
+> +                       return ret;
+> +               }
+> +       }
+> +
+> +       if (!cq->map.pci.virt_addr) {
+> +               ret = pci_epf_nvme_host_queue_map(cq, nvme);
+> +               if (ret) {
+> +                       dev_err(&epf->dev, "Failed to map host CQ%d\n", cqid);
+> +                       pci_epf_nvme_host_queue_unmap(sq);
+> +                       return ret;
+> +               }
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static void pci_epf_nvme_host_complete(struct pci_epf_nvme *nvme, int qid)
+> +{
+> +       struct pci_epf_nvme_host *host = &nvme->host;
+> +       struct pci_epf_nvme_queue *cq = &host->cq[qid];
+> +       struct pci_epf *epf = nvme->epf;
+> +       struct pci_epc *epc = epf->epc;
+> +       struct nvme_completion *entry;
+> +       struct nvme_completion *rsp;
+> +       int tail;
+> +
+> +       pci_epf_nvme_unmap_dptr(nvme);
+> +
+> +       rsp = nvme->target.req.cqe;
+> +       rsp->sq_id = qid;
+> +       rsp->status |= cpu_to_le16(cq->phase);
+> +
+> +       tail = cq->tail++;
+> +       if (cq->tail == cq->depth) {
+> +               cq->tail = 0;
+> +               cq->phase = !cq->phase;
+> +       }
+> +
+> +       entry = (struct nvme_completion *)cq->map.pci.virt_addr + tail;
+> +       memcpy_toio(entry, rsp, sizeof(*rsp));
+> +       pci_epf_debug_dump(entry, sizeof(*entry), "rsp");
+> +
+> +       if (!(cq->flags & NVME_CQ_IRQ_ENABLED))
+> +               return;
+> +
+> +       if (host->msi)
+> +               pci_epc_raise_irq(epc, epf->func_no, PCI_EPC_IRQ_MSI, 1);
+> +       else
+> +               pci_epc_raise_irq(epc, epf->func_no, PCI_EPC_IRQ_LEGACY, 0);
+> +}
+> +
+> +static int pci_epf_nvme_host_fetch(struct pci_epf_nvme *nvme, int qid)
+> +{
+> +       struct pci_epf_nvme_host *host = &nvme->host;
+> +       struct pci_epf_nvme_queue *sq = &host->sq[qid];
+> +       struct nvme_command *entry;
+> +       struct nvme_command *cmd;
+> +       int head, db;
+> +
+> +       if (!sq->size)
+> +               return -ENXIO;
+> +
+> +       db = pci_epf_nvme_host_read32(host, sq->db);
+> +       if (db == sq->head)
+> +               return -EAGAIN;
+> +
+> +       if (pci_epf_debug_is_enabled())
+> +               pr_info("sq[%d]: head 0x%x dbs 0x%x\n",
+> +                       qid, (int)sq->head, db);
+> +
+> +       head = sq->head++;
+> +       if (sq->head == sq->depth)
+> +               sq->head = 0;
+> +
+> +       entry = (struct nvme_command *)sq->map.pci.virt_addr + head;
+> +
+> +       cmd = pci_epf_nvmet_init_request(&nvme->target);
+> +       memcpy_fromio(cmd, entry, sizeof(*cmd));
+> +       pci_epf_debug_dump(entry, sizeof(*entry), "cmd");
+> +
+> +       return head;
+> +}
+> +
+> +static void pci_epf_nvme_host_stop(struct pci_epf_nvme *nvme)
+> +{
+> +       struct pci_epf_nvme_host *host = &nvme->host;
+> +       struct pci_epf_nvme_queue *sq = host->sq;
+> +       struct pci_epf_nvme_queue *cq = host->cq;
+> +       int qid;
+> +
+> +       for (qid = 0; qid <= PCI_EPF_NVME_QIDMAX; qid++) {
+> +               pci_epf_nvme_host_queue_unmap(sq++);
+> +               pci_epf_nvme_host_queue_unmap(cq++);
+> +       }
+> +
+> +       host->msi = 0;
+> +
+> +       host->csts &= ~NVME_CSTS_RDY;
+> +       pci_epf_nvme_host_write32(host, NVME_REG_CSTS, host->csts);
+> +}
+> +
+> +static int pci_epf_nvme_host_start(struct pci_epf_nvme *nvme)
+> +{
+> +       struct pci_epf_nvme_host *host = &nvme->host;
+> +       struct pci_epf *epf = nvme->epf;
+> +       struct pci_epc *epc = epf->epc;
+> +       int ret;
+> +
+> +       host->aqa = pci_epf_nvme_host_read32(host, NVME_REG_AQA);
+> +       host->asq = pci_epf_nvme_host_read64(host, NVME_REG_ASQ);
+> +       host->acq = pci_epf_nvme_host_read64(host, NVME_REG_ACQ);
+> +
+> +       host->sq[0].size = (host->aqa & 0x0fff);
+> +       host->sq[0].flags = NVME_QUEUE_PHYS_CONTIG;
+> +       host->sq[0].map.host.phys_addr = host->asq;
+> +
+> +       host->cq[0].size = ((host->aqa & 0x0fff0000) >> 16);
+> +       host->cq[0].flags = NVME_QUEUE_PHYS_CONTIG | NVME_CQ_IRQ_ENABLED;
+> +       host->cq[0].map.host.phys_addr = host->acq;
+> +
+> +       ret = pci_epf_nvme_host_queue_pair(nvme, 0, 0);
+> +       if (ret)
+> +               return ret;
+> +
+> +       host->msi = pci_epc_get_msi(epc, epf->func_no);
+> +
+> +       pci_epf_nvme_host_emit(nvme);
+> +       return 0;
+> +}
+> +
+> +static int pci_epf_nvme_host_cmb_init(struct pci_epf_nvme *nvme)
+> +{
+> +       struct pci_epf_nvme_cmb *cmb = &nvme->host.cmb;
+> +       struct pci_epf *epf = nvme->epf;
+> +       enum pci_barno bar = BAR_2;
+> +
+> +       if (!nvme->reg[bar]) {
+> +               dev_err(&epf->dev, "Failed to initialize CMB\n");
+> +               return -ENOMEM;
+> +       }
+> +
+> +       cmb->bar = bar;
+> +       cmb->size = epf->bar[bar].size;
+> +       cmb->virt_dma_addr = nvme->reg[bar];
+> +       cmb->phys_dma_addr = epf->bar[bar].phys_addr;
+> +       return 0;
+> +}
+> +
+> +static void pci_epf_nvme_host_init(struct pci_epf_nvme *nvme)
+> +{
+> +       struct pci_epf_nvme_host *host = &nvme->host;
+> +       struct pci_epf_nvme_queue *sq = host->sq;
+> +       struct pci_epf_nvme_queue *cq = host->cq;
+> +       int qid;
+> +
+> +       for (qid = 0; qid <= PCI_EPF_NVME_QIDMAX; qid++) {
+> +               pci_epf_nvme_host_queue_reset(sq++);
+> +               pci_epf_nvme_host_queue_reset(cq++);
+> +       }
+> +
+> +       host->reg = nvme->reg[nvme->reg_bar];
+> +
+> +       host->msi = 0;
+> +       host->intms = 0;
+> +       host->intmc = 0;
+> +       host->cc = 0;
+> +       host->aqa = 0;
+> +
+> +       pci_epf_nvme_host_cmb_init(nvme);
+> +       pci_epf_nvme_host_emit(nvme);
+> +}
+> +
+> +static int pci_epf_nvme_admin_identify(struct pci_epf_nvme *nvme)
+> +{
+> +       struct pci_epf_nvme_target *target = &nvme->target;
+> +       struct pci_epf_map *map = target->map;
+> +       struct nvmet_req *req = &target->req;
+> +       struct nvme_command *cmd = req->cmd;
+> +
+> +       switch (cmd->identify.cns) {
+> +       case NVME_ID_CNS_NS_PRESENT_LIST:
+> +               if (pci_epf_nvme_map_prp1(nvme, cmd)) {
+> +                       __le32 *list = (__le32 *)map[0].pci.virt_addr;
+> +
+> +                       list[0] = cpu_to_le32(target->ns.nsid);
+> +                       list[1] = 0;
+> +                       return NVME_SC_SUCCESS;
+> +               }
+> +               break;
+> +       case NVME_ID_CNS_CTRL_LIST:
+> +               if (pci_epf_nvme_map_prp1(nvme, cmd)) {
+> +                       __le16 *list = (__le16 *)map[0].pci.virt_addr;
+> +
+> +                       list[0] = cpu_to_le16(1);
+> +                       list[1] = cpu_to_le16(target->nvmet_ctrl->cntlid);
+> +                       return NVME_SC_SUCCESS;
+> +               }
+> +               break;
+> +       case NVME_ID_CNS_CTRL:
+> +               if (pci_epf_nvme_map_prp1(nvme, cmd)) {
+> +                       struct nvme_id_ctrl *id;
+> +                       int status;
+> +
+> +                       status = pci_epf_nvmet_execute_request(target, 0);
+> +                       if (req->cqe->status)
+> +                               return le16_to_cpu(req->cqe->status);
+> +                       else if (status)
+> +                               break;
+> +
+> +                       /* indicate no support for SGLs */
+> +                       id = (struct nvme_id_ctrl *)map[0].pci.virt_addr;
+> +                       id->sgls = 0;
+> +                       return NVME_SC_SUCCESS;
+> +               }
+> +               break;
+> +       case NVME_ID_CNS_NS:
+> +       case NVME_ID_CNS_NS_ACTIVE_LIST:
+> +       case NVME_ID_CNS_NS_DESC_LIST:
+> +               if (pci_epf_nvme_map_prp1(nvme, cmd))
+> +                       return PCI_EPF_NVME_SYNC;
+> +               break;
+> +       default:
+> +               return NVME_SC_INVALID_OPCODE | NVME_SC_DNR;
+> +       }
+> +
+> +       return NVME_SC_DATA_XFER_ERROR | NVME_SC_DNR;
+> +}
+> +
+> +static int pci_epf_nvme_admin_set_features(struct pci_epf_nvme *nvme)
+> +{
+> +       struct nvme_command *cmd = nvme->target.req.cmd;
+> +       u32 fid = le32_to_cpu(cmd->common.cdw10) & 0xff;
+> +
+> +       switch (fid) {
+> +       case NVME_FEAT_ASYNC_EVENT:
+> +               nvme->host.features.aec = le32_to_cpu(cmd->common.cdw11);
+> +               return NVME_SC_SUCCESS;
+> +       case NVME_FEAT_NUM_QUEUES:
+> +       case NVME_FEAT_KATO:
+> +       case NVME_FEAT_HOST_ID:
+> +       case NVME_FEAT_WRITE_PROTECT:
+> +               return PCI_EPF_NVME_SYNC;
+> +       default:
+> +               return NVME_SC_INVALID_OPCODE | NVME_SC_DNR;
+> +       }
+> +
+> +       return NVME_SC_DATA_XFER_ERROR | NVME_SC_DNR;
+> +}
+> +
+> +static int pci_epf_nvme_admin_get_log_page(struct pci_epf_nvme *nvme)
+> +{
+> +       struct nvme_command *cmd = nvme->target.req.cmd;
+> +       struct pci_epf_map *map = nvme->target.map;
+> +
+> +       switch (cmd->get_log_page.lid) {
+> +       case NVME_LOG_CHANGED_NS:
+> +               if (pci_epf_nvme_map_prp1(nvme, cmd)) {
+> +                       __le32 *list = (__le32 *)map[0].pci.virt_addr;
+> +
+> +                       list[0] = 0;
+> +                       return NVME_SC_SUCCESS;
+> +               }
+> +               break;
+> +       case NVME_LOG_ERROR:
+> +       case NVME_LOG_SMART:
+> +       case NVME_LOG_FW_SLOT:
+> +       case NVME_LOG_CMD_EFFECTS:
+> +       case NVME_LOG_ANA:
+> +               if (pci_epf_nvme_map_prp1(nvme, cmd))
+> +                       return PCI_EPF_NVME_SYNC;
+> +               break;
+> +       default:
+> +               return NVME_SC_INVALID_OPCODE | NVME_SC_DNR;
+> +       }
+> +
+> +       return NVME_SC_DATA_XFER_ERROR | NVME_SC_DNR;
+> +}
+> +
+> +static int pci_epf_nvme_admin_create_cq(struct pci_epf_nvme *nvme)
+> +{
+> +       struct pci_epf_nvme_target *target = &nvme->target;
+> +       struct nvme_create_cq *cmd = (struct nvme_create_cq *)target->req.cmd;
+> +       struct pci_epf_nvme_queue *cq;
+> +       u16 cqid, cq_flags, qsize;
+> +
+> +       if (!cmd->cqid)
+> +               return NVME_SC_SUCCESS;
+> +
+> +       cqid = le16_to_cpu(cmd->cqid);
+> +       if (cqid > PCI_EPF_NVME_QIDMAX)
+> +               return NVME_SC_QID_INVALID | NVME_SC_DNR;
+> +
+> +       cq_flags = le16_to_cpu(cmd->cq_flags);
+> +       if (!(cq_flags & NVME_QUEUE_PHYS_CONTIG))
+> +               return NVME_SC_INVALID_QUEUE | NVME_SC_DNR;
+> +
+> +       qsize = le16_to_cpu(cmd->qsize);
+> +       if (!qsize)
+> +               return NVME_SC_QUEUE_SIZE | NVME_SC_DNR;
+> +
+> +       if (cmd->irq_vector)
+> +               return NVME_SC_INVALID_VECTOR | NVME_SC_DNR;
+> +
+> +       cq = &nvme->host.cq[cqid];
+> +       cq->size = qsize;
+> +       cq->flags = cq_flags;
+> +       cq->map.host.phys_addr = cmd->prp1;
+> +
+> +       return NVME_SC_SUCCESS;
+> +}
+> +
+> +static int pci_epf_nvme_admin_create_sq(struct pci_epf_nvme *nvme)
+> +{
+> +       struct pci_epf_nvme_host *host = &nvme->host;
+> +       struct pci_epf_nvme_target *target = &nvme->target;
+> +       struct nvme_create_sq *cmd = (struct nvme_create_sq *)target->req.cmd;
+> +       struct pci_epf_nvme_queue *sq;
+> +       u16 sqid, cqid, sq_flags, qsize;
+> +
+> +       if (!cmd->sqid)
+> +               return NVME_SC_SUCCESS;
+> +
+> +       sqid = le16_to_cpu(cmd->sqid);
+> +       if (sqid > PCI_EPF_NVME_QIDMAX)
+> +               return NVME_SC_QID_INVALID | NVME_SC_DNR;
+> +
+> +       cqid = le16_to_cpu(cmd->cqid);
+> +       if (sqid != cqid)
+> +               return NVME_SC_CQ_INVALID | NVME_SC_DNR;
+> +
+> +       sq_flags = le16_to_cpu(cmd->sq_flags);
+> +       if (sq_flags != NVME_QUEUE_PHYS_CONTIG)
+> +               return NVME_SC_INVALID_QUEUE | NVME_SC_DNR;
+> +
+> +       qsize = le16_to_cpu(cmd->qsize);
+> +       if (!qsize)
+> +               return NVME_SC_QUEUE_SIZE | NVME_SC_DNR;
+> +
+> +       sq = &host->sq[sqid];
+> +       sq->size = qsize;
+> +       sq->flags = sq_flags;
+> +       sq->map.host.phys_addr = cmd->prp1;
+> +
+> +       if (host->cmb.size)
+> +               sq->map.pci.virt_addr = host->cmb.virt_dma_addr;
+> +
+> +       if (pci_epf_nvmet_connect(target, sqid, qsize, cmd->command_id))
+> +               return NVME_SC_INTERNAL | NVME_SC_DNR;
+> +
+> +       if (pci_epf_nvme_host_queue_pair(nvme, sqid, cqid))
+> +               return NVME_SC_INTERNAL | NVME_SC_DNR;
+> +
+> +       return NVME_SC_SUCCESS;
+> +}
+> +
+> +static int pci_epf_nvme_admin_command(struct pci_epf_nvme *nvme)
+> +{
+> +       struct nvme_command *cmd = nvme->target.req.cmd;
+> +
+> +       if (cmd->common.flags & NVME_CMD_SGL_ALL)
+> +               return NVME_SC_DATA_XFER_ERROR | NVME_SC_DNR;
+> +
+> +       switch (cmd->common.opcode) {
+> +       case nvme_admin_identify:
+> +               return pci_epf_nvme_admin_identify(nvme);
+> +       case nvme_admin_set_features:
+> +               return pci_epf_nvme_admin_set_features(nvme);
+> +       case nvme_admin_get_log_page:
+> +               return pci_epf_nvme_admin_get_log_page(nvme);
+> +       case nvme_admin_create_cq:
+> +               return pci_epf_nvme_admin_create_cq(nvme);
+> +       case nvme_admin_create_sq:
+> +               return pci_epf_nvme_admin_create_sq(nvme);
+> +       case nvme_admin_async_event:
+> +               return PCI_EPF_NVME_ASYNC;
+> +       case nvme_admin_get_features:
+> +       case nvme_admin_keep_alive:
+> +       case nvme_admin_abort_cmd:
+> +               if (pci_epf_nvme_map_prp1(nvme, cmd))
+> +                       return PCI_EPF_NVME_SYNC;
+> +               break;
+> +       case nvme_admin_delete_sq:
+> +       case nvme_admin_delete_cq:
+> +       case nvme_admin_ns_attach:
+> +               return NVME_SC_SUCCESS;
+> +       default:
+> +               return NVME_SC_INVALID_OPCODE | NVME_SC_DNR;
+> +       }
+> +
+> +       return NVME_SC_DATA_XFER_ERROR | NVME_SC_DNR;
+> +}
+> +
+> +static int pci_epf_nvme_io_command(struct pci_epf_nvme *nvme)
+> +{
+> +       struct nvme_command *cmd = nvme->target.req.cmd;
+> +
+> +       switch (cmd->common.opcode) {
+> +       case nvme_cmd_write:
+> +       case nvme_cmd_read:
+> +               if (pci_epf_nvme_map_dptr(nvme, cmd))
+> +                       return PCI_EPF_NVME_SYNC;
+> +               break;
+> +       case nvme_cmd_dsm:
+> +               if (pci_epf_nvme_map_prp1(nvme, cmd))
+> +                       return PCI_EPF_NVME_SYNC;
+> +               break;
+> +       case nvme_cmd_flush:
+> +       case nvme_cmd_write_zeroes:
+> +               return PCI_EPF_NVME_SYNC;
+> +       default:
+> +               return NVME_SC_INVALID_OPCODE | NVME_SC_DNR;
+> +       }
+> +
+> +       return NVME_SC_DATA_XFER_ERROR | NVME_SC_DNR;
+> +}
+> +
+> +static void pci_epf_nvme_admin_poll(struct pci_epf_nvme *nvme)
+> +{
+> +       struct pci_epf_nvme_target *target = &nvme->target;
+> +       struct nvmet_req *req = &target->req;
+> +       struct nvme_command *cmd = req->cmd;
+> +       struct nvme_completion *rsp = req->cqe;
+> +       int qid = 0;
+> +       int status;
+> +       int head;
+> +
+> +       head = pci_epf_nvme_host_fetch(nvme, qid);
+> +       if (head < 0)
+> +               return;
+> +
+> +       status = pci_epf_nvme_admin_command(nvme);
+> +       if (status >= NVME_SC_SUCCESS)
+> +               rsp->status = cpu_to_le16(status << 1);
+> +       else if (pci_epf_nvmet_execute_request(target, qid))
+> +               dev_err(&nvme->epf->dev, "Failed to execute admin command\n");
+> +
+> +       if (status == PCI_EPF_NVME_ASYNC) {
+> +               struct nvmet_ns *ns = &target->ns;
+> +
+> +               if (ns->enabled || nvmet_ns_enable(ns))
+> +                       return;
+> +
+> +               wait_for_completion(&target->done);
+> +       }
+> +
+> +       rsp->sq_head = cpu_to_le16(head);
+> +       rsp->command_id = cmd->common.command_id;
+> +       pci_epf_nvme_host_complete(nvme, qid);
+> +}
+> +
+> +static void pci_epf_nvme_io_poll(struct pci_epf_nvme *nvme)
+> +{
+> +       struct pci_epf_nvme_target *target = &nvme->target;
+> +       struct nvmet_req *req = &target->req;
+> +       struct nvme_command *cmd = req->cmd;
+> +       struct nvme_completion *rsp = req->cqe;
+> +       int qid = 1;
+> +       int status;
+> +       int head;
+> +
+> +       head = pci_epf_nvme_host_fetch(nvme, qid);
+> +       if (head < 0)
+> +               return;
+> +
+> +       status = pci_epf_nvme_io_command(nvme);
+> +       if (status >= NVME_SC_SUCCESS)
+> +               rsp->status = cpu_to_le16(status << 1);
+> +       else if (pci_epf_nvmet_execute_request(target, qid))
+> +               dev_err(&nvme->epf->dev, "Failed to execute I/O command\n");
+> +
+> +       rsp->sq_head = cpu_to_le16(head);
+> +       rsp->command_id = cmd->common.command_id;
+> +       pci_epf_nvme_host_complete(nvme, qid);
+> +}
+> +
+> +static void pci_epf_nvme_poll(struct work_struct *work)
+> +{
+> +       struct pci_epf_nvme *nvme = container_of(work, struct pci_epf_nvme,
+> +                                                poll.work);
+> +       struct pci_epf_nvme_host *host = &nvme->host;
+> +       struct pci_epf *epf = nvme->epf;
+> +       struct device *dev = &epf->dev;
+> +
+> +       nvme->tick++;
+> +       host->cc = pci_epf_nvme_host_read32(host, NVME_REG_CC);
+> +       if (host->cc & NVME_CC_ENABLE) {
+> +               if ((host->csts & NVME_CSTS_RDY) == 0) {
+> +                       dev_info(dev, "CC 0x%x NVME_CC_ENABLE set tick %d\n",
+> +                                host->cc, nvme->tick);
+> +                       pci_epf_nvme_target_start(nvme);
+> +                       pci_epf_nvme_host_start(nvme);
+> +               }
+> +               pci_epf_nvme_admin_poll(nvme);
+> +               pci_epf_nvme_io_poll(nvme);
+> +               pci_epf_nvme_target_keep_alive(nvme);
+> +       } else if (host->csts & NVME_CSTS_RDY) {
+> +               dev_info(dev, "CC 0x%x NVME_CC_ENABLE clear tick %d\n",
+> +                        host->cc, nvme->tick);
+> +               pci_epf_nvme_host_stop(nvme);
+> +               pci_epf_nvme_target_stop(nvme);
+> +       }
+> +
+> +       queue_delayed_work(epf_nvme_workqueue, &nvme->poll,
+> +                          msecs_to_jiffies(1));
+> +}
+> +
+> +static void pci_epf_nvme_linkup(struct pci_epf *epf)
+> +{
+> +       struct pci_epf_nvme *nvme = epf_get_drvdata(epf);
+> +
+> +       queue_delayed_work(epf_nvme_workqueue, &nvme->poll,
+> +                          msecs_to_jiffies(1));
+> +}
+> +
+> +static void pci_epf_nvme_unbind(struct pci_epf *epf)
+> +{
+> +       struct pci_epf_nvme *nvme = epf_get_drvdata(epf);
+> +       struct pci_epc *epc = epf->epc;
+> +       struct pci_epf_bar *epf_bar;
+> +       int bar;
+> +
+> +       cancel_delayed_work(&nvme->poll);
+> +       pci_epc_stop(epc);
+> +       for (bar = BAR_0; bar <= BAR_5; bar++) {
+> +               epf_bar = &epf->bar[bar];
+> +
+> +               if (nvme->reg[bar]) {
+> +                       pci_epc_clear_bar(epc, epf->func_no, epf_bar);
+> +                       pci_epf_free_space(epf, nvme->reg[bar], bar);
+> +               }
+> +       }
+> +
+> +#ifdef CONFIG_PCI_ENDPOINT_DMAENGINE
+> +       pci_epc_epf_exit(epc, epf);
+> +#endif
+> +}
+> +
+> +static int pci_epf_nvme_set_bar(struct pci_epf *epf)
+> +{
+> +       struct pci_epc *epc = epf->epc;
+> +       struct pci_epf_nvme *nvme = epf_get_drvdata(epf);
+> +       const struct pci_epc_features *features = nvme->epc_features;
+> +       u8 reserved_bar = features ? features->reserved_bar : 0;
+> +       enum pci_barno reg_bar = nvme->reg_bar;
+> +       struct pci_epf_bar *epf_bar;
+> +       int bar, add;
+> +       int ret;
+> +
+> +       for (bar = BAR_0; bar <= BAR_5; bar += add) {
+> +               epf_bar = &epf->bar[bar];
+> +               /*
+> +                * pci_epc_set_bar() sets PCI_BASE_ADDRESS_MEM_TYPE_64
+> +                * if the specific implementation required a 64-bit BAR,
+> +                * even if we only requested a 32-bit BAR.
+> +                */
+> +               add = (epf_bar->flags & PCI_BASE_ADDRESS_MEM_TYPE_64) ? 2 : 1;
+> +
+> +               if (!!(reserved_bar & (1 << bar)))
+> +                       continue;
+> +
+> +               ret = pci_epc_set_bar(epc, epf->func_no, epf_bar);
+> +               if (ret) {
+> +                       pci_epf_free_space(epf, nvme->reg[bar], bar);
+> +                       dev_err(&epf->dev, "Failed to set BAR%d\n", bar);
+> +                       if (bar == reg_bar)
+> +                               return ret;
+> +               }
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int pci_epf_nvme_alloc_space(struct pci_epf *epf)
+> +{
+> +       struct pci_epf_nvme *nvme = epf_get_drvdata(epf);
+> +       const struct pci_epc_features *features = nvme->epc_features;
+> +       enum pci_barno reg_bar = nvme->reg_bar;
+> +       struct device *dev = &epf->dev;
+> +       struct pci_epf_bar *epf_bar;
+> +       size_t align = PAGE_SIZE;
+> +       u8 reserved_bar = 0;
+> +       int bar, add;
+> +       void *base;
+> +
+> +       if (features) {
+> +               reserved_bar = features->reserved_bar;
+> +               if (features->align)
+> +                       align = features->align;
+> +       }
+> +
+> +       base = pci_epf_alloc_space(epf, bar_size[reg_bar], reg_bar, align);
+> +       if (!base) {
+> +               dev_err(dev, "Failed to allocated register space\n");
+> +               return -ENOMEM;
+> +       }
+> +       nvme->reg[reg_bar] = base;
+> +
+> +       for (bar = BAR_0; bar <= BAR_5; bar += add) {
+> +               epf_bar = &epf->bar[bar];
+> +               add = (epf_bar->flags & PCI_BASE_ADDRESS_MEM_TYPE_64) ? 2 : 1;
+> +
+> +               if (bar == reg_bar)
+> +                       continue;
+> +
+> +               if (!!(reserved_bar & (1 << bar)))
+> +                       continue;
+> +
+> +               base = pci_epf_alloc_space(epf, bar_size[bar], bar, align);
+> +               if (!base)
+> +                       dev_err(dev, "Failed to allocate BAR%d space\n", bar);
+> +               nvme->reg[bar] = base;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static void pci_epf_configure_bar(struct pci_epf *epf,
+> +                                 const struct pci_epc_features *features)
+> +{
+> +       u8 bar_fixed_64bit = features ? features->bar_fixed_64bit : 0;
+> +       struct pci_epf_bar *epf_bar;
+> +       int i;
+> +
+> +       for (i = BAR_0; i <= BAR_5; i++) {
+> +               epf_bar = &epf->bar[i];
+> +               if (!!(bar_fixed_64bit & (1 << i)))
+> +                       epf_bar->flags |= PCI_BASE_ADDRESS_MEM_TYPE_64;
+> +               if (features && features->bar_fixed_size[i])
+> +                       bar_size[i] = features->bar_fixed_size[i];
+> +       }
+> +}
+> +
+> +static int pci_epf_nvme_bind(struct pci_epf *epf)
+> +{
+> +       int ret;
+> +       struct pci_epf_nvme *nvme = epf_get_drvdata(epf);
+> +       struct pci_epf_header *header = epf->header;
+> +       const struct pci_epc_features *features;
+> +       enum pci_barno reg_bar = BAR_0;
+> +       struct pci_epc *epc = epf->epc;
+> +       bool linkup_notifier = false;
+> +       bool msix_capable = false;
+> +       bool msi_capable = true;
+> +
+> +       if (WARN_ON_ONCE(!epc))
+> +               return -EINVAL;
+> +
+> +       features = pci_epc_get_features(epc, epf->func_no);
+> +       if (features) {
+> +               linkup_notifier = features->linkup_notifier;
+> +               msix_capable = features->msix_capable;
+> +               msi_capable = features->msi_capable;
+> +               reg_bar = pci_epc_get_first_free_bar(features);
+> +               pci_epf_configure_bar(epf, features);
+> +       }
+> +
+> +       nvme->epc_features = features;
+> +       nvme->reg_bar = reg_bar;
+> +
+> +#ifdef CONFIG_PCI_ENDPOINT_DMAENGINE
+> +       ret = pci_epc_epf_init(epc, epf);
+> +       if (ret) {
+> +               dev_err(&epf->dev, "Failed to initialize EPF\n");
+> +               return ret;
+> +       }
+> +#endif
+> +
+> +       ret = pci_epc_write_header(epc, epf->func_no, header);
+> +       if (ret) {
+> +               dev_err(&epf->dev, "Configuration header write failed\n");
+> +               return ret;
+> +       }
+> +
+> +       ret = pci_epf_nvme_alloc_space(epf);
+> +       if (ret)
+> +               return ret;
+> +
+> +       ret = pci_epf_nvme_set_bar(epf);
+> +       if (ret)
+> +               return ret;
+> +
+> +       if (msi_capable) {
+> +               ret = pci_epc_set_msi(epc, epf->func_no, epf->msi_interrupts);
+> +               if (ret) {
+> +                       dev_err(&epf->dev, "MSI configuration failed\n");
+> +                       return ret;
+> +               }
+> +       }
+> +
+> +       if (msix_capable) {
+> +               ret = pci_epc_set_msix(epc, epf->func_no, epf->msix_interrupts);
+> +               if (ret) {
+> +                       dev_err(&epf->dev, "MSI-X configuration failed\n");
+> +                       return ret;
+> +               }
+> +       }
+> +
+> +       pci_epf_nvme_target_init(nvme);
+> +       pci_epf_nvme_target_start(nvme);
+> +       pci_epf_nvme_host_init(nvme);
+> +       pci_epf_nvme_target_stop(nvme);
+> +
+> +       if (!linkup_notifier)
+> +               queue_work(epf_nvme_workqueue, &nvme->poll.work);
+> +
+> +       return 0;
+> +}
+> +
+> +static struct pci_epf_header epf_nvme_pci_header = {
+> +       .vendorid       = PCI_ANY_ID,
+> +       .deviceid       = PCI_ANY_ID,
+> +       .progif_code    = 2, /* NVM Express */
+> +       .subclass_code  = 8, /* Non-Volatile Memory controller */
+> +       .baseclass_code = PCI_BASE_CLASS_STORAGE,
+> +       .interrupt_pin  = PCI_INTERRUPT_INTA,
+> +};
+> +
+> +static int pci_epf_nvme_probe(struct pci_epf *epf)
+> +{
+> +       struct pci_epf_nvme *nvme;
+> +
+> +       nvme = devm_kzalloc(&epf->dev, sizeof(*nvme), GFP_KERNEL);
+> +       if (!nvme)
+> +               return -ENOMEM;
+> +
+> +       epf->header = &epf_nvme_pci_header;
+> +       nvme->epf = epf;
+> +
+> +       INIT_DELAYED_WORK(&nvme->poll, pci_epf_nvme_poll);
+> +
+> +       epf_set_drvdata(epf, nvme);
+> +       return 0;
+> +}
+> +
+> +static const struct pci_epf_device_id pci_epf_nvme_ids[] = {
+> +       { .name = "pci_epf_nvme" },
+> +       {},
+> +};
+> +
+> +static struct pci_epf_ops pci_epf_nvme_ops = {
+> +       .unbind = pci_epf_nvme_unbind,
+> +       .bind   = pci_epf_nvme_bind,
+> +       .linkup = pci_epf_nvme_linkup
+> +};
+> +
+> +static struct pci_epf_driver epf_nvme_driver = {
+> +       .driver.name    = "pci_epf_nvme",
+> +       .probe          = pci_epf_nvme_probe,
+> +       .id_table       = pci_epf_nvme_ids,
+> +       .ops            = &pci_epf_nvme_ops,
+> +       .owner          = THIS_MODULE
+> +};
+> +
+> +static int __init pci_epf_nvme_init(void)
+> +{
+> +       int ret;
+> +
+> +       epf_nvme_workqueue = alloc_workqueue("kepfnvme",
+> +                                            WQ_MEM_RECLAIM | WQ_HIGHPRI, 0);
+> +       if (!epf_nvme_workqueue) {
+> +               pr_err("Failed to allocate the ksvnvme work queue\n");
+> +               return -ENOMEM;
+> +       }
+> +
+> +       ret = pci_epf_register_driver(&epf_nvme_driver);
+> +       if (ret) {
+> +               pr_err("Failed to register pci epf nvme driver --> %d\n", ret);
+> +               return ret;
+> +       }
+> +
+> +       return 0;
+> +}
+> +module_init(pci_epf_nvme_init);
+> +
+> +static void __exit pci_epf_nvme_exit(void)
+> +{
+> +       pci_epf_unregister_driver(&epf_nvme_driver);
+> +}
+> +module_exit(pci_epf_nvme_exit);
+> +
+> +MODULE_DESCRIPTION("PCI EPF NVME FUNCTION DRIVER");
+> +MODULE_AUTHOR("SiFive");
+> +MODULE_LICENSE("GPL v2");
+> --
+> 2.7.4
+>
++linux-pci@vger.kernel.org
