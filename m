@@ -2,543 +2,157 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 750F2F72FF
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Nov 2019 12:21:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EC752F73EA
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Nov 2019 13:31:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbfKKLVw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Nov 2019 06:21:52 -0500
-Received: from mx2.suse.de ([195.135.220.15]:40212 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726791AbfKKLVw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 11 Nov 2019 06:21:52 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A729EB490;
-        Mon, 11 Nov 2019 11:21:48 +0000 (UTC)
-Message-ID: <86aeec16bc04d17372db5e33ffec0d5621973116.camel@suse.de>
-Subject: Re: [PATCH 4/4] PCI: brcmstb: add MSI capability
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     maz@kernel.org
-Cc:     Andrew Murray <andrew.murray@arm.com>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>, mbrugger@suse.com,
-        phil@raspberrypi.org, linux-kernel@vger.kernel.org,
-        wahrenst@gmx.net, james.quinlan@broadcom.com,
-        Bjorn Helgaas <bhelgaas@google.com>
-Date:   Mon, 11 Nov 2019 12:21:41 +0100
-In-Reply-To: <f1154b65d422e2e37e3b320e662d4268@www.loen.fr>
-References: <20191106214527.18736-1-nsaenzjulienne@suse.de>
-         <20191106214527.18736-5-nsaenzjulienne@suse.de>
-         <f1154b65d422e2e37e3b320e662d4268@www.loen.fr>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-Aeotz4Kz86JAeSXZZo/i"
-User-Agent: Evolution 3.34.1 
+        id S1726908AbfKKMbY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Nov 2019 07:31:24 -0500
+Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:61252 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726994AbfKKMbX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Nov 2019 07:31:23 -0500
+Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
+        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xABCSUZ2014958;
+        Mon, 11 Nov 2019 04:31:16 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=proofpoint;
+ bh=9dAIiU4HrQr/OkMOuiLIHdIphnU372y0RAi0rGvNI9Y=;
+ b=cXOTsgRi3ph+fJyrQRRKxqJN2d2hpVggKUdjHaJ2fEI3yzmAtefvVE9j+5wBf992oisU
+ bFZjt/RROcwsn2XErY+X46hV6DtwGj3uXUVbwZnKxVHS8nFhZC+uvcHxDZZn226oLD1V
+ eV7taLty9qCvvep6iwIgdutCQzrdE97sYHHlwiT3Jaqx1+5FcZt8CBUMlS3MQvocU1Fb
+ D6/wePXDEB487Zoyqt13gk+0W2Z0d136HW3/KHTo5MQfmJDmKa6IsptAlTmygA8JfK9p
+ VH79dqV/xP5b9gpB1eOAs19Q1SlJOUrUq56jWg/WaJa2mXK83mI3SOGzw6QDUnqF4wfS Zg== 
+Received: from nam03-co1-obe.outbound.protection.outlook.com (mail-co1nam03lp2059.outbound.protection.outlook.com [104.47.40.59])
+        by mx0b-0014ca01.pphosted.com with ESMTP id 2w5swy90s5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 11 Nov 2019 04:31:16 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Z9S1kDSKiXsakFOPxTmFt6ERAbnFUrUhxzyiOWEj4JNh+7huWGiPOA+1GPkw1W/odWCZ2uZkT7q56Bb+RrEWJRw20SEHcXi+89WxyLTJTLik83dlqzT28I+AIokInIxFw2Jxra09DBsdqGtGcCggXZWmBGyF1nIWULJb1dkjty6O/rQRr/X+EzX/lMPwdNxA80n8JXtLccbB1p/dJzpPTWrbXQh7gFSsBXrNwvhCtRL/KzD2NQAy24CdqE4Wvrv7LBhK2A1BzBBW939PvzaQFxQgZGPf509PrfcEPyNapHxHPkDWh/2QnZKGPyqSDdN/KsDE/Bioj80/OLMmupI8Aw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9dAIiU4HrQr/OkMOuiLIHdIphnU372y0RAi0rGvNI9Y=;
+ b=iNXXiQjK7HAQudsERH1y4kuuMAdo+oxhnAkPU48e3Y7pvoHnNY5fOxPHJ+FafigcuXwkzQmUbLJCeDrWoqL5uLh5+Pe0W/gyikRpPuF4OQNddagtHkdFgsdTQLiGeZbPayg2UbeZHl3eTA0ZQrIDWkV0MmLID5yRxmKr5mm78nKQJ08PX2/EmTA7h2qmYRzfHEr/+30gzarB2Cv/fkt2zZV0pf2zTMCh6IRYm8ca3dHaUCF6A7HrM2YVyfdMbOHqBjOYKZMYu5cR1V+JAYFh6z4EQScCd3r1uK5S9IKmTxbr1LsCoZiUXXiXwQLhpd/5ZV/mU0ouh5ymLtQmD1fwlA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
+ is 158.140.1.28) smtp.rcpttodomain=arm.com smtp.mailfrom=cadence.com;
+ dmarc=fail (p=none sp=none pct=100) action=none header.from=cadence.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9dAIiU4HrQr/OkMOuiLIHdIphnU372y0RAi0rGvNI9Y=;
+ b=sbDunUsSu7AvhKNFENgHoLEcEyiDiR+0ImvHwB9gZKkddFzFQRxRAx9Ln2boMfMIYQk5QurHndqwl6J92pMc4FgK1SSL7MNMVbVpL5s24xKpISu75XqUVJHsC6u8JAE5slrPjtwuH894hkrZzlgdnhvpuj6hQo80WYqVmPgxiFU=
+Received: from CH2PR07CA0011.namprd07.prod.outlook.com (2603:10b6:610:20::24)
+ by DM5PR07MB3434.namprd07.prod.outlook.com (2603:10b6:4:62::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2430.24; Mon, 11 Nov
+ 2019 12:31:13 +0000
+Received: from CO1NAM05FT009.eop-nam05.prod.protection.outlook.com
+ (2a01:111:f400:7e50::201) by CH2PR07CA0011.outlook.office365.com
+ (2603:10b6:610:20::24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2430.20 via Frontend
+ Transport; Mon, 11 Nov 2019 12:31:12 +0000
+Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
+ cadence.com discourages use of 158.140.1.28 as permitted sender)
+Received: from sjmaillnx2.cadence.com (158.140.1.28) by
+ CO1NAM05FT009.mail.protection.outlook.com (10.152.96.116) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2451.15 via Frontend Transport; Mon, 11 Nov 2019 12:31:12 +0000
+Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
+        by sjmaillnx2.cadence.com (8.14.4/8.14.4) with ESMTP id xABCVAi9001601
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Mon, 11 Nov 2019 04:31:11 -0800
+X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
+Received: from maileu3.global.cadence.com (10.160.88.99) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3; Mon, 11 Nov 2019 13:31:10 +0100
+Received: from lvlogina.cadence.com (10.165.176.102) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Mon, 11 Nov 2019 13:31:10 +0100
+Received: from lvlogina.cadence.com (localhost.localdomain [127.0.0.1])
+        by lvlogina.cadence.com (8.14.4/8.14.4) with ESMTP id xABCV9Za019034;
+        Mon, 11 Nov 2019 12:31:09 GMT
+Received: (from tjoseph@localhost)
+        by lvlogina.cadence.com (8.14.4/8.14.4/Submit) id xABCV8rJ019005;
+        Mon, 11 Nov 2019 12:31:08 GMT
+From:   Tom Joseph <tjoseph@cadence.com>
+To:     <linux-pci@vger.kernel.org>
+CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        <linux-kernel@vger.kernel.org>, Tom Joseph <tjoseph@cadence.com>
+Subject: [PATCH v4 0/2]PCI: cadence: Convert drivers to core library
+Date:   Mon, 11 Nov 2019 12:30:42 +0000
+Message-ID: <1573475444-17903-1-git-send-email-tjoseph@cadence.com>
+X-Mailer: git-send-email 2.2.2
 MIME-Version: 1.0
+Content-Type: text/plain
+X-OrganizationHeadersPreserved: maileu3.global.cadence.com
+X-EOPAttributedMessage: 0
+X-Forefront-Antispam-Report: CIP:158.140.1.28;IPV:CAL;SCL:-1;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(39860400002)(346002)(136003)(199004)(189003)(36092001)(87636003)(478600001)(26826003)(2906002)(6916009)(2351001)(50226002)(86362001)(70586007)(70206006)(8676002)(246002)(8936002)(107886003)(6666004)(426003)(356004)(50466002)(76130400001)(36756003)(7636002)(305945005)(336012)(126002)(476003)(2616005)(486006)(54906003)(4326008)(16586007)(42186006)(316002)(26005)(5660300002)(51416003)(186003)(47776003)(48376002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR07MB3434;H:sjmaillnx2.cadence.com;FPR:;SPF:SoftFail;LANG:en;PTR:corp.Cadence.COM;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: fda27fc6-a26b-4589-b4ae-08d766a309c0
+X-MS-TrafficTypeDiagnostic: DM5PR07MB3434:
+X-Microsoft-Antispam-PRVS: <DM5PR07MB3434F7265F35922469AD91B7A1740@DM5PR07MB3434.namprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1186;
+X-Forefront-PRVS: 0218A015FA
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: RYo38qghFIr5lKAiZM36llEbWeLD7sF8Ysl69z0pWR9NXWdE8BNx09WahYy6XHMv86Zv7poAaVOTHcB1VMcTuOKm7AuekBhpZj7HgxHhWL0c5pUr4QkLCUSNIy8GpSVlkVMM8pLVeQu32kqQNGkrtR1HQ56WSAfkHi8Drxl/gLc22BLB6viJ243k//8zGse7cEkVc4aRGK1sFRNS4tftnt1wh34mkorvQlePt7YqTvmS4pBqsoezZOqyrjoio1PVkRISMPfZzgedM0QIn5y5gI/YHPfDmXGaJlxEa/lj1/0PJHIlGV1pkxQINDf9x8ccLC+z4p8Juxe99GWxfVb5SiQJtlds8iyQGyPnaxCHZ4rtOXnxp+LrjQMZ+gVe+S0jQNYsb1G7Uakey4VLblu8OWgUiByTffjaP87uPmiJjEo5nR0lZa9H02NQ5tKZvV72ncDDoGzV/AHwU4mNNelqmQ==
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Nov 2019 12:31:12.4970
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: fda27fc6-a26b-4589-b4ae-08d766a309c0
+X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[158.140.1.28];Helo=[sjmaillnx2.cadence.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR07MB3434
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-11_03:2019-11-11,2019-11-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
+ lowpriorityscore=0 spamscore=0 mlxscore=0 bulkscore=0 impostorscore=0
+ phishscore=0 suspectscore=1 clxscore=1015 priorityscore=1501 adultscore=0
+ mlxlogscore=999 malwarescore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1910280000 definitions=main-1911110119
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+This patch series intend to refactor the cadence pcie host and endpoint
+driver files as a library, such that this can be used by other platform
+drivers. A new directory 'cadence' is created to group all the cadence
+derivatives.
 
---=-Aeotz4Kz86JAeSXZZo/i
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+v4:
+- Updated commit title for [PATCH 2/2] as adviced by Andrew
 
-Hi Marc,
-thanks for the review!
+v3:
+- Commit logs rephrased and corrected as suggested by Andrew and Kishon
+- Created a new folder 'cadence', as suggested by Kishon.
+- Removed few unwanted codes, as pointed out by review comments
 
-On Thu, 2019-11-07 at 16:49 +0109, Marc Zyngier wrote:
-> On 2019-11-06 22:54, Nicolas Saenz Julienne wrote:
-> > From: Jim Quinlan <james.quinlan@broadcom.com>
-> >=20
-> > This commit adds MSI to the Broadcom STB PCIe host controller. It=20
-> > does
-> > not add MSIX since that functionality is not in the HW.  The MSI
-> > controller is physically located within the PCIe block, however,=20
-> > there
-> > is no reason why the MSI controller could not be moved elsewhere in
-> > the future.
-> >=20
-> > Since the internal Brcmstb MSI controller is intertwined with the=20
-> > PCIe
-> > controller, it is not its own platform device but rather part of the
-> > PCIe platform device.
-> >=20
-> > This is based on Jim's original submission[1] with some slight=20
-> > changes
-> > regarding how pcie->msi_target_addr is decided.
-> >=20
-> > [1] https://patchwork.kernel.org/patch/10605955/
-> >=20
-> > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> > Co-developed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > ---
-> >  drivers/pci/controller/Kconfig        |   2 +-
-> >  drivers/pci/controller/pcie-brcmstb.c | 333=20
-> > +++++++++++++++++++++++++-
-> >  2 files changed, 332 insertions(+), 3 deletions(-)
-> >=20
-> > diff --git a/drivers/pci/controller/Kconfig=20
-> > b/drivers/pci/controller/Kconfig
-> > index 8b3aae91d8af..99b972ad3f2f 100644
-> > --- a/drivers/pci/controller/Kconfig
-> > +++ b/drivers/pci/controller/Kconfig
-> > @@ -284,7 +284,7 @@ config VMD
-> >  config PCIE_BRCMSTB
-> >  	bool "Broadcom Brcmstb PCIe host controller"
-> >  	depends on ARCH_BRCMSTB || BMIPS_GENERIC
-> > -	depends on OF
-> > +	depends on OF && PCI_MSI
-> >  	depends on SOC_BRCMSTB
-> >  	default ARCH_BRCMSTB || BMIPS_GENERIC
-> >  	help
-> > diff --git a/drivers/pci/controller/pcie-brcmstb.c
-> > b/drivers/pci/controller/pcie-brcmstb.c
-> > index 880ec11d06a1..26053e69b95f 100644
-> > --- a/drivers/pci/controller/pcie-brcmstb.c
-> > +++ b/drivers/pci/controller/pcie-brcmstb.c
-> > @@ -1,6 +1,7 @@
-> >  // SPDX-License-Identifier: GPL-2.0
-> >  /* Copyright (C) 2009 - 2019 Broadcom */
-> >=20
-> > +#include <linux/bitops.h>
-> >  #include <linux/clk.h>
-> >  #include <linux/compiler.h>
-> >  #include <linux/delay.h>
-> > @@ -8,11 +9,13 @@
-> >  #include <linux/interrupt.h>
-> >  #include <linux/io.h>
-> >  #include <linux/ioport.h>
-> > +#include <linux/irqchip/chained_irq.h>
-> >  #include <linux/irqdomain.h>
-> >  #include <linux/kernel.h>
-> >  #include <linux/list.h>
-> >  #include <linux/log2.h>
-> >  #include <linux/module.h>
-> > +#include <linux/msi.h>
-> >  #include <linux/of_address.h>
-> >  #include <linux/of_irq.h>
-> >  #include <linux/of_pci.h>
-> > @@ -46,6 +49,9 @@
-> >  #define PCIE_MISC_RC_BAR2_CONFIG_LO			0x4034
-> >  #define PCIE_MISC_RC_BAR2_CONFIG_HI			0x4038
-> >  #define PCIE_MISC_RC_BAR3_CONFIG_LO			0x403c
-> > +#define PCIE_MISC_MSI_BAR_CONFIG_LO			0x4044
-> > +#define PCIE_MISC_MSI_BAR_CONFIG_HI			0x4048
-> > +#define PCIE_MISC_MSI_DATA_CONFIG			0x404c
-> >  #define PCIE_MISC_PCIE_CTRL				0x4064
-> >  #define PCIE_MISC_PCIE_STATUS				0x4068
-> >  #define PCIE_MISC_REVISION				0x406c
-> > @@ -54,6 +60,7 @@
-> >  #define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_LIMIT_HI		0x4084
-> >  #define PCIE_MISC_HARD_PCIE_HARD_DEBUG			0x4204
-> >  #define PCIE_INTR2_CPU_BASE				0x4300
-> > +#define PCIE_MSI_INTR2_BASE				0x4500
-> >=20
-> >  /*
-> >   * Broadcom Settop Box PCIe Register Field shift and mask info. The
-> > @@ -114,6 +121,8 @@
-> >=20
-> >  #define BRCM_NUM_PCIE_OUT_WINS		0x4
-> >  #define BRCM_MAX_SCB			0x4
-> > +#define BRCM_INT_PCI_MSI_NR		32
-> > +#define BRCM_PCIE_HW_REV_33		0x0303
-> >=20
-> >  #define BRCM_MSI_TARGET_ADDR_LT_4GB	0x0fffffffcULL
-> >  #define BRCM_MSI_TARGET_ADDR_GT_4GB	0xffffffffcULL
-> > @@ -199,6 +208,33 @@ struct brcm_window {
-> >  	dma_addr_t size;
-> >  };
-> >=20
-> > +struct brcm_msi {
-> > +	struct device		*dev;
-> > +	void __iomem		*base;
-> > +	struct device_node	*dn;
-> > +	struct irq_domain	*msi_domain;
-> > +	struct irq_domain	*inner_domain;
-> > +	struct mutex		lock; /* guards the alloc/free operations */
-> > +	u64			target_addr;
-> > +	int			irq;
-> > +
-> > +	/* intr_base is the base pointer for interrupt status/set/clr regs=
-=20
-> > */
-> > +	void __iomem		*intr_base;
-> > +
-> > +	/* intr_legacy_mask indicates how many bits are MSI interrupts */
-> > +	u32			intr_legacy_mask;
-> > +
-> > +	/*
-> > +	 * intr_legacy_offset indicates bit position of MSI_01. It is
-> > +	 * to map the register bit position to a hwirq that starts at 0.
-> > +	 */
-> > +	u32			intr_legacy_offset;
-> > +
-> > +	/* used indicates which MSI interrupts have been alloc'd */
-> > +	unsigned long		used;
-> > +	unsigned int		rev;
-> > +};
-> > +
-> >  /* Internal PCIe Host Controller Information.*/
-> >  struct brcm_pcie {
-> >  	struct device		*dev;
-> > @@ -211,7 +247,10 @@ struct brcm_pcie {
-> >  	bool			suspended;
-> >  	bool			ssc;
-> >  	int			gen;
-> > +	u64			msi_target_addr;
-> >  	struct brcm_window	out_wins[BRCM_NUM_PCIE_OUT_WINS];
-> > +	struct brcm_msi		*msi;
-> > +	bool			msi_internal;
->=20
-> Do you need both of these fields? Is there any case where msi is valid
-> and msi_internal is false?
+Tom Joseph (2):
+  PCI: cadence: Refactor driver to use as a core library
+  PCI: cadence: Move all files to per-device cadence directory
 
-You're right, got rid of msi_internal.
+ drivers/pci/controller/Kconfig                     |  29 +---
+ drivers/pci/controller/Makefile                    |   4 +-
+ drivers/pci/controller/cadence/Kconfig             |  45 ++++++
+ drivers/pci/controller/cadence/Makefile            |   5 +
+ .../pci/controller/{ => cadence}/pcie-cadence-ep.c |  96 +-----------
+ .../controller/{ => cadence}/pcie-cadence-host.c   |  95 +----------
+ drivers/pci/controller/cadence/pcie-cadence-plat.c | 174 +++++++++++++++++++++
+ .../pci/controller/{ => cadence}/pcie-cadence.c    |   0
+ .../pci/controller/{ => cadence}/pcie-cadence.h    |  77 +++++++++
+ 9 files changed, 315 insertions(+), 210 deletions(-)
+ create mode 100644 drivers/pci/controller/cadence/Kconfig
+ create mode 100644 drivers/pci/controller/cadence/Makefile
+ rename drivers/pci/controller/{ => cadence}/pcie-cadence-ep.c (83%)
+ rename drivers/pci/controller/{ => cadence}/pcie-cadence-host.c (76%)
+ create mode 100644 drivers/pci/controller/cadence/pcie-cadence-plat.c
+ rename drivers/pci/controller/{ => cadence}/pcie-cadence.c (100%)
+ rename drivers/pci/controller/{ => cadence}/pcie-cadence.h (82%)
 
->=20
-> >  	unsigned int		rev;
-> >  	const int		*reg_offsets;
-> >  	const int		*reg_field_info;
-> > @@ -477,6 +516,267 @@ static void brcm_pcie_set_outbound_win(struct
-> > brcm_pcie *pcie,
-> >  			   LIMIT, tmp);
-> >  }
-> >=20
-> > +static struct irq_chip brcm_msi_irq_chip =3D {
-> > +	.name =3D "Brcm_MSI",
-> > +	.irq_mask =3D pci_msi_mask_irq,
-> > +	.irq_unmask =3D pci_msi_unmask_irq,
-> > +};
-> > +
-> > +static struct msi_domain_info brcm_msi_domain_info =3D {
-> > +	.flags	=3D (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
-> > +		   MSI_FLAG_PCI_MSIX),
->=20
-> Is there a particular reason for not supporting MultiMSI? I won't miss
-> it, but it might be worth documenting the restriction if the HW cannot
-> support it (though I can't immediately see why).
-
-There is no actual restriction. As Jim tells me, there never was the need f=
-or
-it. If it's fine with you, we'll leave that as an enhancement for the futur=
-e,
-specially since the RPi's XHCI device only uses one MSI interrupt.
-
-> > +	.chip	=3D &brcm_msi_irq_chip,
-> > +};
-> > +
-> > +static void brcm_pcie_msi_isr(struct irq_desc *desc)
-> > +{
-> > +	struct irq_chip *chip =3D irq_desc_get_chip(desc);
-> > +	struct brcm_msi *msi;
-> > +	unsigned long status, virq;
-> > +	u32 mask, bit, hwirq;
-> > +	struct device *dev;
-> > +
-> > +	chained_irq_enter(chip, desc);
-> > +	msi =3D irq_desc_get_handler_data(desc);
-> > +	mask =3D msi->intr_legacy_mask;
-> > +	dev =3D msi->dev;
-> > +
-> > +	while ((status =3D bcm_readl(msi->intr_base + STATUS) & mask)) {
->=20
-> Is this loop really worth it? If, as I imagine, this register is at the
-> end of a wet piece of string, this additional read (likely to return=20
-> zero)
-> will have a measurable latency impact...
-
-I think this one was cargo-culted, TBH this pattern is all over the place.
-Though, now that you point it out, I can't really provide a justification f=
-or
-it. Maybe Jim can contradict me here, but It's working fine without it.
-
-> > +		for_each_set_bit(bit, &status, BRCM_INT_PCI_MSI_NR) {
-> > +			/* clear the interrupt */
-> > +			bcm_writel(1 << bit, msi->intr_base + CLR);
-> > +
-> > +			/* Account for legacy interrupt offset */
-> > +			hwirq =3D bit - msi->intr_legacy_offset;
-> > +
-> > +			virq =3D irq_find_mapping(msi->inner_domain, hwirq);
-> > +			if (virq) {
-> > +				if (msi->used & (1 << hwirq))
-> > +					generic_handle_irq(virq);
-> > +				else
-> > +					dev_info(dev, "unhandled MSI %d\n",
-> > +						 hwirq);
->=20
-> Can this ever happen? If you've found the mapping in the irqdomain,
-> the MSI obviously has been allocated. Or am I missing something?
-
-Agree, I'll get rid of it.
-
-> > +			} else {
-> > +				/* Unknown MSI, just clear it */
-> > +				dev_dbg(dev, "unexpected MSI\n");
-> > +			}
-> > +		}
-> > +	}
-> > +	chained_irq_exit(chip, desc);
-> > +}
-> > +
-> > +static void brcm_compose_msi_msg(struct irq_data *data, struct=20
-> > msi_msg *msg)
-> > +{
-> > +	struct brcm_msi *msi =3D irq_data_get_irq_chip_data(data);
-> > +	u32 temp;
-> > +
-> > +	msg->address_lo =3D lower_32_bits(msi->target_addr);
-> > +	msg->address_hi =3D upper_32_bits(msi->target_addr);
-> > +	temp =3D bcm_readl(msi->base + PCIE_MISC_MSI_DATA_CONFIG);
-
-Well as far as the RPi is concerned I can do without it. I don't know if th=
-ere
-is an odd case on STB devices where we need it, maybe Jim can shine some li=
-ght
-into it. Regardless I think I'll remove it for now, we can then fix it once=
- we
-enable other users for the controller.
-
-> > +	msg->data =3D ((temp >> 16) & (temp & 0xffff)) | data->hwirq;
-> > +}
-> > +
-> > +static int brcm_msi_set_affinity(struct irq_data *irq_data,
-> > +				 const struct cpumask *mask, bool force)
-> > +{
-> > +	return -EINVAL;
-> > +}
-> > +
-> > +static struct irq_chip brcm_msi_bottom_irq_chip =3D {
-> > +	.name			=3D "Brcm_MSI",
-> > +	.irq_compose_msi_msg	=3D brcm_compose_msi_msg,
-> > +	.irq_set_affinity	=3D brcm_msi_set_affinity,
-> > +};
-> > +
-> > +static int brcm_msi_alloc(struct brcm_msi *msi)
-> > +{
-> > +	int bit, hwirq;
-> > +
-> > +	mutex_lock(&msi->lock);
-> > +	bit =3D ~msi->used ? ffz(msi->used) : -1;
-> > +
-> > +	if (bit >=3D 0 && bit < BRCM_INT_PCI_MSI_NR) {
-> > +		msi->used |=3D (1 << bit);
-> > +		hwirq =3D bit - msi->intr_legacy_offset;
-> > +	} else {
-> > +		hwirq =3D -ENOSPC;
-> > +	}
->=20
-> Please consider using bitmap_find_free_region() and co, instead of
-> open coding your allocator.
-
-Noted.
-
-> > +
-> > +	mutex_unlock(&msi->lock);
-> > +	return hwirq;
-> > +}
-> > +
-> > +static void brcm_msi_free(struct brcm_msi *msi, unsigned long hwirq)
-> > +{
-> > +	mutex_lock(&msi->lock);
-> > +	msi->used &=3D ~(1 << (hwirq + msi->intr_legacy_offset));
-> > +	mutex_unlock(&msi->lock);
-> > +}
-> > +
-> > +static int brcm_irq_domain_alloc(struct irq_domain *domain, unsigned
-> > int virq,
-> > +				 unsigned int nr_irqs, void *args)
-> > +{
-> > +	struct brcm_msi *msi =3D domain->host_data;
-> > +	int hwirq;
-> > +
-> > +	hwirq =3D brcm_msi_alloc(msi);
-> > +
-> > +	if (hwirq < 0)
-> > +		return hwirq;
-> > +
-> > +	irq_domain_set_info(domain, virq, (irq_hw_number_t)hwirq,
-> > +			    &brcm_msi_bottom_irq_chip, domain->host_data,
-> > +			    handle_simple_irq, NULL, NULL);
->=20
-> simple_irq doesn't quite match what this does. This really should
-> use an edge flow.
-
-Ok, I'll look into it.
-
-> > +	return 0;
-> > +}
-> > +
-> > +static void brcm_irq_domain_free(struct irq_domain *domain,
-> > +				 unsigned int virq, unsigned int nr_irqs)
-> > +{
-> > +	struct irq_data *d =3D irq_domain_get_irq_data(domain, virq);
-> > +	struct brcm_msi *msi =3D irq_data_get_irq_chip_data(d);
-> > +
-> > +	brcm_msi_free(msi, d->hwirq);
-> > +}
-> > +
-> > +static void brcm_msi_set_regs(struct brcm_msi *msi)
-> > +{
-> > +	u32 data_val, msi_lo, msi_hi;
-> > +
-> > +	if (msi->rev >=3D BRCM_PCIE_HW_REV_33) {
-> > +		/*
-> > +		 * ffe0 -- least sig 5 bits are 0 indicating 32 msgs
-> > +		 * 6540 -- this is our arbitrary unique data value
-> > +		 */
-> > +		data_val =3D 0xffe06540;
-> > +	} else {
-> > +		/*
-> > +		 * fff8 -- least sig 3 bits are 0 indicating 8 msgs
-> > +		 * 6540 -- this is our arbitrary unique data value
-> > +		 */
-> > +		data_val =3D 0xfff86540;
-> > +	}
-> > +
-> > +	/*
-> > +	 * Make sure we are not masking MSIs.  Note that MSIs can be=20
-> > masked,
-> > +	 * but that occurs on the PCIe EP device
->=20
-> That's not a guarantee, specially with plain MultiMSI. I'm actually
-> minded to move the masking to be purely local on the MSI controllers
-> I maintain.
-
-Sorry, I'm a little lost here. The way I understand it after reset, even wi=
-th
-multiMSI, on the EP side all vectors are umasked. So it would make sense to=
- do
-the same on the controller.
-
-The way I see it, we want to avoid using this register anyway, as with mult=
-iMSI
-we'd only get function wide masking, which I guess is not all that useful.
-
-> > +	 */
-> > +	bcm_writel(0xffffffff & msi->intr_legacy_mask,
-> > +		   msi->intr_base + MASK_CLR);
-> > +
-> > +	msi_lo =3D lower_32_bits(msi->target_addr);
-> > +	msi_hi =3D upper_32_bits(msi->target_addr);
-> > +	/*
-> > +	 * The 0 bit of PCIE_MISC_MSI_BAR_CONFIG_LO is repurposed to MSI
-> > +	 * enable, which we set to 1.
-> > +	 */
-> > +	bcm_writel(msi_lo | 1, msi->base + PCIE_MISC_MSI_BAR_CONFIG_LO);
-> > +	bcm_writel(msi_hi, msi->base + PCIE_MISC_MSI_BAR_CONFIG_HI);
-> > +	bcm_writel(data_val, msi->base + PCIE_MISC_MSI_DATA_CONFIG);
-> > +}
-> > +
-> > +static const struct irq_domain_ops msi_domain_ops =3D {
-> > +	.alloc	=3D brcm_irq_domain_alloc,
-> > +	.free	=3D brcm_irq_domain_free,
-> > +};
-> > +
-> > +static int brcm_allocate_domains(struct brcm_msi *msi)
-> > +{
-> > +	struct fwnode_handle *fwnode =3D of_node_to_fwnode(msi->dn);
-> > +	struct device *dev =3D msi->dev;
-> > +
-> > +	msi->inner_domain =3D irq_domain_add_linear(NULL,=20
-> > BRCM_INT_PCI_MSI_NR,
-> > +						  &msi_domain_ops, msi);
-> > +	if (!msi->inner_domain) {
-> > +		dev_err(dev, "failed to create IRQ domain\n");
-> > +		return -ENOMEM;
-> > +	}
-> > +
-> > +	msi->msi_domain =3D pci_msi_create_irq_domain(fwnode,
-> > +						    &brcm_msi_domain_info,
-> > +						    msi->inner_domain);
-> > +	if (!msi->msi_domain) {
-> > +		dev_err(dev, "failed to create MSI domain\n");
-> > +		irq_domain_remove(msi->inner_domain);
-> > +		return -ENOMEM;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static void brcm_free_domains(struct brcm_msi *msi)
-> > +{
-> > +	irq_domain_remove(msi->msi_domain);
-> > +	irq_domain_remove(msi->inner_domain);
-> > +}
-> > +
-> > +static void brcm_msi_remove(struct brcm_pcie *pcie)
-> > +{
-> > +	struct brcm_msi *msi =3D pcie->msi;
-> > +
-> > +	if (!msi)
-> > +		return;
-> > +	irq_set_chained_handler(msi->irq, NULL);
-> > +	irq_set_handler_data(msi->irq, NULL);
-> > +	brcm_free_domains(msi);
-> > +}
-> > +
-> > +static int brcm_pcie_enable_msi(struct brcm_pcie *pcie)
-> > +{
-> > +	struct brcm_msi *msi;
-> > +	int irq, ret;
-> > +	struct device *dev =3D pcie->dev;
-> > +
-> > +	irq =3D irq_of_parse_and_map(dev->of_node, 1);
-> > +	if (irq <=3D 0) {
-> > +		dev_err(dev, "cannot map msi intr\n");
-> > +		return -ENODEV;
-> > +	}
-> > +
-> > +	msi =3D devm_kzalloc(dev, sizeof(struct brcm_msi), GFP_KERNEL);
-> > +	if (!msi)
-> > +		return -ENOMEM;
-> > +
-> > +	msi->dev =3D dev;
-> > +	msi->base =3D pcie->base;
-> > +	msi->rev =3D  pcie->rev;
-> > +	msi->dn =3D pcie->dn;
-> > +	msi->target_addr =3D pcie->msi_target_addr;
-> > +	msi->irq =3D irq;
-> > +
-> > +	ret =3D brcm_allocate_domains(msi);
-> > +	if (ret)
-> > +		return ret;
->=20
-> You seem to rely on the devm_* allocators to cleanup on failure. But as=
-=20
-> far
-> as I can see, failing to initialize the MSI subsystem doesn't translate=
-=20
-> in
-> a PCIe init failure, hence keeping the memory around.
-
-Indeed, I see what you mean. I say let's fail.
-
-Regards,
-Nicolas
-
-
---=-Aeotz4Kz86JAeSXZZo/i
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3JREUACgkQlfZmHno8
-x/7HtwgAiw7mjaGYhpREVRGzDS2lLIGWEJRDREBdmOKifd4x5JIdnD+ZVlRc7exC
-IZaQ1foJyz3txz36UbHwEEW9aaPhzYXjRCuXX7ggcBqs7DnYQvvoKjZsXVw2T+lB
-x/x2Ia1DUjovDov/ddkxn8Ajau2MBU2dPJ5Bzrn0g4ubwDoBF6BXiltNhfuqV/fx
-kvmVaduDLIP27kT3xh9GGFZ/5EO/hM0QtUtAO7DJ1DG0Q/A08GKtcW6eo7TMDxPk
-MmnfdRWiAwvtpH+t+vTxHKtH+xYgbdfiJNJobTsaq8+n+yuBdfuIS/ATeVsOMaiS
-uf1+WQb5gmI13ndurPIqw2HBmUCZQA==
-=9Ztr
------END PGP SIGNATURE-----
-
---=-Aeotz4Kz86JAeSXZZo/i--
+-- 
+2.2.2
 
