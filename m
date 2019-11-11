@@ -2,57 +2,57 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4AEADF6DD2
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Nov 2019 06:22:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 132A4F6DCE
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Nov 2019 06:22:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbfKKFWJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Nov 2019 00:22:09 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:25944 "EHLO
+        id S1726810AbfKKFWG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Nov 2019 00:22:06 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:17368 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726819AbfKKFWI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Nov 2019 00:22:08 -0500
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xAB5HYik155517;
-        Mon, 11 Nov 2019 00:21:54 -0500
+        by vger.kernel.org with ESMTP id S1725860AbfKKFWG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Nov 2019 00:22:06 -0500
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xAB5Hnlo041546;
+        Mon, 11 Nov 2019 00:21:55 -0500
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2w70vt91ua-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2w717p8d3s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 11 Nov 2019 00:21:55 -0500
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id xAB5Ifcg043247;
+        Mon, 11 Nov 2019 00:21:54 -0500
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2w717p8d3j-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
         Mon, 11 Nov 2019 00:21:54 -0500
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id xAB5HaEm155785;
-        Mon, 11 Nov 2019 00:21:54 -0500
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2w70vt91tv-1
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xAB5K6Sg012852;
+        Mon, 11 Nov 2019 05:21:54 GMT
+Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
+        by ppma02dal.us.ibm.com with ESMTP id 2w5n35prx5-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 Nov 2019 00:21:54 -0500
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xAB5K7kd015867;
-        Mon, 11 Nov 2019 05:21:53 GMT
-Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
-        by ppma04dal.us.ibm.com with ESMTP id 2w5n35xqcf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 Nov 2019 05:21:53 +0000
+        Mon, 11 Nov 2019 05:21:54 +0000
 Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAB5LqLS26804484
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAB5Lr1m30212498
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 Nov 2019 05:21:52 GMT
+        Mon, 11 Nov 2019 05:21:53 GMT
 Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5F3CC2805A;
+        by IMSVA (Postfix) with ESMTP id 275AC28058;
+        Mon, 11 Nov 2019 05:21:53 +0000 (GMT)
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 804F528059;
         Mon, 11 Nov 2019 05:21:52 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AAD2628058;
-        Mon, 11 Nov 2019 05:21:51 +0000 (GMT)
 Received: from ltcalpine2-lp18.aus.stglabs.ibm.com (unknown [9.40.195.201])
         by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon, 11 Nov 2019 05:21:51 +0000 (GMT)
+        Mon, 11 Nov 2019 05:21:52 +0000 (GMT)
 From:   Tyrel Datwyler <tyreld@linux.ibm.com>
 To:     mpe@ellerman.id.au
 Cc:     benh@kernel.crashing.org, linuxppc-dev@lists.ozlabs.org,
         tlfalcon@linux.ibm.com, nathanl@linux.ibm.com, bhelgaas@google.com,
         linux-pci@vger.kernel.org, Tyrel Datwyler <tyreld@linux.ibm.com>
-Subject: [PATCH v2 7/9] PCI: rpaphp: annotate and correctly byte swap DRC properties
-Date:   Sun, 10 Nov 2019 23:21:34 -0600
-Message-Id: <1573449697-5448-8-git-send-email-tyreld@linux.ibm.com>
+Subject: [PATCH v2 7/9] PCI: rpaphp: Annotate and correctly byte swap DRC properties
+Date:   Sun, 10 Nov 2019 23:21:35 -0600
+Message-Id: <1573449697-5448-9-git-send-email-tyreld@linux.ibm.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1573449697-5448-1-git-send-email-tyreld@linux.ibm.com>
 References: <1573449697-5448-1-git-send-email-tyreld@linux.ibm.com>
