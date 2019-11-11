@@ -2,152 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CC976F7FF0
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Nov 2019 20:30:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DED50F8079
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Nov 2019 20:49:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727363AbfKKTaI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Nov 2019 14:30:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47718 "EHLO mail.kernel.org"
+        id S1727159AbfKKTta (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Nov 2019 14:49:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727237AbfKKTaG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 11 Nov 2019 14:30:06 -0500
+        id S1727080AbfKKTta (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 11 Nov 2019 14:49:30 -0500
 Received: from localhost (unknown [69.71.4.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3CA621E6F;
-        Mon, 11 Nov 2019 19:30:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B554721655;
+        Mon, 11 Nov 2019 19:49:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573500606;
-        bh=s6vN2gztyPnVL0ZfK6FlvDDglneenMZ9wnAvmSRIS7E=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vr86xYOW630eigCpwelKLTDYNr9rFZGS2edjSgFdYW9w0JtjC2RgTy4L13R2rzvY9
-         0ir24c8alb9DzKQ/GkUoYnW1U6r9Y8sU11QwwQQAnO1505hJ3KbPPP6AWPv8HLer3+
-         ZbEs1aCXfDhK4gNaavPU3TdLypCOLTvN5z//CPIg=
+        s=default; t=1573501770;
+        bh=REocQpHcUoTtJ9Lh+xQEQRDVLTZtYKJWSj4dAiNX3xw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=1Ab8iCkYnJf94nsOy/Munq6j823ReviIIS9wpR9XftMxl0XEEZHDVPRA5OU0sziFW
+         h0ibZehKnyrXCBwT7FSlzHq9TnttB4juz5tJYQjodv1jts1H4x3NX4ggTgSzTtUoce
+         CHJk1Go1Mk+IuSJ2Zmp8NI5vOVIN5YKlCfLTX8ls=
+Date:   Mon, 11 Nov 2019 13:49:28 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        David Zhou <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     Frederick Lawler <fred@fredlawl.com>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, Ilia Mirkin <imirkin@alum.mit.edu>,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 2/2] drm: replace Target Link Speed magic numbers with PCI_EXP_LNKCTL2 definitions
-Date:   Mon, 11 Nov 2019 13:29:32 -0600
-Message-Id: <20191111192932.36048-3-helgaas@kernel.org>
-X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
-In-Reply-To: <20191111192932.36048-1-helgaas@kernel.org>
-References: <20191111192932.36048-1-helgaas@kernel.org>
+To:     Tyrel Datwyler <tyreld@linux.ibm.com>
+Cc:     mpe@ellerman.id.au, benh@kernel.crashing.org,
+        linuxppc-dev@lists.ozlabs.org, tlfalcon@linux.ibm.com,
+        nathanl@linux.ibm.com, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 0/9] Fixes and Enablement of ibm,drc-info property
+Message-ID: <20191111194928.GA38342@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1573449697-5448-1-git-send-email-tyreld@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+On Sun, Nov 10, 2019 at 11:21:27PM -0600, Tyrel Datwyler wrote:
+> There was a previous effort to add support for the PAPR
+> architected ibm,drc-info property. This property provides a more
+> memory compact representation of a parition's Dynamic Reconfig
+> Connectors (DRC). These can otherwise be thought of as currently
+> partitioned, or available but yet to be partitioned system resources
+> such as cpus, memory, and physical/logical IOA devices.
+> 
+> The initial implementation proved buggy and was fully turned off by
+> disabling the bit in the appropriate CAS support vector. We now have
+> PowerVM firmware in the field that supports this new property, and
+> further to support partitions with 24TB+ of possible memory this
+> property is required to perform platform migration.
+> 
+> This series fixs the short comings of the previous submission
+> in the areas of general implementation, cpu hotplug, and IOA hotplug.
+> 
+> v2 changelog:
+> 	Cover Letter: fixed up spelling errors (mpe, tfalcon)
+> 	Patch 3: added comment regarding indexing of drc values (tfalcon)
+> 		 split drc-index and drc-info logic into multiple
+> 		 functions for collecting cpu drc's for dlpar (mpe)
+> 	Patch 7: fix up a couple more sparse warnings (mpe)
+> 
+> Tyrel Datwyler (9):
+>   powerpc/pseries: Fix bad drc_index_start value parsing of drc-info
+>     entry
+>   powerpc/pseries: Fix drc-info mappings of logical cpus to drc-index
+>   powerpc/pseries: Add cpu DLPAR support for drc-info property
+>   PCI: rpaphp: Fix up pointer to first drc-info entry
+>   PCI: rpaphp: Don't rely on firmware feature to imply drc-info support
+>   PCI: rpaphp: Add drc-info support for hotplug slot registration
+>   PCI: rpaphp: Annotate and correctly byte swap DRC properties
+>   PCI: rpaphp: Correctly match ibm,my-drc-index to drc-name when using
+>     drc-info
+>   powerpc/pseries: Enable support for ibm,drc-info property
+> 
+>  arch/powerpc/kernel/prom_init.c                 |   2 +-
+>  arch/powerpc/platforms/pseries/hotplug-cpu.c    | 127 +++++++++++++++++++++---
+>  arch/powerpc/platforms/pseries/of_helpers.c     |   8 +-
+>  arch/powerpc/platforms/pseries/pseries_energy.c |  23 ++---
+>  drivers/pci/hotplug/rpaphp_core.c               | 127 +++++++++++++++++-------
 
-Replace hard-coded magic numbers with the descript PCI_EXP_LNKCTL2
-definitions.  No functional change intended.
+For the drivers/pci/* parts:
 
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
----
- drivers/gpu/drm/amd/amdgpu/cik.c | 8 ++++----
- drivers/gpu/drm/amd/amdgpu/si.c  | 8 ++++----
- drivers/gpu/drm/radeon/cik.c     | 8 ++++----
- drivers/gpu/drm/radeon/si.c      | 8 ++++----
- 4 files changed, 16 insertions(+), 16 deletions(-)
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/cik.c b/drivers/gpu/drm/amd/amdgpu/cik.c
-index e4a595cdd4c1..3067bb874032 100644
---- a/drivers/gpu/drm/amd/amdgpu/cik.c
-+++ b/drivers/gpu/drm/amd/amdgpu/cik.c
-@@ -1527,13 +1527,13 @@ static void cik_pcie_gen3_enable(struct amdgpu_device *adev)
- 	WREG32_PCIE(ixPCIE_LC_SPEED_CNTL, speed_cntl);
- 
- 	pci_read_config_word(adev->pdev, gpu_pos + PCI_EXP_LNKCTL2, &tmp16);
--	tmp16 &= ~0xf;
-+	tmp16 &= ~PCI_EXP_LNKCTL2_TLS;
- 	if (adev->pm.pcie_gen_mask & CAIL_PCIE_LINK_SPEED_SUPPORT_GEN3)
--		tmp16 |= 3; /* gen3 */
-+		tmp16 |= PCI_EXP_LNKCTL2_TLS_8_0GT; /* gen3 */
- 	else if (adev->pm.pcie_gen_mask & CAIL_PCIE_LINK_SPEED_SUPPORT_GEN2)
--		tmp16 |= 2; /* gen2 */
-+		tmp16 |= PCI_EXP_LNKCTL2_TLS_5_0GT; /* gen2 */
- 	else
--		tmp16 |= 1; /* gen1 */
-+		tmp16 |= PCI_EXP_LNKCTL2_TLS_2_5GT; /* gen1 */
- 	pci_write_config_word(adev->pdev, gpu_pos + PCI_EXP_LNKCTL2, tmp16);
- 
- 	speed_cntl = RREG32_PCIE(ixPCIE_LC_SPEED_CNTL);
-diff --git a/drivers/gpu/drm/amd/amdgpu/si.c b/drivers/gpu/drm/amd/amdgpu/si.c
-index cf543410a424..d5c83d82063b 100644
---- a/drivers/gpu/drm/amd/amdgpu/si.c
-+++ b/drivers/gpu/drm/amd/amdgpu/si.c
-@@ -1762,13 +1762,13 @@ static void si_pcie_gen3_enable(struct amdgpu_device *adev)
- 	WREG32_PCIE_PORT(PCIE_LC_SPEED_CNTL, speed_cntl);
- 
- 	pci_read_config_word(adev->pdev, gpu_pos + PCI_EXP_LNKCTL2, &tmp16);
--	tmp16 &= ~0xf;
-+	tmp16 &= ~PCI_EXP_LNKCTL2_TLS;
- 	if (adev->pm.pcie_gen_mask & CAIL_PCIE_LINK_SPEED_SUPPORT_GEN3)
--		tmp16 |= 3;
-+		tmp16 |= PCI_EXP_LNKCTL2_TLS_8_0GT; /* gen3 */
- 	else if (adev->pm.pcie_gen_mask & CAIL_PCIE_LINK_SPEED_SUPPORT_GEN2)
--		tmp16 |= 2;
-+		tmp16 |= PCI_EXP_LNKCTL2_TLS_5_0GT; /* gen2 */
- 	else
--		tmp16 |= 1;
-+		tmp16 |= PCI_EXP_LNKCTL2_TLS_2_5GT; /* gen1 */
- 	pci_write_config_word(adev->pdev, gpu_pos + PCI_EXP_LNKCTL2, tmp16);
- 
- 	speed_cntl = RREG32_PCIE_PORT(PCIE_LC_SPEED_CNTL);
-diff --git a/drivers/gpu/drm/radeon/cik.c b/drivers/gpu/drm/radeon/cik.c
-index 95ffa0bff2d8..a280442c81aa 100644
---- a/drivers/gpu/drm/radeon/cik.c
-+++ b/drivers/gpu/drm/radeon/cik.c
-@@ -9647,13 +9647,13 @@ static void cik_pcie_gen3_enable(struct radeon_device *rdev)
- 	WREG32_PCIE_PORT(PCIE_LC_SPEED_CNTL, speed_cntl);
- 
- 	pci_read_config_word(rdev->pdev, gpu_pos + PCI_EXP_LNKCTL2, &tmp16);
--	tmp16 &= ~0xf;
-+	tmp16 &= ~PCI_EXP_LNKCTL2_TLS;
- 	if (speed_cap == PCIE_SPEED_8_0GT)
--		tmp16 |= 3; /* gen3 */
-+		tmp16 |= PCI_EXP_LNKCTL2_TLS_8_0GT; /* gen3 */
- 	else if (speed_cap == PCIE_SPEED_5_0GT)
--		tmp16 |= 2; /* gen2 */
-+		tmp16 |= PCI_EXP_LNKCTL2_TLS_5_0GT; /* gen2 */
- 	else
--		tmp16 |= 1; /* gen1 */
-+		tmp16 |= PCI_EXP_LNKCTL2_TLS_2_5GT; /* gen1 */
- 	pci_write_config_word(rdev->pdev, gpu_pos + PCI_EXP_LNKCTL2, tmp16);
- 
- 	speed_cntl = RREG32_PCIE_PORT(PCIE_LC_SPEED_CNTL);
-diff --git a/drivers/gpu/drm/radeon/si.c b/drivers/gpu/drm/radeon/si.c
-index 69993d34d1e9..529e70a42019 100644
---- a/drivers/gpu/drm/radeon/si.c
-+++ b/drivers/gpu/drm/radeon/si.c
-@@ -7230,13 +7230,13 @@ static void si_pcie_gen3_enable(struct radeon_device *rdev)
- 	WREG32_PCIE_PORT(PCIE_LC_SPEED_CNTL, speed_cntl);
- 
- 	pci_read_config_word(rdev->pdev, gpu_pos + PCI_EXP_LNKCTL2, &tmp16);
--	tmp16 &= ~0xf;
-+	tmp16 &= ~PCI_EXP_LNKCTL2_TLS;
- 	if (speed_cap == PCIE_SPEED_8_0GT)
--		tmp16 |= 3; /* gen3 */
-+		tmp16 |= PCI_EXP_LNKCTL2_TLS_8_0GT; /* gen3 */
- 	else if (speed_cap == PCIE_SPEED_5_0GT)
--		tmp16 |= 2; /* gen2 */
-+		tmp16 |= PCI_EXP_LNKCTL2_TLS_5_0GT; /* gen2 */
- 	else
--		tmp16 |= 1; /* gen1 */
-+		tmp16 |= PCI_EXP_LNKCTL2_TLS_2_5GT; /* gen1 */
- 	pci_write_config_word(rdev->pdev, gpu_pos + PCI_EXP_LNKCTL2, tmp16);
- 
- 	speed_cntl = RREG32_PCIE_PORT(PCIE_LC_SPEED_CNTL);
--- 
-2.24.0.rc1.363.gb1bccd3e3d-goog
+I assume they will be merged along with the rest of the series via
+powerpc.
 
+>  5 files changed, 216 insertions(+), 71 deletions(-)
+> 
+> -- 
+> 2.7.4
+> 
