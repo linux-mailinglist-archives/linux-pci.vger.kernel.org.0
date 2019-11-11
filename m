@@ -2,64 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BE795F793D
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Nov 2019 17:55:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6CC82F796C
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Nov 2019 18:03:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbfKKQz1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Nov 2019 11:55:27 -0500
-Received: from mga14.intel.com ([192.55.52.115]:21559 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726927AbfKKQz1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 11 Nov 2019 11:55:27 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Nov 2019 08:55:26 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,293,1569308400"; 
-   d="scan'208";a="403936056"
-Received: from orsmsx107.amr.corp.intel.com ([10.22.240.5])
-  by fmsmga005.fm.intel.com with ESMTP; 11 Nov 2019 08:55:26 -0800
-Received: from orsmsx121.amr.corp.intel.com (10.22.225.226) by
- ORSMSX107.amr.corp.intel.com (10.22.240.5) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 11 Nov 2019 08:55:25 -0800
-Received: from orsmsx101.amr.corp.intel.com ([169.254.8.229]) by
- ORSMSX121.amr.corp.intel.com ([169.254.10.169]) with mapi id 14.03.0439.000;
- Mon, 11 Nov 2019 08:55:25 -0800
-From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
-To:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
-CC:     "kbusch@kernel.org" <kbusch@kernel.org>,
+        id S1726887AbfKKRDn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Nov 2019 12:03:43 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:39994 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726845AbfKKRDn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Nov 2019 12:03:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=jJ2XSvmWYSjH8U6K0+cFtVLMQGHVRVlZ4wb+eJcs2bM=; b=nTy5/J5uQXmgXT+1+meEgmTgk
+        nnyQfpjO2QGevTyl3/hTL0I2Koi3cmSrTVF7BUorhPZKaE5uhy662x8TNptxqnuR91U6XDYT40Ocf
+        3bG3ui4+MdL8a3mpsVLGBO3Td0CZ5AVOjddPs58Kyt0WQZu/8Rp0WYq0UI7pde8hnhPcXyZzWKfWA
+        /eiTfW2E4pwg9Y6AFjPg4fTkdGo5N46BZTaD1XxxZUAxdv79kBMNbeHjUBWaD1BJ7fYeoxCHZd7vl
+        NQumPCDdcvcopw2Jwj8DRHjb0b00RIhKLDZlFUnc9vh8+mIxFatKHthRxHjPUESO07J3h4o4ZsHwx
+        1yZHdRSxg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iUD6K-00076k-EO; Mon, 11 Nov 2019 17:03:40 +0000
+Date:   Mon, 11 Nov 2019 09:03:40 -0800
+From:   "hch@infradead.org" <hch@infradead.org>
+To:     "Derrick, Jonathan" <jonathan.derrick@intel.com>
+Cc:     "hch@infradead.org" <hch@infradead.org>,
+        "kbusch@kernel.org" <kbusch@kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "helgaas@kernel.org" <helgaas@kernel.org>
-Subject: Re: [PATCH 0/2] VMD support for 8086:9A0B
-Thread-Topic: [PATCH 0/2] VMD support for 8086:9A0B
-Thread-Index: AQHVmLCBzM/wSgBcHkKvyqwqwFVLNqeGtkqA
-Date:   Mon, 11 Nov 2019 16:55:24 +0000
-Message-ID: <140d42b51dc98b4ec7e8b99d7c3ac6772913b43e.camel@intel.com>
-References: <20191111165302.29636-1-jonathan.derrick@intel.com>
-In-Reply-To: <20191111165302.29636-1-jonathan.derrick@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.232.115.143]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <BCE4212B22BFCB40AB43A1945FB7F2C3@intel.com>
-Content-Transfer-Encoding: base64
+Subject: Re: [PATCH 0/3] PCI: vmd: Reducing tail latency by affining to the
+ storage stack
+Message-ID: <20191111170340.GA26474@infradead.org>
+References: <1573040408-3831-1-git-send-email-jonathan.derrick@intel.com>
+ <20191107093952.GA13826@infradead.org>
+ <bfc69a54dc394ffb7580d14818047ec6a647536f.camel@intel.com>
+ <20191107153736.GA16006@infradead.org>
+ <c0d62e0f1f8d1d6f31b2a63757aad471ced1df28.camel@intel.com>
+ <20191107154224.GA26224@infradead.org>
+ <784d25a41399472e80a0b384f88eccab29b01cc1.camel@intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <784d25a41399472e80a0b384f88eccab29b01cc1.camel@intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-K0tlaXRoDQpodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3Byb2plY3QvbGludXgtcGNpL2xp
-c3QvP3Nlcmllcz0yMDExNDcNCg0KT24gTW9uLCAyMDE5LTExLTExIGF0IDA5OjUzIC0wNzAwLCBK
-b24gRGVycmljayB3cm90ZToNCj4gVGhpcyBzZXQgYWRkcyBWTUQgc3VwcG9ydCBmb3IgZGV2aWNl
-IDgwODY6OUEwQi4gVGhlIGZpcnN0IHBhdGNoIGFkZHMNCj4gYW5vdGhlciBidXMgcmFuZ2UgcmVz
-dHJpY3Rpb24gYW5kIHRoZSBzZWNvbmQgYWRkcyB0aGUgZGV2aWNlIGlkLg0KPiANCj4gSm9uIERl
-cnJpY2sgKDIpOg0KPiAgIFBDSTogdm1kOiBBZGQgYnVzIDIyNC0yNTUgcmVzdHJpY3Rpb24gZGVj
-b2RlDQo+ICAgUENJOiB2bWQ6IEFkZCBkZXZpY2UgaWQgZm9yIFZNRCBkZXZpY2UgODA4Njo5QTBC
-DQo+IA0KPiAgZHJpdmVycy9wY2kvY29udHJvbGxlci92bWQuYyB8IDMyICsrKysrKysrKysrKysr
-KysrKysrKysrKy0tLS0tLS0tDQo+ICBpbmNsdWRlL2xpbnV4L3BjaV9pZHMuaCAgICAgIHwgIDEg
-Kw0KPiAgMiBmaWxlcyBjaGFuZ2VkLCAyNSBpbnNlcnRpb25zKCspLCA4IGRlbGV0aW9ucygtKQ0K
-PiANCg==
+On Thu, Nov 07, 2019 at 03:47:09PM +0000, Derrick, Jonathan wrote:
+> A cloud service provider might have several VMs on a single system and
+> wish to provide surprise hotplug functionality within the guests so
+> that they don't need to bring the whole server down or migrate VMs in
+> order to swap disks.
+
+And how does the vmd mechanism help with that?  Maybe qemu is missing
+a memremap to not access the remove device right now, but adding that
+is way simpler than having to deal with a device that makes everyones
+life complicated.
+
