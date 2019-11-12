@@ -2,83 +2,150 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 392A6F8B93
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2019 10:18:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 67F01F8BDC
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2019 10:32:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbfKLJSQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 Nov 2019 04:18:16 -0500
-Received: from mx2.suse.de ([195.135.220.15]:43154 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725954AbfKLJSQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 12 Nov 2019 04:18:16 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A4A7AAE65;
-        Tue, 12 Nov 2019 09:18:14 +0000 (UTC)
-Message-ID: <31e7037674b388919b28c6b13d4b4f71b011d9ee.camel@suse.de>
-Subject: Re: [PATCH 2/4] ARM: dts: bcm2711: Enable PCIe controller
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Andrew Murray <andrew.murray@arm.com>
-Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Eric Anholt <eric@anholt.net>,
-        Stefan Wahren <wahrenst@gmx.net>, james.quinlan@broadcom.com,
-        mbrugger@suse.com, f.fainelli@gmail.com, phil@raspberrypi.org,
-        linux-kernel@vger.kernel.org
-Date:   Tue, 12 Nov 2019 10:18:12 +0100
-In-Reply-To: <20191107103705.GX9723@e119886-lin.cambridge.arm.com>
-References: <20191106214527.18736-1-nsaenzjulienne@suse.de>
-         <20191106214527.18736-3-nsaenzjulienne@suse.de>
-         <20191107103705.GX9723@e119886-lin.cambridge.arm.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-GShpbkW8CowbTJFvOKc+"
-User-Agent: Evolution 3.34.1 
+        id S1727319AbfKLJcU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 12 Nov 2019 04:32:20 -0500
+Received: from mga09.intel.com ([134.134.136.24]:63033 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727362AbfKLJcU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 12 Nov 2019 04:32:20 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Nov 2019 01:32:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,295,1569308400"; 
+   d="scan'208";a="214040982"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 12 Nov 2019 01:32:14 -0800
+Received: by lahna (sSMTP sendmail emulation); Tue, 12 Nov 2019 11:32:14 +0200
+Date:   Tue, 12 Nov 2019 11:32:14 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Lukas Wunner <lukas@wunner.de>,
+        Keith Busch <keith.busch@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Frederick Lawler <fred@fredlawl.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] PCI: pciehp: Do not disable interrupt twice on
+ suspend
+Message-ID: <20191112093214.GC2644@lahna.fi.intel.com>
+References: <20191029170022.57528-1-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191029170022.57528-1-mika.westerberg@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi Bjorn,
 
---=-GShpbkW8CowbTJFvOKc+
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Friendly reminder. If there are no objections it would be nice to get
+these two into v5.5 so we would have mostly working native PCIe hotlug
+then :)
 
-Hi Andrew,
-
-On Thu, 2019-11-07 at 10:37 +0000, Andrew Murray wrote:
-> > +			ranges =3D <0x02000000 0x0 0xf8000000 0x6 0x00000000
-> > +				  0x0 0x04000000>;
->=20
-> Is legacy I/O supported by this controller?
->=20
-
-No, it isn't.
-
-Regards,
-Nicolas
-
-
---=-GShpbkW8CowbTJFvOKc+
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3KeNQACgkQlfZmHno8
-x/5iUgf+LjXdBQ4FjWn71+T/EcTk9J/bddIQmKOu98J3Tg6Gshv3uodKu0oH8FcW
-Ebw2xoianZ+9h3R6JO4DRyXyzM8z5jSbUbzS9RtfIkjaTc1rp+/EUo4WOIos/va1
-5PtnNBT2Ked9JKSaYAfA1RUYxTyvUqRe0gmCB6tK8LDIIrtjvHw+NJt2UxatosZf
-hbdEzFV23h7dSAEtibilo0Tsu/tQG2QcrcJb2EClIwaFprttPViyFqXcLt4NdmfU
-7nYY4CJtzBsx8aLVHYXKcJ3UuhodbmFo9Z4BDA881tKDlHKRq7fA0qinkDV5LYjy
-vqUlWp8b1ko68z8uvqshd2KfjjLumA==
-=DWxZ
------END PGP SIGNATURE-----
-
---=-GShpbkW8CowbTJFvOKc+--
-
+On Tue, Oct 29, 2019 at 08:00:21PM +0300, Mika Westerberg wrote:
+> We try to keep PCIe hotplug ports runtime suspended when entering system
+> suspend. Due to the fact that the PCIe portdrv sets NEVER_SKIP driver PM
+> flag the PM core always calls system suspend/resume hooks even if the
+> device is left runtime suspended. Since PCIe hotplug driver re-uses the
+> same function for both it ends up disabling hotplug interrupt twice and
+> the second time following is printed:
+> 
+>   pciehp 0000:03:01.0:pcie204: pcie_do_write_cmd: no response from device
+> 
+> Prevent this from happening by checking whether the device is already
+> runtime suspended when system suspend hook is called.
+> 
+> Fixes: 9c62f0bfb832 ("PCI: pciehp: Implement runtime PM callbacks")
+> Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+> No changes from previous version.
+> 
+>  drivers/pci/hotplug/pciehp_core.c | 25 +++++++++++++++++++++++--
+>  1 file changed, 23 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/pciehp_core.c
+> index b3122c151b80..56daad828c9e 100644
+> --- a/drivers/pci/hotplug/pciehp_core.c
+> +++ b/drivers/pci/hotplug/pciehp_core.c
+> @@ -253,7 +253,7 @@ static bool pme_is_native(struct pcie_device *dev)
+>  	return pcie_ports_native || host->native_pme;
+>  }
+>  
+> -static int pciehp_suspend(struct pcie_device *dev)
+> +static void pciehp_disable_interrupt(struct pcie_device *dev)
+>  {
+>  	/*
+>  	 * Disable hotplug interrupt so that it does not trigger
+> @@ -261,7 +261,19 @@ static int pciehp_suspend(struct pcie_device *dev)
+>  	 */
+>  	if (pme_is_native(dev))
+>  		pcie_disable_interrupt(get_service_data(dev));
+> +}
+>  
+> +#ifdef CONFIG_PM_SLEEP
+> +static int pciehp_suspend(struct pcie_device *dev)
+> +{
+> +	/*
+> +	 * If the port is already runtime suspended we can keep it that
+> +	 * way.
+> +	 */
+> +	if (dev_pm_smart_suspend_and_suspended(&dev->port->dev))
+> +		return 0;
+> +
+> +	pciehp_disable_interrupt(dev);
+>  	return 0;
+>  }
+>  
+> @@ -279,6 +291,7 @@ static int pciehp_resume_noirq(struct pcie_device *dev)
+>  
+>  	return 0;
+>  }
+> +#endif
+>  
+>  static int pciehp_resume(struct pcie_device *dev)
+>  {
+> @@ -292,6 +305,12 @@ static int pciehp_resume(struct pcie_device *dev)
+>  	return 0;
+>  }
+>  
+> +static int pciehp_runtime_suspend(struct pcie_device *dev)
+> +{
+> +	pciehp_disable_interrupt(dev);
+> +	return 0;
+> +}
+> +
+>  static int pciehp_runtime_resume(struct pcie_device *dev)
+>  {
+>  	struct controller *ctrl = get_service_data(dev);
+> @@ -318,10 +337,12 @@ static struct pcie_port_service_driver hpdriver_portdrv = {
+>  	.remove		= pciehp_remove,
+>  
+>  #ifdef	CONFIG_PM
+> +#ifdef	CONFIG_PM_SLEEP
+>  	.suspend	= pciehp_suspend,
+>  	.resume_noirq	= pciehp_resume_noirq,
+>  	.resume		= pciehp_resume,
+> -	.runtime_suspend = pciehp_suspend,
+> +#endif
+> +	.runtime_suspend = pciehp_runtime_suspend,
+>  	.runtime_resume	= pciehp_runtime_resume,
+>  #endif	/* PM */
+>  };
+> -- 
+> 2.23.0
