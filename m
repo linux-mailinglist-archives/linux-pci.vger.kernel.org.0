@@ -2,94 +2,169 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E728FF8500
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2019 01:17:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 96F18F8503
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2019 01:19:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbfKLARO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Nov 2019 19:17:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48680 "EHLO mail.kernel.org"
+        id S1727041AbfKLATT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Nov 2019 19:19:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726845AbfKLARO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 11 Nov 2019 19:17:14 -0500
+        id S1727002AbfKLATR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 11 Nov 2019 19:19:17 -0500
 Received: from localhost (unknown [69.71.4.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1134620840;
-        Tue, 12 Nov 2019 00:17:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD4E720840;
+        Tue, 12 Nov 2019 00:19:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573517833;
-        bh=Kk1bpUfJbrw8Yuc6Dy5J8f/fMli5NfvcrZp5hOVBoBQ=;
+        s=default; t=1573517956;
+        bh=7Viu80YlFDf/U2qYiv71cMwq4T3UA/2DZ1VgU9m0rWE=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=s1hAzH0WnZ3iOuSUD1Co8FyXq7hWtX4kiOBtxlKaJal7t+zBvf2HwFLBTLx54snbm
-         LqZzaOH3WmxYDK/kcNpuJejxLk1zZB42l78aop0wWf3Qbh5Ejd50es4iElQw15tnNG
-         JKOv/54HF/P6JaaCSk7ZaogKHqEIe9nPzfFj5oMI=
-Date:   Mon, 11 Nov 2019 18:17:10 -0600
+        b=NgnDFJijO8asY3t2SPzE2AOteKCC+6tt0EO5p2aFa2st3NXLH+miZOoMaqA/LZWtZ
+         ZSjcUU7AOYcrA+ZqgME3ViU7Wp5+1sZuxUDYkHiNSPOXIWNhw1kVlPl1INmdFPhLZR
+         Z9UWycaMvvgoUAuFQW4R3pQnMYTrlwtP2qRxdUks=
+Date:   Mon, 11 Nov 2019 18:19:14 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-pci@vger.kernel.org, Stuart Hayes <stuart.w.hayes@gmail.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Andrew Murray <andrew.murray@arm.com>
-Subject: Re: [PATCH v2] PCI: pciehp: Refactor infinite loop in pcie_poll_cmd()
-Message-ID: <20191112001710.GA78003@google.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Valerio Passini <passini.valerio@gmail.com>,
+        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] ACPI / hotplug / PCI: Allocate resources directly under
+ the non-hotplug bridge
+Message-ID: <20191112001914.GA78121@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191108111855.85866-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20191030150545.19885-1-mika.westerberg@linux.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Nov 08, 2019 at 01:18:55PM +0200, Andy Shevchenko wrote:
-> Infinite timeout loops are hard to read. Refactor it
-> to plausible 'do {} while ()'.
+On Wed, Oct 30, 2019 at 06:05:45PM +0300, Mika Westerberg wrote:
+> Valerio and others reported that commit 84c8b58ed3ad ("ACPI / hotplug /
+> PCI: Don't scan bridges managed by native hotplug") prevents some recent
+> LG and HP laptops from booting with endless loop of:
 > 
-> Note, the supplied timeout can't be negative for current use,
-> though if it's not dividable to 10, we may go below 0,
-> that's why type of the parameter is int. And thus, we may move
-> the check to the loop condition.
+>   [   26.237796] ACPI Error: No handler or method for GPE 08, disabling event (20190215/evgpe-835)
+>   [   26.238699] ACPI Error: No handler or method for GPE 09, disabling event (20190215/evgpe-835)
+>   [   26.239306] ACPI Error: No handler or method for GPE 0A, disabling event (20190215/evgpe-835)
+>   ...
 > 
-> No functional changes implied.
+> What seems to happen is that during boot, after the initial PCI
+> enumeration when EC is enabled the platform triggers ACPI Notify() to
+> one of the root ports. The root port itself looks like this:
 > 
-> Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>   [    0.723757] pci 0000:00:1b.0: PCI bridge to [bus 02-3a]
+>   [    0.723765] pci 0000:00:1b.0:   bridge window [mem 0xc4000000-0xda0fffff]
+>   [    0.723773] pci 0000:00:1b.0:   bridge window [mem 0x80000000-0xa1ffffff 64bit pref]
+> 
+> The BIOS has configured the root port so that it does not have I/O
+> bridge window.
+> 
+> Now when the ACPI Notify() is triggered ACPI hotplug handler calls
+> acpiphp_native_scan_bridge() for each non-hotplug bridge (as this system
+> is using native PCIe hotplug) and pci_assign_unassigned_bridge_resources()
+> to allocate resources.
+> 
+> The device connected to the root port is a PCIe switch (Thunderbolt
+> controller) with two hotplug downstream ports. Because of the hotplug
+> ports __pci_bus_size_bridges() tries to add "additional I/O" of 256
+> bytes to each (DEFAULT_HOTPLUG_IO_SIZE). This gets further aligned to 4k
+> as that's the minimum I/O window size so each hotplug port gets 4k I/O
+> window and the same happens for the root port (which is also hotplug
+> port). This means 3 * 4k = 12k I/O window.
+> 
+> Because of this pci_assign_unassigned_bridge_resources() ends up opening
+> a I/O bridge window for the root port at first available I/O address
+> which seems to be in range 0x1000 - 0x3fff. Normally this range is used
+> for ACPI stuff such as GPE bits (below is part of /proc/ioports):
+> 
+>     1800-1803 : ACPI PM1a_EVT_BLK
+>     1804-1805 : ACPI PM1a_CNT_BLK
+>     1808-180b : ACPI PM_TMR
+>     1810-1815 : ACPI CPU throttle
+>     1850-1850 : ACPI PM2_CNT_BLK
+>     1854-1857 : pnp 00:05
+>     1860-187f : ACPI GPE0_BLK
+> 
+> However, when the ACPI Notify() happened this range was not yet reserved
+> for ACPI/PNP (that happens later) so PCI gets it. It then starts writing
+> to this range and accidentally stomps over GPE bits among other things
+> causing the endless stream of messages about missing GPE handler.
+> 
+> This problem does not happen if "pci=hpiosize=0" is passed in the kernel
+> command line. The reason is that then the kernel does not try to
+> allocate the additional 256 bytes for each hotplug port.
+> 
+> Fix this by allocating resources directly below the non-hotplug bridges
+> where a new device may appear as a result of ACPI Notify(). This avoids
+> the hotplug bridges and prevents opening the additional I/O window.
+> 
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=203617
+> Fixes: 84c8b58ed3ad ("ACPI / hotplug / PCI: Don't scan bridges managed by native hotplug")
+> Cc: stable@vger.kernel.org
+> Reported-by: Valerio Passini <passini.valerio@gmail.com>
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-Applied to pci/hotplug for v5.5, thanks!
+Applied with Rafael's reviewed-by to pci/hotplug for v5.5, thanks!
 
 > ---
-> - corrected loop conditional to include 0 comparison (Keith)
-> - added Rb (Andrew)
->  drivers/pci/hotplug/pciehp_hpc.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
+> I was able to reproduce this without access to the affected system by
+> forcing ACPI core to send Notify() to the TBT root port like this:
 > 
-> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-> index 86d97f3112f0..764384153c7d 100644
-> --- a/drivers/pci/hotplug/pciehp_hpc.c
-> +++ b/drivers/pci/hotplug/pciehp_hpc.c
-> @@ -68,7 +68,7 @@ static int pcie_poll_cmd(struct controller *ctrl, int timeout)
->  	struct pci_dev *pdev = ctrl_dev(ctrl);
->  	u16 slot_status;
+> void acpi_notify_rp(void)
+> {
+> 	struct acpi_device *adev;
+> 	acpi_handle handle;
+> 
+> 	if (ACPI_FAILURE(acpi_get_handle(NULL, "\\_SB.PCI0.RP17", &handle)))
+> 		return;
+> 
+> 	if (acpi_bus_get_device(handle, &adev))
+> 		return;
+> 
+> 	dev_info(&adev->dev, "queueing hotplug\n");
+> 	acpiphp_hotplug_notify(adev, ACPI_NOTIFY_BUS_CHECK);
+> }
+> 
+> and calling it from acpi_init() directly after acpi_ec_init().
+> 
+>  drivers/pci/hotplug/acpiphp_glue.c | 12 +++++++++---
+>  1 file changed, 9 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pci/hotplug/acpiphp_glue.c b/drivers/pci/hotplug/acpiphp_glue.c
+> index e4c46637f32f..b3869951c0eb 100644
+> --- a/drivers/pci/hotplug/acpiphp_glue.c
+> +++ b/drivers/pci/hotplug/acpiphp_glue.c
+> @@ -449,8 +449,15 @@ static void acpiphp_native_scan_bridge(struct pci_dev *bridge)
 >  
-> -	while (true) {
-> +	do {
->  		pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
->  		if (slot_status == (u16) ~0) {
->  			ctrl_info(ctrl, "%s: no response from device\n",
-> @@ -81,11 +81,9 @@ static int pcie_poll_cmd(struct controller *ctrl, int timeout)
->  						   PCI_EXP_SLTSTA_CC);
->  			return 1;
->  		}
-> -		if (timeout < 0)
-> -			break;
->  		msleep(10);
->  		timeout -= 10;
-> -	}
-> +	} while (timeout >= 0);
->  	return 0;	/* timeout */
+>  	/* Scan non-hotplug bridges that need to be reconfigured */
+>  	for_each_pci_bridge(dev, bus) {
+> -		if (!hotplug_is_native(dev))
+> -			max = pci_scan_bridge(bus, dev, max, 1);
+> +		if (hotplug_is_native(dev))
+> +			continue;
+> +
+> +		max = pci_scan_bridge(bus, dev, max, 1);
+> +		if (dev->subordinate) {
+> +			pcibios_resource_survey_bus(dev->subordinate);
+> +			pci_bus_size_bridges(dev->subordinate);
+> +			pci_bus_assign_resources(dev->subordinate);
+> +		}
+>  	}
 >  }
 >  
+> @@ -480,7 +487,6 @@ static void enable_slot(struct acpiphp_slot *slot, bool bridge)
+>  			if (PCI_SLOT(dev->devfn) == slot->device)
+>  				acpiphp_native_scan_bridge(dev);
+>  		}
+> -		pci_assign_unassigned_bridge_resources(bus->self);
+>  	} else {
+>  		LIST_HEAD(add_list);
+>  		int max, pass;
 > -- 
-> 2.24.0.rc1
+> 2.23.0
 > 
