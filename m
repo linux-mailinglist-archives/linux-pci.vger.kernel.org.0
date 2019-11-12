@@ -2,169 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 96F18F8503
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2019 01:19:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B81DEF851D
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Nov 2019 01:22:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbfKLATT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Nov 2019 19:19:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48836 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727002AbfKLATR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 11 Nov 2019 19:19:17 -0500
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD4E720840;
-        Tue, 12 Nov 2019 00:19:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573517956;
-        bh=7Viu80YlFDf/U2qYiv71cMwq4T3UA/2DZ1VgU9m0rWE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=NgnDFJijO8asY3t2SPzE2AOteKCC+6tt0EO5p2aFa2st3NXLH+miZOoMaqA/LZWtZ
-         ZSjcUU7AOYcrA+ZqgME3ViU7Wp5+1sZuxUDYkHiNSPOXIWNhw1kVlPl1INmdFPhLZR
-         Z9UWycaMvvgoUAuFQW4R3pQnMYTrlwtP2qRxdUks=
-Date:   Mon, 11 Nov 2019 18:19:14 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Valerio Passini <passini.valerio@gmail.com>,
-        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] ACPI / hotplug / PCI: Allocate resources directly under
- the non-hotplug bridge
-Message-ID: <20191112001914.GA78121@google.com>
+        id S1726887AbfKLAWA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Nov 2019 19:22:00 -0500
+Received: from mail-qv1-f42.google.com ([209.85.219.42]:40566 "EHLO
+        mail-qv1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726845AbfKLAWA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Nov 2019 19:22:00 -0500
+Received: by mail-qv1-f42.google.com with SMTP id i3so5483041qvv.7
+        for <linux-pci@vger.kernel.org>; Mon, 11 Nov 2019 16:22:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/dnImrLwCfDWFxJwmcsvAa0fiZbE181aSgupMV2nY24=;
+        b=C5Q1KEMKkzb4HcEXkTOJPf9NP+zVv32HQER+gqIaBPUy8TrBqvYgXA4a6ZJxQhJF0T
+         V4W454ocgcQ+nRrClf/Rf0/EuAubuNVwGKPXuetbp5vMgyyTVzYikZTe9JDznvMQpnKC
+         nFHPt13F7NQxnZtO5MGOvDrAk3C8XFKeRUhd4L5U/e5lOFyrjlVzxFl09pMv9gU+4AO3
+         nrVP6Pilcs3UHBDHrWQwpbujd8o+kjXjENOdrftvsooEUn7HtsbMWRUGMAIC3cRN8wzP
+         XSZH9EgE4zV7uwn2W/UmtV3YEUxXArBS6hD9ySZHrovwN9DWKn6vTrE8HiQCFvzUgEE6
+         S/3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/dnImrLwCfDWFxJwmcsvAa0fiZbE181aSgupMV2nY24=;
+        b=HYNSmAndaPHerXH42EV8mFm2S1eTs0IAZNmD42JVXqix5bhnhoIntwPjM93rxk9AbH
+         zlOrRHjbf5yCqcSwzNipEPKmUikH7iPoHm58F2l6wqcUPybSeDnzT3cEbY7mOWXS6Cej
+         3SMPX5fMnqKV2J78jvSl0Bkf0p9smUU4Jb3t8aB1fnHoyCj39PkNrG/uTojT5eHjquuB
+         LA6LykBAiGB/mUtrI+YWGYfB9BdClpCGtrkJjfNowuRv3GBXPN2LYbQzV/JcXQL/+Xa8
+         5EIWoTMC3UbopF9LfGMx9Z735iobcfQYKTeOTj65kd9vrESahyDKel/gAyoWl+eU46Ai
+         0RgA==
+X-Gm-Message-State: APjAAAUyHJvFOex7qfQegbmmy3QcrR6PkwJiyz1bsoK/7fy011hO9ZQT
+        /9n1zVHWpbgSEHIu9Q7DZdj3I/6hTyLiTJiDelGOcZoFw5Y=
+X-Google-Smtp-Source: APXvYqxYFiFSOqxTBYlU02T1WV3knqhZ26kuIrarnHYZNBxAn0VJSMNUVwyv0SKLBPxQak8zMSascx6jZ9zB4Wv2z7A=
+X-Received: by 2002:a0c:f603:: with SMTP id r3mr11792769qvm.19.1573518119164;
+ Mon, 11 Nov 2019 16:21:59 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191030150545.19885-1-mika.westerberg@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CAMdYzYo6mKSMXoDR7St1ynUJ9f3sh=0rgNAbbVvFAfJn82VvVQ@mail.gmail.com>
+ <20191112000334.GA69183@google.com>
+In-Reply-To: <20191112000334.GA69183@google.com>
+From:   Peter Geis <pgwipeout@gmail.com>
+Date:   Mon, 11 Nov 2019 19:21:48 -0500
+Message-ID: <CAMdYzYqQdd5Es3DtWT3M4bBhMrTeZfz--eVGjGzin6jbH3ZwcA@mail.gmail.com>
+Subject: Re: [BUG] rk3399-rockpro64 pcie synchronous external abort
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Doug Anderson <dianders@chromium.org>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 06:05:45PM +0300, Mika Westerberg wrote:
-> Valerio and others reported that commit 84c8b58ed3ad ("ACPI / hotplug /
-> PCI: Don't scan bridges managed by native hotplug") prevents some recent
-> LG and HP laptops from booting with endless loop of:
-> 
->   [   26.237796] ACPI Error: No handler or method for GPE 08, disabling event (20190215/evgpe-835)
->   [   26.238699] ACPI Error: No handler or method for GPE 09, disabling event (20190215/evgpe-835)
->   [   26.239306] ACPI Error: No handler or method for GPE 0A, disabling event (20190215/evgpe-835)
->   ...
-> 
-> What seems to happen is that during boot, after the initial PCI
-> enumeration when EC is enabled the platform triggers ACPI Notify() to
-> one of the root ports. The root port itself looks like this:
-> 
->   [    0.723757] pci 0000:00:1b.0: PCI bridge to [bus 02-3a]
->   [    0.723765] pci 0000:00:1b.0:   bridge window [mem 0xc4000000-0xda0fffff]
->   [    0.723773] pci 0000:00:1b.0:   bridge window [mem 0x80000000-0xa1ffffff 64bit pref]
-> 
-> The BIOS has configured the root port so that it does not have I/O
-> bridge window.
-> 
-> Now when the ACPI Notify() is triggered ACPI hotplug handler calls
-> acpiphp_native_scan_bridge() for each non-hotplug bridge (as this system
-> is using native PCIe hotplug) and pci_assign_unassigned_bridge_resources()
-> to allocate resources.
-> 
-> The device connected to the root port is a PCIe switch (Thunderbolt
-> controller) with two hotplug downstream ports. Because of the hotplug
-> ports __pci_bus_size_bridges() tries to add "additional I/O" of 256
-> bytes to each (DEFAULT_HOTPLUG_IO_SIZE). This gets further aligned to 4k
-> as that's the minimum I/O window size so each hotplug port gets 4k I/O
-> window and the same happens for the root port (which is also hotplug
-> port). This means 3 * 4k = 12k I/O window.
-> 
-> Because of this pci_assign_unassigned_bridge_resources() ends up opening
-> a I/O bridge window for the root port at first available I/O address
-> which seems to be in range 0x1000 - 0x3fff. Normally this range is used
-> for ACPI stuff such as GPE bits (below is part of /proc/ioports):
-> 
->     1800-1803 : ACPI PM1a_EVT_BLK
->     1804-1805 : ACPI PM1a_CNT_BLK
->     1808-180b : ACPI PM_TMR
->     1810-1815 : ACPI CPU throttle
->     1850-1850 : ACPI PM2_CNT_BLK
->     1854-1857 : pnp 00:05
->     1860-187f : ACPI GPE0_BLK
-> 
-> However, when the ACPI Notify() happened this range was not yet reserved
-> for ACPI/PNP (that happens later) so PCI gets it. It then starts writing
-> to this range and accidentally stomps over GPE bits among other things
-> causing the endless stream of messages about missing GPE handler.
-> 
-> This problem does not happen if "pci=hpiosize=0" is passed in the kernel
-> command line. The reason is that then the kernel does not try to
-> allocate the additional 256 bytes for each hotplug port.
-> 
-> Fix this by allocating resources directly below the non-hotplug bridges
-> where a new device may appear as a result of ACPI Notify(). This avoids
-> the hotplug bridges and prevents opening the additional I/O window.
-> 
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=203617
-> Fixes: 84c8b58ed3ad ("ACPI / hotplug / PCI: Don't scan bridges managed by native hotplug")
-> Cc: stable@vger.kernel.org
-> Reported-by: Valerio Passini <passini.valerio@gmail.com>
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-
-Applied with Rafael's reviewed-by to pci/hotplug for v5.5, thanks!
-
-> ---
-> I was able to reproduce this without access to the affected system by
-> forcing ACPI core to send Notify() to the TBT root port like this:
-> 
-> void acpi_notify_rp(void)
-> {
-> 	struct acpi_device *adev;
-> 	acpi_handle handle;
-> 
-> 	if (ACPI_FAILURE(acpi_get_handle(NULL, "\\_SB.PCI0.RP17", &handle)))
-> 		return;
-> 
-> 	if (acpi_bus_get_device(handle, &adev))
-> 		return;
-> 
-> 	dev_info(&adev->dev, "queueing hotplug\n");
-> 	acpiphp_hotplug_notify(adev, ACPI_NOTIFY_BUS_CHECK);
-> }
-> 
-> and calling it from acpi_init() directly after acpi_ec_init().
-> 
->  drivers/pci/hotplug/acpiphp_glue.c | 12 +++++++++---
->  1 file changed, 9 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/hotplug/acpiphp_glue.c b/drivers/pci/hotplug/acpiphp_glue.c
-> index e4c46637f32f..b3869951c0eb 100644
-> --- a/drivers/pci/hotplug/acpiphp_glue.c
-> +++ b/drivers/pci/hotplug/acpiphp_glue.c
-> @@ -449,8 +449,15 @@ static void acpiphp_native_scan_bridge(struct pci_dev *bridge)
->  
->  	/* Scan non-hotplug bridges that need to be reconfigured */
->  	for_each_pci_bridge(dev, bus) {
-> -		if (!hotplug_is_native(dev))
-> -			max = pci_scan_bridge(bus, dev, max, 1);
-> +		if (hotplug_is_native(dev))
-> +			continue;
-> +
-> +		max = pci_scan_bridge(bus, dev, max, 1);
-> +		if (dev->subordinate) {
-> +			pcibios_resource_survey_bus(dev->subordinate);
-> +			pci_bus_size_bridges(dev->subordinate);
-> +			pci_bus_assign_resources(dev->subordinate);
-> +		}
->  	}
->  }
->  
-> @@ -480,7 +487,6 @@ static void enable_slot(struct acpiphp_slot *slot, bool bridge)
->  			if (PCI_SLOT(dev->devfn) == slot->device)
->  				acpiphp_native_scan_bridge(dev);
->  		}
-> -		pci_assign_unassigned_bridge_resources(bus->self);
->  	} else {
->  		LIST_HEAD(add_list);
->  		int max, pass;
-> -- 
-> 2.23.0
-> 
+On Mon, Nov 11, 2019 at 7:03 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Sun, Nov 10, 2019 at 10:43:48AM -0500, Peter Geis wrote:
+>
+> > I plugged in an i350 two port nic and examined the assigned address spaces.
+> > I've attached it below.
+> > Judging by the usage, I think this controller has enough address space
+> > for another two port NIC, and that's about it.
+> > I'm pretty sure now that the rk3399 controller just doesn't have the
+> > address space to map larger devices.
+> > I'm pretty sure the IOMMU would allow us to address system memory as
+> > pcie address space and overcome this limitation, but I don't know how
+> > to do that.
+>
+> I don't think you're out of MMIO space, at least in this instance.  It
+> looks like you have 32MB available and the two-port NIC on bus 01 only
+> takes 5MB.
+>
+> The IOMMU is used for DMA (e.g., reads/writes initiated by the NIC),
+> while the MMIO space is used for CPU programmed I/O (reads/writes done
+> by the driver running on the CPU).
+>
+> > The address space for the nic is below:
+> > f8000000-f8ffffff : axi-base
+> > fa000000-fbdfffff : MEM
+>
+> 32MB.
+>
+> >   fa000000-fa4fffff : PCI Bus 0000:01
+>
+> 5MB.
+Just a note, this is not the device that triggered the bug.
+This is a i350 NIC, i posted it as a comparison to my original email.
+>
+> >     fa000000-fa07ffff : 0000:01:00.0
+> >       fa000000-fa07ffff : igb
+> >     fa080000-fa0fffff : 0000:01:00.0
+> >     fa100000-fa17ffff : 0000:01:00.1
+> >       fa100000-fa17ffff : igb
+> >     fa180000-fa1fffff : 0000:01:00.1
+> >     fa200000-fa27ffff : 0000:01:00.0
+> >     fa280000-fa2fffff : 0000:01:00.0
+> >     fa300000-fa37ffff : 0000:01:00.1
+> >     fa380000-fa3fffff : 0000:01:00.1
+> >     fa400000-fa403fff : 0000:01:00.0
+> >       fa400000-fa403fff : igb
+> >     fa404000-fa407fff : 0000:01:00.1
+> >       fa404000-fa407fff : igb
+> > fd000000-fdffffff : f8000000.pcie
