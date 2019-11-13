@@ -2,224 +2,178 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 19BF7FA7E3
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2019 05:15:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A1DCFA960
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2019 06:09:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbfKMEPg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 Nov 2019 23:15:36 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:35707 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726995AbfKMEPg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Nov 2019 23:15:36 -0500
-Received: by mail-ot1-f68.google.com with SMTP id z6so478140otb.2;
-        Tue, 12 Nov 2019 20:15:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Fu3Y/4lCeDSudNWi+wvYdwt8kDwqIxhy6RedI/4rb48=;
-        b=I0kEQgPZzvbMz3kEE2r6A6XpCNlpBFKHOCcwuFO7y38oZkWBQnWBfzKGWQVscdnvPD
-         Wx94zwVO2teY/zniBbr+oNhUxWu66HQ90fX7V2vhbPn9QWRALsuzoyNSYJBb41Igi3N0
-         6t6Mf0PwxuhnHL6xcwLqO/2dJ+p7IeUVeug0uwzoLcIgMMz5oasdE0JBDLeZfd70LPSx
-         lxFih57Y7e0v3ZPjpxzmou8fxP7856lal3acVql6EJze0Um3aPhhJEqDLZfNDrAaQFc3
-         gKCrRWYS2yKaSXSuZKLSj7dNzOkwX7U3ljEEJHY9Ez4D0fhb0PkTVVXZaA7gcisBp6oY
-         DTBA==
-X-Gm-Message-State: APjAAAWEpwURm34coqfWGN1ClL5cwTUgyllxx/dvVmely23MpZGS0Pss
-        fIWSaO3sHvEFZljdabxcNw==
-X-Google-Smtp-Source: APXvYqxbN5/QlD1YTfwus6CP4J23kgOsBx8dLDfsU2Js+cOxTe7uQW9y/ENAShKBJ4fIZy7N6jInJw==
-X-Received: by 2002:a9d:a63:: with SMTP id 90mr1061108otg.346.1573618534975;
-        Tue, 12 Nov 2019 20:15:34 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id o14sm295660oie.24.2019.11.12.20.15.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 20:15:34 -0800 (PST)
-Date:   Tue, 12 Nov 2019 22:15:33 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Andrew Murray <andrew.murray@arm.com>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        james.quinlan@broadcom.com, mbrugger@suse.com,
-        f.fainelli@gmail.com, phil@raspberrypi.org, wahrenst@gmx.net,
-        Mark Rutland <mark.rutland@arm.com>,
+        id S1725976AbfKMFJt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 Nov 2019 00:09:49 -0500
+Received: from bmailout2.hostsharing.net ([83.223.78.240]:51099 "EHLO
+        bmailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbfKMFJt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Nov 2019 00:09:49 -0500
+X-Greylist: delayed 606 seconds by postgrey-1.27 at vger.kernel.org; Wed, 13 Nov 2019 00:09:47 EST
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout2.hostsharing.net (Postfix) with ESMTPS id 763252800021B;
+        Wed, 13 Nov 2019 05:59:39 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 38CC8477C16; Wed, 13 Nov 2019 05:59:39 +0100 (CET)
+Date:   Wed, 13 Nov 2019 05:59:39 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Stuart Hayes <stuart.w.hayes@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] dt-bindings: pci: add bindings for brcmstb's PCIe
- device
-Message-ID: <20191113041533.GA25497@bogus>
-References: <20191106214527.18736-1-nsaenzjulienne@suse.de>
- <20191106214527.18736-2-nsaenzjulienne@suse.de>
+Subject: Re: [PATCH] PCI: pciehp: Make sure pciehp_isr clears interrupt events
+Message-ID: <20191113045939.hhmzfbx46vkgmsvn@wunner.de>
+References: <20191112215938.1145-1-stuart.w.hayes@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191106214527.18736-2-nsaenzjulienne@suse.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191112215938.1145-1-stuart.w.hayes@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 10:45:23PM +0100, Nicolas Saenz Julienne wrote:
-> From: Jim Quinlan <james.quinlan@broadcom.com>
+On Tue, Nov 12, 2019 at 04:59:38PM -0500, Stuart Hayes wrote:
+> The pciehp interrupt handler pciehp_isr() will read the slot status
+> register and then write back to it to clear just the bits that caused the
+> interrupt. If a different interrupt event bit gets set between the read and
+> the write, pciehp_isr() will exit without having cleared all of the
+> interrupt event bits, so we will never get another hotplug interrupt from
+> that device.
+
+The IRQ is masked when it occurs and unmasked after it's been handled.
+See the invocation of mask_ack_irq() in handle_edge_irq() and
+handle_level_irq() in kernel/irq/chip.c.
+
+If the IRQ has fired in-between, the IRQ chip is expected to invoke
+the IRQ handler again.  There is some support for IRQ chips not
+capable of replaying interrupts in kernel/irq/resend.c, but in general,
+if you do not get another hotplug interrupt, the hardware is broken.
+What kind of IRQ chip are you using and what kind of chip is the
+hotplug port built into?
+
+I'm not opposed to quirks to support such broken hardware but the
+commit message shouldn't purport that it's normal behavior and the
+quirk should only be executed where necessary and be made explicit
+in the code to be a quirk.
+
+Thanks,
+
+Lukas
+
 > 
-> The DT bindings description of the brcmstb PCIe device is described.
-> This node can only be used for now on the Raspberry Pi 4.
+> That is expected behavior according to the PCI Express spec (v.5.0, section
+> 6.7.3.4, "Software Notification of Hot-Plug Events").
 > 
-> This was based on Jim's original submission[1], converted to yaml and
-> adapted to the RPi4 case.
+> Because the "presence detect changed" and "data link layer state changed"
+> event bits are both getting set at nearly the same time when a device is
+> added or removed, this is more likely to happen than it might seem. The
+> issue can be reproduced rather easily by connecting and disconnecting an
+> NVMe device on at least one system model.
 > 
-> [1] https://patchwork.kernel.org/patch/10605937/
+> This patch fixes the issue by modifying pciehp_isr() to loop back and
+> re-read the slot status register immediately after writing to it, until
+> it sees that all of the event status bits have been cleared.
 > 
-> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> Co-developed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
 > ---
->  .../bindings/pci/brcm,stb-pcie.yaml           | 116 ++++++++++++++++++
->  1 file changed, 116 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-
-I'm working on a common PCI host schema that should cut down some of the 
-standard props.
-
-> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> new file mode 100644
-> index 000000000000..0b81c26f8568
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> @@ -0,0 +1,116 @@
-> +# SPDX-License-Identifier: GPL-2.0
-
-Dual license new bindings please:
-
-# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/brcm,stb-pcie.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>  drivers/pci/hotplug/pciehp_hpc.c | 39 +++++++++++++++++++++++++++-----
+>  1 file changed, 33 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+> index 1a522c1c4177..8ec22a872b28 100644
+> --- a/drivers/pci/hotplug/pciehp_hpc.c
+> +++ b/drivers/pci/hotplug/pciehp_hpc.c
+> @@ -487,12 +487,21 @@ void pciehp_power_off_slot(struct controller *ctrl)
+>  		 PCI_EXP_SLTCTL_PWR_OFF);
+>  }
+>  
+> +/*
+> + * We should never need to re-read the slot status register this many times,
+> + * because there are only six possible events that could generate this
+> + * interrupt.  If we still see events after this many reads, there's a stuck
+> + * bit.
+> + */
+> +#define MAX_ISR_STATUS_READS 6
 > +
-> +title: Brcmstb PCIe Host Controller Device Tree Bindings
+>  static irqreturn_t pciehp_isr(int irq, void *dev_id)
+>  {
+>  	struct controller *ctrl = (struct controller *)dev_id;
+>  	struct pci_dev *pdev = ctrl_dev(ctrl);
+>  	struct device *parent = pdev->dev.parent;
+> -	u16 status, events;
+> +	u16 status, events = 0;
+> +	int status_reads = 0;
+>  
+>  	/*
+>  	 * Interrupts only occur in D3hot or shallower and only if enabled
+> @@ -517,6 +526,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
+>  		}
+>  	}
+>  
+> +read_status:
+>  	pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &status);
+>  	if (status == (u16) ~0) {
+>  		ctrl_info(ctrl, "%s: no response from device\n", __func__);
+> @@ -529,16 +539,34 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
+>  	 * Slot Status contains plain status bits as well as event
+>  	 * notification bits; right now we only want the event bits.
+>  	 */
+> -	events = status & (PCI_EXP_SLTSTA_ABP | PCI_EXP_SLTSTA_PFD |
+> -			   PCI_EXP_SLTSTA_PDC | PCI_EXP_SLTSTA_CC |
+> -			   PCI_EXP_SLTSTA_DLLSC);
+> +	status &= (PCI_EXP_SLTSTA_ABP | PCI_EXP_SLTSTA_PFD |
+> +		   PCI_EXP_SLTSTA_PDC | PCI_EXP_SLTSTA_CC |
+> +		   PCI_EXP_SLTSTA_DLLSC);
+>  
+>  	/*
+>  	 * If we've already reported a power fault, don't report it again
+>  	 * until we've done something to handle it.
+>  	 */
+>  	if (ctrl->power_fault_detected)
+> -		events &= ~PCI_EXP_SLTSTA_PFD;
+> +		status &= ~PCI_EXP_SLTSTA_PFD;
 > +
-> +maintainers:
-> +  - Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> +	if (status) {
+> +		pcie_capability_write_word(pdev, PCI_EXP_SLTSTA, status);
+> +		events |= status;
+> +	}
 > +
-> +properties:
-> +  compatible:
-> +    const: brcm,bcm2711-pcie # The Raspberry Pi 4
+> +	/*
+> +	 * All of the event bits must be zero before the port will send
+> +	 * a new interrupt.  If an event bit gets set between the read
+> +	 * and the write, we'll never get another interrupt, so loop until
+> +	 * we see no event bits set.
+> +	 */
+> +	if (status && status_reads++ < MAX_ISR_STATUS_READS)
+> +		goto read_status;
 > +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    minItems: 1
-> +    maxItems: 2
-> +    items:
-> +      - description: PCIe host controller
-> +      - description: builtin MSI controller
-> +
-> +  interrupt-names:
-> +    minItems: 1
-> +    maxItems: 2
-> +    items:
-> +      - const: pcie
-> +      - const: msi
-> +
-> +  "#address-cells":
-> +    const: 3
-> +
-> +  "#size-cells":
-> +    const: 2
-> +
-> +  "#interrupt-cells":
-> +    const: 1
-> +
-> +  interrupt-map-mask: true
-> +
-> +  interrupt-map: true
-
-4 entries?
-
-You'll need to bracket <> each entry in the example and dts.
-
-> +
-> +  ranges: true
-
-How many entries?
-
-> +
-> +  dma-ranges: true
-
-How many entries?
-
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    items:
-> +      - const: sw_pcie
-> +
-> +  msi-controller:
-> +    description: Identifies the node as an MSI controller.
-> +    type: boolean
-> +
-> +  msi-parent:
-> +    description: MSI controller the device is capable of using.
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +
-> +  linux,pci-domain:
-> +    description: PCI domain ID. Should be unique for each host controller.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +
-> +  brcm,enable-ssc:
-> +    description: Indicates usage of spread-spectrum clocking.
-> +    type: boolean
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +  - "#interrupt-cells"
-> +  - interrupt-map-mask
-> +  - interrupt-map
-> +  - ranges
-> +  - dma-ranges
-> +  - linux,pci-domain
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    scb {
-> +            #address-cells = <2>;
-> +            #size-cells = <1>;
-> +            pcie0: pcie@7d500000 {
-> +                    compatible = "brcm,bcm2711-pcie";
-> +                    reg = <0x0 0x7d500000 0x9310>;
-> +                    #address-cells = <3>;
-> +                    #size-cells = <2>;
-> +                    #interrupt-cells = <1>;
-> +                    interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
-> +                                 <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
-> +                    interrupt-names = "pcie", "msi";
-> +                    interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-> +                    interrupt-map = <0 0 0 1 &gicv2 GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH
-> +                                     0 0 0 2 &gicv2 GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH
-> +                                     0 0 0 3 &gicv2 GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH
-> +                                     0 0 0 4 &gicv2 GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>;
-> +                    msi-parent = <&pcie0>;
-> +                    msi-controller;
-> +                    ranges = <0x02000000 0x0 0xf8000000 0x6 0x00000000 0x0 0x04000000>;
-> +                    dma-ranges = <0x02000000 0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>;
-> +                    linux,pci-domain = <0>;
-> +                    brcm,enable-ssc;
-> +            };
-> +    };
+> +	if (status_reads == MAX_ISR_STATUS_READS)
+> +		ctrl_warn(ctrl, "Slot(%s): Hot plug event bit stuck, reading %x\n",
+> +			  status, slot_name(ctrl));
+>  
+>  	if (!events) {
+>  		if (parent)
+> @@ -546,7 +574,6 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
+>  		return IRQ_NONE;
+>  	}
+>  
+> -	pcie_capability_write_word(pdev, PCI_EXP_SLTSTA, events);
+>  	ctrl_dbg(ctrl, "pending interrupts %#06x from Slot Status\n", events);
+>  	if (parent)
+>  		pm_runtime_put(parent);
 > -- 
-> 2.23.0
+> 2.18.1
 > 
