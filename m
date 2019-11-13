@@ -2,35 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 10F19FA5E2
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2019 03:25:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7EF1CFA5CB
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2019 03:25:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727905AbfKMBvg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 Nov 2019 20:51:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39518 "EHLO mail.kernel.org"
+        id S1728062AbfKMCYv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 12 Nov 2019 21:24:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727904AbfKMBvg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:51:36 -0500
+        id S1728053AbfKMBvz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:51:55 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F21B422470;
-        Wed, 13 Nov 2019 01:51:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91CA1222D3;
+        Wed, 13 Nov 2019 01:51:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573609895;
-        bh=OpXDIx5xOYY97zeVa/FNBxT/29iZH3I1AKxSms1pfW8=;
+        s=default; t=1573609914;
+        bh=4NfQ9fxpNP+h0TZLuSv/Z7hVRrKUXXgL0ky5mqRXjFU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kQQN30IX0DSAHnBchsug33lSvHn9jL4DC8LZcNlHXO4DPTh5R85t9/MHtzzAoYn4a
-         5V/cRPdorAr16kw0CPFF8kglXDFIe/AWKf5Lor9UQszLt/zkPbzzNKiKtsisUBSl8V
-         YfMigkPMpNmhGnj0CsC5QxBo4LO6/2IlgsBO5DMk=
+        b=pJF1SqHKAAEdsYnxvkwXyHWQzb813BT/oA4euSH4sHMrZJXkI/Mb9whprhAO3jzRp
+         t5xL8C0PT+9QBaLou2R4SNE4VdnHy6iURfxPKmqGcnz0OnUIkmpfO9NAYV39eBjsH3
+         mpLQHoHpnygMGc9PcwRmgNwy7doYg3rmOONzXTp4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jon Derrick <jonathan.derrick@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 051/209] x86/PCI: Apply VMD's AERSID fixup generically
-Date:   Tue, 12 Nov 2019 20:47:47 -0500
-Message-Id: <20191113015025.9685-51-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 063/209] tools: PCI: Fix compilation warnings
+Date:   Tue, 12 Nov 2019 20:47:59 -0500
+Message-Id: <20191113015025.9685-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -43,46 +44,75 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Jon Derrick <jonathan.derrick@intel.com>
+From: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 
-[ Upstream commit 4f475e8e0a6d4f5d430350d1f74f7e4899fb1692 ]
+[ Upstream commit fef31ecaaf2c5c54db85b35e893bf8abec96b93f ]
 
-A root port Device ID changed between simulation and production.  Rather
-than match Device IDs which may not be future-proof if left unmaintained,
-match all root ports which exist in a VMD domain.
+Current compilation produces the following warnings:
 
-Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+tools/pci/pcitest.c: In function 'run_test':
+tools/pci/pcitest.c:56:9: warning: unused variable 'time'
+[-Wunused-variable]
+  double time;
+         ^~~~
+tools/pci/pcitest.c:55:25: warning: unused variable 'end'
+[-Wunused-variable]
+  struct timespec start, end;
+                         ^~~
+tools/pci/pcitest.c:55:18: warning: unused variable 'start'
+[-Wunused-variable]
+  struct timespec start, end;
+                  ^~~~~
+tools/pci/pcitest.c:146:1: warning: control reaches end of non-void
+function [-Wreturn-type]
+ }
+ ^
+
+Fix them:
+ - remove unused variables
+ - change function return from int to void, since it's not used
+
+Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+[lorenzo.pieralisi@arm.com: rewrote the commit log]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/pci/fixup.c | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
+ tools/pci/pcitest.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
-index bd372e8965571..527e69b120025 100644
---- a/arch/x86/pci/fixup.c
-+++ b/arch/x86/pci/fixup.c
-@@ -629,17 +629,11 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x8c10, quirk_apple_mbp_poweroff);
- static void quirk_no_aersid(struct pci_dev *pdev)
- {
- 	/* VMD Domain */
--	if (is_vmd(pdev->bus))
-+	if (is_vmd(pdev->bus) && pci_is_root_bus(pdev->bus))
- 		pdev->bus->bus_flags |= PCI_BUS_FLAGS_NO_AERSID;
- }
--DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x2030, quirk_no_aersid);
--DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x2031, quirk_no_aersid);
--DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x2032, quirk_no_aersid);
--DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x2033, quirk_no_aersid);
--DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x334a, quirk_no_aersid);
--DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x334b, quirk_no_aersid);
--DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x334c, quirk_no_aersid);
--DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x334d, quirk_no_aersid);
-+DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_INTEL, PCI_ANY_ID,
-+			      PCI_CLASS_BRIDGE_PCI, 8, quirk_no_aersid);
+diff --git a/tools/pci/pcitest.c b/tools/pci/pcitest.c
+index af146bb03b4df..ec4d51f3308b8 100644
+--- a/tools/pci/pcitest.c
++++ b/tools/pci/pcitest.c
+@@ -23,7 +23,6 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <sys/ioctl.h>
+-#include <time.h>
+ #include <unistd.h>
  
- static void quirk_intel_th_dnv(struct pci_dev *dev)
+ #include <linux/pcitest.h>
+@@ -48,17 +47,15 @@ struct pci_test {
+ 	unsigned long	size;
+ };
+ 
+-static int run_test(struct pci_test *test)
++static void run_test(struct pci_test *test)
  {
+ 	long ret;
+ 	int fd;
+-	struct timespec start, end;
+-	double time;
+ 
+ 	fd = open(test->device, O_RDWR);
+ 	if (fd < 0) {
+ 		perror("can't open PCI Endpoint Test device");
+-		return fd;
++		return;
+ 	}
+ 
+ 	if (test->barnum >= 0 && test->barnum <= 5) {
 -- 
 2.20.1
 
