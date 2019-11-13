@@ -2,534 +2,142 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 738E2FA005
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2019 02:19:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A21D4FA033
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2019 02:34:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbfKMBTd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 Nov 2019 20:19:33 -0500
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:40067 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727041AbfKMBTd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Nov 2019 20:19:33 -0500
-Received: by mail-qv1-f67.google.com with SMTP id i3so149981qvv.7
-        for <linux-pci@vger.kernel.org>; Tue, 12 Nov 2019 17:19:30 -0800 (PST)
+        id S1727058AbfKMBez (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 12 Nov 2019 20:34:55 -0500
+Received: from mail-eopbgr1410128.outbound.protection.outlook.com ([40.107.141.128]:20835
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727041AbfKMBez (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:34:55 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=at8JnQ4+Ehbg2EdMffXZqbt9Vvu4EMg69mE+XAG1kTyaepR0yOm4gnX7OZoy0mh5U+uEqErknwSfUWV//jmbRrusNsiTlWWBq4309MUGPKOM5uOVvC7HAnyrc6NA32LC8Cm8cVFkjyYWL+n4JAV9o5uPOltcqn6d/TN0iwB4ywh5YZDU6vlFGCyYPx6LOpxmAQZlShUsLsG36yKqmMVXrebMLalSus/6glmh0636mnoKrBRhhVzf1N6s1jBNlAwAr4u9U/XrbTjbkCfInCxxj8Mcp5q+YDtzSKTNUM4m0GNOIjz/cG4LGVfHKD8vdiQXiHn+02rItfpg6Wd+vc012Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Y2Ij4zsYm1Ubn+CbvJmXpu36XEuWtJn15q/VIvM5O3E=;
+ b=JkGS1nNTlAI9yPEzDHH/njodMQyEkpOTHAhtr6l1Kl++7HApRGo9Al5WZR92lrMjiz9w+d2cUqYt6qaV3M7U3mXuRyiyGjJ/M8zn2Lx4j1pKN4YvmIFUBSeljRQHshPDaVxQdbkg9Qx0UqLRT0ci783pzJ4vph/loRXr969Dg5oJ2ANW2CA1Cv17eGSf3L6Mj0Bz0shp6FSh4Ypgg4UqF9BfvhYFQ0RYrTRy9uVrSpaOEXH8DuntxeSwVZPhawXWzrQR72wPWVPIz9gf/uyRCGgDtEcO+7qMCqjm9ELec06D+3RFDiUr6MJKI3KRBAnKR0kxcCNwngRX1Z0AaStj0g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ixf3iYbv2Q8qohYZsKjhZw4GGRRJFlwNUff3nd6L8Eo=;
-        b=ZLD3DDHD2uhjwtqfMMIp7bx2q64snA02IubKf2VhueqHApdBvQtcKaWh+jeU3d6xLQ
-         t9CGbc1C+Y+LZyJ9qSVK5jeEcpF7euOW8TLD8T1miJgpg9NQoE/kMlgzz8ejELHtWyoc
-         AOcO1Nju9kTsc/XOQGq3Zra+VGjUZTBV50xPoX4lmHFgirk0U0dYz2/PjRmHv0M1+Goh
-         gVGyYM494J9S08cIty/XbTGh6MhTpW7dR4qeAkvkXlSwZHz9A7o/N/hGaiklPxKNpOEa
-         K+WcBkD3RQoD8fiqqvTKBHBXU0XvqzrJL7kcz2i7KvnnxzmW0OLSQWsSn+Pq3cTj7Inm
-         XuRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ixf3iYbv2Q8qohYZsKjhZw4GGRRJFlwNUff3nd6L8Eo=;
-        b=PlCUNK7mCIK4oHI0NA4jcxDt2eNjPXdsFIjbBKt4uFxQyicaWiwPs3NeD1Zr7NltSy
-         ukQ0VLTQ2OgidqrmdbI6eZ9TnQMHyE7okgfEX7M/DpUY10u0ChEcL7JdAVwkR8Msv7PY
-         IUIhlKo3GWDxRV0YgKvLoA/+QLQohvOduOwVa/RR7xlehocJCCUjK+1BDU1sF5RFXCmW
-         HwdgeX9DPOsAUY0R0JVpx1I8RK0KgBSGxBAZVyPKtaG06WG7FAhR4KklvQBgFp3HvZCZ
-         e0p5oEn4pjCk+RkppJckQFh8FI/hZPzRo8jc8gvYfei5EjLJxTKymyTsDxaDuOQ8jrMw
-         RX3g==
-X-Gm-Message-State: APjAAAUJ2m2zG4JtiSnq6ebTEnFsvj0fw99dt3aUZQIwG/JAJhpgemCB
-        lzD6tHVXtHYN9olVcKm6LZs15PH3+GvdtOpK4dw=
-X-Google-Smtp-Source: APXvYqyA/6F8H7CX8fJOtheX1alAJ9+5MLosk5+FKgbF3Rsvcayqj9EirPEsUh9PDYfGNA332xPKDvTbkFlbJW/26UY=
-X-Received: by 2002:a05:6214:8ee:: with SMTP id dr14mr614359qvb.122.1573607969629;
- Tue, 12 Nov 2019 17:19:29 -0800 (PST)
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Y2Ij4zsYm1Ubn+CbvJmXpu36XEuWtJn15q/VIvM5O3E=;
+ b=KKFhdocJL5HpsI+wz4sZR42277ZLqL3dzFRShaH3CW7GwUIGJlomSfCOaLoagiYieNotNgHX4cVtfyYZ7SEvuhk8dyoMaN34uFwVZbLvUZ5L1RXtXK9LL3rAqv2RnPmFg/RgVaIedp9mjWfzk7tTl8BAdvfE1I/wdo+KwvhOxT4=
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
+ TYAPR01MB3597.jpnprd01.prod.outlook.com (20.178.140.10) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2430.22; Wed, 13 Nov 2019 01:34:52 +0000
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::6998:f6cf:8cf1:2528]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::6998:f6cf:8cf1:2528%5]) with mapi id 15.20.2451.023; Wed, 13 Nov 2019
+ 01:34:51 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     "marek.vasut+renesas@gmail.com" <marek.vasut+renesas@gmail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: RE: [PATCH v4 2/2] PCI: rcar: Fix missing MACCTLR register setting in
+ initialize sequence
+Thread-Topic: [PATCH v4 2/2] PCI: rcar: Fix missing MACCTLR register setting
+ in initialize sequence
+Thread-Index: AQHVk8b75iTnpBH/kkeyIqRIXE+o+qeGFPYAgACz2rCAAJcYAIAABXoAgAAKvwCAAOy04A==
+Date:   Wed, 13 Nov 2019 01:34:51 +0000
+Message-ID: <TYAPR01MB454416AA6EAFDA8BF5024330D8760@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+References: <1572951089-19956-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1572951089-19956-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <20191111144236.GB9653@e121166-lin.cambridge.arm.com>
+ <TYAPR01MB4544F0F0BCAC5116731D15A9D8770@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+ <20191112102706.GA12685@e121166-lin.cambridge.arm.com>
+ <CAMuHMdXBJaL=c+9_kb70jHMqzvfxxYezLEX-Evh-FRyY-FYPyQ@mail.gmail.com>
+ <20191112112510.GA15159@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20191112112510.GA15159@e121166-lin.cambridge.arm.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
+x-originating-ip: [150.249.235.54]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 1b43d180-b022-4fdd-ace3-08d767d9ade9
+x-ms-traffictypediagnostic: TYAPR01MB3597:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <TYAPR01MB3597AEEE8D13E85DEDC73F92D8760@TYAPR01MB3597.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3383;
+x-forefront-prvs: 0220D4B98D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(39860400002)(346002)(376002)(136003)(396003)(189003)(199004)(229853002)(52536014)(8936002)(476003)(11346002)(3846002)(99286004)(6116002)(6306002)(86362001)(446003)(66066001)(9686003)(486006)(71190400001)(256004)(186003)(71200400001)(6916009)(33656002)(8676002)(55016002)(6506007)(53546011)(5660300002)(25786009)(26005)(4326008)(102836004)(478600001)(7736002)(6436002)(54906003)(966005)(14454004)(7696005)(76176011)(81166006)(66476007)(81156014)(6246003)(66946007)(66446008)(76116006)(64756008)(66556008)(2906002)(316002)(74316002)(305945005);DIR:OUT;SFP:1102;SCL:1;SRVR:TYAPR01MB3597;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 5u+qhbdkKZitnMnjKk9lCj3HLo456SehcYRggEyP1kJEfHlpkonAWeZ8ORD9iyLBVmELf2BIyyV7CKW/ujFAqsMHPG6i+jfpmySEUZWyEebWCAw/NSfKfi3haQZtLjqywP56J46TXvAWxjTJnh6zggwQnOyfN+ucMo1GlpBrkjBUTGD+knvXdyqNAJpczdzK6YFNc8U/L+YMmH3Omb0PO1uE8kzrp/hmkdUBNJoQgLYXOdYnut2HPBFHV54eFw5mZfI07ne80pThmKGFjghCWVYLBHsv3ymUhakz4KTwS8lHN2kF9RAnwOiwdd+6mrQ/D7AovNLjBCxqHKYxQfVnEPtqydi7uq32dduvCO4Z5gGAgf1syS/o5Z2ZuAECszm5rfkFraQOtMmW82u+j03H9hd8D1I6o0zD9ZtJVtM84vPI0r8FuFpSMTi2d5j2YtvJ5djPDJvRpj5IuUr+qV+b4xlDIEzmbyWdZV/9J82YW9I=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <CAMdYzYp7kQdMKzX2RQW0tY2P4Um=CNJW93RPquBmYATRGrxwng@mail.gmail.com>
- <20191112022938.GA89741@google.com> <CAMdYzYrYHtiEXwiKxwWcKSV7Re6dG4zTvkKtZxvso+fLBRYbPQ@mail.gmail.com>
- <991e386e-4c4f-fcbd-89a1-1edd82f63ece@arm.com> <CAMdYzYri-yroFtvVXdNZH=sNOM7RP_PBHVnmbHuAKmGBZ0GifA@mail.gmail.com>
- <CAMdYzYrc-AJNpnqR6Xw9Np0wuUvS4-u+TCS2WEo78TfyEhCQKg@mail.gmail.com>
-In-Reply-To: <CAMdYzYrc-AJNpnqR6Xw9Np0wuUvS4-u+TCS2WEo78TfyEhCQKg@mail.gmail.com>
-From:   Peter Geis <pgwipeout@gmail.com>
-Date:   Tue, 12 Nov 2019 20:19:18 -0500
-Message-ID: <CAMdYzYow8SuXb_8ow433O_+Wezxb-U08WDUiLxcTKh+1_zBzkQ@mail.gmail.com>
-Subject: Re: [BUG] rk3399-rockpro64 pcie synchronous external abort
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1b43d180-b022-4fdd-ace3-08d767d9ade9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Nov 2019 01:34:51.7572
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: kuHRchefntJnLSTFIkDSEDejdtzn43GIf6+UPqg49OCJ2i8/fCSuGDi5WmhntL/PS1CxFmssqezWAdsHi5DsuzaU3xB1Aitx6hAxEIU6UB+RHoxyZzgd6gFjVtApLiok
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB3597
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 8:06 PM Peter Geis <pgwipeout@gmail.com> wrote:
->
-> On Tue, Nov 12, 2019 at 2:41 PM Peter Geis <pgwipeout@gmail.com> wrote:
-> >
-> > On Tue, Nov 12, 2019 at 2:15 PM Robin Murphy <robin.murphy@arm.com> wrote:
-> > >
-> > > On 12/11/2019 3:55 pm, Peter Geis wrote:
-> > > > On Mon, Nov 11, 2019 at 9:29 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > >>
-> > > >> On Mon, Nov 11, 2019 at 07:30:15PM -0500, Peter Geis wrote:
-> > > >>> On Mon, Nov 11, 2019 at 7:13 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > >>>> On Mon, Nov 04, 2019 at 01:55:40PM -0500, Peter Geis wrote:
-> > > >>>>> Good Morning,
-> > > >>>>>
-> > > >>>>> I'm attempting to debug an issue with the rockpro64 pcie port.
-> > > >>>>> It would appear that the port does not like various cards, including
-> > > >>>>> cards of the same make that randomly work or do not work, such as
-> > > >>>>> Intel i340 based NICs.
-> > > >>>>> I'm experiencing it with a GTX645 gpu.
-> > > >>>>>
-> > > >>>>> This seems to be a long running issue, referenced both at [0], and [1].
-> > > >>>>> There was an attempt to rectify it, by adding a delay between training
-> > > >>>>> and probing [2], but that doesn't seem to be the issue here.
-> > > >>>>> It appears that when we probe further into the card, such as devfn >
-> > > >>>>> 1, we trigger the bug.
-> > > >>>>> I've added a print statement that prints the devfn, address, and size
-> > > >>>>> information, which you can see below.
-> > > >>>>>
-> > > >>>>> I've attempted setting the available number of lanes to 1 as well, to
-> > > >>>>> no difference.
-> > > >>>>>
-> > > >>>>> If anyone could point me in the right direction as to where to
-> > > >>>>> continue debugging, I'd greatly appreciate it.
-> > > >>>>>
-> > > >>>>> [0] https://github.com/ayufan-rock64/linux-build/issues/254
-> > > >>>>> [1] https://github.com/rockchip-linux/kernel/issues/116
-> > > >>>>> [2] https://github.com/ayufan-rock64/linux-kernel/commit/3cde5c624c9c39aa03251a55c2d26a48b5bdca5b
-> > > >>>>>
-> > > >>>>> [  198.491458] rockchip-pcie f8000000.pcie: missing legacy phy; search
-> > > >>>>> for per-lane PHY
-> > > >>>>> [  198.492986] rockchip-pcie f8000000.pcie: no vpcie1v8 regulator found
-> > > >>>>> [  198.493060] rockchip-pcie f8000000.pcie: no vpcie0v9 regulator found
-> > > >>>>> [  198.550444] rockchip-pcie f8000000.pcie: current link width is x1
-> > > >>>>> [  198.550458] rockchip-pcie f8000000.pcie: idling lane 1
-> > > >>>>> [  198.550479] rockchip-pcie f8000000.pcie: idling lane 2
-> > > >>>>> [  198.550490] rockchip-pcie f8000000.pcie: idling lane 3
-> > > >>>>> [  198.550608] rockchip-pcie f8000000.pcie: host bridge /pcie@f8000000 ranges:
-> > > >>>>> [  198.550625] rockchip-pcie f8000000.pcie: Parsing ranges property...
-> > > >>>>> [  198.550656] rockchip-pcie f8000000.pcie:   MEM
-> > > >>>>> 0xfa000000..0xfbdfffff -> 0xfa000000
-> > > >>>>> [  198.550676] rockchip-pcie f8000000.pcie:    IO
-> > > >>>>> 0xfbe00000..0xfbefffff -> 0xfbe00000
-> > > >>>>> [  198.552908] rockchip-pcie f8000000.pcie: PCI host bridge to bus 0000:00
-> > > >>>>> [  198.552933] pci_bus 0000:00: root bus resource [bus 00-1f]
-> > > >>>>> [  198.552943] pci_bus 0000:00: root bus resource [mem 0xfa000000-0xfbdfffff]
-> > > >>>>> [  198.552954] pci_bus 0000:00: root bus resource [io  0x0000-0xfffff]
-> > > >>>>> (bus address [0xfbe00000-0xfbefffff])
-> > > >>>>> [  198.552965] pci_bus 0000:00: scanning bus
-> > > >>>>> [  198.554198] pci 0000:00:00.0: [1d87:0100] type 01 class 0x060400
-> > > >>>>> [  198.555508] pci 0000:00:00.0: supports D1
-> > > >>>>> [  198.555516] pci 0000:00:00.0: PME# supported from D0 D1 D3hot
-> > > >>>>> [  198.556023] pci 0000:00:00.0: PME# disabled
-> > > >>>>> [  198.561245] pci_bus 0000:00: fixups for bus
-> > > >>>>> [  198.561269] pci 0000:00:00.0: scanning [bus 00-00] behind bridge, pass 0
-> > > >>>>> [  198.561277] pci 0000:00:00.0: bridge configuration invalid ([bus
-> > > >>>>> 00-00]), reconfiguring
-> > > >>>>> [  198.566429] pci 0000:00:00.0: scanning [bus 00-00] behind bridge, pass 1
-> > > >>>>> [  198.567008] pci_bus 0000:01: scanning bus
-> > > >>>>> [  198.567171] pci 0000:01:00.0: [10de:11c4] type 00 class 0x030000
-> > > >>>>> [  198.567420] pci 0000:01:00.0: reg 0x10: [mem 0x00000000-0x00ffffff]
-> > > >>>>> [  198.567515] pci 0000:01:00.0: reg 0x14: [mem 0x00000000-0x07ffffff
-> > > >>>>> 64bit pref]
-> > > >>>>> [  198.567608] pci 0000:01:00.0: reg 0x1c: [mem 0x00000000-0x01ffffff
-> > > >>>>> 64bit pref]
-> > > >>>>> [  198.567665] pci 0000:01:00.0: reg 0x24: initial BAR value 0x00000000 invalid
-> > > >>>>> [  198.567673] pci 0000:01:00.0: reg 0x24: [io  size 0x0080]
-> > > >>>>> [  198.567730] pci 0000:01:00.0: reg 0x30: [mem 0x00000000-0x0007ffff pref]
-> > > >>>>> [  198.567815] pci 0000:01:00.0: Max Payload Size set to 256 (was 128, max 256)
-> > > >>>>> [  198.569051] pci 0000:01:00.0: 2.000 Gb/s available PCIe bandwidth,
-> > > >>>>> limited by 2.5 GT/s x1 link at 0000:00:00.0 (capable of 126.016 Gb/s
-> > > >>>>> with 8 GT/s x16 link)
-> > > >>>>> [  198.570225] pci 0000:01:00.0: vgaarb: VGA device added:
-> > > >>>>> decodes=io+mem,owns=none,locks=none
-> > > >>>>> [  198.570481] pci 0000:01:00.1: [10de:0e0b] type 00 class 0x040300
-> > > >>>>> [  198.570663] pci 0000:01:00.1: reg 0x10: [mem 0x00000000-0x00003fff]
-> > > >>>>> [  198.571039] pci 0000:01:00.1: Max Payload Size set to 256 (was 128, max 256)
-> > > >>>>> <snip>
-> > > >>>>> [  198.749857] pci_bus 0000:01: read pcie, devfn 1, at 100, size 2
-> > > >>>>> [  198.750252] pci_bus 0000:01: read pcie, devfn 2, at 0, size 4
-> > > >>>>> [  198.750881] Internal error: synchronous external abort: 96000210
-> > > >>>>> [#1] PREEMPT SMP
-> > > >>>>
-> > > >>>> Is there really supposed to be a device at 01:00.2?
-> > > >>>>
-> > > >>>> Maybe this is just the PCIe Unsupported Request error that we expect
-> > > >>>> to get when trying to read config space of a device that doesn't
-> > > >>>> exist.
-> > > >>>>
-> > > >>>> On "most" platforms, we just get ~0 data back when that happens, but
-> > > >>>> I'm not sure that's always the case on arm64.  I think it depends on
-> > > >>>> how the PCIe host bridge is designed, and there might be some CPU
-> > > >>>> configuration, too.
-> > > >>>
-> > > >>> Yes, this is a GTX645 video card.
-> > > >>> Nvidia cards usually have two to three devices,
-> > > >>> The GPU proper, the audio device for the hdmi output, and the i2c controller.
-> > > >>>
-> > > >>> I do think that this driver is missing sanity checking on the
-> > > >>> addressing, since the BRCM driver for the RPI4 doesn't try to
-> > > >>> enumerate a video card, since it checks if the MMIO space is large
-> > > >>> enough to fit the BAR before assigning the addresses. See [3]. Also in
-> > > >>> that thread he was able to increase the address space provided to the
-> > > >>> BRCM driver and fix the issue, but I don't see how we could do that on
-> > > >>> the rk3399.
-> > > >>>
-> > > >>> pci 0000:01:00.0: reg 0x14: [mem 0x00000000-0x07ffffff 64bit pref] is
-> > > >>> 128 MB, which already exceeds our address space.
-> > > >>> I think the driver is just overflowing the address space.
-> > > >>
-> > > >> If we don't have enough space to assign all the device BARs, I think a
-> > > >> driver will still be able to claim the device, but when the driver
-> > > >> calls pci_enable_device(), it should fail.  Lack of address space
-> > > >> should not cause a PCIe error.
-> > > >>
-> > > >> But in this case, none of that matters because we're still enumerating
-> > > >> devices in pci_scan_root_bus_bridge().  We haven't gotten to the point
-> > > >> of trying to bind drivers to devices, so the driver isn't involved at
-> > > >> all yet.
-> > > > For clarification, the driver I'm referring to is the rk3399-pcie host driver.
-> > > >>
-> > > >> The backtrace says we're trying to read the Vendor ID of a device, and
-> > > >> your debug output suggests we're trying to enumerate 01:00.2.  If you
-> > > >> put that card in another system, you could find out how many functions
-> > > >> it has.
-> > > >>
-> > > >> Or if you swapped this with other cards where you know the number of
-> > > >> functions, you could see if the external abort always happens when
-> > > >> probing for the first unimplemented function.
-> > > > This card definitely has more than one function.
-> > >
-> > > FWIW, random lspci logs I grovelled up off the internet show cards with
-> > > the same IDs only implementing functions 0 and 1, which does suggest
-> > > that maybe function 2 really doesn't exist but the card handles
-> > > unsupported config requests in a way that this particular bridge/root
-> > > port doesn't quite deal with properly.
-> >
-> > Thanks! Is there a sane way we could make the kernel handle this in
-> > place of the controller?
-> > (It's apparently based on the designware ip, but it doesn't use their
-> > driver for some reason)
-> >
-> > >
-> > > > Before my original message I hacked in some code to make the driver
-> > > > return 0xff when devfn > 1, and the scan passed, but as soon as
-> > > > nouveau attempted to access the device, the entire kernel exploded.
->
-> This is what happens when probing is prevented from reading above
-> devfn 1, and nouveau gets a shot.
-> [   76.658128] SError Interrupt on CPU4, code 0xbf000000 -- SError
-> [   76.658129] CPU: 4 PID: 1752 Comm: systemd-udevd Not tainted
-> 5.4.0-rc5-next-20191031-00001-gddbfb17ac1c4-dirty #16
-> [   76.658130] Hardware name: Pine64 RockPro64 (DT)
-> [   76.658131] pstate: 60400005 (nZCv daif +PAN -UAO)
-> [   76.658131] pc : nvkm_device_ctor+0x2cc/0x2e18 [nouveau]
-> [   76.658132] lr : nvkm_device_ctor+0x2c0/0x2e18 [nouveau]
-> [   76.658133] sp : ffff800012daf740
-> [   76.658134] x29: ffff800012daf740 x28: ffff0000c2db9800
-> [   76.658136] x27: 0000000000000000 x26: ffff0000c7f2e0b0
-> [   76.658138] x25: 0000000000000000 x24: 0000000000000000
-> [   76.658139] x23: 0000000000000000 x22: ffff800009e1b1e0
-> [   76.658141] x21: ffff0000c335b940 x20: ffff800009ede660
-> [   76.658142] x19: 0000000000000000 x18: 0000000000000001
-> [   76.658144] x17: 0000000000000000 x16: 0000000000000000
-> [   76.658145] x15: ffff0000c335bdc0 x14: ffff8000140a0000
-> [   76.658147] x13: 0000000000110000 x12: 0040000000000001
-> [   76.658148] x11: ffff0000c12b8180 x10: 0000000000000085
-> [   76.658150] x9 : ffff800013c00000 x8 : 0000000000110000
-> [   76.658152] x7 : 0000000000000000 x6 : ffff0000f7ff0008
-> [   76.658153] x5 : ffff800013d0ffff x4 : ffff800013c00000
-> [   76.658154] x3 : ffff800013c00004 x2 : 0140000000000000
-> [   76.658156] x1 : 0000000000000000 x0 : ffff800013c00000
-> [   76.658158] Kernel panic - not syncing: Asynchronous SError Interrupt
-> [   76.658159] CPU: 4 PID: 1752 Comm: systemd-udevd Not tainted
-> 5.4.0-rc5-next-20191031-00001-gddbfb17ac1c4-dirty #16
-> [   76.658160] Hardware name: Pine64 RockPro64 (DT)
-> [   76.658161] Call trace:
-> [   76.658161]  dump_backtrace+0x0/0x148
-> [   76.658162]  show_stack+0x24/0x30
-> [   76.658163]  dump_stack+0xa8/0xf0
-> [   76.658163]  panic+0x160/0x36c
-> [   76.658164]  nmi_panic+0x94/0x98
-> [   76.658164]  arm64_serror_panic+0x84/0x90
-> [   76.658165]  do_serror+0x88/0x140
-> [   76.658166]  el1_error+0xc4/0x170
-> [   76.658166]  nvkm_device_ctor+0x2cc/0x2e18 [nouveau]
-> [   76.658167]  nvkm_device_pci_new+0xf8/0x2c8 [nouveau]
-> [   76.658168]  nouveau_drm_probe+0x60/0x288 [nouveau]
-> [   76.658168]  local_pci_probe+0x44/0x98
-> [   76.658169]  pci_device_probe+0x118/0x1b0
-> [   76.658170]  really_probe+0xe0/0x320
-> [   76.658171]  driver_probe_device+0x5c/0xf0
-> [   76.658171]  device_driver_attach+0x74/0x80
-> [   76.658172]  __driver_attach+0x64/0xe0
-> [   76.658173]  bus_for_each_dev+0x80/0xd0
-> [   76.658173]  driver_attach+0x30/0x40
-> [   76.658174]  bus_add_driver+0x14c/0x1f0
-> [   76.658175]  driver_register+0x64/0x110
-> [   76.658175]  __pci_register_driver+0x58/0x68
-> [   76.658176]  nouveau_drm_init+0x17c/0x10000 [nouveau]
-> [   76.658177]  do_one_initcall+0x50/0x298
-> [   76.658178]  do_init_module+0x88/0x270
-> [   76.658178]  load_module+0x2068/0x2600
-> [   76.658179]  __do_sys_finit_module+0xd0/0xe8
-> [   76.658180]  __arm64_sys_finit_module+0x28/0x38
-> [   76.658180]  el0_svc_common.constprop.0+0x7c/0x1f0
-> [   76.658181]  el0_svc_handler+0x34/0xa0
-> [   76.658182]  el0_svc+0x14/0x40
-> [   76.658182]  el0_sync_handler+0x118/0x280
-> [   76.658183]  el0_sync+0x164/0x180
-> [   76.658248] SMP: stopping secondary CPUs
-> [   76.658249] Kernel Offset: disabled
-> [   76.658250] CPU features: 0x10002,2000600c
-> [   76.658250] Memory Limit: none
+Hi Lorenzo,
 
-Last log, I promise.
-This is what happens when it is locked out of devfn > 1, and nouveau
-is not available.
+> From: Lorenzo Pieralisi, Sent: Tuesday, November 12, 2019 8:25 PM
+>=20
+> On Tue, Nov 12, 2019 at 11:46:42AM +0100, Geert Uytterhoeven wrote:
+> > Hi Lorenzo,
+> >
+> > On Tue, Nov 12, 2019 at 11:27 AM Lorenzo Pieralisi
+> > <lorenzo.pieralisi@arm.com> wrote:
+> > > On Tue, Nov 12, 2019 at 01:48:03AM +0000, Yoshihiro Shimoda wrote:
+> > > > I'm sorry. I think I should not drop a sentence "because the bit 0 =
+is
+> > > > set to 1 on reset" which has the reverted patch from this version. =
+Also,
+> > > > the note seems to be difficult to understand. So, I'll rewrite this=
+ log
+> > > > like below. Is it acceptable?
+> > > >
+> > > > ---
+> > > > According to the R-Car Gen2/3 manual,
+> > >
+> > > Is this a publicly available manual ? If yes we provide a link, if
+> > > not I will reword the sentence below.
+> >
+> > The same hardware block is present in the RZ/G series, and documented
+> > in RZ/G Series User's Manual: Hardware
+> > https://www.renesas.com/eu/en/products/microcontrollers-microprocessors=
+/rz/rzg/rzg1m.html#documents
+> > Chapter 39 ("PCIEC").
+> > Section 39.28.98 ("MAC Control Register (MACCTLR)")
+> > Section 39.3.1 ("Initialization"), Paragraph 3 ("Initial Setting of
+> > PCI Express").
+> >
+> > Thanks, and happy digesting ;-)
+>=20
+> Thank you, updated commit log and pushed out, pci/rcar branch.
 
-[    4.199087] vcc3v3_pcie: supplied by vcc12v_dcin
-[   55.617783] ehci-pci: EHCI PCI platform driver
-[   55.868935] ohci-pci: OHCI PCI platform driver
-[   65.426085] rockchip-pcie f8000000.pcie: missing legacy phy; search
-for per-lane PHY
-[   65.426645] rockchip-pcie f8000000.pcie: no vpcie1v8 regulator found
-[   65.426662] rockchip-pcie f8000000.pcie: no vpcie0v9 regulator found
-[   65.507012] rockchip-pcie f8000000.pcie: current link width is x4
-[   65.507078] rockchip-pcie f8000000.pcie: host bridge /pcie@f8000000 ranges:
-[   65.507088] rockchip-pcie f8000000.pcie: Parsing ranges property...
-[   65.507103] rockchip-pcie f8000000.pcie:   MEM
-0xfa000000..0xfbdfffff -> 0xfa000000
-[   65.507112] rockchip-pcie f8000000.pcie:    IO
-0xfbe00000..0xfbffffff -> 0xfbe00000
-[   65.507368] rockchip-pcie f8000000.pcie: PCI host bridge to bus 0000:00
-[   65.507376] pci_bus 0000:00: root bus resource [bus 00-1f]
-[   65.507382] pci_bus 0000:00: root bus resource [mem 0xfa000000-0xfbdfffff]
-[   65.507390] pci_bus 0000:00: root bus resource [io
-0x0000-0x1fffff] (bus address [0xfbe00000-0xfbffffff])
-[   65.507394] pci_bus 0000:00: scanning bus
-[   65.507423] pci 0000:00:00.0: [1d87:0100] type 01 class 0x060400
-[   65.507543] pci 0000:00:00.0: supports D1
-[   65.507547] pci 0000:00:00.0: PME# supported from D0 D1 D3hot
-[   65.507555] pci 0000:00:00.0: PME# disabled
-[   65.511436] pci_bus 0000:00: fixups for bus
-[   65.511452] pci 0000:00:00.0: scanning [bus 00-00] behind bridge, pass 0
-[   65.511457] pci 0000:00:00.0: bridge configuration invalid ([bus
-00-00]), reconfiguring
-[   65.511471] pci 0000:00:00.0: scanning [bus 00-00] behind bridge, pass 1
-[   65.511633] pci_bus 0000:01: scanning bus
-[   65.511739] pci 0000:01:00.0: [10de:11c4] type 00 class 0x030000
-[   65.512205] pci 0000:01:00.0: reg 0x10: [mem 0x00000000-0x00ffffff]
-[   65.512274] pci 0000:01:00.0: reg 0x14: [mem 0x00000000-0x07ffffff
-64bit pref]
-[   65.512345] pci 0000:01:00.0: reg 0x1c: [mem 0x00000000-0x01ffffff
-64bit pref]
-[   65.512390] pci 0000:01:00.0: reg 0x24: initial BAR value 0x00000000 invalid
-[   65.512394] pci 0000:01:00.0: reg 0x24: [io  size 0x0080]
-[   65.512435] pci 0000:01:00.0: reg 0x30: [mem 0x00000000-0x0007ffff pref]
-[   65.512485] pci 0000:01:00.0: Max Payload Size set to 256 (was 128, max 256)
-[   65.513319] pci 0000:01:00.0: 8.000 Gb/s available PCIe bandwidth,
-limited by 2.5 GT/s x4 link at 0000:00:00.0 (capable of 126.016 Gb/s
-with 8 GT/s x16 link)
-[   65.513568] pci 0000:01:00.0: vgaarb: VGA device added:
-decodes=io+mem,owns=none,locks=none
-[   65.513744] pci 0000:01:00.1: [10de:0e0b] type 00 class 0x040300
-[   65.513900] pci 0000:01:00.1: reg 0x10: [mem 0x00000000-0x00003fff]
-[   65.514179] pci 0000:01:00.1: Max Payload Size set to 256 (was 128, max 256)
-[   65.515129] rockchip-pcie f8000000.pcie: phy link changes
-[   65.527011] pci_bus 0000:01: fixups for bus
-[   65.527021] pci_bus 0000:01: bus scan returning with max=01
-[   65.527030] pci_bus 0000:01: busn_res: [bus 01-1f] end is updated to 01
-[   65.527042] pci_bus 0000:00: bus scan returning with max=01
-[   65.527076] pci 0000:00:00.0: BAR 14: no space for [mem size 0x0c000000]
-[   65.527081] pci 0000:00:00.0: BAR 14: failed to assign [mem size 0x0c000000]
-[   65.527091] pci 0000:01:00.0: BAR 1: no space for [mem size
-0x08000000 64bit pref]
-[   65.527095] pci 0000:01:00.0: BAR 1: failed to assign [mem size
-0x08000000 64bit pref]
-[   65.527100] pci 0000:01:00.0: BAR 3: no space for [mem size
-0x02000000 64bit pref]
-[   65.527104] pci 0000:01:00.0: BAR 3: failed to assign [mem size
-0x02000000 64bit pref]
-[   65.527109] pci 0000:01:00.0: BAR 0: no space for [mem size 0x01000000]
-[   65.527119] pci 0000:01:00.0: BAR 0: failed to assign [mem size 0x01000000]
-[   65.527123] pci 0000:01:00.0: BAR 6: no space for [mem size 0x00080000 pref]
-[   65.527129] pci 0000:01:00.0: BAR 6: failed to assign [mem size
-0x00080000 pref]
-[   65.527134] pci 0000:01:00.1: BAR 0: no space for [mem size 0x00004000]
-[   65.527138] pci 0000:01:00.1: BAR 0: failed to assign [mem size 0x00004000]
-[   65.527142] pci 0000:01:00.0: BAR 5: no space for [io  size 0x0080]
-[   65.527146] pci 0000:01:00.0: BAR 5: failed to assign [io  size 0x0080]
-[   65.527152] pci 0000:00:00.0: PCI bridge to [bus 01]
-[   65.529410] pcieport 0000:00:00.0: assign IRQ: got 238
-[   65.529454] pcieport 0000:00:00.0: enabling bus mastering
-[   65.529807] pcieport 0000:00:00.0: PME: Signaling with IRQ 239
-[   65.530265] pcieport 0000:00:00.0: AER: enabled with IRQ 239
-[   65.530685] pci 0000:01:00.1: D0 power state depends on 0000:01:00.0
+Thank you very much for updating the commit log. It's very clear than mine =
+:)
 
+Best regards,
+Yoshihiro Shimoda
 
->
->
-> > > >
-> > > > Another reason I believe the address assignments are overflowing and
-> > > > corrupting other address assignments is after the external abort, the
-> > > > entire PCIE controller is inaccessible.
-> > > > $ lspci
-> > > > pcilib: Cannot open /sys/bus/pci/devices/0000:01:00.1/config
-> > > > lspci: Unable to read the standard configuration space header of
-> > > > device 0000:01:00.1
-> > > > pcilib: Cannot open /sys/bus/pci/devices/0000:00:00.0/config
-> > > > lspci: Unable to read the standard configuration space header of
-> > > > device 0000:00:00.0
-> > > > pcilib: Cannot open /sys/bus/pci/devices/0000:01:00.0/config
-> > > > lspci: Unable to read the standard configuration space header of
-> > > > device 0000:01:00.0
-> > > >
-> > > > Attempting to rescan the bus or any other pci function results in a
-> > > > hung kernel task.
-> > >
-> > > You crashed deep in the kernel part-way through the driver's probe
-> > > routine; don't expect any partly-initialised bits of that driver to
-> > > actually work. I bet you also can't load/unload modules and do various
-> > > other things either, because the thread will almost certainly have been
-> > > holding a bunch of locks, too. It's not worth trying to reason about the
-> > > state of anything after that kind of unexpected crash ;)
-> >
-> > That is observed, but I think it is actually more destructive than that.
-> > Attempting to do an access after the fact, then performing a soft
-> > reset results in a spectacular crash when it tries to bring the BIG
-> > cluster online.
-> >
-> > [    0.203160] CPU3: Booted secondary processor 0x0000000003 [0x410fd034]
-> > [    5.355606] CPU4: failed to come online
-> > [    5.363258] CPU4: failed in unknown state : 0x0
-> > Unhandled Exception in EL3.
-> > x30 =           0xUhandled Exception in L3.
-> > x30 =           UNhandled ExcEption in EL3.
-> > x30 =   0xUnhandled Excepti2n in EL_.
-> > x30 =           0xUnhandled Exception in EL3.
-> > x30 =           lxUnhadled Exception in EL3.
-> > x30 =           0xUnhandled Excepion in EL3.
-> > x30 =           0xUnhandled Exception in EL3.
-> > x30 =   0xUnhandled Eception in EL3.
-> > x30 =           0xUnhandled Exception in EL3.
-> > x30 =           0xUnhandled Exception in EL3.x30 =
-> > 0xUnhandled Exception in EL3.
-> > x30 =           0xUnhandled Excepton i2 EL3.
-> > x30 =           0xUnhandUnhandled Exceptionein EL3.lx30 =
-> >  0xUnhandled Exception in EL3.
-> > x30 =           0xUnhandled Unhanded Exception in EL3.
-> > x30 =           0xUnhandled Exceptin in EL3Unhandled Exception inEL3.
-> > x0 =            0xUnhandled Exception in EL3.
-> > x30 =           0xUnhandled Exception in EL3.
-> > x30 =           0xUnhandled Exception in EL.
-> > x30 =           0xUnhandled Exception in EL3.
-> > x30 =           0xUnhandled Exception in EL3.
-> > x30 =           0xUnhandled xception in EL3
-> > x30 =           0xUnhcndled Exception in EL3.
-> > x30=            0xUnhandled Excextion in EL3.
-> > x30 =   0xUnhandled Exception in EL3.
-> > x30 =           0x[   10.484411] CPU5: failed to come online
-> > [   10.484807] CPU5: failed in unknown state : 0x0
-> > [   10.485374] smp: Brought up 1 node, 4 CPUs
-> >
-> > It goes on until it tries to do it's first DMA setup, then just hangs.
-> > >
-> > > >> If the Root Port (00:00.0) supports AER, you could also dump out the
-> > > >> status registers from the AER capability and figure out whether it
-> > > >> logged a PCIe error.  This would be sort of like what
-> > > >> aer_process_err_devices() does.  A bit of a hassle to do this by hand
-> > > >> in the exception path, but could be enlightening, just as a debug
-> > > >> tool.
-> > > >
-> > > > Is there a way to handle external synchronous aborts in a device driver?
-> > >
-> > > Not easily on arm64 - the closest thing we have is some arch-internal
-> > > machinery for undefined instruction hooks. You'd have to hack something
-> > > gruesome into do_sea()...
-> > >
-> > > For starters it might be worth enabling all the debug prints in
-> > > rockchip-pcie to see if there's any error IRQ corresponding to the
-> > > aborted access.
-> >
-> > Debug prints are already enabled, I had to hack in the print to show
-> > what addresses it was crashing on.
-> >
-> > Your explanation was the last piece for me to understand how this all
-> > works, thanks!
-> > >
-> > > Robin.
-> > >
-> > > > If so, I'll definitely look into plugging in the aer status functions.
-> > > >
-> > > >>
-> > > >>> [3] https://twitter.com/domipheus/status/1167586160077627393
-> > > >>>>
-> > > >>>>> [  198.751581] Modules linked in: drm_panel_orientation_quirks
-> > > >>>>> pcie_rockchip_host(+) cpufreq_dt sch_fq_codel ip_tables x_tables ipv6
-> > > >>>>> crc_ccitt nf_defrag_ipv6
-> > > >>>>> [  198.752861] CPU: 1 PID: 1686 Comm: systemd-udevd Not tainted
-> > > >>>>> 5.4.0-rc5-next-20191031-00001-gddbfb17ac1c4-dirty #5
-> > > >>>>> [  198.753791] Hardware name: Pine64 RockPro64 (DT)
-> > > >>>>> [  198.754215] pstate: 60400085 (nZCv daIf +PAN -UAO)
-> > > >>>>> [  198.754672] pc : __raw_readl+0x0/0x8 [pcie_rockchip_host]
-> > > >>>>> [  198.755172] lr : rockchip_pcie_rd_conf+0x140/0x1dc [pcie_rockchip_host]
-> > > >>>>> [  198.755773] sp : ffff8000132af530
-> > > >>>>> [  198.756079] x29: ffff8000132af530 x28: 0000000000000000
-> > > >>>>> [  198.756565] x27: 0000000000000001 x26: 0000000000000000
-> > > >>>>> [  198.757049] x25: ffff0000c20ac000 x24: 0000000000002000
-> > > >>>>> [  198.757534] x23: ffff0000c20ae5c0 x22: ffff8000132af5d4
-> > > >>>>> [  198.758018] x21: 0000000000002000 x20: 0000000000000004
-> > > >>>>> [  198.758502] x19: 0000000000102000 x18: 0000000000000001
-> > > >>>>> [  198.758987] x17: 0000000000000000 x16: 0000000000000000
-> > > >>>>> [  198.759472] x15: ffffffffffffffff x14: ffff80001159bcc8
-> > > >>>>> [  198.759957] x13: 0000000000000000 x12: ffff800011b2c000
-> > > >>>>> [  198.760441] x11: ffff8000115bf000 x10: ffff800011310018
-> > > >>>>> [  198.760926] x9 : 00000000fffb9fff x8 : 0000000000000001
-> > > >>>>> [  198.761410] x7 : 0000000000000000 x6 : ffff0000f7492548
-> > > >>>>> [  198.761894] x5 : 0000000000000001 x4 : ffff0000f7492548
-> > > >>>>> [  198.762379] x3 : 0000000000000000 x2 : 0000000000c00008
-> > > >>>>> [  198.762863] x1 : ffff80001dc00008 x0 : ffff80001a102000
-> > > >>>>> [  198.763348] Call trace:
-> > > >>>>> [  198.763583]  __raw_readl+0x0/0x8 [pcie_rockchip_host]
-> > > >>>>> [  198.764057]  pci_bus_read_config_dword+0x88/0xd0
-> > > >>>>> [  198.764484]  pci_bus_generic_read_dev_vendor_id+0x40/0x1b8
-> > > >>>>> [  198.764982]  pci_bus_read_dev_vendor_id+0x58/0x88
-> > > >>>>> [  198.765413]  pci_scan_single_device+0x84/0xf8
-> > > >>>>> [  198.765812]  pci_scan_slot+0x7c/0x120
-> > > >>>>> [  198.766149]  pci_scan_child_bus_extend+0x68/0x2dc
-> > > >>>>> [  198.766579]  pci_scan_bridge_extend+0x350/0x588
-> > > >>>>> [  198.766992]  pci_scan_child_bus_extend+0x21c/0x2dc
-> > > >>>>> [  198.767430]  pci_scan_child_bus+0x24/0x30
-> > > >>>>> [  198.767797]  pci_scan_root_bus_bridge+0xc4/0xd0
-> > > >>>>> [  198.768215]  rockchip_pcie_probe+0x610/0x74c [pcie_rockchip_host]
-> > > >>>>> [  198.768770]  platform_drv_probe+0x58/0xa8
-> > > >>>>> [  198.769139]  really_probe+0xe0/0x318
-> > > >>>>> [  198.769468]  driver_probe_device+0x5c/0xf0
-> > > >>>>> [  198.769844]  device_driver_attach+0x74/0x80
-> > > >>>>> [  198.770227]  __driver_attach+0x64/0xe8
-> > > >>>>> [  198.770572]  bus_for_each_dev+0x84/0xd8
-> > > >>>>> [  198.770924]  driver_attach+0x30/0x40
-> > > >>>>> [  198.771253]  bus_add_driver+0x188/0x1e8
-> > > >>>>> [  198.771605]  driver_register+0x64/0x110
-> > > >>>>> [  198.771956]  __platform_driver_register+0x54/0x60
-> > > >>>>> [  198.772388]  rockchip_pcie_driver_init+0x28/0x10000 [pcie_rockchip_host]
-> > > >>>>> [  198.772998]  do_one_initcall+0x94/0x390
-> > > >>>>> [  198.773353]  do_init_module+0x88/0x268
-> > > >>>>> [  198.773697]  load_module+0x1e18/0x2198
-> > > >>>>> [  198.774043]  __do_sys_finit_module+0xd0/0xe8
-> > > >>>>> [  198.774435]  __arm64_sys_finit_module+0x28/0x38
-> > > >>>>> [  198.774858]  el0_svc_common.constprop.3+0xa4/0x1d8
-> > > >>>>> [  198.775297]  el0_svc_handler+0x34/0xa0
-> > > >>>>> [  198.775645]  el0_svc+0x14/0x40
-> > > >>>>> [  198.775928]  el0_sync_handler+0x118/0x290
-> > > >>>>> [  198.776295]  el0_sync+0x164/0x180
-> > > >>>>> [  198.776609] Code: bad PC value
-> > > >>>>> [  198.776897] ---[ end trace 88fc77651b5e2909 ]---
-> > > >
-> > > > _______________________________________________
-> > > > Linux-rockchip mailing list
-> > > > Linux-rockchip@lists.infradead.org
-> > > > http://lists.infradead.org/mailman/listinfo/linux-rockchip
-> > > >
+> Thanks,
+> Lorenzo
