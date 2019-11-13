@@ -2,99 +2,113 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 67653FB81F
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2019 19:54:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A686EFB9F8
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2019 21:34:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727684AbfKMSy1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 Nov 2019 13:54:27 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:35512 "EHLO mail.skyhub.de"
+        id S1727053AbfKMUe3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 Nov 2019 15:34:29 -0500
+Received: from foss.arm.com ([217.140.110.172]:58006 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727216AbfKMSy1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 13 Nov 2019 13:54:27 -0500
-Received: from zn.tnic (p200300EC2F0FA700E9EFB2260700430D.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:a700:e9ef:b226:700:430d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id EDD1A1EC02C1;
-        Wed, 13 Nov 2019 19:54:25 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1573671266;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=fKB2AuyJAPcFgKm9JK8f4US/BxjyKR1akqFbBmoGVJY=;
-        b=Tb4SBglwTALtQ49MfkqDXXuYebN7qrtTVw0CSjdBQ0cVIOpYhLhCI6hokl6Xdmb+WTlT7J
-        2zK790PGCc+lFSy8HUPO4SPFo60ei3vNHm4SoUN+B5LJ8uKMiSqrIj4R/j56NH5uhud2pY
-        PXLkUuAiIS9ABRqLD8xPUEmWjDkDUF4=
-Date:   Wed, 13 Nov 2019 19:54:20 +0100
-From:   Borislav Petkov <bp@alien8.de>
+        id S1726162AbfKMUe3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 13 Nov 2019 15:34:29 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2ECF57A7;
+        Wed, 13 Nov 2019 12:34:28 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9CFC03F52E;
+        Wed, 13 Nov 2019 12:34:23 -0800 (PST)
+Subject: Re: [PATCH] dma-mapping: treat dev->bus_dma_mask as a DMA limit
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Christoph Hellwig <hch@lst.de>
-Cc:     rubini@gnudd.com, hch@infradead.org, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-ide@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
+        phil@raspberrypi.org, linux-acpi@vger.kernel.org,
         Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] x86/PCI: sta2x11: use default DMA address
- translation
-Message-ID: <20191113185420.GC1647@zn.tnic>
-References: <20191107150646.13485-1-nsaenzjulienne@suse.de>
- <20191107150646.13485-3-nsaenzjulienne@suse.de>
+        James Hogan <jhogan@kernel.org>, Len Brown <lenb@kernel.org>,
+        devicetree@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
+        iommu@lists.linux-foundation.org, linuxppc-dev@lists.ozlabs.org
+References: <20191113161340.27228-1-nsaenzjulienne@suse.de>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <f74cd8a6-00bf-46c3-8e2e-d278e72d6e0e@arm.com>
+Date:   Wed, 13 Nov 2019 20:34:15 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191107150646.13485-3-nsaenzjulienne@suse.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191113161340.27228-1-nsaenzjulienne@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 07, 2019 at 04:06:45PM +0100, Nicolas Saenz Julienne wrote:
-> The devices found behind this PCIe chip have unusual DMA mapping
-> constraints as there is an AMBA interconnect placed in between them and
-> the different PCI endpoints. The offset between physical memory
-> addresses and AMBA's view is provided by reading a PCI config register,
-> which is saved and used whenever DMA mapping is needed.
+On 13/11/2019 4:13 pm, Nicolas Saenz Julienne wrote:
+> Using a mask to represent bus DMA constraints has a set of limitations.
+> The biggest one being it can only hold a power of two (minus one). The
+> DMA mapping code is already aware of this and treats dev->bus_dma_mask
+> as a limit. This quirk is already used by some architectures although
+> still rare.
 > 
-> It turns out that this DMA setup can be represented by properly setting
-> 'dma_pfn_offset', 'dma_bus_mask' and 'dma_mask' during the PCI device
-> enable fixup. And ultimately allows us to get rid of this device's
-> custom DMA functions.
+> With the introduction of the Raspberry Pi 4 we've found a new contender
+> for the use of bus DMA limits, as its PCIe bus can only address the
+> lower 3GB of memory (of a total of 4GB). This is impossible to represent
+> with a mask. To make things worse the device-tree code rounds non power
+> of two bus DMA limits to the next power of two, which is unacceptable in
+> this case.
 > 
-> Aside from the code deletion and DMA setup, sta2x11_pdev_to_mapping() is
-> moved to avoid warnings whenever CONFIG_PM is not enabled.
-> 
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> 
-> ---
-> 
-> Changed since v1:
->   - use variable to avoid recalculating AMBA's max address
->   - remove x86's dma-direct.h as it's not longer needed
-> 
->  arch/x86/Kconfig                  |   1 -
->  arch/x86/include/asm/device.h     |   3 -
->  arch/x86/include/asm/dma-direct.h |   9 --
->  arch/x86/pci/sta2x11-fixup.c      | 135 ++++++------------------------
->  4 files changed, 26 insertions(+), 122 deletions(-)
->  delete mode 100644 arch/x86/include/asm/dma-direct.h
+> In the light of this, rename dev->bus_dma_mask to dev->bus_dma_limit all
+> over the tree and treat it as such. Note that dev->bus_dma_limit is
+> meant to contain the higher accesible DMA address.
 
-Ok, I have only 2/2 in my mbox so in the future, when sending a whole
-set, make sure you Cc everybody on all the patches so that people can
-see the whole thing.
+Neat, you win a "why didn't I do it that way in the first place?" :)
 
-Then, I went and read back all the discussion about this cleanup and
-how it is hard to test it because it is not in PCs but in automotive
-installations...
+Looking at it without all the history of previous attempts, this looks 
+entirely reasonable, and definitely a step in the right direction.
 
-Long story, short, I like patches with negative diffstats :) so I could
-take it through tip unless Christoph has different plans for this.
+[...]
+> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
+> index 5a7551d060f2..f18827cf96df 100644
+> --- a/drivers/acpi/arm64/iort.c
+> +++ b/drivers/acpi/arm64/iort.c
+> @@ -1097,7 +1097,7 @@ void iort_dma_setup(struct device *dev, u64 *dma_addr, u64 *dma_size)
+>   		 * Limit coherent and dma mask based on size
+>   		 * retrieved from firmware.
+>   		 */
+> -		dev->bus_dma_mask = mask;
+> +		dev->bus_dma_limit = mask;
 
-Thx.
+Although this preserves the existing behaviour, as in of_dma_configure() 
+we can do better here since we have the original address range to hand. 
+I think it's worth keeping the ACPI and OF paths in sync for minor 
+tweaks like this, rather than letting them diverge unnecessarily.
 
--- 
-Regards/Gruss,
-    Boris.
+Otherwise, the rest looks OK to me - in principle we could store it as 
+an exclusive limit such that we could then streamline the min_not_zero() 
+tests to just min(mask, limit - 1), but that's probably too clever for 
+its own good.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Robin.
+
+>   		dev->coherent_dma_mask = mask;
+>   		*dev->dma_mask = mask;
+>   	}
