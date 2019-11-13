@@ -2,102 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 557D1FBA9E
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2019 22:25:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 74BC4FBB18
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2019 22:50:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbfKMVZI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 Nov 2019 16:25:08 -0500
-Received: from foss.arm.com ([217.140.110.172]:58590 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726338AbfKMVZH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 13 Nov 2019 16:25:07 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7D87D7A7;
-        Wed, 13 Nov 2019 13:25:06 -0800 (PST)
-Received: from [192.168.1.123] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F30ED3F52E;
-        Wed, 13 Nov 2019 13:25:00 -0800 (PST)
-Subject: Re: [PATCH] dma-mapping: treat dev->bus_dma_mask as a DMA limit
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linux-mips@vger.kernel.org, linux-ide@vger.kernel.org,
-        Paul Mackerras <paulus@samba.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
-        phil@raspberrypi.org, linux-acpi@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>, linux-pci@vger.kernel.org,
-        James Hogan <jhogan@kernel.org>, Len Brown <lenb@kernel.org>,
-        devicetree@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-kernel@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
-        iommu@lists.linux-foundation.org, linuxppc-dev@lists.ozlabs.org
-References: <20191113161340.27228-1-nsaenzjulienne@suse.de>
- <f74cd8a6-00bf-46c3-8e2e-d278e72d6e0e@arm.com>
- <48da05e0-5acf-8ab3-a6c9-be4988a9450b@gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <b8e4d303-f226-53d9-f383-73872e41002b@arm.com>
-Date:   Wed, 13 Nov 2019 21:24:52 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        id S1726986AbfKMVuh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 Nov 2019 16:50:37 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:38619 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726162AbfKMVug (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Nov 2019 16:50:36 -0500
+Received: by mail-ot1-f66.google.com with SMTP id z25so3034847oti.5;
+        Wed, 13 Nov 2019 13:50:35 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Dc1AbYFoYLO3C/3U0GXl1ZR0dczJpXZXYD/0wizwRwo=;
+        b=PYdcVmy6yjiqzxxoxzLP+GOUFTYK1++LfA38Z3iVNkHi0sbGcvhBl0NWgQX6JngByk
+         SelL3fuKC2lDXhgNYArMzbLYpVnWbrT14BHEdFQE+aJYz2SUkH136e/OV5DQ1CE5hSXO
+         vROJQYo4FSZWwNUYMLNLTtqR94IjTpOsCL/iNCOWGx0D7eLehwHcaAdkVPhyzHs1NF2A
+         Ey44hsEN59/5SvPL4V5m0z0AIfnOI8m2WN2uK75Ma89ItGCFn9KQbWpm3+L/oH1+Yi1n
+         RzxBRW8sftBi6LvaLu/xQBcL45MTVZ8rlONRd4Sl2crCOE3LJ9pGLH8tsw2RBWq0eDvg
+         HqDw==
+X-Gm-Message-State: APjAAAWQYoqMnihuCeA5iljhjK24vqC21EDd9IgXOhIUQeSUsSW35H49
+        TfFJhOX/nDvxRuytHiATYREALI68qR4o4JCSeC8=
+X-Google-Smtp-Source: APXvYqzR7xkMNSG/PAn3Ei8Xdm6X3JIU59b7AUKWPq5l+uEWlkeJLhfWDT8bUht4O0npIjZzEmai98241T7rn5NVmwc=
+X-Received: by 2002:a05:6830:232a:: with SMTP id q10mr5263876otg.262.1573681835291;
+ Wed, 13 Nov 2019 13:50:35 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <48da05e0-5acf-8ab3-a6c9-be4988a9450b@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20191113154123.75345-1-mika.westerberg@linux.intel.com>
+In-Reply-To: <20191113154123.75345-1-mika.westerberg@linux.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 13 Nov 2019 22:50:24 +0100
+Message-ID: <CAJZ5v0ifbNdDMOXLttgVq_BrP2-s1NZywu=AutBTPERkt76bnA@mail.gmail.com>
+Subject: Re: [PATCH] ACPI / hotplug / PCI: Take runtime PM autosuspend into account
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Len Brown <lenb@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2019-11-13 8:41 pm, Florian Fainelli wrote:
-> On 11/13/19 12:34 PM, Robin Murphy wrote:
->> On 13/11/2019 4:13 pm, Nicolas Saenz Julienne wrote:
->>> Using a mask to represent bus DMA constraints has a set of limitations.
->>> The biggest one being it can only hold a power of two (minus one). The
->>> DMA mapping code is already aware of this and treats dev->bus_dma_mask
->>> as a limit. This quirk is already used by some architectures although
->>> still rare.
->>>
->>> With the introduction of the Raspberry Pi 4 we've found a new contender
->>> for the use of bus DMA limits, as its PCIe bus can only address the
->>> lower 3GB of memory (of a total of 4GB). This is impossible to represent
->>> with a mask. To make things worse the device-tree code rounds non power
->>> of two bus DMA limits to the next power of two, which is unacceptable in
->>> this case.
->>>
->>> In the light of this, rename dev->bus_dma_mask to dev->bus_dma_limit all
->>> over the tree and treat it as such. Note that dev->bus_dma_limit is
->>> meant to contain the higher accesible DMA address.
->>
->> Neat, you win a "why didn't I do it that way in the first place?" :)
->>
->> Looking at it without all the history of previous attempts, this looks
->> entirely reasonable, and definitely a step in the right direction.
-> 
-> And while you are changing those, would it make sense to not only rename
-> the structure member but introduce a getter and setter in order to ease
-> future work where this would no longer be a scalar?
+On Wed, Nov 13, 2019 at 4:41 PM Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+>
+> PCIe ports (the only ones we do runtime PM) are using runtime PM
+> autosuspend to keep the port powered on for a while after it becomes
+> idle. However, ACPI hotplug does not take this into account so if we get
+> multiple hotplug events in a short period of time we may be powering
+> ports on and off and then back on unnecessarily.
+>
+> For this reason call pm_runtime_put_autosuspend() for them (with the
+> accompanying pm_runtime_mark_last_busy()).
+>
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-I doubt it - once we get as a far as supporting multiple DMA ranges, 
-there will be a whole load of infrastructure churn anyway if only to 
-replace dma_pfn_offset, and I'm not sure a simple get/set paradigm would 
-even be viable, so it's probably better to save that until clearly 
-necessary.
+Makes sense:
 
-Robin.
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+
+> ---
+>  drivers/pci/hotplug/acpiphp_glue.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/pci/hotplug/acpiphp_glue.c b/drivers/pci/hotplug/acpiphp_glue.c
+> index b3869951c0eb..c8264af40643 100644
+> --- a/drivers/pci/hotplug/acpiphp_glue.c
+> +++ b/drivers/pci/hotplug/acpiphp_glue.c
+> @@ -672,7 +672,8 @@ static void trim_stale_devices(struct pci_dev *dev)
+>                 list_for_each_entry_safe_reverse(child, tmp, &bus->devices, bus_list)
+>                         trim_stale_devices(child);
+>
+> -               pm_runtime_put(&dev->dev);
+> +               pm_runtime_mark_last_busy(&dev->dev);
+> +               pm_runtime_put_autosuspend(&dev->dev);
+>         }
+>  }
+>
+> @@ -714,8 +715,10 @@ static void acpiphp_check_bridge(struct acpiphp_bridge *bridge)
+>                 }
+>         }
+>
+> -       if (bridge->pci_dev)
+> -               pm_runtime_put(&bridge->pci_dev->dev);
+> +       if (bridge->pci_dev) {
+> +               pm_runtime_mark_last_busy(&bridge->pci_dev->dev);
+> +               pm_runtime_put_autosuspend(&bridge->pci_dev->dev);
+> +       }
+>  }
+>
+>  /*
+> --
