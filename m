@@ -2,124 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E68EFB2A2
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2019 15:31:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 33FC6FB372
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2019 16:16:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727846AbfKMObq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 Nov 2019 09:31:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33504 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727427AbfKMObq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 13 Nov 2019 09:31:46 -0500
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EB5E22466;
-        Wed, 13 Nov 2019 14:31:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573655505;
-        bh=tE8WXy9944L3yf6UfmB6Q/LfiN+2WIWDMBHg+6DQEuE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=l5woY5f+aBW0tqC5hgr0PC/dXIp9asNvrjjrSZ1/lXM/np6GDp/7gIPhqbuWjVYPh
-         cVxpjqSXnytPnvYR3fDobPYsjHWnBR3cYHasRng3b8fEmH53f+h1YikpmILixs9w5h
-         yDMDwrcD85gMEI+8Y6A6y+Pb6I06LJcPLuAWl8+M=
-Date:   Wed, 13 Nov 2019 08:31:43 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Oliver O'Halloran <oohall@gmail.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
-        Sergey Miroshnichenko <s.miroshnichenko@yadro.com>
-Subject: Re: [PATCH] powerpc/powernv: Disable native PCIe port management
-Message-ID: <20191113143143.GA54971@google.com>
+        id S1727582AbfKMPQZ convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Wed, 13 Nov 2019 10:16:25 -0500
+Received: from mx1.silicon-gears.com ([81.47.169.96]:51512 "EHLO
+        mx1.silicon-gears.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726335AbfKMPQZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Nov 2019 10:16:25 -0500
+X-Greylist: delayed 1717 seconds by postgrey-1.27 at vger.kernel.org; Wed, 13 Nov 2019 10:16:23 EST
+From:   Ismael Luceno Cortes <ismael.luceno@silicon-gears.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Patrik Niklasson <patrik.niklasson@silicon-gears.com>
+Subject: Re: Exploring the PCI EP Framework
+Thread-Topic: Exploring the PCI EP Framework
+Thread-Index: AQHVmU8qOjnPCI1YwEGFWKT7LCnZeKeI0KSAgABOlAA=
+Date:   Wed, 13 Nov 2019 14:47:42 +0000
+Message-ID: <20191113144742.GA2680@kiki>
+References: <20191112114854.GA3478@kiki>
+ <6e534239-36c7-086f-502a-fa399917f5f7@ti.com>
+In-Reply-To: <6e534239-36c7-086f-502a-fa399917f5f7@ti.com>
+Accept-Language: en-GB, es-ES, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <860D3405FFCEE741AF0529E27606B64F@silicon-gears.com>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191113094035.22394-1-oohall@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+X-TM-AS-User-Approved-Sender: Yes;No
+X-TMASE-Result: 10--21.803700-10.000000
+X-TMASE-MatchedRID: IDdx3MBO6EALOlLLYTglZaJVTu7sjgg1cVr+FAe3UDUurUcwuzZNE+Mm
+        pZ6XwS0iymvINgQng1nYlAhrLW5bRj13WcdbGR6Q8eSmTJSmEv0TcSAXT4xW4EFwIhIhpx6T5su
+        eCC+qhXcFRSh7ofHHk4J8ACQtXxmkQLBrHsp/dPPWKVDgooDCt1a9r6f+QKmvs4be7XhW2Z7ZQi
+        Ss3YFlOhLGPhTb+r67rM+ASnyCBihhjejNb4SeB65iccRV1A3YSWg+u4ir2NOUbuXvJZv3p7SMH
+        jcMZZi7Mom4BC2cp9iUrJ84gMN/iD+waEkxU0QNsFkCLeeufNt6QyBM5BtUW7oNrnFMteaf0A45
+        IAXRxM3XM7E4d3fliTmy64DpEeZRYHtDBfDeEsjzXLbkJWzoJPZfafJjZZIJnG0dBE+DEE34GBX
+        K/fgP2zpkGp1zoXYsfwFwh/fJ11MJTfSnC4R/H33O3F/Nshx5/RmmEswf7IfvJlVoohLDIVEtMR
+        GFGDWD0DAd9+6+KRtktokPgethAchJhcldb+0MLIrMljt3adsfkDOlTQgzYWs5aIlDmHCs3wRfx
+        vAEQybGBjzLH/jDjetno5Fr47QUgrOBJP860l327WtDgGBc8hdNweKSmDpaY9tXPGh/u0NVZw42
+        jjC7gPXElWYHzovaTPKnaArzlb7l6yjoFgHj/NU8lkLnHC3tj2E0cciid8QObIrZ0cF8LCgkUPW
+        YTW1G4vM1YF6AJbalssEwwVS3DgtuKBGekqUpPjKoPgsq7cA=
+X-IMSS-DKIM-White-List: No;No
+X-TMASE-SNAP-Result: 1.821001.0001-0-1-12:0,22:0,33:0,34:0-0
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 08:40:35PM +1100, Oliver O'Halloran wrote:
-> On PowerNV the PCIe topology is (currently) managed the powernv platform
-> code in cooperation with firmware. The PCIe-native service drivers bypass
-> both and this can cause problems.
-> 
-> Historically this hasn't been a big deal since the only port service
-> driver that saw much use was the AER driver. The AER driver relies
-> a kernel service to report when errors occur rather than acting autonmously
-> so it's fairly easy to ignore. On PowerNV (and pseries) AER events are
-> handled through EEH, which ignores the AER service, so it's never been
-> an issue.
-> 
-> Unfortunately, the hotplug port service driver (pciehp) does act
-> autonomously and conflicts with the platform specific hotplug
-> driver (pnv_php). The main issue is that pciehp claims the interrupt
-> associated with the PCIe capability which in turn prevents pnv_php from
-> claiming it.
-> 
-> This results in hotplug events being handled by pciehp which does not
-> notify firmware when the PCIe topology changes, and does not setup/teardown
-> the arch specific PCI device structures (pci_dn) when the topology changes.
-> The end result is that hot-added devices cannot be enabled and hot-removed
-> devices may not be fully torn-down on removal.
-> 
-> We can fix these problems by setting the "pcie_ports_disabled" flag during
-> platform initialisation. The flag indicates the platform owns the PCIe
-> ports which stops the portbus driver being registered.
-> 
-> Cc: Sergey Miroshnichenko <s.miroshnichenko@yadro.com>
-> Fixes: 66725152fb9f ("PCI/hotplug: PowerPC PowerNV PCI hotplug driver")
-> Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
-> ---
-> Sergey, just FYI. I'll try sort out the rest of the hotplug
-> trainwreck in 5.6.
-> 
-> The Fixes: here is for the patch that added pnv_php in 4.8. It's been
-> a problem since then, but wasn't noticed until people started testing
-> it after the EEH fixes in commit 799abe283e51 ("powerpc/eeh: Clean up
-> EEH PEs after recovery finishes") went in earlier in the 5.4 cycle.
-> ---
->  arch/powerpc/platforms/powernv/pci.c | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
-> 
-> diff --git a/arch/powerpc/platforms/powernv/pci.c b/arch/powerpc/platforms/powernv/pci.c
-> index 2825d00..ae62583 100644
-> --- a/arch/powerpc/platforms/powernv/pci.c
-> +++ b/arch/powerpc/platforms/powernv/pci.c
-> @@ -941,6 +941,23 @@ void __init pnv_pci_init(void)
->  
->  	pci_add_flags(PCI_CAN_SKIP_ISA_ALIGN);
->  
-> +#ifdef CONFIG_PCIEPORTBUS
-> +	/*
-> +	 * On PowerNV PCIe devices are (currently) managed in cooperation
-> +	 * with firmware. This isn't *strictly* required, but there's enough
-> +	 * assumptions baked into both firmware and the platform code that
-> +	 * it's unwise to allow the portbus services to be used.
-> +	 *
-> +	 * We need to fix this eventually, but for now set this flag to disable
-> +	 * the portbus driver. The AER service isn't required since that AER
-> +	 * events are handled via EEH. The pciehp hotplug driver can't work
-> +	 * without kernel changes (and portbus binding breaks pnv_php). The
-> +	 * other services also require some thinking about how we're going
-> +	 * to integrate them.
-> +	 */
-> +	pcie_ports_disabled = true;
-> +#endif
+I'm adding Patrik, who was interested in the thread.
 
-This is fine, but it feels like sort of a blunt instrument.  Is there
-any practical way to clear pci_host_bridge.native_pcie_hotplug (and
-native_aer if appropriate) for the PHBs in question?  That would also
-prevent pciehp from binding.
+On 13/Nov/2019 15:36, Kishon Vijay Abraham I wrote:
+<...> 
+> The endpoint relies on polling a shared memory to detect any events. However if
+> the HW supports some sort of memory signaled interrupt (similar to what is
+> usually available in systems with RC) then we could use it for interrupting the
+> endpoint system. All we have to do is map the MSI address to a EP BAR region so
+> that host can write to a mapped BAR in order to raise MSI interrupt.
 
-We might someday pull portdrv into the PCI core directly instead of as
-a separate driver, and I'm thinking that might be easier if we have
-more specific indications of what the core shouldn't use.
+I was proposing exactly that internally here, but I'm not 100% happy
+with having the RC-side driver trigger the interrupts this way as we
+need to expose a hint about "how", but it's probably the only safe bet
+(we know the endpoints in question will always support MSI-X).
 
->  	/* If we don't have OPAL, eg. in sim, just skip PCI probe */
->  	if (!firmware_has_feature(FW_FEATURE_OPAL))
->  		return;
-> -- 
-> 2.9.5
+> Even if the HW supports, the EP framework doesn't support to use MSI. I'll have
+> to see how that can be added.
+
+Thanks for the confirmation. Where's the polling happening? I can take a
+look at that.
+
+Patrik: Can you check if we could publish that part of our docs? It
+would involve only the signalling.
+
+> > I realize it may not exist because it would imply not yet existing
+> > mechanisms. I even don't know if such a thing is feasible with a
+> > standard IOMMU, but I'm trying to figure out just that.
 > 
+> Does the PCI EP controller also wired to IOMMU?
+
+No, I'm just daydreaming: a programmable IOMMU could implement magic
+pages which produce rewrites, hooked to the PPR mechanics. Even if it's
+not all hardwired, I don't think I could get to play with that.
+
+> > I'm tempted to try to glue together the EP framework with VFIO for the
+> > purpose.
+> 
+> That would help to create a user space endpoint function driver. Not sure if
+> it'll help for the doorbell.
+
+Oh, now that I read it again, it's confusing, I meant I would like to
+tie EP Framework with VFIO somehow, to implement the EPFs in user-space;
+completely unrelated to the previous comments.
+
+> > 
+> > Are you aware of any efforts along those lines?
+> 
+> Most of the efforts in EP right now are towards binding the epf to virtio.
+> https://lore.kernel.org/linux-pci/20190905161516.2845-1-haotian.wang@sifive.com/T/#m4092f14a49852425a00a9a9afa80b4d3b1b836d1
+
+Very interesting, I didn't hit any limitations because our EPC driver is
+a hack, but we're going to go with the EP Framework in the end, so good
+to know (plus we're using virtio already in pretty much the same way).
+
+Thank you very much.
+
+Best regards.
+
+-- 
+Ismael Luceno <ismael.luceno@silicon-gears.com>
++34 934452260 ext. 139
+Travessera de les Corts 302 Bajos, 08029 Barcelona, Spain
+
+https://www.silicon-gears.com/ - https://www.tttech-auto.com/
