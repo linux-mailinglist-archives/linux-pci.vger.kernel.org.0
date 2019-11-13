@@ -2,119 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 33FC6FB372
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2019 16:16:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EAA2EFB3A4
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2019 16:25:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727582AbfKMPQZ convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Wed, 13 Nov 2019 10:16:25 -0500
-Received: from mx1.silicon-gears.com ([81.47.169.96]:51512 "EHLO
-        mx1.silicon-gears.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbfKMPQZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Nov 2019 10:16:25 -0500
-X-Greylist: delayed 1717 seconds by postgrey-1.27 at vger.kernel.org; Wed, 13 Nov 2019 10:16:23 EST
-From:   Ismael Luceno Cortes <ismael.luceno@silicon-gears.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Patrik Niklasson <patrik.niklasson@silicon-gears.com>
-Subject: Re: Exploring the PCI EP Framework
-Thread-Topic: Exploring the PCI EP Framework
-Thread-Index: AQHVmU8qOjnPCI1YwEGFWKT7LCnZeKeI0KSAgABOlAA=
-Date:   Wed, 13 Nov 2019 14:47:42 +0000
-Message-ID: <20191113144742.GA2680@kiki>
-References: <20191112114854.GA3478@kiki>
- <6e534239-36c7-086f-502a-fa399917f5f7@ti.com>
-In-Reply-To: <6e534239-36c7-086f-502a-fa399917f5f7@ti.com>
-Accept-Language: en-GB, es-ES, en-US
+        id S1728008AbfKMPZN convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Wed, 13 Nov 2019 10:25:13 -0500
+Received: from mail-oln040092253036.outbound.protection.outlook.com ([40.92.253.36]:47936
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728005AbfKMPZN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 13 Nov 2019 10:25:13 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fkYEakjJZYvrHlx5C5JvcflXi5alb2f4zWetFN2hCUmgzNeCr4Re12GV2wmmmK9r2hh1AfTjAxp0TjzLVHe389ftWzuM9zY7vG5ZZfGNAUzziApNOVC022kFijs8+kxwaDFKWOba5E7mDOeHEN6bPd99Sg4cudO6H4bL+NVJqmt9XPxWxLMhhK5dEcEMdTULD5cX+Aq+/mKjTayXpeHWLrQBVWpXA8D7AeYH21kINBwsXK7oA8StdTF4qMgCWyQaIAvkMgRpvRTM9guLhsTHf2z8fU8cXAxxFHm8P27u3q558unYnQX3uXLrmsB9F9eZU8yjjP+6GllQoxR4d276nQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ISP7/D8TS0ssr/P+BKguybYIiQAbD999lXY8SXapgrA=;
+ b=a7eDWa+uWjNOR0Eh2J5jfwgPfLtnEKudYR56C3QzHy4gQoKqQSq1fUHBjTvDUNYgVfScJrfDIWQ+ZFkRXxXe1yW2YtTnu0TfWj8GyxXG03PXicdvlD5lpRRr05Ccpk+pJTge1jPIR1I868i2W9QqIQaR0kxJClxIHUibkTMb4MZ8arOlPU78U2T278hsJInlHNhKFTzPZjXRY75TgnzsbOsTMjy5kQgK8oPOFbe0AfvHRR+O4es+Z00ey8uESfitvk4kOcwIKGHi4CF8bB2XPagT/kNDM/M0lHizKLH16ZB8uJbE2W052cxi4o45LJgsVZoRw3Cbgs3Jaev1Y2b4Aw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from SG2APC01FT007.eop-APC01.prod.protection.outlook.com
+ (10.152.250.51) by SG2APC01HT102.eop-APC01.prod.protection.outlook.com
+ (10.152.250.253) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2430.22; Wed, 13 Nov
+ 2019 15:25:06 +0000
+Received: from PS2P216MB0755.KORP216.PROD.OUTLOOK.COM (10.152.250.58) by
+ SG2APC01FT007.mail.protection.outlook.com (10.152.250.84) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2451.23 via Frontend Transport; Wed, 13 Nov 2019 15:25:06 +0000
+Received: from PS2P216MB0755.KORP216.PROD.OUTLOOK.COM
+ ([fe80::44f5:f4bb:1601:2602]) by PS2P216MB0755.KORP216.PROD.OUTLOOK.COM
+ ([fe80::44f5:f4bb:1601:2602%9]) with mapi id 15.20.2451.023; Wed, 13 Nov 2019
+ 15:25:06 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "logang@deltatee.com" <logang@deltatee.com>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Subject: [PATCH v3 0/1] Fix bug resulting in double hpmemsize being assigned
+ to MMIO window
+Thread-Topic: [PATCH v3 0/1] Fix bug resulting in double hpmemsize being
+ assigned to MMIO window
+Thread-Index: AQHVmjaG4rzeiLW1N0+O23g/Zlpwsg==
+Date:   Wed, 13 Nov 2019 15:25:05 +0000
+Message-ID: <PS2P216MB07554AB9A8B0693212CDAF6480760@PS2P216MB0755.KORP216.PROD.OUTLOOK.COM>
+Accept-Language: en-AU, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
+x-clientproxiedby: SYBPR01CA0056.ausprd01.prod.outlook.com
+ (2603:10c6:10:2::20) To PS2P216MB0755.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:300:1c::13)
+x-incomingtopheadermarker: OriginalChecksum:230C1E5DACBE5B9B8EF30B916561980829D529344BBDDCDAB29C78D6CD850D07;UpperCasedChecksum:F652AB35C875A03BD96F1689F3FDD1FC582A29CF7DE803EF8ADCBEA1087D20DB;SizeAsReceived:7681;Count:47
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [AtdtRdYM9W6A64Z/4YfL8VBjDL6pbh6NUbqjYHjvJrgLTmmcbZrYuX0zGt6Fqs15G1xQ2bYMs5U=]
+x-microsoft-original-message-id: <20191113152457.GA5033@nicholas-dell-linux>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 47
+x-eopattributedmessage: 0
+x-ms-office365-filtering-correlation-id: 3de3f1eb-58c6-4e6d-2b37-08d7684da926
+x-ms-exchange-slblob-mailprops: cF9fn+9l+fuoXw0uJWgN4LHeYIiRVMC9JLTpVqIM7OyGIBbw663UQbxWfmOmSx/95YCZM5i/vZD7RAiiE8ibexILSHvALRYTDVj8NyT87fiG43g7uiAlum9HVMIUegCiXPMt63hbiCs6dhFU4DHLyN2B5FxXB63aSyQoveT3FO7qKStrJGJgYaBpjiovrfAWkvdsdVttniGGSsFYPFyJKG1d+aCb8oAK1RsGZIO0mmAgz52DXq3FrdeuysCInextnqNqdn7j1QCvt/wVY22f8AYqBA+PgvT7i3DetaG7vNqS1tNjKAS7KigjImxUAmxSMaKpoBjDL35icoRvm1rGwN9l6qM7s/K8OnUGZ/AwyuAtTz42wV/MMS0V8XvFm9twd49VzwRMKWlV33epW/A1J4mzEqwIRUq2GV6GjmdeUDdEXkXh03vZgy9E4J1POjzv0OeDNGLddIfro5i1OTFtmUAtur/RW613iL1Xs4KdIVtDPWWOS/QU/dDBDu9d40By/fvDdMC9EE/h4+6YQ+s3E6GscOw5wU86JmYXqyCmd5Wn6GYTt/RsUwPbVSRL+LoXqL2IQVK8dvPSfixwJJI3pvBWTPij+JNdjKFwS/8S8SHNG8cZOWKTSwk3zGlHxxeO
+x-ms-traffictypediagnostic: SG2APC01HT102:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ukBQ4vU2agnjymlw8IDc0UXhkS6XL4X4aj0qQ8ai1BDeBmLD5CQXOqJVh1IglN/njb+8Ft2l6/KZDVhl+JwB2wtZdqJd5Ao5CBr9Qyx6ebdMdcoVtXzLCzshDEAngP+/Ov2TJq1l16Cr6oFHlpTQdnAYASgOd2eBfsbbZRnlCPA/OFqVrxM1ZzTmZvhz7w7A
+x-ms-exchange-transport-forked: True
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <860D3405FFCEE741AF0529E27606B64F@silicon-gears.com>
+Content-ID: <F540D89F41CD35488BEACB5946F33258@KORP216.PROD.OUTLOOK.COM>
 Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-TM-AS-User-Approved-Sender: Yes;No
-X-TMASE-Result: 10--21.803700-10.000000
-X-TMASE-MatchedRID: IDdx3MBO6EALOlLLYTglZaJVTu7sjgg1cVr+FAe3UDUurUcwuzZNE+Mm
-        pZ6XwS0iymvINgQng1nYlAhrLW5bRj13WcdbGR6Q8eSmTJSmEv0TcSAXT4xW4EFwIhIhpx6T5su
-        eCC+qhXcFRSh7ofHHk4J8ACQtXxmkQLBrHsp/dPPWKVDgooDCt1a9r6f+QKmvs4be7XhW2Z7ZQi
-        Ss3YFlOhLGPhTb+r67rM+ASnyCBihhjejNb4SeB65iccRV1A3YSWg+u4ir2NOUbuXvJZv3p7SMH
-        jcMZZi7Mom4BC2cp9iUrJ84gMN/iD+waEkxU0QNsFkCLeeufNt6QyBM5BtUW7oNrnFMteaf0A45
-        IAXRxM3XM7E4d3fliTmy64DpEeZRYHtDBfDeEsjzXLbkJWzoJPZfafJjZZIJnG0dBE+DEE34GBX
-        K/fgP2zpkGp1zoXYsfwFwh/fJ11MJTfSnC4R/H33O3F/Nshx5/RmmEswf7IfvJlVoohLDIVEtMR
-        GFGDWD0DAd9+6+KRtktokPgethAchJhcldb+0MLIrMljt3adsfkDOlTQgzYWs5aIlDmHCs3wRfx
-        vAEQybGBjzLH/jDjetno5Fr47QUgrOBJP860l327WtDgGBc8hdNweKSmDpaY9tXPGh/u0NVZw42
-        jjC7gPXElWYHzovaTPKnaArzlb7l6yjoFgHj/NU8lkLnHC3tj2E0cciid8QObIrZ0cF8LCgkUPW
-        YTW1G4vM1YF6AJbalssEwwVS3DgtuKBGekqUpPjKoPgsq7cA=
-X-IMSS-DKIM-White-List: No;No
-X-TMASE-SNAP-Result: 1.821001.0001-0-1-12:0,22:0,33:0,34:0-0
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3de3f1eb-58c6-4e6d-2b37-08d7684da926
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Nov 2019 15:25:06.0533
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2APC01HT102
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-I'm adding Patrik, who was interested in the thread.
+Since last time:
 
-On 13/Nov/2019 15:36, Kishon Vijay Abraham I wrote:
-<...> 
-> The endpoint relies on polling a shared memory to detect any events. However if
-> the HW supports some sort of memory signaled interrupt (similar to what is
-> usually available in systems with RC) then we could use it for interrupting the
-> endpoint system. All we have to do is map the MSI address to a EP BAR region so
-> that host can write to a mapped BAR in order to raise MSI interrupt.
+Changed order of parameters, added comments in the code as per Mika 
+Westerberg's advice.
 
-I was proposing exactly that internally here, but I'm not 100% happy
-with having the RC-side driver trigger the interrupts this way as we
-need to expose a hint about "how", but it's probably the only safe bet
-(we know the endpoints in question will always support MSI-X).
+Added Mika Westerberg's reviewed-by.
 
-> Even if the HW supports, the EP framework doesn't support to use MSI. I'll have
-> to see how that can be added.
+Nicholas Johnson (1):
+  PCI: Fix bug resulting in double hpmemsize being assigned to MMIO
+    window
 
-Thanks for the confirmation. Where's the polling happening? I can take a
-look at that.
-
-Patrik: Can you check if we could publish that part of our docs? It
-would involve only the signalling.
-
-> > I realize it may not exist because it would imply not yet existing
-> > mechanisms. I even don't know if such a thing is feasible with a
-> > standard IOMMU, but I'm trying to figure out just that.
-> 
-> Does the PCI EP controller also wired to IOMMU?
-
-No, I'm just daydreaming: a programmable IOMMU could implement magic
-pages which produce rewrites, hooked to the PPR mechanics. Even if it's
-not all hardwired, I don't think I could get to play with that.
-
-> > I'm tempted to try to glue together the EP framework with VFIO for the
-> > purpose.
-> 
-> That would help to create a user space endpoint function driver. Not sure if
-> it'll help for the doorbell.
-
-Oh, now that I read it again, it's confusing, I meant I would like to
-tie EP Framework with VFIO somehow, to implement the EPFs in user-space;
-completely unrelated to the previous comments.
-
-> > 
-> > Are you aware of any efforts along those lines?
-> 
-> Most of the efforts in EP right now are towards binding the epf to virtio.
-> https://lore.kernel.org/linux-pci/20190905161516.2845-1-haotian.wang@sifive.com/T/#m4092f14a49852425a00a9a9afa80b4d3b1b836d1
-
-Very interesting, I didn't hit any limitations because our EPC driver is
-a hack, but we're going to go with the EP Framework in the end, so good
-to know (plus we're using virtio already in pretty much the same way).
-
-Thank you very much.
-
-Best regards.
+ drivers/pci/setup-bus.c | 38 +++++++++++++++++++++++++++-----------
+ 1 file changed, 27 insertions(+), 11 deletions(-)
 
 -- 
-Ismael Luceno <ismael.luceno@silicon-gears.com>
-+34 934452260 ext. 139
-Travessera de les Corts 302 Bajos, 08029 Barcelona, Spain
+2.24.0
 
-https://www.silicon-gears.com/ - https://www.tttech-auto.com/
