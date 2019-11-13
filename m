@@ -2,146 +2,151 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 22A96FBB2A
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Nov 2019 22:58:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 57B91FBC38
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2019 00:07:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbfKMV6z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 Nov 2019 16:58:55 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:33578 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbfKMV6y (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Nov 2019 16:58:54 -0500
-Received: by mail-oi1-f193.google.com with SMTP id m193so3316276oig.0;
-        Wed, 13 Nov 2019 13:58:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=sXC6pCx2CEyXJ5FQx/AIt/Xl4t7ohdqg7BEaLHc3ehA=;
-        b=Wo/x4pXYonVbYF4u6GisOO8OinqI7zDkt2jd+UmCAXqo513p7D8sAPjQgPR95sV5/c
-         7D49o1ng8wwRK/F52/EnPzQemWW9YgHcXVaUcP6xvggBcJeaXQ2Ga7WT/AmRKz6gW2yT
-         9oCOyMZXGgZ88XoPu0qG+aprmi0FBE3AX4MfBhtdaQCxiGl2yVdEt2He4B1HxXHeuM/M
-         5QJM1RNeeWiLifGkgj3HNgWyn9uJZxaAfPxe1WK23/6OkeGjxHR4gyMyeLAv0yh/MDCF
-         LaeauF0ZzpPv/t2vyTQKd1Tpw0e3L3v31HoKEeQBlfgbi9ACmbxoMOo2YqZcVc/ZOAW+
-         OhfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=sXC6pCx2CEyXJ5FQx/AIt/Xl4t7ohdqg7BEaLHc3ehA=;
-        b=CwoRHSk0jWaJJaIRUirDhJgbqd2l7HIKKbYISc2r16M6HffQvrk9s8+UCTTqUSLEuk
-         cOaJKw7dgx9US50Y9+o7n49oqo6D19W4NcPl4uWLPShml6kaGm9JmUQLT4uuEtsjxTU0
-         SJbqodxQUr1uilGLhJshPmTEA7VNwDxLdQ43IGjbHTpjkkU3AtzshW/x3chrBWDKdLa3
-         XZdVb7X0gw/a2Y2d27TY8rp+9axw/RrWBG1tejv9WHVszUKktLbBUpO+xI/V9Ho9LcTw
-         vGiMBL/b//o0U4g+EXhLdTRFfeflsDSL1mW2bj4DG3uRUfjZE4IEu6gds+GMAJ/eePph
-         IB3w==
-X-Gm-Message-State: APjAAAUxuK5ggD2Jk1s4VJorhfkRUNDLWmHCB001GR8w+zKwYZFWQu/d
-        ZmrIWy6XqX4ybht9AEMmkdTJ6c87Vzgt8w==
-X-Google-Smtp-Source: APXvYqyPmHRJluv3a2S4FUMKILMpGc0FEnfyqJ4xgE9+uz6/wdXp6hXpPKoQFLbmd84HCsXaGA2FYw==
-X-Received: by 2002:aca:5cd5:: with SMTP id q204mr734308oib.14.1573682333351;
-        Wed, 13 Nov 2019 13:58:53 -0800 (PST)
-Received: from [100.71.96.87] ([143.166.81.254])
-        by smtp.gmail.com with ESMTPSA id h22sm1019866otr.36.2019.11.13.13.58.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 Nov 2019 13:58:52 -0800 (PST)
-Subject: Re: [PATCH] PCI: pciehp: Make sure pciehp_isr clears interrupt events
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        id S1726303AbfKMXG7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 Nov 2019 18:06:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33566 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726251AbfKMXG7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 13 Nov 2019 18:06:59 -0500
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98092206E3;
+        Wed, 13 Nov 2019 23:06:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573686418;
+        bh=mlqi9LMSsVHfSL1Hny7iTFZmiFOzZQjuUqd3ZcWXsII=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=NNmD+2/3gxl9UIoz/xcwE7gQAQkOZQ8QvE3xF0N/64a/9hnokx2A26k1gXDOb52lV
+         pcgsPKNFRjfMsx0JINpHX/mpUr6yWlMrf58zLOSn9UKFLj5qie4IJaUbTTh1Yi5y3N
+         a5Zq2IufAo/JdS7P3LVGiWRNqi3KuknCX52aZ+rQ=
+Date:   Wed, 13 Nov 2019 17:06:55 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Lukas Wunner <lukas@wunner.de>,
+        Keith Busch <keith.busch@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Frederick Lawler <fred@fredlawl.com>,
         "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
         Sinan Kaya <okaya@kernel.org>,
-        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191112215938.1145-1-stuart.w.hayes@gmail.com>
- <20191113045939.hhmzfbx46vkgmsvn@wunner.de>
-From:   Stuart Hayes <stuart.w.hayes@gmail.com>
-Message-ID: <0712ed46-e4ba-46d0-05b5-81b258829f38@gmail.com>
-Date:   Wed, 13 Nov 2019 15:58:51 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] PCI: pciehp: Do not disable interrupt twice on
+ suspend
+Message-ID: <20191113230655.GA99849@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20191113045939.hhmzfbx46vkgmsvn@wunner.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191029170022.57528-1-mika.westerberg@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-On 11/12/19 10:59 PM, Lukas Wunner wrote:
-> On Tue, Nov 12, 2019 at 04:59:38PM -0500, Stuart Hayes wrote:
->> The pciehp interrupt handler pciehp_isr() will read the slot status
->> register and then write back to it to clear just the bits that caused the
->> interrupt. If a different interrupt event bit gets set between the read and
->> the write, pciehp_isr() will exit without having cleared all of the
->> interrupt event bits, so we will never get another hotplug interrupt from
->> that device.
+On Tue, Oct 29, 2019 at 08:00:21PM +0300, Mika Westerberg wrote:
+> We try to keep PCIe hotplug ports runtime suspended when entering system
+> suspend. Due to the fact that the PCIe portdrv sets NEVER_SKIP driver PM
+> flag the PM core always calls system suspend/resume hooks even if the
+> device is left runtime suspended. Since PCIe hotplug driver re-uses the
+> same function for both it ends up disabling hotplug interrupt twice and
+> the second time following is printed:
 > 
-> The IRQ is masked when it occurs and unmasked after it's been handled.
-> See the invocation of mask_ack_irq() in handle_edge_irq() and
-> handle_level_irq() in kernel/irq/chip.c.
+>   pciehp 0000:03:01.0:pcie204: pcie_do_write_cmd: no response from device
 > 
-> If the IRQ has fired in-between, the IRQ chip is expected to invoke
-> the IRQ handler again.  There is some support for IRQ chips not
-> capable of replaying interrupts in kernel/irq/resend.c, but in general,
-> if you do not get another hotplug interrupt, the hardware is broken.
-> What kind of IRQ chip are you using and what kind of chip is the
-> hotplug port built into?
+> Prevent this from happening by checking whether the device is already
+> runtime suspended when system suspend hook is called.
 > 
-> I'm not opposed to quirks to support such broken hardware but the
-> commit message shouldn't purport that it's normal behavior and the
-> quirk should only be executed where necessary and be made explicit
-> in the code to be a quirk.
+> Fixes: 9c62f0bfb832 ("PCI: pciehp: Implement runtime PM callbacks")
+> Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+
+Applied both to pci/hotplug for v5.5, thanks!
+
+If it's convenient for you, a cover letter on multi-patch series would
+make a good place for responses like this that apply to the whole
+series.
+
+> ---
+> No changes from previous version.
 > 
-> Thanks,
+>  drivers/pci/hotplug/pciehp_core.c | 25 +++++++++++++++++++++++--
+>  1 file changed, 23 insertions(+), 2 deletions(-)
 > 
-> Lukas
- 
-Thank you for the feedback!
-
-The hotplug port I'm seeing the issue with is an AMD "Starship/Matisse GPP
-Bridge" (1022/1483), which uses an MSI interrupt (PCI-MSI chip).
-
-I don't think that the masking and unmasking will make any difference in this
-case, because this pciehp port does not support MSI per-vector masking.
-
-The PCI spec says:
-
-"If the Port is enabled for edge-triggered interrupt signaling using MSI or MSI-X,
-an interrupt message must be sent every time the logical AND of the following
-conditions transitions from FALSE to TRUE:
-
-• The associated vector is unmasked (not applicable if MSI does not support PVM).
-
-• The Hot-Plug Interrupt Enable bit in the Slot Control register is set to 1b.
-
-• At least one hot-plug event status bit in the Slot Status register and its
-associated enable bit in the Slot Control register are both set to 1b."
-
-Because the AMD port does not support PVM (per vector masking), the first
-condition will always be true.
-
-Because the hot-plug interrupt enable bit isn't cleared on each interrupt, the
-second condition is true.
-
-And because individual event enable bits in the slot control register aren't
-cleared on each interrupt, I interpret this to mean that an interrupt message
-will be sent every time that the event status bits in the slot status register
-transition from all zeros to at least one event status bit being 1.  Once one
-of those event status bits is 1, the logical AND of the three conditions above
-will not transition from FALSE to TRUE again until all of the (enabled) event
-status bits in the slot status register all go to zero, which is what my patch
-is intended to ensure.
-
-(I noticed too late that I have a compile warning with the ctrl_warn() call, so
-I'll have to make a V2 of the patch for that, at least.)
-
-Thanks,
-Stuart
+> diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/pciehp_core.c
+> index b3122c151b80..56daad828c9e 100644
+> --- a/drivers/pci/hotplug/pciehp_core.c
+> +++ b/drivers/pci/hotplug/pciehp_core.c
+> @@ -253,7 +253,7 @@ static bool pme_is_native(struct pcie_device *dev)
+>  	return pcie_ports_native || host->native_pme;
+>  }
+>  
+> -static int pciehp_suspend(struct pcie_device *dev)
+> +static void pciehp_disable_interrupt(struct pcie_device *dev)
+>  {
+>  	/*
+>  	 * Disable hotplug interrupt so that it does not trigger
+> @@ -261,7 +261,19 @@ static int pciehp_suspend(struct pcie_device *dev)
+>  	 */
+>  	if (pme_is_native(dev))
+>  		pcie_disable_interrupt(get_service_data(dev));
+> +}
+>  
+> +#ifdef CONFIG_PM_SLEEP
+> +static int pciehp_suspend(struct pcie_device *dev)
+> +{
+> +	/*
+> +	 * If the port is already runtime suspended we can keep it that
+> +	 * way.
+> +	 */
+> +	if (dev_pm_smart_suspend_and_suspended(&dev->port->dev))
+> +		return 0;
+> +
+> +	pciehp_disable_interrupt(dev);
+>  	return 0;
+>  }
+>  
+> @@ -279,6 +291,7 @@ static int pciehp_resume_noirq(struct pcie_device *dev)
+>  
+>  	return 0;
+>  }
+> +#endif
+>  
+>  static int pciehp_resume(struct pcie_device *dev)
+>  {
+> @@ -292,6 +305,12 @@ static int pciehp_resume(struct pcie_device *dev)
+>  	return 0;
+>  }
+>  
+> +static int pciehp_runtime_suspend(struct pcie_device *dev)
+> +{
+> +	pciehp_disable_interrupt(dev);
+> +	return 0;
+> +}
+> +
+>  static int pciehp_runtime_resume(struct pcie_device *dev)
+>  {
+>  	struct controller *ctrl = get_service_data(dev);
+> @@ -318,10 +337,12 @@ static struct pcie_port_service_driver hpdriver_portdrv = {
+>  	.remove		= pciehp_remove,
+>  
+>  #ifdef	CONFIG_PM
+> +#ifdef	CONFIG_PM_SLEEP
+>  	.suspend	= pciehp_suspend,
+>  	.resume_noirq	= pciehp_resume_noirq,
+>  	.resume		= pciehp_resume,
+> -	.runtime_suspend = pciehp_suspend,
+> +#endif
+> +	.runtime_suspend = pciehp_runtime_suspend,
+>  	.runtime_resume	= pciehp_runtime_resume,
+>  #endif	/* PM */
+>  };
+> -- 
+> 2.23.0
+> 
