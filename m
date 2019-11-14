@@ -2,67 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 347BAFC1E3
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2019 09:51:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A0A6FC230
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2019 10:08:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbfKNIve (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 14 Nov 2019 03:51:34 -0500
-Received: from mail-oi1-f173.google.com ([209.85.167.173]:45019 "EHLO
-        mail-oi1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725976AbfKNIve (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Nov 2019 03:51:34 -0500
-Received: by mail-oi1-f173.google.com with SMTP id s71so4543818oih.11
-        for <linux-pci@vger.kernel.org>; Thu, 14 Nov 2019 00:51:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=XsJZZBmHWs3oTUecsrmJsTbZW2qXyVQWSBFHP3MYq1w=;
-        b=D31R4REIuPhPkh7gI+AhFWIawJQ7SB2IRl33UYvqHRbgtC/RiQvXz8HxcsgLBxGBhe
-         4Bg/1NGsfcfigkp8JJdAkE5Rv87jNaDJLjTqESom3qTNdPpBJ3RFfL7PjPJZhLbKO8u4
-         eKqEcI065u85tpDGY7YMBsgdUi7PCNSCVqSU0nvV+e3uD3dlMDsZtZz38AGtOjvbj6o9
-         Ydp1qaKJC151J1YFMFckg0/xCEPVeFbLlwzapaQFMhu00+Z94WhH+TC51S3FvJC8jOST
-         q+sOJtjsWkp/wQZpan7T/2M1W9NIiWyUxcklyhaTGZewyCRgzzcLwDEUqeTdybS9MvBa
-         dXdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=XsJZZBmHWs3oTUecsrmJsTbZW2qXyVQWSBFHP3MYq1w=;
-        b=J1T2TQzf5zvYWar2FgRM22yDZmBz07wQVgfuGggoew+XlGOW6BTTqJB5oYDCj1GvVD
-         FdYfJZUDS/JLaySGOg+MMhT0+7WOufegA1bR/2yGGCw6T5DehZfXE1Axwjjub7y9hHiE
-         Hkc4B+n4My8+ImOOHf36J9wpIUxovYd3/C0kdVWIQGS0nVowANNKkpesPCWmL8x9NoOT
-         zyfFWgEJ9Ih0+zZun5r0D5orEATmOpQDb2U29Q8hAtq8pxLYMQE3PQH4mkH5b9V8U03P
-         1O3Ma2iscMUbR8tuTdrVcm9VmuREzcnVCkEy5Ph0caEYGDo+0dNRpND7U9NbhiBULkzU
-         kbkA==
-X-Gm-Message-State: APjAAAWQ3KJ824bM0YhpaL9KX43aexhHEIGmxZo/cMkutED5KOK+7IzX
-        8tV0ilKyMCEL7vpfdzvJbvC6/GC/jxMfSwxQ4bvdzKz/
-X-Google-Smtp-Source: APXvYqwF5Pv7Az1duMeHCJhRjMDhdJzzZbtHjmr2CWOI7znClzFsaJ1NROnAF2nAkX8ERfRjgKIQ7lncIClwH65QMw8=
-X-Received: by 2002:aca:c508:: with SMTP id v8mr2486058oif.31.1573721492776;
- Thu, 14 Nov 2019 00:51:32 -0800 (PST)
-MIME-Version: 1.0
-From:   Muni Sekhar <munisekharrms@gmail.com>
-Date:   Thu, 14 Nov 2019 14:21:21 +0530
-Message-ID: <CAHhAz+j+pN3fy_9NTBBchuz_X1a-FQK0Lt8ty3sk3qkufH7KYQ@mail.gmail.com>
-Subject: Question about pci_alloc_consistent() return address
-To:     linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        id S1727345AbfKNJIc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 Nov 2019 04:08:32 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:39427 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727334AbfKNJIc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 14 Nov 2019 04:08:32 -0500
+Received: by ozlabs.org (Postfix, from userid 1034)
+        id 47DFyP6TQRz9sRm; Thu, 14 Nov 2019 20:08:29 +1100 (AEDT)
+X-powerpc-patch-notification: thanks
+X-powerpc-patch-commit: 57409d4fb12c185b2c0689e0496878c8f6bb5b58
+In-Reply-To: <1573449697-5448-2-git-send-email-tyreld@linux.ibm.com>
+To:     Tyrel Datwyler <tyreld@linux.ibm.com>
+From:   Michael Ellerman <patch-notifications@ellerman.id.au>
+Cc:     nathanl@linux.ibm.com, Tyrel Datwyler <tyreld@linux.ibm.com>,
+        tlfalcon@linux.ibm.com, linux-pci@vger.kernel.org,
+        bhelgaas@google.com, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v2 1/9] powerpc/pseries: Fix bad drc_index_start value parsing of drc-info entry
+Message-Id: <47DFyP6TQRz9sRm@ozlabs.org>
+Date:   Thu, 14 Nov 2019 20:08:29 +1100 (AEDT)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi All,
+On Mon, 2019-11-11 at 05:21:28 UTC, Tyrel Datwyler wrote:
+> The ibm,drc-info property is an array property that contains drc-info
+> entries such that each entry is made up of 2 string encoded elements
+> followed by 5 int encoded elements. The of_read_drc_info_cell()
+> helper contains comments that correctly name the expected elements
+> and their encoding. However, the usage of of_prop_next_string() and
+> of_prop_next_u32() introduced a subtle skippage of the first u32.
+> This is a result of of_prop_next_string() returning a pointer to the
+> next property value which is not a string, but actually a (__be32 *).
+> As, a result the following call to of_prop_next_u32() passes over the
+> current int encoded value and actually stores the next one wrongly.
+> 
+> Simply endian swap the current value in place after reading the first
+> two string values. The remaining int encoded values can then be read
+> correctly using of_prop_next_u32().
+> 
+> Signed-off-by: Tyrel Datwyler <tyreld@linux.ibm.com>
 
- I=E2=80=99m using pci_alloc_consistent() in PCIe driver. My PCIe device on=
-ly
-works 64 bit data  boundary transactions.
+Series applied to powerpc next, thanks.
 
-Is there a way to make sure pci_alloc_consistent() always returns
-64-bit aligned address?
+https://git.kernel.org/powerpc/c/57409d4fb12c185b2c0689e0496878c8f6bb5b58
 
-
---=20
-Thanks,
-Sekhar
+cheers
