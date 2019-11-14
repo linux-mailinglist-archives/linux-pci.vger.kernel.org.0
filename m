@@ -2,253 +2,252 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DDD63FD0E9
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2019 23:25:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C3510FD107
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2019 23:39:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbfKNWZ7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 14 Nov 2019 17:25:59 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:35222 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726319AbfKNWZ7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Nov 2019 17:25:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573770358;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=JFvCKKCME4ZFQvtrs0t1Gfy6trGPDpcpBtzp744x92M=;
-        b=UpMUi0RurHTynxN4MLW6i8EAjyOdNVfezJ4fKXWyz8MukOV7ghFlySPYv6T49rdBJ/f6Fp
-        XucIrDFTBnfb94U1FqoIMCdo9xsPHJuJfopod8Vio9rdb2dAJgcO5t0ddvQ4Jxj7vGBgIY
-        QYBbOjiXYc5e+it6TgxHbxzv3RtZ/Fc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-221-cykXuMMsPeSpJpLPLaC7NQ-1; Thu, 14 Nov 2019 17:25:54 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726613AbfKNWjy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 Nov 2019 17:39:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59810 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726319AbfKNWjy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 14 Nov 2019 17:39:54 -0500
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 273C5802426;
-        Thu, 14 Nov 2019 22:25:52 +0000 (UTC)
-Received: from x1.home (ovpn-116-138.phx2.redhat.com [10.3.116.138])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6D20F6106C;
-        Thu, 14 Nov 2019 22:25:51 +0000 (UTC)
-Date:   Thu, 14 Nov 2019 15:25:51 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org,
-        George Cherian <george.cherian@marvell.com>,
-        Robert Richter <rrichter@marvell.com>, Feng Kan <fkan@apm.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Abhinav Ratna <abhinav.ratna@broadcom.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 2/2] PCI: Unify ACS quirk desired vs provided checking
-Message-ID: <20191114152551.2a0bc37e@x1.home>
-In-Reply-To: <20191114220601.261647-3-helgaas@kernel.org>
-References: <20191114220601.261647-1-helgaas@kernel.org>
-        <20191114220601.261647-3-helgaas@kernel.org>
-Organization: Red Hat
+        by mail.kernel.org (Postfix) with ESMTPSA id C61BC206E5;
+        Thu, 14 Nov 2019 22:39:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573771193;
+        bh=oTo9ebOiROu9mMU+M3re/dpZiVycHqS0Kne07Zo2tFU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=oh0tHgI6IQiHr8G1M6U6on+OTgZNjkxwXK4KmqUq4VUiBl4RdP/+1o28njPh6EDIz
+         id/EERmdc6c/FGnImhANkKu+7sysFCuoOfQ+run/i4BBG1Xqvs/yXuWB20WwyLH4ed
+         6WK7hMIoSl/NdFnYfhY9ZbGNGqWVR+W6juWtAjQ8=
+Date:   Thu, 14 Nov 2019 16:39:51 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jay Fang <f.fangjian@huawei.com>
+Cc:     linux-pci@vger.kernel.org, linuxarm@huawei.com
+Subject: Re: [PATCH] PCI/AER: Fix AER/sysfs sriov_numvfs deadlock in
+ pcie_do_recovery()
+Message-ID: <20191114223951.GA2419@google.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: cykXuMMsPeSpJpLPLaC7NQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1567737238-48866-1-git-send-email-f.fangjian@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 14 Nov 2019 16:06:01 -0600
-Bjorn Helgaas <helgaas@kernel.org> wrote:
+Just FYI, "git am" complained:
 
-> From: Bjorn Helgaas <bhelgaas@google.com>
->=20
-> Most of the ACS quirks have a similar pattern of:
->=20
->   acs_flags &=3D ~( <controls provided by this device> );
->   return acs_flags ? 0 : 1;
->=20
-> Pull this out into a helper function to simplify the quirks slightly.  Th=
-e
-> helper function is also a convenient place for comments about what the li=
-st
-> of ACS controls means.  No functional change intended.
->=20
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+  Applying: PCI/AER: Fix AER/sysfs sriov_numvfs deadlock in pcie_do_recovery()
+  error: corrupt patch at line 10
+  Patch failed at 0001 PCI/AER: Fix AER/sysfs sriov_numvfs deadlock in pcie_do_recovery()
+
+It applied fine by hand, and I didn't figure out what the problem was,
+so just FYI.
+
+On Fri, Sep 06, 2019 at 10:33:58AM +0800, Jay Fang wrote:
+> A deadlock triggered by a NONFATAL AER event during a sysfs "sriov_numvfs"
+> operation:
+
+How often does this happen?  Always?  Only when an AER event races
+with the sysfs write?
+
+>   enable one VF
+>   # echo 1 > /sys/devices/pci0000:74/0000:74:00.0/0000:75:00.0/sriov_numvfs
+> 
+>   The sysfs "sriov_numvfs" side is:
+> 
+>     sriov_numvfs_store
+>       device_lock                         # hold the device_lock
+>         ...
+>         pci_enable_sriov
+>           sriov_enable
+>             ...
+>             pci_device_add
+>               down_write(&pci_bus_sem)    # wait for the pci_bus_sem
+> 
+>   The AER side is:
+> 
+>     pcie_do_recovery
+>       pci_walk_bus
+>         down_read(&pci_bus_sem)           # hold the pci_bus_sem
+>           report_resume
+>             device_lock                   # wait for device_unlock()
+> 
+> The calltrace is as below:
+> [  258.411464] INFO: task kworker/0:1:13 blocked for more than 120 seconds.
+> [  258.418139]       Tainted: G         C O      5.1.0-rc1-ge2e3ca0 #1
+> [  258.424379] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> [  258.432172] kworker/0:1     D    0    13      2 0x00000028
+> [  258.437640] Workqueue: events aer_recover_work_func
+> [  258.442496] Call trace:
+> [  258.444933]  __switch_to+0xb4/0x1b8
+> [  258.448409]  __schedule+0x1ec/0x720
+> [  258.451884]  schedule+0x38/0x90
+> [  258.455012]  schedule_preempt_disabled+0x20/0x38
+> [  258.459610]  __mutex_lock.isra.1+0x150/0x518
+> [  258.463861]  __mutex_lock_slowpath+0x10/0x18
+> [  258.468112]  mutex_lock+0x34/0x40
+> [  258.471413]  report_resume+0x1c/0x78
+> [  258.474973]  pci_walk_bus+0x58/0xb0
+> [  258.478451]  pcie_do_recovery+0x18c/0x248
+> [  258.482445]  aer_recover_work_func+0xe0/0x118
+> [  258.486783]  process_one_work+0x1e4/0x468
+> [  258.490776]  worker_thread+0x40/0x450
+> [  258.494424]  kthread+0x128/0x130
+> [  258.497639]  ret_from_fork+0x10/0x1c
+> [  258.501329] INFO: task flr.sh:4534 blocked for more than 120 seconds.
+> [  258.507742]       Tainted: G         C O      5.1.0-rc1-ge2e3ca0 #1
+> [  258.513980] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> [  258.521774] flr.sh          D    0  4534   4504 0x00000000
+> [  258.527235] Call trace:
+> [  258.529671]  __switch_to+0xb4/0x1b8
+> [  258.533146]  __schedule+0x1ec/0x720
+> [  258.536619]  schedule+0x38/0x90
+> [  258.539749]  rwsem_down_write_failed+0x14c/0x210
+> [  258.544347]  down_write+0x48/0x60
+> [  258.547648]  pci_device_add+0x1a0/0x290
+> [  258.551469]  pci_iov_add_virtfn+0x190/0x358
+> [  258.555633]  sriov_enable+0x24c/0x480
+> [  258.559279]  pci_enable_sriov+0x14/0x28
+> [  258.563101]  hisi_zip_sriov_configure+0x64/0x100 [hisi_zip]
+> [  258.568649]  sriov_numvfs_store+0xc4/0x190
+> [  258.572728]  dev_attr_store+0x18/0x28
+> [  258.576375]  sysfs_kf_write+0x3c/0x50
+> [  258.580024]  kernfs_fop_write+0x114/0x1d8
+> [  258.584018]  __vfs_write+0x18/0x38
+> [  258.587404]  vfs_write+0xa4/0x1b0
+> [  258.590705]  ksys_write+0x60/0xd8
+> [  258.594007]  __arm64_sys_write+0x18/0x20
+> [  258.597914]  el0_svc_common+0x5c/0x100
+> [  258.601646]  el0_svc_handler+0x2c/0x80
+> [  258.605381]  el0_svc+0x8/0xc
+> [  379.243461] INFO: task kworker/0:1:13 blocked for more than 241 seconds.
+> [  379.250134]       Tainted: G         C O      5.1.0-rc1-ge2e3ca0 #1
+> [  379.256373] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> 
+> Using the same locking order is a good way to solve this AB->BA kind of
+> deadlock. Adjust the locking order of the AER side, taking device_lock
+> firstly and then the pci_bus_sem, to make sure it's locking order is the
+> same as the sriov side. This patch solves the above deadlock issue only
+> with little changes.
+> 
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=203981
+> Signed-off-by: Jay Fang <f.fangjian@huawei.com>
 > ---
->  drivers/pci/quirks.c | 67 +++++++++++++++++++++++++++++---------------
->  1 file changed, 45 insertions(+), 22 deletions(-)
-
-Much cleaner, and looks equivalent to me.  For both:
-
-Reviewed-by: Alex Williamson <alex.williamson@redhat.com>
-
-Thanks!
-
->=20
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 59f73d084e1d..9a1051071a81 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -4296,6 +4296,24 @@ static void quirk_chelsio_T5_disable_root_port_att=
-ributes(struct pci_dev *pdev)
->  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_CHELSIO, PCI_ANY_ID,
->  =09=09=09 quirk_chelsio_T5_disable_root_port_attributes);
-> =20
-> +/*
-> + * pci_acs_ctrl_enabled - compare desired ACS controls with those provid=
-ed
-> + *=09=09=09  by a device
-> + * @acs_ctrl_req: Bitmask of desired ACS controls
-> + * @acs_ctrl_ena: Bitmask of ACS controls enabled or provided implicitly=
- by
-> + *=09=09  the hardware design
-> + *
-> + * Return 1 if all ACS controls in the @acs_ctrl_req bitmask are include=
-d
-> + * in @acs_ctrl_ena, i.e., the device provides all the access controls t=
-he
-> + * caller desires.  Return 0 otherwise.
-> + */
-> +static int pci_acs_ctrl_enabled(u16 acs_ctrl_req, u16 acs_ctrl_ena)
-> +{
-> +=09if ((acs_ctrl_req & acs_ctrl_ena) =3D=3D acs_ctrl_req)
-> +=09=09return 1;
-> +=09return 0;
-> +}
+>  drivers/pci/pcie/err.c | 12 ++++--------
+>  1 file changed, 4 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> index 773197a..dcc8638 100644
+> --- a/drivers/pci/pcie/err.c
+> +++ b/drivers/pci/pcie/err.c
+> @@ -50,7 +50,6 @@ static int report_error_detected(struct pci_dev *dev,
+> 	pci_ers_result_t vote;
+> 	const struct pci_error_handlers *err_handler;
+> 
+> -	device_lock(&dev->dev);
+> 	if (!pci_dev_set_io_state(dev, state) ||
+> 		!dev->driver ||
+> 		!dev->driver->err_handler ||
+> @@ -71,7 +70,6 @@ static int report_error_detected(struct pci_dev *dev,
+> 	}
+> 	pci_uevent_ers(dev, vote);
+> 	*result = merge_result(*result, vote);
+> -	device_unlock(&dev->dev);
+> 	return 0;
+>  }
+> 
+> @@ -90,7 +88,6 @@ static int report_mmio_enabled(struct pci_dev *dev, void *data)
+> 	pci_ers_result_t vote, *result = data;
+> 	const struct pci_error_handlers *err_handler;
+> 
+> -	device_lock(&dev->dev);
+> 	if (!dev->driver ||
+> 		!dev->driver->err_handler ||
+> 		!dev->driver->err_handler->mmio_enabled)
+> @@ -100,7 +97,6 @@ static int report_mmio_enabled(struct pci_dev *dev, void *data)
+> 	vote = err_handler->mmio_enabled(dev);
+> 	*result = merge_result(*result, vote);
+>  out:
+> -	device_unlock(&dev->dev);
+> 	return 0;
+>  }
+> 
+> @@ -109,7 +105,6 @@ static int report_slot_reset(struct pci_dev *dev, void *data)
+> 	pci_ers_result_t vote, *result = data;
+> 	const struct pci_error_handlers *err_handler;
+> 
+> -	device_lock(&dev->dev);
+> 	if (!dev->driver ||
+> 		!dev->driver->err_handler ||
+> 		!dev->driver->err_handler->slot_reset)
+> @@ -119,7 +114,6 @@ static int report_slot_reset(struct pci_dev *dev, void *data)
+> 	vote = err_handler->slot_reset(dev);
+> 	*result = merge_result(*result, vote);
+>  out:
+> -	device_unlock(&dev->dev);
+> 	return 0;
+>  }
+> 
+> @@ -127,7 +121,6 @@ static int report_resume(struct pci_dev *dev, void *data)
+>  {
+> 	const struct pci_error_handlers *err_handler;
+> 
+> -	device_lock(&dev->dev);
+> 	if (!pci_dev_set_io_state(dev, pci_channel_io_normal) ||
+> 		!dev->driver ||
+> 		!dev->driver->err_handler ||
+> @@ -138,7 +131,6 @@ static int report_resume(struct pci_dev *dev, void *data)
+> 	err_handler->resume(dev);
+>  out:
+> 	pci_uevent_ers(dev, PCI_ERS_RESULT_RECOVERED);
+> -	device_unlock(&dev->dev);
+> 	return 0;
+>  }
+> 
+> @@ -198,6 +190,8 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
+> 		dev = dev->bus->self;
+> 	bus = dev->subordinate;
+> 
+> +	device_lock(&dev->dev);
 > +
->  /*
->   * AMD has indicated that the devices below do not support peer-to-peer
->   * in any system where they are found in the southbridge with an AMD
-> @@ -4339,7 +4357,7 @@ static int pci_quirk_amd_sb_acs(struct pci_dev *dev=
-, u16 acs_flags)
->  =09/* Filter out flags not applicable to multifunction */
->  =09acs_flags &=3D (PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_EC | PCI_ACS_DT);
-> =20
-> -=09return acs_flags & ~(PCI_ACS_RR | PCI_ACS_CR) ? 0 : 1;
-> +=09return pci_acs_ctrl_enabled(acs_flags, PCI_ACS_RR | PCI_ACS_CR);
->  #else
->  =09return -ENODEV;
->  #endif
-> @@ -4377,9 +4395,8 @@ static int pci_quirk_cavium_acs(struct pci_dev *dev=
-, u16 acs_flags)
->  =09 * hardware implements and enables equivalent ACS functionality for
->  =09 * these flags.
->  =09 */
-> -=09acs_flags &=3D ~(PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
-> -
-> -=09return acs_flags ? 0 : 1;
-> +=09return pci_acs_ctrl_enabled(acs_flags,
-> +=09=09PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
->  }
-> =20
->  static int pci_quirk_xgene_acs(struct pci_dev *dev, u16 acs_flags)
-> @@ -4389,9 +4406,8 @@ static int pci_quirk_xgene_acs(struct pci_dev *dev,=
- u16 acs_flags)
->  =09 * transactions with others, allowing masking out these bits as if th=
-ey
->  =09 * were unimplemented in the ACS capability.
->  =09 */
-> -=09acs_flags &=3D ~(PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
-> -
-> -=09return acs_flags ? 0 : 1;
-> +=09return pci_acs_ctrl_enabled(acs_flags,
-> +=09=09PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
->  }
-> =20
->  /*
-> @@ -4443,17 +4459,16 @@ static bool pci_quirk_intel_pch_acs_match(struct =
-pci_dev *dev)
->  =09return false;
->  }
-> =20
-> -#define INTEL_PCH_ACS_FLAGS (PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_=
-ACS_UF)
-> -
->  static int pci_quirk_intel_pch_acs(struct pci_dev *dev, u16 acs_flags)
->  {
->  =09if (!pci_quirk_intel_pch_acs_match(dev))
->  =09=09return -ENOTTY;
-> =20
->  =09if (dev->dev_flags & PCI_DEV_FLAGS_ACS_ENABLED_QUIRK)
-> -=09=09acs_flags &=3D ~(INTEL_PCH_ACS_FLAGS);
-> +=09=09return pci_acs_ctrl_enabled(acs_flags,
-> +=09=09=09PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
-> =20
-> -=09return acs_flags ? 0 : 1;
-> +=09return pci_acs_ctrl_enabled(acs_flags, 0);
->  }
-> =20
->  /*
-> @@ -4468,9 +4483,8 @@ static int pci_quirk_intel_pch_acs(struct pci_dev *=
-dev, u16 acs_flags)
->   */
->  static int pci_quirk_qcom_rp_acs(struct pci_dev *dev, u16 acs_flags)
->  {
-> -=09acs_flags &=3D ~(PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
-> -
-> -=09return acs_flags ? 0 : 1;
-> +=09return pci_acs_ctrl_enabled(acs_flags,
-> +=09=09PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
->  }
-> =20
->  static int pci_quirk_al_acs(struct pci_dev *dev, u16 acs_flags)
-> @@ -4571,7 +4585,7 @@ static int pci_quirk_intel_spt_pch_acs(struct pci_d=
-ev *dev, u16 acs_flags)
-> =20
->  =09pci_read_config_dword(dev, pos + INTEL_SPT_ACS_CTRL, &ctrl);
-> =20
-> -=09return acs_flags & ~ctrl ? 0 : 1;
-> +=09return pci_acs_ctrl_enabled(acs_flags, ctrl);
->  }
-> =20
->  static int pci_quirk_mf_endpoint_acs(struct pci_dev *dev, u16 acs_flags)
-> @@ -4585,10 +4599,9 @@ static int pci_quirk_mf_endpoint_acs(struct pci_de=
-v *dev, u16 acs_flags)
->  =09 * perform peer-to-peer with other functions, allowing us to mask out
->  =09 * these bits as if they were unimplemented in the ACS capability.
->  =09 */
-> -=09acs_flags &=3D ~(PCI_ACS_SV | PCI_ACS_TB | PCI_ACS_RR |
-> -=09=09       PCI_ACS_CR | PCI_ACS_UF | PCI_ACS_DT);
-> -
-> -=09return acs_flags ? 0 : 1;
-> +=09return pci_acs_ctrl_enabled(acs_flags,
-> +=09=09PCI_ACS_SV | PCI_ACS_TB | PCI_ACS_RR |
-> +=09=09PCI_ACS_CR | PCI_ACS_UF | PCI_ACS_DT);
->  }
-> =20
->  static int pci_quirk_brcm_acs(struct pci_dev *dev, u16 acs_flags)
-> @@ -4599,9 +4612,8 @@ static int pci_quirk_brcm_acs(struct pci_dev *dev, =
-u16 acs_flags)
->  =09 * Allow each Root Port to be in a separate IOMMU group by masking
->  =09 * SV/RR/CR/UF bits.
->  =09 */
-> -=09acs_flags &=3D ~(PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
-> -
-> -=09return acs_flags ? 0 : 1;
-> +=09return pci_acs_ctrl_enabled(acs_flags,
-> +=09=09PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
->  }
-> =20
->  static const struct pci_dev_acs_enabled {
-> @@ -4703,6 +4715,17 @@ static const struct pci_dev_acs_enabled {
->  =09{ 0 }
->  };
-> =20
-> +/*
-> + * pci_dev_specific_acs_enabled - check whether device provides ACS cont=
-rols
-> + * @dev:=09PCI device
-> + * @acs_flags:=09Bitmask of desired ACS controls
-> + *
-> + * Returns:
-> + *   -ENOTTY:=09No quirk applies to this device; we can't tell whether t=
-he
-> + *=09=09device provides the desired controls
-> + *   0:=09=09Device does not provide all the desired controls
-> + *   >0:=09Device provides all the controls in @acs_flags
-> + */
->  int pci_dev_specific_acs_enabled(struct pci_dev *dev, u16 acs_flags)
->  {
->  =09const struct pci_dev_acs_enabled *i;
+> 	pci_dbg(dev, "broadcast error_detected message\n");
+> 	if (state == pci_channel_io_frozen)
+> 		pci_walk_bus(bus, report_frozen_detected, &status);
+> @@ -231,12 +225,14 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
+> 	pci_dbg(dev, "broadcast resume message\n");
+> 	pci_walk_bus(bus, report_resume, &status);
+> 
+> +	device_unlock(&dev->dev);
 
+IIUC, previously this path took pci_bus_sem several times (each time
+we call pci_walk_bus()), and then took the device_lock for each device
+visited by pci_walk_bus().
+
+After this patch, we would hold the device lock for a single device
+(the root of the hierarchy walked by pci_walk_bus()) while we call
+pci_walk_bus() several times.
+
+Unless I'm missing something, that means we never acquire the
+device_lock for the devices *visited* by pci_walk_bus() at all.
+
+That doesn't sound like a safe change.  If it is safe, you should
+explain why in the commit log.
+
+> 	pci_aer_clear_device_status(dev);
+> 	pci_cleanup_aer_uncorrect_error_status(dev);
+> 	pci_info(dev, "AER: Device recovery successful\n");
+> 	return;
+> 
+>  failed:
+> +	device_unlock(&dev->dev);
+> 	pci_uevent_ers(dev, PCI_ERS_RESULT_DISCONNECT);
+> 
+> 	/* TODO: Should kernel panic here? */
+
+Bjorn
