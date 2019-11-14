@@ -2,151 +2,57 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 57B91FBC38
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2019 00:07:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 842CBFBDDD
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2019 03:24:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726303AbfKMXG7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 Nov 2019 18:06:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33566 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726251AbfKMXG7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 13 Nov 2019 18:06:59 -0500
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98092206E3;
-        Wed, 13 Nov 2019 23:06:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573686418;
-        bh=mlqi9LMSsVHfSL1Hny7iTFZmiFOzZQjuUqd3ZcWXsII=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=NNmD+2/3gxl9UIoz/xcwE7gQAQkOZQ8QvE3xF0N/64a/9hnokx2A26k1gXDOb52lV
-         pcgsPKNFRjfMsx0JINpHX/mpUr6yWlMrf58zLOSn9UKFLj5qie4IJaUbTTh1Yi5y3N
-         a5Zq2IufAo/JdS7P3LVGiWRNqi3KuknCX52aZ+rQ=
-Date:   Wed, 13 Nov 2019 17:06:55 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Lukas Wunner <lukas@wunner.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Frederick Lawler <fred@fredlawl.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] PCI: pciehp: Do not disable interrupt twice on
- suspend
-Message-ID: <20191113230655.GA99849@google.com>
+        id S1726957AbfKNCYc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 Nov 2019 21:24:32 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:34411 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726960AbfKNCYb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Nov 2019 21:24:31 -0500
+Received: by mail-lf1-f67.google.com with SMTP id y186so3681260lfa.1
+        for <linux-pci@vger.kernel.org>; Wed, 13 Nov 2019 18:24:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=Gf+QwGtA3MXc/BapWdppSC202BwaM1kT1v3NwxO2OX4=;
+        b=LBs1jYUOyE/BZy6h647nqCxOM4kTf1bP/hfVvJ4dbiSCiTRUKdHfGaFjtlkWKpCAsP
+         pRUxlBx6A2R3ILfpS3aMkBwRngmXAwyWm9FjWShuWK7Dje4bZz9s6sBrqB261g3HKrUY
+         cHyvZir93r/lgE1p+cnR1qEoTEzKSJXD6jc9WVEzHeCd+zLbhr14nPMBuqLm67OwptY2
+         vFSPAy3UnRuuJ8LpkfpDTbIMjB2dWfca7c8DuV2aTjTt+m4wTWgNUCwFI/HEAguF41QS
+         LQE4D3koj9Jlq05dqB4jmBXnKTMgT4vW0qV1pMQx5bFtAZ1Wz9dZZzV0eWBWgz2rT58I
+         O+xA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=Gf+QwGtA3MXc/BapWdppSC202BwaM1kT1v3NwxO2OX4=;
+        b=V1X8h98MdQ6P6lS13PJ5aMWwevzHoTAZQqUoq4+aR48aj8EOXoX7ZBonmnKSU/GTS9
+         RlbPVr5wXohE8v7oXr/RsKEKJ11PYPpafRutb+wmT5Lu397+KGGrTU47u+Cn1HM2fiBa
+         xvZC7I6BEk7t5GH4Zq8uQ35VOS4F+whE/dkRR3zzWfLTu3Qx3F9H0LyZ31V6tI8a4+rd
+         x3EVACmzowucaskJlx9v4jymyCI0lxB/gQ/70We8ZhY9sScV30YB3hHoesIjKUY2KMJ/
+         j/MR2Lgm55D1Ff3jxVcbFuxnZfGDJ9Lc7pQL3Ps6ZOvoouXyglKEh9eC5M2g6Tnh7kpP
+         1ZsA==
+X-Gm-Message-State: APjAAAUTMrfNIVn0F/WXlWqq0wNMjYAD7PX7gFABvSjVPnIqg8HBJBHY
+        cp5hB12vdhS4xOLmTPZtUwLgB4N2jgjTPfprS+k=
+X-Google-Smtp-Source: APXvYqyDEa0wLMuFOVXYPpduTE1vQpIg7M9nvYVQtc2+9mzcnNBZ8D39Ye3m1qNtW9Q2VIzc2QY39IRkpU+KSPmiuw0=
+X-Received: by 2002:a05:6512:41e:: with SMTP id u30mr4671677lfk.65.1573698269774;
+ Wed, 13 Nov 2019 18:24:29 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191029170022.57528-1-mika.westerberg@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Received: by 2002:a2e:9445:0:0:0:0:0 with HTTP; Wed, 13 Nov 2019 18:24:29
+ -0800 (PST)
+Reply-To: khiggins144@gmail.com
+From:   Katie Higgins <peterraphealjnr512@gmail.com>
+Date:   Thu, 14 Nov 2019 02:24:29 +0000
+Message-ID: <CADtqMwjtHQ5ns+7nnbLZnKRrz+h5No5D-EwGoskyg-QFmsdHFQ@mail.gmail.com>
+Subject: Hello
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 08:00:21PM +0300, Mika Westerberg wrote:
-> We try to keep PCIe hotplug ports runtime suspended when entering system
-> suspend. Due to the fact that the PCIe portdrv sets NEVER_SKIP driver PM
-> flag the PM core always calls system suspend/resume hooks even if the
-> device is left runtime suspended. Since PCIe hotplug driver re-uses the
-> same function for both it ends up disabling hotplug interrupt twice and
-> the second time following is printed:
-> 
->   pciehp 0000:03:01.0:pcie204: pcie_do_write_cmd: no response from device
-> 
-> Prevent this from happening by checking whether the device is already
-> runtime suspended when system suspend hook is called.
-> 
-> Fixes: 9c62f0bfb832 ("PCI: pciehp: Implement runtime PM callbacks")
-> Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-
-Applied both to pci/hotplug for v5.5, thanks!
-
-If it's convenient for you, a cover letter on multi-patch series would
-make a good place for responses like this that apply to the whole
-series.
-
-> ---
-> No changes from previous version.
-> 
->  drivers/pci/hotplug/pciehp_core.c | 25 +++++++++++++++++++++++--
->  1 file changed, 23 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/pciehp_core.c
-> index b3122c151b80..56daad828c9e 100644
-> --- a/drivers/pci/hotplug/pciehp_core.c
-> +++ b/drivers/pci/hotplug/pciehp_core.c
-> @@ -253,7 +253,7 @@ static bool pme_is_native(struct pcie_device *dev)
->  	return pcie_ports_native || host->native_pme;
->  }
->  
-> -static int pciehp_suspend(struct pcie_device *dev)
-> +static void pciehp_disable_interrupt(struct pcie_device *dev)
->  {
->  	/*
->  	 * Disable hotplug interrupt so that it does not trigger
-> @@ -261,7 +261,19 @@ static int pciehp_suspend(struct pcie_device *dev)
->  	 */
->  	if (pme_is_native(dev))
->  		pcie_disable_interrupt(get_service_data(dev));
-> +}
->  
-> +#ifdef CONFIG_PM_SLEEP
-> +static int pciehp_suspend(struct pcie_device *dev)
-> +{
-> +	/*
-> +	 * If the port is already runtime suspended we can keep it that
-> +	 * way.
-> +	 */
-> +	if (dev_pm_smart_suspend_and_suspended(&dev->port->dev))
-> +		return 0;
-> +
-> +	pciehp_disable_interrupt(dev);
->  	return 0;
->  }
->  
-> @@ -279,6 +291,7 @@ static int pciehp_resume_noirq(struct pcie_device *dev)
->  
->  	return 0;
->  }
-> +#endif
->  
->  static int pciehp_resume(struct pcie_device *dev)
->  {
-> @@ -292,6 +305,12 @@ static int pciehp_resume(struct pcie_device *dev)
->  	return 0;
->  }
->  
-> +static int pciehp_runtime_suspend(struct pcie_device *dev)
-> +{
-> +	pciehp_disable_interrupt(dev);
-> +	return 0;
-> +}
-> +
->  static int pciehp_runtime_resume(struct pcie_device *dev)
->  {
->  	struct controller *ctrl = get_service_data(dev);
-> @@ -318,10 +337,12 @@ static struct pcie_port_service_driver hpdriver_portdrv = {
->  	.remove		= pciehp_remove,
->  
->  #ifdef	CONFIG_PM
-> +#ifdef	CONFIG_PM_SLEEP
->  	.suspend	= pciehp_suspend,
->  	.resume_noirq	= pciehp_resume_noirq,
->  	.resume		= pciehp_resume,
-> -	.runtime_suspend = pciehp_suspend,
-> +#endif
-> +	.runtime_suspend = pciehp_runtime_suspend,
->  	.runtime_resume	= pciehp_runtime_resume,
->  #endif	/* PM */
->  };
-> -- 
-> 2.23.0
-> 
+-- 
+Am Katie a military personnel and i will love to know more about you dear
