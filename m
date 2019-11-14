@@ -2,181 +2,145 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7504BFC2EF
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2019 10:47:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DC9BFC662
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2019 13:34:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbfKNJrI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 14 Nov 2019 04:47:08 -0500
-Received: from mx2.suse.de ([195.135.220.15]:36710 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726057AbfKNJrI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 14 Nov 2019 04:47:08 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B254CB14D;
-        Thu, 14 Nov 2019 09:47:04 +0000 (UTC)
-Message-ID: <33ba915ee84839286c69d048b15758a911c02844.camel@suse.de>
-Subject: Re: [PATCH] dma-mapping: treat dev->bus_dma_mask as a DMA limit
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        id S1726185AbfKNMee (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 Nov 2019 07:34:34 -0500
+Received: from condef-10.nifty.com ([202.248.20.75]:62562 "EHLO
+        condef-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726179AbfKNMee (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Nov 2019 07:34:34 -0500
+Received: from conuserg-12.nifty.com ([10.126.8.75])by condef-10.nifty.com with ESMTP id xAECSBSA001602
+        for <linux-pci@vger.kernel.org>; Thu, 14 Nov 2019 21:28:11 +0900
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-12.nifty.com with ESMTP id xAECR7jJ000853;
+        Thu, 14 Nov 2019 21:27:08 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com xAECR7jJ000853
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1573734429;
+        bh=9TSKJqihdLxzzA14xKVF4zpxiUSO4ACCxImJ7e5ZBeo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=nyXT2As5MHTHfqOrIp9o1kyhAFrBnQrqX5MU4L6ulbeKtAcvXGHIwUFS2rrI1jXaP
+         HmYp4HnnM0gvS17ztD+LbBjQvcITVD4UVpQP0uCRR2bY+hU/wcQ4ytbkH+vFoPnzuK
+         D84XJUweb6v3K5ybcZjKJ56SDHMezOrtTlPha1xPjCXih7x2lkehI1qehcL7ttskvx
+         yt/8uHbqa4GRgC79VmmgBtwkSfdWO05FNogy/ll/PR0v4r+PUfle2g4vSPtF7hQ2CM
+         o+gQLe3+kwd2Vc0ZDMWOP20qH6MbLpU0+JB0m+EfndVxCLbTCOo+ytkHSJUIr9hs9y
+         dJEJHy8Ce5pww==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        linux-pci@vger.kernel.org
+Cc:     Paul Gortmaker <paul.gortmaker@windriver.com>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-ide@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
-        phil@raspberrypi.org, linux-acpi@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>,
-        James Hogan <jhogan@kernel.org>, Len Brown <lenb@kernel.org>,
-        devicetree@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
-        iommu@lists.linux-foundation.org, linuxppc-dev@lists.ozlabs.org
-Date:   Thu, 14 Nov 2019 10:47:00 +0100
-In-Reply-To: <f74cd8a6-00bf-46c3-8e2e-d278e72d6e0e@arm.com>
-References: <20191113161340.27228-1-nsaenzjulienne@suse.de>
-         <f74cd8a6-00bf-46c3-8e2e-d278e72d6e0e@arm.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-wOQXYnHdB19ozhE01VMB"
-User-Agent: Evolution 3.34.1 
-MIME-Version: 1.0
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] PCI: uniphier: remove module code from built-in driver
+Date:   Thu, 14 Nov 2019 21:26:54 +0900
+Message-Id: <20191114122654.1490-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+builtin_platform_driver() and MODULE_* are always odd combination.
 
---=-wOQXYnHdB19ozhE01VMB
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+The MODULE_* tags are never populated since CONFIG_PCIE_UNIPHIER is
+a bool option.
 
-On Wed, 2019-11-13 at 20:34 +0000, Robin Murphy wrote:
-> On 13/11/2019 4:13 pm, Nicolas Saenz Julienne wrote:
-> > Using a mask to represent bus DMA constraints has a set of limitations.
-> > The biggest one being it can only hold a power of two (minus one). The
-> > DMA mapping code is already aware of this and treats dev->bus_dma_mask
-> > as a limit. This quirk is already used by some architectures although
-> > still rare.
-> >=20
-> > With the introduction of the Raspberry Pi 4 we've found a new contender
-> > for the use of bus DMA limits, as its PCIe bus can only address the
-> > lower 3GB of memory (of a total of 4GB). This is impossible to represen=
-t
-> > with a mask. To make things worse the device-tree code rounds non power
-> > of two bus DMA limits to the next power of two, which is unacceptable i=
-n
-> > this case.
-> >=20
-> > In the light of this, rename dev->bus_dma_mask to dev->bus_dma_limit al=
-l
-> > over the tree and treat it as such. Note that dev->bus_dma_limit is
-> > meant to contain the higher accesible DMA address.
->=20
-> Neat, you win a "why didn't I do it that way in the first place?" :)
+You can see similar cleanups by:
+  git log --grep='explicitly non-modular'
 
-:)
+Following those commits, remove all the MODULE_* tags and the driver
+detach code.
 
-> Looking at it without all the history of previous attempts, this looks=
-=20
-> entirely reasonable, and definitely a step in the right direction.
->=20
-> [...]
-> > diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-> > index 5a7551d060f2..f18827cf96df 100644
-> > --- a/drivers/acpi/arm64/iort.c
-> > +++ b/drivers/acpi/arm64/iort.c
-> > @@ -1097,7 +1097,7 @@ void iort_dma_setup(struct device *dev, u64 *dma_=
-addr,
-> > u64 *dma_size)
-> >   		 * Limit coherent and dma mask based on size
-> >   		 * retrieved from firmware.
-> >   		 */
-> > -		dev->bus_dma_mask =3D mask;
-> > +		dev->bus_dma_limit =3D mask;
->=20
-> Although this preserves the existing behaviour, as in of_dma_configure()=
-=20
-> we can do better here since we have the original address range to hand.=
-=20
-> I think it's worth keeping the ACPI and OF paths in sync for minor=20
-> tweaks like this, rather than letting them diverge unnecessarily.
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Reviewed-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+---
 
-I figure you mean something like this:
+ drivers/pci/controller/dwc/pcie-uniphier.c | 31 +---------------------
+ 1 file changed, 1 insertion(+), 30 deletions(-)
 
-@@ -1085,19 +1085,15 @@ void iort_dma_setup(struct device *dev, u64 *dma_ad=
-dr,
-u64 *dma_size)
-        }
-
-        if (!ret) {
--               msb =3D fls64(dmaaddr + size - 1);
--               /*
--                * Round-up to the power-of-two mask or set
--                * the mask to the whole 64-bit address space
--                * in case the DMA region covers the full
--                * memory window.
--                */
--               mask =3D msb =3D=3D 64 ? U64_MAX : (1ULL << msb) - 1;
-+               /* Round-up to the power-of-two */
-+               end =3D dmaddr + size - 1;
-+               mask =3D DMA_BIT_MASK(ilog2(end) + 1);
-+
-                /*
-                 * Limit coherent and dma mask based on size
-                 * retrieved from firmware.
-                 */
--               dev->bus_dma_limit =3D mask;
-+               dev->bus_dma_limit =3D end;
-                dev->coherent_dma_mask =3D mask;
-                *dev->dma_mask =3D mask;
-        }
-
-> Otherwise, the rest looks OK to me - in principle we could store it as=
-=20
-> an exclusive limit such that we could then streamline the min_not_zero()=
-=20
-> tests to just min(mask, limit - 1), but that's probably too clever for=
-=20
-> its own good.
-
-Yes, that was my first intuition and in a perfect world I'd prefer it like
-that. But as you say, it's probably going to cause more trouble than anythi=
-ng.
-
-Regards,
-Nicolas
-
-
---=-wOQXYnHdB19ozhE01VMB
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3NIpQACgkQlfZmHno8
-x/4XNggAtctjofJ4XldVo+K1/P/rLILA/Y+cKWu8qACkyx4o0VedANdaK2iANvY3
-NSFryeYrZSSQS9AGVUcXKwxvBIuLvE2BX6jm7CLSMgir0EIWBOQLWq/RidFZYqm7
-OGFkiOaN1/+XW8Gh8tLu63CtAYXisZ7O7jsxv+qqlXqAmBpChHR3+NimdDsxevgf
-zm6Uk7GEgwPcenlzAFYGaVyhIelfXxB64OJoGJZ3xybsLmBBoa8nlL/vC1QfzNsj
-kGlc4Mc3c6ySI9vpf2Mgn/9pSkOoFvoOsXGEsrbz/qtrpQrC+gpBvYbeLZicVl6G
-Z5EX/OFky1O9iMZTL99Sb2tEonSNlw==
-=17Ah
------END PGP SIGNATURE-----
-
---=-wOQXYnHdB19ozhE01VMB--
+diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
+index 3f30ee4a00b3..8c92b660a0f6 100644
+--- a/drivers/pci/controller/dwc/pcie-uniphier.c
++++ b/drivers/pci/controller/dwc/pcie-uniphier.c
+@@ -9,11 +9,11 @@
+ #include <linux/bitfield.h>
+ #include <linux/clk.h>
+ #include <linux/delay.h>
++#include <linux/init.h>
+ #include <linux/interrupt.h>
+ #include <linux/iopoll.h>
+ #include <linux/irqchip/chained_irq.h>
+ #include <linux/irqdomain.h>
+-#include <linux/module.h>
+ #include <linux/of_irq.h>
+ #include <linux/pci.h>
+ #include <linux/phy/phy.h>
+@@ -161,12 +161,6 @@ static void uniphier_pcie_irq_enable(struct uniphier_pcie_priv *priv)
+ 	writel(PCL_RCV_INTX_ALL_ENABLE, priv->base + PCL_RCV_INTX);
+ }
+ 
+-static void uniphier_pcie_irq_disable(struct uniphier_pcie_priv *priv)
+-{
+-	writel(0, priv->base + PCL_RCV_INT);
+-	writel(0, priv->base + PCL_RCV_INTX);
+-}
+-
+ static void uniphier_pcie_irq_ack(struct irq_data *d)
+ {
+ 	struct pcie_port *pp = irq_data_get_irq_chip_data(d);
+@@ -387,14 +381,6 @@ static int uniphier_pcie_host_enable(struct uniphier_pcie_priv *priv)
+ 	return ret;
+ }
+ 
+-static void uniphier_pcie_host_disable(struct uniphier_pcie_priv *priv)
+-{
+-	uniphier_pcie_irq_disable(priv);
+-	phy_exit(priv->phy);
+-	reset_control_assert(priv->rst);
+-	clk_disable_unprepare(priv->clk);
+-}
+-
+ static const struct dw_pcie_ops dw_pcie_ops = {
+ 	.start_link = uniphier_pcie_establish_link,
+ 	.stop_link = uniphier_pcie_stop_link,
+@@ -446,31 +432,16 @@ static int uniphier_pcie_probe(struct platform_device *pdev)
+ 	return uniphier_add_pcie_port(priv, pdev);
+ }
+ 
+-static int uniphier_pcie_remove(struct platform_device *pdev)
+-{
+-	struct uniphier_pcie_priv *priv = platform_get_drvdata(pdev);
+-
+-	uniphier_pcie_host_disable(priv);
+-
+-	return 0;
+-}
+-
+ static const struct of_device_id uniphier_pcie_match[] = {
+ 	{ .compatible = "socionext,uniphier-pcie", },
+ 	{ /* sentinel */ },
+ };
+-MODULE_DEVICE_TABLE(of, uniphier_pcie_match);
+ 
+ static struct platform_driver uniphier_pcie_driver = {
+ 	.probe  = uniphier_pcie_probe,
+-	.remove = uniphier_pcie_remove,
+ 	.driver = {
+ 		.name = "uniphier-pcie",
+ 		.of_match_table = uniphier_pcie_match,
+ 	},
+ };
+ builtin_platform_driver(uniphier_pcie_driver);
+-
+-MODULE_AUTHOR("Kunihiko Hayashi <hayashi.kunihiko@socionext.com>");
+-MODULE_DESCRIPTION("UniPhier PCIe host controller driver");
+-MODULE_LICENSE("GPL v2");
+-- 
+2.17.1
 
