@@ -2,57 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 842CBFBDDD
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2019 03:24:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 83425FBE01
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Nov 2019 03:50:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726957AbfKNCYc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 Nov 2019 21:24:32 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:34411 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726960AbfKNCYb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Nov 2019 21:24:31 -0500
-Received: by mail-lf1-f67.google.com with SMTP id y186so3681260lfa.1
-        for <linux-pci@vger.kernel.org>; Wed, 13 Nov 2019 18:24:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=Gf+QwGtA3MXc/BapWdppSC202BwaM1kT1v3NwxO2OX4=;
-        b=LBs1jYUOyE/BZy6h647nqCxOM4kTf1bP/hfVvJ4dbiSCiTRUKdHfGaFjtlkWKpCAsP
-         pRUxlBx6A2R3ILfpS3aMkBwRngmXAwyWm9FjWShuWK7Dje4bZz9s6sBrqB261g3HKrUY
-         cHyvZir93r/lgE1p+cnR1qEoTEzKSJXD6jc9WVEzHeCd+zLbhr14nPMBuqLm67OwptY2
-         vFSPAy3UnRuuJ8LpkfpDTbIMjB2dWfca7c8DuV2aTjTt+m4wTWgNUCwFI/HEAguF41QS
-         LQE4D3koj9Jlq05dqB4jmBXnKTMgT4vW0qV1pMQx5bFtAZ1Wz9dZZzV0eWBWgz2rT58I
-         O+xA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=Gf+QwGtA3MXc/BapWdppSC202BwaM1kT1v3NwxO2OX4=;
-        b=V1X8h98MdQ6P6lS13PJ5aMWwevzHoTAZQqUoq4+aR48aj8EOXoX7ZBonmnKSU/GTS9
-         RlbPVr5wXohE8v7oXr/RsKEKJ11PYPpafRutb+wmT5Lu397+KGGrTU47u+Cn1HM2fiBa
-         xvZC7I6BEk7t5GH4Zq8uQ35VOS4F+whE/dkRR3zzWfLTu3Qx3F9H0LyZ31V6tI8a4+rd
-         x3EVACmzowucaskJlx9v4jymyCI0lxB/gQ/70We8ZhY9sScV30YB3hHoesIjKUY2KMJ/
-         j/MR2Lgm55D1Ff3jxVcbFuxnZfGDJ9Lc7pQL3Ps6ZOvoouXyglKEh9eC5M2g6Tnh7kpP
-         1ZsA==
-X-Gm-Message-State: APjAAAUTMrfNIVn0F/WXlWqq0wNMjYAD7PX7gFABvSjVPnIqg8HBJBHY
-        cp5hB12vdhS4xOLmTPZtUwLgB4N2jgjTPfprS+k=
-X-Google-Smtp-Source: APXvYqyDEa0wLMuFOVXYPpduTE1vQpIg7M9nvYVQtc2+9mzcnNBZ8D39Ye3m1qNtW9Q2VIzc2QY39IRkpU+KSPmiuw0=
-X-Received: by 2002:a05:6512:41e:: with SMTP id u30mr4671677lfk.65.1573698269774;
- Wed, 13 Nov 2019 18:24:29 -0800 (PST)
+        id S1726521AbfKNCuZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 Nov 2019 21:50:25 -0500
+Received: from bmailout1.hostsharing.net ([83.223.95.100]:37461 "EHLO
+        bmailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726516AbfKNCuZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Nov 2019 21:50:25 -0500
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 0771B3000452D;
+        Thu, 14 Nov 2019 03:50:23 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id D0FD4A3DC9; Thu, 14 Nov 2019 03:50:22 +0100 (CET)
+Date:   Thu, 14 Nov 2019 03:50:22 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Stuart Hayes <stuart.w.hayes@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: pciehp: Make sure pciehp_isr clears interrupt events
+Message-ID: <20191114025022.wz3gchr7w67fjtzn@wunner.de>
+References: <20191112215938.1145-1-stuart.w.hayes@gmail.com>
+ <20191113045939.hhmzfbx46vkgmsvn@wunner.de>
+ <0712ed46-e4ba-46d0-05b5-81b258829f38@gmail.com>
 MIME-Version: 1.0
-Received: by 2002:a2e:9445:0:0:0:0:0 with HTTP; Wed, 13 Nov 2019 18:24:29
- -0800 (PST)
-Reply-To: khiggins144@gmail.com
-From:   Katie Higgins <peterraphealjnr512@gmail.com>
-Date:   Thu, 14 Nov 2019 02:24:29 +0000
-Message-ID: <CADtqMwjtHQ5ns+7nnbLZnKRrz+h5No5D-EwGoskyg-QFmsdHFQ@mail.gmail.com>
-Subject: Hello
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0712ed46-e4ba-46d0-05b5-81b258829f38@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
--- 
-Am Katie a military personnel and i will love to know more about you dear
+On Wed, Nov 13, 2019 at 03:58:51PM -0600, Stuart Hayes wrote:
+> The hotplug port I'm seeing the issue with is an AMD "Starship/Matisse GPP
+> Bridge" (1022/1483), which uses an MSI interrupt (PCI-MSI chip).
+[...]
+> And because individual event enable bits in the slot control register aren't
+> cleared on each interrupt, I interpret this to mean that an interrupt message
+> will be sent every time that the event status bits in the slot status register
+> transition from all zeros to at least one event status bit being 1.  Once one
+> of those event status bits is 1, the logical AND of the three conditions above
+> will not transition from FALSE to TRUE again until all of the (enabled) event
+> status bits in the slot status register all go to zero, which is what my patch
+> is intended to ensure.
+
+Understood now, thanks.
+
+I'd suggest adding a flag "unsigned int pvm_capable;" to struct controller
+below "u32 slot_cap" (in the "capabilities and quirks" section),
+setting that flag in pcie_init() from dev->msi_cap + PCI_MSI_FLAGS
+(& PCI_MSI_FLAGS_MASKBIT) and amending pciehp_isr() to check for that
+flag and re-read / re-write the Slot Status register until it's all zeroes.
+That would make the reason for the modifications to pciehp_isr() explicit.
+Please try to make the modifications to pciehp_isr() as small and simple
+as possible.  Maybe it's worthwhile to put them in a separate static
+function which is called from pciehp_isr(), I don't know.
+
+Please mention the PCI vendor / device IDs in the commit message
+and provide a reference to the PCIe Base Spec section you've quoted
+above.
+
+Thanks,
+
+Lukas
