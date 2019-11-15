@@ -2,166 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4445AFE67A
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2019 21:41:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DCF13FE815
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Nov 2019 23:37:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726550AbfKOUlA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 15 Nov 2019 15:41:00 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:45821 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726549AbfKOUlA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Nov 2019 15:41:00 -0500
-Received: by mail-pf1-f193.google.com with SMTP id z4so7200591pfn.12;
-        Fri, 15 Nov 2019 12:40:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:thread-topic:thread-index:date:message-id
-         :references:in-reply-to:accept-language:content-language
-         :content-transfer-encoding:mime-version;
-        bh=/eNCiZb2B70OcvEG4CFJpEsh/64tl0xUputhGCMOUYk=;
-        b=KEFLQjC68s5hcGa6HKaiZ36mHeZpBcRX+uss4WLCl0rPqOYZ4dh//08RCSMKEXvuE3
-         j9DDSyJ5+tjD3/fi5VQiUzPpZ6+PelhIpMzTDq0xlJ5uqwNa4odNBXz17oVt7sCpDWai
-         aTGOjT4INKJniDU8CLFuk8UjPBplWMDbnhaO83Uy4ctCQNgeVYq7Mbpa4tnvmSbx/ZmP
-         hlLbrg8t6Xr+QQoEAMpRQsnzAabIy45HqpZ3mrX2RX+h8KVY3nKdDURlH3ICnnQaWoo0
-         5NMK5qixklNzxtQgbjktf9GMjf/jvvmXj2eX/kylQht65vYStMwmFEbo1Lgcp0ww6NB9
-         6r+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:thread-topic:thread-index
-         :date:message-id:references:in-reply-to:accept-language
-         :content-language:content-transfer-encoding:mime-version;
-        bh=/eNCiZb2B70OcvEG4CFJpEsh/64tl0xUputhGCMOUYk=;
-        b=EPhI+mNHJtt3Vad3yW+nxIXxfL/SDpMqDwDh0WPLTdwO2weBBgNrK7q7j/k3LNK8Xv
-         WJSLtkCKUslI4SmmtUjauZPzqWzbtFgJb9SX8Emp861MsX9JL2JOwkl6e70mEG5b9H54
-         D/wWiPDDs1XK+6WxJBohsDi0KzURhQC0hwP2C5SN1I5sVSHVQPxUb+WUVjXJM5W6awsZ
-         fggv3GOlj7gU/tgGovdg0BwOP8tLoXwMKFk9vlhM98GByJmr+bRMrzK3iSihXckDROFZ
-         9Bdp9KUukuWwa5ly3m7sLeO+/v2x3EAF1M21TnSaQVxOo+rWSObm2M8TQnl7ZKCb4P+0
-         FBrQ==
-X-Gm-Message-State: APjAAAVD0S9nNKx8kiT9ygfiUzDgx4ZCdq5N0lz8BWWNe6hBETvWmw57
-        FCdzmqSiUxLjjYs95yrh+bU=
-X-Google-Smtp-Source: APXvYqy74GmqDuG9mHumRBh3b9gvQ06iG7nb1jxhEOnmmOgripvzWoZiWV+GTyyrtTmTBC6fGimcow==
-X-Received: by 2002:a63:1e1f:: with SMTP id e31mr18356918pge.303.1573850457702;
-        Fri, 15 Nov 2019 12:40:57 -0800 (PST)
-Received: from SL2P216MB0105.KORP216.PROD.OUTLOOK.COM ([2603:1046:100:22::5])
-        by smtp.gmail.com with ESMTPSA id b82sm11511061pfb.33.2019.11.15.12.40.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 15 Nov 2019 12:40:56 -0800 (PST)
-From:   Jingoo Han <jingoohan1@gmail.com>
-To:     Dilip Kota <eswara.kota@linux.intel.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "martin.blumenstingl@googlemail.com" 
-        <martin.blumenstingl@googlemail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "andriy.shevchenko@intel.com" <andriy.shevchenko@intel.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "cheol.yong.kim@intel.com" <cheol.yong.kim@intel.com>,
-        "chuanhua.lei@linux.intel.com" <chuanhua.lei@linux.intel.com>,
-        "qi-ming.wu@intel.com" <qi-ming.wu@intel.com>,
-        Han Jingoo <jingoohan1@gmail.com>
-Subject: Re: [PATCH v7 2/3] dwc: PCI: intel: PCIe RC controller driver
-Thread-Topic: [PATCH v7 2/3] dwc: PCI: intel: PCIe RC controller driver
-Thread-Index: AQHVm1y/foErHfC6cU+1DW6VLv0AgqeMszGN
-X-MS-Exchange-MessageSentRepresentingType: 1
-Date:   Fri, 15 Nov 2019 20:40:51 +0000
-Message-ID: <SL2P216MB01056231B6036941BEF71738AA700@SL2P216MB0105.KORP216.PROD.OUTLOOK.COM>
-References: <cover.1573784557.git.eswara.kota@linux.intel.com>
- <99a29f5a4ce18df26bd300ac6728433ec025631b.1573784557.git.eswara.kota@linux.intel.com>
-In-Reply-To: <99a29f5a4ce18df26bd300ac6728433ec025631b.1573784557.git.eswara.kota@linux.intel.com>
-Accept-Language: ko-KR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-Exchange-Organization-SCL: -1
-X-MS-TNEF-Correlator: 
-X-MS-Exchange-Organization-RecordReviewCfmType: 0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1727044AbfKOWgu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 15 Nov 2019 17:36:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59504 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727004AbfKOWgu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 15 Nov 2019 17:36:50 -0500
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9655F2072A;
+        Fri, 15 Nov 2019 22:36:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573857409;
+        bh=pFHuuk1DQeNxWQLJqPfYmeXm2RCC5xYWFYPN1JIewnA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=IuOk2R0yvA4bLu7x4386fodrjq/8QGfNzCdXV1IDAYhv5qMPugCJcKzGKpxa1+U4S
+         1EKzee7a34UdFHbVat/Ef+p12Wkx1NCrdNj1nhcttfjl1RVErE0hVguScMgHllMjfF
+         LrM3CA3uwUCrA0GQHFb+RQLQ9iWDjBGKZ+tnXRyc=
+Date:   Fri, 15 Nov 2019 16:36:47 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     Thierry Reding <treding@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Sinan Kaya <okaya@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        jonathanh@nvidia.com, linux-tegra@vger.kernel.org,
+        linux-pci@vger.kernel.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com,
+        Andrew Murray <andrew.murray@arm.com>,
+        Lukas Wunner <lukas@wunner.de>
+Subject: Re: [PATCH] PCI: Add CRS timeout for pci_device_is_present()
+Message-ID: <20191115223647.GA129381@google.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b6625491-dc02-4fdd-a748-fe0d3b573b01@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 11/14/19, 9:31 PM, Dilip Kota wrote:
-
-> Add support to PCIe RC controller on Intel Gateway SoCs.
-> PCIe controller is based of Synopsys DesignWare PCIe core.
+On Fri, Nov 15, 2019 at 03:34:23PM +0530, Vidya Sagar wrote:
+> On 11/15/2019 12:06 AM, Bjorn Helgaas wrote:
+> > On Wed, Nov 13, 2019 at 12:20:43PM +0100, Thierry Reding wrote:
+> > > On Tue, Nov 12, 2019 at 12:58:44PM -0600, Bjorn Helgaas wrote:
+> > >
+> > > > My question is whether this wait should be connected somehow with
+> > > > platform_pci_set_power_state().  It sounds like the tegra host
+> > > > controller driver already does the platform-specific delays, and I'm
+> > > > not sure it's reasonable for platform_pci_set_power_state() to do the
+> > > > CRS polling.  Maybe something like this?  I'd really like to get
+> > > > Rafael's thinking here.
+> > > > 
+> > > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > > > index e7982af9a5d8..052fa316c917 100644
+> > > > --- a/drivers/pci/pci.c
+> > > > +++ b/drivers/pci/pci.c
+> > > > @@ -964,9 +964,14 @@ void pci_refresh_power_state(struct pci_dev *dev)
+> > > >    */
+> > > >   void pci_power_up(struct pci_dev *dev)
+> > > >   {
+> > > > +	pci_power_state_t prev_state = dev->current_state;
+> > > > +
+> > > >   	if (platform_pci_power_manageable(dev))
+> > > >   		platform_pci_set_power_state(dev, PCI_D0);
+> > > > +	if (prev_state == PCI_D3cold)
+> > > > +		pci_dev_wait(dev, "D3cold->D0", PCIE_RESET_READY_POLL_MS);
 >
-> Intel PCIe driver requires Upconfigure support, Fast Training
-> Sequence and link speed configurations. So adding the respective
-> helper functions in the PCIe DesignWare framework.
-> It also programs hardware autonomous speed during speed
-> configuration so defining it in pci_regs.h.
->
-> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
-> Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> ---
+> Is there any specific reason why should there be a check for the
+> state?  In Tegra series, I observe that, by the time execution comes
+> to this point, prev_state is PCI_D3Hot and in Tegra194 particularly,
+> it is PCI_D0 because the host controller driver explicitly keeps the
+> downstream devices in PCI_D0 state as a work around for one of the
+> Tegra194 specific issues. 
 
-[.....]
+I think you're right, we probably should not try to check "prev_state"
+here because we can't rely on that being accurate.
 
->  drivers/pci/controller/dwc/Kconfig           |  10 +
->  drivers/pci/controller/dwc/Makefile          |   1 +
->  drivers/pci/controller/dwc/pcie-designware.c |  57 +++
->  drivers/pci/controller/dwc/pcie-designware.h |  12 +
->  drivers/pci/controller/dwc/pcie-intel-gw.c   | 542 +++++++++++++++++++++=
-++++++
->  include/uapi/linux/pci_regs.h                |   1 +
->  6 files changed, 623 insertions(+)
->  create mode 100644 drivers/pci/controller/dwc/pcie-intel-gw.c
->
-> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/=
-dwc/Kconfig
-> index 0ba988b5b5bc..fb6d474477df 100644
-> --- a/drivers/pci/controller/dwc/Kconfig
-> +++ b/drivers/pci/controller/dwc/Kconfig
-> @@ -82,6 +82,16 @@ config PCIE_DW_PLAT_EP
->  	  order to enable device-specific features PCI_DW_PLAT_EP must be
->  	  selected.
-> =20
-> +config PCIE_INTEL_GW
-> +	bool "Intel Gateway PCIe host controller support"
-> +	depends on OF && (X86 || COMPILE_TEST)
-> +	select PCIE_DW_HOST
-> +	help
-> +	  Say 'Y' here to enable PCIe Host controller support on Intel
-> +	  Gateway SoCs.
-> +	  The PCIe controller uses the DesignWare core plus Intel-specific
-> +	  hardware wrappers.
-> +
+On Tegra, I assume suspend puts the PCIe devices in D3hot, then when
+we suspend the RC itself, it looks like tegra_pcie_pm_suspend()
+actually turns off the power, so the PCIe devices probably go to
+D3cold but nothing updates their dev->current_state, so it's probably
+still PCI_D3hot.
 
-Please add this config alphabetical order!
-So, this config should be after 'config PCI_IMX6'.
-There is no reason to put this config at the first place.
+On Tegra194, the same probably happens, except that when we suspend
+the RC itself, tegra_pcie_downstream_dev_to_D0() puts the PCIe devices
+back in D0 (updating their dev->current_state to PCI_D0), and then we
+turn off the power, so they probably also end up in D3cold but with
+dev_current_state still set to PCI_D0.
 
->  config PCI_EXYNOS
->  	bool "Samsung Exynos PCIe controller"
->  	depends on SOC_EXYNOS5440 || COMPILE_TEST
-> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller=
-/dwc/Makefile
-> index b30336181d46..99db83cd2f35 100644
-> --- a/drivers/pci/controller/dwc/Makefile
-> +++ b/drivers/pci/controller/dwc/Makefile
-> @@ -3,6 +3,7 @@ obj-$(CONFIG_PCIE_DW) +=3D pcie-designware.o
->  obj-$(CONFIG_PCIE_DW_HOST) +=3D pcie-designware-host.o
->  obj-$(CONFIG_PCIE_DW_EP) +=3D pcie-designware-ep.o
->  obj-$(CONFIG_PCIE_DW_PLAT) +=3D pcie-designware-plat.o
-> +obj-$(CONFIG_PCIE_INTEL_GW) +=3D pcie-intel-gw.o
+> So, I feel the check for current_state may not be need here(?)
 
-Ditto.
+I think you're right.  We can't tell what dev->current_state is when
+we enter pci_power_up().
 
-Best regards,
-Jingoo Han
-
->  obj-$(CONFIG_PCI_DRA7XX) +=3D pci-dra7xx.o
->  obj-$(CONFIG_PCI_EXYNOS) +=3D pci-exynos.o
->  obj-$(CONFIG_PCI_IMX6) +=3D pci-imx6.o
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/c=
-ontroller/dwc/pcie-designware.c
-> index 820488dfeaed..479e250695a0 100644
-
-[.....]
+Bjorn
