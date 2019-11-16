@@ -2,36 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C574DFF174
-	for <lists+linux-pci@lfdr.de>; Sat, 16 Nov 2019 17:12:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7BC25FF089
+	for <lists+linux-pci@lfdr.de>; Sat, 16 Nov 2019 17:06:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730334AbfKPQMP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 16 Nov 2019 11:12:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55526 "EHLO mail.kernel.org"
+        id S1730631AbfKPPut (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 16 Nov 2019 10:50:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730032AbfKPPsZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:48:25 -0500
+        id S1730624AbfKPPus (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:50:48 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51001207FA;
-        Sat, 16 Nov 2019 15:48:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4705120891;
+        Sat, 16 Nov 2019 15:50:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919304;
-        bh=m09NQk/hf9MktbOGeBLi3nTN2WP7IyVR6LenXFTYOpY=;
+        s=default; t=1573919447;
+        bh=hZs1P9plDIJ8W2ENJ7RonhFFJIGU5K6ekGDrHHqkUQw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E+EiG+4NQQNKl5myCF263slnxWJYUSXFx1WfJ7/F9fhlaLHlIagfoC4rcuDexD0S4
-         UpPbtOT5LTA1qE0dThehsBz1Dv36yct/V6K+WPrRy4DBdGwGNsVrWgcO8qEdz9xeZq
-         V0UUV6RaeR7U+uBRukJUSGT7aMEkEnJCk8TSx1X0=
+        b=SRayVvUSTCxczMo+kdZRUht1u6fh42BviXqFflJWEsxIZ2G8mLSp7L759bz7rO+D2
+         H7DxXLWTd3qK/ySUiSSh0YYXfS85JKDgsfzOCzSxbYUx7CTbt/dmTTAq83yjdV4gag
+         PBsZfLMRXhwM0gxCmRTstS4Gck+SBIq0/r7qYdaY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jon Derrick <jonathan.derrick@intel.com>,
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Keith Busch <keith.busch@intel.com>,
         Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 049/150] PCI: vmd: Detach resources after stopping root bus
-Date:   Sat, 16 Nov 2019 10:45:47 -0500
-Message-Id: <20191116154729.9573-49-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 145/150] PCI: keystone: Use quirk to limit MRRS for K2G
+Date:   Sat, 16 Nov 2019 10:47:23 -0500
+Message-Id: <20191116154729.9573-145-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -44,53 +43,41 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Jon Derrick <jonathan.derrick@intel.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
 
-[ Upstream commit dc8af3a827df6d4bb925d3b81b7ec94a7cce9482 ]
+[ Upstream commit 148e340c0696369fadbbddc8f4bef801ed247d71 ]
 
-The VMD removal path calls pci_stop_root_busi(), which tears down the pcie
-tree, including detaching all of the attached drivers. During driver
-detachment, devices may use pci_release_region() to release resources.
-This path relies on the resource being accessible in resource tree.
+PCI controller in K2G also has a limitation that memory read request
+size (MRRS) must not exceed 256 bytes. Use the quirk to limit MRRS
+(added for K2HK, K2L and K2E) for K2G as well.
 
-By detaching the child domain from the parent resource domain prior to
-stopping the bus, we are preventing the list traversal from finding the
-resource to be freed. If we instead detach the resource after stopping
-the bus, we will have properly freed the resource and detaching is
-simply accounting at that point.
-
-Without this order, the resource is never freed and is orphaned on VMD
-removal, leading to a warning:
-
-[  181.940162] Trying to free nonexistent resource <e5a10000-e5a13fff>
-
-Fixes: 2c2c5c5cd213 ("x86/PCI: VMD: Attach VMD resources to parent domain's resource tree")
-Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
-[lorenzo.pieralisi@arm.com: updated commit log]
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Keith Busch <keith.busch@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/host/vmd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/dwc/pci-keystone.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/pci/host/vmd.c b/drivers/pci/host/vmd.c
-index 2537b022f42d4..af6d5da10ea5f 100644
---- a/drivers/pci/host/vmd.c
-+++ b/drivers/pci/host/vmd.c
-@@ -753,12 +753,12 @@ static void vmd_remove(struct pci_dev *dev)
- {
- 	struct vmd_dev *vmd = pci_get_drvdata(dev);
+diff --git a/drivers/pci/dwc/pci-keystone.c b/drivers/pci/dwc/pci-keystone.c
+index 9bc52e4cf52a0..3ea8288c16053 100644
+--- a/drivers/pci/dwc/pci-keystone.c
++++ b/drivers/pci/dwc/pci-keystone.c
+@@ -39,6 +39,7 @@
+ #define PCIE_RC_K2HK		0xb008
+ #define PCIE_RC_K2E		0xb009
+ #define PCIE_RC_K2L		0xb00a
++#define PCIE_RC_K2G		0xb00b
  
--	vmd_detach_resources(vmd);
- 	sysfs_remove_link(&vmd->dev->dev.kobj, "domain");
- 	pci_stop_root_bus(vmd->bus);
- 	pci_remove_root_bus(vmd->bus);
- 	vmd_cleanup_srcu(vmd);
- 	vmd_teardown_dma_ops(vmd);
-+	vmd_detach_resources(vmd);
- 	irq_domain_remove(vmd->irq_domain);
- }
+ #define to_keystone_pcie(x)	dev_get_drvdata((x)->dev)
+ 
+@@ -53,6 +54,8 @@ static void quirk_limit_mrrs(struct pci_dev *dev)
+ 		 .class = PCI_CLASS_BRIDGE_PCI << 8, .class_mask = ~0, },
+ 		{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCIE_RC_K2L),
+ 		 .class = PCI_CLASS_BRIDGE_PCI << 8, .class_mask = ~0, },
++		{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCIE_RC_K2G),
++		 .class = PCI_CLASS_BRIDGE_PCI << 8, .class_mask = ~0, },
+ 		{ 0, },
+ 	};
  
 -- 
 2.20.1
