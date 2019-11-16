@@ -2,48 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A9EDFE9EE
-	for <lists+linux-pci@lfdr.de>; Sat, 16 Nov 2019 01:52:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F19CFE9F1
+	for <lists+linux-pci@lfdr.de>; Sat, 16 Nov 2019 01:52:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727275AbfKPAwn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 15 Nov 2019 19:52:43 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:45062 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727112AbfKPAwn (ORCPT
+        id S1727325AbfKPAwo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 15 Nov 2019 19:52:44 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:35743 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727205AbfKPAwn (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Nov 2019 19:52:43 -0500
-Received: by mail-oi1-f196.google.com with SMTP id 14so10233900oir.12;
-        Fri, 15 Nov 2019 16:52:42 -0800 (PST)
+Received: by mail-oi1-f195.google.com with SMTP id n16so10279990oig.2;
+        Fri, 15 Nov 2019 16:52:43 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=nWoMQ0paWOmaUsqalpGTNE9kf3zkQUzvDJAB/ODhtQI=;
-        b=pWcYfcHehFfatfjpzjUhwdXkxX1SkDub3jrhghsQXkvRkodcXyv5A1ysH2nC3Di/09
-         PhI36FAfOFWmIYnSXmiyPfo/8vZsVseFOZdMChvAQccvlTSzA+H1gM6SU8YMm1fZaJee
-         H9cbPEb9f7s0+BoANrB5syW3wPkLmziUs5ZWoheS3F8BCdQSfV09spGvnPDhuQyGkLlK
-         0b/orE0Ng51P/d13aeZxktQGrTBS8/FsZjdpoDJbVKxhkO5gr98FDmO4YkFzUUQdnWhq
-         wmeI8mSSqFW6OIc5+etMa0hqO91VQj0G5f3GoddPCj9dgSSRghH7ybTl2oqgVCKTysli
-         H9eQ==
-X-Gm-Message-State: APjAAAUyUivQiCEoRV1Lx/DlDZgjPs6TankHicUfTe5arPxcV7iSZiuD
-        p943rUFs6W9LAtY6mB05pq7JRFc=
-X-Google-Smtp-Source: APXvYqxDPJ1BWP4pTS1D7z522kFc2WMxm7LqVnyyAdUsHtniQgmyyWk+hP4cf0Wf7J1GjpqUXNM68g==
-X-Received: by 2002:a05:6808:b1c:: with SMTP id s28mr9147959oij.12.1573865561362;
-        Fri, 15 Nov 2019 16:52:41 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=AetbleCxh59RFQA50mSfhwx5Tr8S+w1DkHRLL89kPsY=;
+        b=ehs0di2T/yogUUmAhIUwAe3pZliPyYkl/X14ykSaWulBIZ9XkqCKN1te6ulnBO3G4e
+         FGAeH06Fgn841gh1af+Cisgh0rvPaLNMfycTHEnvyQb3MbR+sgZl32mpIAa3LOkdNawX
+         cMGAyxobVVkzPT25mY/kcq035JcSxjnIAjnFqEulqojrK+XCg0u+nl9sm47mUc0djpnx
+         K24Pfu6qCpBjZam/PMY15IEJlJyFK0cdd8qNJK2Y28FKaHaoPZi4Aj0yKDChe2p4POoz
+         HSTtutgoV2g9h9nF97THZih8EZGm6vC4cvjdLNhEP7rQaNpeHsi2MunsmpxHGH2719Rp
+         z5JQ==
+X-Gm-Message-State: APjAAAXdgO2yoXfzP49PH7z1HJ/VBqBS5Tu2oXBmeY3oJkm5vxiIuDlA
+        oibGVYqEVRYZ1aajCRGvEeSiNfA=
+X-Google-Smtp-Source: APXvYqwg/VgS3/evD7c7sKv17gVvXIxXTLVIjdz9nGUVlGfrbDpv5PJX/I/IXrd7tvhjMBRZoNi6Ug==
+X-Received: by 2002:aca:d8c5:: with SMTP id p188mr9914595oig.140.1573865562371;
+        Fri, 15 Nov 2019 16:52:42 -0800 (PST)
 Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id g18sm3525680otg.50.2019.11.15.16.52.40
+        by smtp.googlemail.com with ESMTPSA id g18sm3525680otg.50.2019.11.15.16.52.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2019 16:52:40 -0800 (PST)
+        Fri, 15 Nov 2019 16:52:41 -0800 (PST)
 From:   Rob Herring <robh@kernel.org>
 To:     devicetree@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
+        Alan Douglas <adouglas@cadence.com>,
+        Scott Telford <stelford@cadence.com>,
+        Tom Joseph <tjoseph@cadence.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Andrew Murray <andrew.murray@arm.com>
-Subject: [PATCH 1/3] dt-bindings: PCI: Convert Arm Versatile binding to DT schema
-Date:   Fri, 15 Nov 2019 18:52:38 -0600
-Message-Id: <20191116005240.15722-1-robh@kernel.org>
+Subject: [PATCH 2/3] dt-bindings: PCI: Convert Cadence host to DT schema
+Date:   Fri, 15 Nov 2019 18:52:39 -0600
+Message-Id: <20191116005240.15722-2-robh@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191116005240.15722-1-robh@kernel.org>
+References: <20191116005240.15722-1-robh@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
@@ -51,197 +55,233 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Convert the Arm Versatile PCI host binding to a DT schema.
+Convert the Cadence PCIe host binding to DT schema.
 
-Cc: Linus Walleij <linus.walleij@linaro.org>
+The 'phy-names' definition is incomplete.
+
+'vendor-id' and 'device-id' aren't listed as those are standard PCI
+properties. They were incorrectly defined as 16-bit when they should be
+32-bits (even though only 16-bits are used).
+
+'cdns,max-outbound-regions' should really be removed. It serves no
+purpose other than bounds checking 'ranges'. If 'ranges' is wrong for
+the h/w, what's going to ensure 'cdns,max-outbound-regions' is correct.
+
+'cdns,no-bar-match-nbits' is also suspect. This probably could be
+determined from 'dma-ranges' using the sizes.
+
+Cc: Alan Douglas <adouglas@cadence.com>
+Cc: Scott Telford <stelford@cadence.com>
+Cc: Tom Joseph <tjoseph@cadence.com>
 Cc: Bjorn Helgaas <bhelgaas@google.com>
 Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Cc: Andrew Murray <andrew.murray@arm.com>
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/pci/versatile.txt     | 59 ------------
- .../devicetree/bindings/pci/versatile.yaml    | 92 +++++++++++++++++++
- MAINTAINERS                                   |  2 +-
- 3 files changed, 93 insertions(+), 60 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pci/versatile.txt
- create mode 100644 Documentation/devicetree/bindings/pci/versatile.yaml
+ .../bindings/pci/cdns,cdns-pcie-host.txt      |  66 -----------
+ .../bindings/pci/cdns,cdns-pcie-host.yaml     | 106 ++++++++++++++++++
+ MAINTAINERS                                   |   2 +-
+ 3 files changed, 107 insertions(+), 67 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
 
-diff --git a/Documentation/devicetree/bindings/pci/versatile.txt b/Documentation/devicetree/bindings/pci/versatile.txt
+diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
 deleted file mode 100644
-index 0a702b13d2ac..000000000000
---- a/Documentation/devicetree/bindings/pci/versatile.txt
+index 91de69c713a9..000000000000
+--- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
 +++ /dev/null
-@@ -1,59 +0,0 @@
--* ARM Versatile Platform Baseboard PCI interface
+@@ -1,66 +0,0 @@
+-* Cadence PCIe host controller
 -
--PCI host controller found on the ARM Versatile PB board's FPGA.
+-This PCIe controller inherits the base properties defined in
+-host-generic-pci.txt.
 -
 -Required properties:
--- compatible: should contain "arm,versatile-pci" to identify the Versatile PCI
--  controller.
--- reg: base addresses and lengths of the PCI controller. There must be 3
--  entries:
--	- Versatile-specific registers
--	- Self Config space
--	- Config space
--- #address-cells: set to <3>
--- #size-cells: set to <2>
--- device_type: set to "pci"
--- bus-range: set to <0 0xff>
--- ranges: ranges for the PCI memory and I/O regions
--- #interrupt-cells: set to <1>
--- interrupt-map-mask and interrupt-map: standard PCI properties to define
--	the mapping of the PCI interface to interrupt numbers.
+-- compatible: Should contain "cdns,cdns-pcie-host" to identify the IP used.
+-- reg: Should contain the controller register base address, PCIe configuration
+-  window base address, and AXI interface region base address respectively.
+-- reg-names: Must be "reg", "cfg" and "mem" respectively.
+-- #address-cells: Set to <3>
+-- #size-cells: Set to <2>
+-- device_type: Set to "pci"
+-- ranges: Ranges for the PCI memory and I/O regions
+-- #interrupt-cells: Set to <1>
+-- interrupt-map-mask and interrupt-map: Standard PCI properties to define the
+-  mapping of the PCIe interface to interrupt numbers.
+-
+-Optional properties:
+-- cdns,max-outbound-regions: Set to maximum number of outbound regions
+-  (default 32)
+-- cdns,no-bar-match-nbits: Set into the no BAR match register to configure the
+-  number of least significant bits kept during inbound (PCIe -> AXI) address
+-  translations (default 32)
+-- vendor-id: The PCI vendor ID (16 bits, default is design dependent)
+-- device-id: The PCI device ID (16 bits, default is design dependent)
+-- phys: From PHY bindings: List of Generic PHY phandles. One per lane if more
+-  than one in the list.  If only one PHY listed it must manage all lanes. 
+-- phy-names:  List of names to identify the PHY.
 -
 -Example:
 -
--pci-controller@10001000 {
--	compatible = "arm,versatile-pci";
+-pcie@fb000000 {
+-	compatible = "cdns,cdns-pcie-host";
 -	device_type = "pci";
--	reg = <0x10001000 0x1000
--	       0x41000000 0x10000
--	       0x42000000 0x100000>;
--	bus-range = <0 0xff>;
 -	#address-cells = <3>;
 -	#size-cells = <2>;
--	#interrupt-cells = <1>;
+-	bus-range = <0x0 0xff>;
+-	linux,pci-domain = <0>;
+-	cdns,max-outbound-regions = <16>;
+-	cdns,no-bar-match-nbits = <32>;
+-	vendor-id = /bits/ 16 <0x17cd>;
+-	device-id = /bits/ 16 <0x0200>;
 -
--	ranges = <0x01000000 0 0x00000000 0x43000000 0 0x00010000   /* downstream I/O */
--		  0x02000000 0 0x50000000 0x50000000 0 0x10000000   /* non-prefetchable memory */
--		  0x42000000 0 0x60000000 0x60000000 0 0x10000000>; /* prefetchable memory */
+-	reg = <0x0 0xfb000000  0x0 0x01000000>,
+-	      <0x0 0x41000000  0x0 0x00001000>,
+-	      <0x0 0x40000000  0x0 0x04000000>;
+-	reg-names = "reg", "cfg", "mem";
 -
--	interrupt-map-mask = <0x1800 0 0 7>;
--	interrupt-map = <0x1800 0 0 1 &sic 28
--			 0x1800 0 0 2 &sic 29
--			 0x1800 0 0 3 &sic 30
--			 0x1800 0 0 4 &sic 27
+-	ranges = <0x02000000 0x0 0x42000000  0x0 0x42000000  0x0 0x1000000>,
+-		 <0x01000000 0x0 0x43000000  0x0 0x43000000  0x0 0x0010000>;
 -
--			 0x1000 0 0 1 &sic 27
--			 0x1000 0 0 2 &sic 28
--			 0x1000 0 0 3 &sic 29
--			 0x1000 0 0 4 &sic 30
+-	#interrupt-cells = <0x1>;
 -
--			 0x0800 0 0 1 &sic 30
--			 0x0800 0 0 2 &sic 27
--			 0x0800 0 0 3 &sic 28
--			 0x0800 0 0 4 &sic 29
+-	interrupt-map = <0x0 0x0 0x0  0x1  &gic  0x0 0x0 0x0 14 0x1
+-			 0x0 0x0 0x0  0x2  &gic  0x0 0x0 0x0 15 0x1
+-			 0x0 0x0 0x0  0x3  &gic  0x0 0x0 0x0 16 0x1
+-			 0x0 0x0 0x0  0x4  &gic  0x0 0x0 0x0 17 0x1>;
 -
--			 0x0000 0 0 1 &sic 29
--			 0x0000 0 0 2 &sic 30
--			 0x0000 0 0 3 &sic 27
--			 0x0000 0 0 4 &sic 28>;
+-	interrupt-map-mask = <0x0 0x0 0x0  0x7>;
+-
+-	msi-parent = <&its_pci>;
+-
+-	phys = <&pcie_phy0>;
+-	phy-names = "pcie-phy";
 -};
-diff --git a/Documentation/devicetree/bindings/pci/versatile.yaml b/Documentation/devicetree/bindings/pci/versatile.yaml
+diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
 new file mode 100644
-index 000000000000..07a48c27db1f
+index 000000000000..ada77e267b68
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/versatile.yaml
-@@ -0,0 +1,92 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
+@@ -0,0 +1,106 @@
++# SPDX-License-Identifier: GPL-2.0-only
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/pci/versatile.yaml#
++$id: http://devicetree.org/schemas/pci/cdns,cdns-pcie-host.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: ARM Versatile Platform Baseboard PCI interface
++title: Cadence PCIe host controller
 +
 +maintainers:
-+  - Rob Herring <robh@kernel.org>
-+
-+description: |+
-+  PCI host controller found on the ARM Versatile PB board's FPGA.
++  - Alan Douglas <adouglas@cadence.com>
++  - Scott Telford <stelford@cadence.com>
 +
 +allOf:
 +  - $ref: /schemas/pci/pci-bus.yaml#
 +
 +properties:
 +  compatible:
-+    const: arm,versatile-pci
++    const: cdns,cdns-pcie-host
 +
 +  reg:
-+    items:
-+      - description: Versatile-specific registers
-+      - description: Self Config space
-+      - description: Config space
-+
-+  ranges:
 +    maxItems: 3
 +
-+  "#interrupt-cells": true
++  reg-names:
++    items:
++      - const: reg
++      - const: cfg
++      - const: mem
 +
-+  interrupt-map:
++  cdns,max-outbound-regions:
++    description: maximum number of outbound regions
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++    minimum: 1
++    maximum: 32
++    default: 32
++
++  cdns,no-bar-match-nbits:
++    description:
++      Set into the no BAR match register to configure the number of least
++      significant bits kept during inbound (PCIe -> AXI) address translations
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++    minimum: 0
++    maximum: 32
++    default: 32
++
++  msi-parent: true
++
++  phys:
++    description:
++      One per lane if more than one in the list. If only one PHY listed it must
++      manage all lanes.
++    minItems: 1
 +    maxItems: 16
 +
-+  interrupt-map-mask:
++  phy-names:
 +    items:
-+      - const: 0x1800
-+      - const: 0
-+      - const: 0
-+      - const: 7
++      - const: pcie-phy
++    # FIXME: names when more than 1
 +
 +required:
-+  - compatible
 +  - reg
-+  - ranges
-+  - "#interrupt-cells"
-+  - interrupt-map
-+  - interrupt-map-mask
++  - reg-names
 +
 +examples:
 +  - |
-+    pci@10001000 {
-+      compatible = "arm,versatile-pci";
-+      device_type = "pci";
-+      reg = <0x10001000 0x1000>,
-+            <0x41000000 0x10000>,
-+            <0x42000000 0x100000>;
-+      bus-range = <0 0xff>;
-+      #address-cells = <3>;
-+      #size-cells = <2>;
-+      #interrupt-cells = <1>;
++    bus {
++        #address-cells = <2>;
++        #size-cells = <2>;
 +
-+      ranges =
-+          <0x01000000 0 0x00000000 0x43000000 0 0x00010000>,  /* downstream I/O */
-+          <0x02000000 0 0x50000000 0x50000000 0 0x10000000>,  /* non-prefetchable memory */
-+          <0x42000000 0 0x60000000 0x60000000 0 0x10000000>;  /* prefetchable memory */
++        pcie@fb000000 {
++            compatible = "cdns,cdns-pcie-host";
++            device_type = "pci";
++            #address-cells = <3>;
++            #size-cells = <2>;
++            bus-range = <0x0 0xff>;
++            linux,pci-domain = <0>;
++            cdns,max-outbound-regions = <16>;
++            cdns,no-bar-match-nbits = <32>;
++            vendor-id = /bits/ 16 <0x17cd>;
++            device-id = /bits/ 16 <0x0200>;
 +
-+      interrupt-map-mask = <0x1800 0 0 7>;
-+      interrupt-map = <0x1800 0 0 1 &sic 28>,
-+          <0x1800 0 0 2 &sic 29>,
-+          <0x1800 0 0 3 &sic 30>,
-+          <0x1800 0 0 4 &sic 27>,
++            reg = <0x0 0xfb000000  0x0 0x01000000>,
++                  <0x0 0x41000000  0x0 0x00001000>,
++                  <0x0 0x40000000  0x0 0x04000000>;
++            reg-names = "reg", "cfg", "mem";
 +
-+          <0x1000 0 0 1 &sic 27>,
-+          <0x1000 0 0 2 &sic 28>,
-+          <0x1000 0 0 3 &sic 29>,
-+          <0x1000 0 0 4 &sic 30>,
++            ranges = <0x02000000 0x0 0x42000000  0x0 0x42000000  0x0 0x1000000>,
++                     <0x01000000 0x0 0x43000000  0x0 0x43000000  0x0 0x0010000>;
 +
-+          <0x0800 0 0 1 &sic 30>,
-+          <0x0800 0 0 2 &sic 27>,
-+          <0x0800 0 0 3 &sic 28>,
-+          <0x0800 0 0 4 &sic 29>,
++            #interrupt-cells = <0x1>;
 +
-+          <0x0000 0 0 1 &sic 29>,
-+          <0x0000 0 0 2 &sic 30>,
-+          <0x0000 0 0 3 &sic 27>,
-+          <0x0000 0 0 4 &sic 28>;
++            interrupt-map = <0x0 0x0 0x0  0x1  &gic  0x0 0x0 0x0 14 0x1>,
++                 <0x0 0x0 0x0  0x2  &gic  0x0 0x0 0x0 15 0x1>,
++                 <0x0 0x0 0x0  0x3  &gic  0x0 0x0 0x0 16 0x1>,
++                 <0x0 0x0 0x0  0x4  &gic  0x0 0x0 0x0 17 0x1>;
++
++            interrupt-map-mask = <0x0 0x0 0x0  0x7>;
++
++            msi-parent = <&its_pci>;
++
++            phys = <&pcie_phy0>;
++            phy-names = "pcie-phy";
++        };
 +    };
-+
-+
 +...
 diff --git a/MAINTAINERS b/MAINTAINERS
-index c6c34d04ce95..48a90f0833b8 100644
+index 48a90f0833b8..21f3393c36e3 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -12401,7 +12401,7 @@ M:	Rob Herring <robh@kernel.org>
+@@ -12416,7 +12416,7 @@ PCI DRIVER FOR CADENCE PCIE IP
+ M:	Tom Joseph <tjoseph@cadence.com>
  L:	linux-pci@vger.kernel.org
- L:	linux-arm-kernel@lists.infradead.org
  S:	Maintained
--F:	Documentation/devicetree/bindings/pci/versatile.txt
-+F:	Documentation/devicetree/bindings/pci/versatile.yaml
- F:	drivers/pci/controller/pci-versatile.c
+-F:	Documentation/devicetree/bindings/pci/cdns,*.txt
++F:	Documentation/devicetree/bindings/pci/cdns,*
+ F:	drivers/pci/controller/pcie-cadence*
  
- PCI DRIVER FOR ARMADA 8K
+ PCI DRIVER FOR FREESCALE LAYERSCAPE
 -- 
 2.20.1
 
