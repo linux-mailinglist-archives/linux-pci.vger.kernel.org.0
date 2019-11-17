@@ -2,133 +2,422 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F1EB7FF5D5
-	for <lists+linux-pci@lfdr.de>; Sat, 16 Nov 2019 22:42:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 96B3FFFC3B
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Nov 2019 00:27:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727629AbfKPVmN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 16 Nov 2019 16:42:13 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:32842 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727273AbfKPVmM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 16 Nov 2019 16:42:12 -0500
-Received: by mail-pg1-f193.google.com with SMTP id h27so7648355pgn.0;
-        Sat, 16 Nov 2019 13:42:12 -0800 (PST)
+        id S1726268AbfKQX1J (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 17 Nov 2019 18:27:09 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:39611 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726481AbfKQX1I (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 17 Nov 2019 18:27:08 -0500
+Received: by mail-io1-f68.google.com with SMTP id k1so16646219ioj.6
+        for <linux-pci@vger.kernel.org>; Sun, 17 Nov 2019 15:27:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=sQhXYCohXzHB1bZ2481yJdBtaYvkE/AnjVLZI+F8BEk=;
-        b=mhBwANIWPAUMbiXbLLg/F437gJADuhe/M8UHHEaA7XNVpIyvbP11KzZHaaB+hfoPdk
-         HBYS+o0u0FdKRlL236vJVwh2URceG+eabRGqNjKhTD7/gaUBewZ4+fME5ySbtc/8e9S/
-         uTFmSIogQBxF3doFloWPU16EHos7MBALmweEML5B0CvSz8iCkojsgtqP/GBNivqbu1w3
-         Fmpq//AlXnXQtmUCThgNVq0OpMUGDKrzemBHbVeuJysdsccdTBkcdB9L56is5ghyeSZl
-         FsU+CSB1XcIBkefNRHMgOGB660Z6Fx13jk3k8CnSyIelzQxyNzlEjsl0GUN6A0f28/3X
-         wdRQ==
+        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=J89g5wKF3K8lf+tI2gl2oVD6gxnq4u3cgSB1j+ImJmM=;
+        b=DJS6juIxp3hTnbk6xQChYKZPQHDN7YextHFPQEOT4BNIaE6YqT+t5udEtEH8U1sqmn
+         wEabjzybZ6ciPytTIEn6bF2cMI+d7AYKpSuN9lLd4U51F82tEdHiOLv91ydaiup4i5jE
+         Kzgih/urs8/UmucfgEiaLJugGsmUR1229/jSq9DSK7mfF/IxZrNFQu+MljzEb2forngU
+         TNgIUrictIscFY++2F2EqZfRyxiqINy0qvrVLO/zPK+cFLT7wiI0ng7yLRmrBxhg7hws
+         GjU0WLSxtldgoNJvHB9Z3tJS8ACDmdPvCE0t8GbUN5wf2S7lox+qnu4t24DSr6ZfNU2S
+         dfQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=sQhXYCohXzHB1bZ2481yJdBtaYvkE/AnjVLZI+F8BEk=;
-        b=ddlDuzywH+UMaGf7z2SPPThohc9X5OAVMlE488qTtE1/z0mpjXRrIJJ5Kgaljq+sJq
-         Ra1Kw0F5fKroWsr4s6XSFiL9IcFojJQVBU4hm4/ZhfMaXGxyZ1MTsDMGCQfZFeoWeo3f
-         coi3XIi3HG7SW7h6+3urdafhxlMjIKmPhrFur8s78dxTAqpu6xArhmJbjUkllVQah/7R
-         nlfoPTpbEGw2/X0RjZqTIi1mFe+ttuYl93BOvPGaH6jb1ViO9HRmRioa1S/r6uY21tRb
-         zZcQTyUuWJSO+CcwGXw1hLgi5AaaBiOmENpeHzE3lVFQ6SPiYWrfgGYw8w2CMudsuvlI
-         c95w==
-X-Gm-Message-State: APjAAAVhqXoqUkjSoWVOk9JD9+w9aDIBtu8Z7Mi7AvWDbpduCFXNYq+l
-        WeBDuTjltanPrANYMq32X6I=
-X-Google-Smtp-Source: APXvYqw+QwWHibUtTfkKh8QSJINImEotEo9kySGeB/ewfTe9u3hve15Y0ZC9vtlOwDtxF9CMocfZDw==
-X-Received: by 2002:a63:ec4e:: with SMTP id r14mr24780542pgj.235.1573940531922;
-        Sat, 16 Nov 2019 13:42:11 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id s15sm9729415pjp.3.2019.11.16.13.42.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 16 Nov 2019 13:42:10 -0800 (PST)
-Subject: Re: watchdog: how to enable?
-To:     Muni Sekhar <munisekharrms@gmail.com>
-Cc:     linux-watchdog@vger.kernel.org, linux-pci@vger.kernel.org,
-        wim@linux-watchdog.org
-References: <CAHhAz+h6SuGKWn0qNqsCdNjDks_vHuJW-KfiQja_b3x8x=vq_A@mail.gmail.com>
- <0d5c20b1-6b0f-430b-17b0-d3624062020d@roeck-us.net>
- <CAHhAz+iSXZSY012-jNx_wmNmgx_UiHZ4rjxkCUcHk3CjLc9gDg@mail.gmail.com>
- <e5b24949-5215-9d3d-ca45-cab221d4f58a@roeck-us.net>
- <CAHhAz+i83WoGyNwF_sjN+rVH812Nvm=U8ddbv-gWuNbD05HPdg@mail.gmail.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <e4147248-b710-6c8f-530c-1dd6672da8ab@roeck-us.net>
-Date:   Sat, 16 Nov 2019 13:42:08 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=J89g5wKF3K8lf+tI2gl2oVD6gxnq4u3cgSB1j+ImJmM=;
+        b=GXeg/PJFao2nSaDKPr51euTU1bvj2PjsoyKr1QvuXbH4jB0wHpTwPK3D13h7rsZ+zE
+         2HR51HRf8XK1PFjAu4NuOEpmp2CLSqnawUghOuBdIcLdYWHXP1+3Xs/MlRntvNDBSn14
+         mLzAsZPT9K/uMGBU5AWNtYkqPD0qweVWlCn4ruiP0oimgFTdapChFejG1TVN0Z1eFbgi
+         N/sMeVHJUQJJTbKUork+WO5b2VbD++NoKzfPZ78VKxMRNHQI17pT2Ajgje4OGIrZqyJa
+         fbLzJ6nV9qNZBEnn3Xz/GXwJFo5q2iOXDCksf97DTlVSNLXxxviKwoukE9/AQtlx4ui7
+         JY9A==
+X-Gm-Message-State: APjAAAXobueHTAmAMjxP3leQKkCfAb8oBM7+U675hR0jAC8J1NTW8Hwl
+        0KKUahGwDOxyK6RNw+iXJ29LMzSKtrNiooEQK8HVww==
+X-Google-Smtp-Source: APXvYqxwxswmpJRFAdlcuG1ze2koW77BmPysoiXIYeuwmZe3PAz+clYihPYGjvuapIDcH1a5i1AW2ww2n1yXkKVeax0=
+X-Received: by 2002:a5e:db07:: with SMTP id q7mr327515iop.49.1574033227251;
+ Sun, 17 Nov 2019 15:27:07 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAHhAz+i83WoGyNwF_sjN+rVH812Nvm=U8ddbv-gWuNbD05HPdg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20190926112933.8922-1-kishon@ti.com> <20190926112933.8922-5-kishon@ti.com>
+In-Reply-To: <20190926112933.8922-5-kishon@ti.com>
+From:   Jon Mason <jdmason@kudzu.us>
+Date:   Sun, 17 Nov 2019 18:26:56 -0500
+Message-ID: <CAPoiz9zWO14Gu=ZK4mWGX-7UHhzH+1_SJkSoW3hM6x63cmLSNQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 04/21] Documentation: PCI: Add specification for the
+ *PCI NTB* function device
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>, linux-pci@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-ntb <linux-ntb@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 11/16/19 10:34 AM, Muni Sekhar wrote:
-> On Sat, Nov 16, 2019 at 9:31 PM Guenter Roeck <linux@roeck-us.net> wrote:
->>
->> On 11/15/19 7:03 PM, Muni Sekhar wrote:
->> [ ... ]
->>>>
->>>> Another possibility, of course, might be to enable a hardware watchdog
->>>> in your system (assuming it supports one). I personally would not trust
->>>> the NMI watchdog because to detect a system hang, after all, there are
->>>> situations where even NMIs no longer work.
->>>
->>> >From dmesg , Is it possible to know whether my system supports
->>> hardware watchdog or not?
->>> I assume that my system supports the hardware watchdog , then how to
->>> enable the hardware watchdog to debug the system freeze issues?
->>>
->>
->> Hardware watchdog support really depends on the board type. Most PC
->> mainboards support a watchdog in the Super-IO chip, but on some it is
->> not wired correctly. On embedded boards it is often built into the SoC.
->> The easiest way to see if you have a watchdog would be to check for the
->> existence of /dev/watchdog. However, on a PC that would most likely
->> not be there because the necessary module is not auto-loaded.
->> If you tell us your board type, or better the Super-IO chip on the board,
->> we might be able to help.
-> 
-> I’m having two same configuration systems, in one system I installed
-> the Vanilla kernel and I see the /dev/watchdog and /dev/watchdog0
-> nodes. In other system I’m running with ubuntu distribution kernel,
-> but I don’t see any watchdog device node. So it looks like I need to
-> manually load the kernel module in distro kernel. Is there a way to
-> know what is the corresponding kernel module for  /dev/watchdog node?
-> 
-> # ls -l /dev/watchdog*
-> crw------- 1 root root  10, 130 Nov 15 17:15 /dev/watchdog
-> crw------- 1 root root 248,   0 Nov 15 17:15 /dev/watchdog0
-> 
-> # ps -ax | grep watchdog
->    678 ?        S      0:00 [watchdogd]
-> 
-> Regarding Super-IO chip, how to find out the Super-IO chip model?
-> 
-You could try to run sensors-detect (from the "sensors" package).
+On Thu, Sep 26, 2019 at 7:30 AM 'Kishon Vijay Abraham I' via linux-ntb
+<linux-ntb@googlegroups.com> wrote:
+>
+> Add specification for the *PCI NTB* function device. The endpoint function
+> driver and the host PCI driver should be created based on this
+> specification.
+>
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  Documentation/PCI/endpoint/pci-test-ntb.txt | 315 ++++++++++++++++++++
+>  1 file changed, 315 insertions(+)
+>  create mode 100644 Documentation/PCI/endpoint/pci-test-ntb.txt
+>
+> diff --git a/Documentation/PCI/endpoint/pci-test-ntb.txt b/Documentation/PCI/endpoint/pci-test-ntb.txt
+> new file mode 100644
+> index 000000000000..c8bfe9dbfd8b
+> --- /dev/null
+> +++ b/Documentation/PCI/endpoint/pci-test-ntb.txt
+> @@ -0,0 +1,315 @@
+> +                              PCI NTB FUNCTION
+> +                   Kishon Vijay Abraham I <kishon@ti.com>
+> +
+> +PCI NTB Function allows two different systems (or hosts) to communicate
+> +with each other by configurig the endpoint instances in such a way that
+> +transactions from one system is routed to the other system.
+> +
+> +In the below diagram, PCI NTB function configures the SoC with multiple
+> +PCIe Endpoint (EP) instances in such a way that transaction from one EP
+> +controller is routed to the other EP controller. Once PCI NTB function
+> +configures the SoC with multiple EP instances, HOST1 and HOST2 can
+> +communicate with each other using SoC as a bridge.
+> +
+> +   +-------------+                                   +-------------+
+> +   |             |                                   |             |
+> +   |    HOST1    |                                   |    HOST2    |
+> +   |             |                                   |             |
+> +   +------^------+                                   +------^------+
+> +          |                                                 |
+> +          |                                                 |
+> ++---------|-------------------------------------------------|---------+
+> +|  +------v------+                                   +------v------+  |
+> +|  |             |                                   |             |  |
+> +|  |     EP      |                                   |     EP      |  |
+> +|  | CONTROLLER1 |                                   | CONTROLLER2 |  |
+> +|  |             <----------------------------------->             |  |
+> +|  |             |                                   |             |  |
+> +|  |             |                                   |             |  |
+> +|  |             |  SoC With Multiple EP Instances   |             |  |
+> +|  |             |  (Configured using NTB Function)  |             |  |
+> +|  +-------------+                                   +-------------+  |
+> ++---------------------------------------------------------------------+
+> +
+> +Constructs used for Implementing NTB:
+> +
+> +       *) Config Region
+> +       *) Self Scratchpad Registers
+> +       *) Peer Scratchpad Registers
+> +       *) Doorbell Registers
+> +       *) Memory Window
+> +
+> +Modeling Constructs:
+> +
+> +  There are 5 or more distinct regions (config, self scratchpad, peer
+> +scratchpad, doorbell, one or more memory windows) to be modeled to achieve
+> +NTB functionality. Atleast one memory window is required while more than
+> +one is permitted. All these regions should be mapped to BAR for hosts to
+> +access these regions.
+> +
+> +If one 32-bit BAR is allocated for each of these regions, the scheme would
+> +look like
+> +       BAR0 -> Config Region
+> +       BAR1 -> Self Scratchpad
+> +       BAR2 -> Peer Scratchpad
+> +       BAR3 -> Doorbell
+> +       BAR4 -> Memory Window 1
+> +       BAR5 -> Memory Window 2
+> +
+> +However if we allocate a separate BAR for each of the region, there would not
+> +be enough BARs for all the regions in a platform that supports only 64-bit
+> +BAR.
+> +
+> +In order to be be supported by most of the platforms, the regions should be
+> +packed and mapped to BARs in a way that provides NTB functionality and
+> +also making sure the hosts doesn't access any region that it is not supposed
+> +to.
+> +
+> +The following scheme is used in EPF NTB Function
+> +
+> +       BAR0 -> Config Region + Self Scratchpad
+> +       BAR1 -> Peer Scratchpad
+> +       BAR2 -> Doorbell + Memory Window 1
+> +       BAR3 -> Memory Window 2
+> +       BAR4 -> Memory Window 3
+> +       BAR4 -> Memory Window 4
+> +
+> +With this scheme, for the basic NTB functionality 3 BARs should be sufficient.
+> +
+> +Modeling Config/Scratchpad Region:
+> +
+> ++-----------------+------->+------------------+        +-----------------+
+> +|       BAR0      |        |  CONFIG REGION   |        |       BAR0      |
+> ++-----------------+----+   +------------------+<-------+-----------------+
+> +|       BAR1      |    |   |SCRATCHPAD REGION |        |       BAR1      |
+> ++-----------------+    +-->+------------------+<-------+-----------------+
+> +|       BAR2      |            Local Memory            |       BAR2      |
+> ++-----------------+                                    +-----------------+
+> +|       BAR3      |                                    |       BAR3      |
+> ++-----------------+                                    +-----------------+
+> +|       BAR4      |                                    |       BAR4      |
+> ++-----------------+                                    +-----------------+
+> +|       BAR5      |                                    |       BAR5      |
+> ++-----------------+                                    +-----------------+
+> +  EP CONTROLLER 1                                        EP CONTROLLER 2
+> +
+> +Above diagram shows Config region + Scratchpad region for HOST1 (connected to
+> +EP controller 1) allocated in local memory. The HOST1 can access the config
+> +region and scratchpad region (self scratchpad) using BAR0 of EP controller 1.
+> +The peer host (HOST2 connected to EP controller 2) can also access this
+> +scratchpad region (peer scratchpad) using BAR1 of EP controller 2. This
+> +diagram shows the case where Config region and Scratchpad region is allocated
+> +for HOST1, however the same is applicable for HOST2.
+> +
+> +Modeling Doorbell/Memory Window 1:
+> +
+> ++-----------------+    +----->+----------------+-----------+-----------------+
+> +|       BAR0      |    |      |   Doorbell 1   +-----------> MSI|X ADDRESS 1 |
+> ++-----------------+    |      +----------------+           +-----------------+
+> +|       BAR1      |    |      |   Doorbell 2   +---------+ |                 |
+> ++-----------------+    |      +----------------+         | |                 |
+> +|       BAR2      |    |      |   Doorbell 3   +-------+ | +-----------------+
+> ++-----------------+    |      +----------------+       | +-> MSI|X ADDRESS 2 |
+> +|       BAR3      |    |      |   Doorbell 4   +-----+ |   +-----------------+
+> ++----------------------+      +----------------+     | |   |                 |
+> +|       BAR4      |           |                |     | |   +-----------------+
+> ++----------------------+      |      MW1       +---+ | +-->+ MSI|X ADDRESS 3||
+> +|       BAR5      |    |      |                |   | |     +-----------------+
+> ++-----------------+    +----->-----------------+   | |     |                 |
+> +  EP CONTROLLER 1             |                |   | |     +-----------------+
+> +                              |                |   | +---->+ MSI|X ADDRESS 4 |
+> +                              +----------------+   |       +-----------------+
+> +                               EP CONTROLLER 2     |       |                 |
+> +                                 (OB SPACE)        |       |                 |
+> +                                                   +------->      MW1        |
+> +                                                           |                 |
+> +                                                           |                 |
+> +                                                           +-----------------+
+> +                                                           |                 |
+> +                                                           |                 |
+> +                                                           |                 |
+> +                                                           |                 |
+> +                                                           |                 |
+> +                                                           +-----------------+
+> +                                                           PCI Address Space
+> +                                                           (Managed by HOST2)
+> +
+> +Above diagram shows how the doorbell and memory window 1 is mapped so that
+> +HOST1 can raise doorbell interrupt on HOST2 and also how HOST1 can access
+> +buffers exposed by HOST2 using memory window1 (MW1). Here doorbell and
+> +memory window 1 regions are allocated in EP controller 2 outbound (OB) address
+> +space. Allocating and configuring BARs for doorbell and memory window1
+> +is done during the initialization phase of NTB endpoint function driver.
+> +Mapping from EP controller 2 OB space to PCI address space is done when HOST2
+> +sends CMD_CONFIGURE_MW/CMD_CONFIGURE_DOORBELL. The commands are explained
+> +below.
+> +
+> +Modeling Optional Memory Windows:
+> +
+> +This is modeled the same was as MW1 but each of the additional memory windows
+> +is mapped to separate BARs.
+> +
+> +Config Region:
+> +
+> +Config Region is a construct that is specific to NTB implemented using NTB
+> +Endpoint Function Driver. The host and endpoint side NTB function driver will
+> +exchange informatio with each other using this region. Config Region has
 
-If you can boot a system with /dev/watchdog0, you should see the type
-in /sys/class/watchdog/watchdog0/identity.
+s/informatio/information
 
-Also, you can test if the watchdog works with "sudo cat /dev/watchdog",
-assuming the watchdog daemon is not running. The watchdog works if the
-system reboots after the watchdog times out (/sys/class/watchdog/watchdog0/timeout
-is the timeout in seconds).
+> +Control/Status Registers for configuring the Endpoint Controller. Host can
+> +write into this region for configuring the outbound ATU and to indicate the
+> +link status. Endpoint can indicate the status of commands issued be host in
+> +this region. Endpoint can also indicate the scratchpad offset, number of
+> +memory windows to the host using this region.
+> +
+> +The format of Config Region is given below. Each of the fields here are 32
+> +bits.
+> +
+> +       +------------------------+
+> +       |         COMMAND        |
+> +       +------------------------+
+> +       |         ARGUMENT       |
+> +       +------------------------+
+> +       |         STATUS         |
+> +       +------------------------+
+> +       |         TOPOLOGY       |
+> +       +------------------------+
+> +       |    ADDRESS (LOWER 32)  |
+> +       +------------------------+
+> +       |    ADDRESS (UPPER 32)  |
+> +       +------------------------+
+> +       |           SIZE         |
+> +       +------------------------+
+> +       |  MEMORY WINDOW1 OFFSET |
+> +       +------------------------+
+> +       |   NO OF MEMORY WINDOW  |
+> +       +------------------------+
+> +       |       SPAD OFFSET      |
+> +       +------------------------+
+> +       |        SPAD COUNT      |
+> +       +------------------------+
+> +       |      DB ENTRY SIZE     |
+> +       +------------------------+
+> +       |         DB DATA        |
+> +       +------------------------+
+> +       |            :           |
+> +       +------------------------+
+> +       |            :           |
+> +       +------------------------+
+> +       |         DB DATA        |
+> +       +------------------------+
 
->>
->> Note though that this won't help to debug the problem. A hardware
->> watchdog resets the system. It helps to recover, but it is not intended
->> to help with debugging.
-> How do I use the hardware watchdog to reset my system when system is
-> frozen? It helps me to collect the crashdump and finally helps me to
-> find the root cause for the system frozen issue.
-> 
-There won't be a crashdump. It just hard-resets the system.
+The number should probably come before the MW1 offset.  Also, this
+assumes that they are all contiguous and of the same size.  Optimally,
+there should be a tuple for each MW with the start and size, and you
+could parse this with the num of mw you mention above to find out
+where the SPAD information starts.  Worst case, I think you might be
+able to get away with them all being the same size, but you'll need to
+say what size that is in another field.
 
-Guenter
+Thanks,
+Jon
+
+> +
+> +
+> +  COMMAND:
+> +
+> +       NTB function supports three commands:
+> +
+> +         CMD_CONFIGURE_DOORBELL (0x1): Command to configure doorbell. Before
+> +       invoking this command, the host should allocate and initialize
+> +       MSI/MSI-X vectors (i.e initialize the MSI/MSI-X capability in the
+> +       Endpoint). The endpoint on receiving this command will configure
+> +       the outbound ATU such that transaction to DB BAR will be routed
+> +       to the MSI/MSI-X address programmed by the host. The ARGUMENT
+> +       register should be populated with number of DBs to configure (in the
+> +       lower 16 bits) and if MSI or MSI-X should be configured (BIT 16).
+> +       (TODO: Add support for MSI-X).
+> +
+> +         CMD_CONFIGURE_MW (0x2): Command to configure memory window. The
+> +       host invokes this command after allocating a buffer that can be
+> +       accessed by remote host. The allocated address should be programmed
+> +       in the ADDRESS register (64 bit), the size should be programmed in
+> +       the SIZE register and the memory window index should be programmed
+> +       in the ARGUMENT register. The endpoint on receiving this command
+> +       will configure the outbound ATU such that trasaction to MW BAR
+> +       will be routed to the address provided by the host.
+> +
+> +         CMD_LINK_UP (0x3): Command to indicate an NTB application is
+> +       bound to the EP device on the host side. Once the endpoint
+> +       receives this command from both the hosts, the endpoint will
+> +       raise an LINK_UP event to both the hosts to indicate the hosts
+> +       can start communicating with each other.
+> +
+> +  ARGUMENT:
+> +
+> +       The value of this register is based on the commands issued in
+> +       command register. See COMMAND section for more information.
+> +
+> +  configuring memory window and to indicate the host side NTB application
+> +  has initialized.
+> +
+> +  TOPOLOGY:
+> +
+> +       Set to NTB_TOPO_B2B_USD for Primary interface
+> +       Set to NTB_TOPO_B2B_DSD for Secondary interface
+> +
+> +  ADDRESS/SIZE:
+> +
+> +       Address and Size to be used while configuring the memory window.
+> +       See "CMD_CONFIGURE_MW" for more info.
+> +
+> +  MEMORY WINDOW1 OFFSET:
+> +
+> +       Memory Window 1 and Doorbell registers are packed together in the
+> +       same BAR. The initial portion of the region will have doorbell
+> +       registers and the latter portion of the region is for memory window 1.
+> +       This register will specify the offset of the memory window 1.
+> +
+> +  NO OF MEMORY WINDOW:
+> +
+> +       Specifies the number of memory windows supported by the NTB device.
+> +
+> +  SPAD OFFSET:
+> +
+> +       Self scratchpad region and config region are packed together in the
+> +       same BAR. The initial portion of the will have config region and
+> +       the latter portion of the region is for self scratchpad. This
+> +       register will specify the offset of the self scratchpad registers.
+> +
+> +  SPAD COUNT:
+> +
+> +       Specifies the number of scratchpad registers supported by the NTB
+> +       device.
+> +
+> +  DB ENTRY SIZE:
+> +
+> +       Used to determine the offset within the DB BAR that should be written
+> +       in order to raise doorbell. EPF NTB can use either MSI/MSI-X to
+> +       ring doorbell (MSI-X support will be added later). MSI uses same
+> +       address for all the interrupts and MSI-X can provide different
+> +       addresses for different interrupts. The MSI/MSI-X address is provided
+> +       by the host and the address it gives is based on the MSI/MSI-X
+> +       implementation supported by the host. For instance, ARM platform
+> +       using GIC ITS will have same MSI-X address for all the interrupts.
+> +       In order to support all the combinations and use the same mechanism
+> +       for both MSI and MSI-X, EPF NTB allocates separate region in the
+> +       Outbound Address Space for each of the interrupts. This region will
+> +       be mapped to the MSI/MSI-X address provided by the host. If a host
+> +       provides the same address for all the interrupts, all the regions
+> +       will be translated to the same address. If a host provides different
+> +       address, the regions will be translated to different address. This
+> +       will ensure there is no difference while raising the doorbell.
+> +
+> +  DB DATA:
+> +
+> +       EPF NTB supports 32 interrupts. So there are 32 DB DATA registers.
+> +       This holds the MSI/MSI-X data that has to be written to MSI address
+> +       for raising doorbell interrupt. This will be populated by EPF NTB
+> +       while invoking CMD_CONFIGURE_MW.
+> +
+> +Scratchpad Registers:
+> +
+> +  Each host has it's own register space allocated in the memory of NTB EPC.
+> +  They are both readable and writable from both sides of the bridge. They
+> +  are used by applications built over NTB and can be used to pass control
+> +  and status information between both sides of a device.
+> +
+> +  Scratchpad registers has 2 parts
+> +       1) Self Scratchpad: Host's own register space
+> +       2) Peer Scratchpad: Remote host's register space.
+> +
+> +Doorbell Registers:
+> +
+> +  Registers using which one host can interrupt the other host.
+> +
+> +Memory Window:
+> +
+> +  Actual transfer of data between the two hosts will happen using the
+> +  memory window.
+> --
+> 2.17.1
+>
+> --
+> You received this message because you are subscribed to the Google Groups "linux-ntb" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-ntb+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/linux-ntb/20190926112933.8922-5-kishon%40ti.com.
