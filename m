@@ -2,258 +2,159 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C5B55100190
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Nov 2019 10:44:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F35621001CB
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Nov 2019 10:52:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbfKRJnn convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Mon, 18 Nov 2019 04:43:43 -0500
-Received: from mail-oln040092255101.outbound.protection.outlook.com ([40.92.255.101]:45728
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726461AbfKRJnm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 18 Nov 2019 04:43:42 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=W5omv5Q9uPnc6K4zWFW/+UsWylKsx0JobOF6uxDJvukV34HNatO1x/S6eUhAnUcslmQVITkHHfjcpNAxShSP/uoKipy6O5gy7PfLqhe4TkGZjcUK6Cv4f8I3SxXQa6b3lzHoNFqKf/+UQE6YTMeYp/1bwAn19Yn8VEsgpe0H0mF8GWg3Vzc79ppK0LECsgsc2T8PPg6Mz6JE8Kb/8S3yT7PXPOVK2NprJmNVzpZLswclmHJPPvd+hNuzvF87r60vlThlrDm00KEyktI6lQEWHRWZRW9nsiPQs7XYH3Xq5C/c4ysbFBtYP/6AL60IR8AjYjxAaoZm+vBi/5spAvUuqw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SleVUWww7QXXw2oSxlUcLFqhfq7D4cO941aPp65lx7k=;
- b=B06HQeAmouiXYL3moBgTMqvZgN75XpN4uNZguRFm5zUjWotg/nLqpIF2zLkeMh3a7KRnv9v+el6pJwL5OhMszNkt05Iewoloh+MU9rAw6yJMn4VaeTM7Ka8b6SHUuCGtcRM+Ir9JJcVmJAhFE0IB7w9HUQoXmG4Pww9BpJAIVC3Aj2QToHCseyL7eyJDPiplTP4oPkRRdELyWamMdgqvAILM4CvdjwWACY/BQewIeqSfX7WHoR1EHmT+9DV84/gmwgJHoKngBrfyAH8XoakCIFeKAmqXqWdovE58BJSTJ1W1VJ24DxO9m9hLH/DO2TJpb9oM9lJYhLG7SdJw2EkT/A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from SG2APC01FT052.eop-APC01.prod.protection.outlook.com
- (10.152.250.58) by SG2APC01HT059.eop-APC01.prod.protection.outlook.com
- (10.152.251.7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2451.23; Mon, 18 Nov
- 2019 09:43:34 +0000
-Received: from PS2P216MB0755.KORP216.PROD.OUTLOOK.COM (10.152.250.57) by
- SG2APC01FT052.mail.protection.outlook.com (10.152.251.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.23 via Frontend Transport; Mon, 18 Nov 2019 09:43:34 +0000
-Received: from PS2P216MB0755.KORP216.PROD.OUTLOOK.COM
- ([fe80::44f5:f4bb:1601:2602]) by PS2P216MB0755.KORP216.PROD.OUTLOOK.COM
- ([fe80::44f5:f4bb:1601:2602%9]) with mapi id 15.20.2451.029; Mon, 18 Nov 2019
- 09:43:34 +0000
-From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "logang@deltatee.com" <logang@deltatee.com>
-Subject: Re: [PATCH v3 1/1] PCI: Fix bug resulting in double hpmemsize being
- assigned to MMIO window
-Thread-Topic: [PATCH v3 1/1] PCI: Fix bug resulting in double hpmemsize being
- assigned to MMIO window
-Thread-Index: AQHVmjaUpBZrOiNs+EaePGmphxD+QaeK5IeAgAXQSwA=
-Date:   Mon, 18 Nov 2019 09:43:34 +0000
-Message-ID: <PS2P216MB0755848993A4445324AC516E804D0@PS2P216MB0755.KORP216.PROD.OUTLOOK.COM>
-References: <PS2P216MB075563AA6AD242AA666EDC6A80760@PS2P216MB0755.KORP216.PROD.OUTLOOK.COM>
- <20191114165637.GA210407@google.com>
-In-Reply-To: <20191114165637.GA210407@google.com>
-Accept-Language: en-AU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SYBPR01CA0112.ausprd01.prod.outlook.com
- (2603:10c6:10:1::28) To PS2P216MB0755.KORP216.PROD.OUTLOOK.COM
- (2603:1096:300:1c::13)
-x-incomingtopheadermarker: OriginalChecksum:7FB88D3606022236447AE83E1521C51EF602EF044E51F6FAF466BA32A82E88DC;UpperCasedChecksum:36BEE5EE6BB7962D344A753D4E325969A517CCCD25ACE6E585A17E54174484D7;SizeAsReceived:7829;Count:49
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [OqRBEytzFILu8M81jd58mPHbpfhyw1gHdSMytM3FbuJ7uBVwgqpXggf4zjRqnF+Hwl7G+Vp+Hb8=]
-x-microsoft-original-message-id: <20191118094326.GA2194@nicholas-dell-linux>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 49
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: 45a23db3-a5e8-4fa6-fde4-08d76c0bc70b
-x-ms-traffictypediagnostic: SG2APC01HT059:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: WDXEcv6bzn6imJE46d8zC31ck+Ev2hNPp5YhYGxu4QlmbhgzkOd3gbf76l0SR6YcTDLzqF6Zw5ie+/fXEXz5VNiHxNJrw4FoQZCtesRhu/644K7Bkp9EZKvzayvaLI+XdMfydAUFjVy6o4oIHNc0C/1Jt1lspgTFvvpgIHQS3N5wjrZRU1Nn4rg1Jy2FRYPy
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <F9CD7DE8AB46E5438EE71FC979C4F82A@KORP216.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8BIT
+        id S1726541AbfKRJwa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 18 Nov 2019 04:52:30 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:33324 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726511AbfKRJwa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Nov 2019 04:52:30 -0500
+Received: by mail-ot1-f65.google.com with SMTP id u13so13968982ote.0;
+        Mon, 18 Nov 2019 01:52:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=h9px4Tbhb7SK5B37JXGZ/LmRFUWqGW7A+insOgwLMlM=;
+        b=tnSirZrGregVKARHSO63sSEzwQbMdEnA7OQMLKKfmculhYtD8o7iIKlMsTAl76G9tH
+         YgurUB8LfySGxq4aE3OgpII04ZMTuJ8CUY58C9Dh0YcLfeF4Mmims6UydOxyYeTM3GvS
+         86QIiEMl+xLk4SfbFMtxsx0F05mK3nqBH9jNCmUCgg/dILnk2lz2hrlLcM1G5wxIq0Z1
+         z6rXiH4ZdNwSYf7VEAWO7qdp5JXpGO2mk3CYbpT/z2zd74hWREv+AU9R4V6bfAlsARr4
+         QO0/eih+ft2nV5hb3pWOm1iMtxmGdYuu5rR6tbOu0+Yu/LctQA6rcSezu3HEzkYsWmpg
+         un+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=h9px4Tbhb7SK5B37JXGZ/LmRFUWqGW7A+insOgwLMlM=;
+        b=mp8W803OWGqFQd/UMIo0dIY87Ba/HbIbQvEa1gvzI9Nz5aBc7O7LRast5oOkCIPHtb
+         PSr9J+u0CQTbafJC909XxTqDo+e8j7QHYv6ELYyGDBw1v6H7el4mbFtK5SiJKwq1tdOE
+         Oelcya7rDL9WRHqrRbh4v5SyO0GbM67waatCPP/jq8+5IQ+/mF5BN628gwHskhSe9T0u
+         OtYb3KLD3imDgpM/phQZpq/dqiwflSyzumuPWIy9pqGJ4NJfM1vNvGNKOShVUeSuNCgH
+         IENCDfn9W750qzwJAZ2ms/8Uor8nHBzxQGZIsrN30alq5gjk2yn/1axfDLqM+E1OqsJT
+         hCgA==
+X-Gm-Message-State: APjAAAV4SryGa81CdQU3G4mAc5Ep9cijM4SOil4dy7rgvfLAz4JD2HXl
+        9R9Pzc2UPf//YYaYuo73GGjnaljh6PPdoGm/YnO+cP80WJ4=
+X-Google-Smtp-Source: APXvYqz2vnaO8XzH+8lzHgklMAeZmAYOHMzQ+1RmpA1u/000zrPgInR3SmUskvrz2qdOCPhCS0MbucsazWaxQtZT9lY=
+X-Received: by 2002:a05:6830:1b68:: with SMTP id d8mr13342462ote.203.1574070749105;
+ Mon, 18 Nov 2019 01:52:29 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 45a23db3-a5e8-4fa6-fde4-08d76c0bc70b
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Nov 2019 09:43:34.5932
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2APC01HT059
+References: <CAHhAz+h6SuGKWn0qNqsCdNjDks_vHuJW-KfiQja_b3x8x=vq_A@mail.gmail.com>
+ <0d5c20b1-6b0f-430b-17b0-d3624062020d@roeck-us.net> <CAHhAz+iSXZSY012-jNx_wmNmgx_UiHZ4rjxkCUcHk3CjLc9gDg@mail.gmail.com>
+ <e5b24949-5215-9d3d-ca45-cab221d4f58a@roeck-us.net> <CAHhAz+i83WoGyNwF_sjN+rVH812Nvm=U8ddbv-gWuNbD05HPdg@mail.gmail.com>
+ <e4147248-b710-6c8f-530c-1dd6672da8ab@roeck-us.net>
+In-Reply-To: <e4147248-b710-6c8f-530c-1dd6672da8ab@roeck-us.net>
+From:   Muni Sekhar <munisekharrms@gmail.com>
+Date:   Mon, 18 Nov 2019 15:22:17 +0530
+Message-ID: <CAHhAz+gGPaNTO1VR2iBBDFEdJ+cJx6+CNoAneLj6yTW0hgEfkA@mail.gmail.com>
+Subject: Re: watchdog: how to enable?
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-watchdog@vger.kernel.org, linux-pci@vger.kernel.org,
+        wim@linux-watchdog.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 10:56:37AM -0600, Bjorn Helgaas wrote:
-> On Wed, Nov 13, 2019 at 03:25:28PM +0000, Nicholas Johnson wrote:
-> > Currently, the kernel can sometimes assign the MMIO_PREF window
-> > additional size into the MMIO window, resulting in extra MMIO additional
-> > size, despite the MMIO_PREF additional size being assigned successfully
-> > into the MMIO_PREF window.
-> > 
-> > This happens if in the first pass, the MMIO_PREF succeeds but the MMIO
-> > fails. In the next pass, because MMIO_PREF is already assigned, the
-> > attempt to assign MMIO_PREF returns an error code instead of success
-> > (nothing more to do, already allocated). Hence, the size which is
-> > actually allocated, but thought to have failed, is placed in the MMIO
-> > window.
-> > 
-> > Example of problem (more context can be found in the bug report URL):
-> > 
-> > Mainline kernel:
-> > pci 0000:06:01.0: BAR 14: assigned [mem 0x90100000-0xa00fffff] = 256M
-> > pci 0000:06:04.0: BAR 14: assigned [mem 0xa0200000-0xb01fffff] = 256M
-> > 
-> > Patched kernel:
-> > pci 0000:06:01.0: BAR 14: assigned [mem 0x90100000-0x980fffff] = 128M
-> > pci 0000:06:04.0: BAR 14: assigned [mem 0x98200000-0xa01fffff] = 128M
-> > 
-> > This was using pci=realloc,hpmemsize=128M,nocrs - on the same machine
-> > with the same configuration, with a Ubuntu mainline kernel and a kernel
-> > patched with this patch.
-> > 
-> > The bug results in the MMIO_PREF being added to the MMIO window, which
-> > means doubling if MMIO_PREF size = MMIO size. With a large MMIO_PREF,
-> > the MMIO window will likely fail to be assigned altogether due to lack
-> > of 32-bit address space.
-> > 
-> > Change find_free_bus_resource() to do the following:
-> > - Return first unassigned resource of the correct type.
-> > - If none of the above, return first assigned resource of the correct type.
-> > - If none of the above, return NULL.
-> > 
-> > Returning an assigned resource of the correct type allows the caller to
-> > distinguish between already assigned and no resource of the correct type.
-> > 
-> > Rename find_free_bus_resource to find_bus_resource_of_type().
-> > 
-> > Add checks in pbus_size_io() and pbus_size_mem() to return success if
-> > resource returned from find_free_bus_resource() is already allocated.
-> > 
-> > This avoids pbus_size_io() and pbus_size_mem() returning error code to
-> > __pci_bus_size_bridges() when a resource has been successfully assigned
-> > in a previous pass. This fixes the existing behaviour where space for a
-> > resource could be reserved multiple times in different parent bridge
-> > windows.
-> > 
-> > Link: https://lore.kernel.org/lkml/20190531171216.20532-2-logang@deltatee.com/T/#u
-> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=203243
-> > 
-> > Reported-by: Kit Chow <kchow@gigaio.com>
-> > Reported-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-> > Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-> > Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> 
-> Applied with reviewed-by from Mika and Logan to pci/resource for v5.5,
-> thanks!
+On Sun, Nov 17, 2019 at 3:12 AM Guenter Roeck <linux@roeck-us.net> wrote:
+>
+> On 11/16/19 10:34 AM, Muni Sekhar wrote:
+> > On Sat, Nov 16, 2019 at 9:31 PM Guenter Roeck <linux@roeck-us.net> wrot=
+e:
+> >>
+> >> On 11/15/19 7:03 PM, Muni Sekhar wrote:
+> >> [ ... ]
+> >>>>
+> >>>> Another possibility, of course, might be to enable a hardware watchd=
+og
+> >>>> in your system (assuming it supports one). I personally would not tr=
+ust
+> >>>> the NMI watchdog because to detect a system hang, after all, there a=
+re
+> >>>> situations where even NMIs no longer work.
+> >>>
+> >>> >From dmesg , Is it possible to know whether my system supports
+> >>> hardware watchdog or not?
+> >>> I assume that my system supports the hardware watchdog , then how to
+> >>> enable the hardware watchdog to debug the system freeze issues?
+> >>>
+> >>
+> >> Hardware watchdog support really depends on the board type. Most PC
+> >> mainboards support a watchdog in the Super-IO chip, but on some it is
+> >> not wired correctly. On embedded boards it is often built into the SoC=
+.
+> >> The easiest way to see if you have a watchdog would be to check for th=
+e
+> >> existence of /dev/watchdog. However, on a PC that would most likely
+> >> not be there because the necessary module is not auto-loaded.
+> >> If you tell us your board type, or better the Super-IO chip on the boa=
+rd,
+> >> we might be able to help.
+> >
+> > I=E2=80=99m having two same configuration systems, in one system I inst=
+alled
+> > the Vanilla kernel and I see the /dev/watchdog and /dev/watchdog0
+> > nodes. In other system I=E2=80=99m running with ubuntu distribution ker=
+nel,
+> > but I don=E2=80=99t see any watchdog device node. So it looks like I ne=
+ed to
+> > manually load the kernel module in distro kernel. Is there a way to
+> > know what is the corresponding kernel module for  /dev/watchdog node?
+> >
+> > # ls -l /dev/watchdog*
+> > crw------- 1 root root  10, 130 Nov 15 17:15 /dev/watchdog
+> > crw------- 1 root root 248,   0 Nov 15 17:15 /dev/watchdog0
+> >
+> > # ps -ax | grep watchdog
+> >    678 ?        S      0:00 [watchdogd]
+> >
+> > Regarding Super-IO chip, how to find out the Super-IO chip model?
+> >
+> You could try to run sensors-detect (from the "sensors" package).
+>
+> If you can boot a system with /dev/watchdog0, you should see the type
+> in /sys/class/watchdog/watchdog0/identity.
+I could not find the /sys/class/watchdog/watchdog0/identity and
+/sys/class/watchdog/watchdog0/timeout files.
+$ ls -l /sys/class/watchdog/watchdog0/
+total 0
+-r--r--r-- 1 root root 4096 Nov 18 15:12 dev
+lrwxrwxrwx 1 root root    0 Nov 18 15:12 device -> ../../../iTCO_wdt.0.auto
+drwxr-xr-x 2 root root    0 Nov 18 15:12 power
+lrwxrwxrwx 1 root root    0 Nov 18 14:53 subsystem ->
+../../../../../../class/watchdog
+-rw-r--r-- 1 root root 4096 Nov 18 14:53 uevent
 
-We have v5.4-rc8, so there is one more week. Please let me know if you 
-have any concerns about the other four patches so that I may address 
-them ASAP. If you are worried about the first one, I can re-post the 
-series with it at the end, so that the others can be taken first.
+>
+> Also, you can test if the watchdog works with "sudo cat /dev/watchdog",
+> assuming the watchdog daemon is not running. The watchdog works if the
+> system reboots after the watchdog times out (/sys/class/watchdog/watchdog=
+0/timeout
+> is the timeout in seconds).
+sudo cat /dev/watchdog perfectly rebooted my system. I don't see
+timeout node, how do I configure the timeout value?
+>
+> >>
+> >> Note though that this won't help to debug the problem. A hardware
+> >> watchdog resets the system. It helps to recover, but it is not intende=
+d
+> >> to help with debugging.
+> > How do I use the hardware watchdog to reset my system when system is
+> > frozen? It helps me to collect the crashdump and finally helps me to
+> > find the root cause for the system frozen issue.
+> >
+> There won't be a crashdump. It just hard-resets the system.
+So is there any other solution to capture the crashdump or trigger
+soft reboot once kernel is lockedup?
+>
+> Guenter
 
-Thanks!
 
-Regards,
-Nicholas
 
-> 
-> > ---
-> >  drivers/pci/setup-bus.c | 38 +++++++++++++++++++++++++++-----------
-> >  1 file changed, 27 insertions(+), 11 deletions(-)
-> > 
-> > diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-> > index 6b64bf909..f382f449b 100644
-> > --- a/drivers/pci/setup-bus.c
-> > +++ b/drivers/pci/setup-bus.c
-> > @@ -752,24 +752,32 @@ static void pci_bridge_check_ranges(struct pci_bus *bus)
-> >  }
-> >  
-> >  /*
-> > - * Helper function for sizing routines: find first available bus resource
-> > - * of a given type.  Note: we intentionally skip the bus resources which
-> > - * have already been assigned (that is, have non-NULL parent resource).
-> > + * Helper function for sizing routines.
-> > + * Assigned resources have non-NULL parent resource.
-> > + *
-> > + * Return first unassigned resource of the correct type.
-> > + * If none of the above, return first assigned resource of the correct type.
-> > + * If none of the above, return NULL.
-> > + *
-> > + * Returning an assigned resource of the correct type allows the caller to
-> > + * distinguish between already assigned and no resource of the correct type.
-> >   */
-> > -static struct resource *find_free_bus_resource(struct pci_bus *bus,
-> > -					       unsigned long type_mask,
-> > -					       unsigned long type)
-> > +static struct resource *find_bus_resource_of_type(struct pci_bus *bus,
-> > +						  unsigned long type_mask,
-> > +						  unsigned long type)
-> >  {
-> > +	struct resource *r, *r_assigned = NULL;
-> >  	int i;
-> > -	struct resource *r;
-> >  
-> >  	pci_bus_for_each_resource(bus, r, i) {
-> >  		if (r == &ioport_resource || r == &iomem_resource)
-> >  			continue;
-> >  		if (r && (r->flags & type_mask) == type && !r->parent)
-> >  			return r;
-> > +		if (r && (r->flags & type_mask) == type && !r_assigned)
-> > +			r_assigned = r;
-> >  	}
-> > -	return NULL;
-> > +	return r_assigned;
-> >  }
-> >  
-> >  static resource_size_t calculate_iosize(resource_size_t size,
-> > @@ -866,8 +874,8 @@ static void pbus_size_io(struct pci_bus *bus, resource_size_t min_size,
-> >  			 struct list_head *realloc_head)
-> >  {
-> >  	struct pci_dev *dev;
-> > -	struct resource *b_res = find_free_bus_resource(bus, IORESOURCE_IO,
-> > -							IORESOURCE_IO);
-> > +	struct resource *b_res = find_bus_resource_of_type(bus, IORESOURCE_IO,
-> > +								IORESOURCE_IO);
-> >  	resource_size_t size = 0, size0 = 0, size1 = 0;
-> >  	resource_size_t children_add_size = 0;
-> >  	resource_size_t min_align, align;
-> > @@ -875,6 +883,10 @@ static void pbus_size_io(struct pci_bus *bus, resource_size_t min_size,
-> >  	if (!b_res)
-> >  		return;
-> >  
-> > +	/* If resource is already assigned, nothing more to do. */
-> > +	if (b_res->parent)
-> > +		return;
-> > +
-> >  	min_align = window_alignment(bus, IORESOURCE_IO);
-> >  	list_for_each_entry(dev, &bus->devices, bus_list) {
-> >  		int i;
-> > @@ -978,7 +990,7 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
-> >  	resource_size_t min_align, align, size, size0, size1;
-> >  	resource_size_t aligns[18]; /* Alignments from 1MB to 128GB */
-> >  	int order, max_order;
-> > -	struct resource *b_res = find_free_bus_resource(bus,
-> > +	struct resource *b_res = find_bus_resource_of_type(bus,
-> >  					mask | IORESOURCE_PREFETCH, type);
-> >  	resource_size_t children_add_size = 0;
-> >  	resource_size_t children_add_align = 0;
-> > @@ -987,6 +999,10 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
-> >  	if (!b_res)
-> >  		return -ENOSPC;
-> >  
-> > +	/* If resource is already assigned, nothing more to do. */
-> > +	if (b_res->parent)
-> > +		return 0;
-> > +
-> >  	memset(aligns, 0, sizeof(aligns));
-> >  	max_order = 0;
-> >  	size = 0;
-> > -- 
-> > 2.24.0
-> > 
+--=20
+Thanks,
+Sekhar
