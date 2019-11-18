@@ -2,81 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F04841005BF
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Nov 2019 13:39:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 74D181005D3
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Nov 2019 13:46:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbfKRMjz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 18 Nov 2019 07:39:55 -0500
-Received: from foss.arm.com ([217.140.110.172]:33962 "EHLO foss.arm.com"
+        id S1726614AbfKRMqg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 18 Nov 2019 07:46:36 -0500
+Received: from foss.arm.com ([217.140.110.172]:34064 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726506AbfKRMjz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 18 Nov 2019 07:39:55 -0500
+        id S1726668AbfKRMqg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 18 Nov 2019 07:46:36 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4EB901FB;
-        Mon, 18 Nov 2019 04:39:54 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EFC611FB;
+        Mon, 18 Nov 2019 04:46:35 -0800 (PST)
 Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AEE583F6C4;
-        Mon, 18 Nov 2019 04:39:53 -0800 (PST)
-Date:   Mon, 18 Nov 2019 12:39:51 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5AD853F6C4;
+        Mon, 18 Nov 2019 04:46:35 -0800 (PST)
+Date:   Mon, 18 Nov 2019 12:46:33 +0000
 From:   Andrew Murray <andrew.murray@arm.com>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Mark Brown <broonie@kernel.org>, shawn.lin@rock-chips.com,
-        lorenzo.pieralisi@arm.com, bhelgaas@google.com, heiko@sntech.de,
-        lgirdwood@gmail.com, linux-pci@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/2] PCI: rockchip: Simplify optional regulator handling
-Message-ID: <20191118123951.GM43905@e119886-lin.cambridge.arm.com>
-References: <1eebc002101931012d337cda23d18f85b0326361.1573908530.git.robin.murphy@arm.com>
- <347bc3ef8399577e4cef3fdbf3af34d20b4ad27e.1573908530.git.robin.murphy@arm.com>
- <20191118115930.GC9761@sirena.org.uk>
- <a59da4a4-de88-62a5-5f44-001f8e30221e@arm.com>
+To:     zhengbin <zhengbin13@huawei.com>
+Cc:     songxiaowei@hisilicon.com, wangbinghui@hisilicon.com,
+        lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI: kirin: Use PTR_ERR_OR_ZERO() to simplify code
+Message-ID: <20191118124632.GN43905@e119886-lin.cambridge.arm.com>
+References: <1574076646-51621-1-git-send-email-zhengbin13@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a59da4a4-de88-62a5-5f44-001f8e30221e@arm.com>
+In-Reply-To: <1574076646-51621-1-git-send-email-zhengbin13@huawei.com>
 User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 12:20:10PM +0000, Robin Murphy wrote:
-> On 18/11/2019 11:59 am, Mark Brown wrote:
-> > On Sat, Nov 16, 2019 at 12:54:20PM +0000, Robin Murphy wrote:
-> > > Null checks are both cheaper and more readable than having !IS_ERR()
-> > > splattered everywhere.
-> > 
-> > > -	if (IS_ERR(rockchip->vpcie3v3))
-> > > +	if (!rockchip->vpcie3v3)
-> > >   		return;
-> > >   	/*
-> > > @@ -611,6 +611,7 @@ static int rockchip_pcie_parse_host_dt(struct rockchip_pcie *rockchip)
-> > >   		if (PTR_ERR(rockchip->vpcie12v) != -ENODEV)
-> > >   			return PTR_ERR(rockchip->vpcie12v);
-> > >   		dev_info(dev, "no vpcie12v regulator found\n");
-> > > +		rockchip->vpcie12v = NULL;
-> > 
-> > According to the API NULL is a valid regulator.  We don't currently
-> > actually do this but it's storing up surprises if you treat it as
-> > invalid.
+On Mon, Nov 18, 2019 at 07:30:46PM +0800, zhengbin wrote:
+> Fixes coccicheck warning:
 > 
-> Ah, OK - I'd assumed NULL wasn't valid based on regulator_enable()
-> immediately dereferencing its argument without any checks. If we'd rather
-> not bake in that assumption then this patch can happily be ignored.
+> drivers/pci/controller/dwc/pcie-kirin.c:141:1-3: WARNING: PTR_ERR_OR_ZERO can be used
+> drivers/pci/controller/dwc/pcie-kirin.c:177:1-3: WARNING: PTR_ERR_OR_ZERO can be used
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: zhengbin <zhengbin13@huawei.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-kirin.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
+> index c19617a..5b2131f 100644
+> --- a/drivers/pci/controller/dwc/pcie-kirin.c
+> +++ b/drivers/pci/controller/dwc/pcie-kirin.c
+> @@ -138,10 +138,7 @@ static long kirin_pcie_get_clk(struct kirin_pcie *kirin_pcie,
+>  		return PTR_ERR(kirin_pcie->apb_sys_clk);
+> 
+>  	kirin_pcie->pcie_aclk = devm_clk_get(dev, "pcie_aclk");
+> -	if (IS_ERR(kirin_pcie->pcie_aclk))
+> -		return PTR_ERR(kirin_pcie->pcie_aclk);
+> -
+> -	return 0;
+> +	return PTR_ERR_OR_ZERO(kirin_pcie->pcie_aclk);
+>  }
+> 
+>  static long kirin_pcie_get_resource(struct kirin_pcie *kirin_pcie,
 
-I'd suggest we drop this patch.
+Thanks for these patches. Though if you resend these next time you ought
+to put them in a single patch series with a cover letter.
 
-"IS_ERR(ptr)" is not the same as "!ptr", for values of ptr between 0 and
--4095 inclusive.
+I'm not sure on the views of maintainers for other parts of the kernel
+however for PCI this type of change has previously been rejected, see:
 
-Regardless the effect of this patch with the regulator framework, I don't
-think we want to create an example that others may follow.
+https://lkml.org/lkml/2019/5/31/535
+
+I guess coccicheck isn't aware of this.
 
 Thanks,
 
 Andrew Murray
 
+> --
+> 2.7.4
 > 
-> Thanks,
-> Robin.
