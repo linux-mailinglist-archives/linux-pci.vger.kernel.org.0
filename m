@@ -2,127 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FF75100802
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Nov 2019 16:18:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A44D110094C
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Nov 2019 17:35:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727105AbfKRPSU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 18 Nov 2019 10:18:20 -0500
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:16558 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726654AbfKRPSU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Nov 2019 10:18:20 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dd2b6390000>; Mon, 18 Nov 2019 07:18:17 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 18 Nov 2019 07:18:19 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 18 Nov 2019 07:18:19 -0800
-Received: from [10.25.74.243] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 18 Nov
- 2019 15:18:15 +0000
-Subject: Re: [PATCH] PCI: Add CRS timeout for pci_device_is_present()
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     Thierry Reding <treding@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Sinan Kaya <okaya@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        <jonathanh@nvidia.com>, <linux-tegra@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>,
-        "Andrew Murray" <andrew.murray@arm.com>,
-        Lukas Wunner <lukas@wunner.de>
-References: <20191115223647.GA129381@google.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <31b03468-c2ee-4347-51ab-6a15a23cda01@nvidia.com>
-Date:   Mon, 18 Nov 2019 20:48:12 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
-MIME-Version: 1.0
-In-Reply-To: <20191115223647.GA129381@google.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
+        id S1726769AbfKRQfP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 18 Nov 2019 11:35:15 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:45785 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726322AbfKRQfN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Nov 2019 11:35:13 -0500
+Received: by mail-pl1-f195.google.com with SMTP id w7so10067940plz.12
+        for <linux-pci@vger.kernel.org>; Mon, 18 Nov 2019 08:35:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:thread-topic:thread-index:date:message-id
+         :references:in-reply-to:accept-language:content-language
+         :content-transfer-encoding:mime-version;
+        bh=0i62/Z6slWcYNvLCi/1NRq8OSXeaQ9afoBQGBDAQpB4=;
+        b=QK+SXU6LH+2o7j9hjFyDYG1WuCYSj7pZbm9qyrJmWAcMMvRtJnV05lu0Cb1sTLlNqf
+         1TkeLb22j8nSIopHwhuavGeZExy073Q0cIbnvPtOCqAcrG/Am0hlZcePuCWuEo5/K/Fl
+         fC/jvrJXqPTL+M+w0oYh396piWj6R8vcoMfsFCiJUZD7txJjsi7dluwpbeptj/qHT3GN
+         KayshveBJARbqU+RZEIqHegHHAm5vmcikUpa2sbwdOjOOLJ2RI30LC+IL0id/d1hqHzm
+         cutu1N+eUHTTPSQ/AUIlrejPXs47yx4Unim2DuqoWNBHtamMs6YJ8fg5UFItpr4lVhbj
+         15fA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:thread-topic:thread-index
+         :date:message-id:references:in-reply-to:accept-language
+         :content-language:content-transfer-encoding:mime-version;
+        bh=0i62/Z6slWcYNvLCi/1NRq8OSXeaQ9afoBQGBDAQpB4=;
+        b=G/HsNm0Lxij76KJTGwMiq8TRrnU0g0ANmh+vF5unCxforLkNU+x0s9MZkmWcaYN5bS
+         iS5pULnwyQaifoRXz06DNuk+PnTDMCJRcJd3xI3xU7oXs4YAOyZ1AoDcDjORMvx/xGOr
+         p3K76pUaEUyJYgB9v4p+I3DlPR4j/XvTVKLorxcXAXDJ5+XusVfXDShQ4SdfbPk1FMSW
+         p6O6i1b0yWCev0fQWMhlfgGryrtLYlgfhVoM4aslwN73MeRlFxIAAr8lBtB0uzdJO/0y
+         rJ/CzDw6G9iZ2OquX3jq7jz5x5oIgO+ck9OIQ6pcuNUeHSEIgyjl5ocmGNbwWRAKvtO9
+         5nHg==
+X-Gm-Message-State: APjAAAWEGuAIPNdzEjJ9+GY5AeYQRGMTBIz5vPG1djv4lJehc16liTMz
+        cXRObVXPuu7YBvNyKhK7FnUsHqDw
+X-Google-Smtp-Source: APXvYqzaSQ6u9pSlhPl8xKsCKW041CGIcNafMua+2M/xSn8qR1xflXgPPrLdUqsRXzl9r503iU1m1g==
+X-Received: by 2002:a17:902:a417:: with SMTP id p23mr3927099plq.97.1574094912122;
+        Mon, 18 Nov 2019 08:35:12 -0800 (PST)
+Received: from SL2P216MB0105.KORP216.PROD.OUTLOOK.COM ([2603:1046:100:22::5])
+        by smtp.gmail.com with ESMTPSA id g20sm20217417pgk.46.2019.11.18.08.35.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 18 Nov 2019 08:35:10 -0800 (PST)
+From:   Jingoo Han <jingoohan1@gmail.com>
+To:     zhengbin <zhengbin13@huawei.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "kgene@kernel.org" <kgene@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+CC:     Han Jingoo <jingoohan1@gmail.com>
+Subject: Re: [PATCH] PCI: exynos: Use PTR_ERR_OR_ZERO() to simplify code
+Thread-Topic: [PATCH] PCI: exynos: Use PTR_ERR_OR_ZERO() to simplify code
+Thread-Index: ATNoLWc1DEO/Zkzog7LMmcep5qWiqMRsAXR8
+X-MS-Exchange-MessageSentRepresentingType: 1
+Date:   Mon, 18 Nov 2019 16:35:06 +0000
+Message-ID: <SL2P216MB01057BE74411EC7BE168E193AA4D0@SL2P216MB0105.KORP216.PROD.OUTLOOK.COM>
+References: <1574076480-50196-1-git-send-email-zhengbin13@huawei.com>
+In-Reply-To: <1574076480-50196-1-git-send-email-zhengbin13@huawei.com>
+Accept-Language: ko-KR, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1574090297; bh=2PJZ79E/jHsTKbs+cod8Gz9JS/ZVnHFDloRMTChYXVY=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=ROP9XUzKBGMVqfi1I39vq7akOktSSrdYDPzT+Ui7O9ooPCEpphBV5s37rRN96NU42
-         +d+ldjKDEa+4v8nYg+M9sPriHx/DcasCvj5+S13tKJxYQLjaRj1jcTbdoSpIHyLSEF
-         3E5NdRUGu3jWQywK77KlZBGCImRahm4MTwC1gvpvJDDs4fg4DhNLooPIQnKab4Yd3s
-         cseOR551C/VZPR45JzZGagp+3Jw/nSF2qlGEC9JFLDA25p4ZrjRKx8HbBDxEecfxsJ
-         lEHvD65ehyYsFLbxZTEzVCxz7zAXeWyRAuPsrDWlc0y6ZKQUomkcWGfd8//TOosx3Z
-         NlNNngGJIwYDw==
+X-MS-Has-Attach: 
+X-MS-Exchange-Organization-SCL: -1
+X-MS-TNEF-Correlator: 
+X-MS-Exchange-Organization-RecordReviewCfmType: 0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 11/16/2019 4:06 AM, Bjorn Helgaas wrote:
-> On Fri, Nov 15, 2019 at 03:34:23PM +0530, Vidya Sagar wrote:
->> On 11/15/2019 12:06 AM, Bjorn Helgaas wrote:
->>> On Wed, Nov 13, 2019 at 12:20:43PM +0100, Thierry Reding wrote:
->>>> On Tue, Nov 12, 2019 at 12:58:44PM -0600, Bjorn Helgaas wrote:
->>>>
->>>>> My question is whether this wait should be connected somehow with
->>>>> platform_pci_set_power_state().  It sounds like the tegra host
->>>>> controller driver already does the platform-specific delays, and I'm
->>>>> not sure it's reasonable for platform_pci_set_power_state() to do the
->>>>> CRS polling.  Maybe something like this?  I'd really like to get
->>>>> Rafael's thinking here.
->>>>>
->>>>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
->>>>> index e7982af9a5d8..052fa316c917 100644
->>>>> --- a/drivers/pci/pci.c
->>>>> +++ b/drivers/pci/pci.c
->>>>> @@ -964,9 +964,14 @@ void pci_refresh_power_state(struct pci_dev *dev)
->>>>>     */
->>>>>    void pci_power_up(struct pci_dev *dev)
->>>>>    {
->>>>> +	pci_power_state_t prev_state = dev->current_state;
->>>>> +
->>>>>    	if (platform_pci_power_manageable(dev))
->>>>>    		platform_pci_set_power_state(dev, PCI_D0);
->>>>> +	if (prev_state == PCI_D3cold)
->>>>> +		pci_dev_wait(dev, "D3cold->D0", PCIE_RESET_READY_POLL_MS);
->>
->> Is there any specific reason why should there be a check for the
->> state?  In Tegra series, I observe that, by the time execution comes
->> to this point, prev_state is PCI_D3Hot and in Tegra194 particularly,
->> it is PCI_D0 because the host controller driver explicitly keeps the
->> downstream devices in PCI_D0 state as a work around for one of the
->> Tegra194 specific issues.
-> 
-> I think you're right, we probably should not try to check "prev_state"
-> here because we can't rely on that being accurate.
-> 
-> On Tegra, I assume suspend puts the PCIe devices in D3hot, then when
-> we suspend the RC itself, it looks like tegra_pcie_pm_suspend()
-> actually turns off the power, so the PCIe devices probably go to
-> D3cold but nothing updates their dev->current_state, so it's probably
-> still PCI_D3hot.
-> 
-> On Tegra194, the same probably happens, except that when we suspend
-> the RC itself, tegra_pcie_downstream_dev_to_D0() puts the PCIe devices
-> back in D0 (updating their dev->current_state to PCI_D0), and then we
-> turn off the power, so they probably also end up in D3cold but with
-> dev_current_state still set to PCI_D0.
-> 
->> So, I feel the check for current_state may not be need here(?)
-> 
-> I think you're right.  We can't tell what dev->current_state is when
-> we enter pci_power_up().
-Thanks,
-I'll push a change with your suggested modifications.
+On 11/18/19, 6:20 AM, zhengbin wrote:
+>
+> Fixes coccicheck warning:
+>
+> drivers/pci/controller/dwc/pci-exynos.c:95:1-3: WARNING: PTR_ERR_OR_ZERO =
+can be used
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: zhengbin <zhengbin13@huawei.com>
 
-- Vidya Sagar
-> 
-> Bjorn
-> 
+Please write your full name correctly (First name + Second name).=20
+If 'zhengbin' is just your first name, you have to add your second name.
+Or, if  'zhengbin' is already your full name, please separate it with capit=
+alized characters and spaces,
+for example, 'Zheng Bin'.
 
+> ---
+>  drivers/pci/controller/dwc/pci-exynos.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
+>
+
+[.....]
