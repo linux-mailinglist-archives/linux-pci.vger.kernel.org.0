@@ -2,228 +2,140 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CD0B6FFF86
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Nov 2019 08:32:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 25522FFFE6
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Nov 2019 08:59:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726607AbfKRHbx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 18 Nov 2019 02:31:53 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:39605 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726397AbfKRHbx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Nov 2019 02:31:53 -0500
-Received: by mail-oi1-f193.google.com with SMTP id v138so14419561oif.6;
-        Sun, 17 Nov 2019 23:31:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4Jbto+s277uq5Iyl/VAB/rny899zd+4zTI6NCFD/xNI=;
-        b=QCsTrb9JgI9NV8yypNfQApuJL5gYIj21d03yb42rjGjGWC2H/7kyZj7arKSh8A4vBu
-         PgLAakVwOe34BodOPTdLsW3ZSFV8wSIR9z3jhurs6yTeBNTWmVD2VF3bSRViD7xE1clg
-         3y4VfzlPZBGkWks0TF5bISwQGJJ/sBtn2HA1Wf6mQWGH/5N8P3SYukhBnQldv79WXpNB
-         SixZS3BxPNwayjsJzqAxErDWn/Qb8o2KLd3s7p+1kRUXAobQPNTkgQsHOK2gyZBWP74d
-         i83/365zqwIlya/+Vm7Rkzdo7AzJ6EHLAiHZlnZf0bS2ABX8YRDimFFNkz8tYlW+7Tlt
-         IPaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4Jbto+s277uq5Iyl/VAB/rny899zd+4zTI6NCFD/xNI=;
-        b=KrlWa71eN3JyyvTO4WuZ5n4NHAgf4jFi5d0yfOXldLeZVaV8YZruloaoS+nQ7J2GOZ
-         2NNmUucIQ4g9htSiQX5Cz2/VpkVyq/dD29HDMwcdqNthUQP+iKxj32GkPtUhqduQgy6Z
-         ODd2SOQYJ5ZkX7me0PTs9zvG+NxoArh9rC3zsXHHb0viBUwLW5IvmcAmy0lIq0LCQSQf
-         uTbpt+LPG0WOubnmCTZWi9kgTYZV5r+nR4UCmQI17Hj17+slnStwZ08q1XbKbPW03bDq
-         e8SgmFbzVzZGDKtIW+d8awo9EwgTpv427YxaVB/go5z/AD4+YY1vExy0eZ5WJ0h8DFtT
-         7sew==
-X-Gm-Message-State: APjAAAU/Ca57CrDdLmjBGelvnuOa2rW3P11mqGQ32g/+9vyG+xJYQWht
-        493JeF2Zek+90E3OiTd43QhCCLEXqCx3ub5GnLc=
-X-Google-Smtp-Source: APXvYqyF6n+wzGprIt4o7gDrVED6fkxbf8xqs5vWFhzqMfqBMsaWYf6oZLeRPA4lpE9GfmJ1FwnzUNrVoOq5yBRkt/A=
-X-Received: by 2002:aca:5786:: with SMTP id l128mr19117035oib.53.1574062310353;
- Sun, 17 Nov 2019 23:31:50 -0800 (PST)
+        id S1726371AbfKRH67 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 18 Nov 2019 02:58:59 -0500
+Received: from mga09.intel.com ([134.134.136.24]:49378 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726283AbfKRH67 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 18 Nov 2019 02:58:59 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Nov 2019 23:58:58 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,319,1569308400"; 
+   d="scan'208";a="356706254"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga004.jf.intel.com with ESMTP; 17 Nov 2019 23:58:58 -0800
+Received: from [10.226.38.242] (unknown [10.226.38.242])
+        by linux.intel.com (Postfix) with ESMTP id 095EC5804A0;
+        Sun, 17 Nov 2019 23:58:54 -0800 (PST)
+Subject: Re: [PATCH v7 2/3] dwc: PCI: intel: PCIe RC controller driver
+To:     Jingoo Han <jingoohan1@gmail.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "martin.blumenstingl@googlemail.com" 
+        <martin.blumenstingl@googlemail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "andriy.shevchenko@intel.com" <andriy.shevchenko@intel.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "cheol.yong.kim@intel.com" <cheol.yong.kim@intel.com>,
+        "chuanhua.lei@linux.intel.com" <chuanhua.lei@linux.intel.com>,
+        "qi-ming.wu@intel.com" <qi-ming.wu@intel.com>
+References: <cover.1573784557.git.eswara.kota@linux.intel.com>
+ <99a29f5a4ce18df26bd300ac6728433ec025631b.1573784557.git.eswara.kota@linux.intel.com>
+ <SL2P216MB01056231B6036941BEF71738AA700@SL2P216MB0105.KORP216.PROD.OUTLOOK.COM>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <50dabbc6-eae5-5ae5-95a0-f195c1ef7362@linux.intel.com>
+Date:   Mon, 18 Nov 2019 15:58:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <1572850664-9861-1-git-send-email-sundeep.lkml@gmail.com> <20191111233756.GA65477@google.com>
-In-Reply-To: <20191111233756.GA65477@google.com>
-From:   sundeep subbaraya <sundeep.lkml@gmail.com>
-Date:   Mon, 18 Nov 2019 13:01:39 +0530
-Message-ID: <CALHRZuqQG3md8j1dcpGtb-yp4ADG3Nnp0A3f_BJPDjr2FFuBMQ@mail.gmail.com>
-Subject: Re: [v2 PATCH] PCI: Do not use bus number zero from EA capability
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, sgoutham@marvell.com,
-        Subbaraya Sundeep <sbhatta@marvell.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <SL2P216MB01056231B6036941BEF71738AA700@SL2P216MB0105.KORP216.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
 
-On Tue, Nov 12, 2019 at 5:08 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+On 11/16/2019 4:40 AM, Jingoo Han wrote:
+> On 11/14/19, 9:31 PM, Dilip Kota wrote:
 >
-> On Mon, Nov 04, 2019 at 12:27:44PM +0530, sundeep.lkml@gmail.com wrote:
-> > From: Subbaraya Sundeep <sbhatta@marvell.com>
-> >
-> > As per the spec, "Enhanced Allocation (EA) for Memory
-> > and I/O Resources" ECN, approved 23 October 2014,
-> > sec 6.9.1.2, fixed bus numbers of a bridge must be zero
-> > when no function that uses EA is located behind it.
-> > Hence assign bus numbers normally instead of assigning
-> > zeroes from EA capability. Failing to do this and using
-> > zeroes from EA would make the bridges non-functional.
-> >
-> > Fixes: '2dbce5901179 ("PCI: Assign bus numbers present in
-> > EA capability for bridges")'
-> > Signed-off-by: Subbaraya Sundeep <sbhatta@marvell.com>
-> > Cc: stable@vger.kernel.org    # v5.2+
+>> Add support to PCIe RC controller on Intel Gateway SoCs.
+>> PCIe controller is based of Synopsys DesignWare PCIe core.
+>>
+>> Intel PCIe driver requires Upconfigure support, Fast Training
+>> Sequence and link speed configurations. So adding the respective
+>> helper functions in the PCIe DesignWare framework.
+>> It also programs hardware autonomous speed during speed
+>> configuration so defining it in pci_regs.h.
+>>
+>> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+>> Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+>> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+>> ---
+> [.....]
 >
-> Applied to pci/resource for v5.5, thanks!
+>>   drivers/pci/controller/dwc/Kconfig           |  10 +
+>>   drivers/pci/controller/dwc/Makefile          |   1 +
+>>   drivers/pci/controller/dwc/pcie-designware.c |  57 +++
+>>   drivers/pci/controller/dwc/pcie-designware.h |  12 +
+>>   drivers/pci/controller/dwc/pcie-intel-gw.c   | 542 +++++++++++++++++++++++++++
+>>   include/uapi/linux/pci_regs.h                |   1 +
+>>   6 files changed, 623 insertions(+)
+>>   create mode 100644 drivers/pci/controller/dwc/pcie-intel-gw.c
+>>
+>> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+>> index 0ba988b5b5bc..fb6d474477df 100644
+>> --- a/drivers/pci/controller/dwc/Kconfig
+>> +++ b/drivers/pci/controller/dwc/Kconfig
+>> @@ -82,6 +82,16 @@ config PCIE_DW_PLAT_EP
+>>   	  order to enable device-specific features PCI_DW_PLAT_EP must be
+>>   	  selected.
+>>   
+>> +config PCIE_INTEL_GW
+>> +	bool "Intel Gateway PCIe host controller support"
+>> +	depends on OF && (X86 || COMPILE_TEST)
+>> +	select PCIE_DW_HOST
+>> +	help
+>> +	  Say 'Y' here to enable PCIe Host controller support on Intel
+>> +	  Gateway SoCs.
+>> +	  The PCIe controller uses the DesignWare core plus Intel-specific
+>> +	  hardware wrappers.
+>> +
+> Please add this config alphabetical order!
+> So, this config should be after 'config PCI_IMX6'.
+> There is no reason to put this config at the first place.
 >
-> I tweaked it as below so the logic about how to interpret the EA Fixed
-> Secondary Bus Number is more localized.  Let me know if that doesn't
-> make sense.
->
+>>   config PCI_EXYNOS
+>>   	bool "Samsung Exynos PCIe controller"
+>>   	depends on SOC_EXYNOS5440 || COMPILE_TEST
+>> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
+>> index b30336181d46..99db83cd2f35 100644
+>> --- a/drivers/pci/controller/dwc/Makefile
+>> +++ b/drivers/pci/controller/dwc/Makefile
+>> @@ -3,6 +3,7 @@ obj-$(CONFIG_PCIE_DW) += pcie-designware.o
+>>   obj-$(CONFIG_PCIE_DW_HOST) += pcie-designware-host.o
+>>   obj-$(CONFIG_PCIE_DW_EP) += pcie-designware-ep.o
+>>   obj-$(CONFIG_PCIE_DW_PLAT) += pcie-designware-plat.o
+>> +obj-$(CONFIG_PCIE_INTEL_GW) += pcie-intel-gw.o
+> Ditto.
+PCIE_INTEL_GW wouldnt come after PCI_IMX6, the complete Makefile and 
+Kconfig are not in order,( PCI_* and PCIE_* are not in any order). So i 
+just followed PCIE_DW and placed PCIE_INTEL_GW after PCIE_DW as I is 
+after D (and i see PCI_* immediately after the PCIE_DW*, so i placed 
+PCIE_INTEL_GW after PCIE_DW* and before PCI_*).
 
-Looks good. Thanks for applying the patch.
+Regards,
+Dilip
 
-Sundeep
-
-> > ---
-> >  drivers/pci/probe.c | 25 +++++++++++++------------
-> >  1 file changed, 13 insertions(+), 12 deletions(-)
-> >
-> > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> > index 3d5271a..116b276 100644
-> > --- a/drivers/pci/probe.c
-> > +++ b/drivers/pci/probe.c
-> > @@ -1090,27 +1090,28 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
-> >   * @sub: updated with subordinate bus number from EA
-> >   *
-> >   * If @dev is a bridge with EA capability, update @sec and @sub with
-> > - * fixed bus numbers from the capability and return true.  Otherwise,
-> > - * return false.
-> > + * fixed bus numbers from the capability. Otherwise @sec and @sub
-> > + * will be zeroed.
-> >   */
-> > -static bool pci_ea_fixed_busnrs(struct pci_dev *dev, u8 *sec, u8 *sub)
-> > +static void pci_ea_fixed_busnrs(struct pci_dev *dev, u8 *sec, u8 *sub)
-> >  {
-> >       int ea, offset;
-> >       u32 dw;
-> >
-> > +     *sec = *sub = 0;
-> > +
-> >       if (dev->hdr_type != PCI_HEADER_TYPE_BRIDGE)
-> > -             return false;
-> > +             return;
-> >
-> >       /* find PCI EA capability in list */
-> >       ea = pci_find_capability(dev, PCI_CAP_ID_EA);
-> >       if (!ea)
-> > -             return false;
-> > +             return;
-> >
-> >       offset = ea + PCI_EA_FIRST_ENT;
-> >       pci_read_config_dword(dev, offset, &dw);
-> >       *sec =  dw & PCI_EA_SEC_BUS_MASK;
-> >       *sub = (dw & PCI_EA_SUB_BUS_MASK) >> PCI_EA_SUB_BUS_SHIFT;
-> > -     return true;
-> >  }
-> >
-> >  /*
-> > @@ -1146,7 +1147,6 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
-> >       u16 bctl;
-> >       u8 primary, secondary, subordinate;
-> >       int broken = 0;
-> > -     bool fixed_buses;
-> >       u8 fixed_sec, fixed_sub;
-> >       int next_busnr;
-> >
-> > @@ -1249,11 +1249,12 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
-> >               pci_write_config_word(dev, PCI_STATUS, 0xffff);
-> >
-> >               /* Read bus numbers from EA Capability (if present) */
-> > -             fixed_buses = pci_ea_fixed_busnrs(dev, &fixed_sec, &fixed_sub);
-> > -             if (fixed_buses)
-> > +             pci_ea_fixed_busnrs(dev, &fixed_sec, &fixed_sub);
-> > +
-> > +             next_busnr = max + 1;
-> > +             /* Use secondary bus number in EA */
-> > +             if (fixed_sec)
-> >                       next_busnr = fixed_sec;
-> > -             else
-> > -                     next_busnr = max + 1;
-> >
-> >               /*
-> >                * Prevent assigning a bus number that already exists.
-> > @@ -1331,7 +1332,7 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
-> >                * If fixed subordinate bus number exists from EA
-> >                * capability then use it.
-> >                */
-> > -             if (fixed_buses)
-> > +             if (fixed_sub)
-> >                       max = fixed_sub;
-> >               pci_bus_update_busn_res_end(child, max);
-> >               pci_write_config_byte(dev, PCI_SUBORDINATE_BUS, max);
-> > --
-> > 2.7.4
-> >
 >
-> commit 25328e0447de ("PCI: Do not use bus number zero from EA capability")
-> Author: Subbaraya Sundeep <sbhatta@marvell.com>
-> Date:   Mon Nov 4 12:27:44 2019 +0530
+> Best regards,
+> Jingoo Han
 >
->     PCI: Do not use bus number zero from EA capability
->
->     As per PCIe r5.0, sec 7.8.5.2, fixed bus numbers of a bridge must be zero
->     when no function that uses EA is located behind it.  Hence, if EA supplies
->     bus numbers of zero, assign bus numbers normally.  A secondary bus can
->     never have a bus number of zero, so setting a bridge's Secondary Bus Number
->     to zero makes downstream devices unreachable.
->
->     [bhelgaas: retain bool return value so "zero is invalid" logic is local]
->     Fixes: 2dbce5901179 ("PCI: Assign bus numbers present in EA capability for bridges")
->     Link: https://lore.kernel.org/r/1572850664-9861-1-git-send-email-sundeep.lkml@gmail.com
->     Signed-off-by: Subbaraya Sundeep <sbhatta@marvell.com>
->     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
->     Cc: stable@vger.kernel.org  # v5.2+
->
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index bdbc8490f962..d3033873395d 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -1090,14 +1090,15 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
->   * @sec: updated with secondary bus number from EA
->   * @sub: updated with subordinate bus number from EA
->   *
-> - * If @dev is a bridge with EA capability, update @sec and @sub with
-> - * fixed bus numbers from the capability and return true.  Otherwise,
-> - * return false.
-> + * If @dev is a bridge with EA capability that specifies valid secondary
-> + * and subordinate bus numbers, return true with the bus numbers in @sec
-> + * and @sub.  Otherwise return false.
->   */
->  static bool pci_ea_fixed_busnrs(struct pci_dev *dev, u8 *sec, u8 *sub)
->  {
->         int ea, offset;
->         u32 dw;
-> +       u8 ea_sec, ea_sub;
->
->         if (dev->hdr_type != PCI_HEADER_TYPE_BRIDGE)
->                 return false;
-> @@ -1109,8 +1110,13 @@ static bool pci_ea_fixed_busnrs(struct pci_dev *dev, u8 *sec, u8 *sub)
->
->         offset = ea + PCI_EA_FIRST_ENT;
->         pci_read_config_dword(dev, offset, &dw);
-> -       *sec =  dw & PCI_EA_SEC_BUS_MASK;
-> -       *sub = (dw & PCI_EA_SUB_BUS_MASK) >> PCI_EA_SUB_BUS_SHIFT;
-> +       ea_sec =  dw & PCI_EA_SEC_BUS_MASK;
-> +       ea_sub = (dw & PCI_EA_SUB_BUS_MASK) >> PCI_EA_SUB_BUS_SHIFT;
-> +       if (ea_sec  == 0 || ea_sub < ea_sec)
-> +               return false;
-> +
-> +       *sec = ea_sec;
-> +       *sub = ea_sub;
->         return true;
->  }
->
+>>   obj-$(CONFIG_PCI_DRA7XX) += pci-dra7xx.o
+>>   obj-$(CONFIG_PCI_EXYNOS) += pci-exynos.o
+>>   obj-$(CONFIG_PCI_IMX6) += pci-imx6.o
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+>> index 820488dfeaed..479e250695a0 100644
+> [.....]
