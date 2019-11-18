@@ -2,143 +2,228 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0EEEEFFEE7
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Nov 2019 07:56:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CD0B6FFF86
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Nov 2019 08:32:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726990AbfKRG4H (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 18 Nov 2019 01:56:07 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:45989 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbfKRG4G (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Nov 2019 01:56:06 -0500
-Received: by mail-pf1-f196.google.com with SMTP id z4so9883158pfn.12
-        for <linux-pci@vger.kernel.org>; Sun, 17 Nov 2019 22:56:06 -0800 (PST)
+        id S1726607AbfKRHbx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 18 Nov 2019 02:31:53 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:39605 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726397AbfKRHbx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Nov 2019 02:31:53 -0500
+Received: by mail-oi1-f193.google.com with SMTP id v138so14419561oif.6;
+        Sun, 17 Nov 2019 23:31:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Jh9Xf7UIdPMx7Id72kMrL4Yoelm45a9tP9VAeHLYcMk=;
-        b=QO01wbrQ7iqGOHNUo7vjA1kqQMDV3AIlh+4w9cqJV5qSP03TsklDWBavoFXuMjZh5+
-         pnlwNXFVW+EzjiT6y/eUkEj9fqO0fDj8Aeu8LpHNjuckt9UAsP0wZbWR08t94L24FGPU
-         Ggug1CIBXNxIiSN0+oAOF8mNLUPn0NwNkbtRH/281KleV/BekjbyM5s0GetFRUuI+VC0
-         Bnr55O1POhxzJqT9sJh/aXRygVJ4Zos04m5HUANMAll6F7GJNBg5whrVX+TDxjMXVAy8
-         xzW+6Q+Y8/WgsEJh0TLMezmrbejyMMGeSTsqA2LwfSW6h/7ffX1foaCdUf8EzjjLHcc8
-         +iXQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4Jbto+s277uq5Iyl/VAB/rny899zd+4zTI6NCFD/xNI=;
+        b=QCsTrb9JgI9NV8yypNfQApuJL5gYIj21d03yb42rjGjGWC2H/7kyZj7arKSh8A4vBu
+         PgLAakVwOe34BodOPTdLsW3ZSFV8wSIR9z3jhurs6yTeBNTWmVD2VF3bSRViD7xE1clg
+         3y4VfzlPZBGkWks0TF5bISwQGJJ/sBtn2HA1Wf6mQWGH/5N8P3SYukhBnQldv79WXpNB
+         SixZS3BxPNwayjsJzqAxErDWn/Qb8o2KLd3s7p+1kRUXAobQPNTkgQsHOK2gyZBWP74d
+         i83/365zqwIlya/+Vm7Rkzdo7AzJ6EHLAiHZlnZf0bS2ABX8YRDimFFNkz8tYlW+7Tlt
+         IPaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Jh9Xf7UIdPMx7Id72kMrL4Yoelm45a9tP9VAeHLYcMk=;
-        b=ZTVb0rahP5DrlwO0IW3lygUgrdbP4bgmYh0iML3jA/rcMCz97dvb9PAfRh3fBX+M3I
-         IixKOgGvj+X4QgFojuVRoyIsifub8bHgWZhj2moFPISE1ScVBLjhvWmjMZG2cWGEnmex
-         NMZZKmCx6y48tNPw9PwP7133Yv50hnPfLxWbvs6HrMSNgdOjoiCynQjaiGk4y21Lp2sh
-         AeHBcIEq5GpwvFmHSw8tCza0NQY/aTJCvXqorsKQ4IpRQbx/qWL/kWos202Pdij9zfMX
-         20DYWAm5Q4UPyr2lLNyvag+p53lBzGKittJNNFWL8hi28nhqCV1dLShB2zDNT9PEv4OV
-         dlMQ==
-X-Gm-Message-State: APjAAAUci7UeSdsKEq2WXU3tpHiZHTJ01/rptgG7I/Uy8hdRpNnV7a9c
-        8caY/oXZWWHrnh0TlC08tc0=
-X-Google-Smtp-Source: APXvYqxrGg1jltWZbiXt/dVIjVSTm0P4GAAR2VohfW1A7pgAiWDZW3kVeWLS7kUF+Ruz8RlKraBn1g==
-X-Received: by 2002:a63:1057:: with SMTP id 23mr16501207pgq.171.1574060165494;
-        Sun, 17 Nov 2019 22:56:05 -0800 (PST)
-Received: from wafer.ozlabs.ibm.com ([122.99.82.10])
-        by smtp.gmail.com with ESMTPSA id w138sm21131774pfc.68.2019.11.17.22.56.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Nov 2019 22:56:04 -0800 (PST)
-From:   Oliver O'Halloran <oohall@gmail.com>
-To:     linuxppc-dev@lists.ozlabs.org
-Cc:     linux-pci@vger.kernel.org, Oliver O'Halloran <oohall@gmail.com>,
-        Sergey Miroshnichenko <s.miroshnichenko@yadro.com>
-Subject: [PATCH v2] powerpc/powernv: Disable native PCIe port management
-Date:   Mon, 18 Nov 2019 17:55:53 +1100
-Message-Id: <20191118065553.30362-1-oohall@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4Jbto+s277uq5Iyl/VAB/rny899zd+4zTI6NCFD/xNI=;
+        b=KrlWa71eN3JyyvTO4WuZ5n4NHAgf4jFi5d0yfOXldLeZVaV8YZruloaoS+nQ7J2GOZ
+         2NNmUucIQ4g9htSiQX5Cz2/VpkVyq/dD29HDMwcdqNthUQP+iKxj32GkPtUhqduQgy6Z
+         ODd2SOQYJ5ZkX7me0PTs9zvG+NxoArh9rC3zsXHHb0viBUwLW5IvmcAmy0lIq0LCQSQf
+         uTbpt+LPG0WOubnmCTZWi9kgTYZV5r+nR4UCmQI17Hj17+slnStwZ08q1XbKbPW03bDq
+         e8SgmFbzVzZGDKtIW+d8awo9EwgTpv427YxaVB/go5z/AD4+YY1vExy0eZ5WJ0h8DFtT
+         7sew==
+X-Gm-Message-State: APjAAAU/Ca57CrDdLmjBGelvnuOa2rW3P11mqGQ32g/+9vyG+xJYQWht
+        493JeF2Zek+90E3OiTd43QhCCLEXqCx3ub5GnLc=
+X-Google-Smtp-Source: APXvYqyF6n+wzGprIt4o7gDrVED6fkxbf8xqs5vWFhzqMfqBMsaWYf6oZLeRPA4lpE9GfmJ1FwnzUNrVoOq5yBRkt/A=
+X-Received: by 2002:aca:5786:: with SMTP id l128mr19117035oib.53.1574062310353;
+ Sun, 17 Nov 2019 23:31:50 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1572850664-9861-1-git-send-email-sundeep.lkml@gmail.com> <20191111233756.GA65477@google.com>
+In-Reply-To: <20191111233756.GA65477@google.com>
+From:   sundeep subbaraya <sundeep.lkml@gmail.com>
+Date:   Mon, 18 Nov 2019 13:01:39 +0530
+Message-ID: <CALHRZuqQG3md8j1dcpGtb-yp4ADG3Nnp0A3f_BJPDjr2FFuBMQ@mail.gmail.com>
+Subject: Re: [v2 PATCH] PCI: Do not use bus number zero from EA capability
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, sgoutham@marvell.com,
+        Subbaraya Sundeep <sbhatta@marvell.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On PowerNV the PCIe topology is (currently) managed by the powernv platform
-code in Linux in cooperation with the platform firmware. Linux's native
-PCIe port service drivers operate independently of both and this can cause
-problems.
+Hi Bjorn,
 
-The main issue is that the portbus driver will conflict with the platform
-specific hotplug driver (pnv_php) over ownership of the MSI used to notify
-the host when a hotplug event occurs. The portbus driver claims this MSI on
-behalf of the individual port services because the same interrupt is used
-for hotplug events, PMEs (on root ports), and link bandwidth change
-notifications. The portbus driver will always claim the interrupt even if
-the individual port service drivers, such as pciehp, are compiled out.
+On Tue, Nov 12, 2019 at 5:08 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Mon, Nov 04, 2019 at 12:27:44PM +0530, sundeep.lkml@gmail.com wrote:
+> > From: Subbaraya Sundeep <sbhatta@marvell.com>
+> >
+> > As per the spec, "Enhanced Allocation (EA) for Memory
+> > and I/O Resources" ECN, approved 23 October 2014,
+> > sec 6.9.1.2, fixed bus numbers of a bridge must be zero
+> > when no function that uses EA is located behind it.
+> > Hence assign bus numbers normally instead of assigning
+> > zeroes from EA capability. Failing to do this and using
+> > zeroes from EA would make the bridges non-functional.
+> >
+> > Fixes: '2dbce5901179 ("PCI: Assign bus numbers present in
+> > EA capability for bridges")'
+> > Signed-off-by: Subbaraya Sundeep <sbhatta@marvell.com>
+> > Cc: stable@vger.kernel.org    # v5.2+
+>
+> Applied to pci/resource for v5.5, thanks!
+>
+> I tweaked it as below so the logic about how to interpret the EA Fixed
+> Secondary Bus Number is more localized.  Let me know if that doesn't
+> make sense.
+>
 
-The second, bigger, problem is that the hotplug port service driver
-fundamentally does not work on PowerNV. The platform assumes that all
-PCI devices have a corresponding arch-specific handle derived from the DT
-node for the device (pci_dn) and without one the platform will not allow
-a PCI device to be enabled. This problem is largely due to historical
-baggage, but it can't be resolved without significant re-factoring of the
-platform PCI support.
+Looks good. Thanks for applying the patch.
 
-We can fix these problems in the interim by setting the
-"pcie_ports_disabled" flag during platform initialisation. The flag
-indicates the platform owns the PCIe ports which stops the portbus driver
-from being registered.
+Sundeep
 
-This does have the side effect of disabling all port services drivers
-that is: AER, PME, BW notifications, hotplug, and DPC. However, this is
-not a huge disadvantage on PowerNV since these services are either unused
-or handled through other means.
-
-Cc: Sergey Miroshnichenko <s.miroshnichenko@yadro.com>
-Fixes: 66725152fb9f ("PCI/hotplug: PowerPC PowerNV PCI hotplug driver")
-Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
----
-Sergey, just FYI. I'll try sort out the rest of the hotplug
-trainwreck in 5.6.
-
-The Fixes: here is for the patch that added pnv_php in 4.8. It's been
-a problem since then, but wasn't noticed until people started testing
-it after the EEH fixes in commit 799abe283e51 ("powerpc/eeh: Clean up
-EEH PEs after recovery finishes") went in earlier in the 5.4 cycle.
----
-v2: Moved setting the flag until after we check for OPAL support. No
-    actual functional change since we've already probed the platform,
-    but it looks neater.
-
-    Re-wrote the commit message.
----
- arch/powerpc/platforms/powernv/pci.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
-
-diff --git a/arch/powerpc/platforms/powernv/pci.c b/arch/powerpc/platforms/powernv/pci.c
-index 2825d00..c0bea75a 100644
---- a/arch/powerpc/platforms/powernv/pci.c
-+++ b/arch/powerpc/platforms/powernv/pci.c
-@@ -945,6 +945,23 @@ void __init pnv_pci_init(void)
- 	if (!firmware_has_feature(FW_FEATURE_OPAL))
- 		return;
- 
-+#ifdef CONFIG_PCIEPORTBUS
-+	/*
-+	 * On PowerNV PCIe devices are (currently) managed in cooperation
-+	 * with firmware. This isn't *strictly* required, but there's enough
-+	 * assumptions baked into both firmware and the platform code that
-+	 * it's unwise to allow the portbus services to be used.
-+	 *
-+	 * We need to fix this eventually, but for now set this flag to disable
-+	 * the portbus driver. The AER service isn't required since that AER
-+	 * events are handled via EEH. The pciehp hotplug driver can't work
-+	 * without kernel changes (and portbus binding breaks pnv_php). The
-+	 * other services also require some thinking about how we're going
-+	 * to integrate them.
-+	 */
-+	pcie_ports_disabled = true;
-+#endif
-+
- 	/* Look for IODA IO-Hubs. */
- 	for_each_compatible_node(np, NULL, "ibm,ioda-hub") {
- 		pnv_pci_init_ioda_hub(np);
--- 
-2.9.5
-
+> > ---
+> >  drivers/pci/probe.c | 25 +++++++++++++------------
+> >  1 file changed, 13 insertions(+), 12 deletions(-)
+> >
+> > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> > index 3d5271a..116b276 100644
+> > --- a/drivers/pci/probe.c
+> > +++ b/drivers/pci/probe.c
+> > @@ -1090,27 +1090,28 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
+> >   * @sub: updated with subordinate bus number from EA
+> >   *
+> >   * If @dev is a bridge with EA capability, update @sec and @sub with
+> > - * fixed bus numbers from the capability and return true.  Otherwise,
+> > - * return false.
+> > + * fixed bus numbers from the capability. Otherwise @sec and @sub
+> > + * will be zeroed.
+> >   */
+> > -static bool pci_ea_fixed_busnrs(struct pci_dev *dev, u8 *sec, u8 *sub)
+> > +static void pci_ea_fixed_busnrs(struct pci_dev *dev, u8 *sec, u8 *sub)
+> >  {
+> >       int ea, offset;
+> >       u32 dw;
+> >
+> > +     *sec = *sub = 0;
+> > +
+> >       if (dev->hdr_type != PCI_HEADER_TYPE_BRIDGE)
+> > -             return false;
+> > +             return;
+> >
+> >       /* find PCI EA capability in list */
+> >       ea = pci_find_capability(dev, PCI_CAP_ID_EA);
+> >       if (!ea)
+> > -             return false;
+> > +             return;
+> >
+> >       offset = ea + PCI_EA_FIRST_ENT;
+> >       pci_read_config_dword(dev, offset, &dw);
+> >       *sec =  dw & PCI_EA_SEC_BUS_MASK;
+> >       *sub = (dw & PCI_EA_SUB_BUS_MASK) >> PCI_EA_SUB_BUS_SHIFT;
+> > -     return true;
+> >  }
+> >
+> >  /*
+> > @@ -1146,7 +1147,6 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+> >       u16 bctl;
+> >       u8 primary, secondary, subordinate;
+> >       int broken = 0;
+> > -     bool fixed_buses;
+> >       u8 fixed_sec, fixed_sub;
+> >       int next_busnr;
+> >
+> > @@ -1249,11 +1249,12 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+> >               pci_write_config_word(dev, PCI_STATUS, 0xffff);
+> >
+> >               /* Read bus numbers from EA Capability (if present) */
+> > -             fixed_buses = pci_ea_fixed_busnrs(dev, &fixed_sec, &fixed_sub);
+> > -             if (fixed_buses)
+> > +             pci_ea_fixed_busnrs(dev, &fixed_sec, &fixed_sub);
+> > +
+> > +             next_busnr = max + 1;
+> > +             /* Use secondary bus number in EA */
+> > +             if (fixed_sec)
+> >                       next_busnr = fixed_sec;
+> > -             else
+> > -                     next_busnr = max + 1;
+> >
+> >               /*
+> >                * Prevent assigning a bus number that already exists.
+> > @@ -1331,7 +1332,7 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+> >                * If fixed subordinate bus number exists from EA
+> >                * capability then use it.
+> >                */
+> > -             if (fixed_buses)
+> > +             if (fixed_sub)
+> >                       max = fixed_sub;
+> >               pci_bus_update_busn_res_end(child, max);
+> >               pci_write_config_byte(dev, PCI_SUBORDINATE_BUS, max);
+> > --
+> > 2.7.4
+> >
+>
+> commit 25328e0447de ("PCI: Do not use bus number zero from EA capability")
+> Author: Subbaraya Sundeep <sbhatta@marvell.com>
+> Date:   Mon Nov 4 12:27:44 2019 +0530
+>
+>     PCI: Do not use bus number zero from EA capability
+>
+>     As per PCIe r5.0, sec 7.8.5.2, fixed bus numbers of a bridge must be zero
+>     when no function that uses EA is located behind it.  Hence, if EA supplies
+>     bus numbers of zero, assign bus numbers normally.  A secondary bus can
+>     never have a bus number of zero, so setting a bridge's Secondary Bus Number
+>     to zero makes downstream devices unreachable.
+>
+>     [bhelgaas: retain bool return value so "zero is invalid" logic is local]
+>     Fixes: 2dbce5901179 ("PCI: Assign bus numbers present in EA capability for bridges")
+>     Link: https://lore.kernel.org/r/1572850664-9861-1-git-send-email-sundeep.lkml@gmail.com
+>     Signed-off-by: Subbaraya Sundeep <sbhatta@marvell.com>
+>     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+>     Cc: stable@vger.kernel.org  # v5.2+
+>
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index bdbc8490f962..d3033873395d 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -1090,14 +1090,15 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
+>   * @sec: updated with secondary bus number from EA
+>   * @sub: updated with subordinate bus number from EA
+>   *
+> - * If @dev is a bridge with EA capability, update @sec and @sub with
+> - * fixed bus numbers from the capability and return true.  Otherwise,
+> - * return false.
+> + * If @dev is a bridge with EA capability that specifies valid secondary
+> + * and subordinate bus numbers, return true with the bus numbers in @sec
+> + * and @sub.  Otherwise return false.
+>   */
+>  static bool pci_ea_fixed_busnrs(struct pci_dev *dev, u8 *sec, u8 *sub)
+>  {
+>         int ea, offset;
+>         u32 dw;
+> +       u8 ea_sec, ea_sub;
+>
+>         if (dev->hdr_type != PCI_HEADER_TYPE_BRIDGE)
+>                 return false;
+> @@ -1109,8 +1110,13 @@ static bool pci_ea_fixed_busnrs(struct pci_dev *dev, u8 *sec, u8 *sub)
+>
+>         offset = ea + PCI_EA_FIRST_ENT;
+>         pci_read_config_dword(dev, offset, &dw);
+> -       *sec =  dw & PCI_EA_SEC_BUS_MASK;
+> -       *sub = (dw & PCI_EA_SUB_BUS_MASK) >> PCI_EA_SUB_BUS_SHIFT;
+> +       ea_sec =  dw & PCI_EA_SEC_BUS_MASK;
+> +       ea_sub = (dw & PCI_EA_SUB_BUS_MASK) >> PCI_EA_SUB_BUS_SHIFT;
+> +       if (ea_sec  == 0 || ea_sub < ea_sec)
+> +               return false;
+> +
+> +       *sec = ea_sec;
+> +       *sub = ea_sub;
+>         return true;
+>  }
+>
