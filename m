@@ -2,41 +2,47 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E5B3102300
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Nov 2019 12:28:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F5F410230B
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Nov 2019 12:31:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725904AbfKSL21 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 19 Nov 2019 06:28:27 -0500
-Received: from mx2.suse.de ([195.135.220.15]:60244 "EHLO mx1.suse.de"
+        id S1727682AbfKSLaw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 19 Nov 2019 06:30:52 -0500
+Received: from mx2.suse.de ([195.135.220.15]:60704 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725798AbfKSL21 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 19 Nov 2019 06:28:27 -0500
+        id S1725280AbfKSLaw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 19 Nov 2019 06:30:52 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9BA60BBFA;
-        Tue, 19 Nov 2019 11:28:25 +0000 (UTC)
-Message-ID: <5050053fc650e526d91e194465b21ae1730d571c.camel@suse.de>
-Subject: Re: [PATCH v2 2/6] dt-bindings: PCI: Add bindings for brcmstb's
- PCIe device
+        by mx1.suse.de (Postfix) with ESMTP id EFF35BC38;
+        Tue, 19 Nov 2019 11:30:49 +0000 (UTC)
+Message-ID: <052d07fb4eb79b29dd58cab577d59bab6684329a.camel@suse.de>
+Subject: Re: [PATCH v2 1/6] linux/log2.h: Add roundup/rounddown_pow_two64()
+ family of functions
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 To:     Andrew Murray <andrew.murray@arm.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, maz@kernel.org,
-        phil@raspberrypi.org, linux-kernel@vger.kernel.org,
-        jeremy.linton@arm.com, Eric Anholt <eric@anholt.net>,
-        mbrugger@suse.com, bcm-kernel-feedback-list@broadcom.com,
-        Stefan Wahren <wahrenst@gmx.net>, james.quinlan@broadcom.com,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rpi-kernel@lists.infradead.org
-Date:   Tue, 19 Nov 2019 12:28:22 +0100
-In-Reply-To: <20191119111735.GQ43905@e119886-lin.cambridge.arm.com>
+Cc:     Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-rdma@vger.kernel.org, maz@kernel.org, phil@raspberrypi.org,
+        iommu@lists.linux-foundation.org,
+        linux-rockchip@lists.infradead.org, f.fainelli@gmail.com,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-arm-kernel@lists.infradead.org, mbrugger@suse.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jeremy.linton@arm.com, Tom Joseph <tjoseph@cadence.com>,
+        wahrenst@gmx.net, james.quinlan@broadcom.com,
+        Robin Murphy <robin.murphy@arm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Tariq Toukan <tariqt@mellanox.com>
+Date:   Tue, 19 Nov 2019 12:30:47 +0100
+In-Reply-To: <20191119111320.GP43905@e119886-lin.cambridge.arm.com>
 References: <20191112155926.16476-1-nsaenzjulienne@suse.de>
-         <20191112155926.16476-3-nsaenzjulienne@suse.de>
-         <20191119111735.GQ43905@e119886-lin.cambridge.arm.com>
+         <20191112155926.16476-2-nsaenzjulienne@suse.de>
+         <20191119111320.GP43905@e119886-lin.cambridge.arm.com>
 Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-aRfpxxU/pqUdFGe5x0kl"
+        protocol="application/pgp-signature"; boundary="=-JCAElqvKu605DtMG+rxz"
 User-Agent: Evolution 3.34.1 
 MIME-Version: 1.0
 Sender: linux-pci-owner@vger.kernel.org
@@ -45,74 +51,60 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
---=-aRfpxxU/pqUdFGe5x0kl
+--=-JCAElqvKu605DtMG+rxz
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2019-11-19 at 11:17 +0000, Andrew Murray wrote:
-> On Tue, Nov 12, 2019 at 04:59:21PM +0100, Nicolas Saenz Julienne wrote:
-> > From: Jim Quinlan <james.quinlan@broadcom.com>
-> >=20
-> > The DT bindings description of the brcmstb PCIe device is described.
-> > This node can only be used for now on the Raspberry Pi 4.
-> >=20
-> > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> > Co-developed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> >=20
-> > ---
-> >=20
-> > Changes since v1:
-> >   - Fix commit Subject
-> >   - Remove linux,pci-domain
-> >=20
-> > This was based on Jim's original submission[1], converted to yaml and
-> > adapted to the RPi4 case.
-> >=20
-> > [1] https://patchwork.kernel.org/patch/10605937/
-> >=20
-> >  .../bindings/pci/brcm,stb-pcie.yaml           | 110 ++++++++++++++++++
-> >  1 file changed, 110 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/pci/brcm,stb-pcie=
-.yaml
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > new file mode 100644
-> > index 000000000000..4cbb18821300
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > @@ -0,0 +1,110 @@
-> > +# SPDX-License-Identifier: GPL-2.0
+Hi Andrew, thanks for the review.
+> > +/**
+> > + * __roundup_pow_of_two64() - round 64bit value up to nearest power of=
+ two
+> > + * @n: value to round up
+> > + */
+> > +static inline __attribute__((const)) __u64 __roundup_pow_of_two64(__u6=
+4 n)
 >=20
-> I think in the last revision Rob asked you to change the license to
-> the following:
->=20
-> # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> To be consistent with other functions in the same file (__ilog_u64) you m=
+ay
+> want to rename this to __roundup_pow_of_two_u64.
 
-Yes, but I had already sent this series by then. v3 will have all the fixes=
- in.
+Sounds good to me.
+
+> Also do you know why u64 is used in some places and __u64 in others?
+
+That's unwarranted, it should be __u64 everywhere.
+
+> > +{
+> > +	return 1UL << fls64(n - 1);
+>=20
+> Does this need to be (and for the others):
+>=20
+> return 1ULL << fls64(n - 1);
+>=20
+> Notice that the PCI drivers you convert, all use 1ULL.
+
+Noted
 
 Regards,
 Nicolas
 
 
---=-aRfpxxU/pqUdFGe5x0kl
+--=-JCAElqvKu605DtMG+rxz
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: This is a digitally signed message part
 Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3T0dYACgkQlfZmHno8
-x/5LJgf/Q5Qh0zHUdY3QyjOEG6rvYIpqvit4rkhX3Feo92k3mEcYqJpkVsUWYWlx
-5cL7rwP7YjYHl7wQEKjEdp7i5pOYk/TGorh5yQ/W7VMhgmOyZ2ofIVOmeUz+lcXj
-7gGHa/2Fet0RMhMzvQl+Xm7/Fw5MEMDQDJSOZtmzcL4aanTI1pkh1UaA5NeXMP25
-rrOfpPI2AqXjM5Qp35EGQZ9xuVVbSZpr602VXkAEeAOz3VSJoHbe4/J1wy+tPtbS
-qn2/r0CLy0ndPVyogNhX+vWVgRCITMH/B+KhuhhxXqjbUAylC5JGurpTrDE37kO6
-wA3wosxY3hFskV5PdpLlIq7x6tboGQ==
-=oQ4d
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3T0mcACgkQlfZmHno8
+x/6BgQf9EPIQKoR6phksU0S8lgk9wqpGnUdxBbs82aHnTqsDgCrCDSnKXEYjrytg
+JP7gToqXjInWjAuYTza/e4u4j4nQShrZSrX/Wo7n0g/iOPzIrKgFEwt/I8JlZnxn
+eGSGgGDLXcFOIXzSy7aNsDEOHM1JS3Nan1xj+4vfNYb5bx3U7VlJuAAVsNZ7aLHu
+1JSo56OTcTN6DejhWw1GzvlTsqzLUa41v8BUgW19GyOv185sXkbfJImn1hgkRuKj
+JHu3GwUlrQkRrcAs0xqLRflUJHE8If7t+Xh+Su4ToLjWKyWvMu4fnPpwFXCyHhyG
+T2k6eYGiEuyKMYHxJg9YLmvjNMdJuA==
+=s9/D
 -----END PGP SIGNATURE-----
 
---=-aRfpxxU/pqUdFGe5x0kl--
+--=-JCAElqvKu605DtMG+rxz--
 
