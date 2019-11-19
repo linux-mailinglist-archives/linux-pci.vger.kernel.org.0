@@ -2,100 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 37190102A6E
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Nov 2019 18:02:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 16EC0102A9F
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Nov 2019 18:17:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728609AbfKSRC3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 19 Nov 2019 12:02:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56396 "EHLO mail.kernel.org"
+        id S1728413AbfKSRRL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 19 Nov 2019 12:17:11 -0500
+Received: from foss.arm.com ([217.140.110.172]:55780 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727560AbfKSRC3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 19 Nov 2019 12:02:29 -0500
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 522C222384;
-        Tue, 19 Nov 2019 17:02:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574182943;
-        bh=9xlP6l6zc8LrRTuryqi4QOF5/Hg74NZf0SPlZK2mEU8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=hHdDFqFWJkwOuMKZk0NzaOxgeAE6UqGlvZAVH+WTtjEaZ3CCkLs6cDI5yFhIl9SRE
-         54T4E31B4t+satNSKMSJ+416Ec7m0NKdD49RPHEpukOMZs6k0mxIRc9AHYb5zIBbTG
-         bNPOVvg5RSncACs08sPyTJmxe1NXOpvf8io01pqY=
-Received: by mail-qk1-f179.google.com with SMTP id z16so18462574qkg.7;
-        Tue, 19 Nov 2019 09:02:23 -0800 (PST)
-X-Gm-Message-State: APjAAAWDgqNzuLMJs8sFoNhCpmKJ/NCyiGWxa3+rUuO7R+v5e5LWatrG
-        AnMysVzyQOrrnIp3ZSRcxGlXeEucbJgpgLW1ZA==
-X-Google-Smtp-Source: APXvYqxucfdWSXPgW2vd8l9633HeMvIH864eMJ/p+Bk0FhDvh444Pum/yEC+Gs6buUxeu7x2jucgvrCcmOz57phmAkg=
-X-Received: by 2002:a05:620a:205d:: with SMTP id d29mr30290391qka.152.1574182942398;
- Tue, 19 Nov 2019 09:02:22 -0800 (PST)
+        id S1727805AbfKSRRK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 19 Nov 2019 12:17:10 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 841311FB;
+        Tue, 19 Nov 2019 09:17:09 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B5FBF3F703;
+        Tue, 19 Nov 2019 09:17:04 -0800 (PST)
+Subject: Re: [PATCH] dma-mapping: treat dev->bus_dma_mask as a DMA limit
+To:     Christoph Hellwig <hch@lst.de>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-ide@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
+        phil@raspberrypi.org, linux-acpi@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>,
+        James Hogan <jhogan@kernel.org>, Len Brown <lenb@kernel.org>,
+        devicetree@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
+        iommu@lists.linux-foundation.org, linuxppc-dev@lists.ozlabs.org
+References: <20191113161340.27228-1-nsaenzjulienne@suse.de>
+ <dd074ef5c23ba56598e92be19e8e25ae31b75f93.camel@suse.de>
+ <20191119170006.GA19569@lst.de>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <7609007d-52f5-bb10-e8d5-96fadbfab46d@arm.com>
+Date:   Tue, 19 Nov 2019 17:17:03 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191119144315.11261-1-krzk@kernel.org>
-In-Reply-To: <20191119144315.11261-1-krzk@kernel.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 19 Nov 2019 11:02:11 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+1hHneSW5DzLNxU00AqQJ49chTyULJ0S3JR-CqfOfTgA@mail.gmail.com>
-Message-ID: <CAL_Jsq+1hHneSW5DzLNxU00AqQJ49chTyULJ0S3JR-CqfOfTgA@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: power: Fix path to power-domain.txt bindings
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        etnaviv@lists.freedesktop.org,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        linux-tegra@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191119170006.GA19569@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 8:43 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> With split of power domain controller bindings to power-domain.yaml, the
-> consumer part was renamed to power-domain.txt.  Update the references in
-> other bindings.
->
-> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Fixes: abb4805e343a ("dt-bindings: power: Convert Samsung Exynos Power Domain bindings to json-schema")
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  Documentation/devicetree/bindings/clock/clk-exynos-audss.txt  | 2 +-
->  Documentation/devicetree/bindings/clock/exynos5433-clock.txt  | 2 +-
->  .../devicetree/bindings/clock/renesas,r8a7778-cpg-clocks.txt  | 2 +-
->  .../devicetree/bindings/clock/renesas,r8a7779-cpg-clocks.txt  | 2 +-
->  .../bindings/clock/renesas,rcar-gen2-cpg-clocks.txt           | 2 +-
->  .../devicetree/bindings/clock/renesas,rz-cpg-clocks.txt       | 2 +-
->  .../devicetree/bindings/display/etnaviv/etnaviv-drm.txt       | 2 +-
->  Documentation/devicetree/bindings/display/msm/dpu.txt         | 2 +-
->  Documentation/devicetree/bindings/display/msm/mdp5.txt        | 2 +-
->  Documentation/devicetree/bindings/dsp/fsl,dsp.yaml            | 2 +-
->  Documentation/devicetree/bindings/media/imx7-mipi-csi2.txt    | 2 +-
->  .../devicetree/bindings/media/mediatek-jpeg-decoder.txt       | 2 +-
->  Documentation/devicetree/bindings/media/mediatek-mdp.txt      | 2 +-
->  Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt  | 2 +-
->  Documentation/devicetree/bindings/pci/pci-keystone.txt        | 2 +-
->  Documentation/devicetree/bindings/phy/ti,phy-am654-serdes.txt | 2 +-
->  Documentation/devicetree/bindings/power/qcom,rpmpd.txt        | 2 +-
->  Documentation/devicetree/bindings/power/renesas,rcar-sysc.txt | 2 +-
->  .../devicetree/bindings/usb/nvidia,tegra124-xusb.txt          | 4 ++--
->  19 files changed, 20 insertions(+), 20 deletions(-)
+On 19/11/2019 5:00 pm, Christoph Hellwig wrote:
+> On Tue, Nov 19, 2019 at 01:57:43PM +0100, Nicolas Saenz Julienne wrote:
+>> Hi Rob & Christoph,
+>> do you mind if I append v2 of this into my upcoming v3 RPi4 PCIe support
+>> series, I didn't do it initially as I thought this was going to be a
+>> contentious patch.  But as it turned out better than expected, I think it
+>> should go into the PCIe series. In the end it's the first explicit user of the
+>> bus DMA limit.
+>>
+>> Here's v2 in case you don't know what I'm talking about:
+>> https://www.spinics.net/lists/arm-kernel/msg768459.html
+> 
+> In principle I wouldn't mind, but I think this is going to conflict
+> quite badly with other changes in the dma-mapping tree (including
+> yours).  So I think we'll need a shared tree or I'll need to pull
+> in the whole series through the dma-mapping tree if there are not
+> other conflicts and the other maintainers are fine with it.
 
-Please no. Can you just undo the renaming back to power_domain.txt
+TBH I can't see it being a massive problem even if the DMA patch, driver 
+and DTS patch went entirely separately via the respective DMA, PCI, and 
+arm-soc trees in the same cycle. Bisecting over a merge window is a big 
+enough pain in the bum as it is, and if the worst case is that someone 
+trying to do that on a Pi4 has a wonky PCI controller appear for a 
+couple of commits, they may as well just disable that driver for their 
+bisection, because it wasn't there at the start so can't possibly be the 
+thing they're looking for regressions in ;)
 
-Rob
+Robin.
