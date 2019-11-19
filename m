@@ -2,47 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F5F410230B
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Nov 2019 12:31:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2620C102396
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Nov 2019 12:49:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727682AbfKSLaw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 19 Nov 2019 06:30:52 -0500
-Received: from mx2.suse.de ([195.135.220.15]:60704 "EHLO mx1.suse.de"
+        id S1727638AbfKSLt3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 19 Nov 2019 06:49:29 -0500
+Received: from mx2.suse.de ([195.135.220.15]:39454 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725280AbfKSLaw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 19 Nov 2019 06:30:52 -0500
+        id S1726351AbfKSLt3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 19 Nov 2019 06:49:29 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id EFF35BC38;
-        Tue, 19 Nov 2019 11:30:49 +0000 (UTC)
-Message-ID: <052d07fb4eb79b29dd58cab577d59bab6684329a.camel@suse.de>
-Subject: Re: [PATCH v2 1/6] linux/log2.h: Add roundup/rounddown_pow_two64()
- family of functions
+        by mx1.suse.de (Postfix) with ESMTP id E3C64BDB4;
+        Tue, 19 Nov 2019 11:49:26 +0000 (UTC)
+Message-ID: <1b116fabe85a324e2d05a593d38811467f43fb91.camel@suse.de>
+Subject: Re: [PATCH v2 0/6] Raspberry Pi 4 PCIe support
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 To:     Andrew Murray <andrew.murray@arm.com>
-Cc:     Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+Cc:     devicetree@vger.kernel.org, f.fainelli@gmail.com,
         linux-rdma@vger.kernel.org, maz@kernel.org, phil@raspberrypi.org,
-        iommu@lists.linux-foundation.org,
-        linux-rockchip@lists.infradead.org, f.fainelli@gmail.com,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-arm-kernel@lists.infradead.org, mbrugger@suse.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jeremy.linton@arm.com, Tom Joseph <tjoseph@cadence.com>,
-        wahrenst@gmx.net, james.quinlan@broadcom.com,
-        Robin Murphy <robin.murphy@arm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Tariq Toukan <tariqt@mellanox.com>
-Date:   Tue, 19 Nov 2019 12:30:47 +0100
-In-Reply-To: <20191119111320.GP43905@e119886-lin.cambridge.arm.com>
+        linux-kernel@vger.kernel.org, jeremy.linton@arm.com,
+        linux-rockchip@lists.infradead.org,
+        iommu@lists.linux-foundation.org, mbrugger@suse.com,
+        bcm-kernel-feedback-list@broadcom.com, wahrenst@gmx.net,
+        james.quinlan@broadcom.com, linux-pci@vger.kernel.org,
+        Robin Murphy <robin.murphy@arm.com>, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org
+Date:   Tue, 19 Nov 2019 12:49:24 +0100
+In-Reply-To: <20191119111848.GR43905@e119886-lin.cambridge.arm.com>
 References: <20191112155926.16476-1-nsaenzjulienne@suse.de>
-         <20191112155926.16476-2-nsaenzjulienne@suse.de>
-         <20191119111320.GP43905@e119886-lin.cambridge.arm.com>
+         <20191119111848.GR43905@e119886-lin.cambridge.arm.com>
 Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-JCAElqvKu605DtMG+rxz"
+        protocol="application/pgp-signature"; boundary="=-K76aLLNKfyo+gQkABBwD"
 User-Agent: Evolution 3.34.1 
 MIME-Version: 1.0
 Sender: linux-pci-owner@vger.kernel.org
@@ -51,60 +43,64 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
---=-JCAElqvKu605DtMG+rxz
+--=-K76aLLNKfyo+gQkABBwD
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Andrew, thanks for the review.
-> > +/**
-> > + * __roundup_pow_of_two64() - round 64bit value up to nearest power of=
- two
-> > + * @n: value to round up
-> > + */
-> > +static inline __attribute__((const)) __u64 __roundup_pow_of_two64(__u6=
-4 n)
+On Tue, 2019-11-19 at 11:18 +0000, Andrew Murray wrote:
+> On Tue, Nov 12, 2019 at 04:59:19PM +0100, Nicolas Saenz Julienne wrote:
+> > This series aims at providing support for Raspberry Pi 4's PCIe
+> > controller, which is also shared with the Broadcom STB family of
+> > devices.
+> >=20
+> > There was a previous attempt to upstream this some years ago[1] but was
+> > blocked as most STB PCIe integrations have a sparse DMA mapping[2] whic=
+h
+> > is something currently not supported by the kernel.  Luckily this is no=
+t
+> > the case for the Raspberry Pi 4.
+> >=20
+> > Note that the driver code is to be based on top of Rob Herring's series
+> > simplifying inbound and outbound range parsing.
+> >=20
+> > [1] https://patchwork.kernel.org/cover/10605933/
+> > [2] https://patchwork.kernel.org/patch/10605957/
+> >=20
 >=20
-> To be consistent with other functions in the same file (__ilog_u64) you m=
-ay
-> want to rename this to __roundup_pow_of_two_u64.
+> What happened to patch 3? I can't see it on the list or in patchwork?
 
-Sounds good to me.
+For some reason the script I use to call get_maintainer.sh or git send-mail
+failed to add linux-pci@vger.kernel.org and linux-kernel@vger.kernel.org as
+recipients. I didn't do anything different between v1 and v2 as far as mail=
+ing
+is concerned.
 
-> Also do you know why u64 is used in some places and __u64 in others?
+Nevertheless it's here: https://www.spinics.net/lists/arm-kernel/msg768461.=
+html
+and should be present in the linux-arm-kernel list.
 
-That's unwarranted, it should be __u64 everywhere.
-
-> > +{
-> > +	return 1UL << fls64(n - 1);
->=20
-> Does this need to be (and for the others):
->=20
-> return 1ULL << fls64(n - 1);
->=20
-> Notice that the PCI drivers you convert, all use 1ULL.
-
-Noted
+I'll look in to it and make sure this doesn't happen in v3.
 
 Regards,
 Nicolas
 
 
---=-JCAElqvKu605DtMG+rxz
+--=-K76aLLNKfyo+gQkABBwD
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: This is a digitally signed message part
 Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3T0mcACgkQlfZmHno8
-x/6BgQf9EPIQKoR6phksU0S8lgk9wqpGnUdxBbs82aHnTqsDgCrCDSnKXEYjrytg
-JP7gToqXjInWjAuYTza/e4u4j4nQShrZSrX/Wo7n0g/iOPzIrKgFEwt/I8JlZnxn
-eGSGgGDLXcFOIXzSy7aNsDEOHM1JS3Nan1xj+4vfNYb5bx3U7VlJuAAVsNZ7aLHu
-1JSo56OTcTN6DejhWw1GzvlTsqzLUa41v8BUgW19GyOv185sXkbfJImn1hgkRuKj
-JHu3GwUlrQkRrcAs0xqLRflUJHE8If7t+Xh+Su4ToLjWKyWvMu4fnPpwFXCyHhyG
-T2k6eYGiEuyKMYHxJg9YLmvjNMdJuA==
-=s9/D
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3T1sQACgkQlfZmHno8
+x/5oAAgAsirq9AHBWc9c3u37sxo0sduCFRqCFKOtWMxm0jb/DcUdD6rQy3N9/RIf
+tK6vZvovGokMN5GHwwG6sDD7vSCeNimQSFZx7R36XMI5iYvITtmREMYLCwherVD0
+W2hMdlOm1hzjt1sEGCz9BHxnMT3w56ZLabkmJWscUGVaPhArD7ISSUo3ksO5x7rh
+KS1lbJX9wZLpegmk3gxXxAoHN3OWgDunznERQ07/dvrDALwf4CZkyQT+V/8nOZhr
+OV64Rq+nMrhttDcMk2ufbrUsWn0Gt6zVbIXqJyitSJmAEb0If2zq2KGKK/88n2hf
+GFsoFCTkw2RQ0cpZmMHvvkVumUTaPg==
+=kHJj
 -----END PGP SIGNATURE-----
 
---=-JCAElqvKu605DtMG+rxz--
+--=-K76aLLNKfyo+gQkABBwD--
 
