@@ -2,91 +2,76 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 40A8A10108D
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Nov 2019 02:16:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F919101099
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Nov 2019 02:20:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbfKSBQc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 18 Nov 2019 20:16:32 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:34018 "EHLO huawei.com"
+        id S1727018AbfKSBUE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 18 Nov 2019 20:20:04 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7138 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726775AbfKSBQc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 18 Nov 2019 20:16:32 -0500
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 019D6627C3C33EB3DB28;
-        Tue, 19 Nov 2019 09:16:29 +0800 (CST)
-Received: from HGHY4Z004218071.china.huawei.com (10.133.224.57) by
- DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.439.0; Tue, 19 Nov 2019 09:16:20 +0800
-From:   Xiang Zheng <zhengxiang9@huawei.com>
-To:     <bhelgaas@google.com>, <willy@infradead.org>
-CC:     <zhengxiang9@huawei.com>, <wangxiongfeng2@huawei.com>,
-        <wanghaibin.wang@huawei.com>, <guoheyi@huawei.com>,
-        <yebiaoxiang@huawei.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <rjw@rjwysocki.net>,
-        <tglx@linutronix.de>, <guohanjun@huawei.com>,
-        <yangyingliang@huawei.com>
-Subject: [PATCH v2] pci: lock the pci_cfg_wait queue for the consistency of data
-Date:   Tue, 19 Nov 2019 09:15:45 +0800
-Message-ID: <20191119011545.15408-1-zhengxiang9@huawei.com>
-X-Mailer: git-send-email 2.15.1.windows.2
+        id S1726952AbfKSBUE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 18 Nov 2019 20:20:04 -0500
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id CD066DF6A20C892A6598;
+        Tue, 19 Nov 2019 09:20:01 +0800 (CST)
+Received: from [127.0.0.1] (10.184.213.217) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Tue, 19 Nov 2019
+ 09:19:54 +0800
+Subject: Re: [PATCH] PCI: exynos: Use PTR_ERR_OR_ZERO() to simplify code
+To:     Jingoo Han <jingoohan1@gmail.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "kgene@kernel.org" <kgene@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <1574076480-50196-1-git-send-email-zhengbin13@huawei.com>
+ <SL2P216MB01057BE74411EC7BE168E193AA4D0@SL2P216MB0105.KORP216.PROD.OUTLOOK.COM>
+From:   "zhengbin (A)" <zhengbin13@huawei.com>
+Message-ID: <34079004-e87c-1799-137f-5a03deedc205@huawei.com>
+Date:   Tue, 19 Nov 2019 09:19:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.224.57]
+In-Reply-To: <SL2P216MB01057BE74411EC7BE168E193AA4D0@SL2P216MB0105.KORP216.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.184.213.217]
 X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Commit "7ea7e98fd8d0" suggests that the "pci_lock" is sufficient,
-and all the callers of pci_wait_cfg() are wrapped with the "pci_lock".
 
-However, since the commit "cdcb33f98244" merged, the accesses to
-the pci_cfg_wait queue are not safe anymore. A "pci_lock" is
-insufficient and we need to hold an additional queue lock while
-read/write the wait queue.
+On 2019/11/19 0:35, Jingoo Han wrote:
+> On 11/18/19, 6:20 AM, zhengbin wrote:
+>> Fixes coccicheck warning:
+>>
+>> drivers/pci/controller/dwc/pci-exynos.c:95:1-3: WARNING: PTR_ERR_OR_ZERO can be used
+>>
+>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>> Signed-off-by: zhengbin <zhengbin13@huawei.com>
+> Please write your full name correctly (First name + Second name). 
+> If 'zhengbin' is just your first name, you have to add your second name.
+> Or, if  'zhengbin' is already your full name, please separate it with capitalized characters and spaces,
+> for example, 'Zheng Bin'.
 
-So let's use the add_wait_queue()/remove_wait_queue() instead of
-__add_wait_queue()/__remove_wait_queue(). Also move the wait queue
-functionality around the "schedule()" function to avoid reintroducing
-the deadlock addressed by "cdcb33f98244".
+thanks for your remind. In the previous patch, this is rejected, see details on
 
-Signed-off-by: Xiang Zheng <zhengxiang9@huawei.com>
-Cc: Heyi Guo <guoheyi@huawei.com>
-Cc: Biaoxiang Ye <yebiaoxiang@huawei.com>
----
+https://lkml.org/lkml/2019/5/31/535
 
-v2:
- - Move the wait queue functionality around the "schedule()" function to
-   avoid reintroducing the deadlock addressed by "cdcb33f98244"
+So please ignore it
 
----
-
- drivers/pci/access.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pci/access.c b/drivers/pci/access.c
-index 2fccb5762c76..09342a74e5ea 100644
---- a/drivers/pci/access.c
-+++ b/drivers/pci/access.c
-@@ -207,14 +207,14 @@ static noinline void pci_wait_cfg(struct pci_dev *dev)
- {
- 	DECLARE_WAITQUEUE(wait, current);
- 
--	__add_wait_queue(&pci_cfg_wait, &wait);
- 	do {
- 		set_current_state(TASK_UNINTERRUPTIBLE);
- 		raw_spin_unlock_irq(&pci_lock);
-+		add_wait_queue(&pci_cfg_wait, &wait);
- 		schedule();
-+		remove_wait_queue(&pci_cfg_wait, &wait);
- 		raw_spin_lock_irq(&pci_lock);
- 	} while (dev->block_cfg_access);
--	__remove_wait_queue(&pci_cfg_wait, &wait);
- }
- 
- /* Returns 0 on success, negative values indicate error. */
--- 
-2.19.1
-
+>
+>> ---
+>>  drivers/pci/controller/dwc/pci-exynos.c | 5 +----
+>>  1 file changed, 1 insertion(+), 4 deletions(-)
+>>
+> [.....]
+>
+> .
+>
 
