@@ -2,48 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 274141024BF
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Nov 2019 13:43:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CE9C1024FC
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Nov 2019 13:58:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727646AbfKSMnr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 19 Nov 2019 07:43:47 -0500
-Received: from mx2.suse.de ([195.135.220.15]:45166 "EHLO mx1.suse.de"
+        id S1727998AbfKSM5w (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 19 Nov 2019 07:57:52 -0500
+Received: from mx2.suse.de ([195.135.220.15]:53112 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728060AbfKSMnr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 19 Nov 2019 07:43:47 -0500
+        id S1727255AbfKSM5v (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 19 Nov 2019 07:57:51 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 61E29AA35;
-        Tue, 19 Nov 2019 12:43:43 +0000 (UTC)
-Message-ID: <56cbba61d92f9bc7d0a33c1de379bcd5cf411cb8.camel@suse.de>
-Subject: Re: [PATCH v2 1/6] linux/log2.h: Add roundup/rounddown_pow_two64()
- family of functions
+        by mx1.suse.de (Postfix) with ESMTP id 9B69FB1A0;
+        Tue, 19 Nov 2019 12:57:47 +0000 (UTC)
+Message-ID: <dd074ef5c23ba56598e92be19e8e25ae31b75f93.camel@suse.de>
+Subject: Re: [PATCH] dma-mapping: treat dev->bus_dma_mask as a DMA limit
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Andrew Murray <andrew.murray@arm.com>
-Cc:     Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
-        Shawn Lin <shawn.lin@rock-chips.com>,
+To:     Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
         Christoph Hellwig <hch@lst.de>,
         Marek Szyprowski <m.szyprowski@samsung.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-rdma@vger.kernel.org, maz@kernel.org, phil@raspberrypi.org,
-        iommu@lists.linux-foundation.org,
-        linux-rockchip@lists.infradead.org, f.fainelli@gmail.com,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-arm-kernel@lists.infradead.org, mbrugger@suse.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jeremy.linton@arm.com, Tom Joseph <tjoseph@cadence.com>,
-        wahrenst@gmx.net, james.quinlan@broadcom.com,
-        Robin Murphy <robin.murphy@arm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Tariq Toukan <tariqt@mellanox.com>
-Date:   Tue, 19 Nov 2019 13:43:39 +0100
-In-Reply-To: <052d07fb4eb79b29dd58cab577d59bab6684329a.camel@suse.de>
-References: <20191112155926.16476-1-nsaenzjulienne@suse.de>
-         <20191112155926.16476-2-nsaenzjulienne@suse.de>
-         <20191119111320.GP43905@e119886-lin.cambridge.arm.com>
-         <052d07fb4eb79b29dd58cab577d59bab6684329a.camel@suse.de>
+        Robin Murphy <robin.murphy@arm.com>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-ide@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
+        phil@raspberrypi.org, linux-acpi@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>,
+        James Hogan <jhogan@kernel.org>, Len Brown <lenb@kernel.org>,
+        devicetree@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
+        iommu@lists.linux-foundation.org, linuxppc-dev@lists.ozlabs.org
+Date:   Tue, 19 Nov 2019 13:57:43 +0100
+In-Reply-To: <20191113161340.27228-1-nsaenzjulienne@suse.de>
+References: <20191113161340.27228-1-nsaenzjulienne@suse.de>
 Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-PEkTPRiOa1AqhiKRErKs"
+        protocol="application/pgp-signature"; boundary="=-KZ1OEZ2plCMDP0ydmpq5"
 User-Agent: Evolution 3.34.1 
 MIME-Version: 1.0
 Sender: linux-pci-owner@vger.kernel.org
@@ -52,66 +59,62 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
---=-PEkTPRiOa1AqhiKRErKs
+--=-KZ1OEZ2plCMDP0ydmpq5
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2019-11-19 at 12:30 +0100, Nicolas Saenz Julienne wrote:
-> Hi Andrew, thanks for the review.
-> > > +/**
-> > > + * __roundup_pow_of_two64() - round 64bit value up to nearest power =
-of
-> > > two
-> > > + * @n: value to round up
-> > > + */
-> > > +static inline __attribute__((const)) __u64 __roundup_pow_of_two64(__=
-u64
-> > > n)
-> >=20
-> > To be consistent with other functions in the same file (__ilog_u64) you=
- may
-> > want to rename this to __roundup_pow_of_two_u64.
+On Wed, 2019-11-13 at 17:13 +0100, Nicolas Saenz Julienne wrote:
+> Using a mask to represent bus DMA constraints has a set of limitations.
+> The biggest one being it can only hold a power of two (minus one). The
+> DMA mapping code is already aware of this and treats dev->bus_dma_mask
+> as a limit. This quirk is already used by some architectures although
+> still rare.
 >=20
-> Sounds good to me.
+> With the introduction of the Raspberry Pi 4 we've found a new contender
+> for the use of bus DMA limits, as its PCIe bus can only address the
+> lower 3GB of memory (of a total of 4GB). This is impossible to represent
+> with a mask. To make things worse the device-tree code rounds non power
+> of two bus DMA limits to the next power of two, which is unacceptable in
+> this case.
 >=20
-> > Also do you know why u64 is used in some places and __u64 in others?
+> In the light of this, rename dev->bus_dma_mask to dev->bus_dma_limit all
+> over the tree and treat it as such. Note that dev->bus_dma_limit is
+> meant to contain the higher accesible DMA address.
 >=20
-> That's unwarranted, it should be __u64 everywhere.
-
-Sorry, now that I look deeper into it, it should be u64.
-
-> > > +{
-> > > +	return 1UL << fls64(n - 1);
-> >=20
-> > Does this need to be (and for the others):
-> >=20
-> > return 1ULL << fls64(n - 1);
-> >=20
-> > Notice that the PCI drivers you convert, all use 1ULL.
->=20
-> Noted
->=20
-> Regards,
-> Nicolas
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 >=20
 
+Hi Rob & Christoph,
+do you mind if I append v2 of this into my upcoming v3 RPi4 PCIe support
+series, I didn't do it initially as I thought this was going to be a
+contentious patch.  But as it turned out better than expected, I think it
+should go into the PCIe series. In the end it's the first explicit user of =
+the
+bus DMA limit.
 
---=-PEkTPRiOa1AqhiKRErKs
+Here's v2 in case you don't know what I'm talking about:
+https://www.spinics.net/lists/arm-kernel/msg768459.html
+
+Regards,
+Nicolas
+
+
+--=-KZ1OEZ2plCMDP0ydmpq5
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: This is a digitally signed message part
 Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3T43sACgkQlfZmHno8
-x/7LuAf/c4Ft9xBoQ5DrEpF3NZnrHpWnbCYGBZ5Q00PjCEwaMwf7zN1jspazlRC1
-8u+n3yELpEHEhnu5CArHUsydAcMXpcZ05JTf+ii7TGVQfZmFY/iII/4C0WEQPif5
-T19cDHz4f+qS+CVqpEWBvFt5YBDXfVst7ezSwZSRfRYNVjYMG4d2zbTRqSlVmOT5
-6FKyeFGOK+lGpYpAaAu09PG7IFFqMEae3x6TkHfO2cfzUzy88FyOVNZ8G4Oucvhe
-90OcIAUpPGgfX+Q2mQPBsITErw/o+Z4qY6t/kwwLcj9YjCFjh9MuwoDpS24a8Tmq
-5XWFnFRetCT6rYY15K2BujP0/VQBBQ==
-=sJh7
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3T5scACgkQlfZmHno8
+x/7FNgf/TPvrVamDNHipGFKFiSr22YaNYJU4aGZyFuJab0Z9dF35ZbNQqx3sXA83
+gyltGXByQ4c747nqq+LWQTaXLvI4NEMDu/ueQ6T4Vgs0ijtKvI9hVjrjlKU7UVsR
+/v+6HHolAP4q5zxgJbL3PRMlFeJlLs9xRbikBEmGDbc4INP8nBSUiQmk4lrgCAwH
+xV11EcSTA5eKJPS1jpsEP/vKwfu7LQ9ASExtpK5Oud7ZBD8zq1qKQBSVMGXQ1m9L
+l0ok+gqBZtMgwKtigs9mAr0Y09evU1GOVS0ttcncZ854J6/+hr9nuK8eXyhLEm0J
+l/jpo2vtZH0gMy68b+P8LkDtGJisYg==
+=9wOf
 -----END PGP SIGNATURE-----
 
---=-PEkTPRiOa1AqhiKRErKs--
+--=-KZ1OEZ2plCMDP0ydmpq5--
 
