@@ -2,59 +2,136 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 33961103B55
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Nov 2019 14:26:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CB48C103C1D
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Nov 2019 14:40:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728327AbfKTN0f (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 Nov 2019 08:26:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38332 "EHLO mail.kernel.org"
+        id S1730094AbfKTNko (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 Nov 2019 08:40:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727798AbfKTN0f (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 20 Nov 2019 08:26:35 -0500
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728852AbfKTNkn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 20 Nov 2019 08:40:43 -0500
+Received: from localhost.localdomain (unknown [118.189.143.39])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64BE5224F3;
-        Wed, 20 Nov 2019 13:26:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30B7222528;
+        Wed, 20 Nov 2019 13:40:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574256394;
-        bh=DsDYSq/DHhqcdU7x2gyp7R8L2zInP4Q/+ZwnP14xfC8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=FIpUZW/KMEsdAr5Fm7S9pIXa746/f8Kgf29oYt4vjombJ0MJRjGbemJJlubK/KWoi
-         WypaXCzNSSCcJypzI/5gFfbJKMGuBSYgTG1qL/ZdnU5W2CFaMheI4C/Ic/oRSA5qEB
-         4Mu5JBq6dNUdYxiFeG9vDQJLutf59sizvVKdNICo=
-Date:   Wed, 20 Nov 2019 07:26:33 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] PM / QoS: Wrap documentation to fit in 80 columns
-Message-ID: <20191120132633.GA87581@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0gzspKm_Zy8JzWC54iPfJKU=2Hx_FzP-vLBS=CreyKgbA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        s=default; t=1574257243;
+        bh=5dgLwV0bZt3GcdVTr26oMTVvZYWZr57SNUE+QxYGXDU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=IbQ0hrxI3iau/m/kYqnq45+w2tafjS8Avec+zY5r13Hf8wzfAjIxVxnBCS8Gh0vBF
+         ICDXSX8AY9hm4omYt9enGyLj4Sjrq8N/t6VhFLgaW03RrJpHQO6ClJyqUrZQ+nbf98
+         JXGLErJgTfojOH9mjHBRuHA/BxnQkjwA4+Hsh+1k=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        linux-pci@vger.kernel.org
+Subject: [PATCH] pci: Fix Kconfig indentation
+Date:   Wed, 20 Nov 2019 21:40:36 +0800
+Message-Id: <20191120134036.14502-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 12:18:16PM +0100, Rafael J. Wysocki wrote:
-> On Tue, Nov 19, 2019 at 3:09 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > From: Bjorn Helgaas <bhelgaas@google.com>
-> >
-> > Wrap to 80 columns.  No textual change except to correct some "it's" that
-> > should be "its".
-> >
-> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> Applied for 5.5, but I've dropped the "QoS" part from the subject, as
-> this is not only about QoS.
+Adjust indentation from spaces to tab (+optional two spaces) as in
+coding style with command like:
+	$ sed -e 's/^        /\t/' -i */Kconfig
 
-Thank you!  Can't remember why I included "QoS" because it doesn't
-make any sense.
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ drivers/pci/Kconfig                | 24 ++++++++++++------------
+ drivers/pci/controller/dwc/Kconfig |  6 +++---
+ drivers/pci/hotplug/Kconfig        |  2 +-
+ 3 files changed, 16 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+index 77c1428cd945..4bef5c2bae9f 100644
+--- a/drivers/pci/Kconfig
++++ b/drivers/pci/Kconfig
+@@ -106,14 +106,14 @@ config PCI_PF_STUB
+ 	  When in doubt, say N.
+ 
+ config XEN_PCIDEV_FRONTEND
+-        tristate "Xen PCI Frontend"
+-        depends on X86 && XEN
+-        select PCI_XEN
++	tristate "Xen PCI Frontend"
++	depends on X86 && XEN
++	select PCI_XEN
+ 	select XEN_XENBUS_FRONTEND
+-        default y
+-        help
+-          The PCI device frontend driver allows the kernel to import arbitrary
+-          PCI devices from a PCI backend to support PCI driver domains.
++	default y
++	help
++	  The PCI device frontend driver allows the kernel to import arbitrary
++	  PCI devices from a PCI backend to support PCI driver domains.
+ 
+ config PCI_ATS
+ 	bool
+@@ -180,12 +180,12 @@ config PCI_LABEL
+ 	select NLS
+ 
+ config PCI_HYPERV
+-        tristate "Hyper-V PCI Frontend"
+-        depends on X86_64 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && SYSFS
++	tristate "Hyper-V PCI Frontend"
++	depends on X86_64 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && SYSFS
+ 	select PCI_HYPERV_INTERFACE
+-        help
+-          The PCI device frontend driver allows the kernel to import arbitrary
+-          PCI devices from a PCI backend to support PCI driver domains.
++	help
++	  The PCI device frontend driver allows the kernel to import arbitrary
++	  PCI devices from a PCI backend to support PCI driver domains.
+ 
+ source "drivers/pci/hotplug/Kconfig"
+ source "drivers/pci/controller/Kconfig"
+diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+index 0ba988b5b5bc..625a031b2193 100644
+--- a/drivers/pci/controller/dwc/Kconfig
++++ b/drivers/pci/controller/dwc/Kconfig
+@@ -7,9 +7,9 @@ config PCIE_DW
+ 	bool
+ 
+ config PCIE_DW_HOST
+-        bool
++	bool
+ 	depends on PCI_MSI_IRQ_DOMAIN
+-        select PCIE_DW
++	select PCIE_DW
+ 
+ config PCIE_DW_EP
+ 	bool
+@@ -224,7 +224,7 @@ config PCIE_HISI_STB
+ 	depends on PCI_MSI_IRQ_DOMAIN
+ 	select PCIE_DW_HOST
+ 	help
+-          Say Y here if you want PCIe controller support on HiSilicon STB SoCs
++	  Say Y here if you want PCIe controller support on HiSilicon STB SoCs
+ 
+ config PCI_MESON
+ 	bool "MESON PCIe controller"
+diff --git a/drivers/pci/hotplug/Kconfig b/drivers/pci/hotplug/Kconfig
+index e7b493c22bf3..32455a79372d 100644
+--- a/drivers/pci/hotplug/Kconfig
++++ b/drivers/pci/hotplug/Kconfig
+@@ -83,7 +83,7 @@ config HOTPLUG_PCI_CPCI_ZT5550
+ 	depends on HOTPLUG_PCI_CPCI && X86
+ 	help
+ 	  Say Y here if you have an Performance Technologies (formerly Intel,
+-          formerly just Ziatech) Ziatech ZT5550 CompactPCI system card.
++	  formerly just Ziatech) Ziatech ZT5550 CompactPCI system card.
+ 
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called cpcihp_zt5550.
+-- 
+2.17.1
+
