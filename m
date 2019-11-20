@@ -2,93 +2,132 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D63C1033A5
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Nov 2019 06:17:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 05CB110343D
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Nov 2019 07:18:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726529AbfKTFR6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 Nov 2019 00:17:58 -0500
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:6353 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbfKTFR6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Nov 2019 00:17:58 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dd4cc820000>; Tue, 19 Nov 2019 21:17:54 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 19 Nov 2019 21:17:57 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 19 Nov 2019 21:17:57 -0800
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 20 Nov
- 2019 05:17:57 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 20 Nov 2019 05:17:56 +0000
-Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.48]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5dd4cc810004>; Tue, 19 Nov 2019 21:17:56 -0800
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     <bhelgaas@google.com>, <lorenzo.pieralisi@arm.com>,
-        <rjw@rjwysocki.net>, <okaya@kernel.org>, <treding@nvidia.com>,
-        <jonathanh@nvidia.com>
-CC:     <linux-tegra@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>,
-        <sagar.tv@gmail.com>
-Subject: [PATCH V2 2/2] PCI: Introduce pci_dev_wait() in pci_power_up() API
-Date:   Wed, 20 Nov 2019 10:47:43 +0530
-Message-ID: <20191120051743.23124-2-vidyas@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191120051743.23124-1-vidyas@nvidia.com>
-References: <20191118172310.21373-1-vidyas@nvidia.com>
- <20191120051743.23124-1-vidyas@nvidia.com>
-X-NVConfidentiality: public
+        id S1726523AbfKTGSa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 Nov 2019 01:18:30 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7149 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726014AbfKTGSa (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 20 Nov 2019 01:18:30 -0500
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 2070099B356093EE0547;
+        Wed, 20 Nov 2019 14:18:27 +0800 (CST)
+Received: from [127.0.0.1] (10.133.224.57) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Wed, 20 Nov 2019
+ 14:18:19 +0800
+Subject: Re: [PATCH v2] pci: lock the pci_cfg_wait queue for the consistency
+ of data
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     <willy@infradead.org>, <wangxiongfeng2@huawei.com>,
+        <wanghaibin.wang@huawei.com>, <guoheyi@huawei.com>,
+        <yebiaoxiang@huawei.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <rjw@rjwysocki.net>,
+        <tglx@linutronix.de>, <guohanjun@huawei.com>,
+        <yangyingliang@huawei.com>
+References: <20191119202305.GA214858@google.com>
+From:   Xiang Zheng <zhengxiang9@huawei.com>
+Message-ID: <fea7b513-f01d-c059-cb23-7247eb9d712b@huawei.com>
+Date:   Wed, 20 Nov 2019 14:18:18 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1574227074; bh=0wB/nq3VkyKa32HWHP+nZIKV9ao/aUf1HNrbYgl7VYc=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=FWkBHOsjI4/YJ9QiesHR5D/j8E9/+3O4qTRJdwWE7DR4B09EA8IGj8PG7TnfhKf8D
-         yOZgaC/VKdPe8myEPBCR2v8xHPDCxPRfls4KIL/GTsbipHdIMfjj3miKz1r1o0T3XJ
-         m3anV1gY8M1eDvSgEtU/fSNpfG5Kb1vMpGeTQOp7D8Jw7FbJtJxsNdOipRH7D716HM
-         Q0paVk0SfOi6Mn+mww7LnLkFBfniTccSg0hI7fYqzYKqCmInRroOcqN5pAlOEfd87n
-         og7k+lb4UV+grrGmaJWwKkNxBXJ4JE2uNyOILbun18LEd0Oohz7uRRyHMt+WrkGHpK
-         3gzuxDjXPxxSQ==
+In-Reply-To: <20191119202305.GA214858@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.224.57]
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add pci_dev_wait() in pci_power_up() before accessing the configuration
-space of a device for the first time in the system resume sequence.
-This is  to accommodate devices (Ex:- Intel 750 NVMe) that respond with CRS
-status while they get ready for configuration space access and before they
-finally start responding with proper values.
 
-Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
----
- drivers/pci/pci.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+On 2019/11/20 4:23, Bjorn Helgaas wrote:
+> On Tue, Nov 19, 2019 at 09:15:45AM +0800, Xiang Zheng wrote:
+>> Commit "7ea7e98fd8d0" suggests that the "pci_lock" is sufficient,
+>> and all the callers of pci_wait_cfg() are wrapped with the "pci_lock".
+>>
+>> However, since the commit "cdcb33f98244" merged, the accesses to
+>> the pci_cfg_wait queue are not safe anymore. A "pci_lock" is
+>> insufficient and we need to hold an additional queue lock while
+>> read/write the wait queue.
+>>
+>> So let's use the add_wait_queue()/remove_wait_queue() instead of
+>> __add_wait_queue()/__remove_wait_queue(). Also move the wait queue
+>> functionality around the "schedule()" function to avoid reintroducing
+>> the deadlock addressed by "cdcb33f98244".
+> 
+> Procedural nits:
+> 
+>   - Run "git log --oneline drivers/pci/access.c" and follow the
+>     convention, e.g., starts with "PCI: " and first subsequent word is
+>     capitalized.
+> 
+>   - Use conventional commit references, e.g., 7ea7e98fd8d0 ("PCI:
+>     Block on access to temporarily unavailable pci device") and
+>     cdcb33f98244 ("PCI: Avoid possible deadlock on pci_lock and
+>     p->pi_lock")
+> 
+>   - IIRC you found that this actually caused a panic; please include
+>     the lore.kernel.org URL to that report.
+> 
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 71b45ce73bf6..7672b9a44bac 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1086,6 +1086,13 @@ int pci_power_up(struct pci_dev *dev)
- 		pci_wakeup_bus(dev->subordinate);
- 	}
- 
-+	/*
-+	 * Wait for those devices (Ex: Intel 750 NVMe) that are not ready yet
-+	 * and responding with CRS statuses for the configuration space
-+	 * requests.
-+	 */
-+	pci_dev_wait(dev, "Switch to D0", PCIE_RESET_READY_POLL_MS);
-+
- 	return pci_raw_set_power_state(dev, PCI_D0);
- }
- 
+Got it, I will address these nits.
+
+> You can wait for a while to see if there are more substantive comments
+> to address before posting a v3.
+> 
+
+OK.
+
+>> Signed-off-by: Xiang Zheng <zhengxiang9@huawei.com>
+>> Cc: Heyi Guo <guoheyi@huawei.com>
+>> Cc: Biaoxiang Ye <yebiaoxiang@huawei.com>
+>> ---
+>>
+>> v2:
+>>  - Move the wait queue functionality around the "schedule()" function to
+>>    avoid reintroducing the deadlock addressed by "cdcb33f98244"
+>>
+>> ---
+>>
+>>  drivers/pci/access.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+>> index 2fccb5762c76..09342a74e5ea 100644
+>> --- a/drivers/pci/access.c
+>> +++ b/drivers/pci/access.c
+>> @@ -207,14 +207,14 @@ static noinline void pci_wait_cfg(struct pci_dev *dev)
+>>  {
+>>  	DECLARE_WAITQUEUE(wait, current);
+>>  
+>> -	__add_wait_queue(&pci_cfg_wait, &wait);
+>>  	do {
+>>  		set_current_state(TASK_UNINTERRUPTIBLE);
+>>  		raw_spin_unlock_irq(&pci_lock);
+>> +		add_wait_queue(&pci_cfg_wait, &wait);
+>>  		schedule();
+>> +		remove_wait_queue(&pci_cfg_wait, &wait);
+>>  		raw_spin_lock_irq(&pci_lock);
+>>  	} while (dev->block_cfg_access);
+>> -	__remove_wait_queue(&pci_cfg_wait, &wait);
+>>  }
+>>  
+>>  /* Returns 0 on success, negative values indicate error. */
+>> -- 
+>> 2.19.1
+>>
+>>
+> 
+> .
+> 
+
 -- 
-2.17.1
+
+Thanks,
+Xiang
 
