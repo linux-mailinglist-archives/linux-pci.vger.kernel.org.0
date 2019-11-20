@@ -2,101 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C04C104140
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Nov 2019 17:47:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 652CE1041A2
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Nov 2019 18:00:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729336AbfKTQrO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 Nov 2019 11:47:14 -0500
-Received: from foss.arm.com ([217.140.110.172]:42698 "EHLO foss.arm.com"
+        id S1728364AbfKTRAF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 Nov 2019 12:00:05 -0500
+Received: from mga04.intel.com ([192.55.52.120]:33876 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729334AbfKTQrN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 20 Nov 2019 11:47:13 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 243271FB;
-        Wed, 20 Nov 2019 08:47:13 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 740D53F703;
-        Wed, 20 Nov 2019 08:47:12 -0800 (PST)
-Date:   Wed, 20 Nov 2019 16:47:10 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Jon Derrick <jonathan.derrick@intel.com>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
-        Keith Busch <kbusch@kernel.org>
+        id S1728134AbfKTRAF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 20 Nov 2019 12:00:05 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 09:00:05 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,222,1571727600"; 
+   d="scan'208";a="231994270"
+Received: from orsmsx109.amr.corp.intel.com ([10.22.240.7])
+  by fmsmga004.fm.intel.com with ESMTP; 20 Nov 2019 09:00:04 -0800
+Received: from orsmsx101.amr.corp.intel.com ([169.254.8.229]) by
+ ORSMSX109.amr.corp.intel.com ([169.254.11.161]) with mapi id 14.03.0439.000;
+ Wed, 20 Nov 2019 09:00:04 -0800
+From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
+To:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
+CC:     "kbusch@kernel.org" <kbusch@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "helgaas@kernel.org" <helgaas@kernel.org>
 Subject: Re: [PATCH v2 1/2] PCI: vmd: Add bus 224-255 restriction decode
-Message-ID: <20191120164710.GB3279@e121166-lin.cambridge.arm.com>
+Thread-Topic: [PATCH v2 1/2] PCI: vmd: Add bus 224-255 restriction decode
+Thread-Index: AQHVmYoDJjxVmnKcgk2CqrW1hBuLVKeU11UAgAADlAA=
+Date:   Wed, 20 Nov 2019 17:00:03 +0000
+Message-ID: <5f8820ad2c545d21c21e5e95429227ba2a35fef5.camel@intel.com>
 References: <1573562873-96828-1-git-send-email-jonathan.derrick@intel.com>
- <1573562873-96828-2-git-send-email-jonathan.derrick@intel.com>
+         <1573562873-96828-2-git-send-email-jonathan.derrick@intel.com>
+         <20191120164710.GB3279@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20191120164710.GB3279@e121166-lin.cambridge.arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.232.115.147]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <239C8525C74A4C4281A6D5AD84B3A46E@intel.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1573562873-96828-2-git-send-email-jonathan.derrick@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 05:47:52AM -0700, Jon Derrick wrote:
-> VMD bus restrictions are required when IO fabric is multiplexed such
-> that VMD cannot use the entire bus range. This patch adds another bus
-> restriction decode bit that can be set by firmware to restrict the VMD
-> bus range to between 224-255.
-> 
-> Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
-> ---
->  drivers/pci/controller/vmd.c | 30 ++++++++++++++++++++++--------
->  1 file changed, 22 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-> index a35d3f3..15302a1 100644
-> --- a/drivers/pci/controller/vmd.c
-> +++ b/drivers/pci/controller/vmd.c
-> @@ -602,16 +602,30 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
->  
->  	/*
->  	 * Certain VMD devices may have a root port configuration option which
-> -	 * limits the bus range to between 0-127 or 128-255
-> +	 * limits the bus range to between 0-127, 128-255, or 224-255
->  	 */
->  	if (features & VMD_FEAT_HAS_BUS_RESTRICTIONS) {
-> -		u32 vmcap, vmconfig;
-> -
-> -		pci_read_config_dword(vmd->dev, PCI_REG_VMCAP, &vmcap);
-> -		pci_read_config_dword(vmd->dev, PCI_REG_VMCONFIG, &vmconfig);
-> -		if (BUS_RESTRICT_CAP(vmcap) &&
-> -		    (BUS_RESTRICT_CFG(vmconfig) == 0x1))
-> -			vmd->busn_start = 128;
-> +		u16 reg16;
-> +
-> +		pci_read_config_word(vmd->dev, PCI_REG_VMCAP, &reg16);
-> +		if (BUS_RESTRICT_CAP(reg16)) {
-> +			pci_read_config_word(vmd->dev, PCI_REG_VMCONFIG,
-> +					     &reg16);
-> +
-> +			switch (BUS_RESTRICT_CFG(reg16)) {
-> +			case 1:
-> +				vmd->busn_start = 128;
-> +				break;
-> +			case 2:
-> +				vmd->busn_start = 224;
-> +				break;
-> +			case 3:
-> +				pci_err(vmd->dev, "Unknown Bus Offset Setting\n");
-
-Technically this error+message should be present in the current kernel
-as well but anyway, I have applied the series to pci/vmd.
-
-Thanks,
-Lorenzo
-
-> +				return -ENODEV;
-> +			default:
-> +				break;
-> +			}
-> +		}
->  	}
->  
->  	res = &vmd->dev->resource[VMD_CFGBAR];
-> -- 
-> 1.8.3.1
-> 
+T24gV2VkLCAyMDE5LTExLTIwIGF0IDE2OjQ3ICswMDAwLCBMb3JlbnpvIFBpZXJhbGlzaSB3cm90
+ZToNCj4gT24gVHVlLCBOb3YgMTIsIDIwMTkgYXQgMDU6NDc6NTJBTSAtMDcwMCwgSm9uIERlcnJp
+Y2sgd3JvdGU6DQo+ID4gVk1EIGJ1cyByZXN0cmljdGlvbnMgYXJlIHJlcXVpcmVkIHdoZW4gSU8g
+ZmFicmljIGlzIG11bHRpcGxleGVkIHN1Y2gNCj4gPiB0aGF0IFZNRCBjYW5ub3QgdXNlIHRoZSBl
+bnRpcmUgYnVzIHJhbmdlLiBUaGlzIHBhdGNoIGFkZHMgYW5vdGhlciBidXMNCj4gPiByZXN0cmlj
+dGlvbiBkZWNvZGUgYml0IHRoYXQgY2FuIGJlIHNldCBieSBmaXJtd2FyZSB0byByZXN0cmljdCB0
+aGUgVk1EDQo+ID4gYnVzIHJhbmdlIHRvIGJldHdlZW4gMjI0LTI1NS4NCj4gPiANCj4gPiBTaWdu
+ZWQtb2ZmLWJ5OiBKb24gRGVycmljayA8am9uYXRoYW4uZGVycmlja0BpbnRlbC5jb20+DQo+ID4g
+LS0tDQo+ID4gIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvdm1kLmMgfCAzMCArKysrKysrKysrKysr
+KysrKysrKysrLS0tLS0tLS0NCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDIyIGluc2VydGlvbnMoKyks
+IDggZGVsZXRpb25zKC0pDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL2NvbnRy
+b2xsZXIvdm1kLmMgYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL3ZtZC5jDQo+ID4gaW5kZXggYTM1
+ZDNmMy4uMTUzMDJhMSAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL3Zt
+ZC5jDQo+ID4gKysrIGIvZHJpdmVycy9wY2kvY29udHJvbGxlci92bWQuYw0KPiA+IEBAIC02MDIs
+MTYgKzYwMiwzMCBAQCBzdGF0aWMgaW50IHZtZF9lbmFibGVfZG9tYWluKHN0cnVjdCB2bWRfZGV2
+ICp2bWQsIHVuc2lnbmVkIGxvbmcgZmVhdHVyZXMpDQo+ID4gIA0KPiA+ICAJLyoNCj4gPiAgCSAq
+IENlcnRhaW4gVk1EIGRldmljZXMgbWF5IGhhdmUgYSByb290IHBvcnQgY29uZmlndXJhdGlvbiBv
+cHRpb24gd2hpY2gNCj4gPiAtCSAqIGxpbWl0cyB0aGUgYnVzIHJhbmdlIHRvIGJldHdlZW4gMC0x
+Mjcgb3IgMTI4LTI1NQ0KPiA+ICsJICogbGltaXRzIHRoZSBidXMgcmFuZ2UgdG8gYmV0d2VlbiAw
+LTEyNywgMTI4LTI1NSwgb3IgMjI0LTI1NQ0KPiA+ICAJICovDQo+ID4gIAlpZiAoZmVhdHVyZXMg
+JiBWTURfRkVBVF9IQVNfQlVTX1JFU1RSSUNUSU9OUykgew0KPiA+IC0JCXUzMiB2bWNhcCwgdm1j
+b25maWc7DQo+ID4gLQ0KPiA+IC0JCXBjaV9yZWFkX2NvbmZpZ19kd29yZCh2bWQtPmRldiwgUENJ
+X1JFR19WTUNBUCwgJnZtY2FwKTsNCj4gPiAtCQlwY2lfcmVhZF9jb25maWdfZHdvcmQodm1kLT5k
+ZXYsIFBDSV9SRUdfVk1DT05GSUcsICZ2bWNvbmZpZyk7DQo+ID4gLQkJaWYgKEJVU19SRVNUUklD
+VF9DQVAodm1jYXApICYmDQo+ID4gLQkJICAgIChCVVNfUkVTVFJJQ1RfQ0ZHKHZtY29uZmlnKSA9
+PSAweDEpKQ0KPiA+IC0JCQl2bWQtPmJ1c25fc3RhcnQgPSAxMjg7DQo+ID4gKwkJdTE2IHJlZzE2
+Ow0KPiA+ICsNCj4gPiArCQlwY2lfcmVhZF9jb25maWdfd29yZCh2bWQtPmRldiwgUENJX1JFR19W
+TUNBUCwgJnJlZzE2KTsNCj4gPiArCQlpZiAoQlVTX1JFU1RSSUNUX0NBUChyZWcxNikpIHsNCj4g
+PiArCQkJcGNpX3JlYWRfY29uZmlnX3dvcmQodm1kLT5kZXYsIFBDSV9SRUdfVk1DT05GSUcsDQo+
+ID4gKwkJCQkJICAgICAmcmVnMTYpOw0KPiA+ICsNCj4gPiArCQkJc3dpdGNoIChCVVNfUkVTVFJJ
+Q1RfQ0ZHKHJlZzE2KSkgew0KPiA+ICsJCQljYXNlIDE6DQo+ID4gKwkJCQl2bWQtPmJ1c25fc3Rh
+cnQgPSAxMjg7DQo+ID4gKwkJCQlicmVhazsNCj4gPiArCQkJY2FzZSAyOg0KPiA+ICsJCQkJdm1k
+LT5idXNuX3N0YXJ0ID0gMjI0Ow0KPiA+ICsJCQkJYnJlYWs7DQo+ID4gKwkJCWNhc2UgMzoNCj4g
+PiArCQkJCXBjaV9lcnIodm1kLT5kZXYsICJVbmtub3duIEJ1cyBPZmZzZXQgU2V0dGluZ1xuIik7
+DQo+IA0KPiBUZWNobmljYWxseSB0aGlzIGVycm9yK21lc3NhZ2Ugc2hvdWxkIGJlIHByZXNlbnQg
+aW4gdGhlIGN1cnJlbnQga2VybmVsDQo+IGFzIHdlbGwgYnV0IGFueXdheSwgSSBoYXZlIGFwcGxp
+ZWQgdGhlIHNlcmllcyB0byBwY2kvdm1kLg0KQWdyZWVkLiBJdCB3YXMgYW4gYW1iaWd1b3VzIGRl
+ZmluaXRpb24gaW4gYSBwcmV2aW91cyBzcGVjLg0KDQoNCj4gDQo+IFRoYW5rcywNCj4gTG9yZW56
+bw0KVGhhbmsgeW91DQoNCg0KPiANCj4gPiArCQkJCXJldHVybiAtRU5PREVWOw0KPiA+ICsJCQlk
+ZWZhdWx0Og0KPiA+ICsJCQkJYnJlYWs7DQo+ID4gKwkJCX0NCj4gPiArCQl9DQo+ID4gIAl9DQo+
+ID4gIA0KPiA+ICAJcmVzID0gJnZtZC0+ZGV2LT5yZXNvdXJjZVtWTURfQ0ZHQkFSXTsNCj4gPiAt
+LSANCj4gPiAxLjguMy4xDQo+ID4gDQo=
