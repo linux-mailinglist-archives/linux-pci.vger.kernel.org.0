@@ -2,224 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D94461041F9
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Nov 2019 18:20:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F18F10426D
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Nov 2019 18:48:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727645AbfKTRUb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 Nov 2019 12:20:31 -0500
-Received: from foss.arm.com ([217.140.110.172]:43472 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727127AbfKTRUa (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 20 Nov 2019 12:20:30 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0600F1045;
-        Wed, 20 Nov 2019 09:20:30 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8EE153F703;
-        Wed, 20 Nov 2019 09:20:28 -0800 (PST)
-Date:   Wed, 20 Nov 2019 17:20:26 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        sashal@kernel.org, bhelgaas@google.com,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
-        Alexander.Levin@microsoft.com
-Subject: Re: [PATCH v2 2/4] PCI: hv: Add the support of hibernation
-Message-ID: <20191120172026.GE3279@e121166-lin.cambridge.arm.com>
-References: <1574234218-49195-1-git-send-email-decui@microsoft.com>
- <1574234218-49195-3-git-send-email-decui@microsoft.com>
+        id S1727934AbfKTRsz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 Nov 2019 12:48:55 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:40791 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727442AbfKTRsz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Nov 2019 12:48:55 -0500
+Received: by mail-wm1-f68.google.com with SMTP id y5so575318wmi.5;
+        Wed, 20 Nov 2019 09:48:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Gb5aW3R/KOwRkVEvqWdyeVDOFlNOArlGLF6/Wf4S7KY=;
+        b=o4N3n5Pd7xMvM3x6YL9p7RkLA0EaB/gwGYDulzXpofsMxMfBVWzMxAYm+VAQafUko9
+         uGE+Mm3kQsnpCU/PRAcHHpEmsCyW4quf2NcgU0OC0k5Z9kL3e2ONCUQGTdvWSu57Ir37
+         Nl/GXiX+9oEFJuUY2QxToBjBCh0hDTWFm4pxxnapc6gndzXSMPM16dh8jnmN+jo9YxMm
+         Rp8zhNM4Luchw1G2R5zZoACrL2AlIC1gRWVOCMgKJLEvqj0qluAao6YLldT8MG1zscDL
+         qMnU9qGaOTo61E38pKd7uxcDP6NIigQAyxy8dge1PUq/84Vr6srhVZIb2Gt4bUzVPe/2
+         kdnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Gb5aW3R/KOwRkVEvqWdyeVDOFlNOArlGLF6/Wf4S7KY=;
+        b=ktAPCe9wJqpiB9oGvexJ1rxo1oC3cMnJtYweqXmDKDv1yQ1Ywj53AYXGBRawtq7TE8
+         bennNIann5zRegPMFSSLlh5iQpjhWfENTBFMlZhUDjAkRt5yem1ffxx9+T0ju1XP3CAc
+         IRzb0J8kE5ubcFotaeM5JKki4vsHVYEGQclC/PGB+0QWGClLvoRxC6aUcy9WLgwwhErZ
+         AbDb67C4zcCy/QxwiI7BI5PBS/6CVUdWmZx89QSAvsKt0dLOhP6uFoOq323K5ygUb7SZ
+         PrNU6yW542SWwfXEG9bVheNISektxMOCdcq0XVhgtQXGCGnBf+TaMBODY+wjERw/KfT7
+         5pGg==
+X-Gm-Message-State: APjAAAX7INy2mX41TPYWcLkAZNSYEXDLn9nFME5tRp9mkpHXuhH82skN
+        UADaKMfjEzB6d4WfWU2K9Sfh/JUwuW4=
+X-Google-Smtp-Source: APXvYqwXdDQUtrOZSro2T2/CaWB+MPqo3m0UdZTaIiLCvG0M8O7HDp8aMnaddseMLcQwky08IkX0ag==
+X-Received: by 2002:a05:600c:210b:: with SMTP id u11mr4849653wml.170.1574272132571;
+        Wed, 20 Nov 2019 09:48:52 -0800 (PST)
+Received: from [10.83.36.153] ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id t14sm31266663wrw.87.2019.11.20.09.48.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 20 Nov 2019 09:48:51 -0800 (PST)
+Subject: Re: [PATCH] Ensure pci transactions coming from PLX NTB are handled
+ when IOMMU is turned on
+To:     James Sewart <jamessewart@arista.com>,
+        iommu@lists.linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, Dmitry Safonov <dima@arista.com>,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Logan Gunthorpe <logang@deltatee.com>
+References: <A3FA9DE1-2EEF-41D8-9AC2-B1F760E7F5D5@arista.com>
+ <0B8FAD0D-B598-4CEA-A614-67F4C7C5B9CA@arista.com>
+From:   Dmitry Safonov <0x7f454c46@gmail.com>
+Message-ID: <5c3b56dd-7088-e544-6628-01506f7b84e8@gmail.com>
+Date:   Wed, 20 Nov 2019 17:48:45 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1574234218-49195-3-git-send-email-decui@microsoft.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <0B8FAD0D-B598-4CEA-A614-67F4C7C5B9CA@arista.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 11:16:56PM -0800, Dexuan Cui wrote:
-> Implement the suspend/resume callbacks.
-> 
-> We must make sure there is no pending work items before we call
-> vmbus_close().
++Cc: linux-pci@vger.kernel.org
++Cc: Bjorn Helgaas <bhelgaas@google.com>
++Cc: Logan Gunthorpe <logang@deltatee.com>
 
-Where ? Why ? Imagine a developer reading this log to try to understand
-why you made this change, do you really think this commit log is
-informative in its current form ?
+On 11/5/19 12:17 PM, James Sewart wrote:
+> Any comments on this?
+> 
+> Cheers,
+> James.
+> 
+>> On 24 Oct 2019, at 13:52, James Sewart <jamessewart@arista.com> wrote:
+>>
+>> The PLX PEX NTB forwards DMA transactions using Requester ID's that don't exist as
+>> PCI devices. The devfn for a transaction is used as an index into a lookup table
+>> storing the origin of a transaction on the other side of the bridge.
+>>
+>> This patch aliases all possible devfn's to the NTB device so that any transaction
+>> coming in is governed by the mappings for the NTB.
+>>
+>> Signed-Off-By: James Sewart <jamessewart@arista.com>
+>> ---
+>> drivers/pci/quirks.c | 22 ++++++++++++++++++++++
+>> 1 file changed, 22 insertions(+)
+>>
+>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+>> index 320255e5e8f8..647f546e427f 100644
+>> --- a/drivers/pci/quirks.c
+>> +++ b/drivers/pci/quirks.c
+>> @@ -5315,6 +5315,28 @@ SWITCHTEC_QUIRK(0x8574);  /* PFXI 64XG3 */
+>> SWITCHTEC_QUIRK(0x8575);  /* PFXI 80XG3 */
+>> SWITCHTEC_QUIRK(0x8576);  /* PFXI 96XG3 */
+>>
+>> +/*
+>> + * PLX NTB uses devfn proxy IDs to move TLPs between NT endpoints. These IDs
+>> + * are used to forward responses to the originator on the other side of the
+>> + * NTB. Alias all possible IDs to the NTB to permit access when the IOMMU is
+>> + * turned on.
+>> + */
+>> +static void quirk_PLX_NTB_dma_alias(struct pci_dev *pdev)
+>> +{
+>> +	if (!pdev->dma_alias_mask)
+>> +		pdev->dma_alias_mask = kcalloc(BITS_TO_LONGS(U8_MAX),
+>> +					      sizeof(long), GFP_KERNEL);
+>> +	if (!pdev->dma_alias_mask) {
+>> +		dev_warn(&pdev->dev, "Unable to allocate DMA alias mask\n");
+>> +		return;
+>> +	}
+>> +
+>> +	// PLX NTB may use all 256 devfns
+>> +	memset(pdev->dma_alias_mask, U8_MAX, (U8_MAX+1)/BITS_PER_BYTE);
+>> +}
+>> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_PLX, 0x87b0, quirk_PLX_NTB_dma_alias);
+>> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_PLX, 0x87b1, quirk_PLX_NTB_dma_alias);
+>> +
+>> /*
+>>  * On Lenovo Thinkpad P50 SKUs with a Nvidia Quadro M1000M, the BIOS does
+>>  * not always reset the secondary Nvidia GPU between reboots if the system
+>> -- 
+>> 2.19.1
+>>
+>>
+> 
 
-I am not asking a book but this is a significant feature please make
-an effort to explain it (I can update the log for you but please
-write one and I shall do it).
-
-Lorenzo
-
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> ---
-> 
-> Changes in v2: this patch is a simple merge of 2 previous smaller patches,
-> accordign to the suggestion of Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>.
-> 
->  drivers/pci/controller/pci-hyperv.c | 107 +++++++++++++++++++++++++++-
->  1 file changed, 105 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index 65f18f840ce9..e71eb6e0bfdd 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -455,6 +455,7 @@ enum hv_pcibus_state {
->  	hv_pcibus_init = 0,
->  	hv_pcibus_probed,
->  	hv_pcibus_installed,
-> +	hv_pcibus_removing,
->  	hv_pcibus_removed,
->  	hv_pcibus_maximum
->  };
-> @@ -1681,6 +1682,23 @@ static void prepopulate_bars(struct hv_pcibus_device *hbus)
->  
->  	spin_lock_irqsave(&hbus->device_list_lock, flags);
->  
-> +	/*
-> +	 * Clear the memory enable bit, in case it's already set. This occurs
-> +	 * in the suspend path of hibernation, where the device is suspended,
-> +	 * resumed and suspended again: see hibernation_snapshot() and
-> +	 * hibernation_platform_enter().
-> +	 *
-> +	 * If the memory enable bit is already set, Hyper-V sliently ignores
-> +	 * the below BAR updates, and the related PCI device driver can not
-> +	 * work, because reading from the device register(s) always returns
-> +	 * 0xFFFFFFFF.
-> +	 */
-> +	list_for_each_entry(hpdev, &hbus->children, list_entry) {
-> +		_hv_pcifront_read_config(hpdev, PCI_COMMAND, 2, &command);
-> +		command &= ~PCI_COMMAND_MEMORY;
-> +		_hv_pcifront_write_config(hpdev, PCI_COMMAND, 2, command);
-> +	}
-> +
->  	/* Pick addresses for the BARs. */
->  	do {
->  		list_for_each_entry(hpdev, &hbus->children, list_entry) {
-> @@ -2107,6 +2125,12 @@ static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
->  	unsigned long flags;
->  	bool pending_dr;
->  
-> +	if (hbus->state == hv_pcibus_removing) {
-> +		dev_info(&hbus->hdev->device,
-> +			 "PCI VMBus BUS_RELATIONS: ignored\n");
-> +		return;
-> +	}
-> +
->  	dr_wrk = kzalloc(sizeof(*dr_wrk), GFP_NOWAIT);
->  	if (!dr_wrk)
->  		return;
-> @@ -2223,11 +2247,19 @@ static void hv_eject_device_work(struct work_struct *work)
->   */
->  static void hv_pci_eject_device(struct hv_pci_dev *hpdev)
->  {
-> +	struct hv_pcibus_device *hbus = hpdev->hbus;
-> +	struct hv_device *hdev = hbus->hdev;
-> +
-> +	if (hbus->state == hv_pcibus_removing) {
-> +		dev_info(&hdev->device, "PCI VMBus EJECT: ignored\n");
-> +		return;
-> +	}
-> +
->  	hpdev->state = hv_pcichild_ejecting;
->  	get_pcichild(hpdev);
->  	INIT_WORK(&hpdev->wrk, hv_eject_device_work);
-> -	get_hvpcibus(hpdev->hbus);
-> -	queue_work(hpdev->hbus->wq, &hpdev->wrk);
-> +	get_hvpcibus(hbus);
-> +	queue_work(hbus->wq, &hpdev->wrk);
->  }
->  
->  /**
-> @@ -3107,6 +3139,75 @@ static int hv_pci_remove(struct hv_device *hdev)
->  	return ret;
->  }
->  
-> +static int hv_pci_suspend(struct hv_device *hdev)
-> +{
-> +	struct hv_pcibus_device *hbus = hv_get_drvdata(hdev);
-> +	enum hv_pcibus_state old_state;
-> +	int ret;
-> +
-> +	tasklet_disable(&hdev->channel->callback_event);
-> +
-> +	/* Change the hbus state to prevent new work items. */
-> +	old_state = hbus->state;
-> +	if (hbus->state == hv_pcibus_installed)
-> +		hbus->state = hv_pcibus_removing;
-> +
-> +	tasklet_enable(&hdev->channel->callback_event);
-> +
-> +	if (old_state != hv_pcibus_installed)
-> +		return -EINVAL;
-> +
-> +	flush_workqueue(hbus->wq);
-> +
-> +	ret = hv_pci_bus_exit(hdev, true);
-> +	if (ret)
-> +		return ret;
-> +
-> +	vmbus_close(hdev->channel);
-> +
-> +	return 0;
-> +}
-> +
-> +static int hv_pci_resume(struct hv_device *hdev)
-> +{
-> +	struct hv_pcibus_device *hbus = hv_get_drvdata(hdev);
-> +	enum pci_protocol_version_t version[1];
-> +	int ret;
-> +
-> +	hbus->state = hv_pcibus_init;
-> +
-> +	ret = vmbus_open(hdev->channel, pci_ring_size, pci_ring_size, NULL, 0,
-> +			 hv_pci_onchannelcallback, hbus);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Only use the version that was in use before hibernation. */
-> +	version[0] = pci_protocol_version;
-> +	ret = hv_pci_protocol_negotiation(hdev, version, 1);
-> +	if (ret)
-> +		goto out;
-> +
-> +	ret = hv_pci_query_relations(hdev);
-> +	if (ret)
-> +		goto out;
-> +
-> +	ret = hv_pci_enter_d0(hdev);
-> +	if (ret)
-> +		goto out;
-> +
-> +	ret = hv_send_resources_allocated(hdev);
-> +	if (ret)
-> +		goto out;
-> +
-> +	prepopulate_bars(hbus);
-> +
-> +	hbus->state = hv_pcibus_installed;
-> +	return 0;
-> +out:
-> +	vmbus_close(hdev->channel);
-> +	return ret;
-> +}
-> +
->  static const struct hv_vmbus_device_id hv_pci_id_table[] = {
->  	/* PCI Pass-through Class ID */
->  	/* 44C4F61D-4444-4400-9D52-802E27EDE19F */
-> @@ -3121,6 +3222,8 @@ static struct hv_driver hv_pci_drv = {
->  	.id_table	= hv_pci_id_table,
->  	.probe		= hv_pci_probe,
->  	.remove		= hv_pci_remove,
-> +	.suspend	= hv_pci_suspend,
-> +	.resume		= hv_pci_resume,
->  };
->  
->  static void __exit exit_hv_pci_drv(void)
-> -- 
-> 2.19.1
-> 
+Thanks,
+          Dmitry
