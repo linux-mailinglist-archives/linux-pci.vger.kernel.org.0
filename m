@@ -2,38 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B77A0103225
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Nov 2019 04:45:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 58E3B103227
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Nov 2019 04:45:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727264AbfKTDpe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 19 Nov 2019 22:45:34 -0500
-Received: from mail-eopbgr00058.outbound.protection.outlook.com ([40.107.0.58]:36436
+        id S1727357AbfKTDpl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 19 Nov 2019 22:45:41 -0500
+Received: from mail-eopbgr00072.outbound.protection.outlook.com ([40.107.0.72]:56708
         "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727357AbfKTDpe (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 19 Nov 2019 22:45:34 -0500
+        id S1727262AbfKTDpl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 19 Nov 2019 22:45:41 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=em45W8fTrhEAZoSaqFobJi8iHUPREnxB4AzfERV5dQlehfctv7zPDn5vPO9+OvM9JU2Fpl07rYM2efnyCMqWHodCIvUWSDpem9TiKUpFqeI9XzR+ucs9fFanGr+FwNhP4MJ9IsbGo3M3MsRStSd+wzONfgF7QcBuinUtv6RsNWz+mxiGSDFzHzUYu6Xso++CPsbiY3MnLnGr7KeJJ0acvqNJnH+8K2zOyTiOozT9/q+rcI5ypOniA5sJBkDX5LUKT+dW8YiZoJ99Qr8L4YKHTx3jl/eXosApy3GYIUP1eg0svNYHcYmq8rF+Bsa9W78lIwWJPVQRLPQuWO/Q7CSzrA==
+ b=naO5F40ECGaHSGgXCEuaJraPJ8nDdel4P8VDSkFc3IVoSR5j/U4Q3CBsEVyolZwIQx8P3RerQmRnGWIc0z+t3s1piYiB5AFN32jZ+n+F/7IFlCGn5SrrmIEDWtSWEuoXccqSQDf76vqR5zR24E6iCXSLee64cODaZ/cDXeDAQsGVmNZIJNYtQGImyPnumJKz4BASeZfhmlErd9zTWWY5eUMxWq4eTegWhtmgxtzo2X8x8O48e4z3Cp+0wM+8TzXCk8ZxyhyIoEpTPcat9DJ22vw95/4Sc6zs71d0L4NT/MHT28IGv46U8+ZFGXBzCcdf+Mnf3+Xq/YI61NSdluLYdQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9tcCzCpg7MhUp68daqYKGFgRIlEc8U/und6a3AG+9pI=;
- b=W0AV0rwjDOCLEzrcMpCGtlVjqAkiEfCcBE84b455U+UtNkh2ft7Z9uD4hXuFpzZ+8VamVwKkNz/SN/XMRtB/8lM79TQgFM0bWZ15PKVfAXpJp1vzhSXBX/teLibrkcdTbeDbXDJ3glzzJDI0x47fGugzOzMtmTELf+U4rH7MV8NKPYYDYd5sDj++VdvIRKbGlyPXfrSgDGUjiyUxV36veVVl1fdya4beMhAUbpp6GH8BgnvOUH6eLoTwxd6HBfDfYNFlhSKMYKNuqeRsbh65QreSDn31lE5+ohkXu6ixtS56ztojHLJItfcWZGCNYB/u1niCQTHTd4eyWKAFrzNEyg==
+ bh=oYpAL7e6n70SIIHc5c1GGW0XI3T+z4Snl9EO8Aqf9gk=;
+ b=FAAkNYAaF64tYja/nSd7ijLfSu6TY+nYFWmDYt0bpO83AUMDeboUqV5rN9Q2L48gnaW0thQi/W8ZD49Tr/HnzHgKZ/+D+ZdkMaYb2Takkqc+wwLzfSSDyh/PQJHZWqeKHJlyjrTUBrdpBQA/94j8JwMyGus0KQkkBIvuaAAlHYYYEbsfQMmQWRg/RFIEWG9x/szft1SLgBHxKTnY3binJOP28fPX6DX1zW+HMVKFoMbG8wrCSkxd4Zuj3PQGwdiAs/qBIhuc1wFTUtrIjmPoGhIE67DzQKMBX/5Zn/o4/ulMWUf3M8mfVAsEZSV5viIm1phpeT/Vly9kcUQY/y6gvA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9tcCzCpg7MhUp68daqYKGFgRIlEc8U/und6a3AG+9pI=;
- b=r5WmqLa9gwtBa6bjl594p9Ys5yUvHOTAmgCcFVxhZHJweYGjhdDGORXX3c+/RzLqc6xfrY3gBMe1Whav/0KqWMGak8lmAsHT/YblyQvGS5RKdkGQvesUKmI4NSASS2j21vPU4Dco7m6FflGJwy2sIOlUsvDmRhszV681anHpsf0=
+ bh=oYpAL7e6n70SIIHc5c1GGW0XI3T+z4Snl9EO8Aqf9gk=;
+ b=StgkCfx52p8E678ROcO4smaOb1njxHFvLOdXU3y+eZwVrzz7PkoOXHIWH2XDuBEx5jBKcEkcyNoZ05tfFKzEcTtDODNDI8Mm3jg4zPZ7iCmcFlGcF9OKENKLZhm0B7Xo4/51bh5PmngJd0oUnZeNmedIE16I0ObB7nHMBOGW+V4=
 Received: from DB8PR04MB6747.eurprd04.prod.outlook.com (20.179.250.159) by
  DB8PR04MB5657.eurprd04.prod.outlook.com (20.179.9.138) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.23; Wed, 20 Nov 2019 03:45:30 +0000
+ 15.20.2451.23; Wed, 20 Nov 2019 03:45:37 +0000
 Received: from DB8PR04MB6747.eurprd04.prod.outlook.com
  ([fe80::898f:3cd6:c225:7219]) by DB8PR04MB6747.eurprd04.prod.outlook.com
  ([fe80::898f:3cd6:c225:7219%7]) with mapi id 15.20.2451.029; Wed, 20 Nov 2019
- 03:45:30 +0000
+ 03:45:37 +0000
 From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
 To:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "linux-arm-kernel@lists.infradead.org" 
@@ -56,13 +56,13 @@ CC:     Mingkai Hu <mingkai.hu@nxp.com>,
         "M.h. Lian" <minghuan.lian@nxp.com>,
         Xiaowei Bao <xiaowei.bao@nxp.com>,
         "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: [PATCHv9 02/12] PCI: mobiveil: Move the host initialization into a
- routine
-Thread-Topic: [PATCHv9 02/12] PCI: mobiveil: Move the host initialization into
- a routine
-Thread-Index: AQHVn1T0j1qfl+edyE6Gq9MkhB5hBA==
-Date:   Wed, 20 Nov 2019 03:45:30 +0000
-Message-ID: <20191120034451.30102-3-Zhiqiang.Hou@nxp.com>
+Subject: [PATCHv9 03/12] PCI: mobiveil: Collect the interrupt related
+ operations into a routine
+Thread-Topic: [PATCHv9 03/12] PCI: mobiveil: Collect the interrupt related
+ operations into a routine
+Thread-Index: AQHVn1T4QPVpuPxbfUOAcnzZ5mJ3hg==
+Date:   Wed, 20 Nov 2019 03:45:37 +0000
+Message-ID: <20191120034451.30102-4-Zhiqiang.Hou@nxp.com>
 References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
 In-Reply-To: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
 Accept-Language: zh-CN, en-US
@@ -79,29 +79,29 @@ x-mailer: git-send-email 2.17.1
 x-originating-ip: [119.31.174.73]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 5cc634a7-b256-41c6-68e9-08d76d6c16c5
+x-ms-office365-filtering-correlation-id: 47d60390-524f-4943-1242-08d76d6c1ab4
 x-ms-traffictypediagnostic: DB8PR04MB5657:|DB8PR04MB5657:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB8PR04MB5657E9AA02A341A32A8841CB844F0@DB8PR04MB5657.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3513;
+x-microsoft-antispam-prvs: <DB8PR04MB56572B3650B5DD0C3FAD227F844F0@DB8PR04MB5657.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4125;
 x-forefront-prvs: 02272225C5
 x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(396003)(39860400002)(136003)(376002)(199004)(189003)(2201001)(54906003)(86362001)(36756003)(256004)(7736002)(305945005)(6116002)(66066001)(3846002)(110136005)(316002)(71190400001)(7416002)(1076003)(71200400001)(52116002)(2501003)(4326008)(5660300002)(66476007)(476003)(64756008)(66556008)(11346002)(446003)(76176011)(2616005)(66946007)(6512007)(66446008)(8676002)(386003)(6506007)(2906002)(99286004)(102836004)(6486002)(81166006)(81156014)(8936002)(50226002)(186003)(26005)(478600001)(14454004)(486006)(6436002)(25786009)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB5657;H:DB8PR04MB6747.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 4A0KbhAdvAKEL5XsoFjbnRBgYoCp4t2w645CJ+XMTu3KOebhsw+I8bvEs9lStcqf/mK3/cBf/jWn+97VJO2gLin+oU44HJtIhxN9EBHLhL9tpZVvulPnKY2jUk0NIvVp7x/jZ74dMkTYnY59Xc8BsuIN5v3qrtFa1XXkNQh83oVLET1z+TnyajFP9Zu5oTlD/Zem3UCfZF9hBZ93ToRIg7SHViJUlv2ZMkRpajNPDsiNi4XyJ7v8eQh22ETmVwrICVE9QnReOGiuNCvsaVq/3zZRb3pTkCsdr+T/0WVto6tWHQekS7bXU0MhoABSrQvBoCwAlyftRE87oNPFpftn/rCrgk34CyW2NoSXLFviWTlZtG5VSogN54jUyyI8ymVNm/PBO+W2JGup41eAwXZfRVwCzNhROA9Xkthrx9iZdx2FUHcvdldFDKCKgP24q89a
+x-microsoft-antispam-message-info: ZaGBaJFoNQTmn+cyyJx7Rbgo5Es5J8WM9tRgL0Vd2JNNL5SwoJ+MZS+HTS1Jk/Zqhykk94mItc5N8ihFZQfqna/WTtbaj1S8ua1y0K33mfrWvix6ZMyRmP2SBx2CqpAVSCF6Vhd+fcWPYOvgjwqgQZ6+DoC+Fh7rufMvhVKLarWXm6OobSbBv0WfCRE3Fc3/L+UZAY16yDt5KWIzmAUmbsXKy5CuspafEzLdWZmVGwp1At+ZdVTQFWSo+7uCYMl+wv+BKcdase8W41ouvwEkg/L/C0SKphUOzLBggSHTjgSXL75mFcZzJYvAxW2ACqCM2pFdIvl3uk1fiHRPBck2e3SkpzjI3BS5RsVE47tY/H8QLBNjLGqsxyfuzr61KEZMrC9QBf+qLlS9V4NXmqo4h8fJAMuYAjjoRX/QEneN3/Xm0heyPMXDx+3/+IW0NhU1
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5cc634a7-b256-41c6-68e9-08d76d6c16c5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Nov 2019 03:45:30.4714
+X-MS-Exchange-CrossTenant-Network-Message-Id: 47d60390-524f-4943-1242-08d76d6c1ab4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Nov 2019 03:45:37.0747
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: RAyEzTHD8749SWCUdP+YVR3y6WO3MNLnN5Cg2jUfyb2lM8qTPaQxdHHFehAgYqYq1XQYaxyFvrm1FEV1+TIifA==
+X-MS-Exchange-CrossTenant-userprincipalname: fdPEZPWEacOlux5nXLOQ1PFOeWTcFfdUuE/aSN9gw0RgfM2LggcDifRSPDRjzXWsUMn84jg3/pd7C8/Imu8VtQ==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB5657
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
@@ -110,82 +110,139 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-Move the host initialization related operations into a new
-routine to make it can be reused by other incoming platform's
-PCIe host driver, in which the Mobiveil GPEX is integrated.
+Collect the interrupt initialization related operations into
+a new routine to make it more readable.
 
 Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 ---
 V9:
  - New patch splited from the #1 of V8 patches to make it easy to review.
 
- drivers/pci/controller/pcie-mobiveil.c | 38 +++++++++++++++-----------
- 1 file changed, 22 insertions(+), 16 deletions(-)
+ drivers/pci/controller/pcie-mobiveil.c | 65 +++++++++++++++++---------
+ 1 file changed, 42 insertions(+), 23 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controlle=
 r/pcie-mobiveil.c
-index 5fd26e376af2..97f682ca7c7a 100644
+index 97f682ca7c7a..512b27a0536e 100644
 --- a/drivers/pci/controller/pcie-mobiveil.c
 +++ b/drivers/pci/controller/pcie-mobiveil.c
-@@ -873,27 +873,15 @@ static int mobiveil_pcie_init_irq_domain(struct mobiv=
-eil_pcie *pcie)
+@@ -454,12 +454,6 @@ static int mobiveil_pcie_parse_dt(struct mobiveil_pcie=
+ *pcie)
+ 		return PTR_ERR(pcie->csr_axi_slave_base);
+ 	pcie->pcie_reg_base =3D res->start;
+=20
+-	/* map MSI config resource */
+-	res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "apb_csr");
+-	pcie->apb_csr_base =3D devm_pci_remap_cfg_resource(dev, res);
+-	if (IS_ERR(pcie->apb_csr_base))
+-		return PTR_ERR(pcie->apb_csr_base);
+-
+ 	/* read the number of windows requested */
+ 	if (of_property_read_u32(node, "apio-wins", &pcie->apio_wins))
+ 		pcie->apio_wins =3D MAX_PIO_WINDOWS;
+@@ -467,12 +461,6 @@ static int mobiveil_pcie_parse_dt(struct mobiveil_pcie=
+ *pcie)
+ 	if (of_property_read_u32(node, "ppio-wins", &pcie->ppio_wins))
+ 		pcie->ppio_wins =3D MAX_PIO_WINDOWS;
+=20
+-	rp->irq =3D platform_get_irq(pdev, 0);
+-	if (rp->irq <=3D 0) {
+-		dev_err(dev, "failed to map IRQ: %d\n", rp->irq);
+-		return -ENODEV;
+-	}
+-
  	return 0;
  }
 =20
--static int mobiveil_pcie_probe(struct platform_device *pdev)
-+int mobiveil_pcie_host_probe(struct mobiveil_pcie *pcie)
- {
--	struct mobiveil_pcie *pcie;
-+	struct root_port *rp =3D &pcie->rp;
-+	struct pci_host_bridge *bridge =3D rp->bridge;
-+	struct device *dev =3D &pcie->pdev->dev;
- 	struct pci_bus *bus;
- 	struct pci_bus *child;
--	struct pci_host_bridge *bridge;
--	struct device *dev =3D &pdev->dev;
--	struct root_port *rp;
- 	int ret;
+@@ -618,9 +606,6 @@ static int mobiveil_host_init(struct mobiveil_pcie *pci=
+e)
+ 	pab_ctrl |=3D (1 << AMBA_PIO_ENABLE_SHIFT) | (1 << PEX_PIO_ENABLE_SHIFT);
+ 	mobiveil_csr_writel(pcie, pab_ctrl, PAB_CTRL);
 =20
--	/* allocate the PCIe port */
--	bridge =3D devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
--	if (!bridge)
--		return -ENOMEM;
+-	mobiveil_csr_writel(pcie, (PAB_INTP_INTX_MASK | PAB_INTP_MSI_MASK),
+-			    PAB_INTP_AMBA_MISC_ENB);
 -
--	pcie =3D pci_host_bridge_priv(bridge);
--	rp =3D &pcie->rp;
--	rp->bridge =3D bridge;
+ 	/*
+ 	 * program PIO Enable Bit to 1 and Config Window Enable Bit to 1 in
+ 	 * PAB_AXI_PIO_CTRL Register
+@@ -670,9 +655,6 @@ static int mobiveil_host_init(struct mobiveil_pcie *pci=
+e)
+ 	value |=3D (PCI_CLASS_BRIDGE_PCI << 16);
+ 	mobiveil_csr_writel(pcie, value, PAB_INTP_AXI_PIO_CLASS);
+=20
+-	/* setup MSI hardware registers */
+-	mobiveil_pcie_enable_msi(pcie);
 -
--	pcie->pdev =3D pdev;
--
- 	ret =3D mobiveil_pcie_parse_dt(pcie);
- 	if (ret) {
- 		dev_err(dev, "Parsing DT failed, ret: %x\n", ret);
-@@ -956,6 +944,24 @@ static int mobiveil_pcie_probe(struct platform_device =
-*pdev)
  	return 0;
  }
 =20
-+static int mobiveil_pcie_probe(struct platform_device *pdev)
+@@ -873,6 +855,46 @@ static int mobiveil_pcie_init_irq_domain(struct mobive=
+il_pcie *pcie)
+ 	return 0;
+ }
+=20
++static int mobiveil_pcie_interrupt_init(struct mobiveil_pcie *pcie)
 +{
-+	struct mobiveil_pcie *pcie;
-+	struct pci_host_bridge *bridge;
++	struct platform_device *pdev =3D pcie->pdev;
 +	struct device *dev =3D &pdev->dev;
++	struct root_port *rp =3D &pcie->rp;
++	struct resource *res;
++	int ret;
 +
-+	bridge =3D devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
-+	if (!bridge)
-+		return -ENOMEM;
++	/* map MSI config resource */
++	res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "apb_csr");
++	pcie->apb_csr_base =3D devm_pci_remap_cfg_resource(dev, res);
++	if (IS_ERR(pcie->apb_csr_base))
++		return PTR_ERR(pcie->apb_csr_base);
 +
-+	pcie =3D pci_host_bridge_priv(bridge);
-+	pcie->rp.bridge =3D bridge;
++	/* setup MSI hardware registers */
++	mobiveil_pcie_enable_msi(pcie);
 +
-+	pcie->pdev =3D pdev;
++	rp->irq =3D platform_get_irq(pdev, 0);
++	if (rp->irq <=3D 0) {
++		dev_err(dev, "failed to map IRQ: %d\n", rp->irq);
++		return -ENODEV;
++	}
 +
-+	return mobiveil_pcie_host_probe(pcie);
++	/* initialize the IRQ domains */
++	ret =3D mobiveil_pcie_init_irq_domain(pcie);
++	if (ret) {
++		dev_err(dev, "Failed creating IRQ Domain\n");
++		return ret;
++	}
++
++	irq_set_chained_handler_and_data(rp->irq, mobiveil_pcie_isr, pcie);
++
++	/* Enable interrupts */
++	mobiveil_csr_writel(pcie, (PAB_INTP_INTX_MASK | PAB_INTP_MSI_MASK),
++			    PAB_INTP_AMBA_MISC_ENB);
++
++
++	return 0;
 +}
 +
- static const struct of_device_id mobiveil_pcie_of_match[] =3D {
- 	{.compatible =3D "mbvl,gpex40-pcie",},
- 	{},
+ int mobiveil_pcie_host_probe(struct mobiveil_pcie *pcie)
+ {
+ 	struct root_port *rp =3D &pcie->rp;
+@@ -906,15 +928,12 @@ int mobiveil_pcie_host_probe(struct mobiveil_pcie *pc=
+ie)
+ 		return ret;
+ 	}
+=20
+-	/* initialize the IRQ domains */
+-	ret =3D mobiveil_pcie_init_irq_domain(pcie);
++	ret =3D mobiveil_pcie_interrupt_init(pcie);
+ 	if (ret) {
+-		dev_err(dev, "Failed creating IRQ Domain\n");
++		dev_err(dev, "Interrupt init failed\n");
+ 		return ret;
+ 	}
+=20
+-	irq_set_chained_handler_and_data(rp->irq, mobiveil_pcie_isr, pcie);
+-
+ 	/* Initialize bridge */
+ 	bridge->dev.parent =3D dev;
+ 	bridge->sysdata =3D pcie;
 --=20
 2.17.1
 
