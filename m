@@ -2,351 +2,145 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1904010374C
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Nov 2019 11:18:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FD9A103789
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Nov 2019 11:30:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728410AbfKTKSZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 Nov 2019 05:18:25 -0500
-Received: from mga12.intel.com ([192.55.52.136]:42704 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727856AbfKTKSZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 20 Nov 2019 05:18:25 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 02:18:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,221,1571727600"; 
-   d="scan'208";a="215747198"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 20 Nov 2019 02:18:17 -0800
-Received: by lahna (sSMTP sendmail emulation); Wed, 20 Nov 2019 12:18:16 +0200
-Date:   Wed, 20 Nov 2019 12:18:16 +0200
-From:   Mika Westerberg <mika.westerberg@intel.com>
-To:     Karol Herbst <kherbst@redhat.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lyude Paul <lyude@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Dave Airlie <airlied@gmail.com>, Mario.Limonciello@dell.com
-Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
- states on certain intel bridges
-Message-ID: <20191120101816.GX11621@lahna.fi.intel.com>
-References: <20191017121901.13699-1-kherbst@redhat.com>
- <20191119214955.GA223696@google.com>
- <CACO55tu+8VeyMw1Lb6QvNspaJm9LDgoRbooVhr0s3v9uBt=feg@mail.gmail.com>
+        id S1727465AbfKTKa6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 Nov 2019 05:30:58 -0500
+Received: from mail-eopbgr00059.outbound.protection.outlook.com ([40.107.0.59]:17634
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726001AbfKTKa5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 20 Nov 2019 05:30:57 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UIeXgTOQNem+OBQAgUs63R6yMLhylpV6u061aHdXDd1p6jqaPE8rIGPzczgeF4zFB2bpYfXiz24nYWr1opuRZIyVYi/gQV9kPfR/fhbmbD1YjvRxTUeuwvv+FYkaXulnMGbq00wgIIHSCd2sUfCap41aZiQHRRPWWwDzsfjUJTflKfx7Pf8LM/Wz/9aIMIU6UK/Ttva7LD2tIXAAN/9Iq2TCa3JI5O/KA1dmkNWz+I7CD+WqwCpSVwcMmAzl+H1HQqURRq+p4JB+Kcp4mcHW5DRlKyk7hoKAmfodau7coBigZF7hahIVrkDvl5KUeW7NOqU0zXCeHQktlyXq4vB95w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FNb3nptkLxaCouVWOqqHRhMTjj4gy6DnWYjpMfmy4zU=;
+ b=B4RlNxCnBP230H02uXTRRQE2hRFWQxN6LZqtd+0cK/O1HI4q3KfgvUV9Z4QRPlImOZEn0PCLgYmOpXlywIobgo2jtdyIqJeSKY5NMPBKIu46pfaQQojGxed9/NIbIcb1PD6q6/813iorst9UIStdMY9qKoZohdrPFGmqRyzgn//heMKbvp6Bscr3Ep7g7GSAbaqHDo/mDmnRYhxQQ+hz82UA5/uonlk85lMOWC1RoS+J+jKLMr6HskiVstabHvkEPwZmFsxMzi+qo9I216d1Rb/U8vqDpIlDapAVJM91bB5UaSZWumpU64ythgg2lhfYCHKFY9/zwsn5PchmhBD3QQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FNb3nptkLxaCouVWOqqHRhMTjj4gy6DnWYjpMfmy4zU=;
+ b=PiUFPV/908XN2U6gpewQhj95STCoNhvzvwlyY6fS8n3sBtpQzG8s53dJHQa6k47D8MDFCgmty+7NssxN1KcdbTMe3GxBJleRR5VDqQoKeZ8EHIkSpBEqsfKQbBrDmeVtdy3hmGk/A/EWGutaLmvZvGUKo6x3P8mL5wYd9pZ75CU=
+Received: from DB8PR04MB6747.eurprd04.prod.outlook.com (20.179.250.159) by
+ DB8PR04MB6683.eurprd04.prod.outlook.com (20.179.251.218) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2451.26; Wed, 20 Nov 2019 10:30:51 +0000
+Received: from DB8PR04MB6747.eurprd04.prod.outlook.com
+ ([fe80::898f:3cd6:c225:7219]) by DB8PR04MB6747.eurprd04.prod.outlook.com
+ ([fe80::898f:3cd6:c225:7219%7]) with mapi id 15.20.2451.031; Wed, 20 Nov 2019
+ 10:30:51 +0000
+From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
+        Leo Li <leoyang.li@nxp.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>
+Subject: RE: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
+ driver for NXP Layerscape SoCs
+Thread-Topic: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
+ driver for NXP Layerscape SoCs
+Thread-Index: AQHVn1Tsfp+9ZVhNFU2th1+s/za9waeT0yyAgAAHlJA=
+Date:   Wed, 20 Nov 2019 10:30:50 +0000
+Message-ID: <DB8PR04MB67476281607788CD20B292D8844F0@DB8PR04MB6747.eurprd04.prod.outlook.com>
+References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
+ <20191120095729.GJ25745@shell.armlinux.org.uk>
+In-Reply-To: <20191120095729.GJ25745@shell.armlinux.org.uk>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=zhiqiang.hou@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 8bf40b61-2a06-46be-9437-08d76da4b71a
+x-ms-traffictypediagnostic: DB8PR04MB6683:|DB8PR04MB6683:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB8PR04MB668315F9C1B584C7EE750920844F0@DB8PR04MB6683.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 02272225C5
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(6029001)(4636009)(39860400002)(366004)(346002)(396003)(136003)(376002)(189003)(199004)(13464003)(316002)(99286004)(66066001)(54906003)(7736002)(478600001)(6246003)(305945005)(74316002)(26005)(186003)(55016002)(6306002)(9686003)(486006)(25786009)(476003)(86362001)(81156014)(81166006)(11346002)(446003)(4326008)(45080400002)(33656002)(7416002)(8936002)(8676002)(229853002)(66946007)(2906002)(966005)(52536014)(76116006)(14454004)(3846002)(256004)(6116002)(66476007)(66556008)(66446008)(64756008)(6916009)(5660300002)(6506007)(53546011)(102836004)(6436002)(71200400001)(71190400001)(76176011)(7696005);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB6683;H:DB8PR04MB6747.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: cFRUXBi5vX85b+PdBiKhU9t+EJmHyOR192z4FcjY5YpgwOy1zSsSQZ48lTxUeoB0HAT3MqvpJes5uRj4ZzFdB/QfTRfCXjkRhkniuDhgJcn+6EYsRQ61aPxKEw/PWRmXaLO/oXvX1cwLYCVmIp74ViZXgZRlco8yKzF/V8+8XEedVSb2+WApfMq3OT0sOWECftSlc2YNrSIoxjU6ld6bR7ulejWABhpzWFv52+yIn1WNcRN2/dRGJqvxzGoxZlGU0o1jfU/QcN1ChOqV630SCP9QtgQiPiKMvU8q4nQZgsD3OcBaDcuVSro/2jaVGmEUrvSEmsjIhHD1IWEO01V3EnQCmW5W5nUx6mWCJVpRAzuvcNK0Ly61BpMBM3OuXoFhER+eUW9U9U35XNhZcblgVNe/k97z0B95Pz7VuXCh0hhbnprTRpZloFnz7R2T8V/B
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACO55tu+8VeyMw1Lb6QvNspaJm9LDgoRbooVhr0s3v9uBt=feg@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8bf40b61-2a06-46be-9437-08d76da4b71a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Nov 2019 10:30:50.8572
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: KYJlsi7YyT28TZxPHGtatAmjbnZew0l8U2Ycp7pk6Mi/V6OKurCgD8te1VS57BC7W0VsvZpwPBrqNt0qZzeF2Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6683
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Karol,
-
-On Tue, Nov 19, 2019 at 11:26:45PM +0100, Karol Herbst wrote:
-> On Tue, Nov 19, 2019 at 10:50 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > [+cc Dave]
-> >
-> > On Thu, Oct 17, 2019 at 02:19:01PM +0200, Karol Herbst wrote:
-> > > Fixes state transitions of Nvidia Pascal GPUs from D3cold into higher device
-> > > states.
-> > >
-> > > v2: convert to pci_dev quirk
-> > >     put a proper technical explanation of the issue as a in-code comment
-> > > v3: disable it only for certain combinations of intel and nvidia hardware
-> > > v4: simplify quirk by setting flag on the GPU itself
-> >
-> > I have zero confidence that we understand the real problem, but we do
-> > need to do something with this.  I'll merge it for v5.5 if we get the
-> > minor procedural stuff below straightened out.
-> >
-> 
-> Thanks, and I agree with your statement, but at this point I think
-> only Intel can help out digging deeper as I see no way to debug this
-> further.
-
-I don't have anything against this patch, as long as the quirk stays
-limited to the particular root port leading to the NVIDIA GPU. The
-reason why I think it should to be limited is that I'm pretty certain
-the problem is not in the root port itself. I have here a KBL based
-Thinkpad X1 Carbon 6th gen that can put the TBT controller into D3cold
-(it is connected to PCH root port) and it wakes up there just fine, so
-don't want to break that.
-
-Now, PCIe devices cannot go into D3cold all by themselves. They always
-need help from the platform side which is ACPI in this case. This is
-done by having the device to have _PR3 method that returns one or more
-power resources that the OS is supposed to turn off when the device is
-put into D3cold. All of that is implemented as form of ACPI methods that
-pretty much do the hardware specific things that are outside of PCIe
-spec to get the device into D3cold. At high level the _OFF() method
-causes the root port to broadcast PME_Turn_Off message that results the
-link to enter L2/3 ready, it then asserts PERST, configures WAKE (both
-can be GPIOs) and finally removes power (if the link goes into L3,
-otherwise it goes into L2).
-
-I think this is where the problem actually lies - the ASL methods that
-are used to put the device into D3cold and back. We know that in Windows
-this all works fine so unless Windows quirks the root port the same way
-there is another reason behind this.
-
-In case of Dell XPS 9560 (IIRC that's the machine you have) the
-corresponding power resource is called \_SB.PCI0.PEG0.PG00 and its
-_ON/_OFF methods end up calling PGON()/PGOF() accordingly. The methods
-itself do lots of things and it is hard to follow the dissassembled
-ASL which does not have any comments but there are couple of things that
-stand out where we may go into a different path. One of them is this in
-the PGOF() method:
-
-   If (((OSYS <= 0x07D9) || ((OSYS == 0x07DF) && (_REV == 0x05))))
-
-The ((OSYS == 0x07DF) && (_REV == 0x05)) checks specifically for Linux
-(see [1] and 18d78b64fddc ("ACPI / init: Make it possible to override
-_REV")) so it might be that Dell people tested this at some point in
-Linux as well. Added Mario in case he has any ideas.
-
-Previously I suggested you to try the ACPI method tracing to see what
-happens inside PGOF(). Did you have time to try it? It may provide more
-information about that is happening inside those methods and hopefully
-point us to the root cause.
-
-Also if you haven't tried already passing acpi_rev_override in the
-command line makes the _REV to return 5 so it should go into the "Linux"
-path in PGOF().
-
-[1] https://www.kernel.org/doc/html/latest/firmware-guide/acpi/osi.html#do-not-use-rev
-
-> > > Signed-off-by: Karol Herbst <kherbst@redhat.com>
-> > > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > > Cc: Lyude Paul <lyude@redhat.com>
-> > > Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-> > > Cc: Mika Westerberg <mika.westerberg@intel.com>
-> > > Cc: linux-pci@vger.kernel.org
-> > > Cc: linux-pm@vger.kernel.org
-> > > Cc: dri-devel@lists.freedesktop.org
-> > > Cc: nouveau@lists.freedesktop.org
-> > > ---
-> > >  drivers/pci/pci.c    |  7 ++++++
-> > >  drivers/pci/quirks.c | 53 ++++++++++++++++++++++++++++++++++++++++++++
-> > >  include/linux/pci.h  |  1 +
-> > >  3 files changed, 61 insertions(+)
-> > >
-> > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > > index b97d9e10c9cc..02e71e0bcdd7 100644
-> > > --- a/drivers/pci/pci.c
-> > > +++ b/drivers/pci/pci.c
-> > > @@ -850,6 +850,13 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
-> > >          || (state == PCI_D2 && !dev->d2_support))
-> > >               return -EIO;
-> > >
-> > > +     /*
-> > > +      * check if we have a bad combination of bridge controller and nvidia
-> > > +         * GPU, see quirk_broken_nv_runpm for more info
-> >
-> > Whitespace damage.  Capitalized incorrectly (see other comments
-> > nearby).
-> >
-> > > +      */
-> > > +     if (state != PCI_D0 && dev->broken_nv_runpm)
-> > > +             return 0;
-> > > +
-> > >       pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
-> > >
-> > >       /*
-> > > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> > > index 44c4ae1abd00..0006c9e37b6f 100644
-> > > --- a/drivers/pci/quirks.c
-> > > +++ b/drivers/pci/quirks.c
-> > > @@ -5268,3 +5268,56 @@ static void quirk_reset_lenovo_thinkpad_p50_nvgpu(struct pci_dev *pdev)
-> > >  DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, 0x13b1,
-> > >                             PCI_CLASS_DISPLAY_VGA, 8,
-> > >                             quirk_reset_lenovo_thinkpad_p50_nvgpu);
-> > > +
-> > > +/*
-> > > + * Some Intel PCIe bridges cause devices to disappear from the PCIe bus after
-> > > + * those were put into D3cold state if they were put into a non D0 PCI PM
-> > > + * device state before doing so.
-> >
-> > A device in D3cold is off the bus by definition.
-> >
-> > IIUC the problem is that the sequence D0 -> D3hot -> D3cold -> D0 for
-> > the GPU fails in the transition back to D0, while D0 -> D3cold -> D0
-> > works fine.
-> >
-> > So I guess the problem is that we can put the device in D3cold with no
-> > problem, but if we put in D3hot before going to D3cold, the device
-> > never comes back to D0.  Right?
-> >
-> 
-> correct. It By the way, it doesn't matter if I put the device into D1
-> instead, as long as the device is not in D0 state before putting it
-> into D3cold, it fails.
-> 
-> > > + * This leads to various issue different issues which all manifest differently,
-> >
-> > s/issue different//
-> >
-> > Actually, I think there's only one underlying issue with several
-> > manifestations.
-> >
-> > > + * but have the same root cause:
-> > > + *  - AIML code execution hits an infinite loop (as the coe waits on device
-> > > + *    memory to change).
-> >
-> > s/AIML/AML/
-> > s/coe/code/
-> >
-> > > + *  - kernel crashes, as all pci reads return -1, which most code isn't able
-> > > + *    to handle well enough.
-> >
-> > s/pci/PCI/
-> >
-> > More details about these crashes would be useful as we look at places
-> > that *should* be able to handle errors like this.
-> >
-> 
-> makes sense, I could ,orthogonal to this, make the code more robust if
-> we hit issues like this in the future. What I am mostly wondering
-> about is, why pci core doesn't give up if the device doesn't come back
-> from D3cold? It sounds like, that the most sane thing to do here is to
-> just give up and fail runtime_resume and report errors back to
-> userspace trying to make use of the devices.
-> 
-> > > + *  - sudden shutdowns, as the kernel identified an unrecoverable error after
-> > > + *    userspace tries to access the GPU.
-> >
-> > This doesn't fit with the others and more details might be
-> > informative here as well.
-> >
-> 
-> yeah.. I try to get more infos on that. But at least for me (and it
-> might be a distribution thing) if I execute lspci, the system shuts
-> down, or at least tries to and might fail.
-> 
-> > > + * In all cases dmesg will contain at least one line like this:
-> > > + * 'nouveau 0000:01:00.0: Refused to change power state, currently in D3'
-> > > + * followed by a lot of nouveau timeouts.
-> > > + *
-> > > + * ACPI code writes bit 0x80 to the not documented PCI register 0x248 of the
-> > > + * PCIe bridge controller in order to power down the GPU.
-> > > + * Nonetheless, there are other code paths inside the ACPI firmware which use
-> > > + * other registers, which seem to work fine:
-> > > + *  - 0xbc bit 0x20 (publicly available documentation claims 'reserved')
-> > > + *  - 0xb0 bit 0x10 (link disable)
-> >
-> > All these register addresses are device-specific, so they're useless
-> > without identifying the device.  "lspci -vvnn" output would let us at
-> > least connect this with something.  It would be nice to have that info
-> > archived along with your acpidump and python repro scripts in a
-> > bugzilla with the URL in the commit log.
-> >
-> > These are likely in PCI capabilities.  If I make the leap of assuming
-> > the "link disable" bit is PCI_EXP_LNKCTL_LD, that would mean the Link
-> > Control register is at 0xb0 and the register at 0xbc would be the Root
-> > Control register, and indeed 0x20 in Root Control is reserved.
-> >
-> > I don't know what the relevance of all this is, though.  It's not
-> > remarkable that accesses to these registers work.
-> >
-> 
-> those are registers on the bridge controller and are using inside ACPI
-> to power down the link. Depending on the OS detected other methods are
-> used afaik.
-> 
-> > Unless you mean you can access these registers *after* trying to put
-> > the device back in D0, but other accesses to the device fail.  That
-> > would indeed be very interesting.
-> >
-> > > + * Changing the conditions inside the firmware by poking into the relevant
-> > > + * addresses does resolve the issue, but it seemed to be ACPI private memory
-> > > + * and not any device accessible memory at all, so there is no portable way of
-> > > + * changing the conditions.
-> > > + *
-> > > + * The only systems where this behavior can be seen are hybrid graphics laptops
-> > > + * with a secondary Nvidia Pascal GPU. It cannot be ruled out that this issue
-> > > + * only occurs in combination with listed Intel PCIe bridge controllers and
-> > > + * the mentioned GPUs or if it's only a hw bug in the bridge controller.
-> > > + *
-> > > + * But because this issue was NOT seen on laptops with an Nvidia Pascal GPU
-> > > + * and an Intel Coffee Lake SoC, there is a higher chance of there being a bug
-> > > + * in the bridge controller rather than in the GPU.
-> >
-> > I don't think we can conclude anything about where the defect is and I
-> > don't think speculating here will help future readers of this code.
-> >
-> > I *would* still like to see a bugzilla listing the systems where this
-> > problem has been seen with the "lspci -vvnn", dmesg logs, and at least
-> > one acpidump.  I think there's more to this story, and I suspect we
-> > may be revisiting this in the future.
-> >
-> 
-> one big one is https://bugzilla.kernel.org/show_bug.cgi?id=156341 but
-> it's filled with a lot of different reports, but I am sure most of
-> them point to this very issue.
-> 
-> Sadly nobody thought of checking lspci with runpm disabled.. but I
-> could check for other bugs.
-> 
-> > > + * This issue was not able to be reproduced on non laptop systems.
-> > > + */
-> > > +
-> > > +static void quirk_broken_nv_runpm(struct pci_dev *dev)
-> > > +{
-> > > +     struct pci_dev *bridge = pci_upstream_bridge(dev);
-> > > +
-> > > +     if (bridge->vendor == PCI_VENDOR_ID_INTEL &&
-> > > +         bridge->device == 0x1901)
-> >
-> > pci_upstream_bridge() may return NULL, so you need
-> >
-> >   if (bridge && bridge->vendor == PCI_VENDOR_ID_INTEL ...
-> >
-> > https://lore.kernel.org/r/20190927144421.22608-1-kherbst@redhat.com
-> > says Skylake and Kaby Lake SoCs are affected.  But here you only check
-> > for one Device ID?
-> >
-> 
-> yes, I found this bridge controllers on skylake and kaby lake SoCs,
-> but I could verify there are systems with a different architecture
-> (using the "PCI Express Root Port" devices instead of "Processor PCIe
-> Controller") do not show this issue, so I think it might indeed be
-> just this one bridge controller. I couldn't verify this issue on any
-> other so far.
-> 
-> But I could verify this issue with this one bridge controller in
-> combination with Maxwell, Pascal and Turing Nvidia GPUs.
-> 
-> > > +             dev->broken_nv_runpm = 1;
-> > > +}
-> > > +DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
-> > > +                           PCI_BASE_CLASS_DISPLAY, 16,
-> > > +                           quirk_broken_nv_runpm);
-> > > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > > index ac8a6c4e1792..903a0b3a39ec 100644
-> > > --- a/include/linux/pci.h
-> > > +++ b/include/linux/pci.h
-> > > @@ -416,6 +416,7 @@ struct pci_dev {
-> > >       unsigned int    __aer_firmware_first_valid:1;
-> > >       unsigned int    __aer_firmware_first:1;
-> > >       unsigned int    broken_intx_masking:1;  /* INTx masking can't be used */
-> > > +     unsigned int    broken_nv_runpm:1;      /* some combinations of intel bridge controller and nvidia GPUs break rtd3 */
-> > >       unsigned int    io_window_1k:1;         /* Intel bridge 1K I/O windows */
-> > >       unsigned int    irq_managed:1;
-> > >       unsigned int    has_secondary_link:1;
-> > > --
-> > > 2.21.0
-> > >
-> >
-> 
-> Will send out a v5 later addressing you review. Thanks!
+SGkgUnVzc2VsbCwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSdXNz
+ZWxsIEtpbmcgLSBBUk0gTGludXggYWRtaW4gPGxpbnV4QGFybWxpbnV4Lm9yZy51az4NCj4gU2Vu
+dDogMjAxOcTqMTHUwjIwyNUgMTc6NTcNCj4gVG86IFoucS4gSG91IDx6aGlxaWFuZy5ob3VAbnhw
+LmNvbT4NCj4gQ2M6IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxA
+bGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4
+LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IGJoZWxnYWFzQGdvb2dsZS5jb207IHJvYmgrZHRA
+a2VybmVsLm9yZzsgYXJuZEBhcm5kYi5kZTsNCj4gbWFyay5ydXRsYW5kQGFybS5jb207IGwuc3Vi
+cmFobWFueWFAbW9iaXZlaWwuY28uaW47DQo+IHNoYXduZ3VvQGtlcm5lbC5vcmc7IG0ua2FydGhp
+a2V5YW5AbW9iaXZlaWwuY28uaW47IExlbyBMaQ0KPiA8bGVveWFuZy5saUBueHAuY29tPjsgbG9y
+ZW56by5waWVyYWxpc2lAYXJtLmNvbTsNCj4gY2F0YWxpbi5tYXJpbmFzQGFybS5jb207IHdpbGwu
+ZGVhY29uQGFybS5jb207DQo+IGFuZHJldy5tdXJyYXlAYXJtLmNvbTsgTS5oLiBMaWFuIDxtaW5n
+aHVhbi5saWFuQG54cC5jb20+OyBYaWFvd2VpDQo+IEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT47
+IE1pbmdrYWkgSHUgPG1pbmdrYWkuaHVAbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSHY5
+IDAwLzEyXSBQQ0k6IFJlY29kZSBNb2JpdmVpbCBkcml2ZXIgYW5kIGFkZCBQQ0llIEdlbjQNCj4g
+ZHJpdmVyIGZvciBOWFAgTGF5ZXJzY2FwZSBTb0NzDQo+IA0KPiBPbiBXZWQsIE5vdiAyMCwgMjAx
+OSBhdCAwMzo0NToxN0FNICswMDAwLCBaLnEuIEhvdSB3cm90ZToNCj4gPiBGcm9tOiBIb3UgWmhp
+cWlhbmcgPFpoaXFpYW5nLkhvdUBueHAuY29tPg0KPiA+DQo+ID4gVGhpcyBwYXRjaCBzZXQgaXMg
+dG8gcmVjb2RlIHRoZSBNb2JpdmVpbCBkcml2ZXIgYW5kIGFkZCBQQ0llIHN1cHBvcnQNCj4gPiBm
+b3IgTlhQIExheWVyc2NhcGUgc2VyaWVzIFNvQ3MgaW50ZWdyYXRlZCBNb2JpdmVpbCdzIFBDSWUg
+R2VuNA0KPiA+IGNvbnRyb2xsZXIuDQo+IA0KPiBIb3cgbWFueSBQQ0llIGNhcmRzIGhhdmUgYmVl
+biB0ZXN0ZWQgdG8gd29yay9kb24ndCB3b3JrIHdpdGggdGhpcz8NCj4gDQo+IEkgbmVlZDoNCj4g
+DQo+IFBDSTogbW9iaXZlaWw6IGxzX3BjaWVfZzQ6IGZpeCBTRXJyb3Igd2hlbiBhY2Nlc3Npbmcg
+Y29uZmlnIHNwYWNlDQo+IFBDSTogbW9iaXZlaWw6IGxzX3BjaWVfZzQ6IGFkZCBXb3JrYXJvdW5k
+IGZvciBBLTAxMTQ1MQ0KPiBQQ0k6IG1vYml2ZWlsOiBsc19wY2llX2c0OiBhZGQgV29ya2Fyb3Vu
+ZCBmb3IgQS0wMTE1NzcNCj4gDQo+IHRvIHN1Y2Nlc3NmdWxseSBib290IHdpdGggYSBNZWxsYW5v
+eCBjYXJkIHBsdWdnZWQgaW4gd2l0aCBhIHByZXZpb3VzIHJldmlzaW9uDQo+IG9mIHRoZXNlIHBh
+dGNoZXMuDQo+DQoNClllcywgd2UgbmVlZCB0byBhcHBseSB0aGVzZSBOWFAgaW50ZXJuYWwgbWFp
+bnRhaW5lZCB3b3JrYXJvdW5kcyBvbiB0b3Agb2YNCnRoaXMgc2VyaWVzLiBJIG9ubHkgdGVzdGVk
+IEludGVsIGUxMDAwZSBOSUMgd2l0aCB0aGlzIHBhdGNoIHNldCArIHRoZXNlIDMNCndvcmthcm91
+bmRzLg0KDQpUaGFua3MsDQpaaGlxaWFuZw0KIA0KPiAtLQ0KPiBSTUsncyBQYXRjaCBzeXN0ZW06
+DQo+IGh0dHBzOi8vZXVyMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1o
+dHRwcyUzQSUyRiUyRnd3dw0KPiAuYXJtbGludXgub3JnLnVrJTJGZGV2ZWxvcGVyJTJGcGF0Y2hl
+cyUyRiZhbXA7ZGF0YT0wMiU3QzAxJTdDemhpcQ0KPiBpYW5nLmhvdSU0MG54cC5jb20lN0M2OWY2
+ZmIxZjRmZDQ0ZjNmY2EzODA4ZDc2ZGEwMTQ0MCU3QzY4NmVhMWQNCj4gM2JjMmI0YzZmYTkyY2Q5
+OWM1YzMwMTYzNSU3QzAlN0MwJTdDNjM3MDk4NDA2NjA2NTAzMzYxJmFtcDtzZA0KPiBhdGE9d09M
+V3pLZlpab2lQJTJGWnBUT3c1enI0ZW5wdU5JbXo0NVJNOEh5ODBhVWRJJTNEJmFtcDtyZXMNCj4g
+ZXJ2ZWQ9MA0KPiBGVFRDIGJyb2FkYmFuZCBmb3IgMC44bWlsZSBsaW5lIGluIHN1YnVyYmlhOiBz
+eW5jIGF0IDEyLjFNYnBzIGRvd24gNjIya2Jwcw0KPiB1cCBBY2NvcmRpbmcgdG8gc3BlZWR0ZXN0
+Lm5ldDogMTEuOU1icHMgZG93biA1MDBrYnBzIHVwDQo=
