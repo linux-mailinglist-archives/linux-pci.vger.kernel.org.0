@@ -2,82 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B4F58103ABB
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Nov 2019 14:08:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E96BA103B38
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Nov 2019 14:23:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730081AbfKTNIb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 Nov 2019 08:08:31 -0500
-Received: from mga11.intel.com ([192.55.52.93]:50971 "EHLO mga11.intel.com"
+        id S1730148AbfKTNXQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 Nov 2019 08:23:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730079AbfKTNIb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 20 Nov 2019 08:08:31 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 05:08:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,222,1571727600"; 
-   d="scan'208";a="406803216"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga005.fm.intel.com with ESMTP; 20 Nov 2019 05:08:27 -0800
-Received: from andy by smile with local (Exim 4.93-RC1)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1iXPic-0005Ei-Tk; Wed, 20 Nov 2019 15:08:26 +0200
-Date:   Wed, 20 Nov 2019 15:08:26 +0200
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Dilip Kota <eswara.kota@linux.intel.com>
-Cc:     gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
-        andrew.murray@arm.com, helgaas@kernel.org, jingoohan1@gmail.com,
-        robh@kernel.org, martin.blumenstingl@googlemail.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
-Subject: Re: [PATCH v8 2/3] dwc: PCI: intel: PCIe RC controller driver
-Message-ID: <20191120130826.GM32742@smile.fi.intel.com>
-References: <cover.1574158309.git.eswara.kota@linux.intel.com>
- <71262d29ca564060331e7e2c1ceb41158109cb92.1574158309.git.eswara.kota@linux.intel.com>
+        id S1728958AbfKTNXP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 20 Nov 2019 08:23:15 -0500
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87E5422521;
+        Wed, 20 Nov 2019 13:23:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574256194;
+        bh=uYy9gLdFES2Nr8qdLHqGdYuL8mGK/ZNWP6mAo5p8ID4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=zjg14zxk6OdJvEH8K7aBq16aqxr+CyRg5EAjpKosJly0pR/RGIv8mmMym+ucN6J2G
+         BSYAALkbLmG0Hoh9vDk+4n1s+pD5FiXG5LGyUENl+E2Mm55OuA3djfIedvBa0+kFnM
+         ZM7H4BGWd+Ojv85gd8455UrbZJLxRCAhsbeH8D1s=
+Date:   Wed, 20 Nov 2019 07:23:12 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Alex Williamson <alex.williamson@redhat.com>,
+        linux-pci@vger.kernel.org
+Cc:     George Cherian <george.cherian@marvell.com>,
+        Robert Richter <rrichter@marvell.com>, Feng Kan <fkan@apm.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Abhinav Ratna <abhinav.ratna@broadcom.com>
+Subject: Re: [PATCH 0/2] PCI: Unify ACS quirks
+Message-ID: <20191120132312.GA87386@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <71262d29ca564060331e7e2c1ceb41158109cb92.1574158309.git.eswara.kota@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20191114220601.261647-1-helgaas@kernel.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 03:43:01PM +0800, Dilip Kota wrote:
-> Add support to PCIe RC controller on Intel Gateway SoCs.
-> PCIe controller is based of Synopsys DesignWare PCIe core.
+On Thu, Nov 14, 2019 at 04:05:59PM -0600, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
 > 
-> Intel PCIe driver requires Upconfigure support, Fast Training
-> Sequence and link speed configurations. So adding the respective
-> helper functions in the PCIe DesignWare framework.
-> It also programs hardware autonomous speed during speed
-> configuration so defining it in pci_regs.h.
+> These are pretty trivial and not intended to fix anything, but just to
+> remove unnecessary differences of implementation from the ACS quirks.
+> 
+> Bjorn Helgaas (2):
+>   PCI: Make ACS quirk implementations more uniform
+>   PCI: Unify ACS quirk desired vs provided checking
+> 
+>  drivers/pci/quirks.c | 96 ++++++++++++++++++++++++++------------------
+>  1 file changed, 58 insertions(+), 38 deletions(-)
 
-> +static void pcie_app_wr_mask(struct intel_pcie_port *lpp,
-> +			     u32 ofs, u32 mask, u32 val)
-
-It seems your editor is misconfigured. First line should be
-
-static void pcie_app_wr_mask(struct intel_pcie_port *lpp, u32 ofs,
-
-in case you would like to split it logically.
-
-> +static void pcie_rc_cfg_wr_mask(struct intel_pcie_port *lpp,
-> +				u32 ofs, u32 mask, u32 val)
-
-Ditto.
-
-> +	pcie_app_wr(lpp,  PCIE_APP_IRNCR, PCIE_APP_IRN_INT);
-
-Extra white space.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Applied with reviewed-by from Alex and Logan to pci/virtualization for
+v5.5.
