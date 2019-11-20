@@ -2,136 +2,173 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 222C5103237
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Nov 2019 04:46:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A9FB81033A3
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Nov 2019 06:17:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727535AbfKTDqp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 19 Nov 2019 22:46:45 -0500
-Received: from mail-eopbgr10064.outbound.protection.outlook.com ([40.107.1.64]:27138
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727362AbfKTDqp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 19 Nov 2019 22:46:45 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=A5nhIIXcc4LIHsGYMVKVtlm25PR8diBgF1IhXC9kK0JGOr7emJ4Je4A2MnHd/l485btMNpduYpe7XQDpGK/ZET6t/HbI/7DfZ7DDodfhxO8zvDv3sHbD9Ga5hS8G1lsrDYKGgcGpWQLEWrcXpjwB+Zg+hnOSpDZVVNCQmcA0XWhMyztTnZR5+JG+Q8P5voMtDXR2CByw0xExnh4jJxXHsn2o9OmX2Mr6Gaq/ST3+4r2hqto4HUAhiiJqbikqKcTJX+mXqep6t8m2//k6i2azGS7wJUMqtVjG7h0Tn3pQ7VJRkhG9IeTFEV1IDkK/aSESXn7v6MbveU47pV8aUqLwoA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xvECcNdsNP8ZxLYSQY4khzYzlK5B0ouWjp4ZsyQVMWE=;
- b=c3SdO/X6zR3Fko1Gr3GwSeGLn5aJn/Q+eYKSH0rw/MWRTaBqTxuI9jQk18O2Q2WBlRq9wmrLCr+72XEKfIXJxoII0aJDJ5qXX9pgEhC6C6P42b5SaIE0yQqtXekXvgYaMHHF6sbxZq0xHodv3xi85zd8fPExvnfML0v5heTUB25NjeFkKfjbRJPSLfoxW6d5x/kiMZn0luGHhj0lJJi+UcFdfxUBv6Ypkj459qo+xHQR5EzJ7FatNNveq8mUxCe2/ggwCsginzeyvWzqIJFCF77RjDhMdJdZ1OHn7ZGe4PQiAl+OO310xUQqWOymAzgNQg6ZQ5+lvpjNNAbSQHzTvg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xvECcNdsNP8ZxLYSQY4khzYzlK5B0ouWjp4ZsyQVMWE=;
- b=KooYPAYl6PpYVNNjld6/PNJJlf2kLBh3un8SWTTLajGealHr7KYY1sk8a492KNQU1j6aijhr+VGdSIk1MymgqfifyySr9IHBzVmIEdgfZHJQ+FzQl2vySLgD0lCsf3rutI3HqFnVnVh9THbx4Cq/oXI4mkZdXj02sQdorhYyqSo=
-Received: from DB8PR04MB6747.eurprd04.prod.outlook.com (20.179.250.159) by
- DB8PR04MB5740.eurprd04.prod.outlook.com (20.179.9.142) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.29; Wed, 20 Nov 2019 03:46:37 +0000
-Received: from DB8PR04MB6747.eurprd04.prod.outlook.com
- ([fe80::898f:3cd6:c225:7219]) by DB8PR04MB6747.eurprd04.prod.outlook.com
- ([fe80::898f:3cd6:c225:7219%7]) with mapi id 15.20.2451.029; Wed, 20 Nov 2019
- 03:46:37 +0000
-From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
-To:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
-        Leo Li <leoyang.li@nxp.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>
-CC:     Mingkai Hu <mingkai.hu@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>,
-        "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: [PATCHv9 12/12] arm64: defconfig: Enable CONFIG_PCIE_LAYERSCAPE_GEN4
-Thread-Topic: [PATCHv9 12/12] arm64: defconfig: Enable
- CONFIG_PCIE_LAYERSCAPE_GEN4
-Thread-Index: AQHVn1Uc4M4RucFezkSHTTtL1plrKw==
-Date:   Wed, 20 Nov 2019 03:46:37 +0000
-Message-ID: <20191120034451.30102-13-Zhiqiang.Hou@nxp.com>
-References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
-In-Reply-To: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HK2PR02CA0199.apcprd02.prod.outlook.com
- (2603:1096:201:20::11) To DB8PR04MB6747.eurprd04.prod.outlook.com
- (2603:10a6:10:10b::31)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=zhiqiang.hou@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 5777c186-826b-4758-d6db-08d76d6c3e7a
-x-ms-traffictypediagnostic: DB8PR04MB5740:|DB8PR04MB5740:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB8PR04MB5740FD1F6D73666FB6F571A3844F0@DB8PR04MB5740.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2449;
-x-forefront-prvs: 02272225C5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(376002)(39860400002)(366004)(136003)(189003)(199004)(8936002)(305945005)(102836004)(71190400001)(71200400001)(76176011)(386003)(14454004)(478600001)(66946007)(66446008)(99286004)(66556008)(64756008)(446003)(2906002)(2616005)(66476007)(11346002)(36756003)(52116002)(6506007)(7416002)(6512007)(186003)(256004)(26005)(6436002)(6486002)(4326008)(110136005)(8676002)(316002)(6116002)(66066001)(2201001)(25786009)(4744005)(486006)(3846002)(1076003)(7736002)(5660300002)(81166006)(81156014)(50226002)(86362001)(476003)(2501003)(54906003)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB5740;H:DB8PR04MB6747.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: aiVbzQqlrFdyuxHzzTMiwP1AMPxeLmNYZEfJRR9YYSJRsl3Yb5YS2NtLERE+si728BlNK9js1pmozSv2z6FF4iO96t4bGMJv+yd4olMBO+h9HIa/ZfOSTT3P/wFIiXJrhKkL52GAf5u+Lv/PVnfpnn7zJl4TzeeG7xNRKf2fK+xLfva5iBch9UwJ01EQCjCJrMj8A0WOmp95V+xGB/G02Aj3WBG6BKUgbMzpJiJ3qMyEdHismk7/Wf0eXtk484RdVkkIC3BzTIINgk+6nYlHlHpP60XuMJvC7cncHv/3qPFzEjyslvWgzji3S/FWMq+qavWUnJDSHQKeqeMBt9H2Qh1JfTCjGG3zXkTcX9yBJQdCn2njOVcFkcaww0v9vYsVOpu7TIEA4dTNIsV6WLe8YVeuDswuUGMkV6YSMypU1t1kNmvx/LO4cbHj8VZu225+
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        id S1725832AbfKTFRw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 Nov 2019 00:17:52 -0500
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:8357 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725554AbfKTFRw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Nov 2019 00:17:52 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dd4cc820000>; Tue, 19 Nov 2019 21:17:54 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 19 Nov 2019 21:17:51 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 19 Nov 2019 21:17:51 -0800
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 20 Nov
+ 2019 05:17:51 +0000
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 20 Nov
+ 2019 05:17:50 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 20 Nov 2019 05:17:50 +0000
+Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.48]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5dd4cc7a0003>; Tue, 19 Nov 2019 21:17:49 -0800
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <bhelgaas@google.com>, <lorenzo.pieralisi@arm.com>,
+        <rjw@rjwysocki.net>, <okaya@kernel.org>, <treding@nvidia.com>,
+        <jonathanh@nvidia.com>
+CC:     <linux-tegra@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>,
+        <sagar.tv@gmail.com>
+Subject: [PATCH V2 1/2] PCI: Move the definition of pci_dev_wait()
+Date:   Wed, 20 Nov 2019 10:47:42 +0530
+Message-ID: <20191120051743.23124-1-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191118172310.21373-1-vidyas@nvidia.com>
+References: <20191118172310.21373-1-vidyas@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5777c186-826b-4758-d6db-08d76d6c3e7a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Nov 2019 03:46:37.3195
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: YAvMzeWFzRvOAoTeCI4EuyrEhPt8RKMYxaTxUaoGA9VvU6uPVn4hNXbSf3Q2z9ncbBAOgWP+Yg1o/esjlPGnog==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB5740
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1574227074; bh=b6q8dQLvbvfzSyLQrEbGr/padE6lF7nxbuX1hwZDhdw=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=Oq+4VMm/11a2LYHu+IcbdpKGvFRyIriE79RKBjsSoVJVD7T+lVwEhySsMdrI5JAu/
+         63pUBmbTQZuKov+vfAOOyrWAWrreMbfp8dATnxbc9N3o7dBdfQPN9T1HxDXrW2tILw
+         GWtde0wGFcNwaGOsFqs+BRnIuZ05bxFyRa1k0I7uHZ3WJpjwS0JpBQqaSF5od/z/Ik
+         nOjszBibbmAtp77fOIyvAYlHmDD7263lkjwsfpbXdihUMogHMKsMHwjxe24m8eZds6
+         vO/Xf4l72iVomQrUBiBEw1zo/K/xoqVna7MV76B3nXBv7OF2ynzE1h2wAtBjZEfaZ2
+         kAF/V/0ViYFqA==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Move the definition of pci_dev_wait() above pci_power_up() so that it
+can be called from the latter with no change in functionality.
 
-Enable the PCIe Gen4 controller driver for Layerscape SoCs.
-
-Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 ---
-V9:
- - No change
+ drivers/pci/pci.c | 82 +++++++++++++++++++++++------------------------
+ 1 file changed, 41 insertions(+), 41 deletions(-)
 
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 7fa92defb964..0e51207b5ed5 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -199,6 +199,7 @@ CONFIG_PCI_HOST_THUNDER_PEM=3Dy
- CONFIG_PCI_HOST_THUNDER_ECAM=3Dy
- CONFIG_PCIE_ROCKCHIP_HOST=3Dm
- CONFIG_PCI_LAYERSCAPE=3Dy
-+CONFIG_PCIE_LAYERSCAPE_GEN4=3Dy
- CONFIG_PCI_HISI=3Dy
- CONFIG_PCIE_QCOM=3Dy
- CONFIG_PCIE_ARMADA_8K=3Dy
---=20
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 599b2fc99234..71b45ce73bf6 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -1020,6 +1020,47 @@ void pci_wakeup_bus(struct pci_bus *bus)
+ 		pci_walk_bus(bus, pci_wakeup, NULL);
+ }
+ 
++static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
++{
++	int delay = 1;
++	u32 id;
++
++	/*
++	 * After reset, the device should not silently discard config
++	 * requests, but it may still indicate that it needs more time by
++	 * responding to them with CRS completions.  The Root Port will
++	 * generally synthesize ~0 data to complete the read (except when
++	 * CRS SV is enabled and the read was for the Vendor ID; in that
++	 * case it synthesizes 0x0001 data).
++	 *
++	 * Wait for the device to return a non-CRS completion.  Read the
++	 * Command register instead of Vendor ID so we don't have to
++	 * contend with the CRS SV value.
++	 */
++	pci_read_config_dword(dev, PCI_COMMAND, &id);
++	while (id == ~0) {
++		if (delay > timeout) {
++			pci_warn(dev, "not ready %dms after %s; giving up\n",
++				 delay - 1, reset_type);
++			return -ENOTTY;
++		}
++
++		if (delay > 1000)
++			pci_info(dev, "not ready %dms after %s; waiting\n",
++				 delay - 1, reset_type);
++
++		msleep(delay);
++		delay *= 2;
++		pci_read_config_dword(dev, PCI_COMMAND, &id);
++	}
++
++	if (delay > 1000)
++		pci_info(dev, "ready %dms after %s\n", delay - 1,
++			 reset_type);
++
++	return 0;
++}
++
+ /**
+  * pci_power_up - Put the given device into D0
+  * @dev: PCI device to power up
+@@ -4420,47 +4461,6 @@ int pci_wait_for_pending_transaction(struct pci_dev *dev)
+ }
+ EXPORT_SYMBOL(pci_wait_for_pending_transaction);
+ 
+-static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
+-{
+-	int delay = 1;
+-	u32 id;
+-
+-	/*
+-	 * After reset, the device should not silently discard config
+-	 * requests, but it may still indicate that it needs more time by
+-	 * responding to them with CRS completions.  The Root Port will
+-	 * generally synthesize ~0 data to complete the read (except when
+-	 * CRS SV is enabled and the read was for the Vendor ID; in that
+-	 * case it synthesizes 0x0001 data).
+-	 *
+-	 * Wait for the device to return a non-CRS completion.  Read the
+-	 * Command register instead of Vendor ID so we don't have to
+-	 * contend with the CRS SV value.
+-	 */
+-	pci_read_config_dword(dev, PCI_COMMAND, &id);
+-	while (id == ~0) {
+-		if (delay > timeout) {
+-			pci_warn(dev, "not ready %dms after %s; giving up\n",
+-				 delay - 1, reset_type);
+-			return -ENOTTY;
+-		}
+-
+-		if (delay > 1000)
+-			pci_info(dev, "not ready %dms after %s; waiting\n",
+-				 delay - 1, reset_type);
+-
+-		msleep(delay);
+-		delay *= 2;
+-		pci_read_config_dword(dev, PCI_COMMAND, &id);
+-	}
+-
+-	if (delay > 1000)
+-		pci_info(dev, "ready %dms after %s\n", delay - 1,
+-			 reset_type);
+-
+-	return 0;
+-}
+-
+ /**
+  * pcie_has_flr - check if a device supports function level resets
+  * @dev: device to check
+-- 
 2.17.1
 
