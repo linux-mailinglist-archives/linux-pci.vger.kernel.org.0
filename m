@@ -2,165 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C5B41040B1
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Nov 2019 17:23:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D136E1040C3
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Nov 2019 17:27:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729500AbfKTQXM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 Nov 2019 11:23:12 -0500
-Received: from mga02.intel.com ([134.134.136.20]:35003 "EHLO mga02.intel.com"
+        id S1729862AbfKTQ15 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 Nov 2019 11:27:57 -0500
+Received: from foss.arm.com ([217.140.110.172]:42262 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727885AbfKTQXM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 20 Nov 2019 11:23:12 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 08:23:11 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,222,1571727600"; 
-   d="scan'208";a="215851006"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 20 Nov 2019 08:23:07 -0800
-Received: by lahna (sSMTP sendmail emulation); Wed, 20 Nov 2019 18:23:06 +0200
-Date:   Wed, 20 Nov 2019 18:23:06 +0200
-From:   Mika Westerberg <mika.westerberg@intel.com>
-To:     Karol Herbst <kherbst@redhat.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lyude Paul <lyude@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Dave Airlie <airlied@gmail.com>,
-        Mario Limonciello <Mario.Limonciello@dell.com>
-Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
- states on certain intel bridges
-Message-ID: <20191120162306.GM11621@lahna.fi.intel.com>
-References: <CAJZ5v0g4vp1C+zHU5nOVnkGsOjBvLaphK1kK=qAT6b=mK8kpsA@mail.gmail.com>
- <20191120112212.GA11621@lahna.fi.intel.com>
- <20191120115127.GD11621@lahna.fi.intel.com>
- <CACO55tsfNOdtu5SZ-4HzO4Ji6gQtafvZ7Rm19nkPcJAgwUBFMw@mail.gmail.com>
- <CACO55tscD_96jUVts+MTAUsCt-fZx4O5kyhRKoo4mKoC84io8A@mail.gmail.com>
- <20191120120913.GE11621@lahna.fi.intel.com>
- <CACO55tsHy6yZQZ8PkdW8iPA7+uc5rdcEwRJwYEQ3iqu85F8Sqg@mail.gmail.com>
- <20191120151542.GH11621@lahna.fi.intel.com>
- <CACO55tvo3rbPtYJcioEgXCEQqVXcVAm-iowr9Nim=bgTdMjgLw@mail.gmail.com>
- <20191120155301.GL11621@lahna.fi.intel.com>
+        id S1729857AbfKTQ15 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 20 Nov 2019 11:27:57 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8079E1FB;
+        Wed, 20 Nov 2019 08:27:56 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3148F3F703;
+        Wed, 20 Nov 2019 08:27:55 -0800 (PST)
+Date:   Wed, 20 Nov 2019 16:27:50 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Rob Herring <robh@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Srinath Mannam <srinath.mannam@broadcom.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: of: Restore alignment/indentation in host bridge
+ window table
+Message-ID: <20191120162750.GA3279@e121166-lin.cambridge.arm.com>
+References: <20191119191505.25286-1-geert+renesas@glider.be>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191120155301.GL11621@lahna.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191119191505.25286-1-geert+renesas@glider.be>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 05:53:07PM +0200, Mika Westerberg wrote:
-> On Wed, Nov 20, 2019 at 04:37:14PM +0100, Karol Herbst wrote:
-> > On Wed, Nov 20, 2019 at 4:15 PM Mika Westerberg
-> > <mika.westerberg@intel.com> wrote:
-> > >
-> > > On Wed, Nov 20, 2019 at 01:11:52PM +0100, Karol Herbst wrote:
-> > > > On Wed, Nov 20, 2019 at 1:09 PM Mika Westerberg
-> > > > <mika.westerberg@intel.com> wrote:
-> > > > >
-> > > > > On Wed, Nov 20, 2019 at 12:58:00PM +0100, Karol Herbst wrote:
-> > > > > > overall, what I really want to know is, _why_ does it work on windows?
-> > > > >
-> > > > > So do I ;-)
-> > > > >
-> > > > > > Or what are we doing differently on Linux so that it doesn't work? If
-> > > > > > anybody has any idea on how we could dig into this and figure it out
-> > > > > > on this level, this would probably allow us to get closer to the root
-> > > > > > cause? no?
-> > > > >
-> > > > > Have you tried to use the acpi_rev_override parameter in your system and
-> > > > > does it have any effect?
-> > > > >
-> > > > > Also did you try to trace the ACPI _ON/_OFF() methods? I think that
-> > > > > should hopefully reveal something.
-> > > > >
-> > > >
-> > > > I think I did in the past and it seemed to have worked, there is just
-> > > > one big issue with this: it's a Dell specific workaround afaik, and
-> > > > this issue plagues not just Dell, but we've seen it on HP and Lenovo
-> > > > laptops as well, and I've heard about users having the same issues on
-> > > > Asus and MSI laptops as well.
-> > >
-> > > Maybe it is not a workaround at all but instead it simply determines
-> > > whether the system supports RTD3 or something like that (IIRC Windows 8
-> > > started supporting it). Maybe Dell added check for Linux because at that
-> > > time Linux did not support it.
-> > >
-> > 
-> > the point is, it's not checking it by default, so by default you still
-> > run into the windows 8 codepath.
+On Tue, Nov 19, 2019 at 08:15:05PM +0100, Geert Uytterhoeven wrote:
+> Since the printing of the inbound resources was added, alignment and
+> indentation of the host bridge window table is broken because of two
+> reasons:
+>   1. The "IB MEM" row header is longer than the other headers,
+>   2. Inbound ranges typically extend beyond 32-bit address space, and thus
+>      don't fit in "#010llx".
 > 
-> Well you can add the quirk to acpi_rev_dmi_table[] so it goes to that
-> path by default. There are a bunch of similar entries for Dell machines.
+> Fix this by extending the row header field to 6 characters, and the
+> format string to 40-bit addresses.
 > 
-> Of course this does not help the non-Dell users so we would still need
-> to figure out the root cause.
+> Use "%6s" to handle field size and right-alignment, instead of manual
+> preparation using error-prone snprintf() calls.  Use the exact same
+> format string for both cases, to allow sharing.
+> 
+> Impact on kernel boot log on r8a7791/koelsch:
+> 
+>      rcar-pcie fe000000.pcie: host bridge /soc/pcie@fe000000 ranges:
+>     -rcar-pcie fe000000.pcie:    IO 0xfe100000..0xfe1fffff -> 0x00000000
+>     -rcar-pcie fe000000.pcie:   MEM 0xfe200000..0xfe3fffff -> 0xfe200000
+>     -rcar-pcie fe000000.pcie:   MEM 0x30000000..0x37ffffff -> 0x30000000
+>     -rcar-pcie fe000000.pcie:   MEM 0x38000000..0x3fffffff -> 0x38000000
+>     -rcar-pcie fe000000.pcie: IB MEM 0x40000000..0xbfffffff -> 0x40000000
+>     -rcar-pcie fe000000.pcie: IB MEM 0x200000000..0x2ffffffff -> 0x200000000
+>     +rcar-pcie fe000000.pcie:       IO 0x00fe100000..0x00fe1fffff -> 0x0000000000
+>     +rcar-pcie fe000000.pcie:      MEM 0x00fe200000..0x00fe3fffff -> 0x00fe200000
+>     +rcar-pcie fe000000.pcie:      MEM 0x0030000000..0x0037ffffff -> 0x0030000000
+>     +rcar-pcie fe000000.pcie:      MEM 0x0038000000..0x003fffffff -> 0x0038000000
+>     +rcar-pcie fe000000.pcie:   IB MEM 0x0040000000..0x00bfffffff -> 0x0040000000
+>     +rcar-pcie fe000000.pcie:   IB MEM 0x0200000000..0x02ffffffff -> 0x0200000000
+> 
+> Fixes: 52ac576f88f9f701 ("PCI: of: Add inbound resource parsing to helpers")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  drivers/pci/of.c | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
 
-I think I asked you to test the PCIe delay patch and it did not help but
-I wonder if it helps if we increase the delay. As an experiment could
-you try Bjorn's pci/pm branch. The last two commits are for the delay.
+Hi Rob,
 
-If you could pull that branch and apply the following patch on top and
-give it a try? Then post the dmesg somewhere so we can see whether it
-did the delay at all.
+do you mind if I squash this patch in the Fixes: above ?
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 1f319b1175da..1ad6f1372ed5 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -4697,12 +4697,7 @@ void pci_bridge_wait_for_secondary_bus(struct pci_dev *dev)
- 		return;
- 	}
- 
--	/* Take d3cold_delay requirements into account */
--	delay = pci_bus_max_d3cold_delay(dev->subordinate);
--	if (!delay) {
--		up_read(&pci_bus_sem);
--		return;
--	}
-+	delay = 500;
- 
- 	child = list_first_entry(&dev->subordinate->devices, struct pci_dev,
- 				 bus_list);
-@@ -4715,7 +4710,7 @@ void pci_bridge_wait_for_secondary_bus(struct pci_dev *dev)
- 	 * management for them (see pci_bridge_d3_possible()).
- 	 */
- 	if (!pci_is_pcie(dev)) {
--		pci_dbg(dev, "waiting %d ms for secondary bus\n", 1000 + delay);
-+		pci_info(dev, "waiting %d ms for secondary bus\n", 1000 + delay);
- 		msleep(1000 + delay);
- 		return;
- 	}
-@@ -4741,10 +4736,10 @@ void pci_bridge_wait_for_secondary_bus(struct pci_dev *dev)
- 		return;
- 
- 	if (pcie_get_speed_cap(dev) <= PCIE_SPEED_5_0GT) {
--		pci_dbg(dev, "waiting %d ms for downstream link\n", delay);
-+		pci_info(dev, "waiting %d ms for downstream link\n", delay);
- 		msleep(delay);
- 	} else {
--		pci_dbg(dev, "waiting %d ms for downstream link, after activation\n",
-+		pci_info(dev, "waiting %d ms for downstream link, after activation\n",
- 			delay);
- 		if (!pcie_wait_for_link_delay(dev, true, delay)) {
- 			/* Did not train, no need to wait any further */
-@@ -4753,7 +4748,7 @@ void pci_bridge_wait_for_secondary_bus(struct pci_dev *dev)
- 	}
- 
- 	if (!pci_device_is_present(child)) {
--		pci_dbg(child, "waiting additional %d ms to become accessible\n", delay);
-+		pci_info(child, "waiting additional %d ms to become accessible\n", delay);
- 		msleep(delay);
- 	}
- }
+Thanks,
+Lorenzo
+
+> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> index e7e12adcff3a3836..81ceeaa6f1d5a2c5 100644
+> --- a/drivers/pci/of.c
+> +++ b/drivers/pci/of.c
+> @@ -265,7 +265,7 @@ static int devm_of_pci_get_host_bridge_resources(struct device *dev,
+>  	struct resource *bus_range;
+>  	struct of_pci_range range;
+>  	struct of_pci_range_parser parser;
+> -	char range_type[4];
+> +	const char *range_type;
+>  	int err;
+>  
+>  	if (io_base)
+> @@ -299,12 +299,12 @@ static int devm_of_pci_get_host_bridge_resources(struct device *dev,
+>  	for_each_of_pci_range(&parser, &range) {
+>  		/* Read next ranges element */
+>  		if ((range.flags & IORESOURCE_TYPE_BITS) == IORESOURCE_IO)
+> -			snprintf(range_type, 4, " IO");
+> +			range_type = "IO";
+>  		else if ((range.flags & IORESOURCE_TYPE_BITS) == IORESOURCE_MEM)
+> -			snprintf(range_type, 4, "MEM");
+> +			range_type = "MEM";
+>  		else
+> -			snprintf(range_type, 4, "err");
+> -		dev_info(dev, "  %s %#010llx..%#010llx -> %#010llx\n",
+> +			range_type = "err";
+> +		dev_info(dev, "  %6s %#012llx..%#012llx -> %#012llx\n",
+>  			 range_type, range.cpu_addr,
+>  			 range.cpu_addr + range.size - 1, range.pci_addr);
+>  
+> @@ -359,8 +359,8 @@ static int devm_of_pci_get_host_bridge_resources(struct device *dev,
+>  		    range.cpu_addr == OF_BAD_ADDR || range.size == 0)
+>  			continue;
+>  
+> -		dev_info(dev, "IB MEM %#010llx..%#010llx -> %#010llx\n",
+> -			 range.cpu_addr,
+> +		dev_info(dev, "  %6s %#012llx..%#012llx -> %#012llx\n",
+> +			 "IB MEM", range.cpu_addr,
+>  			 range.cpu_addr + range.size - 1, range.pci_addr);
+>  
+>  
+> -- 
+> 2.17.1
+> 
