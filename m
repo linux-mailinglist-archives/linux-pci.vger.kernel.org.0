@@ -2,136 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CB48C103C1D
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Nov 2019 14:40:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 32523103E16
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Nov 2019 16:15:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730094AbfKTNko (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 Nov 2019 08:40:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48550 "EHLO mail.kernel.org"
+        id S1728256AbfKTPPt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 Nov 2019 10:15:49 -0500
+Received: from mga07.intel.com ([134.134.136.100]:50323 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728852AbfKTNkn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 20 Nov 2019 08:40:43 -0500
-Received: from localhost.localdomain (unknown [118.189.143.39])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30B7222528;
-        Wed, 20 Nov 2019 13:40:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574257243;
-        bh=5dgLwV0bZt3GcdVTr26oMTVvZYWZr57SNUE+QxYGXDU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=IbQ0hrxI3iau/m/kYqnq45+w2tafjS8Avec+zY5r13Hf8wzfAjIxVxnBCS8Gh0vBF
-         ICDXSX8AY9hm4omYt9enGyLj4Sjrq8N/t6VhFLgaW03RrJpHQO6ClJyqUrZQ+nbf98
-         JXGLErJgTfojOH9mjHBRuHA/BxnQkjwA4+Hsh+1k=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        linux-pci@vger.kernel.org
-Subject: [PATCH] pci: Fix Kconfig indentation
-Date:   Wed, 20 Nov 2019 21:40:36 +0800
-Message-Id: <20191120134036.14502-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        id S1726771AbfKTPPt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 20 Nov 2019 10:15:49 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 07:15:47 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,222,1571727600"; 
+   d="scan'208";a="215831473"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 20 Nov 2019 07:15:43 -0800
+Received: by lahna (sSMTP sendmail emulation); Wed, 20 Nov 2019 17:15:42 +0200
+Date:   Wed, 20 Nov 2019 17:15:42 +0200
+From:   Mika Westerberg <mika.westerberg@intel.com>
+To:     Karol Herbst <kherbst@redhat.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lyude Paul <lyude@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Dave Airlie <airlied@gmail.com>,
+        Mario Limonciello <Mario.Limonciello@dell.com>
+Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
+ states on certain intel bridges
+Message-ID: <20191120151542.GH11621@lahna.fi.intel.com>
+References: <20191119214955.GA223696@google.com>
+ <CACO55tu+8VeyMw1Lb6QvNspaJm9LDgoRbooVhr0s3v9uBt=feg@mail.gmail.com>
+ <20191120101816.GX11621@lahna.fi.intel.com>
+ <CAJZ5v0g4vp1C+zHU5nOVnkGsOjBvLaphK1kK=qAT6b=mK8kpsA@mail.gmail.com>
+ <20191120112212.GA11621@lahna.fi.intel.com>
+ <20191120115127.GD11621@lahna.fi.intel.com>
+ <CACO55tsfNOdtu5SZ-4HzO4Ji6gQtafvZ7Rm19nkPcJAgwUBFMw@mail.gmail.com>
+ <CACO55tscD_96jUVts+MTAUsCt-fZx4O5kyhRKoo4mKoC84io8A@mail.gmail.com>
+ <20191120120913.GE11621@lahna.fi.intel.com>
+ <CACO55tsHy6yZQZ8PkdW8iPA7+uc5rdcEwRJwYEQ3iqu85F8Sqg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACO55tsHy6yZQZ8PkdW8iPA7+uc5rdcEwRJwYEQ3iqu85F8Sqg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Adjust indentation from spaces to tab (+optional two spaces) as in
-coding style with command like:
-	$ sed -e 's/^        /\t/' -i */Kconfig
+On Wed, Nov 20, 2019 at 01:11:52PM +0100, Karol Herbst wrote:
+> On Wed, Nov 20, 2019 at 1:09 PM Mika Westerberg
+> <mika.westerberg@intel.com> wrote:
+> >
+> > On Wed, Nov 20, 2019 at 12:58:00PM +0100, Karol Herbst wrote:
+> > > overall, what I really want to know is, _why_ does it work on windows?
+> >
+> > So do I ;-)
+> >
+> > > Or what are we doing differently on Linux so that it doesn't work? If
+> > > anybody has any idea on how we could dig into this and figure it out
+> > > on this level, this would probably allow us to get closer to the root
+> > > cause? no?
+> >
+> > Have you tried to use the acpi_rev_override parameter in your system and
+> > does it have any effect?
+> >
+> > Also did you try to trace the ACPI _ON/_OFF() methods? I think that
+> > should hopefully reveal something.
+> >
+> 
+> I think I did in the past and it seemed to have worked, there is just
+> one big issue with this: it's a Dell specific workaround afaik, and
+> this issue plagues not just Dell, but we've seen it on HP and Lenovo
+> laptops as well, and I've heard about users having the same issues on
+> Asus and MSI laptops as well.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- drivers/pci/Kconfig                | 24 ++++++++++++------------
- drivers/pci/controller/dwc/Kconfig |  6 +++---
- drivers/pci/hotplug/Kconfig        |  2 +-
- 3 files changed, 16 insertions(+), 16 deletions(-)
+Maybe it is not a workaround at all but instead it simply determines
+whether the system supports RTD3 or something like that (IIRC Windows 8
+started supporting it). Maybe Dell added check for Linux because at that
+time Linux did not support it.
 
-diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-index 77c1428cd945..4bef5c2bae9f 100644
---- a/drivers/pci/Kconfig
-+++ b/drivers/pci/Kconfig
-@@ -106,14 +106,14 @@ config PCI_PF_STUB
- 	  When in doubt, say N.
- 
- config XEN_PCIDEV_FRONTEND
--        tristate "Xen PCI Frontend"
--        depends on X86 && XEN
--        select PCI_XEN
-+	tristate "Xen PCI Frontend"
-+	depends on X86 && XEN
-+	select PCI_XEN
- 	select XEN_XENBUS_FRONTEND
--        default y
--        help
--          The PCI device frontend driver allows the kernel to import arbitrary
--          PCI devices from a PCI backend to support PCI driver domains.
-+	default y
-+	help
-+	  The PCI device frontend driver allows the kernel to import arbitrary
-+	  PCI devices from a PCI backend to support PCI driver domains.
- 
- config PCI_ATS
- 	bool
-@@ -180,12 +180,12 @@ config PCI_LABEL
- 	select NLS
- 
- config PCI_HYPERV
--        tristate "Hyper-V PCI Frontend"
--        depends on X86_64 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && SYSFS
-+	tristate "Hyper-V PCI Frontend"
-+	depends on X86_64 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && SYSFS
- 	select PCI_HYPERV_INTERFACE
--        help
--          The PCI device frontend driver allows the kernel to import arbitrary
--          PCI devices from a PCI backend to support PCI driver domains.
-+	help
-+	  The PCI device frontend driver allows the kernel to import arbitrary
-+	  PCI devices from a PCI backend to support PCI driver domains.
- 
- source "drivers/pci/hotplug/Kconfig"
- source "drivers/pci/controller/Kconfig"
-diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-index 0ba988b5b5bc..625a031b2193 100644
---- a/drivers/pci/controller/dwc/Kconfig
-+++ b/drivers/pci/controller/dwc/Kconfig
-@@ -7,9 +7,9 @@ config PCIE_DW
- 	bool
- 
- config PCIE_DW_HOST
--        bool
-+	bool
- 	depends on PCI_MSI_IRQ_DOMAIN
--        select PCIE_DW
-+	select PCIE_DW
- 
- config PCIE_DW_EP
- 	bool
-@@ -224,7 +224,7 @@ config PCIE_HISI_STB
- 	depends on PCI_MSI_IRQ_DOMAIN
- 	select PCIE_DW_HOST
- 	help
--          Say Y here if you want PCIe controller support on HiSilicon STB SoCs
-+	  Say Y here if you want PCIe controller support on HiSilicon STB SoCs
- 
- config PCI_MESON
- 	bool "MESON PCIe controller"
-diff --git a/drivers/pci/hotplug/Kconfig b/drivers/pci/hotplug/Kconfig
-index e7b493c22bf3..32455a79372d 100644
---- a/drivers/pci/hotplug/Kconfig
-+++ b/drivers/pci/hotplug/Kconfig
-@@ -83,7 +83,7 @@ config HOTPLUG_PCI_CPCI_ZT5550
- 	depends on HOTPLUG_PCI_CPCI && X86
- 	help
- 	  Say Y here if you have an Performance Technologies (formerly Intel,
--          formerly just Ziatech) Ziatech ZT5550 CompactPCI system card.
-+	  formerly just Ziatech) Ziatech ZT5550 CompactPCI system card.
- 
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called cpcihp_zt5550.
--- 
-2.17.1
+In case RTD3 is supported it invokes LKDS() which probably does the L2
+or L3 entry and this is for some reason does not work the same way in
+Linux than it does with Windows 8+.
 
+I don't remember if this happens only with nouveau or with the
+proprietary driver as well but looking at the nouveau runtime PM suspend
+hook (assuming I'm looking at the correct code):
+
+static int
+nouveau_pmops_runtime_suspend(struct device *dev)
+{       
+        struct pci_dev *pdev = to_pci_dev(dev);
+        struct drm_device *drm_dev = pci_get_drvdata(pdev);
+        int ret;
+
+        if (!nouveau_pmops_runtime()) {
+                pm_runtime_forbid(dev);
+                return -EBUSY;
+        }
+
+        nouveau_switcheroo_optimus_dsm();
+        ret = nouveau_do_suspend(drm_dev, true);
+        pci_save_state(pdev);
+        pci_disable_device(pdev);
+        pci_ignore_hotplug(pdev);
+        pci_set_power_state(pdev, PCI_D3cold);
+        drm_dev->switch_power_state = DRM_SWITCH_POWER_DYNAMIC_OFF;
+        return ret;
+}
+
+Normally PCI drivers leave the PCI bus PM things to PCI core but here
+the driver does these. So I wonder if it makes any difference if we let
+the core handle all that:
+
+static int
+nouveau_pmops_runtime_suspend(struct device *dev)
+{       
+        struct pci_dev *pdev = to_pci_dev(dev);
+        struct drm_device *drm_dev = pci_get_drvdata(pdev);
+        int ret;
+
+        if (!nouveau_pmops_runtime()) {
+                pm_runtime_forbid(dev);
+                return -EBUSY;
+        }
+
+        nouveau_switcheroo_optimus_dsm();
+        ret = nouveau_do_suspend(drm_dev, true);
+        pci_ignore_hotplug(pdev);
+        drm_dev->switch_power_state = DRM_SWITCH_POWER_DYNAMIC_OFF;
+        return ret;
+}
+
+and similar for the nouveau_pmops_runtime_resume().
