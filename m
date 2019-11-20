@@ -2,144 +2,91 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C2CB0103635
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Nov 2019 09:49:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B2F0D103719
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Nov 2019 10:57:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727970AbfKTItZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 Nov 2019 03:49:25 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:40299 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727909AbfKTItZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Nov 2019 03:49:25 -0500
-Received: by mail-qv1-f68.google.com with SMTP id i3so9389344qvv.7;
-        Wed, 20 Nov 2019 00:49:24 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=U7zfNdmgpyMiboihJa1xiLHQ3jUJYyUMIT0Y6QJ7Ulc=;
-        b=udUUlmrHK2QtoQJAgkKU87gIQ7Eg5+tahrXLo561bkxmkafJzlipih929OidOYiXoC
-         4uMQXYvTGCLLYS2214W/Pgi2kUy4FUJG27fy5Z7JMJJdl1VYRZasBxjuHGnoHRrktls7
-         Dy2ngDpV8ppTIyTICERN141djmmga6BQLoGFgjulrHa4n2vL0PchonNXvJPiv9yvb/Zm
-         2srZZRhcRF6XNsee6ghb0Bvzb8/U7FxqvnWvfQ3TR0qnwxg2ivtI7x+ttC8RQjKrW4NL
-         XKBwr5QwJTEvVArrB6t2WqzdFkCedqNthDR5VKkK4EZzJcWjT6Y7aj/yhsIyp/o71eVD
-         hLxA==
-X-Gm-Message-State: APjAAAWmwMoe2tyKezHgE4gUlC29DvUpOjJ0OLMSPaU5EuvGhjnwbM5w
-        s7zLJ0BSx7sNCDamaTfouY5lP5uwgxBcvB9SgZA=
-X-Google-Smtp-Source: APXvYqzoC89VsyKqH8kM+v4dtaa6bLp+LA8RW0cstsBLyISicvDtIlO4aN1V8hZ2omsd9l0HY5hQ+UHjdp9Z6QCWhbg=
-X-Received: by 2002:a0c:e90b:: with SMTP id a11mr1449888qvo.229.1574239763803;
- Wed, 20 Nov 2019 00:49:23 -0800 (PST)
+        id S1728568AbfKTJ5k (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 Nov 2019 04:57:40 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:37820 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728567AbfKTJ5k (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Nov 2019 04:57:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=el6438nih4sfwVUUpa3K7cGTYMkZUt0pCE/MflmMSiA=; b=bcV3glNLOjIUujMfUEw4s7kT6
+        Z6OGWKZbmD0U635MtVAIlSU1ixudFfoksF22a7LTl1W20n/1fJdNsXuujM3+C1ZTKUoUumNB9aNOs
+        RYd13CFvhF4cDxk/34GB9IhDX+rdOqDeoiGBGD0nrEfxwip7rS0pNaRknuUJkcgFvqxExxT41yxpW
+        8PEtujQ51/SZdZW8JriCE6ikn3f7nsbUxydGpzA2n35/RP5oFpUtcrXMbFBO6AibcBqU+4KuUgB3a
+        35iKgzeq3jZ6/tOsoixKQz1oeB1QCsv6pvCEo3bwd+4bSE4EBX/WpAuLpJTlt+0kXqiV8Vxb8mAU5
+        yKENSjU9w==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:58700)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1iXMju-0007YX-7j; Wed, 20 Nov 2019 09:57:34 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1iXMjp-0001cr-EL; Wed, 20 Nov 2019 09:57:29 +0000
+Date:   Wed, 20 Nov 2019 09:57:29 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
+        Leo Li <leoyang.li@nxp.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>
+Subject: Re: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
+ driver for NXP Layerscape SoCs
+Message-ID: <20191120095729.GJ25745@shell.armlinux.org.uk>
+References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
 MIME-Version: 1.0
-References: <20191119191505.25286-1-geert+renesas@glider.be> <20191119194800.GA204901@google.com>
-In-Reply-To: <20191119194800.GA204901@google.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 20 Nov 2019 09:49:12 +0100
-Message-ID: <CAMuHMdULQ6-tSy79XRo8d3ujrxXfCcHDzduX2fnVZku80ofLFg@mail.gmail.com>
-Subject: Re: [PATCH] PCI: of: Restore alignment/indentation in host bridge
- window table
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Rob Herring <robh@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Srinath Mannam <srinath.mannam@broadcom.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
+On Wed, Nov 20, 2019 at 03:45:17AM +0000, Z.q. Hou wrote:
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> 
+> This patch set is to recode the Mobiveil driver and add
+> PCIe support for NXP Layerscape series SoCs integrated
+> Mobiveil's PCIe Gen4 controller.
 
-On Tue, Nov 19, 2019 at 8:48 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> On Tue, Nov 19, 2019 at 08:15:05PM +0100, Geert Uytterhoeven wrote:
-> > Since the printing of the inbound resources was added, alignment and
-> > indentation of the host bridge window table is broken because of two
-> > reasons:
-> >   1. The "IB MEM" row header is longer than the other headers,
-> >   2. Inbound ranges typically extend beyond 32-bit address space, and thus
-> >      don't fit in "#010llx".
-> >
-> > Fix this by extending the row header field to 6 characters, and the
-> > format string to 40-bit addresses.
-> >
-> > Use "%6s" to handle field size and right-alignment, instead of manual
-> > preparation using error-prone snprintf() calls.  Use the exact same
-> > format string for both cases, to allow sharing.
-> >
-> > Impact on kernel boot log on r8a7791/koelsch:
-> >
-> >      rcar-pcie fe000000.pcie: host bridge /soc/pcie@fe000000 ranges:
-> >     -rcar-pcie fe000000.pcie:    IO 0xfe100000..0xfe1fffff -> 0x00000000
-> >     -rcar-pcie fe000000.pcie:   MEM 0xfe200000..0xfe3fffff -> 0xfe200000
-> >     -rcar-pcie fe000000.pcie:   MEM 0x30000000..0x37ffffff -> 0x30000000
-> >     -rcar-pcie fe000000.pcie:   MEM 0x38000000..0x3fffffff -> 0x38000000
-> >     -rcar-pcie fe000000.pcie: IB MEM 0x40000000..0xbfffffff -> 0x40000000
-> >     -rcar-pcie fe000000.pcie: IB MEM 0x200000000..0x2ffffffff -> 0x200000000
-> >     +rcar-pcie fe000000.pcie:       IO 0x00fe100000..0x00fe1fffff -> 0x0000000000
-> >     +rcar-pcie fe000000.pcie:      MEM 0x00fe200000..0x00fe3fffff -> 0x00fe200000
-> >     +rcar-pcie fe000000.pcie:      MEM 0x0030000000..0x0037ffffff -> 0x0030000000
-> >     +rcar-pcie fe000000.pcie:      MEM 0x0038000000..0x003fffffff -> 0x0038000000
-> >     +rcar-pcie fe000000.pcie:   IB MEM 0x0040000000..0x00bfffffff -> 0x0040000000
-> >     +rcar-pcie fe000000.pcie:   IB MEM 0x0200000000..0x02ffffffff -> 0x0200000000
-> >
-> > Fixes: 52ac576f88f9f701 ("PCI: of: Add inbound resource parsing to helpers")
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
-> This is fine with me, and since it applies on top of 52ac576f88f9f701
-> (longer than the usual 12-char SHA1, BTW), which is on Lorenzo's
-> pci/mmio-dma-ranges branch, I assume Lorenzo will be the one to take
-> care of this.
->
-> pci_register_host_bridge() prints some of this info like this:
->
->   pci_bus 0000:00: root bus resource [io  0x0000-0x0cf7 window]
->   pci_bus 0000:00: root bus resource [io  0x0d00-0xffff window]
->   pci_bus 0000:00: root bus resource [mem 0x000a0000-0x000bffff window]
->   pci_bus 0000:00: root bus resource [mem 0xdc800000-0xfebfffff window]
->
-> Is there any opportunity for consolidating these or at least making
-> the format the same?
->
-> I assume we're currently printing most of that info twice, once
-> in devm_of_pci_get_host_bridge_resources() and again in
-> pci_register_host_bridge()?
+How many PCIe cards have been tested to work/don't work with this?
 
-(after ignoring PCIe link down, as I don't have a spare PCIe card to plug in)
+I need:
 
-  rcar-pcie fe000000.pcie: host bridge /soc/pcie@fe000000 ranges:
-  rcar-pcie fe000000.pcie:       IO 0x00fe100000..0x00fe1fffff -> 0x0000000000
-  rcar-pcie fe000000.pcie:      MEM 0x00fe200000..0x00fe3fffff -> 0x00fe200000
-  rcar-pcie fe000000.pcie:      MEM 0x0030000000..0x0037ffffff -> 0x0030000000
-  rcar-pcie fe000000.pcie:      MEM 0x0038000000..0x003fffffff -> 0x0038000000
-  rcar-pcie fe000000.pcie:   IB MEM 0x0040000000..0x00bfffffff -> 0x0040000000
-  rcar-pcie fe000000.pcie:   IB MEM 0x0200000000..0x02ffffffff -> 0x0200000000
-  rcar-pcie fe000000.pcie: PCIe link down (ignored)
-  rcar-pcie fe000000.pcie: PCIe x4: link up
-  rcar-pcie fe000000.pcie: PCI host bridge to bus 0002:00
-  pci_bus 0002:00: root bus resource [bus 00-ff]
-  pci_bus 0002:00: root bus resource [io  0x0000-0xfffff]
-  pci_bus 0002:00: root bus resource [mem 0xfe200000-0xfe3fffff]
-  pci_bus 0002:00: root bus resource [mem 0x30000000-0x37ffffff]
-  pci_bus 0002:00: root bus resource [mem 0x38000000-0x3fffffff pref]
-  pci 0002:00:00.0: [1912:001f] type 01 class 0x060400
-  pci 0002:00:00.0: enabling Extended Tags
-  pci 0002:00:00.0: PME# supported from D0 D3hot D3cold
-  PCI: bus0: Fast back to back transfers disabled
+PCI: mobiveil: ls_pcie_g4: fix SError when accessing config space
+PCI: mobiveil: ls_pcie_g4: add Workaround for A-011451
+PCI: mobiveil: ls_pcie_g4: add Workaround for A-011577
 
-So some, but not all, info is indeed duplicated.
-
-Gr{oetje,eeting}s,
-
-                        Geert
+to successfully boot with a Mellanox card plugged in with a previous
+revision of these patches.
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
