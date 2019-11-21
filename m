@@ -2,174 +2,326 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D45A10527C
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Nov 2019 13:57:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C3D4C105288
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Nov 2019 13:59:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbfKUM5P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Nov 2019 07:57:15 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:42580 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726532AbfKUM5O (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Nov 2019 07:57:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574341032;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=nVnuS3G07UEp6AIL04Xz4q+Tzbj4PQPwyBSCk9uHGkw=;
-        b=GF2GzW1SDMVsf9DdCexQggBjeiNGrZSMC7ugfDMgb3C8TvjztFBs1oJ2eJzQBcp/oTY5e0
-        TnYfmLmTiZ3u53zCIi72E7D+IwWdsx2S6yVResv8ci5Uh6lAGx1fSEfV2aurxMXRIuqpAR
-        dWuwcNcGt6rJ8o65JtZjklc4O0FSvdM=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-394-op4j_shNNbCHsMNcArYy7A-1; Thu, 21 Nov 2019 07:57:10 -0500
-Received: by mail-qt1-f199.google.com with SMTP id j18so2187569qtp.15
-        for <linux-pci@vger.kernel.org>; Thu, 21 Nov 2019 04:57:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QH9raaSEy0ZT3Ng+Xr/UbfMvZg5iClSyjL5MYEeeB0o=;
-        b=Gg4Zezhn1bz0CvuZNeZ/sEpzPMUzFyxPtqK4OBPNKTZeYgQ6WnTNJoNwviAxO4wMBW
-         7S11+3EaIR/WUfKlIkuR/lrEimgyUyrHZHzYw3n+aQkBEY+DTSaTI3FQ8wzbsacsQEQF
-         nRvKgEFV294oe4guJoxzEJT9CLPVn/HtiBwa4IPAwNomI2e/s6YuoDzHwQP9BaOPXRnu
-         WLHSZMixbiPt77YPRbky7i8Ag9ZJwuXweK/F7RWqlSn9jiIDet4W0wUELnldF51gfAlQ
-         s9GZaikyUXf7WMZc6oXo1V0WK7dRTQtpjOa4DpRawK5uq/4RdPCFfrFzM8YSkYq9ofW4
-         +5oA==
-X-Gm-Message-State: APjAAAWy+1kLFw2QRG5aXA2YnXkrnm9jHqe6mjETVyynsKzVvCF3u3mR
-        RXz0r40aQZL4iizX1rrCi2r3ahYRuxYyGvyrfVXmkjUc5jyoYXif2WGWiN13bNp9i70if50fIar
-        ROTv+X/HNgs+903aqgIJ7lGJ2hE8VFMkZ4ozC
-X-Received: by 2002:ac8:7550:: with SMTP id b16mr8247880qtr.286.1574341029751;
-        Thu, 21 Nov 2019 04:57:09 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzCB3+oy9LxTLupf+9fIdsK0rCf/DUfxOcnQaIfyPvrUsIjLHSyzhlMj9XMgXerrNXcdpm7ZYcN/G4r6b/xReI=
-X-Received: by 2002:ac8:7550:: with SMTP id b16mr8247859qtr.286.1574341029535;
- Thu, 21 Nov 2019 04:57:09 -0800 (PST)
+        id S1726502AbfKUM7p (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 Nov 2019 07:59:45 -0500
+Received: from mx2.suse.de ([195.135.220.15]:51332 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726293AbfKUM7p (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 21 Nov 2019 07:59:45 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 51097ABF4;
+        Thu, 21 Nov 2019 12:59:42 +0000 (UTC)
+Message-ID: <276d4160bbe6a4e8225bbd836f43d40da41d25f1.camel@suse.de>
+Subject: Re: [PATCH v2 4/6] PCI: brcmstb: add Broadcom STB PCIe host
+ controller driver
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Andrew Murray <andrew.murray@arm.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>, mbrugger@suse.com,
+        maz@kernel.org, phil@raspberrypi.org, linux-kernel@vger.kernel.org,
+        jeremy.linton@arm.com, Eric Anholt <eric@anholt.net>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Stefan Wahren <wahrenst@gmx.net>, james.quinlan@broadcom.com,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org
+Date:   Thu, 21 Nov 2019 13:59:40 +0100
+In-Reply-To: <20191121120319.GW43905@e119886-lin.cambridge.arm.com>
+References: <20191112155926.16476-1-nsaenzjulienne@suse.de>
+         <20191112155926.16476-5-nsaenzjulienne@suse.de>
+         <20191119162502.GS43905@e119886-lin.cambridge.arm.com>
+         <7e1be0bdcf303224a3fe225654a3c2391207f9eb.camel@suse.de>
+         <20191121120319.GW43905@e119886-lin.cambridge.arm.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-wqkhjN+9qK4qjBEkgN/j"
+User-Agent: Evolution 3.34.1 
 MIME-Version: 1.0
-References: <CACO55tsHy6yZQZ8PkdW8iPA7+uc5rdcEwRJwYEQ3iqu85F8Sqg@mail.gmail.com>
- <20191120151542.GH11621@lahna.fi.intel.com> <CACO55tvo3rbPtYJcioEgXCEQqVXcVAm-iowr9Nim=bgTdMjgLw@mail.gmail.com>
- <20191120155301.GL11621@lahna.fi.intel.com> <CAJZ5v0hkT-fHFOQKzp2qYPyR+NUa4c-G-uGLPZuQxqsG454PiQ@mail.gmail.com>
- <CACO55ttTPi2XpRRM_NYJU5c5=OvG0=-YngFy1BiR8WpHkavwXw@mail.gmail.com>
- <CAJZ5v0h=7zu3A+ojgUSmwTH0KeXmYP5OKDL__rwkkWaWqcJcWQ@mail.gmail.com>
- <20191121112821.GU11621@lahna.fi.intel.com> <CAJZ5v0hQhj5Wf+piU11abC4pF26yM=XHGHAcDv8Jsgdx04aN-w@mail.gmail.com>
- <20191121114610.GW11621@lahna.fi.intel.com> <20191121125236.GX11621@lahna.fi.intel.com>
-In-Reply-To: <20191121125236.GX11621@lahna.fi.intel.com>
-From:   Karol Herbst <kherbst@redhat.com>
-Date:   Thu, 21 Nov 2019 13:56:57 +0100
-Message-ID: <CACO55ttOgx=jyCh_uZLH4t8C5SW0f2u3BSrw93vPmusM98p0Mg@mail.gmail.com>
-Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
- states on certain intel bridges
-To:     Mika Westerberg <mika.westerberg@intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lyude Paul <lyude@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Dave Airlie <airlied@gmail.com>,
-        Mario Limonciello <Mario.Limonciello@dell.com>
-X-MC-Unique: op4j_shNNbCHsMNcArYy7A-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 1:52 PM Mika Westerberg
-<mika.westerberg@intel.com> wrote:
->
-> On Thu, Nov 21, 2019 at 01:46:14PM +0200, Mika Westerberg wrote:
-> > On Thu, Nov 21, 2019 at 12:34:22PM +0100, Rafael J. Wysocki wrote:
-> > > On Thu, Nov 21, 2019 at 12:28 PM Mika Westerberg
-> > > <mika.westerberg@intel.com> wrote:
-> > > >
-> > > > On Wed, Nov 20, 2019 at 11:29:33PM +0100, Rafael J. Wysocki wrote:
-> > > > > > last week or so I found systems where the GPU was under the "PC=
-I
-> > > > > > Express Root Port" (name from lspci) and on those systems all o=
-f that
-> > > > > > seems to work. So I am wondering if it's indeed just the 0x1901=
- one,
-> > > > > > which also explains Mikas case that Thunderbolt stuff works as =
-devices
-> > > > > > never get populated under this particular bridge controller, bu=
-t under
-> > > > > > those "Root Port"s
-> > > > >
-> > > > > It always is a PCIe port, but its location within the SoC may mat=
-ter.
-> > > >
-> > > > Exactly. Intel hardware has PCIe ports on CPU side (these are calle=
-d
-> > > > PEG, PCI Express Graphics, ports), and the PCH side. I think the IP=
- is
-> > > > still the same.
-> > > >
-> > > > > Also some custom AML-based power management is involved and that =
-may
-> > > > > be making specific assumptions on the configuration of the SoC an=
-d the
-> > > > > GPU at the time of its invocation which unfortunately are not kno=
-wn to
-> > > > > us.
-> > > > >
-> > > > > However, it looks like the AML invoked to power down the GPU from
-> > > > > acpi_pci_set_power_state() gets confused if it is not in PCI D0 a=
-t
-> > > > > that point, so it looks like that AML tries to access device memo=
-ry on
-> > > > > the GPU (beyond the PCI config space) or similar which is not
-> > > > > accessible in PCI power states below D0.
-> > > >
-> > > > Or the PCI config space of the GPU when the parent root port is in =
-D3hot
-> > > > (as it is the case here). Also then the GPU config space is not
-> > > > accessible.
-> > >
-> > > Why would the parent port be in D3hot at that point?  Wouldn't that b=
-e
-> > > a suspend ordering violation?
-> >
-> > No. We put the GPU into D3hot first, then the root port and then turn
-> > off the power resource (which is attached to the root port) resulting
-> > the topology entering D3cold.
->
-> I don't see that happening in the AML though.
->
-> Basically the difference is that when Windows 7 or Linux (the _REV=3D=3D5
-> check) then we directly do link disable whereas in Windows 8+ we invoke
-> LKDS() method that puts the link into L2/L3. None of the fields they
-> access seem to touch the GPU itself.
->
-> LKDS() for the first PEG port looks like this:
->
->    P0L2 =3D One
->    Sleep (0x10)
->    Local0 =3D Zero
->    While (P0L2)
->    {
->         If ((Local0 > 0x04))
->         {
->             Break
->         }
->
->         Sleep (0x10)
->         Local0++
->    }
->
-> One thing that comes to mind is that the loop can end even if P0L2 is
-> not cleared as it does only 5 iterations with 16 ms sleep between. Maybe
-> Sleep() is implemented differently in Windows? I mean Linux may be
-> "faster" here and return prematurely and if we leave the port into D0
-> this does not happen, or something. I'm just throwing out ideas :)
->
 
-keep in mind, that I am able to hit this bug with my python script:
-https://raw.githubusercontent.com/karolherbst/pci-stub-runpm/master/nv_runp=
-m_bug_test.py
+--=-wqkhjN+9qK4qjBEkgN/j
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hi Andrew,
+
+On Thu, 2019-11-21 at 12:03 +0000, Andrew Murray wrote:
+> > > > +static void brcm_pcie_set_outbound_win(struct brcm_pcie *pcie,
+> > > > +				       unsigned int win, phys_addr_t
+> > > > cpu_addr,
+> > > > +				       dma_addr_t  pcie_addr, dma_addr_t
+> > > > size)
+> > > > +{
+> > > > +	phys_addr_t cpu_addr_mb, limit_addr_mb;
+> > > > +	void __iomem *base =3D pcie->base;
+> > > > +	u32 tmp;
+> > > > +
+> > > > +	/* Set the base of the pcie_addr window */
+> > > > +	bcm_writel(lower_32_bits(pcie_addr) + MMIO_ENDIAN,
+> > > > +		   base + PCIE_MISC_CPU_2_PCIE_MEM_WIN0_LO + (win * 8));
+> > > > +	bcm_writel(upper_32_bits(pcie_addr),
+> > > > +		   base + PCIE_MISC_CPU_2_PCIE_MEM_WIN0_HI + (win * 8));
+> > > > +
+> > > > +	cpu_addr_mb =3D cpu_addr >> 20;
+> > > > +	limit_addr_mb =3D (cpu_addr + size - 1) >> 20;
+> > > > +
+> > > > +	/* Write the addr base low register */
+> > > > +	WR_FLD_WITH_OFFSET(base, (win * 4),
+> > > > +			   PCIE_MISC_CPU_2_PCIE_MEM_WIN0_BASE_LIMIT,
+> > > > +			   BASE, cpu_addr_mb);
+> > > > +	/* Write the addr limit low register */
+> > > > +	WR_FLD_WITH_OFFSET(base, (win * 4),
+> > > > +			   PCIE_MISC_CPU_2_PCIE_MEM_WIN0_BASE_LIMIT,
+> > > > +			   LIMIT, limit_addr_mb);
+> > > > +
+> > > > +	/* Write the cpu addr high register */
+> > > > +	tmp =3D (u32)(cpu_addr_mb >>
+> > > > +		PCIE_MISC_CPU_2_PCIE_MEM_WIN0_BASE_LIMIT_NUM_MASK_BITS);
+> > >=20
+> > > Despite the name _MASK_BITS, this isn't being used as a mask. Is this
+> > > making
+> > > some assumption about the value of cpu_addr from the DT?
+> >=20
+> > It should be read _NUM_MASK_BITS. It contains the number of set bits on=
+ that
+> > specific mask. I agree it's not ideal. I think I'll be able to do away =
+with
+> > it
+> > using the bitfield.h macros.
+>=20
+> Also why do you have a define for
+> PCIE_MISC_CPU_2_PCIE_MEM_WIN0_BASE_LIMIT_NUM_MASK_BITS but not the '20' s=
+hift
+> used for the low registers?
+
+Good point, I'm changing it to something more explicit:
+
+	cpu_addr_mb =3D cpu_addr / SZ_1M;
+
+As for [...]_NUM_MASK_BITS I'm looking for a smart/generic way to calculate=
+ it
+from the actual mask. No luck so far. If not, I think I'll simply leave it =
+as
+is for now.
+
+> > FYI, What's happening here is that we have to save the CPU address rang=
+e
+> > (which
+> > is already shifted right 20 positions) in two parts, the lower 12 bits =
+go
+> > into
+> > PCIE_MISC_CPU_2_PCIE_MEM_WIN0_BASE_LIMIT while the higher 8 bits go int=
+o
+> > PCIE_MISC_CPU_2_PCIE_MEM_WIN0_BASE_HI or
+> > PCIE_MISC_CPU_2_PCIE_MEM_WIN0_LIMIT_HI.
+>=20
+> The hardware spec require bits 31:20 of the address, and the high registe=
+rs
+> require 39:32 right?
+
+Yes, that's it.
+
+> (Apologies, the indirection by the WR_FLD_** macros easily confuses me. T=
+hese
+> type of macros are helpful, or rather would be if the whole kernel used t=
+hem.
+> I think they can add confusion when each driver has its own set of simila=
+r
+> macros. This is why its *really* helpful to use any existing macros in th=
+e
+> kernel - and only invent new ones if needed).
+
+I agree it's pretty confusing, I think v3, using bitfield.h as much as
+possible, looks substantially more welcoming.
+
+> > [...]
+> >=20
+> > > > +static inline int brcm_pcie_get_rc_bar2_size_and_offset(struct
+> > > > brcm_pcie
+> > > > *pcie,
+> > > > +							u64
+> > > > *rc_bar2_size,
+> > > > +							u64
+> > > > *rc_bar2_offset)
+> > > > +{
+> > > > +	struct pci_host_bridge *bridge =3D
+> > > > pci_host_bridge_from_priv(pcie);
+> > > > +	struct device *dev =3D pcie->dev;
+> > > > +	struct resource_entry *entry;
+> > > > +	u64 total_mem_size =3D 0;
+> > > > +
+> > > > +	*rc_bar2_offset =3D -1;
+> > > > +
+> > > > +	resource_list_for_each_entry(entry, &bridge->dma_ranges) {
+> > > > +		/*
+> > > > +		 * We're promised the RC will provide a contiguous view
+> > > > of
+> > > > +		 * memory to downstream devices. We can then infer the
+> > > > +		 * rc_bar2_offset from the lower available dma-range
+> > > > offset.
+> > > > +		 */
+> > > > +		if (entry->offset < *rc_bar2_offset)
+> > > > +			*rc_bar2_offset =3D entry->offset;
+> > > > +
+> > > > +		total_mem_size +=3D entry->res->end - entry->res->start +
+> > > > 1;
+> > >=20
+> > > This requires that if there are multiple dma-ranges, then there are n=
+o
+> > > gaps
+> > > between them right?
+> >=20
+> > Yes, the PCI view of inbound memory will always be gapless. See an exam=
+ple
+> > here: https://patchwork.kernel.org/patch/10605957/
+>=20
+> Thanks for the reference.=20
+>=20
+>=20
+> > That said, iterating over the dma-ranges is not strictly necessary for =
+now
+> > as
+> > RPi4 is assured to only need one. If that's bothering you I can always
+> > remove
+> > it for now.
+>=20
+> One purpose of this function is to validate that the information given in=
+ the
+> device tree is valid - I've seen other feedback on these lists where the =
+view
+> is taken that 'it's not the job of the kernel to validate the DT'. Subscr=
+ibing
+> to this view would be a justification for removing this validation -
+> especially
+> given that the bindings you include have only one dma-range (in any case =
+if
+> there are constraints you ought to include them in the binding document).
+>=20
+> Though the problem with this point of view is that if the DT is wrong, it=
+ may
+> be possible for the driver to work well enough to do some function but wi=
+th
+> some horrible side effects that are difficult to track down to a bad DT.
+>=20
+> If you assume the DT will only have one range (at least for the Pi) then =
+this
+> code will never be used and so can probably be removed.
+
+Ok, less is more, I'll simplify it.
+
+[...]
+
+> > > > +			continue;
+> > > > +
+> > > > +		if (num_out_wins >=3D BRCM_NUM_PCIE_OUT_WINS) {
+> > > > +			dev_err(pcie->dev, "too many outbound wins\n");
+> > > > +			return -EINVAL;
+> > > > +		}
+> > > > +
+> > > > +		brcm_pcie_set_outbound_win(pcie, num_out_wins, res-
+> > > > >start,
+> > > > +					   res->start - entry->offset,
+> > > > +					   res->end - res->start + 1);
+> > > > +		num_out_wins++;
+> > > > +	}
+> > > > +
+> > > > +	/*
+> > > > +	 * For config space accesses on the RC, show the right class for
+> > > > +	 * a PCIe-PCIe bridge (the default setting is to be EP mode).
+> > > > +	 */
+> > > > +	WR_FLD_RB(base, PCIE_RC_CFG_PRIV1_ID_VAL3, CLASS_CODE,
+> > > > 0x060400);
+> > >=20
+> > > Why does this need to be _RB ? I haven't looked at all of the uses of=
+ _RB
+> > > though I think there are others that may not be necessary.
+> >=20
+> > We're reviewing the _RB usage with Jim, I'll come back to you on that t=
+opic
+> > later.
+>=20
+> Thanks.
+
+Jim and Florian went over all the _RB usages and found out none of them app=
+lied
+to the Pi. Apparently they where introduced as a form of barrier needed on =
+some
+MIPS SoCs. Sorry for that, I'll remove them.
+
+> > [...]
+> >=20
+> > > > +	__brcm_pcie_remove(pcie);
+> > > > +
+> > > > +	return 0;
+> > > > +}
+> > > > +
+> > > > +static const struct of_device_id brcm_pcie_match[] =3D {
+> > > > +	{ .compatible =3D "brcm,bcm2711-pcie", .data =3D &bcm2711_cfg },
+> > >=20
+> > > I'd rather see use of the pcie_cfg_data structure removed from this
+> > > series.
+> > >=20
+> > > I've seen the comments in the previous thread [1], and I understand t=
+hat
+> > > the intention is that this driver will eventually be used for other S=
+OCs.
+> > >=20
+> > > However this indirection isn't needed *now* and it makes reviewing th=
+is
+> > > patch more difficult. If and when a later series is made to cover oth=
+er
+> > > SOCs - then I'd expect that series to find a way to apply this
+> > > indirection.
+> > >=20
+> > > And if that later series is more difficult to review because of the n=
+ewly
+> > > added indirection, then I'd expect an early patch of that series to a=
+pply
+> > > the indirection in a single patch - which would be easy to review.
+> > >=20
+> > > The other risk of such premature changes like this is that when you c=
+ome
+> > > to adding other SOCs, you may then discover that there were shortcomi=
+ngs
+> > > in the way you've approached it here.
+> > >=20
+> >=20
+> > I was about to make a point similar to Florian's. I'll wait for your re=
+ply
+> > and
+> > change this accordingly.
+>=20
+> No problem.
+
+Following your reply, I'll remove it.
+
+Regards,
+Nicolas
+
+
+--=-wqkhjN+9qK4qjBEkgN/j
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3WijwACgkQlfZmHno8
+x/6xAAf+LIkT3w/c8bEsultmWT5xTKh6ydt2GEkHuMOV+xYtKd3QM/z7XF1U6WDr
+eQKpU8mUEAcsYU/wwhP+KqZ6tHplPlRtnt/IUetU1oITLzITHi9q8GpOo3lPPZjX
+NxO68adiIHOYU3/cTazWvsIssw27hyEtAqWHkgnC9ZK+Gyy9i0Gxud8g9ONQNCjg
+AFYth260li9Bb+Gml2rOxsxGzPk4cT63jDB9FSBAP/sIMHVucAUebZMYzi7k4fJP
+IGGsof0LIzBNC9CcnN5A2vtVUViCApiTZ+Pvp1YzF+pvTdnpWiEhcT2QpJWBhoWD
+Gm3EqkdBEpCaUHSNHe7TaYKw7v4N1Q==
+=/W35
+-----END PGP SIGNATURE-----
+
+--=-wqkhjN+9qK4qjBEkgN/j--
 
