@@ -2,72 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 228BF104C9E
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Nov 2019 08:32:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D694B104E6E
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Nov 2019 09:52:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726522AbfKUHcA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Nov 2019 02:32:00 -0500
-Received: from verein.lst.de ([213.95.11.211]:44458 "EHLO verein.lst.de"
+        id S1726541AbfKUIwW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 Nov 2019 03:52:22 -0500
+Received: from mga02.intel.com ([134.134.136.20]:29461 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726230AbfKUHb7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 21 Nov 2019 02:31:59 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 0FAB768B05; Thu, 21 Nov 2019 08:31:53 +0100 (CET)
-Date:   Thu, 21 Nov 2019 08:31:52 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-ide@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
-        phil@raspberrypi.org, linux-acpi@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>,
-        James Hogan <jhogan@kernel.org>, Len Brown <lenb@kernel.org>,
-        devicetree@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
-        iommu@lists.linux-foundation.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH] dma-mapping: treat dev->bus_dma_mask as a DMA limit
-Message-ID: <20191121073152.GB24024@lst.de>
-References: <20191113161340.27228-1-nsaenzjulienne@suse.de> <dd074ef5c23ba56598e92be19e8e25ae31b75f93.camel@suse.de> <20191119170006.GA19569@lst.de> <7609007d-52f5-bb10-e8d5-96fadbfab46d@arm.com>
+        id S1726454AbfKUIwW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 21 Nov 2019 03:52:22 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Nov 2019 00:52:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,224,1571727600"; 
+   d="scan'208";a="259310679"
+Received: from linux.intel.com ([10.54.29.200])
+  by FMSMGA003.fm.intel.com with ESMTP; 21 Nov 2019 00:52:20 -0800
+Received: from [10.226.38.254] (unknown [10.226.38.254])
+        by linux.intel.com (Postfix) with ESMTP id C5D1D5802C4;
+        Thu, 21 Nov 2019 00:52:17 -0800 (PST)
+Subject: Re: [PATCH v8 2/3] dwc: PCI: intel: PCIe RC controller driver
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc:     gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
+        andrew.murray@arm.com, helgaas@kernel.org, jingoohan1@gmail.com,
+        robh@kernel.org, martin.blumenstingl@googlemail.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
+References: <cover.1574158309.git.eswara.kota@linux.intel.com>
+ <71262d29ca564060331e7e2c1ceb41158109cb92.1574158309.git.eswara.kota@linux.intel.com>
+ <20191120130826.GM32742@smile.fi.intel.com>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <8545714b-9393-3272-9d58-35a91d1681cf@linux.intel.com>
+Date:   Thu, 21 Nov 2019 16:52:16 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7609007d-52f5-bb10-e8d5-96fadbfab46d@arm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20191120130826.GM32742@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 05:17:03PM +0000, Robin Murphy wrote:
-> TBH I can't see it being a massive problem even if the DMA patch, driver 
-> and DTS patch went entirely separately via the respective DMA, PCI, and 
-> arm-soc trees in the same cycle. Bisecting over a merge window is a big 
-> enough pain in the bum as it is, and if the worst case is that someone 
-> trying to do that on a Pi4 has a wonky PCI controller appear for a couple 
-> of commits, they may as well just disable that driver for their bisection, 
-> because it wasn't there at the start so can't possibly be the thing they're 
-> looking for regressions in ;)
 
-Agreed.
+On 11/20/2019 9:08 PM, Andy Shevchenko wrote:
+> On Wed, Nov 20, 2019 at 03:43:01PM +0800, Dilip Kota wrote:
+>> Add support to PCIe RC controller on Intel Gateway SoCs.
+>> PCIe controller is based of Synopsys DesignWare PCIe core.
+>>
+>> Intel PCIe driver requires Upconfigure support, Fast Training
+>> Sequence and link speed configurations. So adding the respective
+>> helper functions in the PCIe DesignWare framework.
+>> It also programs hardware autonomous speed during speed
+>> configuration so defining it in pci_regs.h.
+>> +static void pcie_app_wr_mask(struct intel_pcie_port *lpp,
+>> +			     u32 ofs, u32 mask, u32 val)
+> It seems your editor is misconfigured. First line should be
+>
+> static void pcie_app_wr_mask(struct intel_pcie_port *lpp, u32 ofs,
+>
+> in case you would like to split it logically.
+>
+>> +static void pcie_rc_cfg_wr_mask(struct intel_pcie_port *lpp,
+>> +				u32 ofs, u32 mask, u32 val)
+> Ditto.
+>
+>> +	pcie_app_wr(lpp,  PCIE_APP_IRNCR, PCIE_APP_IRN_INT);
+> Extra white space.
+My bad, typo error. Will fix them all in the next patch version.
 
-Nicolas, can you send a respin?  That way I can still queue it up
-for 5.5.
+Regards,
+Dilip
+
+>
