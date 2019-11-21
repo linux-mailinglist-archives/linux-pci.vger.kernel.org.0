@@ -2,181 +2,142 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3DA68105A9C
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Nov 2019 20:49:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D1A4D105B57
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Nov 2019 21:49:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbfKUTts (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Nov 2019 14:49:48 -0500
-Received: from mga12.intel.com ([192.55.52.136]:61330 "EHLO mga12.intel.com"
+        id S1726546AbfKUUt2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 Nov 2019 15:49:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726379AbfKUTts (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 21 Nov 2019 14:49:48 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Nov 2019 11:49:47 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,226,1571727600"; 
-   d="scan'208";a="216204277"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 21 Nov 2019 11:49:43 -0800
-Received: by lahna (sSMTP sendmail emulation); Thu, 21 Nov 2019 21:49:43 +0200
-Date:   Thu, 21 Nov 2019 21:49:42 +0200
-From:   Mika Westerberg <mika.westerberg@intel.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Karol Herbst <kherbst@redhat.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lyude Paul <lyude@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Dave Airlie <airlied@gmail.com>,
-        Mario Limonciello <Mario.Limonciello@dell.com>
-Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
- states on certain intel bridges
-Message-ID: <20191121194942.GY11621@lahna.fi.intel.com>
-References: <CACO55tvo3rbPtYJcioEgXCEQqVXcVAm-iowr9Nim=bgTdMjgLw@mail.gmail.com>
- <20191120155301.GL11621@lahna.fi.intel.com>
- <CAJZ5v0hkT-fHFOQKzp2qYPyR+NUa4c-G-uGLPZuQxqsG454PiQ@mail.gmail.com>
- <CACO55ttTPi2XpRRM_NYJU5c5=OvG0=-YngFy1BiR8WpHkavwXw@mail.gmail.com>
- <CAJZ5v0h=7zu3A+ojgUSmwTH0KeXmYP5OKDL__rwkkWaWqcJcWQ@mail.gmail.com>
- <20191121112821.GU11621@lahna.fi.intel.com>
- <CAJZ5v0hQhj5Wf+piU11abC4pF26yM=XHGHAcDv8Jsgdx04aN-w@mail.gmail.com>
- <20191121114610.GW11621@lahna.fi.intel.com>
- <20191121125236.GX11621@lahna.fi.intel.com>
- <CAJZ5v0iMwhudB7O0hR-6KfRfa+_iGOY=t0Zzeh6+9OiTzeYJfA@mail.gmail.com>
+        id S1726293AbfKUUt2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 21 Nov 2019 15:49:28 -0500
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BD242068D;
+        Thu, 21 Nov 2019 20:49:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574369366;
+        bh=5De6lyHZUeIRTKocUVUZWotA5hsrs6wr64RApzhHGgI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=RxqRR/wsuytn/Fk9HzlloMcfWPyCmZvWj4q5D85e7WnL/HwjE6sSpXaCPt5ezzfHP
+         hx/jsG8D4t+dyh/UgLYDBunGpDfNo6DiRQO9HG1UlrYGlkIXA2O8vSBaqnwpANHKV9
+         Oqy0KvYY0UM3dpvN+VOgNPO9C1kXgK+k9Abhx2DU=
+Date:   Thu, 21 Nov 2019 14:49:24 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Frederick Lawler <fred@fredlawl.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Rajat Jain <rajatja@google.com>, linux-pci@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Wong Vee Khee <vee.khee.wong@ni.com>,
+        Hui Chun Ong <hui.chun.ong@ni.com>,
+        Keith Busch <keith.busch@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 4/5] PCI/ASPM: Add sysfs attributes for controlling
+ ASPM link states
+Message-ID: <20191121204924.GA81030@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJZ5v0iMwhudB7O0hR-6KfRfa+_iGOY=t0Zzeh6+9OiTzeYJfA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <b1c83f8a-9bf6-eac5-82d0-cf5b90128fbf@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 04:43:24PM +0100, Rafael J. Wysocki wrote:
-> On Thu, Nov 21, 2019 at 1:52 PM Mika Westerberg
-> <mika.westerberg@intel.com> wrote:
-> >
-> > On Thu, Nov 21, 2019 at 01:46:14PM +0200, Mika Westerberg wrote:
-> > > On Thu, Nov 21, 2019 at 12:34:22PM +0100, Rafael J. Wysocki wrote:
-> > > > On Thu, Nov 21, 2019 at 12:28 PM Mika Westerberg
-> > > > <mika.westerberg@intel.com> wrote:
-> > > > >
-> > > > > On Wed, Nov 20, 2019 at 11:29:33PM +0100, Rafael J. Wysocki wrote:
-> > > > > > > last week or so I found systems where the GPU was under the "PCI
-> > > > > > > Express Root Port" (name from lspci) and on those systems all of that
-> > > > > > > seems to work. So I am wondering if it's indeed just the 0x1901 one,
-> > > > > > > which also explains Mikas case that Thunderbolt stuff works as devices
-> > > > > > > never get populated under this particular bridge controller, but under
-> > > > > > > those "Root Port"s
-> > > > > >
-> > > > > > It always is a PCIe port, but its location within the SoC may matter.
-> > > > >
-> > > > > Exactly. Intel hardware has PCIe ports on CPU side (these are called
-> > > > > PEG, PCI Express Graphics, ports), and the PCH side. I think the IP is
-> > > > > still the same.
-> > > > >
-> > > > > > Also some custom AML-based power management is involved and that may
-> > > > > > be making specific assumptions on the configuration of the SoC and the
-> > > > > > GPU at the time of its invocation which unfortunately are not known to
-> > > > > > us.
-> > > > > >
-> > > > > > However, it looks like the AML invoked to power down the GPU from
-> > > > > > acpi_pci_set_power_state() gets confused if it is not in PCI D0 at
-> > > > > > that point, so it looks like that AML tries to access device memory on
-> > > > > > the GPU (beyond the PCI config space) or similar which is not
-> > > > > > accessible in PCI power states below D0.
-> > > > >
-> > > > > Or the PCI config space of the GPU when the parent root port is in D3hot
-> > > > > (as it is the case here). Also then the GPU config space is not
-> > > > > accessible.
-> > > >
-> > > > Why would the parent port be in D3hot at that point?  Wouldn't that be
-> > > > a suspend ordering violation?
-> > >
-> > > No. We put the GPU into D3hot first,
-> 
-> OK
-> 
-> Does this involve any AML, like a _PS3 under the GPU object?
+[+cc Rafael, Mika, Wong, Hui, Rajat, Keith, LKML, original patch at [5]]
 
-I don't see _PS3 (nor _PS0) for that object. If I read it right the GPU
-itself is not described in ACPI tables at all.
+On Sat, Oct 05, 2019 at 02:07:56PM +0200, Heiner Kallweit wrote:
 
-> > > then the root port and then turn
-> > > off the power resource (which is attached to the root port) resulting
-> > > the topology entering D3cold.
-> >
-> > I don't see that happening in the AML though.
-> 
-> Which AML do you mean, specifically?  The _OFF method for the root
-> port's _PR3 power resource or something else?
+> +What:		/sys/bus/pci/devices/.../link_pm/clkpm
+> +		/sys/bus/pci/devices/.../link_pm/l0s_aspm
+> +		/sys/bus/pci/devices/.../link_pm/l1_aspm
+> +		/sys/bus/pci/devices/.../link_pm/l1_1_aspm
+> +		/sys/bus/pci/devices/.../link_pm/l1_2_aspm
+> +		/sys/bus/pci/devices/.../link_pm/l1_1_pcipm
+> +		/sys/bus/pci/devices/.../link_pm/l1_2_pcipm
+> +Date:		October 2019
+> +Contact:	Heiner Kallweit <hkallweit1@gmail.com>
+> +Description:	If ASPM is supported for an endpoint, then these files
+> +		can be used to disable or enable the individual
+> +		power management states. Write y/1/on to enable,
+> +		n/0/off to disable.
 
-The root port's _OFF method for the power resource returned by its _PR3.
+This is queued up for the v5.5 merge window, so if we want to tweak
+anything (path names or otherwise), now is the time.
 
-> > Basically the difference is that when Windows 7 or Linux (the _REV==5
-> > check) then we directly do link disable whereas in Windows 8+ we invoke
-> > LKDS() method that puts the link into L2/L3. None of the fields they
-> > access seem to touch the GPU itself.
-> 
-> So that may be where the problem is.
-> 
-> Putting the downstream component into PCI D[1-3] is expected to put
-> the link into L1, so I'm not sure how that plays with the later
-> attempt to put it into L2/L3 Ready.
+I think I might be inclined to change the directory from "link_pm" to
+"link", e.g.,
 
-That should be fine. What I've seen the link goes into L1 when
-downstream component is put to D-state (not D0) and then it is put back
-to L0 when L2/3 ready is propagated. Eventually it goes into L2 or L3.
+  - /sys/bus/pci/devices/0000:00:1c.0/link_pm/clkpm
+  + /sys/bus/pci/devices/0000:00:1c.0/link/clkpm
 
-> Also, L2/L3 Ready is expected to be transient, so finally power should
-> be removed somehow.
+because there are other things that haven't been merged yet that could
+go in link/ as well:
 
-There is GPIO for both power and PERST, I think the line here:
+  * Mika's "link disable" control [1]
+  * Dilip's link width/speed controls [2,3]
 
-  \_SB.SGOV (0x01010004, Zero)
+The max_link_speed, max_link_width, current_link_speed,
+current_link_width files could also logically be in link/, although
+they've already been merged at the top level.
 
-is the one that removes power.
+Rajat's AER statistics change [4] is also coming.  Those stats aren't
+link-related, so they wouldn't go in link/.  The current strawman is
+an "aer_stats" directory, but I wonder if we should make a more
+generic directory like "errors" that could be used for both AER and
+DPC and potentially other error-related things.
 
-> > LKDS() for the first PEG port looks like this:
-> >
-> >    P0L2 = One
-> >    Sleep (0x10)
-> >    Local0 = Zero
-> >    While (P0L2)
-> >    {
-> >         If ((Local0 > 0x04))
-> >         {
-> >             Break
-> >         }
-> >
-> >         Sleep (0x10)
-> >         Local0++
-> >    }
-> >
-> > One thing that comes to mind is that the loop can end even if P0L2 is
-> > not cleared as it does only 5 iterations with 16 ms sleep between. Maybe
-> > Sleep() is implemented differently in Windows? I mean Linux may be
-> > "faster" here and return prematurely and if we leave the port into D0
-> > this does not happen, or something. I'm just throwing out ideas :)
-> 
-> But this actually works for the downstream component in D0, doesn't it?
+For example, we could have these link-related things:
 
-It does and that leaves the link in L0 so it could be that then the
-above AML works better or something.
+  /sys/.../0000:00:1c.0/link/clkpm            # RW ASPM stuff
+  /sys/.../0000:00:1c.0/link/l0s_aspm
+  /sys/.../0000:00:1c.0/link/...
+  /sys/.../0000:00:1c.0/link/disable          # RW Mika
+  /sys/.../0000:00:1c.0/link/speed            # RW Dilip's control
+  /sys/.../0000:00:1c.0/link/width            # RW Dilip's control
+  /sys/.../0000:00:1c.0/link/max_speed        # RO possible rework
+  /sys/.../0000:00:1c.0/link/max_width        # RO possible rework
 
-That reminds me, ASPM may have something to do with this as well.
+With these backwards compatibility symlinks:
 
-> Also, if the downstream component is in D0, the port actually should
-> stay in D0 too, so what would happen with the $subject patch applied?
+  /sys/.../0000:00:1c.0/max_link_speed     -> link/max_speed
+  /sys/.../0000:00:1c.0/current_link_speed -> link/speed
 
-Parent port cannot be lower D-state than the child so I agree it should
-stay in D0 as well. However, it seems that what happens is that the
-issue goes away :)
+Rajat's current patch puts the AER stats here at the top level:
+
+  /sys/.../0000:00:1c.0/aer_stats/fatal_bit4_DLP
+
+But maybe we could push them down like this:
+
+  /sys/.../0000:00:1c.0/errors/aer/stats/unc_04_dlp
+  /sys/.../0000:00:1c.0/errors/aer/stats/unc_26_poison_tlb_blocked
+  /sys/.../0000:00:1c.0/errors/aer/stats/cor_00_rx_err
+  /sys/.../0000:00:1c.0/errors/aer/stats/cor_15_hdr_log_overflow
+
+There are some AER-related things we don't have at all today that
+could go here:
+
+  /sys/.../0000:00:1c.0/errors/aer/ecrc_gen
+  /sys/.../0000:00:1c.0/errors/aer/ecrc_check
+  /sys/.../0000:00:1c.0/errors/aer/unc_err_status
+  /sys/.../0000:00:1c.0/errors/aer/unc_err_mask
+  /sys/.../0000:00:1c.0/errors/aer/unc_err_sev
+
+And we might someday want DPC knobs like this:
+
+  /sys/.../0000:00:1c.0/errors/dpc/status
+  /sys/.../0000:00:1c.0/errors/dpc/error_source
+
+Any thoughts?
+
+Bjorn
+
+[1] https://lore.kernel.org/r/20190529104942.74991-1-mika.westerberg@linux.intel.com
+[2] https://lore.kernel.org/r/d8574605f8e70f41ce1e88ccfb56b63c8f85e4df.1571638827.git.eswara.kota@linux.intel.com
+[3] https://lore.kernel.org/r/20191030221436.GA261632@google.com/
+[4] https://lore.kernel.org/r/20190827222145.32642-2-rajatja@google.com
+[5] https://lore.kernel.org/r/b1c83f8a-9bf6-eac5-82d0-cf5b90128fbf@gmail.com
