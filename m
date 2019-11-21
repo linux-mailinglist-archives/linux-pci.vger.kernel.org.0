@@ -2,81 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D694B104E6E
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Nov 2019 09:52:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 09874104F15
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Nov 2019 10:19:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbfKUIwW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Nov 2019 03:52:22 -0500
-Received: from mga02.intel.com ([134.134.136.20]:29461 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726454AbfKUIwW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 21 Nov 2019 03:52:22 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Nov 2019 00:52:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,224,1571727600"; 
-   d="scan'208";a="259310679"
-Received: from linux.intel.com ([10.54.29.200])
-  by FMSMGA003.fm.intel.com with ESMTP; 21 Nov 2019 00:52:20 -0800
-Received: from [10.226.38.254] (unknown [10.226.38.254])
-        by linux.intel.com (Postfix) with ESMTP id C5D1D5802C4;
-        Thu, 21 Nov 2019 00:52:17 -0800 (PST)
-Subject: Re: [PATCH v8 2/3] dwc: PCI: intel: PCIe RC controller driver
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
-        andrew.murray@arm.com, helgaas@kernel.org, jingoohan1@gmail.com,
-        robh@kernel.org, martin.blumenstingl@googlemail.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
-References: <cover.1574158309.git.eswara.kota@linux.intel.com>
- <71262d29ca564060331e7e2c1ceb41158109cb92.1574158309.git.eswara.kota@linux.intel.com>
- <20191120130826.GM32742@smile.fi.intel.com>
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <8545714b-9393-3272-9d58-35a91d1681cf@linux.intel.com>
-Date:   Thu, 21 Nov 2019 16:52:16 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726532AbfKUJTF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 Nov 2019 04:19:05 -0500
+Received: from mx2.suse.de ([195.135.220.15]:49138 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726014AbfKUJTE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 21 Nov 2019 04:19:04 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 134B7B324;
+        Thu, 21 Nov 2019 09:19:01 +0000 (UTC)
+Message-ID: <f7c09f06913fa1ed5e98c55ebe6d9db81bf232c0.camel@suse.de>
+Subject: Re: [PATCH] dma-mapping: treat dev->bus_dma_mask as a DMA limit
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Christoph Hellwig <hch@lst.de>, Robin Murphy <robin.murphy@arm.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-mips@vger.kernel.org, linux-ide@vger.kernel.org,
+        Paul Mackerras <paulus@samba.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Joerg Roedel <joro@8bytes.org>, x86@kernel.org,
+        phil@raspberrypi.org, linux-acpi@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>, linux-pci@vger.kernel.org,
+        James Hogan <jhogan@kernel.org>, Len Brown <lenb@kernel.org>,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org, Jens Axboe <axboe@kernel.dk>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        linux-kernel@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
+        iommu@lists.linux-foundation.org,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        linuxppc-dev@lists.ozlabs.org
+Date:   Thu, 21 Nov 2019 10:18:54 +0100
+In-Reply-To: <20191121073152.GB24024@lst.de>
+References: <20191113161340.27228-1-nsaenzjulienne@suse.de>
+         <dd074ef5c23ba56598e92be19e8e25ae31b75f93.camel@suse.de>
+         <20191119170006.GA19569@lst.de>
+         <7609007d-52f5-bb10-e8d5-96fadbfab46d@arm.com>
+         <20191121073152.GB24024@lst.de>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-lq+O6sjXzX+AgzEMEd7n"
+User-Agent: Evolution 3.34.1 
 MIME-Version: 1.0
-In-Reply-To: <20191120130826.GM32742@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
-On 11/20/2019 9:08 PM, Andy Shevchenko wrote:
-> On Wed, Nov 20, 2019 at 03:43:01PM +0800, Dilip Kota wrote:
->> Add support to PCIe RC controller on Intel Gateway SoCs.
->> PCIe controller is based of Synopsys DesignWare PCIe core.
->>
->> Intel PCIe driver requires Upconfigure support, Fast Training
->> Sequence and link speed configurations. So adding the respective
->> helper functions in the PCIe DesignWare framework.
->> It also programs hardware autonomous speed during speed
->> configuration so defining it in pci_regs.h.
->> +static void pcie_app_wr_mask(struct intel_pcie_port *lpp,
->> +			     u32 ofs, u32 mask, u32 val)
-> It seems your editor is misconfigured. First line should be
->
-> static void pcie_app_wr_mask(struct intel_pcie_port *lpp, u32 ofs,
->
-> in case you would like to split it logically.
->
->> +static void pcie_rc_cfg_wr_mask(struct intel_pcie_port *lpp,
->> +				u32 ofs, u32 mask, u32 val)
-> Ditto.
->
->> +	pcie_app_wr(lpp,  PCIE_APP_IRNCR, PCIE_APP_IRN_INT);
-> Extra white space.
-My bad, typo error. Will fix them all in the next patch version.
+--=-lq+O6sjXzX+AgzEMEd7n
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, 2019-11-21 at 08:31 +0100, Christoph Hellwig wrote:
+> On Tue, Nov 19, 2019 at 05:17:03PM +0000, Robin Murphy wrote:
+> > TBH I can't see it being a massive problem even if the DMA patch, drive=
+r=20
+> > and DTS patch went entirely separately via the respective DMA, PCI, and=
+=20
+> > arm-soc trees in the same cycle. Bisecting over a merge window is a big=
+=20
+> > enough pain in the bum as it is, and if the worst case is that someone=
+=20
+> > trying to do that on a Pi4 has a wonky PCI controller appear for a coup=
+le=20
+> > of commits, they may as well just disable that driver for their bisecti=
+on,=20
+> > because it wasn't there at the start so can't possibly be the thing the=
+y're=20
+> > looking for regressions in ;)
+>=20
+> Agreed.
+>=20
+> Nicolas, can you send a respin?  That way I can still queue it up
+> for 5.5.
+
+Oh, I thought it was too late for that already. I'll send it in a minute.
 
 Regards,
-Dilip
+Nicolas
 
->
+
+--=-lq+O6sjXzX+AgzEMEd7n
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3WVn4ACgkQlfZmHno8
+x/6kBwf/SKtubLT3BK6PDi2kFxS7U1Nuy9X/MqsOPMdQNIIzccK4WqpweJsn3fn7
+WUh4Tsn5H2fjaeqsOCLpG5PeYLO6nDWDmCzVszhsyBjqWczikEWQ8reuCbXbbW6G
+rUh1wlp8+VDFDs0reFtW9POlYcvxixcMmbkSjKPEtZCh/GjdgIcjdkCtvwGkdrE1
+8E8Z6K9lqyiB2WQ0z7tdOf3fglQwJ7HxRgsmlYm1u0UQCm3+Hdrvy2hO7X/OYhtB
+4JbPmzPk62RNUjdmnuJ8t2ar57gMQ4VwRi7hjfCir9Iq8t/B7vCzCAQnzREpL05w
+BEUfJlvCYEvS3eArOErmv3Mm+/ugdg==
+=NUIQ
+-----END PGP SIGNATURE-----
+
+--=-lq+O6sjXzX+AgzEMEd7n--
+
