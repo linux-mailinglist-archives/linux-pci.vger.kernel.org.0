@@ -2,114 +2,171 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ED173105665
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Nov 2019 17:04:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DACF910567C
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Nov 2019 17:06:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726379AbfKUQEW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Nov 2019 11:04:22 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:35002 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726279AbfKUQEW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Nov 2019 11:04:22 -0500
-Received: by mail-qk1-f196.google.com with SMTP id i19so3516923qki.2;
-        Thu, 21 Nov 2019 08:04:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=muG5txoUIBixmDZY/kv1Jd572ye20WcmiMd8T+3ZRro=;
-        b=s8ZokWlektFXIpdEbHaG9pZh9w7qhVrpkhgikKP6JZExMJdA0GM/o/nLvrop4EQDRy
-         c7ODboTWk5sKduP+vZLqg+n2jQoiVntPTp8DGJNElu+qAegi07GZNoqlveH0RollwfRz
-         oh5yJDk765FIJEygEcnwfkP9IzGulfM3H3RmpQrrssxSuXn+39/2rw1ww+iEv40HXqpf
-         tsO3ZxHki2LEm3YhtCVZRCWApNlAgnNX44inc9HW2hTGcCWhIyKU3Ndt9JilJr8wfL+V
-         ycBmrc/7N2TdpIHlzq1eyt3YUGj3lCPt3BiUSjWLmtmMAPtS94CNlYv0fPQiNyatCHDb
-         nctg==
+        id S1726822AbfKUQG3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 Nov 2019 11:06:29 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:30990 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726541AbfKUQG2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Nov 2019 11:06:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574352387;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=2bUmJw5NVvVVplfFLTrj0DWj0K1ssd2HaG6I0BvVfDc=;
+        b=b7dpbj18d503h3M+u9CUaER1Qu9/MJbdwFCYwStC13tu082gbedLwL7HiYfN5M2oJ3rLHs
+        G5jYd8384kMRLQffcAHFsTt9LwHoGMoPuZdfcaotvOLHC+O5J5iNsw4HePa6IR3Q3uuoFd
+        p72wISzI/WGt8m3L0vdFfJSRYZbRMaQ=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-206-Sl1-_DUYPVmetSV-haLo8g-1; Thu, 21 Nov 2019 11:06:26 -0500
+Received: by mail-qt1-f198.google.com with SMTP id v92so2557895qtd.18
+        for <linux-pci@vger.kernel.org>; Thu, 21 Nov 2019 08:06:26 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=muG5txoUIBixmDZY/kv1Jd572ye20WcmiMd8T+3ZRro=;
-        b=Ba2qLMyOSKIWw0t45mmXMCjo1GUXO5kQyTENgJdncsKf9N8tDqNXq+w9c/i1BkYD7W
-         MkCh+etXGpSMUy642dEZ48Sxl5AbNzqzKFJ8GFVLAn+Sc3TJJUF6hyi53Pw5digDH4lb
-         NbdbUabAjXi2kUTwWTZj6dRwInexV37c1Y7e0pEdKpWZUGKBHOrqPmd8/sAFWCEr9jAl
-         Of7MyxNCmq8X06f8T/RyCytJZ3GwM/wM3JMlK7KV6gHwGuzit0G0oEYNRCQEmXny/hP8
-         1qThpC/MbAbCR3jrnsOl9v/WjtO7swBUPYImydwEjNWLM+byOAobSC3zZPP0l79xlgNM
-         pb9g==
-X-Gm-Message-State: APjAAAXqaUkU3fz5TM1mqcDs8K+PacSFXPBS5iyuCvpCrM9TtptsjV86
-        vEzO3azW94Frra/BJWZYSJRe2J7i6Q4NL1ccKHPCeK2Q
-X-Google-Smtp-Source: APXvYqwC+9MPQofQOTxXPnP1nYL/GncSn55MZfHC24843empaBlI4INyjelPWUq2K44l7J/8Hs9ssemo3ohAknvg2sw=
-X-Received: by 2002:a37:a815:: with SMTP id r21mr3649590qke.464.1574352261059;
- Thu, 21 Nov 2019 08:04:21 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=4u5SaUcnCKvjh6UsP+VC2r3Fd3UTQ4sI8vEm9p9IspQ=;
+        b=ZEQBB5JSMG451fNprdB48QDsvPqijRb4W6z2HpOjkH+eqQrnnfGrIgFD1QDOmMpwoZ
+         G/Y8cZaulNomUf0K+fGlkjTHQYma/nJQa85Zt9ybr2rylf6V/hmWg7mxSxmIHW/WGlf2
+         82xxmepQixiMZuv2tZYuHbvAYRIc+s+hCiFGfm7GEgCkkCt4Cf4BXxmq21sLWT4UXhRW
+         7Yix2KcdMnSh7UuPMDIDyHEGwPDwFb9bTJ7mT/6ks2HSskbl6OBWtG+3m18/XWI9bYHi
+         fup4wPDy/iHzTWSLa13bxgyjpiWqgkL2wCmJ2bOgaXxtUjN4D6hy8BAOAo6mIs0qIBOb
+         BGJw==
+X-Gm-Message-State: APjAAAUGsYDQ7fPQOb0rbMdYSl0WedjkmjTRQlbcSSOGYh+6Rx6f4+49
+        x1MCpk5Q/c0dqZtaNRT9Hg4kAUfrudYrGsGomln6hcCJG01ITCJySTclV3vC5ojpEECsRTBPgZ9
+        bE5PwJrXPUf9CILB/RD64S2s6G9GThVjl5kDQ
+X-Received: by 2002:ac8:73c6:: with SMTP id v6mr9366597qtp.137.1574352381588;
+        Thu, 21 Nov 2019 08:06:21 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyMWsnX6Oq8sVu9TbpGunjITLNboA1N6sHCOJjdw/pIhaC+MKSuuxVJFGx9BLlu7cQMJ12GJrcBaxUzBIiQcN8=
+X-Received: by 2002:ac8:73c6:: with SMTP id v6mr9366479qtp.137.1574352380570;
+ Thu, 21 Nov 2019 08:06:20 -0800 (PST)
 MIME-Version: 1.0
-References: <CAJ2oMhLLaguZMMaescENDUOmNm=WmZLjsO0BjK1-g_ro5AOOMQ@mail.gmail.com>
-In-Reply-To: <CAJ2oMhLLaguZMMaescENDUOmNm=WmZLjsO0BjK1-g_ro5AOOMQ@mail.gmail.com>
-From:   Ranran <ranshalit@gmail.com>
-Date:   Thu, 21 Nov 2019 18:04:09 +0200
-Message-ID: <CAJ2oMhJvks=++wMGYpA_Q_+Gytwb0nFz3jieRzM1rrdUJKHYLA@mail.gmail.com>
-Subject: Re: crash on getting interrupt from uio_generic_pci
-To:     linux-pci@vger.kernel.org, linux-fpga@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+References: <20191120120913.GE11621@lahna.fi.intel.com> <CACO55tsHy6yZQZ8PkdW8iPA7+uc5rdcEwRJwYEQ3iqu85F8Sqg@mail.gmail.com>
+ <20191120151542.GH11621@lahna.fi.intel.com> <CACO55tvo3rbPtYJcioEgXCEQqVXcVAm-iowr9Nim=bgTdMjgLw@mail.gmail.com>
+ <20191120155301.GL11621@lahna.fi.intel.com> <CAJZ5v0hkT-fHFOQKzp2qYPyR+NUa4c-G-uGLPZuQxqsG454PiQ@mail.gmail.com>
+ <CACO55ttTPi2XpRRM_NYJU5c5=OvG0=-YngFy1BiR8WpHkavwXw@mail.gmail.com>
+ <CAJZ5v0h=7zu3A+ojgUSmwTH0KeXmYP5OKDL__rwkkWaWqcJcWQ@mail.gmail.com>
+ <20191121112821.GU11621@lahna.fi.intel.com> <CAJZ5v0hQhj5Wf+piU11abC4pF26yM=XHGHAcDv8Jsgdx04aN-w@mail.gmail.com>
+ <20191121114610.GW11621@lahna.fi.intel.com> <CACO55ttXJgXG32HzYP_uJDfQ6T-d8zQaGjXK_AZD3kF0Rmft4g@mail.gmail.com>
+ <CAJZ5v0ibzcLEm44udUxW2uVgaF9NapdNBF8Ag+RE++u7gi2yNA@mail.gmail.com>
+In-Reply-To: <CAJZ5v0ibzcLEm44udUxW2uVgaF9NapdNBF8Ag+RE++u7gi2yNA@mail.gmail.com>
+From:   Karol Herbst <kherbst@redhat.com>
+Date:   Thu, 21 Nov 2019 17:06:09 +0100
+Message-ID: <CACO55ttBkZD9dm0Y_jT931NnzHHtDFyLz28aoo+ZG0pnLzPgbA@mail.gmail.com>
+Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
+ states on certain intel bridges
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Mika Westerberg <mika.westerberg@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lyude Paul <lyude@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Dave Airlie <airlied@gmail.com>,
+        Mario Limonciello <Mario.Limonciello@dell.com>
+X-MC-Unique: Sl1-_DUYPVmetSV-haLo8g-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-it's been sent too soon , sorry.
-kernel version:
-86_64 x86_64 GNU/Linux
-[root@localhost devmem2]# uname -a
-Linux localhost.localdomain 4.18.16 #4 SMP Thu Nov 21 17:10:34 IST
-2019 x86_64 x86_64 x86_64 GNU/Linux
-[root@localhost devmem2]#
+On Thu, Nov 21, 2019 at 4:47 PM Rafael J. Wysocki <rafael@kernel.org> wrote=
+:
+>
+> On Thu, Nov 21, 2019 at 1:53 PM Karol Herbst <kherbst@redhat.com> wrote:
+> >
+> > On Thu, Nov 21, 2019 at 12:46 PM Mika Westerberg
+> > <mika.westerberg@intel.com> wrote:
+> > >
+> > > On Thu, Nov 21, 2019 at 12:34:22PM +0100, Rafael J. Wysocki wrote:
+> > > > On Thu, Nov 21, 2019 at 12:28 PM Mika Westerberg
+> > > > <mika.westerberg@intel.com> wrote:
+> > > > >
+> > > > > On Wed, Nov 20, 2019 at 11:29:33PM +0100, Rafael J. Wysocki wrote=
+:
+> > > > > > > last week or so I found systems where the GPU was under the "=
+PCI
+> > > > > > > Express Root Port" (name from lspci) and on those systems all=
+ of that
+> > > > > > > seems to work. So I am wondering if it's indeed just the 0x19=
+01 one,
+> > > > > > > which also explains Mikas case that Thunderbolt stuff works a=
+s devices
+> > > > > > > never get populated under this particular bridge controller, =
+but under
+> > > > > > > those "Root Port"s
+> > > > > >
+> > > > > > It always is a PCIe port, but its location within the SoC may m=
+atter.
+> > > > >
+> > > > > Exactly. Intel hardware has PCIe ports on CPU side (these are cal=
+led
+> > > > > PEG, PCI Express Graphics, ports), and the PCH side. I think the =
+IP is
+> > > > > still the same.
+> > > > >
+> >
+> > yeah, I meant the bridge controller with the ID 0x1901 is on the CPU
+> > side. And if the Nvidia GPU is on a port on the PCH side it all seems
+> > to work just fine.
+>
+> But that may involve different AML too, may it not?
+>
+> > > > > > Also some custom AML-based power management is involved and tha=
+t may
+> > > > > > be making specific assumptions on the configuration of the SoC =
+and the
+> > > > > > GPU at the time of its invocation which unfortunately are not k=
+nown to
+> > > > > > us.
+> > > > > >
+> > > > > > However, it looks like the AML invoked to power down the GPU fr=
+om
+> > > > > > acpi_pci_set_power_state() gets confused if it is not in PCI D0=
+ at
+> > > > > > that point, so it looks like that AML tries to access device me=
+mory on
+> > > > > > the GPU (beyond the PCI config space) or similar which is not
+> > > > > > accessible in PCI power states below D0.
+> > > > >
+> > > > > Or the PCI config space of the GPU when the parent root port is i=
+n D3hot
+> > > > > (as it is the case here). Also then the GPU config space is not
+> > > > > accessible.
+> > > >
+> > > > Why would the parent port be in D3hot at that point?  Wouldn't that=
+ be
+> > > > a suspend ordering violation?
+> > >
+> > > No. We put the GPU into D3hot first, then the root port and then turn
+> > > off the power resource (which is attached to the root port) resulting
+> > > the topology entering D3cold.
+> > >
+> >
+> > If the kernel does a D0 -> D3hot -> D0 cycle this works as well, but
+> > the power savings are way lower, so I kind of prefer skipping D3hot
+> > instead of D3cold. Skipping D3hot doesn't seem to make any difference
+> > in power savings in my testing.
+>
+> OK
+>
+> What exactly did you do to skip D3cold in your testing?
+>
 
-Thank you for any  ideas,
-Ran
+For that I poked into the PCI registers directly and skipped doing the
+ACPI calls and simply checked for the idle power consumption on my
+laptop. But I guess I should retest with calling pci_d3cold_disable
+from nouveau instead? Or is there a different preferable way of
+testing this?
 
-On Thu, Nov 21, 2019 at 6:02 PM Ranran <ranshalit@gmail.com> wrote:
->
-> Hello,
->
-> I use FPGA with PCIe, and we try to simulate interrupt.
-> uio_generic_pci is the kernel pci driver.
->
-> On receiving interrupt there is a crash:
->
-> I get the following exception:
-> What do you want to do today ? [  384.696015] irq 23: nobody cared
-> (try booting with the "irqpoll" option)
-> [  384.703048] CPU: 1 PID: 0 Comm: swapper/1 Tainted: G           OE
->   4.18.16 #3
-> [  384.710799] Hardware name:  /conga-MA5, BIOS MA50R000 10/30/2019
-> [  384.717083] Call Trace:
-> [  384.719643]  <IRQ>
-> [  384.721761]  dump_stack+0x5c/0x80
-> [  384.725224]  __report_bad_irq+0x35/0xaf
-> [  384.729234]  note_interrupt.cold.9+0xa/0x63
-> [  384.733612]  handle_irq_event_percpu+0x68/0x70
-> [  384.738239]  handle_irq_event+0x37/0x57
-> [  384.742262]  handle_fasteoi_irq+0x97/0x150
-> [  384.746560]  handle_irq+0x1a/0x30
-> [  384.750021]  do_IRQ+0x44/0xd0
-> [  384.753132]  common_interrupt+0xf/0xf
-> [  384.756979]  </IRQ>
-> [  384.759181] RIP: 0010:cpuidle_enter_state+0x7d/0x220
-> [  384.764368] Code: e8 d8 19 45 00 41 89 c4 e8 30 50 b1 ff 65 8b 3d
-> 99 db 85 7e e8 a4 4e b1 ff 31 ff 48 89 c3 e8 4a 61 b1 ff fb 66 0f 1f
-> 44 00 00 <48> b8 ff ff ff ff f3 01 00 00 4c 29 eb ba ff ff ff 7f 48 89
-> d9 48
-> [  384.784119] RSP: 0018:ffffb068c06afea8 EFLAGS: 00000286 ORIG_RAX:
-> ffffffffffffffda
-> [  384.792032] RAX: ffff96977fca14c0 RBX: 0000005991ab33dd RCX: 000000000000001f
-> [  384.799495] RDX: 0000005991ab33dd RSI: 0000000000000000 RDI: 0000000000000000
-> [  384.806955] RBP: ffff96977fcab300 R08: 000000977b372895 R09: 0000000000000006
-> [  384.814446] R10: 00000000ffffffff R11: ffff96977fca05a8 R12: 0000000000000001
-> [  384.821900] R13: 0000005991ab220e R14: 0000000000000001 R15: 0000000000000000
-> [  384.829346]  ? cpuidle_enter_state+0x76/0x220
-> [  384.833886]  do_idle+0x221/0x260
-> [  384.837258]  cpu_startup_entry+0x6a/0x70
-> [  384.841366]  start_secondary+0x1a4/0x1f0
-> [  384.845465]  secondary_startup_64+0xb7/0xc0
-> [  384.849849] handlers:
-> [  384.852233] [<000000007a5bed83>] uio_interrupt
-> [  384.856892] Disabling IRQ #23
->
-> kernel version:
