@@ -2,48 +2,48 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DF0FE106F8D
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Nov 2019 12:16:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 537B7106F8E
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Nov 2019 12:16:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729435AbfKVKvE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 22 Nov 2019 05:51:04 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40684 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729431AbfKVKvD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 Nov 2019 05:51:03 -0500
-Received: by mail-wm1-f68.google.com with SMTP id y5so7036810wmi.5
-        for <linux-pci@vger.kernel.org>; Fri, 22 Nov 2019 02:51:02 -0800 (PST)
+        id S1728914AbfKVLQJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 22 Nov 2019 06:16:09 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41531 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728529AbfKVKvE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 Nov 2019 05:51:04 -0500
+Received: by mail-wr1-f66.google.com with SMTP id b18so8024071wrj.8
+        for <linux-pci@vger.kernel.org>; Fri, 22 Nov 2019 02:51:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=GmQroTy0ZSrB9+ytyBw658P0+bfjBqqeFkyQrRlY2fc=;
-        b=R/GX7GpncHdtpCGTNb9LZDYyir4t0PAmFjI7FlT5nol5eGqh3g9UoW1PBFoTNplogC
-         SVaBaD4hexSWM3jfSYqGTKlvokoECPyser6aGFmjBzeKT2/KrCawSXcvu8mgYtMRxIMj
-         tjqCar++xgaYfLYaRy3XdgFwRtpRlR7HYSWpL7hpbcrnKLQ/CT50WIpJ4qwVNNF+zNZc
-         UXwNi6d2mNmRLawPvPUm7CP8glqP2G8DYGV8VDXJ3clmTzacXVLkJQNgq1AhzYbkUbhk
-         G7dh/PVGzK1sEon1bwZfxl1rMOZ3neP3I9WNi3BrtVhqN5GNfDY+HDZVheLdZIq1uKyx
-         Bdyw==
+        bh=O8FVNRvH5irJ2zDaBsxloUo7UX0pFrVUzjUZiLfKvwU=;
+        b=KE4FZyVJ7oTMaqEmjpbPlG5DZcuerskPQmr4Oz+oBjjiJHvGL6H8exZ0GXrlPmDu4L
+         fjock0LX/ANKXLc2tQLf8axKFLTKAmNc1cOarXAmF0mUTryD4ji2KpaeIUDw6KdwzCw2
+         MxmVyNC6Z760rlRWN+O0jtt5nJoCB5GWkiGoJq9XOXrGI1Q2/py21NNS6EZZJTYshlH1
+         dixx5JojDpj/FfGb3I7ZZgOUrdLQ8kn2WEIgbTcnNR0ah1Bdppb6CTCz4NURwPA8aLfS
+         EJmBtSrx3Y1mMzNCGoqbw/42Xt3due4SSZ7dusRabMT5A8dSeghZrBgyRs8JtWKzrXen
+         CdDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=GmQroTy0ZSrB9+ytyBw658P0+bfjBqqeFkyQrRlY2fc=;
-        b=qxTn1nX6kR3Wgm+JMZcDHVDABxKQLTKXZEcVh3rwgh1hZZr21taeN2Y3QW78sfqGVB
-         GYQBm9SWbhqwefKjWS1EG0YjsF/OOyIpBR+KW8cCT1st8YA+jOWx+mmtHuAxZ7TNkr6I
-         FuFXwuZOmykWxYFbW7PYmaxGBbqqaeTOSM2lS7vZAvCZkHDHZn8rS/Mn875D443zWC/y
-         SkUhxo54d4P/2/UWtGnOOdFrWD2pn1QjUUT3k2TvpLpjZ+q3ov8QmpsqnNV3teAKVLAx
-         8z+M/SgzWZHGzvIVbUSjlnSTKBmVm/FfCjDKY2/kJsI1xQLHXFfO8cIdAIOq+LYq31T3
-         r4tg==
-X-Gm-Message-State: APjAAAVHEbFwCxq4N9Md6g2oe2zz/fR45HylnB6QO1t5vbpe0JubVp99
-        3n9QLrI19mJAeU5xA/bMwVqS+Q==
-X-Google-Smtp-Source: APXvYqzQ0kK55WM+AUAEgoOeMQBtZwacsLjY81F9irulPCIeYc5srmqzEv2GsM8DeS2tetqh0occ7Q==
-X-Received: by 2002:a1c:f702:: with SMTP id v2mr8729559wmh.157.1574419861629;
-        Fri, 22 Nov 2019 02:51:01 -0800 (PST)
+        bh=O8FVNRvH5irJ2zDaBsxloUo7UX0pFrVUzjUZiLfKvwU=;
+        b=ZZYkCv0OdiFXX1vwv/TFS1mL5Wmy3LgbRl6mbApIris+LrM5rHQ9LHO8FeZD1YQGv4
+         Y5r2stuo3LKS7tcC9O+Gtg46jJWCBaNoPB+vbN3cETHNYQsfXUnHlu9OOqBv/CepNO64
+         lvOAAEX/IsSlWnAXXs4sJ2I/Xna13X3ohXnCOrK5e1Lm9FlcUHpQICSUhXFrKs0Dvxrk
+         X74LEXUIQUCWplvnaJ9Ir8ZYRRlGK219sapAKXs1wPs0OM4nFmyIweHoSzPYDxKp2OX9
+         c9ZKQNgNGZYHAFw6v/yMyeaT2mLn6ozafSnmRqAXadxN1MGcgpzELscHBGO5aKoERMsA
+         +tYw==
+X-Gm-Message-State: APjAAAUAmNSTymbhNUARIGNcS3+D0xSevi8lIGcCPZdaCcp313CT8uIF
+        rEiPoLO3ZFvUiTa5pwyekhDogyL/6cA=
+X-Google-Smtp-Source: APXvYqxupzAk9/+hAGuqo2zCmryiXsqWB8zdfYtdzuCH8fYncJHID5ipVvqg0xilqWNq9KeWUZb/LQ==
+X-Received: by 2002:adf:de0a:: with SMTP id b10mr17179236wrm.268.1574419862914;
+        Fri, 22 Nov 2019 02:51:02 -0800 (PST)
 Received: from localhost.localdomain (xdsl-188-155-204-106.adslplus.ch. [188.155.204.106])
-        by smtp.gmail.com with ESMTPSA id o133sm2088197wmb.4.2019.11.22.02.51.00
+        by smtp.gmail.com with ESMTPSA id o133sm2088197wmb.4.2019.11.22.02.51.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Nov 2019 02:51:01 -0800 (PST)
+        Fri, 22 Nov 2019 02:51:02 -0800 (PST)
 From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
 To:     linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         iommu@lists.linux-foundation.org,
@@ -55,9 +55,9 @@ Cc:     rjw@rjwysocki.net, lenb@kernel.org, lorenzo.pieralisi@arm.com,
         mst@redhat.com, jasowang@redhat.com, jacob.jun.pan@intel.com,
         eric.auger@redhat.com, sebastien.boeuf@intel.com,
         kevin.tian@intel.com
-Subject: [RFC 08/13] ACPI/IORT: Add callback to update a device's fwnode
-Date:   Fri, 22 Nov 2019 11:49:55 +0100
-Message-Id: <20191122105000.800410-9-jean-philippe@linaro.org>
+Subject: [RFC 09/13] iommu/virtio: Create fwnode if necessary
+Date:   Fri, 22 Nov 2019 11:49:56 +0100
+Message-Id: <20191122105000.800410-10-jean-philippe@linaro.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191122105000.800410-1-jean-philippe@linaro.org>
 References: <20191122105000.800410-1-jean-philippe@linaro.org>
@@ -68,92 +68,115 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-For a PCI-based IOMMU, IORT isn't in charge of allocating a fwnode. Let
-the IOMMU driver update the fwnode associated to an IORT node when
-available.
+The presence of a fwnode on a PCI device depends on the platform. QEMU
+q35, for example, creates an ACPI description for each PCI slot, but
+QEMU virt (aarch64) doesn't. Since the IOMMU subsystem relies heavily on
+fwnode to discover the DMA topology, create a fwnode for the
+virtio-iommu if necessary, using the software_node framework.
 
 Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 ---
- drivers/acpi/iort.c       | 38 ++++++++++++++++++++++++++++++++++++++
- include/linux/acpi_iort.h |  4 ++++
- 2 files changed, 42 insertions(+)
+ drivers/iommu/virtio-iommu.c | 56 ++++++++++++++++++++++++++++++++----
+ 1 file changed, 51 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/acpi/iort.c b/drivers/acpi/iort.c
-index f08f72d8af78..8263ab275b2b 100644
---- a/drivers/acpi/iort.c
-+++ b/drivers/acpi/iort.c
-@@ -1038,11 +1038,49 @@ const struct iommu_ops *iort_iommu_configure(struct device *dev)
+diff --git a/drivers/iommu/virtio-iommu.c b/drivers/iommu/virtio-iommu.c
+index 3ea9d7682999..8efa368134c0 100644
+--- a/drivers/iommu/virtio-iommu.c
++++ b/drivers/iommu/virtio-iommu.c
+@@ -966,6 +966,48 @@ static struct iommu_ops viommu_ops = {
+ 	.of_xlate		= viommu_of_xlate,
+ };
  
- 	return ops;
- }
-+
-+/**
-+ * iort_iommu_update_fwnode - update fwnode of a PCI IOMMU
-+ * @dev: the IOMMU device
-+ * @fwnode: the fwnode, or NULL to remove an existing fwnode
-+ *
-+ * A PCI device isn't instantiated by the IORT driver. The IOMMU driver sets or
-+ * removes its fwnode using this function.
-+ */
-+void iort_iommu_update_fwnode(struct device *dev, struct fwnode_handle *fwnode)
++static int viommu_set_fwnode(struct viommu_dev *viommu)
 +{
-+	struct pci_dev *pdev;
-+	struct iort_fwnode *curr;
-+	struct iort_pci_devid *devid;
++	/*
++	 * viommu->dev is the virtio device, its parent is the associated
++	 * transport device.
++	 */
++	struct device *dev = viommu->dev->parent;
 +
-+	if (!dev_is_pci(dev))
++	/*
++	 * With device tree a fwnode is always present. With ACPI, on some
++	 * platforms a PCI device has a DSDT node describing the slot. On other
++	 * platforms, no fwnode is created and we have to do it ourselves.
++	 */
++	if (!dev->fwnode) {
++		struct fwnode_handle *fwnode;
++
++		fwnode = fwnode_create_software_node(NULL, NULL);
++		if (IS_ERR(fwnode))
++			return PTR_ERR(fwnode);
++
++		set_primary_fwnode(dev, fwnode);
++	}
++
++	iommu_device_set_fwnode(&viommu->iommu, dev->fwnode);
++	return 0;
++}
++
++static void viommu_clear_fwnode(struct viommu_dev *viommu)
++{
++	struct device *dev = viommu->dev->parent;
++
++	if (!dev->fwnode)
 +		return;
 +
-+	pdev = to_pci_dev(dev);
++	if (is_software_node(dev->fwnode)) {
++		struct fwnode_handle *fwnode = dev->fwnode;
 +
-+	spin_lock(&iort_fwnode_lock);
-+	list_for_each_entry(curr, &iort_fwnode_list, list) {
-+		devid = curr->pci_devid;
-+		if (devid &&
-+		    pci_domain_nr(pdev->bus) == devid->segment &&
-+		    pdev->bus->number == devid->bus &&
-+		    pdev->devfn == devid->devfn) {
-+			WARN_ON(fwnode && curr->fwnode);
-+			curr->fwnode = fwnode;
-+			break;
-+		}
++		set_primary_fwnode(dev, NULL);
++		fwnode_remove_software_node(fwnode);
 +	}
-+	spin_unlock(&iort_fwnode_lock);
 +}
-+EXPORT_SYMBOL_GPL(iort_iommu_update_fwnode);
- #else
- int iort_iommu_msi_get_resv_regions(struct device *dev, struct list_head *head)
- { return 0; }
- const struct iommu_ops *iort_iommu_configure(struct device *dev)
- { return NULL; }
-+static void iort_iommu_update_fwnode(struct device *dev,
-+				     struct fwnode_handle *fwnode)
-+{ }
- #endif
++
+ static int viommu_init_vqs(struct viommu_dev *viommu)
+ {
+ 	struct virtio_device *vdev = dev_to_virtio(viommu->dev);
+@@ -1004,7 +1046,6 @@ static int viommu_fill_evtq(struct viommu_dev *viommu)
  
- static int nc_dma_get_range(struct device *dev, u64 *size)
-diff --git a/include/linux/acpi_iort.h b/include/linux/acpi_iort.h
-index f4db5fff07cf..840635e40d9d 100644
---- a/include/linux/acpi_iort.h
-+++ b/include/linux/acpi_iort.h
-@@ -43,6 +43,7 @@ int iort_pmsi_get_dev_id(struct device *dev, u32 *dev_id);
- void iort_dma_setup(struct device *dev, u64 *dma_addr, u64 *size);
- const struct iommu_ops *iort_iommu_configure(struct device *dev);
- int iort_iommu_msi_get_resv_regions(struct device *dev, struct list_head *head);
-+void iort_iommu_update_fwnode(struct device *dev, struct fwnode_handle *fwnode);
- #else
- static void acpi_iort_register_table(struct acpi_table_header *table,
- 				     enum iort_table_source source)
-@@ -63,6 +64,9 @@ static inline const struct iommu_ops *iort_iommu_configure(
- static inline
- int iort_iommu_msi_get_resv_regions(struct device *dev, struct list_head *head)
- { return 0; }
-+static void iort_iommu_update_fwnode(struct device *dev,
-+				     struct fwnode_handle *fwnode)
-+{ }
- #endif
+ static int viommu_probe(struct virtio_device *vdev)
+ {
+-	struct device *parent_dev = vdev->dev.parent;
+ 	struct viommu_dev *viommu = NULL;
+ 	struct device *dev = &vdev->dev;
+ 	u64 input_start = 0;
+@@ -1084,9 +1125,11 @@ static int viommu_probe(struct virtio_device *vdev)
+ 	if (ret)
+ 		goto err_free_vqs;
  
- #endif /* __ACPI_IORT_H__ */
+-	iommu_device_set_ops(&viommu->iommu, &viommu_ops);
+-	iommu_device_set_fwnode(&viommu->iommu, parent_dev->fwnode);
++	ret = viommu_set_fwnode(viommu);
++	if (ret)
++		goto err_sysfs_remove;
+ 
++	iommu_device_set_ops(&viommu->iommu, &viommu_ops);
+ 	iommu_device_register(&viommu->iommu);
+ 
+ #ifdef CONFIG_PCI
+@@ -1119,8 +1162,10 @@ static int viommu_probe(struct virtio_device *vdev)
+ 	return 0;
+ 
+ err_unregister:
+-	iommu_device_sysfs_remove(&viommu->iommu);
+ 	iommu_device_unregister(&viommu->iommu);
++	viommu_clear_fwnode(viommu);
++err_sysfs_remove:
++	iommu_device_sysfs_remove(&viommu->iommu);
+ err_free_vqs:
+ 	vdev->config->del_vqs(vdev);
+ 
+@@ -1131,8 +1176,9 @@ static void viommu_remove(struct virtio_device *vdev)
+ {
+ 	struct viommu_dev *viommu = vdev->priv;
+ 
+-	iommu_device_sysfs_remove(&viommu->iommu);
+ 	iommu_device_unregister(&viommu->iommu);
++	viommu_clear_fwnode(viommu);
++	iommu_device_sysfs_remove(&viommu->iommu);
+ 
+ 	/* Stop all virtqueues */
+ 	vdev->config->reset(vdev);
 -- 
 2.24.0
 
