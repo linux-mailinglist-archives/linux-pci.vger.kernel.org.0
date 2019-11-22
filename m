@@ -2,138 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FC921061F0
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Nov 2019 07:00:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D3C0910689C
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Nov 2019 10:07:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727903AbfKVGAN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 22 Nov 2019 01:00:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36166 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728924AbfKVF5l (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:57:41 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 873B02071B;
-        Fri, 22 Nov 2019 05:57:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402260;
-        bh=zBPDCyY6Vpcz+D96PO12iW3TKeVfwHVznMWy6CktHIo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q4DvIK3J+FiUjUcA5AxLs5M9mTd+ppTwSlPnbdyS6nGJKeJ1S+jmG3Vh1lQhGd/0T
-         loulnfx79HTuWwQnUvdehKKkdr3xm0/5bi6QYk149LFI6+e09TnXNF3pcay3csAjRl
-         NV86oQzUoXSgMjFq5t3Y8Y7CMnDJM+8uh+A6ODLo=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ming Lei <ming.lei@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, Jens Axboe <axboe@fb.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 101/127] PCI/MSI: Return -ENOSPC from pci_alloc_irq_vectors_affinity()
-Date:   Fri, 22 Nov 2019 00:55:19 -0500
-Message-Id: <20191122055544.3299-100-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191122055544.3299-1-sashal@kernel.org>
-References: <20191122055544.3299-1-sashal@kernel.org>
+        id S1726100AbfKVJHR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 22 Nov 2019 04:07:17 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:44512 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725999AbfKVJHR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 Nov 2019 04:07:17 -0500
+Received: by mail-ot1-f68.google.com with SMTP id c19so5533675otr.11;
+        Fri, 22 Nov 2019 01:07:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=40cp6sbp1LXK6FgVw9DtfWmsQFXcIol/9unXXqPvBWE=;
+        b=P8pegOdZpnZNV2y/Wo/3oFCP9BS211Sn13jJFDja3JjXIaa+dlwg0ThbbjQD85K1Za
+         Qo48Kpsby1SCmcrCKNsiFECZc8JdgZyfMqmhY+Qj3HD8tKdGWz23in2SQFwIUyng3uP5
+         Y4HHYETMG7kMppt4l5lNhce/PCMMG05bsp0+pXU1bHvHAOW0g7jgR3v8lfk9F0ww5Okz
+         7kxT8hZ2rWoru0dVigvCO4RFHEruUGY81QrbXSuRpBa5bklGFLBe8Qk4dfGz0RYPtU9W
+         Agj3QtzWAyn/M9Z3bckWolQlh2kim6Eha3Bcz8+1zNLLTt1l0Zbi7m1WPtK/xxKCdS1C
+         td7Q==
+X-Gm-Message-State: APjAAAXXDyF1ANYAC0Ru/NWogBFaYzImmA5B+uJLTQ8cZiiPrDXZ8pNt
+        5aiHJPnfYxCiZV62BbgLBdUlXlgz7PQmd8RCwkV0gZcc
+X-Google-Smtp-Source: APXvYqzd0eIxmN800CobU7Ca6/eY+fxOdyQYM0rOLFzFsNXb7tETIPDcTZ5muyZROiFWKVaDqLPhAwIk5Kw3TbBmlQw=
+X-Received: by 2002:a9d:7d01:: with SMTP id v1mr9451324otn.167.1574413636386;
+ Fri, 22 Nov 2019 01:07:16 -0800 (PST)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <CACO55tvo3rbPtYJcioEgXCEQqVXcVAm-iowr9Nim=bgTdMjgLw@mail.gmail.com>
+ <20191120155301.GL11621@lahna.fi.intel.com> <CAJZ5v0hkT-fHFOQKzp2qYPyR+NUa4c-G-uGLPZuQxqsG454PiQ@mail.gmail.com>
+ <CACO55ttTPi2XpRRM_NYJU5c5=OvG0=-YngFy1BiR8WpHkavwXw@mail.gmail.com>
+ <CAJZ5v0h=7zu3A+ojgUSmwTH0KeXmYP5OKDL__rwkkWaWqcJcWQ@mail.gmail.com>
+ <20191121112821.GU11621@lahna.fi.intel.com> <CAJZ5v0hQhj5Wf+piU11abC4pF26yM=XHGHAcDv8Jsgdx04aN-w@mail.gmail.com>
+ <20191121114610.GW11621@lahna.fi.intel.com> <20191121125236.GX11621@lahna.fi.intel.com>
+ <CAJZ5v0iMwhudB7O0hR-6KfRfa+_iGOY=t0Zzeh6+9OiTzeYJfA@mail.gmail.com>
+ <20191121194942.GY11621@lahna.fi.intel.com> <CAJZ5v0gyna0b135uxBVfNXgB9v-U9-93EYe0uzsr2BukJ9OtuA@mail.gmail.com>
+ <CACO55tvFeTFo3gGdL02gnWMMk+AHPPb=hntkre0ZcA6WvKcV1A@mail.gmail.com> <CACO55tvkQyYYnCs71_nJuNFm4f8kkvBqje8WeZGph7X+2zO3aA@mail.gmail.com>
+In-Reply-To: <CACO55tvkQyYYnCs71_nJuNFm4f8kkvBqje8WeZGph7X+2zO3aA@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 22 Nov 2019 10:07:04 +0100
+Message-ID: <CAJZ5v0jNq77xPXxeYeq_JJBCfekVPVPOye1mZwpQi=+=MKSS7w@mail.gmail.com>
+Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
+ states on certain intel bridges
+To:     Karol Herbst <kherbst@redhat.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Mika Westerberg <mika.westerberg@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lyude Paul <lyude@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Dave Airlie <airlied@gmail.com>,
+        Mario Limonciello <Mario.Limonciello@dell.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Ming Lei <ming.lei@redhat.com>
+On Fri, Nov 22, 2019 at 1:13 AM Karol Herbst <kherbst@redhat.com> wrote:
+>
+> so while trying to test with d3cold disabled, I noticed that I run
+> into the exact same error.
 
-[ Upstream commit 77f88abd4a6f73a1a68dbdc0e3f21575fd508fc3 ]
+Does this mean that you disabled d3cold on the GPU via sysfs (the
+"d3cold_allowed" attribute was 0) and the original problem still
+occurred in that configuration?
 
-The API of pci_alloc_irq_vectors_affinity() says it returns -ENOSPC if
-fewer than @min_vecs interrupt vectors are available for @dev.
+> And I verified that the
+> \_SB.PCI0.PEG0.PG00._STA returns 1, which indicates it should still be
+> turned on.
 
-However, if a device supports MSI-X but not MSI and a caller requests
-@min_vecs that can't be satisfied by MSI-X, we previously returned -EINVAL
-(from the failed attempt to enable MSI), not -ENOSPC.
-
-When -ENOSPC is returned, callers may reduce the number IRQs they request
-and try again.  Most callers can use the @min_vecs and @max_vecs
-parameters to avoid this retry loop, but that doesn't work when using IRQ
-affinity "nr_sets" because rebalancing the sets is driver-specific.
-
-This return value bug has been present since pci_alloc_irq_vectors() was
-added in v4.10 by aff171641d18 ("PCI: Provide sensible IRQ vector
-alloc/free routines"), but it wasn't an issue because @min_vecs/@max_vecs
-removed the need for callers to iteratively reduce the number of IRQs
-requested and retry the allocation, so they didn't need to distinguish
--ENOSPC from -EINVAL.
-
-In v5.0, 6da4b3ab9a6e ("genirq/affinity: Add support for allocating
-interrupt sets") added IRQ sets to the interface, which reintroduced the
-need to check for -ENOSPC and possibly reduce the number of IRQs requested
-and retry the allocation.
-
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-[bhelgaas: changelog]
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Jens Axboe <axboe@fb.com>
-Cc: Keith Busch <keith.busch@intel.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pci/msi.c | 22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-index 536e9a5cd2b14..d66ef88e13cf1 100644
---- a/drivers/pci/msi.c
-+++ b/drivers/pci/msi.c
-@@ -1156,7 +1156,8 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
- 				   const struct irq_affinity *affd)
- {
- 	static const struct irq_affinity msi_default_affd;
--	int vecs = -ENOSPC;
-+	int msix_vecs = -ENOSPC;
-+	int msi_vecs = -ENOSPC;
- 
- 	if (flags & PCI_IRQ_AFFINITY) {
- 		if (!affd)
-@@ -1167,16 +1168,17 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
- 	}
- 
- 	if (flags & PCI_IRQ_MSIX) {
--		vecs = __pci_enable_msix_range(dev, NULL, min_vecs, max_vecs,
--				affd);
--		if (vecs > 0)
--			return vecs;
-+		msix_vecs = __pci_enable_msix_range(dev, NULL, min_vecs,
-+						    max_vecs, affd);
-+		if (msix_vecs > 0)
-+			return msix_vecs;
- 	}
- 
- 	if (flags & PCI_IRQ_MSI) {
--		vecs = __pci_enable_msi_range(dev, min_vecs, max_vecs, affd);
--		if (vecs > 0)
--			return vecs;
-+		msi_vecs = __pci_enable_msi_range(dev, min_vecs, max_vecs,
-+						  affd);
-+		if (msi_vecs > 0)
-+			return msi_vecs;
- 	}
- 
- 	/* use legacy irq if allowed */
-@@ -1187,7 +1189,9 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
- 		}
- 	}
- 
--	return vecs;
-+	if (msix_vecs == -ENOSPC)
-+		return -ENOSPC;
-+	return msi_vecs;
- }
- EXPORT_SYMBOL(pci_alloc_irq_vectors_affinity);
- 
--- 
-2.20.1
-
+I don't really understand this comment, so can you explain it a bit to
+me, please?
