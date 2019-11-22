@@ -2,102 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 814C6105EAA
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Nov 2019 03:36:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6149F105EB5
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Nov 2019 03:43:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726270AbfKVCfe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Nov 2019 21:35:34 -0500
-Received: from mailout2.samsung.com ([203.254.224.25]:51529 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726454AbfKVCfe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Nov 2019 21:35:34 -0500
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20191122023529epoutp02aa385e031f861182937955dc55ac3bad~ZW3tDSMYu0460404604epoutp02B
-        for <linux-pci@vger.kernel.org>; Fri, 22 Nov 2019 02:35:29 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20191122023529epoutp02aa385e031f861182937955dc55ac3bad~ZW3tDSMYu0460404604epoutp02B
+        id S1726270AbfKVCnK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 Nov 2019 21:43:10 -0500
+Received: from mailout1.samsung.com ([203.254.224.24]:33133 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726343AbfKVCnI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Nov 2019 21:43:08 -0500
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20191122024302epoutp0174791269d55d05bb93e72905b90553d3~ZW_S6h2Wz2789327893epoutp01H
+        for <linux-pci@vger.kernel.org>; Fri, 22 Nov 2019 02:43:02 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20191122024302epoutp0174791269d55d05bb93e72905b90553d3~ZW_S6h2Wz2789327893epoutp01H
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1574390129;
-        bh=tHRJjMBTQKQJAHt3WUrqgcQ8vEqoveSa1k+dp1SwBbc=;
+        s=mail20170921; t=1574390582;
+        bh=Px4SlZ5apSRJazVEKcmp2ZxkKUBgkoNX88YE/Ke2mS8=;
         h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=meHKQL5iZIDq4aPudogDtJTnWzGnlwKhmQaFU6plL6045AuNwXdz4dw+dckopD+U4
-         04Trix0Z8hPhbCh8Eif83Fd+BTiAkOxP41T8fHwBe4hSKXpGgEjk7wW0SZOvtxmEqE
-         1ojSUshQ459o+50GbxA8wOjyRb2A7h/IFZsZLUJQ=
-Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-        20191122023528epcas5p31255afb402417cd2a8993089245a86d4~ZW3sXaRdK1176411764epcas5p3w;
-        Fri, 22 Nov 2019 02:35:28 +0000 (GMT)
+        b=uS/xP7ZJpaE7dm8BpmRQsfsNp+IZcUg8QFTfJ77zgVFHH52rWHPDbiGYlIP37BRb+
+         H+688o1yjmaaWNVvK3/KrJgnqApsp+/ffDa3RdZMSdKeWSj5vGtiMiqpEshOJ0LxEa
+         cGi/4/TDzTPyV5HKDyyQ+2Cumwklqc7PHY6czK3Y=
+Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
+        epcas5p4.samsung.com (KnoxPortal) with ESMTP id
+        20191122024302epcas5p46e8dff0af37d1b4ae884d7573ce74928~ZW_SZSdhY0340703407epcas5p4L;
+        Fri, 22 Nov 2019 02:43:02 +0000 (GMT)
 Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        D1.69.04403.07947DD5; Fri, 22 Nov 2019 11:35:28 +0900 (KST)
+        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        40.DD.04078.53B47DD5; Fri, 22 Nov 2019 11:43:02 +0900 (KST)
 Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-        20191122023528epcas5p2f890e915e4b1ed5198b840d9992e9ba4~ZW3r7k1Ln1917619176epcas5p2K;
-        Fri, 22 Nov 2019 02:35:28 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+        20191122024301epcas5p15162a4693f1d585dcd42d9ff151d1c54~ZW_Rs2dWT2878528785epcas5p1p;
+        Fri, 22 Nov 2019 02:43:01 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
         epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191122023528epsmtrp1338ef5e134a8a6377f4485b199947888~ZW3r6xRwI0958709587epsmtrp1x;
-        Fri, 22 Nov 2019 02:35:28 +0000 (GMT)
-X-AuditID: b6c32a4a-3cbff70000001133-02-5dd74970a5ac
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        44.88.03814.07947DD5; Fri, 22 Nov 2019 11:35:28 +0900 (KST)
+        20191122024301epsmtrp1632ce3d4ffe6c33d6edf0028bac333cf~ZW_Rr_jHR1274412744epsmtrp1k;
+        Fri, 22 Nov 2019 02:43:01 +0000 (GMT)
+X-AuditID: b6c32a49-5edff70000000fee-f4-5dd74b3557fa
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        B6.C7.03654.53B47DD5; Fri, 22 Nov 2019 11:43:01 +0900 (KST)
 Received: from pankajdubey02 (unknown [107.111.85.21]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191122023526epsmtip2b51b50e830452a5d2c14a76b4d78a58d~ZW3qVqFk60866008660epsmtip2h;
-        Fri, 22 Nov 2019 02:35:26 +0000 (GMT)
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20191122024259epsmtip1f209f41be9c8c724411192d7ce2ac4cd~ZW_PzFe0c2388123881epsmtip1Y;
+        Fri, 22 Nov 2019 02:42:59 +0000 (GMT)
 From:   "Pankaj Dubey" <pankaj.dubey@samsung.com>
-To:     "'Gustavo Pimentel'" <Gustavo.Pimentel@synopsys.com>,
-        "'Anvesh Salveru'" <anvesh.s@samsung.com>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
-Cc:     <jingoohan1@gmail.com>, <lorenzo.pieralisi@arm.com>,
-        <andrew.murray@arm.com>, <bhelgaas@google.com>, <kishon@ti.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>
-In-Reply-To: <DM6PR12MB40102536205C74F4E41EBD69DA4E0@DM6PR12MB4010.namprd12.prod.outlook.com>
-Subject: RE: [PATCH v4 2/2] PCI: dwc: add support to handle ZRX-DC Compliant
- PHYs
-Date:   Fri, 22 Nov 2019 08:05:25 +0530
-Message-ID: <025601d5a0dd$80a214a0$81e63de0$@samsung.com>
+To:     "'Andrew Murray'" <andrew.murray@arm.com>,
+        "'Anvesh Salveru'" <anvesh.s@samsung.com>
+Cc:     <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <kishon@ti.com>, <robh+dt@kernel.org>, <mark.rutland@arm.com>
+In-Reply-To: <20191121160842.GC43905@e119886-lin.cambridge.arm.com>
+Subject: RE: [PATCH v4 1/2] phy: core: add phy_property_present method
+Date:   Fri, 22 Nov 2019 08:12:57 +0530
+Message-ID: <025701d5a0de$8e8b37d0$aba1a770$@samsung.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQE1rVtOHv1BqgLHLDW+5IttHzLvfAIdtnviAzgxAgcBnpO1nKieu6gg
+Thread-Index: AQE1rVtOHv1BqgLHLDW+5IttHzLvfAFs3nFMAYnCwPkCRa1ydaisfipw
 Content-Language: en-us
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sf0gTYRjmu9t2N2t5TmNvS6IGRhprJRUXhYaVXBEWGf0RTbvympb7wc4f
-        LShES1TU0op01VIykzUJxsyaRWHZKtpStBRMQlDStAQVM2aW2y3yv+d9n+d5n++Bj8TlH8RK
-        MsuQw5kNbLZKEiZ69DI2Vm3a26vdWFK1lS760yqmve56Md1QmEm7B0oIumm6lqA7h8sldLf7
-        loT22jwSetw/QtD3ersw+tKzV8TOJYzD5kDME+sAwdQ5cxmnvVTCVLrsiHE9n0KMp68VY6ac
-        qw6SR8N2ZHDZWXmcWZNwPCxzzlYqMvmjzzZPrStAfkUZkpJAbYbSF15RGQoj5VQbgoF345gw
-        TCK46fgiEYYZBG39I6J/ljttnSHLMwRvKqtDwxiCmu6qoEpCacA3axMHcBTVgMDxQxMQ4ZQd
-        QcdcS5CQUlqwzXvxAI6kUqFq4AYKYBEVA9N9TcFDMmob+AeHxAKOgLe1Q8E9Tq2HxvoxXHjS
-        avg13BgKSwZHd1lIo4DRjldEIBgoGwHXf18LddgNhbffhsyR8M3jIgSshNHLxSFshNm71bhg
-        vojgque2WCAS4UXPrYVD5EJCLDx0a4SwZVDhH8ICa6BkUFIsF9Rr4efX96GoaBgsuocJmIF5
-        Vw1+Ba2xLqpmXVTNuqiC9X9YHRLZ0QrOxOt1HL/FFG/g8jfwrJ7PNeg2nDTqnSj4zeL2PUaN
-        vv3tiCKRaqnsSv4nrVzM5vEWfTsCEldFyZ729mjlsgzWco4zG9PNudkc345WkiKVQlYt/nhM
-        TunYHO4Mx5k48z8WI6XKAhT+Oq3GYpxPUkx8Vz94etwyRfS0nDtrj1GZo1JjktcmqFsOSTln
-        7yThPp8P+gPlPs+JLqxhuTcv/RrW2tPfp8S61J/jSUNB2uAF9n5zxdJTp0tMRZd9iSlpnbhu
-        LoWfCK+QziTNJkdEd92xNO5IPLxrj+/IdnZZvJdO2tiRohLxmeymONzMs38BkLMDz2IDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrMIsWRmVeSWpSXmKPExsWy7bCSvG6B5/VYgwdnJC2a/29ntTi7ayGr
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrLKsWRmVeSWpSXmKPExsWy7bCmpq6Z9/VYg/MHmSya/29ntTi7ayGr
         xZKmDItddzvYLVZ8mcluceFpD5vF5V1z2CzOzjvOZvHm9wt2i6XXLzJZtO49wu7A7bFm3hpG
-        j52z7rJ7LNhU6rFpVSebR9+WVYweW/Z/ZvQ4fmM7k8fnTXIBHFFcNimpOZllqUX6dglcGX3X
-        5rAXrJSp+DqtpoFxqXgXIyeHhICJxPzdF1i6GLk4hAR2M0p8eT2PDSIhIzF59QpWCFtYYuW/
-        5+wQRS8ZJVq+/mEESbAJ6Euc+zGPFSQhIrCMUeLD3e3MIA6zwCZGibeLn7JBtMxjkjjyfCnY
-        XE6BWIl5/84yg9jCAoESh/dvYQGxWQRUJb7cWAFm8wpYSvx++IQVwhaUODnzCVicWUBbovdh
-        KyOMvWzha2aI+xQkfj5dBlYvIuAmseZyF1S9uMTLo0fYJzAKz0IyahaSUbOQjJqFpGUBI8sq
-        RsnUguLc9NxiwwKjvNRyveLE3OLSvHS95PzcTYzgqNTS2sF44kT8IUYBDkYlHt4J5ddihVgT
-        y4orcw8xSnAwK4nw7rl+JVaINyWxsiq1KD++qDQntfgQozQHi5I4r3z+sUghgfTEktTs1NSC
-        1CKYLBMHp1QDY/8mvir7p7UBPYImL9LNLvnYai1/zdN+e9ZemTOqp978fMV5vPjzSZ1FWT3m
-        u0sX1VzZF3IsfAtPuL/VYUfBNw/2ZU89NW1zoopIx+4nq/a86U6e4dCwp+yG3SNnYauUozpi
-        8y2Ui8QZFzBLS8dan26foO4oPOe45brtJ+/9Ojufy8fkhfhdHyWW4oxEQy3mouJEAD8RexHG
-        AgAA
-X-CMS-MailID: 20191122023528epcas5p2f890e915e4b1ed5198b840d9992e9ba4
+        j52z7rJ7LNhU6rFpVSebR9+WVYweW/Z/ZvQ4fmM7k8fnTXIBHFFcNimpOZllqUX6dglcGfdW
+        fGIqWKNaserzG/YGxvuyXYwcHBICJhIT9kt3MXJxCAnsZpTY1X2eCcL5xCgxtamJBcL5xiix
+        +d4nIIcTrOP9/FNsEIm9QC29/ewgCSGB14wSk14LgNhsAvoS537MYwWxRQSiJBbe28oK0sAs
+        8JFR4m/3ArAEp4CzRPu8CewgdwgLuEmsexgIEmYRUJU48OUxWAmvgKVE/4MN7BC2oMTJmU/A
+        jmAWkJfY/nYOM8RBChI/ny6D2uUmcevuTkaIGnGJl0ePsIPslRBYxC5xr/sB1AcuEv8OtrJB
+        2MISr45vYYewpSRe9rdB2fkSPxZPYoZobmGUmHx8LitEwl7iwJU5LCBHMwtoSqzfpQ+xjE+i
+        9/cTJkiY8kp0tAlBVKtJfH9+BupOGYmHzUuZIGwPiSvnfjNPYFScheS1WUhem4XkhVkIyxYw
+        sqxilEwtKM5NTy02LTDMSy3XK07MLS7NS9dLzs/dxAhOZFqeOxhnnfM5xCjAwajEwzuh/Fqs
+        EGtiWXFl7iFGCQ5mJRHePdevxArxpiRWVqUW5ccXleakFh9ilOZgURLnncR6NUZIID2xJDU7
+        NbUgtQgmy8TBKdXAmHrQZYPEF758rZcrLKfeYNKc+lbqr+mJMw7XzzXN9VNXO8C90SBP+cGl
+        MB/rfYcO1/lmS06zaj9rkKtsEWalatdcbB7fwOlyXlKmYecL18epiUsPFqZH54RkyXftsmD6
+        sMEpwO+ta0oYS8TGB0c5l5lfPOZuEcGg3RTzjEV+vZ/QORdrg34lluKMREMt5qLiRADz7g5N
+        YAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrAIsWRmVeSWpSXmKPExsWy7bCSnK6p9/VYg79f+S2a/29ntTi7ayGr
+        xZKmDItddzvYLVZ8mcluceFpD5vF5V1z2CzOzjvOZvHm9wt2i6XXLzJZtO49wu7A7bFm3hpG
+        j52z7rJ7LNhU6rFpVSebR9+WVYweW/Z/ZvQ4fmM7k8fnTXIBHFFcNimpOZllqUX6dglcGfdW
+        fGIqWKNaserzG/YGxvuyXYycHBICJhLv559i62Lk4hAS2M0ocfl3NzNEQkZi8uoVrBC2sMTK
+        f8/ZIYpeMkp0TTnHDpJgE9CXOPdjHliRiECUxN/PN1hAipgFfjNKLLv1ngWio4VJYsOFFWBj
+        OQWcJdrnTQDq5uAQFnCTWPcwECTMIqAqceDLY7BBvAKWEv0PNrBD2IISJ2c+YQEpZxbQk2jb
+        yAgSZhaQl9j+dg7UoQoSP58ug7rBTeLW3Z1QNeISL48eYZ/AKDwLyaRZCJNmIZk0C0nHAkaW
+        VYySqQXFuem5xYYFhnmp5XrFibnFpXnpesn5uZsYwfGopbmD8fKS+EOMAhyMSjy8E8qvxQqx
+        JpYVV+YeYpTgYFYS4d1z/UqsEG9KYmVValF+fFFpTmrxIUZpDhYlcd6neccihQTSE0tSs1NT
+        C1KLYLJMHJxSDYwNrKymbe7nrvvbNK4tu6kl+u1OM8dsvY3ezc83c+t+1Of3b71z5fjvdo6I
+        dSfseOZdiHuYvOpc74KgOVbrfx5hFLn65W/mg8lq1w9m3/3XuHv1lKiWp8IVDcd87EJifLM6
+        p/c/2npSIukx84MQu6sd+VF1RvyXfAOenwqfpZ4kXdV1c/LyM+pKLMUZiYZazEXFiQACbQoB
+        wwIAAA==
+X-CMS-MailID: 20191122024301epcas5p15162a4693f1d585dcd42d9ff151d1c54
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 CMS-TYPE: 105P
-X-CMS-RootMailID: 20191121032041epcas5p433066ebc6a07b73a1949da26e55e9b2f
+X-CMS-RootMailID: 20191121032036epcas5p1ec12cabed1104c131a3cab202a180c21
 References: <1574306408-4360-1-git-send-email-anvesh.s@samsung.com>
-        <CGME20191121032041epcas5p433066ebc6a07b73a1949da26e55e9b2f@epcas5p4.samsung.com>
-        <1574306408-4360-3-git-send-email-anvesh.s@samsung.com>
-        <DM6PR12MB40102536205C74F4E41EBD69DA4E0@DM6PR12MB4010.namprd12.prod.outlook.com>
+        <CGME20191121032036epcas5p1ec12cabed1104c131a3cab202a180c21@epcas5p1.samsung.com>
+        <1574306408-4360-2-git-send-email-anvesh.s@samsung.com>
+        <20191121160842.GC43905@e119886-lin.cambridge.arm.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
@@ -106,97 +106,131 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 
 > -----Original Message-----
-> From: Gustavo Pimentel <Gustavo.Pimentel=40synopsys.com>
-> Sent: Thursday, November 21, 2019 7:25 PM
-> To: Anvesh Salveru <anvesh.s=40samsung.com>; linux-kernel=40vger.kernel.o=
-rg;
-> linux-pci=40vger.kernel.org
-> Cc: jingoohan1=40gmail.com; pankaj.dubey=40samsung.com;
-> lorenzo.pieralisi=40arm.com; andrew.murray=40arm.com; bhelgaas=40google.c=
-om;
-> kishon=40ti.com; robh+dt=40kernel.org; mark.rutland=40arm.com
-> Subject: RE: =5BPATCH v4 2/2=5D PCI: dwc: add support to handle ZRX-DC Co=
-mpliant
-> PHYs
->=20
-> On Thu, Nov 21, 2019 at 3:20:8, Anvesh Salveru <anvesh.s=40samsung.com>
-> wrote:
->=20
-> > Many platforms use DesignWare controller but the PHY can be different
-> > in different platforms. If the PHY is compliant is to ZRX-DC
-> > specification it helps in low power consumption during power states.
+> From: Andrew Murray <andrew.murray@arm.com>
+> Sent: Thursday, November 21, 2019 9:39 PM
+> To: Anvesh Salveru <anvesh.s@samsung.com>
+> Cc: linux-kernel@vger.kernel.org; linux-pci@vger.kernel.org;
+> jingoohan1@gmail.com; gustavo.pimentel@synopsys.com;
+> pankaj.dubey@samsung.com; lorenzo.pieralisi@arm.com;
+> bhelgaas@google.com; kishon@ti.com; robh+dt@kernel.org;
+> mark.rutland@arm.com
+> Subject: Re: [PATCH v4 1/2] phy: core: add phy_property_present method
+> 
+> On Thu, Nov 21, 2019 at 08:50:07AM +0530, Anvesh Salveru wrote:
+> > In some platforms, we need information of phy properties in the
+> > controller drivers. This patch adds a new phy_property_present()
+> > method which can be used to check if some property exists in PHY or
+> > not.
 > >
-> > If current data rate is 8.0 GT/s or higher and PHY is not compliant to
-> > ZRX-DC specification, then after every 100ms link should transition to
-> > recovery state during the low power states.
+> > In case of DesignWare PCIe controller, we need to write into
+> > controller register to specify about ZRX-DC compliance property of the
+> > PHY, which reduces the power consumption during lower power states.
 > >
-> > DesignWare controller provides GEN3_ZRXDC_NONCOMPL field in
-> > GEN3_RELATED_OFF to specify about ZRX-DC compliant PHY.
-> >
-> > Platforms with ZRX-DC compliant PHY can set phy_zrxdc_compliant
-> > variable to specify this property to the controller.
-> >
-> > Signed-off-by: Anvesh Salveru <anvesh.s=40samsung.com>
-> > Signed-off-by: Pankaj Dubey <pankaj.dubey=40samsung.com>
+> > Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
+> > Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
 > > ---
-> >  drivers/pci/controller/dwc/pcie-designware.c =7C 6 ++++++
-> > drivers/pci/controller/dwc/pcie-designware.h =7C 4 ++++
-> >  2 files changed, 10 insertions(+)
+> >  drivers/phy/phy-core.c  | 26 ++++++++++++++++++++++++++
+> > include/linux/phy/phy.h |  8 ++++++++
+> >  2 files changed, 34 insertions(+)
 > >
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware.c
-> > b/drivers/pci/controller/dwc/pcie-designware.c
-> > index 820488d..36a01b7 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware.c
-> > +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> > =40=40 -556,4 +556,10 =40=40 void dw_pcie_setup(struct dw_pcie *pci)
-> >  		       PCIE_PL_CHK_REG_CHK_REG_START;
-> >  		dw_pcie_writel_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS,
-> val);
-> >  	=7D
-> > +
-> > +	if (pci->phy_zrxdc_compliant) =7B
-> > +		val =3D dw_pcie_readl_dbi(pci, PCIE_PORT_GEN3_RELATED);
-> > +		val &=3D =7EPORT_LOGIC_GEN3_ZRXDC_NONCOMPL;
-> > +		dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED, val);
-> > +	=7D
-> >  =7D
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware.h
-> > b/drivers/pci/controller/dwc/pcie-designware.h
-> > index 5a18e94..f43f986 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware.h
-> > +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> > =40=40 -60,6 +60,9 =40=40
-> >  =23define PCIE_MSI_INTR0_MASK		0x82C
-> >  =23define PCIE_MSI_INTR0_STATUS		0x830
+> > diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c index
+> > b04f4fe..0a62eca 100644
+> > --- a/drivers/phy/phy-core.c
+> > +++ b/drivers/phy/phy-core.c
+> > @@ -420,6 +420,32 @@ int phy_calibrate(struct phy *phy)
+> > EXPORT_SYMBOL_GPL(phy_calibrate);
 > >
-> > +=23define PCIE_PORT_GEN3_RELATED		0x890
-> > +=23define PORT_LOGIC_GEN3_ZRXDC_NONCOMPL	BIT(0)
+> >  /**
+> > + * phy_property_present() - checks if the property is present in PHY
+> > + * @phy: the phy returned by phy_get()
+> > + * @property: name of the property to check
+> > + *
+> > + * Used to check if the given property is present in PHY. PHY drivers
+> > + * can implement this callback function to expose PHY properties to
+> > + * controller drivers.
+> > + *
+> > + * Returns: true if property exists, false otherwise  */ bool
+> > +phy_property_present(struct phy *phy, const char *property) {
+> > +	bool ret;
 > > +
-> >  =23define PCIE_ATU_VIEWPORT		0x900
-> >  =23define PCIE_ATU_REGION_INBOUND		BIT(31)
-> >  =23define PCIE_ATU_REGION_OUTBOUND	0
-> > =40=40 -249,6 +252,7 =40=40 struct dw_pcie =7B
-> >  	void __iomem		*atu_base;
-> >  	u32			num_viewport;
-> >  	u8			iatu_unroll_enabled;
-> > +	bool			phy_zrxdc_compliant;
->=20
-> Typically is used u8 instead of bool, due to platform compatibility.
-> I'd guess that checkpatch script should have reported this. Did you use i=
-t?
+> > +	if (!phy || !phy->ops->property_present)
+> > +		return false;
+> > +
+> > +	mutex_lock(&phy->mutex);
+> > +	ret = phy->ops->property_present(phy, property);
+> 
+> I don't understand why it is necessary to require every phy driver to
+implement
+> this. Why can't the phy-core driver look up the device node of the given
+phy?
+> 
 
-Checkpatch didn't report any error/warning.=20
-We used bool here as phy_zrxdc_compliant will store the value returned by o=
-f_property_read_bool API.=20
-I can see many places in drivers/pci/ where this API is used the value is s=
-tored in bool itself.
+No specific reason.
 
->=20
-> >  	struct pcie_port	pp;
-> >  	struct dw_pcie_ep	ep;
-> >  	const struct dw_pcie_ops *ops;
+We just went ahead and implemented this similar to other API in phy-core.c
+file where it redirects call to platform specific phy driver. As  you
+pointed out in this case, it makes sense to keep it in phy-core driver
+itself, as platform specific phy driver is not going to do anything which is
+really dependent on the PHY. 
+We will wait for further review comments on this patch, and then will take
+up your suggestion in next patchset.
+
+Thanks for review.
+Pankaj Dubey
+> Thanks,
+> 
+> Andrew Murray
+> 
+> > +	mutex_unlock(&phy->mutex);
+> > +
+> > +	return ret;
+> > +}
+> > +EXPORT_SYMBOL_GPL(phy_property_present);
+> > +
+> > +/**
+> >   * phy_configure() - Changes the phy parameters
+> >   * @phy: the phy returned by phy_get()
+> >   * @opts: New configuration to apply
+> > diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h index
+> > 15032f14..3dd8f3c 100644
+> > --- a/include/linux/phy/phy.h
+> > +++ b/include/linux/phy/phy.h
+> > @@ -61,6 +61,7 @@ union phy_configure_opts {
+> >   * @reset: resetting the phy
+> >   * @calibrate: calibrate the phy
+> >   * @release: ops to be performed while the consumer relinquishes the
+> > PHY
+> > + * @property_present: check if some property is present in PHY
+> >   * @owner: the module owner containing the ops
+> >   */
+> >  struct phy_ops {
+> > @@ -103,6 +104,7 @@ struct phy_ops {
+> >  	int	(*reset)(struct phy *phy);
+> >  	int	(*calibrate)(struct phy *phy);
+> >  	void	(*release)(struct phy *phy);
+> > +	bool	(*property_present)(struct phy *phy, const char *property);
+> >  	struct module *owner;
+> >  };
+> >
+> > @@ -217,6 +219,7 @@ static inline enum phy_mode phy_get_mode(struct
+> > phy *phy)  }  int phy_reset(struct phy *phy);  int
+> > phy_calibrate(struct phy *phy);
+> > +bool phy_property_present(struct phy *phy, const char *property);
+> >  static inline int phy_get_bus_width(struct phy *phy)  {
+> >  	return phy->attrs.bus_width;
+> > @@ -354,6 +357,11 @@ static inline int phy_calibrate(struct phy *phy)
+> >  	return -ENOSYS;
+> >  }
+> >
+> > +static inline bool phy_property_present(struct phy *phy, const char
+> > +*property) {
+> > +	return false;
+> > +}
+> > +
+> >  static inline int phy_configure(struct phy *phy,
+> >  				union phy_configure_opts *opts)
+> >  {
 > > --
 > > 2.7.4
->=20
-
+> >
 
