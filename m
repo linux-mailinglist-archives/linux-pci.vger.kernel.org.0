@@ -2,317 +2,209 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CD07A105D90
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Nov 2019 01:13:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 390F6105D9B
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Nov 2019 01:22:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726038AbfKVANu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Nov 2019 19:13:50 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:56392 "EHLO
+        id S1726529AbfKVAWI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 Nov 2019 19:22:08 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:26237 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726265AbfKVANt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Nov 2019 19:13:49 -0500
+        with ESMTP id S1726270AbfKVAWI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Nov 2019 19:22:08 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574381627;
+        s=mimecast20190719; t=1574382126;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=uN54nyKovZpjX15ad46fYr/x8ehKgPmORA/aMiVni9I=;
-        b=LVU57+0+KInoFRrkRNxX3IkWRHjfZGeUfSAFUFSbE+X83rRQUgorHcdhO/r+vKURwcEOew
-        qKwf+38NdH2qfqOTnniNSHMTqxX7FtWqRJ+elew5OTx1rR4+md0IWYCfEpHCskg2UaeDFO
-        jD7eFOPcwtYrksT0NgpJZtFE6lhIhO0=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-245-FRqBdz_lN7ONr_OcLhTx2A-1; Thu, 21 Nov 2019 19:13:44 -0500
-Received: by mail-qt1-f200.google.com with SMTP id x50so3510954qth.4
-        for <linux-pci@vger.kernel.org>; Thu, 21 Nov 2019 16:13:44 -0800 (PST)
+         content-transfer-encoding:content-transfer-encoding;
+        bh=rUekpHztE4Y/AJCnx5fkeLUBunhkT4upfB7DGt7EVwQ=;
+        b=Wl9bPyXBOdzMKxcAAiAhA8X1sZozUZxdLAssRoqazZfpvBTKm2HIyjvxJSnvLDyuJSyOR8
+        s8XbUPDdDZFXl5o2MvE+MboW5gCGIjT7xJbRd/Q9dJz0oUHpvdEJpoQo2ypAlwRqnyw1B/
+        jdyTvKUbI7TQBtER6gIspNJgEmpz5/8=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-180-Pnahy1_BO-6KWN3u5agVog-1; Thu, 21 Nov 2019 19:22:04 -0500
+Received: by mail-wr1-f70.google.com with SMTP id z10so2988302wrr.5
+        for <linux-pci@vger.kernel.org>; Thu, 21 Nov 2019 16:22:04 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Zw+Oguaqsrzx3D3QkM2PFuC8jKyKAZCHmY4jQUCNjDs=;
-        b=BCW6ouSwpbff3kVf2G3AU2npV8Nvfqd+5U5In4GmnAror83Z1RKZngTHzINfIZROgJ
-         czIHvSHQVRQbrherlpLPyQr+Rz6OkdKlfNOe1xKLSeQjShTz4f27o2w0YpVwBmGyQd0t
-         mkLtlGzLArMXBRJN/MUCgxe+XSBdzWNdljxU2bKiwmIfdy15bRU79yB7DuUHb/Yttqb1
-         LfKDHimXC2svh033kUIE4GNJow4GnFQHIBH758nHs3432N/UX1uKhZAiNcnmUcVajBYE
-         +jzFlq5yIwVD6KR3++vRAdvlYksjHdtm4elR2ufAgZ1vvfYxywVeGwCsix6eZUltvtMx
-         C62A==
-X-Gm-Message-State: APjAAAVm4ok7QFZl3ZOdmQjR4xNYG+/F87Vt+7hm4RqkMyd5En1iISl+
-        pBAhN38sKLNpxIqFTqkJ8Vg0ORsaGBZyYCW/R11bi/L0mX/x9rKwwDw7V3mjEIzxiaMske8oHSF
-        UVeT2I3Qb/RmFbJVTUV5C9RvNUhDwpJe4rNxR
-X-Received: by 2002:a0c:baad:: with SMTP id x45mr10952480qvf.230.1574381623554;
-        Thu, 21 Nov 2019 16:13:43 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxQeNbFPjt9g+SPOPeQ04yvEr8s+o4BozjzIBZZ3TrnGaEiSiHTX2apI5nYqFjPEWJt1G9UpqEUlJOEWQETsLY=
-X-Received: by 2002:a0c:baad:: with SMTP id x45mr10952438qvf.230.1574381622981;
- Thu, 21 Nov 2019 16:13:42 -0800 (PST)
-MIME-Version: 1.0
-References: <CACO55tvo3rbPtYJcioEgXCEQqVXcVAm-iowr9Nim=bgTdMjgLw@mail.gmail.com>
- <20191120155301.GL11621@lahna.fi.intel.com> <CAJZ5v0hkT-fHFOQKzp2qYPyR+NUa4c-G-uGLPZuQxqsG454PiQ@mail.gmail.com>
- <CACO55ttTPi2XpRRM_NYJU5c5=OvG0=-YngFy1BiR8WpHkavwXw@mail.gmail.com>
- <CAJZ5v0h=7zu3A+ojgUSmwTH0KeXmYP5OKDL__rwkkWaWqcJcWQ@mail.gmail.com>
- <20191121112821.GU11621@lahna.fi.intel.com> <CAJZ5v0hQhj5Wf+piU11abC4pF26yM=XHGHAcDv8Jsgdx04aN-w@mail.gmail.com>
- <20191121114610.GW11621@lahna.fi.intel.com> <20191121125236.GX11621@lahna.fi.intel.com>
- <CAJZ5v0iMwhudB7O0hR-6KfRfa+_iGOY=t0Zzeh6+9OiTzeYJfA@mail.gmail.com>
- <20191121194942.GY11621@lahna.fi.intel.com> <CAJZ5v0gyna0b135uxBVfNXgB9v-U9-93EYe0uzsr2BukJ9OtuA@mail.gmail.com>
- <CACO55tvFeTFo3gGdL02gnWMMk+AHPPb=hntkre0ZcA6WvKcV1A@mail.gmail.com>
-In-Reply-To: <CACO55tvFeTFo3gGdL02gnWMMk+AHPPb=hntkre0ZcA6WvKcV1A@mail.gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=W1fJRPx8jNVd2/thMPiixkjKvF9zObui3jPum3g5eVQ=;
+        b=I9DtWSfGLjaSX6o7Sr5s70F1cy1hZhcTCoSbrGR78hTFScilZLtfegX2ZtPtuVgLon
+         +AOgjxu3upAce3HLCwpyekWtadLhlYJkeI/oigPgHP9fyMIVuoS764EZPqaQYBJ35MG+
+         u/JWNxVeSx36FykXTL+oSBbMyHGZKvYOEH0tarCmpGyWEwfODSYEjKDbFC+brbu+o8Eo
+         ROFH0MD46BPiFOJ6h10LBGR91wztYP8kvWpbKrrZAqTnRfdfuUvpC+eGBmJVcF8C5u54
+         Rv2HXdPnmykEf6xE+kxeMJ5hal01lJRjj06oHY4AmEWVR9Aocwg3hMrHE3O1iVkv3IDd
+         roWw==
+X-Gm-Message-State: APjAAAWap0uaOwKZOBoUpi64Dhtm6wcuSojVsuPN5bDsLTY5fN+UV8DU
+        whbUwVqtHtX69eCeJDVsR2hBNjClovqf/U2PNN28Gy28iIk9PapJDnR1VTwEs1QUuIofqkYWyRI
+        0hYRPm57K+PAy3LdopLR/
+X-Received: by 2002:adf:b1cb:: with SMTP id r11mr14748011wra.246.1574382123125;
+        Thu, 21 Nov 2019 16:22:03 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwoJAmffZuZMuES1MgzeSD7DVWMT78Ozvsm2ZLIe1GjyavVRSTTjvnluR6Q46fXQRM4NmNd1A==
+X-Received: by 2002:adf:b1cb:: with SMTP id r11mr14747987wra.246.1574382122838;
+        Thu, 21 Nov 2019 16:22:02 -0800 (PST)
+Received: from kherbst.pingu.com ([2a02:8308:b0be:6900:f836:f331:d633:a9f0])
+        by smtp.gmail.com with ESMTPSA id d16sm3510565wrg.27.2019.11.21.16.22.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Nov 2019 16:22:01 -0800 (PST)
 From:   Karol Herbst <kherbst@redhat.com>
-Date:   Fri, 22 Nov 2019 01:13:31 +0100
-Message-ID: <CACO55tvkQyYYnCs71_nJuNFm4f8kkvBqje8WeZGph7X+2zO3aA@mail.gmail.com>
-Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
- states on certain intel bridges
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Mika Westerberg <mika.westerberg@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
+To:     linux-kernel@vger.kernel.org
+Cc:     Karol Herbst <kherbst@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Lyude Paul <lyude@redhat.com>,
         "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Dave Airlie <airlied@gmail.com>,
-        Mario Limonciello <Mario.Limonciello@dell.com>
-X-MC-Unique: FRqBdz_lN7ONr_OcLhTx2A-1
+        Mika Westerberg <mika.westerberg@intel.com>,
+        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Subject: [PATCH v5] pci: prevent putting nvidia GPUs into lower device states on certain intel bridges
+Date:   Fri, 22 Nov 2019 01:21:59 +0100
+Message-Id: <20191122002159.4159-1-kherbst@redhat.com>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+X-MC-Unique: Pnahy1_BO-6KWN3u5agVog-1
 X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-so while trying to test with d3cold disabled, I noticed that I run
-into the exact same error. And I verified that the
-\_SB.PCI0.PEG0.PG00._STA returns 1, which indicates it should still be
-turned on.
-
-On Thu, Nov 21, 2019 at 11:50 PM Karol Herbst <kherbst@redhat.com> wrote:
->
-> On Thu, Nov 21, 2019 at 11:39 PM Rafael J. Wysocki <rafael@kernel.org> wr=
-ote:
-> >
-> > On Thu, Nov 21, 2019 at 8:49 PM Mika Westerberg
-> > <mika.westerberg@intel.com> wrote:
-> > >
-> > > On Thu, Nov 21, 2019 at 04:43:24PM +0100, Rafael J. Wysocki wrote:
-> > > > On Thu, Nov 21, 2019 at 1:52 PM Mika Westerberg
-> > > > <mika.westerberg@intel.com> wrote:
-> > > > >
-> > > > > On Thu, Nov 21, 2019 at 01:46:14PM +0200, Mika Westerberg wrote:
-> > > > > > On Thu, Nov 21, 2019 at 12:34:22PM +0100, Rafael J. Wysocki wro=
-te:
-> > > > > > > On Thu, Nov 21, 2019 at 12:28 PM Mika Westerberg
-> > > > > > > <mika.westerberg@intel.com> wrote:
-> > > > > > > >
-> > > > > > > > On Wed, Nov 20, 2019 at 11:29:33PM +0100, Rafael J. Wysocki=
- wrote:
-> > > > > > > > > > last week or so I found systems where the GPU was under=
- the "PCI
-> > > > > > > > > > Express Root Port" (name from lspci) and on those syste=
-ms all of that
-> > > > > > > > > > seems to work. So I am wondering if it's indeed just th=
-e 0x1901 one,
-> > > > > > > > > > which also explains Mikas case that Thunderbolt stuff w=
-orks as devices
-> > > > > > > > > > never get populated under this particular bridge contro=
-ller, but under
-> > > > > > > > > > those "Root Port"s
-> > > > > > > > >
-> > > > > > > > > It always is a PCIe port, but its location within the SoC=
- may matter.
-> > > > > > > >
-> > > > > > > > Exactly. Intel hardware has PCIe ports on CPU side (these a=
-re called
-> > > > > > > > PEG, PCI Express Graphics, ports), and the PCH side. I thin=
-k the IP is
-> > > > > > > > still the same.
-> > > > > > > >
-> > > > > > > > > Also some custom AML-based power management is involved a=
-nd that may
-> > > > > > > > > be making specific assumptions on the configuration of th=
-e SoC and the
-> > > > > > > > > GPU at the time of its invocation which unfortunately are=
- not known to
-> > > > > > > > > us.
-> > > > > > > > >
-> > > > > > > > > However, it looks like the AML invoked to power down the =
-GPU from
-> > > > > > > > > acpi_pci_set_power_state() gets confused if it is not in =
-PCI D0 at
-> > > > > > > > > that point, so it looks like that AML tries to access dev=
-ice memory on
-> > > > > > > > > the GPU (beyond the PCI config space) or similar which is=
- not
-> > > > > > > > > accessible in PCI power states below D0.
-> > > > > > > >
-> > > > > > > > Or the PCI config space of the GPU when the parent root por=
-t is in D3hot
-> > > > > > > > (as it is the case here). Also then the GPU config space is=
- not
-> > > > > > > > accessible.
-> > > > > > >
-> > > > > > > Why would the parent port be in D3hot at that point?  Wouldn'=
-t that be
-> > > > > > > a suspend ordering violation?
-> > > > > >
-> > > > > > No. We put the GPU into D3hot first,
-> > > >
-> > > > OK
-> > > >
-> > > > Does this involve any AML, like a _PS3 under the GPU object?
-> > >
-> > > I don't see _PS3 (nor _PS0) for that object. If I read it right the G=
-PU
-> > > itself is not described in ACPI tables at all.
-> >
-> > OK
-> >
-> > > > > > then the root port and then turn
-> > > > > > off the power resource (which is attached to the root port) res=
-ulting
-> > > > > > the topology entering D3cold.
-> > > > >
-> > > > > I don't see that happening in the AML though.
-> > > >
-> > > > Which AML do you mean, specifically?  The _OFF method for the root
-> > > > port's _PR3 power resource or something else?
-> > >
-> > > The root port's _OFF method for the power resource returned by its _P=
-R3.
-> >
-> > OK, so without the $subject patch we (1) program the downstream
-> > component (GPU) into D3hot, then we (2) program the port holding it
-> > into D3hot and then we (3) let the AML (_OFF for the power resource
-> > listed by _PR3 under the port object) run.
-> >
-> > Something strange happens at this point (and I guess that _OFF doesn't
-> > even reach the point where it removes power from the port which is why
-> > we see a lock-up).
-> >
->
-> it does though. I will post the data shortly (with the change in power
-> consumption), as I also want to do the ACPI traces now.
->
-> > We know that skipping (1) makes things work and we kind of suspect
-> > that skipping (3) would make things work either, but what about doing
-> > (1) and (3) without (2)?
-> >
-> > > > > Basically the difference is that when Windows 7 or Linux (the _RE=
-V=3D=3D5
-> > > > > check) then we directly do link disable whereas in Windows 8+ we =
-invoke
-> > > > > LKDS() method that puts the link into L2/L3. None of the fields t=
-hey
-> > > > > access seem to touch the GPU itself.
-> > > >
-> > > > So that may be where the problem is.
-> > > >
-> > > > Putting the downstream component into PCI D[1-3] is expected to put
-> > > > the link into L1, so I'm not sure how that plays with the later
-> > > > attempt to put it into L2/L3 Ready.
-> > >
-> > > That should be fine. What I've seen the link goes into L1 when
-> > > downstream component is put to D-state (not D0) and then it is put ba=
-ck
-> > > to L0 when L2/3 ready is propagated. Eventually it goes into L2 or L3=
-.
-> >
-> > Well, that's the expected behavior, but the observed behavior isn't as
-> > expected. :-)
-> >
-> > > > Also, L2/L3 Ready is expected to be transient, so finally power sho=
-uld
-> > > > be removed somehow.
-> > >
-> > > There is GPIO for both power and PERST, I think the line here:
-> > >
-> > >   \_SB.SGOV (0x01010004, Zero)
-> > >
-> > > is the one that removes power.
-> >
-> > OK
-> >
-> > > > > LKDS() for the first PEG port looks like this:
-> > > > >
-> > > > >    P0L2 =3D One
-> > > > >    Sleep (0x10)
-> > > > >    Local0 =3D Zero
-> > > > >    While (P0L2)
-> > > > >    {
-> > > > >         If ((Local0 > 0x04))
-> > > > >         {
-> > > > >             Break
-> > > > >         }
-> > > > >
-> > > > >         Sleep (0x10)
-> > > > >         Local0++
-> > > > >    }
-> > > > >
-> > > > > One thing that comes to mind is that the loop can end even if P0L=
-2 is
-> > > > > not cleared as it does only 5 iterations with 16 ms sleep between=
-. Maybe
-> > > > > Sleep() is implemented differently in Windows? I mean Linux may b=
+Fixes state transitions of Nvidia Pascal GPUs from D3cold into higher devic=
 e
-> > > > > "faster" here and return prematurely and if we leave the port int=
-o D0
-> > > > > this does not happen, or something. I'm just throwing out ideas :=
-)
-> > > >
-> > > > But this actually works for the downstream component in D0, doesn't=
- it?
-> > >
-> > > It does and that leaves the link in L0 so it could be that then the
-> > > above AML works better or something.
-> >
-> > That would be my guess.
-> >
-> > > That reminds me, ASPM may have something to do with this as well.
-> >
-> > Not really if D-states are involved.
-> >
-> > > > Also, if the downstream component is in D0, the port actually shoul=
-d
-> > > > stay in D0 too, so what would happen with the $subject patch applie=
-d?
-> > >
-> > > Parent port cannot be lower D-state than the child so I agree it shou=
-ld
-> > > stay in D0 as well. However, it seems that what happens is that the
-> > > issue goes away :)
-> >
-> > Well, at least this is kind of out of the spec.
-> >
-> > Note that pci_pm_suspend_noirq() won't let the port go into D3 if the
-> > downstream device is in D0, so the $subject patch will not work as
-> > expected in the suspend-to-idle case.
-> >
-> > Also we really should make up our minds on whether or not to force
-> > PCIe ports to stay in D0 when downstream devices are in D0 and be
-> > consequent about that.  Right now we do one thing during system-wide
-> > suspend and the other one in PM-runtime, which is confusing.
-> >
-> > The current design is mostly based on the PCI PM Spec 1.2, so it would
-> > be consequent to follow system-wide suspend in PM-runtime and avoid
-> > putting PCIe ports holding devices in D0 into any low-power states.
-> > but that would make the approach in the $subject patch ineffective.
-> >
-> > Moreover, the fact that there are separate branches for "Windows 7"
-> > and "Windows 8+" kind of suggest a change in the expected behavior
-> > between Windows 7 and Windows 8, from the AML perspective.  I would
-> > guess that Windows 7 followed PCI PM 1.2 and Windows 8 (and later)
-> > does something else.  Now, the structure of the "Windows 8+" branch
-> > described by you suggests that, at least in the cases when it is going
-> > to remove power from the port eventually, it goes straight for the
-> > link preparation (the L2/L3 Ready transition) and power removal
-> > without bothering to program the downstream device and port into D3hot
-> > (because that's kind of redundant).
-> >
-> > That hypothetical "Windows 8+" approach may really work universally,
-> > because it doesn't seem to break any rules (going straight from D0 to
-> > D3cold is not disallowed and doing that for both a port and a
-> > downstream device at the same time is kind of OK either, as long as
-> > the link is ready for that).
-> >
+states.
+
+v2: convert to pci_dev quirk
+    put a proper technical explanation of the issue as a in-code comment
+v3: disable it only for certain combinations of intel and nvidia hardware
+v4: simplify quirk by setting flag on the GPU itself
+v5: restructure quirk to make it easier to add new IDs
+    fix whitespace issues
+    fix potential NULL pointer access
+    update the quirk documentation
+
+Signed-off-by: Karol Herbst <kherbst@redhat.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Lyude Paul <lyude@redhat.com>
+Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+Cc: Mika Westerberg <mika.westerberg@intel.com>
+Cc: linux-pci@vger.kernel.org
+Cc: linux-pm@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org
+Cc: nouveau@lists.freedesktop.org
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=3D205623
+---
+ drivers/pci/pci.c    |  7 ++++++
+ drivers/pci/quirks.c | 51 ++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/pci.h  |  1 +
+ 3 files changed, 59 insertions(+)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 57f15a7e6f0b..e08db2daa924 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -850,6 +850,13 @@ static int pci_raw_set_power_state(struct pci_dev *dev=
+, pci_power_t state)
+ =09   || (state =3D=3D PCI_D2 && !dev->d2_support))
+ =09=09return -EIO;
+=20
++=09/*
++=09 * Check if we have a bad combination of bridge controller and nvidia
++=09 * GPU, see quirk_broken_nv_runpm for more info
++=09 */
++=09if (state !=3D PCI_D0 && dev->broken_nv_runpm)
++=09=09return 0;
++
+ =09pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
+=20
+ =09/*
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 44c4ae1abd00..24e3f247d291 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5268,3 +5268,54 @@ static void quirk_reset_lenovo_thinkpad_p50_nvgpu(st=
+ruct pci_dev *pdev)
+ DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, 0x13b1,
+ =09=09=09      PCI_CLASS_DISPLAY_VGA, 8,
+ =09=09=09      quirk_reset_lenovo_thinkpad_p50_nvgpu);
++
++/*
++ * Some Intel PCIe bridge controllers cause devices to not reappear doing =
+a
++ * D0 -> D3hot -> D3cold -> D0 sequence. Skipping the intermediate D3hot s=
+tep
++ * seems to make it work again.
++ *
++ * This leads to various manifestations of this issue:
++ *  - AIML code execution hits an infinite loop (as the coe waits on devic=
+e
++ *    memory to change).
++ *  - kernel crashes, as all PCI reads return -1, which most code isn't ab=
+le
++ *    to handle well enough.
++ *  - sudden shutdowns, as the kernel identified an unrecoverable error af=
+ter
++ *    userspace tries to access the GPU.
++ *
++ * In all cases dmesg will contain at least one line like this:
++ * 'nouveau 0000:01:00.0: Refused to change power state, currently in D3'
++ * followed by a lot of nouveau timeouts.
++ *
++ * ACPI code writes bit 0x80 to the not documented PCI register 0x248 of t=
+he
++ * Intel PCIe bridge controller (0x1901) in order to power down the GPU.
++ * Nonetheless, there are other code paths inside the ACPI firmware which =
+use
++ * other registers, which seem to work fine:
++ *  - 0xbc bit 0x20 (publicly available documentation claims 'reserved')
++ *  - 0xb0 bit 0x10 (link disable)
++ * Changing the conditions inside the firmware by poking into the relevant
++ * addresses does resolve the issue, but it seemed to be ACPI private memo=
+ry
++ * and not any device accessible memory at all, so there is no portable wa=
+y of
++ * changing the conditions.
++ *
++ * The only systems where this behavior can be seen are hybrid graphics la=
+ptops
++ * with a secondary Nvidia Maxwell, Pascal or Turing GPU. It cannot be rul=
+ed
++ * out that this issue only occurs in combination with listed Intel PCIe
++ * bridge controllers and the mentioned GPUs or if it's only a hw bug in t=
+he
++ * bridge controller.
++ */
++
++static void quirk_broken_nv_runpm(struct pci_dev *dev)
++{
++=09struct pci_dev *bridge =3D pci_upstream_bridge(dev);
++
++=09if (!bridge || bridge->vendor !=3D PCI_VENDOR_ID_INTEL)
++=09=09return;
++
++=09switch (bridge->device) {
++=09case 0x1901:
++=09=09dev->broken_nv_runpm =3D 1;
++=09}
++}
++DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
++=09=09=09      PCI_BASE_CLASS_DISPLAY, 16,
++=09=09=09      quirk_broken_nv_runpm);
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index ac8a6c4e1792..903a0b3a39ec 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -416,6 +416,7 @@ struct pci_dev {
+ =09unsigned int=09__aer_firmware_first_valid:1;
+ =09unsigned int=09__aer_firmware_first:1;
+ =09unsigned int=09broken_intx_masking:1;=09/* INTx masking can't be used *=
+/
++=09unsigned int=09broken_nv_runpm:1;=09/* some combinations of intel bridg=
+e controller and nvidia GPUs break rtd3 */
+ =09unsigned int=09io_window_1k:1;=09=09/* Intel bridge 1K I/O windows */
+ =09unsigned int=09irq_managed:1;
+ =09unsigned int=09has_secondary_link:1;
+--=20
+2.23.0
 
