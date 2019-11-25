@@ -2,133 +2,70 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B1EFB108BF9
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Nov 2019 11:45:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 85034108C39
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Nov 2019 11:47:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727386AbfKYKpG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 25 Nov 2019 05:45:06 -0500
-Received: from foss.arm.com ([217.140.110.172]:47966 "EHLO foss.arm.com"
+        id S1727861AbfKYKrT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 25 Nov 2019 05:47:19 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:60445 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727278AbfKYKpG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 25 Nov 2019 05:45:06 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 903EF328;
-        Mon, 25 Nov 2019 02:45:05 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2618F3F52E;
-        Mon, 25 Nov 2019 02:45:04 -0800 (PST)
-Date:   Mon, 25 Nov 2019 10:44:59 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     Dexuan Cui <decui@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sasha Levin <Alexander.Levin@microsoft.com>
-Subject: Re: [PATCH v2 2/4] PCI: hv: Add the support of hibernation
-Message-ID: <20191125104459.GA14328@e121166-lin.cambridge.arm.com>
-References: <1574234218-49195-1-git-send-email-decui@microsoft.com>
- <1574234218-49195-3-git-send-email-decui@microsoft.com>
- <20191120172026.GE3279@e121166-lin.cambridge.arm.com>
- <PU1P153MB0169D0A99D5687FBDB02536BBF4E0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
- <20191121114419.GA4318@e121166-lin.cambridge.arm.com>
- <CY4PR21MB06290283219FC78C45688DC4D74B0@CY4PR21MB0629.namprd21.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CY4PR21MB06290283219FC78C45688DC4D74B0@CY4PR21MB0629.namprd21.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        id S1727873AbfKYKrP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 25 Nov 2019 05:47:15 -0500
+Received: by ozlabs.org (Postfix, from userid 1034)
+        id 47M3dF4vDKz9sRd; Mon, 25 Nov 2019 21:47:13 +1100 (AEDT)
+X-powerpc-patch-notification: thanks
+X-powerpc-patch-commit: 9d72dcef891030545f39ad386a30cf91df517fb2
+In-Reply-To: <20191118065553.30362-1-oohall@gmail.com>
+To:     Oliver O'Halloran <oohall@gmail.com>, linuxppc-dev@lists.ozlabs.org
+From:   Michael Ellerman <patch-notifications@ellerman.id.au>
+Cc:     linux-pci@vger.kernel.org, Oliver O'Halloran <oohall@gmail.com>,
+        Sergey Miroshnichenko <s.miroshnichenko@yadro.com>
+Subject: Re: [PATCH v2] powerpc/powernv: Disable native PCIe port management
+Message-Id: <47M3dF4vDKz9sRd@ozlabs.org>
+Date:   Mon, 25 Nov 2019 21:47:13 +1100 (AEDT)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Nov 24, 2019 at 10:19:46PM +0000, Michael Kelley wrote:
-> From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>  Sent: Thursday, November 21, 2019 3:44 AM
-> > 
-> > On Thu, Nov 21, 2019 at 12:50:17AM +0000, Dexuan Cui wrote:
-> > > > From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > > > Sent: Wednesday, November 20, 2019 9:20 AM
-> > > >
-> > > > On Tue, Nov 19, 2019 at 11:16:56PM -0800, Dexuan Cui wrote:
-> > > > > Implement the suspend/resume callbacks.
-> > > > >
-> > > > > We must make sure there is no pending work items before we call
-> > > > > vmbus_close().
-> > > >
-> > > > Where ? Why ? Imagine a developer reading this log to try to understand
-> > > > why you made this change, do you really think this commit log is
-> > > > informative in its current form ?
-> > > >
-> > > > I am not asking a book but this is a significant feature please make
-> > > > an effort to explain it (I can update the log for you but please
-> > > > write one and I shall do it).
-> > > >
-> > > > Lorenzo
-> > >
-> > > Sorry for being sloppy on this patch's changelog! Can you please use the
-> > > below? I can also post v3 with the new changelog if that's better.
-> > 
-> > As you wish but more importantly get hyper-V maintainers to ACK these
-> > changes since time is running out for v5.5.
-> > 
-> > Lorenzo
-> > 
-> > > PCI: hv: Add the support of hibernation
-> > >
-> > > hv_pci_suspend() runs in a process context as a callback in dpm_suspend().
-> > > When it starts to run, the channel callback hv_pci_onchannelcallback(),
-> > > which runs in a tasklet context, can be still running concurrently and
-> > > scheduling new work items onto hbus->wq in hv_pci_devices_present() and
-> > > hv_pci_eject_device(), and the work item handlers can access the vmbus
-> > > channel, which can be being closed by hv_pci_suspend(), e.g. the work item
-> > > handler pci_devices_present_work() -> new_pcichild_device() writes to
-> > > the vmbus channel.
-> > >
-> > > To eliminate the race, hv_pci_suspend() disables the channel callback
-> > > tasklet, sets hbus->state to hv_pcibus_removing, and re-enables the tasklet.
-> > >
-> > > This way, when hv_pci_suspend() proceeds, it knows that no new work item
-> > > can be scheduled, and then it flushes hbus->wq and safely closes the vmbus
-> > > channel.
-> > >
-> > > Thanks,
-> > > -- Dexuan
+On Mon, 2019-11-18 at 06:55:53 UTC, Oliver O'Halloran wrote:
+> On PowerNV the PCIe topology is (currently) managed by the powernv platform
+> code in Linux in cooperation with the platform firmware. Linux's native
+> PCIe port service drivers operate independently of both and this can cause
+> problems.
 > 
-> FWIW, I'd like to see the above level of detail also as comments in the code
-> Itself so that whoever next looks at the code sees the explanation directly
-> without having to review the commit logs.
+> The main issue is that the portbus driver will conflict with the platform
+> specific hotplug driver (pnv_php) over ownership of the MSI used to notify
+> the host when a hotplug event occurs. The portbus driver claims this MSI on
+> behalf of the individual port services because the same interrupt is used
+> for hotplug events, PMEs (on root ports), and link bandwidth change
+> notifications. The portbus driver will always claim the interrupt even if
+> the individual port service drivers, such as pciehp, are compiled out.
 > 
-> Also, the commit message doesn't say what the commit actually does and
-> why.  I'd suggest the commit message along these lines:
+> The second, bigger, problem is that the hotplug port service driver
+> fundamentally does not work on PowerNV. The platform assumes that all
+> PCI devices have a corresponding arch-specific handle derived from the DT
+> node for the device (pci_dn) and without one the platform will not allow
+> a PCI device to be enabled. This problem is largely due to historical
+> baggage, but it can't be resolved without significant re-factoring of the
+> platform PCI support.
 > 
-> Add suspend() and resume() functions so that Hyper-V virtual PCI devices are
-> handled properly when the VM hibernates and resumes from hibernation.
+> We can fix these problems in the interim by setting the
+> "pcie_ports_disabled" flag during platform initialisation. The flag
+> indicates the platform owns the PCIe ports which stops the portbus driver
+> from being registered.
 > 
-> Note that the suspend() function must make sure there are no pending work
-> items before calling vmbus_close(), since it runs in a process context as a
-> callback in dpm_suspend().  When it starts to run, the channel callback
-> hv_pci_onchannelcallback(), which runs in a tasklet context, can be still running
-> concurrently and scheduling new work items onto hbus->wq in
-> hv_pci_devices_present() and hv_pci_eject_device(), and the work item 
-> handlers can access the vmbus channel, which can be being closed by
-> hv_pci_suspend(), e.g. the work item handler pci_devices_present_work() ->
-> new_pcichild_device() writes to the vmbus channel.
+> This does have the side effect of disabling all port services drivers
+> that is: AER, PME, BW notifications, hotplug, and DPC. However, this is
+> not a huge disadvantage on PowerNV since these services are either unused
+> or handled through other means.
 > 
-> To eliminate the race, hv_pci_suspend() disables the channel callback
-> tasklet, sets hbus->state to hv_pcibus_removing, and re-enables the tasklet.
-> This way, when hv_pci_suspend() proceeds, it knows that no new work item
-> can be scheduled, and then it flushes hbus->wq and safely closes the vmbus
-> channel.
+> Cc: Sergey Miroshnichenko <s.miroshnichenko@yadro.com>
+> Fixes: 66725152fb9f ("PCI/hotplug: PowerPC PowerNV PCI hotplug driver")
+> Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
 
-This is much better, thank you, if you are happy with the patches
-please add your tags so that I can pull the series asap, hopefully
-we can merge it in v5.5.
+Applied to powerpc next, thanks.
 
-Thanks,
-Lorenzo
+https://git.kernel.org/powerpc/c/9d72dcef891030545f39ad386a30cf91df517fb2
+
+cheers
