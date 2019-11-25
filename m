@@ -2,117 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7363B108803
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Nov 2019 05:46:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BFD6F108858
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Nov 2019 06:34:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbfKYEqG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 24 Nov 2019 23:46:06 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:47696 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726945AbfKYEqG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 24 Nov 2019 23:46:06 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAP4juuR126494;
-        Sun, 24 Nov 2019 22:45:56 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574657156;
-        bh=Wzx1jESaMfi6+oDwa4IY9LrI/AdCk7z8iODViWIr7tk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=O4ezwgD6Wr303rSZXMHkP5aKut8btcoTFDtxsd4ebT9KgDV03PHtQrcckaptEDnVP
-         8NwNPgX8im44gJX9olkQVMEonvvo1+oNokC0uJnLos9msuHFb7sYOdWErGxO2jG4RM
-         1uBGFLMoOOgDJDhSUFz2bwJXE/+2aID8P+gondi0=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAP4juLS126096;
-        Sun, 24 Nov 2019 22:45:56 -0600
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Sun, 24
- Nov 2019 22:45:56 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Sun, 24 Nov 2019 22:45:56 -0600
-Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAP4jpB7030847;
-        Sun, 24 Nov 2019 22:45:52 -0600
-Subject: Re: [PATCH 0/4] Add support to defer core initialization
-To:     Vidya Sagar <vidyas@nvidia.com>
-CC:     Jingoo Han <jingoohan1@gmail.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "Jisheng.Zhang@synaptics.com" <Jisheng.Zhang@synaptics.com>,
-        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kthota@nvidia.com" <kthota@nvidia.com>,
-        "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
-        "sagar.tv@gmail.com" <sagar.tv@gmail.com>
-References: <20191113090851.26345-1-vidyas@nvidia.com>
- <108c9f42-a595-515e-5ed6-e745a55efe70@nvidia.com>
- <SL2P216MB0105D49E39194C827D60B032AA4D0@SL2P216MB0105.KORP216.PROD.OUTLOOK.COM>
- <550dd734-acd9-802a-f650-44c32b56b58a@nvidia.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <94d5381c-5c39-b040-00a1-8333b6c73423@ti.com>
-Date:   Mon, 25 Nov 2019 10:15:11 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1725912AbfKYFeK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 25 Nov 2019 00:34:10 -0500
+Received: from mail-eopbgr680109.outbound.protection.outlook.com ([40.107.68.109]:7331
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725468AbfKYFeK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 25 Nov 2019 00:34:10 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NqB4rVnxIBoVFpyN2YC6YlB8mrtr00CR1H5ZNBsNZpjacSJTzZ12kI0+nKVqKskKaEG8GiB16XMLaHYFBU/wnGZtd+/QUrb8Ko135ck/URygazyHvsn7Z9MnrZpkXsu1t6RuqzBXBgnzwADrupSzFsQfB6VBx7RJ6yui/hxkpB33XeMHm1OK8/S5ghyxuNELm2/rP9/D84foUQGdECeEr7b1tHHR26+/4fvqRZVR2iVB3ZLyqp3++Jd43lp7Pt6QGWihvLlFQzLA+UvFdUGPZIRZSIsqUcdeVLas7T8hJqpDmTwKhZrCsBrES+ZvKA6kcRh2Rxv4+wNXTTQtIPZPqA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=25ooNnqkx1NicJb25qyZmTsHWJWFs9SQghLLGxs3G+g=;
+ b=eTjDTDRs5HovMs7YkH98J9DurfoPVDu5E6rM/Rc5Y5D6ibS/RR+E/owzN5DVML7Z0ULdSEmMfnOvT3YMYdTWCv0BzuYhAJDChveOGetUGPVOJU3FxJSZEpu65Ro+HA9qaha357wAgIXDVxc1Tzlni69ucV1rKtGnfZ01OIDHvFMi7w9nf+Jyocv0C3jArTb+J2YOAbpmGVB3D1nDqyNn3qLdV2CWsz1OQzAicaepkSFXMeV+SNq69B0VIOzq42UyGFbFJSW8cGG+mdn+LzN3u/hxZdx0ANEfhpikIxEYzSNs0xhbRe+YSvxK6L0IoyyCybD0YYkLDOiJbopOiw4B9w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=25ooNnqkx1NicJb25qyZmTsHWJWFs9SQghLLGxs3G+g=;
+ b=dGw9WXsZ2dgDPi6O1paZT2oMLrbjX7d/X4cnhBjuNY0CoTDqfzWMejyZhAgyR474dJyFUd9+pHK7YEzPT+y3pM/6A76kyuLP5do6YVO2hIeWQOjrbcKWbGWnWTpqSkVEUceVg4IU0w5meleq0VdCIkd9/35pUyEIiyTj6wsMsL8=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+Received: from BYAPR21MB1141.namprd21.prod.outlook.com (20.179.57.138) by
+ BYAPR21MB1189.namprd21.prod.outlook.com (20.179.57.218) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2516.1; Mon, 25 Nov 2019 05:34:07 +0000
+Received: from BYAPR21MB1141.namprd21.prod.outlook.com
+ ([fe80::5d0f:2e49:3464:7c89]) by BYAPR21MB1141.namprd21.prod.outlook.com
+ ([fe80::5d0f:2e49:3464:7c89%3]) with mapi id 15.20.2495.014; Mon, 25 Nov 2019
+ 05:34:07 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        sashal@kernel.org, lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
+        Alexander.Levin@microsoft.com
+Cc:     Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH v3 0/4] Enhance pci-hyperv to support hibernation, and 2 misc fixes
+Date:   Sun, 24 Nov 2019 21:33:50 -0800
+Message-Id: <1574660034-98780-1-git-send-email-decui@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+Reply-To: decui@microsoft.com
+Content-Type: text/plain
+X-ClientProxiedBy: MWHPR20CA0011.namprd20.prod.outlook.com
+ (2603:10b6:300:13d::21) To BYAPR21MB1141.namprd21.prod.outlook.com
+ (2603:10b6:a03:108::10)
 MIME-Version: 1.0
-In-Reply-To: <550dd734-acd9-802a-f650-44c32b56b58a@nvidia.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by MWHPR20CA0011.namprd20.prod.outlook.com (2603:10b6:300:13d::21) with Microsoft SMTP Server (version=TLS1_2, cipher=) via Frontend Transport; Mon, 25 Nov 2019 05:34:07 +0000
+X-Mailer: git-send-email 1.8.3.1
+X-Originating-IP: [13.77.154.182]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: bfcbd2aa-652c-43c1-2d87-08d771691780
+X-MS-TrafficTypeDiagnostic: BYAPR21MB1189:|BYAPR21MB1189:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR21MB1189BB83F41F0A3BC2C39FE5BF4A0@BYAPR21MB1189.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-Forefront-PRVS: 0232B30BBC
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(396003)(39860400002)(376002)(366004)(136003)(346002)(189003)(199004)(6116002)(3846002)(4326008)(107886003)(6486002)(6436002)(10090500001)(3450700001)(2906002)(50466002)(48376002)(25786009)(6512007)(26005)(6506007)(386003)(51416003)(52116002)(4744005)(66946007)(66556008)(66476007)(6636002)(4720700003)(86362001)(7736002)(186003)(2616005)(956004)(16526019)(36756003)(66066001)(8936002)(8676002)(5660300002)(81156014)(47776003)(81166006)(1511001)(50226002)(10290500003)(478600001)(316002)(305945005)(6666004)(16586007)(43066004)(22452003)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR21MB1189;H:BYAPR21MB1141.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: +VIcsMpgyeb3lK5lwAncc67o1IQTxJUMBO5XTUHHnN2k8Ur5/j1pFHa99ztokvO0DZi4fDUMv0/9LGSJM4/+AT169SBe3ohdLbX75uhNYyiXgOxaZDEcxMSwXzR3xh12lnkMmg5AngHkRc5zD7pHCXHyWdENbOEAT9R09SvjmowLKUo8Q+HI7cyiyVDF7FeRI4paft/+8WXb114C1HUjcR6sKG9kpgEHPkg0IyE812NUpKFPWEp0Jp31/8emna15pwDMuInsAbmi3WdTZJTRdR6wkNUqcEXUdZssmoSj9TWlmXTfKADmvJ7mvU9CP/gkaV9ZL4ZF744zCcM8nmU+iO7xBdl2EvCe/QpOqwV3ytC3/8+0j+8ZtRtjxLX7DQg5YYqcvyZEix7Mtz6p2mAVaCu+dGXUDUk24h5BPDj4gKiFG50WjpxBIkdqcl5/0leJ
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bfcbd2aa-652c-43c1-2d87-08d771691780
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Nov 2019 05:34:07.8126
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: NEEHcw1dLdPlLZHiVq8QLDgg9T7D6HSllSswMOTmubynfmMRglYoHfxTGNBEk+ipae7q8/0U84zX2k5osvggdA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR21MB1189
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+I suggest the patchset goes through the pci.git tree.
 
-On 25/11/19 10:03 AM, Vidya Sagar wrote:
-> On 11/18/2019 10:13 PM, Jingoo Han wrote:
->>
->>
->> ﻿On 11/18/19, 1:55 AM, Vidya Sagar wrote:
->>>
->>> On 11/13/2019 2:38 PM, Vidya Sagar wrote:
->>>> EPC/DesignWare core endpoint subsystems assume that the core registers are
->>>> available always for SW to initialize. But, that may not be the case always.
->>>> For example, Tegra194 hardware has the core running on a clock that is derived
->>>> from reference clock that is coming into the endpoint system from host.
->>>> Hence core is made available asynchronously based on when host system is going
->>>> for enumeration of devices. To accommodate this kind of hardwares, support is
->>>> required to defer the core initialization until the respective platform driver
->>>> informs the EPC/DWC endpoint sub-systems that the core is indeed available for
->>>> initiaization. This patch series is attempting to add precisely that.
->>>> This series is based on Kishon's patch that adds notification mechanism
->>>> support from EPC to EPF @ http://patchwork.ozlabs.org/patch/1109884/
->>>>
->>>> Vidya Sagar (4):
->>>>     PCI: dwc: Add new feature to skip core initialization
->>>>     PCI: endpoint: Add notification for core init completion
->>>>     PCI: dwc: Add API to notify core initialization completion
->>>>     PCI: pci-epf-test: Add support to defer core initialization
->>>>
->>>>    .../pci/controller/dwc/pcie-designware-ep.c   |  79 +++++++-----
->>>>    drivers/pci/controller/dwc/pcie-designware.h  |  11 ++
->>>>    drivers/pci/endpoint/functions/pci-epf-test.c | 114 ++++++++++++------
->>>>    drivers/pci/endpoint/pci-epc-core.c           |  19 ++-
->>>>    include/linux/pci-epc.h                       |   2 +
->>>>    include/linux/pci-epf.h                       |   5 +
->>>>    6 files changed, 164 insertions(+), 66 deletions(-)
->>>>
->>>
->>> Hi Kishon / Gustavo / Jingoo,
->>> Could you please take a look at this patch series?
->>
->> You need a Ack from Kishon, because he made EP code.
-> Hi Kishon,
-> Could you please find time to review this series?
+Patch #1: no functional change.
+Patch #2 enhances the pci-hyperv driver to support hibernation.
+Patch #3 is unrelated to hibernation.
+Patch #4 is unrelated to hibernation.
 
-I'll review it this week. Sorry for the delay.
+Changes in v3:
+Patch #1: Added Michael Kelley's Signed-off-by.
+Patch #2: Used a better commit log message from Michael Kelley.
+Patch #3: Added Michael Kelley's Signed-off-by.
+Patch #4: Used kzalloc() rather than get_zeroed_page()/kmemleak_alloc()/
+          kmemleak_free(), and added the necessary comments.
 
--Kishon
+Michael, can you please review #2 and #4 again?
+
+Dexuan Cui (4):
+  PCI: hv: Reorganize the code in preparation of hibernation
+  PCI: hv: Add the support of hibernation
+  PCI: hv: Change pci_protocol_version to per-hbus
+  PCI: hv: Avoid a kmemleak false positive caused by the hbus buffer
+
+ drivers/pci/controller/pci-hyperv.c | 208 ++++++++++++++++++++++++----
+ 1 file changed, 179 insertions(+), 29 deletions(-)
+
+-- 
+2.19.1
+
