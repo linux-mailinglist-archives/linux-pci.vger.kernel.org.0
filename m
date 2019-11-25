@@ -2,308 +2,198 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BEF9F108917
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Nov 2019 08:23:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C7248108921
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Nov 2019 08:25:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725763AbfKYHXx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 25 Nov 2019 02:23:53 -0500
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:17224 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725535AbfKYHXx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Nov 2019 02:23:53 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ddb81870000>; Sun, 24 Nov 2019 23:23:51 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sun, 24 Nov 2019 23:23:49 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sun, 24 Nov 2019 23:23:49 -0800
-Received: from [10.25.75.126] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 25 Nov
- 2019 07:23:45 +0000
-Subject: Re: [PATCH 2/6] dt-bindings: PCI: tegra: Add DT support for PCIe EP
- nodes in Tegra194
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <jonathanh@nvidia.com>, <andrew.murray@arm.com>, <kishon@ti.com>,
-        <gustavo.pimentel@synopsys.com>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+        id S1726498AbfKYHZt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 25 Nov 2019 02:25:49 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55488 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfKYHZt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Nov 2019 02:25:49 -0500
+Received: by mail-wm1-f65.google.com with SMTP id b11so14190268wmb.5;
+        Sun, 24 Nov 2019 23:25:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=MRKWdTT+o+DD9CSNp9mM+jEv8sBn8YtAK9/I5IqFqFw=;
+        b=E04BB6dN4CoedKJaq/iFvhCXSPYOIohw0wy1TIvWnafr8w5QOmHOQIyfrvNIOijOlk
+         s686VZGmpbqtb75f6LohPAFlwIBKveDfC9kwqrhvTCucO6g1NULt0uz4offVWbZ3+WOu
+         S10RFtnN7D+aG8is/Qeeda5c6oAIiMqoNjTd2v9X4/AIPUn7KXXOoYVjaINb1pp2E3j3
+         zCWoraiFQJeffWmdfSzdFPKcu70S0NV1HYgKVCLUbwwFI5imoywUJVsogtCNHghoE8yg
+         6SIXzFvFjYy+EeW7Czxor2ILvq6IKqOPNmZc6Lo0F25aU5k+IntJuuhN2vR8qyk0fvIB
+         BgVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MRKWdTT+o+DD9CSNp9mM+jEv8sBn8YtAK9/I5IqFqFw=;
+        b=Ru92NS1Ssz1mREpX8qplSHJ+h5ddgwZqqeNxoTPVAuXN9AFYXWGWn0wtDy6gQhx7Rm
+         Xj5weGYvuBn4GOmjLoxxPeznEuV5luCBIrac09tAKyaqOW9cyHfOY8lixhoK5vkRcq95
+         NsBF74C8gXxAeU24oMmvldFcGaXqpAjB6j3WQXIGxb7Gtx0iPWnHc6WKoA3zMtkjZAVW
+         8tz6UmU/G5hp+bNV+Ptc4uuXoEsEYxBph5RIekCK7aItYkhoJZ94x+8WOAGOdlqcHXCi
+         xqT3vG6a+n3m6/ryGys0HgFf2xF8cKAVRlaRDPklphn284kvABdQ6o2NSRsz4AQQggI8
+         qt5Q==
+X-Gm-Message-State: APjAAAWJznvDbryS3SP7BSfA+GMy5NtIIm5gDWE0aSkok7CbJmGCUsfa
+        oFvrA63RjtpXx6zDWGyolNg=
+X-Google-Smtp-Source: APXvYqwaUeNdQgy7pin0G7HB+fDvN+4g84RDoQxtgmtE4MeDIww7oauDaSpEEeDd+STiSrInJ6wbdQ==
+X-Received: by 2002:a1c:f612:: with SMTP id w18mr28747225wmc.28.1574666745723;
+        Sun, 24 Nov 2019 23:25:45 -0800 (PST)
+Received: from localhost (pD9E518ED.dip0.t-ipconnect.de. [217.229.24.237])
+        by smtp.gmail.com with ESMTPSA id 91sm9741804wrm.42.2019.11.24.23.25.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 24 Nov 2019 23:25:44 -0800 (PST)
+Date:   Mon, 25 Nov 2019 08:25:42 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
+        jonathanh@nvidia.com, andrew.murray@arm.com, kishon@ti.com,
+        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH 6/6] arm64: tegra: Add support for PCIe endpoint mode in
+ P2972-0000 platform
+Message-ID: <20191125072542.GC1409040@ulmo>
 References: <20191122104505.8986-1-vidyas@nvidia.com>
- <20191122104505.8986-3-vidyas@nvidia.com> <20191122131931.GB1315704@ulmo>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <8fbdda8e-84af-576c-e240-61c381c85a8f@nvidia.com>
-Date:   Mon, 25 Nov 2019 12:53:42 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+ <20191122104505.8986-7-vidyas@nvidia.com>
+ <20191122132533.GD1315704@ulmo>
+ <e1e44c1c-c1ab-27dd-b3ac-a9ed878411a2@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <20191122131931.GB1315704@ulmo>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1574666631; bh=SD5J0Bwrm6CXThVpYdmwQY+mTyslM3LaSGkh0HuWN2E=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=DncNDhuLknaSmmi8yj0sNUd7sAoMhgMEu3cd4o5VP/1GGhQqQpl3HugO6pAluIUzn
-         QqPTZr0OGfrqEXSRvnm60Lio5cZKuy2nZNx8sElIREL3l1wXjfnFvtjgUMZn75l8l7
-         9YfAaTsTpOfJfGGu0Rhv4mmcZ55+sc31ESnZrnqaLDV7DaZxENt4VNFq9JouqrmHx0
-         1oBA+wjXE9DEhdnoMjN2ymxcMzxAYLJxzM0EK/Ep0rXPj8YN5FXp0xekLVDZ9Hqw4S
-         t8hkkAsF1mB5pGi0KegqrMCxC/AVOYqV5G4b+P/0UBDmO9kcw6EGp2zLqMv7M86h6u
-         z6/IKy/YmdvXA==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="z4+8/lEcDcG5Ke9S"
+Content-Disposition: inline
+In-Reply-To: <e1e44c1c-c1ab-27dd-b3ac-a9ed878411a2@nvidia.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 11/22/2019 6:49 PM, Thierry Reding wrote:
-> On Fri, Nov 22, 2019 at 04:15:01PM +0530, Vidya Sagar wrote:
->> Add support for PCIe controllers that can operate in endpoint mode
->> in Tegra194.
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> ---
->>   .../bindings/pci/nvidia,tegra194-pcie-ep.txt  | 138 ++++++++++++++++++
->>   1 file changed, 138 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie-ep.txt
-> 
-> The vast majority of this is a duplication of the host mode device tree
-> bindings. I think it'd be best to combine both and only highlight where
-> both modes differ.
-> 
-> The designware-pcie.txt binding does something similar.
-Ok. I'll merge this into the host mode bindings file and in that differentiate between
-root mode and endpoint mode.
 
-> 
->> diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie-ep.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie-ep.txt
->> new file mode 100644
->> index 000000000000..4676ccf7dfa5
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie-ep.txt
->> @@ -0,0 +1,138 @@
->> +NVIDIA Tegra PCIe Endpoint mode controller (Synopsys DesignWare Core based)
->> +
->> +Some of the PCIe controllers which are based on Synopsys DesignWare PCIe IP
->> +are dual mode i.e. they can work in root port mode or endpoint mode but one
->> + at a time. Since they are based on DesignWare IP, they inherit all the common
->> +properties defined in designware-pcie.txt.
->> +
->> +Required properties:
->> +- compatible: For Tegra19x, must contain "nvidia,tegra194-pcie".
-> 
-> The device tree snippets that you added have "nvidia,tegra194-pcie-ep"
-> for EP mode controllers. So either this is wrong or the DTS files are
-> wrong.
-DTS file are correct. This is a mistake in this file. I'll correct this.
+--z4+8/lEcDcG5Ke9S
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> This device tree binding describes the exact same hardware, so I don't
-> think we necessarily need two different compatible strings. It's fairly
-> easy to distinguish between which mode to run in by looking at which
-> properties exist. EP mode for example is the only one that uses the
-> "addr_space" reg entry.
-> 
-> Rob, do you know why a different compatible string was chosen for the EP
-> mode? Looking at the driver, there are only a handful of differences in
-> the programming, but most of the driver remains identical. An extra DT
-> compatible string seems a bit exaggerated since it suggests that this is
-> actually different hardware, where it clearly isn't.
-Since all other implementations have done it this way, I just followed to be in sync
-with them. Even I would also like to hear from Rob on the rationale behind this.
+On Mon, Nov 25, 2019 at 12:30:53PM +0530, Vidya Sagar wrote:
+> On 11/22/2019 6:55 PM, Thierry Reding wrote:
+> > On Fri, Nov 22, 2019 at 04:15:05PM +0530, Vidya Sagar wrote:
+> > > Add endpoint mode support for PCIe C5 controller in P2972-0000 platfo=
+rm
+> > > with information about supplies, PHY, PERST GPIO and GPIO that contro=
+ls
+> > > PCIe reference clock coming from the host system.
+> > >=20
+> > > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> > > ---
+> > >   .../boot/dts/nvidia/tegra194-p2972-0000.dts   | 29 ++++++++++++++++=
++++
+> > >   1 file changed, 29 insertions(+)
+> > >=20
+> > > diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts b/arc=
+h/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
+> > > index 7eb64b816e08..58c3a9677bc8 100644
+> > > --- a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
+> > > +++ b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
+> > > @@ -43,6 +43,19 @@
+> > >   		gpio@c2f0000 {
+> > >   			status =3D "okay";
+> > > +			/*
+> > > +			 * Change the below node's status to 'okay' when
+> > > +			 * PCIe C5 controller is enabled to operate in endpoint
+> > > +			 * to allow REFCLK from the host system to flow into
+> > > +			 * the controller.
+> > > +			 */
+> > > +			pex-refclk-sel-high {
+> > > +				gpio-hog;
+> > > +				output-high;
+> > > +				gpios =3D <TEGRA194_AON_GPIO(AA, 5) 0>;
+> > > +				label =3D "pex_refclk_sel_high";
+> > > +				status =3D "disabled";
+> > > +			};
+> >=20
+> > Why don't we put this into the PCIe controller's node as a reference to
+> > that GPIO? Seems like the controller would know exactly when this pin
+> > needs to go high or low, so why does it have to be a hog?
+> >=20
+> > Thierry
+> Are you saying something like 'nvidia,enable-refclk-in'?
+> I was thinking, since this is like a board level configuration specific t=
+o Jetson-Xavier,
+> it would suffice to just hog it according to the mode of operation of PCI=
+e controller.
+> But, I see one advantage of referencing it in the PCIe node (so that the =
+driver can configure
+> it as and when needed) is that one has to be careful just to enable eithe=
+r PCIe RP or EP
+> node and not worry about other thing (like this).
+> Let me know if I got this right.
 
-> 
->> +  Tegra194: Only C0, C4 & C5 controllers are dual mode controllers.
->> +- power-domains: A phandle to the node that controls power to the respective
->> +  PCIe controller and a specifier name for the PCIe controller. Following are
->> +  the specifiers for the different PCIe controllers
->> +    TEGRA194_POWER_DOMAIN_PCIEX8B: C0
->> +    TEGRA194_POWER_DOMAIN_PCIEX4A: C4
->> +    TEGRA194_POWER_DOMAIN_PCIEX8A: C5
->> +  these specifiers are defined in
->> +  "include/dt-bindings/power/tegra194-powergate.h" file.
->> +- reg: A list of physical base address and length pairs for each set of
->> +  controller registers. Must contain an entry for each entry in the reg-names
->> +  property.
->> +- reg-names: Must include the following entries:
->> +  "appl": Controller's application logic registers
->> +  "atu_dma": iATU and DMA registers. This is where the iATU (internal Address
->> +             Translation Unit) registers of the PCIe core are made available
->> +             for SW access.
->> +  "dbi": The aperture where root port's own configuration registers are
->> +         available
->> +  "addr_space": Used to map remote RC address space
->> +- interrupts: A list of interrupt outputs of the controller. Must contain an
->> +  entry for each entry in the interrupt-names property.
->> +- interrupt-names: Must include the following entry:
->> +  "intr": The Tegra interrupt that is asserted for controller interrupts
->> +- clocks: Must contain an entry for each entry in clock-names.
->> +  See ../clocks/clock-bindings.txt for details.
->> +- clock-names: Must include the following entries:
->> +  - core
->> +- resets: Must contain an entry for each entry in reset-names.
->> +  See ../reset/reset.txt for details.
->> +- reset-names: Must include the following entries:
->> +  - apb
->> +  - core
->> +- phys: Must contain a phandle to P2U PHY for each entry in phy-names.
->> +- phy-names: Must include an entry for each active lane.
->> +  "p2u-N": where N ranges from 0 to one less than the total number of lanes
->> +- nvidia,bpmp: Must contain a pair of phandle to BPMP controller node followed
->> +  by controller-id. Following are the controller ids for each controller.
->> +    0: C0
->> +    4: C4
->> +    5: C5
->> +- vddio-pex-ctl-supply: Regulator supply for PCIe side band signals
->> +- nvidia,pex-rst-gpio: Must contain a phandle to a GPIO controller followed by
->> +  GPIO that is being used as PERST signal
-> 
-> Why is this NVIDIA specific? Do other instantiations of the DW IP not
-> also need a means to define which GPIO is the reset?
-I'm not sure. At least I didn't find anything like this in other implementations.
-My understanding is that, controller handles assert/de-assert on the PERST line
-automatically without SW intervention. I think it is for the same reason that other
-implementations don't wait for the REFCLK to flow in from host to configure the IP.
-I think they just use some internal clock for the configuration and switch to
-running the core based on REFCLK as and when it is available
-(i.e. whenever a de-assert is perceived on PERST line by the controller)
+Yeah, that's exactly why I think referencing this from the controller
+and controlling it in the driver is preferable.
 
-> 
->> +
->> +Optional properties:
->> +- pinctrl-names: A list of pinctrl state names.
->> +  It is mandatory for C5 controller and optional for other controllers.
->> +  - "default": Configures PCIe I/O for proper operation.
->> +- pinctrl-0: phandle for the 'default' state of pin configuration.
->> +  It is mandatory for C5 controller and optional for other controllers.
->> +- supports-clkreq: Refer to Documentation/devicetree/bindings/pci/pci.txt
->> +- nvidia,update-fc-fixup: This is a boolean property and needs to be present to
->> +    improve performance when a platform is designed in such a way that it
->> +    satisfies at least one of the following conditions thereby enabling root
->> +    port to exchange optimum number of FC (Flow Control) credits with
->> +    downstream devices
->> +    1. If C0/C4/C5 run at x1/x2 link widths (irrespective of speed and MPS)
->> +    2. If C0/C4/C5 operate at their respective max link widths and
->> +       a) speed is Gen-2 and MPS is 256B
->> +       b) speed is >= Gen-3 with any MPS
->> +- nvidia,aspm-cmrt-us: Common Mode Restore Time for proper operation of ASPM
->> +   to be specified in microseconds
->> +- nvidia,aspm-pwr-on-t-us: Power On time for proper operation of ASPM to be
->> +   specified in microseconds
->> +- nvidia,aspm-l0s-entrance-latency-us: ASPM L0s entrance latency to be
->> +   specified in microseconds
->> +
->> +NOTE:- On Tegra194's P2972-0000 platform, only C5 controller can be enabled to
->> +operate in the endpoint mode because of the way the platform is designed.
->> +There is a mux that needs to be programmed to let the REFCLK from the host to
->> +flow into C5 controller when it operates in the endpoint mode. This mux is
->> +controlled by the GPIO (AA, 5) and it needs to be driven 'high'. For this to
->> +happen, set status of "pex-refclk-sel-high" node under "gpio@c2f0000" node to
->> +'okay'.
->> +	When any dual mode controller is made to operate in the endpoint mode,
->> +please make sure that its respective root port node's status is set to
->> +'disabled'.
-> 
-> This seems very brittle to me. There's no good way how we can detect
-> such misconfigurations. If instead we only have one node describing the
-> hardware fully, the chances of configuring things wrong (by for example
-> enabling both the host and EP mode device tree nodes) can be reduced.
-> 
-> So I think instead of duplicating all of the device tree content to have
-> both a host and an EP node for each controller, it'd be better to just
-> have a single node and let the device tree bindings specify which
-> changes to apply to switch into EP mode.
-> 
-> For example, there should be nothing wrong with specifying some of the
-> EP-only properties (like num-ib-windows and num-ob-windows) all the time
-> and only use them when we actually run in EP mode.
-> 
-> As I mentioned earlier, there are a couple of easy ways to distinguish
-> the modes. The presence of the "addr_space" reg entry is one example,
-> but we could also key off the nvidia,pex-rst-gpio property, since that
-> (presumably) wouldn't be needed for host mode.
-> 
-> That way we can just add default, host mode entries to tegra194.dtsi and
-> whenever somebody wants to enable EP mode, they can just override the
-> node in the board-level DTS file, like so:
-> 
-> 	pcie@141a0000 {
-> 		reg = <0x00 0x141a0000 0x0 0x00020000   /* appl registers (128K)      */
-> 		       0x00 0x3a040000 0x0 0x00040000   /* iATU_DMA reg space (256K)  */
-> 		       0x00 0x3a080000 0x0 0x00040000   /* DBI reg space (256K)       */
-> 		       0x1c 0x00000000 0x4 0x00000000>; /* Address Space (16G)        */
-> 		reg-names = "appl", "atu_dma", "dbi", "addr_space";
-> 
-> 		nvidia,pex-rst-gpio = <&gpio TEGRA194_MAIN_GPIO(GG, 1) GPIO_ACTIVE_LOW>;
-> 	};
-> 
-> Thierry
-I like it and fine with making these modifications also but would like to hear from Rob
-also on this.
+If this is some sort of select signal I think it makes sense to name it
+"nvidia,refclk-select-gpios" or something. Does this appear in the
+schematic somewhere? Or does the IP have a name for this? Those are
+usually good places to look for inspiration on the name because it's
+what hardware designers will be familiar with and they are technically
+the ones who should write the DT, even if that's rarely the case.
 
-- Vidya Sagar
-> 
->> +
->> +Examples:
->> +=========
->> +
->> +Tegra194:
->> +--------
->> +
->> +	pcie_ep@141a0000 {
->> +		compatible = "nvidia,tegra194-pcie-ep", "snps,dw-pcie-ep";
->> +		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX8A>;
->> +		reg = <0x00 0x141a0000 0x0 0x00020000   /* appl registers (128K)      */
->> +		       0x00 0x3a040000 0x0 0x00040000   /* iATU_DMA reg space (256K)  */
->> +		       0x00 0x3a080000 0x0 0x00040000   /* DBI reg space (256K)       */
->> +		       0x1c 0x00000000 0x4 0x00000000>; /* Address Space (16G)        */
->> +		reg-names = "appl", "atu_dma", "dbi", "addr_space";
->> +
->> +		num-lanes = <8>;
->> +		num-ib-windows = <2>;
->> +		num-ob-windows = <8>;
->> +
->> +		pinctrl-names = "default";
->> +		pinctrl-0 = <&clkreq_c5_bi_dir_state>;
->> +
->> +		clocks = <&bpmp TEGRA194_CLK_PEX1_CORE_5>;
->> +		clock-names = "core";
->> +
->> +		resets = <&bpmp TEGRA194_RESET_PEX1_CORE_5_APB>,
->> +			 <&bpmp TEGRA194_RESET_PEX1_CORE_5>;
->> +		reset-names = "apb", "core";
->> +
->> +		interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;	/* controller interrupt */
->> +		interrupt-names = "intr";
->> +
->> +		nvidia,bpmp = <&bpmp 5>;
->> +
->> +		nvidia,aspm-cmrt-us = <60>;
->> +		nvidia,aspm-pwr-on-t-us = <20>;
->> +		nvidia,aspm-l0s-entrance-latency-us = <3>;
->> +
->> +		vddio-pex-ctl-supply = <&vdd_1v8ao>;
->> +
->> +		nvidia,pex-rst-gpio = <&gpio TEGRA194_MAIN_GPIO(GG, 1)
->> +					GPIO_ACTIVE_LOW>;
->> +
->> +		phys = <&p2u_nvhs_0>, <&p2u_nvhs_1>, <&p2u_nvhs_2>,
->> +		       <&p2u_nvhs_3>, <&p2u_nvhs_4>, <&p2u_nvhs_5>,
->> +		       <&p2u_nvhs_6>, <&p2u_nvhs_7>;
->> +
->> +		phy-names = "p2u-0", "p2u-1", "p2u-2", "p2u-3", "p2u-4",
->> +			    "p2u-5", "p2u-6", "p2u-7";
->> +	};
->> -- 
->> 2.17.1
->>
+Thierry
 
+>=20
+> - Vidya Sagar
+>=20
+> >=20
+> > >   		};
+> > >   		pwm@c340000 {
+> > > @@ -144,6 +157,22 @@
+> > >   			    "p2u-5", "p2u-6", "p2u-7";
+> > >   	};
+> > > +	pcie_ep@141a0000 {
+> > > +		status =3D "disabled";
+> > > +
+> > > +		vddio-pex-ctl-supply =3D <&vdd_1v8ao>;
+> > > +
+> > > +		nvidia,pex-rst-gpio =3D <&gpio TEGRA194_MAIN_GPIO(GG, 1)
+> > > +					GPIO_ACTIVE_LOW>;
+> > > +
+> > > +		phys =3D <&p2u_nvhs_0>, <&p2u_nvhs_1>, <&p2u_nvhs_2>,
+> > > +		       <&p2u_nvhs_3>, <&p2u_nvhs_4>, <&p2u_nvhs_5>,
+> > > +		       <&p2u_nvhs_6>, <&p2u_nvhs_7>;
+> > > +
+> > > +		phy-names =3D "p2u-0", "p2u-1", "p2u-2", "p2u-3", "p2u-4",
+> > > +			    "p2u-5", "p2u-6", "p2u-7";
+> > > +	};
+> > > +
+> > >   	fan: fan {
+> > >   		compatible =3D "pwm-fan";
+> > >   		pwms =3D <&pwm4 0 45334>;
+> > > --=20
+> > > 2.17.1
+> > >=20
+>=20
+
+--z4+8/lEcDcG5Ke9S
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl3bgfMACgkQ3SOs138+
+s6EXpA//Vf94QkU0m4v0u3GfWabPSf4ibYaD7lAL17j41siLQqsFsLLqPrezP11W
+xE7ZzRyUr/S9+l5WnPFkraFd5omrEmYIx6FYXJ2vdei6AomirGpmPTQYwthEztVB
+o0r7qpnpfLrCz1qqOieUdlOTuaWdf6JWwGQOVJK/b8ZafA25DqLJH0vvawlp+8r6
+g7GRtbMDk6JRy5OOS01wvybB06m5D7GShlIIqY51S7Mrm5QA8QGARb+c1dShrmag
+mzw/HeNJNPH5db3Cl0Vbxhb8qSeJiqxl/b03yKu1RMmNcXmnZENR121LyIb7YsTz
+0YmJIu2qAVa4OGrQZXszIfD1tBturQHol55TuVbLxKQQFtuVPmNAFCb9fSA0xGak
++wLO8LLzGPxdKwqq/gBvhebGp2Bpz6d81TiLPaKFGkYhGsBG168EMUYeKsMha9ef
+C+q1Ja+3xQvyvPrHyjCb0jEp2+hzocPWgTaT3sqzAdsWNRL6Fmd6okut1UmCTs0C
+LfnF5AcUit6p21oz896dSmNSkdk4t9mlLSaZaULF9duBKrhR21305lYfAqJjZ9S0
+DikhRMUN+wY0Cp+omFrq59c+XzpA+pU1TndYR2SULHQMlNN0h3twl0v+kfT6EyMd
+3zLBPfVMk6zYZpkxYfQxYulzFNds/nJfZlgxrx9XHw/9rl8knMU=
+=qGH2
+-----END PGP SIGNATURE-----
+
+--z4+8/lEcDcG5Ke9S--
