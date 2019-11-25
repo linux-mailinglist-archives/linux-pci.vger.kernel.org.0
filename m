@@ -2,66 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9499610907E
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Nov 2019 15:55:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 51E9E1091DB
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Nov 2019 17:33:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728275AbfKYOzw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 25 Nov 2019 09:55:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33056 "EHLO mail.kernel.org"
+        id S1728868AbfKYQd0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 25 Nov 2019 11:33:26 -0500
+Received: from foss.arm.com ([217.140.110.172]:52534 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728071AbfKYOzw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 25 Nov 2019 09:55:52 -0500
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDEBF2084D
-        for <linux-pci@vger.kernel.org>; Mon, 25 Nov 2019 14:55:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574693751;
-        bh=Rxky72PqstIbIlKI/tQIOcS9CSX6zD0sQOuqRSkAbfk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=jkdf/7MjXmux3932g1T35YDJErfO4O/Hd6dOGdf0AW6G2GwaQZErpt7JiTohVjca9
-         iXmejzu+/wYpKw+xwMrql6BcWA0vzVnN9yyEV22UOfJUxIMJc9HmPIQm7CUbBFnvHA
-         p8DAQp1geBRyaNtwL/83HTRKzznZ7owuQoFSV1Fs=
-Received: by mail-qk1-f180.google.com with SMTP id m16so12905490qki.11
-        for <linux-pci@vger.kernel.org>; Mon, 25 Nov 2019 06:55:51 -0800 (PST)
-X-Gm-Message-State: APjAAAWlHsO4TqfKwPf5q2bTnxVD6fczHFtZL5lhTFczk4XWWwbaEFUx
-        Q7eZnpRuU/oWh+1GIuyEm1SWAyiXyLikJvDcuV4=
-X-Google-Smtp-Source: APXvYqyqpZ/vCxtErRlNJFtu7hfc+t7+vo0/X9gR4FrRc0kI9p7P6lPw70p3sR7aJWPnFo2VSF7IHPauCrzFbIc+0EM=
-X-Received: by 2002:a05:620a:120e:: with SMTP id u14mr1392078qkj.325.1574693750891;
- Mon, 25 Nov 2019 06:55:50 -0800 (PST)
+        id S1728683AbfKYQd0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 25 Nov 2019 11:33:26 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8683A31B;
+        Mon, 25 Nov 2019 08:33:25 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0A7713F6C4;
+        Mon, 25 Nov 2019 08:33:20 -0800 (PST)
+Subject: Re: [PATCH v2] dma-mapping: treat dev->bus_dma_mask as a DMA limit
+To:     Christoph Hellwig <hch@lst.de>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-ide@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
+        linux-acpi@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        James Hogan <jhogan@kernel.org>, Len Brown <lenb@kernel.org>,
+        devicetree@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
+        iommu@lists.linux-foundation.org, linuxppc-dev@lists.ozlabs.org
+References: <20191121092646.8449-1-nsaenzjulienne@suse.de>
+ <20191123165108.GA15306@ubuntu-x2-xlarge-x86> <20191125074412.GA30595@lst.de>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <0b851d0e-37c7-062e-c287-05f8c8a54c16@arm.com>
+Date:   Mon, 25 Nov 2019 16:33:17 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191115135842.119621-1-wei.liu@kernel.org>
-In-Reply-To: <20191115135842.119621-1-wei.liu@kernel.org>
-From:   Wei Liu <wei.liu@kernel.org>
-Date:   Mon, 25 Nov 2019 14:55:39 +0000
-X-Gmail-Original-Message-ID: <CAHd7WqxfQg4FXTBqmtMraL4Dqy6zk5uFP4wuxjsY2ns6j=cP9A@mail.gmail.com>
-Message-ID: <CAHd7WqxfQg4FXTBqmtMraL4Dqy6zk5uFP4wuxjsY2ns6j=cP9A@mail.gmail.com>
-Subject: Re: [PATCH] PCI: build Broadcom PAXC quirks unconditionally
-To:     Wei Liu <wei.liu@kernel.org>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        rjui@broadcom.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191125074412.GA30595@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 15 Nov 2019 at 13:58, Wei Liu <wei.liu@kernel.org> wrote:
->
-> CONFIG_PCIE_IPROC_PLATFORM only gets defined when the driver is built
-> in.  Removing the ifdef will allow us to build the driver as a module.
->
-> Signed-off-by: Wei Liu <wei.liu@kernel.org>
-> ---
-> Alternatively, we can change the condition to:
->
->   #ifdef CONFIG_PCIE_IPROC_PLATFORM || CONFIG_PCIE_IPROC_PLATFORM_MODULE
-> .
->
-> I chose to remove the ifdef because that's what other quirks looked like
-> in this file.
+On 25/11/2019 7:44 am, Christoph Hellwig wrote:
+> On Sat, Nov 23, 2019 at 09:51:08AM -0700, Nathan Chancellor wrote:
+>> Just as an FYI, this introduces a warning on arm32 allyesconfig for me:
+> 
+> I think the dma_limit argument to iommu_dma_alloc_iova should be a u64
+> and/or we need to use min_t and open code the zero exception.
+> 
+> Robin, Nicolas - any opinions?
 
-Bjorn and Ray, any comment on this trivial patch?
+Yeah, given that it's always held a mask I'm not entirely sure why it 
+was ever a dma_addr_t rather than a u64. Unless anyone else is desperate 
+to do it I'll get a cleanup patch ready for rc1.
 
-Wei.
+> Also I wonder how this file gets compiled on arm32 given that arm32
+> has its own set of iommu dma ops..
+
+As long as the dependencies for CONFIG_IOMMU_DMA are met it can be built 
+even when it's not actually used. That said, I might have expected that 
+arm allyesconfig ends up with CONFIG_ARCH_DMA_ADDR_T_64BIT=y anyway; I 
+guess it must pick some of CONFIG_ARM_LPAE's negative dependencies.
+
+(/me doesn't feel like jumping down the all*config rabbit hole today)
+
+Robin.
