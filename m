@@ -2,283 +2,140 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E31D8108E2E
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Nov 2019 13:50:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A07A108F00
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Nov 2019 14:37:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727150AbfKYMuA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 25 Nov 2019 07:50:00 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:35610 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725823AbfKYMuA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Nov 2019 07:50:00 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAPCnng5119618;
-        Mon, 25 Nov 2019 06:49:49 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574686189;
-        bh=wpBoal/atHxm5YWpIqfa43sf3vN9axBXlGrlRWTNA7k=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=FxZw2pyI01ilCHkdHoDYTOEraHzp/JdoRb12DqAYAUKvq7QPKnDWzqDvZ8MBgk1+2
-         EsewHolmBamQ8VK1fIYkxYRSgW/BQ4RAPXDcB/h5OTqD3kgQr13Bj4HA4a6/voyxvg
-         wSCDjNtCifN4OtZHH5AwT/eVWjtvxtKjWEx1BHLE=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAPCnn0t048373
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 25 Nov 2019 06:49:49 -0600
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 25
- Nov 2019 06:49:49 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 25 Nov 2019 06:49:49 -0600
-Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAPCnk52055895;
-        Mon, 25 Nov 2019 06:49:47 -0600
-Subject: Re: [PATCH] pci: endpoint: functions: Add a virtnet EP function
-To:     Jason Wang <jasowang@redhat.com>,
-        Haotian Wang <haotian.wang@sifive.com>, <mst@redhat.com>,
-        <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        Alan Mikhak <alan.mikhak@sifive.com>
-CC:     <linux-pci@vger.kernel.org>, <haotian.wang@duke.edu>,
-        Jon Mason <jdmason@kudzu.us>
-References: <7067e657-5c8e-b724-fa6a-086fece6e6c3@redhat.com>
- <20190904215801.2971-1-haotian.wang@sifive.com>
- <59982499-0fc1-2e39-9ff9-993fb4dd7dcc@redhat.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <2cf00ec4-1ed6-f66e-6897-006d1a5b6390@ti.com>
-Date:   Mon, 25 Nov 2019 18:19:05 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1725924AbfKYNhy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 25 Nov 2019 08:37:54 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:39168 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725862AbfKYNhy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Nov 2019 08:37:54 -0500
+Received: by mail-ot1-f65.google.com with SMTP id w24so12586455otk.6;
+        Mon, 25 Nov 2019 05:37:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7I8z2XIpJjId5ryuiZ7tTW11CMQe8kAhWaZCPRxJpjc=;
+        b=XpzTWRcUwhIRkjg3TVIMV9FXdyzKu7/2K9oZ/TfWc7ZI7MzEobDf5qa2t5kHpNMj32
+         glLLIRgQCQ2GTFZlV5aIpyN6mjjjkqBuMYkhwt5HwfHlt5pVtaHy5zrctDRYByXGNJ7a
+         hgvmlQClLa+k+cQEvlZXB9WKhT7GYZoM70Aning2k4pXlC+Axt91No1idEEmbBlHl6XX
+         VmIpZ8sh62JGftJQzB3e4vU40S8sR2xgiJQaSdpUeuuL8IY17yyAJUSpNshhiVOBHIp/
+         jGbINFoGy9t98GGX+S1r5z+yUKnV6H2heLd9xhaDOoHBJ+m23sz2V2G6rTc8S6IvgJst
+         xy+A==
+X-Gm-Message-State: APjAAAXS9Ew5mf3XlivOcVt9m41QD/XSftDhiwpbPdfiAqIPIVjvXeDx
+        XT3OY97EThHR+rq16vpFs9sMuVcnR2jqTvwGYok=
+X-Google-Smtp-Source: APXvYqyxR7cIli33WmFNqWgI7Fy0UCyvtp7aViv6RX+2MxAwqt0IK8X/TAZsk1zjr4pG0MDcemycbDywOsbqbcBfSgY=
+X-Received: by 2002:a05:6830:232a:: with SMTP id q10mr20788376otg.262.1574689073565;
+ Mon, 25 Nov 2019 05:37:53 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <59982499-0fc1-2e39-9ff9-993fb4dd7dcc@redhat.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20191120002836.GA247344@google.com> <20191121181500.GA55996@google.com>
+ <CAD8Lp47o6PqKnQYBba0o_8LSGhd3_APhVuXAVsJRT7TedeqXDg@mail.gmail.com>
+ <CAJZ5v0hxa9OGF-w82ZkQ0n_p5VM7uOdKD_UrdGVoz0MAfeqy0w@mail.gmail.com> <CAD8Lp47kV-C_wf02=s-KKKgB6EVsjNVET9kqYuxfdHFDWbAShw@mail.gmail.com>
+In-Reply-To: <CAD8Lp47kV-C_wf02=s-KKKgB6EVsjNVET9kqYuxfdHFDWbAShw@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 25 Nov 2019 14:37:42 +0100
+Message-ID: <CAJZ5v0hieeb+UQ8CnO+z53KQz6YxLifL+GXkuNjHUM1b5zCE3A@mail.gmail.com>
+Subject: Re: [PATCH] PCI: increase D3 delay for AMD Ryzen5/7 XHCI controllers
+To:     Daniel Drake <drake@endlessm.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
+        Linux Upstreaming Team <linux@endlessm.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux USB Mailing List <linux-usb@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-+Alan, Jon
+On Mon, Nov 25, 2019 at 4:45 AM Daniel Drake <drake@endlessm.com> wrote:
+>
+> On Fri, Nov 22, 2019 at 7:15 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > > But then when pci_update_current_state() is called, it reads pmcsr as
+> > > 3 (D3hot). That's not what I would expect. I guess this means that
+> > > this platform's _PR3/_PS3 do not actually allow us to put the device
+> > > into D3cold,
+> >
+> > That you can't really say.
+> >
+> > Anyway, it is not guaranteed to do that.  For example, the power
+> > resource(s) listed by _PR3 for the device may be referenced by
+> > something else too which prevents them from being turned off.
+> >
+> > > and/or the _PR0/_PS0 transition does not actually transition the device to D0.
+> >
+> > Yes.
+> >
+> > Which may be the case if the power resource(s) in _PR3 have not been
+> > turned off really.
+> >
+> > [To debug this a bit more, you can enable dynamic debug in
+> > drivers/acpi/device_pm.c.]
+>
+> We checked in an earlier thread before I figured out the timing detail
+> - these power resources are being turned off at this point.
+>
+> > > While there is some ACPI strangeness here, the D3hot vs D3cold thing
+> > > is perhaps not the most relevant point. If I hack the code to avoid
+> > > D3cold altogether, just trying to do D0->D3hot->D0, it fails in the
+> > > same way.
+> >
+> > OK, but then you don't really flip the power resource(s), so that only
+> > means that _PS0 does not restore D0, but in general it only is valid
+> > to execute _PS0 after _PS3 (if both are present which is the case
+> > here), so this is not conclusive again.
+>
+> _PS0 is called after _PS3 in the above case.
+>
+> My feeling is that on this platform, we are not actually entering
+> D3cold at any point. Linux appears to be powering off the specified
+> ACPI power domains, but after turning them back on and executing _PS0
+> to move to D0initialized, the pmcsr still reporting D3 state seems
+> highly suspicious to me.
 
-Hi Jason, Haotian, Alan,
+Well, it very well may just mean that the device didn't have enough
+time to get to D0 before reading its PMCSR and it reports a
+(internally) cached value.
 
-On 05/09/19 8:26 AM, Jason Wang wrote:
-> 
-> On 2019/9/5 上午5:58, Haotian Wang wrote:
->> Hi Jason,
->>
->> I have an additional comment regarding using vring.
->>
->> On Tue, Sep 3, 2019 at 6:42 AM Jason Wang <jasowang@redhat.com> wrote:
->>> Kind of, in order to address the above limitation, you probably want to 
->>> implement a vringh based netdevice and driver. It will work like, 
->>> instead of trying to represent a virtio-net device to endpoint, 
->>> represent a new type of network device, it uses two vringh ring instead 
->>> virtio ring. The vringh ring is usually used to implement the 
->>> counterpart of virtio driver. The advantages are obvious:
->>>
->>> - no need to deal with two sets of features, config space etc.
->>> - network specific, from the point of endpoint linux, it's not a virtio 
->>> device, no need to care about transport stuffs or embedding internal 
->>> virtio-net specific data structures
->>> - reuse the exist codes (vringh) to avoid duplicated bugs, implementing 
->>> a virtqueue is kind of challenge
->> With vringh.c, there is no easy way to interface with virtio_net.c.
->>
->> vringh.c is linked with vhost/net.c nicely 
-> 
-> 
-> Let me clarify, vhost_net doesn't use vringh at all (though there's a
-> plan to switch to use vringh).
-> 
-> 
->> but again it's not easy to
->> interface vhost/net.c with the network stack of endpoint kernel. The
->> vhost drivers are not designed with the purpose of creating another
->> suite of virtual devices in the host kernel in the first place. If I try
->> to manually write code for this interfacing, it seems that I will do
->> duplicate work that virtio_net.c does.
-> 
-> 
-> Let me explain:
-> 
-> - I'm not suggesting to use vhost_net since it can only deal with
-> userspace virtio rings.
-> - I suggest to introduce netdev that has vringh vring assoticated.
-> Vringh was designed to deal with virtio ring located at different types
-> of memory. It supports userspace vring and kernel vring currently, but
-> it should not be too hard to add support for e.g endpoint device that
-> requires DMA or whatever other method to access the vring. So it was by
-> design to talk directly with e.g kernel virtio device.
-> - In your case, you can read vring address from virtio config space
-> through endpoint framework and then create vringh. It's as simple as:
-> creating a netdev, read vring address, and initialize vringh. Then you
-> can use vringh helper to get iov and build skb etc (similar to caif_virtio).
+> Also, I just experimented adding a pmscr register read to the end of
+> pci_set_power_state() , after pci_platform_power_transition() has been
+> called. If the power was truly cut and we're in D3cold then I would
+> expect this to fail. However the register read succeeds and returns
+> the same value 0x103.
 
-From the discussions above and from looking at Jason's mdev patches [1], I've
-created the block diagram below.
+Yes, that is more conclusive.  [In theory it may still not have enough
+time to complete the transition before the read, so you can add a
+reasonable delay in there and retest, but I don't really expect that
+to make any difference. :-)]
 
-While this patch (from Haotian) deals with RC<->EP connection, I'd also like
-this to be extended for NTB (using multiple EP instances. RC<->EP<->EP<->RC)
-[2][3].
+> During resume, Linux seems to have accurately detected this failure to
+> transition to D3cold in pci_update_current_state() by reading pmcsr
+> and setting dev->current_state to D3hot accordingly. We then deal with
+> what looks like a D3hot->D0 transition, which suffers the same failure
+> as seen when I force Linux to avoid D3cold and actually do a "real"
+> D0->D3hot->D0 cycle.
+>
+> Presumably on a platform where D3cold actually works, after the device
+> has then been moved to D0uninitialized via ACPI _PS0 and _PR0,
+> pci_update_current_state() would then read pmcsr and update
+> dev->current_state to have value D0?
 
-+-----------------------------------+   +-------------------------------------+
-|                                   |   |                                     |
-|  +------------+  +--------------+ |   | +------------+  +--------------+    |
-|  | vringh_net |  | vringh_rpmsg | |   | | virtio_net |  | virtio_rpmsg |    |
-|  +------------+  +--------------+ |   | +------------+  +--------------+    |
-|                                   |   |                                     |
-|          +---------------+        |   |          +---------------+          |
-|          |  vringh_mdev  |        |   |          |  virtio_mdev  |          |
-|          +---------------+        |   |          +---------------+          |
-|                                   |   |                                     |
-|  +------------+   +------------+  |   | +-------------------+ +------------+|
-|  | vringh_epf |   | vringh_ntb |  |   | | virtio_pci_common | | virtio_ntb ||
-|  +------------+   +------------+  |   | +-------------------+ +------------+|
-| (PCI EP Device)   (NTB Secondary  |   |        (PCI RC)       (NTB Primary  |
-|                       Device)     |   |                          Device)    |
-|                                   |   |                                     |
-|                                   |   |                                     |
-|             (A)                   |   |              (B)                    |
-+-----------------------------------+   +-------------------------------------+
+Yes, that'd be the expected behavior in that case.
 
-GUEST SIDE (B):
-===============
-In the virtualization terminology, the side labeled (B) will be the guest side.
-Here it will be the place where PCIe host (RC) side SW will execute (Ignore NTB
-for this discussion since PCIe host side SW will execute on both ends of the
-link in the case of NTB. However I've included in the block diagram since the
-design we adopt should be able to be extended for NTB as well).
+> So in terms of the review comment questioning if the function name
+> quirk_d3_delay() and accompanying message "extending delay after
+> power-on from D3 to %d msec\n" is good (or whether it should say D3hot
+> or D3cold), maybe it should say D3hot.
 
-Most of the pieces in (B) already exists.
-1) virtio_net and virtio_rpmsg: No modifications needed and can be used as it
-   is.
-2) virtio_mdev: Jason has sent this [1]. This could be used as it is for EP
-   usecases as well. Jason has created mvnet based on virtio_mdev, but for EP
-   usecases virtio_pci_common and virtio_ntb should use it.
-3) virtio_pci_common: This should be used when a PCIe EPF is connected. This
-   should be modified to create virtio_mdev instead of directly creating virtio
-   device.
-4) virtio_ntb: This is used for NTB where one end of the link should use
-   virtio_ntb. This should create virtio_mdev.
+That would be more accurate in my view.
 
-With this virtio_mdev can abstract virtio_pci_common and virtio_ntb and ideally
-any virtio drivers can be used for EP or NTB (In the block diagram above
-virtio_net and virtio_rpmsg can be used).
+> Plus a comment noting that D3cold doesn't actually seem to be fully cold on this platform, so
+> we're actually dealing with a D3hot -> D0 transition?
 
-HOST SIDE (A):
-===============
-In the virtualization terminology, the side labeled (A) will be the host side.
-Here it will be the place where PCIe device (Endpoint) side SW will execute.
+Sounds reasonable to me.
 
-Bits and pieces of (A) should exist but there should be considerable work in this.
-1) vringh_net: There should be vringh drivers corresponding to
-   the virtio drivers on the guest side (B). vringh_net should register with
-   the net core. The vringh_net device should be created by vringh_mdev. This
-   should be new development.
-2) vringh_rpmsg: vringh_rpmsg should register with the rpmsg core. The
-   vringh_rpmsg device should be created by vringh_mdev.
-3) vringh_mdev: This layer should define ops specific to vringh (e.g
-   get_desc_addr() should give vring descriptor address and will depend on
-   either EP device or NTB device). I haven't looked further on what other ops
-   will be needed. IMO this layer should also decide whether _kern() or _user()
-   vringh helpers should be invoked.
-4) vringh_epf: This will be used for PCIe endpoint. This will implement ops to
-   get the vring descriptor address.
-5) vringh_ntb: Similar to vringh_epf but will interface with NTB device instead
-   of EPF device.
-
-Jason,
-
-Can you give your comments on the above design? Do you see any flaws/issues
-with the above approach?
-
-Thanks
-Kishon
-
-[1] -> https://lkml.org/lkml/2019/11/18/261
-[2] -> https://lkml.org/lkml/2019/9/26/291
-[3] ->
-https://www.linuxplumbersconf.org/event/4/contributions/395/attachments/284/481/Implementing_NTB_Controller_Using_PCIe_Endpoint_-_final.pdf
-> 
-> 
->>
->> There will be two more main disadvantages probably.
->>
->> Firstly, there will be two layers of overheads. vhost/net.c uses
->> vringh.c to channel data buffers into some struct sockets. This is the
->> first layer of overhead. That the virtual network device will have to
->> use these sockets somehow adds another layer of overhead.
-> 
-> 
-> As I said, it doesn't work like vhost and no socket is needed at all.
-> 
-> 
->>
->> Secondly, probing, intialization and de-initialization of the virtual
->> network_device are already non-trivial. I'll likely copy this part
->> almost verbatim from virtio_net.c in the end. So in the end, there will
->> be more duplicate code.
-> 
-> 
-> It will be a new type of network device instead of virtio, you don't
-> need to care any virtio stuffs but vringh in your codes. So it looks to
-> me it would be much simpler and compact.
-> 
-> But I'm not saying your method is no way to go, but you should deal with
-> lots of other issues like I've replied in the previous mail. What you
-> want to achieve is
-> 
-> 1) Host (virtio-pci) <-> virtio ring <-> virtual eth device <-> virtio
-> ring <-> Endpoint (virtio with customized config_ops).
-> 
-> But I suggest is
-> 
-> 2) Host (virtio-pci) <-> virtio ring <-> virtual eth device <-> vringh
-> vring (virtio ring in the Host) <-> network device
-> 
-> The differences is.
-> - Complexity: In your proposal, there will be two virtio devices and 4
-> virtqueues. It means you need to prepare two sets of features, config
-> ops etc. And dealing with inconsistent feature will be a pain. It may
-> work for simple case like a virtio-net device with only _F_MAC, but it
-> would be hard to be expanded. If we decide to go for vringh, there will
-> be a single virtio device and 2 virtqueues. In the endpoint part, it
-> will be 2 vringh vring (which is actually point the same virtqueue from
-> Host side) and a normal network device. There's no need for dealing with
-> inconsistency, since vringh basically sever as a a device
-> implementation, the feature negotiation is just between device (network
-> device with vringh) and driver (virtito-pci) from the view of Linux
-> running on the PCI Host.
-> - Maintainability: A third path for dealing virtio ring. We've already
-> had vhost and vringh, a third path will add a lot of overhead when
-> trying to maintaining them. My proposal will try to reuse vringh,
-> there's no need a new path.
-> - Layer violation: We want to hide the transport details from the device
-> and make virito-net device can be used without modification. But your
-> codes try to poke information like virtnet_info. My proposal is to just
-> have a new networking device that won't need to care virtio at all. It's
-> not that hard as you imagine to have a new type of netdev, I suggest to
-> take a look at how caif_virtio is done, it would be helpful.
-> 
-> If you still decide to go with two two virtio device model, you need
-> probably:
-> - Proving two sets of config and features, and deal with inconsistency
-> - Try to reuse the vringh codes
-> - Do not refer internal structures from virtio-net.c
-> 
-> But I recommend to take a step of trying vringh method which should be
-> much simpler.
-> 
-> Thanks
-> 
-> 
->>
->> Thank you for your patience!
->>
->> Best,
->> Haotian
+Thanks!
