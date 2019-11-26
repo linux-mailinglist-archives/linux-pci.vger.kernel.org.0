@@ -2,88 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 77C3810A36D
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Nov 2019 18:38:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A3D610A437
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Nov 2019 19:52:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727445AbfKZRie (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 Nov 2019 12:38:34 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:46798 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727379AbfKZRie (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 Nov 2019 12:38:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=aKZvvePDQW5RDqmZAeiG6BbNoPgHNagjIBh3FYogELM=; b=ciH8dOAK3EX7IC9OLRsLDW7v1
-        TfobHdqmVQrxa/fj9p/gxjWD8V+zUBHxm8qA2+sBAERlhsplsQuqMIh4U56uCHSHWHtyYCG0nDVmO
-        9pPGKrBYbsT23uPZdVjWH/uqgwTpNSLxO+40eKIEM/2N+0499F+t8geK4GAJBSuVijX2Hr99d9jHK
-        KVlU32XRCcHidYdAnBpTLorxpBKjwD/sewe38tetWTmnus7wOv4JDxdW+4r4i6PFN9g+cpIKTm8yx
-        iB/HSZzTFzfnUVREwjBNef1ex3N9aRBtr3pKmsISsnOz7EXh9+aRPRln4JAM45nQKiZEelB9WcDgH
-        7+EPYFnAg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iZenJ-00070t-1h; Tue, 26 Nov 2019 17:38:33 +0000
-Date:   Tue, 26 Nov 2019 09:38:33 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     James Sewart <jamessewart@arista.com>
-Cc:     linux-pci@vger.kernel.org, Dmitry Safonov <0x7f454c46@gmail.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Dmitry Safonov <dima@arista.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v2] PCI: Add DMA alias quirk for PLX PEX NTB
-Message-ID: <20191126173833.GA16069@infradead.org>
-References: <20191120193228.GA103670@google.com>
- <6A902F0D-FE98-4760-ADBB-4D5987D866BE@arista.com>
+        id S1727090AbfKZSwM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 Nov 2019 13:52:12 -0500
+Received: from mx2.suse.de ([195.135.220.15]:45252 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726052AbfKZSwL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 26 Nov 2019 13:52:11 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 38C30ABD6;
+        Tue, 26 Nov 2019 18:52:08 +0000 (UTC)
+Message-ID: <45feed391bbd95c46f64b31cf8817d4f773c8da1.camel@suse.de>
+Subject: Re: [PATCH v2] dma-mapping: treat dev->bus_dma_mask as a DMA limit
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-ide@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
+        linux-acpi@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        James Hogan <jhogan@kernel.org>, Len Brown <lenb@kernel.org>,
+        devicetree@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
+        iommu@lists.linux-foundation.org, linuxppc-dev@lists.ozlabs.org
+Date:   Tue, 26 Nov 2019 19:51:59 +0100
+In-Reply-To: <0b851d0e-37c7-062e-c287-05f8c8a54c16@arm.com>
+References: <20191121092646.8449-1-nsaenzjulienne@suse.de>
+         <20191123165108.GA15306@ubuntu-x2-xlarge-x86>
+         <20191125074412.GA30595@lst.de>
+         <0b851d0e-37c7-062e-c287-05f8c8a54c16@arm.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-B9dp7hYRMOcivm0VMcWv"
+User-Agent: Evolution 3.34.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6A902F0D-FE98-4760-ADBB-4D5987D866BE@arista.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> +int _pci_add_dma_alias_range(struct pci_dev *dev, u8 devfn_from, int len)
 
-This should be mrked static.  Also single underscore prefixes are rather
-unusual in Linux.  Either use two or use a more descriptive name.
+--=-B9dp7hYRMOcivm0VMcWv
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, 2019-11-25 at 16:33 +0000, Robin Murphy wrote:
+> On 25/11/2019 7:44 am, Christoph Hellwig wrote:
+> > On Sat, Nov 23, 2019 at 09:51:08AM -0700, Nathan Chancellor wrote:
+> > > Just as an FYI, this introduces a warning on arm32 allyesconfig for m=
+e:
+> >=20
+> > I think the dma_limit argument to iommu_dma_alloc_iova should be a u64
+> > and/or we need to use min_t and open code the zero exception.
+> >=20
+> > Robin, Nicolas - any opinions?
+>=20
+> Yeah, given that it's always held a mask I'm not entirely sure why it=20
+> was ever a dma_addr_t rather than a u64. Unless anyone else is desperate=
+=20
+> to do it I'll get a cleanup patch ready for rc1.
+
+Sounds good to me too
+
+Robin, since I started the mess, I'll be happy to do it if it helps offload=
+ing
+some work from you.
+
+Regards,
+Nicolas
 
 
-> @@ -5875,18 +5887,21 @@ int pci_set_vga_state(struct pci_dev *dev, bool decode,
->   */
->  void pci_add_dma_alias(struct pci_dev *dev, u8 devfn)
->  {
-> -	if (!dev->dma_alias_mask)
-> -		dev->dma_alias_mask = bitmap_zalloc(U8_MAX, GFP_KERNEL);
-> -	if (!dev->dma_alias_mask) {
-> -		pci_warn(dev, "Unable to allocate DMA alias mask\n");
-> +	if (_pci_add_dma_alias_range(dev, devfn, 1) != 0)
->  		return;
-> -	}
-> -
-> -	set_bit(devfn, dev->dma_alias_mask);
->  	pci_info(dev, "Enabling fixed DMA alias to %02x.%d\n",
->  		 PCI_SLOT(devfn), PCI_FUNC(devfn));
->  }
->  
-> +void pci_add_dma_alias_range(struct pci_dev *dev, u8 devfn_from, int len)
-> +{
-> +	int devfn_to = devfn_from + len - 1;
-> +	if (_pci_add_dma_alias_range(dev, devfn_from, len) != 0)
-> +		return;
-> +	pci_info(dev, "Enabling fixed DMA alias for devfn range from %02x.%d to %02x.%d\n",
-> +		 PCI_SLOT(devfn_from), PCI_FUNC(devfn_from), PCI_SLOT(devfn_to), PCI_FUNC(devfn_to));
-> +}
+--=-B9dp7hYRMOcivm0VMcWv
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
-This adds a non-string constant line over 80 chars that should be fixed
-up.
+-----BEGIN PGP SIGNATURE-----
 
-But can't you just add the len argument (which really should be
-nr_devfns or so) to pci_add_dma_alias and switch the 8 existing
-callers over?
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3ddE8ACgkQlfZmHno8
+x/5fVwgAnN7cpWXNHEbGgqyZcMqmBWCtR0bMa/xIu1xNgr/CAwMMZj0Z3/+6d18p
+mlU5N6AqlkTxefP9mV5ZxBzugcsriGR4+qJ05kZZAMxAeG625qDkfhSEl0FmUZRT
+WmEv98IN0aFzHEjZJAyPDNV8Ff1a3JpoHKQmnYs5z438rMZt49CPBC0jNPFdaEuj
+v9ry1DkR+cGYuD1WRyBQJjtze14XoG7ZCu0o9Htc02GZHq3OuabxDikuTC+UJ1jR
+BZX4ak4qGpJUGYT8fQA7IOA94Sd/N/CHMrDp8yv5f/kRcprKqgGX8PnMCUOPf4ns
+PsCZZGhEKvVwZy3/+QzWSYQ7q20O8w==
+=WYKI
+-----END PGP SIGNATURE-----
+
+--=-B9dp7hYRMOcivm0VMcWv--
+
