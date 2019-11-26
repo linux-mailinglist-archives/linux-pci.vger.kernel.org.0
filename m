@@ -2,112 +2,170 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A3D610A437
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Nov 2019 19:52:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 33A6D10A613
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Nov 2019 22:37:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbfKZSwM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 Nov 2019 13:52:12 -0500
-Received: from mx2.suse.de ([195.135.220.15]:45252 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726052AbfKZSwL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 26 Nov 2019 13:52:11 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 38C30ABD6;
-        Tue, 26 Nov 2019 18:52:08 +0000 (UTC)
-Message-ID: <45feed391bbd95c46f64b31cf8817d4f773c8da1.camel@suse.de>
-Subject: Re: [PATCH v2] dma-mapping: treat dev->bus_dma_mask as a DMA limit
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-ide@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
-        linux-acpi@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        James Hogan <jhogan@kernel.org>, Len Brown <lenb@kernel.org>,
-        devicetree@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
-        iommu@lists.linux-foundation.org, linuxppc-dev@lists.ozlabs.org
-Date:   Tue, 26 Nov 2019 19:51:59 +0100
-In-Reply-To: <0b851d0e-37c7-062e-c287-05f8c8a54c16@arm.com>
-References: <20191121092646.8449-1-nsaenzjulienne@suse.de>
-         <20191123165108.GA15306@ubuntu-x2-xlarge-x86>
-         <20191125074412.GA30595@lst.de>
-         <0b851d0e-37c7-062e-c287-05f8c8a54c16@arm.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-B9dp7hYRMOcivm0VMcWv"
-User-Agent: Evolution 3.34.1 
+        id S1726876AbfKZVhX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 Nov 2019 16:37:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58726 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726036AbfKZVhX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 26 Nov 2019 16:37:23 -0500
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0B0120835;
+        Tue, 26 Nov 2019 21:37:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574804242;
+        bh=NiCNn3FuYjr3n6WG4QyUZzhp+ax9LgPmgNljIGhEErI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=drZqipwPeS+niJFsQ0qSF6WD0LHQSIqKXEeHnUMsVLnVc7MNuISEmOaQH+sDLt2g/
+         zMyTvJUM46sxgLF7lkaIhja1ULdda7AL64iLWUwrXiH0nczywhEf6oFTFeuLNA5HY6
+         hlclqFVo9MpY/gYtPhZbpczXork0in44N12KPgbI=
+Date:   Tue, 26 Nov 2019 15:37:18 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lorenzo.pieralisi@arm.com, robh+dt@kernel.org,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        andrew.murray@arm.com, kishon@ti.com,
+        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH 3/6] PCI: tegra: Add support for PCIe endpoint mode in
+ Tegra194
+Message-ID: <20191126213718.GA185422@google.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191122104505.8986-4-vidyas@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Fri, Nov 22, 2019 at 04:15:02PM +0530, Vidya Sagar wrote:
+> Add support for the endpoint mode of Synopsys DesignWare core based
+> dual mode PCIe controllers present in Tegra194 SoC.
 
---=-B9dp7hYRMOcivm0VMcWv
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+> +static irqreturn_t tegra_pcie_ep_irq_handler(struct tegra_pcie_dw *pcie)
+> +{
+> +	struct dw_pcie_ep *ep = &pcie->pci.ep;
+> +	u32 val, tmp;
+> +
+> +	val = appl_readl(pcie, APPL_INTR_STATUS_L0);
+> +	if (val & APPL_INTR_STATUS_L0_LINK_STATE_INT) {
+> +		val = appl_readl(pcie, APPL_INTR_STATUS_L1_0_0);
+> +		appl_writel(pcie, val, APPL_INTR_STATUS_L1_0_0);
+> +		if (val & APPL_INTR_STATUS_L1_0_0_HOT_RESET_DONE) {
+> +			/* clear any stale PEX_RST interrupt */
+> +			if (!kfifo_put(&pcie->event_fifo, EP_HOT_RST_DONE)) {
+> +				dev_err(pcie->dev, "EVENT FIFO is full\n");
+> +				return IRQ_HANDLED;
+> +			}
+> +			wake_up(&pcie->wq);
+> +		}
+> +		if (val & APPL_INTR_STATUS_L1_0_0_RDLH_LINK_UP_CHGED) {
+> +			tmp = appl_readl(pcie, APPL_LINK_STATUS);
+> +			if (tmp & APPL_LINK_STATUS_RDLH_LINK_UP) {
+> +				dev_info(pcie->dev, "Link is up with Host\n");
+> +				dw_pcie_ep_linkup(ep);
+> +			}
+> +		}
+> +	} else if (val & APPL_INTR_STATUS_L0_PCI_CMD_EN_INT) {
 
-On Mon, 2019-11-25 at 16:33 +0000, Robin Murphy wrote:
-> On 25/11/2019 7:44 am, Christoph Hellwig wrote:
-> > On Sat, Nov 23, 2019 at 09:51:08AM -0700, Nathan Chancellor wrote:
-> > > Just as an FYI, this introduces a warning on arm32 allyesconfig for m=
-e:
-> >=20
-> > I think the dma_limit argument to iommu_dma_alloc_iova should be a u64
-> > and/or we need to use min_t and open code the zero exception.
-> >=20
-> > Robin, Nicolas - any opinions?
->=20
-> Yeah, given that it's always held a mask I'm not entirely sure why it=20
-> was ever a dma_addr_t rather than a u64. Unless anyone else is desperate=
-=20
-> to do it I'll get a cleanup patch ready for rc1.
+Is it really the case that only one of
+APPL_INTR_STATUS_L0_LINK_STATE_INT and
+APPL_INTR_STATUS_L0_PCI_CMD_EN_INT can be set?
 
-Sounds good to me too
+If it's possible that both could be set, maybe this should be
+something like this?
 
-Robin, since I started the mess, I'll be happy to do it if it helps offload=
-ing
-some work from you.
+  int spurious = 1;
 
-Regards,
-Nicolas
+  if (val & APPL_INTR_STATUS_L0_LINK_STATE_INT) {
+    ...
+    spurious = 0;
+  }
+  if (val & APPL_INTR_STATUS_L0_PCI_CMD_EN_INT) {
+    ...
+    spurious = 0;
+  }
 
+  if (spurious) {
+    dev_warn(...)
+  }
 
---=-B9dp7hYRMOcivm0VMcWv
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+> +		val = appl_readl(pcie, APPL_INTR_STATUS_L1_15);
+> +		appl_writel(pcie, val, APPL_INTR_STATUS_L1_15);
+> +		if (val & APPL_INTR_STATUS_L1_15_CFG_BME_CHGED) {
+> +			if (!kfifo_put(&pcie->event_fifo, EP_BME_CHANGE)) {
+> +				dev_err(pcie->dev, "EVENT FIFO is full\n");
+> +				return IRQ_HANDLED;
+> +			}
+> +			wake_up(&pcie->wq);
+> +		}
+> +	} else {
+> +		dev_warn(pcie->dev, "Random interrupt (STATUS = 0x%08X)\n",
+> +			 val);
+> +		appl_writel(pcie, val, APPL_INTR_STATUS_L0);
+> +	}
+> +
+> +	return IRQ_HANDLED;
+> +}
 
------BEGIN PGP SIGNATURE-----
+> +static int tegra_pcie_ep_work_thread(void *p)
+> +{
+> +	struct tegra_pcie_dw *pcie = (struct tegra_pcie_dw *)p;
+> +	u32 event;
+> +
+> +	while (true) {
+> +		wait_event_interruptible(pcie->wq,
+> +					 !kfifo_is_empty(&pcie->event_fifo));
+> +
+> +		if (kthread_should_stop())
+> +			break;
+> +
+> +		if (!kfifo_get(&pcie->event_fifo, &event)) {
+> +			dev_warn(pcie->dev, "EVENT FIFO is empty\n");
+> +			continue;
+> +		}
+> +
+> +		switch (event) {
+> +		case EP_PEX_RST_DEASSERT:
+> +			dev_info(pcie->dev, "EVENT: EP_PEX_RST_DEASSERT\n");
+> +			pex_ep_event_pex_rst_deassert(pcie);
+> +			break;
+> +
+> +		case EP_PEX_RST_ASSERT:
+> +			dev_info(pcie->dev, "EVENT: EP_PEX_RST_ASSERT\n");
+> +			pex_ep_event_pex_rst_assert(pcie);
+> +			break;
+> +
+> +		case EP_HOT_RST_DONE:
+> +			dev_info(pcie->dev, "EVENT: EP_HOT_RST_DONE\n");
+> +			pex_ep_event_hot_rst_done(pcie);
+> +			break;
+> +
+> +		case EP_BME_CHANGE:
+> +			dev_info(pcie->dev, "EVENT: EP_BME_CHANGE\n");
+> +			pex_ep_event_bme_change(pcie);
+> +			break;
+> +
+> +		case EP_EVENT_EXIT:
+> +			dev_info(pcie->dev, "EVENT: EP_EVENT_EXIT\n");
+> +			return 0;
+> +
+> +		default:
+> +			dev_warn(pcie->dev, "Invalid PCIe EP event\n");
 
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3ddE8ACgkQlfZmHno8
-x/5fVwgAnN7cpWXNHEbGgqyZcMqmBWCtR0bMa/xIu1xNgr/CAwMMZj0Z3/+6d18p
-mlU5N6AqlkTxefP9mV5ZxBzugcsriGR4+qJ05kZZAMxAeG625qDkfhSEl0FmUZRT
-WmEv98IN0aFzHEjZJAyPDNV8Ff1a3JpoHKQmnYs5z438rMZt49CPBC0jNPFdaEuj
-v9ry1DkR+cGYuD1WRyBQJjtze14XoG7ZCu0o9Htc02GZHq3OuabxDikuTC+UJ1jR
-BZX4ak4qGpJUGYT8fQA7IOA94Sd/N/CHMrDp8yv5f/kRcprKqgGX8PnMCUOPf4ns
-PsCZZGhEKvVwZy3/+QzWSYQ7q20O8w==
-=WYKI
------END PGP SIGNATURE-----
+Maybe include the invalid event value in the message?
 
---=-B9dp7hYRMOcivm0VMcWv--
-
+> +			break;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
