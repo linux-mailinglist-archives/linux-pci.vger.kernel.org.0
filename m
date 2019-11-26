@@ -2,92 +2,72 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8FCE610A61D
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Nov 2019 22:45:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F83810A638
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Nov 2019 22:50:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbfKZVpc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 Nov 2019 16:45:32 -0500
-Received: from foss.arm.com ([217.140.110.172]:39712 "EHLO foss.arm.com"
+        id S1726333AbfKZVuY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 Nov 2019 16:50:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726033AbfKZVpc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 26 Nov 2019 16:45:32 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 59F5431B;
-        Tue, 26 Nov 2019 13:45:31 -0800 (PST)
-Received: from [192.168.1.124] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 37D3B3F52E;
-        Tue, 26 Nov 2019 13:45:26 -0800 (PST)
-Subject: Re: [PATCH v2] dma-mapping: treat dev->bus_dma_mask as a DMA limit
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Christoph Hellwig <hch@lst.de>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-ide@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
-        linux-acpi@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        James Hogan <jhogan@kernel.org>, Len Brown <lenb@kernel.org>,
-        devicetree@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        id S1726180AbfKZVuY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 26 Nov 2019 16:50:24 -0500
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A4D32064B;
+        Tue, 26 Nov 2019 21:50:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574805023;
+        bh=fviU4DYleNx/9leEWr8KlLRaZcRV5/31mbcIkscLwXI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=uUIlGVPyKOrvuHVpQv/b+ruVHCQDTlDu1+qzEemw7EkSDCS8/n4JPZHteVMdX0WFZ
+         91sGaPq8CDozUc+9UqG1loem0V7LuABz1cFlkueEdKM8Bnyqsc6Xkrw3oMKIRDoyoo
+         AdKDLXRSe79ve81TcXBrMFWSSipAW0nQkoXOLgX0=
+Date:   Tue, 26 Nov 2019 15:50:21 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     andrew.murray@arm.com, maz@kernel.org,
+        linux-kernel@vger.kernel.org, james.quinlan@broadcom.com,
+        mbrugger@suse.com, f.fainelli@gmail.com, phil@raspberrypi.org,
+        wahrenst@gmx.net, jeremy.linton@arm.com, linux-pci@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        Robin Murphy <robin.murphy@arm.com>,
         linux-arm-kernel@lists.infradead.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
-        iommu@lists.linux-foundation.org, linuxppc-dev@lists.ozlabs.org
-References: <20191121092646.8449-1-nsaenzjulienne@suse.de>
- <20191123165108.GA15306@ubuntu-x2-xlarge-x86> <20191125074412.GA30595@lst.de>
- <0b851d0e-37c7-062e-c287-05f8c8a54c16@arm.com>
- <45feed391bbd95c46f64b31cf8817d4f773c8da1.camel@suse.de>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <935d65b4-a28e-d7b9-7392-42fec71b5150@arm.com>
-Date:   Tue, 26 Nov 2019 21:45:19 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
+        linux-acpi@vger.kernel.org, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        iommu@lists.linux-foundation.org
+Subject: Re: [PATCH v3 0/7] Raspberry Pi 4 PCIe support
+Message-ID: <20191126215020.GA191414@google.com>
 MIME-Version: 1.0
-In-Reply-To: <45feed391bbd95c46f64b31cf8817d4f773c8da1.camel@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191126091946.7970-1-nsaenzjulienne@suse.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2019-11-26 6:51 pm, Nicolas Saenz Julienne wrote:
-> On Mon, 2019-11-25 at 16:33 +0000, Robin Murphy wrote:
->> On 25/11/2019 7:44 am, Christoph Hellwig wrote:
->>> On Sat, Nov 23, 2019 at 09:51:08AM -0700, Nathan Chancellor wrote:
->>>> Just as an FYI, this introduces a warning on arm32 allyesconfig for me:
->>>
->>> I think the dma_limit argument to iommu_dma_alloc_iova should be a u64
->>> and/or we need to use min_t and open code the zero exception.
->>>
->>> Robin, Nicolas - any opinions?
->>
->> Yeah, given that it's always held a mask I'm not entirely sure why it
->> was ever a dma_addr_t rather than a u64. Unless anyone else is desperate
->> to do it I'll get a cleanup patch ready for rc1.
-> 
-> Sounds good to me too
-> 
-> Robin, since I started the mess, I'll be happy to do it if it helps offloading
-> some work from you.
+On Tue, Nov 26, 2019 at 10:19:38AM +0100, Nicolas Saenz Julienne wrote:
+> This series aims at providing support for Raspberry Pi 4's PCIe
+> controller, which is also shared with the Broadcom STB family of
+> devices.
 
-No worries - your change only exposed my original weird decision ;)  On 
-second look the patch was literally a trivial one-liner, so I've written 
-it up already.
+> Jim Quinlan (3):
+>   dt-bindings: PCI: Add bindings for brcmstb's PCIe device
+>   PCI: brcmstb: add Broadcom STB PCIe host controller driver
+>   PCI: brcmstb: add MSI capability
 
-Cheers,
-Robin.
+Please update these subjects to match the others, i.e., capitalize
+"Add".  Also, I think "Add MSI capability" really means "Add support
+for MSI ..."; in PCIe terms the "MSI Capability" is a structure in
+config space and it's there whether the OS supports it or not.
+
+No need to repost just for this.
+
+> Nicolas Saenz Julienne (4):
+>   linux/log2.h: Add roundup/rounddown_pow_two64() family of functions
+>   ARM: dts: bcm2711: Enable PCIe controller
+>   MAINTAINERS: Add brcmstb PCIe controller
+>   arm64: defconfig: Enable Broadcom's STB PCIe controller
