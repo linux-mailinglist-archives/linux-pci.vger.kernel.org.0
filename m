@@ -2,75 +2,68 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1AE5F10ACD4
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Nov 2019 10:48:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 12C6010AE58
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Nov 2019 11:59:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726181AbfK0Jsu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 Nov 2019 04:48:50 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:34088 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726133AbfK0Jsu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Nov 2019 04:48:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=P/yUKvXVbQkE33SlewRoaK2e7mxmW3hqYImnmOVQTMY=; b=nnf/Dbqtyj/YKaXQc9zwfbcXT
-        fYQkrY7TWnYTbcYlq8kmwqWaBuLTFhEPhEVKOakSb87v9aO3PyyDQmfbauQ0PY+L8pl0UcltCkDSl
-        YrzIOXfxnl5MC9pofSy5LUch4BKNXlkOkaZDJ87irhNSqb5w0ZG2SQv/N56cF3o1jvDk6KGczNr4y
-        /yfAcby9eY7zR0Bndxb8sEROZ6jAOG3Z96f4LgZ7DZi7HhRhp1QIeCQC5ThuDbIX6e/lUj0NANUvQ
-        s8Dp6ePSDnTsxWF1Ycm5CPb/oayT6G0zgibpPd3+uTug98BOMc2VmttRSazO7k9vMtQGKo6n9vTjC
-        wGWqZ2VJg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iZtwC-0006qV-2H; Wed, 27 Nov 2019 09:48:44 +0000
-Date:   Wed, 27 Nov 2019 01:48:44 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lorenzo.pieralisi@arm.com, andrew.murray@arm.com,
-        bhelgaas@google.com, kishon@ti.com, thierry.reding@gmail.com,
-        Jisheng.Zhang@synaptics.com, jonathanh@nvidia.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH 1/4] PCI: dwc: Add new feature to skip core initialization
-Message-ID: <20191127094844.GA21122@infradead.org>
-References: <20191113090851.26345-1-vidyas@nvidia.com>
- <20191113090851.26345-2-vidyas@nvidia.com>
+        id S1726673AbfK0K7j (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 27 Nov 2019 05:59:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33638 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726240AbfK0K7j (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 27 Nov 2019 05:59:39 -0500
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 648862071E
+        for <linux-pci@vger.kernel.org>; Wed, 27 Nov 2019 10:59:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574852378;
+        bh=MCpEOE5vXkp/TLtWfq/5Qoio1Rf8C0b6msp7BvaJnCw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=sitl8TCjgEMU+PW0gRQBGFqnl1wr5qAURH2zuVSPssYVBxEr0mYz83XBunhWtc0gA
+         GYy2jci5Wy6nWetFKQaCV7Y+7DnApNEJK1C73tWX07HWh9Pv1uaGwrl9pC5eGjeOwS
+         YXiuYGd8jbL8Dk6QKU+IIwO6Fmu6dUVXpp34scnc=
+Received: by mail-qk1-f173.google.com with SMTP id m16so19031538qki.11
+        for <linux-pci@vger.kernel.org>; Wed, 27 Nov 2019 02:59:38 -0800 (PST)
+X-Gm-Message-State: APjAAAUDaA8GpsFXGCVIlHOi4Dao2CjMIc+6Tw3J3h0hoNRlQR5j8glM
+        7T/deJPKUnDoFslyiEkvUNY3EjH86s0u6tk1xAM=
+X-Google-Smtp-Source: APXvYqwTN9F0eFceWFgZarzm5oysR9AAku3lU/GSNSvf682xFJhgeujv+L5Fas9b6peKSRsiGE4+Hie8jf/usIrOSbE=
+X-Received: by 2002:a05:620a:1327:: with SMTP id p7mr3630409qkj.148.1574852377544;
+ Wed, 27 Nov 2019 02:59:37 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191113090851.26345-2-vidyas@nvidia.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <20191115135842.119621-1-wei.liu@kernel.org> <20191126230524.GA197236@google.com>
+In-Reply-To: <20191126230524.GA197236@google.com>
+From:   Wei Liu <wei.liu@kernel.org>
+Date:   Wed, 27 Nov 2019 10:59:26 +0000
+X-Gmail-Original-Message-ID: <CAHd7Wqw49hB3++Td00=xccgJoqPLye_DvYv8+PYjxHWbDm5DVg@mail.gmail.com>
+Message-ID: <CAHd7Wqw49hB3++Td00=xccgJoqPLye_DvYv8+PYjxHWbDm5DVg@mail.gmail.com>
+Subject: Re: [PATCH] PCI: build Broadcom PAXC quirks unconditionally
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Wei Liu <wei.liu@kernel.org>, linux-pci@vger.kernel.org,
+        rjui@broadcom.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 02:38:48PM +0530, Vidya Sagar wrote:
-> +	if (ep->ops->get_features) {
-> +		epc_features = ep->ops->get_features(ep);
-> +		if (epc_features->skip_core_init)
-> +			return 0;
->  	}
->  
-> +	return dw_pcie_ep_init_complete(ep);
+On Tue, 26 Nov 2019 at 23:05, Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Fri, Nov 15, 2019 at 01:58:42PM +0000, Wei Liu wrote:
+> > CONFIG_PCIE_IPROC_PLATFORM only gets defined when the driver is built
+> > in.  Removing the ifdef will allow us to build the driver as a module.
+> >
+> > Signed-off-by: Wei Liu <wei.liu@kernel.org>
+>
+> Sorry, I missed this thinking it would be under drivers/pci/controller
+> and hence handled by Lorenzo.
+>
+> So I guess this doesn't fix a build problem, but without this patch,
+> we just don't run the quirk if the driver is a module, right?
+>
 
-This calling convention is strange.  Just split the early part of
-dw_pcie_ep_init into an dw_pcie_ep_early and either add a tiny
-wrapper like:
+Yes, this is correct.
 
-int dw_pcie_ep_init(struct dw_pcie_ep *ep)
-{
-	int error;
+Without this patch, the quirk doesn't get to run if the driver is a module.
 
-	error = dw_pcie_ep_init_early(ep);
-	if (error)
-		return error;
-	return dw_pcie_ep_init_late(ep);
-}
-
-or just open code that in the few callers.  That keeps the calling
-conventions much simpler and avoids relying on a callback and flag.
+Wei.
