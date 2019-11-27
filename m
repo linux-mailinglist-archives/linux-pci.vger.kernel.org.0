@@ -2,74 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5201E10B4A2
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Nov 2019 18:38:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1BB8B10B51B
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Nov 2019 19:06:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbfK0Riv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 Nov 2019 12:38:51 -0500
-Received: from ale.deltatee.com ([207.54.116.67]:57182 "EHLO ale.deltatee.com"
+        id S1726947AbfK0SG0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 27 Nov 2019 13:06:26 -0500
+Received: from foss.arm.com ([217.140.110.172]:51138 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726729AbfK0Riv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 27 Nov 2019 12:38:51 -0500
-Received: from s0106ac1f6bb1ecac.cg.shawcable.net ([70.73.163.230] helo=[192.168.11.155])
-        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1ia1H3-0003xR-Id; Wed, 27 Nov 2019 10:38:46 -0700
-To:     James Sewart <jamessewart@arista.com>, linux-pci@vger.kernel.org
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Dmitry Safonov <dima@arista.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-References: <20191120193228.GA103670@google.com>
- <6A902F0D-FE98-4760-ADBB-4D5987D866BE@arista.com>
- <20191126173833.GA16069@infradead.org>
- <547214A9-9FD0-4DD5-80E1-1F5A467A0913@arista.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <9c54c5dd-702c-a19b-38ba-55ab73b24729@deltatee.com>
-Date:   Wed, 27 Nov 2019 10:38:42 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        id S1726729AbfK0SG0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 27 Nov 2019 13:06:26 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1924431B;
+        Wed, 27 Nov 2019 10:06:25 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 210853F6C4;
+        Wed, 27 Nov 2019 10:06:20 -0800 (PST)
+Subject: Re: [PATCH v3 1/7] linux/log2.h: Add roundup/rounddown_pow_two64()
+ family of functions
+To:     Leon Romanovsky <leon@kernel.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     andrew.murray@arm.com, maz@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        james.quinlan@broadcom.com, mbrugger@suse.com,
+        f.fainelli@gmail.com, phil@raspberrypi.org, wahrenst@gmx.net,
+        jeremy.linton@arm.com, linux-pci@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        iommu@lists.linux-foundation.org
+References: <20191126091946.7970-1-nsaenzjulienne@suse.de>
+ <20191126091946.7970-2-nsaenzjulienne@suse.de>
+ <20191126125137.GA10331@unreal>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <6e0b9079-9efd-2884-26d1-3db2d622079d@arm.com>
+Date:   Wed, 27 Nov 2019 18:06:18 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <547214A9-9FD0-4DD5-80E1-1F5A467A0913@arista.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20191126125137.GA10331@unreal>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 70.73.163.230
-X-SA-Exim-Rcpt-To: helgaas@kernel.org, alex.williamson@redhat.com, dima@arista.com, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, 0x7f454c46@gmail.com, hch@infradead.org, linux-pci@vger.kernel.org, jamessewart@arista.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        GREYLIST_ISWHITE autolearn=ham autolearn_force=no version=3.4.2
-Subject: Re: [PATCH v3 1/2] PCI: Add parameter nr_devfns to pci_add_dma_alias
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On 26/11/2019 12:51 pm, Leon Romanovsky wrote:
+> On Tue, Nov 26, 2019 at 10:19:39AM +0100, Nicolas Saenz Julienne wrote:
+>> Some users need to make sure their rounding function accepts and returns
+>> 64bit long variables regardless of the architecture. Sadly
+>> roundup/rounddown_pow_two() takes and returns unsigned longs. Create a
+>> new generic 64bit variant of the function and cleanup rougue custom
+>> implementations.
+> 
+> Is it possible to create general roundup/rounddown_pow_two() which will
+> work correctly for any type of variables, instead of creating special
+> variant for every type?
 
+In fact, that is sort of the case already - roundup_pow_of_two() itself 
+wraps ilog2() such that the constant case *is* type-independent. And 
+since ilog2() handles non-constant values anyway, might it be reasonable 
+to just take the strongly-typed __roundup_pow_of_two() helper out of the 
+loop as below?
 
-On 2019-11-27 6:27 a.m., James Sewart wrote:
->   * This helper encodes an 8-bit devfn as a bit number in dma_alias_mask
->   * which is used to program permissible bus-devfn source addresses for DMA
-> @@ -5873,8 +5874,12 @@ int pci_set_vga_state(struct pci_dev *dev, bool decode,
->   * cannot be left as a userspace activity).  DMA aliases should therefore
->   * be configured via quirks, such as the PCI fixup header quirk.
->   */
-> -void pci_add_dma_alias(struct pci_dev *dev, u8 devfn)
-> +void pci_add_dma_alias(struct pci_dev *dev, u8 devfn_from, int nr_devfns)
->  {
-> +	int devfn_to = devfn_from + nr_devfns - 1;
-> +
-> +	BUG_ON(nr_devfns < 1);
+Robin
 
-Why not just make nr_devfns unsigned and do nothing if it's zero? It
-might also be worth checking that nr_devfns + devfn_from is less than
-U8_MAX... But I'd probably avoid the BUG_ON and just truncate it.
+----->8-----
+diff --git a/include/linux/log2.h b/include/linux/log2.h
+index 83a4a3ca3e8a..e825f8a6e8b5 100644
+--- a/include/linux/log2.h
++++ b/include/linux/log2.h
+@@ -172,11 +172,8 @@ unsigned long __rounddown_pow_of_two(unsigned long n)
+   */
+  #define roundup_pow_of_two(n)			\
+  (						\
+-	__builtin_constant_p(n) ? (		\
+-		(n == 1) ? 1 :			\
+-		(1UL << (ilog2((n) - 1) + 1))	\
+-				   ) :		\
+-	__roundup_pow_of_two(n)			\
++	(__builtin_constant_p(n) && (n == 1)) ?	\
++	1 : (1UL << (ilog2((n) - 1) + 1))	\
+   )
 
-Logan
+  /**
