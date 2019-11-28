@@ -2,62 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9AD0D10CA99
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Nov 2019 15:46:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E8F710CB14
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Nov 2019 15:59:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbfK1OqJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Nov 2019 09:46:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35972 "EHLO mail.kernel.org"
+        id S1727755AbfK1O7Y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Nov 2019 09:59:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726556AbfK1OqJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 28 Nov 2019 09:46:09 -0500
+        id S1727751AbfK1O7Y (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 28 Nov 2019 09:59:24 -0500
 Received: from localhost (unknown [69.71.4.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D43A7208E4;
-        Thu, 28 Nov 2019 14:46:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FA9821771;
+        Thu, 28 Nov 2019 14:59:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574952369;
-        bh=aABX5Q1BvqEKbAEBAop5t1E8OsXAl/GaY2nZT/5zL6o=;
+        s=default; t=1574953163;
+        bh=1tWSgyh5Bb0cADmA96mIGQLXOEiXVxaCkY2bgc7V5Ck=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=1LUFUO866b2Rej6uHJUpLgpxoW8pCIwrTp/vbhGwksORP5DOq85lTzdQWurOU6yLa
-         b1rfS0zSZKqIFfntn/LR6p9T8WQejBKc6ljQ0+kUmP7STiHzcUAsmcLhRbvLEq4uQj
-         mJNlVnQQxBULrcaoiozskkZTvJHfvFzSupvWW10Q=
-Date:   Thu, 28 Nov 2019 08:46:06 -0600
+        b=aUjyC5R/dL/1RGcvEJ0kpnKCST8JwBJqimo4aJiaKdJwZc0oCXibvi+4jzky3/w95
+         E3n2GBnhC92mMBDa38/M+3wB3ckUSs7O/WU3jJ8dzpQWJ+NshFZPvD6e6o2pIjGJee
+         ftaMp4WiYaR04rgDOOY73UASaOmViUYk+vInNP7A=
+Date:   Thu, 28 Nov 2019 08:59:21 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Dilip Kota <eswara.kota@linux.intel.com>,
-        linux-pci@vger.kernel.org, gustavo.pimentel@synopsys.com,
-        andrew.murray@arm.com, linux-kernel@vger.kernel.org,
-        andriy.shevchenko@intel.com, rdunlap@infradead.org,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com
-Subject: Re: [PATCH v1 0/1]Fix build warning and errors
-Message-ID: <20191128144606.GA260904@google.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Vidya Sagar <vidyas@nvidia.com>, linux-pci@vger.kernel.org
+Subject: Re: Issue with 395f121e6199 ("PCI/PM: Wait for device to become
+ ready after power-on")
+Message-ID: <20191128145921.GA5570@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191128101954.GA30478@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20191128082314.GD2665@lahna.fi.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 28, 2019 at 10:19:55AM +0000, Lorenzo Pieralisi wrote:
-> [+Bjorn]
+On Thu, Nov 28, 2019 at 10:23:14AM +0200, Mika Westerberg wrote:
+> Hi,
 > 
-> On Thu, Nov 28, 2019 at 04:31:12PM +0800, Dilip Kota wrote:
-> > Mark Intel PCIe driver depends on MSI IRQ Domain to fix
-> > the below warnings and respective build errors.
+> For some reason I don't see this in linux-pci archives. Maybe it was not
+> accepted because of the attachment? In any case the full dmesg can be
+> found here as well:
+> 
+>   https://gist.github.com/westeri/ca2574a4e48dc6e3eb76184922e103e5
+> 
+> On Wed, Nov 27, 2019 at 05:34:37PM +0200, Mika Westerberg wrote:
+> > Hi,
 > > 
-> > WARNING: unmet direct dependencies detected for PCIE_DW_HOST
-> >   Depends on [n]: PCI [=y] && PCI_MSI_IRQ_DOMAIN [=n]
-> >   Selected by [y]:
-> >   - PCIE_INTEL_GW [=y] && PCI [=y] && OF [=y] && (X86 [=y] || COMPILE_TEST [=n])
-> 
-> I don't know yet if we fix it up or I drop the series, given how
-> late this is in the release cycle and very short time this code
-> has been in -next.
+> > I noticed that latest Bjorn's pci/pm branch breaks native PCIe hotplug
+> > so that when I unplug a device (connected over TBT) the pciehp notices
+> > it but then the core PCI code starts waiting for all the devices that
+> > are now gone:
+> > 
+> > [  160.344476] pcieport 0000:04:04.0: pciehp: pciehp_check_link_active: lnk_status = 5041
+> > [  160.344531] pcieport 0000:04:04.0: pciehp: Slot(4): Card not present
+> > [  160.346004] pcieport 0000:04:04.0: pciehp: pciehp_unconfigure_device: domain:bus:dev = 0000:3a:00
+> > [  161.421569] pcieport 0000:3a:00.0: not ready 1023ms after Switch to D0; waiting
+> > [  162.509610] pcieport 0000:3a:00.0: not ready 2047ms after Switch to D0; waiting
+> > [  164.621620] pcieport 0000:3a:00.0: not ready 4095ms after Switch to D0; waiting
+> > [  169.165529] pcieport 0000:3a:00.0: not ready 8191ms after Switch to D0; waiting
+> > [  177.869521] pcieport 0000:3a:00.0: not ready 16383ms after Switch to D0; waiting
+> > [  194.765581] pcieport 0000:3a:00.0: not ready 32767ms after Switch to D0; waiting
+> > ...
+> > 
+> > It seems to continue forever so the devices are not removed from the
+> > system.
+> > 
+> > The test system used here is Dell XPS 9380 but it happens also on other
+> > systems that support native PCIe hotplug.
+> > 
+> > Reverting 395f121e6199 ("PCI/PM: Wait for device to become ready after
+> > power-on") makes the problem go away.
+> > 
+> > I've attached full dmesg from the system. The way I reproduce this is
+> > that I boot the system up (no device connected yet), the I connect TBT
+> > dock that includes the PCIe switch etc. Then I unplug the dock. The
+> > unplug happens around 160.335355 in the dmesg.
 
-I think given the timing and the holiday we need to drop it for now.
+Thanks for testing this.  I dropped 395f121e6199 ("PCI/PM: Wait for
+device to become ready after power-on") for now.  We can sort this out
+for v5.6.
