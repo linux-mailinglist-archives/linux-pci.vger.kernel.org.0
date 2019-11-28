@@ -2,137 +2,196 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A9EEA10C97D
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Nov 2019 14:32:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DD5F810CA49
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Nov 2019 15:21:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbfK1Nc1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Nov 2019 08:32:27 -0500
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:17244 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726496AbfK1Nc1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Nov 2019 08:32:27 -0500
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xASDQga5021021;
-        Thu, 28 Nov 2019 05:28:25 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=pfpt0818;
- bh=1j8OKNv/6FnUysx+Uq/1D3BAHkY4YrfhgGQ9oC34BJo=;
- b=jeCnXLY9DloHccMoek+VyRuvdNgqoxu/QCvUm1JGYfLgXZGx10Z8fDmiLSFatIbTEkXK
- 7fIatbNm3RHXrU9CAoPJ94RdAXyXpijiQ1e3EXLD3gRPRM4PteYo0gFWAw0wkOLMocsh
- CrRT+TSi0ui1aE4Ty2/HAYBEgLqf/vEriVAqRfIkcCiGPbgmmclIvt9lJCJTTvPcHl/K
- 2zeZJEa9Rbig9DUvzHMOn9jxVFKBiuDDLqsVSPFXv5EzkxIOAhX9VVp3rouQD/Rs3G1L
- 0/CrtKGK+7nYF5zKUCqL1SEdwBdmL9F2P3MkstXUGCmpad4//+zr09q1Hi3GNjHOudIZ Qg== 
-Received: from sc-exch04.marvell.com ([199.233.58.184])
-        by mx0b-0016f401.pphosted.com with ESMTP id 2whd08qc87-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Thu, 28 Nov 2019 05:28:25 -0800
-Received: from SC-EXCH01.marvell.com (10.93.176.81) by SC-EXCH04.marvell.com
- (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Thu, 28 Nov
- 2019 05:28:24 -0800
-Received: from NAM01-SN1-obe.outbound.protection.outlook.com (104.47.32.58) by
- SC-EXCH01.marvell.com (10.93.176.81) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Thu, 28 Nov 2019 05:28:23 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EcFFzaKAEo+gYdQbxIRfUa9jF9iV5WaYrcARHGtSbfYdOy9gycCa3gK5jmKTK/3nkPSLGlAKzcnjSpgvlBWzDoWcv4nlyq/2ag3HfpRAEzJHl908hb6+QEQwWxAH9sQW6sTghfXX8iVdkoYkox0bOOjTodDugVn1BT8XIfA8t3z2TrAvV1J36QTzGk5hr2P5ILDlSJGuDKmzTaHpXRC9iWrN3g9T2x6e2kCaH29vv7+1Mm6FMB3Oarx/f0Yvxu1FruRqgr1z1vcsmjIcNhGtSX4gCJNTdIwbKB02XqqAmLcDm5r9+3q+/8mS636AEjGQJu3lgDBcRymeLcYHP8Wk0w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1j8OKNv/6FnUysx+Uq/1D3BAHkY4YrfhgGQ9oC34BJo=;
- b=GmQSI9bQTgNyescMTwAoaYbgttqslVzbdYDupo58ljl7d2YWrZzE9v6ZCLlgh7C+e/dXI3yXGTzEwmaUM2MZAuD/C+5junqn1NHS9+unfBk3ZjFZ1VcvKTyaJNEAhdxSjYn6l0dRYpl1PN/hQGlVJCNy5KaTIhrgvHotns220ojGoIx6s2OmeXTSA+t1Ju3uOBH3+Vz3bDe82LmKqRoMbyZ9MTjoQSSB0Z2d0kScCii4VdoCtzg7QwisXvHyergNdOL7bkX2awBIvTihCo/YamuKlj3ILKJ/nI/TUiLonNsTLEMATbDmL0V5dKBk20xZyYkiYGZ2H+Qy+9Z2GKirUA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
+        id S1726582AbfK1OVi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Nov 2019 09:21:38 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:43933 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbfK1OVi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Nov 2019 09:21:38 -0500
+Received: by mail-ot1-f67.google.com with SMTP id l14so22305477oti.10;
+        Thu, 28 Nov 2019 06:21:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1j8OKNv/6FnUysx+Uq/1D3BAHkY4YrfhgGQ9oC34BJo=;
- b=C2zEKw77mDQtjm6uOwjEF9bLRvLQvA6fq1VPXgWR2kBu5sgwpTHdL7E2ujAui1ziUFDsED/+HkIGnjjVH1O+MQfuvrq8BbslzUbItmnl67v8tXPkCD0ttIqt2t/LjXEMjnrNyYWmluuRbl9CB2MVLXULenDdCQexdTFDhX/4pwE=
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.237.10) by
- MN2PR18MB2765.namprd18.prod.outlook.com (20.179.22.20) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2474.21; Thu, 28 Nov 2019 13:28:22 +0000
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::657c:6c81:859d:106]) by MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::657c:6c81:859d:106%7]) with mapi id 15.20.2474.023; Thu, 28 Nov 2019
- 13:28:21 +0000
-From:   Robert Richter <rrichter@marvell.com>
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "tim@buttersideup.com" <tim@buttersideup.com>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "jdelvare@suse.com" <jdelvare@suse.com>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
-        "richard@nod.at" <richard@nod.at>,
-        "vigneshr@ti.com" <vigneshr@ti.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH 4/6] edac: i82443bxgx_edac: use pci_get_device_by_id()
-Thread-Topic: [PATCH 4/6] edac: i82443bxgx_edac: use pci_get_device_by_id()
-Thread-Index: AQHVpe+0OOeXN/A3hUyun7nCMMonXg==
-Date:   Thu, 28 Nov 2019 13:28:21 +0000
-Message-ID: <20191128132812.tgqg7sak45ccantn@rric.localdomain>
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=pAOuUXPMeoRavXucH0FHeoL8ht+w96IWOMyp3rFxFc8=;
+        b=KBsr5LptVS2b+zcFfq8COkxUXZcEB1jGnIvoAk8NwagRT1ELTfEAXLdstWJYDI6aaB
+         5ikq8r7yeXpZJUsmuCTsxVZBwkn5e6kdd3PYtYjd8hk5CMTpB+upcSPMdHn7RqXcRyw9
+         RinpBwEXjmy04jpU+6TDm7qfEQIz8RRtOLvhFl/p/3aDgIWn9sG3G5vb3HKjgi+KSAAt
+         ZaKa8rtzMcIV6WLvWbALGQEksQ5F0K8jfcop3LjNWaYqAbqrFM454dVpuZ9AJMzROeHP
+         h6bHdcHeRJOvB9+/tVwZlbfYUfLwkG8drmkGEA3Rtv+y2WYKJmiBXol2B/oaLD4Jmf2p
+         cFjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pAOuUXPMeoRavXucH0FHeoL8ht+w96IWOMyp3rFxFc8=;
+        b=l/jhGirmfGJk+Ll0MmeGHYuAzTqXFt0aS5L8n3mgzyL4BrdTUnVJBzSC+ghQlLwVAA
+         gs2RKFKbqHzqFDqa/GRThcdds3QRsXkCCvMaDDwfFTcTDuPkonkkHDDcHlLC6CFiu8lW
+         FtsfXikCRfo/yF0SW5vNaJA4JYES0BC+4C4wIGk9oziyOsRzseBMUhdYtuXr7YSWc8Bk
+         imeiNhoIu9BJO2zfRWcWXE1IHf2Kf9KXxrjKrBdts3euv3zRhKPIRgFRqSgNbUsGR9H1
+         yM5hl6tO5lOiqX4kDxMi6Zb0s5vKzFg6xjWvK3usjlNoKq8lDNhOlKict5grFjVW5qNA
+         LDcg==
+X-Gm-Message-State: APjAAAVBkktTK4wRzI0wWqeD1uZgIpLrqdxwwTWvLKsvUqS9dZN4PbzB
+        pVCwBRM3/f8bLd7ztr2s4sCCjcay
+X-Google-Smtp-Source: APXvYqyg/dOuWAh3aONJFSxiOoY0asq6842kRVYbO07guEulmAV3bFhidrH7ncZ6zHHYAH92ywgZtA==
+X-Received: by 2002:a9d:744a:: with SMTP id p10mr7122237otk.235.1574950896159;
+        Thu, 28 Nov 2019 06:21:36 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id l32sm6126339otl.74.2019.11.28.06.21.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 28 Nov 2019 06:21:34 -0800 (PST)
+Subject: Re: [PATCH 6/6] (v3) drivers: hwmon: i5k_amb: simplify probing /
+ device identification
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        linux-kernel@vger.kernel.org
+Cc:     tim@buttersideup.com, james.morse@arm.com, rrichter@marvell.com,
+        jdelvare@suse.com, miquel.raynal@bootlin.com, richard@nod.at,
+        vigneshr@ti.com, linux-crypto@vger.kernel.org,
+        linux-edac@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-pci@vger.kernel.org
 References: <20191128125406.10417-1-info@metux.net>
- <20191128125406.10417-4-info@metux.net>
-In-Reply-To: <20191128125406.10417-4-info@metux.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR0502CA0002.eurprd05.prod.outlook.com
- (2603:10a6:3:e3::12) To MN2PR18MB3408.namprd18.prod.outlook.com
- (2603:10b6:208:165::10)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [31.208.96.227]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f4159e12-6a41-47da-ba4f-08d77406d678
-x-ms-traffictypediagnostic: MN2PR18MB2765:
-x-microsoft-antispam-prvs: <MN2PR18MB2765EC5AF867EEF7CD59105CD9470@MN2PR18MB2765.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-forefront-prvs: 0235CBE7D0
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(376002)(136003)(346002)(39860400002)(199004)(189003)(4326008)(6512007)(66476007)(64756008)(9686003)(66946007)(25786009)(66446008)(1250700005)(1076003)(4744005)(6506007)(316002)(66556008)(6246003)(478600001)(14454004)(7416002)(305945005)(386003)(256004)(14444005)(8936002)(99286004)(8676002)(5660300002)(86362001)(7736002)(102836004)(52116002)(53546011)(54906003)(66066001)(229853002)(6916009)(76176011)(2906002)(446003)(6486002)(71190400001)(81166006)(6436002)(26005)(81156014)(71200400001)(11346002)(186003)(6116002)(3846002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2765;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: sAO6A77pv9kXBlPZhOKcDnOriHrrygbPHpJUKJRVk+ZnklXbvCaj1iJU5iwV7M9qRZ3lpYtqtj1eqh2WLHBXi1fIdIeO5V1ZaK7do6ALvBlU4nItrlZaBtMcpnf2v+eeUdrmWyp5Bf1QmKOYylgVnGI0pYjE/kFyYSt9T21x5kmnR9mVlv8nB7Rif3YzYWPtm3W7NF0HlkS8xZ8HpFcqIDckwg9T2RKMQ8oDyBYeHul9S7ysFphdgENf+Q0IARtwsp3+2MnU26qK85y5FFY1m1W152ye4yDFR6SsYUQKkB61IYPbezs69PJ2zUXGChBlvQMwHdlxvflRmUwyPvfIrznxJcH0u3n9WckK1fZQZpWJJ4JoPng0ipvte8XpuSiV4bViqT86QFvNFoXD4Ow4oc6nUYJ3NzeBZXiSWfixQ2a31JVgDOXDgD+S44CvKTv3
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2342D6B7712EB243A1530E0A6D4956B2@namprd18.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+ <20191128125406.10417-6-info@metux.net>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <bee7ba11-6b4a-1cc7-ee8c-ddf17cb8daca@roeck-us.net>
+Date:   Thu, 28 Nov 2019 06:21:31 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: f4159e12-6a41-47da-ba4f-08d77406d678
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Nov 2019 13:28:21.6104
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Dc/QHMiIsrm79g4Y9+1fvA8HkuWcJXCu4qa8UawY9v/aO3Nw4VV49pr/cHorxXwdSOEZAOXJq9wR1nrzm6wiEw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2765
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-28_03:2019-11-28,2019-11-28 signatures=0
+In-Reply-To: <20191128125406.10417-6-info@metux.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 28.11.19 13:54:04, Enrico Weigelt, metux IT consult wrote:
-> Use the new pci_get_device_by_id() helper in order to reduce
-> a bit of boilerplate.
+On 11/28/19 4:54 AM, Enrico Weigelt, metux IT consult wrote:
+> Simpilify the probing by putting all chip-specific data directly
+> into the pci match table, removing the redundant chipset_ids table.
+> 
+> Changes v3:
+>      * use pci_get_device_by_id() introduces by a previous patch
+>        of this queue
+> 
+> Changes v2:
+>      * use PCI_DEVICE_DATA() macro in the pci match table
+>      * directly pass the pci device id to i5k_channel_probe(),
+>        instead of computing it internally by extra offset parameter
+> 
+> Submitted: 2019-06-06
+> Signed-off-by: Enrico Weigelt <info@metux.net>
 
-> -		while (mci_pdev =3D=3D NULL && id->vendor !=3D 0) {
-> -			mci_pdev =3D pci_get_device(id->vendor,
-> -					id->device, NULL);
-> +		while (mci_pdev =3D=3D NULL && i82443bxgx_pci_tbl[i].vendor) {
-> +			mci_pdev =3D pci_get_device_by_id(
-> +				&i82443bxgx_pci_tbl[i]);
+I don't immediately see how this is better. I am not even sure if it is correct.
 
-I don't see how this is less boilerplate. Since this differs from the
-typical pattern for this it is less readable now.
+Guenter
 
--Robert
+> ---
+>   drivers/hwmon/i5k_amb.c | 38 +++++++++++++++-----------------------
+>   1 file changed, 15 insertions(+), 23 deletions(-)
+> 
+> diff --git a/drivers/hwmon/i5k_amb.c b/drivers/hwmon/i5k_amb.c
+> index b09c39abd3a8..cb85607d104f 100644
+> --- a/drivers/hwmon/i5k_amb.c
+> +++ b/drivers/hwmon/i5k_amb.c
+> @@ -414,16 +414,14 @@ static int i5k_amb_add(void)
+>   }
+>   
+>   static int i5k_find_amb_registers(struct i5k_amb_data *data,
+> -					    unsigned long devid)
+> +				  const struct pci_device_id *devid)
+>   {
+>   	struct pci_dev *pcidev;
+>   	u32 val32;
+>   	int res = -ENODEV;
+>   
+>   	/* Find AMB register memory space */
+> -	pcidev = pci_get_device(PCI_VENDOR_ID_INTEL,
+> -				devid,
+> -				NULL);
+> +	pcidev = pci_get_device_by_id(devid);
+>   	if (!pcidev)
+>   		return -ENODEV;
+>   
+> @@ -447,14 +445,15 @@ static int i5k_find_amb_registers(struct i5k_amb_data *data,
+>   	return res;
+>   }
+>   
+> -static int i5k_channel_probe(u16 *amb_present, unsigned long dev_id)
+> +static int i5k_channel_probe(u16 *amb_present, unsigned int vendor,
+> +			     unsigned int device)
+>   {
+>   	struct pci_dev *pcidev;
+>   	u16 val16;
+>   	int res = -ENODEV;
+>   
+>   	/* Copy the DIMM presence map for these two channels */
+> -	pcidev = pci_get_device(PCI_VENDOR_ID_INTEL, dev_id, NULL);
+> +	pcidev = pci_get_device(vendor, device, NULL);
+>   	if (!pcidev)
+>   		return -ENODEV;
+>   
+> @@ -473,23 +472,12 @@ static int i5k_channel_probe(u16 *amb_present, unsigned long dev_id)
+>   	return res;
+>   }
+>   
+> -static struct {
+> -	unsigned long err;
+> -	unsigned long fbd0;
+> -} chipset_ids[]  = {
+> -	{ PCI_DEVICE_ID_INTEL_5000_ERR, PCI_DEVICE_ID_INTEL_5000_FBD0 },
+> -	{ PCI_DEVICE_ID_INTEL_5400_ERR, PCI_DEVICE_ID_INTEL_5400_FBD0 },
+> -	{ 0, 0 }
+> -};
+> -
+> -#ifdef MODULE
+>   static const struct pci_device_id i5k_amb_ids[] = {
+> -	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_5000_ERR) },
+> -	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_5400_ERR) },
+> +	{ PCI_DEVICE_DATA(INTEL, 5000_ERR, PCI_DEVICE_ID_INTEL_5000_FBD0) },
+> +	{ PCI_DEVICE_DATA(INTEL, 5400_ERR, PCI_DEVICE_ID_INTEL_5400_FBD0) },
+>   	{ 0, }
+>   };
+>   MODULE_DEVICE_TABLE(pci, i5k_amb_ids);
+> -#endif
+>   
+>   static int i5k_amb_probe(struct platform_device *pdev)
+>   {
+> @@ -504,22 +492,26 @@ static int i5k_amb_probe(struct platform_device *pdev)
+>   	/* Figure out where the AMB registers live */
+>   	i = 0;
+>   	do {
+> -		res = i5k_find_amb_registers(data, chipset_ids[i].err);
+> +		res = i5k_find_amb_registers(data, &i5k_amb_ids[i]);
+>   		if (res == 0)
+>   			break;
+>   		i++;
+> -	} while (chipset_ids[i].err);
+> +	} while (i5k_amb_ids[i].device);
+>   
+>   	if (res)
+>   		goto err;
+>   
+>   	/* Copy the DIMM presence map for the first two channels */
+> -	res = i5k_channel_probe(&data->amb_present[0], chipset_ids[i].fbd0);
+> +	res = i5k_channel_probe(&data->amb_present[0],
+> +				i5k_amb_ids[i].vendor,
+> +				i5k_amb_ids[i].driver_data);
+>   	if (res)
+>   		goto err;
+>   
+>   	/* Copy the DIMM presence map for the optional second two channels */
+> -	i5k_channel_probe(&data->amb_present[2], chipset_ids[i].fbd0 + 1);
+> +	i5k_channel_probe(&data->amb_present[2],
+> +			  i5k_amb_ids[i].vendor,
+> +			  i5k_amb_ids[i].driver_data+1);
+>   
+>   	/* Set up resource regions */
+>   	reso = request_mem_region(data->amb_base, data->amb_len, DRVNAME);
+> 
+
