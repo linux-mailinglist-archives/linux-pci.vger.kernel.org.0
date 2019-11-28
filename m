@@ -2,91 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7CBA710CB2A
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Nov 2019 16:01:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3776610CE71
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Nov 2019 19:18:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbfK1PBO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Nov 2019 10:01:14 -0500
-Received: from mga09.intel.com ([134.134.136.24]:11723 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726446AbfK1PBO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 28 Nov 2019 10:01:14 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Nov 2019 07:01:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,253,1571727600"; 
-   d="scan'208";a="217612243"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 28 Nov 2019 07:01:11 -0800
-Received: by lahna (sSMTP sendmail emulation); Thu, 28 Nov 2019 17:01:10 +0200
-Date:   Thu, 28 Nov 2019 17:01:10 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Vidya Sagar <vidyas@nvidia.com>, linux-pci@vger.kernel.org
-Subject: Re: Issue with 395f121e6199 ("PCI/PM: Wait for device to become
- ready after power-on")
-Message-ID: <20191128150110.GQ2665@lahna.fi.intel.com>
-References: <20191128082314.GD2665@lahna.fi.intel.com>
- <20191128145921.GA5570@google.com>
+        id S1726545AbfK1SSP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Nov 2019 13:18:15 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:50054 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726510AbfK1SSP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Nov 2019 13:18:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=cDy8YEZHHQmJPDc+EtKXEJdfo3JTJLKwxHKLfb+ViwU=; b=ZN8V4dvOPLqlflxCXO62fyjqu
+        /JNAVPtRgb/p4jkc6iKWAA8MbwttszW6pcWbFitQbGl7ffc9zGnmj+l0TWLX5C9Cy30cRgXpCZ8Ph
+        dFnP4lPi/EG15cJ98hozwbm9782WXxlzfNbbaayriHNKr1tkKH7da85T7h+i2aOAgjNX5hODEVrTC
+        rAhSATZXaTdSif87D7gnPrRmoJV4jGJuxehSYe4Ngd9YA6ouP+rQ+MxO0TexcDhqGFTGnUpUc2bS/
+        iSP5v0JWhmn5yAYWQz253IRnLusVZd81/1PuEDamZfQHPLbrqCGFmuUhzkP3KP/hEMtUfyYTyAdMY
+        6R2VfRSzA==;
+Received: from [2601:1c0:6280:3f0::5a22]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iaOMm-0000aD-8b; Thu, 28 Nov 2019 18:18:12 +0000
+Subject: Re: [PATCH v1 1/1] PCI: dwc: Kconfig: Mark intel PCIe driver depends
+ on MSI IRQ Domain
+To:     Dilip Kota <eswara.kota@linux.intel.com>, linux-pci@vger.kernel.org
+Cc:     lorenzo.pieralisi@arm.com, gustavo.pimentel@synopsys.com,
+        andrew.murray@arm.com, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
+References: <cover.1574929426.git.eswara.kota@linux.intel.com>
+ <96078df4bfb6bb252e9a0a447a65a47c70d1fe7d.1574929426.git.eswara.kota@linux.intel.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <5418463a-a212-07a6-1762-c76a48f8e069@infradead.org>
+Date:   Thu, 28 Nov 2019 10:18:11 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191128145921.GA5570@google.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <96078df4bfb6bb252e9a0a447a65a47c70d1fe7d.1574929426.git.eswara.kota@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 28, 2019 at 08:59:21AM -0600, Bjorn Helgaas wrote:
-> On Thu, Nov 28, 2019 at 10:23:14AM +0200, Mika Westerberg wrote:
-> > Hi,
-> > 
-> > For some reason I don't see this in linux-pci archives. Maybe it was not
-> > accepted because of the attachment? In any case the full dmesg can be
-> > found here as well:
-> > 
-> >   https://gist.github.com/westeri/ca2574a4e48dc6e3eb76184922e103e5
-> > 
-> > On Wed, Nov 27, 2019 at 05:34:37PM +0200, Mika Westerberg wrote:
-> > > Hi,
-> > > 
-> > > I noticed that latest Bjorn's pci/pm branch breaks native PCIe hotplug
-> > > so that when I unplug a device (connected over TBT) the pciehp notices
-> > > it but then the core PCI code starts waiting for all the devices that
-> > > are now gone:
-> > > 
-> > > [  160.344476] pcieport 0000:04:04.0: pciehp: pciehp_check_link_active: lnk_status = 5041
-> > > [  160.344531] pcieport 0000:04:04.0: pciehp: Slot(4): Card not present
-> > > [  160.346004] pcieport 0000:04:04.0: pciehp: pciehp_unconfigure_device: domain:bus:dev = 0000:3a:00
-> > > [  161.421569] pcieport 0000:3a:00.0: not ready 1023ms after Switch to D0; waiting
-> > > [  162.509610] pcieport 0000:3a:00.0: not ready 2047ms after Switch to D0; waiting
-> > > [  164.621620] pcieport 0000:3a:00.0: not ready 4095ms after Switch to D0; waiting
-> > > [  169.165529] pcieport 0000:3a:00.0: not ready 8191ms after Switch to D0; waiting
-> > > [  177.869521] pcieport 0000:3a:00.0: not ready 16383ms after Switch to D0; waiting
-> > > [  194.765581] pcieport 0000:3a:00.0: not ready 32767ms after Switch to D0; waiting
-> > > ...
-> > > 
-> > > It seems to continue forever so the devices are not removed from the
-> > > system.
-> > > 
-> > > The test system used here is Dell XPS 9380 but it happens also on other
-> > > systems that support native PCIe hotplug.
-> > > 
-> > > Reverting 395f121e6199 ("PCI/PM: Wait for device to become ready after
-> > > power-on") makes the problem go away.
-> > > 
-> > > I've attached full dmesg from the system. The way I reproduce this is
-> > > that I boot the system up (no device connected yet), the I connect TBT
-> > > dock that includes the PCIe switch etc. Then I unplug the dock. The
-> > > unplug happens around 160.335355 in the dmesg.
+On 11/28/19 12:31 AM, Dilip Kota wrote:
+> Kernel compilation fails for i386 architecture as PCI_MSI_IRQ_DOMAIN
+> is not set.
 > 
-> Thanks for testing this.  I dropped 395f121e6199 ("PCI/PM: Wait for
-> device to become ready after power-on") for now.  We can sort this out
-> for v5.6.
+> Synopsys DesignWare framework depends on the PCI_MSI_IRQ_DOMAIN.
+> So mark the Intel PCIe controller driver dependency on PCI_MSI_IRQ_DOMAIN
+> as it uses the Synopsys DesignWare framework.
+> 
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
 
-Thanks!
+Passes my previously failing kernel configs.  Thanks.
+
+Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+
+
+> ---
+>  drivers/pci/controller/dwc/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+> index e580ae036d77..d8116ed7f3a4 100644
+> --- a/drivers/pci/controller/dwc/Kconfig
+> +++ b/drivers/pci/controller/dwc/Kconfig
+> @@ -212,6 +212,7 @@ config PCIE_ARTPEC6_EP
+>  config PCIE_INTEL_GW
+>  	bool "Intel Gateway PCIe host controller support"
+>  	depends on OF && (X86 || COMPILE_TEST)
+> +	depends on PCI_MSI_IRQ_DOMAIN
+>  	select PCIE_DW_HOST
+>  	help
+>  	  Say 'Y' here to enable PCIe Host controller support on Intel
+> 
+
+
+-- 
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
