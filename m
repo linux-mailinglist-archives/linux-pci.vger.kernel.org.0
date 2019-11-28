@@ -2,120 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C2B8F10C43C
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Nov 2019 08:08:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F20210C4F9
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Nov 2019 09:23:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726438AbfK1HIs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Nov 2019 02:08:48 -0500
-Received: from mout.web.de ([212.227.15.3]:38347 "EHLO mout.web.de"
+        id S1727141AbfK1IXR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Nov 2019 03:23:17 -0500
+Received: from mga04.intel.com ([192.55.52.120]:53174 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726301AbfK1HIs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 28 Nov 2019 02:08:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1574924919;
-        bh=AS07LnF2cF68ZWeFvVUCs6ObVlC4KunI8AEQAN8PYr0=;
-        h=X-UI-Sender-Class:Cc:References:Subject:To:From:Date:In-Reply-To;
-        b=sE+mqH0+Xdyr3r/rNpnjVHjJaa0P6epoC4HE9xWLJZnbS7S7h4xS0HW2zkRd0sbqK
-         6Prl+b5GUTj8ectd5goaKv/nu+HoIPBHmN1IFp1Ky57B2BI3A4CitDZFZPDBCa4UxX
-         lFStdV4KOpXv2CSPezAj9hhq67R3Y3Cd5f1OEdpA=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([78.49.104.135]) by smtp.web.de (mrweb004
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MTLwF-1iPOmu2aet-00SLMG; Thu, 28
- Nov 2019 08:08:39 +0100
-Cc:     Navid Emamdoost <emamd001@umn.edu>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        linux-kernel@vger.kernel.org
-References: <20191125195255.23740-1-navid.emamdoost@gmail.com>
-Subject: Re: [PATCH v2] PCI/IOV: Fix memory leak in pci_iov_add_virtfn()
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <64f48c0c-97e9-bdf0-14fc-ae126603ee51@web.de>
-Date:   Thu, 28 Nov 2019 08:08:31 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        id S1727042AbfK1IXR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 28 Nov 2019 03:23:17 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Nov 2019 00:23:16 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,252,1571727600"; 
+   d="scan'208";a="217551530"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 28 Nov 2019 00:23:14 -0800
+Received: by lahna (sSMTP sendmail emulation); Thu, 28 Nov 2019 10:23:14 +0200
+Date:   Thu, 28 Nov 2019 10:23:14 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Vidya Sagar <vidyas@nvidia.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org
+Subject: Re: Issue with 395f121e6199 ("PCI/PM: Wait for device to become
+ ready after power-on")
+Message-ID: <20191128082314.GD2665@lahna.fi.intel.com>
+References: <20191127153433.GA2665@lahna.fi.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20191125195255.23740-1-navid.emamdoost@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Provags-ID: V03:K1:YlOYjl23BNH7H9oV/9C4U+TRlgy+I5HWc4uvHBjQOLP+ajm0fBp
- eIO6SGRDFfr6qZc18r7RuFQQLZ9RV2o8Tv22P6n8JPA41ksQEqNRy0vW9BqfjDcppQ6owlb
- +ybVHoCVI2vv6rYSFW+uDLKYblLoH/dEYs1RnKJtcNlvLUy4jL4/jq74x5PfrqJ38L+b+gB
- ipRTzmLJcOSgfEnBRytXQ==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:DF/J/gU12Rc=:deiM9OQ3bMbniffgpS+Xqr
- br4qbRRrMI1ath+BZfzvixyyL5paMkVCqT1pSaYOsZB3aogjTylaBiC1OJcFrnd14uYMwqpHN
- kqoD9uOvIE+2fA6PTthfkdeIn5TnOJGz1z4MqgB0epbfXJa82j1TzB/g9NVBE2ewICIDXSOjw
- 9oKCgwbvTjFeJUZJyOpz9rJ1zrnydIajyDntbEEZvdZ9Y4CD+pO5JrUoatRRN6010gR9pqtYm
- ulwzC5So/ZNSKWppAszKo4Ih/iHkVGs07QUUp9DZwH3kJkE58o/wXQP/Y1qGrfXM4ZDCCIjfk
- CdEnToOS24SI1mFBwp6qWjC2WPTxkb0JXIvAi2VYC6Oq4kxi8+/yTp6W956kwIIx7UoZrIA1M
- GOiVf0JmX4GkmMregrc0N5EiP9Ch7nhP399jHdl1bQ0wdBcIteHBYrWHYMZiN370+PGW3UggC
- bXu7dX5bERAR0atRiounISN3gKGTUBXDe2hGBnBzgOzsN67EJLB6/Ka0WREnW1/IGu4UC5gt0
- rR4ucqwPcBB413bjx25yfk2Vdg/zdxgmT6a89RJ/cHrDDkpR2+5z0+RbIz4FCvVNdXOgp47e3
- jRvFDe1yj3Y7ppj4leYegVX1+2tN5puEqUHl5lON4zdnDoy9I23y3+hLQxp5mK76QHp4utAwE
- qS3TQvc/+SIqHGD1nWZIs+ivHtBBny+1c1z/yjvFo/ngwawkIPtH1F3ByVfaOCZxL5HjJ7Std
- pDtAE3r16fVgHP1PR1b+P27ZAMkyf0C+A2xyUC/eq49x/4UX0ZAH5QNXnr8m/Z4C3Q74N0TNC
- hphekItKDxir0QM/lSgSBqvRm7AqDivCrEU9rCsIUElNnCLoqiCUdKrtmtPu3C0ThLRBulCSp
- DRUwY46jklnT/HVFVV3hZnY52lULVkThLRqN/78KFLrl0PUm8vlZf9bamdU/LhIhnPntTSN2p
- r05xfpV3gMEozKRG4PfTy1b4r79NkZkaMOTFFpTGX9/Uy5901sr9wDMyh0Exui/0kLmBGHzkn
- aB/kGnB2h58WeekJiG5YTMuqa8jaeGrMXowYq32qDbxuC2C9GWiE98BFT42Oemks81jvlH0av
- CdJaCugvwG1k63uKSD8yXhh5YLTwGvytOYavrVaL6lS5WxRMR9qpIncQ2++kLwlL1Ql6yb10Q
- MUlqBuqSTo/1587gYkaqvAseFqFJFZfr4yVFaeO59b9IF6Wbrj4jFna5UpUA2pH9TJs9mijN0
- RNDdgn6sBAvilVdWmnJzwevW3jU1v2v3Sg9Egi/db/C30OBNUYrb2OsTAT40=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191127153433.GA2665@lahna.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> In the implementation of pci_iov_add_virtfn() the allocated virtfn is
-> leaked if pci_setup_device() fails. The error handling is not calling
-> pci_stop_and_remove_bus_device(). Change the goto label to failed2.
+Hi,
 
-Would it be nicer to rename numbered labels also according to the
-Linux coding style?
+For some reason I don't see this in linux-pci archives. Maybe it was not
+accepted because of the attachment? In any case the full dmesg can be
+found here as well:
 
-Regards,
-Markus
+  https://gist.github.com/westeri/ca2574a4e48dc6e3eb76184922e103e5
+
+On Wed, Nov 27, 2019 at 05:34:37PM +0200, Mika Westerberg wrote:
+> Hi,
+> 
+> I noticed that latest Bjorn's pci/pm branch breaks native PCIe hotplug
+> so that when I unplug a device (connected over TBT) the pciehp notices
+> it but then the core PCI code starts waiting for all the devices that
+> are now gone:
+> 
+> [  160.344476] pcieport 0000:04:04.0: pciehp: pciehp_check_link_active: lnk_status = 5041
+> [  160.344531] pcieport 0000:04:04.0: pciehp: Slot(4): Card not present
+> [  160.346004] pcieport 0000:04:04.0: pciehp: pciehp_unconfigure_device: domain:bus:dev = 0000:3a:00
+> [  161.421569] pcieport 0000:3a:00.0: not ready 1023ms after Switch to D0; waiting
+> [  162.509610] pcieport 0000:3a:00.0: not ready 2047ms after Switch to D0; waiting
+> [  164.621620] pcieport 0000:3a:00.0: not ready 4095ms after Switch to D0; waiting
+> [  169.165529] pcieport 0000:3a:00.0: not ready 8191ms after Switch to D0; waiting
+> [  177.869521] pcieport 0000:3a:00.0: not ready 16383ms after Switch to D0; waiting
+> [  194.765581] pcieport 0000:3a:00.0: not ready 32767ms after Switch to D0; waiting
+> ...
+> 
+> It seems to continue forever so the devices are not removed from the
+> system.
+> 
+> The test system used here is Dell XPS 9380 but it happens also on other
+> systems that support native PCIe hotplug.
+> 
+> Reverting 395f121e6199 ("PCI/PM: Wait for device to become ready after
+> power-on") makes the problem go away.
+> 
+> I've attached full dmesg from the system. The way I reproduce this is
+> that I boot the system up (no device connected yet), the I connect TBT
+> dock that includes the PCIe switch etc. Then I unplug the dock. The
+> unplug happens around 160.335355 in the dmesg.
