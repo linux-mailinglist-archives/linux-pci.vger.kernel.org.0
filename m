@@ -2,124 +2,196 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BC74410D5D9
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Nov 2019 13:49:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 002E410D60A
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Nov 2019 14:23:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbfK2Mto (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 29 Nov 2019 07:49:44 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39851 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726902AbfK2Mto (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Nov 2019 07:49:44 -0500
-Received: by mail-wm1-f66.google.com with SMTP id s14so8168427wmh.4
-        for <linux-pci@vger.kernel.org>; Fri, 29 Nov 2019 04:49:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=9ZkhQrbE0pqWo4Xrfbt5no2EyvavM8680V6oMcMbppE=;
-        b=OFr2xRM6+3SE+J561j8El5HiW8f7yc8oGUzpj/7E8POne7eTulFBtYHtJn5fz4hyvz
-         zDUXVHTDDC5F7dsjGLRwsDmoW0oUZVv4AY2omdXXWIZSS+YF0GIjHSObhdQi6CIkzbth
-         SxWAjc3L/6KTQSXP77E3ONhr9VEu+17vM5Ufu9aWoGQ/02qc1OrOAbkgZylu8WgA5ssX
-         dS7BuDadYqG1zlSol3JsmFepDRZV93pwGhrP8thfqJPXcUF3L6/SDi7b2Yf5i9fCBsjv
-         H4XTWEc1Ac6vYIy/bZaTfDt7+romyqPW4NOxZIpDn+T1My0NZVHRHRq+bCFgP6D5UvOI
-         UfZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=9ZkhQrbE0pqWo4Xrfbt5no2EyvavM8680V6oMcMbppE=;
-        b=QtmcZko4TjsyGMMUKnhN4shRHbNZRky1CrVwto7rG3Pwb7fBi2O3XUTWqTvy6MCZmy
-         E+xlwLg/DeHcoH0SiQQ+2/vk6ZsXK23bZba+SagnB5nl71zjmyIUJFLu96MbXQMdwM/6
-         fXacLYE7RSePMTojcoq2Dv2ormD6F+iHSrpxdbHPKCQpKj4ThA+rpWs2FXHZd9LiQsa7
-         LYhhBCYcqrrCEPS+sCBozdarHywKyijx2Gp4aRi2ijZoyslM35yswEvuYPLdhdYbSu5N
-         PvUQOU3oSSmRUgfSpIEnJSvy5CbM9AYodfU7ECSaUmATlnt+iAURboh3mEjfs77RO6ed
-         PjJQ==
-X-Gm-Message-State: APjAAAWMVlKlTFFkJZr4fWXeyWKSx1LLyGA8S2lXUBxK4Zsct5LJmjYY
-        wRWWjyYAvCTUqQifQjIFHs30w8VeKYtVWMOE
-X-Google-Smtp-Source: APXvYqzrFnew0Xg726sQyLozIpTyofkdje1WOGBoORFXdlnSGE+sAJRA2NS18bWiUsqdxxmHWnZTzw==
-X-Received: by 2002:a1c:cc1a:: with SMTP id h26mr15129630wmb.40.1575031781981;
-        Fri, 29 Nov 2019 04:49:41 -0800 (PST)
-Received: from [10.83.36.220] ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id l10sm29695601wrg.90.2019.11.29.04.49.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 29 Nov 2019 04:49:41 -0800 (PST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
-Subject: [PATCH v4 2/2] PCI: Add DMA alias quirk for PLX PEX NTB
-From:   James Sewart <jamessewart@arista.com>
-In-Reply-To: <435064D4-00F0-47F5-94D2-2C354F6B1206@arista.com>
-Date:   Fri, 29 Nov 2019 12:49:40 +0000
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Dmitry Safonov <dima@arista.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <AAD9A3CA-59E4-4982-B902-7032CA96FAD1@arista.com>
-References: <20191120193228.GA103670@google.com>
- <6A902F0D-FE98-4760-ADBB-4D5987D866BE@arista.com>
- <20191126173833.GA16069@infradead.org>
- <547214A9-9FD0-4DD5-80E1-1F5A467A0913@arista.com>
- <9c54c5dd-702c-a19b-38ba-55ab73b24729@deltatee.com>
- <435064D4-00F0-47F5-94D2-2C354F6B1206@arista.com>
-To:     linux-pci@vger.kernel.org
-X-Mailer: Apple Mail (2.3445.102.3)
+        id S1726785AbfK2NXC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 29 Nov 2019 08:23:02 -0500
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:19963 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726768AbfK2NXB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Nov 2019 08:23:01 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5de11bb20000>; Fri, 29 Nov 2019 05:22:58 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 29 Nov 2019 05:22:54 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 29 Nov 2019 05:22:54 -0800
+Received: from [10.25.75.74] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 29 Nov
+ 2019 13:22:50 +0000
+Subject: Re: [PATCH 3/6] PCI: tegra: Add support for PCIe endpoint mode in
+ Tegra194
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     <lorenzo.pieralisi@arm.com>, <robh+dt@kernel.org>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <andrew.murray@arm.com>, <kishon@ti.com>,
+        <gustavo.pimentel@synopsys.com>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20191126213718.GA185422@google.com>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <7298f15d-1745-e5c9-2d08-1235a27244ae@nvidia.com>
+Date:   Fri, 29 Nov 2019 18:52:47 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <20191126213718.GA185422@google.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1575033778; bh=7gO/CXj0wvWwogWev3Z+fNC4tNy+uDv47vsz0nrrl5w=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Q1QlqQj9jsPpnd6pf7C27/BelCW4RWZRzBi2KaiDdVgmQRtcmInnvBKkDE6Iq/jDa
+         3eEtcoGbjwFqH0XNmV+7oElfREV+vkp/uQUYaFN8MjIiVD/X1ZjwDEQWOShO+R+Krd
+         s0ELF/Yf578H0G6uMulK4hnMAXda5t1DwKz4j+AyJA5/sbYgIY6KVH82ppVtNN3ybN
+         MfmKAM5lE7RX5Q85hZMaus6bD4MIEM+bTbL5jSUereIJm5FxCXk9FLvlqSi6B8mzHc
+         KblxQObo77nRmb3bfFCnDhQUKusMgt67Q1Qdqvaia3kHhyOEpzmxYR5NVWzR0n67XT
+         YH7xjnMHHJ/JA==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The PLX PEX NTB forwards DMA transactions using Requester ID's that
-don't exist as PCI devices. The devfn for a transaction is used as an
-index into a lookup table storing the origin of a transaction on the
-other side of the bridge.
+On 11/27/2019 3:07 AM, Bjorn Helgaas wrote:
+> On Fri, Nov 22, 2019 at 04:15:02PM +0530, Vidya Sagar wrote:
+>> Add support for the endpoint mode of Synopsys DesignWare core based
+>> dual mode PCIe controllers present in Tegra194 SoC.
+> 
+>> +static irqreturn_t tegra_pcie_ep_irq_handler(struct tegra_pcie_dw *pcie)
+>> +{
+>> +	struct dw_pcie_ep *ep = &pcie->pci.ep;
+>> +	u32 val, tmp;
+>> +
+>> +	val = appl_readl(pcie, APPL_INTR_STATUS_L0);
+>> +	if (val & APPL_INTR_STATUS_L0_LINK_STATE_INT) {
+>> +		val = appl_readl(pcie, APPL_INTR_STATUS_L1_0_0);
+>> +		appl_writel(pcie, val, APPL_INTR_STATUS_L1_0_0);
+>> +		if (val & APPL_INTR_STATUS_L1_0_0_HOT_RESET_DONE) {
+>> +			/* clear any stale PEX_RST interrupt */
+>> +			if (!kfifo_put(&pcie->event_fifo, EP_HOT_RST_DONE)) {
+>> +				dev_err(pcie->dev, "EVENT FIFO is full\n");
+>> +				return IRQ_HANDLED;
+>> +			}
+>> +			wake_up(&pcie->wq);
+>> +		}
+>> +		if (val & APPL_INTR_STATUS_L1_0_0_RDLH_LINK_UP_CHGED) {
+>> +			tmp = appl_readl(pcie, APPL_LINK_STATUS);
+>> +			if (tmp & APPL_LINK_STATUS_RDLH_LINK_UP) {
+>> +				dev_info(pcie->dev, "Link is up with Host\n");
+>> +				dw_pcie_ep_linkup(ep);
+>> +			}
+>> +		}
+>> +	} else if (val & APPL_INTR_STATUS_L0_PCI_CMD_EN_INT) {
+> 
+> Is it really the case that only one of
+> APPL_INTR_STATUS_L0_LINK_STATE_INT and
+> APPL_INTR_STATUS_L0_PCI_CMD_EN_INT can be set?
+Not really.
 
-This patch aliases all possible devfn's to the NTB device so that any
-transaction coming in is governed by the mappings for the NTB.
+> 
+> If it's possible that both could be set, maybe this should be
+> something like this?
+> 
+>    int spurious = 1;
+> 
+>    if (val & APPL_INTR_STATUS_L0_LINK_STATE_INT) {
+>      ...
+>      spurious = 0;
+>    }
+>    if (val & APPL_INTR_STATUS_L0_PCI_CMD_EN_INT) {
+>      ...
+>      spurious = 0;
+>    }
+> 
+>    if (spurious) {
+>      dev_warn(...)
+>    }
+I'll take care of this in the next patch series.
 
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-Signed-off-by: James Sewart <jamessewart@arista.com>
----
- drivers/pci/quirks.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+> 
+>> +		val = appl_readl(pcie, APPL_INTR_STATUS_L1_15);
+>> +		appl_writel(pcie, val, APPL_INTR_STATUS_L1_15);
+>> +		if (val & APPL_INTR_STATUS_L1_15_CFG_BME_CHGED) {
+>> +			if (!kfifo_put(&pcie->event_fifo, EP_BME_CHANGE)) {
+>> +				dev_err(pcie->dev, "EVENT FIFO is full\n");
+>> +				return IRQ_HANDLED;
+>> +			}
+>> +			wake_up(&pcie->wq);
+>> +		}
+>> +	} else {
+>> +		dev_warn(pcie->dev, "Random interrupt (STATUS = 0x%08X)\n",
+>> +			 val);
+>> +		appl_writel(pcie, val, APPL_INTR_STATUS_L0);
+>> +	}
+>> +
+>> +	return IRQ_HANDLED;
+>> +}
+> 
+>> +static int tegra_pcie_ep_work_thread(void *p)
+>> +{
+>> +	struct tegra_pcie_dw *pcie = (struct tegra_pcie_dw *)p;
+>> +	u32 event;
+>> +
+>> +	while (true) {
+>> +		wait_event_interruptible(pcie->wq,
+>> +					 !kfifo_is_empty(&pcie->event_fifo));
+>> +
+>> +		if (kthread_should_stop())
+>> +			break;
+>> +
+>> +		if (!kfifo_get(&pcie->event_fifo, &event)) {
+>> +			dev_warn(pcie->dev, "EVENT FIFO is empty\n");
+>> +			continue;
+>> +		}
+>> +
+>> +		switch (event) {
+>> +		case EP_PEX_RST_DEASSERT:
+>> +			dev_info(pcie->dev, "EVENT: EP_PEX_RST_DEASSERT\n");
+>> +			pex_ep_event_pex_rst_deassert(pcie);
+>> +			break;
+>> +
+>> +		case EP_PEX_RST_ASSERT:
+>> +			dev_info(pcie->dev, "EVENT: EP_PEX_RST_ASSERT\n");
+>> +			pex_ep_event_pex_rst_assert(pcie);
+>> +			break;
+>> +
+>> +		case EP_HOT_RST_DONE:
+>> +			dev_info(pcie->dev, "EVENT: EP_HOT_RST_DONE\n");
+>> +			pex_ep_event_hot_rst_done(pcie);
+>> +			break;
+>> +
+>> +		case EP_BME_CHANGE:
+>> +			dev_info(pcie->dev, "EVENT: EP_BME_CHANGE\n");
+>> +			pex_ep_event_bme_change(pcie);
+>> +			break;
+>> +
+>> +		case EP_EVENT_EXIT:
+>> +			dev_info(pcie->dev, "EVENT: EP_EVENT_EXIT\n");
+>> +			return 0;
+>> +
+>> +		default:
+>> +			dev_warn(pcie->dev, "Invalid PCIe EP event\n");
+> 
+> Maybe include the invalid event value in the message?
+I'll take care of this in the next patch series
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 0f3f5afc73fd..3a67049ca630 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5315,6 +5315,21 @@ SWITCHTEC_QUIRK(0x8574);  /* PFXI 64XG3 */
- SWITCHTEC_QUIRK(0x8575);  /* PFXI 80XG3 */
- SWITCHTEC_QUIRK(0x8576);  /* PFXI 96XG3 */
-=20
-+/*
-+ * PLX NTB uses devfn proxy IDs to move TLPs between NT endpoints. =
-These IDs
-+ * are used to forward responses to the originator on the other side of =
-the
-+ * NTB. Alias all possible IDs to the NTB to permit access when the =
-IOMMU is
-+ * turned on.
-+ */
-+static void quirk_plx_ntb_dma_alias(struct pci_dev *pdev)
-+{
-+	pci_info(pdev, "Setting PLX NTB proxy ID aliases\n");
-+	/* PLX NTB may use all 256 devfns */
-+	pci_add_dma_alias(pdev, 0, 256);
-+}
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_PLX, 0x87b0, =
-quirk_plx_ntb_dma_alias);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_PLX, 0x87b1, =
-quirk_plx_ntb_dma_alias);
-+
- /*
-  * On Lenovo Thinkpad P50 SKUs with a Nvidia Quadro M1000M, the BIOS =
-does
-  * not always reset the secondary Nvidia GPU between reboots if the =
-system
---=20
-2.24.0
+> 
+>> +			break;
+>> +		}
+>> +	}
+>> +
+>> +	return 0;
+>> +}
 
