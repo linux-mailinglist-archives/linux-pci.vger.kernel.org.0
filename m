@@ -2,132 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B685B10DB43
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Nov 2019 22:44:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E1DB710DC4F
+	for <lists+linux-pci@lfdr.de>; Sat, 30 Nov 2019 05:30:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbfK2VoD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 29 Nov 2019 16:44:03 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:39589 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727073AbfK2VoD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Nov 2019 16:44:03 -0500
-Received: by mail-qk1-f195.google.com with SMTP id d124so11554208qke.6
-        for <linux-pci@vger.kernel.org>; Fri, 29 Nov 2019 13:44:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=M3Xs0CQVZmeQA3Vdfnwn92z4nQazeWOpTUsfR+WB79M=;
-        b=aGwio6+HVzCkLlkPoQj49RuDXf16/8Ir6SBBPVouKfxQvQv3oxLYJig0nTpl/GYgtI
-         sLz/+LA0x6dcSzQa4sRTAm0kudkbPqKZwOT2E+nZuEhTHafhdiNbdu+UJbDFqg7vl4DG
-         8SQQMM/QXIYjYUt+ywAgmsb1zdlH7uf3HcWUBqWcg4Utav2HrmoW/JLwspA/KNFrFoSt
-         YyX7gOhSBJe1DtjM/lpr76L4byZTO14JUsAZyPTDMMyUGO759ZDDumSlOiqRzbeekGT0
-         z6GYkM4v5gEgSS5863A+9Urb9wgglUXqHvmEtS9wdYkSVJnQxriSsgi0+acMy/LT1jgN
-         a9EQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=M3Xs0CQVZmeQA3Vdfnwn92z4nQazeWOpTUsfR+WB79M=;
-        b=oGIsunwM+f6NYAJ+f21cyQyZKxdKnjDSZ2bUQfT53S57PArli3+QByqduQhEk502Is
-         +0P+vK6uo8rgKlGGv+d2BbRDwQgkzb28dFttvr3rqVbS+xVnxGt59wfGtBP1elTffACn
-         LVHxDtQrJj9HwlnsTjH2dhGpfLdsUQM3WWxjqOngPH5/1pXOD9TqqPXcvo4mEKpmpHLR
-         p6Vio06wljzr2OxdzRybBQ7sOUPF+D6XaoYVcnLYFOh5a3ZHtjI4gB+IWLviccs+vVqK
-         qlZluB4QJapT8GDyMJFZHGK5g1hFfhlVozXiCIxIc+fFuq/8F1Q0SVKvgn2nfV9jWcre
-         RWMQ==
-X-Gm-Message-State: APjAAAV9b6DxThURaa8LuOANxb5OJGYlgGNQ3wulwj4zvNsbfnKXYN5L
-        wPF0As2PohrxVRhfcyPGWrSrw+lqisTrOodWKijbJA==
-X-Google-Smtp-Source: APXvYqz68xmpSEN6M2G1u1P39XQQQlsRAyRlTACG2DiFoiKp+p9uW4stR+jgQJAw1CmrJdX34YS3JXvwQ34aWT0eP20=
-X-Received: by 2002:a37:7f45:: with SMTP id a66mr17162986qkd.427.1575063842507;
- Fri, 29 Nov 2019 13:44:02 -0800 (PST)
+        id S1727175AbfK3EaJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 29 Nov 2019 23:30:09 -0500
+Received: from mail-eopbgr760128.outbound.protection.outlook.com ([40.107.76.128]:23105
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727142AbfK3EaJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 29 Nov 2019 23:30:09 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LFoF2lOx/+6CKdThc6FxGMyi77v4mMQDbBLxbXudKiHVG3+BztWVvSxnnmHpmt8kM+ZTPKxPWaox6NNDgInZkHTmx6wd+nIvfDCzoCzhVf/8O7UyJ1WwOHUJfTXoqjk2+iergjAmOJW6TUHT1InSmvgoO15AaL5L7SS5y21gA1vNazRfPGPzzh9DPyqNDV7bU1K+g+t4cV3kb2D0iDQgFE316GuUlG+KM6hElQLvnNKNqPVSno3JR3+BImyiTfF8RF4oo78gbXQRBlBlFPN7tiaM6Kk4EOnrkHeR5QXJxpvmKTvnFsgVbUGQBYO6yCABDUkBcnvcchqMJpie2ssz6g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ek599W0cnAadV7AeCqeQ+lVMhFk429fzqTmlmmlWTYs=;
+ b=h+XMkjndxzd0/HQ9tAL8Iy62lnlRO1n+eq1X2X0hWbjXMAKNoL7a/YoebsA/NIpN2x4+zASnxeQYCTGhkpBWhwACLBatMWoiQPuwHw/xYltWw+CYkLmGyuILD6AVWR5n2bC8IbCtI1g6i/7K+GwYfITs5YcCU3eETcw7eFfWDpCALh90VYOR2wg0Zqwz+NYqZ6Yo1OprGkb+d0s5KAFrzC2YKM7pqCr6idx7eupUVXkDyQJJ65zIY6MVguHF5dXWp9O6Snp7LcHy6pLYWzR8EVdkDgzGZs4Ime78KC+7kwL5zJRcMMvKeKn9eiPj4LOu5KcwjToT+O55q+Sk6kecjw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ek599W0cnAadV7AeCqeQ+lVMhFk429fzqTmlmmlWTYs=;
+ b=K1kKnZI+U8xGS6mdbGDVpxgsIUl90EQIkqciTzTCWF9YS4WVUGNKSKD2YgXPF4EfUkuFzCh7t1CfUXO+vIk0W5lK3/7Lw5D5tMwymCFFvu+VUDBtE0ZwHD5LY1vT/4f2tiRZCutnH/Dt69F743Q8sCPxyregijshb5t+9XTsD5U=
+Received: from CY4PR21MB0629.namprd21.prod.outlook.com (10.175.115.19) by
+ CY4PR21MB0775.namprd21.prod.outlook.com (10.173.192.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2516.0; Sat, 30 Nov 2019 04:30:06 +0000
+Received: from CY4PR21MB0629.namprd21.prod.outlook.com
+ ([fe80::ed94:4b6d:5371:285c]) by CY4PR21MB0629.namprd21.prod.outlook.com
+ ([fe80::ed94:4b6d:5371:285c%4]) with mapi id 15.20.2516.003; Sat, 30 Nov 2019
+ 04:30:06 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Long Li <longli@microsoft.com>
+Subject: RE: [EXTERNAL] [PATCH 1/2] PCI: hv: decouple the func definition in
+ hv_dr_state from VSP message
+Thread-Topic: [EXTERNAL] [PATCH 1/2] PCI: hv: decouple the func definition in
+ hv_dr_state from VSP message
+Thread-Index: AQHVoaFcWphb3zmlG0OqjmKFjc5K8qejKdTQ
+Date:   Sat, 30 Nov 2019 04:30:05 +0000
+Message-ID: <CY4PR21MB06293F8FB8A8A1ADD628A8B8D7410@CY4PR21MB0629.namprd21.prod.outlook.com>
+References: <1574474229-44840-1-git-send-email-longli@linuxonhyperv.com>
+In-Reply-To: <1574474229-44840-1-git-send-email-longli@linuxonhyperv.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-11-30T04:30:03.2842035Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=739473f4-27c9-42d2-9236-15eb823f680e;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: daf0c42b-df3d-40e5-f358-08d7754df9db
+x-ms-traffictypediagnostic: CY4PR21MB0775:|CY4PR21MB0775:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY4PR21MB0775DBE1CC8737FBA3261135D7410@CY4PR21MB0775.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 02379661A3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(376002)(396003)(136003)(39860400002)(346002)(189003)(199004)(99286004)(107886003)(102836004)(33656002)(2201001)(6246003)(86362001)(2906002)(7696005)(6436002)(110136005)(76176011)(22452003)(6506007)(2501003)(1511001)(4326008)(8990500004)(10090500001)(55016002)(9686003)(71200400001)(15650500001)(26005)(256004)(71190400001)(25786009)(5660300002)(4744005)(316002)(52536014)(10290500003)(76116006)(81166006)(81156014)(8936002)(14454004)(229853002)(305945005)(7736002)(74316002)(66476007)(66066001)(478600001)(11346002)(446003)(66946007)(8676002)(66556008)(186003)(66446008)(3846002)(6116002)(64756008)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR21MB0775;H:CY4PR21MB0629.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Y3CI/vYqDyZ9YvqXh3pNqKTViSEmo0yOorS7eHCPI1SoCZqgVPx8WiAH/HUh7lg7utIc7byYehMTk6x7uTbmU4YPpquoaxgoSpJwFtd5e4dYvivDB87oR3pjzc6fPM68a6PXPcnd4/J8fM9xhrfrOPSW9NkNlPFZt1va9QsmevgQZ3TX9Y0cD7RDjHuidv4o/LPoQfjlDcS0LSp+TxNMQzGYo0mt+CsV06RPGJJhksiiJUfSJ8goszDvVH73v8oWC4AP4o7XXm/gGsIV9lk1nFpWCEfyZJHssDSS8pywaGd3u42bQY4YKvr3wGrC2MpgUgoX52AAISRLbe9xbFn1icdGVVxYl5wcN4Ffh3MEzlRAjIyLeyrRaepBCeiL79prR2CZ/2n254R4mluvigT6cBOSwGfvLYr7IcEPRW/AFgu9ZGRV6jsqZVnbggPa8XRA
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <CAJ2oMhJ10FTcNH5wqWT2nfNz4jwG0BYr1DcVYTUPOcsSwpkMYg@mail.gmail.com>
- <20191129183836.GA20312@google.com>
-In-Reply-To: <20191129183836.GA20312@google.com>
-From:   Ranran <ranshalit@gmail.com>
-Date:   Fri, 29 Nov 2019 23:43:50 +0200
-Message-ID: <CAJ2oMhJaHSqj1_gVDfWF+V4wn3YMFxhDKs-E4cTQ7G9bUBPW8A@mail.gmail.com>
-Subject: Re: [Bug 205701] New: Can't access RAM from PCIe
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     bjorn@helgaas.com, linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: daf0c42b-df3d-40e5-f358-08d7754df9db
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Nov 2019 04:30:05.7819
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: SRuT7ChrdREyJLKwAC9yJJzwd73/GLtU7zDnjRI4XrM5SfAAjx1Yq8lKvikKzUQaWDAqSNN32qFB5xU4ZL1RUy3Icx7AApOHFvAJKXsrCYU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR21MB0775
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Nov 29, 2019 at 8:38 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Fri, Nov 29, 2019 at 06:10:51PM +0200, Ranran wrote:
-> > On Fri, Nov 29, 2019 at 4:58 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > On Fri, Nov 29, 2019 at 06:59:48AM +0000, bugzilla-daemon@bugzilla.kernel.org wrote:
-> > > > https://bugzilla.kernel.org/show_bug.cgi?id=205701
-> > > > ...
-> > > >
-> > > > Using Intel Xeon computer with linux kernel 4.18.0 centos8.
-> > > > Trying to access RAM (with DMA) using FPGA  fails in this computer.
-> > > >
-> > > > 1. I tried to add intel_iommu=off - it did not help.
-> > > >
-> > > > 2. Installing windows on same PC - FPGA can access RAM using DMA without
-> > > > issues.
-> > > >
-> > > > 3. using another PC (Intel Duo) with same linux and OS - FPGA access works.
-> > > >
-> > > > FPGA access the RAM using a physical address provided by a kernel module which
-> > > > allocates physical continuous memory in PC. (the module works perfectly with
-> > > > Intel Duo on exactly same OS and kernel).
-> > >
-> > > Hi, thanks for the report!  Can you please attach the complete dmesg
-> > > and "sudo lspci -vv" output for the working and non-working v4.18
-> > > kernels to the bugzilla?
-> > >
-> > > Then please try to reproduce the problem on the current v5.4 kernel
-> > > and attach the v5.4 dmesg log.  If v5.4 fails, we'll have to debug it.
-> > > If v5.4 works, figure out what fixed it (by comparing dmesg logs or by
-> > > bisection) and backport it to v4.18.
-> > >
-> > > Bjorn
-> >
-> > Hi,
-> > I've attached 2 files:
-> > 1. dmesg.log - is the dmesg you've requested.
-> > 2. dmesg_intel_iommu_off.log - dmesg when I added intel_iommu=off
-> > kernel parameter.
->
-> Thanks, I attached these to the bugzilla.  I think the linux-pci
-> mailing list rejected your mail since it wasn't plain-text.
->
-> Please also attach the "sudo lspci -vv" output to the bugzilla and
-> indicate which device is your FPGA.  I guess it might be 0000:20:00.0,
-> since it looks like it's being claimed by an out-of-tree module in
-> your dmesg_intel_iommu_off.log (but not dmesg.log).
->
-> Please also attach the driver source so we can see how it is obtaining
-> and using the DMA buffer address.
->
+From: longli@linuxonhyperv.com  Sent: Friday, November 22, 2019 5:57 PM
+>=20
+> From: Long Li <longli@microsoft.com>
+>=20
+> hv_dr_state is used to find present PCI devices on the bus. The structure
+> reuses struct pci_function_description from VSP message to describe a dev=
+ice.
+>=20
+> To prepare support for pci_function_description v2, we need to decouple t=
+his
+> dependence in hv_dr_state so it can work with both v1 and v2 VSP messages=
+.
+>=20
+> There is no functionality change.
+>=20
+> Signed-off-by: Long Li <longli@microsoft.com>
+> ---
+>  drivers/pci/controller/pci-hyperv.c | 100 +++++++++++++++++++---------
+>  1 file changed, 69 insertions(+), 31 deletions(-)
+>=20
 
-I've added the module in bugzilla,
-
-I will try to fetch the other information you requested and update in bugzilla.
-
-Thank you
-
-> > I might try the new kernel, yet since we are required to use the
-> > installation of centos8  (centos8 was just published about 2 month ago
-> > and it comes with kernel 4.18.0), updating kernel might be
-> > problematic.
->
-> Even if you can't use the v5.4 kernel for your project, if you can
-> establish that it works, then you have a clear path to finding the
-> fix.  If v5.4 still *doesn't* work, then we'll be much more interested
-> in helping to fix that.
->
-> > I would please like to ask if there is some workaround you can think of ?
-> > For example, might it help if I disable iommu (VT-d) in BIOS ?
->
-> Usually when an IOMMU blocks a DMA, it seems like there's a note in
-> dmesg.  I don't see that in either of your logs, but I'm not an IOMMU
-> expert, so it does seem reasonable to try disabling the IOMMU.
->
-> Bjorn
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
