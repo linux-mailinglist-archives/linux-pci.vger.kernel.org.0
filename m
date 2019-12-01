@@ -2,169 +2,255 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9EF6610DC55
-	for <lists+linux-pci@lfdr.de>; Sat, 30 Nov 2019 05:45:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EBC5F10E22C
+	for <lists+linux-pci@lfdr.de>; Sun,  1 Dec 2019 15:29:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727179AbfK3Epl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 29 Nov 2019 23:45:41 -0500
-Received: from mail-eopbgr820133.outbound.protection.outlook.com ([40.107.82.133]:62336
-        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727142AbfK3Epl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 29 Nov 2019 23:45:41 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=E6FA+l2BVMzOnV5w97DGC7TeODjzt7uqOl1/C0Lz8FELScxh74kf30m5LBVXVJ9u8R7FZgSvqFfbZp3QPPycb6cfMqvSBo0bkYk/QOuMxISOjTaCrm9XiFuxPAPdypeKl/va+IL/OHqaO75/vFqwFTT24YzgIWpwqHuaa/F/PzV+KFVePMbDKYrypNEtLHrDXSjOE8mc6s5LCffvk8SRzMURE+x4z4rNb1GCxvUXuAymYHuuLLSKaVqSO5iY2KUBPbMnCOGfWIfakK/YROD6luGE9tK9zhfzcos+AYDzg0VQcduAwUcUDDIbKoP5KD57G/iscA7rGkfWNfhpdQ0Vew==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0Co3l934DCYq+zxn8eiJTpMW9eC9dClm6JOgjJK0S34=;
- b=C0Zy0wsmFFKe7ahxaIGIjlqgcyPAsCowqGP8QrJ/Z3OTh6z4ZGzeMQQz8wa0V7UeazVgOPtlOQmqnVKYZn1aoMv2QNizFCC8/6M69JBHCHfaL9BnwtjL/iFzifpqpElN1MRkxoBZfckqZlYReylKWhG+ujo31uwy2y42t8EivfgnVnObojAWDSRrGP8f4CY9aIs1rt1O+tnYwS6HRsZrCv6pySiQU669LKvKfGBjaaSRPyZXTKoYTj3N+xyySN3TpnSUASWabFat3RXIKWve/Apflh2Mnc0hg9wC7Vw7vxTISJXQrF2ZpdBN0wNit1FjH78qoqZ4pRwjq9Y2rIin2w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0Co3l934DCYq+zxn8eiJTpMW9eC9dClm6JOgjJK0S34=;
- b=KlB8vWTVKpg3AXlVszgVq29ZhC72a/344WeoyL7doJGDI9MFHPh2Os+syhH2SBrckRo6FDRiQllrJDopgugocnvaT7iZy7EW8mQniDsmHAqXAtFNwusmESW2QSNR88pcOP3jXRSWvgDe4NzZYx8yet+8w2DbGz5KM1+PvbrW+EY=
-Received: from CY4PR21MB0629.namprd21.prod.outlook.com (10.175.115.19) by
- CY4PR21MB0469.namprd21.prod.outlook.com (10.172.121.147) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.8; Sat, 30 Nov 2019 04:45:36 +0000
-Received: from CY4PR21MB0629.namprd21.prod.outlook.com
- ([fe80::ed94:4b6d:5371:285c]) by CY4PR21MB0629.namprd21.prod.outlook.com
- ([fe80::ed94:4b6d:5371:285c%4]) with mapi id 15.20.2516.003; Sat, 30 Nov 2019
- 04:45:36 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dexuan Cui <decui@microsoft.com>
-CC:     Long Li <longli@microsoft.com>
-Subject: RE: [EXTERNAL] [PATCH 2/2] PCI: hv: Add support for protocol 1.3 and
- support PCI_BUS_RELATIONS2
-Thread-Topic: [EXTERNAL] [PATCH 2/2] PCI: hv: Add support for protocol 1.3 and
- support PCI_BUS_RELATIONS2
-Thread-Index: AQHVoaFeiJWyuTLLsUiMTX6LeRJTSaejKm4Q
-Date:   Sat, 30 Nov 2019 04:45:36 +0000
-Message-ID: <CY4PR21MB0629300E161C5119D4714A64D7410@CY4PR21MB0629.namprd21.prod.outlook.com>
-References: <1574474229-44840-1-git-send-email-longli@linuxonhyperv.com>
- <1574474229-44840-2-git-send-email-longli@linuxonhyperv.com>
-In-Reply-To: <1574474229-44840-2-git-send-email-longli@linuxonhyperv.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-11-30T04:45:34.1746665Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=0f1b8475-7cee-41ba-9596-da3f0b1969db;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 2e2c4505-ba3b-4ad6-3064-08d77550243a
-x-ms-traffictypediagnostic: CY4PR21MB0469:|CY4PR21MB0469:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CY4PR21MB04696F31075A2D89BAB6A4DFD7410@CY4PR21MB0469.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 02379661A3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(39860400002)(366004)(376002)(346002)(396003)(189003)(199004)(26005)(66446008)(6116002)(6436002)(316002)(5660300002)(81156014)(478600001)(6636002)(86362001)(7696005)(14454004)(33656002)(10290500003)(66556008)(66476007)(8936002)(52536014)(66946007)(64756008)(6246003)(76116006)(229853002)(3846002)(25786009)(8676002)(107886003)(4326008)(81166006)(102836004)(256004)(74316002)(71190400001)(22452003)(7736002)(110136005)(2201001)(99286004)(66066001)(10090500001)(76176011)(186003)(55016002)(6506007)(11346002)(8990500004)(2501003)(2906002)(446003)(1511001)(71200400001)(9686003)(305945005)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR21MB0469;H:CY4PR21MB0629.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: u7/18sKmb5VKQMckFMDPBtAtcLwcWgrioJCkjKwfH0iMnzKnJwlNQlD4uF8Sxx341DYC++ZYV8I+vkNvZutkx1g3v+dsTw1Xu2LzE5UtlrrnBjjQbkZx8AOjj0zmzHwYBCAcL4J6WtBfAYlJbIPYDT6ggtO1Ccot/FNVZgb5O29g1+YWWEWhjkmK+qn97yT3YxHhCUSQNc/US8Ja0TMqdwyE3bmctVJhrCCzuVGHxwu/jVwc67MoSwqpxJ3VDpkGTeLQEw0iLnuHLNY153NEP1yP8YcUxIbKTyBxcZNkNWtm2Zw3XUCRP3puWbQjIqt/ri2vqwZ9tliqkiSXgdrSRrbEUThaTIfapXtUkzijyOBuvnKl6RvLEMRAW7fLzaobtMWbZHReQxgir7UxUwhrcZNLnpq/K8WCVHOVoIYv7DaNx/rv1eTbL+ZV5UEyNG/e
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1727072AbfLAO30 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 1 Dec 2019 09:29:26 -0500
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:9539 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726489AbfLAO30 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 1 Dec 2019 09:29:26 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5de3ce470000>; Sun, 01 Dec 2019 06:29:27 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sun, 01 Dec 2019 06:29:23 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sun, 01 Dec 2019 06:29:23 -0800
+Received: from [10.25.74.138] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 1 Dec
+ 2019 14:29:19 +0000
+Subject: Re: [PATCH 4/4] PCI: pci-epf-test: Add support to defer core
+ initialization
+To:     Kishon Vijay Abraham I <kishon@ti.com>, <jingoohan1@gmail.com>,
+        <gustavo.pimentel@synopsys.com>, <lorenzo.pieralisi@arm.com>,
+        <andrew.murray@arm.com>, <bhelgaas@google.com>,
+        <thierry.reding@gmail.com>
+CC:     <Jisheng.Zhang@synaptics.com>, <jonathanh@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20191113090851.26345-1-vidyas@nvidia.com>
+ <20191113090851.26345-5-vidyas@nvidia.com>
+ <e8e3b8b6-d115-b4d4-19c5-1eae1d8abd0f@ti.com>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <958fcc14-6794-0328-5c31-0dcc845ee646@nvidia.com>
+Date:   Sun, 1 Dec 2019 19:59:17 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2e2c4505-ba3b-4ad6-3064-08d77550243a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Nov 2019 04:45:36.0331
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: APPH3jg5OEbrEfCdR5edo8kq2JbLwXgqzmd+yGpzUipzf1Va/I9ZiSlx48R6Xm9mBbyReuY7ZZDaBbqHgGKoqJE4Su0bvR37TbbhRP8h+6w=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR21MB0469
+In-Reply-To: <e8e3b8b6-d115-b4d4-19c5-1eae1d8abd0f@ti.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1575210567; bh=R0xGxFOdur+CeguObMrwAo1cQvjZeJSyyOUZLz2IAp0=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=dZNGqzai/FKSRFv8UH3CuHk1nRWfvN7yIamCZKISnik8dmv8VuX5VPInG3vdGy4i9
+         Bapq+hTPVusDffht2ne+7hhkSljxEf5MT9279o1UNDDTECzQAEWVH0A6Ln83AJJ7tC
+         QtWinDl+cwEW9cWeVyM5Dd/C042gmgP8sagWCu/YNtOWkre9mHlr4bN/AoGQnzwJiC
+         zoJmsPz4wtOp+tbNV+nNwB6MoIdi3bn2+XrTOaG/bFYa9dpzLZS4anMsdKYI8XE5uj
+         iHaTp5rTiV6y50xgN5QyEaID0/ntwDw6I8dtH1eFHsxEjrXg2UXB1jskdMfr4msUYu
+         8036bE/qaF6DQ==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: longli@linuxonhyperv.com Sent: Friday, November 22, 2019 5:57 PM
->=20
-> From: Long Li <longli@microsoft.com>
->=20
-> Starting with Hyper-V PCI protocol version 1.3, the host VSP can send
-> PCI_BUS_RELATIONS2 and pass the vNUMA node information for devices on the=
- bus.
-> The vNUMA node tells which guest NUMA node this device is on based on gue=
-st
-> VM configuration topology and physical device inforamtion.
->=20
-> The patch adds code to negotiate v1.3 and process PCI_BUS_RELATIONS2.
->=20
-> Signed-off-by: Long Li <longli@microsoft.com>
-> ---
->  drivers/pci/controller/pci-hyperv.c | 107 ++++++++++++++++++++++++++++
->  1 file changed, 107 insertions(+)
->=20
+On 11/27/2019 2:50 PM, Kishon Vijay Abraham I wrote:
+> Hi,
+> 
+> On 13/11/19 2:38 PM, Vidya Sagar wrote:
+>> Add support to defer core initialization and to receive a notifier
+>> when core is ready to accommodate platforms where core is not for
+>> initialization untile reference clock from host is available.
+>>
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> ---
+>>   drivers/pci/endpoint/functions/pci-epf-test.c | 114 ++++++++++++------
+>>   1 file changed, 77 insertions(+), 37 deletions(-)
+>>
+>> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+>> index bddff15052cc..068024fab544 100644
+>> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+>> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+>> @@ -360,18 +360,6 @@ static void pci_epf_test_cmd_handler(struct work_struct *work)
+>>   			   msecs_to_jiffies(1));
+>>   }
+>>   
+>> -static int pci_epf_test_notifier(struct notifier_block *nb, unsigned long val,
+>> -				 void *data)
+>> -{
+>> -	struct pci_epf *epf = container_of(nb, struct pci_epf, nb);
+>> -	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+>> -
+>> -	queue_delayed_work(kpcitest_workqueue, &epf_test->cmd_handler,
+>> -			   msecs_to_jiffies(1));
+>> -
+>> -	return NOTIFY_OK;
+>> -}
+>> -
+>>   static void pci_epf_test_unbind(struct pci_epf *epf)
+>>   {
+>>   	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+>> @@ -428,6 +416,78 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
+>>   	return 0;
+>>   }
+>>   
+>> +static int pci_epf_test_core_init(struct pci_epf *epf)
+>> +{
+>> +	struct pci_epf_header *header = epf->header;
+>> +	const struct pci_epc_features *epc_features;
+>> +	struct pci_epc *epc = epf->epc;
+>> +	struct device *dev = &epf->dev;
+>> +	bool msix_capable = false;
+>> +	bool msi_capable = true;
+>> +	int ret;
+>> +
+>> +	epc_features = pci_epc_get_features(epc, epf->func_no);
+>> +	if (epc_features) {
+>> +		msix_capable = epc_features->msix_capable;
+>> +		msi_capable = epc_features->msi_capable;
+>> +	}
+>> +
+>> +	ret = pci_epc_write_header(epc, epf->func_no, header);
+>> +	if (ret) {
+>> +		dev_err(dev, "Configuration header write failed\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret = pci_epf_test_set_bar(epf);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	if (msi_capable) {
+>> +		ret = pci_epc_set_msi(epc, epf->func_no, epf->msi_interrupts);
+>> +		if (ret) {
+>> +			dev_err(dev, "MSI configuration failed\n");
+>> +			return ret;
+>> +		}
+>> +	}
+>> +
+>> +	if (msix_capable) {
+>> +		ret = pci_epc_set_msix(epc, epf->func_no, epf->msix_interrupts);
+>> +		if (ret) {
+>> +			dev_err(dev, "MSI-X configuration failed\n");
+>> +			return ret;
+>> +		}
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int pci_epf_test_notifier(struct notifier_block *nb, unsigned long val,
+>> +				 void *data)
+>> +{
+>> +	struct pci_epf *epf = container_of(nb, struct pci_epf, nb);
+>> +	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+>> +	int ret;
+>> +
+>> +	switch (val) {
+>> +	case CORE_INIT:
+>> +		ret = pci_epf_test_core_init(epf);
+>> +		if (ret)
+>> +			return NOTIFY_BAD;
+>> +		break;
+>> +
+>> +	case LINK_UP:
+>> +		queue_delayed_work(kpcitest_workqueue, &epf_test->cmd_handler,
+>> +				   msecs_to_jiffies(1));
+>> +		break;
+>> +
+>> +	default:
+>> +		dev_err(&epf->dev, "Invalid EPF test notifier event\n");
+>> +		return NOTIFY_BAD;
+>> +	}
+>> +
+>> +	return NOTIFY_OK;
+>> +}
+>> +
+>>   static int pci_epf_test_alloc_space(struct pci_epf *epf)
+>>   {
+>>   	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+>> @@ -496,12 +556,11 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+>>   {
+>>   	int ret;
+>>   	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+>> -	struct pci_epf_header *header = epf->header;
+>>   	const struct pci_epc_features *epc_features;
+>>   	enum pci_barno test_reg_bar = BAR_0;
+>>   	struct pci_epc *epc = epf->epc;
+>> -	struct device *dev = &epf->dev;
+>>   	bool linkup_notifier = false;
+>> +	bool skip_core_init = false;
+>>   	bool msix_capable = false;
+>>   	bool msi_capable = true;
+>>   
+>> @@ -511,6 +570,7 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+>>   	epc_features = pci_epc_get_features(epc, epf->func_no);
+>>   	if (epc_features) {
+>>   		linkup_notifier = epc_features->linkup_notifier;
+>> +		skip_core_init = epc_features->skip_core_init;
+>>   		msix_capable = epc_features->msix_capable;
+>>   		msi_capable = epc_features->msi_capable;
+> 
+> Are these used anywhere in this function?
+Nope. I'll remove them.
 
-[snip]
+>>   		test_reg_bar = pci_epc_get_first_free_bar(epc_features);
+>> @@ -520,34 +580,14 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+>>   	epf_test->test_reg_bar = test_reg_bar;
+>>   	epf_test->epc_features = epc_features;
+>>   
+>> -	ret = pci_epc_write_header(epc, epf->func_no, header);
+>> -	if (ret) {
+>> -		dev_err(dev, "Configuration header write failed\n");
+>> -		return ret;
+>> -	}
+>> -
+>>   	ret = pci_epf_test_alloc_space(epf);
+>>   	if (ret)
+>>   		return ret;
+>>   
+>> -	ret = pci_epf_test_set_bar(epf);
+>> -	if (ret)
+>> -		return ret;
+>> -
+>> -	if (msi_capable) {
+>> -		ret = pci_epc_set_msi(epc, epf->func_no, epf->msi_interrupts);
+>> -		if (ret) {
+>> -			dev_err(dev, "MSI configuration failed\n");
+>> -			return ret;
+>> -		}
+>> -	}
+>> -
+>> -	if (msix_capable) {
+>> -		ret = pci_epc_set_msix(epc, epf->func_no, epf->msix_interrupts);
+>> -		if (ret) {
+>> -			dev_err(dev, "MSI-X configuration failed\n");
+>> +	if (!skip_core_init) {
+>> +		ret = pci_epf_test_core_init(epf);
+>> +		if (ret)
+>>   			return ret;
+>> -		}
+>>   	}
+>>   
+>>   	if (linkup_notifier) {
+> 
+> This could as well be moved to pci_epf_test_core_init().
+Yes, but I would like to keep only the code that touches hardware in pci_epf_test_core_init()
+to minimize the time it takes to execute it. Is there any strong reason to move it? if not,
+I would prefer to leave it here in this function itself.
 
-> +/*
-> + * Set NUMA node for the devices on the bus
-> + */
-> +static void pci_assign_numa_node(struct hv_pcibus_device *hbus)
-> +{
-> +	struct pci_dev *dev;
-> +	struct pci_bus *bus =3D hbus->pci_bus;
-> +	struct hv_pci_dev *hv_dev;
-> +
-> +	list_for_each_entry(dev, &bus->devices, bus_list) {
-> +		hv_dev =3D get_pcichild_wslot(hbus, devfn_to_wslot(dev->devfn));
-> +		if (!hv_dev)
-> +			continue;
-> +
-> +		if (hv_dev->desc.flags & HV_PCI_DEVICE_FLAG_NUMA_AFFINITY)
-> +			set_dev_node(&dev->dev, hv_dev->desc.virtual_numa_node);
-> +	}
-> +}
-> +
+> 
+> Thanks
+> Kishon
+> 
 
-get_pcichild_wslot() gets a reference to the hv_dev, so a call to put_pcich=
-ild() is
-needed to balance.
-
-But more broadly, is the call to set_dev_node() operating on the correct
-struct device?  There's a struct device in the struct hv_device, and also o=
-ne in the
-struct pci_dev.  Everything in this module seems to be operating on the for=
-mer.
-For example, all the dev_err() calls identify the struct device in struct h=
-v_device.
-And enumerating all the devices on a virtual PCI bus is done by iterating t=
-hrough
-the hbus->children list, not the bus->devices list.  I don't completely und=
-erstand
-the interplay between the two struct device entries, but the difference mak=
-es
-me wonder if the above code should be setting the NUMA node on the struct
-device that's in struct hv_device.
-
-Michael
