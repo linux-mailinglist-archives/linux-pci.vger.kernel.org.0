@@ -2,255 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EBC5F10E22C
-	for <lists+linux-pci@lfdr.de>; Sun,  1 Dec 2019 15:29:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E17E10E2FA
+	for <lists+linux-pci@lfdr.de>; Sun,  1 Dec 2019 19:19:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbfLAO30 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 1 Dec 2019 09:29:26 -0500
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:9539 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726489AbfLAO30 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 1 Dec 2019 09:29:26 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5de3ce470000>; Sun, 01 Dec 2019 06:29:27 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sun, 01 Dec 2019 06:29:23 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sun, 01 Dec 2019 06:29:23 -0800
-Received: from [10.25.74.138] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 1 Dec
- 2019 14:29:19 +0000
-Subject: Re: [PATCH 4/4] PCI: pci-epf-test: Add support to defer core
- initialization
-To:     Kishon Vijay Abraham I <kishon@ti.com>, <jingoohan1@gmail.com>,
-        <gustavo.pimentel@synopsys.com>, <lorenzo.pieralisi@arm.com>,
-        <andrew.murray@arm.com>, <bhelgaas@google.com>,
-        <thierry.reding@gmail.com>
-CC:     <Jisheng.Zhang@synaptics.com>, <jonathanh@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20191113090851.26345-1-vidyas@nvidia.com>
- <20191113090851.26345-5-vidyas@nvidia.com>
- <e8e3b8b6-d115-b4d4-19c5-1eae1d8abd0f@ti.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <958fcc14-6794-0328-5c31-0dcc845ee646@nvidia.com>
-Date:   Sun, 1 Dec 2019 19:59:17 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        id S1727275AbfLASTb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 1 Dec 2019 13:19:31 -0500
+Received: from mtax.cdmx.gob.mx ([187.141.35.197]:8821 "EHLO mtax.cdmx.gob.mx"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727237AbfLASTb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 1 Dec 2019 13:19:31 -0500
+X-Greylist: delayed 6554 seconds by postgrey-1.27 at vger.kernel.org; Sun, 01 Dec 2019 13:19:30 EST
+X-NAI-Header: Modified by McAfee Email Gateway (4500)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cdmx.gob.mx; s=72359050-3965-11E6-920A-0192F7A2F08E;
+        t=1575217620; h=DKIM-Filter:X-Virus-Scanned:
+         Content-Type:MIME-Version:Content-Transfer-Encoding:
+         Content-Description:Subject:To:From:Date:Message-Id:
+         X-AnalysisOut:X-AnalysisOut:X-AnalysisOut:
+         X-AnalysisOut:X-AnalysisOut:X-SAAS-TrackingID:
+         X-NAI-Spam-Flag:X-NAI-Spam-Threshold:X-NAI-Spam-Score:
+         X-NAI-Spam-Rules:X-NAI-Spam-Version; bh=M
+        8rWdUYQ57RAYAgTWJQ4Rsch0kO0UXllaAVDzocOs4
+        8=; b=xmPVRGCw4qzxsEDmAsFKLSIwPlwrpRxowhq691MHr7tD
+        TeFqJqhmbe7fMBkHROpScU/kjUvwOriVPQPs8gRCx5VdusrS7A
+        bkyCZVT6fl5R/P1j2R2QAFKtXx0c2p2icn1ga9QXBa3rD7pymY
+        rLJCp7ABOpLk6cPtr6EpIocQVDk=
+Received: from cdmx.gob.mx (correo.cdmx.gob.mx [10.250.108.150]) by mtax.cdmx.gob.mx with smtp
+        (TLS: TLSv1/SSLv3,256bits,ECDHE-RSA-AES256-GCM-SHA384)
+         id 1dee_63b3_67b13cd4_2f21_4f18_862f_1e3425e85351;
+        Sun, 01 Dec 2019 10:26:59 -0600
+Received: from localhost (localhost [127.0.0.1])
+        by cdmx.gob.mx (Postfix) with ESMTP id 0BC8E1E2681;
+        Sun,  1 Dec 2019 10:18:29 -0600 (CST)
+Received: from cdmx.gob.mx ([127.0.0.1])
+        by localhost (cdmx.gob.mx [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id 0ah01Sz6lBZy; Sun,  1 Dec 2019 10:18:28 -0600 (CST)
+Received: from localhost (localhost [127.0.0.1])
+        by cdmx.gob.mx (Postfix) with ESMTP id A84E51E2A4C;
+        Sun,  1 Dec 2019 10:13:18 -0600 (CST)
+DKIM-Filter: OpenDKIM Filter v2.9.2 cdmx.gob.mx A84E51E2A4C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cdmx.gob.mx;
+        s=72359050-3965-11E6-920A-0192F7A2F08E; t=1575216798;
+        bh=M8rWdUYQ57RAYAgTWJQ4Rsch0kO0UXllaAVDzocOs48=;
+        h=Content-Type:MIME-Version:Content-Transfer-Encoding:Subject:To:
+         From:Date:Message-Id;
+        b=AfQJ9jhrCf53nHfXYA961WI2mYis6miZ66wTLqSKWDiGQ8obGafk7/mXf29DB0OZB
+         CSLiFkQO/WGvf6HeVZTV00Q8mLyvNYMDIZrZHntSH1El72HA15oQc+hh9kDB1Y8R2c
+         4to2kLGIpczdySltu00c026HpLS6bvQ4S9cy8YrI=
+X-Virus-Scanned: amavisd-new at cdmx.gob.mx
+Received: from cdmx.gob.mx ([127.0.0.1])
+        by localhost (cdmx.gob.mx [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id XD36UbkEA-K2; Sun,  1 Dec 2019 10:13:18 -0600 (CST)
+Received: from [192.168.0.104] (unknown [188.125.168.160])
+        by cdmx.gob.mx (Postfix) with ESMTPSA id C7A5D1E30D2;
+        Sun,  1 Dec 2019 10:04:54 -0600 (CST)
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-In-Reply-To: <e8e3b8b6-d115-b4d4-19c5-1eae1d8abd0f@ti.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1575210567; bh=R0xGxFOdur+CeguObMrwAo1cQvjZeJSyyOUZLz2IAp0=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=dZNGqzai/FKSRFv8UH3CuHk1nRWfvN7yIamCZKISnik8dmv8VuX5VPInG3vdGy4i9
-         Bapq+hTPVusDffht2ne+7hhkSljxEf5MT9279o1UNDDTECzQAEWVH0A6Ln83AJJ7tC
-         QtWinDl+cwEW9cWeVyM5Dd/C042gmgP8sagWCu/YNtOWkre9mHlr4bN/AoGQnzwJiC
-         zoJmsPz4wtOp+tbNV+nNwB6MoIdi3bn2+XrTOaG/bFYa9dpzLZS4anMsdKYI8XE5uj
-         iHaTp5rTiV6y50xgN5QyEaID0/ntwDw6I8dtH1eFHsxEjrXg2UXB1jskdMfr4msUYu
-         8036bE/qaF6DQ==
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: Congratulations
+To:     Recipients <aac-styfe@cdmx.gob.mx>
+From:   "Bishop Johnr" <aac-styfe@cdmx.gob.mx>
+Date:   Sun, 01 Dec 2019 17:04:46 +0100
+Message-Id: <20191201160454.C7A5D1E30D2@cdmx.gob.mx>
+X-AnalysisOut: [v=2.2 cv=aPKAkf1m c=1 sm=1 tr=0 p=6K-Ig8iNAUou4E5wYCEA:9 p]
+X-AnalysisOut: [=zRI05YRXt28A:10 a=T6zFoIZ12MK39YzkfxrL7A==:117 a=9152RP8M]
+X-AnalysisOut: [6GQqDhC/mI/QXQ==:17 a=8nJEP1OIZ-IA:10 a=pxVhFHJ0LMsA:10 a=]
+X-AnalysisOut: [pGLkceISAAAA:8 a=wPNLvfGTeEIA:10 a=M8O0W8wq6qAA:10 a=Ygvjr]
+X-AnalysisOut: [iKHvHXA2FhpO6d-:22]
+X-SAAS-TrackingID: 1d9e3ed5.0.105116450.00-2336.176706380.s12p02m016.mxlogic.net
+X-NAI-Spam-Flag: NO
+X-NAI-Spam-Threshold: 3
+X-NAI-Spam-Score: -5000
+X-NAI-Spam-Rules: 1 Rules triggered
+        WHITELISTED=-5000
+X-NAI-Spam-Version: 2.3.0.9418 : core <6686> : inlines <7165> : streams
+ <1840193> : uri <2949749>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 11/27/2019 2:50 PM, Kishon Vijay Abraham I wrote:
-> Hi,
-> 
-> On 13/11/19 2:38 PM, Vidya Sagar wrote:
->> Add support to defer core initialization and to receive a notifier
->> when core is ready to accommodate platforms where core is not for
->> initialization untile reference clock from host is available.
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> ---
->>   drivers/pci/endpoint/functions/pci-epf-test.c | 114 ++++++++++++------
->>   1 file changed, 77 insertions(+), 37 deletions(-)
->>
->> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
->> index bddff15052cc..068024fab544 100644
->> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
->> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
->> @@ -360,18 +360,6 @@ static void pci_epf_test_cmd_handler(struct work_struct *work)
->>   			   msecs_to_jiffies(1));
->>   }
->>   
->> -static int pci_epf_test_notifier(struct notifier_block *nb, unsigned long val,
->> -				 void *data)
->> -{
->> -	struct pci_epf *epf = container_of(nb, struct pci_epf, nb);
->> -	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
->> -
->> -	queue_delayed_work(kpcitest_workqueue, &epf_test->cmd_handler,
->> -			   msecs_to_jiffies(1));
->> -
->> -	return NOTIFY_OK;
->> -}
->> -
->>   static void pci_epf_test_unbind(struct pci_epf *epf)
->>   {
->>   	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
->> @@ -428,6 +416,78 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
->>   	return 0;
->>   }
->>   
->> +static int pci_epf_test_core_init(struct pci_epf *epf)
->> +{
->> +	struct pci_epf_header *header = epf->header;
->> +	const struct pci_epc_features *epc_features;
->> +	struct pci_epc *epc = epf->epc;
->> +	struct device *dev = &epf->dev;
->> +	bool msix_capable = false;
->> +	bool msi_capable = true;
->> +	int ret;
->> +
->> +	epc_features = pci_epc_get_features(epc, epf->func_no);
->> +	if (epc_features) {
->> +		msix_capable = epc_features->msix_capable;
->> +		msi_capable = epc_features->msi_capable;
->> +	}
->> +
->> +	ret = pci_epc_write_header(epc, epf->func_no, header);
->> +	if (ret) {
->> +		dev_err(dev, "Configuration header write failed\n");
->> +		return ret;
->> +	}
->> +
->> +	ret = pci_epf_test_set_bar(epf);
->> +	if (ret)
->> +		return ret;
->> +
->> +	if (msi_capable) {
->> +		ret = pci_epc_set_msi(epc, epf->func_no, epf->msi_interrupts);
->> +		if (ret) {
->> +			dev_err(dev, "MSI configuration failed\n");
->> +			return ret;
->> +		}
->> +	}
->> +
->> +	if (msix_capable) {
->> +		ret = pci_epc_set_msix(epc, epf->func_no, epf->msix_interrupts);
->> +		if (ret) {
->> +			dev_err(dev, "MSI-X configuration failed\n");
->> +			return ret;
->> +		}
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static int pci_epf_test_notifier(struct notifier_block *nb, unsigned long val,
->> +				 void *data)
->> +{
->> +	struct pci_epf *epf = container_of(nb, struct pci_epf, nb);
->> +	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
->> +	int ret;
->> +
->> +	switch (val) {
->> +	case CORE_INIT:
->> +		ret = pci_epf_test_core_init(epf);
->> +		if (ret)
->> +			return NOTIFY_BAD;
->> +		break;
->> +
->> +	case LINK_UP:
->> +		queue_delayed_work(kpcitest_workqueue, &epf_test->cmd_handler,
->> +				   msecs_to_jiffies(1));
->> +		break;
->> +
->> +	default:
->> +		dev_err(&epf->dev, "Invalid EPF test notifier event\n");
->> +		return NOTIFY_BAD;
->> +	}
->> +
->> +	return NOTIFY_OK;
->> +}
->> +
->>   static int pci_epf_test_alloc_space(struct pci_epf *epf)
->>   {
->>   	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
->> @@ -496,12 +556,11 @@ static int pci_epf_test_bind(struct pci_epf *epf)
->>   {
->>   	int ret;
->>   	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
->> -	struct pci_epf_header *header = epf->header;
->>   	const struct pci_epc_features *epc_features;
->>   	enum pci_barno test_reg_bar = BAR_0;
->>   	struct pci_epc *epc = epf->epc;
->> -	struct device *dev = &epf->dev;
->>   	bool linkup_notifier = false;
->> +	bool skip_core_init = false;
->>   	bool msix_capable = false;
->>   	bool msi_capable = true;
->>   
->> @@ -511,6 +570,7 @@ static int pci_epf_test_bind(struct pci_epf *epf)
->>   	epc_features = pci_epc_get_features(epc, epf->func_no);
->>   	if (epc_features) {
->>   		linkup_notifier = epc_features->linkup_notifier;
->> +		skip_core_init = epc_features->skip_core_init;
->>   		msix_capable = epc_features->msix_capable;
->>   		msi_capable = epc_features->msi_capable;
-> 
-> Are these used anywhere in this function?
-Nope. I'll remove them.
+Money was donated to you by Mr and Mrs Allen and Violet Large, just contact=
+ them with this email for more information =
 
->>   		test_reg_bar = pci_epc_get_first_free_bar(epc_features);
->> @@ -520,34 +580,14 @@ static int pci_epf_test_bind(struct pci_epf *epf)
->>   	epf_test->test_reg_bar = test_reg_bar;
->>   	epf_test->epc_features = epc_features;
->>   
->> -	ret = pci_epc_write_header(epc, epf->func_no, header);
->> -	if (ret) {
->> -		dev_err(dev, "Configuration header write failed\n");
->> -		return ret;
->> -	}
->> -
->>   	ret = pci_epf_test_alloc_space(epf);
->>   	if (ret)
->>   		return ret;
->>   
->> -	ret = pci_epf_test_set_bar(epf);
->> -	if (ret)
->> -		return ret;
->> -
->> -	if (msi_capable) {
->> -		ret = pci_epc_set_msi(epc, epf->func_no, epf->msi_interrupts);
->> -		if (ret) {
->> -			dev_err(dev, "MSI configuration failed\n");
->> -			return ret;
->> -		}
->> -	}
->> -
->> -	if (msix_capable) {
->> -		ret = pci_epc_set_msix(epc, epf->func_no, epf->msix_interrupts);
->> -		if (ret) {
->> -			dev_err(dev, "MSI-X configuration failed\n");
->> +	if (!skip_core_init) {
->> +		ret = pci_epf_test_core_init(epf);
->> +		if (ret)
->>   			return ret;
->> -		}
->>   	}
->>   
->>   	if (linkup_notifier) {
-> 
-> This could as well be moved to pci_epf_test_core_init().
-Yes, but I would like to keep only the code that touches hardware in pci_epf_test_core_init()
-to minimize the time it takes to execute it. Is there any strong reason to move it? if not,
-I would prefer to leave it here in this function itself.
 
-> 
-> Thanks
-> Kishon
-> 
-
+EMail: allenandvioletlargeaward@gmail.com
