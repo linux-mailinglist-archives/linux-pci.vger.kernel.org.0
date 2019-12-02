@@ -2,89 +2,155 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E17E10E2FA
-	for <lists+linux-pci@lfdr.de>; Sun,  1 Dec 2019 19:19:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D44FC10E810
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Dec 2019 11:00:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727275AbfLASTb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 1 Dec 2019 13:19:31 -0500
-Received: from mtax.cdmx.gob.mx ([187.141.35.197]:8821 "EHLO mtax.cdmx.gob.mx"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727237AbfLASTb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 1 Dec 2019 13:19:31 -0500
-X-Greylist: delayed 6554 seconds by postgrey-1.27 at vger.kernel.org; Sun, 01 Dec 2019 13:19:30 EST
-X-NAI-Header: Modified by McAfee Email Gateway (4500)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cdmx.gob.mx; s=72359050-3965-11E6-920A-0192F7A2F08E;
-        t=1575217620; h=DKIM-Filter:X-Virus-Scanned:
-         Content-Type:MIME-Version:Content-Transfer-Encoding:
-         Content-Description:Subject:To:From:Date:Message-Id:
-         X-AnalysisOut:X-AnalysisOut:X-AnalysisOut:
-         X-AnalysisOut:X-AnalysisOut:X-SAAS-TrackingID:
-         X-NAI-Spam-Flag:X-NAI-Spam-Threshold:X-NAI-Spam-Score:
-         X-NAI-Spam-Rules:X-NAI-Spam-Version; bh=M
-        8rWdUYQ57RAYAgTWJQ4Rsch0kO0UXllaAVDzocOs4
-        8=; b=xmPVRGCw4qzxsEDmAsFKLSIwPlwrpRxowhq691MHr7tD
-        TeFqJqhmbe7fMBkHROpScU/kjUvwOriVPQPs8gRCx5VdusrS7A
-        bkyCZVT6fl5R/P1j2R2QAFKtXx0c2p2icn1ga9QXBa3rD7pymY
-        rLJCp7ABOpLk6cPtr6EpIocQVDk=
-Received: from cdmx.gob.mx (correo.cdmx.gob.mx [10.250.108.150]) by mtax.cdmx.gob.mx with smtp
-        (TLS: TLSv1/SSLv3,256bits,ECDHE-RSA-AES256-GCM-SHA384)
-         id 1dee_63b3_67b13cd4_2f21_4f18_862f_1e3425e85351;
-        Sun, 01 Dec 2019 10:26:59 -0600
-Received: from localhost (localhost [127.0.0.1])
-        by cdmx.gob.mx (Postfix) with ESMTP id 0BC8E1E2681;
-        Sun,  1 Dec 2019 10:18:29 -0600 (CST)
-Received: from cdmx.gob.mx ([127.0.0.1])
-        by localhost (cdmx.gob.mx [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 0ah01Sz6lBZy; Sun,  1 Dec 2019 10:18:28 -0600 (CST)
-Received: from localhost (localhost [127.0.0.1])
-        by cdmx.gob.mx (Postfix) with ESMTP id A84E51E2A4C;
-        Sun,  1 Dec 2019 10:13:18 -0600 (CST)
-DKIM-Filter: OpenDKIM Filter v2.9.2 cdmx.gob.mx A84E51E2A4C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cdmx.gob.mx;
-        s=72359050-3965-11E6-920A-0192F7A2F08E; t=1575216798;
-        bh=M8rWdUYQ57RAYAgTWJQ4Rsch0kO0UXllaAVDzocOs48=;
-        h=Content-Type:MIME-Version:Content-Transfer-Encoding:Subject:To:
-         From:Date:Message-Id;
-        b=AfQJ9jhrCf53nHfXYA961WI2mYis6miZ66wTLqSKWDiGQ8obGafk7/mXf29DB0OZB
-         CSLiFkQO/WGvf6HeVZTV00Q8mLyvNYMDIZrZHntSH1El72HA15oQc+hh9kDB1Y8R2c
-         4to2kLGIpczdySltu00c026HpLS6bvQ4S9cy8YrI=
-X-Virus-Scanned: amavisd-new at cdmx.gob.mx
-Received: from cdmx.gob.mx ([127.0.0.1])
-        by localhost (cdmx.gob.mx [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id XD36UbkEA-K2; Sun,  1 Dec 2019 10:13:18 -0600 (CST)
-Received: from [192.168.0.104] (unknown [188.125.168.160])
-        by cdmx.gob.mx (Postfix) with ESMTPSA id C7A5D1E30D2;
-        Sun,  1 Dec 2019 10:04:54 -0600 (CST)
-Content-Type: text/plain; charset="iso-8859-1"
+        id S1726399AbfLBKAJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 2 Dec 2019 05:00:09 -0500
+Received: from mx2.suse.de ([195.135.220.15]:60354 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726115AbfLBKAJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 2 Dec 2019 05:00:09 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D8DE5ADD9;
+        Mon,  2 Dec 2019 10:00:05 +0000 (UTC)
+Message-ID: <2820f3fb9abc69d54df0dee1b6233eaf3cb63834.camel@suse.de>
+Subject: Re: [PATCH v3 5/7] PCI: brcmstb: add MSI capability
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Andrew Murray <andrew.murray@arm.com>
+Cc:     maz@kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Eric Anholt <eric@anholt.net>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com,
+        mbrugger@suse.com, phil@raspberrypi.org, jeremy.linton@arm.com,
+        linux-pci@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-arm-kernel@lists.infradead.org
+Date:   Mon, 02 Dec 2019 10:59:36 +0100
+In-Reply-To: <20191129154629.GF43905@e119886-lin.cambridge.arm.com>
+References: <20191126091946.7970-1-nsaenzjulienne@suse.de>
+         <20191126091946.7970-6-nsaenzjulienne@suse.de>
+         <20191129154629.GF43905@e119886-lin.cambridge.arm.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-K6gbtw6TubZyS8Q2Q2nd"
+User-Agent: Evolution 3.34.1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: Congratulations
-To:     Recipients <aac-styfe@cdmx.gob.mx>
-From:   "Bishop Johnr" <aac-styfe@cdmx.gob.mx>
-Date:   Sun, 01 Dec 2019 17:04:46 +0100
-Message-Id: <20191201160454.C7A5D1E30D2@cdmx.gob.mx>
-X-AnalysisOut: [v=2.2 cv=aPKAkf1m c=1 sm=1 tr=0 p=6K-Ig8iNAUou4E5wYCEA:9 p]
-X-AnalysisOut: [=zRI05YRXt28A:10 a=T6zFoIZ12MK39YzkfxrL7A==:117 a=9152RP8M]
-X-AnalysisOut: [6GQqDhC/mI/QXQ==:17 a=8nJEP1OIZ-IA:10 a=pxVhFHJ0LMsA:10 a=]
-X-AnalysisOut: [pGLkceISAAAA:8 a=wPNLvfGTeEIA:10 a=M8O0W8wq6qAA:10 a=Ygvjr]
-X-AnalysisOut: [iKHvHXA2FhpO6d-:22]
-X-SAAS-TrackingID: 1d9e3ed5.0.105116450.00-2336.176706380.s12p02m016.mxlogic.net
-X-NAI-Spam-Flag: NO
-X-NAI-Spam-Threshold: 3
-X-NAI-Spam-Score: -5000
-X-NAI-Spam-Rules: 1 Rules triggered
-        WHITELISTED=-5000
-X-NAI-Spam-Version: 2.3.0.9418 : core <6686> : inlines <7165> : streams
- <1840193> : uri <2949749>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Money was donated to you by Mr and Mrs Allen and Violet Large, just contact=
- them with this email for more information =
+
+--=-K6gbtw6TubZyS8Q2Q2nd
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hi Andrew,
+
+On Fri, 2019-11-29 at 15:46 +0000, Andrew Murray wrote:
+> On Tue, Nov 26, 2019 at 10:19:43AM +0100, Nicolas Saenz Julienne wrote:
+> > From: Jim Quinlan <james.quinlan@broadcom.com>
+> >=20
+> > This adds MSI support to the Broadcom STB PCIe host controller. The MSI
+> > controller is physically located within the PCIe block, however, there
+> > is no reason why the MSI controller could not be moved elsewhere in the
+> > future. MSIX is not supported by the HW.
+> >=20
+> > Since the internal Brcmstb MSI controller is intertwined with the PCIe
+> > controller, it is not its own platform device but rather part of the
+> > PCIe platform device.
+> >=20
+> > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> > Co-developed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > Reviewed-by: Marc Zyngier <maz@kernel.org>
+> >=20
+> > ---
+> >=20
+> > Changes since v2 (kept Marc's Reviewed-by as changes didn't affect irq
+> > subsystem stuff or seem petty enough):
+> >   - Use standard APIs on register operations
+> >   - Get rid of revision code
+>=20
+> Do any RPI4's have a HW revision of less than 33?
+
+No, IIRC it's actually revision 34. I had left that bit of code in, followi=
+ng
+the same train of thought as with the of_data on the device-tree part of th=
+e
+driver: "It's harmless and should make accomodating other devices easier." =
+It
+turned out not to be such a great approach. Lesson's learned. So I decided =
+to
+remove it.
+
+> >   - Update rules to msi_target_addr selection
+> >   - Remove unwarranted MSI_FLAG_PCI_MSIX
+> >   - Small cosmetic changes
+> >=20
+> > Changes since v1:cuando ten=C3=ADas tu vacaciones?
+> >   - Move revision code and some registers to this patch
+> >   - Use PCIE_MSI_IRQ_DOMAIN in Kconfig
+> >   - Remove redundant register read from ISR
+> >   - Fail probe on MSI init error
+> >   - Get rid of msi_internal
+> >   - Use bitmap family of functions
+> >   - Use edge triggered setup
+> >   - Add comment regarding MultiMSI
+> >   - Simplify compose_msi_msg to avoid reg read
+> >=20
+> > This is based on Jim's original submission[1] with some slight changes
+> > regarding how pcie->msi_target_addr is decided.
+> >=20
+> > [1] https://patchwork.kernel.org/patch/10605955/
+> >=20
+> >  drivers/pci/controller/Kconfig        |   1 +
+> >  drivers/pci/controller/pcie-brcmstb.c | 261 +++++++++++++++++++++++++-
+> >  2 files changed, 261 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kc=
+onfig
+> > index 27504f108ee5..918e283bbff1 100644
+> > +
+> > +static void brcm_msi_compose_msi_msg(struct irq_data *data, struct msi=
+_msg
+> > *msg)
+> > +{
+> > +	struct brcm_msi *msi =3D irq_data_get_irq_chip_data(data);
+> > +
+> > +	msg->address_lo =3D lower_32_bits(msi->target_addr);
+> > +	msg->address_hi =3D upper_32_bits(msi->target_addr);
+> > +	msg->data =3D 0x6540 | data->hwirq;
+>=20
+> NIT: Perhaps this 0x6540 can be a define - just in the same way we have a
+> define
+> for PCIE_MISC_MSI_DATA_CONFIG_VAL.
+
+Noted
+
+Regards,
+Nicolas
 
 
-EMail: allenandvioletlargeaward@gmail.com
+--=-K6gbtw6TubZyS8Q2Q2nd
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3k4IgACgkQlfZmHno8
+x/6oLAf/ZrjxvdunJzn4AYQQQ3YqnEVeLonAfG7NdyTmIPouYioWmuAJeWWycG9Z
+w9LJ5HQWtb34zAbKgJL9oznp+tlE/SKI+BoIxJt3HnNC44bQvYP9D2mVuC3khAMQ
+6wsSY7nKOQ84BC1wNhhsTxVOrR4TqAaCXG+Qh+rP5Vu/4tcH5CDJCg1+NpsTN1Lh
+/skKo6q+DbjQxyRUwXp0CpTm0VpSQpbhu9BDRAFUNT9VKY0zptPGFF1CiDaV+dsU
+WJENZ1GM/PaynUdZFbUE/y+uRf0JyvJeXyq6h7tsX0ORPvBHSR/mqSw70UregaH6
+c+jSMYmGSBOe+KRNM9w/TLdcRBa6Qw==
+=Z/P8
+-----END PGP SIGNATURE-----
+
+--=-K6gbtw6TubZyS8Q2Q2nd--
+
