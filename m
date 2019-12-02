@@ -2,99 +2,190 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C088910EDBB
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Dec 2019 18:04:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A0B5410F21B
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Dec 2019 22:23:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727670AbfLBRD7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 2 Dec 2019 12:03:59 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:41746 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727601AbfLBRD7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 Dec 2019 12:03:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=raL1+4V5E2+QW+HFVTt4GSePQ92W/jLVrBwyPI09wsc=; b=ODQMWZrxM3Ei91kafr/GGAwsm
-        Vaful+p5elqfnvM/sfwpwKe+crzQfQaye6TkkVGA5JgPugc7BaXzAbguFtZ+NwB1IvDOWEGnUSM5P
-        YiXwfDUsC+aHfe6gL86lsgHrBcIjiZBb0LAZnlHCLWXa2ehn9x38l1hcjs/wJPwXXCNV68SCA0WRu
-        9WhBoK77Mxc79Sp2vAATF0H+ZXHIIXb7cQRJ7BA9L5+wzu1qLAD96nekj6ivFZs1cH8TQXGuuTMFN
-        o+/jbkVAUVjjocir/PweEsTz9y0foZw1grxr76NcqC3ZyhjLc0uhtF2bYJlSzd8WpjRUo1lRebLOM
-        cAk26netg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ibp78-0001EG-SQ; Mon, 02 Dec 2019 17:03:58 +0000
-Date:   Mon, 2 Dec 2019 09:03:58 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     James Sewart <jamessewart@arista.com>
-Cc:     linux-pci@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Dmitry Safonov <dima@arista.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v5 2/3] PCI: Add parameter nr_devfns to pci_add_dma_alias
-Message-ID: <20191202170358.GB4174@infradead.org>
-References: <6A902F0D-FE98-4760-ADBB-4D5987D866BE@arista.com>
- <20191126173833.GA16069@infradead.org>
- <547214A9-9FD0-4DD5-80E1-1F5A467A0913@arista.com>
- <9c54c5dd-702c-a19b-38ba-55ab73b24729@deltatee.com>
- <435064D4-00F0-47F5-94D2-2C354F6B1206@arista.com>
- <058383d9-69fe-65e3-e410-eebd99840261@deltatee.com>
- <F26CC19F-66C2-466B-AE30-D65E10BA3022@arista.com>
- <d811576e-0f89-2303-a554-2701af5c5647@deltatee.com>
- <9DD82D05-6B9E-4AF5-9A3C-D459B75C0089@arista.com>
- <07D724A1-308F-44C3-8937-EE0C21EF3170@arista.com>
+        id S1725834AbfLBVXM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 2 Dec 2019 16:23:12 -0500
+Received: from mail-eopbgr730136.outbound.protection.outlook.com ([40.107.73.136]:5792
+        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725825AbfLBVXM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 2 Dec 2019 16:23:12 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YVx0uJFL7XKdU/zvqsGW+8kVs1hl0ycIhDCDr8JArXXykIVhNma2i/GGUi4800VWHmSgQN5hOQBnHRGV28qdsjhY2N/z4l3ARzbfX3Q5cvTZcShvp8VDqPp/TVZCDqVzo3VKjp1uaDSrGQa3RwZpCWINVeBxulVjQle4qHEh/4ICYDFMkqcwRgiaZrTgzU1eOsUd0JesOnDBAk2seeexYWhrOuyfbpaRbAltM9k/DTouZOBX6QIb/FHqGL73S03M4eFcVcYaGcZXy4PsxBYAxb0wGa7JZXtsoAT9Y9VzYy3eOI+g65gagQZThwWj/WL930P+DJWpyyqmNUGKg6K7cw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pUPwRfmqQsRAMI7qIqr2YmhuR3ZzoCSIeaC3EM1mdy8=;
+ b=b8vIFd4nDoVnaVcQx2WEqHlmIBOZz7ZyW4YqPpV7+PgaSn9ZvrCGqFT8OuYaJoPto/zhzV4mWEZc+wVdZQeT0KZ2bg/EMG8ZgHtUOSaQsCTGJ8rx60yVem6c6rYG3tTMYe7WKoNLG+JrDfK6sDSAa/zZsBdpXxxi9ZNmx5MnTep8nW+73u7sfBR6E21NPInpagFWiAT628HE/3rAeKpGOC7Zci5Xfjmck3P6UkRLEQ94j7HSwIFgo9P9Tk2NTk19kZ0UWjEhq5J7zJoArE7C8WGP6zAdhq1Uk/94TZ43OyYHTUcXG1WMSloz/x0ES1JFxfj5eBD5TOBtEUhscXNmPQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pUPwRfmqQsRAMI7qIqr2YmhuR3ZzoCSIeaC3EM1mdy8=;
+ b=hBhKMoxlq+0ggNup9z4S1gw69dnsrdPRXnsAjT5CRXT+arzZ15IFPuzaWC+dqwAOFPbrAlUUSbIybYus1fYixvFvK/qkTj2fPYCNOqCyFB7s+JnIsAf0yTLaBuQ7bRVlpTlN0mMz7Lb/THtqav+BfqEkmjtkZN5ZTR3HbPoZwHA=
+Received: from SN6PR2101MB1134.namprd21.prod.outlook.com (52.132.114.23) by
+ SN6PR2101MB0976.namprd21.prod.outlook.com (52.132.114.29) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.1; Mon, 2 Dec 2019 21:23:09 +0000
+Received: from SN6PR2101MB1134.namprd21.prod.outlook.com
+ ([fe80::5154:fa80:5f3:ad17]) by SN6PR2101MB1134.namprd21.prod.outlook.com
+ ([fe80::5154:fa80:5f3:ad17%9]) with mapi id 15.20.2538.000; Mon, 2 Dec 2019
+ 21:23:09 +0000
+From:   Long Li <longli@microsoft.com>
+To:     Michael Kelley <mikelley@microsoft.com>,
+        "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dexuan Cui <decui@microsoft.com>
+Subject: RE: [EXTERNAL] [PATCH 2/2] PCI: hv: Add support for protocol 1.3 and
+ support PCI_BUS_RELATIONS2
+Thread-Topic: [EXTERNAL] [PATCH 2/2] PCI: hv: Add support for protocol 1.3 and
+ support PCI_BUS_RELATIONS2
+Thread-Index: AQHVoaFcMccAfvEwC0apfMtqY7fC/6ejLsAAgAQt+qA=
+Date:   Mon, 2 Dec 2019 21:23:09 +0000
+Message-ID: <SN6PR2101MB113402749BE289B8B97D9D72CE430@SN6PR2101MB1134.namprd21.prod.outlook.com>
+References: <1574474229-44840-1-git-send-email-longli@linuxonhyperv.com>
+ <1574474229-44840-2-git-send-email-longli@linuxonhyperv.com>
+ <CY4PR21MB0629300E161C5119D4714A64D7410@CY4PR21MB0629.namprd21.prod.outlook.com>
+In-Reply-To: <CY4PR21MB0629300E161C5119D4714A64D7410@CY4PR21MB0629.namprd21.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-11-30T04:45:34.1746665Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=0f1b8475-7cee-41ba-9596-da3f0b1969db;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=longli@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:9:ede5:db5c:c6fe:798]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 7e0889d8-76bb-4f4e-cbd0-08d7776dd491
+x-ms-traffictypediagnostic: SN6PR2101MB0976:|SN6PR2101MB0976:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <SN6PR2101MB097698C66D0C2A59BDA9BDDCCE430@SN6PR2101MB0976.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0239D46DB6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(366004)(346002)(136003)(396003)(376002)(189003)(199004)(11346002)(446003)(46003)(6506007)(1511001)(2906002)(8676002)(102836004)(186003)(6116002)(81156014)(256004)(229853002)(81166006)(9686003)(6436002)(14454004)(33656002)(8936002)(76176011)(10290500003)(478600001)(66476007)(25786009)(71190400001)(71200400001)(66946007)(64756008)(66446008)(76116006)(66556008)(2501003)(10090500001)(2201001)(86362001)(8990500004)(6636002)(55016002)(7696005)(99286004)(6246003)(22452003)(316002)(110136005)(74316002)(305945005)(7736002)(52536014)(5660300002)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR2101MB0976;H:SN6PR2101MB1134.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: QElNTHoG3U72m8aBho4Jqs77QS4Y/FmMsdG1Y3PfVYzA54bwN7/3Vrkbqm9IAnZC5PREUD5i/Nve6ojBguK1mDYkvnGCfqxm2+G4Zxx/uQFnRSBl+xKAaBe3iYUscb85pMpQzp/Hd/aymUjFcRUjYSDxIaCvICm6DYiCbiPRDt2iWbJv8klS9nrMO+A93X4RYTcfnd5rFyM1rzfvRBGMVnmLyzND1rL9IyPgg6HGnjIloSO60uLICulFUHpkZrn5OGIneDgKPGLAVDl9Ywozo3TQNpRz3DErO+flrtRMd/BNZXO2qDGR9lojPmWFQASkQUx9x/OjEGhAUvMxPuk4EiiLuNN6jvVmi+kmfKSt6c65kC9cWVTWjT/7yT8CsUQCfOYcAis2MDQ2ajKnwRENAbZubEMKKyrcNMSySkTZKUpOioOnKdtt44KLzHnQskuc
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <07D724A1-308F-44C3-8937-EE0C21EF3170@arista.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7e0889d8-76bb-4f4e-cbd0-08d7776dd491
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Dec 2019 21:23:09.5670
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ywuVWFPMyK1/jxBW8naaTTp4VwHgX+y1m4g7ca3W5NvWWWCRlkfDR0guxJIyv0XIEJO1g/a0jvzKLxEIBfa3fA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB0976
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Nov 29, 2019 at 05:56:55PM +0000, James Sewart wrote:
-> pci_add_dma_alias can now be used to create a dma alias for a range of
-> devfns.
-> 
-> Signed-off-by: James Sewart <jamessewart@arista.com>
-> ---
->  drivers/pci/pci.c    | 23 ++++++++++++++++++-----
->  drivers/pci/quirks.c | 14 +++++++-------
->  include/linux/pci.h  |  2 +-
->  3 files changed, 26 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 0a4449a30ace..f9800a610ca1 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -5857,7 +5857,8 @@ int pci_set_vga_state(struct pci_dev *dev, bool decode,
->  /**
->   * pci_add_dma_alias - Add a DMA devfn alias for a device
->   * @dev: the PCI device for which alias is added
-> - * @devfn: alias slot and function
-> + * @devfn_from: alias slot and function
-> + * @nr_devfns: Number of subsequent devfns to alias
->   *
->   * This helper encodes an 8-bit devfn as a bit number in dma_alias_mask
->   * which is used to program permissible bus-devfn source addresses for DMA
-> @@ -5873,8 +5874,14 @@ int pci_set_vga_state(struct pci_dev *dev, bool decode,
->   * cannot be left as a userspace activity).  DMA aliases should therefore
->   * be configured via quirks, such as the PCI fixup header quirk.
->   */
-> -void pci_add_dma_alias(struct pci_dev *dev, u8 devfn)
-> +void pci_add_dma_alias(struct pci_dev *dev, u8 devfn_from, unsigned nr_devfns)
->  {
-> +	int devfn_to;
-> +
-> +	if (nr_devfns > U8_MAX+1)
-> +		nr_devfns = U8_MAX+1;
+>Subject: RE: [EXTERNAL] [PATCH 2/2] PCI: hv: Add support for protocol 1.3 =
+and
+>support PCI_BUS_RELATIONS2
+>
+>From: longli@linuxonhyperv.com Sent: Friday, November 22, 2019 5:57 PM
+>>
+>> From: Long Li <longli@microsoft.com>
+>>
+>> Starting with Hyper-V PCI protocol version 1.3, the host VSP can send
+>> PCI_BUS_RELATIONS2 and pass the vNUMA node information for devices
+>on the bus.
+>> The vNUMA node tells which guest NUMA node this device is on based on
+>> guest VM configuration topology and physical device inforamtion.
+>>
+>> The patch adds code to negotiate v1.3 and process PCI_BUS_RELATIONS2.
+>>
+>> Signed-off-by: Long Li <longli@microsoft.com>
+>> ---
+>>  drivers/pci/controller/pci-hyperv.c | 107
+>> ++++++++++++++++++++++++++++
+>>  1 file changed, 107 insertions(+)
+>>
+>
+>[snip]
+>
+>> +/*
+>> + * Set NUMA node for the devices on the bus  */ static void
+>> +pci_assign_numa_node(struct hv_pcibus_device *hbus) {
+>> +	struct pci_dev *dev;
+>> +	struct pci_bus *bus =3D hbus->pci_bus;
+>> +	struct hv_pci_dev *hv_dev;
+>> +
+>> +	list_for_each_entry(dev, &bus->devices, bus_list) {
+>> +		hv_dev =3D get_pcichild_wslot(hbus, devfn_to_wslot(dev-
+>>devfn));
+>> +		if (!hv_dev)
+>> +			continue;
+>> +
+>> +		if (hv_dev->desc.flags &
+>HV_PCI_DEVICE_FLAG_NUMA_AFFINITY)
+>> +			set_dev_node(&dev->dev, hv_dev-
+>>desc.virtual_numa_node);
+>> +	}
+>> +}
+>> +
+>
+>get_pcichild_wslot() gets a reference to the hv_dev, so a call to put_pcic=
+hild()
+>is needed to balance.
 
-Missing whitespaces here as well.  Also this could use max() and I
-think you want a documented constants for MAX_NR_DEVFNS that documents
-this "not off by one".
+Thanks for pointing this out! I will send v2 to fix this.
+
+>
+>But more broadly, is the call to set_dev_node() operating on the correct s=
+truct
+>device?  There's a struct device in the struct hv_device, and also one in =
+the
+>struct pci_dev.  Everything in this module seems to be operating on the
+>former.
+>For example, all the dev_err() calls identify the struct device in struct
+>hv_device.
+>And enumerating all the devices on a virtual PCI bus is done by iterating
+>through the hbus->children list, not the bus->devices list.  I don't compl=
+etely
+>understand the interplay between the two struct device entries, but the
+>difference makes me wonder if the above code should be setting the NUMA
+>node on the struct device that's in struct hv_device.
+
+There are two "bus" variables in this function. "bus" is a "struct pci_bus"=
+ from the PCI layer. "hbus" is a "struct hv_pcibus_device" defined in pci-h=
+yperv.
+
+The parameter passed to set_dev_node is &dev->dev, the dev is enumerated fr=
+om bus->devices. So dev (struct pci_dev) is from the PCI layer, this functi=
+on sets the node on the device that will be used to probe and load its corr=
+esponding driver.
+
+There is a separate list of hbus->children. It's represents pci-hyperv's vi=
+ew of devices on its bus. pci-hyperv presents those devices to PCI layer wh=
+en pci_scan_child_bus() is called.
+
+Long
