@@ -2,38 +2,33 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C5A5110FCD1
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Dec 2019 12:49:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AE0AE10FCBE
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Dec 2019 12:48:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbfLCLsa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Dec 2019 06:48:30 -0500
-Received: from mx2.suse.de ([195.135.220.15]:49446 "EHLO mx1.suse.de"
+        id S1726330AbfLCLry (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Dec 2019 06:47:54 -0500
+Received: from mx2.suse.de ([195.135.220.15]:49510 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725907AbfLCLrx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S1725939AbfLCLrx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Tue, 3 Dec 2019 06:47:53 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 78EF7B168;
-        Tue,  3 Dec 2019 11:47:50 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 6B4FCB1E8;
+        Tue,  3 Dec 2019 11:47:51 +0000 (UTC)
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 To:     andrew.murray@arm.com, maz@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Eric Anholt <eric@anholt.net>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Bjorn Helgaas <bhelgaas@google.com>
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Eric Anholt <eric@anholt.net>, Stefan Wahren <wahrenst@gmx.net>
 Cc:     james.quinlan@broadcom.com, mbrugger@suse.com,
-        phil@raspberrypi.org, jeremy.linton@arm.com,
+        f.fainelli@gmail.com, phil@raspberrypi.org, jeremy.linton@arm.com,
         linux-pci@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
         Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Rob Herring <robh@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH v4 1/8] dt-bindings: PCI: Add bindings for brcmstb's PCIe device
-Date:   Tue,  3 Dec 2019 12:47:34 +0100
-Message-Id: <20191203114743.1294-2-nsaenzjulienne@suse.de>
+        devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v4 2/8] ARM: dts: bcm2711: Enable PCIe controller
+Date:   Tue,  3 Dec 2019 12:47:35 +0100
+Message-Id: <20191203114743.1294-3-nsaenzjulienne@suse.de>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191203114743.1294-1-nsaenzjulienne@suse.de>
 References: <20191203114743.1294-1-nsaenzjulienne@suse.de>
@@ -44,143 +39,77 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Jim Quinlan <james.quinlan@broadcom.com>
+This enables bcm2711's PCIe bus, which is hardwired to a VIA
+Technologies XHCI USB 3.0 controller.
 
-The DT bindings description of the brcmstb PCIe device is described.
-This node can only be used for now on the Raspberry Pi 4.
-
-Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-Co-developed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Reviewed-by: Rob Herring <robh@kernel.org>
 
 ---
 
+Changes since v3:
+  - Remove unwarranted comment
+
 Changes since v2:
-  - Add pci reference schema
-  - Drop all default properties
-  - Assume msi-controller and msi-parent are properly defined
-  - Add num entries on multiple properties
-  - use unevaluatedProperties
-  - Update required properties
-  - Fix license
+  - Remove unused interrupt-map
+  - correct dma-ranges to it's full size, non power of 2 bus DMA
+    constraints now supported in linux-next[1]
+  - add device_type
+  - rename alias from pcie_0 to pcie0
 
 Changes since v1:
-  - Fix commit Subject
-  - Remove linux,pci-domain
+  - remove linux,pci-domain
 
-This was based on Jim's original submission[1], converted to yaml and
-adapted to the RPi4 case.
+ arch/arm/boot/dts/bcm2711.dtsi | 37 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
-[1] https://patchwork.kernel.org/patch/10605937/
-
- .../bindings/pci/brcm,stb-pcie.yaml           | 97 +++++++++++++++++++
- 1 file changed, 97 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-
-diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-new file mode 100644
-index 000000000000..77d3e81a437b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-@@ -0,0 +1,97 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pci/brcm,stb-pcie.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711.dtsi
+index 667658497898..5b61cd915f2b 100644
+--- a/arch/arm/boot/dts/bcm2711.dtsi
++++ b/arch/arm/boot/dts/bcm2711.dtsi
+@@ -288,6 +288,43 @@ IRQ_TYPE_LEVEL_LOW)>,
+ 		arm,cpu-registers-not-fw-configured;
+ 	};
+ 
++	scb {
++		compatible = "simple-bus";
++		#address-cells = <2>;
++		#size-cells = <1>;
 +
-+title: Brcmstb PCIe Host Controller Device Tree Bindings
++		ranges = <0x0 0x7c000000  0x0 0xfc000000  0x03800000>,
++			 <0x6 0x00000000  0x6 0x00000000  0x40000000>;
 +
-+maintainers:
-+  - Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
++		pcie0: pcie@7d500000 {
++			compatible = "brcm,bcm2711-pcie";
++			reg = <0x0 0x7d500000 0x9310>;
++			device_type = "pci";
++			#address-cells = <3>;
++			#interrupt-cells = <1>;
++			#size-cells = <2>;
++			interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "pcie", "msi";
++			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
++			interrupt-map = <0 0 0 1 &gicv2 GIC_SPI 143
++							IRQ_TYPE_LEVEL_HIGH>;
++			msi-controller;
++			msi-parent = <&pcie0>;
 +
-+allOf:
-+  - $ref: /schemas/pci/pci-bus.yaml#
++			ranges = <0x02000000 0x0 0xf8000000 0x6 0x00000000
++				  0x0 0x04000000>;
++			/*
++			 * The wrapper around the PCIe block has a bug
++			 * preventing it from accessing beyond the first 3GB of
++			 * memory.
++			 */
++			dma-ranges = <0x02000000 0x0 0x00000000 0x0 0x00000000
++				      0x0 0xc0000000>;
++			brcm,enable-ssc;
++		};
++	};
 +
-+properties:
-+  compatible:
-+    const: brcm,bcm2711-pcie # The Raspberry Pi 4
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - description: PCIe host controller
-+      - description: builtin MSI controller
-+
-+  interrupt-names:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - const: pcie
-+      - const: msi
-+
-+  ranges:
-+    maxItems: 1
-+
-+  dma-ranges:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    items:
-+      - const: sw_pcie
-+
-+  msi-controller:
-+    description: Identifies the node as an MSI controller.
-+
-+  msi-parent:
-+    description: MSI controller the device is capable of using.
-+
-+  brcm,enable-ssc:
-+    description: Indicates usage of spread-spectrum clocking.
-+    type: boolean
-+
-+required:
-+  - reg
-+  - dma-ranges
-+  - "#interrupt-cells"
-+  - interrupts
-+  - interrupt-names
-+  - interrupt-map-mask
-+  - interrupt-map
-+  - msi-controller
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    scb {
-+            #address-cells = <2>;
-+            #size-cells = <1>;
-+            pcie0: pcie@7d500000 {
-+                    compatible = "brcm,bcm2711-pcie";
-+                    reg = <0x0 0x7d500000 0x9310>;
-+                    device_type = "pci";
-+                    #address-cells = <3>;
-+                    #size-cells = <2>;
-+                    #interrupt-cells = <1>;
-+                    interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
-+                                 <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
-+                    interrupt-names = "pcie", "msi";
-+                    interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-+                    interrupt-map = <0 0 0 1 &gicv2 GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>;
-+                    msi-parent = <&pcie0>;
-+                    msi-controller;
-+                    ranges = <0x02000000 0x0 0xf8000000 0x6 0x00000000 0x0 0x04000000>;
-+                    dma-ranges = <0x02000000 0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>;
-+                    brcm,enable-ssc;
-+            };
-+    };
+ 	cpus: cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
 -- 
 2.24.0
 
