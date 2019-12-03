@@ -2,120 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B39C11017E
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Dec 2019 16:44:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D8896110194
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Dec 2019 16:53:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbfLCPoU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Dec 2019 10:44:20 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:36012 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726969AbfLCPoT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Dec 2019 10:44:19 -0500
-Received: by mail-pj1-f67.google.com with SMTP id n96so1685239pjc.3
-        for <linux-pci@vger.kernel.org>; Tue, 03 Dec 2019 07:44:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=9ZkhQrbE0pqWo4Xrfbt5no2EyvavM8680V6oMcMbppE=;
-        b=EBwqc6MulSxDWmm7FdPAlxIr1bsXOSVCfKzrNL1doUXKxjR7GgAOrbgPO8OBy0Z3G9
-         Bm5CZmA9BZ/TbmkovBpvwhZIJ30cFgj4XLfb9ILKVsr87CAknH81elcvsIszKP1NoAKR
-         aGoWTjt56RQiNo6Q7npeqkPdw3vqrupsnmyNtB545Okihe9VojG2/NA2Ckyu3YYNO8Ta
-         C1ZIdxjKY/1vUndUI8IXOAd6NhogSj/gSUsdveQKA62ryk1FVsjhdXZ10hz3jkr3p0Dh
-         n+eWdL0KL9P0/2mppivVB0C8itzjIFmTufIqXQ7MSmQ672wzoes8agSVU8kh0p/b22CV
-         uykQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=9ZkhQrbE0pqWo4Xrfbt5no2EyvavM8680V6oMcMbppE=;
-        b=GBUlj8sJW/XoQsRCksCvZwDrD7iVzAyCT2HDCgmuT8H+8ck0/dkj8bamixuvQfhrHr
-         3ilI9jUhwkDHovqSvZtUyHRjpr5gIDikw1Q1OIYzMpU2EI7q6Zj248OX5CxqcRMAEJJM
-         xfKb5PFHxLmuKNgPGD9ibLK8BDi94jyv+r+txTYDgTFuGAbDhh1U36/pDdo/IIP/Ejgy
-         vDBAsgC5ZWKjEv8KnbE9WFLQVMAATNVZPZzFebeDgws+AiBXbWemTRSQoyTZ5FJDql+d
-         YItF3SZBDnpOxH+NAFOWc++Sg4pm8N2fazW8NqRzTUrN+qV4xoFOizUhCfBXL8Pojx6E
-         UFvQ==
-X-Gm-Message-State: APjAAAU7oFixoMCooQQMzKvhcQTjDmee6eJdfxnWBN+f2UKZ02f8vPoN
-        7k0cMYhOrA+71YxdTLDb5FUG2qveGRLRQa3s
-X-Google-Smtp-Source: APXvYqwi1quFBuB5qYP3TcIJe8VNkDjJWejd8MLtlpQR7IQidLMT9GSnDbiV/IMnm1WNzKlpfKtONQ==
-X-Received: by 2002:a17:90a:d353:: with SMTP id i19mr6306671pjx.43.1575387858722;
-        Tue, 03 Dec 2019 07:44:18 -0800 (PST)
-Received: from [10.83.42.232] ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id e11sm3953969pgh.54.2019.12.03.07.44.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 03 Dec 2019 07:44:17 -0800 (PST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
-Subject: [PATCH v6 3/3] PCI: Add DMA alias quirk for PLX PEX NTB
-From:   James Sewart <jamessewart@arista.com>
-In-Reply-To: <D4C7374E-4DFE-4024-8E76-9F54BF421B62@arista.com>
-Date:   Tue, 3 Dec 2019 15:44:15 +0000
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Dmitry Safonov <dima@arista.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <DB3DFAF8-D126-4ECB-A4E0-C314F4F46205@arista.com>
-References: <910070E3-7964-4549-B77F-EC7FC6144503@arista.com>
- <D4C7374E-4DFE-4024-8E76-9F54BF421B62@arista.com>
-To:     linux-pci@vger.kernel.org
-X-Mailer: Apple Mail (2.3445.102.3)
+        id S1726179AbfLCPxV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Dec 2019 10:53:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51978 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726024AbfLCPxV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 3 Dec 2019 10:53:21 -0500
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05A6D2073F;
+        Tue,  3 Dec 2019 15:53:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575388400;
+        bh=cKUlQJxyEbNNE534SxNpTQSfjp4RJhfRU1TUcm+QH08=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Nm1H73YFEpWiEJ7OcGsNEJd3BOuiFHQOpmau/UXVgeM0A3bJ4zEmI/hHgl2R62C1y
+         Ms62vpk7yOnX3u1BuWQss6CwRWnVQXsDzid8yYPpfAB1VJO4Tgm8AGk7nzJRGSJKld
+         i6dHTj8CNyyW9bPfXgUO/tMXqTZtxcPv3D8aWTdQ=
+Received: by mail-qv1-f52.google.com with SMTP id t9so1680702qvh.13;
+        Tue, 03 Dec 2019 07:53:19 -0800 (PST)
+X-Gm-Message-State: APjAAAVJ49WG1m4rnxIDzV6bZNgvIYDKKpBsv2NUCEBJIK1euNEkDUZm
+        7u/8oY6z25IWCMPjFJ4zKb1FAEq1P/tWCDr4HA==
+X-Google-Smtp-Source: APXvYqyICjW3HYnUPFqTgR4rEp2A1uuQE3BOephqhDMI2H3gFhNk2aTw/xPKbNHQEIKUpgOnuSfcOdrza+JvE1yn/H8=
+X-Received: by 2002:ad4:450a:: with SMTP id k10mr5459306qvu.136.1575388397912;
+ Tue, 03 Dec 2019 07:53:17 -0800 (PST)
+MIME-Version: 1.0
+References: <20191203114743.1294-1-nsaenzjulienne@suse.de> <20191203114743.1294-9-nsaenzjulienne@suse.de>
+In-Reply-To: <20191203114743.1294-9-nsaenzjulienne@suse.de>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 3 Dec 2019 09:53:05 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLMCXdnZag3jihV_dzuR+wFaVKFb7q_PdKTxTg0LVA6cw@mail.gmail.com>
+Message-ID: <CAL_JsqLMCXdnZag3jihV_dzuR+wFaVKFb7q_PdKTxTg0LVA6cw@mail.gmail.com>
+Subject: Re: [PATCH v4 8/8] linux/log2.h: Use roundup/dow_pow_two() on 64bit calculations
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Andrew Murray <andrew.murray@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Eric Anholt <eric@anholt.net>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        james.quinlan@broadcom.com, Matthias Brugger <mbrugger@suse.com>,
+        Phil Elwell <phil@raspberrypi.org>,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-acpi@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        netdev <netdev@vger.kernel.org>, linux-rdma@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The PLX PEX NTB forwards DMA transactions using Requester ID's that
-don't exist as PCI devices. The devfn for a transaction is used as an
-index into a lookup table storing the origin of a transaction on the
-other side of the bridge.
+On Tue, Dec 3, 2019 at 5:48 AM Nicolas Saenz Julienne
+<nsaenzjulienne@suse.de> wrote:
+>
+> The function now is safe to use while expecting a 64bit value. Use it
+> where relevant.
 
-This patch aliases all possible devfn's to the NTB device so that any
-transaction coming in is governed by the mappings for the NTB.
+What was wrong with the existing code? This is missing some context.
 
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-Signed-off-by: James Sewart <jamessewart@arista.com>
----
- drivers/pci/quirks.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> ---
+>  drivers/acpi/arm64/iort.c                        | 2 +-
+>  drivers/net/ethernet/mellanox/mlx4/en_clock.c    | 3 ++-
+>  drivers/of/device.c                              | 3 ++-
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 0f3f5afc73fd..3a67049ca630 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5315,6 +5315,21 @@ SWITCHTEC_QUIRK(0x8574);  /* PFXI 64XG3 */
- SWITCHTEC_QUIRK(0x8575);  /* PFXI 80XG3 */
- SWITCHTEC_QUIRK(0x8576);  /* PFXI 96XG3 */
-=20
-+/*
-+ * PLX NTB uses devfn proxy IDs to move TLPs between NT endpoints. =
-These IDs
-+ * are used to forward responses to the originator on the other side of =
-the
-+ * NTB. Alias all possible IDs to the NTB to permit access when the =
-IOMMU is
-+ * turned on.
-+ */
-+static void quirk_plx_ntb_dma_alias(struct pci_dev *pdev)
-+{
-+	pci_info(pdev, "Setting PLX NTB proxy ID aliases\n");
-+	/* PLX NTB may use all 256 devfns */
-+	pci_add_dma_alias(pdev, 0, 256);
-+}
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_PLX, 0x87b0, =
-quirk_plx_ntb_dma_alias);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_PLX, 0x87b1, =
-quirk_plx_ntb_dma_alias);
-+
- /*
-  * On Lenovo Thinkpad P50 SKUs with a Nvidia Quadro M1000M, the BIOS =
-does
-  * not always reset the secondary Nvidia GPU between reboots if the =
-system
---=20
-2.24.0
+In any case,
 
+Acked-by: Rob Herring <robh@kernel.org>
+
+>  drivers/pci/controller/cadence/pcie-cadence-ep.c | 3 ++-
+>  drivers/pci/controller/cadence/pcie-cadence.c    | 3 ++-
+>  drivers/pci/controller/pcie-brcmstb.c            | 3 ++-
+>  drivers/pci/controller/pcie-rockchip-ep.c        | 5 +++--
+>  kernel/dma/direct.c                              | 2 +-
+>  8 files changed, 15 insertions(+), 9 deletions(-)
