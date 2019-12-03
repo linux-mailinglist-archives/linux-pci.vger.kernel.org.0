@@ -2,56 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 04924110548
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Dec 2019 20:36:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D72E0110551
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Dec 2019 20:40:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727349AbfLCTg1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Dec 2019 14:36:27 -0500
-Received: from mail-io1-f44.google.com ([209.85.166.44]:42264 "EHLO
-        mail-io1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726079AbfLCTg1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Dec 2019 14:36:27 -0500
-Received: by mail-io1-f44.google.com with SMTP id f82so5080787ioa.9
-        for <linux-pci@vger.kernel.org>; Tue, 03 Dec 2019 11:36:27 -0800 (PST)
+        id S1726970AbfLCTkg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Dec 2019 14:40:36 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:39572 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726549AbfLCTkf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Dec 2019 14:40:35 -0500
+Received: by mail-io1-f67.google.com with SMTP id c16so5126814ioh.6
+        for <linux-pci@vger.kernel.org>; Tue, 03 Dec 2019 11:40:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=rbCm+sboO//ec+9mJyUZQfBjgbVhZp2u3dmOtW+Tw+c=;
-        b=thVNI2dYbYLDW7LST1GvzlBiAIZzDGO78uzN5JdQEO7M2lDOMNOZANxdYW/Y7S1E6z
-         AcwyTekhqytphND8+4zCsLKXRktkres1MuM7s1pYrPxWFAnFY1Tp2Wd8xvzwZX4PBfcn
-         Tm+WvtYdvApcHjn6toWDudMHLN9YunqMDWB67jvfly7Y6o47uSik+1Jg3cl20RL4da7P
-         WT0pEGwL7R5GvTy4QRe9JCbM2ia3Ljd68N4ly17rWbUsvkBsNs6r3AMCu/Io//k/PPtF
-         ILNKPshiXXSd4xHgkaSDLBCJ3xCGvHOJlmYSftmXic4Lvhqhc9cp1iPk6kJlcGCelnxr
-         vF5Q==
+        bh=8ch+WNijaY6AsPxm0+XePiTtapq06gZNm+FnTtW+Yvk=;
+        b=cUiQ2WxJYfgxGRtIYYrBFgideFa64zwJVC0xM+vPn1heDbtP8PS8yhn2SslWuKeDcv
+         qhLffbJ3Uo+Xo+PBrM9d1srYRC+HpClcuPS7jDcp7nCHYvNKj3tAiPHBPOeKB6nyEJgr
+         hAziOs01GF/Nm9RN1Ac/APBu0vvoX7TLuXjbEo16RDF+snyauxsyRnPMV36z/iiP3SDn
+         hKDznvFTSRzqAqz2WkQLpDHNKsS+cvsRHjWorCY9fY2HMWbBfkQv7Akz/++xiyUkfxYF
+         soTgico8aclq+HXraOhqfo7I5eaUa1BR59m74mMTlpG6jLAnZo16mBg2DDLjOz1EzXtX
+         1Nwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=rbCm+sboO//ec+9mJyUZQfBjgbVhZp2u3dmOtW+Tw+c=;
-        b=sgT5E/a3cHQDjJZf2dklOoEsPf759J/InHkjX/h6M64x9cdWHyDDXDBMZJCWLt3MD6
-         L9dExQDdYVK8YTaUrrV/UftDQitUr3WNhA1GfGYpMxMxoAe20ZcStNo229128QLJjVgE
-         x9Q9203HLtk5UpSYDWRkUNP9OzQycNVEpHKqKSgAdsNNJFN1Z8ucKRUSPgC0TQa9m7Gu
-         1odUE+Y2tQWnUpkqCiTu0XMBnuWXubK8xWUqf5ddOu4EXukphTp2DEQ4fsA52XOA5UGv
-         Lxo/i1tCmei1tE3il30k1KWtbYoxUf83h52VVmH6KF/UhvIk2mMPzqOEVoENxQM/pkSD
-         FCRA==
-X-Gm-Message-State: APjAAAV6CFInRFLFWFPEYd++7wRAeoOGstTd2oryT1AcCgUZTdf/OeJk
-        dii9tAQkBP3WtUD0lFbGSK6+dQvFtVuP16N3T4kwZQ==
-X-Google-Smtp-Source: APXvYqwXTemaEQu0/mYQjJ1bcWTg9q8UAwit2frvVQwe/2qP7ctCZJKto+d/csaEagHBKXglAWZRppbsdsVOSBecxrw=
-X-Received: by 2002:a05:6602:187:: with SMTP id m7mr3775316ioo.16.1575401786293;
- Tue, 03 Dec 2019 11:36:26 -0800 (PST)
+        bh=8ch+WNijaY6AsPxm0+XePiTtapq06gZNm+FnTtW+Yvk=;
+        b=bglJtBbi4gYKbzmKFeNHdsyRsooIW98+lIBY6xVKSTi1jMHqWmU5AWmZuQceOpq09F
+         73yAmjTRaamsaFN19Wg5l7M+IIuG/MKgxn9cgyMC6Ozgs7u4tM7pv8CzbW2VVRkrarAv
+         h4ROHf3I92mXq27KuY0u9xY/C6Ykv4AKx995v2eV76qZCWP/ACbWSlLKgWL1dQMOIhjI
+         GaAEKyxA8Ckf1B0ZuwAnMHwLZcKdZ8G2JFeTYGry8Wb6ven3xIZdoAesKPtMzPZN0V2m
+         gVV2QSAthYKuVEOrvlQfIFGJ528uDS9Oy0DHlZQn3BRdC2Oy0K5AzwK9shGiy7JPBsE0
+         mXOg==
+X-Gm-Message-State: APjAAAUKNbumnT0HudTgCndFLZyM8in3tJNsfR8WMq2BX1axwJOkWeT9
+        EFeA8jqegsmfSdTlgjasRN/cB8zFfPQBjnL073Ecww==
+X-Google-Smtp-Source: APXvYqycuBVBV4ixbORLjq5bU2odtfEntOXSTXVTJDzP7mv/SVY3vXetQWjJOUPobARr4NVuoGg3ywXDKlHjyRak6ng=
+X-Received: by 2002:a5e:df06:: with SMTP id f6mr3715528ioq.84.1575402034437;
+ Tue, 03 Dec 2019 11:40:34 -0800 (PST)
 MIME-Version: 1.0
 References: <20191203004043.174977-1-matthewgarrett@google.com>
- <CACdnJus7nHdr4p4H1j5as9eB=FG-uX+wy_tjvTQ5ObErDJHdow@mail.gmail.com>
- <CAKv+Gu8emrf7WbTyGc8QDykX_hZbrVtxJKkRVbGFhd8rd13yww@mail.gmail.com> <9c58f2d2-5712-0972-6ea7-092500f37cf9@redhat.com>
-In-Reply-To: <9c58f2d2-5712-0972-6ea7-092500f37cf9@redhat.com>
+ <CACdnJus7nHdr4p4H1j5as9eB=FG-uX+wy_tjvTQ5ObErDJHdow@mail.gmail.com> <CAKv+Gu8emrf7WbTyGc8QDykX_hZbrVtxJKkRVbGFhd8rd13yww@mail.gmail.com>
+In-Reply-To: <CAKv+Gu8emrf7WbTyGc8QDykX_hZbrVtxJKkRVbGFhd8rd13yww@mail.gmail.com>
 From:   Matthew Garrett <mjg59@google.com>
-Date:   Tue, 3 Dec 2019 11:36:14 -0800
-Message-ID: <CACdnJutpgeUsGcscVJsxsj5-E=0JwYUFqEfjT4VJ+BMjn2RpAQ@mail.gmail.com>
+Date:   Tue, 3 Dec 2019 11:40:23 -0800
+Message-ID: <CACdnJusMeC+G3wq_oDGTYi1CBMWDiuq4NdANTBmhNBTDu5zCug@mail.gmail.com>
 Subject: Re: [PATCH] [EFI,PCI] Allow disabling PCI busmastering on bridges
  during boot
-To:     Laszlo Ersek <lersek@redhat.com>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Laszlo Ersek <lersek@redhat.com>,
         linux-efi <linux-efi@vger.kernel.org>,
         "the arch/x86 maintainers" <x86@kernel.org>,
         linux-pci <linux-pci@vger.kernel.org>,
@@ -62,40 +61,34 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Dec 3, 2019 at 5:38 AM Laszlo Ersek <lersek@redhat.com> wrote:
+On Tue, Dec 3, 2019 at 3:54 AM Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
 
-> (2) I'm not 100% convinced this threat model -- I hope I'm using the
-> right term -- is useful. A PCI device will likely not "itself" set up
-> DMA (maliciously or not) without a matching driver.
+> There is no reason this shouldn't apply to ARM, but disabling bus
+> mastering like that before the drivers themselves get a chance to do
+> so is likely to cause trouble. Network devices or storage controllers
+> that are still running and have live descriptor rings in DMA memory
+> shouldn't get the rug pulled from under their feet like that by
+> blindly disabling the BM attribute on all root ports before their
+> drivers have had the opportunity to do this cleanly.
 
-A malicious PCI device can absolutely set up DMA itself without a
-matching driver. There's a couple of cases:
+Yes, whether this causes problems is going to be influenced by the
+behaviour of the hardware on the system. That's why I'm not defaulting
+it to being enabled :)
 
-1) A device that's entirely under the control of an attacker. Using
-external Thunderbolt devices to overwrite OS data has been
-demonstrated on multiple occasions.
-
-2) A device that's been compromised in some way. The UEFI driver is a
-long way from the only software that's related to the device -
-discrete GPUs boot themselves even in the absence of a driver, and if
-that on-board code can be compromised in any persistent way then they
-can be used to attack the OS.
-
-> Is this a scenario where we trust the device driver that comes from the
-> device's ROM BAR (let's say after the driver passes Secure Boot
-> verification and after we measure it into the TPM), but don't trust the
-> silicon jammed in the motherboard that presents the driver?
-
-Yes, though it's not just internal devices that we need to worry about.
-
-> (3) I never understood why the default behavior (or rather, "only"
-> behavior) for system firmware wrt. the IOMMU at EBS was "whitelist
-> everything". Why not "blacklist everything"?
+> One trick we implemented in EDK2 for memory encryption was to do the
+> following (Laszlo, mind correcting me here if I am remembering this
+> wrong?)
+> - create an event X
+> - register an AtExitBootServices event that signals event X in its handler
+> - in the handler of event X, iterate over all PPBs to clear the bus
+> master attribute
+> - for bonus points, do the same for the PCIe devices themselves,
+> because root ports are known to exist that entirely ignore the BM
+> attribute
 >
-> I understand the compat perspective, but the OS should at least be able
-> to request such a full blackout through OsIndications or whatever. (With
-> the SEV IOMMU driver in OVMF, that's what we do -- we set everything to
-> encrypted.)
+> This way, event X should get handled after all the drivers' EBS event
+> handlers have been called.
 
-I'm working on that, but it would be nice to have an approach for
-existing systems.
+Can we guarantee that this happens before IOMMU state teardown? I
+don't think there's a benefit to clearing the bit on endpoint devices,
+if they're malicious they're just going to turn it back on anyway.
