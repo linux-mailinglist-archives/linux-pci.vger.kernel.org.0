@@ -2,140 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E771D10FCDF
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Dec 2019 12:51:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C72610FCE9
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Dec 2019 12:54:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725954AbfLCLvM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Dec 2019 06:51:12 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:39275 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725907AbfLCLvM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Dec 2019 06:51:12 -0500
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1ic6hv-0004Si-8u; Tue, 03 Dec 2019 12:51:07 +0100
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: RE: [PATCH] PCI: layerscape: Add the SRIOV support in host side
-X-PHP-Originating-Script: 0:main.inc
+        id S1726114AbfLCLy2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Dec 2019 06:54:28 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40629 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726107AbfLCLy2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Dec 2019 06:54:28 -0500
+Received: by mail-wr1-f66.google.com with SMTP id c14so3291484wrn.7
+        for <linux-pci@vger.kernel.org>; Tue, 03 Dec 2019 03:54:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+WIWRDqUrNa3Vz0vkAgniAzsAnjKkXYESaBrWD4fFkM=;
+        b=m4qrb6yiypHYi3ZRGQQi8dTn37rz5gbDv916tRh9lEUdzVQS1fefAKVt1XSqOD2Jqq
+         7ZID4YZZPfS5mkVCCksveucYj7fn7BUPaqYXBLdLiss83ZWi/kSm0E826/NbVFG5GdSB
+         NyNPuqdf0aXggsIV5L+SDYMgwgVSQ9M7OBtdGemRKQP3evBS+9eq7UoLznKxdHOQtUSv
+         qQgnZLrXb3vOkurhU4K32yoDy2t4jqhNhyBZqEQQkJB/kmZqhzS4BGGbfjTyh36FD3DC
+         +AsENHgPSULSPolwUQ0GkWOQtnSeODHlPu6zER3S7jFtpYAflxjZrTL2BAV1w/PiS0Ko
+         rHCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+WIWRDqUrNa3Vz0vkAgniAzsAnjKkXYESaBrWD4fFkM=;
+        b=TYI5FEdsQ29tDp1BLwGxFOXaJARnRuHYVyHMPsDZW+aYlZGordyPXMfm2flG2abYCX
+         8Fw1Kh6b0qYZwpLLyMuExFIbvZr2RGpPaHMXjwe+38NZ+xRb2NOiYoU8RCVqbvYNI2ZS
+         aRDHPtY/Tu5aM30PvExfKH44COVJ5EDoHefEJq6hlxWyQXag3Rm1aEeNcgcLvLfY4FIB
+         reAffGeui4c7lof8JvFrXdAyDo9yH/erVMTxQfMe1MfBYEJw78S442WRyIuwk/wjPMwf
+         Fhyqx7Vfbbt5U25SHHuQxGcWlt5AdZWuQr/QVNoXaqpjQzaUDFfB5i9hDMYz9fxXaiYf
+         +2XA==
+X-Gm-Message-State: APjAAAVCe/4bBwpQ/WWIrhW86zKDY+0X4R2AFOh4TovSZDk5aog1GOTg
+        m2tudVvaHtLQQRjoSAv1/JHMNyDfHRAJ48sSgwWy8Q==
+X-Google-Smtp-Source: APXvYqyD/zVkD/KsKt1cRJSy2Z57/rlzCyPRyodpEegh31zXluD3a/OFt1wjQuEeziXjQKeJ5PV4912fiFxOPxivXsE=
+X-Received: by 2002:a5d:43c7:: with SMTP id v7mr4497199wrr.32.1575374066240;
+ Tue, 03 Dec 2019 03:54:26 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Tue, 03 Dec 2019 11:51:07 +0000
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     <robh+dt@kernel.org>, <frowand.list@gmail.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        <lorenzo.pieralisi@arm.com>, <andrew.murray@arm.com>,
-        <bhelgaas@google.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        "Z.q. Hou" <zhiqiang.hou@nxp.com>
-In-Reply-To: <AM5PR04MB3299A5A504DEFEF3E137A27CF5420@AM5PR04MB3299.eurprd04.prod.outlook.com>
-References: <20191202104506.27916-1-xiaowei.bao@nxp.com>
- <606a00a2edcf077aa868319e0daa4dbc@www.loen.fr>
- <AM5PR04MB3299A5A504DEFEF3E137A27CF5420@AM5PR04MB3299.eurprd04.prod.outlook.com>
-Message-ID: <3dcdf44eb76390730658e3f4d932620c@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: xiaowei.bao@nxp.com, robh+dt@kernel.org, frowand.list@gmail.com, minghuan.lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com, lorenzo.pieralisi@arm.com, andrew.murray@arm.com, bhelgaas@google.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, zhiqiang.hou@nxp.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+References: <20191203004043.174977-1-matthewgarrett@google.com> <CACdnJus7nHdr4p4H1j5as9eB=FG-uX+wy_tjvTQ5ObErDJHdow@mail.gmail.com>
+In-Reply-To: <CACdnJus7nHdr4p4H1j5as9eB=FG-uX+wy_tjvTQ5ObErDJHdow@mail.gmail.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Tue, 3 Dec 2019 11:54:21 +0000
+Message-ID: <CAKv+Gu8emrf7WbTyGc8QDykX_hZbrVtxJKkRVbGFhd8rd13yww@mail.gmail.com>
+Subject: Re: [PATCH] [EFI,PCI] Allow disabling PCI busmastering on bridges
+ during boot
+To:     Matthew Garrett <mjg59@google.com>,
+        Laszlo Ersek <lersek@redhat.com>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2019-12-03 01:42, Xiaowei Bao wrote:
->> -----Original Message-----
->> From: Marc Zyngier <maz@misterjones.org>
->> Sent: 2019年12月2日 20:48
->> To: Xiaowei Bao <xiaowei.bao@nxp.com>
->> Cc: robh+dt@kernel.org; frowand.list@gmail.com; M.h. Lian
->> <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; Roy Zang
->> <roy.zang@nxp.com>; lorenzo.pieralisi@arm.com; 
->> andrew.murray@arm.com;
->> bhelgaas@google.com; devicetree@vger.kernel.org;
->> linux-kernel@vger.kernel.org; linux-pci@vger.kernel.org;
->> linux-arm-kernel@lists.infradead.org; Z.q. Hou 
->> <zhiqiang.hou@nxp.com>
->> Subject: Re: [PATCH] PCI: layerscape: Add the SRIOV support in host 
->> side
->>
->> On 2019-12-02 10:45, Xiaowei Bao wrote:
->> > GIC get the map relations of devid and stream id from the msi-map
->> > property of DTS, our platform add this property in u-boot base on 
->> the
->> > PCIe device in the bus, but if enable the vf device in kernel, the 
->> vf
->> > device msi-map will not set, so the vf device can't work, this 
->> patch
->> > purpose is that manage the stream id and device id map relations
->> > dynamically in kernel, and make the new PCIe device work in 
->> kernel.
->> >
->> > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
->> > ---
->> >  drivers/of/irq.c                            |  9 +++
->> >  drivers/pci/controller/dwc/pci-layerscape.c | 94
->> > +++++++++++++++++++++++++++++
->> >  drivers/pci/probe.c                         |  6 ++
->> >  drivers/pci/remove.c                        |  6 ++
->> >  4 files changed, 115 insertions(+)
->> >
->> > diff --git a/drivers/of/irq.c b/drivers/of/irq.c index
->> > a296eaf..791e609 100644
->> > --- a/drivers/of/irq.c
->> > +++ b/drivers/of/irq.c
->> > @@ -576,6 +576,11 @@ void __init of_irq_init(const struct 
->> of_device_id
->> > *matches)
->> >  	}
->> >  }
->> >
->> > +u32 __weak ls_pcie_streamid_fix(struct device *dev, u32 rid) {
->> > +	return rid;
->> > +}
->> > +
->> >  static u32 __of_msi_map_rid(struct device *dev, struct 
->> device_node
->> > **np,
->> >  			    u32 rid_in)
->> >  {
->> > @@ -590,6 +595,10 @@ static u32 __of_msi_map_rid(struct device 
->> *dev,
->> > struct device_node **np,
->> >  		if (!of_map_rid(parent_dev->of_node, rid_in, "msi-map",
->> >  				"msi-map-mask", np, &rid_out))
->> >  			break;
->> > +
->> > +	if (rid_out == rid_in)
->> > +		rid_out = ls_pcie_streamid_fix(parent_dev, rid_in);
->>
->> Over my dead body. Get your firmware to properly program the LUT so 
->> that it
->> presents the ITS with a reasonable topology. There is absolutely no 
->> way this
->> kind of change makes it into the kernel.
+(+ Laszlo)
+
+On Tue, 3 Dec 2019 at 00:43, Matthew Garrett <mjg59@google.com> wrote:
 >
-> Sorry for this, I know it is not reasonable, but I have no other way,
-> as I know, ARM
-> get the mapping of stream ID to request ID from the msi-map property
-> of DTS, if
-> add a new device which need the stream ID and try to get it from the
-> msi-map of DTS,
-> it will failed and not work, yes? So could you give me a better
-> advice to fix this issue,
-> I would really appreciate any comments or suggestions, thanks a lot.
+> On Mon, Dec 2, 2019 at 4:40 PM Matthew Garrett
+> <matthewgarrett@google.com> wrote:
+> >
+> > Add an option to disable the busmaster bit in the control register on
+> > all PCI bridges before calling ExitBootServices() and passing control to
+> > the runtime kernel. System firmware may configure the IOMMU to prevent
+> > malicious PCI devices from being able to attack the OS via DMA. However,
+> > since firmware can't guarantee that the OS is IOMMU-aware, it will tear
+> > down IOMMU configuration when ExitBootServices() is called. This leaves
+> > a window between where a hostile device could still cause damage before
+> > Linux configures the IOMMU again.
+>
+> I don't know enough about ARM to know if this makes sense there as well. Anyone?
 
-Why can't firmware expose an msi-map/msi-map-mask that has a large
-enough range to ensure mapping of VFs? What are the limitations of
-the LUT that would prevent this from being configured before the
-kernel boots?
+There is no reason this shouldn't apply to ARM, but disabling bus
+mastering like that before the drivers themselves get a chance to do
+so is likely to cause trouble. Network devices or storage controllers
+that are still running and have live descriptor rings in DMA memory
+shouldn't get the rug pulled from under their feet like that by
+blindly disabling the BM attribute on all root ports before their
+drivers have had the opportunity to do this cleanly.
 
-Thanks,
+One trick we implemented in EDK2 for memory encryption was to do the
+following (Laszlo, mind correcting me here if I am remembering this
+wrong?)
+- create an event X
+- register an AtExitBootServices event that signals event X in its handler
+- in the handler of event X, iterate over all PPBs to clear the bus
+master attribute
+- for bonus points, do the same for the PCIe devices themselves,
+because root ports are known to exist that entirely ignore the BM
+attribute
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+This way, event X should get handled after all the drivers' EBS event
+handlers have been called.
