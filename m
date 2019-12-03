@@ -2,193 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3EF921100C5
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Dec 2019 16:03:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 254FE11010C
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Dec 2019 16:20:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726074AbfLCPDQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Dec 2019 10:03:16 -0500
-Received: from foss.arm.com ([217.140.110.172]:43988 "EHLO foss.arm.com"
+        id S1726473AbfLCPUb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Dec 2019 10:20:31 -0500
+Received: from foss.arm.com ([217.140.110.172]:44236 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726057AbfLCPDQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 3 Dec 2019 10:03:16 -0500
+        id S1726057AbfLCPUb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 3 Dec 2019 10:20:31 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E78F531B;
-        Tue,  3 Dec 2019 07:03:14 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3888E3F52E;
-        Tue,  3 Dec 2019 07:03:14 -0800 (PST)
-Date:   Tue, 3 Dec 2019 15:03:12 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     maz@kernel.org, linux-kernel@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Eric Anholt <eric@anholt.net>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        james.quinlan@broadcom.com, mbrugger@suse.com,
-        phil@raspberrypi.org, jeremy.linton@arm.com,
-        linux-pci@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        Rob Herring <robh@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 1/8] dt-bindings: PCI: Add bindings for brcmstb's PCIe
- device
-Message-ID: <20191203150312.GD18399@e119886-lin.cambridge.arm.com>
-References: <20191203114743.1294-1-nsaenzjulienne@suse.de>
- <20191203114743.1294-2-nsaenzjulienne@suse.de>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5C73F31B;
+        Tue,  3 Dec 2019 07:20:30 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 686E23F52E;
+        Tue,  3 Dec 2019 07:20:28 -0800 (PST)
+Subject: Re: [PATCH] PCI: layerscape: Add the SRIOV support in host side
+To:     Marc Zyngier <maz@kernel.org>, Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     Roy Zang <roy.zang@nxp.com>, lorenzo.pieralisi@arm.com,
+        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+        "Z.q. Hou" <zhiqiang.hou@nxp.com>, linux-kernel@vger.kernel.org,
+        "M.h. Lian" <minghuan.lian@nxp.com>, robh+dt@kernel.org,
+        linux-arm-kernel@lists.infradead.org, bhelgaas@google.com,
+        andrew.murray@arm.com, frowand.list@gmail.com,
+        Mingkai Hu <mingkai.hu@nxp.com>
+References: <20191202104506.27916-1-xiaowei.bao@nxp.com>
+ <606a00a2edcf077aa868319e0daa4dbc@www.loen.fr>
+ <AM5PR04MB3299A5A504DEFEF3E137A27CF5420@AM5PR04MB3299.eurprd04.prod.outlook.com>
+ <3dcdf44eb76390730658e3f4d932620c@www.loen.fr>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <8f56c2d9-ab01-a91e-902f-a61def0e8ce8@arm.com>
+Date:   Tue, 3 Dec 2019 15:20:27 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191203114743.1294-2-nsaenzjulienne@suse.de>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <3dcdf44eb76390730658e3f4d932620c@www.loen.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Dec 03, 2019 at 12:47:34PM +0100, Nicolas Saenz Julienne wrote:
-> From: Jim Quinlan <james.quinlan@broadcom.com>
+On 03/12/2019 11:51 am, Marc Zyngier wrote:
+> On 2019-12-03 01:42, Xiaowei Bao wrote:
+>>> -----Original Message-----
+>>> From: Marc Zyngier <maz@misterjones.org>
+>>> Sent: 2019年12月2日 20:48
+>>> To: Xiaowei Bao <xiaowei.bao@nxp.com>
+>>> Cc: robh+dt@kernel.org; frowand.list@gmail.com; M.h. Lian
+>>> <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; Roy Zang
+>>> <roy.zang@nxp.com>; lorenzo.pieralisi@arm.com; andrew.murray@arm.com;
+>>> bhelgaas@google.com; devicetree@vger.kernel.org;
+>>> linux-kernel@vger.kernel.org; linux-pci@vger.kernel.org;
+>>> linux-arm-kernel@lists.infradead.org; Z.q. Hou <zhiqiang.hou@nxp.com>
+>>> Subject: Re: [PATCH] PCI: layerscape: Add the SRIOV support in host side
+>>>
+>>> On 2019-12-02 10:45, Xiaowei Bao wrote:
+>>> > GIC get the map relations of devid and stream id from the msi-map
+>>> > property of DTS, our platform add this property in u-boot base on the
+>>> > PCIe device in the bus, but if enable the vf device in kernel, the vf
+>>> > device msi-map will not set, so the vf device can't work, this patch
+>>> > purpose is that manage the stream id and device id map relations
+>>> > dynamically in kernel, and make the new PCIe device work in kernel.
+>>> >
+>>> > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+>>> > ---
+>>> >  drivers/of/irq.c                            |  9 +++
+>>> >  drivers/pci/controller/dwc/pci-layerscape.c | 94
+>>> > +++++++++++++++++++++++++++++
+>>> >  drivers/pci/probe.c                         |  6 ++
+>>> >  drivers/pci/remove.c                        |  6 ++
+>>> >  4 files changed, 115 insertions(+)
+>>> >
+>>> > diff --git a/drivers/of/irq.c b/drivers/of/irq.c index
+>>> > a296eaf..791e609 100644
+>>> > --- a/drivers/of/irq.c
+>>> > +++ b/drivers/of/irq.c
+>>> > @@ -576,6 +576,11 @@ void __init of_irq_init(const struct of_device_id
+>>> > *matches)
+>>> >      }
+>>> >  }
+>>> >
+>>> > +u32 __weak ls_pcie_streamid_fix(struct device *dev, u32 rid) {
+>>> > +    return rid;
+>>> > +}
+>>> > +
+>>> >  static u32 __of_msi_map_rid(struct device *dev, struct device_node
+>>> > **np,
+>>> >                  u32 rid_in)
+>>> >  {
+>>> > @@ -590,6 +595,10 @@ static u32 __of_msi_map_rid(struct device *dev,
+>>> > struct device_node **np,
+>>> >          if (!of_map_rid(parent_dev->of_node, rid_in, "msi-map",
+>>> >                  "msi-map-mask", np, &rid_out))
+>>> >              break;
+>>> > +
+>>> > +    if (rid_out == rid_in)
+>>> > +        rid_out = ls_pcie_streamid_fix(parent_dev, rid_in);
+>>>
+>>> Over my dead body. Get your firmware to properly program the LUT so 
+>>> that it
+>>> presents the ITS with a reasonable topology. There is absolutely no 
+>>> way this
+>>> kind of change makes it into the kernel.
+>>
+>> Sorry for this, I know it is not reasonable, but I have no other way,
+>> as I know, ARM
+>> get the mapping of stream ID to request ID from the msi-map property
+>> of DTS, if
+>> add a new device which need the stream ID and try to get it from the
+>> msi-map of DTS,
+>> it will failed and not work, yes? So could you give me a better
+>> advice to fix this issue,
+>> I would really appreciate any comments or suggestions, thanks a lot.
 > 
-> The DT bindings description of the brcmstb PCIe device is described.
-> This node can only be used for now on the Raspberry Pi 4.
-> 
-> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> Co-developed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> 
-> ---
+> Why can't firmware expose an msi-map/msi-map-mask that has a large
+> enough range to ensure mapping of VFs? What are the limitations of
+> the LUT that would prevent this from being configured before the
+> kernel boots?
 
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+Furthermore, note that this attempt isn't doing anything for the SMMU 
+Stream IDs, so the moment anyone tries to assign those VFs they're still 
+going to go bang anyway. Any firmware-based fixup for ID mappings, 
+config space addresses, etc. needs to be SR-IOV-aware and account for 
+all *possible* BDFs.
 
-> 
-> Changes since v2:
->   - Add pci reference schema
->   - Drop all default properties
->   - Assume msi-controller and msi-parent are properly defined
->   - Add num entries on multiple properties
->   - use unevaluatedProperties
->   - Update required properties
->   - Fix license
-> 
-> Changes since v1:
->   - Fix commit Subject
->   - Remove linux,pci-domain
-> 
-> This was based on Jim's original submission[1], converted to yaml and
-> adapted to the RPi4 case.
-> 
-> [1] https://patchwork.kernel.org/patch/10605937/
-> 
->  .../bindings/pci/brcm,stb-pcie.yaml           | 97 +++++++++++++++++++
->  1 file changed, 97 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> new file mode 100644
-> index 000000000000..77d3e81a437b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> @@ -0,0 +1,97 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/brcm,stb-pcie.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Brcmstb PCIe Host Controller Device Tree Bindings
-> +
-> +maintainers:
-> +  - Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> +
-> +allOf:
-> +  - $ref: /schemas/pci/pci-bus.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    const: brcm,bcm2711-pcie # The Raspberry Pi 4
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    minItems: 1
-> +    maxItems: 2
-> +    items:
-> +      - description: PCIe host controller
-> +      - description: builtin MSI controller
-> +
-> +  interrupt-names:
-> +    minItems: 1
-> +    maxItems: 2
-> +    items:
-> +      - const: pcie
-> +      - const: msi
-> +
-> +  ranges:
-> +    maxItems: 1
-> +
-> +  dma-ranges:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    items:
-> +      - const: sw_pcie
-> +
-> +  msi-controller:
-> +    description: Identifies the node as an MSI controller.
-> +
-> +  msi-parent:
-> +    description: MSI controller the device is capable of using.
-> +
-> +  brcm,enable-ssc:
-> +    description: Indicates usage of spread-spectrum clocking.
-> +    type: boolean
-> +
-> +required:
-> +  - reg
-> +  - dma-ranges
-> +  - "#interrupt-cells"
-> +  - interrupts
-> +  - interrupt-names
-> +  - interrupt-map-mask
-> +  - interrupt-map
-> +  - msi-controller
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    scb {
-> +            #address-cells = <2>;
-> +            #size-cells = <1>;
-> +            pcie0: pcie@7d500000 {
-> +                    compatible = "brcm,bcm2711-pcie";
-> +                    reg = <0x0 0x7d500000 0x9310>;
-> +                    device_type = "pci";
-> +                    #address-cells = <3>;
-> +                    #size-cells = <2>;
-> +                    #interrupt-cells = <1>;
-> +                    interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
-> +                                 <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
-> +                    interrupt-names = "pcie", "msi";
-> +                    interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-> +                    interrupt-map = <0 0 0 1 &gicv2 GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>;
-> +                    msi-parent = <&pcie0>;
-> +                    msi-controller;
-> +                    ranges = <0x02000000 0x0 0xf8000000 0x6 0x00000000 0x0 0x04000000>;
-> +                    dma-ranges = <0x02000000 0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>;
-> +                    brcm,enable-ssc;
-> +            };
-> +    };
-> -- 
-> 2.24.0
-> 
+On LS2085 at least, IIRC you can configure a single LUT entry to just 
+translate the Bus:Device identifier and pass some or all of the Function 
+bits straight through as the LSBs of the Stream ID, so I don't believe 
+the relatively limited number of LUT registers should be too much of an 
+issue. For example, last time I hacked on that I apparently had it set 
+up statically like this:
+
+&pcie3 {
+	/* Squash 8:5:3 BDF down to 2:2:3 */
+	msi-map-mask = <0x031f>;
+	msi-map = <0x000 &its 0x00 0x20>,
+		  <0x100 &its 0x20 0x20>,
+		  <0x200 &its 0x40 0x20>,
+		  <0x300 &its 0x60 0x20>;
+};
+
+Robin.
