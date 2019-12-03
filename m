@@ -2,143 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B684510FEEE
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Dec 2019 14:38:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8BD8910FF9B
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Dec 2019 15:07:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726388AbfLCNi1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Dec 2019 08:38:27 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55410 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726291AbfLCNi0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Dec 2019 08:38:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575380305;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=j86gFYchvxCAdw1aMDtjnplAIlCiAIyuvE/UGPPey4g=;
-        b=AdStPFuPNMypw9a8IQhhKh59sE0K4fagB7fO9A3aP21qgHesI0j5lmIjkcks34bJjjPwHI
-        oMbIPuIY6MredRc87kvAWfTR0Nr3q8vf6EmVeZ+1e+D4xxFm1OSDVbPuVavw2VEfKxsJ+2
-        6+tqvVeQyT94j694sraIAUltLSXtkiE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-415-0wNpRvzAOSKhHDhgWywmsA-1; Tue, 03 Dec 2019 08:38:22 -0500
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726186AbfLCOHT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Dec 2019 09:07:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38530 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726131AbfLCOHT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 3 Dec 2019 09:07:19 -0500
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 252CE802B63;
-        Tue,  3 Dec 2019 13:38:21 +0000 (UTC)
-Received: from lacos-laptop-7.usersys.redhat.com (ovpn-117-183.ams2.redhat.com [10.36.117.183])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 94CDB5C3FD;
-        Tue,  3 Dec 2019 13:38:19 +0000 (UTC)
-Subject: Re: [PATCH] [EFI,PCI] Allow disabling PCI busmastering on bridges
- during boot
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Matthew Garrett <mjg59@google.com>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20191203004043.174977-1-matthewgarrett@google.com>
- <CACdnJus7nHdr4p4H1j5as9eB=FG-uX+wy_tjvTQ5ObErDJHdow@mail.gmail.com>
- <CAKv+Gu8emrf7WbTyGc8QDykX_hZbrVtxJKkRVbGFhd8rd13yww@mail.gmail.com>
-From:   Laszlo Ersek <lersek@redhat.com>
-Message-ID: <9c58f2d2-5712-0972-6ea7-092500f37cf9@redhat.com>
-Date:   Tue, 3 Dec 2019 14:38:18 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        by mail.kernel.org (Postfix) with ESMTPSA id BBB04206EC
+        for <linux-pci@vger.kernel.org>; Tue,  3 Dec 2019 14:07:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575382038;
+        bh=EGatAtFBvrsjDjApk6awgNmJq6Jgdwl6aS4KaCqWoYc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=u3TfvUXpKObuZK9w49dj6dDQe/oFM76ROu2At20o6n9Nlqbx6zWJprI/08f/pI/CC
+         PFhpwYpVAHADsd9nv/4Gn0gZ7Rvwi6iu3OOa8S5fvPjcFovqp7LcgeaSPdP1RXLLqM
+         p7Xg8VY6G94o5h63M/6joq/+yo82OKYdGsHpI/E8=
+Received: by mail-qt1-f171.google.com with SMTP id z22so3833104qto.7
+        for <linux-pci@vger.kernel.org>; Tue, 03 Dec 2019 06:07:18 -0800 (PST)
+X-Gm-Message-State: APjAAAWfRnHWfTn/+4eEc9wBXnT30vTFH1LQmc+7VtKN9CH33uMf8Ui4
+        Qt2dkEMBl3VmYkfTWjvwDo+vyBO0ucP57YrmAIw=
+X-Google-Smtp-Source: APXvYqzpiINkhxGJ+qJ8A++X8HXmCEFmVBfYySmTwUdSHuxL74sWpsm4uhlynLHgPakJm0GS2RM4grVFguCEh1WVCh8=
+X-Received: by 2002:ac8:7948:: with SMTP id r8mr4872148qtt.91.1575382028983;
+ Tue, 03 Dec 2019 06:07:08 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAKv+Gu8emrf7WbTyGc8QDykX_hZbrVtxJKkRVbGFhd8rd13yww@mail.gmail.com>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: 0wNpRvzAOSKhHDhgWywmsA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+References: <20191115135842.119621-1-wei.liu@kernel.org> <20191126230524.GA197236@google.com>
+ <CAHd7Wqw49hB3++Td00=xccgJoqPLye_DvYv8+PYjxHWbDm5DVg@mail.gmail.com>
+In-Reply-To: <CAHd7Wqw49hB3++Td00=xccgJoqPLye_DvYv8+PYjxHWbDm5DVg@mail.gmail.com>
+From:   Wei Liu <wei.liu@kernel.org>
+Date:   Tue, 3 Dec 2019 14:06:57 +0000
+X-Gmail-Original-Message-ID: <CAHd7Wqw56pPXFgvk+vNnrMCeVow6Op2mXONiqHs4C9NrMfS=VQ@mail.gmail.com>
+Message-ID: <CAHd7Wqw56pPXFgvk+vNnrMCeVow6Op2mXONiqHs4C9NrMfS=VQ@mail.gmail.com>
+Subject: Re: [PATCH] PCI: build Broadcom PAXC quirks unconditionally
+To:     Wei Liu <wei.liu@kernel.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        rjui@broadcom.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 12/03/19 12:54, Ard Biesheuvel wrote:
-> (+ Laszlo)
-> 
-> On Tue, 3 Dec 2019 at 00:43, Matthew Garrett <mjg59@google.com> wrote:
->>
->> On Mon, Dec 2, 2019 at 4:40 PM Matthew Garrett
->> <matthewgarrett@google.com> wrote:
->>>
->>> Add an option to disable the busmaster bit in the control register on
->>> all PCI bridges before calling ExitBootServices() and passing control to
->>> the runtime kernel. System firmware may configure the IOMMU to prevent
->>> malicious PCI devices from being able to attack the OS via DMA. However,
->>> since firmware can't guarantee that the OS is IOMMU-aware, it will tear
->>> down IOMMU configuration when ExitBootServices() is called. This leaves
->>> a window between where a hostile device could still cause damage before
->>> Linux configures the IOMMU again.
+On Wed, 27 Nov 2019 at 10:59, Wei Liu <wei.liu@kernel.org> wrote:
+>
+> On Tue, 26 Nov 2019 at 23:05, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >
+> > On Fri, Nov 15, 2019 at 01:58:42PM +0000, Wei Liu wrote:
+> > > CONFIG_PCIE_IPROC_PLATFORM only gets defined when the driver is built
+> > > in.  Removing the ifdef will allow us to build the driver as a module.
+> > >
+> > > Signed-off-by: Wei Liu <wei.liu@kernel.org>
+> >
+> > Sorry, I missed this thinking it would be under drivers/pci/controller
+> > and hence handled by Lorenzo.
+> >
+> > So I guess this doesn't fix a build problem, but without this patch,
+> > we just don't run the quirk if the driver is a module, right?
+> >
+>
+> Yes, this is correct.
+>
+> Without this patch, the quirk doesn't get to run if the driver is a module.
+>
 
-(1) This vaguely reminds me of
-<https://bugzilla.tianocore.org/show_bug.cgi?id=675>.
+Hi Bjorn
 
+Are you satisfied with the patch? What do I need to do to get it merged?
 
-(2) I'm not 100% convinced this threat model -- I hope I'm using the
-right term -- is useful. A PCI device will likely not "itself" set up
-DMA (maliciously or not) without a matching driver. The driver will
-likely come from the device too (option ROM). The driver will program
-the device to do DMA. So, whatever the system firwmare does wrt. the
-IOMMU for OS protection purposes, the device driver from the option ROM
-can undo.
-
-Is this a scenario where we trust the device driver that comes from the
-device's ROM BAR (let's say after the driver passes Secure Boot
-verification and after we measure it into the TPM), but don't trust the
-silicon jammed in the motherboard that presents the driver?
-
-
-(3) I never understood why the default behavior (or rather, "only"
-behavior) for system firmware wrt. the IOMMU at EBS was "whitelist
-everything". Why not "blacklist everything"?
-
-I understand the compat perspective, but the OS should at least be able
-to request such a full blackout through OsIndications or whatever. (With
-the SEV IOMMU driver in OVMF, that's what we do -- we set everything to
-encrypted.)
-
->> I don't know enough about ARM to know if this makes sense there as well. Anyone?
-> 
-> There is no reason this shouldn't apply to ARM, but disabling bus
-> mastering like that before the drivers themselves get a chance to do
-> so is likely to cause trouble. Network devices or storage controllers
-> that are still running and have live descriptor rings in DMA memory
-> shouldn't get the rug pulled from under their feet like that by
-> blindly disabling the BM attribute on all root ports before their
-> drivers have had the opportunity to do this cleanly.
-
-I agree.
-
-> 
-> One trick we implemented in EDK2 for memory encryption was to do the
-> following (Laszlo, mind correcting me here if I am remembering this
-> wrong?)
-> - create an event X
-> - register an AtExitBootServices event that signals event X in its handler
-> - in the handler of event X, iterate over all PPBs to clear the bus
-> master attribute
-> - for bonus points, do the same for the PCIe devices themselves,
-> because root ports are known to exist that entirely ignore the BM
-> attribute
-> 
-> This way, event X should get handled after all the drivers' EBS event
-> handlers have been called.
-
-Yes. Please see the commit message and the code comments in the
-following edk2 commit:
-
-https://github.com/tianocore/edk2/commit/7aee391fa3d0
-
-I'm unsure how portable it is to platforms that are not derived from edk2.
-
-Thanks!
-Laszlo
-
+Thanks,
+Wei.
