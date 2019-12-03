@@ -2,92 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CD05011014C
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Dec 2019 16:30:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7072B110176
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Dec 2019 16:43:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726973AbfLCPaT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Dec 2019 10:30:19 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44566 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725997AbfLCPaT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Dec 2019 10:30:19 -0500
-Received: by mail-wr1-f68.google.com with SMTP id q10so4140988wrm.11
-        for <linux-pci@vger.kernel.org>; Tue, 03 Dec 2019 07:30:18 -0800 (PST)
+        id S1726057AbfLCPna (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Dec 2019 10:43:30 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:45044 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726189AbfLCPn1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Dec 2019 10:43:27 -0500
+Received: by mail-pg1-f196.google.com with SMTP id x7so1823750pgl.11
+        for <linux-pci@vger.kernel.org>; Tue, 03 Dec 2019 07:43:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VNwFXPekhWv2eWzhcVjVYpipKkMgjKBl/x6cxxZotUw=;
-        b=1xmyuh6Q4BEGz3DUn6Oygwz3dLh7jtOKkgYrwruEzDQIOyp/C02nFpj9llkoTJS1zy
-         mKjWEeUpRzjUbBy4gvYwvCQcaFl4QGcScLRnryehvKnasb4ws4iHqrawvY/ss+9DHqqm
-         UeTIQa+n69bQXmuHnr37kRIt8bPAN0YyMdbiTrYlOlErcgIHHmqsAEZciIn5tSkOUFzr
-         nPnJ7/uEdvJj9TdcgHowkij+dPMTwU9cBQAwbzoNkHXM161pvrONEyPKp1wr5KddW1L3
-         97Hkw8B67WLW9CgbUwk6Vh4nY7xpSw3+CZK03pCcwCe0sgYBJ9d4vUCaOVywuEdki0yZ
-         R2yQ==
+        d=arista.com; s=googlenew;
+        h=from:content-transfer-encoding:mime-version:subject:message-id:date
+         :cc:to;
+        bh=b4QI//StRs4CfOqNK9eqzKkxRA2qL4/GWMuaqRRnuEU=;
+        b=icMa4rx1ZMtE5mnOvVjmI5EmCAMki8keD1M3g2P0oLuo3vA1I4BJW9vCZHa3KzebQg
+         gX8+tYGFryfM9B+JfdjFEuj/FnbP8ZaCdaIDSiP3gkT1m0rpfhYO5EtPm7NjSH7S92Q7
+         Ckqx4GyGRmfWn/wQqCRffS+ElnSoMBGBGth1jD5cGB+NLc6HwogzaEQ5JaZaQ+09fyJ5
+         APB4eEpHr2arpYyM55WyB3NqajX3n1/4dS3wDV6IYKjWg0IFVruXrBB9sudTsjGZzqPC
+         sKm0dZxtL526oFKECCvin+Dw51/efc/ZJh7TmRSFhL7ClWy/kOzTqCN7bOU+hrHOP387
+         9vpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VNwFXPekhWv2eWzhcVjVYpipKkMgjKBl/x6cxxZotUw=;
-        b=q0EEtkrWh+h6fuGf9qtvHFeESsTb+zlKdDK5bTlDiCdcesr1cd/i3Tq9Xant+fm39c
-         ky0+zvFRphAT+rPX1TuAvi3f/XrhRR3m4H8VvZLeX5DTxUNUd1k6qne4iqEuP6aUfIgV
-         Pv0vELVAJJk0xqVLND2jYBt5qFp0LKKlpo1Nvqhyv0B3EgTulYxRbOQw4Q0fPR85dlP6
-         5T3M6vISPUiPW9wFLOBGxXR8uNPk5qpX7DbnswJlyFi9dRRXUg+/atKJAm4yatmFuvvn
-         xcZyHPLEprSN2ewZnlb8xWrPPIWazjFueXBuAQavzyfDx+U+afS2Dm4B+w6957VX4FQ+
-         xDqw==
-X-Gm-Message-State: APjAAAXzNwdhNGEK6Y/oOYGwZ3DIg81FDDrsaqmwPiojOAdqpURW+UkT
-        aPOgxc0Ywyh2SBVzmFB+JWv9QYx3y4vQV+sXBUTBXg==
-X-Google-Smtp-Source: APXvYqzvDZnEv6036rAJma5lg+xhVt5jTdEqZrDmi9t5h9+Wa4yrnaO9rZTh44tqf1dAMZx3SCpJw1xD4Yc4gepb1ls=
-X-Received: by 2002:adf:f491:: with SMTP id l17mr5718407wro.149.1575387017828;
- Tue, 03 Dec 2019 07:30:17 -0800 (PST)
-MIME-Version: 1.0
-References: <20191203004043.174977-1-matthewgarrett@google.com>
-In-Reply-To: <20191203004043.174977-1-matthewgarrett@google.com>
-From:   Andy Lutomirski <luto@amacapital.net>
-Date:   Tue, 3 Dec 2019 07:30:06 -0800
-Message-ID: <CALCETrWUYapn=vTbKnKFVQ3Y4vG0qHwux0ym_To2NWKPew+vrw@mail.gmail.com>
-Subject: Re: [PATCH] [EFI,PCI] Allow disabling PCI busmastering on bridges
- during boot
-To:     Matthew Garrett <matthewgarrett@google.com>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        X86 ML <x86@kernel.org>, linux-pci@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Matthew Garrett <mjg59@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:content-transfer-encoding:mime-version
+         :subject:message-id:date:cc:to;
+        bh=b4QI//StRs4CfOqNK9eqzKkxRA2qL4/GWMuaqRRnuEU=;
+        b=AvPakq/kq/NSPxng33FJCt1CgjxQecwPSmjrrh9r7YcQ7FA5cIE7BZBFfe0QIhGFZ8
+         bMhejZGQdd+3nm3JlZgPqBDcxXB1mKKSeAoxHzQZ1ltOsyPy4OPdFPkVkyA3wK32awcU
+         uk7z7VoG9hPQUIaMlG35250GEP8vDS4zjJZhHaEcabpGVsGXE+RkPKPQzsJ1lll+B2RZ
+         vnvoFWAR+xOjFbyudut0UghObbST4pchqBaFbrkg5RUulOP8onGTBPKaVBTkfdgBjyXN
+         SFhtCjgd+GZLGwxc4mzUe3b6BrPpSUCpx56KN4tmGt5ssImpblV5uueT579VAM0J/LZh
+         juSA==
+X-Gm-Message-State: APjAAAXoFU+Nn0ayAKTeJH3a2M6JQmEBUkpWC0MPaA6VFPkoLQp8REmE
+        z1RQmcmHBRbuFDlbVXW7ohJnN4lgT8oEuw==
+X-Google-Smtp-Source: APXvYqy5sg3uYP2PMY30/llWMY51RYB4brhQFWOKQRquMLOrHznUnkMZQ43OVqK+IyKd3Jqdc+RmFw==
+X-Received: by 2002:a63:1624:: with SMTP id w36mr5602893pgl.404.1575387806408;
+        Tue, 03 Dec 2019 07:43:26 -0800 (PST)
+Received: from [10.83.42.232] ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id e11sm3953969pgh.54.2019.12.03.07.43.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 03 Dec 2019 07:43:25 -0800 (PST)
+From:   James Sewart <jamessewart@arista.com>
+Content-Type: text/plain;
+        charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
+Subject: [PATCH v6 1/3] PCI: Fix off by one in dma_alias_mask allocation size
+Message-Id: <910070E3-7964-4549-B77F-EC7FC6144503@arista.com>
+Date:   Tue, 3 Dec 2019 15:43:22 +0000
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Dmitry Safonov <dima@arista.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+To:     linux-pci@vger.kernel.org
+X-Mailer: Apple Mail (2.3445.102.3)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Dec 2, 2019 at 4:41 PM Matthew Garrett
-<matthewgarrett@google.com> wrote:
->
-> Add an option to disable the busmaster bit in the control register on
-> all PCI bridges before calling ExitBootServices() and passing control to
-> the runtime kernel. System firmware may configure the IOMMU to prevent
-> malicious PCI devices from being able to attack the OS via DMA. However,
-> since firmware can't guarantee that the OS is IOMMU-aware, it will tear
-> down IOMMU configuration when ExitBootServices() is called. This leaves
-> a window between where a hostile device could still cause damage before
-> Linux configures the IOMMU again.
->
-> If CONFIG_EFI_NO_BUSMASTER is enabled or the "disable_busmaster=1"
-> commandline argument is passed, the EFI stub will clear the busmaster
-> bit on all PCI bridges before ExitBootServices() is called. This will
-> prevent any malicious PCI devices from being able to perform DMA until
-> the kernel reenables busmastering after configuring the IOMMU.
+The number of possible devfns is 256, add def and correct uses.
 
-I hate to be an obnoxious bikeshedder, but I really dislike the
-"disable_busmaster" name.  I read this and $SUBJECT as "for some
-reason, the admin wants to operate the system with busmastering off".
-What you really want is something more like "disable busmastering
-before IOMMU initialization".  Maybe
-"iommu.disable_busmaster_before_init"?
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+Signed-off-by: James Sewart <jamessewart@arista.com>
+---
+ drivers/pci/pci.c    | 2 +-
+ drivers/pci/search.c | 2 +-
+ include/linux/pci.h  | 2 ++
+ 3 files changed, 4 insertions(+), 2 deletions(-)
 
-Similarly, EFI_NO_BUSMASTER sounds like a permanent state of affairs.
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index a97e2571a527..d3c83248f3ce 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -5876,7 +5876,7 @@ int pci_set_vga_state(struct pci_dev *dev, bool decode,
+ void pci_add_dma_alias(struct pci_dev *dev, u8 devfn)
+ {
+ 	if (!dev->dma_alias_mask)
+-		dev->dma_alias_mask = bitmap_zalloc(U8_MAX, GFP_KERNEL);
++		dev->dma_alias_mask = bitmap_zalloc(MAX_NR_DEVFNS, GFP_KERNEL);
+ 	if (!dev->dma_alias_mask) {
+ 		pci_warn(dev, "Unable to allocate DMA alias mask\n");
+ 		return;
+diff --git a/drivers/pci/search.c b/drivers/pci/search.c
+index bade14002fd8..9e4dfae47252 100644
+--- a/drivers/pci/search.c
++++ b/drivers/pci/search.c
+@@ -43,7 +43,7 @@ int pci_for_each_dma_alias(struct pci_dev *pdev,
+ 	if (unlikely(pdev->dma_alias_mask)) {
+ 		u8 devfn;
+ 
+-		for_each_set_bit(devfn, pdev->dma_alias_mask, U8_MAX) {
++		for_each_set_bit(devfn, pdev->dma_alias_mask, MAX_NR_DEVFNS) {
+ 			ret = fn(pdev, PCI_DEVID(pdev->bus->number, devfn),
+ 				 data);
+ 			if (ret)
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 1a6cf19eac2d..6481da29d667 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -57,6 +57,8 @@
+ #define PCI_DEVID(bus, devfn)	((((u16)(bus)) << 8) | (devfn))
+ /* return bus from PCI devid = ((u16)bus_number) << 8) | devfn */
+ #define PCI_BUS_NUM(x) (((x) >> 8) & 0xff)
++/* Number of possible devfns. devfns can be from 0.0 to 1f.7 inclusive */
++#define MAX_NR_DEVFNS 256
+ 
+ /* pci_slot represents a physical slot */
+ struct pci_slot {
+-- 
+2.24.0
 
-Would a similar patch apply to non-EFI boot?  That is, in a BIOS boot,
-is busmastering on when the kernel is loaded?
 
---Andy
