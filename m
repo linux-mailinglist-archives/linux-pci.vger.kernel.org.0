@@ -2,231 +2,140 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9EEB310FCC4
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Dec 2019 12:48:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E771D10FCDF
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Dec 2019 12:51:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726659AbfLCLsH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Dec 2019 06:48:07 -0500
-Received: from mx2.suse.de ([195.135.220.15]:49822 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726653AbfLCLsG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 3 Dec 2019 06:48:06 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 523B6AF93;
-        Tue,  3 Dec 2019 11:48:03 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     andrew.murray@arm.com, maz@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Eric Anholt <eric@anholt.net>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Cc:     james.quinlan@broadcom.com, mbrugger@suse.com,
-        phil@raspberrypi.org, jeremy.linton@arm.com,
-        linux-pci@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH v4 8/8] linux/log2.h: Use roundup/dow_pow_two() on 64bit calculations
-Date:   Tue,  3 Dec 2019 12:47:41 +0100
-Message-Id: <20191203114743.1294-9-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191203114743.1294-1-nsaenzjulienne@suse.de>
-References: <20191203114743.1294-1-nsaenzjulienne@suse.de>
+        id S1725954AbfLCLvM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Dec 2019 06:51:12 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:39275 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725907AbfLCLvM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Dec 2019 06:51:12 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1ic6hv-0004Si-8u; Tue, 03 Dec 2019 12:51:07 +0100
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: RE: [PATCH] PCI: layerscape: Add the SRIOV support in host side
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 8bit
+Date:   Tue, 03 Dec 2019 11:51:07 +0000
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     <robh+dt@kernel.org>, <frowand.list@gmail.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        <lorenzo.pieralisi@arm.com>, <andrew.murray@arm.com>,
+        <bhelgaas@google.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        "Z.q. Hou" <zhiqiang.hou@nxp.com>
+In-Reply-To: <AM5PR04MB3299A5A504DEFEF3E137A27CF5420@AM5PR04MB3299.eurprd04.prod.outlook.com>
+References: <20191202104506.27916-1-xiaowei.bao@nxp.com>
+ <606a00a2edcf077aa868319e0daa4dbc@www.loen.fr>
+ <AM5PR04MB3299A5A504DEFEF3E137A27CF5420@AM5PR04MB3299.eurprd04.prod.outlook.com>
+Message-ID: <3dcdf44eb76390730658e3f4d932620c@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: xiaowei.bao@nxp.com, robh+dt@kernel.org, frowand.list@gmail.com, minghuan.lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com, lorenzo.pieralisi@arm.com, andrew.murray@arm.com, bhelgaas@google.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, zhiqiang.hou@nxp.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The function now is safe to use while expecting a 64bit value. Use it
-where relevant.
+On 2019-12-03 01:42, Xiaowei Bao wrote:
+>> -----Original Message-----
+>> From: Marc Zyngier <maz@misterjones.org>
+>> Sent: 2019年12月2日 20:48
+>> To: Xiaowei Bao <xiaowei.bao@nxp.com>
+>> Cc: robh+dt@kernel.org; frowand.list@gmail.com; M.h. Lian
+>> <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; Roy Zang
+>> <roy.zang@nxp.com>; lorenzo.pieralisi@arm.com; 
+>> andrew.murray@arm.com;
+>> bhelgaas@google.com; devicetree@vger.kernel.org;
+>> linux-kernel@vger.kernel.org; linux-pci@vger.kernel.org;
+>> linux-arm-kernel@lists.infradead.org; Z.q. Hou 
+>> <zhiqiang.hou@nxp.com>
+>> Subject: Re: [PATCH] PCI: layerscape: Add the SRIOV support in host 
+>> side
+>>
+>> On 2019-12-02 10:45, Xiaowei Bao wrote:
+>> > GIC get the map relations of devid and stream id from the msi-map
+>> > property of DTS, our platform add this property in u-boot base on 
+>> the
+>> > PCIe device in the bus, but if enable the vf device in kernel, the 
+>> vf
+>> > device msi-map will not set, so the vf device can't work, this 
+>> patch
+>> > purpose is that manage the stream id and device id map relations
+>> > dynamically in kernel, and make the new PCIe device work in 
+>> kernel.
+>> >
+>> > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+>> > ---
+>> >  drivers/of/irq.c                            |  9 +++
+>> >  drivers/pci/controller/dwc/pci-layerscape.c | 94
+>> > +++++++++++++++++++++++++++++
+>> >  drivers/pci/probe.c                         |  6 ++
+>> >  drivers/pci/remove.c                        |  6 ++
+>> >  4 files changed, 115 insertions(+)
+>> >
+>> > diff --git a/drivers/of/irq.c b/drivers/of/irq.c index
+>> > a296eaf..791e609 100644
+>> > --- a/drivers/of/irq.c
+>> > +++ b/drivers/of/irq.c
+>> > @@ -576,6 +576,11 @@ void __init of_irq_init(const struct 
+>> of_device_id
+>> > *matches)
+>> >  	}
+>> >  }
+>> >
+>> > +u32 __weak ls_pcie_streamid_fix(struct device *dev, u32 rid) {
+>> > +	return rid;
+>> > +}
+>> > +
+>> >  static u32 __of_msi_map_rid(struct device *dev, struct 
+>> device_node
+>> > **np,
+>> >  			    u32 rid_in)
+>> >  {
+>> > @@ -590,6 +595,10 @@ static u32 __of_msi_map_rid(struct device 
+>> *dev,
+>> > struct device_node **np,
+>> >  		if (!of_map_rid(parent_dev->of_node, rid_in, "msi-map",
+>> >  				"msi-map-mask", np, &rid_out))
+>> >  			break;
+>> > +
+>> > +	if (rid_out == rid_in)
+>> > +		rid_out = ls_pcie_streamid_fix(parent_dev, rid_in);
+>>
+>> Over my dead body. Get your firmware to properly program the LUT so 
+>> that it
+>> presents the ITS with a reasonable topology. There is absolutely no 
+>> way this
+>> kind of change makes it into the kernel.
+>
+> Sorry for this, I know it is not reasonable, but I have no other way,
+> as I know, ARM
+> get the mapping of stream ID to request ID from the msi-map property
+> of DTS, if
+> add a new device which need the stream ID and try to get it from the
+> msi-map of DTS,
+> it will failed and not work, yes? So could you give me a better
+> advice to fix this issue,
+> I would really appreciate any comments or suggestions, thanks a lot.
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
----
- drivers/acpi/arm64/iort.c                        | 2 +-
- drivers/net/ethernet/mellanox/mlx4/en_clock.c    | 3 ++-
- drivers/of/device.c                              | 3 ++-
- drivers/pci/controller/cadence/pcie-cadence-ep.c | 3 ++-
- drivers/pci/controller/cadence/pcie-cadence.c    | 3 ++-
- drivers/pci/controller/pcie-brcmstb.c            | 3 ++-
- drivers/pci/controller/pcie-rockchip-ep.c        | 5 +++--
- kernel/dma/direct.c                              | 2 +-
- 8 files changed, 15 insertions(+), 9 deletions(-)
+Why can't firmware expose an msi-map/msi-map-mask that has a large
+enough range to ensure mapping of VFs? What are the limitations of
+the LUT that would prevent this from being configured before the
+kernel boots?
 
-diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-index 33f71983e001..9950c9757092 100644
---- a/drivers/acpi/arm64/iort.c
-+++ b/drivers/acpi/arm64/iort.c
-@@ -1090,7 +1090,7 @@ void iort_dma_setup(struct device *dev, u64 *dma_addr, u64 *dma_size)
- 		 * firmware.
- 		 */
- 		end = dmaaddr + size - 1;
--		mask = DMA_BIT_MASK(ilog2(end) + 1);
-+		mask = roundup_pow_of_two(end) - 1;
- 		dev->bus_dma_limit = end;
- 		dev->coherent_dma_mask = mask;
- 		*dev->dma_mask = mask;
-diff --git a/drivers/net/ethernet/mellanox/mlx4/en_clock.c b/drivers/net/ethernet/mellanox/mlx4/en_clock.c
-index 024788549c25..23dcb18224d4 100644
---- a/drivers/net/ethernet/mellanox/mlx4/en_clock.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/en_clock.c
-@@ -33,6 +33,7 @@
- 
- #include <linux/mlx4/device.h>
- #include <linux/clocksource.h>
-+#include <linux/log2.h>
- 
- #include "mlx4_en.h"
- 
-@@ -252,7 +253,7 @@ static u32 freq_to_shift(u16 freq)
- {
- 	u32 freq_khz = freq * 1000;
- 	u64 max_val_cycles = freq_khz * 1000 * MLX4_EN_WRAP_AROUND_SEC;
--	u64 max_val_cycles_rounded = 1ULL << fls64(max_val_cycles - 1);
-+	u64 max_val_cycles_rounded = roundup_pow_of_two(max_val_cycles);
- 	/* calculate max possible multiplier in order to fit in 64bit */
- 	u64 max_mul = div64_u64(ULLONG_MAX, max_val_cycles_rounded);
- 
-diff --git a/drivers/of/device.c b/drivers/of/device.c
-index e9127db7b067..7259922d2078 100644
---- a/drivers/of/device.c
-+++ b/drivers/of/device.c
-@@ -11,6 +11,7 @@
- #include <linux/mod_devicetable.h>
- #include <linux/slab.h>
- #include <linux/platform_device.h>
-+#include <linux/log2.h>
- 
- #include <asm/errno.h>
- #include "of_private.h"
-@@ -149,7 +150,7 @@ int of_dma_configure(struct device *dev, struct device_node *np, bool force_dma)
- 	 * set by the driver.
- 	 */
- 	end = dma_addr + size - 1;
--	mask = DMA_BIT_MASK(ilog2(end) + 1);
-+	mask = roundup_pow_of_two(end) - 1;
- 	dev->coherent_dma_mask &= mask;
- 	*dev->dma_mask &= mask;
- 	/* ...but only set bus limit if we found valid dma-ranges earlier */
-diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-index 1c173dad67d1..72eda0b2f939 100644
---- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
-+++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-@@ -10,6 +10,7 @@
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
- #include <linux/sizes.h>
-+#include <linux/log2.h>
- 
- #include "pcie-cadence.h"
- 
-@@ -65,7 +66,7 @@ static int cdns_pcie_ep_set_bar(struct pci_epc *epc, u8 fn,
- 	 * roundup_pow_of_two() returns an unsigned long, which is not suited
- 	 * for 64bit values.
- 	 */
--	sz = 1ULL << fls64(sz - 1);
-+	sz = roundup_pow_of_two(sz);
- 	aperture = ilog2(sz) - 7; /* 128B -> 0, 256B -> 1, 512B -> 2, ... */
- 
- 	if ((flags & PCI_BASE_ADDRESS_SPACE) == PCI_BASE_ADDRESS_SPACE_IO) {
-diff --git a/drivers/pci/controller/cadence/pcie-cadence.c b/drivers/pci/controller/cadence/pcie-cadence.c
-index cd795f6fc1e2..b1689f725b41 100644
---- a/drivers/pci/controller/cadence/pcie-cadence.c
-+++ b/drivers/pci/controller/cadence/pcie-cadence.c
-@@ -4,6 +4,7 @@
- // Author: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
- 
- #include <linux/kernel.h>
-+#include <linux/log2.h>
- 
- #include "pcie-cadence.h"
- 
-@@ -15,7 +16,7 @@ void cdns_pcie_set_outbound_region(struct cdns_pcie *pcie, u8 fn,
- 	 * roundup_pow_of_two() returns an unsigned long, which is not suited
- 	 * for 64bit values.
- 	 */
--	u64 sz = 1ULL << fls64(size - 1);
-+	u64 sz = roundup_pow_of_two(size);
- 	int nbits = ilog2(sz);
- 	u32 addr0, addr1, desc0, desc1;
- 
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index 7ba06a0e1a71..e705d9d73030 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -627,7 +627,8 @@ static inline int brcm_pcie_get_rc_bar2_size_and_offset(struct brcm_pcie *pcie,
- 		return -ENODEV;
- 
- 	*rc_bar2_offset = -entry->offset;
--	*rc_bar2_size = 1ULL << fls64(entry->res->end - entry->res->start);
-+	*rc_bar2_size = roundup_pow_of_two(entry->res->end -
-+					   entry->res->start + 1);
- 
- 	/*
- 	 * We validate the inbound memory view even though we should trust
-diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/pcie-rockchip-ep.c
-index d743b0a48988..83665f5f804a 100644
---- a/drivers/pci/controller/pcie-rockchip-ep.c
-+++ b/drivers/pci/controller/pcie-rockchip-ep.c
-@@ -16,6 +16,7 @@
- #include <linux/platform_device.h>
- #include <linux/pci-epf.h>
- #include <linux/sizes.h>
-+#include <linux/log2.h>
- 
- #include "pcie-rockchip.h"
- 
-@@ -70,7 +71,7 @@ static void rockchip_pcie_prog_ep_ob_atu(struct rockchip_pcie *rockchip, u8 fn,
- 					 u32 r, u32 type, u64 cpu_addr,
- 					 u64 pci_addr, size_t size)
- {
--	u64 sz = 1ULL << fls64(size - 1);
-+	u64 sz = roundup_pow_of_two(size);
- 	int num_pass_bits = ilog2(sz);
- 	u32 addr0, addr1, desc0, desc1;
- 	bool is_nor_msg = (type == AXI_WRAPPER_NOR_MSG);
-@@ -176,7 +177,7 @@ static int rockchip_pcie_ep_set_bar(struct pci_epc *epc, u8 fn,
- 	 * roundup_pow_of_two() returns an unsigned long, which is not suited
- 	 * for 64bit values.
- 	 */
--	sz = 1ULL << fls64(sz - 1);
-+	sz = roundup_pow_of_two(sz);
- 	aperture = ilog2(sz) - 7; /* 128B -> 0, 256B -> 1, 512B -> 2, ... */
- 
- 	if ((flags & PCI_BASE_ADDRESS_SPACE) == PCI_BASE_ADDRESS_SPACE_IO) {
-diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-index 6af7ae83c4ad..056886c4efec 100644
---- a/kernel/dma/direct.c
-+++ b/kernel/dma/direct.c
-@@ -53,7 +53,7 @@ u64 dma_direct_get_required_mask(struct device *dev)
- {
- 	u64 max_dma = phys_to_dma_direct(dev, (max_pfn - 1) << PAGE_SHIFT);
- 
--	return (1ULL << (fls64(max_dma) - 1)) * 2 - 1;
-+	return rounddown_pow_of_two(max_dma) * 2 - 1;
- }
- 
- static gfp_t __dma_direct_optimal_gfp_mask(struct device *dev, u64 dma_mask,
+Thanks,
+
+         M.
 -- 
-2.24.0
-
+Jazz is not dead. It just smells funny...
