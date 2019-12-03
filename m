@@ -2,77 +2,71 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BD8910FF9B
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Dec 2019 15:07:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F1CE110083
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Dec 2019 15:42:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726186AbfLCOHT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Dec 2019 09:07:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38530 "EHLO mail.kernel.org"
+        id S1726057AbfLCOma (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Dec 2019 09:42:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726131AbfLCOHT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 3 Dec 2019 09:07:19 -0500
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1725957AbfLCOma (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 3 Dec 2019 09:42:30 -0500
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBB04206EC
-        for <linux-pci@vger.kernel.org>; Tue,  3 Dec 2019 14:07:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 882D420661;
+        Tue,  3 Dec 2019 14:42:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575382038;
-        bh=EGatAtFBvrsjDjApk6awgNmJq6Jgdwl6aS4KaCqWoYc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=u3TfvUXpKObuZK9w49dj6dDQe/oFM76ROu2At20o6n9Nlqbx6zWJprI/08f/pI/CC
-         PFhpwYpVAHADsd9nv/4Gn0gZ7Rvwi6iu3OOa8S5fvPjcFovqp7LcgeaSPdP1RXLLqM
-         p7Xg8VY6G94o5h63M/6joq/+yo82OKYdGsHpI/E8=
-Received: by mail-qt1-f171.google.com with SMTP id z22so3833104qto.7
-        for <linux-pci@vger.kernel.org>; Tue, 03 Dec 2019 06:07:18 -0800 (PST)
-X-Gm-Message-State: APjAAAWfRnHWfTn/+4eEc9wBXnT30vTFH1LQmc+7VtKN9CH33uMf8Ui4
-        Qt2dkEMBl3VmYkfTWjvwDo+vyBO0ucP57YrmAIw=
-X-Google-Smtp-Source: APXvYqzpiINkhxGJ+qJ8A++X8HXmCEFmVBfYySmTwUdSHuxL74sWpsm4uhlynLHgPakJm0GS2RM4grVFguCEh1WVCh8=
-X-Received: by 2002:ac8:7948:: with SMTP id r8mr4872148qtt.91.1575382028983;
- Tue, 03 Dec 2019 06:07:08 -0800 (PST)
-MIME-Version: 1.0
-References: <20191115135842.119621-1-wei.liu@kernel.org> <20191126230524.GA197236@google.com>
- <CAHd7Wqw49hB3++Td00=xccgJoqPLye_DvYv8+PYjxHWbDm5DVg@mail.gmail.com>
-In-Reply-To: <CAHd7Wqw49hB3++Td00=xccgJoqPLye_DvYv8+PYjxHWbDm5DVg@mail.gmail.com>
-From:   Wei Liu <wei.liu@kernel.org>
-Date:   Tue, 3 Dec 2019 14:06:57 +0000
-X-Gmail-Original-Message-ID: <CAHd7Wqw56pPXFgvk+vNnrMCeVow6Op2mXONiqHs4C9NrMfS=VQ@mail.gmail.com>
-Message-ID: <CAHd7Wqw56pPXFgvk+vNnrMCeVow6Op2mXONiqHs4C9NrMfS=VQ@mail.gmail.com>
-Subject: Re: [PATCH] PCI: build Broadcom PAXC quirks unconditionally
+        s=default; t=1575384149;
+        bh=X0tSYbxhCgxkGi0QUqni+3iiK1EwhvPfsy2UsM12iAY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=p4aDQItokXXJj8o5Ey/eviueffDtwz0GdZ4C8KFI0W+7eIuaCtHK+sPIFmzoNOrOD
+         aPJMROb4YyE4jcJ31MMo5c091ibWV5urkso0ssUGH7DUq4IFsDKMwBXbOBMNoBi+eo
+         dPZ3Lqd258OB2j15NlG11T6xaDfDf23FgS/gYNdg=
+Date:   Tue, 3 Dec 2019 08:42:26 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Wei Liu <wei.liu@kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        rjui@broadcom.com
-Content-Type: text/plain; charset="UTF-8"
+Cc:     linux-pci@vger.kernel.org, rjui@broadcom.com
+Subject: Re: [PATCH] PCI: build Broadcom PAXC quirks unconditionally
+Message-ID: <20191203144226.GA255690@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHd7Wqw56pPXFgvk+vNnrMCeVow6Op2mXONiqHs4C9NrMfS=VQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 27 Nov 2019 at 10:59, Wei Liu <wei.liu@kernel.org> wrote:
->
-> On Tue, 26 Nov 2019 at 23:05, Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Tue, Dec 03, 2019 at 02:06:57PM +0000, Wei Liu wrote:
+> On Wed, 27 Nov 2019 at 10:59, Wei Liu <wei.liu@kernel.org> wrote:
 > >
-> > On Fri, Nov 15, 2019 at 01:58:42PM +0000, Wei Liu wrote:
-> > > CONFIG_PCIE_IPROC_PLATFORM only gets defined when the driver is built
-> > > in.  Removing the ifdef will allow us to build the driver as a module.
+> > On Tue, 26 Nov 2019 at 23:05, Bjorn Helgaas <helgaas@kernel.org> wrote:
 > > >
-> > > Signed-off-by: Wei Liu <wei.liu@kernel.org>
+> > > On Fri, Nov 15, 2019 at 01:58:42PM +0000, Wei Liu wrote:
+> > > > CONFIG_PCIE_IPROC_PLATFORM only gets defined when the driver is built
+> > > > in.  Removing the ifdef will allow us to build the driver as a module.
+> > > >
+> > > > Signed-off-by: Wei Liu <wei.liu@kernel.org>
+> > >
+> > > Sorry, I missed this thinking it would be under drivers/pci/controller
+> > > and hence handled by Lorenzo.
+> > >
+> > > So I guess this doesn't fix a build problem, but without this patch,
+> > > we just don't run the quirk if the driver is a module, right?
 > >
-> > Sorry, I missed this thinking it would be under drivers/pci/controller
-> > and hence handled by Lorenzo.
+> > Yes, this is correct.
 > >
-> > So I guess this doesn't fix a build problem, but without this patch,
-> > we just don't run the quirk if the driver is a module, right?
-> >
->
-> Yes, this is correct.
->
-> Without this patch, the quirk doesn't get to run if the driver is a module.
->
+> > Without this patch, the quirk doesn't get to run if the driver is a module.
+> 
+> Are you satisfied with the patch? What do I need to do to get it merged?
 
-Hi Bjorn
+You needn't do anything.  I'll clarify the changelog (the patch
+doesn't actually *enable* building the driver as a module; it merely
+ensures that we include the quirk in that case).
 
-Are you satisfied with the patch? What do I need to do to get it merged?
+This is too late for v5.5, so it will get merged for v5.6 unless the
+modular driver itself was enabled for v5.5.
 
-Thanks,
-Wei.
+Bjorn
