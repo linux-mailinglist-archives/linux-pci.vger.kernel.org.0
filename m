@@ -2,117 +2,121 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E5E711124F5
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2019 09:30:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1EACF1128D0
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2019 11:05:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727158AbfLDIaD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 Dec 2019 03:30:03 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42929 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726679AbfLDIaC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 Dec 2019 03:30:02 -0500
-Received: by mail-pf1-f195.google.com with SMTP id l22so3261071pff.9;
-        Wed, 04 Dec 2019 00:30:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=26Svodx2iKimpEDX28qyUXASc5gWZTuY5LBcruAtYsQ=;
-        b=KKZ+O0qQLp376LkvoLp+WaBAY1gCrMaSJqGMWi4S6126B1TeH6x48Xb8ngBRJIQc4F
-         3QAbr2qXsqfgY6bBbrmVpx7DJZh3AcAVN/OhQxB1W9OpHyvXnlWafkDYFUJUuaxE3lvU
-         cCh1rAALzHNb1CE+yvUyA6ql7xgTnsB+XrmeqJYTLh20JxMAm75L8JIRGzvgUrbCsv4e
-         B+eaNcCE0NqBZmMcBWbN5onY15Vdj7MydB5ggqh2P+2Y0fQ5o710inQhwTl9o9xz/8ih
-         tsaHh/wyC4jr98DqSeZCNAG4QxH/ZlWbuwQ3Nsp25rlkIpeZteEX1q1eLvBFWoliSr0W
-         BSfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=26Svodx2iKimpEDX28qyUXASc5gWZTuY5LBcruAtYsQ=;
-        b=Ns26/PsTPjJzt/P2VXQrg2CGAsHaRo7OToaT+9cdKrKErVTlH5OqgCRbOcj5TjF+zE
-         K5/YmS+PbO0uyTmFh02umssSp5gk62a3/dU5AHOLbsFJexGZXY6SRatF4kHpPAn2gvvA
-         11J/kSDnXppLDw/7qglm6Bi84kU/aJgGcAPLcO9AsIOxbZcixqEtiweXYMLhr/AT32CB
-         LyXcOycaAFlnkJSUTn56um3heq22REdu4YruhaeDIDhDtamA8d/jP8Xt0QKYeTr0GryO
-         amSbWaKousD2N0B6Xn/2uIGKHs929jXzwMW04ocCwjQqphqrBLi+SdJ3v6wqOM7HVNA9
-         +IVA==
-X-Gm-Message-State: APjAAAWqaE+EhPsXZRdv8SLNaum1W4ame4Zettqc4TxEnqSWPPORp46o
-        qXCuLEn/Rt8SYOZUBoGQpSzh0RfY//malxBn5dA=
-X-Google-Smtp-Source: APXvYqzjAZ0vAhPhJSIR2kF3EuRKWdrEJY88vgQI+LDDt1kDWp6YChc0yxSHIbzB8zqEI/D6eXIErZ/TdjfYIfEZpgM=
-X-Received: by 2002:a62:1a09:: with SMTP id a9mr2343166pfa.64.1575448202017;
- Wed, 04 Dec 2019 00:30:02 -0800 (PST)
+        id S1726893AbfLDKFv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 Dec 2019 05:05:51 -0500
+Received: from mx.socionext.com ([202.248.49.38]:25693 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727420AbfLDKFu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 4 Dec 2019 05:05:50 -0500
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 04 Dec 2019 19:05:48 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 7D8B2603AB;
+        Wed,  4 Dec 2019 19:05:48 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Wed, 4 Dec 2019 19:06:21 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id E71B11A01CF;
+        Wed,  4 Dec 2019 19:05:47 +0900 (JST)
+Received: from [10.213.132.48] (unknown [10.213.132.48])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id B6A79120456;
+        Wed,  4 Dec 2019 19:05:47 +0900 (JST)
+Date:   Wed, 04 Dec 2019 19:05:47 +0900
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH 2/2] PCI: uniphier: Add checking whether PERST# is deasserted
+Cc:     <linux-pci@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+In-Reply-To: <20191122205316.297B.4A936039@socionext.com>
+References: <20191121164705.GA14229@e121166-lin.cambridge.arm.com> <20191122205316.297B.4A936039@socionext.com>
+Message-Id: <20191204190547.333C.4A936039@socionext.com>
 MIME-Version: 1.0
-References: <1575349026-8743-1-git-send-email-srinath.mannam@broadcom.com>
- <1575349026-8743-3-git-send-email-srinath.mannam@broadcom.com>
- <20191203155514.GE18399@e119886-lin.cambridge.arm.com> <CAHp75Vf7d=Gw24MTq2q3BKspkLEDDM24GVK4Zh_4zfZEzVuZjw@mail.gmail.com>
- <40fffa66-4b06-a851-84c2-4de36d5c6777@broadcom.com>
-In-Reply-To: <40fffa66-4b06-a851-84c2-4de36d5c6777@broadcom.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 4 Dec 2019 10:29:51 +0200
-Message-ID: <CAHp75VfyKAg4OhzUa4swGXOGTvJ5fVO8mhGSG=5HAUP__M-URQ@mail.gmail.com>
-Subject: Re: [PATCH v3 2/6] PCI: iproc: Add INTx support with better modeling
-To:     Ray Jui <ray.jui@broadcom.com>
-Cc:     Andrew Murray <andrew.murray@arm.com>,
-        Srinath Mannam <srinath.mannam@broadcom.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        linux-pci@vger.kernel.org, devicetree <devicetree@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Becky! ver. 2.70 [ja]
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Dec 4, 2019 at 12:09 AM Ray Jui <ray.jui@broadcom.com> wrote:
-> On 12/3/19 11:27 AM, Andy Shevchenko wrote:
-> > On Tue, Dec 3, 2019 at 5:55 PM Andrew Murray <andrew.murray@arm.com> wrote:
-> >> On Tue, Dec 03, 2019 at 10:27:02AM +0530, Srinath Mannam wrote:
-> >
-> >>> +     /* go through INTx A, B, C, D until all interrupts are handled */
-> >>> +     do {
-> >>> +             status = iproc_pcie_read_reg(pcie, IPROC_PCIE_INTX_CSR);
-> >>
-> >> By performing this read once and outside of the do/while loop you may improve
-> >> performance. I wonder how probable it is to get another INTx whilst handling
-> >> one?
-> >
-> > May I ask how it can be improved?
-> > One read will be needed any way, and so does this code.
-> >
->
-> I guess the current code will cause the IPROC_PCIE_INTX_CSR register to
-> be read TWICE, if it's ever set to start with.
->
-> But then if we do it outside of the while loop, if we ever receive an
-> interrupt while servicing one, the interrupt will still need to be
-> serviced, and in this case, it will cause additional context switch
-> overhead by going out and back in the interrupt context.
->
-> My take is that it's probably more ideal to leave this portion of code
-> as it is.
+On Fri, 22 Nov 2019 20:53:16 +0900 <hayashi.kunihiko@socionext.com> wrote:
 
-Can't we simple drop a do-while completely and leave only
-for_each_set_bit() loop?
+> Hello Lorenzo,
+> 
+> On Thu, 21 Nov 2019 16:47:05 +0000 <lorenzo.pieralisi@arm.com> wrote:
+> 
+> > On Fri, Nov 08, 2019 at 04:30:27PM +0900, Kunihiko Hayashi wrote:
+> > > > However, If I understand correctly, doesn't your solution only work some
+> > > > of the time? What happens if you boot both machines at the same time,
+> > > > and PERST# isn't asserted prior to the kernel booting?
+> > > 
+> > > I think it contains an annoying problem.
+> > > 
+> > > If PERST# isn't toggled prior to the kernel booting, PERST# remains asserted
+> > > and the RC driver can't access PCI bus.
+> > > 
+> > > As a result, this patch works and deasserts PERST# (and EP configuration will
+> > > be lost). So boot sequence needs to include deasserting PERST#.
+> > 
+> > I am sorry but I have lost you. Can you explain to us why checking
+> > that PERST# is deasserted guarantees you that:
+> > 
+> > - The EP has bootstrapped
+> > - It is safe not to toggle it again (and also skip
+> >   uniphier_pcie_ltssm_enable())
+> > 
+> > Please provide details of the HW configuration so that we understand
+> > what's actually supposed to happen and why this patch fixes the
+> > issue you are facing.
+> 
+> I tried to connect between the following boards, and do pci-epf-test:
+>  - "RC board": UniPhier ld20 board that has DWC RC controller
+>  - "EP board": UniPhier legacy board that has DWC EP controller
+> 
+> This EP has power-on-state configuration, but it's necessary to set
+> class ID, BAR sizes, etc. after starting up.
+> 
+> In case of that starting up RC board before EP board, the RC driver
+> can't establish link. So we need to boot EP board first.
 
->
-> >>> +             for_each_set_bit(bit, &status, PCI_NUM_INTX) {
-> >>> +                     virq = irq_find_mapping(pcie->irq_domain, bit);
-> >>> +                     if (virq)
-> >>> +                             generic_handle_irq(virq);
-> >>> +                     else
-> >>> +                             dev_err(dev, "unexpected INTx%u\n", bit);
-> >>> +             }
-> >>> +     } while ((status & SYS_RC_INTX_MASK) != 0);
-> >
+At that point, I've considered why RC can't establish link,
+and found that the waitng time was too short.
 
+- EP/RC: power on both boards
 
+- RC: start up the kernel on RC board
 
--- 
-With Best Regards,
-Andy Shevchenko
+- RC: wait for link up (long time enough)
+
+- EP: start up the kernel on EP board
+
+- EP: configurate pci-epf-test
+
+When the endpoint  configuration is done and the EP driver enables LTSSM,
+the RC driver will quit from waiting for link up.
+
+Currently DWC RC driver calls dwc_pcie_wait_for_link(), however,
+the function tries to link up 10 times only, that is defined
+as LINK_WAIT_MAX_RETRIES in pcie-designware.h, it's too short
+to configurate the endpoint.
+
+Now the patch to bypass PERST# is not necessary.
+
+Instead for DWC RC drivers, I think that the number of retries
+should be changed according to the usage.
+And the same issue remains with other RC drivers.
+
+Thank you,
+
+---
+Best Regards,
+Kunihiko Hayashi
+
