@@ -2,262 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3AAE41121A1
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2019 03:53:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B71DA1121AF
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Dec 2019 04:01:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbfLDCxu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Dec 2019 21:53:50 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:56216 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726482AbfLDCxu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Dec 2019 21:53:50 -0500
-Received: by linux.microsoft.com (Postfix, from userid 1004)
-        id EC9ED20B4900; Tue,  3 Dec 2019 18:53:48 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com EC9ED20B4900
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
-        s=default; t=1575428028;
-        bh=2T+sA7LpUfCjwm5Iu/JZdSYRI9AlEDHDUmB76+RouIA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lviKuF99LpaY78QDOIg/26PVbOJxgs0hcEyAtIJM/gjLIO62+4ux3uHE/mMtdAFV9
-         0q38B9725LIfQmLiG36GQjO1mBSpL6cdlhX8wjgJ6mi28pEH5SMm5++4VJceOH5GPG
-         nysHOJigGye9FHhuvKWc1LRgezgQIPSymk/M1UU4=
-From:   longli@linuxonhyperv.com
-To:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Long Li <longli@microsoft.com>
-Subject: [Patch v2 2/2] PCI: hv: Add support for protocol 1.3 and support PCI_BUS_RELATIONS2
-Date:   Tue,  3 Dec 2019 18:53:37 -0800
-Message-Id: <1575428017-87914-2-git-send-email-longli@linuxonhyperv.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1575428017-87914-1-git-send-email-longli@linuxonhyperv.com>
-References: <1575428017-87914-1-git-send-email-longli@linuxonhyperv.com>
+        id S1726893AbfLDDBj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Dec 2019 22:01:39 -0500
+Received: from mga11.intel.com ([192.55.52.93]:47720 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726482AbfLDDBj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 3 Dec 2019 22:01:39 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Dec 2019 19:01:37 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,275,1571727600"; 
+   d="scan'208";a="385576029"
+Received: from jpan9-mobl2.amr.corp.intel.com (HELO localhost) ([10.254.106.153])
+  by orsmga005.jf.intel.com with ESMTP; 03 Dec 2019 19:01:37 -0800
+Date:   Tue, 3 Dec 2019 19:01:36 -0800
+From:   "Jacob Pan (Jun)" <jacob.jun.pan@intel.com>
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     <linux-acpi@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <iommu@lists.linux-foundation.org>,
+        <virtualization@lists.linux-foundation.org>,
+        <linux-pci@vger.kernel.org>, <virtio-dev@lists.oasis-open.org>,
+        <rjw@rjwysocki.net>, <lenb@kernel.org>,
+        <lorenzo.pieralisi@arm.com>, <guohanjun@huawei.com>,
+        <sudeep.holla@arm.com>, <gregkh@linuxfoundation.org>,
+        <joro@8bytes.org>, <bhelgaas@google.com>, <mst@redhat.com>,
+        <jasowang@redhat.com>, <eric.auger@redhat.com>,
+        <sebastien.boeuf@intel.com>, <kevin.tian@intel.com>,
+        jacob.jun.pan@intel.com
+Subject: Re: [RFC 00/13] virtio-iommu on non-devicetree platforms
+Message-ID: <20191203190136.00007171@intel.com>
+In-Reply-To: <20191125180247.GD945122@lophozonia>
+References: <20191122105000.800410-1-jean-philippe@linaro.org>
+        <20191122160102.00004489@intel.com>
+        <20191125180247.GD945122@lophozonia>
+Organization: intel
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Long Li <longli@microsoft.com>
+Hi Jean,
 
-Starting with Hyper-V PCI protocol version 1.3, the host VSP can send
-PCI_BUS_RELATIONS2 and pass the vNUMA node information for devices on the bus.
-The vNUMA node tells which guest NUMA node this device is on based on guest
-VM configuration topology and physical device inforamtion.
+Sorry for the delay, I was out last week. Comments inline below.
 
-The patch adds code to negotiate v1.3 and process PCI_BUS_RELATIONS2.
+On Mon, 25 Nov 2019 19:02:47 +0100
+Jean-Philippe Brucker <jean-philippe@linaro.org> wrote:
 
-Signed-off-by: Long Li <longli@microsoft.com>
----
+> On Fri, Nov 22, 2019 at 04:01:02PM -0800, Jacob Pan (Jun) wrote:
+> > > (1) ACPI has one table per vendor (DMAR for Intel, IVRS for AMD
+> > > and IORT for Arm). From my point of view IORT is easier to
+> > > extend, since we just need to introduce a new node type. There
+> > > are no dependencies to Arm in the Linux IORT driver, so it works
+> > > well with CONFIG_X86. 
+> > From my limited understanding, IORT and VIOT is to solve device
+> > topology enumeration only? I am not sure how it can be expanded to
+> > cover information beyond device topology. e.g. DMAR has NUMA
+> > information and root port ATS, I guess they are not used today in
+> > the guest but might be additions in the future.  
+> 
+> The PCI root-complex node of IORT has an ATS attribute, which we can
+> already use. However its scope is the root complex, not individual
+> root ports like with DMAR.
+> 
+> I'm not very familiar with NUMA, but it looks like we just need to
+> specify a proximity domain in relation to the SRAT table, for each
+> viommu? The SMMUv3 node in IORT has a 4-bytes "proximity domain"
+> field for this. We can add the same to the VIOT virtio-iommu nodes
+> later, since the structures are extensible.
+> 
+I think there the proximity domain is more for each assigned device
+than vIOMMU. vIOMMU in the guest can have assigned devices belong to
+different pIOMMU and proximity domains. If the guest owns the first
+level page tables (gIOVA or SVA), we want to make sure page tables are
+allocated from the close proximity domain.
 
-Changes
-v2: Changed some spaces to tabs, added put_pcichild() after get_pcichild_wslot(), renamed pci_assign_numa_node() to hv_pci_assign_numa_node()
+My understanding is virtio IOMMU supports both virtio devices and
+assigned devices. we could care less about the former in terms of NUMA.
 
- drivers/pci/controller/pci-hyperv.c | 109 ++++++++++++++++++++++++++++
- 1 file changed, 109 insertions(+)
+In ACPI, we have _PXM method to retrieve device proximity domain. I
+don't know if there is something equivalent or a generic way to get
+_PXM information. I think VMM also need to make sure when an assigned
+device is used with vIOMMU, there are some memory is allocated from the
+device's proximity domain.
 
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 8c1533be6ad0..fee0d7fdc672 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -63,6 +63,7 @@
- enum pci_protocol_version_t {
- 	PCI_PROTOCOL_VERSION_1_1 = PCI_MAKE_VERSION(1, 1),	/* Win10 */
- 	PCI_PROTOCOL_VERSION_1_2 = PCI_MAKE_VERSION(1, 2),	/* RS1 */
-+	PCI_PROTOCOL_VERSION_1_3 = PCI_MAKE_VERSION(1, 3),	/* Vibranium */
- };
- 
- #define CPU_AFFINITY_ALL	-1ULL
-@@ -72,6 +73,7 @@ enum pci_protocol_version_t {
-  * first.
-  */
- static enum pci_protocol_version_t pci_protocol_versions[] = {
-+	PCI_PROTOCOL_VERSION_1_3,
- 	PCI_PROTOCOL_VERSION_1_2,
- 	PCI_PROTOCOL_VERSION_1_1,
- };
-@@ -124,6 +126,7 @@ enum pci_message_type {
- 	PCI_RESOURCES_ASSIGNED2		= PCI_MESSAGE_BASE + 0x16,
- 	PCI_CREATE_INTERRUPT_MESSAGE2	= PCI_MESSAGE_BASE + 0x17,
- 	PCI_DELETE_INTERRUPT_MESSAGE2	= PCI_MESSAGE_BASE + 0x18, /* unused */
-+	PCI_BUS_RELATIONS2		= PCI_MESSAGE_BASE + 0x19,
- 	PCI_MESSAGE_MAXIMUM
- };
- 
-@@ -169,6 +172,26 @@ struct pci_function_description {
- 	u32	ser;	/* serial number */
- } __packed;
- 
-+enum pci_device_description_flags {
-+	HV_PCI_DEVICE_FLAG_NONE			= 0x0,
-+	HV_PCI_DEVICE_FLAG_NUMA_AFFINITY	= 0x1,
-+};
-+
-+struct pci_function_description2 {
-+	u16	v_id;	/* vendor ID */
-+	u16	d_id;	/* device ID */
-+	u8	rev;
-+	u8	prog_intf;
-+	u8	subclass;
-+	u8	base_class;
-+	u32	subsystem_id;
-+	union	win_slot_encoding win_slot;
-+	u32	ser;	/* serial number */
-+	u32	flags;
-+	u16	virtual_numa_node;
-+	u16	reserved;
-+} __packed;
-+
- /**
-  * struct hv_msi_desc
-  * @vector:		IDT entry
-@@ -304,6 +327,12 @@ struct pci_bus_relations {
- 	struct pci_function_description func[0];
- } __packed;
- 
-+struct pci_bus_relations2 {
-+	struct pci_incoming_message incoming;
-+	u32 device_count;
-+	struct pci_function_description2 func[0];
-+} __packed;
-+
- struct pci_q_res_req_response {
- 	struct vmpacket_descriptor hdr;
- 	s32 status;			/* negative values are failures */
-@@ -1417,6 +1446,7 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 		break;
- 
- 	case PCI_PROTOCOL_VERSION_1_2:
-+	case PCI_PROTOCOL_VERSION_1_3:
- 		size = hv_compose_msi_req_v2(&ctxt.int_pkts.v2,
- 					dest,
- 					hpdev->desc.win_slot.slot,
-@@ -1798,6 +1828,27 @@ static void hv_pci_remove_slots(struct hv_pcibus_device *hbus)
- 	}
- }
- 
-+/*
-+ * Set NUMA node for the devices on the bus
-+ */
-+static void hv_pci_assign_numa_node(struct hv_pcibus_device *hbus)
-+{
-+	struct pci_dev *dev;
-+	struct pci_bus *bus = hbus->pci_bus;
-+	struct hv_pci_dev *hv_dev;
-+
-+	list_for_each_entry(dev, &bus->devices, bus_list) {
-+		hv_dev = get_pcichild_wslot(hbus, devfn_to_wslot(dev->devfn));
-+		if (!hv_dev)
-+			continue;
-+
-+		if (hv_dev->desc.flags & HV_PCI_DEVICE_FLAG_NUMA_AFFINITY)
-+			set_dev_node(&dev->dev, hv_dev->desc.virtual_numa_node);
-+
-+		put_pcichild(hv_dev);
-+	}
-+}
-+
- /**
-  * create_root_hv_pci_bus() - Expose a new root PCI bus
-  * @hbus:	Root PCI bus, as understood by this driver
-@@ -1820,6 +1871,7 @@ static int create_root_hv_pci_bus(struct hv_pcibus_device *hbus)
- 
- 	pci_lock_rescan_remove();
- 	pci_scan_child_bus(hbus->pci_bus);
-+	hv_pci_assign_numa_node(hbus);
- 	pci_bus_assign_resources(hbus->pci_bus);
- 	hv_pci_assign_slots(hbus);
- 	pci_bus_add_devices(hbus->pci_bus);
-@@ -2088,6 +2140,7 @@ static void pci_devices_present_work(struct work_struct *work)
- 		 */
- 		pci_lock_rescan_remove();
- 		pci_scan_child_bus(hbus->pci_bus);
-+		hv_pci_assign_numa_node(hbus);
- 		hv_pci_assign_slots(hbus);
- 		pci_unlock_rescan_remove();
- 		break;
-@@ -2183,6 +2236,46 @@ static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
- 		kfree(dr);
- }
- 
-+/**
-+ * hv_pci_devices_present2() - Handles list of new children
-+ * @hbus:	Root PCI bus, as understood by this driver
-+ * @relations2:	Packet from host listing children
-+ *
-+ * This function is the v2 version of hv_pci_devices_present()
-+ */
-+static void hv_pci_devices_present2(struct hv_pcibus_device *hbus,
-+				    struct pci_bus_relations2 *relations)
-+{
-+	struct hv_dr_state *dr;
-+	int i;
-+
-+	dr = kzalloc(offsetof(struct hv_dr_state, func) +
-+		     (sizeof(struct hv_pcidev_description) *
-+		      (relations->device_count)), GFP_NOWAIT);
-+
-+	if (!dr)
-+		return;
-+
-+	dr->device_count = relations->device_count;
-+	for (i = 0; i < dr->device_count; i++) {
-+		dr->func[i].v_id = relations->func[i].v_id;
-+		dr->func[i].d_id = relations->func[i].d_id;
-+		dr->func[i].rev = relations->func[i].rev;
-+		dr->func[i].prog_intf = relations->func[i].prog_intf;
-+		dr->func[i].subclass = relations->func[i].subclass;
-+		dr->func[i].base_class = relations->func[i].base_class;
-+		dr->func[i].subsystem_id = relations->func[i].subsystem_id;
-+		dr->func[i].win_slot = relations->func[i].win_slot;
-+		dr->func[i].ser = relations->func[i].ser;
-+		dr->func[i].flags = relations->func[i].flags;
-+		dr->func[i].virtual_numa_node =
-+			relations->func[i].virtual_numa_node;
-+	}
-+
-+	if (hv_pci_start_relations_work(hbus, dr))
-+		kfree(dr);
-+}
-+
- /**
-  * hv_eject_device_work() - Asynchronously handles ejection
-  * @work:	Work struct embedded in internal device struct
-@@ -2288,6 +2381,7 @@ static void hv_pci_onchannelcallback(void *context)
- 	struct pci_response *response;
- 	struct pci_incoming_message *new_message;
- 	struct pci_bus_relations *bus_rel;
-+	struct pci_bus_relations2 *bus_rel2;
- 	struct pci_dev_inval_block *inval;
- 	struct pci_dev_incoming *dev_message;
- 	struct hv_pci_dev *hpdev;
-@@ -2355,6 +2449,21 @@ static void hv_pci_onchannelcallback(void *context)
- 				hv_pci_devices_present(hbus, bus_rel);
- 				break;
- 
-+			case PCI_BUS_RELATIONS2:
-+
-+				bus_rel2 = (struct pci_bus_relations2 *)buffer;
-+				if (bytes_recvd <
-+				    offsetof(struct pci_bus_relations2, func) +
-+				    (sizeof(struct pci_function_description2) *
-+				     (bus_rel2->device_count))) {
-+					dev_err(&hbus->hdev->device,
-+						"bus relations v2 too small\n");
-+					break;
-+				}
-+
-+				hv_pci_devices_present2(hbus, bus_rel2);
-+				break;
-+
- 			case PCI_EJECT:
- 
- 				dev_message = (struct pci_dev_incoming *)buffer;
--- 
-2.17.1
+> But it might be better to keep the bare minimum information in the FW
+> descriptor, and put the rest in the virtio-iommu. So yes topology
+> enumeration is something the device cannot do itself (not fully that
+> is, see (2)) but for the rest, virtio-iommu's PROBE request can
+> provide details about each endpoint in relation to their physical
+> IOMMU.
+> 
+> We could for example add a bit in a PROBE property saying that the
+> whole path between the IOMMU and the endpoint supports ATS. For NUMA
+> it might also be more interesting to have a finer granularity, since
+> one viommu could be managing endpoints that are behind different
+> physical IOMMUs. If in the future we want to allocate page tables
+> close to the physical IOMMU for example, we might need to describe
+> multiple NUMA nodes per viommu, using the PROBE request.
+> 
+Should we reinvent something for NUMA or use ACPI's SRAT, _PXM? I am
+not sure how it is handled today in QEMU in terms of guest-host NUMA
+proximity domain mapping.
+
+> Thanks,
+> Jean
 
