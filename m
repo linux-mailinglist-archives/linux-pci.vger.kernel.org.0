@@ -2,252 +2,196 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B66B114657
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Dec 2019 18:56:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 61B68114832
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Dec 2019 21:38:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730003AbfLER4O (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Dec 2019 12:56:14 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:39483 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729711AbfLER4O (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Dec 2019 12:56:14 -0500
-Received: by mail-qv1-f68.google.com with SMTP id y8so1612383qvk.6;
-        Thu, 05 Dec 2019 09:56:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=uBdc6tAdaDbdHfwIgPMwkMeOlhCvhzqvHxjkUnPKKyc=;
-        b=P8s90vb58VmKhLYpki6zTr+33BWbPiCP+lB303nru6CX5sd5JurxgkyzGkwXIrECVv
-         18KHZASPN0B1R22YsTE4pKB3VlqFDVUBpLyphe3c6t478HNAzYxUVk35aqVneHwbYUdZ
-         ZGPdtmSDiewN/w7fKwkVv6K1N1t7boYmhG1a9zPu045gs8U+9cHCclpimX92uG7/Hhyb
-         OCzTLoQhDr59Ju1lPAnbnX0uyht2DiwZE5VK6epFCoVQH0xMGqVOxYhgrvncVTU3itOy
-         0NEBOgP7arVX/1DaUxPOz326J2ych72bsv10nsOQ/PMEJD2FuyJyf1x5h4veZvzyw4Zi
-         8xrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=uBdc6tAdaDbdHfwIgPMwkMeOlhCvhzqvHxjkUnPKKyc=;
-        b=Lr56DzOPXsc+WimHYppmzcAcpocq7u194Z8XIh5k7YKf3z4TsYi0wV/Kgm3guUbh5K
-         lPodKzwgDGxlc/91hG9u2dSC34MbB497gy6JpqmOUiq7GLAbdA2hN3sriA81Cf7SPQk0
-         8glg4kra36sSTq/bdGP65hT5XZY2DpF/RKSYbOvHG48QqzOONs0fzDR2FMek69q2w+jg
-         YT/lhN3VgZEm7xuMEkNF2LGXlUJzsqfTEpNfyADcl3LMm41j4EPLqN8u+9NRmxzUyRxw
-         p94KQ50n6t2vxWMzUuaak0WpJFtuon6m6WizV0MQSQXuicfYTgH78gGtfQEKIbmh/8PT
-         D4uQ==
-X-Gm-Message-State: APjAAAWUzq1a+SCuSm12O8nffCLG6VK6gu2Bd4UCuQ2dB34wFxeSNo4S
-        0kzHcY7egU7sa+PxdDLXtjFYzdLuC0DzBXHLbtA=
-X-Google-Smtp-Source: APXvYqxsfjMbJimky0Slu9Gm3PSpPimUV4lVFsuPZgK0g7ak4i7DrFu1uUqJtDVrwoypiJmR+0thY9zswvWPt9f96zk=
-X-Received: by 2002:a0c:e4cc:: with SMTP id g12mr8781528qvm.237.1575568572639;
- Thu, 05 Dec 2019 09:56:12 -0800 (PST)
-MIME-Version: 1.0
-References: <20191028163256.8004-1-robh@kernel.org> <20191028163256.8004-11-robh@kernel.org>
-In-Reply-To: <20191028163256.8004-11-robh@kernel.org>
-From:   Enric Balletbo Serra <eballetbo@gmail.com>
-Date:   Thu, 5 Dec 2019 18:56:01 +0100
-Message-ID: <CAFqH_51-BMWSGGBpoKxA3UK+yPHSpPgok5i=daSC0KS5oc5ueA@mail.gmail.com>
-Subject: Re: [PATCH v3 10/25] PCI: rockchip: Use pci_parse_request_of_pci_ranges()
-To:     Rob Herring <robh@kernel.org>
-Cc:     Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        id S1729154AbfLEUit (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 Dec 2019 15:38:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41292 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729145AbfLEUit (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 5 Dec 2019 15:38:49 -0500
+Received: from localhost (mobile-166-170-221-197.mycingular.net [166.170.221.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B455D205F4;
+        Thu,  5 Dec 2019 20:38:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575578328;
+        bh=K7c3qaYFnXWMMqmwVGrwX7rG4+uwWtUsCcODfBtRF1k=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=NWmiSx+ex1TjiKC4MaIx3xgvijveWrSbxbs+XjqnQh8NtXiBsDxOC54dxgdSCwY2Q
+         JFbBLgr1/UwBKIqUKv7MLbUuUhoa33JyMTyHQS/JVBgESXzRhy4V3aJStQ6g6aSYgd
+         BMEn5r9MAm2BdXlEKpf1Z9W0pYFSQT6+AX76sG20=
+Date:   Thu, 5 Dec 2019 14:38:45 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     andrew.murray@arm.com, maz@kernel.org,
+        linux-kernel@vger.kernel.org,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
-        linux-pci@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Toan Le <toan@os.amperecomputing.com>,
-        Will Deacon <will@kernel.org>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         bcm-kernel-feedback-list@broadcom.com,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ray Jui <rjui@broadcom.com>,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Simon Horman <horms@verge.net.au>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Scott Branden <sbranden@broadcom.com>,
-        Jingoo Han <jingoohan1@gmail.com>, rfi@lists.rocketboards.org,
-        linux-renesas-soc@vger.kernel.org,
-        Tom Joseph <tjoseph@cadence.com>,
-        Srinath Mannam <srinath.mannam@broadcom.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Ley Foon Tan <lftan@altera.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Eric Anholt <eric@anholt.net>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        james.quinlan@broadcom.com, mbrugger@suse.com,
+        phil@raspberrypi.org, jeremy.linton@arm.com,
+        linux-pci@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        iommu@lists.linux-foundation.org
+Subject: Re: [PATCH v4 8/8] linux/log2.h: Use roundup/dow_pow_two() on 64bit
+ calculations
+Message-ID: <20191205203845.GA243596@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191203114743.1294-9-nsaenzjulienne@suse.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Rob,
+The subject contains a couple typos: it's missing "of" and it's
+missing the "n" on "down".
 
-Missatge de Rob Herring <robh@kernel.org> del dia dl., 28 d=E2=80=99oct. 20=
-19
-a les 17:38:
->
-> Convert the Rockchip host bridge to use the common
-> pci_parse_request_of_pci_ranges().
->
-> There's no need to assign the resources to a temporary list first. Just
-> use bridge->windows directly and remove all the temporary list handling.
->
-> Cc: Shawn Lin <shawn.lin@rock-chips.com>
-> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: Andrew Murray <andrew.murray@arm.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Heiko Stuebner <heiko@sntech.de>
-> Cc: linux-rockchip@lists.infradead.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
+On Tue, Dec 03, 2019 at 12:47:41PM +0100, Nicolas Saenz Julienne wrote:
+> The function now is safe to use while expecting a 64bit value. Use it
+> where relevant.
+
+Please include the function names ("roundup_pow_of_two()",
+"rounddown_pow_of_two()") in the changelog so it is self-contained and
+doesn't depend on the subject.
+
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+
+With the nits above and below addressed,
+
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# drivers/pci
+
 > ---
+>  drivers/acpi/arm64/iort.c                        | 2 +-
+>  drivers/net/ethernet/mellanox/mlx4/en_clock.c    | 3 ++-
+>  drivers/of/device.c                              | 3 ++-
+>  drivers/pci/controller/cadence/pcie-cadence-ep.c | 3 ++-
+>  drivers/pci/controller/cadence/pcie-cadence.c    | 3 ++-
+>  drivers/pci/controller/pcie-brcmstb.c            | 3 ++-
+>  drivers/pci/controller/pcie-rockchip-ep.c        | 5 +++--
+>  kernel/dma/direct.c                              | 2 +-
+>  8 files changed, 15 insertions(+), 9 deletions(-)
 
-I just tested mainline on my Samsung Chromebook Plus, and since
-yesterday I'm getting a "synchronous external abort" [1]. After a
-bisection, I found that this patch triggers the issue (this patch was
-merged yesterday)
+> --- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/sizes.h>
+> +#include <linux/log2.h>
+>  
+>  #include "pcie-cadence.h"
+>  
+> @@ -65,7 +66,7 @@ static int cdns_pcie_ep_set_bar(struct pci_epc *epc, u8 fn,
+>  	 * roundup_pow_of_two() returns an unsigned long, which is not suited
+>  	 * for 64bit values.
+>  	 */
 
-I didn't look in detail yet, but if you have any idea of what could be
-the problem, that would be great.
+Please remove the comment above since it no longer applies.
 
-Thanks,
- Enric
+> -	sz = 1ULL << fls64(sz - 1);
+> +	sz = roundup_pow_of_two(sz);
+>  	aperture = ilog2(sz) - 7; /* 128B -> 0, 256B -> 1, 512B -> 2, ... */
+>  
+>  	if ((flags & PCI_BASE_ADDRESS_SPACE) == PCI_BASE_ADDRESS_SPACE_IO) {
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence.c b/drivers/pci/controller/cadence/pcie-cadence.c
+> index cd795f6fc1e2..b1689f725b41 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence.c
+> @@ -4,6 +4,7 @@
+>  // Author: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
+>  
+>  #include <linux/kernel.h>
+> +#include <linux/log2.h>
+>  
+>  #include "pcie-cadence.h"
+>  
+> @@ -15,7 +16,7 @@ void cdns_pcie_set_outbound_region(struct cdns_pcie *pcie, u8 fn,
+>  	 * roundup_pow_of_two() returns an unsigned long, which is not suited
+>  	 * for 64bit values.
+>  	 */
 
-[1] https://hastebin.com/adasegihiw.rb
+Same here.
 
->  drivers/pci/controller/pcie-rockchip-host.c | 36 ++++-----------------
->  1 file changed, 7 insertions(+), 29 deletions(-)
->
-> diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/co=
-ntroller/pcie-rockchip-host.c
-> index ef8e677ce9d1..8d2e6f2e141e 100644
-> --- a/drivers/pci/controller/pcie-rockchip-host.c
-> +++ b/drivers/pci/controller/pcie-rockchip-host.c
-> @@ -950,14 +950,10 @@ static int rockchip_pcie_probe(struct platform_devi=
-ce *pdev)
->         struct device *dev =3D &pdev->dev;
->         struct pci_bus *bus, *child;
->         struct pci_host_bridge *bridge;
-> +       struct resource *bus_res;
->         struct resource_entry *win;
-> -       resource_size_t io_base;
-> -       struct resource *mem;
-> -       struct resource *io;
->         int err;
->
-> -       LIST_HEAD(res);
-> -
->         if (!dev->of_node)
->                 return -ENODEV;
->
-> @@ -995,29 +991,20 @@ static int rockchip_pcie_probe(struct platform_devi=
-ce *pdev)
->         if (err < 0)
->                 goto err_deinit_port;
->
-> -       err =3D devm_of_pci_get_host_bridge_resources(dev, 0, 0xff,
-> -                                                   &res, &io_base);
-> +       err =3D pci_parse_request_of_pci_ranges(dev, &bridge->windows, &b=
-us_res);
->         if (err)
->                 goto err_remove_irq_domain;
->
-> -       err =3D devm_request_pci_bus_resources(dev, &res);
-> -       if (err)
-> -               goto err_free_res;
-> +       rockchip->root_bus_nr =3D bus_res->start;
->
->         /* Get the I/O and memory ranges from DT */
-> -       resource_list_for_each_entry(win, &res) {
-> +       resource_list_for_each_entry(win, &bridge->windows) {
->                 switch (resource_type(win->res)) {
->                 case IORESOURCE_IO:
->                         io =3D win->res;
->                         io->name =3D "I/O";
->                         rockchip->io_size =3D resource_size(io);
->                         rockchip->io_bus_addr =3D io->start - win->offset=
-;
-> -                       err =3D pci_remap_iospace(io, io_base);
-> -                       if (err) {
-> -                               dev_warn(dev, "error %d: failed to map re=
-source %pR\n",
-> -                                        err, io);
-> -                               continue;
-> -                       }
->                         rockchip->io =3D io;
->                         break;
->                 case IORESOURCE_MEM:
-> @@ -1026,9 +1013,6 @@ static int rockchip_pcie_probe(struct platform_devi=
-ce *pdev)
->                         rockchip->mem_size =3D resource_size(mem);
->                         rockchip->mem_bus_addr =3D mem->start - win->offs=
-et;
->                         break;
-> -               case IORESOURCE_BUS:
-> -                       rockchip->root_bus_nr =3D win->res->start;
-> -                       break;
->                 default:
->                         continue;
->                 }
-> @@ -1036,15 +1020,14 @@ static int rockchip_pcie_probe(struct platform_de=
-vice *pdev)
->
->         err =3D rockchip_pcie_cfg_atu(rockchip);
->         if (err)
-> -               goto err_unmap_iospace;
-> +               goto err_remove_irq_domain;
->
->         rockchip->msg_region =3D devm_ioremap(dev, rockchip->msg_bus_addr=
-, SZ_1M);
->         if (!rockchip->msg_region) {
->                 err =3D -ENOMEM;
-> -               goto err_unmap_iospace;
-> +               goto err_remove_irq_domain;
->         }
->
-> -       list_splice_init(&res, &bridge->windows);
->         bridge->dev.parent =3D dev;
->         bridge->sysdata =3D rockchip;
->         bridge->busnr =3D 0;
-> @@ -1054,7 +1037,7 @@ static int rockchip_pcie_probe(struct platform_devi=
-ce *pdev)
->
->         err =3D pci_scan_root_bus_bridge(bridge);
->         if (err < 0)
-> -               goto err_unmap_iospace;
-> +               goto err_remove_irq_domain;
->
->         bus =3D bridge->bus;
->
-> @@ -1068,10 +1051,6 @@ static int rockchip_pcie_probe(struct platform_dev=
-ice *pdev)
->         pci_bus_add_devices(bus);
->         return 0;
->
-> -err_unmap_iospace:
-> -       pci_unmap_iospace(rockchip->io);
-> -err_free_res:
-> -       pci_free_resource_list(&res);
->  err_remove_irq_domain:
->         irq_domain_remove(rockchip->irq_domain);
->  err_deinit_port:
-> @@ -1097,7 +1076,6 @@ static int rockchip_pcie_remove(struct platform_dev=
-ice *pdev)
->
->         pci_stop_root_bus(rockchip->root_bus);
->         pci_remove_root_bus(rockchip->root_bus);
-> -       pci_unmap_iospace(rockchip->io);
->         irq_domain_remove(rockchip->irq_domain);
->
->         rockchip_pcie_deinit_phys(rockchip);
-> --
-> 2.20.1
->
->
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+> -	u64 sz = 1ULL << fls64(size - 1);
+> +	u64 sz = roundup_pow_of_two(size);
+>  	int nbits = ilog2(sz);
+>  	u32 addr0, addr1, desc0, desc1;
+>  
+> --- a/drivers/pci/controller/pcie-rockchip-ep.c
+> +++ b/drivers/pci/controller/pcie-rockchip-ep.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/pci-epf.h>
+>  #include <linux/sizes.h>
+> +#include <linux/log2.h>
+>  
+>  #include "pcie-rockchip.h"
+>  
+> @@ -70,7 +71,7 @@ static void rockchip_pcie_prog_ep_ob_atu(struct rockchip_pcie *rockchip, u8 fn,
+>  					 u32 r, u32 type, u64 cpu_addr,
+>  					 u64 pci_addr, size_t size)
+>  {
+> -	u64 sz = 1ULL << fls64(size - 1);
+> +	u64 sz = roundup_pow_of_two(size);
+>  	int num_pass_bits = ilog2(sz);
+>  	u32 addr0, addr1, desc0, desc1;
+>  	bool is_nor_msg = (type == AXI_WRAPPER_NOR_MSG);
+> @@ -176,7 +177,7 @@ static int rockchip_pcie_ep_set_bar(struct pci_epc *epc, u8 fn,
+>  	 * roundup_pow_of_two() returns an unsigned long, which is not suited
+>  	 * for 64bit values.
+>  	 */
+
+And here.
+
+> -	sz = 1ULL << fls64(sz - 1);
+> +	sz = roundup_pow_of_two(sz);
+>  	aperture = ilog2(sz) - 7; /* 128B -> 0, 256B -> 1, 512B -> 2, ... */
+>  
+>  	if ((flags & PCI_BASE_ADDRESS_SPACE) == PCI_BASE_ADDRESS_SPACE_IO) {
+> diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+> index 6af7ae83c4ad..056886c4efec 100644
+> --- a/kernel/dma/direct.c
+> +++ b/kernel/dma/direct.c
+> @@ -53,7 +53,7 @@ u64 dma_direct_get_required_mask(struct device *dev)
+>  {
+>  	u64 max_dma = phys_to_dma_direct(dev, (max_pfn - 1) << PAGE_SHIFT);
+>  
+> -	return (1ULL << (fls64(max_dma) - 1)) * 2 - 1;
+> +	return rounddown_pow_of_two(max_dma) * 2 - 1;
+
+Personally I would probably make this one a separate patch since it's
+qualitatively different than the others and it would avoid the slight
+awkwardness of the non-greppable "roundup/down_pow_of_two()"
+construction in the commit subject.
+
+But it's fine either way.
+
+>  }
+>  
+>  static gfp_t __dma_direct_optimal_gfp_mask(struct device *dev, u64 dma_mask,
+> -- 
+> 2.24.0
+> 
