@@ -2,525 +2,264 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E364B1138EB
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Dec 2019 01:40:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 64EA1113A1F
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Dec 2019 03:56:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728419AbfLEAkR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 Dec 2019 19:40:17 -0500
-Received: from mga01.intel.com ([192.55.52.88]:64838 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728011AbfLEAkR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 4 Dec 2019 19:40:17 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Dec 2019 16:40:15 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,279,1571727600"; 
-   d="scan'208";a="223447984"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by orsmga002.jf.intel.com with ESMTP; 04 Dec 2019 16:40:06 -0800
-Cc:     baolu.lu@linux.intel.com, james.quinlan@broadcom.com,
-        mbrugger@suse.com, f.fainelli@gmail.com, phil@raspberrypi.org,
-        wahrenst@gmx.net, jeremy.linton@arm.com, linux-pci@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        Robin Murphy <robin.murphy@arm.con>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "David S. Miller" <davem@davemloft.net>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rdma@vger.kernel.org, iommu@lists.linux-foundation.org,
-        netdev@vger.kernel.org, kexec@lists.infradead.org,
-        linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v4 7/8] linux/log2.h: Fix 64bit calculations in
- roundup/down_pow_two()
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        andrew.murray@arm.com, maz@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        =?UTF-8?Q?Emilio_L=c3=b3pez?= <emilio@elopez.com.ar>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Moni Shoua <monis@mellanox.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Mirko Lindner <mlindner@marvell.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Solarflare linux maintainers <linux-net-drivers@solarflare.com>,
-        Edward Cree <ecree@solarflare.com>,
-        Martin Habets <mhabets@solarflare.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Thomas Graf <tgraf@suug.ch>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-References: <20191203114743.1294-1-nsaenzjulienne@suse.de>
- <20191203114743.1294-8-nsaenzjulienne@suse.de>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <1adefda1-5823-0028-b1c6-6b5dfedbdb13@linux.intel.com>
-Date:   Thu, 5 Dec 2019 08:39:28 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
-MIME-Version: 1.0
-In-Reply-To: <20191203114743.1294-8-nsaenzjulienne@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        id S1728449AbfLEC4z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 Dec 2019 21:56:55 -0500
+Received: from mail-eopbgr70052.outbound.protection.outlook.com ([40.107.7.52]:40700
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728321AbfLEC4z (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 4 Dec 2019 21:56:55 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PJra9JdWqR9OEaL7O+L5QnlL8sE3CnpVuipRITT5D5x6uh1x4x6ducl2rfiKBYhTDuOnph4HV7iUsDzsKkQkifFWfcgomwnYWP9giyHvAmEHXTYUjpjmRl8URXapzi6+YTqby9ZUXp2gy6/0bysYDQpp8blkT3vk88q5KhN6q371tyJENXTrPp0k0tKoybFQV/6RZfgy8ygO8FRkBisdOFfHYhtCFS8LJ9a8k5HxaQHmAwHMJTNXk5s5/fT9vQJfMZIwvvvABcbeX326/o5WR2rXAhRbSmfioMT4n1S/9g4inKfzTzsyIKdmoLE4jqAvN7yC3KQDkQF8zYajb9n6+w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FUou88A/OFRSJuz2SjDMcqSe05FBwvcWP10S+Sp+9ok=;
+ b=KH4fq4bsfVfrNEa8lS+x/FIdzcoJU5XqSAeQGkNsmCrRcVrKpVujsk0c4nfdR2GU9wCpbuD6Z9EHkkAZpRdbZOe5vSVvHqVT9Xe82aZVEpdvEPiatK0SfggFUwgMvApOm2rzUrXekzcjiBRkQYJ0z9fnroVhdfRtyMpwyDXSPW2SyW5ZjSKWC8/vUI4mSN2TeTEj9OUTJcrr7EF/cyY9jv0Y5a+sg010PVZrwsg5FAHKFjJ7XgSYaOTMtK8yfPlkIRoaxg86MZqfDWHJAsrG14WObpjwe4owhaeX2ezC99AZkKrN+fReafV88mBTNK2wNNn/LoGJB8dEbQ23Ee4yng==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FUou88A/OFRSJuz2SjDMcqSe05FBwvcWP10S+Sp+9ok=;
+ b=A3+23pniBxbuFoUyNk2b9+h0T7Ed7DvHj4F8XxpJ7KiFFk7dskS8R5ywjAaK5UrN2XDVnox3EJhKl+QyhsEMXxsFKbVKkmlQAcBItoPRFxVtSQ3CIWg13JlaViJTQ4gG46/rTefNkddXpB+jUCF9oWfTqSjmUKVhkJR4TgOfPgA=
+Received: from AM5PR04MB3299.eurprd04.prod.outlook.com (10.173.255.158) by
+ AM5PR04MB3027.eurprd04.prod.outlook.com (10.173.254.142) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.22; Thu, 5 Dec 2019 02:56:37 +0000
+Received: from AM5PR04MB3299.eurprd04.prod.outlook.com
+ ([fe80::a8a6:8d0d:aca4:7bf1]) by AM5PR04MB3299.eurprd04.prod.outlook.com
+ ([fe80::a8a6:8d0d:aca4:7bf1%7]) with mapi id 15.20.2495.014; Thu, 5 Dec 2019
+ 02:56:37 +0000
+From:   Xiaowei Bao <xiaowei.bao@nxp.com>
+To:     Robin Murphy <robin.murphy@arm.com>, Marc Zyngier <maz@kernel.org>
+CC:     Roy Zang <roy.zang@nxp.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "Z.q. Hou" <zhiqiang.hou@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "frowand.list@gmail.com" <frowand.list@gmail.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>
+Subject: RE: [PATCH] PCI: layerscape: Add the SRIOV support in host side
+Thread-Topic: [PATCH] PCI: layerscape: Add the SRIOV support in host side
+Thread-Index: AQHVqP2nw3AoM5GAtUqPe+h1Ib8VVaemy2EAgADUbVCAAK4bgIAAOn2AgADDy0CAAJZUAIAA9iSA
+Date:   Thu, 5 Dec 2019 02:56:37 +0000
+Message-ID: <AM5PR04MB32998F0CB64D47581CA58F3EF55C0@AM5PR04MB3299.eurprd04.prod.outlook.com>
+References: <20191202104506.27916-1-xiaowei.bao@nxp.com>
+ <606a00a2edcf077aa868319e0daa4dbc@www.loen.fr>
+ <AM5PR04MB3299A5A504DEFEF3E137A27CF5420@AM5PR04MB3299.eurprd04.prod.outlook.com>
+ <3dcdf44eb76390730658e3f4d932620c@www.loen.fr>
+ <8f56c2d9-ab01-a91e-902f-a61def0e8ce8@arm.com>
+ <AM5PR04MB3299BFC34A4666B7A9C12B13F55D0@AM5PR04MB3299.eurprd04.prod.outlook.com>
+ <12545949-74bb-214f-0803-248ebd509765@arm.com>
+In-Reply-To: <12545949-74bb-214f-0803-248ebd509765@arm.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=xiaowei.bao@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 9d6e1447-3dc9-44be-68f8-08d7792ebed6
+x-ms-traffictypediagnostic: AM5PR04MB3027:|AM5PR04MB3027:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM5PR04MB30276C87C0F011541D7A41C9F55C0@AM5PR04MB3027.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 02426D11FE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(366004)(376002)(136003)(396003)(39860400002)(13464003)(199004)(189003)(14454004)(64756008)(66556008)(9686003)(3846002)(6116002)(71190400001)(71200400001)(74316002)(8936002)(305945005)(14444005)(55016002)(6246003)(4326008)(7736002)(86362001)(6436002)(33656002)(7416002)(8676002)(6506007)(66446008)(2906002)(229853002)(316002)(186003)(81166006)(81156014)(478600001)(66946007)(76116006)(7696005)(66476007)(110136005)(5660300002)(26005)(76176011)(11346002)(99286004)(52536014)(53546011)(102836004)(25786009)(44832011)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR04MB3027;H:AM5PR04MB3299.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: TmWKcTjqxHdotZ5VVJe/qFLBeYEFKwZ7FHgeZiLSNGrB3EcoKrQ1WTBKrk0vRRVI4BIeGme6RkdY75RprdUG35EmAGkA7cG+2is02hbRgW8LFkFow+R+1qEorB7OV/TH96347yHmbRyO41+bxOSr5QZGTVeuOHzMux5IZ0wtRtrN5hXeFvwRjCKEgSUqYYlO9tw0e86SVLzFV3isWAPsg2VpTBpSXqDNmJkI7Wi2/NplRQM6f5Y03tGteOaGfOxPodEnAfVgRrPyjMtLC+W21vFeYpbwebo3GTyqWDwC3hCh1LyNy3o/nmpzPrzoMG9FPd9CofgMJucUxbvXAa0SQNJaFSh8elyM4w5VBnikxj+/4O5CJKXEYic1Wws6MkuF/A5Om8yUwiEyozjmdHRxe32FI6cX3UufIo2EaBKl8pVD0gyn0rU6sOP/sYP6je5N25zl6BTxUdYE1Fzy1HRSqDAhqcIKvdBwtvLafa1OVgDD8u0rAbLitdmVhTt1EWZr
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9d6e1447-3dc9-44be-68f8-08d7792ebed6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Dec 2019 02:56:37.1904
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 2aFfh3TuaceHEbh9lKAazzuYq+XZgsZ2MJb4JR5TzclQe3VTAA5RaehRDc36IJScEIQOaI3xu4ek2hrY3Bu7Fg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR04MB3027
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
-
-On 12/3/19 7:47 PM, Nicolas Saenz Julienne wrote:
-> Some users need to make sure their rounding function accepts and returns
-> 64bit long variables regardless of the architecture. Sadly
-> roundup/rounddown_pow_two() takes and returns unsigned longs. It turns
-> out ilog2() already handles 32/64bit calculations properly, and being
-> the building block to the round functions we can rework them as a
-> wrapper around it.
-> 
-> Suggested-by: Robin Murphy <robin.murphy@arm.con>
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> ---
->   drivers/clk/clk-divider.c                    |  8 ++--
->   drivers/clk/sunxi/clk-sunxi.c                |  2 +-
->   drivers/infiniband/hw/hfi1/chip.c            |  4 +-
->   drivers/infiniband/hw/hfi1/init.c            |  4 +-
->   drivers/infiniband/hw/mlx4/srq.c             |  2 +-
->   drivers/infiniband/hw/mthca/mthca_srq.c      |  2 +-
->   drivers/infiniband/sw/rxe/rxe_qp.c           |  4 +-
->   drivers/iommu/intel-iommu.c                  |  4 +-
->   drivers/iommu/intel-svm.c                    |  4 +-
->   drivers/iommu/intel_irq_remapping.c          |  2 +-
-
-For changes in drivers/iommu/intel*.c,
-
-Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
-
-Best regards,
-baolu
-
->   drivers/net/ethernet/amd/xgbe/xgbe-ethtool.c |  4 +-
->   drivers/net/ethernet/marvell/sky2.c          |  2 +-
->   drivers/net/ethernet/rocker/rocker_hw.h      |  4 +-
->   drivers/net/ethernet/sfc/ef10.c              |  2 +-
->   drivers/net/ethernet/sfc/efx.h               |  2 +-
->   drivers/net/ethernet/sfc/falcon/efx.h        |  2 +-
->   drivers/pci/msi.c                            |  2 +-
->   include/linux/log2.h                         | 44 +++++---------------
->   kernel/kexec_core.c                          |  3 +-
->   lib/rhashtable.c                             |  2 +-
->   net/sunrpc/xprtrdma/verbs.c                  |  2 +-
->   21 files changed, 41 insertions(+), 64 deletions(-)
-> 
-> diff --git a/drivers/clk/clk-divider.c b/drivers/clk/clk-divider.c
-> index 098b2b01f0af..ba947e4c8193 100644
-> --- a/drivers/clk/clk-divider.c
-> +++ b/drivers/clk/clk-divider.c
-> @@ -222,7 +222,7 @@ static int _div_round_up(const struct clk_div_table *table,
->   	int div = DIV_ROUND_UP_ULL((u64)parent_rate, rate);
->   
->   	if (flags & CLK_DIVIDER_POWER_OF_TWO)
-> -		div = __roundup_pow_of_two(div);
-> +		div = roundup_pow_of_two(div);
->   	if (table)
->   		div = _round_up_table(table, div);
->   
-> @@ -240,8 +240,8 @@ static int _div_round_closest(const struct clk_div_table *table,
->   	down = parent_rate / rate;
->   
->   	if (flags & CLK_DIVIDER_POWER_OF_TWO) {
-> -		up = __roundup_pow_of_two(up);
-> -		down = __rounddown_pow_of_two(down);
-> +		up = roundup_pow_of_two(up);
-> +		down = rounddown_pow_of_two(down);
->   	} else if (table) {
->   		up = _round_up_table(table, up);
->   		down = _round_down_table(table, down);
-> @@ -278,7 +278,7 @@ static int _next_div(const struct clk_div_table *table, int div,
->   	div++;
->   
->   	if (flags & CLK_DIVIDER_POWER_OF_TWO)
-> -		return __roundup_pow_of_two(div);
-> +		return roundup_pow_of_two(div);
->   	if (table)
->   		return _round_up_table(table, div);
->   
-> diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
-> index 27201fd26e44..faec99dc09c0 100644
-> --- a/drivers/clk/sunxi/clk-sunxi.c
-> +++ b/drivers/clk/sunxi/clk-sunxi.c
-> @@ -311,7 +311,7 @@ static void sun6i_get_ahb1_factors(struct factors_request *req)
->   
->   		calcm = DIV_ROUND_UP(div, 1 << calcp);
->   	} else {
-> -		calcp = __roundup_pow_of_two(div);
-> +		calcp = roundup_pow_of_two(div);
->   		calcp = calcp > 3 ? 3 : calcp;
->   	}
->   
-> diff --git a/drivers/infiniband/hw/hfi1/chip.c b/drivers/infiniband/hw/hfi1/chip.c
-> index 9b1fb84a3d45..96b1d343c32f 100644
-> --- a/drivers/infiniband/hw/hfi1/chip.c
-> +++ b/drivers/infiniband/hw/hfi1/chip.c
-> @@ -14199,10 +14199,10 @@ static int qos_rmt_entries(struct hfi1_devdata *dd, unsigned int *mp,
->   			max_by_vl = krcvqs[i];
->   	if (max_by_vl > 32)
->   		goto no_qos;
-> -	m = ilog2(__roundup_pow_of_two(max_by_vl));
-> +	m = ilog2(roundup_pow_of_two(max_by_vl));
->   
->   	/* determine bits for vl */
-> -	n = ilog2(__roundup_pow_of_two(num_vls));
-> +	n = ilog2(roundup_pow_of_two(num_vls));
->   
->   	/* reject if too much is used */
->   	if ((m + n) > 7)
-> diff --git a/drivers/infiniband/hw/hfi1/init.c b/drivers/infiniband/hw/hfi1/init.c
-> index 26b792bb1027..838c789c7cce 100644
-> --- a/drivers/infiniband/hw/hfi1/init.c
-> +++ b/drivers/infiniband/hw/hfi1/init.c
-> @@ -467,7 +467,7 @@ int hfi1_create_ctxtdata(struct hfi1_pportdata *ppd, int numa,
->   		 * MTU supported.
->   		 */
->   		if (rcd->egrbufs.size < hfi1_max_mtu) {
-> -			rcd->egrbufs.size = __roundup_pow_of_two(hfi1_max_mtu);
-> +			rcd->egrbufs.size = roundup_pow_of_two(hfi1_max_mtu);
->   			hfi1_cdbg(PROC,
->   				  "ctxt%u: eager bufs size too small. Adjusting to %u\n",
->   				    rcd->ctxt, rcd->egrbufs.size);
-> @@ -1959,7 +1959,7 @@ int hfi1_setup_eagerbufs(struct hfi1_ctxtdata *rcd)
->   	 * to satisfy the "multiple of 8 RcvArray entries" requirement.
->   	 */
->   	if (rcd->egrbufs.size <= (1 << 20))
-> -		rcd->egrbufs.rcvtid_size = max((unsigned long)round_mtu,
-> +		rcd->egrbufs.rcvtid_size = max((unsigned long long)round_mtu,
->   			rounddown_pow_of_two(rcd->egrbufs.size / 8));
->   
->   	while (alloced_bytes < rcd->egrbufs.size &&
-> diff --git a/drivers/infiniband/hw/mlx4/srq.c b/drivers/infiniband/hw/mlx4/srq.c
-> index 8dcf6e3d9ae2..7e685600a7b3 100644
-> --- a/drivers/infiniband/hw/mlx4/srq.c
-> +++ b/drivers/infiniband/hw/mlx4/srq.c
-> @@ -96,7 +96,7 @@ int mlx4_ib_create_srq(struct ib_srq *ib_srq,
->   	srq->msrq.max    = roundup_pow_of_two(init_attr->attr.max_wr + 1);
->   	srq->msrq.max_gs = init_attr->attr.max_sge;
->   
-> -	desc_size = max(32UL,
-> +	desc_size = max(32ULL,
->   			roundup_pow_of_two(sizeof (struct mlx4_wqe_srq_next_seg) +
->   					   srq->msrq.max_gs *
->   					   sizeof (struct mlx4_wqe_data_seg)));
-> diff --git a/drivers/infiniband/hw/mthca/mthca_srq.c b/drivers/infiniband/hw/mthca/mthca_srq.c
-> index a85935ccce88..0c2e14b4142a 100644
-> --- a/drivers/infiniband/hw/mthca/mthca_srq.c
-> +++ b/drivers/infiniband/hw/mthca/mthca_srq.c
-> @@ -225,7 +225,7 @@ int mthca_alloc_srq(struct mthca_dev *dev, struct mthca_pd *pd,
->   	else
->   		srq->max = srq->max + 1;
->   
-> -	ds = max(64UL,
-> +	ds = max(64ULL,
->   		 roundup_pow_of_two(sizeof (struct mthca_next_seg) +
->   				    srq->max_gs * sizeof (struct mthca_data_seg)));
->   
-> diff --git a/drivers/infiniband/sw/rxe/rxe_qp.c b/drivers/infiniband/sw/rxe/rxe_qp.c
-> index e2c6d1cedf41..040b707b0877 100644
-> --- a/drivers/infiniband/sw/rxe/rxe_qp.c
-> +++ b/drivers/infiniband/sw/rxe/rxe_qp.c
-> @@ -592,7 +592,7 @@ int rxe_qp_from_attr(struct rxe_qp *qp, struct ib_qp_attr *attr, int mask,
->   	int err;
->   
->   	if (mask & IB_QP_MAX_QP_RD_ATOMIC) {
-> -		int max_rd_atomic = __roundup_pow_of_two(attr->max_rd_atomic);
-> +		int max_rd_atomic = roundup_pow_of_two(attr->max_rd_atomic);
->   
->   		qp->attr.max_rd_atomic = max_rd_atomic;
->   		atomic_set(&qp->req.rd_atomic, max_rd_atomic);
-> @@ -600,7 +600,7 @@ int rxe_qp_from_attr(struct rxe_qp *qp, struct ib_qp_attr *attr, int mask,
->   
->   	if (mask & IB_QP_MAX_DEST_RD_ATOMIC) {
->   		int max_dest_rd_atomic =
-> -			__roundup_pow_of_two(attr->max_dest_rd_atomic);
-> +			roundup_pow_of_two(attr->max_dest_rd_atomic);
->   
->   		qp->attr.max_dest_rd_atomic = max_dest_rd_atomic;
->   
-> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-> index 0c8d81f56a30..ce7c900bd666 100644
-> --- a/drivers/iommu/intel-iommu.c
-> +++ b/drivers/iommu/intel-iommu.c
-> @@ -1488,7 +1488,7 @@ static void iommu_flush_iotlb_psi(struct intel_iommu *iommu,
->   				  unsigned long pfn, unsigned int pages,
->   				  int ih, int map)
->   {
-> -	unsigned int mask = ilog2(__roundup_pow_of_two(pages));
-> +	unsigned int mask = ilog2(roundup_pow_of_two(pages));
->   	uint64_t addr = (uint64_t)pfn << VTD_PAGE_SHIFT;
->   	u16 did = domain->iommu_did[iommu->seq_id];
->   
-> @@ -3390,7 +3390,7 @@ static unsigned long intel_alloc_iova(struct device *dev,
->   	/* Restrict dma_mask to the width that the iommu can handle */
->   	dma_mask = min_t(uint64_t, DOMAIN_MAX_ADDR(domain->gaw), dma_mask);
->   	/* Ensure we reserve the whole size-aligned region */
-> -	nrpages = __roundup_pow_of_two(nrpages);
-> +	nrpages = roundup_pow_of_two(nrpages);
->   
->   	if (!dmar_forcedac && dma_mask > DMA_BIT_MASK(32)) {
->   		/*
-> diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
-> index 9b159132405d..602caca3cd1a 100644
-> --- a/drivers/iommu/intel-svm.c
-> +++ b/drivers/iommu/intel-svm.c
-> @@ -115,7 +115,7 @@ static void intel_flush_svm_range_dev (struct intel_svm *svm, struct intel_svm_d
->   			QI_EIOTLB_TYPE;
->   		desc.qw1 = 0;
->   	} else {
-> -		int mask = ilog2(__roundup_pow_of_two(pages));
-> +		int mask = ilog2(roundup_pow_of_two(pages));
->   
->   		desc.qw0 = QI_EIOTLB_PASID(svm->pasid) |
->   				QI_EIOTLB_DID(sdev->did) |
-> @@ -142,7 +142,7 @@ static void intel_flush_svm_range_dev (struct intel_svm *svm, struct intel_svm_d
->   			 * for example, an "address" value of 0x12345f000 will
->   			 * flush from 0x123440000 to 0x12347ffff (256KiB). */
->   			unsigned long last = address + ((unsigned long)(pages - 1) << VTD_PAGE_SHIFT);
-> -			unsigned long mask = __rounddown_pow_of_two(address ^ last);
-> +			unsigned long mask = rounddown_pow_of_two(address ^ last);
->   
->   			desc.qw1 = QI_DEV_EIOTLB_ADDR((address & ~mask) |
->   					(mask - 1)) | QI_DEV_EIOTLB_SIZE;
-> diff --git a/drivers/iommu/intel_irq_remapping.c b/drivers/iommu/intel_irq_remapping.c
-> index 81e43c1df7ec..935657b2c661 100644
-> --- a/drivers/iommu/intel_irq_remapping.c
-> +++ b/drivers/iommu/intel_irq_remapping.c
-> @@ -113,7 +113,7 @@ static int alloc_irte(struct intel_iommu *iommu,
->   		return -1;
->   
->   	if (count > 1) {
-> -		count = __roundup_pow_of_two(count);
-> +		count = roundup_pow_of_two(count);
->   		mask = ilog2(count);
->   	}
->   
-> diff --git a/drivers/net/ethernet/amd/xgbe/xgbe-ethtool.c b/drivers/net/ethernet/amd/xgbe/xgbe-ethtool.c
-> index 6a757dadb5f1..fd5b12c23eaa 100644
-> --- a/drivers/net/ethernet/amd/xgbe/xgbe-ethtool.c
-> +++ b/drivers/net/ethernet/amd/xgbe/xgbe-ethtool.c
-> @@ -680,13 +680,13 @@ static int xgbe_set_ringparam(struct net_device *netdev,
->   		return -EINVAL;
->   	}
->   
-> -	rx = __rounddown_pow_of_two(ringparam->rx_pending);
-> +	rx = rounddown_pow_of_two(ringparam->rx_pending);
->   	if (rx != ringparam->rx_pending)
->   		netdev_notice(netdev,
->   			      "rx ring parameter rounded to power of two: %u\n",
->   			      rx);
->   
-> -	tx = __rounddown_pow_of_two(ringparam->tx_pending);
-> +	tx = rounddown_pow_of_two(ringparam->tx_pending);
->   	if (tx != ringparam->tx_pending)
->   		netdev_notice(netdev,
->   			      "tx ring parameter rounded to power of two: %u\n",
-> diff --git a/drivers/net/ethernet/marvell/sky2.c b/drivers/net/ethernet/marvell/sky2.c
-> index 5f56ee83e3b1..cc3a03b4a611 100644
-> --- a/drivers/net/ethernet/marvell/sky2.c
-> +++ b/drivers/net/ethernet/marvell/sky2.c
-> @@ -4139,7 +4139,7 @@ static int sky2_set_coalesce(struct net_device *dev,
->    */
->   static unsigned long roundup_ring_size(unsigned long pending)
->   {
-> -	return max(128ul, roundup_pow_of_two(pending+1));
-> +	return max(128ull, roundup_pow_of_two(pending+1));
->   }
->   
->   static void sky2_get_ringparam(struct net_device *dev,
-> diff --git a/drivers/net/ethernet/rocker/rocker_hw.h b/drivers/net/ethernet/rocker/rocker_hw.h
-> index 59f1f8b690d2..d8de15509e2c 100644
-> --- a/drivers/net/ethernet/rocker/rocker_hw.h
-> +++ b/drivers/net/ethernet/rocker/rocker_hw.h
-> @@ -88,8 +88,8 @@ enum rocker_dma_type {
->   };
->   
->   /* Rocker DMA ring size limits and default sizes */
-> -#define ROCKER_DMA_SIZE_MIN		2ul
-> -#define ROCKER_DMA_SIZE_MAX		65536ul
-> +#define ROCKER_DMA_SIZE_MIN		2ull
-> +#define ROCKER_DMA_SIZE_MAX		65536ull
->   #define ROCKER_DMA_CMD_DEFAULT_SIZE	32ul
->   #define ROCKER_DMA_EVENT_DEFAULT_SIZE	32ul
->   #define ROCKER_DMA_TX_DEFAULT_SIZE	64ul
-> diff --git a/drivers/net/ethernet/sfc/ef10.c b/drivers/net/ethernet/sfc/ef10.c
-> index 4d9bbccc6f89..4f4d9a5b3b75 100644
-> --- a/drivers/net/ethernet/sfc/ef10.c
-> +++ b/drivers/net/ethernet/sfc/ef10.c
-> @@ -27,7 +27,7 @@ enum {
->   };
->   /* The maximum size of a shared RSS context */
->   /* TODO: this should really be from the mcdi protocol export */
-> -#define EFX_EF10_MAX_SHARED_RSS_CONTEXT_SIZE 64UL
-> +#define EFX_EF10_MAX_SHARED_RSS_CONTEXT_SIZE 64ULL
->   
->   /* The filter table(s) are managed by firmware and we have write-only
->    * access.  When removing filters we must identify them to the
-> diff --git a/drivers/net/ethernet/sfc/efx.h b/drivers/net/ethernet/sfc/efx.h
-> index 2dd8d5002315..fea2add5860e 100644
-> --- a/drivers/net/ethernet/sfc/efx.h
-> +++ b/drivers/net/ethernet/sfc/efx.h
-> @@ -52,7 +52,7 @@ void efx_schedule_slow_fill(struct efx_rx_queue *rx_queue);
->   
->   #define EFX_MAX_DMAQ_SIZE 4096UL
->   #define EFX_DEFAULT_DMAQ_SIZE 1024UL
-> -#define EFX_MIN_DMAQ_SIZE 512UL
-> +#define EFX_MIN_DMAQ_SIZE 512ULL
->   
->   #define EFX_MAX_EVQ_SIZE 16384UL
->   #define EFX_MIN_EVQ_SIZE 512UL
-> diff --git a/drivers/net/ethernet/sfc/falcon/efx.h b/drivers/net/ethernet/sfc/falcon/efx.h
-> index d3b4646545fa..0d16257156d6 100644
-> --- a/drivers/net/ethernet/sfc/falcon/efx.h
-> +++ b/drivers/net/ethernet/sfc/falcon/efx.h
-> @@ -55,7 +55,7 @@ void ef4_schedule_slow_fill(struct ef4_rx_queue *rx_queue);
->   
->   #define EF4_MAX_DMAQ_SIZE 4096UL
->   #define EF4_DEFAULT_DMAQ_SIZE 1024UL
-> -#define EF4_MIN_DMAQ_SIZE 512UL
-> +#define EF4_MIN_DMAQ_SIZE 512ULL
->   
->   #define EF4_MAX_EVQ_SIZE 16384UL
->   #define EF4_MIN_EVQ_SIZE 512UL
-> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-> index c7709e49f0e4..f0391e88bc42 100644
-> --- a/drivers/pci/msi.c
-> +++ b/drivers/pci/msi.c
-> @@ -578,7 +578,7 @@ msi_setup_entry(struct pci_dev *dev, int nvec, struct irq_affinity *affd)
->   	entry->msi_attrib.maskbit	= !!(control & PCI_MSI_FLAGS_MASKBIT);
->   	entry->msi_attrib.default_irq	= dev->irq;	/* Save IOAPIC IRQ */
->   	entry->msi_attrib.multi_cap	= (control & PCI_MSI_FLAGS_QMASK) >> 1;
-> -	entry->msi_attrib.multiple	= ilog2(__roundup_pow_of_two(nvec));
-> +	entry->msi_attrib.multiple	= ilog2(roundup_pow_of_two(nvec));
->   
->   	if (control & PCI_MSI_FLAGS_64BIT)
->   		entry->mask_pos = dev->msi_cap + PCI_MSI_MASK_64;
-> diff --git a/include/linux/log2.h b/include/linux/log2.h
-> index 83a4a3ca3e8a..53a727303dac 100644
-> --- a/include/linux/log2.h
-> +++ b/include/linux/log2.h
-> @@ -47,26 +47,6 @@ bool is_power_of_2(unsigned long n)
->   	return (n != 0 && ((n & (n - 1)) == 0));
->   }
->   
-> -/**
-> - * __roundup_pow_of_two() - round up to nearest power of two
-> - * @n: value to round up
-> - */
-> -static inline __attribute__((const))
-> -unsigned long __roundup_pow_of_two(unsigned long n)
-> -{
-> -	return 1UL << fls_long(n - 1);
-> -}
-> -
-> -/**
-> - * __rounddown_pow_of_two() - round down to nearest power of two
-> - * @n: value to round down
-> - */
-> -static inline __attribute__((const))
-> -unsigned long __rounddown_pow_of_two(unsigned long n)
-> -{
-> -	return 1UL << (fls_long(n) - 1);
-> -}
-> -
->   /**
->    * const_ilog2 - log base 2 of 32-bit or a 64-bit constant unsigned value
->    * @n: parameter
-> @@ -170,14 +150,11 @@ unsigned long __rounddown_pow_of_two(unsigned long n)
->    * - the result is undefined when n == 0
->    * - this can be used to initialise global variables from constant data
->    */
-> -#define roundup_pow_of_two(n)			\
-> -(						\
-> -	__builtin_constant_p(n) ? (		\
-> -		(n == 1) ? 1 :			\
-> -		(1UL << (ilog2((n) - 1) + 1))	\
-> -				   ) :		\
-> -	__roundup_pow_of_two(n)			\
-> - )
-> +#define roundup_pow_of_two(n)			  \
-> +(						  \
-> +	(__builtin_constant_p(n) && ((n) == 1)) ? \
-> +	1 : (1ULL << (ilog2((n) - 1) + 1))        \
-> +)
->   
->   /**
->    * rounddown_pow_of_two - round the given value down to nearest power of two
-> @@ -187,12 +164,11 @@ unsigned long __rounddown_pow_of_two(unsigned long n)
->    * - the result is undefined when n == 0
->    * - this can be used to initialise global variables from constant data
->    */
-> -#define rounddown_pow_of_two(n)			\
-> -(						\
-> -	__builtin_constant_p(n) ? (		\
-> -		(1UL << ilog2(n))) :		\
-> -	__rounddown_pow_of_two(n)		\
-> - )
-> +#define rounddown_pow_of_two(n)			  \
-> +(						  \
-> +	(__builtin_constant_p(n) && ((n) == 1)) ? \
-> +	1 : (1ULL << (ilog2(n)))		  \
-> +)
->   
->   static inline __attribute_const__
->   int __order_base_2(unsigned long n)
-> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> index 15d70a90b50d..bb9efc6944a4 100644
-> --- a/kernel/kexec_core.c
-> +++ b/kernel/kexec_core.c
-> @@ -1094,7 +1094,8 @@ static int __init crash_notes_memory_init(void)
->   	 * crash_notes is allocated inside one physical page.
->   	 */
->   	size = sizeof(note_buf_t);
-> -	align = min(roundup_pow_of_two(sizeof(note_buf_t)), PAGE_SIZE);
-> +	align = min(roundup_pow_of_two(sizeof(note_buf_t)),
-> +		    (unsigned long long)PAGE_SIZE);
->   
->   	/*
->   	 * Break compile if size is bigger than PAGE_SIZE since crash_notes
-> diff --git a/lib/rhashtable.c b/lib/rhashtable.c
-> index bdb7e4cadf05..70908678c7a8 100644
-> --- a/lib/rhashtable.c
-> +++ b/lib/rhashtable.c
-> @@ -950,7 +950,7 @@ static size_t rounded_hashtable_size(const struct rhashtable_params *params)
->   
->   	if (params->nelem_hint)
->   		retsize = max(roundup_pow_of_two(params->nelem_hint * 4 / 3),
-> -			      (unsigned long)params->min_size);
-> +			      (unsigned long long)params->min_size);
->   	else
->   		retsize = max(HASH_DEFAULT_SIZE,
->   			      (unsigned long)params->min_size);
-> diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-> index 77c7dd7f05e8..78fb8ccabddd 100644
-> --- a/net/sunrpc/xprtrdma/verbs.c
-> +++ b/net/sunrpc/xprtrdma/verbs.c
-> @@ -1015,7 +1015,7 @@ struct rpcrdma_req *rpcrdma_req_create(struct rpcrdma_xprt *r_xprt, size_t size,
->   	maxhdrsize = rpcrdma_fixed_maxsz + 3 +
->   		     r_xprt->rx_ia.ri_max_segs * rpcrdma_readchunk_maxsz;
->   	maxhdrsize *= sizeof(__be32);
-> -	rb = rpcrdma_regbuf_alloc(__roundup_pow_of_two(maxhdrsize),
-> +	rb = rpcrdma_regbuf_alloc(roundup_pow_of_two(maxhdrsize),
->   				  DMA_TO_DEVICE, flags);
->   	if (!rb)
->   		goto out2;
-> 
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUm9iaW4gTXVycGh5IDxy
+b2Jpbi5tdXJwaHlAYXJtLmNvbT4NCj4gU2VudDogMjAxOeW5tDEy5pyINOaXpSAxOTo1OQ0KPiBU
+bzogWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54cC5jb20+OyBNYXJjIFp5bmdpZXIgPG1hekBr
+ZXJuZWwub3JnPg0KPiBDYzogUm95IFphbmcgPHJveS56YW5nQG54cC5jb20+OyBsb3JlbnpvLnBp
+ZXJhbGlzaUBhcm0uY29tOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgtcGNp
+QHZnZXIua2VybmVsLm9yZzsgWi5xLiBIb3UNCj4gPHpoaXFpYW5nLmhvdUBueHAuY29tPjsgbGlu
+dXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgTS5oLiBMaWFuDQo+IDxtaW5naHVhbi5saWFuQG54
+cC5jb20+OyByb2JoK2R0QGtlcm5lbC5vcmc7DQo+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5m
+cmFkZWFkLm9yZzsgYmhlbGdhYXNAZ29vZ2xlLmNvbTsNCj4gYW5kcmV3Lm11cnJheUBhcm0uY29t
+OyBmcm93YW5kLmxpc3RAZ21haWwuY29tOyBNaW5na2FpIEh1DQo+IDxtaW5na2FpLmh1QG54cC5j
+b20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIFBDSTogbGF5ZXJzY2FwZTogQWRkIHRoZSBTUklP
+ViBzdXBwb3J0IGluIGhvc3Qgc2lkZQ0KPiANCj4gT24gMjAxOS0xMi0wNCA0OjM0IGFtLCBYaWFv
+d2VpIEJhbyB3cm90ZToNCj4gPg0KPiA+DQo+ID4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0t
+DQo+ID4+IEZyb206IFJvYmluIE11cnBoeSA8cm9iaW4ubXVycGh5QGFybS5jb20+DQo+ID4+IFNl
+bnQ6IDIwMTnlubQxMuaciDPml6UgMjM6MjANCj4gPj4gVG86IE1hcmMgWnluZ2llciA8bWF6QGtl
+cm5lbC5vcmc+OyBYaWFvd2VpIEJhbw0KPiA8eGlhb3dlaS5iYW9AbnhwLmNvbT4NCj4gPj4gQ2M6
+IFJveSBaYW5nIDxyb3kuemFuZ0BueHAuY29tPjsgbG9yZW56by5waWVyYWxpc2lAYXJtLmNvbTsN
+Cj4gPj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5v
+cmc7IFoucS4gSG91DQo+ID4+IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT47IGxpbnV4LWtlcm5lbEB2
+Z2VyLmtlcm5lbC5vcmc7IE0uaC4gTGlhbg0KPiA+PiA8bWluZ2h1YW4ubGlhbkBueHAuY29tPjsg
+cm9iaCtkdEBrZXJuZWwub3JnOw0KPiA+PiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVh
+ZC5vcmc7IGJoZWxnYWFzQGdvb2dsZS5jb207DQo+ID4+IGFuZHJldy5tdXJyYXlAYXJtLmNvbTsg
+ZnJvd2FuZC5saXN0QGdtYWlsLmNvbTsgTWluZ2thaSBIdQ0KPiA+PiA8bWluZ2thaS5odUBueHAu
+Y29tPg0KPiA+PiBTdWJqZWN0OiBSZTogW1BBVENIXSBQQ0k6IGxheWVyc2NhcGU6IEFkZCB0aGUg
+U1JJT1Ygc3VwcG9ydCBpbiBob3N0DQo+ID4+IHNpZGUNCj4gPj4NCj4gPj4gT24gMDMvMTIvMjAx
+OSAxMTo1MSBhbSwgTWFyYyBaeW5naWVyIHdyb3RlOg0KPiA+Pj4gT24gMjAxOS0xMi0wMyAwMTo0
+MiwgWGlhb3dlaSBCYW8gd3JvdGU6DQo+ID4+Pj4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0t
+DQo+ID4+Pj4+IEZyb206IE1hcmMgWnluZ2llciA8bWF6QG1pc3RlcmpvbmVzLm9yZz4NCj4gPj4+
+Pj4gU2VudDogMjAxOeW5tDEy5pyIMuaXpSAyMDo0OA0KPiA+Pj4+PiBUbzogWGlhb3dlaSBCYW8g
+PHhpYW93ZWkuYmFvQG54cC5jb20+DQo+ID4+Pj4+IENjOiByb2JoK2R0QGtlcm5lbC5vcmc7IGZy
+b3dhbmQubGlzdEBnbWFpbC5jb207IE0uaC4gTGlhbg0KPiA+Pj4+PiA8bWluZ2h1YW4ubGlhbkBu
+eHAuY29tPjsgTWluZ2thaSBIdSA8bWluZ2thaS5odUBueHAuY29tPjsgUm95DQo+ID4+IFphbmcN
+Cj4gPj4+Pj4gPHJveS56YW5nQG54cC5jb20+OyBsb3JlbnpvLnBpZXJhbGlzaUBhcm0uY29tOw0K
+PiA+Pj4+PiBhbmRyZXcubXVycmF5QGFybS5jb207IGJoZWxnYWFzQGdvb2dsZS5jb207DQo+ID4+
+Pj4+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwu
+b3JnOw0KPiA+Pj4+PiBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVs
+QGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+ID4+Pj4+IFoucS4gSG91IDx6aGlxaWFuZy5ob3VAbnhw
+LmNvbT4NCj4gPj4+Pj4gU3ViamVjdDogUmU6IFtQQVRDSF0gUENJOiBsYXllcnNjYXBlOiBBZGQg
+dGhlIFNSSU9WIHN1cHBvcnQgaW4NCj4gPj4+Pj4gaG9zdCBzaWRlDQo+ID4+Pj4+DQo+ID4+Pj4+
+IE9uIDIwMTktMTItMDIgMTA6NDUsIFhpYW93ZWkgQmFvIHdyb3RlOg0KPiA+Pj4+Pj4gR0lDIGdl
+dCB0aGUgbWFwIHJlbGF0aW9ucyBvZiBkZXZpZCBhbmQgc3RyZWFtIGlkIGZyb20gdGhlIG1zaS1t
+YXANCj4gPj4+Pj4+IHByb3BlcnR5IG9mIERUUywgb3VyIHBsYXRmb3JtIGFkZCB0aGlzIHByb3Bl
+cnR5IGluIHUtYm9vdCBiYXNlIG9uDQo+ID4+Pj4+PiB0aGUgUENJZSBkZXZpY2UgaW4gdGhlIGJ1
+cywgYnV0IGlmIGVuYWJsZSB0aGUgdmYgZGV2aWNlIGluDQo+ID4+Pj4+PiBrZXJuZWwsIHRoZSB2
+ZiBkZXZpY2UgbXNpLW1hcCB3aWxsIG5vdCBzZXQsIHNvIHRoZSB2ZiBkZXZpY2UNCj4gPj4+Pj4+
+IGNhbid0IHdvcmssIHRoaXMgcGF0Y2ggcHVycG9zZSBpcyB0aGF0IG1hbmFnZSB0aGUgc3RyZWFt
+IGlkIGFuZA0KPiA+Pj4+Pj4gZGV2aWNlIGlkIG1hcCByZWxhdGlvbnMgZHluYW1pY2FsbHkgaW4g
+a2VybmVsLCBhbmQgbWFrZSB0aGUgbmV3DQo+ID4+Pj4+PiBQQ0llIGRldmljZSB3b3JrIGluDQo+
+ID4+IGtlcm5lbC4NCj4gPj4+Pj4+DQo+ID4+Pj4+PiBTaWduZWQtb2ZmLWJ5OiBYaWFvd2VpIEJh
+byA8eGlhb3dlaS5iYW9AbnhwLmNvbT4NCj4gPj4+Pj4+IC0tLQ0KPiA+Pj4+Pj4gIMKgIGRyaXZl
+cnMvb2YvaXJxLmPCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqAgfMKgIDkNCj4gKysrDQo+ID4+Pj4+PiAgwqAgZHJpdmVycy9wY2kvY29udHJvbGxl
+ci9kd2MvcGNpLWxheWVyc2NhcGUuYyB8IDk0DQo+ID4+Pj4+PiArKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKw0KPiA+Pj4+Pj4gIMKgIGRyaXZlcnMvcGNpL3Byb2JlLmPCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKgIDYNCj4gKysNCj4gPj4+Pj4+
+ICDCoCBkcml2ZXJzL3BjaS9yZW1vdmUuY8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqAgfMKgIDYNCj4gKysNCj4gPj4+Pj4+ICDCoCA0IGZpbGVzIGNoYW5nZWQs
+IDExNSBpbnNlcnRpb25zKCspDQo+ID4+Pj4+Pg0KPiA+Pj4+Pj4gZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvb2YvaXJxLmMgYi9kcml2ZXJzL29mL2lycS5jIGluZGV4DQo+ID4+Pj4+PiBhMjk2ZWFmLi43
+OTFlNjA5IDEwMDY0NA0KPiA+Pj4+Pj4gLS0tIGEvZHJpdmVycy9vZi9pcnEuYw0KPiA+Pj4+Pj4g
+KysrIGIvZHJpdmVycy9vZi9pcnEuYw0KPiA+Pj4+Pj4gQEAgLTU3Niw2ICs1NzYsMTEgQEAgdm9p
+ZCBfX2luaXQgb2ZfaXJxX2luaXQoY29uc3Qgc3RydWN0DQo+ID4+Pj4+PiBvZl9kZXZpY2VfaWQN
+Cj4gPj4+Pj4+ICptYXRjaGVzKQ0KPiA+Pj4+Pj4gIMKgwqDCoMKgwqAgfQ0KPiA+Pj4+Pj4gIMKg
+IH0NCj4gPj4+Pj4+DQo+ID4+Pj4+PiArdTMyIF9fd2VhayBsc19wY2llX3N0cmVhbWlkX2ZpeChz
+dHJ1Y3QgZGV2aWNlICpkZXYsIHUzMiByaWQpIHsNCj4gPj4+Pj4+ICvCoMKgwqAgcmV0dXJuIHJp
+ZDsNCj4gPj4+Pj4+ICt9DQo+ID4+Pj4+PiArDQo+ID4+Pj4+PiAgwqAgc3RhdGljIHUzMiBfX29m
+X21zaV9tYXBfcmlkKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0DQo+ID4+Pj4+PiBkZXZpY2Vf
+bm9kZSAgKipucCwNCj4gPj4+Pj4+ICDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+IHUzMiByaWRfaW4pDQo+ID4+Pj4+PiAgwqAgew0KPiA+Pj4+Pj4gQEAgLTU5MCw2ICs1OTUsMTAg
+QEAgc3RhdGljIHUzMiBfX29mX21zaV9tYXBfcmlkKHN0cnVjdCBkZXZpY2UNCj4gPj4+Pj4+ICpk
+ZXYsICBzdHJ1Y3QgZGV2aWNlX25vZGUgKipucCwNCj4gPj4+Pj4+ICDCoMKgwqDCoMKgwqDCoMKg
+wqAgaWYgKCFvZl9tYXBfcmlkKHBhcmVudF9kZXYtPm9mX25vZGUsIHJpZF9pbiwNCj4gPj4+Pj4+
+ICJtc2ktbWFwIiwNCj4gPj4+Pj4+ICDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+ICJtc2ktbWFwLW1hc2siLCBucCwgJnJpZF9vdXQpKQ0KPiA+Pj4+Pj4gIMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgIGJyZWFrOw0KPiA+Pj4+Pj4gKw0KPiA+Pj4+Pj4gK8KgwqDCoCBpZiAocmlk
+X291dCA9PSByaWRfaW4pDQo+ID4+Pj4+PiArwqDCoMKgwqDCoMKgwqAgcmlkX291dCA9IGxzX3Bj
+aWVfc3RyZWFtaWRfZml4KHBhcmVudF9kZXYsIHJpZF9pbik7DQo+ID4+Pj4+DQo+ID4+Pj4+IE92
+ZXIgbXkgZGVhZCBib2R5LiBHZXQgeW91ciBmaXJtd2FyZSB0byBwcm9wZXJseSBwcm9ncmFtIHRo
+ZSBMVVQNCj4gPj4+Pj4gc28gdGhhdCBpdCBwcmVzZW50cyB0aGUgSVRTIHdpdGggYSByZWFzb25h
+YmxlIHRvcG9sb2d5LiBUaGVyZSBpcw0KPiA+Pj4+PiBhYnNvbHV0ZWx5IG5vIHdheSB0aGlzIGtp
+bmQgb2YgY2hhbmdlIG1ha2VzIGl0IGludG8gdGhlIGtlcm5lbC4NCj4gPj4+Pg0KPiA+Pj4+IFNv
+cnJ5IGZvciB0aGlzLCBJIGtub3cgaXQgaXMgbm90IHJlYXNvbmFibGUsIGJ1dCBJIGhhdmUgbm8g
+b3RoZXINCj4gPj4+PiB3YXksIGFzIEkga25vdywgQVJNIGdldCB0aGUgbWFwcGluZyBvZiBzdHJl
+YW0gSUQgdG8gcmVxdWVzdCBJRCBmcm9tDQo+ID4+Pj4gdGhlIG1zaS1tYXAgcHJvcGVydHkgb2Yg
+RFRTLCBpZiBhZGQgYSBuZXcgZGV2aWNlIHdoaWNoIG5lZWQgdGhlDQo+ID4+Pj4gc3RyZWFtIElE
+IGFuZCB0cnkgdG8gZ2V0IGl0IGZyb20gdGhlIG1zaS1tYXAgb2YgRFRTLCBpdCB3aWxsIGZhaWxl
+ZA0KPiA+Pj4+IGFuZCBub3Qgd29yaywgeWVzPyBTbyBjb3VsZCB5b3UgZ2l2ZSBtZSBhIGJldHRl
+ciBhZHZpY2UgdG8gZml4IHRoaXMNCj4gPj4+PiBpc3N1ZSwgSSB3b3VsZCByZWFsbHkgYXBwcmVj
+aWF0ZSBhbnkgY29tbWVudHMgb3Igc3VnZ2VzdGlvbnMsIHRoYW5rcyBhDQo+IGxvdC4NCj4gPj4+
+DQo+ID4+PiBXaHkgY2FuJ3QgZmlybXdhcmUgZXhwb3NlIGFuIG1zaS1tYXAvbXNpLW1hcC1tYXNr
+IHRoYXQgaGFzIGEgbGFyZ2UNCj4gPj4+IGVub3VnaCByYW5nZSB0byBlbnN1cmUgbWFwcGluZyBv
+ZiBWRnM/IFdoYXQgYXJlIHRoZSBsaW1pdGF0aW9ucyBvZg0KPiA+Pj4gdGhlIExVVCB0aGF0IHdv
+dWxkIHByZXZlbnQgdGhpcyBmcm9tIGJlaW5nIGNvbmZpZ3VyZWQgYmVmb3JlIHRoZQ0KPiA+Pj4g
+a2VybmVsIGJvb3RzPw0KPiA+DQo+ID4gVGhhbmtzIGZvciB5b3VyIGNvbW1lbnRzLCB5ZXMsIHRo
+aXMgaXMgdGhlIHJvb3QgY2F1c2UsIHdlIG9ubHkgaGF2ZSAxNg0KPiA+IHN0cmVhbSBJRHMgZm9y
+IFBDSWUgZG9tYWluLCB0aGlzIGlzIHRoZSBoYXJkd2FyZSBsaW1pdGF0aW9uLCBpZiB0aGVyZQ0K
+PiA+IGhhdmUgZW5vdWdoIHN0cmVhbSBJRHMsIHdlIGNhbiBleHBvc2UgYW4gbXNpLW1hcC9tc2kt
+bWFwLW1hc2sgZm9yIGFsbA0KPiA+IFBDSWUgZGV2aWNlcyBpbiBzeXN0ZW0sIHVuZm9ydHVuYXRl
+bHksIHRoZSBzdHJlYW0gSURzIGlzIG5vdCBlbm91Z2gsIEkNCj4gPiB0aGluayBvdGhlciBBUk0g
+dmVuZG9yIGhhdmUgc2FtZSBpc3N1ZSB0aGF0IHRoZXkgZG9uJ3QgaGF2ZSBlbm91Z2gNCj4gc3Ry
+ZWFtIElEcy4NCj4gDQo+IFNvbWUgU01NVXYyIGNvbmZpZ3VyYXRpb25zIG1heSBoYXZlIGFuIHVu
+Y29tZm9ydGFibHkgbGltaXRlZCBudW1iZXIgb2YNCj4gY29udGV4dCBiYW5rcywgYnV0IHRoZXkg
+YWxtb3N0IGFsd2F5cyBoYXZlIG1vcmUgdGhhbiBlbm91Z2ggc3RyZWFtIElEIGJpdHMuDQo+IFlv
+dXIgSUNJRCBhbGxvY2F0aW9uIHBvbGljeSBpcyBtb3N0IGNlcnRhaW5seSBhbiBpc3N1ZSB1bmlx
+dWUgdG8gTGF5ZXJzY2FwZQ0KPiBwbGF0Zm9ybXMuDQoNCkkgYW0gbm90IHN1cmUgd2hpY2ggdmVy
+c2lvbiBvZiBTTU1VIHVzZWQgaW4gb3VyIExheWVyc2NhcGUgcGxhdGZvcm0sIEkgdGhpbmsgdGhl
+DQpTTU1VIHZlcnNpb24gaXMgMSBpbiBvdXIgZWFybHkgYm9hcmQuIFNvIHRoZXJlIGlzIG5vdCBl
+bm91Z2ggc3RyZWFtIElEIGZvciBQQ0llIG9yDQpvdGhlciBwZXJpcGhlcmFscy4gICANCg0KPiAN
+Cj4gRnVydGhlcm1vcmUsIHRoYXQgYXJndW1lbnQgZG9lc24ndCBtYWtlIGEgd2hvbGUgbG90IG9m
+IHNlbnNlIGFueXdheSAtIGlmDQo+IHlvdSBkb24ndCBoYXZlIGVub3VnaCBzdHJlYW0gSURzIGZv
+ciBhbGwgcG9zc2libGUgVkZzIGF0IGJvb3QgdGltZSwgdGhlbiB5b3UNCj4gc3RpbGwgd29uJ3Qg
+aGF2ZSBlbm91Z2ggbGF0ZXIsIHNvIHByZXRlbmRpbmcgdG8gc3VwcG9ydCBTUi1JT1YsIG9ubHkg
+Zm9yIHRoaW5ncw0KPiB0byBzdGFydCBzdWJ0bHkgZ29pbmcgd3JvbmcgaWYgdGhlIHVzZXIgaGFz
+IHRvbyBtYW55IGVuZHBvaW50cyBhY3RpdmUgYXQgb25jZSwNCj4gaXNuJ3QgZ29pbmcgdG8gY3V0
+IGl0Lg0KDQpUaGFua3MgUm9iaW4sIHllcywgYWdyZWUgeW91ciBwb2ludCwgSSB0aGluayBJIGhh
+dmUgdG8gZHJvcCB0aGlzIHBhdGNoLCB0aGUgcHVycG9zZQ0Kb2Ygc3VibWl0dGluZyB0aGlzIHBh
+dGNoIHRvIG9wZW5zb3VyY2UgaXMgdGhhdCB0byBrbm93IHdoZXRoZXIgaGF2ZSBhIGJlc3Qgd2F5
+DQp0byBmaXggdGhpcyBpc3N1ZSwgYnV0IGR1ZSB0byB0aGUgbGltaXRhdGlvbiBvZiBoYXJkd2Fy
+ZSwgaXQgbG9va3MgbGlrZSBoYXZlIG5vIGJldHRlcg0Kd2F5LCBpbiBhIHdvcmQsIHRoYW5rcyBh
+IGxvdC4NCg0KPiANCj4gPj4gRnVydGhlcm1vcmUsIG5vdGUgdGhhdCB0aGlzIGF0dGVtcHQgaXNu
+J3QgZG9pbmcgYW55dGhpbmcgZm9yIHRoZSBTTU1VDQo+ID4+IFN0cmVhbSBJRHMsIHNvIHRoZSBt
+b21lbnQgYW55b25lIHRyaWVzIHRvIGFzc2lnbiB0aG9zZSBWRnMgdGhleSdyZQ0KPiA+PiBzdGls
+bCBnb2luZyB0byBnbyBiYW5nIGFueXdheS4gQW55IGZpcm13YXJlLWJhc2VkIGZpeHVwIGZvciBJ
+RA0KPiA+PiBtYXBwaW5ncywgY29uZmlnIHNwYWNlIGFkZHJlc3NlcywgZXRjLiBuZWVkcyB0byBi
+ZSBTUi1JT1YtYXdhcmUgYW5kDQo+ID4+IGFjY291bnQgZm9yIGFsbCAqcG9zc2libGUqIEJERnMu
+DQo+ID4+DQo+ID4+IE9uIExTMjA4NSBhdCBsZWFzdCwgSUlSQyB5b3UgY2FuIGNvbmZpZ3VyZSBh
+IHNpbmdsZSBMVVQgZW50cnkgdG8ganVzdA0KPiA+PiB0cmFuc2xhdGUgdGhlIEJ1czpEZXZpY2Ug
+aWRlbnRpZmllciBhbmQgcGFzcyBzb21lIG9yIGFsbCBvZiB0aGUNCj4gPj4gRnVuY3Rpb24gYml0
+cyBzdHJhaWdodCB0aHJvdWdoIGFzIHRoZSBMU0JzIG9mIHRoZSBTdHJlYW0gSUQsIHNvIEkNCj4g
+Pj4gZG9uJ3QgYmVsaWV2ZSB0aGUgcmVsYXRpdmVseSBsaW1pdGVkIG51bWJlciBvZiBMVVQgcmVn
+aXN0ZXJzIHNob3VsZA0KPiA+PiBiZSB0b28gbXVjaCBvZiBhbiBpc3N1ZS4gRm9yIGV4YW1wbGUs
+IGxhc3QgdGltZSBJIGhhY2tlZCBvbiB0aGF0IEkNCj4gYXBwYXJlbnRseSBoYWQgaXQgc2V0IHVw
+IHN0YXRpY2FsbHkgbGlrZSB0aGlzOg0KPiA+Pg0KPiA+PiAmcGNpZTMgew0KPiA+PiAJLyogU3F1
+YXNoIDg6NTozIEJERiBkb3duIHRvIDI6MjozICovDQo+ID4+IAltc2ktbWFwLW1hc2sgPSA8MHgw
+MzFmPjsNCj4gPj4gCW1zaS1tYXAgPSA8MHgwMDAgJml0cyAweDAwIDB4MjA+LA0KPiA+PiAJCSAg
+PDB4MTAwICZpdHMgMHgyMCAweDIwPiwNCj4gPj4gCQkgIDwweDIwMCAmaXRzIDB4NDAgMHgyMD4s
+DQo+ID4+IAkJICA8MHgzMDAgJml0cyAweDYwIDB4MjA+Ow0KPiA+PiB9Ow0KPiA+DQo+ID4gVGhh
+bmtzIFJvYmluLCB0aGlzIGlzIGEgZWZmZWN0aXZlIHdheSwgYnV0IHdlIG9ubHkgaGF2ZSB0b3Rh
+bCAxNg0KPiA+IHN0cmVhbSBJRHMgZm9yIFBDSWUgZG9tYWluLCBhbmQgb25seSBhc3NpZ24gNCBz
+dHJlYW0gSURzIGZvciBlYWNoIFBDSWUNCj4gPiBjb250cm9sbGVyIGlmIHRoZSBib2FyZCBoYXZl
+IDQgUENJZSBjb250cm9sbGVycywgdGhpcyBpcyB0aGUgcm9vdA0KPiA+IGNhdXNlLCBJIHN1Ym1p
+dHRlZCB0aGlzIHBhdGNoIHRvIGR5bmFtaWNhbGx5IG1hbmFnZSB0aGVzZSBzdHJlYW0gSURzLA0K
+PiA+IHNvIHRoYXQgaXQgbG9va3MgbGlrZSBlYWNoIFBDSWUgY29udHJvbGxlciBoYXMgMTYgc3Ry
+ZWFtIElEcy4gSSBjYW4NCj4gPiBkeW5hbWljYWxseSBhbGxvY2F0ZSBhbmQgcmVsZWFzZSB0aGVz
+ZSBzdHJlYW0gSURzIGJhc2VkIG9uIHRoZSBQQ0llDQo+IGRldmljZXMgaW4gdGhlIGN1cnJlbnQg
+c3lzdGVtLiBJZiB1c2UgeW91ciBtZXRob2QsIHdlIHN1cHBvcnQgdXAgdG8gNCBQQ0llDQo+IGRl
+dmljZXMoMiBQRnMgYW5kIDIgVkZzKSwgaXQgd2lsbCBub3QgYWNoaWV2ZSBvdXIgcHVycG9zZS4N
+Cj4gDQo+IFN1cmUsIHRoYXQgd2FzIGp1c3QgYW4gZXhhbXBsZSB0byBpbGx1c3RyYXRlIHRoYXQg
+eW91IGRvbid0IG5lZWQgYSBzZXBhcmF0ZQ0KPiBtc2ktbWFwIGVudHJ5IChhbmQgY29ycmVzcG9u
+ZGluZyBMVVQgZW50cnkpIGZvciBlYWNoIGluZGl2aWR1YWwgUENJIFJJRCAtDQo+IHRoYXQgZGF0
+ZXMgZnJvbSBiZWZvcmUgVS1Cb290IGhhZCBJQ0lEIHN1cHBvcnQsIHNvIEkgaGFkIGhhY2tzIGFs
+bCBvdmVyDQo+IHZhcmlvdXMga2VybmVsIGRyaXZlcnMgdG8gc2V0IHRoZW0gYXJiaXRyYXJpbHkg
+d2hlbiBJIHdhcyBwbGF5aW5nIHdpdGggdGhlDQo+IFNNTVUuDQo+IA0KPiBSZWFsaXN0aWNhbGx5
+LCBhdCB0aGlzIHBvaW50IHlvdXIgb3B0aW9ucyBhcmUgYSkgcmVzZXJ2ZSBtb3JlIElDSURzIGZv
+ciBQQ0llIGFuZA0KPiBhbGxvY2F0ZSB0aGVtIGluIGEgd2F5IHRoYXQgYWNjb3VudHMgZm9yIHRo
+ZSBwcmVzZW50IGVuZHBvaW50cycNCj4gU1ItSU9WIGNhcGFiaWxpdGllcywgb3IgYikgZG9uJ3Qg
+ZXhwb3NlIFNSLUlPViBmdW5jdGlvbmFsaXR5IGF0IGFsbCBvbiB0aGUgcm9vdA0KPiBjb21wbGV4
+IGlmIGl0IGNhbid0IGJlIGd1YXJhbnRlZWQgdG8gd29yayBwcm9wZXJseS4NCg0KQWdyZWUsIGlm
+IGVuYWJsZSBtb3JlIHRoYW4gMTYgUENJZSBkZXZpY2VzLCB0aGUgc3RyZWFtIElEcyBmb3IgUENJ
+ZSBhcmUgbm90IGVub3VnaCwNCnRoZSByb290IGNhdXNlIGlzIHRoZSBsaW1pdGF0aW9uIG9mIHRo
+ZSBoYXJkd2FyZSwgSSB0aGluayBJIGhhdmUgdG8gZHJvcCBpdCwgdGhhbmtzIGEgbG90Lg0KDQo+
+IA0KPiBSb2Jpbi4NCg==
