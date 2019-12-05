@@ -2,119 +2,231 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CED3D113EE8
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Dec 2019 10:59:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D617113F00
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Dec 2019 11:04:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728794AbfLEJ7d (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Dec 2019 04:59:33 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:4870 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728629AbfLEJ7d (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Dec 2019 04:59:33 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5de8d5000000>; Thu, 05 Dec 2019 01:59:28 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 05 Dec 2019 01:59:32 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 05 Dec 2019 01:59:32 -0800
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 5 Dec
- 2019 09:59:32 +0000
-Received: from [10.25.73.84] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 5 Dec 2019
- 09:59:28 +0000
+        id S1729017AbfLEKEJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 Dec 2019 05:04:09 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:54290 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726239AbfLEKEJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Dec 2019 05:04:09 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB5A3skv115735;
+        Thu, 5 Dec 2019 04:03:54 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575540234;
+        bh=KVdOg686NGTO/lSscHFY4DTCJ8U0Ya2tIRngEQ14Ijs=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=PAZrJdzhxj8TcFMU2LbHzqPQTAquU25WJVwbJvjcrp6rS5q5D/6lmMRqEBxNPw57T
+         UxmxubBtKczv0+AQm6pY4B/+5ha9Iv9OeYoalQ5xkmp+2mCt0Ty1Pnjd2oaMXRAJvP
+         KW2CUwf3L8wshbdRIPai6L6w3KYI85I7RdxlrIdk=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB5A3rtd019638
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 5 Dec 2019 04:03:54 -0600
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 5 Dec
+ 2019 04:03:53 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 5 Dec 2019 04:03:53 -0600
+Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB5A3noL030226;
+        Thu, 5 Dec 2019 04:03:49 -0600
 Subject: Re: [PATCH 1/4] PCI: dwc: Add new feature to skip core initialization
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     Christoph Hellwig <hch@infradead.org>
-CC:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <lorenzo.pieralisi@arm.com>, <andrew.murray@arm.com>,
-        <bhelgaas@google.com>, <kishon@ti.com>, <thierry.reding@gmail.com>,
-        <Jisheng.Zhang@synaptics.com>, <jonathanh@nvidia.com>,
+To:     Vidya Sagar <vidyas@nvidia.com>, <jingoohan1@gmail.com>,
+        <gustavo.pimentel@synopsys.com>, <lorenzo.pieralisi@arm.com>,
+        <andrew.murray@arm.com>, <bhelgaas@google.com>,
+        <thierry.reding@gmail.com>
+CC:     <Jisheng.Zhang@synaptics.com>, <jonathanh@nvidia.com>,
         <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
 References: <20191113090851.26345-1-vidyas@nvidia.com>
  <20191113090851.26345-2-vidyas@nvidia.com>
- <20191127094844.GA21122@infradead.org>
- <80d610bf-71d8-d2c1-9c75-b0a58cb5c8ed@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <2c9a860f-4700-87e9-2538-9b0d40c9ce34@nvidia.com>
-Date:   Thu, 5 Dec 2019 15:29:25 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <47c801ab-ddec-d436-1f0d-1dd0c4980869@ti.com>
+Date:   Thu, 5 Dec 2019 15:34:59 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-In-Reply-To: <80d610bf-71d8-d2c1-9c75-b0a58cb5c8ed@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
+In-Reply-To: <20191113090851.26345-2-vidyas@nvidia.com>
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1575539968; bh=FJ/ufq3DMyMB0SdrVKvJq04CRyn8GvLD1QOEQGmYUVM=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=mkbAxR4g0hk2Q+9IdZlfW6hicVtQJHxaOhbcLYd8ernWZL5+AFEEMKQRBQIDMKw0q
-         vm/2MhIpgh/8G7Bw1FocEEChDX1cMUTk9S0DDpgBrgzQL0G7TQej8O95zg3xVH4qSO
-         X6OVNtXCfwX8DV2qVNKr79vAHyesnOqAjCnoprTpigsDjhplLidYDip/Q0adnvFoAa
-         3SY1gYaFp1eZygJsB4z9L/ANJ0n2e6iknGMRS+JR12zdHaNJwsYjNjjqzxYkgzP8KC
-         GU/xIBVP+OHM0eMnIzgE6waf0a4n3De5KUN4MDumB0f6iWnWP5Iqk+LC22IM/D8o09
-         n5OFF9D0URCNw==
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 11/29/2019 8:10 PM, Vidya Sagar wrote:
 
-Hi Christoph,
-Could you please let me know what am I missing here?
 
-Thanks,
-Vidya Sagar
+On 13/11/19 2:38 pm, Vidya Sagar wrote:
+> Add a new feature 'skip_core_init' that can be set by platform drivers
+> of devices that do not have their core registers available until reference
+> clock from host is available (Ex:- Tegra194) to indicate DesignWare
+> endpoint mode sub-system to not perform core registers initialization.
+> Existing dw_pcie_ep_init() is refactored and all the code that touches
+> registers is extracted to form a new API dw_pcie_ep_init_complete() that
+> can be called later by platform drivers setting 'skip_core_init' to '1'.
 
-> On 11/27/2019 3:18 PM, Christoph Hellwig wrote:
->> On Wed, Nov 13, 2019 at 02:38:48PM +0530, Vidya Sagar wrote:
->>> +=C2=A0=C2=A0=C2=A0 if (ep->ops->get_features) {
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 epc_features =3D ep->ops->g=
-et_features(ep);
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (epc_features->skip_core=
-_init)
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret=
-urn 0;
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>> +=C2=A0=C2=A0=C2=A0 return dw_pcie_ep_init_complete(ep);
->>
->> This calling convention is strange.=C2=A0 Just split the early part of
->> dw_pcie_ep_init into an dw_pcie_ep_early and either add a tiny
->> wrapper like:
->>
->> int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->> {
->> =C2=A0=C2=A0=C2=A0=C2=A0int error;
->>
->> =C2=A0=C2=A0=C2=A0=C2=A0error =3D dw_pcie_ep_init_early(ep);
->> =C2=A0=C2=A0=C2=A0=C2=A0if (error)
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return error;
->> =C2=A0=C2=A0=C2=A0=C2=A0return dw_pcie_ep_init_late(ep);
->> }
->>
->> or just open code that in the few callers.=C2=A0 That keeps the calling
->> conventions much simpler and avoids relying on a callback and flag.
-> I'm not sure if I got this right. I think in any case, code that is going=
- to be
-> part of dw_pcie_ep_init_late() needs to depend on callback and flag right=
-?
-> I mean, unless it is confirmed (by calling the get_features() callback an=
-d
-> checking whether or not the core is available for programming) dw_pcie_ep=
-_init_late()
-> can't be called right?
-> Please let me know if I'm missing something here.
->=20
-> - Vidya Sagar
->>
->=20
+No. pci_epc_features should only use constant values. This is used by 
+function drivers to know the controller capabilities.
 
+Thanks
+Kishon
+
+> 
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+>   .../pci/controller/dwc/pcie-designware-ep.c   | 72 +++++++++++--------
+>   drivers/pci/controller/dwc/pcie-designware.h  |  6 ++
+>   include/linux/pci-epc.h                       |  1 +
+>   3 files changed, 51 insertions(+), 28 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index 3dd2e2697294..06f4379be8a3 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -492,19 +492,53 @@ static unsigned int dw_pcie_ep_find_ext_capability(struct dw_pcie *pci, int cap)
+>   	return 0;
+>   }
+>   
+> -int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+> +int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
+>   {
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +	unsigned int offset;
+> +	unsigned int nbars;
+> +	u8 hdr_type;
+> +	u32 reg;
+>   	int i;
+> +
+> +	hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE);
+> +	if (hdr_type != PCI_HEADER_TYPE_NORMAL) {
+> +		dev_err(pci->dev,
+> +			"PCIe controller is not set to EP mode (hdr_type:0x%x)!\n",
+> +			hdr_type);
+> +		return -EIO;
+> +	}
+> +
+> +	ep->msi_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
+> +
+> +	ep->msix_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSIX);
+> +
+> +	offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
+> +	if (offset) {
+> +		reg = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
+> +		nbars = (reg & PCI_REBAR_CTRL_NBAR_MASK) >>
+> +			PCI_REBAR_CTRL_NBAR_SHIFT;
+> +
+> +		dw_pcie_dbi_ro_wr_en(pci);
+> +		for (i = 0; i < nbars; i++, offset += PCI_REBAR_CTRL)
+> +			dw_pcie_writel_dbi(pci, offset + PCI_REBAR_CAP, 0x0);
+> +		dw_pcie_dbi_ro_wr_dis(pci);
+> +	}
+> +
+> +	dw_pcie_setup(pci);
+> +
+> +	return 0;
+> +}
+> +
+> +int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+> +{
+>   	int ret;
+> -	u32 reg;
+>   	void *addr;
+> -	u8 hdr_type;
+> -	unsigned int nbars;
+> -	unsigned int offset;
+>   	struct pci_epc *epc;
+>   	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>   	struct device *dev = pci->dev;
+>   	struct device_node *np = dev->of_node;
+> +	const struct pci_epc_features *epc_features;
+>   
+>   	if (!pci->dbi_base || !pci->dbi_base2) {
+>   		dev_err(dev, "dbi_base/dbi_base2 is not populated\n");
+> @@ -563,13 +597,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>   	if (ep->ops->ep_init)
+>   		ep->ops->ep_init(ep);
+>   
+> -	hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE);
+> -	if (hdr_type != PCI_HEADER_TYPE_NORMAL) {
+> -		dev_err(pci->dev, "PCIe controller is not set to EP mode (hdr_type:0x%x)!\n",
+> -			hdr_type);
+> -		return -EIO;
+> -	}
+> -
+>   	ret = of_property_read_u8(np, "max-functions", &epc->max_functions);
+>   	if (ret < 0)
+>   		epc->max_functions = 1;
+> @@ -587,23 +614,12 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>   		dev_err(dev, "Failed to reserve memory for MSI/MSI-X\n");
+>   		return -ENOMEM;
+>   	}
+> -	ep->msi_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
+>   
+> -	ep->msix_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSIX);
+> -
+> -	offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
+> -	if (offset) {
+> -		reg = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
+> -		nbars = (reg & PCI_REBAR_CTRL_NBAR_MASK) >>
+> -			PCI_REBAR_CTRL_NBAR_SHIFT;
+> -
+> -		dw_pcie_dbi_ro_wr_en(pci);
+> -		for (i = 0; i < nbars; i++, offset += PCI_REBAR_CTRL)
+> -			dw_pcie_writel_dbi(pci, offset + PCI_REBAR_CAP, 0x0);
+> -		dw_pcie_dbi_ro_wr_dis(pci);
+> +	if (ep->ops->get_features) {
+> +		epc_features = ep->ops->get_features(ep);
+> +		if (epc_features->skip_core_init)
+> +			return 0;
+>   	}
+>   
+> -	dw_pcie_setup(pci);
+> -
+> -	return 0;
+> +	return dw_pcie_ep_init_complete(ep);
+>   }
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index 5accdd6bc388..340783e9032e 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -399,6 +399,7 @@ static inline int dw_pcie_allocate_domains(struct pcie_port *pp)
+>   #ifdef CONFIG_PCIE_DW_EP
+>   void dw_pcie_ep_linkup(struct dw_pcie_ep *ep);
+>   int dw_pcie_ep_init(struct dw_pcie_ep *ep);
+> +int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep);
+>   void dw_pcie_ep_exit(struct dw_pcie_ep *ep);
+>   int dw_pcie_ep_raise_legacy_irq(struct dw_pcie_ep *ep, u8 func_no);
+>   int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+> @@ -416,6 +417,11 @@ static inline int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>   	return 0;
+>   }
+>   
+> +static inline int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
+> +{
+> +	return 0;
+> +}
+> +
+>   static inline void dw_pcie_ep_exit(struct dw_pcie_ep *ep)
+>   {
+>   }
+> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
+> index 36644ccd32ac..241e6a6f39fb 100644
+> --- a/include/linux/pci-epc.h
+> +++ b/include/linux/pci-epc.h
+> @@ -121,6 +121,7 @@ struct pci_epc_features {
+>   	u8	bar_fixed_64bit;
+>   	u64	bar_fixed_size[PCI_STD_NUM_BARS];
+>   	size_t	align;
+> +	bool	skip_core_init;
+>   };
+>   
+>   #define to_pci_epc(device) container_of((device), struct pci_epc, dev)
+> 
