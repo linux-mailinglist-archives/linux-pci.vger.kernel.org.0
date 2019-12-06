@@ -2,125 +2,136 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 03A8E11494B
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Dec 2019 23:30:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 43996114C43
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2019 07:10:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727898AbfLEWas (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Dec 2019 17:30:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43900 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727595AbfLEWas (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 5 Dec 2019 17:30:48 -0500
-Received: from localhost (mobile-166-170-221-197.mycingular.net [166.170.221.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84F6520707;
-        Thu,  5 Dec 2019 22:30:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575585047;
-        bh=rwc2W/J/V58JZoKOWg2doRruK6KWPbQgM5Sb2F/Ai60=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=cliOZcUxDWzGZ1UQTKJkPsD++s/EPrjyE7H/snJuA3uqE7NURH520sOnVje6nd0Ts
-         Td38CmfeZyMBlRyr+Rypsepv/EG8hoAOa7B7sJiJzOVgMDkiBquX3yxdZnHzKOkS/c
-         BBv+wew7DxEj2QDNBsIebdp/nYnu0CS5l8OPwMaM=
-Date:   Thu, 5 Dec 2019 16:30:44 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     andrew.murray@arm.com, maz@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Emilio =?iso-8859-1?Q?L=F3pez?= <emilio@elopez.com.ar>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Moni Shoua <monis@mellanox.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Mirko Lindner <mlindner@marvell.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Solarflare linux maintainers <linux-net-drivers@solarflare.com>,
-        Edward Cree <ecree@solarflare.com>,
-        Martin Habets <mhabets@solarflare.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Thomas Graf <tgraf@suug.ch>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        james.quinlan@broadcom.com, mbrugger@suse.com,
-        f.fainelli@gmail.com, phil@raspberrypi.org, wahrenst@gmx.net,
-        jeremy.linton@arm.com, linux-pci@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        Robin Murphy <robin.murphy@arm.con>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "David S. Miller" <davem@davemloft.net>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rdma@vger.kernel.org, iommu@lists.linux-foundation.org,
-        netdev@vger.kernel.org, kexec@lists.infradead.org,
-        linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v4 7/8] linux/log2.h: Fix 64bit calculations in
- roundup/down_pow_two()
-Message-ID: <20191205223044.GA250573@google.com>
+        id S1726076AbfLFGKB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 Dec 2019 01:10:01 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:34307 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726068AbfLFGKB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 Dec 2019 01:10:01 -0500
+Received: by mail-qt1-f195.google.com with SMTP id 5so6159200qtz.1
+        for <linux-pci@vger.kernel.org>; Thu, 05 Dec 2019 22:10:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lTGkz4bGNLSBByKRY+XMc/8PwwmxOinFRPPxMBQvl9A=;
+        b=T5Bw9RtkPmglwFHS+XTONH6lKglnA4/qzz5heLyDWw7UO7PX13JJLRVMnt9e/hH7Hu
+         kamxdnrpnKaOyKInj39K/Znv2GriB7+w49A+AtrlJBJZuZxB6A+AUFBouUCuin94cfys
+         jPIgrI3Xw7cBZ6SgtXbG7Zrun2zdy7xfZ18hxyLxMpxrIDNO8iZR+ogk7vqG/gv5UZc8
+         DweYMBoP+SPQFGSMSHmASaAnpPmred64CiPYtVqsyhsDgdn0Ba9zXfNDwy0Sba6Jt2AV
+         vHNgUt3/6Gocfo8XHJbbBpI8aK9ngLfNmUyHesMOqGvM9ROKwOq4S0S4VT1sQR3+z68r
+         lm0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lTGkz4bGNLSBByKRY+XMc/8PwwmxOinFRPPxMBQvl9A=;
+        b=tuT1gCBGFzhOSay7qPUCfxy3z9uTNg/lqYjDTNMRfOZBje3vjgQQLKtAD/omMUl/uM
+         UYoW3ip/AX5CXW8Qg4rUVfW71/LbaP16wDzbwmVcyzzra7lT0tlWOeHzu7ovNvnU0PFj
+         np5zvOnJuICxupwkcTnryYERXUXcTNuqhWDv+8ptbAROtKoMYjcoTMVPXeO4XTfhsAaT
+         BsbTqlzJdf8Lkv6dKaiXWDsJNrdAzeXEuO6FIbJY3g1pHYavlbdSyZOylJOzjgZjGqCm
+         B3QXgdBi09jzSrdGHPkIFwKG63CcOksmxqLfRNx5QICRKRWlPV2zNZ6OVBcFVn7T3aWz
+         JzYA==
+X-Gm-Message-State: APjAAAXNKhIynp0LoXdeYyKymuTSYXmhaBpVi5++qjRDFSGugc5lBHwm
+        kYrnmFuVrFj2DJ4/LbMk2bwjNi6WyHagDoeDZiq2WA==
+X-Google-Smtp-Source: APXvYqwzTIJe5G1exbg4mHBzapxOvxRdfnENdXdJiMtFaRJEQuFuK+7guZGmowj2rQccgdW7QMNpaCMZVhV3Mz1hi4Y=
+X-Received: by 2002:ac8:7a78:: with SMTP id w24mr10649361qtt.321.1575612600205;
+ Thu, 05 Dec 2019 22:10:00 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191203114743.1294-8-nsaenzjulienne@suse.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CAJ2oMhJ10FTcNH5wqWT2nfNz4jwG0BYr1DcVYTUPOcsSwpkMYg@mail.gmail.com>
+ <20191129183836.GA20312@google.com>
+In-Reply-To: <20191129183836.GA20312@google.com>
+From:   Ranran <ranshalit@gmail.com>
+Date:   Fri, 6 Dec 2019 08:09:48 +0200
+Message-ID: <CAJ2oMhJDxkU8TpFon4vzBiL5WrYv-zQNtYW8xbqaQLh2eS7bbg@mail.gmail.com>
+Subject: Re: [Bug 205701] New: Can't access RAM from PCIe
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     bjorn@helgaas.com, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-You got the "n" on "down" in the subject, but still missing "of" ;)
+On Fri, Nov 29, 2019 at 8:38 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Fri, Nov 29, 2019 at 06:10:51PM +0200, Ranran wrote:
+> > On Fri, Nov 29, 2019 at 4:58 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > On Fri, Nov 29, 2019 at 06:59:48AM +0000, bugzilla-daemon@bugzilla.kernel.org wrote:
+> > > > https://bugzilla.kernel.org/show_bug.cgi?id=205701
+> > > > ...
+> > > >
+> > > > Using Intel Xeon computer with linux kernel 4.18.0 centos8.
+> > > > Trying to access RAM (with DMA) using FPGA  fails in this computer.
+> > > >
+> > > > 1. I tried to add intel_iommu=off - it did not help.
+> > > >
+> > > > 2. Installing windows on same PC - FPGA can access RAM using DMA without
+> > > > issues.
+> > > >
+> > > > 3. using another PC (Intel Duo) with same linux and OS - FPGA access works.
+> > > >
+> > > > FPGA access the RAM using a physical address provided by a kernel module which
+> > > > allocates physical continuous memory in PC. (the module works perfectly with
+> > > > Intel Duo on exactly same OS and kernel).
+> > >
+> > > Hi, thanks for the report!  Can you please attach the complete dmesg
+> > > and "sudo lspci -vv" output for the working and non-working v4.18
+> > > kernels to the bugzilla?
+> > >
+> > > Then please try to reproduce the problem on the current v5.4 kernel
+> > > and attach the v5.4 dmesg log.  If v5.4 fails, we'll have to debug it.
+> > > If v5.4 works, figure out what fixed it (by comparing dmesg logs or by
+> > > bisection) and backport it to v4.18.
+> > >
+> > > Bjorn
+> >
+> > Hi,
+> > I've attached 2 files:
+> > 1. dmesg.log - is the dmesg you've requested.
+> > 2. dmesg_intel_iommu_off.log - dmesg when I added intel_iommu=off
+> > kernel parameter.
+>
+> Thanks, I attached these to the bugzilla.  I think the linux-pci
+> mailing list rejected your mail since it wasn't plain-text.
+>
+> Please also attach the "sudo lspci -vv" output to the bugzilla and
+> indicate which device is your FPGA.  I guess it might be 0000:20:00.0,
+> since it looks like it's being claimed by an out-of-tree module in
+> your dmesg_intel_iommu_off.log (but not dmesg.log).
+>
+> Please also attach the driver source so we can see how it is obtaining
+> and using the DMA buffer address.
+>
+> > I might try the new kernel, yet since we are required to use the
+> > installation of centos8  (centos8 was just published about 2 month ago
+> > and it comes with kernel 4.18.0), updating kernel might be
+> > problematic.
+>
+> Even if you can't use the v5.4 kernel for your project, if you can
+> establish that it works, then you have a clear path to finding the
+> fix.  If v5.4 still *doesn't* work, then we'll be much more interested
+> in helping to fix that.
+>
+> > I would please like to ask if there is some workaround you can think of ?
+> > For example, might it help if I disable iommu (VT-d) in BIOS ?
+>
+> Usually when an IOMMU blocks a DMA, it seems like there's a note in
+> dmesg.  I don't see that in either of your logs, but I'm not an IOMMU
+> expert, so it does seem reasonable to try disabling the IOMMU.
+>
+> Bjorn
 
-On Tue, Dec 03, 2019 at 12:47:40PM +0100, Nicolas Saenz Julienne wrote:
-> Some users need to make sure their rounding function accepts and returns
-> 64bit long variables regardless of the architecture. Sadly
-> roundup/rounddown_pow_two() takes and returns unsigned longs. It turns
-> out ilog2() already handles 32/64bit calculations properly, and being
-> the building block to the round functions we can rework them as a
-> wrapper around it.
 
-Missing "of" in the function names here.
-s/a wrapper/wrappers/
+Hello,
 
-IIUC the point of this is that roundup_pow_of_two() returned
-"unsigned long", which can be either 32 or 64 bits (worth pointing
-out, I think), and many callers need something that returns
-"unsigned long long" (always 64 bits).
-
-It's a nice simplification to remove the "__" variants.  Just as a
-casual reader of this commit message, I'd like to know why we had both
-the roundup and the __roundup versions in the first place, and why we
-no longer need both.
-
-> -#define roundup_pow_of_two(n)			\
-> -(						\
-> -	__builtin_constant_p(n) ? (		\
-> -		(n == 1) ? 1 :			\
-> -		(1UL << (ilog2((n) - 1) + 1))	\
-> -				   ) :		\
-> -	__roundup_pow_of_two(n)			\
-> - )
-> +#define roundup_pow_of_two(n)			  \
-> +(						  \
-> +	(__builtin_constant_p(n) && ((n) == 1)) ? \
-> +	1 : (1ULL << (ilog2((n) - 1) + 1))        \
-> +)
-
-Should the resulting type of this expression always be a ULL, even
-when n==1, i.e., should it be this?
-
-  1ULL : (1ULL << (ilog2((n) - 1) + 1))        \
-
-Or maybe there's no case where that makes a difference?
-
-Bjorn
+I have tried to upgrade to latest kernel 5.4 (elrepo in centos), but
+with this processor/board (system x3650, Xeon), it get hang during
+kernel boot, without any error in dmesg, just keeps waiting for
+nothing for couple of minutes and than drops to dracut.
+I am really stuck with this, is there any way to get progress with this bug ?
+Please help,
+Ran
