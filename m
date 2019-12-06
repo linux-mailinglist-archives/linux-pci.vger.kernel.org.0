@@ -2,104 +2,230 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6944C1153E4
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2019 16:08:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D33AE115462
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2019 16:36:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726251AbfLFPIk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 Dec 2019 10:08:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60936 "EHLO mail.kernel.org"
+        id S1726284AbfLFPgm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 Dec 2019 10:36:42 -0500
+Received: from foss.arm.com ([217.140.110.172]:48216 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726234AbfLFPIk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 6 Dec 2019 10:08:40 -0500
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5382424659;
-        Fri,  6 Dec 2019 15:08:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575644919;
-        bh=Mk2Qn+6rQTzSn+2H0WBlJBLvPoY4xXtoMOqRsbebiEA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=B+AbtR+2D/wgn5nJjHJb1K37ECvtLq4AQF0xT/4IiZP9LFCiykGA1hfj5hT+JSrhO
-         M10YtBBd6huCyf0ivSKsrfQ6C5/rpsDde+anr7cpqtY8I5y92r3IcE0MjI5xoQkYZP
-         UBkQz4FTXNmA1KTocOPvtkfwnKfGDJx92QkSyzHQ=
-Date:   Fri, 6 Dec 2019 09:08:38 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ranran <ranshalit@gmail.com>
-Cc:     linux-pci@vger.kernel.org
-Subject: Re: [Bug 205701] New: Can't access RAM from PCIe
-Message-ID: <20191206150837.GA98601@google.com>
+        id S1726250AbfLFPgm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 6 Dec 2019 10:36:42 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BB8D031B;
+        Fri,  6 Dec 2019 07:36:41 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 25D843F718;
+        Fri,  6 Dec 2019 07:36:38 -0800 (PST)
+Date:   Fri, 6 Dec 2019 15:36:33 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        Christoph Hellwig <hch@infradead.org>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+        Ley Foon Tan <lftan@altera.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-mediatek@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Ray Jui <rjui@broadcom.com>, rfi@lists.rocketboards.org,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Simon Horman <horms@verge.net.au>,
+        Srinath Mannam <srinath.mannam@broadcom.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Toan Le <toan@os.amperecomputing.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Will Deacon <will@kernel.org>, eballetbo@gmail.com
+Subject: Re: [PATCH v3 11/25] PCI: rockchip: Drop storing driver private
+ outbound resource data
+Message-ID: <20191206153633.GA18142@e121166-lin.cambridge.arm.com>
+References: <20191028163256.8004-1-robh@kernel.org>
+ <20191028163256.8004-12-robh@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJ2oMhJDxkU8TpFon4vzBiL5WrYv-zQNtYW8xbqaQLh2eS7bbg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191028163256.8004-12-robh@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Dec 06, 2019 at 08:09:48AM +0200, Ranran wrote:
-> On Fri, Nov 29, 2019 at 8:38 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > On Fri, Nov 29, 2019 at 06:10:51PM +0200, Ranran wrote:
-> > > On Fri, Nov 29, 2019 at 4:58 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > On Fri, Nov 29, 2019 at 06:59:48AM +0000, bugzilla-daemon@bugzilla.kernel.org wrote:
-> > > > > https://bugzilla.kernel.org/show_bug.cgi?id=205701
+[+Eric]
 
-> I have tried to upgrade to latest kernel 5.4 (elrepo in centos), but
-> with this processor/board (system x3650, Xeon), it get hang during
-> kernel boot, without any error in dmesg, just keeps waiting for
-> nothing for couple of minutes and than drops to dracut.
+On Mon, Oct 28, 2019 at 11:32:42AM -0500, Rob Herring wrote:
+> The Rockchip host bridge driver doesn't need to store outboard resources
+> in its private struct as they are already stored in struct
+> pci_host_bridge.
+> 
+> Cc: Shawn Lin <shawn.lin@rock-chips.com>
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Cc: Andrew Murray <andrew.murray@arm.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Heiko Stuebner <heiko@sntech.de>
+> Cc: linux-rockchip@lists.infradead.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  drivers/pci/controller/pcie-rockchip-host.c | 54 +++++++++------------
+>  drivers/pci/controller/pcie-rockchip.h      |  5 --
+>  2 files changed, 23 insertions(+), 36 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
+> index 8d2e6f2e141e..f375e55ea02e 100644
+> --- a/drivers/pci/controller/pcie-rockchip-host.c
+> +++ b/drivers/pci/controller/pcie-rockchip-host.c
+> @@ -806,19 +806,28 @@ static int rockchip_pcie_prog_ib_atu(struct rockchip_pcie *rockchip,
+>  static int rockchip_pcie_cfg_atu(struct rockchip_pcie *rockchip)
+>  {
+>  	struct device *dev = rockchip->dev;
+> +	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(rockchip);
+> +	struct resource_entry *entry;
+> +	u64 pci_addr, size;
+>  	int offset;
+>  	int err;
+>  	int reg_no;
+>  
+>  	rockchip_pcie_cfg_configuration_accesses(rockchip,
+>  						 AXI_WRAPPER_TYPE0_CFG);
+> +	entry = resource_list_first_type(&bridge->windows, IORESOURCE_MEM);
+> +	if (!entry)
+> +		return -ENODEV;
+> +
+> +	size = resource_size(entry->res);
+> +	pci_addr = entry->res->start - entry->offset;
+> +	rockchip->msg_bus_addr = pci_addr;
+>  
+> -	for (reg_no = 0; reg_no < (rockchip->mem_size >> 20); reg_no++) {
+> +	for (reg_no = 0; reg_no < (size >> 20); reg_no++) {
+>  		err = rockchip_pcie_prog_ob_atu(rockchip, reg_no + 1,
+>  						AXI_WRAPPER_MEM_WRITE,
+>  						20 - 1,
+> -						rockchip->mem_bus_addr +
+> -						(reg_no << 20),
+> +						pci_addr + (reg_no << 20),
+>  						0);
+>  		if (err) {
+>  			dev_err(dev, "program RC mem outbound ATU failed\n");
+> @@ -832,14 +841,20 @@ static int rockchip_pcie_cfg_atu(struct rockchip_pcie *rockchip)
+>  		return err;
+>  	}
+>  
+> -	offset = rockchip->mem_size >> 20;
+> -	for (reg_no = 0; reg_no < (rockchip->io_size >> 20); reg_no++) {
+> +	entry = resource_list_first_type(&bridge->windows, IORESOURCE_IO);
+> +	if (!entry)
+> +		return -ENODEV;
+> +
+> +	size = resource_size(entry->res);
+> +	pci_addr = entry->res->start - entry->offset;
+> +
+> +	offset = size >> 20;
 
-- I don't think you ever said exactly what the original failure mode
-  was.  You said DMA from an FPGA failed.  What is the specific
-  device?  How do you know the DMA fails?
+Just trying to find what triggers:
 
-- Re your v5.4 kernel testing, dracut is a user-space distro thing, so
-  it sounds like your hang is some sort of installation problem that I
-  can't really help you with.  Maybe there are troubleshooting hints
-  at https://www.kernel.org/pub/linux/utils/boot/dracut/dracut.html.
-  You may also be able to just drop a v5.4 kernel on your v4.18
-  system, at least for testing purposes.
+https://lore.kernel.org/linux-pci/CAFqH_52BiQJzNEzd_0pB3K+JmzVOVikYQo0xfiC0J-DwiXdtqw@mail.gmail.com/T/#u
 
-- Your comment #3 in bugzilla is a link to a Google Doc containing a
-  test module.  In the future, please attach things as plain text
-  attachments directly to the bugzilla.  There's an "Add attachment"
-  link immediately before the "Description" comment in bugzilla.  I
-  did it for you this time.
+I think this offset calculation changed the behaviour:
 
-- It looks like your test_module.c is a kernel module, and frankly
-  it's a mess.  Global variables that should be per-device, unused
-  variables (dma_get_mask() called for no reason), confused usage
-  (e.g., using both pci_dev_s and pPciDev), whitespace that appears
-  random, etc.  I suggest starting with Documentation/PCI/pci.rst and,
-  at least for this debugging effort, making it a self-contained
-  driver instead of splitting things between a kernel module and
-  user-space.
+Before:
 
-- Your comment #4 is a link to a Google Doc containing lspci output.
-  I attached it to bugzilla directly for you.
+> -	offset = rockchip->mem_size >> 20;
 
-- You apparently didn't run lspci as root ("sudo lspci -vv"), so it
-  is missing a lot of information.
+Now:
 
-- Your lspci doesn't match either of the dmesg logs.  Please make sure
-  all your logs are from the same machine in the same configuration.
-  For example, the first devices found by the kernel (from both
-  comments #1 and #2) are:
+> +	offset = size >> 20;
 
-    pci 0000:00:00.0: [8086:3c00] type 00 class 0x060000
-    pci 0000:00:01.0: [8086:3c02] type 01 class 0x060400
-    pci 0000:00:02.0: [8086:3c04] type 01 class 0x060400
-    pci 0000:00:02.2: [8086:3c06] type 01 class 0x060400
-    ...
+size must be the IORESOURCE_MEM resource size instead we are using the
+IORESOURCE_IO size so IIUC the ATU window setup may be compromised.
 
-  But the lspci doesn't include 00:01.0, 00:02.0, or 00:02.2.  It
-  shows:
+Lorenzo
 
-    00:00.0 Host bridge: Intel Corporation Device 2020 (rev 04)
-    00:04.0 System peripheral: Intel Corporation Sky Lake-E CBDMA Registers (rev 04)
-    00:04.1 System peripheral: Intel Corporation Sky Lake-E CBDMA Registers (rev 04)
-    00:04.2 System peripheral: Intel Corporation Sky Lake-E CBDMA Registers (rev 04)
-    ...
+> +	for (reg_no = 0; reg_no < (size >> 20); reg_no++) {
+>  		err = rockchip_pcie_prog_ob_atu(rockchip,
+>  						reg_no + 1 + offset,
+>  						AXI_WRAPPER_IO_WRITE,
+>  						20 - 1,
+> -						rockchip->io_bus_addr +
+> -						(reg_no << 20),
+> +						pci_addr + (reg_no << 20),
+>  						0);
+>  		if (err) {
+>  			dev_err(dev, "program RC io outbound ATU failed\n");
+> @@ -852,8 +867,7 @@ static int rockchip_pcie_cfg_atu(struct rockchip_pcie *rockchip)
+>  				  AXI_WRAPPER_NOR_MSG,
+>  				  20 - 1, 0, 0);
+>  
+> -	rockchip->msg_bus_addr = rockchip->mem_bus_addr +
+> -					((reg_no + offset) << 20);
+> +	rockchip->msg_bus_addr += ((reg_no + offset) << 20);
+>  	return err;
+>  }
+>  
+> @@ -951,7 +965,6 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
+>  	struct pci_bus *bus, *child;
+>  	struct pci_host_bridge *bridge;
+>  	struct resource *bus_res;
+> -	struct resource_entry *win;
+>  	int err;
+>  
+>  	if (!dev->of_node)
+> @@ -997,27 +1010,6 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
+>  
+>  	rockchip->root_bus_nr = bus_res->start;
+>  
+> -	/* Get the I/O and memory ranges from DT */
+> -	resource_list_for_each_entry(win, &bridge->windows) {
+> -		switch (resource_type(win->res)) {
+> -		case IORESOURCE_IO:
+> -			io = win->res;
+> -			io->name = "I/O";
+> -			rockchip->io_size = resource_size(io);
+> -			rockchip->io_bus_addr = io->start - win->offset;
+> -			rockchip->io = io;
+> -			break;
+> -		case IORESOURCE_MEM:
+> -			mem = win->res;
+> -			mem->name = "MEM";
+> -			rockchip->mem_size = resource_size(mem);
+> -			rockchip->mem_bus_addr = mem->start - win->offset;
+> -			break;
+> -		default:
+> -			continue;
+> -		}
+> -	}
+> -
+>  	err = rockchip_pcie_cfg_atu(rockchip);
+>  	if (err)
+>  		goto err_remove_irq_domain;
+> diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
+> index 8e87a059ce73..bef42a803b56 100644
+> --- a/drivers/pci/controller/pcie-rockchip.h
+> +++ b/drivers/pci/controller/pcie-rockchip.h
+> @@ -304,13 +304,8 @@ struct rockchip_pcie {
+>  	struct	irq_domain *irq_domain;
+>  	int     offset;
+>  	struct pci_bus *root_bus;
+> -	struct resource *io;
+> -	phys_addr_t io_bus_addr;
+> -	u32     io_size;
+>  	void    __iomem *msg_region;
+> -	u32     mem_size;
+>  	phys_addr_t msg_bus_addr;
+> -	phys_addr_t mem_bus_addr;
+>  	bool is_rc;
+>  	struct resource *mem_res;
+>  };
+> -- 
+> 2.20.1
+> 
