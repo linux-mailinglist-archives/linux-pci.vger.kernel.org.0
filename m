@@ -2,143 +2,295 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CA84114DE2
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2019 10:00:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 31757114E4B
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2019 10:44:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726154AbfLFJAY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 Dec 2019 04:00:24 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:34036 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726109AbfLFJAY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 Dec 2019 04:00:24 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB6909uV013502;
-        Fri, 6 Dec 2019 03:00:09 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575622809;
-        bh=uaXzZSsyNHO08tIpDkwGwrPMYqYLJBO4Gfc7A2K13E8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=FMFmLosuuKCZW7AkF/X81qsrzdSuoDgsdXMsFUJvHqsyR+1VnlWmM7j5QT4OOjdp2
-         dzcJxHcO3S8QSl3MrPUvOEmpt8AtPnO4FnvWZWCI3BrJLrsCWPE6J8GJOVpxjLv9Ck
-         Bji9mz06imCSMz2qHvoTQDvRPBfp6JiZt4dZyJJ0=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB6909YR100000;
-        Fri, 6 Dec 2019 03:00:09 -0600
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 6 Dec
- 2019 03:00:09 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 6 Dec 2019 03:00:09 -0600
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB6906vX023816;
-        Fri, 6 Dec 2019 03:00:07 -0600
-Subject: Re: [PATCH 2/2] PCI: uniphier: Add checking whether PERST# is
- deasserted
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-References: <20191204190547.333C.4A936039@socionext.com>
- <c40da2f3-ea5d-b1fc-0190-f90f031eef4c@ti.com>
- <20191206175813.E6B2.4A936039@socionext.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <6b288f46-452d-6f92-728c-56c4100028cf@ti.com>
-Date:   Fri, 6 Dec 2019 14:31:17 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        id S1726157AbfLFJo1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 Dec 2019 04:44:27 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:52497 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726102AbfLFJo1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 Dec 2019 04:44:27 -0500
+Received: by mail-wm1-f66.google.com with SMTP id p9so7096951wmc.2
+        for <linux-pci@vger.kernel.org>; Fri, 06 Dec 2019 01:44:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tD5cN6JrZpuSFRCt7liglnMruHf8uGIUBSOId/ul41Y=;
+        b=Oc8XoFX5YOak0ZJQTZ4mpoDZHSTysWBR5rH14aTYu31Ew4GiKUwD2MgJE6LyhjEhVL
+         AAs41F2SglycrHK/NPesRG88wRsTopB5XI1ITwYJY9+PtSg8Ba3VnV5CsjloGCzSRN8P
+         zt1GHgab+fdLiBLOr7CelRJypEMolmKwhMg/s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tD5cN6JrZpuSFRCt7liglnMruHf8uGIUBSOId/ul41Y=;
+        b=Bqq1R0FgxTUCeXtADC5xOqunXO7BwEg4cQIC5yOmevUIIGrZkVUpATh1sLVgQwb24E
+         I9gnOwbCMll/0uAznPYb0PBH2uGkeks5m0dpG/Rw7B7tGVaIMtWKtjn96Jixne/dwJeG
+         zkh6PqYuIeVvqYPTNaLLzPL+r3Z3Bpb664GIRnzDsyIlGuE9eNxPEzBoRhjm7nUHxvDC
+         hSvXwEHjLQWEen21rELFMG2ufWNS9sn54IZxmwkz0wXmh6I0WJhVUxJy6Pel6gj/EBp5
+         m7nqM2UPKyBAUorzLKncL93lOSaw+KXGSj8ZRCB/vjT+pEVPnvM+fEv0mxvdwrcVvE5C
+         91iA==
+X-Gm-Message-State: APjAAAUvhjfo7eKwEp4apWDGlBdQ76dmlfixl4Ru1kdZxd3qxGhb0kCZ
+        xdwx03/Hff+BGFrCi0EldxX6Ks3MneOasZOdVPrq0w==
+X-Google-Smtp-Source: APXvYqyqAr8t+VqBdWWoSFNj3FbSNTxUyRiKH8kmrnrqoFnvXce9BSxmOl9qwYeYzyc8yxiVo0+B6bl/R5EK0Ia5/1Q=
+X-Received: by 2002:a1c:a141:: with SMTP id k62mr9029403wme.98.1575625463761;
+ Fri, 06 Dec 2019 01:44:23 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191206175813.E6B2.4A936039@socionext.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <1575349026-8743-1-git-send-email-srinath.mannam@broadcom.com>
+ <1575349026-8743-3-git-send-email-srinath.mannam@broadcom.com> <20191203155514.GE18399@e119886-lin.cambridge.arm.com>
+In-Reply-To: <20191203155514.GE18399@e119886-lin.cambridge.arm.com>
+From:   Srinath Mannam <srinath.mannam@broadcom.com>
+Date:   Fri, 6 Dec 2019 15:14:11 +0530
+Message-ID: <CABe79T6vAQdk1BQ=yGScJ3F5Xd8qFEbaCiTw29kFoyhrZDLZkQ@mail.gmail.com>
+Subject: Re: [PATCH v3 2/6] PCI: iproc: Add INTx support with better modeling
+To:     Andrew Murray <andrew.murray@arm.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ray Jui <ray.jui@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
-
-On 06/12/19 2:28 pm, Kunihiko Hayashi wrote:
-> Hi Kishon,
-> 
-> On Fri, 6 Dec 2019 12:28:29 +0530 <kishon@ti.com> wrote:
-> 
->> Hi,
->>
->> On 04/12/19 3:35 pm, Kunihiko Hayashi wrote:
->>> On Fri, 22 Nov 2019 20:53:16 +0900 <hayashi.kunihiko@socionext.com> wrote:
->>>>> Hello Lorenzo,
->>>>
->>>> On Thu, 21 Nov 2019 16:47:05 +0000 <lorenzo.pieralisi@arm.com> wrote:
->>>>
->>>>> On Fri, Nov 08, 2019 at 04:30:27PM +0900, Kunihiko Hayashi wrote:
->>>>>>> However, If I understand correctly, doesn't your solution only work some
->>>>>>> of the time? What happens if you boot both machines at the same time,
->>>>>>> and PERST# isn't asserted prior to the kernel booting?
->>>>>>
->>>>>> I think it contains an annoying problem.
->>>>>>
->>>>>> If PERST# isn't toggled prior to the kernel booting, PERST# remains asserted
->>>>>> and the RC driver can't access PCI bus.
->>>>>>
->>>>>> As a result, this patch works and deasserts PERST# (and EP configuration will
->>>>>> be lost). So boot sequence needs to include deasserting PERST#.
->>>>>
->>>>> I am sorry but I have lost you. Can you explain to us why checking
->>>>> that PERST# is deasserted guarantees you that:
->>>>>
->>>>> - The EP has bootstrapped
->>>>> - It is safe not to toggle it again (and also skip
->>>>>     uniphier_pcie_ltssm_enable())
->>>>>
->>>>> Please provide details of the HW configuration so that we understand
->>>>> what's actually supposed to happen and why this patch fixes the
->>>>> issue you are facing.
->>>>
->>>> I tried to connect between the following boards, and do pci-epf-test:
->>>>    - "RC board": UniPhier ld20 board that has DWC RC controller
->>>>    - "EP board": UniPhier legacy board that has DWC EP controller
->>>>
->>>> This EP has power-on-state configuration, but it's necessary to set
->>>> class ID, BAR sizes, etc. after starting up.
->>>>
->>>> In case of that starting up RC board before EP board, the RC driver
->>>> can't establish link. So we need to boot EP board first.
->>>> At that point, I've considered why RC can't establish link,
->>> and found that the waitng time was too short.
->>>> - EP/RC: power on both boards
->>>> - RC: start up the kernel on RC board
->>>> - RC: wait for link up (long time enough)
->>>> - EP: start up the kernel on EP board
->>>> - EP: configurate pci-epf-test
->>>> When the endpoint  configuration is done and the EP driver enables LTSSM,
->>> the RC driver will quit from waiting for link up.
->>>> Currently DWC RC driver calls dwc_pcie_wait_for_link(), however,
->>> the function tries to link up 10 times only, that is defined
->>> as LINK_WAIT_MAX_RETRIES in pcie-designware.h, it's too short
->>> to configurate the endpoint.
->>>> Now the patch to bypass PERST# is not necessary.
->>>> Instead for DWC RC drivers, I think that the number of retries
->>> should be changed according to the usage.
->>> And the same issue remains with other RC drivers.
->>
->> If EP is configured using Linux, then PERST# cannot be used as it's difficult to boot linux and initialize EP within the specified time interval. Can't you prevent PERST from being propagated at all?
-> 
-> Surely it might be difficult for RC to decide the time to wait for EP.
-> Since RC almost toggles PERST# in boot time, I'd like to think about
-> how to prevent from first PERST# at least.
-
-It can be prevented in the HW (If that's possible). I modify the cable 
-connecting RC and EP to not propagate PERST#.
-
-Thanks
-Kishon
+On Tue, Dec 3, 2019 at 9:25 PM Andrew Murray <andrew.murray@arm.com> wrote:
+>
+> On Tue, Dec 03, 2019 at 10:27:02AM +0530, Srinath Mannam wrote:
+> > From: Ray Jui <ray.jui@broadcom.com>
+> >
+> > Add PCIe legacy interrupt INTx support to the iProc PCIe driver by
+> > modeling it with its own IRQ domain. All 4 interrupts INTA, INTB, INTC,
+> > INTD share the same interrupt line connected to the GIC in the system,
+> > while the status of each INTx can be obtained through the INTX CSR
+> > register
+> >
+> > Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+> > Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+> > ---
+> >  drivers/pci/controller/pcie-iproc.c | 100 +++++++++++++++++++++++++++++++++++-
+> >  drivers/pci/controller/pcie-iproc.h |   6 +++
+> >  2 files changed, 104 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
+> > index 2d457bf..e90c22e 100644
+> > --- a/drivers/pci/controller/pcie-iproc.c
+> > +++ b/drivers/pci/controller/pcie-iproc.c
+> > @@ -14,6 +14,7 @@
+> >  #include <linux/delay.h>
+> >  #include <linux/interrupt.h>
+> >  #include <linux/irqchip/arm-gic-v3.h>
+> > +#include <linux/irqchip/chained_irq.h>
+> >  #include <linux/platform_device.h>
+> >  #include <linux/of_address.h>
+> >  #include <linux/of_pci.h>
+> > @@ -270,6 +271,7 @@ enum iproc_pcie_reg {
+> >
+> >       /* enable INTx */
+> >       IPROC_PCIE_INTX_EN,
+> > +     IPROC_PCIE_INTX_CSR,
+> >
+> >       /* outbound address mapping */
+> >       IPROC_PCIE_OARR0,
+> > @@ -314,6 +316,7 @@ static const u16 iproc_pcie_reg_paxb_bcma[] = {
+> >       [IPROC_PCIE_CFG_ADDR]           = 0x1f8,
+> >       [IPROC_PCIE_CFG_DATA]           = 0x1fc,
+> >       [IPROC_PCIE_INTX_EN]            = 0x330,
+> > +     [IPROC_PCIE_INTX_CSR]           = 0x334,
+> >       [IPROC_PCIE_LINK_STATUS]        = 0xf0c,
+> >  };
+> >
+> > @@ -325,6 +328,7 @@ static const u16 iproc_pcie_reg_paxb[] = {
+> >       [IPROC_PCIE_CFG_ADDR]           = 0x1f8,
+> >       [IPROC_PCIE_CFG_DATA]           = 0x1fc,
+> >       [IPROC_PCIE_INTX_EN]            = 0x330,
+> > +     [IPROC_PCIE_INTX_CSR]           = 0x334,
+> >       [IPROC_PCIE_OARR0]              = 0xd20,
+> >       [IPROC_PCIE_OMAP0]              = 0xd40,
+> >       [IPROC_PCIE_OARR1]              = 0xd28,
+> > @@ -341,6 +345,7 @@ static const u16 iproc_pcie_reg_paxb_v2[] = {
+> >       [IPROC_PCIE_CFG_ADDR]           = 0x1f8,
+> >       [IPROC_PCIE_CFG_DATA]           = 0x1fc,
+> >       [IPROC_PCIE_INTX_EN]            = 0x330,
+> > +     [IPROC_PCIE_INTX_CSR]           = 0x334,
+> >       [IPROC_PCIE_OARR0]              = 0xd20,
+> >       [IPROC_PCIE_OMAP0]              = 0xd40,
+> >       [IPROC_PCIE_OARR1]              = 0xd28,
+> > @@ -846,9 +851,95 @@ static int iproc_pcie_check_link(struct iproc_pcie *pcie)
+> >       return link_is_active ? 0 : -ENODEV;
+> >  }
+> >
+> > -static void iproc_pcie_enable(struct iproc_pcie *pcie)
+> > +static int iproc_pcie_intx_map(struct irq_domain *domain, unsigned int irq,
+> > +                            irq_hw_number_t hwirq)
+> >  {
+> > +     irq_set_chip_and_handler(irq, &dummy_irq_chip, handle_simple_irq);
+> > +     irq_set_chip_data(irq, domain->host_data);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static const struct irq_domain_ops intx_domain_ops = {
+> > +     .map = iproc_pcie_intx_map,
+> > +};
+> > +
+> > +static void iproc_pcie_isr(struct irq_desc *desc)
+> > +{
+> > +     struct irq_chip *chip = irq_desc_get_chip(desc);
+> > +     struct iproc_pcie *pcie;
+> > +     struct device *dev;
+> > +     unsigned long status;
+> > +     u32 bit, virq;
+> > +
+> > +     chained_irq_enter(chip, desc);
+> > +     pcie = irq_desc_get_handler_data(desc);
+> > +     dev = pcie->dev;
+> > +
+> > +     /* go through INTx A, B, C, D until all interrupts are handled */
+> > +     do {
+> > +             status = iproc_pcie_read_reg(pcie, IPROC_PCIE_INTX_CSR);
+>
+> By performing this read once and outside of the do/while loop you may improve
+> performance. I wonder how probable it is to get another INTx whilst handling
+> one?
+>
+>
+> > +             for_each_set_bit(bit, &status, PCI_NUM_INTX) {
+> > +                     virq = irq_find_mapping(pcie->irq_domain, bit);
+> > +                     if (virq)
+> > +                             generic_handle_irq(virq);
+> > +                     else
+> > +                             dev_err(dev, "unexpected INTx%u\n", bit);
+> > +             }
+> > +     } while ((status & SYS_RC_INTX_MASK) != 0);
+> > +
+> > +     chained_irq_exit(chip, desc);
+> > +}
+> > +
+> > +static int iproc_pcie_intx_enable(struct iproc_pcie *pcie)
+> > +{
+> > +     struct device *dev = pcie->dev;
+> > +     struct device_node *node;
+> > +     int ret;
+> > +
+> >       iproc_pcie_write_reg(pcie, IPROC_PCIE_INTX_EN, SYS_RC_INTX_MASK);
+> > +     /*
+> > +      * BCMA devices do not map INTx the same way as platform devices. All
+> > +      * BCMA needs is the above code to enable INTx
+> > +      */
+>
+> NIT: Move this comment above the line of code?
+I will change in the next patch set.
+>
+>
+> > +
+> > +     node = of_get_compatible_child(dev->of_node, "brcm,iproc-intc");
+>
+> As the interrupt controller is built into the PCI controller, what is the
+> rationale for representing this as a separate device tree device?
+In patchset v1, PCIe controller was taken as interrupt controller
+which is not correct.
+So that, separate DT node was taken, based on comments below link.
+https://lore.kernel.org/linux-pci/CAL_Jsq+ac6dmHKS6m0h5N3bv=VseKVL8XLU5K7j1Rn=mgFNLsA@mail.gmail.com/
+>
+> Thanks,
+>
+> Andrew Murray
+>
+> > +     if (node)
+> > +             pcie->irq = of_irq_get(node, 0);
+> > +
+> > +     if (!node || pcie->irq <= 0)
+> > +             return 0;
+> > +
+> > +     /* set IRQ handler */
+> > +     irq_set_chained_handler_and_data(pcie->irq, iproc_pcie_isr, pcie);
+> > +
+> > +     /* add IRQ domain for INTx */
+> > +     pcie->irq_domain = irq_domain_add_linear(node, PCI_NUM_INTX,
+> > +                                              &intx_domain_ops, pcie);
+> > +     if (!pcie->irq_domain) {
+> > +             dev_err(dev, "failed to add INTx IRQ domain\n");
+> > +             ret = -ENOMEM;
+> > +             goto err_rm_handler_data;
+> > +     }
+> > +
+> > +     return 0;
+> > +
+> > +err_rm_handler_data:
+> > +     of_node_put(node);
+> > +     irq_set_chained_handler_and_data(pcie->irq, NULL, NULL);
+> > +
+> > +     return ret;
+> > +}
+> > +
+> > +static void iproc_pcie_intx_disable(struct iproc_pcie *pcie)
+> > +{
+> > +     iproc_pcie_write_reg(pcie, IPROC_PCIE_INTX_EN, 0x0);
+> > +
+> > +     if (pcie->irq <= 0)
+> > +             return;
+> > +
+> > +     irq_domain_remove(pcie->irq_domain);
+> > +     irq_set_chained_handler_and_data(pcie->irq, NULL, NULL);
+> >  }
+> >
+> >  static inline bool iproc_pcie_ob_is_valid(struct iproc_pcie *pcie,
+> > @@ -1537,7 +1628,11 @@ int iproc_pcie_setup(struct iproc_pcie *pcie, struct list_head *res)
+> >               goto err_power_off_phy;
+> >       }
+> >
+> > -     iproc_pcie_enable(pcie);
+> > +     ret = iproc_pcie_intx_enable(pcie);
+> > +     if (ret) {
+> > +             dev_err(dev, "failed to enable INTx\n");
+> > +             goto err_power_off_phy;
+> > +     }
+> >
+> >       if (IS_ENABLED(CONFIG_PCI_MSI))
+> >               if (iproc_pcie_msi_enable(pcie))
+> > @@ -1582,6 +1677,7 @@ int iproc_pcie_remove(struct iproc_pcie *pcie)
+> >       pci_remove_root_bus(pcie->root_bus);
+> >
+> >       iproc_pcie_msi_disable(pcie);
+> > +     iproc_pcie_intx_disable(pcie);
+> >
+> >       phy_power_off(pcie->phy);
+> >       phy_exit(pcie->phy);
+> > diff --git a/drivers/pci/controller/pcie-iproc.h b/drivers/pci/controller/pcie-iproc.h
+> > index 4f03ea5..103e568 100644
+> > --- a/drivers/pci/controller/pcie-iproc.h
+> > +++ b/drivers/pci/controller/pcie-iproc.h
+> > @@ -74,6 +74,9 @@ struct iproc_msi;
+> >   * @ib: inbound mapping related parameters
+> >   * @ib_map: outbound mapping region related parameters
+> >   *
+> > + * @irq: interrupt line wired to the generic GIC for INTx
+> > + * @irq_domain: IRQ domain for INTx
+> > + *
+> >   * @need_msi_steer: indicates additional configuration of the iProc PCIe
+> >   * controller is required to steer MSI writes to external interrupt controller
+> >   * @msi: MSI data
+> > @@ -102,6 +105,9 @@ struct iproc_pcie {
+> >       struct iproc_pcie_ib ib;
+> >       const struct iproc_pcie_ib_map *ib_map;
+> >
+> > +     int irq;
+> > +     struct irq_domain *irq_domain;
+> > +
+> >       bool need_msi_steer;
+> >       struct iproc_msi *msi;
+> >  };
+> > --
+> > 2.7.4
+> >
