@@ -2,22 +2,22 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D50D5115160
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2019 14:52:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 96CB7115205
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2019 15:09:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726278AbfLFNwP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 Dec 2019 08:52:15 -0500
-Received: from foss.arm.com ([217.140.110.172]:44240 "EHLO foss.arm.com"
+        id S1726245AbfLFOJI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 Dec 2019 09:09:08 -0500
+Received: from foss.arm.com ([217.140.110.172]:45790 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726234AbfLFNwP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 6 Dec 2019 08:52:15 -0500
+        id S1726234AbfLFOJI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 6 Dec 2019 09:09:08 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5A82C1FB;
-        Fri,  6 Dec 2019 05:52:14 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9397D1FB;
+        Fri,  6 Dec 2019 06:09:07 -0800 (PST)
 Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B257F3F718;
-        Fri,  6 Dec 2019 05:52:10 -0800 (PST)
-Date:   Fri, 6 Dec 2019 13:52:01 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F249A3F718;
+        Fri,  6 Dec 2019 06:09:03 -0800 (PST)
+Date:   Fri, 6 Dec 2019 14:09:01 +0000
 From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 To:     Enric Balletbo Serra <eballetbo@gmail.com>
 Cc:     Rob Herring <robh@kernel.org>,
@@ -51,7 +51,7 @@ Cc:     Rob Herring <robh@kernel.org>,
         Ley Foon Tan <lftan@altera.com>
 Subject: Re: [PATCH v3 10/25] PCI: rockchip: Use
  pci_parse_request_of_pci_ranges()
-Message-ID: <20191206135151.GA26562@e121166-lin.cambridge.arm.com>
+Message-ID: <20191206140901.GB26562@e121166-lin.cambridge.arm.com>
 References: <20191028163256.8004-1-robh@kernel.org>
  <20191028163256.8004-11-robh@kernel.org>
  <CAFqH_51-BMWSGGBpoKxA3UK+yPHSpPgok5i=daSC0KS5oc5ueA@mail.gmail.com>
@@ -91,7 +91,15 @@ On Thu, Dec 05, 2019 at 06:56:01PM +0100, Enric Balletbo Serra wrote:
 > yesterday I'm getting a "synchronous external abort" [1]. After a
 > bisection, I found that this patch triggers the issue (this patch was
 > merged yesterday)
-> 
+
+This patch standalone triggers a compilation error - so it does
+trigger a bisection but not the one you are enquiring about.
+
+Can you try to bisect it again and report back please ?
+
+Thanks,
+Lorenzo
+
 > I didn't look in detail yet, but if you have any idea of what could be
 > the problem, that would be great.
 > 
@@ -99,11 +107,7 @@ On Thu, Dec 05, 2019 at 06:56:01PM +0100, Enric Balletbo Serra wrote:
 >  Enric
 > 
 > [1] https://hastebin.com/adasegihiw.rb
-
-Could you please post the kernel log again ?
-
-Lorenzo
-
+> 
 > >  drivers/pci/controller/pcie-rockchip-host.c | 36 ++++-----------------
 > >  1 file changed, 7 insertions(+), 29 deletions(-)
 > >
