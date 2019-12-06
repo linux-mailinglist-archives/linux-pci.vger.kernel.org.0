@@ -2,83 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F646114CA6
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2019 08:28:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 27400114DD2
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2019 09:58:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726513AbfLFH2M (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 Dec 2019 02:28:12 -0500
-Received: from mga17.intel.com ([192.55.52.151]:48024 "EHLO mga17.intel.com"
+        id S1726109AbfLFI6R (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 Dec 2019 03:58:17 -0500
+Received: from mx.socionext.com ([202.248.49.38]:51748 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726472AbfLFH2K (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 6 Dec 2019 02:28:10 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Dec 2019 23:28:09 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,283,1571727600"; 
-   d="scan'208";a="263519920"
-Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by FMSMGA003.fm.intel.com with ESMTP; 05 Dec 2019 23:28:06 -0800
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-To:     lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, andriy.shevchenko@intel.com
-Cc:     gustavo.pimentel@synopsys.com, andrew.murray@arm.com,
-        robh@kernel.org, linux-kernel@vger.kernel.org,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com, Dilip Kota <eswara.kota@linux.intel.com>
-Subject: [PATCH v10 3/3] PCI: artpec6: Configure FTS with dwc helper function
-Date:   Fri,  6 Dec 2019 15:27:50 +0800
-Message-Id: <0cee553f18a8ec1ae84ee64cdffb6627e4c5bc02.1575612493.git.eswara.kota@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1575612493.git.eswara.kota@linux.intel.com>
-References: <cover.1575612493.git.eswara.kota@linux.intel.com>
-In-Reply-To: <cover.1575612493.git.eswara.kota@linux.intel.com>
-References: <cover.1575612493.git.eswara.kota@linux.intel.com>
+        id S1726088AbfLFI6R (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 6 Dec 2019 03:58:17 -0500
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 06 Dec 2019 17:58:14 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 1E951603AB;
+        Fri,  6 Dec 2019 17:58:15 +0900 (JST)
+Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Fri, 6 Dec 2019 17:58:42 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by iyokan.css.socionext.com (Postfix) with ESMTP id 853AD4037A;
+        Fri,  6 Dec 2019 17:58:14 +0900 (JST)
+Received: from [10.213.132.48] (unknown [10.213.132.48])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id 57E4B120456;
+        Fri,  6 Dec 2019 17:58:14 +0900 (JST)
+Date:   Fri, 06 Dec 2019 17:58:14 +0900
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 2/2] PCI: uniphier: Add checking whether PERST# is deasserted
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        <linux-pci@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+In-Reply-To: <c40da2f3-ea5d-b1fc-0190-f90f031eef4c@ti.com>
+References: <20191204190547.333C.4A936039@socionext.com> <c40da2f3-ea5d-b1fc-0190-f90f031eef4c@ti.com>
+Message-Id: <20191206175813.E6B2.4A936039@socionext.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Becky! ver. 2.70 [ja]
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Use DesignWare helper functions to configure Fast Training
-Sequence. Drop the respective code in the driver.
+Hi Kishon,
 
-Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+On Fri, 6 Dec 2019 12:28:29 +0530 <kishon@ti.com> wrote:
+
+> Hi,
+> 
+> On 04/12/19 3:35 pm, Kunihiko Hayashi wrote:
+> > On Fri, 22 Nov 2019 20:53:16 +0900 <hayashi.kunihiko@socionext.com> wrote:
+> > >> Hello Lorenzo,
+> >>
+> >> On Thu, 21 Nov 2019 16:47:05 +0000 <lorenzo.pieralisi@arm.com> wrote:
+> >>
+> >>> On Fri, Nov 08, 2019 at 04:30:27PM +0900, Kunihiko Hayashi wrote:
+> >>>>> However, If I understand correctly, doesn't your solution only work some
+> >>>>> of the time? What happens if you boot both machines at the same time,
+> >>>>> and PERST# isn't asserted prior to the kernel booting?
+> >>>>
+> >>>> I think it contains an annoying problem.
+> >>>>
+> >>>> If PERST# isn't toggled prior to the kernel booting, PERST# remains asserted
+> >>>> and the RC driver can't access PCI bus.
+> >>>>
+> >>>> As a result, this patch works and deasserts PERST# (and EP configuration will
+> >>>> be lost). So boot sequence needs to include deasserting PERST#.
+> >>>
+> >>> I am sorry but I have lost you. Can you explain to us why checking
+> >>> that PERST# is deasserted guarantees you that:
+> >>>
+> >>> - The EP has bootstrapped
+> >>> - It is safe not to toggle it again (and also skip
+> >>>    uniphier_pcie_ltssm_enable())
+> >>>
+> >>> Please provide details of the HW configuration so that we understand
+> >>> what's actually supposed to happen and why this patch fixes the
+> >>> issue you are facing.
+> >>
+> >> I tried to connect between the following boards, and do pci-epf-test:
+> >>   - "RC board": UniPhier ld20 board that has DWC RC controller
+> >>   - "EP board": UniPhier legacy board that has DWC EP controller
+> >>
+> >> This EP has power-on-state configuration, but it's necessary to set
+> >> class ID, BAR sizes, etc. after starting up.
+> >>
+> >> In case of that starting up RC board before EP board, the RC driver
+> >> can't establish link. So we need to boot EP board first.
+> > > At that point, I've considered why RC can't establish link,
+> > and found that the waitng time was too short.
+> > > - EP/RC: power on both boards
+> > > - RC: start up the kernel on RC board
+> > > - RC: wait for link up (long time enough)
+> > > - EP: start up the kernel on EP board
+> > > - EP: configurate pci-epf-test
+> > > When the endpoint  configuration is done and the EP driver enables LTSSM,
+> > the RC driver will quit from waiting for link up.
+> > > Currently DWC RC driver calls dwc_pcie_wait_for_link(), however,
+> > the function tries to link up 10 times only, that is defined
+> > as LINK_WAIT_MAX_RETRIES in pcie-designware.h, it's too short
+> > to configurate the endpoint.
+> > > Now the patch to bypass PERST# is not necessary.
+> > > Instead for DWC RC drivers, I think that the number of retries
+> > should be changed according to the usage.
+> > And the same issue remains with other RC drivers.
+> 
+> If EP is configured using Linux, then PERST# cannot be used as it's difficult to boot linux and initialize EP within the specified time interval. Can't you prevent PERST from being propagated at all?
+
+Surely it might be difficult for RC to decide the time to wait for EP.
+Since RC almost toggles PERST# in boot time, I'd like to think about
+how to prevent from first PERST# at least.
+
+Thank you,
+
 ---
-Changes on v10:
-	No change.
-
- drivers/pci/controller/dwc/pcie-artpec6.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-artpec6.c b/drivers/pci/controller/dwc/pcie-artpec6.c
-index d00252bd8fae..02d93b8c7942 100644
---- a/drivers/pci/controller/dwc/pcie-artpec6.c
-+++ b/drivers/pci/controller/dwc/pcie-artpec6.c
-@@ -51,9 +51,6 @@ static const struct of_device_id artpec6_pcie_of_match[];
- #define ACK_N_FTS_MASK			GENMASK(15, 8)
- #define ACK_N_FTS(x)			(((x) << 8) & ACK_N_FTS_MASK)
- 
--#define FAST_TRAINING_SEQ_MASK		GENMASK(7, 0)
--#define FAST_TRAINING_SEQ(x)		(((x) << 0) & FAST_TRAINING_SEQ_MASK)
--
- /* ARTPEC-6 specific registers */
- #define PCIECFG				0x18
- #define  PCIECFG_DBG_OEN		BIT(24)
-@@ -313,10 +310,7 @@ static void artpec6_pcie_set_nfts(struct artpec6_pcie *artpec6_pcie)
- 	 * Set the Number of Fast Training Sequences that the core
- 	 * advertises as its N_FTS during Gen2 or Gen3 link training.
- 	 */
--	val = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
--	val &= ~FAST_TRAINING_SEQ_MASK;
--	val |= FAST_TRAINING_SEQ(180);
--	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
-+	dw_pcie_link_set_n_fts(pci, 180);
- }
- 
- static void artpec6_pcie_assert_core_reset(struct artpec6_pcie *artpec6_pcie)
--- 
-2.11.0
+Best Regards,
+Kunihiko Hayashi
 
