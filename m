@@ -2,143 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 97908114C7B
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2019 07:57:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EAE79114C83
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2019 08:06:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726214AbfLFG5f (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 Dec 2019 01:57:35 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:60352 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725858AbfLFG5f (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 Dec 2019 01:57:35 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB66vM5X028652;
-        Fri, 6 Dec 2019 00:57:22 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575615442;
-        bh=TidBXxmG0lVf97Urae4Of6uTLVY6v3WqmRhj9ONoPwc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Xvbf3nMvYnmB1kXGjcV54vyBZTcqO6hccRsxGYb2EjN5u33y65FaxMd+I6JFT+y64
-         LySLrAiP/SwAO87rHcLzD22DKiCdOWYLsPB+k6hrwps7P7DSH6M7gmMNvVH4ghnz6J
-         tigiVBgh/Z2FKxP6qDD+VPcBBF0Y14KlHhdo09MI=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB66vMEj039305
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 6 Dec 2019 00:57:22 -0600
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 6 Dec
- 2019 00:57:21 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 6 Dec 2019 00:57:21 -0600
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB66vIdd114242;
-        Fri, 6 Dec 2019 00:57:19 -0600
-Subject: Re: [PATCH 2/2] PCI: uniphier: Add checking whether PERST# is
- deasserted
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-CC:     <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-References: <20191121164705.GA14229@e121166-lin.cambridge.arm.com>
- <20191122205316.297B.4A936039@socionext.com>
- <20191204190547.333C.4A936039@socionext.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <c40da2f3-ea5d-b1fc-0190-f90f031eef4c@ti.com>
-Date:   Fri, 6 Dec 2019 12:28:29 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        id S1726352AbfLFHGX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 Dec 2019 02:06:23 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:53498 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726214AbfLFHGX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 6 Dec 2019 02:06:23 -0500
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 73E079205C7F6D23921B;
+        Fri,  6 Dec 2019 15:06:18 +0800 (CST)
+Received: from linux-ibm.site (10.175.102.37) by
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 6 Dec 2019 15:06:08 +0800
+From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
+To:     <andrew.murray@arm.com>, <bhelgaas@google.com>
+CC:     <wangxiongfeng2@huawei.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <wangkefeng.wang@huawei.com>,
+        <huawei.libin@huawei.com>, <guohanjun@huawei.com>
+Subject: [PATCH v2] PCI: Add quirk for HiSilicon NP 5896 devices
+Date:   Fri, 6 Dec 2019 15:01:45 +0800
+Message-ID: <1575615705-30716-1-git-send-email-wangxiongfeng2@huawei.com>
+X-Mailer: git-send-email 1.7.12.4
 MIME-Version: 1.0
-In-Reply-To: <20191204190547.333C.4A936039@socionext.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain
+X-Originating-IP: [10.175.102.37]
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+HiSilicon PCI Network Processor 5896 devices misreport the class type as
+'NOT_DEFINED', but it is actually a network device. Also the size of
+BAR3 is reported as 265T, but this BAR is actually unused.
+This patch modify the class type to 'CLASS_NETWORK' and disable the
+unused BAR3.
 
-On 04/12/19 3:35 pm, Kunihiko Hayashi wrote:
-> On Fri, 22 Nov 2019 20:53:16 +0900 <hayashi.kunihiko@socionext.com> wrote:
-> 
->> Hello Lorenzo,
->>
->> On Thu, 21 Nov 2019 16:47:05 +0000 <lorenzo.pieralisi@arm.com> wrote:
->>
->>> On Fri, Nov 08, 2019 at 04:30:27PM +0900, Kunihiko Hayashi wrote:
->>>>> However, If I understand correctly, doesn't your solution only work some
->>>>> of the time? What happens if you boot both machines at the same time,
->>>>> and PERST# isn't asserted prior to the kernel booting?
->>>>
->>>> I think it contains an annoying problem.
->>>>
->>>> If PERST# isn't toggled prior to the kernel booting, PERST# remains asserted
->>>> and the RC driver can't access PCI bus.
->>>>
->>>> As a result, this patch works and deasserts PERST# (and EP configuration will
->>>> be lost). So boot sequence needs to include deasserting PERST#.
->>>
->>> I am sorry but I have lost you. Can you explain to us why checking
->>> that PERST# is deasserted guarantees you that:
->>>
->>> - The EP has bootstrapped
->>> - It is safe not to toggle it again (and also skip
->>>    uniphier_pcie_ltssm_enable())
->>>
->>> Please provide details of the HW configuration so that we understand
->>> what's actually supposed to happen and why this patch fixes the
->>> issue you are facing.
->>
->> I tried to connect between the following boards, and do pci-epf-test:
->>   - "RC board": UniPhier ld20 board that has DWC RC controller
->>   - "EP board": UniPhier legacy board that has DWC EP controller
->>
->> This EP has power-on-state configuration, but it's necessary to set
->> class ID, BAR sizes, etc. after starting up.
->>
->> In case of that starting up RC board before EP board, the RC driver
->> can't establish link. So we need to boot EP board first.
-> 
-> At that point, I've considered why RC can't establish link,
-> and found that the waitng time was too short.
-> 
-> - EP/RC: power on both boards
-> 
-> - RC: start up the kernel on RC board
-> 
-> - RC: wait for link up (long time enough)
-> 
-> - EP: start up the kernel on EP board
-> 
-> - EP: configurate pci-epf-test
-> 
-> When the endpoint  configuration is done and the EP driver enables LTSSM,
-> the RC driver will quit from waiting for link up.
-> 
-> Currently DWC RC driver calls dwc_pcie_wait_for_link(), however,
-> the function tries to link up 10 times only, that is defined
-> as LINK_WAIT_MAX_RETRIES in pcie-designware.h, it's too short
-> to configurate the endpoint.
-> 
-> Now the patch to bypass PERST# is not necessary.
-> 
-> Instead for DWC RC drivers, I think that the number of retries
-> should be changed according to the usage.
-> And the same issue remains with other RC drivers.
+Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+---
+ drivers/pci/quirks.c    | 29 +++++++++++++++++++++++++++++
+ include/linux/pci_ids.h |  1 +
+ 2 files changed, 30 insertions(+)
 
-If EP is configured using Linux, then PERST# cannot be used as it's 
-difficult to boot linux and initialize EP within the specified time 
-interval. Can't you prevent PERST from being propagated at all?
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 4937a08..b9adebb 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5431,3 +5431,32 @@ static void quirk_reset_lenovo_thinkpad_p50_nvgpu(struct pci_dev *pdev)
+ DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, 0x13b1,
+ 			      PCI_CLASS_DISPLAY_VGA, 8,
+ 			      quirk_reset_lenovo_thinkpad_p50_nvgpu);
++
++static void quirk_hisi_fixup_np_class(struct pci_dev *pdev)
++{
++	u32 class = pdev->class;
++
++	pdev->class = PCI_BASE_CLASS_NETWORK << 8;
++	pci_info(pdev, "PCI class overriden (%#08x -> %#08x)\n",
++		 class, pdev->class);
++}
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HISI_5896,
++			quirk_hisi_fixup_np_class);
++
++/*
++ * HiSilicon NP 5896 devices BAR3 size is reported as 256T and causes problem
++ * when assigning the resources. But this BAR is actually unused by the driver,
++ * so let's disable it.
++ */
++static void quirk_hisi_fixup_np_bar(struct pci_dev *pdev)
++{
++	struct resource *r = &pdev->resource[3];
++
++	r->start = 0;
++	r->end = 0;
++	r->flags = 0;
++
++	pci_info(pdev, "Disabling invalid BAR 3\n");
++}
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HISI_5896,
++			 quirk_hisi_fixup_np_bar);
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index 2302d133..f21cd8b 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -2558,6 +2558,7 @@
+ #define PCI_DEVICE_ID_KORENIX_JETCARDF3	0x17ff
+ 
+ #define PCI_VENDOR_ID_HUAWEI		0x19e5
++#define PCI_DEVICE_ID_HISI_5896        0x5896 /* HiSilicon NP 5896 devices */
+ 
+ #define PCI_VENDOR_ID_NETRONOME		0x19ee
+ #define PCI_DEVICE_ID_NETRONOME_NFP4000	0x4000
+-- 
+1.7.12.4
 
-Thanks
-Kishon
