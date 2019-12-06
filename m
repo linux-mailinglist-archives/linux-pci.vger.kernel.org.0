@@ -2,136 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 43996114C43
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2019 07:10:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9263F114C5C
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Dec 2019 07:36:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726076AbfLFGKB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 Dec 2019 01:10:01 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:34307 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726068AbfLFGKB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 Dec 2019 01:10:01 -0500
-Received: by mail-qt1-f195.google.com with SMTP id 5so6159200qtz.1
-        for <linux-pci@vger.kernel.org>; Thu, 05 Dec 2019 22:10:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lTGkz4bGNLSBByKRY+XMc/8PwwmxOinFRPPxMBQvl9A=;
-        b=T5Bw9RtkPmglwFHS+XTONH6lKglnA4/qzz5heLyDWw7UO7PX13JJLRVMnt9e/hH7Hu
-         kamxdnrpnKaOyKInj39K/Znv2GriB7+w49A+AtrlJBJZuZxB6A+AUFBouUCuin94cfys
-         jPIgrI3Xw7cBZ6SgtXbG7Zrun2zdy7xfZ18hxyLxMpxrIDNO8iZR+ogk7vqG/gv5UZc8
-         DweYMBoP+SPQFGSMSHmASaAnpPmred64CiPYtVqsyhsDgdn0Ba9zXfNDwy0Sba6Jt2AV
-         vHNgUt3/6Gocfo8XHJbbBpI8aK9ngLfNmUyHesMOqGvM9ROKwOq4S0S4VT1sQR3+z68r
-         lm0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lTGkz4bGNLSBByKRY+XMc/8PwwmxOinFRPPxMBQvl9A=;
-        b=tuT1gCBGFzhOSay7qPUCfxy3z9uTNg/lqYjDTNMRfOZBje3vjgQQLKtAD/omMUl/uM
-         UYoW3ip/AX5CXW8Qg4rUVfW71/LbaP16wDzbwmVcyzzra7lT0tlWOeHzu7ovNvnU0PFj
-         np5zvOnJuICxupwkcTnryYERXUXcTNuqhWDv+8ptbAROtKoMYjcoTMVPXeO4XTfhsAaT
-         BsbTqlzJdf8Lkv6dKaiXWDsJNrdAzeXEuO6FIbJY3g1pHYavlbdSyZOylJOzjgZjGqCm
-         B3QXgdBi09jzSrdGHPkIFwKG63CcOksmxqLfRNx5QICRKRWlPV2zNZ6OVBcFVn7T3aWz
-         JzYA==
-X-Gm-Message-State: APjAAAXNKhIynp0LoXdeYyKymuTSYXmhaBpVi5++qjRDFSGugc5lBHwm
-        kYrnmFuVrFj2DJ4/LbMk2bwjNi6WyHagDoeDZiq2WA==
-X-Google-Smtp-Source: APXvYqwzTIJe5G1exbg4mHBzapxOvxRdfnENdXdJiMtFaRJEQuFuK+7guZGmowj2rQccgdW7QMNpaCMZVhV3Mz1hi4Y=
-X-Received: by 2002:ac8:7a78:: with SMTP id w24mr10649361qtt.321.1575612600205;
- Thu, 05 Dec 2019 22:10:00 -0800 (PST)
+        id S1726169AbfLFGgA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 Dec 2019 01:36:00 -0500
+Received: from mga05.intel.com ([192.55.52.43]:7544 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726104AbfLFGgA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 6 Dec 2019 01:36:00 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Dec 2019 22:35:57 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,283,1571727600"; 
+   d="scan'208";a="243533297"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga002.fm.intel.com with ESMTP; 05 Dec 2019 22:35:59 -0800
+Received: from [10.226.39.7] (unknown [10.226.39.7])
+        by linux.intel.com (Postfix) with ESMTP id A9EE55802C8;
+        Thu,  5 Dec 2019 22:35:55 -0800 (PST)
+Subject: Re: [PATCH v1 0/1]Fix build warning and errors
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     linux-pci@vger.kernel.org, gustavo.pimentel@synopsys.com,
+        andrew.murray@arm.com, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@intel.com, rdunlap@infradead.org,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com
+References: <cover.1574929426.git.eswara.kota@linux.intel.com>
+ <20191205162356.GA19365@e121166-lin.cambridge.arm.com>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <0bc42fb8-4ff5-4ecf-ddf4-305de2186efc@linux.intel.com>
+Date:   Fri, 6 Dec 2019 14:35:54 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-References: <CAJ2oMhJ10FTcNH5wqWT2nfNz4jwG0BYr1DcVYTUPOcsSwpkMYg@mail.gmail.com>
- <20191129183836.GA20312@google.com>
-In-Reply-To: <20191129183836.GA20312@google.com>
-From:   Ranran <ranshalit@gmail.com>
-Date:   Fri, 6 Dec 2019 08:09:48 +0200
-Message-ID: <CAJ2oMhJDxkU8TpFon4vzBiL5WrYv-zQNtYW8xbqaQLh2eS7bbg@mail.gmail.com>
-Subject: Re: [Bug 205701] New: Can't access RAM from PCIe
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     bjorn@helgaas.com, linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191205162356.GA19365@e121166-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Nov 29, 2019 at 8:38 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Fri, Nov 29, 2019 at 06:10:51PM +0200, Ranran wrote:
-> > On Fri, Nov 29, 2019 at 4:58 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > On Fri, Nov 29, 2019 at 06:59:48AM +0000, bugzilla-daemon@bugzilla.kernel.org wrote:
-> > > > https://bugzilla.kernel.org/show_bug.cgi?id=205701
-> > > > ...
-> > > >
-> > > > Using Intel Xeon computer with linux kernel 4.18.0 centos8.
-> > > > Trying to access RAM (with DMA) using FPGA  fails in this computer.
-> > > >
-> > > > 1. I tried to add intel_iommu=off - it did not help.
-> > > >
-> > > > 2. Installing windows on same PC - FPGA can access RAM using DMA without
-> > > > issues.
-> > > >
-> > > > 3. using another PC (Intel Duo) with same linux and OS - FPGA access works.
-> > > >
-> > > > FPGA access the RAM using a physical address provided by a kernel module which
-> > > > allocates physical continuous memory in PC. (the module works perfectly with
-> > > > Intel Duo on exactly same OS and kernel).
-> > >
-> > > Hi, thanks for the report!  Can you please attach the complete dmesg
-> > > and "sudo lspci -vv" output for the working and non-working v4.18
-> > > kernels to the bugzilla?
-> > >
-> > > Then please try to reproduce the problem on the current v5.4 kernel
-> > > and attach the v5.4 dmesg log.  If v5.4 fails, we'll have to debug it.
-> > > If v5.4 works, figure out what fixed it (by comparing dmesg logs or by
-> > > bisection) and backport it to v4.18.
-> > >
-> > > Bjorn
-> >
-> > Hi,
-> > I've attached 2 files:
-> > 1. dmesg.log - is the dmesg you've requested.
-> > 2. dmesg_intel_iommu_off.log - dmesg when I added intel_iommu=off
-> > kernel parameter.
->
-> Thanks, I attached these to the bugzilla.  I think the linux-pci
-> mailing list rejected your mail since it wasn't plain-text.
->
-> Please also attach the "sudo lspci -vv" output to the bugzilla and
-> indicate which device is your FPGA.  I guess it might be 0000:20:00.0,
-> since it looks like it's being claimed by an out-of-tree module in
-> your dmesg_intel_iommu_off.log (but not dmesg.log).
->
-> Please also attach the driver source so we can see how it is obtaining
-> and using the DMA buffer address.
->
-> > I might try the new kernel, yet since we are required to use the
-> > installation of centos8  (centos8 was just published about 2 month ago
-> > and it comes with kernel 4.18.0), updating kernel might be
-> > problematic.
->
-> Even if you can't use the v5.4 kernel for your project, if you can
-> establish that it works, then you have a clear path to finding the
-> fix.  If v5.4 still *doesn't* work, then we'll be much more interested
-> in helping to fix that.
->
-> > I would please like to ask if there is some workaround you can think of ?
-> > For example, might it help if I disable iommu (VT-d) in BIOS ?
->
-> Usually when an IOMMU blocks a DMA, it seems like there's a note in
-> dmesg.  I don't see that in either of your logs, but I'm not an IOMMU
-> expert, so it does seem reasonable to try disabling the IOMMU.
->
-> Bjorn
 
+On 12/6/2019 12:23 AM, Lorenzo Pieralisi wrote:
+> On Thu, Nov 28, 2019 at 04:31:12PM +0800, Dilip Kota wrote:
+>> Mark Intel PCIe driver depends on MSI IRQ Domain to fix
+>> the below warnings and respective build errors.
+>>
+>> WARNING: unmet direct dependencies detected for PCIE_DW_HOST
+>>    Depends on [n]: PCI [=y] && PCI_MSI_IRQ_DOMAIN [=n]
+>>    Selected by [y]:
+>>    - PCIE_INTEL_GW [=y] && PCI [=y] && OF [=y] && (X86 [=y] || COMPILE_TEST [=n])
+>>
+>> Dilip Kota (1):
+>>    PCI: dwc: Kconfig: Mark intel PCIe driver depends on MSI IRQ Domain
+>>
+>>   drivers/pci/controller/dwc/Kconfig | 1 +
+>>   1 file changed, 1 insertion(+)
+> Hi Dilip,
+>
+> would you mind squashing this patch into the initial series and repost
+> it (rebase it against current mainline) straight away ? I will
+> rebase it to -rc1 and push it out next week (I am asking since then
+> I am afk for a month so I would like to get your code queued asap,
+> it is ready).
+Sure, i will do it.
+Thanks for prioritizing.
 
-Hello,
-
-I have tried to upgrade to latest kernel 5.4 (elrepo in centos), but
-with this processor/board (system x3650, Xeon), it get hang during
-kernel boot, without any error in dmesg, just keeps waiting for
-nothing for couple of minutes and than drops to dracut.
-I am really stuck with this, is there any way to get progress with this bug ?
-Please help,
-Ran
+Regards,
+Dilip
+>
+> Thanks,
+> Lorenzo
