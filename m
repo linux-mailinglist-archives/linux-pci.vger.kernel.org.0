@@ -2,351 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B1D47117124
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Dec 2019 17:06:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 31DD3117131
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Dec 2019 17:11:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726608AbfLIQGr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 9 Dec 2019 11:06:47 -0500
-Received: from foss.arm.com ([217.140.110.172]:36922 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726265AbfLIQGr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 9 Dec 2019 11:06:47 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 383451FB;
-        Mon,  9 Dec 2019 08:06:46 -0800 (PST)
-Received: from donnerap.arm.com (donnerap.cambridge.arm.com [10.1.197.44])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8BD9A3F718;
-        Mon,  9 Dec 2019 08:06:44 -0800 (PST)
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: [PATCH] pcie: Add quirk for the Arm Neoverse N1SDP platform
-Date:   Mon,  9 Dec 2019 16:06:38 +0000
-Message-Id: <20191209160638.141431-1-andre.przywara@arm.com>
-X-Mailer: git-send-email 2.17.1
+        id S1726522AbfLIQLH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 9 Dec 2019 11:11:07 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:44015 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726342AbfLIQLH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Dec 2019 11:11:07 -0500
+Received: by mail-il1-f195.google.com with SMTP id u16so13179012ilg.10;
+        Mon, 09 Dec 2019 08:11:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=V1rQj2NYpyrjZuSj9vZCVjr8OoOEApgs5CD1MbhwecM=;
+        b=URz2es964aBg/tgzcHlwyqPIOI4zN8TSjwiGZ8xcptQ5xFQKA1+8VK9Q+bSAiyZPkt
+         74U96aFbCX1Vn0Im6NR7EzpsCgPqfqdODHuB33UHFQBfSpKJjtC9Tw9LcQVBqUIF3jGI
+         gCk3Ts8CIo4T4VRYAdJIKKuyMZJ4adIq5PWx7YmpIBaCrurtNXC76eBlhMFs7I8Lv5+0
+         YoeSBdX8JSuTVZQ6PIS0G3GjCmOFhCDRFvj93byVGJzXYHt4YJ52yyYOiF09c0tNpxhH
+         Be3AA8H6Rnr+6dj7Ykd97lapmM4QO+fshpQWO0J07qmm+AOl4rgm7Cb+iWiZdx9tzWiF
+         6Aww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=V1rQj2NYpyrjZuSj9vZCVjr8OoOEApgs5CD1MbhwecM=;
+        b=W+ZPj6GxT/yyxj4qPK/rZO0wDOMr4OUvcfYPDNTZ+3jB7fmhLO9c25grq2NZ2g5lAo
+         orJQ7HIvugR3RWoTqBLFfPiRUHUWb2gv9JkYHDnIWN9xf3Twxw5BjYKaDd1AZ/PLiKSA
+         kdB3Gb/ZSHssZ3dtvhSj5mOez7LkkC148a/DZvs8kljKh/u9utu+AKH6Y5FYjcA2zEwH
+         YtrS6f63AbJQv6HAFbjMIk4/uQkYqW73DDYZO8hGeklQWf0/7iAtKacXM6hDdykaM8So
+         82Y2mzel2P9GYWcw90hcXOUnCk83/RtN1qdT0hBOiVi+6QXGOnZOyCwMUUOVpWNG6kiS
+         HBiw==
+X-Gm-Message-State: APjAAAXdWlM8NYEm8sGWr8OwsHjSOy49OT64AZUd6YrDNS3zXAwrFtDw
+        Nb3c9dL1T/Beh/FFjs01AiPGDELGHjMMfbGPdis=
+X-Google-Smtp-Source: APXvYqz0nWHT53HKk7dsGX4luv1vsXxIjyyy+6bEaibX3GI/XQkhJ3tLcZNkrwGMUE6JA9WhNqD08VhRtGUdBkigH/8=
+X-Received: by 2002:a92:3b19:: with SMTP id i25mr28698139ila.85.1575907866282;
+ Mon, 09 Dec 2019 08:11:06 -0800 (PST)
+MIME-Version: 1.0
+References: <PSXP216MB043824762539AFC40143D75880490@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+In-Reply-To: <PSXP216MB043824762539AFC40143D75880490@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+Reply-To: bjorn@helgaas.com
+From:   Bjorn Helgaas <bjorn.helgaas@gmail.com>
+Date:   Mon, 9 Dec 2019 10:10:55 -0600
+Message-ID: <CABhMZUXOQXruHnZARVqe8cdkuhGXenMZ__7GhaJtDDsdBrcoyQ@mail.gmail.com>
+Subject: Re: [[RFC PATCH v1] 0/1] Add pci=nobbn to ignore ACPI _BBN method to
+ override host bridge bus window
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Deepak Pandey <Deepak.Pandey@arm.com>
+On Thu, Nov 21, 2019 at 9:02 PM Nicholas Johnson
+<nicholas.johnson-opensource@outlook.com.au> wrote:
+>
+> Hi all,
+>
+> I want to be able to override the bus resource from ACPI, but nocrs does
+> not do it. I am putting this out here to get a feel for the sentiment
+> for doing something like this.
 
-The Arm N1SDP SoC suffers from some PCIe integration issues, most
-prominently config space accesses to not existing BDFs being answered
-with a bus abort, resulting in an SError.
-To mitigate this, the firmware scans the bus before boot (catching the
-SErrors) and creates a table with valid BDFs, which acts as a filter for
-Linux' config space accesses.
+This should be cc'd to linus-pci and linux-acpi (added).  I only
+noticed this message by accident.  And I don't see the patch at all.
 
-Add code consulting the table as an ACPI PCIe quirk, also register the
-corresponding device tree based description of the host controller.
-Also fix the other two minor issues on the way, namely not being fully
-ECAM compliant and config space accesses being restricted to 32-bit
-accesses only.
+> What is my motivation for doing this?
+>
+> I have a Gigabyte Z170X Designare motherboard which only gives resource
+> [bus 00-7e]. I want the full [bus 00-ff] because I am trying to add as
+> many Thunderbolt 3 ports with add-in cards as possible. Thunderbolt
+> consumes bus numbers quickly. An Intel Ice Lake implementation (ideal)
+> consumes 42 busses per port, but prior solutions consume 50 busses per
+> port and have additional busses required for the NHI and USB
+> controllers, as well as the bridges from the root port.
+>
+> Why not change nocrs to do this? Why the new kernel parameter?
+>
+> I imagine that on systems with multiple PCI root complexes, things will
+> get hairy if we do this, if they are not placed on separate segments /
+> domains by the firmware. I do not own such a beast, but from what I
+> understand, the firmware normally places them on the same segment /
+> domain with non-overlapping bus numbers. But we may still want to use
+> nocrs for other reasons. I need to use nocrs to allow Linux to allocate
+> vast amounts of MMIO and MMIO_PREF under the Thunderbolt root ports
+> without the BIOS support for Thunderbolt. Hence, they should be kept
+> separate.
+>
+> Why do this in general?
+>
+> The bus resource is still a resource which is specified from ACPI, just
+> like those overridden by nocrs. Even if we do not use pci=nocrs to
+> override it, it should be possible to override it, just as it is
+> possible to override _CRS.
 
-This allows the Arm Neoverse N1SDP board to boot Linux without crashing
-and to access *any* devices (there are no platform devices except UART).
+pci=nocrs is for working around defects in firmware or Linux.  The
+firmware knows more about the platform than Linux, and in general we
+have to trust it.  We probably should taint the kernel when we use it.
 
-Signed-off-by: Deepak Pandey <Deepak.Pandey@arm.com>
-[Sudipto: extend to cover the CCIX root port as well]
-Signed-off-by: Sudipto Paul <sudipto.paul@arm.com>
-[Andre: fix coding style issues, rewrite some parts, add DT support]
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
----
- arch/arm64/configs/defconfig        |   1 +
- drivers/acpi/pci_mcfg.c             |   7 +
- drivers/pci/controller/Kconfig      |  11 ++
- drivers/pci/controller/Makefile     |   1 +
- drivers/pci/controller/pcie-n1sdp.c | 196 ++++++++++++++++++++++++++++
- include/linux/pci-ecam.h            |   2 +
- 6 files changed, 218 insertions(+)
- create mode 100644 drivers/pci/controller/pcie-n1sdp.c
+Any parameter like this should work the same on all ACPI systems,
+including ia64 and arm64, and should probably also taint the kernel.
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 6a83ba2aea3e..58124ef5070b 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -177,6 +177,7 @@ CONFIG_NET_9P=y
- CONFIG_NET_9P_VIRTIO=y
- CONFIG_PCI=y
- CONFIG_PCIEPORTBUS=y
-+CONFIG_PCI_QUIRKS=y
- CONFIG_PCI_IOV=y
- CONFIG_HOTPLUG_PCI=y
- CONFIG_HOTPLUG_PCI_ACPI=y
-diff --git a/drivers/acpi/pci_mcfg.c b/drivers/acpi/pci_mcfg.c
-index 6b347d9920cc..7a2b41b9ab57 100644
---- a/drivers/acpi/pci_mcfg.c
-+++ b/drivers/acpi/pci_mcfg.c
-@@ -142,6 +142,13 @@ static struct mcfg_fixup mcfg_quirks[] = {
- 	XGENE_V2_ECAM_MCFG(4, 0),
- 	XGENE_V2_ECAM_MCFG(4, 1),
- 	XGENE_V2_ECAM_MCFG(4, 2),
-+
-+#define N1SDP_ECAM_MCFG(rev, seg, ops) \
-+	{"ARMLTD", "ARMN1SDP", rev, seg, MCFG_BUS_ANY, ops }
-+
-+	/* N1SDP SoC with v1 PCIe controller */
-+	N1SDP_ECAM_MCFG(0x20181101, 0, &pci_n1sdp_pcie_ecam_ops),
-+	N1SDP_ECAM_MCFG(0x20181101, 1, &pci_n1sdp_ccix_ecam_ops),
- };
- 
- static char mcfg_oem_id[ACPI_OEM_ID_SIZE];
-diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-index c77069c8ee5d..45700d32f02e 100644
---- a/drivers/pci/controller/Kconfig
-+++ b/drivers/pci/controller/Kconfig
-@@ -37,6 +37,17 @@ config PCI_FTPCI100
- 	depends on OF
- 	default ARCH_GEMINI
- 
-+config PCIE_HOST_N1SDP_ECAM
-+	bool "ARM N1SDP PCIe Controller"
-+	depends on ARM64
-+	depends on OF || (ACPI && PCI_QUIRKS)
-+	select PCI_HOST_COMMON
-+	default y if ARCH_VEXPRESS
-+	help
-+	  Say Y here if you want PCIe support for the Arm N1SDP platform.
-+	  The controller is ECAM compliant, but needs a quirk to workaround
-+	  an integration issue.
-+
- config PCI_TEGRA
- 	bool "NVIDIA Tegra PCIe controller"
- 	depends on ARCH_TEGRA || COMPILE_TEST
-diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
-index 3d4f597f15ce..5f47fefbd67d 100644
---- a/drivers/pci/controller/Makefile
-+++ b/drivers/pci/controller/Makefile
-@@ -28,6 +28,7 @@ obj-$(CONFIG_PCIE_MEDIATEK) += pcie-mediatek.o
- obj-$(CONFIG_PCIE_MOBIVEIL) += pcie-mobiveil.o
- obj-$(CONFIG_PCIE_TANGO_SMP8759) += pcie-tango.o
- obj-$(CONFIG_VMD) += vmd.o
-+obj-$(CONFIG_PCIE_HOST_N1SDP_ECAM) += pcie-n1sdp.o
- # pcie-hisi.o quirks are needed even without CONFIG_PCIE_DW
- obj-y				+= dwc/
- 
-diff --git a/drivers/pci/controller/pcie-n1sdp.c b/drivers/pci/controller/pcie-n1sdp.c
-new file mode 100644
-index 000000000000..620ab221466c
---- /dev/null
-+++ b/drivers/pci/controller/pcie-n1sdp.c
-@@ -0,0 +1,196 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2018/2019 ARM Ltd.
-+ *
-+ * This quirk is to mask the following issues:
-+ * - PCIE SLVERR: config space accesses to invalid PCIe BDFs cause a bus
-+ *		  error (signalled as an asynchronous SError)
-+ * - MCFG BDF mapping: the root complex is mapped separately from the device
-+ *		       config space
-+ * - Non 32-bit accesses to config space are not supported.
-+ *
-+ * At boot time the SCP board firmware creates a discovery table with
-+ * the root complex' base address and the valid BDF values, discovered while
-+ * scanning the config space and catching the SErrors.
-+ * Linux responds only to the EPs listed in this table, returning NULL
-+ * for the rest.
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/init.h>
-+#include <linux/ioport.h>
-+#include <linux/sizes.h>
-+#include <linux/of_pci.h>
-+#include <linux/of.h>
-+#include <linux/pci-ecam.h>
-+#include <linux/platform_device.h>
-+#include <linux/module.h>
-+
-+/* Platform specific values as hardcoded in the firmware. */
-+#define AP_NS_SHARED_MEM_BASE	0x06000000
-+#define MAX_SEGMENTS		2		/* Two PCIe root complexes. */
-+#define BDF_TABLE_SIZE		SZ_16K
-+
-+/*
-+ * Shared memory layout as written by the SCP upon boot time:
-+ *  ----
-+ *  Discover data header --> RC base address
-+ *                       \-> BDF Count
-+ *  Discover data        --> BDF 0...n
-+ *  ----
-+ */
-+struct pcie_discovery_data {
-+	u32 rc_base_addr;
-+	u32 nr_bdfs;
-+	u32 valid_bdfs[0];
-+} *pcie_discovery_data[MAX_SEGMENTS];
-+
-+void __iomem *rc_remapped_addr[MAX_SEGMENTS];
-+
-+/*
-+ * map_bus() is called before we do a config space access for a certain
-+ * device. We use this to check whether this device is valid, avoiding
-+ * config space accesses which would result in an SError otherwise.
-+ */
-+static void __iomem *pci_n1sdp_map_bus(struct pci_bus *bus, unsigned int devfn,
-+				       int where)
-+{
-+	struct pci_config_window *cfg = bus->sysdata;
-+	unsigned int devfn_shift = cfg->ops->bus_shift - 8;
-+	unsigned int busn = bus->number;
-+	unsigned int segment = bus->domain_nr;
-+	unsigned int bdf_addr;
-+	unsigned int table_count, i;
-+
-+	if (segment >= MAX_SEGMENTS ||
-+	    busn < cfg->busr.start || busn > cfg->busr.end)
-+		return NULL;
-+
-+	/* The PCIe root complex has a separate config space mapping. */
-+	if (busn == 0 && devfn == 0)
-+		return rc_remapped_addr[segment] + where;
-+
-+	busn -= cfg->busr.start;
-+	bdf_addr = (busn << cfg->ops->bus_shift) + (devfn << devfn_shift);
-+	table_count = pcie_discovery_data[segment]->nr_bdfs;
-+	for (i = 0; i < table_count; i++) {
-+		if (bdf_addr == pcie_discovery_data[segment]->valid_bdfs[i])
-+			return pci_ecam_map_bus(bus, devfn, where);
-+	}
-+
-+	return NULL;
-+}
-+
-+static int pci_n1sdp_init(struct pci_config_window *cfg, unsigned int segment)
-+{
-+	phys_addr_t table_base;
-+	struct device *dev = cfg->parent;
-+	struct pcie_discovery_data *shared_data;
-+	size_t bdfs_size;
-+
-+	if (segment >= MAX_SEGMENTS)
-+		return -ENODEV;
-+
-+	table_base = AP_NS_SHARED_MEM_BASE + segment * BDF_TABLE_SIZE;
-+
-+	if (!request_mem_region(table_base, BDF_TABLE_SIZE,
-+				"PCIe valid BDFs")) {
-+		dev_err(dev, "PCIe BDF shared region request failed\n");
-+		return -ENOMEM;
-+	}
-+
-+	shared_data = devm_ioremap(dev,
-+				   table_base, BDF_TABLE_SIZE);
-+	if (!shared_data)
-+		return -ENOMEM;
-+
-+	/* Copy the valid BDFs structure to allocated normal memory. */
-+	bdfs_size = sizeof(struct pcie_discovery_data) +
-+		    sizeof(u32) * shared_data->nr_bdfs;
-+	pcie_discovery_data[segment] = devm_kmalloc(dev, bdfs_size, GFP_KERNEL);
-+	if (!pcie_discovery_data[segment])
-+		return -ENOMEM;
-+
-+	memcpy_fromio(pcie_discovery_data[segment], shared_data, bdfs_size);
-+
-+	rc_remapped_addr[segment] = devm_ioremap_nocache(dev,
-+						shared_data->rc_base_addr,
-+						PCI_CFG_SPACE_EXP_SIZE);
-+	if (!rc_remapped_addr[segment]) {
-+		dev_err(dev, "Cannot remap root port base\n");
-+		return -ENOMEM;
-+	}
-+
-+	devm_iounmap(dev, shared_data);
-+
-+	return 0;
-+}
-+
-+static int pci_n1sdp_pcie_init(struct pci_config_window *cfg)
-+{
-+	return pci_n1sdp_init(cfg, 0);
-+}
-+
-+static int pci_n1sdp_ccix_init(struct pci_config_window *cfg)
-+{
-+	return pci_n1sdp_init(cfg, 1);
-+}
-+
-+struct pci_ecam_ops pci_n1sdp_pcie_ecam_ops = {
-+	.bus_shift	= 20,
-+	.init		= pci_n1sdp_pcie_init,
-+	.pci_ops	= {
-+		.map_bus        = pci_n1sdp_map_bus,
-+		.read           = pci_generic_config_read32,
-+		.write          = pci_generic_config_write32,
-+	}
-+};
-+
-+struct pci_ecam_ops pci_n1sdp_ccix_ecam_ops = {
-+	.bus_shift	= 20,
-+	.init		= pci_n1sdp_ccix_init,
-+	.pci_ops	= {
-+		.map_bus        = pci_n1sdp_map_bus,
-+		.read           = pci_generic_config_read32,
-+		.write          = pci_generic_config_write32,
-+	}
-+};
-+
-+static const struct of_device_id n1sdp_pcie_of_match[] = {
-+	{ .compatible = "arm,n1sdp-pcie" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, n1sdp_pcie_of_match);
-+
-+static int n1sdp_pcie_probe(struct platform_device *pdev)
-+{
-+	const struct device_node *of_node = pdev->dev.of_node;
-+	u32 segment;
-+
-+	if (of_property_read_u32(of_node, "linux,pci-domain", &segment)) {
-+		dev_err(&pdev->dev, "N1SDP PCI controllers require linux,pci-domain property\n");
-+		return -EINVAL;
-+	}
-+
-+	switch (segment) {
-+	case 0:
-+		return pci_host_common_probe(pdev, &pci_n1sdp_pcie_ecam_ops);
-+	case 1:
-+		return pci_host_common_probe(pdev, &pci_n1sdp_ccix_ecam_ops);
-+	}
-+
-+	dev_err(&pdev->dev, "Invalid segment number, must be smaller than %d\n",
-+		MAX_SEGMENTS);
-+
-+	return -EINVAL;
-+}
-+
-+static struct platform_driver n1sdp_pcie_driver = {
-+	.driver = {
-+		.name = KBUILD_MODNAME,
-+		.of_match_table = n1sdp_pcie_of_match,
-+		.suppress_bind_attrs = true,
-+	},
-+	.probe = n1sdp_pcie_probe,
-+};
-+builtin_platform_driver(n1sdp_pcie_driver);
-diff --git a/include/linux/pci-ecam.h b/include/linux/pci-ecam.h
-index a73164c85e78..03cdea69f4e8 100644
---- a/include/linux/pci-ecam.h
-+++ b/include/linux/pci-ecam.h
-@@ -57,6 +57,8 @@ extern struct pci_ecam_ops pci_thunder_ecam_ops; /* Cavium ThunderX 1.x */
- extern struct pci_ecam_ops xgene_v1_pcie_ecam_ops; /* APM X-Gene PCIe v1 */
- extern struct pci_ecam_ops xgene_v2_pcie_ecam_ops; /* APM X-Gene PCIe v2.x */
- extern struct pci_ecam_ops al_pcie_ops; /* Amazon Annapurna Labs PCIe */
-+extern struct pci_ecam_ops pci_n1sdp_pcie_ecam_ops; /* Arm N1SDP PCIe */
-+extern struct pci_ecam_ops pci_n1sdp_ccix_ecam_ops; /* Arm N1SDP PCIe */
- #endif
- 
- #ifdef CONFIG_PCI_HOST_COMMON
--- 
-2.17.1
+I can't see the patch itself, but I'm a little confused because we
+normally get the bus number range from _CRS in acpi_pci_root_add() and
+your patch doesn't appear to touch that.
 
+> Nicholas Johnson (1):
+>   PCI: Add pci=nobbn to ignore ACPI _BBN method to override host bridge
+>     bus window
+>
+>  Documentation/admin-guide/kernel-parameters.txt |  2 ++
+>  arch/x86/include/asm/pci_x86.h                  |  1 +
+>  arch/x86/pci/acpi.c                             | 11 +++++++++++
+>  arch/x86/pci/common.c                           |  3 +++
+>  4 files changed, 17 insertions(+)
+>
+> --
+> 2.24.0
+>
