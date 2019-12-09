@@ -2,73 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 175A8116AF6
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Dec 2019 11:27:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ACC70116BAE
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Dec 2019 12:03:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727346AbfLIK1e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 9 Dec 2019 05:27:34 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:42009 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727143AbfLIK1e (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Dec 2019 05:27:34 -0500
-Received: by mail-oi1-f194.google.com with SMTP id j22so5824231oij.9;
-        Mon, 09 Dec 2019 02:27:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=BOldAukWPGvCMXmrQf1gXfFA50h3n/TlEcM4kvZn67k=;
-        b=rQTIghiXGjKRvew8550rzD8nED93vGsH14VPT8ZowwJxJypGj2JJCg4WG4ssPyBNCf
-         7AioaFOakr1OXnFH2APWquuBYj6k2M1STa28v+zYnYWoMRmGaP8zAMXT3SVf+AXcYIwr
-         BTwyBMl1tA7VkeJugpV5ONPFZFSIVCu6C4u0tknGcMz1MVNnD/d2IAtzw99l4dsLE/zG
-         yXt7bRCLP7uXqhS+t9gq7Li6CbWyKF96EI0DHohtIMqimRAeMcSTt+D/VNjHAod5KmQE
-         huGVspqbi2GnMm7xUjE/tUgYEDZ8FSBdfRwz8GBw0BWGLhMsBD6KMvk8QEig6bDvH3Sa
-         ilBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=BOldAukWPGvCMXmrQf1gXfFA50h3n/TlEcM4kvZn67k=;
-        b=BpkT7ZTpw+sjJucDSipFBH22IJiUKkkl6+pHz9vJt+CuUAQejCnFIKVhKoakxxCdNP
-         mgMbYDMCFKei9qJ3Z1vIVWIi2djhM71mvj6WXQO1jGK6gQz4NGCUKrhjsJwQLCoWa+tB
-         BD/xml2cmpg8EFWiLYk7twHaxqvnxMGwj4a7JG82vyMf0Xj/BTJ7B75toQdfM7sPJRje
-         FaXMQXL3CEwhckozJ+ZxayvLmGAbYvxD6YclLWT2Y6O8eU/vYe8do9qHPDzwAkoDO7FP
-         8/7IuLPLN8LjJTNBkohfhdzjfIQZwjEJ8KVwttMGiRm1mtTC+gmrqTl5kEN4Xe4SkzIv
-         xPLA==
-X-Gm-Message-State: APjAAAUE3TtVARL2elxZ9fnYmA2U0ePpU2vQhC4CCClGkBLcpuB95K9k
-        qAsRiT9g13qOrbq9n+PFE39ErwCGuEbeLyNB+VA=
-X-Google-Smtp-Source: APXvYqzDel7dxaZdi9R+PP3cUE6cZO9V1PUkCfBzoSIrbf9sruiYhOkZPeAeUMFEIJQXv+PVS7LJNIyxKg/RZuXISF0=
-X-Received: by 2002:aca:f445:: with SMTP id s66mr22398129oih.95.1575887253334;
- Mon, 09 Dec 2019 02:27:33 -0800 (PST)
+        id S1726377AbfLILDS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 9 Dec 2019 06:03:18 -0500
+Received: from foss.arm.com ([217.140.110.172]:56290 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726297AbfLILDS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 9 Dec 2019 06:03:18 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 965571FB;
+        Mon,  9 Dec 2019 03:03:17 -0800 (PST)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0D6EF3F6CF;
+        Mon,  9 Dec 2019 03:03:16 -0800 (PST)
+Date:   Mon, 9 Dec 2019 11:03:15 +0000
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Remi Pommarel <repk@triplefau.lt>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Yue Wang <yue.wang@Amlogic.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH 2/2] PCI: amlogic: Use PCIe pll gate when available
+Message-ID: <20191209110314.GQ18399@e119886-lin.cambridge.arm.com>
+References: <20191208210320.15539-1-repk@triplefau.lt>
+ <20191208210320.15539-3-repk@triplefau.lt>
 MIME-Version: 1.0
-From:   Ramon Fried <rfried.dev@gmail.com>
-Date:   Mon, 9 Dec 2019 12:27:22 +0200
-Message-ID: <CAGi-RUJvqJoCXWN2YugRn=WYEk9yzt7m3OPfX_o++PmJWQ3woQ@mail.gmail.com>
-Subject: MSI irqchip configured as IRQCHIP_ONESHOT_SAFE causes spurious IRQs
-To:     hkallweit1@gmail.com, bhelgaas@google.com, marc.zyngier@arm.com,
-        tglx@linutronix.de, lorenzo.pieralisi@arm.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191208210320.15539-3-repk@triplefau.lt>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
-While debugging the root cause of spurious IRQ's on my PCIe MSI line it appears
-that because of the line:
-    info->chip->flags |= IRQCHIP_ONESHOT_SAFE;
-in pci_msi_create_irq_domain()
-The IRQF_ONESHOT is ignored, especially when requesting IRQ through
-pci_request_threaded_irq() where handler is NULL.
+On Sun, Dec 08, 2019 at 10:03:20PM +0100, Remi Pommarel wrote:
+> In order to get PCIe working reliably on some AXG platforms, PCIe pll
+> cml needs to be enabled. This is done by using the PCIE_PLL_CML_ENABLE
+> clock gate.
 
-The problem is that the MSI masking now only surrounds the HW handler,
-and all additional MSI that occur before the threaded handler is
-complete are considered by the note_interrupt() as spurious.
+s/cml/CML/
 
-Besides the side effect of that, I don't really understand the logic
-of not masking the MSI until the threaded handler is complete,
-especially when there's no HW handler and only threaded handler.
+In addition to Jerome's feedback - it would also be helpful to explain
+when CML outputs should be enabled, i.e. which platforms and why those
+ones?
 
-Your thoughts?
+> 
+> This clock gate is optional, so do not fail if it is missing in the
+> devicetree.
 
-Thank,
-Ramon.
+If certain platforms require PCIE_PLL_CML_ENABLE to work reliably and
+thus the clock is specified in the device tree - then surely if there
+is an error in enabling the clock we should fail? I.e. should you only
+ignore -ENOENT here?
+
+Thanks,
+
+Andrew Murray
+
+> 
+> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+> ---
+>  drivers/pci/controller/dwc/pci-meson.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
+> index 3772b02a5c55..32b70ea9a426 100644
+> --- a/drivers/pci/controller/dwc/pci-meson.c
+> +++ b/drivers/pci/controller/dwc/pci-meson.c
+> @@ -89,6 +89,7 @@ struct meson_pcie_clk_res {
+>  	struct clk *mipi_gate;
+>  	struct clk *port_clk;
+>  	struct clk *general_clk;
+> +	struct clk *pll_cml_gate;
+>  };
+>  
+>  struct meson_pcie_rc_reset {
+> @@ -300,6 +301,10 @@ static int meson_pcie_probe_clocks(struct meson_pcie *mp)
+>  	if (IS_ERR(res->clk))
+>  		return PTR_ERR(res->clk);
+>  
+> +	res->pll_cml_gate = meson_pcie_probe_clock(dev, "pll_cml_en", 0);
+> +	if (IS_ERR(res->pll_cml_gate))
+> +		res->pll_cml_gate = NULL;
+> +
+>  	return 0;
+>  }
+>  
+> -- 
+> 2.24.0
+> 
