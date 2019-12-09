@@ -2,59 +2,74 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E99DD116DBC
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Dec 2019 14:12:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D15A5116DD8
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Dec 2019 14:21:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727513AbfLINMo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 9 Dec 2019 08:12:44 -0500
-Received: from mga18.intel.com ([134.134.136.126]:29342 "EHLO mga18.intel.com"
+        id S1727625AbfLINVZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 9 Dec 2019 08:21:25 -0500
+Received: from foss.arm.com ([217.140.110.172]:60316 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727163AbfLINMo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 9 Dec 2019 08:12:44 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Dec 2019 05:12:42 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,294,1571727600"; 
-   d="scan'208";a="219977287"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 09 Dec 2019 05:12:40 -0800
-Received: by lahna (sSMTP sendmail emulation); Mon, 09 Dec 2019 15:12:39 +0200
-Date:   Mon, 9 Dec 2019 15:12:39 +0200
-From:   "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
-To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: Linux v5.5 serious PCI bug
-Message-ID: <20191209131239.GP2665@lahna.fi.intel.com>
-References: <PSXP216MB0438BFEAA0617283A834E11580580@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+        id S1727513AbfLINVZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 9 Dec 2019 08:21:25 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C177E328;
+        Mon,  9 Dec 2019 05:21:24 -0800 (PST)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 355563F718;
+        Mon,  9 Dec 2019 05:21:24 -0800 (PST)
+Date:   Mon, 9 Dec 2019 13:21:22 +0000
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, robh@kernel.org,
+        linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com
+Subject: Re: [PATCH v11 0/3] PCI: Add Intel PCIe Driver and respective
+ dt-binding yaml file
+Message-ID: <20191209132122.GR18399@e119886-lin.cambridge.arm.com>
+References: <cover.1575860791.git.eswara.kota@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <PSXP216MB0438BFEAA0617283A834E11580580@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <cover.1575860791.git.eswara.kota@linux.intel.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 12:34:04PM +0000, Nicholas Johnson wrote:
-> Hi,
+On Mon, Dec 09, 2019 at 11:20:03AM +0800, Dilip Kota wrote:
+> Intel PCIe is Synopsys based controller. Intel PCIe driver uses
+> DesignWare PCIe framework for host initialization and register
+> configurations.
 > 
-> I have compiled Linux v5.5-rc1 and thought all was good until I 
-> hot-removed a Gigabyte Aorus eGPU from Thunderbolt. The driver for the 
-> GPU was not loaded (blacklisted) so the crash is nothing to do with the 
-> GPU driver.
-> 
-> We had:
-> - kernel NULL pointer dereference
-> - refcount_t: underflow; use-after-free.
-> 
-> Attaching dmesg for now; will bisect and come back with results.
+> Changes on v11:
+> 	Patches rebase on kernel v5.5-rc1
 
-Looks like something related to iommu. Does it work if you disable it?
-(intel_iommu=off in the command line).
+Thanks for this. Looks OK to me.
+
+Andrew Murray
+
+> 
+> Dilip Kota (3):
+>   dt-bindings: PCI: intel: Add YAML schemas for the PCIe RC controller
+>   PCI: dwc: intel: PCIe RC controller driver
+>   PCI: artpec6: Configure FTS with dwc helper function
+> 
+>  .../devicetree/bindings/pci/intel-gw-pcie.yaml     | 138 ++++++
+>  drivers/pci/controller/dwc/Kconfig                 |  11 +
+>  drivers/pci/controller/dwc/Makefile                |   1 +
+>  drivers/pci/controller/dwc/pcie-artpec6.c          |   8 +-
+>  drivers/pci/controller/dwc/pcie-designware.c       |  57 +++
+>  drivers/pci/controller/dwc/pcie-designware.h       |  12 +
+>  drivers/pci/controller/dwc/pcie-intel-gw.c         | 545 +++++++++++++++++++++
+>  include/uapi/linux/pci_regs.h                      |   1 +
+>  8 files changed, 766 insertions(+), 7 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
+>  create mode 100644 drivers/pci/controller/dwc/pcie-intel-gw.c
+> 
+> -- 
+> 2.11.0
+> 
