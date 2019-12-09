@@ -2,91 +2,132 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 004C21163F0
-	for <lists+linux-pci@lfdr.de>; Sun,  8 Dec 2019 23:08:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3EECF11650C
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Dec 2019 03:35:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbfLHWIJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 8 Dec 2019 17:08:09 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:43689 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726665AbfLHWIJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 8 Dec 2019 17:08:09 -0500
-Received: by mail-oi1-f194.google.com with SMTP id x14so4635240oic.10;
-        Sun, 08 Dec 2019 14:08:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6LcpecxJCuptWnky/wBInRHW7dBWZyoNDO8ejqGqya4=;
-        b=JiUPaF+aLz6TU175q9IIuAWCfbj1Dp34A44ajwK6wWjJuU4qAW6BB4WFznxCnlrz+m
-         11aV+yzG5hho4KnFOHqZ4MdNh0vO5men3cU1qp5cZ4yKlf8NYCo/WlL3zH/9Us1l56E2
-         zaiUI5IFBXi84lF7T6fkfCSTwUxRB+6DMpcPrFgw+839cVtn7VvEd/tz1YJlMGKUMrFv
-         cMVvpXHbsEhI+l1VNNoyP/3w2xVFStHfFJ1IDsQzMBaQj74boPcUBmJpW+MuWdDWAp4S
-         z91RVykEF70X975kRocmzBBOXgC3eOuH0yxBwNCsUrxB0bkqd2TIjaIXJztFPi8M4KID
-         6zPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6LcpecxJCuptWnky/wBInRHW7dBWZyoNDO8ejqGqya4=;
-        b=RFKfF3+N3VgeXEAJWocg22vGGkANgCW6zk3A93KeUHfbeZ/OFd5ZUbH45i9Q0oNybe
-         SM6A9TKT3/heLEn5KVBG6bu74Jw+HHe7KY3TaFP/AQUks97W3EeMWtWSlzLM0A8DI+xF
-         GVSxDILmZAciC4J2vkMKcpv/OfEK6XBdlzRozZ0sQ8yOYasnyFq/F215R6cm6z890Lu6
-         eG/5Tkj0qKBz5tfZS0vL5jPhaZY2ccA/aHRZVB4J7HkYQZ+8mCDynIU6fxgd8/oLzX+l
-         q84o85GFm+R1mxAMiqpjsDkSRLtP5mBw19m4SNYPu4Imxb0m5HKSoA97u6J64CuwbC8y
-         OMsA==
-X-Gm-Message-State: APjAAAWMJoo2W9LAGWfV6bui17gBqhmP/zf2IKD07K2a0CaQPSOWJJyS
-        VcjB+l4bRf+NdU8gUMLIiPRGklF6qLc+zl7mZQQ=
-X-Google-Smtp-Source: APXvYqyhNhm0JNicy/loq8RdAT4DHahKdfAG1UNTU2pTEGoRTXZgPhgK9yLqIJ8epqm1nERlorhDJkru2+6iVkzYho0=
-X-Received: by 2002:a54:401a:: with SMTP id x26mr21795889oie.15.1575842888488;
- Sun, 08 Dec 2019 14:08:08 -0800 (PST)
+        id S1726860AbfLICfj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 8 Dec 2019 21:35:39 -0500
+Received: from mx.socionext.com ([202.248.49.38]:19132 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726841AbfLICfj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 8 Dec 2019 21:35:39 -0500
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 09 Dec 2019 11:35:37 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id B67FE603AB;
+        Mon,  9 Dec 2019 11:35:37 +0900 (JST)
+Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Mon, 9 Dec 2019 11:36:06 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by iyokan.css.socionext.com (Postfix) with ESMTP id 3907F40372;
+        Mon,  9 Dec 2019 11:35:37 +0900 (JST)
+Received: from [10.213.132.48] (unknown [10.213.132.48])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id 0C6CE120456;
+        Mon,  9 Dec 2019 11:35:37 +0900 (JST)
+Date:   Mon, 09 Dec 2019 11:35:37 +0900
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 2/2] PCI: uniphier: Add checking whether PERST# is deasserted
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        <linux-pci@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+In-Reply-To: <6b288f46-452d-6f92-728c-56c4100028cf@ti.com>
+References: <20191206175813.E6B2.4A936039@socionext.com> <6b288f46-452d-6f92-728c-56c4100028cf@ti.com>
+Message-Id: <20191209113536.E9DD.4A936039@socionext.com>
 MIME-Version: 1.0
-References: <20191208210320.15539-1-repk@triplefau.lt> <20191208210320.15539-2-repk@triplefau.lt>
-In-Reply-To: <20191208210320.15539-2-repk@triplefau.lt>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Sun, 8 Dec 2019 23:07:57 +0100
-Message-ID: <CAFBinCA7Tnc2M=4jxYYS_RuoLnGNprUOFDrZG_G6fhQCyb3Cig@mail.gmail.com>
-Subject: Re: [PATCH 1/2] clk: meson: axg: add pcie pll cml gating
-To:     Remi Pommarel <repk@triplefau.lt>
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Yue Wang <yue.wang@amlogic.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-pci@vger.kernel.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Becky! ver. 2.70 [ja]
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Remi,
+Hi Kishon,
 
-On Sun, Dec 8, 2019 at 9:56 PM Remi Pommarel <repk@triplefau.lt> wrote:
-[...]
-> +static MESON_GATE(axg_pcie_pll_cml_enable, HHI_MIPI_CNTL0, 26);
-we already have CLKID_PCIE_CML_EN0
-do you know how this new one is related (in terms of clock hierarchy)
-to the existing one?
+On Fri, 6 Dec 2019 14:31:17 +0530 <kishon@ti.com> wrote:
 
-[...]
-> --- a/include/dt-bindings/clock/axg-clkc.h
-> +++ b/include/dt-bindings/clock/axg-clkc.h
-> @@ -72,5 +72,6 @@
->  #define CLKID_PCIE_CML_EN1                     80
->  #define CLKID_MIPI_ENABLE                      81
->  #define CLKID_GEN_CLK                          84
-> +#define CLKID_PCIE_PLL_CML_ENABLE              91
-this has to be a separate patch if you want the .dts patch to go into
-the same cycle
-the .dts change depends on this one. what we typically do is to apply
-the dt-bindings patches to a separate clock branch, create an
-immutable tag and then Kevin pulls that into his dt64 branch.
-the clock controller changes go into a separate patch in the
-clk-meson/drivers branch to avoid conflicts with other driver changes
+> Hi,
+> 
+> On 06/12/19 2:28 pm, Kunihiko Hayashi wrote:
+> > Hi Kishon,
+> > > On Fri, 6 Dec 2019 12:28:29 +0530 <kishon@ti.com> wrote:
+> > >> Hi,
+> >>
+> >> On 04/12/19 3:35 pm, Kunihiko Hayashi wrote:
+> >>> On Fri, 22 Nov 2019 20:53:16 +0900 <hayashi.kunihiko@socionext.com> wrote:
+> >>>>> Hello Lorenzo,
+> >>>>
+> >>>> On Thu, 21 Nov 2019 16:47:05 +0000 <lorenzo.pieralisi@arm.com> wrote:
+> >>>>
+> >>>>> On Fri, Nov 08, 2019 at 04:30:27PM +0900, Kunihiko Hayashi wrote:
+> >>>>>>> However, If I understand correctly, doesn't your solution only work some
+> >>>>>>> of the time? What happens if you boot both machines at the same time,
+> >>>>>>> and PERST# isn't asserted prior to the kernel booting?
+> >>>>>>
+> >>>>>> I think it contains an annoying problem.
+> >>>>>>
+> >>>>>> If PERST# isn't toggled prior to the kernel booting, PERST# remains asserted
+> >>>>>> and the RC driver can't access PCI bus.
+> >>>>>>
+> >>>>>> As a result, this patch works and deasserts PERST# (and EP configuration will
+> >>>>>> be lost). So boot sequence needs to include deasserting PERST#.
+> >>>>>
+> >>>>> I am sorry but I have lost you. Can you explain to us why checking
+> >>>>> that PERST# is deasserted guarantees you that:
+> >>>>>
+> >>>>> - The EP has bootstrapped
+> >>>>> - It is safe not to toggle it again (and also skip
+> >>>>>     uniphier_pcie_ltssm_enable())
+> >>>>>
+> >>>>> Please provide details of the HW configuration so that we understand
+> >>>>> what's actually supposed to happen and why this patch fixes the
+> >>>>> issue you are facing.
+> >>>>
+> >>>> I tried to connect between the following boards, and do pci-epf-test:
+> >>>>    - "RC board": UniPhier ld20 board that has DWC RC controller
+> >>>>    - "EP board": UniPhier legacy board that has DWC EP controller
+> >>>>
+> >>>> This EP has power-on-state configuration, but it's necessary to set
+> >>>> class ID, BAR sizes, etc. after starting up.
+> >>>>
+> >>>> In case of that starting up RC board before EP board, the RC driver
+> >>>> can't establish link. So we need to boot EP board first.
+> >>>> At that point, I've considered why RC can't establish link,
+> >>> and found that the waitng time was too short.
+> >>>> - EP/RC: power on both boards
+> >>>> - RC: start up the kernel on RC board
+> >>>> - RC: wait for link up (long time enough)
+> >>>> - EP: start up the kernel on EP board
+> >>>> - EP: configurate pci-epf-test
+> >>>> When the endpoint  configuration is done and the EP driver enables LTSSM,
+> >>> the RC driver will quit from waiting for link up.
+> >>>> Currently DWC RC driver calls dwc_pcie_wait_for_link(), however,
+> >>> the function tries to link up 10 times only, that is defined
+> >>> as LINK_WAIT_MAX_RETRIES in pcie-designware.h, it's too short
+> >>> to configurate the endpoint.
+> >>>> Now the patch to bypass PERST# is not necessary.
+> >>>> Instead for DWC RC drivers, I think that the number of retries
+> >>> should be changed according to the usage.
+> >>> And the same issue remains with other RC drivers.
+> >>
+> >> If EP is configured using Linux, then PERST# cannot be used as it's difficult to boot linux and initialize EP within the specified time interval. Can't you prevent PERST from being propagated at all?
+> > > Surely it might be difficult for RC to decide the time to wait for EP.
+> > Since RC almost toggles PERST# in boot time, I'd like to think about
+> > how to prevent from first PERST# at least.
+> 
+> It can be prevented in the HW (If that's possible). I modify the cable connecting RC and EP to not propagate PERST#.
 
+I understand. Although it's possible in case of a cable,
+in case of an edge connector, EP side needs hardware mechanism not to propagate PERST#.
 
-Martin
+Thank you,
+
+---
+Best Regards,
+Kunihiko Hayashi
+
