@@ -2,132 +2,65 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3EECF11650C
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Dec 2019 03:35:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3CDE611654C
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Dec 2019 04:20:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbfLICfj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 8 Dec 2019 21:35:39 -0500
-Received: from mx.socionext.com ([202.248.49.38]:19132 "EHLO mx.socionext.com"
+        id S1726860AbfLIDUO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 8 Dec 2019 22:20:14 -0500
+Received: from mga03.intel.com ([134.134.136.65]:17890 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726841AbfLICfj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 8 Dec 2019 21:35:39 -0500
-Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 09 Dec 2019 11:35:37 +0900
-Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
-        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id B67FE603AB;
-        Mon,  9 Dec 2019 11:35:37 +0900 (JST)
-Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Mon, 9 Dec 2019 11:36:06 +0900
-Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
-        by iyokan.css.socionext.com (Postfix) with ESMTP id 3907F40372;
-        Mon,  9 Dec 2019 11:35:37 +0900 (JST)
-Received: from [10.213.132.48] (unknown [10.213.132.48])
-        by yuzu.css.socionext.com (Postfix) with ESMTP id 0C6CE120456;
-        Mon,  9 Dec 2019 11:35:37 +0900 (JST)
-Date:   Mon, 09 Dec 2019 11:35:37 +0900
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 2/2] PCI: uniphier: Add checking whether PERST# is deasserted
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-In-Reply-To: <6b288f46-452d-6f92-728c-56c4100028cf@ti.com>
-References: <20191206175813.E6B2.4A936039@socionext.com> <6b288f46-452d-6f92-728c-56c4100028cf@ti.com>
-Message-Id: <20191209113536.E9DD.4A936039@socionext.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Becky! ver. 2.70 [ja]
+        id S1726834AbfLIDUO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 8 Dec 2019 22:20:14 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Dec 2019 19:20:13 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,294,1571727600"; 
+   d="scan'208";a="219892592"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by fmsmga001.fm.intel.com with ESMTP; 08 Dec 2019 19:20:10 -0800
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+To:     lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        andrew.murray@arm.com, robh@kernel.org,
+        linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com, Dilip Kota <eswara.kota@linux.intel.com>
+Subject: [PATCH v11 0/3] PCI: Add Intel PCIe Driver and respective dt-binding yaml file
+Date:   Mon,  9 Dec 2019 11:20:03 +0800
+Message-Id: <cover.1575860791.git.eswara.kota@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Kishon,
+Intel PCIe is Synopsys based controller. Intel PCIe driver uses
+DesignWare PCIe framework for host initialization and register
+configurations.
 
-On Fri, 6 Dec 2019 14:31:17 +0530 <kishon@ti.com> wrote:
+Changes on v11:
+	Patches rebase on kernel v5.5-rc1
 
-> Hi,
-> 
-> On 06/12/19 2:28 pm, Kunihiko Hayashi wrote:
-> > Hi Kishon,
-> > > On Fri, 6 Dec 2019 12:28:29 +0530 <kishon@ti.com> wrote:
-> > >> Hi,
-> >>
-> >> On 04/12/19 3:35 pm, Kunihiko Hayashi wrote:
-> >>> On Fri, 22 Nov 2019 20:53:16 +0900 <hayashi.kunihiko@socionext.com> wrote:
-> >>>>> Hello Lorenzo,
-> >>>>
-> >>>> On Thu, 21 Nov 2019 16:47:05 +0000 <lorenzo.pieralisi@arm.com> wrote:
-> >>>>
-> >>>>> On Fri, Nov 08, 2019 at 04:30:27PM +0900, Kunihiko Hayashi wrote:
-> >>>>>>> However, If I understand correctly, doesn't your solution only work some
-> >>>>>>> of the time? What happens if you boot both machines at the same time,
-> >>>>>>> and PERST# isn't asserted prior to the kernel booting?
-> >>>>>>
-> >>>>>> I think it contains an annoying problem.
-> >>>>>>
-> >>>>>> If PERST# isn't toggled prior to the kernel booting, PERST# remains asserted
-> >>>>>> and the RC driver can't access PCI bus.
-> >>>>>>
-> >>>>>> As a result, this patch works and deasserts PERST# (and EP configuration will
-> >>>>>> be lost). So boot sequence needs to include deasserting PERST#.
-> >>>>>
-> >>>>> I am sorry but I have lost you. Can you explain to us why checking
-> >>>>> that PERST# is deasserted guarantees you that:
-> >>>>>
-> >>>>> - The EP has bootstrapped
-> >>>>> - It is safe not to toggle it again (and also skip
-> >>>>>     uniphier_pcie_ltssm_enable())
-> >>>>>
-> >>>>> Please provide details of the HW configuration so that we understand
-> >>>>> what's actually supposed to happen and why this patch fixes the
-> >>>>> issue you are facing.
-> >>>>
-> >>>> I tried to connect between the following boards, and do pci-epf-test:
-> >>>>    - "RC board": UniPhier ld20 board that has DWC RC controller
-> >>>>    - "EP board": UniPhier legacy board that has DWC EP controller
-> >>>>
-> >>>> This EP has power-on-state configuration, but it's necessary to set
-> >>>> class ID, BAR sizes, etc. after starting up.
-> >>>>
-> >>>> In case of that starting up RC board before EP board, the RC driver
-> >>>> can't establish link. So we need to boot EP board first.
-> >>>> At that point, I've considered why RC can't establish link,
-> >>> and found that the waitng time was too short.
-> >>>> - EP/RC: power on both boards
-> >>>> - RC: start up the kernel on RC board
-> >>>> - RC: wait for link up (long time enough)
-> >>>> - EP: start up the kernel on EP board
-> >>>> - EP: configurate pci-epf-test
-> >>>> When the endpoint  configuration is done and the EP driver enables LTSSM,
-> >>> the RC driver will quit from waiting for link up.
-> >>>> Currently DWC RC driver calls dwc_pcie_wait_for_link(), however,
-> >>> the function tries to link up 10 times only, that is defined
-> >>> as LINK_WAIT_MAX_RETRIES in pcie-designware.h, it's too short
-> >>> to configurate the endpoint.
-> >>>> Now the patch to bypass PERST# is not necessary.
-> >>>> Instead for DWC RC drivers, I think that the number of retries
-> >>> should be changed according to the usage.
-> >>> And the same issue remains with other RC drivers.
-> >>
-> >> If EP is configured using Linux, then PERST# cannot be used as it's difficult to boot linux and initialize EP within the specified time interval. Can't you prevent PERST from being propagated at all?
-> > > Surely it might be difficult for RC to decide the time to wait for EP.
-> > Since RC almost toggles PERST# in boot time, I'd like to think about
-> > how to prevent from first PERST# at least.
-> 
-> It can be prevented in the HW (If that's possible). I modify the cable connecting RC and EP to not propagate PERST#.
+Dilip Kota (3):
+  dt-bindings: PCI: intel: Add YAML schemas for the PCIe RC controller
+  PCI: dwc: intel: PCIe RC controller driver
+  PCI: artpec6: Configure FTS with dwc helper function
 
-I understand. Although it's possible in case of a cable,
-in case of an edge connector, EP side needs hardware mechanism not to propagate PERST#.
+ .../devicetree/bindings/pci/intel-gw-pcie.yaml     | 138 ++++++
+ drivers/pci/controller/dwc/Kconfig                 |  11 +
+ drivers/pci/controller/dwc/Makefile                |   1 +
+ drivers/pci/controller/dwc/pcie-artpec6.c          |   8 +-
+ drivers/pci/controller/dwc/pcie-designware.c       |  57 +++
+ drivers/pci/controller/dwc/pcie-designware.h       |  12 +
+ drivers/pci/controller/dwc/pcie-intel-gw.c         | 545 +++++++++++++++++++++
+ include/uapi/linux/pci_regs.h                      |   1 +
+ 8 files changed, 766 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
+ create mode 100644 drivers/pci/controller/dwc/pcie-intel-gw.c
 
-Thank you,
-
----
-Best Regards,
-Kunihiko Hayashi
+-- 
+2.11.0
 
