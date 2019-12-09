@@ -2,127 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 31DD3117131
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Dec 2019 17:11:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C2C8D117191
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Dec 2019 17:26:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726522AbfLIQLH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 9 Dec 2019 11:11:07 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:44015 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726342AbfLIQLH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Dec 2019 11:11:07 -0500
-Received: by mail-il1-f195.google.com with SMTP id u16so13179012ilg.10;
-        Mon, 09 Dec 2019 08:11:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=V1rQj2NYpyrjZuSj9vZCVjr8OoOEApgs5CD1MbhwecM=;
-        b=URz2es964aBg/tgzcHlwyqPIOI4zN8TSjwiGZ8xcptQ5xFQKA1+8VK9Q+bSAiyZPkt
-         74U96aFbCX1Vn0Im6NR7EzpsCgPqfqdODHuB33UHFQBfSpKJjtC9Tw9LcQVBqUIF3jGI
-         gCk3Ts8CIo4T4VRYAdJIKKuyMZJ4adIq5PWx7YmpIBaCrurtNXC76eBlhMFs7I8Lv5+0
-         YoeSBdX8JSuTVZQ6PIS0G3GjCmOFhCDRFvj93byVGJzXYHt4YJ52yyYOiF09c0tNpxhH
-         Be3AA8H6Rnr+6dj7Ykd97lapmM4QO+fshpQWO0J07qmm+AOl4rgm7Cb+iWiZdx9tzWiF
-         6Aww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=V1rQj2NYpyrjZuSj9vZCVjr8OoOEApgs5CD1MbhwecM=;
-        b=W+ZPj6GxT/yyxj4qPK/rZO0wDOMr4OUvcfYPDNTZ+3jB7fmhLO9c25grq2NZ2g5lAo
-         orJQ7HIvugR3RWoTqBLFfPiRUHUWb2gv9JkYHDnIWN9xf3Twxw5BjYKaDd1AZ/PLiKSA
-         kdB3Gb/ZSHssZ3dtvhSj5mOez7LkkC148a/DZvs8kljKh/u9utu+AKH6Y5FYjcA2zEwH
-         YtrS6f63AbJQv6HAFbjMIk4/uQkYqW73DDYZO8hGeklQWf0/7iAtKacXM6hDdykaM8So
-         82Y2mzel2P9GYWcw90hcXOUnCk83/RtN1qdT0hBOiVi+6QXGOnZOyCwMUUOVpWNG6kiS
-         HBiw==
-X-Gm-Message-State: APjAAAXdWlM8NYEm8sGWr8OwsHjSOy49OT64AZUd6YrDNS3zXAwrFtDw
-        Nb3c9dL1T/Beh/FFjs01AiPGDELGHjMMfbGPdis=
-X-Google-Smtp-Source: APXvYqz0nWHT53HKk7dsGX4luv1vsXxIjyyy+6bEaibX3GI/XQkhJ3tLcZNkrwGMUE6JA9WhNqD08VhRtGUdBkigH/8=
-X-Received: by 2002:a92:3b19:: with SMTP id i25mr28698139ila.85.1575907866282;
- Mon, 09 Dec 2019 08:11:06 -0800 (PST)
+        id S1726509AbfLIQ0w (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 9 Dec 2019 11:26:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32818 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726477AbfLIQ0w (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 9 Dec 2019 11:26:52 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 839772080D;
+        Mon,  9 Dec 2019 16:26:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575908811;
+        bh=XmMuS1tdYvjAP/dOf3MN6vwqugHg0P62ECl8srBnh14=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=zOU+VVGKwRrsQ0D+daeQ+x/xsP+ATGq5Wl9RqLMP25OEiY225038UWy37UJhw427c
+         daPKborkT9vmKrlKEnjdHU05mgGRcG8eVRcpb/wMvX8g9vmrQcTXv0EFF7BeKw12Kf
+         l0lhHe8IOzGxUjarOFoGOoeadP8wDld7a054/8Sc=
+Date:   Mon, 9 Dec 2019 16:26:46 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Andre Przywara <andre.przywara@arm.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH] pcie: Add quirk for the Arm Neoverse N1SDP platform
+Message-ID: <20191209162645.GA7489@willie-the-truck>
+References: <20191209160638.141431-1-andre.przywara@arm.com>
 MIME-Version: 1.0
-References: <PSXP216MB043824762539AFC40143D75880490@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
-In-Reply-To: <PSXP216MB043824762539AFC40143D75880490@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
-Reply-To: bjorn@helgaas.com
-From:   Bjorn Helgaas <bjorn.helgaas@gmail.com>
-Date:   Mon, 9 Dec 2019 10:10:55 -0600
-Message-ID: <CABhMZUXOQXruHnZARVqe8cdkuhGXenMZ__7GhaJtDDsdBrcoyQ@mail.gmail.com>
-Subject: Re: [[RFC PATCH v1] 0/1] Add pci=nobbn to ignore ACPI _BBN method to
- override host bridge bus window
-To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191209160638.141431-1-andre.przywara@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 9:02 PM Nicholas Johnson
-<nicholas.johnson-opensource@outlook.com.au> wrote:
->
-> Hi all,
->
-> I want to be able to override the bus resource from ACPI, but nocrs does
-> not do it. I am putting this out here to get a feel for the sentiment
-> for doing something like this.
+On Mon, Dec 09, 2019 at 04:06:38PM +0000, Andre Przywara wrote:
+> From: Deepak Pandey <Deepak.Pandey@arm.com>
+> 
+> The Arm N1SDP SoC suffers from some PCIe integration issues, most
+> prominently config space accesses to not existing BDFs being answered
+> with a bus abort, resulting in an SError.
 
-This should be cc'd to linus-pci and linux-acpi (added).  I only
-noticed this message by accident.  And I don't see the patch at all.
+"Do as I say, not as I do"?
 
-> What is my motivation for doing this?
->
-> I have a Gigabyte Z170X Designare motherboard which only gives resource
-> [bus 00-7e]. I want the full [bus 00-ff] because I am trying to add as
-> many Thunderbolt 3 ports with add-in cards as possible. Thunderbolt
-> consumes bus numbers quickly. An Intel Ice Lake implementation (ideal)
-> consumes 42 busses per port, but prior solutions consume 50 busses per
-> port and have additional busses required for the NHI and USB
-> controllers, as well as the bridges from the root port.
->
-> Why not change nocrs to do this? Why the new kernel parameter?
->
-> I imagine that on systems with multiple PCI root complexes, things will
-> get hairy if we do this, if they are not placed on separate segments /
-> domains by the firmware. I do not own such a beast, but from what I
-> understand, the firmware normally places them on the same segment /
-> domain with non-overlapping bus numbers. But we may still want to use
-> nocrs for other reasons. I need to use nocrs to allow Linux to allocate
-> vast amounts of MMIO and MMIO_PREF under the Thunderbolt root ports
-> without the BIOS support for Thunderbolt. Hence, they should be kept
-> separate.
->
-> Why do this in general?
->
-> The bus resource is still a resource which is specified from ACPI, just
-> like those overridden by nocrs. Even if we do not use pci=nocrs to
-> override it, it should be possible to override it, just as it is
-> possible to override _CRS.
+> To mitigate this, the firmware scans the bus before boot (catching the
+> SErrors) and creates a table with valid BDFs, which acts as a filter for
+> Linux' config space accesses.
+> 
+> Add code consulting the table as an ACPI PCIe quirk, also register the
+> corresponding device tree based description of the host controller.
+> Also fix the other two minor issues on the way, namely not being fully
+> ECAM compliant and config space accesses being restricted to 32-bit
+> accesses only.
+> 
+> This allows the Arm Neoverse N1SDP board to boot Linux without crashing
+> and to access *any* devices (there are no platform devices except UART).
+> 
+> Signed-off-by: Deepak Pandey <Deepak.Pandey@arm.com>
+> [Sudipto: extend to cover the CCIX root port as well]
+> Signed-off-by: Sudipto Paul <sudipto.paul@arm.com>
+> [Andre: fix coding style issues, rewrite some parts, add DT support]
+> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> ---
+>  arch/arm64/configs/defconfig        |   1 +
+>  drivers/acpi/pci_mcfg.c             |   7 +
+>  drivers/pci/controller/Kconfig      |  11 ++
+>  drivers/pci/controller/Makefile     |   1 +
+>  drivers/pci/controller/pcie-n1sdp.c | 196 ++++++++++++++++++++++++++++
+>  include/linux/pci-ecam.h            |   2 +
+>  6 files changed, 218 insertions(+)
+>  create mode 100644 drivers/pci/controller/pcie-n1sdp.c
 
-pci=nocrs is for working around defects in firmware or Linux.  The
-firmware knows more about the platform than Linux, and in general we
-have to trust it.  We probably should taint the kernel when we use it.
+Where can I buy one of these? They're "unreleased" according to:
 
-Any parameter like this should work the same on all ACPI systems,
-including ia64 and arm64, and should probably also taint the kernel.
+https://community.arm.com/developer/tools-software/oss-platforms/w/docs/440/neoverse-n1-sdp
 
-I can't see the patch itself, but I'm a little confused because we
-normally get the bus number range from _CRS in acpi_pci_root_add() and
-your patch doesn't appear to touch that.
+and I don't think we should wreck upstream because of a platform that
+doesn't exist.
 
-> Nicholas Johnson (1):
->   PCI: Add pci=nobbn to ignore ACPI _BBN method to override host bridge
->     bus window
->
->  Documentation/admin-guide/kernel-parameters.txt |  2 ++
->  arch/x86/include/asm/pci_x86.h                  |  1 +
->  arch/x86/pci/acpi.c                             | 11 +++++++++++
->  arch/x86/pci/common.c                           |  3 +++
->  4 files changed, 17 insertions(+)
->
-> --
-> 2.24.0
->
+Will
