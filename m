@@ -2,95 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 60303117267
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Dec 2019 18:05:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 22B97117389
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Dec 2019 19:12:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726342AbfLIRFQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 9 Dec 2019 12:05:16 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44334 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726290AbfLIRFQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Dec 2019 12:05:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575911115;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=YU2tYXsp2GBBsr4G0U6n0fc7yLb4kMLHpVFrZEia0zU=;
-        b=Go7As8l/HmAnviyCrmAZEd2BKMR3y2e+qmE5e7lGK2GpD+ZdN6uOUTuC/TNCHZaOhshph9
-        NNySYBfwPtcTL3lBUVYxecYoy164HDwXDJGC8CRen73v82WrBFgrYJTqCQRt4vf6R/SzHB
-        0E/I49BZFclDr5QKX15SMJAEFb9vdzQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-332-PdEyLpJ7Md-RN-yy8qvTJQ-1; Mon, 09 Dec 2019 12:05:11 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3E427106B1DD;
-        Mon,  9 Dec 2019 17:05:10 +0000 (UTC)
-Received: from x1.home (ovpn04.gateway.prod.ext.phx2.redhat.com [10.5.9.4])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8B05D60C84;
-        Mon,  9 Dec 2019 17:05:09 +0000 (UTC)
-Date:   Mon, 9 Dec 2019 10:05:09 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Peter Geis <pgwipeout@gmail.com>, Heiko Stuebner <heiko@sntech.de>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        linux-pci@vger.kernel.org
-Subject: Re: [Question] rk3399 vfio-pci/sr-iov support
-Message-ID: <20191209100509.5cb950ac@x1.home>
-In-Reply-To: <b597b9a6-870a-8fbd-6490-59734c04367f@arm.com>
-References: <CAMdYzYoPXWbv4zXet6c9JQEMbqcJi6ZEOui_n82NVmrqNLy_pw@mail.gmail.com>
-        <b597b9a6-870a-8fbd-6490-59734c04367f@arm.com>
-Organization: Red Hat
+        id S1726342AbfLISL6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 9 Dec 2019 13:11:58 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37105 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726642AbfLISL6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Dec 2019 13:11:58 -0500
+Received: by mail-wr1-f67.google.com with SMTP id w15so17350756wru.4
+        for <linux-pci@vger.kernel.org>; Mon, 09 Dec 2019 10:11:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EPZYuKzuHS01ypbpAypAPWL2i1nnzUw0mtei/SOU8FI=;
+        b=eChG24HveCLJr1w7htcnEaSdvHwWYy3dopCe7PzKjFIohfKepun/JzeHDOVtJdhFBX
+         krj9dCfZna5uDRah00TO6hMrC5CxJ839KjvhzTUWqxzJ0nzCKaHhF508qHSSy0GZtoSx
+         KJKhRNuYym1oZf7HWKmhQjbPY2WwKkqcLV/aEZnMdOGhN7+MIwQiCiCZ6KKFGROEzZxL
+         Htj1QWdRJqh6WeQx5GUmgHJil8TmhNhDhDAyvl7+sHEzB6M95GtfmZ/PLcNOaeZEdyGj
+         IBWYXgi+wPjUJZNb7Xjum2/nBvekCA934r8JznZDGI55yX51UEARM1sRTsF7H8bRaJoC
+         7XyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EPZYuKzuHS01ypbpAypAPWL2i1nnzUw0mtei/SOU8FI=;
+        b=DAj1wrqCsx5uDbD30fXjPyZ1wWwz7H1mqpS4KLCmJ7aT6kvPDKmZthfXOtLYmjyyRv
+         eNVWOOaXD9ERijGLZN4SyyWbAR1mSC75oTUQ4UYPCYJclefJAC5DL2foyw254S+1jAvo
+         hLaXt3/SLJU95YnIFICzYUx4tc/Uze+SdArYfm50FrevHx/piGsGYE0wItHUVyLgkD5/
+         jfWTnIuXQZY7jRNpaIi0NaF0YtH0S3u7oc46zQTcTnjgEEftMgQ4yJUKRCLzXtNCjZen
+         z6RIHt4YRliZE9xgkJxXhpcXoUtnpA8PluMhcwdqay7XqIn5LCPqHU/BT7Ebm+IDZC8k
+         DYgw==
+X-Gm-Message-State: APjAAAWj8Mo+dtMYiGDQfDuRhb83TZSQWwr2L3zTizgXNgkvBK9CaGkf
+        olhr0WkOKyUER0CSzXbmyawBabHS5oY=
+X-Google-Smtp-Source: APXvYqzT1ymN3phudM5XMKZ/AIHs5aojcXL1B8J2G48oy5R7vLLmgXJx0GUEWH2l1syk1oV2bTStlA==
+X-Received: by 2002:a5d:5704:: with SMTP id a4mr3593884wrv.198.1575915116081;
+        Mon, 09 Dec 2019 10:11:56 -0800 (PST)
+Received: from localhost.localdomain (adsl-62-167-101-88.adslplus.ch. [62.167.101.88])
+        by smtp.gmail.com with ESMTPSA id h2sm309838wrv.66.2019.12.09.10.11.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Dec 2019 10:11:55 -0800 (PST)
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
+        iommu@lists.linux-foundation.org
+Cc:     joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        lorenzo.pieralisi@arm.com, guohanjun@huawei.com,
+        sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org,
+        will@kernel.org, robin.murphy@arm.com, bhelgaas@google.com,
+        eric.auger@redhat.com, jonathan.cameron@huawei.com,
+        zhangfei.gao@linaro.org
+Subject: [PATCH v3 00/13] iommu: Add PASID support to Arm SMMUv3
+Date:   Mon,  9 Dec 2019 19:05:01 +0100
+Message-Id: <20191209180514.272727-1-jean-philippe@linaro.org>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: PdEyLpJ7Md-RN-yy8qvTJQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 9 Dec 2019 14:07:02 +0000
-Robin Murphy <robin.murphy@arm.com> wrote:
+Add support for Substream ID and PASIDs to the SMMUv3 driver.
+Changes since v2 [1]:
 
-> On 09/12/2019 1:28 pm, Peter Geis wrote:
-> > Good Morning,
-> > 
-> > I'm back with more pcie fun on the rk3399.
-> > I'm trying to get pcie passthrough working for a vm on the rk3399, and
-> > have encountered some roadblocks.
-> > 
-> > First, vfio-pci doesn't work on the rk3399, as the pcie controller
-> > doesn't bind explicitly to a iommu.
-> > [37528.138212] vfio-pci 0000:01:00.0: assign IRQ: got 226
-> > [37528.138254] vfio-pci: probe of 0000:01:00.0 failed with error -22
-> > 
-> > # find /sys/kernel/iommu_groups/ -type l
-> > /sys/kernel/iommu_groups/1/devices/ff8f0000.vop
-> > /sys/kernel/iommu_groups/2/devices/ff900000.vop
-> > 
-> > # virsh start openwrt
-> > error: Failed to start domain openwrt
-> > error: internal error: Process exited prior to exec: libvirt:  error :
-> > internal error: Invalid device 0000:01:00.0 iommu_group file
-> > /sys/bus/pci/devices/0000:01:00.0/iommu_group is not a symlink  
-> 
-> That much I can help with somewhat: the major impediment is that RK3399 
-> doesn't have an IOMMU in front of PCIe. As far as I'm aware your only 
-> option is to resort to the "here be dragons" CONFIG_VFIO_NOIOMMU mode 
-> (which I don't know an awful lot about beyond that it's a thing).
+* Split preparatory work into patches 5, 6, 8 and 9.
 
-And it's a thing that's really only useful if your motivation is to run
-something like DPDK in the host and you're not concerned about
-isolation between userspace drivers and the host kernel, and you don't
-mind tainting the kernel.  It's not useful for things like assigning a
-device to a VM as we can't readily do that without an IOMMU for
-translation.  Thanks,
+* Added patch 1. Not strictly relevant, but since we're moving the DMA
+  allocations and adding a new one, we might as well clean the flags
+  first.
 
-Alex
+* Fixed a double free reported by Jonathan, and other small
+  issues.
+
+* Added patch 12. Upstream commit c6e9aefbf9db ("PCI/ATS: Remove unused
+  PRI and PASID stubs") removed the unused PASID stubs. Since the SMMU
+  driver can be built without PCI, the stubs are now needed.
+
+[1] https://lore.kernel.org/linux-iommu/20191108152508.4039168-1-jean-philippe@linaro.org/
+
+Jean-Philippe Brucker (13):
+  iommu/arm-smmu-v3: Drop __GFP_ZERO flag from DMA allocation
+  dt-bindings: document PASID property for IOMMU masters
+  iommu/arm-smmu-v3: Support platform SSID
+  ACPI/IORT: Support PASID for platform devices
+  iommu/arm-smmu-v3: Prepare arm_smmu_s1_cfg for SSID support
+  iommu/arm-smmu-v3: Add context descriptor tables allocators
+  iommu/arm-smmu-v3: Add support for Substream IDs
+  iommu/arm-smmu-v3: Propate ssid_bits
+  iommu/arm-smmu-v3: Handle failure of arm_smmu_write_ctx_desc()
+  iommu/arm-smmu-v3: Add second level of context descriptor table
+  iommu/arm-smmu-v3: Improve add_device() error handling
+  PCI/ATS: Add PASID stubs
+  iommu/arm-smmu-v3: Add support for PCI PASID
+
+ .../devicetree/bindings/iommu/iommu.txt       |   6 +
+ drivers/acpi/arm64/iort.c                     |  18 +
+ drivers/iommu/arm-smmu-v3.c                   | 462 +++++++++++++++---
+ drivers/iommu/of_iommu.c                      |   6 +-
+ include/linux/iommu.h                         |   2 +
+ include/linux/pci-ats.h                       |   3 +
+ 6 files changed, 437 insertions(+), 60 deletions(-)
+
+-- 
+2.24.0
 
