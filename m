@@ -2,90 +2,73 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ED717116931
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Dec 2019 10:21:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 175A8116AF6
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Dec 2019 11:27:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727706AbfLIJVf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 9 Dec 2019 04:21:35 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:49524 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727718AbfLIJVc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Dec 2019 04:21:32 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB99LPHq026154;
-        Mon, 9 Dec 2019 03:21:25 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575883285;
-        bh=cTJomjNQR0NW5SRIkkORWQfkiTKy/NfWuwZUGbbS3uA=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=OAleDUDjlZrmKYS+2pxGC/MILdtul2ndm1T8f/23r67hG0phlm7zivhm2j55WszWv
-         r5oReC8nsFTwMKKWg7+GQHBpLAlNn9Cm/nMTKlYAZN5ylm4UEn2H59yF6fciiSnp/O
-         8ExJYRSQ1+x7NxBuefTLcudPpqVk55e4ojIwdYsk=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB99LPBZ064204
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 9 Dec 2019 03:21:25 -0600
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 9 Dec
- 2019 03:21:25 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 9 Dec 2019 03:21:25 -0600
-Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB99KcdB087697;
-        Mon, 9 Dec 2019 03:21:22 -0600
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Murray <andrew.murray@arm.com>
-CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH 13/13] MAINTAINERS: Add Kishon Vijay Abraham I for TI J721E SoC PCIe
-Date:   Mon, 9 Dec 2019 14:51:47 +0530
-Message-ID: <20191209092147.22901-14-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191209092147.22901-1-kishon@ti.com>
-References: <20191209092147.22901-1-kishon@ti.com>
+        id S1727346AbfLIK1e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 9 Dec 2019 05:27:34 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:42009 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727143AbfLIK1e (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Dec 2019 05:27:34 -0500
+Received: by mail-oi1-f194.google.com with SMTP id j22so5824231oij.9;
+        Mon, 09 Dec 2019 02:27:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=BOldAukWPGvCMXmrQf1gXfFA50h3n/TlEcM4kvZn67k=;
+        b=rQTIghiXGjKRvew8550rzD8nED93vGsH14VPT8ZowwJxJypGj2JJCg4WG4ssPyBNCf
+         7AioaFOakr1OXnFH2APWquuBYj6k2M1STa28v+zYnYWoMRmGaP8zAMXT3SVf+AXcYIwr
+         BTwyBMl1tA7VkeJugpV5ONPFZFSIVCu6C4u0tknGcMz1MVNnD/d2IAtzw99l4dsLE/zG
+         yXt7bRCLP7uXqhS+t9gq7Li6CbWyKF96EI0DHohtIMqimRAeMcSTt+D/VNjHAod5KmQE
+         huGVspqbi2GnMm7xUjE/tUgYEDZ8FSBdfRwz8GBw0BWGLhMsBD6KMvk8QEig6bDvH3Sa
+         ilBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=BOldAukWPGvCMXmrQf1gXfFA50h3n/TlEcM4kvZn67k=;
+        b=BpkT7ZTpw+sjJucDSipFBH22IJiUKkkl6+pHz9vJt+CuUAQejCnFIKVhKoakxxCdNP
+         mgMbYDMCFKei9qJ3Z1vIVWIi2djhM71mvj6WXQO1jGK6gQz4NGCUKrhjsJwQLCoWa+tB
+         BD/xml2cmpg8EFWiLYk7twHaxqvnxMGwj4a7JG82vyMf0Xj/BTJ7B75toQdfM7sPJRje
+         FaXMQXL3CEwhckozJ+ZxayvLmGAbYvxD6YclLWT2Y6O8eU/vYe8do9qHPDzwAkoDO7FP
+         8/7IuLPLN8LjJTNBkohfhdzjfIQZwjEJ8KVwttMGiRm1mtTC+gmrqTl5kEN4Xe4SkzIv
+         xPLA==
+X-Gm-Message-State: APjAAAUE3TtVARL2elxZ9fnYmA2U0ePpU2vQhC4CCClGkBLcpuB95K9k
+        qAsRiT9g13qOrbq9n+PFE39ErwCGuEbeLyNB+VA=
+X-Google-Smtp-Source: APXvYqzDel7dxaZdi9R+PP3cUE6cZO9V1PUkCfBzoSIrbf9sruiYhOkZPeAeUMFEIJQXv+PVS7LJNIyxKg/RZuXISF0=
+X-Received: by 2002:aca:f445:: with SMTP id s66mr22398129oih.95.1575887253334;
+ Mon, 09 Dec 2019 02:27:33 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+From:   Ramon Fried <rfried.dev@gmail.com>
+Date:   Mon, 9 Dec 2019 12:27:22 +0200
+Message-ID: <CAGi-RUJvqJoCXWN2YugRn=WYEk9yzt7m3OPfX_o++PmJWQ3woQ@mail.gmail.com>
+Subject: MSI irqchip configured as IRQCHIP_ONESHOT_SAFE causes spurious IRQs
+To:     hkallweit1@gmail.com, bhelgaas@google.com, marc.zyngier@arm.com,
+        tglx@linutronix.de, lorenzo.pieralisi@arm.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add Kishon Vijay Abraham I as MAINTAINER for TI J721E SoC PCIe.
+Hi,
+While debugging the root cause of spurious IRQ's on my PCIe MSI line it appears
+that because of the line:
+    info->chip->flags |= IRQCHIP_ONESHOT_SAFE;
+in pci_msi_create_irq_domain()
+The IRQF_ONESHOT is ignored, especially when requesting IRQ through
+pci_request_threaded_irq() where handler is NULL.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- MAINTAINERS | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+The problem is that the MSI masking now only surrounds the HW handler,
+and all additional MSI that occur before the threaded handler is
+complete are considered by the note_interrupt() as spurious.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index bd5847e802de..a9533d0752de 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12691,13 +12691,14 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/pci/designware-pcie.txt
- F:	drivers/pci/controller/dwc/*designware*
- 
--PCI DRIVER FOR TI DRA7XX
-+PCI DRIVER FOR TI DRA7XX/J721E
- M:	Kishon Vijay Abraham I <kishon@ti.com>
- L:	linux-omap@vger.kernel.org
- L:	linux-pci@vger.kernel.org
- S:	Supported
- F:	Documentation/devicetree/bindings/pci/ti-pci.txt
- F:	drivers/pci/controller/dwc/pci-dra7xx.c
-+F:	drivers/pci/controller/cadence/pci-j721e.c
- 
- PCI DRIVER FOR TI KEYSTONE
- M:	Murali Karicheri <m-karicheri2@ti.com>
--- 
-2.17.1
+Besides the side effect of that, I don't really understand the logic
+of not masking the MSI until the threaded handler is complete,
+especially when there's no HW handler and only threaded handler.
 
+Your thoughts?
+
+Thank,
+Ramon.
