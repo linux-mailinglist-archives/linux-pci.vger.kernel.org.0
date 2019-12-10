@@ -2,106 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 09690119A09
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2019 22:53:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 390EA119DF0
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2019 23:41:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727443AbfLJVtD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 10 Dec 2019 16:49:03 -0500
-Received: from ale.deltatee.com ([207.54.116.67]:43196 "EHLO ale.deltatee.com"
+        id S1727940AbfLJWlR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 10 Dec 2019 17:41:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729798AbfLJVtD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:49:03 -0500
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1ienNM-000409-QV; Tue, 10 Dec 2019 14:49:01 -0700
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Armen Baloyan <abaloyan@gigaio.com>
-Cc:     armbaloyan@gmail.com, epilmore@gigaio.com,
-        linux-pci@vger.kernel.org
-References: <20191210212258.GA144914@google.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <2070c4d6-cfe8-4d81-6f23-99d05b3bd3a5@deltatee.com>
-Date:   Tue, 10 Dec 2019 14:49:00 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1728904AbfLJWbu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:31:50 -0500
+Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EDE5206EC;
+        Tue, 10 Dec 2019 22:31:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576017110;
+        bh=OWeDD1ggaI7KtD7dXyfUWEhw8ibkokJLLFnshu+t8Bs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=jx/aoNNd4yeJQOJni2d8Jm2bVglXRvoz4EFeLcuMkv+4rwBBQgDPc8e0091THiWqv
+         ByDPON5LbCRk5pfsGKnre0V6A3u0AVAS3HCh4SvEgK46AtHn1Lj4VDYvmleLkrwvjW
+         e7Rs9VJEMWlZSW72/q1C36bfYYi7lcjJcJDvAF2c=
+Date:   Tue, 10 Dec 2019 16:31:48 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     James Sewart <jamessewart@arista.com>
+Cc:     linux-pci@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Dmitry Safonov <dima@arista.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: Re: [PATCH v6 1/3] PCI: Fix off by one in dma_alias_mask allocation
+ size
+Message-ID: <20191210223148.GA166696@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20191210212258.GA144914@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: linux-pci@vger.kernel.org, epilmore@gigaio.com, armbaloyan@gmail.com, abaloyan@gigaio.com, helgaas@kernel.org
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        GREYLIST_ISWHITE autolearn=ham autolearn_force=no version=3.4.2
-Subject: Re: [PATCH] PCI/P2PDMA: Add Intel SkyLake-E to the whitelist
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <910070E3-7964-4549-B77F-EC7FC6144503@arista.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+[+cc Joerg]
 
-
-On 2019-12-10 2:22 p.m., Bjorn Helgaas wrote:
-> On Fri, Dec 06, 2019 at 01:52:45PM -0800, Armen Baloyan wrote:
->> Intel SkyLake-E was successfully tested for p2pdma
->> transactions spanning over a host bridge and PCI
->> bridge with IOMMU on.
->>
->> Signed-off-by: Armen Baloyan <abaloyan@gigaio.com>
+On Tue, Dec 03, 2019 at 03:43:22PM +0000, James Sewart wrote:
+> The number of possible devfns is 256, add def and correct uses.
 > 
-> Applied with Logan's reviewed-by to pci/p2pdma for v5.6, thanks!
+> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+> Signed-off-by: James Sewart <jamessewart@arista.com>
+
+I applied these three patches to pci/virtualization for v5.6, thanks!
+
+I moved the MAX_NR_DEVFNS from include/linux/pci.h to
+drivers/pci/pci.h since nobody outside drivers/pci needs it.
+
+> ---
+>  drivers/pci/pci.c    | 2 +-
+>  drivers/pci/search.c | 2 +-
+>  include/linux/pci.h  | 2 ++
+>  3 files changed, 4 insertions(+), 2 deletions(-)
 > 
-> Logan, the commit log for 494d63b0d5d0 ("PCI/P2PDMA: Whitelist some
-> Intel host bridges") says:
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index a97e2571a527..d3c83248f3ce 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -5876,7 +5876,7 @@ int pci_set_vga_state(struct pci_dev *dev, bool decode,
+>  void pci_add_dma_alias(struct pci_dev *dev, u8 devfn)
+>  {
+>  	if (!dev->dma_alias_mask)
+> -		dev->dma_alias_mask = bitmap_zalloc(U8_MAX, GFP_KERNEL);
+> +		dev->dma_alias_mask = bitmap_zalloc(MAX_NR_DEVFNS, GFP_KERNEL);
+>  	if (!dev->dma_alias_mask) {
+>  		pci_warn(dev, "Unable to allocate DMA alias mask\n");
+>  		return;
+> diff --git a/drivers/pci/search.c b/drivers/pci/search.c
+> index bade14002fd8..9e4dfae47252 100644
+> --- a/drivers/pci/search.c
+> +++ b/drivers/pci/search.c
+> @@ -43,7 +43,7 @@ int pci_for_each_dma_alias(struct pci_dev *pdev,
+>  	if (unlikely(pdev->dma_alias_mask)) {
+>  		u8 devfn;
+>  
+> -		for_each_set_bit(devfn, pdev->dma_alias_mask, U8_MAX) {
+> +		for_each_set_bit(devfn, pdev->dma_alias_mask, MAX_NR_DEVFNS) {
+>  			ret = fn(pdev, PCI_DEVID(pdev->bus->number, devfn),
+>  				 data);
+>  			if (ret)
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 1a6cf19eac2d..6481da29d667 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -57,6 +57,8 @@
+>  #define PCI_DEVID(bus, devfn)	((((u16)(bus)) << 8) | (devfn))
+>  /* return bus from PCI devid = ((u16)bus_number) << 8) | devfn */
+>  #define PCI_BUS_NUM(x) (((x) >> 8) & 0xff)
+> +/* Number of possible devfns. devfns can be from 0.0 to 1f.7 inclusive */
+> +#define MAX_NR_DEVFNS 256
+>  
+>  /* pci_slot represents a physical slot */
+>  struct pci_slot {
+> -- 
+> 2.24.0
 > 
->     Intel devices do not have good support for P2P requests that span different
->     host bridges as the transactions will cross the QPI/UPI bus and this does
->     not perform well.
 > 
->     Therefore, enable support for these devices only if the host bridges match.
-> 
->     Add Intel devices that have been tested and are known to work. There are
->     likely many others out there that will need to be tested and added.
-> 
-> That suggests it's possible that P2P DMA may actually work but with
-> poor performance, and that you only want to add host bridges that work
-> with good performance to the whitelist.
-> 
-> Armen found that it *works*, but I have no idea what the performance
-> was.  Do you care about the performance, or is this a simple "works /
-> doesn't work" test?
-
-Armen and I discussed this off list and things are a bit more
-complicated than I'd like but I think this is still the right way to go
-until we have more evidence:
-
-With older SandyBridge devices, I know that if a P2P transaction crosses
-the QPI bus between sockets the performance will be unacceptable. Which
-is why I added the current check so P2P transactions will not cross
-between host bridges.
-
-With the SkyLake device Armen tested with: it is not a multi-socket
-configuration but the device, internally, has multiple host bridges.
-Armen tested the performance across two of these host bridges and is
-relying on that working so cannot set that flag.
-
-What we don't know is whether P2P transactions across a multi-socket
-SkyLake platforms will perform well. And, if it doesn't, I don't at this
-time know how we can differentiate between the host bridges on the same
-socket and those on other sockets.
-
-So IMO, until someone comes forward saying that a particular SkyLake
-platform doesn't work well and informing us how to differentiate them,
-Armen's patch is the best we can do.
-
-Logan
-
-
-
-
