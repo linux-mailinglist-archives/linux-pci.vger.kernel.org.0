@@ -2,78 +2,91 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D944A11932D
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2019 22:08:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 58FF51195BE
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2019 22:23:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727427AbfLJVHp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 10 Dec 2019 16:07:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54190 "EHLO mail.kernel.org"
+        id S1728750AbfLJVXC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 10 Dec 2019 16:23:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727335AbfLJVHo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:07:44 -0500
+        id S1728920AbfLJVXB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:23:01 -0500
 Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C86E82467E;
-        Tue, 10 Dec 2019 21:07:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06E8D205C9;
+        Tue, 10 Dec 2019 21:22:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012064;
-        bh=2ykNyvGZMJo7g3XX2Ffo2Sm4t/OZWneo6t2EKj0O0vs=;
+        s=default; t=1576012980;
+        bh=jgZTmZ2JHLxkkhkw15N7CWxyAqm2EjktUnApqMjONyY=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=tiZ5TXWGgfMMcgH1qAGW16vBSyFbf8QVFgba/3MyF+aPuDTbo4hJyiKvDLa/T3dHf
-         QC17RvTnsNWgjsiKExbDTckPZJk/RCI/j1M9mCOmDjgARxC0K8V6pKEybDPhvvojm+
-         0dNknNsvmHuDSPRrzN1/QfLHPNP0Fm1IwVXvM5HU=
-Date:   Tue, 10 Dec 2019 15:07:41 -0600
+        b=X7ANq6rpHSZ3n/QITEPYW2/gTZgG9Llo1ZR//ZMXcNQPBid9RbsYMc323lO4z5Pz7
+         C9ubTOu/wkaH9vJlvmYEpdTUinlko+x+8gj+JBgPql729UFvy2wMvFFXWD3TmpbcFS
+         TfLEb0jw/zhoOcGY0FlaiW1hrY4Of5SqwGzyEZOI=
+Date:   Tue, 10 Dec 2019 15:22:58 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
-        iommu@lists.linux-foundation.org, joro@8bytes.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        lorenzo.pieralisi@arm.com, guohanjun@huawei.com,
-        sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org,
-        will@kernel.org, robin.murphy@arm.com, eric.auger@redhat.com,
-        jonathan.cameron@huawei.com, zhangfei.gao@linaro.org
-Subject: Re: [PATCH v3 12/13] PCI/ATS: Add PASID stubs
-Message-ID: <20191210210741.GA143420@google.com>
+To:     Armen Baloyan <abaloyan@gigaio.com>
+Cc:     logang@deltatee.com, armbaloyan@gmail.com, epilmore@gigaio.com,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI/P2PDMA: Add Intel SkyLake-E to the whitelist
+Message-ID: <20191210212258.GA144914@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191209180514.272727-13-jean-philippe@linaro.org>
+In-Reply-To: <1575669165-31697-1-git-send-email-abaloyan@gigaio.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 07:05:13PM +0100, Jean-Philippe Brucker wrote:
-> The SMMUv3 driver, which may be built without CONFIG_PCI, will soon gain
-> PASID support.  Partially revert commit c6e9aefbf9db ("PCI/ATS: Remove
-> unused PRI and PASID stubs") to re-introduce the PASID stubs, and avoid
-> adding more #ifdefs to the SMMU driver.
+On Fri, Dec 06, 2019 at 01:52:45PM -0800, Armen Baloyan wrote:
+> Intel SkyLake-E was successfully tested for p2pdma
+> transactions spanning over a host bridge and PCI
+> bridge with IOMMU on.
 > 
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> Signed-off-by: Armen Baloyan <abaloyan@gigaio.com>
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Applied with Logan's reviewed-by to pci/p2pdma for v5.6, thanks!
+
+Logan, the commit log for 494d63b0d5d0 ("PCI/P2PDMA: Whitelist some
+Intel host bridges") says:
+
+    Intel devices do not have good support for P2P requests that span different
+    host bridges as the transactions will cross the QPI/UPI bus and this does
+    not perform well.
+
+    Therefore, enable support for these devices only if the host bridges match.
+
+    Add Intel devices that have been tested and are known to work. There are
+    likely many others out there that will need to be tested and added.
+
+That suggests it's possible that P2P DMA may actually work but with
+poor performance, and that you only want to add host bridges that work
+with good performance to the whitelist.
+
+Armen found that it *works*, but I have no idea what the performance
+was.  Do you care about the performance, or is this a simple "works /
+doesn't work" test?
 
 > ---
->  include/linux/pci-ats.h | 3 +++
+>  drivers/pci/p2pdma.c | 3 +++
 >  1 file changed, 3 insertions(+)
 > 
-> diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
-> index 5d62e78946a3..d08f0869f121 100644
-> --- a/include/linux/pci-ats.h
-> +++ b/include/linux/pci-ats.h
-> @@ -33,6 +33,9 @@ void pci_disable_pasid(struct pci_dev *pdev);
->  int pci_pasid_features(struct pci_dev *pdev);
->  int pci_max_pasids(struct pci_dev *pdev);
->  #else /* CONFIG_PCI_PASID */
-> +static inline int pci_enable_pasid(struct pci_dev *pdev, int features)
-> +{ return -EINVAL; }
-> +static inline void pci_disable_pasid(struct pci_dev *pdev) { }
->  static inline int pci_pasid_features(struct pci_dev *pdev)
->  { return -EINVAL; }
->  static inline int pci_max_pasids(struct pci_dev *pdev)
+> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+> index 79fcb8d8f1b1..9f8e9df8f4ca 100644
+> --- a/drivers/pci/p2pdma.c
+> +++ b/drivers/pci/p2pdma.c
+> @@ -324,6 +324,9 @@ static const struct pci_p2pdma_whitelist_entry {
+>  	/* Intel Xeon E7 v3/Xeon E5 v3/Core i7 */
+>  	{PCI_VENDOR_ID_INTEL,	0x2f00, REQ_SAME_HOST_BRIDGE},
+>  	{PCI_VENDOR_ID_INTEL,	0x2f01, REQ_SAME_HOST_BRIDGE},
+> +	/* Intel SkyLake-E. */
+> +	{PCI_VENDOR_ID_INTEL,	0x2030, 0},
+> +	{PCI_VENDOR_ID_INTEL,	0x2020, 0},
+>  	{}
+>  };
+>  
 > -- 
-> 2.24.0
+> 2.16.5
 > 
