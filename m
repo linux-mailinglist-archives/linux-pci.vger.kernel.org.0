@@ -2,96 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EC9C611802D
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2019 07:07:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 31361118159
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Dec 2019 08:28:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbfLJGHP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 10 Dec 2019 01:07:15 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:49460 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725942AbfLJGHO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 10 Dec 2019 01:07:14 -0500
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 35A159D4EFD3133DFE18;
-        Tue, 10 Dec 2019 14:07:11 +0800 (CST)
-Received: from HGHY4Z004218071.china.huawei.com (10.133.224.57) by
- DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.439.0; Tue, 10 Dec 2019 14:07:00 +0800
-From:   Xiang Zheng <zhengxiang9@huawei.com>
-To:     <bhelgaas@google.com>, <willy@infradead.org>
-CC:     <zhengxiang9@huawei.com>, <wangxiongfeng2@huawei.com>,
-        <wanghaibin.wang@huawei.com>, <guoheyi@huawei.com>,
-        <yebiaoxiang@huawei.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <rjw@rjwysocki.net>,
-        <tglx@linutronix.de>, <guohanjun@huawei.com>,
-        <yangyingliang@huawei.com>
-Subject: [PATCH v3] PCI: Lock the pci_cfg_wait queue for the consistency of data
-Date:   Tue, 10 Dec 2019 11:15:27 +0800
-Message-ID: <20191210031527.40136-1-zhengxiang9@huawei.com>
-X-Mailer: git-send-email 2.15.1.windows.2
+        id S1727194AbfLJH2E (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 10 Dec 2019 02:28:04 -0500
+Received: from mga01.intel.com ([192.55.52.88]:52144 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727143AbfLJH2E (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 10 Dec 2019 02:28:04 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Dec 2019 23:28:03 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,298,1571727600"; 
+   d="scan'208";a="220151589"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 09 Dec 2019 23:28:01 -0800
+Received: by lahna (sSMTP sendmail emulation); Tue, 10 Dec 2019 09:28:00 +0200
+Date:   Tue, 10 Dec 2019 09:28:00 +0200
+From:   "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: Linux v5.5 serious PCI bug
+Message-ID: <20191210072800.GY2665@lahna.fi.intel.com>
+References: <PSXP216MB0438BFEAA0617283A834E11580580@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+ <20191209131239.GP2665@lahna.fi.intel.com>
+ <PSXP216MB043809A423446A6EF2C7909A80580@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.224.57]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PSXP216MB043809A423446A6EF2C7909A80580@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-7ea7e98fd8d0 ("PCI: Block on access to temporarily unavailable pci
-device") suggests that the "pci_lock" is sufficient, and all the
-callers of pci_wait_cfg() are wrapped with the "pci_lock".
+On Mon, Dec 09, 2019 at 01:33:49PM +0000, Nicholas Johnson wrote:
+> On Mon, Dec 09, 2019 at 03:12:39PM +0200, mika.westerberg@linux.intel.com wrote:
+> > On Mon, Dec 09, 2019 at 12:34:04PM +0000, Nicholas Johnson wrote:
+> > > Hi,
+> > > 
+> > > I have compiled Linux v5.5-rc1 and thought all was good until I 
+> > > hot-removed a Gigabyte Aorus eGPU from Thunderbolt. The driver for the 
+> > > GPU was not loaded (blacklisted) so the crash is nothing to do with the 
+> > > GPU driver.
+> > > 
+> > > We had:
+> > > - kernel NULL pointer dereference
+> > > - refcount_t: underflow; use-after-free.
+> > > 
+> > > Attaching dmesg for now; will bisect and come back with results.
+> > 
+> > Looks like something related to iommu. Does it work if you disable it?
+> > (intel_iommu=off in the command line).
+> On Mon, Dec 09, 2019 at 03:12:39PM +0200, mika.westerberg@linux.intel.com wrote:
+> > On Mon, Dec 09, 2019 at 12:34:04PM +0000, Nicholas Johnson wrote:
+> > > Hi,
+> > > 
+> > > I have compiled Linux v5.5-rc1 and thought all was good until I 
+> > > hot-removed a Gigabyte Aorus eGPU from Thunderbolt. The driver for the 
+> > > GPU was not loaded (blacklisted) so the crash is nothing to do with the 
+> > > GPU driver.
+> > > 
+> > > We had:
+> > > - kernel NULL pointer dereference
+> > > - refcount_t: underflow; use-after-free.
+> > > 
+> > > Attaching dmesg for now; will bisect and come back with results.
+> > 
+> > Looks like something related to iommu. Does it work if you disable it?
+> > (intel_iommu=off in the command line).
+> I thought it could be that, too.
+> 
+> The attachment "dmesg-4" from the original email is with iommu parameters.
+> The attachment "dmesg-5" from the original email is with no iommu parameters.
+> Attaching here "dmesg-6" with the iommu explicitly set off like you said.
+> 
+> No difference, still broken. Although, with iommu off, there are less stack traces.
+> 
+> Could it be sysfs-related?
 
-However, since the commit cdcb33f98244 ("PCI: Avoid possible deadlock on
-pci_lock and p->pi_lock") merged, the accesses to the pci_cfg_wait queue
-are not safe anymore. This would cause kernel panic in a very low chance
-(See more detailed information from the below link). A "pci_lock" is
-insufficient and we need to hold an additional queue lock while read/write
-the wait queue.
+Bisect would probably be the best option to find the culprit commit.
+There are couple of commits done for pciehp so reverting them one by one
+may help as well:
 
-So let's use the add_wait_queue()/remove_wait_queue() instead of
-__add_wait_queue()/__remove_wait_queue(). Also move the wait queue
-functionality around the "schedule()" function to avoid reintroducing
-the deadlock addressed by "cdcb33f98244".
-
-Signed-off-by: Xiang Zheng <zhengxiang9@huawei.com>
-Cc: Heyi Guo <guoheyi@huawei.com>
-Cc: Biaoxiang Ye <yebiaoxiang@huawei.com>
-Link: https://lore.kernel.org/linux-pci/79827f2f-9b43-4411-1376-b9063b67aee3@huawei.com/
----
-
-v3:
-  Improve the commit subject and message.
-
-v2:
-  Move the wait queue functionality around the "schedule()".
-
----
- drivers/pci/access.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pci/access.c b/drivers/pci/access.c
-index 2fccb5762c76..09342a74e5ea 100644
---- a/drivers/pci/access.c
-+++ b/drivers/pci/access.c
-@@ -207,14 +207,14 @@ static noinline void pci_wait_cfg(struct pci_dev *dev)
- {
- 	DECLARE_WAITQUEUE(wait, current);
- 
--	__add_wait_queue(&pci_cfg_wait, &wait);
- 	do {
- 		set_current_state(TASK_UNINTERRUPTIBLE);
- 		raw_spin_unlock_irq(&pci_lock);
-+		add_wait_queue(&pci_cfg_wait, &wait);
- 		schedule();
-+		remove_wait_queue(&pci_cfg_wait, &wait);
- 		raw_spin_lock_irq(&pci_lock);
- 	} while (dev->block_cfg_access);
--	__remove_wait_queue(&pci_cfg_wait, &wait);
- }
- 
- /* Returns 0 on success, negative values indicate error. */
--- 
-2.19.1
-
-
+  87d0f2a5536f PCI: pciehp: Prevent deadlock on disconnect
+  75fcc0ce72e5 PCI: pciehp: Do not disable interrupt twice on suspend
+  b94ec12dfaee PCI: pciehp: Refactor infinite loop in pcie_poll_cmd()
+  157c1062fcd8 PCI: pciehp: Avoid returning prematurely from sysfs requests
