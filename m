@@ -2,96 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B83BA11BD18
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Dec 2019 20:34:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 590F111BDBF
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Dec 2019 21:17:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726592AbfLKTeO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Dec 2019 14:34:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37992 "EHLO mail.kernel.org"
+        id S1726568AbfLKUR3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Dec 2019 15:17:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726242AbfLKTeO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 11 Dec 2019 14:34:14 -0500
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726411AbfLKUR2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 11 Dec 2019 15:17:28 -0500
+Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A537D2173E;
-        Wed, 11 Dec 2019 19:34:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6BBF20836;
+        Wed, 11 Dec 2019 20:17:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576092853;
-        bh=pk5mlVjD1gbfWi7be4kCl2yXmTdkckNMVaeV/EJ2Yf4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=VtLfOchvvNRkPdkAqsM38NCeJFhkESnhs8pf82brAqT1xvbmo2yUupNjDThtfolE6
-         +2mRg0RtyyhHx9+D5H7iQeg+i/+uu5+PxOEN+/uZQEasKXl6nPETpgi2cKoNI1MAc/
-         grmWRhAKhV9qFb6xT1lTH9/xMwTpf9jPWKbdJebk=
-Received: by mail-qt1-f174.google.com with SMTP id 38so7275066qtb.13;
-        Wed, 11 Dec 2019 11:34:13 -0800 (PST)
-X-Gm-Message-State: APjAAAUcMhkJL/TiEQ8wOvBSmJzIwSFGwY1+9aodNts6dDEXw5PWrPjf
-        M8PWPpeo+CXSs9XaCXQGC9Yvm5Cdbzx4t6UXKg==
-X-Google-Smtp-Source: APXvYqzgnGxu26F0CkZ7oMwgc8p9WduBrS9LANuxGEAK9qlyhrHXv1vndLPtfkakVtGDf8ibnUqcrmXE5QSpRPIx278=
-X-Received: by 2002:ac8:59:: with SMTP id i25mr4308140qtg.110.1576092852765;
- Wed, 11 Dec 2019 11:34:12 -0800 (PST)
+        s=default; t=1576095447;
+        bh=4r2Iy5r3yltzkOi+Ue/uCbrEJloSfsHyNrQQPZ6a91M=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=K4rsURO1d1nG/9CUOU21PXHxDAlfjKTIYvivgtNsYl2RHhWnxioV5ZWBR5AvTs0VK
+         ouL+9ULhlT2NOagYYFpOiUEp/E5LJNw/znAZJQl9HBw5tUbqd5CwjrZ8AfaYQk25T8
+         Zm3bYJLHCtPdebAetY0QRpkGCgDR477M8hji3lBA=
+Date:   Wed, 11 Dec 2019 14:17:25 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Andre Przywara <andre.przywara@arm.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH] pcie: Add quirk for the Arm Neoverse N1SDP platform
+Message-ID: <20191211201725.GA30513@google.com>
 MIME-Version: 1.0
-References: <20191211161808.7566-1-andrew.murray@arm.com> <20191211165855.kfoz2x63kw3gnlmm@localhost>
-In-Reply-To: <20191211165855.kfoz2x63kw3gnlmm@localhost>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 11 Dec 2019 13:33:37 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJnLF9A9GoqNgwBebb8gWbCUo7txiAX2Q56cfyYvMjhVQ@mail.gmail.com>
-Message-ID: <CAL_JsqJnLF9A9GoqNgwBebb8gWbCUo7txiAX2Q56cfyYvMjhVQ@mail.gmail.com>
-Subject: Re: [GIT PULL] PCI: dt: Remove magic numbers for legacy PCI IRQ interrupts
-To:     Olof Johansson <olof@lixom.net>
-Cc:     Andrew Murray <andrew.murray@arm.com>, soc@kernel.org,
-        devicetree@vger.kernel.org, PCI <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191211110049.54a2d6f3@donnerap.cambridge.arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 10:59 AM Olof Johansson <olof@lixom.net> wrote:
+On Wed, Dec 11, 2019 at 11:00:49AM +0000, Andre Przywara wrote:
+> On Tue, 10 Dec 2019 08:41:15 -0600
+> Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Mon, Dec 09, 2019 at 04:06:38PM +0000, Andre Przywara wrote:
+> > > From: Deepak Pandey <Deepak.Pandey@arm.com>
+> > > 
+> > > The Arm N1SDP SoC suffers from some PCIe integration issues, most
+> > > prominently config space accesses to not existing BDFs being answered
+> > > with a bus abort, resulting in an SError.  
+> > 
+> > Can we tease this apart a little more?  Linux doesn't program all the
+> > bits that control error signaling, so even on hardware that works
+> > perfectly, much of this behavior is determined by what firmware did.
+> > I wonder if Linux could be more careful about this.
+> > 
+> > "Bus abort" is not a term used in PCIe.
+> 
+> Yes, sorry, that was my sloppy term, also aiming more at the CPU
+> side of the bus, between the cores and the RC.
 >
-> On Wed, Dec 11, 2019 at 04:18:08PM +0000, Andrew Murray wrote:
-> > Hi Arnd,
-> >
-> > Please consider this pull request.
-> >
-> > The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
-> >
-> >   Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
-> >
-> > are available in the Git repository at:
-> >
-> >   git://linux-arm.org/linux-am.git tags/pci-dt-intx-defines-5.5-rc1
-> >
-> > for you to fetch changes up to d50e85b9ad3d4287ab3c5108b7b36ad4fd50e5b4:
-> >
-> >   dt-bindings: PCI: Use IRQ flags for legacy PCI IRQ interrupts (2019-12-11 16:05:55 +0000)
-> >
-> > ----------------------------------------------------------------
-> > PCI: dt: Remove magic numbers for legacy PCI IRQ interrupts
-> >
-> > PCI devices can trigger interrupts via 4 physical/virtual lines known
-> > as INTA, INTB, INTC or INTD. Due to interrupt swizzling it is often
-> > required to describe the interrupt mapping in the device tree. Let's
-> > avoid the existing magic numbers and replace them with a #define to
-> > improve clarity.
-> >
-> > This is based on v5.5-rc1. As this series covers multiple architectures
-> > and updates include/dt-bindings it was felt that it may be more
-> > convenient to merge in one go.
->
-> That's a pretty high-effort way of doing this, with potential for messy
-> conflicts.
->
-> The standard way of making sweeping changes across the tree is usually to
-> get the new interface/definition added in one release, and then moving
-> usage over through the various maintainers in the release after since
-> the define is then in the base tree for everybody. Would you mind using
-> the same approach here, please? Especially since this is mostly a cleanup.
+> >  IIUC, a config read to a
+> > device that doesn't exist should terminate with an Unsupported Request
+> > completion, e.g., see the implementation note in PCIe r5.0 sec 2.3.1.
+> 
+> Yes, that's what Lorenzo mentioned as well.
+> 
+> > The UR should be an uncorrectable non-fatal error (Table 6-5), and
+> > Figures 6-2 and 6-3 show how it should be handled and when it should
+> > be signaled as a system error.  In case you don't have a copy of the
+> > spec, I extracted those two figures and put them at [1].
+> 
+> Thanks for that.
+> So in the last few months we tossed several ideas around how to
+> work-around this without kernel intervention, all of them turned out
+> to be not working. There are indeed registers in the RC that
+> influence error reporting to the CPU side, but even if we could
+> suppress (or catch) the SError, we can't recover and fixup the read
+> transaction to the CPU. Even Lorenzo gave up on this ;-) As far as I
+> understood this, there are gates missing which are supposed to
+> translate this specific UR into a valid "all-1s" response.
 
-Yeah, it's already going to conflict with some PCI controller schema
-conversions pending.
+But the commit log says firmware scanned the bus (catching the
+SErrors).  Shouldn't Linux be able to catch them the same way?
 
-I'm happy to apply the header for 5.5-rc2. Then send the dts changes
-to Arnd/Olof and the binding changes to Lorenzo.
+The "all-1s" response directly from hardware is typical of most
+platforms, but I don't think it's strictly required by the PCIe spec
+and I don't think it's absolutely essential even to Linux.  If you can
+catch the SErrors, isn't there a way for software to fabricate that
+all-1s data and continue after the read?
 
-Rob
+> > Even ECAM compliance is not really minor -- if this controller were
+> > fully compliant with the spec, you would need ZERO Linux changes to
+> > support it.  Every quirk like this means additional maintenance
+> > burden, and it's not just a one-time thing.  It means old kernels that
+> > *should* "just work" on your system will not work unless somebody
+> > backports the quirk.
+> 
+> I am well aware of that, and we had quite some discussions
+> internally, with quite some opposition.  ...
+
+The main point is that *future* silicon should be designed to avoid
+this issue.  I hope at least that part was not controversial.
+
+If we want to take advantage of the generic PCI code supplied by
+Linux, we have to expect that the hardware will play by the rules of
+PCI.
+
+Bjorn
