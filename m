@@ -2,90 +2,46 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B89A11B0F6
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Dec 2019 16:27:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 33EB911B44E
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Dec 2019 16:47:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387432AbfLKP1b (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Dec 2019 10:27:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33172 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732990AbfLKP1a (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:27:30 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 728A32465B;
-        Wed, 11 Dec 2019 15:27:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078049;
-        bh=QIEmayY7XBaf2l1724/9bB94MXsBZk48XyzvQo26dVY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QbmI0YFhUdyZSmKP7PdBhiBIt5ZnvzLGe+a4R0r3/1a6/KPgR/ksFTk3jLL7AKMVw
-         kU/FlTur4hgkTFun0yZNB3yugoHB42ZCIihIQbhX2qNye/EahjAdNhQgY0CIOo3LGb
-         8JqRseNJcDHftbTNNc/hhhrc1eUgznk57WxffL+A=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 42/79] PCI: rpaphp: Correctly match ibm, my-drc-index to drc-name when using drc-info
-Date:   Wed, 11 Dec 2019 10:26:06 -0500
-Message-Id: <20191211152643.23056-42-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211152643.23056-1-sashal@kernel.org>
-References: <20191211152643.23056-1-sashal@kernel.org>
+        id S1733185AbfLKP0y convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Wed, 11 Dec 2019 10:26:54 -0500
+Received: from mailout02.3bbmail.com ([110.164.252.195]:33956 "EHLO
+        mailout03.3bb.co.th" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1732996AbfLKP0y (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Dec 2019 10:26:54 -0500
+X-Greylist: delayed 355 seconds by postgrey-1.27 at vger.kernel.org; Wed, 11 Dec 2019 10:26:49 EST
+Authentication-Results: 3bb.co.th;
+        spf=fail smtp.mailfrom=infoccfoundation@amazon.com
+Received: from appserv (mx-ll-110.164.149-9.static.3bb.co.th [110.164.149.9] (may be forged))
+        by mailout03.3bb.co.th (8.16.0.27/8.16.0.27) with ESMTP id xBBFF3Lr020977;
+        Wed, 11 Dec 2019 22:15:03 +0700
+Message-ID: <41448-2201912311151513293@appserv>
+To:     "a" <skyteamsbiz@gmail.com>
+Reply-To: "CCULVERT FOUNDATION" <skyteamsbiz@gmail.com>
+From:   "CCULVERT FOUNDATION" <infoccfoundation@amazon.com>
+Subject: Mein letzter Wunsch.
+Date:   Wed, 11 Dec 2019 22:15:13 +0700
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-type: text/plain; charset=windows-874
+Content-Transfer-Encoding: 8BIT
+X-Proofpoint-SPF-Result: fail
+X-Proofpoint-SPF-Record: v=spf1 include:spf1.amazon.com include:spf2.amazon.com
+ include:amazonses.com -all
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-25_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=40 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=250
+ adultscore=0 classifier=spam adjust=40 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1911260048
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Tyrel Datwyler <tyreld@linux.ibm.com>
-
-[ Upstream commit 4f9f2d3d7a434b7f882b72550194c9278f4a3925 ]
-
-The newer ibm,drc-info property is a condensed description of the old
-ibm,drc-* properties (ie. names, types, indexes, and power-domains).
-When matching a drc-index to a drc-name we need to verify that the
-index is within the start and last drc-index range and map it to a
-drc-name using the drc-name-prefix and logical index.
-
-Fix the mapping by checking that the index is within the range of the
-current drc-info entry, and build the name from the drc-name-prefix
-concatenated with the starting drc-name-suffix value and the sequential
-index obtained by subtracting ibm,my-drc-index from this entries
-drc-start-index.
-
-Signed-off-by: Tyrel Datwyler <tyreld@linux.ibm.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/1573449697-5448-10-git-send-email-tyreld@linux.ibm.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pci/hotplug/rpaphp_core.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pci/hotplug/rpaphp_core.c b/drivers/pci/hotplug/rpaphp_core.c
-index 7d74fe875225e..a306cad704705 100644
---- a/drivers/pci/hotplug/rpaphp_core.c
-+++ b/drivers/pci/hotplug/rpaphp_core.c
-@@ -248,9 +248,10 @@ static int rpaphp_check_drc_props_v2(struct device_node *dn, char *drc_name,
- 		/* Should now know end of current entry */
- 
- 		/* Found it */
--		if (my_index <= drc.last_drc_index) {
-+		if (my_index >= drc.drc_index_start && my_index <= drc.last_drc_index) {
-+			int index = my_index - drc.drc_index_start;
- 			sprintf(cell_drc_name, "%s%d", drc.drc_name_prefix,
--				my_index);
-+				drc.drc_name_suffix_start + index);
- 			break;
- 		}
- 	}
--- 
-2.20.1
+Wenn Sie sich für die Finanzierung der STIFTUNG interessieren, schreiben Sie bitte heute über meinen Anwalt zurück
+Grüße,
+Mrs. Cindy Culvert.
+skyteamsbiz@gmail.com
 
