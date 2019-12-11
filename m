@@ -2,100 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A77A411AD3D
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Dec 2019 15:20:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B89A11B0F6
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Dec 2019 16:27:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729750AbfLKOUY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Dec 2019 09:20:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57762 "EHLO mail.kernel.org"
+        id S2387432AbfLKP1b (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Dec 2019 10:27:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727554AbfLKOUY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 11 Dec 2019 09:20:24 -0500
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1732990AbfLKP1a (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:27:30 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CAF6D214AF;
-        Wed, 11 Dec 2019 14:20:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 728A32465B;
+        Wed, 11 Dec 2019 15:27:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576074024;
-        bh=2112vcRvffbbbfNLim0Vo0faBMt99YUI8qgiqHAGLqk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=nu8bvQlOLmTPRsrn+c+H1hyBH50QH6IXCOetMbMqKW5Y7S5UXeh13ojI5cLmBF6wt
-         cSgcERk+vhQAE5dvLKeKLAt7lHT+zKNjsG/Cizxwdod0woiuW52sQ4dBNq1BjavF1y
-         +6fvpZq9547S28MAHy9ZyEhc1aKFDFu2Ma/pXsfM=
-Date:   Wed, 11 Dec 2019 08:20:22 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Dilip Kota <eswara.kota@linux.intel.com>
-Cc:     lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
-        gustavo.pimentel@synopsys.com, andrew.murray@arm.com,
-        robh@kernel.org, linux-kernel@vger.kernel.org,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com
-Subject: Re: [PATCH v10 2/3] PCI: dwc: intel: PCIe RC controller driver
-Message-ID: <20191211142022.GA26342@google.com>
+        s=default; t=1576078049;
+        bh=QIEmayY7XBaf2l1724/9bB94MXsBZk48XyzvQo26dVY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=QbmI0YFhUdyZSmKP7PdBhiBIt5ZnvzLGe+a4R0r3/1a6/KPgR/ksFTk3jLL7AKMVw
+         kU/FlTur4hgkTFun0yZNB3yugoHB42ZCIihIQbhX2qNye/EahjAdNhQgY0CIOo3LGb
+         8JqRseNJcDHftbTNNc/hhhrc1eUgznk57WxffL+A=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Tyrel Datwyler <tyreld@linux.ibm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 42/79] PCI: rpaphp: Correctly match ibm, my-drc-index to drc-name when using drc-info
+Date:   Wed, 11 Dec 2019 10:26:06 -0500
+Message-Id: <20191211152643.23056-42-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191211152643.23056-1-sashal@kernel.org>
+References: <20191211152643.23056-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7f5f0eec-465e-9c21-35ac-b6906119ed5e@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 05:59:58PM +0800, Dilip Kota wrote:
-> 
-> On 12/11/2019 7:49 AM, Bjorn Helgaas wrote:
-> > On Fri, Dec 06, 2019 at 03:27:49PM +0800, Dilip Kota wrote:
-> > > Add support to PCIe RC controller on Intel Gateway SoCs.
-> > > PCIe controller is based of Synopsys DesignWare PCIe core.
-> > > 
-> > > Intel PCIe driver requires Upconfigure support, Fast Training
-> > > Sequence and link speed configurations. So adding the respective
-> > > helper functions in the PCIe DesignWare framework.
-> > > It also programs hardware autonomous speed during speed
-> > > configuration so defining it in pci_regs.h.
-> > > 
-> > > Also, mark Intel PCIe driver depends on MSI IRQ Domain
-> > > as Synopsys DesignWare framework depends on the
-> > > PCI_MSI_IRQ_DOMAIN.
-> > > 
-> > > Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
-> > > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > > Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-> > > Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-> > > Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+From: Tyrel Datwyler <tyreld@linux.ibm.com>
 
-> > > +static void pcie_update_bits(void __iomem *base, u32 ofs, u32 mask, u32 val)
-> > > +{
-> > > +	u32 old;
-> > > +
-> > > +	old = readl(base + ofs);
-> > > +	val = (old & ~mask) | (val & mask);
-> > > +
-> > > +	if (val != old)
-> > > +		writel(val, base + ofs);
-> > I assume this is never used on registers where the "old & ~mask" part
-> > contains RW1C bits?  If there are RW1C bits in that part, this will
-> > corrupt them.
-> There is no impact because RW1C bits of respective registers are 0s at the
-> time of this function call.
+[ Upstream commit 4f9f2d3d7a434b7f882b72550194c9278f4a3925 ]
 
-Sounds ... dangerous, but I'll take your word for it.
+The newer ibm,drc-info property is a condensed description of the old
+ibm,drc-* properties (ie. names, types, indexes, and power-domains).
+When matching a drc-index to a drc-name we need to verify that the
+index is within the start and last drc-index range and map it to a
+drc-name using the drc-name-prefix and logical index.
 
-> I see, this patch series is merged in the maintainer tree.
-> Should i need to submit as a separate patch on top of maintainer tree or
-> submit the new version of whole patch series?
-> Please let me know the best practice.
+Fix the mapping by checking that the index is within the range of the
+current drc-info entry, and build the name from the drc-name-prefix
+concatenated with the starting drc-name-suffix value and the sequential
+index obtained by subtracting ibm,my-drc-index from this entries
+drc-start-index.
 
-Sorry, I didn't realize this had already been merged to Lorenzo's
-tree.  But it's not upstream (in Linus' tree) yet.  I don't know how
-Andrew and Lorenzo want to handle this.  None of these are important,
-so you could just ignore these comments.
+Signed-off-by: Tyrel Datwyler <tyreld@linux.ibm.com>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/1573449697-5448-10-git-send-email-tyreld@linux.ibm.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pci/hotplug/rpaphp_core.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-What I personally would do is rebase the branch, e.g.,
-lpieralisi/pci/dwc, and apply an incremental patch.  But it's up to
-Andrew and Lorenzo whether they want to do anything.
+diff --git a/drivers/pci/hotplug/rpaphp_core.c b/drivers/pci/hotplug/rpaphp_core.c
+index 7d74fe875225e..a306cad704705 100644
+--- a/drivers/pci/hotplug/rpaphp_core.c
++++ b/drivers/pci/hotplug/rpaphp_core.c
+@@ -248,9 +248,10 @@ static int rpaphp_check_drc_props_v2(struct device_node *dn, char *drc_name,
+ 		/* Should now know end of current entry */
+ 
+ 		/* Found it */
+-		if (my_index <= drc.last_drc_index) {
++		if (my_index >= drc.drc_index_start && my_index <= drc.last_drc_index) {
++			int index = my_index - drc.drc_index_start;
+ 			sprintf(cell_drc_name, "%s%d", drc.drc_name_prefix,
+-				my_index);
++				drc.drc_name_suffix_start + index);
+ 			break;
+ 		}
+ 	}
+-- 
+2.20.1
 
-Bjorn
