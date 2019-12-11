@@ -2,104 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C508119FB2
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Dec 2019 00:54:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7151A119FC6
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Dec 2019 01:09:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbfLJXyx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 10 Dec 2019 18:54:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41068 "EHLO mail.kernel.org"
+        id S1725999AbfLKAJf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 10 Dec 2019 19:09:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725999AbfLJXyx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 10 Dec 2019 18:54:53 -0500
+        id S1726598AbfLKAJf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 10 Dec 2019 19:09:35 -0500
 Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DB3420663;
-        Tue, 10 Dec 2019 23:54:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27015206D9;
+        Wed, 11 Dec 2019 00:09:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576022092;
-        bh=Y0rL3OsX7JSwZVE3fA0lUgy0MkmQlbXJklmzyjR5bNM=;
+        s=default; t=1576022974;
+        bh=qEHIoLuedXqsVTSU6OyFX22i8JLpQUFxE029keZcpZ0=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=PJRJUvGNLkzF/3KyseqNWDsju4IpL9e6Xix4DS0afggoIue7jI5efsorgmYncOfVO
-         4vbwciByxssxuA17svyBeoRAvAB/ycZHidQjdnM4xTjbwBYshIVWlgSgaajTJG5cVQ
-         VGVJi+XxOAKgyP4g/ejd6T/yEx5/UpaH0ZT587y0=
-Date:   Tue, 10 Dec 2019 17:54:50 -0600
+        b=hb3fitBB2ovfRLMOKZw/bTjTlcdtBAh84dfDYhl78MGbfVEr938Jh5LZnbS1bYeLT
+         M6iKaI6e658ky66EQBVziaV6W546JR+bBaCNrz0rAwfzMzIHZz/RTA4vQgRTqQYveX
+         YomgKQMv3eXqFpyUlb33kfyAY/k7qUYfbJ5k3y8c=
+Date:   Tue, 10 Dec 2019 18:09:32 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     longli@linuxonhyperv.com
-Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Long Li <longli@microsoft.com>
-Subject: Re: [Patch v2 1/2] PCI: hv: decouple the func definition in
- hv_dr_state from VSP message
-Message-ID: <20191210235450.GA177105@google.com>
+To:     Wei Liu <wei.liu@kernel.org>
+Cc:     linux-pci@vger.kernel.org, rjui@broadcom.com
+Subject: Re: [PATCH] PCI: build Broadcom PAXC quirks unconditionally
+Message-ID: <20191211000932.GA178707@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1575428017-87914-1-git-send-email-longli@linuxonhyperv.com>
+In-Reply-To: <20191115135842.119621-1-wei.liu@kernel.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Run "git log --oneline drivers/pci/controller/pci-hyperv.c" and make
-yours match.  Capitalize the first word, etc.
-
-On Tue, Dec 03, 2019 at 06:53:36PM -0800, longli@linuxonhyperv.com wrote:
-> From: Long Li <longli@microsoft.com>
+On Fri, Nov 15, 2019 at 01:58:42PM +0000, Wei Liu wrote:
+> CONFIG_PCIE_IPROC_PLATFORM only gets defined when the driver is built
+> in.  Removing the ifdef will allow us to build the driver as a module.
 > 
-> hv_dr_state is used to find present PCI devices on the bus. The structure
-> reuses struct pci_function_description from VSP message to describe a device.
+> Signed-off-by: Wei Liu <wei.liu@kernel.org>
+> ---
+> Alternatively, we can change the condition to:
 > 
-> To prepare support for pci_function_description v2, we need to decouple this
-> dependence in hv_dr_state so it can work with both v1 and v2 VSP messages.
+>   #ifdef CONFIG_PCIE_IPROC_PLATFORM || CONFIG_PCIE_IPROC_PLATFORM_MODULE
+> .
 > 
-> There is no functionality change.
+> I chose to remove the ifdef because that's what other quirks looked like
+> in this file.
+> ---
+>  drivers/pci/quirks.c | 2 --
+>  1 file changed, 2 deletions(-)
 > 
-> Signed-off-by: Long Li <longli@microsoft.com>
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 320255e5e8f8..cd0e7c18e717 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -2381,7 +2381,6 @@ DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_BROADCOM,
+>  			 PCI_DEVICE_ID_TIGON3_5719,
+>  			 quirk_brcm_5719_limit_mrrs);
+>  
+> -#ifdef CONFIG_PCIE_IPROC_PLATFORM
+>  static void quirk_paxc_bridge(struct pci_dev *pdev)
+>  {
+>  	/*
+> @@ -2405,7 +2404,6 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0x16f0, quirk_paxc_bridge);
+>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0xd750, quirk_paxc_bridge);
+>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0xd802, quirk_paxc_bridge);
+>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0xd804, quirk_paxc_bridge);
+> -#endif
 
-> + * hv_pci_devices_present() - Handles list of new children
-> + * @hbus:	Root PCI bus, as understood by this driver
-> + * @relations:	Packet from host listing children
-> + *
-> + * This function is invoked whenever a new list of devices for
-> + * this bus appears.
+Is there a reason this quirk can't be moved to
+drivers/pci/controller/pcie-iproc-platform.c?  That would make it much
+less subtle because it would be compiled if and only if the driver
+itself is compiled.
 
-The comment should tell us what the function *does*, not when it is
-called.
+If it needs to be here in quirks.c, please include a note about the
+reason.
 
-> + */
-> +static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
-> +				   struct pci_bus_relations *relations)
-> +{
-> +	struct hv_dr_state *dr;
-> +	int i;
-> +
-> +	dr = kzalloc(offsetof(struct hv_dr_state, func) +
-> +		     (sizeof(struct hv_pcidev_description) *
-> +		      (relations->device_count)), GFP_NOWAIT);
-> +
-> +	if (!dr)
-> +		return;
-> +
-> +	dr->device_count = relations->device_count;
-> +	for (i = 0; i < dr->device_count; i++) {
-> +		dr->func[i].v_id = relations->func[i].v_id;
-> +		dr->func[i].d_id = relations->func[i].d_id;
-> +		dr->func[i].rev = relations->func[i].rev;
-> +		dr->func[i].prog_intf = relations->func[i].prog_intf;
-> +		dr->func[i].subclass = relations->func[i].subclass;
-> +		dr->func[i].base_class = relations->func[i].base_class;
-> +		dr->func[i].subsystem_id = relations->func[i].subsystem_id;
-> +		dr->func[i].win_slot = relations->func[i].win_slot;
-> +		dr->func[i].ser = relations->func[i].ser;
-> +	}
-> +
-> +	if (hv_pci_start_relations_work(hbus, dr))
-> +		kfree(dr);
->  }
+>  /*
+>   * Originally in EDAC sources for i82875P: Intel tells BIOS developers to
+> -- 
+> 2.24.0
+> 
