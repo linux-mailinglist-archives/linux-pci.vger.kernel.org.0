@@ -2,136 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EB9AE11BA8D
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Dec 2019 18:45:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B83BA11BD18
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Dec 2019 20:34:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730157AbfLKRpR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Dec 2019 12:45:17 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41033 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729524AbfLKRpR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Dec 2019 12:45:17 -0500
-Received: by mail-wr1-f68.google.com with SMTP id c9so25025481wrw.8
-        for <linux-pci@vger.kernel.org>; Wed, 11 Dec 2019 09:45:15 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CD4p8fYxiMicDD4MIq7mi7uX8xuegn7mjnir6hlrD64=;
-        b=swpPbwWuFcZFgvGvdXxrIJCqS0RA1Hgfg2IMSaAWJaJb2codc1799GQJO8o6ScQxCe
-         TgyVIr5wuRoVcgVrcFFBo3GKdZ+QbIrnuYf2IiPye66b/xuM3TJB2iobcfQFA6tyOJmd
-         2Ollz/UHsd4kUEISvo9w27J7fOuCj/Ag5gmtuIsnPHY/DbvLH4rn839Hgv1jyMhYcnqG
-         CXsrtbINV9xtIJF8rL8fBxM3acxOD0QBAgcypP+Ra5D7fgnMcvwtU2HFfR2QxheQ8EOl
-         WAcStG8AOt4neGXqwXg6jgYe5WBIOy1rY9OAgqp1pz2pEEDOfIMEIhbjFW8Sa+qNMCjL
-         3F4g==
-X-Gm-Message-State: APjAAAVHzQ5XxeMi9ALkcpcQAQ4DSbOmf+txC7FHg3WjejidIHPLf26u
-        0iezZZP7gWMG1/rQFOXX9zKIuMW6
-X-Google-Smtp-Source: APXvYqykpoTeCD/ymvARXcUmyXc+hJXoByaotglh7QqX19MUS/bSRgjRvLQSTr1Qg5uTQrsqCqh/HQ==
-X-Received: by 2002:adf:9104:: with SMTP id j4mr1050473wrj.221.1576086314469;
-        Wed, 11 Dec 2019 09:45:14 -0800 (PST)
-Received: from liuwe-devbox-debian.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.104.231.240])
-        by smtp.gmail.com with ESMTPSA id p17sm3060005wrx.20.2019.12.11.09.45.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 09:45:13 -0800 (PST)
-From:   Wei Liu <wei.liu@kernel.org>
-To:     linux-pci@vger.kernel.org
-Cc:     helgaas@kernel.org, rjui@broadcom.com, Wei Liu <wei.liu@kernel.org>
-Subject: [PATCH] PCI: iproc: move quirks to driver
-Date:   Wed, 11 Dec 2019 17:45:11 +0000
-Message-Id: <20191211174511.89713-1-wei.liu@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        id S1726592AbfLKTeO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Dec 2019 14:34:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37992 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726242AbfLKTeO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 11 Dec 2019 14:34:14 -0500
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A537D2173E;
+        Wed, 11 Dec 2019 19:34:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576092853;
+        bh=pk5mlVjD1gbfWi7be4kCl2yXmTdkckNMVaeV/EJ2Yf4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=VtLfOchvvNRkPdkAqsM38NCeJFhkESnhs8pf82brAqT1xvbmo2yUupNjDThtfolE6
+         +2mRg0RtyyhHx9+D5H7iQeg+i/+uu5+PxOEN+/uZQEasKXl6nPETpgi2cKoNI1MAc/
+         grmWRhAKhV9qFb6xT1lTH9/xMwTpf9jPWKbdJebk=
+Received: by mail-qt1-f174.google.com with SMTP id 38so7275066qtb.13;
+        Wed, 11 Dec 2019 11:34:13 -0800 (PST)
+X-Gm-Message-State: APjAAAUcMhkJL/TiEQ8wOvBSmJzIwSFGwY1+9aodNts6dDEXw5PWrPjf
+        M8PWPpeo+CXSs9XaCXQGC9Yvm5Cdbzx4t6UXKg==
+X-Google-Smtp-Source: APXvYqzgnGxu26F0CkZ7oMwgc8p9WduBrS9LANuxGEAK9qlyhrHXv1vndLPtfkakVtGDf8ibnUqcrmXE5QSpRPIx278=
+X-Received: by 2002:ac8:59:: with SMTP id i25mr4308140qtg.110.1576092852765;
+ Wed, 11 Dec 2019 11:34:12 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191211161808.7566-1-andrew.murray@arm.com> <20191211165855.kfoz2x63kw3gnlmm@localhost>
+In-Reply-To: <20191211165855.kfoz2x63kw3gnlmm@localhost>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 11 Dec 2019 13:33:37 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJnLF9A9GoqNgwBebb8gWbCUo7txiAX2Q56cfyYvMjhVQ@mail.gmail.com>
+Message-ID: <CAL_JsqJnLF9A9GoqNgwBebb8gWbCUo7txiAX2Q56cfyYvMjhVQ@mail.gmail.com>
+Subject: Re: [GIT PULL] PCI: dt: Remove magic numbers for legacy PCI IRQ interrupts
+To:     Olof Johansson <olof@lixom.net>
+Cc:     Andrew Murray <andrew.murray@arm.com>, soc@kernel.org,
+        devicetree@vger.kernel.org, PCI <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The quirks were originally enclosed by ifdef. That made the quirks not
-to be applied when respective drivers were compiled as modules.
+On Wed, Dec 11, 2019 at 10:59 AM Olof Johansson <olof@lixom.net> wrote:
+>
+> On Wed, Dec 11, 2019 at 04:18:08PM +0000, Andrew Murray wrote:
+> > Hi Arnd,
+> >
+> > Please consider this pull request.
+> >
+> > The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
+> >
+> >   Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
+> >
+> > are available in the Git repository at:
+> >
+> >   git://linux-arm.org/linux-am.git tags/pci-dt-intx-defines-5.5-rc1
+> >
+> > for you to fetch changes up to d50e85b9ad3d4287ab3c5108b7b36ad4fd50e5b4:
+> >
+> >   dt-bindings: PCI: Use IRQ flags for legacy PCI IRQ interrupts (2019-12-11 16:05:55 +0000)
+> >
+> > ----------------------------------------------------------------
+> > PCI: dt: Remove magic numbers for legacy PCI IRQ interrupts
+> >
+> > PCI devices can trigger interrupts via 4 physical/virtual lines known
+> > as INTA, INTB, INTC or INTD. Due to interrupt swizzling it is often
+> > required to describe the interrupt mapping in the device tree. Let's
+> > avoid the existing magic numbers and replace them with a #define to
+> > improve clarity.
+> >
+> > This is based on v5.5-rc1. As this series covers multiple architectures
+> > and updates include/dt-bindings it was felt that it may be more
+> > convenient to merge in one go.
+>
+> That's a pretty high-effort way of doing this, with potential for messy
+> conflicts.
+>
+> The standard way of making sweeping changes across the tree is usually to
+> get the new interface/definition added in one release, and then moving
+> usage over through the various maintainers in the release after since
+> the define is then in the base tree for everybody. Would you mind using
+> the same approach here, please? Especially since this is mostly a cleanup.
 
-Move the quirks to driver code to fix the issue.
+Yeah, it's already going to conflict with some PCI controller schema
+conversions pending.
 
-Signed-off-by: Wei Liu <wei.liu@kernel.org>
----
-Feel free to change the commit message as you see fit.
----
- drivers/pci/controller/pcie-iproc-platform.c | 24 ++++++++++++++++++
- drivers/pci/quirks.c                         | 26 --------------------
- 2 files changed, 24 insertions(+), 26 deletions(-)
+I'm happy to apply the header for 5.5-rc2. Then send the dts changes
+to Arnd/Olof and the binding changes to Lorenzo.
 
-diff --git a/drivers/pci/controller/pcie-iproc-platform.c b/drivers/pci/controller/pcie-iproc-platform.c
-index ff0a81a632a1..4e6f7cdd9a25 100644
---- a/drivers/pci/controller/pcie-iproc-platform.c
-+++ b/drivers/pci/controller/pcie-iproc-platform.c
-@@ -19,6 +19,30 @@
- #include "../pci.h"
- #include "pcie-iproc.h"
- 
-+static void quirk_paxc_bridge(struct pci_dev *pdev)
-+{
-+	/*
-+	 * The PCI config space is shared with the PAXC root port and the first
-+	 * Ethernet device.  So, we need to workaround this by telling the PCI
-+	 * code that the bridge is not an Ethernet device.
-+	 */
-+	if (pdev->hdr_type == PCI_HEADER_TYPE_BRIDGE)
-+		pdev->class = PCI_CLASS_BRIDGE_PCI << 8;
-+
-+	/*
-+	 * MPSS is not being set properly (as it is currently 0).  This is
-+	 * because that area of the PCI config space is hard coded to zero, and
-+	 * is not modifiable by firmware.  Set this to 2 (e.g., 512 byte MPS)
-+	 * so that the MPS can be set to the real max value.
-+	 */
-+	pdev->pcie_mpss = 2;
-+}
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0x16cd, quirk_paxc_bridge);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0x16f0, quirk_paxc_bridge);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0xd750, quirk_paxc_bridge);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0xd802, quirk_paxc_bridge);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0xd804, quirk_paxc_bridge);
-+
- static const struct of_device_id iproc_pcie_of_match_table[] = {
- 	{
- 		.compatible = "brcm,iproc-pcie",
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 4937a088d7d8..202837ed68c9 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -2381,32 +2381,6 @@ DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_BROADCOM,
- 			 PCI_DEVICE_ID_TIGON3_5719,
- 			 quirk_brcm_5719_limit_mrrs);
- 
--#ifdef CONFIG_PCIE_IPROC_PLATFORM
--static void quirk_paxc_bridge(struct pci_dev *pdev)
--{
--	/*
--	 * The PCI config space is shared with the PAXC root port and the first
--	 * Ethernet device.  So, we need to workaround this by telling the PCI
--	 * code that the bridge is not an Ethernet device.
--	 */
--	if (pdev->hdr_type == PCI_HEADER_TYPE_BRIDGE)
--		pdev->class = PCI_CLASS_BRIDGE_PCI << 8;
--
--	/*
--	 * MPSS is not being set properly (as it is currently 0).  This is
--	 * because that area of the PCI config space is hard coded to zero, and
--	 * is not modifiable by firmware.  Set this to 2 (e.g., 512 byte MPS)
--	 * so that the MPS can be set to the real max value.
--	 */
--	pdev->pcie_mpss = 2;
--}
--DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0x16cd, quirk_paxc_bridge);
--DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0x16f0, quirk_paxc_bridge);
--DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0xd750, quirk_paxc_bridge);
--DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0xd802, quirk_paxc_bridge);
--DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0xd804, quirk_paxc_bridge);
--#endif
--
- /*
-  * Originally in EDAC sources for i82875P: Intel tells BIOS developers to
-  * hide device 6 which configures the overflow device access containing the
--- 
-2.20.1
-
+Rob
