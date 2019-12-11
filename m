@@ -2,101 +2,174 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5258711C0A7
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2019 00:38:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B917B11C0AC
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2019 00:40:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbfLKXil (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Dec 2019 18:38:41 -0500
-Received: from mail-wr1-f51.google.com ([209.85.221.51]:44095 "EHLO
-        mail-wr1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726404AbfLKXil (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Dec 2019 18:38:41 -0500
-Received: by mail-wr1-f51.google.com with SMTP id q10so552833wrm.11;
-        Wed, 11 Dec 2019 15:38:39 -0800 (PST)
+        id S1726631AbfLKXk3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Dec 2019 18:40:29 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36634 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726404AbfLKXk3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Dec 2019 18:40:29 -0500
+Received: by mail-wm1-f67.google.com with SMTP id p17so252484wma.1
+        for <linux-pci@vger.kernel.org>; Wed, 11 Dec 2019 15:40:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:mime-version:message-id:user-agent
-         :content-transfer-encoding;
-        bh=9MD2iuL/4WQUUIETBvkMoKCxMANv9+K7ltNUru8sZLQ=;
-        b=Za9dk0f3+8Oo2BcaPZmBbpc29b3C6CmCFARBm9fTHh/QLUWgUu5TSJr9ppy8bkCdrc
-         H/Zs90vGg4yF2K3w5woCtLhBCGBREAC1ocKIG3+pB+wiIO4NxrOHH3iI6/38Dd0vbjMg
-         qFTUiuois9HPXxl9PR6eLbt6Lk8Bi9eEli3Rdl8mq/mzwsvpdHLVpxgdV4O5587xza97
-         ydALyXp3GgqPyRbvcu8+UuPLpE8ZG9qw5YFuoj3sesJJk3j3EoMXB6+mSPzTfzmY0ZcY
-         7KFxamKx4iTGmrzz8dSXEFpas10CjMjE6bX/g7Nlz2sMXrNJOXZOt+Ujtfcfm/v1JW6k
-         3Qcg==
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=foUeHKYwxZENesR/ao95Ojl4028wWw6rXK6q1y1Jq8o=;
+        b=c4/VFQMjZwBHv/1qLuUhvwKovfNcFTdSXXSmMx7SXdYPr9rkKSTM6uuYEzt2VR97b1
+         Xtylarf3eP94fhPSx86BASo8ILrGR/3S0v0Uy+IIgdta572YPsFoXffXhDvbbGKltiM6
+         6QCJLzYas2Sge1eoKjIL76EOy2IrFib0mVVQg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:mime-version:message-id
-         :user-agent:content-transfer-encoding;
-        bh=9MD2iuL/4WQUUIETBvkMoKCxMANv9+K7ltNUru8sZLQ=;
-        b=YIWRT95AhiLawdzUfw770XytlmAnSohh0CUwSFg9pO/StPdGQHIzMVYAA56H3u8LHq
-         SIRAjePrT1aL8NoiY6qAQZrHLzCIssZcOVxg0WgKlnT1lXzxy3D2/9mraD5pQVXRq5ZC
-         +NYHpI6acu3oKGIk3yvO4/KaeFh7iNaW3A2pPMbobxS5OWyuyKuj1CJSELcHiGQMVZHT
-         FW8WYMVaW81W4BqjVxPLBtqLUHdx83Y2xtA6o92sqo75jmPJhWoVinF11BOJX91NJi9R
-         bNbNKlyQXI/qCuMBFLUMtU93wLiHw83nq/Qjd4WXcbmpNNhSHzelTaoY8QtU+EO9mQUh
-         gqjg==
-X-Gm-Message-State: APjAAAXrvcaw4LEChn6QSWhzl5ODWkm6D1VHWATOhWwSqrBZGozRYo/a
-        YL4JFmjXCCbDs/vLX/g2S2A=
-X-Google-Smtp-Source: APXvYqyt9+nph0QrBPM/FnhfUGZMJLtmYaY8jJjnZzNW2cdfqWXBK8OyEytjvDss5jLs0ZDLutaJ+A==
-X-Received: by 2002:a5d:68cf:: with SMTP id p15mr2640601wrw.31.1576107518523;
-        Wed, 11 Dec 2019 15:38:38 -0800 (PST)
-Received: from localhost ([5.59.90.131])
-        by smtp.gmail.com with ESMTPSA id w20sm3995604wmk.34.2019.12.11.15.38.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 15:38:37 -0800 (PST)
-From:   Vicente Bergas <vicencb@gmail.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "\"Rafael J. Wysocki\"" <rafael.j.wysocki@intel.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=foUeHKYwxZENesR/ao95Ojl4028wWw6rXK6q1y1Jq8o=;
+        b=TNvZoULouKErQW7n6rP3QEuVLklc8KXxbxi7FqXRE00Sx5ndxTweIf+nisjVk8Qgoj
+         ChflAdFrvfdYuauYkWWaHuAbTZBNbgwgDxuXKGsPP3AIlXhukvRHx7480jmiiz98Dv0g
+         ojScOy4pzHIMYb321KPzqwCIotu9IPSlv8IRqcDM6Nw2iixJzFqw0O5A/r075SIdY9Yd
+         Swb4WB+MV7mxvr2er/1ONZDWpxjT1zRU2jbh/BUpMeDqJ9DLq6bUMc3wCG1zPaFfn93b
+         WSiW5b7lgfjUaY3yzCaRBbD38aYx9kt84MTCuXSaWKzq1J9bBG9rDb9ZAN8LUpeQfOuo
+         XT9Q==
+X-Gm-Message-State: APjAAAU24b22B19jOrS+xaBvjzJ0vZQVt+J/V7lJBU2S8KOEfdTD++3n
+        2XWd3Nug6CWtOC7puFBxKjumKw==
+X-Google-Smtp-Source: APXvYqxo9xVmMjfj4H0mTQrLDUJ7/QhWaShBP5oQJPPpUzWdQNEeYbsXE1F8ciZtOy4AMxJF8d3LXg==
+X-Received: by 2002:a1c:c90e:: with SMTP id f14mr2705412wmb.47.1576107625065;
+        Wed, 11 Dec 2019 15:40:25 -0800 (PST)
+Received: from rj-aorus.ric.broadcom.com ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id z11sm4008381wrt.82.2019.12.11.15.40.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Dec 2019 15:40:24 -0800 (PST)
+Subject: Re: [PATCH] PCI: iproc: move quirks to driver
+To:     Bjorn Helgaas <helgaas@kernel.org>, Wei Liu <wei.liu@kernel.org>
+Cc:     linux-pci@vger.kernel.org, rjui@broadcom.com,
         Andrew Murray <andrew.murray@arm.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        =?iso-8859-1?Q?=22Stefan_M=E4tje=22?= <stefan.maetje@esd.eu>,
-        Frederick Lawler <fred@fredlawl.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-rockchip@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: [REGRESSION] PCI v5.5-rc1 breaks google kevin
-Date:   Thu, 12 Dec 2019 00:38:35 +0100
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+References: <20191211223438.GA121846@google.com>
+From:   Ray Jui <ray.jui@broadcom.com>
+Message-ID: <afbb14fb-e114-d6de-0bfe-d39be354842e@broadcom.com>
+Date:   Wed, 11 Dec 2019 15:40:13 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Message-ID: <58ce5534-64bd-4b4b-bd60-ed4e0c71b20f@gmail.com>
-User-Agent: Trojita
+In-Reply-To: <20191211223438.GA121846@google.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
-since v5.5-rc1 the google kevin chromebook does not boot.
-Git bisect reports=20
-5e0c21c75e8c PCI/ASPM: Remove pcie_aspm_enabled() unnecessary locking
-as the first bad commit.
 
-In order to revert it from v5.5-rc1 i had to also revert some dependencies:
-5e0c21c75e8c08375a69710527e4a921b897cb7e
-aff5d0552da4055da3faa27ee4252e48bb1f5821
-35efea32b26f9aacc99bf07e0d2cdfba2028b099
-687aaf386aeb551130f31705ce40d1341047a936
-72ea91afbfb08619696ccde610ee4d0d29cf4a1d
-87e90283c94c76ee11d379ab5a0973382bbd0baf
-After reverting all of this, still no luck.
-So, either the results of git bisect are not to be trusted, or
-there are more bad commits.
 
-By "does not boot" i mean that the display fails to start and
-the display is the only output device, so debugging is quite difficult.
+On 12/11/19 2:34 PM, Bjorn Helgaas wrote:
+> On Wed, Dec 11, 2019 at 05:45:11PM +0000, Wei Liu wrote:
+>> The quirks were originally enclosed by ifdef. That made the quirks not
+>> to be applied when respective drivers were compiled as modules.
+>>
+>> Move the quirks to driver code to fix the issue.
+>>
+>> Signed-off-by: Wei Liu <wei.liu@kernel.org>
+> 
+> This straddles the core and native driver boundary, so I applied it to
+> pci/misc for v5.6.  Thanks, I think this is a great solution!  It's
+> always nice when we can encapsulate device-specific things in a
+> driver.
+> 
 
-v5.5-rc1 as is (reverting no commits at all) works fine when disabling PCI:
-# CONFIG_PCI is not set
+Opps! I was going to review and comment and you are quick, :)
 
-Regards,
-  Vicente.
+I was going to say, I think it's better to keep this quirk in 
+"pcie-iproc.c" instead of "pcie-iproc-platform.c".
 
+The quirk is specific to certain PCIe devices under iProc (activated 
+based on device ID), but should not be tied to a specific bus 
+architecture (i.e., platform vs BCMA).
+
+Thanks,
+
+Ray
+
+>> ---
+>>   drivers/pci/controller/pcie-iproc-platform.c | 24 ++++++++++++++++++
+>>   drivers/pci/quirks.c                         | 26 --------------------
+>>   2 files changed, 24 insertions(+), 26 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/pcie-iproc-platform.c b/drivers/pci/controller/pcie-iproc-platform.c
+>> index ff0a81a632a1..4e6f7cdd9a25 100644
+>> --- a/drivers/pci/controller/pcie-iproc-platform.c
+>> +++ b/drivers/pci/controller/pcie-iproc-platform.c
+>> @@ -19,6 +19,30 @@
+>>   #include "../pci.h"
+>>   #include "pcie-iproc.h"
+>>   
+>> +static void quirk_paxc_bridge(struct pci_dev *pdev)
+>> +{
+>> +	/*
+>> +	 * The PCI config space is shared with the PAXC root port and the first
+>> +	 * Ethernet device.  So, we need to workaround this by telling the PCI
+>> +	 * code that the bridge is not an Ethernet device.
+>> +	 */
+>> +	if (pdev->hdr_type == PCI_HEADER_TYPE_BRIDGE)
+>> +		pdev->class = PCI_CLASS_BRIDGE_PCI << 8;
+>> +
+>> +	/*
+>> +	 * MPSS is not being set properly (as it is currently 0).  This is
+>> +	 * because that area of the PCI config space is hard coded to zero, and
+>> +	 * is not modifiable by firmware.  Set this to 2 (e.g., 512 byte MPS)
+>> +	 * so that the MPS can be set to the real max value.
+>> +	 */
+>> +	pdev->pcie_mpss = 2;
+>> +}
+>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0x16cd, quirk_paxc_bridge);
+>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0x16f0, quirk_paxc_bridge);
+>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0xd750, quirk_paxc_bridge);
+>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0xd802, quirk_paxc_bridge);
+>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0xd804, quirk_paxc_bridge);
+>> +
+>>   static const struct of_device_id iproc_pcie_of_match_table[] = {
+>>   	{
+>>   		.compatible = "brcm,iproc-pcie",
+>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+>> index 4937a088d7d8..202837ed68c9 100644
+>> --- a/drivers/pci/quirks.c
+>> +++ b/drivers/pci/quirks.c
+>> @@ -2381,32 +2381,6 @@ DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_BROADCOM,
+>>   			 PCI_DEVICE_ID_TIGON3_5719,
+>>   			 quirk_brcm_5719_limit_mrrs);
+>>   
+>> -#ifdef CONFIG_PCIE_IPROC_PLATFORM
+>> -static void quirk_paxc_bridge(struct pci_dev *pdev)
+>> -{
+>> -	/*
+>> -	 * The PCI config space is shared with the PAXC root port and the first
+>> -	 * Ethernet device.  So, we need to workaround this by telling the PCI
+>> -	 * code that the bridge is not an Ethernet device.
+>> -	 */
+>> -	if (pdev->hdr_type == PCI_HEADER_TYPE_BRIDGE)
+>> -		pdev->class = PCI_CLASS_BRIDGE_PCI << 8;
+>> -
+>> -	/*
+>> -	 * MPSS is not being set properly (as it is currently 0).  This is
+>> -	 * because that area of the PCI config space is hard coded to zero, and
+>> -	 * is not modifiable by firmware.  Set this to 2 (e.g., 512 byte MPS)
+>> -	 * so that the MPS can be set to the real max value.
+>> -	 */
+>> -	pdev->pcie_mpss = 2;
+>> -}
+>> -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0x16cd, quirk_paxc_bridge);
+>> -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0x16f0, quirk_paxc_bridge);
+>> -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0xd750, quirk_paxc_bridge);
+>> -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0xd802, quirk_paxc_bridge);
+>> -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0xd804, quirk_paxc_bridge);
+>> -#endif
+>> -
+>>   /*
+>>    * Originally in EDAC sources for i82875P: Intel tells BIOS developers to
+>>    * hide device 6 which configures the overflow device access containing the
+>> -- 
+>> 2.20.1
+>>
