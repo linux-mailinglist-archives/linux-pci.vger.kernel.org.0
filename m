@@ -2,156 +2,173 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C89611B3D2
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Dec 2019 16:44:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B02811B2B6
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Dec 2019 16:39:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732583AbfLKPoU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Dec 2019 10:44:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33144 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733113AbfLKP13 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:27:29 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64E0D22527;
-        Wed, 11 Dec 2019 15:27:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078048;
-        bh=ejot6L9fm3YbdGO02ZyywhGUTmP6TRIjGIlJ8WY/OQY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p9cq4XQjCssXj2E0Qalq7/wLdJuUUModogpUcRfUjlDvPXc60IERXMkyjAbyQdV5W
-         jMdDf+yzCKWRmdzxZaVdi2X/7/SfohJeLe4RsLpTiwjigWSwtu+ADPmUJGAYpTtlXy
-         b3Uc6XMYzE3//36i7AnNDlamj9t//m82xPqb9kTU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 41/79] PCI: rpaphp: Annotate and correctly byte swap DRC properties
-Date:   Wed, 11 Dec 2019 10:26:05 -0500
-Message-Id: <20191211152643.23056-41-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211152643.23056-1-sashal@kernel.org>
-References: <20191211152643.23056-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        id S2387611AbfLKPhj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Dec 2019 10:37:39 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:33832 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387784AbfLKPhh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Dec 2019 10:37:37 -0500
+Received: by mail-pj1-f66.google.com with SMTP id j11so7951116pjs.1
+        for <linux-pci@vger.kernel.org>; Wed, 11 Dec 2019 07:37:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=googlenew;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=mZyjjAAc7yNANmoebBsT963AofjY/s84X8vsLTIrpD4=;
+        b=K30i6dN5IfT1gG+6PGpefroyqGIpo4g4XmXSr85BsjYcaE88tQFwI33Ovorlgz2ABC
+         FZMpdjij1HpLqDarqrAR48u/z2XVLxf68TnO6laeWh58YG9jR16KBBpjlflEUeuPmVOs
+         MMiE4Z69y4R+Ow5o1jQM/OGtDXgnQZG+oH6Ni96mfqqoRoipYsqyaMoSpAY+9hLDWDIz
+         ug1/Jl1bdYElBVegTmWiGgTmdmpYkmhUDFVMAJVlv94FS4Mo4/tWB9yvbW04RB6zj5S5
+         0aPsdhA1ysrLqUJmjegxg1Twxm1vDhc1dC3kl6hZuZ4GIa55Rrk8kQ151DpmSYFbDhKJ
+         WFVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=mZyjjAAc7yNANmoebBsT963AofjY/s84X8vsLTIrpD4=;
+        b=QSGxWu/RUjeSm7g8jzhqo9ppvBV8qLQ+3M+5jpoJnXC5Z5PGw7qsJwe02opQ3EIjlI
+         7ytEYI/O+o1ZpTn5Jpp8YqxEC90wA9yFjUnYZs+9LxCQL8eG2n1rTUM6UENS+/BtGlk1
+         BGuhhq4QUvaJ9PnYPHCWlV1+umhvg7gANmGpDq2WvD/IMxr2e56PZXC+mMEfsyuLkRj/
+         emsZdktOvHxE8O86DPzn4LhEEPoIIYvRK/1Fo3i1LpmtBmhcpKoE5INA35f0hILQIAq4
+         IWIsRLqTuKr2UqMZ1t98YzkxGK4wF4MuVg927Hc7OsmhonM9ghUfM/cUdgFpHZihQXdS
+         6QqQ==
+X-Gm-Message-State: APjAAAUlp5hlD8tweTKqg6KeG+6mI++JUVXNYNb4qpL7GdE82FienP2s
+        T2fcpivy5/2Touww2gq3vgd0tA==
+X-Google-Smtp-Source: APXvYqyfHdj5Wju5tHjYhtBozUgo+eKxaW7VtMGL10rLo9NwZ5f8ANm6rWjTtpKXW6rwsYnvY5BNVg==
+X-Received: by 2002:a17:902:b18e:: with SMTP id s14mr4008320plr.261.1576078656416;
+        Wed, 11 Dec 2019 07:37:36 -0800 (PST)
+Received: from [10.83.42.232] ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id w11sm3150883pgs.60.2019.12.11.07.37.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 11 Dec 2019 07:37:35 -0800 (PST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
+Subject: Re: [PATCH v6 2/3] PCI: Add parameter nr_devfns to pci_add_dma_alias
+From:   James Sewart <jamessewart@arista.com>
+In-Reply-To: <20191210223745.GA167002@google.com>
+Date:   Wed, 11 Dec 2019 15:37:30 +0000
+Cc:     linux-pci@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Dmitry Safonov <dima@arista.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <826A0459-FA8D-4BDB-A342-CE46974466DF@arista.com>
+References: <20191210223745.GA167002@google.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+X-Mailer: Apple Mail (2.3445.102.3)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Tyrel Datwyler <tyreld@linux.ibm.com>
 
-[ Upstream commit 0737686778c6dbe0908d684dd5b9c05b127526ba ]
 
-The device tree is in big endian format and any properties directly
-retrieved using OF helpers that don't explicitly byte swap should
-be annotated. In particular there are several places where we grab
-the opaque property value for the old ibm,drc-* properties and the
-ibm,my-drc-index property.
+> On 10 Dec 2019, at 22:37, Bjorn Helgaas <helgaas@kernel.org> wrote:
+>=20
+> [+cc Joerg]
+>=20
+> On Tue, Dec 03, 2019 at 03:43:53PM +0000, James Sewart wrote:
+>> pci_add_dma_alias can now be used to create a dma alias for a range =
+of
+>> devfns.
+>>=20
+>> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+>> Signed-off-by: James Sewart <jamessewart@arista.com>
+>> ---
+>> drivers/pci/pci.c    | 22 +++++++++++++++++-----
+>> drivers/pci/quirks.c | 14 +++++++-------
+>> include/linux/pci.h  |  2 +-
+>> 3 files changed, 25 insertions(+), 13 deletions(-)
+>=20
+> Heads up Joerg: I also updated drivers/iommu/amd_iommu.c (this is the
+> one reported by the kbuild test robot) and removed the printk there
+> that prints the same thing as the one in pci_add_dma_alias(), and I
+> updated a PCI quirk that was merged after this patch was posted.
+>=20
+>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+>> index d3c83248f3ce..dbb01aceafda 100644
+>> --- a/drivers/pci/pci.c
+>> +++ b/drivers/pci/pci.c
+>> @@ -5857,7 +5857,8 @@ int pci_set_vga_state(struct pci_dev *dev, bool =
+decode,
+>> /**
+>>  * pci_add_dma_alias - Add a DMA devfn alias for a device
+>>  * @dev: the PCI device for which alias is added
+>> - * @devfn: alias slot and function
+>> + * @devfn_from: alias slot and function
+>> + * @nr_devfns: Number of subsequent devfns to alias
+>>  *
+>>  * This helper encodes an 8-bit devfn as a bit number in =
+dma_alias_mask
+>>  * which is used to program permissible bus-devfn source addresses =
+for DMA
+>> @@ -5873,8 +5874,13 @@ int pci_set_vga_state(struct pci_dev *dev, =
+bool decode,
+>>  * cannot be left as a userspace activity).  DMA aliases should =
+therefore
+>>  * be configured via quirks, such as the PCI fixup header quirk.
+>>  */
+>> -void pci_add_dma_alias(struct pci_dev *dev, u8 devfn)
+>> +void pci_add_dma_alias(struct pci_dev *dev, u8 devfn_from, unsigned =
+nr_devfns)
+>> {
+>> +	int devfn_to;
+>> +
+>> +	nr_devfns =3D min(nr_devfns, (unsigned)MAX_NR_DEVFNS);
+>> +	devfn_to =3D devfn_from + nr_devfns - 1;
+>=20
+> I made this look like:
+>=20
+> +       devfn_to =3D min(devfn_from + nr_devfns - 1,
+> +                      (unsigned) MAX_NR_DEVFNS - 1);
+>=20
+> so devfn_from=3D0xf0, nr_devfns=3D0x20 doesn't cause devfn_to to wrap
+> around.
+>=20
+> I did keep Logan's reviewed-by, so let me know if I broke something.
 
-Fix this for better static checking by annotating values we know to
-explicitly big endian, and byte swap where appropriate.
+I think nr_devfns still needs updating as it is used for bitmap_set.=20
+Although thinking about it now we should limit the number to alias to be=20=
 
-Signed-off-by: Tyrel Datwyler <tyreld@linux.ibm.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/1573449697-5448-9-git-send-email-tyreld@linux.ibm.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pci/hotplug/rpaphp_core.c | 29 +++++++++++++++--------------
- 1 file changed, 15 insertions(+), 14 deletions(-)
+maximum (MAX_NR_DEVFNS - devfn_from), so that we don=E2=80=99t set past =
+the end of=20
+the bitmap:
 
-diff --git a/drivers/pci/hotplug/rpaphp_core.c b/drivers/pci/hotplug/rpaphp_core.c
-index ccc6deeb9ccf0..7d74fe875225e 100644
---- a/drivers/pci/hotplug/rpaphp_core.c
-+++ b/drivers/pci/hotplug/rpaphp_core.c
-@@ -154,11 +154,11 @@ static enum pci_bus_speed get_max_bus_speed(struct slot *slot)
- 	return speed;
- }
- 
--static int get_children_props(struct device_node *dn, const int **drc_indexes,
--		const int **drc_names, const int **drc_types,
--		const int **drc_power_domains)
-+static int get_children_props(struct device_node *dn, const __be32 **drc_indexes,
-+			      const __be32 **drc_names, const __be32 **drc_types,
-+			      const __be32 **drc_power_domains)
- {
--	const int *indexes, *names, *types, *domains;
-+	const __be32 *indexes, *names, *types, *domains;
- 
- 	indexes = of_get_property(dn, "ibm,drc-indexes", NULL);
- 	names = of_get_property(dn, "ibm,drc-names", NULL);
-@@ -194,8 +194,8 @@ static int rpaphp_check_drc_props_v1(struct device_node *dn, char *drc_name,
- 				char *drc_type, unsigned int my_index)
- {
- 	char *name_tmp, *type_tmp;
--	const int *indexes, *names;
--	const int *types, *domains;
-+	const __be32 *indexes, *names;
-+	const __be32 *types, *domains;
- 	int i, rc;
- 
- 	rc = get_children_props(dn->parent, &indexes, &names, &types, &domains);
-@@ -208,7 +208,7 @@ static int rpaphp_check_drc_props_v1(struct device_node *dn, char *drc_name,
- 
- 	/* Iterate through parent properties, looking for my-drc-index */
- 	for (i = 0; i < be32_to_cpu(indexes[0]); i++) {
--		if ((unsigned int) indexes[i + 1] == my_index)
-+		if (be32_to_cpu(indexes[i + 1]) == my_index)
- 			break;
- 
- 		name_tmp += (strlen(name_tmp) + 1);
-@@ -267,7 +267,7 @@ static int rpaphp_check_drc_props_v2(struct device_node *dn, char *drc_name,
- int rpaphp_check_drc_props(struct device_node *dn, char *drc_name,
- 			char *drc_type)
- {
--	const unsigned int *my_index;
-+	const __be32 *my_index;
- 
- 	my_index = of_get_property(dn, "ibm,my-drc-index", NULL);
- 	if (!my_index) {
-@@ -277,10 +277,10 @@ int rpaphp_check_drc_props(struct device_node *dn, char *drc_name,
- 
- 	if (of_find_property(dn->parent, "ibm,drc-info", NULL))
- 		return rpaphp_check_drc_props_v2(dn, drc_name, drc_type,
--						*my_index);
-+						be32_to_cpu(*my_index));
- 	else
- 		return rpaphp_check_drc_props_v1(dn, drc_name, drc_type,
--						*my_index);
-+						be32_to_cpu(*my_index));
- }
- EXPORT_SYMBOL_GPL(rpaphp_check_drc_props);
- 
-@@ -311,10 +311,11 @@ static int is_php_type(char *drc_type)
-  * for built-in pci slots (even when the built-in slots are
-  * dlparable.)
-  */
--static int is_php_dn(struct device_node *dn, const int **indexes,
--		const int **names, const int **types, const int **power_domains)
-+static int is_php_dn(struct device_node *dn, const __be32 **indexes,
-+		     const __be32 **names, const __be32 **types,
-+		     const __be32 **power_domains)
- {
--	const int *drc_types;
-+	const __be32 *drc_types;
- 	int rc;
- 
- 	rc = get_children_props(dn, indexes, names, &drc_types, power_domains);
-@@ -349,7 +350,7 @@ int rpaphp_add_slot(struct device_node *dn)
- 	struct slot *slot;
- 	int retval = 0;
- 	int i;
--	const int *indexes, *names, *types, *power_domains;
-+	const __be32 *indexes, *names, *types, *power_domains;
- 	char *name, *type;
- 
- 	if (!dn->name || strcmp(dn->name, "pci"))
--- 
-2.20.1
+ nr_devfns =3D min(nr_devfns, (unsigned) MAX_NR_DEVFNS - devfn_from);
+
+I think with this change we wont need to clip devfn_to.
+
+>=20
+>> 	if (!dev->dma_alias_mask)
+>> 		dev->dma_alias_mask =3D bitmap_zalloc(MAX_NR_DEVFNS, =
+GFP_KERNEL);
+>> 	if (!dev->dma_alias_mask) {
+>> @@ -5882,9 +5888,15 @@ void pci_add_dma_alias(struct pci_dev *dev, u8 =
+devfn)
+>> 		return;
+>> 	}
+>>=20
+>> -	set_bit(devfn, dev->dma_alias_mask);
+>> -	pci_info(dev, "Enabling fixed DMA alias to %02x.%d\n",
+>> -		 PCI_SLOT(devfn), PCI_FUNC(devfn));
+>> +	bitmap_set(dev->dma_alias_mask, devfn_from, nr_devfns);
+>> +
+>> +	if (nr_devfns =3D=3D 1)
+>> +		pci_info(dev, "Enabling fixed DMA alias to %02x.%d\n",
+>> +				PCI_SLOT(devfn_from), =
+PCI_FUNC(devfn_from));
+>> +	else if(nr_devfns > 1)
+>> +		pci_info(dev, "Enabling fixed DMA alias for devfn range =
+from %02x.%d to %02x.%d\n",
+>> +				PCI_SLOT(devfn_from), =
+PCI_FUNC(devfn_from),
+>> +				PCI_SLOT(devfn_to), PCI_FUNC(devfn_to));
+>> }
 
