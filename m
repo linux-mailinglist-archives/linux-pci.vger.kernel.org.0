@@ -2,102 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E4E1311C10D
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2019 01:05:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B53011C128
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2019 01:13:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727067AbfLLAF1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Dec 2019 19:05:27 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:42058 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726673AbfLLAF1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Dec 2019 19:05:27 -0500
-Received: by mail-pl1-f195.google.com with SMTP id x13so230489plr.9
-        for <linux-pci@vger.kernel.org>; Wed, 11 Dec 2019 16:05:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=knL1h4z24lzIsuvmKBSo/0XCAih1x2E+PNOpBTrzcGk=;
-        b=F+L7+Mc3etbG1GUgdUAhBMtdS+nyLaqayWnDG5+p1t59WUdZj1PBNxC99I2o8fj+2n
-         /ZlDtwrf9BqmdY9E5tAc/sOu7JaK4kpdT6ZRR3c4NOh8Sz8ySHB9Ifn40VhfubjkJNHK
-         ONSsQvsWpQibeZP7zO5nzSUfSJZ1AwPA9EaG8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=knL1h4z24lzIsuvmKBSo/0XCAih1x2E+PNOpBTrzcGk=;
-        b=emgpHs4DR8OYZbD1vFRhQBuOgIykaWfv+R8Zlluh0iNQjTCv9wBMvw1kxgOnToyZiA
-         eDfK8jtXOg6r3Ke3DLaEqB2q1gn3guv5SUxc/tS0FTJPcakhJhLHtS0OyzFXISLACqtF
-         2yfkhQILzgWMg0Ykj4wSmCcdIAP3XQRT7X0KoTyL1SEAMqCGCOZvvoSRk35tnzCFgiEG
-         swrk26FU4cc83bQ1Vh+dUITk5/OSsDX345FpPDhmNerij7aEI2l4ZvVfQKd6lRMRwdbq
-         xe+4MI/m+b4/Tsma3Az3TjS9HsoJ0y2T0N8cm2NuCwtr0mvXMCvbSBXv4hximc7Ey50z
-         8QCA==
-X-Gm-Message-State: APjAAAXuAgfKSWpvCxJrMn0dXP+ab+TpGAC+9Vjg3qi/EGDCXX6pQEuv
-        rbywktoh4m4bp2QodyH879Nkcw==
-X-Google-Smtp-Source: APXvYqwcALLNRnEYmvQAy3fkAKoj96pGRx8c8rS0MqgQqUrVCv3OXGILvc7bHoF670n2YGGrTcS9GA==
-X-Received: by 2002:a17:902:203:: with SMTP id 3mr6369151plc.170.1576109126833;
-        Wed, 11 Dec 2019 16:05:26 -0800 (PST)
-Received: from rj-aorus.ric.broadcom.com ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id y199sm4415133pfb.137.2019.12.11.16.05.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Dec 2019 16:05:25 -0800 (PST)
-Subject: Re: [PATCH] PCI: iproc: move quirks to driver
-To:     bjorn@helgaas.com
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, Wei Liu <wei.liu@kernel.org>,
-        linux-pci@vger.kernel.org, rjui@broadcom.com,
+        id S1727283AbfLLANB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Dec 2019 19:13:01 -0500
+Received: from foss.arm.com ([217.140.110.172]:53048 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727067AbfLLANA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 11 Dec 2019 19:13:00 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B4E121FB;
+        Wed, 11 Dec 2019 16:12:59 -0800 (PST)
+Received: from [192.168.1.123] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 025913F52E;
+        Wed, 11 Dec 2019 16:12:56 -0800 (PST)
+Subject: Re: [REGRESSION] PCI v5.5-rc1 breaks google kevin
+To:     Vicente Bergas <vicencb@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Frederick Lawler <fred@fredlawl.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Philipp Zabel <p.zabel@pengutronix.de>,
         Andrew Murray <andrew.murray@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-References: <20191211223438.GA121846@google.com>
- <afbb14fb-e114-d6de-0bfe-d39be354842e@broadcom.com>
- <CABhMZUU82iRD67yQhpUG3MUx3s9WaZ=tAXA=QriEEjUkNbu22w@mail.gmail.com>
-From:   Ray Jui <ray.jui@broadcom.com>
-Message-ID: <8983ae6c-36ac-7acc-5caa-2d11bf593d44@broadcom.com>
-Date:   Wed, 11 Dec 2019 16:05:23 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        =?UTF-8?Q?Stefan_M=c3=a4tje?= <stefan.maetje@esd.eu>,
+        linux-arm-kernel@lists.infradead.org
+References: <58ce5534-64bd-4b4b-bd60-ed4e0c71b20f@gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <166f0016-7061-be5c-660d-0499f74e8697@arm.com>
+Date:   Thu, 12 Dec 2019 00:12:56 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <CABhMZUU82iRD67yQhpUG3MUx3s9WaZ=tAXA=QriEEjUkNbu22w@mail.gmail.com>
+In-Reply-To: <58ce5534-64bd-4b4b-bd60-ed4e0c71b20f@gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi Vicente,
 
-
-On 12/11/19 4:02 PM, Bjorn Helgaas wrote:
-> On Wed, Dec 11, 2019 at 5:40 PM Ray Jui <ray.jui@broadcom.com> wrote:
->>
->>
->>
->> On 12/11/19 2:34 PM, Bjorn Helgaas wrote:
->>> On Wed, Dec 11, 2019 at 05:45:11PM +0000, Wei Liu wrote:
->>>> The quirks were originally enclosed by ifdef. That made the quirks not
->>>> to be applied when respective drivers were compiled as modules.
->>>>
->>>> Move the quirks to driver code to fix the issue.
->>>>
->>>> Signed-off-by: Wei Liu <wei.liu@kernel.org>
->>>
->>> This straddles the core and native driver boundary, so I applied it to
->>> pci/misc for v5.6.  Thanks, I think this is a great solution!  It's
->>> always nice when we can encapsulate device-specific things in a
->>> driver.
->>>
->>
->> Opps! I was going to review and comment and you are quick, :)
->>
->> I was going to say, I think it's better to keep this quirk in
->> "pcie-iproc.c" instead of "pcie-iproc-platform.c".
->>
->> The quirk is specific to certain PCIe devices under iProc (activated
->> based on device ID), but should not be tied to a specific bus
->> architecture (i.e., platform vs BCMA).
+On 2019-12-11 11:38 pm, Vicente Bergas wrote:
+> Hi,
+> since v5.5-rc1 the google kevin chromebook does not boot.
+> Git bisect reports 5e0c21c75e8c PCI/ASPM: Remove pcie_aspm_enabled() 
+> unnecessary locking
+> as the first bad commit.
 > 
-> I'm happy to move it; that's no problem.
+> In order to revert it from v5.5-rc1 i had to also revert some dependencies:
+> 5e0c21c75e8c08375a69710527e4a921b897cb7e
+> aff5d0552da4055da3faa27ee4252e48bb1f5821
+> 35efea32b26f9aacc99bf07e0d2cdfba2028b099
+> 687aaf386aeb551130f31705ce40d1341047a936
+> 72ea91afbfb08619696ccde610ee4d0d29cf4a1d
+> 87e90283c94c76ee11d379ab5a0973382bbd0baf
+> After reverting all of this, still no luck.
+> So, either the results of git bisect are not to be trusted, or
+> there are more bad commits.
 > 
+> By "does not boot" i mean that the display fails to start and
+> the display is the only output device, so debugging is quite difficult.
 
-Thanks, Bjorn!
+Assuming it's a manifestation of the same PCI breakage that Enric and 
+Lorenzo figured out, there's a proposed fix here: 
+https://lkml.org/lkml/2019/12/11/199
+
+Robin.
+
+> v5.5-rc1 as is (reverting no commits at all) works fine when disabling PCI:
+> # CONFIG_PCI is not set
+> 
+> Regards,
+>   Vicente.
+> 
+> 
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
