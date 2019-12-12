@@ -2,68 +2,167 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 09A1E11CD88
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2019 13:51:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A8AEB11CE04
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2019 14:16:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729313AbfLLMvx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Dec 2019 07:51:53 -0500
-Received: from foss.arm.com ([217.140.110.172]:45770 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729226AbfLLMvx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 12 Dec 2019 07:51:53 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC82930E;
-        Thu, 12 Dec 2019 04:51:52 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 247893F718;
-        Thu, 12 Dec 2019 04:51:51 -0800 (PST)
-Date:   Thu, 12 Dec 2019 12:51:49 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Zenghui Yu <yuzenghui@huawei.com>
-Cc:     bhelgaas@google.com, corbet@lwn.net, linux-pci@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        wanghaibin.wang@huawei.com
-Subject: Re: [PATCH] Documentation: PCI: msi-howto.rst: Fix wrong function
- name
-Message-ID: <20191212125149.GG24359@e119886-lin.cambridge.arm.com>
-References: <20191212111338.1848-1-yuzenghui@huawei.com>
+        id S1729395AbfLLNQl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Dec 2019 08:16:41 -0500
+Received: from mx2.suse.de ([195.135.220.15]:48780 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729338AbfLLNQl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 12 Dec 2019 08:16:41 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 9BC24AD07;
+        Thu, 12 Dec 2019 13:16:36 +0000 (UTC)
+Message-ID: <b35922dfd7f62489d35ab15362891a90bf46c3d2.camel@suse.de>
+Subject: Re: [PATCH v4 7/8] linux/log2.h: Fix 64bit calculations in
+ roundup/down_pow_two()
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     andrew.murray@arm.com, maz@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Emilio =?ISO-8859-1?Q?L=F3pez?= <emilio@elopez.com.ar>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Moni Shoua <monis@mellanox.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Mirko Lindner <mlindner@marvell.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Solarflare linux maintainers <linux-net-drivers@solarflare.com>,
+        Edward Cree <ecree@solarflare.com>,
+        Martin Habets <mhabets@solarflare.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Thomas Graf <tgraf@suug.ch>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        james.quinlan@broadcom.com, mbrugger@suse.com,
+        f.fainelli@gmail.com, phil@raspberrypi.org, wahrenst@gmx.net,
+        jeremy.linton@arm.com, linux-pci@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        Robin Murphy <robin.murphy@arm.con>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "David S. Miller" <davem@davemloft.net>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rdma@vger.kernel.org, iommu@lists.linux-foundation.org,
+        netdev@vger.kernel.org, kexec@lists.infradead.org,
+        linux-nfs@vger.kernel.org
+Date:   Thu, 12 Dec 2019 14:16:27 +0100
+In-Reply-To: <20191205223044.GA250573@google.com>
+References: <20191205223044.GA250573@google.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-vpJ9shRBsDfxzY4jD4N5"
+User-Agent: Evolution 3.34.2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191212111338.1848-1-yuzenghui@huawei.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 07:13:38PM +0800, Zenghui Yu wrote:
-> pci_irq_alloc_vectors() -> pci_alloc_irq_vectors().
-> 
-> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
-> ---
->  Documentation/PCI/msi-howto.rst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/PCI/msi-howto.rst b/Documentation/PCI/msi-howto.rst
-> index 994cbb660ade..aa2046af69f7 100644
-> --- a/Documentation/PCI/msi-howto.rst
-> +++ b/Documentation/PCI/msi-howto.rst
-> @@ -283,5 +283,5 @@ or disabled (0).  If 0 is found in any of the msi_bus files belonging
->  to bridges between the PCI root and the device, MSIs are disabled.
->  
->  It is also worth checking the device driver to see whether it supports MSIs.
-> -For example, it may contain calls to pci_irq_alloc_vectors() with the
-> +For example, it may contain calls to pci_alloc_irq_vectors() with the
 
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+--=-vpJ9shRBsDfxzY4jD4N5
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
+On Thu, 2019-12-05 at 16:30 -0600, Bjorn Helgaas wrote:
+> You got the "n" on "down" in the subject, but still missing "of" ;)
 
-Andrew Murray
+Yes, sorry about that, I tend to re-read what I meant to say instead of wha=
+t
+it's actually written.
 
->  PCI_IRQ_MSI or PCI_IRQ_MSIX flags.
-> -- 
-> 2.19.1
-> 
-> 
+> On Tue, Dec 03, 2019 at 12:47:40PM +0100, Nicolas Saenz Julienne wrote:
+> > Some users need to make sure their rounding function accepts and return=
+s
+> > 64bit long variables regardless of the architecture. Sadly
+> > roundup/rounddown_pow_two() takes and returns unsigned longs. It turns
+> > out ilog2() already handles 32/64bit calculations properly, and being
+> > the building block to the round functions we can rework them as a
+> > wrapper around it.
+>=20
+> Missing "of" in the function names here.
+> s/a wrapper/wrappers/
+
+Noted
+
+> IIUC the point of this is that roundup_pow_of_two() returned
+> "unsigned long", which can be either 32 or 64 bits (worth pointing
+> out, I think), and many callers need something that returns
+> "unsigned long long" (always 64 bits).
+
+I'll update the commit message to be a more explicit.
+
+> It's a nice simplification to remove the "__" variants.  Just as a
+> casual reader of this commit message, I'd like to know why we had both
+> the roundup and the __roundup versions in the first place, and why we
+> no longer need both.
+
+So, the commit that introduced it (312a0c170945b) meant to use the '__' var=
+iant
+as a helper, but, due to the fact this is a header file, some found it and =
+made
+use of it. I went over some if the commits introducing '__' usages and none=
+ of
+them seem to acknowledge its use as opposed to the macro version. I think i=
+t's
+fair to say it's a case of cargo-culting.
+
+> > -#define roundup_pow_of_two(n)			\
+> > -(						\
+> > -	__builtin_constant_p(n) ? (		\
+> > -		(n =3D=3D 1) ? 1 :			\
+> > -		(1UL << (ilog2((n) - 1) + 1))	\
+> > -				   ) :		\
+> > -	__roundup_pow_of_two(n)			\
+> > - )
+> > +#define roundup_pow_of_two(n)			  \
+> > +(						  \
+> > +	(__builtin_constant_p(n) && ((n) =3D=3D 1)) ? \
+> > +	1 : (1ULL << (ilog2((n) - 1) + 1))        \
+> > +)
+>=20
+> Should the resulting type of this expression always be a ULL, even
+> when n=3D=3D1, i.e., should it be this?
+>=20
+>   1ULL : (1ULL << (ilog2((n) - 1) + 1))        \
+>=20
+> Or maybe there's no case where that makes a difference?
+
+It should be 1ULL on either case.
+
+Regards,
+Nicolas
+
+
+--=-vpJ9shRBsDfxzY4jD4N5
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3yPasACgkQlfZmHno8
+x/4qrgf9GTaIX4ZRG0TCYwOuyJCzR/7cg3GMSsuHo8bknRFfBKmZUwtS0JmNNrn7
+f1Av7IZ0OAbAWPJQkzOXw4OxNhVxq0ItdXAktetVKaF6U5Dz/5tWkkwHLFdhSepV
+FcS4qxWo8nOugcgYRzN6kDaihMFUqbAIioU7n1HGLRGN2s9vaJM1rNmOrGMPovU3
+BbGTs4/7BMM3FmqoGwWUKX5FPFNamYrxAaaOknMUVa16iI7MN7hYH5scWUUK56ER
+57y4jC6vGu17Cku4HBlynsoZpm6z6SvHDoXIMZCbUKbJogsiQo+b1+cZTWLVGi2P
+qQGX/jHjIhYWNVa2Le9F3qgxxmf0uA==
+=hg1F
+-----END PGP SIGNATURE-----
+
+--=-vpJ9shRBsDfxzY4jD4N5--
+
