@@ -2,164 +2,146 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6691B11CE2C
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2019 14:21:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CFB7F11CEA7
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2019 14:44:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729417AbfLLNVH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Dec 2019 08:21:07 -0500
-Received: from mx2.suse.de ([195.135.220.15]:50418 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729378AbfLLNVH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 12 Dec 2019 08:21:07 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B70EFAFD8;
-        Thu, 12 Dec 2019 13:21:03 +0000 (UTC)
-Message-ID: <ff60337c5f6f324fb121fa7cad24e763af29cfe2.camel@suse.de>
-Subject: Re: [PATCH v4 8/8] linux/log2.h: Use roundup/dow_pow_two() on 64bit
- calculations
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     andrew.murray@arm.com, maz@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Eric Anholt <eric@anholt.net>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        james.quinlan@broadcom.com, mbrugger@suse.com,
-        phil@raspberrypi.org, jeremy.linton@arm.com,
-        linux-pci@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        iommu@lists.linux-foundation.org
-Date:   Thu, 12 Dec 2019 14:21:00 +0100
-In-Reply-To: <20191205203845.GA243596@google.com>
-References: <20191205203845.GA243596@google.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-lcx9Dpdc/nSfdN+F0tca"
-User-Agent: Evolution 3.34.2 
+        id S1729470AbfLLNoz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Dec 2019 08:44:55 -0500
+Received: from foss.arm.com ([217.140.110.172]:47352 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729392AbfLLNoz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 12 Dec 2019 08:44:55 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9D4D530E;
+        Thu, 12 Dec 2019 05:44:54 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 17E8B3F718;
+        Thu, 12 Dec 2019 05:44:52 -0800 (PST)
+Subject: Re: [PATCH] pcie: Add quirk for the Arm Neoverse N1SDP platform
+To:     Andre Przywara <andre.przywara@arm.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, Andrew Murray <andrew.murray@arm.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, Len Brown <lenb@kernel.org>
+References: <20191211201725.GA30513@google.com>
+ <9ad40b55-0d31-a7b7-9f99-ea281fd4ad7d@arm.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <46bfdd37-c8a2-f0e2-b0b4-0a40a129d4cb@arm.com>
+Date:   Thu, 12 Dec 2019 13:44:51 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <9ad40b55-0d31-a7b7-9f99-ea281fd4ad7d@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On 12/12/2019 11:05 am, Andre Przywara wrote:
+> On 11/12/2019 20:17, Bjorn Helgaas wrote:
+> 
+> Hi Bjorn,
+> 
+>> On Wed, Dec 11, 2019 at 11:00:49AM +0000, Andre Przywara wrote:
+>>> On Tue, 10 Dec 2019 08:41:15 -0600
+>>> Bjorn Helgaas <helgaas@kernel.org> wrote:
+>>>> On Mon, Dec 09, 2019 at 04:06:38PM +0000, Andre Przywara wrote:
+>>>>> From: Deepak Pandey <Deepak.Pandey@arm.com>
+>>>>>
+>>>>> The Arm N1SDP SoC suffers from some PCIe integration issues, most
+>>>>> prominently config space accesses to not existing BDFs being answered
+>>>>> with a bus abort, resulting in an SError.
+>>>>
+>>>> Can we tease this apart a little more?  Linux doesn't program all the
+>>>> bits that control error signaling, so even on hardware that works
+>>>> perfectly, much of this behavior is determined by what firmware did.
+>>>> I wonder if Linux could be more careful about this.
+>>>>
+>>>> "Bus abort" is not a term used in PCIe.
+>>>
+>>> Yes, sorry, that was my sloppy term, also aiming more at the CPU
+>>> side of the bus, between the cores and the RC.
+>>>
+>>>>   IIUC, a config read to a
+>>>> device that doesn't exist should terminate with an Unsupported Request
+>>>> completion, e.g., see the implementation note in PCIe r5.0 sec 2.3.1.
+>>>
+>>> Yes, that's what Lorenzo mentioned as well.
+>>>
+>>>> The UR should be an uncorrectable non-fatal error (Table 6-5), and
+>>>> Figures 6-2 and 6-3 show how it should be handled and when it should
+>>>> be signaled as a system error.  In case you don't have a copy of the
+>>>> spec, I extracted those two figures and put them at [1].
+>>>
+>>> Thanks for that.
+>>> So in the last few months we tossed several ideas around how to
+>>> work-around this without kernel intervention, all of them turned out
+>>> to be not working. There are indeed registers in the RC that
+>>> influence error reporting to the CPU side, but even if we could
+>>> suppress (or catch) the SError, we can't recover and fixup the read
+>>> transaction to the CPU. Even Lorenzo gave up on this ;-) As far as I
+>>> understood this, there are gates missing which are supposed to
+>>> translate this specific UR into a valid "all-1s" response.
+>>
+>> But the commit log says firmware scanned the bus (catching the
+>> SErrors).  Shouldn't Linux be able to catch them the same way?
+> 
+> Not really. The scanning is done by the SCP management processor, which is a Cortex-M class core on the same bus. So it's a simple, single core running very early after power-on, when the actual AP cores are still off. The SError handler is set to just increase a value, then to return. This value is then checked before and after a config space access for a given
+> BDF: https://git.linaro.org/landing-teams/working/arm/n1sdp-pcie-quirk.git/tree/scp
+> 
+> On the AP cores that run Linux later on this is quite different: The SError is asynchronous, imprecise (inexact) and has no syndrome information. That means we can't attribute this anymore to the faulting instruction, we don't even know if it happened due to this config space access. The CPU might have executed later instructions already, so the state is broken at this point. SError basically means: the system is screwed up.
+> Because this is quite common for SErrors, we don't even allow to register SError handlers in arm64 Linux.
 
---=-lcx9Dpdc/nSfdN+F0tca
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Furthermore, on the main application processor, SError might be 
+delivered to EL3 firmware well beyond the reach of Linux, so we can make 
+zero assumptions about how it's handled and whether we'll ever see it, 
+or survive the result (EL3 is at liberty to say "oh, something went 
+wrong, I'll reset the system immediately").
 
-On Thu, 2019-12-05 at 14:38 -0600, Bjorn Helgaas wrote:
-> The subject contains a couple typos: it's missing "of" and it's
-> missing the "n" on "down".
-
-Noted >=20
-> On Tue, Dec 03, 2019 at 12:47:41PM +0100, Nicolas Saenz Julienne wrote:
-> > The function now is safe to use while expecting a 64bit value. Use it
-> > where relevant.
->=20
-> Please include the function names ("roundup_pow_of_two()",
-> "rounddown_pow_of_two()") in the changelog so it is self-contained and
-> doesn't depend on the subject.
-
-Noted
-
-> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
->=20
-> With the nits above and below addressed,
->=20
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# drivers/pci
-
-Thanks!
-
-> > ---
-> >  drivers/acpi/arm64/iort.c                        | 2 +-
-> >  drivers/net/ethernet/mellanox/mlx4/en_clock.c    | 3 ++-
-> >  drivers/of/device.c                              | 3 ++-
-> >  drivers/pci/controller/cadence/pcie-cadence-ep.c | 3 ++-
-> >  drivers/pci/controller/cadence/pcie-cadence.c    | 3 ++-
-> >  drivers/pci/controller/pcie-brcmstb.c            | 3 ++-
-> >  drivers/pci/controller/pcie-rockchip-ep.c        | 5 +++--
-> >  kernel/dma/direct.c                              | 2 +-
-> >  8 files changed, 15 insertions(+), 9 deletions(-)
-> > --- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> > +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> > @@ -10,6 +10,7 @@
-> >  #include <linux/platform_device.h>
-> >  #include <linux/pm_runtime.h>
-> >  #include <linux/sizes.h>
-> > +#include <linux/log2.h>
-> > =20
-> >  #include "pcie-cadence.h"
-> > =20
-> > @@ -65,7 +66,7 @@ static int cdns_pcie_ep_set_bar(struct pci_epc *epc, =
-u8
-> > fn,
-> >  	 * roundup_pow_of_two() returns an unsigned long, which is not suited
-> >  	 * for 64bit values.
-> >  	 */
->=20
-> Please remove the comment above since it no longer applies.
-
-Noted
-
-[...]
-
-> > diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-> > index 6af7ae83c4ad..056886c4efec 100644
-> > --- a/kernel/dma/direct.c
-> > +++ b/kernel/dma/direct.c
-> > @@ -53,7 +53,7 @@ u64 dma_direct_get_required_mask(struct device *dev)
-> >  {
-> >  	u64 max_dma =3D phys_to_dma_direct(dev, (max_pfn - 1) << PAGE_SHIFT);
-> > =20
-> > -	return (1ULL << (fls64(max_dma) - 1)) * 2 - 1;
-> > +	return rounddown_pow_of_two(max_dma) * 2 - 1;
->=20
-> Personally I would probably make this one a separate patch since it's
-> qualitatively different than the others and it would avoid the slight
-> awkwardness of the non-greppable "roundup/down_pow_of_two()"
-> construction in the commit subject.
->=20
-> But it's fine either way.
-
-I'll split it into two parts, as RobH made a similar complaint.
-
-Regards,
-Nicolas
-
-
---=-lcx9Dpdc/nSfdN+F0tca
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3yPrwACgkQlfZmHno8
-x/4DxAf/dUNU44c6C5UlupKkHs1V09AR3yPNPOe8GrxrtpnzWAaNQ9L4S0ZG9ocS
-gey8W3CCPJPrWmqSAjQ8ddX9w+wKaaRaGFE3wHRFiGVMDSN8kGzHySuWi1ytfy0Y
-x0msb/bX87L3SwSegRTGlvbRJ1rDZl4WxCVFSrhCNRwem2R+v668VGifVS24Ay1f
-dwS7xyDUcMTmaiCfpK8KyJK1GdbScI6kVPFUM57deANw/I60zWGWykBnTeTQtlrM
-gLN2fGNP1wLRKZ5IEHObKLWo0rXTRKBjsouzL4/D5dW69LXZK1nS02rJsdu5bpUl
-WepA96OKnIgxngbBiO8z4btiMgZ1Jw==
-=QTsG
------END PGP SIGNATURE-----
-
---=-lcx9Dpdc/nSfdN+F0tca--
-
+Robin.
+> So even if we could somehow handle this is in Linux, it would be a much greater and intrusive hack, so I'd rather stick with this version.
+>   
+>> The "all-1s" response directly from hardware is typical of most
+>> platforms, but I don't think it's strictly required by the PCIe spec
+>> and I don't think it's absolutely essential even to Linux.  If you can
+>> catch the SErrors, isn't there a way for software to fabricate that
+>> all-1s data and continue after the read?
+> 
+> That was an idea we had as well, but due to the points mentioned above this is not possible.
+> 
+>>>> Even ECAM compliance is not really minor -- if this controller were
+>>>> fully compliant with the spec, you would need ZERO Linux changes to
+>>>> support it.  Every quirk like this means additional maintenance
+>>>> burden, and it's not just a one-time thing.  It means old kernels that
+>>>> *should* "just work" on your system will not work unless somebody
+>>>> backports the quirk.
+>>>
+>>> I am well aware of that, and we had quite some discussions
+>>> internally, with quite some opposition.  ...
+>>
+>> The main point is that *future* silicon should be designed to avoid
+>> this issue.  I hope at least that part was not controversial.
+> 
+> Yes, the design goal was to be completely standards (SBSA, ACPI, ECAM) compliant, it was just the usual "things happen" that wasn't spotted in time.
+> 
+>> If we want to take advantage of the generic PCI code supplied by
+>> Linux, we have to expect that the hardware will play by the rules of
+>> PCI.
+> 
+> You don't need to convince me ;-), but I think the lesson has been learned.
+> 
+> Cheers,
+> Andre.
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
