@@ -2,150 +2,132 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B54D11D810
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2019 21:49:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E104D11D844
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2019 22:07:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730866AbfLLUst (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Dec 2019 15:48:49 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:50727 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730749AbfLLUss (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Dec 2019 15:48:48 -0500
-Received: by mail-wm1-f66.google.com with SMTP id a5so3885614wmb.0;
-        Thu, 12 Dec 2019 12:48:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:mime-version:message-id:in-reply-to
-         :references:user-agent:content-transfer-encoding;
-        bh=5qSR0QdqBCxMs032kRyQPK8EtIXFRay9PJcRioaKMHY=;
-        b=IqqQVn8ilZmmSxPnbbsjtHorPQB/AZreK9phmXXKd/PX+sxkep7uzTHc1eAtlEfFP+
-         jdcbyZP21eOJTefkqKGfd9eUPRW2BK83iju3qT6bi2ScAFc+7uLUFuRBXCX57ebxhbgY
-         ik0V440sm/3gTTrhFVU5ZEY+w4uR1XSYg4z+ahrJzIQCLjS264cTU/yl9y+UhU7NI30x
-         ce3QRGUrE2qbCVFKvUhy0kSQAdUEGQDIocasLUwVvYs+zoHYeiHM6Z0djE2Y4wgn7TWe
-         owMwTfCJ1hR6ESjDut+GrU7sxmj+sc3j4TmhzTZ6COP5rSGGzGbj4COtI8Oh60LgDhHB
-         DwWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:mime-version:message-id
-         :in-reply-to:references:user-agent:content-transfer-encoding;
-        bh=5qSR0QdqBCxMs032kRyQPK8EtIXFRay9PJcRioaKMHY=;
-        b=VcsYh+MbOEvi+wOSnNRTNUxofKxKYFRfLO+lT2w0xHtvEK/3nDIKRkPGUP2uvNFPJ1
-         JdsagLble68yyebYdQqzoKZYcRhM2VVvr5JKIRYpj/2MFVh0ihHajNZz3dbUoVnAvs+X
-         8bpJh6z9SOpjsGKbFsgkHRdVVU/e/K6DVZYH7qbbYnjHCWsOQSDVEWkwz7frWY4md2PD
-         eP7vGUNWXZJ5hhbiFJtPM/nDuvOUeQP3zt90dTdLn/kVnwSXX350k9gG/MytR8kftxoa
-         YCBui8570zaCimI69nqiwUUsfhRh7z9ebphbe1Ye75GB99Lkt5l/GPM7dq/hWMgJJid7
-         FQvA==
-X-Gm-Message-State: APjAAAVDnh5PEOKBgCpIV7JXlhFVtsmlvBSHCqBtHxVRSjf5hSBKqOXv
-        yitqBEGOPsnMXF8KXYmVlAs=
-X-Google-Smtp-Source: APXvYqyRBHkSwvPqlOT+cdjfjV6lVJXPzV6ms+AZeyVinqzXI6QzavMEZHDeFT0yrkacR53OIEZa0Q==
-X-Received: by 2002:a05:600c:10cd:: with SMTP id l13mr9322438wmd.102.1576183726517;
-        Thu, 12 Dec 2019 12:48:46 -0800 (PST)
-Received: from localhost ([5.59.90.131])
-        by smtp.gmail.com with ESMTPSA id s16sm7349852wrn.78.2019.12.12.12.48.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2019 12:48:45 -0800 (PST)
-From:   Vicente Bergas <vicencb@gmail.com>
-To:     Andrew Murray <andrew.murray@arm.com>
-Cc:     Enric Balletbo Serra <eballetbo@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>,
+        id S1730971AbfLLVH2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Dec 2019 16:07:28 -0500
+Received: from foss.arm.com ([217.140.110.172]:60840 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730742AbfLLVH2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 12 Dec 2019 16:07:28 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1BD2A328;
+        Thu, 12 Dec 2019 13:07:27 -0800 (PST)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 87EB43F718;
+        Thu, 12 Dec 2019 13:07:26 -0800 (PST)
+Date:   Thu, 12 Dec 2019 21:07:24 +0000
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Andre Przywara <andre.przywara@arm.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Frederick Lawler <fred@fredlawl.com>,
-        <linux-pci@vger.kernel.org>, Shawn Lin <shawn.lin@rock-chips.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Mark Brown <broonie@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        =?iso-8859-1?Q?Stefan_M=E4tje?= <stefan.maetje@esd.eu>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [REGRESSION] PCI v5.5-rc1 breaks google kevin
-Date:   Thu, 12 Dec 2019 21:48:43 +0100
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH] pcie: Add quirk for the Arm Neoverse N1SDP platform
+Message-ID: <20191212210723.GJ24359@e119886-lin.cambridge.arm.com>
+References: <20191209160638.141431-1-andre.przywara@arm.com>
+ <20191210144115.GA94877@google.com>
 MIME-Version: 1.0
-Message-ID: <1d500ac9-accd-40d5-b1c9-e3de88957557@gmail.com>
-In-Reply-To: <20191212203925.GH24359@e119886-lin.cambridge.arm.com>
-References: <58ce5534-64bd-4b4b-bd60-ed4e0c71b20f@gmail.com>
- <166f0016-7061-be5c-660d-0499f74e8697@arm.com>
- <20191212005254.GE24359@e119886-lin.cambridge.arm.com>
- <CAFqH_50pJVQT3uqtpVgqn4ijfdPMzHoE1ns_KARH+_cKe+3NRg@mail.gmail.com>
- <792cf6ab-26c4-40a4-90b0-a99e620548f4@gmail.com>
- <20191212203925.GH24359@e119886-lin.cambridge.arm.com>
-User-Agent: Trojita
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191210144115.GA94877@google.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thursday, December 12, 2019 9:39:27 PM CET, Andrew Murray wrote:
-> On Thu, Dec 12, 2019 at 07:40:06PM +0100, Vicente Bergas wrote:
->> On Thursday, December 12, 2019 3:16:25 PM CET, Enric Balletbo Serra wrote:=
+On Tue, Dec 10, 2019 at 08:41:15AM -0600, Bjorn Helgaas wrote:
+> On Mon, Dec 09, 2019 at 04:06:38PM +0000, Andre Przywara wrote:
+> > From: Deepak Pandey <Deepak.Pandey@arm.com>
+> > 
+> > The Arm N1SDP SoC suffers from some PCIe integration issues, most
+> > prominently config space accesses to not existing BDFs being answered
+> > with a bus abort, resulting in an SError.
+> 
+> Can we tease this apart a little more?  Linux doesn't program all the
+> bits that control error signaling, so even on hardware that works
+> perfectly, much of this behavior is determined by what firmware did.
+> I wonder if Linux could be more careful about this.
+> 
+> "Bus abort" is not a term used in PCIe.  IIUC, a config read to a
+> device that doesn't exist should terminate with an Unsupported Request
+> completion, e.g., see the implementation note in PCIe r5.0 sec 2.3.1.
+> 
+> The UR should be an uncorrectable non-fatal error (Table 6-5), and
+> Figures 6-2 and 6-3 show how it should be handled and when it should
+> be signaled as a system error.  In case you don't have a copy of the
+> spec, I extracted those two figures and put them at [1].
+> 
+> Can you collect "lspci -vvxxx" output to see if we can correlate it
+> with those figures and the behavior you see?
+> 
+> [1] https://drive.google.com/file/d/1ihhdQvr0a7ZEJG-3gPddw1Tq7cTFAsah/view?usp=sharing
+> 
+> > To mitigate this, the firmware scans the bus before boot (catching the
+> > SErrors) and creates a table with valid BDFs, which acts as a filter for
+> > Linux' config space accesses.
+> > 
+> > Add code consulting the table as an ACPI PCIe quirk, also register the
+> > corresponding device tree based description of the host controller.
+> > Also fix the other two minor issues on the way, namely not being fully
+> > ECAM compliant and config space accesses being restricted to 32-bit
+> > accesses only.
+> 
+> As I'm sure you've noticed, controllers that support only 32-bit
+> config writes are not spec compliant and devices may not work
+> correctly.  The comment in pci_generic_config_write32() explains why.
+> 
+> You may not trip over this problem frequently, but I wouldn't call it
+> a "minor" issue because when you *do* trip over it, you have no
+> indication that a register was corrupted.
+> 
+> Even ECAM compliance is not really minor -- if this controller were
+> fully compliant with the spec, you would need ZERO Linux changes to
+> support it.  Every quirk like this means additional maintenance
+> burden, and it's not just a one-time thing.  It means old kernels that
+> *should* "just work" on your system will not work unless somebody
+> backports the quirk.
 
->>> Hi Vicente,
->>>=20
->>> Missatge de Andrew Murray <andrew.murray@arm.com> del dia dj., 12 de
->>> des. 2019 a les 1:53:
->>>> On Thu, Dec 12, 2019 at 12:12:56AM +0000, Robin Murphy wrote: ...
->>>=20
->>> Another issue that is affecting current mainline for kevin is fixed
->>> with [1]. As usual, I have a tracking branch for 5.5 for different
->>> Chromebooks with some not yet merged patches that makes things work
->>> while are not fixed [2]. For kevin only the mentioned ASoC patch [1]
->>> and the pcie fix [3] should be needed. Other than that display is
->>> working for me on Kevin.
->>>=20
->>> Cheers,
->>>  Enric
->>>=20
->>> [1]=20
->>> https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git/commit/=
-?h=3Dfor-5.5&id=3D4bf2e385aa59c2fae5f880aa25cfd2b470109093
->>> [2]=20
->>> https://gitlab.collabora.com/eballetbo/linux/commits/topic/chromeos/somew=
-hat-stable-5.5
->>> [3]  https://lkml.org/lkml/2019/12/11/199
->>>=20
->>>>> ...
->>>> It's likely that any PCI driver that uses PCI IO with that=20
->>>> controller will
->>>> suffer the same fate.
->>>>=20
->>>> Vicente - can you try the patch that has been proposed and=20
->>>> verify it fixes
->>>> the issue for you?
->>>>=20
->>>> Thanks, ...
->>=20
->> Hi Robin, Andrew and Enric,
->> thank you all for the quick responses!
->> I can confirm that patch [3] fixes the issue reported in this email and
->> that [1] fixes the other issue reported on the other email.
->
-> Pleased to hear this is working for you now.
->
-> Are you happy to give a tested-by tag for [3]?
+With regards to URs resulting in unwanted aborts or similar - this seems
+to be a very common theme amongst ARM PCI controller drivers. For example
+both ARM32 imx6 and ARM32 keystone have fault handlers to handle an abort
+and fabricate a 0xffffffff read value.
 
-Yes, feel free to apply this tag.
-Using it just now and the wlan at the other side of the PCIe bus is=20
-detected.
+The ARM32 rcar driver, whilst it doesn't appear to produce an abort, does
+read the PCI_STATUS register after making a config read to determine if
+any aborts have happened - in which case it reports
+PCIBIOS_DEVICE_NOT_FOUND.
 
-Regards,
-  Vicente.
+And as recently reported [1], the rockchip driver also appears to produce
+aborts.
 
-> Thanks,
->
-> Andrew Murray
->
->>=20
->> Regards,
->>  Vicen=C3=A7.
->>=20
->
->
+I suspect that this ARM64 controller driver won't be the last either. Thus
+any solution here may form the basis of copy-cat solutions for subsequent
+controllers.
 
+From my understanding of the issues, the ARM64 serrors are imprecise and
+as a result there isn't a sensible way of using them to determine that a
+read is a UR. So where there are no other solutions to suppress the
+generation of an abort by the controller, the only solutions that seem to
+exist are 1) pre-scan the devices in firmware and only talk to those devices
+in Linux - a safe option but limiting - perhaps with side effects for CRS
+and 2) the approach rcar takes in using the PCI_STATUS register - though
+you'd end up having to mask the serror (PSTATE.A) for a limited period of
+time - a risky option (you'll miss real serrors) - but with no side effects.
+
+(I don't know if option 2 is feasible in this case by the way).
+
+[1] https://lore.kernel.org/linux-pci/2a381384-9d47-a7e2-679c-780950cd862d@rock-chips.com/2-0001-WFT-PCI-rockchip-play-game-with-unsupported-request-.patch
+
+Thanks,
+
+Andrew Murray
+
+> 
+> > This allows the Arm Neoverse N1SDP board to boot Linux without crashing
+> > and to access *any* devices (there are no platform devices except UART).
