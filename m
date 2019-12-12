@@ -2,109 +2,170 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C8DDF11C0BA
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2019 00:46:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 60D7911C10A
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Dec 2019 01:02:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbfLKXqb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Dec 2019 18:46:31 -0500
-Received: from foss.arm.com ([217.140.110.172]:52186 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726404AbfLKXqa (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 11 Dec 2019 18:46:30 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F0CC51FB;
-        Wed, 11 Dec 2019 15:46:29 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 661923F52E;
-        Wed, 11 Dec 2019 15:46:29 -0800 (PST)
-Date:   Wed, 11 Dec 2019 23:46:27 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Dilip Kota <eswara.kota@linux.intel.com>,
-        lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
-        gustavo.pimentel@synopsys.com, robh@kernel.org,
-        linux-kernel@vger.kernel.org, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
-Subject: Re: [PATCH v10 2/3] PCI: dwc: intel: PCIe RC controller driver
-Message-ID: <20191211234627.GC24359@e119886-lin.cambridge.arm.com>
-References: <7f5f0eec-465e-9c21-35ac-b6906119ed5e@linux.intel.com>
- <20191211142022.GA26342@google.com>
+        id S1726897AbfLLACe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Dec 2019 19:02:34 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:43118 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726673AbfLLACe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Dec 2019 19:02:34 -0500
+Received: by mail-il1-f194.google.com with SMTP id u16so411904ilg.10
+        for <linux-pci@vger.kernel.org>; Wed, 11 Dec 2019 16:02:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=UIxOY7IGmpjx+kE26Zz/AZHJvD4vpoM/26KSW9B7G64=;
+        b=MRAabtMrFwq//yWxpmqVz0QeA+jhKSCexqhnRo+WmaV/ztdE0BwGgwq6jOr6/6yx4N
+         7FECFrj2S5NuuSf99B4bLZ89U7EpDc/1zrKovI6NDSMznfRnLk4jI23HLz6zepIfCnUa
+         qR5JxsRjwjIBVBbFqQlwXYhaxasoOUgM/8zkHvPfKW3G2oIDzQ04sdT352IxpArWUOJR
+         BmZarmCCauiskIJn6XC1nSHgr8+Dcrq1KByJmD7cvN8PgBanUFKE0QH+f2zfPRc/o6pB
+         x+V3ToGatXFue/GTFdMBFodt70hyCyd1qpxsUAJHgkz/rJU8CDUmLfbucflCDpIH9XI9
+         L1Jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=UIxOY7IGmpjx+kE26Zz/AZHJvD4vpoM/26KSW9B7G64=;
+        b=pb2HrbCSTIx+1oJtJMq5OZaKuSPW+ZnUl+TlMQqBLhuYjghieM7l5ZZeFD6AY7FSjB
+         E9HZqUScw1eAfDzHHltC1A0KLrRReNi/UMZzpjC87mPghBq3E7Q0a4G75EL2lUt3So7+
+         W9fl0R2CA42yDhHnQljN9HThy5pYSlMpBX6jCBdWViqo7De0T3zsNNqH8mMjHzCzMdWL
+         1UsAm+M8WG77bLr8Dgag6pik5+1+xsX7KmOYF6Tt9FFtaVSbtaUHH4k0afhOb6VDbGnh
+         QA3cJBRFmdFixdTrrD1bDDT/qdU3TJVbvIp2xawnt8eHe+KOynf+C5jtJ37oGJNsjKjs
+         iHQA==
+X-Gm-Message-State: APjAAAVDndZfHr5m0gbHg1hhA76kZbm6+oLFUW55Oxqx0V62GzjGEe+z
+        U8WYlaOxO2e91UsWBWzzabY2tXhqku1UqYEm3q9DaJgr3aQ=
+X-Google-Smtp-Source: APXvYqxrzqx0gk9Z/gY5wywz5gP5wWD4Na3DWMDckp2M1Nq0i6mWyvHDOpgIn65vbxfNGBOKaMP+dhzzxxpQ1F/+MSI=
+X-Received: by 2002:a92:4694:: with SMTP id d20mr5653149ilk.149.1576108953011;
+ Wed, 11 Dec 2019 16:02:33 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191211142022.GA26342@google.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+References: <20191211223438.GA121846@google.com> <afbb14fb-e114-d6de-0bfe-d39be354842e@broadcom.com>
+In-Reply-To: <afbb14fb-e114-d6de-0bfe-d39be354842e@broadcom.com>
+Reply-To: bjorn@helgaas.com
+From:   Bjorn Helgaas <bjorn.helgaas@gmail.com>
+Date:   Wed, 11 Dec 2019 18:02:21 -0600
+Message-ID: <CABhMZUU82iRD67yQhpUG3MUx3s9WaZ=tAXA=QriEEjUkNbu22w@mail.gmail.com>
+Subject: Re: [PATCH] PCI: iproc: move quirks to driver
+To:     Ray Jui <ray.jui@broadcom.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, Wei Liu <wei.liu@kernel.org>,
+        linux-pci@vger.kernel.org, rjui@broadcom.com,
+        Andrew Murray <andrew.murray@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 08:20:22AM -0600, Bjorn Helgaas wrote:
-> On Wed, Dec 11, 2019 at 05:59:58PM +0800, Dilip Kota wrote:
-> > 
-> > On 12/11/2019 7:49 AM, Bjorn Helgaas wrote:
-> > > On Fri, Dec 06, 2019 at 03:27:49PM +0800, Dilip Kota wrote:
-> > > > Add support to PCIe RC controller on Intel Gateway SoCs.
-> > > > PCIe controller is based of Synopsys DesignWare PCIe core.
-> > > > 
-> > > > Intel PCIe driver requires Upconfigure support, Fast Training
-> > > > Sequence and link speed configurations. So adding the respective
-> > > > helper functions in the PCIe DesignWare framework.
-> > > > It also programs hardware autonomous speed during speed
-> > > > configuration so defining it in pci_regs.h.
-> > > > 
-> > > > Also, mark Intel PCIe driver depends on MSI IRQ Domain
-> > > > as Synopsys DesignWare framework depends on the
-> > > > PCI_MSI_IRQ_DOMAIN.
-> > > > 
-> > > > Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
-> > > > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > > > Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-> > > > Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-> > > > Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> 
-> > > > +static void pcie_update_bits(void __iomem *base, u32 ofs, u32 mask, u32 val)
-> > > > +{
-> > > > +	u32 old;
-> > > > +
-> > > > +	old = readl(base + ofs);
-> > > > +	val = (old & ~mask) | (val & mask);
-> > > > +
-> > > > +	if (val != old)
-> > > > +		writel(val, base + ofs);
-> > > I assume this is never used on registers where the "old & ~mask" part
-> > > contains RW1C bits?  If there are RW1C bits in that part, this will
-> > > corrupt them.
-> > There is no impact because RW1C bits of respective registers are 0s at the
-> > time of this function call.
-> 
-> Sounds ... dangerous, but I'll take your word for it.
-> 
-> > I see, this patch series is merged in the maintainer tree.
-> > Should i need to submit as a separate patch on top of maintainer tree or
-> > submit the new version of whole patch series?
-> > Please let me know the best practice.
-> 
-> Sorry, I didn't realize this had already been merged to Lorenzo's
-> tree.  But it's not upstream (in Linus' tree) yet.  I don't know how
-> Andrew and Lorenzo want to handle this.  None of these are important,
-> so you could just ignore these comments.
-> 
-> What I personally would do is rebase the branch, e.g.,
-> lpieralisi/pci/dwc, and apply an incremental patch.  But it's up to
-> Andrew and Lorenzo whether they want to do anything.
+On Wed, Dec 11, 2019 at 5:40 PM Ray Jui <ray.jui@broadcom.com> wrote:
+>
+>
+>
+> On 12/11/19 2:34 PM, Bjorn Helgaas wrote:
+> > On Wed, Dec 11, 2019 at 05:45:11PM +0000, Wei Liu wrote:
+> >> The quirks were originally enclosed by ifdef. That made the quirks not
+> >> to be applied when respective drivers were compiled as modules.
+> >>
+> >> Move the quirks to driver code to fix the issue.
+> >>
+> >> Signed-off-by: Wei Liu <wei.liu@kernel.org>
+> >
+> > This straddles the core and native driver boundary, so I applied it to
+> > pci/misc for v5.6.  Thanks, I think this is a great solution!  It's
+> > always nice when we can encapsulate device-specific things in a
+> > driver.
+> >
+>
+> Opps! I was going to review and comment and you are quick, :)
+>
+> I was going to say, I think it's better to keep this quirk in
+> "pcie-iproc.c" instead of "pcie-iproc-platform.c".
+>
+> The quirk is specific to certain PCIe devices under iProc (activated
+> based on device ID), but should not be tied to a specific bus
+> architecture (i.e., platform vs BCMA).
 
-Hi Dilip,
+I'm happy to move it; that's no problem.
 
-Thanks for taking on this additional feedback.
-
-I'd be happy for you to send an additional patch ontop of your v11 (head of
-lpieralisi/pci/dwc) and we'll squash it in.
-
-Thanks,
-
-Andrew Murray
-
-> 
-> Bjorn
+> >> ---
+> >>   drivers/pci/controller/pcie-iproc-platform.c | 24 ++++++++++++++++++
+> >>   drivers/pci/quirks.c                         | 26 --------------------
+> >>   2 files changed, 24 insertions(+), 26 deletions(-)
+> >>
+> >> diff --git a/drivers/pci/controller/pcie-iproc-platform.c b/drivers/pci/controller/pcie-iproc-platform.c
+> >> index ff0a81a632a1..4e6f7cdd9a25 100644
+> >> --- a/drivers/pci/controller/pcie-iproc-platform.c
+> >> +++ b/drivers/pci/controller/pcie-iproc-platform.c
+> >> @@ -19,6 +19,30 @@
+> >>   #include "../pci.h"
+> >>   #include "pcie-iproc.h"
+> >>
+> >> +static void quirk_paxc_bridge(struct pci_dev *pdev)
+> >> +{
+> >> +    /*
+> >> +     * The PCI config space is shared with the PAXC root port and the first
+> >> +     * Ethernet device.  So, we need to workaround this by telling the PCI
+> >> +     * code that the bridge is not an Ethernet device.
+> >> +     */
+> >> +    if (pdev->hdr_type == PCI_HEADER_TYPE_BRIDGE)
+> >> +            pdev->class = PCI_CLASS_BRIDGE_PCI << 8;
+> >> +
+> >> +    /*
+> >> +     * MPSS is not being set properly (as it is currently 0).  This is
+> >> +     * because that area of the PCI config space is hard coded to zero, and
+> >> +     * is not modifiable by firmware.  Set this to 2 (e.g., 512 byte MPS)
+> >> +     * so that the MPS can be set to the real max value.
+> >> +     */
+> >> +    pdev->pcie_mpss = 2;
+> >> +}
+> >> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0x16cd, quirk_paxc_bridge);
+> >> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0x16f0, quirk_paxc_bridge);
+> >> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0xd750, quirk_paxc_bridge);
+> >> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0xd802, quirk_paxc_bridge);
+> >> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0xd804, quirk_paxc_bridge);
+> >> +
+> >>   static const struct of_device_id iproc_pcie_of_match_table[] = {
+> >>      {
+> >>              .compatible = "brcm,iproc-pcie",
+> >> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> >> index 4937a088d7d8..202837ed68c9 100644
+> >> --- a/drivers/pci/quirks.c
+> >> +++ b/drivers/pci/quirks.c
+> >> @@ -2381,32 +2381,6 @@ DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_BROADCOM,
+> >>                       PCI_DEVICE_ID_TIGON3_5719,
+> >>                       quirk_brcm_5719_limit_mrrs);
+> >>
+> >> -#ifdef CONFIG_PCIE_IPROC_PLATFORM
+> >> -static void quirk_paxc_bridge(struct pci_dev *pdev)
+> >> -{
+> >> -    /*
+> >> -     * The PCI config space is shared with the PAXC root port and the first
+> >> -     * Ethernet device.  So, we need to workaround this by telling the PCI
+> >> -     * code that the bridge is not an Ethernet device.
+> >> -     */
+> >> -    if (pdev->hdr_type == PCI_HEADER_TYPE_BRIDGE)
+> >> -            pdev->class = PCI_CLASS_BRIDGE_PCI << 8;
+> >> -
+> >> -    /*
+> >> -     * MPSS is not being set properly (as it is currently 0).  This is
+> >> -     * because that area of the PCI config space is hard coded to zero, and
+> >> -     * is not modifiable by firmware.  Set this to 2 (e.g., 512 byte MPS)
+> >> -     * so that the MPS can be set to the real max value.
+> >> -     */
+> >> -    pdev->pcie_mpss = 2;
+> >> -}
+> >> -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0x16cd, quirk_paxc_bridge);
+> >> -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0x16f0, quirk_paxc_bridge);
+> >> -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0xd750, quirk_paxc_bridge);
+> >> -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0xd802, quirk_paxc_bridge);
+> >> -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0xd804, quirk_paxc_bridge);
+> >> -#endif
+> >> -
+> >>   /*
+> >>    * Originally in EDAC sources for i82875P: Intel tells BIOS developers to
+> >>    * hide device 6 which configures the overflow device access containing the
+> >> --
+> >> 2.20.1
+> >>
