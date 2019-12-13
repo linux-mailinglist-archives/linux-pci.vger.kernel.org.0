@@ -2,95 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AAB5B11EA84
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2019 19:37:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4AB0E11EBEC
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2019 21:36:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728902AbfLMShS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Dec 2019 13:37:18 -0500
-Received: from mail-io1-f43.google.com ([209.85.166.43]:40766 "EHLO
-        mail-io1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728884AbfLMShS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Dec 2019 13:37:18 -0500
-Received: by mail-io1-f43.google.com with SMTP id x1so627944iop.7
-        for <linux-pci@vger.kernel.org>; Fri, 13 Dec 2019 10:37:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8rSTbx4+Xnp8FvEJgiPQ5fFPbX8PvFRdBprtRWfCWCQ=;
-        b=Ohgf2p7RcDyAO9x+7hqrHkTxJ+a7kT8vOKByrsrMwlsQyfiqsofPMz6dlNEaH2kFr/
-         30OXQgmqBqqpNadNXtss0bPV2ZVcHODsCXvhDzcMWmbv1s3KgrYiRRQusO6bkbFDRp5r
-         LKvKMn4BTmDY7od/XhpsXT23xIipONjzb6tpmba5Yg7opdrxn9JbPVo+73idK9kGsIF2
-         nxFDLQAEjalQhqtduuADtXitKUuXf7FWRkHCJElsAxtG+37Ox7MhGWEh9v8dKVoLChhH
-         vtTC4mmQqcAXBoutRncx9v8ysca09wIVNJ/BhTFVjArRy8gBLIIC18A4DbY6RDDKDnlb
-         wsYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8rSTbx4+Xnp8FvEJgiPQ5fFPbX8PvFRdBprtRWfCWCQ=;
-        b=GhRxdf79tM5t7IXMtf+P1wmBaI2VR4CnPCbZ9KYOMFW6spnkI9MpoKv3kYwVurI67m
-         1F2HgDf6obY4jE3YO4w4ugZebrFt80MQtbkpIoT4OfrIeziRHB5C5Tzj/U/+6os6pE/a
-         I9gFVovWDckS0WihfaOAnqGJcyF4Fb5QNcm4noFhe+75aACb0SJW4pzLbyfpXGfELx8X
-         pYg5uMu0U5OJXQPhnrWJA4r9H1BB/Y9akofBvrcCmqcGg9EHJFjn93P5F5jnJ+489cXL
-         8VstvGcgu7yqth8YqHkzLQNnJTqsGsIPmcXIdRG28QnRlOqQs0OvBtp0n8MJIJvZBxJg
-         P7cA==
-X-Gm-Message-State: APjAAAXH5O/inaDi+3z3PngYIM6FC3ufMgArMC66DjG/mqNN4yL7eykK
-        DNKB3tKh0KV3PvwjDjZUeEw+sR4ZjqJKCBgtYgPr0JdglHI=
-X-Google-Smtp-Source: APXvYqwmEGW+SCoK781R1wHEyeHBJdMspwk5PrOmp57kqjQ+5c6ggfMA1Zq5gVwxNfGgc4rjMK4/bvTYtO3f/Xhf1Jc=
-X-Received: by 2002:a5e:da0d:: with SMTP id x13mr7973581ioj.123.1576262237318;
- Fri, 13 Dec 2019 10:37:17 -0800 (PST)
+        id S1729007AbfLMUgI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Dec 2019 15:36:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47884 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729067AbfLMUgF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 13 Dec 2019 15:36:05 -0500
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C54E246E0;
+        Fri, 13 Dec 2019 20:36:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576269363;
+        bh=TD0vlyaaEUltY3uhgJ1XIdZNPofDo4T5Xxo/vcYOCwY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=x/ScfOhLMLfLSOxK98g5I1CSfHCvGY8HkFL/pbJrRsktxxOZFqLEFBhiV5wU2WRJN
+         wrMijQLeCDJ0+/5Gf3VRdeM4RfREKcGKQHDOeystLL6jmmznSYZQ317HO5Hj2gFMvG
+         7MCWp2IyA61/qrqAS2yk3WEW+zO96cbyO5994S8E=
+Received: by mail-qk1-f176.google.com with SMTP id x1so267197qkl.12;
+        Fri, 13 Dec 2019 12:36:04 -0800 (PST)
+X-Gm-Message-State: APjAAAWfG8iJtaCznxj4UTCAv42KaVQ91sahk9pg5aTICADg2k+iRNjB
+        yIhYTFKrRnxCDapIugMrJK1Ydw4kTJhq4hG3qg==
+X-Google-Smtp-Source: APXvYqxkbISqK9twnzzbDp0Ep4niiepgzIHARDF7yBHJmpY5klt6cp3Cad6Ltt+c1NvlrxmDe5/mRhj5K2wE2GoSEAU=
+X-Received: by 2002:a37:85c4:: with SMTP id h187mr14127413qkd.223.1576249641042;
+ Fri, 13 Dec 2019 07:07:21 -0800 (PST)
 MIME-Version: 1.0
-References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
-In-Reply-To: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
-From:   Olof Johansson <olof@lixom.net>
-Date:   Fri, 13 Dec 2019 10:37:06 -0800
-Message-ID: <CAOesGMjAQSfx1WZr6b1kNX=Exipj_f4X_f39Db7AxXr4xG4Tkg@mail.gmail.com>
-Subject: Re: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
- driver for NXP Layerscape SoCs
-To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+References: <20191213084748.11210-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20191213084748.11210-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20191213084748.11210-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 13 Dec 2019 09:07:07 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLSYroDZGWksJJ=E+01X=3Tji4+GmK8s3i+d2BJphqiLQ@mail.gmail.com>
+Message-ID: <CAL_JsqLSYroDZGWksJJ=E+01X=3Tji4+GmK8s3i+d2BJphqiLQ@mail.gmail.com>
+Subject: Re: [v2 3/6] of: address: add support to parse PCI outbound-ranges
+To:     Lad Prabhakar <prabhakar.csengg@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Murray <andrew.murray@arm.com>,
+        devicetree@vger.kernel.org,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
-        Leo Li <leoyang.li@nxp.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Simon Horman <horms@verge.net.au>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi!
-
-On Tue, Nov 19, 2019 at 7:45 PM Z.q. Hou <zhiqiang.hou@nxp.com> wrote:
+On Fri, Dec 13, 2019 at 2:48 AM Lad Prabhakar
+<prabhakar.csengg@gmail.com> wrote:
 >
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
 >
-> This patch set is to recode the Mobiveil driver and add
-> PCIe support for NXP Layerscape series SoCs integrated
-> Mobiveil's PCIe Gen4 controller.
+> this patch adds support to parse PCI outbound-ranges, the
+> outbound-regions are similar to pci ranges except it doesn't
+> have pci address, below is the format for bar-ranges:
+>
+> outbound-ranges = <flags upper32_cpuaddr lower32_cpuaddr
+>                    upper32_size lower32_size>;
 
-Can we get a respin for this on top of the 5.5 merge window material?
-Given that it's a bunch of refactorings, many of them don't apply on
-top of the material that was merged.
+You can't just make up a new ranges property. Especially one that
+doesn't follow how 'ranges' works. We already have 'dma-ranges' to
+translate device to memory addresses.
 
-I'd love to see these go in sooner rather than later so I can start
-getting -next running on ls2160a here.
+Explain the problem or feature you need, not the solution you came up
+with. Why do you need this and other endpoint bindings haven't?
 
-
--Olof
+Rob
