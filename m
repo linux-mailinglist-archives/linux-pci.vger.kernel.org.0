@@ -2,211 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4881E11E830
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2019 17:25:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3438F11E89F
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2019 17:45:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728292AbfLMQZR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Dec 2019 11:25:17 -0500
-Received: from andre.telenet-ops.be ([195.130.132.53]:57214 "EHLO
-        andre.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728029AbfLMQZQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Dec 2019 11:25:16 -0500
-Received: from ramsan ([84.195.182.253])
-        by andre.telenet-ops.be with bizsmtp
-        id dUR1210015USYZQ01UR1w4; Fri, 13 Dec 2019 17:25:12 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1ifnkS-0006mS-TP; Fri, 13 Dec 2019 17:25:00 +0100
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1ifnkS-0000Sl-QS; Fri, 13 Dec 2019 17:25:00 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Magnus Damm <magnus.damm@gmail.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] ARM: dts: rcar-gen2: Fix PCI high address in interrupt-map-mask
-Date:   Fri, 13 Dec 2019 17:24:59 +0100
-Message-Id: <20191213162459.1731-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        id S1728363AbfLMQpN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Dec 2019 11:45:13 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2189 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728109AbfLMQpM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 13 Dec 2019 11:45:12 -0500
+Received: from lhreml703-cah.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id D295B1175F5A999CD297;
+        Fri, 13 Dec 2019 16:45:10 +0000 (GMT)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ lhreml703-cah.china.huawei.com (10.201.108.44) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 13 Dec 2019 16:45:10 +0000
+Received: from localhost (10.202.226.57) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Fri, 13 Dec
+ 2019 16:45:10 +0000
+Date:   Fri, 13 Dec 2019 16:45:08 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
+CC:     <linux-pci@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-acpi@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <iommu@lists.linux-foundation.org>, <joro@8bytes.org>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <lorenzo.pieralisi@arm.com>, <guohanjun@huawei.com>,
+        <sudeep.holla@arm.com>, <rjw@rjwysocki.net>, <lenb@kernel.org>,
+        <will@kernel.org>, <robin.murphy@arm.com>, <bhelgaas@google.com>,
+        <eric.auger@redhat.com>, <zhangfei.gao@linaro.org>
+Subject: Re: [PATCH v3 01/13] iommu/arm-smmu-v3: Drop __GFP_ZERO flag from
+ DMA allocation
+Message-ID: <20191213164508.00001f99@Huawei.com>
+In-Reply-To: <20191209180514.272727-2-jean-philippe@linaro.org>
+References: <20191209180514.272727-1-jean-philippe@linaro.org>
+        <20191209180514.272727-2-jean-philippe@linaro.org>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.57]
+X-ClientProxiedBy: lhreml721-chm.china.huawei.com (10.201.108.72) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-"make dtbs_check" emits warnings like:
+On Mon, 9 Dec 2019 19:05:02 +0100
+Jean-Philippe Brucker <jean-philippe@linaro.org> wrote:
 
-    pci@ee090000: interrupt-map-mask:0:0: 65280 is greater than the maximum of 63488
-    pci@ee0b0000: interrupt-map-mask:0:0: 65280 is greater than the maximum of 63488
-    pci@ee0d0000: interrupt-map-mask:0:0: 65280 is greater than the maximum of 63488
+> Since commit 518a2f1925c3 ("dma-mapping: zero memory returned from
+> dma_alloc_*"), dma_alloc_* always initializes memory to zero, so there
+> is no need to use dma_zalloc_* or pass the __GFP_ZERO flag anymore.
+> 
+> The flag was introduced by commit 04fa26c71be5 ("iommu/arm-smmu: Convert
+> DMA buffer allocations to the managed API"), since the managed API
+> didn't provide a dmam_zalloc_coherent() function.
+> 
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-According to dt-schemas/schemas/pci/pci-bus.yaml, the PCI high address
-cell value in the "interrupt-map-mask" property must lie in the range
-0..0xf800.
+Good to tidy these up whilst we are here.
 
-Fix this by correcting the values from 0xff00 to 0xf800 in all affected
-R-Car Gen2 and RZ/G1 DTS files.
+Jonathan
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- arch/arm/boot/dts/r8a7743.dtsi | 4 ++--
- arch/arm/boot/dts/r8a7744.dtsi | 4 ++--
- arch/arm/boot/dts/r8a7745.dtsi | 4 ++--
- arch/arm/boot/dts/r8a7790.dtsi | 6 +++---
- arch/arm/boot/dts/r8a7791.dtsi | 4 ++--
- arch/arm/boot/dts/r8a7794.dtsi | 4 ++--
- 6 files changed, 13 insertions(+), 13 deletions(-)
+> ---
+>  drivers/iommu/arm-smmu-v3.c | 9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+> index effe72eb89e7..d4e8b7f8d9f4 100644
+> --- a/drivers/iommu/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm-smmu-v3.c
+> @@ -1675,7 +1675,7 @@ static int arm_smmu_init_l2_strtab(struct arm_smmu_device *smmu, u32 sid)
+>  
+>  	desc->span = STRTAB_SPLIT + 1;
+>  	desc->l2ptr = dmam_alloc_coherent(smmu->dev, size, &desc->l2ptr_dma,
+> -					  GFP_KERNEL | __GFP_ZERO);
+> +					  GFP_KERNEL);
+>  	if (!desc->l2ptr) {
+>  		dev_err(smmu->dev,
+>  			"failed to allocate l2 stream table for SID %u\n",
+> @@ -2161,8 +2161,7 @@ static int arm_smmu_domain_finalise_s1(struct arm_smmu_domain *smmu_domain,
+>  		return asid;
+>  
+>  	cfg->cdptr = dmam_alloc_coherent(smmu->dev, CTXDESC_CD_DWORDS << 3,
+> -					 &cfg->cdptr_dma,
+> -					 GFP_KERNEL | __GFP_ZERO);
+> +					 &cfg->cdptr_dma, GFP_KERNEL);
+>  	if (!cfg->cdptr) {
+>  		dev_warn(smmu->dev, "failed to allocate context descriptor\n");
+>  		ret = -ENOMEM;
+> @@ -2883,7 +2882,7 @@ static int arm_smmu_init_strtab_2lvl(struct arm_smmu_device *smmu)
+>  
+>  	l1size = cfg->num_l1_ents * (STRTAB_L1_DESC_DWORDS << 3);
+>  	strtab = dmam_alloc_coherent(smmu->dev, l1size, &cfg->strtab_dma,
+> -				     GFP_KERNEL | __GFP_ZERO);
+> +				     GFP_KERNEL);
+>  	if (!strtab) {
+>  		dev_err(smmu->dev,
+>  			"failed to allocate l1 stream table (%u bytes)\n",
+> @@ -2910,7 +2909,7 @@ static int arm_smmu_init_strtab_linear(struct arm_smmu_device *smmu)
+>  
+>  	size = (1 << smmu->sid_bits) * (STRTAB_STE_DWORDS << 3);
+>  	strtab = dmam_alloc_coherent(smmu->dev, size, &cfg->strtab_dma,
+> -				     GFP_KERNEL | __GFP_ZERO);
+> +				     GFP_KERNEL);
+>  	if (!strtab) {
+>  		dev_err(smmu->dev,
+>  			"failed to allocate linear stream table (%u bytes)\n",
 
-diff --git a/arch/arm/boot/dts/r8a7743.dtsi b/arch/arm/boot/dts/r8a7743.dtsi
-index de981d629bdddec3..5f88d9f585988c0c 100644
---- a/arch/arm/boot/dts/r8a7743.dtsi
-+++ b/arch/arm/boot/dts/r8a7743.dtsi
-@@ -1461,7 +1461,7 @@
- 			#size-cells = <2>;
- 			#interrupt-cells = <1>;
- 			ranges = <0x02000000 0 0xee080000 0 0xee080000 0 0x00010000>;
--			interrupt-map-mask = <0xff00 0 0 0x7>;
-+			interrupt-map-mask = <0xf800 0 0 0x7>;
- 			interrupt-map = <0x0000 0 0 1 &gic GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH
- 					 0x0800 0 0 1 &gic GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH
- 					 0x1000 0 0 2 &gic GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
-@@ -1496,7 +1496,7 @@
- 			#size-cells = <2>;
- 			#interrupt-cells = <1>;
- 			ranges = <0x02000000 0 0xee0c0000 0 0xee0c0000 0 0x00010000>;
--			interrupt-map-mask = <0xff00 0 0 0x7>;
-+			interrupt-map-mask = <0xf800 0 0 0x7>;
- 			interrupt-map = <0x0000 0 0 1 &gic GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH
- 					 0x0800 0 0 1 &gic GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH
- 					 0x1000 0 0 2 &gic GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
-diff --git a/arch/arm/boot/dts/r8a7744.dtsi b/arch/arm/boot/dts/r8a7744.dtsi
-index fa74a262107bce6c..446dbb5409e67aeb 100644
---- a/arch/arm/boot/dts/r8a7744.dtsi
-+++ b/arch/arm/boot/dts/r8a7744.dtsi
-@@ -1461,7 +1461,7 @@
- 			#size-cells = <2>;
- 			#interrupt-cells = <1>;
- 			ranges = <0x02000000 0 0xee080000 0 0xee080000 0 0x00010000>;
--			interrupt-map-mask = <0xff00 0 0 0x7>;
-+			interrupt-map-mask = <0xf800 0 0 0x7>;
- 			interrupt-map = <0x0000 0 0 1 &gic GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH
- 					 0x0800 0 0 1 &gic GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH
- 					 0x1000 0 0 2 &gic GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
-@@ -1496,7 +1496,7 @@
- 			#size-cells = <2>;
- 			#interrupt-cells = <1>;
- 			ranges = <0x02000000 0 0xee0c0000 0 0xee0c0000 0 0x00010000>;
--			interrupt-map-mask = <0xff00 0 0 0x7>;
-+			interrupt-map-mask = <0xf800 0 0 0x7>;
- 			interrupt-map = <0x0000 0 0 1 &gic GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH
- 					 0x0800 0 0 1 &gic GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH
- 					 0x1000 0 0 2 &gic GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
-diff --git a/arch/arm/boot/dts/r8a7745.dtsi b/arch/arm/boot/dts/r8a7745.dtsi
-index c53f7ff20695f04a..04f1ca1828b15954 100644
---- a/arch/arm/boot/dts/r8a7745.dtsi
-+++ b/arch/arm/boot/dts/r8a7745.dtsi
-@@ -1337,7 +1337,7 @@
- 			#size-cells = <2>;
- 			#interrupt-cells = <1>;
- 			ranges = <0x02000000 0 0xee080000 0 0xee080000 0 0x00010000>;
--			interrupt-map-mask = <0xff00 0 0 0x7>;
-+			interrupt-map-mask = <0xf800 0 0 0x7>;
- 			interrupt-map = <0x0000 0 0 1 &gic GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH
- 					 0x0800 0 0 1 &gic GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH
- 					 0x1000 0 0 2 &gic GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
-@@ -1372,7 +1372,7 @@
- 			#size-cells = <2>;
- 			#interrupt-cells = <1>;
- 			ranges = <0x02000000 0 0xee0c0000 0 0xee0c0000 0 0x00010000>;
--			interrupt-map-mask = <0xff00 0 0 0x7>;
-+			interrupt-map-mask = <0xf800 0 0 0x7>;
- 			interrupt-map = <0x0000 0 0 1 &gic GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH
- 					 0x0800 0 0 1 &gic GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH
- 					 0x1000 0 0 2 &gic GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
-diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
-index 5a2747758f676a4b..cf7bf7d7caee1808 100644
---- a/arch/arm/boot/dts/r8a7790.dtsi
-+++ b/arch/arm/boot/dts/r8a7790.dtsi
-@@ -1388,7 +1388,7 @@
- 			#size-cells = <2>;
- 			#interrupt-cells = <1>;
- 			ranges = <0x02000000 0 0xee080000 0 0xee080000 0 0x00010000>;
--			interrupt-map-mask = <0xff00 0 0 0x7>;
-+			interrupt-map-mask = <0xf800 0 0 0x7>;
- 			interrupt-map = <0x0000 0 0 1 &gic GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH
- 					 0x0800 0 0 1 &gic GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH
- 					 0x1000 0 0 2 &gic GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
-@@ -1423,7 +1423,7 @@
- 			#size-cells = <2>;
- 			#interrupt-cells = <1>;
- 			ranges = <0x02000000 0 0xee0a0000 0 0xee0a0000 0 0x00010000>;
--			interrupt-map-mask = <0xff00 0 0 0x7>;
-+			interrupt-map-mask = <0xf800 0 0 0x7>;
- 			interrupt-map = <0x0000 0 0 1 &gic GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH
- 					 0x0800 0 0 1 &gic GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH
- 					 0x1000 0 0 2 &gic GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
-@@ -1446,7 +1446,7 @@
- 			#size-cells = <2>;
- 			#interrupt-cells = <1>;
- 			ranges = <0x02000000 0 0xee0c0000 0 0xee0c0000 0 0x00010000>;
--			interrupt-map-mask = <0xff00 0 0 0x7>;
-+			interrupt-map-mask = <0xf800 0 0 0x7>;
- 			interrupt-map = <0x0000 0 0 1 &gic GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH
- 					 0x0800 0 0 1 &gic GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH
- 					 0x1000 0 0 2 &gic GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
-diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791.dtsi
-index a8266e76d7e50739..e5fa01034666616b 100644
---- a/arch/arm/boot/dts/r8a7791.dtsi
-+++ b/arch/arm/boot/dts/r8a7791.dtsi
-@@ -1427,7 +1427,7 @@
- 			#size-cells = <2>;
- 			#interrupt-cells = <1>;
- 			ranges = <0x02000000 0 0xee080000 0 0xee080000 0 0x00010000>;
--			interrupt-map-mask = <0xff00 0 0 0x7>;
-+			interrupt-map-mask = <0xf800 0 0 0x7>;
- 			interrupt-map = <0x0000 0 0 1 &gic GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH
- 					 0x0800 0 0 1 &gic GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH
- 					 0x1000 0 0 2 &gic GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
-@@ -1462,7 +1462,7 @@
- 			#size-cells = <2>;
- 			#interrupt-cells = <1>;
- 			ranges = <0x02000000 0 0xee0c0000 0 0xee0c0000 0 0x00010000>;
--			interrupt-map-mask = <0xff00 0 0 0x7>;
-+			interrupt-map-mask = <0xf800 0 0 0x7>;
- 			interrupt-map = <0x0000 0 0 1 &gic GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH
- 					 0x0800 0 0 1 &gic GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH
- 					 0x1000 0 0 2 &gic GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
-diff --git a/arch/arm/boot/dts/r8a7794.dtsi b/arch/arm/boot/dts/r8a7794.dtsi
-index 8d797d34816e3625..945b1378dc40d53a 100644
---- a/arch/arm/boot/dts/r8a7794.dtsi
-+++ b/arch/arm/boot/dts/r8a7794.dtsi
-@@ -1176,7 +1176,7 @@
- 			#size-cells = <2>;
- 			#interrupt-cells = <1>;
- 			ranges = <0x02000000 0 0xee080000 0 0xee080000 0 0x00010000>;
--			interrupt-map-mask = <0xff00 0 0 0x7>;
-+			interrupt-map-mask = <0xf800 0 0 0x7>;
- 			interrupt-map = <0x0000 0 0 1 &gic GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH
- 					 0x0800 0 0 1 &gic GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH
- 					 0x1000 0 0 2 &gic GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
-@@ -1211,7 +1211,7 @@
- 			#size-cells = <2>;
- 			#interrupt-cells = <1>;
- 			ranges = <0x02000000 0 0xee0c0000 0 0xee0c0000 0 0x00010000>;
--			interrupt-map-mask = <0xff00 0 0 0x7>;
-+			interrupt-map-mask = <0xf800 0 0 0x7>;
- 			interrupt-map = <0x0000 0 0 1 &gic GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH
- 					 0x0800 0 0 1 &gic GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH
- 					 0x1000 0 0 2 &gic GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
--- 
-2.17.1
 
