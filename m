@@ -2,248 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D0C7D11E373
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2019 13:17:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E1B6111E3D1
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2019 13:48:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbfLMMRO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Dec 2019 07:17:14 -0500
-Received: from mx2.mailbox.org ([80.241.60.215]:24639 "EHLO mx2.mailbox.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726421AbfLMMRN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 13 Dec 2019 07:17:13 -0500
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mx2.mailbox.org (Postfix) with ESMTPS id B1372A42F7;
-        Fri, 13 Dec 2019 13:17:09 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by spamfilter01.heinlein-hosting.de (spamfilter01.heinlein-hosting.de [80.241.56.115]) (amavisd-new, port 10030)
-        with ESMTP id 1UVrYhGRk6XQ; Fri, 13 Dec 2019 13:17:06 +0100 (CET)
-Subject: Re: PCIe hotplug resource issues with PEX switch (NVMe disks) on AMD
- Epyc system
-To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Sergey Miroshnichenko <s.miroshnichenko@yadro.com>
-References: <4fc407f8-2a24-4a04-20fb-5d07d5c24be4@denx.de>
- <PSXP216MB0438BE9DA58D0AF9F908070680540@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
- <c9f154e5-4214-aa46-2ce2-443b508e1643@denx.de>
- <PSXP216MB0438AD1041F6BD7DB51363A380540@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
-From:   Stefan Roese <sr@denx.de>
-Message-ID: <9aa45b1d-8afe-2d59-4bca-4d2beb983cfc@denx.de>
-Date:   Fri, 13 Dec 2019 13:17:03 +0100
-MIME-Version: 1.0
-In-Reply-To: <PSXP216MB0438AD1041F6BD7DB51363A380540@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1727208AbfLMMsB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Dec 2019 07:48:01 -0500
+Received: from mailout2.samsung.com ([203.254.224.25]:60449 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727145AbfLMMr6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Dec 2019 07:47:58 -0500
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20191213124755epoutp02bbd198507a8400d0ea189de2061b0572~f7xao0KPj0997309973epoutp02V
+        for <linux-pci@vger.kernel.org>; Fri, 13 Dec 2019 12:47:55 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20191213124755epoutp02bbd198507a8400d0ea189de2061b0572~f7xao0KPj0997309973epoutp02V
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1576241275;
+        bh=FOYvzOc4ArubhpGFdauhxPXlGf36MVaORJdD5vDBn/0=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=u+hhLRm0qdGhoUDYoIFPPz0ZPUhWhy+4CwzGxiOkO99JdtDNqTm/kseTFEI4fk6yd
+         jdTCV1U9DxfDjHGxDQ2OmLQ2hApqqjIzHKqRdVPPC9bXSvX2NUJ7wziucQ5oeTFCAG
+         IokgzQA4zvQq8SII97JfEY51UuXUsB9WePgHPWzk=
+Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+        20191213124754epcas5p3077458c986795a5d2a7a68f97ae74f54~f7xaFaTAb1146911469epcas5p3e;
+        Fri, 13 Dec 2019 12:47:54 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        DB.59.19726.A7883FD5; Fri, 13 Dec 2019 21:47:54 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+        20191213124754epcas5p156ab383641794e026b15902d00fc5dc6~f7xZvuuVH0234602346epcas5p1T;
+        Fri, 13 Dec 2019 12:47:54 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191213124754epsmtrp1e6a7b59bcaf828c0db1c12b4eb985a10~f7xZu-vHR2978729787epsmtrp1R;
+        Fri, 13 Dec 2019 12:47:54 +0000 (GMT)
+X-AuditID: b6c32a49-7c1ff70000014d0e-c5-5df3887a3497
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        1C.BC.10238.A7883FD5; Fri, 13 Dec 2019 21:47:54 +0900 (KST)
+Received: from ubuntu.sa.corp.samsungelectronics.net (unknown
+        [107.108.83.125]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191213124752epsmtip2cf93c915081ef7cf39f251e1712dae03~f7xYG3EQK0417104171epsmtip2e;
+        Fri, 13 Dec 2019 12:47:52 +0000 (GMT)
+From:   Anvesh Salveru <anvesh.s@samsung.com>
+To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Cc:     kishon@ti.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lorenzo.pieralisi@arm.com, andrew.murray@arm.com,
+        bhelgaas@google.com, pankaj.dubey@samsung.com,
+        mark.rutland@arm.com, robh+dt@kernel.org,
+        Anvesh Salveru <anvesh.s@samsung.com>
+Subject: [PATCH v5 0/2] Add support to handle ZRX-DC Compliant PHYs
+Date:   Fri, 13 Dec 2019 18:17:41 +0530
+Message-Id: <1576241263-23817-1-git-send-email-anvesh.s@samsung.com>
+X-Mailer: git-send-email 2.7.4
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrFIsWRmVeSWpSXmKPExsWy7bCmum5Vx+dYgxUfZS2a/29ntTi7ayGr
+        xZKmDItddzvYLVZ8mcluceFpD5vF5V1z2CzOzjvOZvHm9wt2i6XXLzJZLNr6hd2ide8Rdgce
+        jzXz1jB67Jx1l91jwaZSj02rOtk8+rasYvTYsv8zo8fxG9uZPD5vkgvgiOKySUnNySxLLdK3
+        S+DK2PdHtaCJr2L3qj2sDYxLuLsYOTkkBEwk2n6eYOti5OIQEtjNKLHl8GJ2COcTo8TmaU+h
+        nG+MEivOrWWCaXnT+pYVIrGXUWLh1yUsEE4Lk8TMU4fYQKrYBLQlfh7dyw5iiwhYSxxu3wIW
+        Zxb4xyjxeE5FFyMHh7CAs8TUDYkgJouAqsT2fUYgFbwCLhIvv3QzQuySk7h5rpMZZLyEwB42
+        iQfPf7CA1EsAFXXMVYeoEZZ4dXwLO4QtJfGyvw3KzpfovbsUyq6RmHK3A2qmvcSBK3PAxjAL
+        aEqs36UPcRifRO/vJ0wQ03klOtqEIEwlibaZ1RCNEhKL599khrA9JNpu9LGA2EICsRKzP09n
+        nMAoMwth5gJGxlWMkqkFxbnpqcWmBYZ5qeV6xYm5xaV56XrJ+bmbGMEpQstzB+Oscz6HGAU4
+        GJV4eFckfooVYk0sK67MPcQowcGsJMKbqv05Vog3JbGyKrUoP76oNCe1+BCjNAeLkjjvJNar
+        MUIC6YklqdmpqQWpRTBZJg5OqQbGHrOOfSVrJLOi3ig22Fx1lBJhE2Xha9q99bf1ywfT9/L+
+        SpR5sDB2WmO8f/+yzT+4bbL3v7rXfLfB4Ut77tXFy2+49MxP9tjN+eaTfG/7vSdCRzYt5g78
+        GjE/5Eqy4inby4Yy24Vqf95QZWv/xq7aEjFlyhp9ft9UidotGrsviwlG7BBnmsyqxFKckWio
+        xVxUnAgAuPje4Q0DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrALMWRmVeSWpSXmKPExsWy7bCSvG5Vx+dYg6nnOS2a/29ntTi7ayGr
+        xZKmDItddzvYLVZ8mcluceFpD5vF5V1z2CzOzjvOZvHm9wt2i6XXLzJZLNr6hd2ide8Rdgce
+        jzXz1jB67Jx1l91jwaZSj02rOtk8+rasYvTYsv8zo8fxG9uZPD5vkgvgiOKySUnNySxLLdK3
+        S+DK2PdHtaCJr2L3qj2sDYxLuLsYOTkkBEwk3rS+Ze1i5OIQEtjNKNH9fQ8zREJC4sver2wQ
+        trDEyn/P2SGKmpgkuhuus4Ak2AS0JX4e3csOYosI2ErcfzQZbBKzQBeTxJlf94EmcXAICzhL
+        TN2QCGKyCKhKbN9nBFLOK+Ai8fJLNyPEfDmJm+c6mScw8ixgZFjFKJlaUJybnltsWGCYl1qu
+        V5yYW1yal66XnJ+7iREcjlqaOxgvL4k/xCjAwajEw8uQ8ilWiDWxrLgy9xCjBAezkghvqvbn
+        WCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8T/OORQoJpCeWpGanphakFsFkmTg4pRoYcz5dmbrH
+        PetNpPEvpXruqX1Pvp4xW1zFM+f96ZdOEZsNn7+qYX4bfaN8Xsr3snbV5tAq+w/+TRNPbHnn
+        /OLD/cD3n5ZdPfOnclfbnxffX/X7rYl6Xyx2reYVXxKPn8+ua8/NKldqCHFE6b/7cH4Rh8ae
+        7kU3b8am3Xi9u0d9jbsM04y+cyzs05RYijMSDbWYi4oTAVht2ftDAgAA
+X-CMS-MailID: 20191213124754epcas5p156ab383641794e026b15902d00fc5dc6
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20191213124754epcas5p156ab383641794e026b15902d00fc5dc6
+References: <CGME20191213124754epcas5p156ab383641794e026b15902d00fc5dc6@epcas5p1.samsung.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 13.12.19 12:52, Nicholas Johnson wrote:
-> On Fri, Dec 13, 2019 at 11:58:53AM +0100, Stefan Roese wrote:
->> Hi Nicholas,
->>
->> On 13.12.19 10:00, Nicholas Johnson wrote:
->>> On Fri, Dec 13, 2019 at 09:35:19AM +0100, Stefan Roese wrote:
->>>> Hi!
->>> Hi,
->>>>
->>>> I am facing an issue with PCIe-Hotplug on an AMD Epyc based system.
->>>> Our system is equipped with an HBA for NVMe SSDs incl. PCIe switch
->>>> (Supermicro AOC-SLG3-4E2P) [1] and we would like to be able to hotplug
->>>> NVMe disks.
->>>>
->>>> Currently, I'm testing with v5.5.0-rc1 and series [2] applied. Here
->>>> a few tests and results that I did so far. All tests were done with
->>>> one Intel NVMe SSD connected to one of the 4 NVMe ports of the HBA
->>>> and the other 3 ports (currently) left unconnected:
->>>>
->>>> a) Kernel Parameter "pci=pcie_bus_safe"
->>>> The resources of the 3 unused PCIe slots of the PEX switch are not
->>>> assigned in this test.
->>>>
->>>> b) Kernel Parameter "pci=pcie_bus_safe,hpmemsize=0,hpiosize=0,hpmmiosize=1M,hpmmioprefsize=0"
->>>> With this test I restricted the resources of the HP slots to the
->>>> minimum. Still this results in unassigned resourced for the unused
->>>> PCIe slots of the PEX switch.
->>>>
->>>> c) Kernel Parameter "pci=realloc,pcie_bus_safe,hpmemsize=0,hpiosize=0,hpmmiosize=1M,hpmmioprefsize=0"
->>>> Again, not all resources are assigned.
->>>>
->>>> d) Kernel Parameter "pci=nocrs,realloc,pcie_bus_safe,hpmemsize=0,hpiosize=0,hpmmiosize=1M,hpmmioprefsize=0"
->>>> Now all requested resources are available for the HP PCIe slots of the
->>>> PEX switch. But the NVMe driver fails while probing. Debugging has
->>>> shown, that reading from the BAR of the NVMe disk returns 0xffffffff.
->>>> Also reading from the PLX PEX switch registers returns 0xfffffff in this
->>>> case (this works of course without nocrs, when the BARs are mapped at
->>>> a different address).
->>>>
->>>> Does anybody have a clue on why the access to the PEX switch and / or
->>>> the NVMe BAR does not work in the "nocrs" case? The BARs are located in
->>>> the same window that is provided by the BIOS in the ACPI list (but is
->>>> "ignored" in this case) [3].
->>>>
->>>> Or if it is possible to get the HP resource mapping done correctly without
->>>> setting "nocrs" for our setup with the PCIe/NVMe switch?
->>>>
->>>> I can provide all sorts of logs (dmegs, lspci etc) if needed - just let
->>>> me know.
->>>>
->>>> Many thanks in advance,
->>>> Stefan
->>> This will be a quick response for now. I will get more in depth tonight
->>> when I have more time.
->>>
->>> What I have taken away from this is:
->>>
->>> 1. Epyc -> Up to 4x PCIe Root Complexes, but from what I can gather,
->>> they are probably assigned on the same segment / domain, unfortunately,
->>> with non-overlapping bus numbers. Either way, multiple RCs may
->>> complicate using pci=nocrs and others. Unfortunately, I have not had the
->>> privilege of owning a system with multiple RCs, so I cannot be sure.
->>>
->>> 2. Not using Thunderbolt - [2] patch series only really makes a
->>> difference with nested hotplug bridges, such as in Thunderbolt.
->>> Although, it might help by not using additional resource lists, but I
->>> still do not think it will matter without nested hotplug bridges.
->>
->> I was not sure about those patches but since they have been queued for
->> 5.6, I included them in these tests. The results are similar (or even
->> identical, I would need to re-run the test to be sure) without them.
->>> 3. System not reallocating resources despite overridden -> is ACPI _DSM
->>> method evaluating to zero?
->>
->> Not sure if I follow you here. The kernel is reallocating the resources, or
->> at least trying to, if requested to via bootargs (Tests c) and d)). I've
->> attached the logs from all 4 tests in an archive [1]. It just fails to
->> reallocate the resources in test case c) and even though it successfully
->> reallocates the resources in test case d), the new addresses at the PEX
->> switch and its ports "don't work".
-> It is unlikely to be the issue, but I thought it was worth a mention.
-> 
->>
->>> I experienced this recently with an Intel Ice
->>> Lake system. I booted the laptop at the retail store into Linux off a
->>> USB to find out about the Thunderbolt implementation. I dumped "sudo
->>> lspci -xxxx" and dmesg and analysed the results at home.
->>
->> Very brave. ;)
-> It's a retail store with display models for people to play with. If I do
-> not damage it (or pay for any damage caused) then I do not have anything
-> to be afraid of.
+According the PCI Express base specification when PHY does not meet
+ZRX-DC specification, after every 100ms timeout the link should
+transition to recovery state when the link is in low power states. 
 
-Sure. I was referring to you being "brave" to do all this analyzing /
-debugging without having the system at your hands while doing this for any
-further tests. ;)
-  
->>
->>> I noticed it
->>> did not override the resources, and from examining the source code, it
->>> likely evaluated _DSM to 0, which may have overridden pci=realloc. Try
->>> modifying the source code to unconditionally apply realloc in
->>> drivers/pci/setup-bus.c and see what happens. I have not bothered doing
->>> this myself and going back to the store to try to test this hypothesis.
->>
->> realloc is enabled via boot args and active in the kernel as you can see
->> from the dmesg log [2].
->>> 4. It would be helpful if you attached full dmesg and "sudo lspci -xxxx"
->>> which dumps full PCI config, allowing us to run any lspci query as if we
->>> were on your system, from the file. I will be able to tell a lot more
->>> after seeing that. Possibly do one with no kernel parameters, and do
->>> another set of results with all of the kernel parameters. Use
->>> hpmmiosize=64M and hpmmioprefsize=1G for it to be noticeable, I reckon.
->>> But this will answer questions I have about which ports are hotplug
->>> bridges and other things.
->>
->> Okay, I added the following test cases:
->>
->> e) Kernel Parameter ""
->> f) Kernel Parameter "pci=nocrs,realloc,hpmmiosize=64M,hpmmioprefsize=1G"
->>
->> The logs are also included. Please let me know, if I should do any other
->> tests and provide the logs.
->>
->>> 5. There is a good chance it will not even boot since kernel since
->>> around ~v5.3 with acpi=off but it is worth a shot there, also. Since a
->>> recent kernel, I have found that acpi=off only removes HyperThreading,
->>> and not all the physical cores like it used to. So there must have been
->>> a patch which allowed it to guess the MADT table information. I have not
->>> investigated. But now, some of my computers crash upon loading the
->>> kernel with acpi=off. It must get it wrong at times.
->>
->> Booting this 5.5 kernel with "acpi=off" increases the bootup time quite
->> a bit. The resources are distributed behind the PLX switch (similar to
->> using "pci=nocrs" but again accessing the BARs doesn't work (0xffffffff
->> is read back).
-> It was only to see if ACPI was part of the issue. You would not run in
-> production with it off.
-> 
->>
->>> What about
->>> pci=noacpi instead?
->>
->> I also tested using pci=noacpi and it did not resolve the resource
->> mapping problems.
->>> Sorry if I missed something you said.
->>>
->>> Best of luck, and I am interested into looking into this further. :)
->>
->> Very much appreciated. :)
->>
->> Thanks,
->> Stefan
->>
->> [1] logs.tar.bz2
->> [2] 5.5.0-rc1-custom-test-c/dmesg.log
-> 
->  From the logs, it looks like MMIO_PREF was assigned 1G but not MMIO.
-> 
-> This looks tricky. Please revert my commit:
-> c13704f5685deb7d6eb21e293233e0901ed77377
-> 
-> And see if it is the problem.
+Ports that meet the ZRX-DC specification for 2.5 GT/s while in the
+L1.Idle state and are therefore not required to implement the 100 ms
+timeout and transition to Recovery should avoid implementing it, since
+it will reduce the power savings expected from the L1 state.
 
-I reverted this patch and did a few test (some of my test cases). None
-turned out differently than before. Either the resources are not mapped
-completely or they are mapped  (with pci=nocrs) and not accessible.
+DesignWare controller provides GEN3_ZRXDC_NONCOMPL field in
+GEN3_RELATED_OFF to specify about ZRX-DC compliant PHY.
 
-> It is entirely possible, but because of
-> the very old code and how there are multiple passes, it might be
-> impossible to use realloc without side effects for somebody. If you fix
-> it for one scenario, it is possible that there is another scenario for
-> which it will break due to the change. The only way to make everything
-> work is a near complete rewrite of drivers/pci/setup-bus.c and
-> potentially others, something I am working on, but is going to take a
-> long time. And unlikely to ever be accepted.
+We need to get the PHY property in controller driver. So, we are
+proposing a new method phy_property_present() in the phy driver.
 
-While working on this issue, I looked (again) at this resource (re-)
-allocation code. This is really confusing (at least to me) and I also think
-that it needs a "near complete rewrite".
-  
-> Otherwise, it will take me a lot of grepping through dmesg to find the
-> cause, which will take more time.
+PCIe controller platform drivers should populate the phy_zrxdc_compliant
+flag, which will be used by generic DesignWare driver.
 
-Sure.
-  
-> FYI, "lspci -vvv" is redundant because it can be produced from "lspci
-> -xxxx" output.
+pci->phy_zrxdc_compliant = phy_property_present(xxxx_ctrl->phy, "phy-zrxdc-compliant");
 
-I know. Its mainly for me to easily see the PCI devices listed quickly.
-  
-> A final note, Epyc CPUs can bifurcate x16 slots into x4/x4/x4/x4 in the
-> BIOS setup, although you will probably not have the hotplug services
-> provided by the PEX switch.
+Patchset v2 can be found at:
+ - 1/2: https://lkml.org/lkml/2019/11/11/672
+ - 2/2: https://lkml.org/lkml/2019/10/28/285
 
-I think it should not matter for my current test with resource assignment,
-how many PCIe lanes the PEX switch has connected to the PCI root port. Its
-of course important for the bandwidth, but this is a completely different
-issue.
+Changes w.r.t v2:
+ - Addressed review comments
+ - Rebased on latest linus/master
 
-Thanks,
-Stefan
+Changes w.r.t v3:
+ - Added linux-pci@vger.kernel.org as pointed by Gustavo, Sorry for annoying.
+
+Changes w.r.t v4:
+ - Addressed review comments from Andrew Murray
+ - Rebased on latest linus/master
+
+Anvesh Salveru (2):
+  phy: core: add phy_property_present method
+  PCI: dwc: add support to handle ZRX-DC Compliant PHYs
+
+ drivers/pci/controller/dwc/pcie-designware.c |  6 ++++++
+ drivers/pci/controller/dwc/pcie-designware.h |  4 ++++
+ drivers/phy/phy-core.c                       | 17 +++++++++++++++++
+ include/linux/phy/phy.h                      |  6 ++++++
+ 4 files changed, 33 insertions(+)
+
+-- 
+2.7.4
+
