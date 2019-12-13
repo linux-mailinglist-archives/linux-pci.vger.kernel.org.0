@@ -2,111 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E618311E8F4
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2019 18:13:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E7B2C11E9B1
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Dec 2019 19:04:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728014AbfLMRKK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Dec 2019 12:10:10 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2191 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728012AbfLMRKJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 13 Dec 2019 12:10:09 -0500
-Received: from lhreml704-cah.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id AAD5AC95724CE7AC0041;
-        Fri, 13 Dec 2019 17:10:08 +0000 (GMT)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- lhreml704-cah.china.huawei.com (10.201.108.45) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 13 Dec 2019 17:10:07 +0000
-Received: from localhost (10.202.226.57) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Fri, 13 Dec
- 2019 17:10:08 +0000
-Date:   Fri, 13 Dec 2019 17:10:06 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>, <lenb@kernel.org>
-CC:     <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-acpi@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <iommu@lists.linux-foundation.org>, <joro@8bytes.org>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <lorenzo.pieralisi@arm.com>, <guohanjun@huawei.com>,
-        <sudeep.holla@arm.com>, <rjw@rjwysocki.net>, <will@kernel.org>,
-        <robin.murphy@arm.com>, <bhelgaas@google.com>,
-        <eric.auger@redhat.com>, <zhangfei.gao@linaro.org>
-Subject: Re: [PATCH v3 00/13] iommu: Add PASID support to Arm SMMUv3
-Message-ID: <20191213171006.00003e99@Huawei.com>
-In-Reply-To: <20191209180514.272727-1-jean-philippe@linaro.org>
-References: <20191209180514.272727-1-jean-philippe@linaro.org>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        id S1728637AbfLMSEU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Dec 2019 13:04:20 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:43610 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726404AbfLMSEU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Dec 2019 13:04:20 -0500
+Received: by mail-io1-f65.google.com with SMTP id s2so483747iog.10;
+        Fri, 13 Dec 2019 10:04:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=jlzKVAxbx+/Wr5suXUGHs2MnNQmk3chg9M1fa3mxz0g=;
+        b=Skh6QyHnf7xBMFDJYmzZZRHK0QvNMRhjfKNkFmERmWOjRUeuq9Cv8Dj3RgrxMNiTwI
+         ywitD7tQC8mx+ruBvsmxhQHSZkSezs7LGvajniWTFxP+/GZ3n1IB+54WP1xHR+tn3aSb
+         18zQItO6jGVSrwY0MzCcplQv9pZxuHfxzpfXFomF1dyHqb53kJfjOU7jUN0FvnB7utUZ
+         2F6V1W5Q1cZ2UYl6trJVIsXy+0ZiShGux1TuA3q4IKdt8A0f67Jo2EWdqv3dpWUhIKOW
+         4gVJ0tYkggMSUgNMeS2Qv3hCxmlslYR9tIzGISL7hi9nYeBLoWzU1I6TcEwsRGVrwt7V
+         5hGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=jlzKVAxbx+/Wr5suXUGHs2MnNQmk3chg9M1fa3mxz0g=;
+        b=W7OzOMfeV5+zRpiZjg8FJyX+KSi4qBmUgJj7svAE69dAhwFAajQhdy+mUxypmVTwn8
+         4CAehv2AsTxpbN9NEdEdlvB2oFRz9w4/RDCMVXWZvnP+4VYMp3StwqO4MUV+D7pqygSj
+         VTz4vfO02nVE8n9mNdOBt8hLny06cKZYmOUEMjnDS8amMBfpmO+5+F9sot8qKedpbEzY
+         XKAUZqAkofjVEFpDPsvEoWuu2NyFqOdBDqHwFKaBayixDlYQ2/ndR1l03RKFkDs0GFt/
+         nIFv1OhSJq7GShtPtaUko/SsdxbLcvX6oi9XQtJ5dJtFFMdz1/b7Cx9wu/oQHvjeXgH7
+         xl+A==
+X-Gm-Message-State: APjAAAVJbJxZ9hOoN1TyrV1l8xfV++s/pkSLBKFfKou3pPm9c7v2AKS3
+        6IFFEv0njPZVqpiScwVoUqaAmF7t3AWNvXVCorGVCQHw
+X-Google-Smtp-Source: APXvYqz+Ddjeu5WylBKH31KLJqL+in4RoPghN7qO8r+09q+bmZZr5Nz73OoWlxeyVxdUA4Ecm8R2x9ODEBCdv+gTVg4=
+X-Received: by 2002:a5d:9512:: with SMTP id d18mr8473567iom.85.1576260259061;
+ Fri, 13 Dec 2019 10:04:19 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.57]
-X-ClientProxiedBy: lhreml721-chm.china.huawei.com (10.201.108.72) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+References: <PSXP216MB043892C04178AB333F7AF08C80580@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+ <20191210213836.GA149297@google.com> <PSXP216MB0438B40D6EFFF5F9B5952F6580550@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+In-Reply-To: <PSXP216MB0438B40D6EFFF5F9B5952F6580550@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+Reply-To: bjorn@helgaas.com
+From:   Bjorn Helgaas <bjorn.helgaas@gmail.com>
+Date:   Fri, 13 Dec 2019 12:04:07 -0600
+Message-ID: <CABhMZUU_6Ljn60sH_C8EwhKwF=uUrP2Y3ob1nnAM_UjM=i+8=A@mail.gmail.com>
+Subject: Re: [PATCH v12 0/4] PCI: Patch series to improve Thunderbolt enumeration
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Logan Gunthorpe <logang@deltatee.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 9 Dec 2019 19:05:01 +0100
-Jean-Philippe Brucker <jean-philippe@linaro.org> wrote:
+On Thu, Dec 12, 2019 at 4:23 AM Nicholas Johnson
+<nicholas.johnson-opensource@outlook.com.au> wrote:
+>
+> On Tue, Dec 10, 2019 at 03:38:36PM -0600, Bjorn Helgaas wrote:
+> > On Mon, Dec 09, 2019 at 12:59:29PM +0000, Nicholas Johnson wrote:
+> > > Hi all,
+> > >
+> > > Since last time:
+> > >     Reverse Christmas tree for a couple of variables
+> > >
+> > >     Changed while to whilst (sounds more formal, and so that
+> > >     grepping for "while" only brings up code)
+> > >
+> > >     Made sure they still apply to latest Linux v5.5-rc1
+> > >
+> > > Kind regards,
+> > > Nicholas
+> > >
+> > > Nicholas Johnson (4):
+> > >   PCI: Consider alignment of hot-added bridges when distributing
+> > >     available resources
+> > >   PCI: In extend_bridge_window() change available to new_size
+> > >   PCI: Change extend_bridge_window() to set resource size directly
+> > >   PCI: Allow extend_bridge_window() to shrink resource if necessary
+> > >
+> > >  drivers/pci/setup-bus.c | 182 +++++++++++++++++++---------------------
+> > >  1 file changed, 88 insertions(+), 94 deletions(-)
+> >
+> > Applied to pci/resource for v5.6, thanks!
+> Thank you all for your time, support and patience with me. I have
+> learned a lot in the past year.
+>
+> I will obviously stick around to address any potential concerns with the
+> patches, but it also seems like kernel development is what I want to do
+> as a career. Hopefully I can take this beyond a hobby despite my
+> physical location. Perth, Western Australia is not big on this. Perhaps
+> there are companies open to telecommuting employees. In any case, you
+> will continue to see me around.
 
-> Add support for Substream ID and PASIDs to the SMMUv3 driver.
-> Changes since v2 [1]:
-> 
-> * Split preparatory work into patches 5, 6, 8 and 9.
-> 
-> * Added patch 1. Not strictly relevant, but since we're moving the DMA
->   allocations and adding a new one, we might as well clean the flags
->   first.
-> 
-> * Fixed a double free reported by Jonathan, and other small
->   issues.
-> 
-> * Added patch 12. Upstream commit c6e9aefbf9db ("PCI/ATS: Remove unused
->   PRI and PASID stubs") removed the unused PASID stubs. Since the SMMU
->   driver can be built without PCI, the stubs are now needed.
-> 
-> [1] https://lore.kernel.org/linux-iommu/20191108152508.4039168-1-jean-philippe@linaro.org/
-
-Hi Jean-Philippe,
-
-Series looks great to me.  FWIW
-
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-for the patches I didn't comment on in this version as I couldn't find anything
-to comment about ;)
-
-Thanks
-
-Jonathan
-
-> 
-> Jean-Philippe Brucker (13):
->   iommu/arm-smmu-v3: Drop __GFP_ZERO flag from DMA allocation
->   dt-bindings: document PASID property for IOMMU masters
->   iommu/arm-smmu-v3: Support platform SSID
->   ACPI/IORT: Support PASID for platform devices
->   iommu/arm-smmu-v3: Prepare arm_smmu_s1_cfg for SSID support
->   iommu/arm-smmu-v3: Add context descriptor tables allocators
->   iommu/arm-smmu-v3: Add support for Substream IDs
->   iommu/arm-smmu-v3: Propate ssid_bits
->   iommu/arm-smmu-v3: Handle failure of arm_smmu_write_ctx_desc()
->   iommu/arm-smmu-v3: Add second level of context descriptor table
->   iommu/arm-smmu-v3: Improve add_device() error handling
->   PCI/ATS: Add PASID stubs
->   iommu/arm-smmu-v3: Add support for PCI PASID
-> 
->  .../devicetree/bindings/iommu/iommu.txt       |   6 +
->  drivers/acpi/arm64/iort.c                     |  18 +
->  drivers/iommu/arm-smmu-v3.c                   | 462 +++++++++++++++---
->  drivers/iommu/of_iommu.c                      |   6 +-
->  include/linux/iommu.h                         |   2 +
->  include/linux/pci-ats.h                       |   3 +
->  6 files changed, 437 insertions(+), 60 deletions(-)
-> 
-
-
+Thanks for your work.  Springfield, Missouri, is not big on kernel
+development either, so I can sympathize with that :)
