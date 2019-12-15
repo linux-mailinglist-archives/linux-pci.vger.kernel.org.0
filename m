@@ -2,435 +2,185 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6FA3911F002
-	for <lists+linux-pci@lfdr.de>; Sat, 14 Dec 2019 03:36:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 19BBD11F568
+	for <lists+linux-pci@lfdr.de>; Sun, 15 Dec 2019 04:17:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726170AbfLNCgC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Dec 2019 21:36:02 -0500
-Received: from mail-pf1-f201.google.com ([209.85.210.201]:44761 "EHLO
-        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726046AbfLNCgC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Dec 2019 21:36:02 -0500
-Received: by mail-pf1-f201.google.com with SMTP id r127so2693548pfc.11
-        for <linux-pci@vger.kernel.org>; Fri, 13 Dec 2019 18:36:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=BzuOkp85Fyup3EI4GheCT5kaG1/F1s80DIcONtC1OgQ=;
-        b=V0BCuAS0cvtGQ1FBO2my973/nI2b8vxzKdmGgoJ4Y0o2hTaclY1TdmzrWnGaFOhtV4
-         rWoY5M/EnP6w5spmasPSlGhocmc7xpz4ErdUTgKHmOw76llQwXbeHq3GFNFSDfEMOots
-         oD0s1g9e/fv7oAnnzKtUQed/ySPrURl+Ak29/HsAPN7INALTyObIz3Ncdzuj66mHQqu9
-         hNp812TiLrU75lu/+B8xT8RTNli/N6oYpNdz4MUkxgj+X0gc4Ay2RUiwzYLWDpr0bxYZ
-         LMElqLrFYMEAemSZ1L12bxfBITSyeUJLEdgUxXO9MXCFgUzYReN6SfxG994Bvx6MAWS+
-         kO1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=BzuOkp85Fyup3EI4GheCT5kaG1/F1s80DIcONtC1OgQ=;
-        b=AUAeX0bCsAP/ry0r2uZiW1iuzXSh6p1ald6Ay4aLAC2V6dqQhwnhpOg5dsALOKVqk4
-         yJ3pqRp115viyby+pyGJQYH68vnQZtOpM/xu81ioXfM0LnHYasElSya7lDJtqwgea7Ag
-         6MYySDGNagpbDWfj62NlIUMK65Cf7vzeegyxDfec6ZYB1FptRrDYVv7lpnrwshSclgRX
-         eoeR1WsBz1nOE+djbALQs6Mc0DBiaJ4CL7Dm53frQpBcPpRTXLQ0Qx37eIsuhJKcUVBV
-         Wt8iLWXj3mKIRog5lnAHKwXQmxSoO2SyRIqNqJkyVew23kIixOHfcGoCqmx36X5OmnZV
-         OEBg==
-X-Gm-Message-State: APjAAAUmC5d81djk27CsF0GoypdWP6OywXa8w08nJPU/o+e+baBkcSFP
-        wNtRVeW4GGeDwiZyccbgYTqOlc3YakOqzscyoJFNnw==
-X-Google-Smtp-Source: APXvYqw1Ub/Z+O3jHcMEB46RIHlKwXB2iWX+yWYDGRmVFXK8kuxqatdFjZXNtTudLmVR+z0LGMEogfliBJ/w3zo57XbORQ==
-X-Received: by 2002:a63:f202:: with SMTP id v2mr3139369pgh.420.1576290960550;
- Fri, 13 Dec 2019 18:36:00 -0800 (PST)
-Date:   Fri, 13 Dec 2019 18:35:43 -0800
-Message-Id: <20191214023543.24933-1-matthewgarrett@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
-Subject: [PATCH V2] efi: Allow disabling PCI busmastering on bridges during boot
-From:   Matthew Garrett <matthewgarrett@google.com>
-To:     linux-efi@vger.kernel.org
-Cc:     ard.biesheuvel@linaro.org, x86@kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Matthew Garrett <matthewgarrett@google.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Ard Biesheuvel <ardb@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        id S1726019AbfLODRO convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Sat, 14 Dec 2019 22:17:14 -0500
+Received: from mail-oln040092253092.outbound.protection.outlook.com ([40.92.253.92]:32075
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725990AbfLODRO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 14 Dec 2019 22:17:14 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZoKTWiprH4ZOk/1VV6Q3+E6vgiMyf/3F1uy+DhQcQ428oWGHEMoO/2nmFB1yN36UqN3Sz60GIHrriLAKWUVxUsXNHmikYdU7RPRxKeFih3IOx5iofwNI26GZzmYeaYLJYerZ8cy8QajKq9YQ9TFqf7mB9tAjTRguTzQAu0VmSPskewgF/Fcp29tb9e2HYtVbnDboojWE4RWrb3i9oZViYU9N/hX5wpZm9F1UJi+iZonrH6RBKV4GQcUMYwTqRU4MHf+S+5cAS/zqFn/xgrI9q787IJwpvnrn/5ABo4zZ+JNgN/v1gFa4HPbmZ4A9n8gElp3UzKQ1/Z6/6LOQMVIuvQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dTzE8PF2sfxedpNN+Jno6pyFzsKOhdHeK4tmfmWREZw=;
+ b=fwLL+XQ46T86TL/7QORVLg12NAEIRieLUKCt/2H1lCYfOedsBk3jRm5hE/KEfxvWi60ZRZtBI/cyzLLD2n5MT4oS62YdUFdr11vKIN7pqUMKVgmyKX2gzw4O850R8s5puWETLqJ1armXL0ZeP1M2Rb6ZIUeB/g2/oAoBm4AsNLbpDzAoeXMPuJLa1lvqK1oyC1Q1u62YpH5sZqTXMrYz/MwZabzU1Qv/oZrkJ7IHIjy0ufXR1uConPnWSgyrjdQgEp3mldkZZMrZzMiX506fp0L03d/ZI5vVNl9R/XlmNjSMH3AMSWJFs6dhJ7O2j4RncCHPt9AtHikRsenNKk4G8w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from SG2APC01FT056.eop-APC01.prod.protection.outlook.com
+ (10.152.250.59) by SG2APC01HT240.eop-APC01.prod.protection.outlook.com
+ (10.152.251.50) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2538.15; Sun, 15 Dec
+ 2019 03:16:27 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.250.54) by
+ SG2APC01FT056.mail.protection.outlook.com (10.152.251.13) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.15 via Frontend Transport; Sun, 15 Dec 2019 03:16:26 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::20ad:6646:5bcd:63c9]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::20ad:6646:5bcd:63c9%11]) with mapi id 15.20.2538.019; Sun, 15 Dec
+ 2019 03:16:26 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     Stefan Roese <sr@denx.de>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Sergey Miroshnichenko <s.miroshnichenko@yadro.com>
+Subject: Re: PCIe hotplug resource issues with PEX switch (NVMe disks) on AMD
+ Epyc system
+Thread-Topic: PCIe hotplug resource issues with PEX switch (NVMe disks) on AMD
+ Epyc system
+Thread-Index: AQHVsZBJH4x6UZhJJ0OzP9pilhD//ae3xGIAgAAhGoCAAA8BgIAABtaAgAKNhYA=
+Date:   Sun, 15 Dec 2019 03:16:26 +0000
+Message-ID: <PSXP216MB0438ADAE9B4081B69CABEA7580560@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+References: <4fc407f8-2a24-4a04-20fb-5d07d5c24be4@denx.de>
+ <PSXP216MB0438BE9DA58D0AF9F908070680540@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+ <c9f154e5-4214-aa46-2ce2-443b508e1643@denx.de>
+ <PSXP216MB0438AD1041F6BD7DB51363A380540@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+ <9aa45b1d-8afe-2d59-4bca-4d2beb983cfc@denx.de>
+In-Reply-To: <9aa45b1d-8afe-2d59-4bca-4d2beb983cfc@denx.de>
+Accept-Language: en-AU, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: ME2PR01CA0067.ausprd01.prod.outlook.com
+ (2603:10c6:201:2b::31) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:300:d::20)
+x-incomingtopheadermarker: OriginalChecksum:7B8696DA3B5A7C72F1773FC0A2DA3F1C33C81F90FAA173848517101755EA66FF;UpperCasedChecksum:EBEDBC8607EB22D83E2E0554CF4C06C18D4DE55C4AC7B05E44DA414F66D38CFE;SizeAsReceived:7849;Count:49
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [KGqMWtXz8Y4Ei6REv9vy+tm8hg6eP9yPQgD0DhemkaU=]
+x-microsoft-original-message-id: <20191215031605.GA1659@nicholas-dell-linux>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 49
+x-eopattributedmessage: 0
+x-ms-office365-filtering-correlation-id: 8b6e4f9e-a07e-4b44-9f27-08d7810d2b49
+x-ms-traffictypediagnostic: SG2APC01HT240:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: CWtitCTgWibpy8I7cwGhXXshG838uUZqcsYU8k4lVsMmLYT6eS6WLAE5lav0s6xFSfdZTg2WLIDzxIQw/CH2Wa9BnNeNmaHN72vuzji2hQAD/gsC7Z33EBVfSJUY9WPsjKkofzmtOHBoKGdeCL0Bp2idgpS8Aa5dVcF03twHo/W2Sw/FcI3DpJ91ajrUEivY
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <66E5F4FB1F56A6468C7928CA84698F29@KORP216.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8b6e4f9e-a07e-4b44-9f27-08d7810d2b49
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Dec 2019 03:16:26.2655
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2APC01HT240
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add an option to disable the busmaster bit in the control register on
-all PCI bridges before calling ExitBootServices() and passing control to
-the runtime kernel. System firmware may configure the IOMMU to prevent
-malicious PCI devices from being able to attack the OS via DMA. However,
-since firmware can't guarantee that the OS is IOMMU-aware, it will tear
-down IOMMU configuration when ExitBootServices() is called. This leaves
-a window between where a hostile device could still cause damage before
-Linux configures the IOMMU again.
+Hi,
 
-If CONFIG_EFI_NO_PCI_BUSMASTER is enabled or the
-"efi=disable_pci_busmaster" commandline argument is passed, the EFI stub
-will clear the busmaster bit on all PCI bridges before
-ExitBootServices() is called. This will prevent any malicious PCI
-devices from being able to perform DMA until the kernel reenables
-busmastering after configuring the IOMMU.
+> >  From the logs, it looks like MMIO_PREF was assigned 1G but not MMIO.
+> > 
+> > This looks tricky. Please revert my commit:
+> > c13704f5685deb7d6eb21e293233e0901ed77377
+> > 
+> > And see if it is the problem.
+> 
+> I reverted this patch and did a few test (some of my test cases). None
+> turned out differently than before. Either the resources are not mapped
+> completely or they are mapped  (with pci=nocrs) and not accessible.
+> 
+> > It is entirely possible, but because of
+> > the very old code and how there are multiple passes, it might be
+> > impossible to use realloc without side effects for somebody. If you fix
+> > it for one scenario, it is possible that there is another scenario for
+> > which it will break due to the change. The only way to make everything
+> > work is a near complete rewrite of drivers/pci/setup-bus.c and
+> > potentially others, something I am working on, but is going to take a
+> > long time. And unlikely to ever be accepted.
+> 
+> While working on this issue, I looked (again) at this resource (re-)
+> allocation code. This is really confusing (at least to me) and I also think
+> that it needs a "near complete rewrite".
+> > Otherwise, it will take me a lot of grepping through dmesg to find the
+> > cause, which will take more time.
+> 
+> Sure.
+> > FYI, "lspci -vvv" is redundant because it can be produced from "lspci
+> > -xxxx" output.
+> 
+> I know. Its mainly for me to easily see the PCI devices listed quickly.
+> > A final note, Epyc CPUs can bifurcate x16 slots into x4/x4/x4/x4 in the
+> > BIOS setup, although you will probably not have the hotplug services
+> > provided by the PEX switch.
+> 
+> I think it should not matter for my current test with resource assignment,
+> how many PCIe lanes the PEX switch has connected to the PCI root port. Its
+> of course important for the bandwidth, but this is a completely different
+> issue.
+I meant that you can connect 4x NVMe drives to a PCIe x16 slot with a 
+cheap passive bifurcation riser. But it sounds like this card is useful 
+because of its hotplug support.
 
-This option is disabled when in EFI mixed mode environments (ie, 64-bit
-kernels with a 32-bit EFI implementation). The current thunking code is
-unable to handle cases where 64-bit values are required, and is also
-hard to integrate with code that should run on both ARM and x86.
+I noticed if you grep your some of your dmesg logs for "add_size", you 
+have some lines like this:
+[    0.767652] pci 0000:42:04.0: bridge window [mem 0x00100000-0x000fffff 64bit pref] to [bus 44] add_size 200000 add_align 100000
 
-This option will cause failures with some poorly behaved hardware and
-should not be enabled without testing. The kernel commandline option
-"efi=disable_pci_busmaster" or "efi=enable_pci_busmaster" may be used to
-override the default.
+I am not sure if these are the cause or a symptom of the problem, but I 
+do not have any when assigning MMIO and MMIO_PREF for Thunderbolt 3.
 
-Signed-off-by: Matthew Garrett <mjg59@google.com>
-Cc: Ard Biesheuvel <ardb@kernel.org>
----
+I noticed you are using pci=hpmemsize in some of the tests. It should 
+not be interfering because you put it first (it is overwritten by 
+hpmmiosize and hpmmioprefsize). But I should point out that 
+pci=hpmemsize=X is equivalent to pci=hpmmiosize=X,hpmmioprefsize=X so it 
+is redundant. When I added hpmmiosize and hpmmioprefsize parameters to 
+control them independently, I would have liked to have dropped 
+hpmemsize, but needed to leave it around to not disrupt people who are 
+already using it.
 
-V2: Fix up support for ARM, add a helper to identify whether we're in
-mixed mode and exit gracefully if so, modify the naming and command line
-arguments to make it clearer that it's restricted to EFI and PCI.
+Please try something like this, which I dug up from a very old attempt 
+to overhaul drivers/pci/setup-bus.c that I was working on. It will 
+release all the boot resources before the initial allocation, and should 
+give the system a chance to cleanly assign all resources on the first 
+pass / try. The allocation code works well until you use more than one 
+pass - then things get very hairy. I just applied it to mine, and now
+everything applies the first pass, with not a single failure to assign.
 
- .../admin-guide/kernel-parameters.txt         |  4 +
- arch/arm64/include/asm/efi.h                  |  1 +
- arch/x86/boot/compressed/eboot.c              |  2 +
- arch/x86/include/asm/efi.h                    | 11 +++
- drivers/firmware/efi/Kconfig                  | 22 +++++
- drivers/firmware/efi/libstub/Makefile         |  2 +-
- .../firmware/efi/libstub/efi-stub-helper.c    | 17 ++++
- drivers/firmware/efi/libstub/efistub.h        |  1 +
- drivers/firmware/efi/libstub/pci.c            | 90 +++++++++++++++++++
- include/linux/efi.h                           | 31 +++++--
- 10 files changed, 175 insertions(+), 6 deletions(-)
- create mode 100644 drivers/firmware/efi/libstub/pci.c
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index ade4e6ec23e0..e4faa52c5abd 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -1180,6 +1180,10 @@
- 			claim. Specify efi=nosoftreserve to disable this
- 			reservation and treat the memory by its base type
- 			(i.e. EFI_CONVENTIONAL_MEMORY / "System RAM").
-+			disable_busmaster: Disable the busmaster bit on all
-+			PCI bridges while in the EFI boot stub
-+			enable_busmaster: Leave the busmaster bit set on all
-+			PCI bridges while in the EFI boot stub
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index 22aed6cdb..befaef6a8 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -1822,8 +1822,16 @@ void pci_assign_unassigned_root_bus_resources(struct pci_bus *bus)
+ void __init pci_assign_unassigned_resources(void)
+ {
+ 	struct pci_bus *root_bus;
++	struct pci_dev *dev;
  
- 	efi_no_storage_paranoia [EFI; X86]
- 			Using this parameter you can use more than 50% of
-diff --git a/arch/arm64/include/asm/efi.h b/arch/arm64/include/asm/efi.h
-index b54d3a86c444..e14e9ad35b55 100644
---- a/arch/arm64/include/asm/efi.h
-+++ b/arch/arm64/include/asm/efi.h
-@@ -97,6 +97,7 @@ static inline unsigned long efi_get_max_initrd_addr(unsigned long dram_base,
- #define __efi_call_early(f, ...)	f(__VA_ARGS__)
- #define efi_call_runtime(f, ...)	sys_table_arg->runtime->f(__VA_ARGS__)
- #define efi_is_64bit()			(true)
-+#define efi_is_mixed_mode()		(false)
- 
- #define efi_table_attr(table, attr, instance)				\
- 	((table##_t *)instance)->attr
-diff --git a/arch/x86/boot/compressed/eboot.c b/arch/x86/boot/compressed/eboot.c
-index 72b08fde6de6..0f1edd2c49fc 100644
---- a/arch/x86/boot/compressed/eboot.c
-+++ b/arch/x86/boot/compressed/eboot.c
-@@ -137,6 +137,8 @@ static void setup_efi_pci(struct boot_params *params)
- 	struct setup_data *data;
- 	int i;
- 
-+	efi_pci_disable_bridge_busmaster(sys_table);
-+
- 	status = efi_call_early(locate_handle,
- 				EFI_LOCATE_BY_PROTOCOL,
- 				&pci_proto, NULL, &size, pci_handle);
-diff --git a/arch/x86/include/asm/efi.h b/arch/x86/include/asm/efi.h
-index d028e9acdf1c..eeee0bb3caee 100644
---- a/arch/x86/include/asm/efi.h
-+++ b/arch/x86/include/asm/efi.h
-@@ -220,6 +220,17 @@ static inline bool efi_is_64bit(void)
- 	return __efi_early()->is64;
- }
- 
-+static inline bool efi_is_mixed_mode(void)
-+{
-+	if (!IS_ENABLED(CONFIG_EFI_MIXED))
-+		return false;
-+
-+	if (!IS_ENABLED(CONFIG_X86_64))
-+		return false;
-+
-+	return !(__efi_early()->is64);
-+}
-+
- #define efi_table_attr(table, attr, instance)				\
- 	(efi_is_64bit() ?						\
- 		((table##_64_t *)(unsigned long)instance)->attr :	\
-diff --git a/drivers/firmware/efi/Kconfig b/drivers/firmware/efi/Kconfig
-index bcc378c19ebe..e8b432b2d94a 100644
---- a/drivers/firmware/efi/Kconfig
-+++ b/drivers/firmware/efi/Kconfig
-@@ -215,6 +215,28 @@ config EFI_RCI2_TABLE
- 
- 	  Say Y here for Dell EMC PowerEdge systems.
- 
-+config EFI_DISABLE_PCI_BUSMASTER
-+       bool "Clear Busmaster bit on PCI bridges before ExitBootServices()"
-+       help
-+	  Disable the busmaster bit in the control register on all PCI bridges
-+	  before calling ExitBootServices() and passing control to the runtime
-+	  kernel. System firmware may configure the IOMMU to prevent malicious
-+	  PCI devices from being able to attack the OS via DMA. However, since
-+	  firmware can't guarantee that the OS is IOMMU-aware, it will tear
-+	  down IOMMU configuration when ExitBootServices() is called. This
-+	  leaves a window between where a hostile device could still cause
-+	  damage before Linux configures the IOMMU again.
-+
-+	  If you say Y here, the EFI stub will clear the busmaster bit on all
-+	  PCI bridges before ExitBootServices() is called. This will prevent
-+	  any malicious PCI devices from being able to perform DMA until the
-+	  kernel reenables busmastering after configuring the IOMMU.
-+
-+	  This option will cause failures with some poorly behaved hardware
-+	  and should not be enabled without testing. The kernel commandline
-+	  option "efi=disable_pci_busmaster" or "efi=enable_busmaster" may
-+	  be used to override this option.
-+
- endmenu
- 
- config UEFI_CPER
-diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-index 33535252605a..f14b7636323a 100644
---- a/drivers/firmware/efi/libstub/Makefile
-+++ b/drivers/firmware/efi/libstub/Makefile
-@@ -39,7 +39,7 @@ OBJECT_FILES_NON_STANDARD	:= y
- KCOV_INSTRUMENT			:= n
- 
- lib-y				:= efi-stub-helper.o gop.o secureboot.o tpm.o \
--				   random.o
-+				   random.o pci.o
- 
- # include the stub's generic dependencies from lib/ when building for ARM/arm64
- arm-deps-y := fdt_rw.c fdt_ro.c fdt_wip.c fdt.c fdt_empty_tree.c fdt_sw.c
-diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c b/drivers/firmware/efi/libstub/efi-stub-helper.c
-index b1e220a124ea..852f1b8247ca 100644
---- a/drivers/firmware/efi/libstub/efi-stub-helper.c
-+++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
-@@ -32,6 +32,8 @@ static unsigned long __chunk_size = EFI_READ_CHUNK_SIZE;
- static int __section(.data) __nokaslr;
- static int __section(.data) __quiet;
- static bool __section(.data) efi_nosoftreserve;
-+static int __section(.data) __disable_pci_busmaster =
-+	IS_ENABLED(CONFIG_EFI_DISABLE_PCI_BUSMASTER);
- 
- static u16 efi_supported_rt_services_mask = EFI_RT_SUPPORTED_ALL;
- 
-@@ -54,6 +56,11 @@ bool __pure __efi_soft_reserve_enabled(void)
- 	return !efi_nosoftreserve;
- }
- 
-+int __pure disable_pci_busmaster(void)
-+{
-+	return __disable_pci_busmaster;
-+}
-+
- #define EFI_MMAP_NR_SLACK_SLOTS	8
- 
- struct file_info {
-@@ -507,6 +514,16 @@ efi_status_t efi_parse_options(char const *cmdline)
- 			efi_nosoftreserve = 1;
- 		}
- 
-+		if (!strncmp(str, "disable_pci_busmaster", 21)) {
-+			str += strlen("disable_pci_busmaster");
-+			__disable_pci_busmaster = 1;
+ 	list_for_each_entry(root_bus, &pci_root_buses, node) {
++		for_each_pci_bridge(dev, root_bus) {
++			pci_bridge_release_resources(dev->subordinate, IORESOURCE_IO);
++			pci_bridge_release_resources(dev->subordinate, IORESOURCE_MEM);
++			pci_bridge_release_resources(dev->subordinate, IORESOURCE_MEM_64);
++			pci_bridge_release_resources(dev->subordinate, IORESOURCE_MEM_64 | IORESOURCE_PREFETCH);
 +		}
 +
-+		if (!strncmp(str, "enable_pci_busmaster", 20)) {
-+			str += strlen("enable_pci_busmaster");
-+			__disable_pci_busmaster = 0;
-+		}
-+
- 		/* Group words together, delimited by "," */
- 		while (*str && *str != ' ' && *str != ',')
- 			str++;
-diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
-index e2948667fa66..b7e04ab71fc2 100644
---- a/drivers/firmware/efi/libstub/efistub.h
-+++ b/drivers/firmware/efi/libstub/efistub.h
-@@ -28,6 +28,7 @@
- extern int __pure nokaslr(void);
- extern int __pure is_quiet(void);
- extern int __pure novamap(void);
-+extern int __pure disable_pci_busmaster(void);
+ 		pci_assign_unassigned_root_bus_resources(root_bus);
  
- #define pr_efi(sys_table, msg)		do {				\
- 	if (!is_quiet()) efi_printk(sys_table, "EFI stub: "msg);	\
-diff --git a/drivers/firmware/efi/libstub/pci.c b/drivers/firmware/efi/libstub/pci.c
-new file mode 100644
-index 000000000000..a8472481a509
---- /dev/null
-+++ b/drivers/firmware/efi/libstub/pci.c
-@@ -0,0 +1,90 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * PCI-related functions used by the EFI stub on multiple
-+ * architectures.
-+ *
-+ * Copyright 2019 Google, LLC
-+ */
-+
-+#include <linux/efi.h>
-+#include <linux/pci.h>
-+
-+#include <asm/efi.h>
-+
-+#include "efistub.h"
-+
-+void efi_pci_disable_bridge_busmaster(efi_system_table_t *sys_table_arg)
-+{
-+	efi_status_t status;
-+	void **pci_handle = NULL;
-+	efi_guid_t pci_proto = EFI_PCI_IO_PROTOCOL_GUID;
-+	unsigned long size = 0;
-+	unsigned long nr_pci;
-+	u16 class, command;
-+	int i;
-+
-+	if (efi_is_mixed_mode())
-+		return;
-+
-+	if (!disable_pci_busmaster())
-+		return;
-+
-+	status = efi_call_early(locate_handle,
-+				EFI_LOCATE_BY_PROTOCOL,
-+				&pci_proto, NULL, &size, pci_handle);
-+
-+	if (status == EFI_BUFFER_TOO_SMALL) {
-+		status = efi_call_early(allocate_pool,
-+					EFI_LOADER_DATA,
-+					size, (void **)&pci_handle);
-+
-+		if (status != EFI_SUCCESS) {
-+			pr_efi_err(sys_table_arg,
-+				   "Failed to allocate memory for 'pci_handle'\n");
-+			return;
-+		}
-+
-+		status = efi_call_early(locate_handle,
-+					EFI_LOCATE_BY_PROTOCOL, &pci_proto,
-+					NULL, &size, pci_handle);
-+	}
-+
-+	if (status != EFI_SUCCESS)
-+		goto free_handle;
-+
-+	nr_pci = size / sizeof(void *);
-+	for (i = 0; i < nr_pci; i++) {
-+		efi_pci_io_protocol_t *pci = NULL;
-+		unsigned long handle = (unsigned long)pci_handle[i];
-+
-+		status = efi_call_early(handle_protocol, (efi_handle_t)handle,
-+					&pci_proto, (void **)&pci);
-+		if (status != EFI_SUCCESS || !pci)
-+			continue;
-+
-+		status = efi_call_proto(efi_pci_io_protocol, pci.read, pci,
-+					EfiPciIoWidthUint16, PCI_CLASS_DEVICE,
-+					1, &class);
-+
-+		if (status != EFI_SUCCESS || class != PCI_CLASS_BRIDGE_PCI)
-+			continue;
-+
-+		/* Disable busmastering */
-+		status = efi_call_proto(efi_pci_io_protocol, pci.read, pci,
-+					EfiPciIoWidthUint16, PCI_COMMAND, 1,
-+					&command);
-+		if (status != EFI_SUCCESS || !(command & PCI_COMMAND_MASTER))
-+			continue;
-+
-+		command &= ~PCI_COMMAND_MASTER;
-+		status = efi_call_proto(efi_pci_io_protocol, pci.write, pci,
-+					EfiPciIoWidthUint16, PCI_COMMAND, 1,
-+					&command);
-+		if (status != EFI_SUCCESS)
-+			pr_efi_err(sys_table_arg,
-+				   "Failed to disable PCI busmastering\n");
-+	}
-+
-+free_handle:
-+	efi_call_early(free_pool, pci_handle);
-+}
-diff --git a/include/linux/efi.h b/include/linux/efi.h
-index 80b504958941..234afa333a6f 100644
---- a/include/linux/efi.h
-+++ b/include/linux/efi.h
-@@ -388,11 +388,30 @@ typedef struct {
- 	u64 write;
- } efi_pci_io_protocol_access_64_t;
- 
-+typedef struct efi_pci_io_protocol efi_pci_io_protocol_t;
-+
-+typedef
-+efi_status_t (*efi_pci_io_protocol_mem_t)(struct efi_pci_io_protocol *,
-+					  EFI_PCI_IO_PROTOCOL_WIDTH,
-+					  u8 bar_index, u64 offset,
-+					  unsigned long count, void *buffer);
-+
-+typedef
-+efi_status_t (*efi_pci_io_protocol_cfg_t)(struct efi_pci_io_protocol *,
-+					  EFI_PCI_IO_PROTOCOL_WIDTH,
-+					  u32 offset, unsigned long count,
-+					  void *buffer);
-+
- typedef struct {
--	void *read;
--	void *write;
-+	efi_pci_io_protocol_mem_t read;
-+	efi_pci_io_protocol_mem_t write;
- } efi_pci_io_protocol_access_t;
- 
-+typedef struct {
-+	efi_pci_io_protocol_cfg_t read;
-+	efi_pci_io_protocol_cfg_t write;
-+} efi_pci_io_protocol_config_access_t;
-+
- typedef struct {
- 	u32 poll_mem;
- 	u32 poll_io;
-@@ -433,12 +452,12 @@ typedef struct {
- 	u64 romimage;
- } efi_pci_io_protocol_64_t;
- 
--typedef struct {
-+struct efi_pci_io_protocol {
- 	void *poll_mem;
- 	void *poll_io;
- 	efi_pci_io_protocol_access_t mem;
- 	efi_pci_io_protocol_access_t io;
--	efi_pci_io_protocol_access_t pci;
-+	efi_pci_io_protocol_config_access_t pci;
- 	void *copy_mem;
- 	void *map;
- 	void *unmap;
-@@ -451,7 +470,7 @@ typedef struct {
- 	void *set_bar_attributes;
- 	uint64_t romsize;
- 	void *romimage;
--} efi_pci_io_protocol_t;
-+};
- 
- #define EFI_PCI_IO_ATTRIBUTE_ISA_MOTHERBOARD_IO 0x0001
- #define EFI_PCI_IO_ATTRIBUTE_ISA_IO 0x0002
-@@ -1662,6 +1681,8 @@ efi_status_t efi_random_get_seed(efi_system_table_t *sys_table_arg);
- 
- void efi_retrieve_tpm2_eventlog(efi_system_table_t *sys_table);
- 
-+void efi_pci_disable_bridge_busmaster(efi_system_table_t *sys_table);
-+
- /*
-  * Arch code can implement the following three template macros, avoiding
-  * reptition for the void/non-void return cases of {__,}efi_call_virt():
--- 
-2.24.1.735.g03f4e72817-goog
+ 		/* Make sure the root bridge has a companion ACPI device */
 
+Kind regards,
+Nicholas
