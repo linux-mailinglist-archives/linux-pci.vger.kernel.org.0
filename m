@@ -2,115 +2,148 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A63111FB2A
-	for <lists+linux-pci@lfdr.de>; Sun, 15 Dec 2019 21:44:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C760E11FBB6
+	for <lists+linux-pci@lfdr.de>; Sun, 15 Dec 2019 23:51:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726260AbfLOUoc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 15 Dec 2019 15:44:32 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:40201 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726146AbfLOUoc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 15 Dec 2019 15:44:32 -0500
-Received: by mail-ot1-f66.google.com with SMTP id i15so6273647oto.7;
-        Sun, 15 Dec 2019 12:44:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zt9xL93I8MsKs6Socqd2NmMVjNPgCRRv4tjGDgdBCSw=;
-        b=IQ2bT4OFZQWWliGC6Q+V6Kf26jnuzpQACPXwyY6cwPMUJe0lD7BDA0rJLHRc9AXQ+7
-         nUEzp1ASKVPv7h6zeGDoll31LQwdkrQtAcIN2+6nx5WZny6yhUJOnqiwFNTkut6yFTA1
-         kMeckmsoC3tLNdBKledAnfZnx8cHXghd3aBmZLI7ZhyyT7sXyrt14wocHkFxe9A4kW/J
-         SThbE0Mx/WoCntEioF+6KZz/gHL1umZFXDjGJA0WjPEcfmhgXl2Jo3YntsteRQfjRX/4
-         ZPaNmW+HeQ2+x76oRGia3CS2jcc7ASMO27s5yHqdVri5kjws8+FioaxM5SYJmTl3k36V
-         MjAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zt9xL93I8MsKs6Socqd2NmMVjNPgCRRv4tjGDgdBCSw=;
-        b=YsOZ8p23FujVJpt6g83z7C+/UmbsFuZj4MjSEb5jmPLv67I0g5zjYH+xPvRe73Hq0a
-         Xz2VKS90KDsl0Sa2dI2BpHgTjEN9THK1f+A2dzOUOwFgKLt8mTQ7VkPECbl6jneGOyxD
-         drj9leeoFi68jb96Zlr1f5swARTu4dmpTSvP/tytgEHrH0BGLyYdcANujRda5bD/oCkW
-         xgHwYqLSa9JomxLbzNviN1CTbV4iMhlErCkPlpzXFfVVfoXdEAsxm4m7vIxn4KUO7aH3
-         WpYU/BSTOCscxppv1VEL8nLpjqL6Ll+jb2hqif37+fKyiBhbxMLwcdiWg2D37wBDWUT0
-         Ab1w==
-X-Gm-Message-State: APjAAAW2KGwmOhvKtzvONpv0fh/der++C5hn889UjuIcguyB9v5R523P
-        Z+Mcxbi7LGI065mvDmiYdn0xY8IhonhdqH2CsCU=
-X-Google-Smtp-Source: APXvYqzTskIRt2Xw6EqKZjSVIvxiX/lSFCf08HAZcNVOCGDv9OhkOltw6Or9ek9Mtm4/ItWI9/ZSUmrTMq6qqm+Z6UI=
-X-Received: by 2002:a9d:6a4c:: with SMTP id h12mr28669493otn.81.1576442671149;
- Sun, 15 Dec 2019 12:44:31 -0800 (PST)
-MIME-Version: 1.0
-References: <20191208210320.15539-1-repk@triplefau.lt> <1jpngxew6l.fsf@starbuckisacylon.baylibre.com>
- <20191215113634.GB7304@voidbox>
-In-Reply-To: <20191215113634.GB7304@voidbox>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Sun, 15 Dec 2019 21:44:20 +0100
-Message-ID: <CAFBinCC+i5nFdyHGZkaV0gm3Qkn6OA8xR91iQJAK1SGUBRMJTw@mail.gmail.com>
-Subject: Re: [PATCH 0/2] PCI: amlogic: Make PCIe working reliably on AXG platforms
-To:     Remi Pommarel <repk@triplefau.lt>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        id S1726260AbfLOWvw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 15 Dec 2019 17:51:52 -0500
+Received: from condef-04.nifty.com ([202.248.20.69]:40596 "EHLO
+        condef-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726219AbfLOWvw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 15 Dec 2019 17:51:52 -0500
+X-Greylist: delayed 460 seconds by postgrey-1.27 at vger.kernel.org; Sun, 15 Dec 2019 17:51:50 EST
+Received: from conuserg-10.nifty.com ([10.126.8.73])by condef-04.nifty.com with ESMTP id xBFMet4j014289
+        for <linux-pci@vger.kernel.org>; Mon, 16 Dec 2019 07:40:55 +0900
+Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
+        by conuserg-10.nifty.com with ESMTP id xBFMdess006397;
+        Mon, 16 Dec 2019 07:39:40 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com xBFMdess006397
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1576449581;
+        bh=i0oU5g5CjQIetP14HFEjJsItIoa4W1ipl4ajrjt0JKk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=kzgaCKL2ZBe8y8oSOUSe9RJ0JB6GmD83VGhv9bWLKotEPGtum7t/5vwW+zi5G63Ap
+         cIkIL9qPJQIqI2aL5+Pyz978Qb2bdtuDRUzISectClQsvBU5DGxzy7gY9eDPqXJLo+
+         pqaW+vC0eREcMFcGvWlpmyX1RL1YtMbpjBvd7WCV9Py0se/dy1WvSNm27epozcJ4nf
+         qNzxbJHV2osBRhuSF7ultgfZEknKJAOKG0WGx26M+p7lUy+hI/ETa6nz7TzwPraTlU
+         q8YObApL6Ko82u/QaHZzd2/3bQrh9ug+pL3REntcZpGj8202ccXoSsgE2Sy3rFrW+Y
+         LX2E2jLs05rDQ==
+X-Nifty-SrcIP: [126.93.102.113]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-kernel@vger.kernel.org, Yue Wang <yue.wang@amlogic.com>,
-        linux-pci@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        jianxin.pan@amlogic.com
-Content-Type: text/plain; charset="UTF-8"
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] PCI: uniphier: remove module code from built-in driver
+Date:   Mon, 16 Dec 2019 07:39:37 +0900
+Message-Id: <20191215223937.19619-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Remi,
+builtin_platform_driver() and MODULE_* are always odd combination.
 
-On Sun, Dec 15, 2019 at 12:28 PM Remi Pommarel <repk@triplefau.lt> wrote:
->
-> On Mon, Dec 09, 2019 at 09:32:18AM +0100, Jerome Brunet wrote:
-> >
-> > On Sun 08 Dec 2019 at 22:03, Remi Pommarel <repk@triplefau.lt> wrote:
-> >
-> > > PCIe device probing failures have been seen on some AXG platforms and were
-> > > due to unreliable clock signal output. Setting HHI_MIPI_CNTL0[26] bit
-> > > solved the problem. After being contacted about this, vendor reported that
-> > > this bit was linked to PCIe PLL CML output.
-> >
-> > Thanks for reporting the problem.
-> >
-> > As Martin pointed out, the CML outputs already exist in the AXG clock
-> > controller but are handled using HHI_PCIE_PLL_CNTL6. Although
-> > incomplete, it seems to be aligned with the datasheet I have (v0.9)
-> >
-> > According to the same document, HHI_MIPI_CNTL0 belong to the MIPI Phy.
-> > Unfortunately bit 26 is not documented
-> >
-> > AFAICT, the clock controller is not appropriate driver to deal with this
-> > register/bit
-> >
->
-> Regarding both @Martin's and your remark.
->
-> Unfortunately the documentation I have and vendor feedback are a bit
-> vague to me. I do agree that CLKID_PCIE_PLL_CML_ENABLE is not a proper
-> name for this bit because this register is MIPI related.
->
-> Here is the information I got from the vendor [1]. As you can see
-> HHI_MIPI_CNTL0[29] and HHI_MIPI_CNTL0[26] are related together, and
-> HHI_MIPI_CNTL0[29] is implemented in the clock controller as
-> axg_mipi_enable which is why I used this driver for HHI_MIPI_CNTL0[26].
-I agree, the details you got so far are unfortunately pretty vague
-(with my knowledge at least)
-from my experience Amlogic has very good documentation internally, so
-I'm sure that more details are available.
+This file is not compiled as a module by anyone because
+CONFIG_PCIE_UNIPHIER is a bool option.
 
-Yue Wang (the Amlogic PCIe controller maintainer) is already Cc'ed and
-I added Jianxin. I hope that they can explain the meaning of bis 26
-and 29 in HHI_MIPI_CNTL0 on the AXG SoCs (assuming Remi's contact at
-Amlogic can't) and how they are related to the PCIe controller (even
-though they're in a MIPI related register).
+Let's remove the modular code that is essentially orphaned, so that
+when reading the driver there is no doubt it is builtin-only.
 
+We explicitly disallow a driver unbind, since that doesn't have a
+sensible use case anyway, and it allows us to drop the ".remove" code.
 
-Martin
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+
+Changes in v2:
+  - update commit description
+  - remove Reviewed-by
+
+ drivers/pci/controller/dwc/pcie-uniphier.c | 31 +---------------------
+ 1 file changed, 1 insertion(+), 30 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
+index 8fd7badd59c2..a5401a0b1e58 100644
+--- a/drivers/pci/controller/dwc/pcie-uniphier.c
++++ b/drivers/pci/controller/dwc/pcie-uniphier.c
+@@ -9,11 +9,11 @@
+ #include <linux/bitfield.h>
+ #include <linux/clk.h>
+ #include <linux/delay.h>
++#include <linux/init.h>
+ #include <linux/interrupt.h>
+ #include <linux/iopoll.h>
+ #include <linux/irqchip/chained_irq.h>
+ #include <linux/irqdomain.h>
+-#include <linux/module.h>
+ #include <linux/of_irq.h>
+ #include <linux/pci.h>
+ #include <linux/phy/phy.h>
+@@ -171,12 +171,6 @@ static void uniphier_pcie_irq_enable(struct uniphier_pcie_priv *priv)
+ 	writel(PCL_RCV_INTX_ALL_ENABLE, priv->base + PCL_RCV_INTX);
+ }
+ 
+-static void uniphier_pcie_irq_disable(struct uniphier_pcie_priv *priv)
+-{
+-	writel(0, priv->base + PCL_RCV_INT);
+-	writel(0, priv->base + PCL_RCV_INTX);
+-}
+-
+ static void uniphier_pcie_irq_ack(struct irq_data *d)
+ {
+ 	struct pcie_port *pp = irq_data_get_irq_chip_data(d);
+@@ -397,14 +391,6 @@ static int uniphier_pcie_host_enable(struct uniphier_pcie_priv *priv)
+ 	return ret;
+ }
+ 
+-static void uniphier_pcie_host_disable(struct uniphier_pcie_priv *priv)
+-{
+-	uniphier_pcie_irq_disable(priv);
+-	phy_exit(priv->phy);
+-	reset_control_assert(priv->rst);
+-	clk_disable_unprepare(priv->clk);
+-}
+-
+ static const struct dw_pcie_ops dw_pcie_ops = {
+ 	.start_link = uniphier_pcie_establish_link,
+ 	.stop_link = uniphier_pcie_stop_link,
+@@ -456,31 +442,16 @@ static int uniphier_pcie_probe(struct platform_device *pdev)
+ 	return uniphier_add_pcie_port(priv, pdev);
+ }
+ 
+-static int uniphier_pcie_remove(struct platform_device *pdev)
+-{
+-	struct uniphier_pcie_priv *priv = platform_get_drvdata(pdev);
+-
+-	uniphier_pcie_host_disable(priv);
+-
+-	return 0;
+-}
+-
+ static const struct of_device_id uniphier_pcie_match[] = {
+ 	{ .compatible = "socionext,uniphier-pcie", },
+ 	{ /* sentinel */ },
+ };
+-MODULE_DEVICE_TABLE(of, uniphier_pcie_match);
+ 
+ static struct platform_driver uniphier_pcie_driver = {
+ 	.probe  = uniphier_pcie_probe,
+-	.remove = uniphier_pcie_remove,
+ 	.driver = {
+ 		.name = "uniphier-pcie",
+ 		.of_match_table = uniphier_pcie_match,
+ 	},
+ };
+ builtin_platform_driver(uniphier_pcie_driver);
+-
+-MODULE_AUTHOR("Kunihiko Hayashi <hayashi.kunihiko@socionext.com>");
+-MODULE_DESCRIPTION("UniPhier PCIe host controller driver");
+-MODULE_LICENSE("GPL v2");
+-- 
+2.17.1
+
