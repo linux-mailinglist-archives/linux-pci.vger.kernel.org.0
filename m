@@ -2,114 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 528FC1204DA
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2019 13:06:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 706AE120779
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2019 14:47:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727626AbfLPMGL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 Dec 2019 07:06:11 -0500
-Received: from foss.arm.com ([217.140.110.172]:52540 "EHLO foss.arm.com"
+        id S1727916AbfLPNpb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 Dec 2019 08:45:31 -0500
+Received: from foss.arm.com ([217.140.110.172]:55834 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727579AbfLPMGK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 16 Dec 2019 07:06:10 -0500
+        id S1727894AbfLPNpa (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 16 Dec 2019 08:45:30 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 227761063;
-        Mon, 16 Dec 2019 04:06:10 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E22C11FB;
+        Mon, 16 Dec 2019 05:45:29 -0800 (PST)
 Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8F1CE3F719;
-        Mon, 16 Dec 2019 04:06:09 -0800 (PST)
-Date:   Mon, 16 Dec 2019 12:06:07 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5412F3F718;
+        Mon, 16 Dec 2019 05:45:29 -0800 (PST)
+Date:   Mon, 16 Dec 2019 13:45:27 +0000
 From:   Andrew Murray <andrew.murray@arm.com>
-To:     Simon Horman <horms@verge.net.au>,
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [RFC PATCH] PCI: rcar: Fix incorrect programming of OB windows
-Message-ID: <20191216120607.GV24359@e119886-lin.cambridge.arm.com>
-References: <20191004132941.6660-1-andrew.murray@arm.com>
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org
+Subject: Re: [PATCH 01/13] PCI: cadence: Remove stray "pm_runtime_put_sync()"
+ in error path
+Message-ID: <20191216134526.GW24359@e119886-lin.cambridge.arm.com>
+References: <20191209092147.22901-1-kishon@ti.com>
+ <20191209092147.22901-2-kishon@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191004132941.6660-1-andrew.murray@arm.com>
+In-Reply-To: <20191209092147.22901-2-kishon@ti.com>
 User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Oct 04, 2019 at 02:29:41PM +0100, Andrew Murray wrote:
-> The outbound windows (PCIEPAUR(x), PCIEPALR(x)) describe a mapping between
-> a CPU address (which is determined by the window number 'x') and a
-> programmed PCI address - Thus allowing the controller to translate CPU
-> accesses into PCI accesses.
+On Mon, Dec 09, 2019 at 02:51:35PM +0530, Kishon Vijay Abraham I wrote:
+> commit bd22885aa188f135fd9 ("PCI: cadence: Refactor driver to use
+> as a core library") while refactoring the Cadence PCIe driver to be
+> used as library, removed pm_runtime_get_sync() from cdns_pcie_ep_setup()
+> and cdns_pcie_host_setup() but missed to remove the corresponding
+> pm_runtime_put_sync() in the error path. Fix it here.
 > 
-> However the existing code incorrectly writes the CPU address - lets fix
-> this by writing the PCI address instead.
-> 
-> For memory transactions, existing DT users describe a 1:1 identity mapping
-> and thus this change should have no effect. However the same isn't true for
-> I/O.
-> 
-> Fixes: c25da4778803 ("PCI: rcar: Add Renesas R-Car PCIe driver")
-> Signed-off-by: Andrew Murray <andrew.murray@arm.com>
-> 
-> ---
-> This hasn't been tested, so keen for someone to give it a try.
-> 
-> Also keen for someone to confirm my understanding that the RCar windows
-> expect PCI addresses and that res->start refers to CPU addresses. If this
-> is correct then it's possible the I/O doesn't work correctly.
+> Fixes: commit bd22885aa188f135fd9 ("PCI: cadence: Refactor driver to use
 
-Marek/Yoshihiro - any feedback on this?
+As this is a fix, a commit subject starting with PCI: cadence: Fix ... may
+be more obvious.
+
+I'd suggest you use the shorter form of this, i.e. Fixes: %h (\"%s\"))
+
+Fixes: bd22885aa188 ("PCI: cadence: Refactor driver to use as a core library")
+
+> as a core library")
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  drivers/pci/controller/cadence/pcie-cadence-ep.c   | 2 --
+>  drivers/pci/controller/cadence/pcie-cadence-host.c | 2 --
+>  2 files changed, 4 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> index 1c173dad67d1..560f22b4d165 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> @@ -473,7 +473,5 @@ int cdns_pcie_ep_setup(struct cdns_pcie_ep *ep)
+>  	pci_epc_mem_exit(epc);
+>  
+>   err_init:
+> -	pm_runtime_put_sync(dev);
+> -
+>  	return ret;
+>  }
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> index 9b1c3966414b..ccf55e143e1d 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> @@ -275,7 +275,5 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>  	pci_free_resource_list(&resources);
+>  
+>   err_init:
+> -	pm_runtime_put_sync(dev);
+> -
+
+There is probably more you can do here for both -host and -ep:
+
+ - Remove the possibly now unused <linux/pm_runtime.h> include
+ - Remove the err_init label and return directly from source.
 
 Thanks,
 
 Andrew Murray
 
-> ---
->  drivers/pci/controller/pcie-rcar.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-rcar.c b/drivers/pci/controller/pcie-rcar.c
-> index f6a669a9af41..b28d726b4aba 100644
-> --- a/drivers/pci/controller/pcie-rcar.c
-> +++ b/drivers/pci/controller/pcie-rcar.c
-> @@ -332,11 +332,12 @@ static struct pci_ops rcar_pcie_ops = {
->  };
->  
->  static void rcar_pcie_setup_window(int win, struct rcar_pcie *pcie,
-> -				   struct resource *res)
-> +				   struct resource_entry *window)
->  {
->  	/* Setup PCIe address space mappings for each resource */
->  	resource_size_t size;
->  	resource_size_t res_start;
-> +	struct resource *res = window->res;
->  	u32 mask;
->  
->  	rcar_pci_write_reg(pcie, 0x00000000, PCIEPTCTLR(win));
-> @@ -350,9 +351,9 @@ static void rcar_pcie_setup_window(int win, struct rcar_pcie *pcie,
->  	rcar_pci_write_reg(pcie, mask << 7, PCIEPAMR(win));
->  
->  	if (res->flags & IORESOURCE_IO)
-> -		res_start = pci_pio_to_address(res->start);
-> +		res_start = pci_pio_to_address(res->start) - window->offset;
->  	else
-> -		res_start = res->start;
-> +		res_start = res->start - window->offset;
->  
->  	rcar_pci_write_reg(pcie, upper_32_bits(res_start), PCIEPAUR(win));
->  	rcar_pci_write_reg(pcie, lower_32_bits(res_start) & ~0x7F,
-> @@ -381,7 +382,7 @@ static int rcar_pcie_setup(struct list_head *resource, struct rcar_pcie *pci)
->  		switch (resource_type(res)) {
->  		case IORESOURCE_IO:
->  		case IORESOURCE_MEM:
-> -			rcar_pcie_setup_window(i, pci, res);
-> +			rcar_pcie_setup_window(i, pci, win);
->  			i++;
->  			break;
->  		case IORESOURCE_BUS:
+>  	return ret;
+>  }
 > -- 
-> 2.21.0
+> 2.17.1
 > 
