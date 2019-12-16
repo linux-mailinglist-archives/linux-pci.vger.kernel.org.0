@@ -2,51 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CC3E2120067
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2019 09:56:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E9A21120124
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2019 10:30:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbfLPI4D (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 Dec 2019 03:56:03 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39082 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726772AbfLPI4D (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Dec 2019 03:56:03 -0500
-Received: by mail-ot1-f66.google.com with SMTP id 77so8254795oty.6;
-        Mon, 16 Dec 2019 00:56:02 -0800 (PST)
+        id S1727329AbfLPJ2R (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 Dec 2019 04:28:17 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:34696 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727269AbfLPJ2Q (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Dec 2019 04:28:16 -0500
+Received: by mail-ot1-f65.google.com with SMTP id a15so8417998otf.1;
+        Mon, 16 Dec 2019 01:28:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=kYtpzi4OVKtcejBRTQymtnHqpwZ9IMOgfskqRMoMYJk=;
-        b=FjlOHfjUAfcuD6g8sPuagxsQz5NN8GYgQkKB5eMFUDSFQVwSP89GYTqlut3C2mn/YS
-         eBOmWEFi3DmQuTp/qkgihQaDk97WF8xOzKLyWA49CUntFhQp+iGILFSDaYtSjG/0u4Wj
-         LxTSyOx9E//ppj6YpXZ9za8Llr1VmVC8BQXLoBKo0CW3HilP1RhaTFw1FQjulLbUp223
-         mcF16tAkJWH/7f/hSfMy6k/MJDZnaM06WaiErKL/enY0E/Lb5Y7170h/2S8KarFCyZDD
-         CgTiwf8HwXNonQvRTdFiPmrTUBGgr+ds+XVrfdLY1VYSxeJGxr4PI7XI3xP99XeFpSks
-         XLNw==
+        bh=pg5InTeU1+5SFJs1OkGX+MSzCriOaN0CGMKcgjVfhPY=;
+        b=REYdlWoCppoJSnQwoBaE+mlNj/PWBu2hmjNYDPB3EHKKn9ekNqeKBaqE5S+WEvj5eP
+         mIaOoJmFrZRpmT2YwDXMnszw1lDZUYFxnjs/tQVIalouwWG0HEHlE74hFo275GegcKTS
+         dIvktzgT7iSkOp5KFfHf3gICWW9UVUplMnhk+UFJ3hZAdOpZE1UoJy2hwc0ZOjTJSZW0
+         MHzZ+4sWJyuGy/MhabiLR4qrNTF25t3/9Ms5+WBAF1C/qEaz2ezxDv/XS3S6vEn2tWpU
+         vZhy3yPAcT3xNalK5FcjqBI74kSsU+6nNY1b3r9GSfsS9o4ABXvei8js/FgwPczmKU4y
+         9CMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=kYtpzi4OVKtcejBRTQymtnHqpwZ9IMOgfskqRMoMYJk=;
-        b=RPYjI3gwP83QcQqzhxK/prh5vQhNuhlVOh5qOzqkXImdY5cFJ6XypF5jLJ8+OSF8RC
-         XSW6ZpvL7bjMYmSQcnR0DJZtLorc8yK+cSg4EFSr0qh/XHa3YJJnG+QmxXgs4g3xmWvA
-         wkioxxZykys6C7vyDHfM+ClwuiY5cM8h+Pv3kP/RzLX+EN2gdiO8RG9RFqacemGqpWe2
-         zxYAojJ4WoiQBraxp0k0yV9IqiFSl/RAEfAmRnQgHgoZF0F9s5IigrydQ9ApnZH0hoZQ
-         NgBt33MutVTzl0zTPf+KVxs9K3appRL7ZiQ/7Y153M+lY9BzJSzUvLMESmhuZD9iukjz
-         oHVg==
-X-Gm-Message-State: APjAAAWKZa9yihn/6DhMbzE7j9O4osVchadOusA84c5rSIm2rl7ixtaw
-        OUkL1LldHSsGa1nUtJGJcbpiaQsbp71nbcXgQo8=
-X-Google-Smtp-Source: APXvYqxuG1NFvuEk8dd9qCJss5ujNitykdgf+GtcWeO9MK3yKpQRtT4rBhNxc5bDbHMtxvDMRwurT0NSEqfrjfpI+2g=
-X-Received: by 2002:a05:6830:147:: with SMTP id j7mr15118795otp.44.1576486562033;
- Mon, 16 Dec 2019 00:56:02 -0800 (PST)
+        bh=pg5InTeU1+5SFJs1OkGX+MSzCriOaN0CGMKcgjVfhPY=;
+        b=hHtRTBcHm8l66N7v5pfT5LGH+JATA167YOiLMj4nR11SMUTY5SiwFKhNzMD+k1sYCI
+         fVxG/YvQN+feDrq6MPKqs4kavcAQohXejV1vGkk8cvyzUnuzix4ZCvYPLBMbwfCWU3pB
+         7PiZlSUpZN2Xkj5ALst9WuNb8ncWDRTZwjc5c/YdYEYsk2H+F52nhXfWyADUYCwxfX7Q
+         745lZyYtNiRNq+oxIszHeNTjTXPYFqayWgrJ9aQfk8Z3fFxzTbj4tThi3Jhol8Yk56eW
+         4j55BOcHlqNjYk209EUiyeZFUdvlieRTEdJP8zpZidfqdL5+eDim/ufdrS+HbFPWAX0R
+         ccDQ==
+X-Gm-Message-State: APjAAAUAUK73h4B6cVsgWsTI1pEdP4bU334QWNkpnD8L3GKk0stNSXJo
+        EQ0SrU+1Ayle4TOq0Don4t+xjp5H4LitP2L8H68=
+X-Google-Smtp-Source: APXvYqyGefY4ixRGGGVDGR32f4i/isJOglkcBFAsGS3yQVb39Cm/FzUVt3sGpLUqE3PoqwHroNp3cfe6VCKqeo0YAnY=
+X-Received: by 2002:a05:6830:147:: with SMTP id j7mr15240871otp.44.1576488495702;
+ Mon, 16 Dec 2019 01:28:15 -0800 (PST)
 MIME-Version: 1.0
-References: <20191213084748.11210-4-prabhakar.mahadev-lad.rj@bp.renesas.com> <20191213201944.GA190383@google.com>
-In-Reply-To: <20191213201944.GA190383@google.com>
+References: <20191213084748.11210-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20191213184627.GA169673@google.com>
+In-Reply-To: <20191213184627.GA169673@google.com>
 From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Mon, 16 Dec 2019 08:55:35 +0000
-Message-ID: <CA+V-a8sd1c_8-weQjn6_UbAmVELLQa=3Fe+0cdXSm2Sif0HDRQ@mail.gmail.com>
-Subject: Re: [v2 3/6] of: address: add support to parse PCI outbound-ranges
+Date:   Mon, 16 Dec 2019 09:27:49 +0000
+Message-ID: <CA+V-a8ugehRVuV2kwYgkTVp3Vk4ftKsQVfW0=vL4L7BZbDdeNg@mail.gmail.com>
+Subject: Re: [v2 0/6] Add support for PCIe controller to work in endpoint mode
+ on R-Car SoCs
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -74,7 +75,7 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         Shawn Lin <shawn.lin@rock-chips.com>,
         Tom Joseph <tjoseph@cadence.com>,
         Heiko Stuebner <heiko@sntech.de>,
-        linux-rockchip@lists.infradead.org,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
         "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
@@ -84,42 +85,30 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 Hi Bjorn,
 
-Thank you for the review.
+On Fri, Dec 13, 2019 at 9:06 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Fri, Dec 13, 2019 at 08:47:42AM +0000, Lad Prabhakar wrote:
+>
+> > Lad, Prabhakar (6):
+> >   pci: pcie-rcar: preparation for adding endpoint support
+> >   pci: endpoint: add support to handle features of outbound memory
+> >   of: address: add support to parse PCI outbound-ranges
+> >   dt-bindings: PCI: rcar: Add bindings for R-Car PCIe endpoint
+> >     controller
+> >   pci: rcar: add support for rcar pcie controller in endpoint mode
+> >   misc: pci_endpoint_test: add device-id for RZ/G2E pcie controller
+>
+> The next time you post this, please update the subject lines to match
+> existing conventions (capitalize "PCI", description is a complete
+> sentence starting with a capitalized verb, etc").  Run "git log
+> --online" on the file you're changing and make yours look the same.
+>
+>   s/pci: /PCI: /
+>   s/pcie-rcar: /rcar: /
+>   s/pcie/PCIe/
+>   s/device-id/Device ID/
 
-On Fri, Dec 13, 2019 at 9:05 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Fri, Dec 13, 2019 at 08:47:45AM +0000, Lad Prabhakar wrote:
-> > From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> $ git log --oneline drivers/of/address.c
-> 951d48855d86 of: Make of_dma_get_range() work on bus nodes
-> 645c138636de of/address: Fix of_pci_range_parser_one translation of DMA addresses
-> 81db12ee15cb of/address: Translate 'dma-ranges' for parent nodes missing 'dma-ranges'
-> b68ac8dc22eb of: Factor out #{addr,size}-cells parsing
-> c60bf3eb888a of: address: Follow DMA parent for "dma-coherent"
-> 862ab5578f75 of/address: Introduce of_get_next_dma_parent() helper
->
-> Make yours match.  There are a few "of: address: " subjects, but the
-> ones from Rob (the maintainer) use "of/address: ", so I'd use that.
->
-will do the same for next iteration.
-
-> > this patch adds support to parse PCI outbound-ranges, the
-> > outbound-regions are similar to pci ranges except it doesn't
-> > have pci address, below is the format for bar-ranges:
->
-> s/pci/PCI/
-> Capitalize sentences.
->
-will fix that.
-
-> Is "bar-range" an actual DT property?  If it's supposed to be a
-> generic description, "BAR range" would be better.
->
-my bad, it should be outbound-range.
+Thank you for the review, I'll fix the above in next iteration.
 
 Cheers,
 --Prabhakar
-
-> > outbound-ranges = <flags upper32_cpuaddr lower32_cpuaddr
-> >                    upper32_size lower32_size>;
