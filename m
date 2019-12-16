@@ -2,69 +2,72 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B96F11FC49
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2019 01:46:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BDAA11FE97
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2019 07:48:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbfLPAq1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 15 Dec 2019 19:46:27 -0500
-Received: from mail-io1-f50.google.com ([209.85.166.50]:39479 "EHLO
-        mail-io1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726437AbfLPAq1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 15 Dec 2019 19:46:27 -0500
-Received: by mail-io1-f50.google.com with SMTP id c16so3210506ioh.6
-        for <linux-pci@vger.kernel.org>; Sun, 15 Dec 2019 16:46:26 -0800 (PST)
+        id S1726448AbfLPGrX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 Dec 2019 01:47:23 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:37320 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726569AbfLPGrW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Dec 2019 01:47:22 -0500
+Received: by mail-pg1-f194.google.com with SMTP id q127so3112908pga.4
+        for <linux-pci@vger.kernel.org>; Sun, 15 Dec 2019 22:47:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=YrDQlY3igCX/nfFCN5lHwT2I+1UXfedetiyUunyFClw=;
-        b=kFYxvZ4+KpE8j4Ms6N/gwICbSWxAE4iv18uh2AyzFT4eIA1HoXCFNpol/zv0pRKQ/N
-         opErEoPmDiYv/nzz/KUXhoHT/0yFbmzynTMyb0Su+1E7JyJ9CY1Ynlk+6criNwvj6CTl
-         Ew2mXRFds6L2EwdJ+si/RbgNviESPgcFNMLURfYqACVyZVoMI1RjPxJRKZOp2wvhuhga
-         dd7BUrAVMpr+6ZfDJJc+TGMr62zdP8QFg6i7i50W8DleFaxy+oBJ8xptr7IKHyAWxkBN
-         /wE6ITJP6WarVNO8pNufCWyzFLGNX7IiIMw4Ih5Yo9+/QHX2nTannvOhwalqC3qY6gm5
-         wRtA==
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=YPHzDwynlmOFdAU5St+7P/aISgKvPX7+uyfwjb3J5vQ=;
+        b=Q7/FsZxqSwMa+BzKGhf/87FEkHKFRHq6bnEriH4r/8faI2wq55Pf+hh6Dn/1A1L1hE
+         QpDC8Tw2cEi1FMh9isaL5Wm2ZOPxXOZWcDiADyPoncHeRi4uNuQVZ3vevcMF6Zmy/s06
+         xmkVNHiSNCCl1q561PMnqZFynvhDCjvRPKlbXzMKMW6IL5ryRPiH7VvsfdkMe7Zfg23b
+         ZInoD7zU0DqJdxovEj9bVs8SpG+oMV7T58xRpRHQNmDSFiQ6/cgLseuSCkkXC5Tjb9Rc
+         15Kg06QdQIh1L0juCm+0Wblblnt87P6qJKU6kJsjsSXtxS5uEzMSMllQ/53QAInBoJnm
+         HzYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=YrDQlY3igCX/nfFCN5lHwT2I+1UXfedetiyUunyFClw=;
-        b=OLNttuw1tLuBJ0OehInCUwKA5rrzenKXY5zPgyUvT5FhoQp0zU+qAOfRnnu0BA9kAC
-         PY9syx9ZGbeRkjzHqsp2MZ/HSCSmA9iCXVjC3Hq3mtJ/dXVOk+5pBAPRDb+seV9mte7G
-         FcDRJM5hpGYsQ5RXInPHL6m13jSS9DCjx5QrTxS1fxTpJLDvEUdNuxVjyrJ3QBYmu0wl
-         EdyjaXx1YzdXekO9K6xt+2ELjVIoS2mkqT90DVX+75ksE4QfRE08AK9xYArod8rupAQ6
-         yQfTUfhKsIdHSw2dctunuGI8ChQKLEY2gJcbKnd3z974Wj+4VhXDA6KUKqxAcm5NhYWl
-         Jlqg==
-X-Gm-Message-State: APjAAAXZ0bMA18Qy2Ca28d3iS9n2w+OUQGmXz9PexIOdmYEK0yd30ilo
-        o4JWx4jXI56A8SyRChgrtnsA1hQBIB6VCJQRIWg=
-X-Google-Smtp-Source: APXvYqybjSFNQlh0K1LFp8Gj2sFWF1zbABczQQOpNd/nFptH6oLTu66PkXtePL9wW2pqVyncdrW/G19BthbLZXGayDs=
-X-Received: by 2002:a5d:9512:: with SMTP id d18mr16359069iom.85.1576457186413;
- Sun, 15 Dec 2019 16:46:26 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=YPHzDwynlmOFdAU5St+7P/aISgKvPX7+uyfwjb3J5vQ=;
+        b=MYP3jgkmQ0PPl+oIEEVdKl0HpOS1e7x4iolB3y9UVnLgKvE59A/sCVfuuDN/a82egI
+         rlWm5xz3FWtvJO8zeEp3MvRqK9JkfBInQqvQGu5RG0wveOFjOnI6z68vlpFbiLnJRXH3
+         JZf+iiln78w/4ZCDh3ox0VLfpjb4uHrZBOj4xLD5cewyzDvc+npYbBHAxcEdaU1ur8d/
+         3pnirreV+XhCYTlzF27qgi/Z644EW3rp9hZOQLPwcF44O2gGgleX9a47BagDPqXu2N2O
+         InVkOT51Z3wkcOaMfn7K8NSuj/rgYSWCdGHSxcGDJSX0+wbAeLxWkr3m816JegdAUWGb
+         YJrg==
+X-Gm-Message-State: APjAAAU4Mj3iO8ZysbWrEbexnMcwIe5VP9KjKmeDUFwaJd/DniOkHXlh
+        Y++yHDlt+WBUgrZRh3HGFPc/Vw==
+X-Google-Smtp-Source: APXvYqzcXDlL9EfEPDbT8ec8JfIiOjcIeAoXu12dG22SBfYFW7LzFWn8hWSWuniHIINm1Ku+0eA7YQ==
+X-Received: by 2002:a63:753:: with SMTP id 80mr15150274pgh.95.1576478842024;
+        Sun, 15 Dec 2019 22:47:22 -0800 (PST)
+Received: from localhost.localdomain (123-204-46-122.static.seed.net.tw. [123.204.46.122])
+        by smtp.gmail.com with ESMTPSA id g7sm20758515pfq.33.2019.12.15.22.47.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Dec 2019 22:47:21 -0800 (PST)
+From:   Jian-Hong Pan <jian-hong@endlessm.com>
+To:     nsaenzjulienne@suse.de
+Cc:     andrew.murray@arm.com, bcm-kernel-feedback-list@broadcom.com,
+        devicetree@vger.kernel.org, eric@anholt.net, f.fainelli@gmail.com,
+        james.quinlan@broadcom.com, jeremy.linton@arm.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        mark.rutland@arm.com, maz@kernel.org, mbrugger@suse.com,
+        phil@raspberrypi.org, robh+dt@kernel.org, wahrenst@gmx.net,
+        linux@endlessm.com
+Subject: Re: [PATCH v4 2/8] ARM: dts: bcm2711: Enable PCIe controller
+Date:   Mon, 16 Dec 2019 14:46:38 +0800
+Message-Id: <20191216064638.5067-1-jian-hong@endlessm.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191203114743.1294-3-nsaenzjulienne@suse.de>
+References: <20191203114743.1294-3-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
-References: <4fc407f8-2a24-4a04-20fb-5d07d5c24be4@denx.de> <PSXP216MB0438BE9DA58D0AF9F908070680540@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
- <c9f154e5-4214-aa46-2ce2-443b508e1643@denx.de> <PSXP216MB0438AD1041F6BD7DB51363A380540@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
-In-Reply-To: <PSXP216MB0438AD1041F6BD7DB51363A380540@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
-Reply-To: bjorn@helgaas.com
-From:   Bjorn Helgaas <bjorn.helgaas@gmail.com>
-Date:   Sun, 15 Dec 2019 18:46:15 -0600
-Message-ID: <CABhMZUUGTiH-KfPtLQrc6LkXzc7CpkrAcOSmvv6p0Uj4K+_abQ@mail.gmail.com>
-Subject: Re: PCIe hotplug resource issues with PEX switch (NVMe disks) on AMD
- Epyc system
-To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Cc:     Stefan Roese <sr@denx.de>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Sergey Miroshnichenko <s.miroshnichenko@yadro.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> > The logs are also included. Please let me know, if I should do any other
-> > tests and provide the logs.
+Thanks for your effort! System can have USB with this patch series, if the device tree is modified properly.
+Here is the question: Will not the device tree "scb/ranges" in this patch conflict with commit be8af7a9e3cc ("ARM: dts: bcm2711-rpi-4: Enable GENET support")?
 
-Please include these logs in your mail to the list or post them
-someplace where everybody can see them.
+Jian-Hong Pan
