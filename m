@@ -2,401 +2,179 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BD27511FF9E
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2019 09:25:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A2443120031
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2019 09:48:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbfLPIWA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 Dec 2019 03:22:00 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:46623 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726712AbfLPIWA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Dec 2019 03:22:00 -0500
-Received: by mail-ot1-f65.google.com with SMTP id g18so8079509otj.13;
-        Mon, 16 Dec 2019 00:21:59 -0800 (PST)
+        id S1726818AbfLPIro (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 Dec 2019 03:47:44 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41829 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726841AbfLPIrn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Dec 2019 03:47:43 -0500
+Received: by mail-wr1-f66.google.com with SMTP id c9so6162911wrw.8
+        for <linux-pci@vger.kernel.org>; Mon, 16 Dec 2019 00:47:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=B2zr+SxGgQJRKPjCI0ZlCNLHKl8Hq+JbhUCM9tDaYbk=;
-        b=duCNJEibi83CQtLO3lJy8ZeTakoP8uvN3rYY/wkMtOGdcEAoS3hikmezHKWm0CA5Pm
-         9dL0Oz8Qoh2fSfXuethC2UUonF9dhfVvzIhos/7OF5APUXaGD+ozKlWRvy5oN71OKV97
-         O9chmuVrwmzS6M/f8BQsn6RDt+beAkjXHGQHMEqlTRiRl7F4YpovwtXu3z01fBv9t/JU
-         m1RwuykieOwvhYNmnGjevq6+CmQSVn9QW96K+HLJbb3UkIfaKwPx/jivTNNGnMj89B0I
-         oZ7BHnvjJJS4ZrWzDkrsyxIX+gEODf8o+n/a9w5+NEi4szuQ5RjtJHNummuyoNBNNIDb
-         /spw==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=UCb1aLRLTzlVhWNMjZXZKGwuML6x7jOTgc2nDzZf58E=;
+        b=Mspx/K+QfHmNRZPHL6k5AJMceeZwtVPDzqXbxtrPfcHZCmPaxeuVIFSA4Rgd3YhD76
+         fT1t/dd8PunfVmAPihW8z0V8ypiLOnVwMbhLN4+gap6qinf7YXJvcPpIeGJRt3jqvGMP
+         3L8w5kf1WLsdAvw1jjEl1qSFmI63h9J4n93J7R3Y0Qvg/KFDNSb2eFhUeaKcTUaB1jsa
+         zEIaqTjvq2F8nfDEBLolbmA+4K+N1iHBaF7kroMNF6OpMRIEiSp934EJ5jmxrXlU4ZUS
+         D9xcCyfF7GBak9VY4qWm+AmbxpIupPIY1r/KSd43sD5ioVrT3JoOFBgx4Zsazft7dbYf
+         dssw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=B2zr+SxGgQJRKPjCI0ZlCNLHKl8Hq+JbhUCM9tDaYbk=;
-        b=KGnonN9UZE3RiRnYo67kXkumhqBtpQ2tOElH3qEcFYfHIy09sRoTtQJbZlk76Ponor
-         78DavZiQ1uk12M/siczGyySH/V9LXSsV+2MGMeWHjHVX5mMzeYK+77JGGWXifzZObD3o
-         ZaTYA1mFh2d+g3ds2nOY3ebH0AADElBKoV2b+QHzHAjru0tkZkXyJ3krtBTfhUQHd/5k
-         CmJZNFJLyUJcKLMuv5C8mEb5Gi2RR4JUVXE8UUmIFV2/K5K1EbwPmWxMYBQHvV6ky7l+
-         mjUOpwmJciJkHEpG0yhpX1cb23dSOkSHKvwCTSU07pqzQZJ0ZKspLeLj2Ev/khA4Y9zx
-         gHxQ==
-X-Gm-Message-State: APjAAAXJHXQNc4kNfis/AjL5nNYNYRe1NdoYKeMuoSRSnnit8REyJib4
-        WZmU8QkGQnwX6ilb4aGLJskcMCIQQo25s87TC20=
-X-Google-Smtp-Source: APXvYqxQ2QA/IJOqMGi2skPvLoXCAHWfqvnNsrhuIWnq8ZJXE69aNr5mcARZx/rneXf34MbVxtEMNdjkpDEu0iV67GE=
-X-Received: by 2002:a05:6830:147:: with SMTP id j7mr14990640otp.44.1576484518648;
- Mon, 16 Dec 2019 00:21:58 -0800 (PST)
-MIME-Version: 1.0
-References: <20191213084748.11210-3-prabhakar.mahadev-lad.rj@bp.renesas.com> <20191213195727.GA170874@google.com>
-In-Reply-To: <20191213195727.GA170874@google.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Mon, 16 Dec 2019 08:21:31 +0000
-Message-ID: <CA+V-a8saLrvuTiQWaSGK9j6BA=waOSAwNdm_2Ae-EpMKOq-73A@mail.gmail.com>
-Subject: Re: [v2 2/6] pci: endpoint: add support to handle features of
- outbound memory
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=UCb1aLRLTzlVhWNMjZXZKGwuML6x7jOTgc2nDzZf58E=;
+        b=gVOJt6PqvotJoBcaplOZWTxd6FmIoXxMFhNpIW+CAbGpJuWpXiAw47CT/sL6zxERfz
+         M1zPUNC7iJ424E6lidJhR21n2mGc8XG86y9ASau8ErjAPBv4+6xAqOTrNssxQ+700Caw
+         /WxrVM6YeZMP1bf9yRhLb2unCpxwd+MmhFtKaWECzoGvVAtPiWPMpBN/QqwZdS1nfM2r
+         fY5snv8KVgM7ML8hFVeCoXZ9/7wv3T3AwJt0whd/zL9IuOVhGnOOJhK1D5D2iTToq+ZH
+         x7iZLn5uDQ9p8Wf/NO+7JPFxSLenRTfJP7uIiC3O6q9FZ2y5WmYKB//UetCPWRhpzh7B
+         hdEg==
+X-Gm-Message-State: APjAAAVPMJZICRZ2bTVVNIjyjYUXgmvJLWeYFum6enIFtXqJp+70xqGh
+        qfJPpm8YthWynkLhI07e1/k3QQ==
+X-Google-Smtp-Source: APXvYqyLnlEaVpkiF1HI78n8G1vzJZongnJIMYz+ifesrg0LxQphKWK8bFoJHiH4Wxje2YoxtG06rw==
+X-Received: by 2002:adf:fc03:: with SMTP id i3mr29498932wrr.306.1576486061156;
+        Mon, 16 Dec 2019 00:47:41 -0800 (PST)
+Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
+        by smtp.gmail.com with ESMTPSA id z18sm19958406wmf.21.2019.12.16.00.47.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Dec 2019 00:47:40 -0800 (PST)
+References: <20191208210320.15539-1-repk@triplefau.lt> <1jpngxew6l.fsf@starbuckisacylon.baylibre.com> <20191215113634.GB7304@voidbox>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Remi Pommarel <repk@triplefau.lt>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Yue Wang <yue.wang@amlogic.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Simon Horman <horms@verge.net.au>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        linux-rockchip@lists.infradead.org,
-        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH 0/2] PCI: amlogic: Make PCIe working reliably on AXG platforms
+In-reply-to: <20191215113634.GB7304@voidbox>
+Date:   Mon, 16 Dec 2019 09:47:39 +0100
+Message-ID: <1jsglkbqs4.fsf@starbuckisacylon.baylibre.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
 
-thank you for the review.
+On Sun 15 Dec 2019 at 12:36, Remi Pommarel <repk@triplefau.lt> wrote:
 
-On Fri, Dec 13, 2019 at 9:06 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> On Mon, Dec 09, 2019 at 09:32:18AM +0100, Jerome Brunet wrote:
+>> 
+>> On Sun 08 Dec 2019 at 22:03, Remi Pommarel <repk@triplefau.lt> wrote:
+>> 
+>> > PCIe device probing failures have been seen on some AXG platforms and were
+>> > due to unreliable clock signal output. Setting HHI_MIPI_CNTL0[26] bit
+>> > solved the problem. After being contacted about this, vendor reported that
+>> > this bit was linked to PCIe PLL CML output.
+>> 
+>> Thanks for reporting the problem.
+>> 
+>> As Martin pointed out, the CML outputs already exist in the AXG clock
+>> controller but are handled using HHI_PCIE_PLL_CNTL6. Although
+>> incomplete, it seems to be aligned with the datasheet I have (v0.9)
+>> 
+>> According to the same document, HHI_MIPI_CNTL0 belong to the MIPI Phy.
+>> Unfortunately bit 26 is not documented
+>> 
+>> AFAICT, the clock controller is not appropriate driver to deal with this
+>> register/bit
+>> 
 >
-> On Fri, Dec 13, 2019 at 08:47:44AM +0000, Lad Prabhakar wrote:
-> > From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > rcar pcie controller has support to map multiple memory regions
-> > for mapping the outbound memory in local system, this feature
-> > inspires to add support for handling such features in endpoint
-> > framework. similar features exists on other controllers where
-> > outbound regions can be specifically used for low/high priority
-> > transactions, and regions can be flagged and used for allocation
-> > of large/small memory allocations.
-> > This patch adds support to handle such features, where the
-> > properties described for outbound regions are used whenever a
-> > request to memory is made.
+> Regarding both @Martin's and your remark.
 >
-> For this and the other patches, please:
+> Unfortunately the documentation I have and vendor feedback are a bit
+> vague to me. I do agree that CLKID_PCIE_PLL_CML_ENABLE is not a proper
+> name for this bit because this register is MIPI related.
 >
->   - start sentences with a capital letter
->   - leave a blank line between paragraphs
->   - wrap commit log text to use the whole 80 character line (I wrap to
->     75 characters to account for "git log" indenting by 4 spaces)
->   - check your signed-off-by: it shows your name as "Lad, Prabhakar",
->     while your email From: line shows "Lad Prabhakar".  Choose one :)
+> Here is the information I got from the vendor [1]. As you can see
+> HHI_MIPI_CNTL0[29] and HHI_MIPI_CNTL0[26] are related together, and
+> HHI_MIPI_CNTL0[29] is implemented in the clock controller as
+> axg_mipi_enable which is why I used this driver for HHI_MIPI_CNTL0[26].
 >
-sure will fix it next version.
 
-> > diff --git a/drivers/pci/endpoint/pci-epc-mem.c b/drivers/pci/endpoint/pci-epc-mem.c
-> > index 2bf8bd1..4b610cd 100644
-> > --- a/drivers/pci/endpoint/pci-epc-mem.c
-> > +++ b/drivers/pci/endpoint/pci-epc-mem.c
->
-> > -int __pci_epc_mem_init(struct pci_epc *epc, phys_addr_t phys_base, size_t size,
-> > -                    size_t page_size)
-> > +int __pci_epc_mem_init(struct pci_epc *epc, struct pci_epc_mem_window *windows,
-> > +                    int num_windows, size_t page_size)
-> >  {
-> > -     int ret;
-> > -     struct pci_epc_mem *mem;
-> > -     unsigned long *bitmap;
-> > +     struct pci_epc_mem *mem = NULL;
-> > +     unsigned long *bitmap = NULL;
-> >       unsigned int page_shift;
-> > -     int pages;
-> >       int bitmap_size;
-> > +     int pages;
-> > +     int ret;
-> > +     int i;
-> > +
-> > +     epc->mem_windows = 0;
-> > +
-> > +     if (!windows)
-> > +             return -EINVAL;
-> > +
-> > +     if (num_windows <= 0)
-> > +             return -EINVAL;
->
-> Why is num_windows signed?
->
-> >  void pci_epc_mem_exit(struct pci_epc *epc)
-> >  {
-> > -     struct pci_epc_mem *mem = epc->mem;
-> > +     struct pci_epc_mem *mem;
-> > +     int i;
-> > +
-> > +     if (!epc->mem_windows)
-> > +             return;
->
-> If you fix the loop below, why do you even need to test this?
->
-yes makes sense will drop this check.
+Seems I should have paid more attention when axg_mipi_enable.
+Bit 29 is yet another undocumented bit
 
-> > +     for (i = 0; i <= epc->mem_windows; i--) {
->
-> Huh?  "<="?  "i--"?  Surely you mean
->
->         for (i = 0; i < epc->mem_windows; i++) {
->
-oops my bad, will fix it.
+> So maybe I could rename this bit to something MIPI related ?
 
-> > +             mem = epc->mem[i];
-> > +             kfree(mem->bitmap);
-> > +             kfree(epc->mem[i]);
-> > +     }
-> > +     kfree(epc->mem);
-> >
-> >       epc->mem = NULL;
-> > -     kfree(mem->bitmap);
-> > -     kfree(mem);
-> > +     epc->mem_windows = 0;
-> >  }
-> >  EXPORT_SYMBOL_GPL(pci_epc_mem_exit);
-> >
-> > +static int pci_epc_find_best_fit_window(struct pci_epc *epc, size_t size,
-> > +                                     u32 flags)
->
-> Can this just return a struct pci_epc_mem *, so the caller doesn't
-> have to lookup epc->mem[i] again?
->
-yes makes sense will change it to return struct pci_epc_mem *
+This register region is simply not part of the main clock
+controller. The bits in it are not related to this controller but the
+MIPI PHY. It should not have been mapped in this way to begin with.
 
-> > +{
-> > +     size_t window_least_size = 0;
-> > +     int best_fit_window = -1;
-> > +     struct pci_epc_mem *mem;
-> > +     size_t actual_size;
-> > +     size_t avail_size;
-> > +     u32 win_flags;
-> > +     int i;
-> > +
-> > +     for (i = 0; i < epc->mem_windows; i++) {
-> > +             mem = epc->mem[i];
-> > +             win_flags = mem->window.flags;
-> > +
-> > +             actual_size = ALIGN(size, mem->page_size);
-> > +             avail_size = mem->window.size - mem->window.map_size;
-> > +
-> > +             if (win_flags == 0x0) {
-> > +                     if (best_fit_window == -1) {
-> > +                             if (actual_size <= avail_size) {
-> > +                                     best_fit_window = i;
-> > +                                     window_least_size = mem->window.size;
-> > +                             }
-> > +                     } else {
-> > +                             if (actual_size <= avail_size &&
-> > +                                 mem->window.size < window_least_size) {
-> > +                                     best_fit_window = i;
-> > +                                     window_least_size = mem->window.size;
-> > +                             }
-> > +                     }
-> > +             } else {
-> > +                     if (mem->window.map_size &&
-> > +                         (win_flags | PCI_EPC_WINDOW_FLAG_NON_MULTI_ALLOC))
-> > +                             continue;
-> > +
-> > +                     if (!(win_flags | flags))
-> > +                             continue;
-> > +
-> > +                     if (best_fit_window == -1) {
-> > +                             if (actual_size <= avail_size) {
-> > +                                     best_fit_window = i;
-> > +                                     window_least_size = mem->window.size;
-> > +                             }
-> > +                     } else {
-> > +                             if (actual_size <= avail_size &&
-> > +                                 mem->window.size < window_least_size) {
-> > +                                     best_fit_window = i;
-> > +                                     window_least_size = mem->window.size;
-> > +                             }
-> > +                     }
-> > +             }
-> > +     }
-> > +
-> > +     return best_fit_window;
-> > +}
-> > +
-> >  /**
-> >   * pci_epc_mem_alloc_addr() - allocate memory address from EPC addr space
-> >   * @epc: the EPC device on which memory has to be allocated
-> >   * @phys_addr: populate the allocated physical address here
-> > + * @window: populate the window here which will be used to map PCI address
-> >   * @size: the size of the address space that has to be allocated
-> > + * @flags: look for window as requested in flags
-> >   *
-> >   * Invoke to allocate memory address from the EPC address space. This
-> >   * is usually done to map the remote RC address into the local system.
-> >   */
-> >  void __iomem *pci_epc_mem_alloc_addr(struct pci_epc *epc,
-> > -                                  phys_addr_t *phys_addr, size_t size)
-> > +                                  phys_addr_t *phys_addr,
-> > +                                  int *window, size_t size, uint32_t flags)
-> >  {
-> > +     int best_fit = PCI_EPC_DEFAULT_WINDOW;
-> > +     void __iomem *virt_addr = NULL;
-> > +     struct pci_epc_mem *mem;
-> > +     unsigned int page_shift;
-> >       int pageno;
-> > -     void __iomem *virt_addr;
-> > -     struct pci_epc_mem *mem = epc->mem;
-> > -     unsigned int page_shift = ilog2(mem->page_size);
-> >       int order;
-> >
-> > +     if (epc->mem_windows <= 0)
-> > +             return NULL;
-> > +
-> > +     if (epc->mem_windows > 1) {
->
-> Why bother testing epc->mem_windows here?  Just make sure
-> pci_epc_find_best_fit_window() returns the correct thing for
-> "mem_windows == 0" and "mem_windows == 1", and remove both the tests
-> above.
->
-will fix that.
+I can see how it would be convient to model this with a gate to just
+flip the bit when needed but it is just wrong.
 
-> > +             best_fit = pci_epc_find_best_fit_window(epc, size, flags);
-> > +             if (best_fit < 0)
-> > +                     return NULL;
-> > +     }
-> > +
-> > +     mem = epc->mem[best_fit];
-> >       size = ALIGN(size, mem->page_size);
-> > +     if (size > (mem->window.size - mem->window.map_size))
-> > +             return NULL;
-> > +     page_shift = ilog2(mem->page_size);
-> >       order = pci_epc_mem_get_order(mem, size);
-> >
-> >       pageno = bitmap_find_free_region(mem->bitmap, mem->pages, order);
-> >       if (pageno < 0)
-> >               return NULL;
-> >
-> > -     *phys_addr = mem->phys_base + (pageno << page_shift);
-> > +     *phys_addr = mem->window.phys_base + (pageno << page_shift);
-> >       virt_addr = ioremap(*phys_addr, size);
-> > -     if (!virt_addr)
-> > +     if (!virt_addr) {
-> >               bitmap_release_region(mem->bitmap, pageno, order);
-> > +     } else {
-> > +             mem->window.map_size += size;
-> > +             *window = best_fit;
-> > +     }
-> >
-> >       return virt_addr;
-> >  }
-> >  EXPORT_SYMBOL_GPL(pci_epc_mem_alloc_addr);
-> >
-> > +static int pci_epc_get_matching_window(struct pci_epc *epc,
-> > +                                    phys_addr_t phys_addr)
->
-> Return struct pci_epc_mem * again?
->
-yes makes sense.
+The documentation says the register are for the MIPI analog PHY, it
+should be implemented as such and used by the PCIe as needed.
 
-> > +{
-> > +     struct pci_epc_mem *mem;
-> > +     int i;
-> > +
-> > +     for (i = 0; i < epc->mem_windows; i++) {
-> > +             mem = epc->mem[i];
-> > +
-> > +             if (mem->window.phys_base == phys_addr)
-> > +                     return i;
-> > +     }
-> > +
-> > +     return -EINVAL;
-> > +}
-> > +
-> >  /**
-> >   * pci_epc_mem_free_addr() - free the allocated memory address
-> >   * @epc: the EPC device on which memory was allocated
-> > @@ -155,16 +281,26 @@ EXPORT_SYMBOL_GPL(pci_epc_mem_alloc_addr);
-> >  void pci_epc_mem_free_addr(struct pci_epc *epc, phys_addr_t phys_addr,
-> >                          void __iomem *virt_addr, size_t size)
-> >  {
-> > +     struct pci_epc_mem *mem;
-> > +     unsigned int page_shift;
-> > +     int window = 0;
-> >       int pageno;
-> > -     struct pci_epc_mem *mem = epc->mem;
-> > -     unsigned int page_shift = ilog2(mem->page_size);
-> >       int order;
-> >
-> > +     if (epc->mem_windows > 1) {
->
-> Same here (unnecessary test).
->
-will drop it.
+Of course, fixing this (remapping the region and removing
+axg_mipi_enable) will be a bit messy. If you want to make that MIPI Phy
+driver, I can help you with the clock part.
 
-> > +             window = pci_epc_get_matching_window(epc, phys_addr);
-> > +             if (window < 0)
-> > +                     return;
-> > +     }
-> > +
-> > +     mem = epc->mem[window];
-> > +     page_shift = ilog2(mem->page_size);
-> >       iounmap(virt_addr);
-> > -     pageno = (phys_addr - mem->phys_base) >> page_shift;
-> > +     pageno = (phys_addr - mem->window.phys_base) >> page_shift;
-> >       size = ALIGN(size, mem->page_size);
-> >       order = pci_epc_mem_get_order(mem, size);
-> >       bitmap_release_region(mem->bitmap, pageno, order);
-> > +     mem->window.map_size -= size;
-> >  }
-> >  EXPORT_SYMBOL_GPL(pci_epc_mem_free_addr);
 >
-> > @@ -85,7 +126,8 @@ struct pci_epc_mem {
-> >   * @dev: PCI EPC device
-> >   * @pci_epf: list of endpoint functions present in this EPC device
-> >   * @ops: function pointers for performing endpoint operations
-> > - * @mem: address space of the endpoint controller
-> > + * @mem: array of address space of the endpoint controller
-> > + * @mem_windows: number of windows supported by device
-> >   * @max_functions: max number of functions that can be configured in this EPC
-> >   * @group: configfs group representing the PCI EPC device
-> >   * @lock: spinlock to protect pci_epc ops
-> > @@ -94,7 +136,8 @@ struct pci_epc {
-> >       struct device                   dev;
-> >       struct list_head                pci_epf;
-> >       const struct pci_epc_ops        *ops;
-> > -     struct pci_epc_mem              *mem;
-> > +     struct pci_epc_mem              **mem;
-> > +     int                             mem_windows;
+>> >
+>> > This serie adds a way to set this bit through AXG clock gating logic.
+>> > Platforms having this kind of issue could make use of this gating by
+>> > applying a patch to their devicetree similar to:
+>> >
+>> >                 clocks = <&clkc CLKID_USB
+>> >                         &clkc CLKID_MIPI_ENABLE
+>> >                         &clkc CLKID_PCIE_A
+>> > -                       &clkc CLKID_PCIE_CML_EN0>;
+>> > +                       &clkc CLKID_PCIE_CML_EN0
+>> > +                       &clkc CLKID_PCIE_PLL_CML_ENABLE>;
+>> >                 clock-names = "pcie_general",
+>> >                                 "pcie_mipi_en",
+>> >                                 "pcie",
+>> > -                               "port";
+>> > +                               "port",
+>> > +                               "pll_cml_en";
+>> >                 resets = <&reset RESET_PCIE_PHY>,
+>> >                         <&reset RESET_PCIE_A>,
+>> >                         <&reset RESET_PCIE_APB>;
+>> 
+>> A few remarks for your future patches:
+>> 
+>> * You need to document any need binding you introduce:
+>>   It means that there should have been a patch in
+>>   Documentation/devicetree/... before using your newclock name in the
+>>   pcie driver. As Martin pointed out, dt-bindings should be dealt with
+>>   in their own patches
+>> 
+>> >
+>> >
+>> > Remi Pommarel (2):
+>> >   clk: meson: axg: add pcie pll cml gating
+>> 
+>> Whenever possible, patches intended for different maintainers should be
+>> sent separately (different series)
 >
-> Can't this be unsigned int and then there's no need to check
-> "mem_windows < 0"?
+> Thanks, will do both of the above remarks.
 >
-yes will change it unsigned int.
+>> 
+>> >   PCI: amlogic: Use PCIe pll gate when available
+>> >
+>> >  drivers/clk/meson/axg.c                | 3 +++
+>> >  drivers/clk/meson/axg.h                | 2 +-
+>> >  drivers/pci/controller/dwc/pci-meson.c | 5 +++++
+>> >  include/dt-bindings/clock/axg-clkc.h   | 1 +
+>> >  4 files changed, 10 insertions(+), 1 deletion(-)
+>> 
+>
+> Thanks for reviewing this.
+>
+> [1] https://i.snipboard.io/bHMPeq.jpg
 
-Cheers,
---Prabhakar
-
-> >       u8                              max_functions;
-> >       struct config_group             *group;
-> >       /* spinlock to protect against concurrent access of EP controller */
