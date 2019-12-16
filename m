@@ -2,86 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A039120397
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2019 12:18:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D21D912039E
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2019 12:19:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727192AbfLPLS1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 Dec 2019 06:18:27 -0500
-Received: from mx2.suse.de ([195.135.220.15]:46122 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727059AbfLPLS1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 16 Dec 2019 06:18:27 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 0C713AD4F;
-        Mon, 16 Dec 2019 11:18:25 +0000 (UTC)
-Message-ID: <e94310c04571b23e57d802aecb4789d7c6d35d74.camel@suse.de>
-Subject: Re: [PATCH v5 1/6] dt-bindings: PCI: Add bindings for brcmstb's
- PCIe device
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Matthias Brugger <mbrugger@suse.com>, andrew.murray@arm.com,
-        maz@kernel.org, linux-kernel@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>,
-        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
-        phil@raspberrypi.org, jeremy.linton@arm.com,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-rpi-kernel@lists.infradead.org, james.quinlan@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, wahrenst@gmx.net
-Date:   Mon, 16 Dec 2019 12:18:23 +0100
-In-Reply-To: <39a8ab96-2b32-1d9c-63cd-8114a58f723c@suse.com>
-References: <20191216110113.30436-1-nsaenzjulienne@suse.de>
-         <20191216110113.30436-2-nsaenzjulienne@suse.de>
-         <39a8ab96-2b32-1d9c-63cd-8114a58f723c@suse.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-4ZM5h4FNm971ZXqZ/T37"
-User-Agent: Evolution 3.34.2 
-MIME-Version: 1.0
+        id S1727132AbfLPLSz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 Dec 2019 06:18:55 -0500
+Received: from mail.sysgo.com ([176.9.12.79]:57480 "EHLO mail.sysgo.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727059AbfLPLSz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 16 Dec 2019 06:18:55 -0500
+From:   David Engraf <david.engraf@sysgo.com>
+To:     thierry.reding@gmail.com, lorenzo.pieralisi@arm.com,
+        andrew.murray@arm.com, bhelgaas@google.com, jonathanh@nvidia.com
+Cc:     linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, David Engraf <david.engraf@sysgo.com>
+Subject: [PATCH v2] PCI: tegra: Fix return value check of pm_runtime_get_sync
+Date:   Mon, 16 Dec 2019 12:18:25 +0100
+Message-Id: <20191216111825.28136-1-david.engraf@sysgo.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191216102208.GO24359@e119886-lin.cambridge.arm.com>
+References: <20191216102208.GO24359@e119886-lin.cambridge.arm.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+pm_runtime_get_sync() returns the device's usage counter. This might
+be >0 if the device is already powered up or CONFIG_PM is disabled.
 
---=-4ZM5h4FNm971ZXqZ/T37
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Abort probe function on real error only.
 
-On Mon, 2019-12-16 at 12:14 +0100, Matthias Brugger wrote:
-> > +
-> > +  msi-controller:
-> > +    description: Identifies the node as an MSI controller.
->=20
-> are you missing "type: boolean" here?
+Fixes: da76ba50963b ("PCI: tegra: Add power management support")
+Signed-off-by: David Engraf <david.engraf@sysgo.com>
+---
+ drivers/pci/controller/pci-tegra.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-As per RobH's suggestion[1] I assumed the type on msi-controller and msi-pa=
-rent
-is alredy defined.
-
-Regards,
-Nicolas
-
-[1] https://patchwork.kernel.org/patch/11239717/#23008585
-
-
---=-4ZM5h4FNm971ZXqZ/T37
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl33Z/8ACgkQlfZmHno8
-x/7P7gf+NuNPpIsO6gLiH8DJTHrzG+A4soBpSgB0r3XzWZfc0Rem+xaaojNEVDTT
-po1m4X5pXKLejfpfB7srdeIweCg2xg3Pm61W6750iDhgKOtF7CNj91zkYkkSMIvs
-0lvWgo25TX1z3O/Z+dfRrPSMKMR1Rhos4KLxFALXiSakdoPsaoetmz7pkAdgXwqr
-0jKv3rerg41Q0yJi/zQSJcbvFCGd05ghq2Z+SdUtnqu5Iw/VEmorK6bo22W911w9
-3Kr9RHGM6dtTTMqS3rZWk3zfx1HuwhXjU93ObTavjtYqSL0UrCt9RCLoMgDA95hM
-f44IH0GrZdZuUqHOO0YN77qenyPzlg==
-=xgVD
------END PGP SIGNATURE-----
-
---=-4ZM5h4FNm971ZXqZ/T37--
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index 673a1725ef38..090b632965e2 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -2798,7 +2798,7 @@ static int tegra_pcie_probe(struct platform_device *pdev)
+ 
+ 	pm_runtime_enable(pcie->dev);
+ 	err = pm_runtime_get_sync(pcie->dev);
+-	if (err) {
++	if (err < 0) {
+ 		dev_err(dev, "fail to enable pcie controller: %d\n", err);
+ 		goto teardown_msi;
+ 	}
+-- 
+2.17.1
 
