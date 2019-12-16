@@ -2,88 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 48BCC120172
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2019 10:49:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 964E912023F
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Dec 2019 11:22:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727106AbfLPJtM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 Dec 2019 04:49:12 -0500
-Received: from mx2.suse.de ([195.135.220.15]:43718 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726992AbfLPJtM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 16 Dec 2019 04:49:12 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1D467AF13;
-        Mon, 16 Dec 2019 09:49:11 +0000 (UTC)
-Message-ID: <6384f1dac3bfbcad625138b2d528b1855c4a92a0.camel@suse.de>
-Subject: Re: [PATCH v4 2/8] ARM: dts: bcm2711: Enable PCIe controller
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Jian-Hong Pan <jian-hong@endlessm.com>
-Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
-        f.fainelli@gmail.com, robh+dt@kernel.org,
-        linux-pci@vger.kernel.org, phil@raspberrypi.org,
-        linux-kernel@vger.kernel.org, jeremy.linton@arm.com,
-        eric@anholt.net, mbrugger@suse.com,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org, james.quinlan@broadcom.com,
-        maz@kernel.org, andrew.murray@arm.com, linux@endlessm.com,
-        linux-arm-kernel@lists.infradead.org, wahrenst@gmx.net
-Date:   Mon, 16 Dec 2019 10:49:08 +0100
-In-Reply-To: <20191216064638.5067-1-jian-hong@endlessm.com>
-References: <20191203114743.1294-3-nsaenzjulienne@suse.de>
-         <20191216064638.5067-1-jian-hong@endlessm.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-ca9uKgWQRdtwH/iqxJQ5"
-User-Agent: Evolution 3.34.2 
+        id S1727378AbfLPKWM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 Dec 2019 05:22:12 -0500
+Received: from foss.arm.com ([217.140.110.172]:48636 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727099AbfLPKWM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 16 Dec 2019 05:22:12 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 87D141FB;
+        Mon, 16 Dec 2019 02:22:11 -0800 (PST)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 010A03F6CF;
+        Mon, 16 Dec 2019 02:22:10 -0800 (PST)
+Date:   Mon, 16 Dec 2019 10:22:09 +0000
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     David Engraf <david.engraf@sysgo.com>
+Cc:     thierry.reding@gmail.com, lorenzo.pieralisi@arm.com,
+        bhelgaas@google.com, jonathanh@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: tegra: Correctly handle return code of
+ pm_runtime_get_sync()
+Message-ID: <20191216102208.GO24359@e119886-lin.cambridge.arm.com>
+References: <20191216093415.27320-1-david.engraf@sysgo.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191216093415.27320-1-david.engraf@sysgo.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Mon, Dec 16, 2019 at 10:34:15AM +0100, David Engraf wrote:
+> pm_runtime_get_sync() returns the device's usage counter. This might
+> be >0 if the device is already powered up or CONFIG_PM is disabled.
+> 
+> Abort probe function on real error only.
+> 
+> Signed-off-by: David Engraf <david.engraf@sysgo.com>
 
---=-ca9uKgWQRdtwH/iqxJQ5
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Thanks for this, looks OK to me.
 
-Hi Jian-Hong,
-On Mon, 2019-12-16 at 14:46 +0800, Jian-Hong Pan wrote:
-> Thanks for your effort! System can have USB with this patch series, if th=
-e
+As this is a fix, can you add the following fixes tag?
 
-:)
+Fixes: da76ba50963b ("PCI: tegra: Add power management support")
 
-> device tree is modified properly.
-> Here is the question: Will not the device tree "scb/ranges" in this patch
-> conflict with commit be8af7a9e3cc ("ARM: dts: bcm2711-rpi-4: Enable GENET
-> support")?
+And whilst doing that can you rename the subject to "PCI: tegra: Fix return
+value check of pm_runtime_get_sync" - it's slightly shorter and has the
+word fix in the title.
 
-You're right, the patch needs to be refreshed.
+Thanks,
 
-I'm going to send a v5 of the series factoring out all the log2.h changes, =
-and
-addressing this.
+Andrew Murray
 
-Regards,
-Nicolas
-
-
---=-ca9uKgWQRdtwH/iqxJQ5
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl33UxQACgkQlfZmHno8
-x/5qZAgAspvPWdeld7fMjDA7RgPcepOG/7Tlr7qM5Pj4OqiMED5mmllk/dlq9t9v
-I2VQp6/JpG1KuEjaSQdy7i+0xJrQsl9NAKUyqDnp704MXqpLHa7prZUehxuIsyGf
-jvVThTMIcdp8/XBp5QfuuVIZ/6DkCh0eg/P1f/SXsImRR6waGSprkWfertIMgf+L
-nKsupBFPruKtVSAUPuI33r8TvQxRJsU7qdMQ+djmPI6CpChYtzFfUk0xqYHvgGKB
-B8h+kjrZLw1G4rlN8o0BMgnO8EX/fvuH3kKMYMpQAxWAlRoMfbcu7vFg+uiaOY/t
-2RDihMFD4GAnIcNHrU0l5J8RKBGkVA==
-=WVjN
------END PGP SIGNATURE-----
-
---=-ca9uKgWQRdtwH/iqxJQ5--
-
+> ---
+>  drivers/pci/controller/pci-tegra.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+> index 673a1725ef38..090b632965e2 100644
+> --- a/drivers/pci/controller/pci-tegra.c
+> +++ b/drivers/pci/controller/pci-tegra.c
+> @@ -2798,7 +2798,7 @@ static int tegra_pcie_probe(struct platform_device *pdev)
+>  
+>  	pm_runtime_enable(pcie->dev);
+>  	err = pm_runtime_get_sync(pcie->dev);
+> -	if (err) {
+> +	if (err < 0) {
+>  		dev_err(dev, "fail to enable pcie controller: %d\n", err);
+>  		goto teardown_msi;
+>  	}
+> -- 
+> 2.17.1
+> 
