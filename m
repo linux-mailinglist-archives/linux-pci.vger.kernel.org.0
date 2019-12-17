@@ -2,85 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 967EC122EC5
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Dec 2019 15:31:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E3377122EE4
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Dec 2019 15:36:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729146AbfLQObQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 Dec 2019 09:31:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34116 "EHLO mail.kernel.org"
+        id S1726920AbfLQOge (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 Dec 2019 09:36:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728896AbfLQObQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 17 Dec 2019 09:31:16 -0500
+        id S1726402AbfLQOge (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 17 Dec 2019 09:36:34 -0500
 Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2AB9F21D7D;
-        Tue, 17 Dec 2019 14:31:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A6232072D;
+        Tue, 17 Dec 2019 14:36:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576593075;
-        bh=5VfUppQ1jeD0B8W3z2U/PZ/wqjDbBboTOoj2Qsp6Cfc=;
+        s=default; t=1576593393;
+        bh=otz2sbQzhiJxVm0FVlkP/Fn8/XLXf3QBj2FIs0MC7Gk=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=0reMdQjRLKDNvRpgkXHzmk/RDkzXG9mkrlzYREgA9CO8KKhu+5BNgru+Y/XhShEvu
-         RqY7BYrFsWOwIt/85L4xvcLnMp/mEWFXR3vsDWD0Xuh74N/K7gGbjHoO4om6ecxYkx
-         efBwZrFHcO69xztUj3lg4uDu5bS8Dv1T4bk5YVrE=
-Date:   Tue, 17 Dec 2019 08:31:13 -0600
+        b=w9SIW0zQkbYVcBqz00/udDKv5a92C/DnYCHoDcPKL6xU+/cw0TIuJq6yLBC+enyoM
+         9xLxyZECpAtZpupYeIpLUrqeN8C58Ulw0RVHo697gNVYXszldzHSA2PoP14OFGNT/a
+         jRiF7MINmBG1XVS79/ct2p6imJdnXM8cN3suiKgI=
+Date:   Tue, 17 Dec 2019 08:36:32 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Yurii Monakov <monakov.y@gmail.com>
-Cc:     linux-pci@vger.kernel.org, m-karicheri2@ti.com,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH] PCI: keystone: Fix outbound region mapping
-Message-ID: <20191217143113.GA157932@google.com>
+To:     David Engraf <david.engraf@sysgo.com>
+Cc:     thierry.reding@gmail.com, lorenzo.pieralisi@arm.com,
+        andrew.murray@arm.com, jonathanh@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Subject: Re: [PATCH v2] PCI: tegra: Fix return value check of
+ pm_runtime_get_sync
+Message-ID: <20191217143632.GA160591@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191004154811.GA31397@monakov-y.office.kontur-niirs.ru>
+In-Reply-To: <20191216111825.28136-1-david.engraf@sysgo.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Kishon]
-
-On Fri, Oct 04, 2019 at 06:48:11PM +0300, Yurii Monakov wrote:
-> PCIe window memory start address should be incremented by OB_WIN_SIZE
-> megabytes (8 MB) instead of plain OB_WIN_SIZE (8).
+On Mon, Dec 16, 2019 at 12:18:25PM +0100, David Engraf wrote:
+> pm_runtime_get_sync() returns the device's usage counter. This might
+> be >0 if the device is already powered up or CONFIG_PM is disabled.
 > 
-> Signed-off-by: Yurii Monakov <monakov.y@gmail.com>
+> Abort probe function on real error only.
+> 
+> Fixes: da76ba50963b ("PCI: tegra: Add power management support")
+> Signed-off-by: David Engraf <david.engraf@sysgo.com>
 
-I added:
+I added Andrew's ack and a stable tag for v4.17+.  Also cc'd
+Manikanta, author of da76ba50963b.
 
-  Fixes: e75043ad9792 ("PCI: keystone: Cleanup outbound window configuration")
-  Acked-by: Andrew Murray <andrew.murray@arm.com>
-  Cc: stable@vger.kernel.org      # v4.20+
-
-and cc'd Kishon (author of e75043ad9792) and put this on my
-pci/host-keystone branch for v5.6.  Lorenzo may pick this up when he
-returns.
-
-I'd like the commit message to say what this fixes.  Currently it just
-restates the code change, which I can see from the diff.
-
-My *guess* is that previously, we could only access 8MB of MMIO space
-and this patch increases that to 8MB * num_viewport.
+I put this on my pci/host-tegra branch for v5.6 for now.  Lorenzo may
+move this when he returns.
 
 > ---
->  drivers/pci/controller/dwc/pci-keystone.c | 2 +-
+>  drivers/pci/controller/pci-tegra.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-> index af677254a072..f19de60ac991 100644
-> --- a/drivers/pci/controller/dwc/pci-keystone.c
-> +++ b/drivers/pci/controller/dwc/pci-keystone.c
-> @@ -422,7 +422,7 @@ static void ks_pcie_setup_rc_app_regs(struct keystone_pcie *ks_pcie)
->  				   lower_32_bits(start) | OB_ENABLEN);
->  		ks_pcie_app_writel(ks_pcie, OB_OFFSET_HI(i),
->  				   upper_32_bits(start));
-> -		start += OB_WIN_SIZE;
-> +		start += OB_WIN_SIZE * SZ_1M;
->  	}
+> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+> index 673a1725ef38..090b632965e2 100644
+> --- a/drivers/pci/controller/pci-tegra.c
+> +++ b/drivers/pci/controller/pci-tegra.c
+> @@ -2798,7 +2798,7 @@ static int tegra_pcie_probe(struct platform_device *pdev)
 >  
->  	val = ks_pcie_app_readl(ks_pcie, CMD_STATUS);
+>  	pm_runtime_enable(pcie->dev);
+>  	err = pm_runtime_get_sync(pcie->dev);
+> -	if (err) {
+> +	if (err < 0) {
+>  		dev_err(dev, "fail to enable pcie controller: %d\n", err);
+>  		goto teardown_msi;
+>  	}
 > -- 
 > 2.17.1
 > 
