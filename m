@@ -2,59 +2,121 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 49DA812327F
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Dec 2019 17:31:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DDF58123281
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Dec 2019 17:31:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728689AbfLQQay (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 Dec 2019 11:30:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56240 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728238AbfLQQay (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 17 Dec 2019 11:30:54 -0500
-Received: from redsun51.ssa.fujisawa.hgst.com (unknown [199.255.47.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3BF321D7D;
-        Tue, 17 Dec 2019 16:30:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576600253;
-        bh=ELfXB4kOCjfXxNtciCDztOtMLcyNgsTVpl1df/9690w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GWmrwLdAgvD5xSPvzsrJg77S+A7dTxN87nd2VffHWcF4pV8TjcqRSwkdM4A/MrEAh
-         Ap71rdESnwomCphxbW3K+rxwZ1hU1IDi3k2QJu7HSdUjh7HdE6mT1ScpsSAn9W3Al6
-         rq/TZpCJjGQprEZo4n3fVTf/kCPK8H6pPXjY4orw=
-Date:   Wed, 18 Dec 2019 01:30:46 +0900
-From:   Keith Busch <kbusch@kernel.org>
-To:     Stefan Roese <sr@denx.de>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Sergey Miroshnichenko <s.miroshnichenko@yadro.com>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Subject: Re: PCIe hotplug resource issues with PEX switch (NVMe disks) on AMD
- Epyc system
-Message-ID: <20191217163046.GA2029@redsun51.ssa.fujisawa.hgst.com>
-References: <20191216233759.GA249123@google.com>
- <8a0d7768-55f1-c1c8-1507-04e977184a67@denx.de>
+        id S1728224AbfLQQbg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 Dec 2019 11:31:36 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:33403 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728150AbfLQQbg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Dec 2019 11:31:36 -0500
+Received: by mail-lf1-f67.google.com with SMTP id n25so7438626lfl.0
+        for <linux-pci@vger.kernel.org>; Tue, 17 Dec 2019 08:31:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=9EegNCE760gkNB7fbdhTt+nN8Pyj1MuF76V2hDSQ5So=;
+        b=QTSmVuKPPBV58aa4KhLFDuFg51YfC/p+yXYOw35x1xiknOuj4AisCqb42R9bwpnKkJ
+         xC6euyifMhtKVIcKGilLYSa1esUvTgtOOxkC/vxpR94fu8JakCwyJeVg8mRNEampRoCH
+         BUBmPCNlqmizB1D0cgiLCuJz90rDvFRMemY0vAx77nWoF8T/FmllznKUwhigJeSwyplc
+         3D0GFfRmIYjiwol6r+a+uACo9QBzK8yfA/yyMwaoGx5EmmM+Ikiw4Lr07bFcuO+T/JNd
+         vCkgt0fpZDwtpGIqlHIuFdZcxWCFtETO7MLMsGJgojdsK9o+0LpPRnT4gZ18t//U+Z+l
+         6mhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=9EegNCE760gkNB7fbdhTt+nN8Pyj1MuF76V2hDSQ5So=;
+        b=mDVFKiy7rERzyaFyslt0zvRP/4Q6SsukrBoIv+W1w/c98mkQtzHUuYg1PHXfH+YdJt
+         6n2IAPrz/0GCRiaNqDVfM+r2rzphFuJH5mKX57uLHazUwnYwUi62TXNPMhcukb1k57zj
+         tw1YzQZEh53GCJicd7ikNwcVrDPebT6kHz4dgZZ1d1/563imslYpoUFSyGSiD6uDoOBP
+         Q1B1+jeCe2/s97uv8G3umThJrgCoRx1t0FOb76B1pB1sVPz4T+xPj/ZoRs2McVMX/84e
+         7+6B1PLr8hgrAtfrSFsFxT6MkHxE7b4XkFLa02oNGYnf2GRBUq1dJIEd3EmmNWXOtP+l
+         8tFw==
+X-Gm-Message-State: APjAAAVJEVG/Q+UEiMXy8+t+yvn6hfyuHofnO//hAAhy1dpiCQqL2JR+
+        4azYP6ujsZIFsPbKOso2pps2MKEzur4=
+X-Google-Smtp-Source: APXvYqyD8SAlS4HzbVg5kqGIGSk/Hyt8quOYrPH8Bu+v0CMTkQaVwhw0TAlyqd3HZVixLjyNr/KISA==
+X-Received: by 2002:ac2:51a4:: with SMTP id f4mr3471468lfk.76.1576600294014;
+        Tue, 17 Dec 2019 08:31:34 -0800 (PST)
+Received: from monakov-y.xu ([81.222.243.34])
+        by smtp.gmail.com with ESMTPSA id d9sm12684137lja.73.2019.12.17.08.31.33
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 17 Dec 2019 08:31:33 -0800 (PST)
+Date:   Tue, 17 Dec 2019 19:31:31 +0300
+From:   Yurii Monakov <monakov.y@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, m-karicheri2@ti.com,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH] PCI: keystone: Fix outbound region mapping
+Message-ID: <20191217193131.2dc1c53c@monakov-y.xu>
+In-Reply-To: <20191217143113.GA157932@google.com>
+References: <20191004154811.GA31397@monakov-y.office.kontur-niirs.ru>
+        <20191217143113.GA157932@google.com>
+X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8a0d7768-55f1-c1c8-1507-04e977184a67@denx.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 02:54:06PM +0100, Stefan Roese wrote:
-> On 17.12.19 00:37, Bjorn Helgaas wrote:
-> >    - Boot with all four PLX slots occupied by NVMe devices.  The BIOS
-> >      may assign space to accommodate them all.  If it does, you should
-> >      be able to hot-remove and add devices after boot.
-> 
-> Unfortunately, that's not an option. We need to be able to boot with
-> e.g. one NVMe device and hot-plug one or more devices later.
+On Tue, 17 Dec 2019 08:31:13 -0600, Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-That was also my suggestion, but not necessarily as a "solution". It's
-just to see if it works, which might indicate what the kernel could do
-differently.
+> [+cc Kishon]
+> 
+> On Fri, Oct 04, 2019 at 06:48:11PM +0300, Yurii Monakov wrote:
+> > PCIe window memory start address should be incremented by OB_WIN_SIZE
+> > megabytes (8 MB) instead of plain OB_WIN_SIZE (8).
+> > 
+> > Signed-off-by: Yurii Monakov <monakov.y@gmail.com>  
+> 
+> I added:
+> 
+>   Fixes: e75043ad9792 ("PCI: keystone: Cleanup outbound window configuration")
+>   Acked-by: Andrew Murray <andrew.murray@arm.com>
+>   Cc: stable@vger.kernel.org      # v4.20+
+> 
+> and cc'd Kishon (author of  e75043ad9792) and put this on my
+> pci/host-keystone branch for v5.6.  Lorenzo may pick this up when he
+> returns.
+> 
+> I'd like the commit message to say what this fixes.  Currently it just
+> restates the code change, which I can see from the diff.
+This was my first patch sent to LKML, I'm sorry for inconvenience.
+Should I take any actions to fix this?
+
+> My *guess* is that previously, we could only access 8MB of MMIO space
+> and this patch increases that to 8MB * num_viewport.
+Technically you are right. It seems that without this patch all outbound
+regions were mapped to first 8 MB. But this is obviously a bug, because
+comment above the loop states that the intent was to map num_ob_windows
+to linear MMIO space. And prior to e75043ad9792 'start' variable was
+incremented by 'tr_size = (1 << 3) * SZ_1M'.
+
+Best Regards,
+Yurii Monakov
+
+> > ---
+> >  drivers/pci/controller/dwc/pci-keystone.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+> > index af677254a072..f19de60ac991 100644
+> > --- a/drivers/pci/controller/dwc/pci-keystone.c
+> > +++ b/drivers/pci/controller/dwc/pci-keystone.c
+> > @@ -422,7 +422,7 @@ static void ks_pcie_setup_rc_app_regs(struct keystone_pcie *ks_pcie)
+> >  				   lower_32_bits(start) | OB_ENABLEN);
+> >  		ks_pcie_app_writel(ks_pcie, OB_OFFSET_HI(i),
+> >  				   upper_32_bits(start));
+> > -		start += OB_WIN_SIZE;
+> > +		start += OB_WIN_SIZE * SZ_1M;
+> >  	}
+> >  
+> >  	val = ks_pcie_app_readl(ks_pcie, CMD_STATUS);
+> > -- 
+> > 2.17.1
+> >   
+
