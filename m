@@ -2,39 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C8D1122959
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Dec 2019 11:59:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F40A3122979
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Dec 2019 12:05:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbfLQK7Q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 Dec 2019 05:59:16 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:44043 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726623AbfLQK7Q (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Dec 2019 05:59:16 -0500
+        id S1726608AbfLQLFb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 Dec 2019 06:05:31 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:51317 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726383AbfLQLFa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Dec 2019 06:05:30 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576580355;
+        s=mimecast20190719; t=1576580729;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=tAVUgYEbOKAmbmGHd4mLJpWS0BdtmbZWYoTyqnMHjpM=;
-        b=Lj1XrahblT7yT6L0KhG7O/uPLzA4d8+4dd6lFPL2dmen4zji7mMgqCt4XMmOh9ztw5zgCN
-        msYIPEsa9ZnL6BHpEoyRUM4syT+3kGCAyJWoOvjDPEPFhIPxfeAf3tHwlKjBGuEG5mkTSl
-        6QBYQ3Bqa+CaDjGY4FZx1nklxZv1qxc=
+        bh=mm4iGWCY3iczUepBnQaYVu5axa9a4WU8aq4/kTqrKKs=;
+        b=XNU7BsvY1wRJo/1bYbbw2Da97ZKLKNwUy/MX599Z5dlDYQp3dZbFQK25t43uqBYmxWIq79
+        OQ0s2A3WxDNbVUuAJEvKsJejaeb8Wmfs0dJykyH7z3e8y2zqrHfM3ZjbKHeYV7G8h1AubI
+        uHDXx7bF8NYccFphtfKHS10pbG8DkSY=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-241-toc7B--iMgaH3SihD5o5Wg-1; Tue, 17 Dec 2019 05:59:12 -0500
-X-MC-Unique: toc7B--iMgaH3SihD5o5Wg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+ us-mta-177-UfeWOGhgMNO_hNvcjVNqkQ-1; Tue, 17 Dec 2019 06:05:28 -0500
+X-MC-Unique: UfeWOGhgMNO_hNvcjVNqkQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D132618FF662;
-        Tue, 17 Dec 2019 10:59:08 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9A40710054E3;
+        Tue, 17 Dec 2019 11:05:25 +0000 (UTC)
 Received: from [10.36.116.117] (ovpn-116-117.ams2.redhat.com [10.36.116.117])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C1D465D9C9;
-        Tue, 17 Dec 2019 10:59:04 +0000 (UTC)
-Subject: Re: [PATCH v3 01/13] iommu/arm-smmu-v3: Drop __GFP_ZERO flag from DMA
- allocation
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 682B260BE0;
+        Tue, 17 Dec 2019 11:05:20 +0000 (UTC)
+Subject: Re: [PATCH v3 03/13] iommu/arm-smmu-v3: Support platform SSID
 To:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
         linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
@@ -45,18 +44,18 @@ Cc:     joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com,
         will@kernel.org, robin.murphy@arm.com, bhelgaas@google.com,
         jonathan.cameron@huawei.com, zhangfei.gao@linaro.org
 References: <20191209180514.272727-1-jean-philippe@linaro.org>
- <20191209180514.272727-2-jean-philippe@linaro.org>
+ <20191209180514.272727-4-jean-philippe@linaro.org>
 From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <2917e0a3-e351-69fe-5e67-adeda9d40617@redhat.com>
-Date:   Tue, 17 Dec 2019 11:59:03 +0100
+Message-ID: <e5b9a017-585a-5425-77bd-be40b86010e6@redhat.com>
+Date:   Tue, 17 Dec 2019 12:05:18 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <20191209180514.272727-2-jean-philippe@linaro.org>
+In-Reply-To: <20191209180514.272727-4-jean-philippe@linaro.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
@@ -65,65 +64,104 @@ X-Mailing-List: linux-pci@vger.kernel.org
 Hi Jean,
 
 On 12/9/19 7:05 PM, Jean-Philippe Brucker wrote:
-> Since commit 518a2f1925c3 ("dma-mapping: zero memory returned from
-> dma_alloc_*"), dma_alloc_* always initializes memory to zero, so there
-> is no need to use dma_zalloc_* or pass the __GFP_ZERO flag anymore.
-> 
-> The flag was introduced by commit 04fa26c71be5 ("iommu/arm-smmu: Convert
-> DMA buffer allocations to the managed API"), since the managed API
-> didn't provide a dmam_zalloc_coherent() function.
+> For platform devices that support SubstreamID (SSID), firmware provides
+> the number of supported SSID bits. Restrict it to what the SMMU supports
+> and cache it into master->ssid_bits, which will also be used for PCI
+> PASID.
 > 
 > Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> ---
+>  drivers/iommu/arm-smmu-v3.c | 13 +++++++++++++
+>  drivers/iommu/of_iommu.c    |  6 +++++-
+>  include/linux/iommu.h       |  2 ++
+>  3 files changed, 20 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+> index d4e8b7f8d9f4..837b4283b4dc 100644
+> --- a/drivers/iommu/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm-smmu-v3.c
+> @@ -292,6 +292,12 @@
+>  
+>  #define CTXDESC_CD_1_TTB0_MASK		GENMASK_ULL(51, 4)
+>  
+> +/*
+> + * When the SMMU only supports linear context descriptor tables, pick a
+> + * reasonable size limit (64kB).
+> + */
+> +#define CTXDESC_LINEAR_CDMAX		ilog2(SZ_64K / (CTXDESC_CD_DWORDS << 3))
+> +
+>  /* Convert between AArch64 (CPU) TCR format and SMMU CD format */
+>  #define ARM_SMMU_TCR2CD(tcr, fld)	FIELD_PREP(CTXDESC_CD_0_TCR_##fld, \
+>  					FIELD_GET(ARM64_TCR_##fld, tcr))
+> @@ -638,6 +644,7 @@ struct arm_smmu_master {
+>  	u32				*sids;
+>  	unsigned int			num_sids;
+>  	bool				ats_enabled;
+> +	unsigned int			ssid_bits;
+>  };
+>  
+>  /* SMMU private data for an IOMMU domain */
+> @@ -2571,6 +2578,12 @@ static int arm_smmu_add_device(struct device *dev)
+>  		}
+>  	}
+>  
+> +	master->ssid_bits = min(smmu->ssid_bits, fwspec->num_pasid_bits);
+> +
+> +	if (!(smmu->features & ARM_SMMU_FEAT_2_LVL_CDTAB))
+> +		master->ssid_bits = min_t(u8, master->ssid_bits,
+> +					  CTXDESC_LINEAR_CDMAX);
+> +
+>  	group = iommu_group_get_for_dev(dev);
+>  	if (!IS_ERR(group)) {
+>  		iommu_group_put(group);
+> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
+> index 026ad2b29dcd..b3ccb2f7f1c7 100644
+> --- a/drivers/iommu/of_iommu.c
+> +++ b/drivers/iommu/of_iommu.c
+> @@ -196,8 +196,12 @@ const struct iommu_ops *of_iommu_configure(struct device *dev,
+>  			if (err)
+>  				break;
+>  		}
+> -	}
+>  
+> +		fwspec = dev_iommu_fwspec_get(dev);
+> +		if (!err && fwspec)
+> +			of_property_read_u32(master_np, "pasid-num-bits",
+> +					     &fwspec->num_pasid_bits);
+> +	}
+This patch dedicates to platform devices however I fail to understand,
+at that stage, how/when do you retrieve/store the same max capability
+for PCI devices?
+>  
+>  	/*
+>  	 * Two success conditions can be represented by non-negative err here:
+> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+> index 3a113c5d7394..bd46775c3329 100644
+> --- a/include/linux/iommu.h
+> +++ b/include/linux/iommu.h
+> @@ -581,6 +581,7 @@ struct iommu_group *fsl_mc_device_group(struct device *dev);
+>   * @ops: ops for this device's IOMMU
+>   * @iommu_fwnode: firmware handle for this device's IOMMU
+>   * @iommu_priv: IOMMU driver private data for this device
+> + * @num_pasid_bits: number of PASID bits supported by this device
+>   * @num_ids: number of associated device IDs
+>   * @ids: IDs which this device may present to the IOMMU
+>   */
+> @@ -589,6 +590,7 @@ struct iommu_fwspec {
+>  	struct fwnode_handle	*iommu_fwnode;
+>  	void			*iommu_priv;
+>  	u32			flags;
+> +	u32			num_pasid_bits;
+>  	unsigned int		num_ids;
+>  	u32			ids[1];
+>  };
+> 
+Besides,
+
 Reviewed-by: Eric Auger <eric.auger@redhat.com>
 
 Thanks
 
 Eric
 
-> ---
->  drivers/iommu/arm-smmu-v3.c | 9 ++++-----
->  1 file changed, 4 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-> index effe72eb89e7..d4e8b7f8d9f4 100644
-> --- a/drivers/iommu/arm-smmu-v3.c
-> +++ b/drivers/iommu/arm-smmu-v3.c
-> @@ -1675,7 +1675,7 @@ static int arm_smmu_init_l2_strtab(struct arm_smmu_device *smmu, u32 sid)
->  
->  	desc->span = STRTAB_SPLIT + 1;
->  	desc->l2ptr = dmam_alloc_coherent(smmu->dev, size, &desc->l2ptr_dma,
-> -					  GFP_KERNEL | __GFP_ZERO);
-> +					  GFP_KERNEL);
->  	if (!desc->l2ptr) {
->  		dev_err(smmu->dev,
->  			"failed to allocate l2 stream table for SID %u\n",
-> @@ -2161,8 +2161,7 @@ static int arm_smmu_domain_finalise_s1(struct arm_smmu_domain *smmu_domain,
->  		return asid;
->  
->  	cfg->cdptr = dmam_alloc_coherent(smmu->dev, CTXDESC_CD_DWORDS << 3,
-> -					 &cfg->cdptr_dma,
-> -					 GFP_KERNEL | __GFP_ZERO);
-> +					 &cfg->cdptr_dma, GFP_KERNEL);
->  	if (!cfg->cdptr) {
->  		dev_warn(smmu->dev, "failed to allocate context descriptor\n");
->  		ret = -ENOMEM;
-> @@ -2883,7 +2882,7 @@ static int arm_smmu_init_strtab_2lvl(struct arm_smmu_device *smmu)
->  
->  	l1size = cfg->num_l1_ents * (STRTAB_L1_DESC_DWORDS << 3);
->  	strtab = dmam_alloc_coherent(smmu->dev, l1size, &cfg->strtab_dma,
-> -				     GFP_KERNEL | __GFP_ZERO);
-> +				     GFP_KERNEL);
->  	if (!strtab) {
->  		dev_err(smmu->dev,
->  			"failed to allocate l1 stream table (%u bytes)\n",
-> @@ -2910,7 +2909,7 @@ static int arm_smmu_init_strtab_linear(struct arm_smmu_device *smmu)
->  
->  	size = (1 << smmu->sid_bits) * (STRTAB_STE_DWORDS << 3);
->  	strtab = dmam_alloc_coherent(smmu->dev, size, &cfg->strtab_dma,
-> -				     GFP_KERNEL | __GFP_ZERO);
-> +				     GFP_KERNEL);
->  	if (!strtab) {
->  		dev_err(smmu->dev,
->  			"failed to allocate linear stream table (%u bytes)\n",
-> 
 
