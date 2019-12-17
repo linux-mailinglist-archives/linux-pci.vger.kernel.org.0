@@ -2,105 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EFFEB1238E4
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Dec 2019 22:54:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F3291123ACA
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Dec 2019 00:29:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726895AbfLQVyj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 Dec 2019 16:54:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48354 "EHLO mail.kernel.org"
+        id S1725886AbfLQX3p (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 Dec 2019 18:29:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726891AbfLQVyi (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 17 Dec 2019 16:54:38 -0500
+        id S1725805AbfLQX3o (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 17 Dec 2019 18:29:44 -0500
 Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4C73206B7;
-        Tue, 17 Dec 2019 21:54:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F2A020716;
+        Tue, 17 Dec 2019 23:29:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576619678;
-        bh=wdyV16wlU9V9Sjvh2PVgfC0/SgWz45D/9pDQ0Y8PBj8=;
+        s=default; t=1576625384;
+        bh=RDmd44o6oMpaId45QHHBF5kKqBGAGIO13OmjcBMHt9k=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=chZCfW9WwO7YaHDGHv+ZcSQnY6TEQqSOlzLpafVWNKzleI+RBH6wAusrYEtULFjHZ
-         JiwosCJMmJ9Xw3M7Yk9AHVqw++52rhOyjb8T01xfC5bJY5fJM5v9gpxu/0R7p2L4R4
-         fYg+kSR25TiN+YN6KhvkAAN78YwbTInjUwJ5ilpU=
-Date:   Tue, 17 Dec 2019 15:54:36 -0600
+        b=Ri0yHsWtev8qy5i4TBu/PI73ECu6kHgw4sRf4ZpN0V8syq2MrpeD5/NFyMN+IK3hU
+         4i+0JO/gXnpOozP0I8L8E38JAHA+orLVd34q6xPDkfnxUcljnTa/6KJ8CMX9iIx6TU
+         IcBoTm+aVCYCMCpkCEiA18OE7K3bEkCo1r+r5CJ0=
+Date:   Tue, 17 Dec 2019 17:29:41 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Yurii Monakov <monakov.y@gmail.com>
-Cc:     linux-pci@vger.kernel.org, m-karicheri2@ti.com,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH] PCI: keystone: Fix outbound region mapping
-Message-ID: <20191217215436.GA230275@google.com>
+To:     Ranran <ranshalit@gmail.com>
+Cc:     linux-pci@vger.kernel.org
+Subject: Re: [Bug 205701] New: Can't access RAM from PCIe
+Message-ID: <20191217232941.GA1617@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191217193131.2dc1c53c@monakov-y.xu>
+In-Reply-To: <CAJ2oMhJBY_i-s6kBOMPxSdhCAudbR4up-dy3=RxJpBiF707NKQ@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 07:31:31PM +0300, Yurii Monakov wrote:
-> On Tue, 17 Dec 2019 08:31:13 -0600, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> 
-> > [+cc Kishon]
-> > 
-> > On Fri, Oct 04, 2019 at 06:48:11PM +0300, Yurii Monakov wrote:
-> > > PCIe window memory start address should be incremented by OB_WIN_SIZE
-> > > megabytes (8 MB) instead of plain OB_WIN_SIZE (8).
-> > > 
-> > > Signed-off-by: Yurii Monakov <monakov.y@gmail.com>  
-> > 
-> > I added:
-> > 
-> >   Fixes: e75043ad9792 ("PCI: keystone: Cleanup outbound window configuration")
-> >   Acked-by: Andrew Murray <andrew.murray@arm.com>
-> >   Cc: stable@vger.kernel.org      # v4.20+
-> > 
-> > and cc'd Kishon (author of  e75043ad9792) and put this on my
-> > pci/host-keystone branch for v5.6.  Lorenzo may pick this up when he
-> > returns.
-> > 
-> > I'd like the commit message to say what this fixes.  Currently it just
-> > restates the code change, which I can see from the diff.
-> This was my first patch sent to LKML, I'm sorry for inconvenience.
-> Should I take any actions to fix this?
+On Sun, Dec 15, 2019 at 07:29:58PM +0200, Ranran wrote:
+> On Fri, Dec 6, 2019 at 7:57 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Fri, Dec 06, 2019 at 06:48:24PM +0200, Ranran wrote:
+> > > On Fri, Dec 6, 2019 at 5:08 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > On Fri, Dec 06, 2019 at 08:09:48AM +0200, Ranran wrote:
+> > > > > On Fri, Nov 29, 2019 at 8:38 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > > > On Fri, Nov 29, 2019 at 06:10:51PM +0200, Ranran wrote:
+> > > > > > > On Fri, Nov 29, 2019 at 4:58 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > > > > > On Fri, Nov 29, 2019 at 06:59:48AM +0000, bugzilla-daemon@bugzilla.kernel.org wrote:
+> > > > > > > > > https://bugzilla.kernel.org/show_bug.cgi?id=205701
+> > > >
+> > > > > I have tried to upgrade to latest kernel 5.4 (elrepo in centos), but
+> > > > > with this processor/board (system x3650, Xeon), it get hang during
+> > > > > kernel boot, without any error in dmesg, just keeps waiting for
+> > > > > nothing for couple of minutes and than drops to dracut.
+> > > >
+> > > > - I don't think you ever said exactly what the original failure mode
+> > > >   was.  You said DMA from an FPGA failed.  What is the specific
+> > > >   device?  How do you know the DMA fails?
+> > >
+> > > FPGA is Intel's Arria 10 device.
+> >
+> > I really meant which bus/device/function it is so we can correlate it
+> > with the dmesg log and lspci output.
+> >
+> > > We know that DMA fails because on using signaltap/probing the DMA
+> > > transaction from FPGA to CPU's RAM we see that it stall, i.e. keep
+> > > waiting for the access to finish.
+> > > We don't observe any error in dmesg.
+> >
+> > ... So I assume that:
+> >
+> >   - On the working system (Intel DUO?) Signal Tap shows the PCIe
+> >     Memory Read TLP from the FPGA and the matching Completion.
+> >
+> >   - On the non-working system Signal Tap shows the PCIe Memory Read
+> >     TLP from the FPGA but the Completion never arrives.  I assume the
+> >     FPGA eventually logs a Completion Timeout error?
+> >
+> > My guess would be something's wrong with the address the FPGA is
+> > generating.  So please collect the complete dmesg log and /proc/iomem
+> > contents and the address used in the FPGA DMA TLP from both the
+> > working and non-working systems.  There should be some clue if we
+> > look at the differences between the systems.
 
-Great, welcome!  No need for you to do anything; just let me know if I
-captured this correctly:
+> I've installed ubuntu 19.10 with kernel 5.3, and I still see same
+> issue with Xeon.
+> I've attached result of lspci -vv
 
-commit 93c53da177c9 ("PCI: keystone: Fix outbound region mapping")
-Author: Yurii Monakov <monakov.y@gmail.com>
-Date:   Fri Oct 4 18:48:11 2019 +0300
+Sorry, all this information is incomplete and inconsistent, so I can't
+give you any useful help.  The dmesg log contains output not produced
+by the module you supplied, the lspci doesn't match the dmesg output,
+the lspci was not collected as root ("sudo lspci -vv", as I requested
+twice), you haven't supplied the user-space code, etc.
 
-    PCI: keystone: Fix outbound region mapping
-    
-    The Keystone outbound Address Translation Unit (ATU) maps PCI MMIO space in
-    8 MB windows.  When programming the ATU windows, we previously incremented
-    the starting address by 8, not 8 MB, so all the windows were mapped to the
-    first 8 MB.  Therefore, only 8 MB of MMIO space was accessible.
-    
-    Update the loop so it increments the starting address by 8 MB, not 8, so
-    more MMIO space is accessible.
-    
-    Fixes: e75043ad9792 ("PCI: keystone: Cleanup outbound window configuration")
-    Link: https://lore.kernel.org/r/20191004154811.GA31397@monakov-y.office.kontur-niirs.ru
-    [bhelgaas: commit log]
-    Signed-off-by: Yurii Monakov <monakov.y@gmail.com>
-    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-    Acked-by: Andrew Murray <andrew.murray@arm.com>
-    Cc: stable@vger.kernel.org	# v4.20+
-
-diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-index af677254a072..f19de60ac991 100644
---- a/drivers/pci/controller/dwc/pci-keystone.c
-+++ b/drivers/pci/controller/dwc/pci-keystone.c
-@@ -422,7 +422,7 @@ static void ks_pcie_setup_rc_app_regs(struct keystone_pcie *ks_pcie)
- 				   lower_32_bits(start) | OB_ENABLEN);
- 		ks_pcie_app_writel(ks_pcie, OB_OFFSET_HI(i),
- 				   upper_32_bits(start));
--		start += OB_WIN_SIZE;
-+		start += OB_WIN_SIZE * SZ_1M;
- 	}
- 
- 	val = ks_pcie_app_readl(ks_pcie, CMD_STATUS);
+Bjorn
