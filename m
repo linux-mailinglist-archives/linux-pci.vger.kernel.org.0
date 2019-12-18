@@ -2,94 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 68BA7124B41
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Dec 2019 16:14:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7ED37124CA4
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Dec 2019 17:07:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727377AbfLRPOQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 Dec 2019 10:14:16 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:36173 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727193AbfLRPOE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Dec 2019 10:14:04 -0500
-Received: by mail-io1-f66.google.com with SMTP id r13so2348009ioa.3
-        for <linux-pci@vger.kernel.org>; Wed, 18 Dec 2019 07:14:04 -0800 (PST)
+        id S1727460AbfLRQG5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 Dec 2019 11:06:57 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46305 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727608AbfLRQG5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Dec 2019 11:06:57 -0500
+Received: by mail-wr1-f65.google.com with SMTP id z7so2843200wrl.13
+        for <linux-pci@vger.kernel.org>; Wed, 18 Dec 2019 08:06:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=R9l9mbjTMtC+3agOxuj88vgGSGUSi1shzIvbtHPQHDA=;
-        b=RfaUJbE64AqObBUWyZFAX00yFzfv+PMQBeMlfEbyOTSSIZSlP9dNPzblRe9C4/Xp5G
-         OOrfzjlEIPRCszaxaclLviha/Gl6J+8MNE2wJIlQr3g8uWJn+m5NNx6dyOIWXJDzHKAu
-         CFfw6ayoPSChbR+RAE0+B68G/pEf5o1uZqam8GCW/DM3JVJn1rrKg09G5nyaA4x8K46C
-         DidFmOGbhUnnebgzWtKvL2IYqcm0dJ4hRYsroJX5h4wZl5ygcdMBOrPylnEG0iZgtaC4
-         tctA6UVKTV1ZO7eaOpJeM3zJ9lY8Otzi6Az77Sm1wv6CYLTS/yvcKPbBaIHIL7wY9gk+
-         23sQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ilGmQzgVpyz5+GgzhiMi4TnzxPgEeCNgmk38TMF+kZE=;
+        b=C1i8TT0BKaZyqPij7EJiWtjjPH+4RB1V0a/wUUSe/JhD9Oslbx/1Q6XBpUW4q/UXah
+         aoe7twq2cCcWk0bOOJ8Gb45nCWzluMIaHz3zLYW62oA0JAIGE4LCdpdOofh0hHYbNncr
+         7MRGFnhVHQ4QYKCyBPZDcJ+yuntrIOsJELzFkUuNbHJ5GH97ieyD4Hx/gV1FrVok8xPE
+         jNC4iIRl7+jgHUADTihavmD3bgyz/hMLa6NPMD4z0NlctNZH0ccJcgj2fU8QyAbECLao
+         R/3/iPqI0xBufIyVNwBG7j7oOgv1rd4/DaFeC9pHElsyRmZy3qcm5xpPdim14xbF4VWO
+         YKKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=R9l9mbjTMtC+3agOxuj88vgGSGUSi1shzIvbtHPQHDA=;
-        b=eTzbiwLdHo5Dr9G0gp02UsRHmfciPep4uzNvQzFe6J980ljSuG0/T93BNFJ8COoOOX
-         hA2G1SfVn9SSYYFF2sbItzN92DyzcTY2LXStH8sji1bJ8//zwJL/0XpcDu7NekNR7SK3
-         gW7W7BdJ30uySuPI5tag263MK0l7TgfEHWLqZDWOr3vtjryr8xmcDy7V3Hqt3ab+kvzg
-         aRcwQMBikFD30vSKyh/p1aJM+fhvRzd6SyUlJzu8IcMs89dhmco+vsmA5pG+2l+WpDlc
-         73kY/AXsJRBtILYBsffSMjKUJWIhPydL9Nim9aMusNOTZAss/L9fRjckFBmMb5yNGVFY
-         EZ4g==
-X-Gm-Message-State: APjAAAXXSPnKcPN7+AhMjsMlVEpllxCPHlfYyv8A0pED6qeW4FwYv2Nk
-        Ek8L7sLouZ1xYWkhJNb1rTeV0rYpwcZsb91UZw==
-X-Google-Smtp-Source: APXvYqyIz9CrpHcrXivylieLEiE1VxRyGUw+E9DXz6VIYz+kYlOCef915g/qsmML8+OoqrwbsBK3G0eW6o6RBALrF/E=
-X-Received: by 2002:a05:6638:950:: with SMTP id f16mr2789501jad.107.1576682043767;
- Wed, 18 Dec 2019 07:14:03 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ilGmQzgVpyz5+GgzhiMi4TnzxPgEeCNgmk38TMF+kZE=;
+        b=h7Mvz6Ke64ZJiPTY3Ayjg2lVyCs6IJ6cYMEfHV8sRC6T4s7tw2+vCt+6ZUbTxh50f6
+         SVUOb716YGlj/sbjK7X1WcoPNtTGuc1OmBkvCbh1O2xpMQh3/7saff1HMIWppUK5/ev9
+         sHUZOy2ywPrbNwIqELAHh7fd5wUwCd7tbK2gCoYMYOls8LIMthqRyNqnA8dgKuyQDb/U
+         ETHVC06IwalX38oM4+afeHPSnt4DaHyx5mOc6kWN7Qg7Iv76AcVxnqoq9gAr7ifGybQp
+         5YU7YqEK7DC7qLMAybD9jHGsuL5D6mvD8NsYEWCILIUEktOkvb9qo/uGU5ulRKobdLNr
+         AamQ==
+X-Gm-Message-State: APjAAAXmBmYD6mxb9Jzz8R6FQV0nHUGPgeum4B0J16taErBP6T2cmsRc
+        o7RZifohqsub71q4qw5krWQ2yA==
+X-Google-Smtp-Source: APXvYqzlJfnzBPNvhgPh9GCf337cLxDV4nJ7SDFk/WvYc0UpuKM/kTPeUg6Rln8M6dK6UBAz2n6nYw==
+X-Received: by 2002:a5d:4dc9:: with SMTP id f9mr3435991wru.297.1576685214969;
+        Wed, 18 Dec 2019 08:06:54 -0800 (PST)
+Received: from myrica (adsl-84-227-176-239.adslplus.ch. [84.227.176.239])
+        by smtp.gmail.com with ESMTPSA id d14sm3236857wru.9.2019.12.18.08.06.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Dec 2019 08:06:54 -0800 (PST)
+Date:   Wed, 18 Dec 2019 17:06:49 +0100
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Auger Eric <eric.auger@redhat.com>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
+        iommu@lists.linux-foundation.org, joro@8bytes.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        lorenzo.pieralisi@arm.com, guohanjun@huawei.com,
+        sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org,
+        will@kernel.org, robin.murphy@arm.com, bhelgaas@google.com,
+        jonathan.cameron@huawei.com, zhangfei.gao@linaro.org
+Subject: Re: [PATCH v3 03/13] iommu/arm-smmu-v3: Support platform SSID
+Message-ID: <20191218160649.GE2371701@myrica>
+References: <20191209180514.272727-1-jean-philippe@linaro.org>
+ <20191209180514.272727-4-jean-philippe@linaro.org>
+ <06c57de4-cfca-f95f-ac06-ab6f49a028a3@redhat.com>
 MIME-Version: 1.0
-Received: by 2002:a02:6603:0:0:0:0:0 with HTTP; Wed, 18 Dec 2019 07:14:03
- -0800 (PST)
-Reply-To: dhl.expresscourier102156@outlook.fr
-From:   "MS. MARYANNA B. THOMASON" <info.zennitbankplcnigerian@gmail.com>
-Date:   Wed, 18 Dec 2019 16:14:03 +0100
-Message-ID: <CABHzvr=Pq7-TqhY8TPvFCsr+5-DhDQy=XOg-TM13qqbFWeemfQ@mail.gmail.com>
-Subject: =?UTF-8?Q?Urgent_delivery_Notification_of_your_ATM_MASTER_CARD?=
-        =?UTF-8?Q?_Amount=2C=2415=2E800=E2=80=99000=E2=80=9900=2C?=
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <06c57de4-cfca-f95f-ac06-ab6f49a028a3@redhat.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Attn Dear.
+On Wed, Dec 18, 2019 at 11:17:40AM +0100, Auger Eric wrote:
+> Hi Jean,
+> 
+> On 12/9/19 7:05 PM, Jean-Philippe Brucker wrote:
+> > For platform devices that support SubstreamID (SSID), firmware provides
+> > the number of supported SSID bits. Restrict it to what the SMMU supports
+> > and cache it into master->ssid_bits, which will also be used for PCI
+> > PASID.
+> > 
+> > Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> the title of the patch does not really explain what it actually does. At
+> this stage we are far from supporting SSIDs ;-) Same for 04?
 
-Urgent delivery Notification of your ATM MASTER CARD, Dhl-Benin is
-ready for delivery of your ATM Master card worth $15.800=E2=80=99000=E2=80=
-=9900, as
-approved this morning, Date, 18/12/2019. Through the Intruction from
-INTERNATIONAL MONETARY FUNDS, I.M.F official Directors.
+Alright I'll make this "Parse PASID devicetree property of platform
+devices" and "Parse SSID property of named component node"
 
-REGISTRATION NO :EG58945
-PARCEL NUMBER: 140479
-Delivery Schuleded now,
-Finally all we required from you is your ATM Card Proccessing Delivery
-fees $19.00 only which you must send to this DHL service to enable us
-dispatch the parcel to your destination today.
-
-Here is our receiving payment details.
-You are advised to send it Via Money Gram Service.
-
-Receiver's Name--------Alan Ude
-Country-------Benin Republic.
-City/ Address--------Cotonou
-Test Question--------In God
-Answer-------We Trust
-Amount------------$US19.00 only
-Mtcn-------------
-Sender's Name-------
-
-Your delivery  ATM card worth $15.800=E2=80=99000=E2=80=9900,
-Is Due for delivery to your address today upon confirmation of
-required fee from you asap.
-
-Call us on this phone number for any inquiry. +229 62819378
-Awaiting your urgent response.
-
-MS. MARYANNA B. THOMASON, Shipment director, DHL Express
-Courier Company-Benin
+Thanks,
+Jean
