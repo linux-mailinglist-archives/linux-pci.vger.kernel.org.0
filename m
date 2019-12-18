@@ -2,110 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6BE68124E90
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Dec 2019 18:00:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B871124E96
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Dec 2019 18:00:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727648AbfLRRAV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 Dec 2019 12:00:21 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:46096 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727605AbfLRRAV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Dec 2019 12:00:21 -0500
-Received: by mail-qk1-f196.google.com with SMTP id r14so2109041qke.13
-        for <linux-pci@vger.kernel.org>; Wed, 18 Dec 2019 09:00:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WeqKDFdUfnO84ii4lXKLuvBndynJP0TEKYsVVVEnPp8=;
-        b=GeUt53t1wbtNOn+ZhJvgbA3cY/cve2xq3FHu81BHiUMPSHVYqvTDRYtILsdcz+b063
-         Y07trchcQ03ZhzFyjU5R380xAlvDqA3qsN8Bg5fpFMvYMGUWPJq0ktP0WTUvWU9UK3oE
-         mAgYGqED+FtOgZv0u7Kj+7rqULyZILk5yJoQ5YUoSnX04lRmb/3VZByGv+Kv/RsHLBXu
-         z4vgpIUWgqhLLqD5CgriLAZjPPONJ41fcSV8OcF+c+8reRKP7+UR97d4WmtSzOFaQ03V
-         Wjy2yvPXm2DsJK829IVoqSXuTZYK6PHqdWnrXIqyQcSlRAsZNRP1+0vf+t7m31SLGc6L
-         wqng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WeqKDFdUfnO84ii4lXKLuvBndynJP0TEKYsVVVEnPp8=;
-        b=fiRoz/kO/AbF2zTghn3IDC88tAwKod/7cHhDlL7OPOUIln3lHtWI3v54oOuKwfBqqS
-         HLP51JM19UR/mCsR7MJxkkVlStqu/eKdqUMXjcSmd7CYKd26Gm434sfTtCsTS70c+SHu
-         TINvmgFcv9TWG5kEmkLbDnTd9m2Ui1s2q+9Hjgz/7ILYlMmp81/2wcGA0rRsNeEu1Fex
-         xZnBIXQ94PSssMj+KldkW/+0x3CNsbT8A25wn5VoSEAR/UlbSy7XNjjtEPSdVVwP1Ckk
-         UKsKNlBBXvCNEkgbpqA1fF8RDaqeDlofJYw0ZZNpzxc9O5Grw3IGlGMunFH7qHydMruz
-         l7xQ==
-X-Gm-Message-State: APjAAAW2BEYzJWqvYuMe+0xsnnzsDweaiQA9D38msPrq1B6FnNvQiek4
-        KGMDQhwMvpu3YT3gCSr6niJ1pg==
-X-Google-Smtp-Source: APXvYqw5jDmu9ZkUqf6ud+pAbFz2CZOEk72YgKgv7/B7c2Mmq+Jz7H0KXBY9oMmm07H3UETri8EpwQ==
-X-Received: by 2002:a05:620a:1592:: with SMTP id d18mr3588970qkk.80.1576688420639;
-        Wed, 18 Dec 2019 09:00:20 -0800 (PST)
-Received: from ovpn-126-98.rdu2.redhat.com ([71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id s27sm799362qkm.97.2019.12.18.09.00.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 18 Dec 2019 09:00:20 -0800 (PST)
-From:   Qian Cai <cai@lca.pw>
-To:     bhelgaas@google.com
-Cc:     jamessewart@arista.com, logang@deltatee.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH -next] pci: fix a -Wtype-limits compilation warning
-Date:   Wed, 18 Dec 2019 12:00:04 -0500
-Message-Id: <20191218170004.5297-1-cai@lca.pw>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
+        id S1727397AbfLRRAn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 Dec 2019 12:00:43 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:56740 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727440AbfLRRAn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Dec 2019 12:00:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576688442;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=dn5SUwiPZ6v5NQ8mtwG6iqV/r/5Gbbs8HrzPzH1EerI=;
+        b=ItGxrXOflq3XyLIwUJF7tFGtxNAtXEZvoJAqtOQ8q+t4Z7s9krV+q06Ts5M9DKXW1CBzPU
+        agL7aGhiuJwVchL9v7JxPXOgWH5wVBcgrqXkEfqei7IugImk2h4LzKrvvEG+ju9FXxeKXT
+        Ncvjlv+uMS2lQ3/c1dvaa/IM9Dcdrpo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-352-9UUkOd8SOmCuHuHDl5aHpg-1; Wed, 18 Dec 2019 12:00:18 -0500
+X-MC-Unique: 9UUkOd8SOmCuHuHDl5aHpg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 797B119586C8;
+        Wed, 18 Dec 2019 17:00:14 +0000 (UTC)
+Received: from [10.36.116.117] (ovpn-116-117.ams2.redhat.com [10.36.116.117])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1A81460C18;
+        Wed, 18 Dec 2019 17:00:09 +0000 (UTC)
+Subject: Re: [PATCH v3 08/13] iommu/arm-smmu-v3: Propate ssid_bits
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
+        iommu@lists.linux-foundation.org, joro@8bytes.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        lorenzo.pieralisi@arm.com, guohanjun@huawei.com,
+        sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org,
+        will@kernel.org, robin.murphy@arm.com, bhelgaas@google.com,
+        jonathan.cameron@huawei.com, zhangfei.gao@linaro.org
+References: <20191209180514.272727-1-jean-philippe@linaro.org>
+ <20191209180514.272727-9-jean-philippe@linaro.org>
+ <466bbc57-79d4-274c-67bc-4ed591da9968@redhat.com>
+ <20191218160834.GG2371701@myrica>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <bf66e477-6fea-517e-98b6-123eef625334@redhat.com>
+Date:   Wed, 18 Dec 2019 18:00:08 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191218160834.GG2371701@myrica>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The commit a7d06153eea2 ("PCI: Fix pci_add_dma_alias() bitmask size")
-introduced a compilation warning and a potential infinite loop because
-it is no longer possible to be self-terminated as u8 is always less than
-256,
+Hi Jean,
 
-In file included from ./include/linux/kernel.h:12,
-                 from ./include/asm-generic/bug.h:19,
-                 from ./arch/x86/include/asm/bug.h:83,
-                 from ./include/linux/bug.h:5,
-                 from ./include/linux/jump_label.h:250,
-                 from ./arch/x86/include/asm/string_64.h:6,
-                 from ./arch/x86/include/asm/string.h:5,
-                 from ./include/linux/string.h:20,
-                 from ./include/linux/uuid.h:12,
-                 from ./include/linux/mod_devicetable.h:13,
-                 from ./include/linux/pci.h:27,
-                 from drivers/pci/search.c:11:
-drivers/pci/search.c: In function 'pci_for_each_dma_alias':
-./include/linux/bitops.h:30:13: warning: comparison is always true due
-to limited range of data type [-Wtype-limits]
-       (bit) < (size);     \
-             ^
-drivers/pci/search.c:46:3: note: in expansion of macro 'for_each_set_bit'
-   for_each_set_bit(devfn, pdev->dma_alias_mask, MAX_NR_DEVFNS) {
+On 12/18/19 5:08 PM, Jean-Philippe Brucker wrote:
+> On Tue, Dec 17, 2019 at 06:07:26PM +0100, Auger Eric wrote:
+>> Hi Jean,
+>>
+>> On 12/9/19 7:05 PM, Jean-Philippe Brucker wrote:
+>>
+>> s/Propate/Propagate in the commit title.
+>>> Now that we support substream IDs, initialize s1cdmax with the number of
+>>> SSID bits supported by a master and the SMMU.
+>>>
+>>> Context descriptor tables are allocated once for the first master
+>>> attached to a domain. Therefore attaching multiple devices with
+>>> different SSID sizes is tricky, and we currently don't support it.
+>>>
+>>> As a future improvement it would be nice to at least support attaching a
+>>> SSID-capable device to a domain that isn't using SSID, by reallocating
+>>> the SSID table.
+>> Isn't that use case relevant (I mean using both devices in a non SSID
+>> use case). For platform devices you can work this around with FW but for
+>> PCI devices?
+> 
+> Normally each device gets its own domain. Especially since PASID is a PCI
+> Express capability, I expect them to be properly isolated with ACS, each
+> with its own IOMMU group. So I don't think this is too relevant for the
+> moment, it would be a quirk for a broken system.
 
-Fixed it by using u16 for "devfn" in this occasion.
+OK
 
-Fixes: a7d06153eea2 ("PCI: Fix pci_add_dma_alias() bitmask size")
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- drivers/pci/search.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pci/search.c b/drivers/pci/search.c
-index 9e4dfae47252..42bc44d0e681 100644
---- a/drivers/pci/search.c
-+++ b/drivers/pci/search.c
-@@ -41,7 +41,7 @@ int pci_for_each_dma_alias(struct pci_dev *pdev,
- 	 * DMA, iterate over that too.
- 	 */
- 	if (unlikely(pdev->dma_alias_mask)) {
--		u8 devfn;
-+		u16 devfn;
- 
- 		for_each_set_bit(devfn, pdev->dma_alias_mask, MAX_NR_DEVFNS) {
- 			ret = fn(pdev, PCI_DEVID(pdev->bus->number, devfn),
--- 
-2.21.0 (Apple Git-122.2)
+Eric
+> 
+> Thanks,
+> Jean
+> 
 
