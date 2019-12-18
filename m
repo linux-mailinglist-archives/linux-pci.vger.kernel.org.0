@@ -2,174 +2,82 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BCC4212443A
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Dec 2019 11:18:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 64B8112445E
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Dec 2019 11:22:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726360AbfLRKSJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 Dec 2019 05:18:09 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:36109 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726682AbfLRKSJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Dec 2019 05:18:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576664288;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=LzL7HDaM7h2etRJEiQVdhdl2GZL68l8lKd1Hg2rlDWU=;
-        b=CPgiqdY2T3pVW0bvEqhr2mpD/NtnRyJKAeDmAKjQOQohbzPigWVx4XFu82zCZ3YZVd7uxa
-        HS3DRIf67zsBEBlFfdyQwkDf2CTIxPeqZxX9X+PZf1D9J+KyksHT+WEY+SmJFPRw3K+pA0
-        G5Vo0+vG65tLYTUzmmxlhJ5phhmggNM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-420-l4BNxwTgNk6_xZLcRT0how-1; Wed, 18 Dec 2019 05:18:03 -0500
-X-MC-Unique: l4BNxwTgNk6_xZLcRT0how-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D7B7E800D48;
-        Wed, 18 Dec 2019 10:18:00 +0000 (UTC)
-Received: from [10.36.116.117] (ovpn-116-117.ams2.redhat.com [10.36.116.117])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id EC21026DF8;
-        Wed, 18 Dec 2019 10:17:56 +0000 (UTC)
-Subject: Re: [PATCH v3 13/13] iommu/arm-smmu-v3: Add support for PCI PASID
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-Cc:     joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        lorenzo.pieralisi@arm.com, guohanjun@huawei.com,
-        sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org,
-        will@kernel.org, robin.murphy@arm.com, bhelgaas@google.com,
-        jonathan.cameron@huawei.com, zhangfei.gao@linaro.org
-References: <20191209180514.272727-1-jean-philippe@linaro.org>
- <20191209180514.272727-14-jean-philippe@linaro.org>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <551ce08c-4160-72c9-05b5-97799f6e5d25@redhat.com>
-Date:   Wed, 18 Dec 2019 11:17:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        id S1725955AbfLRKWI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 Dec 2019 05:22:08 -0500
+Received: from foss.arm.com ([217.140.110.172]:40620 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725930AbfLRKWI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 18 Dec 2019 05:22:08 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8A5FC30E;
+        Wed, 18 Dec 2019 02:22:07 -0800 (PST)
+Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F01C93F6CF;
+        Wed, 18 Dec 2019 02:22:05 -0800 (PST)
+Date:   Wed, 18 Dec 2019 10:22:03 +0000
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     Jon Masters <jcm@jonmasters.org>
+Cc:     Will Deacon <will@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH] pcie: Add quirk for the Arm Neoverse N1SDP platform
+Message-ID: <20191218102203.4078b011@donnerap.cambridge.arm.com>
+In-Reply-To: <dacfd8bf-0f68-f2af-9238-4b0fadfbdfe3@jonmasters.org>
+References: <20191209160638.141431-1-andre.przywara@arm.com>
+        <20191209162645.GA7489@willie-the-truck>
+        <dacfd8bf-0f68-f2af-9238-4b0fadfbdfe3@jonmasters.org>
+Organization: ARM
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20191209180514.272727-14-jean-philippe@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Jean,
+On Tue, 17 Dec 2019 21:21:17 -0500
+Jon Masters <jcm@jonmasters.org> wrote:
 
-On 12/9/19 7:05 PM, Jean-Philippe Brucker wrote:
-> Enable PASID for PCI devices that support it. Since the SSID tables are
-> allocated by arm_smmu_attach_dev(), PASID has to be enabled early enough.
-> arm_smmu_dev_feature_enable() would be too late, since by that time the
-> main DMA domain has already been attached. Do it in add_device() instead.
+Hi Jon,
+
+> On 12/9/19 11:26 AM, Will Deacon wrote:
+> > On Mon, Dec 09, 2019 at 04:06:38PM +0000, Andre Przywara wrote:  
+> >> From: Deepak Pandey <Deepak.Pandey@arm.com>
+> >>
+> >> The Arm N1SDP SoC suffers from some PCIe integration issues, most
+> >> prominently config space accesses to not existing BDFs being answered
+> >> with a bus abort, resulting in an SError.  
+> > 
+> > "Do as I say, not as I do"?  
 > 
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> ---
->  drivers/iommu/arm-smmu-v3.c | 51 ++++++++++++++++++++++++++++++++++++-
->  1 file changed, 50 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-> index d20a79108f8a..cde7af39681c 100644
-> --- a/drivers/iommu/arm-smmu-v3.c
-> +++ b/drivers/iommu/arm-smmu-v3.c
-> @@ -2643,6 +2643,49 @@ static void arm_smmu_disable_ats(struct arm_smmu_master *master)
->  	atomic_dec(&smmu_domain->nr_ats_masters);
->  }
->  
-> +static int arm_smmu_enable_pasid(struct arm_smmu_master *master)
-> +{
-> +	int ret;
-> +	int features;
-> +	int num_pasids;
-> +	struct pci_dev *pdev;
-> +
-> +	if (!dev_is_pci(master->dev))
-> +		return -ENODEV;
-> +
-> +	pdev = to_pci_dev(master->dev);
-> +
-> +	features = pci_pasid_features(pdev);
-> +	if (features < 0)
-> +		return -ENODEV;
-why -ENODEV?
-> +
-> +	num_pasids = pci_max_pasids(pdev);
-> +	if (num_pasids <= 0)
-> +		return -ENODEV;
-> +
-> +	ret = pci_enable_pasid(pdev, features);
-> +	if (!ret)
-> +		master->ssid_bits = min_t(u8, ilog2(num_pasids),
-> +					  master->smmu->ssid_bits);
-so here we are ;-)
-> +	return ret;
-> +}
-> +
-> +static void arm_smmu_disable_pasid(struct arm_smmu_master *master)
-> +{
-> +	struct pci_dev *pdev;
-> +
-> +	if (!dev_is_pci(master->dev))
-> +		return;
-> +
-> +	pdev = to_pci_dev(master->dev);
-> +
-> +	if (!pdev->pasid_enabled)
-> +		return;
-> +
-> +	master->ssid_bits = 0;
-> +	pci_disable_pasid(pdev);
-> +}
-> +
->  static void arm_smmu_detach_dev(struct arm_smmu_master *master)
->  {
->  	unsigned long flags;
-> @@ -2851,13 +2894,16 @@ static int arm_smmu_add_device(struct device *dev)
->  
->  	master->ssid_bits = min(smmu->ssid_bits, fwspec->num_pasid_bits);
->  
-> +	/* Note that PASID must be enabled before, and disabled after ATS */
-> +	arm_smmu_enable_pasid(master);
-No error handling?
-> +
->  	if (!(smmu->features & ARM_SMMU_FEAT_2_LVL_CDTAB))
->  		master->ssid_bits = min_t(u8, master->ssid_bits,
->  					  CTXDESC_LINEAR_CDMAX);
->  
->  	ret = iommu_device_link(&smmu->iommu, dev);
->  	if (ret)
-> -		goto err_free_master;
-> +		goto err_disable_pasid;
->  
->  	group = iommu_group_get_for_dev(dev);
->  	if (IS_ERR(group)) {
-> @@ -2870,6 +2916,8 @@ static int arm_smmu_add_device(struct device *dev)
->  
->  err_unlink:
->  	iommu_device_unlink(&smmu->iommu, dev);
-> +err_disable_pasid:
-> +	arm_smmu_disable_pasid(master);
->  err_free_master:
->  	kfree(master);
->  	fwspec->iommu_priv = NULL;
-> @@ -2890,6 +2938,7 @@ static void arm_smmu_remove_device(struct device *dev)
->  	arm_smmu_detach_dev(master);
->  	iommu_group_remove_device(dev);
->  	iommu_device_unlink(&smmu->iommu, dev);
-> +	arm_smmu_disable_pasid(master);
->  	kfree(master);
->  	iommu_fwspec_free(dev);
->  }
-> 
+> In my former role I asked nicely that these patches not be posted 
+> upstream, but I see that they ended up being posted anyway. Hacking up 
+> upstream Linux to cover for the fact that a (reference) platform is 
+> non-standard is not only not good form but it actively harms the community.
 
-Thanks
+Please keep in mind that this platform was designed to be standards compliant, it is just due to an integration problem that this is not the case with this silicon. So we end up with the usual hardware errata, which the kernel can fix up. I agree it's not nice, and I also want it fixed in hardware, but I guess that's the usual software guy's pipe dream.
 
-Eric
+> You'll have people consume this platform and not realize that it's 
+> broken, IP won't get fixed, and generally it'll be a mess.
 
+I don't see how yet another ACPI quirk in the ACPI quirk framework(!) will make a mess.
+Actually the rest of the system is standards compliant (it even uses ACPI from the very beginning ;-), so it's just this problem that prevents us from using the system in the proper, standards compliant way. Effectively we are back to the embedded times with compiling your own kernel and somehow getting a root filesystem on the hard drive.
+If there would be mainline kernel support, all of this would go away and would could use standard distro installers (given they backport the patch).
+
+> Yes, it's 
+> unfortunate, but so was taping out that platform without working PCI. We 
+> all know what should have happened, and what the right move ahead is.
+
+That may come as a surprise to some, but Arm Ltd. is actually not really in the business of *producing silicon*, so a respin of the chip was and is not an option. I too wish it would be different, but that's how it is.
+
+Cheers,
+Andre.
