@@ -2,137 +2,61 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E9F1124285
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Dec 2019 10:16:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 369A3124393
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Dec 2019 10:46:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725955AbfLRJQO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 Dec 2019 04:16:14 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:8145 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725799AbfLRJQO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 18 Dec 2019 04:16:14 -0500
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id C970B752B66CF392781B;
-        Wed, 18 Dec 2019 17:16:11 +0800 (CST)
-Received: from [127.0.0.1] (10.184.52.56) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Wed, 18 Dec 2019
- 17:16:04 +0800
-Subject: Re: [PATCH v2] PCI: Add quirk for HiSilicon NP 5896 devices
-To:     <bjorn@helgaas.com>
-CC:     Bjorn Helgaas <helgaas@kernel.org>, <andrew.murray@arm.com>,
-        <linux-pci@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        <wangkefeng.wang@huawei.com>, <huawei.libin@huawei.com>,
-        <guohanjun@huawei.com>
-References: <20191206181051.GA121021@google.com>
- <6ebfcfc7-f9f0-bee0-172c-89c93530d94b@huawei.com>
- <CABhMZUX8spN93es+qtZWtMSUi3M+c99649ect4ZAkcrPLqfO=g@mail.gmail.com>
-From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Message-ID: <5ec52f21-8fd6-86f0-88ad-e316a274024d@huawei.com>
-Date:   Wed, 18 Dec 2019 17:16:03 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.6.0
+        id S1725785AbfLRJqn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 Dec 2019 04:46:43 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33573 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726545AbfLRJqn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Dec 2019 04:46:43 -0500
+Received: by mail-pf1-f195.google.com with SMTP id z16so927845pfk.0
+        for <linux-pci@vger.kernel.org>; Wed, 18 Dec 2019 01:46:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=4K2MK3t+oRu3Wj2Yae7pe0l65TrLsJH+Rt5TYjKyU4k=;
+        b=iPJWNJNiiudqWZFcOBLEaoaaPyoOFE+KMW1SdIfxyjiHZFgUssrhlSS0AkihijfTD5
+         jKZM082hpZ7C4zjzsKhuTedUTzaoqkkNVjDqzfWccxIaneniikI87DrNLdAJ+5LumKNY
+         Up1SMolmEJpDIxgoCrsL0N/lVrWYpqNa6PEF4vjyMZiQkDbhVJ47bsw0tPWX0isF1rdd
+         ggHyqzXw7uezY1SMxPPS7MqV4b/riFivfyh5QPP0BJ2W0SnLqln4rZC/xPwOsQXHF1sn
+         8jYUNdrB1f9wIZrQzSakgvgycYY9OnXFxtb6AIk4smQYPgOw/GSo0l131GTsUDdYv182
+         Ki3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=4K2MK3t+oRu3Wj2Yae7pe0l65TrLsJH+Rt5TYjKyU4k=;
+        b=fgtfdQHEtCyeEERAodY1PdpQR0UgkEU+EJUffgQMd06ceeKbRYzWw6ztJYTAYSYZeB
+         n+LCLrUBRqZ0pHxqmtMViBVDbUL4HApcimATLBDCyxXJfH59OtdSewL8qe/Nfnqxser0
+         sKtGOy50n6cYSO+ED2ah9lqIdG01SCtUDhVG+G5z4IuX4txe1at+mGtbDEOUCRWyDDTS
+         14FJbXDRewZo6n6VQEiXqVWGRGpV9bYPN2z/Nv7B0jAOzl6etXf+WK1G2dYnd8Zbv+0h
+         KFLLVLJsICXZB8HuzSKhVAue034MNPIfzNwu/wqi4dL9sBhsokamSPMqr7AHEEb5avDc
+         BSxQ==
+X-Gm-Message-State: APjAAAVxstu0496UMet5kdXPiLa+YWtIEBo0rCabiu7twKg5K1ViUdpu
+        yTl4uw2wvGvLr4WGYLALYzSJGqh8XTAnwAou0jQ=
+X-Google-Smtp-Source: APXvYqxWnlpe/faXd+S+i4Rj+WZfSJphICsVcz/YTr1ygvcdLMr8yVYWQUAPL6tUNCzg6IU3AokQia0GUnnspoA95vA=
+X-Received: by 2002:aa7:9629:: with SMTP id r9mr2024508pfg.51.1576662402384;
+ Wed, 18 Dec 2019 01:46:42 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CABhMZUX8spN93es+qtZWtMSUi3M+c99649ect4ZAkcrPLqfO=g@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.184.52.56]
-X-CFilter-Loop: Reflected
+Received: by 2002:a17:90a:d3c5:0:0:0:0 with HTTP; Wed, 18 Dec 2019 01:46:41
+ -0800 (PST)
+Reply-To: peacemaurice54@gmail.com
+From:   Peace maurice <okerekenwaka@gmail.com>
+Date:   Wed, 18 Dec 2019 09:46:41 +0000
+Message-ID: <CAOWzqCvWXz3jk0V2vHerb-9ovFix5c0Rm6_F8SOBkhixEtVU-g@mail.gmail.com>
+Subject: sehr geehrter
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On 2019/12/11 12:10, Bjorn Helgaas wrote:
-> On Tue, Dec 10, 2019 at 9:28 PM Xiongfeng Wang
-> <wangxiongfeng2@huawei.com> wrote:
->>
->>
->>
->> On 2019/12/7 2:10, Bjorn Helgaas wrote:
->>> On Fri, Dec 06, 2019 at 03:01:45PM +0800, Xiongfeng Wang wrote:
->>>> HiSilicon PCI Network Processor 5896 devices misreport the class type as
->>>> 'NOT_DEFINED', but it is actually a network device. Also the size of
->>>> BAR3 is reported as 265T, but this BAR is actually unused.
->>>> This patch modify the class type to 'CLASS_NETWORK' and disable the
->>>> unused BAR3.
->>>
->>> "NOT_DEFINED" is not the value in the Class Code register.  The commit
->>> message should include the actual value.
->>
->> The actual value is 0, I will update the commit message.
->>
->>>
->>>> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
->>>> ---
->>>>  drivers/pci/quirks.c    | 29 +++++++++++++++++++++++++++++
->>>>  include/linux/pci_ids.h |  1 +
->>>>  2 files changed, 30 insertions(+)
->>>>
->>>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
->>>> index 4937a08..b9adebb 100644
->>>> --- a/drivers/pci/quirks.c
->>>> +++ b/drivers/pci/quirks.c
->>>> @@ -5431,3 +5431,32 @@ static void quirk_reset_lenovo_thinkpad_p50_nvgpu(struct pci_dev *pdev)
->>>>  DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, 0x13b1,
->>>>                            PCI_CLASS_DISPLAY_VGA, 8,
->>>>                            quirk_reset_lenovo_thinkpad_p50_nvgpu);
->>>> +
->>>> +static void quirk_hisi_fixup_np_class(struct pci_dev *pdev)
->>>> +{
->>>> +    u32 class = pdev->class;
->>>> +
->>>> +    pdev->class = PCI_BASE_CLASS_NETWORK << 8;
->>>> +    pci_info(pdev, "PCI class overriden (%#08x -> %#08x)\n",
->>>> +             class, pdev->class);
->>>> +}
->>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HISI_5896,
->>>> +                    quirk_hisi_fixup_np_class);
->>>> +
->>>> +/*
->>>> + * HiSilicon NP 5896 devices BAR3 size is reported as 256T and causes problem
->>>> + * when assigning the resources. But this BAR is actually unused by the driver,
->>>> + * so let's disable it.
->>>
->>> The question is not whether the BAR is used by the driver; the
->>> question is whether the device responds to accesses to the region
->>> described by the BAR when PCI_COMMAND_MEMORY is turned on.
->>
->> I asked the hardware engineer. He said I can not write an address into that BAR.
-> 
-> If the BAR is not writable, I think sizing should fail, so I suspect
-> some of the bits are actually writable.
-
-Sorry for the delayed response. It's not so convenient for me to get to the hardware guys.
-BAR0 BAR1 BAR2 are 32-bit and can be used to access the registers and memory within
-5896 devices. These three BARs can meet the need for most scenario.
-BAR3 is 64-bit and can be used to access all the registers and memory within 5896 devices.
-(BAR3 is writable. Sorry for the non-confirmed information before.)
-But BAR3 is not used by the driver and the size is very large（larger than 100G, still didn't
-get the precise size）.
-So I think maybe we can disable this BAR for now, otherwise the unassigned resource will cause
-'pci_enable_device()' returning failure.
-
-Thanks,
-Xiongfeng
-
-> 
-> What do you see in dmesg when this device is enumerated?  Can you
-> instrument the code in __pci_read_base() and see what we read/write to
-> that BAR?
-> 
-> Per spec, if the BAR is not implemented, it should be read-only zero.
-> But obviously the whole reason for the quirk is that the device
-> doesn't comply with the spec.
-
-
-
-
-> 
-> Bjorn
-> 
-> .
-> 
-
+DO YOU SPEAK ENGLISH?
+Es w=C3=A4re toll, dich zu kennen. Ich habe eine sehr wichtige und
+vertrauliche Angelegenheit, die ich mit dir besprechen m=C3=B6chte.
+Antworte mir hier zur=C3=BCck.
