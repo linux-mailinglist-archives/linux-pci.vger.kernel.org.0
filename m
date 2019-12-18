@@ -2,136 +2,129 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EFF4C124867
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Dec 2019 14:31:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 702171248C0
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Dec 2019 14:53:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726902AbfLRNbK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 Dec 2019 08:31:10 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39676 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726749AbfLRNbJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Dec 2019 08:31:09 -0500
-Received: by mail-lj1-f193.google.com with SMTP id l2so2148645lja.6
-        for <linux-pci@vger.kernel.org>; Wed, 18 Dec 2019 05:31:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=VgYUn0m04y4lziXkPkx+mepQM6rOgURZ4g2WLYIpXFc=;
-        b=R/w0lbToBbFBnbypMREu8eTdu/r9CgRc1RM/vZ4DH/XJ7b5h6EP82fJCneA17dE4CB
-         vFSPOf+Aw+OVxY4s8rcDkUFT7fEjiUGQV2D172IYM76sbwcSQE/YnXzQz4zFL4r4YEqN
-         69qV4M8QlUoDlztHvlPYp88fngnDfONFkLYi2/4VEPl5NxXPgngLP3LL5lUn/xeBGbFG
-         pVIpbBJ1t9x2Pe+OVbjBKEmvDnMQ5yRWdJX0+iH2In/7w/5/ShGyMU9E1eZNagcMsL2Z
-         Qi6nw6MRNqjlSfOxsDXRoHebdBqELh6MpM7ToB33PP8ZLMduzLvG178NymD1vZO2qt+D
-         5UzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=VgYUn0m04y4lziXkPkx+mepQM6rOgURZ4g2WLYIpXFc=;
-        b=sbtJ5Ykliw0dQ6K1Sk6xuG+FM106+j9ENyGbmOxs+Ji5I1aqM/Qvk6hBFs7sJ+EMyN
-         zJxCo6//kDJSADuOAX8+yHKq54yUySAhfWdNLZS0q0iaqejDSueSmZIbSs/SzOT8eix4
-         hK2PIQbmiBxhKAcSL2fc+Lx/a44GYOhxX/WrI/qD1TN5cRzhx+IsfO6QVUcHYGhKqbmt
-         gPk5tNf84rEXJmvZdjNziva6uTWJSNe+aLKRtc4ZFiJ0b/Jqj5mV+Hz1l0M4L+Y8TtPQ
-         iSWNVgONQo4wrHP87qqBJrJr1o4xhOG9HAD7BvCGYxjJ8endIMEuZrvUrM1+rxJS+p2U
-         QWhQ==
-X-Gm-Message-State: APjAAAUklFxEAsxrHfCuc/DJNEb14n44VRztH26bf01Ptr59PT4TXxtF
-        dEhD+yHMppaWwSOMY2DydFA=
-X-Google-Smtp-Source: APXvYqz2Ig0BB4Sjo05mH8EzplpyVhS7rXPIZPIF8B56WrXvb6Ivj8sN3Sw1tmDipoGtZYrtle2aMQ==
-X-Received: by 2002:a2e:9987:: with SMTP id w7mr1759131lji.107.1576675867274;
-        Wed, 18 Dec 2019 05:31:07 -0800 (PST)
-Received: from monakov-y.xu ([81.222.243.34])
-        by smtp.gmail.com with ESMTPSA id a9sm1148973lfk.23.2019.12.18.05.31.06
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 18 Dec 2019 05:31:06 -0800 (PST)
-Date:   Wed, 18 Dec 2019 16:31:01 +0300
-From:   Yurii Monakov <monakov.y@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, m-karicheri2@ti.com,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH] PCI: keystone: Fix outbound region mapping
-Message-ID: <20191218163101.4af92f48@monakov-y.xu>
-In-Reply-To: <20191217215436.GA230275@google.com>
-References: <20191217193131.2dc1c53c@monakov-y.xu>
-        <20191217215436.GA230275@google.com>
-X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726959AbfLRNxH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 Dec 2019 08:53:07 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:51038 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726710AbfLRNxH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Dec 2019 08:53:07 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1ihZl9-0001g7-Pf; Wed, 18 Dec 2019 14:53:03 +0100
+To:     Andre Przywara <andre.przywara@arm.com>
+Subject: Re: [PATCH] pcie: Add quirk for the Arm Neoverse N1SDP platform
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Wed, 18 Dec 2019 13:53:02 +0000
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     Jon Masters <jcm@jonmasters.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        <linux-kernel@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Will Deacon <will@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, Len Brown <lenb@kernel.org>
+In-Reply-To: <20191218102203.4078b011@donnerap.cambridge.arm.com>
+References: <20191209160638.141431-1-andre.przywara@arm.com>
+ <20191209162645.GA7489@willie-the-truck>
+ <dacfd8bf-0f68-f2af-9238-4b0fadfbdfe3@jonmasters.org>
+ <20191218102203.4078b011@donnerap.cambridge.arm.com>
+Message-ID: <68c0c1e31ce72ab26eab7f1b077a302c@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: andre.przywara@arm.com, jcm@jonmasters.org, lorenzo.pieralisi@arm.com, catalin.marinas@arm.com, rjw@rjwysocki.net, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, andrew.murray@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, lenb@kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 17 Dec 2019 15:54:36 -0600, Bjorn Helgaas <helgaas@kernel.org> wrote:
+On 2019-12-18 10:22, Andre Przywara wrote:
+> On Tue, 17 Dec 2019 21:21:17 -0500
+> Jon Masters <jcm@jonmasters.org> wrote:
+>
+> Hi Jon,
+>
+>> On 12/9/19 11:26 AM, Will Deacon wrote:
+>> > On Mon, Dec 09, 2019 at 04:06:38PM +0000, Andre Przywara wrote:
+>> >> From: Deepak Pandey <Deepak.Pandey@arm.com>
+>> >>
+>> >> The Arm N1SDP SoC suffers from some PCIe integration issues, most
+>> >> prominently config space accesses to not existing BDFs being 
+>> answered
+>> >> with a bus abort, resulting in an SError.
+>> >
+>> > "Do as I say, not as I do"?
+>>
+>> In my former role I asked nicely that these patches not be posted
+>> upstream, but I see that they ended up being posted anyway. Hacking 
+>> up
+>> upstream Linux to cover for the fact that a (reference) platform is
+>> non-standard is not only not good form but it actively harms the 
+>> community.
+>
+> Please keep in mind that this platform was designed to be standards
+> compliant, it is just due to an integration problem that this is not
+> the case with this silicon. So we end up with the usual hardware
+> errata, which the kernel can fix up. I agree it's not nice, and I 
+> also
+> want it fixed in hardware, but I guess that's the usual software 
+> guy's
+> pipe dream.
+>
+>> You'll have people consume this platform and not realize that it's
+>> broken, IP won't get fixed, and generally it'll be a mess.
+>
+> I don't see how yet another ACPI quirk in the ACPI quirk framework(!)
+> will make a mess.
+> Actually the rest of the system is standards compliant (it even uses
+> ACPI from the very beginning ;-), so it's just this problem that
+> prevents us from using the system in the proper, standards compliant
+> way. Effectively we are back to the embedded times with compiling 
+> your
+> own kernel and somehow getting a root filesystem on the hard drive.
+> If there would be mainline kernel support, all of this would go away
+> and would could use standard distro installers (given they backport
+> the patch).
+>
+>> Yes, it's
+>> unfortunate, but so was taping out that platform without working 
+>> PCI. We
+>> all know what should have happened, and what the right move ahead 
+>> is.
+>
+> That may come as a surprise to some, but Arm Ltd. is actually not
+> really in the business of *producing silicon*, so a respin of the 
+> chip
+> was and is not an option. I too wish it would be different, but 
+> that's
+> how it is.
 
-> On Tue, Dec 17, 2019 at 07:31:31PM +0300, Yurii Monakov wrote:
-> > On Tue, 17 Dec 2019 08:31:13 -0600, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >   
-> > > [+cc Kishon]
-> > > 
-> > > On Fri, Oct 04, 2019 at 06:48:11PM +0300, Yurii Monakov wrote:  
-> > > > PCIe window memory start address should be incremented by OB_WIN_SIZE
-> > > > megabytes (8 MB) instead of plain OB_WIN_SIZE (8).
-> > > > 
-> > > > Signed-off-by: Yurii Monakov <monakov.y@gmail.com>    
-> > > 
-> > > I added:
-> > > 
-> > >   Fixes: e75043ad9792 ("PCI: keystone: Cleanup outbound window configuration")
-> > >   Acked-by: Andrew Murray <andrew.murray@arm.com>
-> > >   Cc: stable@vger.kernel.org      # v4.20+
-> > > 
-> > > and cc'd Kishon (author of  e75043ad9792) and put this on my
-> > > pci/host-keystone branch for v5.6.  Lorenzo may pick this up when he
-> > > returns.
-> > > 
-> > > I'd like the commit message to say what this fixes.  Currently it just
-> > > restates the code change, which I can see from the diff.  
-> > This was my first patch sent to LKML, I'm sorry for inconvenience.
-> > Should I take any actions to fix this?  
-> 
-> Great, welcome!  No need for you to do anything; just let me know if I
-> captured this correctly:
-Yes, everything is correct. New commit message perfectly describes this patch.
+In all honesty, I really wonder why we are even having this discussion:
 
-Best Regards,
-Yurii Monakov
+- The HW is unavailable to the mere mortal. And even most superheroes
+   cannot get their hands on it
 
-> 
-> commit 93c53da177c9 ("PCI: keystone: Fix outbound region mapping")
-> Author: Yurii Monakov <monakov.y@gmail.com>
-> Date:   Fri Oct 4 18:48:11 2019 +0300
-> 
->     PCI: keystone: Fix outbound region mapping
->     
->     The Keystone outbound Address Translation Unit (ATU) maps PCI MMIO space in
->     8 MB windows.  When programming the ATU windows, we previously incremented
->     the starting address by 8, not 8 MB, so all the windows were mapped to the
->     first 8 MB.  Therefore, only 8 MB of MMIO space was accessible.
->     
->     Update the loop so it increments the starting address by 8 MB, not 8, so
->     more MMIO space is accessible.
->     
->     Fixes: e75043ad9792 ("PCI: keystone: Cleanup outbound window configuration")
->     Link: https://lore.kernel.org/r/20191004154811.GA31397@monakov-y.office.kontur-niirs.ru
->     [bhelgaas: commit log]
->     Signed-off-by: Yurii Monakov <monakov.y@gmail.com>
->     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
->     Acked-by: Andrew Murray <andrew.murray@arm.com>
->     Cc: stable@vger.kernel.org	# v4.20+
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-> index af677254a072..f19de60ac991 100644
-> --- a/drivers/pci/controller/dwc/pci-keystone.c
-> +++ b/drivers/pci/controller/dwc/pci-keystone.c
-> @@ -422,7 +422,7 @@ static void ks_pcie_setup_rc_app_regs(struct keystone_pcie *ks_pcie)
->  				   lower_32_bits(start) | OB_ENABLEN);
->  		ks_pcie_app_writel(ks_pcie, OB_OFFSET_HI(i),
->  				   upper_32_bits(start));
-> -		start += OB_WIN_SIZE;
-> +		start += OB_WIN_SIZE * SZ_1M;
->  	}
->  
->  	val = ks_pcie_app_readl(ks_pcie, CMD_STATUS);
+- Even with this terrible son of a hack, essential PCIe features cannot
+   work (and yes, I do consider SR-IOV as an essential feature)
 
+- If we take this hack and somehow get this thing to run with mainline,
+   we will never be able to say "no" to this kind of unfinished,
+   *prototype* implementations ever again
+
+To sum it up: a hack that doesn't really work for a prototype that you
+can't really buy? Why should we even care?
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
