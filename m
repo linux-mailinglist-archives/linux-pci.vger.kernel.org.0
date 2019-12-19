@@ -2,113 +2,176 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 93972125CF9
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Dec 2019 09:51:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D070125F1F
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Dec 2019 11:35:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbfLSIvp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 Dec 2019 03:51:45 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:51196 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726591AbfLSIvp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 19 Dec 2019 03:51:45 -0500
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id E1C6F1B3979B511D2B53;
-        Thu, 19 Dec 2019 16:51:42 +0800 (CST)
-Received: from [127.0.0.1] (10.184.52.56) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Thu, 19 Dec 2019
- 16:51:35 +0800
-Subject: Re: [PATCH v2] PCI: Add quirk for HiSilicon NP 5896 devices
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     <bjorn@helgaas.com>, <andrew.murray@arm.com>,
-        <linux-pci@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        <wangkefeng.wang@huawei.com>, <huawei.libin@huawei.com>,
-        <guohanjun@huawei.com>
-References: <20191218142831.GA101587@google.com>
-From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Message-ID: <03ef3686-2cbb-8495-bf5a-f6927ad25179@huawei.com>
-Date:   Thu, 19 Dec 2019 16:51:34 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.6.0
+        id S1726751AbfLSKfK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 Dec 2019 05:35:10 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:37754 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726652AbfLSKfJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Dec 2019 05:35:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576751708;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=grytLlF1DJ8ixVXUMMRXrV+hvL2jNyAGRxO10pwO3Kk=;
+        b=hmzieCX3AmU79KHeblEB7o0cNfKizFm8NtBMXNuENjKts2biAm6oSASpRyUsX/HpaMcgFI
+        70iSvc3ujHihXW8/GNUdCHv0U1Fidr1Q5rFwZYx5EpxDQBFpK/ww8gpvT0dJQsi08p3s5U
+        +Hfb4JXOWU1or41QzaYNZksunEYSDlc=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-322-V1NvEs7VN4iHHI7EToTMPA-1; Thu, 19 Dec 2019 05:35:06 -0500
+X-MC-Unique: V1NvEs7VN4iHHI7EToTMPA-1
+Received: by mail-wr1-f72.google.com with SMTP id o6so2182125wrp.8
+        for <linux-pci@vger.kernel.org>; Thu, 19 Dec 2019 02:35:06 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=grytLlF1DJ8ixVXUMMRXrV+hvL2jNyAGRxO10pwO3Kk=;
+        b=R0vC+Ze8+MA2oClIOcD0TM/LZYq/gWyMUJA9RZ9mRxWu5F2oYpbOJrEoTmKPeBqa/l
+         q5LEX4+uM5H3W2lSSx0SgLE2Bu0q1SOzMTWOdpD4Ztsv66tlXJR7vNGeCv0AUQYnFPeM
+         QtRgCsmgI3NsbyFSCnOOVL86B9ZzNVF4DJDh2kejiCWnav2MvYMIjAdXBRu9/JQUq6vV
+         0rJd5dS0AfXwrIRdMjB4hIvTvZl8Hs4L/ouKgRMD2P7o2Jnz/RhS+7i3I5WvYwThXbMw
+         C/QRF1SO/Qy2l1eVhQ9Bo28nZfPb3JbDQEDWFtGpktumj0F+xZh1hsxZjRJy/CbJOAsd
+         i2Pg==
+X-Gm-Message-State: APjAAAV9Hdg9J7cYmoWyc7s+mJebtTMIWPg1KURS+s6jFuAOnr6QE0Ae
+        WAGIUk6bYxe4cqZSRxjNokQlgUXmA6lmJf66RiPSwB9LCjv4RUImzE1I/PzMjP3NCZxADJSfv7u
+        xR5aNeciklfdDyIBwp/a6
+X-Received: by 2002:a5d:690e:: with SMTP id t14mr8532972wru.65.1576751704392;
+        Thu, 19 Dec 2019 02:35:04 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyRIN6jrjB2zwl/YVEf01195wmi63mQXP7jnb1nOJ++QqxEfgXl6pGOygsE+eeyF7zb41K3zQ==
+X-Received: by 2002:a5d:690e:: with SMTP id t14mr8532922wru.65.1576751703925;
+        Thu, 19 Dec 2019 02:35:03 -0800 (PST)
+Received: from localhost.localdomain ([151.29.30.195])
+        by smtp.gmail.com with ESMTPSA id o7sm5513625wmh.11.2019.12.19.02.35.02
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 19 Dec 2019 02:35:03 -0800 (PST)
+Date:   Thu, 19 Dec 2019 11:35:00 +0100
+From:   Juri Lelli <juri.lelli@redhat.com>
+To:     linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-rt-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Claudio Scordino <c.scordino@evidence.eu.com>,
+        Luca Abeni <luca.abeni@santannapisa.it>,
+        Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>,
+        Juri Lelli <juri.lelli@redhat.com>
+Subject: [ANNOUNCE][CFP] Power Management and Scheduling in the Linux Kernel
+ IV edition (OSPM-summit 2020)
+Message-ID: <20191219103500.GC13724@localhost.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <20191218142831.GA101587@google.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.184.52.56]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Power Management and Scheduling in the Linux Kernel (OSPM-summit) IV edition
 
+May 11-13, 2019
+Scuola Superiore Sant'Anna
+Pisa, Italy
 
-On 2019/12/18 22:28, Bjorn Helgaas wrote:
-> On Wed, Dec 18, 2019 at 05:16:03PM +0800, Xiongfeng Wang wrote:
->> On 2019/12/11 12:10, Bjorn Helgaas wrote:
->>> On Tue, Dec 10, 2019 at 9:28 PM Xiongfeng Wang
->>> <wangxiongfeng2@huawei.com> wrote:
->>>> On 2019/12/7 2:10, Bjorn Helgaas wrote:
->>>>> On Fri, Dec 06, 2019 at 03:01:45PM +0800, Xiongfeng Wang wrote:
->>>>>> HiSilicon PCI Network Processor 5896 devices misreport the
->>>>>> class type as 'NOT_DEFINED', but it is actually a network
->>>>>> device. Also the size of BAR3 is reported as 265T, but this BAR
->>>>>> is actually unused.  This patch modify the class type to
->>>>>> 'CLASS_NETWORK' and disable the unused BAR3.
-> 
->>>>> The question is not whether the BAR is used by the driver; the
->>>>> question is whether the device responds to accesses to the
->>>>> region described by the BAR when PCI_COMMAND_MEMORY is turned
->>>>> on.
->>>>
->>>> I asked the hardware engineer. He said I can not write an address
->>>> into that BAR.
->>>
->>> If the BAR is not writable, I think sizing should fail, so I
->>> suspect some of the bits are actually writable.
->>
->> Sorry for the delayed response. It's not so convenient for me to get
->> to the hardware guys.  BAR0 BAR1 BAR2 are 32-bit and can be used to
->> access the registers and memory within 5896 devices. These three
->> BARs can meet the need for most scenario.  BAR3 is 64-bit and can be
->> used to access all the registers and memory within 5896 devices.
->> (BAR3 is writable. Sorry for the non-confirmed information before.)
->> But BAR3 is not used by the driver and the size is very
->> large（larger than 100G, still didn't get the precise size）.  So I
->> think maybe we can disable this BAR for now, otherwise the
->> unassigned resource will cause 'pci_enable_device()' returning
->> failure.
-> 
-> Here's the problem: the proposed patch (below) clears the struct
-> resource corresponding to BAR 3, but that doesn't actually disable the
-> BAR.  It hides the BAR from Linux, so Linux will pretend it doesn't
-> exist, but it's still there in the hardware.
-> 
-> The hardware BAR 3 still contains some value (possibly zero), and if
-> PCI_COMMAND_MEMORY is set (which you need to do if you want to use
-> *any* memory BARs on the device), the device will respond to any
-> transactions in the BAR 3 range.  Depending on the topology and all
-> the other BAR and window assignments, this may cause address
-> conflicts.
+---
 
-Yes, there does exist this problem. I will check it with the hardware
-engineers. Thanks.
+.:: FOCUS
 
-> 
-> + * HiSilicon NP 5896 devices BAR3 size is reported as 256T and causes problem
-> + * when assigning the resources. But this BAR is actually unused by the driver,
-> + * so let's disable it.
-> + */
-> +static void quirk_hisi_fixup_np_bar(struct pci_dev *pdev)
-> +{
-> +       struct resource *r = &pdev->resource[3];
-> +
-> +       r->start = 0;
-> +       r->end = 0;
-> +       r->flags = 0;
-> +
-> +       pci_info(pdev, "Disabling invalid BAR 3\n");
-> 
-> .
-> 
+The IV edition of the Power Management and Scheduling in the Linux
+Kernel (OSPM) summit aims at fostering discussions on power management
+and (real-time) scheduling techniques. Summit will be held in Pisa
+(Italy) on May 11-13, 2020.
+
+Although scheduler techniques for reducing energy consumption while
+meeting performance and latency requirements are the prime interest of
+the summit, we welcome anybody interested in having discussions on the
+broader scope of real-time systems, real-time and non-real-time
+scheduling, tooling, debugging and tracing.
+
+Feel free to have a look at what happened previous years:
+
+ I   edition - https://lwn.net/Articles/721573/
+ II  edition - https://lwn.net/Articles/754923/
+ III edition - https://lwn.net/Articles/793281/
+
+.:: FORMAT
+
+The summit is organized to cover three days of discussions and talks.
+
+The list of topics of interest includes (but it is not limited to):
+
+ * Power management techniques
+ * Real-time and non real-time scheduling techniques
+ * Energy consumption and CPU capacity aware scheduling
+ * Real-time virtualization
+ * Mobile/Server power management real-world use cases (successes and
+   failures)
+ * Power management and scheduling tooling (configuration, integration,
+   testing, etc.)
+ * Tracing
+ * Recap/lightning talks
+
+Presentations can cover recently developed technologies, ongoing work
+and new ideas. Please understand that this workshop is not intended for
+presenting sales and marketing pitches.
+
+.:: ATTENDING
+
+Attending the OSPM-summit is free of charge, but registration to the
+event is mandatory. The event can allow a maximum of 50 people (so, be
+sure to register early!). Registrations open on February 24th, 2020.
+
+To register fill in the registration form available at
+https://forms.gle/7LfFY8oNyRxV1wuQ7
+
+While it is not strictly required to submit a topic/presentation (see
+below), registrations with a topic/presentation proposal will take
+precedence.
+
+.:: SUBMIT A TOPIC/PRESENTATION
+
+To submit a topic/presentation add its details to this list:
+https://docs.google.com/spreadsheets/d/1pPU2ybHHoQjqicYLTaNanPz9H5fv6mQTtrzOqwP9uHs/edit?usp=sharing
+
+Or, if you prefer, simply reply (only to me, please :) to this email
+specifying:
+
+- name/surname
+- affiliation
+- short bio
+- email address
+- title
+- abstract
+- 30min or 50min slot
+
+Deadline for submitting topics/presentations is 10th of February 2019.
+Notifications for accepted topics/presentations will be sent out on 24th
+of February 2019.
+
+.:: VENUE
+
+The workshop will take place at ReTiS Lab*, Scuola Superiore Sant'Anna,
+Pisa, Italy. Pisa is a small town, walking distance from the city center
+to the venue is 20 minutes, walking distance from the airport to the
+city center is 30 minutes. More details are available from the summit
+web page: http://retis.sssup.it/ospm-summit/#site
+
+* https://goo.gl/maps/2pPXG2v7Lfp
+
+.:: ORGANIZERS (in alphabetical order)
+
+Luca Abeni (SSSA)
+Tommaso Cucinotta (SSSA)
+Dietmar Eggemann (Arm)
+Sudeep Holla (Arm)
+Juri Lelli (Red Hat)
+Lorenzo Pieralisi (Arm)
+Morten Rasmussen (Arm)
+Claudio Scordino (Evidence SRL)
 
