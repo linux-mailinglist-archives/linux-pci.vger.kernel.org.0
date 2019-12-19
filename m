@@ -2,41 +2,42 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AC69B126153
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Dec 2019 12:54:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F4A412616C
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Dec 2019 12:59:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbfLSLyf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 Dec 2019 06:54:35 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:54060 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726692AbfLSLyd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Dec 2019 06:54:33 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBJBsQ7f094692;
-        Thu, 19 Dec 2019 05:54:26 -0600
+        id S1726895AbfLSL7e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 Dec 2019 06:59:34 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:50150 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726695AbfLSL7e (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Dec 2019 06:59:34 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBJBxQv3029312;
+        Thu, 19 Dec 2019 05:59:26 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576756466;
-        bh=0wneAsr2dIRQgUOU8O6OrKktT1aM0VMh6k8EH1G2T9g=;
+        s=ti-com-17Q1; t=1576756766;
+        bh=yxnvtS3Y6dPrnMhLpxgcSG/4NfRE2DXlNbtemhtrESM=;
         h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Y7nKHasEJ0XxpznpaLYRknLdxcb/F01l1qO5LxRpjmiOVw6au+fi8WVMOUDtSJv9q
-         MJQPniruZNRrVnECnrhvByY91xGTWQwfx16eiu4iP1OTXQ5j03qJFV4H2GRna4sT2W
-         +r2J7HHMI2KErdjfWqrKaBMvFqB/jzCYK93oJoOE=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBJBsQ4L001524;
-        Thu, 19 Dec 2019 05:54:26 -0600
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+        b=Y4Y/y3I/vtDVqaru8Sb8k5lFOAcIPq6QsfYkosMiBcJ57TtTSq0dWCTol/3doRSMR
+         1PO38ehyG9OpRZ0hDg21crEDpPFOIoHy41N+aFPL1bOXRyKlKscZsNqtqYzt6ZeVK9
+         iJGeAuQBmOkiu8asV6Ges6w1RXfrjDIMh/PWicw4=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBJBxQJO118229
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 19 Dec 2019 05:59:26 -0600
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
- Dec 2019 05:54:25 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ Dec 2019 05:59:24 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 19 Dec 2019 05:54:25 -0600
+ Frontend Transport; Thu, 19 Dec 2019 05:59:25 -0600
 Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBJBsMcp080167;
-        Thu, 19 Dec 2019 05:54:23 -0600
-Subject: Re: [PATCH 05/13] PCI: cadence: Add read and write accessors to
- perform only 32-bit accesses
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBJBxLn4096682;
+        Thu, 19 Dec 2019 05:59:22 -0600
+Subject: Re: [PATCH 04/13] PCI: cadence: Add support to start link and verify
+ link status
 To:     Andrew Murray <andrew.murray@arm.com>
 CC:     Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -45,15 +46,15 @@ CC:     Bjorn Helgaas <bhelgaas@google.com>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-omap@vger.kernel.org>
 References: <20191209092147.22901-1-kishon@ti.com>
- <20191209092147.22901-6-kishon@ti.com>
- <20191216144932.GY24359@e119886-lin.cambridge.arm.com>
+ <20191209092147.22901-5-kishon@ti.com>
+ <20191217115826.GA24359@e119886-lin.cambridge.arm.com>
 From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <d1ee4579-a3da-6a73-3516-a6d264f80995@ti.com>
-Date:   Thu, 19 Dec 2019 17:26:05 +0530
+Message-ID: <16ffe86d-9061-1a9a-d536-561e20ecbdd7@ti.com>
+Date:   Thu, 19 Dec 2019 17:31:04 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20191216144932.GY24359@e119886-lin.cambridge.arm.com>
+In-Reply-To: <20191217115826.GA24359@e119886-lin.cambridge.arm.com>
 Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -65,74 +66,91 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 Hi Andrew,
 
-On 16/12/19 8:19 pm, Andrew Murray wrote:
-> On Mon, Dec 09, 2019 at 02:51:39PM +0530, Kishon Vijay Abraham I wrote:
->> Certain platforms like TI's J721E allow only 32-bit register accesses.
-> 
-> When I first read this I thought you meant only 32-bit accesses are allowed
-> and not other sizes (such as 64-bit). However the limitation you address
-> here is that the J721E allows only 32-bit *aligned* register accesses.
-
-It's both, it allows only 32-bit aligned accesses and the size should be
-only 32 bits. That's why I always use "readl" in the APIs below.
-> 
-> It would be helpful to make this clearer in the commit message.
-> 
-> You can also shorten the commit subject to 'PCI: cadence: Add read/write
-> accessors for 32-bit aligned accesses' or similar.
-> 
->> Add read and write accessors to perform only 32-bit accesses in order to
->> support platfroms like TI's J721E.
+On 17/12/19 5:28 pm, Andrew Murray wrote:
+> On Mon, Dec 09, 2019 at 02:51:38PM +0530, Kishon Vijay Abraham I wrote:
+>> Add cdns_pcie_ops to start link and verify link status. The registers
+>> to start link and to check link status is in Platform specific PCIe
+>> wrapper. Add support for platform specific drivers to add callback
+>> functions for the PCIe Cadence core to start link and verify link status.
 >>
 >> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 >> ---
->>  drivers/pci/controller/cadence/pcie-cadence.c | 40 +++++++++++++++++++
->>  drivers/pci/controller/cadence/pcie-cadence.h |  2 +
->>  2 files changed, 42 insertions(+)
+>>  .../pci/controller/cadence/pcie-cadence-ep.c  |  8 ++++++
+>>  .../controller/cadence/pcie-cadence-host.c    | 28 +++++++++++++++++++
+>>  drivers/pci/controller/cadence/pcie-cadence.h | 23 +++++++++++++++
+>>  3 files changed, 59 insertions(+)
 >>
->> diff --git a/drivers/pci/controller/cadence/pcie-cadence.c b/drivers/pci/controller/cadence/pcie-cadence.c
->> index cd795f6fc1e2..de5b3b06f2d0 100644
->> --- a/drivers/pci/controller/cadence/pcie-cadence.c
->> +++ b/drivers/pci/controller/cadence/pcie-cadence.c
->> @@ -7,6 +7,46 @@
+>> diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+>> index 560f22b4d165..088394b6be04 100644
+>> --- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
+>> +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+>> @@ -355,8 +355,10 @@ static int cdns_pcie_ep_start(struct pci_epc *epc)
+>>  {
+>>  	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+>>  	struct cdns_pcie *pcie = &ep->pcie;
+>> +	struct device *dev = pcie->dev;
+>>  	struct pci_epf *epf;
+>>  	u32 cfg;
+>> +	int ret;
 >>  
->>  #include "pcie-cadence.h"
+>>  	/*
+>>  	 * BIT(0) is hardwired to 1, hence function 0 is always enabled
+>> @@ -367,6 +369,12 @@ static int cdns_pcie_ep_start(struct pci_epc *epc)
+>>  		cfg |= BIT(epf->func_no);
+>>  	cdns_pcie_writel(pcie, CDNS_PCIE_LM_EP_FUNC_CFG, cfg);
 >>  
->> +u32 cdns_pcie_read32(void __iomem *addr, int size)
-> 
-> Given there is already a cdns_pcie_readl in pcie-cadence.h it may help
-> to name this in a way that doesn't cause confusion. Here 32 is perhaps
-> being used to suggest the size of the actual read performed, the
-> maximum size of 'size' or the alignment.
-> 
-> 
->> +{
->> +	void __iomem *aligned_addr = PTR_ALIGN_DOWN(addr, 0x4);
->> +	unsigned int offset = (unsigned long)addr & 0x3;
->> +	u32 val = readl(aligned_addr);
->> +
->> +	if (!IS_ALIGNED((uintptr_t)addr, size)) {
->> +		pr_err("Invalid Address in function:%s\n", __func__);
-> 
-> Would this be better as a BUG? Without a BUG this error could get ignored
-> and yet the device may not behave as expected.
-
-yeah.
-> 
-> 
->> +		return 0;
+>> +	ret = cdns_pcie_start_link(pcie, true);
+>> +	if (ret) {
+>> +		dev_err(dev, "Failed to start link\n");
+>> +		return ret;
 >> +	}
 >> +
->> +	if (size > 2)
->> +		return val;
+>>  	return 0;
+>>  }
+>>  
+>> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> index ccf55e143e1d..0929554f5a81 100644
+>> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> @@ -3,6 +3,7 @@
+>>  // Cadence PCIe host controller driver.
+>>  // Author: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
+>>  
+>> +#include <linux/delay.h>
+>>  #include <linux/kernel.h>
+>>  #include <linux/of_address.h>
+>>  #include <linux/of_pci.h>
+>> @@ -201,6 +202,23 @@ static int cdns_pcie_host_init(struct device *dev,
+>>  	return err;
+>>  }
+>>  
+>> +static int cdns_pcie_host_wait_for_link(struct cdns_pcie *pcie)
+>> +{
+>> +	struct device *dev = pcie->dev;
+>> +	int retries;
+>> +
+>> +	/* Check if the link is up or not */
+>> +	for (retries = 0; retries < LINK_WAIT_MAX_RETRIES; retries++) {
+>> +		if (cdns_pcie_is_link_up(pcie)) {
+>> +			dev_info(dev, "Link up\n");
+>> +			return 0;
+>> +		}
+>> +		usleep_range(LINK_WAIT_USLEEP_MIN, LINK_WAIT_USLEEP_MAX);
+>> +	}
+>> +
+>> +	return -ETIMEDOUT;
+>> +}
 > 
-> I think you make the assumption here that if size > 2 then it's 4. It could
-> be 3 (though unlikely) in which case you'd want to fall through to the next
-> line.
+> This patch looks fine, except this function (above) is identical to
+> dw_pcie_wait_for_link, advk_pcie_wait_for_link and nwl_wait_for_link. Even
+> the definitions of LINK_WAIT_USLEEP_xx are the same.
+> 
+> I don't see any justification to duplicating this again - can you consolidate
+> these functions to something that all controller drivers can use?
 
-This assumption is used elsewhere too (e.g drivers/pci/access.c). I
-generally don't prefer adding handlers for non-occurring error
-scenarios, but If you insist I can fix that.
+This involves reading a register, so this in entirety cannot be in a
+generic layer. We could add "ops" for checking the link status (in
+pci_ops?), but I'm not sure if that's really required.
 
 Thanks
 Kishon
