@@ -2,98 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A0E42126346
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Dec 2019 14:17:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 08B5B126355
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Dec 2019 14:21:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbfLSNRr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 Dec 2019 08:17:47 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:57998 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726695AbfLSNRq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Dec 2019 08:17:46 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBJDHdR9054319;
-        Thu, 19 Dec 2019 07:17:39 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576761459;
-        bh=2DtoSfwQF0HK6yLy59cfwpATaGf4HB72ZXQDZhbGl2s=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=R5PjBEQOKxDt+PpPr87G052DkxfTxvOu3MtDbQn065YlSubStXr7K4hZB73OqtaFe
-         JwNVPEMoiMDd1/T7Gj7+BGcPtzp8NUBNPXj/3axcoE39K/5FlOuTgx0KovUghIYWGt
-         ZrTBgxHviOq2wqLla3e9uYgd/S3xp356LMSYsAI0=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBJDHdCb126202;
-        Thu, 19 Dec 2019 07:17:39 -0600
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
- Dec 2019 07:17:38 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 19 Dec 2019 07:17:38 -0600
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBJDHZa3046472;
-        Thu, 19 Dec 2019 07:17:36 -0600
-Subject: Re: [PATCH 05/13] PCI: cadence: Add read and write accessors to
- perform only 32-bit accesses
-To:     Arnd Bergmann <arnd@arndb.de>
-CC:     Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>
-References: <20191209092147.22901-1-kishon@ti.com>
- <20191209092147.22901-6-kishon@ti.com>
- <20191216144932.GY24359@e119886-lin.cambridge.arm.com>
- <d1ee4579-a3da-6a73-3516-a6d264f80995@ti.com>
- <CAK8P3a06XLSa-FHNGsN=b10JrddjbOKAvfU=iXdMa+0L43m5fA@mail.gmail.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <9b40e71a-c18c-a958-84fe-c5a126fe8272@ti.com>
-Date:   Thu, 19 Dec 2019 18:49:18 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        id S1726752AbfLSNVL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 Dec 2019 08:21:11 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:52774 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726701AbfLSNVK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Dec 2019 08:21:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576761669;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=f9QuhHETPe7h5O5S9p4/hJNro5uBVjObNxSM6kbHGs0=;
+        b=YMGe8Auk09W0JY3cX6XRrb5q7VUvG3JiRylPfUJy33gRZImS0cIU3VvOOMtWmnsepzY5Bw
+        Qb9KjRk6VJ7v76DIEjsu7ALRcw6OEfMQ7dT+0HsNTKgmR/zRB9hHZsxRTlXOKW0+7YK7+k
+        7cR8KMk5Wdx9F6QV2qiWI6pBzv+ioPE=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-323-WRfRxh3OP0W1hHEH5DLgLQ-1; Thu, 19 Dec 2019 08:21:08 -0500
+X-MC-Unique: WRfRxh3OP0W1hHEH5DLgLQ-1
+Received: by mail-wr1-f72.google.com with SMTP id 90so2353769wrq.6
+        for <linux-pci@vger.kernel.org>; Thu, 19 Dec 2019 05:21:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=f9QuhHETPe7h5O5S9p4/hJNro5uBVjObNxSM6kbHGs0=;
+        b=ftnycFRbpw9iAqlWIm/KnCoJIVGlnribSECVycKRMPJH9zbSjmIm1yyIG2Nb7Oc0Pl
+         df9kox9mQaQGQn6AxOXdEC7vosWuz3aTyWsZ7FnrA1NDzUkQGhjmx1+fu5mnM0aV6EoW
+         XJ5igYkAW82kbuF3WJDat/O1YFlEmhxTHPIeNsjHSHQQ/2p/AZNhr/Rgdr29ZslLDLor
+         L4/fqZHRVbqx0BK4sB/ZkKwDeLfa64AIprmbhjgJUUqeyjjksXKYnV3IaSYPP1/cqv1S
+         CyzJA7A7Cn0mGhXluecqKoML4gf2F9Q36E40EFsgCJEMOAWOu2Kpnkkdl65HA46ympiv
+         NRlg==
+X-Gm-Message-State: APjAAAUzPRuwpv2FpKEpSovW8sN2KCQIilHOXuAM1X6EIgx6WZfx8QYI
+        quyURG932+R3BCmcx0oV6ycwhVADRmxmg0yxb5+Tir8Drrp7S+JZFVwqVUWNJa7yxUDU1SAQcbG
+        bp/WEhiE2ij7qWNPwuxz8
+X-Received: by 2002:a5d:6551:: with SMTP id z17mr9922286wrv.269.1576761667270;
+        Thu, 19 Dec 2019 05:21:07 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyYsmkicq1CgpePFwwJNc2lMQupRm5P+aon/r1P4LvdWHpza4ghagzA9OygT/h18nUeOHn+jg==
+X-Received: by 2002:a5d:6551:: with SMTP id z17mr9922266wrv.269.1576761667016;
+        Thu, 19 Dec 2019 05:21:07 -0800 (PST)
+Received: from localhost.localdomain ([151.29.30.195])
+        by smtp.gmail.com with ESMTPSA id 188sm6488919wmd.1.2019.12.19.05.21.05
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 19 Dec 2019 05:21:05 -0800 (PST)
+Date:   Thu, 19 Dec 2019 14:21:03 +0100
+From:   Juri Lelli <juri.lelli@redhat.com>
+To:     linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-rt-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Claudio Scordino <c.scordino@evidence.eu.com>,
+        Luca Abeni <luca.abeni@santannapisa.it>,
+        Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>
+Subject: Re: [ANNOUNCE][CFP] Power Management and Scheduling in the Linux
+ Kernel IV edition (OSPM-summit 2020)
+Message-ID: <20191219132103.GD13724@localhost.localdomain>
+References: <20191219103500.GC13724@localhost.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a06XLSa-FHNGsN=b10JrddjbOKAvfU=iXdMa+0L43m5fA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191219103500.GC13724@localhost.localdomain>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Arnd,
-
-On 19/12/19 5:33 pm, Arnd Bergmann wrote:
-> On Thu, Dec 19, 2019 at 12:54 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>
->> Hi Andrew,
->>
->> On 16/12/19 8:19 pm, Andrew Murray wrote:
->>> On Mon, Dec 09, 2019 at 02:51:39PM +0530, Kishon Vijay Abraham I wrote:
->>>> Certain platforms like TI's J721E allow only 32-bit register accesses.
->>>
->>> When I first read this I thought you meant only 32-bit accesses are allowed
->>> and not other sizes (such as 64-bit). However the limitation you address
->>> here is that the J721E allows only 32-bit *aligned* register accesses.
->>
->> It's both, it allows only 32-bit aligned accesses and the size should be
->> only 32 bits. That's why I always use "readl" in the APIs below.
+On 19/12/19 11:35, Juri Lelli wrote:
+> Power Management and Scheduling in the Linux Kernel (OSPM-summit) IV edition
 > 
-> In that case, can't you use the pci_generic_config_read32/write32
-> functions with a cadence specific .map_bus() function?
+> May 11-13, 2019
 
-pci_generic_config_read32() is for reading configuration space registers
-only. The accessors I added here are for the controller IP configuration.
+Argh! s/2019/2020/g of course. :-/
 
-For the configuration space access I use
-pci_generic_config_read32/write32()([PATCH 11/13] PCI: j721e: Add TI
-J721E PCIe driver).
-
-Thanks
-Kishon
