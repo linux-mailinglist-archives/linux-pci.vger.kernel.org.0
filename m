@@ -2,42 +2,41 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A0A0E1260F8
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Dec 2019 12:39:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AC69B126153
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Dec 2019 12:54:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbfLSLja (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 Dec 2019 06:39:30 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:52608 "EHLO
+        id S1726903AbfLSLyf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 Dec 2019 06:54:35 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:54060 "EHLO
         lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726668AbfLSLj3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Dec 2019 06:39:29 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBJBdLW4089961;
-        Thu, 19 Dec 2019 05:39:21 -0600
+        with ESMTP id S1726692AbfLSLyd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Dec 2019 06:54:33 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBJBsQ7f094692;
+        Thu, 19 Dec 2019 05:54:26 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576755561;
-        bh=URjsFi4ZIoRLlymSfAHTpngfFolgDFyHrFhz0PlZAyo=;
+        s=ti-com-17Q1; t=1576756466;
+        bh=0wneAsr2dIRQgUOU8O6OrKktT1aM0VMh6k8EH1G2T9g=;
         h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Rx7y9Jfgj8jUXKSsBe0ulubTK2CfDEEp0yo9BddnkYd411O9CQ+DzmWVziSFUNSLY
-         bhHODvmYVl2YzlFMq4k+h18meSchksyKbYRLV9TW2+Y+ejxzkU3AxpHAnBaJIVXchl
-         saGKTTsl1uvdk96dN/FmNzJ0W2dlqHyEj6DQ5Sgc=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBJBdL2l022773
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 19 Dec 2019 05:39:21 -0600
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+        b=Y7nKHasEJ0XxpznpaLYRknLdxcb/F01l1qO5LxRpjmiOVw6au+fi8WVMOUDtSJv9q
+         MJQPniruZNRrVnECnrhvByY91xGTWQwfx16eiu4iP1OTXQ5j03qJFV4H2GRna4sT2W
+         +r2J7HHMI2KErdjfWqrKaBMvFqB/jzCYK93oJoOE=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBJBsQ4L001524;
+        Thu, 19 Dec 2019 05:54:26 -0600
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
- Dec 2019 05:39:21 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ Dec 2019 05:54:25 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 19 Dec 2019 05:39:21 -0600
+ Frontend Transport; Thu, 19 Dec 2019 05:54:25 -0600
 Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBJBdHch064637;
-        Thu, 19 Dec 2019 05:39:18 -0600
-Subject: Re: [PATCH 03/13] PCI: cadence: Add support to use custom read and
- write accessors
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBJBsMcp080167;
+        Thu, 19 Dec 2019 05:54:23 -0600
+Subject: Re: [PATCH 05/13] PCI: cadence: Add read and write accessors to
+ perform only 32-bit accesses
 To:     Andrew Murray <andrew.murray@arm.com>
 CC:     Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -46,15 +45,15 @@ CC:     Bjorn Helgaas <bhelgaas@google.com>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-omap@vger.kernel.org>
 References: <20191209092147.22901-1-kishon@ti.com>
- <20191209092147.22901-4-kishon@ti.com>
- <20191216140729.GX24359@e119886-lin.cambridge.arm.com>
+ <20191209092147.22901-6-kishon@ti.com>
+ <20191216144932.GY24359@e119886-lin.cambridge.arm.com>
 From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <cdd13dd0-6595-c11c-72b2-6a1d140c2bbc@ti.com>
-Date:   Thu, 19 Dec 2019 17:11:00 +0530
+Message-ID: <d1ee4579-a3da-6a73-3516-a6d264f80995@ti.com>
+Date:   Thu, 19 Dec 2019 17:26:05 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20191216140729.GX24359@e119886-lin.cambridge.arm.com>
+In-Reply-To: <20191216144932.GY24359@e119886-lin.cambridge.arm.com>
 Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -64,77 +63,76 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+Hi Andrew,
 
-On 16/12/19 7:37 pm, Andrew Murray wrote:
-> On Mon, Dec 09, 2019 at 02:51:37PM +0530, Kishon Vijay Abraham I wrote:
->> Add support to use custom read and write accessors. Platforms that
->> doesn't support half word or byte access or any other constraint
+On 16/12/19 8:19 pm, Andrew Murray wrote:
+> On Mon, Dec 09, 2019 at 02:51:39PM +0530, Kishon Vijay Abraham I wrote:
+>> Certain platforms like TI's J721E allow only 32-bit register accesses.
 > 
-> s/doesn't/don't/
+> When I first read this I thought you meant only 32-bit accesses are allowed
+> and not other sizes (such as 64-bit). However the limitation you address
+> here is that the J721E allows only 32-bit *aligned* register accesses.
+
+It's both, it allows only 32-bit aligned accesses and the size should be
+only 32 bits. That's why I always use "readl" in the APIs below.
 > 
->> while accessing registers can use this feature to populate custom
->> read and write accessors. These custom accessors are used for both
->> standard register access and configuration space register access.
+> It would be helpful to make this clearer in the commit message.
 > 
-> You can put the following sentence underneath a --- as it's not needed
-> in the commit message (but may be helpful to reviewers).
+> You can also shorten the commit subject to 'PCI: cadence: Add read/write
+> accessors for 32-bit aligned accesses' or similar.
 > 
->> This is in preparation for adding PCIe support in TI's J721E SoC which
->> uses Cadence PCIe core.
+>> Add read and write accessors to perform only 32-bit accesses in order to
+>> support platfroms like TI's J721E.
 >>
 >> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 >> ---
->>  drivers/pci/controller/cadence/pcie-cadence.h | 99 +++++++++++++++++--
->>  1 file changed, 90 insertions(+), 9 deletions(-)
+>>  drivers/pci/controller/cadence/pcie-cadence.c | 40 +++++++++++++++++++
+>>  drivers/pci/controller/cadence/pcie-cadence.h |  2 +
+>>  2 files changed, 42 insertions(+)
 >>
->> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
->> index a2b28b912ca4..d0d91c69fa1d 100644
->> --- a/drivers/pci/controller/cadence/pcie-cadence.h
->> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
->> @@ -223,6 +223,11 @@ enum cdns_pcie_msg_routing {
->>  	MSG_ROUTING_GATHER,
->>  };
+>> diff --git a/drivers/pci/controller/cadence/pcie-cadence.c b/drivers/pci/controller/cadence/pcie-cadence.c
+>> index cd795f6fc1e2..de5b3b06f2d0 100644
+>> --- a/drivers/pci/controller/cadence/pcie-cadence.c
+>> +++ b/drivers/pci/controller/cadence/pcie-cadence.c
+>> @@ -7,6 +7,46 @@
 >>  
->> +struct cdns_pcie_ops {
->> +	u32	(*read)(void __iomem *addr, int size);
->> +	void	(*write)(void __iomem *addr, int size, u32 value);
->> +};
->> +
->>  /**
->>   * struct cdns_pcie - private data for Cadence PCIe controller drivers
->>   * @reg_base: IO mapped register base
->> @@ -239,7 +244,7 @@ struct cdns_pcie {
->>  	int			phy_count;
->>  	struct phy		**phy;
->>  	struct device_link	**link;
->> -	const struct cdns_pcie_common_ops *ops;
+>>  #include "pcie-cadence.h"
+>>  
+>> +u32 cdns_pcie_read32(void __iomem *addr, int size)
 > 
-> What was cdns_pcie_common_ops? It's not defined in the current tree is it?
+> Given there is already a cdns_pcie_readl in pcie-cadence.h it may help
+> to name this in a way that doesn't cause confusion. Here 32 is perhaps
+> being used to suggest the size of the actual read performed, the
+> maximum size of 'size' or the alignment.
+> 
+> 
+>> +{
+>> +	void __iomem *aligned_addr = PTR_ALIGN_DOWN(addr, 0x4);
+>> +	unsigned int offset = (unsigned long)addr & 0x3;
+>> +	u32 val = readl(aligned_addr);
+>> +
+>> +	if (!IS_ALIGNED((uintptr_t)addr, size)) {
+>> +		pr_err("Invalid Address in function:%s\n", __func__);
+> 
+> Would this be better as a BUG? Without a BUG this error could get ignored
+> and yet the device may not behave as expected.
 
-Yeah, it's spurious change that has got merged.
+yeah.
 > 
->> +	const struct cdns_pcie_ops *ops;
->>  };
->>  
->>  /**
->> @@ -301,21 +306,47 @@ struct cdns_pcie_ep {
->>  /* Register access */
->>  static inline void cdns_pcie_writeb(struct cdns_pcie *pcie, u32 reg, u8 value)
->>  {
->> +	void __iomem *addr = pcie->reg_base + reg;
->> +
->> +	if (pcie->ops && pcie->ops->write) {
->> +		pcie->ops->write(addr, 0x1, value);
->> +		return;
+> 
+>> +		return 0;
 >> +	}
 >> +
->>  	writeb(value, pcie->reg_base + reg);
+>> +	if (size > 2)
+>> +		return val;
 > 
-> Can you use 'addr' here instead of 'pcie->reg_base + reg'? (And similar for the
-> rest of them).
+> I think you make the assumption here that if size > 2 then it's 4. It could
+> be 3 (though unlikely) in which case you'd want to fall through to the next
+> line.
 
-Sure.
+This assumption is used elsewhere too (e.g drivers/pci/access.c). I
+generally don't prefer adding handlers for non-occurring error
+scenarios, but If you insist I can fix that.
 
 Thanks
 Kishon
