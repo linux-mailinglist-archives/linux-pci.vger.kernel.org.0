@@ -2,138 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CC055126174
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Dec 2019 13:01:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DA975126180
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Dec 2019 13:03:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbfLSMBS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 Dec 2019 07:01:18 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:37964 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726704AbfLSMBS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Dec 2019 07:01:18 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBJC19aq067272;
-        Thu, 19 Dec 2019 06:01:09 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576756869;
-        bh=UE9chI9mah0RhDqtfW9UyM7cHrHG5JmXTXk/JRmKmUU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=RBr3umIPtIGbAZA44PEYUUII1Aj1fR/A7Yr+xSqCTYVJ+pDsy8gn7XJ7fzDv3/3v4
-         HE5Pi+VyhIfm1Jufg2koqiypZJH6SXUKbcgdZ36S6dd7h2RbLO5jOKeMuvS/odQHzT
-         G8jc1GfeOnFOLMnH5elgZJjtigM2evFq7tycs8pE=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBJC19J4051781
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 19 Dec 2019 06:01:09 -0600
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
- Dec 2019 06:01:09 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 19 Dec 2019 06:01:08 -0600
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBJC15YS047971;
-        Thu, 19 Dec 2019 06:01:06 -0600
-Subject: Re: [PATCH 06/13] PCI: cadence: Allow pci_host_bridge to have custom
- pci_ops
-To:     Andrew Murray <andrew.murray@arm.com>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        id S1726744AbfLSMDs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 Dec 2019 07:03:48 -0500
+Received: from mout.kundenserver.de ([217.72.192.74]:55627 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726668AbfLSMDs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Dec 2019 07:03:48 -0500
+Received: from mail-qv1-f53.google.com ([209.85.219.53]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MXH3Y-1iBNa345AU-00Yfyv; Thu, 19 Dec 2019 13:03:46 +0100
+Received: by mail-qv1-f53.google.com with SMTP id m14so2113644qvl.3;
+        Thu, 19 Dec 2019 04:03:45 -0800 (PST)
+X-Gm-Message-State: APjAAAXMlQFMB2P/264RYR8qG8bHAqtVvXZiWmueKgL7wxk/lTdZe/Nk
+        lOzae+eApQqXFmaZG3jgQSCd8S+cee5xbPRzixk=
+X-Google-Smtp-Source: APXvYqyRYAthWWOFbK4JwdbfUGnK3IkCerPrE6//l+bsXhqevvRLK6TVQiG7yBNWDpk0m44tuJY3intXaCEenSLn4+0=
+X-Received: by 2002:a0c:d788:: with SMTP id z8mr1183000qvi.211.1576757024622;
+ Thu, 19 Dec 2019 04:03:44 -0800 (PST)
+MIME-Version: 1.0
+References: <20191209092147.22901-1-kishon@ti.com> <20191209092147.22901-6-kishon@ti.com>
+ <20191216144932.GY24359@e119886-lin.cambridge.arm.com> <d1ee4579-a3da-6a73-3516-a6d264f80995@ti.com>
+In-Reply-To: <d1ee4579-a3da-6a73-3516-a6d264f80995@ti.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 19 Dec 2019 13:03:28 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a06XLSa-FHNGsN=b10JrddjbOKAvfU=iXdMa+0L43m5fA@mail.gmail.com>
+Message-ID: <CAK8P3a06XLSa-FHNGsN=b10JrddjbOKAvfU=iXdMa+0L43m5fA@mail.gmail.com>
+Subject: Re: [PATCH 05/13] PCI: cadence: Add read and write accessors to
+ perform only 32-bit accesses
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>
-References: <20191209092147.22901-1-kishon@ti.com>
- <20191209092147.22901-7-kishon@ti.com>
- <20191217123243.GC24359@e119886-lin.cambridge.arm.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <0176543a-bc9b-0584-537e-ea407f5340c2@ti.com>
-Date:   Thu, 19 Dec 2019 17:32:48 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <20191217123243.GC24359@e119886-lin.cambridge.arm.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        linux-pci <linux-pci@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:r6T3/CcYpNS86A2Hvx7bMZm1KM8FiNbjscHFDmZ+OK596/2FHQw
+ 14vK4BjTgsPQWg4SSBHNWwqS6TU86YPVztPL/xXH5371kxHFXCsOvIde4HG5UNt1u8wGx55
+ AWkOYni8+6x1/5B6p+HXnwF3lJ9Q0z5E62HCsdQbWJgy7ex2BMVj4+VbB231e4izNmOxWfJ
+ 0wGPd+fGDcyCzLxj0dAUA==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:XyO0F0+TXjA=:r/8VdwCanuBYUQ4DTNJuie
+ QffNdRqHrA0PKHo66OByfUYaRxiUtIsPRrHvHxTt1zL5lT8EoXHNMPX2q+M8d9+lHMpd1aebu
+ Gp/ebIp1FCuP/ZiTLo5vkO8coqiWo6Q9O6dVZhwx0agYKLAjnVdKgaJLpPV2l5YB1jJIi4ihQ
+ t2QuYf8cAMoLsLQYJbniTt6Z19W5dGHv3BY3WR76XSOOtdvLKqPn0QLUVSj0zg/UMasDZHG7H
+ kW1NCbJmxsUpak2z2DSRSJEGIlXHpCDvxbNTUjdFmjdMYClFdGSWo0kYQM903zK72v4JM5+nI
+ 0lXxrbubQPRvxq2PQKoOWKD9nQGp4l6CG2QKsh2LQl3Qt3ymNIbPsLNPznGX3b/GNhUWt6tV6
+ ijGGsDUWuVKFxgoKuAdjizL2ncUp4pyW1OJwsrLkRB3aeZ6K5ILBlBpOVtMf3yOau4ZeNdUQN
+ 2ah/h3Zd02t85RB5YOuNQQRZPpMhPJaHWuRVdJWeqekgFmRqHH3DocCIlsP2cB0mnaf0nge0U
+ Yt/PKaBs73aspwFTixChOQYD/y+RrY2IBtUJxWm3O6EAV0Tmu3lSsNUc0k1PKvp3+073euJAc
+ Gna6Ai5KQoQpszqJIQKDSujU+4sIsk7SJkwAJ9eX4tKVwyXABq9NNxKiK/LMs4zbYewnrA/C7
+ x06Jrh2YnaZ4urjdevC9gRfdxkhj5HNKgatjJIG49k9kG9VGsfRaz2Vbgv92VEy5mA08P1RJB
+ 5YCK/X8cl+tTLVq8kAtzWiXT+OhcTwjeer2YmBM7fapkJhpyvTr0xr0h3yPZHxDEqHXlyXB2R
+ TZ6ZmjQOy1aA+uJZkPRzqjjwTdVro8AvcUjbNjRlTZSnOpR78z8Pl/mpb5gQkGLlW+VxQ6JCZ
+ QbqpeebYENhYnrghRqrQ==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Andrew,
+On Thu, Dec 19, 2019 at 12:54 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>
+> Hi Andrew,
+>
+> On 16/12/19 8:19 pm, Andrew Murray wrote:
+> > On Mon, Dec 09, 2019 at 02:51:39PM +0530, Kishon Vijay Abraham I wrote:
+> >> Certain platforms like TI's J721E allow only 32-bit register accesses.
+> >
+> > When I first read this I thought you meant only 32-bit accesses are allowed
+> > and not other sizes (such as 64-bit). However the limitation you address
+> > here is that the J721E allows only 32-bit *aligned* register accesses.
+>
+> It's both, it allows only 32-bit aligned accesses and the size should be
+> only 32 bits. That's why I always use "readl" in the APIs below.
 
-On 17/12/19 6:02 pm, Andrew Murray wrote:
-> On Mon, Dec 09, 2019 at 02:51:40PM +0530, Kishon Vijay Abraham I wrote:
->> Certain platforms like TI's J721E allows only 32-bit configuration
->> space access. In such cases pci_generic_config_read and
->> pci_generic_config_write cannot be used. Add support in Cadence core
->> to let pci_host_bridge have custom pci_ops.
->>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>  drivers/pci/controller/cadence/pcie-cadence-host.c | 7 ++++---
->>  drivers/pci/controller/cadence/pcie-cadence.h      | 8 ++++++++
->>  2 files changed, 12 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
->> index 0929554f5a81..2efc33b1cade 100644
->> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
->> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
->> @@ -12,8 +12,8 @@
->>  
->>  #include "pcie-cadence.h"
->>  
->> -static void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
->> -				      int where)
->> +void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
->> +			       int where)
->>  {
->>  	struct pci_host_bridge *bridge = pci_find_host_bridge(bus);
->>  	struct cdns_pcie_rc *rc = pci_host_bridge_priv(bridge);
->> @@ -289,7 +289,8 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->>  	list_splice_init(&resources, &bridge->windows);
->>  	bridge->dev.parent = dev;
->>  	bridge->busnr = pcie->bus;
->> -	bridge->ops = &cdns_pcie_host_ops;
->> +	if (!bridge->ops)
->> +		bridge->ops = &cdns_pcie_host_ops;
->>  	bridge->map_irq = of_irq_parse_and_map_pci;
->>  	bridge->swizzle_irq = pci_common_swizzle;
->>  
->> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
->> index 5171d0da37da..c879dd3d2893 100644
->> --- a/drivers/pci/controller/cadence/pcie-cadence.h
->> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
->> @@ -472,11 +472,19 @@ static inline bool cdns_pcie_is_link_up(struct cdns_pcie *pcie)
->>  
->>  #ifdef CONFIG_PCIE_CADENCE_HOST
->>  int cdns_pcie_host_setup(struct cdns_pcie_rc *rc);
->> +void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
->> +			       int where);
-> 
-> The commit message doesn't explain why this change in visibility is needed).
+In that case, can't you use the pci_generic_config_read32/write32
+functions with a cadence specific .map_bus() function?
 
-So that platform drivers can write custom read() and write() ops and
-re-use map_bus. Will add this info in commit message.
-> 
->>  #else
->>  static inline int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->>  {
->>  	return 0;
->>  }
->> +
->> +static inline void __iomem *cdns_pci_map_bus(struct pci_bus *bus,
->> +					     unsigned int devfn,
->> +					     int where)
->> +{
-> 
-> This still needs to return something right?
-
-Right, thanks for spotting this.
-
-Thanks
-Kishon
+       Arnd
