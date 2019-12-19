@@ -2,76 +2,237 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D569312704D
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Dec 2019 23:05:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 111C41270DF
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Dec 2019 23:47:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbfLSWFJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 Dec 2019 17:05:09 -0500
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:38253 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726866AbfLSWFI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Dec 2019 17:05:08 -0500
-Received: by mail-yw1-f68.google.com with SMTP id 10so2787824ywv.5;
-        Thu, 19 Dec 2019 14:05:08 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1ZLXo5NjpSRAxo1kpGOmOXM5hSzlfuVkSp439RA+RFk=;
-        b=nKJyvfLPIkNgXq4Vk/HErscJQSHFoqz5/4vhCEeQFBRKYh3ZlJZ6WFhcbfsSu5qxei
-         g3Ldc+yb64XScCUUVauW9iSVVzzhhjaTAqsDT/wIYbKlWBRA4Xxf9ojPJj74aAe0H44v
-         q5JN7pImy1oGOP7EdWB9wPqGPPoXSbZUsQayL5tqia+tkNL9gt1E+FG+YwiZCHbyKUYQ
-         g0Txe/XceSRkViY1kV23JGOTd9SLUa5vvUs1EAIjG4Rnn1jTX0kDqZwHcniFqrygbB/3
-         aqNMQEPvjfw5gA+81kAMlg9hsDmI4Im/uVQMXao/gfug8NMNC2eDhlpMp7q2/1KbjU7S
-         ShAw==
-X-Gm-Message-State: APjAAAXRwXuqM9DlbMV37OvAVsF7wTebrJdttuOaM05aXFcIw2r7wwLa
-        AAW7tDi+VFGgE9u61gCoww==
-X-Google-Smtp-Source: APXvYqwGDJJUF+JP/PfFSSCbn62gaMUqUnaNPm8Ka78UNu1rFv1DVCnAhHZw9+75RosiSxzI4EHmkg==
-X-Received: by 2002:a0d:c243:: with SMTP id e64mr8252091ywd.12.1576793107781;
-        Thu, 19 Dec 2019 14:05:07 -0800 (PST)
-Received: from localhost (ip-99-203-15-82.pools.spcsdns.net. [99.203.15.82])
-        by smtp.gmail.com with ESMTPSA id h193sm2928138ywc.88.2019.12.19.14.04.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 14:05:07 -0800 (PST)
-Date:   Thu, 19 Dec 2019 16:03:46 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        id S1726964AbfLSWrx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 Dec 2019 17:47:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51496 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726818AbfLSWrx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 19 Dec 2019 17:47:53 -0500
+Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 783C424676;
+        Thu, 19 Dec 2019 22:47:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576795671;
+        bh=8GcBnntoXyRz8XWSW60SBcCPacwS7TvkNShSEN8spKw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=iVxne02lXPGE7JLWXH2ApVnlkXdRZLs6triyU+ubK2gzI/jY3Ks9IxiaRc9yX0MpM
+         3w/8prLTYogAlcOOCFIfDK7PgU+qlvIMOEqpQMLxkszXlgg4saKTtUWR93n6MioGu2
+         Ioypml7rHSALjSVdCMLy0ScApSlRLV+lW3jzaVS0=
+Date:   Thu, 19 Dec 2019 16:47:49 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
         Andrew Murray <andrew.murray@arm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mark Rutland <mark.rutland@arm.com>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: Re: [PATCH 1/2] dt-bindings: PCI: Add UniPhier PCIe endpoint
- controller description
-Message-ID: <20191219215617.GA11666@bogus>
-References: <1576116138-16501-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1576116138-16501-2-git-send-email-hayashi.kunihiko@socionext.com>
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCH 11/13] PCI: j721e: Add TI J721E PCIe driver
+Message-ID: <20191219224749.GA4225@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1576116138-16501-2-git-send-email-hayashi.kunihiko@socionext.com>
+In-Reply-To: <20191209092147.22901-12-kishon@ti.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 12 Dec 2019 11:02:17 +0900, Kunihiko Hayashi wrote:
-> Add DT bindings for PCIe controller implemented in UniPhier SoCs
-> when configured in endpoint mode. This controller is based on
-> the DesignWare PCIe core.
+On Mon, Dec 09, 2019 at 02:51:45PM +0530, Kishon Vijay Abraham I wrote:
+> Add support for PCIe controller in J721E SoC. The controller uses the
+> Cadence PCIe core programmed by pcie-cadence*.c. The PCIe controller
+> will work in both host mode and device mode.
+> Some of the features of the controller are:
+>   *) Supports both RC mode and EP mode
+>   *) Supports MSI and MSI-X support
+>   *) Supports upto GEN3 speed mode
+>   *) Supports SR-IOV capability
+>   *) Ability to route all transactions via SMMU (support will be added
+>      in a later patch).
 > 
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 > ---
->  .../devicetree/bindings/pci/uniphier-pcie-ep.txt   | 47 ++++++++++++++++++++++
->  MAINTAINERS                                        |  2 +-
->  2 files changed, 48 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/pci/uniphier-pcie-ep.txt
+>  drivers/pci/controller/cadence/Kconfig     |  23 ++
+>  drivers/pci/controller/cadence/Makefile    |   1 +
+>  drivers/pci/controller/cadence/pci-j721e.c | 430 +++++++++++++++++++++
+>  3 files changed, 454 insertions(+)
+>  create mode 100644 drivers/pci/controller/cadence/pci-j721e.c
 > 
+> diff --git a/drivers/pci/controller/cadence/Kconfig b/drivers/pci/controller/cadence/Kconfig
+> index b76b3cf55ce5..5d30564190e1 100644
+> --- a/drivers/pci/controller/cadence/Kconfig
+> +++ b/drivers/pci/controller/cadence/Kconfig
+> @@ -42,4 +42,27 @@ config PCIE_CADENCE_PLAT_EP
+>  	  endpoint mode. This PCIe controller may be embedded into many
+>  	  different vendors SoCs.
+>  
+> +config PCI_J721E
+> +	bool
+> +
+> +config PCI_J721E_HOST
+> +	bool "TI J721E PCIe platform host controller"
+> +	depends on OF
+> +	select PCIE_CADENCE_HOST
+> +	select PCI_J721E
+> +	help
+> +	  Say Y here if you want to support the TI J721E PCIe platform
+> +	  controller in host mode. TI J721E PCIe controller uses Cadence PCIe
+> +	  core.
+> +
+> +config PCI_J721E_EP
+> +	bool "TI J721E PCIe platform endpoint controller"
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Most drivers call these "PCIe host controller" and "PCIe endpoint
+controller" or similar.  Does adding "platform" indicate something
+useful?
+
+> +	depends on OF
+> +	depends on PCI_ENDPOINT
+> +	select PCIE_CADENCE_EP
+> +	select PCI_J721E
+> +	help
+> +	  Say Y here if you want to support the TI J721E PCIe platform
+> +	  controller in endpoint mode. TI J721E PCIe controller uses Cadence PCIe
+> +	  core.
+>  endmenu
+> diff --git a/drivers/pci/controller/cadence/Makefile b/drivers/pci/controller/cadence/Makefile
+> index 232a3f20876a..9bac5fb2f13d 100644
+> --- a/drivers/pci/controller/cadence/Makefile
+> +++ b/drivers/pci/controller/cadence/Makefile
+> @@ -3,3 +3,4 @@ obj-$(CONFIG_PCIE_CADENCE) += pcie-cadence.o
+>  obj-$(CONFIG_PCIE_CADENCE_HOST) += pcie-cadence-host.o
+>  obj-$(CONFIG_PCIE_CADENCE_EP) += pcie-cadence-ep.o
+>  obj-$(CONFIG_PCIE_CADENCE_PLAT) += pcie-cadence-plat.o
+> +obj-$(CONFIG_PCI_J721E) += pci-j721e.o
+> diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
+> new file mode 100644
+> index 000000000000..9ffb7e88c739
+> --- /dev/null
+> +++ b/drivers/pci/controller/cadence/pci-j721e.c
+> @@ -0,0 +1,430 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/**
+> + * pci-j721e - PCIe controller driver for TI's J721E SoCs
+> + *
+> + * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com
+> + * Author: Kishon Vijay Abraham I <kishon@ti.com>
+> + */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/io.h>
+> +#include <linux/irqchip/chained_irq.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/pci.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/regmap.h>
+> +
+> +#include "../../pci.h"
+> +#include "pcie-cadence.h"
+> +
+> +#define J721E_PCIE_USER_CMD_STATUS	0x4
+> +#define LINK_TRAINING_ENABLE		BIT(0)
+> +
+> +#define J721E_PCIE_USER_LINKSTATUS	0x14
+> +#define LINK_STATUS			GENMASK(1, 0)
+> +
+> +enum link_status {
+> +	NO_RECIEVERS_DETECTED,
+
+s/NO_RECIEVERS_DETECTED/NO_RECEIVERS_DETECTED/
+
+> +	LINK_TRAINING_IN_PROGRESS,
+> +	LINK_UP_DL_IN_PROGRESS,
+> +	LINK_UP_DL_COMPLETED,
+> +};
+> +
+> +#define J721E_MODE_RC			BIT(7)
+> +#define LANE_COUNT_MASK			BIT(8)
+> +#define LANE_COUNT(n)			((n) << 8)
+> +
+> +#define GENERATION_SEL_MASK		GENMASK(1, 0)
+> +
+> +#define MAX_LANES			2
+> +
+> +struct j721e_pcie {
+> +	struct device		*dev;
+> +	struct device_node	*node;
+> +	u32			mode;
+> +	u32			num_lanes;
+> +	struct cdns_pcie	*cdns_pcie;
+> +	void __iomem		*user_cfg_base;
+> +};
+> +
+> +enum j721e_pcie_mode {
+> +	PCI_MODE_RC,
+> +	PCI_MODE_EP,
+> +};
+> +
+> +struct j721e_pcie_data {
+> +	enum j721e_pcie_mode	mode;
+> +};
+> +
+> +static inline u32 j721e_pcie_user_readl(struct j721e_pcie *pcie, u32 offset)
+> +{
+> +	return readl(pcie->user_cfg_base + offset);
+> +}
+> +
+> +static inline void j721e_pcie_user_writel(struct j721e_pcie *pcie, u32 offset,
+> +					  u32 value)
+> +{
+> +	writel(value, pcie->user_cfg_base + offset);
+> +}
+> +
+> +static int j721e_pcie_start_link(struct cdns_pcie *cdns_pcie, bool start)
+> +{
+> +	struct j721e_pcie *pcie = dev_get_drvdata(cdns_pcie->dev);
+> +	u32 reg;
+> +
+> +	reg = j721e_pcie_user_readl(pcie, J721E_PCIE_USER_CMD_STATUS);
+> +	if (start)
+> +		reg |= LINK_TRAINING_ENABLE;
+> +	else
+> +		reg &= ~LINK_TRAINING_ENABLE;
+> +	j721e_pcie_user_writel(pcie, J721E_PCIE_USER_CMD_STATUS, reg);
+> +
+> +	return 0;
+> +}
+> +
+> +static bool j721e_pcie_is_link_up(struct cdns_pcie *cdns_pcie)
+
+There are many *_pcie_link_up() definitions that looks essentially
+like this; maybe this could be simply j721e_pcie_link_up() to match?
+
+> +{
+> +	struct j721e_pcie *pcie = dev_get_drvdata(cdns_pcie->dev);
+> +	u32 reg;
+> +
+> +	reg = j721e_pcie_user_readl(pcie, J721E_PCIE_USER_LINKSTATUS);
+> +	reg &= LINK_STATUS;
+> +	if (reg == LINK_UP_DL_COMPLETED)
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
+> +static const struct cdns_pcie_ops j721e_ops_ops = {
+> +	.read = cdns_pcie_read32,
+> +	.write = cdns_pcie_write32,
+> +	.start_link = j721e_pcie_start_link,
+> +	.is_link_up = j721e_pcie_is_link_up,
+> +};
+
+Can these match struct dw_pcie_ops more closely, e.g., ".link_up"
+instead of ".is_link_up", ".start_link" and ".stop_link" instead of
+".start_link(..., bool)"?
+
+Bjorn
