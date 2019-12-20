@@ -2,178 +2,201 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F59C127696
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Dec 2019 08:37:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ECF95127783
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Dec 2019 09:50:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbfLTHh6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Dec 2019 02:37:58 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:46414 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727167AbfLTHh6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Dec 2019 02:37:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576827476;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=fPptbBAOO0GcMCPdxf9qZyN4g0rcLLRix/sll54J6WU=;
-        b=Z83NZmHJRYsK/7F1CqZpX6tT4jkGcKuz/NBpkeLWmcapdTPY3oX4dg+Kj+l7hLO9QcmQgG
-        cAJnmywi+oxUV6qcBRGSaxAt33t/Hi2XPurx5XAwkvaHZBe/CnAGlyPpyXDP8yAcCHJt9G
-        e6j517ua1pYmX/Gq0m5okcm4+djoTo8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-163-9VEu2D28Oh-yyCnTTKDODw-1; Fri, 20 Dec 2019 02:37:52 -0500
-X-MC-Unique: 9VEu2D28Oh-yyCnTTKDODw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B3863184BEC0;
-        Fri, 20 Dec 2019 07:37:49 +0000 (UTC)
-Received: from [10.36.116.117] (ovpn-116-117.ams2.redhat.com [10.36.116.117])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 89EE25DA2C;
-        Fri, 20 Dec 2019 07:37:40 +0000 (UTC)
-Subject: Re: [PATCH v4 13/13] iommu/arm-smmu-v3: Add support for PCI PASID
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-Cc:     joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        lorenzo.pieralisi@arm.com, guohanjun@huawei.com,
-        sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org,
-        will@kernel.org, robin.murphy@arm.com, bhelgaas@google.com,
-        jonathan.cameron@huawei.com, zhangfei.gao@linaro.org
-References: <20191219163033.2608177-1-jean-philippe@linaro.org>
- <20191219163033.2608177-14-jean-philippe@linaro.org>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <8c843513-15a4-e51a-a32c-6316273c3289@redhat.com>
-Date:   Fri, 20 Dec 2019 08:37:38 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-MIME-Version: 1.0
-In-Reply-To: <20191219163033.2608177-14-jean-philippe@linaro.org>
-Content-Type: text/plain; charset=utf-8
+        id S1727174AbfLTIuW convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Fri, 20 Dec 2019 03:50:22 -0500
+Received: from mail-oln040092255087.outbound.protection.outlook.com ([40.92.255.87]:43008
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727135AbfLTIuW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 20 Dec 2019 03:50:22 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LETB1PxKPnpV2Zcem7/KYafPuaK7eQoAo/3417+qL2gBElaH1r0gUXqN6svzzs+zSGb6jZtskCckxc4gTluyhpR3EDWAFVlOB5mVxq9Lk/468i1h1qH8VkeYYr1HElpRFa435T3VQR3muJu3PdShrol6lmRIV7UhGeASaUNJCqVVfSMGMzeJFvjg8Gdz1tsN5qAz3tAcFI/qk0u7UzmD12ahDZ0heIjX1Uv1aJteOUxgKWCc5sVm8xSFw8QFKxRyf2mccUX/Y5NSw5zqBCXs5DPvQf8yYpznaVLOec/hBUuUPoSOY8lDkt8IcaJ2f3P9hBL7mkEeuJD+p0z08hT8Jg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=j/qRJkZpdBBGdnBBdu/OQNM9Xv0903fVpLOavpib+tQ=;
+ b=V0nvoTp7Eqgh9aTEteSih4RgcHtrKXiy+kdPSZ6xojbQCQ2oaYJQyTleFXk32tBND7KmoIj5yUWgX9RskYpB8XcptUQB35UGJ08QzYa0MK9sJ5jvod0tE8NGgacBSsROzxG8JPyQPWDOiME6D2/pCYnAnqDgB1ZvV58i3py1rsxnK1IAbTi5jyFhrNyIbO4koV9/J88NtiBWfqD7miU4Sw1zRN4lnVxbqNvGbTa8vMngr6evKIbbz/YkTvDse8nKLxeZe2W50iYdpLab2iQ9MWuSUpcopCvro5KeDKe1naXp1JT01VALX6FPGGeH36H34IZMVhze/GnaQ0Rt7Zk/Pw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from SG2APC01FT132.eop-APC01.prod.protection.outlook.com
+ (10.152.250.58) by SG2APC01HT159.eop-APC01.prod.protection.outlook.com
+ (10.152.251.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2559.14; Fri, 20 Dec
+ 2019 08:50:14 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.250.52) by
+ SG2APC01FT132.mail.protection.outlook.com (10.152.250.218) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2559.14 via Frontend Transport; Fri, 20 Dec 2019 08:50:14 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::20ad:6646:5bcd:63c9]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::20ad:6646:5bcd:63c9%11]) with mapi id 15.20.2559.016; Fri, 20 Dec
+ 2019 08:50:14 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Logan Gunthorpe <logang@deltatee.com>
+Subject: Re: [PATCH v12 0/4] PCI: Patch series to improve Thunderbolt
+ enumeration
+Thread-Topic: [PATCH v12 0/4] PCI: Patch series to improve Thunderbolt
+ enumeration
+Thread-Index: AQHVrpB+5sK/XGeQw0yttw28ATWBvae+e8EAgACidQCAAxacAIAAkwAA
+Date:   Fri, 20 Dec 2019 08:50:14 +0000
+Message-ID: <PSXP216MB043888F94710A361E4D84DFF802D0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+References: <PSXP216MB043840E2DE9B81AC8797F63A80530@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+ <20191220000358.GA126443@google.com>
+In-Reply-To: <20191220000358.GA126443@google.com>
+Accept-Language: en-AU, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MEXPR01CA0109.ausprd01.prod.outlook.com
+ (2603:10c6:200:2c::18) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:300:d::20)
+x-incomingtopheadermarker: OriginalChecksum:F855BA5884A513592D612ADEB0FE1425C82BDCD0ADD03B8B71DA19680BC08343;UpperCasedChecksum:E9D8B675A18992AF997A75D9987BA494C0C307504AF795FDB17FBA13AB47D237;SizeAsReceived:7638;Count:49
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [HxoIoUgI7m6Ry2ozidc62JYW/LoovkdT]
+x-microsoft-original-message-id: <20191220085006.GA1607@nicholas-dell-linux>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 49
+x-eopattributedmessage: 0
+x-ms-office365-filtering-correlation-id: 1986a1cd-6770-4e30-ec0f-08d78529a136
+x-ms-traffictypediagnostic: SG2APC01HT159:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: RnU3kqWcxfI3MwhVA5OQR4uaUKGbUgFhEGnnYpBuYRlg9LwLEcs4t4QGSUlVTmZ5ytIFKsyVlqrZc61SIqicXGv4ms4zBe3joYaKrxbWUMZ5vx92LtwYKRnLu5ca5hUUSq8acOMLld0WdWGDpJa05tqYSzsYB1DN21+Vh3G5ItHoLdf2KTMoIe/njDLv052q
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <E7FD1774B7DB644FAF17DD9771CB1EFE@KORP216.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1986a1cd-6770-4e30-ec0f-08d78529a136
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Dec 2019 08:50:14.7406
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2APC01HT159
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Jean,
+On Thu, Dec 19, 2019 at 06:03:58PM -0600, Bjorn Helgaas wrote:
+> On Wed, Dec 18, 2019 at 12:54:25AM +0000, Nicholas Johnson wrote:
+> > On Tue, Dec 17, 2019 at 09:12:48AM -0600, Bjorn Helgaas wrote:
+> > > On Mon, Dec 09, 2019 at 12:59:29PM +0000, Nicholas Johnson wrote:
+> > > > Hi all,
+> > > > 
+> > > > Since last time:
+> > > > 	Reverse Christmas tree for a couple of variables
+> > > > 
+> > > > 	Changed while to whilst (sounds more formal, and so that 
+> > > > 	grepping for "while" only brings up code)
+> > > > 
+> > > > 	Made sure they still apply to latest Linux v5.5-rc1
+> > > > 
+> > > > Kind regards,
+> > > > Nicholas
+> > > > 
+> > > > Nicholas Johnson (4):
+> > > >   PCI: Consider alignment of hot-added bridges when distributing
+> > > >     available resources
+Prevent failure to assign hot-added Thunderbolt PCI BARs with alignment >1M 
 
-On 12/19/19 5:30 PM, Jean-Philippe Brucker wrote:
-> Enable PASID for PCI devices that support it. Since the SSID tables are
-> allocated by arm_smmu_attach_dev(), PASID has to be enabled early enough.
-> arm_smmu_dev_feature_enable() would be too late, since by that time the
-> main DMA domain has already been attached. Do it in add_device() instead.
+> > > >   PCI: In extend_bridge_window() change available to new_size
+Change variable name in extend_bridge_window() to better reflect its 
+purpose
+
+^ I would have preferred this not be its own commit. Is it too late to 
+squash it back together with patch 3/4?
+
+> > > >   PCI: Change extend_bridge_window() to set resource size directly
+Use guaranteed PCI resource size instead of optional add_size when 
+adjusting bridge windows
+
+> > > >   PCI: Allow extend_bridge_window() to shrink resource if necessary
+Prevent failure to extend nested hotplug bridge window if pci=hpmmiosize 
+or similar kernel parameter used
+
+> > > 
+> > > I have tentatively applied these to pci/resource for v5.6, but I need
+> > > some kind of high-level description for why we want these changes.
+> > I could not find these in linux-next (whereas it was almost immediate 
+> > last time), so this must be why.
+> > 
+> > > The commit logs describe what the code does, and that's good, but we
+> > > really need a little more of the *why* and what the user-visible
+> > > benefit is.  I know some of this was in earlier postings, but it seems
+> > > to have gotten lost along the way.
+> >
+> > Is this explanation going into the commit notes, or is this just to get 
+> > it past reviewers, Greg K-H and Linus Torvalds?
 > 
-> Tested-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
-
-Thanks
-
-Eric
-
-> ---
->  drivers/iommu/arm-smmu-v3.c | 55 ++++++++++++++++++++++++++++++++++++-
->  1 file changed, 54 insertions(+), 1 deletion(-)
+> This is for the commit log of the merge commit, i.e., it should answer
+> the question of "why should we merge this branch?"  Typically this is
+> short, e.g., here's the merge commit for the pci/resource branch that
+> was merged for v5.5:
 > 
-> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-> index e62ca80f2f76..8e95ecad4c9a 100644
-> --- a/drivers/iommu/arm-smmu-v3.c
-> +++ b/drivers/iommu/arm-smmu-v3.c
-> @@ -2644,6 +2644,53 @@ static void arm_smmu_disable_ats(struct arm_smmu_master *master)
->  	atomic_dec(&smmu_domain->nr_ats_masters);
->  }
->  
-> +static int arm_smmu_enable_pasid(struct arm_smmu_master *master)
-> +{
-> +	int ret;
-> +	int features;
-> +	int num_pasids;
-> +	struct pci_dev *pdev;
-> +
-> +	if (!dev_is_pci(master->dev))
-> +		return -ENODEV;
-> +
-> +	pdev = to_pci_dev(master->dev);
-> +
-> +	features = pci_pasid_features(pdev);
-> +	if (features < 0)
-> +		return features;
-> +
-> +	num_pasids = pci_max_pasids(pdev);
-> +	if (num_pasids <= 0)
-> +		return num_pasids;
-> +
-> +	ret = pci_enable_pasid(pdev, features);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Failed to enable PASID\n");
-> +		return ret;
-> +	}
-> +
-> +	master->ssid_bits = min_t(u8, ilog2(num_pasids),
-> +				  master->smmu->ssid_bits);
-> +	return 0;
-> +}
-> +
-> +static void arm_smmu_disable_pasid(struct arm_smmu_master *master)
-> +{
-> +	struct pci_dev *pdev;
-> +
-> +	if (!dev_is_pci(master->dev))
-> +		return;
-> +
-> +	pdev = to_pci_dev(master->dev);
-> +
-> +	if (!pdev->pasid_enabled)
-> +		return;
-> +
-> +	master->ssid_bits = 0;
-> +	pci_disable_pasid(pdev);
-> +}
-> +
->  static void arm_smmu_detach_dev(struct arm_smmu_master *master)
->  {
->  	unsigned long flags;
-> @@ -2852,13 +2899,16 @@ static int arm_smmu_add_device(struct device *dev)
->  
->  	master->ssid_bits = min(smmu->ssid_bits, fwspec->num_pasid_bits);
->  
-> +	/* Note that PASID must be enabled before, and disabled after ATS */
-> +	arm_smmu_enable_pasid(master);
-> +
->  	if (!(smmu->features & ARM_SMMU_FEAT_2_LVL_CDTAB))
->  		master->ssid_bits = min_t(u8, master->ssid_bits,
->  					  CTXDESC_LINEAR_CDMAX);
->  
->  	ret = iommu_device_link(&smmu->iommu, dev);
->  	if (ret)
-> -		goto err_free_master;
-> +		goto err_disable_pasid;
->  
->  	group = iommu_group_get_for_dev(dev);
->  	if (IS_ERR(group)) {
-> @@ -2871,6 +2921,8 @@ static int arm_smmu_add_device(struct device *dev)
->  
->  err_unlink:
->  	iommu_device_unlink(&smmu->iommu, dev);
-> +err_disable_pasid:
-> +	arm_smmu_disable_pasid(master);
->  err_free_master:
->  	kfree(master);
->  	fwspec->iommu_priv = NULL;
-> @@ -2891,6 +2943,7 @@ static void arm_smmu_remove_device(struct device *dev)
->  	arm_smmu_detach_dev(master);
->  	iommu_group_remove_device(dev);
->  	iommu_device_unlink(&smmu->iommu, dev);
-> +	arm_smmu_disable_pasid(master);
->  	kfree(master);
->  	iommu_fwspec_free(dev);
->  }
+>   commit 774800cb099f ("Merge branch 'pci/resource'")
+>   Author: Bjorn Helgaas <bhelgaas@google.com>
+>   Date:   Thu Nov 28 08:54:36 2019 -0600
 > 
+>     Merge branch 'pci/resource'
+> 
+>       - Protect pci_reassign_bridge_resources() against concurrent
+>         addition/removal (Benjamin Herrenschmidt)
+> 
+>       - Fix bridge dma_ranges resource list cleanup (Rob Herring)
+> 
+>       - Add PCI_STD_NUM_BARS for the number of standard BARs (Denis Efremov)
+> 
+>       - Add "pci=hpmmiosize" and "pci=hpmmioprefsize" parameters to control the
+>         MMIO and prefetchable MMIO window sizes of hotplug bridges
+>         independently (Nicholas Johnson)
+> 
+>       - Fix MMIO/MMIO_PREF window assignment that assigned more space than
+>         desired (Nicholas Johnson)
+> 
+>       - Only enforce bus numbers from bridge EA if the bridge has EA devices
+>         downstream (Subbaraya Sundeep)
+> 
+>     * pci/resource:
+>       PCI: Do not use bus number zero from EA capability
+>       PCI: Avoid double hpmemsize MMIO window assignment
+>       PCI: Add "pci=hpmmiosize" and "pci=hpmmioprefsize" parameters
+>       PCI: Add PCI_STD_NUM_BARS for the number of standard BARs
+>       PCI: Fix missing bridge dma_ranges resource list cleanup
+>       PCI: Protect pci_reassign_bridge_resources() against concurrent addition/removal
+> 
+> The logs for individual commits are obviously longer but should answer
+> the same question in more detail.
+> 
+> Basically, I'm not comfortable asking Linus to pull material unless I
+> can explain what the benefit is.  I'm still struggling to articulate
+> the benefit in this case.  I think it makes hotplug work better in
+> some cases where we need more alignment than we currently have, but
+> that's pretty sketchy.
+In my opinion, fixing failure to assign is a clear reason to merge, 
+especially when the failure will result in a user wondering why the 
+device they plugged in does not work. If that is not enough to get past 
+Linus Torvalds then I will have to go back to the drawing board, because 
+it is the best I can think of (for now).
 
+I have had a go above for the four patches.
+
+Mika, what would you have written if you had to do this?
+
+> 
+> Bjorn
+
+Thanks!
+
+Kind regards,
+Nicholas
