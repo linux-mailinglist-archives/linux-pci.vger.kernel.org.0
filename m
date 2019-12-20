@@ -2,127 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B38711271FE
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Dec 2019 01:04:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D485C127441
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Dec 2019 04:54:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726963AbfLTAEB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 Dec 2019 19:04:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59032 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726952AbfLTAEB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 19 Dec 2019 19:04:01 -0500
-Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C760222C2;
-        Fri, 20 Dec 2019 00:03:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576800240;
-        bh=sWq+9KSTwARofQnWsAgQYWAF/MTYTslzXC2YUL9YOUU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=y+50dcG+enUsbey/BuOFRBNPTJ0WXZMkKA4w3HQR8Zq9UY4xlF9eE9X9r3HB83JsG
-         YXU+8e9uE7GM/4pbXGCwANX9kLhlNTxzRvHiO+5KKzDk1ZDS/LL4uxhHBgplVK70tr
-         kxQ4OhrPB7NEa333uI4sMwoH07mSCW/ACcbQ6EYc=
-Date:   Thu, 19 Dec 2019 18:03:58 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Logan Gunthorpe <logang@deltatee.com>
-Subject: Re: [PATCH v12 0/4] PCI: Patch series to improve Thunderbolt
- enumeration
-Message-ID: <20191220000358.GA126443@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PSXP216MB043840E2DE9B81AC8797F63A80530@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1727135AbfLTDyf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 Dec 2019 22:54:35 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:55265 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727063AbfLTDyf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Dec 2019 22:54:35 -0500
+Received: by mail-pj1-f66.google.com with SMTP id ep17so3494853pjb.4
+        for <linux-pci@vger.kernel.org>; Thu, 19 Dec 2019 19:54:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=PoLshNDzrJ34zNiIcguyofrG58V/A2F+YEa2ClLgm0M=;
+        b=J7pcTxw2cF3I1+9MhU6RvI2RCWdIsCwvKIRtRkrOgsADvQScweskX2fQ21XcvlXRGD
+         YXMvNbK9KYj9Ixm2dXRnRNkFMtGW13JfRdGr/Sq6lQbIW/7+uJbZ10Htlt2lcW0iwhLR
+         2+o3yepAZjv1lsnqqssRQ+VSURCqIFraFtJHc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=PoLshNDzrJ34zNiIcguyofrG58V/A2F+YEa2ClLgm0M=;
+        b=K1fvSmy1z+PEheimWKrRPm+ceGIwT8YqUCArjspzhnHlsHopYP55K21KQipxpYX2KU
+         yR/ki1fSJ2f6CyvXg7va7wAQLzVrsCfVw09r38FpJj98SQ4ealhtq+bP07qNKGQEIiiB
+         k+9KPsr2NZF8yIRK8qL3N98sKvmRxEoJsP6kchRXPM40AZLQcXXEl5YpCzUXbXipQ8lo
+         i36yoDpJ9gT6H9FkmTfeKAl2k/ii9016ndnPxVarPqeK+5ZjzWhf1Q1ZOULv3c7tOYAE
+         3s+ZMBtHBCcjaFKW6q3w31wSqsNE0Uoqb0FYjhwgGPsHiqPEJQehA3dbsdyZqChu+ipu
+         1mig==
+X-Gm-Message-State: APjAAAVGG7ACcyDCtTiVyRQjYdy9MY1Yn653QnR1plLcC/YKgQhXDiPk
+        FI5LVPaByJGBRR9PugAZcUhe3A==
+X-Google-Smtp-Source: APXvYqz5gbwIuxN8xP8ES2rSbow/hVGo5nLVK4ha6qxGjm0meTH2KyQMRtB2mycw7ogT+3QFA53bNg==
+X-Received: by 2002:a17:902:b90c:: with SMTP id bf12mr12676383plb.286.1576814074673;
+        Thu, 19 Dec 2019 19:54:34 -0800 (PST)
+Received: from mannams-OptiPlex-7010.dhcp.broadcom.net ([192.19.234.250])
+        by smtp.gmail.com with ESMTPSA id t65sm10522205pfd.178.2019.12.19.19.54.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 19 Dec 2019 19:54:33 -0800 (PST)
+From:   Srinath Mannam <srinath.mannam@broadcom.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Srinath Mannam <srinath.mannam@broadcom.com>
+Subject: [PATCH v4 0/6] PAXB INTx support with proper model
+Date:   Fri, 20 Dec 2019 09:24:12 +0530
+Message-Id: <1576814058-30003-1-git-send-email-srinath.mannam@broadcom.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 12:54:25AM +0000, Nicholas Johnson wrote:
-> On Tue, Dec 17, 2019 at 09:12:48AM -0600, Bjorn Helgaas wrote:
-> > On Mon, Dec 09, 2019 at 12:59:29PM +0000, Nicholas Johnson wrote:
-> > > Hi all,
-> > > 
-> > > Since last time:
-> > > 	Reverse Christmas tree for a couple of variables
-> > > 
-> > > 	Changed while to whilst (sounds more formal, and so that 
-> > > 	grepping for "while" only brings up code)
-> > > 
-> > > 	Made sure they still apply to latest Linux v5.5-rc1
-> > > 
-> > > Kind regards,
-> > > Nicholas
-> > > 
-> > > Nicholas Johnson (4):
-> > >   PCI: Consider alignment of hot-added bridges when distributing
-> > >     available resources
-> > >   PCI: In extend_bridge_window() change available to new_size
-> > >   PCI: Change extend_bridge_window() to set resource size directly
-> > >   PCI: Allow extend_bridge_window() to shrink resource if necessary
-> > 
-> > I have tentatively applied these to pci/resource for v5.6, but I need
-> > some kind of high-level description for why we want these changes.
-> I could not find these in linux-next (whereas it was almost immediate 
-> last time), so this must be why.
-> 
-> > The commit logs describe what the code does, and that's good, but we
-> > really need a little more of the *why* and what the user-visible
-> > benefit is.  I know some of this was in earlier postings, but it seems
-> > to have gotten lost along the way.
->
-> Is this explanation going into the commit notes, or is this just to get 
-> it past reviewers, Greg K-H and Linus Torvalds?
+This patch series adds PCIe legacy interrupt (INTx) support to the iProc
+PCIe driver by modeling it with its own IRQ domain. All 4 interrupts INTA,
+INTB, INTC, INTD share the same interrupt line connected to the GIC
+in the system. This is now modeled by using its own IRQ domain.
 
-This is for the commit log of the merge commit, i.e., it should answer
-the question of "why should we merge this branch?"  Typically this is
-short, e.g., here's the merge commit for the pci/resource branch that
-was merged for v5.5:
+Also update all relevant devicetree files to adapt to the new model.
 
-  commit 774800cb099f ("Merge branch 'pci/resource'")
-  Author: Bjorn Helgaas <bhelgaas@google.com>
-  Date:   Thu Nov 28 08:54:36 2019 -0600
+This patch set is based on Linux-5.5-rc1.
 
-    Merge branch 'pci/resource'
+Changes from v3:
+  - Addressed Andrew Murray's comments
+  - Add change to dispose VIRQ when disabling INTx
 
-      - Protect pci_reassign_bridge_resources() against concurrent
-        addition/removal (Benjamin Herrenschmidt)
+Changes from v2:
+  - Addressed Lorenzo's comments
+    - Corrected INTx to PIN mapping.
 
-      - Fix bridge dma_ranges resource list cleanup (Rob Herring)
+Changes from v1:
+  - Addressed Rob, Lorenzo, Arnd's comments
+    - Used child node for interrupt controller.
+  - Addressed Andy Shevchenko's comments
+    - Replaced while loop with do-while.
 
-      - Add PCI_STD_NUM_BARS for the number of standard BARs (Denis Efremov)
+Ray Jui (6):
+  dt-bindings: pci: Update iProc PCI binding for INTx support
+  PCI: iproc: Add INTx support with better modeling
+  arm: dts: Change PCIe INTx mapping for Cygnus
+  arm: dts: Change PCIe INTx mapping for NSP
+  arm: dts: Change PCIe INTx mapping for HR2
+  arm64: dts: Change PCIe INTx mapping for NS2
 
-      - Add "pci=hpmmiosize" and "pci=hpmmioprefsize" parameters to control the
-        MMIO and prefetchable MMIO window sizes of hotplug bridges
-        independently (Nicholas Johnson)
+ .../devicetree/bindings/pci/brcm,iproc-pcie.txt    |  48 +++++++--
+ arch/arm/boot/dts/bcm-cygnus.dtsi                  |  30 +++++-
+ arch/arm/boot/dts/bcm-hr2.dtsi                     |  30 +++++-
+ arch/arm/boot/dts/bcm-nsp.dtsi                     |  45 +++++++--
+ arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi   |  28 +++++-
+ drivers/pci/controller/pcie-iproc.c                | 108 ++++++++++++++++++++-
+ drivers/pci/controller/pcie-iproc.h                |   6 ++
+ 7 files changed, 268 insertions(+), 27 deletions(-)
 
-      - Fix MMIO/MMIO_PREF window assignment that assigned more space than
-        desired (Nicholas Johnson)
+-- 
+2.7.4
 
-      - Only enforce bus numbers from bridge EA if the bridge has EA devices
-        downstream (Subbaraya Sundeep)
-
-    * pci/resource:
-      PCI: Do not use bus number zero from EA capability
-      PCI: Avoid double hpmemsize MMIO window assignment
-      PCI: Add "pci=hpmmiosize" and "pci=hpmmioprefsize" parameters
-      PCI: Add PCI_STD_NUM_BARS for the number of standard BARs
-      PCI: Fix missing bridge dma_ranges resource list cleanup
-      PCI: Protect pci_reassign_bridge_resources() against concurrent addition/removal
-
-The logs for individual commits are obviously longer but should answer
-the same question in more detail.
-
-Basically, I'm not comfortable asking Linus to pull material unless I
-can explain what the benefit is.  I'm still struggling to articulate
-the benefit in this case.  I think it makes hotplug work better in
-some cases where we need more alignment than we currently have, but
-that's pretty sketchy.
-
-Bjorn
