@@ -2,171 +2,164 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E23D1287A7
-	for <lists+linux-pci@lfdr.de>; Sat, 21 Dec 2019 06:49:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CAB7128C5C
+	for <lists+linux-pci@lfdr.de>; Sun, 22 Dec 2019 03:47:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725774AbfLUFtQ convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Sat, 21 Dec 2019 00:49:16 -0500
-Received: from mail-oln040092254088.outbound.protection.outlook.com ([40.92.254.88]:59638
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        id S1726323AbfLVCrW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 21 Dec 2019 21:47:22 -0500
+Received: from mail-bn8nam12on2108.outbound.protection.outlook.com ([40.107.237.108]:48080
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725773AbfLUFtQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 21 Dec 2019 00:49:16 -0500
+        id S1726086AbfLVCrW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 21 Dec 2019 21:47:22 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Lnhw+t/hMH2HN81scRTRdmJo7dxYJjQArVZKeugzJzC9FxyOMnKIUYl7YCk3rHhffzitEg0ptDO1IWNfN5I9AMJJKu9LZbXYo/W9AWD7bHDuRoFUuVv4jH27SBhsegI5qThJeF6GEfEUaHmUgJZoCMYQCXberVKw9n0wLXiEEjqCErTsdO1bbPrC1Wbdpxex/zvUf2FTEGmZfVaazOghLZ3nqEfGTcQ8NpKWd0syJv9dk80/wkuXEQGH5+WwbAaZ95/Aq0CvKxtPiTEueArzPUnUOK32wwvRVBMYkbeEnrumRmY7bvjxC363j35Ao/ZM1FypAaePXUQGigrkyicMJQ==
+ b=aW7Feh02JrNmZ4ciTF6Q09uREpy5bhUT+nqDKCjeP/8XURTGh7M10TqmR86Vo6h1cgqJIoGITVIYRsjeyBxmWZNgo5atehOEOSGC26UCL+QU4p3cSgZg8GhySAvGYVfjIx2QRkgNWHwhOpPQbbXrh5+0wrzj4OsmTDPvwbHS9y+LswQJSMUxTtYBsg/EfKlKQNyPy0BrNTeD7KvaCdWGmLLUqq8U3Kib1o5eY/hjA8qORtvUhuoDSGB9zmPyg1stXHlijUJmAgGayDOXT2XJR41k6DZBpaxlZRBDodHObWPOSFre46bKuo/MF1SNSuVazi5lUf2f1r+VWzyH/gQSCg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=O+QnFU/Cp+bPSofXn7nSi79nhVUOGJj7dqUor9xF4j8=;
- b=ItXFJmuQyaDSEszipeUvjvgjiGDJe8YFuGXrX2nU9ZMpDeSm9vzZsKEGXhLtGQlCRAlMfRNkgNMz5rH4ywtp/DyXgOo7g4PlXgW90Dfq0a4wa9Jvph7nNsAY9JO6jtnw2SRqUcRcIfF9vnKqWTrRfsOoT1/tAaVPr5Ugj5svZ3I7geEQ7x56VO+HLZJMcOTkNP/tpGr3V1Kq+VVL86zOnwBGda5XHZyQ4MXRn+s/lUdAqUXEp+unsUhOe6lqum4AzEQhymDXVpoz892O5j83Os93VOFh2kAdCV144HIzWy9hRWKCJOr75HupI7bIPddit6rUjdVYEeE0DqKlyDlZSQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from SG2APC01FT013.eop-APC01.prod.protection.outlook.com
- (10.152.250.53) by SG2APC01HT066.eop-APC01.prod.protection.outlook.com
- (10.152.251.149) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2559.14; Sat, 21 Dec
- 2019 05:48:56 +0000
-Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.250.55) by
- SG2APC01FT013.mail.protection.outlook.com (10.152.250.186) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2559.14 via Frontend Transport; Sat, 21 Dec 2019 05:48:56 +0000
-Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- ([fe80::20ad:6646:5bcd:63c9]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- ([fe80::20ad:6646:5bcd:63c9%11]) with mapi id 15.20.2559.017; Sat, 21 Dec
- 2019 05:48:56 +0000
-From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ bh=ryWy730AfZJEmX9DTlZkXvUgjg0wzfiJYX4DSym2QXM=;
+ b=jx0DOZX0mQch/ICbLsXoCZ7RyPBWQnXPPtjuj291otNRhIbDkeFSHK1twfCnUR/NZaBwE+vkD2OfdZIOsVVLnlykKhEHYl5DWrEquOrFCVbDHx+IxUGgcb3TGkoDd9AfkpJxdg4NPpzkQf1m7t4PJB4sQl4X1GoBWlwo6LFN63QlDgO4zRPcNUaTVT/Vx3fpg+JTGyviRkLRMDXdtp4Og3RFJklbr2PKDtk8gIpqwj6qNvPeKppxV32hYS9VTSMEsK2uTwl5S+8v0g3t/Aqut6I1JLuyoPDa7FsrOwn37YJsK8lK94yMkPq3Yk2XXOyI4AXtZ72yYyrJ4fg4QtdB7g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ryWy730AfZJEmX9DTlZkXvUgjg0wzfiJYX4DSym2QXM=;
+ b=W6JHmwRVBJpgxxQ9kA6jbtdWJfZKxe2uqVnMX7gH5Yh4193VkzhoBGyu8okojdD33jZDLCX7jhHvKulVuDbqueyq4m2cqsD1i+WAhhHNgtAThSz8gbrXWVQKR9qQHazNF+nez3ZWrBi/4SFjp6F6ADc6e9eeBQIoNNGD5229sFQ=
+Received: from BL0PR2101MB1123.namprd21.prod.outlook.com (52.132.20.151) by
+ BL0PR2101MB1121.namprd21.prod.outlook.com (52.132.18.33) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2581.10; Sun, 22 Dec 2019 02:47:19 +0000
+Received: from BL0PR2101MB1123.namprd21.prod.outlook.com
+ ([fe80::602f:c781:a5ff:39f3]) by BL0PR2101MB1123.namprd21.prod.outlook.com
+ ([fe80::602f:c781:a5ff:39f3%3]) with mapi id 15.20.2581.007; Sun, 22 Dec 2019
+ 02:47:19 +0000
+From:   Long Li <longli@microsoft.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>
+CC:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Logan Gunthorpe <logang@deltatee.com>
-Subject: Re: [PATCH v12 0/4] PCI: Patch series to improve Thunderbolt
- enumeration
-Thread-Topic: [PATCH v12 0/4] PCI: Patch series to improve Thunderbolt
- enumeration
-Thread-Index: AQHVrpB+5sK/XGeQw0yttw28ATWBvae+e8EAgACidQCAAxacAIAAkwAAgABhdwCAAP41gA==
-Date:   Sat, 21 Dec 2019 05:48:56 +0000
-Message-ID: <PSXP216MB0438F46577120B6E80B3932B802C0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
-References: <PSXP216MB043888F94710A361E4D84DFF802D0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
- <20191220143856.GA92795@google.com>
-In-Reply-To: <20191220143856.GA92795@google.com>
-Accept-Language: en-AU, en-US
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [Patch v2 1/2] PCI: hv: decouple the func definition in
+ hv_dr_state from VSP message
+Thread-Topic: [Patch v2 1/2] PCI: hv: decouple the func definition in
+ hv_dr_state from VSP message
+Thread-Index: AQHVqk4NWoi5w81JaEWb3p6WSpwllqe0Fc8AgBF5lAA=
+Date:   Sun, 22 Dec 2019 02:47:18 +0000
+Message-ID: <BL0PR2101MB11232C53CC44A092F7B0C7C9CE2F0@BL0PR2101MB1123.namprd21.prod.outlook.com>
+References: <1575428017-87914-1-git-send-email-longli@linuxonhyperv.com>
+ <20191210235450.GA177105@google.com>
+In-Reply-To: <20191210235450.GA177105@google.com>
+Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: SYBPR01CA0198.ausprd01.prod.outlook.com
- (2603:10c6:10:16::18) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- (2603:1096:300:d::20)
-x-incomingtopheadermarker: OriginalChecksum:F1F1EC5EC6ED7A54E43AA0EAE9ABB43E7FD43B09D490AACB1E63CA8A9FA025B3;UpperCasedChecksum:BDF88537DBC624C96641AF88C2EC4B67F364B414816FEC08A0E15D23A160433F;SizeAsReceived:7751;Count:49
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [+fW7c5CYTEX+iu5K7lA19dXkyPJkOON+PD+abrbAWqov1nT2ihKOsdMXOHyPi6PzZIS+xLylWEQ=]
-x-microsoft-original-message-id: <20191221054847.GA2537@nicholas-dell-linux>
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=longli@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:a:ede4:db5c:c6fe:798]
 x-ms-publictraffictype: Email
-x-incomingheadercount: 49
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: e02876d9-6189-4895-64f9-08d785d9778e
-x-ms-traffictypediagnostic: SG2APC01HT066:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: uL2RuD+MuEGihUyDWK5oMYbdH0jk14aGXFeaCleCgJAh+M7NU3eQ6aRo7eQETpZHSzeM+8zpdPYNSEoW/c+1aw07YaK6MBHbLKSAWDTFeLmh+yLh6doVgEEH2tk2tc0bbz9HrVJ88HEjuZAv5fUOKDrFf1z0jIwYP5pZq/LXC7VIxSkQ4kdLmzYq4kfloMvK
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 737faf64-1d2f-43fe-7d9f-08d786894341
+x-ms-traffictypediagnostic: BL0PR2101MB1121:|BL0PR2101MB1121:
 x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BL0PR2101MB1121144FB621CE331A3B9186CE2F0@BL0PR2101MB1121.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 02596AB7DA
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(366004)(39860400002)(396003)(376002)(346002)(199004)(189003)(15650500001)(66476007)(66446008)(64756008)(66556008)(81166006)(4326008)(316002)(52536014)(76116006)(10290500003)(5660300002)(2906002)(71200400001)(478600001)(66946007)(7696005)(54906003)(186003)(33656002)(9686003)(8990500004)(110136005)(8676002)(55016002)(6506007)(81156014)(8936002)(86362001);DIR:OUT;SFP:1102;SCL:1;SRVR:BL0PR2101MB1121;H:BL0PR2101MB1123.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: szbOQH+QB/ebmk0xWe37Et7uE0z2HtQyXudLlB1iNGKj8tpW+w5yVfgW2Q4X0reRzV+KZADTbZzP+7sFmehM2woQcWZAyF9LcIrzNVcIawLjyL9ELIKA9JmDQV163D8X0MSSwjcr6UEjUzk9hJjdYKkhEXSmz2QZlEE4aiUAWyDguR5xNBD6imIBgEcMRhw3P7n1jIHtpPj1qiIoaKzd2ZVo92dhI6UnElZzGKHXH643o/hFH11okFdlNvArQxYdFojAMG5jxxx3F1zvEPZ2ijy9WEkbA/0ZvEZzFrnx5Hka4/o7hu79djZKaPRdrfYxtmUM0g3d/l3kH/ybMqDM/rUxv/1mLO085edMnxohLozJqnJsxQS6dQLGZuQwbDtkePyxTldU0XQcacsVY0ME9tNyqsNBzfIET4DTvz2dWnHZLaTSnpC9MOUUxy8/Iapf
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <C12F7D308C8EBC49B26A3F13D7D5E4C0@KORP216.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: e02876d9-6189-4895-64f9-08d785d9778e
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Dec 2019 05:48:56.3379
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 737faf64-1d2f-43fe-7d9f-08d786894341
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Dec 2019 02:47:19.1372
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2APC01HT066
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: B4Lvb3LOKSznFqWMXXatHHApKEigtMSL1m+FTGA4Pr3ykJWpOT7eGMrJnMTL/MtBIfXXmZ/6FW+kxlSGe+R5TQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR2101MB1121
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 08:38:56AM -0600, Bjorn Helgaas wrote:
-> On Fri, Dec 20, 2019 at 08:50:14AM +0000, Nicholas Johnson wrote:
-> > On Thu, Dec 19, 2019 at 06:03:58PM -0600, Bjorn Helgaas wrote:
-> > > On Wed, Dec 18, 2019 at 12:54:25AM +0000, Nicholas Johnson wrote:
-> > > > On Tue, Dec 17, 2019 at 09:12:48AM -0600, Bjorn Helgaas wrote:
-> > > > > On Mon, Dec 09, 2019 at 12:59:29PM +0000, Nicholas Johnson wrote:
-> 
-> > > > > > Nicholas Johnson (4):
-> > > > > >   PCI: Consider alignment of hot-added bridges when distributing
-> > > > > >     available resources
-> > Prevent failure to assign hot-added Thunderbolt PCI BARs with alignment >1M 
-> > 
-> > > > > >   PCI: In extend_bridge_window() change available to new_size
-> > Change variable name in extend_bridge_window() to better reflect its 
-> > purpose
-> > 
-> > ^ I would have preferred this not be its own commit. Is it too late to 
-> > squash it back together with patch 3/4?
-> 
-> Not too late; it's trivial to squash it.  I consider these branches to
-> be drafts, subject to revision until I ask Linus to pull them.
-> 
-> But ... why?  In general, the smaller the patch the better.
-Now that I had to justify why were are putting it in, it does not fix a 
-bug or have any effect on the end user. But it seems I was mistaken in 
-that I have to write reasons for each patch. It seems like it is one for 
-the whole series.
+>Subject: Re: [Patch v2 1/2] PCI: hv: decouple the func definition in
+>hv_dr_state from VSP message
+>
+>Run "git log --oneline drivers/pci/controller/pci-hyperv.c" and make yours
+>match.  Capitalize the first word, etc.
+>
+>On Tue, Dec 03, 2019 at 06:53:36PM -0800, longli@linuxonhyperv.com wrote:
+>> From: Long Li <longli@microsoft.com>
+>>
+>> hv_dr_state is used to find present PCI devices on the bus. The
+>> structure reuses struct pci_function_description from VSP message to
+>describe a device.
+>>
+>> To prepare support for pci_function_description v2, we need to
+>> decouple this dependence in hv_dr_state so it can work with both v1 and =
+v2
+>VSP messages.
+>>
+>> There is no functionality change.
+>>
+>> Signed-off-by: Long Li <longli@microsoft.com>
+>
+>> + * hv_pci_devices_present() - Handles list of new children
+>> + * @hbus:	Root PCI bus, as understood by this driver
+>> + * @relations:	Packet from host listing children
+>> + *
+>> + * This function is invoked whenever a new list of devices for
+>> + * this bus appears.
+>
+>The comment should tell us what the function *does*, not when it is called=
+.
 
-> 
-> > > Basically, I'm not comfortable asking Linus to pull material unless I
-> > > can explain what the benefit is.  I'm still struggling to articulate
-> > > the benefit in this case.  I think it makes hotplug work better in
-> > > some cases where we need more alignment than we currently have, but
-> > > that's pretty sketchy.
-> >
-> > In my opinion, fixing failure to assign is a clear reason to merge, 
-> > especially when the failure will result in a user wondering why the 
-> > device they plugged in does not work.
-> 
-> Sure.  But there's nothing specific in the commit logs about what the
-> problem is and how these fix it.
-> 
-> For example, I think the first patch ("PCI: Consider alignment of
-> hot-added bridges when distributing available resources") is something
-> to do with increasing the alignment of bridge windows to account for
-> descendants that require greater alignment.
-> 
-> But the log says "Rewrite pci_bus_distribute_available_resources to
-> better handle bridges with different resource alignment requirements."
-> That says nothing about what the problem was or how you fix it.
-When I first started the patches a year ago, it was all about my 
-Thunderbolt add-in cards. Since then, I have realised that although that 
-is the motivation, there is nothing in this code specific to 
-Thunderbolt. Hence, I tried to write the logs in terms of what it means 
-for PCI in general, and tried to leave mentions of Thunderbolt out. If I 
-recall correctly, the fact that there is nothing specific to Thunderbolt 
-here has been brought up by reviewers.
+I will send v3 to address the comments.
 
-> 
-> Ideally that patch would very specifically change *alignment* details.
-> It currently also contains a bunch of other changes (interface change,
-> removing "b" in favor "dev->subordinate", etc).  These make the patch
-> bigger and harder to understand and justify.  Some of these lead up to
-> the alignment change but possibly could be split to separate patches.
-I tried to split the first patch up, but it got very messy, very 
-quickly. I tried to do the interface change first, but I found variable 
-names to clash when making partial changes. The overall number of lines 
-of diff would have been much greater to achieve the same thing, and each 
-patch was not a whole lot smaller.
+Thanks
 
-I can re-submit with changed commit logs if you wish, to mention the 
-Thunderbolt problems.
+Long
 
-Patches 2, 3 and 4 can be applied first if that helps.
-
-I can try to split 1 up more, but it is going to be a lot of work and 
-I am not convinced you will like the results much more.
-
-> 
-> Bjorn
-
-Nicholas
+>
+>> + */
+>> +static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
+>> +				   struct pci_bus_relations *relations) {
+>> +	struct hv_dr_state *dr;
+>> +	int i;
+>> +
+>> +	dr =3D kzalloc(offsetof(struct hv_dr_state, func) +
+>> +		     (sizeof(struct hv_pcidev_description) *
+>> +		      (relations->device_count)), GFP_NOWAIT);
+>> +
+>> +	if (!dr)
+>> +		return;
+>> +
+>> +	dr->device_count =3D relations->device_count;
+>> +	for (i =3D 0; i < dr->device_count; i++) {
+>> +		dr->func[i].v_id =3D relations->func[i].v_id;
+>> +		dr->func[i].d_id =3D relations->func[i].d_id;
+>> +		dr->func[i].rev =3D relations->func[i].rev;
+>> +		dr->func[i].prog_intf =3D relations->func[i].prog_intf;
+>> +		dr->func[i].subclass =3D relations->func[i].subclass;
+>> +		dr->func[i].base_class =3D relations->func[i].base_class;
+>> +		dr->func[i].subsystem_id =3D relations->func[i].subsystem_id;
+>> +		dr->func[i].win_slot =3D relations->func[i].win_slot;
+>> +		dr->func[i].ser =3D relations->func[i].ser;
+>> +	}
+>> +
+>> +	if (hv_pci_start_relations_work(hbus, dr))
+>> +		kfree(dr);
+>>  }
