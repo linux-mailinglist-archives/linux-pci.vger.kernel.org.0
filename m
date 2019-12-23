@@ -2,111 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D0EB9128E89
-	for <lists+linux-pci@lfdr.de>; Sun, 22 Dec 2019 15:32:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 775E3129B24
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Dec 2019 22:38:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725951AbfLVOcG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 22 Dec 2019 09:32:06 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37162 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725903AbfLVOcG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 22 Dec 2019 09:32:06 -0500
-Received: by mail-wr1-f68.google.com with SMTP id w15so1336725wru.4;
-        Sun, 22 Dec 2019 06:32:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+JTaMAihMQcGoLYVzC8yfarHE4d+Vw11ecW2v7rlvYc=;
-        b=aW4GWiH4RRWzVi1YvxtgC6SKRcDtgfkHhl5d9qxCzfDOlqz8FrdxgU7iuLwEvejWbo
-         d6pXhPqoKCP7QfnYEWuP8ZA+EfkOBG8k3YtGszhBeLjdH+7KjgjkmFliIPuJ8eCUG7MS
-         D25Z7LykTLWJmCjBXbVpz5J3ZLFqwPqpn/yKRP7/xBwZ418M1YxeJ6zfJ/Lds2LNoB4A
-         avUZZnfmXv2zV72xUrTa6cAxTh9/9iiL+D6G9Mo766L8asxIhpfyUY/y//85WVTvSsed
-         Webge9BNSGswgWzXHIlONEKnXukBPf7lJBiTfOGCcjkUl8cnWqD1cOKfJr46qsixxqk0
-         fwaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+JTaMAihMQcGoLYVzC8yfarHE4d+Vw11ecW2v7rlvYc=;
-        b=BH0tErNqbN9dzAL4cNWl2KwQ0wSt8sxNXs/ttQa6Y5lBkrd7PkCBZjM68pTNZ+knDw
-         Ax6E7bl4YPSiP/jRHfcGrQ9nKksPFn/K9j7YzZCNSXdhJfR1Nj4kSsB9Mqi4ceJylQSX
-         Z7kt5wGOC1OoMxLWQN7W8a4aG3ZtErr1h17JywioDkqUp/6ptJzdzTGUDp0obgy33LcR
-         4MZLbzPoNb2UzyD1A0b2mzMv69pG6EdH9CHqjrlykTSGjQdg+QkNUNFWq8AuvM+f7Xr9
-         VqwokFDo0I6dOAkeGcFzwlbmPXPQ6XTqvjla6tQdAioVjDVZuEZixPMNNth1kqKZoSET
-         mlig==
-X-Gm-Message-State: APjAAAUTjPgKq0oLeORoCp3vAd9XuKkcqaQeBs20qVuFuVwV5mgl2/1V
-        xV9BgIiR7K9Mwj43bYYGv8FRi6He
-X-Google-Smtp-Source: APXvYqzGNZRDvouRP65RO3Fj4ECALDB/bjLNoA1qO8hB9P5QU33Y7/nHQ87nvJdmY0xXeojYWMpNSA==
-X-Received: by 2002:a5d:65c5:: with SMTP id e5mr25602381wrw.311.1577025123628;
-        Sun, 22 Dec 2019 06:32:03 -0800 (PST)
-Received: from [172.16.0.186] (188-175-35-175.client.rionet.cz. [188.175.35.175])
-        by smtp.gmail.com with ESMTPSA id i10sm17179060wru.16.2019.12.22.06.32.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 22 Dec 2019 06:32:02 -0800 (PST)
-Subject: Re: [PATCH V3 2/3] PCI: rcar: Do not abort on too many inbound
- dma-ranges
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>
-Cc:     Simon Horman <horms@verge.net.au>, linux-pci@vger.kernel.org,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
+        id S1726860AbfLWViC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 23 Dec 2019 16:38:02 -0500
+Received: from relay12.mail.gandi.net ([217.70.178.232]:45431 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726817AbfLWViC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 23 Dec 2019 16:38:02 -0500
+Received: from localhost (unknown [88.190.179.123])
+        (Authenticated sender: repk@triplefau.lt)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id C81F7200007;
+        Mon, 23 Dec 2019 21:37:58 +0000 (UTC)
+From:   Remi Pommarel <repk@triplefau.lt>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Yue Wang <yue.wang@Amlogic.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        linux-renesas-soc@vger.kernel.org
-References: <20190809175741.7066-1-marek.vasut@gmail.com>
- <20190809175741.7066-2-marek.vasut@gmail.com>
- <20190816132305.gyyml5r3xsimmoor@verge.net.au>
- <8f1871ed-4820-1985-0090-bb9e2d8803d8@gmail.com>
- <20191021101805.GM47056@e119886-lin.cambridge.arm.com>
- <fef9502f-d51c-b922-afb3-8891267ae6c3@gmail.com>
- <20191026203627.GA47056@e119886-lin.cambridge.arm.com>
- <9c46a2d2-00bd-3854-8060-fc7389751f3f@gmail.com>
- <20191107141906.GB43905@e119886-lin.cambridge.arm.com>
- <3424b83c-4693-0259-ac3d-ea10a3f98377@gmail.com>
- <82c69634-ffb5-0b20-2254-55e5cfbef035@arm.com>
-From:   Marek Vasut <marek.vasut@gmail.com>
-Message-ID: <ddb1295c-dbee-d965-0278-52d8b8937940@gmail.com>
-Date:   Sun, 22 Dec 2019 08:46:24 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Andrew Murray <andrew.murray@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        Remi Pommarel <repk@triplefau.lt>
+Subject: [PATCH v2 0/3] PCI: amlogic: Make PCIe working reliably on AXG platforms
+Date:   Mon, 23 Dec 2019 22:45:26 +0100
+Message-Id: <20191223214529.20377-1-repk@triplefau.lt>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <82c69634-ffb5-0b20-2254-55e5cfbef035@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 11/18/19 7:42 PM, Robin Murphy wrote:
-[...]
+PCIe device probing failures have been seen on AXG platforms and were due
+to unreliable clock signal output. Setting HHI_MIPI_CNTL0[26] bit in
+MIPI's PHY registers solved the problem. This bit controls band gap
+reference.
 
->>> Despite the good intentions here, it doesn't seem like dma-ranges is
->>> designed for this purpose and as the hardware has limited ranges it will
->>> only be best-effort.
->> So what other options do we have ?
-> 
-> If you really want to sacrifice DMA efficiency for a perceived increase
-> in theoretical robustness by setting very conservative windows,
+As discussed here [1] one of these shared MIPI/PCIE PHY register bits was
+implemented in the clock driver as CLKID_MIPI_ENABLE. This adds a PHY
+driver to control this bit instead, as well as setting the band gap one
+in order to get reliable PCIE communication.
 
-That really means configuring the hardware correctly.
+While at it add another PHY driver to control PCIE only PHY registers,
+making AXG code more similar to G12A platform thus allowing to remove
+some specific platform handling in pci-meson driver.
 
-> then
-> ultimately it's your choice, go ahead. It's just that you *need* to make
-> that choice in the bootloader, not in Linux. If Linux gets passed
-> dma-ranges that aren't actually reflected by the hardware, such that
-> this patch is needed, then it *will* go wrong eventually, and you'll
-> only get an "I told you so" from me.
-> 
-> The bootloader knows what platform it's running on, so it has no excuse
-> for emitting more ranges than there are available windows on that platform.
+Please note that devicetree and its documentation modifications as well as
+CLKID_MIPI_ENABLE will be sent as different series if this one is
+considered sane.
 
-So basically the conclusion is to limit the amount of DMA ranges added
-into the DT and be done with it ?
+Changes sinve v1:
+ - Move HHI_MIPI_CNTL0 bit control in its own PHY driver
+ - Add a PHY driver for PCIE_PHY registers
+ - Modify pci-meson.c to make use of both PHYs and remove specific
+   handling for AXG and G12A
+
+[1] https://lkml.org/lkml/2019/12/16/119
+
+Remi Pommarel (3):
+  phy: amlogic: Add Amlogic AXG MIPI/PCIE PHY Driver
+  phy: amlogic: Add Amlogic AXG PCIE PHY Driver
+  PCI: amlogic: Use AXG PCIE and shared MIPI/PCIE PHYs
+
+ drivers/pci/controller/dwc/pci-meson.c        | 140 +++++---------
+ drivers/phy/amlogic/Kconfig                   |  22 +++
+ drivers/phy/amlogic/Makefile                  |   2 +
+ drivers/phy/amlogic/phy-meson-axg-mipi-pcie.c | 176 ++++++++++++++++++
+ drivers/phy/amlogic/phy-meson-axg-pcie.c      | 163 ++++++++++++++++
+ 5 files changed, 409 insertions(+), 94 deletions(-)
+ create mode 100644 drivers/phy/amlogic/phy-meson-axg-mipi-pcie.c
+ create mode 100644 drivers/phy/amlogic/phy-meson-axg-pcie.c
 
 -- 
-Best regards,
-Marek Vasut
+2.24.0
+
