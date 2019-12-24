@@ -2,21 +2,21 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DCEDC12A327
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Dec 2019 17:23:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A489312A338
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Dec 2019 17:33:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726171AbfLXQWt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 24 Dec 2019 11:22:49 -0500
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:40671 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726168AbfLXQWt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 24 Dec 2019 11:22:49 -0500
+        id S1726171AbfLXQdV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 24 Dec 2019 11:33:21 -0500
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:41687 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726168AbfLXQdV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 24 Dec 2019 11:33:21 -0500
 X-Originating-IP: 88.190.179.123
 Received: from localhost (unknown [88.190.179.123])
         (Authenticated sender: repk@triplefau.lt)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 2BD96E0007;
-        Tue, 24 Dec 2019 16:22:44 +0000 (UTC)
-Date:   Tue, 24 Dec 2019 17:30:49 +0100
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 831FE240004;
+        Tue, 24 Dec 2019 16:33:17 +0000 (UTC)
+Date:   Tue, 24 Dec 2019 17:41:22 +0100
 From:   Remi Pommarel <repk@triplefau.lt>
 To:     Kishon Vijay Abraham I <kishon@ti.com>
 Cc:     Yue Wang <yue.wang@amlogic.com>,
@@ -28,245 +28,272 @@ Cc:     Yue Wang <yue.wang@amlogic.com>,
         Jerome Brunet <jbrunet@baylibre.com>,
         linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-amlogic@lists.infradead.org
-Subject: Re: [PATCH v2 1/3] phy: amlogic: Add Amlogic AXG MIPI/PCIE PHY Driver
-Message-ID: <20191224163049.GD7304@voidbox>
+Subject: Re: [PATCH v2 3/3] PCI: amlogic: Use AXG PCIE and shared MIPI/PCIE
+ PHYs
+Message-ID: <20191224164122.GE7304@voidbox>
 References: <20191223214529.20377-1-repk@triplefau.lt>
- <20191223214529.20377-2-repk@triplefau.lt>
- <a2445a16-651c-457c-9e3c-23899c639a1a@ti.com>
+ <20191223214529.20377-4-repk@triplefau.lt>
+ <ce9e2f14-cadd-a977-75d7-402a7ee04c7b@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a2445a16-651c-457c-9e3c-23899c639a1a@ti.com>
+In-Reply-To: <ce9e2f14-cadd-a977-75d7-402a7ee04c7b@ti.com>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Dec 24, 2019 at 03:40:20PM +0530, Kishon Vijay Abraham I wrote:
+On Tue, Dec 24, 2019 at 03:44:41PM +0530, Kishon Vijay Abraham I wrote:
 > Hi,
 > 
 > On 24/12/19 3:15 AM, Remi Pommarel wrote:
-> > This adds support for the MIPI PHY also needed for PCIE found in the
-> > Amlogic AXG SoC Family.
+> > Now that PCIE PHY has been introduced for AXG, the whole has_shared_phy
+> > logic can be mutualized between AXG and G12A platforms.
 > > 
-> > MIPI or PCIE selection is done by the #phy-cells, making the mode
-> > static and exclusive.
-> > 
-> > For now only PCIE fonctionality is supported.
-> > 
-> > This PHY will be used to replace the mipi_enable clock gating logic
-> > which was mistakenly added in the clock subsystem. This also activate
-> > a non documented band gap bit in those registers that allows reliable
-> > PCIE clock signal generation on AXG platforms.
+> > This also makes use of the optional MIPI/PCIE shared fonctionality PHY
+> > found on AXG platforms, which need to be used in order to have reliable
+> > PCIE communications.
 > > 
 > > Signed-off-by: Remi Pommarel <repk@triplefau.lt>
 > > ---
-> >  drivers/phy/amlogic/Kconfig                   |  11 ++
-> >  drivers/phy/amlogic/Makefile                  |   1 +
-> >  drivers/phy/amlogic/phy-meson-axg-mipi-pcie.c | 176 ++++++++++++++++++
-> >  3 files changed, 188 insertions(+)
-> >  create mode 100644 drivers/phy/amlogic/phy-meson-axg-mipi-pcie.c
+> >  drivers/pci/controller/dwc/pci-meson.c | 140 ++++++++-----------------
+> >  1 file changed, 46 insertions(+), 94 deletions(-)
 > > 
-> > diff --git a/drivers/phy/amlogic/Kconfig b/drivers/phy/amlogic/Kconfig
-> > index af774ac2b934..1eeb75d018e3 100644
-> > --- a/drivers/phy/amlogic/Kconfig
-> > +++ b/drivers/phy/amlogic/Kconfig
-> > @@ -59,3 +59,14 @@ config PHY_MESON_G12A_USB3_PCIE
-> >  	  Enable this to support the Meson USB3 + PCIE Combo PHY found
-> >  	  in Meson G12A SoCs.
-> >  	  If unsure, say N.
+> > diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
+> > index 3772b02a5c55..3d12155c32f6 100644
+> > --- a/drivers/pci/controller/dwc/pci-meson.c
+> > +++ b/drivers/pci/controller/dwc/pci-meson.c
+> > @@ -66,7 +66,6 @@
+> >  #define PORT_CLK_RATE			100000000UL
+> >  #define MAX_PAYLOAD_SIZE		256
+> >  #define MAX_READ_REQ_SIZE		256
+> > -#define MESON_PCIE_PHY_POWERUP		0x1c
+> >  #define PCIE_RESET_DELAY		500
+> >  #define PCIE_SHARED_RESET		1
+> >  #define PCIE_NORMAL_RESET		0
+> > @@ -81,26 +80,19 @@ enum pcie_data_rate {
+> >  struct meson_pcie_mem_res {
+> >  	void __iomem *elbi_base;
+> >  	void __iomem *cfg_base;
+> > -	void __iomem *phy_base;
+> >  };
+> >  
+> >  struct meson_pcie_clk_res {
+> >  	struct clk *clk;
+> > -	struct clk *mipi_gate;
+> >  	struct clk *port_clk;
+> >  	struct clk *general_clk;
+> >  };
+> >  
+> >  struct meson_pcie_rc_reset {
+> > -	struct reset_control *phy;
+> >  	struct reset_control *port;
+> >  	struct reset_control *apb;
+> >  };
+> >  
+> > -struct meson_pcie_param {
+> > -	bool has_shared_phy;
+> > -};
+> > -
+> >  struct meson_pcie {
+> >  	struct dw_pcie pci;
+> >  	struct meson_pcie_mem_res mem_res;
+> > @@ -108,7 +100,7 @@ struct meson_pcie {
+> >  	struct meson_pcie_rc_reset mrst;
+> >  	struct gpio_desc *reset_gpio;
+> >  	struct phy *phy;
+> > -	const struct meson_pcie_param *param;
+> > +	struct phy *shared_phy;
+> >  };
+> >  
+> >  static struct reset_control *meson_pcie_get_reset(struct meson_pcie *mp,
+> > @@ -130,13 +122,6 @@ static int meson_pcie_get_resets(struct meson_pcie *mp)
+> >  {
+> >  	struct meson_pcie_rc_reset *mrst = &mp->mrst;
+> >  
+> > -	if (!mp->param->has_shared_phy) {
+> > -		mrst->phy = meson_pcie_get_reset(mp, "phy", PCIE_SHARED_RESET);
+> > -		if (IS_ERR(mrst->phy))
+> > -			return PTR_ERR(mrst->phy);
+> > -		reset_control_deassert(mrst->phy);
+> > -	}
+> > -
+> >  	mrst->port = meson_pcie_get_reset(mp, "port", PCIE_NORMAL_RESET);
+> >  	if (IS_ERR(mrst->port))
+> >  		return PTR_ERR(mrst->port);
+> > @@ -162,22 +147,6 @@ static void __iomem *meson_pcie_get_mem(struct platform_device *pdev,
+> >  	return devm_ioremap_resource(dev, res);
+> >  }
+> >  
+> > -static void __iomem *meson_pcie_get_mem_shared(struct platform_device *pdev,
+> > -					       struct meson_pcie *mp,
+> > -					       const char *id)
+> > -{
+> > -	struct device *dev = mp->pci.dev;
+> > -	struct resource *res;
+> > -
+> > -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, id);
+> > -	if (!res) {
+> > -		dev_err(dev, "No REG resource %s\n", id);
+> > -		return ERR_PTR(-ENXIO);
+> > -	}
+> > -
+> > -	return devm_ioremap(dev, res->start, resource_size(res));
+> > -}
+> > -
+> >  static int meson_pcie_get_mems(struct platform_device *pdev,
+> >  			       struct meson_pcie *mp)
+> >  {
+> > @@ -189,14 +158,6 @@ static int meson_pcie_get_mems(struct platform_device *pdev,
+> >  	if (IS_ERR(mp->mem_res.cfg_base))
+> >  		return PTR_ERR(mp->mem_res.cfg_base);
+> >  
+> > -	/* Meson AXG SoC has two PCI controllers use same phy register */
+> > -	if (!mp->param->has_shared_phy) {
+> > -		mp->mem_res.phy_base =
+> > -			meson_pcie_get_mem_shared(pdev, mp, "phy");
+> > -		if (IS_ERR(mp->mem_res.phy_base))
+> > -			return PTR_ERR(mp->mem_res.phy_base);
+> > -	}
+> > -
+> >  	return 0;
+> >  }
+> >  
+> > @@ -204,20 +165,40 @@ static int meson_pcie_power_on(struct meson_pcie *mp)
+> >  {
+> >  	int ret = 0;
+> >  
+> > -	if (mp->param->has_shared_phy) {
+> > -		ret = phy_init(mp->phy);
+> > -		if (ret)
+> > -			return ret;
+> > +	ret = phy_init(mp->phy);
+> > +	if (ret)
+> > +		goto err;
+> >  
+> > -		ret = phy_power_on(mp->phy);
+> > -		if (ret) {
+> > -			phy_exit(mp->phy);
+> > -			return ret;
+> > -		}
+> > -	} else
+> > -		writel(MESON_PCIE_PHY_POWERUP, mp->mem_res.phy_base);
+> > +	ret = phy_init(mp->shared_phy);
+> > +	if (ret)
+> > +		goto exit;
 > > +
-> > +config PHY_MESON_AXG_MIPI_PCIE
-> > +	tristate "Meson AXG MIPI + PCIE PHY driver"
-> > +	default ARCH_MESON
-> > +	depends on OF && (ARCH_MESON || COMPILE_TEST)
-> > +	select GENERIC_PHY
-> > +	select MFD_SYSCON
-> > +	help
-> > +	  Enable this to support the Meson MIPI + PCIE PHY found
-> > +	  in Meson AXG SoCs.
-> > +	  If unsure, say N.
-> > diff --git a/drivers/phy/amlogic/Makefile b/drivers/phy/amlogic/Makefile
-> > index 11d1c42ac2be..2167330a0ae8 100644
-> > --- a/drivers/phy/amlogic/Makefile
-> > +++ b/drivers/phy/amlogic/Makefile
-> > @@ -4,3 +4,4 @@ obj-$(CONFIG_PHY_MESON_GXL_USB2)	+= phy-meson-gxl-usb2.o
-> >  obj-$(CONFIG_PHY_MESON_G12A_USB2)	+= phy-meson-g12a-usb2.o
-> >  obj-$(CONFIG_PHY_MESON_GXL_USB3)	+= phy-meson-gxl-usb3.o
-> >  obj-$(CONFIG_PHY_MESON_G12A_USB3_PCIE)	+= phy-meson-g12a-usb3-pcie.o
-> > +obj-$(CONFIG_PHY_MESON_AXG_MIPI_PCIE)	+= phy-meson-axg-mipi-pcie.o
-> > diff --git a/drivers/phy/amlogic/phy-meson-axg-mipi-pcie.c b/drivers/phy/amlogic/phy-meson-axg-mipi-pcie.c
-> > new file mode 100644
-> > index 000000000000..006aa8cdfc47
-> > --- /dev/null
-> > +++ b/drivers/phy/amlogic/phy-meson-axg-mipi-pcie.c
-> > @@ -0,0 +1,176 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Amlogic AXG MIPI + PCIE PHY driver
-> > + *
-> > + * Copyright (C) 2019 Remi Pommarel <repk@triplefau.lt>
-> > + */
-> > +#include <linux/module.h>
-> > +#include <linux/phy/phy.h>
-> > +#include <linux/regmap.h>
-> > +#include <linux/mfd/syscon.h>
-> > +#include <linux/platform_device.h>
-> > +#include <dt-bindings/phy/phy.h>
+> > +	ret = phy_power_on(mp->phy);
+> > +	if (ret)
+> > +		goto shared_exit;
 > > +
-> > +#define HHI_MIPI_CNTL0 0x00
-> > +#define		HHI_MIPI_CNTL0_COMMON_BLOCK	GENMASK(31, 28)
-> > +#define		HHI_MIPI_CNTL0_ENABLE		BIT(29)
-> > +#define		HHI_MIPI_CNTL0_BANDGAP		BIT(26)
-> > +#define		HHI_MIPI_CNTL0_DECODE_TO_RTERM	GENMASK(15, 12)
-> > +#define		HHI_MIPI_CNTL0_OUTPUT_EN	BIT(3)
+> > +	ret = phy_power_on(mp->shared_phy);
+> > +	if (ret)
+> > +		goto power_off;
+> >  
+> >  	return 0;
 > > +
-> > +#define HHI_MIPI_CNTL1 0x01
-> > +#define		HHI_MIPI_CNTL1_CH0_CML_PDR_EN	BIT(12)
-> > +#define		HHI_MIPI_CNTL1_LP_ABILITY	GENMASK(5, 4)
-> > +#define		HHI_MIPI_CNTL1_LP_RESISTER	BIT(3)
-> > +#define		HHI_MIPI_CNTL1_INPUT_SETTING	BIT(2)
-> > +#define		HHI_MIPI_CNTL1_INPUT_SEL	BIT(1)
-> > +#define		HHI_MIPI_CNTL1_PRBS7_EN		BIT(0)
-> > +
-> > +#define HHI_MIPI_CNTL2 0x02
-> > +#define		HHI_MIPI_CNTL2_CH_PU		GENMASK(31, 25)
-> > +#define		HHI_MIPI_CNTL2_CH_CTL		GENMASK(24, 19)
-> > +#define		HHI_MIPI_CNTL2_CH0_DIGDR_EN	BIT(18)
-> > +#define		HHI_MIPI_CNTL2_CH_DIGDR_EN	BIT(17)
-> > +#define		HHI_MIPI_CNTL2_LPULPS_EN	BIT(16)
-> > +#define		HHI_MIPI_CNTL2_CH_EN(n)		BIT(15 - (n))
-> > +#define		HHI_MIPI_CNTL2_CH0_LP_CTL	GENMASK(10, 1)
-> > +
-> > +struct phy_axg_mipi_pcie_priv {
-> > +	struct phy *phy;
-> > +	unsigned int mode;
-> > +	struct regmap *regmap;
-> > +};
-> > +
-> > +static const struct regmap_config phy_axg_mipi_pcie_regmap_conf = {
-> > +	.reg_bits = 8,
-> > +	.val_bits = 32,
-> > +	.reg_stride = 4,
-> > +	.max_register = HHI_MIPI_CNTL2,
-> > +};
-> > +
-> > +static int phy_axg_mipi_pcie_power_on(struct phy *phy)
-> > +{
-> > +	struct phy_axg_mipi_pcie_priv *priv = phy_get_drvdata(phy);
-> > +
-> > +	/* MIPI not supported yet */
-> > +	if (priv->mode != PHY_TYPE_PCIE)
-> > +		return 0;
-> > +
-> > +	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
-> > +			   HHI_MIPI_CNTL0_BANDGAP, HHI_MIPI_CNTL0_BANDGAP);
-> > +
-> > +	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
-> > +			   HHI_MIPI_CNTL0_ENABLE, HHI_MIPI_CNTL0_ENABLE);
-> > +	return 0;
+> > +power_off:
+> > +	phy_power_off(mp->phy);
+> > +shared_exit:
+> > +	phy_exit(mp->shared_phy);
+> > +exit:
+> > +	phy_exit(mp->phy);
+> > +err:
+> > +	return ret;
 > > +}
 > > +
-> > +static int phy_axg_mipi_pcie_power_off(struct phy *phy)
+> > +static void meson_pcie_power_off(struct meson_pcie *mp)
 > > +{
-> > +	struct phy_axg_mipi_pcie_priv *priv = phy_get_drvdata(phy);
-> > +
-> > +	/* MIPI not supported yet */
-> > +	if (priv->mode != PHY_TYPE_PCIE)
-> > +		return 0;
-> > +
-> > +	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
-> > +			   HHI_MIPI_CNTL0_BANDGAP, 0);
-> > +	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
-> > +			   HHI_MIPI_CNTL0_ENABLE, 0);
-> > +	return 0;
-> > +}
-> > +
-> > +static int phy_axg_mipi_pcie_init(struct phy *phy)
-> > +{
-> > +	return 0;
-> > +}
-> > +
-> > +static int phy_axg_mipi_pcie_exit(struct phy *phy)
-> > +{
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct phy_ops phy_axg_mipi_pcie_ops = {
-> > +	.init = phy_axg_mipi_pcie_init,
-> > +	.exit = phy_axg_mipi_pcie_exit,
-> > +	.power_on = phy_axg_mipi_pcie_power_on,
-> > +	.power_off = phy_axg_mipi_pcie_power_off,
-> > +	.owner = THIS_MODULE,
-> > +};
-> > +
-> > +static struct phy *phy_axg_mipi_pcie_xlate(struct device *dev,
-> > +					   struct of_phandle_args *args)
-> > +{
-> > +	struct phy_axg_mipi_pcie_priv *priv = dev_get_drvdata(dev);
-> > +	unsigned int mode;
-> > +
-> > +	if (args->args_count != 1) {
-> > +		dev_err(dev, "invalid number of arguments\n");
-> > +		return ERR_PTR(-EINVAL);
-> > +	}
-> > +
-> > +	mode = args->args[0];
-> > +
-> > +	/* MIPI mode is not supported yet */
-> > +	if (mode != PHY_TYPE_PCIE) {
-> > +		dev_err(dev, "invalid phy mode select argument\n");
-> > +		return ERR_PTR(-EINVAL);
-> > +	}
-> > +
-> > +	priv->mode = mode;
-> > +	return priv->phy;
-> > +}
-> > +
-> > +static int phy_axg_mipi_pcie_probe(struct platform_device *pdev)
-> > +{
-> > +	struct phy_provider *pphy;
-> > +	struct device *dev = &pdev->dev;
-> > +	struct phy_axg_mipi_pcie_priv *priv;
-> > +	struct device_node *np = dev->of_node;
-> > +	int ret;
-> > +
-> > +	priv = devm_kmalloc(dev, sizeof(*priv), GFP_KERNEL);
-> > +	if (!priv)
-> > +		return -ENOMEM;
-> > +
-> > +	/* Get the hhi system controller node */
-> > +	priv->regmap = syscon_node_to_regmap(of_get_parent(dev->of_node));
-> > +	if (IS_ERR(priv->regmap)) {
-> > +		dev_err(dev, "failed to get HHI regmap\n");
-> > +		return PTR_ERR(priv->regmap);
-> > +	}
-> > +
-> > +	priv->phy = devm_phy_create(dev, np, &phy_axg_mipi_pcie_ops);
-> > +	if (IS_ERR(priv->phy)) {
-> > +		ret = PTR_ERR(priv->phy);
-> > +		if (ret != -EPROBE_DEFER)
-> > +			dev_err(dev, "failed to create PHY\n");
+> > +	phy_power_off(mp->shared_phy);
+> > +	phy_power_off(mp->phy);
+> > +	phy_exit(mp->shared_phy);
+> > +	phy_exit(mp->phy);
+> >  }
+> >  
+> >  static int meson_pcie_reset(struct meson_pcie *mp)
+> > @@ -225,16 +206,13 @@ static int meson_pcie_reset(struct meson_pcie *mp)
+> >  	struct meson_pcie_rc_reset *mrst = &mp->mrst;
+> >  	int ret = 0;
+> >  
+> > -	if (mp->param->has_shared_phy) {
+> > -		ret = phy_reset(mp->phy);
+> > -		if (ret)
+> > -			return ret;
+> > -	} else {
+> > -		reset_control_assert(mrst->phy);
+> > -		udelay(PCIE_RESET_DELAY);
+> > -		reset_control_deassert(mrst->phy);
+> > -		udelay(PCIE_RESET_DELAY);
+> > -	}
+> > +	ret = phy_reset(mp->phy);
+> > +	if (ret)
 > > +		return ret;
-> > +	}
 > > +
-> > +	phy_set_drvdata(priv->phy, priv);
-> > +	dev_set_drvdata(dev, priv);
-> > +	pphy = devm_of_phy_provider_register(dev, phy_axg_mipi_pcie_xlate);
-> > +
-> > +	return PTR_ERR_OR_ZERO(pphy);
-> > +}
-> > +
-> > +static const struct of_device_id phy_axg_mipi_pcie_of_match[] = {
-> > +	{
-> > +		.compatible = "amlogic,axg-mipi-pcie-phy",
+> > +	ret = phy_reset(mp->shared_phy);
+> > +	if (ret)
+> > +		return ret;
+> >  
+> >  	reset_control_assert(mrst->port);
+> >  	reset_control_assert(mrst->apb);
+> > @@ -286,12 +264,6 @@ static int meson_pcie_probe_clocks(struct meson_pcie *mp)
+> >  	if (IS_ERR(res->port_clk))
+> >  		return PTR_ERR(res->port_clk);
+> >  
+> > -	if (!mp->param->has_shared_phy) {
+> > -		res->mipi_gate = meson_pcie_probe_clock(dev, "mipi", 0);
+> > -		if (IS_ERR(res->mipi_gate))
+> > -			return PTR_ERR(res->mipi_gate);
+> > -	}
+> > -
+> >  	res->general_clk = meson_pcie_probe_clock(dev, "general", 0);
+> >  	if (IS_ERR(res->general_clk))
+> >  		return PTR_ERR(res->general_clk);
+> > @@ -562,7 +534,6 @@ static const struct dw_pcie_ops dw_pcie_ops = {
+> >  
+> >  static int meson_pcie_probe(struct platform_device *pdev)
+> >  {
+> > -	const struct meson_pcie_param *match_data;
+> >  	struct device *dev = &pdev->dev;
+> >  	struct dw_pcie *pci;
+> >  	struct meson_pcie *mp;
+> > @@ -576,18 +547,13 @@ static int meson_pcie_probe(struct platform_device *pdev)
+> >  	pci->dev = dev;
+> >  	pci->ops = &dw_pcie_ops;
+> >  
+> > -	match_data = of_device_get_match_data(dev);
+> > -	if (!match_data) {
+> > -		dev_err(dev, "failed to get match data\n");
+> > -		return -ENODEV;
+> > -	}
+> > -	mp->param = match_data;
+> > +	mp->phy = devm_phy_get(dev, "pcie");
+> > +	if (IS_ERR(mp->phy))
+> > +		return PTR_ERR(mp->phy);
+> >  
+> > -	if (mp->param->has_shared_phy) {
+> > -		mp->phy = devm_phy_get(dev, "pcie");
+> > -		if (IS_ERR(mp->phy))
+> > -			return PTR_ERR(mp->phy);
+> > -	}
+> > +	mp->shared_phy = devm_phy_optional_get(dev, "shared");
+> > +	if (IS_ERR(mp->phy))
+> > +		return PTR_ERR(mp->phy);
 > 
-> Is there a dt-binding documentation for this?
+> This also requires dt-binding updation.Is PCIe connected to two
+> different PHYs here?
 
-There is binding documentation updates for this whole serie but I thought
-they were supposed to be sent in separate serie, which is not the case
-apparently.
+Not exactly, it is that the PCIE PHY is using some non documented bits
+from the range of the MIPI one. But now that I have read about syscon it
+seems that those registers are defined to be handled by syscon subsystem
+in the device tree.
+
+Thus I think It would make much more sense to remove the shared MIPI/PCIE
+PHY driver in patch 1/3 and set the appropriate bits in the PCIE PHY
+driver itself from patch 2/3 through syscon subsystem.
+
+Sorry for the noise, will send v3 with only 1 PHY driver and appropriate
+binding documentation.
 
 Thanks,
 
