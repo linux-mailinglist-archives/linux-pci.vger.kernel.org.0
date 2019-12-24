@@ -2,132 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 388A1129EC1
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Dec 2019 09:04:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EAD03129F0F
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Dec 2019 09:37:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726065AbfLXIEl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 24 Dec 2019 03:04:41 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:48372 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726037AbfLXIEl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 24 Dec 2019 03:04:41 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBO84WQf044802;
-        Tue, 24 Dec 2019 02:04:32 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1577174672;
-        bh=1Ded6pvuMA3oMdmazX4/A7l0KSskT0kDg81kNM68v+Q=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=B0O2k2Wr9saFAaISz01NN4EwJZsrFCOh2m5F9hZDnD2YsjuYdtLRN5c+JPWn2R9sb
-         7wduya7EG5lefJZ5YCtVDMq/9+2PmotsaEVzTpfl2iQs6TOkPAZ79k9Otr+mTolvFM
-         iWnfa4fvzk4uA6k0A/r/u7b9XuQmWwyL9+WcsHEE=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBO84WjW050928
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 24 Dec 2019 02:04:32 -0600
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 24
- Dec 2019 02:04:32 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 24 Dec 2019 02:04:32 -0600
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBO84TMr013924;
-        Tue, 24 Dec 2019 02:04:30 -0600
-Subject: Re: [PATCH 09/13] dt-bindings: PCI: Add host mode dt-bindings for
- TI's J721E SoC
-To:     Rob Herring <robh@kernel.org>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Murray <andrew.murray@arm.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>
-References: <20191209092147.22901-1-kishon@ti.com>
- <20191209092147.22901-10-kishon@ti.com> <20191219000841.GA4251@bogus>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <fc145cbc-88f2-5ccb-5c20-4be1ac81fe25@ti.com>
-Date:   Tue, 24 Dec 2019 13:36:25 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1726154AbfLXIhS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 24 Dec 2019 03:37:18 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:40067 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726128AbfLXIhS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 24 Dec 2019 03:37:18 -0500
+Received: by mail-il1-f194.google.com with SMTP id c4so16086978ilo.7
+        for <linux-pci@vger.kernel.org>; Tue, 24 Dec 2019 00:37:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=LcGU1mt+nAQIi3eKcWZpiy7DqrkNG23tK1MNYV9CB+M=;
+        b=thLznmLowQYlgCkXssGgqDu9lyH9UW6YjKmOssHb1tTK4hOQZrMXPmcN+NyMPf6FCl
+         UvREnc30T4YWVk+0sz5tUX66h6x9TrTk5PLAy+j6B7YQx87dbuBKpJdKp6vHEaeyv/Mk
+         +ugQax6dxzQYdZRO2RuhmUBXO0k1ex+ujK03f0IwAMz2143noOnX/n9FaaLqE/JawMIu
+         cAyyILMJ9qtw2dvj23jE86BJWZZAt8n9o0u6ZQ2NXyeUK9YTazBgzNeXTkC83D8e6w+y
+         LyuzLzl8dZr8HmmG/1asFn/Ndqg1z9wICefdZo1ski0C2gomR8pQBnx9Wa/071qwcZbY
+         xpeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=LcGU1mt+nAQIi3eKcWZpiy7DqrkNG23tK1MNYV9CB+M=;
+        b=VKqs8YsZjRoNJJfIcjJWWj/W2dF8yP+5ptsvi4kgfzXrbW5M1A15cWeRO9iA1KHig+
+         FH6tCFqEzGyWL4FA3xD5JBwNp12wPgmr2M2owz80IeWT02xjYLAirG/AqSqpMiZWtCo2
+         Zjx1srkGsJD7AEa453f78Qh0r+xaLI1gQ3UQV/gCzhgQCZA1IRhTd3F+AyHK91OA+qLa
+         0LnzNMdKsXTfdly9UgQ36gqC4g2Q/9kVGgan9sN2PPg+rzyy3M85jWswjH/A9tupP1Xp
+         S6aZU0eAAwYmiHPUBG7luiiX0qo1clHzil1ufcoSUfvzFU1GaFsQoPOMseQXDxlSNA7Z
+         b7oQ==
+X-Gm-Message-State: APjAAAW0TIi2gr5ltHmShgNiDx88qVUF2hMJWDnm3WUl3Nb+vrxPZixj
+        AD+8qq640ix8120FV7I+eMonDtFurjU1S5DML/g=
+X-Google-Smtp-Source: APXvYqz2tBa4QzKmO6wzSXUBWoAEt+AdW5keElYd0pxn2QCdUk0KRvhLw5nMwIzFzVTuSc6Cp+qr2Z5Nq+YfPm0LYgM=
+X-Received: by 2002:a92:3b98:: with SMTP id n24mr4582447ilh.108.1577176637594;
+ Tue, 24 Dec 2019 00:37:17 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191219000841.GA4251@bogus>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Received: by 2002:ac0:f302:0:0:0:0:0 with HTTP; Tue, 24 Dec 2019 00:37:16
+ -0800 (PST)
+Reply-To: bethnatividad9@gmail.com
+From:   Beth Nat <clementidibia1960@gmail.com>
+Date:   Tue, 24 Dec 2019 08:37:16 +0000
+Message-ID: <CAEG=icHSiKA+obxr5hSbrz+bX3f1O1rMyddMXXp8YnqnRrxBeQ@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Rob,
-
-On 19/12/19 5:38 AM, Rob Herring wrote:
-> On Mon, Dec 09, 2019 at 02:51:43PM +0530, Kishon Vijay Abraham I wrote:
->> Add host mode dt-bindings for TI's J721E SoC.
->>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>  .../bindings/pci/ti,j721e-pci-host.yaml       | 161 ++++++++++++++++++
->>  1 file changed, 161 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
->> new file mode 100644
->> index 000000000000..96184e1f419f
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
->> @@ -0,0 +1,161 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +# Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
->> +%YAML 1.2
->> +---
->> +$id: "http://devicetree.org/schemas/pci/ti,j721e-pci-host.yaml#"
->> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->> +
->> +title: TI J721E PCI Host (PCIe Wrapper)
->> +
->> +maintainers:
->> +  - Kishon Vijay Abraham I <kishon@ti.com>
-> 
-> There's now a PCI bus schema. Reference it here:
-> 
-> allOf:
->   - $ref: "/schemas/pci/pci-bus.yaml#"
-> 
->> +
->> +properties:
->> +  compatible:
->> +      enum:
->> +          - ti,j721e-pcie-host
-> 
-> Indentation.
-> 
->> +
->> +  reg:
->> +    maxItems: 4
->> +
->> +  reg-names:
->> +    items:
->> +      - const: intd_cfg
->> +      - const: user_cfg
->> +      - const: reg
->> +      - const: cfg
->> +
->> +  ti,syscon-pcie-ctrl:
->> +    description: Phandle to the SYSCON entry required for configuring PCIe mode
->> +                 and link speed.
->> +    allOf:
->> +      - $ref: /schemas/types.yaml#/definitions/phandle
-> 
-> You can drop the 'allOf' here if there aren't more constraints.
-
-Do you mean I don't have to include phandle schema here? I don't seem to
-be able to include $ref without allOf.
-
-Thanks
-Kishon
+How are you today my dear? i saw your profile and it interests me, i
+am a Military nurse from USA. Can we be friend? I want to know more
+about you.
