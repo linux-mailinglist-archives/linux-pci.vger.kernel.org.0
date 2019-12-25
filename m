@@ -2,82 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E50812A6A4
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Dec 2019 08:53:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DBFFA12A8EF
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Dec 2019 19:54:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726000AbfLYHxE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Dec 2019 02:53:04 -0500
-Received: from mail01.vodafone.es ([217.130.24.71]:51195 "EHLO
-        mail01.vodafone.es" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725935AbfLYHxE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Dec 2019 02:53:04 -0500
-X-Greylist: delayed 302 seconds by postgrey-1.27 at vger.kernel.org; Wed, 25 Dec 2019 02:53:02 EST
-IronPort-SDR: d2ezYg6bLqWonddT7bDtVSbarO2QW4tQRCw/YvIMfCcFKTE/8vmU+lHW3rydPstoIce9yXBTuC
- zTfId+MzesVA==
-IronPort-PHdr: =?us-ascii?q?9a23=3Ax4JGxhP1vY4Y5xt6Bbcl6mtUPXoX/o7sNwtQ0K?=
- =?us-ascii?q?IMzox0IvzzrarrMEGX3/hxlliBBdydt6sfzbCM6Ou+BCQp2tWoiDg6aptCVh?=
- =?us-ascii?q?sI2409vjcLJ4q7M3D9N+PgdCcgHc5PBxdP9nC/NlVJSo6lPwWB6nK94iQPFR?=
- =?us-ascii?q?rhKAF7Ovr6GpLIj8Swyuu+54Dfbx9HiTagb75+Ngu6oRvfu8UZgIZvKrs6xw?=
- =?us-ascii?q?fUrHdPZ+lY335jK0iJnxb76Mew/Zpj/DpVtvk86cNOUrj0crohQ7BAAzsoL2?=
- =?us-ascii?q?465MvwtRneVgSP/WcTUn8XkhVTHQfI6gzxU4rrvSv7sup93zSaPdHzQLspVz?=
- =?us-ascii?q?mu87tnRRn1gyoBKjU38nzYitZogaxVoByhvQJxzY3Jbo6aKPVwcbjQfc8YSG?=
- =?us-ascii?q?VdQspdSzBNDp26YoASD+QBJ+FYr4zlqlUItxS1GBOiBPnuyj9Nh3/2waw60/?=
- =?us-ascii?q?o7Hgrb2wEgA88OsHDIo9X0KagdS/u1wbLNzTrZbvNW3S3x6JTWfRAlv/6MRa?=
- =?us-ascii?q?h/ftbLxUk3CwPIl1OdopHmMTONzukBrXWX4uh6We6yhWMrtxt9riagy8s2hI?=
- =?us-ascii?q?TEhoQYwU3e+ypj2oY6P9i4RVZ+Yd6jDZRfqTmXN5BzQsM+W2Fovzs6yqEetZ?=
- =?us-ascii?q?67YicKzJMnygbaa/OdcoiI5gjjW/iVITtki39pYqy/hxGv/ke6xO38Uc+030?=
- =?us-ascii?q?hQoiVbidnArnEN1xrN5cibUvZx4Fqt1DSV2wzO5OxIPVo4mbTUJpI7zLM9lo?=
- =?us-ascii?q?IfsUHZES/3nEX2grWWdkIh+uWw9+Tnf7HmqYOdN4BpkA7+Kb8jmsmlDuQ5Ng?=
- =?us-ascii?q?gCRXSb9vq41LL95U32WqlFgucukqnFqJzaP9gUpralAw9J1YYu8xK/Dzag0N?=
- =?us-ascii?q?QFkngLNUpFdw6Gj4XyJVHOL+73De2lj1Svjjhr3fbGMaPlApnXKXjDirjhLv?=
- =?us-ascii?q?5B7BtYyQwu3ZVH7JN8FL4MOrTwV1X3udieCQU2YDa52+L2NNIo8opWYXiOB6?=
- =?us-ascii?q?6FMb3b+QuM7/o1IuyNeI4LsTvmA+oi5/nrhH4931IAK/qHx5wSPVSxVsx8Ik?=
- =?us-ascii?q?CYfXvyi59VDXoOtQsyRffCjVSDVXhPanK/R6s3oCknXtH1RbzfT5yg1eTSlB?=
- =?us-ascii?q?ywGYdbMzhL?=
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2GEKgC5EwNelyMYgtllgkQBGAEBgns?=
- =?us-ascii?q?3GyASk0JUBnUdihKFM4N8FYYaDIFbDQEBAQEBNQIBAYRAgiIkOBMCAw0BAQU?=
- =?us-ascii?q?BAQEBAQUEAQECEAEBAQEBCBYGhXNCAQwBgWsihBeBA4EsgwOCUymtExoChSO?=
- =?us-ascii?q?EdIE2AYwYGnmBB4FEgjKFAgESAWyFIQSNRSGIS2GXfoI+BJYwDYIpAYw4A4J?=
- =?us-ascii?q?UiRGnIoI3VYELgQpxTTiBchmBHU8YDY0sji1AgRYQAk+FQIdcgjIBAQ?=
-X-IPAS-Result: =?us-ascii?q?A2GEKgC5EwNelyMYgtllgkQBGAEBgns3GyASk0JUBnUdi?=
- =?us-ascii?q?hKFM4N8FYYaDIFbDQEBAQEBNQIBAYRAgiIkOBMCAw0BAQUBAQEBAQUEAQECE?=
- =?us-ascii?q?AEBAQEBCBYGhXNCAQwBgWsihBeBA4EsgwOCUymtExoChSOEdIE2AYwYGnmBB?=
- =?us-ascii?q?4FEgjKFAgESAWyFIQSNRSGIS2GXfoI+BJYwDYIpAYw4A4JUiRGnIoI3VYELg?=
- =?us-ascii?q?QpxTTiBchmBHU8YDY0sji1AgRYQAk+FQIdcgjIBAQ?=
-X-IronPort-AV: E=Sophos;i="5.69,353,1571695200"; 
-   d="scan'208";a="298576582"
-Received: from mailrel04.vodafone.es ([217.130.24.35])
-  by mail01.vodafone.es with ESMTP; 25 Dec 2019 08:47:59 +0100
-Received: (qmail 32227 invoked from network); 25 Dec 2019 04:33:51 -0000
-Received: from unknown (HELO 192.168.1.88) (seigo@[217.217.179.17])
-          (envelope-sender <tulcidas@mail.telepac.pt>)
-          by mailrel04.vodafone.es (qmail-ldap-1.03) with SMTP
-          for <linux-pci@vger.kernel.org>; 25 Dec 2019 04:33:51 -0000
-Date:   Wed, 25 Dec 2019 05:33:42 +0100 (CET)
-From:   La Primitiva <tulcidas@mail.telepac.pt>
-Reply-To: La Primitiva <laprimitivaes@zohomail.eu>
-To:     linux-pci@vger.kernel.org
-Message-ID: <24395006.259377.1577248423089.JavaMail.javamailuser@localhost>
-Subject: Take home 750,000 Euros this end of year
+        id S1726414AbfLYSyW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Dec 2019 13:54:22 -0500
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:43311 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726397AbfLYSyW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Dec 2019 13:54:22 -0500
+X-Originating-IP: 88.190.179.123
+Received: from localhost (unknown [88.190.179.123])
+        (Authenticated sender: repk@triplefau.lt)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id CF474240003;
+        Wed, 25 Dec 2019 18:54:17 +0000 (UTC)
+Date:   Wed, 25 Dec 2019 20:02:20 +0100
+From:   Remi Pommarel <repk@triplefau.lt>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Yue Wang <yue.wang@amlogic.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 5/5] dt-bindings: Add AXG PCIE PHY bindings
+Message-ID: <20191225190220.GF7304@voidbox>
+References: <20191224173942.18160-1-repk@triplefau.lt>
+ <20191224173942.18160-6-repk@triplefau.lt>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20191224173942.18160-6-repk@triplefau.lt>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Attn: Email User,
+On Tue, Dec 24, 2019 at 06:39:42PM +0100, Remi Pommarel wrote:
+> Add documentation for PCIE PHYs found in AXG SoCs.
+> 
+> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+> ---
+>  .../bindings/phy/amlogic,meson-axg-pcie.yaml  | 51 +++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-axg-pcie.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/amlogic,meson-axg-pcie.yaml b/Documentation/devicetree/bindings/phy/amlogic,meson-axg-pcie.yaml
+> new file mode 100644
+> index 000000000000..c622a1b38ffc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/amlogic,meson-axg-pcie.yaml
+> @@ -0,0 +1,51 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2019 BayLibre, SAS
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/phy/amlogic,meson-axg-pcie.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Amlogic AXG PCIE PHY
+> +
+> +maintainers:
+> +  - Remi Pommarel <repk@triplefau.lt>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - amlogic,axg-pcie-phy
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  aml,hhi-gpr:
+> +    maxItems: 1
 
-You have won, you are to reply back with your name and phone number for
-claim.
+My bad, I didn't know about devicetree schemas and their verification,
+I will fix the missing $ref: '/schemas/types.yaml#/definitions/phandle'
+here, add a description and add the missing include for reset in the
+example below in v4 along with upcoming comments on the other patches.
 
-La Primitiva
+Sorry about that.
 
-
-
-
-----------------------------------------------------
-This email was sent by the shareware version of Postman Professional.
-
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  reset-names:
+> +    items:
+> +      - const: phy
+> +
+> +  "#phy-cells":
+> +    const: 0
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - aml,hhi-gpr
+> +  - resets
+> +  - reset-names
+> +  - "#phy-cells"
+> +
+> +examples:
+> +  - |
+> +    pcie_phy: pcie-phy@ff644000 {
+> +          compatible = "amlogic,axg-pcie-phy";
+> +          reg = <0x0 0xff644000 0x0 0x2000>;
+> +          aml,hhi-gpr = <&sysctrl>;
+> +          resets = <&reset RESET_PCIE_PHY>;
+> +          reset-names = "phy";
+> +          #phy-cells = <0>;
+> +    };
+> -- 
+> 2.24.0
+> 
