@@ -2,186 +2,302 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 45FB112A906
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Dec 2019 20:21:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DAF212AB38
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Dec 2019 10:25:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726461AbfLYTVu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Dec 2019 14:21:50 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59858 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726414AbfLYTVt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Dec 2019 14:21:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1577301708;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=OKuMH7cOPk6Y3exCZSCpC68iVYRRyyM9yHlIxnQYc5Q=;
-        b=jR6KPAeLuFiVyr+Fg7kMlA3bx0NvDvsCFHLkA1t2Tlkunfe2D//j2ECqTqa/PN6nUNDA1E
-        xpHxos+TZa2lNx2UFLrGj1u7mYfkARb+J568klhCNAdrUoxncQcfdbJvyBmmwMTSsGwY+y
-        aV2gRr6KhxLbk7BICAAX11hGcVeEUcM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-228-f0m36YqNNayB1z6IGVRPqw-1; Wed, 25 Dec 2019 14:21:44 -0500
-X-MC-Unique: f0m36YqNNayB1z6IGVRPqw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 533DD801E70;
-        Wed, 25 Dec 2019 19:21:43 +0000 (UTC)
-Received: from kasong-rh-laptop.redhat.com (ovpn-12-152.pek2.redhat.com [10.72.12.152])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6C8AF101F6CF;
-        Wed, 25 Dec 2019 19:21:40 +0000 (UTC)
-From:   Kairui Song <kasong@redhat.com>
-To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, kexec@lists.infradead.org,
-        Jerry Hoemann <jerry.hoemann@hpe.com>,
-        Baoquan He <bhe@redhat.com>, Kairui Song <kasong@redhat.com>
-Subject: [RFC PATCH] PCI, kdump: Clear bus master bit upon shutdown in kdump kernel
-Date:   Thu, 26 Dec 2019 03:21:18 +0800
-Message-Id: <20191225192118.283637-1-kasong@redhat.com>
+        id S1726229AbfLZJZn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 26 Dec 2019 04:25:43 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:34206 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726109AbfLZJZk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 26 Dec 2019 04:25:40 -0500
+Received: by mail-wm1-f67.google.com with SMTP id c127so4764202wme.1
+        for <linux-pci@vger.kernel.org>; Thu, 26 Dec 2019 01:25:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=peWpqXP+RCVG8au9sO9TuXZn9CWcw1T30FsYw+3LN6s=;
+        b=ZEXyS1Y8ESURMqzSuFHNPIrsVEGjNsoIg+cpNWtfZBy4FxIDLl3CqHc2eDXN6i7PpG
+         lRCN/a48sFrZR5kEaEkIDifXtlv8K+mGZ2RTRb3G3mVSpgYUkw3mJs+MC1+wi18+QT/A
+         c/HgRtkgkrAkXnQ4gvdPS5diEYh5XQtxsf8PRmJ8UruJVVtkX2AzT1MnFv1KaRqzzAc4
+         bP7u+6W7N2Vh2Om+Fe5O/wcaj1bCdgCTAiCzrutywVRFFNUfyspUmW3G0y3jR+XszNid
+         lU8QCkXyD9+OXrz6v9qkhee6Hl4xw0MGtZf7XL57kSXsNIy8ng748mNNLtZY+zNYhDMM
+         4i3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=peWpqXP+RCVG8au9sO9TuXZn9CWcw1T30FsYw+3LN6s=;
+        b=T81XqpFtjsTZOe8rCpA0B90LP5XzlLAGcrXM3DRr3BAxwXSwRiCTEhICxKZZO4Kppl
+         wT6rotGv//fGLNX6hoLA6eVgMW55HbEUFSZJWD1zvIcwZE7o0gQ/9mhbFLncZsrHIBsE
+         rpfTfzBVL5qCIQL+T8BUEddQW7zO3Ntprg7x/h4bPupIs4b6qH9iMzQ9i0wi9/HUn3hu
+         B2RbvbufB/4xWTXALhKloWUxENANyZkQedh4RdyduzJPmKcpObOCELFD0lXF9NOCTLxQ
+         xmH0LF3/8Q0Qmw5akzh4EMlRTPNMzf4lSZs8ENumJ0T0nEsB/Jie60Obh0tduF3LN6It
+         ICHg==
+X-Gm-Message-State: APjAAAUI9uDLSQuJik9D9ekss7iHc+FiTNqLQq/Nh42aw5K1ZmtYBkUq
+        ToWD50+7ysmR9MH9wFPKS568qw==
+X-Google-Smtp-Source: APXvYqzeKUMLohPe7ZL5iXLvSW84mbmDd/bfOop/hvlmApB8+hKGKPint93OBSG2z4eTj6up8MfMvA==
+X-Received: by 2002:a1c:49c2:: with SMTP id w185mr12633724wma.138.1577352337049;
+        Thu, 26 Dec 2019 01:25:37 -0800 (PST)
+Received: from localhost ([2a01:e0a:1a5:7ee0:1e09:f4bb:719a:3028])
+        by smtp.gmail.com with ESMTPSA id n3sm29822422wrs.8.2019.12.26.01.25.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Dec 2019 01:25:36 -0800 (PST)
+References: <20191223214529.20377-1-repk@triplefau.lt> <20191223214529.20377-2-repk@triplefau.lt> <a2445a16-651c-457c-9e3c-23899c639a1a@ti.com> <20191224163049.GD7304@voidbox>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Remi Pommarel <repk@triplefau.lt>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Yue Wang <yue.wang@amlogic.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-amlogic@lists.infradead.org
+Subject: Re: [PATCH v2 1/3] phy: amlogic: Add Amlogic AXG MIPI/PCIE PHY Driver
+In-reply-to: <20191224163049.GD7304@voidbox>
+Date:   Thu, 26 Dec 2019 10:25:35 +0100
+Message-ID: <1jfth7phf4.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-There are reports about kdump hang upon reboot on some HPE machines,
-kernel hanged when trying to shutdown a PCIe port, an uncorrectable
-error occurred and crashed the system.
 
-On the machine I can reproduce this issue, part of the topology
-looks like this:
+On Tue 24 Dec 2019 at 17:30, Remi Pommarel <repk@triplefau.lt> wrote:
 
-[0000:00]-+-00.0  Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DMI2
-          +-01.0-[02]--
-          +-01.1-[05]--
-          +-02.0-[06]--+-00.0  Emulex Corporation OneConnect NIC (Skyhawk=
-)
-          |            +-00.1  Emulex Corporation OneConnect NIC (Skyhawk=
-)
-          |            +-00.2  Emulex Corporation OneConnect NIC (Skyhawk=
-)
-          |            +-00.3  Emulex Corporation OneConnect NIC (Skyhawk=
-)
-          |            +-00.4  Emulex Corporation OneConnect NIC (Skyhawk=
-)
-          |            +-00.5  Emulex Corporation OneConnect NIC (Skyhawk=
-)
-          |            +-00.6  Emulex Corporation OneConnect NIC (Skyhawk=
-)
-          |            \-00.7  Emulex Corporation OneConnect NIC (Skyhawk=
-)
-          +-02.1-[0f]--
-          +-02.2-[07]----00.0  Hewlett-Packard Company Smart Array Gen9 C=
-ontrollers
+> On Tue, Dec 24, 2019 at 03:40:20PM +0530, Kishon Vijay Abraham I wrote:
+>> Hi,
+>> 
+>> On 24/12/19 3:15 AM, Remi Pommarel wrote:
+>> > This adds support for the MIPI PHY also needed for PCIE found in the
+>> > Amlogic AXG SoC Family.
+>> > 
+>> > MIPI or PCIE selection is done by the #phy-cells, making the mode
+>> > static and exclusive.
+>> > 
+>> > For now only PCIE fonctionality is supported.
+>> > 
+>> > This PHY will be used to replace the mipi_enable clock gating logic
+>> > which was mistakenly added in the clock subsystem. This also activate
+>> > a non documented band gap bit in those registers that allows reliable
+>> > PCIE clock signal generation on AXG platforms.
+>> > 
+>> > Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+>> > ---
+>> >  drivers/phy/amlogic/Kconfig                   |  11 ++
+>> >  drivers/phy/amlogic/Makefile                  |   1 +
+>> >  drivers/phy/amlogic/phy-meson-axg-mipi-pcie.c | 176 ++++++++++++++++++
+>> >  3 files changed, 188 insertions(+)
+>> >  create mode 100644 drivers/phy/amlogic/phy-meson-axg-mipi-pcie.c
+>> > 
+>> > diff --git a/drivers/phy/amlogic/Kconfig b/drivers/phy/amlogic/Kconfig
+>> > index af774ac2b934..1eeb75d018e3 100644
+>> > --- a/drivers/phy/amlogic/Kconfig
+>> > +++ b/drivers/phy/amlogic/Kconfig
+>> > @@ -59,3 +59,14 @@ config PHY_MESON_G12A_USB3_PCIE
+>> >  	  Enable this to support the Meson USB3 + PCIE Combo PHY found
+>> >  	  in Meson G12A SoCs.
+>> >  	  If unsure, say N.
+>> > +
+>> > +config PHY_MESON_AXG_MIPI_PCIE
+>> > +	tristate "Meson AXG MIPI + PCIE PHY driver"
+>> > +	default ARCH_MESON
+>> > +	depends on OF && (ARCH_MESON || COMPILE_TEST)
+>> > +	select GENERIC_PHY
+>> > +	select MFD_SYSCON
+>> > +	help
+>> > +	  Enable this to support the Meson MIPI + PCIE PHY found
+>> > +	  in Meson AXG SoCs.
+>> > +	  If unsure, say N.
+>> > diff --git a/drivers/phy/amlogic/Makefile b/drivers/phy/amlogic/Makefile
+>> > index 11d1c42ac2be..2167330a0ae8 100644
+>> > --- a/drivers/phy/amlogic/Makefile
+>> > +++ b/drivers/phy/amlogic/Makefile
+>> > @@ -4,3 +4,4 @@ obj-$(CONFIG_PHY_MESON_GXL_USB2)	+= phy-meson-gxl-usb2.o
+>> >  obj-$(CONFIG_PHY_MESON_G12A_USB2)	+= phy-meson-g12a-usb2.o
+>> >  obj-$(CONFIG_PHY_MESON_GXL_USB3)	+= phy-meson-gxl-usb3.o
+>> >  obj-$(CONFIG_PHY_MESON_G12A_USB3_PCIE)	+= phy-meson-g12a-usb3-pcie.o
+>> > +obj-$(CONFIG_PHY_MESON_AXG_MIPI_PCIE)	+= phy-meson-axg-mipi-pcie.o
+>> > diff --git a/drivers/phy/amlogic/phy-meson-axg-mipi-pcie.c b/drivers/phy/amlogic/phy-meson-axg-mipi-pcie.c
+>> > new file mode 100644
+>> > index 000000000000..006aa8cdfc47
+>> > --- /dev/null
+>> > +++ b/drivers/phy/amlogic/phy-meson-axg-mipi-pcie.c
+>> > @@ -0,0 +1,176 @@
+>> > +// SPDX-License-Identifier: GPL-2.0
+>> > +/*
+>> > + * Amlogic AXG MIPI + PCIE PHY driver
+>> > + *
+>> > + * Copyright (C) 2019 Remi Pommarel <repk@triplefau.lt>
+>> > + */
+>> > +#include <linux/module.h>
+>> > +#include <linux/phy/phy.h>
+>> > +#include <linux/regmap.h>
+>> > +#include <linux/mfd/syscon.h>
+>> > +#include <linux/platform_device.h>
+>> > +#include <dt-bindings/phy/phy.h>
+>> > +
+>> > +#define HHI_MIPI_CNTL0 0x00
+>> > +#define		HHI_MIPI_CNTL0_COMMON_BLOCK	GENMASK(31, 28)
+>> > +#define		HHI_MIPI_CNTL0_ENABLE		BIT(29)
+>> > +#define		HHI_MIPI_CNTL0_BANDGAP		BIT(26)
+>> > +#define		HHI_MIPI_CNTL0_DECODE_TO_RTERM	GENMASK(15, 12)
+>> > +#define		HHI_MIPI_CNTL0_OUTPUT_EN	BIT(3)
+>> > +
+>> > +#define HHI_MIPI_CNTL1 0x01
+>> > +#define		HHI_MIPI_CNTL1_CH0_CML_PDR_EN	BIT(12)
+>> > +#define		HHI_MIPI_CNTL1_LP_ABILITY	GENMASK(5, 4)
+>> > +#define		HHI_MIPI_CNTL1_LP_RESISTER	BIT(3)
+>> > +#define		HHI_MIPI_CNTL1_INPUT_SETTING	BIT(2)
+>> > +#define		HHI_MIPI_CNTL1_INPUT_SEL	BIT(1)
+>> > +#define		HHI_MIPI_CNTL1_PRBS7_EN		BIT(0)
+>> > +
+>> > +#define HHI_MIPI_CNTL2 0x02
+>> > +#define		HHI_MIPI_CNTL2_CH_PU		GENMASK(31, 25)
+>> > +#define		HHI_MIPI_CNTL2_CH_CTL		GENMASK(24, 19)
+>> > +#define		HHI_MIPI_CNTL2_CH0_DIGDR_EN	BIT(18)
+>> > +#define		HHI_MIPI_CNTL2_CH_DIGDR_EN	BIT(17)
+>> > +#define		HHI_MIPI_CNTL2_LPULPS_EN	BIT(16)
+>> > +#define		HHI_MIPI_CNTL2_CH_EN(n)		BIT(15 - (n))
+>> > +#define		HHI_MIPI_CNTL2_CH0_LP_CTL	GENMASK(10, 1)
+>> > +
+>> > +struct phy_axg_mipi_pcie_priv {
+>> > +	struct phy *phy;
+>> > +	unsigned int mode;
+>> > +	struct regmap *regmap;
+>> > +};
+>> > +
+>> > +static const struct regmap_config phy_axg_mipi_pcie_regmap_conf = {
+>> > +	.reg_bits = 8,
+>> > +	.val_bits = 32,
+>> > +	.reg_stride = 4,
+>> > +	.max_register = HHI_MIPI_CNTL2,
+>> > +};
+>> > +
+>> > +static int phy_axg_mipi_pcie_power_on(struct phy *phy)
+>> > +{
+>> > +	struct phy_axg_mipi_pcie_priv *priv = phy_get_drvdata(phy);
+>> > +
+>> > +	/* MIPI not supported yet */
+>> > +	if (priv->mode != PHY_TYPE_PCIE)
+>> > +		return 0;
+>> > +
+>> > +	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
+>> > +			   HHI_MIPI_CNTL0_BANDGAP, HHI_MIPI_CNTL0_BANDGAP);
+>> > +
+>> > +	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
+>> > +			   HHI_MIPI_CNTL0_ENABLE, HHI_MIPI_CNTL0_ENABLE);
+>> > +	return 0;
+>> > +}
+>> > +
+>> > +static int phy_axg_mipi_pcie_power_off(struct phy *phy)
+>> > +{
+>> > +	struct phy_axg_mipi_pcie_priv *priv = phy_get_drvdata(phy);
+>> > +
+>> > +	/* MIPI not supported yet */
+>> > +	if (priv->mode != PHY_TYPE_PCIE)
+>> > +		return 0;
+>> > +
+>> > +	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
+>> > +			   HHI_MIPI_CNTL0_BANDGAP, 0);
+>> > +	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
+>> > +			   HHI_MIPI_CNTL0_ENABLE, 0);
+>> > +	return 0;
+>> > +}
+>> > +
+>> > +static int phy_axg_mipi_pcie_init(struct phy *phy)
+>> > +{
+>> > +	return 0;
+>> > +}
+>> > +
+>> > +static int phy_axg_mipi_pcie_exit(struct phy *phy)
+>> > +{
+>> > +	return 0;
+>> > +}
+>> > +
+>> > +static const struct phy_ops phy_axg_mipi_pcie_ops = {
+>> > +	.init = phy_axg_mipi_pcie_init,
+>> > +	.exit = phy_axg_mipi_pcie_exit,
+>> > +	.power_on = phy_axg_mipi_pcie_power_on,
+>> > +	.power_off = phy_axg_mipi_pcie_power_off,
+>> > +	.owner = THIS_MODULE,
+>> > +};
+>> > +
+>> > +static struct phy *phy_axg_mipi_pcie_xlate(struct device *dev,
+>> > +					   struct of_phandle_args *args)
+>> > +{
+>> > +	struct phy_axg_mipi_pcie_priv *priv = dev_get_drvdata(dev);
+>> > +	unsigned int mode;
+>> > +
+>> > +	if (args->args_count != 1) {
+>> > +		dev_err(dev, "invalid number of arguments\n");
+>> > +		return ERR_PTR(-EINVAL);
+>> > +	}
+>> > +
+>> > +	mode = args->args[0];
+>> > +
+>> > +	/* MIPI mode is not supported yet */
+>> > +	if (mode != PHY_TYPE_PCIE) {
+>> > +		dev_err(dev, "invalid phy mode select argument\n");
+>> > +		return ERR_PTR(-EINVAL);
+>> > +	}
+>> > +
+>> > +	priv->mode = mode;
+>> > +	return priv->phy;
+>> > +}
+>> > +
+>> > +static int phy_axg_mipi_pcie_probe(struct platform_device *pdev)
+>> > +{
+>> > +	struct phy_provider *pphy;
+>> > +	struct device *dev = &pdev->dev;
+>> > +	struct phy_axg_mipi_pcie_priv *priv;
+>> > +	struct device_node *np = dev->of_node;
+>> > +	int ret;
+>> > +
+>> > +	priv = devm_kmalloc(dev, sizeof(*priv), GFP_KERNEL);
+>> > +	if (!priv)
+>> > +		return -ENOMEM;
+>> > +
+>> > +	/* Get the hhi system controller node */
+>> > +	priv->regmap = syscon_node_to_regmap(of_get_parent(dev->of_node));
+>> > +	if (IS_ERR(priv->regmap)) {
+>> > +		dev_err(dev, "failed to get HHI regmap\n");
+>> > +		return PTR_ERR(priv->regmap);
+>> > +	}
+>> > +
+>> > +	priv->phy = devm_phy_create(dev, np, &phy_axg_mipi_pcie_ops);
+>> > +	if (IS_ERR(priv->phy)) {
+>> > +		ret = PTR_ERR(priv->phy);
+>> > +		if (ret != -EPROBE_DEFER)
+>> > +			dev_err(dev, "failed to create PHY\n");
+>> > +		return ret;
+>> > +	}
+>> > +
+>> > +	phy_set_drvdata(priv->phy, priv);
+>> > +	dev_set_drvdata(dev, priv);
+>> > +	pphy = devm_of_phy_provider_register(dev, phy_axg_mipi_pcie_xlate);
+>> > +
+>> > +	return PTR_ERR_OR_ZERO(pphy);
+>> > +}
+>> > +
+>> > +static const struct of_device_id phy_axg_mipi_pcie_of_match[] = {
+>> > +	{
+>> > +		.compatible = "amlogic,axg-mipi-pcie-phy",
+>> 
+>> Is there a dt-binding documentation for this?
+>
+> There is binding documentation updates for this whole serie but I thought
+> they were supposed to be sent in separate serie, which is not the case
+> apparently.
 
-When shuting down PCIe port 0000:00:02.2 or 0000:00:02.0, the machine
-will hang, depend on which device is reinitialized in kdump kernel.
+Different patches, but same series is recommended ;)
 
-If force remove unused device then trigger kdump, the problem will never
-happen:
-
-    echo 1 > /sys/bus/pci/devices/0000\:00\:02.2/0000\:07\:00.0/remove
-    echo c > /proc/sysrq-trigger
-
-    ... Kdump save vmcore through network, the NIC get reinitialized and
-    hpsa is untouched. Then reboot with no problem. (If hpsa is used
-    instead, shutdown the NIC in first kernel will help)
-
-The cause is that some devices are enabled by the first kernel, but it
-don't have the chance to shutdown the device, and kdump kernel is not
-aware of it, unless it reinitialize the device.
-
-Upon reboot, kdump kernel will skip downstream device shutdown and
-clears its bridge's master bit directly. The downstream device could
-error out as it can still send requests but upstream refuses it.
-
-So for kdump, let kernel read the correct hardware power state on boot,
-and always clear the bus master bit of PCI device upon shutdown if the
-device is on. PCIe port driver will always shutdown all downstream
-devices first, so this should ensure all downstream devices have bus
-master bit off before clearing the bridge's bus master bit.
-
-Signed-off-by: Kairui Song <kasong@redhat.com>
----
- drivers/pci/pci-driver.c | 11 ++++++++---
- drivers/pci/quirks.c     | 20 ++++++++++++++++++++
- 2 files changed, 28 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index 0454ca0e4e3f..84a7fd643b4d 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -18,6 +18,7 @@
- #include <linux/kexec.h>
- #include <linux/of_device.h>
- #include <linux/acpi.h>
-+#include <linux/crash_dump.h>
- #include "pci.h"
- #include "pcie/portdrv.h"
-=20
-@@ -488,10 +489,14 @@ static void pci_device_shutdown(struct device *dev)
- 	 * If this is a kexec reboot, turn off Bus Master bit on the
- 	 * device to tell it to not continue to do DMA. Don't touch
- 	 * devices in D3cold or unknown states.
--	 * If it is not a kexec reboot, firmware will hit the PCI
--	 * devices with big hammer and stop their DMA any way.
-+	 * If this is kdump kernel, also turn off Bus Master, the device
-+	 * could be activated by previous crashed kernel and may block
-+	 * it's upstream from shutting down.
-+	 * Else, firmware will hit the PCI devices with big hammer
-+	 * and stop their DMA any way.
- 	 */
--	if (kexec_in_progress && (pci_dev->current_state <=3D PCI_D3hot))
-+	if ((kexec_in_progress || is_kdump_kernel()) &&
-+			pci_dev->current_state <=3D PCI_D3hot)
- 		pci_clear_master(pci_dev);
- }
-=20
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 4937a088d7d8..c65d11ab3939 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -28,6 +28,7 @@
- #include <linux/platform_data/x86/apple.h>
- #include <linux/pm_runtime.h>
- #include <linux/switchtec.h>
-+#include <linux/crash_dump.h>
- #include <asm/dma.h>	/* isa_dma_bridge_buggy */
- #include "pci.h"
-=20
-@@ -192,6 +193,25 @@ static int __init pci_apply_final_quirks(void)
- }
- fs_initcall_sync(pci_apply_final_quirks);
-=20
-+/*
-+ * Read the device state even if it's not enabled. The device could be
-+ * activated by previous crashed kernel, this will read and correct the
-+ * cached state.
-+ */
-+static void quirk_read_pm_state_in_kdump(struct pci_dev *dev)
-+{
-+	u16 pmcsr;
-+
-+	if (!is_kdump_kernel())
-+		return;
-+
-+	if (dev->pm_cap) {
-+		pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
-+		dev->current_state =3D (pmcsr & PCI_PM_CTRL_STATE_MASK);
-+	}
-+}
-+DECLARE_PCI_FIXUP_FINAL(PCI_ANY_ID, PCI_ANY_ID, quirk_read_pm_state_in_k=
-dump);
-+
- /*
-  * Decoding should be disabled for a PCI device during BAR sizing to avo=
-id
-  * conflict. But doing so may cause problems on host bridge and perhaps =
-other
---=20
-2.24.1
+>
+> Thanks,
 
