@@ -2,98 +2,82 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 05C7D12B353
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Dec 2019 09:52:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D4A7D12B388
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Dec 2019 10:24:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726156AbfL0Iv7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 27 Dec 2019 03:51:59 -0500
-Received: from ns.mm-sol.com ([37.157.136.199]:33646 "EHLO extserv.mm-sol.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725936AbfL0Iv7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 27 Dec 2019 03:51:59 -0500
-X-Greylist: delayed 381 seconds by postgrey-1.27 at vger.kernel.org; Fri, 27 Dec 2019 03:51:57 EST
-Received: from [192.168.1.13] (87-126-225-137.ip.btc-net.bg [87.126.225.137])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by extserv.mm-sol.com (Postfix) with ESMTPSA id 49135CF4E;
-        Fri, 27 Dec 2019 10:51:56 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
-        t=1577436716; bh=bJiYGKO/9WPFqn77XOxGnZ0/2b7Pu46nlAv2y5Gj754=;
-        h=Subject:To:Cc:From:Date:From;
-        b=GPaSepEjMyGzmSZmQ40HyrYL9fJlz0X/j1s2Hs9YxZbDbPs/B5nQ2eKTdGeQcfjg8
-         Q6eG92rSGfM4Khg4S3vjSg6Ip+Ai1gg8h9A6GEvOJ/4y7U+wuW/3go1j8miNjwRrR+
-         B41SM2QkGhxCNg5HdyaPazzMBaQHBTc86jnlwPl1yr5ikF+Yp/prUlMqqjd0cbuBui
-         rXNhHcR5WZk/YjsICbQN1DSL4IjLmASetdCpuHZ1bAPZNIkv/8JcjBdvSE+5TCTd0m
-         12iWA2E3WW6ag575kWYhUWZWcgt7P2qA70tcPMMP2VEz5hov/Nrh2tnu0tLvqo3cvJ
-         BNGUQFt3nXzFQ==
-Subject: Re: [PATCH v2] PCI: qcom: Fix the fixup of PCI_VENDOR_ID_QCOM
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>, stable@vger.kernel.org
-References: <20191227012717.78965-1-bjorn.andersson@linaro.org>
-From:   Stanimir Varbanov <svarbanov@mm-sol.com>
-Message-ID: <9e5ee7e8-aa63-e82c-8135-acc77b476c87@mm-sol.com>
-Date:   Fri, 27 Dec 2019 10:51:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <20191227012717.78965-1-bjorn.andersson@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1726169AbfL0JYR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 27 Dec 2019 04:24:17 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:44643 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbfL0JYR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Dec 2019 04:24:17 -0500
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1iklqv-000718-2j; Fri, 27 Dec 2019 09:24:13 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     bhelgaas@google.com, rafael.j.wysocki@intel.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH] PCI/PM: Report runtime wakeup is not supported if bridge isn't bound to driver
+Date:   Fri, 27 Dec 2019 17:24:05 +0800
+Message-Id: <20191227092405.29588-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
+We have a Pericom USB add-on card that has three USB controller
+functions 06:00.[0-2], connected to bridge device 05:03.0, which is
+connected to another bridge device 04:00.0:
 
-On 12/27/19 3:27 AM, Bjorn Andersson wrote:
-> There exists non-bridge PCIe devices with PCI_VENDOR_ID_QCOM, so limit
-> the fixup to only affect the relevant PCIe bridges.
-> 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
-> 
-> Stan, I picked up all the suggested device id's from the previous thread and
-> added 0x1000 for QCS404. I looked at creating platform specific defines in
-> pci_ids.h, but SDM845 has both 106 and 107... Please let me know if you would
-> prefer that I do this anyway.
+-[0000:00]-+-00.0
+           +-1c.6-[04-06]----00.0-[05-06]----03.0-[06]--+-00.0
+           |                                            +-00.1
+           |                                            \-00.2
 
-Looks good,
+When bridge device (05:03.0) and all three USB controller functions
+(06:00.[0-2]) are runtime suspended, they don't get woken up by plugging
+USB devices into the add-on card.
 
-Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+This is because the pcieport driver failed to probe on 04:00.0, since
+the device supports neither legacy IRQ, MSI nor MSI-X. Because of that,
+there's no native PCIe PME can work for devices connected to it.
 
-> 
->  drivers/pci/controller/dwc/pcie-qcom.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 5ea527a6bd9f..138e1a2d21cc 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -1439,7 +1439,13 @@ static void qcom_fixup_class(struct pci_dev *dev)
->  {
->  	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
->  }
-> -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCI_ANY_ID, qcom_fixup_class);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0101, qcom_fixup_class);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0104, qcom_fixup_class);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0106, qcom_fixup_class);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0107, qcom_fixup_class);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0302, qcom_fixup_class);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1000, qcom_fixup_class);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1001, qcom_fixup_class);
->  
->  static struct platform_driver qcom_pcie_driver = {
->  	.probe = qcom_pcie_probe,
-> 
+So let's correctly report runtime wakeup isn't supported when any of
+PCIe bridges isn't bound to pcieport driver.
 
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=205981
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ drivers/pci/pci.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 951099279192..ca686cfbd65e 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -2493,6 +2493,18 @@ bool pci_dev_run_wake(struct pci_dev *dev)
+ 	if (!pci_pme_capable(dev, pci_target_state(dev, true)))
+ 		return false;
+ 
++	/* If any upstream PCIe bridge isn't bound to pcieport driver, there's
++	 * no IRQ for PME.
++	 */
++	if (pci_is_pcie(dev)) {
++		while (bus->parent) {
++			if (!bus->self->driver)
++				return false;
++
++			bus = bus->parent;
++		}
++	}
++
+ 	if (device_can_wakeup(&dev->dev))
+ 		return true;
+ 
 -- 
-regards,
-Stan
+2.17.1
+
