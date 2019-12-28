@@ -2,86 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F07512B63C
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Dec 2019 18:41:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C77D12BDF6
+	for <lists+linux-pci@lfdr.de>; Sat, 28 Dec 2019 16:41:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727386AbfL0RlS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 27 Dec 2019 12:41:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37376 "EHLO mail.kernel.org"
+        id S1726410AbfL1Pla (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 28 Dec 2019 10:41:30 -0500
+Received: from smtp4-g21.free.fr ([212.27.42.4]:21342 "EHLO smtp4-g21.free.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727274AbfL0RlR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:41:17 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA7F022522;
-        Fri, 27 Dec 2019 17:41:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468477;
-        bh=bxw/s/0mmi4d1HPjam3EBwcbNipwUxX5FJj0gvVh/MU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IXVP8wlf4jNdEfxK4LYspNXRoWDNqi7GXhi9+3i0/WDYhln3Wmx3kVWpVlEYIOiZB
-         Rm6AajXRBuQ3EdJuDkzfj/gZ65c6pBZi75p/qpa5o426sgplCrsmYgJbCeSciptiM9
-         9NKKoqfq2zcxV8g/EqSpXxaeHtSA5VbGm6N0v4/0=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, bp@alien8.de,
-        feng.tang@intel.com, harry.pan@intel.com, hpa@zytor.com,
-        Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 016/187] x86/intel: Disable HPET on Intel Ice Lake platforms
-Date:   Fri, 27 Dec 2019 12:38:04 -0500
-Message-Id: <20191227174055.4923-16-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191227174055.4923-1-sashal@kernel.org>
-References: <20191227174055.4923-1-sashal@kernel.org>
+        id S1726080AbfL1Pla (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 28 Dec 2019 10:41:30 -0500
+Received: from [192.168.1.91] (unknown [77.207.133.132])
+        (Authenticated sender: marc.w.gonzalez)
+        by smtp4-g21.free.fr (Postfix) with ESMTPSA id 6AC7119F5A8;
+        Sat, 28 Dec 2019 16:41:08 +0100 (CET)
+Subject: Re: [PATCH v2] PCI: qcom: Fix the fixup of PCI_VENDOR_ID_QCOM
+To:     Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20191227012717.78965-1-bjorn.andersson@linaro.org>
+ <9e5ee7e8-aa63-e82c-8135-acc77b476c87@mm-sol.com>
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Message-ID: <38acf5fc-85aa-7090-e666-97a1281e9905@free.fr>
+Date:   Sat, 28 Dec 2019 16:41:08 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <9e5ee7e8-aa63-e82c-8135-acc77b476c87@mm-sol.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+On 27/12/2019 09:51, Stanimir Varbanov wrote:
 
-[ Upstream commit e0748539e3d594dd26f0d27a270f14720b22a406 ]
+> On 12/27/19 3:27 AM, Bjorn Andersson wrote:
+>
+>> There exists non-bridge PCIe devices with PCI_VENDOR_ID_QCOM, so limit
+>> the fixup to only affect the relevant PCIe bridges.
+>>
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>> ---
+>>
+>> Stan, I picked up all the suggested device id's from the previous thread and
+>> added 0x1000 for QCS404. I looked at creating platform specific defines in
+>> pci_ids.h, but SDM845 has both 106 and 107... Please let me know if you would
+>> prefer that I do this anyway.
+> 
+> Looks good,
+> 
+> Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+> 
+>>  drivers/pci/controller/dwc/pcie-qcom.c | 8 +++++++-
+>>  1 file changed, 7 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+>> index 5ea527a6bd9f..138e1a2d21cc 100644
+>> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+>> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+>> @@ -1439,7 +1439,13 @@ static void qcom_fixup_class(struct pci_dev *dev)
+>>  {
+>>  	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
+>>  }
+>> -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCI_ANY_ID, qcom_fixup_class);
+>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0101, qcom_fixup_class);
+>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0104, qcom_fixup_class);
+>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0106, qcom_fixup_class);
+>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0107, qcom_fixup_class);
+>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0302, qcom_fixup_class);
+>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1000, qcom_fixup_class);
+>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1001, qcom_fixup_class);
 
-Like CFL and CFL-H, ICL SoC has skewed HPET timer once it hits PC10.
-So let's disable HPET on ICL.
+Hrmmm... still not CCed on the patch, and still don't think the
+fixup is required(?) for 0x106 and 0x107.
 
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: bp@alien8.de
-Cc: feng.tang@intel.com
-Cc: harry.pan@intel.com
-Cc: hpa@zytor.com
-Link: https://lkml.kernel.org/r/20191129062303.18982-2-kai.heng.feng@canonical.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/kernel/early-quirks.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/x86/kernel/early-quirks.c b/arch/x86/kernel/early-quirks.c
-index 606711f5ebf8..2f9ec14be3b1 100644
---- a/arch/x86/kernel/early-quirks.c
-+++ b/arch/x86/kernel/early-quirks.c
-@@ -714,6 +714,8 @@ static struct chipset early_qrk[] __initdata = {
- 		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
- 	{ PCI_VENDOR_ID_INTEL, 0x3ec4,
- 		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
-+	{ PCI_VENDOR_ID_INTEL, 0x8a12,
-+		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
- 	{ PCI_VENDOR_ID_BROADCOM, 0x4331,
- 	  PCI_CLASS_NETWORK_OTHER, PCI_ANY_ID, 0, apple_airport_reset},
- 	{}
--- 
-2.20.1
-
+Regards.
