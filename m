@@ -2,63 +2,161 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CFCE12C661
-	for <lists+linux-pci@lfdr.de>; Sun, 29 Dec 2019 18:54:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D30A712CB2C
+	for <lists+linux-pci@lfdr.de>; Sun, 29 Dec 2019 23:37:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731076AbfL2Rq1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 29 Dec 2019 12:46:27 -0500
-Received: from smtpgwv02.dogantelekom.com ([213.243.1.84]:62138 "EHLO
-        smtpgwv02.dogantelekom.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731060AbfL2Rq0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 29 Dec 2019 12:46:26 -0500
-X-Greylist: delayed 901 seconds by postgrey-1.27 at vger.kernel.org; Sun, 29 Dec 2019 12:46:22 EST
-X-AuditID: d5f30154-30bff70000001822-12-5e08e2e6441c
-Received: from dolhst01.dol.com.tr (ftp.kozayonetim.com.tr [213.243.39.2])
-        by smtpgwv02.dogantelekom.com (D-Smart Corporate Messaging Gateway) with SMTP id 9C.BC.06178.6E2E80E5; Sun, 29 Dec 2019 20:31:18 +0300 (MSK)
-Received: from 69.164.194.72 ([69.164.194.72]) by dsmartkurumsal.com with MailEnable WebMail; Sun, 29 Dec 2019 20:31:11 +0300
-From:   "Norman HKMA cs" <nener@enercompany.com>
-Subject: 
-Date:   Sun, 29 Dec 2019 18:31:11 +0100
-Message-ID: <34CBFE7BA78C444F8FC1548BA2453ED7.MAI@dsmartkurumsal.com>
+        id S1726586AbfL2Wh6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 29 Dec 2019 17:37:58 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:62237 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726490AbfL2Wh6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 29 Dec 2019 17:37:58 -0500
+Received: from 79.184.253.116.ipv4.supernova.orange.pl (79.184.253.116) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.320)
+ id fd89ba99d30803d6; Sun, 29 Dec 2019 23:37:55 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     bhelgaas@google.com, rafael.j.wysocki@intel.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI/PM: Report runtime wakeup is not supported if bridge isn't bound to driver
+Date:   Sun, 29 Dec 2019 23:37:55 +0100
+Message-ID: <4466650.2HG2iOLVKt@kreacher>
+In-Reply-To: <C9708CF1-9F01-47BF-A568-53A01725AF95@canonical.com>
+References: <20191227092405.29588-1-kai.heng.feng@canonical.com> <1948783.ToaVGCCZch@kreacher> <C9708CF1-9F01-47BF-A568-53A01725AF95@canonical.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed;
-        boundary="--=_NextPart_000_000B_4401273EFF49482890298C2F150C4C64"
-X-Mailer: MailEnable WebMail.NET
-X-MimeOLE: Produced By MailEnable WebMail.NET V2.0.0.0
-X-Read: 0
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sf0wTZxzG8969793BvO1WGbzDLHHN5oyLCItuX5LNmCxmtyVbXDYXsyWw
-        Uy4tgdKuBww2NaDIFlpGoaJrxSqxqwP9Y1RIUEmIRTMHA3Qd2onIOoVl/FJwoYSg7mw187/P
-        +z7P833+eQTW4OLShfyiYtVepBQauWQ8dPcVZu34X0JOZrV7BbTWBQjUtw2wcHr+GIbF1gss
-        OBudDBzub8Mw3TeCYMg/x8CIb4aBpivfseA7P4MhUJEK4TNNHDh/6iBw4+QDAv2+nzkYD9Vi
-        uBU6zsBvnVEWLrU38LBQPUeg8mwMQW3PKIETDj8PF6bfgj2RkyyEDupHrnWeRVDT/TeB4cZT
-        BIIXz+nPvkEMg/tK4Fq0ncDly7ME3FdOcXC/7jYHUwvjGNzfaOAYOYo3rZZnwkO83HVvlpGD
-        tR28HGu5wcmnvSO8XHngXyLfdP7Kyf3nYlh211RhOTjXwMt9Y1lyQ8/vrNxcP8rJh9pcvPxP
-        ZEp3hD/ZkvJp8pt5amF+qWpft/HzZPPV3jucrZ0tc/n3kwo0z9SgJIFK6+m92DT/kA3SH4g6
-        wjsTvIsuRj1xT4qEaUsshh8yJ2XQSs+ZuH+5lESDjsE4Y+llGvXXx1mUNtPKQPgRP0t/8dyK
-        Z1lpO/VXHeYTvSvp4v0mkuDXae/S0CNOopfGvMiFRO8Tce8T8QRn0pare9gEv0oDzZPsUYRb
-        UbpmKbaZvizNfC0jz2pS9L0UqgVWS8YOqyWI4qtBH3eiH6o+CCFJQMZl4vcHhRwDUUq1cksI
-        PS8wxufEI3X619PbrXnlZkUz59pLClUthKjAGlPEIhPJMYh5SvlXqt36WFohYGOamPvS29sM
-        kkkpVgtU1abaH6uMkDSB0vSy5WI0ql9epq9Yyzcl5AmULTBSpJtIkT+JNHnT42PTsWZTLHrX
-        ewKnd2nFyv/2NU8JcY8kUxdKr0BpW8wkt8txaLbl+Bt7N0L1ys+uL6YOh23zBz70KltD2asi
-        /me6l1KO3RVzs3wvLMwNBHYrX6e+XzK+2hKo8wW+HS6b2TrWvMk5saOx01M9tqFoybUuObvd
-        7Or+aFX2F2WjvQO71l5kB/bxBe71XR32H08c2dyTNbuteWrynfP7w+++aMSaWclaw9o15T8a
-        0270owMAAA==
-To:     unlisted-recipients:; (no To-header on input)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This is a multi-part message in MIME format.
+On Friday, December 27, 2019 6:15:26 PM CET Kai-Heng Feng wrote:
+> 
+> > On Dec 27, 2019, at 18:36, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> > 
+> > On Friday, December 27, 2019 10:24:05 AM CET Kai-Heng Feng wrote:
+> >> We have a Pericom USB add-on card that has three USB controller
+> >> functions 06:00.[0-2], connected to bridge device 05:03.0, which is
+> >> connected to another bridge device 04:00.0:
+> >> 
+> >> -[0000:00]-+-00.0
+> >>           +-1c.6-[04-06]----00.0-[05-06]----03.0-[06]--+-00.0
+> >>           |                                            +-00.1
+> >>           |                                            \-00.2
+> >> 
+> >> When bridge device (05:03.0) and all three USB controller functions
+> >> (06:00.[0-2]) are runtime suspended, they don't get woken up by plugging
+> >> USB devices into the add-on card.
+> >> 
+> >> This is because the pcieport driver failed to probe on 04:00.0, since
+> >> the device supports neither legacy IRQ, MSI nor MSI-X. Because of that,
+> >> there's no native PCIe PME can work for devices connected to it.
+> > 
+> > But in that case the PME driver (drivers/pci/pcie/pme.c) should not bind
+> > to the port in question, so the "can_wakeup" flag should not be set for
+> > the devices under that port.
+> 
+> We can remove the can_wakeup flag for all its child devices once pcieport probe fails, but I think it's not intuitive.
+> 
+> > 
+> >> So let's correctly report runtime wakeup isn't supported when any of
+> >> PCIe bridges isn't bound to pcieport driver.
+> >> 
+> >> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=205981
+> >> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> >> ---
+> >> drivers/pci/pci.c | 12 ++++++++++++
+> >> 1 file changed, 12 insertions(+)
+> >> 
+> >> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> >> index 951099279192..ca686cfbd65e 100644
+> >> --- a/drivers/pci/pci.c
+> >> +++ b/drivers/pci/pci.c
+> >> @@ -2493,6 +2493,18 @@ bool pci_dev_run_wake(struct pci_dev *dev)
+> >> 	if (!pci_pme_capable(dev, pci_target_state(dev, true)))
+> >> 		return false;
+> >> 
+> >> +	/* If any upstream PCIe bridge isn't bound to pcieport driver, there's
+> >> +	 * no IRQ for PME.
+> >> +	 */
+> >> +	if (pci_is_pcie(dev)) {
+> >> +		while (bus->parent) {
+> >> +			if (!bus->self->driver)
+> >> +				return false;
+> >> +
+> >> +			bus = bus->parent;
+> >> +		}
+> >> +	}
+> >> +
+> > 
+> > So it looks like device_can_wakeup() returns 'true' for this device, but it
+> > should return 'false'.
+> 
+> The USB controllers can assert PME#, so it actually can wakeup, in a way.
 
-----=_NextPart_000_000B_4401273EFF49482890298C2F150C4C64
-Content-type: text/plain; charset="windows-1254"
-Content-Transfer-Encoding: quoted-printable
+Well, that's questionable.
 
-I have a business deal worth $150 Million USD which can be invested
-in any business area in your country, reply to me for more info via
-Email: Normanhkma@gmail.com
+If there is no known way for the PME to be signaled, we may as well mark the
+device as wakeup-incapable.
+
+> I think the logical distinction between pci_dev_run_wake() and device_can_wakeup() is that,
+> pci_dev_run_wake() means it can actually do runtime wakeup, while device_can_wakeup()
+> only means it has the capability to wakeup. Am I correct here?
+
+Kind of, but the "capability" part is not well defined, so to speak, because
+if the device happens to be located below a PCIe port in a low-power state
+(say D3hot), the PME "support" declared in the config space is clearly
+insufficient.
+
+> > 
+> > Do you know why the "can_wakeup" flag is set for it?
+> 
+> All PCI devices with PME cap calls device_set_wakeup_capable() in pci_pm_init().
+
+Right, I forgot about that thing.
+
+It is inconsistent with the rest of the code, particularly with
+pci_dev_run_wake(), so I'd try to drop it.
+
+IIRC that would require some other pieces of code to be reworked to avoid
+regressions, though.
+
+> > 
+> >> 	if (device_can_wakeup(&dev->dev))
+> >> 		return true;
+> >> 
+> >> 
+> > 
+> > Moreover, even if the native PME is not supported, there can be an ACPI GPE (or
+> > equivalent) that triggers when WAKE# is asserted by one of the PCIe devices
+> > connected to it, so the test added by this patch cannot be used in general.
+> 
+> Ok. So how to know when both native PME isn't supported and it doesn't use ACPI GPE?
+
+If the PME driver doesn't bind to the device's root port, the native PME cannot
+work.
+
+If there is no wakeup GPE, pci_acpi_setup() will not call
+device_set_wakeup_capable() for the device.
+
+> I thought ACPI GPE only works for devices directly connect to Root Complex, but I can't find the reference now.
+
+No, that's not the case.
+
+It can work for any devices (even old-style PCI, non-PCIe) with PME# connected
+to a dedicated WAKE# pin on the board (which then is represented as an ACPI GPE
+or a GPIO IRQ).
+
+> 
+> Another short-term workaround is to make pci_pme_list_scan() not skip bridge when it's in D3hot:
+
+No, that would not be safe in general.
+
+Basically, pci_finish_runtime_suspend() needs to enable wakeup for devices
+that can do PME even though can_wakeup is not set for them, as long as
+pci_pme_list_scan() can reach them.  That should be sufficient to cover
+all of the practically relevant cases.
 
 
-----=_NextPart_000_000B_4401273EFF49482890298C2F150C4C64--
 
