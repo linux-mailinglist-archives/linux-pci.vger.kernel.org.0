@@ -2,125 +2,87 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BB63412D517
-	for <lists+linux-pci@lfdr.de>; Tue, 31 Dec 2019 00:30:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A1A812D51F
+	for <lists+linux-pci@lfdr.de>; Tue, 31 Dec 2019 00:59:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727750AbfL3XaC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Dec 2019 18:30:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55074 "EHLO mail.kernel.org"
+        id S1727756AbfL3X7F (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Dec 2019 18:59:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727740AbfL3XaC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 30 Dec 2019 18:30:02 -0500
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727751AbfL3X7F (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 30 Dec 2019 18:59:05 -0500
+Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 145242071E;
-        Mon, 30 Dec 2019 23:30:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2474120658;
+        Mon, 30 Dec 2019 23:59:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577748601;
-        bh=hkEGClyK44JrT1UNYO0jbZ0tX8GcixfZ5o/++Rt06dA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ycs0qW//qZzwO1So3mRQruBvcezHM66js6X/8OZd6SToAPYp9m01psXAmsP6hHrJ7
-         EZTRcX1E33l/CHkNgCmtXrf5aCczPBaq0ipr5cdJkpTjegaevjTizea1HAV6pZ/B18
-         l5ZsU0wXWXfmtsrkC8WOfzzS/iqXBwfzm8z/FGNI=
-Received: by mail-qt1-f169.google.com with SMTP id d5so30664058qto.0;
-        Mon, 30 Dec 2019 15:30:01 -0800 (PST)
-X-Gm-Message-State: APjAAAUsKpXFIy/abzBCYHMB3pKOs646fmRUT/2KE0tor8BjT07qvVMP
-        w77cy9+JX2uruDlHf7ah4JUwiezaKLNXe1KmKg==
-X-Google-Smtp-Source: APXvYqzUYjO1rBL+O7ItgGLs1LEmveivzL2IGDBLwwnbea0alSFh/xQM2lhdiJtCRqsgvNgGZGkrlHwTkYsjRu3keSk=
-X-Received: by 2002:ac8:5513:: with SMTP id j19mr50575941qtq.143.1577748600241;
- Mon, 30 Dec 2019 15:30:00 -0800 (PST)
+        s=default; t=1577750344;
+        bh=aw3uPwg9jYCP2G9VjPAtTKdZZpAsL71kvFq58sx1GGs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=SxxHB05rWlj1c5U6ycBpBN4b8J8QNbpviUlBZljRfwwQv1AFNlc6N42dDbSr6+XxV
+         OqvE41sZ87FJ1vwtTLYeZcjRuwmL42Ua82MOLK9baRJ6vuvMX7mqfYPZ6dP3OqDBVg
+         TSUNQu0ppC92rvXyH0P0+PoEmDlSQMo/BMMSKbrg=
+Date:   Mon, 30 Dec 2019 17:59:02 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     sathyanarayanan.kuppuswamy@linux.intel.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, keith.busch@intel.com, Austin.Bolen@dell.com
+Subject: Re: [PATCH v11 5/8] PCI/AER: Allow clearing Error Status Register in
+ FF mode
+Message-ID: <20191230235902.GA226371@google.com>
 MIME-Version: 1.0
-References: <20191116005240.15722-1-robh@kernel.org> <20191116005240.15722-3-robh@kernel.org>
- <CAMuHMdX20LvK2o1cZJ8q83Q08JQzH6L07gmqBm0V0xSc5GHk4A@mail.gmail.com>
-In-Reply-To: <CAMuHMdX20LvK2o1cZJ8q83Q08JQzH6L07gmqBm0V0xSc5GHk4A@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 30 Dec 2019 16:29:48 -0700
-X-Gmail-Original-Message-ID: <CAL_Jsq+24qYqN6u1o93gkGm13GZeSRQM4uor0170HeFbLdU-xQ@mail.gmail.com>
-Message-ID: <CAL_Jsq+24qYqN6u1o93gkGm13GZeSRQM4uor0170HeFbLdU-xQ@mail.gmail.com>
-Subject: Re: [PATCH 3/3] dt-bindings: PCI: Convert generic host binding to DT schema
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        Will Deacon <will@kernel.org>,
-        David Daney <david.daney@cavium.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c778a619d164f5202248543dc5eec99c079fb82e.1577400653.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 7:41 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Rob,
->
-> On Sat, Nov 16, 2019 at 1:53 AM Rob Herring <robh@kernel.org> wrote:
-> > Convert the generic PCI host binding to DT schema. The derivative Juno,
-> > PLDA XpressRICH3-AXI, and Designware ECAM bindings all just vary in
-> > their compatible strings. The simplest way to convert those to
-> > schema is just add them into the common generic PCI host schema.
-> >
-> > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > Cc: Andrew Murray <andrew.murray@arm.com>
-> > Cc: Zhou Wang <wangzhou1@hisilicon.com>
-> > Cc: Will Deacon <will@kernel.org>
-> > Cc: David Daney <david.daney@cavium.com>
-> > Signed-off-by: Rob Herring <robh@kernel.org>
->
-> > index 515b2f9542e5..000000000000
-> > --- a/Documentation/devicetree/bindings/pci/designware-pcie-ecam.txt
-> > +++ /dev/null
->
-> > -Example:
-> > -
-> > -    pcie1: pcie@7f000000 {
-> > -        compatible = "socionext,synquacer-pcie-ecam", "snps,dw-pcie-ecam";
-> > -        device_type = "pci";
-> > -        reg = <0x0 0x7f000000 0x0 0xf00000>;
-> > -        bus-range = <0x0 0xe>;
-> > -        #address-cells = <3>;
-> > -        #size-cells = <2>;
-> > -        ranges = <0x1000000 0x00 0x00010000 0x00 0x7ff00000 0x0 0x00010000>,
-> > -                 <0x2000000 0x00 0x70000000 0x00 0x70000000 0x0 0x0f000000>,
-> > -                 <0x3000000 0x3f 0x00000000 0x3f 0x00000000 0x1 0x00000000>;
-> > -
-> > -        #interrupt-cells = <0x1>;
-> > -        interrupt-map-mask = <0x0 0x0 0x0 0x0>;
->
-> An all-zeroes interrupt-map-mask seems to be very common on embedded
-> SoCs, where all devices are mapped to a single interrupt.
+[+cc Austin]
 
-Indeed.
+On Thu, Dec 26, 2019 at 04:39:11PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> 
+> As per PCI firmware specification r3.2 System Firmware Intermediary
+> (SFI) _OSC and DPC Updates ECR
+> (https://members.pcisig.com/wg/PCI-SIG/document/13563),
 
-> However, schemas/pci/pci-bus.yaml says:
->
->   interrupt-map-mask:
->     items:
->       - description: PCI high address cell
->         minimum: 0
->         maximum: 0xf800
->       - description: PCI mid address cell
->         const: 0
->       - description: PCI low address cell
->         const: 0
->       - description: PCI IRQ cell
->         minimum: 1
->         maximum: 7
->
-> and thus complains about an all-zeroes mask, e.g.
->
->     arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dt.yaml:
-> pcie@fe000000: interrupt-map-mask:0:3: 0 is less than the minimum of 1
+What is the state of this ECR?  I see it in the "PCI Express Review
+Zone Archive".  I don't know what the usage is of the "Review Zone" vs
+the "Review Zone Archive / PCI Express Review Zone Archive".  AFAICS,
+it is not listed in any of the "Documents for 60 Day Member Review".
 
-Now fixed.
+And I think it needs some clarification (for one thing, it needs to
+say what the red/blue text means).  I've mentioned some other items to
+Austin, but I haven't read it in detail because it seems like it's not
+quite baked yet.
 
-Thanks,
-Rob
+E.g., there's language about "it may make sense for an embedded system
+OS to own SFI, but it's recommended that general-purpose OSes never
+request SFI ownership."  That's useless: Linux is certainly a general
+purpose OS, but Linux is also often an embedded OS.  So the ECR
+doesn't provide useful guidance about how an OS should decide whether
+to request SFI ownership.
+
+Making code changes based on a published spec or ECN is fine,
+obviously.  Changes based on an ECR that is well on track to being
+accepted, e.g., is in the 60-day review period, are probably OK.  I
+don't yet have warm fuzzies about this ECR because I have no idea how
+far along it is.
+
+We might be able to justify some of these changes based on other
+specs; it just sounds weird to me to say "based on this Engineering
+Change Request that might be accepted someday, we must do X".  Anybody
+can dream up an ECR that says anything at all, so AFAICT, an ECR is
+not at all authoritative.
+
+> sec titled
+> "DPC Event Handling Implementation Note", page 10, Error Disconnect
+> Recover (EDR) support allows OS to handle error recovery and clearing
+> Error Registers even in FF mode. So create exception for FF mode checks
+> in pci_cleanup_aer_uncorrect_error_status(), pci_aer_clear_fatal_status()
+> and pci_cleanup_aer_error_status_regs() functions when its being called
+> from DPC code path.
