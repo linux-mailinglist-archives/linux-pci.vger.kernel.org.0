@@ -2,58 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ACD9D12CE40
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Dec 2019 10:34:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EB81912CFFA
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Dec 2019 13:31:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727162AbfL3Jem (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Dec 2019 04:34:42 -0500
-Received: from sonic314-15.consmr.mail.bf2.yahoo.com ([74.6.132.125]:34080
-        "EHLO sonic314-15.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727243AbfL3Jel (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Dec 2019 04:34:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1577698480; bh=YooljpITC31Cc9KXMfJzAPmr/1tCBEdX27fhfqn54Fs=; h=Date:From:Reply-To:Subject:References:From:Subject; b=bJ8zajuKko9Qp7lnufJkDY+wNt2FXRIRvA1Bp3gAVb7B2BO8gOkh0Yjz0vRiGswJVP3OJBhWWA5ujA4Gc+sLV+LirPxhT0hTcuhXGXZCiTT/uY8xfNI+H1qVb3d8tv31hre5OKnt+IofFXhry3CV15nhcjBsQnFymDW83bokZmhbjjEUzYM7Ogpm3sTJVFsC5an8kqrDdtT0csk4rFAB5AWgsvbUrcj8fvRMPGqy+2rGPBRj94PjsZK1eoyVshbWmNe9ercX2JMlijosJPczAkuaVR54ZsEApmNU3XACvfdsZ3mDNkDvBfnfh4QgfZLF1PQfWkCK4326OKn49e6luw==
-X-YMail-OSG: eEzk7jgVM1m72GeAJkvjLjnl6YuZdIcRZJgidG6pq0QpUBPtGqb0aPSNBvnB1vA
- WqN_tB_nGQs1XHkLHIhP5KKGS2nFHx8tBdIio1J.3mNXgB.lGEX7XfMW_UVBbEJG5BjCbxV6iXcY
- RHcM49XyHrTmo1ZLabBb_ZAjnab8DmxsdaCT2L5V8ud7Wthodyyo61Wnk3SZZ2oujGnYxbGUXIUp
- f7NNJInV_fCV3OEKFMJkgwoc86SIu5n31No.Spm1WozON8ldgMQmOMfCWGk_p__l979kPWtcin7m
- hcuMCeepDroxeh13r_3prsBkg2n5ATBK3oJPsD6sWxJNMMHT_VXdxTsX_TY892kf1Pn.3UC8aELS
- Prjr4ylyeiixVF68UvS.vqbkeKoF0LQcS9FbLhm8e0zlsnGeCUfh1Uikagpgo9AGxPvBJCGDrwXT
- CkGneTBRH0qfp10JjR4vb6TODwWNHIpY.Zo16TJDY7U35ejyCmQHTR2WMREGVSINMB52HRmtcSU0
- M_MCoK_RkHPwfYF1Hbxw._W3yvbY5GS1hhhGBVoRW9qIM0UfZz2r8a2ug4uEbNBW.ecAr6r4YjyC
- mwUrgcEr7E376GQ2ekJ2YfEquwSeVxba1B_M5E7N8bRytk0gPhYAv_aeDHQLg1hcuGZ1CiJ.L5eR
- Z1iLWPvweMOLtL4iTepI5HWyqeKLiN7P2DTB.utPVAEOh3..cd8y.Y7ZlyNOsVEZ7pTTfKmOVhcv
- u5l0yVYFEs..MQ1q8gyk_pn8BIUA.FiarjQ.H9Uf8HxlgERks2SUnIfEm7NHNsCs9.suAKgDHld6
- Dtxa.hsDx4Pb9NQKWQvSt0w42re.se73nLhHv0hPITfkZqtuLobnxC23eLzOTo9WtYZB2nfiq8E.
- smbKn2UuDN5p3z_XjjVv3fReu6s862g.c6CBMaT52frBt4x2xWjvOWVYjg1lQk9OEf6CGnfZqNz_
- vqmGhziDvYTdGuqG6KKy4nB1vJApJNSsOr7KgBzesESh5zj4ZZiS0wFebP98xfaxlmcUvot_tvUq
- 2Z9Y9Ur4mHJPA9thEjGwTKNEQRm_cJgEABiAc1DD2_lJVw6x0h1QJe8BAARMbqQLo5Cnz69CQKs_
- HTjgD5emejOyOv8Idj8R6P4WxtrpeRL3bmv3QEeJ6KkMwDr3u3crQG8uoWsaiaBtesCFVGEmgDCk
- vaZxgM4snE9mzNDAGjRY5jWsbvZHVc_gEPhrsN8DKbKq19cs8Fcfs4yfhPH31taCOS0qauGA_gxK
- lMZfjkXkJbq6WEchvy3FOcfkhY205oGSEDgE9v7xRCIWYvx8cGHxKyLIPcYvFlEZ.9An7oMBh
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic314.consmr.mail.bf2.yahoo.com with HTTP; Mon, 30 Dec 2019 09:34:40 +0000
-Date:   Mon, 30 Dec 2019 09:34:38 +0000 (UTC)
-From:   Lisa Williams <ah77900432@gmail.com>
-Reply-To: lisawilliams003@yahoo.com
-Message-ID: <1054553309.3099532.1577698478836@mail.yahoo.com>
-Subject: Hello
+        id S1727397AbfL3Mb3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Dec 2019 07:31:29 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:52584 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727376AbfL3Mb2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Dec 2019 07:31:28 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBUCVIuN069300;
+        Mon, 30 Dec 2019 06:31:18 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1577709078;
+        bh=h1bBuCCt5p3npXFEeqmlW/XTH5HMdwLY7PMMhaC3OJs=;
+        h=From:To:CC:Subject:Date;
+        b=HoGPOyLwSvSx+HCBFECvXbTkr33tTMtHlzCLGV63NjT6+YUxhx1TNDfwH0/EovR8U
+         60xPaSHbLnsUu1eVJhTawnA6sMvShK2FbwZfrN2mdlqXFmOk2/jAgueqrnZMgCv3+l
+         a+SojzeUQncMV35M6pL0fBCGfG/4zbxQxSFLg1hs=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBUCVITa058483
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 30 Dec 2019 06:31:18 -0600
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 30
+ Dec 2019 06:31:17 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 30 Dec 2019 06:31:17 -0600
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBUCVEhM002491;
+        Mon, 30 Dec 2019 06:31:15 -0600
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH 0/7] Improvements to pci_endpoint_test driver
+Date:   Mon, 30 Dec 2019 18:03:08 +0530
+Message-ID: <20191230123315.31037-1-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-References: <1054553309.3099532.1577698478836.ref@mail.yahoo.com>
-X-Mailer: WebService/1.1.14873 YMailNodin Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; InfoPath.2)
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+This series adds improvements and fixes to pci_endpoint_test driver
+mostly applicable when used with multi-function endpoint (or multiple
+endpoint instances using pci_epf_test).
 
+*) Using module parameter to determine irqtype would indicate all the
+   pci_endpoint_test device have the same irqtype. Fix it here.
+*) Add ioctl to clear irq so that "cat /proc/interrupts" only lists
+   the entries for the devices that is actually being used.
+*) Creating more than 10 pci-endpoint-test devices results in a kernel
+   error.
+*) Use full pci-endpoint-test name in request irq so that it's easy to
+   profile the interrupt details in "cat /proc/interrupts"
+*) Always enable legacy interrupt.
 
-Hi Dear,
+Kishon Vijay Abraham I (7):
+  misc: pci_endpoint_test: Avoid using module parameter to determine
+    irqtype
+  misc: pci_endpoint_test: Do not request or allocate IRQs in probe
+  misc: pci_endpoint_test: Add ioctl to clear IRQ
+  tools: PCI: Add 'e' to clear IRQ
+  misc: pci_endpoint_test: Fix to support > 10 pci-endpoint-test devices
+  misc: pci_endpoint_test: Use full pci-endpoint-test name in request
+    irq
+  misc: pci_endpoint_test: Enable legacy interrupt
 
-I was just going through the Internet search when I found your email address, I want to make a new and special friend, so I decided to contact you to see how we can make it work out if we can. Please I wish you will have the desire with me so that we can get to know each other better and see what happens in future.
+ drivers/misc/pci_endpoint_test.c | 43 +++++++++++++++++++++++++-------
+ include/uapi/linux/pcitest.h     |  1 +
+ tools/pci/pcitest.c              | 16 +++++++++++-
+ 3 files changed, 50 insertions(+), 10 deletions(-)
 
-My name is Lisa Williams, I am an American, but presently I live in the UK, I will be glad to see your reply for us to know each other better to exchange pictures and details about us
+-- 
+2.17.1
 
-Yours
-Lisa
