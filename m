@@ -2,39 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EA3E112CFFC
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Dec 2019 13:31:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CA0512D006
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Dec 2019 13:32:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727447AbfL3Mba (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Dec 2019 07:31:30 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:33346 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727376AbfL3Mba (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Dec 2019 07:31:30 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBUCVKVb065543;
-        Mon, 30 Dec 2019 06:31:20 -0600
+        id S1727478AbfL3Mbg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Dec 2019 07:31:36 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:60356 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727477AbfL3Mbf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Dec 2019 07:31:35 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBUCVNG2039076;
+        Mon, 30 Dec 2019 06:31:23 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1577709080;
-        bh=iUve48Cr1mGxUmUX5fWUT0DFtlcnvm91lMesp5aocLw=;
+        s=ti-com-17Q1; t=1577709083;
+        bh=VtEJU4ab4RUM55E/wEo6hBdB5joL/ciHyw3e3snZOGA=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=yU60qJ+OIQFQqXY4q8e2wbNPg+5CyuP09EDbaTnR7667eNGgKuqePveRM8LnRRXWp
-         L8nQgAD4FPRVvo2utlq42cFpQP5/6m8Z18t47uBVHIpdEqsfuaqLIVxz5grcLl3Y43
-         7TK9AC1VOFbyuB3ShAJmUUgIa0V5SFmUooiDBpFY=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBUCVKvg112284;
-        Mon, 30 Dec 2019 06:31:20 -0600
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+        b=p3v1n3V/stbuvljQe057ss2Mwvxj5i79vjEypcFk0EyzIHD7NBUW4+y9KWLwfEDQo
+         b3Bs2M5oi1n2pckCLyy5jqEK8mX9tv76zk0rnYswClftBWtA6wadG9TPTPgycJu20d
+         lxjkls/+od90aKMRnR6mnzC2WJWGwgNSl9Aku9kE=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBUCVNUp058554
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 30 Dec 2019 06:31:23 -0600
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 30
- Dec 2019 06:31:20 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ Dec 2019 06:31:23 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 30 Dec 2019 06:31:20 -0600
+ Frontend Transport; Mon, 30 Dec 2019 06:31:22 -0600
 Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBUCVEhN002491;
-        Mon, 30 Dec 2019 06:31:18 -0600
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBUCVEhO002491;
+        Mon, 30 Dec 2019 06:31:20 -0600
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Kishon Vijay Abraham I <kishon@ti.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -42,9 +43,9 @@ To:     Kishon Vijay Abraham I <kishon@ti.com>,
 CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
         <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 1/7] misc: pci_endpoint_test: Avoid using module parameter to determine irqtype
-Date:   Mon, 30 Dec 2019 18:03:09 +0530
-Message-ID: <20191230123315.31037-2-kishon@ti.com>
+Subject: [PATCH 2/7] misc: pci_endpoint_test: Do not request or allocate IRQs in probe
+Date:   Mon, 30 Dec 2019 18:03:10 +0530
+Message-ID: <20191230123315.31037-3-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191230123315.31037-1-kishon@ti.com>
 References: <20191230123315.31037-1-kishon@ti.com>
@@ -56,102 +57,48 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-commit e03327122e2c8e6ae4565ef ("pci_endpoint_test: Add 2 ioctl
-commands") uses module parameter in pci_endpoint_test_set_irq()
-'irqtype' to check if irq vectors of a particular type is already
-allocated. However with multi-function devices, irqtype will not
-correctly reflect the irq type of the PCI device. Fix it here by
-adding 'irqtype' for each PCI device to show the irq type of a
-particular PCI device.
+Allocation of IRQ vectors and requesting IRQ is done as part of
+PCITEST_SET_IRQTYPE. Do not request or allocate IRQs in probe for
+AM654 and J721E so that the user space test script has better control
+of the devices for which the IRQs are configured.
 
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- drivers/misc/pci_endpoint_test.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/misc/pci_endpoint_test.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-index 215f9b8432a3..743ff4dcb3f0 100644
+index 743ff4dcb3f0..04505890eae9 100644
 --- a/drivers/misc/pci_endpoint_test.c
 +++ b/drivers/misc/pci_endpoint_test.c
-@@ -99,6 +99,7 @@ struct pci_endpoint_test {
- 	struct completion irq_raised;
- 	int		last_irq;
- 	int		num_irqs;
-+	int		irq_type;
- 	/* mutex to protect the ioctls */
- 	struct mutex	mutex;
- 	struct miscdevice miscdev;
-@@ -158,6 +159,7 @@ static void pci_endpoint_test_free_irq_vectors(struct pci_endpoint_test *test)
- 	struct pci_dev *pdev = test->pdev;
+@@ -70,6 +70,9 @@
+ #define is_am654_pci_dev(pdev)		\
+ 		((pdev)->device == PCI_DEVICE_ID_TI_AM654)
  
- 	pci_free_irq_vectors(pdev);
-+	test->irq_type = IRQ_TYPE_UNDEFINED;
- }
- 
- static bool pci_endpoint_test_alloc_irq_vectors(struct pci_endpoint_test *test,
-@@ -192,6 +194,8 @@ static bool pci_endpoint_test_alloc_irq_vectors(struct pci_endpoint_test *test,
- 		irq = 0;
- 		res = false;
- 	}
++#define is_j721e_pci_dev(pdev)         \
++		((pdev)->device == PCI_DEVICE_ID_TI_J721E)
 +
-+	test->irq_type = type;
- 	test->num_irqs = irq;
+ static DEFINE_IDA(pci_endpoint_test_ida);
  
- 	return res;
-@@ -331,6 +335,7 @@ static bool pci_endpoint_test_copy(struct pci_endpoint_test *test, size_t size)
- 	dma_addr_t orig_dst_phys_addr;
- 	size_t offset;
- 	size_t alignment = test->alignment;
-+	int irq_type = test->irq_type;
- 	u32 src_crc32;
- 	u32 dst_crc32;
+ #define to_endpoint_test(priv) container_of((priv), struct pci_endpoint_test, \
+@@ -688,11 +691,13 @@ static int pci_endpoint_test_probe(struct pci_dev *pdev,
  
-@@ -427,6 +432,7 @@ static bool pci_endpoint_test_write(struct pci_endpoint_test *test, size_t size)
- 	dma_addr_t orig_phys_addr;
- 	size_t offset;
- 	size_t alignment = test->alignment;
-+	int irq_type = test->irq_type;
- 	u32 crc32;
+ 	pci_set_master(pdev);
  
- 	if (size > SIZE_MAX - alignment)
-@@ -495,6 +501,7 @@ static bool pci_endpoint_test_read(struct pci_endpoint_test *test, size_t size)
- 	dma_addr_t orig_phys_addr;
- 	size_t offset;
- 	size_t alignment = test->alignment;
-+	int irq_type = test->irq_type;
- 	u32 crc32;
+-	if (!pci_endpoint_test_alloc_irq_vectors(test, irq_type))
+-		goto err_disable_irq;
++	if (!(is_am654_pci_dev(pdev) || is_j721e_pci_dev(pdev))) {
++		if (!pci_endpoint_test_alloc_irq_vectors(test, irq_type))
++			goto err_disable_irq;
  
- 	if (size > SIZE_MAX - alignment)
-@@ -556,7 +563,7 @@ static bool pci_endpoint_test_set_irq(struct pci_endpoint_test *test,
- 		return false;
- 	}
+-	if (!pci_endpoint_test_request_irq(test))
+-		goto err_disable_irq;
++		if (!pci_endpoint_test_request_irq(test))
++			goto err_disable_irq;
++	}
  
--	if (irq_type == req_irq_type)
-+	if (test->irq_type == req_irq_type)
- 		return true;
- 
- 	pci_endpoint_test_release_irq(test);
-@@ -568,12 +575,10 @@ static bool pci_endpoint_test_set_irq(struct pci_endpoint_test *test,
- 	if (!pci_endpoint_test_request_irq(test))
- 		goto err;
- 
--	irq_type = req_irq_type;
- 	return true;
- 
- err:
- 	pci_endpoint_test_free_irq_vectors(test);
--	irq_type = IRQ_TYPE_UNDEFINED;
- 	return false;
- }
- 
-@@ -653,6 +658,7 @@ static int pci_endpoint_test_probe(struct pci_dev *pdev,
- 	test->test_reg_bar = 0;
- 	test->alignment = 0;
- 	test->pdev = pdev;
-+	test->irq_type = IRQ_TYPE_UNDEFINED;
- 
- 	if (no_msi)
- 		irq_type = IRQ_TYPE_LEGACY;
+ 	for (bar = 0; bar < PCI_STD_NUM_BARS; bar++) {
+ 		if (pci_resource_flags(pdev, bar) & IORESOURCE_MEM) {
 -- 
 2.17.1
 
