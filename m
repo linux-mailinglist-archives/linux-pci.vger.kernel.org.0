@@ -2,120 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EBD0E12CD7C
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Dec 2019 09:12:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ACD9D12CE40
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Dec 2019 10:34:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727208AbfL3IMH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Dec 2019 03:12:07 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:8205 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727158AbfL3IMG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 30 Dec 2019 03:12:06 -0500
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 692DD9AA0CF7A4652F84;
-        Mon, 30 Dec 2019 16:12:02 +0800 (CST)
-Received: from [127.0.0.1] (10.184.52.56) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Mon, 30 Dec 2019
- 16:11:51 +0800
-Subject: Re: [PATCH v2] PCI: Add quirk for HiSilicon NP 5896 devices
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     <bjorn@helgaas.com>, <andrew.murray@arm.com>,
-        <linux-pci@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        <wangkefeng.wang@huawei.com>, <huawei.libin@huawei.com>,
-        <guohanjun@huawei.com>
-References: <20191218142831.GA101587@google.com>
-From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Message-ID: <dfd3ad93-7c17-abb2-b620-99df5c984fd4@huawei.com>
-Date:   Mon, 30 Dec 2019 16:11:50 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.6.0
+        id S1727162AbfL3Jem (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Dec 2019 04:34:42 -0500
+Received: from sonic314-15.consmr.mail.bf2.yahoo.com ([74.6.132.125]:34080
+        "EHLO sonic314-15.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727243AbfL3Jel (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Dec 2019 04:34:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1577698480; bh=YooljpITC31Cc9KXMfJzAPmr/1tCBEdX27fhfqn54Fs=; h=Date:From:Reply-To:Subject:References:From:Subject; b=bJ8zajuKko9Qp7lnufJkDY+wNt2FXRIRvA1Bp3gAVb7B2BO8gOkh0Yjz0vRiGswJVP3OJBhWWA5ujA4Gc+sLV+LirPxhT0hTcuhXGXZCiTT/uY8xfNI+H1qVb3d8tv31hre5OKnt+IofFXhry3CV15nhcjBsQnFymDW83bokZmhbjjEUzYM7Ogpm3sTJVFsC5an8kqrDdtT0csk4rFAB5AWgsvbUrcj8fvRMPGqy+2rGPBRj94PjsZK1eoyVshbWmNe9ercX2JMlijosJPczAkuaVR54ZsEApmNU3XACvfdsZ3mDNkDvBfnfh4QgfZLF1PQfWkCK4326OKn49e6luw==
+X-YMail-OSG: eEzk7jgVM1m72GeAJkvjLjnl6YuZdIcRZJgidG6pq0QpUBPtGqb0aPSNBvnB1vA
+ WqN_tB_nGQs1XHkLHIhP5KKGS2nFHx8tBdIio1J.3mNXgB.lGEX7XfMW_UVBbEJG5BjCbxV6iXcY
+ RHcM49XyHrTmo1ZLabBb_ZAjnab8DmxsdaCT2L5V8ud7Wthodyyo61Wnk3SZZ2oujGnYxbGUXIUp
+ f7NNJInV_fCV3OEKFMJkgwoc86SIu5n31No.Spm1WozON8ldgMQmOMfCWGk_p__l979kPWtcin7m
+ hcuMCeepDroxeh13r_3prsBkg2n5ATBK3oJPsD6sWxJNMMHT_VXdxTsX_TY892kf1Pn.3UC8aELS
+ Prjr4ylyeiixVF68UvS.vqbkeKoF0LQcS9FbLhm8e0zlsnGeCUfh1Uikagpgo9AGxPvBJCGDrwXT
+ CkGneTBRH0qfp10JjR4vb6TODwWNHIpY.Zo16TJDY7U35ejyCmQHTR2WMREGVSINMB52HRmtcSU0
+ M_MCoK_RkHPwfYF1Hbxw._W3yvbY5GS1hhhGBVoRW9qIM0UfZz2r8a2ug4uEbNBW.ecAr6r4YjyC
+ mwUrgcEr7E376GQ2ekJ2YfEquwSeVxba1B_M5E7N8bRytk0gPhYAv_aeDHQLg1hcuGZ1CiJ.L5eR
+ Z1iLWPvweMOLtL4iTepI5HWyqeKLiN7P2DTB.utPVAEOh3..cd8y.Y7ZlyNOsVEZ7pTTfKmOVhcv
+ u5l0yVYFEs..MQ1q8gyk_pn8BIUA.FiarjQ.H9Uf8HxlgERks2SUnIfEm7NHNsCs9.suAKgDHld6
+ Dtxa.hsDx4Pb9NQKWQvSt0w42re.se73nLhHv0hPITfkZqtuLobnxC23eLzOTo9WtYZB2nfiq8E.
+ smbKn2UuDN5p3z_XjjVv3fReu6s862g.c6CBMaT52frBt4x2xWjvOWVYjg1lQk9OEf6CGnfZqNz_
+ vqmGhziDvYTdGuqG6KKy4nB1vJApJNSsOr7KgBzesESh5zj4ZZiS0wFebP98xfaxlmcUvot_tvUq
+ 2Z9Y9Ur4mHJPA9thEjGwTKNEQRm_cJgEABiAc1DD2_lJVw6x0h1QJe8BAARMbqQLo5Cnz69CQKs_
+ HTjgD5emejOyOv8Idj8R6P4WxtrpeRL3bmv3QEeJ6KkMwDr3u3crQG8uoWsaiaBtesCFVGEmgDCk
+ vaZxgM4snE9mzNDAGjRY5jWsbvZHVc_gEPhrsN8DKbKq19cs8Fcfs4yfhPH31taCOS0qauGA_gxK
+ lMZfjkXkJbq6WEchvy3FOcfkhY205oGSEDgE9v7xRCIWYvx8cGHxKyLIPcYvFlEZ.9An7oMBh
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic314.consmr.mail.bf2.yahoo.com with HTTP; Mon, 30 Dec 2019 09:34:40 +0000
+Date:   Mon, 30 Dec 2019 09:34:38 +0000 (UTC)
+From:   Lisa Williams <ah77900432@gmail.com>
+Reply-To: lisawilliams003@yahoo.com
+Message-ID: <1054553309.3099532.1577698478836@mail.yahoo.com>
+Subject: Hello
 MIME-Version: 1.0
-In-Reply-To: <20191218142831.GA101587@google.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.184.52.56]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+References: <1054553309.3099532.1577698478836.ref@mail.yahoo.com>
+X-Mailer: WebService/1.1.14873 YMailNodin Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; InfoPath.2)
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi, Bjorn
 
-On 2019/12/18 22:28, Bjorn Helgaas wrote:
-> On Wed, Dec 18, 2019 at 05:16:03PM +0800, Xiongfeng Wang wrote:
->> On 2019/12/11 12:10, Bjorn Helgaas wrote:
->>> On Tue, Dec 10, 2019 at 9:28 PM Xiongfeng Wang
->>> <wangxiongfeng2@huawei.com> wrote:
->>>> On 2019/12/7 2:10, Bjorn Helgaas wrote:
->>>>> On Fri, Dec 06, 2019 at 03:01:45PM +0800, Xiongfeng Wang wrote:
->>>>>> HiSilicon PCI Network Processor 5896 devices misreport the
->>>>>> class type as 'NOT_DEFINED', but it is actually a network
->>>>>> device. Also the size of BAR3 is reported as 265T, but this BAR
->>>>>> is actually unused.  This patch modify the class type to
->>>>>> 'CLASS_NETWORK' and disable the unused BAR3.
-> 
->>>>> The question is not whether the BAR is used by the driver; the
->>>>> question is whether the device responds to accesses to the
->>>>> region described by the BAR when PCI_COMMAND_MEMORY is turned
->>>>> on.
->>>>
->>>> I asked the hardware engineer. He said I can not write an address
->>>> into that BAR.
->>>
->>> If the BAR is not writable, I think sizing should fail, so I
->>> suspect some of the bits are actually writable.
->>
->> Sorry for the delayed response. It's not so convenient for me to get
->> to the hardware guys.  BAR0 BAR1 BAR2 are 32-bit and can be used to
->> access the registers and memory within 5896 devices. These three
->> BARs can meet the need for most scenario.  BAR3 is 64-bit and can be
->> used to access all the registers and memory within 5896 devices.
->> (BAR3 is writable. Sorry for the non-confirmed information before.)
->> But BAR3 is not used by the driver and the size is very
->> large（larger than 100G, still didn't get the precise size）.  So I
->> think maybe we can disable this BAR for now, otherwise the
->> unassigned resource will cause 'pci_enable_device()' returning
->> failure.
-> 
-> Here's the problem: the proposed patch (below) clears the struct
-> resource corresponding to BAR 3, but that doesn't actually disable the
-> BAR.  It hides the BAR from Linux, so Linux will pretend it doesn't
-> exist, but it's still there in the hardware.
-> 
-> The hardware BAR 3 still contains some value (possibly zero), and if
-> PCI_COMMAND_MEMORY is set (which you need to do if you want to use
-> *any* memory BARs on the device), the device will respond to any
-> transactions in the BAR 3 range.  Depending on the topology and all
-> the other BAR and window assignments, this may cause address
-> conflicts.
 
-I have checked with the hardware engineer. He said the transactions have some
-bits to indicate whether the address is 32-bit or 64-bit. The device will respond
-only when the 64-bit address transactions is in the BAR3 range.
+Hi Dear,
 
-So I think, if I clear the resource corresponding to BAR3, the 64-bit window of the
-downport is empty. There will be no 64-bit address transaction sent to the device.
+I was just going through the Internet search when I found your email address, I want to make a new and special friend, so I decided to contact you to see how we can make it work out if we can. Please I wish you will have the desire with me so that we can get to know each other better and see what happens in future.
 
-Thanks,
-Xiongfeng
+My name is Lisa Williams, I am an American, but presently I live in the UK, I will be glad to see your reply for us to know each other better to exchange pictures and details about us
 
-> 
-> + * HiSilicon NP 5896 devices BAR3 size is reported as 256T and causes problem
-> + * when assigning the resources. But this BAR is actually unused by the driver,
-> + * so let's disable it.
-> + */
-> +static void quirk_hisi_fixup_np_bar(struct pci_dev *pdev)
-> +{
-> +       struct resource *r = &pdev->resource[3];
-> +
-> +       r->start = 0;
-> +       r->end = 0;
-> +       r->flags = 0;
-> +
-> +       pci_info(pdev, "Disabling invalid BAR 3\n");
-> 
-> .
-> 
-
+Yours
+Lisa
