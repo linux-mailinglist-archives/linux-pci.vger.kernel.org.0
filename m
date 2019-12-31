@@ -2,110 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 52D5F12DBFB
-	for <lists+linux-pci@lfdr.de>; Tue, 31 Dec 2019 23:06:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A4E7512DD5D
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Jan 2020 03:27:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbfLaWGy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 31 Dec 2019 17:06:54 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:38867 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727056AbfLaWGx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 31 Dec 2019 17:06:53 -0500
-Received: by mail-pj1-f65.google.com with SMTP id l35so1632147pje.3;
-        Tue, 31 Dec 2019 14:06:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=UyKWBjTYtMhvO9CkUZXNZDev/n9QRhV/4KmWAGx3d9M=;
-        b=BXl4VwVPTLF4wJmXzKQRGjKLNC916gV7fQJmv+Bcfrxb3AYMAMwq5uiSf0LyAt4rHf
-         MgaSse7K2QcJNXjp5m7kxZLoqdkwjVhXCwjJEJZpMqKsMw+PYbI97+4rMU5Bm1nTX+4s
-         r0iX7RqJUGVOQcbGQLW8bdafTQnzqCPINxM6ST3FMLLPlcB7iehwU4E7eP0v0WTuwgZy
-         kDBIcpjyae1f4cke7KvavQiOw7OzhueQNifXvwE9OA6rdP+bO8wk3PeWnuNwZ3qdIa1n
-         QuYKUWomZLLaR25nCLZ6pMpedHYhOkkGvbW+1sWxKxmtJN+8tTQV/m/qhZX8TC6sz1UB
-         3O7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=UyKWBjTYtMhvO9CkUZXNZDev/n9QRhV/4KmWAGx3d9M=;
-        b=WwmQ9K/0c+X6DdTmF6myj/YpV8UJJr+71ZzMQdc8wcfgIZtPU1z8ZXjqmrpnlEqoDy
-         PvGk+8ude5TSfbG7VvjGURMLNhjJA9akjl6PHT1/A2iMyIyJr9ak/xPymbRNBFYDjp3r
-         jRW+79vxxhz5eMFSCUElEq//aeWcUxtUKYwsmDqcsD97nZY0ZPklPcL4VZsUn1Klbyoe
-         5Qv2Z/PX5QZ6FuZnKt+NDa5m32XEkcAjlLz6agghPjCK36+sn8x2fYYp6DIRKGJu0nsF
-         ElVrqSSc6VrI8W0ThfDCucN0trRmYUHWnjr3sBkmqTBPQGYgUlw9CJ3f8K/ayckltTTC
-         qwug==
-X-Gm-Message-State: APjAAAVT6PH1d+8t5b+tUM3EYbKOblftSDzoTM0J8YMy7vnw1S/npXc4
-        7LnR6IQ0+kbJv8az1O72X1A=
-X-Google-Smtp-Source: APXvYqybjvAuvXhX2zdUwKAnSrs4yjN/Tdp8vKgaeiN/DvOw2nnIGGWQAFL9xkVY7rgADrIhlamMGw==
-X-Received: by 2002:a17:90b:4004:: with SMTP id ie4mr8971773pjb.49.1577830013234;
-        Tue, 31 Dec 2019 14:06:53 -0800 (PST)
-Received: from [100.71.96.87] ([143.166.81.254])
-        by smtp.gmail.com with ESMTPSA id 3sm54207358pfi.13.2019.12.31.14.06.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 31 Dec 2019 14:06:52 -0800 (PST)
-Subject: Re: [PATCH v4 1/3] PCI: pciehp: Add support for disabling in-band
- presence
-From:   Stuart Hayes <stuart.w.hayes@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Austin Bolen <austin_bolen@dell.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lukas Wunner <lukas@wunner.de>
-References: <20191025190047.38130-2-stuart.w.hayes@gmail.com>
- <20191127013613.GA233706@google.com>
- <CAL5oW00Lh4v2YpX2GcDoRS2fFJjvHRsdhNjtvyYGpWOpgL=TCg@mail.gmail.com>
-Message-ID: <f14d8325-8635-329f-cdc7-fd27a52b2704@gmail.com>
-Date:   Tue, 31 Dec 2019 16:06:45 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <CAL5oW00Lh4v2YpX2GcDoRS2fFJjvHRsdhNjtvyYGpWOpgL=TCg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1727132AbgAAC1B (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 31 Dec 2019 21:27:01 -0500
+Received: from mga14.intel.com ([192.55.52.115]:65216 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726960AbgAAC1B (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 31 Dec 2019 21:27:01 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Dec 2019 18:27:01 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,381,1571727600"; 
+   d="scan'208";a="221068054"
+Received: from unknown (HELO nsgsw-rhel7p6.lm.intel.com) ([10.232.116.83])
+  by orsmga006.jf.intel.com with ESMTP; 31 Dec 2019 18:27:00 -0800
+From:   Jon Derrick <jonathan.derrick@intel.com>
+To:     <iommu@lists.linux-foundation.org>, <linux-pci@vger.kernel.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Joerg Roedel <joro@8bytes.org>, Christoph Hellwig <hch@lst.de>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Jon Derrick <jonathan.derrick@intel.com>
+Subject: [RFC 0/5] Clean up VMD DMA Map Ops
+Date:   Tue, 31 Dec 2019 13:24:18 -0700
+Message-Id: <1577823863-3303-1-git-send-email-jonathan.derrick@intel.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Inspired by Christoph's last set:
+https://lkml.org/lkml/2019/8/28/667
 
+VMD currently works with VT-d enabled by pointing DMA and IOMMU actions at the
+VMD endpoint. The problem with this approach is that the VMD endpoint's
+device-specific attributes, such as the dma mask, are used instead.
 
-On 11/26/19 8:19 PM, Stuart Hayes wrote:
-> On Tue, Nov 26, 2019 at 7:36 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->>
->> On Fri, Oct 25, 2019 at 03:00:45PM -0400, Stuart Hayes wrote:
->>> From: Alexandru Gagniuc <mr.nuke.me@gmail.com>
->>>
->>> The presence detect state (PDS) is normally a logical or of in-band and
->>> out-of-band presence. As of PCIe 4.0, there is the option to disable
->>> in-band presence so that the PDS bit always reflects the state of the
->>> out-of-band presence.
->>>
->>> The recommendation of the PCIe spec is to disable in-band presence
->>> whenever supported.
->>
->> I think I'm fine with this patch, but I would like to include the
->> specific reference for this recommendation.  If you have it handy, I
->> can just insert it.
->>
-> 
-> The PCI Express Base Specification Revision 5.0, Version 1.0, in the
-> implementation note under Appendix I ("Async Hot-Plug Reference
-> Model"), it says "If OOB PD is being used and the associated DSP
-> supports In-Band PD Disable, it is recommended that the In-Band PD
-> Disable bit be Set, ..."
-> 
-> 
+This set cleans up VMD by removing the override that redirects dma map
+operations to the VMD endpoint. Instead it introduces a new dma alias mechanism
+into the existing dma alias infrastructure.
 
-Is that what you were looking for?  Please let me know if there's anything
-else I can do to help.
+Patch 1 and 2 are miscellaneous fixes discovered during development.
+Patch 1 is ready, but 2 likely doesn't go far enough for proper teardown on
+addition failure.
+
+Jon Derrick (5):
+  iommu: Remove device link to group on failure
+  iommu/vt-d: Unlink device if failed to add to group
+  x86/PCI: Expose VMD's device in pci_sysdata
+  PCI: vmd: Stop overriding dma_map_ops
+  x86/PCI: Remove unused X86_DEV_DMA_OPS
+
+ arch/x86/Kconfig               |   3 -
+ arch/x86/include/asm/device.h  |  10 ---
+ arch/x86/include/asm/pci.h     |   4 +-
+ arch/x86/pci/common.c          |  44 ++----------
+ drivers/iommu/intel-iommu.c    |  26 ++++---
+ drivers/iommu/iommu.c          |   1 +
+ drivers/pci/controller/Kconfig |   1 -
+ drivers/pci/controller/vmd.c   | 152 +----------------------------------------
+ drivers/pci/pci.c              |   4 +-
+ drivers/pci/search.c           |   6 ++
+ include/linux/pci.h            |   1 +
+ 11 files changed, 37 insertions(+), 215 deletions(-)
+
+-- 
+1.8.3.1
 
