@@ -2,133 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A22FF12D712
-	for <lists+linux-pci@lfdr.de>; Tue, 31 Dec 2019 09:23:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FD4D12D718
+	for <lists+linux-pci@lfdr.de>; Tue, 31 Dec 2019 09:33:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725793AbfLaIXy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 31 Dec 2019 03:23:54 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:41921 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725497AbfLaIXy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 31 Dec 2019 03:23:54 -0500
-Received: by mail-ot1-f68.google.com with SMTP id r27so49465455otc.8;
-        Tue, 31 Dec 2019 00:23:53 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=exbpjm8R+9VG0LXo53eXq/JhXDU32icBm8b7iAcsrrE=;
-        b=i3Wxe0Y8JvJoL3QnoADXcbxDv88kne5wunme+8tkCLtTL3j2tqfyp+VwrrZebF1isY
-         Brh7RO0jsJGPGoHnCMR7FQ+VylzZLWfSjPf2H0/93/PJ5a2KvZ8+6tGm96R07nrbzDwA
-         JAGaKDCw+Xb4AoX325e/FlU56e38gy0UAvhXle76xejbm/9VEn/NUBi9FfQcS5RJDs0C
-         QOmt0uq0bF6X5Lxvv3CRTZ49I4X6vZndAKjHY6AMcn/5Rp4waqjAncohIsma5JDXcPpB
-         xEaAIm5raBYfF8pplLUEAdiKXCBQ2jd3S/uqrWtlhO8rG6SBql/rTlBAz8Dp1OPJ1ExD
-         659g==
-X-Gm-Message-State: APjAAAX7REPno25mLqC2Efe1F6g9brc3bOEHL0iAY8q34RF7AenoqP9W
-        SiU/vr2MtoS3cZooeGXgAXkNol8ZnbwqI1r1KRA=
-X-Google-Smtp-Source: APXvYqyNXKUrqWbQ3GKR/KvwCtjIAXctgLXNr5s7v9TX4B69OhYh51yZVdBnhbmzbfErcyqtCy7X45zpE7TsSY5A/m4=
-X-Received: by 2002:a05:6830:2141:: with SMTP id r1mr79413312otd.39.1577780633088;
- Tue, 31 Dec 2019 00:23:53 -0800 (PST)
-MIME-Version: 1.0
-References: <20191116005240.15722-1-robh@kernel.org> <20191116005240.15722-3-robh@kernel.org>
- <CAMuHMdX20LvK2o1cZJ8q83Q08JQzH6L07gmqBm0V0xSc5GHk4A@mail.gmail.com> <CAL_Jsq+24qYqN6u1o93gkGm13GZeSRQM4uor0170HeFbLdU-xQ@mail.gmail.com>
-In-Reply-To: <CAL_Jsq+24qYqN6u1o93gkGm13GZeSRQM4uor0170HeFbLdU-xQ@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 31 Dec 2019 09:23:41 +0100
-Message-ID: <CAMuHMdXBVyutji67Ladvoh3NhrPNTYfAKS4pmOQcOouZGokYvQ@mail.gmail.com>
-Subject: Re: [PATCH 3/3] dt-bindings: PCI: Convert generic host binding to DT schema
-To:     Rob Herring <robh@kernel.org>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        id S1725770AbfLaIdg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 31 Dec 2019 03:33:36 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:43494 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725536AbfLaIdg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 31 Dec 2019 03:33:36 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBV8XIpv039830;
+        Tue, 31 Dec 2019 02:33:18 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1577781198;
+        bh=jbOv1LVbSazAXgc+tVdf1lshir3VjpBQ9GhevKwekk8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=r7+o6OffmTxm00zXbxuk2arAa6kz5nEw+UIp4kePDchAbpZ4KlHXxLAdnSOyjpl5O
+         GlwjRBFqjGrIvptP+WgjzySX+BJ2kjZgLx/ejB68e0dB+nxOl0uKDPPWj0eFRKaWU6
+         VE1qelkQVC98qpqL9kaXZNpNtMURAhzlUS+7R/NY=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBV8XHDu082565;
+        Tue, 31 Dec 2019 02:33:17 -0600
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 31
+ Dec 2019 02:33:17 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 31 Dec 2019 02:33:17 -0600
+Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBV8XEaC127311;
+        Tue, 31 Dec 2019 02:33:15 -0600
+Subject: Re: [PATCH 2/7] misc: pci_endpoint_test: Do not request or allocate
+ IRQs in probe
+To:     kbuild test robot <lkp@intel.com>
+CC:     <kbuild-all@lists.01.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        Will Deacon <will@kernel.org>,
-        David Daney <david.daney@cavium.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20191230123315.31037-3-kishon@ti.com>
+ <201912310039.Jef27rlg%lkp@intel.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <b561503f-a753-7750-2a43-78509755eb83@ti.com>
+Date:   Tue, 31 Dec 2019 14:05:15 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <201912310039.Jef27rlg%lkp@intel.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Rob,
+Hi,
 
-On Tue, Dec 31, 2019 at 12:30 AM Rob Herring <robh@kernel.org> wrote:
-> On Thu, Dec 12, 2019 at 7:41 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Sat, Nov 16, 2019 at 1:53 AM Rob Herring <robh@kernel.org> wrote:
-> > > Convert the generic PCI host binding to DT schema. The derivative Juno,
-> > > PLDA XpressRICH3-AXI, and Designware ECAM bindings all just vary in
-> > > their compatible strings. The simplest way to convert those to
-> > > schema is just add them into the common generic PCI host schema.
-> > >
-> > > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > > Cc: Andrew Murray <andrew.murray@arm.com>
-> > > Cc: Zhou Wang <wangzhou1@hisilicon.com>
-> > > Cc: Will Deacon <will@kernel.org>
-> > > Cc: David Daney <david.daney@cavium.com>
-> > > Signed-off-by: Rob Herring <robh@kernel.org>
-> >
-> > > index 515b2f9542e5..000000000000
-> > > --- a/Documentation/devicetree/bindings/pci/designware-pcie-ecam.txt
-> > > +++ /dev/null
-> >
-> > > -Example:
-> > > -
-> > > -    pcie1: pcie@7f000000 {
-> > > -        compatible = "socionext,synquacer-pcie-ecam", "snps,dw-pcie-ecam";
-> > > -        device_type = "pci";
-> > > -        reg = <0x0 0x7f000000 0x0 0xf00000>;
-> > > -        bus-range = <0x0 0xe>;
-> > > -        #address-cells = <3>;
-> > > -        #size-cells = <2>;
-> > > -        ranges = <0x1000000 0x00 0x00010000 0x00 0x7ff00000 0x0 0x00010000>,
-> > > -                 <0x2000000 0x00 0x70000000 0x00 0x70000000 0x0 0x0f000000>,
-> > > -                 <0x3000000 0x3f 0x00000000 0x3f 0x00000000 0x1 0x00000000>;
-> > > -
-> > > -        #interrupt-cells = <0x1>;
-> > > -        interrupt-map-mask = <0x0 0x0 0x0 0x0>;
-> >
-> > An all-zeroes interrupt-map-mask seems to be very common on embedded
-> > SoCs, where all devices are mapped to a single interrupt.
->
-> Indeed.
->
-> > However, schemas/pci/pci-bus.yaml says:
-> >
-> >   interrupt-map-mask:
-> >     items:
-> >       - description: PCI high address cell
-> >         minimum: 0
-> >         maximum: 0xf800
-> >       - description: PCI mid address cell
-> >         const: 0
-> >       - description: PCI low address cell
-> >         const: 0
-> >       - description: PCI IRQ cell
-> >         minimum: 1
-> >         maximum: 7
-> >
-> > and thus complains about an all-zeroes mask, e.g.
-> >
-> >     arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dt.yaml:
-> > pcie@fe000000: interrupt-map-mask:0:3: 0 is less than the minimum of 1
->
-> Now fixed.
+On 30/12/19 10:40 PM, kbuild test robot wrote:
+> Hi Kishon,
+> 
+> I love your patch! Perhaps something to improve:
+> 
+> [auto build test WARNING on char-misc/char-misc-testing]
+> [also build test WARNING on pci/next arm-soc/for-next linus/master v5.5-rc4 next-20191220]
+> [if your patch is applied to the wrong git tree, please drop us a note to help
+> improve the system. BTW, we also suggest to use '--base' option to specify the
+> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Kishon-Vijay-Abraham-I/Improvements-to-pci_endpoint_test-driver/20191230-203402
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git d1eef1c619749b2a57e514a3fa67d9a516ffa919
+> config: arm-randconfig-a001-20191229 (attached as .config)
+> compiler: arm-linux-gnueabi-gcc (GCC) 7.5.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         GCC_VERSION=7.5.0 make.cross ARCH=arm 
+> 
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> All warnings (new ones prefixed by >>):
+> 
+>    In file included from include/linux/kernel.h:11:0,
+>                     from include/linux/delay.h:22,
+>                     from drivers/[1] -> http://lore.kernel.org/r/20191209092147.22901-1-kishon@ti.commisc/pci_endpoint_test.c:10:
+>    drivers/misc/pci_endpoint_test.c: In function 'pci_endpoint_test_probe':
+>    drivers/misc/pci_endpoint_test.c:73:22: error: 'PCI_DEVICE_ID_TI_J721E' undeclared (first use in this function); did you mean 'PCI_DEVICE_ID_TI_7510'?
+>       ((pdev)->device == PCI_DEVICE_ID_TI_J721E)
 
-Thank you, confirmed.
+The patches in this series should be merged only after [1]. With that
+this error wouldn't be seen.
 
-Gr{oetje,eeting}s,
+[1] -> http://lore.kernel.org/r/20191209092147.22901-1-kishon@ti.com
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Thanks
+Kishon
