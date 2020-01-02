@@ -2,82 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A099D12E402
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Jan 2020 09:48:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C690D12E421
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Jan 2020 10:00:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbgABIsO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Jan 2020 03:48:14 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:37927 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727757AbgABIsO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Jan 2020 03:48:14 -0500
-Received: by mail-ot1-f66.google.com with SMTP id d7so51705596otf.5;
-        Thu, 02 Jan 2020 00:48:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lYK3JQAmW07FRU5GuNZTgBOd+vjFiils6tG0VLmuyGE=;
-        b=XvrNbulzxprjJqi8RpScnA140KqOgH0A3KIwDYeZHKhtNqXpKqoIH3DkDmMCVQ4mUL
-         UwesBRnFDTc16aXYRWU9fFLStptClVcntJFNz6OyMjwF05UXavP3leAtsROoVh410vm+
-         jUwytle5bVp/DrZEhUKPxt7VGX15m/li3nhKMCPQHhUUfTMLo4HrwFfUuHyhLRmPJosc
-         ZVN+FIUAGNI58UFohnNWgK+pW61uPy/3SkM8oE8zY+MwPijr+Ibg7angTkInKzlKJqfa
-         UB5p84iBYkGvBSTVKgL5bpv2MgeEExqeZUGno4Xaoq9OwJaoN+NtTQiaOofpO6zyJYpl
-         4DsQ==
+        id S1727862AbgABJAv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Jan 2020 04:00:51 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:33104 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727842AbgABJAv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Jan 2020 04:00:51 -0500
+Received: by mail-ot1-f68.google.com with SMTP id b18so34359847otp.0;
+        Thu, 02 Jan 2020 01:00:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=lYK3JQAmW07FRU5GuNZTgBOd+vjFiils6tG0VLmuyGE=;
-        b=ZQJ5XERqKOsE6PBlyf4fn+oUgSy18oD4/lCAZ7FkaLqy/4xf7DqL24c5KGhfLEPeEI
-         pYCVqpqndrHqQQ4Aja+Q6Su+voHcPL1Jpp+RJdnqUKGOXv0ECmRojDjWvmU/CdvFD8BS
-         jAqi1HuHGJ0aSqIsaNiF9gXJ+PD371Ue6xBmeMCEfKQqbJjeT+U0eM4TNEClUdeUMoh7
-         BMb+EWppXnvZU896LYdY6PCegsR/fnlPmM9hRFY5XahtHdRoHWnNLXDbBR8ovsbf+GGM
-         y9t74z1csZvLCMOTTVhu0zxptnEw2hLGwdXh4TO47RlgppCEEDNt7bhaIc/vPAJ6Ywnm
-         IeNg==
-X-Gm-Message-State: APjAAAU2uebq3i4Wcz6805ZKdpsDJJG8ZUJzM9lPpX4r/CfU0UBg1uCs
-        NIdb79qFbpEPQbOjsViEc4ToDt9FIWLoMeRZo0k=
-X-Google-Smtp-Source: APXvYqxeuKbXHxGtyzku07WE9C0N/ua7Tl5Z8JOlkhllIuUswqzYTzv/m5bf/QtdXNVE3v+FavUIVxFQjdB8xF8hNl8=
-X-Received: by 2002:a05:6830:1188:: with SMTP id u8mr91290992otq.274.1577954893533;
- Thu, 02 Jan 2020 00:48:13 -0800 (PST)
+        bh=fJFkq9fgXdJc4mnZ6lqzSDTJfkkupEPzyOJabLJ6bv0=;
+        b=p9REWqXekPXmYokjLl1uoSbL2yEYUA760udBkAGj7QaMc2CMdnUp3Sp7l4JN3F/L1E
+         gx88GBSlLdA+b1KYILzao0whKbxsROSjfoI5Tn1mSE72r5ju6DBQZNpj8B3TtY0gX5OQ
+         QEFt6W24tZmfLVj6jouITo1kJUJ16t+J+ItAQcWF7M7h2bTkZs+9BTQU2hbSxBMbpVSE
+         95Rx2g+nwVAxaNmn1UJZXb6/jFKDEEBmRkKR7+hS9XWhbD/fz+QWqLPeebkFJmMwK7Cn
+         IquoomnRu8APPSUQwRTBE784spVhGUOgzHg0ozjj4Kr8qEkkd6+VfZTWNdcYaLqarHpY
+         1VuA==
+X-Gm-Message-State: APjAAAWxe0o82Jq1isZ1o13NMwZiNc84fLncW6Z4Kweov910MnE8fgLr
+        1ma176CKHPSx5Mqg6dQ1bvTRs2EYlf2urUtV/Kw=
+X-Google-Smtp-Source: APXvYqyUfUGFNgz0xNB0ytdDk3m9k6lvN2rSLQrWuplzu38HrzYAPZJ4cUcexs15+gohZobI23e99dHh/W90fK4UCfA=
+X-Received: by 2002:a9d:7984:: with SMTP id h4mr92750494otm.297.1577955650175;
+ Thu, 02 Jan 2020 01:00:50 -0800 (PST)
 MIME-Version: 1.0
-References: <20191213084748.11210-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20191213084748.11210-5-prabhakar.mahadev-lad.rj@bp.renesas.com> <20191219233525.GA9478@bogus>
-In-Reply-To: <20191219233525.GA9478@bogus>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 2 Jan 2020 08:47:47 +0000
-Message-ID: <CA+V-a8vO_3P3vDFVuKLJAK7v99E7qKVAei0Kmba8tKist7mAaw@mail.gmail.com>
-Subject: Re: [v2 4/6] dt-bindings: PCI: rcar: Add bindings for R-Car PCIe
- endpoint controller
+References: <20191116005240.15722-1-robh@kernel.org> <20191116005240.15722-3-robh@kernel.org>
+ <CAMuHMdX20LvK2o1cZJ8q83Q08JQzH6L07gmqBm0V0xSc5GHk4A@mail.gmail.com>
+ <CAL_Jsq+24qYqN6u1o93gkGm13GZeSRQM4uor0170HeFbLdU-xQ@mail.gmail.com>
+ <CAMuHMdXBVyutji67Ladvoh3NhrPNTYfAKS4pmOQcOouZGokYvQ@mail.gmail.com>
+ <CAMuHMdU0K3n4CandL2RKrVmzmbBMt2Mw3WWM4JZoZcK3h8yZNA@mail.gmail.com> <CAL_JsqLOtT478wXZv8hshvpsdHESnDCNuwDBNj264tNu-oyVUQ@mail.gmail.com>
+In-Reply-To: <CAL_JsqLOtT478wXZv8hshvpsdHESnDCNuwDBNj264tNu-oyVUQ@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 2 Jan 2020 10:00:39 +0100
+Message-ID: <CAMuHMdUq9FD8MU2iF4FPwLND+jrD5f-h8Wnp1A3=HwHmHg+nmg@mail.gmail.com>
+Subject: Re: [PATCH 3/3] dt-bindings: PCI: Convert generic host binding to DT schema
 To:     Rob Herring <robh@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         linux-pci <linux-pci@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Andrew Murray <andrew.murray@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Simon Horman <horms@verge.net.au>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Will Deacon <will@kernel.org>,
+        David Daney <david.daney@cavium.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
@@ -86,85 +60,112 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 Hi Rob,
 
-Thank you for the review.
-
-On Thu, Dec 19, 2019 at 11:35 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Fri, Dec 13, 2019 at 08:47:46AM +0000, Lad Prabhakar wrote:
-> > From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Tue, Dec 31, 2019 at 6:10 PM Rob Herring <robh@kernel.org> wrote:
+> On Tue, Dec 31, 2019 at 7:31 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > On Tue, Dec 31, 2019 at 9:23 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > On Tue, Dec 31, 2019 at 12:30 AM Rob Herring <robh@kernel.org> wrote:
+> > > > On Thu, Dec 12, 2019 at 7:41 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > > > On Sat, Nov 16, 2019 at 1:53 AM Rob Herring <robh@kernel.org> wrote:
+> > > > > > Convert the generic PCI host binding to DT schema. The derivative Juno,
+> > > > > > PLDA XpressRICH3-AXI, and Designware ECAM bindings all just vary in
+> > > > > > their compatible strings. The simplest way to convert those to
+> > > > > > schema is just add them into the common generic PCI host schema.
+> > > > > >
+> > > > > > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > > > > > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > > > > > Cc: Andrew Murray <andrew.murray@arm.com>
+> > > > > > Cc: Zhou Wang <wangzhou1@hisilicon.com>
+> > > > > > Cc: Will Deacon <will@kernel.org>
+> > > > > > Cc: David Daney <david.daney@cavium.com>
+> > > > > > Signed-off-by: Rob Herring <robh@kernel.org>
+> > > > >
+> > > > > > index 515b2f9542e5..000000000000
+> > > > > > --- a/Documentation/devicetree/bindings/pci/designware-pcie-ecam.txt
+> > > > > > +++ /dev/null
+> > > > >
+> > > > > > -Example:
+> > > > > > -
+> > > > > > -    pcie1: pcie@7f000000 {
+> > > > > > -        compatible = "socionext,synquacer-pcie-ecam", "snps,dw-pcie-ecam";
+> > > > > > -        device_type = "pci";
+> > > > > > -        reg = <0x0 0x7f000000 0x0 0xf00000>;
+> > > > > > -        bus-range = <0x0 0xe>;
+> > > > > > -        #address-cells = <3>;
+> > > > > > -        #size-cells = <2>;
+> > > > > > -        ranges = <0x1000000 0x00 0x00010000 0x00 0x7ff00000 0x0 0x00010000>,
+> > > > > > -                 <0x2000000 0x00 0x70000000 0x00 0x70000000 0x0 0x0f000000>,
+> > > > > > -                 <0x3000000 0x3f 0x00000000 0x3f 0x00000000 0x1 0x00000000>;
+> > > > > > -
+> > > > > > -        #interrupt-cells = <0x1>;
+> > > > > > -        interrupt-map-mask = <0x0 0x0 0x0 0x0>;
+> > > > >
+> > > > > An all-zeroes interrupt-map-mask seems to be very common on embedded
+> > > > > SoCs, where all devices are mapped to a single interrupt.
+> > > >
+> > > > Indeed.
+> > > >
+> > > > > However, schemas/pci/pci-bus.yaml says:
+> > > > >
+> > > > >   interrupt-map-mask:
+> > > > >     items:
+> > > > >       - description: PCI high address cell
+> > > > >         minimum: 0
+> > > > >         maximum: 0xf800
+> > > > >       - description: PCI mid address cell
+> > > > >         const: 0
+> > > > >       - description: PCI low address cell
+> > > > >         const: 0
+> > > > >       - description: PCI IRQ cell
+> > > > >         minimum: 1
+> > > > >         maximum: 7
+> > > > >
+> > > > > and thus complains about an all-zeroes mask, e.g.
+> > > > >
+> > > > >     arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dt.yaml:
+> > > > > pcie@fe000000: interrupt-map-mask:0:3: 0 is less than the minimum of 1
+> > > >
+> > > > Now fixed.
+> > >
+> > > Thank you, confirmed.
 > >
-> > This patch adds the bindings for the R-Car PCIe endpoint driver.
+> > And with latest renesas-drivers, I started seeing:
 > >
-> > Signed-off-by: Lad, Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > ---
-> >  .../devicetree/bindings/pci/rcar-pci-ep.txt        | 37 ++++++++++++++++++++++
-> >  1 file changed, 37 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
->
-> Please make this a DT schema.
->
-sure will do.
-
+> >     arch/arm/boot/dts/r8a7791-koelsch.dt.yaml: pci@ee0d0000:
+> > interrupt-map:0: [0, 0, 0, 1] is too short
+> >     arch/arm/boot/dts/r8a7791-koelsch.dt.yaml: pci@ee0d0000:
+> > interrupt-map:1: [5, 0, 113, 4] is too short
+> >     arch/arm/boot/dts/r8a7791-koelsch.dt.yaml: pci@ee0d0000:
+> > interrupt-map:2: [2048, 0, 0, 1] is too short
+> >     arch/arm/boot/dts/r8a7791-koelsch.dt.yaml: pci@ee0d0000:
+> > interrupt-map:3: [5, 0, 113, 4] is too short
+> >     arch/arm/boot/dts/r8a7791-koelsch.dt.yaml: pci@ee0d0000:
+> > interrupt-map:4: [4096, 0, 0, 2] is too short
+> >     arch/arm/boot/dts/r8a7791-koelsch.dt.yaml: pci@ee0d0000:
+> > interrupt-map:5: [5, 0, 113, 4] is too short
 > >
-> > diff --git a/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt b/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
-> > new file mode 100644
-> > index 0000000..7f0a97e
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
-> > @@ -0,0 +1,37 @@
-> > +* Renesas R-Car PCIe Endpoint Controller DT description
-> > +
-> > +Required properties:
-> > +         "renesas,pcie-ep-r8a774c0" for the R8A774C0 SoC;
+> > Looks like interrupt-map is split incorrectly: shouldn't each entry have 8
+> > cells?
 >
-> Normal ordering is: renesas,r8a774c0-pcie-ep
->
-> > +         "renesas,pcie-ep-rcar-gen3" for a generic R-Car Gen3 or
-> > +                                  RZ/G2 compatible device.
-> > +
-> > +         When compatible with the generic version, nodes must list the
-> > +         SoC-specific version corresponding to the platform first
-> > +         followed by the generic version.
-> > +
-> > +- reg: base address and length of the PCIe controller registers.
-> > +- outbound-ranges: outbound windows base address and length including the flags.
-> > +- resets: Must contain phandles to PCIe-related reset lines exposed by IP block
->
-> How many?
->
-should be one.
+> That must be with a current dtc which now splits the array before each
+> phandle. That works for phandle+args, but not *-map properties. :( I
 
-> > +- clocks: from common clock binding: clock specifiers for the PCIe controller
-> > +      clock.
-> > +- clock-names: from common clock binding: should be "pcie".
-> > +
-> > +Optional Property:
-> > +- max-functions: Maximum number of functions that can be configured (default 1).
-> > +
-> > +Example:
-> > +
-> > +SoC-specific DT Entry:
-> > +
-> > +     pcie_ep: pcie_ep@fe000000 {
->
-> pcie-ep@
->
-will fix that.
+Ah, that explains it: renesas-drivers does include your for-next branch.
+At first I was a bit puzzled, as the messages weren't introduced by a
+dt-schema repo update...
 
-Cheers,
---Prabhakar
+> was trying to avoid a bunch of dts updates to add brackets. I think
+> for now, I'll just drop the interrupt-map size constraint. It's not
+> all that accurate anyways as it doesn't look at cell sizes.
 
-> > +             compatible = "renesas,pcie-ep-r8a774c0", "renesas,pcie-rcar-gen2";
-> > +             reg = <0 0xfe000000 0 0x80000>;
-> > +             outbound-ranges = <0xa 0x0 0xfe100000 0 0x000100000
-> > +                                0xa 0x0 0xfe200000 0 0x000200000
-> > +                                0x6 0x0 0x30000000 0 0x008000000
-> > +                                0x6 0x0 0x38000000 0 0x008000000>;
-> > +             clocks = <&cpg CPG_MOD 319>;
-> > +             clock-names = "pcie";
-> > +             power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
-> > +             resets = <&cpg 319>;
-> > +     };
-> > --
-> > 2.7.4
-> >
+Too late, I've already applied grouping to the Renesas ARM DTS files ;-)
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
