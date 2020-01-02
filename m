@@ -2,81 +2,148 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E632812E3BE
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Jan 2020 09:20:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B99F212E3F6
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Jan 2020 09:44:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727756AbgABIUC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Jan 2020 03:20:02 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:36201 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727688AbgABIUB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Jan 2020 03:20:01 -0500
-Received: by mail-ot1-f66.google.com with SMTP id 19so43556513otz.3;
-        Thu, 02 Jan 2020 00:20:01 -0800 (PST)
+        id S1727757AbgABIou (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Jan 2020 03:44:50 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:42070 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727756AbgABIot (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Jan 2020 03:44:49 -0500
+Received: by mail-ot1-f67.google.com with SMTP id 66so56084251otd.9;
+        Thu, 02 Jan 2020 00:44:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=aHriWhJI0dqaNpyRfzm/gY6/ALoua79QPBLVzGEfWhQ=;
-        b=LYHBU3hyZ4qeez/x8Dc6xNL+CoxkMucMrviIHsG4U7S2oBXfo3sm0E1OqVhgkPIAB9
-         WjbMWW1IYC1v/BXWqU2M3IcQKuR3fBjdq7oLC7Xg0Sk7WGpK3vqlqg1nF1zX8YzZSzI3
-         QkcRw7QedQurR4i+1nwDlF4PZrMY3a4U8gQZphEunf7CZ6evf6TosC1u1Ga6lvRwp8RO
-         66lR56KQoVjtDPXsILWbDNPTWU6YNMew4QFIH6sE8uqEMPq3I5xZEsdeAOoqlxJggxNA
-         /v/d830qKdKIsp4TcJQSN9+Xb98L5kBox5S/CVj8KVXlyP3FG+vhgRLKJ9zm7bwuUEuh
-         JYBw==
+        bh=RJXFVlyRwTqj9HkStatG/uviJjFGvZJlZBeqka9UDNY=;
+        b=gdiUCeOPqScjXzrbvIh+ShMJdMtOIFx3qiDxl8Rnx0tRID+ljoSEDWZXifZyy+UDoK
+         ZbP+uX2yH0Lua7XN3AMGacK2rVrdEAdaFX09Pn8/uzG3t01jvXUKjmInkQIVS+QHIezD
+         VXX6JM5ur/SC4XeH73Y6MZ2pf8t8dk3hLl6vy6PahZF9tKuqXwq53iy00PMcaIcImJvz
+         a0qOXjUw9jKbNkcQk34Ejg4DCSj/O8c7yFs5z0bZaMFOy6CrljgugPlFvg6n+X9/iQEw
+         F/xgEeo5JX2ZN4LVxKsTrzXDRQO8ty7llvBlWTz/fa7rkDg9PweY+jOm9fuFBl4kD2F5
+         0bPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=aHriWhJI0dqaNpyRfzm/gY6/ALoua79QPBLVzGEfWhQ=;
-        b=N9U+5TXT/3COIUkcyj2pFRGGebRIFr6jxDLPG8n5YBoUjU49Sla4/jLJazIcmm60q1
-         3DHmJNv4sVUDC4B71PJ/gzmkg63/1ZyRBWWUswSdCURxAWCQokEPuWjkxUJNHzJoKwGf
-         spLa3rkir/p1XQM/UL/amn5jqXkIOzcsL+J2B9UcPICol9i9Yr1j9mYo3Qvek+q8kQiZ
-         RsSINLCO3xHXDDUUjfBTIAmIvVoAHFfHls8415pip65I+rTOn+LSQvQ0CJL5b3KTHGGd
-         OvrAjuYt7HbA0xDWxV44a5tBRomIo2ON3aipGKK/n+//0AeBnlHewScc4ISLKzld29sv
-         FN0g==
-X-Gm-Message-State: APjAAAXGdo7bafLAmKJtohIzJlLHbIndUqsXBvUKBVGXOGAINM5CdnlA
-        n/7KtCiyRlgSDLcyAKPGVGovJTA6bIYVZrXZrck=
-X-Google-Smtp-Source: APXvYqyWFs4P4fJpHL4dAErb4LD+E4qkFoJIMSL10eM8o/+GIMuANvXQbWlQHIE4bI13/uvpEL312cHqld0uEKCiSXg=
-X-Received: by 2002:a05:6830:1615:: with SMTP id g21mr94672907otr.49.1577953200818;
- Thu, 02 Jan 2020 00:20:00 -0800 (PST)
+        bh=RJXFVlyRwTqj9HkStatG/uviJjFGvZJlZBeqka9UDNY=;
+        b=RL2nRiSN6pm26gySagtnGSBdpJFox4fSSxM0bkFoFZhavUAvTp9lk1wV+v1BmsvU4y
+         789IjyZYuEBkldfyMvSe82ptq4Lcp0Wsg2j0oscyzeCrYS8hv4+hfVjdZnzMlIcBW03a
+         h5lCgvSY1Is6zfofSLM4K9HIq6mkmTUl8feVUM64lK0hdZUKfXqujfqRtc6UExvz14QJ
+         BfE6oQKFx+/piAnrLsyCrDo1atLPQioJzpHU1HFty4u66VHPjAHTVhU7JrblJDLITEV/
+         tqpyPEomO13AUAPaKlaAL5QNremkrs2coRdNVtfzkEOLGD5WUGDZASA8BwD2ZCs/r8Qy
+         B8CA==
+X-Gm-Message-State: APjAAAVOTxiJbxzCAeuNrYa9Mxeo9kOw8qLrwofBhvqOmJNZlIl3R6fR
+        q2Fe0897JKIDyKcwvobKAl+o5lNXp87uZ9B2bok=
+X-Google-Smtp-Source: APXvYqzOhzS82AptAf2MZPwDekJw6thW0D54iQ6Qt4TuLUMBcVXdHaCHrtJnYpVCXcsxnGiGCP9GyLgDg6gsrK4LUGE=
+X-Received: by 2002:a9d:5c02:: with SMTP id o2mr83617674otk.176.1577954688818;
+ Thu, 02 Jan 2020 00:44:48 -0800 (PST)
 MIME-Version: 1.0
-References: <CAGi-RUJvqJoCXWN2YugRn=WYEk9yzt7m3OPfX_o++PmJWQ3woQ@mail.gmail.com>
-In-Reply-To: <CAGi-RUJvqJoCXWN2YugRn=WYEk9yzt7m3OPfX_o++PmJWQ3woQ@mail.gmail.com>
-From:   Ramon Fried <rfried.dev@gmail.com>
-Date:   Thu, 2 Jan 2020 10:19:49 +0200
-Message-ID: <CAGi-RUJuS540oNTtJc1zfv6tbfTtSt-S0m1tdpQ-=5JPeo92xg@mail.gmail.com>
-Subject: Re: MSI irqchip configured as IRQCHIP_ONESHOT_SAFE causes spurious IRQs
-To:     hkallweit1@gmail.com, Bjorn Helgaas <bhelgaas@google.com>,
-        marc.zyngier@arm.com, tglx@linutronix.de, lorenzo.pieralisi@arm.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191213084748.11210-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20191213084748.11210-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAL_JsqLSYroDZGWksJJ=E+01X=3Tji4+GmK8s3i+d2BJphqiLQ@mail.gmail.com>
+ <CA+V-a8uKBuVUQvkoJ9pJYX97Qy3JazTyLCy-2T35gOX77AP8vg@mail.gmail.com> <20191219233129.GA5484@bogus>
+In-Reply-To: <20191219233129.GA5484@bogus>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Thu, 2 Jan 2020 08:44:23 +0000
+Message-ID: <CA+V-a8vjwqkH5rYsy_rsHF93d91izsaEwmFXNpYqk3_=_Asd2g@mail.gmail.com>
+Subject: Re: [v2 3/6] of: address: add support to parse PCI outbound-ranges
+To:     Rob Herring <robh@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Murray <andrew.murray@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Simon Horman <horms@verge.net.au>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Ping
+Hi Rob,
 
-On Mon, Dec 9, 2019 at 12:27 PM Ramon Fried <rfried.dev@gmail.com> wrote:
+On Thu, Dec 19, 2019 at 11:31 PM Rob Herring <robh@kernel.org> wrote:
 >
-> Hi,
-> While debugging the root cause of spurious IRQ's on my PCIe MSI line it appears
-> that because of the line:
->     info->chip->flags |= IRQCHIP_ONESHOT_SAFE;
-> in pci_msi_create_irq_domain()
-> The IRQF_ONESHOT is ignored, especially when requesting IRQ through
-> pci_request_threaded_irq() where handler is NULL.
+> On Mon, Dec 16, 2019 at 08:49:23AM +0000, Lad, Prabhakar wrote:
+> > Hi Rob,
+> >
+> > Thank you for the review.
+> >
+> > On Fri, Dec 13, 2019 at 8:37 PM Rob Herring <robh+dt@kernel.org> wrote:
+> > >
+> > > On Fri, Dec 13, 2019 at 2:48 AM Lad Prabhakar
+> > > <prabhakar.csengg@gmail.com> wrote:
+> > > >
+> > > > From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > >
+> > > > this patch adds support to parse PCI outbound-ranges, the
+> > > > outbound-regions are similar to pci ranges except it doesn't
+> > > > have pci address, below is the format for bar-ranges:
+> > > >
+> > > > outbound-ranges = <flags upper32_cpuaddr lower32_cpuaddr
+> > > >                    upper32_size lower32_size>;
+> > >
+> > > You can't just make up a new ranges property. Especially one that
+> > > doesn't follow how 'ranges' works. We already have 'dma-ranges' to
+> > > translate device to memory addresses.
+> > >
+> > > Explain the problem or feature you need, not the solution you came up
+> > > with. Why do you need this and other endpoint bindings haven't?
+> > >
+> > rcar SoC's supports multiple outbound region for mapping the PCI address
+> > locally to the system. This lead to discussion where there exist controllers
+> > which support regions for high/low priority transfer and similarly regions
+> > for large/small memory allocations, as a result a new ranges property was
+> > added, where we can specify the flags which would indicate how the outbound
+> > region can be used during requests.
 >
-> The problem is that the MSI masking now only surrounds the HW handler,
-> and all additional MSI that occur before the threaded handler is
-> complete are considered by the note_interrupt() as spurious.
->
-> Besides the side effect of that, I don't really understand the logic
-> of not masking the MSI until the threaded handler is complete,
-> especially when there's no HW handler and only threaded handler.
->
-> Your thoughts?
->
-> Thank,
-> Ramon.
+> What are the flags?
+
+below are the flags which were discussed in first version of the
+series, but since the driver is
+currently using just PCI_EPC_WINDOW_FLAG_NON_MULTI_ALLOC flag I'll be
+dropping them in
+next version (suggested by Kishon) and rest will be added as and when
+required by the driver.
+
+ * @PCI_EPC_WINDOW_FLAG_MULTI_ALLOC: Indicates multiple chunks of memory can be
+ *                                  allocated from same window
+ * @PCI_EPC_WINDOW_FLAG_NON_MULTI_ALLOC: Indicates only single memory allocation
+ *                                      is possible on the window
+ * @PCI_EPC_WINDOW_FLAG_LARGE_ALLOC: Window is used for large memory allocation
+ * @PCI_EPC_WINDOW_FLAG_SMALL_ALLOC: Window is used for small memory allocation
+ * @PCI_EPC_WINDOW_FLAG_HIGH_PRI_ALLOC: Window is used for high priority data
+ *                                     transfers
+ * @PCI_EPC_WINDOW_FLAG_LOW_PRI_ALLOC: Window is used for low priority data
+ *                                    transfers
+
+Cheers,
+--Prabhakar
