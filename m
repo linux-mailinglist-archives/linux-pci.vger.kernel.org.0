@@ -2,54 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B99F212E3F6
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Jan 2020 09:44:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A099D12E402
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Jan 2020 09:48:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727757AbgABIou (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Jan 2020 03:44:50 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42070 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727756AbgABIot (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Jan 2020 03:44:49 -0500
-Received: by mail-ot1-f67.google.com with SMTP id 66so56084251otd.9;
-        Thu, 02 Jan 2020 00:44:49 -0800 (PST)
+        id S1727801AbgABIsO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Jan 2020 03:48:14 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:37927 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727757AbgABIsO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Jan 2020 03:48:14 -0500
+Received: by mail-ot1-f66.google.com with SMTP id d7so51705596otf.5;
+        Thu, 02 Jan 2020 00:48:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=RJXFVlyRwTqj9HkStatG/uviJjFGvZJlZBeqka9UDNY=;
-        b=gdiUCeOPqScjXzrbvIh+ShMJdMtOIFx3qiDxl8Rnx0tRID+ljoSEDWZXifZyy+UDoK
-         ZbP+uX2yH0Lua7XN3AMGacK2rVrdEAdaFX09Pn8/uzG3t01jvXUKjmInkQIVS+QHIezD
-         VXX6JM5ur/SC4XeH73Y6MZ2pf8t8dk3hLl6vy6PahZF9tKuqXwq53iy00PMcaIcImJvz
-         a0qOXjUw9jKbNkcQk34Ejg4DCSj/O8c7yFs5z0bZaMFOy6CrljgugPlFvg6n+X9/iQEw
-         F/xgEeo5JX2ZN4LVxKsTrzXDRQO8ty7llvBlWTz/fa7rkDg9PweY+jOm9fuFBl4kD2F5
-         0bPg==
+        bh=lYK3JQAmW07FRU5GuNZTgBOd+vjFiils6tG0VLmuyGE=;
+        b=XvrNbulzxprjJqi8RpScnA140KqOgH0A3KIwDYeZHKhtNqXpKqoIH3DkDmMCVQ4mUL
+         UwesBRnFDTc16aXYRWU9fFLStptClVcntJFNz6OyMjwF05UXavP3leAtsROoVh410vm+
+         jUwytle5bVp/DrZEhUKPxt7VGX15m/li3nhKMCPQHhUUfTMLo4HrwFfUuHyhLRmPJosc
+         ZVN+FIUAGNI58UFohnNWgK+pW61uPy/3SkM8oE8zY+MwPijr+Ibg7angTkInKzlKJqfa
+         UB5p84iBYkGvBSTVKgL5bpv2MgeEExqeZUGno4Xaoq9OwJaoN+NtTQiaOofpO6zyJYpl
+         4DsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=RJXFVlyRwTqj9HkStatG/uviJjFGvZJlZBeqka9UDNY=;
-        b=RL2nRiSN6pm26gySagtnGSBdpJFox4fSSxM0bkFoFZhavUAvTp9lk1wV+v1BmsvU4y
-         789IjyZYuEBkldfyMvSe82ptq4Lcp0Wsg2j0oscyzeCrYS8hv4+hfVjdZnzMlIcBW03a
-         h5lCgvSY1Is6zfofSLM4K9HIq6mkmTUl8feVUM64lK0hdZUKfXqujfqRtc6UExvz14QJ
-         BfE6oQKFx+/piAnrLsyCrDo1atLPQioJzpHU1HFty4u66VHPjAHTVhU7JrblJDLITEV/
-         tqpyPEomO13AUAPaKlaAL5QNremkrs2coRdNVtfzkEOLGD5WUGDZASA8BwD2ZCs/r8Qy
-         B8CA==
-X-Gm-Message-State: APjAAAVOTxiJbxzCAeuNrYa9Mxeo9kOw8qLrwofBhvqOmJNZlIl3R6fR
-        q2Fe0897JKIDyKcwvobKAl+o5lNXp87uZ9B2bok=
-X-Google-Smtp-Source: APXvYqzOhzS82AptAf2MZPwDekJw6thW0D54iQ6Qt4TuLUMBcVXdHaCHrtJnYpVCXcsxnGiGCP9GyLgDg6gsrK4LUGE=
-X-Received: by 2002:a9d:5c02:: with SMTP id o2mr83617674otk.176.1577954688818;
- Thu, 02 Jan 2020 00:44:48 -0800 (PST)
+        bh=lYK3JQAmW07FRU5GuNZTgBOd+vjFiils6tG0VLmuyGE=;
+        b=ZQJ5XERqKOsE6PBlyf4fn+oUgSy18oD4/lCAZ7FkaLqy/4xf7DqL24c5KGhfLEPeEI
+         pYCVqpqndrHqQQ4Aja+Q6Su+voHcPL1Jpp+RJdnqUKGOXv0ECmRojDjWvmU/CdvFD8BS
+         jAqi1HuHGJ0aSqIsaNiF9gXJ+PD371Ue6xBmeMCEfKQqbJjeT+U0eM4TNEClUdeUMoh7
+         BMb+EWppXnvZU896LYdY6PCegsR/fnlPmM9hRFY5XahtHdRoHWnNLXDbBR8ovsbf+GGM
+         y9t74z1csZvLCMOTTVhu0zxptnEw2hLGwdXh4TO47RlgppCEEDNt7bhaIc/vPAJ6Ywnm
+         IeNg==
+X-Gm-Message-State: APjAAAU2uebq3i4Wcz6805ZKdpsDJJG8ZUJzM9lPpX4r/CfU0UBg1uCs
+        NIdb79qFbpEPQbOjsViEc4ToDt9FIWLoMeRZo0k=
+X-Google-Smtp-Source: APXvYqxeuKbXHxGtyzku07WE9C0N/ua7Tl5Z8JOlkhllIuUswqzYTzv/m5bf/QtdXNVE3v+FavUIVxFQjdB8xF8hNl8=
+X-Received: by 2002:a05:6830:1188:: with SMTP id u8mr91290992otq.274.1577954893533;
+ Thu, 02 Jan 2020 00:48:13 -0800 (PST)
 MIME-Version: 1.0
 References: <20191213084748.11210-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20191213084748.11210-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAL_JsqLSYroDZGWksJJ=E+01X=3Tji4+GmK8s3i+d2BJphqiLQ@mail.gmail.com>
- <CA+V-a8uKBuVUQvkoJ9pJYX97Qy3JazTyLCy-2T35gOX77AP8vg@mail.gmail.com> <20191219233129.GA5484@bogus>
-In-Reply-To: <20191219233129.GA5484@bogus>
+ <20191213084748.11210-5-prabhakar.mahadev-lad.rj@bp.renesas.com> <20191219233525.GA9478@bogus>
+In-Reply-To: <20191219233525.GA9478@bogus>
 From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 2 Jan 2020 08:44:23 +0000
-Message-ID: <CA+V-a8vjwqkH5rYsy_rsHF93d91izsaEwmFXNpYqk3_=_Asd2g@mail.gmail.com>
-Subject: Re: [v2 3/6] of: address: add support to parse PCI outbound-ranges
+Date:   Thu, 2 Jan 2020 08:47:47 +0000
+Message-ID: <CA+V-a8vO_3P3vDFVuKLJAK7v99E7qKVAei0Kmba8tKist7mAaw@mail.gmail.com>
+Subject: Re: [v2 4/6] dt-bindings: PCI: rcar: Add bindings for R-Car PCIe
+ endpoint controller
 To:     Rob Herring <robh@kernel.org>
 Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -58,7 +57,7 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Kishon Vijay Abraham I <kishon@ti.com>,
         Marek Vasut <marek.vasut+renesas@gmail.com>,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        PCI <linux-pci@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -66,12 +65,9 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Andrew Murray <andrew.murray@arm.com>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
-        <linux-renesas-soc@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        LAK <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
         Chris Paterson <Chris.Paterson2@renesas.com>,
         Frank Rowand <frowand.list@gmail.com>,
         Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
@@ -90,60 +86,85 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 Hi Rob,
 
-On Thu, Dec 19, 2019 at 11:31 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Mon, Dec 16, 2019 at 08:49:23AM +0000, Lad, Prabhakar wrote:
-> > Hi Rob,
-> >
-> > Thank you for the review.
-> >
-> > On Fri, Dec 13, 2019 at 8:37 PM Rob Herring <robh+dt@kernel.org> wrote:
-> > >
-> > > On Fri, Dec 13, 2019 at 2:48 AM Lad Prabhakar
-> > > <prabhakar.csengg@gmail.com> wrote:
-> > > >
-> > > > From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > >
-> > > > this patch adds support to parse PCI outbound-ranges, the
-> > > > outbound-regions are similar to pci ranges except it doesn't
-> > > > have pci address, below is the format for bar-ranges:
-> > > >
-> > > > outbound-ranges = <flags upper32_cpuaddr lower32_cpuaddr
-> > > >                    upper32_size lower32_size>;
-> > >
-> > > You can't just make up a new ranges property. Especially one that
-> > > doesn't follow how 'ranges' works. We already have 'dma-ranges' to
-> > > translate device to memory addresses.
-> > >
-> > > Explain the problem or feature you need, not the solution you came up
-> > > with. Why do you need this and other endpoint bindings haven't?
-> > >
-> > rcar SoC's supports multiple outbound region for mapping the PCI address
-> > locally to the system. This lead to discussion where there exist controllers
-> > which support regions for high/low priority transfer and similarly regions
-> > for large/small memory allocations, as a result a new ranges property was
-> > added, where we can specify the flags which would indicate how the outbound
-> > region can be used during requests.
->
-> What are the flags?
+Thank you for the review.
 
-below are the flags which were discussed in first version of the
-series, but since the driver is
-currently using just PCI_EPC_WINDOW_FLAG_NON_MULTI_ALLOC flag I'll be
-dropping them in
-next version (suggested by Kishon) and rest will be added as and when
-required by the driver.
+On Thu, Dec 19, 2019 at 11:35 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Fri, Dec 13, 2019 at 08:47:46AM +0000, Lad Prabhakar wrote:
+> > From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > This patch adds the bindings for the R-Car PCIe endpoint driver.
+> >
+> > Signed-off-by: Lad, Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > ---
+> >  .../devicetree/bindings/pci/rcar-pci-ep.txt        | 37 ++++++++++++++++++++++
+> >  1 file changed, 37 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
+>
+> Please make this a DT schema.
+>
+sure will do.
 
- * @PCI_EPC_WINDOW_FLAG_MULTI_ALLOC: Indicates multiple chunks of memory can be
- *                                  allocated from same window
- * @PCI_EPC_WINDOW_FLAG_NON_MULTI_ALLOC: Indicates only single memory allocation
- *                                      is possible on the window
- * @PCI_EPC_WINDOW_FLAG_LARGE_ALLOC: Window is used for large memory allocation
- * @PCI_EPC_WINDOW_FLAG_SMALL_ALLOC: Window is used for small memory allocation
- * @PCI_EPC_WINDOW_FLAG_HIGH_PRI_ALLOC: Window is used for high priority data
- *                                     transfers
- * @PCI_EPC_WINDOW_FLAG_LOW_PRI_ALLOC: Window is used for low priority data
- *                                    transfers
+> >
+> > diff --git a/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt b/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
+> > new file mode 100644
+> > index 0000000..7f0a97e
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
+> > @@ -0,0 +1,37 @@
+> > +* Renesas R-Car PCIe Endpoint Controller DT description
+> > +
+> > +Required properties:
+> > +         "renesas,pcie-ep-r8a774c0" for the R8A774C0 SoC;
+>
+> Normal ordering is: renesas,r8a774c0-pcie-ep
+>
+> > +         "renesas,pcie-ep-rcar-gen3" for a generic R-Car Gen3 or
+> > +                                  RZ/G2 compatible device.
+> > +
+> > +         When compatible with the generic version, nodes must list the
+> > +         SoC-specific version corresponding to the platform first
+> > +         followed by the generic version.
+> > +
+> > +- reg: base address and length of the PCIe controller registers.
+> > +- outbound-ranges: outbound windows base address and length including the flags.
+> > +- resets: Must contain phandles to PCIe-related reset lines exposed by IP block
+>
+> How many?
+>
+should be one.
+
+> > +- clocks: from common clock binding: clock specifiers for the PCIe controller
+> > +      clock.
+> > +- clock-names: from common clock binding: should be "pcie".
+> > +
+> > +Optional Property:
+> > +- max-functions: Maximum number of functions that can be configured (default 1).
+> > +
+> > +Example:
+> > +
+> > +SoC-specific DT Entry:
+> > +
+> > +     pcie_ep: pcie_ep@fe000000 {
+>
+> pcie-ep@
+>
+will fix that.
 
 Cheers,
 --Prabhakar
+
+> > +             compatible = "renesas,pcie-ep-r8a774c0", "renesas,pcie-rcar-gen2";
+> > +             reg = <0 0xfe000000 0 0x80000>;
+> > +             outbound-ranges = <0xa 0x0 0xfe100000 0 0x000100000
+> > +                                0xa 0x0 0xfe200000 0 0x000200000
+> > +                                0x6 0x0 0x30000000 0 0x008000000
+> > +                                0x6 0x0 0x38000000 0 0x008000000>;
+> > +             clocks = <&cpg CPG_MOD 319>;
+> > +             clock-names = "pcie";
+> > +             power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
+> > +             resets = <&cpg 319>;
+> > +     };
+> > --
+> > 2.7.4
+> >
