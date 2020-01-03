@@ -2,109 +2,169 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C686812F96C
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2020 16:01:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C10212FA5D
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2020 17:29:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727797AbgACPBd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 3 Jan 2020 10:01:33 -0500
-Received: from foss.arm.com ([217.140.110.172]:56064 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725890AbgACPBd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 3 Jan 2020 10:01:33 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AE544DA7;
-        Fri,  3 Jan 2020 07:01:32 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 22DE43F534;
-        Fri,  3 Jan 2020 07:01:31 -0800 (PST)
-Date:   Fri, 3 Jan 2020 15:01:30 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Thierry Reding <treding@nvidia.com>
-Cc:     Marcel Ziswiler <marcel@ziswiler.com>, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v1] pci: tegra: fix afi_pex2_ctrl reg offset for tegra30
-Message-ID: <20200103150129.GR42593@e119886-lin.cambridge.arm.com>
-References: <20191230005209.1546434-1-marcel@ziswiler.com>
- <20200102123822.GA1924669@ulmo>
+        id S1728004AbgACQ3t (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 3 Jan 2020 11:29:49 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:45933 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727969AbgACQ3p (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Jan 2020 11:29:45 -0500
+Received: by mail-ot1-f65.google.com with SMTP id 59so61796322otp.12;
+        Fri, 03 Jan 2020 08:29:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TP17Q6SBM8RfPS7JEf89IxBEEl+82WJKOot5C8K9N98=;
+        b=qqjelQ0+Kba+Pvu7W6JzOzsWlxmU4Ap+PUQ1JAnf1w4z9lOX0l2NhJIYieVbWYkq+i
+         tZnhI+JcVeUs9DSAbecaKFqKLjENQC/bJXsXocYpxG/SaqscK8CFG6Q3VMOkAPlGS+vG
+         NXTkv9j3ucpnFzf2QRu0uiA74wdEuNrJJ6QSBTmxAcPD9TmNe9mnDfArKRMUVuVuQ3Ou
+         fgGlmjc677XGKTIEGhvglgnnFTTlb2s+aE66EfKRY8Pqg2Hop+iVfDEArN2O7oDnkG69
+         whfs/9FCtOBgZogqFllOd00fE8JMvYZwHR0GoFtWLyKVfcYf2bfe+Iok4a+DPiocc2+J
+         udBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TP17Q6SBM8RfPS7JEf89IxBEEl+82WJKOot5C8K9N98=;
+        b=n67tly/MuUa+QJzx6r6wRj3UjMjFGYsqhcaOF4/Jv0FdZRlWx2msUs+TU1ov+iVI09
+         6WmvFUYa30E/27cV/iNJWbfSYJcwEEDu+kCjRfWGDi69zy1+mskFUuJy5g426Vgtw4op
+         BZCuPUkxsG5j4Jt5/fvK72ppgrO8Q42zW6H+M8457ip7vrEavXDylZq+qwBtLkBsZL5C
+         LIZLXDn8KwbYUyJXe7WYP8a8LlKxI8g6bGr72LyQoC6X5QFwbsMFCoXS8qkD32jLOPtZ
+         mC+B/DH89buEEpOlWnlzY1nv3STrw/8SFvQVznHNsh5yGiRbbvKzCYuDAVUZQ5zu2pq+
+         dwrw==
+X-Gm-Message-State: APjAAAUYnGrofmNCPsXeS//AZLximddfqiySLWnLERM7JuK2/oVVkFv7
+        Xcvs4oA51ZVoVKIS885+WI+ptCp+LrK43z1wXeM=
+X-Google-Smtp-Source: APXvYqyx0qfOGlCgf+mbqVx1RA3NJa/iWXu/notHG2jRzI1XyQlklOpJtiW2znnOyK1gz/QnIOAs/YVhOvNs6/K2WcU=
+X-Received: by 2002:a9d:5c02:: with SMTP id o2mr92142289otk.176.1578068984784;
+ Fri, 03 Jan 2020 08:29:44 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200102123822.GA1924669@ulmo>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+References: <20191213084748.11210-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20191213084748.11210-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20191213084748.11210-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Fri, 3 Jan 2020 16:29:18 +0000
+Message-ID: <CA+V-a8uZqwfbYNec7bPWf5RuZP-zVkAyAz8SMueJic5wU0zyBw@mail.gmail.com>
+Subject: Re: [v2 4/6] dt-bindings: PCI: rcar: Add bindings for R-Car PCIe
+ endpoint controller
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        LAK <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Simon Horman <horms@verge.net.au>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        linux-pci <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jan 02, 2020 at 01:38:22PM +0100, Thierry Reding wrote:
-> On Mon, Dec 30, 2019 at 01:52:09AM +0100, Marcel Ziswiler wrote:
-> > Fix AFI_PEX2_CTRL reg offset for tegra30 by moving it from the tegra20
-> > SoC struct where it erroneously got added by commit adb2653b3d2e
-> > ("PCI: tegra: Add AFI_PEX2_CTRL reg offset as part of SoC struct").
-> > This fixes the AFI_PEX2_CTRL reg offset being uninitialised
-> > subsequently failing to bring up the third PCIe port.
-> > 
-> > Signed-off-by: Marcel Ziswiler <marcel@ziswiler.com>
-> > 
-> > ---
-> > 
-> >  drivers/pci/controller/pci-tegra.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> Hi Marcel,
-> 
-> the recipient list looks somewhat odd. Mailing lists typically go into
-> the Cc: line and subsystem maintainers into the To: line. That way you
-> increase chances of people's filters catching important emails.
-> 
-> You may also want to fix up the subject line to use the more standard
-> "PCI: tegra: " prefix. Also, maybe capitalize "fix" -> "Fix" to match
-> standard formatting rules for commit messages. In the subject and the
-> commit message, also, please spell "tegra20" and "tegra30" as "Tegra20"
-> and "Tegra30", which can help when searching logs.
-> 
-> With the above fixed, this looks good, so:
-> 
-> Acked-by: Thierry Reding <treding@nvidia.com>
+Hi Kishon/Rob,
 
-Also can you please add the following tag:
+On Fri, Dec 13, 2019 at 8:48 AM Lad Prabhakar
+<prabhakar.csengg@gmail.com> wrote:
+>
+> From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> This patch adds the bindings for the R-Car PCIe endpoint driver.
+>
+> Signed-off-by: Lad, Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+>  .../devicetree/bindings/pci/rcar-pci-ep.txt        | 37 ++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
+>
+> diff --git a/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt b/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
+> new file mode 100644
+> index 0000000..7f0a97e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
+> @@ -0,0 +1,37 @@
+> +* Renesas R-Car PCIe Endpoint Controller DT description
+> +
+> +Required properties:
+> +           "renesas,pcie-ep-r8a774c0" for the R8A774C0 SoC;
+> +           "renesas,pcie-ep-rcar-gen3" for a generic R-Car Gen3 or
+> +                                    RZ/G2 compatible device.
+> +
+> +           When compatible with the generic version, nodes must list the
+> +           SoC-specific version corresponding to the platform first
+> +           followed by the generic version.
+> +
+> +- reg: base address and length of the PCIe controller registers.
+> +- outbound-ranges: outbound windows base address and length including the flags.
+> +- resets: Must contain phandles to PCIe-related reset lines exposed by IP block
+> +- clocks: from common clock binding: clock specifiers for the PCIe controller
+> +        clock.
+> +- clock-names: from common clock binding: should be "pcie".
+> +
+> +Optional Property:
+> +- max-functions: Maximum number of functions that can be configured (default 1).
+> +
+> +Example:
+> +
+> +SoC-specific DT Entry:
+> +
+> +       pcie_ep: pcie_ep@fe000000 {
+> +               compatible = "renesas,pcie-ep-r8a774c0", "renesas,pcie-rcar-gen2";
+> +               reg = <0 0xfe000000 0 0x80000>;
+> +               outbound-ranges = <0xa 0x0 0xfe100000 0 0x000100000
+> +                                  0xa 0x0 0xfe200000 0 0x000200000
+> +                                  0x6 0x0 0x30000000 0 0x008000000
+> +                                  0x6 0x0 0x38000000 0 0x008000000>;
+> +               clocks = <&cpg CPG_MOD 319>;
+> +               clock-names = "pcie";
+> +               power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
+> +               resets = <&cpg 319>;
+> +       };
 
-Fixes: adb2653b3d2e ("PCI: tegra: Add AFI_PEX2_CTRL reg offset as part of SoC struct")
+Now that I have dropped "outbound-ranges", do the below bindings look good ?
 
-Thanks,
+- reg-names: Must include the following names
+ - "apb-base" - Controller base
+ - "memory0" - memory window 0 used by the host to map the pci address locally
+ - "memory1" - memory window 1 used by the host to map the pci address locally
+- "memory2" - memory window 2 used by the host to map the pci address locally
+- "memory3" - memory window 3 used by the host to map the pci address locally
 
-Andrew Murray
+    pcie-ep: pcie_ep@fe000000 {
+        compatible = "renesas,pcie-r8a774c0", "renesas,pcie-rcar-gen2";
+        reg = <0 0xfe000000 0 0x80000>,
+            <0x0 0xfe100000 0 0x100000>,
+            <0x0 0xfe200000 0 0x200000>,
+            <0x0 0x30000000 0 0x8000000>,
+            <0x0 0x38000000 0 0x8000000>;
+        reg-names = "apb-base", "memory0", "memory1", "memory2", "memory3";
+        clocks = <&cpg CPG_MOD 319>;
+        clock-names = "pcie";
+        power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
+        resets = <&cpg 319>;
+    };
 
-> 
-> > 
-> > diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-> > index 090b632965e2..ac93f5a0398e 100644
-> > --- a/drivers/pci/controller/pci-tegra.c
-> > +++ b/drivers/pci/controller/pci-tegra.c
-> > @@ -2499,7 +2499,6 @@ static const struct tegra_pcie_soc tegra20_pcie = {
-> >  	.num_ports = 2,
-> >  	.ports = tegra20_pcie_ports,
-> >  	.msi_base_shift = 0,
-> > -	.afi_pex2_ctrl = 0x128,
-> >  	.pads_pll_ctl = PADS_PLL_CTL_TEGRA20,
-> >  	.tx_ref_sel = PADS_PLL_CTL_TXCLKREF_DIV10,
-> >  	.pads_refclk_cfg0 = 0xfa5cfa5c,
-> > @@ -2528,6 +2527,7 @@ static const struct tegra_pcie_soc tegra30_pcie = {
-> >  	.num_ports = 3,
-> >  	.ports = tegra30_pcie_ports,
-> >  	.msi_base_shift = 8,
-> > +	.afi_pex2_ctrl = 0x128,
-> >  	.pads_pll_ctl = PADS_PLL_CTL_TEGRA30,
-> >  	.tx_ref_sel = PADS_PLL_CTL_TXCLKREF_BUF_EN,
-> >  	.pads_refclk_cfg0 = 0xfa5cfa5c,
-> > -- 
-> > 2.24.1
-> > 
-
-
+Cheers,
+--Prabhakar
