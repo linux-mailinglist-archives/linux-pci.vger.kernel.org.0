@@ -2,100 +2,151 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6225012FDC4
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Jan 2020 21:20:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6831F12FF83
+	for <lists+linux-pci@lfdr.de>; Sat,  4 Jan 2020 01:21:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728712AbgACUUS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 3 Jan 2020 15:20:18 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:46941 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728745AbgACUUJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Jan 2020 15:20:09 -0500
-Received: by mail-qk1-f194.google.com with SMTP id r14so34689740qke.13
-        for <linux-pci@vger.kernel.org>; Fri, 03 Jan 2020 12:20:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=40ACnQIUnpge54Cj+EODMXbGQ2AM0yGbootCDBdgIh0=;
-        b=JHYDNcOHsw5Vg59sFwNh4MhnXNKJfQKDhV3JhQemZ8O0wjy4NOClQJHVO9/XZY1B2e
-         7N2r8FlVbF9YCIZf1O8PJKqvP+J732CrXrgkZLQFQD6r8xa5PmtrOPXurr4eE1D10/dY
-         mFNu91hy8xJJRta6mrMYIQyNs0OE0ozgPWJvUT4Jmr91vUmPG9p04hCqKp3daJ6nspkN
-         ZTnUyt7jeaXiRVZmI5OCw3hnhqJr3CafoKv3hfbaHkDpeu4215n4LA4JUWv5RDO6VsPp
-         wo4bmuxUPsJ+VBxSxq4NIVVGqRtUU4TTV0YA8c6/GhqTjpJxCcyOyITBnIawjrG3MRiM
-         hUyw==
+        id S1727188AbgADAVz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 3 Jan 2020 19:21:55 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:45193 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727159AbgADAVz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Jan 2020 19:21:55 -0500
+Received: by mail-io1-f65.google.com with SMTP id i11so43058172ioi.12
+        for <linux-pci@vger.kernel.org>; Fri, 03 Jan 2020 16:21:54 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=40ACnQIUnpge54Cj+EODMXbGQ2AM0yGbootCDBdgIh0=;
-        b=QSMH5qgc54JS+X2v/3UY4XQVf7moZ8y1c6TsMUeBFZ+5YDTjNcB2gjUHXm4yZ+50JX
-         8uFsYX6JENy3DHMZRPVyir0vqznLjJMrgXsvbNKODMJh6FUoPOh6qodInHqUpjA0G6oP
-         HV8DM/q0hjV08BSjjkvkA0S6aceJONzwfyUeJLpwb/FF0pDFbNrq2d5QqDZ6JhtwW5RR
-         NO1zoLOTzlxMei53VI7WWsu6JXJsF48JY6V9VGL7Rsl21bV7Y+vWXE9Y2x+0i/TC3AEm
-         8QuN5G1rr1DvVqf4S0MdU2N2d7Zt/9ZLyYD+YNg751YoO4uknuEhIIHUqklhBCTd6xUy
-         2CNA==
-X-Gm-Message-State: APjAAAX2S/+TIgl8HejzRwdttf3exuTJDS2CJVF1E25xmz9FBxgQw+9J
-        klg/UfD9M2SAvy+7k/ZkM3AIh+VaqxaR1uFRMkY=
-X-Google-Smtp-Source: APXvYqzazOZ1eDGwLjA5b5joJwHBsXYUc3xk3mwbut9BpsYKwbpZffl6B/gnfGOg4rASQDOizOWq9gQ5QJjCh6l6GTs=
-X-Received: by 2002:a37:4141:: with SMTP id o62mr70745354qka.282.1578082808591;
- Fri, 03 Jan 2020 12:20:08 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GRrMCIevFS+50QdWWWGaYeUVyp1OjoJAsbXHKCUBzfs=;
+        b=rA2dVEyyIa0fKIAOyP1digNNfVzcnHP/wIBtS0WrSqgDZfH3v3E5e1JQE8D4cjmiv1
+         LSXNk5Rq01yiGyXSl3nyuPGZ360NwUmqdeunN07DsyB2Ptb7vtGYc1JTOJi6hXKqSbWA
+         xJuJBrUg4kO/3XTUv4z2aqvBiAU7i7o6rCw/9Olfm/dfw5osoJ15V341dR/gQMjvVZj3
+         PEEhLVwmh74sH5jxcC12VT/6iICKMaYJKq+Tj5Z/0mKtP+xB7GI3kQu5dkDdcvcK0kl7
+         bixEsSu6iY8ppwzXpnDuapA9gleD7I4VUxZREwq7Du59ttiIpQpVPpnRfizaR3z7YNbP
+         paYQ==
+X-Gm-Message-State: APjAAAUReJEFiVyp5pZfL7tSFABNsLB2zsWhk2Hh2zx8RilPFJCObqfS
+        bojft7cVouiN5vSSOKiwHYMievg=
+X-Google-Smtp-Source: APXvYqxyMnSJMZxpNBfwElWkzgxj2fHxrQVZsEFav1BWWNRS+nSVJrS2PRj1jFR5242AHsnsUqfudw==
+X-Received: by 2002:a5d:9041:: with SMTP id v1mr51974709ioq.303.1578097314031;
+        Fri, 03 Jan 2020 16:21:54 -0800 (PST)
+Received: from rob-hp-laptop ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id n22sm15228727iog.14.2020.01.03.16.21.52
+        for <linux-pci@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jan 2020 16:21:53 -0800 (PST)
+Received: from rob (uid 1000)
+        (envelope-from rob@rob-hp-laptop)
+        id 2219a5
+        by rob-hp-laptop (DragonFly Mail Agent v0.11);
+        Fri, 03 Jan 2020 17:21:52 -0700
+Date:   Fri, 3 Jan 2020 17:21:52 -0700
+From:   Rob Herring <robh@kernel.org>
+To:     Remi Pommarel <repk@triplefau.lt>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Yue Wang <yue.wang@Amlogic.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 4/5] dt-bindings: PCI: meson: Update PCIE bindings
+ documentation
+Message-ID: <20200104002152.GA32487@bogus>
+References: <20191224173942.18160-1-repk@triplefau.lt>
+ <20191224173942.18160-5-repk@triplefau.lt>
 MIME-Version: 1.0
-Received: by 2002:ac8:4410:0:0:0:0:0 with HTTP; Fri, 3 Jan 2020 12:20:08 -0800 (PST)
-From:   "Rev.Dr Emmanuel Okoye CEO Ecobank-benin" 
-        <westernunion.benin982@gmail.com>
-Date:   Fri, 3 Jan 2020 21:20:08 +0100
-Message-ID: <CAP=nHBJWiJ9KpSSbF4jP9u5UiU5d_kGjSUyPYDmdB2x1uiJFMw@mail.gmail.com>
-Subject: I promise you must be happy today, God has uplifted you and your
- family ok
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191224173942.18160-5-repk@triplefau.lt>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Dear Friend
+On Tue, Dec 24, 2019 at 06:39:41PM +0100, Remi Pommarel wrote:
+> Now that a new PHYs has been introduced for AXG SoC family, update
+> dt bindings documentation.
 
-i hope all is well with you,if so, glory be to God almighty. I'm very
-happy to inform you, about my success in getting payment funds under
-the cooperation of a new partner from United States of
-America.Presently I am in uk for investment projects with my own share
-of the total sum. I didn't forget your past efforts. IMF finally
-approved your compensation payment funds this morning by prepaid (ATM)
-Debit card of US$12,500.000.00Million Dollars, Since you not received
-this payment yet, I was not certified
-but it is not your fault and not my fault, I hold nothing against
-you.than bank official whom has been detaining the transfer in the
-bank, trying to claim your funds by themselves.
+This breaks compatibility. If that's okay, say so and why it is.
 
-Therefore, in appreciation of your effort I have raised an
-International prepaid (ATM) Debit card of US$12,500.000.00 in your
-favor as compensation to you.
+If only someone had said putting the phy here in the first place was 
+wrong:
 
-Now, i want you to contact my Diplomatic Agent, His name is Mike Benz
-on His  e-mail Address (mikebenz550@aol.com
+https://lore.kernel.org/linux-amlogic/20180829004122.GA25928@bogus/
 
-ask Him to send the Prepaid (ATM) Debit card to you. Bear in mind that
-the money is in Prepaid (ATM) Debit card, not cash, so you need to
-send to him,
-your full name
-address  where the prepaid (ATM) Debit card will be delivered to you,
-including your cell phone number. Finally, I left explicit
-instructions with him, on how to send the (ATM CARD) to you.
-
-The Prepaid (ATM) Debit card, will be send to you through my
-Diplomatic Agent Mr. Mike Benz immediately you contact him. So contact
-my Diplomatic Agent Mr. Mike Benz immediately you receive this letter.
-Below is his contact information:
-
-NAME : MIKE BENZ
-EMAIL ADDRESS: mikebenz550@aol.com
-Text Him, (256) 284-4886
-
-Request for Delivery of the Prepaid (ATM) Debit card  to you today.
-Note, please I have paid for the whole service fees for you, so the
-only money you will send to my Diplomatic Agent Mr. Mike Benz is
-$50.00 for your prepaid (ATM) Debit card DELIVERY FEE to your address
-ok.
-Let me know once you receive this Card at your address.
-Best regards,
-Rev.Dr, George Adadar
+> 
+> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+> ---
+>  .../bindings/pci/amlogic,meson-pcie.txt       | 22 ++++++++-----------
+>  1 file changed, 9 insertions(+), 13 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+> index 84fdc422792e..b6acbe694ffb 100644
+> --- a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+> @@ -18,7 +18,6 @@ Required properties:
+>  - reg-names: Must be
+>  	- "elbi"	External local bus interface registers
+>  	- "cfg"		Meson specific registers
+> -	- "phy"		Meson PCIE PHY registers for AXG SoC Family
+>  	- "config"	PCIe configuration space
+>  - reset-gpios: The GPIO to generate PCIe PERST# assert and deassert signal.
+>  - clocks: Must contain an entry for each entry in clock-names.
+> @@ -26,13 +25,13 @@ Required properties:
+>  	- "pclk"       PCIe GEN 100M PLL clock
+>  	- "port"       PCIe_x(A or B) RC clock gate
+>  	- "general"    PCIe Phy clock
+> -	- "mipi"       PCIe_x(A or B) 100M ref clock gate for AXG SoC Family
+>  - resets: phandle to the reset lines.
+> -- reset-names: must contain "phy" "port" and "apb"
+> -       - "phy"         Share PHY reset for AXG SoC Family
+> +- reset-names: must contain "port" and "apb"
+>         - "port"        Port A or B reset
+>         - "apb"         Share APB reset
+> -- phys: should contain a phandle to the shared phy for G12A SoC Family
+> +- phys: should contain a phandle to the PCIE phy
+> +- phy-names: must contain "pcie"
+> +
+>  - device_type:
+>  	should be "pci". As specified in designware-pcie.txt
+>  
+> @@ -43,9 +42,8 @@ Example configuration:
+>  			compatible = "amlogic,axg-pcie", "snps,dw-pcie";
+>  			reg = <0x0 0xf9800000 0x0 0x400000
+>  					0x0 0xff646000 0x0 0x2000
+> -					0x0 0xff644000 0x0 0x2000
+>  					0x0 0xf9f00000 0x0 0x100000>;
+> -			reg-names = "elbi", "cfg", "phy", "config";
+> +			reg-names = "elbi", "cfg", "config";
+>  			reset-gpios = <&gpio GPIOX_19 GPIO_ACTIVE_HIGH>;
+>  			interrupts = <GIC_SPI 177 IRQ_TYPE_EDGE_RISING>;
+>  			#interrupt-cells = <1>;
+> @@ -58,17 +56,15 @@ Example configuration:
+>  			ranges = <0x82000000 0 0 0x0 0xf9c00000 0 0x00300000>;
+>  
+>  			clocks = <&clkc CLKID_USB
+> -					&clkc CLKID_MIPI_ENABLE
+>  					&clkc CLKID_PCIE_A
+>  					&clkc CLKID_PCIE_CML_EN0>;
+>  			clock-names = "general",
+> -					"mipi",
+>  					"pclk",
+>  					"port";
+> -			resets = <&reset RESET_PCIE_PHY>,
+> -				<&reset RESET_PCIE_A>,
+> +			resets = <&reset RESET_PCIE_A>,
+>  				<&reset RESET_PCIE_APB>;
+> -			reset-names = "phy",
+> -					"port",
+> +			reset-names = "port",
+>  					"apb";
+> +			phys = <&pcie_phy>;
+> +			phy-names = "pcie";
+>  	};
+> -- 
+> 2.24.0
+> 
