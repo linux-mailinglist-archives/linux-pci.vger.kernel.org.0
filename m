@@ -2,204 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FFBF1313D3
-	for <lists+linux-pci@lfdr.de>; Mon,  6 Jan 2020 15:38:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E49EE131508
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Jan 2020 16:45:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbgAFOie (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 6 Jan 2020 09:38:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46830 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726303AbgAFOie (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 6 Jan 2020 09:38:34 -0500
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16A0220731;
-        Mon,  6 Jan 2020 14:38:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578321513;
-        bh=FesBo1upHM+kuo7tXW02SAn+zVTYT92KHE4R6S1mh88=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=LzWHqUnIiFJpaDWbx/gEgjkBNW8J4uabH0xBLBr1E1CCPnySXqNsdTH+XTEuhddZy
-         Bh5LyRZCqTYqcQguTIOVzWLW1cSr3Il0Da4wwHC3ZU3VPczDtEO/PpYketnxxt2X8w
-         IFYIFYnRxdSPQL7O6ugK16LxIE/7RKIR7wlMmdII=
-Date:   Mon, 6 Jan 2020 08:38:32 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Deepa Dinamani <deepa.kernel@gmail.com>
-Cc:     mika.westerberg@linux.intel.com, alex.williamson@redhat.com,
-        logang@deltatee.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drivers: pci: Clear ACS state at kexec
-Message-ID: <20200106143832.GA108920@google.com>
+        id S1726437AbgAFPpP convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Mon, 6 Jan 2020 10:45:15 -0500
+Received: from mail-oln040092253075.outbound.protection.outlook.com ([40.92.253.75]:8794
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726296AbgAFPpP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 6 Jan 2020 10:45:15 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Tf9bV80HX2QbDpdD9LX758To8BR98+k+b7shiu1/rLdUYV4z0L3lp5vpNJ84S1dvSqkb/kWBy8R1hXo7syA1UFhgY1YRLsADtNFPle6XUTu+z2zy9g+e9mRPF9xV7OWLT5g+PkmhXbD67OgLgA9ydZdPjO+s65sfnPfOjjJmlBZe1QdoYPv/50BOFfM036hS8AsLR4zxX91Zz5cHltiJDhY+8wyYqBbie1wrM0vHV4I37uLI7YPPnAfA+vk4ou+hEQ2PVBkGLdZSoKruKQdwkqAl5kBd81Wsu1Ge+4nMBuk0FupHBVlmo1ql6VH6MbmrjJqystZebCFNsy11jqX2CQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aKDubXA6Sg025IVngblb4O44qlE8KhMdjYMIimhHQjg=;
+ b=jp8IENSkW+Xl/TsdoxzWVVwWD3n802ZdV2N5NYXi9E2p6DItv+pnvKScteKJlhoyjGiJ3LGn78LQ3OiqaWod9VpO/PPzZUp6NFJwttY4clVnorwGiIZ25Srs1K44sVe+DjJ7baNHa6dahovC96l99HrdbSHihUMpLT1UgOk605Mh/obopXXifnItv2C7/MLKfcp5Vg0x50jEz8pCJcRX2XnQWeUTq1ILHHIJcAcsTogzsJgd5k7cuJyM5Tb3KzLw2quTYPOwa5Gbs9fjhNGdgtYL1syWKFJXPmvS4t2hrcH3wbv169tmELgMLKorEWaNbpwiwv4NPolgXFN3XMNvCQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from PU1APC01FT027.eop-APC01.prod.protection.outlook.com
+ (10.152.252.51) by PU1APC01HT219.eop-APC01.prod.protection.outlook.com
+ (10.152.252.246) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.11; Mon, 6 Jan
+ 2020 15:45:09 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.252.59) by
+ PU1APC01FT027.mail.protection.outlook.com (10.152.252.232) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.11 via Frontend Transport; Mon, 6 Jan 2020 15:45:09 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::20ad:6646:5bcd:63c9]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::20ad:6646:5bcd:63c9%11]) with mapi id 15.20.2602.016; Mon, 6 Jan 2020
+ 15:45:09 +0000
+Received: from nicholas-dell-linux (49.196.2.242) by MEAPR01CA0028.ausprd01.prod.outlook.com (2603:10c6:201::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.11 via Frontend Transport; Mon, 6 Jan 2020 15:45:06 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Subject: [PATCH v1 0/3] PCI: Fix failure to assign BARs with alignment >1M
+ with Thunderbolt
+Thread-Topic: [PATCH v1 0/3] PCI: Fix failure to assign BARs with alignment
+ >1M with Thunderbolt
+Thread-Index: AQHVxKhGWS2XwdDU4U2HcIog9dsExg==
+Date:   Mon, 6 Jan 2020 15:45:09 +0000
+Message-ID: <PSXP216MB0438243F9C310CC98AF402F3803C0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+Accept-Language: en-AU, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MEAPR01CA0028.ausprd01.prod.outlook.com (2603:10c6:201::16)
+ To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (2603:1096:300:d::20)
+x-incomingtopheadermarker: OriginalChecksum:FDFB42B970A8271B242C951796C0EBBFDFC6733A826CCFD291DCED4F2FCFE433;UpperCasedChecksum:0F13D60B2A99D00E2766A97605161B49D2C5592A849023BCEFE8C52F4980A52B;SizeAsReceived:7781;Count:48
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [21lwpAr0pbM1aScAyduhkTboquPuk8GV]
+x-microsoft-original-message-id: <20200106154500.GA2535@nicholas-dell-linux>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 48
+x-eopattributedmessage: 0
+x-ms-office365-filtering-correlation-id: 8f00a8bc-7a9e-4a98-329f-08d792bf689d
+x-ms-exchange-slblob-mailprops: =?us-ascii?Q?In1fGN/mPIaOd14rbxEmcaQRHn+nmPfUBJpUXYqcl2RWvB9el2hmar3g+2Yr?=
+ =?us-ascii?Q?ctSIgkoUc9ehGzHvYRK2YSqo1VvfLrHD2/SaOAdnl2T0Wh4soBrO9GqFYrgr?=
+ =?us-ascii?Q?AGAOUjddyDM00dIvUr7UbxzIiifzdLS3SOEP2pDCVFgYzGbFMDTxjqHEOvrJ?=
+ =?us-ascii?Q?rc74cCRZIi3bUXO0dG9zmSdRuLFYlHfmAI10lmCNhybZKqWZdXn6l4ZqNZ5Q?=
+ =?us-ascii?Q?d795urGprtYF5Rnu9SegbZx3r64jFwafwwaftG5axW2dl0eojlgki2hmio8i?=
+ =?us-ascii?Q?zzWDT2DYDYyIpemwBjxhUIfRqtYcFW2ce9u7e275EXnEJO72oN3Pxme9tYb3?=
+ =?us-ascii?Q?+Qh1eY2BWiAZ9XVfAPwEPA7aqwpVZ97a8eoD3JRMvIQZ1MCLAykGfKgCMSYS?=
+ =?us-ascii?Q?9FVxjnGVyg7kmp63PT1rIq0rBcHWofrPTAi+kfn8MOHv8gVnkvZFan5oafVs?=
+ =?us-ascii?Q?aWpo/LID4f2g++hEFVfHrmK8U5r7g0DnCp2vOmgoAbGlSWE7l6Y1xiMLCopQ?=
+ =?us-ascii?Q?owE9d4Y2nIf7VkhLNNoX97kk5s4k4iGacILHTrQclz9DKBU8PGBhTnqjZCgB?=
+ =?us-ascii?Q?g4UhhlzgeUWk3ailR/bbLsPV9vhlPhSB/qY5DG/Ry9YLL6apTpGVPBXAKCvZ?=
+ =?us-ascii?Q?kPsuFGgrkgo3rP6YAuo7gqF4D49+8gO+9YLudLqg2/UDzhGehqnxffL0Y//C?=
+ =?us-ascii?Q?8D35cXFfPWeIgZlCLyX38D7UTKLunnymPmF/b2wzKpglrN0y0JCxxY5LbeeH?=
+ =?us-ascii?Q?uPdUtpLlrmEbHjxkpei/ic47G9tuFxuaz2bdg95gggF0kZvV8I+usA0cXdCF?=
+ =?us-ascii?Q?OxnoS7Tmg1EzqrLL+kIHfPoyDeRWBPYZ/auzR9qZNYFeVoCEkEa+vYhsvKr/?=
+ =?us-ascii?Q?ml6d9KMCOam8yTD9KN3z5TNZYruiMNP5tOsM/jYXl7rseBe5Xb2ujrnAhwFu?=
+ =?us-ascii?Q?56aSp0M0GKWx2EUGgm7R2tmZsPic6PZMv/lOC95Hg+hh9l9KQSCWSmS/foTu?=
+ =?us-ascii?Q?Q0KgvhED/Si/gkc=3D?=
+x-ms-traffictypediagnostic: PU1APC01HT219:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 1FOrf1duEWijaSuulRp/N7IestAb2ADy7kycxTn0xCUtFZ3DhOD6hpzX4tv8TCcbdDn6UbWJi23RyW7wE4OfnvsDSisjhPVF7Fuf3/7ki4BagGTzUNyZW9Qhwf+nE6aJnAynTIvUnlDvyaWEh/YlniONemhMRvdZ2782768fOrjG29xX3PGlj6frr0Mvdjf8
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <59597A65FEF1894E84A88B2735CAF4FF@KORP216.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200104225149.27342-1-deepa.kernel@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8f00a8bc-7a9e-4a98-329f-08d792bf689d
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jan 2020 15:45:09.3583
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT219
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Jan 04, 2020 at 02:51:49PM -0800, Deepa Dinamani wrote:
-> ACS bits remain sticky through kexec reset. This is not really a
-> problem for Linux because turning IOMMU on assumes ACS on. But,
-> this becomes a problem if we kexec into something other than
-> Linux and that does not turn ACS on always.
+This patch series is split from from [0] to make sign-off easier.
 
-"Sticky" in the PCIe spec specifically describes bits that are
-unaffected by hot reset or FLR (see PCIe r5.0, sec 7.4), but the
-PCI_ACS_CTRL register contains no RWS bits, so I don't think that's
-what you mean here.
+I have found a way to change the arguments of 
+pci_bus_distribute_available_resources() without making any functional 
+changes. I think it turned out very well. I hope everybody agrees.
 
-I suspect you mean something like "kexec doesn't reset the device, so
-the new kernel inherits the PCI_ACS_CTRL settings from Linux"?
+I have tested and looked over for mistakes for several days, but there 
+could still be mistakes. I have also changed the commit messages and 
+might not be clear enough yet.
 
-So it looks like you're unconditionally disabling ACS during kexec.
-The comment in pci_enable_acs() suggests that ACS may have been
-enabled by platform firmware.  Maybe we should *restore* the original
-ACS settings from before Linux enabled ACS rather than clearing them?
+Best to get it out there and get feedback or it will never happen.
 
-> Reset the ACS bits to default before kexec or device remove.
-> 
-> Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
-> ---
->  drivers/pci/pci-driver.c |  4 ++++
->  drivers/pci/pci.c        | 39 +++++++++++++++++++++++++++------------
->  drivers/pci/pci.h        |  1 +
->  3 files changed, 32 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index 0454ca0e4e3f..bd8d08e50b97 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -453,6 +453,8 @@ static int pci_device_remove(struct device *dev)
->  
->  	/* Undo the runtime PM settings in local_pci_probe() */
->  	pm_runtime_put_sync(dev);
-> +	/* Undo the PCI ACS settings in pci_init_capabilities() */
-> +	pci_disable_acs(pci_dev);
+Removed Reviewed-by tags from Mika Westerberg because some things have 
+changed.
 
-Can this be a separate patch?  It doesn't seem to have anything to do
-with kexec, so a different patch with (presumably) a different
-rationale would be good.
+[0]
+https://lore.kernel.org/lkml/PSXP216MB043892C04178AB333F7AF08C80580@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM/
 
->  	/*
->  	 * If the device is still on, set the power state as "unknown",
-> @@ -493,6 +495,8 @@ static void pci_device_shutdown(struct device *dev)
->  	 */
->  	if (kexec_in_progress && (pci_dev->current_state <= PCI_D3hot))
->  		pci_clear_master(pci_dev);
-> +	if (kexec_in_progress)
-> +		pci_disable_acs(pci_dev);
+Nicholas Johnson (3):
+  PCI: Remove redundant brackets in
+    pci_bus_distribute_available_resources()
+  PCI: Change pci_bus_distribute_available_resources() args to struct
+    resource
+  PCI: Consider alignment of hot-added bridges when distributing
+    available resources
 
-Shouldn't this be in the same "if" block as pci_clear_master()?  If
-the device is in D3cold, it's not going to work to disable ACS because
-config space isn't accessible.
+ drivers/pci/setup-bus.c | 106 +++++++++++++++++++++++-----------------
+ 1 file changed, 61 insertions(+), 45 deletions(-)
 
->  }
->  
->  #ifdef CONFIG_PM
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index da2e59daad6f..8254617cff03 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -3261,15 +3261,23 @@ static void pci_disable_acs_redir(struct pci_dev *dev)
->  	pci_info(dev, "disabled ACS redirect\n");
->  }
->  
-> +
-> +/* Standard PCI ACS capailities
-> + * Source Validation | P2P Request Redirect | P2P Completion Redirect | Upstream Forwarding
+-- 
+2.24.1
 
-Please make this comment fit in 80 columns.
-
-> + */
-> +#define PCI_STD_ACS_CAP (PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF)
-> +
->  /**
-> - * pci_std_enable_acs - enable ACS on devices using standard ACS capabilities
-> + * pci_std_enable_disable_acs - enable/disable ACS on devices using standard
-> + * ACS capabilities
->   * @dev: the PCI device
->   */
-> -static void pci_std_enable_acs(struct pci_dev *dev)
-> +static void pci_std_enable_disable_acs(struct pci_dev *dev, int enable)
-
-Maybe you could split this refactoring into its own patch that doesn't
-actually change any behavior?  Then the kexec patch would be a
-one-liner and the device remove patch would be another one-liner, so
-it's obvious where the important changes are.
-
->  {
->  	int pos;
->  	u16 cap;
->  	u16 ctrl;
-> +	u16 val = 0;
->  
->  	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ACS);
->  	if (!pos)
-> @@ -3278,19 +3286,26 @@ static void pci_std_enable_acs(struct pci_dev *dev)
->  	pci_read_config_word(dev, pos + PCI_ACS_CAP, &cap);
->  	pci_read_config_word(dev, pos + PCI_ACS_CTRL, &ctrl);
->  
-> -	/* Source Validation */
-> -	ctrl |= (cap & PCI_ACS_SV);
-> +	val = (cap & PCI_STD_ACS_CAP);
->  
-> -	/* P2P Request Redirect */
-> -	ctrl |= (cap & PCI_ACS_RR);
-> +	if (enable)
-> +		ctrl |= val;
-> +	else
-> +		ctrl &= ~val;
->  
-> -	/* P2P Completion Redirect */
-> -	ctrl |= (cap & PCI_ACS_CR);
-> +	pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
-> +}
->  
-> -	/* Upstream Forwarding */
-> -	ctrl |= (cap & PCI_ACS_UF);
-> +/**
-> + * pci_disable_acs - enable ACS if hardware support it
-
-s/enable/disable/ (in comment)
-s/support/supports/
-
-> + * @dev: the PCI device
-> + */
-> +void pci_disable_acs(struct pci_dev *dev)
-> +{
-> +	if (pci_acs_enable)
-> +		pci_std_enable_disable_acs(dev, 0);
->  
-> -	pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
-> +	pci_disable_acs_redir(dev);
->  }
->  
->  /**
-> @@ -3305,7 +3320,7 @@ void pci_enable_acs(struct pci_dev *dev)
->  	if (!pci_dev_specific_enable_acs(dev))
->  		goto disable_acs_redir;
->  
-> -	pci_std_enable_acs(dev);
-> +	pci_std_enable_disable_acs(dev, 1);
->  
->  disable_acs_redir:
->  	/*
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 6394e7746fb5..480e4de46fa8 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -526,6 +526,7 @@ static inline resource_size_t pci_resource_alignment(struct pci_dev *dev,
->  }
->  
->  void pci_enable_acs(struct pci_dev *dev);
-> +void pci_disable_acs(struct pci_dev *dev);
->  #ifdef CONFIG_PCI_QUIRKS
->  int pci_dev_specific_acs_enabled(struct pci_dev *dev, u16 acs_flags);
->  int pci_dev_specific_enable_acs(struct pci_dev *dev);
-> -- 
-> 2.17.1
-> 
