@@ -2,143 +2,261 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 06BE91311A2
-	for <lists+linux-pci@lfdr.de>; Mon,  6 Jan 2020 12:55:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B0C35131237
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Jan 2020 13:38:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726290AbgAFLzV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 6 Jan 2020 06:55:21 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:37983 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725787AbgAFLzV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Jan 2020 06:55:21 -0500
-Received: by mail-io1-f66.google.com with SMTP id v3so48335593ioj.5;
-        Mon, 06 Jan 2020 03:55:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=6Di6ffajBH2cZR+pVdW7IOpKkZDUHrowT9et6cWo7uY=;
-        b=L8gc2XfmZbBDtaLDePZyXvUltjzM6ScSH0/znKIKaMCtMCibv+eO04IaTmDlBTGhbT
-         1rWQ6Vxtd+o4e39T+uUEzmVcl6tC6lTKZECYTG3ADyckeJ2TKRJsyelTSAZPGKez8D1u
-         m9AV1p7UxTh7bcRIN24V638UW6qgwex5yhHpV1oBPHLuyL16FphzTKID3dnJ402mwY7T
-         fNA+T9uDhZOQbhiwhChgDX/xjmgG4zPj25Gy6KRmUXp8XXJJSewwhBEmcXUuqTv8EAue
-         UdDLrzLHpxFMpL4MJqK4cUngKwqznMSJAKFLCIvYGaknkBlUacMMgm2Nm416NF7SRbZg
-         mAYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=6Di6ffajBH2cZR+pVdW7IOpKkZDUHrowT9et6cWo7uY=;
-        b=KdJeOx5DrqPUqLUxPDZ+PuHUYCQb5BI06oXxlCvW3W6w+S5CdK5C7N8y2cPV7YWQHi
-         At8MJloPi5c4AOymZNvhfczlZfQDy7Wx4Epo9YuHrQngrBZG6LUI+uGpiEUFgiobgfNE
-         NtI74WnumVRduhCWLfd9HV2mJ3aCpPwgfgbH94HMknLkmWWP1e5gNgbE0psGu3JiRMuq
-         Z3/puamYjPSR/DcbTBZTfsEJJa7sepr85u7SkMIfOP8olda+auJLtcj6NTrbgJePnf+5
-         lNyYivrdALsHDxPBTG/HOtKegJ7JkcZsvmAjcCL3Df0iiPUDmAcdXriw4EYYqzZl4nYh
-         cNIg==
-X-Gm-Message-State: APjAAAUkPoiLiQysULbUH1dNYdsnIenU2B2ZnfVyh3NnhxZ+g69RuUcp
-        /dIDmlvx7uD9UDa7kvTPlgJwS+yIM+jNJ4Gf2Zz023RG
-X-Google-Smtp-Source: APXvYqyK5B13r8HZFUhRRLwCjL031uyNVHRJy14fnkwQW+NME79KYnHpYoaVPSOY+KwNL7GKReAVKzghVs3O6n2eRC8=
-X-Received: by 2002:a02:c90a:: with SMTP id t10mr77309211jao.25.1578311720271;
- Mon, 06 Jan 2020 03:55:20 -0800 (PST)
+        id S1726294AbgAFMic (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 6 Jan 2020 07:38:32 -0500
+Received: from foss.arm.com ([217.140.110.172]:43542 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725821AbgAFMic (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 6 Jan 2020 07:38:32 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4F4F4328;
+        Mon,  6 Jan 2020 04:38:31 -0800 (PST)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C44FA3F534;
+        Mon,  6 Jan 2020 04:38:30 -0800 (PST)
+Date:   Mon, 6 Jan 2020 12:38:29 +0000
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Srinath Mannam <srinath.mannam@broadcom.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Ray Jui <ray.jui@broadcom.com>
+Subject: Re: [PATCH v4 2/6] PCI: iproc: Add INTx support with better modeling
+Message-ID: <20200106123828.GS42593@e119886-lin.cambridge.arm.com>
+References: <1576814058-30003-1-git-send-email-srinath.mannam@broadcom.com>
+ <1576814058-30003-3-git-send-email-srinath.mannam@broadcom.com>
 MIME-Version: 1.0
-From:   Prabhakar Kushwaha <prabhakar.pkin@gmail.com>
-Date:   Mon, 6 Jan 2020 17:24:44 +0530
-Message-ID: <CAJ2QiJ+MVVztHONagmYc2-BzbtdGQhABRKO7h4+kOE9cCK=CxA@mail.gmail.com>
-Subject: kexec -e not working: root disk not able to detect
-To:     linux-pci@vger.kernel.org, linux-ide@vger.kernel.org,
-        Ganapatrao Prabhakerrao Kulkarni <gkulkarni@marvell.com>,
-        Kamlakant Patel <kamlakantp@marvell.com>,
-        kexec mailing list <kexec@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1576814058-30003-3-git-send-email-srinath.mannam@broadcom.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi All,
+On Fri, Dec 20, 2019 at 09:24:14AM +0530, Srinath Mannam wrote:
+> From: Ray Jui <ray.jui@broadcom.com>
+> 
+> Add PCIe legacy interrupt INTx support to the iProc PCIe driver by
+> modeling it with its own IRQ domain. All 4 interrupts INTA, INTB, INTC,
+> INTD share the same interrupt line connected to the GIC in the system,
+> while the status of each INTx can be obtained through the INTX CSR
+> register
+> 
+> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
 
-I am trying kexec -e with latest kernel i.e. Linux-5.5.0-rc4.  Here
-second kernel is not able to detect/mount hard-disk having root file
-system (INTEL SSDSC2BB240G7).
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 
-[  279.690575] ata1: softreset failed (1st FIS failed)
-[  279.695446] ata1: limiting SATA link speed to 3.0 Gbps
-[  280.910020] ata1: SATA link down (SStatus 0 SControl 320)
-[  282.626018] ata1: SATA link down (SStatus 0 SControl 300)
-[  282.631409] ata1: link online but 1 devices misclassified, retrying
-[  282.637665] ata1: reset failed (errno=-11), retrying in 9 secs
-[  298.294546] ata1: failed to reset engine (errno=-5)
-[  302.042967] ata1: softreset failed (1st FIS failed)
-[  308.798609] ata1: failed to reset engine (errno=-5)
-[  337.546605] ata1: softreset failed (1st FIS failed)
-[  337.551475] ata1: limiting SATA link speed to 3.0 Gbps
-[  338.766022] ata1: SATA link down (SStatus 0 SControl 320)
-[  339.270943] ata1: EH pending after 5 tries, giving up
-
-I found following two workaround for this issue.
-A) Define ".shutdown" in driver/ata/ahci.c.
-
-reboot --> kernel_kexec() --> kernel_restart_prepare() -->
-device_shutdown() --> pci_device_shutdown() --> ahci_shutdown_one()
---> new function
-
-diff --git a/drivers/ata/ahci.c b/drivers/ata/ahci.c
-index 4bfd1b14b390..50a101002885 100644
---- a/drivers/ata/ahci.c
-+++ b/drivers/ata/ahci.c
-@@ -81,6 +81,7 @@ enum board_ids {
-
- static int ahci_init_one(struct pci_dev *pdev, const struct
-pci_device_id *ent);
- static void ahci_remove_one(struct pci_dev *dev);
- +static void ahci_shutdown_one(struct pci_dev *dev);
- static int ahci_vt8251_hardreset(struct ata_link *link, unsigned int *class,
-                                  unsigned long deadline);
-  static int ahci_avn_hardreset(struct ata_link *link, unsigned int *class,
- @@ -606,6 +607,7 @@ static struct pci_driver ahci_pci_driver = {
-         .id_table               = ahci_pci_tbl,
-         .probe                  = ahci_init_one,
-         .remove                 = ahci_remove_one,
- +       .shutdown               = ahci_shutdown_one,
-         .driver = {
-                 .pm             = &ahci_pci_pm_ops,
-         },
-
- +static void ahci_shutdown_one(struct pci_dev *pdev)
- +{
- +       pm_runtime_get_noresume(&pdev->dev);
- +       ata_pci_remove_one(pdev);
- +}
- +
-Note: After defining shutdown, error related to file-system write
-seen. Looks like even after device_shutdown, file system related
-transaction goes to disk.
-
-B)) Commenting of pci_clear_master() from pci_device_shutdown()
-reboot --> kernel_kexec() --> kernel_restart_prepare() -->
-device_shutdown() --> pci_device_shutdown()
-
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index 0454ca0e4e3f..ddffaa9321bb 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -481,8 +481,10 @@ static void pci_device_shutdown(struct device *dev)
-        /*
-         * If this is a kexec reboot, turn off Bus Master bit on the
-@@ -491,8 +493,16 @@ static void pci_device_shutdown(struct device *dev)
-         * If it is not a kexec reboot, firmware will hit the PCI
-         * devices with big hammer and stop their DMA any way.
-         */
-
- - if (kexec_in_progress && (pci_dev->current_state <= PCI_D3hot))
- -                pci_clear_master(pci_dev);
-
-Here pci_dev current_state. It is "0" i.e. D0.
-
-From A and B. Looks like even after pci_clear_master(), Some DMA
-transactions going on PCIe device  causing device in unstable.
-Not sure if this is the reason and how to solve this problem.
-
-Any help/guidance will help me in moving forward.
-
-Thanks!!
-
---prabhakar (pk)
+> ---
+>  drivers/pci/controller/pcie-iproc.c | 108 +++++++++++++++++++++++++++++++++++-
+>  drivers/pci/controller/pcie-iproc.h |   6 ++
+>  2 files changed, 112 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
+> index 0a468c7..485967b 100644
+> --- a/drivers/pci/controller/pcie-iproc.c
+> +++ b/drivers/pci/controller/pcie-iproc.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/irqchip/arm-gic-v3.h>
+> +#include <linux/irqchip/chained_irq.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/of_address.h>
+>  #include <linux/of_pci.h>
+> @@ -270,6 +271,7 @@ enum iproc_pcie_reg {
+>  
+>  	/* enable INTx */
+>  	IPROC_PCIE_INTX_EN,
+> +	IPROC_PCIE_INTX_CSR,
+>  
+>  	/* outbound address mapping */
+>  	IPROC_PCIE_OARR0,
+> @@ -314,6 +316,7 @@ static const u16 iproc_pcie_reg_paxb_bcma[] = {
+>  	[IPROC_PCIE_CFG_ADDR]		= 0x1f8,
+>  	[IPROC_PCIE_CFG_DATA]		= 0x1fc,
+>  	[IPROC_PCIE_INTX_EN]		= 0x330,
+> +	[IPROC_PCIE_INTX_CSR]		= 0x334,
+>  	[IPROC_PCIE_LINK_STATUS]	= 0xf0c,
+>  };
+>  
+> @@ -325,6 +328,7 @@ static const u16 iproc_pcie_reg_paxb[] = {
+>  	[IPROC_PCIE_CFG_ADDR]		= 0x1f8,
+>  	[IPROC_PCIE_CFG_DATA]		= 0x1fc,
+>  	[IPROC_PCIE_INTX_EN]		= 0x330,
+> +	[IPROC_PCIE_INTX_CSR]		= 0x334,
+>  	[IPROC_PCIE_OARR0]		= 0xd20,
+>  	[IPROC_PCIE_OMAP0]		= 0xd40,
+>  	[IPROC_PCIE_OARR1]		= 0xd28,
+> @@ -341,6 +345,7 @@ static const u16 iproc_pcie_reg_paxb_v2[] = {
+>  	[IPROC_PCIE_CFG_ADDR]		= 0x1f8,
+>  	[IPROC_PCIE_CFG_DATA]		= 0x1fc,
+>  	[IPROC_PCIE_INTX_EN]		= 0x330,
+> +	[IPROC_PCIE_INTX_CSR]		= 0x334,
+>  	[IPROC_PCIE_OARR0]		= 0xd20,
+>  	[IPROC_PCIE_OMAP0]		= 0xd40,
+>  	[IPROC_PCIE_OARR1]		= 0xd28,
+> @@ -846,9 +851,103 @@ static int iproc_pcie_check_link(struct iproc_pcie *pcie)
+>  	return link_is_active ? 0 : -ENODEV;
+>  }
+>  
+> -static void iproc_pcie_enable(struct iproc_pcie *pcie)
+> +static int iproc_pcie_intx_map(struct irq_domain *domain, unsigned int irq,
+> +			       irq_hw_number_t hwirq)
+>  {
+> +	irq_set_chip_and_handler(irq, &dummy_irq_chip, handle_simple_irq);
+> +	irq_set_chip_data(irq, domain->host_data);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct irq_domain_ops intx_domain_ops = {
+> +	.map = iproc_pcie_intx_map,
+> +};
+> +
+> +static void iproc_pcie_isr(struct irq_desc *desc)
+> +{
+> +	struct irq_chip *chip = irq_desc_get_chip(desc);
+> +	struct iproc_pcie *pcie;
+> +	struct device *dev;
+> +	unsigned long status;
+> +	u32 bit, virq;
+> +
+> +	chained_irq_enter(chip, desc);
+> +	pcie = irq_desc_get_handler_data(desc);
+> +	dev = pcie->dev;
+> +
+> +	/* go through INTx A, B, C, D until all interrupts are handled */
+> +	do {
+> +		status = iproc_pcie_read_reg(pcie, IPROC_PCIE_INTX_CSR);
+> +		for_each_set_bit(bit, &status, PCI_NUM_INTX) {
+> +			virq = irq_find_mapping(pcie->irq_domain, bit);
+> +			if (virq)
+> +				generic_handle_irq(virq);
+> +			else
+> +				dev_err(dev, "unexpected INTx%u\n", bit);
+> +		}
+> +	} while ((status & SYS_RC_INTX_MASK) != 0);
+> +
+> +	chained_irq_exit(chip, desc);
+> +}
+> +
+> +static int iproc_pcie_intx_enable(struct iproc_pcie *pcie)
+> +{
+> +	struct device *dev = pcie->dev;
+> +	struct device_node *node;
+> +	int ret;
+> +
+> +	/*
+> +	 * BCMA devices do not map INTx the same way as platform devices. All
+> +	 * BCMA needs below line to enable INTx
+> +	 */
+>  	iproc_pcie_write_reg(pcie, IPROC_PCIE_INTX_EN, SYS_RC_INTX_MASK);
+> +
+> +	node = of_get_compatible_child(dev->of_node, "brcm,iproc-intc");
+> +	if (node)
+> +		pcie->irq = of_irq_get(node, 0);
+> +
+> +	if (!node || pcie->irq <= 0)
+> +		return 0;
+> +
+> +	/* set IRQ handler */
+> +	irq_set_chained_handler_and_data(pcie->irq, iproc_pcie_isr, pcie);
+> +
+> +	/* add IRQ domain for INTx */
+> +	pcie->irq_domain = irq_domain_add_linear(node, PCI_NUM_INTX,
+> +						 &intx_domain_ops, pcie);
+> +	if (!pcie->irq_domain) {
+> +		dev_err(dev, "failed to add INTx IRQ domain\n");
+> +		ret = -ENOMEM;
+> +		goto err_rm_handler_data;
+> +	}
+> +
+> +	return 0;
+> +
+> +err_rm_handler_data:
+> +	of_node_put(node);
+> +	irq_set_chained_handler_and_data(pcie->irq, NULL, NULL);
+> +
+> +	return ret;
+> +}
+> +
+> +static void iproc_pcie_intx_disable(struct iproc_pcie *pcie)
+> +{
+> +	uint32_t offset, virq;
+> +
+> +	iproc_pcie_write_reg(pcie, IPROC_PCIE_INTX_EN, 0x0);
+> +
+> +	if (pcie->irq <= 0)
+> +		return;
+> +
+> +	for (offset = 0; offset < PCI_NUM_INTX; offset++) {
+> +		virq = irq_find_mapping(pcie->irq_domain, offset);
+> +		if (virq)
+> +			irq_dispose_mapping(virq);
+> +	}
+> +
+> +	irq_domain_remove(pcie->irq_domain);
+> +	irq_set_chained_handler_and_data(pcie->irq, NULL, NULL);
+>  }
+>  
+>  static inline bool iproc_pcie_ob_is_valid(struct iproc_pcie *pcie,
+> @@ -1518,7 +1617,11 @@ int iproc_pcie_setup(struct iproc_pcie *pcie, struct list_head *res)
+>  		goto err_power_off_phy;
+>  	}
+>  
+> -	iproc_pcie_enable(pcie);
+> +	ret = iproc_pcie_intx_enable(pcie);
+> +	if (ret) {
+> +		dev_err(dev, "failed to enable INTx\n");
+> +		goto err_power_off_phy;
+> +	}
+>  
+>  	if (IS_ENABLED(CONFIG_PCI_MSI))
+>  		if (iproc_pcie_msi_enable(pcie))
+> @@ -1562,6 +1665,7 @@ int iproc_pcie_remove(struct iproc_pcie *pcie)
+>  	pci_remove_root_bus(pcie->root_bus);
+>  
+>  	iproc_pcie_msi_disable(pcie);
+> +	iproc_pcie_intx_disable(pcie);
+>  
+>  	phy_power_off(pcie->phy);
+>  	phy_exit(pcie->phy);
+> diff --git a/drivers/pci/controller/pcie-iproc.h b/drivers/pci/controller/pcie-iproc.h
+> index 4f03ea5..103e568 100644
+> --- a/drivers/pci/controller/pcie-iproc.h
+> +++ b/drivers/pci/controller/pcie-iproc.h
+> @@ -74,6 +74,9 @@ struct iproc_msi;
+>   * @ib: inbound mapping related parameters
+>   * @ib_map: outbound mapping region related parameters
+>   *
+> + * @irq: interrupt line wired to the generic GIC for INTx
+> + * @irq_domain: IRQ domain for INTx
+> + *
+>   * @need_msi_steer: indicates additional configuration of the iProc PCIe
+>   * controller is required to steer MSI writes to external interrupt controller
+>   * @msi: MSI data
+> @@ -102,6 +105,9 @@ struct iproc_pcie {
+>  	struct iproc_pcie_ib ib;
+>  	const struct iproc_pcie_ib_map *ib_map;
+>  
+> +	int irq;
+> +	struct irq_domain *irq_domain;
+> +
+>  	bool need_msi_steer;
+>  	struct iproc_msi *msi;
+>  };
+> -- 
+> 2.7.4
+> 
