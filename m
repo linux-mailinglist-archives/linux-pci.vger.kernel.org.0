@@ -2,261 +2,144 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B0C35131237
-	for <lists+linux-pci@lfdr.de>; Mon,  6 Jan 2020 13:38:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0898C13125A
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Jan 2020 13:55:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726294AbgAFMic (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 6 Jan 2020 07:38:32 -0500
-Received: from foss.arm.com ([217.140.110.172]:43542 "EHLO foss.arm.com"
+        id S1726467AbgAFMzO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 6 Jan 2020 07:55:14 -0500
+Received: from foss.arm.com ([217.140.110.172]:43630 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725821AbgAFMic (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 6 Jan 2020 07:38:32 -0500
+        id S1726528AbgAFMzO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 6 Jan 2020 07:55:14 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4F4F4328;
-        Mon,  6 Jan 2020 04:38:31 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 69F6B328;
+        Mon,  6 Jan 2020 04:55:13 -0800 (PST)
 Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C44FA3F534;
-        Mon,  6 Jan 2020 04:38:30 -0800 (PST)
-Date:   Mon, 6 Jan 2020 12:38:29 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E15993F534;
+        Mon,  6 Jan 2020 04:55:12 -0800 (PST)
+Date:   Mon, 6 Jan 2020 12:55:11 +0000
 From:   Andrew Murray <andrew.murray@arm.com>
-To:     Srinath Mannam <srinath.mannam@broadcom.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Ray Jui <ray.jui@broadcom.com>
-Subject: Re: [PATCH v4 2/6] PCI: iproc: Add INTx support with better modeling
-Message-ID: <20200106123828.GS42593@e119886-lin.cambridge.arm.com>
-References: <1576814058-30003-1-git-send-email-srinath.mannam@broadcom.com>
- <1576814058-30003-3-git-send-email-srinath.mannam@broadcom.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: uniphier: remove module code from built-in driver
+Message-ID: <20200106125511.GT42593@e119886-lin.cambridge.arm.com>
+References: <20191215223937.19619-1-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1576814058-30003-3-git-send-email-srinath.mannam@broadcom.com>
+In-Reply-To: <20191215223937.19619-1-yamada.masahiro@socionext.com>
 User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 09:24:14AM +0530, Srinath Mannam wrote:
-> From: Ray Jui <ray.jui@broadcom.com>
+On Mon, Dec 16, 2019 at 07:39:37AM +0900, Masahiro Yamada wrote:
+> builtin_platform_driver() and MODULE_* are always odd combination.
 > 
-> Add PCIe legacy interrupt INTx support to the iProc PCIe driver by
-> modeling it with its own IRQ domain. All 4 interrupts INTA, INTB, INTC,
-> INTD share the same interrupt line connected to the GIC in the system,
-> while the status of each INTx can be obtained through the INTX CSR
-> register
+> This file is not compiled as a module by anyone because
+> CONFIG_PCIE_UNIPHIER is a bool option.
 > 
-> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
-> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+> Let's remove the modular code that is essentially orphaned, so that
+> when reading the driver there is no doubt it is builtin-only.
+> 
+> We explicitly disallow a driver unbind, since that doesn't have a
+> sensible use case anyway, and it allows us to drop the ".remove" code.
+> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
 Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 
 > ---
->  drivers/pci/controller/pcie-iproc.c | 108 +++++++++++++++++++++++++++++++++++-
->  drivers/pci/controller/pcie-iproc.h |   6 ++
->  2 files changed, 112 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
-> index 0a468c7..485967b 100644
-> --- a/drivers/pci/controller/pcie-iproc.c
-> +++ b/drivers/pci/controller/pcie-iproc.c
-> @@ -14,6 +14,7 @@
+> Changes in v2:
+>   - update commit description
+>   - remove Reviewed-by
+> 
+>  drivers/pci/controller/dwc/pcie-uniphier.c | 31 +---------------------
+>  1 file changed, 1 insertion(+), 30 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
+> index 8fd7badd59c2..a5401a0b1e58 100644
+> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
+> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
+> @@ -9,11 +9,11 @@
+>  #include <linux/bitfield.h>
+>  #include <linux/clk.h>
 >  #include <linux/delay.h>
+> +#include <linux/init.h>
 >  #include <linux/interrupt.h>
->  #include <linux/irqchip/arm-gic-v3.h>
-> +#include <linux/irqchip/chained_irq.h>
->  #include <linux/platform_device.h>
->  #include <linux/of_address.h>
->  #include <linux/of_pci.h>
-> @@ -270,6 +271,7 @@ enum iproc_pcie_reg {
->  
->  	/* enable INTx */
->  	IPROC_PCIE_INTX_EN,
-> +	IPROC_PCIE_INTX_CSR,
->  
->  	/* outbound address mapping */
->  	IPROC_PCIE_OARR0,
-> @@ -314,6 +316,7 @@ static const u16 iproc_pcie_reg_paxb_bcma[] = {
->  	[IPROC_PCIE_CFG_ADDR]		= 0x1f8,
->  	[IPROC_PCIE_CFG_DATA]		= 0x1fc,
->  	[IPROC_PCIE_INTX_EN]		= 0x330,
-> +	[IPROC_PCIE_INTX_CSR]		= 0x334,
->  	[IPROC_PCIE_LINK_STATUS]	= 0xf0c,
->  };
->  
-> @@ -325,6 +328,7 @@ static const u16 iproc_pcie_reg_paxb[] = {
->  	[IPROC_PCIE_CFG_ADDR]		= 0x1f8,
->  	[IPROC_PCIE_CFG_DATA]		= 0x1fc,
->  	[IPROC_PCIE_INTX_EN]		= 0x330,
-> +	[IPROC_PCIE_INTX_CSR]		= 0x334,
->  	[IPROC_PCIE_OARR0]		= 0xd20,
->  	[IPROC_PCIE_OMAP0]		= 0xd40,
->  	[IPROC_PCIE_OARR1]		= 0xd28,
-> @@ -341,6 +345,7 @@ static const u16 iproc_pcie_reg_paxb_v2[] = {
->  	[IPROC_PCIE_CFG_ADDR]		= 0x1f8,
->  	[IPROC_PCIE_CFG_DATA]		= 0x1fc,
->  	[IPROC_PCIE_INTX_EN]		= 0x330,
-> +	[IPROC_PCIE_INTX_CSR]		= 0x334,
->  	[IPROC_PCIE_OARR0]		= 0xd20,
->  	[IPROC_PCIE_OMAP0]		= 0xd40,
->  	[IPROC_PCIE_OARR1]		= 0xd28,
-> @@ -846,9 +851,103 @@ static int iproc_pcie_check_link(struct iproc_pcie *pcie)
->  	return link_is_active ? 0 : -ENODEV;
+>  #include <linux/iopoll.h>
+>  #include <linux/irqchip/chained_irq.h>
+>  #include <linux/irqdomain.h>
+> -#include <linux/module.h>
+>  #include <linux/of_irq.h>
+>  #include <linux/pci.h>
+>  #include <linux/phy/phy.h>
+> @@ -171,12 +171,6 @@ static void uniphier_pcie_irq_enable(struct uniphier_pcie_priv *priv)
+>  	writel(PCL_RCV_INTX_ALL_ENABLE, priv->base + PCL_RCV_INTX);
 >  }
 >  
-> -static void iproc_pcie_enable(struct iproc_pcie *pcie)
-> +static int iproc_pcie_intx_map(struct irq_domain *domain, unsigned int irq,
-> +			       irq_hw_number_t hwirq)
+> -static void uniphier_pcie_irq_disable(struct uniphier_pcie_priv *priv)
+> -{
+> -	writel(0, priv->base + PCL_RCV_INT);
+> -	writel(0, priv->base + PCL_RCV_INTX);
+> -}
+> -
+>  static void uniphier_pcie_irq_ack(struct irq_data *d)
 >  {
-> +	irq_set_chip_and_handler(irq, &dummy_irq_chip, handle_simple_irq);
-> +	irq_set_chip_data(irq, domain->host_data);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct irq_domain_ops intx_domain_ops = {
-> +	.map = iproc_pcie_intx_map,
-> +};
-> +
-> +static void iproc_pcie_isr(struct irq_desc *desc)
-> +{
-> +	struct irq_chip *chip = irq_desc_get_chip(desc);
-> +	struct iproc_pcie *pcie;
-> +	struct device *dev;
-> +	unsigned long status;
-> +	u32 bit, virq;
-> +
-> +	chained_irq_enter(chip, desc);
-> +	pcie = irq_desc_get_handler_data(desc);
-> +	dev = pcie->dev;
-> +
-> +	/* go through INTx A, B, C, D until all interrupts are handled */
-> +	do {
-> +		status = iproc_pcie_read_reg(pcie, IPROC_PCIE_INTX_CSR);
-> +		for_each_set_bit(bit, &status, PCI_NUM_INTX) {
-> +			virq = irq_find_mapping(pcie->irq_domain, bit);
-> +			if (virq)
-> +				generic_handle_irq(virq);
-> +			else
-> +				dev_err(dev, "unexpected INTx%u\n", bit);
-> +		}
-> +	} while ((status & SYS_RC_INTX_MASK) != 0);
-> +
-> +	chained_irq_exit(chip, desc);
-> +}
-> +
-> +static int iproc_pcie_intx_enable(struct iproc_pcie *pcie)
-> +{
-> +	struct device *dev = pcie->dev;
-> +	struct device_node *node;
-> +	int ret;
-> +
-> +	/*
-> +	 * BCMA devices do not map INTx the same way as platform devices. All
-> +	 * BCMA needs below line to enable INTx
-> +	 */
->  	iproc_pcie_write_reg(pcie, IPROC_PCIE_INTX_EN, SYS_RC_INTX_MASK);
-> +
-> +	node = of_get_compatible_child(dev->of_node, "brcm,iproc-intc");
-> +	if (node)
-> +		pcie->irq = of_irq_get(node, 0);
-> +
-> +	if (!node || pcie->irq <= 0)
-> +		return 0;
-> +
-> +	/* set IRQ handler */
-> +	irq_set_chained_handler_and_data(pcie->irq, iproc_pcie_isr, pcie);
-> +
-> +	/* add IRQ domain for INTx */
-> +	pcie->irq_domain = irq_domain_add_linear(node, PCI_NUM_INTX,
-> +						 &intx_domain_ops, pcie);
-> +	if (!pcie->irq_domain) {
-> +		dev_err(dev, "failed to add INTx IRQ domain\n");
-> +		ret = -ENOMEM;
-> +		goto err_rm_handler_data;
-> +	}
-> +
-> +	return 0;
-> +
-> +err_rm_handler_data:
-> +	of_node_put(node);
-> +	irq_set_chained_handler_and_data(pcie->irq, NULL, NULL);
-> +
-> +	return ret;
-> +}
-> +
-> +static void iproc_pcie_intx_disable(struct iproc_pcie *pcie)
-> +{
-> +	uint32_t offset, virq;
-> +
-> +	iproc_pcie_write_reg(pcie, IPROC_PCIE_INTX_EN, 0x0);
-> +
-> +	if (pcie->irq <= 0)
-> +		return;
-> +
-> +	for (offset = 0; offset < PCI_NUM_INTX; offset++) {
-> +		virq = irq_find_mapping(pcie->irq_domain, offset);
-> +		if (virq)
-> +			irq_dispose_mapping(virq);
-> +	}
-> +
-> +	irq_domain_remove(pcie->irq_domain);
-> +	irq_set_chained_handler_and_data(pcie->irq, NULL, NULL);
+>  	struct pcie_port *pp = irq_data_get_irq_chip_data(d);
+> @@ -397,14 +391,6 @@ static int uniphier_pcie_host_enable(struct uniphier_pcie_priv *priv)
+>  	return ret;
 >  }
 >  
->  static inline bool iproc_pcie_ob_is_valid(struct iproc_pcie *pcie,
-> @@ -1518,7 +1617,11 @@ int iproc_pcie_setup(struct iproc_pcie *pcie, struct list_head *res)
->  		goto err_power_off_phy;
->  	}
+> -static void uniphier_pcie_host_disable(struct uniphier_pcie_priv *priv)
+> -{
+> -	uniphier_pcie_irq_disable(priv);
+> -	phy_exit(priv->phy);
+> -	reset_control_assert(priv->rst);
+> -	clk_disable_unprepare(priv->clk);
+> -}
+> -
+>  static const struct dw_pcie_ops dw_pcie_ops = {
+>  	.start_link = uniphier_pcie_establish_link,
+>  	.stop_link = uniphier_pcie_stop_link,
+> @@ -456,31 +442,16 @@ static int uniphier_pcie_probe(struct platform_device *pdev)
+>  	return uniphier_add_pcie_port(priv, pdev);
+>  }
 >  
-> -	iproc_pcie_enable(pcie);
-> +	ret = iproc_pcie_intx_enable(pcie);
-> +	if (ret) {
-> +		dev_err(dev, "failed to enable INTx\n");
-> +		goto err_power_off_phy;
-> +	}
->  
->  	if (IS_ENABLED(CONFIG_PCI_MSI))
->  		if (iproc_pcie_msi_enable(pcie))
-> @@ -1562,6 +1665,7 @@ int iproc_pcie_remove(struct iproc_pcie *pcie)
->  	pci_remove_root_bus(pcie->root_bus);
->  
->  	iproc_pcie_msi_disable(pcie);
-> +	iproc_pcie_intx_disable(pcie);
->  
->  	phy_power_off(pcie->phy);
->  	phy_exit(pcie->phy);
-> diff --git a/drivers/pci/controller/pcie-iproc.h b/drivers/pci/controller/pcie-iproc.h
-> index 4f03ea5..103e568 100644
-> --- a/drivers/pci/controller/pcie-iproc.h
-> +++ b/drivers/pci/controller/pcie-iproc.h
-> @@ -74,6 +74,9 @@ struct iproc_msi;
->   * @ib: inbound mapping related parameters
->   * @ib_map: outbound mapping region related parameters
->   *
-> + * @irq: interrupt line wired to the generic GIC for INTx
-> + * @irq_domain: IRQ domain for INTx
-> + *
->   * @need_msi_steer: indicates additional configuration of the iProc PCIe
->   * controller is required to steer MSI writes to external interrupt controller
->   * @msi: MSI data
-> @@ -102,6 +105,9 @@ struct iproc_pcie {
->  	struct iproc_pcie_ib ib;
->  	const struct iproc_pcie_ib_map *ib_map;
->  
-> +	int irq;
-> +	struct irq_domain *irq_domain;
-> +
->  	bool need_msi_steer;
->  	struct iproc_msi *msi;
+> -static int uniphier_pcie_remove(struct platform_device *pdev)
+> -{
+> -	struct uniphier_pcie_priv *priv = platform_get_drvdata(pdev);
+> -
+> -	uniphier_pcie_host_disable(priv);
+> -
+> -	return 0;
+> -}
+> -
+>  static const struct of_device_id uniphier_pcie_match[] = {
+>  	{ .compatible = "socionext,uniphier-pcie", },
+>  	{ /* sentinel */ },
 >  };
+> -MODULE_DEVICE_TABLE(of, uniphier_pcie_match);
+>  
+>  static struct platform_driver uniphier_pcie_driver = {
+>  	.probe  = uniphier_pcie_probe,
+> -	.remove = uniphier_pcie_remove,
+>  	.driver = {
+>  		.name = "uniphier-pcie",
+>  		.of_match_table = uniphier_pcie_match,
+>  	},
+>  };
+>  builtin_platform_driver(uniphier_pcie_driver);
+> -
+> -MODULE_AUTHOR("Kunihiko Hayashi <hayashi.kunihiko@socionext.com>");
+> -MODULE_DESCRIPTION("UniPhier PCIe host controller driver");
+> -MODULE_LICENSE("GPL v2");
 > -- 
-> 2.7.4
+> 2.17.1
 > 
