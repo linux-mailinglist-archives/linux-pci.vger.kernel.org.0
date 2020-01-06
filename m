@@ -2,132 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 40D591318D6
-	for <lists+linux-pci@lfdr.de>; Mon,  6 Jan 2020 20:38:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 05B72131946
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Jan 2020 21:23:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbgAFTim (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 6 Jan 2020 14:38:42 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:45713 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726569AbgAFTim (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Jan 2020 14:38:42 -0500
-Received: by mail-io1-f66.google.com with SMTP id i11so49785692ioi.12;
-        Mon, 06 Jan 2020 11:38:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cFL1fKtV0fgN9gDJ7Fm/iZJuC48WZ+DUJ81pq9R4fTw=;
-        b=mONhGolss5xAIaSVNmY/VtF7D5t3S8CORW4oqNNOlfYgn5MTeWxb+LZk7OUDOsnZCM
-         h1xxXcCHkBF33srP3ImNfNtizd73nSUUSVdWHlm8Xbp1+E6wNk3RtbzX89FCZS7quirv
-         sJZOopIfH8wgaD9E/NOcbE506NbI2a8ahXftWesxADkmZafB14mueoO3dCrk2RH9BUhd
-         0zByWiECq/Bm2Z4ApHV8SqQgJTpAkMCV6hEpE+NdO4ofoUkX3LFlUXiA6+cAGYKl4pJV
-         +sURO4IlbLX1IOlGBz9sfzLm3MexQqtG82tuNUaTELBjnEK1RS/oLvclJNuxULf2u7wC
-         me/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cFL1fKtV0fgN9gDJ7Fm/iZJuC48WZ+DUJ81pq9R4fTw=;
-        b=mO6l24VfgRVGjlsKEUbhjnemRmrAsUD1edUfucJ0lyxHSjIwHtbEcecmS/94HF9ml8
-         kWY14wKUwBx/l/V9pklXYjxAuoMeYLBYOCw84A/pxLvz2jHEkRZt4pWfRvUjPtsVTdzN
-         qcBtHe6FzunJ5ZSLfWh4ksf5VSnbUbwpf3IpE7NC/yMRTS3aKSk3xggP1tZgHWIrtfzj
-         vepY2fePBlz7o8pJ/tZyLsJ64bOTCH4eE7ixvu1Jw+KKzn1xKp/FYqJc6GIpJtXn0pt9
-         VNIhdpy3xeEHJp8+kqWktKomSgIWHyapzEpSUr4/tqUeGAnIido6D8CpcaVMNrog03ui
-         oX9w==
-X-Gm-Message-State: APjAAAXJfNte1RJB7+xaehhgrcxH6nWus4oiHGbJsaHDNnLI9g1pPxB2
-        WQQ2wbFVr43prs+fOPyXQsxQkAdP1LGvPoqJGOAsSA==
-X-Google-Smtp-Source: APXvYqxg3XNAVjsAlMB/h9I0hNtVDxbwwdFx6/0b6++YshopUpBVSxbIjnMZ6rec/szJ31LLeytI64XVk6J1N/pzpDM=
-X-Received: by 2002:a05:6638:76f:: with SMTP id y15mr81509841jad.5.1578339521244;
- Mon, 06 Jan 2020 11:38:41 -0800 (PST)
+        id S1726683AbgAFUXE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 6 Jan 2020 15:23:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45198 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726657AbgAFUXD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 6 Jan 2020 15:23:03 -0500
+Received: from localhost (unknown [64.237.17.219])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96A1B2072C;
+        Mon,  6 Jan 2020 20:23:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578342182;
+        bh=25PZJ3bxW9cvFKLoe04UEz+DJIDuK6tnzw3H5UoY7J4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=YiVVfvruwwv191AVb8asnyueIBs27wbbAGsxJY8Gr/pHeMFRlGl5wBlofVTEPkhid
+         orw+IpGondGfQoZbCnKI+KTIM35+5RgjuhF79WueafuY6uscQp7TnZFae5aiQ4clW8
+         po7qZHCt56ZzjgjUoVlm6f7VbjOFLcEc4utbKaw8=
+Date:   Mon, 6 Jan 2020 14:23:01 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Logan Gunthorpe <logang@deltatee.com>
+Subject: Re: [PATCH v1 3/4] PCI: Change extend_bridge_window() to set
+ resource size directly
+Message-ID: <20200106202301.GA137556@google.com>
 MIME-Version: 1.0
-References: <20200104225052.27275-1-deepa.kernel@gmail.com> <20200106135455.GA104407@google.com>
-In-Reply-To: <20200106135455.GA104407@google.com>
-From:   Deepa Dinamani <deepa.kernel@gmail.com>
-Date:   Mon, 6 Jan 2020 11:38:29 -0800
-Message-ID: <CABeXuvownNp7ngp38vHzCgQfLA-tnH7FFT5pQQeHF3tLizmxcg@mail.gmail.com>
-Subject: Re: [PATCH] pci: Warn if BME cannot be turned off during kexec
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     mika.westerberg@linux.intel.com, alex.williamson@redhat.com,
-        logang@deltatee.com, linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PSXP216MB04386BA48874B56BC5CB0292803C0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jan 6, 2020 at 5:54 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> Hi Deepa,
->
-> Thanks for the patches.  Since these two patches touch the same piece
-> of code in pci_device_shutdown(), they conflict with each other.  I
-> could resolve this myself, but maybe you could make them a series that
-> applies cleanly together?
+Thanks a lot for splitting these up.  It makes these dramatically
+easier to read.
 
-Sure, will make this a series.
+On Mon, Jan 06, 2020 at 03:47:46PM +0000, Nicholas Johnson wrote:
+> Change extend_bridge_window() to set resource size directly instead of
+> using additional resource lists.
+> 
+> Because additional resource lists are optional resources, any algorithm
+> that requires guaranteed allocation that uses them cannot be guaranteed
+> to work.
 
-> Can you also please edit the subject lines so they match the
-> convention (use "git log --oneline drivers/pci/pci-driver.c" to see
-> it).
+There is never a guarantee that PCI resource assignment will work.
+It's always possible that we don't have enough resources to allow us
+to enable a device.  So I'm not sure what this is telling me, and it
+doesn't seem like a justification for setting the resource size
+directly here.
 
-Will do.
+Prior to this patch, I think all the assignment and changes to
+dev->resource[] were in __assign_resources_sorted().  Maybe it's safe
+to do some here and some in __assign_resources_sorted(), but I don't
+understand it well enough to be confident.
 
-> On Sat, Jan 04, 2020 at 02:50:52PM -0800, Deepa Dinamani wrote:
-> > BME not being off is a security risk, so for whatever
-> > reason if we cannot disable it, print a warning.
->
-> "BME" is not a common term in drivers/pci; can you use "Bus Master
-> Enable" (to match the PCIe spec) or "PCI_COMMAND_MASTER" (to match the
-> Linux code)?
+> Remove the resource from add_list, as a zero-sized additional resource
+> is redundant.
+> 
+> Update comment in pci_bus_distribute_available_resources() to reflect
+> the above changes.
+> 
+> Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+> ---
+>  drivers/pci/setup-bus.c | 25 ++++++++-----------------
+>  1 file changed, 8 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+> index de43815be..0c51f4937 100644
+> --- a/drivers/pci/setup-bus.c
+> +++ b/drivers/pci/setup-bus.c
+> @@ -1836,7 +1836,7 @@ static void adjust_bridge_window(struct pci_dev *bridge, struct resource *res,
+>  				 struct list_head *add_list,
+>  				 resource_size_t new_size)
+>  {
+> -	struct pci_dev_resource *dev_res;
+> +	resource_size_t add_size;
+>  
+>  	if (res->parent)
+>  		return;
+> @@ -1844,17 +1844,10 @@ static void adjust_bridge_window(struct pci_dev *bridge, struct resource *res,
+>  	if (resource_size(res) >= new_size)
+>  		return;
+>  
+> -	dev_res = res_to_dev_res(add_list, res);
+> -	if (!dev_res)
+> -		return;
+> -
+> -	/* Is there room to extend the window? */
+> -	if (new_size - resource_size(res) <= dev_res->add_size)
+> -		return;
+> -
+> -	dev_res->add_size = new_size - resource_size(res);
+> -	pci_dbg(bridge, "bridge window %pR extended by %pa\n", res,
+> -		&dev_res->add_size);
+> +	add_size = new_size - resource_size(res);
+> +	pci_dbg(bridge, "bridge window %pR extended by %pa\n", res, &add_size);
+> +	res->end = res->start + new_size - 1;
 
-Will do.
+How do we know it's safe to extend this, i.e., how do we know there's
+nothing immediately after res?
 
-> Can you also explain why this is a security risk?  It looks like we
-> disable bus mastering if the device is in D0-D3hot.  If the device is
-> in D3cold, it's powered off, so we can't read/write config space.  But
-> if it's in D3cold, the device is powered off, so it can't be a bus
-> master either, so why would we warn about it?
-
-I was mainly concerned about the PCI_UNKNOWN state here. Maybe we can
-add a specific check for the unknown state if that is preferable.
-
-> > Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
-> > ---
-> >  drivers/pci/pci-driver.c | 8 ++++++--
-> >  1 file changed, 6 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> > index 0454ca0e4e3f..6c866a81f46c 100644
-> > --- a/drivers/pci/pci-driver.c
-> > +++ b/drivers/pci/pci-driver.c
-> > @@ -491,8 +491,12 @@ static void pci_device_shutdown(struct device *dev)
-> >        * If it is not a kexec reboot, firmware will hit the PCI
-> >        * devices with big hammer and stop their DMA any way.
-> >        */
-> > -     if (kexec_in_progress && (pci_dev->current_state <= PCI_D3hot))
-> > -             pci_clear_master(pci_dev);
-> > +     if (kexec_in_progress) {
-> > +             if (likely(pci_dev->current_state <= PCI_D3hot))
->
-> No need to use "likely" here unless you can measure a difference.  I
-> doubt this is a performance path.
->
-> > +                     pci_clear_master(pci_dev);
-> > +             else
-> > +                     dev_warn(dev, "Unable to turn off BME during kexec");
->
-> How often and for what sort of devices would you expect this warning
-> to be emitted?  If this is a common situation and the user can't do
-> anything about it, the warnings will clutter the logs and train users
-> to ignore them.
-
-This is not a common situation. I think I have seen this only a couple
-of times in my kexec experiments. I have not found any documentation
-about if a device can go into an unknown power state and still be
-harmful or not. But, if you need more testing, I could check the patch
-into the Google datacenter code and sweep the logs to see if these get
-printed at all.
-
--Deepa
+> +	remove_from_list(add_list, res);
+>  }
+>  
+>  static void pci_bus_distribute_available_resources(struct pci_bus *bus,
+> @@ -1889,11 +1882,9 @@ static void pci_bus_distribute_available_resources(struct pci_bus *bus,
+>  		mmio_pref.start = min(ALIGN(mmio_pref.start, align),
+>  			mmio_pref.end + 1);
+>  
+> -	/*
+> -	 * Update additional resource list (add_list) to fill all the
+> -	 * extra resource space available for this port except the space
+> -	 * calculated in __pci_bus_size_bridges() which covers all the
+> -	 * devices currently connected to the port and below.
+> +        /*
+> +	 * Now that we have adjusted for alignment, update the bridge window
+> +	 * resources to fill as much remaining resource space as possible.
+>  	 */
+>  	adjust_bridge_window(bridge, io_res, add_list, resource_size(&io));
+>  	adjust_bridge_window(bridge, mmio_res, add_list, resource_size(&mmio));
+> -- 
+> 2.24.1
+> 
