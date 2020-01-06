@@ -2,41 +2,43 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 40BFD13164C
-	for <lists+linux-pci@lfdr.de>; Mon,  6 Jan 2020 17:51:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 33E8C13182A
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Jan 2020 20:04:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbgAFQv4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 6 Jan 2020 11:51:56 -0500
-Received: from ale.deltatee.com ([207.54.116.67]:52638 "EHLO ale.deltatee.com"
+        id S1727053AbgAFTDr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 6 Jan 2020 14:03:47 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:54836 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726448AbgAFQv4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 6 Jan 2020 11:51:56 -0500
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1ioVbd-0002qj-Sl; Mon, 06 Jan 2020 09:51:54 -0700
-To:     Deepa Dinamani <deepa.kernel@gmail.com>, bhelgaas@google.com
-Cc:     mika.westerberg@linux.intel.com, alex.williamson@redhat.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200104225149.27342-1-deepa.kernel@gmail.com>
+        id S1727024AbgAFTDr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 6 Jan 2020 14:03:47 -0500
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1ioXf9-0005m3-NR; Mon, 06 Jan 2020 12:03:46 -0700
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1ioXf8-0000e5-Rx; Mon, 06 Jan 2020 12:03:38 -0700
 From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <724d80ee-3a81-23bc-74b0-4b786b3ace53@deltatee.com>
-Date:   Mon, 6 Jan 2020 09:51:52 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Kelvin.Cao@microchip.com, Eric Pilmore <epilmore@gigaio.com>,
+        Doug Meyer <dmeyer@gigaio.com>,
+        Logan Gunthorpe <logang@deltatee.com>
+Date:   Mon,  6 Jan 2020 12:03:25 -0700
+Message-Id: <20200106190337.2428-1-logang@deltatee.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20200104225149.27342-1-deepa.kernel@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, alex.williamson@redhat.com, mika.westerberg@linux.intel.com, bhelgaas@google.com, deepa.kernel@gmail.com
-X-SA-Exim-Mail-From: logang@deltatee.com
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, Kelvin.Cao@microchip.com, epilmore@gigaio.com, dmeyer@gigaio.com, logang@deltatee.com
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
 X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=5.0 tests=ALL_TRUSTED,BAYES_00
-        autolearn=ham autolearn_force=no version=3.4.2
-Subject: Re: [PATCH] drivers: pci: Clear ACS state at kexec
+X-Spam-Status: No, score=-8.7 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        GREYLIST_ISWHITE,MYRULES_NO_TEXT autolearn=ham autolearn_force=no
+        version=3.4.2
+Subject: [PATCH 00/12]  Switchtec Fixes and Gen4 Support
 X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-pci-owner@vger.kernel.org
@@ -44,48 +46,51 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2020-01-04 3:51 p.m., Deepa Dinamani wrote:
-> ACS bits remain sticky through kexec reset. This is not really a
-> problem for Linux because turning IOMMU on assumes ACS on. But,
-> this becomes a problem if we kexec into something other than
-> Linux and that does not turn ACS on always.
-> 
-> Reset the ACS bits to default before kexec or device remove.
+Hi,
 
-Hmm, I'm slightly hesitant about disabling ACS on a device's unbind...
-Not sure if that's going to open up a hole on us.
+Please find a bunch of patches for the switchtec driver collected over the
+last few months.
 
-> +
-> +/* Standard PCI ACS capailities
-> + * Source Validation | P2P Request Redirect | P2P Completion Redirect | Upstream Forwarding
-> + */
-> +#define PCI_STD_ACS_CAP (PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF)
-> +
->  /**
-> - * pci_std_enable_acs - enable ACS on devices using standard ACS capabilities
-> + * pci_std_enable_disable_acs - enable/disable ACS on devices using standard
-> + * ACS capabilities
->   * @dev: the PCI device
->   */
-> -static void pci_std_enable_acs(struct pci_dev *dev)
-> +static void pci_std_enable_disable_acs(struct pci_dev *dev, int enable)
->  {
->  	int pos;
->  	u16 cap;
->  	u16 ctrl;
-> +	u16 val = 0;
->  
->  	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ACS);
->  	if (!pos)
-> @@ -3278,19 +3286,26 @@ static void pci_std_enable_acs(struct pci_dev *dev)
->  	pci_read_config_word(dev, pos + PCI_ACS_CAP, &cap);
->  	pci_read_config_word(dev, pos + PCI_ACS_CTRL, &ctrl);
->  
-> -	/* Source Validation */
-> -	ctrl |= (cap & PCI_ACS_SV);
-> +	val = (cap & PCI_STD_ACS_CAP);
+The first 2 patches fix a couple of minor bugs. Patch 3 adds support for
+a new event that is available in specific firmware versions. Patches 4 and
+5 are some code cleanup changes to simplify the logic. And the last 6
+patches implement support for the new Gen4 hardware.
 
-Can we open code PCI_STD_ACS_CAP? I don't see any value in it being
-defined above the function, it just makes the code harder to read.
+This patchset is based on v5.5-rc5 and a git branch is available here:
+
+https://github.com/sbates130272/linux-p2pmem switchtec-next
+
+Thanks,
 
 Logan
+
+--
+
+Kelvin Cao (3):
+  PCI/switchtec: Add gen4 support in struct flash_info_regs
+  PCI/switchtec: Add permission check for the GAS access MRPC commands
+  PCI/switchtec: Introduce gen4 variant IDS in the device ID table
+
+Logan Gunthorpe (6):
+  PCI/switchtec: Fix vep_vector_number ioread width
+  PCI/switchtec: Add support for new events
+  PCI/switchtec: Introduce Generation Variable
+  PCI/switchtec: Separate out gen3 specific fields in the sys_info_regs
+    structure
+  PCI/switchtec: Add gen4 support in struct sys_info_regs
+  PCI: Apply switchtec DMA aliasing quirk to GEN4 devices
+
+Wesley Sheng (3):
+  PCI/switchtec: Use dma_set_mask_and_coherent()
+  PCI/switchtec: Remove redundant valid PFF number count
+  PCI/switchtec: Move check event id from mask_event() to
+    switchtec_event_isr()
+
+ drivers/pci/quirks.c                 |  18 ++
+ drivers/pci/switch/switchtec.c       | 365 ++++++++++++++++++++-------
+ include/linux/switchtec.h            | 160 ++++++++++--
+ include/uapi/linux/switchtec_ioctl.h |  13 +-
+ 4 files changed, 450 insertions(+), 106 deletions(-)
+
+--
+2.20.1
