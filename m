@@ -2,92 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6BA0C132365
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Jan 2020 11:19:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A8931325C5
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Jan 2020 13:13:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727722AbgAGKT3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Jan 2020 05:19:29 -0500
-Received: from foss.arm.com ([217.140.110.172]:55306 "EHLO foss.arm.com"
+        id S1727273AbgAGMND (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Jan 2020 07:13:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726558AbgAGKT3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 7 Jan 2020 05:19:29 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4192A328;
-        Tue,  7 Jan 2020 02:19:28 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B7C473F534;
-        Tue,  7 Jan 2020 02:19:27 -0800 (PST)
-Date:   Tue, 7 Jan 2020 10:19:26 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Marcel Ziswiler <marcel@ziswiler.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-pci@vger.kernel.org,
-        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v2] PCI: tegra: Fix afi_pex2_ctrl reg offset for Tegra30
-Message-ID: <20200107101924.GU42593@e119886-lin.cambridge.arm.com>
-References: <20200107081402.213149-1-marcel@ziswiler.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200107081402.213149-1-marcel@ziswiler.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+        id S1726937AbgAGMND (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 7 Jan 2020 07:13:03 -0500
+Received: from localhost (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24C4C206F0;
+        Tue,  7 Jan 2020 12:13:02 +0000 (UTC)
+From:   Shawn Guo <shawn.guo@linaro.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     linux-pci@vger.kernel.org, Shawn Guo <shawn.guo@linaro.org>
+Subject: [PATCH] PCI: histb: improve GPIO reset implementation
+Date:   Tue,  7 Jan 2020 20:12:56 +0800
+Message-Id: <20200107121256.16207-1-shawn.guo@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 09:14:02AM +0100, Marcel Ziswiler wrote:
-> Fix AFI_PEX2_CTRL reg offset for Tegra30 by moving it from the Tegra20
-> SoC struct where it erroneously got added. This fixes the AFI_PEX2_CTRL
-> reg offset being uninitialised subsequently failing to bring up the
-> third PCIe port.
-> 
-> Fixes: adb2653b3d2e ("PCI: tegra: Add AFI_PEX2_CTRL reg offset as part of SoC struct")
-> 
-> Signed-off-by: Marcel Ziswiler <marcel@ziswiler.com>
-> Acked-by: Thierry Reding <treding@nvidia.com>
+It switches GPIO reset code to use gpio_desc, so that the code becomes
+simpler and cleaner.  Also the GPIO signal should be implemented as
+a pulse to trigger a reset, let's correct that in the meantime.
 
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+---
+ drivers/pci/controller/dwc/pcie-histb.c | 35 ++++++++++---------------
+ 1 file changed, 14 insertions(+), 21 deletions(-)
 
-> 
-> ---
-> 
-> Changes in v2:
-> - Fix recipient list concerning CC: and To: lines as suggested by
->   Thierry.
-> - Fix subject line and commit message to adhere to standard formatting
->   rules as suggested by Thierry.
-> - Add Thierry's Acked-by tag.
-> - Add standard Fixes tag as suggested by Andrew.
-> 
->  drivers/pci/controller/pci-tegra.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-> index 090b632965e2..ac93f5a0398e 100644
-> --- a/drivers/pci/controller/pci-tegra.c
-> +++ b/drivers/pci/controller/pci-tegra.c
-> @@ -2499,7 +2499,6 @@ static const struct tegra_pcie_soc tegra20_pcie = {
->  	.num_ports = 2,
->  	.ports = tegra20_pcie_ports,
->  	.msi_base_shift = 0,
-> -	.afi_pex2_ctrl = 0x128,
->  	.pads_pll_ctl = PADS_PLL_CTL_TEGRA20,
->  	.tx_ref_sel = PADS_PLL_CTL_TXCLKREF_DIV10,
->  	.pads_refclk_cfg0 = 0xfa5cfa5c,
-> @@ -2528,6 +2527,7 @@ static const struct tegra_pcie_soc tegra30_pcie = {
->  	.num_ports = 3,
->  	.ports = tegra30_pcie_ports,
->  	.msi_base_shift = 8,
-> +	.afi_pex2_ctrl = 0x128,
->  	.pads_pll_ctl = PADS_PLL_CTL_TEGRA30,
->  	.tx_ref_sel = PADS_PLL_CTL_TXCLKREF_BUF_EN,
->  	.pads_refclk_cfg0 = 0xfa5cfa5c,
-> -- 
-> 2.24.1
-> 
+diff --git a/drivers/pci/controller/dwc/pcie-histb.c b/drivers/pci/controller/dwc/pcie-histb.c
+index 811b5c6d62ea..d47a8e6d6fa3 100644
+--- a/drivers/pci/controller/dwc/pcie-histb.c
++++ b/drivers/pci/controller/dwc/pcie-histb.c
+@@ -60,7 +60,7 @@ struct histb_pcie {
+ 	struct reset_control *sys_reset;
+ 	struct reset_control *bus_reset;
+ 	void __iomem *ctrl;
+-	int reset_gpio;
++	struct gpio_desc *reset_gpio;
+ 	struct regulator *vpcie;
+ };
+ 
+@@ -219,9 +219,6 @@ static void histb_pcie_host_disable(struct histb_pcie *hipcie)
+ 	clk_disable_unprepare(hipcie->sys_clk);
+ 	clk_disable_unprepare(hipcie->bus_clk);
+ 
+-	if (gpio_is_valid(hipcie->reset_gpio))
+-		gpio_set_value_cansleep(hipcie->reset_gpio, 0);
+-
+ 	if (hipcie->vpcie)
+ 		regulator_disable(hipcie->vpcie);
+ }
+@@ -242,9 +239,6 @@ static int histb_pcie_host_enable(struct pcie_port *pp)
+ 		}
+ 	}
+ 
+-	if (gpio_is_valid(hipcie->reset_gpio))
+-		gpio_set_value_cansleep(hipcie->reset_gpio, 1);
+-
+ 	ret = clk_prepare_enable(hipcie->bus_clk);
+ 	if (ret) {
+ 		dev_err(dev, "cannot prepare/enable bus clk\n");
+@@ -278,6 +272,14 @@ static int histb_pcie_host_enable(struct pcie_port *pp)
+ 	reset_control_assert(hipcie->bus_reset);
+ 	reset_control_deassert(hipcie->bus_reset);
+ 
++	if (hipcie->reset_gpio) {
++		gpiod_set_value_cansleep(hipcie->reset_gpio, 1);
++		usleep_range(100, 200);
++		gpiod_set_value_cansleep(hipcie->reset_gpio, 0);
++		/* wait for 1ms */
++		usleep_range(1000, 2000);
++	}
++
+ 	return 0;
+ 
+ err_aux_clk:
+@@ -305,10 +307,7 @@ static int histb_pcie_probe(struct platform_device *pdev)
+ 	struct dw_pcie *pci;
+ 	struct pcie_port *pp;
+ 	struct resource *res;
+-	struct device_node *np = pdev->dev.of_node;
+ 	struct device *dev = &pdev->dev;
+-	enum of_gpio_flags of_flags;
+-	unsigned long flag = GPIOF_DIR_OUT;
+ 	int ret;
+ 
+ 	hipcie = devm_kzalloc(dev, sizeof(*hipcie), GFP_KERNEL);
+@@ -345,17 +344,11 @@ static int histb_pcie_probe(struct platform_device *pdev)
+ 		hipcie->vpcie = NULL;
+ 	}
+ 
+-	hipcie->reset_gpio = of_get_named_gpio_flags(np,
+-				"reset-gpios", 0, &of_flags);
+-	if (of_flags & OF_GPIO_ACTIVE_LOW)
+-		flag |= GPIOF_ACTIVE_LOW;
+-	if (gpio_is_valid(hipcie->reset_gpio)) {
+-		ret = devm_gpio_request_one(dev, hipcie->reset_gpio,
+-				flag, "PCIe device power control");
+-		if (ret) {
+-			dev_err(dev, "unable to request gpio\n");
+-			return ret;
+-		}
++	hipcie->reset_gpio = devm_gpiod_get_optional(dev, "reset",
++						     GPIOD_OUT_LOW);
++	if (IS_ERR(hipcie->reset_gpio)) {
++		ret = PTR_ERR(hipcie->reset_gpio);
++		return ret;
+ 	}
+ 
+ 	hipcie->aux_clk = devm_clk_get(dev, "aux");
+-- 
+2.17.1
+
