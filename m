@@ -2,84 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D306133E28
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Jan 2020 10:17:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 248C5133E52
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Jan 2020 10:29:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727340AbgAHJPi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Jan 2020 04:15:38 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:36254 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727337AbgAHJPi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Jan 2020 04:15:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=bulq+716cexBfsYppdGtDHL94WJyzgWNk4KwK59xVNo=; b=tQc70mbO6zapIeg3SCrwEc3Bl
-        CTIgfUZhUD2FtQdZJS0eZvJSs/4aGXFOzeMHw/T07WkMnYYybGs9NOLOmQF2kmJKISKIeY/zrcAtw
-        cYQmqqxb1KzyS0FfIyudYlejsX2U+cl0gpLqUeXbpagDtnWh92GN2BRNC+EUVZogOpWGOi4+TFGnG
-        bzt96wCK3kfKQCoRkfCmK3+Hv3A/SSlEnKo5rye7oPOf0l9W9PGWanGloiKgwHioQqDgdP3cU/qn/
-        2lUc9bYkjff+jQPQIvWmiO2H6CrOcka42mDSnTGjo6WuCtiBogWjvD45aQ0mKx6/ElW8m4cYk6h83
-        72GMS+FUA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ip7R7-0001Ev-6f; Wed, 08 Jan 2020 09:15:33 +0000
-Date:   Wed, 8 Jan 2020 01:15:33 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Sushma Kalakota <sushmax.kalakota@intel.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Jonathan Derrick <jonathan.derrick@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: vmd: Add two VMD Device IDs
-Message-ID: <20200108091533.GA31095@infradead.org>
-References: <20200107220806.6807-1-sushmax.kalakota@intel.com>
+        id S1727311AbgAHJ3x (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Jan 2020 04:29:53 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46963 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727205AbgAHJ3x (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Jan 2020 04:29:53 -0500
+Received: by mail-wr1-f66.google.com with SMTP id z7so2500330wrl.13
+        for <linux-pci@vger.kernel.org>; Wed, 08 Jan 2020 01:29:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=n8jCEiEcTwElRnc98SiiA1c1rFw4mbyCB/o8s1If2IM=;
+        b=gJDlwpkC5rwRFzgzNNtl784Xhsf/OccotD5OnTbK0Isbj10Pb+DrkSY8urRi+AxsWJ
+         ftg0m89tOaNzkCFw6PE24tYOEajCgf2HeTyMaCAn04ShFKJe1Q5L/mth+T9+nhD1VFaq
+         mpGoDWEPdZ6NDuq899R25zjLNXE1TYP7nhXTT0rx/P1PkhqdWl8TjqXzgIGK/8iNQeb6
+         VwFNaskD2RZsTQop18y7mwPT5p2dsWjUUrdZ8k+ZyfbmVxVyYowRwIeY89X+1HynGe/+
+         w+ckK/9Bq7FYGFjcL6H/DsWlCOZnLC2M3VNrLrFKVDkwHIlFrFkILekWpE7XvqcQtyNr
+         r29A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=n8jCEiEcTwElRnc98SiiA1c1rFw4mbyCB/o8s1If2IM=;
+        b=YyNk7fC/iWoZOaL1W4GEwKtK7Q1tZjR+SnMf8iavjgBoN3dgpa8acb/tpI53rtXHdo
+         CIeE4/saG/1IQOytpcVizrMGZbvHC/YwWBrbGSNOvV051Dw/FJXYcro/7Bz0mLIcafud
+         GQhOt3i5L/Hd1vz+izobNORTQtoYNUPGz/XWhc0c9ha0diO8Ud7TS2UdRg3M9mY1RlP7
+         pxPEJC+Exd+uGsFadxyi0jcNIA36tv3M02pSI1ND+4Jfyw8MrlWwkwl0JKpESZCmen2W
+         OvipHreth/kkKjNxup5lOm2MR4mizCrfIvHBr9h7+GUMkkXspseVVIEBPTvRtY39rEDq
+         iNFQ==
+X-Gm-Message-State: APjAAAVSxAl3gypVRqmBIBEuTsr1CDaSSQqcQxig5dnSXPw9cYdLbh6d
+        bQzpfWWBSgMSseOXkTG6nvdSs/hXcQTT4qFwT6M=
+X-Google-Smtp-Source: APXvYqwvVG2qWQw9PC/sAYEuP4qQoc0Tb6mI2eS79L2BlAhgyvYSxQRnbm2AMTGcOXvEIfdrOTXifObLAR0XoLy7YSQ=
+X-Received: by 2002:a5d:6a0f:: with SMTP id m15mr3389517wru.40.1578475791777;
+ Wed, 08 Jan 2020 01:29:51 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200107220806.6807-1-sushmax.kalakota@intel.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Received: by 2002:a05:600c:34c:0:0:0:0 with HTTP; Wed, 8 Jan 2020 01:29:51
+ -0800 (PST)
+Reply-To: huanjlaying08@hotmail.com
+From:   Frau Huan Jlaying <sylvesterallenedward@gmail.com>
+Date:   Wed, 8 Jan 2020 01:29:51 -0800
+Message-ID: <CADvgYxNw6wmmNN2HY69FHqZGMDv3E5mArubLz9GA8A6djftNgA@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 03:08:06PM -0700, Sushma Kalakota wrote:
-> Add new VMD device IDs that require the bus restriction mode.
-> 
-> Signed-off-by: Sushma Kalakota <sushmax.kalakota@intel.com>
-> Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
-> ---
->  drivers/pci/controller/vmd.c | 4 ++++
->  include/linux/pci_ids.h      | 2 ++
->  2 files changed, 6 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-> index 212842263f55..9433bd387fdd 100644
-> --- a/drivers/pci/controller/vmd.c
-> +++ b/drivers/pci/controller/vmd.c
-> @@ -868,6 +868,10 @@ static const struct pci_device_id vmd_ids[] = {
->  	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_VMD_28C0),
->  		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW |
->  				VMD_FEAT_HAS_BUS_RESTRICTIONS,},
-> +	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_VMD_467F),
-> +		.driver_data = VMD_FEAT_HAS_BUS_RESTRICTIONS,},
-> +	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_VMD_4C3D),
-> +		.driver_data = VMD_FEAT_HAS_BUS_RESTRICTIONS,},
->  	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_VMD_9A0B),
->  		.driver_data = VMD_FEAT_HAS_BUS_RESTRICTIONS,},
->  	{0,}
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index 2302d133af6f..aac007c60f87 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -2957,6 +2957,8 @@
->  #define PCI_DEVICE_ID_INTEL_SBRIDGE_BR		0x3cf5	/* 13.6 */
->  #define PCI_DEVICE_ID_INTEL_SBRIDGE_SAD1	0x3cf6	/* 12.7 */
->  #define PCI_DEVICE_ID_INTEL_IOAT_SNB	0x402f
-> +#define PCI_DEVICE_ID_INTEL_VMD_467F	0x467f
-> +#define PCI_DEVICE_ID_INTEL_VMD_4C3D	0x4c3d
+--=20
+Sch=C3=B6nen Tag,
 
-Please don't add pci_ids.h constants there are only used in a single
-driver.  Especially so if they are totally non-descriptive.
+     Ich bin Frau Huan Jlaying, eine Mitarbeiterin der Wing Hang Bank
+hier in Hongkong. Kann ich einer =C3=9Cberweisung von 13.991.674 USD
+vertrauen? Kontaktieren Sie mich per E-Mail: huanjlaying08@hotmail.com
+
+
+Gr=C3=BC=C3=9Fe
