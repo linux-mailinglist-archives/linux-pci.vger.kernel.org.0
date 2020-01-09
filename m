@@ -2,162 +2,279 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 522FA1356E6
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Jan 2020 11:31:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E53301356F7
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Jan 2020 11:33:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730137AbgAIKby (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Jan 2020 05:31:54 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:47862 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728614AbgAIKby (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 9 Jan 2020 05:31:54 -0500
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 087812475503C6C4EDA4;
-        Thu,  9 Jan 2020 18:31:52 +0800 (CST)
-Received: from [127.0.0.1] (10.65.58.147) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Thu, 9 Jan 2020
- 18:31:42 +0800
-Subject: Re: PCI: bus resource allocation error
-To:     Bjorn Helgaas <helgaas@kernel.org>
-References: <20200109042702.GA223211@google.com>
-CC:     <linux-pci@vger.kernel.org>,
-        fangjian 00545541 <f.fangjian@huawei.com>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-From:   Yicong Yang <yangyicong@hisilicon.com>
-Message-ID: <25173a78-8927-5b2f-c248-731629bbc8ec@hisilicon.com>
-Date:   Thu, 9 Jan 2020 18:31:57 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        id S1728793AbgAIKdc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Jan 2020 05:33:32 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:52800 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728448AbgAIKdb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Jan 2020 05:33:31 -0500
+Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 6F0E2404D4;
+        Thu,  9 Jan 2020 10:33:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1578566010; bh=E5BNh8f7JoVXWv2a5Ky3VL/Jtz6BygI6B0QxDDeJius=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=SQAcGQxEKhBwIpJG9RMgQRkVljTULAto6Ldjv5cXFCtW/4A0qEJxGlnaKIDGGlY0i
+         SzjzGFiCiTeUFeslFHyQ4FN7NEc3pRA58TRI5oeD5t6pnTmUVvpRU8pyWz3VJRsQsG
+         +YfwnPVlS2fJgFRF1i9MN4aJgjHJbfR6aUtaseS2qr/iMhAfMv31tJ75Oi8nQ4gjaq
+         gPWckW0hPImKcVA/UWPNXGPH94ZA9ZHAl1jy8oGWZJZvPQ/JG3HlZwDkYeebRocYoV
+         X3VNnmgNeJ/HWvGKeKN9mSN5KJWB7DtIoOnjGhX5joORp0xuI9C6JdKzryZHMYJCqq
+         aOCHUMQ759USw==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 6AA9FA0067;
+        Thu,  9 Jan 2020 10:33:17 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Thu, 9 Jan 2020 02:33:05 -0800
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Thu, 9 Jan 2020 02:33:04 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NX0nWjwdqwUidg7XLPW6s42Mi5UaE5yrT4a5sxQ1hVnKaZV97rvoiJ7VDQuL/eB7v3qoVdwI27omdhvtZz95iLogwKQveys7Oe+ID87mCL1WAkY9Ek+ZqZlxmRnqU7iaSRkdvor7GDiqIJGup/rLvt5jiohUdTGv6UeMsHSfgRBQklseiSkK68zUtIqc1FQhGXAsNP0nZgjQCWsVUxHD1ywBO+0lPHSTLpzbwcL1gs6e9MrEDQvP1HV+wvziO2tIPBMnjcoo0Kh58FvYdJgaX1JL9GWysJzKlu3srFUgQiF1Vacl4FuRpzOnve51PMqUqiY/OVnlBSjMUtDrg4vYGA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=E5BNh8f7JoVXWv2a5Ky3VL/Jtz6BygI6B0QxDDeJius=;
+ b=b4QieYvoIhmzwEwjPwVvf/1B66lq92qboK0uff0Y7D8e9KjWvnDZBp3o0/sTOlvDq4J4Tve/F4NhtZHw6RaLa7OOUfp/o9BkA0xBHrLwveQ7B1oFuDaNEZr2hjhAesEHGdNKbzyp0kMgEmNaBBb4gq9Cq7g5K2UF+nEdxP4m9sn/x9zp79yOGdotq93dY5vgUoqC626R8nDF0bcr/31+Y0ub23mizST5De6A+tXtNEv8mx61bWnUC/yjQuECRPZbjnp6JF3nhNyJa4/EIfZE4PghvwITp2w5P9jxLkZsreHz9epq3OcLmrtzWNF+SvW0RQ91r9EJpaSoa/l/hqXZvA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=E5BNh8f7JoVXWv2a5Ky3VL/Jtz6BygI6B0QxDDeJius=;
+ b=JTR1lhwP9eNKLGVqWNDNFd/gYB1migz3CDz8rWrljxDgW3IlZ4ffsm3auBHZZ/XdwbF9dUs+6eohJzBB1xK712KsMcjXZxbiXFcGPkfbGH3/A1ulgXp2IgGGaC/G0rku6JV/C3+sxRbxms2lhcdlr/Xj9fntxEu7b6aZLLi4A9w=
+Received: from CH2PR12MB4007.namprd12.prod.outlook.com (52.132.247.78) by
+ CH2PR12MB3959.namprd12.prod.outlook.com (52.132.245.85) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.12; Thu, 9 Jan 2020 10:33:03 +0000
+Received: from CH2PR12MB4007.namprd12.prod.outlook.com
+ ([fe80::f0e2:26d5:2de4:a4b7]) by CH2PR12MB4007.namprd12.prod.outlook.com
+ ([fe80::f0e2:26d5:2de4:a4b7%6]) with mapi id 15.20.2602.017; Thu, 9 Jan 2020
+ 10:33:03 +0000
+From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>
+CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [PATCH 0/4] Redesign MSI-X support in PCIe Endpoint Core
+Thread-Topic: [PATCH 0/4] Redesign MSI-X support in PCIe Endpoint Core
+Thread-Index: AQHVsCDyo+BSPS1gO0yCMCKlE1xed6e1iW0AgCzC0ID////JEA==
+Date:   Thu, 9 Jan 2020 10:33:02 +0000
+Message-ID: <CH2PR12MB4007D88BF5BD0A3365A160ACDA390@CH2PR12MB4007.namprd12.prod.outlook.com>
+References: <20191211224636.GA122332@google.com>
+ <a971c0b1-ed66-fd4c-5a1d-7aef9d410866@ti.com>
+In-Reply-To: <a971c0b1-ed66-fd4c-5a1d-7aef9d410866@ti.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: =?utf-8?B?UEcxbGRHRStQR0YwSUc1dFBTSmliMlI1TG5SNGRDSWdjRDBpWXpwY2RYTmxj?=
+ =?utf-8?B?bk5jWjNWemRHRjJiMXhoY0hCa1lYUmhYSEp2WVcxcGJtZGNNRGxrT0RRNVlq?=
+ =?utf-8?B?WXRNekprTXkwMFlUUXdMVGcxWldVdE5tSTROR0poTWpsbE16VmlYRzF6WjNO?=
+ =?utf-8?B?Y2JYTm5MVFk0TURBeVlXTXdMVE15WTJJdE1URmxZUzA1T0RsbExXWTRPVFJq?=
+ =?utf-8?B?TWpjek9EQTBNbHhoYldVdGRHVnpkRncyT0RBd01tRmpNUzB6TW1OaUxURXha?=
+ =?utf-8?B?V0V0T1RnNVpTMW1PRGswWXpJM016Z3dOREppYjJSNUxuUjRkQ0lnYzNvOUlq?=
+ =?utf-8?B?TTFNelVpSUhROUlqRXpNakl6TURNNU5UZ3hNalE1TkRjek1pSWdhRDBpY25G?=
+ =?utf-8?B?bFJWVXpXbFJvTTBvck5UUmlURWxZYjFweU1uRnJUbnAzUFNJZ2FXUTlJaUln?=
+ =?utf-8?B?WW13OUlqQWlJR0p2UFNJeElpQmphVDBpWTBGQlFVRkZVa2hWTVZKVFVsVkdU?=
+ =?utf-8?B?a05uVlVGQlFsRktRVUZEVFhabGEzRXlUV0pXUVZWUlppc3pSbmRHYUU5dVVr?=
+ =?utf-8?B?SXZOMk5ZUVZkRk5tTlBRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVaEJRVUZCUTJ0RFFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVWQlFWRkJRa0ZCUVVGRlIwbFplbEZCUVVGQlFVRkJRVUZCUVVGQlFVRktO?=
+ =?utf-8?B?RUZCUVVKdFFVZHJRV0puUW1oQlJ6UkJXWGRDYkVGR09FRmpRVUp6UVVkRlFX?=
+ =?utf-8?B?Sm5RblZCUjJ0QlltZENia0ZHT0VGa2QwSm9RVWhSUVZwUlFubEJSekJCV1ZG?=
+ =?utf-8?B?Q2VVRkhjMEZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUlVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?blFVRkJRVUZCYm1kQlFVRkhXVUZpZDBJeFFVYzBRVnBCUW5sQlNHdEJXSGRD?=
+ =?utf-8?B?ZDBGSFJVRmpaMEl3UVVjMFFWcFJRbmxCU0UxQldIZENia0ZIV1VGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFWRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkRRVUZCUVVGQlEyVkJRVUZCV21kQ2RrRklWVUZpWjBKclFV?=
+ =?utf-8?B?aEpRV1ZSUW1aQlNFRkJXVkZDZVVGSVVVRmlaMEpzUVVoSlFXTjNRbVpCU0Ux?=
+ =?utf-8?B?QldWRkNkRUZJVFVGa1VVSjFRVWRqUVZoM1FtcEJSemhCWW1kQ2JVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUpCUVVGQlFVRkJRVUZCU1VGQlFVRkJRVW8wUVVGQlFtMUJSemhC?=
+ =?utf-8?B?WkZGQ2RVRkhVVUZqWjBJMVFVWTRRV05CUW1oQlNFbEJaRUZDZFVGSFZVRmpa?=
+ =?utf-8?B?MEo2UVVZNFFXTjNRbWhCUnpCQlkzZENNVUZITkVGYWQwSm1RVWhKUVZwUlFu?=
+ =?utf-8?B?cEJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGRlFVRkJRVUZCUVVGQlFXZEJRVUZCUVVGdVow?=
+ =?utf-8?B?RkJRVWRaUVdKM1FqRkJSelJCV2tGQ2VVRklhMEZZZDBKM1FVZEZRV05uUWpC?=
+ =?utf-8?B?QlJ6UkJXbEZDZVVGSVRVRllkMEo2UVVjd1FXRlJRbXBCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJVVUZCUVVGQlFVRkJRVU5C?=
+ =?utf-8?B?UVVGQlFVRkRaVUZCUVVGYVowSjJRVWhWUVdKblFtdEJTRWxCWlZGQ1prRklR?=
+ =?utf-8?B?VUZaVVVKNVFVaFJRV0puUW14QlNFbEJZM2RDWmtGSVRVRmtRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUWtGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGSlFVRkJRVUZCU2pSQlFVRkNiVUZIT0VGa1VVSjFRVWRSUVdO?=
+ =?utf-8?B?blFqVkJSamhCWTBGQ2FFRklTVUZrUVVKMVFVZFZRV05uUW5wQlJqaEJaRUZD?=
+ =?utf-8?B?ZWtGSE1FRlpkMEZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVVkJRVUZCUVVGQlFVRkJaMEZCUVVGQlFXNW5RVUZCUjFsQlluZENN?=
+ =?utf-8?B?VUZITkVGYVFVSjVRVWhyUVZoM1FuZEJSMFZCWTJkQ01FRkhORUZhVVVKNVFV?=
+ =?utf-8?B?aE5RVmgzUWpGQlJ6QkJXWGRCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZSUVVGQlFVRkJRVUZCUTBGQlFVRkJRVU5sUVVG?=
+ =?utf-8?B?QlFWcDNRakJCU0UxQldIZENkMEZJU1VGaWQwSnJRVWhWUVZsM1FqQkJSamhC?=
+ =?utf-8?B?WkVGQ2VVRkhSVUZoVVVKMVFVZHJRV0puUW01QlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQ1FVRkJRVUZCUVVGQlFVbEJR?=
+ =?utf-8?B?VUZCUVVGS05FRkJRVUo2UVVkRlFXSkJRbXhCU0UxQldIZENhRUZIVFVGWmQw?=
+ =?utf-8?B?SjJRVWhWUVdKblFqQkJSamhCWTBGQ2MwRkhSVUZpWjBGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJSVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZuUVVGQlFVRkJibWRCUVVGSVRVRlpVVUp6UVVkVlFXTjNRbVpC?=
+ =?utf-8?B?U0VWQlpGRkNka0ZJVVVGYVVVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVZGQlFVRkJRVUZCUVVGRFFVRkJRVUZCUTJWQlFVRkJZM2RDZFVGSVFV?=
+ =?utf-8?B?RmpkMEptUVVkM1FXRlJRbXBCUjFWQlltZENla0ZIVlVGWWQwSXdRVWRWUVdO?=
+ =?utf-8?B?blFuUkJSamhCVFZGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVSkJRVUZCUVVGQlFVRkJTVUZCUVVGQlFVbzBRVUZC?=
+ =?utf-8?B?UW5wQlJ6UkJZMEZDZWtGR09FRmlRVUp3UVVkTlFWcFJRblZCU0UxQldsRkNa?=
+ =?utf-8?B?a0ZJVVVGYVVVSjVRVWN3UVZoM1FucEJTRkZCWkZGQ2EwRkhWVUZpWjBJd1FV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZGUVVGQlFVRkJRVUZCUVdkQlFV?=
+ =?utf-8?B?RkJRVUZ1WjBGQlFVaFpRVnAzUW1aQlIzTkJXbEZDTlVGSVkwRmlkMEo1UVVk?=
+ =?utf-8?B?UlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlVVRkJRVUZC?=
+ =?utf-8?Q?QUFBQUNBQUFBQUFBPSIvPjwvbWV0YT4=3D?=
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=gustavo@synopsys.com; 
+x-originating-ip: [83.174.63.141]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b6db0a42-2b1f-4f1d-01d5-08d794ef4e78
+x-ms-traffictypediagnostic: CH2PR12MB3959:
+x-microsoft-antispam-prvs: <CH2PR12MB3959F58BBC77538896FFE176DA390@CH2PR12MB3959.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:216;
+x-forefront-prvs: 02778BF158
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(346002)(136003)(39850400004)(396003)(376002)(199004)(189003)(7416002)(66446008)(66556008)(76116006)(64756008)(316002)(2906002)(66946007)(71200400001)(478600001)(81166006)(81156014)(5660300002)(86362001)(52536014)(54906003)(110136005)(8676002)(66476007)(4326008)(33656002)(9686003)(53546011)(55016002)(6506007)(7696005)(8936002)(26005)(966005)(186003);DIR:OUT;SFP:1102;SCL:1;SRVR:CH2PR12MB3959;H:CH2PR12MB4007.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: mzU8siBrFF/wCASM8TrGZLNELa2/qlX3IBleXYIeFi7Kv9guo/rruwjOJFpUbl/XojzvFHTeZ6TjgNbxQ6e/mLd6qBtzu3x824JDtpMdqNnU4/B8zg6EEmiGbN5pUkRHGVZp6K9eNCgNq7DcY6dn/D/Ig152DkGeVG2/hLwdaa3D39Rr7kRKf4ZlPoZaEpMi3qEUkTe9X2mQO26VqGwH6wuNOAmplRd4hHXNGU9Su0rezHm0rrl5ntgQLSN7iGwsdIIXAp/eXfG+kuaLaoz7IzybMbwqPBr/t4Ad31+8LC87J27PgvYXiSDU685SHJK6t+fS4hJ8SY0im5aEXN8/WrPHuz15ICoZxkYmwpve552MFfvNYvn1ctqrbcm+kS20KT8dYSl0xyve3yVphKAnlMIfjZzlB6Zcr4NI2a2cee17N6h4zkLWdP4e7AIHN+nJGqpvoXdQUyDDWlnRZ4hEuKCH5wWFhHkYscxo/S8NVzxKScoe7bWrcbegaKDcHODooEhi96FApmaRMB706LBiTA==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <20200109042702.GA223211@google.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.65.58.147]
-X-CFilter-Loop: Reflected
+X-MS-Exchange-CrossTenant-Network-Message-Id: b6db0a42-2b1f-4f1d-01d5-08d794ef4e78
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jan 2020 10:33:02.9657
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 3qnBkRmCtS9mJgfQJu/WpvovL5W1m0+Td/wDudhmyCQqKgdFzlJCPIyNENw8o2hFfRZaP7iRqBsMIhMTrJH+Hw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB3959
+X-OriginatorOrg: synopsys.com
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2020/1/9 12:27, Bjorn Helgaas wrote:
-> [+cc Nicholas, who is working in this area]
->
-> On Thu, Jan 09, 2020 at 11:35:09AM +0800, Yicong Yang wrote:
->> Hi,
->>
->> recently I met a problem with pci bus resource allocation. The allocation strategy
->> makes me confused and leads to a wrong allocation results.
->>
->> There is a hisilicon network device with four functions under one root port. The
->> original bios resources allocation looks like:
-> What kernel is this?  Can you collect the complete dmesg log?
-
-The kernel version is 5.4.0.  the dmesg log is like:
-
-[  496.598130] hns3 0000:7d:00.3 eth11: net stop
-[  496.602702] hns3 0000:7d:00.3 eth11: link down
-[  496.655963] pci 0000:7d:00.3: Removing from iommu group 49
-[  508.453948] pci 0000:7d:00.3: [19e5:a221] type 00 class 0x020000
-[  508.459943] pci 0000:7d:00.3: reg 0x10: [mem 0x1210c0000-0x1210cffff 64bit pref]
-[  508.467317] pci 0000:7d:00.3: reg 0x18: [mem 0x120c00000-0x120cfffff 64bit pref]
-[  508.474720] pci 0000:7d:00.3: reg 0x224: [mem 0x1210d0000-0x1210dffff 64bit pref]
-[  508.482175] pci 0000:7d:00.3: VF(n) BAR0 space: [mem 0x1210d0000-0x1210fffff 64bit pref] (contains BAR0 for 3 VFs)
-[  508.492485] pci 0000:7d:00.3: reg 0x22c: [mem 0x120d00000-0x120dfffff 64bit pref]
-[  508.499939] pci 0000:7d:00.3: VF(n) BAR2 space: [mem 0x120d00000-0x120ffffff 64bit pref] (contains BAR2 for 3 VFs)
-[  508.510351] pci 0000:7c:00.0: bridge window [mem 0x00100000-0x002fffff] to [bus 7d] add_size 300000 add_align 100000
-[  508.520836] pci 0000:7c:00.0: BAR 14: no space for [mem size 0x00500000]
-[  508.527513] pci 0000:7c:00.0: BAR 14: failed to assign [mem size 0x00500000]
-[  508.534538] pci 0000:7c:00.0: BAR 14: no space for [mem size 0x00200000]
-[  508.541216] pci 0000:7c:00.0: BAR 14: failed to assign [mem size 0x00200000]
-[  508.548246] pci 0000:7d:00.3: BAR 2: assigned [mem 0x120c00000-0x120cfffff 64bit pref]
-[  508.556132] pci 0000:7d:00.3: BAR 9: assigned [mem 0x120d00000-0x120ffffff 64bit pref]
-[  508.564022] pci 0000:7d:00.3: BAR 0: assigned [mem 0x1210c0000-0x1210cffff 64bit pref]
-[  508.571909] pci 0000:7d:00.3: BAR 7: assigned [mem 0x1210d0000-0x1210fffff 64bit pref]
-[  508.579903] hns3 0000:7d:00.3: Adding to iommu group 49
-[  508.585782] hns3 0000:7d:00.3: The firmware version is 1.9.23.6
-[  508.594571] libphy: hisilicon MII bus: probed
-[  508.694463] hns3 0000:7d:00.3: hclge driver initialization finished.
-[  508.701446] RTL8211F Gigabit Ethernet mii-0000:7d:00.3:07: attached PHY driver [RTL8211F Gigabit Ethernet] (mii_bus:phy_addr=mii-0000:7d:00.3:07, irq=POLL)
-
->
->> 7c:00.0 Root Port
->>      prefetchable memory behind bridge: 12000000-0x1210fffff 17M [64bit pref]
->>     7d:00.0
->>         bar0: 0x121000000-0x12100ffff 64k  [64bit pref]
->>         bar2: 0x120000000-0x1200fffff 1M   [64bit pref]
->>         bar7: 0x121010000-0x12103ffff 128K [64bit pref]
->>         bar9: 0x120100000-0x1203fffff 3M   [64bit pref]
->>     7d:00.1
->>         bar0: 0x121040000-0x12104ffff 64k  [64bit pref]
->>         bar2: 0x120400000-0x1204fffff 1M   [64bit pref]
->>         bar7: 0x121050000-0x12107ffff 128K [64bit pref]
->>         bar9: 0x120500000-0x1207fffff 3M   [64bit pref]
->>     7d:00.2
->>         bar0: 0x121080000-0x12108ffff 64k  [64bit pref]
->>         bar2: 0x120800000-0x1208fffff 1M   [64bit pref]
->>         bar7: 0x121090000-0x1210bffff 128K [64bit pref]
->>         bar9: 0x120900000-0x120bfffff 3M   [64bit pref]
->>     7d:00.3
->>         bar0: 0x1210c0000-0x1210cffff 64k  [64bit pref]
->>         bar2: 0x120c00000-0x120cfffff 1M   [64bit pref]
->>         bar7: 0x121010000-0x12103ffff 128K [64bit pref]
->>         bar9: 0x120d00000-0x120ffffff 3M   [64bit pref]
->>
->> When I remove function 7d:00.3 and try to rescan the bus[7c], kernel prints the
->> error information.
->> [  391.770030] pci 0000:7d:00.3: [19e5:a221] type 00 class 0x020000
->> [  391.776024] pci 0000:7d:00.3: reg 0x10: [mem 0x1210c0000-0x1210cffff 64bit pref]
->> [  391.783394] pci 0000:7d:00.3: reg 0x18: [mem 0x120c00000-0x120cfffff 64bit pref]
->> [  391.790786] pci 0000:7d:00.3: reg 0x224: [mem 0x1210d0000-0x1210dffff 64bit pref]
->> [  391.798238] pci 0000:7d:00.3: VF(n) BAR0 space: [mem 0x1210d0000-0x1210fffff 64bit pref] (contains BAR0 for 3 VFs)
->> [  391.808543] pci 0000:7d:00.3: reg 0x22c: [mem 0x120d00000-0x120dfffff 64bit pref]
->> [  391.815994] pci 0000:7d:00.3: VF(n) BAR2 space: [mem 0x120d00000-0x120ffffff 64bit pref] (contains BAR2 for 3 VFs)
->> [  391.826391] pci 0000:7c:00.0: bridge window [mem 0x00100000-0x002fffff] to [bus 7d] add_size 300000 add_align 100000
->> [  391.836869] pci 0000:7c:00.0: BAR 14: no space for [mem size 0x00500000]
->>                                                             ^^^^^^^^^^^^^^^^^^^^^^^   
->> [  391.843543] pci 0000:7c:00.0: BAR 14: failed to assign [mem size 0x00500000]
->>                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^
->> [  391.850562] pci 0000:7c:00.0: BAR 14: no space for [mem size 0x00200000]
->>                                                             ^^^^^^^^^^^^^^^^^^^^^^^
->> [  391.857237] pci 0000:7c:00.0: BAR 14: failed to assign [mem size 0x00200000]
->>                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^
->> [  391.864261] pci 0000:7d:00.3: BAR 2: assigned [mem 0x120c00000-0x120cfffff 64bit pref]
->> [  391.872148] pci 0000:7d:00.3: BAR 9: assigned [mem 0x120d00000-0x120ffffff 64bit pref]
->> [  391.880035] pci 0000:7d:00.3: BAR 0: assigned [mem 0x1210c0000-0x1210cffff 64bit pref]
->> [  391.887920] pci 0000:7d:00.3: BAR 7: assigned [mem 0x1210d0000-0x1210fffff 64bit pref]
->>
->> When looking into the code, the functions called like:
->>     pci_rescan_bus()
->>         pci_assign_unassigned_bus_resources()
->>             __pci_bus_size_bridges()
->>                 pbus_size_mem()
->>
->> The function 7d:00.3 is added and enabled well as the required resources are satisfied.
->> As it request 64bit prefetchable resources, there is no reason to open bar14 for it.
->>
->> When a new function is added, the framework trys to size the bridge memory
->> window for it. In __pci_bus_size_bridges(), firstly the framework trys to size bar15 for the
->> new added 5M resources as we require 64bit pref mem. But bar15 has *parent*
->> so pbus_size_mem() return failure with bar15 unchanged. Then the framework try to put
->> resources in bar14, 32bit mem window, and the bar14 is unused so it is sized to 5M and
->> pbus_size_mem() return success.
->> After bridge size settles down, the framework assign resources for each bar. *As the bios
->> doesn't reserve a 32bit mem window for the bridge*, bar14 assignment is failed and print
->> the error assigen information. When assigning 7d:00.3, the framework try to find a space
->> in bar15 firstly and succeed. Then the flow is terminated. The bar14 is even not touched.
->>
->> Here comes the question:
->>     Why should we resize the bridge memory window when only one function is removed and
->> rescanned later? The bridge memory window should remain unchanged in such a situation.
->>     Is there a *certain condition* which requirs such operation?
->>     If all the functions are removed, we should use pci_rescan_bus_bridge_resize() to rescan and add
->> devices as the required memory size maybe changed.  Otherwise, i think we should try to assign
->> resources directly without sizing the bridge resource.
->>    
->> Thanks,
->> Yang
->>
-> .
->
-
-
+SGkgS2lzaG9uLA0KDQpPbiBUaHUsIEphbiA5LCAyMDIwIGF0IDEwOjE5OjE3LCBLaXNob24gVmlq
+YXkgQWJyYWhhbSBJIDxraXNob25AdGkuY29tPiANCndyb3RlOg0KDQo+IEhpLA0KPiANCj4gT24g
+MTIvMTIvMTkgNDoxNiBBTSwgQmpvcm4gSGVsZ2FhcyB3cm90ZToNCj4gPiBPbiBXZWQsIERlYyAx
+MSwgMjAxOSBhdCAwNjoxNjowNFBNICswNTMwLCBLaXNob24gVmlqYXkgQWJyYWhhbSBJIHdyb3Rl
+Og0KPiA+PiBFeGlzdGluZyBNU0ktWCBzdXBwb3J0IGluIEVuZHBvaW50IGNvcmUgaGFzIGxpbWl0
+YXRpb25zOg0KPiA+PiAgMSkgTVNJWCB0YWJsZSAod2hpY2ggaXMgbWFwcGVkIHRvIGEgQkFSKSBp
+cyBub3QgYWxsb2NhdGVkIGJ5DQo+ID4+ICAgICBhbnlvbmUuIElkZWFsbHkgdGhpcyBzaG91bGQg
+YmUgYWxsb2NhdGVkIGJ5IGVuZHBvaW50DQo+ID4+ICAgICBmdW5jdGlvbiBkcml2ZXIuDQo+ID4+
+ICAyKSBFbmRwb2ludCBjb250cm9sbGVyIGNhbiBjaG9vc2UgYW55IHJhbmRvbSBCQVJzIGZvciBN
+U0lYDQo+ID4+ICAgICB0YWJsZSAoaXJyZXNwZWN0aXZlIG9mIHdoZXRoZXIgdGhlIGVuZHBvaW50
+IGZ1bmN0aW9uIGRyaXZlcg0KPiA+PiAgICAgaGFzIGFsbG9jYXRlZCBtZW1vcnkgZm9yIGl0IG9y
+IG5vdCkNCj4gPj4NCj4gPj4gSW4gb3JkZXIgdG8gYXZvaWQgdGhlc2UgbGltaXRhdGlvbnMsIHBj
+aV9lcGNfc2V0X21zaXgoKSBpcw0KPiA+PiBtb2RpZmllZCB0byBpbmNsdWRlIEJBUiBJbmRpY2F0
+b3IgcmVnaXN0ZXIgKEJJUikgY29uZmlndXJhdGlvbg0KPiA+PiBhbmQgTVNJWCB0YWJsZSBvZmZz
+ZXQgYXMgYXJndW1lbnRzLiBUaGlzIHNlcmllcyBhbHNvIGZpeGVkIE1TSVgNCj4gPj4gc3VwcG9y
+dCBpbiBkd2MgZHJpdmVyIGFuZCBhZGQgTVNJLVggc3VwcG9ydCBpbiBDYWRlbmNlIFBDSWUgZHJp
+dmVyLg0KPiA+Pg0KPiA+PiBUaGUgcHJldmlvdXMgdmVyc2lvbiBvZiBDYWRlbmNlIEVQIE1TSS1Y
+IHN1cHBvcnQgaXMgQCBbMV0uDQo+ID4+IFRoaXMgc2VyaWVzIGlzIGNyZWF0ZWQgb24gdG9wIG9m
+IFsyXQ0KPiA+Pg0KPiA+PiBbMV0gLT4gaHR0cHM6Ly91cmxkZWZlbnNlLnByb29mcG9pbnQuY29t
+L3YyL3VybD91PWh0dHBzLTNBX19wYXRjaHdvcmsub3psYWJzLm9yZ19wYXRjaF85NzExNjBfJmQ9
+RHdJQ2FRJmM9RFBMNl9YXzZKa1hGeDdBWFdxQjB0ZyZyPWJrV3hwTG9XLWYtRTNFZGlEQ0NhMF9o
+MFBpY3NWaWFzU2x2SXB6WnZQeHMmbT1tRHV1ckQ2WHVmekw2ajE0WDJMSEMxdWxNYlU1ZGJtQ3RW
+VVlWdEN4TkZNJnM9SUVLVTMxZEhrT3VYRGZFUlBWMV9RWjBVX0JzamdDRmdMd29FMmlwQWhGVSZl
+PSANCj4gPj4gWzJdIC0+IGh0dHBzOi8vdXJsZGVmZW5zZS5wcm9vZnBvaW50LmNvbS92Mi91cmw/
+dT1odHRwLTNBX19sb3JlLmtlcm5lbC5vcmdfcl8yMDE5MTIwOTA5MjE0Ny4yMjkwMS0yRDEtMkRr
+aXNob24tNDB0aS5jb20mZD1Ed0lDYVEmYz1EUEw2X1hfNkprWEZ4N0FYV3FCMHRnJnI9YmtXeHBM
+b1ctZi1FM0VkaURDQ2EwX2gwUGljc1ZpYXNTbHZJcHpadlB4cyZtPW1EdXVyRDZYdWZ6TDZqMTRY
+MkxIQzF1bE1iVTVkYm1DdFZVWVZ0Q3hORk0mcz05LURYQ3l6Nml5dUZrNjdCQ25YZUJ0OEh0Si1P
+T2N6azZ1Z18wWlpCZ1ZFJmU9IA0KPiA+Pg0KPiA+PiBBbGFuIERvdWdsYXMgKDEpOg0KPiA+PiAg
+IFBDSTogY2FkZW5jZTogQWRkIE1TSS1YIHN1cHBvcnQgdG8gRW5kcG9pbnQgZHJpdmVyDQo+ID4+
+DQo+ID4+IEtpc2hvbiBWaWpheSBBYnJhaGFtIEkgKDMpOg0KPiA+PiAgIFBDSTogZW5kcG9pbnQ6
+IEZpeCAtPnNldF9tc2l4KCkgdG8gdGFrZSBCSVIgYW5kIG9mZnNldCBhcyBhcmd1bWVudHMNCj4g
+Pj4gICBQQ0k6IGR3YzogRml4IGR3X3BjaWVfZXBfcmFpc2VfbXNpeF9pcnEoKSB0byBnZXQgY29y
+cmVjdCBNU0lYIHRhYmxlDQo+ID4+ICAgICBhZGRyZXNzDQo+ID4+ICAgUENJOiBrZXlzdG9uZTog
+QWRkIEFNNjU0IFBDSWUgRW5kcG9pbnQgdG8gcmFpc2UgTVNJWCBpbnRlcnJ1cHQNCj4gPiANCj4g
+PiBUcml2aWFsIG5pdHM6DQo+ID4gDQo+ID4gICAtIFRoZXJlJ3MgYSBtaXggb2YgIk1TSS1YIiBh
+bmQgIk1TSVgiIGluIHRoZSBzdWJqZWN0cywgY29tbWl0IGxvZ3MsDQo+ID4gICAgIGFuZCBjb21t
+ZW50cy4gIEkgcHJlZmVyICJNU0ktWCIgdG8gbWF0Y2ggdXNhZ2UgaW4gdGhlIHNwZWMuDQo+ID4g
+DQo+ID4gICAtICJGaXhlczoiIHRhZ3MgbmVlZCBub3QgaW5jbHVkZSAiY29tbWl0Ii4gIEl0IGRv
+ZXNuJ3QgKmh1cnQqDQo+ID4gICAgIGFueXRoaW5nLCBidXQgaXQgdGFrZXMgdXAgc3BhY2UgdGhh
+dCBjb3VsZCBiZSB1c2VkIGZvciB0aGUNCj4gPiAgICAgc3ViamVjdC4NCj4gPiANCj4gPiAgIC0g
+Q29tbWl0IHJlZmVyZW5jZXMgdHlwaWNhbGx5IHVzZSBhIDEyLWNoYXIgU0hBMS4gIEFnYWluLCBk
+b2Vzbid0DQo+ID4gICAgIGh1cnQgYW55dGhpbmcuDQo+IA0KPiBJJ2xsIGZpeCBhbGwgdGhpcyBp
+biBteSBuZXh0IHJldmlzaW9uLg0KPiANCj4gWGlhb3dlaSwgR3VzdGF2bywNCj4gDQo+IFRoZSBp
+c3N1ZXMgd2UgZGlzY3Vzc2VkIGluICBbMV0gc2hvdWxkIGJlIGZpeGVkIHdpdGggdGhpcyBzZXJp
+ZXMuIENhbg0KPiB5b3UgaGVscCB0ZXN0IHRoaXMgaW4geW91ciBwbGF0Zm9ybXM/DQoNCkkgZGlk
+bid0IGZvcmdldCB0aGlzLCBidXQgdW5mb3J0dW5hdGVseSwgSSBzdGlsbCBkb24ndCBoYXZlIHRo
+ZSBIVyANCnByb3RvdHlwZSByZXF1aXJlZCB0byBiZSBhYmxlIHRvIHRlc3QgdGhpcyAodGhlcmUg
+YXJlIHNvbWUgcmVzb3VyY2VzIGFuZCANCnJvYWRtYXAgY29uc3RyYWludHMgdGhhdCBhcmUgYmxv
+Y2tpbmcgdGhpcykuDQpUbyBhdm9pZCBibG9ja2luZyB5b3UgYW5kIFhpYW9taSwgSSAnZCBzdWdn
+ZXN0IChhc3N1bWluZyB0aGlzIE1TSS1YIEFQSSANCnJld29yayBpcyB3b3JraW5nIGZvciBsYXll
+cnNjYXBlIGFuZCBrZXlzdG9uZSBkcml2ZXJzKSB0byBjb250aW51ZSB3aXRoIA0KdGhpcyBwYXRj
+aCBzZXJpZXMgYW5kIHRha2UgaXQgdG8gdGhlIG1haW5saW5lLiBJZiBJIGdldCBzb21lIHByb2Js
+ZW0gd2l0aCANCm15IHNldHVwIChhcyBzb29uIGFzIEkgZ2V0IHRoZSByZXF1aXJlZCBjb25kaXRp
+b25zIHRvIHRlc3QpIEknbGwgZGVhbCANCndpdGggaXQgdGhlbi4NCg0KUmVnYXJkcw0KR3VzdGF2
+bw0KDQo+IA0KPiBbMV0gLT4gaHR0cHM6Ly91cmxkZWZlbnNlLnByb29mcG9pbnQuY29tL3YyL3Vy
+bD91PWh0dHBzLTNBX19sa21sLm9yZ19sa21sXzIwMTlfMTFfNl82NzgmZD1Ed0lDYVEmYz1EUEw2
+X1hfNkprWEZ4N0FYV3FCMHRnJnI9YmtXeHBMb1ctZi1FM0VkaURDQ2EwX2gwUGljc1ZpYXNTbHZJ
+cHpadlB4cyZtPW1EdXVyRDZYdWZ6TDZqMTRYMkxIQzF1bE1iVTVkYm1DdFZVWVZ0Q3hORk0mcz1D
+Ylo2M2pSLVVXLU5NWTNVMzlodG5YaHBlcmJReGxRWDZkTVE5enB2QlhnJmU9IA0KPiANCj4gVGhh
+bmtzDQo+IEtpc2hvbg0KPiA+IA0KDQoNCg==
