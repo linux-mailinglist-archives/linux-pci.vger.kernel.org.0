@@ -2,84 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B9103136028
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Jan 2020 19:30:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6626E1361CF
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Jan 2020 21:33:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730415AbgAIS37 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Jan 2020 13:29:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51236 "EHLO mail.kernel.org"
+        id S1728027AbgAIUdm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Jan 2020 15:33:42 -0500
+Received: from mga01.intel.com ([192.55.52.88]:37112 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729648AbgAIS37 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 9 Jan 2020 13:29:59 -0500
-Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C6552072A;
-        Thu,  9 Jan 2020 18:29:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578594598;
-        bh=uJrGvHiJ0jLq+t8TWq4ljCMDSX4ZBF5RxHoNG5ABlW4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=enobhZX2ZoNb9qAxtib8xHmL6/fRDwaisFCRxj4Rf1j/PP+QUuT4XMXvvEjJutjZd
-         e4G20pdiCUCoBAbKSHVFkYdRPe1UlgHbwnyfEU7pQKpRqdYsUB+RmsrG/dTLhRwBb/
-         wyy+Wwp8up5gxnEbTfpHUH+L5SbaGIyk5w0VLXNg=
-Date:   Thu, 9 Jan 2020 12:29:57 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Cc:     Shawn Guo <shawn.guo@linaro.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
+        id S1725839AbgAIUdm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 9 Jan 2020 15:33:42 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 12:33:41 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,414,1571727600"; 
+   d="scan'208";a="396206706"
+Received: from unknown (HELO nsgsw-rhel7p6.lm.intel.com) ([10.232.116.226])
+  by orsmga005.jf.intel.com with ESMTP; 09 Jan 2020 12:33:41 -0800
+From:   Jon Derrick <jonathan.derrick@intel.com>
+To:     <iommu@lists.linux-foundation.org>, <linux-pci@vger.kernel.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Pratyush Anand <pratyush.anand@gmail.com>,
-        Zaihai Yu <yuzaihai@hisilicon.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] PCI: dwc: Separate CFG0 and CFG1 into different ATU
- regions
-Message-ID: <20200109182957.GA252973@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CH2PR12MB4007CC62E0939BAAABA0E64FDA390@CH2PR12MB4007.namprd12.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Keith Busch <kbusch@kernel.org>,
+        Joerg Roedel <joro@8bytes.org>, Christoph Hellwig <hch@lst.de>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Jon Derrick <jonathan.derrick@intel.com>
+Subject: [PATCH v2 0/5] Clean up VMD DMA Map Ops
+Date:   Thu,  9 Jan 2020 07:30:51 -0700
+Message-Id: <1578580256-3483-1-git-send-email-jonathan.derrick@intel.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 12:24:17PM +0000, Gustavo Pimentel wrote:
-> On Thu, Jan 9, 2020 at 11:14:58, Shawn Guo <shawn.guo@linaro.org> wrote:
-> 
-> > Hi Gustavo,
-> > 
-> > Thanks for taking a look.
-> > 
-> > On Thu, Jan 09, 2020 at 10:37:14AM +0000, Gustavo Pimentel wrote:
-> > > Hi Shawn,
-> > > 
-> > > On Thu, Jan 9, 2020 at 6:6:57, Shawn Guo <shawn.guo@linaro.org> wrote:
-> > > 
-> > > > Some platform has 4 (or more) viewports.  In that case, CFG0 and CFG1
-> > > 
-> > > Remove double space before "In that..." 
-> > 
-> > Hmm, that was intentional.  My writing practice is using two spaces
-> > after a period and single space after a comma.  Is it a bad habit?
-> 
-> I thought it was a typo. I personally don't have anything against it, but 
-> I didn't see this style on the comments till now. To keep the coherence 
-> between all patches, I know that Bjorn and Lorenzo like to have it the 
-> most standardized possible. It is OK by Lorenzo and Bjorn, it's fine for 
-> me too.
+v1 Set: https://lore.kernel.org/linux-iommu/20200107134125.GD30750@8bytes.org/T/#t
 
-Eagle eyes!  I was taught in the dark ages of typewriters to use two
-spaces after a period, but I don't really care either way.  If I
-rework a commit log for other reasons I might use two spaces, and I
-frequently use vim 'gq' to reformat paragraphs to use the whole line
-width, and I think that inserts two spaces (by default), so I try to
-be consistent at least within each commit log.  But either is really
-fine with me.
+This revision introduces a new weak function to reference the dma alias, as
+well as using the struct device rather than the pci_dev. By using the weak
+function in this manner, we remove the need to add a pointer in struct device
+or pci_dev. Weak functions are generally frowned upon when it's a single
+architecture implementation, so I am open to alternatives.
 
-Thanks for taking the time to read and pay attention to commit logs!
+v1 Blurb:
+VMD currently works with VT-d enabled by pointing DMA and IOMMU actions at the
+VMD endpoint. The problem with this approach is that the VMD endpoint's
+device-specific attributes, such as the dma mask, are used instead.
 
-Bjorn
+This set cleans up VMD by removing the override that redirects dma map
+operations to the VMD endpoint. Instead it introduces a new dma alias mechanism
+into the existing dma alias infrastructure.
+
+Changes from v1:
+Removed 1/5 & 2/5 misc fix patches that were merged
+Uses Christoph's staging/cleanup patches
+Introduce weak function rather than including pointer in struct device or pci_dev.
+
+Based on Joerg's next:
+https://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git/
+
+Christoph Hellwig (2):
+  x86/pci: Add a to_pci_sysdata helper
+  x86/pci: Replace the vmd_domain field with a vmd_dev pointer
+
+Jon Derrick (3):
+  PCI: Introduce direct dma alias
+  PCI: vmd: Stop overriding dma_map_ops
+  x86/pci: Remove X86_DEV_DMA_OPS
+
+ arch/x86/Kconfig               |   3 -
+ arch/x86/include/asm/device.h  |  10 ---
+ arch/x86/include/asm/pci.h     |  31 ++++-----
+ arch/x86/pci/common.c          |  45 ++----------
+ drivers/iommu/intel-iommu.c    |  17 +++--
+ drivers/pci/controller/Kconfig |   1 -
+ drivers/pci/controller/vmd.c   | 152 +----------------------------------------
+ drivers/pci/pci.c              |  17 ++++-
+ drivers/pci/search.c           |   9 +++
+ include/linux/pci.h            |   1 +
+ 10 files changed, 60 insertions(+), 226 deletions(-)
+
+-- 
+1.8.3.1
+
