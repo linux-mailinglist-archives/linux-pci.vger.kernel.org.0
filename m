@@ -2,147 +2,70 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B74971361D4
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Jan 2020 21:33:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 552EA1362EA
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Jan 2020 22:55:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728347AbgAIUdp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Jan 2020 15:33:45 -0500
-Received: from mga01.intel.com ([192.55.52.88]:37112 "EHLO mga01.intel.com"
+        id S1729191AbgAIVzU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Jan 2020 16:55:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727738AbgAIUdp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 9 Jan 2020 15:33:45 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 12:33:44 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,414,1571727600"; 
-   d="scan'208";a="396206723"
-Received: from unknown (HELO nsgsw-rhel7p6.lm.intel.com) ([10.232.116.226])
-  by orsmga005.jf.intel.com with ESMTP; 09 Jan 2020 12:33:44 -0800
-From:   Jon Derrick <jonathan.derrick@intel.com>
-To:     <iommu@lists.linux-foundation.org>, <linux-pci@vger.kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Joerg Roedel <joro@8bytes.org>, Christoph Hellwig <hch@lst.de>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Jon Derrick <jonathan.derrick@intel.com>
-Subject: [PATCH v2 5/5] x86/pci: Remove X86_DEV_DMA_OPS
-Date:   Thu,  9 Jan 2020 07:30:56 -0700
-Message-Id: <1578580256-3483-6-git-send-email-jonathan.derrick@intel.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1578580256-3483-1-git-send-email-jonathan.derrick@intel.com>
-References: <1578580256-3483-1-git-send-email-jonathan.derrick@intel.com>
+        id S1729032AbgAIVzU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 9 Jan 2020 16:55:20 -0500
+Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C4622080D;
+        Thu,  9 Jan 2020 21:55:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578606919;
+        bh=Pm6lyGQhMLRYl7S7KE+vl1AlwfWcZu5NH3Dqa4h0Bi8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Ew7xB49dLLe7eLoiNDKc+0jg1FaaWloY4DF5YIzFum3Z7QthAZybp5U/VWY39GmS0
+         6qlHSLgctzDU07BGIF2NpV8FsG7FISyamWbijbU83nQLLBMUlaP19jcRGUmFFe2Xcu
+         IQV2kuVosgi35bxwforGxmPARSV9GNiCqqSE3afA=
+Date:   Thu, 9 Jan 2020 15:55:17 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Yicong Yang <yangyicong@hisilicon.com>
+Cc:     linux-pci@vger.kernel.org,
+        fangjian 00545541 <f.fangjian@huawei.com>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Subject: Re: PCI: bus resource allocation error
+Message-ID: <20200109215517.GA255522@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <25173a78-8927-5b2f-c248-731629bbc8ec@hisilicon.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+On Thu, Jan 09, 2020 at 06:31:57PM +0800, Yicong Yang wrote:
+> On 2020/1/9 12:27, Bjorn Helgaas wrote:
+> > [+cc Nicholas, who is working in this area]
+> >
+> > On Thu, Jan 09, 2020 at 11:35:09AM +0800, Yicong Yang wrote:
+> >> Hi,
+> >>
+> >> recently I met a problem with pci bus resource allocation. The allocation strategy
+> >> makes me confused and leads to a wrong allocation results.
+> >>
+> >> There is a hisilicon network device with four functions under one root port. The
+> >> original bios resources allocation looks like:
+> > What kernel is this?  Can you collect the complete dmesg log?
+> 
+> The kernel version is 5.4.0.  
 
-There are no users of X86_DEV_DMA_OPS left, so remove the code.
+Good; at least we know this isn't related to Nicholas' new resource
+code that's in -next right now.
 
-Reviewed-by: Jon Derrick <jonathan.derrick@intel.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- arch/x86/Kconfig              |  3 ---
- arch/x86/include/asm/device.h | 10 ----------
- arch/x86/pci/common.c         | 38 --------------------------------------
- 3 files changed, 51 deletions(-)
+> the dmesg log is like:
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 5e89499..77f9426 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -2955,9 +2955,6 @@ config HAVE_ATOMIC_IOMAP
- 	def_bool y
- 	depends on X86_32
- 
--config X86_DEV_DMA_OPS
--	bool
--
- source "drivers/firmware/Kconfig"
- 
- source "arch/x86/kvm/Kconfig"
-diff --git a/arch/x86/include/asm/device.h b/arch/x86/include/asm/device.h
-index 5e12c63..7e31f7f 100644
---- a/arch/x86/include/asm/device.h
-+++ b/arch/x86/include/asm/device.h
-@@ -8,16 +8,6 @@ struct dev_archdata {
- #endif
- };
- 
--#if defined(CONFIG_X86_DEV_DMA_OPS) && defined(CONFIG_PCI_DOMAINS)
--struct dma_domain {
--	struct list_head node;
--	const struct dma_map_ops *dma_ops;
--	int domain_nr;
--};
--void add_dma_domain(struct dma_domain *domain);
--void del_dma_domain(struct dma_domain *domain);
--#endif
--
- struct pdev_archdata {
- };
- 
-diff --git a/arch/x86/pci/common.c b/arch/x86/pci/common.c
-index 565cc17..5a9fb00 100644
---- a/arch/x86/pci/common.c
-+++ b/arch/x86/pci/common.c
-@@ -625,43 +625,6 @@ unsigned int pcibios_assign_all_busses(void)
- 	return (pci_probe & PCI_ASSIGN_ALL_BUSSES) ? 1 : 0;
- }
- 
--#if defined(CONFIG_X86_DEV_DMA_OPS) && defined(CONFIG_PCI_DOMAINS)
--static LIST_HEAD(dma_domain_list);
--static DEFINE_SPINLOCK(dma_domain_list_lock);
--
--void add_dma_domain(struct dma_domain *domain)
--{
--	spin_lock(&dma_domain_list_lock);
--	list_add(&domain->node, &dma_domain_list);
--	spin_unlock(&dma_domain_list_lock);
--}
--EXPORT_SYMBOL_GPL(add_dma_domain);
--
--void del_dma_domain(struct dma_domain *domain)
--{
--	spin_lock(&dma_domain_list_lock);
--	list_del(&domain->node);
--	spin_unlock(&dma_domain_list_lock);
--}
--EXPORT_SYMBOL_GPL(del_dma_domain);
--
--static void set_dma_domain_ops(struct pci_dev *pdev)
--{
--	struct dma_domain *domain;
--
--	spin_lock(&dma_domain_list_lock);
--	list_for_each_entry(domain, &dma_domain_list, node) {
--		if (pci_domain_nr(pdev->bus) == domain->domain_nr) {
--			pdev->dev.dma_ops = domain->dma_ops;
--			break;
--		}
--	}
--	spin_unlock(&dma_domain_list_lock);
--}
--#else
--static void set_dma_domain_ops(struct pci_dev *pdev) {}
--#endif
--
- static void set_dev_domain_options(struct pci_dev *pdev)
- {
- 	if (is_vmd(pdev->bus))
-@@ -697,7 +660,6 @@ int pcibios_add_device(struct pci_dev *dev)
- 		pa_data = data->next;
- 		memunmap(data);
- 	}
--	set_dma_domain_ops(dev);
- 	set_dev_domain_options(dev);
- 	return 0;
- }
--- 
-1.8.3.1
+The below is not the complete dmesg log.  I don't know what your
+system is, but the complete log might be in /var/log/dmesg, or maybe
+you could capture it with the "ignore_loglevel" kernel parameter and a
+serial console?
 
+> [  496.598130] hns3 0000:7d:00.3 eth11: net stop
+> ...
