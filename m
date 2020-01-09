@@ -2,165 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 13A821363C8
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Jan 2020 00:26:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8000C1363E4
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Jan 2020 00:37:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729342AbgAIX0m (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Jan 2020 18:26:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39586 "EHLO mail.kernel.org"
+        id S1726299AbgAIXh0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Jan 2020 18:37:26 -0500
+Received: from mga18.intel.com ([134.134.136.126]:7499 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729309AbgAIX0m (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 9 Jan 2020 18:26:42 -0500
-Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0EF02073A;
-        Thu,  9 Jan 2020 23:26:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578612401;
-        bh=au4i6hoUP1jq46fOB57Lzy3xYgHp/aHV7LUZVNXrNi0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=IayYNWt2dNCbCf2b5jpPKtrHNjK17fcpT+tXk6QIPczBSmXpOixzLWd7i9OjF/e+T
-         bcUSXVKldBczVMj5tQm+HNlUeko5PIeVCqKZyCWMOL+SZioOlaje8AtwykIPJRDx05
-         ofMD+I1JA86CC8b3lxdM4p4fCcmypUSFekpLYeQg=
-Date:   Thu, 9 Jan 2020 17:26:39 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, keith.busch@intel.com
-Subject: Re: [PATCH v11 1/8] PCI/ERR: Update error status after reset_link()
-Message-ID: <20200109232639.GA42480@google.com>
+        id S1726267AbgAIXh0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 9 Jan 2020 18:37:26 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 15:37:25 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,414,1571727600"; 
+   d="scan'208";a="246825563"
+Received: from orsmsx106.amr.corp.intel.com ([10.22.225.133])
+  by fmsmga004.fm.intel.com with ESMTP; 09 Jan 2020 15:37:25 -0800
+Received: from orsmsx101.amr.corp.intel.com ([169.254.8.147]) by
+ ORSMSX106.amr.corp.intel.com ([169.254.1.81]) with mapi id 14.03.0439.000;
+ Thu, 9 Jan 2020 15:37:25 -0800
+From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
+To:     "helgaas@kernel.org" <helgaas@kernel.org>
+CC:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "hch@lst.de" <hch@lst.de>,
+        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kbusch@kernel.org" <kbusch@kernel.org>,
+        "dwmw2@infradead.org" <dwmw2@infradead.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v2 3/5] PCI: Introduce direct dma alias
+Thread-Topic: [PATCH v2 3/5] PCI: Introduce direct dma alias
+Thread-Index: AQHVxywXwoQKE3+vlUKZwoCX2cxUfafjfBGAgAAHMAA=
+Date:   Thu, 9 Jan 2020 23:37:24 +0000
+Message-ID: <f0e837bca2bd141e529dbd5817b52d77cea87ddd.camel@intel.com>
+References: <20200109231141.GA41540@google.com>
+In-Reply-To: <20200109231141.GA41540@google.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.232.115.159]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <DF859B91DC1D2F4182403F4327729D56@intel.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7f7fdfec-5060-bcaa-38c4-6b973149e5cc@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 04:14:09PM -0800, Kuppuswamy Sathyanarayanan wrote:
-> On 1/3/20 6:54 PM, Bjorn Helgaas wrote:
-> > On Fri, Jan 03, 2020 at 05:03:03PM -0800, Kuppuswamy Sathyanarayanan wrote:
-> > > On 1/3/20 4:34 PM, Bjorn Helgaas wrote:
-> > > > On Thu, Dec 26, 2019 at 04:39:07PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> > > > > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > > > > 
-> > > > > Commit bdb5ac85777d ("PCI/ERR: Handle fatal error recovery") uses
-> > > > > reset_link() to recover from fatal errors. But, if the reset is
-> > > > > successful there is no need to continue the rest of the error recovery
-> > > > > checks. Also, during fatal error recovery, if the initial value of error
-> > > > > status is PCI_ERS_RESULT_DISCONNECT or PCI_ERS_RESULT_NO_AER_DRIVER then
-> > > > > even after successful recovery (using reset_link()) pcie_do_recovery()
-> > > > > will report the recovery result as failure. So update the status of
-> > > > > error after reset_link().
-> > > > I like the part about updating "status" with the result of
-> > > > reset_link(), and I split that into its own patch because it
-> > > > seems like a fix that *can* be separated.
-> > > > 
-> > > > But I'm not convinced that we should skip the ->slot_reset()
-> > > > callbacks if the reset_link() was successful.
-> > > If reset_link() call is successful then the result value will be
-> > > "PCI_ERS_RESULT_RECOVERED". So even if you proceed with
-> > > rest of the code, slot_reset() will never get called right ?
-> > The current code:
-> > 
-> >          if (state == pci_channel_io_frozen &&
-> >              reset_link(dev, service) != PCI_ERS_RESULT_RECOVERED)
-> >                  goto failed;
-> >          ...
-> >          if (status == PCI_ERS_RESULT_NEED_RESET) {
-> >                  status = PCI_ERS_RESULT_RECOVERED;
-> >                  pci_walk_bus(bus, report_slot_reset, &status);
-> > 
-> > doesn't save the result of reset_link(), so if status was
-> > PCI_ERS_RESULT_NEED_RESET and the reset succeeds, we will call
-> > ->slot_reset().
-> > 
-> > After your patch, if "state == pci_channel_io_frozen", we *never* call
-> > ->slot_reset().
-> > 
-> > Do you think that matches pci-error-recovery.rst?  It doesn't seem
-> > like it to me, but perhaps I haven't read it closely enough.
-> Documentation does not have clear details on what to do with return
-> value of reset_link() (step 3). But IMO, if step 3 recovers the device and
-> returns PCI_ERS_RESULT_RECOVERED then there is no need to proceed
-> to slot reset (step 4). May be we should update the Documentation?
-
-Are you suggesting we don't need to call a driver callback after
-resetting the device?  Note that the ->slot_reset() doesn't *perform*
-a reset; it is called *after* completion of a reset.
-
-The doc says:
-
-  ... Upon completion of slot reset, the platform will call the device
-  slot_reset() callback.
-  ...
-  This call gives drivers the chance to re-initialize the hardware
-  (re-download firmware, etc.).  At this point, the driver may assume
-  that the card is in a fresh state and is fully functional. The slot
-  is unfrozen and the driver has full access to PCI config space,
-  memory mapped I/O space and DMA. Interrupts (Legacy, MSI, or MSI-X)
-  will also be available.
-
-After we reset a device, the driver certainly needs a chance to
-reinitialize it.
-
-> > > > According to
-> > > > Documentation/PCI/pci-error-recovery.rst, we should call
-> > > > ->slot_reset() after completion of the reset.
-> > > > 
-> > > > For example, rsxx_err_handler implements ->slot_reset(), but
-> > > > not ->resume().  If we reset the device, we'll claim success and
-> > > > return, but we won't call rsxx_slot_reset(), which does a bunch
-> > > > of important-looking recovery stuff.
-> > > > 
-> > > > If pci-error-recovery.rst is wrong, we should fix that (after
-> > > > auditing all the drivers to make sure they match).
-> > > > 
-> > > > > Fixes: bdb5ac85777d ("PCI/ERR: Handle fatal error recovery")
-> > > > > Cc: Ashok Raj <ashok.raj@intel.com>
-> > > > > Cc: Keith Busch <keith.busch@intel.com>
-> > > > > Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > > > > Acked-by: Keith Busch <keith.busch@intel.com>
-> > > > > ---
-> > > > >    drivers/pci/pcie/err.c | 10 +++++++---
-> > > > >    1 file changed, 7 insertions(+), 3 deletions(-)
-> > > > > 
-> > > > > diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-> > > > > index b0e6048a9208..53cd9200ec2c 100644
-> > > > > --- a/drivers/pci/pcie/err.c
-> > > > > +++ b/drivers/pci/pcie/err.c
-> > > > > @@ -204,9 +204,12 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
-> > > > >    	else
-> > > > >    		pci_walk_bus(bus, report_normal_detected, &status);
-> > > > > -	if (state == pci_channel_io_frozen &&
-> > > > > -	    reset_link(dev, service) != PCI_ERS_RESULT_RECOVERED)
-> > > > > -		goto failed;
-> > > > > +	if (state == pci_channel_io_frozen) {
-> > > > > +		status = reset_link(dev, service);
-> > > > > +		if (status != PCI_ERS_RESULT_RECOVERED)
-> > > > > +			goto failed;
-> > > > > +		goto done;
-> > > > > +	}
-> > > > >    	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
-> > > > >    		status = PCI_ERS_RESULT_RECOVERED;
-> > > > > @@ -228,6 +231,7 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
-> > > > >    	if (status != PCI_ERS_RESULT_RECOVERED)
-> > > > >    		goto failed;
-> > > > > +done:
-> > > > >    	pci_dbg(dev, "broadcast resume message\n");
-> > > > >    	pci_walk_bus(bus, report_resume, &status);
-> > > > > -- 
-> > > > > 2.21.0
-> > > > > 
-> > > -- 
-> > > Sathyanarayanan Kuppuswamy
-> > > Linux kernel developer
-> > > 
-> -- 
-> Sathyanarayanan Kuppuswamy
-> Linux kernel developer
-> 
+T24gVGh1LCAyMDIwLTAxLTA5IGF0IDE3OjExIC0wNjAwLCBCam9ybiBIZWxnYWFzIHdyb3RlOg0K
+PiBJbiBzdWJqZWN0Og0KPiBzL0ludHJvZHVjZSBkaXJlY3QgZG1hIGFsaWFzL0FkZCBwY2lfZGly
+ZWN0X2RtYV9hbGlhcygpLw0KPiANCj4gT24gVGh1LCBKYW4gMDksIDIwMjAgYXQgMDc6MzA6NTRB
+TSAtMDcwMCwgSm9uIERlcnJpY2sgd3JvdGU6DQo+ID4gVGhlIGN1cnJlbnQgZG1hIGFsaWFzIGlt
+cGxlbWVudGF0aW9uIHJlcXVpcmVzIHRoZSBhbGlhc2VkIGRldmljZSBiZSBvbg0KPiA+IHRoZSBz
+YW1lIGJ1cyBhcyB0aGUgZG1hIHBhcmVudC4gVGhpcyBpbnRyb2R1Y2VzIGFuIGFyY2gtc3BlY2lm
+aWMNCj4gPiBtZWNoYW5pc20gdG8gcG9pbnQgdG8gYW4gYXJiaXRyYXJ5IHN0cnVjdCBkZXZpY2Ug
+d2hlbiBkb2luZyBtYXBwaW5nIGFuZA0KPiA+IHBjaSBhbGlhcyBzZWFyY2guDQo+IA0KPiAiYXJi
+aXRyYXJ5IHN0cnVjdCBkZXZpY2UiIGlzIGEgbGl0dGxlIHdlaXJkIHNpbmNlIGFuIGFyYml0cmFy
+eSBkZXZpY2UNCj4gZG9lc24ndCBoYXZlIHRvIGJlIGEgUENJIGRldmljZSwgYnV0IHRoZXNlIG1h
+cHBpbmdzIGFuZCBhbGlhc2VzIG9ubHkNCj4gbWFrZSBzZW5zZSBpbiB0aGUgUENJIGRvbWFpbi4N
+Cj4gDQo+IE1heWJlIGl0IGhhcyBzb21ldGhpbmcgdG8gZG8gd2l0aCBwY2lfc3lzZGF0YS52bWRf
+ZGV2IGJlaW5nIGENCj4gInN0cnVjdCBkZXZpY2UgKiIgcmF0aGVyIHRoYW4gYSAic3RydWN0IHBj
+aV9kZXYgKiI/ICBJIGRvbid0IGtub3cgd2h5DQo+IHRoYXQgaXMsIGJlY2F1c2UgaXQgbG9va3Mg
+bGlrZSBldmVyeSBwbGFjZSB5b3UgdXNlIGl0LCB5b3UgdXNlDQo+IHRvX3BjaV9kZXYoKSB0byBn
+ZXQgdGhlIHBjaV9kZXYgcG9pbnRlciBiYWNrIGFueXdheS4gIEJ1dCBJIGFzc3VtZSB5b3UNCj4g
+aGF2ZSBzb21lIGdvb2QgcmVhc29uIGZvciB0aGF0Lg0KTm8gcGFydGljdWxhciByZWFzb24gb3Ro
+ZXIgdGhhbiB0byBhbGlnbiB3aXRoIHRoZSBzdWdnZXN0aW9uIGluIHRoZQ0KbGFzdCBzZXQgdG8g
+YmUgdXNpbmcgdGhlIHN0cnVjdCBkZXZpY2UuIEl0IGRvZXMgbWFrZSBzZW5zZSB0byByZWZlcmVu
+Y2UNCnRoZSBzdHJ1Y3QgZGV2aWNlIGFzIHRoYXQgcHJvdmlkZXMgdGhlIGRtYSBjb250ZXh0LCBo
+b3dldmVyIGFzIHlvdSBoYXZlDQpwb2ludGVkIG91dCwgdGhlIGltcGxlbWVudGF0aW9uIGhlcmUg
+bW9yZXNvIG5lZWRzIHRoZSBkZXZpY2Uncw0KcGNpX2Rldi4gDQoNCkknbGwgc2VlIGhvdyBpdCBs
+b29rcyBmb3IgdGhlIG5leHQgc2V0Lg0KDQo+IA0KPiBzL2RtYS9ETUEvDQo+IHMvcGNpL1BDSS8N
+Cj4gKGFib3ZlIGFuZCBhbHNvIGluIGNvZGUgY29tbWVudHMgYmVsb3cpDQo+IA0KPiA+IA0K
