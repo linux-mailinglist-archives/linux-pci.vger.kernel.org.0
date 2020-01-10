@@ -2,93 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 79C8F1371E8
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Jan 2020 16:55:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 15F84137428
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Jan 2020 17:56:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728245AbgAJPzY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Jan 2020 10:55:24 -0500
-Received: from foss.arm.com ([217.140.110.172]:47340 "EHLO foss.arm.com"
+        id S1728394AbgAJQzk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Jan 2020 11:55:40 -0500
+Received: from foss.arm.com ([217.140.110.172]:48516 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728183AbgAJPzY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 10 Jan 2020 10:55:24 -0500
+        id S1728258AbgAJQzk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 10 Jan 2020 11:55:40 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9CFD330E;
-        Fri, 10 Jan 2020 07:55:23 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 04EA830E;
+        Fri, 10 Jan 2020 08:55:40 -0800 (PST)
 Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4E4183F6C4;
-        Fri, 10 Jan 2020 07:55:22 -0800 (PST)
-Date:   Fri, 10 Jan 2020 15:55:20 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C308B3F6C4;
+        Fri, 10 Jan 2020 08:55:38 -0800 (PST)
+Date:   Fri, 10 Jan 2020 16:55:33 +0000
 From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Marcel Ziswiler <marcel@ziswiler.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-pci@vger.kernel.org,
-        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
         Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH v2] PCI: tegra: Fix afi_pex2_ctrl reg offset for Tegra30
-Message-ID: <20200110155519.GB29372@e121166-lin.cambridge.arm.com>
-References: <20200107081402.213149-1-marcel@ziswiler.com>
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/2] PCI: qcom: Add support for SDM845 PCIe
+Message-ID: <20200110165533.GA885@e121166-lin.cambridge.arm.com>
+References: <20191107001642.1127561-1-bjorn.andersson@linaro.org>
+ <20191227012349.GG1908628@ripper>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200107081402.213149-1-marcel@ziswiler.com>
+In-Reply-To: <20191227012349.GG1908628@ripper>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 09:14:02AM +0100, Marcel Ziswiler wrote:
-> Fix AFI_PEX2_CTRL reg offset for Tegra30 by moving it from the Tegra20
-> SoC struct where it erroneously got added. This fixes the AFI_PEX2_CTRL
-> reg offset being uninitialised subsequently failing to bring up the
-> third PCIe port.
+On Thu, Dec 26, 2019 at 05:23:49PM -0800, Bjorn Andersson wrote:
+> On Wed 06 Nov 16:16 PST 2019, Bjorn Andersson wrote:
 > 
-> Fixes: adb2653b3d2e ("PCI: tegra: Add AFI_PEX2_CTRL reg offset as part of SoC struct")
-> 
-> Signed-off-by: Marcel Ziswiler <marcel@ziswiler.com>
-> Acked-by: Thierry Reding <treding@nvidia.com>
-> 
-> ---
-> 
-> Changes in v2:
-> - Fix recipient list concerning CC: and To: lines as suggested by
->   Thierry.
-> - Fix subject line and commit message to adhere to standard formatting
->   rules as suggested by Thierry.
-> - Add Thierry's Acked-by tag.
-> - Add standard Fixes tag as suggested by Andrew.
-> 
->  drivers/pci/controller/pci-tegra.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Bjorn, this still applies nicely on linux-next and works as expected.
+> Could you please apply it? Or would you like me to resend it with
+> people's tags picked up?
 
-Applied to pci/tegra, thanks.
+Applied to pci/qcom for v5.6, thanks.
 
 Lorenzo
 
-> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-> index 090b632965e2..ac93f5a0398e 100644
-> --- a/drivers/pci/controller/pci-tegra.c
-> +++ b/drivers/pci/controller/pci-tegra.c
-> @@ -2499,7 +2499,6 @@ static const struct tegra_pcie_soc tegra20_pcie = {
->  	.num_ports = 2,
->  	.ports = tegra20_pcie_ports,
->  	.msi_base_shift = 0,
-> -	.afi_pex2_ctrl = 0x128,
->  	.pads_pll_ctl = PADS_PLL_CTL_TEGRA20,
->  	.tx_ref_sel = PADS_PLL_CTL_TXCLKREF_DIV10,
->  	.pads_refclk_cfg0 = 0xfa5cfa5c,
-> @@ -2528,6 +2527,7 @@ static const struct tegra_pcie_soc tegra30_pcie = {
->  	.num_ports = 3,
->  	.ports = tegra30_pcie_ports,
->  	.msi_base_shift = 8,
-> +	.afi_pex2_ctrl = 0x128,
->  	.pads_pll_ctl = PADS_PLL_CTL_TEGRA30,
->  	.tx_ref_sel = PADS_PLL_CTL_TXCLKREF_BUF_EN,
->  	.pads_refclk_cfg0 = 0xfa5cfa5c,
-> -- 
-> 2.24.1
+> Regards,
+> Bjorn
 > 
+> > This adds support necessary for the two PCIe controllers found in Qualcomm
+> > SDM845.
+> > 
+> > Bjorn Andersson (2):
+> >   dt-bindings: PCI: qcom: Add support for SDM845 PCIe
+> >   PCI: qcom: Add support for SDM845 PCIe controller
+> > 
+> >  .../devicetree/bindings/pci/qcom,pcie.txt     |  19 +++
+> >  drivers/pci/controller/dwc/pcie-qcom.c        | 150 ++++++++++++++++++
+> >  2 files changed, 169 insertions(+)
+> > 
+> > -- 
+> > 2.23.0
+> > 
