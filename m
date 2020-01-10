@@ -2,107 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F7BF137156
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Jan 2020 16:33:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 79C8F1371E8
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Jan 2020 16:55:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728175AbgAJPd5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Jan 2020 10:33:57 -0500
-Received: from foss.arm.com ([217.140.110.172]:46848 "EHLO foss.arm.com"
+        id S1728245AbgAJPzY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Jan 2020 10:55:24 -0500
+Received: from foss.arm.com ([217.140.110.172]:47340 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728137AbgAJPd5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 10 Jan 2020 10:33:57 -0500
+        id S1728183AbgAJPzY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 10 Jan 2020 10:55:24 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8D7BC30E;
-        Fri, 10 Jan 2020 07:33:56 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9CFD330E;
+        Fri, 10 Jan 2020 07:55:23 -0800 (PST)
 Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 268623F6C4;
-        Fri, 10 Jan 2020 07:33:54 -0800 (PST)
-Date:   Fri, 10 Jan 2020 15:33:47 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4E4183F6C4;
+        Fri, 10 Jan 2020 07:55:22 -0800 (PST)
+Date:   Fri, 10 Jan 2020 15:55:20 +0000
 From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc:     Olof Johansson <olof@lixom.net>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
-        Leo Li <leoyang.li@nxp.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: Re: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
- driver for NXP Layerscape SoCs
-Message-ID: <20200110153347.GA29372@e121166-lin.cambridge.arm.com>
-References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
- <CAOesGMjAQSfx1WZr6b1kNX=Exipj_f4X_f39Db7AxXr4xG4Tkg@mail.gmail.com>
- <DB8PR04MB6747DA8E1480DCF3EFF67C9284500@DB8PR04MB6747.eurprd04.prod.outlook.com>
+To:     Marcel Ziswiler <marcel@ziswiler.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-pci@vger.kernel.org,
+        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH v2] PCI: tegra: Fix afi_pex2_ctrl reg offset for Tegra30
+Message-ID: <20200110155519.GB29372@e121166-lin.cambridge.arm.com>
+References: <20200107081402.213149-1-marcel@ziswiler.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <DB8PR04MB6747DA8E1480DCF3EFF67C9284500@DB8PR04MB6747.eurprd04.prod.outlook.com>
+In-Reply-To: <20200107081402.213149-1-marcel@ziswiler.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 02:50:15AM +0000, Z.q. Hou wrote:
-> Hi Lorenzo,
+On Tue, Jan 07, 2020 at 09:14:02AM +0100, Marcel Ziswiler wrote:
+> Fix AFI_PEX2_CTRL reg offset for Tegra30 by moving it from the Tegra20
+> SoC struct where it erroneously got added. This fixes the AFI_PEX2_CTRL
+> reg offset being uninitialised subsequently failing to bring up the
+> third PCIe port.
 > 
-> The v9 patches have addressed the comments from Andrew, and it has
-> been dried about 1 month, can you help to apply them?
+> Fixes: adb2653b3d2e ("PCI: tegra: Add AFI_PEX2_CTRL reg offset as part of SoC struct")
+> 
+> Signed-off-by: Marcel Ziswiler <marcel@ziswiler.com>
+> Acked-by: Thierry Reding <treding@nvidia.com>
+> 
+> ---
+> 
+> Changes in v2:
+> - Fix recipient list concerning CC: and To: lines as suggested by
+>   Thierry.
+> - Fix subject line and commit message to adhere to standard formatting
+>   rules as suggested by Thierry.
+> - Add Thierry's Acked-by tag.
+> - Add standard Fixes tag as suggested by Andrew.
+> 
+>  drivers/pci/controller/pci-tegra.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-We shall have a look beginning of next week, sorry for the delay
-in getting back to you.
+Applied to pci/tegra, thanks.
 
 Lorenzo
 
-> Thanks,
-> Zhiqiang
+> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+> index 090b632965e2..ac93f5a0398e 100644
+> --- a/drivers/pci/controller/pci-tegra.c
+> +++ b/drivers/pci/controller/pci-tegra.c
+> @@ -2499,7 +2499,6 @@ static const struct tegra_pcie_soc tegra20_pcie = {
+>  	.num_ports = 2,
+>  	.ports = tegra20_pcie_ports,
+>  	.msi_base_shift = 0,
+> -	.afi_pex2_ctrl = 0x128,
+>  	.pads_pll_ctl = PADS_PLL_CTL_TEGRA20,
+>  	.tx_ref_sel = PADS_PLL_CTL_TXCLKREF_DIV10,
+>  	.pads_refclk_cfg0 = 0xfa5cfa5c,
+> @@ -2528,6 +2527,7 @@ static const struct tegra_pcie_soc tegra30_pcie = {
+>  	.num_ports = 3,
+>  	.ports = tegra30_pcie_ports,
+>  	.msi_base_shift = 8,
+> +	.afi_pex2_ctrl = 0x128,
+>  	.pads_pll_ctl = PADS_PLL_CTL_TEGRA30,
+>  	.tx_ref_sel = PADS_PLL_CTL_TXCLKREF_BUF_EN,
+>  	.pads_refclk_cfg0 = 0xfa5cfa5c,
+> -- 
+> 2.24.1
 > 
-> > -----Original Message-----
-> > From: Olof Johansson <olof@lixom.net>
-> > Sent: 2019年12月14日 2:37
-> > To: Z.q. Hou <zhiqiang.hou@nxp.com>; bhelgaas@google.com
-> > Cc: linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > robh+dt@kernel.org; arnd@arndb.de; mark.rutland@arm.com;
-> > l.subrahmanya@mobiveil.co.in; shawnguo@kernel.org;
-> > m.karthikeyan@mobiveil.co.in; Leo Li <leoyang.li@nxp.com>;
-> > lorenzo.pieralisi@arm.com; catalin.marinas@arm.com;
-> > will.deacon@arm.com; andrew.murray@arm.com; Mingkai Hu
-> > <mingkai.hu@nxp.com>; M.h. Lian <minghuan.lian@nxp.com>; Xiaowei Bao
-> > <xiaowei.bao@nxp.com>
-> > Subject: Re: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
-> > driver for NXP Layerscape SoCs
-> > 
-> > Hi!
-> > 
-> > On Tue, Nov 19, 2019 at 7:45 PM Z.q. Hou <zhiqiang.hou@nxp.com> wrote:
-> > >
-> > > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> > >
-> > > This patch set is to recode the Mobiveil driver and add PCIe support
-> > > for NXP Layerscape series SoCs integrated Mobiveil's PCIe Gen4
-> > > controller.
-> > 
-> > Can we get a respin for this on top of the 5.5 merge window material?
-> > Given that it's a bunch of refactorings, many of them don't apply on top of
-> > the material that was merged.
-> > 
-> > I'd love to see these go in sooner rather than later so I can start getting -next
-> > running on ls2160a here.
-> > 
-> > 
-> > -Olof
