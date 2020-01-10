@@ -2,105 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 98B3513686E
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Jan 2020 08:40:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CD43E136946
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Jan 2020 09:56:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726276AbgAJHk1 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Fri, 10 Jan 2020 02:40:27 -0500
-Received: from mail-oln040092253047.outbound.protection.outlook.com ([40.92.253.47]:5484
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725844AbgAJHk1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 10 Jan 2020 02:40:27 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=U39/yuDtHaayVUrMmNK+SwMjoh4BJRjmm4tTrMbGNmqUHIFvHP//FlJRcoOkcyxohYPJreFmMrJ/1bUjnZpEOjFgj18JYh+5/5657ENHXPJhovBNXEgtUTIz3DCluqGyS2/PD6nw3LWS5lPpOVxSNbwd1qG64U2qRxIkZlusPZq+WcPBBmlq59sSeUUnEqOOi6NXp5Mi9SSoTSWl3TEGAkrMjrf3KgDLEf7R7lGZ+JBLOFR4/PP0qA4qj3C3G+iyOk0uhOcGuOdiEVHLHBUB6QpV3FSPnwgGow65SV4B7S6pH23XDgiX7jvCsd18/SanUJ0m1CfsWuU0dHzhfsPQ1Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ofi4QMCRWVtXfu7MUHN5gWUjNkyjjCq+TK8askGIMSc=;
- b=QGXxoXvBG1CWJguvlpm8DDyeOnKnNgtf7A80t9eAx1YSZvJ0C7Cd09BbeVVIBRV2LvTcq9TOUgRaTaTEh6UpgzhQMJpHwrRJVumSE80/s32o6PBgMWWtgl0g5exrR8BicLvRJP78ltXUlUslsJXrPdw2Y7aXdGEO5McEZZUhm8d7lbOyMwBB5Y5zY4ZlX6O9ELL4JxoH0Pd6bv4y8ApqkV8/3i/l2Z+j2oWXdmpXpSq2A+7Oh+8AtFF1jd+e/vJy1U2OVehFFN9aXvnQVH/u6amzWD5Y1ENVEsHqGuX42/OULozEUL03AUX0HKQqa/uJtkh6MLHcN37ba0g4Tnq4jg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from HK2APC01FT038.eop-APC01.prod.protection.outlook.com
- (10.152.248.56) by HK2APC01HT235.eop-APC01.prod.protection.outlook.com
- (10.152.249.125) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.11; Fri, 10 Jan
- 2020 07:40:21 +0000
-Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.248.55) by
- HK2APC01FT038.mail.protection.outlook.com (10.152.248.243) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2602.11 via Frontend Transport; Fri, 10 Jan 2020 07:40:21 +0000
-Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- ([fe80::20ad:6646:5bcd:63c9]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- ([fe80::20ad:6646:5bcd:63c9%11]) with mapi id 15.20.2623.013; Fri, 10 Jan
- 2020 07:40:21 +0000
-Received: from nicholas-dell-linux (49.196.2.242) by ME4P282CA0013.AUSP282.PROD.OUTLOOK.COM (2603:10c6:220:90::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.8 via Frontend Transport; Fri, 10 Jan 2020 07:40:17 +0000
-From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-To:     Yicong Yang <yangyicong@hisilicon.com>
-CC:     Bjorn Helgaas <helgaas@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        fangjian 00545541 <f.fangjian@huawei.com>
-Subject: Re: PCI: bus resource allocation error
-Thread-Topic: PCI: bus resource allocation error
-Thread-Index: AQHVx4hAJYx6aq+dvkSE1wcW3LemFqfjg0+A
-Date:   Fri, 10 Jan 2020 07:40:20 +0000
-Message-ID: <PSXP216MB0438E92832F08A1AEC015D8180380@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
-References: <f0cab9da-8e74-e923-a2fe-591d065228ee@hisilicon.com>
- <1bcc117a-3fce-35c2-a52c-f417db3ce030@hisilicon.com>
-In-Reply-To: <1bcc117a-3fce-35c2-a52c-f417db3ce030@hisilicon.com>
-Accept-Language: en-AU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: ME4P282CA0013.AUSP282.PROD.OUTLOOK.COM
- (2603:10c6:220:90::23) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- (2603:1096:300:d::20)
-x-incomingtopheadermarker: OriginalChecksum:AAA85FC285B283E2027F9F343CFC072D916B7914A8CAABD7C75B7C08A8A65571;UpperCasedChecksum:87A653F94AB95DBCEB73DB4BB7C3EE88CF434985C220BBBACEEA321283E770F8;SizeAsReceived:7691;Count:50
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [Wyqys46OwHpBBRp5i2CavGSdTil43AOW]
-x-microsoft-original-message-id: <20200110074011.GA1615@nicholas-dell-linux>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 50
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: b6213d60-3e2f-4d46-6631-08d795a05808
-x-ms-traffictypediagnostic: HK2APC01HT235:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: opsHJD8qH1CCpqei1QiKeYynQSKghcblj+SGvjjSrS2050+qpJWFxyMY21GSejY1qAApwSMOx3l5VJUP+UvIFli77gL1AUzhLBvYKCT/FvZpsI99jT3zC8bZZD29nWPCRRjbiJHY+dBkqDeq8V3fubJeA6CU76ltAsDxWq2uGV4nfPgGUChcYzAeLhLvv+mc
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <74CF0C5F18E8E643AD999091C0CED9DC@KORP216.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8BIT
+        id S1727210AbgAJI4h (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Jan 2020 03:56:37 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:45750 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726877AbgAJI4g (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Jan 2020 03:56:36 -0500
+Received: by mail-pl1-f193.google.com with SMTP id b22so590616pls.12
+        for <linux-pci@vger.kernel.org>; Fri, 10 Jan 2020 00:56:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mtkMEc02hXcR+20gh5yanXRHRh9eVEHsJBoW93ABkXo=;
+        b=YMENjTwxc2x1aZh9cvqZtVp9X+gzmXBfgyOFu25Rw9m4fkkrrKiShS8BtfH3gAqIA/
+         foxdYZNNM7cFnVVnTQQnSqXg1J00PFqe4YPY8Aq6IgVBYin7QPVPD3WrOpT2zIHderyl
+         V3RpHlCIpMrJvklAXVEELBgPliPXrGWqi5IXNcMgdvBd+PtFHZwFZRDiVzGAlzKPWekb
+         aQdQLm941KrBHI8pXhX6fNx7nNQ8YP9aajNFwmRDva9AkSTjiLdZj8iU3+LtIb8K4sCj
+         jNvL8EfIPdukdDJLXXzmelH5H4BH4VALKv6n2SwioemXe+ah4XmmXCWyaA1qZ80aufVj
+         daNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mtkMEc02hXcR+20gh5yanXRHRh9eVEHsJBoW93ABkXo=;
+        b=cycg9dYYQzxpj/tNP3SoXDQ7uyWaYxLaQ9z2cJC+LN0EAlN2QFcv8mBA6SiOEGFKc1
+         E2RlvOxUuSc0bgWZtPIDg/WCuauOpgOmcOr/zu1An9ZfSN29uPfbsqdHyZYcIiYQnXc2
+         mIJIIIL9mwHjVgMRETEZbWIPFUtfvNDOr+06q25SX/6dhc+cUE3RYY6IViCItWmo53Ad
+         DKyDnI1e6VxopNOXTMk1h2U7fSvxd6lilrmADcBFcAHaY5tXLWyav6/DqaQprpoJYNv+
+         imMmpWw1LNW8i/+WVdb6k/5T+5QaJPF6qRMH0c/Epet8VIFMQaFRTqg6L8bYMkMQxBkN
+         H5pQ==
+X-Gm-Message-State: APjAAAWz/3uQib9CunIgXCoFAR/D6Bs1FlMpEm2+xVh6u513AnnV9MAc
+        dZTvin3gGn/p9iMpSmyUPcDC6Q==
+X-Google-Smtp-Source: APXvYqwvvqWWDtlZMEyHeR3o0UJrf+fM/69T5OTeEzspifsxckyDh5dV2k+bJZqhudcsAanWCaCgmQ==
+X-Received: by 2002:a17:90b:2286:: with SMTP id kx6mr3333120pjb.95.1578646596036;
+        Fri, 10 Jan 2020 00:56:36 -0800 (PST)
+Received: from T480 (98.142.130.235.16clouds.com. [98.142.130.235])
+        by smtp.gmail.com with ESMTPSA id d14sm2079709pfq.117.2020.01.10.00.56.32
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 10 Jan 2020 00:56:35 -0800 (PST)
+Date:   Fri, 10 Jan 2020 16:56:28 +0800
+From:   Shawn Guo <shawn.guo@linaro.org>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     linux-pci@vger.kernel.org, Jingoo Han <jingoohan1@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Pratyush Anand <pratyush.anand@gmail.com>,
+        Zaihai Yu <yuzaihai@hisilicon.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] PCI: dwc: Separate CFG0 and CFG1 into different ATU
+ regions
+Message-ID: <20200110085626.GA17787@T480>
+References: <20200109060657.1953-1-shawn.guo@linaro.org>
+ <beda8923-a3b7-47eb-7cf1-19a3bacf1e34@nvidia.com>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: b6213d60-3e2f-4d46-6631-08d795a05808
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jan 2020 07:40:20.9252
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK2APC01HT235
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <beda8923-a3b7-47eb-7cf1-19a3bacf1e34@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+Hi Vidya,
 
-On Fri, Jan 10, 2020 at 03:33:27PM +0800, Yicong Yang wrote:
-> Hi,
+On Thu, Jan 09, 2020 at 11:04:01PM +0530, Vidya Sagar wrote:
 > 
-> It seems the attachments are blocked by the server.
-> The necessary console output is below.
-> The kernel version is 5.4, centos release 7.6.  I didn't
-> change the PCI codes.
+> 
+> On 1/9/2020 11:36 AM, Shawn Guo wrote:
+> > External email: Use caution opening links or attachments
+> > 
+> > 
+> > Some platform has 4 (or more) viewports.  In that case, CFG0 and CFG1
+> > can be separated into different ATU regions.
+> Is there any specific benefit with this scheme?
 
-It is very difficult for me to get the wider picture of your system 
-without the full output of "sudo lspci -xxxx". Can you place them on 
-PasteBin and send the links, rather than attaching them directly?
+Thanks much for the question which leads me to go back to vendor for
+checking design details of 4 (or more) viewports.
 
-I can try to speculate based on what you sent, but I cannot be sure it 
-will be enough. For example, I do not know if your computer has multiple 
-root complexes, which have shown to complicate things.
+It turns out the patch is not complete.  We need more code change to
+get the benefit of using separate ATU region for CFG0 and CFG1, that
+is the dw_pcie_prog_outbound_atu() call in dw_pcie_access_other_conf()
+function can  be saved.  But in the meanwhile, we need to pass
+'va_cfg_base | busdev' as the first argument to dw_pcie_write/read()
+in there.
 
-Thanks!
+@Lorenzo, @Bjorn,
+
+Please ignore this patch.
+
+Shawn
