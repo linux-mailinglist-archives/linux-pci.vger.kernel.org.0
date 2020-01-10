@@ -2,180 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FD48136B17
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Jan 2020 11:31:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5EAA0136CBE
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Jan 2020 13:10:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727486AbgAJKbl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Jan 2020 05:31:41 -0500
-Received: from mail1.perex.cz ([77.48.224.245]:49136 "EHLO mail1.perex.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727352AbgAJKbk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 10 Jan 2020 05:31:40 -0500
-Received: from mail1.perex.cz (localhost [127.0.0.1])
-        by smtp1.perex.cz (Perex's E-mail Delivery System) with ESMTP id 8B395A0040;
-        Fri, 10 Jan 2020 11:31:37 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.11.0 smtp1.perex.cz 8B395A0040
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=perex.cz; s=default;
-        t=1578652297; bh=kkS6k4Vqe/aQIiu/vUx6V9ei2NTfrbuVLe3Tuvjr6vI=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=hmyz8mickaawShu6LcZDu4uooUnwjF8xUTS3FdRG+BF/PTARZS4HEfvgK71N/aqnq
-         w6/2b5g/YF3brAr8j2PbROeg23wv0S5axP70l0Wv9itbTpnnnqHir58MJIELKYnUbC
-         nrERdz4TYFY0gXW6ye5rCISF4hHwAh1X6bSWa2X0=
-Received: from p50.perex-int.cz (unknown [192.168.100.94])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: perex)
-        by mail1.perex.cz (Perex's E-mail Delivery System) with ESMTPSA;
-        Fri, 10 Jan 2020 11:31:29 +0100 (CET)
-Subject: Re: [alsa-devel] [PATCH v6 2/2] ALSA: hda: Allow HDA to be runtime
- suspended when dGPU is not bound to a driver
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>, bhelgaas@google.com,
-        tiwai@suse.com, linux-pci@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
-References: <20191018073848.14590-1-kai.heng.feng@canonical.com>
- <20191018073848.14590-2-kai.heng.feng@canonical.com>
- <10e35320-b7a8-0bcf-92d1-61aa5c057f58@perex.cz>
- <s5ha76vmy8c.wl-tiwai@suse.de>
-From:   Jaroslav Kysela <perex@perex.cz>
-Message-ID: <fd9d174e-febe-27ef-cc4c-f19007e21a1a@perex.cz>
-Date:   Fri, 10 Jan 2020 11:31:29 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        id S1727909AbgAJMKc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Jan 2020 07:10:32 -0500
+Received: from mail-pj1-f53.google.com ([209.85.216.53]:39028 "EHLO
+        mail-pj1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727868AbgAJMKc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Jan 2020 07:10:32 -0500
+Received: by mail-pj1-f53.google.com with SMTP id m1so921600pjv.4
+        for <linux-pci@vger.kernel.org>; Fri, 10 Jan 2020 04:10:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=N1hfXg4LHfOQ4rsMFLoWXEIHtD836C3veIylGFjbfa4=;
+        b=vOe/Yk5o2vo7tZMcqIiltuZE+E50lVk+UWVaf1xyoea8HFax+edXlikLNUBGt1uMKB
+         ryulSeF1SWI/7jerFX08VtP91nhZYERHIQqT6V1ucA9PB5WM8mH87+hzrOJooIF7ZEaQ
+         sPcv499KGNvZrJ7lJDk6gu/DqU0IkM+imfP7fdxnKnuLpaf2/uNlZmGa+bDcQZq/PvV4
+         vJbVkHn2SL5GwSmJHEpl5XQkIyzQdReu2czhhJryM3rGwZ4h/svtQJnJm7ms2uUt4q9V
+         HVCpxRxlctqQr1tCU8wLoOVSxd29EqiZOFspAeczBBcUfWaqBf5/Afr+iG3p2+mhxPoo
+         vdVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=N1hfXg4LHfOQ4rsMFLoWXEIHtD836C3veIylGFjbfa4=;
+        b=L8NeNrspOxXIVeZqmU8AOJDIwpCbfGhFG5fpalKAeXAYiWMsApwiVyRqLp6nRMyA/5
+         W/EtcMjxHTO0p0Z5Tbhnwl6FGVdwiOeMNjCM6GssN17ZW8YL0TNKbJ5HFq+tr1aAAUWq
+         rGmDAEnRo/o/uR/uAwDxOpG5By6x0UhJf979PcwFVndu3wTVR/OCAMW/+HgQe7xDTHkc
+         OT2IhwCEl0GF/gl8ZF59hhjhSu1/eQGGVwPfo4OevkDaHlcVxRH1dDXA1GDqz+ejADGn
+         nncapfpsOcht2j7e/JsFM9LE+muhh2ehur3Q7b4zxZeIt2T9hAynX5R5ZHw56RbSSvWy
+         RPmA==
+X-Gm-Message-State: APjAAAXpeKoO0ICKKmOrm0ojXGHzyyXDYTdIdAIE073yiN01p7xSMN8T
+        S11yy7AsbGoCHRRhE0OAihUq2V3XvpSfmyUcrBM=
+X-Google-Smtp-Source: APXvYqx/I2yeAd77dxWaywzTwvgV//29iFUXikg85IX9G0+v53Geb7+3/cQxE6FcHtXOQ3AnDb4khT2FaJiExC+0FvA=
+X-Received: by 2002:a17:90b:3109:: with SMTP id gc9mr4420378pjb.30.1578658231291;
+ Fri, 10 Jan 2020 04:10:31 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <s5ha76vmy8c.wl-tiwai@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <nycvar.YSQ.7.76.2001101712310.129933@xnncv>
+In-Reply-To: <nycvar.YSQ.7.76.2001101712310.129933@xnncv>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 10 Jan 2020 14:10:22 +0200
+Message-ID: <CAHp75Ve4WhwqKft_7nMi5Ys9N4Fs98G1FgKxpKZ59e_UyCsKuw@mail.gmail.com>
+Subject: Re: About pci_ioremap_bar null dereference
+To:     P J P <ppandit@redhat.com>, linux-pci@vger.kernel.org
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Dne 10. 01. 20 v 10:56 Takashi Iwai napsal(a):
-> On Fri, 10 Jan 2020 10:43:26 +0100,
-> Jaroslav Kysela wrote:
->>
->> Dne 18. 10. 19 v 9:38 Kai-Heng Feng napsal(a):
->>> Nvidia proprietary driver doesn't support runtime power management, so
->>> when a user only wants to use the integrated GPU, it's a common practice
->>> to let dGPU not to bind any driver, and let its upstream port to be
->>> runtime suspended. At the end of runtime suspension the port uses
->>> platform power management to disable power through _OFF method of power
->>> resource, which is listed by _PR3.
->>>
->>> After commit b516ea586d71 ("PCI: Enable NVIDIA HDA controllers"), when
->>> the dGPU comes with an HDA function, the HDA won't be suspended if the
->>> dGPU is unbound, so the power resource can't be turned off by its
->>> upstream port driver.
->>>
->>> Commit 37a3a98ef601 ("ALSA: hda - Enable runtime PM only for
->>> discrete GPU") only allows HDA to be runtime suspended once GPU is
->>> bound, to keep APU's HDA working.
->>>
->>> However, HDA on dGPU isn't that useful if dGPU is not bound to any
->>> driver.  So let's relax the runtime suspend requirement for dGPU's HDA
->>> function, to disable the power source to save lots of power.
->>
->> This patch breaks the HDMI audio detection at least on some platforms
->> (Lenovo P50 for example) with nouveau and the proprietary nvidia
->> driver. Those laptops have the external HDMI/DP ports connected to
->> dGPU instead the iGPU. The ACPI PR3 is set.
->>
->> The runtime PM off fixes this problem:
->>
->> echo on > /sys/bus/pci/devices/0000\:01\:00.1/power/control
-> 
-> But this will keep the power of the graphics chip on, and that's what
-> the patch was supposed to "fix".
-> 
->> But I don't think that it's the best solution. My proposal is to
->> create a pr3 check blacklist to keep power for the HDMI audio for
->> those machines. Also we may add a new module parameter for
->> snd-hda-intel to control this. Other ideas?
-> 
-> For nouveau, the best fix is to merge the audio component patch.
-> This will make things working without fiddling with the power
-> up/down.  The patch has been pending over months under review in DRM
-> side, unfortunately...  Please pinging them for driving ahead.
+Cc'ed to Linux PCI ML in case somebody has better knowledge about.
 
-Adding Cc: to dri-devel. You probably mean this thread:
+On Fri, Jan 10, 2020 at 1:54 PM P J P <ppandit@redhat.com> wrote:
+>
+>    Hello Andy, Navid
+>
+>   -> https://git.kernel.org/linus/ea5ab2e422de0ef0fc476fe40f0829abe72684cd
+>
+> I was trying to understand this NULL dereference. IIUC, pci_ioremap_bar()
+> returning NULL indicates insufficient memory OR if the pci device is
+> configured to use I/O port address, instead of memory mapped region.
+>
+> I was wondering if(or how) it is reproducible for unprivileged user? Do you
+> happen to have a reproducer for it?
 
-https://lists.freedesktop.org/archives/dri-devel/2019-July/thread.html#227423
-
-> For Nvidia, though, it's no path a binary-only stuff can go with, due
-> to the GPL symbol of the component framework.  Those guys know of it
-> well, and they seem adding the temporary power up/down procedure by
-> poking the proc file from the user-space side at the HDMI connection.
-
-Wow.
-
-> About a module option: I don't think it's much better than the sysfs
-> toggle.  You can set up a simple udev rule if needed, too.
-
-Ok, it's a bit nightmare to maintain those extra settings in the distribution.
-
-					Jaroslav
-
-> 
-> 
-> thanks,
-> 
-> Takashi
-> 
->>
->> 					Jaroslav
->>
->>
->>> BugLink: https://bugs.launchpad.net/bugs/1840835
->>> Fixes: b516ea586d71 ("PCI: Enable NVIDIA HDA controllers")
->>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
->>> ---
->>> v5, v6:
->>> - No change.
->>> v4:
->>> - Find upstream port, it's callee's responsibility now.
->>> v3:
->>> - Make changelog more clear.
->>> v2:
->>> - Change wording.
->>> - Rebase to Tiwai's branch.
->>>    sound/pci/hda/hda_intel.c | 8 +++++++-
->>>    1 file changed, 7 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
->>> index 240f4ca76391..e63b871343e5 100644
->>> --- a/sound/pci/hda/hda_intel.c
->>> +++ b/sound/pci/hda/hda_intel.c
->>> @@ -1280,11 +1280,17 @@ static void init_vga_switcheroo(struct azx *chip)
->>>    {
->>>    	struct hda_intel *hda = container_of(chip, struct hda_intel, chip);
->>>    	struct pci_dev *p = get_bound_vga(chip->pci);
->>> +	struct pci_dev *parent;
->>>    	if (p) {
->>>    		dev_info(chip->card->dev,
->>>    			 "Handle vga_switcheroo audio client\n");
->>>    		hda->use_vga_switcheroo = 1;
->>> -		chip->bus.keep_power = 1; /* cleared in either gpu_bound op or codec probe */
->>> +
->>> +		/* cleared in either gpu_bound op or codec probe, or when its
->>> +		 * upstream port has _PR3 (i.e. dGPU).
->>> +		 */
->>> +		parent = pci_upstream_bridge(p);
->>> +		chip->bus.keep_power = parent ? !pci_pr3_present(parent) : 1;
->>>    		chip->driver_caps |= AZX_DCAPS_PM_RUNTIME;
->>>    		pci_dev_put(p);
->>>    	}
->>>
->>
->>
->> -- 
->> Jaroslav Kysela <perex@perex.cz>
->> Linux Sound Maintainer; ALSA Project; Red Hat, Inc.
->>
+It's very unlikely to see IRL such problem. Theoretically  it may
+happen if the system in question has a LOT of devices connected to PCI
+and suddenly there is no window for a resource left (usually 4k) under
+PCI Root Bridge. Other than that I can't imagine what can go wrong.
+Ah, of course the virtual space starvation is another possibility.
 
 
 -- 
-Jaroslav Kysela <perex@perex.cz>
-Linux Sound Maintainer; ALSA Project; Red Hat, Inc.
+With Best Regards,
+Andy Shevchenko
