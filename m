@@ -2,146 +2,221 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1172A137E05
-	for <lists+linux-pci@lfdr.de>; Sat, 11 Jan 2020 11:06:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D0DE1380F0
+	for <lists+linux-pci@lfdr.de>; Sat, 11 Jan 2020 11:39:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728911AbgAKKEJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 11 Jan 2020 05:04:09 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:27741 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728939AbgAKKEJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 11 Jan 2020 05:04:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578737048;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=+A7qVqL+kOfiotLJYXOYSH7AWSTgiw9QTUBY34scgx4=;
-        b=bzENziGGN3yRq7wElvS4CJ/m0uBtlsXdhjMDomQV2+YoJbr3W+MvjnoK1C7ArewTYIdKN6
-        P4c2yiMScalJVeJW9Nx1+ZcfuWHwcn99RBN3W3fvnGj+7ew1XjESTvbFaEpNWNpUsPoQwh
-        +qsJU0LcVlh77h5gRr7HmSqtx6sWc4k=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-131-RDdW0EfqOTaHm80AVpxXOg-1; Sat, 11 Jan 2020 05:04:07 -0500
-X-MC-Unique: RDdW0EfqOTaHm80AVpxXOg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8DF24800D41;
-        Sat, 11 Jan 2020 10:04:05 +0000 (UTC)
-Received: from localhost (ovpn-12-65.pek2.redhat.com [10.72.12.65])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A0E3A8062A;
-        Sat, 11 Jan 2020 10:04:04 +0000 (UTC)
-Date:   Sat, 11 Jan 2020 18:04:01 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Khalid Aziz <khalid@gonehiking.org>
-Cc:     Jerry.Hoemann@hpe.com, Bjorn Helgaas <helgaas@kernel.org>,
-        Kairui Song <kasong@redhat.com>, linux-pci@vger.kernel.org,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Randy Wright <rwright@hpe.com>
-Subject: Re: [RFC PATCH] PCI, kdump: Clear bus master bit upon shutdown in
- kdump kernel
-Message-ID: <20200111100401.GE19291@MiWiFi-R3L-srv>
-References: <20200110214217.GA88274@google.com>
- <e0194581-4cdd-3629-d9fe-10a1cfd29d03@gonehiking.org>
- <20200110230003.GB1875851@anatevka.americas.hpqcorp.net>
- <d2715683-f171-a825-3c0b-678b6c5c1a79@gonehiking.org>
- <20200111005041.GB19291@MiWiFi-R3L-srv>
- <dc46c904-1652-09b3-f351-6b3a3e761d74@gonehiking.org>
+        id S1728996AbgAKKjw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 11 Jan 2020 05:39:52 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:33940 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728861AbgAKKjw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:39:52 -0500
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id C400EEAAEB4F45AE65C4;
+        Sat, 11 Jan 2020 18:39:49 +0800 (CST)
+Received: from linux-ibm.site (10.175.102.37) by
+ DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
+ 14.3.439.0; Sat, 11 Jan 2020 18:39:41 +0800
+From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
+To:     <bhelgaas@google.com>, <lukas@wunner.de>, <keith.busch@intel.com>,
+        <andy.shevchenko@gmail.com>, <rafael.j.wysocki@intel.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <guohanjun@huawei.com>, <huawei.libin@huawei.com>,
+        <lvying6@huawei.com>, <wangxiongfeng2@huawei.com>
+Subject: [PATCH] PCI/AER: increments pci bus reference count in aer-inject process
+Date:   Sat, 11 Jan 2020 18:34:59 +0800
+Message-ID: <1578738899-11408-1-git-send-email-wangxiongfeng2@huawei.com>
+X-Mailer: git-send-email 1.7.12.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dc46c904-1652-09b3-f351-6b3a3e761d74@gonehiking.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain
+X-Originating-IP: [10.175.102.37]
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 01/10/20 at 08:45pm, Khalid Aziz wrote:
-> >>>>>> -	if (kexec_in_progress && (pci_dev->current_state <= PCI_D3hot))
-> >>>>>> +	if ((kexec_in_progress || is_kdump_kernel()) &&
-> >>>>>> +			pci_dev->current_state <= PCI_D3hot)
-> >>>>>>  		pci_clear_master(pci_dev);
-> >>>>>
-> >>>>> I'm clearly missing something because this will turn off bus mastering
-> >>>>> in cases where we previously left it enabled.
-> >>>>>
-> >>>>> I was assuming the crash was related to a device doing DMA when the
-> >>>>> Root Port had bus mastering disabled.  But that must be wrong.
-> >>>>>
-> >>>>> I'd like to understand the crash/hang better because the quirk
-> >>>>> especially is hard to connect to anything.  If the crash is because of
-> >>>>> an AER or other PCIe error, maybe another possibility is that we could
-> >>>>> handle it better or disable signaling of it or something.
-> >>>>>
-> >>>>
-> >>>> I am not understanding this failure mode either. That code in
-> >>>> pci_device_shutdown() was added originally to address this very issue.
-> >>>> The patch 4fc9bbf98fd6 ("PCI: Disable Bus Master only on kexec reboot")
-> >>>> shut down any errant DMAs from PCI devices as we kexec a new kernel. In
-> >>>> this new patch, this is the same code path that will be taken again when
-> >>>> kdump kernel is shutting down. If the errant DMA problem was not fixed
-> >>>> by clearing Bus Master bit in this path when kdump kernel was being
-> >>>> kexec'd, why does the same code path work the second time around when
-> >>>> kdump kernel is shutting down? Is there more going on that we don't
-> >>>> understand?
-> >>>>
-> >>>
-> >>>   Khalid,
-> >>>
-> >>>   I don't believe we execute that code path in the crash case.
-> >>>
-> >>>   The variable kexec_in_progress is set true in kernel_kexec() before calling
-> >>>   machine_kexec().  This is the fast reboot case.
-> >>>
-> >>>   I don't see kexec_in_progress set true elsewhere.
-> >>>
-> >>>
-> >>>   The code path for crash is different.
-> >>>
-> >>>   For instance, panic() will call
-> >>> 	-> __crash_kexec()  which calls
-> >>> 		-> machine_kexec().
-> >>>
-> >>>  So the setting of kexec_in_progress is bypassed.
-> >>>
-> >>
-> >> True, but what that means is if it is an errant DMA causing the issue
-> >> you are seeing, that errant DMA can happen any time between when we
-> > 
-> > Here, there could be misunderstanding. It's not an errant DMA, it's an
-> > device which may be in DMA transporting state in normal kernel, but in
-> > kdump kernel it's not manipulated by its driver because we don't use it
-> > to dump, so exlucde its driver from kdump initramfs for saving space. 
-> > 
-> 
-> Errant DMA as in currently running kernel did not enable the device to
-> do DMA and is not ready for it. If a device can issue DMA request in
-> this state, it could do it well before kdump kernel starts shutting
-> down. Don't we need to fix this before we start shutting down kdump in
-> preparation for reboot? I can see the need for this fix, but I am not
-> sure if this patch places the fix in right place.
+When I test 'aer-inject' with the following procedures:
+1. inject a fatal error into a PCI device
+2. remove the parent device by sysfs
+3. execute command 'rmmod aer-inject'
 
-Ah, I could get your point now, but not very sure. Do you mean the HPSA
-is in errant DMA state, because it doesn't have driver to re-initilize
-to correct state? 
+I came across the following use-after-free.
 
-We have been doing like this for kdump kernel always, to only
-include needed devices' driver to kdump initrd so that the driver will
-initialize and opearte the device. For other unneeded devices by kdump
-kernel, we just leave it as is. This error is only seen on this HPE
-owned system. Wondering if HPE can do something to check their
-firmware/hardware setting.
+[  297.581524] ==================================================================
+[  297.581543] BUG: KASAN: use-after-free in pci_bus_set_ops+0xb4/0xb8
+[  297.581545] Read of size 8 at addr ffff802edbde80e0 by task rmmod/21839
 
-This patch is using a quirk to adjust all those devices if its
-pci_dev->current_state is beyond PCI_D3hot during bootup. Then clear the
-master bit of device firstly, next clear its parent bridge's master bit,
-to make reboot proceed further. This need you PCI experts to offer help
-to evaluate.
+[  297.581552] CPU: 119 PID: 21839 Comm: rmmod Kdump: loaded Not tainted 4.19.36 #1
+[  297.581554] Hardware name: Huawei TaiShan 2280 V2/BC82AMDD, BIOS 1.05 09/18/2019
+[  297.581556] Call trace:
+[  297.581561]  dump_backtrace+0x0/0x360
+[  297.581563]  show_stack+0x24/0x30
+[  297.581569]  dump_stack+0xd8/0x104
+[  297.581576]  print_address_description+0x68/0x278
+[  297.581578]  kasan_report+0x204/0x330
+[  297.581580]  __asan_report_load8_noabort+0x30/0x40
+[  297.581582]  pci_bus_set_ops+0xb4/0xb8
+[  297.581591]  aer_inject_exit+0x198/0x334 [aer_inject]
+[  297.581595]  __arm64_sys_delete_module+0x310/0x490
+[  297.581601]  el0_svc_common+0xfc/0x278
+[  297.581603]  el0_svc_handler+0x50/0xc0
+[  297.581605]  el0_svc+0x8/0xc
 
-Thanks
-Baoquan
+[  297.581608] Allocated by task 1:
+[  297.581611]  kasan_kmalloc+0xe0/0x190
+[  297.581614]  kmem_cache_alloc_trace+0x104/0x218
+[  297.581616]  pci_alloc_bus+0x50/0x2e0
+[  297.581618]  pci_add_new_bus+0xa8/0xe08
+[  297.581620]  pci_scan_bridge_extend+0x884/0xb28
+[  297.581623]  pci_scan_child_bus_extend+0x350/0x628
+[  297.581625]  pci_scan_child_bus+0x24/0x30
+[  297.581627]  pci_scan_bridge_extend+0x3b8/0xb28
+[  297.581629]  pci_scan_child_bus_extend+0x350/0x628
+[  297.581631]  pci_scan_child_bus+0x24/0x30
+[  297.581635]  acpi_pci_root_create+0x558/0x888
+[  297.581640]  pci_acpi_scan_root+0x198/0x330
+[  297.581641]  acpi_pci_root_add+0x7bc/0xbb0
+[  297.581646]  acpi_bus_attach+0x2f4/0x728
+[  297.581647]  acpi_bus_attach+0x1b0/0x728
+[  297.581649]  acpi_bus_attach+0x1b0/0x728
+[  297.581651]  acpi_bus_scan+0xa0/0x110
+[  297.581657]  acpi_scan_init+0x20c/0x500
+[  297.581659]  acpi_init+0x54c/0x5d4
+[  297.581661]  do_one_initcall+0xbc/0x480
+[  297.581665]  kernel_init_freeable+0x5fc/0x6ac
+[  297.581670]  kernel_init+0x18/0x128
+[  297.581671]  ret_from_fork+0x10/0x18
+
+[  297.581673] Freed by task 19270:
+[  297.581675]  __kasan_slab_free+0x120/0x228
+[  297.581677]  kasan_slab_free+0x10/0x18
+[  297.581678]  kfree+0x80/0x1f8
+[  297.581680]  release_pcibus_dev+0x54/0x68
+[  297.581686]  device_release+0xd4/0x1c0
+[  297.581689]  kobject_put+0x12c/0x400
+[  297.581691]  device_unregister+0x30/0xc0
+[  297.581693]  pci_remove_bus+0xe8/0x1c0
+[  297.581695]  pci_remove_bus_device+0xd0/0x2f0
+[  297.581697]  pci_stop_and_remove_bus_device_locked+0x2c/0x40
+[  297.581701]  remove_store+0x1b8/0x1d0
+[  297.581703]  dev_attr_store+0x60/0x80
+[  297.581708]  sysfs_kf_write+0x104/0x170
+[  297.581710]  kernfs_fop_write+0x23c/0x430
+[  297.581713]  __vfs_write+0xec/0x4e0
+[  297.581714]  vfs_write+0x12c/0x3d0
+[  297.581715]  ksys_write+0xd0/0x190
+[  297.581716]  __arm64_sys_write+0x70/0xa0
+[  297.581718]  el0_svc_common+0xfc/0x278
+[  297.581720]  el0_svc_handler+0x50/0xc0
+[  297.581721]  el0_svc+0x8/0xc
+
+[  297.581724] The buggy address belongs to the object at ffff802edbde8000
+                which belongs to the cache kmalloc-2048 of size 2048
+[  297.581726] The buggy address is located 224 bytes inside of
+                2048-byte region [ffff802edbde8000, ffff802edbde8800)
+[  297.581727] The buggy address belongs to the page:
+[  297.581730] page:ffff7e00bb6f7a00 count:1 mapcount:0 mapping:ffff8026de810780 index:0x0 compound_mapcount: 0
+[  297.591520] flags: 0x2ffffe0000008100(slab|head)
+[  297.596121] raw: 2ffffe0000008100 ffff7e00bb6f5008 ffff7e00bb6ff608 ffff8026de810780
+[  297.596123] raw: 0000000000000000 00000000000f000f 00000001ffffffff 0000000000000000
+[  297.596124] page dumped because: kasan: bad access detected
+
+[  297.596126] Memory state around the buggy address:
+[  297.596128]  ffff802edbde7f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+[  297.596129]  ffff802edbde8000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  297.596131] >ffff802edbde8080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  297.596132]                                                        ^
+[  297.596133]  ffff802edbde8100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  297.596135]  ffff802edbde8180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  297.596135] ==================================================================
+
+It is because when we unload the module and restore the member 'pci_ops'
+of 'pci_bus', the 'pci_bus' has been freed. This patch increments the
+reference count of 'pci_bus' when we modify its member 'pci_ops' and
+decrements the reference count after we have restored its member.
+
+This patch export pci_bus_get() and pci_bus_put() again and reverts the
+following two commits.
+fae6b93b19b4 ("PCI: Unexport pci_bus_get() and pci_bus_put()")
+ecd29c1a38af ("PCI: Make pci_bus_get(), pci_bus_put() private")
+
+Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+---
+ drivers/pci/bus.c             | 2 ++
+ drivers/pci/pci.h             | 2 --
+ drivers/pci/pcie/aer_inject.c | 8 ++++++++
+ include/linux/pci.h           | 2 ++
+ 4 files changed, 12 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
+index 8e40b3e..495059d 100644
+--- a/drivers/pci/bus.c
++++ b/drivers/pci/bus.c
+@@ -417,9 +417,11 @@ struct pci_bus *pci_bus_get(struct pci_bus *bus)
+ 		get_device(&bus->dev);
+ 	return bus;
+ }
++EXPORT_SYMBOL(pci_bus_get);
+ 
+ void pci_bus_put(struct pci_bus *bus)
+ {
+ 	if (bus)
+ 		put_device(&bus->dev);
+ }
++EXPORT_SYMBOL(pci_bus_put);
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index a0a53bd..cf849b7 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -286,8 +286,6 @@ void __pci_bus_assign_resources(const struct pci_bus *bus,
+ 
+ void pci_reassigndev_resource_alignment(struct pci_dev *dev);
+ void pci_disable_bridge_window(struct pci_dev *dev);
+-struct pci_bus *pci_bus_get(struct pci_bus *bus);
+-void pci_bus_put(struct pci_bus *bus);
+ 
+ /* PCIe link information */
+ #define PCIE_SPEED2STR(speed) \
+diff --git a/drivers/pci/pcie/aer_inject.c b/drivers/pci/pcie/aer_inject.c
+index 6988fe7..0b6b3d0 100644
+--- a/drivers/pci/pcie/aer_inject.c
++++ b/drivers/pci/pcie/aer_inject.c
+@@ -307,6 +307,13 @@ static int pci_bus_set_aer_ops(struct pci_bus *bus)
+ 	spin_lock_irqsave(&inject_lock, flags);
+ 	if (ops == &aer_inj_pci_ops)
+ 		goto out;
++	/*
++	 * increments the reference count of the pci bus. Otherwise, when we
++	 * restore the 'pci_ops' in 'aer_inject_exit', the 'pci_bus' may have
++	 * been freed.
++	 */
++	pci_bus_get(bus);
++
+ 	pci_bus_ops_init(bus_ops, bus, ops);
+ 	list_add(&bus_ops->list, &pci_bus_ops_list);
+ 	bus_ops = NULL;
+@@ -529,6 +536,7 @@ static void __exit aer_inject_exit(void)
+ 
+ 	while ((bus_ops = pci_bus_ops_pop())) {
+ 		pci_bus_set_ops(bus_ops->bus, bus_ops->ops);
++		pci_bus_put(bus_ops->bus);
+ 		kfree(bus_ops);
+ 	}
+ 
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index c393dff..adef0da 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1288,6 +1288,8 @@ int pci_add_ext_cap_save_buffer(struct pci_dev *dev,
+ void pci_release_selected_regions(struct pci_dev *, int);
+ 
+ /* drivers/pci/bus.c */
++struct pci_bus *pci_bus_get(struct pci_bus *bus);
++void pci_bus_put(struct pci_bus *bus);
+ void pci_add_resource(struct list_head *resources, struct resource *res);
+ void pci_add_resource_offset(struct list_head *resources, struct resource *res,
+ 			     resource_size_t offset);
+-- 
+1.7.12.4
 
