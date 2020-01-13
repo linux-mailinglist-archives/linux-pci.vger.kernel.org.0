@@ -2,22 +2,22 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AF8D8138EE4
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Jan 2020 11:19:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2429A138F2A
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Jan 2020 11:34:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726127AbgAMKTP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Jan 2020 05:19:15 -0500
-Received: from foss.arm.com ([217.140.110.172]:37098 "EHLO foss.arm.com"
+        id S1728720AbgAMKeg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Jan 2020 05:34:36 -0500
+Received: from foss.arm.com ([217.140.110.172]:37386 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726001AbgAMKTP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 13 Jan 2020 05:19:15 -0500
+        id S1726133AbgAMKeg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 13 Jan 2020 05:34:36 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B0D1C13D5;
-        Mon, 13 Jan 2020 02:19:14 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 802DD13D5;
+        Mon, 13 Jan 2020 02:34:35 -0800 (PST)
 Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0189D3F534;
-        Mon, 13 Jan 2020 02:19:14 -0800 (PST)
-Date:   Mon, 13 Jan 2020 10:19:12 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 926413F534;
+        Mon, 13 Jan 2020 02:34:34 -0800 (PST)
+Date:   Mon, 13 Jan 2020 10:34:32 +0000
 From:   Andrew Murray <andrew.murray@arm.com>
 To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
 Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
@@ -39,114 +39,162 @@ Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         Mingkai Hu <mingkai.hu@nxp.com>,
         "M.h. Lian" <minghuan.lian@nxp.com>,
         Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: Re: [PATCHv9 02/12] PCI: mobiveil: Move the host initialization into
- a routine
-Message-ID: <20200113101912.GH42593@e119886-lin.cambridge.arm.com>
+Subject: Re: [PATCHv9 03/12] PCI: mobiveil: Collect the interrupt related
+ operations into a routine
+Message-ID: <20200113103431.GI42593@e119886-lin.cambridge.arm.com>
 References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
- <20191120034451.30102-3-Zhiqiang.Hou@nxp.com>
+ <20191120034451.30102-4-Zhiqiang.Hou@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191120034451.30102-3-Zhiqiang.Hou@nxp.com>
+In-Reply-To: <20191120034451.30102-4-Zhiqiang.Hou@nxp.com>
 User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 03:45:30AM +0000, Z.q. Hou wrote:
+On Wed, Nov 20, 2019 at 03:45:37AM +0000, Z.q. Hou wrote:
 > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 > 
-> Move the host initialization related operations into a new
-> routine to make it can be reused by other incoming platform's
+> Collect the interrupt initialization related operations into
+> a new routine to make it more readable.
 
-s/to make/such that/
+I prefer the word 'function' instead of routine. Also indicate why, not only
+is it nicer but it is in preparation for EP support.
 
-'function' is probably a better word than 'routine'.
-
-
-> PCIe host driver, in which the Mobiveil GPEX is integrated.
 > 
 > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 > ---
 > V9:
 >  - New patch splited from the #1 of V8 patches to make it easy to review.
 > 
->  drivers/pci/controller/pcie-mobiveil.c | 38 +++++++++++++++-----------
->  1 file changed, 22 insertions(+), 16 deletions(-)
+>  drivers/pci/controller/pcie-mobiveil.c | 65 +++++++++++++++++---------
+>  1 file changed, 42 insertions(+), 23 deletions(-)
 > 
 > diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-> index 5fd26e376af2..97f682ca7c7a 100644
+> index 97f682ca7c7a..512b27a0536e 100644
 > --- a/drivers/pci/controller/pcie-mobiveil.c
 > +++ b/drivers/pci/controller/pcie-mobiveil.c
-> @@ -873,27 +873,15 @@ static int mobiveil_pcie_init_irq_domain(struct mobiveil_pcie *pcie)
+> @@ -454,12 +454,6 @@ static int mobiveil_pcie_parse_dt(struct mobiveil_pcie *pcie)
+>  		return PTR_ERR(pcie->csr_axi_slave_base);
+>  	pcie->pcie_reg_base = res->start;
+>  
+> -	/* map MSI config resource */
+> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "apb_csr");
+> -	pcie->apb_csr_base = devm_pci_remap_cfg_resource(dev, res);
+> -	if (IS_ERR(pcie->apb_csr_base))
+> -		return PTR_ERR(pcie->apb_csr_base);
+> -
+>  	/* read the number of windows requested */
+>  	if (of_property_read_u32(node, "apio-wins", &pcie->apio_wins))
+>  		pcie->apio_wins = MAX_PIO_WINDOWS;
+> @@ -467,12 +461,6 @@ static int mobiveil_pcie_parse_dt(struct mobiveil_pcie *pcie)
+>  	if (of_property_read_u32(node, "ppio-wins", &pcie->ppio_wins))
+>  		pcie->ppio_wins = MAX_PIO_WINDOWS;
+>  
+> -	rp->irq = platform_get_irq(pdev, 0);
+> -	if (rp->irq <= 0) {
+> -		dev_err(dev, "failed to map IRQ: %d\n", rp->irq);
+> -		return -ENODEV;
+> -	}
+> -
 >  	return 0;
 >  }
 >  
-> -static int mobiveil_pcie_probe(struct platform_device *pdev)
-> +int mobiveil_pcie_host_probe(struct mobiveil_pcie *pcie)
-
-This is no longer static - but do you need to add a header file somewhere?
-
-
->  {
-> -	struct mobiveil_pcie *pcie;
-> +	struct root_port *rp = &pcie->rp;
-> +	struct pci_host_bridge *bridge = rp->bridge;
-> +	struct device *dev = &pcie->pdev->dev;
->  	struct pci_bus *bus;
->  	struct pci_bus *child;
-> -	struct pci_host_bridge *bridge;
-> -	struct device *dev = &pdev->dev;
-> -	struct root_port *rp;
->  	int ret;
+> @@ -618,9 +606,6 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+>  	pab_ctrl |= (1 << AMBA_PIO_ENABLE_SHIFT) | (1 << PEX_PIO_ENABLE_SHIFT);
+>  	mobiveil_csr_writel(pcie, pab_ctrl, PAB_CTRL);
 >  
-> -	/* allocate the PCIe port */
-> -	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
-> -	if (!bridge)
-> -		return -ENOMEM;
+> -	mobiveil_csr_writel(pcie, (PAB_INTP_INTX_MASK | PAB_INTP_MSI_MASK),
+> -			    PAB_INTP_AMBA_MISC_ENB);
 > -
-> -	pcie = pci_host_bridge_priv(bridge);
-> -	rp = &pcie->rp;
-> -	rp->bridge = bridge;
+>  	/*
+>  	 * program PIO Enable Bit to 1 and Config Window Enable Bit to 1 in
+>  	 * PAB_AXI_PIO_CTRL Register
+> @@ -670,9 +655,6 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+>  	value |= (PCI_CLASS_BRIDGE_PCI << 16);
+>  	mobiveil_csr_writel(pcie, value, PAB_INTP_AXI_PIO_CLASS);
+>  
+> -	/* setup MSI hardware registers */
+> -	mobiveil_pcie_enable_msi(pcie);
 > -
-> -	pcie->pdev = pdev;
-> -
->  	ret = mobiveil_pcie_parse_dt(pcie);
->  	if (ret) {
->  		dev_err(dev, "Parsing DT failed, ret: %x\n", ret);
-> @@ -956,6 +944,24 @@ static int mobiveil_pcie_probe(struct platform_device *pdev)
 >  	return 0;
 >  }
 >  
-> +static int mobiveil_pcie_probe(struct platform_device *pdev)
+> @@ -873,6 +855,46 @@ static int mobiveil_pcie_init_irq_domain(struct mobiveil_pcie *pcie)
+>  	return 0;
+>  }
+>  
+> +static int mobiveil_pcie_interrupt_init(struct mobiveil_pcie *pcie)
 > +{
-> +	struct mobiveil_pcie *pcie;
-> +	struct pci_host_bridge *bridge;
+> +	struct platform_device *pdev = pcie->pdev;
 > +	struct device *dev = &pdev->dev;
+> +	struct root_port *rp = &pcie->rp;
+> +	struct resource *res;
+> +	int ret;
 > +
-> +	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
+> +	/* map MSI config resource */
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "apb_csr");
+> +	pcie->apb_csr_base = devm_pci_remap_cfg_resource(dev, res);
+> +	if (IS_ERR(pcie->apb_csr_base))
+> +		return PTR_ERR(pcie->apb_csr_base);
+> +
+> +	/* setup MSI hardware registers */
+> +	mobiveil_pcie_enable_msi(pcie);
 
-You've lost the comment that was above this.
+Does this need to come after mobiveil_pcie_init_irq_domain - given that
+this function sets up the irq domain for MSI?
 
 Thanks,
 
 Andrew Murray
 
-> +	if (!bridge)
-> +		return -ENOMEM;
 > +
-> +	pcie = pci_host_bridge_priv(bridge);
-> +	pcie->rp.bridge = bridge;
+> +	rp->irq = platform_get_irq(pdev, 0);
+> +	if (rp->irq <= 0) {
+> +		dev_err(dev, "failed to map IRQ: %d\n", rp->irq);
+> +		return -ENODEV;
+> +	}
 > +
-> +	pcie->pdev = pdev;
+> +	/* initialize the IRQ domains */
+> +	ret = mobiveil_pcie_init_irq_domain(pcie);
+> +	if (ret) {
+> +		dev_err(dev, "Failed creating IRQ Domain\n");
+> +		return ret;
+> +	}
 > +
-> +	return mobiveil_pcie_host_probe(pcie);
+> +	irq_set_chained_handler_and_data(rp->irq, mobiveil_pcie_isr, pcie);
+> +
+> +	/* Enable interrupts */
+> +	mobiveil_csr_writel(pcie, (PAB_INTP_INTX_MASK | PAB_INTP_MSI_MASK),
+> +			    PAB_INTP_AMBA_MISC_ENB);
+> +
+> +
+> +	return 0;
 > +}
 > +
->  static const struct of_device_id mobiveil_pcie_of_match[] = {
->  	{.compatible = "mbvl,gpex40-pcie",},
->  	{},
+>  int mobiveil_pcie_host_probe(struct mobiveil_pcie *pcie)
+>  {
+>  	struct root_port *rp = &pcie->rp;
+> @@ -906,15 +928,12 @@ int mobiveil_pcie_host_probe(struct mobiveil_pcie *pcie)
+>  		return ret;
+>  	}
+>  
+> -	/* initialize the IRQ domains */
+> -	ret = mobiveil_pcie_init_irq_domain(pcie);
+> +	ret = mobiveil_pcie_interrupt_init(pcie);
+>  	if (ret) {
+> -		dev_err(dev, "Failed creating IRQ Domain\n");
+> +		dev_err(dev, "Interrupt init failed\n");
+>  		return ret;
+>  	}
+>  
+> -	irq_set_chained_handler_and_data(rp->irq, mobiveil_pcie_isr, pcie);
+> -
+>  	/* Initialize bridge */
+>  	bridge->dev.parent = dev;
+>  	bridge->sysdata = pcie;
 > -- 
 > 2.17.1
 > 
