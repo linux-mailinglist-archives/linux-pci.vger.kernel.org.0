@@ -2,669 +2,417 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D1F4F138E7F
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Jan 2020 11:04:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EDBB1138E94
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Jan 2020 11:09:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728346AbgAMKEU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Jan 2020 05:04:20 -0500
-Received: from mail-dm6nam10on2063.outbound.protection.outlook.com ([40.107.93.63]:14598
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725992AbgAMKEU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 13 Jan 2020 05:04:20 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=M/MBMg+cqzkVk+o2UHaJAA7nYnBlA/M6CElcYEHvq8A3MmckQXqQN2RMtnhFqUeMRyuUj8qLR/kOTFkAYA0JgPzeCJoQGMy9nAK6+WuG+wIZz3XsjkQryBMjZ6mp/iPHnazjEO5GfgYwjACvYcUSBlDCxk7y/BsA4DLMSscILh/Y+NPWJxc6vdGhoapdUTgrKkrO1NcCDsNIUdCZVoLV8VTngOkMddu0cjqbUimc890K4Q1igQ5+rPAbONZNF0ZyvpCakUTcU2Fs3EwYYy8aOoXrdY3ul4k0A3QpJ2b4sqQyvJQ9QX5Gr+IZlvXhkq2OX+sJhmjXXomFZy12T+RrhQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VfqXTtb/lAJi5Xa1UDrNF70gVf5qlTLn2cqTeNjfoGI=;
- b=DQ500SbnAlX4/q3mn0/zlIEuxqkmfKIBz6r35OeA5V9HGxDmT2mPjicSqOBB/OE8L6cm00BR3e6twUtxzoqTqKqWGXCEnQVAnuJXP+VHwyma3/jVh2VtHOUdB9A9+0+qPVMk8Rl/Thr5sVSvSRh/GsxNauQXsaiC45BnbxkogT++cQjjU6abqg1ZA+foxPgXO/qhxyAkHYABg6cFx6wlj1DMFJGeNH7Yd2JubJFSc+lYRqcm+twJFiR6fiDdPDDKJNaLsfkzwkUCCrm2dBIOhkLGFAJ2CL3iqidl7n3B5y0r+z68LshpA79tJC9M/QwNFrtJfNmfgLpPoqpBI0kxiw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VfqXTtb/lAJi5Xa1UDrNF70gVf5qlTLn2cqTeNjfoGI=;
- b=O1ArrsPxysZp4lctauUGcKWytDrq9MC3bGBymgnHEhaWr6yrTquLSBm+C5VmXRpYPD/gKBEoHpHGbQfsuUuEyaQRNj4GXUc7MOHrP8Fm1WeIRfHIEKyeUEQEtaRLk99Yyk0bmYfd70ht3wJ/wUvmQ1vgmuC0GXfvUW3MSGnqIRo=
-Received: from BN7PR02CA0022.namprd02.prod.outlook.com (2603:10b6:408:20::35)
- by CY4PR02MB2408.namprd02.prod.outlook.com (2603:10b6:903:9::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.11; Mon, 13 Jan
- 2020 10:04:14 +0000
-Received: from CY1NAM02FT012.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::204) by BN7PR02CA0022.outlook.office365.com
- (2603:10b6:408:20::35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.13 via Frontend
- Transport; Mon, 13 Jan 2020 10:04:13 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT012.mail.protection.outlook.com (10.152.75.158) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2623.9
- via Frontend Transport; Mon, 13 Jan 2020 10:04:12 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <bharat.kumar.gogada@xilinx.com>)
-        id 1iqwZw-0000S2-Di; Mon, 13 Jan 2020 02:04:12 -0800
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <bharat.kumar.gogada@xilinx.com>)
-        id 1iqwZr-0007Zs-5h; Mon, 13 Jan 2020 02:04:07 -0800
-Received: from [10.140.9.2] (helo=xhdbharatku40.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <bharat.kumar.gogada@xilinx.com>)
-        id 1iqwZk-0007VY-3f; Mon, 13 Jan 2020 02:04:00 -0800
-From:   Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     bhelgaas@google.com, rgummal@xilinx.com,
-        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Subject: [PATCH v3 2/2] PCI: Versal CPM: Add support for Versal CPM Root Port driver
-Date:   Mon, 13 Jan 2020 15:33:41 +0530
-Message-Id: <1578909821-10604-3-git-send-email-bharat.kumar.gogada@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1578909821-10604-1-git-send-email-bharat.kumar.gogada@xilinx.com>
-References: <1578909821-10604-1-git-send-email-bharat.kumar.gogada@xilinx.com>
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(346002)(136003)(39860400002)(189003)(199004)(2616005)(5660300002)(8936002)(81156014)(81166006)(9786002)(8676002)(70586007)(478600001)(4326008)(107886003)(70206006)(30864003)(426003)(336012)(26005)(186003)(7696005)(2906002)(36756003)(356004)(316002)(6666004);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR02MB2408;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
+        id S1726985AbgAMKJg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Jan 2020 05:09:36 -0500
+Received: from foss.arm.com ([217.140.110.172]:36870 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726109AbgAMKJg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 13 Jan 2020 05:09:36 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 745A213D5;
+        Mon, 13 Jan 2020 02:09:35 -0800 (PST)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B587C3F534;
+        Mon, 13 Jan 2020 02:09:34 -0800 (PST)
+Date:   Mon, 13 Jan 2020 10:09:33 +0000
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
+        Leo Li <leoyang.li@nxp.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: Re: [PATCHv9 01/12] PCI: mobiveil: Re-abstract the private structure
+Message-ID: <20200113100931.GG42593@e119886-lin.cambridge.arm.com>
+References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
+ <20191120034451.30102-2-Zhiqiang.Hou@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 631537b8-cbdd-48f1-e7f1-08d7980ff0ff
-X-MS-TrafficTypeDiagnostic: CY4PR02MB2408:
-X-Microsoft-Antispam-PRVS: <CY4PR02MB2408D84326DD93AF74309DB0A5350@CY4PR02MB2408.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:146;
-X-Forefront-PRVS: 028166BF91
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: elO5O+Ll42T+rGcXCMtZ/S+ESXGpwYeOP8pnHhhEnTMaBSr/w5LyZ1a+SWooRAuGbBDq9dk/Wt3OqzbbHnSD/zt/U0QPzGaPuZHrEO5wfK30o7jTRhHWBXjXJvNp9gmiFchsNx7abGD/yqItvBmUP3/uL9nV4vhh2cM+EJ4+pWzTwJ1vcWJ0JANsDPTdvF6yr4BAd7KobHYbgORIVitm/KLzQb+kOcvETfffh+5BhkZNWt+jm9/k3XiVno3m78ErDgKce7zkNqLiRI+DKAj0h6kAcjsvleQtW5KVosiocGayQIgowXZL50SxXBBtA99Fn4YYwXP4J4q4xE9rGFb801uSt294XCrUFdS02IuVWhR/fAV6vwSRsWTGAXvAhFdv8NBCWPMxyd5c7HirWxt2HJqBQaAHNoZaAr2lMEq/102vX4VjXoAxjnma/OgR5uuc
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jan 2020 10:04:12.8886
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 631537b8-cbdd-48f1-e7f1-08d7980ff0ff
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR02MB2408
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191120034451.30102-2-Zhiqiang.Hou@nxp.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-- Adding support for Versal CPM as Root Port.
-- The Versal ACAP devices include CCIX-PCIe Module (CPM). The integrated
-  block for CPM along with the integrated bridge can function
-  as PCIe Root Port.
-- CPM Versal uses GICv3 ITS feature for acheiving assigning MSI/MSI-X
-  vectors and handling MSI/MSI-X interrupts.
-- Bridge error and legacy interrupts in Versal CPM are handled using
-  Versal CPM specific MISC interrupt line.
+On Wed, Nov 20, 2019 at 03:45:23AM +0000, Z.q. Hou wrote:
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> 
+> The Mobiveil PCIe controller can work in either Root Complex
+> mode or Endpoint mode. So introduce a new structure root_port,
+> and abstract the RC related members into it.
 
-Changes v3:
-Fix warnings reported.
+The first sentence explains the trigger for this work, the second
+explains what you are changing, it would be helpful to also describe
+why you need to make this change. You could do this by extending the
+last sentence, e.g.
 
-Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
----
- drivers/pci/controller/Kconfig           |   8 +
- drivers/pci/controller/Makefile          |   1 +
- drivers/pci/controller/pcie-xilinx-cpm.c | 505 +++++++++++++++++++++++++++++++
- 3 files changed, 514 insertions(+)
- create mode 100644 drivers/pci/controller/pcie-xilinx-cpm.c
+"So introduce a new structure root_port, and abstract the RC
+ related members into it such that it can be used by both ..."
 
-diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-index c77069c..eca496d 100644
---- a/drivers/pci/controller/Kconfig
-+++ b/drivers/pci/controller/Kconfig
-@@ -81,6 +81,14 @@ config PCIE_XILINX
- 	  Say 'Y' here if you want kernel to support the Xilinx AXI PCIe
- 	  Host Bridge driver.
- 
-+config PCIE_XILINX_CPM
-+	bool "Xilinx Versal CPM host bridge support"
-+	depends on ARCH_ZYNQMP || COMPILE_TEST
-+	help
-+	  Say 'Y' here if you want kernel to enable support the
-+	  Xilinx Versal CPM host Bridge driver.The driver supports
-+	  MSI/MSI-X interrupts using GICv3 ITS feature.
-+
- config PCI_XGENE
- 	bool "X-Gene PCIe controller"
- 	depends on ARM64 || COMPILE_TEST
-diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
-index 3d4f597..6c936e9 100644
---- a/drivers/pci/controller/Makefile
-+++ b/drivers/pci/controller/Makefile
-@@ -12,6 +12,7 @@ obj-$(CONFIG_PCI_HOST_COMMON) += pci-host-common.o
- obj-$(CONFIG_PCI_HOST_GENERIC) += pci-host-generic.o
- obj-$(CONFIG_PCIE_XILINX) += pcie-xilinx.o
- obj-$(CONFIG_PCIE_XILINX_NWL) += pcie-xilinx-nwl.o
-+obj-$(CONFIG_PCIE_XILINX_CPM) += pcie-xilinx-cpm.o
- obj-$(CONFIG_PCI_V3_SEMI) += pci-v3-semi.o
- obj-$(CONFIG_PCI_XGENE_MSI) += pci-xgene-msi.o
- obj-$(CONFIG_PCI_VERSATILE) += pci-versatile.o
-diff --git a/drivers/pci/controller/pcie-xilinx-cpm.c b/drivers/pci/controller/pcie-xilinx-cpm.c
-new file mode 100644
-index 0000000..88ee93e
---- /dev/null
-+++ b/drivers/pci/controller/pcie-xilinx-cpm.c
-@@ -0,0 +1,505 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * PCIe host controller driver for Xilinx Versal CPM DMA Bridge
-+ *
-+ * (C) Copyright 2019 - 2020, Xilinx, Inc.
-+ */
-+
-+#include <linux/interrupt.h>
-+#include <linux/irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of_address.h>
-+#include <linux/of_pci.h>
-+#include <linux/of_platform.h>
-+#include <linux/of_irq.h>
-+#include <linux/pci.h>
-+#include <linux/platform_device.h>
-+
-+#include "../pci.h"
-+
-+/* Register definitions */
-+#define XILINX_CPM_PCIE_REG_IDR		0x00000E10
-+#define XILINX_CPM_PCIE_REG_IMR		0x00000E14
-+#define XILINX_CPM_PCIE_REG_PSCR	0x00000E1C
-+#define XILINX_CPM_PCIE_REG_RPSC	0x00000E20
-+#define XILINX_CPM_PCIE_REG_RPEFR	0x00000E2C
-+#define XILINX_CPM_PCIE_REG_IDRN	0x00000E38
-+#define XILINX_CPM_PCIE_REG_IDRN_MASK	0x00000E3C
-+#define XILINX_CPM_PCIE_MISC_IR_STATUS	0x00000340
-+#define XILINX_CPM_PCIE_MISC_IR_ENABLE	0x00000348
-+#define XILINX_CPM_PCIE_MISC_IR_LOCAL	BIT(1)
-+
-+/* Interrupt registers definitions */
-+#define XILINX_CPM_PCIE_INTR_LINK_DOWN		BIT(0)
-+#define XILINX_CPM_PCIE_INTR_HOT_RESET		BIT(3)
-+#define XILINX_CPM_PCIE_INTR_CFG_TIMEOUT	BIT(8)
-+#define XILINX_CPM_PCIE_INTR_CORRECTABLE	BIT(9)
-+#define XILINX_CPM_PCIE_INTR_NONFATAL		BIT(10)
-+#define XILINX_CPM_PCIE_INTR_FATAL		BIT(11)
-+#define XILINX_CPM_PCIE_INTR_INTX		BIT(16)
-+#define XILINX_CPM_PCIE_INTR_MSI		BIT(17)
-+#define XILINX_CPM_PCIE_INTR_SLV_UNSUPP		BIT(20)
-+#define XILINX_CPM_PCIE_INTR_SLV_UNEXP		BIT(21)
-+#define XILINX_CPM_PCIE_INTR_SLV_COMPL		BIT(22)
-+#define XILINX_CPM_PCIE_INTR_SLV_ERRP		BIT(23)
-+#define XILINX_CPM_PCIE_INTR_SLV_CMPABT		BIT(24)
-+#define XILINX_CPM_PCIE_INTR_SLV_ILLBUR		BIT(25)
-+#define XILINX_CPM_PCIE_INTR_MST_DECERR		BIT(26)
-+#define XILINX_CPM_PCIE_INTR_MST_SLVERR		BIT(27)
-+#define XILINX_CPM_PCIE_IMR_ALL_MASK		0x1FF39FF9
-+#define XILINX_CPM_PCIE_IDR_ALL_MASK		0xFFFFFFFF
-+#define XILINX_CPM_PCIE_IDRN_MASK		GENMASK(19, 16)
-+#define XILINX_CPM_PCIE_INTR_CFG_PCIE_TIMEOUT	BIT(4)
-+#define XILINX_CPM_PCIE_INTR_CFG_ERR_POISON	BIT(12)
-+#define XILINX_CPM_PCIE_INTR_PME_TO_ACK_RCVD	BIT(15)
-+#define XILINX_CPM_PCIE_INTR_PM_PME_RCVD	BIT(17)
-+#define XILINX_CPM_PCIE_INTR_SLV_PCIE_TIMEOUT	BIT(28)
-+#define XILINX_CPM_PCIE_IDRN_SHIFT		16
-+
-+/* Root Port Error FIFO Read Register definitions */
-+#define XILINX_CPM_PCIE_RPEFR_ERR_VALID		BIT(18)
-+#define XILINX_CPM_PCIE_RPEFR_REQ_ID		GENMASK(15, 0)
-+#define XILINX_CPM_PCIE_RPEFR_ALL_MASK		0xFFFFFFFF
-+
-+/* Root Port Status/control Register definitions */
-+#define XILINX_CPM_PCIE_REG_RPSC_BEN		BIT(0)
-+
-+/* Phy Status/Control Register definitions */
-+#define XILINX_CPM_PCIE_REG_PSCR_LNKUP		BIT(11)
-+
-+/* ECAM definitions */
-+#define ECAM_BUS_NUM_SHIFT		20
-+#define ECAM_DEV_NUM_SHIFT		12
-+
-+/**
-+ * struct xilinx_cpm_pcie_port - PCIe port information
-+ * @reg_base: Bridge Register Base
-+ * @cpm_base: CPM SLCR Register Base
-+ * @irq: Interrupt number
-+ * @root_busno: Root Bus number
-+ * @dev: Device pointer
-+ * @leg_domain: Legacy IRQ domain pointer
-+ * @irq_misc: Legacy and error interrupt number
-+ */
-+struct xilinx_cpm_pcie_port {
-+	void __iomem *reg_base;
-+	void __iomem *cpm_base;
-+	u32 irq;
-+	u8 root_busno;
-+	struct device *dev;
-+	struct irq_domain *leg_domain;
-+	int irq_misc;
-+};
-+
-+static inline u32 pcie_read(struct xilinx_cpm_pcie_port *port, u32 reg)
-+{
-+	return readl(port->reg_base + reg);
-+}
-+
-+static inline void pcie_write(struct xilinx_cpm_pcie_port *port,
-+			      u32 val, u32 reg)
-+{
-+	writel(val, port->reg_base + reg);
-+}
-+
-+static inline bool cpm_pcie_link_up(struct xilinx_cpm_pcie_port *port)
-+{
-+	return (pcie_read(port, XILINX_CPM_PCIE_REG_PSCR) &
-+		XILINX_CPM_PCIE_REG_PSCR_LNKUP) ? 1 : 0;
-+}
-+
-+/**
-+ * xilinx_cpm_pcie_clear_err_interrupts - Clear Error Interrupts
-+ * @port: PCIe port information
-+ */
-+static void cpm_pcie_clear_err_interrupts(struct xilinx_cpm_pcie_port *port)
-+{
-+	unsigned long val = pcie_read(port, XILINX_CPM_PCIE_REG_RPEFR);
-+
-+	if (val & XILINX_CPM_PCIE_RPEFR_ERR_VALID) {
-+		dev_dbg(port->dev, "Requester ID %lu\n",
-+			val & XILINX_CPM_PCIE_RPEFR_REQ_ID);
-+		pcie_write(port, XILINX_CPM_PCIE_RPEFR_ALL_MASK,
-+			   XILINX_CPM_PCIE_REG_RPEFR);
-+	}
-+}
-+
-+/**
-+ * xilinx_cpm_pcie_valid_device - Check if a valid device is present on bus
-+ * @bus: PCI Bus structure
-+ * @devfn: device/function
-+ *
-+ * Return: 'true' on success and 'false' if invalid device is found
-+ */
-+static bool xilinx_cpm_pcie_valid_device(struct pci_bus *bus,
-+					 unsigned int devfn)
-+{
-+	struct xilinx_cpm_pcie_port *port = bus->sysdata;
-+
-+	/* Only one device down on each root port */
-+	if (bus->number == port->root_busno && devfn > 0)
-+		return false;
-+
-+	return true;
-+}
-+
-+/**
-+ * xilinx_cpm_pcie_map_bus - Get configuration base
-+ * @bus: PCI Bus structure
-+ * @devfn: Device/function
-+ * @where: Offset from base
-+ *
-+ * Return: Base address of the configuration space needed to be
-+ *	   accessed.
-+ */
-+static void __iomem *xilinx_cpm_pcie_map_bus(struct pci_bus *bus,
-+					     unsigned int devfn, int where)
-+{
-+	struct xilinx_cpm_pcie_port *port = bus->sysdata;
-+	int relbus;
-+
-+	if (!xilinx_cpm_pcie_valid_device(bus, devfn))
-+		return NULL;
-+
-+	relbus = (bus->number << ECAM_BUS_NUM_SHIFT) |
-+		 (devfn << ECAM_DEV_NUM_SHIFT);
-+
-+	return port->reg_base + relbus + where;
-+}
-+
-+/* PCIe operations */
-+static struct pci_ops xilinx_cpm_pcie_ops = {
-+	.map_bus = xilinx_cpm_pcie_map_bus,
-+	.read	= pci_generic_config_read,
-+	.write	= pci_generic_config_write,
-+};
-+
-+/**
-+ * xilinx_cpm_pcie_intx_map - Set the handler for the INTx and mark IRQ as valid
-+ * @domain: IRQ domain
-+ * @irq: Virtual IRQ number
-+ * @hwirq: HW interrupt number
-+ *
-+ * Return: Always returns 0.
-+ */
-+static int xilinx_cpm_pcie_intx_map(struct irq_domain *domain,
-+				    unsigned int irq, irq_hw_number_t hwirq)
-+{
-+	irq_set_chip_and_handler(irq, &dummy_irq_chip, handle_simple_irq);
-+	irq_set_chip_data(irq, domain->host_data);
-+	irq_set_status_flags(irq, IRQ_LEVEL);
-+
-+	return 0;
-+}
-+
-+/* INTx IRQ Domain operations */
-+static const struct irq_domain_ops intx_domain_ops = {
-+	.map = xilinx_cpm_pcie_intx_map,
-+	.xlate = pci_irqd_intx_xlate,
-+};
-+
-+/**
-+ * xilinx_cpm_pcie_intr_handler - Interrupt Service Handler
-+ * @irq: IRQ number
-+ * @data: PCIe port information
-+ *
-+ * Return: IRQ_HANDLED on success and IRQ_NONE on failure
-+ */
-+static irqreturn_t xilinx_cpm_pcie_intr_handler(int irq, void *data)
-+{
-+	struct xilinx_cpm_pcie_port *port =
-+				(struct xilinx_cpm_pcie_port *)data;
-+	struct device *dev = port->dev;
-+	u32 val, mask, status, bit;
-+	unsigned long intr_val;
-+
-+	/* Read interrupt decode and mask registers */
-+	val = pcie_read(port, XILINX_CPM_PCIE_REG_IDR);
-+	mask = pcie_read(port, XILINX_CPM_PCIE_REG_IMR);
-+
-+	status = val & mask;
-+	if (!status)
-+		return IRQ_NONE;
-+
-+	if (status & XILINX_CPM_PCIE_INTR_LINK_DOWN)
-+		dev_warn(dev, "Link Down\n");
-+
-+	if (status & XILINX_CPM_PCIE_INTR_HOT_RESET)
-+		dev_info(dev, "Hot reset\n");
-+
-+	if (status & XILINX_CPM_PCIE_INTR_CFG_TIMEOUT)
-+		dev_warn(dev, "ECAM access timeout\n");
-+
-+	if (status & XILINX_CPM_PCIE_INTR_CORRECTABLE) {
-+		dev_warn(dev, "Correctable error message\n");
-+		cpm_pcie_clear_err_interrupts(port);
-+	}
-+
-+	if (status & XILINX_CPM_PCIE_INTR_NONFATAL) {
-+		dev_warn(dev, "Non fatal error message\n");
-+		cpm_pcie_clear_err_interrupts(port);
-+	}
-+
-+	if (status & XILINX_CPM_PCIE_INTR_FATAL) {
-+		dev_warn(dev, "Fatal error message\n");
-+		cpm_pcie_clear_err_interrupts(port);
-+	}
-+
-+	if (status & XILINX_CPM_PCIE_INTR_INTX) {
-+		/* Handle INTx Interrupt */
-+		intr_val = pcie_read(port, XILINX_CPM_PCIE_REG_IDRN);
-+		intr_val = intr_val >> XILINX_CPM_PCIE_IDRN_SHIFT;
-+
-+		for_each_set_bit(bit, &intr_val, PCI_NUM_INTX)
-+			generic_handle_irq(irq_find_mapping(port->leg_domain,
-+							    bit));
-+	}
-+
-+	if (status & XILINX_CPM_PCIE_INTR_SLV_UNSUPP)
-+		dev_warn(dev, "Slave unsupported request\n");
-+
-+	if (status & XILINX_CPM_PCIE_INTR_SLV_UNEXP)
-+		dev_warn(dev, "Slave unexpected completion\n");
-+
-+	if (status & XILINX_CPM_PCIE_INTR_SLV_COMPL)
-+		dev_warn(dev, "Slave completion timeout\n");
-+
-+	if (status & XILINX_CPM_PCIE_INTR_SLV_ERRP)
-+		dev_warn(dev, "Slave Error Poison\n");
-+
-+	if (status & XILINX_CPM_PCIE_INTR_SLV_CMPABT)
-+		dev_warn(dev, "Slave Completer Abort\n");
-+
-+	if (status & XILINX_CPM_PCIE_INTR_SLV_ILLBUR)
-+		dev_warn(dev, "Slave Illegal Burst\n");
-+
-+	if (status & XILINX_CPM_PCIE_INTR_MST_DECERR)
-+		dev_warn(dev, "Master decode error\n");
-+
-+	if (status & XILINX_CPM_PCIE_INTR_MST_SLVERR)
-+		dev_warn(dev, "Master slave error\n");
-+
-+	if (status & XILINX_CPM_PCIE_INTR_CFG_PCIE_TIMEOUT)
-+		dev_warn(dev, "PCIe ECAM access timeout\n");
-+
-+	if (status & XILINX_CPM_PCIE_INTR_CFG_ERR_POISON)
-+		dev_warn(dev, "ECAM poisoned completion received\n");
-+
-+	if (status & XILINX_CPM_PCIE_INTR_PME_TO_ACK_RCVD)
-+		dev_warn(dev, "PME_TO_ACK message received\n");
-+
-+	if (status & XILINX_CPM_PCIE_INTR_PM_PME_RCVD)
-+		dev_warn(dev, "PM_PME message received\n");
-+
-+	if (status & XILINX_CPM_PCIE_INTR_SLV_PCIE_TIMEOUT)
-+		dev_warn(dev, "PCIe completion timeout received\n");
-+
-+	/* Clear the Interrupt Decode register */
-+	pcie_write(port, status, XILINX_CPM_PCIE_REG_IDR);
-+	val = readl(port->cpm_base + XILINX_CPM_PCIE_MISC_IR_STATUS);
-+	if (val)
-+		writel(val, port->cpm_base + XILINX_CPM_PCIE_MISC_IR_STATUS);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+/**
-+ * xilinx_cpm_pcie_init_irq_domain - Initialize IRQ domain
-+ * @port: PCIe port information
-+ *
-+ * Return: '0' on success and error value on failure
-+ */
-+static int xilinx_cpm_pcie_init_irq_domain(struct xilinx_cpm_pcie_port *port)
-+{
-+	struct device *dev = port->dev;
-+	struct device_node *node = dev->of_node;
-+	struct device_node *pcie_intc_node;
-+
-+	/* Setup INTx */
-+	pcie_intc_node = of_get_next_child(node, NULL);
-+	if (!pcie_intc_node) {
-+		dev_err(dev, "No PCIe Intc node found\n");
-+		return -EINVAL;
-+	}
-+
-+	port->leg_domain = irq_domain_add_linear(pcie_intc_node, PCI_NUM_INTX,
-+						 &intx_domain_ops,
-+						 port);
-+	if (!port->leg_domain) {
-+		dev_err(dev, "Failed to get a INTx IRQ domain\n");
-+		return -ENOMEM;
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * xilinx_cpm_pcie_init_port - Initialize hardware
-+ * @port: PCIe port information
-+ */
-+static void xilinx_cpm_pcie_init_port(struct xilinx_cpm_pcie_port *port)
-+{
-+	if (cpm_pcie_link_up(port))
-+		dev_info(port->dev, "PCIe Link is UP\n");
-+	else
-+		dev_info(port->dev, "PCIe Link is DOWN\n");
-+
-+	/* Disable all interrupts */
-+	pcie_write(port, ~XILINX_CPM_PCIE_IDR_ALL_MASK,
-+		   XILINX_CPM_PCIE_REG_IMR);
-+
-+	/* Clear pending interrupts */
-+	pcie_write(port, pcie_read(port, XILINX_CPM_PCIE_REG_IDR) &
-+		   XILINX_CPM_PCIE_IMR_ALL_MASK,
-+		   XILINX_CPM_PCIE_REG_IDR);
-+
-+	/* Enable all interrupts */
-+	pcie_write(port, XILINX_CPM_PCIE_IMR_ALL_MASK,
-+		   XILINX_CPM_PCIE_REG_IMR);
-+	pcie_write(port, XILINX_CPM_PCIE_IDRN_MASK,
-+		   XILINX_CPM_PCIE_REG_IDRN_MASK);
-+
-+	writel(XILINX_CPM_PCIE_MISC_IR_LOCAL,
-+	       port->cpm_base + XILINX_CPM_PCIE_MISC_IR_ENABLE);
-+	/* Enable the Bridge enable bit */
-+	pcie_write(port, pcie_read(port, XILINX_CPM_PCIE_REG_RPSC) |
-+		   XILINX_CPM_PCIE_REG_RPSC_BEN,
-+		   XILINX_CPM_PCIE_REG_RPSC);
-+}
-+
-+static int xilinx_cpm_request_misc_irq(struct xilinx_cpm_pcie_port *port)
-+{
-+	struct device *dev = port->dev;
-+	struct platform_device *pdev = to_platform_device(dev);
-+	int err;
-+
-+	port->irq_misc = platform_get_irq_byname(pdev, "misc");
-+	if (port->irq_misc <= 0) {
-+		dev_err(dev, "Unable to find misc IRQ line\n");
-+		return port->irq_misc;
-+	}
-+	err = devm_request_irq(dev, port->irq_misc,
-+			       xilinx_cpm_pcie_intr_handler,
-+			       IRQF_SHARED | IRQF_NO_THREAD,
-+			       "xilinx-pcie", port);
-+	if (err) {
-+		dev_err(dev, "unable to request misc IRQ line %d\n",
-+			port->irq_misc);
-+		return err;
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * xilinx_cpm_pcie_parse_dt - Parse Device tree
-+ * @port: PCIe port information
-+ *
-+ * Return: '0' on success and error value on failure
-+ */
-+static int xilinx_cpm_pcie_parse_dt(struct xilinx_cpm_pcie_port *port)
-+{
-+	struct device *dev = port->dev;
-+	struct resource *res;
-+	int err;
-+	struct platform_device *pdev = to_platform_device(dev);
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "cfg");
-+	port->reg_base = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(port->reg_base))
-+		return PTR_ERR(port->reg_base);
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-+					   "cpm_slcr");
-+	port->cpm_base = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(port->cpm_base))
-+		return PTR_ERR(port->cpm_base);
-+
-+	err = xilinx_cpm_request_misc_irq(port);
-+	if (err)
-+		return err;
-+
-+	return 0;
-+}
-+
-+/**
-+ * xilinx_cpm_pcie_probe - Probe function
-+ * @pdev: Platform device pointer
-+ *
-+ * Return: '0' on success and error value on failure
-+ */
-+static int xilinx_cpm_pcie_probe(struct platform_device *pdev)
-+{
-+	struct xilinx_cpm_pcie_port *port;
-+	struct device *dev = &pdev->dev;
-+	struct pci_bus *bus;
-+	struct pci_bus *child;
-+	struct pci_host_bridge *bridge;
-+	int err;
-+
-+	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*port));
-+	if (!bridge)
-+		return -ENODEV;
-+
-+	port = pci_host_bridge_priv(bridge);
-+
-+	port->dev = dev;
-+
-+	err = xilinx_cpm_pcie_parse_dt(port);
-+	if (err) {
-+		dev_err(dev, "Parsing DT failed\n");
-+		return err;
-+	}
-+
-+	xilinx_cpm_pcie_init_port(port);
-+
-+	err = xilinx_cpm_pcie_init_irq_domain(port);
-+	if (err) {
-+		dev_err(dev, "Failed creating IRQ Domain\n");
-+		return err;
-+	}
-+
-+	err = pci_parse_request_of_pci_ranges(dev, &bridge->windows,
-+					      &bridge->dma_ranges, NULL);
-+	if (err) {
-+		dev_err(dev, "Getting bridge resources failed\n");
-+		return err;
-+	}
-+
-+	bridge->dev.parent = dev;
-+	bridge->sysdata = port;
-+	bridge->busnr = port->root_busno;
-+	bridge->ops = &xilinx_cpm_pcie_ops;
-+	bridge->map_irq = of_irq_parse_and_map_pci;
-+	bridge->swizzle_irq = pci_common_swizzle;
-+
-+	err = pci_scan_root_bus_bridge(bridge);
-+	if (err)
-+		return err;
-+
-+	bus = bridge->bus;
-+
-+	pci_assign_unassigned_bus_resources(bus);
-+	list_for_each_entry(child, &bus->children, node)
-+		pcie_bus_configure_settings(child);
-+	pci_bus_add_devices(bus);
-+	return 0;
-+}
-+
-+static const struct of_device_id xilinx_cpm_pcie_of_match[] = {
-+	{ .compatible = "xlnx,versal-cpm-host-1.00", },
-+	{}
-+};
-+
-+static struct platform_driver xilinx_cpm_pcie_driver = {
-+	.driver = {
-+		.name = "xilinx-cpm-pcie",
-+		.of_match_table = xilinx_cpm_pcie_of_match,
-+		.suppress_bind_attrs = true,
-+	},
-+	.probe = xilinx_cpm_pcie_probe,
-+};
-+
-+builtin_platform_driver(xilinx_cpm_pcie_driver);
--- 
-2.7.4
+As this series doesn't actually add a EP driver, this abstraction
+isn't needed now - but it is nice to have - it may be helpful to explain
+this.
 
+The email subject could also more precisely explain what this patch
+does.
+
+
+> 
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> ---
+> V9:
+>  - New patch splited from the #1 of V8 patches to make it easy to review.
+
+Indeed, it's much nicer to review - thanks.
+
+
+> 
+>  drivers/pci/controller/pcie-mobiveil.c | 99 ++++++++++++++++----------
+>  1 file changed, 60 insertions(+), 39 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
+> index 3a696ca45bfa..5fd26e376af2 100644
+> --- a/drivers/pci/controller/pcie-mobiveil.c
+> +++ b/drivers/pci/controller/pcie-mobiveil.c
+> @@ -3,7 +3,10 @@
+>   * PCIe host controller driver for Mobiveil PCIe Host controller
+>   *
+>   * Copyright (c) 2018 Mobiveil Inc.
+> + * Copyright 2019 NXP
+> + *
+>   * Author: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+> + * Recode: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+
+As per my previous feedback, I'm not sure the value of using the term refactor
+or a synonym of it. And I certaintly don't want to encourage anyone that
+modifies this file to add a similar tag when the information is easily visible
+via GIT and the get_maintainers script.
+
+>   */
+>  
+>  #include <linux/delay.h>
+> @@ -138,22 +141,27 @@ struct mobiveil_msi {			/* MSI information */
+>  	DECLARE_BITMAP(msi_irq_in_use, PCI_NUM_MSI);
+>  };
+>  
+> +struct root_port {
+> +	char root_bus_nr;
+> +	void __iomem *config_axi_slave_base;	/* endpoint config base */
+> +	struct resource *ob_io_res;
+> +	int irq;
+> +	raw_spinlock_t intx_mask_lock;
+> +	struct irq_domain *intx_domain;
+> +	struct mobiveil_msi msi;
+> +	struct pci_host_bridge *bridge;
+> +};
+
+Please prefix with mobiveil given we have mobiveil related structures
+inside it.
+
+(Also on your respin, please rebase as per Olof's feedback).
+
+Thanks,
+
+Andrew Murray
+
+> +
+>  struct mobiveil_pcie {
+>  	struct platform_device *pdev;
+> -	void __iomem *config_axi_slave_base;	/* endpoint config base */
+>  	void __iomem *csr_axi_slave_base;	/* root port config base */
+>  	void __iomem *apb_csr_base;	/* MSI register base */
+>  	phys_addr_t pcie_reg_base;	/* Physical PCIe Controller Base */
+> -	struct irq_domain *intx_domain;
+> -	raw_spinlock_t intx_mask_lock;
+> -	int irq;
+>  	int apio_wins;
+>  	int ppio_wins;
+>  	int ob_wins_configured;		/* configured outbound windows */
+>  	int ib_wins_configured;		/* configured inbound windows */
+> -	struct resource *ob_io_res;
+> -	char root_bus_nr;
+> -	struct mobiveil_msi msi;
+> +	struct root_port rp;
+>  };
+>  
+>  /*
+> @@ -281,16 +289,17 @@ static bool mobiveil_pcie_link_up(struct mobiveil_pcie *pcie)
+>  static bool mobiveil_pcie_valid_device(struct pci_bus *bus, unsigned int devfn)
+>  {
+>  	struct mobiveil_pcie *pcie = bus->sysdata;
+> +	struct root_port *rp = &pcie->rp;
+>  
+>  	/* Only one device down on each root port */
+> -	if ((bus->number == pcie->root_bus_nr) && (devfn > 0))
+> +	if ((bus->number == rp->root_bus_nr) && (devfn > 0))
+>  		return false;
+>  
+>  	/*
+>  	 * Do not read more than one device on the bus directly
+>  	 * attached to RC
+>  	 */
+> -	if ((bus->primary == pcie->root_bus_nr) && (PCI_SLOT(devfn) > 0))
+> +	if ((bus->primary == rp->root_bus_nr) && (PCI_SLOT(devfn) > 0))
+>  		return false;
+>  
+>  	return true;
+> @@ -304,13 +313,14 @@ static void __iomem *mobiveil_pcie_map_bus(struct pci_bus *bus,
+>  					   unsigned int devfn, int where)
+>  {
+>  	struct mobiveil_pcie *pcie = bus->sysdata;
+> +	struct root_port *rp = &pcie->rp;
+>  	u32 value;
+>  
+>  	if (!mobiveil_pcie_valid_device(bus, devfn))
+>  		return NULL;
+>  
+>  	/* RC config access */
+> -	if (bus->number == pcie->root_bus_nr)
+> +	if (bus->number == rp->root_bus_nr)
+>  		return pcie->csr_axi_slave_base + where;
+>  
+>  	/*
+> @@ -325,7 +335,7 @@ static void __iomem *mobiveil_pcie_map_bus(struct pci_bus *bus,
+>  
+>  	mobiveil_csr_writel(pcie, value, PAB_AXI_AMAP_PEX_WIN_L(WIN_NUM_0));
+>  
+> -	return pcie->config_axi_slave_base + where;
+> +	return rp->config_axi_slave_base + where;
+>  }
+>  
+>  static struct pci_ops mobiveil_pcie_ops = {
+> @@ -339,7 +349,8 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
+>  	struct irq_chip *chip = irq_desc_get_chip(desc);
+>  	struct mobiveil_pcie *pcie = irq_desc_get_handler_data(desc);
+>  	struct device *dev = &pcie->pdev->dev;
+> -	struct mobiveil_msi *msi = &pcie->msi;
+> +	struct root_port *rp = &pcie->rp;
+> +	struct mobiveil_msi *msi = &rp->msi;
+>  	u32 msi_data, msi_addr_lo, msi_addr_hi;
+>  	u32 intr_status, msi_status;
+>  	unsigned long shifted_status;
+> @@ -365,7 +376,7 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
+>  		shifted_status >>= PAB_INTX_START;
+>  		do {
+>  			for_each_set_bit(bit, &shifted_status, PCI_NUM_INTX) {
+> -				virq = irq_find_mapping(pcie->intx_domain,
+> +				virq = irq_find_mapping(rp->intx_domain,
+>  							bit + 1);
+>  				if (virq)
+>  					generic_handle_irq(virq);
+> @@ -424,15 +435,16 @@ static int mobiveil_pcie_parse_dt(struct mobiveil_pcie *pcie)
+>  	struct device *dev = &pcie->pdev->dev;
+>  	struct platform_device *pdev = pcie->pdev;
+>  	struct device_node *node = dev->of_node;
+> +	struct root_port *rp = &pcie->rp;
+>  	struct resource *res;
+>  
+>  	/* map config resource */
+>  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+>  					   "config_axi_slave");
+> -	pcie->config_axi_slave_base = devm_pci_remap_cfg_resource(dev, res);
+> -	if (IS_ERR(pcie->config_axi_slave_base))
+> -		return PTR_ERR(pcie->config_axi_slave_base);
+> -	pcie->ob_io_res = res;
+> +	rp->config_axi_slave_base = devm_pci_remap_cfg_resource(dev, res);
+> +	if (IS_ERR(rp->config_axi_slave_base))
+> +		return PTR_ERR(rp->config_axi_slave_base);
+> +	rp->ob_io_res = res;
+>  
+>  	/* map csr resource */
+>  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> @@ -455,9 +467,9 @@ static int mobiveil_pcie_parse_dt(struct mobiveil_pcie *pcie)
+>  	if (of_property_read_u32(node, "ppio-wins", &pcie->ppio_wins))
+>  		pcie->ppio_wins = MAX_PIO_WINDOWS;
+>  
+> -	pcie->irq = platform_get_irq(pdev, 0);
+> -	if (pcie->irq <= 0) {
+> -		dev_err(dev, "failed to map IRQ: %d\n", pcie->irq);
+> +	rp->irq = platform_get_irq(pdev, 0);
+> +	if (rp->irq <= 0) {
+> +		dev_err(dev, "failed to map IRQ: %d\n", rp->irq);
+>  		return -ENODEV;
+>  	}
+>  
+> @@ -564,9 +576,9 @@ static int mobiveil_bringup_link(struct mobiveil_pcie *pcie)
+>  static void mobiveil_pcie_enable_msi(struct mobiveil_pcie *pcie)
+>  {
+>  	phys_addr_t msg_addr = pcie->pcie_reg_base;
+> -	struct mobiveil_msi *msi = &pcie->msi;
+> +	struct mobiveil_msi *msi = &pcie->rp.msi;
+>  
+> -	pcie->msi.num_of_vectors = PCI_NUM_MSI;
+> +	msi->num_of_vectors = PCI_NUM_MSI;
+>  	msi->msi_pages_phys = (phys_addr_t)msg_addr;
+>  
+>  	writel_relaxed(lower_32_bits(msg_addr),
+> @@ -579,7 +591,8 @@ static void mobiveil_pcie_enable_msi(struct mobiveil_pcie *pcie)
+>  
+>  static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+>  {
+> -	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
+> +	struct root_port *rp = &pcie->rp;
+> +	struct pci_host_bridge *bridge = rp->bridge;
+>  	u32 value, pab_ctrl, type;
+>  	struct resource_entry *win;
+>  
+> @@ -629,8 +642,8 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+>  	 */
+>  
+>  	/* config outbound translation window */
+> -	program_ob_windows(pcie, WIN_NUM_0, pcie->ob_io_res->start, 0,
+> -			   CFG_WINDOW_TYPE, resource_size(pcie->ob_io_res));
+> +	program_ob_windows(pcie, WIN_NUM_0, rp->ob_io_res->start, 0,
+> +			   CFG_WINDOW_TYPE, resource_size(rp->ob_io_res));
+>  
+>  	/* memory inbound translation window */
+>  	program_ib_windows(pcie, WIN_NUM_0, 0, 0, MEM_WINDOW_TYPE, IB_WIN_SIZE);
+> @@ -667,32 +680,36 @@ static void mobiveil_mask_intx_irq(struct irq_data *data)
+>  {
+>  	struct irq_desc *desc = irq_to_desc(data->irq);
+>  	struct mobiveil_pcie *pcie;
+> +	struct root_port *rp;
+>  	unsigned long flags;
+>  	u32 mask, shifted_val;
+>  
+>  	pcie = irq_desc_get_chip_data(desc);
+> +	rp = &pcie->rp;
+>  	mask = 1 << ((data->hwirq + PAB_INTX_START) - 1);
+> -	raw_spin_lock_irqsave(&pcie->intx_mask_lock, flags);
+> +	raw_spin_lock_irqsave(&rp->intx_mask_lock, flags);
+>  	shifted_val = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
+>  	shifted_val &= ~mask;
+>  	mobiveil_csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
+> -	raw_spin_unlock_irqrestore(&pcie->intx_mask_lock, flags);
+> +	raw_spin_unlock_irqrestore(&rp->intx_mask_lock, flags);
+>  }
+>  
+>  static void mobiveil_unmask_intx_irq(struct irq_data *data)
+>  {
+>  	struct irq_desc *desc = irq_to_desc(data->irq);
+>  	struct mobiveil_pcie *pcie;
+> +	struct root_port *rp;
+>  	unsigned long flags;
+>  	u32 shifted_val, mask;
+>  
+>  	pcie = irq_desc_get_chip_data(desc);
+> +	rp = &pcie->rp;
+>  	mask = 1 << ((data->hwirq + PAB_INTX_START) - 1);
+> -	raw_spin_lock_irqsave(&pcie->intx_mask_lock, flags);
+> +	raw_spin_lock_irqsave(&rp->intx_mask_lock, flags);
+>  	shifted_val = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
+>  	shifted_val |= mask;
+>  	mobiveil_csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
+> -	raw_spin_unlock_irqrestore(&pcie->intx_mask_lock, flags);
+> +	raw_spin_unlock_irqrestore(&rp->intx_mask_lock, flags);
+>  }
+>  
+>  static struct irq_chip intx_irq_chip = {
+> @@ -760,7 +777,7 @@ static int mobiveil_irq_msi_domain_alloc(struct irq_domain *domain,
+>  					 unsigned int nr_irqs, void *args)
+>  {
+>  	struct mobiveil_pcie *pcie = domain->host_data;
+> -	struct mobiveil_msi *msi = &pcie->msi;
+> +	struct mobiveil_msi *msi = &pcie->rp.msi;
+>  	unsigned long bit;
+>  
+>  	WARN_ON(nr_irqs != 1);
+> @@ -787,7 +804,7 @@ static void mobiveil_irq_msi_domain_free(struct irq_domain *domain,
+>  {
+>  	struct irq_data *d = irq_domain_get_irq_data(domain, virq);
+>  	struct mobiveil_pcie *pcie = irq_data_get_irq_chip_data(d);
+> -	struct mobiveil_msi *msi = &pcie->msi;
+> +	struct mobiveil_msi *msi = &pcie->rp.msi;
+>  
+>  	mutex_lock(&msi->lock);
+>  
+> @@ -808,9 +825,9 @@ static int mobiveil_allocate_msi_domains(struct mobiveil_pcie *pcie)
+>  {
+>  	struct device *dev = &pcie->pdev->dev;
+>  	struct fwnode_handle *fwnode = of_node_to_fwnode(dev->of_node);
+> -	struct mobiveil_msi *msi = &pcie->msi;
+> +	struct mobiveil_msi *msi = &pcie->rp.msi;
+>  
+> -	mutex_init(&pcie->msi.lock);
+> +	mutex_init(&msi->lock);
+>  	msi->dev_domain = irq_domain_add_linear(NULL, msi->num_of_vectors,
+>  						&msi_domain_ops, pcie);
+>  	if (!msi->dev_domain) {
+> @@ -834,18 +851,19 @@ static int mobiveil_pcie_init_irq_domain(struct mobiveil_pcie *pcie)
+>  {
+>  	struct device *dev = &pcie->pdev->dev;
+>  	struct device_node *node = dev->of_node;
+> +	struct root_port *rp = &pcie->rp;
+>  	int ret;
+>  
+>  	/* setup INTx */
+> -	pcie->intx_domain = irq_domain_add_linear(node, PCI_NUM_INTX,
+> -						  &intx_domain_ops, pcie);
+> +	rp->intx_domain = irq_domain_add_linear(node, PCI_NUM_INTX,
+> +						&intx_domain_ops, pcie);
+>  
+> -	if (!pcie->intx_domain) {
+> +	if (!rp->intx_domain) {
+>  		dev_err(dev, "Failed to get a INTx IRQ domain\n");
+>  		return -ENOMEM;
+>  	}
+>  
+> -	raw_spin_lock_init(&pcie->intx_mask_lock);
+> +	raw_spin_lock_init(&rp->intx_mask_lock);
+>  
+>  	/* setup MSI */
+>  	ret = mobiveil_allocate_msi_domains(pcie);
+> @@ -862,6 +880,7 @@ static int mobiveil_pcie_probe(struct platform_device *pdev)
+>  	struct pci_bus *child;
+>  	struct pci_host_bridge *bridge;
+>  	struct device *dev = &pdev->dev;
+> +	struct root_port *rp;
+>  	int ret;
+>  
+>  	/* allocate the PCIe port */
+> @@ -870,6 +889,8 @@ static int mobiveil_pcie_probe(struct platform_device *pdev)
+>  		return -ENOMEM;
+>  
+>  	pcie = pci_host_bridge_priv(bridge);
+> +	rp = &pcie->rp;
+> +	rp->bridge = bridge;
+>  
+>  	pcie->pdev = pdev;
+>  
+> @@ -904,12 +925,12 @@ static int mobiveil_pcie_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> -	irq_set_chained_handler_and_data(pcie->irq, mobiveil_pcie_isr, pcie);
+> +	irq_set_chained_handler_and_data(rp->irq, mobiveil_pcie_isr, pcie);
+>  
+>  	/* Initialize bridge */
+>  	bridge->dev.parent = dev;
+>  	bridge->sysdata = pcie;
+> -	bridge->busnr = pcie->root_bus_nr;
+> +	bridge->busnr = rp->root_bus_nr;
+>  	bridge->ops = &mobiveil_pcie_ops;
+>  	bridge->map_irq = of_irq_parse_and_map_pci;
+>  	bridge->swizzle_irq = pci_common_swizzle;
+> -- 
+> 2.17.1
+> 
