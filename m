@@ -2,229 +2,244 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 47F2C139A81
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Jan 2020 21:08:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BFE3139A86
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Jan 2020 21:08:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbgAMUH7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Jan 2020 15:07:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57848 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726494AbgAMUH7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 13 Jan 2020 15:07:59 -0500
-Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD1672084D;
-        Mon, 13 Jan 2020 20:07:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578946078;
-        bh=O0K16XQn8uPCH5+iYfVbIfAs5xSRq+A5ma0gRsIAXPM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=bKewygt7CpRB4fM3uRvYlASHYFGvm+V67n6VI6W4z9+kGWeJIDToKFm5hF3KqcMBc
-         XJSBDrIwlRwU+FVDJgsMfz78Z9IJVZSpX22kuTp2aHe2lQ6BFc5oBDdpJ0dBnKJbx0
-         5hpewe6e9esnOD3Tg+nGTsELDm5Y8V5w9JFjxoqk=
-Date:   Mon, 13 Jan 2020 14:07:56 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Kit Chow <kchow@gigaio.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v5] PCI: Fix disabling of bridge BARs when assigning bus
- resources
-Message-ID: <20200113200756.GA97441@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200108213208.4612-1-logang@deltatee.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1728689AbgAMUI0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Jan 2020 15:08:26 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:53490 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726202AbgAMUI0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Jan 2020 15:08:26 -0500
+Received: by linux.microsoft.com (Postfix, from userid 1004)
+        id 31F2220B4798; Mon, 13 Jan 2020 12:08:24 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 31F2220B4798
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
+        s=default; t=1578946104;
+        bh=2CIn592ZrTU+WFbzikLJFCcmd+GtETD7ol8+pVX3dJc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=XhxH/rA9MYAeVh9u7FtBQNPr1t8egWKGUeyGPCZDNr8sHTdI3/gUxFbAukH5sSSrv
+         NjVXq1IzrkWhYUrSYqrAQCKxYDlRqUVrorE9dopAPNOyePIHVxtARt1fT3tOt7O+nX
+         9fDQECaYN7BXHLEp38omHXOeAK0ndpCfMS/HxLts=
+From:   longli@linuxonhyperv.com
+To:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Long Li <longli@microsoft.com>
+Subject: [Patch v4 1/2] PCI: hv: Decouple the func definition in hv_dr_state from VSP message
+Date:   Mon, 13 Jan 2020 12:08:20 -0800
+Message-Id: <1578946101-74036-1-git-send-email-longli@linuxonhyperv.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 02:32:08PM -0700, Logan Gunthorpe wrote:
-> One odd quirk of PLX switches is that their upstream bridge port has
-> 256K of space allocated behind its BAR0 (most other bridge
-> implementations do not report any BAR space). The lspci for such  device
-> looks like:
-> 
->   04:00.0 PCI bridge: PLX Technology, Inc. PEX 8724 24-Lane, 6-Port PCI
->             Express Gen 3 (8 GT/s) Switch, 19 x 19mm FCBGA (rev ca)
-> 	    (prog-if 00 [Normal decode])
->       Physical Slot: 1
->       Flags: bus master, fast devsel, latency 0, IRQ 30, NUMA node 0
->       Memory at 90a00000 (32-bit, non-prefetchable) [size=256K]
->       Bus: primary=04, secondary=05, subordinate=0a, sec-latency=0
->       I/O behind bridge: 00002000-00003fff
->       Memory behind bridge: 90000000-909fffff
->       Prefetchable memory behind bridge: 0000380000800000-0000380000bfffff
->       Kernel driver in use: pcieport
-> 
-> It's not clear what the purpose of the memory at 0x90a00000 is, and
-> currently the kernel never actually uses it for anything. In most cases,
-> it's safely ignored and does not cause a problem.
-> 
-> However, when the kernel assigns the resource addresses (with the
-> pci=realloc command line parameter, for example) it can inadvertently
-> disable the struct resource corresponding to the BAR. When this happens,
-> lspci will report this memory as ignored:
-> 
->    Region 0: Memory at <ignored> (32-bit, non-prefetchable) [size=256K]
-> 
-> This is because the kernel reports a zero start address and zero flags
-> in the corresponding sysfs resource file and in /proc/bus/pci/devices.
-> Investigation with 'lspci -x', however shows the BIOS-assigned address
-> will still be programmed in the device's BAR registers.
-> 
-> It's clearly a bug that the kernel's view of the registers differs from
-> what's actually programmed in the BAR, but in most cases, this still
-> won't result in a visible issue because nothing uses the memory,
-> so nothing is affected. However, a big problem shows up when an IOMMU
-> is in use: the IOMMU will not reserve this space in the IOVA because the
-> kernel no longer thinks the range is valid. (See
-> dmar_init_reserved_ranges() for the Intel implementation of this.)
-> 
-> Without the proper reserved range, we have a situation where a DMA
-> mapping may occasionally allocate an IOVA which the PCI bus will actually
-> route to a BAR in the PLX switch. This will result in some random DMA
-> writes not actually writing to the RAM they are supposed to, or random
-> DMA reads returning all FFs from the PLX BAR when it's supposed to have
-> read from RAM.
-> 
-> The problem is caused in pci_assign_unassigned_root_bus_resources().
-> When any resource from a bridge device fails to get assigned, the code
-> sets the resource's flags to zero. This makes sense for bridge resources,
-> as they will be re-enabled later, but for regular BARs, it disables them
-> permanently.
-> 
-> The code in question seems to intend to check if "dev->subordinate" is
-> zero to determine whether a device is a bridge, however this is not
-> likely valid as there might be a bridge without a subordinate bus due to
-> running out of bus numbers or other cases.
-> 
-> To fix these issues we instead check that the idx is in the
-> PCI_BRIDGE_RESOURCES range which are only used for bridge windows and
-> thus is sufficient for the "dev->subordinate" check and will also
-> prevent the bug above from clobbering PLX devices' regular BARs.
-> 
-> The bug was caused in pci_assign_unassigned_root_bus_resources() but the
-> same pattern is in pci_assign_unassigned_bridge_resources() so we
-> changed the code for consistency in both places.
-> 
-> Reported-by: Kit Chow <kchow@gigaio.com>
-> Fixes: da7822e5ad71 ("PCI: update bridge resources to get more big ranges when allocating space (again)")
-> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
+From: Long Li <longli@microsoft.com>
 
-Applied to pci/resource for v5.6, thanks!
+hv_dr_state is used to find present PCI devices on the bus. The structure
+reuses struct pci_function_description from VSP message to describe a
+device.
 
-I added a check of pci_is_bridge() as another hint that this is really
-a bridge-specific issue.  Let me know if that breaks anything.
+To prepare support for pci_function_description v2, decouple this
+dependence in hv_dr_state so it can work with both v1 and v2 VSP messages.
 
-commit 9db8dc6d0785 ("PCI: Don't disable bridge BARs when assigning bus resources")
-Author: Logan Gunthorpe <logang@deltatee.com>
-Date:   Wed Jan 8 14:32:08 2020 -0700
+There is no functionality change.
 
-    PCI: Don't disable bridge BARs when assigning bus resources
-    
-    Some PCI bridges implement BARs in addition to bridge windows.  For
-    example, here's a PLX switch:
-    
-      04:00.0 PCI bridge: PLX Technology, Inc. PEX 8724 24-Lane, 6-Port PCI
-                Express Gen 3 (8 GT/s) Switch, 19 x 19mm FCBGA (rev ca)
-    	    (prog-if 00 [Normal decode])
-          Flags: bus master, fast devsel, latency 0, IRQ 30, NUMA node 0
-          Memory at 90a00000 (32-bit, non-prefetchable) [size=256K]
-          Bus: primary=04, secondary=05, subordinate=0a, sec-latency=0
-          I/O behind bridge: 00002000-00003fff
-          Memory behind bridge: 90000000-909fffff
-          Prefetchable memory behind bridge: 0000380000800000-0000380000bfffff
-    
-    Previously, when the kernel assigned resource addresses (with the
-    pci=realloc command line parameter, for example) it could clear the struct
-    resource corresponding to the BAR.  When this happened, lspci would report
-    this BAR as "ignored":
-    
-       Region 0: Memory at <ignored> (32-bit, non-prefetchable) [size=256K]
-    
-    This is because the kernel reports a zero start address and zero flags
-    in the corresponding sysfs resource file and in /proc/bus/pci/devices.
-    Investigation with 'lspci -x', however, shows the BIOS-assigned address
-    will still be programmed in the device's BAR registers.
-    
-    It's clearly a bug that the kernel lost track of the BAR value, but in most
-    cases, this still won't result in a visible issue because nothing uses the
-    memory, so nothing is affected.  However, when an IOMMU is in use, it will
-    not reserve this space in the IOVA because the kernel no longer thinks the
-    range is valid.  (See dmar_init_reserved_ranges() for the Intel
-    implementation of this.)
-    
-    Without the proper reserved range, a DMA mapping may allocate an IOVA that
-    matches a bridge BAR, which results in DMA accesses going to the BAR
-    instead of the intended RAM.
-    
-    The problem was in pci_assign_unassigned_root_bus_resources().  When any
-    resource from a bridge device fails to get assigned, the code set the
-    resource's flags to zero.  This makes sense for bridge windows, as they
-    will be re-enabled later, but for regular BARs, it makes the kernel
-    permanently lose track of the fact that they decode address space.
-    
-    Change pci_assign_unassigned_root_bus_resources() and
-    pci_assign_unassigned_bridge_resources() so they only clear "res->flags"
-    for bridge *windows*, not bridge BARs.
-    
-    Fixes: da7822e5ad71 ("PCI: update bridge resources to get more big ranges when allocating space (again)")
-    Link: https://lore.kernel.org/r/20200108213208.4612-1-logang@deltatee.com
-    [bhelgaas: commit log, check for pci_is_bridge()]
-    Reported-by: Kit Chow <kchow@gigaio.com>
-    Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Long Li <longli@microsoft.com>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+---
+Changes
+v2: Changed some spaces to tabs, changed failure code to -ENOMEM
+v3: Revised comment for function hv_pci_devices_present(), reformatted patch title
+v4: Fixed spelling
 
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index f279826204eb..591161ce0f51 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -1803,12 +1803,18 @@ void pci_assign_unassigned_root_bus_resources(struct pci_bus *bus)
- 	/* Restore size and flags */
- 	list_for_each_entry(fail_res, &fail_head, list) {
- 		struct resource *res = fail_res->res;
-+		int idx;
+ drivers/pci/controller/pci-hyperv.c | 101 +++++++++++++++++++---------
+ 1 file changed, 70 insertions(+), 31 deletions(-)
+
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index f1f300218fab..3b3e1967cf08 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -507,10 +507,24 @@ struct hv_dr_work {
+ 	struct hv_pcibus_device *bus;
+ };
  
- 		res->start = fail_res->start;
- 		res->end = fail_res->end;
- 		res->flags = fail_res->flags;
--		if (fail_res->dev->subordinate)
--			res->flags = 0;
++struct hv_pcidev_description {
++	u16	v_id;	/* vendor ID */
++	u16	d_id;	/* device ID */
++	u8	rev;
++	u8	prog_intf;
++	u8	subclass;
++	u8	base_class;
++	u32	subsystem_id;
++	union	win_slot_encoding win_slot;
++	u32	ser;	/* serial number */
++	u32	flags;
++	u16	virtual_numa_node;
++};
 +
-+		if (pci_is_bridge(fail_res->dev)) {
-+			idx = res - &fail_res->dev->resource[0];
-+			if (idx >= PCI_BRIDGE_RESOURCES &&
-+			    idx <= PCI_BRIDGE_RESOURCE_END)
-+				res->flags = 0;
-+		}
+ struct hv_dr_state {
+ 	struct list_head list_entry;
+ 	u32 device_count;
+-	struct pci_function_description func[0];
++	struct hv_pcidev_description func[0];
+ };
+ 
+ enum hv_pcichild_state {
+@@ -527,7 +541,7 @@ struct hv_pci_dev {
+ 	refcount_t refs;
+ 	enum hv_pcichild_state state;
+ 	struct pci_slot *pci_slot;
+-	struct pci_function_description desc;
++	struct hv_pcidev_description desc;
+ 	bool reported_missing;
+ 	struct hv_pcibus_device *hbus;
+ 	struct work_struct wrk;
+@@ -1862,7 +1876,7 @@ static void q_resource_requirements(void *context, struct pci_response *resp,
+  * Return: Pointer to the new tracking struct
+  */
+ static struct hv_pci_dev *new_pcichild_device(struct hv_pcibus_device *hbus,
+-		struct pci_function_description *desc)
++		struct hv_pcidev_description *desc)
+ {
+ 	struct hv_pci_dev *hpdev;
+ 	struct pci_child_message *res_req;
+@@ -1973,7 +1987,7 @@ static void pci_devices_present_work(struct work_struct *work)
+ {
+ 	u32 child_no;
+ 	bool found;
+-	struct pci_function_description *new_desc;
++	struct hv_pcidev_description *new_desc;
+ 	struct hv_pci_dev *hpdev;
+ 	struct hv_pcibus_device *hbus;
+ 	struct list_head removed;
+@@ -2090,43 +2104,26 @@ static void pci_devices_present_work(struct work_struct *work)
+ 	put_hvpcibus(hbus);
+ 	kfree(dr);
+ }
+-
+ /**
+- * hv_pci_devices_present() - Handles list of new children
++ * hv_pci_start_relations_work() - Queue work to start device discovery
+  * @hbus:	Root PCI bus, as understood by this driver
+- * @relations:	Packet from host listing children
++ * @dr:		The list of children returned from host
+  *
+- * This function is invoked whenever a new list of devices for
+- * this bus appears.
++ * Return:  0 on success, -errno on failure
+  */
+-static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
+-				   struct pci_bus_relations *relations)
++static int hv_pci_start_relations_work(struct hv_pcibus_device *hbus,
++				       struct hv_dr_state *dr)
+ {
+-	struct hv_dr_state *dr;
+ 	struct hv_dr_work *dr_wrk;
+-	unsigned long flags;
+ 	bool pending_dr;
++	unsigned long flags;
+ 
+ 	dr_wrk = kzalloc(sizeof(*dr_wrk), GFP_NOWAIT);
+ 	if (!dr_wrk)
+-		return;
+-
+-	dr = kzalloc(offsetof(struct hv_dr_state, func) +
+-		     (sizeof(struct pci_function_description) *
+-		      (relations->device_count)), GFP_NOWAIT);
+-	if (!dr)  {
+-		kfree(dr_wrk);
+-		return;
+-	}
++		return -ENOMEM;
+ 
+ 	INIT_WORK(&dr_wrk->wrk, pci_devices_present_work);
+ 	dr_wrk->bus = hbus;
+-	dr->device_count = relations->device_count;
+-	if (dr->device_count != 0) {
+-		memcpy(dr->func, relations->func,
+-		       sizeof(struct pci_function_description) *
+-		       dr->device_count);
+-	}
+ 
+ 	spin_lock_irqsave(&hbus->device_list_lock, flags);
+ 	/*
+@@ -2144,6 +2141,47 @@ static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
+ 		get_hvpcibus(hbus);
+ 		queue_work(hbus->wq, &dr_wrk->wrk);
  	}
- 	free_list(&fail_head);
- 
-@@ -2055,12 +2061,18 @@ void pci_assign_unassigned_bridge_resources(struct pci_dev *bridge)
- 	/* Restore size and flags */
- 	list_for_each_entry(fail_res, &fail_head, list) {
- 		struct resource *res = fail_res->res;
-+		int idx;
- 
- 		res->start = fail_res->start;
- 		res->end = fail_res->end;
- 		res->flags = fail_res->flags;
--		if (fail_res->dev->subordinate)
--			res->flags = 0;
 +
-+		if (pci_is_bridge(fail_res->dev)) {
-+			idx = res - &fail_res->dev->resource[0];
-+			if (idx >= PCI_BRIDGE_RESOURCES &&
-+			    idx <= PCI_BRIDGE_RESOURCE_END)
-+				res->flags = 0;
-+		}
- 	}
- 	free_list(&fail_head);
++	return 0;
++}
++
++/**
++ * hv_pci_devices_present() - Handle list of new children
++ * @hbus:	Root PCI bus, as understood by this driver
++ * @relations:	Packet from host listing children
++ *
++ * Process a new list of devices on the bus. The list of devices is
++ * discovered by VSP and sent to us via VSP message PCI_BUS_RELATIONS,
++ * whenever a new list of devices for this bus appears.
++ */
++static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
++				   struct pci_bus_relations *relations)
++{
++	struct hv_dr_state *dr;
++	int i;
++
++	dr = kzalloc(offsetof(struct hv_dr_state, func) +
++		     (sizeof(struct hv_pcidev_description) *
++		      (relations->device_count)), GFP_NOWAIT);
++
++	if (!dr)
++		return;
++
++	dr->device_count = relations->device_count;
++	for (i = 0; i < dr->device_count; i++) {
++		dr->func[i].v_id = relations->func[i].v_id;
++		dr->func[i].d_id = relations->func[i].d_id;
++		dr->func[i].rev = relations->func[i].rev;
++		dr->func[i].prog_intf = relations->func[i].prog_intf;
++		dr->func[i].subclass = relations->func[i].subclass;
++		dr->func[i].base_class = relations->func[i].base_class;
++		dr->func[i].subsystem_id = relations->func[i].subsystem_id;
++		dr->func[i].win_slot = relations->func[i].win_slot;
++		dr->func[i].ser = relations->func[i].ser;
++	}
++
++	if (hv_pci_start_relations_work(hbus, dr))
++		kfree(dr);
+ }
  
+ /**
+@@ -3018,7 +3056,7 @@ static void hv_pci_bus_exit(struct hv_device *hdev)
+ 		struct pci_packet teardown_packet;
+ 		u8 buffer[sizeof(struct pci_message)];
+ 	} pkt;
+-	struct pci_bus_relations relations;
++	struct hv_dr_state *dr;
+ 	struct hv_pci_compl comp_pkt;
+ 	int ret;
+ 
+@@ -3030,8 +3068,9 @@ static void hv_pci_bus_exit(struct hv_device *hdev)
+ 		return;
+ 
+ 	/* Delete any children which might still exist. */
+-	memset(&relations, 0, sizeof(relations));
+-	hv_pci_devices_present(hbus, &relations);
++	dr = kzalloc(sizeof(*dr), GFP_KERNEL);
++	if (dr && hv_pci_start_relations_work(hbus, dr))
++		kfree(dr);
+ 
+ 	ret = hv_send_resources_released(hdev);
+ 	if (ret)
+-- 
+2.17.1
+
