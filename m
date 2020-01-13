@@ -2,118 +2,229 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C0D1139A30
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Jan 2020 20:30:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 47F2C139A81
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Jan 2020 21:08:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728516AbgAMTag (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Jan 2020 14:30:36 -0500
-Received: from mail-eopbgr760098.outbound.protection.outlook.com ([40.107.76.98]:23156
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726435AbgAMTag (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 13 Jan 2020 14:30:36 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QFJWhhKAj4FaegYk3tcaAI7POLSqwyQCV6pY8Hv4mun10im9SAjMlkdi/Pz51DIjTmZ7eFIM7/quNZs95liLQlZjRrEnZZIPPyHPQQUJHuLdxT/CSNgdBUmFQbQ73evrnINpt+sudeeGEKQX6BFt32tHRWm+nvi+ZI/uWMZ7FK03x1dkKdpTQqdlC/2KV++d19UF8Vzm70b9WpAG8+Rhfmv4nTF3EL7fNZjiLdNlofau5JZBpSiGoTIvgJWC8k8PyVdEAEGXqysQmx15ReWxeLKN+NOoVsy23/UDSVEhlJBXVFBgwiDf1NT/UCu+laRaoXsBd4eez21yb8I8glnrWw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zSB5ZxMBQMtYpxQNGiXy4d/0mhJpMuhHxCmJstq1Xzc=;
- b=LFQcGi2WjU1q3PHxNfi/cWw0zvOhg0oEkmC/YC9AKFuol+dU+FoQgkNPtU/mE3i1XwmS25EeVWfAEE95kFKmDymCrdd/7b7DBKAeOyY3ylZwVyJKONJb6fnO0j0C3uIdm1rS7yaFP6529V3T4Z84sgo50gBTdhsM9Hfb9QwGLYCyfJFg35CmYzMexejj0XcBkDNbswdUiBbPG1ywxhGu/zy4m0AD5AaGReg8FNhOP8qQI1NGqF0E7H18nJwflJoS/bKh4BIWDFE07e+6WDhNCBYZuTP3IRltq6ZszDWs3Vd3kJFnmAVG1QiSNnQaboufbOLeJSo+w0XsN+7xecG3iQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zSB5ZxMBQMtYpxQNGiXy4d/0mhJpMuhHxCmJstq1Xzc=;
- b=fNayqSGTi1mxyfAw3Sm4GTywOdPTSCH2aDXCXsLu7Iyn0TaE9GNbkZP7ui0aGL/7+bV8ET64WERTNQY7Ui9PsJZm42ujMd2n2VmelWDs4ByRNuxMzA/LTdK75cRL1AehoXDS6xFakp0dHwFXGna3OZoWawD+FNdxY8w3fSzEMUw=
-Received: from BL0PR2101MB1123.namprd21.prod.outlook.com (52.132.20.151) by
- BL0PR2101MB0996.namprd21.prod.outlook.com (52.132.23.158) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.6; Mon, 13 Jan 2020 19:30:33 +0000
-Received: from BL0PR2101MB1123.namprd21.prod.outlook.com
- ([fe80::d1de:7b03:3f66:19fb]) by BL0PR2101MB1123.namprd21.prod.outlook.com
- ([fe80::d1de:7b03:3f66:19fb%6]) with mapi id 15.20.2644.015; Mon, 13 Jan 2020
- 19:30:33 +0000
-From:   Long Li <longli@microsoft.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [Patch v3 1/2] PCI: hv: Decouple the func definition in
- hv_dr_state from VSP message
-Thread-Topic: [Patch v3 1/2] PCI: hv: Decouple the func definition in
- hv_dr_state from VSP message
-Thread-Index: AQHVvCRkF/InBl2gY02lH0V30pa41qflORQggACewYCAAz9xEA==
-Date:   Mon, 13 Jan 2020 19:30:33 +0000
-Message-ID: <BL0PR2101MB1123E4716CFCB1990968D4FACE350@BL0PR2101MB1123.namprd21.prod.outlook.com>
-References: <BL0PR2101MB1123229A668A200C34A2888ECE3B0@BL0PR2101MB1123.namprd21.prod.outlook.com>
- <20200111175341.GA238104@google.com>
-In-Reply-To: <20200111175341.GA238104@google.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=a279fdf0-03b7-4921-8d88-000080fcd1fe;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-01-13T19:29:32Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=longli@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:2:edec:db5c:c6fe:798]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 00d59c32-ba87-4e9a-1992-08d7985f0eef
-x-ms-traffictypediagnostic: BL0PR2101MB0996:|BL0PR2101MB0996:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BL0PR2101MB09962DBFDF2DF63388B327CECE350@BL0PR2101MB0996.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-forefront-prvs: 028166BF91
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(136003)(376002)(396003)(346002)(366004)(199004)(189003)(478600001)(66946007)(66476007)(66556008)(54906003)(66446008)(76116006)(6506007)(7696005)(15650500001)(6916009)(33656002)(10290500003)(64756008)(8936002)(5660300002)(186003)(52536014)(316002)(8990500004)(4326008)(8676002)(86362001)(81156014)(81166006)(2906002)(55016002)(9686003)(71200400001)(4744005);DIR:OUT;SFP:1102;SCL:1;SRVR:BL0PR2101MB0996;H:BL0PR2101MB1123.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: MiYDH5EhqGyHtgAhTe7t3dUcC/n3oMOrPYbFkigl+44BbEceK2j4UXfuaLwnMPivdnUkgR12FimNQDX3tY4fymeKFwR1W8b7DsCFeygfMPCd+apebySndwX86bacoXT1lylyj+yddEc55oh16VQCbwZ5hJQ896MEjGid8URHpTqcdCjoATeUwhu3Q5DdKL+CkyvQrnzqLXf9Rbl9YfI+2uWarPBLu+e5WInkmeCSp/VywOAXHcqjwNgZVwSCRyrG8OQN+Ppz2NCdSzWxnyhWIX9iQreM5ZdWj+Q8D7LHef5UasQFcPxL/pZJwvXA11MNKdiC/72U7Y5wVyFRfHLZoxDBnXM8tVLULkULFh6jXnEZ/+O/2GK8FnMF+5cE17QYVY9YTgx7rCISSdM2h8ERs3T6LNtvnWVzZw++r1Pt+oMd7mCJDlu9IMdKY8cquSsP
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1726878AbgAMUH7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Jan 2020 15:07:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57848 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726494AbgAMUH7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 13 Jan 2020 15:07:59 -0500
+Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD1672084D;
+        Mon, 13 Jan 2020 20:07:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578946078;
+        bh=O0K16XQn8uPCH5+iYfVbIfAs5xSRq+A5ma0gRsIAXPM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=bKewygt7CpRB4fM3uRvYlASHYFGvm+V67n6VI6W4z9+kGWeJIDToKFm5hF3KqcMBc
+         XJSBDrIwlRwU+FVDJgsMfz78Z9IJVZSpX22kuTp2aHe2lQ6BFc5oBDdpJ0dBnKJbx0
+         5hpewe6e9esnOD3Tg+nGTsELDm5Y8V5w9JFjxoqk=
+Date:   Mon, 13 Jan 2020 14:07:56 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Kit Chow <kchow@gigaio.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH v5] PCI: Fix disabling of bridge BARs when assigning bus
+ resources
+Message-ID: <20200113200756.GA97441@google.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 00d59c32-ba87-4e9a-1992-08d7985f0eef
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jan 2020 19:30:33.5070
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: r6qQqugHrpX7qHJki3v2FlRJyRj9Qo1HdJjyOROaNxGzC4oMzlK6MTru9FpWhHHtit/UWHOaHNQY9YZTfX0g+A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR2101MB0996
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200108213208.4612-1-logang@deltatee.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
->Subject: Re: [Patch v3 1/2] PCI: hv: Decouple the func definition in hv_dr=
-_state
->from VSP message
->
->On Sat, Jan 11, 2020 at 08:27:25AM +0000, Long Li wrote:
->> Hi Bjorn,
->>
->> I have addressed all the prior comments in this v3 patch. Please take a =
-look.
->
->Lorenzo normally merges hv updates, so I'm sure this is on his list to tak=
-e a look.
->I pointed out a few spelling and similar nits, but I didn't review the act=
-ual
->substance of v3.
->
->Bjorn
+On Wed, Jan 08, 2020 at 02:32:08PM -0700, Logan Gunthorpe wrote:
+> One odd quirk of PLX switches is that their upstream bridge port has
+> 256K of space allocated behind its BAR0 (most other bridge
+> implementations do not report any BAR space). The lspci for such  device
+> looks like:
+> 
+>   04:00.0 PCI bridge: PLX Technology, Inc. PEX 8724 24-Lane, 6-Port PCI
+>             Express Gen 3 (8 GT/s) Switch, 19 x 19mm FCBGA (rev ca)
+> 	    (prog-if 00 [Normal decode])
+>       Physical Slot: 1
+>       Flags: bus master, fast devsel, latency 0, IRQ 30, NUMA node 0
+>       Memory at 90a00000 (32-bit, non-prefetchable) [size=256K]
+>       Bus: primary=04, secondary=05, subordinate=0a, sec-latency=0
+>       I/O behind bridge: 00002000-00003fff
+>       Memory behind bridge: 90000000-909fffff
+>       Prefetchable memory behind bridge: 0000380000800000-0000380000bfffff
+>       Kernel driver in use: pcieport
+> 
+> It's not clear what the purpose of the memory at 0x90a00000 is, and
+> currently the kernel never actually uses it for anything. In most cases,
+> it's safely ignored and does not cause a problem.
+> 
+> However, when the kernel assigns the resource addresses (with the
+> pci=realloc command line parameter, for example) it can inadvertently
+> disable the struct resource corresponding to the BAR. When this happens,
+> lspci will report this memory as ignored:
+> 
+>    Region 0: Memory at <ignored> (32-bit, non-prefetchable) [size=256K]
+> 
+> This is because the kernel reports a zero start address and zero flags
+> in the corresponding sysfs resource file and in /proc/bus/pci/devices.
+> Investigation with 'lspci -x', however shows the BIOS-assigned address
+> will still be programmed in the device's BAR registers.
+> 
+> It's clearly a bug that the kernel's view of the registers differs from
+> what's actually programmed in the BAR, but in most cases, this still
+> won't result in a visible issue because nothing uses the memory,
+> so nothing is affected. However, a big problem shows up when an IOMMU
+> is in use: the IOMMU will not reserve this space in the IOVA because the
+> kernel no longer thinks the range is valid. (See
+> dmar_init_reserved_ranges() for the Intel implementation of this.)
+> 
+> Without the proper reserved range, we have a situation where a DMA
+> mapping may occasionally allocate an IOVA which the PCI bus will actually
+> route to a BAR in the PLX switch. This will result in some random DMA
+> writes not actually writing to the RAM they are supposed to, or random
+> DMA reads returning all FFs from the PLX BAR when it's supposed to have
+> read from RAM.
+> 
+> The problem is caused in pci_assign_unassigned_root_bus_resources().
+> When any resource from a bridge device fails to get assigned, the code
+> sets the resource's flags to zero. This makes sense for bridge resources,
+> as they will be re-enabled later, but for regular BARs, it disables them
+> permanently.
+> 
+> The code in question seems to intend to check if "dev->subordinate" is
+> zero to determine whether a device is a bridge, however this is not
+> likely valid as there might be a bridge without a subordinate bus due to
+> running out of bus numbers or other cases.
+> 
+> To fix these issues we instead check that the idx is in the
+> PCI_BRIDGE_RESOURCES range which are only used for bridge windows and
+> thus is sufficient for the "dev->subordinate" check and will also
+> prevent the bug above from clobbering PLX devices' regular BARs.
+> 
+> The bug was caused in pci_assign_unassigned_root_bus_resources() but the
+> same pattern is in pci_assign_unassigned_bridge_resources() so we
+> changed the code for consistency in both places.
+> 
+> Reported-by: Kit Chow <kchow@gigaio.com>
+> Fixes: da7822e5ad71 ("PCI: update bridge resources to get more big ranges when allocating space (again)")
+> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
 
-Thanks, I will address your comments and send v4.
+Applied to pci/resource for v5.6, thanks!
 
-Long
+I added a check of pci_is_bridge() as another hint that this is really
+a bridge-specific issue.  Let me know if that breaks anything.
+
+commit 9db8dc6d0785 ("PCI: Don't disable bridge BARs when assigning bus resources")
+Author: Logan Gunthorpe <logang@deltatee.com>
+Date:   Wed Jan 8 14:32:08 2020 -0700
+
+    PCI: Don't disable bridge BARs when assigning bus resources
+    
+    Some PCI bridges implement BARs in addition to bridge windows.  For
+    example, here's a PLX switch:
+    
+      04:00.0 PCI bridge: PLX Technology, Inc. PEX 8724 24-Lane, 6-Port PCI
+                Express Gen 3 (8 GT/s) Switch, 19 x 19mm FCBGA (rev ca)
+    	    (prog-if 00 [Normal decode])
+          Flags: bus master, fast devsel, latency 0, IRQ 30, NUMA node 0
+          Memory at 90a00000 (32-bit, non-prefetchable) [size=256K]
+          Bus: primary=04, secondary=05, subordinate=0a, sec-latency=0
+          I/O behind bridge: 00002000-00003fff
+          Memory behind bridge: 90000000-909fffff
+          Prefetchable memory behind bridge: 0000380000800000-0000380000bfffff
+    
+    Previously, when the kernel assigned resource addresses (with the
+    pci=realloc command line parameter, for example) it could clear the struct
+    resource corresponding to the BAR.  When this happened, lspci would report
+    this BAR as "ignored":
+    
+       Region 0: Memory at <ignored> (32-bit, non-prefetchable) [size=256K]
+    
+    This is because the kernel reports a zero start address and zero flags
+    in the corresponding sysfs resource file and in /proc/bus/pci/devices.
+    Investigation with 'lspci -x', however, shows the BIOS-assigned address
+    will still be programmed in the device's BAR registers.
+    
+    It's clearly a bug that the kernel lost track of the BAR value, but in most
+    cases, this still won't result in a visible issue because nothing uses the
+    memory, so nothing is affected.  However, when an IOMMU is in use, it will
+    not reserve this space in the IOVA because the kernel no longer thinks the
+    range is valid.  (See dmar_init_reserved_ranges() for the Intel
+    implementation of this.)
+    
+    Without the proper reserved range, a DMA mapping may allocate an IOVA that
+    matches a bridge BAR, which results in DMA accesses going to the BAR
+    instead of the intended RAM.
+    
+    The problem was in pci_assign_unassigned_root_bus_resources().  When any
+    resource from a bridge device fails to get assigned, the code set the
+    resource's flags to zero.  This makes sense for bridge windows, as they
+    will be re-enabled later, but for regular BARs, it makes the kernel
+    permanently lose track of the fact that they decode address space.
+    
+    Change pci_assign_unassigned_root_bus_resources() and
+    pci_assign_unassigned_bridge_resources() so they only clear "res->flags"
+    for bridge *windows*, not bridge BARs.
+    
+    Fixes: da7822e5ad71 ("PCI: update bridge resources to get more big ranges when allocating space (again)")
+    Link: https://lore.kernel.org/r/20200108213208.4612-1-logang@deltatee.com
+    [bhelgaas: commit log, check for pci_is_bridge()]
+    Reported-by: Kit Chow <kchow@gigaio.com>
+    Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index f279826204eb..591161ce0f51 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -1803,12 +1803,18 @@ void pci_assign_unassigned_root_bus_resources(struct pci_bus *bus)
+ 	/* Restore size and flags */
+ 	list_for_each_entry(fail_res, &fail_head, list) {
+ 		struct resource *res = fail_res->res;
++		int idx;
+ 
+ 		res->start = fail_res->start;
+ 		res->end = fail_res->end;
+ 		res->flags = fail_res->flags;
+-		if (fail_res->dev->subordinate)
+-			res->flags = 0;
++
++		if (pci_is_bridge(fail_res->dev)) {
++			idx = res - &fail_res->dev->resource[0];
++			if (idx >= PCI_BRIDGE_RESOURCES &&
++			    idx <= PCI_BRIDGE_RESOURCE_END)
++				res->flags = 0;
++		}
+ 	}
+ 	free_list(&fail_head);
+ 
+@@ -2055,12 +2061,18 @@ void pci_assign_unassigned_bridge_resources(struct pci_dev *bridge)
+ 	/* Restore size and flags */
+ 	list_for_each_entry(fail_res, &fail_head, list) {
+ 		struct resource *res = fail_res->res;
++		int idx;
+ 
+ 		res->start = fail_res->start;
+ 		res->end = fail_res->end;
+ 		res->flags = fail_res->flags;
+-		if (fail_res->dev->subordinate)
+-			res->flags = 0;
++
++		if (pci_is_bridge(fail_res->dev)) {
++			idx = res - &fail_res->dev->resource[0];
++			if (idx >= PCI_BRIDGE_RESOURCES &&
++			    idx <= PCI_BRIDGE_RESOURCE_END)
++				res->flags = 0;
++		}
+ 	}
+ 	free_list(&fail_head);
+ 
