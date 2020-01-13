@@ -2,263 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 93848139A89
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Jan 2020 21:08:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 07C13139B48
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Jan 2020 22:17:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728767AbgAMUI3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Jan 2020 15:08:29 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:53522 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726202AbgAMUI2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Jan 2020 15:08:28 -0500
-Received: by linux.microsoft.com (Postfix, from userid 1004)
-        id B5DA420B4798; Mon, 13 Jan 2020 12:08:27 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B5DA420B4798
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
-        s=default; t=1578946107;
-        bh=LkK82Ra8Ttf6ZPaM3dBUrYD8dLhOi0+C1AGx6m7TTMY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g1WmqYBOtNb/9s0NLLBYOWwJrruXWaJB7kf81WxbtjFZM+c76eqL1fdWOGo4RNrpL
-         5x2v6vnZuvssH17+IsSXg+hmdMdQudtfWJ1ojLmluhuI1skQWduBEXIz+LSD63ktrX
-         KyEUMd5M1YqMLVQy//FHgbghBFLcmwYyzJtjo4Qc=
-From:   longli@linuxonhyperv.com
-To:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Long Li <longli@microsoft.com>
-Subject: [Patch v4 2/2] PCI: hv: Add support for protocol 1.3 and support PCI_BUS_RELATIONS2
-Date:   Mon, 13 Jan 2020 12:08:21 -0800
-Message-Id: <1578946101-74036-2-git-send-email-longli@linuxonhyperv.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1578946101-74036-1-git-send-email-longli@linuxonhyperv.com>
-References: <1578946101-74036-1-git-send-email-longli@linuxonhyperv.com>
+        id S1726536AbgAMVRb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Jan 2020 16:17:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48298 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726488AbgAMVRb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 13 Jan 2020 16:17:31 -0500
+Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D062F2072B;
+        Mon, 13 Jan 2020 21:17:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578950250;
+        bh=a3M9peGLxqJfcgONYpYrnY2hm9/E2kn/qjsgS5bQ528=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=nJfd27bjMYKkFoxQGTtykqdD5cumqlRhVFp5DZZxAZlrD9hZE5LW5CNjYi3wyLOwI
+         4LvHAZgSqafE4+zMNaUOo5z8KUJk6v0FF9tQMVDEaI9HmMbawRTw+5QcB4c87e2538
+         3Gp9zPtJfSGbhHo/ESt2SB49GkUk7l/WfLDyEibw=
+Date:   Mon, 13 Jan 2020 15:17:28 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Yicong Yang <yangyicong@hisilicon.com>
+Cc:     linux-pci@vger.kernel.org, f.fangjian@huawei.com
+Subject: Re: [Patch] PCI:add 32 GT/s decoding in some macros
+Message-ID: <20200113211728.GA113776@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1578883220-28222-1-git-send-email-yangyicong@hisilicon.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Long Li <longli@microsoft.com>
+On Mon, Jan 13, 2020 at 10:40:20AM +0800, Yicong Yang wrote:
+> Link speed 32.0 GT/s is supported in PCIe r5.0. Add in macro
+> PCIE_SPEED2STR and PCIE_SPEED2MBS_ENC to correctly decode.
+> This patch is a complementary to
+> commit de76cda215d5 ("PCI: Decode PCIe 32 GT/s link speed")
 
-Starting with Hyper-V PCI protocol version 1.3, the host VSP can send
-PCI_BUS_RELATIONS2 and pass the vNUMA node information for devices on the
-bus. The vNUMA node tells which guest NUMA node this device is on based
-on guest VM configuration topology and physical device inforamtion.
+Thanks for the patch!  Can you please rework current_link_speed_show()
+(which was updated by de76cda215d5 ("PCI: Decode PCIe 32 GT/s link
+speed")) so we don't duplicate the strings there and in
+PCIE_SPEED2STR()?
 
-Add code to negotiate v1.3 and process PCI_BUS_RELATIONS2.
+Maybe something like:
 
-Signed-off-by: Long Li <longli@microsoft.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
----
-Changes
-v2: Changed some spaces to tabs, added put_pcichild() after get_pcichild_wslot(), renamed pci_assign_numa_node() to hv_pci_assign_numa_node()
-v4: Fixed spelling
+  switch (linkstat & PCI_EXP_LNKSTA_CLS) {
+  case PCI_EXP_LNKSTA_CLS_32_0GB:
+    speed = PCIE_SPEED2STR(PCIE_SPEED_32_0GT);
+    break;
+  ...
 
- drivers/pci/controller/pci-hyperv.c | 109 ++++++++++++++++++++++++++++
- 1 file changed, 109 insertions(+)
+My goal is to both remove the string duplication and make it more
+likely that when we add the *next* new speed, we'll catch everything
+the first time around.
 
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 3b3e1967cf08..147358fae8a2 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -63,6 +63,7 @@
- enum pci_protocol_version_t {
- 	PCI_PROTOCOL_VERSION_1_1 = PCI_MAKE_VERSION(1, 1),	/* Win10 */
- 	PCI_PROTOCOL_VERSION_1_2 = PCI_MAKE_VERSION(1, 2),	/* RS1 */
-+	PCI_PROTOCOL_VERSION_1_3 = PCI_MAKE_VERSION(1, 3),	/* Vibranium */
- };
- 
- #define CPU_AFFINITY_ALL	-1ULL
-@@ -72,6 +73,7 @@ enum pci_protocol_version_t {
-  * first.
-  */
- static enum pci_protocol_version_t pci_protocol_versions[] = {
-+	PCI_PROTOCOL_VERSION_1_3,
- 	PCI_PROTOCOL_VERSION_1_2,
- 	PCI_PROTOCOL_VERSION_1_1,
- };
-@@ -124,6 +126,7 @@ enum pci_message_type {
- 	PCI_RESOURCES_ASSIGNED2		= PCI_MESSAGE_BASE + 0x16,
- 	PCI_CREATE_INTERRUPT_MESSAGE2	= PCI_MESSAGE_BASE + 0x17,
- 	PCI_DELETE_INTERRUPT_MESSAGE2	= PCI_MESSAGE_BASE + 0x18, /* unused */
-+	PCI_BUS_RELATIONS2		= PCI_MESSAGE_BASE + 0x19,
- 	PCI_MESSAGE_MAXIMUM
- };
- 
-@@ -169,6 +172,26 @@ struct pci_function_description {
- 	u32	ser;	/* serial number */
- } __packed;
- 
-+enum pci_device_description_flags {
-+	HV_PCI_DEVICE_FLAG_NONE			= 0x0,
-+	HV_PCI_DEVICE_FLAG_NUMA_AFFINITY	= 0x1,
-+};
-+
-+struct pci_function_description2 {
-+	u16	v_id;	/* vendor ID */
-+	u16	d_id;	/* device ID */
-+	u8	rev;
-+	u8	prog_intf;
-+	u8	subclass;
-+	u8	base_class;
-+	u32	subsystem_id;
-+	union	win_slot_encoding win_slot;
-+	u32	ser;	/* serial number */
-+	u32	flags;
-+	u16	virtual_numa_node;
-+	u16	reserved;
-+} __packed;
-+
- /**
-  * struct hv_msi_desc
-  * @vector:		IDT entry
-@@ -304,6 +327,12 @@ struct pci_bus_relations {
- 	struct pci_function_description func[0];
- } __packed;
- 
-+struct pci_bus_relations2 {
-+	struct pci_incoming_message incoming;
-+	u32 device_count;
-+	struct pci_function_description2 func[0];
-+} __packed;
-+
- struct pci_q_res_req_response {
- 	struct vmpacket_descriptor hdr;
- 	s32 status;			/* negative values are failures */
-@@ -1417,6 +1446,7 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 		break;
- 
- 	case PCI_PROTOCOL_VERSION_1_2:
-+	case PCI_PROTOCOL_VERSION_1_3:
- 		size = hv_compose_msi_req_v2(&ctxt.int_pkts.v2,
- 					dest,
- 					hpdev->desc.win_slot.slot,
-@@ -1798,6 +1828,27 @@ static void hv_pci_remove_slots(struct hv_pcibus_device *hbus)
- 	}
- }
- 
-+/*
-+ * Set NUMA node for the devices on the bus
-+ */
-+static void hv_pci_assign_numa_node(struct hv_pcibus_device *hbus)
-+{
-+	struct pci_dev *dev;
-+	struct pci_bus *bus = hbus->pci_bus;
-+	struct hv_pci_dev *hv_dev;
-+
-+	list_for_each_entry(dev, &bus->devices, bus_list) {
-+		hv_dev = get_pcichild_wslot(hbus, devfn_to_wslot(dev->devfn));
-+		if (!hv_dev)
-+			continue;
-+
-+		if (hv_dev->desc.flags & HV_PCI_DEVICE_FLAG_NUMA_AFFINITY)
-+			set_dev_node(&dev->dev, hv_dev->desc.virtual_numa_node);
-+
-+		put_pcichild(hv_dev);
-+	}
-+}
-+
- /**
-  * create_root_hv_pci_bus() - Expose a new root PCI bus
-  * @hbus:	Root PCI bus, as understood by this driver
-@@ -1820,6 +1871,7 @@ static int create_root_hv_pci_bus(struct hv_pcibus_device *hbus)
- 
- 	pci_lock_rescan_remove();
- 	pci_scan_child_bus(hbus->pci_bus);
-+	hv_pci_assign_numa_node(hbus);
- 	pci_bus_assign_resources(hbus->pci_bus);
- 	hv_pci_assign_slots(hbus);
- 	pci_bus_add_devices(hbus->pci_bus);
-@@ -2088,6 +2140,7 @@ static void pci_devices_present_work(struct work_struct *work)
- 		 */
- 		pci_lock_rescan_remove();
- 		pci_scan_child_bus(hbus->pci_bus);
-+		hv_pci_assign_numa_node(hbus);
- 		hv_pci_assign_slots(hbus);
- 		pci_unlock_rescan_remove();
- 		break;
-@@ -2184,6 +2237,46 @@ static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
- 		kfree(dr);
- }
- 
-+/**
-+ * hv_pci_devices_present2() - Handle list of new children
-+ * @hbus:	Root PCI bus, as understood by this driver
-+ * @relations2:	Packet from host listing children
-+ *
-+ * This function is the v2 version of hv_pci_devices_present()
-+ */
-+static void hv_pci_devices_present2(struct hv_pcibus_device *hbus,
-+				    struct pci_bus_relations2 *relations)
-+{
-+	struct hv_dr_state *dr;
-+	int i;
-+
-+	dr = kzalloc(offsetof(struct hv_dr_state, func) +
-+		     (sizeof(struct hv_pcidev_description) *
-+		      (relations->device_count)), GFP_NOWAIT);
-+
-+	if (!dr)
-+		return;
-+
-+	dr->device_count = relations->device_count;
-+	for (i = 0; i < dr->device_count; i++) {
-+		dr->func[i].v_id = relations->func[i].v_id;
-+		dr->func[i].d_id = relations->func[i].d_id;
-+		dr->func[i].rev = relations->func[i].rev;
-+		dr->func[i].prog_intf = relations->func[i].prog_intf;
-+		dr->func[i].subclass = relations->func[i].subclass;
-+		dr->func[i].base_class = relations->func[i].base_class;
-+		dr->func[i].subsystem_id = relations->func[i].subsystem_id;
-+		dr->func[i].win_slot = relations->func[i].win_slot;
-+		dr->func[i].ser = relations->func[i].ser;
-+		dr->func[i].flags = relations->func[i].flags;
-+		dr->func[i].virtual_numa_node =
-+			relations->func[i].virtual_numa_node;
-+	}
-+
-+	if (hv_pci_start_relations_work(hbus, dr))
-+		kfree(dr);
-+}
-+
- /**
-  * hv_eject_device_work() - Asynchronously handles ejection
-  * @work:	Work struct embedded in internal device struct
-@@ -2289,6 +2382,7 @@ static void hv_pci_onchannelcallback(void *context)
- 	struct pci_response *response;
- 	struct pci_incoming_message *new_message;
- 	struct pci_bus_relations *bus_rel;
-+	struct pci_bus_relations2 *bus_rel2;
- 	struct pci_dev_inval_block *inval;
- 	struct pci_dev_incoming *dev_message;
- 	struct hv_pci_dev *hpdev;
-@@ -2356,6 +2450,21 @@ static void hv_pci_onchannelcallback(void *context)
- 				hv_pci_devices_present(hbus, bus_rel);
- 				break;
- 
-+			case PCI_BUS_RELATIONS2:
-+
-+				bus_rel2 = (struct pci_bus_relations2 *)buffer;
-+				if (bytes_recvd <
-+				    offsetof(struct pci_bus_relations2, func) +
-+				    (sizeof(struct pci_function_description2) *
-+				     (bus_rel2->device_count))) {
-+					dev_err(&hbus->hdev->device,
-+						"bus relations v2 too small\n");
-+					break;
-+				}
-+
-+				hv_pci_devices_present2(hbus, bus_rel2);
-+				break;
-+
- 			case PCI_EJECT:
- 
- 				dev_message = (struct pci_dev_incoming *)buffer;
--- 
-2.17.1
+Bjorn
 
+> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+> ---
+>  drivers/pci/pci.h | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 3f6947e..2cd64bd 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -288,7 +288,8 @@ void pci_bus_put(struct pci_bus *bus);
+> 
+>  /* PCIe link information */
+>  #define PCIE_SPEED2STR(speed) \
+> -	((speed) == PCIE_SPEED_16_0GT ? "16 GT/s" : \
+> +	((speed) == PCIE_SPEED_32_0GT ? "32 GT/s" : \
+> +	 (speed) == PCIE_SPEED_16_0GT ? "16 GT/s" : \
+>  	 (speed) == PCIE_SPEED_8_0GT ? "8 GT/s" : \
+>  	 (speed) == PCIE_SPEED_5_0GT ? "5 GT/s" : \
+>  	 (speed) == PCIE_SPEED_2_5GT ? "2.5 GT/s" : \
+> @@ -296,7 +297,8 @@ void pci_bus_put(struct pci_bus *bus);
+> 
+>  /* PCIe speed to Mb/s reduced by encoding overhead */
+>  #define PCIE_SPEED2MBS_ENC(speed) \
+> -	((speed) == PCIE_SPEED_16_0GT ? 16000*128/130 : \
+> +	((speed) == PCIE_SPEED_32_0GT ? 32000*128/130 : \
+> +	 (speed) == PCIE_SPEED_16_0GT ? 16000*128/130 : \
+>  	 (speed) == PCIE_SPEED_8_0GT  ?  8000*128/130 : \
+>  	 (speed) == PCIE_SPEED_5_0GT  ?  5000*8/10 : \
+>  	 (speed) == PCIE_SPEED_2_5GT  ?  2500*8/10 : \
+> --
+> 2.8.1
+> 
