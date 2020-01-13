@@ -2,90 +2,179 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 16DA2139BCC
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Jan 2020 22:45:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 50C04139CA4
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Jan 2020 23:34:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728641AbgAMVpN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Jan 2020 16:45:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35462 "EHLO mail.kernel.org"
+        id S1728714AbgAMWej (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Jan 2020 17:34:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726488AbgAMVpM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 13 Jan 2020 16:45:12 -0500
+        id S1726530AbgAMWej (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 13 Jan 2020 17:34:39 -0500
 Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC8FA20CC7;
-        Mon, 13 Jan 2020 21:45:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CFE0207FF;
+        Mon, 13 Jan 2020 22:34:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578951912;
-        bh=cNM+trifQppQVmWLHDIheU3838+ouIqu4KohlNVE2W8=;
+        s=default; t=1578954878;
+        bh=vPaoIv3K3OkGHthTe0VwmQQyIHT4a91KzCBghgPlylE=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=OWYviWPlsbpybgnWy3g5GklkweM1lBUCM8pjfgSeXL/HKpXS2Odrs2N1yLhGZ7q0I
-         Gvk/wcS0SZ0KR9EN771+zEkpnHodZAoo8HayesnR+fCRjRSYqTXzj/1jAg4+kR/b1+
-         BOxPqHsePpONqH+K4Srs266/9ZzdFSCUJC5RhD54=
-Date:   Mon, 13 Jan 2020 15:45:10 -0600
+        b=cK2X/HbXh6fTIVAWPjHS3dF05JIN8pCEXV6q9WrBpQezbi27nM/zXpgAkfc/X9XpM
+         V7WPdwjnA5hGWJrotUaQJF5VrAaWgdeWX5B55mwZHw8Ga+Lk8hpeTTtGLI5rxP/Dnm
+         NpsSBCAeGej1JjaWSg2d+AhzI6akod+v6khtlkT4=
+Date:   Mon, 13 Jan 2020 16:34:36 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Chen Yu <yu.c.chen@intel.com>
-Cc:     linux-pci@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI/PM: Print the pci config space of devices before
- suspend
-Message-ID: <20200113214510.GA119378@google.com>
+To:     Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rgummal@xilinx.com
+Subject: Re: [PATCH v3 2/2] PCI: Versal CPM: Add support for Versal CPM Root
+ Port driver
+Message-ID: <20200113223436.GA128724@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200113060724.19571-1-yu.c.chen@intel.com>
+In-Reply-To: <1578909821-10604-3-git-send-email-bharat.kumar.gogada@xilinx.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 02:07:24PM +0800, Chen Yu wrote:
-> The pci config space was found to be insane during resume
-> from hibernation(S4, or suspend to disk) on a VM:
-> 
->  serial 0000:00:16.3: restoring config space at offset 0x14
->  (was 0x9104e000, writing 0xffffffff)
-> 
-> Either the snapshot on the disk has been scribbled or the pci
-> config space becomes invalid before suspend. To narrow down
-> and benefit future debugging, print the pci config space
-> being saved before suspend, which is symmetric to the log
-> in pci_restore_config_dword().
-> 
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Cc: Len Brown <lenb@kernel.org>
-> Cc: linux-pci@vger.kernel.org
-> Cc: linux-pm@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Chen Yu <yu.c.chen@intel.com>
+s/PCI: Versal CPM: .../PCI: xilinx-cpm: Add Versal CPM Root Port driver/
 
-Applied to pci/pm for v5.6, thanks!
+Format is "PCI: <driver-name>: Subject"
 
-> ---
->  drivers/pci/pci.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+On Mon, Jan 13, 2020 at 03:33:41PM +0530, Bharat Kumar Gogada wrote:
+> - Adding support for Versal CPM as Root Port.
+
+s/- Adding/Add/
+
+> - The Versal ACAP devices include CCIX-PCIe Module (CPM). The integrated
+>   block for CPM along with the integrated bridge can function
+>   as PCIe Root Port.
+> - CPM Versal uses GICv3 ITS feature for acheiving assigning MSI/MSI-X
+>   vectors and handling MSI/MSI-X interrupts.
+
+s/acheiving//
+
+> - Bridge error and legacy interrupts in Versal CPM are handled using
+>   Versal CPM specific MISC interrupt line.
 > 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index e87196cc1a7f..34cde70440c3 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -1372,8 +1372,11 @@ int pci_save_state(struct pci_dev *dev)
->  {
->  	int i;
->  	/* XXX: 100% dword access ok here? */
-> -	for (i = 0; i < 16; i++)
-> +	for (i = 0; i < 16; i++) {
->  		pci_read_config_dword(dev, i * 4, &dev->saved_config_space[i]);
-> +		pci_dbg(dev, "saving config space at offset %#x (reading %#x)\n",
-> +			i * 4, dev->saved_config_space[i]);
-> +	}
->  	dev->state_saved = true;
->  
->  	i = pci_save_pcie_state(dev);
-> -- 
-> 2.17.1
+> Changes v3:
+> Fix warnings reported.
 > 
+> Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+
+"Reported-by" is for bug reports.  This makes it look like the lack of
+the driver is the bug, but it's not.  Personally, I'd thank Dan and
+the kbuild robot, but not add "Reported-by" here.  It's like patch
+reviews; I don't expect you to mention my feedback in the commit log.
+
+> +config PCIE_XILINX_CPM
+> +	bool "Xilinx Versal CPM host bridge support"
+> +	depends on ARCH_ZYNQMP || COMPILE_TEST
+> +	help
+> +	  Say 'Y' here if you want kernel to enable support the
+> +	  Xilinx Versal CPM host Bridge driver.The driver supports
+> +	  MSI/MSI-X interrupts using GICv3 ITS feature.
+
+s/kernel to enable support the/kernel support for the/
+s/host Bridge driver./host bridge. /  (note space after period)
+
+> + * xilinx_cpm_pcie_valid_device - Check if a valid device is present on bus
+
+Technically this does not check if the device is present on the bus.
+It checks whether it's *possible* for a device to be at this address.
+For non-root bus devices in particular, it always returns true, and
+you have to do a config read to see whether a device responds.
+
+> + * @bus: PCI Bus structure
+> + * @devfn: device/function
+> + *
+> + * Return: 'true' on success and 'false' if invalid device is found
+> + */
+> +static bool xilinx_cpm_pcie_valid_device(struct pci_bus *bus,
+> +					 unsigned int devfn)
+> +{
+> +	struct xilinx_cpm_pcie_port *port = bus->sysdata;
+> +
+> +	/* Only one device down on each root port */
+> +	if (bus->number == port->root_busno && devfn > 0)
+> +		return false;
+> +
+> +	return true;
+> +}
+
+> +static irqreturn_t xilinx_cpm_pcie_intr_handler(int irq, void *data)
+> +{
+> +	struct xilinx_cpm_pcie_port *port =
+> +				(struct xilinx_cpm_pcie_port *)data;
+
+No cast needed.
+
+> +static void xilinx_cpm_pcie_init_port(struct xilinx_cpm_pcie_port *port)
+> +{
+> +	if (cpm_pcie_link_up(port))
+> +		dev_info(port->dev, "PCIe Link is UP\n");
+> +	else
+> +		dev_info(port->dev, "PCIe Link is DOWN\n");
+> +
+> +	/* Disable all interrupts */
+> +	pcie_write(port, ~XILINX_CPM_PCIE_IDR_ALL_MASK,
+> +		   XILINX_CPM_PCIE_REG_IMR);
+> +
+> +	/* Clear pending interrupts */
+> +	pcie_write(port, pcie_read(port, XILINX_CPM_PCIE_REG_IDR) &
+> +		   XILINX_CPM_PCIE_IMR_ALL_MASK,
+> +		   XILINX_CPM_PCIE_REG_IDR);
+> +
+> +	/* Enable all interrupts */
+> +	pcie_write(port, XILINX_CPM_PCIE_IMR_ALL_MASK,
+> +		   XILINX_CPM_PCIE_REG_IMR);
+> +	pcie_write(port, XILINX_CPM_PCIE_IDRN_MASK,
+> +		   XILINX_CPM_PCIE_REG_IDRN_MASK);
+> +
+> +	writel(XILINX_CPM_PCIE_MISC_IR_LOCAL,
+> +	       port->cpm_base + XILINX_CPM_PCIE_MISC_IR_ENABLE);
+
+This lonely writel() in the middle of all the pcie_write() and
+pcie_read() calls *looks* like a mistake.
+
+I see that the writel() uses port->cpm_base, while pcie_write() uses
+port->reg_base, so I don't think it *is* a mistake, but it's sure not
+obvious.  A blank line after it and a comment at the _MISC_IR
+definitions about them being in a different register set would be nice
+hints.
+
+> +	/* Enable the Bridge enable bit */
+> +	pcie_write(port, pcie_read(port, XILINX_CPM_PCIE_REG_RPSC) |
+> +		   XILINX_CPM_PCIE_REG_RPSC_BEN,
+> +		   XILINX_CPM_PCIE_REG_RPSC);
+> +}
+
+> +static int xilinx_cpm_pcie_parse_dt(struct xilinx_cpm_pcie_port *port)
+> +{
+> +	struct device *dev = port->dev;
+> +	struct resource *res;
+> +	int err;
+> +	struct platform_device *pdev = to_platform_device(dev);
+
+The "struct platform_device ..." line really should be first in the
+list.  Not because of "reverse Christmas tree", but because "pdev" is
+the first variable used in the code below.
+
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "cfg");
+> +	port->reg_base = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(port->reg_base))
+> +		return PTR_ERR(port->reg_base);
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> +					   "cpm_slcr");
+> +	port->cpm_base = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(port->cpm_base))
+> +		return PTR_ERR(port->cpm_base);
+
+Bjorn
