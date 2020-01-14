@@ -2,56 +2,74 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D8D1D13B327
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2020 20:48:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E18913B3D6
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2020 21:55:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbgANTsq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Jan 2020 14:48:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33926 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726491AbgANTsq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 14 Jan 2020 14:48:46 -0500
-Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 940A524655;
-        Tue, 14 Jan 2020 19:48:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579031326;
-        bh=Jwtjbz1xWl2epV72DQ55JG7jJJ7iyLgmYALvx4gZz4M=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=L1KzeYrIy55KkTvrJ5ex0kR+Iz1jl9gpFWZnB6xbgs9V7I+KBnRKxn4W72X4UxOUp
-         0cxlWPXEOGmyqKuGEwlQsnHqMeigm+iw9EMpMetHRCKHkCXnzTT95K4CiQpATDNfTv
-         hcCzWFVsRU/HMM8L5igYBAQQYJbvlCyhr71H6gxk=
-Date:   Tue, 14 Jan 2020 13:48:43 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     sathyanarayanan.kuppuswamy@linux.intel.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com
-Subject: Re: [PATCH v12 0/8] Add Error Disconnect Recover (EDR) support
-Message-ID: <20200114194843.GA134677@google.com>
+        id S1727285AbgANUzg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Jan 2020 15:55:36 -0500
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:33095 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbgANUzg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Jan 2020 15:55:36 -0500
+Received: by mail-yb1-f196.google.com with SMTP id n66so1944274ybg.0
+        for <linux-pci@vger.kernel.org>; Tue, 14 Jan 2020 12:55:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BUYwUy2fDJyl5O/FssXYizN9RZrtlMGcja1+uO0rXSA=;
+        b=NEv+cDqSYreP50KlOiF6+PWm8BytNU5kHs9Lkr5uu6HBtRnj5q7NVxlChzeuMmMHw/
+         3v0YJ9lPqmdVil4i5JXOSndbMfjo8CnjvoN4+ERv2lhRlU4EZQY24iLiJcWwJtm67b/Q
+         TLgSaqqQnsQkNdnwRikSGJaJ6TmGUENtM52XIsTN8B2kjtIwiGuWq6Keuz45H1oC4aCZ
+         ctDv0lUAcx16uYj/BmWdy3yLsYBz9seyDxseG5fBCtN6dSUxnsWwogUVpW41rM/9h9xR
+         dQ5tCZ9GmfDiO5C5yDg4tigYMdlEH+wZ+m7oOcqVx3zbjyOpR4jolZFIzAAR04geuod0
+         eEFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BUYwUy2fDJyl5O/FssXYizN9RZrtlMGcja1+uO0rXSA=;
+        b=TmytnI0491su5kzFGNU7kBZAaMKw3s8IdS1tbAxE6sJERxU78VoqPwl+luRT1EJzPH
+         ewQ0QxTwx+BHkgL+lO46YplNLJEvxFcwTsadqIn4FqYl95l3aDoVRLq3mNRMo0SI2F/c
+         DCZ7sMkE544X7OKALs7RmqsWnUXdQYtoCgM/U+11OuSzByox8e1Fkb45HHnAayrmYDnP
+         Rzhs48AlcJ8s9Il9eUhwDMQYZRd4XpYAynoZsfrEGZD+LG+vgUKSQYHch2AzRn7pSL81
+         hagVc74cxfnipVxl166sNxCc1iWC00RzaxHHPSNvjdRpPtukB6cSOYGg2wzNAdM3jE5c
+         FwJg==
+X-Gm-Message-State: APjAAAWQikGw4VBrAMo23+XE4yg4WsQF8cj4QJ/tzR+m2eggn7SBzqEP
+        mR2POQ1PlNUBdkuo6YEg8sU=
+X-Google-Smtp-Source: APXvYqzrUyqSx8KY0o1U9CC8mTy4P5AWzDm+eAk8T7g7Le2r3qHIWe+VbvZBYl3O/yvTwDMXNJ3eLw==
+X-Received: by 2002:a5b:3c9:: with SMTP id t9mr13197020ybp.377.1579035335198;
+        Tue, 14 Jan 2020 12:55:35 -0800 (PST)
+Received: from tr4.amd.com (atlvpn.amd.com. [165.204.84.11])
+        by smtp.gmail.com with ESMTPSA id a189sm7440521ywh.92.2020.01.14.12.55.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jan 2020 12:55:34 -0800 (PST)
+From:   Alex Deucher <alexdeucher@gmail.com>
+X-Google-Original-From: Alex Deucher <alexander.deucher@amd.com>
+To:     amd-gfx@lists.freedesktop.org, linux-pci@vger.kernel.org,
+        bhelgaas@google.com
+Cc:     Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 0/2] Adjust AMD GPU ATS quirks
+Date:   Tue, 14 Jan 2020 15:55:21 -0500
+Message-Id: <20200114205523.1054271-1-alexander.deucher@amd.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1578682741.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Jan 12, 2020 at 02:43:54PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> ...
-> Changes since v11:
->  * Allowed error recovery to proceed after successful reset_link().
->  * Used correct ACPI handle for sending EDR status.
->  * Rebased on top of v5.5-rc5
+We've root caused the issue and clarified the quirk.
+This also adds a new quirk for a new GPU.
 
-You don't need to rebase this for *me*, since I always apply patches
-on topic branches based on my "master" branch (typically -rc1) unless
-they depend on something that's not in -rc1 (please tell me when this
-is the case).
+Alex Deucher (2):
+  pci: Clarify ATS quirk
+  pci: add ATS quirk for navi14 board (v2)
 
-It usually doesn't *hurt* (and this series applies just fine on -rc1),
-so this is just FYI.
+ drivers/pci/quirks.c | 32 +++++++++++++++++++++++++-------
+ 1 file changed, 25 insertions(+), 7 deletions(-)
+
+-- 
+2.24.1
+
