@@ -2,100 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D06213A8CB
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2020 12:56:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 146C713A90F
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2020 13:15:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728959AbgANL4S (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Jan 2020 06:56:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59540 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728826AbgANL4S (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 14 Jan 2020 06:56:18 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2B6424672;
-        Tue, 14 Jan 2020 11:56:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579002977;
-        bh=ahbXe4hwMQQLlrN5u66UYJDrMHT3NIY/p5dKKof/mlc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OZd5ICnclBnHLWVfm9YUQb5LWnL7oJhvwxZkC88/Qfz/xVf7KUgZ8/ayoCIO7ZVY4
-         kzZacU3EMKl9p71FFs2ixfivPi6PsnxWs/K7aKsLkECRQmsPqQyhhtdDdv7bv1Inov
-         /MVYLw34ynCIxhIjPlRlKlOz7eRnPqLnOObYNQdM=
-Date:   Tue, 14 Jan 2020 11:56:11 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
-        iommu@lists.linux-foundation.org, joro@8bytes.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        lorenzo.pieralisi@arm.com, guohanjun@huawei.com,
-        sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org,
-        robin.murphy@arm.com, bhelgaas@google.com, eric.auger@redhat.com,
-        jonathan.cameron@huawei.com, zhangfei.gao@linaro.org
-Subject: Re: [PATCH v4 06/13] iommu/arm-smmu-v3: Add context descriptor
- tables allocators
-Message-ID: <20200114115611.GB29222@willie-the-truck>
-References: <20191219163033.2608177-1-jean-philippe@linaro.org>
- <20191219163033.2608177-7-jean-philippe@linaro.org>
- <20200114110651.GA29222@willie-the-truck>
- <20200114115230.GA1799@myrica>
+        id S1728779AbgANMPP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Jan 2020 07:15:15 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:42935 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbgANMPO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Jan 2020 07:15:14 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1irL6D-0003Yw-Os; Tue, 14 Jan 2020 13:15:09 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 388A1101DEE; Tue, 14 Jan 2020 13:15:09 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Ramon Fried <rfried.dev@gmail.com>, hkallweit1@gmail.com,
+        bhelgaas@google.com, maz@kernel.org, lorenzo.pieralisi@arm.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: MSI irqchip configured as IRQCHIP_ONESHOT_SAFE causes spurious IRQs
+In-Reply-To: <CAGi-RUJvqJoCXWN2YugRn=WYEk9yzt7m3OPfX_o++PmJWQ3woQ@mail.gmail.com>
+References: <CAGi-RUJvqJoCXWN2YugRn=WYEk9yzt7m3OPfX_o++PmJWQ3woQ@mail.gmail.com>
+Date:   Tue, 14 Jan 2020 13:15:09 +0100
+Message-ID: <87wo9ub5f6.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200114115230.GA1799@myrica>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 12:52:30PM +0100, Jean-Philippe Brucker wrote:
-> On Tue, Jan 14, 2020 at 11:06:52AM +0000, Will Deacon wrote:
-> > >  /* Context descriptor manipulation functions */
-> > > +static int arm_smmu_alloc_cd_leaf_table(struct arm_smmu_device *smmu,
-> > > +					struct arm_smmu_cd_table *table,
-> > > +					size_t num_entries)
-> > > +{
-> > > +	size_t size = num_entries * (CTXDESC_CD_DWORDS << 3);
-> > > +
-> > > +	table->ptr = dmam_alloc_coherent(smmu->dev, size, &table->ptr_dma,
-> > > +					 GFP_KERNEL);
-> > > +	if (!table->ptr) {
-> > > +		dev_warn(smmu->dev,
-> > > +			 "failed to allocate context descriptor table\n");
-> > > +		return -ENOMEM;
-> > > +	}
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static void arm_smmu_free_cd_leaf_table(struct arm_smmu_device *smmu,
-> > > +					struct arm_smmu_cd_table *table,
-> > > +					size_t num_entries)
-> > > +{
-> > > +	size_t size = num_entries * (CTXDESC_CD_DWORDS << 3);
-> > > +
-> > > +	dmam_free_coherent(smmu->dev, size, table->ptr, table->ptr_dma);
-> > > +}
-> > 
-> > I think we'd be better off taking the 'arm_smmu_s1_cfg' as a parameter here
-> > instead of the table pointer and a num_entries value, since the code above
-> > implies that we support partial freeing of the context descriptors.
-> > 
-> > I can do that as a follow-up patch if you agree. Thoughts?
-> 
-> Do you mean only changing the arguments of arm_smmu_free_cd_leaf_table(),
-> or arm_smmu_alloc_cd_leaf_table() as well? For free() I agree, for alloc()
-> I'm not sure it would look better.
+Ramon Fried <rfried.dev@gmail.com> writes:
+> While debugging the root cause of spurious IRQ's on my PCIe MSI line it appears
+> that because of the line:
+>     info->chip->flags |= IRQCHIP_ONESHOT_SAFE;
+> in pci_msi_create_irq_domain()
+>
+> The IRQF_ONESHOT is ignored, especially when requesting IRQ through
+> pci_request_threaded_irq() where handler is NULL.
 
-Yeah, just for free(). I'll spin something on top after I've finished
-reviewing the series.
+Which is perfectly fine.
 
-> For my tests I have a debug patch that allocates PASIDs randomly which
-> quickly consumes DMA for leaf tables. So I do have to free the leaves
-> individually when they aren't used, but it will be easy for me to update.
+> The problem is that the MSI masking now only surrounds the HW handler,
+> and all additional MSI that occur before the threaded handler is
+> complete are considered by the note_interrupt() as spurious.
 
-Cool.
+Which is not a problem as long as the thread finishes before 100k MSIs
+arrived on that line. If that happens then there is something really
+wrong. Either the device fires MSIs like crazy or the threaded handler
+is stuck somewhere.
 
-Will
+> Besides the side effect of that, I don't really understand the logic
+> of not masking the MSI until the threaded handler is complete,
+> especially when there's no HW handler and only threaded handler.
+
+What's wrong with having another interrupt firing while the threaded
+handler is running? Nothing, really. It actually can be desired because
+the threaded handler is allowed to sleep.
+
+Thanks,
+
+        tglx
