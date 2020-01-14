@@ -2,207 +2,312 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 07BE513A229
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2020 08:32:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EA9C113A285
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2020 09:10:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728734AbgANHcE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Jan 2020 02:32:04 -0500
-Received: from lucky1.263xmail.com ([211.157.147.130]:32798 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728957AbgANHcE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Jan 2020 02:32:04 -0500
-Received: from localhost (unknown [192.168.167.16])
-        by lucky1.263xmail.com (Postfix) with ESMTP id 124AC7CF0C;
-        Tue, 14 Jan 2020 15:24:42 +0800 (CST)
-X-MAIL-GRAY: 1
-X-MAIL-DELIVERY: 0
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-ABS-CHECKED: 0
-Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P5437T140292994864896S1578986620990337_;
-        Tue, 14 Jan 2020 15:24:42 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <f25456ee66a8a74a07826691950c75a3>
-X-RL-SENDER: shawn.lin@rock-chips.com
-X-SENDER: lintao@rock-chips.com
-X-LOGIN-NAME: shawn.lin@rock-chips.com
-X-FST-TO: heiko@sntech.de
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-From:   Shawn Lin <shawn.lin@rock-chips.com>
-To:     Heiko Stuebner <heiko@sntech.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        id S1729031AbgANIKR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Jan 2020 03:10:17 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:40523 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728992AbgANIKR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Jan 2020 03:10:17 -0500
+Received: by mail-ot1-f67.google.com with SMTP id w21so11765983otj.7;
+        Tue, 14 Jan 2020 00:10:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ADoHczfnfwvTHTvwEzQykNkOfVFkdqsmaGJm2GfcQqg=;
+        b=EJZy9hG0LMeuJBkesqHDRBgsI1lak03o5EWwTcPsm0XV1Sjy9jZeGHd+x8m9HSLUUu
+         kGnImO9rXK+21uKSB0+arziaUPK61JW7/fLPTYI6IBlLAMpa1uDDltoEkaxgngi/Y7fd
+         9A+k0su7mh/0T+7fB3mlyf81lFyFel7S1J/YiQAyHgEIWnARtzzmn7Z/E06rvh73IJRr
+         9Kn49GH4VsA31yuyv9gIwwI4cu5jzWZNbD6wZwJjk+KC7texmBP2WJHF8SLqcVBOeMje
+         3OKg3EKsyxNhvSNukICOYTnjLGYCFI6qKEGNkKrOlPGb5qQ9bygr2jO3cvYxCAn8sXow
+         cNRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ADoHczfnfwvTHTvwEzQykNkOfVFkdqsmaGJm2GfcQqg=;
+        b=bZ70+cscHcEhJc7fKPZk1AxB3jkYsXPG/Hve10fVdcZbzBHPgXOtlIZ4iCv5XoqMxT
+         2xeKMiYc9tM4QiduykUf1X9CEf61vLiFS9CASUDtWGsRrP+yA5JkBNH23nZk6Rvgd1RJ
+         xBRsQydg58r5wBXue55284Bv4DA7JOTrs5J+MQy/IabhThoSknwSPYHLCo7ZPDp3hXXr
+         8ka2mldK2OuSnqZw4vc3Bv1p21tOuYqvi90BsuXo7n1uu6qiXN4NCfzuKIAuOMgfNuzM
+         XbokTi3TJdvMfaDWN7dBPP7c8Njxl9f7nFejXahNQDHLiQz2ogp4c/RTqRp6rgOJUFjC
+         2ozA==
+X-Gm-Message-State: APjAAAX/yQPICkRY6k/kM4jva3jxi1Mgolw46QPe0KBwsMrdO5UgOmoo
+        EdWxXv/gauqAMLV7+6u7Q7jT8FTOrx8tX/eKItM=
+X-Google-Smtp-Source: APXvYqygXu/f7SsTk/IQwbPRIFhQDBJ91FPpJ8e2VaIQ7vAfiBxNzcLSBq8YksHvkEr0WgUlfuhm6rV7ESZA9BHenTw=
+X-Received: by 2002:a05:6830:147:: with SMTP id j7mr16417215otp.44.1578989415836;
+ Tue, 14 Jan 2020 00:10:15 -0800 (PST)
+MIME-Version: 1.0
+References: <20200108162211.22358-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200108162211.22358-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <53d74632-34ee-f7f7-656f-a93a6c10e7ba@ti.com> <CA+V-a8tHkqkxE_5DMtt6PbJyGz1vfKZUezE5nOFmJXarJAugkw@mail.gmail.com>
+ <2b4dd351-76ee-60bd-bd91-20d5f1ac4e79@ti.com>
+In-Reply-To: <2b4dd351-76ee-60bd-bd91-20d5f1ac4e79@ti.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Tue, 14 Jan 2020 08:09:49 +0000
+Message-ID: <CA+V-a8vZUU52f1683Eu2=C_w--mN0Z6mpP38d-9MssRUY0wEpQ@mail.gmail.com>
+Subject: Re: [v3 3/6] PCI: endpoint: Add support to handle multiple base for
+ mapping outbound memory
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, William Wu <william.wu@rock-chips.com>,
-        Simon Xue <xxm@rock-chips.com>,
-        linux-rockchip@lists.infradead.org,
-        Shawn Lin <shawn.lin@rock-chips.com>
-Subject: [PATCH 4/6] dt-bindings: rockchip: Add DesignWare based PCIe controller
-Date:   Tue, 14 Jan 2020 15:22:58 +0800
-Message-Id: <1578986580-71974-5-git-send-email-shawn.lin@rock-chips.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1578986580-71974-1-git-send-email-shawn.lin@rock-chips.com>
-References: <1578986580-71974-1-git-send-email-shawn.lin@rock-chips.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Murray <andrew.murray@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        LAK <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Simon Horman <horms@verge.net.au>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Simon Xue <xxm@rock-chips.com>
+Hi Kishon,
 
-Signed-off-by: Simon Xue <xxm@rock-chips.com>
-Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
----
+On Mon, Jan 13, 2020 at 8:56 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>
+> Hi Prabhakar,
+>
+> On 10/01/20 11:38 PM, Lad, Prabhakar wrote:
+> > Hi Kishon,
+> >
+> > Thank you for the review.
+> >
+> > On Thu, Jan 9, 2020 at 6:25 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+> >>
+> >> Hi Prabhakar,
+> >>
+> >> On 08/01/20 9:52 PM, Lad Prabhakar wrote:
+> >>> R-Car PCIe controller has support to map multiple memory regions for
+> >>> mapping the outbound memory in local system also the controller limits
+> >>> single allocation for each region (that is, once a chunk is used from the
+> >>> region it cannot be used to allocate a new one). This features inspires to
+> >>> add support for handling multiple memory bases in endpoint framework.
+> >>>
+> >>> With this patch pci_epc_mem_init() now accepts multiple regions, also
+> >>> page_size for each memory region is passed during initialization so as
+> >>> to handle single allocation for each region by setting the page_size to
+> >>> window_size.
+> >>>
+> >>> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >>> ---
+> >>>  .../pci/controller/cadence/pcie-cadence-ep.c  |  12 +-
+> >>>  .../pci/controller/dwc/pcie-designware-ep.c   |  31 ++-
+> >>>  drivers/pci/controller/pcie-rockchip-ep.c     |  14 +-
+> >>>  drivers/pci/endpoint/functions/pci-epf-test.c |  29 +--
+> >>>  drivers/pci/endpoint/pci-epc-core.c           |   7 +-
+> >>>  drivers/pci/endpoint/pci-epc-mem.c            | 199 ++++++++++++++----
+> >>>  include/linux/pci-epc.h                       |  46 ++--
+> >>>  7 files changed, 245 insertions(+), 93 deletions(-)
+> >>>
+> >> .
+> >> .
+> >> <snip>
+> >> .
+> >> .
+> >>> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+> >>> index 2091508c1620..289c266c2d90 100644
+> >>> --- a/drivers/pci/endpoint/pci-epc-core.c
+> >>> +++ b/drivers/pci/endpoint/pci-epc-core.c
+> >>> @@ -358,13 +358,15 @@ EXPORT_SYMBOL_GPL(pci_epc_unmap_addr);
+> >>>   * @epc: the EPC device on which address is allocated
+> >>>   * @func_no: the endpoint function number in the EPC device
+> >>>   * @phys_addr: physical address of the local system
+> >>> + * @window: index to the window region where PCI address will be mapped
+> >>>   * @pci_addr: PCI address to which the physical address should be mapped
+> >>>   * @size: the size of the allocation
+> >>>   *
+> >>>   * Invoke to map CPU address with PCI address.
+> >>>   */
+> >>>  int pci_epc_map_addr(struct pci_epc *epc, u8 func_no,
+> >>> -                  phys_addr_t phys_addr, u64 pci_addr, size_t size)
+> >>> +                  phys_addr_t phys_addr, int window,
+> >>> +                  u64 pci_addr, size_t size)
+> >>>  {
+> >>>       int ret;
+> >>>       unsigned long flags;
+> >>> @@ -376,7 +378,8 @@ int pci_epc_map_addr(struct pci_epc *epc, u8 func_no,
+> >>>               return 0;
+> >>>
+> >>>       spin_lock_irqsave(&epc->lock, flags);
+> >>> -     ret = epc->ops->map_addr(epc, func_no, phys_addr, pci_addr, size);
+> >>> +     ret = epc->ops->map_addr(epc, func_no, phys_addr,
+> >>> +                              window, pci_addr, size);
+> >>>       spin_unlock_irqrestore(&epc->lock, flags);
+> >>>
+> >>>       return ret;
+> >>> diff --git a/drivers/pci/endpoint/pci-epc-mem.c b/drivers/pci/endpoint/pci-epc-mem.c
+> >>> index d2b174ce15de..f205f7819292 100644
+> >>> --- a/drivers/pci/endpoint/pci-epc-mem.c
+> >>> +++ b/drivers/pci/endpoint/pci-epc-mem.c
+> >>> @@ -38,57 +38,77 @@ static int pci_epc_mem_get_order(struct pci_epc_mem *mem, size_t size)
+> >>>  /**
+> >>>   * __pci_epc_mem_init() - initialize the pci_epc_mem structure
+> >>>   * @epc: the EPC device that invoked pci_epc_mem_init
+> >>> - * @phys_base: the physical address of the base
+> >>> - * @size: the size of the address space
+> >>> - * @page_size: size of each page
+> >>> + * @windows: pointer to windows supported by the device
+> >>> + * @num_windows: number of windows device supports
+> >>>   *
+> >>>   * Invoke to initialize the pci_epc_mem structure used by the
+> >>>   * endpoint functions to allocate mapped PCI address.
+> >>>   */
+> >>> -int __pci_epc_mem_init(struct pci_epc *epc, phys_addr_t phys_base, size_t size,
+> >>> -                    size_t page_size)
+> >>> +int __pci_epc_mem_init(struct pci_epc *epc, struct pci_epc_mem_window *windows,
+> >>> +                    int num_windows)
+> >>>  {
+> >>> -     int ret;
+> >>> -     struct pci_epc_mem *mem;
+> >>> -     unsigned long *bitmap;
+> >>> +     struct pci_epc_mem *mem = NULL;
+> >>> +     unsigned long *bitmap = NULL;
+> >>>       unsigned int page_shift;
+> >>> -     int pages;
+> >>> +     size_t page_size;
+> >>>       int bitmap_size;
+> >>> +     int pages;
+> >>> +     int ret;
+> >>> +     int i;
+> >>>
+> >>> -     if (page_size < PAGE_SIZE)
+> >>> -             page_size = PAGE_SIZE;
+> >>> +     epc->mem_windows = 0;
+> >>>
+> >>> -     page_shift = ilog2(page_size);
+> >>> -     pages = size >> page_shift;
+> >>> -     bitmap_size = BITS_TO_LONGS(pages) * sizeof(long);
+> >>> +     if (!windows)
+> >>> +             return -EINVAL;
+> >>>
+> >>> -     mem = kzalloc(sizeof(*mem), GFP_KERNEL);
+> >>> -     if (!mem) {
+> >>> -             ret = -ENOMEM;
+> >>> -             goto err;
+> >>> -     }
+> >>> +     if (num_windows <= 0)
+> >>> +             return -EINVAL;
+> >>>
+> >>> -     bitmap = kzalloc(bitmap_size, GFP_KERNEL);
+> >>> -     if (!bitmap) {
+> >>> -             ret = -ENOMEM;
+> >>> -             goto err_mem;
+> >>> -     }
+> >>> +     epc->mem = kcalloc(num_windows, sizeof(*mem), GFP_KERNEL);
+> >>> +     if (!epc->mem)
+> >>> +             return -EINVAL;
+> >>> +
+> >>> +     for (i = 0; i < num_windows; i++) {
+> >>> +             page_size = windows[i].page_size;
+> >>> +             if (page_size < PAGE_SIZE)
+> >>> +                     page_size = PAGE_SIZE;
+> >>> +             page_shift = ilog2(page_size);
+> >>> +             pages = windows[i].size >> page_shift;
+> >>> +             bitmap_size = BITS_TO_LONGS(pages) * sizeof(long);
+> >>> +
+> >>> +             mem = kzalloc(sizeof(*mem), GFP_KERNEL);
+> >>> +             if (!mem) {
+> >>> +                     ret = -ENOMEM;
+> >>> +                     goto err_mem;
+> >>> +             }
+> >>>
+> >>> -     mem->bitmap = bitmap;
+> >>> -     mem->phys_base = phys_base;
+> >>> -     mem->page_size = page_size;
+> >>> -     mem->pages = pages;
+> >>> -     mem->size = size;
+> >>> +             bitmap = kzalloc(bitmap_size, GFP_KERNEL);
+> >>> +             if (!bitmap) {
+> >>> +                     ret = -ENOMEM;
+> >>> +                     goto err_mem;
+> >>> +             }
+> >>>
+> >>> -     epc->mem = mem;
+> >>> +             mem->bitmap = bitmap;
+> >>> +             mem->window.phys_base = windows[i].phys_base;
+> >>> +             mem->page_size = page_size;
+> >>> +             mem->pages = pages;
+> >>> +             mem->window.size = windows[i].size;
+> >>> +             mem->window.map_size = 0;
+> >>> +
+> >>> +             epc->mem[i] = mem;
+> >>> +     }
+> >>> +     epc->mem_windows = num_windows;
+> >>>
+> >>>       return 0;
+> >>>
+> >>>  err_mem:
+> >>> -     kfree(mem);
+> >>> +     for (; i >= 0; i--) {
+> >>
+> >> mem has to be reinitialized for every iteration of the loop.
+> > not sure what exactly you mean here, could you please elaborate.
+>
+> You are invoking "kfree(mem->bitmap);" in a loop without re-initializing
+> mem. Refer pci_epc_mem_exit() where you are doing the free properly.
+>
+good catch will fix that.
 
- .../devicetree/bindings/pci/rockchip-dw-pcie.yaml  | 132 +++++++++++++++++++++
- 1 file changed, 132 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
+Cheers,
+--Prabhakar
 
-diff --git a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-new file mode 100644
-index 0000000..c5205f6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-@@ -0,0 +1,132 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pci/rockchip-dw-pcie.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: DesignWare based PCIe RC controller on Rockchip SoCs
-+
-+maintainers:
-+        - Shawn Lin <shawn.lin@rock-chips.com>
-+        - Simon Xue <xxm@rock-chips.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - rockchip,rk1808-pcie
-+      - snps,dw-pcie
-+
-+  reg:
-+    maxItems: 2
-+
-+  clocks:
-+    items:
-+      - description: High speed clock for PCIe
-+      - description: Low speed clock for PCIe
-+      - description: AHB clock for PCIe
-+      - description: APB clock for PCIe
-+      - description: Auxiliary clock for PCIe
-+
-+  clock-names:
-+    items:
-+      - const: hsclk
-+      - const: lsclk
-+      - const: aclk
-+      - const: pclk
-+      - const: sclk-aux
-+
-+  resets:
-+    items:
-+      - description: PCIe niu high reset line
-+      - description: PCIe niu low reset line
-+      - description: PCIe grf reset line
-+      - description: PCIe control reset line
-+      - description: PCIe control powerup reset line
-+      - description: PCIe control master reset line
-+      - description: PCIe control slave reset line
-+      - description: PCIe control dbi reset line
-+      - description: PCIe control button reset line
-+      - description: PCIe control power engine reset line
-+      - description: PCIe control core reset line
-+      - description: PCIe control non-sticky reset line
-+      - description: PCIe control sticky reset line
-+      - description: PCIe control power reset line
-+      - description: PCIe niu ahb reset line
-+      - description: PCIe niu apb reset line
-+
-+  reset-names:
-+    items:
-+      - const: niu-h
-+      - const: niu-l
-+      - const: grf-p
-+      - const: ctl-p
-+      - const: ctl-powerup
-+      - const: ctl-mst-a
-+      - const: ctl-slv-a
-+      - const: ctl-dbi-a
-+      - const: ctl-button
-+      - const: ctl-pe
-+      - const: ctl-core
-+      - const: ctl-nsticky
-+      - const: ctl-sticky
-+      - const: ctl-pwr
-+      - const: ctl-niu-a
-+      - const: ctl-niu-p
-+
-+  rockchip,usbpciegrf:
-+    items:
-+      - description: The grf for COMBPHY configuration and state registers.
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - msi-map
-+  - num-lanes
-+  - phys
-+  - phy-names
-+  - resets
-+  - reset-names
-+  - rockchip,usbpciegrf
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    usb_pcie_grf: syscon@fe040000 {
-+        compatible = "rockchip,usb-pcie-grf", "syscon";
-+        reg = <0x0 0xfe040000 0x0 0x1000>;
-+    };
-+
-+    pcie0: pcie@fc400000 {
-+        compatible = "rockchip,rk1808-pcie", "snps,dw-pcie";
-+        reg = <0x0 0xfc000000 0x0 0x400000>,
-+              <0x0 0xfc400000 0x0 0x10000>;
-+        clocks = <&cru HSCLK_PCIE>, <&cru LSCLK_PCIE>,
-+                 <&cru ACLK_PCIE>, <&cru PCLK_PCIE>,
-+                 <&cru SCLK_PCIE_AUX>;
-+        clock-names = "hsclk", "lsclk",
-+                      "aclk", "pclk",
-+                      "sclk-aux";
-+        msi-map = <0x0 &its 0x0 0x1000>;
-+        num-lanes = <2>;
-+        phys = <&combphy PHY_TYPE_PCIE>;
-+        phy-names = "pcie-phy";
-+        resets = <&cru SRST_PCIE_NIU_H>, <&cru SRST_PCIE_NIU_L>,
-+                 <&cru SRST_PCIEGRF_P>, <&cru SRST_PCIECTL_P>,
-+                 <&cru SRST_PCIECTL_POWERUP>, <&cru SRST_PCIECTL_MST_A>,
-+                 <&cru SRST_PCIECTL_SLV_A>, <&cru SRST_PCIECTL_DBI_A>,
-+                 <&cru SRST_PCIECTL_BUTTON>, <&cru SRST_PCIECTL_PE>,
-+                 <&cru SRST_PCIECTL_CORE>, <&cru SRST_PCIECTL_NSTICKY>,
-+                 <&cru SRST_PCIECTL_STICKY>, <&cru SRST_PCIECTL_PWR>,
-+                 <&cru SRST_PCIE_NIU_A>, <&cru SRST_PCIE_NIU_P>;
-+        reset-names = "niu-h", "niu-l", "grf-p", "ctl-p",
-+                      "ctl-powerup", "ctl-mst-a", "ctl-slv-a",
-+                      "ctl-dbi-a", "ctl-button", "ctl-pe",
-+                      "ctl-core", "ctl-nsticky", "ctl-sticky",
-+                      "ctl-pwr", "ctl-niu-a", "ctl-niu-p";
-+        rockchip,usbpciegrf = <&usb_pcie_grf>;
-+    };
-+
-+...
--- 
-1.9.1
-
-
-
+> >
+> >>> +             kfree(mem->bitmap);
+> >>> +             kfree(epc->mem[i]);
+> >>> +     }
+> >>> +     kfree(epc->mem);
+> >>>
+> >>> -err:
+> >>> -return ret;
+> >>> +     return ret;
+> >>>  }
+> >>>  EXPORT_SYMBOL_GPL(__pci_epc_mem_init);
+> >>>
+> >>> @@ -101,48 +121,127 @@ EXPORT_SYMBOL_GPL(__pci_epc_mem_init);
+> >>>   */
+> >>>  void pci_epc_mem_exit(struct pci_epc *epc)
+> >>>  {
+> >>> -     struct pci_epc_mem *mem = epc->mem;
+> >>> +     struct pci_epc_mem *mem;
+> >>> +     int i;
+> >>> +
+> >>> +     if (!epc->mem_windows)
+> >>> +             return;
+> >>> +
+> >>> +     for (i = 0; i <= epc->mem_windows; i++) {
+> >>> +             mem = epc->mem[i];
+>
+> Missing the above line in the error handling above.
+>
+>
+> >>> +             kfree(mem->bitmap);
+> >>> +             kfree(epc->mem[i]);
+> >>> +     }
+>
+> Thanks
+> Kishon
