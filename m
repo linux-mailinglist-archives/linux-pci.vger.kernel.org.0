@@ -2,182 +2,76 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D49E513A2A6
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2020 09:15:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5156D13A2EF
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2020 09:24:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725860AbgANIPc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Jan 2020 03:15:32 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:38462 "EHLO huawei.com"
+        id S1725820AbgANIYx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Jan 2020 03:24:53 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:9169 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725820AbgANIPc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 14 Jan 2020 03:15:32 -0500
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id A5990DF56008EED06CC3;
-        Tue, 14 Jan 2020 16:15:29 +0800 (CST)
-Received: from localhost.localdomain (10.67.165.24) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Tue, 14 Jan 2020 16:15:19 +0800
+        id S1726452AbgANIYx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 14 Jan 2020 03:24:53 -0500
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 88C923E44881A71F48EE;
+        Tue, 14 Jan 2020 16:24:49 +0800 (CST)
+Received: from [127.0.0.1] (10.65.58.147) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Tue, 14 Jan 2020
+ 16:24:39 +0800
+Subject: Re: PCI: bus resource allocation error
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+References: <f0cab9da-8e74-e923-a2fe-591d065228ee@hisilicon.com>
+ <1bcc117a-3fce-35c2-a52c-f417db3ce030@hisilicon.com>
+ <PSXP216MB0438E92832F08A1AEC015D8180380@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+CC:     Bjorn Helgaas <helgaas@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        fangjian 00545541 <f.fangjian@huawei.com>
 From:   Yicong Yang <yangyicong@hisilicon.com>
-To:     <helgaas@kernel.org>, <linux-pci@vger.kernel.org>
-CC:     <f.fangjian@huawei.com>
-Subject: [PATCH] PCI: Improve link speed presentation process
-Date:   Tue, 14 Jan 2020 16:11:34 +0800
-Message-ID: <1578989494-20583-1-git-send-email-yangyicong@hisilicon.com>
-X-Mailer: git-send-email 2.8.1
+Message-ID: <376bafc4-b2a2-a08f-3aa1-8be69ce909a5@hisilicon.com>
+Date:   Tue, 14 Jan 2020 16:25:09 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.165.24]
+In-Reply-To: <PSXP216MB0438E92832F08A1AEC015D8180380@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.65.58.147]
 X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Currently We use switch-case statements to acquire the speed
-string according to the pci bus speed in current_link_speed_show()
-and pcie_get_speed_cap(). It leads to redundant and when new
-standard comes, we have to add cases in the related functions,
-which is easy to omit at somewhere.
+Hi,
 
-Abstract the judge statements out. Use macros and pci speed
-arrays instead. Then only the macros and arrays need to be
-extended when next generation comes.
+I cannot get the log on the original machine.
+So I tested on another one and got the same error prints.
+You can find the console output at
+https://paste.ubuntu.com/p/5VHVnKWSty/
+as well as the "lspci -xxxx" infomation.
 
-Link: https://lore.kernel.org/linux-pci/20200113211728.GA113776@google.com/
-Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
-Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
----
-Previously we get speed from sysfs likes "16.0 GT/s", etc. In this PATCH,
-we get the speed string from pci_bus_speed_strings[], and it'll look like
-"16.0 GT/s PCIe", etc. It makes no more affects and maybe make the information
-more detailed.
+Thanks,
+Yang
 
- drivers/pci/pci-sysfs.c | 24 +++---------------------
- drivers/pci/pci.c       | 12 +-----------
- drivers/pci/pci.h       | 20 ++++++++++++++------
- drivers/pci/slot.c      |  2 +-
- 4 files changed, 19 insertions(+), 39 deletions(-)
+On 2020/1/10 15:40, Nicholas Johnson wrote:
+> Hi,
+>
+> On Fri, Jan 10, 2020 at 03:33:27PM +0800, Yicong Yang wrote:
+>> Hi,
+>>
+>> It seems the attachments are blocked by the server.
+>> The necessary console output is below.
+>> The kernel version is 5.4, centos release 7.6.  I didn't
+>> change the PCI codes.
+> It is very difficult for me to get the wider picture of your system 
+> without the full output of "sudo lspci -xxxx". Can you place them on 
+> PasteBin and send the links, rather than attaching them directly?
+>
+> I can try to speculate based on what you sent, but I cannot be sure it 
+> will be enough. For example, I do not know if your computer has multiple 
+> root complexes, which have shown to complicate things.
+>
+> Thanks!
+>
+>
 
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 7934129..8bcb136 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -175,33 +175,15 @@ static ssize_t current_link_speed_show(struct device *dev,
- 	struct pci_dev *pci_dev = to_pci_dev(dev);
- 	u16 linkstat;
- 	int err;
--	const char *speed;
-+	enum pci_bus_speed link_speed;
- 
- 	err = pcie_capability_read_word(pci_dev, PCI_EXP_LNKSTA, &linkstat);
- 	if (err)
- 		return -EINVAL;
- 
--	switch (linkstat & PCI_EXP_LNKSTA_CLS) {
--	case PCI_EXP_LNKSTA_CLS_32_0GB:
--		speed = "32 GT/s";
--		break;
--	case PCI_EXP_LNKSTA_CLS_16_0GB:
--		speed = "16 GT/s";
--		break;
--	case PCI_EXP_LNKSTA_CLS_8_0GB:
--		speed = "8 GT/s";
--		break;
--	case PCI_EXP_LNKSTA_CLS_5_0GB:
--		speed = "5 GT/s";
--		break;
--	case PCI_EXP_LNKSTA_CLS_2_5GB:
--		speed = "2.5 GT/s";
--		break;
--	default:
--		speed = "Unknown speed";
--	}
-+	link_speed = pcie_link_speed[linkstat & PCI_EXP_LNKSTA_CLS];
- 
--	return sprintf(buf, "%s\n", speed);
-+	return sprintf(buf, "%s\n", PCIE_SPEED2STR(link_speed));
- }
- static DEVICE_ATTR_RO(current_link_speed);
- 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index a97e257..ea72e6d8 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -5658,17 +5658,7 @@ enum pci_bus_speed pcie_get_speed_cap(struct pci_dev *dev)
- 	 */
- 	pcie_capability_read_dword(dev, PCI_EXP_LNKCAP2, &lnkcap2);
- 	if (lnkcap2) { /* PCIe r3.0-compliant */
--		if (lnkcap2 & PCI_EXP_LNKCAP2_SLS_32_0GB)
--			return PCIE_SPEED_32_0GT;
--		else if (lnkcap2 & PCI_EXP_LNKCAP2_SLS_16_0GB)
--			return PCIE_SPEED_16_0GT;
--		else if (lnkcap2 & PCI_EXP_LNKCAP2_SLS_8_0GB)
--			return PCIE_SPEED_8_0GT;
--		else if (lnkcap2 & PCI_EXP_LNKCAP2_SLS_5_0GB)
--			return PCIE_SPEED_5_0GT;
--		else if (lnkcap2 & PCI_EXP_LNKCAP2_SLS_2_5GB)
--			return PCIE_SPEED_2_5GT;
--		return PCI_SPEED_UNKNOWN;
-+		return PCIE_LNKCAP2_SLS2SPEED(lnkcap2);
- 	}
- 
- 	pcie_capability_read_dword(dev, PCI_EXP_LNKCAP, &lnkcap);
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 3f6947e..90cacf6 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -9,6 +9,7 @@
- #define PCI_VSEC_ID_INTEL_TBT	0x1234	/* Thunderbolt */
- 
- extern const unsigned char pcie_link_speed[];
-+extern const char *pci_bus_speed_strings[];
- extern bool pci_early_dump;
- 
- bool pcie_cap_has_lnkctl(const struct pci_dev *dev);
-@@ -286,17 +287,24 @@ void pci_disable_bridge_window(struct pci_dev *dev);
- struct pci_bus *pci_bus_get(struct pci_bus *bus);
- void pci_bus_put(struct pci_bus *bus);
- 
-+/* PCIe link information from Link Capabilities 2 */
-+#define PCIE_LNKCAP2_SLS2SPEED(mask) \
-+	((mask) & PCI_EXP_LNKCAP2_SLS_32_0GB ? PCIE_SPEED_32_0GT : \
-+	 (mask) & PCI_EXP_LNKCAP2_SLS_16_0GB ? PCIE_SPEED_16_0GT : \
-+	 (mask) & PCI_EXP_LNKCAP2_SLS_8_0GB ? PCIE_SPEED_8_0GT : \
-+	 (mask) & PCI_EXP_LNKCAP2_SLS_5_0GB ? PCIE_SPEED_5_0GT : \
-+	 (mask) & PCI_EXP_LNKCAP2_SLS_2_5GB ? PCIE_SPEED_2_5GT : \
-+	 PCI_SPEED_UNKNOWN)
-+
- /* PCIe link information */
- #define PCIE_SPEED2STR(speed) \
--	((speed) == PCIE_SPEED_16_0GT ? "16 GT/s" : \
--	 (speed) == PCIE_SPEED_8_0GT ? "8 GT/s" : \
--	 (speed) == PCIE_SPEED_5_0GT ? "5 GT/s" : \
--	 (speed) == PCIE_SPEED_2_5GT ? "2.5 GT/s" : \
--	 "Unknown speed")
-+	((speed) == PCI_SPEED_UNKNOWN ? "Unknown speed" : \
-+	 pci_bus_speed_strings[speed])
- 
- /* PCIe speed to Mb/s reduced by encoding overhead */
- #define PCIE_SPEED2MBS_ENC(speed) \
--	((speed) == PCIE_SPEED_16_0GT ? 16000*128/130 : \
-+	((speed) == PCIE_SPEED_32_0GT ? 32000*128/130 : \
-+	 (speed) == PCIE_SPEED_16_0GT ? 16000*128/130 : \
- 	 (speed) == PCIE_SPEED_8_0GT  ?  8000*128/130 : \
- 	 (speed) == PCIE_SPEED_5_0GT  ?  5000*8/10 : \
- 	 (speed) == PCIE_SPEED_2_5GT  ?  2500*8/10 : \
-diff --git a/drivers/pci/slot.c b/drivers/pci/slot.c
-index ae4aa0e..08a59ed 100644
---- a/drivers/pci/slot.c
-+++ b/drivers/pci/slot.c
-@@ -50,7 +50,7 @@ static ssize_t address_read_file(struct pci_slot *slot, char *buf)
- }
- 
- /* these strings match up with the values in pci_bus_speed */
--static const char *pci_bus_speed_strings[] = {
-+const char *pci_bus_speed_strings[] = {
- 	"33 MHz PCI",		/* 0x00 */
- 	"66 MHz PCI",		/* 0x01 */
- 	"66 MHz PCI-X",		/* 0x02 */
--- 
-2.8.1
 
