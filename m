@@ -2,179 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 50C04139CA4
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Jan 2020 23:34:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5AA41139ED4
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2020 02:17:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728714AbgAMWej (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Jan 2020 17:34:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52116 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726530AbgAMWej (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 13 Jan 2020 17:34:39 -0500
-Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CFE0207FF;
-        Mon, 13 Jan 2020 22:34:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578954878;
-        bh=vPaoIv3K3OkGHthTe0VwmQQyIHT4a91KzCBghgPlylE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=cK2X/HbXh6fTIVAWPjHS3dF05JIN8pCEXV6q9WrBpQezbi27nM/zXpgAkfc/X9XpM
-         V7WPdwjnA5hGWJrotUaQJF5VrAaWgdeWX5B55mwZHw8Ga+Lk8hpeTTtGLI5rxP/Dnm
-         NpsSBCAeGej1JjaWSg2d+AhzI6akod+v6khtlkT4=
-Date:   Mon, 13 Jan 2020 16:34:36 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rgummal@xilinx.com
-Subject: Re: [PATCH v3 2/2] PCI: Versal CPM: Add support for Versal CPM Root
- Port driver
-Message-ID: <20200113223436.GA128724@google.com>
+        id S1729332AbgANBRI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Jan 2020 20:17:08 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8713 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729088AbgANBRI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 13 Jan 2020 20:17:08 -0500
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 081629E8C5DCA82DDE57;
+        Tue, 14 Jan 2020 09:17:05 +0800 (CST)
+Received: from [127.0.0.1] (10.65.58.147) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Tue, 14 Jan 2020
+ 09:16:56 +0800
+Subject: Re: [Patch] PCI:add 32 GT/s decoding in some macros
+To:     Bjorn Helgaas <helgaas@kernel.org>
+References: <20200113211728.GA113776@google.com>
+CC:     <linux-pci@vger.kernel.org>, <f.fangjian@huawei.com>
+From:   Yicong Yang <yangyicong@hisilicon.com>
+Message-ID: <f2005ec1-841e-a6a7-cfe3-cf460b7a3d0a@hisilicon.com>
+Date:   Tue, 14 Jan 2020 09:17:11 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1578909821-10604-3-git-send-email-bharat.kumar.gogada@xilinx.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200113211728.GA113776@google.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.65.58.147]
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-s/PCI: Versal CPM: .../PCI: xilinx-cpm: Add Versal CPM Root Port driver/
+On 2020/1/14 5:17, Bjorn Helgaas wrote:
+> On Mon, Jan 13, 2020 at 10:40:20AM +0800, Yicong Yang wrote:
+>> Link speed 32.0 GT/s is supported in PCIe r5.0. Add in macro
+>> PCIE_SPEED2STR and PCIE_SPEED2MBS_ENC to correctly decode.
+>> This patch is a complementary to
+>> commit de76cda215d5 ("PCI: Decode PCIe 32 GT/s link speed")
+> Thanks for the patch!  Can you please rework current_link_speed_show()
+> (which was updated by de76cda215d5 ("PCI: Decode PCIe 32 GT/s link
+> speed")) so we don't duplicate the strings there and in
+> PCIE_SPEED2STR()?
+>
+> Maybe something like:
+>
+>   switch (linkstat & PCI_EXP_LNKSTA_CLS) {
+>   case PCI_EXP_LNKSTA_CLS_32_0GB:
+>     speed = PCIE_SPEED2STR(PCIE_SPEED_32_0GT);
+>     break;
+>   ...
+>
+> My goal is to both remove the string duplication and make it more
+> likely that when we add the *next* new speed, we'll catch everything
+> the first time around.
+>
+> Bjorn
 
-Format is "PCI: <driver-name>: Subject"
+fine. I'll send a v2 patch.
 
-On Mon, Jan 13, 2020 at 03:33:41PM +0530, Bharat Kumar Gogada wrote:
-> - Adding support for Versal CPM as Root Port.
+thanks
+Yang
 
-s/- Adding/Add/
+>
+>> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+>> ---
+>>  drivers/pci/pci.h | 6 ++++--
+>>  1 file changed, 4 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+>> index 3f6947e..2cd64bd 100644
+>> --- a/drivers/pci/pci.h
+>> +++ b/drivers/pci/pci.h
+>> @@ -288,7 +288,8 @@ void pci_bus_put(struct pci_bus *bus);
+>>
+>>  /* PCIe link information */
+>>  #define PCIE_SPEED2STR(speed) \
+>> -	((speed) == PCIE_SPEED_16_0GT ? "16 GT/s" : \
+>> +	((speed) == PCIE_SPEED_32_0GT ? "32 GT/s" : \
+>> +	 (speed) == PCIE_SPEED_16_0GT ? "16 GT/s" : \
+>>  	 (speed) == PCIE_SPEED_8_0GT ? "8 GT/s" : \
+>>  	 (speed) == PCIE_SPEED_5_0GT ? "5 GT/s" : \
+>>  	 (speed) == PCIE_SPEED_2_5GT ? "2.5 GT/s" : \
+>> @@ -296,7 +297,8 @@ void pci_bus_put(struct pci_bus *bus);
+>>
+>>  /* PCIe speed to Mb/s reduced by encoding overhead */
+>>  #define PCIE_SPEED2MBS_ENC(speed) \
+>> -	((speed) == PCIE_SPEED_16_0GT ? 16000*128/130 : \
+>> +	((speed) == PCIE_SPEED_32_0GT ? 32000*128/130 : \
+>> +	 (speed) == PCIE_SPEED_16_0GT ? 16000*128/130 : \
+>>  	 (speed) == PCIE_SPEED_8_0GT  ?  8000*128/130 : \
+>>  	 (speed) == PCIE_SPEED_5_0GT  ?  5000*8/10 : \
+>>  	 (speed) == PCIE_SPEED_2_5GT  ?  2500*8/10 : \
+>> --
+>> 2.8.1
+>>
+> .
+>
 
-> - The Versal ACAP devices include CCIX-PCIe Module (CPM). The integrated
->   block for CPM along with the integrated bridge can function
->   as PCIe Root Port.
-> - CPM Versal uses GICv3 ITS feature for acheiving assigning MSI/MSI-X
->   vectors and handling MSI/MSI-X interrupts.
 
-s/acheiving//
-
-> - Bridge error and legacy interrupts in Versal CPM are handled using
->   Versal CPM specific MISC interrupt line.
-> 
-> Changes v3:
-> Fix warnings reported.
-> 
-> Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-
-"Reported-by" is for bug reports.  This makes it look like the lack of
-the driver is the bug, but it's not.  Personally, I'd thank Dan and
-the kbuild robot, but not add "Reported-by" here.  It's like patch
-reviews; I don't expect you to mention my feedback in the commit log.
-
-> +config PCIE_XILINX_CPM
-> +	bool "Xilinx Versal CPM host bridge support"
-> +	depends on ARCH_ZYNQMP || COMPILE_TEST
-> +	help
-> +	  Say 'Y' here if you want kernel to enable support the
-> +	  Xilinx Versal CPM host Bridge driver.The driver supports
-> +	  MSI/MSI-X interrupts using GICv3 ITS feature.
-
-s/kernel to enable support the/kernel support for the/
-s/host Bridge driver./host bridge. /  (note space after period)
-
-> + * xilinx_cpm_pcie_valid_device - Check if a valid device is present on bus
-
-Technically this does not check if the device is present on the bus.
-It checks whether it's *possible* for a device to be at this address.
-For non-root bus devices in particular, it always returns true, and
-you have to do a config read to see whether a device responds.
-
-> + * @bus: PCI Bus structure
-> + * @devfn: device/function
-> + *
-> + * Return: 'true' on success and 'false' if invalid device is found
-> + */
-> +static bool xilinx_cpm_pcie_valid_device(struct pci_bus *bus,
-> +					 unsigned int devfn)
-> +{
-> +	struct xilinx_cpm_pcie_port *port = bus->sysdata;
-> +
-> +	/* Only one device down on each root port */
-> +	if (bus->number == port->root_busno && devfn > 0)
-> +		return false;
-> +
-> +	return true;
-> +}
-
-> +static irqreturn_t xilinx_cpm_pcie_intr_handler(int irq, void *data)
-> +{
-> +	struct xilinx_cpm_pcie_port *port =
-> +				(struct xilinx_cpm_pcie_port *)data;
-
-No cast needed.
-
-> +static void xilinx_cpm_pcie_init_port(struct xilinx_cpm_pcie_port *port)
-> +{
-> +	if (cpm_pcie_link_up(port))
-> +		dev_info(port->dev, "PCIe Link is UP\n");
-> +	else
-> +		dev_info(port->dev, "PCIe Link is DOWN\n");
-> +
-> +	/* Disable all interrupts */
-> +	pcie_write(port, ~XILINX_CPM_PCIE_IDR_ALL_MASK,
-> +		   XILINX_CPM_PCIE_REG_IMR);
-> +
-> +	/* Clear pending interrupts */
-> +	pcie_write(port, pcie_read(port, XILINX_CPM_PCIE_REG_IDR) &
-> +		   XILINX_CPM_PCIE_IMR_ALL_MASK,
-> +		   XILINX_CPM_PCIE_REG_IDR);
-> +
-> +	/* Enable all interrupts */
-> +	pcie_write(port, XILINX_CPM_PCIE_IMR_ALL_MASK,
-> +		   XILINX_CPM_PCIE_REG_IMR);
-> +	pcie_write(port, XILINX_CPM_PCIE_IDRN_MASK,
-> +		   XILINX_CPM_PCIE_REG_IDRN_MASK);
-> +
-> +	writel(XILINX_CPM_PCIE_MISC_IR_LOCAL,
-> +	       port->cpm_base + XILINX_CPM_PCIE_MISC_IR_ENABLE);
-
-This lonely writel() in the middle of all the pcie_write() and
-pcie_read() calls *looks* like a mistake.
-
-I see that the writel() uses port->cpm_base, while pcie_write() uses
-port->reg_base, so I don't think it *is* a mistake, but it's sure not
-obvious.  A blank line after it and a comment at the _MISC_IR
-definitions about them being in a different register set would be nice
-hints.
-
-> +	/* Enable the Bridge enable bit */
-> +	pcie_write(port, pcie_read(port, XILINX_CPM_PCIE_REG_RPSC) |
-> +		   XILINX_CPM_PCIE_REG_RPSC_BEN,
-> +		   XILINX_CPM_PCIE_REG_RPSC);
-> +}
-
-> +static int xilinx_cpm_pcie_parse_dt(struct xilinx_cpm_pcie_port *port)
-> +{
-> +	struct device *dev = port->dev;
-> +	struct resource *res;
-> +	int err;
-> +	struct platform_device *pdev = to_platform_device(dev);
-
-The "struct platform_device ..." line really should be first in the
-list.  Not because of "reverse Christmas tree", but because "pdev" is
-the first variable used in the code below.
-
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "cfg");
-> +	port->reg_base = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(port->reg_base))
-> +		return PTR_ERR(port->reg_base);
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> +					   "cpm_slcr");
-> +	port->cpm_base = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(port->cpm_base))
-> +		return PTR_ERR(port->cpm_base);
-
-Bjorn
