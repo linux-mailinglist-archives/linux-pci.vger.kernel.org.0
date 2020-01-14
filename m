@@ -2,201 +2,182 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4008F13A292
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2020 09:11:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D49E513A2A6
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2020 09:15:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729300AbgANILk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Jan 2020 03:11:40 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:41253 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbgANILk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Jan 2020 03:11:40 -0500
-Received: by mail-oi1-f193.google.com with SMTP id i1so10981062oie.8;
-        Tue, 14 Jan 2020 00:11:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ESgbHWyyXZkUE+Zt5y6qd3pCusxZlx2vlVaiZEg9MHY=;
-        b=qs1x37BdbYn5t6+23mL0IE+dw5g0PGcS5ldK99AKnwJhurHow1kPcdhAGd29oDAm8D
-         vZBnicg0mFy4ulUyWo0e8COjmB12/uPF+VtzOLHMl3i2Y1CA3Ok+t56Iw7roc0KjzqaL
-         oP5L7jiNCAM4qY4BkmOi/LHpeFyDNKziaX5S1OHwT9HS2QKe7wriSs4oHZJxZyRmwF+I
-         yVc/UuBYs6IkcHdWcknqLstN1X15uGDB/JZ1R29VlAT0nx8/An6hzNW9Qbqclaec5XYC
-         4dh6dw3o/hl+Q22PdhB8rlk0cLlApYHShdgEnK3Tts+cco5LAo1nulGT+ZpVyzFZBbHQ
-         SF7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ESgbHWyyXZkUE+Zt5y6qd3pCusxZlx2vlVaiZEg9MHY=;
-        b=hyt0rq1GHGTpBD4aQRVnRIb10a4gkwUUka8PA8E6Ng/QPEDDQ22jWaJCgWv0kiE1il
-         UJUuSx3hJUleB6cML8FwaUFPWu1nkrSieKhZNfdWCCC5OoeYLp4W+huJJiQ3Io34X23s
-         iiETB2VDpP5dWcxvaIDM60YrGgdY5m4odwmZFI0QIwJ/ex4RkKFCQ/2K4Y2wgfZOc+Rm
-         Aea6wmhX6bBqVqFI67vznSW/hOg8KyaJM6WQUH1KTFXkeOwJlCzqtx5meuzqeCmC7+6n
-         3fkh3vnyARTCRjgvWUtDX6ONX3mUqyCW/o9BMts6FIqMgm44lGWpvBNuNU+P7IPdL8DC
-         y8GA==
-X-Gm-Message-State: APjAAAUiRhjjXpR/JuRljBkoUTb6KipAR6tlphhJtkP8v84iAvTmSnp2
-        68ulTo52vke09lUCk6oa+x3XBILWGQZfLsW/zqk=
-X-Google-Smtp-Source: APXvYqzCDP1HlSPkjT+Ko+pskg045pRBOTrM+W3f2eEy7IcfuScVnML1cmr+MHU+++hW/8MQQKSTseULh6yeUpc2qVo=
-X-Received: by 2002:aca:1309:: with SMTP id e9mr15897662oii.7.1578989498871;
- Tue, 14 Jan 2020 00:11:38 -0800 (PST)
+        id S1725860AbgANIPc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Jan 2020 03:15:32 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:38462 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725820AbgANIPc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 14 Jan 2020 03:15:32 -0500
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id A5990DF56008EED06CC3;
+        Tue, 14 Jan 2020 16:15:29 +0800 (CST)
+Received: from localhost.localdomain (10.67.165.24) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.439.0; Tue, 14 Jan 2020 16:15:19 +0800
+From:   Yicong Yang <yangyicong@hisilicon.com>
+To:     <helgaas@kernel.org>, <linux-pci@vger.kernel.org>
+CC:     <f.fangjian@huawei.com>
+Subject: [PATCH] PCI: Improve link speed presentation process
+Date:   Tue, 14 Jan 2020 16:11:34 +0800
+Message-ID: <1578989494-20583-1-git-send-email-yangyicong@hisilicon.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
-References: <20200108162211.22358-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200108162211.22358-5-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200113212252.GA3120@bogus>
-In-Reply-To: <20200113212252.GA3120@bogus>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Tue, 14 Jan 2020 08:11:12 +0000
-Message-ID: <CA+V-a8sP=zTU1UAbXBWCpAn0uduNnUg+JEK0-y8G-4dV4AVVGQ@mail.gmail.com>
-Subject: Re: [v3 4/6] dt-bindings: PCI: rcar: Add bindings for R-Car PCIe
- endpoint controller
-To:     Rob Herring <robh@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Simon Horman <horms@verge.net.au>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.67.165.24]
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Rob,
+Currently We use switch-case statements to acquire the speed
+string according to the pci bus speed in current_link_speed_show()
+and pcie_get_speed_cap(). It leads to redundant and when new
+standard comes, we have to add cases in the related functions,
+which is easy to omit at somewhere.
 
-thank you for the review.
+Abstract the judge statements out. Use macros and pci speed
+arrays instead. Then only the macros and arrays need to be
+extended when next generation comes.
 
-On Mon, Jan 13, 2020 at 9:23 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Wed, Jan 08, 2020 at 04:22:09PM +0000, Lad Prabhakar wrote:
-> > This patch adds the bindings for the R-Car PCIe endpoint driver.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > ---
-> >  .../devicetree/bindings/pci/rcar-pci-ep.yaml  | 76 +++++++++++++++++++
-> >  1 file changed, 76 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
->
-> Fails 'make dt_binding_check':
->
-> Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml: $id:
-> path/filename 'pci/rcar-pcie-ep.yaml' doesn't match actual filename
->
-my bad fill that and post a v4.
+Link: https://lore.kernel.org/linux-pci/20200113211728.GA113776@google.com/
+Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
+Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+---
+Previously we get speed from sysfs likes "16.0 GT/s", etc. In this PATCH,
+we get the speed string from pci_bus_speed_strings[], and it'll look like
+"16.0 GT/s PCIe", etc. It makes no more affects and maybe make the information
+more detailed.
 
-Cheers,
---Prabhakar Lad
-> >
-> > diff --git a/Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml b/Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
-> > new file mode 100644
-> > index 000000000000..99c2a1174463
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
-> > @@ -0,0 +1,76 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +# Copyright (C) 2020 Renesas Electronics Europe GmbH - https://www.renesas.com/eu/en/
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/pci/rcar-pcie-ep.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Renesas R-Car PCIe Endpoint
-> > +
-> > +maintainers:
-> > +  - Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    items:
-> > +      - const: renesas,r8a774c0-pcie-ep
-> > +      - const: renesas,rcar-gen3-pcie-ep
-> > +
-> > +  reg:
-> > +    maxItems: 5
-> > +
-> > +  reg-names:
-> > +    items:
-> > +      - const: apb-base
-> > +      - const: memory0
-> > +      - const: memory1
-> > +      - const: memory2
-> > +      - const: memory3
-> > +
-> > +  power-domains:
-> > +    maxItems: 1
-> > +
-> > +  resets:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    maxItems: 1
-> > +
-> > +  clock-names:
-> > +    items:
-> > +      - const: pcie
-> > +
-> > +  max-functions:
-> > +    minimum: 1
-> > +    maximum: 6
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - reg-names
-> > +  - resets
-> > +  - power-domains
-> > +  - clocks
-> > +  - clock-names
-> > +  - max-functions
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/clock/r8a774c0-cpg-mssr.h>
-> > +    #include <dt-bindings/power/r8a774c0-sysc.h>
-> > +
-> > +     pcie0_ep: pcie-ep@fe000000 {
-> > +            compatible = "renesas,r8a774c0-pcie-ep",
-> > +                         "renesas,rcar-gen3-pcie-ep";
-> > +            reg = <0 0xfe000000 0 0x80000>,
-> > +                  <0x0 0xfe100000 0 0x100000>,
-> > +                  <0x0 0xfe200000 0 0x200000>,
-> > +                  <0x0 0x30000000 0 0x8000000>,
-> > +                  <0x0 0x38000000 0 0x8000000>;
-> > +            reg-names = "apb-base", "memory0", "memory1", "memory2", "memory3";
-> > +            resets = <&cpg 319>;
-> > +            power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
-> > +            clocks = <&cpg CPG_MOD 319>;
-> > +            clock-names = "pcie";
-> > +            max-functions = /bits/ 8 <1>;
-> > +    };
-> > --
-> > 2.20.1
-> >
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+ drivers/pci/pci-sysfs.c | 24 +++---------------------
+ drivers/pci/pci.c       | 12 +-----------
+ drivers/pci/pci.h       | 20 ++++++++++++++------
+ drivers/pci/slot.c      |  2 +-
+ 4 files changed, 19 insertions(+), 39 deletions(-)
+
+diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+index 7934129..8bcb136 100644
+--- a/drivers/pci/pci-sysfs.c
++++ b/drivers/pci/pci-sysfs.c
+@@ -175,33 +175,15 @@ static ssize_t current_link_speed_show(struct device *dev,
+ 	struct pci_dev *pci_dev = to_pci_dev(dev);
+ 	u16 linkstat;
+ 	int err;
+-	const char *speed;
++	enum pci_bus_speed link_speed;
+ 
+ 	err = pcie_capability_read_word(pci_dev, PCI_EXP_LNKSTA, &linkstat);
+ 	if (err)
+ 		return -EINVAL;
+ 
+-	switch (linkstat & PCI_EXP_LNKSTA_CLS) {
+-	case PCI_EXP_LNKSTA_CLS_32_0GB:
+-		speed = "32 GT/s";
+-		break;
+-	case PCI_EXP_LNKSTA_CLS_16_0GB:
+-		speed = "16 GT/s";
+-		break;
+-	case PCI_EXP_LNKSTA_CLS_8_0GB:
+-		speed = "8 GT/s";
+-		break;
+-	case PCI_EXP_LNKSTA_CLS_5_0GB:
+-		speed = "5 GT/s";
+-		break;
+-	case PCI_EXP_LNKSTA_CLS_2_5GB:
+-		speed = "2.5 GT/s";
+-		break;
+-	default:
+-		speed = "Unknown speed";
+-	}
++	link_speed = pcie_link_speed[linkstat & PCI_EXP_LNKSTA_CLS];
+ 
+-	return sprintf(buf, "%s\n", speed);
++	return sprintf(buf, "%s\n", PCIE_SPEED2STR(link_speed));
+ }
+ static DEVICE_ATTR_RO(current_link_speed);
+ 
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index a97e257..ea72e6d8 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -5658,17 +5658,7 @@ enum pci_bus_speed pcie_get_speed_cap(struct pci_dev *dev)
+ 	 */
+ 	pcie_capability_read_dword(dev, PCI_EXP_LNKCAP2, &lnkcap2);
+ 	if (lnkcap2) { /* PCIe r3.0-compliant */
+-		if (lnkcap2 & PCI_EXP_LNKCAP2_SLS_32_0GB)
+-			return PCIE_SPEED_32_0GT;
+-		else if (lnkcap2 & PCI_EXP_LNKCAP2_SLS_16_0GB)
+-			return PCIE_SPEED_16_0GT;
+-		else if (lnkcap2 & PCI_EXP_LNKCAP2_SLS_8_0GB)
+-			return PCIE_SPEED_8_0GT;
+-		else if (lnkcap2 & PCI_EXP_LNKCAP2_SLS_5_0GB)
+-			return PCIE_SPEED_5_0GT;
+-		else if (lnkcap2 & PCI_EXP_LNKCAP2_SLS_2_5GB)
+-			return PCIE_SPEED_2_5GT;
+-		return PCI_SPEED_UNKNOWN;
++		return PCIE_LNKCAP2_SLS2SPEED(lnkcap2);
+ 	}
+ 
+ 	pcie_capability_read_dword(dev, PCI_EXP_LNKCAP, &lnkcap);
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 3f6947e..90cacf6 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -9,6 +9,7 @@
+ #define PCI_VSEC_ID_INTEL_TBT	0x1234	/* Thunderbolt */
+ 
+ extern const unsigned char pcie_link_speed[];
++extern const char *pci_bus_speed_strings[];
+ extern bool pci_early_dump;
+ 
+ bool pcie_cap_has_lnkctl(const struct pci_dev *dev);
+@@ -286,17 +287,24 @@ void pci_disable_bridge_window(struct pci_dev *dev);
+ struct pci_bus *pci_bus_get(struct pci_bus *bus);
+ void pci_bus_put(struct pci_bus *bus);
+ 
++/* PCIe link information from Link Capabilities 2 */
++#define PCIE_LNKCAP2_SLS2SPEED(mask) \
++	((mask) & PCI_EXP_LNKCAP2_SLS_32_0GB ? PCIE_SPEED_32_0GT : \
++	 (mask) & PCI_EXP_LNKCAP2_SLS_16_0GB ? PCIE_SPEED_16_0GT : \
++	 (mask) & PCI_EXP_LNKCAP2_SLS_8_0GB ? PCIE_SPEED_8_0GT : \
++	 (mask) & PCI_EXP_LNKCAP2_SLS_5_0GB ? PCIE_SPEED_5_0GT : \
++	 (mask) & PCI_EXP_LNKCAP2_SLS_2_5GB ? PCIE_SPEED_2_5GT : \
++	 PCI_SPEED_UNKNOWN)
++
+ /* PCIe link information */
+ #define PCIE_SPEED2STR(speed) \
+-	((speed) == PCIE_SPEED_16_0GT ? "16 GT/s" : \
+-	 (speed) == PCIE_SPEED_8_0GT ? "8 GT/s" : \
+-	 (speed) == PCIE_SPEED_5_0GT ? "5 GT/s" : \
+-	 (speed) == PCIE_SPEED_2_5GT ? "2.5 GT/s" : \
+-	 "Unknown speed")
++	((speed) == PCI_SPEED_UNKNOWN ? "Unknown speed" : \
++	 pci_bus_speed_strings[speed])
+ 
+ /* PCIe speed to Mb/s reduced by encoding overhead */
+ #define PCIE_SPEED2MBS_ENC(speed) \
+-	((speed) == PCIE_SPEED_16_0GT ? 16000*128/130 : \
++	((speed) == PCIE_SPEED_32_0GT ? 32000*128/130 : \
++	 (speed) == PCIE_SPEED_16_0GT ? 16000*128/130 : \
+ 	 (speed) == PCIE_SPEED_8_0GT  ?  8000*128/130 : \
+ 	 (speed) == PCIE_SPEED_5_0GT  ?  5000*8/10 : \
+ 	 (speed) == PCIE_SPEED_2_5GT  ?  2500*8/10 : \
+diff --git a/drivers/pci/slot.c b/drivers/pci/slot.c
+index ae4aa0e..08a59ed 100644
+--- a/drivers/pci/slot.c
++++ b/drivers/pci/slot.c
+@@ -50,7 +50,7 @@ static ssize_t address_read_file(struct pci_slot *slot, char *buf)
+ }
+ 
+ /* these strings match up with the values in pci_bus_speed */
+-static const char *pci_bus_speed_strings[] = {
++const char *pci_bus_speed_strings[] = {
+ 	"33 MHz PCI",		/* 0x00 */
+ 	"66 MHz PCI",		/* 0x01 */
+ 	"66 MHz PCI-X",		/* 0x02 */
+-- 
+2.8.1
+
