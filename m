@@ -2,84 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3AA7C13B587
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2020 23:54:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0366E13B60C
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2020 00:41:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728753AbgANWyg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Jan 2020 17:54:36 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:45340 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728656AbgANWyg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Jan 2020 17:54:36 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1irV4v-000091-V6; Tue, 14 Jan 2020 23:54:30 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id DB273101DEE; Tue, 14 Jan 2020 23:54:28 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Ramon Fried <rfried.dev@gmail.com>
-Cc:     hkallweit1@gmail.com, Bjorn Helgaas <bhelgaas@google.com>,
-        maz@kernel.org, lorenzo.pieralisi@arm.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: MSI irqchip configured as IRQCHIP_ONESHOT_SAFE causes spurious IRQs
-In-Reply-To: <CAGi-RUJG=SB7az5FFVTzzgefn_VXUbyQX1dtBN+9gkR7MgyC6g@mail.gmail.com>
-References: <CAGi-RUJvqJoCXWN2YugRn=WYEk9yzt7m3OPfX_o++PmJWQ3woQ@mail.gmail.com> <87wo9ub5f6.fsf@nanos.tec.linutronix.de> <CAGi-RUK_TA+WWvXJSrsa=_Pwq0pV1ffUKOCBu5c1t8O5Xs+UJg@mail.gmail.com> <CAGi-RUJG=SB7az5FFVTzzgefn_VXUbyQX1dtBN+9gkR7MgyC6g@mail.gmail.com>
-Date:   Tue, 14 Jan 2020 23:54:28 +0100
-Message-ID: <87imldbqe3.fsf@nanos.tec.linutronix.de>
+        id S1728844AbgANXlr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Jan 2020 18:41:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39980 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728774AbgANXlr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 14 Jan 2020 18:41:47 -0500
+Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F115724658;
+        Tue, 14 Jan 2020 23:41:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579045306;
+        bh=RsuImxKncFh921sEhbYmo2hrm0xBmtsUawKwojC/cxY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=aoGMW7Ylbi7mAlxbAkz9U6f9POkDbrJ2bADfo97cwN5JCmoNny4DH/i9OgAiHNwtG
+         vyZh/4NJ7AW/mvgSGIQ7ktD+XrhveMW4zz6g9dhhHwzm/h+Xt9fEnvxpke8nftv5Za
+         4pumKkS331yyTD+3/rIOvi9TTdVaJEWUwpBB4Ptg=
+Date:   Tue, 14 Jan 2020 17:41:44 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Alex Deucher <alexdeucher@gmail.com>
+Cc:     amd-gfx@lists.freedesktop.org, linux-pci@vger.kernel.org,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: Re: [PATCH 0/2] Adjust AMD GPU ATS quirks
+Message-ID: <20200114234144.GA56595@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200114205523.1054271-1-alexander.deucher@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Ramon Fried <rfried.dev@gmail.com> writes:
-> On Tue, Jan 14, 2020 at 11:38 PM Ramon Fried <rfried.dev@gmail.com> wrote:
->> On Tue, Jan 14, 2020 at 2:15 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->> > Ramon Fried <rfried.dev@gmail.com> writes:
->> > > Besides the side effect of that, I don't really understand the logic
->> > > of not masking the MSI until the threaded handler is complete,
->> > > especially when there's no HW handler and only threaded handler.
->> >
->> > What's wrong with having another interrupt firing while the threaded
->> > handler is running? Nothing, really. It actually can be desired because
->> > the threaded handler is allowed to sleep.
->> >
->> What do you mean, isn't it the purpose IRQ masking ?  Interrupt
->> coalescing is done to mitigate these IRQ's, these HW interrupts just
->> consume CPU cycles and don't do anything useful (scheduling an
->> already scheduled thread).
+On Tue, Jan 14, 2020 at 03:55:21PM -0500, Alex Deucher wrote:
+> We've root caused the issue and clarified the quirk.
+> This also adds a new quirk for a new GPU.
+> 
+> Alex Deucher (2):
+>   pci: Clarify ATS quirk
+>   pci: add ATS quirk for navi14 board (v2)
+> 
+>  drivers/pci/quirks.c | 32 +++++++++++++++++++++++++-------
+>  1 file changed, 25 insertions(+), 7 deletions(-)
 
-Again, that depends on your POV. It's a perfectly valid scenario to have
-another HW irq coming in preventing the thread to go to sleep and just
-run for another cycle. So no, masking is not necessarily required and
-the semantics of MSI is edge type, so the hardware should not fire
-another interrupt _before_ the threaded handler actually took care of
-the initial one.
+I propose the following, which I intend to be functionally identical.
+It just doesn't repeat the pci_info() and pdev->ats_cap = 0.
 
-> Additionally, in this case there isn't even an HW IRQ handler, it's
-> passed as NULL in the request IRQ function in this scenario.
+commit 998c4f7975b0 ("PCI: Mark AMD Navi14 GPU rev 0xc5 ATS as broken")
+Author: Bjorn Helgaas <bhelgaas@google.com>
+Date:   Tue Jan 14 17:09:28 2020 -0600
 
-This is completely irrelevant. The primary hardware IRQ handler is
-provided by the core code in this case.
+    PCI: Mark AMD Navi14 GPU rev 0xc5 ATS as broken
+    
+    To account for parts of the chip that are "harvested" (disabled) due to
+    silicon flaws, caches on some AMD GPUs must be initialized before ATS is
+    enabled.
+    
+    ATS is normally enabled by the IOMMU driver before the GPU driver loads, so
+    this cache initialization would have to be done in a quirk, but that's too
+    complex to be practical.
+    
+    For Navi14 (device ID 0x7340), this initialization is done by the VBIOS,
+    but apparently some boards went to production with an older VBIOS that
+    doesn't do it.  Disable ATS for those boards.
+    
+    https://lore.kernel.org/r/20200114205523.1054271-3-alexander.deucher@amd.com
+    Bug: https://gitlab.freedesktop.org/drm/amd/issues/1015
+    See-also: d28ca864c493 ("PCI: Mark AMD Stoney Radeon R7 GPU ATS as broken")
+    See-also: 9b44b0b09dec ("PCI: Mark AMD Stoney GPU ATS as broken")
+    Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 
-Due to the semantics of MSI this is perfectly fine and aside of your
-problem this has worked perfectly fine so far and it's an actual
-performance win because it avoid fiddling with the MSI mask which is
-slow.
-
-You still have not told which driver/hardware is affected by this. Can
-you please provide that information so we can finally look at the actual
-hardware/driver combo?
-
-Either the driver is broken or the hardware does not comply with the MSI
-spec.
-
-Thanks,
-
-        tglx
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 4937a088d7d8..fbeb9f73ef28 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5074,18 +5074,25 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0422, quirk_no_ext_tags);
+ 
+ #ifdef CONFIG_PCI_ATS
+ /*
+- * Some devices have a broken ATS implementation causing IOMMU stalls.
+- * Don't use ATS for those devices.
++ * Some devices require additional driver setup to enable ATS.  Don't use
++ * ATS for those devices as ATS will be enabled before the driver has had a
++ * chance to load and configure the device.
+  */
+-static void quirk_no_ats(struct pci_dev *pdev)
++static void quirk_amd_harvest_no_ats(struct pci_dev *pdev)
+ {
+-	pci_info(pdev, "disabling ATS (broken on this device)\n");
++	if (pdev->device == 0x7340 && pdev->revision != 0xc5)
++		return;
++
++	pci_info(pdev, "disabling ATS\n");
+ 	pdev->ats_cap = 0;
+ }
+ 
+ /* AMD Stoney platform GPU */
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x98e4, quirk_no_ats);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6900, quirk_no_ats);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x98e4, quirk_amd_harvest_no_ats);
++/* AMD Iceland dGPU */
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6900, quirk_amd_harvest_no_ats);
++/* AMD Navi14 dGPU */
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7340, quirk_amd_harvest_no_ats);
+ #endif /* CONFIG_PCI_ATS */
+ 
+ /* Freescale PCIe doesn't support MSI in RC mode */
