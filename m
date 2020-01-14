@@ -2,101 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B93113A348
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2020 09:54:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 061E513A7DD
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jan 2020 12:07:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725860AbgANIy2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Jan 2020 03:54:28 -0500
-Received: from verein.lst.de ([213.95.11.211]:44889 "EHLO verein.lst.de"
+        id S1728868AbgANLG7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Jan 2020 06:06:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728779AbgANIy2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 14 Jan 2020 03:54:28 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id A947568B20; Tue, 14 Jan 2020 09:54:25 +0100 (CET)
-Date:   Tue, 14 Jan 2020 09:54:25 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jon Derrick <jonathan.derrick@intel.com>
-Cc:     iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Joerg Roedel <joro@8bytes.org>, Christoph Hellwig <hch@lst.de>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>
-Subject: Re: [PATCH v3 4/5] PCI: vmd: Stop overriding dma_map_ops
-Message-ID: <20200114085425.GD32024@lst.de>
-References: <1578676873-6206-1-git-send-email-jonathan.derrick@intel.com> <1578676873-6206-5-git-send-email-jonathan.derrick@intel.com>
+        id S1725956AbgANLG7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 14 Jan 2020 06:06:59 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C6F0206D5;
+        Tue, 14 Jan 2020 11:06:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579000018;
+        bh=NUepL9I8VxhkL/G0N0NYGcEM4cH+wKLTDcaEIcpguBw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZUXDxIj3k1xuPdIk/43rzWfhLIyHVCsu6peTMrszGiIL2GjqQGiwJBY+YMhXjZ9Qu
+         hYIVZExluD75rG7RLmMDyAZDrmqM0ooSK5PGWTvVRgb5PqsNA9meXdzClU84zB9kZu
+         vjyxEKvFPeISAkzr+LkiY2R4VxGgYDHQba/bS0es=
+Date:   Tue, 14 Jan 2020 11:06:52 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
+        iommu@lists.linux-foundation.org, joro@8bytes.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        lorenzo.pieralisi@arm.com, guohanjun@huawei.com,
+        sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org,
+        robin.murphy@arm.com, bhelgaas@google.com, eric.auger@redhat.com,
+        jonathan.cameron@huawei.com, zhangfei.gao@linaro.org
+Subject: Re: [PATCH v4 06/13] iommu/arm-smmu-v3: Add context descriptor
+ tables allocators
+Message-ID: <20200114110651.GA29222@willie-the-truck>
+References: <20191219163033.2608177-1-jean-philippe@linaro.org>
+ <20191219163033.2608177-7-jean-philippe@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1578676873-6206-5-git-send-email-jonathan.derrick@intel.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20191219163033.2608177-7-jean-philippe@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 10:21:12AM -0700, Jon Derrick wrote:
-> Devices on the VMD domain use the VMD endpoint's requester ID and have
-> been relying on the VMD endpoint's DMA operations. The problem with this
-> was that VMD domain devices would use the VMD endpoint's attributes when
-> doing DMA and IOMMU mapping. We can be smarter about this by only using
-> the VMD endpoint when mapping and providing the correct child device's
-> attributes during DMA operations.
+On Thu, Dec 19, 2019 at 05:30:26PM +0100, Jean-Philippe Brucker wrote:
+> Support for SSID will require allocating context descriptor tables. Move
+> the context descriptor allocation to separate functions.
 > 
-> This patch modifies Intel-IOMMU to check for a 'Direct DMA Alias' and
-> refer to it for mapping.
-> 
-> Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
+> Reviewed-by: Eric Auger <eric.auger@redhat.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 > ---
->  drivers/iommu/intel-iommu.c    |  18 +++--
->  drivers/pci/controller/Kconfig |   1 -
->  drivers/pci/controller/vmd.c   | 150 -----------------------------------------
->  3 files changed, 13 insertions(+), 156 deletions(-)
+>  drivers/iommu/arm-smmu-v3.c | 57 ++++++++++++++++++++++++++++++-------
+>  1 file changed, 46 insertions(+), 11 deletions(-)
 > 
-> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-> index 716347e2..7ca807a 100644
-> --- a/drivers/iommu/intel-iommu.c
-> +++ b/drivers/iommu/intel-iommu.c
-> @@ -804,14 +804,14 @@ static struct intel_iommu *device_to_iommu(struct device *dev, u8 *bus, u8 *devf
+> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+> index b287e303b1d7..43d6a7ded6e4 100644
+> --- a/drivers/iommu/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm-smmu-v3.c
+> @@ -568,6 +568,7 @@ struct arm_smmu_cd_table {
+>  struct arm_smmu_s1_cfg {
+>  	struct arm_smmu_cd_table	table;
+>  	struct arm_smmu_ctx_desc	cd;
+> +	u8				s1cdmax;
+>  };
 >  
->  	if (dev_is_pci(dev)) {
->  		struct pci_dev *pf_pdev;
-> +		struct pci_dev *dma_alias;
+>  struct arm_smmu_s2_cfg {
+> @@ -1455,6 +1456,31 @@ static int arm_smmu_cmdq_issue_sync(struct arm_smmu_device *smmu)
+>  }
 >  
->  		pdev = to_pci_dev(dev);
->  
-> -#ifdef CONFIG_X86
-> -		/* VMD child devices currently cannot be handled individually */
-> -		if (is_vmd(pdev->bus))
-> -			return NULL;
-> -#endif
-
-Don't we need this sanity check to prevent assingning vmd subdevices?
-
-> +		/* DMA aliased devices use the DMA alias's IOMMU */
-> +		dma_alias = pci_direct_dma_alias(pdev);
-> +		if (dma_alias)
-> +			pdev = dma_alias;
->  
->  		/* VFs aren't listed in scope tables; we need to look up
->  		 * the PF instead to find the IOMMU. */
-> @@ -2521,6 +2521,14 @@ struct dmar_domain *find_domain(struct device *dev)
->  		     dev->archdata.iommu == DUMMY_DEVICE_DOMAIN_INFO))
->  		return NULL;
->  
-> +	if (dev_is_pci(dev)) {
-> +		struct pci_dev *pdev = to_pci_dev(dev);
-> +		struct pci_dev *dma_alias = pci_direct_dma_alias(pdev);
+>  /* Context descriptor manipulation functions */
+> +static int arm_smmu_alloc_cd_leaf_table(struct arm_smmu_device *smmu,
+> +					struct arm_smmu_cd_table *table,
+> +					size_t num_entries)
+> +{
+> +	size_t size = num_entries * (CTXDESC_CD_DWORDS << 3);
 > +
-> +		if (dma_alias)
-> +			dev = &dma_alias->dev;
+> +	table->ptr = dmam_alloc_coherent(smmu->dev, size, &table->ptr_dma,
+> +					 GFP_KERNEL);
+> +	if (!table->ptr) {
+> +		dev_warn(smmu->dev,
+> +			 "failed to allocate context descriptor table\n");
+> +		return -ENOMEM;
+> +	}
+> +	return 0;
+> +}
+> +
+> +static void arm_smmu_free_cd_leaf_table(struct arm_smmu_device *smmu,
+> +					struct arm_smmu_cd_table *table,
+> +					size_t num_entries)
+> +{
+> +	size_t size = num_entries * (CTXDESC_CD_DWORDS << 3);
+> +
+> +	dmam_free_coherent(smmu->dev, size, table->ptr, table->ptr_dma);
+> +}
 
-Instead of all these duplicate calls, shouldn't pci_direct_dma_alias be
-replaced with a pci_real_dma_dev helper that either returns the
-dma parent if it exiѕts, or the actual device?
+I think we'd be better off taking the 'arm_smmu_s1_cfg' as a parameter here
+instead of the table pointer and a num_entries value, since the code above
+implies that we support partial freeing of the context descriptors.
 
-Also I think this patch should be split - one for intel-iommu that
-just adds the real device checks, and then one that wires up vmd to
-the new mechanism and then removes all the cruft.
+I can do that as a follow-up patch if you agree. Thoughts?
+
+Will
