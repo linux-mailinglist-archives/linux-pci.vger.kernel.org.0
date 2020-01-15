@@ -2,138 +2,541 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3DA5113B72D
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2020 02:46:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5EFAF13B79B
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2020 03:17:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728911AbgAOBpa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Jan 2020 20:45:30 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:41566 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728961AbgAOBp3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Jan 2020 20:45:29 -0500
-Received: by mail-oi1-f195.google.com with SMTP id i1so13885077oie.8
-        for <linux-pci@vger.kernel.org>; Tue, 14 Jan 2020 17:45:29 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3bD/LT4C3MC6J/wcM/SaP9VxFISKGm7IY0gKpOMd0Pg=;
-        b=Nvf9NhA26vW2Nx3lU1GzeEN0DQX3bQkWJpeicvUquJFGVoQWTforCjS+JW3oBl/LaT
-         IrnUYZB3mcp0MOmrP9/Jt2Ubkj9uP3ezAvIDd+156CAkYi9WwAuq3RY1QX2tEWG6Mtue
-         Su22Xjktv8+gDkxJtg7rsDZI3uG5LZr9HCDGc2Kp8HqS2HcgDimvQeORqHvKLAr1r9PH
-         kbEsqykPXGYOcUH3dL+enJXWNFgcDh0MEdW1oFaYbKiRs0NA1gOCBLJJs8wwT4nJmp2C
-         VrqZcx4wqj0yJP2cm89N0nAMgVyPxRAJkg+uhmBCe9xb+wXxJlJYbsc+snAeMYPQHB3V
-         N6Ug==
-X-Gm-Message-State: APjAAAUNZ6eYZIZFIKknC5WiyV7zJf+r02/6548CkIPKJnsY/8xO8Gyz
-        KAt93ES0GUI6jqw+EaHcHfc22no=
-X-Google-Smtp-Source: APXvYqxNVUb7KUCRr7y608EGSNA/RxplX6r5RgYBk5Y5blieIQxuSogpUEIKbLdzcv5/FXTdewpSyg==
-X-Received: by 2002:a05:6808:8cd:: with SMTP id k13mr19721537oij.4.1579052728378;
-        Tue, 14 Jan 2020 17:45:28 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id j186sm5211518oih.55.2020.01.14.17.45.27
-        for <linux-pci@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2020 17:45:28 -0800 (PST)
-Received: from rob (uid 1000)
-        (envelope-from rob@rob-hp-laptop)
-        id 2209ae
-        by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Tue, 14 Jan 2020 19:40:26 -0600
-Date:   Tue, 14 Jan 2020 19:40:26 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-doc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/7] dt-bindings: PCI: cadence: Add binding to specify
- max virtual functions
-Message-ID: <20200115014026.GA10726@bogus>
-References: <20191231113534.30405-1-kishon@ti.com>
- <20191231113534.30405-3-kishon@ti.com>
+        id S1728880AbgAOCRB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Jan 2020 21:17:01 -0500
+Received: from mx.socionext.com ([202.248.49.38]:22489 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728808AbgAOCRB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 14 Jan 2020 21:17:01 -0500
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 15 Jan 2020 11:16:58 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 36DDB603AB;
+        Wed, 15 Jan 2020 11:16:58 +0900 (JST)
+Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Wed, 15 Jan 2020 11:18:06 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by iyokan.css.socionext.com (Postfix) with ESMTP id E59FD4034C;
+        Wed, 15 Jan 2020 11:16:57 +0900 (JST)
+Received: from [10.213.132.48] (unknown [10.213.132.48])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id A3A82120B64;
+        Wed, 15 Jan 2020 11:16:57 +0900 (JST)
+Date:   Wed, 15 Jan 2020 11:16:57 +0900
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>
+Subject: Re: [PATCH 2/2] PCI: uniphier: Add UniPhier PCIe endpoint controller support
+Cc:     "Masahiro Yamada" <yamada.masahiro@socionext.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+In-Reply-To: <1576116138-16501-3-git-send-email-hayashi.kunihiko@socionext.com>
+References: <1576116138-16501-1-git-send-email-hayashi.kunihiko@socionext.com> <1576116138-16501-3-git-send-email-hayashi.kunihiko@socionext.com>
+Message-Id: <20200115111657.FD32.4A936039@socionext.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191231113534.30405-3-kishon@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Becky! ver. 2.70 [ja]
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Dec 31, 2019 at 05:05:29PM +0530, Kishon Vijay Abraham I wrote:
-> Add binding to specify maximum number of virtual functions that can be
-> associated with each physical function.
+Hi,
+
+Gentle ping.
+Is there any comments about this?
+
+Thank you,
+
+On Thu, 12 Dec 2019 11:02:18 +0900
+Kunihiko Hayashi <hayashi.kunihiko@socionext.com> wrote:
+
+> This introduces specific glue layer for UniPhier platform to support
+> PCIe controller that is based on the DesignWare PCIe core, and
+> this driver supports endpoint mode. This supports for Pro5 SoC only.
 > 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 > ---
->  .../devicetree/bindings/pci/cdns,cdns-pcie-ep.txt         | 2 ++
->  .../devicetree/bindings/pci/ti,j721e-pci-ep.yaml          | 8 ++++++++
->  2 files changed, 10 insertions(+)
+>  MAINTAINERS                                   |   2 +-
+>  drivers/pci/controller/dwc/Kconfig            |  13 +-
+>  drivers/pci/controller/dwc/Makefile           |   1 +
+>  drivers/pci/controller/dwc/pcie-uniphier-ep.c | 399 ++++++++++++++++++++++++++
+>  4 files changed, 412 insertions(+), 3 deletions(-)
+>  create mode 100644 drivers/pci/controller/dwc/pcie-uniphier-ep.c
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
-> index 4a0475e2ba7e..432578202733 100644
-> --- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
-> +++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
-> @@ -9,6 +9,8 @@ Required properties:
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 4b6ec28..9ed0572 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -12695,7 +12695,7 @@ M:	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+>  L:	linux-pci@vger.kernel.org
+>  S:	Maintained
+>  F:	Documentation/devicetree/bindings/pci/uniphier-pcie*.txt
+> -F:	drivers/pci/controller/dwc/pcie-uniphier.c
+> +F:	drivers/pci/controller/dwc/pcie-uniphier*.c
 >  
->  Optional properties:
->  - max-functions: Maximum number of functions that can be configured (default 1).
-> +- max-virtual-functions: Maximum number of virtual functions that can be
-> +    associated with each physical function.
->  - phys: From PHY bindings: List of Generic PHY phandles. One per lane if more
->    than one in the list.  If only one PHY listed it must manage all lanes. 
->  - phy-names:  List of names to identify the PHY.
-> diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
-> index 4621c62016c7..1d4964ba494f 100644
-> --- a/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
-> +++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
-> @@ -61,6 +61,12 @@ properties:
->      minimum: 1
->      maximum: 6
+>  PCIE DRIVER FOR ST SPEAR13XX
+>  M:	Pratyush Anand <pratyush.anand@gmail.com>
+> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+> index 0ba988b..6bc661a 100644
+> --- a/drivers/pci/controller/dwc/Kconfig
+> +++ b/drivers/pci/controller/dwc/Kconfig
+> @@ -247,15 +247,24 @@ config PCIE_TEGRA194
+>  	  controller found in NVIDIA Tegra194 SoC.
 >  
-> +  max-virtual-functions:
-> +    minItems: 1
-> +    maxItems: 6
-
-Is there a PCIe spec limit to number of virtual functions per phy 
-function? Or 2^32 virtual functions is okay.
-
-> +    description: As defined in
-> +                 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
-
-I suspect this this be a common property.
-
+>  config PCIE_UNIPHIER
+> -	bool "Socionext UniPhier PCIe controllers"
+> +	bool "Socionext UniPhier PCIe host controllers"
+>  	depends on ARCH_UNIPHIER || COMPILE_TEST
+>  	depends on OF && HAS_IOMEM
+>  	depends on PCI_MSI_IRQ_DOMAIN
+>  	select PCIE_DW_HOST
+>  	help
+> -	  Say Y here if you want PCIe controller support on UniPhier SoCs.
+> +	  Say Y here if you want PCIe host controller support on UniPhier SoCs.
+>  	  This driver supports LD20 and PXs3 SoCs.
+>  
+> +config PCIE_UNIPHIER_EP
+> +	bool "Socionext UniPhier PCIe endpoint controllers"
+> +	depends on ARCH_UNIPHIER || COMPILE_TEST
+> +	depends on OF && HAS_IOMEM
+> +	select PCIE_DW_EP
+> +	help
+> +	  Say Y here if you want PCIe endpoint controller support on
+> +	  UniPhier SoCs. This driver supports Pro5 SoC.
 > +
->    dma-coherent:
->      description: Indicates that the PCIe IP block can ensure the coherency
+>  config PCIE_AL
+>  	bool "Amazon Annapurna Labs PCIe controller"
+>  	depends on OF && (ARM64 || COMPILE_TEST)
+> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
+> index 69faff3..ba458b6 100644
+> --- a/drivers/pci/controller/dwc/Makefile
+> +++ b/drivers/pci/controller/dwc/Makefile
+> @@ -18,6 +18,7 @@ obj-$(CONFIG_PCIE_HISI_STB) += pcie-histb.o
+>  obj-$(CONFIG_PCI_MESON) += pci-meson.o
+>  obj-$(CONFIG_PCIE_TEGRA194) += pcie-tegra194.o
+>  obj-$(CONFIG_PCIE_UNIPHIER) += pcie-uniphier.o
+> +obj-$(CONFIG_PCIE_UNIPHIER_EP) += pcie-uniphier-ep.o
 >  
-> @@ -85,6 +91,7 @@ required:
->    - cdns,max-outbound-regions
->    - dma-coherent
->    - max-functions
-> +  - max-virtual-functions
->    - phys
->    - phy-names
->  
-> @@ -107,6 +114,7 @@ examples:
->              clock-names = "fck";
->              cdns,max-outbound-regions = <16>;
->              max-functions = /bits/ 8 <6>;
-> +            max-virtual-functions = /bits/ 16 <4 4 4 4 0 0>;
->              dma-coherent;
->              phys = <&serdes0_pcie_link>;
->              phy-names = "pcie_phy";
+>  # The following drivers are for devices that use the generic ACPI
+>  # pci_root.c driver but don't support standard ECAM config access.
+> diff --git a/drivers/pci/controller/dwc/pcie-uniphier-ep.c b/drivers/pci/controller/dwc/pcie-uniphier-ep.c
+> new file mode 100644
+> index 00000000..7b5aa0f
+> --- /dev/null
+> +++ b/drivers/pci/controller/dwc/pcie-uniphier-ep.c
+> @@ -0,0 +1,399 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * PCIe endpoint controller driver for UniPhier SoCs
+> + * Copyright 2018 Socionext Inc.
+> + * Author: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> + */
+> +
+> +#include <linux/bitops.h>
+> +#include <linux/bitfield.h>
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/init.h>
+> +#include <linux/of_device.h>
+> +#include <linux/pci.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/reset.h>
+> +
+> +#include "pcie-designware.h"
+> +
+> +/* Link Glue registers */
+> +#define PCL_RSTCTRL0			0x0010
+> +#define PCL_RSTCTRL_AXI_REG		BIT(3)
+> +#define PCL_RSTCTRL_AXI_SLAVE		BIT(2)
+> +#define PCL_RSTCTRL_AXI_MASTER		BIT(1)
+> +#define PCL_RSTCTRL_PIPE3		BIT(0)
+> +
+> +#define PCL_RSTCTRL1			0x0020
+> +#define PCL_RSTCTRL_PERST		BIT(0)
+> +
+> +#define PCL_RSTCTRL2			0x0024
+> +#define PCL_RSTCTRL_PHY_RESET		BIT(0)
+> +
+> +#define PCL_MODE			0x8000
+> +#define PCL_MODE_REGVAL			BIT(0)
+> +
+> +#define PCL_APP_CLK_CTRL		0x8004
+> +#define PCL_APP_CLK_REQ			BIT(0)
+> +
+> +#define PCL_APP_READY_CTRL		0x8008
+> +#define PCL_APP_LTSSM_ENABLE		BIT(0)
+> +
+> +#define PCL_APP_MSI0			0x8040
+> +#define PCL_APP_VEN_MSI_TC_MASK		GENMASK(10, 8)
+> +#define PCL_APP_VEN_MSI_VECTOR_MASK	GENMASK(4, 0)
+> +
+> +#define PCL_APP_MSI1			0x8044
+> +#define PCL_APP_MSI_REQ			BIT(0)
+> +
+> +#define PCL_APP_INTX			0x8074
+> +#define PCL_APP_INTX_SYS_INT		BIT(0)
+> +
+> +/* assertion time of intx in usec */
+> +#define PCL_INTX_WIDTH_USEC		30
+> +
+> +struct uniphier_pcie_ep_priv {
+> +	void __iomem *base;
+> +	struct dw_pcie pci;
+> +	struct clk *clk, *clk_gio;
+> +	struct reset_control *rst, *rst_gio;
+> +	struct phy *phy;
+> +	const struct uniphier_pcie_ep_soc_data *data;
+> +};
+> +
+> +struct uniphier_pcie_ep_soc_data {
+> +	bool is_legacy;
+> +	const struct pci_epc_features features;
+> +};
+> +
+> +#define to_uniphier_pcie(x)	dev_get_drvdata((x)->dev)
+> +
+> +static void uniphier_pcie_ltssm_enable(struct uniphier_pcie_ep_priv *priv,
+> +				       bool enable)
+> +{
+> +	u32 val;
+> +
+> +	val = readl(priv->base + PCL_APP_READY_CTRL);
+> +	if (enable)
+> +		val |= PCL_APP_LTSSM_ENABLE;
+> +	else
+> +		val &= ~PCL_APP_LTSSM_ENABLE;
+> +	writel(val, priv->base + PCL_APP_READY_CTRL);
+> +}
+> +
+> +static void uniphier_pcie_phy_reset(struct uniphier_pcie_ep_priv *priv,
+> +				    bool assert)
+> +{
+> +	u32 val;
+> +
+> +	val = readl(priv->base + PCL_RSTCTRL2);
+> +	if (assert)
+> +		val |= PCL_RSTCTRL_PHY_RESET;
+> +	else
+> +		val &= ~PCL_RSTCTRL_PHY_RESET;
+> +	writel(val, priv->base + PCL_RSTCTRL2);
+> +}
+> +
+> +static void uniphier_pcie_init_ep(struct uniphier_pcie_ep_priv *priv)
+> +{
+> +	u32 val;
+> +
+> +	/* set EP mode */
+> +	val = readl(priv->base + PCL_MODE);
+> +	val |= PCL_MODE_REGVAL;
+> +	writel(val, priv->base + PCL_MODE);
+> +
+> +	/* clock request */
+> +	val = readl(priv->base + PCL_APP_CLK_CTRL);
+> +	val &= ~PCL_APP_CLK_REQ;
+> +	writel(val, priv->base + PCL_APP_CLK_CTRL);
+> +
+> +	/* deassert PIPE3 and AXI reset */
+> +	val = readl(priv->base + PCL_RSTCTRL0);
+> +	val |= PCL_RSTCTRL_AXI_REG | PCL_RSTCTRL_AXI_SLAVE
+> +		| PCL_RSTCTRL_AXI_MASTER | PCL_RSTCTRL_PIPE3;
+> +	writel(val, priv->base + PCL_RSTCTRL0);
+> +
+> +	uniphier_pcie_ltssm_enable(priv, false);
+> +}
+> +
+> +static int uniphier_pcie_start_link(struct dw_pcie *pci)
+> +{
+> +	struct uniphier_pcie_ep_priv *priv = to_uniphier_pcie(pci);
+> +
+> +	uniphier_pcie_ltssm_enable(priv, true);
+> +
+> +	return 0;
+> +}
+> +
+> +static void uniphier_pcie_stop_link(struct dw_pcie *pci)
+> +{
+> +	struct uniphier_pcie_ep_priv *priv = to_uniphier_pcie(pci);
+> +
+> +	uniphier_pcie_ltssm_enable(priv, false);
+> +}
+> +
+> +static void uniphier_pcie_ep_init(struct dw_pcie_ep *ep)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +	enum pci_barno bar;
+> +
+> +	for (bar = BAR_0; bar <= BAR_5; bar++)
+> +		dw_pcie_ep_reset_bar(pci, bar);
+> +}
+> +
+> +static int uniphier_pcie_ep_raise_legacy_irq(struct dw_pcie_ep *ep)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +	struct uniphier_pcie_ep_priv *priv = to_uniphier_pcie(pci);
+> +	u32 val;
+> +
+> +	/* assert INTx */
+> +	val = readl(priv->base + PCL_APP_INTX);
+> +	val |= PCL_APP_INTX_SYS_INT;
+> +	writel(val, priv->base + PCL_APP_INTX);
+> +
+> +	udelay(PCL_INTX_WIDTH_USEC);
+> +
+> +	/* deassert INTx */
+> +	val = readl(priv->base + PCL_APP_INTX);
+> +	val &= ~PCL_APP_INTX_SYS_INT;
+> +	writel(val, priv->base + PCL_APP_INTX);
+> +
+> +	return 0;
+> +}
+> +
+> +static int uniphier_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep,
+> +					  u8 func_no, u16 interrupt_num)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +	struct uniphier_pcie_ep_priv *priv = to_uniphier_pcie(pci);
+> +	u32 val;
+> +
+> +	val = FIELD_PREP(PCL_APP_VEN_MSI_TC_MASK, func_no)
+> +		| FIELD_PREP(PCL_APP_VEN_MSI_VECTOR_MASK, interrupt_num - 1);
+> +	writel(val, priv->base + PCL_APP_MSI0);
+> +
+> +	val = readl(priv->base + PCL_APP_MSI1);
+> +	val |= PCL_APP_MSI_REQ;
+> +	writel(val, priv->base + PCL_APP_MSI1);
+> +
+> +	return 0;
+> +}
+> +
+> +static int uniphier_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+> +				      enum pci_epc_irq_type type,
+> +				      u16 interrupt_num)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +
+> +	switch (type) {
+> +	case PCI_EPC_IRQ_LEGACY:
+> +		return uniphier_pcie_ep_raise_legacy_irq(ep);
+> +	case PCI_EPC_IRQ_MSI:
+> +		return uniphier_pcie_ep_raise_msi_irq(ep, func_no,
+> +						      interrupt_num);
+> +	default:
+> +		dev_err(pci->dev, "UNKNOWN IRQ type (%d)\n", type);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct pci_epc_features*
+> +uniphier_pcie_get_features(struct dw_pcie_ep *ep)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +	struct uniphier_pcie_ep_priv *priv = to_uniphier_pcie(pci);
+> +
+> +	return &priv->data->features;
+> +}
+> +
+> +static const struct dw_pcie_ep_ops uniphier_pcie_ep_ops = {
+> +	.ep_init = uniphier_pcie_ep_init,
+> +	.raise_irq = uniphier_pcie_ep_raise_irq,
+> +	.get_features = uniphier_pcie_get_features,
+> +};
+> +
+> +static int uniphier_add_pcie_ep(struct uniphier_pcie_ep_priv *priv,
+> +				struct platform_device *pdev)
+> +{
+> +	struct dw_pcie *pci = &priv->pci;
+> +	struct dw_pcie_ep *ep = &pci->ep;
+> +	struct device *dev = &pdev->dev;
+> +	struct resource *res;
+> +	int ret;
+> +
+> +	ep->ops = &uniphier_pcie_ep_ops;
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi2");
+> +	pci->dbi_base2 = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(pci->dbi_base2))
+> +		return PTR_ERR(pci->dbi_base2);
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "addr_space");
+> +	if (!res)
+> +		return -EINVAL;
+> +
+> +	ep->phys_base = res->start;
+> +	ep->addr_size = resource_size(res);
+> +
+> +	ret = dw_pcie_ep_init(ep);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to initialize endpoint (%d)\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int uniphier_pcie_ep_enable(struct uniphier_pcie_ep_priv *priv)
+> +{
+> +	int ret;
+> +
+> +	ret = clk_prepare_enable(priv->clk);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = clk_prepare_enable(priv->clk_gio);
+> +	if (ret)
+> +		goto out_clk_disable;
+> +
+> +	ret = reset_control_deassert(priv->rst);
+> +	if (ret)
+> +		goto out_clk_gio_disable;
+> +
+> +	ret = reset_control_deassert(priv->rst_gio);
+> +	if (ret)
+> +		goto out_rst_assert;
+> +
+> +	uniphier_pcie_init_ep(priv);
+> +
+> +	if (priv->data->is_legacy)
+> +		uniphier_pcie_phy_reset(priv, true);
+> +
+> +	ret = phy_init(priv->phy);
+> +	if (ret)
+> +		goto out_rst_gio_assert;
+> +
+> +	if (priv->data->is_legacy)
+> +		uniphier_pcie_phy_reset(priv, false);
+> +
+> +	return 0;
+> +
+> +out_rst_gio_assert:
+> +	reset_control_assert(priv->rst_gio);
+> +out_rst_assert:
+> +	reset_control_assert(priv->rst);
+> +out_clk_gio_disable:
+> +	clk_disable_unprepare(priv->clk_gio);
+> +out_clk_disable:
+> +	clk_disable_unprepare(priv->clk);
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct dw_pcie_ops dw_pcie_ops = {
+> +	.start_link = uniphier_pcie_start_link,
+> +	.stop_link = uniphier_pcie_stop_link,
+> +};
+> +
+> +static int uniphier_pcie_ep_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct uniphier_pcie_ep_priv *priv;
+> +	struct resource *res;
+> +	int ret;
+> +
+> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	priv->data = of_device_get_match_data(dev);
+> +	if (WARN_ON(!priv->data))
+> +		return -EINVAL;
+> +
+> +	priv->pci.dev = dev;
+> +	priv->pci.ops = &dw_pcie_ops;
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
+> +	priv->pci.dbi_base = devm_pci_remap_cfg_resource(dev, res);
+> +	if (IS_ERR(priv->pci.dbi_base))
+> +		return PTR_ERR(priv->pci.dbi_base);
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "link");
+> +	priv->base = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(priv->base))
+> +		return PTR_ERR(priv->base);
+> +
+> +	if (priv->data->is_legacy) {
+> +		priv->clk_gio = devm_clk_get(dev, "gio");
+> +		if (IS_ERR(priv->clk))
+> +			return PTR_ERR(priv->clk);
+> +
+> +		priv->rst_gio =
+> +			devm_reset_control_get_shared(dev, "gio");
+> +		if (IS_ERR(priv->rst_gio))
+> +			return PTR_ERR(priv->rst_gio);
+> +
+> +		priv->clk = devm_clk_get(dev, "link");
+> +		if (IS_ERR(priv->clk))
+> +			return PTR_ERR(priv->clk);
+> +
+> +		priv->rst =
+> +			devm_reset_control_get_shared(dev, "link");
+> +		if (IS_ERR(priv->rst))
+> +			return PTR_ERR(priv->rst);
+> +	} else {
+> +		priv->clk = devm_clk_get(dev, NULL);
+> +		if (IS_ERR(priv->clk))
+> +			return PTR_ERR(priv->clk);
+> +
+> +		priv->rst = devm_reset_control_get_shared(dev, NULL);
+> +		if (IS_ERR(priv->rst))
+> +			return PTR_ERR(priv->rst);
+> +	}
+> +
+> +	priv->phy = devm_phy_optional_get(dev, "pcie-phy");
+> +	if (IS_ERR(priv->phy))
+> +		return PTR_ERR(priv->phy);
+> +
+> +	platform_set_drvdata(pdev, priv);
+> +
+> +	ret = uniphier_pcie_ep_enable(priv);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return uniphier_add_pcie_ep(priv, pdev);
+> +}
+> +
+> +static const struct uniphier_pcie_ep_soc_data uniphier_pro5_data = {
+> +	.is_legacy = true,
+> +	.features = {
+> +		.linkup_notifier = false,
+> +		.msi_capable = true,
+> +		.msix_capable = false,
+> +		.align = 1 << 16,
+> +		.bar_fixed_64bit = BIT(BAR_0) | BIT(BAR_2) | BIT(BAR_4),
+> +		.reserved_bar =  BIT(BAR_4),
+> +	},
+> +};
+> +
+> +static const struct of_device_id uniphier_pcie_ep_match[] = {
+> +	{
+> +		.compatible = "socionext,uniphier-pro5-pcie-ep",
+> +		.data = &uniphier_pro5_data,
+> +	},
+> +	{ /* sentinel */ },
+> +};
+> +
+> +static struct platform_driver uniphier_pcie_ep_driver = {
+> +	.probe  = uniphier_pcie_ep_probe,
+> +	.driver = {
+> +		.name = "uniphier-pcie-ep",
+> +		.of_match_table = uniphier_pcie_ep_match,
+> +		.suppress_bind_attrs = true,
+> +	},
+> +};
+> +builtin_platform_driver(uniphier_pcie_ep_driver);
 > -- 
-> 2.17.1
-> 
+> 2.7.4
+
+---
+Best Regards,
+Kunihiko Hayashi
+
