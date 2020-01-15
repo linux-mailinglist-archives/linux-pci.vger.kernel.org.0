@@ -2,39 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1047913CB77
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2020 18:56:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 805B713CB79
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2020 18:57:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728927AbgAOR4r convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Wed, 15 Jan 2020 12:56:47 -0500
-Received: from mail-oln040092255015.outbound.protection.outlook.com ([40.92.255.15]:6126
+        id S1726587AbgAOR5N convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Wed, 15 Jan 2020 12:57:13 -0500
+Received: from mail-oln040092255074.outbound.protection.outlook.com ([40.92.255.74]:7290
         "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728904AbgAOR4q (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 15 Jan 2020 12:56:46 -0500
+        id S1726574AbgAOR5N (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 15 Jan 2020 12:57:13 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TAghpwyrYlwrMMGo5GHHm9QDy9ruCwCyj89N+Vtau80OsvDAq++5HSX/mvKOKULmSmKqbjBPnjoWaiy2dTZVXkCeqx2cBRG1kQlab2TssSvEI6VmejXWTq8/fhNHFqKnxDN8TqI/3wIPJqCu637Tc1XRAXWjvtwoRJX+jbk2b/A3f76VpqBFEjHlL6tyjMXsjnPUxG5ewY7ErCwaC/vK6mjR+rhRi/smk63YkQjmfXl9r3jr71An5dU1+CiUv8gPP/6rViuc6RXzZgXmS0ALhzGwCQuN3nKLelqDXFC3n2X0Bt53+U9tu9Xv2nUG1cQSyBZGSMZYUkp7AkBJCWZo6g==
+ b=YdHKp7XMaxB0PNvw+F063xvDM2suQAgT0GxS0r2X/yufASQN0L74HWx6fJ57qxZJizXSer5y0j5poUldRreV/FyU9W2Urq6EreUj/FnABGFwaIQ6sjBqUrgz1CbjKsV0sfAqBBHPqyVJp+MwvtRahthp9xbX43wS8p4Txz1Q/wyt8iuR52xU7Cj94lFYRtBjYrHy6Z8iG/KLEKsevTyfTDqagxc1RH0NfzWusGsXHyDJYcXJqj4ED9tlMzmzpWuTd2PaYK7b8UTtXwUY1o4eHZUknkib9k1zIOAthgSKTprlydjxIRDERUx0p3JdW9EeY3SC7ZUqTkiSaR4QBkGCQA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UpJTJZguPK9u+WwGV3fKcp8vjcupVEEM3tez6NCZYs0=;
- b=FYKEGYzx7H8eRC8h0fh25LR16IvGIG5bzSqqD7HDH4yxLI+OwQmVOStqypRmMg82oAngn5I8LE6UlVCQnnb2lRVNmsTR1UbFGL+UDDdjq3YQ6xaxQLdQJK+E189eM11vlXVYhsdDDa2BdBMp9Fkbg7E26HIG1ycDxE6/sCZAlsQPwHGyJvFWtxn69feCyamG7EjOQIgWbtRYtyRBPRzxyNx0bVZlJWCt6q+p2hHIxJm8LnenBg69IZqn9aDFWu9VTOQCVpbmfavhPx+X81OT3tiodu4lkztQR3//WHG4CIm7zAgc6sng1XdXctjsaqFCqnXQSWspUWvoa+EsVB0zRA==
+ bh=NnxnZTseYNRSorcEdPv6JpSUmglTmlSUs21F/UpBx10=;
+ b=hPpTFjF2y2nK0LtmoMKpWp5DjNCZFwPVvySSanOF4EnqPcSkbPAXWHYuj4MufgUIjAik0q1/2dr7SA3Sb0e0Fj5iHJD4Q1P/fC1KAkYVtb3J7WwG6D2Ua7rTNG6CJPnjgBzhc7NA7OkWNqROO9kxQ4QahBgWqlYFptBkV8k7JTsJg/iYLqlP07NV3DTTA3CUeFLphhOPsvoBuh4BNnNEuljZzoqOtaCbCpe3GiuotPmA3lFRi0LHiCOFf7LBsT4qTSHfsis/97kugt5OxkPxvxDQ3uJC7kReNWvRhORThEWQx18OL6H99Pc81riWJ4d2qTXBgsHhsFO49Ot/pH+BuA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 Received: from PU1APC01FT115.eop-APC01.prod.protection.outlook.com
- (10.152.252.52) by PU1APC01HT022.eop-APC01.prod.protection.outlook.com
- (10.152.253.19) with Microsoft SMTP Server (version=TLS1_2,
+ (10.152.252.51) by PU1APC01HT173.eop-APC01.prod.protection.outlook.com
+ (10.152.253.186) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.11; Wed, 15 Jan
- 2020 17:56:42 +0000
+ 2020 17:57:08 +0000
 Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.252.57) by
  PU1APC01FT115.mail.protection.outlook.com (10.152.252.208) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2602.11 via Frontend Transport; Wed, 15 Jan 2020 17:56:42 +0000
+ 15.20.2602.11 via Frontend Transport; Wed, 15 Jan 2020 17:57:08 +0000
 Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
  ([fe80::20ad:6646:5bcd:63c9]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
  ([fe80::20ad:6646:5bcd:63c9%11]) with mapi id 15.20.2623.018; Wed, 15 Jan
- 2020 17:56:42 +0000
-Received: from nicholas-dell-linux (61.69.138.108) by ME2PR01CA0003.ausprd01.prod.outlook.com (2603:10c6:201:15::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.19 via Frontend Transport; Wed, 15 Jan 2020 17:56:40 +0000
+ 2020 17:57:08 +0000
+Received: from nicholas-dell-linux (61.69.138.108) by ME2PR01CA0092.ausprd01.prod.outlook.com (2603:10c6:201:2d::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.20 via Frontend Transport; Wed, 15 Jan 2020 17:57:06 +0000
 From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
 To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
@@ -43,76 +43,95 @@ CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Logan Gunthorpe <logang@deltatee.com>,
         Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Subject: [PATCH v2 0/4] PCI: Allow Thunderbolt to work with resources from
- pci=hpmemsize
-Thread-Topic: [PATCH v2 0/4] PCI: Allow Thunderbolt to work with resources
- from pci=hpmemsize
-Thread-Index: AQHVy80k0dy1ycOVHEGXcYzo6foIvQ==
-Date:   Wed, 15 Jan 2020 17:56:42 +0000
-Message-ID: <PSXP216MB04388C465B8CD6FBEB8FDA3880370@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+Subject: [PATCH v2 1/4] PCI: In extend_bridge_window() change available to
+ new_size
+Thread-Topic: [PATCH v2 1/4] PCI: In extend_bridge_window() change available
+ to new_size
+Thread-Index: AQHVy800b6sbH4fyHEqte7GWmI1Irg==
+Date:   Wed, 15 Jan 2020 17:57:08 +0000
+Message-ID: <PSXP216MB0438A47D6153AD2CFAA64D9780370@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
 Accept-Language: en-AU, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: ME2PR01CA0003.ausprd01.prod.outlook.com
- (2603:10c6:201:15::15) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+x-clientproxiedby: ME2PR01CA0092.ausprd01.prod.outlook.com
+ (2603:10c6:201:2d::32) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
  (2603:1096:300:d::20)
-x-incomingtopheadermarker: OriginalChecksum:0A1C9C73DC3CD87860CB04775845FA647DF2CAD8A61C36EEB68729E200A61607;UpperCasedChecksum:130A13BF628B5BF8C1E7C68569FE4A69490B7677243FDECDA830EA300474B3C5;SizeAsReceived:7793;Count:48
+x-incomingtopheadermarker: OriginalChecksum:19D8AE965C6259C3EF6F392DA44C51ED1D0226EDEAB295E60CF79DF5285D27BA;UpperCasedChecksum:C8529EBF9C6159CA1CB35642E0E155950603E3CF8D6F05EA69383FB954D46DA4;SizeAsReceived:7773;Count:48
 x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [JeAZ4vgSl8cF0SiR25rG16N/pVKOrcL/]
-x-microsoft-original-message-id: <20200115175635.GA4512@nicholas-dell-linux>
+x-tmn:  [xaRsmw/bvQv/n80rB9Ht9vX7d1RWx2NG]
+x-microsoft-original-message-id: <20200115175701.GA4514@nicholas-dell-linux>
 x-ms-publictraffictype: Email
 x-incomingheadercount: 48
 x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: f347ea83-6de9-4244-2ff2-08d799e44704
-x-ms-exchange-slblob-mailprops: zswcL9HXbeVV5DRQNiFD0ULmQNyfwccSKEcqpcRYpp0V/11rNdteQfTY83wrLyEVxtgGo2fLqi2fZxMiqaACk3PGKqp6ZrIXznku9tRRI5Y9Tfvm8qaofwLgMX+GjEOROtgGGOLckT4RtLef1gT+Qnir1jdy80ue5LgTPVgw27YyBzq233GVZaQ3l2RN+DneIzoI69g//Dk/+I0Y+G/bla2x/K/ZUqCt732R+Fj6n/O8yooQBMH1tsk3P6IlIphUdG6otQp/CF2ivne1Xr/IfWdgMgGpHPDdgOxfvb34KNtdd5YMZaR8sZ+hgFI03jE/VIY/qJi1XX1ar5OtzK2HOIZwMBbIrjlce5Q996mS6+k4ioZK6u/sO/+VLOKG8Run4BE71AS/yPO7uKNxvai5BxcW+8mTAUYGWI2vmbQshQQqXC+9iqrw8PQoG8oN7Eo4XBKTnxk2fPzEJYqg/Pa2aI4zK8DPGvcyelfzFnEyVslaSIpXb/jQXOgwgxZ6hvvcMghj4WjkbcXb7J2TRRkfvlM82uEAj1AQkhZgP8/lonimpenDa2TNSyFz0i2dyBLdWxfBr4o7krFzoo1tWpVQgUyPTVo25Z8O93EE6gnR3zZL/QUx0mABHTZ/uN5cHOX3pnR03z4HcM6OQDor1/cPgV4WbBJ4stpU6ADB+twBjP5Q9j1uNu8aeD3drIiHRQkvnc+fGgowIP2lEOfsJ/UOLBoMShyQMothO4KztN/Pbv8oEoEJUdAZYlL4GpG3vhYa
-x-ms-traffictypediagnostic: PU1APC01HT022:
+x-ms-office365-filtering-correlation-id: 00efbd71-66ba-4d77-3955-08d799e456e2
+x-ms-exchange-slblob-mailprops: mBy7Mai7yE5NBIk4d/kkaYf19Kf5IaBBc+KQ89c3PucBbkKhGIRbQguA6DdcNNtz5kBi/j0D0n/FMQHJCfq+NL7l8PsXM0UmScmkRUOSmWP26ey1ciNn6fImSVG1YTeCmDgFEFlT6P3LzzG4/j1w8EiY+oYAjye2mCYnbm4mARZR1N/tY01vt3+OkI6I93aYv5RUN8huvJP1aIb+WC6z84b+GtDf8gvFsAMf3dtsgnywnoQUD1W2HogwL2VLzj7nHnBs3rE6Gkr00QERjeFStF7Pdx7xdds6Dy9AxBAhgWT+fmqNdFCynM6AH/P0SOQw8zxDJO09V/0b0T3JJqtZfs05OACG3NCerpTzAx36GN6Z+cLCsLAMtpn2C5TJl4yn0z7InsCyEaCMOkj60SgWXk9vSpsWIknFbOz3najA5i3cJ8fhQSzyP3gNOIKxBQ8Iz29mq1HAS0DewJW/bPqsqG8PfihcY9nSnlt9rLV3Aaux6+oQrZeZDbaGBXuWf6oJKHJouOga4/o5Aa+HOxD9n+i4HrSFcB4+em522wnUSTffQx9256DGDvp9kHc8KD/Hvd3GOORF1LT6fMMVe17jc43dLCnIefqDg5JXKd/Ps+qjU00YW+GNcC1yzI3/2A+aQ/6lZup7uquf8zHU7uIezdZk8jHz2kUJtRH8CBYerbk3XMQLiTQ7SYQl/X8pwahiAYovSQYhHYaCZMklRHdINukBwppJTzbL
+x-ms-traffictypediagnostic: PU1APC01HT173:
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: l86ZNkVJpZFEF1+Pbi/I55psqb094yiVeFNCy9cEdInYRUtwPzgDNJWvmxYWj1KRLhSYd58Yo7A2zlDxiNi2VQIIHezFjF3H9/5cizWXNdmGXcGjgkXwzwtAhIbWACwg0qC72c5JbdYJET7+liKEUwJfUQM0fGusDkjX0mAvVvcRBz4XT5JMQC6ea8//ffxX
+x-microsoft-antispam-message-info: oHkLjS2vSBdOaV5EAWQol0De2Cgmo0CHW1mBfdesy3PKKC8FE0jp7ayfb++NYsbV/Pqc1hQNv1kh4mDn+YnH7e/dymdADiiL1l6t4cW7mJAgVM5yw4l37+lXvIEX7Z1iSPW4Rkr7guoxPditAmz5AkGwqHmqMJ7jwbsMXkbX1BAREpl/vk+gDAza4Juk4khk
 x-ms-exchange-transport-forked: True
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <BFEA7CD5ADF5FF408B707FA7A19602E3@KORP216.PROD.OUTLOOK.COM>
+Content-ID: <6682A45BBFE5BC41960215529C46F0C7@KORP216.PROD.OUTLOOK.COM>
 Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
 X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: f347ea83-6de9-4244-2ff2-08d799e44704
+X-MS-Exchange-CrossTenant-Network-Message-Id: 00efbd71-66ba-4d77-3955-08d799e456e2
 X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jan 2020 17:56:42.3532
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jan 2020 17:57:08.8632
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Internet
 X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT022
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT173
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Changes:
-	- Add Mika Westerberg's Reviewed-by: tags that he gave for 1, 2
-	- Change commit description slightly in 1
-	- Change commit description more substantially in 3, 4
-	- Fix indentation in 3, oops. I thought I ran checkpatch.pl on
-	  it, clearly I was asleep or missed that one
-	- Update 4 to remove usage of reset_resource() which Bjorn says
-	  he considers to be depricated.
+In extend_bridge_window() change "available" parameter name to
+"new_size". This makes more sense as this parameter represents the new
+size for the window.
 
-I have not heard back from Bjorn in a while from my latest replies, so I
-am moving ahead with PATCH v2. I have tried to act on his initial
-feedback the best I can.
+Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+---
+ drivers/pci/setup-bus.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Apply this series after series:
-"PCI: Fix failure to assign BARs with alignment >1M with Thunderbolt"
-
-Nicholas Johnson (4):
-  PCI: In extend_bridge_window() change available to new_size
-  PCI: Rename extend_bridge_window() to adjust_bridge_window()
-  PCI: Change extend_bridge_window() to set resource size directly
-  PCI: Allow extend_bridge_window() to shrink resource if necessary
-
- drivers/pci/setup-bus.c | 41 ++++++++++++++++++++---------------------
- 1 file changed, 20 insertions(+), 21 deletions(-)
-
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index 8b39b9ebb..ed5055ef7 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -1834,14 +1834,14 @@ void __init pci_assign_unassigned_resources(void)
+ 
+ static void extend_bridge_window(struct pci_dev *bridge, struct resource *res,
+ 				 struct list_head *add_list,
+-				 resource_size_t available)
++				 resource_size_t new_size)
+ {
+ 	struct pci_dev_resource *dev_res;
+ 
+ 	if (res->parent)
+ 		return;
+ 
+-	if (resource_size(res) >= available)
++	if (resource_size(res) >= new_size)
+ 		return;
+ 
+ 	dev_res = res_to_dev_res(add_list, res);
+@@ -1849,10 +1849,10 @@ static void extend_bridge_window(struct pci_dev *bridge, struct resource *res,
+ 		return;
+ 
+ 	/* Is there room to extend the window? */
+-	if (available - resource_size(res) <= dev_res->add_size)
++	if (new_size - resource_size(res) <= dev_res->add_size)
+ 		return;
+ 
+-	dev_res->add_size = available - resource_size(res);
++	dev_res->add_size = new_size - resource_size(res);
+ 	pci_dbg(bridge, "bridge window %pR extended by %pa\n", res,
+ 		&dev_res->add_size);
+ }
 -- 
 2.25.0
 
