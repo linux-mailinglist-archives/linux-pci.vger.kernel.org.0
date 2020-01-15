@@ -2,54 +2,71 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FE5213BACC
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2020 09:20:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 937B613BC02
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2020 10:08:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726418AbgAOIT7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Jan 2020 03:19:59 -0500
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:41000 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726088AbgAOIT7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Jan 2020 03:19:59 -0500
-Received: by mail-vs1-f65.google.com with SMTP id k188so9939404vsc.8
-        for <linux-pci@vger.kernel.org>; Wed, 15 Jan 2020 00:19:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=rdLvTh277ewc/86VATNeJrrz8QUvxsSSlpfp+H2YtXc=;
-        b=MviZp88rjf/mkIJhR6JHgg2gdkvkR+rhgAvqkOT5yk1BHaKawam3ca0HeJ39lJfaYt
-         x2jaszI9uvibCD5419Q/0vBhqxOwQqbyZF8uU7/aaT0eSc2pmYRpLMosXqLfW8/GKL2L
-         y3ErDyxzsm9KDe0QP8L7lcnU/Cj0ppWY00+cfZj24C/MZzO/efcnyMLhAD4mqzHRolHY
-         jF6LEOCamBIEkNRIpvJjsRCXYd2scbe/K1mVWvty1+3d1T534omNsXqK2KJeZU8iqLve
-         ddsC2br/GTwDOySKSDOnpD9iCI2n1kVMI5ZuU5aWayFofb4tuEfaqi1RzXnl+M5Esgsx
-         uxVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=rdLvTh277ewc/86VATNeJrrz8QUvxsSSlpfp+H2YtXc=;
-        b=BENSfQyo2o3UKslvWt4MNzcvDCt5O4Ga9ZPGHoc+6w217nvwLoV6Li3PTBqia18Mt4
-         AonmwIdH11I4FEeiiv0I9OlJnsmhRN//8nvTi5cGIq2FJe4CiS7iCuPEKhS1eZXw36jD
-         ZOvsRWD7IrvAUc7dCyTMbepATnqOhrhPCoxOYZeeVNn/1ISdJAxhxaWF9+MLDHrqAjEB
-         QNfN8U43665juzL94dPvQDMuqDEFXOi4ZkZ7cZYsOC1VI40qr4ykXv9UU0dLsXv6jBmG
-         XmB1F2AU9w0gM9mbKZ7b5z5YCHnNX47geU7TWgtYMVVvSol9JdLBzuTxboSEdZWG3loA
-         0CBw==
-X-Gm-Message-State: APjAAAUa2Xy+8CR6HR6Rw+ZUP0/76ECyN2Q+SeeQx/e7PjVWoPI1oKZ9
-        6pqUUdiQ6L2GWRwK3z1WIlEcLcf+E3ASGlHW9Mo=
-X-Google-Smtp-Source: APXvYqyOExqaAoWUBH72APaD4CS87aLC6wMiQ0znKOCdJmE+b5n1a0IWHT9Tzu75hVvao8RFvy5f1uNbJcLdkoDgRm4=
-X-Received: by 2002:a05:6102:219:: with SMTP id z25mr3988793vsp.79.1579076398274;
- Wed, 15 Jan 2020 00:19:58 -0800 (PST)
+        id S1729276AbgAOJIY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Jan 2020 04:08:24 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:9616 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729347AbgAOJIY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 15 Jan 2020 04:08:24 -0500
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 5B2EEA74A5278F501139;
+        Wed, 15 Jan 2020 17:08:19 +0800 (CST)
+Received: from localhost.localdomain (10.67.165.24) by
+ DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
+ 14.3.439.0; Wed, 15 Jan 2020 17:08:09 +0800
+From:   Yicong Yang <yangyicong@hisilicon.com>
+To:     <helgaas@kernel.org>, <linux-pci@vger.kernel.org>
+CC:     <f.fangjian@huawei.com>
+Subject: [PATCH 0/6] Improve link speed presentation process
+Date:   Wed, 15 Jan 2020 17:04:17 +0800
+Message-ID: <1579079063-5668-1-git-send-email-yangyicong@hisilicon.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
-Received: by 2002:ab0:7612:0:0:0:0:0 with HTTP; Wed, 15 Jan 2020 00:19:57
- -0800 (PST)
-From:   susan davld <susandavld366@gmail.com>
-Date:   Wed, 15 Jan 2020 08:19:57 +0000
-Message-ID: <CAC9YyZ=QpeEXZEBibAL13XG7uccsKd7pY3s9==LpYbhzSQuUNw@mail.gmail.com>
-Subject: hiiiiiiiii
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.67.165.24]
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-hiiiiiiii
+In this series:
+1. Add 32 GT/s decoding in some macros as a complementary
+2. Remove redundancy in speed presentation process and improve the codes.
+
+Currently We use switch-case statements to acquire the speed
+string according to the pci bus speed in current_link_speed_show()
+and pcie_get_speed_cap(). It leads to redundant and when new
+standard comes, we have to add cases in the related functions,
+which is easy to omit at somewhere.
+
+Abstract the judge statements out. Use macros and pci speed
+arrays instead. Then only the macros and arrays need to be
+extended when next generation comes.
+
+Link:
+https://lore.kernel.org/linux-pci/20200113211728.GA113776@google.com/
+https://lore.kernel.org/linux-pci/20200114224909.GA19633@google.com/
+
+
+Yicong Yang (6):
+  PCI: add 32 GT/s decoding in some macros
+  PCI: Make pci_bus_speed_strings[] public
+  PCI: Add comments for link speed info arrays
+  PCI: Improve and rename PCIE_SPEED2STR macro
+  PCI: Add PCIE_LNKCAP2_SLS2SPEED macro
+  PCI: Reduce redundancy in current_link_speed_show()
+
+ drivers/pci/pci-sysfs.c | 26 ++++----------------------
+ drivers/pci/pci.c       | 23 +++++++----------------
+ drivers/pci/pci.h       | 22 +++++++++++++++-------
+ drivers/pci/probe.c     | 37 +++++++++++++++++++++++++++++++++++++
+ drivers/pci/slot.c      | 39 +++------------------------------------
+ 5 files changed, 66 insertions(+), 81 deletions(-)
+
+--
+2.8.1
+
