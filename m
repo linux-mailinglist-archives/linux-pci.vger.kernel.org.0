@@ -2,194 +2,163 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BB7813CB31
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2020 18:43:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F196F13CB44
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2020 18:45:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729021AbgAORl2 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Wed, 15 Jan 2020 12:41:28 -0500
-Received: from mail-oln040092254098.outbound.protection.outlook.com ([40.92.254.98]:40992
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726587AbgAORl1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 15 Jan 2020 12:41:27 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nHMYlEisu5bObXCP7VJZRFWUvYq/pm3WZRP3vyBOhjmwXjLnswUgS9AI9nStUr8jbK9ANc9oa5ezlZavPvcF6caXMox3zpDdY9SxLS/xrNJRWdB5vPdbvn4NA1ecDNe1Zeu3R+B3iCyicZFQ2+Ii02ieA2kcrxX8aQ5PVqXE7yiAL09H1UhHefqApUYd0gttlvksZOInYoWaMjD911keDmxpyZVwzK4KwQCFWp13vIa00xFaQWO7YMv48/nO9slDF/6X2aJ1WEMQn/L59xnRuKXhcIwx98JlZeyAo8lQaij2GGwrqdIuKpmsgG2ITi7AMJK0CdO/sMe61+8WmVVHKA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=R8BEnF5eE7oIezSTRFxpC2oUgcQ+ql6JGr6nvCiXoIk=;
- b=S3qgy92r784YZ0Yh+6UHDRwH6uWdKAX+zpxliwnnyf8lx+hVzyeXKcnDFxne8DzLwvZdqFzZqs0YtgEayLvL8KpMnQMksPV7YPbt8PEZ5/y0b7Gq1LgJXjZHjLmoOrICSle+bN0svXQchE2NJetG2CinDxHUsPHakOx81tSV07DHDMdewHU82p+o+gtW8G05p0qFrBdBfKXs5clUJZtez5fGVKtdw25IURzo9GcCkXFTtZT8ayQBbumx7HsmHnx5EgNqoM7A/54j3OihCG0TU/UJnRnp1+CZC//eEJ09AJdjr3CMVRT954nCsOw0o+PsCqDCY5d9+8bhLW78DFnlGQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from SG2APC01FT003.eop-APC01.prod.protection.outlook.com
- (10.152.250.57) by SG2APC01HT089.eop-APC01.prod.protection.outlook.com
- (10.152.251.54) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.11; Wed, 15 Jan
- 2020 17:41:22 +0000
-Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.250.54) by
- SG2APC01FT003.mail.protection.outlook.com (10.152.250.130) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.19 via Frontend Transport; Wed, 15 Jan 2020 17:41:22 +0000
-Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- ([fe80::20ad:6646:5bcd:63c9]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- ([fe80::20ad:6646:5bcd:63c9%11]) with mapi id 15.20.2623.018; Wed, 15 Jan
- 2020 17:41:21 +0000
-Received: from nicholas-dell-linux (61.69.138.108) by MEAPR01CA0080.ausprd01.prod.outlook.com (2603:10c6:220:35::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.18 via Frontend Transport; Wed, 15 Jan 2020 17:41:19 +0000
-From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Logan Gunthorpe <logang@deltatee.com>
-Subject: Re: [PATCH v1 3/4] PCI: Change extend_bridge_window() to set resource
- size directly
-Thread-Topic: [PATCH v1 3/4] PCI: Change extend_bridge_window() to set
- resource size directly
-Thread-Index: AQHVxKijErSkuA6mHUWDAsVXSXsSf6feFN2AgA33yAA=
-Date:   Wed, 15 Jan 2020 17:41:21 +0000
-Message-ID: <PSXP216MB043820DCE0911B8DBFD29D5B80370@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
-References: <PSXP216MB04386BA48874B56BC5CB0292803C0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
- <20200106202301.GA137556@google.com>
-In-Reply-To: <20200106202301.GA137556@google.com>
-Accept-Language: en-AU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MEAPR01CA0080.ausprd01.prod.outlook.com
- (2603:10c6:220:35::20) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- (2603:1096:300:d::20)
-x-incomingtopheadermarker: OriginalChecksum:2BDB3E64EF504330BBCE5EEB8A9496782DE4955C06C60AD743AFC3FF53197E0C;UpperCasedChecksum:2D3C5F16C527382329DDCF7CE08FBF3451AD9756C2F7F6A536A040AFE0D2300F;SizeAsReceived:7950;Count:50
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [0vTLCpfi6ThKP/dKxfERdgIKXzMwZ9XV]
-x-microsoft-original-message-id: <20200115174114.GA4225@nicholas-dell-linux>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 50
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: 231c77c1-9ce8-4317-b6ae-08d799e221fb
-x-ms-traffictypediagnostic: SG2APC01HT089:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: t5nedS4Bkw5rJ7jukS2AGbqUcq7EeXv2uArxWWH2cdVmhQ/HCf1uZbI4DSH7Xd5jeiZGc4EV+KqjrnxMrGoWeXwQM+E7T0+fHpwoyIkRTnenY32UHuulHZbVY9zJTqaijzcxFjBaI7E4H7ZicTN5poPQ514GjUWS+2sGggDITsivZeIzxkccy/sDWwVsHv3l
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <82DAE899746B6C49A7D97B375F11A421@KORP216.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8BIT
+        id S1729012AbgAORpC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Jan 2020 12:45:02 -0500
+Received: from foss.arm.com ([217.140.110.172]:40618 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726574AbgAORpB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 15 Jan 2020 12:45:01 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DBAAA328;
+        Wed, 15 Jan 2020 09:45:00 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9E8643F6C4;
+        Wed, 15 Jan 2020 09:44:58 -0800 (PST)
+Subject: Re: [PATCH v4 11/13] iommu/arm-smmu-v3: Improve add_device() error
+ handling
+To:     Will Deacon <will@kernel.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
+        iommu@lists.linux-foundation.org, joro@8bytes.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        lorenzo.pieralisi@arm.com, guohanjun@huawei.com,
+        sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org,
+        bhelgaas@google.com, eric.auger@redhat.com,
+        jonathan.cameron@huawei.com, zhangfei.gao@linaro.org
+References: <20191219163033.2608177-1-jean-philippe@linaro.org>
+ <20191219163033.2608177-12-jean-philippe@linaro.org>
+ <20200114152538.GB2579@willie-the-truck>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <5287c59f-0331-4d2e-e8a0-292bf27683fb@arm.com>
+Date:   Wed, 15 Jan 2020 17:44:57 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 231c77c1-9ce8-4317-b6ae-08d799e221fb
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jan 2020 17:41:21.4514
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2APC01HT089
+In-Reply-To: <20200114152538.GB2579@willie-the-truck>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jan 06, 2020 at 02:23:01PM -0600, Bjorn Helgaas wrote:
-> Thanks a lot for splitting these up.  It makes these dramatically
-> easier to read.
+On 14/01/2020 3:25 pm, Will Deacon wrote:
+> On Thu, Dec 19, 2019 at 05:30:31PM +0100, Jean-Philippe Brucker wrote:
+>> Let add_device() clean up after itself. The iommu_bus_init() function
+>> does call remove_device() on error, but other sites (e.g. of_iommu) do
+>> not.
+>>
+>> Don't free level-2 stream tables because we'd have to track if we
+>> allocated each of them or if they are used by other endpoints. It's not
+>> worth the hassle since they are managed resources.
+>>
+>> Reviewed-by: Eric Auger <eric.auger@redhat.com>
+>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+>> ---
+>>   drivers/iommu/arm-smmu-v3.c | 28 +++++++++++++++++++++-------
+>>   1 file changed, 21 insertions(+), 7 deletions(-)
 > 
-> On Mon, Jan 06, 2020 at 03:47:46PM +0000, Nicholas Johnson wrote:
-> > Change extend_bridge_window() to set resource size directly instead of
-> > using additional resource lists.
-> > 
-> > Because additional resource lists are optional resources, any algorithm
-> > that requires guaranteed allocation that uses them cannot be guaranteed
-> > to work.
+> I think this is alright, with one caveat relating to:
 > 
-> There is never a guarantee that PCI resource assignment will work.
-> It's always possible that we don't have enough resources to allow us
-> to enable a device.  So I'm not sure what this is telling me, and it
-> doesn't seem like a justification for setting the resource size
-> directly here.
 > 
-> Prior to this patch, I think all the assignment and changes to
-> dev->resource[] were in __assign_resources_sorted().  Maybe it's safe
-> to do some here and some in __assign_resources_sorted(), but I don't
-> understand it well enough to be confident.
+> 	/*
+> 	 * We _can_ actually withstand dodgy bus code re-calling add_device()
+> 	 * without an intervening remove_device()/of_xlate() sequence, but
+> 	 * we're not going to do so quietly...
+> 	 */
+> 	if (WARN_ON_ONCE(fwspec->iommu_priv)) {
+> 		master = fwspec->iommu_priv;
+> 		smmu = master->smmu;
+> 	} ...
 > 
-> > Remove the resource from add_list, as a zero-sized additional resource
-> > is redundant.
-> > 
-> > Update comment in pci_bus_distribute_available_resources() to reflect
-> > the above changes.
-> > 
-> > Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-> > ---
-> >  drivers/pci/setup-bus.c | 25 ++++++++-----------------
-> >  1 file changed, 8 insertions(+), 17 deletions(-)
-> > 
-> > diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-> > index de43815be..0c51f4937 100644
-> > --- a/drivers/pci/setup-bus.c
-> > +++ b/drivers/pci/setup-bus.c
-> > @@ -1836,7 +1836,7 @@ static void adjust_bridge_window(struct pci_dev *bridge, struct resource *res,
-> >  				 struct list_head *add_list,
-> >  				 resource_size_t new_size)
-> >  {
-> > -	struct pci_dev_resource *dev_res;
-> > +	resource_size_t add_size;
-> >  
-> >  	if (res->parent)
-> >  		return;
-> > @@ -1844,17 +1844,10 @@ static void adjust_bridge_window(struct pci_dev *bridge, struct resource *res,
-> >  	if (resource_size(res) >= new_size)
-> >  		return;
-> >  
-> > -	dev_res = res_to_dev_res(add_list, res);
-> > -	if (!dev_res)
-> > -		return;
-> > -
-> > -	/* Is there room to extend the window? */
-> > -	if (new_size - resource_size(res) <= dev_res->add_size)
-> > -		return;
-> > -
-> > -	dev_res->add_size = new_size - resource_size(res);
-> > -	pci_dbg(bridge, "bridge window %pR extended by %pa\n", res,
-> > -		&dev_res->add_size);
-> > +	add_size = new_size - resource_size(res);
-> > +	pci_dbg(bridge, "bridge window %pR extended by %pa\n", res, &add_size);
-> > +	res->end = res->start + new_size - 1;
 > 
-> How do we know it's safe to extend this, i.e., how do we know there's
-> nothing immediately after res?
-Sorry, I do not remember answering this one before, must have missed it.
+> which may be on shakey ground if the subsequent add_device() call can fail
+> and free stuff that the first one allocated. At least, I don't know what
+> we're trying to support with this, so it's hard to tell whether or not it
+> still works as intended after your change.
 
-Because we return if assigned (res->parent not NULL), this resource has 
-not been assigned. Hence, the desired alignment is .start and the 
-desired size is set by setting the .end = .start + size - 1. The address 
-is not yet absolute. If we make it bigger then the kernel will take that 
-into account when handing out addresses.
+Hmm, if add_device() ever did fail it should really be expected to 
+return the device back to an un-added state, so I don't believe that 
+particular concern should be significant regardless...
+> How is this supposed to work? I don't recall ever seeing that WARN fire,
+> so can we just remove this and bail instead? Robin?
 
-Also, since this resource is not yet assigned, neither are the other 
-ones around it. pci_bus_distribute_available_resources() is called on 
-the native hotplug interrupt when a device (such as Thunderbolt 3) is 
-added.
+However, I am inclined to agree that it's probably better to make it all 
+moot. Although it indeed should never happen, ISTR at the time there 
+appeared to be some possible path somewhere by which the notifier may 
+have been triggered a second time - possibly if some other device failed 
+or deferred after the first call, triggering the bus code to start all 
+over again. Since then, though, we've made a lot of changes to how 
+->add_device usually gets called, plus stuff like the 
+iommu_device_link() call has snuck in that might not stand up to a 
+replay anyway, so I don't see any problem with making this condition a 
+hard failure. It's certainly much easier to reason about.
 
+In fact, there will already be a WARN from iommu_probe_device() now 
+(because the first call will have set the group), so I don't think we 
+need any additional diagnostic in the driver any more.
+
+Robin.
+
+> Something like below before your changes...
 > 
-> > +	remove_from_list(add_list, res);
-> >  }
-> >  
-> >  static void pci_bus_distribute_available_resources(struct pci_bus *bus,
-> > @@ -1889,11 +1882,9 @@ static void pci_bus_distribute_available_resources(struct pci_bus *bus,
-> >  		mmio_pref.start = min(ALIGN(mmio_pref.start, align),
-> >  			mmio_pref.end + 1);
-> >  
-> > -	/*
-> > -	 * Update additional resource list (add_list) to fill all the
-> > -	 * extra resource space available for this port except the space
-> > -	 * calculated in __pci_bus_size_bridges() which covers all the
-> > -	 * devices currently connected to the port and below.
-> > +        /*
-> > +	 * Now that we have adjusted for alignment, update the bridge window
-> > +	 * resources to fill as much remaining resource space as possible.
-> >  	 */
-> >  	adjust_bridge_window(bridge, io_res, add_list, resource_size(&io));
-> >  	adjust_bridge_window(bridge, mmio_res, add_list, resource_size(&mmio));
-> > -- 
-> > 2.24.1
-> > 
+> Will
+> 
+> --->8
+> 
+> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+> index effe72eb89e7..6ae3df2f3495 100644
+> --- a/drivers/iommu/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm-smmu-v3.c
+> @@ -2534,28 +2534,23 @@ static int arm_smmu_add_device(struct device *dev)
+>   
+>   	if (!fwspec || fwspec->ops != &arm_smmu_ops)
+>   		return -ENODEV;
+> -	/*
+> -	 * We _can_ actually withstand dodgy bus code re-calling add_device()
+> -	 * without an intervening remove_device()/of_xlate() sequence, but
+> -	 * we're not going to do so quietly...
+> -	 */
+> -	if (WARN_ON_ONCE(fwspec->iommu_priv)) {
+> -		master = fwspec->iommu_priv;
+> -		smmu = master->smmu;
+> -	} else {
+> -		smmu = arm_smmu_get_by_fwnode(fwspec->iommu_fwnode);
+> -		if (!smmu)
+> -			return -ENODEV;
+> -		master = kzalloc(sizeof(*master), GFP_KERNEL);
+> -		if (!master)
+> -			return -ENOMEM;
+>   
+> -		master->dev = dev;
+> -		master->smmu = smmu;
+> -		master->sids = fwspec->ids;
+> -		master->num_sids = fwspec->num_ids;
+> -		fwspec->iommu_priv = master;
+> -	}
+> +	if (WARN_ON_ONCE(fwspec->iommu_priv))
+> +		return -EBUSY;
+> +
+> +	smmu = arm_smmu_get_by_fwnode(fwspec->iommu_fwnode);
+> +	if (!smmu)
+> +		return -ENODEV;
+> +
+> +	master = kzalloc(sizeof(*master), GFP_KERNEL);
+> +	if (!master)
+> +		return -ENOMEM;
+> +
+> +	master->dev = dev;
+> +	master->smmu = smmu;
+> +	master->sids = fwspec->ids;
+> +	master->num_sids = fwspec->num_ids;
+> +	fwspec->iommu_priv = master;
+>   
+>   	/* Check the SIDs are in range of the SMMU and our stream table */
+>   	for (i = 0; i < master->num_sids; i++) {
+> 
