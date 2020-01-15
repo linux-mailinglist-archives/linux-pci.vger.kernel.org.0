@@ -2,232 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1991013B820
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2020 04:27:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 292A413B86E
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2020 04:58:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728885AbgAOD0H (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Jan 2020 22:26:07 -0500
-Received: from mail-eopbgr140079.outbound.protection.outlook.com ([40.107.14.79]:47966
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728884AbgAOD0G (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 14 Jan 2020 22:26:06 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lRRmdUavJFHbgd6tiAqjNt8jSFENExQRT74JRoUQgkrr89wPhTg+j/3Ch6s1sku8OdQfjBjyLVPh7IlEhzs/XpI7Y3QPyVFcmTcSqP4A795xkY6LwnC0O+6kMhwWdcLKAArtDT0i8oWpYx5JaIelH4plJJZnTcT4Zx6lUK50lNBzkOAxevUejXW7eW9bqqIODyRAGBauaacT5BfxHEWKWKV6zaGFCqNhZHwGyNNgMOcyKtCMX9YTBkTRS9YupK1P8REKi6twJP1X/8kpmt8JltmPEHBAKqMFgLApPeRGKlhNeKjZGz5jbIm1K8god9/VZBN2bH2XKhj9Cy5nnVmBMA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PbLpjnB5Zy8PvarWrkg9NGxYPqSqJG3p1GndrEbZhps=;
- b=SbrukHZlCwT7pNP/9wnoDDX1MQH60//inACl06YN1dpEqMlc9KcGPIxMBLpHX5SJaC8v6ry/3g28mysOhLPW6bOKtK9q29Pb+/9UlWYA8id92fEWo+cuVHtge5arKe0eqv9du++wvyu4s3wv7vLdq65rzpgzJAmYcLuJdzHEZQOnR5nm3eR8NeBJvmACF0NINq57oYDLZYqHetNTD4tTPW8bSbN5/lQL19KDOmp/CGw71yyV/Da0TbLBbjPv7bMMMcKlGqoJg6hUcnNfnsXjph/bNBaSOKjb+EUlz1mxgjKizTCZFnkmynbs11ES/Qp3dXIxsl/MsOyUC1p4tpWt6w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PbLpjnB5Zy8PvarWrkg9NGxYPqSqJG3p1GndrEbZhps=;
- b=C1eCfBeCsCf0jq8lUVuHe6O4XHbi/p4SbeSQRy3j2I1Vj7MPiU1nlKLQCjPCliFbFhxJu+w317+RzoW8nXzq8mrQQNfsMJMOzeMZ4u/XLwwfDMYslQTa4EWI6X4LgtA/AX8kNevmXA2D0xU0oYaeY2d2J/OVnQUepNhQ/yApoH8=
-Received: from AM0PR0402MB3570.eurprd04.prod.outlook.com (52.133.46.11) by
- AM0PR0402MB3521.eurprd04.prod.outlook.com (52.133.47.29) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.18; Wed, 15 Jan 2020 03:25:59 +0000
-Received: from AM0PR0402MB3570.eurprd04.prod.outlook.com
- ([fe80::c088:6e67:c34e:7ead]) by AM0PR0402MB3570.eurprd04.prod.outlook.com
- ([fe80::c088:6e67:c34e:7ead%7]) with mapi id 15.20.2623.017; Wed, 15 Jan 2020
- 03:25:59 +0000
-From:   Richard Zhu <hongxing.zhu@nxp.com>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [EXT] [PATCH] PCI: imx6: Add L1SS support for i.MX8MQ
-Thread-Topic: [EXT] [PATCH] PCI: imx6: Add L1SS support for i.MX8MQ
-Thread-Index: AQHVyvxyRed04cWpekCR22lPnXmF6afrD+Ag
-Date:   Wed, 15 Jan 2020 03:25:58 +0000
-Message-ID: <AM0PR0402MB35708B48AF371E81BFCCED158C370@AM0PR0402MB3570.eurprd04.prod.outlook.com>
-References: <20200114170231.16421-1-andrew.smirnov@gmail.com>
-In-Reply-To: <20200114170231.16421-1-andrew.smirnov@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=hongxing.zhu@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 9538c9fb-2fba-434e-d104-08d7996aa3f3
-x-ms-traffictypediagnostic: AM0PR0402MB3521:|AM0PR0402MB3521:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR0402MB3521633D1AA571233CA926238C370@AM0PR0402MB3521.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2803;
-x-forefront-prvs: 02830F0362
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(346002)(376002)(39860400002)(396003)(199004)(189003)(26005)(66946007)(6506007)(53546011)(186003)(7696005)(86362001)(110136005)(316002)(478600001)(54906003)(71200400001)(4326008)(2906002)(33656002)(55016002)(66476007)(9686003)(64756008)(66446008)(8676002)(66556008)(8936002)(81156014)(81166006)(52536014)(76116006)(5660300002)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR0402MB3521;H:AM0PR0402MB3570.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 29EnGZwRr6tqvqsjvN+UWbdJfg0a1ksDq90Dwn/i8bo8CTvY7LZKb07QnJxcp1oXrLIzpFV5HkBbEmRduA7go1GbH4ggl+KRx9+JXS7eLFp6WT9B1qf0gK8r+SzniHMix+KPHLBZORft5TW2DGOY9GNo9VpM9nmzXweWY68niA80rRE9y1ciqvhPB4hYLYEBXch3BmSGpVYIeeK5hyTbwmb7r4z+FbmpA02v3k7+eCLNCVMXvOb7SJM3kMMEQLaHKRW3ayW0C4wz6DnkKGhAGF08jNCfCu0xIG0Tjr2CgBT40IVP3c1afcHHbfZ5UEFmvksrRjLftm5e0Lqbo9xKOv3kpJmtSyF4/16Aye3GVmTUjmeEuk8QIn64CFuqgV1omSt8ef90uuDALuQ12cdHx314dTywGXal2S05wSekCZkWIX7B5PNVB7MSYjnLWM6zMf0xhUq1FbSopHBYlk56q/KUTyyjKwcl5kULI+GYS8s=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        id S1729113AbgAOD5D (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Jan 2020 22:57:03 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:43354 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729100AbgAOD5C (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 14 Jan 2020 22:57:02 -0500
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1irZna-0001ij-30; Tue, 14 Jan 2020 20:56:59 -0700
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1irZnW-0000gQ-KY; Tue, 14 Jan 2020 20:56:50 -0700
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Kelvin.Cao@microchip.com, Eric Pilmore <epilmore@gigaio.com>,
+        Doug Meyer <dmeyer@gigaio.com>,
+        Logan Gunthorpe <logang@deltatee.com>
+Date:   Tue, 14 Jan 2020 20:56:41 -0700
+Message-Id: <20200115035648.2578-1-logang@deltatee.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9538c9fb-2fba-434e-d104-08d7996aa3f3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jan 2020 03:25:59.0473
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: zpZ3e3Rj0vaWxqo85FoFHs0P029DCubuV9Nle8zxoqs5Vv+Bd/XGky+Cp49bPCIUX43FrDcVrxaUZnoBTlo7EQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR0402MB3521
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, Kelvin.Cao@microchip.com, epilmore@gigaio.com, dmeyer@gigaio.com, logang@deltatee.com
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.7 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        GREYLIST_ISWHITE,MYRULES_NO_TEXT autolearn=ham autolearn_force=no
+        version=3.4.2
+Subject: [PATCH v2 0/7]  Switchtec Gen4 Support
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEFuZHJleSBTbWlybm92IDxh
-bmRyZXcuc21pcm5vdkBnbWFpbC5jb20+DQo+IFNlbnQ6IDIwMjDE6jHUwjE1yNUgMTowMw0KPiBU
-bzogbGludXgtcGNpQHZnZXIua2VybmVsLm9yZw0KPiBDYzogQW5kcmV5IFNtaXJub3YgPGFuZHJl
-dy5zbWlybm92QGdtYWlsLmNvbT47IExvcmVuem8gUGllcmFsaXNpDQo+IDxsb3JlbnpvLnBpZXJh
-bGlzaUBhcm0uY29tPjsgQmpvcm4gSGVsZ2FhcyA8YmhlbGdhYXNAZ29vZ2xlLmNvbT47IENocmlz
-DQo+IEhlYWx5IDxjcGhlYWx5QGdtYWlsLmNvbT47IEx1Y2FzIFN0YWNoIDxsLnN0YWNoQHBlbmd1
-dHJvbml4LmRlPjsgUmljaGFyZA0KPiBaaHUgPGhvbmd4aW5nLnpodUBueHAuY29tPjsgZGwtbGlu
-dXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT47DQo+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5m
-cmFkZWFkLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBbRVhU
-XSBbUEFUQ0hdIFBDSTogaW14NjogQWRkIEwxU1Mgc3VwcG9ydCBmb3IgaS5NWDhNUQ0KPiANCj4g
-Q2F1dGlvbjogRVhUIEVtYWlsDQo+IA0KPiBBZGQgY29kZSB0byBjb25maWd1cmUgUENJIElQIGJs
-b2NrIHRvIHV0aWxpemUgc3VwcG9ydGVkIEFTUE0gZmVhdHVyZXMuDQo+IA0KPiBTaWduZWQtb2Zm
-LWJ5OiBBbmRyZXkgU21pcm5vdiA8YW5kcmV3LnNtaXJub3ZAZ21haWwuY29tPg0KW1JpY2hhcmQg
-Wmh1XSAgSEkgQW5kcmV5Og0KVGhpcyBwYXRjaCBkb2VzIHRoZSByZWdtYXAgdG8gdGhlIHNyYyBy
-ZWdpb24sIHJpZ2h0Pw0KSG93IGFib3V0IHRvIGFkZCBhbm90aGVyIHJlc2V0IHRvIG1hbmlwdWxh
-dGUgdGhlICpfT1ZFUlJJREUgYml0Lg0KSnVzdCBsaWtlIHRoZSBmb2xsb3dpbmcgYml0cy4NCiAg
-ICAgICAgICAgICAgICAgICAgICAgIHJlc2V0cyA9IDwmc3JjIElNWDhNUV9SRVNFVF9QQ0lFUEhZ
-PiwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwmc3JjIElNWDhNUV9SRVNFVF9Q
-Q0lFX0NUUkxfQVBQU19FTj4sDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8JnNy
-YyBJTVg4TVFfUkVTRVRfUENJRV9DVFJMX0FQUFNfVFVSTk9GRj47DQogICAgICAgICAgICAgICAg
-ICAgICAgICByZXNldC1uYW1lcyA9ICJwY2llcGh5IiwgImFwcHMiLCAidHVybm9mZiI7DQoNCkJl
-c3QgUmVnYXJkcw0KUmljaGFyZCBaaHUNCg0KPiBDYzogTG9yZW56byBQaWVyYWxpc2kgPGxvcmVu
-em8ucGllcmFsaXNpQGFybS5jb20+DQo+IENjOiBCam9ybiBIZWxnYWFzIDxiaGVsZ2Fhc0Bnb29n
-bGUuY29tPg0KPiBDYzogQ2hyaXMgSGVhbHkgPGNwaGVhbHlAZ21haWwuY29tPg0KPiBDYzogTHVj
-YXMgU3RhY2ggPGwuc3RhY2hAcGVuZ3V0cm9uaXguZGU+DQo+IENjOiBSaWNoYXJkIFpodSA8aG9u
-Z3hpbmcuemh1QG54cC5jb20+DQo+IENjOiBsaW51eC1pbXhAbnhwLmNvbQ0KPiBDYzogbGludXgt
-YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+IENjOiBsaW51eC1rZXJuZWxAdmdlci5r
-ZXJuZWwub3JnDQo+IENjOiBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnDQo+IC0tLQ0KPiAgZHJp
-dmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpLWlteDYuYyB8IDcyICsrKysrKysrKysrKysrKysr
-KysrKystLS0tLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDYwIGluc2VydGlvbnMoKyksIDEyIGRlbGV0
-aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3Bj
-aS1pbXg2LmMNCj4gYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktaW14Ni5jDQo+IGlu
-ZGV4IGFjZmJkMzQwMzJhOC4uM2NjOTRhYjdkMjJiIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3Bj
-aS9jb250cm9sbGVyL2R3Yy9wY2ktaW14Ni5jDQo+ICsrKyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xs
-ZXIvZHdjL3BjaS1pbXg2LmMNCj4gQEAgLTQwLDYgKzQwLDkgQEANCj4gICNkZWZpbmUgSU1YOE1R
-X0dQUjEyX1BDSUUyX0NUUkxfREVWSUNFX1RZUEUgICAgR0VOTUFTSygxMSwgOCkNCj4gICNkZWZp
-bmUgSU1YOE1RX1BDSUUyX0JBU0VfQUREUiAgICAgICAgICAgICAgICAgMHgzM2MwMDAwMA0KPiAN
-Cj4gKyNkZWZpbmUgSU1YOE1RX1BDSUVfTElOS19DQVBfTDFFTF82NFVTICAgICAgICAgKDB4NiA8
-PCAxNSkNCj4gKyNkZWZpbmUgSU1YOE1RX1BDSUVfQ1RSTF9BUFBTX0NMS19SRVEgICAgICAgICAg
-QklUKDQpDQo+ICsNCj4gICNkZWZpbmUgdG9faW14Nl9wY2llKHgpICAgICAgICBkZXZfZ2V0X2Ry
-dmRhdGEoKHgpLT5kZXYpDQo+IA0KPiAgZW51bSBpbXg2X3BjaWVfdmFyaWFudHMgew0KPiBAQCAt
-NjQsMTIgKzY3LDE0IEBAIHN0cnVjdCBpbXg2X3BjaWUgew0KPiAgICAgICAgIHN0cnVjdCBkd19w
-Y2llICAgICAgICAgICpwY2k7DQo+ICAgICAgICAgaW50ICAgICAgICAgICAgICAgICAgICAgcmVz
-ZXRfZ3BpbzsNCj4gICAgICAgICBib29sICAgICAgICAgICAgICAgICAgICBncGlvX2FjdGl2ZV9o
-aWdoOw0KPiArICAgICAgIGJvb2wgICAgICAgICAgICAgICAgICAgIHN1cHBvcnRzX2Nsa3JlcTsN
-Cj4gICAgICAgICBzdHJ1Y3QgY2xrICAgICAgICAgICAgICAqcGNpZV9idXM7DQo+ICAgICAgICAg
-c3RydWN0IGNsayAgICAgICAgICAgICAgKnBjaWVfcGh5Ow0KPiAgICAgICAgIHN0cnVjdCBjbGsg
-ICAgICAgICAgICAgICpwY2llX2luYm91bmRfYXhpOw0KPiAgICAgICAgIHN0cnVjdCBjbGsgICAg
-ICAgICAgICAgICpwY2llOw0KPiAgICAgICAgIHN0cnVjdCBjbGsgICAgICAgICAgICAgICpwY2ll
-X2F1eDsNCj4gICAgICAgICBzdHJ1Y3QgcmVnbWFwICAgICAgICAgICAqaW9tdXhjX2dwcjsNCj4g
-KyAgICAgICBzdHJ1Y3QgcmVnbWFwICAgICAgICAgICAqc3JjOw0KPiAgICAgICAgIHUzMiAgICAg
-ICAgICAgICAgICAgICAgIGNvbnRyb2xsZXJfaWQ7DQo+ICAgICAgICAgc3RydWN0IHJlc2V0X2Nv
-bnRyb2wgICAgKnBjaWVwaHlfcmVzZXQ7DQo+ICAgICAgICAgc3RydWN0IHJlc2V0X2NvbnRyb2wg
-ICAgKmFwcHNfcmVzZXQ7DQo+IEBAIC00MjEsMTEgKzQyNiwxNyBAQCBzdGF0aWMgdW5zaWduZWQg
-aW50IGlteDZfcGNpZV9ncnBfb2Zmc2V0KGNvbnN0DQo+IHN0cnVjdCBpbXg2X3BjaWUgKmlteDZf
-cGNpZSkNCj4gICAgICAgICByZXR1cm4gaW14Nl9wY2llLT5jb250cm9sbGVyX2lkID09IDEgPyBJ
-T01VWENfR1BSMTYgOg0KPiBJT01VWENfR1BSMTQ7ICB9DQo+IA0KPiArc3RhdGljIHVuc2lnbmVk
-IGludA0KPiAraW14Nl9wY2llX3BjaXBoeV9yY3Jfb2Zmc2V0KGNvbnN0IHN0cnVjdCBpbXg2X3Bj
-aWUgKmlteDZfcGNpZSkgew0KPiArICAgICAgIFdBUk5fT04oaW14Nl9wY2llLT5kcnZkYXRhLT52
-YXJpYW50ICE9IElNWDhNUSk7DQo+ICsgICAgICAgcmV0dXJuIGlteDZfcGNpZS0+Y29udHJvbGxl
-cl9pZCA9PSAxID8gMHg0OCA6IDB4MkM7IH0NCj4gKw0KPiAgc3RhdGljIGludCBpbXg2X3BjaWVf
-ZW5hYmxlX3JlZl9jbGsoc3RydWN0IGlteDZfcGNpZSAqaW14Nl9wY2llKSAgew0KPiAgICAgICAg
-IHN0cnVjdCBkd19wY2llICpwY2kgPSBpbXg2X3BjaWUtPnBjaTsNCj4gICAgICAgICBzdHJ1Y3Qg
-ZGV2aWNlICpkZXYgPSBwY2ktPmRldjsNCj4gLSAgICAgICB1bnNpZ25lZCBpbnQgb2Zmc2V0Ow0K
-PiAgICAgICAgIGludCByZXQgPSAwOw0KPiANCj4gICAgICAgICBzd2l0Y2ggKGlteDZfcGNpZS0+
-ZHJ2ZGF0YS0+dmFyaWFudCkgeyBAQCAtNDYzLDE3ICs0NzQsMTkgQEANCj4gc3RhdGljIGludCBp
-bXg2X3BjaWVfZW5hYmxlX3JlZl9jbGsoc3RydWN0IGlteDZfcGNpZSAqaW14Nl9wY2llKQ0KPiAg
-ICAgICAgICAgICAgICAgICAgICAgICBicmVhazsNCj4gICAgICAgICAgICAgICAgIH0NCj4gDQo+
-IC0gICAgICAgICAgICAgICBvZmZzZXQgPSBpbXg2X3BjaWVfZ3JwX29mZnNldChpbXg2X3BjaWUp
-Ow0KPiAtICAgICAgICAgICAgICAgLyoNCj4gLSAgICAgICAgICAgICAgICAqIFNldCB0aGUgb3Zl
-ciByaWRlIGxvdyBhbmQgZW5hYmxlZA0KPiAtICAgICAgICAgICAgICAgICogbWFrZSBzdXJlIHRo
-YXQgUkVGX0NMSyBpcyB0dXJuZWQgb24uDQo+IC0gICAgICAgICAgICAgICAgKi8NCj4gLSAgICAg
-ICAgICAgICAgIHJlZ21hcF91cGRhdGVfYml0cyhpbXg2X3BjaWUtPmlvbXV4Y19ncHIsIG9mZnNl
-dCwNCj4gLQ0KPiBJTVg4TVFfR1BSX1BDSUVfQ0xLX1JFUV9PVkVSUklERSwNCj4gLSAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAwKTsNCj4gLSAgICAgICAgICAgICAgIHJlZ21hcF91
-cGRhdGVfYml0cyhpbXg2X3BjaWUtPmlvbXV4Y19ncHIsIG9mZnNldCwNCj4gLQ0KPiBJTVg4TVFf
-R1BSX1BDSUVfQ0xLX1JFUV9PVkVSUklERV9FTiwNCj4gLQ0KPiBJTVg4TVFfR1BSX1BDSUVfQ0xL
-X1JFUV9PVkVSUklERV9FTik7DQo+ICsgICAgICAgICAgICAgICBpZiAoIWlteDZfcGNpZS0+c3Vw
-cG9ydHNfY2xrcmVxKSB7DQo+ICsgICAgICAgICAgICAgICAgICAgICAgIHVuc2lnbmVkIGludCBv
-ZmZzZXQgPQ0KPiBpbXg2X3BjaWVfZ3JwX29mZnNldChpbXg2X3BjaWUpOw0KPiArICAgICAgICAg
-ICAgICAgICAgICAgICAvKg0KPiArICAgICAgICAgICAgICAgICAgICAgICAgKiBTZXQgdGhlIG92
-ZXIgcmlkZSBsb3cgYW5kIGVuYWJsZWQNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICogbWFr
-ZSBzdXJlIHRoYXQgUkVGX0NMSyBpcyB0dXJuZWQgb24uDQo+ICsgICAgICAgICAgICAgICAgICAg
-ICAgICAqLw0KPiArICAgICAgICAgICAgICAgICAgICAgICByZWdtYXBfdXBkYXRlX2JpdHMoaW14
-Nl9wY2llLT5pb211eGNfZ3ByLA0KPiBvZmZzZXQsDQo+ICsNCj4gSU1YOE1RX0dQUl9QQ0lFX0NM
-S19SRVFfT1ZFUlJJREUsDQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAwKTsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgcmVnbWFwX3VwZGF0ZV9iaXRzKGlt
-eDZfcGNpZS0+aW9tdXhjX2dwciwNCj4gb2Zmc2V0LA0KPiArDQo+IElNWDhNUV9HUFJfUENJRV9D
-TEtfUkVRX09WRVJSSURFX0VOLA0KPiArDQo+IElNWDhNUV9HUFJfUENJRV9DTEtfUkVRX09WRVJS
-SURFX0VOKTsNCj4gKyAgICAgICAgICAgICAgIH0NCj4gICAgICAgICAgICAgICAgIGJyZWFrOw0K
-PiAgICAgICAgIH0NCj4gDQo+IEBAIC01NDcsNiArNTYwLDI3IEBAIHN0YXRpYyB2b2lkIGlteDZf
-cGNpZV9kZWFzc2VydF9jb3JlX3Jlc2V0KHN0cnVjdA0KPiBpbXg2X3BjaWUgKmlteDZfcGNpZSkN
-Cj4gICAgICAgICBzd2l0Y2ggKGlteDZfcGNpZS0+ZHJ2ZGF0YS0+dmFyaWFudCkgew0KPiAgICAg
-ICAgIGNhc2UgSU1YOE1ROg0KPiAgICAgICAgICAgICAgICAgcmVzZXRfY29udHJvbF9kZWFzc2Vy
-dChpbXg2X3BjaWUtPnBjaWVwaHlfcmVzZXQpOw0KPiArICAgICAgICAgICAgICAgaWYgKGlteDZf
-cGNpZS0+c3VwcG9ydHNfY2xrcmVxKSB7DQo+ICsgICAgICAgICAgICAgICAgICAgICAgIHUzMiBs
-Y3I7DQo+ICsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgcmVnbWFwX3VwZGF0ZV9iaXRzKGlt
-eDZfcGNpZS0+c3JjLA0KPiArDQo+IGlteDZfcGNpZV9wY2lwaHlfcmNyX29mZnNldChpbXg2X3Bj
-aWUpLA0KPiArDQo+IElNWDhNUV9QQ0lFX0NUUkxfQVBQU19DTEtfUkVRLA0KPiArDQo+IElNWDhN
-UV9QQ0lFX0NUUkxfQVBQU19DTEtfUkVRKTsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgLyoN
-Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICogQ29uZmlndXJlIHRoZSBMMSBsYXRlbmN5IG9m
-IHJjIHRvIGxlc3MgdGhhbg0KPiArICAgICAgICAgICAgICAgICAgICAgICAgKiA2NHVzIE90aGVy
-d2lzZSwgdGhlIEwxL0wxU1VCIHdvdWxkbid0IGJlDQo+ICsgICAgICAgICAgICAgICAgICAgICAg
-ICAqIGVuYWJsZSBieSBBU1BNLg0KPiArICAgICAgICAgICAgICAgICAgICAgICAgKi8NCj4gKyAg
-ICAgICAgICAgICAgICAgICAgICAgZHdfcGNpZV9kYmlfcm9fd3JfZW4ocGNpKTsNCj4gKw0KPiAr
-ICAgICAgICAgICAgICAgICAgICAgICBsY3IgID0gZHdfcGNpZV9yZWFkbF9kYmkyKHBjaSwgUENJ
-RV9SQ19MQ1IpOw0KPiArICAgICAgICAgICAgICAgICAgICAgICBsY3IgJj0gflBDSV9FWFBfTE5L
-Q0FQX0wxRUw7DQo+ICsgICAgICAgICAgICAgICAgICAgICAgIGxjciB8PSBJTVg4TVFfUENJRV9M
-SU5LX0NBUF9MMUVMXzY0VVM7DQo+ICsgICAgICAgICAgICAgICAgICAgICAgIGR3X3BjaWVfd3Jp
-dGVsX2RiaTIocGNpLCBQQ0lFX1JDX0xDUiwgbGNyKTsNCj4gKw0KPiArICAgICAgICAgICAgICAg
-ICAgICAgICBkd19wY2llX2RiaV9yb193cl9kaXMocGNpKTsNCj4gKyAgICAgICAgICAgICAgIH0N
-Cj4gICAgICAgICAgICAgICAgIGJyZWFrOw0KPiAgICAgICAgIGNhc2UgSU1YN0Q6DQo+ICAgICAg
-ICAgICAgICAgICByZXNldF9jb250cm9sX2RlYXNzZXJ0KGlteDZfcGNpZS0+cGNpZXBoeV9yZXNl
-dCk7DQo+IEBAIC0xMDU0LDYgKzEwODgsMTEgQEAgc3RhdGljIGludCBpbXg2X3BjaWVfcHJvYmUo
-c3RydWN0IHBsYXRmb3JtX2RldmljZQ0KPiAqcGRldikNCj4gICAgICAgICBwY2ktPmRiaV9iYXNl
-ID0gZGV2bV9pb3JlbWFwX3Jlc291cmNlKGRldiwgZGJpX2Jhc2UpOw0KPiAgICAgICAgIGlmIChJ
-U19FUlIocGNpLT5kYmlfYmFzZSkpDQo+ICAgICAgICAgICAgICAgICByZXR1cm4gUFRSX0VSUihw
-Y2ktPmRiaV9iYXNlKTsNCj4gKyAgICAgICAvKg0KPiArICAgICAgICAqIENvbmZpZ3VyZSBkYmlf
-YmFzZTIgdG8gYWNjZXNzIERCSSBzcGFjZSB3aXRoIENTMg0KPiArICAgICAgICAqIGFzc2VydGVk
-DQo+ICsgICAgICAgICovDQo+ICsgICAgICAgcGNpLT5kYmlfYmFzZTIgPSBwY2ktPmRiaV9iYXNl
-ICsgU1pfMU07DQo+IA0KPiAgICAgICAgIC8qIEZldGNoIEdQSU9zICovDQo+ICAgICAgICAgaW14
-Nl9wY2llLT5yZXNldF9ncGlvID0gb2ZfZ2V0X25hbWVkX2dwaW8obm9kZSwgInJlc2V0LWdwaW8i
-LCAwKTsNCj4gQEAgLTExMDcsNiArMTE0NiwxMyBAQCBzdGF0aWMgaW50IGlteDZfcGNpZV9wcm9i
-ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlDQo+ICpwZGV2KQ0KPiAgICAgICAgICAgICAgICAgICAg
-ICAgICBkZXZfZXJyKGRldiwgInBjaWVfYXV4IGNsb2NrIHNvdXJjZSBtaXNzaW5nIG9yDQo+IGlu
-dmFsaWRcbiIpOw0KPiAgICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gUFRSX0VSUihpbXg2
-X3BjaWUtPnBjaWVfYXV4KTsNCj4gICAgICAgICAgICAgICAgIH0NCj4gKyAgICAgICAgICAgICAg
-IGlteDZfcGNpZS0+c3JjID0NCj4gKw0KPiBzeXNjb25fcmVnbWFwX2xvb2t1cF9ieV9jb21wYXRp
-YmxlKCJmc2wsaW14OG1xLXNyYyIpOw0KPiArICAgICAgICAgICAgICAgaWYgKElTX0VSUihpbXg2
-X3BjaWUtPnNyYykpIHsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgZGV2X2VycihkZXYsICJT
-UkMgcmVnbWFwIGlzIG1pc3Npbmcgb3INCj4gaW52YWxpZFxuIik7DQo+ICsgICAgICAgICAgICAg
-ICAgICAgICAgIHJldHVybiBQVFJfRVJSKGlteDZfcGNpZS0+c3JjKTsNCj4gKyAgICAgICAgICAg
-ICAgIH0NCj4gKw0KPiAgICAgICAgICAgICAgICAgLyogZmFsbCB0aHJvdWdoICovDQo+ICAgICAg
-ICAgY2FzZSBJTVg3RDoNCj4gICAgICAgICAgICAgICAgIGlmIChkYmlfYmFzZS0+c3RhcnQgPT0g
-SU1YOE1RX1BDSUUyX0JBU0VfQUREUikgQEANCj4gLTExNzksNiArMTIyNSw4IEBAIHN0YXRpYyBp
-bnQgaW14Nl9wY2llX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UNCj4gKnBkZXYpDQo+ICAg
-ICAgICAgICAgICAgICBpbXg2X3BjaWUtPnZwY2llID0gTlVMTDsNCj4gICAgICAgICB9DQo+IA0K
-PiArICAgICAgIGlteDZfcGNpZS0+c3VwcG9ydHNfY2xrcmVxID0gb2ZfcHJvcGVydHlfcmVhZF9i
-b29sKG5vZGUsDQo+ICsNCj4gKyAic3VwcG9ydHMtY2xrcmVxIik7DQo+ICAgICAgICAgcGxhdGZv
-cm1fc2V0X2RydmRhdGEocGRldiwgaW14Nl9wY2llKTsNCj4gDQo+ICAgICAgICAgcmV0ID0gaW14
-Nl9wY2llX2F0dGFjaF9wZChkZXYpOw0KPiAtLQ0KPiAyLjIxLjANCg==
+Hi,
+
+Here are the cleaned up version of the patches for Gen4 support in
+switchtec. The end result is mostly the same, save some very minor
+changes, but the organization into commits has been reworked per
+Bjorn's feedback. This set is also rebased onto pci/switchtec.
+
+A git branch is available here:
+
+https://github.com/sbates130272/linux-p2pmem switchtec-next-v2
+
+Thanks,
+
+Logan
+
+--
+
+Kelvin Cao (2):
+  PCI/switchtec: Add gen4 support for the flash information interface
+  PCI/switchtec: Introduce gen4 variant IDS in the device ID table
+
+Logan Gunthorpe (5):
+  PCI/switchtec: Rename generation specific constants
+  PCI/switchtec: Introduce Generation Variable
+  PCI/switchtec: Refactor ioctl_flash_part_info()
+  PCI/switchtec: Separate out gen3 register structures into unionse
+  PCI/switchtec: Add gen4 support for the system info registers
+
+ drivers/pci/quirks.c                 |  18 ++
+ drivers/pci/switch/switchtec.c       | 334 +++++++++++++++++++++------
+ include/linux/switchtec.h            | 148 ++++++++++--
+ include/uapi/linux/switchtec_ioctl.h |  13 +-
+ 4 files changed, 424 insertions(+), 89 deletions(-)
+
+--
+2.20.1
