@@ -2,152 +2,159 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0848313CB80
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2020 18:58:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7079B13CBA1
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2020 19:06:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729074AbgAOR6L convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Wed, 15 Jan 2020 12:58:11 -0500
-Received: from mail-oln040092255042.outbound.protection.outlook.com ([40.92.255.42]:42240
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726574AbgAOR6K (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 15 Jan 2020 12:58:10 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=B9T+DB4Ni3F5mrwJp9i4VKTEe81i5pHMMML3TwAooJOQIanBmSeGg77hG9NBnH9Ai5kFpTkERFme/P/8PPmHeTyjSj0yw5m+eZv1NrIbJbrooQqoADhfqB8xxdM1PY+gaqEUwsewiIfsXW2sDe5trlX71jpZJ80r7f5QtyeWt1ekYJgXBLa5iCbn4SoBa9qyf2boYZMFSncBzzENo+hwll8HBhgRxeVf7Ybu3MKj+lNwjifBT6iOvltwPnjENQovmA+cB4w8E906V6BVy23QJogIH1qpH3Upl/nJg9ehfN/H5b2QxQgegAPXgQFUfVBO8IE6YsTIauUHsW7hnj9Ycw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jTZHIDttUSLS5LHeRxgppXH/XS/ZolcfcQDNSghrvKM=;
- b=gZ2bmNfh4grBQ5F+xpPoSMN31TuFgz01+f036ueiCu5pE4BNC7Fl2x1EljSbKz9qiCgNOpRrRT+xLJRZy+UmN4MuNhYyuiTtJ3UtEWACGeOK2TYAcRadEXeEvBXsCQQqa+OSK5Y3uNJYy8ssjOMh75eKiiont6o/g2bjllxc7TU2TI85cAjcYMhNu6qSqLbI8U00YyYWy6fcObSpvdoFR5zCYJggjG4GnQWvnaryPz0Vy+9SN9BjJayTfF3R7fBqW9Zpj7hV7Yd115BJ4jLUlJnAd4/tqHHlx1X5t0KmUV+dGfCENpwXTlefV4fqEqeEmo1eiuqz77qth0YEOYc7Pw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from PU1APC01FT115.eop-APC01.prod.protection.outlook.com
- (10.152.252.53) by PU1APC01HT223.eop-APC01.prod.protection.outlook.com
- (10.152.252.192) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.11; Wed, 15 Jan
- 2020 17:58:05 +0000
-Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.252.57) by
- PU1APC01FT115.mail.protection.outlook.com (10.152.252.208) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2602.11 via Frontend Transport; Wed, 15 Jan 2020 17:58:05 +0000
-Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- ([fe80::20ad:6646:5bcd:63c9]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- ([fe80::20ad:6646:5bcd:63c9%11]) with mapi id 15.20.2623.018; Wed, 15 Jan
- 2020 17:58:05 +0000
-Received: from nicholas-dell-linux (61.69.138.108) by MEXPR01CA0139.ausprd01.prod.outlook.com (2603:10c6:200:2e::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.19 via Frontend Transport; Wed, 15 Jan 2020 17:58:03 +0000
-From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Subject: [PATCH v2 4/4] PCI: Allow extend_bridge_window() to shrink resource
- if necessary
-Thread-Topic: [PATCH v2 4/4] PCI: Allow extend_bridge_window() to shrink
- resource if necessary
-Thread-Index: AQHVy81WZ0aY/Rpcq0KYMVH4glqmEQ==
-Date:   Wed, 15 Jan 2020 17:58:05 +0000
-Message-ID: <PSXP216MB0438DE9E25E07F3915B8E99880370@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
-Accept-Language: en-AU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MEXPR01CA0139.ausprd01.prod.outlook.com
- (2603:10c6:200:2e::24) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- (2603:1096:300:d::20)
-x-incomingtopheadermarker: OriginalChecksum:756F20CC4212D69BCB7AD88E73210CA08FC6953FE0F7CBC6D12E48230490FBCF;UpperCasedChecksum:9DBBA6096AE45A3C91CADFCAF97D76357282033536A95D1D4FC692A21538CDD2;SizeAsReceived:7794;Count:48
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [isfTshrZaUMoGiqt2tK+qf8qWlR7JcNC]
-x-microsoft-original-message-id: <20200115175758.GA4526@nicholas-dell-linux>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 48
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: 9c1637dd-0271-414f-f24a-08d799e478d9
-x-ms-exchange-slblob-mailprops: mBy7Mai7yE5NBIk4d/kkaYf19Kf5IaBBWDTNUgNopOAkOjQJjzlAjhv6afDIGsMI3TDXoosU/8nWIBIPe1ZYGNAM7EcMeQCVqcmqMloMKCdjHs9VrT0Ktz4vw13u2mB685eDdd2Y2tNvjnuaKUuRHqPwDNV5mvWELo2qBgUHMZNcV7QYRXoA/fRRx38e7+fiCzncrre5jjGOmF1cUBfxtmVHr2q16TKzVV0T1yUhgdFQxsstmYi6/oLu+DprnIRW2Q5HBUmcJHBjjhqOw6q1HdxNe6gO3jheS2HxtSH7AtVehNpEX96cQcDGZVmOfLDVtUZqnQDfGH38ZYKFWbLe8tC3mjNtKL0U/DXqUdDxJ5dtOd05BBapRspXADbFnu1bqvhr61Uznv38HvWNOQxM74KMC3S9HcEPAhHr/jcE564T0ZijzQhWiLsu/RfdVkmS6L+hpWWITVsHPqd//dFQwJe/7dKY14JWbNt7fERqcP+2Vuy0xo+bPlceqYFht6pPdzrZflv2sox52a3mvEbV8LxKrMbb6Bd65Uh0q7l4tPMytJVBIs07JSK6wukcCMhUBjR2nvR8GiPs6E1QoUm6orKjxJzEtGxZgWT7NVLzRsS/zPr3sLiZwqRusl7vata/dZV1ZeScO18PpH4JVPHdco5+Rwa4raP+A6tDdQWpxjV5/vMf2eD54DS6lNK2M3oYm15a9QoRLu8jMvzgOtk0aA1ddl5JfC6g
-x-ms-traffictypediagnostic: PU1APC01HT223:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: zSVERXP9nG5xbFo4f7IvalaEt5KZ/NelxKhFjoI4VwYu6OInlJChAuraikNUUHGvYlA4OHPL7VlRgze9m2vfzntFrOOchK1fRTQYbYKQUfFOu/OPA5ljnS8iCUNA0IARVnm4ojEC6rQAoBqvgCg15G9Xyk/QxeG5PRFKkFXgwO0rPA3Lj+kjHDHm4x+arcFC
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <E58127C42896484F834B46D4DE8BCD89@KORP216.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8BIT
+        id S1729256AbgAOSGO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Jan 2020 13:06:14 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:28812 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729078AbgAOSGO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Jan 2020 13:06:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579111572;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=5/JVNCvoMKLbuw+th8Mvpr4NSmYiudENwSQlfto1vYg=;
+        b=XIm/1wIL+v8VymJIBNUelsevMvXU1g4/Fc2etWk/pCdA5Zklc53u8QNbMqQVlseFyFk1Tn
+        WZYPD0G4r39BP+oOR1aRLQ7OJ4claDnFXLcYT7TTZEQ+fFrr+YbFYgROhL+wSyOJ7Ti6Xh
+        XKDek0k7uli/6FDRI4DpguyfMTsF7kg=
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com
+ [209.85.166.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-425-tevsaZC5N0O2lmuMKW9XkA-1; Wed, 15 Jan 2020 13:06:10 -0500
+X-MC-Unique: tevsaZC5N0O2lmuMKW9XkA-1
+Received: by mail-il1-f198.google.com with SMTP id c5so14034439ilo.9
+        for <linux-pci@vger.kernel.org>; Wed, 15 Jan 2020 10:06:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5/JVNCvoMKLbuw+th8Mvpr4NSmYiudENwSQlfto1vYg=;
+        b=nijsuI3ceGHCmLFBu8lD/fgnSTXHTCY0hwEsc8ffr4lI2Szp4QG3U1pJC6hBtomz/4
+         iocn3CH5S6zdhqCX9FBB8cfEiXH9keW6pb7sEhIAgdEDzI0rRWV4mccclhyJZenxxWDi
+         5+zvMJP/gcm3gINLRV6CUpQ5E/fyHUHu+VWEv3beCjmTrOIDkTrxA95DjwR9nooNIgrm
+         ICQoFEYa+/Z0z1FhySBj6C8G+6fSPwEouZ37vMn4UYrL17duKqBy4vvj0+bYcuKQE64H
+         dBmx6q3S7OjpbQ5619IMEybxmmUw0De1GP0JaG1Ihb6rZR+D7tGYEIS/3hfSaQgVaZM/
+         Xq3w==
+X-Gm-Message-State: APjAAAWuXDzUwNHlffm3AQHuVspnYTWwzzRmr5AmEPeRz8DeruGSgUL0
+        2KzQe+u5dESOEEnt2ciw95vT1wUc5pImxUsCE3nJI6Ut06AHb717OUrEKMjO4AJGaEqWD/n7Ywo
+        Q5DGWbDwIQIkhAskgf/ERGSNuHSLNMVqqTAok
+X-Received: by 2002:a92:3a95:: with SMTP id i21mr4486729ilf.249.1579111569277;
+        Wed, 15 Jan 2020 10:06:09 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyiSpVTrT9xrjDsRfXMdNMLD3zLf65q5AGAKjzBKvyYRr2MTNUMJyyycnXSNnfMh8iTlOsaFXQttkz/wrm0e3g=
+X-Received: by 2002:a92:3a95:: with SMTP id i21mr4486711ilf.249.1579111569023;
+ Wed, 15 Jan 2020 10:06:09 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9c1637dd-0271-414f-f24a-08d799e478d9
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jan 2020 17:58:05.8345
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT223
+References: <20200110214217.GA88274@google.com> <e0194581-4cdd-3629-d9fe-10a1cfd29d03@gonehiking.org>
+ <20200110230003.GB1875851@anatevka.americas.hpqcorp.net> <d2715683-f171-a825-3c0b-678b6c5c1a79@gonehiking.org>
+ <20200111005041.GB19291@MiWiFi-R3L-srv> <dc46c904-1652-09b3-f351-6b3a3e761d74@gonehiking.org>
+ <CACPcB9c0-nRjM3DSN8wzZBTPsJKWjZ9d_aNTq5zUj4k4egb32Q@mail.gmail.com>
+ <CABeXuvqquCU+1G=5onk9owASorhpcYWeWBge9U35BrorABcsuw@mail.gmail.com>
+ <CACPcB9cQY9Vu3wG-QYZS6W6T_PZxnJ1ABNUUAF_qvk-VSxbpTA@mail.gmail.com> <b2360db7-66f5-421d-8fe0-150f08aa2f39@gonehiking.org>
+In-Reply-To: <b2360db7-66f5-421d-8fe0-150f08aa2f39@gonehiking.org>
+From:   Kairui Song <kasong@redhat.com>
+Date:   Thu, 16 Jan 2020 02:05:57 +0800
+Message-ID: <CACPcB9epDPcowhnSJuEHQ8miCBX1oKjFx4Wdn4aYPe2_pueA5A@mail.gmail.com>
+Subject: Re: [RFC PATCH] PCI, kdump: Clear bus master bit upon shutdown in
+ kdump kernel
+To:     Khalid Aziz <khalid@gonehiking.org>
+Cc:     Deepa Dinamani <deepa.kernel@gmail.com>,
+        Baoquan He <bhe@redhat.com>, linux-pci@vger.kernel.org,
+        kexec@lists.infradead.org, Jerry Hoemann <Jerry.Hoemann@hpe.com>,
+        Randy Wright <rwright@hpe.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Remove checks for resource size in extend_bridge_window(). This is
-necessary to allow the pci_bus_distribute_available_resources() to
-function when the kernel parameter pci=hpmemsize=nn[KMG] is used to
-allocate resources. Because the kernel parameter sets the size of all
-hotplug bridges to be the same, there are problems when nested hotplug
-bridges are encountered. Fitting a downstream hotplug bridge with size X
-and normal bridges with non-zero size Y into parent hotplug bridge with
-size X is impossible, and hence the downstream hotplug bridge needs to
-shrink to fit into its parent.
+On Thu, Jan 16, 2020 at 1:31 AM Khalid Aziz <khalid@gonehiking.org> wrote:
+>
+> On 1/13/20 10:07 AM, Kairui Song wrote:
+> > On Sun, Jan 12, 2020 at 2:33 AM Deepa Dinamani <deepa.kernel@gmail.com> wrote:
+> >>
+> >>> Hi, there are some previous works about this issue, reset PCI devices
+> >>> in kdump kernel to stop ongoing DMA:
+> >>>
+> >>> [v7,0/5] Reset PCIe devices to address DMA problem on kdump with iommu
+> >>> https://lore.kernel.org/patchwork/cover/343767/
+> >>>
+> >>> [v2] PCI: Reset PCIe devices to stop ongoing DMA
+> >>> https://lore.kernel.org/patchwork/patch/379191/
+> >>>
+> >>> And didn't get merged, that patch are trying to fix some DMAR error
+> >>> problem, but resetting devices is a bit too destructive, and the
+> >>> problem is later fixed in IOMMU side. And in most case the DMA seems
+> >>> harmless, as they targets first kernel's memory and kdump kernel only
+> >>> live in crash memory.
+> >>
+> >> I was going to ask the same. If the kdump kernel had IOMMU on, would
+> >> that still be a problem?
+> >
+> > It will still fail, doing DMA is not a problem, it only go wrong when
+> > a device's upstream bridge is mistakenly shutdown before the device
+> > shutdown.
+> >
+> >>
+> >>> Also, by the time kdump kernel is able to scan and reset devices,
+> >>> there are already a very large time window where things could go
+> >>> wrong.
+> >>>
+> >>> The currently problem observed only happens upon kdump kernel
+> >>> shutdown, as the upper bridge is disabled before the device is
+> >>> disabledm so DMA will raise error. It's more like a problem of wrong
+> >>> device shutting down order.
+> >>
+> >> The way it was described earlier "During this time, the SUT sometimes
+> >> gets a PCI error that raises an NMI." suggests that it isn't really
+> >> restricted to kexec/kdump.
+> >> Any attached device without an active driver might attempt spurious or
+> >> malicious DMA and trigger the same during normal operation.
+> >> Do you have available some more reporting of what happens during the
+> >> PCIe error handling?
+> >
+> > Let me add more info about this:
+> >
+> > On the machine where I can reproduce this issue, the first kernel
+> > always runs fine, and kdump kernel works fine during dumping the
+> > vmcore, even if I keep the kdump kernel running for hours, nothing
+> > goes wrong. If there are DMA during normal operation that will cause
+> > problem, this should have exposed it.
+> >
+>
+> This is the part that is puzzling me. Error shows up only when kdump
+> kernel is being shut down. kdump kernel can run for hours without this
+> issue. What is the operation from downstream device that is resulting in
+> uncorrectable error - is it indeed a DMA request? Why does that
+> operation from downstream device not happen until shutdown?
+>
+> I just want to make sure we fix the right problem in the right way.
+>
 
-Add check for if bridge is extended or shrunken and reflect that in the
-call to pci_dbg().
+Actually the device could keep sending request with no problem during
+kdump kernel running. Eg. keep sending DMA, and all DMA targets first
+kernel's system memory, so kdump runs fine as long as nothing touch
+the reserved crash memory. And the error is reported by the port, when
+shutdown it has bus master bit, and downstream request will cause
+error.
 
-Do not change resource size if new size is zero (if we have run out of a
-bridge window resource) to prevent the PCI resource assignment code from
-attempting to assign a zero-sized resource. If this happens, we are
-running out of resource space, anyway, so not shrinking the resource
-will not deny space for other resources. This prevents the following
-from happening:
+I'm not sure what request it really is either, it could depend on
+device. On that machine, error could be reproduced when either the NIC
+or HPSA is not reset in kdump, and from the bug report, the reporter
+used a different NIC card and it's also reproducible.
+The NIC is much less like to cause bridge error though (HPSA is about
+7/10 reproducible, NIC is about 3/10), so the device could send
+different requests but fail in the same way (UR error reported from
+the bridge).
 
-pcieport 0000:07:04.0: can't enable device: BAR 13 [io  0x1000-0x0fff] not claimed
+Will try to do more debug, but I'm not sure how can I intercept the
+PCIe operation to get some info about what is actually causing the
+issue, do you have any suggestion?
 
-Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
----
- drivers/pci/setup-bus.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index 50d14921a..074501a75 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -1836,16 +1836,24 @@ static void adjust_bridge_window(struct pci_dev *bridge, struct resource *res,
- 				 struct list_head *add_list,
- 				 resource_size_t new_size)
- {
--	resource_size_t add_size;
-+	resource_size_t add_size, size = resource_size(res);
- 
- 	if (res->parent)
- 		return;
- 
--	if (resource_size(res) >= new_size)
-+	if (!new_size)
- 		return;
- 
--	add_size = new_size - resource_size(res);
--	pci_dbg(bridge, "bridge window %pR extended by %pa\n", res, &add_size);
-+	if (new_size > size) {
-+		add_size = new_size - size;
-+		pci_dbg(bridge, "bridge window %pR extended by %pa\n", res,
-+			&add_size);
-+	} else if (new_size < size) {
-+		add_size = size - new_size;
-+		pci_dbg(bridge, "bridge window %pR shrunken by %pa\n", res,
-+			&add_size);
-+	}
-+
- 	res->end = res->start + new_size - 1;
- 	remove_from_list(add_list, res);
- }
 -- 
-2.25.0
+Best Regards,
+Kairui Song
 
