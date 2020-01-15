@@ -2,163 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F196F13CB44
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2020 18:45:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 07D1713CB6B
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2020 18:55:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729012AbgAORpC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Jan 2020 12:45:02 -0500
-Received: from foss.arm.com ([217.140.110.172]:40618 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726574AbgAORpB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 15 Jan 2020 12:45:01 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DBAAA328;
-        Wed, 15 Jan 2020 09:45:00 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9E8643F6C4;
-        Wed, 15 Jan 2020 09:44:58 -0800 (PST)
-Subject: Re: [PATCH v4 11/13] iommu/arm-smmu-v3: Improve add_device() error
- handling
-To:     Will Deacon <will@kernel.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
-        iommu@lists.linux-foundation.org, joro@8bytes.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        lorenzo.pieralisi@arm.com, guohanjun@huawei.com,
-        sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org,
-        bhelgaas@google.com, eric.auger@redhat.com,
-        jonathan.cameron@huawei.com, zhangfei.gao@linaro.org
-References: <20191219163033.2608177-1-jean-philippe@linaro.org>
- <20191219163033.2608177-12-jean-philippe@linaro.org>
- <20200114152538.GB2579@willie-the-truck>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <5287c59f-0331-4d2e-e8a0-292bf27683fb@arm.com>
-Date:   Wed, 15 Jan 2020 17:44:57 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726574AbgAORzW convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Wed, 15 Jan 2020 12:55:22 -0500
+Received: from mail-oln040092254041.outbound.protection.outlook.com ([40.92.254.41]:6165
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726418AbgAORzV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 15 Jan 2020 12:55:21 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TH4DHm8tzd2BcDZY3jCexdct8X29JgK4T1SR9CoZ3fHM22lLjo10FcSaZQzOyEsqQrqiD1O9lvvkQOR6OiLIzIeIduOHpN94muxECPIBTc9S4UHgV/wTuIixQ7f0/kOZox5ttN8atVQQAozJPQdCKEC2CjALS/p6echVON1lxhiklU+Qb+6MQ5X4ephCxR/a2Q9rThEaODCY8x4tp8WOP0ccIu0xx2wVQvExH20bgQffc4xSIzrZ7oJL1TEFmvD3C++oVuA8bqxdFEHdMDt0zcvwVX3CSsDefpaPHizmlr83017I178kZxTyBxvEbJENkNj1WwWMBUa7PWbd13UuRA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SwrHrs3hsBumaJ66DLtUIOXyRW1kkvuywmlrXO/fibU=;
+ b=fo0psRQ76ceRSkl+9X82maUcEMCBSrbdHDJE4Agnd+8B2zWffjHV4j+yYGiaE/0QRf4aPDJ/YjoIW/opxZOtQtzRVXZsMgj96UtqZYncR650RsqpBpwAN1UrJM0abPTiF8jp7tD771kC8314z2iD4VdsSE2gYahHkIqGp1G4Dy9KHltuOWVVg6Ae3QL5dC4dtL0qFVPuvk1lpIaXA2FB9gXz7MLWB36dHwk7XhMPe/0c/vZP9Cnx97mHfvg4XEcHSU8XFL2yt4tJ3MhU7sXVeUYXFGBooknpgqsBUNmDcUyo+vgNAeAAeAQ0QKbtH8kPAGNDLUDdaDEGsz/+RWOrRQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from PU1APC01FT115.eop-APC01.prod.protection.outlook.com
+ (10.152.252.51) by PU1APC01HT158.eop-APC01.prod.protection.outlook.com
+ (10.152.252.185) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.11; Wed, 15 Jan
+ 2020 17:55:17 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.252.57) by
+ PU1APC01FT115.mail.protection.outlook.com (10.152.252.208) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.11 via Frontend Transport; Wed, 15 Jan 2020 17:55:17 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::20ad:6646:5bcd:63c9]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::20ad:6646:5bcd:63c9%11]) with mapi id 15.20.2623.018; Wed, 15 Jan
+ 2020 17:55:17 +0000
+Received: from nicholas-dell-linux (61.69.138.108) by ME2PR01CA0124.ausprd01.prod.outlook.com (2603:10c6:201:2e::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.18 via Frontend Transport; Wed, 15 Jan 2020 17:55:14 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Subject: [PATCH v2 0/3] PCI: Fix failure to assign BARs with alignment >1M
+ with Thunderbolt
+Thread-Topic: [PATCH v2 0/3] PCI: Fix failure to assign BARs with alignment
+ >1M with Thunderbolt
+Thread-Index: AQHVy8zxsAcuWcBVnUOaHrWI/O9uwg==
+Date:   Wed, 15 Jan 2020 17:55:17 +0000
+Message-ID: <PSXP216MB04387C41E6734CC4DEA9846280370@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+Accept-Language: en-AU, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: ME2PR01CA0124.ausprd01.prod.outlook.com
+ (2603:10c6:201:2e::16) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:300:d::20)
+x-incomingtopheadermarker: OriginalChecksum:9BCD66280E596EBA588BBAB7CAF578C2700EF1CBE08D7DC6E68A4118C9CA2220;UpperCasedChecksum:1FBC8856690AEC71C1D8D695B7B9AB1CDC9E4DCB257F1B498C3775709184686F;SizeAsReceived:7798;Count:48
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [tccJdBO/fWgCSAz8DQY7D2G/iSgcXRf1]
+x-microsoft-original-message-id: <20200115175508.GA4503@nicholas-dell-linux>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 48
+x-eopattributedmessage: 0
+x-ms-office365-filtering-correlation-id: f12dca4c-660d-47e2-74d9-08d799e4144b
+x-ms-exchange-slblob-mailprops: mBy7Mai7yE5NBIk4d/kkaYf19Kf5IaBB2ougQ3QCcMIjZyL4I2r/u3GZgbZ6LJJKYtR9hPJk37ZennVP2juFXXLWsJHLAP4lTdVlGYxJhy9kLWcQkQZaPb0kuNjJa0Dw383gRwenq0vfOZH3AffhU/yAMqc87JrWv+TA06UPmha13Ca/WwGa9eXa0laKveHHTXwVxzL8Dfbh0JUrBjovRsY2C/sPlRSsmNpiWsBLdngSSXoz+WIgED+f9duIdrhAy64RCxOz6N2/63N+ReFSMvmMEhsXp+/KJuEihD4Z2n6OTsD5DT47NAGY7H4NuKkZmh+5xNvvG1a2nh3zsWJrhAtvKcHKOFgyk9/spICRDz10jmR3zsr5kfPsi7lum/NGz6VaztZjj3W818FeNgEEeBekh1CU1jp8adGkhA4tdfPdIGxiNLngJINgK7ENAeiwEGZhGru45KFHZEuFcdiywfZDQYPigTthrshv2d2Ra77Yi+Vf5CWl8Cmi+LeRqNBwQHNWoBOekIbvCRTCoSWiW1GM5FCg3DWa/0fx5VvZJswK9n7Jc8msMueNiIY70oLAIKZpunXa+pTkdJW4sracsvvYTkgLTTHqUE/wCeqbV0NSnFxPNUACtfWpImtZfgHSQDWD54ZWwUSanS8bm88WJAjp8glvVzVEX1B5bZYm43N4Z9oNXOaBhSfMWinGE9hC+rK41pBuyn6SdkpAqEz9cdfH5LXRk282
+x-ms-traffictypediagnostic: PU1APC01HT158:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: q8A5eiQmGvK0nPCDgDHbxNtvLdCVmlJKRXNrQsuoxkR1xoV4lYDJvFK5ZmivC5vzKPSvytTaYbxvtz2aY+ijVh1FRjluw6QmG+zG2Ovr/6gWKMUdLGWbcYepBpIRtIZhkO3HyAxmGUTk6ydOT7v5SiP7o+DLEfYJQdmfamP+rMUppOzL45hRq3qIQmDUYnk2
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <8A9B1EE179975A4DB1177E45C0110F1C@KORP216.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-In-Reply-To: <20200114152538.GB2579@willie-the-truck>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: f12dca4c-660d-47e2-74d9-08d799e4144b
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jan 2020 17:55:17.2045
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT158
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 14/01/2020 3:25 pm, Will Deacon wrote:
-> On Thu, Dec 19, 2019 at 05:30:31PM +0100, Jean-Philippe Brucker wrote:
->> Let add_device() clean up after itself. The iommu_bus_init() function
->> does call remove_device() on error, but other sites (e.g. of_iommu) do
->> not.
->>
->> Don't free level-2 stream tables because we'd have to track if we
->> allocated each of them or if they are used by other endpoints. It's not
->> worth the hassle since they are managed resources.
->>
->> Reviewed-by: Eric Auger <eric.auger@redhat.com>
->> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
->> ---
->>   drivers/iommu/arm-smmu-v3.c | 28 +++++++++++++++++++++-------
->>   1 file changed, 21 insertions(+), 7 deletions(-)
-> 
-> I think this is alright, with one caveat relating to:
-> 
-> 
-> 	/*
-> 	 * We _can_ actually withstand dodgy bus code re-calling add_device()
-> 	 * without an intervening remove_device()/of_xlate() sequence, but
-> 	 * we're not going to do so quietly...
-> 	 */
-> 	if (WARN_ON_ONCE(fwspec->iommu_priv)) {
-> 		master = fwspec->iommu_priv;
-> 		smmu = master->smmu;
-> 	} ...
-> 
-> 
-> which may be on shakey ground if the subsequent add_device() call can fail
-> and free stuff that the first one allocated. At least, I don't know what
-> we're trying to support with this, so it's hard to tell whether or not it
-> still works as intended after your change.
+Tiny changes:
+	- Add Mika Westerberg's Reviewed-by: tags which he gave.
+	- Change commit description slightly in 2/3.
 
-Hmm, if add_device() ever did fail it should really be expected to 
-return the device back to an un-added state, so I don't believe that 
-particular concern should be significant regardless...
-> How is this supposed to work? I don't recall ever seeing that WARN fire,
-> so can we just remove this and bail instead? Robin?
+Nicholas Johnson (3):
+  PCI: Remove redundant brackets in
+    pci_bus_distribute_available_resources()
+  PCI: Change pci_bus_distribute_available_resources() args to struct
+    resource
+  PCI: Consider alignment of hot-added bridges when distributing
+    available resources
 
-However, I am inclined to agree that it's probably better to make it all 
-moot. Although it indeed should never happen, ISTR at the time there 
-appeared to be some possible path somewhere by which the notifier may 
-have been triggered a second time - possibly if some other device failed 
-or deferred after the first call, triggering the bus code to start all 
-over again. Since then, though, we've made a lot of changes to how 
-->add_device usually gets called, plus stuff like the 
-iommu_device_link() call has snuck in that might not stand up to a 
-replay anyway, so I don't see any problem with making this condition a 
-hard failure. It's certainly much easier to reason about.
+ drivers/pci/setup-bus.c | 106 +++++++++++++++++++++++-----------------
+ 1 file changed, 61 insertions(+), 45 deletions(-)
 
-In fact, there will already be a WARN from iommu_probe_device() now 
-(because the first call will have set the group), so I don't think we 
-need any additional diagnostic in the driver any more.
+-- 
+2.25.0
 
-Robin.
-
-> Something like below before your changes...
-> 
-> Will
-> 
-> --->8
-> 
-> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-> index effe72eb89e7..6ae3df2f3495 100644
-> --- a/drivers/iommu/arm-smmu-v3.c
-> +++ b/drivers/iommu/arm-smmu-v3.c
-> @@ -2534,28 +2534,23 @@ static int arm_smmu_add_device(struct device *dev)
->   
->   	if (!fwspec || fwspec->ops != &arm_smmu_ops)
->   		return -ENODEV;
-> -	/*
-> -	 * We _can_ actually withstand dodgy bus code re-calling add_device()
-> -	 * without an intervening remove_device()/of_xlate() sequence, but
-> -	 * we're not going to do so quietly...
-> -	 */
-> -	if (WARN_ON_ONCE(fwspec->iommu_priv)) {
-> -		master = fwspec->iommu_priv;
-> -		smmu = master->smmu;
-> -	} else {
-> -		smmu = arm_smmu_get_by_fwnode(fwspec->iommu_fwnode);
-> -		if (!smmu)
-> -			return -ENODEV;
-> -		master = kzalloc(sizeof(*master), GFP_KERNEL);
-> -		if (!master)
-> -			return -ENOMEM;
->   
-> -		master->dev = dev;
-> -		master->smmu = smmu;
-> -		master->sids = fwspec->ids;
-> -		master->num_sids = fwspec->num_ids;
-> -		fwspec->iommu_priv = master;
-> -	}
-> +	if (WARN_ON_ONCE(fwspec->iommu_priv))
-> +		return -EBUSY;
-> +
-> +	smmu = arm_smmu_get_by_fwnode(fwspec->iommu_fwnode);
-> +	if (!smmu)
-> +		return -ENODEV;
-> +
-> +	master = kzalloc(sizeof(*master), GFP_KERNEL);
-> +	if (!master)
-> +		return -ENOMEM;
-> +
-> +	master->dev = dev;
-> +	master->smmu = smmu;
-> +	master->sids = fwspec->ids;
-> +	master->num_sids = fwspec->num_ids;
-> +	fwspec->iommu_priv = master;
->   
->   	/* Check the SIDs are in range of the SMMU and our stream table */
->   	for (i = 0; i < master->num_sids; i++) {
-> 
