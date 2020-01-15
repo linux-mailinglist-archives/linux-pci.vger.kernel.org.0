@@ -2,159 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7079B13CBA1
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2020 19:06:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AEBDC13CC1E
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2020 19:30:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729256AbgAOSGO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Jan 2020 13:06:14 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:28812 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729078AbgAOSGO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Jan 2020 13:06:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579111572;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=5/JVNCvoMKLbuw+th8Mvpr4NSmYiudENwSQlfto1vYg=;
-        b=XIm/1wIL+v8VymJIBNUelsevMvXU1g4/Fc2etWk/pCdA5Zklc53u8QNbMqQVlseFyFk1Tn
-        WZYPD0G4r39BP+oOR1aRLQ7OJ4claDnFXLcYT7TTZEQ+fFrr+YbFYgROhL+wSyOJ7Ti6Xh
-        XKDek0k7uli/6FDRI4DpguyfMTsF7kg=
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com
- [209.85.166.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-425-tevsaZC5N0O2lmuMKW9XkA-1; Wed, 15 Jan 2020 13:06:10 -0500
-X-MC-Unique: tevsaZC5N0O2lmuMKW9XkA-1
-Received: by mail-il1-f198.google.com with SMTP id c5so14034439ilo.9
-        for <linux-pci@vger.kernel.org>; Wed, 15 Jan 2020 10:06:09 -0800 (PST)
+        id S1729078AbgAOSaD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Jan 2020 13:30:03 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51559 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729016AbgAOSaD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Jan 2020 13:30:03 -0500
+Received: by mail-wm1-f67.google.com with SMTP id d73so1046703wmd.1
+        for <linux-pci@vger.kernel.org>; Wed, 15 Jan 2020 10:30:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=vx9ZI/rGscUUGCBc0iWif4TA6oe6ecIt71Ef+bzf57U=;
+        b=JEN7pX6UGwBqBgRVeU46B89XGheqHUrF69+1A6TQGYjtGYTBLYkKWY2orOVSw8hS/V
+         yx7E/7T+8HwIqvdg6/rD8ch2BDnEbEBkwzGS0jNSiN7xOdZTWJCGNpH00b6FmjajImRM
+         Y0Cq723LUX5rNaaq68rFRJpBzri8ZTJCpfZZXzuZlACIyqy276ntAuLB5rebtF6KpuK0
+         VXsLW7MtFmYWfFQNZ8guFJVTMh0WdkoUrDalt/20pf7BJAKsa7gxBb/6aEtY5v52u+FS
+         rJOoE27gKx2D97bW1kHpVoBosfK/GPlAyGR5lt0nUOtflXGNm7+DRO/mgm/UQ7iD4uHu
+         TMyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5/JVNCvoMKLbuw+th8Mvpr4NSmYiudENwSQlfto1vYg=;
-        b=nijsuI3ceGHCmLFBu8lD/fgnSTXHTCY0hwEsc8ffr4lI2Szp4QG3U1pJC6hBtomz/4
-         iocn3CH5S6zdhqCX9FBB8cfEiXH9keW6pb7sEhIAgdEDzI0rRWV4mccclhyJZenxxWDi
-         5+zvMJP/gcm3gINLRV6CUpQ5E/fyHUHu+VWEv3beCjmTrOIDkTrxA95DjwR9nooNIgrm
-         ICQoFEYa+/Z0z1FhySBj6C8G+6fSPwEouZ37vMn4UYrL17duKqBy4vvj0+bYcuKQE64H
-         dBmx6q3S7OjpbQ5619IMEybxmmUw0De1GP0JaG1Ihb6rZR+D7tGYEIS/3hfSaQgVaZM/
-         Xq3w==
-X-Gm-Message-State: APjAAAWuXDzUwNHlffm3AQHuVspnYTWwzzRmr5AmEPeRz8DeruGSgUL0
-        2KzQe+u5dESOEEnt2ciw95vT1wUc5pImxUsCE3nJI6Ut06AHb717OUrEKMjO4AJGaEqWD/n7Ywo
-        Q5DGWbDwIQIkhAskgf/ERGSNuHSLNMVqqTAok
-X-Received: by 2002:a92:3a95:: with SMTP id i21mr4486729ilf.249.1579111569277;
-        Wed, 15 Jan 2020 10:06:09 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyiSpVTrT9xrjDsRfXMdNMLD3zLf65q5AGAKjzBKvyYRr2MTNUMJyyycnXSNnfMh8iTlOsaFXQttkz/wrm0e3g=
-X-Received: by 2002:a92:3a95:: with SMTP id i21mr4486711ilf.249.1579111569023;
- Wed, 15 Jan 2020 10:06:09 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=vx9ZI/rGscUUGCBc0iWif4TA6oe6ecIt71Ef+bzf57U=;
+        b=FDoqqUHkekWK+5GIkaa671kGR59YYZCLG0i8XVR5qyUZipY2gBlpTUN8Exeux0ejRR
+         KdpK3v4xGoctr8ervwTmIJb+nwGeAmqLNUnNbaCT+U/XymcakJPke1+PHVUl0CCcU1+t
+         kQ5NApysXLkjTS5UmrREglZSOHt0U+fqRyxa1p41ZNSuGybbdd9aey9YU4HNeRshqf9A
+         L35EtRNM1KW5mGpVkUIJszqNYQ0y6rLg6UmO/xwisu9tW768L+Vr4bFagj/PtAaObQ7K
+         N7ijcxWXtIEKR2VkCPWe92R3afEWvCvof2Da3JGve1NeWrVvpAEkVVLTq2A8ClexTAJr
+         M9sw==
+X-Gm-Message-State: APjAAAV2/tv8l1jR0OhafT5aFCnFol9tUbE715GQRTDu2MlUWqbenkaP
+        2Zqu0lLskj14lM1BRi6+FOkxvw==
+X-Google-Smtp-Source: APXvYqy8nNtvTuOB8AddkrK/wK0uuvgD1wX9xlx2WFGLj57TQXbAf34VislU15LMhdhXKyk0wQaang==
+X-Received: by 2002:a05:600c:21da:: with SMTP id x26mr1338398wmj.4.1579113001084;
+        Wed, 15 Jan 2020 10:30:01 -0800 (PST)
+Received: from myrica ([2001:171b:2266:ba60:116c:c27a:3e7f:5eaf])
+        by smtp.gmail.com with ESMTPSA id u8sm913472wmm.15.2020.01.15.10.29.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2020 10:30:00 -0800 (PST)
+Date:   Wed, 15 Jan 2020 19:29:55 +0100
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
+        iommu@lists.linux-foundation.org, joro@8bytes.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        lorenzo.pieralisi@arm.com, guohanjun@huawei.com,
+        sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org,
+        robin.murphy@arm.com, bhelgaas@google.com, eric.auger@redhat.com,
+        jonathan.cameron@huawei.com, zhangfei.gao@linaro.org
+Subject: Re: [PATCH v5 00/13] iommu: Add PASID support to Arm SMMUv3
+Message-ID: <20200115182955.GA152753@myrica>
+References: <20200115125239.136759-1-jean-philippe@linaro.org>
+ <20200115164255.GB30746@willie-the-truck>
 MIME-Version: 1.0
-References: <20200110214217.GA88274@google.com> <e0194581-4cdd-3629-d9fe-10a1cfd29d03@gonehiking.org>
- <20200110230003.GB1875851@anatevka.americas.hpqcorp.net> <d2715683-f171-a825-3c0b-678b6c5c1a79@gonehiking.org>
- <20200111005041.GB19291@MiWiFi-R3L-srv> <dc46c904-1652-09b3-f351-6b3a3e761d74@gonehiking.org>
- <CACPcB9c0-nRjM3DSN8wzZBTPsJKWjZ9d_aNTq5zUj4k4egb32Q@mail.gmail.com>
- <CABeXuvqquCU+1G=5onk9owASorhpcYWeWBge9U35BrorABcsuw@mail.gmail.com>
- <CACPcB9cQY9Vu3wG-QYZS6W6T_PZxnJ1ABNUUAF_qvk-VSxbpTA@mail.gmail.com> <b2360db7-66f5-421d-8fe0-150f08aa2f39@gonehiking.org>
-In-Reply-To: <b2360db7-66f5-421d-8fe0-150f08aa2f39@gonehiking.org>
-From:   Kairui Song <kasong@redhat.com>
-Date:   Thu, 16 Jan 2020 02:05:57 +0800
-Message-ID: <CACPcB9epDPcowhnSJuEHQ8miCBX1oKjFx4Wdn4aYPe2_pueA5A@mail.gmail.com>
-Subject: Re: [RFC PATCH] PCI, kdump: Clear bus master bit upon shutdown in
- kdump kernel
-To:     Khalid Aziz <khalid@gonehiking.org>
-Cc:     Deepa Dinamani <deepa.kernel@gmail.com>,
-        Baoquan He <bhe@redhat.com>, linux-pci@vger.kernel.org,
-        kexec@lists.infradead.org, Jerry Hoemann <Jerry.Hoemann@hpe.com>,
-        Randy Wright <rwright@hpe.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200115164255.GB30746@willie-the-truck>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 1:31 AM Khalid Aziz <khalid@gonehiking.org> wrote:
->
-> On 1/13/20 10:07 AM, Kairui Song wrote:
-> > On Sun, Jan 12, 2020 at 2:33 AM Deepa Dinamani <deepa.kernel@gmail.com> wrote:
-> >>
-> >>> Hi, there are some previous works about this issue, reset PCI devices
-> >>> in kdump kernel to stop ongoing DMA:
-> >>>
-> >>> [v7,0/5] Reset PCIe devices to address DMA problem on kdump with iommu
-> >>> https://lore.kernel.org/patchwork/cover/343767/
-> >>>
-> >>> [v2] PCI: Reset PCIe devices to stop ongoing DMA
-> >>> https://lore.kernel.org/patchwork/patch/379191/
-> >>>
-> >>> And didn't get merged, that patch are trying to fix some DMAR error
-> >>> problem, but resetting devices is a bit too destructive, and the
-> >>> problem is later fixed in IOMMU side. And in most case the DMA seems
-> >>> harmless, as they targets first kernel's memory and kdump kernel only
-> >>> live in crash memory.
-> >>
-> >> I was going to ask the same. If the kdump kernel had IOMMU on, would
-> >> that still be a problem?
-> >
-> > It will still fail, doing DMA is not a problem, it only go wrong when
-> > a device's upstream bridge is mistakenly shutdown before the device
-> > shutdown.
-> >
-> >>
-> >>> Also, by the time kdump kernel is able to scan and reset devices,
-> >>> there are already a very large time window where things could go
-> >>> wrong.
-> >>>
-> >>> The currently problem observed only happens upon kdump kernel
-> >>> shutdown, as the upper bridge is disabled before the device is
-> >>> disabledm so DMA will raise error. It's more like a problem of wrong
-> >>> device shutting down order.
-> >>
-> >> The way it was described earlier "During this time, the SUT sometimes
-> >> gets a PCI error that raises an NMI." suggests that it isn't really
-> >> restricted to kexec/kdump.
-> >> Any attached device without an active driver might attempt spurious or
-> >> malicious DMA and trigger the same during normal operation.
-> >> Do you have available some more reporting of what happens during the
-> >> PCIe error handling?
-> >
-> > Let me add more info about this:
-> >
-> > On the machine where I can reproduce this issue, the first kernel
-> > always runs fine, and kdump kernel works fine during dumping the
-> > vmcore, even if I keep the kdump kernel running for hours, nothing
-> > goes wrong. If there are DMA during normal operation that will cause
-> > problem, this should have exposed it.
-> >
->
-> This is the part that is puzzling me. Error shows up only when kdump
-> kernel is being shut down. kdump kernel can run for hours without this
-> issue. What is the operation from downstream device that is resulting in
-> uncorrectable error - is it indeed a DMA request? Why does that
-> operation from downstream device not happen until shutdown?
->
-> I just want to make sure we fix the right problem in the right way.
->
+On Wed, Jan 15, 2020 at 04:42:56PM +0000, Will Deacon wrote:
+> On Wed, Jan 15, 2020 at 01:52:26PM +0100, Jean-Philippe Brucker wrote:
+> > Since v4 [1] I addressed some of Will's comment.
+> 
+> Thanks! I've tentatively managed to queue all of this apart from the last
+> patch, since that relies on some pasid symbols being exported from the PCI
+> core when building the driver as a module with PCI_PASID=y.
+> 
+> Please can you look at the rest of things here?:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/log/?h=for-joerg/arm-smmu/updates
 
-Actually the device could keep sending request with no problem during
-kdump kernel running. Eg. keep sending DMA, and all DMA targets first
-kernel's system memory, so kdump runs fine as long as nothing touch
-the reserved crash memory. And the error is reported by the port, when
-shutdown it has bus master bit, and downstream request will cause
-error.
+Sorry for the delay, I had to rebase and rework the SVA patchset a little
+in order to test. Your changes look good to me and run fine on the
+hisilicon KunPeng920 (although I haven't tried building as a module yet,
+I'll do that next).
 
-I'm not sure what request it really is either, it could depend on
-device. On that machine, error could be reproduced when either the NIC
-or HPSA is not reset in kdump, and from the bug report, the reporter
-used a different NIC card and it's also reproducible.
-The NIC is much less like to cause bridge error though (HPSA is about
-7/10 reproducible, NIC is about 3/10), so the device could send
-different requests but fail in the same way (UR error reported from
-the bridge).
+Thanks,
+Jean
 
-Will try to do more debug, but I'm not sure how can I intercept the
-PCIe operation to get some info about what is actually causing the
-issue, do you have any suggestion?
-
--- 
-Best Regards,
-Kairui Song
-
+> 
+> > Still missing and will be submitted as follow-up patches:
+> > * write STE.V with WRITE_ONCE() (patch 7)
+> 
+> I've hacked that one up myself.
+> 
+> > * batch submission of CD invalidation (patch 7)
+> 
+> That can be 5.7 material.
+> 
+> > * Remove WARN_ON_ONCE() in add_device() (patch 13)
+> >   Pending Robin's input.
+> 
+> I've written that one too, but we'll see what Robin says. The question now
+> is which commit do I tag in the branch above :)
+> 
+> Will
