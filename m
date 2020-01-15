@@ -2,218 +2,502 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 800DA13C4EE
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2020 15:08:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 509BE13C54B
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2020 15:14:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729058AbgAOOIH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Jan 2020 09:08:07 -0500
-Received: from mail-bn8nam11on2057.outbound.protection.outlook.com ([40.107.236.57]:35265
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726501AbgAOOIG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 15 Jan 2020 09:08:06 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QUoSBEll0IGLZkC+XZgnxbJ7zuWN2r2Hu6ALP9MGKsFklO+vQ2I3ZcPyz0iNUrHsJ0g6JqK+hN2R77caIJIp1eZeKT4GnVzMI2MI7Rj7u1egKxd+EMYGcwS6UCn+nxZ0mMPCO3qD/zc8tc7hjWrJChQ75K0dcYK5jpAqrm81LFQn8PeItqaVeNAXWC72BRzHf7gRcmG5KFWy86MSc0vZTLrLrTHRtc8BGwcCrvI3rnppUCaO0BCkEpS8Tiqo6MyeRI680JNXIJHG+Vmq/KuXONimKysXORkUUkBM+78yXYkh9qK6tETPEHueUPU+7M4fNBqGNyLqjRUJnNyPk7XD8Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=H5oIwdf5wwQROJteWmz+7ZHjWICHe0DuH2XoWzMT27M=;
- b=aSQm61z6HUfNVgGdipfSdg5hHRtzU6ybwKDCJWtkKtVaa10f6ri21ab+mKExY+PJOQFv/Qv+hE/swRIMsOG7JYkNul+QZmZ3ab9Se1ZdSM8PntpCOY+sVJTQTemQfM2Gn1FKXVQrl60WhQt57DfALaKTVzsp/0TjKBAqlibuaGOrpYcNdJelP9eAjaHTueHtj/S6kkFQAhgm96Hv2xiQDp7U2IaqZZwqr2ZahmGNU+8zIA1lFzdYi6z3t7AT85URnyW2+2sgXlNxFNGYdXHS4VFb5xD+0msRSGh9R1I7i7JU+x9e0UtJzZJkDdebYEccibnj8JTjsSFulGxvJqVYFw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=H5oIwdf5wwQROJteWmz+7ZHjWICHe0DuH2XoWzMT27M=;
- b=cNJSefpfZY84ebmwG7R5dXbICB/ULCODBQuSuQRLuOwiEEHEvUA6quGPejHjktOqczbL21u6BOdka2YPwX8Qnz4NLw/aEps2PsJvLJyLTwxMTgUyE8nWM4Okp8pvIaZ4tCB3n+0hdyDztN8iYhtxIObXNfBdliCXkvdbFDicI2w=
-Received: from CH2PR12MB3912.namprd12.prod.outlook.com (52.132.246.86) by
- CH2SPR01MB0010.namprd12.prod.outlook.com (10.141.106.8) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.18; Wed, 15 Jan 2020 14:08:02 +0000
-Received: from CH2PR12MB3912.namprd12.prod.outlook.com
- ([fe80::35e4:f61:8c42:333d]) by CH2PR12MB3912.namprd12.prod.outlook.com
- ([fe80::35e4:f61:8c42:333d%6]) with mapi id 15.20.2644.015; Wed, 15 Jan 2020
- 14:08:02 +0000
-From:   "Deucher, Alexander" <Alexander.Deucher@amd.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Alex Deucher <alexdeucher@gmail.com>
-CC:     "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: RE: [PATCH 0/2] Adjust AMD GPU ATS quirks
-Thread-Topic: [PATCH 0/2] Adjust AMD GPU ATS quirks
-Thread-Index: AQHVyxz5e3deHIakDEi7MiGaUbFZUKfq0iEAgADxxQA=
-Date:   Wed, 15 Jan 2020 14:08:02 +0000
-Message-ID: <CH2PR12MB39124307C111836194A81A24F7370@CH2PR12MB3912.namprd12.prod.outlook.com>
-References: <20200114205523.1054271-1-alexander.deucher@amd.com>
- <20200114234144.GA56595@google.com>
-In-Reply-To: <20200114234144.GA56595@google.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_0d814d60-469d-470c-8cb0-58434e2bf457_Enabled=true;
- MSIP_Label_0d814d60-469d-470c-8cb0-58434e2bf457_SetDate=2020-01-15T14:07:07Z;
- MSIP_Label_0d814d60-469d-470c-8cb0-58434e2bf457_Method=Privileged;
- MSIP_Label_0d814d60-469d-470c-8cb0-58434e2bf457_Name=Public_0;
- MSIP_Label_0d814d60-469d-470c-8cb0-58434e2bf457_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;
- MSIP_Label_0d814d60-469d-470c-8cb0-58434e2bf457_ActionId=18597a2d-2cd7-48ac-8a7d-000016ca9683;
- MSIP_Label_0d814d60-469d-470c-8cb0-58434e2bf457_ContentBits=1
-msip_label_0d814d60-469d-470c-8cb0-58434e2bf457_enabled: true
-msip_label_0d814d60-469d-470c-8cb0-58434e2bf457_setdate: 2020-01-15T14:07:59Z
-msip_label_0d814d60-469d-470c-8cb0-58434e2bf457_method: Privileged
-msip_label_0d814d60-469d-470c-8cb0-58434e2bf457_name: Public_0
-msip_label_0d814d60-469d-470c-8cb0-58434e2bf457_siteid: 3dd8961f-e488-4e60-8e11-a82d994e183d
-msip_label_0d814d60-469d-470c-8cb0-58434e2bf457_actionid: 587b2447-fb88-497e-a2bc-00009b2cf3c9
-msip_label_0d814d60-469d-470c-8cb0-58434e2bf457_contentbits: 0
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Alexander.Deucher@amd.com; 
-x-originating-ip: [165.204.84.11]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 950ef82c-b24b-4acc-a9ee-08d799c455b6
-x-ms-traffictypediagnostic: CH2SPR01MB0010:
-x-microsoft-antispam-prvs: <CH2SPR01MB0010A9BE041B81FBB97E0F0BF7370@CH2SPR01MB0010.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 02830F0362
-x-forefront-antispam-report: SFV:NSPM;SFS:(10001)(10009020)(4636009)(366004)(189003)(199004)(498600001)(6506007)(53546011)(4326008)(966005)(8936002)(2906002)(45080400002)(76116006)(186003)(66946007)(110136005)(7696005)(8676002)(71200400001)(86362001)(5660300002)(66556008)(64756008)(55016002)(9686003)(81156014)(52536014)(81166006)(33656002)(54906003)(26005)(66446008)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2SPR01MB0010;H:CH2PR12MB3912.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Ht4D3EEZSdtsLSCU6Y11Enl6B3xHbm+0hfz2qcnPvEMG6xc0AvkheX2/Yz9taRy0yCWPiOeAL9mLXDg91zLo3wg4NFgWBaUhIZNe4fODEO0yfa4zlabgY3COeoo600cP0SCisrl7OwbDL9PeG/ajawIDpBI6h3YZVi/EE9urHMBUKvwY7GoW+T+mBmFvonY/T5oyQEL3G7oFnWu9jKmf/cQN3kChLkZ+AlBWiLJzl8SDN65rdnBWqLPw+csQbCDUJoNjkWWUXWMxK4Taa7cID/XUrfBzXM66/YxXN02L0mUcn95IkUxBCJhD6zPfyVBrOSn4F8Yd1/X1BYBd6FDDt15z69g9LRXJiCTBJtsubVy5DxRf/6HK6IFtRW4/ZX++9kpiDGZdP0Z+0MRT2F4YiJqJQ5tVuQKViQU9R7cXcvxMyHQBILJyPRV8zyBkbEAOk15jiDgANjO2iJyGSJ53IuPxACyhr3zQZXHo1Ql24eIUMpc+v6KE6up7EtAiQYzjJRldZVCRwGwHQvNmDJe5AuZmLJWjiBKC4tEeyVGjYhZ2IyEmKHZ7spDzGPP62PfDMpC5M4ZqIMuaxOrILD+RHw==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1730592AbgAOON7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Jan 2020 09:13:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39288 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730294AbgAOON7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 15 Jan 2020 09:13:59 -0500
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C952F2084D;
+        Wed, 15 Jan 2020 14:13:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579097638;
+        bh=HZvsvfUK7jqeHobeQJkLVG//BojxoJ6RabM4NcXY05g=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ROcvvhxPoELmT58dw3OZUwETXnG1jIUu8HAEld7TwllTlERlrwJG/7hfeH8zbPhdt
+         f1/rEvLckBKQyJakI8sPGWhUvXuuhjBhztGuRSOYEeUwhPOF4a0Tm3pRvgk+ZtQUg9
+         QclUwFo+I9nDBuRzYCREcDs87A0EaAYUKwAzJYBI=
+Date:   Wed, 15 Jan 2020 08:13:56 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Shiju Jose <shiju.jose@huawei.com>
+Cc:     linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, rjw@rjwysocki.net, lenb@kernel.org,
+        bp@alien8.de, james.morse@arm.com, tony.luck@intel.com,
+        gregkh@linuxfoundation.org, zhangliguang@linux.alibaba.com,
+        tglx@linutronix.de, linuxarm@huawei.com,
+        jonathan.cameron@huawei.com, tanxiaofei@huawei.com,
+        yangyicong@hisilicon.com
+Subject: Re: [RFC PATCH 2/2] PCI:hip08:Add driver to handle HiSilicon hip08
+ PCIe controller's errors
+Message-ID: <20200115141356.GA156562@google.com>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 950ef82c-b24b-4acc-a9ee-08d799c455b6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jan 2020 14:08:02.5239
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: BJhxdxb0hFXcL+gLH0VPB+f4H2RtjxCHQP0H65Tmf4r6Fm9tcp7jbfSvjPAF+tIFVAM3B4iJ/g60TiG2PFY/fQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2SPR01MB0010
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200115110141.12300-3-shiju.jose@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[AMD Public Use]
+Follow convention for subject line.
 
-> -----Original Message-----
-> From: Bjorn Helgaas <helgaas@kernel.org>
-> Sent: Tuesday, January 14, 2020 6:42 PM
-> To: Alex Deucher <alexdeucher@gmail.com>
-> Cc: amd-gfx@lists.freedesktop.org; linux-pci@vger.kernel.org; Deucher,
-> Alexander <Alexander.Deucher@amd.com>
-> Subject: Re: [PATCH 0/2] Adjust AMD GPU ATS quirks
->=20
-> On Tue, Jan 14, 2020 at 03:55:21PM -0500, Alex Deucher wrote:
-> > We've root caused the issue and clarified the quirk.
-> > This also adds a new quirk for a new GPU.
-> >
-> > Alex Deucher (2):
-> >   pci: Clarify ATS quirk
-> >   pci: add ATS quirk for navi14 board (v2)
-> >
-> >  drivers/pci/quirks.c | 32 +++++++++++++++++++++++++-------
-> >  1 file changed, 25 insertions(+), 7 deletions(-)
->=20
-> I propose the following, which I intend to be functionally identical.
-> It just doesn't repeat the pci_info() and pdev->ats_cap =3D 0.
->=20
+On Wed, Jan 15, 2020 at 11:01:40AM +0000, Shiju Jose wrote:
+> From: Yicong Yang <yangyicong@hisilicon.com>
+> 
+> The hip08 error handle driver logs and reports PCIe controller's
+> recoverable errors.
+> Perform root port reset and restore link status for the recovery.
+> 
+> Following are some of the PCIe controller's recoverable errors
+> 1. completion transmission timeout error.
+> 2. CRS retry counter over the threshold error.
+> 3. ECC 2 bit errors
+> 4. AXI bresponse/rresponse errors etc.
+> 
+> RFC: The appropriate location for this driver may be discussed.
+> 
+> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+> ---
+>  drivers/pci/controller/Kconfig                 |   8 +
+>  drivers/pci/controller/Makefile                |   1 +
+>  drivers/pci/controller/pcie-hisi-hip08-error.c | 323 +++++++++++++++++++++++++
 
-Works for me.  Thanks!
+Seems like this driver and its Kconfig should be near
+drivers/pci/controller/dwc/pcie-hisi.c.
 
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+>  3 files changed, 332 insertions(+)
+>  create mode 100644 drivers/pci/controller/pcie-hisi-hip08-error.c
+> 
+> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+> index c77069c..0ee99b8 100644
+> --- a/drivers/pci/controller/Kconfig
+> +++ b/drivers/pci/controller/Kconfig
+> @@ -260,6 +260,14 @@ config PCI_HYPERV_INTERFACE
+>  	  The Hyper-V PCI Interface is a helper driver allows other drivers to
+>  	  have a common interface with the Hyper-V PCI frontend driver.
+>  
+> +config PCIE_HISI_HIP08_ERR_HANDLER
 
-> commit 998c4f7975b0 ("PCI: Mark AMD Navi14 GPU rev 0xc5 ATS as broken")
-> Author: Bjorn Helgaas <bhelgaas@google.com>
-> Date:   Tue Jan 14 17:09:28 2020 -0600
->=20
->     PCI: Mark AMD Navi14 GPU rev 0xc5 ATS as broken
->=20
->     To account for parts of the chip that are "harvested" (disabled) due =
-to
->     silicon flaws, caches on some AMD GPUs must be initialized before ATS=
- is
->     enabled.
->=20
->     ATS is normally enabled by the IOMMU driver before the GPU driver loa=
-ds,
-> so
->     this cache initialization would have to be done in a quirk, but that'=
-s too
->     complex to be practical.
->=20
->     For Navi14 (device ID 0x7340), this initialization is done by the VBI=
-OS,
->     but apparently some boards went to production with an older VBIOS tha=
-t
->     doesn't do it.  Disable ATS for those boards.
->=20
->=20
-> https://nam11.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Flore.
-> kernel.org%2Fr%2F20200114205523.1054271-3-
-> alexander.deucher%40amd.com&amp;data=3D02%7C01%7Calexander.deucher
-> %40amd.com%7C7bbf2f086ba64a68891e08d7994b5216%7C3dd8961fe4884e6
-> 08e11a82d994e183d%7C0%7C0%7C637146421098328112&amp;sdata=3DaLaNuiJ
-> pB4dYatxvBJuC%2Blk90Dhl4qd5jvLp75ZUDns%3D&amp;reserved=3D0
->     Bug:
-> https://nam11.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fgitla
-> b.freedesktop.org%2Fdrm%2Famd%2Fissues%2F1015&amp;data=3D02%7C01%
-> 7Calexander.deucher%40amd.com%7C7bbf2f086ba64a68891e08d7994b5216
-> %7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C63714642109832811
-> 2&amp;sdata=3DQgCFuWKp8Dg3lpQhXCb2z4qmukdqkiX0e3%2BRz%2FcPkg0%3
-> D&amp;reserved=3D0
->     See-also: d28ca864c493 ("PCI: Mark AMD Stoney Radeon R7 GPU ATS as
-> broken")
->     See-also: 9b44b0b09dec ("PCI: Mark AMD Stoney GPU ATS as broken")
->     Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
->     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
->=20
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c index
-> 4937a088d7d8..fbeb9f73ef28 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -5074,18 +5074,25 @@
-> DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0422,
-> quirk_no_ext_tags);
->=20
->  #ifdef CONFIG_PCI_ATS
->  /*
-> - * Some devices have a broken ATS implementation causing IOMMU stalls.
-> - * Don't use ATS for those devices.
-> + * Some devices require additional driver setup to enable ATS.  Don't
-> + use
-> + * ATS for those devices as ATS will be enabled before the driver has
-> + had a
-> + * chance to load and configure the device.
->   */
-> -static void quirk_no_ats(struct pci_dev *pdev)
-> +static void quirk_amd_harvest_no_ats(struct pci_dev *pdev)
->  {
-> -	pci_info(pdev, "disabling ATS (broken on this device)\n");
-> +	if (pdev->device =3D=3D 0x7340 && pdev->revision !=3D 0xc5)
-> +		return;
+Config symbol is too long, maybe CONFIG_PCI_HISI_ERR or similar (to be
+parallel with existing CONFIG_PCI_HISI).  Both should probably be
+"CONFIG_PCIE", not "CONFIG_PCI".  I can't remember why CONFIG_PCI_HISI
+is that way.
+
+> +	depends on ARM64 || COMPILE_TEST
+> +	depends on (ACPI && PCI_QUIRKS)
+> +	bool "HiSilicon hip08 Soc PCIe local error handling driver"
+> +	help
+> +	  Say Y here if you want PCIe error handling support
+> +	  for the PCIe local(controller) errors on HiSilicon hip08 SoC
 > +
-> +	pci_info(pdev, "disabling ATS\n");
->  	pdev->ats_cap =3D 0;
->  }
->=20
->  /* AMD Stoney platform GPU */
-> -DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x98e4, quirk_no_ats); -
-> DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6900, quirk_no_ats);
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x98e4,
-> +quirk_amd_harvest_no_ats);
-> +/* AMD Iceland dGPU */
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6900,
-> +quirk_amd_harvest_no_ats);
-> +/* AMD Navi14 dGPU */
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7340,
-> +quirk_amd_harvest_no_ats);
->  #endif /* CONFIG_PCI_ATS */
->=20
->  /* Freescale PCIe doesn't support MSI in RC mode */
+>  source "drivers/pci/controller/dwc/Kconfig"
+>  source "drivers/pci/controller/cadence/Kconfig"
+>  endmenu
+> diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
+> index 3d4f597..ac9852f 100644
+> --- a/drivers/pci/controller/Makefile
+> +++ b/drivers/pci/controller/Makefile
+> @@ -28,6 +28,7 @@ obj-$(CONFIG_PCIE_MEDIATEK) += pcie-mediatek.o
+>  obj-$(CONFIG_PCIE_MOBIVEIL) += pcie-mobiveil.o
+>  obj-$(CONFIG_PCIE_TANGO_SMP8759) += pcie-tango.o
+>  obj-$(CONFIG_VMD) += vmd.o
+> +obj-$(CONFIG_PCIE_HISI_HIP08_ERR_HANDLER) += pcie-hisi-hip08-error.o
+>  # pcie-hisi.o quirks are needed even without CONFIG_PCIE_DW
+>  obj-y				+= dwc/
+>  
+> diff --git a/drivers/pci/controller/pcie-hisi-hip08-error.c b/drivers/pci/controller/pcie-hisi-hip08-error.c
+> new file mode 100644
+> index 0000000..6f5d002
+> --- /dev/null
+> +++ b/drivers/pci/controller/pcie-hisi-hip08-error.c
+> @@ -0,0 +1,323 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * PCIe driver for handling PCIe local errors occurred on
+> + * HiSilicon hip08 PCIe controller.
+
+"PCIe" occurs too many times in this sentence.  Strictly speaking this
+is not a "PCIe driver"; it's a driver for an ACPI device that reports
+hip08-related errors.  Hopefully we don't need a separate driver for
+every hip* device, so maybe the "hip08" name is too specific.
+
+> + * Copyright (c) 2018-2019 Hisilicon Limited.
+
+Capitalize "HiSilicon" consistently.  Also "hip08"; previous practice
+in drivers/pci is "Hip05", "Hip06", so use that unless HiSilicon
+itself does it differently.
+
+> +#include <linux/acpi.h>
+> +#include <acpi/ghes.h>
+> +#include <linux/bitfield.h>
+> +#include <linux/bitops.h>
+> +#include <linux/delay.h>
+> +#include <linux/irq.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/list.h>
+> +#include <linux/pci.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/resource.h>
+> +#include <linux/kfifo.h>
+> +#include <linux/spinlock.h>
+> +
+> +#include "../pci.h"
+> +
+> +#define HISI_PCIE_ERR_RECOVER_RING_SIZE           16
+> +#define	HISI_PCIE_ERR_INFO_SIZE	1024
+> +
+> +/* HISI PCIe Local error definitions */
+> +#define HISI_PCIE_ERR_MISC_REGS	33
+> +
+> +#define HISI_PCIE_SUB_MODULE_ID_AP	0
+> +#define HISI_PCIE_SUB_MODULE_ID_TL	1
+> +#define HISI_PCIE_SUB_MODULE_ID_MAC	2
+> +#define HISI_PCIE_SUB_MODULE_ID_DL	3
+> +#define HISI_PCIE_SUB_MODULE_ID_SDI	4
+> +
+> +#define HISI_PCIE_LOCAL_VALID_VERSION		BIT(0)
+> +#define HISI_PCIE_LOCAL_VALID_SOC_ID		BIT(1)
+> +#define HISI_PCIE_LOCAL_VALID_SOCKET_ID		BIT(2)
+> +#define HISI_PCIE_LOCAL_VALID_NIMBUS_ID		BIT(3)
+> +#define HISI_PCIE_LOCAL_VALID_SUB_MODULE_ID	BIT(4)
+> +#define HISI_PCIE_LOCAL_VALID_CORE_ID		BIT(5)
+> +#define HISI_PCIE_LOCAL_VALID_PORT_ID		BIT(6)
+> +#define HISI_PCIE_LOCAL_VALID_ERR_TYPE		BIT(7)
+> +#define HISI_PCIE_LOCAL_VALID_ERR_SEVERITY	BIT(8)
+> +#define HISI_PCIE_LOCAL_VALID_ERR_MISC		9
+> +
+> +#define HISI_ERR_SEV_RECOVERABLE	0
+> +#define HISI_ERR_SEV_FATAL		1
+> +#define HISI_ERR_SEV_CORRECTED		2
+> +#define HISI_ERR_SEV_NONE		3
+> +
+> +guid_t hip08_pcie_sec_type = GUID_INIT(0xB2889FC9, 0xE7D7, 0x4F9D, 0xA8, 0x67,
+> +				       0xAF, 0x42, 0xE9, 0x8B, 0xE7, 0x72);
+> +
+> +#define HISI_PCIE_CORE_ID(v)             ((v) >> 3)
+> +#define HISI_PCIE_PORT_ID(core, v)       ((v >> 1) + (core << 3))
+> +#define HISI_PCIE_CORE_PORT_ID(v)        ((v % 8) << 1)
+> +#define HISI_PCIE_ROOT_BUSNR(v)          ((v) ? 0x80 : 0)
+
+Is the root bus number really hard-wired in the chip?  You're saying
+the only possible root bus numbers are 0x80 and 0x00?  Typically this
+bus number is programmable.
+
+Why parens around "v" (sometimes) but not others and "core"?
+
+> +struct hisi_pcie_local_err_data {
+> +	uint64_t   val_bits;
+> +	uint8_t    version;
+> +	uint8_t    soc_id;
+> +	uint8_t    socket_id;
+> +	uint8_t    nimbus_id;
+> +	uint8_t    sub_module_id;
+> +	uint8_t    core_id;
+> +	uint8_t    port_id;
+> +	uint8_t    err_severity;
+> +	uint16_t   err_type;
+> +	uint8_t    reserv[2];
+> +	uint32_t   err_misc[HISI_PCIE_ERR_MISC_REGS];
+
+Use u64, u8, u32 throughout instead.
+
+> +};
+> +
+> +struct pcie_err_info {
+> +	struct hisi_pcie_local_err_data err_data;
+> +	struct platform_device *pdev;
+> +};
+> +
+> +static char *pcie_local_sub_module_name(uint8_t id)
+> +{
+> +	switch (id) {
+> +	case HISI_PCIE_SUB_MODULE_ID_AP: return "AP Layer";
+> +	case HISI_PCIE_SUB_MODULE_ID_TL: return "TL Layer";
+> +	case HISI_PCIE_SUB_MODULE_ID_MAC: return "MAC Layer";
+> +	case HISI_PCIE_SUB_MODULE_ID_DL: return "DL Layer";
+> +	case HISI_PCIE_SUB_MODULE_ID_SDI: return "SDI Layer";
+> +	}
+> +
+> +	return "unknown";
+> +}
+> +
+> +static char *err_severity(uint8_t err_sev)
+> +{
+> +	switch (err_sev) {
+> +	case HISI_ERR_SEV_RECOVERABLE: return "recoverable";
+> +	case HISI_ERR_SEV_FATAL: return "fatal";
+> +	case HISI_ERR_SEV_CORRECTED: return "corrected";
+> +	case HISI_ERR_SEV_NONE: return "none";
+> +	}
+> +
+> +	return "unknown";
+> +}
+> +
+> +static struct pci_dev *hisi_hip08_pcie_get_rp(u32 chip_id, u32 port_id)
+> +{
+> +	u32 devfn = PCI_DEVFN(port_id, 0);
+> +	u32 busnr = HISI_PCIE_ROOT_BUSNR(chip_id);
+> +
+> +	return pci_get_domain_bus_and_slot(0, busnr, devfn);
+> +}
+> +
+> +static int hisi_hip08_pcie_port_acpi_reset(struct platform_device *pdev,
+> +					u32 chip_id, u32 port_id)
+> +{
+> +	struct device *dev = &(pdev->dev);
+
+Unnecessary parens.  More occurrences below.
+
+> +	struct acpi_object_list arg_list;
+> +	union acpi_object arg[3];
+> +
+> +	arg[0].type = ACPI_TYPE_INTEGER;
+> +	arg[0].integer.value = chip_id;
+> +	arg[1].type = ACPI_TYPE_INTEGER;
+> +	arg[1].integer.value = HISI_PCIE_CORE_ID(port_id);
+> +	arg[2].type = ACPI_TYPE_INTEGER;
+> +	arg[2].integer.value = HISI_PCIE_CORE_PORT_ID(port_id);
+> +
+> +	arg_list.count = 3;
+> +	arg_list.pointer = arg;
+> +	/* Call the ACPI handle to reset root port  */
+
+s/root port  /root port /
+
+> +	if (ACPI_HANDLE(dev)) {
+
+Restructure this to return early for error and unindent the following,
+e.g.,
+
+  acpi_handle handle = ACPI_HANDLE(dev);
+
+  if (!handle) {
+    dev_err(...);
+    return -EINVAL;
+  }
+
+  arg[0].type = ACPI_TYPE_INTEGER;
+  ...
+  s = acpi_evaluate_integer(handle, ...);
+
+> +		unsigned long long data = 0;
+> +		acpi_status s;
+> +
+> +		s = acpi_evaluate_integer(ACPI_HANDLE(dev),
+> +				"RST", &arg_list, &data);
+> +
+> +		if (ACPI_FAILURE(s)) {
+> +			dev_err(dev, "No Reset method\n");
+> +			return -EIO;
+> +		}
+> +
+> +		if (data) {
+> +			dev_err(dev, "Failed to Reset\n");
+> +			return -EIO;
+> +		}
+> +
+> +	} else {
+> +		dev_err(dev, "No Reset method\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int hisi_hip08_pcie_port_reset(struct platform_device *dev,
+> +				      u32 chip_id, u32 port_id)
+> +{
+> +	struct pci_dev *pdev;
+> +	struct pci_bus *root_bus;
+> +
+> +	pdev = hisi_hip08_pcie_get_rp(chip_id, port_id);
+> +	if (!pdev) {
+> +		dev_info(&(dev->dev), "Fail to get root port device\n");
+> +		return -ENODEV;
+> +	}
+> +	root_bus = pdev->bus;
+> +
+> +	pci_stop_and_remove_bus_device_locked(pdev);
+> +
+> +	if (hisi_hip08_pcie_port_acpi_reset(dev, chip_id, port_id))
+> +		return -EIO;
+> +	ssleep(1UL);
+
+Please include a comment that cites the spec section that requires
+this sleep.
+
+> +
+> +	/* add root port and downstream devices */
+> +	pci_lock_rescan_remove();
+> +	pci_rescan_bus(root_bus);
+> +	pci_unlock_rescan_remove();
+> +
+> +	return 0;
+> +}
+> +
+> +static void pcie_local_error_handle(const struct hisi_pcie_local_err_data *err,
+> +				    struct platform_device *pdev)
+> +{
+> +	char buf[HISI_PCIE_ERR_INFO_SIZE];
+> +	char *p = buf, *end = buf + sizeof(buf);
+> +	struct device *dev = &(pdev->dev);
+> +	uint32_t i;
+> +	int rc;
+> +
+> +	if (err->val_bits == 0) {
+> +		dev_warn(dev, "%s: no valid error information\n", __func__);
+> +		return;
+> +	}
+> +
+> +	/* Logging */
+> +	p += snprintf(p, end - p, "[ Table version=%d ", err->version);
+> +	if (err->val_bits & HISI_PCIE_LOCAL_VALID_SOC_ID)
+> +		p += snprintf(p, end - p, "SOC ID=%d ", err->soc_id);
+> +
+> +	if (err->val_bits & HISI_PCIE_LOCAL_VALID_SOCKET_ID)
+> +		p += snprintf(p, end - p, "socket ID=%d ", err->socket_id);
+> +
+> +	if (err->val_bits & HISI_PCIE_LOCAL_VALID_NIMBUS_ID)
+> +		p += snprintf(p, end - p, "nimbus ID=%d ", err->nimbus_id);
+> +
+> +	if (err->val_bits & HISI_PCIE_LOCAL_VALID_SUB_MODULE_ID)
+> +		p += snprintf(p, end - p, "sub module=%s ",
+> +			      pcie_local_sub_module_name(err->sub_module_id));
+> +
+> +	if (err->val_bits & HISI_PCIE_LOCAL_VALID_CORE_ID)
+> +		p += snprintf(p, end - p, "core ID=core%d ", err->core_id);
+> +
+> +	if (err->val_bits & HISI_PCIE_LOCAL_VALID_PORT_ID)
+> +		p += snprintf(p, end - p, "port ID=port%d ", err->port_id);
+> +
+> +	if (err->val_bits & HISI_PCIE_LOCAL_VALID_ERR_SEVERITY)
+> +		p += snprintf(p, end - p, "error severity=%s ",
+> +			      err_severity(err->err_severity));
+> +
+> +	if (err->val_bits & HISI_PCIE_LOCAL_VALID_ERR_TYPE)
+> +		p += snprintf(p, end - p, "error type=0x%x ", err->err_type);
+> +
+> +	p += snprintf(p, end - p, "]\n");
+> +	dev_info(dev, "\nHISI HIP08: PCIe local error\n");
+> +	dev_info(dev, "%s\n", buf);
+> +
+> +	dev_info(dev, "Reg Dump:\n");
+> +	for (i = 0; i < HISI_PCIE_ERR_MISC_REGS; i++) {
+> +		if (err->val_bits & BIT(HISI_PCIE_LOCAL_VALID_ERR_MISC + i))
+> +			dev_info(dev,
+> +				 "ERR_MISC_%d=0x%x\n", i, err->err_misc[i]);
+> +	}
+> +
+> +	/* Recovery for the PCIe local errors */
+> +	if (err->err_severity == HISI_ERR_SEV_RECOVERABLE) {
+> +		/* try reset PCI port for the error recovery */
+> +		rc = hisi_hip08_pcie_port_reset(pdev, err->socket_id,
+> +				HISI_PCIE_PORT_ID(err->core_id, err->port_id));
+> +		if (rc) {
+> +			dev_info(dev, "fail to do hip08 pcie port reset\n");
+> +			return;
+> +		}
+> +	}
+> +}
+> +
+> +static DEFINE_KFIFO(pcie_err_recover_ring, struct pcie_err_info,
+> +		    HISI_PCIE_ERR_RECOVER_RING_SIZE);
+> +static DEFINE_SPINLOCK(pcie_err_recover_ring_lock);
+> +
+> +static void pcie_local_err_recover_work_func(struct work_struct *work)
+> +{
+> +	struct pcie_err_info pcie_err_entry;
+> +
+> +	while (kfifo_get(&pcie_err_recover_ring, &pcie_err_entry)) {
+> +		pcie_local_error_handle(&pcie_err_entry.err_data,
+> +					pcie_err_entry.pdev);
+> +	}
+> +}
+> +
+> +static DECLARE_WORK(pcie_err_recover_work, pcie_local_err_recover_work_func);
+> +
+> +
+> +static void hip08_pcie_local_error_handle(struct acpi_hest_generic_data *gdata,
+> +					  int sev, void *data)
+> +{
+> +	const struct hisi_pcie_local_err_data *err_data =
+> +					acpi_hest_get_payload(gdata);
+> +	struct pcie_err_info err_info;
+> +	struct platform_device *pdev = data;
+> +	struct device *dev = &(pdev->dev);
+> +
+> +	memcpy(&err_info.err_data, err_data, sizeof(*err_data));
+> +	err_info.pdev = pdev;
+> +
+> +	if (kfifo_in_spinlocked(&pcie_err_recover_ring, &err_info, 1,
+> +				&pcie_err_recover_ring_lock))
+> +		schedule_work(&pcie_err_recover_work);
+> +	else
+> +		dev_warn(dev, "Buffer overflow when recovering PCIe local error\n");
+
+I'd call this a "queue full" warning or similar.  "Buffer overflow"
+suggests that we wrote past the end of a buffer and corrupted some
+memory, but that's not the case here.
+
+> +}
+> +
+> +static int hisi_hip08_pcie_err_handler_probe(struct platform_device *pdev)
+> +{
+> +	int ret = 0;
+
+Pointless local variable; maybe you meant to return failure if
+ghes_register_event_handler() fails?  Don't initialize unless it's
+necessary.
+
+> +
+> +	if (ghes_register_event_handler(hip08_pcie_sec_type,
+> +					hip08_pcie_local_error_handle,
+> +					pdev)) {
+> +		dev_err(&(pdev->dev), "%s : ghes_register_event_handler fail\n",
+> +			__func__);
+> +		return ret;
+> +}
+
+Indentation error.
+
+> +
+> +	return 0;
+> +}
+> +
+> +static int hisi_hip08_pcie_err_handler_remove(struct platform_device *pdev)
+> +{
+> +	ghes_unregister_event_handler(hip08_pcie_sec_type);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct acpi_device_id hip08_pcie_acpi_match[] = {
+> +	{ "HISI0361", 0 },
+> +	{ }
+> +};
+> +
+> +static struct platform_driver hisi_hip08_pcie_err_handler_driver = {
+> +	.driver = {
+> +		.name	= "hisi-hip08-pcie-err-handler",
+> +		.acpi_match_table = hip08_pcie_acpi_match,
+> +	},
+> +	.probe		= hisi_hip08_pcie_err_handler_probe,
+> +	.remove		= hisi_hip08_pcie_err_handler_remove,
+> +};
+> +module_platform_driver(hisi_hip08_pcie_err_handler_driver);
+> +
+> +MODULE_DESCRIPTION("HiSilicon HIP08 PCIe controller error handling driver");
+> +MODULE_LICENSE("GPL v2");
+> +
+> -- 
+> 1.9.1
+> 
+> 
