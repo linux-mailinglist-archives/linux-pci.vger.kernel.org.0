@@ -2,39 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 07D1713CB6B
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2020 18:55:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F76213CB6D
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jan 2020 18:55:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726574AbgAORzW convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Wed, 15 Jan 2020 12:55:22 -0500
-Received: from mail-oln040092254041.outbound.protection.outlook.com ([40.92.254.41]:6165
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        id S1729067AbgAORzl convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Wed, 15 Jan 2020 12:55:41 -0500
+Received: from mail-oln040092253099.outbound.protection.outlook.com ([40.92.253.99]:62544
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726418AbgAORzV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 15 Jan 2020 12:55:21 -0500
+        id S1726418AbgAORzl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 15 Jan 2020 12:55:41 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TH4DHm8tzd2BcDZY3jCexdct8X29JgK4T1SR9CoZ3fHM22lLjo10FcSaZQzOyEsqQrqiD1O9lvvkQOR6OiLIzIeIduOHpN94muxECPIBTc9S4UHgV/wTuIixQ7f0/kOZox5ttN8atVQQAozJPQdCKEC2CjALS/p6echVON1lxhiklU+Qb+6MQ5X4ephCxR/a2Q9rThEaODCY8x4tp8WOP0ccIu0xx2wVQvExH20bgQffc4xSIzrZ7oJL1TEFmvD3C++oVuA8bqxdFEHdMDt0zcvwVX3CSsDefpaPHizmlr83017I178kZxTyBxvEbJENkNj1WwWMBUa7PWbd13UuRA==
+ b=Ehj5yglgyc8wkXGfFw2CxYRxkPES0nygaDLGuF+6Q4ugpzIQzoq6foqs5Bmp/5qGgrQFksye5xyC4b0LhOJzTEbB0cUeNPqf6mv5KmiFJEm7srZXHPgyc8u+q1hIeJXLakGobA7Y2PZYCPgK1fKefg2ECbhunXxuNpV+f7vj3rSrsrwUzd1+qLHbO2iiDJUts1nsMRywhCqQKWDKRyfdnAxLId7LoPv1uDvga2bdeU/N8nBh+P97M39gGsq5PKb5j1sgn/puVB1LIzs6yrBjj3fOSkppJMn2OzQ/xAlFvhtHk/Ea71aquMsiPRk9rs5z8Jc+Wi00mfhTT/4kwuDc1w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SwrHrs3hsBumaJ66DLtUIOXyRW1kkvuywmlrXO/fibU=;
- b=fo0psRQ76ceRSkl+9X82maUcEMCBSrbdHDJE4Agnd+8B2zWffjHV4j+yYGiaE/0QRf4aPDJ/YjoIW/opxZOtQtzRVXZsMgj96UtqZYncR650RsqpBpwAN1UrJM0abPTiF8jp7tD771kC8314z2iD4VdsSE2gYahHkIqGp1G4Dy9KHltuOWVVg6Ae3QL5dC4dtL0qFVPuvk1lpIaXA2FB9gXz7MLWB36dHwk7XhMPe/0c/vZP9Cnx97mHfvg4XEcHSU8XFL2yt4tJ3MhU7sXVeUYXFGBooknpgqsBUNmDcUyo+vgNAeAAeAQ0QKbtH8kPAGNDLUDdaDEGsz/+RWOrRQ==
+ bh=PaWrRiUlxqKC/gKwrQ6i+Mwd0PrSM1EXI3p/EN1u1OU=;
+ b=nMDFtwan/FjN/psUmPH2HfpvNaBBfxy4Ya2W6SHrdIzITQBzngBd4JBbQ5yYYd9xe3PAB2n5kvdsnGVHjlgyBQuaV7mAdFsshGCMysC1pMy0ml6n3ghczHhCdX2EIT4v6NIlBKRabLCLPUTjwFnFL+GTTJw+x1x8cdhMV0vJ7fV2vcN7eGjzCrhKqOkvnB18/Llt99mXDErD3jHgG9ophp8x89dG7/lc95XtLd4ctXtr95Lg7EpBy4Y6jeCnremFJMhHjgMfOdbXPtGJNNy2sn9FXPRr5HmHc3qQ+XHDOesJC+dHH7CLY0mUFJjLa+RKu3SQ5XthGwjaTXltqecmXQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 Received: from PU1APC01FT115.eop-APC01.prod.protection.outlook.com
- (10.152.252.51) by PU1APC01HT158.eop-APC01.prod.protection.outlook.com
- (10.152.252.185) with Microsoft SMTP Server (version=TLS1_2,
+ (10.152.252.54) by PU1APC01HT069.eop-APC01.prod.protection.outlook.com
+ (10.152.253.47) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.11; Wed, 15 Jan
- 2020 17:55:17 +0000
+ 2020 17:55:36 +0000
 Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.252.57) by
  PU1APC01FT115.mail.protection.outlook.com (10.152.252.208) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2602.11 via Frontend Transport; Wed, 15 Jan 2020 17:55:17 +0000
+ 15.20.2602.11 via Frontend Transport; Wed, 15 Jan 2020 17:55:36 +0000
 Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
  ([fe80::20ad:6646:5bcd:63c9]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
  ([fe80::20ad:6646:5bcd:63c9%11]) with mapi id 15.20.2623.018; Wed, 15 Jan
- 2020 17:55:17 +0000
-Received: from nicholas-dell-linux (61.69.138.108) by ME2PR01CA0124.ausprd01.prod.outlook.com (2603:10c6:201:2e::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.18 via Frontend Transport; Wed, 15 Jan 2020 17:55:14 +0000
+ 2020 17:55:36 +0000
+Received: from nicholas-dell-linux (61.69.138.108) by ME2PR01CA0059.ausprd01.prod.outlook.com (2603:10c6:201:2b::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.19 via Frontend Transport; Wed, 15 Jan 2020 17:55:33 +0000
 From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
 To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
@@ -43,66 +43,78 @@ CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Logan Gunthorpe <logang@deltatee.com>,
         Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Subject: [PATCH v2 0/3] PCI: Fix failure to assign BARs with alignment >1M
- with Thunderbolt
-Thread-Topic: [PATCH v2 0/3] PCI: Fix failure to assign BARs with alignment
- >1M with Thunderbolt
-Thread-Index: AQHVy8zxsAcuWcBVnUOaHrWI/O9uwg==
-Date:   Wed, 15 Jan 2020 17:55:17 +0000
-Message-ID: <PSXP216MB04387C41E6734CC4DEA9846280370@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+Subject: [PATCH v2 1/3] PCI: Remove redundant brackets in
+ pci_bus_distribute_available_resources()
+Thread-Topic: [PATCH v2 1/3] PCI: Remove redundant brackets in
+ pci_bus_distribute_available_resources()
+Thread-Index: AQHVy8z9Ar1BXjAzu02TW9NgPGJS+w==
+Date:   Wed, 15 Jan 2020 17:55:35 +0000
+Message-ID: <PSXP216MB043862CDB5DEC7B58D5A1B7B80370@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
 Accept-Language: en-AU, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: ME2PR01CA0124.ausprd01.prod.outlook.com
- (2603:10c6:201:2e::16) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+x-clientproxiedby: ME2PR01CA0059.ausprd01.prod.outlook.com
+ (2603:10c6:201:2b::23) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
  (2603:1096:300:d::20)
-x-incomingtopheadermarker: OriginalChecksum:9BCD66280E596EBA588BBAB7CAF578C2700EF1CBE08D7DC6E68A4118C9CA2220;UpperCasedChecksum:1FBC8856690AEC71C1D8D695B7B9AB1CDC9E4DCB257F1B498C3775709184686F;SizeAsReceived:7798;Count:48
+x-incomingtopheadermarker: OriginalChecksum:A77651BFBE56B22DE675C464AECA7AD6224C5B8F6FA06847F6A0524CC330A123;UpperCasedChecksum:119053F4C44AFB5D7071DF8C9D9019510F6A007824BE182D5106C05F9C68EC58;SizeAsReceived:7828;Count:48
 x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [tccJdBO/fWgCSAz8DQY7D2G/iSgcXRf1]
-x-microsoft-original-message-id: <20200115175508.GA4503@nicholas-dell-linux>
+x-tmn:  [+cZ8q41Eg7q3G2XpRomHGhh7FZvLmmQL]
+x-microsoft-original-message-id: <20200115175528.GA4505@nicholas-dell-linux>
 x-ms-publictraffictype: Email
 x-incomingheadercount: 48
 x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: f12dca4c-660d-47e2-74d9-08d799e4144b
-x-ms-exchange-slblob-mailprops: mBy7Mai7yE5NBIk4d/kkaYf19Kf5IaBB2ougQ3QCcMIjZyL4I2r/u3GZgbZ6LJJKYtR9hPJk37ZennVP2juFXXLWsJHLAP4lTdVlGYxJhy9kLWcQkQZaPb0kuNjJa0Dw383gRwenq0vfOZH3AffhU/yAMqc87JrWv+TA06UPmha13Ca/WwGa9eXa0laKveHHTXwVxzL8Dfbh0JUrBjovRsY2C/sPlRSsmNpiWsBLdngSSXoz+WIgED+f9duIdrhAy64RCxOz6N2/63N+ReFSMvmMEhsXp+/KJuEihD4Z2n6OTsD5DT47NAGY7H4NuKkZmh+5xNvvG1a2nh3zsWJrhAtvKcHKOFgyk9/spICRDz10jmR3zsr5kfPsi7lum/NGz6VaztZjj3W818FeNgEEeBekh1CU1jp8adGkhA4tdfPdIGxiNLngJINgK7ENAeiwEGZhGru45KFHZEuFcdiywfZDQYPigTthrshv2d2Ra77Yi+Vf5CWl8Cmi+LeRqNBwQHNWoBOekIbvCRTCoSWiW1GM5FCg3DWa/0fx5VvZJswK9n7Jc8msMueNiIY70oLAIKZpunXa+pTkdJW4sracsvvYTkgLTTHqUE/wCeqbV0NSnFxPNUACtfWpImtZfgHSQDWD54ZWwUSanS8bm88WJAjp8glvVzVEX1B5bZYm43N4Z9oNXOaBhSfMWinGE9hC+rK41pBuyn6SdkpAqEz9cdfH5LXRk282
-x-ms-traffictypediagnostic: PU1APC01HT158:
+x-ms-office365-filtering-correlation-id: 7b203514-f05d-4236-63ac-08d799e41f8e
+x-ms-exchange-slblob-mailprops: Zv/SX2iM+5VJNhHB98CBUJCpDp+U+pvxxmPlOs7EevofASLKSzltoElL1zmS5cefwn8lmMZPKG3nlQsxJkBf+uX2luHuwMHJTkQsLmGtiH7r1GVkjM0EERHfi8uPoRjbLNzgK6UpNFB4d9Y/Q3o89bdFpg6Nmyt6NuuiIDkbPtwUc9EGn9c8SZ92IIuJMPhXiQxOda0BdqoblD2LYEJqArdHNS8y58NBT25uROApJoX93KKf7qKgFgsDqmaHH9MeLSdsmDcrXRM5a4QleyaqvV+/v5kFM++1lmghtoKfSUbg+CmGh5GQraj0v6ZQ6sTIDjgiOdLASfSHWkWJjDZb4Y0wF61jR3iO/2J8bPdxPxRyDB5DlNpkB+iZ9y/ow+VmgFkRnM1Q28Ev3bVfz6TfyNNe6KtJKDO7Uaj/Xjvf/4hhN1p0LdGoc997Aysv5VDK9lqxfuve/N+BT8hHusma/brH6X16Xhw8tncACLzuPJJFQn/eHhuJsEhj1b+AgHJGSvGLFvMxry+4EpupFIyzOJvtJ0JnKFrNbhpO7Hc8D0HC1b6mbr4+Q06Fj0mPSpEDvpXV6u/+s5DFj+aItC0+F1c31CM/ruot9WdxvXbUk1xhw1N19DFZSIsJaSVRuQlSwjxDdmj18aYYPP1V+Hytb4bCbNjvJ85vnjvAjhdZ7iX3tVie9+3R1TTxohyeYmarjuIK/SyOAEM=
+x-ms-traffictypediagnostic: PU1APC01HT069:
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: q8A5eiQmGvK0nPCDgDHbxNtvLdCVmlJKRXNrQsuoxkR1xoV4lYDJvFK5ZmivC5vzKPSvytTaYbxvtz2aY+ijVh1FRjluw6QmG+zG2Ovr/6gWKMUdLGWbcYepBpIRtIZhkO3HyAxmGUTk6ydOT7v5SiP7o+DLEfYJQdmfamP+rMUppOzL45hRq3qIQmDUYnk2
+x-microsoft-antispam-message-info: ylJBPrzEq6HFbSkZHrBj/AcCFKlNjjWETxPjWXtxR5Jvm2eqvPQdaVf4CAyAZh3jgZEMUb/JoZcZtMVFANqO1MiO9R0dotv9eMFeTu5VEMyEum/+fYmEueBZ8G3Aw4lJBTVe5VMWKxc3ar0Pd5Kb4s/MifmlR2hD7QF7Sa8rDumLO7c+L6hKp6AIkZsWpa5z
 x-ms-exchange-transport-forked: True
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <8A9B1EE179975A4DB1177E45C0110F1C@KORP216.PROD.OUTLOOK.COM>
+Content-ID: <7A58F04F1A923040A8900979CECFEFC9@KORP216.PROD.OUTLOOK.COM>
 Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
 X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: f12dca4c-660d-47e2-74d9-08d799e4144b
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7b203514-f05d-4236-63ac-08d799e41f8e
 X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jan 2020 17:55:17.2045
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jan 2020 17:55:36.2280
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Internet
 X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT158
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT069
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Tiny changes:
-	- Add Mika Westerberg's Reviewed-by: tags which he gave.
-	- Change commit description slightly in 2/3.
+Remove redundant brackets in pci_bus_distribute_available_resources().
 
-Nicholas Johnson (3):
-  PCI: Remove redundant brackets in
-    pci_bus_distribute_available_resources()
-  PCI: Change pci_bus_distribute_available_resources() args to struct
-    resource
-  PCI: Consider alignment of hot-added bridges when distributing
-    available resources
+No functional changes.
 
- drivers/pci/setup-bus.c | 106 +++++++++++++++++++++++-----------------
- 1 file changed, 61 insertions(+), 45 deletions(-)
+Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+---
+ drivers/pci/setup-bus.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index f27982620..465a8b565 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -1902,11 +1902,10 @@ static void pci_bus_distribute_available_resources(struct pci_bus *bus,
+ 	 */
+ 	if (hotplug_bridges + normal_bridges == 1) {
+ 		dev = list_first_entry(&bus->devices, struct pci_dev, bus_list);
+-		if (dev->subordinate) {
++		if (dev->subordinate)
+ 			pci_bus_distribute_available_resources(dev->subordinate,
+ 				add_list, available_io, available_mmio,
+ 				available_mmio_pref);
+-		}
+ 		return;
+ 	}
+ 
 -- 
 2.25.0
 
