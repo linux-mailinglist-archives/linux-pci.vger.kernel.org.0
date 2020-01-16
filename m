@@ -2,115 +2,162 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CF5C13FB8F
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2020 22:32:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6525313FBA1
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2020 22:36:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389288AbgAPVbo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Jan 2020 16:31:44 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:37794 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389270AbgAPVbn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Jan 2020 16:31:43 -0500
-Received: by mail-pl1-f195.google.com with SMTP id c23so8903781plz.4
-        for <linux-pci@vger.kernel.org>; Thu, 16 Jan 2020 13:31:43 -0800 (PST)
+        id S1729235AbgAPVgI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Jan 2020 16:36:08 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:39077 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726872AbgAPVgI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Jan 2020 16:36:08 -0500
+Received: by mail-pg1-f193.google.com with SMTP id b137so10556187pga.6;
+        Thu, 16 Jan 2020 13:36:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CnVcYi/hHjaeb2++zB3QNjZWrPcPugEoKb4FEoIY0uc=;
-        b=e1Q+9nwivpUZ2eoLhWvQW1m6CVAfa3aaBK6UccLFGY6wRgCQaM0k2UwuA/r4xW72Fz
-         Cpa8tRIYCmLrOJczdtutg3hQgF5DQ/LN0HphoQosDw7iwLUx78p/zHtm31mmcOujIme5
-         IVDzoihrY9213l6cwwUw0YMFuljdl3ONuQPx8=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:thread-topic:thread-index:date:message-id
+         :references:in-reply-to:accept-language:content-language
+         :content-transfer-encoding:mime-version;
+        bh=VvHjOr4ACw42b4kMyCv1bwkltuHZ5dV8Yk2HQjQZAlI=;
+        b=VXMxF6J4VZaz/Wz/4mgtW/q1blQp73b5J3ss4YXtK3xaICcRQ2TRvWJYSWTvfbf+x4
+         3JsuoCOm02lXPCiVipKd7lZ6zlcBYl5iJpeMZG6mmvQhc8fijS4jm7OeXiOyUFI4ZyTp
+         f2q2cRVF7yklkq/083axeifLLcevK4ZM19nRuhRLDaNEJX1PsllqFr8CEguV3Un01aZa
+         d9eL7YrGUJxW5iuIj6Oese/tY5+ijzsL3iWNXvSnstqIf9LcFPOGgTfi+wYoPQHZ4nGu
+         PaTKHQY0ff+/rjx04oBxocEGBXUDIL8zNXze+NH+Y8/GN9EMpn2w856KYdkpP2p6aYVD
+         bybQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CnVcYi/hHjaeb2++zB3QNjZWrPcPugEoKb4FEoIY0uc=;
-        b=rFlar3gcLdu0havx7aN7Eu0Nupf6ie9+g1dzr2T6a7b7+Hw0XwGEraBBfUzq8b39GU
-         cFLTPEzQyEydIr4GF244WbXIdzBUxSRedlxnNOsb0IVW9rCUoTzRe1zjYnNDhnVUUHyQ
-         1n1tCwwaakVbcuOVCTiZOTHP/j2AWTbC0rncOk5GUtPt8jZDy0vVDbWamOBNUVbNjq9z
-         SSmdIWzD/aI3xpUpI36ld0PQdUxo6V82Eq6z3dkAF4fVUKuLNJCAbAZ1rVLYtEvO+1gS
-         2il6zs/XTLSsaNnRbeuAQtnfMd0UOzfb71/N9KIgcrxJUuewIRqnSJPmrc73yv/m1BY1
-         HCBg==
-X-Gm-Message-State: APjAAAWE3o348AVpnQIvUcIZAya2fcFwr9BBnyr+NQxKrhbtaH/YIrCc
-        OiwePo/gvDqE/RuHuPHMRFIS8E6ab/4=
-X-Google-Smtp-Source: APXvYqxRm1Ch7JZUpuIlMAl3bHLM9JzmakZgQeA31Fg9jI5zsQYCQR2YD2ZlLu+lzl5fVGUJRQtt3A==
-X-Received: by 2002:a17:902:8202:: with SMTP id x2mr32885787pln.314.1579210302728;
-        Thu, 16 Jan 2020 13:31:42 -0800 (PST)
-Received: from evgreen2.mtv.corp.google.com ([2620:15c:202:201:ffda:7716:9afc:1301])
-        by smtp.gmail.com with ESMTPSA id g19sm26782723pfh.134.2020.01.16.13.31.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 16 Jan 2020 13:31:42 -0800 (PST)
-From:   Evan Green <evgreen@chromium.org>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Evan Green <evgreen@chromium.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI/MSI: Avoid torn updates to MSI pairs
-Date:   Thu, 16 Jan 2020 13:31:28 -0800
-Message-Id: <20200116133102.1.I9c7e72144ef639cc135ea33ef332852a6b33730f@changeid>
-X-Mailer: git-send-email 2.24.1
+        h=x-gm-message-state:from:to:cc:subject:thread-topic:thread-index
+         :date:message-id:references:in-reply-to:accept-language
+         :content-language:content-transfer-encoding:mime-version;
+        bh=VvHjOr4ACw42b4kMyCv1bwkltuHZ5dV8Yk2HQjQZAlI=;
+        b=nw8gvnVs4nHYNulV8HcogCQwZXDurflFD8k+UlKXyGvGRQt/i8VQUBStDISYDZrzOQ
+         8Lr2j/Wq0T4EgGGCb+syPhhXQoDtMox1uU0x8qyDnGcKywMuidq74RgtZebUJB/XC7N9
+         7hHgbC9riNDxjAtDzVT45Lg2pgCYhnTcLKc7U7tLiV826udBRSrBHJBh0wQfwWloADX/
+         48GRI83D1Thf3kVMZW881IJqiInv6Ln5kuivyxLQn7zZmSRnCFZepxoXyGD1rYe5+pRs
+         9ptWuKxVrmp3T4UEBtXXcC7ajhO5Wt7I2rTeykdAWpfAqsKuHQ5seQ8c06/P1/J5z0vq
+         D9fA==
+X-Gm-Message-State: APjAAAVH3Hrqsi45S5aF3HDm4/mAOi8V4oGwoeSNgQICdC7hwM4zw8Bw
+        uVZYepsvcXkOCsYg8eZaMBk=
+X-Google-Smtp-Source: APXvYqxjr+BBlZeEcRR6QoKUFDGOvvBQdbcqg/tsq1gFgKlSEwc4bQlSKtnjEoU0a7Mq2ueap/gU1g==
+X-Received: by 2002:a63:554c:: with SMTP id f12mr42586847pgm.23.1579210567196;
+        Thu, 16 Jan 2020 13:36:07 -0800 (PST)
+Received: from SL2P216MB0105.KORP216.PROD.OUTLOOK.COM ([2603:1046:100:22::5])
+        by smtp.gmail.com with ESMTPSA id g2sm26555320pgn.59.2020.01.16.13.36.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 16 Jan 2020 13:36:06 -0800 (PST)
+From:   Jingoo Han <jingoohan1@gmail.com>
+To:     Shawn Lin <shawn.lin@rock-chips.com>
+CC:     Heiko Stuebner <heiko@sntech.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        William Wu <william.wu@rock-chips.com>,
+        Simon Xue <xxm@rock-chips.com>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        Han Jingoo <jingoohan1@gmail.com>
+Subject: Re: [PATCH 5/6] PCI: rockchip: add DesignWare based PCIe controller
+Thread-Topic: [PATCH 5/6] PCI: rockchip: add DesignWare based PCIe controller
+Thread-Index: AQHVyqvWb/c4FgGoOUOrdcU9dWh4vqft1IkR
+X-MS-Exchange-MessageSentRepresentingType: 1
+Date:   Thu, 16 Jan 2020 21:36:00 +0000
+Message-ID: <SL2P216MB0105652DE83E7CBBDA2A370CAA360@SL2P216MB0105.KORP216.PROD.OUTLOOK.COM>
+References: <1578986580-71974-1-git-send-email-shawn.lin@rock-chips.com>
+ <1578986701-72072-1-git-send-email-shawn.lin@rock-chips.com>
+In-Reply-To: <1578986701-72072-1-git-send-email-shawn.lin@rock-chips.com>
+Accept-Language: ko-KR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-Exchange-Organization-SCL: -1
+X-MS-TNEF-Correlator: 
+X-MS-Exchange-Organization-RecordReviewCfmType: 0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-__pci_write_msi_msg() updates three registers in the device: address
-high, address low, and data. On x86 systems, address low contains
-CPU targeting info, and data contains the vector. The order of writes
-is address, then data.
+On 1/14/20, 2:25 AM, Shawn Lin wrote:
+>=20
+> From: Simon Xue <xxm@rock-chips.com>
+>
+> Signed-off-by: Simon Xue <xxm@rock-chips.com>
+> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+> ---
+>
+>  drivers/pci/controller/dwc/Kconfig            |   9 +
+>  drivers/pci/controller/dwc/Makefile           |   1 +
+>  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 441 ++++++++++++++++++++=
+++++++
+>  3 files changed, 451 insertions(+)
+>  create mode 100644 drivers/pci/controller/dwc/pcie-dw-rockchip.c
+>
+> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/=
+dwc/Kconfig
+> index 0830dfc..9160264 100644
+> --- a/drivers/pci/controller/dwc/Kconfig
+> +++ b/drivers/pci/controller/dwc/Kconfig
+> @@ -82,6 +82,15 @@ config PCIE_DW_PLAT_EP
+>  	  order to enable device-specific features PCI_DW_PLAT_EP must be
+>  	  selected.
+> =20
+> +config PCIE_DW_ROCKCHIP
+> +	bool "Rockchip DesignWare PCIe controller"
+> +	select PCIE_DW
+> +	select PCIE_DW_HOST
+> +	depends on ARCH_ROCKCHIP
+> +	depends on OF
+> +	help
+> +	  Enables support for the DW PCIe controller in the Rockchip SoC.
+> +
 
-This is problematic if an interrupt comes in after address has
-been written, but before data is updated, and the SMP affinity of
-the interrupt is changing. In this case, the interrupt targets the
-wrong vector on the new CPU.
+The order is PCIE_DW, PCI_*, and PCIE_* as below.
 
-This case is pretty easy to stumble into using xhci and CPU hotplugging.
-Create a script that targets interrupts at a set of cores and then
-offlines those cores. Put some stress on USB, and then watch xhci lose
-an interrupt and die.
+1. Common Frameworks:
+    These options are used by other controller drivers.
+    e.g., PCIE_DW, PCIE_DW_HOST, PCIE_DW_EP.
 
-Avoid this by disabling MSIs during the update.
+2. PCI_* controller drivers:
+    PCI_* was used earlier than PCIE_*. If a chip vendor's controllers prov=
+ide
+    both conventional PCI and PCI Express, or only conventional PCI, PCI_* =
+can
+    be used.
 
-Signed-off-by: Evan Green <evgreen@chromium.org>
----
+3. PCIE_* controller drivers
+    If a controller can support only PCI Express, not conventional PCI,
+    PCIE_* is the proper naming.
 
+Then, within PCI_* or PCIE_* categories, each controller option should be
+in an alphabetical order for the readability.
 
-Bjorn,
-I was unsure whether disabling MSIs temporarily is actually an okay
-thing to do. I considered using the mask bit, but got the impression
-that not all devices support the mask bit. Let me know if this going to
-cause problems or there's a better way. I can include the repro
-script I used to cause mayhem if needed.
+So, add 'PCIE_DW_ROCKCHIP' between 'PCIE_ARTPEC6_EP' and 'PCIE_KIRIN'.
 
----
- drivers/pci/msi.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+>
+>  config PCI_EXYNOS
+>  	bool "Samsung Exynos PCIe controller"
+>  	depends on SOC_EXYNOS5440 || COMPILE_TEST
+> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller=
+/dwc/Makefile
+> index 8a637cf..cb4857f 100644
+> --- a/drivers/pci/controller/dwc/Makefile
+> +++ b/drivers/pci/controller/dwc/Makefile
+> @@ -19,6 +19,7 @@ obj-$(CONFIG_PCIE_HISI_STB) +=3D pcie-histb.o
+>  obj-$(CONFIG_PCI_MESON) +=3D pci-meson.o
+>  obj-$(CONFIG_PCIE_TEGRA194) +=3D pcie-tegra194.o
+>  obj-$(CONFIG_PCIE_UNIPHIER) +=3D pcie-uniphier.o
+> +obj-$(CONFIG_PCIE_DW_ROCKCHIP) +=3D pcie-dw-rockchip.o
 
-diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-index 6b43a5455c7af..97856ef862d68 100644
---- a/drivers/pci/msi.c
-+++ b/drivers/pci/msi.c
-@@ -328,7 +328,7 @@ void __pci_write_msi_msg(struct msi_desc *entry, struct msi_msg *msg)
- 		u16 msgctl;
- 
- 		pci_read_config_word(dev, pos + PCI_MSI_FLAGS, &msgctl);
--		msgctl &= ~PCI_MSI_FLAGS_QSIZE;
-+		msgctl &= ~(PCI_MSI_FLAGS_QSIZE | PCI_MSI_FLAGS_ENABLE);
- 		msgctl |= entry->msi_attrib.multiple << 4;
- 		pci_write_config_word(dev, pos + PCI_MSI_FLAGS, msgctl);
- 
-@@ -343,6 +343,9 @@ void __pci_write_msi_msg(struct msi_desc *entry, struct msi_msg *msg)
- 			pci_write_config_word(dev, pos + PCI_MSI_DATA_32,
- 					      msg->data);
- 		}
-+
-+		msgctl |= PCI_MSI_FLAGS_ENABLE;
-+		pci_write_config_word(dev, pos + PCI_MSI_FLAGS, msgctl);
- 	}
- 
- skip:
--- 
-2.24.1
+Ditto.
+
+[...]
+
+Best regards,
+Jingoo Han
 
