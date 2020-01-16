@@ -2,41 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E2A4213F84C
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2020 20:18:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D792E13F6F4
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2020 20:08:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437636AbgAPTR2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Jan 2020 14:17:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40396 "EHLO mail.kernel.org"
+        id S2387991AbgAPTIW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Jan 2020 14:08:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731458AbgAPQzS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:55:18 -0500
+        id S2387966AbgAPRBA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:01:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A59D422522;
-        Thu, 16 Jan 2020 16:55:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BEA520730;
+        Thu, 16 Jan 2020 17:00:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193717;
-        bh=r1TXOJ5+im7ZtJxcLkK9fAtqlGOUDTNxoiKn4bdGoiE=;
+        s=default; t=1579194060;
+        bh=UUbtdtYPxr1Fu2Ab0dI1KWoUNyTnq3mp4rCOTqYE0Cc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iAvlw/yfBXArpMHce8av4YhNQXGC7Biqy5lRJtvEqoRzZ4GsEbbnRZNQw0K4Xk11Q
-         lsBjWr9A4J8f0yNsjJZcUSoo3xdORzZMlpYb8QaGKJegcR3UhSkBccQr4Yqs03Gq/i
-         55RYxprIwZnZ53sZtxcAg18O6cuPNGhHUcrD1jKo=
+        b=DLdZDnCLjA1nqHtFqVY7Ml1JYHighXnlOLb5vc5aGMBfCM3yUpW/uGtuf2d7jClxs
+         492zZ5BUKsnes4el8LJsXW0WbUOh2Og7U7/57uXvoLNW7XWno1/9dbFzcBDPxtUgL0
+         4rj7RMgXpfWvEaALJDEYsaAjO4IkbbJ8jYZH0uYk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jitendra Bhivare <jitendra.bhivare@broadcom.com>,
-        Ray Jui <ray.jui@broadcom.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andy Gospodarek <gospo@broadcom.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 012/671] PCI: iproc: Remove PAXC slot check to allow VF support
-Date:   Thu, 16 Jan 2020 11:44:03 -0500
-Message-Id: <20200116165502.8838-12-sashal@kernel.org>
+Cc:     Paul Selles <paul.selles@microchip.com>,
+        Wesley Sheng <wesley.sheng@microchip.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>,
+        linux-pci@vger.kernel.org, linux-ntb@googlegroups.com
+Subject: [PATCH AUTOSEL 4.19 172/671] ntb_hw_switchtec: debug print 64bit aligned crosslink BAR Numbers
+Date:   Thu, 16 Jan 2020 11:51:21 -0500
+Message-Id: <20200116165940.10720-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
-References: <20200116165502.8838-1-sashal@kernel.org>
+In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
+References: <20200116165940.10720-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -46,43 +45,37 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Jitendra Bhivare <jitendra.bhivare@broadcom.com>
+From: Paul Selles <paul.selles@microchip.com>
 
-[ Upstream commit 4da6b4480766e5bc9c4d7bc14bf1d0939a1a5fa7 ]
+[ Upstream commit cce8e04cf79e47809455215744685e8eb56f94bb ]
 
-Fix previous incorrect logic that limits PAXC slot number to zero only.
-In order for SRIOV/VF to work, we need to allow the slot number to be
-greater than zero.
+Switchtec NTB crosslink BARs are 64bit addressed but they are printed as
+32bit addressed BARs. Fix debug log to increment the BAR numbers by 2 to
+reflect the 64bit address alignment.
 
-Fixes: 46560388c476c ("PCI: iproc: Allow multiple devices except on PAXC")
-Signed-off-by: Jitendra Bhivare <jitendra.bhivare@broadcom.com>
-Signed-off-by: Ray Jui <ray.jui@broadcom.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Andy Gospodarek <gospo@broadcom.com>
+Fixes: 017525018202 ("ntb_hw_switchtec: Add initialization code for crosslink")
+Signed-off-by: Paul Selles <paul.selles@microchip.com>
+Signed-off-by: Wesley Sheng <wesley.sheng@microchip.com>
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+Signed-off-by: Jon Mason <jdmason@kudzu.us>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pcie-iproc.c | 8 --------
- 1 file changed, 8 deletions(-)
+ drivers/ntb/hw/mscc/ntb_hw_switchtec.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
-index 3160e9342a2f..c20fd6bd68fd 100644
---- a/drivers/pci/controller/pcie-iproc.c
-+++ b/drivers/pci/controller/pcie-iproc.c
-@@ -630,14 +630,6 @@ static void __iomem *iproc_pcie_map_cfg_bus(struct iproc_pcie *pcie,
- 			return (pcie->base + offset);
- 	}
+diff --git a/drivers/ntb/hw/mscc/ntb_hw_switchtec.c b/drivers/ntb/hw/mscc/ntb_hw_switchtec.c
+index 5ee5f40b4dfc..9916bc5b6759 100644
+--- a/drivers/ntb/hw/mscc/ntb_hw_switchtec.c
++++ b/drivers/ntb/hw/mscc/ntb_hw_switchtec.c
+@@ -1120,7 +1120,7 @@ static int crosslink_enum_partition(struct switchtec_ntb *sndev,
  
--	/*
--	 * PAXC is connected to an internally emulated EP within the SoC.  It
--	 * allows only one device.
--	 */
--	if (pcie->ep_is_internal)
--		if (slot > 0)
--			return NULL;
--
- 	return iproc_pcie_map_ep_cfg_reg(pcie, busno, slot, fn, where);
- }
+ 		dev_dbg(&sndev->stdev->dev,
+ 			"Crosslink BAR%d addr: %llx\n",
+-			i, bar_addr);
++			i*2, bar_addr);
  
+ 		if (bar_addr != bar_space * i)
+ 			continue;
 -- 
 2.20.1
 
