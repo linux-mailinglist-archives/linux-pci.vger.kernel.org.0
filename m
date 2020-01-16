@@ -2,70 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9615A13D7D4
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2020 11:23:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D8B9A13D8F2
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2020 12:27:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbgAPKXE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Jan 2020 05:23:04 -0500
-Received: from mga12.intel.com ([192.55.52.136]:3718 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726220AbgAPKXE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 16 Jan 2020 05:23:04 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jan 2020 02:23:04 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,325,1574150400"; 
-   d="scan'208";a="257781971"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 16 Jan 2020 02:23:01 -0800
-Received: by lahna (sSMTP sendmail emulation); Thu, 16 Jan 2020 12:23:00 +0200
-Date:   Thu, 16 Jan 2020 12:23:00 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        id S1726100AbgAPL1n (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Jan 2020 06:27:43 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:48494 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725800AbgAPL1n (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Jan 2020 06:27:43 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00GBRGdj061689;
+        Thu, 16 Jan 2020 05:27:16 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579174036;
+        bh=myfrgAkACHwJfmdNtMcuEJNJskU9ZB6VVutnIR84JH4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=nEFmlIIkHRmg720elyKMOm+dhwS+GmQz54J/Pk0oyMkOmh+nf69RXMnk221Fm2/e7
+         NSzzCU2NpIciRM4d5s7zg63jd0GcYITe/s87EiYMWMO+9mg4DS68MEI0wBotVnoNJ0
+         KvXPQQC6+eWZhLjEpa5vffjlE8C0JzoLPGRujhCI=
+Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00GBRGVV021247
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 16 Jan 2020 05:27:16 -0600
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 16
+ Jan 2020 05:27:16 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 16 Jan 2020 05:27:15 -0600
+Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00GBR8Tb095885;
+        Thu, 16 Jan 2020 05:27:11 -0600
+Subject: Re: [PATCH 2/7] dt-bindings: PCI: cadence: Add binding to specify max
+ virtual functions
+To:     Rob Herring <robh@kernel.org>
+CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Logan Gunthorpe <logang@deltatee.com>
-Subject: Re: [PATCH v2 4/4] PCI: Allow extend_bridge_window() to shrink
- resource if necessary
-Message-ID: <20200116102300.GY2838@lahna.fi.intel.com>
-References: <PSXP216MB0438DE9E25E07F3915B8E99880370@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+        Andrew Murray <andrew.murray@arm.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-doc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-rockchip@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20191231113534.30405-1-kishon@ti.com>
+ <20191231113534.30405-3-kishon@ti.com> <20200115014026.GA10726@bogus>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <f0690395-4ce7-df93-e837-670829aafb03@ti.com>
+Date:   Thu, 16 Jan 2020 16:59:20 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PSXP216MB0438DE9E25E07F3915B8E99880370@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200115014026.GA10726@bogus>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 05:58:05PM +0000, Nicholas Johnson wrote:
-> Remove checks for resource size in extend_bridge_window(). This is
-> necessary to allow the pci_bus_distribute_available_resources() to
-> function when the kernel parameter pci=hpmemsize=nn[KMG] is used to
-> allocate resources. Because the kernel parameter sets the size of all
-> hotplug bridges to be the same, there are problems when nested hotplug
-> bridges are encountered. Fitting a downstream hotplug bridge with size X
-> and normal bridges with non-zero size Y into parent hotplug bridge with
-> size X is impossible, and hence the downstream hotplug bridge needs to
-> shrink to fit into its parent.
-> 
-> Add check for if bridge is extended or shrunken and reflect that in the
-> call to pci_dbg().
-> 
-> Do not change resource size if new size is zero (if we have run out of a
-> bridge window resource) to prevent the PCI resource assignment code from
-> attempting to assign a zero-sized resource. If this happens, we are
-> running out of resource space, anyway, so not shrinking the resource
-> will not deny space for other resources. This prevents the following
-> from happening:
-> 
-> pcieport 0000:07:04.0: can't enable device: BAR 13 [io  0x1000-0x0fff] not claimed
-> 
-> Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Hi Rob,
 
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+On 15/01/20 7:10 AM, Rob Herring wrote:
+> On Tue, Dec 31, 2019 at 05:05:29PM +0530, Kishon Vijay Abraham I wrote:
+>> Add binding to specify maximum number of virtual functions that can be
+>> associated with each physical function.
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>  .../devicetree/bindings/pci/cdns,cdns-pcie-ep.txt         | 2 ++
+>>  .../devicetree/bindings/pci/ti,j721e-pci-ep.yaml          | 8 ++++++++
+>>  2 files changed, 10 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
+>> index 4a0475e2ba7e..432578202733 100644
+>> --- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
+>> +++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
+>> @@ -9,6 +9,8 @@ Required properties:
+>>  
+>>  Optional properties:
+>>  - max-functions: Maximum number of functions that can be configured (default 1).
+>> +- max-virtual-functions: Maximum number of virtual functions that can be
+>> +    associated with each physical function.
+>>  - phys: From PHY bindings: List of Generic PHY phandles. One per lane if more
+>>    than one in the list.  If only one PHY listed it must manage all lanes. 
+>>  - phy-names:  List of names to identify the PHY.
+>> diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
+>> index 4621c62016c7..1d4964ba494f 100644
+>> --- a/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
+>> +++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
+>> @@ -61,6 +61,12 @@ properties:
+>>      minimum: 1
+>>      maximum: 6
+>>  
+>> +  max-virtual-functions:
+>> +    minItems: 1
+>> +    maxItems: 6
+> 
+> Is there a PCIe spec limit to number of virtual functions per phy 
+> function? Or 2^32 virtual functions is okay.
+
+The PCIe spec provides a 16 bit field to specify number of virtual
+functions in the SR-IOV extended capability.
+
+
+> 
+>> +    description: As defined in
+>> +                 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
+> 
+> I suspect this this be a common property.
+
+Right now we don't have common EP property binding across all
+controllers. Maybe should create one?
+
+Thanks
+Kishon
