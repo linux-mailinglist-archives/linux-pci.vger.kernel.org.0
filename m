@@ -2,138 +2,124 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F82B13D0EF
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2020 01:15:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D29913D102
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2020 01:20:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729186AbgAPAPB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Jan 2020 19:15:01 -0500
-Received: from lucky1.263xmail.com ([211.157.147.135]:54420 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729880AbgAPAPA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Jan 2020 19:15:00 -0500
-Received: from localhost (unknown [192.168.167.70])
-        by lucky1.263xmail.com (Postfix) with ESMTP id 5B2AC4FCF9;
-        Thu, 16 Jan 2020 08:14:57 +0800 (CST)
-X-MAIL-GRAY: 1
-X-MAIL-DELIVERY: 0
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-SKE-CHECKED: 1
-X-ABS-CHECKED: 1
-Received: from [172.16.12.37] (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P20733T140093645911808S1579133695560712_;
-        Thu, 16 Jan 2020 08:14:56 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <4477a7a0a00c9b10bfd531bf21275836>
-X-RL-SENDER: shawn.lin@rock-chips.com
-X-SENDER: lintao@rock-chips.com
-X-LOGIN-NAME: shawn.lin@rock-chips.com
-X-FST-TO: linux-rockchip@lists.infradead.org
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-Cc:     shawn.lin@rock-chips.com, Heiko Stuebner <heiko@sntech.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, William Wu <william.wu@rock-chips.com>,
-        Simon Xue <xxm@rock-chips.com>,
-        linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH 5/6] PCI: rockchip: add DesignWare based PCIe controller
-To:     Bjorn Helgaas <helgaas@kernel.org>
-References: <20200115172430.GA180494@google.com>
-From:   Shawn Lin <shawn.lin@rock-chips.com>
-Message-ID: <2facd747-2b42-c500-9c04-7fd06471415a@rock-chips.com>
-Date:   Thu, 16 Jan 2020 08:14:55 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        id S1729130AbgAPATz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Jan 2020 19:19:55 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:35042 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726310AbgAPATz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Jan 2020 19:19:55 -0500
+Received: by mail-ot1-f68.google.com with SMTP id i15so17816703oto.2;
+        Wed, 15 Jan 2020 16:19:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZU5z0jv6vLkxXNqNasAO0rHibPY0RtWLbOjVbo8j9bM=;
+        b=TiyKo5kq22lrMJu+TfM0cyJlBOcyXACcTmJNkYuhgZ6+Ej74UPkEnUpcj1QtU+iMFE
+         VlOLQhgiB+TqW56ap5Fng7PYwiawZMMrV/Kkgr7T82kfs77IQq6UTORND7mzW52UTH33
+         G58aS2m4xyePIcAasMj7yNJopsaKoonFKtJvjYlLCjuU4PMhE90P3CDlGiCWfzfnOc+k
+         xgqAINXlRj/6yCySZCHefcEy31T32+QYxDjKCNckgyq+Dv712FD9vHVXkYJIOXwF4MG/
+         ZVqD63CBkiwbKDW0Qr+HzJiDsj0RUD4PGrHQY/b9t+HWteju8J7/tDsIgVAGyDw6Y0Pz
+         ip6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZU5z0jv6vLkxXNqNasAO0rHibPY0RtWLbOjVbo8j9bM=;
+        b=dSuGSNwbdTAQaT82t/W7v2yYnFPPDwvwIWAUqToqd1eEIQgDwnKkzI3zTw/JODKwj6
+         qfIQRnpWHJIW4k0ti7Dd4+MGbtTM4ujSOa7YGpd8PaqBhjGQkNzTcqCN1V+LbE5bmLld
+         wTQWX8bKlVBCf+XGY6nj6ToG3RpQKcs+v4L98xAWqKHnwM2+frbZBWrx8ChBrTY6Lakd
+         J4EPrpjRgPtJWyeNLp69Auuu+wMmiZ7j1AqX7H5gQ1H6kCwD7xjmkZakBkOgKmOiXFJU
+         vWwR4xlamH14+ZORFVbAxbYEbwtzSsTArTjEgbV5q05/9Et/KWccows/mmXZI9jFHhK1
+         O+oQ==
+X-Gm-Message-State: APjAAAUXpFjlWkoaFTPO7u6fAcah08KWjBfsnrPZrtDpwm2Vms7vuv06
+        B2Q3xzS2RhEOK1PGnbYaMw3plyxv7CyObBP8COc=
+X-Google-Smtp-Source: APXvYqwEp+kpYgUagYAHFYU2YX8f9iDBexiTW7nUmnFZ6PPZk5G/o3uJkrK9AOZImf30kqPO5pYY4z5BycnOYnfOpaI=
+X-Received: by 2002:a9d:7090:: with SMTP id l16mr4854274otj.187.1579133994535;
+ Wed, 15 Jan 2020 16:19:54 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200115172430.GA180494@google.com>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <CAGi-RUJvqJoCXWN2YugRn=WYEk9yzt7m3OPfX_o++PmJWQ3woQ@mail.gmail.com>
+ <87wo9ub5f6.fsf@nanos.tec.linutronix.de> <CAGi-RUK_TA+WWvXJSrsa=_Pwq0pV1ffUKOCBu5c1t8O5Xs+UJg@mail.gmail.com>
+ <CAGi-RUJG=SB7az5FFVTzzgefn_VXUbyQX1dtBN+9gkR7MgyC6g@mail.gmail.com> <87imldbqe3.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <87imldbqe3.fsf@nanos.tec.linutronix.de>
+From:   Ramon Fried <rfried.dev@gmail.com>
+Date:   Thu, 16 Jan 2020 02:19:43 +0200
+Message-ID: <CAGi-RULNwpiNGYALYRG84SOUzkvNTbgctmXoS=Luh29xDHJzYw@mail.gmail.com>
+Subject: Re: MSI irqchip configured as IRQCHIP_ONESHOT_SAFE causes spurious IRQs
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     hkallweit1@gmail.com, Bjorn Helgaas <bhelgaas@google.com>,
+        maz@kernel.org, lorenzo.pieralisi@arm.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Wed, Jan 15, 2020 at 12:54 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Ramon Fried <rfried.dev@gmail.com> writes:
+> > On Tue, Jan 14, 2020 at 11:38 PM Ramon Fried <rfried.dev@gmail.com> wrote:
+> >> On Tue, Jan 14, 2020 at 2:15 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >> > Ramon Fried <rfried.dev@gmail.com> writes:
+> >> > > Besides the side effect of that, I don't really understand the logic
+> >> > > of not masking the MSI until the threaded handler is complete,
+> >> > > especially when there's no HW handler and only threaded handler.
+> >> >
+> >> > What's wrong with having another interrupt firing while the threaded
+> >> > handler is running? Nothing, really. It actually can be desired because
+> >> > the threaded handler is allowed to sleep.
+> >> >
+> >> What do you mean, isn't it the purpose IRQ masking ?  Interrupt
+> >> coalescing is done to mitigate these IRQ's, these HW interrupts just
+> >> consume CPU cycles and don't do anything useful (scheduling an
+> >> already scheduled thread).
+>
+> Again, that depends on your POV. It's a perfectly valid scenario to have
+> another HW irq coming in preventing the thread to go to sleep and just
+> run for another cycle. So no, masking is not necessarily required and
+> the semantics of MSI is edge type, so the hardware should not fire
+> another interrupt _before_ the threaded handler actually took care of
+> the initial one.
+>
+> > Additionally, in this case there isn't even an HW IRQ handler, it's
+> > passed as NULL in the request IRQ function in this scenario.
+>
+> This is completely irrelevant. The primary hardware IRQ handler is
+> provided by the core code in this case.
+>
+You're right.
 
-On 2020/1/16 1:24, Bjorn Helgaas wrote:
-> Follow subject line convention.
-> 
-> On Tue, Jan 14, 2020 at 03:25:01PM +0800, Shawn Lin wrote:
->> From: Simon Xue <xxm@rock-chips.com>
-> 
-> Needs a commit log.  Please describe the relationship with the
-> existing drivers/pci/controller/pcie-rockchip-host.c.  Are they for
-> different devices?  Does this supercede the other?
+> Due to the semantics of MSI this is perfectly fine and aside of your
+> problem this has worked perfectly fine so far and it's an actual
+> performance win because it avoid fiddling with the MSI mask which is
+> slow.
+>
+fiddling with MSI masks is a configuration space write, which is
+non-posted, so it does come with a price.
+The question is if a test was ever conducted to see the it's better
+than spurious IRQ's.
 
-Yes, this PCIe controller is based on dwc IP, however pcie-rockchip* in
-drivers/pcie/controller is another IP. They are two different
-controllers totally. pcie-rockchip-host is end-of-life due to some
-defects, so AFAICT, it's *only* for RK3399 SoC. All the other follow-up
-SoCs should use this controller.
+> You still have not told which driver/hardware is affected by this. Can
+> you please provide that information so we can finally look at the actual
+> hardware/driver combo?
+>
+Sure,
+I'm writing an MSI IRQ controller, it's basically a MIPS GIC interrupt
+line which several MSI are multiplexed on it.
+It's configured with handle_level_irq() as the GIC is level IRQ.
 
-> 
->> Signed-off-by: Simon Xue <xxm@rock-chips.com>
->> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
->> ---
->>
->>   drivers/pci/controller/dwc/Kconfig            |   9 +
->>   drivers/pci/controller/dwc/Makefile           |   1 +
->>   drivers/pci/controller/dwc/pcie-dw-rockchip.c | 441 ++++++++++++++++++++++++++
->>   3 files changed, 451 insertions(+)
->>   create mode 100644 drivers/pci/controller/dwc/pcie-dw-rockchip.c
->>
->> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
->> index 0830dfc..9160264 100644
->> --- a/drivers/pci/controller/dwc/Kconfig
->> +++ b/drivers/pci/controller/dwc/Kconfig
->> @@ -82,6 +82,15 @@ config PCIE_DW_PLAT_EP
->>   	  order to enable device-specific features PCI_DW_PLAT_EP must be
->>   	  selected.
->>   
->> +config PCIE_DW_ROCKCHIP
->> +	bool "Rockchip DesignWare PCIe controller"
->> +	select PCIE_DW
->> +	select PCIE_DW_HOST
->> +	depends on ARCH_ROCKCHIP
->> +	depends on OF
->> +	help
->> +	  Enables support for the DW PCIe controller in the Rockchip SoC.
-> 
-> A user needs to be able to tell whether to enable
-> CONFIG_PCIE_ROCKCHIP_HOST or CONFIG_PCIE_DW_ROCKCHIP.  Is there an
-> endpoint driver coming?  Should this be named PCIE_DW_ROCKCHIP_HOST?
+The ack callback acks the GIC irq.
+the mask/unmask calls pci_msi_mask_irq() / pci_msi_unmask_irq()
 
-Will add a description to tell users CONFIG_PCIE_ROCKCHIP_HOST is only
-for RK3399, so all other Rockchip platforms should use
-CONFIG_PCIE_DW_ROCKCHIP.
-
-There is no plan to develop endponit driver recently, but
-PCIE_DW_ROCKCHIP_HOST looks sane.
-
-
-> 
->> +	ret = rockchip_pcie_reset_grant_ctrl(rockchip, true);
->> +	if (ret)
->> +		goto deinit_clk;
->> +
->> +//	if (rockchip->mode == DW_PCIE_RC_TYPE)
->> +//		ret = rk_add_pcie_port(rockchip);
-> 
-> Remove commented-out code.  I do like an "if" statement better than
-> the complicated assignment/ternary thing below, though.
-> 
-
-My bad. Will fix it in V2.
-
->> +	ret = rockchip->mode == DW_PCIE_RC_TYPE ?
->> +		rk_add_pcie_port(rockchip) : -EINVAL;
->> +
->> +	if (ret)
->> +		goto deinit_clk;
-> 
-> 
-
-
+Thanks,
+Ramon.
+> Either the driver is broken or the hardware does not comply with the MSI
+> spec.
+>
+> Thanks,
+>
+>         tglx
