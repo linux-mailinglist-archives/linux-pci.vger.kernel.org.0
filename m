@@ -2,18 +2,18 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 821DA13D0DD
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2020 01:04:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F82B13D0EF
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2020 01:15:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731350AbgAPAEA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Jan 2020 19:04:00 -0500
-Received: from lucky1.263xmail.com ([211.157.147.134]:46598 "EHLO
+        id S1729186AbgAPAPB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Jan 2020 19:15:01 -0500
+Received: from lucky1.263xmail.com ([211.157.147.135]:54420 "EHLO
         lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730128AbgAPAD7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Jan 2020 19:03:59 -0500
-Received: from localhost (unknown [192.168.167.32])
-        by lucky1.263xmail.com (Postfix) with ESMTP id 826EE4E735;
-        Thu, 16 Jan 2020 08:03:55 +0800 (CST)
+        with ESMTP id S1729880AbgAPAPA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Jan 2020 19:15:00 -0500
+Received: from localhost (unknown [192.168.167.70])
+        by lucky1.263xmail.com (Postfix) with ESMTP id 5B2AC4FCF9;
+        Thu, 16 Jan 2020 08:14:57 +0800 (CST)
 X-MAIL-GRAY: 1
 X-MAIL-DELIVERY: 0
 X-ADDR-CHECKED4: 1
@@ -21,41 +21,35 @@ X-ANTISPAM-LEVEL: 2
 X-SKE-CHECKED: 1
 X-ABS-CHECKED: 1
 Received: from [172.16.12.37] (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P9174T140331144181504S1579133034317848_;
-        Thu, 16 Jan 2020 08:03:55 +0800 (CST)
+        by smtp.263.net (postfix) whith ESMTP id P20733T140093645911808S1579133695560712_;
+        Thu, 16 Jan 2020 08:14:56 +0800 (CST)
 X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <161c3253a650a55ec4915d63e8b13e0c>
+X-UNIQUE-TAG: <4477a7a0a00c9b10bfd531bf21275836>
 X-RL-SENDER: shawn.lin@rock-chips.com
 X-SENDER: lintao@rock-chips.com
 X-LOGIN-NAME: shawn.lin@rock-chips.com
-X-FST-TO: xxm@rock-chips.com
+X-FST-TO: linux-rockchip@lists.infradead.org
 X-SENDER-IP: 58.22.7.114
 X-ATTACHMENT-NUM: 0
 X-DNS-TYPE: 0
-Cc:     shawn.lin@rock-chips.com, devicetree@vger.kernel.org,
+Cc:     shawn.lin@rock-chips.com, Heiko Stuebner <heiko@sntech.de>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        linux-rockchip@lists.infradead.org,
-        Jingoo Han <jingoohan1@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Kishon Vijay Abraham I <kishon@ti.com>,
-        William Wu <william.wu@rock-chips.com>,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Simon Xue <xxm@rock-chips.com>
-Subject: =?UTF-8?Q?Re=3a_=5bPATCH_1/6=5d_dt-bindings=3a_add_binding_for_Rock?=
- =?UTF-8?B?Y2hpcCBjb21ibyBwaHkgdXNpbmcgYW4gSW5ub3NpbGljb24gSVDjgJDor7fms6g=?=
- =?UTF-8?B?5oSP77yM6YKu5Lu255SxbGludXgtcm9ja2NoaXAtYm91bmNlcytzaGF3bi5saW49?=
- =?UTF-8?B?cm9jay1jaGlwcy5jb21AbGlzdHMuaW5mcmFkZWFkLm9yZ+S7o+WPkeOAkQ==?=
-To:     Rob Herring <robh@kernel.org>
-References: <1578986580-71974-1-git-send-email-shawn.lin@rock-chips.com>
- <1578986580-71974-2-git-send-email-shawn.lin@rock-chips.com>
- <20200114234323.GA5823@bogus>
+        Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, William Wu <william.wu@rock-chips.com>,
+        Simon Xue <xxm@rock-chips.com>,
+        linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH 5/6] PCI: rockchip: add DesignWare based PCIe controller
+To:     Bjorn Helgaas <helgaas@kernel.org>
+References: <20200115172430.GA180494@google.com>
 From:   Shawn Lin <shawn.lin@rock-chips.com>
-Message-ID: <75a1b9d2-6dff-eaad-dab5-87321a7ca9cd@rock-chips.com>
-Date:   Thu, 16 Jan 2020 08:03:54 +0800
+Message-ID: <2facd747-2b42-c500-9c04-7fd06471415a@rock-chips.com>
+Date:   Thu, 16 Jan 2020 08:14:55 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.3.1
 MIME-Version: 1.0
-In-Reply-To: <20200114234323.GA5823@bogus>
+In-Reply-To: <20200115172430.GA180494@google.com>
 Content-Type: text/plain; charset=gbk; format=flowed
 Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
@@ -64,142 +58,81 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
+On 2020/1/16 1:24, Bjorn Helgaas wrote:
+> Follow subject line convention.
+> 
+> On Tue, Jan 14, 2020 at 03:25:01PM +0800, Shawn Lin wrote:
+>> From: Simon Xue <xxm@rock-chips.com>
+> 
+> Needs a commit log.  Please describe the relationship with the
+> existing drivers/pci/controller/pcie-rockchip-host.c.  Are they for
+> different devices?  Does this supercede the other?
 
-On 2020/1/15 7:43, Rob Herring wrote:
-> On Tue, Jan 14, 2020 at 03:22:55PM +0800, Shawn Lin wrote:
->> This IP could supports USB3.0 and PCIe.
->>
+Yes, this PCIe controller is based on dwc IP, however pcie-rockchip* in
+drivers/pcie/controller is another IP. They are two different
+controllers totally. pcie-rockchip-host is end-of-life due to some
+defects, so AFAICT, it's *only* for RK3399 SoC. All the other follow-up
+SoCs should use this controller.
+
+> 
+>> Signed-off-by: Simon Xue <xxm@rock-chips.com>
 >> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
->>
 >> ---
 >>
->>   .../bindings/phy/rockchip,inno-combophy.yaml       | 84 ++++++++++++++++++++++
->>   1 file changed, 84 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/phy/rockchip,inno-combophy.yaml
+>>   drivers/pci/controller/dwc/Kconfig            |   9 +
+>>   drivers/pci/controller/dwc/Makefile           |   1 +
+>>   drivers/pci/controller/dwc/pcie-dw-rockchip.c | 441 ++++++++++++++++++++++++++
+>>   3 files changed, 451 insertions(+)
+>>   create mode 100644 drivers/pci/controller/dwc/pcie-dw-rockchip.c
+>>
+>> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+>> index 0830dfc..9160264 100644
+>> --- a/drivers/pci/controller/dwc/Kconfig
+>> +++ b/drivers/pci/controller/dwc/Kconfig
+>> @@ -82,6 +82,15 @@ config PCIE_DW_PLAT_EP
+>>   	  order to enable device-specific features PCI_DW_PLAT_EP must be
+>>   	  selected.
+>>   
+>> +config PCIE_DW_ROCKCHIP
+>> +	bool "Rockchip DesignWare PCIe controller"
+>> +	select PCIE_DW
+>> +	select PCIE_DW_HOST
+>> +	depends on ARCH_ROCKCHIP
+>> +	depends on OF
+>> +	help
+>> +	  Enables support for the DW PCIe controller in the Rockchip SoC.
 > 
-> Fails 'make dt_binding_check':
+> A user needs to be able to tell whether to enable
+> CONFIG_PCIE_ROCKCHIP_HOST or CONFIG_PCIE_DW_ROCKCHIP.  Is there an
+> endpoint driver coming?  Should this be named PCIE_DW_ROCKCHIP_HOST?
+
+Will add a description to tell users CONFIG_PCIE_ROCKCHIP_HOST is only
+for RK3399, so all other Rockchip platforms should use
+CONFIG_PCIE_DW_ROCKCHIP.
+
+There is no plan to develop endponit driver recently, but
+PCIE_DW_ROCKCHIP_HOST looks sane.
+
+
 > 
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/rockchip,inno-combophy.yaml:
-> ignoring, error in schema: properties: rockchip,combphygrf
-> Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11:
-> Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/rockchip,inno-combophy.yaml:
-> properties:rockchip,combphygrf: {'items': [{'description': 'The grf for
-> COMBPHY configuration and state registers.'}]} is not valid under any of
-> the given schemas (Possible causes of the failure):
-> 	
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/rockchip,inno-combophy.yaml:
-> properties:rockchip,combphygrf: 'description' is a required property
+>> +	ret = rockchip_pcie_reset_grant_ctrl(rockchip, true);
+>> +	if (ret)
+>> +		goto deinit_clk;
+>> +
+>> +//	if (rockchip->mode == DW_PCIE_RC_TYPE)
+>> +//		ret = rk_add_pcie_port(rockchip);
+> 
+> Remove commented-out code.  I do like an "if" statement better than
+> the complicated assignment/ternary thing below, though.
 > 
 
-Thanks Rob, will fix them in v2.
+My bad. Will fix it in V2.
 
-> 
->>
->> diff --git a/Documentation/devicetree/bindings/phy/rockchip,inno-combophy.yaml b/Documentation/devicetree/bindings/phy/rockchip,inno-combophy.yaml
->> new file mode 100644
->> index 0000000..d647ab3
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/phy/rockchip,inno-combophy.yaml
->> @@ -0,0 +1,84 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/phy/rockchip,inno-combophy.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +	ret = rockchip->mode == DW_PCIE_RC_TYPE ?
+>> +		rk_add_pcie_port(rockchip) : -EINVAL;
 >> +
->> +title: Rockchip USB3.0/PCI-e combo phy
->> +
->> +maintainers:
->> +        - Shawn Lin <shawn.lin@rock-chips.com>
->> +        - William Wu <william.wu@rock-chips.com>
-> 
-> 2 space indent.
-> 
->> +
->> +properties:
->> +  "#phy-cells":
->> +    const: 1
->> +
->> +  compatible:
->> +    enum:
->> +      - rockchip,rk1808-combphy
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    items:
->> +      - description: PLL reference clock
->> +
->> +  clock-names:
->> +    items:
->> +      - const: refclk
->> +
->> +  resets:
->> +    items:
->> +      - description: OTG unit reset line
->> +      - description: POR unit reset line
->> +      - description: APB interface reset line
->> +      - description: PIPE unit reset line
->> +
->> +  reset-names:
->> +    items:
->> +      - const: otg-rst
->> +      - const: combphy-por
->> +      - const: combphy-apb
->> +      - const: combphy-pipe
->> +
->> +  rockchip,combphygrf:
->> +    items:
->> +      - description: The grf for COMBPHY configuration and state registers.
->> +
->> +required:
->> +  - "#phy-cells"
->> +  - compatible
->> +  - reg
->> +  - clocks
->> +  - clock-names
->> +  - resets
->> +  - reset-names
->> +  - rockchip,combphygrf
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    combphy_grf: syscon@fe018000 {
->> +        compatible = "rockchip,usb3phy-grf", "syscon";
->> +        reg = <0x0 0xfe018000 0x0 0x8000>;
->> +    };
->> +
->> +    combphy: phy@ff380000 {
->> +        compatible = "rockchip,rk1808-combphy";
->> +        reg = <0x0 0xff380000 0x0 0x10000>;
->> +        #phy-cells = <1>;
->> +        clocks = <&cru SCLK_PCIEPHY_REF>;
->> +        clock-names = "refclk";
->> +        assigned-clocks = <&cru SCLK_PCIEPHY_REF>;
->> +        assigned-clock-rates = <25000000>;
->> +        resets = <&cru SRST_USB3_OTG_A>, <&cru SRST_PCIEPHY_POR>,
->> +                 <&cru SRST_PCIEPHY_P>, <&cru SRST_PCIEPHY_PIPE>;
->> +        reset-names = "otg-rst", "combphy-por",
->> +                      "combphy-apb", "combphy-pipe";
->> +        rockchip,combphygrf = <&combphy_grf>;
->> +    };
->> +
->> +...
->> -- 
->> 1.9.1
->>
->>
->>
-> 
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
-> 
+>> +	if (ret)
+>> +		goto deinit_clk;
 > 
 > 
 
