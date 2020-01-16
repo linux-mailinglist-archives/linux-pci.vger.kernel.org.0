@@ -2,39 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8008613E413
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2020 18:06:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AD42E13E49B
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2020 18:09:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388804AbgAPRFy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Jan 2020 12:05:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35358 "EHLO mail.kernel.org"
+        id S2389698AbgAPRJa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Jan 2020 12:09:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388668AbgAPRFy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:05:54 -0500
+        id S2389689AbgAPRJ3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:09:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D805217F4;
-        Thu, 16 Jan 2020 17:05:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C19B24686;
+        Thu, 16 Jan 2020 17:09:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194353;
-        bh=nPZ1XTnaEG3wsEn3/9GneQYMObYjOmeffnxVFFkkbUg=;
+        s=default; t=1579194569;
+        bh=aFuI9s9qrYGvRS3aJIBpExQNugQRFOhhIn8THPtBKoo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DCaTg6b06C8KN3Qmb0E9olqbC8JMT6V2z6zvw+g9BPtqdJFAGMJawTUgsVS64CZtO
-         LcFmBwLDU3PTcii4PpN9Lz/o0ipKfaRWQrnI5SKkXoeX6ILkxH5uG4mOP5idOuZt4X
-         Rt/grCc9LZGu+9yWtecoT2h0KZpDZcoo6a5cdUSI=
+        b=g6Wwm9cfTpwTEcc321Q2yGt7PJg9zR1zcxvro7wJCQCwpbYJ9CN3zB5HSdZb2u03A
+         FjsznxaEvP+2INjOWgjUZb7H7HqUPAFVtDiEYrtxyFUUUa9f9L6qXOIbwsr/ukV//t
+         ZYcIlPFZoU66wqlVewQfSOGqZG1krmDDSHk4ydcg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 292/671] PCI: rockchip: Fix rockchip_pcie_ep_assert_intx() bitwise operations
-Date:   Thu, 16 Jan 2020 11:58:50 -0500
-Message-Id: <20200116170509.12787-29-sashal@kernel.org>
+Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        "Robert R . Howell" <RHowell@uwyo.edu>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 447/671] PM: ACPI/PCI: Resume all devices during hibernation
+Date:   Thu, 16 Jan 2020 12:01:25 -0500
+Message-Id: <20200116170509.12787-184-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -47,40 +46,87 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-[ Upstream commit c577f4a5a08bb9677e12ddafb62e2f3a901de87f ]
+[ Upstream commit 501debd4aa5edc755037c39ea5a8fba23b41e580 ]
 
-Currently the bitwise operations on the u16 variable 'status' with
-the setting ROCKCHIP_PCIE_EP_CMD_STATUS_IS are incorrect because
-ROCKCHIP_PCIE_EP_CMD_STATUS_IS is 1UL<<19 which is wider than the
-u16 variable.
+Both the PCI bus type and the ACPI PM domain avoid resuming
+runtime-suspended devices with DPM_FLAG_SMART_SUSPEND set during
+hibernation (before creating the snapshot image of system memory),
+but that turns out to be a mistake.  It leads to functional issues
+and adds complexity that's hard to justify.
 
-Fix this by making status a u32.
+For this reason, resume all runtime-suspended PCI devices and all
+devices in the ACPI PM domains before creating a snapshot image of
+system memory during hibernation.
 
-Fixes: cf590b078391 ("PCI: rockchip: Add EP driver for Rockchip PCIe controller")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Acked-by: Shawn Lin <shawn.lin@rock-chips.com>
+Fixes: 05087360fd7a (ACPI / PM: Take SMART_SUSPEND driver flag into account)
+Fixes: c4b65157aeef (PCI / PM: Take SMART_SUSPEND driver flag into account)
+Link: https://lore.kernel.org/linux-acpi/917d4399-2e22-67b1-9d54-808561f9083f@uwyo.edu/T/#maf065fe6e4974f2a9d79f332ab99dfaba635f64c
+Reported-by: Robert R. Howell <RHowell@uwyo.edu>
+Tested-by: Robert R. Howell <RHowell@uwyo.edu>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pcie-rockchip-ep.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/acpi/device_pm.c | 13 +++++++------
+ drivers/pci/pci-driver.c | 16 ++++++++--------
+ 2 files changed, 15 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/pcie-rockchip-ep.c
-index b8163c56a142..caf34661d38d 100644
---- a/drivers/pci/controller/pcie-rockchip-ep.c
-+++ b/drivers/pci/controller/pcie-rockchip-ep.c
-@@ -350,7 +350,7 @@ static void rockchip_pcie_ep_assert_intx(struct rockchip_pcie_ep *ep, u8 fn,
- 	struct rockchip_pcie *rockchip = &ep->rockchip;
- 	u32 r = ep->max_regions - 1;
- 	u32 offset;
--	u16 status;
-+	u32 status;
- 	u8 msg_code;
+diff --git a/drivers/acpi/device_pm.c b/drivers/acpi/device_pm.c
+index e0927c5fd282..11b7a1632e5a 100644
+--- a/drivers/acpi/device_pm.c
++++ b/drivers/acpi/device_pm.c
+@@ -1116,13 +1116,14 @@ EXPORT_SYMBOL_GPL(acpi_subsys_resume_early);
+ int acpi_subsys_freeze(struct device *dev)
+ {
+ 	/*
+-	 * This used to be done in acpi_subsys_prepare() for all devices and
+-	 * some drivers may depend on it, so do it here.  Ideally, however,
+-	 * runtime-suspended devices should not be touched during freeze/thaw
+-	 * transitions.
++	 * Resume all runtime-suspended devices before creating a snapshot
++	 * image of system memory, because the restore kernel generally cannot
++	 * be expected to always handle them consistently and they need to be
++	 * put into the runtime-active metastate during system resume anyway,
++	 * so it is better to ensure that the state saved in the image will be
++	 * always consistent with that.
+ 	 */
+-	if (!dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND))
+-		pm_runtime_resume(dev);
++	pm_runtime_resume(dev);
  
- 	if (unlikely(ep->irq_pci_addr != ROCKCHIP_PCIE_EP_PCI_LEGACY_IRQ_ADDR ||
+ 	return pm_generic_freeze(dev);
+ }
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index e69af9b8361d..5def4b74d54a 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -996,15 +996,15 @@ static int pci_pm_freeze(struct device *dev)
+ 	}
+ 
+ 	/*
+-	 * This used to be done in pci_pm_prepare() for all devices and some
+-	 * drivers may depend on it, so do it here.  Ideally, runtime-suspended
+-	 * devices should not be touched during freeze/thaw transitions,
+-	 * however.
++	 * Resume all runtime-suspended devices before creating a snapshot
++	 * image of system memory, because the restore kernel generally cannot
++	 * be expected to always handle them consistently and they need to be
++	 * put into the runtime-active metastate during system resume anyway,
++	 * so it is better to ensure that the state saved in the image will be
++	 * always consistent with that.
+ 	 */
+-	if (!dev_pm_smart_suspend_and_suspended(dev)) {
+-		pm_runtime_resume(dev);
+-		pci_dev->state_saved = false;
+-	}
++	pm_runtime_resume(dev);
++	pci_dev->state_saved = false;
+ 
+ 	if (pm->freeze) {
+ 		int error;
 -- 
 2.20.1
 
