@@ -2,44 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B0AD113F20E
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2020 19:33:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F13A613F929
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2020 20:23:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391829AbgAPRY5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Jan 2020 12:24:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60228 "EHLO mail.kernel.org"
+        id S2387813AbgAPTXS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Jan 2020 14:23:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391824AbgAPRY4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:24:56 -0500
+        id S1729449AbgAPQxR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:53:17 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A51FE246AE;
-        Thu, 16 Jan 2020 17:24:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34E8A2464B;
+        Thu, 16 Jan 2020 16:53:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195495;
-        bh=BR4bAa3sU9jTA4hgBf/kKhrT7L1DR2b3BRTZ3iHNCgU=;
+        s=default; t=1579193596;
+        bh=B39tRMTgHG+yvSL+XbOx831COUj/FX+wNF00LG9uoJk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FAWRqBduZG6ms5+eyc5GmhQd/ljzUuWYFKKyQjfvuC+sJ+Mpq+2+aI47QiICaou4h
-         czCwGaP3Vn0BAuLFE5m5TlZyesdG6giHLInyK3sS7E46JyMbXfJc8KxSIzQLnYP32S
-         lXUwxawg+/KFa6XlfYINEY1pXyYh489G7cN3sTBw=
+        b=yvIL3ts7e6/NBWXtNwwxW8XtNthX3dpgcuCCrdaxOYgKimQfYaL+yBnOLByp3wkc6
+         rgya7sajdqpgbzP8XrkO3cBX4O1+AZzcL6z3RfpxmpbRNQyLJP35UWglp8sYWW8Hpt
+         7jeaxjDZUDYMeBRjeqJQJNXL98zEkoF1fSqgwg6I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wen Yang <wen.yang99@zte.com.cn>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Niklas Cassel <niklas.cassel@axis.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Cyrille Pitchen <cyrille.pitchen@free-electrons.com>,
-        linux-pci@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 097/371] PCI: endpoint: functions: Use memcpy_fromio()/memcpy_toio()
-Date:   Thu, 16 Jan 2020 12:19:29 -0500
-Message-Id: <20200116172403.18149-40-sashal@kernel.org>
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 135/205] PCI: pciehp: Do not disable interrupt twice on suspend
+Date:   Thu, 16 Jan 2020 11:41:50 -0500
+Message-Id: <20200116164300.6705-135-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
-References: <20200116172403.18149-1-sashal@kernel.org>
+In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
+References: <20200116164300.6705-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -49,56 +45,102 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Wen Yang <wen.yang99@zte.com.cn>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-[ Upstream commit 726dabfde6aa35a4f1508e235ae37edbbf9fbc65 ]
+[ Upstream commit 75fcc0ce72e5cea2e357cdde858216c5bad40442 ]
 
-Functions copying from/to IO addresses should use the
-memcpy_fromio()/memcpy_toio() API rather than plain memcpy().
+We try to keep PCIe hotplug ports runtime suspended when entering system
+suspend. Because the PCIe portdrv sets the DPM_FLAG_NEVER_SKIP flag, the PM
+core always calls system suspend/resume hooks even if the device is left
+runtime suspended. Since PCIe hotplug driver re-used the same function for
+both runtime suspend and system suspend, it ended up disabling hotplug
+interrupt twice and the second time following was printed:
 
-Fix the issue detected through the sparse tool.
+  pciehp 0000:03:01.0:pcie204: pcie_do_write_cmd: no response from device
 
-Fixes: 349e7a85b25f ("PCI: endpoint: functions: Add an EP function to test PCI")
-Suggested-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-[lorenzo.pieralisi@arm.com: updated log]
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-CC: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC: Bjorn Helgaas <bhelgaas@google.com>
-CC: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-CC: Niklas Cassel <niklas.cassel@axis.com>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
-CC: linux-pci@vger.kernel.org
-CC: linux-kernel@vger.kernel.org
+Prevent this from happening by checking whether the device is already
+runtime suspended when the system suspend hook is called.
+
+Fixes: 9c62f0bfb832 ("PCI: pciehp: Implement runtime PM callbacks")
+Link: https://lore.kernel.org/r/20191029170022.57528-1-mika.westerberg@linux.intel.com
+Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/endpoint/functions/pci-epf-test.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pci/hotplug/pciehp_core.c | 25 +++++++++++++++++++++++--
+ 1 file changed, 23 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-index f9308c2f22e6..c2541a772abc 100644
---- a/drivers/pci/endpoint/functions/pci-epf-test.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-@@ -177,7 +177,7 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
- 		goto err_map_addr;
- 	}
+diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/pciehp_core.c
+index b3122c151b80..56daad828c9e 100644
+--- a/drivers/pci/hotplug/pciehp_core.c
++++ b/drivers/pci/hotplug/pciehp_core.c
+@@ -253,7 +253,7 @@ static bool pme_is_native(struct pcie_device *dev)
+ 	return pcie_ports_native || host->native_pme;
+ }
  
--	memcpy(buf, src_addr, reg->size);
-+	memcpy_fromio(buf, src_addr, reg->size);
- 
- 	crc32 = crc32_le(~0, buf, reg->size);
- 	if (crc32 != reg->checksum)
-@@ -231,7 +231,7 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
- 	get_random_bytes(buf, reg->size);
- 	reg->checksum = crc32_le(~0, buf, reg->size);
- 
--	memcpy(dst_addr, buf, reg->size);
-+	memcpy_toio(dst_addr, buf, reg->size);
- 
+-static int pciehp_suspend(struct pcie_device *dev)
++static void pciehp_disable_interrupt(struct pcie_device *dev)
+ {
  	/*
- 	 * wait 1ms inorder for the write to complete. Without this delay L3
+ 	 * Disable hotplug interrupt so that it does not trigger
+@@ -261,7 +261,19 @@ static int pciehp_suspend(struct pcie_device *dev)
+ 	 */
+ 	if (pme_is_native(dev))
+ 		pcie_disable_interrupt(get_service_data(dev));
++}
+ 
++#ifdef CONFIG_PM_SLEEP
++static int pciehp_suspend(struct pcie_device *dev)
++{
++	/*
++	 * If the port is already runtime suspended we can keep it that
++	 * way.
++	 */
++	if (dev_pm_smart_suspend_and_suspended(&dev->port->dev))
++		return 0;
++
++	pciehp_disable_interrupt(dev);
+ 	return 0;
+ }
+ 
+@@ -279,6 +291,7 @@ static int pciehp_resume_noirq(struct pcie_device *dev)
+ 
+ 	return 0;
+ }
++#endif
+ 
+ static int pciehp_resume(struct pcie_device *dev)
+ {
+@@ -292,6 +305,12 @@ static int pciehp_resume(struct pcie_device *dev)
+ 	return 0;
+ }
+ 
++static int pciehp_runtime_suspend(struct pcie_device *dev)
++{
++	pciehp_disable_interrupt(dev);
++	return 0;
++}
++
+ static int pciehp_runtime_resume(struct pcie_device *dev)
+ {
+ 	struct controller *ctrl = get_service_data(dev);
+@@ -318,10 +337,12 @@ static struct pcie_port_service_driver hpdriver_portdrv = {
+ 	.remove		= pciehp_remove,
+ 
+ #ifdef	CONFIG_PM
++#ifdef	CONFIG_PM_SLEEP
+ 	.suspend	= pciehp_suspend,
+ 	.resume_noirq	= pciehp_resume_noirq,
+ 	.resume		= pciehp_resume,
+-	.runtime_suspend = pciehp_suspend,
++#endif
++	.runtime_suspend = pciehp_runtime_suspend,
+ 	.runtime_resume	= pciehp_runtime_resume,
+ #endif	/* PM */
+ };
 -- 
 2.20.1
 
