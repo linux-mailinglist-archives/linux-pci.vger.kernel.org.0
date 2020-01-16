@@ -2,93 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 504AE13D76B
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2020 11:02:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ACF9113D7D1
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2020 11:22:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732417AbgAPKCG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Jan 2020 05:02:06 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:51044 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732419AbgAPKCD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Jan 2020 05:02:03 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1is1yK-0003KK-V9; Thu, 16 Jan 2020 11:01:53 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 6AE3E100C1E; Thu, 16 Jan 2020 11:01:52 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Kar Hin Ong <kar.hin.ong@ni.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-rt-users <linux-rt-users@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "x86\@kernel.org" <x86@kernel.org>,
-        "linux-pci\@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Julia Cartwright <julia.cartwright@ni.com>,
-        Keng Soon Cheah <keng.soon.cheah@ni.com>,
-        Gratian Crisan <gratian.crisan@ni.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: RE: RE: Re: "oneshot" interrupt causes another interrupt to be fired erroneously in Haswell system
-In-Reply-To: <MN2PR04MB62551D8B240966B02ED71516C3360@MN2PR04MB6255.namprd04.prod.outlook.com>
-References: <20191031230532.GA170712@google.com> <alpine.DEB.2.21.1911050017410.17054@nanos.tec.linutronix.de> <MN2PR04MB625594021250E0FB92EC955DC3780@MN2PR04MB6255.namprd04.prod.outlook.com> <87a76oxqv1.fsf@nanos.tec.linutronix.de> <MN2PR04MB62551D8B240966B02ED71516C3360@MN2PR04MB6255.namprd04.prod.outlook.com>
-Date:   Thu, 16 Jan 2020 11:01:52 +0100
-Message-ID: <87muanwwhb.fsf@nanos.tec.linutronix.de>
+        id S1726552AbgAPKVW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Jan 2020 05:21:22 -0500
+Received: from mga07.intel.com ([134.134.136.100]:61301 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725800AbgAPKVW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 16 Jan 2020 05:21:22 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jan 2020 02:21:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,325,1574150400"; 
+   d="scan'208";a="257773923"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 16 Jan 2020 02:21:19 -0800
+Received: by lahna (sSMTP sendmail emulation); Thu, 16 Jan 2020 12:21:18 +0200
+Date:   Thu, 16 Jan 2020 12:21:18 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Logan Gunthorpe <logang@deltatee.com>
+Subject: Re: [PATCH v2 3/4] PCI: Change extend_bridge_window() to set
+ resource size directly
+Message-ID: <20200116102118.GX2838@lahna.fi.intel.com>
+References: <PSXP216MB0438679CD51C0B198CDA231480370@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PSXP216MB0438679CD51C0B198CDA231480370@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Kar Hin Ong <kar.hin.ong@ni.com> writes:
->> I don't have access to the document you mentioned, but I know that chipsets
->> have a knob to control that behaviour. Just checked a few chipset docs and they
->> contain the same sentence, but then in the next paragraph they say:
->> 
->>  "If the I/OxAPIC entry is masked (via the mask bit in the corresponding
->>   Redirection Table Entry), then the corresponding PCI Express
->>   interrupt(s) is forwarded to the legacy ICH, provided the Disable PCI
->>   INTx Routing to ICH bit is clear, Section 19.10.2.27, QPIPINTRC: Intel
->>   QuickPath Interconnect Protocol Interrupt Control."
->> 
->> That control bit is 0 after reset, so the legacy forwarding works.
->
-> Intel support engineer do provide similar advice to us as a workaround
-> to the CPU behaviour.  They said we could enable the "Don'tRouteToPCH"
-> bit in the BIOS to block the interrupt from propagating to PCH.  This
-> bit is located at "Coherent Interface Protocol Interrupt Control
-> (cipintrc)" register of "Virtualization" device (Bus 0, Device 5,
-> Function 0, Offset 0x14C).
->
-> With the help of our BIOS engineer, after setting this bit in BIOS
-> does prevent the interrupt forwarding.
->
-> However, Intel told us that this workaround is not validated, i.e. the
-> side effect of setting this bit is unknown.
+On Wed, Jan 15, 2020 at 05:57:47PM +0000, Nicholas Johnson wrote:
+> Change extend_bridge_window() to set resource size directly instead of
+> using additional resource lists.
+> 
+> This is required in preparation for the next patch [0] which will allow
+> the resource to shrink. If we do not make this change, the next patch
+> will need to have complicated logic to handle shrinking the overall size
+> using size and add_size.
+> 
+> Remove the resource from add_list, as a zero-sized additional resource
+> is redundant.
+> 
+> Update comment in pci_bus_distribute_available_resources() to reflect
+> the above changes.
+> 
+> [0]
+> PCI: Allow extend_bridge_window() to shrink resource if necessary
+> 
+> Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
 
-What? That's ridiculous.
-
-That bit is documented in various chipset documents and that legacy
-rerouting is really just there to support OSes which do not support
-multiple IO-APICs properly.
-
-If setting this bit has unknown side effects then someone at Intel
-should have a close look and fix their documentation.
-
-Can the Intel people on Cc please take care of this?
-
-As we have already quirks in drivers/pci/quirks.c which handle the same
-issue on older chipsets, we really should add one for these kind of
-systems to avoid fiddling with the BIOS (which you can, but most people
-cannot).
-
-Thanks,
-
-        tglx
-
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
