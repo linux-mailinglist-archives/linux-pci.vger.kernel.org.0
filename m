@@ -2,349 +2,223 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9304013FBB1
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2020 22:47:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D3C3C13FC05
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2020 23:11:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729388AbgAPVrp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Jan 2020 16:47:45 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36045 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729878AbgAPVro (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Jan 2020 16:47:44 -0500
-Received: by mail-pf1-f194.google.com with SMTP id x184so10894217pfb.3
-        for <linux-pci@vger.kernel.org>; Thu, 16 Jan 2020 13:47:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:thread-topic:thread-index:date:message-id
-         :accept-language:content-language:content-transfer-encoding
-         :mime-version;
-        bh=loJq2BFCJDLuMqoHpzHxiOl0dPxBfdfBELyXwXbZ4gY=;
-        b=lMgymSfx9ehbmnV2Ct9wOLxj5LFEUXp8WhcYhCP83DNe0KdLDgxm3H15/+dH5HySIK
-         i9K6Uj6QXtXsi4aQxr9CxagQBfFhAofZ1JZrCI0MyNVeapu2GmJ3ehtBGw7qEtf0YV6g
-         FXtMZDm3fyVQCw9DhFzyb+CUo7FAgSt+WbZpzSs4oNVUZtJ2B24MQ06PHJsL3FELbEE1
-         HIgpJ68TInl8oN2c03pzge7KUhsUCvx2OGSrOc1yTFWlbcm0hgjUGMQmtuO+N/ZZPg9q
-         rGzZs1q9lajjrwmpUWrWEnW8NiHHCjXrNQMXQ8hy2cnzC/mtm+rbSKPtWWY4E8FJmMbK
-         /h9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:thread-topic:thread-index
-         :date:message-id:accept-language:content-language
-         :content-transfer-encoding:mime-version;
-        bh=loJq2BFCJDLuMqoHpzHxiOl0dPxBfdfBELyXwXbZ4gY=;
-        b=m1xtEder2vkbxsF7MyVjHijG1cNWIOhaDSooye6e+A3FzTPsP0P/zhgnSGAIt1i3j2
-         OqytoXcEWvqhwe1ZWb8gvfUHTyonrCv3GSXl8BMNViragLnI24QJCVNjYreNEjhtY7AH
-         EREC79fqPDVkk29BBuIvjjrb63kFsKBJi1fC2lxU735bI5VnGBGfPPSoNwx0tfnwrfCX
-         YTaABpyzfNibcwdtIiOXOgsAiymUkuGwe/9FG7XVY46roXCrhFaqGMWwvd11NM6ykrAr
-         g/bK2MWEgVBJzQ5rTKAfzhrDz2qo48Ils/LejdPPERHdQOTGfDhB7GJRgXDQTyxdTyIY
-         TVrA==
-X-Gm-Message-State: APjAAAUT2dOzTNR5muyHZ9bL9r1wroaI2ssYzHOcDBIqylLHfM3t4GN2
-        Y+BmAh6lyyVfpuT3DxtKiJA=
-X-Google-Smtp-Source: APXvYqy/7OXl7eu9xAJEno5HK7zw219qsj7jBndTjsHZAqsVGkIzd94ObVFMPVzTRe7uYhROMEth7g==
-X-Received: by 2002:a63:1346:: with SMTP id 6mr42244463pgt.111.1579211263558;
-        Thu, 16 Jan 2020 13:47:43 -0800 (PST)
-Received: from SL2P216MB0105.KORP216.PROD.OUTLOOK.COM ([2603:1046:100:22::5])
-        by smtp.gmail.com with ESMTPSA id n1sm27699809pfd.47.2020.01.16.13.47.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 16 Jan 2020 13:47:42 -0800 (PST)
-From:   Jingoo Han <jingoohan1@gmail.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Han Jingoo <jingoohan1@gmail.com>
-Subject: [PATCH] PCI: dwc: Makefile/Kconfig: sort alphabetically
-Thread-Topic: [PATCH] PCI: dwc: Makefile/Kconfig: sort alphabetically
-Thread-Index: AQHVzLaRd//I5YntB0GSFszSnX4h4w==
-X-MS-Exchange-MessageSentRepresentingType: 1
-Date:   Thu, 16 Jan 2020 21:47:38 +0000
-Message-ID: <SL2P216MB010521AC91184B715AFA197FAA360@SL2P216MB0105.KORP216.PROD.OUTLOOK.COM>
-Accept-Language: ko-KR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-Exchange-Organization-SCL: -1
-X-MS-TNEF-Correlator: 
-X-MS-Exchange-Organization-RecordReviewCfmType: 0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S2389859AbgAPWKF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Jan 2020 17:10:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42686 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388979AbgAPWKF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 16 Jan 2020 17:10:05 -0500
+Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 255D22073A;
+        Thu, 16 Jan 2020 22:10:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579212604;
+        bh=j1j3M27vbKz8clF1SBs8s3ip/nmQhDsJXA241gtfI4M=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=fwfuPhaCYiP50auIhrK8Iwl/YJQ8ugSVpH9rj/0698Vrr43aMLzT7av3geY7J5ftp
+         viDZDXebp2VRaSX9IjODh+rmt3qIDJBzmpCAt9S+JsSMrqgR/+ibxWNwTyBU+hK/o0
+         +uX/4XWji+Vm/GqW+ejB1W+GVMDHNrncwL/7+RBg=
+Date:   Thu, 16 Jan 2020 16:10:02 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     sathyanarayanan.kuppuswamy@linux.intel.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Keith Busch <keith.busch@intel.com>,
+        Huong Nguyen <huong.nguyen@dell.com>,
+        Austin Bolen <Austin.Bolen@dell.com>
+Subject: Re: [PATCH v12 8/8] PCI/ACPI: Enable EDR support
+Message-ID: <20200116221002.GA191067@google.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a15c5467ab8d52ede096b598e14c1beae1ce8e48.1578682741.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The order in dwc directory is PCIE_DW, PCI_*, and PCIE_* as below.
+On Sun, Jan 12, 2020 at 02:44:02PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> 
+> As per PCI firmware specification r3.2 Downstream Port Containment
+> Related Enhancements ECN, sec 4.5.1, OS must implement following steps
+> to enable/use EDR feature.
+> 
+> 1. OS can use bit 7 of _OSC Control Field to negotiate control over
+> Downstream Port Containment (DPC) configuration of PCIe port. After _OSC
+> negotiation, firmware will Set this bit to grant OS control over PCIe
+> DPC configuration and Clear it if this feature was requested and denied,
+> or was not requested.
+> 
+> 2. Also, if OS supports EDR, it should expose its support to BIOS by
+> setting bit 7 of _OSC Support Field. And if OS sets bit 7 of _OSC
+> Control Field it must also expose support for EDR by setting bit 7 of
+> _OSC Support Field.
+> 
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Cc: Len Brown <lenb@kernel.org>
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> Acked-by: Keith Busch <keith.busch@intel.com>
+> Tested-by: Huong Nguyen <huong.nguyen@dell.com>
+> Tested-by: Austin Bolen <Austin.Bolen@dell.com>
+> ---
+>  drivers/acpi/pci_root.c         | 9 +++++++++
+>  drivers/pci/pcie/portdrv_core.c | 7 +++++--
+>  drivers/pci/probe.c             | 1 +
+>  include/linux/acpi.h            | 6 ++++--
+>  include/linux/pci.h             | 3 ++-
+>  5 files changed, 21 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+> index d1e666ef3fcc..134e20474dfd 100644
+> --- a/drivers/acpi/pci_root.c
+> +++ b/drivers/acpi/pci_root.c
+> @@ -131,6 +131,7 @@ static struct pci_osc_bit_struct pci_osc_support_bit[] = {
+>  	{ OSC_PCI_CLOCK_PM_SUPPORT, "ClockPM" },
+>  	{ OSC_PCI_SEGMENT_GROUPS_SUPPORT, "Segments" },
+>  	{ OSC_PCI_MSI_SUPPORT, "MSI" },
+> +	{ OSC_PCI_EDR_SUPPORT, "EDR" },
+>  	{ OSC_PCI_HPX_TYPE_3_SUPPORT, "HPX-Type3" },
+>  };
+>  
+> @@ -141,6 +142,7 @@ static struct pci_osc_bit_struct pci_osc_control_bit[] = {
+>  	{ OSC_PCI_EXPRESS_AER_CONTROL, "AER" },
+>  	{ OSC_PCI_EXPRESS_CAPABILITY_CONTROL, "PCIeCapability" },
+>  	{ OSC_PCI_EXPRESS_LTR_CONTROL, "LTR" },
+> +	{ OSC_PCI_EXPRESS_DPC_CONTROL, "DPC" },
+>  };
+>  
+>  static void decode_osc_bits(struct acpi_pci_root *root, char *msg, u32 word,
+> @@ -440,6 +442,8 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
+>  		support |= OSC_PCI_ASPM_SUPPORT | OSC_PCI_CLOCK_PM_SUPPORT;
+>  	if (pci_msi_enabled())
+>  		support |= OSC_PCI_MSI_SUPPORT;
+> +	if (IS_ENABLED(CONFIG_PCIE_EDR))
+> +		support |= OSC_PCI_EDR_SUPPORT;
+>  
+>  	decode_osc_support(root, "OS supports", support);
+>  	status = acpi_pci_osc_support(root, support);
+> @@ -487,6 +491,9 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
+>  			control |= OSC_PCI_EXPRESS_AER_CONTROL;
+>  	}
+>  
+> +	if (IS_ENABLED(CONFIG_PCIE_DPC))
+> +		control |= OSC_PCI_EXPRESS_DPC_CONTROL;
 
-1. Common Frameworks:
-    These options are used by other controller drivers.
-    e.g., PCIE_DW, PCIE_DW_HOST, PCIE_DW_EP.
+The ECN [1] says:
 
-2. PCI_* controller drivers:
-    PCI_* was used earlier than PCIE_*. If a chip vendor's controllers prov=
-ide
-    both conventional PCI and PCI Express, or only conventional PCI, PCI_* =
-can
-    be used.
+  If this bit is set by the OS, this indicates that it supports both
+  native OS control and firmware ownership models (i.e. Error
+  Disconnect Recover notification) of Downstream Port Containment.
 
-3. PCIE_* controller drivers:
-    If a controller can support only PCI Express, not conventional PCI,
-    PCIE_* is the proper naming.
+But if CONFIG_PCIE_DPC=y and CONFIG_PCIE_EDR is not set, we will set
+OSC_PCI_EXPRESS_DPC_CONTROL even though we don't support EDR.  That
+doesn't seem to match what the spec says.
 
-Then, within PCI_* or PCIE_* categories, each controller option should be
-in an alphabetical order for the readability.
+I think this needs to be something like:
 
-Signed-off-by: Jingoo Han <jingoohan1@gmail.com>
----
-Based on 'dwc' branch
+  if (IS_ENABLED(CONFIG_PCIE_DPC) && IS_ENABLED(CONFIG_PCIE_EDR))
+    control |= OSC_PCI_EXPRESS_DPC_CONTROL;
 
- drivers/pci/controller/dwc/Kconfig  | 148 ++++++++++++++--------------
- drivers/pci/controller/dwc/Makefile |   8 +-
- 2 files changed, 78 insertions(+), 78 deletions(-)
+[1] Downstream Port Containment related Enhancements, PCI ECN, Jan 28,
+2019, Section 4.5.1, Table 4-5.
 
-diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dw=
-c/Kconfig
-index 0830dfcfa43a..377323d01ee3 100644
---- a/drivers/pci/controller/dwc/Kconfig
-+++ b/drivers/pci/controller/dwc/Kconfig
-@@ -16,6 +16,38 @@ config PCIE_DW_EP
- 	depends on PCI_ENDPOINT
- 	select PCIE_DW
-=20
-+config PCIE_DW_PLAT
-+	bool
-+
-+config PCIE_DW_PLAT_HOST
-+	bool "Platform bus based DesignWare PCIe Controller - Host mode"
-+	depends on PCI && PCI_MSI_IRQ_DOMAIN
-+	select PCIE_DW_HOST
-+	select PCIE_DW_PLAT
-+	help
-+	  Enables support for the PCIe controller in the Designware IP to
-+	  work in host mode. There are two instances of PCIe controller in
-+	  Designware IP.
-+	  This controller can work either as EP or RC. In order to enable
-+	  host-specific features PCIE_DW_PLAT_HOST must be selected and in
-+	  order to enable device-specific features PCI_DW_PLAT_EP must be
-+	  selected.
-+
-+config PCIE_DW_PLAT_EP
-+	bool "Platform bus based DesignWare PCIe Controller - Endpoint mode"
-+	depends on PCI && PCI_MSI_IRQ_DOMAIN
-+	depends on PCI_ENDPOINT
-+	select PCIE_DW_EP
-+	select PCIE_DW_PLAT
-+	help
-+	  Enables support for the PCIe controller in the Designware IP to
-+	  work in endpoint mode. There are two instances of PCIe controller
-+	  in Designware IP.
-+	  This controller can work either as EP or RC. In order to enable
-+	  host-specific features PCIE_DW_PLAT_HOST must be selected and in
-+	  order to enable device-specific features PCI_DW_PLAT_EP must be
-+	  selected.
-+
- config PCI_DRA7XX
- 	bool
-=20
-@@ -50,57 +82,27 @@ config PCI_DRA7XX_EP
- 	  to enable device-specific features PCI_DRA7XX_EP must be selected.
- 	  This uses the DesignWare core.
-=20
--config PCIE_DW_PLAT
--	bool
--
--config PCIE_DW_PLAT_HOST
--	bool "Platform bus based DesignWare PCIe Controller - Host mode"
--	depends on PCI && PCI_MSI_IRQ_DOMAIN
--	select PCIE_DW_HOST
--	select PCIE_DW_PLAT
--	help
--	  Enables support for the PCIe controller in the Designware IP to
--	  work in host mode. There are two instances of PCIe controller in
--	  Designware IP.
--	  This controller can work either as EP or RC. In order to enable
--	  host-specific features PCIE_DW_PLAT_HOST must be selected and in
--	  order to enable device-specific features PCI_DW_PLAT_EP must be
--	  selected.
--
--config PCIE_DW_PLAT_EP
--	bool "Platform bus based DesignWare PCIe Controller - Endpoint mode"
--	depends on PCI && PCI_MSI_IRQ_DOMAIN
--	depends on PCI_ENDPOINT
--	select PCIE_DW_EP
--	select PCIE_DW_PLAT
--	help
--	  Enables support for the PCIe controller in the Designware IP to
--	  work in endpoint mode. There are two instances of PCIe controller
--	  in Designware IP.
--	  This controller can work either as EP or RC. In order to enable
--	  host-specific features PCIE_DW_PLAT_HOST must be selected and in
--	  order to enable device-specific features PCI_DW_PLAT_EP must be
--	  selected.
--
- config PCI_EXYNOS
- 	bool "Samsung Exynos PCIe controller"
- 	depends on SOC_EXYNOS5440 || COMPILE_TEST
- 	depends on PCI_MSI_IRQ_DOMAIN
- 	select PCIE_DW_HOST
-=20
--config PCI_IMX6
--	bool "Freescale i.MX6/7/8 PCIe controller"
--	depends on ARCH_MXC || COMPILE_TEST
-+config PCI_HISI
-+	depends on OF && (ARM64 || COMPILE_TEST)
-+	bool "HiSilicon Hip05 and Hip06 SoCs PCIe controllers"
- 	depends on PCI_MSI_IRQ_DOMAIN
- 	select PCIE_DW_HOST
-+	select PCI_HOST_COMMON
-+	help
-+	  Say Y here if you want PCIe controller support on HiSilicon
-+	  Hip05 and Hip06 SoCs
-=20
--config PCIE_SPEAR13XX
--	bool "STMicroelectronics SPEAr PCIe controller"
--	depends on ARCH_SPEAR13XX || COMPILE_TEST
-+config PCI_IMX6
-+	bool "Freescale i.MX6/7/8 PCIe controller"
-+	depends on ARCH_MXC || COMPILE_TEST
- 	depends on PCI_MSI_IRQ_DOMAIN
- 	select PCIE_DW_HOST
--	help
--	  Say Y here if you want PCIe support on SPEAr13XX SoCs.
-=20
- config PCI_KEYSTONE
- 	bool
-@@ -155,25 +157,27 @@ config PCI_LAYERSCAPE_EP
- 	  determines which PCIe controller works in EP mode and which PCIe
- 	  controller works in RC mode.
-=20
--config PCI_HISI
--	depends on OF && (ARM64 || COMPILE_TEST)
--	bool "HiSilicon Hip05 and Hip06 SoCs PCIe controllers"
-+config PCI_MESON
-+	bool "MESON PCIe controller"
- 	depends on PCI_MSI_IRQ_DOMAIN
- 	select PCIE_DW_HOST
--	select PCI_HOST_COMMON
- 	help
--	  Say Y here if you want PCIe controller support on HiSilicon
--	  Hip05 and Hip06 SoCs
-+	  Say Y here if you want to enable PCI controller support on Amlogic
-+	  SoCs. The PCI controller on Amlogic is based on DesignWare hardware
-+	  and therefore the driver re-uses the DesignWare core functions to
-+	  implement the driver.
-=20
--config PCIE_QCOM
--	bool "Qualcomm PCIe controller"
--	depends on OF && (ARCH_QCOM || COMPILE_TEST)
-+config PCIE_AL
-+	bool "Amazon Annapurna Labs PCIe controller"
-+	depends on OF && (ARM64 || COMPILE_TEST)
- 	depends on PCI_MSI_IRQ_DOMAIN
- 	select PCIE_DW_HOST
- 	help
--	  Say Y here to enable PCIe controller support on Qualcomm SoCs. The
--	  PCIe controller uses the DesignWare core plus Qualcomm-specific
--	  hardware wrappers.
-+	  Say Y here to enable support of the Amazon's Annapurna Labs PCIe
-+	  controller IP on Amazon SoCs. The PCIe controller uses the DesignWare
-+	  core plus Annapurna Labs proprietary hardware wrappers. This is
-+	  required only for DT-based platforms. ACPI platforms with the
-+	  Annapurna Labs PCIe controller don't need to enable this.
-=20
- config PCIE_ARMADA_8K
- 	bool "Marvell Armada-8K PCIe controller"
-@@ -209,6 +213,14 @@ config PCIE_ARTPEC6_EP
- 	  Enables support for the PCIe controller in the ARTPEC-6 SoC to work in
- 	  endpoint mode. This uses the DesignWare core.
-=20
-+config PCIE_HISI_STB
-+	bool "HiSilicon STB SoCs PCIe controllers"
-+	depends on ARCH_HISI || COMPILE_TEST
-+	depends on PCI_MSI_IRQ_DOMAIN
-+	select PCIE_DW_HOST
-+	help
-+	  Say Y here if you want PCIe controller support on HiSilicon STB SoCs
-+
- config PCIE_INTEL_GW
- 	bool "Intel Gateway PCIe host controller support"
- 	depends on OF && (X86 || COMPILE_TEST)
-@@ -229,23 +241,23 @@ config PCIE_KIRIN
- 	  Say Y here if you want PCIe controller support
- 	  on HiSilicon Kirin series SoCs.
-=20
--config PCIE_HISI_STB
--	bool "HiSilicon STB SoCs PCIe controllers"
--	depends on ARCH_HISI || COMPILE_TEST
-+config PCIE_QCOM
-+	bool "Qualcomm PCIe controller"
-+	depends on OF && (ARCH_QCOM || COMPILE_TEST)
- 	depends on PCI_MSI_IRQ_DOMAIN
- 	select PCIE_DW_HOST
- 	help
--	  Say Y here if you want PCIe controller support on HiSilicon STB SoCs
-+	  Say Y here to enable PCIe controller support on Qualcomm SoCs. The
-+	  PCIe controller uses the DesignWare core plus Qualcomm-specific
-+	  hardware wrappers.
-=20
--config PCI_MESON
--	bool "MESON PCIe controller"
-+config PCIE_SPEAR13XX
-+	bool "STMicroelectronics SPEAr PCIe controller"
-+	depends on ARCH_SPEAR13XX || COMPILE_TEST
- 	depends on PCI_MSI_IRQ_DOMAIN
- 	select PCIE_DW_HOST
- 	help
--	  Say Y here if you want to enable PCI controller support on Amlogic
--	  SoCs. The PCI controller on Amlogic is based on DesignWare hardware
--	  and therefore the driver re-uses the DesignWare core functions to
--	  implement the driver.
-+	  Say Y here if you want PCIe support on SPEAr13XX SoCs.
-=20
- config PCIE_TEGRA194
- 	tristate "NVIDIA Tegra194 (and later) PCIe controller"
-@@ -267,16 +279,4 @@ config PCIE_UNIPHIER
- 	  Say Y here if you want PCIe controller support on UniPhier SoCs.
- 	  This driver supports LD20 and PXs3 SoCs.
-=20
--config PCIE_AL
--	bool "Amazon Annapurna Labs PCIe controller"
--	depends on OF && (ARM64 || COMPILE_TEST)
--	depends on PCI_MSI_IRQ_DOMAIN
--	select PCIE_DW_HOST
--	help
--	  Say Y here to enable support of the Amazon's Annapurna Labs PCIe
--	  controller IP on Amazon SoCs. The PCIe controller uses the DesignWare
--	  core plus Annapurna Labs proprietary hardware wrappers. This is
--	  required only for DT-based platforms. ACPI platforms with the
--	  Annapurna Labs PCIe controller don't need to enable this.
--
- endmenu
-diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/d=
-wc/Makefile
-index 8a637cfcf6e9..53d25b4e5206 100644
---- a/drivers/pci/controller/dwc/Makefile
-+++ b/drivers/pci/controller/dwc/Makefile
-@@ -6,17 +6,17 @@ obj-$(CONFIG_PCIE_DW_PLAT) +=3D pcie-designware-plat.o
- obj-$(CONFIG_PCI_DRA7XX) +=3D pci-dra7xx.o
- obj-$(CONFIG_PCI_EXYNOS) +=3D pci-exynos.o
- obj-$(CONFIG_PCI_IMX6) +=3D pci-imx6.o
--obj-$(CONFIG_PCIE_SPEAR13XX) +=3D pcie-spear13xx.o
- obj-$(CONFIG_PCI_KEYSTONE) +=3D pci-keystone.o
- obj-$(CONFIG_PCI_LAYERSCAPE) +=3D pci-layerscape.o
- obj-$(CONFIG_PCI_LAYERSCAPE_EP) +=3D pci-layerscape-ep.o
--obj-$(CONFIG_PCIE_QCOM) +=3D pcie-qcom.o
-+obj-$(CONFIG_PCI_MESON) +=3D pci-meson.o
- obj-$(CONFIG_PCIE_ARMADA_8K) +=3D pcie-armada8k.o
- obj-$(CONFIG_PCIE_ARTPEC6) +=3D pcie-artpec6.o
-+obj-$(CONFIG_PCIE_HISI_STB) +=3D pcie-histb.o
- obj-$(CONFIG_PCIE_INTEL_GW) +=3D pcie-intel-gw.o
- obj-$(CONFIG_PCIE_KIRIN) +=3D pcie-kirin.o
--obj-$(CONFIG_PCIE_HISI_STB) +=3D pcie-histb.o
--obj-$(CONFIG_PCI_MESON) +=3D pci-meson.o
-+obj-$(CONFIG_PCIE_QCOM) +=3D pcie-qcom.o
-+obj-$(CONFIG_PCIE_SPEAR13XX) +=3D pcie-spear13xx.o
- obj-$(CONFIG_PCIE_TEGRA194) +=3D pcie-tegra194.o
- obj-$(CONFIG_PCIE_UNIPHIER) +=3D pcie-uniphier.o
-=20
---=20
-2.17.1
+>  	requested = control;
+>  	status = acpi_pci_osc_control_set(handle, &control,
+>  					  OSC_PCI_EXPRESS_CAPABILITY_CONTROL);
+> @@ -916,6 +923,8 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
+>  		host_bridge->native_pme = 0;
+>  	if (!(root->osc_control_set & OSC_PCI_EXPRESS_LTR_CONTROL))
+>  		host_bridge->native_ltr = 0;
+> +	if (!(root->osc_control_set & OSC_PCI_EXPRESS_DPC_CONTROL))
+> +		host_bridge->native_dpc = 0;
+>  
+>  	/*
+>  	 * Evaluate the "PCI Boot Configuration" _DSM Function.  If it
+> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+> index 5075cb9e850c..009742c865d6 100644
+> --- a/drivers/pci/pcie/portdrv_core.c
+> +++ b/drivers/pci/pcie/portdrv_core.c
+> @@ -253,10 +253,13 @@ static int get_port_device_capability(struct pci_dev *dev)
+>  	/*
+>  	 * With dpc-native, allow Linux to use DPC even if it doesn't have
+>  	 * permission to use AER.
+> +	 * If EDR support is enabled in OS, then even if AER is not handled in
+> +	 * OS, DPC service can be enabled.
+>  	 */
+>  	if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC) &&
+> -	    pci_aer_available() &&
+> -	    (pcie_ports_dpc_native || (services & PCIE_PORT_SERVICE_AER)))
+> +	    ((IS_ENABLED(CONFIG_PCIE_EDR) && !host->native_dpc) ||
+> +	    (pci_aer_available() &&
+> +	    (pcie_ports_dpc_native || (services & PCIE_PORT_SERVICE_AER)))))
+>  		services |= PCIE_PORT_SERVICE_DPC;
+>  
+>  	if (pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 512cb4312ddd..c9a9c5b42e72 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -598,6 +598,7 @@ static void pci_init_host_bridge(struct pci_host_bridge *bridge)
+>  	bridge->native_shpc_hotplug = 1;
+>  	bridge->native_pme = 1;
+>  	bridge->native_ltr = 1;
+> +	bridge->native_dpc = 1;
+>  }
+>  
+>  struct pci_host_bridge *pci_alloc_host_bridge(size_t priv)
+> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+> index 0f37a7d5fa77..0a7aaa452a98 100644
+> --- a/include/linux/acpi.h
+> +++ b/include/linux/acpi.h
+> @@ -515,8 +515,9 @@ extern bool osc_pc_lpi_support_confirmed;
+>  #define OSC_PCI_CLOCK_PM_SUPPORT		0x00000004
+>  #define OSC_PCI_SEGMENT_GROUPS_SUPPORT		0x00000008
+>  #define OSC_PCI_MSI_SUPPORT			0x00000010
+> +#define OSC_PCI_EDR_SUPPORT			0x00000080
+>  #define OSC_PCI_HPX_TYPE_3_SUPPORT		0x00000100
+> -#define OSC_PCI_SUPPORT_MASKS			0x0000011f
+> +#define OSC_PCI_SUPPORT_MASKS			0x0000019f
+>  
+>  /* PCI Host Bridge _OSC: Capabilities DWORD 3: Control Field */
+>  #define OSC_PCI_EXPRESS_NATIVE_HP_CONTROL	0x00000001
+> @@ -525,7 +526,8 @@ extern bool osc_pc_lpi_support_confirmed;
+>  #define OSC_PCI_EXPRESS_AER_CONTROL		0x00000008
+>  #define OSC_PCI_EXPRESS_CAPABILITY_CONTROL	0x00000010
+>  #define OSC_PCI_EXPRESS_LTR_CONTROL		0x00000020
+> -#define OSC_PCI_CONTROL_MASKS			0x0000003f
+> +#define OSC_PCI_EXPRESS_DPC_CONTROL		0x00000080
+> +#define OSC_PCI_CONTROL_MASKS			0x000000bf
+>  
+>  #define ACPI_GSB_ACCESS_ATTRIB_QUICK		0x00000002
+>  #define ACPI_GSB_ACCESS_ATTRIB_SEND_RCV         0x00000004
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index c393dff2d66f..0b7c63c7888d 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -510,8 +510,9 @@ struct pci_host_bridge {
+>  	unsigned int	native_shpc_hotplug:1;	/* OS may use SHPC hotplug */
+>  	unsigned int	native_pme:1;		/* OS may use PCIe PME */
+>  	unsigned int	native_ltr:1;		/* OS may use PCIe LTR */
+> -	unsigned int	preserve_config:1;	/* Preserve FW resource setup */
+> +	unsigned int	native_dpc:1;		/* OS may use PCIe DPC */
+>  
+> +	unsigned int	preserve_config:1;	/* Preserve FW resource setup */
 
+The blank line should stay after the bitfields.  Then this will look
+like the simple insertion of native_dpc, as it should.
+
+>  	/* Resource alignment requirements */
+>  	resource_size_t (*align_resource)(struct pci_dev *dev,
+>  			const struct resource *res,
+> -- 
+> 2.21.0
+> 
