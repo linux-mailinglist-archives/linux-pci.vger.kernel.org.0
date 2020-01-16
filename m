@@ -2,33 +2,34 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 25FBE13EDD2
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2020 19:05:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BCF813EDEA
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2020 19:06:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393551AbgAPRjy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Jan 2020 12:39:54 -0500
+        id S2393543AbgAPSFu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Jan 2020 13:05:50 -0500
 Received: from mga05.intel.com ([192.55.52.43]:12413 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393547AbgAPRjx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:39:53 -0500
+        id S2391507AbgAPRjv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:39:51 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
   by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jan 2020 09:39:51 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,327,1574150400"; 
-   d="scan'208";a="259359359"
+   d="scan'208";a="226047363"
 Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga001.fm.intel.com with ESMTP; 16 Jan 2020 09:39:51 -0800
+  by orsmga003.jf.intel.com with ESMTP; 16 Jan 2020 09:39:50 -0800
 Received: from kbuild by lkp-server01 with local (Exim 4.89)
         (envelope-from <lkp@intel.com>)
-        id 1is97W-0005Yy-LL; Fri, 17 Jan 2020 01:39:50 +0800
+        id 1is97V-0005RW-Iz; Fri, 17 Jan 2020 01:39:49 +0800
 Date:   Fri, 17 Jan 2020 01:38:51 +0800
 From:   kbuild test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     linux-pci@vger.kernel.org
-Subject: [pci:next] BUILD SUCCESS 2919da90bf223900be14ec08e9bbbdee68c37b8a
-Message-ID: <5e209fab.9o54h/k3mPDcsxR3%lkp@intel.com>
+Subject: [pci:pci/switchtec] BUILD SUCCESS
+ 7a30ebb9f2a253eae908cc3e1ba7daaa3bfe2bba
+Message-ID: <5e209fab.YrVNSjtQ+MDU2mLR%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -38,10 +39,10 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  next
-branch HEAD: 2919da90bf223900be14ec08e9bbbdee68c37b8a  Merge branch 'remotes/lorenzo/pci/uniphier'
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/switchtec
+branch HEAD: 7a30ebb9f2a253eae908cc3e1ba7daaa3bfe2bba  PCI/switchtec: Add Gen4 device IDs
 
-elapsed time: 682m
+elapsed time: 681m
 
 configs tested: 136
 configs skipped: 0
