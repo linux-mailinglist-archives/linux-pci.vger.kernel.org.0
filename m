@@ -2,39 +2,42 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E9BC13E3F2
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2020 18:05:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8008613E413
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2020 18:06:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730109AbgAPRFJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Jan 2020 12:05:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55400 "EHLO mail.kernel.org"
+        id S2388804AbgAPRFy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Jan 2020 12:05:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388409AbgAPRCd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:02:33 -0500
+        id S2388668AbgAPRFy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:05:54 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B1342073A;
-        Thu, 16 Jan 2020 17:02:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D805217F4;
+        Thu, 16 Jan 2020 17:05:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194152;
-        bh=NMtzhIfJOHOAtmyYoR7QWOqYodHl2omDYrFFEDvuwAs=;
+        s=default; t=1579194353;
+        bh=nPZ1XTnaEG3wsEn3/9GneQYMObYjOmeffnxVFFkkbUg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CgPPZVwAfS9d11fp0NkTA/Jgbn0Krawh8k5y2ZBdcxTN4tGBNg2CldsugaXHHCwB+
-         W71uTEhMdEtMnOtIf5+sNay+i19fUER2BngReOmDNz88DnrBKamIppkzAYhE9ODf+c
-         6PLrmjLanKL4aRccmOW2vGiolBEoQoywNfP7CLrs=
+        b=DCaTg6b06C8KN3Qmb0E9olqbC8JMT6V2z6zvw+g9BPtqdJFAGMJawTUgsVS64CZtO
+         LcFmBwLDU3PTcii4PpN9Lz/o0ipKfaRWQrnI5SKkXoeX6ILkxH5uG4mOP5idOuZt4X
+         Rt/grCc9LZGu+9yWtecoT2h0KZpDZcoo6a5cdUSI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sinan Kaya <okaya@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 236/671] PCI: Fix "try" semantics of bus and slot reset
-Date:   Thu, 16 Jan 2020 11:52:25 -0500
-Message-Id: <20200116165940.10720-119-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 292/671] PCI: rockchip: Fix rockchip_pcie_ep_assert_intx() bitwise operations
+Date:   Thu, 16 Jan 2020 11:58:50 -0500
+Message-Id: <20200116170509.12787-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
-References: <20200116165940.10720-1-sashal@kernel.org>
+In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
+References: <20200116170509.12787-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -44,161 +47,40 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Alex Williamson <alex.williamson@redhat.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit ddefc033eecf23f1e8b81d0663c5db965adf5516 ]
+[ Upstream commit c577f4a5a08bb9677e12ddafb62e2f3a901de87f ]
 
-The commit referenced below introduced device locking around save and
-restore of state for each device during a PCI bus "try" reset, making it
-decidely non-"try" and prone to deadlock in the event that a device is
-already locked.  Restore __pci_reset_bus() and __pci_reset_slot() to their
-advertised locking semantics by pushing the save and restore functions into
-the branch where the entire tree is already locked.  Extend the helper
-function names with "_locked" and update the comment to reflect this
-calling requirement.
+Currently the bitwise operations on the u16 variable 'status' with
+the setting ROCKCHIP_PCIE_EP_CMD_STATUS_IS are incorrect because
+ROCKCHIP_PCIE_EP_CMD_STATUS_IS is 1UL<<19 which is wider than the
+u16 variable.
 
-Fixes: b014e96d1abb ("PCI: Protect pci_error_handlers->reset_notify() usage with device_lock()")
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Sinan Kaya <okaya@kernel.org>
+Fix this by making status a u32.
+
+Fixes: cf590b078391 ("PCI: rockchip: Add EP driver for Rockchip PCIe controller")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Acked-by: Shawn Lin <shawn.lin@rock-chips.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pci.c | 54 +++++++++++++++++++++++------------------------
- 1 file changed, 26 insertions(+), 28 deletions(-)
+ drivers/pci/controller/pcie-rockchip-ep.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index c9f51fc24563..57a87a001b4f 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -5039,39 +5039,42 @@ static int pci_slot_trylock(struct pci_slot *slot)
- 	return 0;
- }
+diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/pcie-rockchip-ep.c
+index b8163c56a142..caf34661d38d 100644
+--- a/drivers/pci/controller/pcie-rockchip-ep.c
++++ b/drivers/pci/controller/pcie-rockchip-ep.c
+@@ -350,7 +350,7 @@ static void rockchip_pcie_ep_assert_intx(struct rockchip_pcie_ep *ep, u8 fn,
+ 	struct rockchip_pcie *rockchip = &ep->rockchip;
+ 	u32 r = ep->max_regions - 1;
+ 	u32 offset;
+-	u16 status;
++	u32 status;
+ 	u8 msg_code;
  
--/* Save and disable devices from the top of the tree down */
--static void pci_bus_save_and_disable(struct pci_bus *bus)
-+/*
-+ * Save and disable devices from the top of the tree down while holding
-+ * the @dev mutex lock for the entire tree.
-+ */
-+static void pci_bus_save_and_disable_locked(struct pci_bus *bus)
- {
- 	struct pci_dev *dev;
- 
- 	list_for_each_entry(dev, &bus->devices, bus_list) {
--		pci_dev_lock(dev);
- 		pci_dev_save_and_disable(dev);
--		pci_dev_unlock(dev);
- 		if (dev->subordinate)
--			pci_bus_save_and_disable(dev->subordinate);
-+			pci_bus_save_and_disable_locked(dev->subordinate);
- 	}
- }
- 
- /*
-- * Restore devices from top of the tree down - parent bridges need to be
-- * restored before we can get to subordinate devices.
-+ * Restore devices from top of the tree down while holding @dev mutex lock
-+ * for the entire tree.  Parent bridges need to be restored before we can
-+ * get to subordinate devices.
-  */
--static void pci_bus_restore(struct pci_bus *bus)
-+static void pci_bus_restore_locked(struct pci_bus *bus)
- {
- 	struct pci_dev *dev;
- 
- 	list_for_each_entry(dev, &bus->devices, bus_list) {
--		pci_dev_lock(dev);
- 		pci_dev_restore(dev);
--		pci_dev_unlock(dev);
- 		if (dev->subordinate)
--			pci_bus_restore(dev->subordinate);
-+			pci_bus_restore_locked(dev->subordinate);
- 	}
- }
- 
--/* Save and disable devices from the top of the tree down */
--static void pci_slot_save_and_disable(struct pci_slot *slot)
-+/*
-+ * Save and disable devices from the top of the tree down while holding
-+ * the @dev mutex lock for the entire tree.
-+ */
-+static void pci_slot_save_and_disable_locked(struct pci_slot *slot)
- {
- 	struct pci_dev *dev;
- 
-@@ -5080,26 +5083,25 @@ static void pci_slot_save_and_disable(struct pci_slot *slot)
- 			continue;
- 		pci_dev_save_and_disable(dev);
- 		if (dev->subordinate)
--			pci_bus_save_and_disable(dev->subordinate);
-+			pci_bus_save_and_disable_locked(dev->subordinate);
- 	}
- }
- 
- /*
-- * Restore devices from top of the tree down - parent bridges need to be
-- * restored before we can get to subordinate devices.
-+ * Restore devices from top of the tree down while holding @dev mutex lock
-+ * for the entire tree.  Parent bridges need to be restored before we can
-+ * get to subordinate devices.
-  */
--static void pci_slot_restore(struct pci_slot *slot)
-+static void pci_slot_restore_locked(struct pci_slot *slot)
- {
- 	struct pci_dev *dev;
- 
- 	list_for_each_entry(dev, &slot->bus->devices, bus_list) {
- 		if (!dev->slot || dev->slot != slot)
- 			continue;
--		pci_dev_lock(dev);
- 		pci_dev_restore(dev);
--		pci_dev_unlock(dev);
- 		if (dev->subordinate)
--			pci_bus_restore(dev->subordinate);
-+			pci_bus_restore_locked(dev->subordinate);
- 	}
- }
- 
-@@ -5158,17 +5160,15 @@ static int __pci_reset_slot(struct pci_slot *slot)
- 	if (rc)
- 		return rc;
- 
--	pci_slot_save_and_disable(slot);
--
- 	if (pci_slot_trylock(slot)) {
-+		pci_slot_save_and_disable_locked(slot);
- 		might_sleep();
- 		rc = pci_reset_hotplug_slot(slot->hotplug, 0);
-+		pci_slot_restore_locked(slot);
- 		pci_slot_unlock(slot);
- 	} else
- 		rc = -EAGAIN;
- 
--	pci_slot_restore(slot);
--
- 	return rc;
- }
- 
-@@ -5254,17 +5254,15 @@ static int __pci_reset_bus(struct pci_bus *bus)
- 	if (rc)
- 		return rc;
- 
--	pci_bus_save_and_disable(bus);
--
- 	if (pci_bus_trylock(bus)) {
-+		pci_bus_save_and_disable_locked(bus);
- 		might_sleep();
- 		rc = pci_bridge_secondary_bus_reset(bus->self);
-+		pci_bus_restore_locked(bus);
- 		pci_bus_unlock(bus);
- 	} else
- 		rc = -EAGAIN;
- 
--	pci_bus_restore(bus);
--
- 	return rc;
- }
- 
+ 	if (unlikely(ep->irq_pci_addr != ROCKCHIP_PCIE_EP_PCI_LEGACY_IRQ_ADDR ||
 -- 
 2.20.1
 
