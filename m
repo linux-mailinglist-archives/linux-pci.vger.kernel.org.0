@@ -2,129 +2,190 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AB27113F080
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2020 19:22:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 25FBE13EDD2
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2020 19:05:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392478AbgAPR1i (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Jan 2020 12:27:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37608 "EHLO mail.kernel.org"
+        id S2393551AbgAPRjy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Jan 2020 12:39:54 -0500
+Received: from mga05.intel.com ([192.55.52.43]:12413 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390821AbgAPR1h (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:27:37 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4AEC246DC;
-        Thu, 16 Jan 2020 17:27:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195656;
-        bh=MVuQihC75yyeoF/lahCObJDjcs4ywXW3oeFo6Zh6GIE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2reit09ulDujz+8GyMgmEtoVYMj1UmcJzVBX03UtFapvWVnR4sWzaHgDVmptG3w1R
-         wJ06mD6ndxoswhRhctL108pJl8VN7XFWR0h+IMQWJ+YC3ioRW+Sr3BWJl8FGEjGxn+
-         yWqAkvNIR//7Govug0KXDod1lx2IlDo2sahsXvQY=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 217/371] PCI: PM: Avoid possible suspend-to-idle issue
-Date:   Thu, 16 Jan 2020 12:21:29 -0500
-Message-Id: <20200116172403.18149-160-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
-References: <20200116172403.18149-1-sashal@kernel.org>
+        id S2393547AbgAPRjx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:39:53 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jan 2020 09:39:51 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,327,1574150400"; 
+   d="scan'208";a="259359359"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga001.fm.intel.com with ESMTP; 16 Jan 2020 09:39:51 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1is97W-0005Yy-LL; Fri, 17 Jan 2020 01:39:50 +0800
+Date:   Fri, 17 Jan 2020 01:38:51 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:next] BUILD SUCCESS 2919da90bf223900be14ec08e9bbbdee68c37b8a
+Message-ID: <5e209fab.9o54h/k3mPDcsxR3%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  next
+branch HEAD: 2919da90bf223900be14ec08e9bbbdee68c37b8a  Merge branch 'remotes/lorenzo/pci/uniphier'
 
-[ Upstream commit d491f2b75237ef37d8867830ab7fad8d9659e853 ]
+elapsed time: 682m
 
-If a PCI driver leaves the device handled by it in D0 and calls
-pci_save_state() on the device in its ->suspend() or ->suspend_late()
-callback, it can expect the device to stay in D0 over the whole
-s2idle cycle.  However, that may not be the case if there is a
-spurious wakeup while the system is suspended, because in that case
-pci_pm_suspend_noirq() will run again after pci_pm_resume_noirq()
-which calls pci_restore_state(), via pci_pm_default_resume_early(),
-so state_saved is cleared and the second iteration of
-pci_pm_suspend_noirq() will invoke pci_prepare_to_sleep() which
-may change the power state of the device.
+configs tested: 136
+configs skipped: 0
 
-To avoid that, add a new internal flag, skip_bus_pm, that will be set
-by pci_pm_suspend_noirq() when it runs for the first time during the
-given system suspend-resume cycle if the state of the device has
-been saved already and the device is still in D0.  Setting that flag
-will cause the next iterations of pci_pm_suspend_noirq() to set
-state_saved for pci_pm_resume_noirq(), so that it always restores the
-device state from the originally saved data, and avoid calling
-pci_prepare_to_sleep() for the device.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Fixes: 33e4f80ee69b ("ACPI / PM: Ignore spurious SCI wakeups from suspend-to-idle")
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Reviewed-by: Keith Busch <keith.busch@intel.com>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+sh                               allmodconfig
+sh                                allnoconfig
+sh                          rsk7269_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                            titan_defconfig
+x86_64               randconfig-c001-20200116
+x86_64               randconfig-c002-20200116
+x86_64               randconfig-c003-20200116
+i386                 randconfig-c001-20200116
+i386                 randconfig-c002-20200116
+i386                 randconfig-c003-20200116
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                             allmodconfig
+mips                              allnoconfig
+mips                             allyesconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                          allmodconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                             defconfig
+h8300                     edosk2674_defconfig
+h8300                    h8300h-sim_defconfig
+h8300                       h8s-sim_defconfig
+m68k                             allmodconfig
+m68k                       m5475evb_defconfig
+m68k                          multi_defconfig
+m68k                           sun3_defconfig
+alpha                randconfig-a001-20200116
+m68k                 randconfig-a001-20200116
+mips                 randconfig-a001-20200116
+nds32                randconfig-a001-20200116
+parisc               randconfig-a001-20200116
+riscv                randconfig-a001-20200116
+s390                             alldefconfig
+s390                             allmodconfig
+s390                              allnoconfig
+s390                             allyesconfig
+s390                          debug_defconfig
+s390                                defconfig
+s390                       zfcpdump_defconfig
+c6x                              allyesconfig
+c6x                        evmc6678_defconfig
+nios2                         10m50_defconfig
+nios2                         3c120_defconfig
+openrisc                    or1ksim_defconfig
+openrisc                 simple_smp_defconfig
+xtensa                       common_defconfig
+xtensa                          iss_defconfig
+arc                              allyesconfig
+arc                                 defconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+x86_64               randconfig-a001-20200116
+x86_64               randconfig-a002-20200116
+x86_64               randconfig-a003-20200116
+i386                 randconfig-a001-20200116
+i386                 randconfig-a002-20200116
+i386                 randconfig-a003-20200116
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                               rhel-7.6
+i386                             alldefconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+alpha                               defconfig
+csky                                defconfig
+nds32                             allnoconfig
+nds32                               defconfig
+parisc                            allnoconfig
+parisc                            allyesonfig
+parisc                         b180_defconfig
+parisc                        c3000_defconfig
+parisc                              defconfig
+x86_64               randconfig-d001-20200116
+x86_64               randconfig-d002-20200116
+x86_64               randconfig-d003-20200116
+i386                 randconfig-d001-20200116
+i386                 randconfig-d002-20200116
+i386                 randconfig-d003-20200116
+riscv                            allmodconfig
+riscv                             allnoconfig
+riscv                            allyesconfig
+riscv                               defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+um                                  defconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm                         at91_dt_defconfig
+arm                           efm32_defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                        multi_v7_defconfig
+arm                        shmobile_defconfig
+arm                           sunxi_defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arc                  randconfig-a001-20200116
+arm                  randconfig-a001-20200116
+arm64                randconfig-a001-20200116
+ia64                 randconfig-a001-20200116
+powerpc              randconfig-a001-20200116
+sparc                randconfig-a001-20200116
+x86_64               randconfig-b001-20200116
+x86_64               randconfig-b002-20200116
+x86_64               randconfig-b003-20200116
+i386                 randconfig-b001-20200116
+i386                 randconfig-b002-20200116
+i386                 randconfig-b003-20200116
+ia64                             alldefconfig
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+ia64                                defconfig
+x86_64               randconfig-e001-20200116
+x86_64               randconfig-e002-20200116
+x86_64               randconfig-e003-20200116
+i386                 randconfig-e001-20200116
+i386                 randconfig-e002-20200116
+i386                 randconfig-e003-20200116
+
 ---
- drivers/pci/pci-driver.c | 17 ++++++++++++++++-
- include/linux/pci.h      |  1 +
- 2 files changed, 17 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index 522e59274b5d..1589a147c536 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -728,6 +728,8 @@ static int pci_pm_suspend(struct device *dev)
- 	struct pci_dev *pci_dev = to_pci_dev(dev);
- 	const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
- 
-+	pci_dev->skip_bus_pm = false;
-+
- 	if (pci_has_legacy_pm_support(pci_dev))
- 		return pci_legacy_suspend(dev, PMSG_SUSPEND);
- 
-@@ -801,7 +803,20 @@ static int pci_pm_suspend_noirq(struct device *dev)
- 		}
- 	}
- 
--	if (!pci_dev->state_saved) {
-+	if (pci_dev->skip_bus_pm) {
-+		/*
-+		 * The function is running for the second time in a row without
-+		 * going through full resume, which is possible only during
-+		 * suspend-to-idle in a spurious wakeup case.  Moreover, the
-+		 * device was originally left in D0, so its power state should
-+		 * not be changed here and the device register values saved
-+		 * originally should be restored on resume again.
-+		 */
-+		pci_dev->state_saved = true;
-+	} else if (pci_dev->state_saved) {
-+		if (pci_dev->current_state == PCI_D0)
-+			pci_dev->skip_bus_pm = true;
-+	} else {
- 		pci_save_state(pci_dev);
- 		if (pci_power_manageable(pci_dev))
- 			pci_prepare_to_sleep(pci_dev);
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 59f4d10568c6..430f3c335446 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -346,6 +346,7 @@ struct pci_dev {
- 						   D3cold, not set for devices
- 						   powered on/off by the
- 						   corresponding bridge */
-+	unsigned int	skip_bus_pm:1;	/* Internal: Skip bus-level PM */
- 	unsigned int	ignore_hotplug:1;	/* Ignore hotplug events */
- 	unsigned int	hotplug_user_indicators:1; /* SlotCtl indicators
- 						      controlled exclusively by
--- 
-2.20.1
-
+0-DAY kernel test infrastructure                 Open Source Technology Center
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
