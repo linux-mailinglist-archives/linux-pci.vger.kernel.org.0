@@ -2,40 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F5CB13E282
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2020 17:56:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 507B113E347
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2020 18:01:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729680AbgAPQ4j (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Jan 2020 11:56:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43066 "EHLO mail.kernel.org"
+        id S2387982AbgAPRBC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Jan 2020 12:01:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733255AbgAPQ4g (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:56:36 -0500
+        id S2387977AbgAPRBB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:01:01 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84EFB20730;
-        Thu, 16 Jan 2020 16:56:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7114A2077B;
+        Thu, 16 Jan 2020 17:01:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193796;
-        bh=OZl7IZgkwyMRmVRuwE0X41/L3zEhmaK/dbmjNhpb7nY=;
+        s=default; t=1579194061;
+        bh=/49kyxd0PfXibenNT+urM4vRt0IRh8RAXda1+lG3nD0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RejDn44MhvciSExXVIx4y3NH4OE7S+keTf+kJnUcJr8Q/ZByrqGtxae5twH3cuPfZ
-         6DHFQ4QuPL9D6QfmEwksZnRhlL5uy+/NEfME/Zy3poxOe2nTmuL2tRWET/ly3ZBvx7
-         PZn3akPj9zaHzHkKCez+QRhH41hUdF1+qFhBMW6c=
+        b=RLrb+5CQJsDV5tLuBAl3SwPhG4gyeqt742cQItG4ARvum05ANBosp/ylYKOvu4FB0
+         ru2dKdHWBSS0/pXHj7vA9a5mYx3qh/04gR4oz3K8n0Qhk86tk4aAQ2BKuBfX/4vVKS
+         mqOrIuDaHuNZ/Az1GsTozq/Ikak1tHa61wWPfKkI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kelvin Cao <kelvin.cao@microchip.com>,
-        Wesley Sheng <wesley.sheng@microchip.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+Cc:     Wesley Sheng <wesley.sheng@microchip.com>,
         Logan Gunthorpe <logang@deltatee.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 066/671] switchtec: Remove immediate status check after submitting MRPC command
-Date:   Thu, 16 Jan 2020 11:44:57 -0500
-Message-Id: <20200116165502.8838-66-sashal@kernel.org>
+        Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>,
+        linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 173/671] ntb_hw_switchtec: NT req id mapping table register entry number should be 512
+Date:   Thu, 16 Jan 2020 11:51:22 -0500
+Message-Id: <20200116165940.10720-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
-References: <20200116165502.8838-1-sashal@kernel.org>
+In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
+References: <20200116165940.10720-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -45,50 +44,39 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Kelvin Cao <kelvin.cao@microchip.com>
+From: Wesley Sheng <wesley.sheng@microchip.com>
 
-[ Upstream commit 526180408b815aa7b96fd48bd23cdd33ef04e38e ]
+[ Upstream commit d123fab71f63aae129aebe052664fda73131921a ]
 
-After submitting a Firmware Download MRPC command, Switchtec firmware will
-delay Management EP BAR MemRd TLP responses by more than 10ms.  This is a
-firmware limitation.  Delayed MemRd completions are a problem for systems
-with a low Completion Timeout (CTO).
+The number of available NT req id mapping table entries per NTB control
+register is 512. The driver mistakenly limits the number to 256.
 
-The current driver checks the MRPC status immediately after submitting an
-MRPC command, which results in a delayed MemRd completion that may cause a
-Completion Timeout.
+Fix the array size of NT req id mapping table.
 
-Remove the immediate status check and rely on the check after receiving an
-interrupt or timing out.
-
-This is only a software workaround to the READ issue and a proper fix of
-this should be done in firmware.
-
-Fixes: 080b47def5e5 ("MicroSemi Switchtec management interface driver")
-Signed-off-by: Kelvin Cao <kelvin.cao@microchip.com>
+Fixes: c082b04c9d40 ("NTB: switchtec: Add NTB hardware register definitions")
 Signed-off-by: Wesley Sheng <wesley.sheng@microchip.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+Signed-off-by: Jon Mason <jdmason@kudzu.us>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/switch/switchtec.c | 4 ----
- 1 file changed, 4 deletions(-)
+ include/linux/switchtec.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
-index 5aaa4ce04ec3..ceb7ab3ba3d0 100644
---- a/drivers/pci/switch/switchtec.c
-+++ b/drivers/pci/switch/switchtec.c
-@@ -134,10 +134,6 @@ static void mrpc_cmd_submit(struct switchtec_dev *stdev)
- 		    stuser->data, stuser->data_len);
- 	iowrite32(stuser->cmd, &stdev->mmio_mrpc->cmd);
+diff --git a/include/linux/switchtec.h b/include/linux/switchtec.h
+index ab400af6f0ce..623719c91706 100644
+--- a/include/linux/switchtec.h
++++ b/include/linux/switchtec.h
+@@ -244,8 +244,8 @@ struct ntb_ctrl_regs {
+ 		u64 xlate_addr;
+ 	} bar_entry[6];
+ 	u32 reserved2[216];
+-	u32 req_id_table[256];
+-	u32 reserved3[512];
++	u32 req_id_table[512];
++	u32 reserved3[256];
+ 	u64 lut_entry[512];
+ } __packed;
  
--	stuser->status = ioread32(&stdev->mmio_mrpc->status);
--	if (stuser->status != SWITCHTEC_MRPC_STATUS_INPROGRESS)
--		mrpc_complete_cmd(stdev);
--
- 	schedule_delayed_work(&stdev->mrpc_timeout,
- 			      msecs_to_jiffies(500));
- }
 -- 
 2.20.1
 
