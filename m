@@ -2,73 +2,62 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6525313FBA1
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2020 22:36:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9304013FBB1
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2020 22:47:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729235AbgAPVgI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Jan 2020 16:36:08 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:39077 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726872AbgAPVgI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Jan 2020 16:36:08 -0500
-Received: by mail-pg1-f193.google.com with SMTP id b137so10556187pga.6;
-        Thu, 16 Jan 2020 13:36:07 -0800 (PST)
+        id S1729388AbgAPVrp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Jan 2020 16:47:45 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:36045 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729878AbgAPVro (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Jan 2020 16:47:44 -0500
+Received: by mail-pf1-f194.google.com with SMTP id x184so10894217pfb.3
+        for <linux-pci@vger.kernel.org>; Thu, 16 Jan 2020 13:47:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:thread-topic:thread-index:date:message-id
-         :references:in-reply-to:accept-language:content-language
-         :content-transfer-encoding:mime-version;
-        bh=VvHjOr4ACw42b4kMyCv1bwkltuHZ5dV8Yk2HQjQZAlI=;
-        b=VXMxF6J4VZaz/Wz/4mgtW/q1blQp73b5J3ss4YXtK3xaICcRQ2TRvWJYSWTvfbf+x4
-         3JsuoCOm02lXPCiVipKd7lZ6zlcBYl5iJpeMZG6mmvQhc8fijS4jm7OeXiOyUFI4ZyTp
-         f2q2cRVF7yklkq/083axeifLLcevK4ZM19nRuhRLDaNEJX1PsllqFr8CEguV3Un01aZa
-         d9eL7YrGUJxW5iuIj6Oese/tY5+ijzsL3iWNXvSnstqIf9LcFPOGgTfi+wYoPQHZ4nGu
-         PaTKHQY0ff+/rjx04oBxocEGBXUDIL8zNXze+NH+Y8/GN9EMpn2w856KYdkpP2p6aYVD
-         bybQ==
+         :accept-language:content-language:content-transfer-encoding
+         :mime-version;
+        bh=loJq2BFCJDLuMqoHpzHxiOl0dPxBfdfBELyXwXbZ4gY=;
+        b=lMgymSfx9ehbmnV2Ct9wOLxj5LFEUXp8WhcYhCP83DNe0KdLDgxm3H15/+dH5HySIK
+         i9K6Uj6QXtXsi4aQxr9CxagQBfFhAofZ1JZrCI0MyNVeapu2GmJ3ehtBGw7qEtf0YV6g
+         FXtMZDm3fyVQCw9DhFzyb+CUo7FAgSt+WbZpzSs4oNVUZtJ2B24MQ06PHJsL3FELbEE1
+         HIgpJ68TInl8oN2c03pzge7KUhsUCvx2OGSrOc1yTFWlbcm0hgjUGMQmtuO+N/ZZPg9q
+         rGzZs1q9lajjrwmpUWrWEnW8NiHHCjXrNQMXQ8hy2cnzC/mtm+rbSKPtWWY4E8FJmMbK
+         /h9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:thread-topic:thread-index
-         :date:message-id:references:in-reply-to:accept-language
-         :content-language:content-transfer-encoding:mime-version;
-        bh=VvHjOr4ACw42b4kMyCv1bwkltuHZ5dV8Yk2HQjQZAlI=;
-        b=nw8gvnVs4nHYNulV8HcogCQwZXDurflFD8k+UlKXyGvGRQt/i8VQUBStDISYDZrzOQ
-         8Lr2j/Wq0T4EgGGCb+syPhhXQoDtMox1uU0x8qyDnGcKywMuidq74RgtZebUJB/XC7N9
-         7hHgbC9riNDxjAtDzVT45Lg2pgCYhnTcLKc7U7tLiV826udBRSrBHJBh0wQfwWloADX/
-         48GRI83D1Thf3kVMZW881IJqiInv6Ln5kuivyxLQn7zZmSRnCFZepxoXyGD1rYe5+pRs
-         9ptWuKxVrmp3T4UEBtXXcC7ajhO5Wt7I2rTeykdAWpfAqsKuHQ5seQ8c06/P1/J5z0vq
-         D9fA==
-X-Gm-Message-State: APjAAAVH3Hrqsi45S5aF3HDm4/mAOi8V4oGwoeSNgQICdC7hwM4zw8Bw
-        uVZYepsvcXkOCsYg8eZaMBk=
-X-Google-Smtp-Source: APXvYqxjr+BBlZeEcRR6QoKUFDGOvvBQdbcqg/tsq1gFgKlSEwc4bQlSKtnjEoU0a7Mq2ueap/gU1g==
-X-Received: by 2002:a63:554c:: with SMTP id f12mr42586847pgm.23.1579210567196;
-        Thu, 16 Jan 2020 13:36:07 -0800 (PST)
+         :date:message-id:accept-language:content-language
+         :content-transfer-encoding:mime-version;
+        bh=loJq2BFCJDLuMqoHpzHxiOl0dPxBfdfBELyXwXbZ4gY=;
+        b=m1xtEder2vkbxsF7MyVjHijG1cNWIOhaDSooye6e+A3FzTPsP0P/zhgnSGAIt1i3j2
+         OqytoXcEWvqhwe1ZWb8gvfUHTyonrCv3GSXl8BMNViragLnI24QJCVNjYreNEjhtY7AH
+         EREC79fqPDVkk29BBuIvjjrb63kFsKBJi1fC2lxU735bI5VnGBGfPPSoNwx0tfnwrfCX
+         YTaABpyzfNibcwdtIiOXOgsAiymUkuGwe/9FG7XVY46roXCrhFaqGMWwvd11NM6ykrAr
+         g/bK2MWEgVBJzQ5rTKAfzhrDz2qo48Ils/LejdPPERHdQOTGfDhB7GJRgXDQTyxdTyIY
+         TVrA==
+X-Gm-Message-State: APjAAAUT2dOzTNR5muyHZ9bL9r1wroaI2ssYzHOcDBIqylLHfM3t4GN2
+        Y+BmAh6lyyVfpuT3DxtKiJA=
+X-Google-Smtp-Source: APXvYqy/7OXl7eu9xAJEno5HK7zw219qsj7jBndTjsHZAqsVGkIzd94ObVFMPVzTRe7uYhROMEth7g==
+X-Received: by 2002:a63:1346:: with SMTP id 6mr42244463pgt.111.1579211263558;
+        Thu, 16 Jan 2020 13:47:43 -0800 (PST)
 Received: from SL2P216MB0105.KORP216.PROD.OUTLOOK.COM ([2603:1046:100:22::5])
-        by smtp.gmail.com with ESMTPSA id g2sm26555320pgn.59.2020.01.16.13.36.03
+        by smtp.gmail.com with ESMTPSA id n1sm27699809pfd.47.2020.01.16.13.47.41
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 16 Jan 2020 13:36:06 -0800 (PST)
+        Thu, 16 Jan 2020 13:47:42 -0800 (PST)
 From:   Jingoo Han <jingoohan1@gmail.com>
-To:     Shawn Lin <shawn.lin@rock-chips.com>
-CC:     Heiko Stuebner <heiko@sntech.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        William Wu <william.wu@rock-chips.com>,
-        Simon Xue <xxm@rock-chips.com>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
         Han Jingoo <jingoohan1@gmail.com>
-Subject: Re: [PATCH 5/6] PCI: rockchip: add DesignWare based PCIe controller
-Thread-Topic: [PATCH 5/6] PCI: rockchip: add DesignWare based PCIe controller
-Thread-Index: AQHVyqvWb/c4FgGoOUOrdcU9dWh4vqft1IkR
+Subject: [PATCH] PCI: dwc: Makefile/Kconfig: sort alphabetically
+Thread-Topic: [PATCH] PCI: dwc: Makefile/Kconfig: sort alphabetically
+Thread-Index: AQHVzLaRd//I5YntB0GSFszSnX4h4w==
 X-MS-Exchange-MessageSentRepresentingType: 1
-Date:   Thu, 16 Jan 2020 21:36:00 +0000
-Message-ID: <SL2P216MB0105652DE83E7CBBDA2A370CAA360@SL2P216MB0105.KORP216.PROD.OUTLOOK.COM>
-References: <1578986580-71974-1-git-send-email-shawn.lin@rock-chips.com>
- <1578986701-72072-1-git-send-email-shawn.lin@rock-chips.com>
-In-Reply-To: <1578986701-72072-1-git-send-email-shawn.lin@rock-chips.com>
+Date:   Thu, 16 Jan 2020 21:47:38 +0000
+Message-ID: <SL2P216MB010521AC91184B715AFA197FAA360@SL2P216MB0105.KORP216.PROD.OUTLOOK.COM>
 Accept-Language: ko-KR, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -83,41 +72,7 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 1/14/20, 2:25 AM, Shawn Lin wrote:
->=20
-> From: Simon Xue <xxm@rock-chips.com>
->
-> Signed-off-by: Simon Xue <xxm@rock-chips.com>
-> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
-> ---
->
->  drivers/pci/controller/dwc/Kconfig            |   9 +
->  drivers/pci/controller/dwc/Makefile           |   1 +
->  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 441 ++++++++++++++++++++=
-++++++
->  3 files changed, 451 insertions(+)
->  create mode 100644 drivers/pci/controller/dwc/pcie-dw-rockchip.c
->
-> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/=
-dwc/Kconfig
-> index 0830dfc..9160264 100644
-> --- a/drivers/pci/controller/dwc/Kconfig
-> +++ b/drivers/pci/controller/dwc/Kconfig
-> @@ -82,6 +82,15 @@ config PCIE_DW_PLAT_EP
->  	  order to enable device-specific features PCI_DW_PLAT_EP must be
->  	  selected.
-> =20
-> +config PCIE_DW_ROCKCHIP
-> +	bool "Rockchip DesignWare PCIe controller"
-> +	select PCIE_DW
-> +	select PCIE_DW_HOST
-> +	depends on ARCH_ROCKCHIP
-> +	depends on OF
-> +	help
-> +	  Enables support for the DW PCIe controller in the Rockchip SoC.
-> +
-
-The order is PCIE_DW, PCI_*, and PCIE_* as below.
+The order in dwc directory is PCIE_DW, PCI_*, and PCIE_* as below.
 
 1. Common Frameworks:
     These options are used by other controller drivers.
@@ -130,34 +85,266 @@ ide
 can
     be used.
 
-3. PCIE_* controller drivers
+3. PCIE_* controller drivers:
     If a controller can support only PCI Express, not conventional PCI,
     PCIE_* is the proper naming.
 
 Then, within PCI_* or PCIE_* categories, each controller option should be
 in an alphabetical order for the readability.
 
-So, add 'PCIE_DW_ROCKCHIP' between 'PCIE_ARTPEC6_EP' and 'PCIE_KIRIN'.
+Signed-off-by: Jingoo Han <jingoohan1@gmail.com>
+---
+Based on 'dwc' branch
 
->
->  config PCI_EXYNOS
->  	bool "Samsung Exynos PCIe controller"
->  	depends on SOC_EXYNOS5440 || COMPILE_TEST
-> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller=
-/dwc/Makefile
-> index 8a637cf..cb4857f 100644
-> --- a/drivers/pci/controller/dwc/Makefile
-> +++ b/drivers/pci/controller/dwc/Makefile
-> @@ -19,6 +19,7 @@ obj-$(CONFIG_PCIE_HISI_STB) +=3D pcie-histb.o
->  obj-$(CONFIG_PCI_MESON) +=3D pci-meson.o
->  obj-$(CONFIG_PCIE_TEGRA194) +=3D pcie-tegra194.o
->  obj-$(CONFIG_PCIE_UNIPHIER) +=3D pcie-uniphier.o
-> +obj-$(CONFIG_PCIE_DW_ROCKCHIP) +=3D pcie-dw-rockchip.o
+ drivers/pci/controller/dwc/Kconfig  | 148 ++++++++++++++--------------
+ drivers/pci/controller/dwc/Makefile |   8 +-
+ 2 files changed, 78 insertions(+), 78 deletions(-)
 
-Ditto.
-
-[...]
-
-Best regards,
-Jingoo Han
+diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dw=
+c/Kconfig
+index 0830dfcfa43a..377323d01ee3 100644
+--- a/drivers/pci/controller/dwc/Kconfig
++++ b/drivers/pci/controller/dwc/Kconfig
+@@ -16,6 +16,38 @@ config PCIE_DW_EP
+ 	depends on PCI_ENDPOINT
+ 	select PCIE_DW
+=20
++config PCIE_DW_PLAT
++	bool
++
++config PCIE_DW_PLAT_HOST
++	bool "Platform bus based DesignWare PCIe Controller - Host mode"
++	depends on PCI && PCI_MSI_IRQ_DOMAIN
++	select PCIE_DW_HOST
++	select PCIE_DW_PLAT
++	help
++	  Enables support for the PCIe controller in the Designware IP to
++	  work in host mode. There are two instances of PCIe controller in
++	  Designware IP.
++	  This controller can work either as EP or RC. In order to enable
++	  host-specific features PCIE_DW_PLAT_HOST must be selected and in
++	  order to enable device-specific features PCI_DW_PLAT_EP must be
++	  selected.
++
++config PCIE_DW_PLAT_EP
++	bool "Platform bus based DesignWare PCIe Controller - Endpoint mode"
++	depends on PCI && PCI_MSI_IRQ_DOMAIN
++	depends on PCI_ENDPOINT
++	select PCIE_DW_EP
++	select PCIE_DW_PLAT
++	help
++	  Enables support for the PCIe controller in the Designware IP to
++	  work in endpoint mode. There are two instances of PCIe controller
++	  in Designware IP.
++	  This controller can work either as EP or RC. In order to enable
++	  host-specific features PCIE_DW_PLAT_HOST must be selected and in
++	  order to enable device-specific features PCI_DW_PLAT_EP must be
++	  selected.
++
+ config PCI_DRA7XX
+ 	bool
+=20
+@@ -50,57 +82,27 @@ config PCI_DRA7XX_EP
+ 	  to enable device-specific features PCI_DRA7XX_EP must be selected.
+ 	  This uses the DesignWare core.
+=20
+-config PCIE_DW_PLAT
+-	bool
+-
+-config PCIE_DW_PLAT_HOST
+-	bool "Platform bus based DesignWare PCIe Controller - Host mode"
+-	depends on PCI && PCI_MSI_IRQ_DOMAIN
+-	select PCIE_DW_HOST
+-	select PCIE_DW_PLAT
+-	help
+-	  Enables support for the PCIe controller in the Designware IP to
+-	  work in host mode. There are two instances of PCIe controller in
+-	  Designware IP.
+-	  This controller can work either as EP or RC. In order to enable
+-	  host-specific features PCIE_DW_PLAT_HOST must be selected and in
+-	  order to enable device-specific features PCI_DW_PLAT_EP must be
+-	  selected.
+-
+-config PCIE_DW_PLAT_EP
+-	bool "Platform bus based DesignWare PCIe Controller - Endpoint mode"
+-	depends on PCI && PCI_MSI_IRQ_DOMAIN
+-	depends on PCI_ENDPOINT
+-	select PCIE_DW_EP
+-	select PCIE_DW_PLAT
+-	help
+-	  Enables support for the PCIe controller in the Designware IP to
+-	  work in endpoint mode. There are two instances of PCIe controller
+-	  in Designware IP.
+-	  This controller can work either as EP or RC. In order to enable
+-	  host-specific features PCIE_DW_PLAT_HOST must be selected and in
+-	  order to enable device-specific features PCI_DW_PLAT_EP must be
+-	  selected.
+-
+ config PCI_EXYNOS
+ 	bool "Samsung Exynos PCIe controller"
+ 	depends on SOC_EXYNOS5440 || COMPILE_TEST
+ 	depends on PCI_MSI_IRQ_DOMAIN
+ 	select PCIE_DW_HOST
+=20
+-config PCI_IMX6
+-	bool "Freescale i.MX6/7/8 PCIe controller"
+-	depends on ARCH_MXC || COMPILE_TEST
++config PCI_HISI
++	depends on OF && (ARM64 || COMPILE_TEST)
++	bool "HiSilicon Hip05 and Hip06 SoCs PCIe controllers"
+ 	depends on PCI_MSI_IRQ_DOMAIN
+ 	select PCIE_DW_HOST
++	select PCI_HOST_COMMON
++	help
++	  Say Y here if you want PCIe controller support on HiSilicon
++	  Hip05 and Hip06 SoCs
+=20
+-config PCIE_SPEAR13XX
+-	bool "STMicroelectronics SPEAr PCIe controller"
+-	depends on ARCH_SPEAR13XX || COMPILE_TEST
++config PCI_IMX6
++	bool "Freescale i.MX6/7/8 PCIe controller"
++	depends on ARCH_MXC || COMPILE_TEST
+ 	depends on PCI_MSI_IRQ_DOMAIN
+ 	select PCIE_DW_HOST
+-	help
+-	  Say Y here if you want PCIe support on SPEAr13XX SoCs.
+=20
+ config PCI_KEYSTONE
+ 	bool
+@@ -155,25 +157,27 @@ config PCI_LAYERSCAPE_EP
+ 	  determines which PCIe controller works in EP mode and which PCIe
+ 	  controller works in RC mode.
+=20
+-config PCI_HISI
+-	depends on OF && (ARM64 || COMPILE_TEST)
+-	bool "HiSilicon Hip05 and Hip06 SoCs PCIe controllers"
++config PCI_MESON
++	bool "MESON PCIe controller"
+ 	depends on PCI_MSI_IRQ_DOMAIN
+ 	select PCIE_DW_HOST
+-	select PCI_HOST_COMMON
+ 	help
+-	  Say Y here if you want PCIe controller support on HiSilicon
+-	  Hip05 and Hip06 SoCs
++	  Say Y here if you want to enable PCI controller support on Amlogic
++	  SoCs. The PCI controller on Amlogic is based on DesignWare hardware
++	  and therefore the driver re-uses the DesignWare core functions to
++	  implement the driver.
+=20
+-config PCIE_QCOM
+-	bool "Qualcomm PCIe controller"
+-	depends on OF && (ARCH_QCOM || COMPILE_TEST)
++config PCIE_AL
++	bool "Amazon Annapurna Labs PCIe controller"
++	depends on OF && (ARM64 || COMPILE_TEST)
+ 	depends on PCI_MSI_IRQ_DOMAIN
+ 	select PCIE_DW_HOST
+ 	help
+-	  Say Y here to enable PCIe controller support on Qualcomm SoCs. The
+-	  PCIe controller uses the DesignWare core plus Qualcomm-specific
+-	  hardware wrappers.
++	  Say Y here to enable support of the Amazon's Annapurna Labs PCIe
++	  controller IP on Amazon SoCs. The PCIe controller uses the DesignWare
++	  core plus Annapurna Labs proprietary hardware wrappers. This is
++	  required only for DT-based platforms. ACPI platforms with the
++	  Annapurna Labs PCIe controller don't need to enable this.
+=20
+ config PCIE_ARMADA_8K
+ 	bool "Marvell Armada-8K PCIe controller"
+@@ -209,6 +213,14 @@ config PCIE_ARTPEC6_EP
+ 	  Enables support for the PCIe controller in the ARTPEC-6 SoC to work in
+ 	  endpoint mode. This uses the DesignWare core.
+=20
++config PCIE_HISI_STB
++	bool "HiSilicon STB SoCs PCIe controllers"
++	depends on ARCH_HISI || COMPILE_TEST
++	depends on PCI_MSI_IRQ_DOMAIN
++	select PCIE_DW_HOST
++	help
++	  Say Y here if you want PCIe controller support on HiSilicon STB SoCs
++
+ config PCIE_INTEL_GW
+ 	bool "Intel Gateway PCIe host controller support"
+ 	depends on OF && (X86 || COMPILE_TEST)
+@@ -229,23 +241,23 @@ config PCIE_KIRIN
+ 	  Say Y here if you want PCIe controller support
+ 	  on HiSilicon Kirin series SoCs.
+=20
+-config PCIE_HISI_STB
+-	bool "HiSilicon STB SoCs PCIe controllers"
+-	depends on ARCH_HISI || COMPILE_TEST
++config PCIE_QCOM
++	bool "Qualcomm PCIe controller"
++	depends on OF && (ARCH_QCOM || COMPILE_TEST)
+ 	depends on PCI_MSI_IRQ_DOMAIN
+ 	select PCIE_DW_HOST
+ 	help
+-	  Say Y here if you want PCIe controller support on HiSilicon STB SoCs
++	  Say Y here to enable PCIe controller support on Qualcomm SoCs. The
++	  PCIe controller uses the DesignWare core plus Qualcomm-specific
++	  hardware wrappers.
+=20
+-config PCI_MESON
+-	bool "MESON PCIe controller"
++config PCIE_SPEAR13XX
++	bool "STMicroelectronics SPEAr PCIe controller"
++	depends on ARCH_SPEAR13XX || COMPILE_TEST
+ 	depends on PCI_MSI_IRQ_DOMAIN
+ 	select PCIE_DW_HOST
+ 	help
+-	  Say Y here if you want to enable PCI controller support on Amlogic
+-	  SoCs. The PCI controller on Amlogic is based on DesignWare hardware
+-	  and therefore the driver re-uses the DesignWare core functions to
+-	  implement the driver.
++	  Say Y here if you want PCIe support on SPEAr13XX SoCs.
+=20
+ config PCIE_TEGRA194
+ 	tristate "NVIDIA Tegra194 (and later) PCIe controller"
+@@ -267,16 +279,4 @@ config PCIE_UNIPHIER
+ 	  Say Y here if you want PCIe controller support on UniPhier SoCs.
+ 	  This driver supports LD20 and PXs3 SoCs.
+=20
+-config PCIE_AL
+-	bool "Amazon Annapurna Labs PCIe controller"
+-	depends on OF && (ARM64 || COMPILE_TEST)
+-	depends on PCI_MSI_IRQ_DOMAIN
+-	select PCIE_DW_HOST
+-	help
+-	  Say Y here to enable support of the Amazon's Annapurna Labs PCIe
+-	  controller IP on Amazon SoCs. The PCIe controller uses the DesignWare
+-	  core plus Annapurna Labs proprietary hardware wrappers. This is
+-	  required only for DT-based platforms. ACPI platforms with the
+-	  Annapurna Labs PCIe controller don't need to enable this.
+-
+ endmenu
+diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/d=
+wc/Makefile
+index 8a637cfcf6e9..53d25b4e5206 100644
+--- a/drivers/pci/controller/dwc/Makefile
++++ b/drivers/pci/controller/dwc/Makefile
+@@ -6,17 +6,17 @@ obj-$(CONFIG_PCIE_DW_PLAT) +=3D pcie-designware-plat.o
+ obj-$(CONFIG_PCI_DRA7XX) +=3D pci-dra7xx.o
+ obj-$(CONFIG_PCI_EXYNOS) +=3D pci-exynos.o
+ obj-$(CONFIG_PCI_IMX6) +=3D pci-imx6.o
+-obj-$(CONFIG_PCIE_SPEAR13XX) +=3D pcie-spear13xx.o
+ obj-$(CONFIG_PCI_KEYSTONE) +=3D pci-keystone.o
+ obj-$(CONFIG_PCI_LAYERSCAPE) +=3D pci-layerscape.o
+ obj-$(CONFIG_PCI_LAYERSCAPE_EP) +=3D pci-layerscape-ep.o
+-obj-$(CONFIG_PCIE_QCOM) +=3D pcie-qcom.o
++obj-$(CONFIG_PCI_MESON) +=3D pci-meson.o
+ obj-$(CONFIG_PCIE_ARMADA_8K) +=3D pcie-armada8k.o
+ obj-$(CONFIG_PCIE_ARTPEC6) +=3D pcie-artpec6.o
++obj-$(CONFIG_PCIE_HISI_STB) +=3D pcie-histb.o
+ obj-$(CONFIG_PCIE_INTEL_GW) +=3D pcie-intel-gw.o
+ obj-$(CONFIG_PCIE_KIRIN) +=3D pcie-kirin.o
+-obj-$(CONFIG_PCIE_HISI_STB) +=3D pcie-histb.o
+-obj-$(CONFIG_PCI_MESON) +=3D pci-meson.o
++obj-$(CONFIG_PCIE_QCOM) +=3D pcie-qcom.o
++obj-$(CONFIG_PCIE_SPEAR13XX) +=3D pcie-spear13xx.o
+ obj-$(CONFIG_PCIE_TEGRA194) +=3D pcie-tegra194.o
+ obj-$(CONFIG_PCIE_UNIPHIER) +=3D pcie-uniphier.o
+=20
+--=20
+2.17.1
 
