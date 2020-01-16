@@ -2,197 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C39413F4DC
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2020 19:53:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B0AD113F20E
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2020 19:33:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389430AbgAPSwU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Jan 2020 13:52:20 -0500
-Received: from mga11.intel.com ([192.55.52.93]:37924 "EHLO mga11.intel.com"
+        id S2391829AbgAPRY5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Jan 2020 12:24:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389418AbgAPRIb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:08:31 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jan 2020 09:08:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,326,1574150400"; 
-   d="scan'208";a="425610754"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga006.fm.intel.com with ESMTP; 16 Jan 2020 09:08:30 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1is8dB-000Cqd-Ls; Fri, 17 Jan 2020 01:08:29 +0800
-Date:   Fri, 17 Jan 2020 01:08:05 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/misc] BUILD SUCCESS
- 6d12872bf1632497aa9208672c5fdd16e086a90c
-Message-ID: <5e209875.5R0sytPnQ9w2SiqR%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S2391824AbgAPRY4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:24:56 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A51FE246AE;
+        Thu, 16 Jan 2020 17:24:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579195495;
+        bh=BR4bAa3sU9jTA4hgBf/kKhrT7L1DR2b3BRTZ3iHNCgU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=FAWRqBduZG6ms5+eyc5GmhQd/ljzUuWYFKKyQjfvuC+sJ+Mpq+2+aI47QiICaou4h
+         czCwGaP3Vn0BAuLFE5m5TlZyesdG6giHLInyK3sS7E46JyMbXfJc8KxSIzQLnYP32S
+         lXUwxawg+/KFa6XlfYINEY1pXyYh489G7cN3sTBw=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Wen Yang <wen.yang99@zte.com.cn>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Niklas Cassel <niklas.cassel@axis.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Cyrille Pitchen <cyrille.pitchen@free-electrons.com>,
+        linux-pci@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 097/371] PCI: endpoint: functions: Use memcpy_fromio()/memcpy_toio()
+Date:   Thu, 16 Jan 2020 12:19:29 -0500
+Message-Id: <20200116172403.18149-40-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
+References: <20200116172403.18149-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/misc
-branch HEAD: 6d12872bf1632497aa9208672c5fdd16e086a90c  PCI: Mark AMD Navi14 GPU rev 0xc5 ATS as broken
+From: Wen Yang <wen.yang99@zte.com.cn>
 
-elapsed time: 650m
+[ Upstream commit 726dabfde6aa35a4f1508e235ae37edbbf9fbc65 ]
 
-configs tested: 142
-configs skipped: 0
+Functions copying from/to IO addresses should use the
+memcpy_fromio()/memcpy_toio() API rather than plain memcpy().
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Fix the issue detected through the sparse tool.
 
-sh                               allmodconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-um                                  defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-alpha                               defconfig
-csky                                defconfig
-nds32                             allnoconfig
-nds32                               defconfig
-x86_64               randconfig-c001-20200116
-x86_64               randconfig-c002-20200116
-x86_64               randconfig-c003-20200116
-i386                 randconfig-c001-20200116
-i386                 randconfig-c002-20200116
-i386                 randconfig-c003-20200116
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-h8300                     edosk2674_defconfig
-h8300                    h8300h-sim_defconfig
-h8300                       h8s-sim_defconfig
-m68k                             allmodconfig
-m68k                       m5475evb_defconfig
-m68k                          multi_defconfig
-m68k                           sun3_defconfig
-alpha                randconfig-a001-20200116
-m68k                 randconfig-a001-20200116
-mips                 randconfig-a001-20200116
-nds32                randconfig-a001-20200116
-parisc               randconfig-a001-20200116
-riscv                randconfig-a001-20200116
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-arc                              allyesconfig
-arc                                 defconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-parisc                            allnoconfig
-parisc                            allyesonfig
-parisc                         b180_defconfig
-parisc                        c3000_defconfig
-parisc                              defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                               rhel-7.6
-i386                             alldefconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-riscv                            allmodconfig
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-s390                             alldefconfig
-s390                             allmodconfig
-s390                              allnoconfig
-s390                             allyesconfig
-s390                          debug_defconfig
-s390                                defconfig
-s390                       zfcpdump_defconfig
-x86_64               randconfig-d001-20200116
-x86_64               randconfig-d002-20200116
-x86_64               randconfig-d003-20200116
-i386                 randconfig-d001-20200116
-i386                 randconfig-d002-20200116
-i386                 randconfig-d003-20200116
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                                defconfig
-x86_64               randconfig-a001-20200116
-x86_64               randconfig-a002-20200116
-x86_64               randconfig-a003-20200116
-i386                 randconfig-a001-20200116
-i386                 randconfig-a002-20200116
-i386                 randconfig-a003-20200116
-arc                  randconfig-a001-20200116
-arm                  randconfig-a001-20200116
-arm64                randconfig-a001-20200116
-ia64                 randconfig-a001-20200116
-powerpc              randconfig-a001-20200116
-sparc                randconfig-a001-20200116
-arc                  randconfig-a001-20200117
-arm                  randconfig-a001-20200117
-arm64                randconfig-a001-20200117
-ia64                 randconfig-a001-20200117
-powerpc              randconfig-a001-20200117
-sparc                randconfig-a001-20200117
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-x86_64               randconfig-b001-20200116
-x86_64               randconfig-b002-20200116
-x86_64               randconfig-b003-20200116
-i386                 randconfig-b001-20200116
-i386                 randconfig-b002-20200116
-i386                 randconfig-b003-20200116
-x86_64               randconfig-e001-20200116
-x86_64               randconfig-e002-20200116
-x86_64               randconfig-e003-20200116
-i386                 randconfig-e001-20200116
-i386                 randconfig-e002-20200116
-i386                 randconfig-e003-20200116
-
+Fixes: 349e7a85b25f ("PCI: endpoint: functions: Add an EP function to test PCI")
+Suggested-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+[lorenzo.pieralisi@arm.com: updated log]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+CC: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC: Bjorn Helgaas <bhelgaas@google.com>
+CC: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+CC: Niklas Cassel <niklas.cassel@axis.com>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
+CC: linux-pci@vger.kernel.org
+CC: linux-kernel@vger.kernel.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-0-DAY kernel test infrastructure                 Open Source Technology Center
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+ drivers/pci/endpoint/functions/pci-epf-test.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+index f9308c2f22e6..c2541a772abc 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-test.c
++++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+@@ -177,7 +177,7 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
+ 		goto err_map_addr;
+ 	}
+ 
+-	memcpy(buf, src_addr, reg->size);
++	memcpy_fromio(buf, src_addr, reg->size);
+ 
+ 	crc32 = crc32_le(~0, buf, reg->size);
+ 	if (crc32 != reg->checksum)
+@@ -231,7 +231,7 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
+ 	get_random_bytes(buf, reg->size);
+ 	reg->checksum = crc32_le(~0, buf, reg->size);
+ 
+-	memcpy(dst_addr, buf, reg->size);
++	memcpy_toio(dst_addr, buf, reg->size);
+ 
+ 	/*
+ 	 * wait 1ms inorder for the write to complete. Without this delay L3
+-- 
+2.20.1
+
