@@ -2,109 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BC23A13D19D
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2020 02:41:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 850C013D249
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Jan 2020 03:44:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729327AbgAPBjw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Jan 2020 20:39:52 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:49795 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729048AbgAPBjw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Jan 2020 20:39:52 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iru8P-0004zY-Tg; Thu, 16 Jan 2020 02:39:46 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 3CF6710121C; Thu, 16 Jan 2020 02:39:45 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Ramon Fried <rfried.dev@gmail.com>
-Cc:     hkallweit1@gmail.com, Bjorn Helgaas <bhelgaas@google.com>,
-        maz@kernel.org, lorenzo.pieralisi@arm.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        maz@kernel.org
-Subject: Re: MSI irqchip configured as IRQCHIP_ONESHOT_SAFE causes spurious IRQs
-In-Reply-To: <CAGi-RULNwpiNGYALYRG84SOUzkvNTbgctmXoS=Luh29xDHJzYw@mail.gmail.com>
-References: <CAGi-RUJvqJoCXWN2YugRn=WYEk9yzt7m3OPfX_o++PmJWQ3woQ@mail.gmail.com> <87wo9ub5f6.fsf@nanos.tec.linutronix.de> <CAGi-RUK_TA+WWvXJSrsa=_Pwq0pV1ffUKOCBu5c1t8O5Xs+UJg@mail.gmail.com> <CAGi-RUJG=SB7az5FFVTzzgefn_VXUbyQX1dtBN+9gkR7MgyC6g@mail.gmail.com> <87imldbqe3.fsf@nanos.tec.linutronix.de> <CAGi-RULNwpiNGYALYRG84SOUzkvNTbgctmXoS=Luh29xDHJzYw@mail.gmail.com>
-Date:   Thu, 16 Jan 2020 02:39:45 +0100
-Message-ID: <87v9pcw55q.fsf@nanos.tec.linutronix.de>
+        id S1729012AbgAPCoZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Jan 2020 21:44:25 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:42371 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726552AbgAPCoZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Jan 2020 21:44:25 -0500
+Received: by mail-ot1-f66.google.com with SMTP id 66so18035135otd.9;
+        Wed, 15 Jan 2020 18:44:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=a4pKcw/2BK8WWEeubF0Q2A9y+I7yO16zCFaw5GtTcg8=;
+        b=fZC0gpoWyib170KL5rP2oTpwxhcZZLQjhtxaZDNij1MDAPULVU14doVOJGK46LsTp/
+         1UQ7oBb7UEPQZih68kAds0Z483kZkk83bDJ+1yb80YqLdqbau1lHyjCZPhCj9b21rTYK
+         CnSWETNaJ8saaWFDaDezzX8keTnxM+Y1ZpTQcHh8PeQarkHYigNoPEwpCrwPCdp4HDxe
+         biZrYKEbssNNmDoJnS7A8QQxhitW3VOnDf39hK/mam6xb2W7Otyq9mmMqwyyXemNdBgJ
+         TB8ujQyqQLPnB42CvGQ2DOj/065LULoN9BNElsMkpE54uTVX9derTW4Cd2G2psbxP0y+
+         F1Mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=a4pKcw/2BK8WWEeubF0Q2A9y+I7yO16zCFaw5GtTcg8=;
+        b=b5+gxGpbs/B47aLCqsEnOGOQCvWVjFJI/TVIcIS5V07CDkBOWtii4sr2fEP/VGQ4pN
+         CsYqKMi2LfmR2PRTAhTvLTC+F+HPQ3MT+R5p+M6kgiujFhp6Ith4Txonr9cQH4zaZNos
+         W2jG+l7KT7VJYN4E2h1mWo43Rogmaq/ZNLdEzVyGNHqnSkkHsSwyRoovosSNi4Yhsk5p
+         hqW8iHBW+UqdQGJbUCa1j9QTmzElUVMBNgoZUO7scdosct3juduheRoAq9vp/ixEcmYM
+         BqU4MGzD0mJhHvoKE2lY6a1SZcx9Tax3lDx7Rkgnx0++KX7h0nYD3wtZPBeNAE+Vo1SK
+         772w==
+X-Gm-Message-State: APjAAAWePj9p2y56lQMmJalMcTC7BNInZcdFWpFwoBfQSkg3/6ZN7+5W
+        23wFYLJFLxjv+dNcg5FxBjuKxrgXS9s=
+X-Google-Smtp-Source: APXvYqyMzjUqnYZhbCuI8vmeXgY3MMiWg+xL/yMGpoTUZvlOw9zo4fFc9iQ7oLgje0urhCYDbdTXmw==
+X-Received: by 2002:a9d:5888:: with SMTP id x8mr285541otg.361.1579142664039;
+        Wed, 15 Jan 2020 18:44:24 -0800 (PST)
+Received: from nukespec.gtech ([2601:2c1:8501:182d::6fe])
+        by smtp.gmail.com with ESMTPSA id c12sm7357959otp.9.2020.01.15.18.44.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Jan 2020 18:44:23 -0800 (PST)
+Subject: Re: Issues with "PCI/LINK: Report degraded links via link bandwidth
+ notification"
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Alexandru Gagniuc <alex_gagniuc@dellteam.com>,
+        Keith Busch <keith.busch@intel.com>
+Cc:     Jan Vesely <jano.vesely@gmail.com>, Lukas Wunner <lukas@wunner.de>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Austin Bolen <austin_bolen@dell.com>,
+        Shyam Iyer <Shyam_Iyer@dell.com>,
+        Sinan Kaya <okaya@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200115221008.GA191037@google.com>
+From:   Alex G <mr.nuke.me@gmail.com>
+Message-ID: <967fb44c-b1cd-875c-2354-b6ad0b8ae6d7@gmail.com>
+Date:   Wed, 15 Jan 2020 20:44:21 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <20200115221008.GA191037@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Ramon,
+Hi Bjorn,
 
-Ramon Fried <rfried.dev@gmail.com> writes:
-> On Wed, Jan 15, 2020 at 12:54 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->> Ramon Fried <rfried.dev@gmail.com> writes:
->> Due to the semantics of MSI this is perfectly fine and aside of your
->> problem this has worked perfectly fine so far and it's an actual
->> performance win because it avoid fiddling with the MSI mask which is
->> slow.
->>
-> fiddling with MSI masks is a configuration space write, which is
-> non-posted, so it does come with a price.
-> The question is if a test was ever conducted to see the it's better
-> than spurious IRQ's.
+I'm no longer working on this, so my memory may not be up to speed. If 
+the endpoint is causing the bandwidth change, then we should get an 
+_autonomous_ link management interrupt instead. I don't think we report 
+those, and that shouldn't spam the logs
 
-The point is that there are no spurious interrupts in the sane cases and
-the tests we did showed a real performance improvements in high
-frequency interrupt situations due to avoiding the config space access.
+If it's not a (non-autonomous) link management interrupt, then something 
+is causing the downstream port to do funny things. I don't think ASPM is 
+supposed to be causing this.
 
-Please stop claiming that this spurious interrupt problem is there by
-design. It's not. Read the MSI spec.
+Do we know what's causing these swings?
 
-Also boot your laptop/workstation with 'threadirqs' on the kernel
-command line and check how many spurious interrupts come in. On a test
-machine which has that command line parameter set I see exactly ONE with
-an uptime of several days and heavy MSI interrupt activity. The ONE is
-even there without 'threadirqs' on the command line, so I really can't
-be bothered to analyze that.
+For now, I suggest a boot-time parameter to disable link speed reporting 
+instead of a compile time option.
 
->> You still have not told which driver/hardware is affected by this. Can
->> you please provide that information so we can finally look at the actual
->> hardware/driver combo?
->>
-> Sure,
-> I'm writing an MSI IRQ controller, it's basically a MIPS GIC interrupt
-> line which several MSI are multiplexed on it.
+Alex
 
-I assume you write the driver, not the VHDL for the actual hardware,
-right? If so, you still did not tell which hardware that is and where we
-can find information about it.
-
-I further assume that 'multiplexed' means that the hardware is something
-like an MSI receiver on the CPU/chipset which handles multiple MSI
-messages and forwards them to a single shared interrupt line on the MIPS
-GIC. Right?
-
-Can you please provide a pointer to the hardware documentation?
-
-> It's configured with handle_level_irq() as the GIC is level IRQ.
-
-Which is completely bonkers. MSI has edge semantics and sharing an
-interrupt line for edge type interrupts is broken by design, unless the
-hardware which handles the incoming MSIs and forwards them to the level
-type interrupt line is designed properly and the driver does the right
-thing.
-
-> The ack callback acks the GIC irq.  the mask/unmask calls
-> pci_msi_mask_irq() / pci_msi_unmask_irq()
-
-What? How is that supposed to work with multiple MSIs?
-
-Either the hardware is a trainwreck or the driver or both.
-
-I can't tell as I can't find my crystal ball. Maybe I should replace it
-with an Mobileye :)
-
-Thanks,
-
-        tglx
+On 1/15/20 4:10 PM, Bjorn Helgaas wrote:
+> I think we have a problem with link bandwidth change notifications
+> (see https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/pcie/bw_notification.c).
+> 
+> Here's a recent bug report where Jan reported "_tons_" of these
+> notifications on an nvme device:
+> https://bugzilla.kernel.org/show_bug.cgi?id=206197
+> 
+> There was similar discussion involving GPU drivers at
+> https://lore.kernel.org/r/20190429185611.121751-2-helgaas@kernel.org
+> 
+> The current solution is the CONFIG_PCIE_BW config option, which
+> disables the messages completely.  That option defaults to "off" (no
+> messages), but even so, I think it's a little problematic.
+> 
+> Users are not really in a position to figure out whether it's safe to
+> enable.  All they can do is experiment and see whether it works with
+> their current mix of devices and drivers.
+> 
+> I don't think it's currently useful for distros because it's a
+> compile-time switch, and distros cannot predict what system configs
+> will be used, so I don't think they can enable it.
+> 
+> Does anybody have proposals for making it smarter about distinguishing
+> real problems from intentional power management, or maybe interfaces
+> drivers could use to tell us when we should ignore bandwidth changes?
+> 
+> Bjorn
+> 
