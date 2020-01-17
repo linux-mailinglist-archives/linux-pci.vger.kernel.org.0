@@ -2,215 +2,204 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A7679140E0D
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Jan 2020 16:43:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F8A5140E20
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Jan 2020 16:45:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728831AbgAQPnV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Jan 2020 10:43:21 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:38911 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728780AbgAQPnV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Jan 2020 10:43:21 -0500
-Received: by mail-oi1-f195.google.com with SMTP id l9so22531826oii.5;
-        Fri, 17 Jan 2020 07:43:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3f+W4Xvm6P1QHWnul/IjVaVbxVFaJSRxnQJCYSx9gEI=;
-        b=LOIu42vhUzF9Mu+lfoPqpOM9rxI1BC0+cdUy0nL1Gb7u3qDzLDNkVue67qKqOoK+PQ
-         Zn0Z3eCYKz+sKmY1O6Mn+WxgRGFX72kZoLjIe+w86hCt3HGdyJq31rZsIXKh48QL3EdQ
-         rU+KJKKMm1WS8V4qptEUaxHH1wFPLxl1H2HGSac240BD+K5g8YYI9TubdoT/efcMF6vt
-         kf1pL7QgoR7QjzeHho5AWwkXQumqELeFZjbyqV0pGMF5IGIMHm4pEJhR+evgK94fj+4q
-         k+FUfh61EvtqNxZiiT3x3akhV3X+lmzmWeU2tYIavKm5Ze/oHBk/AhtjmFCyAeTOwvB9
-         5NFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3f+W4Xvm6P1QHWnul/IjVaVbxVFaJSRxnQJCYSx9gEI=;
-        b=YLMnjYvvtd+vTQXshfiz5pYqMRuAP46rmx4N5+rhU0Y4dEIZ0ybJOrBsXloUqpa3r1
-         If6ozni9c9q3A3tXj+K/TraxCXcc2//TbGPNNnL8Lyuo5UdY7hsvXjSzOq0EzawzQMyn
-         NpCFCYswS+4xmwHC9wYCB4fncCGt4EW31hdIM4IfSeCDWU/6rkdhHVX0Qxr/hTzPdKMR
-         0sbZ6iFwK0NVb3aSTZH5NnLL4xOfBJYRe236nmOKDcx0cUvJ513pAuCA6OTuoCnmGeWp
-         1oFkV3hZhjp4rEn5s4uFhPmnx8c3LrnLvINyyCGX5q1yoO5Ue09FgVOeZt1FBkJF+JlD
-         XYMQ==
-X-Gm-Message-State: APjAAAV8KEdiYNbNBONlrj+GxCR3Yc/CXUm3/qH8n5VO6B8ckxeDGVOd
-        2Cyh6NhDIgo7J3R2cv6O81H8D+1oPvx1s0dv6ZI=
-X-Google-Smtp-Source: APXvYqwQX6C67Z5k/Olz9ErSM0kNCQ/PtxFi1i1R+R/MleSFSQsUjHJQx0I1YtYGt5q3PkOX37rRHIstPathPjducks=
-X-Received: by 2002:a05:6808:24e:: with SMTP id m14mr3934910oie.168.1579275800172;
- Fri, 17 Jan 2020 07:43:20 -0800 (PST)
+        id S1729297AbgAQPof (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Jan 2020 10:44:35 -0500
+Received: from mailout.easymail.ca ([64.68.200.34]:33580 "EHLO
+        mailout.easymail.ca" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729274AbgAQPoe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Jan 2020 10:44:34 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mailout.easymail.ca (Postfix) with ESMTP id D0D1EA0FE0;
+        Fri, 17 Jan 2020 15:44:32 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at emo05-pco.easydns.vpn
+Received: from mailout.easymail.ca ([127.0.0.1])
+        by localhost (emo05-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id mApu5MmsP17a; Fri, 17 Jan 2020 15:44:32 +0000 (UTC)
+Received: from mail.gonehiking.org (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        by mailout.easymail.ca (Postfix) with ESMTPA id 55C98A0E2B;
+        Fri, 17 Jan 2020 15:44:19 +0000 (UTC)
+Received: from [192.168.1.4] (rhapsody.internal [192.168.1.4])
+        by mail.gonehiking.org (Postfix) with ESMTP id 346C83F02E;
+        Fri, 17 Jan 2020 08:44:19 -0700 (MST)
+Subject: Re: [RFC PATCH] PCI, kdump: Clear bus master bit upon shutdown in
+ kdump kernel
+To:     Dave Young <dyoung@redhat.com>
+Cc:     Kairui Song <kasong@redhat.com>, Baoquan He <bhe@redhat.com>,
+        linux-pci@vger.kernel.org, kexec@lists.infradead.org,
+        Jerry Hoemann <Jerry.Hoemann@hpe.com>,
+        Randy Wright <rwright@hpe.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Deepa Dinamani <deepa.kernel@gmail.com>
+References: <20200110230003.GB1875851@anatevka.americas.hpqcorp.net>
+ <d2715683-f171-a825-3c0b-678b6c5c1a79@gonehiking.org>
+ <20200111005041.GB19291@MiWiFi-R3L-srv>
+ <dc46c904-1652-09b3-f351-6b3a3e761d74@gonehiking.org>
+ <CACPcB9c0-nRjM3DSN8wzZBTPsJKWjZ9d_aNTq5zUj4k4egb32Q@mail.gmail.com>
+ <CABeXuvqquCU+1G=5onk9owASorhpcYWeWBge9U35BrorABcsuw@mail.gmail.com>
+ <CACPcB9cQY9Vu3wG-QYZS6W6T_PZxnJ1ABNUUAF_qvk-VSxbpTA@mail.gmail.com>
+ <b2360db7-66f5-421d-8fe0-150f08aa2f39@gonehiking.org>
+ <CACPcB9epDPcowhnSJuEHQ8miCBX1oKjFx4Wdn4aYPe2_pueA5A@mail.gmail.com>
+ <6b56ce15-5a5a-97b7-ded1-1fd88fec26eb@gonehiking.org>
+ <20200117032413.GA16906@dhcp-128-65.nay.redhat.com>
+From:   Khalid Aziz <khalid@gonehiking.org>
+Autocrypt: addr=khalid@gonehiking.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <f7c5d044-b821-2edd-7b24-ca36056b61bb@gonehiking.org>
+Date:   Fri, 17 Jan 2020 08:44:19 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <CAGi-RUJvqJoCXWN2YugRn=WYEk9yzt7m3OPfX_o++PmJWQ3woQ@mail.gmail.com>
- <87wo9ub5f6.fsf@nanos.tec.linutronix.de> <CAGi-RUK_TA+WWvXJSrsa=_Pwq0pV1ffUKOCBu5c1t8O5Xs+UJg@mail.gmail.com>
- <CAGi-RUJG=SB7az5FFVTzzgefn_VXUbyQX1dtBN+9gkR7MgyC6g@mail.gmail.com>
- <87imldbqe3.fsf@nanos.tec.linutronix.de> <CAGi-RULNwpiNGYALYRG84SOUzkvNTbgctmXoS=Luh29xDHJzYw@mail.gmail.com>
- <87v9pcw55q.fsf@nanos.tec.linutronix.de> <CAGi-RUJPJ59AMZp3Wap=9zSWLmQSXVDtkbD+O6Hofizf8JWyRg@mail.gmail.com>
- <87pnfjwxtx.fsf@nanos.tec.linutronix.de> <CAGi-RUJtqdLtFBVMxL8TOQ3LGRqqrV4Ge7Fu9mTyDoQVYxtA5g@mail.gmail.com>
- <87zhem172r.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <87zhem172r.fsf@nanos.tec.linutronix.de>
-From:   Ramon Fried <rfried.dev@gmail.com>
-Date:   Fri, 17 Jan 2020 17:43:08 +0200
-Message-ID: <CAGi-RUJkr0gPbynYe+Gkk-JoeyCHdSvd9zdgCv4Hij5vfGVMEA@mail.gmail.com>
-Subject: Re: MSI irqchip configured as IRQCHIP_ONESHOT_SAFE causes spurious IRQs
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     hkallweit1@gmail.com, Bjorn Helgaas <bhelgaas@google.com>,
-        maz@kernel.org, lorenzo.pieralisi@arm.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200117032413.GA16906@dhcp-128-65.nay.redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 4:38 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> Ramon,
->
-> Ramon Fried <rfried.dev@gmail.com> writes:
-> >> So from a software perspective you want to do something like this:
-> >>
-> >> gic_irq_handler()
-> >> {
-> >>    mask_ack(gic_irqX);
-> >>
-> >>    pending = read(msi_status);
-> >>    for_each_bit(bit, pending) {
-> >>        ack(msi_status, bit);  // This clears the latch in the MSI block
-> >>        handle_irq(irqof(bit));
-> >>    }
-> >>    unmask(gic_irqX);
-> >> }
-> >>
-> >> And that works perfectly correct without masking the MSI interrupt at
-> >> the PCI level for a threaded handler simply because the PCI device
-> >> will not send another interrupt until the previous one has been
-> >> handled by the driver unless the PCI device is broken.
-> >
-> > I'm missing something here, isn't this implementation blocks IRQ's only during
-> > the HW handler and not during the threaded handler ? (Assuming that I selected
-> > handle_level_irq() as the default handler)
->
-> handle_level_irq() is the proper handler for the actual GIC interrupt
-> which does the demultiplexing. The MSI interrupts want to have
-> handle_edge_irq().
->
-> > Actually my implementation current implementation is very similar to what
-> > you just described:
-> >
-> > static void eq_msi_isr(struct irq_desc *desc)
-> > {
-> >         struct irq_chip *chip = irq_desc_get_chip(desc);
-> >         struct eq_msi *msi;
-> >         u16 status;
-> >         unsigned long bitmap;
-> >         u32 bit;
-> >         u32 virq;
-> >
-> >         chained_irq_enter(chip, desc);
-> >         msi = irq_desc_get_handler_data(desc);
-> >
-> >         while ((status = readw(msi->gcsr_regs_base + LINK_GCSR5_OFFSET)
-> >                 & MSI_IRQ_REQ) != 0) {
-> >                 pr_debug("MSI: %x\n", status >> 12);
-> >
-> >                 bitmap = status >> 12;
-> >                 for_each_set_bit(bit, &bitmap, msi->num_of_vectors) {
-> >                         virq = irq_find_mapping(msi->inner_domain, bit);
-> >                         if (virq) {
-> >                                 generic_handle_irq(virq);
-> >                         } else {
-> >                                 pr_err("unexpected MSI\n");
-> >                                 handle_bad_irq(desc);
->
-> Now if you look at the example I gave you there is a subtle difference:
->
-> >>    pending = read(msi_status);
-> >>    for_each_bit(bit, pending) {
-> >>        ack(msi_status, bit);  // This clears the latch in the MSI block
-> >>        handle_irq(irqof(bit));
-> >>    }
->
-> And this clearing is important when one of the MSI interrupts is
-> actually having a threaded handler.
->
->  MSI interrupt fires
->   -> sets bit in msi_status
->     -> MSI block raises GIC interrupt because msi_status != 0
->
->  CPU handles GIC interrupt
->    pending = read(msi_status);
->    for_each_bit(bit, pending)
->       handle_irq()
->         primary_handler()
->            -> WAKEUP_THREAD
->
->    RETI, but msi_status is still != 0
->
-> > Additionally the domain allocation is defined like:
-> > static int eq_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
-> >                                  unsigned int nr_irqs, void *args)
-> > {
-> >         struct eq_msi *msi = domain->host_data;
-> >         unsigned long bit;
-> >         u32 mask;
-> >
-> >         /* We only allow 32 MSI per device */
-> >         WARN_ON(nr_irqs > 32);
-> >         if (nr_irqs > 32)
-> >                 return -ENOSPC;
-> >
-> >         bit = find_first_zero_bit(msi->used, msi->num_of_vectors);
-> >         if (bit >= msi->num_of_vectors)
-> >                 return -ENOSPC;
-> >
-> >         set_bit(bit, msi->used);
-> >
-> >         mask = readw(msi->gcsr_regs_base + LINK_GCSR6_OFFSET);
-> >         mask |= BIT(bit) << 12;
-> >         writew(mask, msi->gcsr_regs_base + LINK_GCSR6_OFFSET);
-> >
-> >         irq_domain_set_info(domain, virq, bit, &eq_msi_bottom_irq_chip,
-> >                             domain->host_data, handle_level_irq,
->
-> This is wrong. MSI is edge type, not level and you are really mixing up
-> the concepts here.
->
-> The fact that the MSI block raises a level interrupt on the output side
-> has absolutely nothing to do with the type of the MSI interrupt itself.
->
-> MSI is edge type by definition and this does not change just because
-> there is a translation unit between the MSI interrupt and the CPU
-> controller.
->
-> The actual MSI interrupts do not even know about the existance of that
-> MSI block at all. They do not care, as all they need to know is a
-> message and an address. When an interrupt is raised in the device the
-> MSI chip associated to the device (PCI or something else) writes this
-> message to the address exactly ONCE. And this exactly ONCE defines the
-> edge nature of MSI.
-OK, now I understand my mistake. thanks.
->
-> A proper designed MSI device should not send another message before the
-> interrupt handler which is associated to the device has handled the
-> interrupt at the device level.
-By "MSI device" you mean the MSI controller in the SOC or the endpoint
-that sends the MSI ?
->
-> So you really have to understand that the GIC interrupt and the MSI
-> interrupts are two different entities. They just have a 'connection'
-> because the message/address which is handed to the MSI device triggers
-> that GIC interrupt via the MSI translation unit. But they are still
-> different and independent entities.
->
-> See?
->
-> Thanks,
->
->         tglx
->
->
->
->
->
->
+On 1/16/20 8:24 PM, Dave Young wrote:
+> On 01/15/20 at 02:17pm, Khalid Aziz wrote:
+>> On 1/15/20 11:05 AM, Kairui Song wrote:
+>>> On Thu, Jan 16, 2020 at 1:31 AM Khalid Aziz <khalid@gonehiking.org> wrote:
+>>>>
+>>>> On 1/13/20 10:07 AM, Kairui Song wrote:
+>>>>> On Sun, Jan 12, 2020 at 2:33 AM Deepa Dinamani <deepa.kernel@gmail.com> wrote:
+>>>>>>
+>>>>>>> Hi, there are some previous works about this issue, reset PCI devices
+>>>>>>> in kdump kernel to stop ongoing DMA:
+>>>>>>>
+>>>>>>> [v7,0/5] Reset PCIe devices to address DMA problem on kdump with iommu
+>>>>>>> https://lore.kernel.org/patchwork/cover/343767/
+>>>>>>>
+>>>>>>> [v2] PCI: Reset PCIe devices to stop ongoing DMA
+>>>>>>> https://lore.kernel.org/patchwork/patch/379191/
+>>>>>>>
+>>>>>>> And didn't get merged, that patch are trying to fix some DMAR error
+>>>>>>> problem, but resetting devices is a bit too destructive, and the
+>>>>>>> problem is later fixed in IOMMU side. And in most case the DMA seems
+>>>>>>> harmless, as they targets first kernel's memory and kdump kernel only
+>>>>>>> live in crash memory.
+>>>>>>
+>>>>>> I was going to ask the same. If the kdump kernel had IOMMU on, would
+>>>>>> that still be a problem?
+>>>>>
+>>>>> It will still fail, doing DMA is not a problem, it only go wrong when
+>>>>> a device's upstream bridge is mistakenly shutdown before the device
+>>>>> shutdown.
+>>>>>
+>>>>>>
+>>>>>>> Also, by the time kdump kernel is able to scan and reset devices,
+>>>>>>> there are already a very large time window where things could go
+>>>>>>> wrong.
+>>>>>>>
+>>>>>>> The currently problem observed only happens upon kdump kernel
+>>>>>>> shutdown, as the upper bridge is disabled before the device is
+>>>>>>> disabledm so DMA will raise error. It's more like a problem of wrong
+>>>>>>> device shutting down order.
+>>>>>>
+>>>>>> The way it was described earlier "During this time, the SUT sometimes
+>>>>>> gets a PCI error that raises an NMI." suggests that it isn't really
+>>>>>> restricted to kexec/kdump.
+>>>>>> Any attached device without an active driver might attempt spurious or
+>>>>>> malicious DMA and trigger the same during normal operation.
+>>>>>> Do you have available some more reporting of what happens during the
+>>>>>> PCIe error handling?
+>>>>>
+>>>>> Let me add more info about this:
+>>>>>
+>>>>> On the machine where I can reproduce this issue, the first kernel
+>>>>> always runs fine, and kdump kernel works fine during dumping the
+>>>>> vmcore, even if I keep the kdump kernel running for hours, nothing
+>>>>> goes wrong. If there are DMA during normal operation that will cause
+>>>>> problem, this should have exposed it.
+>>>>>
+>>>>
+>>>> This is the part that is puzzling me. Error shows up only when kdump
+>>>> kernel is being shut down. kdump kernel can run for hours without this
+>>>> issue. What is the operation from downstream device that is resulting in
+>>>> uncorrectable error - is it indeed a DMA request? Why does that
+>>>> operation from downstream device not happen until shutdown?
+>>>>
+>>>> I just want to make sure we fix the right problem in the right way.
+>>>>
+>>>
+>>> Actually the device could keep sending request with no problem during
+>>> kdump kernel running. Eg. keep sending DMA, and all DMA targets first
+>>> kernel's system memory, so kdump runs fine as long as nothing touch
+>>> the reserved crash memory. And the error is reported by the port, when
+>>> shutdown it has bus master bit, and downstream request will cause
+>>> error.
+>>>
+>>
+>> Problem really is there are active devices while kdump kernel is
+>> running. You did say earlier - "And in most case the DMA seems
+>> harmless, as they targets first kernel's memory and kdump kernel only
+>> live in crash memory.". Even if this holds today, it is going to break
+>> one of these days. There is the "reset_devices" option but that does not
+>> work if driver is not loaded by kdump kernel. Can we try to shut down
+>> devices in machine_crash_shutdown() before we start kdump kernel?
+> 
+> It is not a good idea :)  We do not add extra logic after a panic
+> because the kernel is not stable and we want a correct vmcore.
+> 
+
+I agree any extra code in panic path opens up door to more trouble. For
+kdump kernel if hardware is not in a good shape when it boots up, we are
+still in no better place. There may be some room to do minimal and
+absolutely essential hardware shutdown in panic path to ensure kdump
+kernel can work reliably, but such code has to be approached very
+carefully. For this specific problem, it seems to stems from not loading
+the same drivers in kdump kernel that were running in previous kernel.
+Recommendation for situations like this just might be that one must load
+all the same driver and use "reset_devices" option if they want to
+ensure stability for kdump kernel. I can see reluctance to load any more
+drivers than absolutely needed in kdump kernel, but not doing that has
+side-effects as we are seeing in this case.
+
+--
+Khalid
