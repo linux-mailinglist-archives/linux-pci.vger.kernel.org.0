@@ -2,87 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DA47414125E
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Jan 2020 21:41:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CD6614141A
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Jan 2020 23:30:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729600AbgAQUlR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Jan 2020 15:41:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56818 "EHLO mail.kernel.org"
+        id S1726857AbgAQWa2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Jan 2020 17:30:28 -0500
+Received: from mga03.intel.com ([134.134.136.65]:34028 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727519AbgAQUlR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 17 Jan 2020 15:41:17 -0500
-Received: from localhost (187.sub-174-234-133.myvzw.com [174.234.133.187])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00EBA2072E;
-        Fri, 17 Jan 2020 20:41:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579293677;
-        bh=X+HN8JA8Xxvdsg8uqHSGhQAuKo7DGP04S09Aa7FL/CU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=zAbWCcjEPpYO5qaR8+LvWr1qAZhtcTHoGqsK0nGWhln0iZrm3FZgs3CuVsZtWRldg
-         KpjorYVAZaj58XfKaPP1ud7QblYwtxOBpVVIBkoARr2QUQbZZGOO/GiEmFW3vvqV9f
-         SDYFyuEb+ipV5kw195W6N9YLcRQOvHzoEodTb1aM=
-Date:   Fri, 17 Jan 2020 14:41:15 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     sathyanarayanan.kuppuswamy@linux.intel.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Keith Busch <keith.busch@intel.com>,
-        Huong Nguyen <huong.nguyen@dell.com>,
-        Austin Bolen <Austin.Bolen@dell.com>
-Subject: Re: [PATCH v12 8/8] PCI/ACPI: Enable EDR support
-Message-ID: <20200117204115.GA126492@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a15c5467ab8d52ede096b598e14c1beae1ce8e48.1578682741.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1726587AbgAQWa2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 17 Jan 2020 17:30:28 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jan 2020 14:30:27 -0800
+X-IronPort-AV: E=Sophos;i="5.70,331,1574150400"; 
+   d="scan'208";a="219052190"
+Received: from nsgsw-rhel7p6.lm.intel.com ([10.232.116.83])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jan 2020 14:30:27 -0800
+From:   Jon Derrick <jonathan.derrick@intel.com>
+To:     <linux-pci@vger.kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     <iommu@lists.linux-foundation.org>, Christoph Hellwig <hch@lst.de>,
+        Keith Busch <kbusch@kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Jon Derrick <jonathan.derrick@intel.com>
+Subject: [PATCH v4 0/7] Clean up VMD DMA Map Ops
+Date:   Fri, 17 Jan 2020 09:27:22 -0700
+Message-Id: <1579278449-174098-1-git-send-email-jonathan.derrick@intel.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Jan 12, 2020 at 02:44:02PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> 
-> As per PCI firmware specification r3.2 Downstream Port Containment
-> Related Enhancements ECN, sec 4.5.1, OS must implement following steps
-> to enable/use EDR feature.
-> 
-> 1. OS can use bit 7 of _OSC Control Field to negotiate control over
-> Downstream Port Containment (DPC) configuration of PCIe port. After _OSC
-> negotiation, firmware will Set this bit to grant OS control over PCIe
-> DPC configuration and Clear it if this feature was requested and denied,
-> or was not requested.
-> 
-> 2. Also, if OS supports EDR, it should expose its support to BIOS by
-> setting bit 7 of _OSC Support Field. And if OS sets bit 7 of _OSC
-> Control Field it must also expose support for EDR by setting bit 7 of
-> _OSC Support Field.
+v3 Set: https://lore.kernel.org/linux-iommu/20200113181742.GA27623@e121166-lin.cambridge.arm.com/T/#t
+v2 Set: https://lore.kernel.org/linux-iommu/1578580256-3483-1-git-send-email-jonathan.derrick@intel.com/T/#t
+v1 Set: https://lore.kernel.org/linux-iommu/20200107134125.GD30750@8bytes.org/T/#t
 
-> --- a/drivers/pci/pcie/portdrv_core.c
-> +++ b/drivers/pci/pcie/portdrv_core.c
-> @@ -253,10 +253,13 @@ static int get_port_device_capability(struct pci_dev *dev)
->  	/*
->  	 * With dpc-native, allow Linux to use DPC even if it doesn't have
->  	 * permission to use AER.
-> +	 * If EDR support is enabled in OS, then even if AER is not handled in
-> +	 * OS, DPC service can be enabled.
+VMD currently works with VT-d enabled by pointing DMA and IOMMU actions at the
+VMD endpoint. The problem with this approach is that the VMD endpoint's
+device-specific attributes, such as the DMA Mask Bits, are used instead of the
+child device's attributes.
 
-Can you clarify this comment?  It talks about AER, but the code you
-added:
+This set cleans up VMD by removing the override that redirects DMA map
+operations to the VMD endpoint. Instead it introduces a new DMA alias mechanism
+into the existing DMA alias infrastructure. This new DMA alias mechanism allows
+an architecture-specific pci_real_dma_dev() function to provide a pointer from
+a pci_dev to its PCI DMA device, where by default it returns the original
+pci_dev.
 
-  (IS_ENABLED(CONFIG_PCIE_EDR) && !host->native_dpc)
+In addition, this set removes the sanity check that was added to prevent
+assigning VMD child devices. By using the DMA alias mechanism, all child
+devices are assigned the same IOMMU group as the VMD endpoint. This removes the
+need for restricting VMD child devices from assignment, as the whole group
+would have to be assigned, requiring unbinding the VMD driver and removing the
+child device domain.
 
-doesn't have anything to do with AER.
+v1 added a pointer in struct pci_dev that pointed to the DMA alias' struct
+pci_dev and did the necessary DMA alias and IOMMU modifications.
 
->  	 */
->  	if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC) &&
-> -	    pci_aer_available() &&
-> -	    (pcie_ports_dpc_native || (services & PCIE_PORT_SERVICE_AER)))
-> +	    ((IS_ENABLED(CONFIG_PCIE_EDR) && !host->native_dpc) ||
-> +	    (pci_aer_available() &&
-> +	    (pcie_ports_dpc_native || (services & PCIE_PORT_SERVICE_AER)))))
->  		services |= PCIE_PORT_SERVICE_DPC;
+v2 introduced a new weak function to reference the 'Direct DMA Alias', and
+removed the need to add a pointer in struct device or pci_dev. Weak functions
+are generally frowned upon when it's a single architecture implementation, so I
+am open to alternatives.
+
+v3 referenced the pci_dev rather than the struct device for the PCI
+'Direct DMA Alias' (pci_direct_dma_alias()). This revision also allowed
+pci_for_each_dma_alias() to call any DMA aliases for the Direct DMA alias
+device, though I don't expect the VMD endpoint to need intra-bus DMA aliases.
+
+v4 changes the 'Direct DMA Alias' to instead refer to the 'Real DMA Dev', which
+either returns the PCI device itself or the PCI DMA device.
+
+
+Changes from v3:
+Uses pci_real_dma_dev() instead of pci_direct_dma_alias()
+Split IOMMU enabling, IOMMU VMD sanity check and VMD dma_map_ops cleanup into three patches
+
+Changes from v2:
+Uses struct pci_dev for PCI Device 'Direct DMA aliasing' (pci_direct_dma_alias)
+Allows pci_for_each_dma_alias to iterate over the alias mask of the 'Direct DMA alias'
+
+Changes from v1:
+Removed 1/5 & 2/5 misc fix patches that were merged
+Uses Christoph's staging/cleanup patches
+Introduce weak function rather than including pointer in struct device or pci_dev.
+
+Based on Bjorn's next:
+https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/log/?h=next
+
+Christoph Hellwig (2):
+  x86/PCI: Add a to_pci_sysdata helper
+  x86/PCI: Remove X86_DEV_DMA_OPS
+
+Jon Derrick (5):
+  x86/PCI: Expose VMD's PCI Device in pci_sysdata
+  PCI: Introduce pci_real_dma_dev()
+  iommu/vt-d: Use pci_real_dma_dev() for mapping
+  iommu/vt-d: Remove VMD child device sanity check
+  PCI: vmd: Stop overriding dma_map_ops
+
+ arch/x86/Kconfig               |   3 -
+ arch/x86/include/asm/device.h  |  10 ---
+ arch/x86/include/asm/pci.h     |  31 ++++-----
+ arch/x86/pci/common.c          |  48 +++----------
+ drivers/iommu/intel-iommu.c    |  15 ++--
+ drivers/pci/controller/Kconfig |   1 -
+ drivers/pci/controller/vmd.c   | 152 +----------------------------------------
+ drivers/pci/pci.c              |  19 +++++-
+ drivers/pci/search.c           |   6 ++
+ include/linux/pci.h            |   1 +
+ 10 files changed, 58 insertions(+), 228 deletions(-)
+
+-- 
+1.8.3.1
+
