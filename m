@@ -2,186 +2,595 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D3622140279
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Jan 2020 04:46:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E338A140679
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Jan 2020 10:41:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbgAQDqa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Jan 2020 22:46:30 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:53309 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726553AbgAQDqa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Jan 2020 22:46:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579232788;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=fo7HRBfpWlP4As+UqwBqxox4rOzMxaYO651E0ZJDut8=;
-        b=arBo9VGLKECmi7SefM2M0JO8RchwzTeTHEIgm5Djqxm97mKt7wj/eJlO4tqU78C7TU524V
-        cHpApxl2AmmzaR0tcRhoEUgjsM91S3qPamPpU4tFXAt+AuWshAAzNPbhVs0Do4T+W7lX4T
-        vgy6I0dDHykNhgc9GNrksR8Fbelieo0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-7-icHzL5KWM-Wf_6BX15mz1w-1; Thu, 16 Jan 2020 22:46:27 -0500
-X-MC-Unique: icHzL5KWM-Wf_6BX15mz1w-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3BEF6185432C;
-        Fri, 17 Jan 2020 03:46:26 +0000 (UTC)
-Received: from localhost (ovpn-12-20.pek2.redhat.com [10.72.12.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 77F3F1A7E3;
-        Fri, 17 Jan 2020 03:46:22 +0000 (UTC)
-Date:   Fri, 17 Jan 2020 11:46:20 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Dave Young <dyoung@redhat.com>,
-        Jerry Hoemann <Jerry.Hoemann@hpe.com>,
-        Randy Wright <rwright@hpe.com>
-Cc:     Khalid Aziz <khalid@gonehiking.org>,
-        Kairui Song <kasong@redhat.com>, linux-pci@vger.kernel.org,
-        kexec@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Deepa Dinamani <deepa.kernel@gmail.com>
-Subject: Re: [RFC PATCH] PCI, kdump: Clear bus master bit upon shutdown in
- kdump kernel
-Message-ID: <20200117034620.GD22191@MiWiFi-R3L-srv>
-References: <d2715683-f171-a825-3c0b-678b6c5c1a79@gonehiking.org>
- <20200111005041.GB19291@MiWiFi-R3L-srv>
- <dc46c904-1652-09b3-f351-6b3a3e761d74@gonehiking.org>
- <CACPcB9c0-nRjM3DSN8wzZBTPsJKWjZ9d_aNTq5zUj4k4egb32Q@mail.gmail.com>
- <CABeXuvqquCU+1G=5onk9owASorhpcYWeWBge9U35BrorABcsuw@mail.gmail.com>
- <CACPcB9cQY9Vu3wG-QYZS6W6T_PZxnJ1ABNUUAF_qvk-VSxbpTA@mail.gmail.com>
- <b2360db7-66f5-421d-8fe0-150f08aa2f39@gonehiking.org>
- <CACPcB9epDPcowhnSJuEHQ8miCBX1oKjFx4Wdn4aYPe2_pueA5A@mail.gmail.com>
- <6b56ce15-5a5a-97b7-ded1-1fd88fec26eb@gonehiking.org>
- <20200117032413.GA16906@dhcp-128-65.nay.redhat.com>
+        id S1726752AbgAQJk7 convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Fri, 17 Jan 2020 04:40:59 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2278 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726196AbgAQJk6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 17 Jan 2020 04:40:58 -0500
+Received: from lhreml707-cah.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 3499C4EE776BC8396BE1;
+        Fri, 17 Jan 2020 09:40:56 +0000 (GMT)
+Received: from lhreml718-chm.china.huawei.com (10.201.108.69) by
+ lhreml707-cah.china.huawei.com (10.201.108.48) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 17 Jan 2020 09:40:55 +0000
+Received: from lhreml715-chm.china.huawei.com (10.201.108.66) by
+ lhreml718-chm.china.huawei.com (10.201.108.69) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 17 Jan 2020 09:40:55 +0000
+Received: from lhreml715-chm.china.huawei.com ([10.201.108.66]) by
+ lhreml715-chm.china.huawei.com ([10.201.108.66]) with mapi id 15.01.1713.004;
+ Fri, 17 Jan 2020 09:40:55 +0000
+From:   Shiju Jose <shiju.jose@huawei.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "lenb@kernel.org" <lenb@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "zhangliguang@linux.alibaba.com" <zhangliguang@linux.alibaba.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        Linuxarm <linuxarm@huawei.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        tanxiaofei <tanxiaofei@huawei.com>,
+        yangyicong <yangyicong@huawei.com>
+Subject: RE: [RFC PATCH 2/2] PCI:hip08:Add driver to handle HiSilicon hip08
+ PCIe controller's errors
+Thread-Topic: [RFC PATCH 2/2] PCI:hip08:Add driver to handle HiSilicon hip08
+ PCIe controller's errors
+Thread-Index: AQHVy5NLsvrgolHpbEe808Q+qvT9rKfrxOUAgALQx5A=
+Date:   Fri, 17 Jan 2020 09:40:55 +0000
+Message-ID: <a13619d2c4aa4c24a3945f1cdc7070af@huawei.com>
+References: <20200115110141.12300-3-shiju.jose@huawei.com>
+ <20200115141356.GA156562@google.com>
+In-Reply-To: <20200115141356.GA156562@google.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.47.89.87]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200117032413.GA16906@dhcp-128-65.nay.redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 01/17/20 at 11:24am, Dave Young wrote:
-> On 01/15/20 at 02:17pm, Khalid Aziz wrote:
-> > On 1/15/20 11:05 AM, Kairui Song wrote:
-> > > On Thu, Jan 16, 2020 at 1:31 AM Khalid Aziz <khalid@gonehiking.org> wrote:
-> > >>
-> > >> On 1/13/20 10:07 AM, Kairui Song wrote:
-> > >>> On Sun, Jan 12, 2020 at 2:33 AM Deepa Dinamani <deepa.kernel@gmail.com> wrote:
-> > >>>>
-> > >>>>> Hi, there are some previous works about this issue, reset PCI devices
-> > >>>>> in kdump kernel to stop ongoing DMA:
-> > >>>>>
-> > >>>>> [v7,0/5] Reset PCIe devices to address DMA problem on kdump with iommu
-> > >>>>> https://lore.kernel.org/patchwork/cover/343767/
-> > >>>>>
-> > >>>>> [v2] PCI: Reset PCIe devices to stop ongoing DMA
-> > >>>>> https://lore.kernel.org/patchwork/patch/379191/
-> > >>>>>
-> > >>>>> And didn't get merged, that patch are trying to fix some DMAR error
-> > >>>>> problem, but resetting devices is a bit too destructive, and the
-> > >>>>> problem is later fixed in IOMMU side. And in most case the DMA seems
-> > >>>>> harmless, as they targets first kernel's memory and kdump kernel only
-> > >>>>> live in crash memory.
-> > >>>>
-> > >>>> I was going to ask the same. If the kdump kernel had IOMMU on, would
-> > >>>> that still be a problem?
-> > >>>
-> > >>> It will still fail, doing DMA is not a problem, it only go wrong when
-> > >>> a device's upstream bridge is mistakenly shutdown before the device
-> > >>> shutdown.
-> > >>>
-> > >>>>
-> > >>>>> Also, by the time kdump kernel is able to scan and reset devices,
-> > >>>>> there are already a very large time window where things could go
-> > >>>>> wrong.
-> > >>>>>
-> > >>>>> The currently problem observed only happens upon kdump kernel
-> > >>>>> shutdown, as the upper bridge is disabled before the device is
-> > >>>>> disabledm so DMA will raise error. It's more like a problem of wrong
-> > >>>>> device shutting down order.
-> > >>>>
-> > >>>> The way it was described earlier "During this time, the SUT sometimes
-> > >>>> gets a PCI error that raises an NMI." suggests that it isn't really
-> > >>>> restricted to kexec/kdump.
-> > >>>> Any attached device without an active driver might attempt spurious or
-> > >>>> malicious DMA and trigger the same during normal operation.
-> > >>>> Do you have available some more reporting of what happens during the
-> > >>>> PCIe error handling?
-> > >>>
-> > >>> Let me add more info about this:
-> > >>>
-> > >>> On the machine where I can reproduce this issue, the first kernel
-> > >>> always runs fine, and kdump kernel works fine during dumping the
-> > >>> vmcore, even if I keep the kdump kernel running for hours, nothing
-> > >>> goes wrong. If there are DMA during normal operation that will cause
-> > >>> problem, this should have exposed it.
-> > >>>
-> > >>
-> > >> This is the part that is puzzling me. Error shows up only when kdump
-> > >> kernel is being shut down. kdump kernel can run for hours without this
-> > >> issue. What is the operation from downstream device that is resulting in
-> > >> uncorrectable error - is it indeed a DMA request? Why does that
-> > >> operation from downstream device not happen until shutdown?
-> > >>
-> > >> I just want to make sure we fix the right problem in the right way.
-> > >>
-> > > 
-> > > Actually the device could keep sending request with no problem during
-> > > kdump kernel running. Eg. keep sending DMA, and all DMA targets first
-> > > kernel's system memory, so kdump runs fine as long as nothing touch
-> > > the reserved crash memory. And the error is reported by the port, when
-> > > shutdown it has bus master bit, and downstream request will cause
-> > > error.
-> > > 
-> > 
-> > Problem really is there are active devices while kdump kernel is
-> > running. You did say earlier - "And in most case the DMA seems
-> > harmless, as they targets first kernel's memory and kdump kernel only
-> > live in crash memory.". Even if this holds today, it is going to break
-> > one of these days. There is the "reset_devices" option but that does not
-> > work if driver is not loaded by kdump kernel. Can we try to shut down
-> > devices in machine_crash_shutdown() before we start kdump kernel?
-> 
-> It is not a good idea :)  We do not add extra logic after a panic
-> because the kernel is not stable and we want a correct vmcore.
-> 
-> Similar suggestions had been rejected a lot of times..
+Hi Bjorn,
 
-Yes.
+Thanks for reviewing the patch.
+Please find reply inline.
 
-About this bug, I think HPE may need to check if their firmware/hardware
-has special design. I checked other vendors' system which has many
-devices under several bridges, this issue is not seen.
+>-----Original Message-----
+>From: Bjorn Helgaas [mailto:helgaas@kernel.org]
+>Sent: 15 January 2020 14:14
+>To: Shiju Jose <shiju.jose@huawei.com>
+>Cc: linux-acpi@vger.kernel.org; linux-pci@vger.kernel.org; linux-
+>kernel@vger.kernel.org; rjw@rjwysocki.net; lenb@kernel.org; bp@alien8.de;
+>james.morse@arm.com; tony.luck@intel.com; gregkh@linuxfoundation.org;
+>zhangliguang@linux.alibaba.com; tglx@linutronix.de; Linuxarm
+><linuxarm@huawei.com>; Jonathan Cameron
+><jonathan.cameron@huawei.com>; tanxiaofei <tanxiaofei@huawei.com>;
+>yangyicong <yangyicong@huawei.com>
+>Subject: Re: [RFC PATCH 2/2] PCI:hip08:Add driver to handle HiSilicon hip08
+>PCIe controller's errors
+>
+>Follow convention for subject line.
 
-Say the issue again, we have been excluding the unneeded devices drivers
-from kdump initramfs. This issue is seen first time. And we don't suggest
-customer to close IOMMU in kdump kernel if hardware IOMMU is deployed.
+Ok. We will ix it.
 
-So for a system with hardware IOMMU, those devices will go through these
-life cycles:
+>
+>On Wed, Jan 15, 2020 at 11:01:40AM +0000, Shiju Jose wrote:
+>> From: Yicong Yang <yangyicong@hisilicon.com>
+>>
+>> The hip08 error handle driver logs and reports PCIe controller's
+>> recoverable errors.
+>> Perform root port reset and restore link status for the recovery.
+>>
+>> Following are some of the PCIe controller's recoverable errors 1.
+>> completion transmission timeout error.
+>> 2. CRS retry counter over the threshold error.
+>> 3. ECC 2 bit errors
+>> 4. AXI bresponse/rresponse errors etc.
+>>
+>> RFC: The appropriate location for this driver may be discussed.
+>>
+>> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+>> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+>> ---
+>>  drivers/pci/controller/Kconfig                 |   8 +
+>>  drivers/pci/controller/Makefile                |   1 +
+>>  drivers/pci/controller/pcie-hisi-hip08-error.c | 323
+>> +++++++++++++++++++++++++
+>
+>Seems like this driver and its Kconfig should be near
+>drivers/pci/controller/dwc/pcie-hisi.c.
 
-1) devices handling DMA transferring in 1st kernel;
-2) after crash, we don't shutdown them. Means they are keeping alive,
-and handling DMA transferring;
-3) during kdump kernel boot, hardware IOMMU initialization will copy the
-old iommu translation table to make the on-flight DMA continue;
-4) device driver will initialize the relevant device, to reset it;
-   - if no device driver loaded, the device will keep active in the
-     whole kdump kernel life cycle
-5) when vmcore dumping is done, we try to reboot kdump kernel, shutdown
-all devices;
+pcie-hisi.c was for our old hip* devices.
+Our hip08 PCIe controller doesn't use DWC ip.
+Thus the driver to be in /drivers/pci/controller/ ?
 
-The issue happened in the 5) step. As Kairui provided log, shutting down
-the bridge which subordinate devices are not controlled by loaded driver
-will cause the UR and NMI, then hang happened.
+>
+>>  3 files changed, 332 insertions(+)
+>>  create mode 100644 drivers/pci/controller/pcie-hisi-hip08-error.c
+>>
+>> diff --git a/drivers/pci/controller/Kconfig
+>> b/drivers/pci/controller/Kconfig index c77069c..0ee99b8 100644
+>> --- a/drivers/pci/controller/Kconfig
+>> +++ b/drivers/pci/controller/Kconfig
+>> @@ -260,6 +260,14 @@ config PCI_HYPERV_INTERFACE
+>>  	  The Hyper-V PCI Interface is a helper driver allows other drivers to
+>>  	  have a common interface with the Hyper-V PCI frontend driver.
+>>
+>> +config PCIE_HISI_HIP08_ERR_HANDLER
+>
+>Config symbol is too long, maybe CONFIG_PCI_HISI_ERR or similar (to be
+>parallel with existing CONFIG_PCI_HISI).  Both should probably be
+>"CONFIG_PCIE", not "CONFIG_PCI".  I can't remember why CONFIG_PCI_HISI is
+>that way.
 
-Thanks
-Baoquan
+Ok. We will change it to CONFIG_PCI_HISI_ERR.
 
+>
+>> +	depends on ARM64 || COMPILE_TEST
+>> +	depends on (ACPI && PCI_QUIRKS)
+>> +	bool "HiSilicon hip08 Soc PCIe local error handling driver"
+>> +	help
+>> +	  Say Y here if you want PCIe error handling support
+>> +	  for the PCIe local(controller) errors on HiSilicon hip08 SoC
+>> +
+>>  source "drivers/pci/controller/dwc/Kconfig"
+>>  source "drivers/pci/controller/cadence/Kconfig"
+>>  endmenu
+>> diff --git a/drivers/pci/controller/Makefile
+>> b/drivers/pci/controller/Makefile index 3d4f597..ac9852f 100644
+>> --- a/drivers/pci/controller/Makefile
+>> +++ b/drivers/pci/controller/Makefile
+>> @@ -28,6 +28,7 @@ obj-$(CONFIG_PCIE_MEDIATEK) += pcie-mediatek.o
+>>  obj-$(CONFIG_PCIE_MOBIVEIL) += pcie-mobiveil.o
+>>  obj-$(CONFIG_PCIE_TANGO_SMP8759) += pcie-tango.o
+>>  obj-$(CONFIG_VMD) += vmd.o
+>> +obj-$(CONFIG_PCIE_HISI_HIP08_ERR_HANDLER) += pcie-hisi-hip08-error.o
+>>  # pcie-hisi.o quirks are needed even without CONFIG_PCIE_DW
+>>  obj-y				+= dwc/
+>>
+>> diff --git a/drivers/pci/controller/pcie-hisi-hip08-error.c
+>> b/drivers/pci/controller/pcie-hisi-hip08-error.c
+>> new file mode 100644
+>> index 0000000..6f5d002
+>> --- /dev/null
+>> +++ b/drivers/pci/controller/pcie-hisi-hip08-error.c
+>> @@ -0,0 +1,323 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * PCIe driver for handling PCIe local errors occurred on
+>> + * HiSilicon hip08 PCIe controller.
+>
+>"PCIe" occurs too many times in this sentence.  Strictly speaking this is not a
+>"PCIe driver"; it's a driver for an ACPI device that reports hip08-related errors.
+
+Ok. Will remove it.
+
+>Hopefully we don't need a separate driver for every hip* device, so maybe the
+>"hip08" name is too specific.
+
+Currently we are using this single driver for all hip08 device. so maybe this is better:
+yes, a separate driver is unnecessary. We'll remove "hip08" name and
+make it more generic for hip* device.
+
+>
+>> + * Copyright (c) 2018-2019 Hisilicon Limited.
+>
+>Capitalize "HiSilicon" consistently.  Also "hip08"; previous practice in
+>drivers/pci is "Hip05", "Hip06", so use that unless HiSilicon itself does it
+>differently.
+
+Ok. We will fix.
+
+>
+>> +#include <linux/acpi.h>
+>> +#include <acpi/ghes.h>
+>> +#include <linux/bitfield.h>
+>> +#include <linux/bitops.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/irq.h>
+>> +#include <linux/irqdomain.h>
+>> +#include <linux/list.h>
+>> +#include <linux/pci.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/resource.h>
+>> +#include <linux/kfifo.h>
+>> +#include <linux/spinlock.h>
+>> +
+>> +#include "../pci.h"
+>> +
+>> +#define HISI_PCIE_ERR_RECOVER_RING_SIZE           16
+>> +#define	HISI_PCIE_ERR_INFO_SIZE	1024
+>> +
+>> +/* HISI PCIe Local error definitions */
+>> +#define HISI_PCIE_ERR_MISC_REGS	33
+>> +
+>> +#define HISI_PCIE_SUB_MODULE_ID_AP	0
+>> +#define HISI_PCIE_SUB_MODULE_ID_TL	1
+>> +#define HISI_PCIE_SUB_MODULE_ID_MAC	2
+>> +#define HISI_PCIE_SUB_MODULE_ID_DL	3
+>> +#define HISI_PCIE_SUB_MODULE_ID_SDI	4
+>> +
+>> +#define HISI_PCIE_LOCAL_VALID_VERSION		BIT(0)
+>> +#define HISI_PCIE_LOCAL_VALID_SOC_ID		BIT(1)
+>> +#define HISI_PCIE_LOCAL_VALID_SOCKET_ID		BIT(2)
+>> +#define HISI_PCIE_LOCAL_VALID_NIMBUS_ID		BIT(3)
+>> +#define HISI_PCIE_LOCAL_VALID_SUB_MODULE_ID	BIT(4)
+>> +#define HISI_PCIE_LOCAL_VALID_CORE_ID		BIT(5)
+>> +#define HISI_PCIE_LOCAL_VALID_PORT_ID		BIT(6)
+>> +#define HISI_PCIE_LOCAL_VALID_ERR_TYPE		BIT(7)
+>> +#define HISI_PCIE_LOCAL_VALID_ERR_SEVERITY	BIT(8)
+>> +#define HISI_PCIE_LOCAL_VALID_ERR_MISC		9
+>> +
+>> +#define HISI_ERR_SEV_RECOVERABLE	0
+>> +#define HISI_ERR_SEV_FATAL		1
+>> +#define HISI_ERR_SEV_CORRECTED		2
+>> +#define HISI_ERR_SEV_NONE		3
+>> +
+>> +guid_t hip08_pcie_sec_type = GUID_INIT(0xB2889FC9, 0xE7D7, 0x4F9D,
+>0xA8, 0x67,
+>> +				       0xAF, 0x42, 0xE9, 0x8B, 0xE7, 0x72);
+>> +
+>> +#define HISI_PCIE_CORE_ID(v)             ((v) >> 3)
+>> +#define HISI_PCIE_PORT_ID(core, v)       ((v >> 1) + (core << 3))
+>> +#define HISI_PCIE_CORE_PORT_ID(v)        ((v % 8) << 1)
+>> +#define HISI_PCIE_ROOT_BUSNR(v)          ((v) ? 0x80 : 0)
+>
+>Is the root bus number really hard-wired in the chip?  You're saying the only
+>possible root bus numbers are 0x80 and 0x00?  Typically this bus number is
+>programmable.
+
+We will fix it and remove the macro. We'll get the root bus number from acpi instead.
+
+>
+>Why parens around "v" (sometimes) but not others and "core"?
+
+We will correct it.
+
+>
+>> +struct hisi_pcie_local_err_data {
+>> +	uint64_t   val_bits;
+>> +	uint8_t    version;
+>> +	uint8_t    soc_id;
+>> +	uint8_t    socket_id;
+>> +	uint8_t    nimbus_id;
+>> +	uint8_t    sub_module_id;
+>> +	uint8_t    core_id;
+>> +	uint8_t    port_id;
+>> +	uint8_t    err_severity;
+>> +	uint16_t   err_type;
+>> +	uint8_t    reserv[2];
+>> +	uint32_t   err_misc[HISI_PCIE_ERR_MISC_REGS];
+>
+>Use u64, u8, u32 throughout instead.
+
+We will change it.
+
+>
+>> +};
+>> +
+>> +struct pcie_err_info {
+>> +	struct hisi_pcie_local_err_data err_data;
+>> +	struct platform_device *pdev;
+>> +};
+>> +
+>> +static char *pcie_local_sub_module_name(uint8_t id) {
+>> +	switch (id) {
+>> +	case HISI_PCIE_SUB_MODULE_ID_AP: return "AP Layer";
+>> +	case HISI_PCIE_SUB_MODULE_ID_TL: return "TL Layer";
+>> +	case HISI_PCIE_SUB_MODULE_ID_MAC: return "MAC Layer";
+>> +	case HISI_PCIE_SUB_MODULE_ID_DL: return "DL Layer";
+>> +	case HISI_PCIE_SUB_MODULE_ID_SDI: return "SDI Layer";
+>> +	}
+>> +
+>> +	return "unknown";
+>> +}
+>> +
+>> +static char *err_severity(uint8_t err_sev) {
+>> +	switch (err_sev) {
+>> +	case HISI_ERR_SEV_RECOVERABLE: return "recoverable";
+>> +	case HISI_ERR_SEV_FATAL: return "fatal";
+>> +	case HISI_ERR_SEV_CORRECTED: return "corrected";
+>> +	case HISI_ERR_SEV_NONE: return "none";
+>> +	}
+>> +
+>> +	return "unknown";
+>> +}
+>> +
+>> +static struct pci_dev *hisi_hip08_pcie_get_rp(u32 chip_id, u32
+>> +port_id) {
+>> +	u32 devfn = PCI_DEVFN(port_id, 0);
+>> +	u32 busnr = HISI_PCIE_ROOT_BUSNR(chip_id);
+>> +
+>> +	return pci_get_domain_bus_and_slot(0, busnr, devfn); }
+>> +
+>> +static int hisi_hip08_pcie_port_acpi_reset(struct platform_device *pdev,
+>> +					u32 chip_id, u32 port_id)
+>> +{
+>> +	struct device *dev = &(pdev->dev);
+>
+>Unnecessary parens.  More occurrences below.
+
+We will change it.
+
+>
+>> +	struct acpi_object_list arg_list;
+>> +	union acpi_object arg[3];
+>> +
+>> +	arg[0].type = ACPI_TYPE_INTEGER;
+>> +	arg[0].integer.value = chip_id;
+>> +	arg[1].type = ACPI_TYPE_INTEGER;
+>> +	arg[1].integer.value = HISI_PCIE_CORE_ID(port_id);
+>> +	arg[2].type = ACPI_TYPE_INTEGER;
+>> +	arg[2].integer.value = HISI_PCIE_CORE_PORT_ID(port_id);
+>> +
+>> +	arg_list.count = 3;
+>> +	arg_list.pointer = arg;
+>> +	/* Call the ACPI handle to reset root port  */
+>
+>s/root port  /root port /
+>
+>> +	if (ACPI_HANDLE(dev)) {
+>
+>Restructure this to return early for error and unindent the following, e.g.,
+
+Ok. We will change it.
+
+>
+>  acpi_handle handle = ACPI_HANDLE(dev);
+>
+>  if (!handle) {
+>    dev_err(...);
+>    return -EINVAL;
+>  }
+>
+>  arg[0].type = ACPI_TYPE_INTEGER;
+>  ...
+>  s = acpi_evaluate_integer(handle, ...);
+>
+>> +		unsigned long long data = 0;
+>> +		acpi_status s;
+>> +
+>> +		s = acpi_evaluate_integer(ACPI_HANDLE(dev),
+>> +				"RST", &arg_list, &data);
+>> +
+>> +		if (ACPI_FAILURE(s)) {
+>> +			dev_err(dev, "No Reset method\n");
+>> +			return -EIO;
+>> +		}
+>> +
+>> +		if (data) {
+>> +			dev_err(dev, "Failed to Reset\n");
+>> +			return -EIO;
+>> +		}
+>> +
+>> +	} else {
+>> +		dev_err(dev, "No Reset method\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int hisi_hip08_pcie_port_reset(struct platform_device *dev,
+>> +				      u32 chip_id, u32 port_id)
+>> +{
+>> +	struct pci_dev *pdev;
+>> +	struct pci_bus *root_bus;
+>> +
+>> +	pdev = hisi_hip08_pcie_get_rp(chip_id, port_id);
+>> +	if (!pdev) {
+>> +		dev_info(&(dev->dev), "Fail to get root port device\n");
+>> +		return -ENODEV;
+>> +	}
+>> +	root_bus = pdev->bus;
+>> +
+>> +	pci_stop_and_remove_bus_device_locked(pdev);
+>> +
+>> +	if (hisi_hip08_pcie_port_acpi_reset(dev, chip_id, port_id))
+>> +		return -EIO;
+>> +	ssleep(1UL);
+>
+>Please include a comment that cites the spec section that requires this sleep.
+
+we'll add a comment. We use a 1s delay here as does in pci_reset_secondary_bus().
+It's necessary for re-initialization of subordinate devices.
+
+>
+>> +
+>> +	/* add root port and downstream devices */
+>> +	pci_lock_rescan_remove();
+>> +	pci_rescan_bus(root_bus);
+>> +	pci_unlock_rescan_remove();
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void pcie_local_error_handle(const struct hisi_pcie_local_err_data
+>*err,
+>> +				    struct platform_device *pdev) {
+>> +	char buf[HISI_PCIE_ERR_INFO_SIZE];
+>> +	char *p = buf, *end = buf + sizeof(buf);
+>> +	struct device *dev = &(pdev->dev);
+>> +	uint32_t i;
+>> +	int rc;
+>> +
+>> +	if (err->val_bits == 0) {
+>> +		dev_warn(dev, "%s: no valid error information\n", __func__);
+>> +		return;
+>> +	}
+>> +
+>> +	/* Logging */
+>> +	p += snprintf(p, end - p, "[ Table version=%d ", err->version);
+>> +	if (err->val_bits & HISI_PCIE_LOCAL_VALID_SOC_ID)
+>> +		p += snprintf(p, end - p, "SOC ID=%d ", err->soc_id);
+>> +
+>> +	if (err->val_bits & HISI_PCIE_LOCAL_VALID_SOCKET_ID)
+>> +		p += snprintf(p, end - p, "socket ID=%d ", err->socket_id);
+>> +
+>> +	if (err->val_bits & HISI_PCIE_LOCAL_VALID_NIMBUS_ID)
+>> +		p += snprintf(p, end - p, "nimbus ID=%d ", err->nimbus_id);
+>> +
+>> +	if (err->val_bits & HISI_PCIE_LOCAL_VALID_SUB_MODULE_ID)
+>> +		p += snprintf(p, end - p, "sub module=%s ",
+>> +			      pcie_local_sub_module_name(err-
+>>sub_module_id));
+>> +
+>> +	if (err->val_bits & HISI_PCIE_LOCAL_VALID_CORE_ID)
+>> +		p += snprintf(p, end - p, "core ID=core%d ", err->core_id);
+>> +
+>> +	if (err->val_bits & HISI_PCIE_LOCAL_VALID_PORT_ID)
+>> +		p += snprintf(p, end - p, "port ID=port%d ", err->port_id);
+>> +
+>> +	if (err->val_bits & HISI_PCIE_LOCAL_VALID_ERR_SEVERITY)
+>> +		p += snprintf(p, end - p, "error severity=%s ",
+>> +			      err_severity(err->err_severity));
+>> +
+>> +	if (err->val_bits & HISI_PCIE_LOCAL_VALID_ERR_TYPE)
+>> +		p += snprintf(p, end - p, "error type=0x%x ", err->err_type);
+>> +
+>> +	p += snprintf(p, end - p, "]\n");
+>> +	dev_info(dev, "\nHISI HIP08: PCIe local error\n");
+>> +	dev_info(dev, "%s\n", buf);
+>> +
+>> +	dev_info(dev, "Reg Dump:\n");
+>> +	for (i = 0; i < HISI_PCIE_ERR_MISC_REGS; i++) {
+>> +		if (err->val_bits & BIT(HISI_PCIE_LOCAL_VALID_ERR_MISC + i))
+>> +			dev_info(dev,
+>> +				 "ERR_MISC_%d=0x%x\n", i, err->err_misc[i]);
+>> +	}
+>> +
+>> +	/* Recovery for the PCIe local errors */
+>> +	if (err->err_severity == HISI_ERR_SEV_RECOVERABLE) {
+>> +		/* try reset PCI port for the error recovery */
+>> +		rc = hisi_hip08_pcie_port_reset(pdev, err->socket_id,
+>> +				HISI_PCIE_PORT_ID(err->core_id, err-
+>>port_id));
+>> +		if (rc) {
+>> +			dev_info(dev, "fail to do hip08 pcie port reset\n");
+>> +			return;
+>> +		}
+>> +	}
+>> +}
+>> +
+>> +static DEFINE_KFIFO(pcie_err_recover_ring, struct pcie_err_info,
+>> +		    HISI_PCIE_ERR_RECOVER_RING_SIZE); static
+>> +DEFINE_SPINLOCK(pcie_err_recover_ring_lock);
+>> +
+>> +static void pcie_local_err_recover_work_func(struct work_struct
+>> +*work) {
+>> +	struct pcie_err_info pcie_err_entry;
+>> +
+>> +	while (kfifo_get(&pcie_err_recover_ring, &pcie_err_entry)) {
+>> +		pcie_local_error_handle(&pcie_err_entry.err_data,
+>> +					pcie_err_entry.pdev);
+>> +	}
+>> +}
+>> +
+>> +static DECLARE_WORK(pcie_err_recover_work,
+>> +pcie_local_err_recover_work_func);
+>> +
+>> +
+>> +static void hip08_pcie_local_error_handle(struct acpi_hest_generic_data
+>*gdata,
+>> +					  int sev, void *data)
+>> +{
+>> +	const struct hisi_pcie_local_err_data *err_data =
+>> +					acpi_hest_get_payload(gdata);
+>> +	struct pcie_err_info err_info;
+>> +	struct platform_device *pdev = data;
+>> +	struct device *dev = &(pdev->dev);
+>> +
+>> +	memcpy(&err_info.err_data, err_data, sizeof(*err_data));
+>> +	err_info.pdev = pdev;
+>> +
+>> +	if (kfifo_in_spinlocked(&pcie_err_recover_ring, &err_info, 1,
+>> +				&pcie_err_recover_ring_lock))
+>> +		schedule_work(&pcie_err_recover_work);
+>> +	else
+>> +		dev_warn(dev, "Buffer overflow when recovering PCIe local
+>> +error\n");
+>
+>I'd call this a "queue full" warning or similar.  "Buffer overflow"
+>suggests that we wrote past the end of a buffer and corrupted some memory,
+>but that's not the case here.
+
+We will change it to "queue full".
+
+>
+>> +}
+>> +
+>> +static int hisi_hip08_pcie_err_handler_probe(struct platform_device
+>> +*pdev) {
+>> +	int ret = 0;
+>
+>Pointless local variable; maybe you meant to return failure if
+>ghes_register_event_handler() fails?  Don't initialize unless it's necessary.
+
+We will fix it. We  need to return error value on ghes_register_event_handler  failure.
+
+>
+>> +
+>> +	if (ghes_register_event_handler(hip08_pcie_sec_type,
+>> +					hip08_pcie_local_error_handle,
+>> +					pdev)) {
+>> +		dev_err(&(pdev->dev), "%s : ghes_register_event_handler
+>fail\n",
+>> +			__func__);
+>> +		return ret;
+>> +}
+>
+>Indentation error.
+
+Ok. we will correct it.
+
+>
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int hisi_hip08_pcie_err_handler_remove(struct platform_device
+>> +*pdev) {
+>> +	ghes_unregister_event_handler(hip08_pcie_sec_type);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct acpi_device_id hip08_pcie_acpi_match[] = {
+>> +	{ "HISI0361", 0 },
+>> +	{ }
+>> +};
+>> +
+>> +static struct platform_driver hisi_hip08_pcie_err_handler_driver = {
+>> +	.driver = {
+>> +		.name	= "hisi-hip08-pcie-err-handler",
+>> +		.acpi_match_table = hip08_pcie_acpi_match,
+>> +	},
+>> +	.probe		= hisi_hip08_pcie_err_handler_probe,
+>> +	.remove		= hisi_hip08_pcie_err_handler_remove,
+>> +};
+>> +module_platform_driver(hisi_hip08_pcie_err_handler_driver);
+>> +
+>> +MODULE_DESCRIPTION("HiSilicon HIP08 PCIe controller error handling
+>> +driver"); MODULE_LICENSE("GPL v2");
+>> +
+>> --
+>> 1.9.1
+>>
+>>
+
+Thanks,
+Shiju
