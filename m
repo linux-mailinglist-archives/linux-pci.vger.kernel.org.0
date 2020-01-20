@@ -2,140 +2,121 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 89338142EA0
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Jan 2020 16:18:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E039142F15
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Jan 2020 16:56:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbgATPS5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 20 Jan 2020 10:18:57 -0500
-Received: from foss.arm.com ([217.140.110.172]:33568 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726626AbgATPS5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 20 Jan 2020 10:18:57 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 60D2D30E;
-        Mon, 20 Jan 2020 07:18:56 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 661003F52E;
-        Mon, 20 Jan 2020 07:18:54 -0800 (PST)
-Date:   Mon, 20 Jan 2020 15:18:49 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Vidya Sagar <vidyas@nvidia.com>, bjorn@helgaas.com,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Andrew Murray <andrew.murray@arm.com>, treding@nvidia.com,
-        jonathanh@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH] PCI: Add MCFG quirks for Tegra194 host controllers
-Message-ID: <20200120151849.GA24402@e121166-lin.cambridge.arm.com>
-References: <20200103174935.5612-1-vidyas@nvidia.com>
- <CABhMZUUHGEEhsJ-+foSsodqtKXyX5ZNPkGgv_VzXz=Qv+NVcUA@mail.gmail.com>
- <9a767725-9671-6402-4e1c-a648f5a7860b@nvidia.com>
- <20200117121736.GA7072@e121166-lin.cambridge.arm.com>
- <20200120111042.GA203160@ulmo>
+        id S1726642AbgATP4w (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 20 Jan 2020 10:56:52 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:51033 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728935AbgATP4v (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Jan 2020 10:56:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579535810;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=4e5hNsjyX6zx1OYI6NvhnYccfBkWo6gxjd9Kp9Jqg/w=;
+        b=Eq8su56cemFRQZNb2VRBKcQH/0uNy2G/Yc/wR0OEe51EDapI5gv1iplohStPv1JbnOmC2/
+        nGqxIlktOWAvX/ZugDmQ1cwA2kYQR8vlxZGami/IW6wz4hBSdTGQwomr8IZqE31aV2aqKB
+        qNqKKFTY1MnGzosoKda8siEnZqjQchA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-402-5ZYWsX5eNluUaNaSkmL5RQ-1; Mon, 20 Jan 2020 10:56:47 -0500
+X-MC-Unique: 5ZYWsX5eNluUaNaSkmL5RQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7439910054E3;
+        Mon, 20 Jan 2020 15:56:44 +0000 (UTC)
+Received: from w520.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E97767DB34;
+        Mon, 20 Jan 2020 15:56:40 +0000 (UTC)
+Date:   Mon, 20 Jan 2020 08:56:40 -0700
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        Alexandru Gagniuc <alex_gagniuc@dellteam.com>,
+        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jan Vesely <jano.vesely@gmail.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Austin Bolen <austin_bolen@dell.com>,
+        Shyam Iyer <Shyam_Iyer@dell.com>,
+        Sinan Kaya <okaya@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Issues with "PCI/LINK: Report degraded links via link bandwidth
+ notification"
+Message-ID: <20200120085640.53dc9652@w520.home>
+In-Reply-To: <20200120023326.GA149019@google.com>
+References: <20200115221008.GA191037@google.com>
+        <20200120023326.GA149019@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200120111042.GA203160@ulmo>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 12:10:42PM +0100, Thierry Reding wrote:
+On Sun, 19 Jan 2020 20:33:26 -0600
+Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-[...]
-
-> > > Currently the BSP has the kernel booting through Device Tree mechanism
-> > > and there is a plan to support UEFI based boot as well in the future software
-> > > releases for which we need this quirky way of handling ECAM.
-> > > Tegra194 is going to be the only and last chip with this issue and next chip
-> > > in line in Tegra SoC series will be fully compliant with ECAM.
+> [+cc NVMe, GPU driver folks]
+> 
+> On Wed, Jan 15, 2020 at 04:10:08PM -0600, Bjorn Helgaas wrote:
+> > I think we have a problem with link bandwidth change notifications
+> > (see https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/pcie/bw_notification.c).
 > > 
-> > ACPI on ARM64 works on a standard subset of systems, defined by the
-> > ARM SBSA:
+> > Here's a recent bug report where Jan reported "_tons_" of these
+> > notifications on an nvme device:
+> > https://bugzilla.kernel.org/show_bug.cgi?id=206197
 > > 
-> > http://infocenter.arm.com/help/topic/com.arm.doc.den0029c/Server_Base_System_Architecture_v6_0_ARM_DEN_0029C_SBSA_6_0.pdf
+> > There was similar discussion involving GPU drivers at
+> > https://lore.kernel.org/r/20190429185611.121751-2-helgaas@kernel.org
+> > 
+> > The current solution is the CONFIG_PCIE_BW config option, which
+> > disables the messages completely.  That option defaults to "off" (no
+> > messages), but even so, I think it's a little problematic.
+> > 
+> > Users are not really in a position to figure out whether it's safe to
+> > enable.  All they can do is experiment and see whether it works with
+> > their current mix of devices and drivers.
+> > 
+> > I don't think it's currently useful for distros because it's a
+> > compile-time switch, and distros cannot predict what system configs
+> > will be used, so I don't think they can enable it.
+> > 
+> > Does anybody have proposals for making it smarter about distinguishing
+> > real problems from intentional power management, or maybe interfaces
+> > drivers could use to tell us when we should ignore bandwidth changes?  
 > 
-> I don't understand what you're saying here. Are you saying that you want
-> to prevent vendors from upstreaming code that they need to support their
-> ACPI based platforms? I understand that the lack of support for proper
-> ECAM means that a platform will not be SBSA compatible, but I wasn't
-> aware that lack of SBSA compatibility meant that a platform would be
-> prohibited from implementing ACPI support in an upstream kernel.
-
-ACPI on ARM64 requires a set of HW components described in the SBSA.
-
-If those HW requirements are not fulfilled you can't bootstrap an ARM64
-system with ACPI - it is as simple as that. It is not even appropriate
-to discuss this on a Linux mailing list anymore since it is HW
-requirements and it has been public information since ACPI on ARM64 was
-first enabled.
-
-> > These patches will have to be carried out of tree, the MCFG quirk
-> > mechanism (merged as Bjorn said more than three years ago) was supposed
-> > to be a temporary plaster to bootstrap server platforms with teething
-> > issues, the aim is to remove it eventually not to add more code to it
-> > indefinitely.
+> NVMe, GPU folks, do your drivers or devices change PCIe link
+> speed/width for power saving or other reasons?  When CONFIG_PCIE_BW=y,
+> the PCI core interprets changes like that as problems that need to be
+> reported.
 > 
-> Now, I fully agree that quirks are suboptimal and we'd all prefer if we
-> didn't have to deal with them. Unfortunately the reality is that
-> mistakes happen and hardware doesn't always work the way we want it to.
-> There's plenty of other quirk mechanisms in the kernel, and frankly this
-> one isn't really that bad in comparison.
-
-Because you don't have to maintain it ;) - I think I said what I had to
-say about the MCFG mechanism in the past - it has been three years
-and counting - it is time to remove it rather that adding to it.
-
-> > So I am afraid but this quirk (and any other coming our way) will not be
-> > merged in an upstream kernel anymore - for any queries please put Nvidia
-> > in touch.
+> If drivers do change link speed/width, can you point me to where
+> that's done?  Would it be feasible to add some sort of PCI core
+> interface so the driver could say "ignore" or "pay attention to"
+> subsequent link changes?
 > 
-> Again, I don't understand what you're trying to achieve here. You seem
-> to be saying that we categorically can't support this hardware because
-> it isn't fully SBSA compatible.
+> Or maybe there would even be a way to move the link change itself into
+> the PCI core, so the core would be aware of what's going on?
 
-I am not trying to achieve anything - I am just stating public
-information - let me repeat it again for interested readers: to
-bootstrap an ARM64 system with ACPI the platform HW design must follow
-the SBSA guidelines.
+One case where we previously saw sporadic link change messages was
+vfio-pci owned devices.  If the transitions are based on config space
+manipulation then I can trap those accesses and wrap them in a PCI core
+API, but I suspect that's not the exclusive (or potentially even
+primary) mechanism for initiating link changes.  So I think we'd
+probably need a mechanism for a driver to opt-out of link notification
+for their devices (presumably the fn0 device per link would opt-out the
+entire link?).  Thanks,
 
-> Do you have any alternative suggestions on how we can support this in an
-> upstream kernel?
+Alex
 
-Booting with a device tree ?
-
-> We realized a while ago that we cannot achieve proper ECAM on Tegra194
-> because of some issues with the hardware and we've provided this as
-> feedback to the hardware engineers. As a result, the next generation of
-> Tegra should no longer suffer from these issues.
-
-We will bootstrap next generation Tegra with ACPI then, there are
-SBSA tests available for compliancy - again, that's a matter for
-Nvidia and Arm to settle, not a mailing list discussion.
-
-> As for Tegra194, that chip taped out two years ago and it isn't possible
-> to make it fully ECAM compliant other than by revising the chip, which,
-> frankly, isn't going to happen.
-> 
-> So I see two options here: either we find a way of dealing with this, by
-> either merging this quirk or finding an alternative solution, or we make
-> the decision that some hardware just can't be supported.
-> 
-> The former is fairly common, whereas I've never heard of the latter.
-
-What does this mean ? Should I wreck the upstream kernel to make it boot
-with ACPI on *any* ARM64 platform out there then ?
-
-My stance is clear above and the ACPI PCI programming model - inclusive
-of firmware - has been there since ACPI was deployed, if ACPI support
-is required HW must comply, either that or it is out of tree patches
-and I can't be blamed for that.
-
-Thanks,
-Lorenzo
