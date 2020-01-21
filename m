@@ -2,173 +2,222 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 07511143F36
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Jan 2020 15:17:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 43BF1143FB2
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Jan 2020 15:37:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727508AbgAUORP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 21 Jan 2020 09:17:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44274 "EHLO mail.kernel.org"
+        id S1729253AbgAUOhj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 Jan 2020 09:37:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726968AbgAUORP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 21 Jan 2020 09:17:15 -0500
+        id S1726968AbgAUOhj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 21 Jan 2020 09:37:39 -0500
 Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 375D02087E;
-        Tue, 21 Jan 2020 14:17:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B2B22070C;
+        Tue, 21 Jan 2020 14:37:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579616234;
-        bh=eGP8z6dxRF+W8utN64emYHnd98d13UH+DfvCNXZYpbs=;
+        s=default; t=1579617458;
+        bh=hha4biDp81wEOPmWi3GEIfBbYU2CcuiLqOjxy9uS7Yc=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=c22eyzSNHY9dnn++zti3b8e+NUbi3X6N4cx3YafkTKPC/QYJR9gCHla3sKAoq8exI
-         sD6SQ96r4j2pM9OcN9VGUk9UdefZ+bIwiRM85+79oMDyeopexe8rimq4v9Ac+TLcCE
-         u+aSjnd+zRJ320sQUc+MpMiLybHnLjdUhYjnw2zc=
-Date:   Tue, 21 Jan 2020 08:17:12 -0600
+        b=mCLSoItwpAg/CFYjzmuAV3O4ploxDv+LIqVKIxtWxkJrhA6yO0fXXHl1TT9i/JoJY
+         kZ5rpwrzhgGcfbDMstxSXzo0NI1VwmbQLf9DGkAlnxe+rXDEkzUHjdNRbaO0SSO31k
+         wsW/tv/6+XqC2P4qknAWhGk8S+bX2d/MoEVU3y0I=
+Date:   Tue, 21 Jan 2020 08:37:36 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        ashok.raj@intel.com, jacob.jun.pan@intel.com, kevin.tian@intel.com,
-        Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [RFC PATCH 2/4] PCI: Add "pci=iommu_passthrough=" parameter for
- iommu passthrough
-Message-ID: <20200121141712.GA94911@google.com>
+To:     Boqun Feng <boqun.feng@gmail.com>
+Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Michael Kelley <mikelley@microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH 2/2] pci: hyperv: Move retarget related struct
+ definitions into tlfs
+Message-ID: <20200121143736.GA96172@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200101052648.14295-3-baolu.lu@linux.intel.com>
+In-Reply-To: <20200121015713.69691-2-boqun.feng@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc linux-pci, thread at https://lore.kernel.org/r/20200101052648.14295-1-baolu.lu@linux.intel.com]
+On Tue, Jan 21, 2020 at 09:57:13AM +0800, Boqun Feng wrote:
+> For future support of virtual PCI on non-x86 architecture.
 
-On Wed, Jan 01, 2020 at 01:26:46PM +0800, Lu Baolu wrote:
-> The new parameter takes a list of devices separated by a semicolon.
-> Each device specified will have its iommu_passthrough bit in struct
-> device set. This is very similar to the existing 'disable_acs_redir'
-> parameter.
+1) Don't make up random subject line prefixes; look at previous
+practice and follow it, e.g.,
 
-Almost all of this patchset is in drivers/iommu.  Should the parameter
-be "iommu ..." instead of "pci=iommu_passthrough=..."?
+  $ git log --oneline drivers/pci/controller/pci-hyperv.c | head
+  877b911a5ba0 PCI: hv: Avoid a kmemleak false positive caused by the hbus buffer
+  14ef39fddd23 PCI: hv: Change pci_protocol_version to per-hbus
+  ac82fc832708 PCI: hv: Add hibernation support
+  a8e37506e79a PCI: hv: Reorganize the code in preparation of hibernation
+  f73f8a504e27 PCI: hv: Use bytes 4 and 5 from instance ID as the PCI domain numbers
+  348dd93e40c1 PCI: hv: Add a Hyper-V PCI interface driver for software backchannel interface
 
-There is already an "iommu.passthrough=" argument.  Would this fit
-better there?  Since the iommu_passthrough bit is generic, it seems
-like you anticipate similar situations for non-PCI devices.
+2) Make the commit log complete in itself.  This one (and the previous
+on) is not complete without reading the subject.
 
-> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+3) This patch claims to be a "move", but in fact it also *adds* union
+hv_msi_entry, which didn't exist before.  It's better if you do a pure
+move that doesn't add or change things, plus a separate patch that
+makes changes that need to be reviewed more closely.
+
+> Signed-off-by: Boqun Feng (Microsoft) <boqun.feng@gmail.com>
 > ---
->  .../admin-guide/kernel-parameters.txt         |  5 +++
->  drivers/pci/pci.c                             | 34 +++++++++++++++++++
->  drivers/pci/pci.h                             |  1 +
->  drivers/pci/probe.c                           |  2 ++
->  4 files changed, 42 insertions(+)
+>  arch/x86/include/asm/hyperv-tlfs.h  | 38 +++++++++++++++++++++++++++++
+>  arch/x86/include/asm/mshyperv.h     |  8 ++++++
+>  drivers/pci/controller/pci-hyperv.c | 38 +++--------------------------
+>  3 files changed, 50 insertions(+), 34 deletions(-)
 > 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index ade4e6ec23e0..d3edc2cb6696 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -3583,6 +3583,11 @@
->  				may put more devices in an IOMMU group.
->  		force_floating	[S390] Force usage of floating interrupts.
->  		nomio		[S390] Do not use MIO instructions.
-> +		iommu_passthrough=<pci_dev>[; ...]
-> +				Specify one or more PCI devices (in the format
-> +				specified above) separated by semicolons.
-> +				Each device specified will bypass IOMMU DMA
-> +				translation.
+> diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
+> index b9ebc20b2385..debe017ae748 100644
+> --- a/arch/x86/include/asm/hyperv-tlfs.h
+> +++ b/arch/x86/include/asm/hyperv-tlfs.h
+> @@ -912,4 +912,42 @@ struct hv_tlb_flush_ex {
+>  struct hv_partition_assist_pg {
+>  	u32 tlb_lock_count;
+>  };
+> +
+> +union hv_msi_entry {
+> +	u64 as_uint64;
+> +	struct {
+> +		u32 address;
+> +		u32 data;
+> +	} __packed;
+> +};
+> +
+> +struct hv_interrupt_entry {
+> +	u32 source;			/* 1 for MSI(-X) */
+> +	u32 reserved1;
+> +	union hv_msi_entry msi_entry;
+> +} __packed;
+> +
+> +/*
+> + * flags for hv_device_interrupt_target.flags
+> + */
+> +#define HV_DEVICE_INTERRUPT_TARGET_MULTICAST		1
+> +#define HV_DEVICE_INTERRUPT_TARGET_PROCESSOR_SET	2
+> +
+> +struct hv_device_interrupt_target {
+> +	u32 vector;
+> +	u32 flags;
+> +	union {
+> +		u64 vp_mask;
+> +		struct hv_vpset vp_set;
+> +	};
+> +} __packed;
+> +
+> +/* HvRetargetDeviceInterrupt hypercall */
+> +struct hv_retarget_device_interrupt {
+> +	u64 partition_id;
+> +	u64 device_id;
+> +	struct hv_interrupt_entry int_entry;
+> +	u64 reserved2;
+> +	struct hv_device_interrupt_target int_target;
+> +} __packed __aligned(8);
+>  #endif
+> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
+> index 6b79515abb82..d13319d82f6b 100644
+> --- a/arch/x86/include/asm/mshyperv.h
+> +++ b/arch/x86/include/asm/mshyperv.h
+> @@ -240,6 +240,14 @@ bool hv_vcpu_is_preempted(int vcpu);
+>  static inline void hv_apic_init(void) {}
+>  #endif
 >  
->  	pcie_aspm=	[PCIE] Forcibly enable or disable PCIe Active State Power
->  			Management.
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 90dbd7c70371..05bf3f4acc36 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -6401,6 +6401,37 @@ void __weak pci_fixup_cardbus(struct pci_bus *bus)
->  }
->  EXPORT_SYMBOL(pci_fixup_cardbus);
+> +#if IS_ENABLED(CONFIG_PCI_HYPERV)
+> +#define hv_set_msi_address_from_desc(msi_entry, msi_desc)	\
+> +do {								\
+> +	(msi_entry)->address = (msi_desc)->msg.address_lo;	\
+> +} while (0)
+> +
+> +#endif /* CONFIG_PCI_HYPERV */
+> +
+>  #else /* CONFIG_HYPERV */
+>  static inline void hyperv_init(void) {}
+>  static inline void hyperv_setup_mmu_ops(void) {}
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index aacfcc90d929..2240f2b3643e 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -406,36 +406,6 @@ struct pci_eject_response {
 >  
-> +static const char *iommu_passthrough_param;
-> +bool pci_iommu_passthrough_match(struct pci_dev *dev)
-> +{
-> +	int ret = 0;
-> +	const char *p = iommu_passthrough_param;
-> +
-> +	if (!p)
-> +		return false;
-> +
-> +	while (*p) {
-> +		ret = pci_dev_str_match(dev, p, &p);
-> +		if (ret < 0) {
-> +			pr_info_once("PCI: Can't parse iommu_passthrough parameter: %s\n",
-> +				     iommu_passthrough_param);
-> +
-> +			break;
-> +		} else if (ret == 1) {
-> +			pci_info(dev, "PCI: IOMMU passthrough\n");
-> +			return true;
-> +		}
-> +
-> +		if (*p != ';' && *p != ',') {
-> +			/* End of param or invalid format */
-> +			break;
-> +		}
-> +		p++;
-> +	}
-> +
-> +	return false;
-> +}
-> +
->  static int __init pci_setup(char *str)
->  {
->  	while (str) {
-> @@ -6462,6 +6493,8 @@ static int __init pci_setup(char *str)
->  				pci_add_flags(PCI_SCAN_ALL_PCIE_DEVS);
->  			} else if (!strncmp(str, "disable_acs_redir=", 18)) {
->  				disable_acs_redir_param = str + 18;
-> +			} else if (!strncmp(str, "iommu_passthrough=", 18)) {
-> +				iommu_passthrough_param = str + 18;
->  			} else {
->  				pr_err("PCI: Unknown option `%s'\n", str);
->  			}
-> @@ -6486,6 +6519,7 @@ static int __init pci_realloc_setup_params(void)
->  	resource_alignment_param = kstrdup(resource_alignment_param,
->  					   GFP_KERNEL);
->  	disable_acs_redir_param = kstrdup(disable_acs_redir_param, GFP_KERNEL);
-> +	iommu_passthrough_param = kstrdup(iommu_passthrough_param, GFP_KERNEL);
+>  static int pci_ring_size = (4 * PAGE_SIZE);
 >  
->  	return 0;
->  }
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index a0a53bd05a0b..95f6af06aba6 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -288,6 +288,7 @@ void pci_reassigndev_resource_alignment(struct pci_dev *dev);
->  void pci_disable_bridge_window(struct pci_dev *dev);
->  struct pci_bus *pci_bus_get(struct pci_bus *bus);
->  void pci_bus_put(struct pci_bus *bus);
-> +bool pci_iommu_passthrough_match(struct pci_dev *dev);
+> -struct hv_interrupt_entry {
+> -	u32	source;			/* 1 for MSI(-X) */
+> -	u32	reserved1;
+> -	u32	address;
+> -	u32	data;
+> -};
+> -
+> -/*
+> - * flags for hv_device_interrupt_target.flags
+> - */
+> -#define HV_DEVICE_INTERRUPT_TARGET_MULTICAST		1
+> -#define HV_DEVICE_INTERRUPT_TARGET_PROCESSOR_SET	2
+> -
+> -struct hv_device_interrupt_target {
+> -	u32	vector;
+> -	u32	flags;
+> -	union {
+> -		u64		 vp_mask;
+> -		struct hv_vpset vp_set;
+> -	};
+> -};
+> -
+> -struct retarget_msi_interrupt {
+> -	u64	partition_id;		/* use "self" */
+> -	u64	device_id;
+> -	struct hv_interrupt_entry int_entry;
+> -	u64	reserved2;
+> -	struct hv_device_interrupt_target int_target;
+> -} __packed __aligned(8);
+> -
+>  /*
+>   * Driver specific state.
+>   */
+> @@ -482,7 +452,7 @@ struct hv_pcibus_device {
+>  	struct workqueue_struct *wq;
 >  
->  /* PCIe link information */
->  #define PCIE_SPEED2STR(speed) \
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 512cb4312ddd..4c571ee75621 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -2404,6 +2404,8 @@ void pci_device_add(struct pci_dev *dev, struct pci_bus *bus)
->  
->  	dev->state_saved = false;
->  
-> +	dev->dev.iommu_passthrough = pci_iommu_passthrough_match(dev);
-> +
->  	pci_init_capabilities(dev);
+>  	/* hypercall arg, must not cross page boundary */
+> -	struct retarget_msi_interrupt retarget_msi_interrupt_params;
+> +	struct hv_retarget_device_interrupt retarget_msi_interrupt_params;
 >  
 >  	/*
+>  	 * Don't put anything here: retarget_msi_interrupt_params must be last
+> @@ -1178,7 +1148,7 @@ static void hv_irq_unmask(struct irq_data *data)
+>  {
+>  	struct msi_desc *msi_desc = irq_data_get_msi_desc(data);
+>  	struct irq_cfg *cfg = irqd_cfg(data);
+> -	struct retarget_msi_interrupt *params;
+> +	struct hv_retarget_device_interrupt *params;
+>  	struct hv_pcibus_device *hbus;
+>  	struct cpumask *dest;
+>  	cpumask_var_t tmp;
+> @@ -1200,8 +1170,8 @@ static void hv_irq_unmask(struct irq_data *data)
+>  	memset(params, 0, sizeof(*params));
+>  	params->partition_id = HV_PARTITION_ID_SELF;
+>  	params->int_entry.source = 1; /* MSI(-X) */
+> -	params->int_entry.address = msi_desc->msg.address_lo;
+> -	params->int_entry.data = msi_desc->msg.data;
+> +	hv_set_msi_address_from_desc(&params->int_entry.msi_entry, msi_desc);
+> +	params->int_entry.msi_entry.data = msi_desc->msg.data;
+>  	params->device_id = (hbus->hdev->dev_instance.b[5] << 24) |
+>  			   (hbus->hdev->dev_instance.b[4] << 16) |
+>  			   (hbus->hdev->dev_instance.b[7] << 8) |
 > -- 
-> 2.17.1
+> 2.24.1
 > 
