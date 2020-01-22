@@ -2,210 +2,134 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D6FCA144D0A
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Jan 2020 09:13:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 33CCD14508C
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Jan 2020 10:48:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725928AbgAVINe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Jan 2020 03:13:34 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:40544 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbgAVINd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Jan 2020 03:13:33 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00M8Cxqb099296;
-        Wed, 22 Jan 2020 02:12:59 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1579680779;
-        bh=DhZNPVYtbrpKrZkAkg13qDd9TroZfhPQ/2aqImA4XLQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=YyTGJm0CliogdcFd9gnifEAk8QmkOT+QCVGoH27ocDzrZPB7avzwnza5mzPX+UheB
-         WfIed/40LSUiLyMMRn74ExRwIwhhSSv1UJr7souRbL0Yr2UkTH1rE9itP9it9eg9Og
-         aM+RXxLq2QWw9UixnNzaKOvthN/78MMYypz3cRkI=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00M8CwGh095984
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 22 Jan 2020 02:12:58 -0600
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 22
- Jan 2020 02:12:58 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 22 Jan 2020 02:12:58 -0600
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00M8Co0Y069651;
-        Wed, 22 Jan 2020 02:12:51 -0600
-Subject: Re: [v3 4/6] dt-bindings: PCI: rcar: Add bindings for R-Car PCIe
- endpoint controller
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-pci <linux-pci@vger.kernel.org>
-CC:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Simon Horman <horms@verge.net.au>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20200108162211.22358-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200108162211.22358-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CA+V-a8s1Jx8uZiSr0uiryS492EbFRoFg9QTwkosZsuyfRYp-3g@mail.gmail.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <9c65eb7a-539b-1fa3-f988-40c32aa8dfe3@ti.com>
-Date:   Wed, 22 Jan 2020 13:45:53 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        id S1729721AbgAVJrZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Jan 2020 04:47:25 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:58026 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387704AbgAVJmY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Jan 2020 04:42:24 -0500
+Received: from albireo.burrow.ucw.cz (albireo.ucw.cz [91.219.245.20])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "albireo.ucw.cz", Issuer "ucw.cz" (verified OK))
+        by jabberwock.ucw.cz (Postfix) with ESMTPS id 1CE3C1C0371
+        for <linux-pci@vger.kernel.org>; Wed, 22 Jan 2020 10:42:22 +0100 (CET)
+Received: by albireo.burrow.ucw.cz (Postfix, from userid 1000)
+        id 4DC531A0561; Wed, 22 Jan 2020 10:42:21 +0100 (CET)
+Date:   Wed, 22 Jan 2020 10:42:21 +0100
+From:   Martin =?utf-8?B?TWFyZcWh?= <mj@ucw.cz>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-pci@vger.kernel.org, bhelgaas@google.com,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, jcm@redhat.com,
+        nariman.poushin@linaro.org, linuxarm@huawei.com
+Subject: Re: [RFC PATCH 0/2] lspci: support for CCIX DVSEC
+Message-ID: <mj+md-20200122.092951.48097.albireo@ucw.cz>
+References: <20190627144355.27913-1-Jonathan.Cameron@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <CA+V-a8s1Jx8uZiSr0uiryS492EbFRoFg9QTwkosZsuyfRYp-3g@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190627144355.27913-1-Jonathan.Cameron@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spamd-Bar: /
+X-Spam-Status: No, score=-0.80
+X-Spamd-Result: default: False [-0.80 / 15.00];
+         ARC_NA(0.00)[];
+         BAYES_HAM(-3.00)[100.00%];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         SENDER_REP_HAM(0.00)[asn: 51744(0.26), country: CZ(-0.00), ip: 91.219.245.20(-0.37)];
+         HFILTER_HELO_IP_A(1.00)[albireo.burrow.ucw.cz];
+         AUTH_NA(1.00)[];
+         DMARC_NA(0.00)[ucw.cz];
+         HFILTER_HELO_NORES_A_OR_MX(0.30)[albireo.burrow.ucw.cz];
+         TO_MATCH_ENVRCPT_SOME(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[7];
+         NEURAL_HAM(-0.00)[-0.926];
+         R_SPF_NA(0.00)[];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         R_DKIM_NA(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:51744, ipnet:91.219.244.0/22, country:CZ];
+         TAGGED_FROM(0.00)[f-220120,linux-pci=vger.kernel.org];
+         MID_RHS_MATCH_FROM(0.00)[]
+X-Rspamd-Queue-Id: 1CE3C1C0371
+Authentication-Results: jabberwock.ucw.cz;
+        dkim=none;
+        dmarc=none;
+        spf=none (jabberwock.ucw.cz: domain of mj@ucw.cz has no SPF policy when checking 91.219.245.20) smtp.mailfrom=mj@ucw.cz
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Prabhakar,
+Hello!
 
-On 21/01/20 11:27 PM, Lad, Prabhakar wrote:
-> Hi Rob/Kishon,
+> This series adds support for near complete interpretation of CCIX DVSEC.
+> Most of the CCIX base 1.0 specification is covered, but a few minor
+> elements are not currently printed (some of the timeouts and credit
+> types). That can be rectified in a future version or follow up patch
+> and isn't necessary for this discussion.
 > 
-> On Wed, Jan 8, 2020 at 4:22 PM Lad Prabhakar <prabhakar.csengg@gmail.com> wrote:
->>
->> This patch adds the bindings for the R-Car PCIe endpoint driver.
->>
->> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->> ---
->>  .../devicetree/bindings/pci/rcar-pci-ep.yaml  | 76 +++++++++++++++++++
->>  1 file changed, 76 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml b/Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
->> new file mode 100644
->> index 000000000000..99c2a1174463
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
->> @@ -0,0 +1,76 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +# Copyright (C) 2020 Renesas Electronics Europe GmbH - https://www.renesas.com/eu/en/
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/pci/rcar-pcie-ep.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Renesas R-Car PCIe Endpoint
->> +
->> +maintainers:
->> +  - Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->> +
->> +properties:
->> +  compatible:
->> +    items:
->> +      - const: renesas,r8a774c0-pcie-ep
->> +      - const: renesas,rcar-gen3-pcie-ep
->> +
->> +  reg:
->> +    maxItems: 5
->> +
->> +  reg-names:
->> +    items:
->> +      - const: apb-base
->> +      - const: memory0
->> +      - const: memory1
->> +      - const: memory2
->> +      - const: memory3
-
-As I had mentioned in the other patch, I'd prefer if we can create
-standard binding for representing the memory regions. IMHO we should
-create subnode for memory regions Each sub-node itself may or may not
-have more than one memory region.
-
-In your platform, since there can be only one allocation in a memory
-region, there should be 4 sub-nodes for each of the memory region and
-each node should have page_size (or some equivalent property) property
-to indicate page_size (= region_size).
-
-For a platform that doesn't have the restriction, there can be a single
-sub-node containing all the memory region.
-
-Let's wait for Rob's comment though.
-
-Thanks
-Kishon
->> +
->> +  power-domains:
->> +    maxItems: 1
->> +
->> +  resets:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    maxItems: 1
->> +
->> +  clock-names:
->> +    items:
->> +      - const: pcie
->> +
->> +  max-functions:
->> +    minimum: 1
->> +    maximum: 6
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - reg-names
->> +  - resets
->> +  - power-domains
->> +  - clocks
->> +  - clock-names
->> +  - max-functions
->> +
-> apart from dt_binding_check error are we OK with dt bindings ?
+> CCIX (www.ccixconsortium.org) is a coherent interconnect specification.
+> It is flexible in allowed interconnect topologies, but is overlayed
+> on top of a traditional PCIe tree.  Note that CCIX physical devices
+> may turn up in a number of different locations in the PCIe tree.
 > 
-> Cheers,
-> --Prabhakar
+> The topology configuration and physical layer controls and description
+> are presented using PCIe DVSEC structures defined in the CCIX 1.0
+> base specification.  These use the unique ID granted by the PCISIG.
+> Note that, whilst it looks like a Vendor ID for this usecase it is
+> not one and can only be used to identify DVSEC and related CCIX protocol
+> messages.
 > 
->> +examples:
->> +  - |
->> +    #include <dt-bindings/clock/r8a774c0-cpg-mssr.h>
->> +    #include <dt-bindings/power/r8a774c0-sysc.h>
->> +
->> +     pcie0_ep: pcie-ep@fe000000 {
->> +            compatible = "renesas,r8a774c0-pcie-ep",
->> +                         "renesas,rcar-gen3-pcie-ep";
->> +            reg = <0 0xfe000000 0 0x80000>,
->> +                  <0x0 0xfe100000 0 0x100000>,
->> +                  <0x0 0xfe200000 0 0x200000>,
->> +                  <0x0 0x30000000 0 0x8000000>,
->> +                  <0x0 0x38000000 0 0x8000000>;
->> +            reg-names = "apb-base", "memory0", "memory1", "memory2", "memory3";
->> +            resets = <&cpg 319>;
->> +            power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
->> +            clocks = <&cpg CPG_MOD 319>;
->> +            clock-names = "pcie";
->> +            max-functions = /bits/ 8 <1>;
->> +    };
->> --
->> 2.20.1
->>
+> So why an RFC?
+> * Are the lspci maintainers happy to have the tool include support for
+>   PCI configuration structures that are defined in other standards?
+> * Is the general approach and code structure appropriate?
+> * It's a lot of description so chances are some of it isn't in a format
+>   consistent with the rest of lspci!
+
+I am very happy to include parsers of vendor-specific capabilities.
+
+The general approach is fine, but please bring the source code closer
+to the coding style of the rest of pciutils.
+
+> The following grants the 'pciutils' project trademark usage of
+> CCIX tradmark where relevant.
+> 
+> This patch is being distributed by the CCIX Consortium, Inc. (CCIX) to
+> you and other parties that are paticipating (the "participants") in the
+> pciutils with the understanding that the participants will use CCIX's
+> name and trademark only when this patch is used in association with the
+> pciutils project.
+
+I suspect that this is not compatible with the GPL. Everybody is allowed
+to use portions of pciutils in other GPLed projects. So the trademark usage
+right should be granted to use in the contributed code, regardless of whether
+it is currently in the pciutils project, or any other project.
+
+> CCIX is also distributing this patch to these participants with the
+> understanding that if any portion of the CCIX specification will be
+> used or referenced in the pciutils project, the participants will not modify
+> the cited portion of the CCIX specification and will give CCIX propery
+> copyright attribution by including the following copyright notice with
+> the cited part of the CCIX specification:
+> "© 2019 CCIX CONSORTIUM, INC. ALL RIGHTS RESERVED."
+
+Are there any citations affected by this in your patch? You only refer to data
+structures defined by the specification, but this is factual information which
+cannot be copyrighted (but IANAL).
+
+I am strongly opposed to adding more copyright notices to the pciutils
+besides the GPL.
+
+				Have a nice fortnight
+-- 
+Martin `MJ' Mareš                        <mj@ucw.cz>   http://mj.ucw.cz/
+United Computer Wizards, Prague, Czech Republic, Europe, Earth, Universe
+hAS ANYONE SEEN MY cAPSLOCK KEY?
