@@ -2,269 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A05F145F0E
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Jan 2020 00:17:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 52D7C145F34
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Jan 2020 00:37:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726049AbgAVXRr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Jan 2020 18:17:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47422 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725884AbgAVXRr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 22 Jan 2020 18:17:47 -0500
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70A0324655;
-        Wed, 22 Jan 2020 23:17:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579735065;
-        bh=n/dsn3gDSL+x/Hcoz8ENnerQqfvkZJr8KkYmos+/oW4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Wlu1tKUlaALizPOIxvFgH+ZFgQUk9U8riu0nn58xk0HQMkZR37jFCg0meizjf1+Wp
-         1e3fY/WklWdniZKbRD77Wl0N2IRhe1d4/aP5kGmvJMTtSnie3XlfQj1HV38vWoqEU8
-         aZL66t/uC2JyKwZJx8kgGE2YvcvhsPIw28fZrwJk=
-Date:   Wed, 22 Jan 2020 17:17:43 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     sathyanarayanan.kuppuswamy@linux.intel.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, Keith Busch <keith.busch@intel.com>
-Subject: Re: [PATCH v13 2/8] PCI/DPC: Allow dpc_probe() even if firmware
- first mode is enabled
-Message-ID: <20200122231743.GA28442@google.com>
+        id S1726227AbgAVXhl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Jan 2020 18:37:41 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:38871 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbgAVXhl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Jan 2020 18:37:41 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iuPZ0-0007OT-0Q; Thu, 23 Jan 2020 00:37:34 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 3688610029B; Thu, 23 Jan 2020 00:37:33 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Evan Green <evgreen@chromium.org>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Marc Zyngier <maz@kernel.org>, Christoph Hellwig <hch@lst.de>,
+        Rajat Jain <rajatxjain@gmail.com>
+Subject: Re: [PATCH] PCI/MSI: Avoid torn updates to MSI pairs
+In-Reply-To: <CAE=gft6hvO7G2OrxFGXeSDctz-21ryiu8JSBWT0g2fRFss-pxA@mail.gmail.com>
+References: <20200116133102.1.I9c7e72144ef639cc135ea33ef332852a6b33730f@changeid> <20200122172816.GA139285@google.com> <CAE=gft6hvO7G2OrxFGXeSDctz-21ryiu8JSBWT0g2fRFss-pxA@mail.gmail.com>
+Date:   Thu, 23 Jan 2020 00:37:33 +0100
+Message-ID: <875zh3ukoy.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <85876c50033440ec147719a1c3f6b22d691645be.1579406227.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Jan 18, 2020 at 08:00:31PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> 
-> As per ACPI specification v6.3, sec 5.6.6, Error Disconnect Recover
-> (EDR) notification used by firmware to let OS know about the DPC event
-> and permit OS to perform error recovery when processing the EDR
-> notification. 
+Evan Green <evgreen@chromium.org> writes:
+> On Wed, Jan 22, 2020 at 9:28 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>> I suspect this *is* a problem because I think disabling MSI doesn't
+>> disable interrupts; it just means the device will interrupt using INTx
+>> instead of MSI.  And the driver is probably not prepared to handle
+>> INTx.
+>>
+>> PCIe r5.0, sec 7.7.1.2, seems relevant: "If MSI and MSI-X are both
+>> disabled, the Function requests servicing using INTx interrupts (if
+>> supported)."
 
-I want to clear up some of this description because this is a very
-confusing area and we should follow the spec carefully so we all
-understand each other.
+Disabling MSI is not an option. Masking yes, but MSI does not have
+mandatory masking. We already attempt masking on migration, which covers
+only MSI-X reliably, but not all MSI incarnations.
 
-> Also, as per PCI firmware specification r3.2 Downstream
-> Port Containment Related Enhancements ECN, sec 4.5.1, table 4-6, if DPC
-> is controlled by firmware (firmware first mode), it's responsible for
-> initializing Downstream Port Containment Extended Capability Structures
-> per firmware policy. 
+So I assume that problem happens on a MSI interrupt, right?
 
-The above is actually not what the ECN says.  What it does say is
-this:
+>> Maybe the IRQ guys have ideas about how to solve this?
 
-  If control of this feature [DPC configuration] was requested and
-  denied, firmware is responsible for initializing Downstream Port
-  Containment Extended Capability Structures per firmware policy.
+Maybe :)
 
-Neither the PCI Firmware Spec (r3.2) nor the ECN contains any
-reference to "firmware first".  As far as I can tell, "Firmware First"
-is defined by the ACPI spec, and the FIRMWARE_FIRST bit in various
-HEST entries (sec 18.3.2) is what tells us when a device is in
-firmware-first mode.
+> But don't we already do this in __pci_restore_msi_state():
+>         pci_intx_for_msi(dev, 0);
+>         pci_msi_set_enable(dev, 0);
+>         arch_restore_msi_irqs(dev);
+>
+> I'd think if there were a chance for a line-based interrupt to get in
+> and wedge itself, it would already be happening there.
 
-That's a really long way of saying that from a spec point of view, DPC
-being controlled by firmware does NOT imply anything about
-firmware-first mode.
+That's a completely different beast. It's used when resetting a device
+and for other stuff like virt state migration. That's not a model for
+affinity changes of a live device.
 
-> And, OS is permitted to read or write DPC Control
-> and Status registers of a port while processing an Error Disconnect
-> Recover (EDR) notification from firmware on that port.
-> 
-> Currently, if firmware controls DPC (firmware first mode), OS will not
-> create/enumerate DPC PCIe port services. But, if OS supports EDR
-> feature, then as mentioned in above spec references, it should permit
-> enumeration of DPC driver and also support handling ACPI EDR
-> notification. So as first step, allow dpc_probe() to continue even if
-> firmware first mode is enabled. Also add appropriate checks to ensure
-> device registers are not modified outside EDR notification window in
-> firmware first mode. This is a preparatory patch for adding EDR support.
-> 
-> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> Acked-by: Keith Busch <keith.busch@intel.com>
-> ---
->  drivers/pci/pcie/dpc.c | 74 ++++++++++++++++++++++++++++++++++--------
->  1 file changed, 61 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-> index e06f42f58d3d..c583a90fa90d 100644
-> --- a/drivers/pci/pcie/dpc.c
-> +++ b/drivers/pci/pcie/dpc.c
-> @@ -22,6 +22,7 @@ struct dpc_dev {
->  	u16			cap_pos;
->  	bool			rp_extensions;
->  	u8			rp_log_size;
-> +	bool			edr_enabled; /* EDR mode is supported */
+> One other way you could avoid torn MSI writes would be to ensure that
+> if you migrate IRQs across cores, you keep the same x86 vector number.
+> That way the address portion would be updated, and data doesn't
+> change, so there's no window. But that may not actually be feasible.
 
-This needs a better name, or perhaps it should be removed completely.
-EDR is not a mode that can be enabled or disabled.  The _OSC "EDR
-supported" bit tells the firmware whether the OS supports EDR
-notification, but there's no corresponding bit that tells the OS
-whether firmware will actually *send* those notifications.
+That's not possible simply because the x86 vector space is limited. If
+we would have to guarantee that then we'd end up with a max of ~220
+interrupts per system. Sufficient for your notebook, but the big iron
+people would be not amused.
 
-Also, EDR is an ACPI concept, and dpc.c is a generic driver not
-specific to ACPI, so we should try to avoid polluting it with
-ACPI-isms.
+The real critical path here is the CPU hotplug path.
 
->  };
->  
->  static const char * const rp_pio_error_string[] = {
-> @@ -69,6 +70,14 @@ void pci_save_dpc_state(struct pci_dev *dev)
->  	if (!dpc)
->  		return;
->  
-> +	/*
-> +	 * If DPC is controlled by firmware then save/restore tasks are also
-> +	 * controlled by firmware. So skip rest of the function if DPC is
-> +	 * controlled by firmware.
-> +	 */
-> +	if (dpc->edr_enabled)
-> +		return;
+For regular migration between two online CPUs we use the 'migrate when
+the irq is actually serviced ' mechanism. That might have the same issue
+on misdesigned devices which are firing the next interrupt before the
+one on the flight is serviced, but I haven't seen any reports with that
+symptom yet.
 
-I think this should be something like:
+But before I dig deeper into this, please provide the output of
 
-  if (!host->native_dpc)
-    return;
+'lscpci -vvv' and 'cat /proc/interrupts'
 
-That's what the spec says: if firmware does not grant control of DPC
-to the OS via _OSC, the OS may not read/write the DPC capability.
+Thanks,
 
-The usual situation would be that if firmware doesn't grant the OS
-permission to use DPC, we wouldn't use the dpc.c driver at all.
+        tglx
 
-But IIUC, the point of this EDR stuff is that we're adding a case
-where the OS doesn't have permission to use DPC, but we *do* want to
-use parts of dpc.c in limited cases while handling EDR notifications.
 
-I think you should probably take the DPC-related _OSC stuff from the
-last patch ("PCI/ACPI: Enable EDR support") and move it before this
-patch, so it *only* negotiates DPC ownership, per the ECN.  That would
-probably result in dpc.c being used only if _OSC grants DPC ownership
-to the OS.
-
-Then subsequent patches like this one would relax that slightly and
-allow dpc.c to be used even without DPC ownership, but it would only
-touch the DPC capability in limited cases.
-
->  	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_DPC);
->  	if (!save_state)
->  		return;
-> @@ -90,6 +99,14 @@ void pci_restore_dpc_state(struct pci_dev *dev)
->  	if (!dpc)
->  		return;
->  
-> +	/*
-> +	 * If DPC is controlled by firmware then save/restore tasks are also
-> +	 * controlled by firmware. So skip rest of the function if DPC is
-> +	 * controlled by firmware.
-> +	 */
-> +	if (dpc->edr_enabled)
-> +		return;
-> +
->  	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_DPC);
->  	if (!save_state)
->  		return;
-> @@ -291,24 +308,48 @@ static int dpc_probe(struct pcie_device *dev)
->  	int status;
->  	u16 ctl, cap;
->  
-> -	if (pcie_aer_get_firmware_first(pdev) && !pcie_ports_dpc_native)
-> -		return -ENOTSUPP;
-> -
->  	dpc = devm_kzalloc(device, sizeof(*dpc), GFP_KERNEL);
->  	if (!dpc)
->  		return -ENOMEM;
->  
->  	dpc->cap_pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_DPC);
->  	dpc->dev = dev;
-> +
-> +	/*
-> +	 * As per PCIe r5.0, sec 6.2.10, implementation note titled
-> +	 * "Determination of DPC Control", to avoid conflicts over whether
-> +	 * platform firmware or the operating system have control of DPC,
-> +	 * it is recommended that platform firmware and operating systems
-> +	 * always link the control of DPC to the control of Advanced Error
-> +	 * Reporting.
-> +	 *
-> +	 * So use AER FF mode check API pcie_aer_get_firmware_first() to decide
-> +	 * whether DPC is controlled by software or firmware. 
-
-AFAICT, this is not what the spec says.  Firmware-first is not what
-tells us whether DPC is controlled by firmware or the OS.  For ACPI
-systems, _OSC tells us whether the OS is allowed control of DPC.
-
-> +	 * And EDR support
-> +	 * can only be enabled if DPC is controlled by firmware.
-> +	 */
-> +
-> +	if (pcie_aer_get_firmware_first(pdev) && !pcie_ports_dpc_native)
-> +		dpc->edr_enabled = 1;
-
-> +	/*
-> +	 * If DPC is handled in firmware and ACPI support is not enabled
-> +	 * in OS, skip probe and return error.
-> +	 */
-> +	if (dpc->edr_enabled && !IS_ENABLED(CONFIG_ACPI))
-> +		return -ENODEV;
-> +
->  	set_service_data(dev, dpc);
->  
-> -	status = devm_request_threaded_irq(device, dev->irq, dpc_irq,
-> -					   dpc_handler, IRQF_SHARED,
-> -					   "pcie-dpc", dpc);
-> -	if (status) {
-> -		pci_warn(pdev, "request IRQ%d failed: %d\n", dev->irq,
-> -			 status);
-> -		return status;
-> +	/* Register interrupt handler only if OS controls DPC */
-> +	if (!dpc->edr_enabled) {
-> +		status = devm_request_threaded_irq(device, dev->irq, dpc_irq,
-> +						   dpc_handler, IRQF_SHARED,
-> +						   "pcie-dpc", dpc);
-> +		if (status) {
-> +			pci_warn(pdev, "request IRQ%d failed: %d\n", dev->irq,
-> +				 status);
-> +			return status;
-> +		}
->  	}
->  
->  	pci_read_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CAP, &cap);
-> @@ -323,9 +364,12 @@ static int dpc_probe(struct pcie_device *dev)
->  			dpc->rp_log_size = 0;
->  		}
->  	}
-> -
-> -	ctl = (ctl & 0xfff4) | PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN;
-> -	pci_write_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL, ctl);
-> +	if (!dpc->edr_enabled) {
-> +		ctl = (ctl & 0xfff4) |
-> +			(PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN);
-> +		pci_write_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL,
-> +				      ctl);
-> +	}
->  
->  	pci_info(pdev, "error containment capabilities: Int Msg #%d, RPExt%c PoisonedTLP%c SwTrigger%c RP PIO Log %d, DL_ActiveErr%c\n",
->  		 cap & PCI_EXP_DPC_IRQ, FLAG(cap, PCI_EXP_DPC_CAP_RP_EXT),
-> @@ -343,6 +387,10 @@ static void dpc_remove(struct pcie_device *dev)
->  	struct pci_dev *pdev = dev->port;
->  	u16 ctl;
->  
-> +	/* Skip updating DPC registers if DPC is controlled by firmware */
-> +	if (dpc->edr_enabled)
-> +		return;
-> +
->  	pci_read_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL, &ctl);
->  	ctl &= ~(PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN);
->  	pci_write_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL, ctl);
-> -- 
-> 2.21.0
-> 
