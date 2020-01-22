@@ -2,62 +2,115 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AD5D3145A5A
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Jan 2020 17:56:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 91571145AD5
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Jan 2020 18:28:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727847AbgAVQ4W (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Jan 2020 11:56:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38632 "EHLO mail.kernel.org"
+        id S1728901AbgAVR2S (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Jan 2020 12:28:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725836AbgAVQ4W (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 22 Jan 2020 11:56:22 -0500
-Received: from redsun51.ssa.fujisawa.hgst.com (unknown [199.255.47.7])
+        id S1725883AbgAVR2S (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 22 Jan 2020 12:28:18 -0500
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B76B321569;
-        Wed, 22 Jan 2020 16:56:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 518C52465A;
+        Wed, 22 Jan 2020 17:28:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579712182;
-        bh=g8BjkDQDC30b7DKasbB08kfebxsj4k8XiUA4G5pHC3Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nnUW1fE8OXhV0av6FW7Ow9kKcf4rGHzbm2nyMgYOAOoFNHDrocAndE7jh9EWr2pdq
-         G7lAonmVT+Xcl2y6Xx3nAUPTtkzkTRAXR3Lo6T9y70nMvTXREebvRWAXVImSYLco9n
-         sK9xUHar2FrV7OiW65Ci0MZrmrWTvjts6avXClt4=
-Date:   Thu, 23 Jan 2020 01:56:14 +0900
-From:   Keith Busch <kbusch@kernel.org>
-To:     Jon Derrick <jonathan.derrick@intel.com>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        iommu@lists.linux-foundation.org, Christoph Hellwig <hch@lst.de>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>
-Subject: Re: [PATCH v5 6/7] PCI: vmd: Stop overriding dma_map_ops
-Message-ID: <20200122165614.GA6571@redsun51.ssa.fujisawa.hgst.com>
-References: <1579613871-301529-1-git-send-email-jonathan.derrick@intel.com>
- <1579613871-301529-7-git-send-email-jonathan.derrick@intel.com>
+        s=default; t=1579714097;
+        bh=v45//aLOIelbSIblxH0H5quiYA4SDipsGzDyo26vKWw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=uuEbZODdAfY2orhNAv1udC3ffIXt2OSXDhzucSgEDrIEVsOGW2ar5/mExXmBvtcl9
+         FCJF7HS3xS/Sn4RXa7YOCvDqgFudCy37FqmpT22JikWhkUfQAJn6iBdsqRFj1uUnoI
+         iu+HjBt5BNh2H9K+uhzxkTq76DJmq91hPN7+DJA8=
+Date:   Wed, 22 Jan 2020 11:28:16 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Evan Green <evgreen@chromium.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>, Christoph Hellwig <hch@lst.de>,
+        Rajat Jain <rajatxjain@gmail.com>
+Subject: Re: [PATCH] PCI/MSI: Avoid torn updates to MSI pairs
+Message-ID: <20200122172816.GA139285@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1579613871-301529-7-git-send-email-jonathan.derrick@intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20200116133102.1.I9c7e72144ef639cc135ea33ef332852a6b33730f@changeid>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 06:37:50AM -0700, Jon Derrick wrote:
-> Devices on the VMD domain use the VMD endpoint's requester ID and have
-> been relying on the VMD endpoint's DMA operations. The problem with this
-> was that VMD domain devices would use the VMD endpoint's attributes when
-> doing DMA and IOMMU mapping. We can be smarter about this by only using
-> the VMD endpoint when mapping and providing the correct child device's
-> attributes during DMA operations.
-> 
-> This patch removes the dma_map_ops redirect.
-> 
-> Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
+[+cc Thomas, Marc, Christoph, Rajat]
 
-Looks good.
+On Thu, Jan 16, 2020 at 01:31:28PM -0800, Evan Green wrote:
+> __pci_write_msi_msg() updates three registers in the device: address
+> high, address low, and data. On x86 systems, address low contains
+> CPU targeting info, and data contains the vector. The order of writes
+> is address, then data.
+> 
+> This is problematic if an interrupt comes in after address has
+> been written, but before data is updated, and the SMP affinity of
+> the interrupt is changing. In this case, the interrupt targets the
+> wrong vector on the new CPU.
+> 
+> This case is pretty easy to stumble into using xhci and CPU hotplugging.
+> Create a script that targets interrupts at a set of cores and then
+> offlines those cores. Put some stress on USB, and then watch xhci lose
+> an interrupt and die.
+> 
+> Avoid this by disabling MSIs during the update.
+> 
+> Signed-off-by: Evan Green <evgreen@chromium.org>
+> ---
+> 
+> 
+> Bjorn,
+> I was unsure whether disabling MSIs temporarily is actually an okay
+> thing to do. I considered using the mask bit, but got the impression
+> that not all devices support the mask bit. Let me know if this going to
+> cause problems or there's a better way. I can include the repro
+> script I used to cause mayhem if needed.
 
-Reviewed-by: Keith Busch <kbusch@kernel.org>
+I suspect this *is* a problem because I think disabling MSI doesn't
+disable interrupts; it just means the device will interrupt using INTx
+instead of MSI.  And the driver is probably not prepared to handle
+INTx.
+
+PCIe r5.0, sec 7.7.1.2, seems relevant: "If MSI and MSI-X are both
+disabled, the Function requests servicing using INTx interrupts (if
+supported)."
+
+Maybe the IRQ guys have ideas about how to solve this?
+
+> ---
+>  drivers/pci/msi.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+> index 6b43a5455c7af..97856ef862d68 100644
+> --- a/drivers/pci/msi.c
+> +++ b/drivers/pci/msi.c
+> @@ -328,7 +328,7 @@ void __pci_write_msi_msg(struct msi_desc *entry, struct msi_msg *msg)
+>  		u16 msgctl;
+>  
+>  		pci_read_config_word(dev, pos + PCI_MSI_FLAGS, &msgctl);
+> -		msgctl &= ~PCI_MSI_FLAGS_QSIZE;
+> +		msgctl &= ~(PCI_MSI_FLAGS_QSIZE | PCI_MSI_FLAGS_ENABLE);
+>  		msgctl |= entry->msi_attrib.multiple << 4;
+>  		pci_write_config_word(dev, pos + PCI_MSI_FLAGS, msgctl);
+>  
+> @@ -343,6 +343,9 @@ void __pci_write_msi_msg(struct msi_desc *entry, struct msi_msg *msg)
+>  			pci_write_config_word(dev, pos + PCI_MSI_DATA_32,
+>  					      msg->data);
+>  		}
+> +
+> +		msgctl |= PCI_MSI_FLAGS_ENABLE;
+> +		pci_write_config_word(dev, pos + PCI_MSI_FLAGS, msgctl);
+>  	}
+>  
+>  skip:
+> -- 
+> 2.24.1
+> 
