@@ -2,87 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E8AF01473CD
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Jan 2020 23:26:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 31F0E147442
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2020 00:00:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbgAWWZ6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 23 Jan 2020 17:25:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60706 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729043AbgAWWZ6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 23 Jan 2020 17:25:58 -0500
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8EBB421569;
-        Thu, 23 Jan 2020 22:25:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579818358;
-        bh=LpYPT2p3EzPLIgDHUXsIyOM5Yx2HubUkTJfa982jVdA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=p1GgAvrClknGWFrr/ONizGu5Hz49PZ5zadLpy91/NN4A+6pLvQ10TVCcauE1UlzNN
-         Ejo9b1XF7sZ3hhQK7sDCpVgjsjxy46YeatAFA8qW1FL1Uxt+7XqD59nfGfyb0m2nUm
-         vNUg8gfoim+KQvENc9ndfoP7IIoIinOXFNL3iMU0=
-Date:   Thu, 23 Jan 2020 16:25:55 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Dongdong Liu <liudongdong3@huawei.com>
-Cc:     keith.busch@intel.com, linux-pci@vger.kernel.org,
-        linuxarm@huawei.com
-Subject: Re: [PATCH] PCI/AER: Fix the uninitialized aer_fifo
-Message-ID: <20200123222555.GA151102@google.com>
+        id S1729596AbgAWXAH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 Jan 2020 18:00:07 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:46041 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729635AbgAWXAH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Jan 2020 18:00:07 -0500
+Received: by mail-lj1-f195.google.com with SMTP id j26so181592ljc.12
+        for <linux-pci@vger.kernel.org>; Thu, 23 Jan 2020 15:00:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nS7ocb5jumTWRAIkSgB97xnkdSH5hp40IMpcRwtHcbY=;
+        b=QHKBwjvIIEDpjKu390N/gc1f9Q6gVEAklPmkY+Ok83BmjLFPgsYimIPaB7w1N5KOuB
+         XmXHjgtDrWaV/cu4fniFp9KuQKOAKHB3BEC222MdEkfvQhSskR8IVqks1DjwMdbuZaG6
+         5ceBFph6PeI4oRJXdzPwLHMoChv0YMYyEP4vE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nS7ocb5jumTWRAIkSgB97xnkdSH5hp40IMpcRwtHcbY=;
+        b=ii5bmYaBUJRvKFiSnhlPEhW+rVdeFeO/gYs0uGf0eMLIXJI22IIQruQ8JtOCP8q820
+         bn+S7sSyRQgClBsMKOIhyvpK+IN+XVPw7Y2KG/zXqeBHG3hZGz81qZ30HCyW0t86Zvip
+         LgBBRg5W7g6SOdiJEmGUkLhRX3xLd7Uc8ENRROwXmZUP2ebjJ+sDXiiAZfR/0tYqAMc7
+         Pcm/VKjWXv/XGJnIk/wu3KWD60AatoUDL4t1N8mr5Z4Fel1oJlyaBF/OZ6/lCiyKPtwP
+         uODIMfu/Pr8jiTfPTDdnfbOj0Sj8omzA4vHXTt6Z7WC6axd9DMCR5b8CojyCseC11Moj
+         FRkQ==
+X-Gm-Message-State: APjAAAU2BChk7cwqpkq3JaXF4snbzh5YcAZNK0t+ZzxTOXHQ6w6vZZ7A
+        J0jEL4zsKpj7kJn5sWijQTqsJDapee8=
+X-Google-Smtp-Source: APXvYqx/v9x9mmQRgsgepSA+t/eRcDdK+1KDz7V61S2vaPMIuQ8dktv8vvnxgsrpOBlrA8WbJQJNHw==
+X-Received: by 2002:a2e:86c4:: with SMTP id n4mr404437ljj.97.1579820403940;
+        Thu, 23 Jan 2020 15:00:03 -0800 (PST)
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
+        by smtp.gmail.com with ESMTPSA id b17sm2001365ljd.5.2020.01.23.15.00.02
+        for <linux-pci@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Jan 2020 15:00:03 -0800 (PST)
+Received: by mail-lf1-f50.google.com with SMTP id r14so3600223lfm.5
+        for <linux-pci@vger.kernel.org>; Thu, 23 Jan 2020 15:00:02 -0800 (PST)
+X-Received: by 2002:a19:e011:: with SMTP id x17mr44398lfg.59.1579820402396;
+ Thu, 23 Jan 2020 15:00:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1579767991-103898-1-git-send-email-liudongdong3@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200117162444.v2.1.I9c7e72144ef639cc135ea33ef332852a6b33730f@changeid>
+ <CACK8Z6Ft95qj4e_fsA32r_bcz2SsHOW1xxqZJt3_DBAJw=NMGA@mail.gmail.com>
+ <CAE=gft6fKQWExW-=xjZGzXs30XohfpA5SKggvL2WtYXAHmzMew@mail.gmail.com>
+ <87y2tytv5i.fsf@nanos.tec.linutronix.de> <87eevqkpgn.fsf@nanos.tec.linutronix.de>
+ <CAE=gft6YiM5S1A7iJYJTd5zmaAa8=nhLE3B94JtWa+XW-qVSqQ@mail.gmail.com>
+In-Reply-To: <CAE=gft6YiM5S1A7iJYJTd5zmaAa8=nhLE3B94JtWa+XW-qVSqQ@mail.gmail.com>
+From:   Evan Green <evgreen@chromium.org>
+Date:   Thu, 23 Jan 2020 14:59:25 -0800
+X-Gmail-Original-Message-ID: <CAE=gft5xta4XCJtctWe=R3w=kVr598JCbk9VSRue04nzKAk3CQ@mail.gmail.com>
+Message-ID: <CAE=gft5xta4XCJtctWe=R3w=kVr598JCbk9VSRue04nzKAk3CQ@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI/MSI: Avoid torn updates to MSI pairs
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Rajat Jain <rajatja@google.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 04:26:31PM +0800, Dongdong Liu wrote:
-> Current code do not call INIT_KFIFO() to init aer_fifo. This will lead to
-> kfifo_put() sometimes return 0. This means the fifo was full. In fact, it
-> is not. 
+On Thu, Jan 23, 2020 at 12:59 PM Evan Green <evgreen@chromium.org> wrote:
+>
+> On Thu, Jan 23, 2020 at 10:17 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >
+> > Evan,
+> >
+> > Thomas Gleixner <tglx@linutronix.de> writes:
+> > > This is not yet debugged fully and as this is happening on MSI-X I'm not
+> > > really convinced yet that your 'torn write' theory holds.
+> >
+> > can you please apply the debug patch below and run your test. When the
+> > failure happens, stop the tracer and collect the trace.
+> >
+> > Another question. Did you ever try to change the affinity of that
+> > interrupt without hotplug rapidly while the device makes traffic? If
+> > not, it would be interesting whether this leads to a failure as well.
+>
+> Thanks for the patch. Looks pretty familiar :)
+> I ran into issues where trace_printks on offlined cores seem to
+> disappear. I even made sure the cores were back online when I
+> collected the trace. So your logs might not be useful. Known issue
+> with the tracer?
+>
+> I figured I'd share my own debug chicken scratch, in case you could
+> glean anything from it. The LOG entries print out timestamps (divide
+> by 1000000) that you can match up back to earlier in the log (ie so
+> the last XHCI MSI change occurred at 74.032501, the last interrupt
+> came in at 74.032405). Forgive the mess.
+>
+> I also tried changing the affinity rapidly without CPU hotplug, but
+> didn't see the issue, at least not in the few minutes I waited
+> (normally repros easily within 1 minute). An interesting datapoint.
 
-It's definitely a problem that we don't call INIT_KFIFO().  But I'm
-curious about why this would only be a problem "sometimes".  The kfifo
-is allocated with devm_kzalloc(), so it should be zero-filled and I
-would think it would fail consistently, every time.  But I guess not?
-
-> It is easy to reproduce the problem by using aer_inject.
-
-I assume maybe you mean "aer-inject" (not "aer_inject"), from
-https://git.kernel.org/pub/scm/linux/kernel/git/gong.chen/aer-inject.git/ ?
-At least, that's what's mentioned in Documentation/PCI/pcieaer-howto.rst.
-
-> aer_inject -s :82:00.0 multiple-corr-nonfatal
-> The content of multiple-corr-nonfatal file is as below.
-> AER
-> COR RCVR
-> HL 0 1 2 3
-> AER
-> UNCOR POISON_TLP
-> HL 4 5 6 7
-> 
-> Fixes: 27c1ce8bbed7 ("PCI/AER: Use kfifo for tracking events instead of reimplementing it")
-> Signed-off-by: Dongdong Liu <liudongdong3@huawei.com>
-> ---
->  drivers/pci/pcie/aer.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 1ca86f2..4a818b0 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -1445,6 +1445,7 @@ static int aer_probe(struct pcie_device *dev)
->  		return -ENOMEM;
->  
->  	rpc->rpd = port;
-> +	INIT_KFIFO(rpc->aer_fifo);
->  	set_service_data(dev, rpc);
->  
->  	status = devm_request_threaded_irq(device, dev->irq, aer_irq, aer_isr,
-> -- 
-> 1.9.1
-> 
+One additional datapoint. The intel guys suggested enabling
+CONFIG_IRQ_REMAP, which does seem to eliminate the issue for me. I'm
+still hoping there's a smaller fix so I don't have to add all that in.
+-Evan
