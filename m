@@ -2,159 +2,154 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DF5D146DC7
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Jan 2020 17:08:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BAABF14701D
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Jan 2020 18:56:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728911AbgAWQIJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 23 Jan 2020 11:08:09 -0500
-Received: from foss.arm.com ([217.140.110.172]:41568 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726231AbgAWQII (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 23 Jan 2020 11:08:08 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B471B1007;
-        Thu, 23 Jan 2020 08:08:07 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 801503F881;
-        Thu, 23 Jan 2020 08:08:06 -0800 (PST)
-Date:   Thu, 23 Jan 2020 16:08:01 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Jon Derrick <jonathan.derrick@intel.com>,
-        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Christoph Hellwig <hch@lst.de>,
-        Keith Busch <kbusch@kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>
-Subject: Re: [PATCH v5 3/7] PCI: Introduce pci_real_dma_dev()
-Message-ID: <20200123160800.GA7302@e121166-lin.cambridge.arm.com>
-References: <1579613871-301529-4-git-send-email-jonathan.derrick@intel.com>
- <20200122211259.GA19172@google.com>
+        id S1728767AbgAWR4U (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 Jan 2020 12:56:20 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:34394 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728731AbgAWR4U (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Jan 2020 12:56:20 -0500
+Received: by mail-lf1-f66.google.com with SMTP id l18so3028604lfc.1
+        for <linux-pci@vger.kernel.org>; Thu, 23 Jan 2020 09:56:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tbUt6go+kLuXKXQ0VzJ6Mhyl0zSlPzgGsNDFNiXJt7g=;
+        b=NK4+dXDpNBbzPh3b80IEDt5inscQTCvjYG7+GPJ5WUbiU+W/8YhHNLVwGhxs57FIS4
+         fK7JN1NswFF2h0zIXnkR7Xk+qgzuLlEZVN6S32B+6w20Ygvnm09GYcbJgAJZKjeKpTGc
+         792wHEdxRwurEfdqWJVhjVFcefHoQJugA+IyI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tbUt6go+kLuXKXQ0VzJ6Mhyl0zSlPzgGsNDFNiXJt7g=;
+        b=Y16GEYoWIFxrJaw9MufTYdRsaRUhfiJfWSqmmYGV4Pwf7VDplezU+s9eaWiJY0unJV
+         kiFN89IgmkbpCXiCQkGm5PI9vsSX9ZCvYac2klR9wl0DzHzwLjBCiuPkhu/O8vhph6f8
+         KbR3Y7p7bZwa4vbFkf5x6hiUXypLBpYxYCvyJykSc1a4EzkOTvqjLnTPa05agFM8WNjO
+         A4Wxtf8tGPW3u9LHe4B17PbJ7wTq2721xgsnAnBdotrqTpXv1lElO+InJUX+Opm9yZ03
+         TWdq1Mls4BWxnkl9LZAcft6Qau5SsN1M1lCR6nWMvhEn1ttiSLXSoNDEz9eCyixmnYZs
+         cVYA==
+X-Gm-Message-State: APjAAAX0uVfyT0VSgsd70tFumA5HmSV8W1PLYh3YbWWjA0IevVZ8wnAM
+        hYv8drQJnY0rpVPzuZC4rotIQSB8ufM=
+X-Google-Smtp-Source: APXvYqxfnraROHGiApdKE3Hkgtf8DbEllKN1kHwY1xuw4mb5l1PPseM0uVIghNZE1r8nyJWUT9v+kQ==
+X-Received: by 2002:a19:6d13:: with SMTP id i19mr5171798lfc.6.1579802177472;
+        Thu, 23 Jan 2020 09:56:17 -0800 (PST)
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
+        by smtp.gmail.com with ESMTPSA id i4sm1640602ljg.102.2020.01.23.09.56.16
+        for <linux-pci@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Jan 2020 09:56:16 -0800 (PST)
+Received: by mail-lj1-f181.google.com with SMTP id h23so4557542ljc.8
+        for <linux-pci@vger.kernel.org>; Thu, 23 Jan 2020 09:56:16 -0800 (PST)
+X-Received: by 2002:a2e:b017:: with SMTP id y23mr24733117ljk.229.1579802175831;
+ Thu, 23 Jan 2020 09:56:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200122211259.GA19172@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200116133102.1.I9c7e72144ef639cc135ea33ef332852a6b33730f@changeid>
+ <20200122172816.GA139285@google.com> <CAE=gft6hvO7G2OrxFGXeSDctz-21ryiu8JSBWT0g2fRFss-pxA@mail.gmail.com>
+ <875zh3ukoy.fsf@nanos.tec.linutronix.de> <CAE=gft7ukQOxHmJT_tkWzA3u2cecmV0Jiq-ukAu-1OR+sPnTtg@mail.gmail.com>
+ <871rrqva0t.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <871rrqva0t.fsf@nanos.tec.linutronix.de>
+From:   Evan Green <evgreen@chromium.org>
+Date:   Thu, 23 Jan 2020 09:55:39 -0800
+X-Gmail-Original-Message-ID: <CAE=gft77xmkc6-4+h3WAp_4C7ra8XKSxcsqrVkBrYgXE0JPeSw@mail.gmail.com>
+Message-ID: <CAE=gft77xmkc6-4+h3WAp_4C7ra8XKSxcsqrVkBrYgXE0JPeSw@mail.gmail.com>
+Subject: Re: [PATCH] PCI/MSI: Avoid torn updates to MSI pairs
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Marc Zyngier <maz@kernel.org>, Christoph Hellwig <hch@lst.de>,
+        Rajat Jain <rajatxjain@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 03:12:59PM -0600, Bjorn Helgaas wrote:
-> On Tue, Jan 21, 2020 at 06:37:47AM -0700, Jon Derrick wrote:
-> > The current DMA alias implementation requires the aliased device be on
-> > the same PCI bus as the requester ID. This introduces an arch-specific
-> > mechanism to point to another PCI device when doing mapping and
-> > PCI DMA alias search. The default case returns the actual device.
-> > 
-> > CC: Christoph Hellwig <hch@lst.de>
-> > Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
-> 
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> Looks like a nice cleanup to me.
-> 
-> Lorenzo, let me know if you want me to take this.
+On Thu, Jan 23, 2020 at 12:42 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Evan Green <evgreen@chromium.org> writes:
+> > On Wed, Jan 22, 2020 at 3:37 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >> > One other way you could avoid torn MSI writes would be to ensure that
+> >> > if you migrate IRQs across cores, you keep the same x86 vector number.
+> >> > That way the address portion would be updated, and data doesn't
+> >> > change, so there's no window. But that may not actually be feasible.
+> >>
+> >> That's not possible simply because the x86 vector space is limited. If
+> >> we would have to guarantee that then we'd end up with a max of ~220
+> >> interrupts per system. Sufficient for your notebook, but the big iron
+> >> people would be not amused.
+> >
+> > Right, that occurred to me as well. The actual requirement isn't quite
+> > as restrictive. What you really need is the old vector to be
+> > registered on both the old CPU and the new CPU. Then once the
+> > interrupt is confirmed to have moved we could release both the old
+> > vector both CPUs, leaving only the new vector on the new CPU.
+>
+> Sure, and how can you guarantee that without reserving the vector on all
+> CPUs in the first place? If you don't do that then if the vector is not
+> available affinity setting would fail every so often and it would pretty
+> much prevent hotplug if a to be migrated vector is not available on at
+> least one online CPU.
+>
+> > In that world some SMP affinity transitions might fail, which is a
+> > bummer. To avoid that, you could first migrate to a vector that's
+> > available on both the source and destination CPUs, keeping affinity
+> > the same. Then change affinity in a separate step.
+>
+> Good luck with doing that at the end of the hotplug routine where the
+> CPU is about to vanish.
+>
+> > Or alternatively, you could permanently designate a "transit" vector.
+> > If an interrupt fires on this vector, then we call all ISRs currently
+> > in transit between CPUs. You might end up calling ISRs that didn't
+> > actually need service, but at least that's better than missing edges.
+>
+> I don't think we need that. While walking the dogs I thought about
+> invoking a force migrated interrupt on the target CPU, but haven't
+> thought it through yet.
 
-Hi Bjorn,
+Yeah, I think the Intel folks did that in some tree of theirs too.
 
-I think it makes sense for you to take the series given that
-it is mostly core/x86 changes. FWIW I Acked the relevant patch
-(6) even though Jon forgot to carry it to v5.
+>
+> >> 'lscpci -vvv' and 'cat /proc/interrupts'
+> >
+> > Here it is:
+> > https://pastebin.com/YyxBUvQ2
+>
+> Hrm:
+>
+>         Capabilities: [80] MSI-X: Enable+ Count=16 Masked-
+>
+> So this is weird. We mask it before moving it, so the tear issue should
+> not happen on MSI-X. So the tearing might be just a red herring.
 
-Thanks,
-Lorenzo
+Mmm... sorry what? This is the complete entry for xhci:
 
-> >  arch/x86/pci/common.c | 10 ++++++++++
-> >  drivers/pci/pci.c     | 19 ++++++++++++++++++-
-> >  drivers/pci/search.c  |  6 ++++++
-> >  include/linux/pci.h   |  1 +
-> >  4 files changed, 35 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/x86/pci/common.c b/arch/x86/pci/common.c
-> > index 1e59df0..fe21a5c 100644
-> > --- a/arch/x86/pci/common.c
-> > +++ b/arch/x86/pci/common.c
-> > @@ -736,3 +736,13 @@ int pci_ext_cfg_avail(void)
-> >  	else
-> >  		return 0;
-> >  }
-> > +
-> > +#if IS_ENABLED(CONFIG_VMD)
-> > +struct pci_dev *pci_real_dma_dev(struct pci_dev *dev)
-> > +{
-> > +	if (is_vmd(dev->bus))
-> > +		return to_pci_sysdata(dev->bus)->vmd_dev;
-> > +
-> > +	return dev;
-> > +}
-> > +#endif
-> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > index 581b177..36d24f2 100644
-> > --- a/drivers/pci/pci.c
-> > +++ b/drivers/pci/pci.c
-> > @@ -6048,7 +6048,9 @@ bool pci_devs_are_dma_aliases(struct pci_dev *dev1, struct pci_dev *dev2)
-> >  	return (dev1->dma_alias_mask &&
-> >  		test_bit(dev2->devfn, dev1->dma_alias_mask)) ||
-> >  	       (dev2->dma_alias_mask &&
-> > -		test_bit(dev1->devfn, dev2->dma_alias_mask));
-> > +		test_bit(dev1->devfn, dev2->dma_alias_mask)) ||
-> > +	       pci_real_dma_dev(dev1) == dev2 ||
-> > +	       pci_real_dma_dev(dev2) == dev1;
-> >  }
-> >  
-> >  bool pci_device_is_present(struct pci_dev *pdev)
-> > @@ -6072,6 +6074,21 @@ void pci_ignore_hotplug(struct pci_dev *dev)
-> >  }
-> >  EXPORT_SYMBOL_GPL(pci_ignore_hotplug);
-> >  
-> > +/**
-> > + * pci_real_dma_dev - Get PCI DMA device for PCI device
-> > + * @dev: the PCI device that may have a PCI DMA alias
-> > + *
-> > + * Permits the platform to provide architecture-specific functionality to
-> > + * devices needing to alias DMA to another PCI device on another PCI bus. If
-> > + * the PCI device is on the same bus, it is recommended to use
-> > + * pci_add_dma_alias(). This is the default implementation. Architecture
-> > + * implementations can override this.
-> > + */
-> > +struct pci_dev __weak *pci_real_dma_dev(struct pci_dev *dev)
-> > +{
-> > +	return dev;
-> > +}
-> > +
-> >  resource_size_t __weak pcibios_default_alignment(void)
-> >  {
-> >  	return 0;
-> > diff --git a/drivers/pci/search.c b/drivers/pci/search.c
-> > index e4dbdef..2061672 100644
-> > --- a/drivers/pci/search.c
-> > +++ b/drivers/pci/search.c
-> > @@ -32,6 +32,12 @@ int pci_for_each_dma_alias(struct pci_dev *pdev,
-> >  	struct pci_bus *bus;
-> >  	int ret;
-> >  
-> > +	/*
-> > +	 * The device may have an explicit alias requester ID for DMA where the
-> > +	 * requester is on another PCI bus.
-> > +	 */
-> > +	pdev = pci_real_dma_dev(pdev);
-> >  	ret = fn(pdev, pci_dev_id(pdev), data);
-> >  	if (ret)
-> >  		return ret;
-> > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > index 930fab2..3840a54 100644
-> > --- a/include/linux/pci.h
-> > +++ b/include/linux/pci.h
-> > @@ -1202,6 +1202,7 @@ u32 pcie_bandwidth_available(struct pci_dev *dev, struct pci_dev **limiting_dev,
-> >  int pci_select_bars(struct pci_dev *dev, unsigned long flags);
-> >  bool pci_device_is_present(struct pci_dev *pdev);
-> >  void pci_ignore_hotplug(struct pci_dev *dev);
-> > +struct pci_dev *pci_real_dma_dev(struct pci_dev *dev);
-> >  
-> >  int __printf(6, 7) pci_request_irq(struct pci_dev *dev, unsigned int nr,
-> >  		irq_handler_t handler, irq_handler_t thread_fn, void *dev_id,
-> > -- 
-> > 1.8.3.1
-> > 
+00:14.0 USB controller: Intel Corporation Device 02ed (prog-if 30 [XHCI])
+        Subsystem: Intel Corporation Device 7270
+        Control: I/O- Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop-
+ParErr- Stepping- SERR- FastB2B- DisINTx+
+        Status: Cap+ 66MHz- UDF- FastB2B+ ParErr- DEVSEL=medium
+>TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+        Interrupt: pin A routed to IRQ 124
+        Region 0: Memory at d1200000 (64-bit, non-prefetchable) [size=64K]
+        Capabilities: [70] Power Management version 2
+                Flags: PMEClk- DSI- D1- D2- AuxCurrent=375mA
+PME(D0-,D1-,D2-,D3hot+,D3cold+)
+                Status: D3 NoSoftRst+ PME-Enable+ DSel=0 DScale=0 PME-
+        Capabilities: [80] MSI: Enable+ Count=1/8 Maskable- 64bit+
+                Address: 00000000fee10004  Data: 402a
+        Capabilities: [90] Vendor Specific Information: Len=14 <?>
+        Kernel driver in use: xhci_hcd
+
+
+>
+> Let me stare into the code a bit.
+
+Thanks, I appreciate the help.
+
+-Evan
