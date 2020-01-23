@@ -2,20 +2,20 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 449641474B1
+	by mail.lfdr.de (Postfix) with ESMTP id C1B971474B2
 	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2020 00:22:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729907AbgAWXWd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 23 Jan 2020 18:22:33 -0500
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:45429 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729232AbgAWXWc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Jan 2020 18:22:32 -0500
+        id S1729959AbgAWXWg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 Jan 2020 18:22:36 -0500
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:38391 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729949AbgAWXWg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Jan 2020 18:22:36 -0500
 X-Originating-IP: 88.190.179.123
 Received: from localhost (unknown [88.190.179.123])
         (Authenticated sender: repk@triplefau.lt)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 6C659FF802;
-        Thu, 23 Jan 2020 23:22:28 +0000 (UTC)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 1A621240002;
+        Thu, 23 Jan 2020 23:22:31 +0000 (UTC)
 From:   Remi Pommarel <repk@triplefau.lt>
 To:     Kishon Vijay Abraham I <kishon@ti.com>,
         Yue Wang <yue.wang@Amlogic.com>,
@@ -29,9 +29,9 @@ Cc:     Jerome Brunet <jbrunet@baylibre.com>,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
         Remi Pommarel <repk@triplefau.lt>
-Subject: [PATCH v6 5/7] phy: amlogic: Add Amlogic AXG MIPI/PCIE analog PHY Driver
-Date:   Fri, 24 Jan 2020 00:29:41 +0100
-Message-Id: <20200123232943.10229-6-repk@triplefau.lt>
+Subject: [PATCH v6 6/7] phy: amlogic: Add Amlogic AXG PCIE PHY Driver
+Date:   Fri, 24 Jan 2020 00:29:42 +0100
+Message-Id: <20200123232943.10229-7-repk@triplefau.lt>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200123232943.10229-1-repk@triplefau.lt>
 References: <20200123232943.10229-1-repk@triplefau.lt>
@@ -42,197 +42,190 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This adds support for the MIPI analog PHY which is also used for PCIE
-found in the Amlogic AXG SoC Family.
+This adds support for the PCI PHY found in the Amlogic AXG SoC Family.
+This will allow to mutualize code in pci-meson.c between AXG and G12A
+SoC.
 
-MIPI or PCIE selection is done by the #phy-cells, making the mode
-static and exclusive.
-
-For now only PCIE fonctionality is supported.
-
-This PHY will be used to replace the mipi_enable clock gating logic
-which was mistakenly added in the clock subsystem. This also activate
-a non documented band gap bit in those registers that allows reliable
-PCIE clock signal generation on AXG platforms.
+This PHY also uses and chains an analog PHY, which on AXG platform
+is needed to have reliable PCIe communication.
 
 Signed-off-by: Remi Pommarel <repk@triplefau.lt>
 ---
- drivers/phy/amlogic/Kconfig                   |  11 +
- drivers/phy/amlogic/Makefile                  |  11 +-
- .../amlogic/phy-meson-axg-mipi-pcie-analog.c  | 188 ++++++++++++++++++
- 3 files changed, 205 insertions(+), 5 deletions(-)
- create mode 100644 drivers/phy/amlogic/phy-meson-axg-mipi-pcie-analog.c
+ drivers/phy/amlogic/Kconfig              |  11 ++
+ drivers/phy/amlogic/Makefile             |   1 +
+ drivers/phy/amlogic/phy-meson-axg-pcie.c | 192 +++++++++++++++++++++++
+ 3 files changed, 204 insertions(+)
+ create mode 100644 drivers/phy/amlogic/phy-meson-axg-pcie.c
 
 diff --git a/drivers/phy/amlogic/Kconfig b/drivers/phy/amlogic/Kconfig
-index af774ac2b934..8c9cf2403591 100644
+index 8c9cf2403591..71801e30d601 100644
 --- a/drivers/phy/amlogic/Kconfig
 +++ b/drivers/phy/amlogic/Kconfig
-@@ -59,3 +59,14 @@ config PHY_MESON_G12A_USB3_PCIE
- 	  Enable this to support the Meson USB3 + PCIE Combo PHY found
+@@ -60,6 +60,17 @@ config PHY_MESON_G12A_USB3_PCIE
  	  in Meson G12A SoCs.
  	  If unsure, say N.
-+
-+config PHY_MESON_AXG_MIPI_PCIE_ANALOG
-+	tristate "Meson AXG MIPI + PCIE analog PHY driver"
+ 
++config PHY_MESON_AXG_PCIE
++	tristate "Meson AXG PCIE PHY driver"
 +	default ARCH_MESON
 +	depends on OF && (ARCH_MESON || COMPILE_TEST)
 +	select GENERIC_PHY
 +	select REGMAP_MMIO
 +	help
-+	  Enable this to support the Meson MIPI + PCIE analog PHY
-+	  found in Meson AXG SoCs.
++	  Enable this to support the Meson MIPI + PCIE PHY found
++	  in Meson AXG SoCs.
 +	  If unsure, say N.
++
+ config PHY_MESON_AXG_MIPI_PCIE_ANALOG
+ 	tristate "Meson AXG MIPI + PCIE analog PHY driver"
+ 	default ARCH_MESON
 diff --git a/drivers/phy/amlogic/Makefile b/drivers/phy/amlogic/Makefile
-index 11d1c42ac2be..0aecf92d796a 100644
+index 0aecf92d796a..e2baa133f7af 100644
 --- a/drivers/phy/amlogic/Makefile
 +++ b/drivers/phy/amlogic/Makefile
-@@ -1,6 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0-only
--obj-$(CONFIG_PHY_MESON8B_USB2)		+= phy-meson8b-usb2.o
--obj-$(CONFIG_PHY_MESON_GXL_USB2)	+= phy-meson-gxl-usb2.o
--obj-$(CONFIG_PHY_MESON_G12A_USB2)	+= phy-meson-g12a-usb2.o
--obj-$(CONFIG_PHY_MESON_GXL_USB3)	+= phy-meson-gxl-usb3.o
--obj-$(CONFIG_PHY_MESON_G12A_USB3_PCIE)	+= phy-meson-g12a-usb3-pcie.o
-+obj-$(CONFIG_PHY_MESON8B_USB2)			+= phy-meson8b-usb2.o
-+obj-$(CONFIG_PHY_MESON_GXL_USB2)		+= phy-meson-gxl-usb2.o
-+obj-$(CONFIG_PHY_MESON_G12A_USB2)		+= phy-meson-g12a-usb2.o
-+obj-$(CONFIG_PHY_MESON_GXL_USB3)		+= phy-meson-gxl-usb3.o
-+obj-$(CONFIG_PHY_MESON_G12A_USB3_PCIE)		+= phy-meson-g12a-usb3-pcie.o
-+obj-$(CONFIG_PHY_MESON_AXG_MIPI_PCIE_ANALOG)	+= phy-meson-axg-mipi-pcie-analog.o
-diff --git a/drivers/phy/amlogic/phy-meson-axg-mipi-pcie-analog.c b/drivers/phy/amlogic/phy-meson-axg-mipi-pcie-analog.c
+@@ -4,4 +4,5 @@ obj-$(CONFIG_PHY_MESON_GXL_USB2)		+= phy-meson-gxl-usb2.o
+ obj-$(CONFIG_PHY_MESON_G12A_USB2)		+= phy-meson-g12a-usb2.o
+ obj-$(CONFIG_PHY_MESON_GXL_USB3)		+= phy-meson-gxl-usb3.o
+ obj-$(CONFIG_PHY_MESON_G12A_USB3_PCIE)		+= phy-meson-g12a-usb3-pcie.o
++obj-$(CONFIG_PHY_MESON_AXG_PCIE)		+= phy-meson-axg-pcie.o
+ obj-$(CONFIG_PHY_MESON_AXG_MIPI_PCIE_ANALOG)	+= phy-meson-axg-mipi-pcie-analog.o
+diff --git a/drivers/phy/amlogic/phy-meson-axg-pcie.c b/drivers/phy/amlogic/phy-meson-axg-pcie.c
 new file mode 100644
-index 000000000000..1431cbf885e1
+index 000000000000..377ed0dcd0d9
 --- /dev/null
-+++ b/drivers/phy/amlogic/phy-meson-axg-mipi-pcie-analog.c
-@@ -0,0 +1,188 @@
++++ b/drivers/phy/amlogic/phy-meson-axg-pcie.c
+@@ -0,0 +1,192 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Amlogic AXG MIPI + PCIE analog PHY driver
++ * Amlogic AXG PCIE PHY driver
 + *
-+ * Copyright (C) 2019 Remi Pommarel <repk@triplefau.lt>
++ * Copyright (C) 2020 Remi Pommarel <repk@triplefau.lt>
 + */
 +#include <linux/module.h>
 +#include <linux/phy/phy.h>
 +#include <linux/regmap.h>
++#include <linux/reset.h>
 +#include <linux/platform_device.h>
++#include <linux/bitfield.h>
 +#include <dt-bindings/phy/phy.h>
 +
-+#define HHI_MIPI_CNTL0 0x00
-+#define		HHI_MIPI_CNTL0_COMMON_BLOCK	GENMASK(31, 28)
-+#define		HHI_MIPI_CNTL0_ENABLE		BIT(29)
-+#define		HHI_MIPI_CNTL0_BANDGAP		BIT(26)
-+#define		HHI_MIPI_CNTL0_DECODE_TO_RTERM	GENMASK(15, 12)
-+#define		HHI_MIPI_CNTL0_OUTPUT_EN	BIT(3)
++#define MESON_PCIE_REG0 0x00
++#define		MESON_PCIE_COMMON_CLK	BIT(4)
++#define		MESON_PCIE_PORT_SEL	GENMASK(3, 2)
++#define		MESON_PCIE_CLK		BIT(1)
++#define		MESON_PCIE_POWERDOWN	BIT(0)
 +
-+#define HHI_MIPI_CNTL1 0x01
-+#define		HHI_MIPI_CNTL1_CH0_CML_PDR_EN	BIT(12)
-+#define		HHI_MIPI_CNTL1_LP_ABILITY	GENMASK(5, 4)
-+#define		HHI_MIPI_CNTL1_LP_RESISTER	BIT(3)
-+#define		HHI_MIPI_CNTL1_INPUT_SETTING	BIT(2)
-+#define		HHI_MIPI_CNTL1_INPUT_SEL	BIT(1)
-+#define		HHI_MIPI_CNTL1_PRBS7_EN		BIT(0)
++#define MESON_PCIE_TWO_X1		FIELD_PREP(MESON_PCIE_PORT_SEL, 0x3)
++#define MESON_PCIE_COMMON_REF_CLK	FIELD_PREP(MESON_PCIE_COMMON_CLK, 0x1)
++#define MESON_PCIE_PHY_INIT		(MESON_PCIE_TWO_X1 |		\
++					 MESON_PCIE_COMMON_REF_CLK)
++#define MESON_PCIE_RESET_DELAY		500
 +
-+#define HHI_MIPI_CNTL2 0x02
-+#define		HHI_MIPI_CNTL2_CH_PU		GENMASK(31, 25)
-+#define		HHI_MIPI_CNTL2_CH_CTL		GENMASK(24, 19)
-+#define		HHI_MIPI_CNTL2_CH0_DIGDR_EN	BIT(18)
-+#define		HHI_MIPI_CNTL2_CH_DIGDR_EN	BIT(17)
-+#define		HHI_MIPI_CNTL2_LPULPS_EN	BIT(16)
-+#define		HHI_MIPI_CNTL2_CH_EN(n)		BIT(15 - (n))
-+#define		HHI_MIPI_CNTL2_CH0_LP_CTL	GENMASK(10, 1)
-+
-+struct phy_axg_mipi_pcie_analog_priv {
++struct phy_axg_pcie_priv {
 +	struct phy *phy;
-+	unsigned int mode;
++	struct phy *analog;
 +	struct regmap *regmap;
++	struct reset_control *reset;
 +};
 +
-+static const struct regmap_config phy_axg_mipi_pcie_analog_regmap_conf = {
++static const struct regmap_config phy_axg_pcie_regmap_conf = {
 +	.reg_bits = 8,
 +	.val_bits = 32,
 +	.reg_stride = 4,
-+	.max_register = HHI_MIPI_CNTL2,
++	.max_register = MESON_PCIE_REG0,
 +};
 +
-+static int phy_axg_mipi_pcie_analog_power_on(struct phy *phy)
++static int phy_axg_pcie_power_on(struct phy *phy)
 +{
-+	struct phy_axg_mipi_pcie_analog_priv *priv = phy_get_drvdata(phy);
++	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
++	int ret;
 +
-+	/* MIPI not supported yet */
-+	if (priv->mode != PHY_TYPE_PCIE)
-+		return -EINVAL;
++	ret = phy_power_on(priv->analog);
++	if (ret != 0)
++		return ret;
 +
-+	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
-+			   HHI_MIPI_CNTL0_BANDGAP, HHI_MIPI_CNTL0_BANDGAP);
-+
-+	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
-+			   HHI_MIPI_CNTL0_ENABLE, HHI_MIPI_CNTL0_ENABLE);
++	regmap_update_bits(priv->regmap, MESON_PCIE_REG0,
++			   MESON_PCIE_POWERDOWN, 0);
 +	return 0;
 +}
 +
-+static int phy_axg_mipi_pcie_analog_power_off(struct phy *phy)
++static int phy_axg_pcie_power_off(struct phy *phy)
 +{
-+	struct phy_axg_mipi_pcie_analog_priv *priv = phy_get_drvdata(phy);
++	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
++	int ret;
 +
-+	/* MIPI not supported yet */
-+	if (priv->mode != PHY_TYPE_PCIE)
-+		return -EINVAL;
++	ret = phy_power_off(priv->analog);
++	if (ret != 0)
++		return ret;
 +
-+	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
-+			   HHI_MIPI_CNTL0_BANDGAP, 0);
-+	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
-+			   HHI_MIPI_CNTL0_ENABLE, 0);
++	regmap_update_bits(priv->regmap, MESON_PCIE_REG0,
++			   MESON_PCIE_POWERDOWN, 1);
 +	return 0;
 +}
 +
-+static int phy_axg_mipi_pcie_analog_init(struct phy *phy)
++static int phy_axg_pcie_init(struct phy *phy)
 +{
-+	return 0;
++	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
++	int ret;
++
++	ret = phy_init(priv->analog);
++	if (ret != 0)
++		return ret;
++
++	regmap_write(priv->regmap, MESON_PCIE_REG0, MESON_PCIE_PHY_INIT);
++	return reset_control_reset(priv->reset);
 +}
 +
-+static int phy_axg_mipi_pcie_analog_exit(struct phy *phy)
++static int phy_axg_pcie_exit(struct phy *phy)
 +{
-+	return 0;
++	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
++	int ret;
++
++	ret = phy_exit(priv->analog);
++	if (ret != 0)
++		return ret;
++
++	return reset_control_reset(priv->reset);
 +}
 +
-+static const struct phy_ops phy_axg_mipi_pcie_analog_ops = {
-+	.init = phy_axg_mipi_pcie_analog_init,
-+	.exit = phy_axg_mipi_pcie_analog_exit,
-+	.power_on = phy_axg_mipi_pcie_analog_power_on,
-+	.power_off = phy_axg_mipi_pcie_analog_power_off,
++static int phy_axg_pcie_reset(struct phy *phy)
++{
++	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
++	int ret = 0;
++
++	ret = phy_reset(priv->analog);
++	if (ret != 0)
++		goto out;
++
++	ret = reset_control_assert(priv->reset);
++	if (ret != 0)
++		goto out;
++	udelay(MESON_PCIE_RESET_DELAY);
++
++	ret = reset_control_deassert(priv->reset);
++	if (ret != 0)
++		goto out;
++	udelay(MESON_PCIE_RESET_DELAY);
++
++out:
++	return ret;
++}
++
++static const struct phy_ops phy_axg_pcie_ops = {
++	.init = phy_axg_pcie_init,
++	.exit = phy_axg_pcie_exit,
++	.power_on = phy_axg_pcie_power_on,
++	.power_off = phy_axg_pcie_power_off,
++	.reset = phy_axg_pcie_reset,
 +	.owner = THIS_MODULE,
 +};
 +
-+static struct phy *phy_axg_mipi_pcie_analog_xlate(struct device *dev,
-+						  struct of_phandle_args *args)
++static int phy_axg_pcie_probe(struct platform_device *pdev)
 +{
-+	struct phy_axg_mipi_pcie_analog_priv *priv = dev_get_drvdata(dev);
-+	unsigned int mode;
-+
-+	if (args->args_count != 1) {
-+		dev_err(dev, "invalid number of arguments\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	mode = args->args[0];
-+
-+	/* MIPI mode is not supported yet */
-+	if (mode != PHY_TYPE_PCIE) {
-+		dev_err(dev, "invalid phy mode select argument\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	priv->mode = mode;
-+	return priv->phy;
-+}
-+
-+static int phy_axg_mipi_pcie_analog_probe(struct platform_device *pdev)
-+{
-+	struct phy_provider *phy;
++	struct phy_provider *pphy;
 +	struct device *dev = &pdev->dev;
-+	struct phy_axg_mipi_pcie_analog_priv *priv;
++	struct phy_axg_pcie_priv *priv;
 +	struct device_node *np = dev->of_node;
-+	struct regmap *map;
 +	struct resource *res;
 +	void __iomem *base;
 +	int ret;
@@ -241,22 +234,7 @@ index 000000000000..1431cbf885e1
 +	if (!priv)
 +		return -ENOMEM;
 +
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	base = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(base)) {
-+		dev_err(dev, "failed to get regmap base\n");
-+		return PTR_ERR(base);
-+	}
-+
-+	map = devm_regmap_init_mmio(dev, base,
-+				    &phy_axg_mipi_pcie_analog_regmap_conf);
-+	if (IS_ERR(map)) {
-+		dev_err(dev, "failed to get HHI regmap\n");
-+		return PTR_ERR(map);
-+	}
-+	priv->regmap = map;
-+
-+	priv->phy = devm_phy_create(dev, np, &phy_axg_mipi_pcie_analog_ops);
++	priv->phy = devm_phy_create(dev, np, &phy_axg_pcie_ops);
 +	if (IS_ERR(priv->phy)) {
 +		ret = PTR_ERR(priv->phy);
 +		if (ret != -EPROBE_DEFER)
@@ -264,34 +242,50 @@ index 000000000000..1431cbf885e1
 +		return ret;
 +	}
 +
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	base = devm_ioremap_resource(dev, res);
++	if (IS_ERR(base))
++		return PTR_ERR(base);
++
++	priv->regmap = devm_regmap_init_mmio(dev, base,
++					     &phy_axg_pcie_regmap_conf);
++	if (IS_ERR(priv->regmap))
++		return PTR_ERR(priv->regmap);
++
++	priv->reset = devm_reset_control_array_get(dev, false, false);
++	if (IS_ERR(priv->reset))
++		return PTR_ERR(priv->reset);
++
++	priv->analog = devm_phy_get(dev, "analog");
++	if (IS_ERR(priv->analog))
++		return PTR_ERR(priv->analog);
++
 +	phy_set_drvdata(priv->phy, priv);
 +	dev_set_drvdata(dev, priv);
++	pphy = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
 +
-+	phy = devm_of_phy_provider_register(dev,
-+					    phy_axg_mipi_pcie_analog_xlate);
-+
-+	return PTR_ERR_OR_ZERO(phy);
++	return PTR_ERR_OR_ZERO(pphy);
 +}
 +
-+static const struct of_device_id phy_axg_mipi_pcie_analog_of_match[] = {
++static const struct of_device_id phy_axg_pcie_of_match[] = {
 +	{
-+		.compatible = "amlogic,axg-mipi-pcie-analog-phy",
++		.compatible = "amlogic,axg-pcie-phy",
 +	},
 +	{ },
 +};
-+MODULE_DEVICE_TABLE(of, phy_axg_mipi_pcie_analog_of_match);
++MODULE_DEVICE_TABLE(of, phy_axg_pcie_of_match);
 +
-+static struct platform_driver phy_axg_mipi_pcie_analog_driver = {
-+	.probe = phy_axg_mipi_pcie_analog_probe,
++static struct platform_driver phy_axg_pcie_driver = {
++	.probe = phy_axg_pcie_probe,
 +	.driver = {
-+		.name = "phy-axg-mipi-pcie-analog",
-+		.of_match_table = phy_axg_mipi_pcie_analog_of_match,
++		.name = "phy-axg-pcie",
++		.of_match_table = phy_axg_pcie_of_match,
 +	},
 +};
-+module_platform_driver(phy_axg_mipi_pcie_analog_driver);
++module_platform_driver(phy_axg_pcie_driver);
 +
 +MODULE_AUTHOR("Remi Pommarel <repk@triplefau.lt>");
-+MODULE_DESCRIPTION("Amlogic AXG MIPI + PCIE analog PHY driver");
++MODULE_DESCRIPTION("Amlogic AXG PCIE PHY driver");
 +MODULE_LICENSE("GPL v2");
 -- 
 2.24.1
