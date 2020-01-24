@@ -2,289 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 86CB2147964
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2020 09:27:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E6EB2147968
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2020 09:29:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729485AbgAXI1L (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 24 Jan 2020 03:27:11 -0500
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:33623 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725843AbgAXI1L (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 24 Jan 2020 03:27:11 -0500
+        id S1729418AbgAXI3W (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 24 Jan 2020 03:29:22 -0500
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:37353 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725843AbgAXI3W (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 24 Jan 2020 03:29:22 -0500
 X-Originating-IP: 88.190.179.123
 Received: from localhost (unknown [88.190.179.123])
         (Authenticated sender: repk@triplefau.lt)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 7DE94240014;
-        Fri, 24 Jan 2020 08:27:05 +0000 (UTC)
-Date:   Fri, 24 Jan 2020 09:35:29 +0100
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 1C7C6C0010;
+        Fri, 24 Jan 2020 08:29:18 +0000 (UTC)
+Date:   Fri, 24 Jan 2020 09:37:43 +0100
 From:   Remi Pommarel <repk@triplefau.lt>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
         Yue Wang <yue.wang@amlogic.com>,
         Kevin Hilman <khilman@baylibre.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jerome Brunet <jbrunet@baylibre.com>,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v6 7/7] PCI: amlogic: Use AXG PCIE
-Message-ID: <20200124083529.GX1803@voidbox>
+Subject: Re: [PATCH v6 0/7] PCI: amlogic: Make PCIe working reliably on AXG
+ platforms
+Message-ID: <20200124083743.GY1803@voidbox>
 References: <20200123232943.10229-1-repk@triplefau.lt>
- <20200123232943.10229-8-repk@triplefau.lt>
+ <64b5d857-569a-ab2e-a467-9cdb47cf20e4@baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200123232943.10229-8-repk@triplefau.lt>
+In-Reply-To: <64b5d857-569a-ab2e-a467-9cdb47cf20e4@baylibre.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add missing Reviewed/Acked-by from v5
+Hi,
 
-On Fri, Jan 24, 2020 at 12:29:43AM +0100, Remi Pommarel wrote:
-> Now that PCIE PHY has been introduced for AXG, the whole has_shared_phy
-> logic can be mutualized between AXG and G12A platforms.
+On Fri, Jan 24, 2020 at 09:02:12AM +0100, Neil Armstrong wrote:
+> Hi,
 > 
-> This new PHY makes use of the shared MIPI/PCIE analog PHY found on AXG
-> platforms, which need to be used in order to have reliable PCIE
-> communications.
+> On 24/01/2020 00:29, Remi Pommarel wrote:
+> > PCIe device probing failures have been seen on AXG platforms and were
+> > due to unreliable clock signal output. Setting HHI_MIPI_CNTL0[26] bit
+> > in MIPI's PHY registers solved the problem. This bit controls band gap
+> > reference.
+> > 
+> > As discussed here [1] one of these shared MIPI/PCIE analog PHY register
+> > bits was implemented in the clock driver as CLKID_MIPI_ENABLE. This adds
+> > a PHY driver to control this bit instead, as well as setting the band
+> > gap one in order to get reliable PCIE communication.
+> > 
+> > While at it add another PHY driver to control PCIE only PHY registers,
+> > making AXG code more similar to G12A platform thus allowing to remove
+> > some specific platform handling in pci-meson driver.
+> > 
+> > Please note that CLKID_MIPI_ENABLE removable will be done in a different
+> > serie.
+> > 
+> > Changes since v5:
+> >  - Add additionalProperties in device tree binding documentation
+> >  - Make analog PHY required
+> > 
+> > Changes since v4:
+> >  - Rename the shared MIPI/PCIe PHY to analog
+> >  - Chain the MIPI/PCIe PHY to the PCIe one
+> > 
+> > Changes since v3:
+> >  - Go back to the shared MIPI/PCIe phy driver solution from v2
+> >  - Remove syscon usage
+> >  - Add all dt-bindings documentation
+> > 
+> > Changes since v2:
+> >  - Remove shared MIPI/PCIE device driver and use syscon to access register
+> >    in PCIE only driver instead
+> >  - Include devicetree documentation
+> > 
+> > Changes sinve v1:
+> >  - Move HHI_MIPI_CNTL0 bit control in its own PHY driver
+> >  - Add a PHY driver for PCIE_PHY registers
+> >  - Modify pci-meson.c to make use of both PHYs and remove specific
+> >    handling for AXG and G12A
+> > 
+> > [1] https://lkml.org/lkml/2019/12/16/119
+> > 
+> > Remi Pommarel (7):
+> >   dt-bindings: Add AXG PCIE PHY bindings
+> >   dt-bindings: Add AXG shared MIPI/PCIE analog PHY bindings
+> >   dt-bindings: PCI: meson: Update PCIE bindings documentation
+> >   arm64: dts: meson-axg: Add PCIE PHY nodes
+> >   phy: amlogic: Add Amlogic AXG MIPI/PCIE analog PHY Driver
+> >   phy: amlogic: Add Amlogic AXG PCIE PHY Driver
+> >   PCI: amlogic: Use AXG PCIE
+> > 
+> >  .../bindings/pci/amlogic,meson-pcie.txt       |  22 +-
+> >  .../amlogic,meson-axg-mipi-pcie-analog.yaml   |  35 ++++
+> >  .../bindings/phy/amlogic,meson-axg-pcie.yaml  |  52 +++++
+> >  arch/arm64/boot/dts/amlogic/meson-axg.dtsi    |  16 ++
+> >  drivers/pci/controller/dwc/pci-meson.c        | 116 ++---------
+> >  drivers/phy/amlogic/Kconfig                   |  22 ++
+> >  drivers/phy/amlogic/Makefile                  |  12 +-
+> >  .../amlogic/phy-meson-axg-mipi-pcie-analog.c  | 188 +++++++++++++++++
+> >  drivers/phy/amlogic/phy-meson-axg-pcie.c      | 192 ++++++++++++++++++
+> >  9 files changed, 543 insertions(+), 112 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-axg-mipi-pcie-analog.yaml
+> >  create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-axg-pcie.yaml
+> >  create mode 100644 drivers/phy/amlogic/phy-meson-axg-mipi-pcie-analog.c
+> >  create mode 100644 drivers/phy/amlogic/phy-meson-axg-pcie.c
+> > 
 > 
-> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-> ---
->  drivers/pci/controller/dwc/pci-meson.c | 116 +++++--------------------
->  1 file changed, 22 insertions(+), 94 deletions(-)
+> You forgot to keep the Reviewed-by/Acked-by tags from the previous reviews.
 > 
-> diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
-> index 3772b02a5c55..3715dceca1bf 100644
-> --- a/drivers/pci/controller/dwc/pci-meson.c
-> +++ b/drivers/pci/controller/dwc/pci-meson.c
-> @@ -66,7 +66,6 @@
->  #define PORT_CLK_RATE			100000000UL
->  #define MAX_PAYLOAD_SIZE		256
->  #define MAX_READ_REQ_SIZE		256
-> -#define MESON_PCIE_PHY_POWERUP		0x1c
->  #define PCIE_RESET_DELAY		500
->  #define PCIE_SHARED_RESET		1
->  #define PCIE_NORMAL_RESET		0
-> @@ -81,26 +80,19 @@ enum pcie_data_rate {
->  struct meson_pcie_mem_res {
->  	void __iomem *elbi_base;
->  	void __iomem *cfg_base;
-> -	void __iomem *phy_base;
->  };
->  
->  struct meson_pcie_clk_res {
->  	struct clk *clk;
-> -	struct clk *mipi_gate;
->  	struct clk *port_clk;
->  	struct clk *general_clk;
->  };
->  
->  struct meson_pcie_rc_reset {
-> -	struct reset_control *phy;
->  	struct reset_control *port;
->  	struct reset_control *apb;
->  };
->  
-> -struct meson_pcie_param {
-> -	bool has_shared_phy;
-> -};
-> -
->  struct meson_pcie {
->  	struct dw_pcie pci;
->  	struct meson_pcie_mem_res mem_res;
-> @@ -108,7 +100,6 @@ struct meson_pcie {
->  	struct meson_pcie_rc_reset mrst;
->  	struct gpio_desc *reset_gpio;
->  	struct phy *phy;
-> -	const struct meson_pcie_param *param;
->  };
->  
->  static struct reset_control *meson_pcie_get_reset(struct meson_pcie *mp,
-> @@ -130,13 +121,6 @@ static int meson_pcie_get_resets(struct meson_pcie *mp)
->  {
->  	struct meson_pcie_rc_reset *mrst = &mp->mrst;
->  
-> -	if (!mp->param->has_shared_phy) {
-> -		mrst->phy = meson_pcie_get_reset(mp, "phy", PCIE_SHARED_RESET);
-> -		if (IS_ERR(mrst->phy))
-> -			return PTR_ERR(mrst->phy);
-> -		reset_control_deassert(mrst->phy);
-> -	}
-> -
->  	mrst->port = meson_pcie_get_reset(mp, "port", PCIE_NORMAL_RESET);
->  	if (IS_ERR(mrst->port))
->  		return PTR_ERR(mrst->port);
-> @@ -162,22 +146,6 @@ static void __iomem *meson_pcie_get_mem(struct platform_device *pdev,
->  	return devm_ioremap_resource(dev, res);
->  }
->  
-> -static void __iomem *meson_pcie_get_mem_shared(struct platform_device *pdev,
-> -					       struct meson_pcie *mp,
-> -					       const char *id)
-> -{
-> -	struct device *dev = mp->pci.dev;
-> -	struct resource *res;
-> -
-> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, id);
-> -	if (!res) {
-> -		dev_err(dev, "No REG resource %s\n", id);
-> -		return ERR_PTR(-ENXIO);
-> -	}
-> -
-> -	return devm_ioremap(dev, res->start, resource_size(res));
-> -}
-> -
->  static int meson_pcie_get_mems(struct platform_device *pdev,
->  			       struct meson_pcie *mp)
->  {
-> @@ -189,14 +157,6 @@ static int meson_pcie_get_mems(struct platform_device *pdev,
->  	if (IS_ERR(mp->mem_res.cfg_base))
->  		return PTR_ERR(mp->mem_res.cfg_base);
->  
-> -	/* Meson AXG SoC has two PCI controllers use same phy register */
-> -	if (!mp->param->has_shared_phy) {
-> -		mp->mem_res.phy_base =
-> -			meson_pcie_get_mem_shared(pdev, mp, "phy");
-> -		if (IS_ERR(mp->mem_res.phy_base))
-> -			return PTR_ERR(mp->mem_res.phy_base);
-> -	}
-> -
->  	return 0;
->  }
->  
-> @@ -204,37 +164,33 @@ static int meson_pcie_power_on(struct meson_pcie *mp)
->  {
->  	int ret = 0;
->  
-> -	if (mp->param->has_shared_phy) {
-> -		ret = phy_init(mp->phy);
-> -		if (ret)
-> -			return ret;
-> +	ret = phy_init(mp->phy);
-> +	if (ret)
-> +		return ret;
->  
-> -		ret = phy_power_on(mp->phy);
-> -		if (ret) {
-> -			phy_exit(mp->phy);
-> -			return ret;
-> -		}
-> -	} else
-> -		writel(MESON_PCIE_PHY_POWERUP, mp->mem_res.phy_base);
-> +	ret = phy_power_on(mp->phy);
-> +	if (ret) {
-> +		phy_exit(mp->phy);
-> +		return ret;
-> +	}
->  
->  	return 0;
->  }
->  
-> +static void meson_pcie_power_off(struct meson_pcie *mp)
-> +{
-> +	phy_power_off(mp->phy);
-> +	phy_exit(mp->phy);
-> +}
-> +
->  static int meson_pcie_reset(struct meson_pcie *mp)
->  {
->  	struct meson_pcie_rc_reset *mrst = &mp->mrst;
->  	int ret = 0;
->  
-> -	if (mp->param->has_shared_phy) {
-> -		ret = phy_reset(mp->phy);
-> -		if (ret)
-> -			return ret;
-> -	} else {
-> -		reset_control_assert(mrst->phy);
-> -		udelay(PCIE_RESET_DELAY);
-> -		reset_control_deassert(mrst->phy);
-> -		udelay(PCIE_RESET_DELAY);
-> -	}
-> +	ret = phy_reset(mp->phy);
-> +	if (ret)
-> +		return ret;
->  
->  	reset_control_assert(mrst->port);
->  	reset_control_assert(mrst->apb);
-> @@ -286,12 +242,6 @@ static int meson_pcie_probe_clocks(struct meson_pcie *mp)
->  	if (IS_ERR(res->port_clk))
->  		return PTR_ERR(res->port_clk);
->  
-> -	if (!mp->param->has_shared_phy) {
-> -		res->mipi_gate = meson_pcie_probe_clock(dev, "mipi", 0);
-> -		if (IS_ERR(res->mipi_gate))
-> -			return PTR_ERR(res->mipi_gate);
-> -	}
-> -
->  	res->general_clk = meson_pcie_probe_clock(dev, "general", 0);
->  	if (IS_ERR(res->general_clk))
->  		return PTR_ERR(res->general_clk);
-> @@ -562,7 +512,6 @@ static const struct dw_pcie_ops dw_pcie_ops = {
->  
->  static int meson_pcie_probe(struct platform_device *pdev)
->  {
-> -	const struct meson_pcie_param *match_data;
->  	struct device *dev = &pdev->dev;
->  	struct dw_pcie *pci;
->  	struct meson_pcie *mp;
-> @@ -576,17 +525,10 @@ static int meson_pcie_probe(struct platform_device *pdev)
->  	pci->dev = dev;
->  	pci->ops = &dw_pcie_ops;
->  
-> -	match_data = of_device_get_match_data(dev);
-> -	if (!match_data) {
-> -		dev_err(dev, "failed to get match data\n");
-> -		return -ENODEV;
-> -	}
-> -	mp->param = match_data;
-> -
-> -	if (mp->param->has_shared_phy) {
-> -		mp->phy = devm_phy_get(dev, "pcie");
-> -		if (IS_ERR(mp->phy))
-> -			return PTR_ERR(mp->phy);
-> +	mp->phy = devm_phy_get(dev, "pcie");
-> +	if (IS_ERR(mp->phy)) {
-> +		dev_err(dev, "get phy failed, %ld\n", PTR_ERR(mp->phy));
-> +		return PTR_ERR(mp->phy);
->  	}
->  
->  	mp->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
-> @@ -636,30 +578,16 @@ static int meson_pcie_probe(struct platform_device *pdev)
->  	return 0;
->  
->  err_phy:
-> -	if (mp->param->has_shared_phy) {
-> -		phy_power_off(mp->phy);
-> -		phy_exit(mp->phy);
-> -	}
-> -
-> +	meson_pcie_power_off(mp);
->  	return ret;
->  }
->  
-> -static struct meson_pcie_param meson_pcie_axg_param = {
-> -	.has_shared_phy = false,
-> -};
-> -
-> -static struct meson_pcie_param meson_pcie_g12a_param = {
-> -	.has_shared_phy = true,
-> -};
-> -
->  static const struct of_device_id meson_pcie_of_match[] = {
->  	{
->  		.compatible = "amlogic,axg-pcie",
-> -		.data = &meson_pcie_axg_param,
->  	},
->  	{
->  		.compatible = "amlogic,g12a-pcie",
-> -		.data = &meson_pcie_g12a_param,
->  	},
->  	{},
->  };
 
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Indeed, sorry about that, I have just added them.
+
+-- 
+Remi
