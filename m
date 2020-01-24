@@ -2,137 +2,155 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 662A9148FDE
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2020 22:02:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0337814907B
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2020 22:54:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387395AbgAXVCr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 24 Jan 2020 16:02:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50962 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387394AbgAXVCq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 24 Jan 2020 16:02:46 -0500
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF73F2071E;
-        Fri, 24 Jan 2020 21:02:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579899766;
-        bh=ovQ19TCQxYzE5zJTHWmIFSrtTys+P8rRme6GoRfbE6E=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=ge5ByDnuVUhZhhVLf/Y9cQ56BMpHR0ft8p5VVlxFRnCG/Zl7GxrIVVsfGrS+xDxj9
-         BvoYVmvnr55ylYhWTRfTvxylxqvKFlTxkLEZ492P67HtCb2FmT2Glo9qd1AoLMbuhl
-         YyAjvH18xThF2uWV1LjH5+/itQAzl+BoeVE0e01M=
-Date:   Fri, 24 Jan 2020 15:02:44 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jon Derrick <jonathan.derrick@intel.com>
-Cc:     linux-pci@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        iommu@lists.linux-foundation.org, Christoph Hellwig <hch@lst.de>,
-        Keith Busch <kbusch@kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>
-Subject: Re: [PATCH v5 0/7] Clean up VMD DMA Map Ops
-Message-ID: <20200124210244.GA54951@google.com>
+        id S1725821AbgAXVx5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 24 Jan 2020 16:53:57 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:41648 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727264AbgAXVx5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 24 Jan 2020 16:53:57 -0500
+Received: by mail-lf1-f67.google.com with SMTP id m30so2186254lfp.8
+        for <linux-pci@vger.kernel.org>; Fri, 24 Jan 2020 13:53:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3HJT7W/WRXdBhAlKmOBifhojKSqvdoUdaUmLJgJ9MdU=;
+        b=Y6MEqGsh7k/zNskKHAS+ylILiPoWb+Xn+ki0mKYgKGyQMZ8ZE5YJRsYzhXQtKnZVBZ
+         3Zn4D2XQ9BZp8C/u2g41Jwdldu0dMd0Y3uPzS9Un5bPlzINSi+NEETRD/7n90FMnOG+K
+         A0WIHrq7VoC/sx/OV9KPfd6RS9XHnh+aubq88=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3HJT7W/WRXdBhAlKmOBifhojKSqvdoUdaUmLJgJ9MdU=;
+        b=VKn9R6KklzkxK7+db54NSuPtyUKhz+J97kR9cAIPOYPpafuO6bw+fAR4UwOy55ZIGj
+         LAYh4Jq/wt27JZzt5LkTNGJAosNZYkmZEaqoD6OchOlYn9R2xQDdKMfPID2RAS39EGlj
+         5MT3tA95FnPEn2Gd73YuXt8qkTLK/HasrDLg6ONH6JpG7WaGJCvuGr40JS6BkV0lJJ78
+         wBho4jCN/eT8W1sd4S32JK5hNg9Bo/v5/B8ufm1ZutjSs9yI/fr1+JTnKAzl7EN9NigY
+         VCWrwzTBZswKfyH2L/lUmvhwGS/CoOVQ+VGfhSBwmksFtxLkLMbqvUIwmXzNK63JWm6f
+         /5yQ==
+X-Gm-Message-State: APjAAAUmgNsZ/splfgroOTgBz/R2BScxPr4+nnSFmIgphFHYymASK0h/
+        uScHjIsdka21vWIR+yXlvZssM1zCFlU=
+X-Google-Smtp-Source: APXvYqxpiO/w/df7mZOZc89HEFUAyhqT49Y3bdCyFWNnv+5F88F10EOl+LFSLCWyfpl7QZgzsLwJZg==
+X-Received: by 2002:ac2:4c2b:: with SMTP id u11mr2384515lfq.46.1579902833792;
+        Fri, 24 Jan 2020 13:53:53 -0800 (PST)
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
+        by smtp.gmail.com with ESMTPSA id f26sm3665147ljn.104.2020.01.24.13.53.52
+        for <linux-pci@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Jan 2020 13:53:52 -0800 (PST)
+Received: by mail-lf1-f49.google.com with SMTP id z18so2201653lfe.2
+        for <linux-pci@vger.kernel.org>; Fri, 24 Jan 2020 13:53:52 -0800 (PST)
+X-Received: by 2002:a05:6512:2035:: with SMTP id s21mr2229303lfs.99.1579902831885;
+ Fri, 24 Jan 2020 13:53:51 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1579613871-301529-1-git-send-email-jonathan.derrick@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200117162444.v2.1.I9c7e72144ef639cc135ea33ef332852a6b33730f@changeid>
+ <CACK8Z6Ft95qj4e_fsA32r_bcz2SsHOW1xxqZJt3_DBAJw=NMGA@mail.gmail.com>
+ <CAE=gft6fKQWExW-=xjZGzXs30XohfpA5SKggvL2WtYXAHmzMew@mail.gmail.com>
+ <87y2tytv5i.fsf@nanos.tec.linutronix.de> <87eevqkpgn.fsf@nanos.tec.linutronix.de>
+ <CAE=gft6YiM5S1A7iJYJTd5zmaAa8=nhLE3B94JtWa+XW-qVSqQ@mail.gmail.com>
+ <CAE=gft5xta4XCJtctWe=R3w=kVr598JCbk9VSRue04nzKAk3CQ@mail.gmail.com>
+ <CAE=gft7MqQ3Mej5oCT=gw6ZLMSTHoSyMGOFz=-hae-eRZvXLxA@mail.gmail.com> <87d0b82a9o.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <87d0b82a9o.fsf@nanos.tec.linutronix.de>
+From:   Evan Green <evgreen@chromium.org>
+Date:   Fri, 24 Jan 2020 13:53:15 -0800
+X-Gmail-Original-Message-ID: <CAE=gft7C5HTmcTLsXqXbCtcYDeKG6bCJ0gmgwVNc0PDHLJ5y_A@mail.gmail.com>
+Message-ID: <CAE=gft7C5HTmcTLsXqXbCtcYDeKG6bCJ0gmgwVNc0PDHLJ5y_A@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI/MSI: Avoid torn updates to MSI pairs
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Rajat Jain <rajatja@google.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 06:37:44AM -0700, Jon Derrick wrote:
-> v4 Set: https://lore.kernel.org/linux-pci/20200120110220.GB17267@e121166-lin.cambridge.arm.com/T/#t
-> v3 Set: https://lore.kernel.org/linux-iommu/20200113181742.GA27623@e121166-lin.cambridge.arm.com/T/#t
-> v2 Set: https://lore.kernel.org/linux-iommu/1578580256-3483-1-git-send-email-jonathan.derrick@intel.com/T/#t
-> v1 Set: https://lore.kernel.org/linux-iommu/20200107134125.GD30750@8bytes.org/T/#t
-> 
-> VMD currently works with VT-d enabled by pointing DMA and IOMMU actions at the
-> VMD endpoint. The problem with this approach is that the VMD endpoint's
-> device-specific attributes, such as the DMA Mask Bits, are used instead of the
-> child device's attributes.
-> 
-> This set cleans up VMD by removing the override that redirects DMA map
-> operations to the VMD endpoint. Instead it introduces a new DMA alias mechanism
-> into the existing DMA alias infrastructure. This new DMA alias mechanism allows
-> an architecture-specific pci_real_dma_dev() function to provide a pointer from
-> a pci_dev to its PCI DMA device, where by default it returns the original
-> pci_dev.
-> 
-> In addition, this set removes the sanity check that was added to prevent
-> assigning VMD child devices. By using the DMA alias mechanism, all child
-> devices are assigned the same IOMMU group as the VMD endpoint. This removes the
-> need for restricting VMD child devices from assignment, as the whole group
-> would have to be assigned, requiring unbinding the VMD driver and removing the
-> child device domain.
-> 
-> v1 added a pointer in struct pci_dev that pointed to the DMA alias' struct
-> pci_dev and did the necessary DMA alias and IOMMU modifications.
-> 
-> v2 introduced a new weak function to reference the 'Direct DMA Alias', and
-> removed the need to add a pointer in struct device or pci_dev. Weak functions
-> are generally frowned upon when it's a single architecture implementation, so I
-> am open to alternatives.
-> 
-> v3 referenced the pci_dev rather than the struct device for the PCI
-> 'Direct DMA Alias' (pci_direct_dma_alias()). This revision also allowed
-> pci_for_each_dma_alias() to call any DMA aliases for the Direct DMA alias
-> device, though I don't expect the VMD endpoint to need intra-bus DMA aliases.
-> 
-> v4 changes the 'Direct DMA Alias' to instead refer to the 'Real DMA Dev', which
-> either returns the PCI device itself or the PCI DMA device.
-> 
-> v5 Fixes a bad call argument to pci_real_dma_dev that would have broken
-> bisection. This revision also changes one of the calls to a one-liner, and
-> assembles the same on my system.
-> 
-> 
-> Changes from v4:
-> Fix pci_real_dma_dev() call in 4/7.
-> Change other pci_real_dma_dev() call in 4/7 to one-liner.
-> 
-> Changes from v3:
-> Uses pci_real_dma_dev() instead of pci_direct_dma_alias()
-> Split IOMMU enabling, IOMMU VMD sanity check and VMD dma_map_ops cleanup into three patches
-> 
-> Changes from v2:
-> Uses struct pci_dev for PCI Device 'Direct DMA aliasing' (pci_direct_dma_alias)
-> Allows pci_for_each_dma_alias to iterate over the alias mask of the 'Direct DMA alias'
-> 
-> Changes from v1:
-> Removed 1/5 & 2/5 misc fix patches that were merged
-> Uses Christoph's staging/cleanup patches
-> Introduce weak function rather than including pointer in struct device or pci_dev.
-> 
-> Based on Bjorn's next:
-> https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/log/?h=next
-> 
-> Christoph Hellwig (2):
->   x86/PCI: Add a to_pci_sysdata helper
->   x86/PCI: Remove X86_DEV_DMA_OPS
-> 
-> Jon Derrick (5):
->   x86/PCI: Expose VMD's PCI Device in pci_sysdata
->   PCI: Introduce pci_real_dma_dev()
->   iommu/vt-d: Use pci_real_dma_dev() for mapping
->   iommu/vt-d: Remove VMD child device sanity check
->   PCI: vmd: Stop overriding dma_map_ops
-> 
->  arch/x86/Kconfig               |   3 -
->  arch/x86/include/asm/device.h  |  10 ---
->  arch/x86/include/asm/pci.h     |  31 ++++-----
->  arch/x86/pci/common.c          |  48 +++----------
->  drivers/iommu/intel-iommu.c    |  11 ++-
->  drivers/pci/controller/Kconfig |   1 -
->  drivers/pci/controller/vmd.c   | 152 +----------------------------------------
->  drivers/pci/pci.c              |  19 +++++-
->  drivers/pci/search.c           |   6 ++
->  include/linux/pci.h            |   1 +
->  10 files changed, 54 insertions(+), 228 deletions(-)
+On Fri, Jan 24, 2020 at 6:34 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Evan,
+>
+> Evan Green <evgreen@chromium.org> writes:
+> > I did another experiment that I think lends credibility to my torn MSI
+> > hypothesis. I have the following change:
+> >
+> > And indeed, I get a machine check, despite the fact that MSI_DATA is
+> > overwritten just after address is updated.
+>
+> I don't have to understand why a SoC released in 2019 still has
+> unmaskable MSI especially as Inhell's own XHCI spec clearly documents
+> and recommends MSI-X.
+>
+> While your workaround (disabling MSI) works in this particular case it's
+> not really a good option:
+>
+>  1) Quite some devices have a bug where the legacy INTX disable does not
+>     work reliably or is outright broken. That means MSI disable will
+>     reroute to INTX.
+>
+>  2) I digged out old debug data which confirms that some silly devices
+>     lose interrupts accross MSI disable/reenable if the INTX fallback is
+>     disabled.
+>
+>     And no, it's not a random weird device, it's part of a chipset which
+>     was pretty popular a few years ago. I leave it as an excercise for
+>     the reader to guess the vendor.
+>
+> Can you please apply the patch below? It enforces an IPI to the new
+> vector/target CPU when the interrupt is MSI w/o masking. It should
+> cure the issue. It goes without saying that I'm not proud of it.
 
-Applied with acks/reviewed-by from Lu, Keith, and Lorenzo to
-pci/host-vmd for v5.6, thanks!
+I'll feel just as dirty putting a tested-by on it :)
+
+I don't think this patch is complete. As written, it creates "recovery
+interrupts" for MSIs that are not maskable, however through the
+pci_msi_domain_write_msg() path, which is the one I seem to use, we
+make no effort to mask the MSI while changing affinity. So at the very
+least it would need a follow-on patch that attempts to mask the MSI,
+for MSIs that are maskable. __pci_restore_msi_state(), called in the
+resume path, does have this masking, but for some reason not
+pci_msi_domain_write_msg().
+
+I'm also a bit concerned about all the spurious interrupts we'll be
+introducing. Not just the retriggering introduced here, but the fact
+that we never dealt with the torn interrupt. So in my case, XHCI will
+be sending an interrupt on the old vector to the new CPU, which could
+be registered to anything. I'm worried that not every driver in the
+system is hardened to receiving interrupts it's not prepared for.
+Perhaps the driver misbehaves, or perhaps it's a "bad" interrupt like
+the MCE interrupt that takes the system down. (I realize the MCE
+interrupt itself is not in the device vector region, but some other
+bad interrupt then).
+
+Now that you're on board with the torn write theory, what do you think
+about my "transit vector" proposal? The idea is this:
+ - Reserve a single vector number on all CPUs for interrupts in
+transit between CPUs.
+ - Interrupts in transit between CPUs are added to some sort of list,
+or maybe the transit vector itself.
+ - __pci_msi_write_msg() would, after proper abstractions, essentially
+be doing this:
+    pci_write(MSI_DATA, TRANSIT_VECTOR);
+    pci_write(MSI_ADDRESS, new_affinity);
+    pci_write(MSI_DATA, new_vector);
+ - In the rare torn case I've found here, the interrupt will come in
+on <new CPU, transit_vector>, or <old CPU, transit_vector>.
+ - The ISR for TRANSIT_VECTOR would go through and call the ISR for
+every IRQ in transit across CPUs. This does still result in a couple
+extra ISR calls, since multiple interrupts might be in transit across
+CPUs, but at least it's very rare.
+ - CPU hotplug would keep the same logic it already has, retriggering
+TRANSIT_VECTOR if it happened to land on <old CPU, old vector>.
+ - When the interrupt is confirmed on <new CPU, new vector>, remove
+the ISR from the TRANSIT_VECTOR list.
+
+If you think it's a worthwhile idea I can try to code it up.
+
+I've been running your patch for about 30 minutes, with no repro case.
+-Evan
