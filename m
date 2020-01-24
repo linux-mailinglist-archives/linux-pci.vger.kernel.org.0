@@ -2,105 +2,91 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A78B14847E
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2020 12:44:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BCE73148541
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2020 13:40:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387827AbgAXLKf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 24 Jan 2020 06:10:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46360 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387889AbgAXLKd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:10:33 -0500
-Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBDC020708;
-        Fri, 24 Jan 2020 11:10:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864233;
-        bh=cKJUaldp19Cl94RAqGRylCP48OpAtKBvhX1cqyV2YUQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zHsC01G5sCJrcvdQ3YKKdFuLi7uR1sLc8xlO+RKdr76kf70Y1RRQ/vba4ZDSgW7E+
-         CX0Gicmco0X7YWHRzRQ6qVD4074EbSR7lkykWzapZ05F1w6KmnRGxsG0YHe9lNa2lU
-         8ayuPY7Vo5GSIWgnrpOAT9PWnywNXmn8fXggpWwk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
-        Wen Yang <wen.yang99@zte.com.cn>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Niklas Cassel <niklas.cassel@axis.com>,
-        Cyrille Pitchen <cyrille.pitchen@free-electrons.com>,
-        linux-pci@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 196/639] PCI: endpoint: functions: Use memcpy_fromio()/memcpy_toio()
-Date:   Fri, 24 Jan 2020 10:26:06 +0100
-Message-Id: <20200124093111.612954211@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
-References: <20200124093047.008739095@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1730741AbgAXMkH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 24 Jan 2020 07:40:07 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:55450 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729774AbgAXMkH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 24 Jan 2020 07:40:07 -0500
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 397EE532D99C1BB561E2;
+        Fri, 24 Jan 2020 20:40:05 +0800 (CST)
+Received: from DESKTOP-6T4S3DQ.china.huawei.com (10.47.84.245) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 24 Jan 2020 20:39:58 +0800
+From:   Shiju Jose <shiju.jose@huawei.com>
+To:     <linux-acpi@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <rjw@rjwysocki.net>,
+        <helgaas@kernel.org>, <lenb@kernel.org>, <bp@alien8.de>,
+        <james.morse@arm.com>, <tony.luck@intel.com>,
+        <gregkh@linuxfoundation.org>, <zhangliguang@linux.alibaba.com>,
+        <tglx@linutronix.de>
+CC:     <linuxarm@huawei.com>, <jonathan.cameron@huawei.com>,
+        <tanxiaofei@huawei.com>, <yangyicong@hisilicon.com>,
+        Shiju Jose <shiju.jose@huawei.com>
+Subject: [PATCH v2 0/2] ACPI: APEI: Add support to notify the vendor specific HW errors
+Date:   Fri, 24 Jan 2020 12:39:36 +0000
+Message-ID: <20200124123938.16524-1-shiju.jose@huawei.com>
+X-Mailer: git-send-email 2.19.2.windows.1
+In-Reply-To: <Shiju Jose>
+References: <Shiju Jose>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.47.84.245]
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Wen Yang <wen.yang99@zte.com.cn>
+Presently the vendor drivers are unable to do the recovery for the vendor specific
+recoverable HW errors, reported to the APEI driver in the vendor defined sections,
+because APEI driver does not support reporting the same to the vendor drivers.
 
-[ Upstream commit 726dabfde6aa35a4f1508e235ae37edbbf9fbc65 ]
+This patch set
+1. add an interface to the APEI driver to enable the vendor
+drivers to register the event handling functions for the corresponding
+vendor specific HW errors and report the error to the vendor driver.
 
-Functions copying from/to IO addresses should use the
-memcpy_fromio()/memcpy_toio() API rather than plain memcpy().
+2. add driver to handle HiSilicon hip08 PCIe controller's errors
+   which is an example application of the above APEI interface.
 
-Fix the issue detected through the sparse tool.
+Changes:
 
-Fixes: 349e7a85b25f ("PCI: endpoint: functions: Add an EP function to test PCI")
-Suggested-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-[lorenzo.pieralisi@arm.com: updated log]
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-CC: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC: Bjorn Helgaas <bhelgaas@google.com>
-CC: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-CC: Niklas Cassel <niklas.cassel@axis.com>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
-CC: linux-pci@vger.kernel.org
-CC: linux-kernel@vger.kernel.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pci/endpoint/functions/pci-epf-test.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+V2:
+1. Changes in the HiSilicon PCIe controller's error handling driver
+   for the comments from Bjorn Helgaas.
+   
+2. Changes in the APEI interface to support reporting the vendor error
+   for module with multiple devices, but use the same section type.
+   In the error handler will use socket id/sub module id etc to distinguish
+   the device.
 
-diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-index 3e86fa3c7da32..4bbd26e8a9e2f 100644
---- a/drivers/pci/endpoint/functions/pci-epf-test.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-@@ -175,7 +175,7 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
- 		goto err_map_addr;
- 	}
- 
--	memcpy(buf, src_addr, reg->size);
-+	memcpy_fromio(buf, src_addr, reg->size);
- 
- 	crc32 = crc32_le(~0, buf, reg->size);
- 	if (crc32 != reg->checksum)
-@@ -230,7 +230,7 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
- 	get_random_bytes(buf, reg->size);
- 	reg->checksum = crc32_le(~0, buf, reg->size);
- 
--	memcpy(dst_addr, buf, reg->size);
-+	memcpy_toio(dst_addr, buf, reg->size);
- 
- 	/*
- 	 * wait 1ms inorder for the write to complete. Without this delay L3
+V1:  
+1. Fix comments from James Morse.
+
+2. add driver to handle HiSilicon hip08 PCIe controller's errors,
+   which is an application of the above interface.
+
+Shiju Jose (1):
+  ACPI: APEI: Add support to notify the vendor specific HW errors
+
+Yicong Yang (1):
+  PCI: hip: Add handling of HiSilicon hip PCIe controller's errors
+
+ drivers/acpi/apei/ghes.c                 | 116 ++++++++++-
+ drivers/pci/controller/Kconfig           |   8 +
+ drivers/pci/controller/Makefile          |   1 +
+ drivers/pci/controller/pcie-hisi-error.c | 336 +++++++++++++++++++++++++++++++
+ include/acpi/ghes.h                      |  56 ++++++
+ 5 files changed, 512 insertions(+), 5 deletions(-)
+ create mode 100644 drivers/pci/controller/pcie-hisi-error.c
+
 -- 
-2.20.1
-
+1.9.1
 
 
