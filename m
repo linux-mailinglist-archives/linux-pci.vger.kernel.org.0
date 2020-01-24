@@ -2,125 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E6EB2147968
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2020 09:29:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 17CAD147C46
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2020 10:50:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729418AbgAXI3W (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 24 Jan 2020 03:29:22 -0500
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:37353 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725843AbgAXI3W (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 24 Jan 2020 03:29:22 -0500
-X-Originating-IP: 88.190.179.123
-Received: from localhost (unknown [88.190.179.123])
-        (Authenticated sender: repk@triplefau.lt)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 1C7C6C0010;
-        Fri, 24 Jan 2020 08:29:18 +0000 (UTC)
-Date:   Fri, 24 Jan 2020 09:37:43 +0100
-From:   Remi Pommarel <repk@triplefau.lt>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Yue Wang <yue.wang@amlogic.com>,
-        Kevin Hilman <khilman@baylibre.com>,
+        id S1730766AbgAXJut (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 24 Jan 2020 04:50:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51642 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730713AbgAXJus (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:50:48 -0500
+Received: from localhost (unknown [145.15.244.15])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EA19206D5;
+        Fri, 24 Jan 2020 09:50:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579859448;
+        bh=invVvVKYK/1dK5+OevdyADX2bdFmvZK6mtpBfUBztm8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=BYfaJWKTKDnEDjrKCw/nOLtSt7aHwaF1cEBO5yDMmvLKL48B7X8q+FTE5vfeSa019
+         8S9e4SUgXdWnIswBYUHCtB3dVGqZitoCNMx9pDa/uBNQusPrmPm20/onx/DrIYgIDY
+         SiuK4Y5mZAIjEugKb6VG36bu9JMzzUgLUVR4gLLg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
+        Wen Yang <wen.yang99@zte.com.cn>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v6 0/7] PCI: amlogic: Make PCIe working reliably on AXG
- platforms
-Message-ID: <20200124083743.GY1803@voidbox>
-References: <20200123232943.10229-1-repk@triplefau.lt>
- <64b5d857-569a-ab2e-a467-9cdb47cf20e4@baylibre.com>
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Niklas Cassel <niklas.cassel@axis.com>,
+        Cyrille Pitchen <cyrille.pitchen@free-electrons.com>,
+        linux-pci@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 104/343] PCI: endpoint: functions: Use memcpy_fromio()/memcpy_toio()
+Date:   Fri, 24 Jan 2020 10:28:42 +0100
+Message-Id: <20200124092933.745397829@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
+References: <20200124092919.490687572@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <64b5d857-569a-ab2e-a467-9cdb47cf20e4@baylibre.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+From: Wen Yang <wen.yang99@zte.com.cn>
 
-On Fri, Jan 24, 2020 at 09:02:12AM +0100, Neil Armstrong wrote:
-> Hi,
-> 
-> On 24/01/2020 00:29, Remi Pommarel wrote:
-> > PCIe device probing failures have been seen on AXG platforms and were
-> > due to unreliable clock signal output. Setting HHI_MIPI_CNTL0[26] bit
-> > in MIPI's PHY registers solved the problem. This bit controls band gap
-> > reference.
-> > 
-> > As discussed here [1] one of these shared MIPI/PCIE analog PHY register
-> > bits was implemented in the clock driver as CLKID_MIPI_ENABLE. This adds
-> > a PHY driver to control this bit instead, as well as setting the band
-> > gap one in order to get reliable PCIE communication.
-> > 
-> > While at it add another PHY driver to control PCIE only PHY registers,
-> > making AXG code more similar to G12A platform thus allowing to remove
-> > some specific platform handling in pci-meson driver.
-> > 
-> > Please note that CLKID_MIPI_ENABLE removable will be done in a different
-> > serie.
-> > 
-> > Changes since v5:
-> >  - Add additionalProperties in device tree binding documentation
-> >  - Make analog PHY required
-> > 
-> > Changes since v4:
-> >  - Rename the shared MIPI/PCIe PHY to analog
-> >  - Chain the MIPI/PCIe PHY to the PCIe one
-> > 
-> > Changes since v3:
-> >  - Go back to the shared MIPI/PCIe phy driver solution from v2
-> >  - Remove syscon usage
-> >  - Add all dt-bindings documentation
-> > 
-> > Changes since v2:
-> >  - Remove shared MIPI/PCIE device driver and use syscon to access register
-> >    in PCIE only driver instead
-> >  - Include devicetree documentation
-> > 
-> > Changes sinve v1:
-> >  - Move HHI_MIPI_CNTL0 bit control in its own PHY driver
-> >  - Add a PHY driver for PCIE_PHY registers
-> >  - Modify pci-meson.c to make use of both PHYs and remove specific
-> >    handling for AXG and G12A
-> > 
-> > [1] https://lkml.org/lkml/2019/12/16/119
-> > 
-> > Remi Pommarel (7):
-> >   dt-bindings: Add AXG PCIE PHY bindings
-> >   dt-bindings: Add AXG shared MIPI/PCIE analog PHY bindings
-> >   dt-bindings: PCI: meson: Update PCIE bindings documentation
-> >   arm64: dts: meson-axg: Add PCIE PHY nodes
-> >   phy: amlogic: Add Amlogic AXG MIPI/PCIE analog PHY Driver
-> >   phy: amlogic: Add Amlogic AXG PCIE PHY Driver
-> >   PCI: amlogic: Use AXG PCIE
-> > 
-> >  .../bindings/pci/amlogic,meson-pcie.txt       |  22 +-
-> >  .../amlogic,meson-axg-mipi-pcie-analog.yaml   |  35 ++++
-> >  .../bindings/phy/amlogic,meson-axg-pcie.yaml  |  52 +++++
-> >  arch/arm64/boot/dts/amlogic/meson-axg.dtsi    |  16 ++
-> >  drivers/pci/controller/dwc/pci-meson.c        | 116 ++---------
-> >  drivers/phy/amlogic/Kconfig                   |  22 ++
-> >  drivers/phy/amlogic/Makefile                  |  12 +-
-> >  .../amlogic/phy-meson-axg-mipi-pcie-analog.c  | 188 +++++++++++++++++
-> >  drivers/phy/amlogic/phy-meson-axg-pcie.c      | 192 ++++++++++++++++++
-> >  9 files changed, 543 insertions(+), 112 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-axg-mipi-pcie-analog.yaml
-> >  create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-axg-pcie.yaml
-> >  create mode 100644 drivers/phy/amlogic/phy-meson-axg-mipi-pcie-analog.c
-> >  create mode 100644 drivers/phy/amlogic/phy-meson-axg-pcie.c
-> > 
-> 
-> You forgot to keep the Reviewed-by/Acked-by tags from the previous reviews.
-> 
+[ Upstream commit 726dabfde6aa35a4f1508e235ae37edbbf9fbc65 ]
 
-Indeed, sorry about that, I have just added them.
+Functions copying from/to IO addresses should use the
+memcpy_fromio()/memcpy_toio() API rather than plain memcpy().
 
+Fix the issue detected through the sparse tool.
+
+Fixes: 349e7a85b25f ("PCI: endpoint: functions: Add an EP function to test PCI")
+Suggested-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+[lorenzo.pieralisi@arm.com: updated log]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+CC: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC: Bjorn Helgaas <bhelgaas@google.com>
+CC: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+CC: Niklas Cassel <niklas.cassel@axis.com>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
+CC: linux-pci@vger.kernel.org
+CC: linux-kernel@vger.kernel.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pci/endpoint/functions/pci-epf-test.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+index f9308c2f22e67..c2541a772abc8 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-test.c
++++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+@@ -177,7 +177,7 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
+ 		goto err_map_addr;
+ 	}
+ 
+-	memcpy(buf, src_addr, reg->size);
++	memcpy_fromio(buf, src_addr, reg->size);
+ 
+ 	crc32 = crc32_le(~0, buf, reg->size);
+ 	if (crc32 != reg->checksum)
+@@ -231,7 +231,7 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
+ 	get_random_bytes(buf, reg->size);
+ 	reg->checksum = crc32_le(~0, buf, reg->size);
+ 
+-	memcpy(dst_addr, buf, reg->size);
++	memcpy_toio(dst_addr, buf, reg->size);
+ 
+ 	/*
+ 	 * wait 1ms inorder for the write to complete. Without this delay L3
 -- 
-Remi
+2.20.1
+
+
+
