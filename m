@@ -2,27 +2,27 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 17CAD147C46
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2020 10:50:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A78B14847E
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2020 12:44:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730766AbgAXJut (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 24 Jan 2020 04:50:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51642 "EHLO mail.kernel.org"
+        id S2387827AbgAXLKf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 24 Jan 2020 06:10:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730713AbgAXJus (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:50:48 -0500
-Received: from localhost (unknown [145.15.244.15])
+        id S2387889AbgAXLKd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:10:33 -0500
+Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EA19206D5;
-        Fri, 24 Jan 2020 09:50:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBDC020708;
+        Fri, 24 Jan 2020 11:10:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579859448;
-        bh=invVvVKYK/1dK5+OevdyADX2bdFmvZK6mtpBfUBztm8=;
+        s=default; t=1579864233;
+        bh=cKJUaldp19Cl94RAqGRylCP48OpAtKBvhX1cqyV2YUQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BYfaJWKTKDnEDjrKCw/nOLtSt7aHwaF1cEBO5yDMmvLKL48B7X8q+FTE5vfeSa019
-         8S9e4SUgXdWnIswBYUHCtB3dVGqZitoCNMx9pDa/uBNQusPrmPm20/onx/DrIYgIDY
-         SiuK4Y5mZAIjEugKb6VG36bu9JMzzUgLUVR4gLLg=
+        b=zHsC01G5sCJrcvdQ3YKKdFuLi7uR1sLc8xlO+RKdr76kf70Y1RRQ/vba4ZDSgW7E+
+         CX0Gicmco0X7YWHRzRQ6qVD4074EbSR7lkykWzapZ05F1w6KmnRGxsG0YHe9lNa2lU
+         8ayuPY7Vo5GSIWgnrpOAT9PWnywNXmn8fXggpWwk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -34,12 +34,12 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Niklas Cassel <niklas.cassel@axis.com>,
         Cyrille Pitchen <cyrille.pitchen@free-electrons.com>,
         linux-pci@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 104/343] PCI: endpoint: functions: Use memcpy_fromio()/memcpy_toio()
-Date:   Fri, 24 Jan 2020 10:28:42 +0100
-Message-Id: <20200124092933.745397829@linuxfoundation.org>
+Subject: [PATCH 4.19 196/639] PCI: endpoint: functions: Use memcpy_fromio()/memcpy_toio()
+Date:   Fri, 24 Jan 2020 10:26:06 +0100
+Message-Id: <20200124093111.612954211@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
-References: <20200124092919.490687572@linuxfoundation.org>
+In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
+References: <20200124093047.008739095@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -78,10 +78,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-index f9308c2f22e67..c2541a772abc8 100644
+index 3e86fa3c7da32..4bbd26e8a9e2f 100644
 --- a/drivers/pci/endpoint/functions/pci-epf-test.c
 +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-@@ -177,7 +177,7 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
+@@ -175,7 +175,7 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
  		goto err_map_addr;
  	}
  
@@ -90,7 +90,7 @@ index f9308c2f22e67..c2541a772abc8 100644
  
  	crc32 = crc32_le(~0, buf, reg->size);
  	if (crc32 != reg->checksum)
-@@ -231,7 +231,7 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
+@@ -230,7 +230,7 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
  	get_random_bytes(buf, reg->size);
  	reg->checksum = crc32_le(~0, buf, reg->size);
  
