@@ -2,21 +2,21 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BCE73148541
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2020 13:40:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C44B8148546
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jan 2020 13:40:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730741AbgAXMkH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 24 Jan 2020 07:40:07 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:55450 "EHLO huawei.com"
+        id S1732980AbgAXMkM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 24 Jan 2020 07:40:12 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:55628 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729774AbgAXMkH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 24 Jan 2020 07:40:07 -0500
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 397EE532D99C1BB561E2;
-        Fri, 24 Jan 2020 20:40:05 +0800 (CST)
+        id S1729774AbgAXMkM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 24 Jan 2020 07:40:12 -0500
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 47AF1A2B43927DA4507A;
+        Fri, 24 Jan 2020 20:40:10 +0800 (CST)
 Received: from DESKTOP-6T4S3DQ.china.huawei.com (10.47.84.245) by
  DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 24 Jan 2020 20:39:58 +0800
+ 14.3.439.0; Fri, 24 Jan 2020 20:40:03 +0800
 From:   Shiju Jose <shiju.jose@huawei.com>
 To:     <linux-acpi@vger.kernel.org>, <linux-pci@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <rjw@rjwysocki.net>,
@@ -27,12 +27,13 @@ To:     <linux-acpi@vger.kernel.org>, <linux-pci@vger.kernel.org>,
 CC:     <linuxarm@huawei.com>, <jonathan.cameron@huawei.com>,
         <tanxiaofei@huawei.com>, <yangyicong@hisilicon.com>,
         Shiju Jose <shiju.jose@huawei.com>
-Subject: [PATCH v2 0/2] ACPI: APEI: Add support to notify the vendor specific HW errors
-Date:   Fri, 24 Jan 2020 12:39:36 +0000
-Message-ID: <20200124123938.16524-1-shiju.jose@huawei.com>
+Subject: [PATCH v2 1/2] ACPI: APEI: Add support to notify the vendor specific HW errors
+Date:   Fri, 24 Jan 2020 12:39:37 +0000
+Message-ID: <20200124123938.16524-2-shiju.jose@huawei.com>
 X-Mailer: git-send-email 2.19.2.windows.1
-In-Reply-To: <Shiju Jose>
+In-Reply-To: <20200124123938.16524-1-shiju.jose@huawei.com>
 References: <Shiju Jose>
+ <20200124123938.16524-1-shiju.jose@huawei.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -43,49 +44,221 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Presently the vendor drivers are unable to do the recovery for the vendor specific
-recoverable HW errors, reported to the APEI driver in the vendor defined sections,
-because APEI driver does not support reporting the same to the vendor drivers.
+Presently APEI does not support reporting the vendor specific
+recoverable HW errors, received in the vendor defined table entries, to the
+vendor drivers for the recovery.
 
-This patch set
-1. add an interface to the APEI driver to enable the vendor
-drivers to register the event handling functions for the corresponding
-vendor specific HW errors and report the error to the vendor driver.
+This patch adds the support to register and unregister the
+error handling function for the vendor specific HW errors and
+to notify the registered kernel driver.
 
-2. add driver to handle HiSilicon hip08 PCIe controller's errors
-   which is an example application of the above APEI interface.
+Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+---
+ drivers/acpi/apei/ghes.c | 116 +++++++++++++++++++++++++++++++++++++++++++++--
+ include/acpi/ghes.h      |  56 +++++++++++++++++++++++
+ 2 files changed, 167 insertions(+), 5 deletions(-)
 
-Changes:
-
-V2:
-1. Changes in the HiSilicon PCIe controller's error handling driver
-   for the comments from Bjorn Helgaas.
-   
-2. Changes in the APEI interface to support reporting the vendor error
-   for module with multiple devices, but use the same section type.
-   In the error handler will use socket id/sub module id etc to distinguish
-   the device.
-
-V1:  
-1. Fix comments from James Morse.
-
-2. add driver to handle HiSilicon hip08 PCIe controller's errors,
-   which is an application of the above interface.
-
-Shiju Jose (1):
-  ACPI: APEI: Add support to notify the vendor specific HW errors
-
-Yicong Yang (1):
-  PCI: hip: Add handling of HiSilicon hip PCIe controller's errors
-
- drivers/acpi/apei/ghes.c                 | 116 ++++++++++-
- drivers/pci/controller/Kconfig           |   8 +
- drivers/pci/controller/Makefile          |   1 +
- drivers/pci/controller/pcie-hisi-error.c | 336 +++++++++++++++++++++++++++++++
- include/acpi/ghes.h                      |  56 ++++++
- 5 files changed, 512 insertions(+), 5 deletions(-)
- create mode 100644 drivers/pci/controller/pcie-hisi-error.c
-
+diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
+index 103acbb..69e18d7 100644
+--- a/drivers/acpi/apei/ghes.c
++++ b/drivers/acpi/apei/ghes.c
+@@ -490,6 +490,109 @@ static void ghes_handle_aer(struct acpi_hest_generic_data *gdata)
+ #endif
+ }
+ 
++struct ghes_event_notify {
++	struct list_head list;
++	struct rcu_head	rcu_head;
++	guid_t sec_type; /* guid of the error record */
++	ghes_event_handler_t event_handler; /* event handler function */
++	void *data; /* handler driver's private data if any */
++};
++
++/* List to store the registered event handling functions */
++static DEFINE_MUTEX(ghes_event_notify_mutex);
++static LIST_HEAD(ghes_event_handler_list);
++
++/**
++ * ghes_register_event_handler - register an event handling
++ * function for the non-fatal HW errors.
++ * @sec_type: sec_type of the corresponding CPER to be notified.
++ * @event_handler: pointer to the error handling function.
++ * @data: handler driver's private data.
++ *
++ * return 0 : SUCCESS, non-zero : FAIL
++ */
++int ghes_register_event_handler(guid_t sec_type,
++				ghes_event_handler_t event_handler,
++				void *data)
++{
++	struct ghes_event_notify *event_notify;
++
++	event_notify = kzalloc(sizeof(*event_notify), GFP_KERNEL);
++	if (!event_notify)
++		return -ENOMEM;
++
++	event_notify->event_handler = event_handler;
++	guid_copy(&event_notify->sec_type, &sec_type);
++	event_notify->data = data;
++
++	mutex_lock(&ghes_event_notify_mutex);
++	list_add_rcu(&event_notify->list, &ghes_event_handler_list);
++	mutex_unlock(&ghes_event_notify_mutex);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(ghes_register_event_handler);
++
++/**
++ * ghes_unregister_event_handler - unregister the previously
++ * registered event handling function.
++ * @sec_type: sec_type of the corresponding CPER.
++ * @data: driver specific data to distinguish devices.
++ */
++void ghes_unregister_event_handler(guid_t sec_type, void *data)
++{
++	struct ghes_event_notify *event_notify;
++	bool found = false;
++
++	mutex_lock(&ghes_event_notify_mutex);
++	rcu_read_lock();
++	list_for_each_entry_rcu(event_notify,
++				&ghes_event_handler_list, list) {
++		if (guid_equal(&event_notify->sec_type, &sec_type)) {
++			if (data != event_notify->data)
++				continue;
++			list_del_rcu(&event_notify->list);
++			found = true;
++			break;
++		}
++	}
++	rcu_read_unlock();
++	mutex_unlock(&ghes_event_notify_mutex);
++
++	if (!found) {
++		pr_err("Tried to unregister a GHES event handler that has not been registered\n");
++		return;
++	}
++
++	synchronize_rcu();
++	kfree(event_notify);
++}
++EXPORT_SYMBOL_GPL(ghes_unregister_event_handler);
++
++static int ghes_handle_non_standard_event(guid_t *sec_type,
++	struct acpi_hest_generic_data *gdata, int sev)
++{
++	struct ghes_event_notify *event_notify;
++	bool found = false;
++	int ret;
++
++	rcu_read_lock();
++	list_for_each_entry_rcu(event_notify,
++				&ghes_event_handler_list, list) {
++		if (guid_equal(&event_notify->sec_type, sec_type)) {
++			ret = event_notify->event_handler(gdata, sev,
++						    event_notify->data);
++			if (!ret)
++				continue;
++			found = true;
++			break;
++		}
++	}
++	rcu_read_unlock();
++
++	return found;
++}
++
+ static void ghes_do_proc(struct ghes *ghes,
+ 			 const struct acpi_hest_generic_status *estatus)
+ {
+@@ -525,11 +628,14 @@ static void ghes_do_proc(struct ghes *ghes,
+ 
+ 			log_arm_hw_error(err);
+ 		} else {
+-			void *err = acpi_hest_get_payload(gdata);
+-
+-			log_non_standard_event(sec_type, fru_id, fru_text,
+-					       sec_sev, err,
+-					       gdata->error_data_length);
++			if (!ghes_handle_non_standard_event(sec_type, gdata,
++							    sev)) {
++				void *err = acpi_hest_get_payload(gdata);
++
++				log_non_standard_event(sec_type, fru_id,
++						       fru_text, sec_sev, err,
++						       gdata->error_data_length);
++			}
+ 		}
+ 	}
+ }
+diff --git a/include/acpi/ghes.h b/include/acpi/ghes.h
+index e3f1cdd..e3387cf 100644
+--- a/include/acpi/ghes.h
++++ b/include/acpi/ghes.h
+@@ -50,6 +50,62 @@ enum {
+ 	GHES_SEV_PANIC = 0x3,
+ };
+ 
++enum {
++	GHES_EVENT_NONE	= 0x0,
++	GHES_EVENT_HANDLED	= 0x1,
++};
++
++/**
++ * typedef ghes_event_handler_t - event handling function
++ * for the non-fatal HW errors.
++ *
++ * @gdata: acpi_hest_generic_data.
++ * @sev: error severity of the entire error event defined in the
++ *       ACPI spec table generic error status block.
++ * @data: handler driver's private data.
++ *
++ * Return : GHES_EVENT_NONE - event not handled, GHES_EVENT_HANDLED - handled.
++ *
++ * The error handling function is responsible for logging error and
++ * this function would be called in the interrupt context.
++ */
++typedef int (*ghes_event_handler_t)(struct acpi_hest_generic_data *gdata,
++				    int sev, void *data);
++
++#ifdef CONFIG_ACPI_APEI_GHES
++/**
++ * ghes_register_event_handler - register an event handling
++ * function for the non-fatal HW errors.
++ * @sec_type: sec_type of the corresponding CPER to be notified.
++ * @event_handler: pointer to the event handling function.
++ * @data: handler driver's private data.
++ *
++ * Return : 0 - SUCCESS, non-zero - FAIL.
++ */
++int ghes_register_event_handler(guid_t sec_type,
++				ghes_event_handler_t event_handler,
++				void *data);
++
++/**
++ * ghes_unregister_event_handler - unregister the previously
++ * registered event handling function.
++ * @sec_type: sec_type of the corresponding CPER.
++ * @data: driver specific data to distinguish devices.
++ */
++void ghes_unregister_event_handler(guid_t sec_typei, void *data);
++#else
++static inline int ghes_register_event_handler(guid_t sec_type,
++					ghes_event_handler_t event_handler,
++					void *data)
++{
++	return -ENODEV;
++}
++
++static inline void ghes_unregister_event_handler(guid_t sec_type, void *data)
++{
++}
++#endif
++
+ int ghes_estatus_pool_init(int num_ghes);
+ 
+ /* From drivers/edac/ghes_edac.c */
 -- 
 1.9.1
 
