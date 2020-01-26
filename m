@@ -2,295 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F4AB149850
-	for <lists+linux-pci@lfdr.de>; Sun, 26 Jan 2020 01:28:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D413149C38
+	for <lists+linux-pci@lfdr.de>; Sun, 26 Jan 2020 19:13:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727893AbgAZA2C (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 25 Jan 2020 19:28:02 -0500
-Received: from mga05.intel.com ([192.55.52.43]:59409 "EHLO mga05.intel.com"
+        id S1727212AbgAZSNH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 26 Jan 2020 13:13:07 -0500
+Received: from mga12.intel.com ([192.55.52.136]:36752 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727163AbgAZA2C (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 25 Jan 2020 19:28:02 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
+        id S1725838AbgAZSNH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 26 Jan 2020 13:13:07 -0500
+X-Amp-Result: UNSCANNABLE
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jan 2020 16:28:01 -0800
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jan 2020 10:13:06 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,363,1574150400"; 
-   d="scan'208";a="260653564"
+X-IronPort-AV: E=Sophos;i="5.70,366,1574150400"; 
+   d="scan'208";a="246211153"
 Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga002.fm.intel.com with ESMTP; 25 Jan 2020 16:28:00 -0800
+  by orsmga002.jf.intel.com with ESMTP; 26 Jan 2020 10:13:01 -0800
 Received: from kbuild by lkp-server01 with local (Exim 4.89)
         (envelope-from <lkp@intel.com>)
-        id 1ivVmR-0005Ga-Te; Sun, 26 Jan 2020 08:27:59 +0800
-Date:   Sun, 26 Jan 2020 08:27:48 +0800
+        id 1ivmP7-0007e3-2V; Mon, 27 Jan 2020 02:13:01 +0800
+Date:   Mon, 27 Jan 2020 02:12:13 +0800
 From:   kbuild test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/aer] BUILD SUCCESS
- d95f20c4f07020ebc605f3b46af4b6db9eb5fc99
-Message-ID: <5e2cdd04.0V0M4jfb4hAuzXVm%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+To:     Shiju Jose <shiju.jose@huawei.com>
+Cc:     kbuild-all@lists.01.org, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rjw@rjwysocki.net, helgaas@kernel.org, lenb@kernel.org,
+        bp@alien8.de, james.morse@arm.com, tony.luck@intel.com,
+        gregkh@linuxfoundation.org, zhangliguang@linux.alibaba.com,
+        tglx@linutronix.de, linuxarm@huawei.com,
+        jonathan.cameron@huawei.com, tanxiaofei@huawei.com,
+        yangyicong@hisilicon.com, Shiju Jose <shiju.jose@huawei.com>
+Subject: Re: [PATCH v2 2/2] PCI: hip: Add handling of HiSilicon hip PCIe
+ controller's errors
+Message-ID: <202001270152.aPmzPfjp%lkp@intel.com>
+References: <20200124123938.16524-3-shiju.jose@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20200124123938.16524-3-shiju.jose@huawei.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/aer
-branch HEAD: d95f20c4f07020ebc605f3b46af4b6db9eb5fc99  PCI/AER: Initialize aer_fifo
+Hi Shiju,
 
-elapsed time: 2887m
+Thank you for the patch! Perhaps something to improve:
 
-configs tested: 241
-configs skipped: 0
+[auto build test WARNING on pm/linux-next]
+[also build test WARNING on linux/master linus/master v5.5-rc7]
+[cannot apply to pci/next next-20200121]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+url:    https://github.com/0day-ci/linux/commits/Shiju-Jose/ACPI-APEI-Add-support-to-notify-the-vendor-specific-HW-errors/20200125-171952
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git linux-next
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.1-153-g47b6dfef-dirty
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
 
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-alpha                               defconfig
-csky                                defconfig
-nds32                             allnoconfig
-nds32                               defconfig
-s390                             alldefconfig
-s390                             allmodconfig
-s390                              allnoconfig
-s390                             allyesconfig
-s390                          debug_defconfig
-s390                                defconfig
-s390                       zfcpdump_defconfig
-c6x                  randconfig-a001-20200124
-h8300                randconfig-a001-20200124
-microblaze           randconfig-a001-20200124
-nios2                randconfig-a001-20200124
-sparc64              randconfig-a001-20200124
-x86_64               randconfig-e001-20200125
-x86_64               randconfig-e002-20200125
-x86_64               randconfig-e003-20200125
-i386                 randconfig-e001-20200125
-i386                 randconfig-e002-20200125
-i386                 randconfig-e003-20200125
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
-ia64                                defconfig
-powerpc                             defconfig
-sh                               allmodconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-i386                             alldefconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-arc                              allyesconfig
-arc                                 defconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-x86_64               randconfig-e001-20200124
-x86_64               randconfig-e002-20200124
-x86_64               randconfig-e003-20200124
-i386                 randconfig-e001-20200124
-i386                 randconfig-e002-20200124
-i386                 randconfig-e003-20200124
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-x86_64               randconfig-d001-20200124
-x86_64               randconfig-d002-20200124
-x86_64               randconfig-d003-20200124
-i386                 randconfig-d001-20200124
-i386                 randconfig-d002-20200124
-i386                 randconfig-d003-20200124
-parisc                            allnoconfig
-parisc                            allyesonfig
-parisc                         b180_defconfig
-parisc                        c3000_defconfig
-parisc                              defconfig
-um                                  defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-riscv                            allmodconfig
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-x86_64               randconfig-f001-20200124
-x86_64               randconfig-f002-20200124
-x86_64               randconfig-f003-20200124
-i386                 randconfig-f001-20200124
-i386                 randconfig-f002-20200124
-i386                 randconfig-f003-20200124
-arc                  randconfig-a001-20200124
-arm                  randconfig-a001-20200124
-arm64                randconfig-a001-20200124
-ia64                 randconfig-a001-20200124
-powerpc              randconfig-a001-20200124
-sparc                randconfig-a001-20200124
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-csky                 randconfig-a001-20200124
-openrisc             randconfig-a001-20200124
-s390                 randconfig-a001-20200124
-sh                   randconfig-a001-20200124
-xtensa               randconfig-a001-20200124
-csky                 randconfig-a001-20200125
-openrisc             randconfig-a001-20200125
-s390                 randconfig-a001-20200125
-xtensa               randconfig-a001-20200125
-h8300                     edosk2674_defconfig
-h8300                    h8300h-sim_defconfig
-h8300                       h8s-sim_defconfig
-m68k                             allmodconfig
-m68k                       m5475evb_defconfig
-m68k                          multi_defconfig
-m68k                           sun3_defconfig
-x86_64               randconfig-a001-20200124
-x86_64               randconfig-a002-20200124
-x86_64               randconfig-a003-20200124
-i386                 randconfig-a001-20200124
-i386                 randconfig-a002-20200124
-i386                 randconfig-a003-20200124
-x86_64               randconfig-h001-20200125
-x86_64               randconfig-h002-20200125
-x86_64               randconfig-h003-20200125
-i386                 randconfig-h001-20200125
-i386                 randconfig-h002-20200125
-i386                 randconfig-h003-20200125
-x86_64               randconfig-c001-20200124
-x86_64               randconfig-c002-20200124
-x86_64               randconfig-c003-20200124
-i386                 randconfig-c001-20200124
-i386                 randconfig-c002-20200124
-i386                 randconfig-c003-20200124
-x86_64               randconfig-b001-20200125
-x86_64               randconfig-b002-20200125
-x86_64               randconfig-b003-20200125
-i386                 randconfig-b001-20200125
-i386                 randconfig-b002-20200125
-i386                 randconfig-b003-20200125
-x86_64               randconfig-a001-20200125
-x86_64               randconfig-a002-20200125
-x86_64               randconfig-a003-20200125
-i386                 randconfig-a001-20200125
-i386                 randconfig-a002-20200125
-i386                 randconfig-a003-20200125
-x86_64               randconfig-g001-20200126
-x86_64               randconfig-g002-20200126
-x86_64               randconfig-g003-20200126
-i386                 randconfig-g001-20200126
-i386                 randconfig-g002-20200126
-i386                 randconfig-g003-20200126
-x86_64               randconfig-g001-20200125
-x86_64               randconfig-g002-20200125
-x86_64               randconfig-g003-20200125
-i386                 randconfig-g001-20200125
-i386                 randconfig-g002-20200125
-i386                 randconfig-g003-20200125
-arc                  randconfig-a001-20200125
-arm                  randconfig-a001-20200125
-arm64                randconfig-a001-20200125
-ia64                 randconfig-a001-20200125
-powerpc              randconfig-a001-20200125
-sparc                randconfig-a001-20200125
-x86_64               randconfig-c001-20200125
-x86_64               randconfig-c002-20200125
-x86_64               randconfig-c003-20200125
-i386                 randconfig-c001-20200125
-i386                 randconfig-c002-20200125
-i386                 randconfig-c003-20200125
-c6x                  randconfig-a001-20200125
-h8300                randconfig-a001-20200125
-microblaze           randconfig-a001-20200125
-nios2                randconfig-a001-20200125
-sparc64              randconfig-a001-20200125
-x86_64               randconfig-b001-20200124
-x86_64               randconfig-b002-20200124
-x86_64               randconfig-b003-20200124
-i386                 randconfig-b001-20200124
-i386                 randconfig-b002-20200124
-i386                 randconfig-b003-20200124
-alpha                randconfig-a001-20200125
-m68k                 randconfig-a001-20200125
-mips                 randconfig-a001-20200125
-nds32                randconfig-a001-20200125
-parisc               randconfig-a001-20200125
-riscv                randconfig-a001-20200125
-x86_64               randconfig-d001-20200125
-x86_64               randconfig-d002-20200125
-x86_64               randconfig-d003-20200125
-i386                 randconfig-d001-20200125
-i386                 randconfig-d002-20200125
-i386                 randconfig-d003-20200125
-x86_64               randconfig-f001-20200125
-x86_64               randconfig-f002-20200125
-x86_64               randconfig-f003-20200125
-i386                 randconfig-f001-20200125
-i386                 randconfig-f002-20200125
-i386                 randconfig-f003-20200125
-x86_64               randconfig-h001-20200124
-x86_64               randconfig-h002-20200124
-x86_64               randconfig-h003-20200124
-i386                 randconfig-h001-20200124
-i386                 randconfig-h002-20200124
-i386                 randconfig-h003-20200124
-sh                   randconfig-a001-20200125
-x86_64               randconfig-g001-20200124
-x86_64               randconfig-g002-20200124
-x86_64               randconfig-g003-20200124
-i386                 randconfig-g001-20200124
-i386                 randconfig-g002-20200124
-i386                 randconfig-g003-20200124
-alpha                randconfig-a001-20200124
-m68k                 randconfig-a001-20200124
-mips                 randconfig-a001-20200124
-nds32                randconfig-a001-20200124
-parisc               randconfig-a001-20200124
-riscv                randconfig-a001-20200124
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+
+
+sparse warnings: (new ones prefixed by >>)
+
+>> drivers/pci/controller/pcie-hisi-error.c:53:8: sparse: sparse: symbol 'hisi_pcie_sec_type' was not declared. Should it be static?
+
+Please review and possibly fold the followup patch.
 
 ---
 0-DAY kernel test infrastructure                 Open Source Technology Center
