@@ -2,471 +2,296 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EDBA814983C
-	for <lists+linux-pci@lfdr.de>; Sun, 26 Jan 2020 00:27:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F4AB149850
+	for <lists+linux-pci@lfdr.de>; Sun, 26 Jan 2020 01:28:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727925AbgAYX1R (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 25 Jan 2020 18:27:17 -0500
-Received: from mga04.intel.com ([192.55.52.120]:41850 "EHLO mga04.intel.com"
+        id S1727893AbgAZA2C (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 25 Jan 2020 19:28:02 -0500
+Received: from mga05.intel.com ([192.55.52.43]:59409 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727817AbgAYX1Q (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 25 Jan 2020 18:27:16 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+        id S1727163AbgAZA2C (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 25 Jan 2020 19:28:02 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jan 2020 15:27:14 -0800
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jan 2020 16:28:01 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,363,1574150400"; 
-   d="scan'208";a="426953523"
-Received: from skuppusw-desk.jf.intel.com (HELO skuppusw-desk.amr.corp.intel.com) ([10.54.74.33])
-  by fmsmga005.fm.intel.com with ESMTP; 25 Jan 2020 15:27:13 -0800
-Date:   Sat, 25 Jan 2020 15:25:00 -0800
-From:   Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
+   d="scan'208";a="260653564"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga002.fm.intel.com with ESMTP; 25 Jan 2020 16:28:00 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1ivVmR-0005Ga-Te; Sun, 26 Jan 2020 08:27:59 +0800
+Date:   Sun, 26 Jan 2020 08:27:48 +0800
+From:   kbuild test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, Keith Busch <keith.busch@intel.com>,
-        Huong Nguyen <huong.nguyen@dell.com>,
-        Austin Bolen <Austin.Bolen@dell.com>
-Subject: Re: [PATCH v13 4/8] PCI/DPC: Add Error Disconnect Recover (EDR)
- support
-Message-ID: <20200125232500.GA112031@skuppusw-desk.amr.corp.intel.com>
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
-References: <f9b8a3e79fd7f2e732ce2f712ad399734eadef84.1579406227.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <20200124150450.GA15183@google.com>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:pci/aer] BUILD SUCCESS
+ d95f20c4f07020ebc605f3b46af4b6db9eb5fc99
+Message-ID: <5e2cdd04.0V0M4jfb4hAuzXVm%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200124150450.GA15183@google.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 09:04:50AM -0600, Bjorn Helgaas wrote:
-> On Sat, Jan 18, 2020 at 08:00:33PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > 
-> > As per ACPI specification r6.3, sec 5.6.6, when firmware owns Downstream
-> > Port Containment (DPC), its expected to use the "Error Disconnect
-> > Recover" (EDR) notification to alert OSPM of a DPC event and if OS
-> > supports EDR, its expected to handle the software state invalidation and
-> > port recovery in OS, and also let firmware know the recovery status via
-> > _OST ACPI call. Related _OST status codes can be found in ACPI
-> > specification r6.3, sec 6.3.5.2.
-> > 
-> > Also, as per PCI firmware specification r3.2 Downstream Port Containment
-> > Related Enhancements ECN, sec 4.5.1, table 4-6, If DPC is controlled by
-> > firmware (firmware first mode), firmware is responsible for
-> > configuring the DPC and OS is responsible for error recovery. Also, OS
-> > is allowed to modify DPC registers only during the EDR notification
-> > window. So with EDR support, OS should provide DPC port services even in
-> > firmware first mode.
-> > 
-> > Cc: Keith Busch <keith.busch@intel.com>
-> > Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > Acked-by: Keith Busch <keith.busch@intel.com>
-> > Tested-by: Huong Nguyen <huong.nguyen@dell.com>
-> > Tested-by: Austin Bolen <Austin.Bolen@dell.com>
-> > ---
-> >  drivers/pci/pci-acpi.c   |  99 +++++++++++++++++++++++++++++++
-> >  drivers/pci/pcie/Kconfig |  10 ++++
-> >  drivers/pci/pcie/dpc.c   | 123 ++++++++++++++++++++++++++++++++++++++-
-> >  include/linux/pci-acpi.h |  13 +++++
-> >  4 files changed, 244 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> > index 0c02d500158f..920928f0d55c 100644
-> > --- a/drivers/pci/pci-acpi.c
-> > +++ b/drivers/pci/pci-acpi.c
-> > @@ -103,6 +103,105 @@ int acpi_get_rc_resources(struct device *dev, const char *hid, u16 segment,
-> >  }
-> >  #endif
-> >  
-> > +#if defined(CONFIG_PCIE_DPC)
-> > +
-> > +/*
-> > + * _DSM wrapper function to enable/disable DPC port.
-> > + * @dpc   : DPC device structure
-> > + * @enable: status of DPC port (0 or 1).
-> > + *
-> > + * returns 0 on success or errno on failure.
-> > + */
-> > +int acpi_enable_dpc_port(struct pci_dev *pdev, acpi_handle handle, bool enable)
-> > +{
-> > +	union acpi_object *obj, argv4, req;
-> > +	int status = 0;
-> > +
-> > +	req.type = ACPI_TYPE_INTEGER;
-> > +	req.integer.value = enable;
-> > +
-> > +	argv4.type = ACPI_TYPE_PACKAGE;
-> > +	argv4.package.count = 1;
-> > +	argv4.package.elements = &req;
-> > +
-> > +	/*
-> > +	 * Per the Downstream Port Containment Related Enhancements ECN to
-> > +	 * the PCI Firmware Specification r3.2, sec 4.6.12,
-> > +	 * EDR_PORT_ENABLE_DSM is optional.  Return success if it's not
-> > +	 * implemented.
-> > +	 */
-> > +	obj = acpi_evaluate_dsm(handle, &pci_acpi_dsm_guid, 5,
-> > +				EDR_PORT_ENABLE_DSM, &argv4);
-> > +	if (!obj)
-> > +		return 0;
-> > +
-> > +	if (obj->type != ACPI_TYPE_INTEGER || obj->integer.value != enable)
-> > +		status = -EIO;
-> > +
-> > +	ACPI_FREE(obj);
-> > +
-> > +	return status;
-> > +}
-> > +
-> > +/*
-> > + * _DSM wrapper function to locate DPC port.
-> > + * @dpc   : DPC device structure
-> > + *
-> > + * returns pci_dev or NULL.
-> > + */
-> > +struct pci_dev *acpi_locate_dpc_port(struct pci_dev *pdev, acpi_handle handle)
-> > +{
-> > +	union acpi_object *obj;
-> > +	u16 port;
-> > +
-> > +	obj = acpi_evaluate_dsm(handle, &pci_acpi_dsm_guid, 5,
-> > +				EDR_PORT_LOCATE_DSM, NULL);
-> > +	if (!obj)
-> > +		return pci_dev_get(pdev);
-> > +
-> > +	if (obj->type != ACPI_TYPE_INTEGER) {
-> > +		ACPI_FREE(obj);
-> > +		return NULL;
-> > +	}
-> > +
-> > +	/*
-> > +	 * Firmware returns DPC port BDF details in following format:
-> > +	 *	15:8 = bus
-> > +	 *	 7:3 = device
-> > +	 *	 2:0 = function
-> > +	 */
-> > +	port = obj->integer.value;
-> > +
-> > +	ACPI_FREE(obj);
-> > +
-> > +	return pci_get_domain_bus_and_slot(pci_domain_nr(pdev->bus),
-> > +					   PCI_BUS_NUM(port), port & 0xff);
-> > +}
-> > +
-> > +/*
-> > + * _OST wrapper function to let firmware know the status of EDR event.
-> > + * @dpc   : DPC device structure.
-> > + * @status: Status of EDR event.
-> > + */
-> > +int acpi_send_edr_status(struct pci_dev *pdev, acpi_handle handle, u16 status)
-> > +{
-> > +	u32 ost_status;
-> > +
-> > +	pci_dbg(pdev, "Sending EDR status :%#x\n", status);
-> > +
-> > +	ost_status =  PCI_DEVID(pdev->bus->number, pdev->devfn);
-> > +	ost_status = (ost_status << 16) | status;
-> > +
-> > +	status = acpi_evaluate_ost(handle,
-> > +				   ACPI_NOTIFY_DISCONNECT_RECOVER,
-> > +				   ost_status, NULL);
-> > +	if (ACPI_FAILURE(status))
-> > +		return -EINVAL;
-> > +
-> > +	return 0;
-> > +}
-> > +#endif /* CONFIG_PCIE_DPC */
-> 
-> I think we should try collecting all this stuff into a new pcie/edr.c
-> file.  It could contain all the above, plus edr_handle_event() and
-> maybe something like a "pci_acpi_add_edr_notifier()" that could be
-> called from pci_acpi_setup() to install the notify handler.
-> 
-> I think the ACPI EDR stuff in dpc.c kind of clutters it up, especially
-> for the non-ACPI systems that use dpc.c.
-> 
-> Obviously this would require some sort of interface exported from
-> dpc.c to do the guts of edr_handle_event(), i.e., reading
-> PCI_EXP_DPC_STATUS and calling dpc_process_error().
-Ok. Let me move all EDR related code to edr.c. But, this might also 
-require me to export a new interface similar to pcie_do_recovery
-function. Since this function has dependency on port service
-from which is its called, I might need to create a version without
-this dependency.
-> 
-> >  phys_addr_t acpi_pci_root_get_mcfg_addr(acpi_handle handle)
-> >  {
-> >  	acpi_status status = AE_NOT_EXIST;
-> > diff --git a/drivers/pci/pcie/Kconfig b/drivers/pci/pcie/Kconfig
-> > index 6e3c04b46fb1..772b1f4cb19e 100644
-> > --- a/drivers/pci/pcie/Kconfig
-> > +++ b/drivers/pci/pcie/Kconfig
-> > @@ -140,3 +140,13 @@ config PCIE_BW
-> >  	  This enables PCI Express Bandwidth Change Notification.  If
-> >  	  you know link width or rate changes occur only to correct
-> >  	  unreliable links, you may answer Y.
-> > +
-> > +config PCIE_EDR
-> > +	bool "PCI Express Error Disconnect Recover support"
-> > +	depends on PCIE_DPC && ACPI
-> > +	help
-> > +	  This option adds Error Disconnect Recover support as specified
-> > +	  in the Downstream Port Containment Related Enhancements ECN to
-> > +	  the PCI Firmware Specification r3.2.  Enable this if you want to
-> > +	  support hybrid DPC model which uses both firmware and OS to
-> > +	  implement DPC.
-> > diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-> > index 9f58e91f8852..8a8ee374d9b1 100644
-> > --- a/drivers/pci/pcie/dpc.c
-> > +++ b/drivers/pci/pcie/dpc.c
-> > @@ -13,6 +13,8 @@
-> >  #include <linux/interrupt.h>
-> >  #include <linux/init.h>
-> >  #include <linux/pci.h>
-> > +#include <linux/acpi.h>
-> > +#include <linux/pci-acpi.h>
-> >  
-> >  #include "portdrv.h"
-> >  #include "../pci.h"
-> > @@ -23,6 +25,11 @@ struct dpc_dev {
-> >  	bool			rp_extensions;
-> >  	u8			rp_log_size;
-> >  	bool			edr_enabled; /* EDR mode is supported */
-> > +	pci_ers_result_t	error_state;
-> > +	struct mutex		edr_lock;
-> > +#ifdef CONFIG_ACPI
-> > +	struct acpi_device	*adev;
-> > +#endif
-> >  };
-> >  
-> >  static const char * const rp_pio_error_string[] = {
-> > @@ -161,6 +168,9 @@ static pci_ers_result_t dpc_reset_link(struct pci_dev *pdev)
-> >  	if (!pcie_wait_for_link(pdev, true))
-> >  		return PCI_ERS_RESULT_DISCONNECT;
-> >  
-> > +	/* Since the device recovery is done just update the error state */
-> > +	dpc->error_state = PCI_ERS_RESULT_RECOVERED;
-> > +
-> >  	return PCI_ERS_RESULT_RECOVERED;
-> >  }
-> >  
-> > @@ -305,14 +315,94 @@ static irqreturn_t dpc_irq(int irq, void *context)
-> >  	return IRQ_HANDLED;
-> >  }
-> >  
-> > +static void dpc_error_resume(struct pci_dev *dev)
-> > +{
-> > +	struct dpc_dev *dpc = to_dpc_dev(dev);
-> > +
-> > +	dpc->error_state = PCI_ERS_RESULT_RECOVERED;
-> > +}
-> > +
-> > +#ifdef CONFIG_ACPI
-> > +
-> > +static void edr_handle_event(acpi_handle handle, u32 event, void *data)
-> > +{
-> > +	struct dpc_dev *dpc = data;
-> > +	struct pci_dev *pdev = dpc->dev->port;
-> > +	u16 status;
-> > +
-> > +	pci_info(pdev, "ACPI event %#x received\n", event);
-> > +
-> > +	if (event != ACPI_NOTIFY_DISCONNECT_RECOVER)
-> > +		return;
-> > +
-> > +	/*
-> > +	 * Check if _DSM(0xD) is available, and if present locate the
-> > +	 * port which issued EDR event.
-> > +	 */
-> > +	pdev = acpi_locate_dpc_port(pdev, dpc->adev->handle);
-> > +	if (!pdev) {
-> > +		pdev = dpc->dev->port;
-> > +		pci_err(pdev, "No valid port found\n");
-> 
-i> This message should include the bus/device/function that we looked for.
-Ok. I will add this in next version.
-> 
-> > +		return;
-> > +	}
-> > +
-> > +	dpc = to_dpc_dev(pdev);
-> > +	if (!dpc) {
-> > +		pci_err(pdev, "DPC port is NULL\n");
-> > +		goto done;
-> > +	}
-> > +
-> > +	mutex_lock(&dpc->edr_lock);
-> > +
-> > +	dpc->error_state = PCI_ERS_RESULT_DISCONNECT;
-> > +
-> > +	/*
-> > +	 * Check if the port supports DPC:
-> > +	 *
-> > +	 * If port supports DPC, then fall back to default error
-> > +	 * recovery.
-> > +	 */
-> > +	if (dpc->cap_pos) {
-> > +		/* Check if there is a valid DPC trigger */
-> > +		pci_read_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_STATUS,
-> > +				     &status);
-> > +		if ((status & PCI_EXP_DPC_STATUS_TRIGGER))
-> > +			dpc_process_error(dpc);
-> > +		else
-> > +			pci_err(pdev, "Invalid DPC trigger %#010x\n", status);
-> > +	}
-> > +
-> > +	/*
-> > +	 * If recovery is successful, send _OST(0xF, BDF << 16 | 0x80)
-> > +	 * to firmware. If not successful, send _OST(0xF, BDF << 16 | 0x81).
-> > +	 */
-> > +	if (dpc->error_state == PCI_ERS_RESULT_RECOVERED)
-> > +		status = EDR_OST_SUCCESS;
-> > +	else
-> > +		status = EDR_OST_FAILED;
-> > +
-> > +	/* Use ACPI handle of DPC event device for sending EDR status */
-> > +	dpc = data;
-> > +
-> > +	acpi_send_edr_status(pdev, dpc->adev->handle, status);
-> > +
-> > +	mutex_unlock(&dpc->edr_lock);
-> > +done:
-> > +	pci_dev_put(pdev);
-> > +}
-> > +#endif
-> > +
-> >  #define FLAG(x, y) (((x) & (y)) ? '+' : '-')
-> >  static int dpc_probe(struct pcie_device *dev)
-> >  {
-> >  	struct dpc_dev *dpc;
-> >  	struct pci_dev *pdev = dev->port;
-> >  	struct device *device = &dev->device;
-> > -	int status;
-> > +	int status = 0;
-> >  	u16 ctl, cap;
-> > +#ifdef CONFIG_ACPI
-> > +	struct acpi_device *adev = ACPI_COMPANION(&pdev->dev);
-> > +#endif
-> >  
-> >  	dpc = devm_kzalloc(device, sizeof(*dpc), GFP_KERNEL);
-> >  	if (!dpc)
-> > @@ -321,6 +411,9 @@ static int dpc_probe(struct pcie_device *dev)
-> >  	dpc->cap_pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_DPC);
-> >  	dpc->dev = dev;
-> >  
-> > +	dpc->error_state = PCI_ERS_RESULT_NONE;
-> > +	mutex_init(&dpc->edr_lock);
-> > +
-> >  	/*
-> >  	 * As per PCIe r5.0, sec 6.2.10, implementation note titled
-> >  	 * "Determination of DPC Control", to avoid conflicts over whether
-> > @@ -358,6 +451,33 @@ static int dpc_probe(struct pcie_device *dev)
-> >  		}
-> >  	}
-> >  
-> > +#ifdef CONFIG_ACPI
-> > +	if (pcie_aer_get_firmware_first(pdev) && adev) {
-> 
-> I'm not convinced about using pcie_aer_get_firmware_first() here yet.
-> AFAICT the spec doesn't actually say anything like this (I'm looking
-> at the ECN sec 4.5.1 description of "Error Disconnect Recover
-> Supported".
-If we are moving all EDR related code to edr.c, we will not need this
-change.
-> 
-> > +		acpi_status astatus;
-> > +
-> > +		dpc->adev = adev;
-> > +
-> > +		astatus = acpi_install_notify_handler(adev->handle,
-> > +						      ACPI_SYSTEM_NOTIFY,
-> > +						      edr_handle_event,
-> > +						      dpc);
-> 
-> I think there are a couple issues with the ECN here:
-> 
->   - The ECN allows EDR notifications on host bridges (sec 4.5.1, table
->     4-4), but it does not allow the "Locate" _DSM under host bridges
->     (sec 4.6.13).
-> 
->   - The ECN allows EDR notifications on root ports or switch ports
->     that do not support DPC (sec 4.5.1), but it does not allow the
->     "Locate" _DSM on those ports (sec 4.6.13).
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/aer
+branch HEAD: d95f20c4f07020ebc605f3b46af4b6db9eb5fc99  PCI/AER: Initialize aer_fifo
 
-Can you please give more details on where its mentioned? Following is
-the copy of "Locate" _DSM location related specification. All it says is,
-this object can be placed under any object representing root port or
-switch port. It does not seem to add any restrictions. Please let me  know
-your comments.
+elapsed time: 2887m
 
-Location:
-This object can be placed under any object representing a DPC capable
-PCI Express Root Port or Switch Downstream Port. If a port implements
-this DSM, its child devices cannot instantiate this DSM function
+configs tested: 241
+configs skipped: 0
 
-> 
-> > +		if (ACPI_FAILURE(astatus)) {
-> > +			pci_err(pdev,
-> > +				"Install ACPI_SYSTEM_NOTIFY handler failed\n");
-> > +			return -EBUSY;
-> > +		}
-> > +
-> > +		status = acpi_enable_dpc_port(pdev, adev->handle, true);
-> > +		if (status) {
-> > +			pci_warn(pdev, "Enable DPC port failed\n");
-> > +			acpi_remove_notify_handler(adev->handle,
-> > +						   ACPI_SYSTEM_NOTIFY,
-> > +						   edr_handle_event);
-> > +			return status;
-> > +		}
-> > +	}
-> > +#endif
-> >  	pci_read_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CAP, &cap);
-> >  	pci_read_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL, &ctl);
-> >  
-> > @@ -409,6 +529,7 @@ static struct pcie_port_service_driver dpcdriver = {
-> >  	.probe		= dpc_probe,
-> >  	.remove		= dpc_remove,
-> >  	.reset_link	= dpc_reset_link,
-> > +	.error_resume   = dpc_error_resume,
-> >  };
-> >  
-> >  int __init pcie_dpc_init(void)
-> > diff --git a/include/linux/pci-acpi.h b/include/linux/pci-acpi.h
-> > index 62b7fdcc661c..f4e0d5d984b0 100644
-> > --- a/include/linux/pci-acpi.h
-> > +++ b/include/linux/pci-acpi.h
-> > @@ -111,6 +111,19 @@ extern const guid_t pci_acpi_dsm_guid;
-> >  #define DEVICE_LABEL_DSM		0x07
-> >  #define RESET_DELAY_DSM			0x08
-> >  #define FUNCTION_DELAY_DSM		0x09
-> > +#ifdef CONFIG_PCIE_DPC
-> > +#define EDR_PORT_ENABLE_DSM		0x0C
-> > +#define EDR_PORT_LOCATE_DSM		0x0D
-> > +#define EDR_OST_SUCCESS			0x80
-> > +#define EDR_OST_FAILED			0x81
-> > +
-> > +int acpi_enable_dpc_port(struct pci_dev *pdev, acpi_handle handle,
-> > +			 bool enable);
-> > +struct pci_dev *acpi_locate_dpc_port(struct pci_dev *pdev,
-> > +				     acpi_handle handle);
-> > +int acpi_send_edr_status(struct pci_dev *pdev,
-> > +			 acpi_handle handle, u16 status);
-> > +#endif /* CONFIG_PCIE_DPC */
-> >  
-> >  #else	/* CONFIG_ACPI */
-> >  static inline void acpi_pci_add_bus(struct pci_bus *bus) { }
-> > -- 
-> > 2.21.0
-> > 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                          allmodconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                             defconfig
+alpha                               defconfig
+csky                                defconfig
+nds32                             allnoconfig
+nds32                               defconfig
+s390                             alldefconfig
+s390                             allmodconfig
+s390                              allnoconfig
+s390                             allyesconfig
+s390                          debug_defconfig
+s390                                defconfig
+s390                       zfcpdump_defconfig
+c6x                  randconfig-a001-20200124
+h8300                randconfig-a001-20200124
+microblaze           randconfig-a001-20200124
+nios2                randconfig-a001-20200124
+sparc64              randconfig-a001-20200124
+x86_64               randconfig-e001-20200125
+x86_64               randconfig-e002-20200125
+x86_64               randconfig-e003-20200125
+i386                 randconfig-e001-20200125
+i386                 randconfig-e002-20200125
+i386                 randconfig-e003-20200125
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                               rhel-7.6
+ia64                                defconfig
+powerpc                             defconfig
+sh                               allmodconfig
+sh                                allnoconfig
+sh                          rsk7269_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                            titan_defconfig
+i386                             alldefconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+arc                              allyesconfig
+arc                                 defconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+c6x                              allyesconfig
+c6x                        evmc6678_defconfig
+nios2                         10m50_defconfig
+nios2                         3c120_defconfig
+openrisc                    or1ksim_defconfig
+openrisc                 simple_smp_defconfig
+xtensa                       common_defconfig
+xtensa                          iss_defconfig
+x86_64               randconfig-e001-20200124
+x86_64               randconfig-e002-20200124
+x86_64               randconfig-e003-20200124
+i386                 randconfig-e001-20200124
+i386                 randconfig-e002-20200124
+i386                 randconfig-e003-20200124
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                             allmodconfig
+mips                              allnoconfig
+mips                             allyesconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm                         at91_dt_defconfig
+arm                           efm32_defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                        multi_v7_defconfig
+arm                        shmobile_defconfig
+arm                           sunxi_defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+x86_64               randconfig-d001-20200124
+x86_64               randconfig-d002-20200124
+x86_64               randconfig-d003-20200124
+i386                 randconfig-d001-20200124
+i386                 randconfig-d002-20200124
+i386                 randconfig-d003-20200124
+parisc                            allnoconfig
+parisc                            allyesonfig
+parisc                         b180_defconfig
+parisc                        c3000_defconfig
+parisc                              defconfig
+um                                  defconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+riscv                            allmodconfig
+riscv                             allnoconfig
+riscv                            allyesconfig
+riscv                               defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+x86_64               randconfig-f001-20200124
+x86_64               randconfig-f002-20200124
+x86_64               randconfig-f003-20200124
+i386                 randconfig-f001-20200124
+i386                 randconfig-f002-20200124
+i386                 randconfig-f003-20200124
+arc                  randconfig-a001-20200124
+arm                  randconfig-a001-20200124
+arm64                randconfig-a001-20200124
+ia64                 randconfig-a001-20200124
+powerpc              randconfig-a001-20200124
+sparc                randconfig-a001-20200124
+ia64                             alldefconfig
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+csky                 randconfig-a001-20200124
+openrisc             randconfig-a001-20200124
+s390                 randconfig-a001-20200124
+sh                   randconfig-a001-20200124
+xtensa               randconfig-a001-20200124
+csky                 randconfig-a001-20200125
+openrisc             randconfig-a001-20200125
+s390                 randconfig-a001-20200125
+xtensa               randconfig-a001-20200125
+h8300                     edosk2674_defconfig
+h8300                    h8300h-sim_defconfig
+h8300                       h8s-sim_defconfig
+m68k                             allmodconfig
+m68k                       m5475evb_defconfig
+m68k                          multi_defconfig
+m68k                           sun3_defconfig
+x86_64               randconfig-a001-20200124
+x86_64               randconfig-a002-20200124
+x86_64               randconfig-a003-20200124
+i386                 randconfig-a001-20200124
+i386                 randconfig-a002-20200124
+i386                 randconfig-a003-20200124
+x86_64               randconfig-h001-20200125
+x86_64               randconfig-h002-20200125
+x86_64               randconfig-h003-20200125
+i386                 randconfig-h001-20200125
+i386                 randconfig-h002-20200125
+i386                 randconfig-h003-20200125
+x86_64               randconfig-c001-20200124
+x86_64               randconfig-c002-20200124
+x86_64               randconfig-c003-20200124
+i386                 randconfig-c001-20200124
+i386                 randconfig-c002-20200124
+i386                 randconfig-c003-20200124
+x86_64               randconfig-b001-20200125
+x86_64               randconfig-b002-20200125
+x86_64               randconfig-b003-20200125
+i386                 randconfig-b001-20200125
+i386                 randconfig-b002-20200125
+i386                 randconfig-b003-20200125
+x86_64               randconfig-a001-20200125
+x86_64               randconfig-a002-20200125
+x86_64               randconfig-a003-20200125
+i386                 randconfig-a001-20200125
+i386                 randconfig-a002-20200125
+i386                 randconfig-a003-20200125
+x86_64               randconfig-g001-20200126
+x86_64               randconfig-g002-20200126
+x86_64               randconfig-g003-20200126
+i386                 randconfig-g001-20200126
+i386                 randconfig-g002-20200126
+i386                 randconfig-g003-20200126
+x86_64               randconfig-g001-20200125
+x86_64               randconfig-g002-20200125
+x86_64               randconfig-g003-20200125
+i386                 randconfig-g001-20200125
+i386                 randconfig-g002-20200125
+i386                 randconfig-g003-20200125
+arc                  randconfig-a001-20200125
+arm                  randconfig-a001-20200125
+arm64                randconfig-a001-20200125
+ia64                 randconfig-a001-20200125
+powerpc              randconfig-a001-20200125
+sparc                randconfig-a001-20200125
+x86_64               randconfig-c001-20200125
+x86_64               randconfig-c002-20200125
+x86_64               randconfig-c003-20200125
+i386                 randconfig-c001-20200125
+i386                 randconfig-c002-20200125
+i386                 randconfig-c003-20200125
+c6x                  randconfig-a001-20200125
+h8300                randconfig-a001-20200125
+microblaze           randconfig-a001-20200125
+nios2                randconfig-a001-20200125
+sparc64              randconfig-a001-20200125
+x86_64               randconfig-b001-20200124
+x86_64               randconfig-b002-20200124
+x86_64               randconfig-b003-20200124
+i386                 randconfig-b001-20200124
+i386                 randconfig-b002-20200124
+i386                 randconfig-b003-20200124
+alpha                randconfig-a001-20200125
+m68k                 randconfig-a001-20200125
+mips                 randconfig-a001-20200125
+nds32                randconfig-a001-20200125
+parisc               randconfig-a001-20200125
+riscv                randconfig-a001-20200125
+x86_64               randconfig-d001-20200125
+x86_64               randconfig-d002-20200125
+x86_64               randconfig-d003-20200125
+i386                 randconfig-d001-20200125
+i386                 randconfig-d002-20200125
+i386                 randconfig-d003-20200125
+x86_64               randconfig-f001-20200125
+x86_64               randconfig-f002-20200125
+x86_64               randconfig-f003-20200125
+i386                 randconfig-f001-20200125
+i386                 randconfig-f002-20200125
+i386                 randconfig-f003-20200125
+x86_64               randconfig-h001-20200124
+x86_64               randconfig-h002-20200124
+x86_64               randconfig-h003-20200124
+i386                 randconfig-h001-20200124
+i386                 randconfig-h002-20200124
+i386                 randconfig-h003-20200124
+sh                   randconfig-a001-20200125
+x86_64               randconfig-g001-20200124
+x86_64               randconfig-g002-20200124
+x86_64               randconfig-g003-20200124
+i386                 randconfig-g001-20200124
+i386                 randconfig-g002-20200124
+i386                 randconfig-g003-20200124
+alpha                randconfig-a001-20200124
+m68k                 randconfig-a001-20200124
+mips                 randconfig-a001-20200124
+nds32                randconfig-a001-20200124
+parisc               randconfig-a001-20200124
+riscv                randconfig-a001-20200124
+
+---
+0-DAY kernel test infrastructure                 Open Source Technology Center
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
