@@ -2,289 +2,158 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 14E0D149E35
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Jan 2020 03:21:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4664D149F2D
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Jan 2020 08:18:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbgA0CVl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 26 Jan 2020 21:21:41 -0500
-Received: from mga05.intel.com ([192.55.52.43]:21438 "EHLO mga05.intel.com"
+        id S1725777AbgA0HSa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Jan 2020 02:18:30 -0500
+Received: from mga02.intel.com ([134.134.136.20]:35724 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726670AbgA0CVk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 26 Jan 2020 21:21:40 -0500
+        id S1725765AbgA0HSa (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 27 Jan 2020 02:18:30 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jan 2020 18:21:40 -0800
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jan 2020 23:18:29 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,368,1574150400"; 
-   d="scan'208";a="303422331"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga001.fm.intel.com with ESMTP; 26 Jan 2020 18:21:38 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1ivu1y-000Bdm-5X; Mon, 27 Jan 2020 10:21:38 +0800
-Date:   Mon, 27 Jan 2020 10:21:05 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/host-vmd] BUILD SUCCESS
- dab0198413d227f13be7da8abf0d5bc8620427f0
-Message-ID: <5e2e4911.SqIBeRNXc4kwaF+7%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+X-IronPort-AV: E=Sophos;i="5.70,369,1574150400"; 
+   d="scan'208";a="260955504"
+Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
+  by fmsmga002.fm.intel.com with ESMTP; 26 Jan 2020 23:18:29 -0800
+Received: from fmsmsx101.amr.corp.intel.com (10.18.124.199) by
+ FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sun, 26 Jan 2020 23:18:28 -0800
+Received: from FMSEDG001.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx101.amr.corp.intel.com (10.18.124.199) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sun, 26 Jan 2020 23:18:28 -0800
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.169)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Sun, 26 Jan 2020 23:18:28 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eQJc7NEQGLltKPAc9G/lpFh9CpFTD+kevZd/BbaSgPbR3zsB0PqkaqJGxHQUTFn3xsPwkUxzIf/y4LGUnWiiLwpEhXaKmROFFUy0J59vp/ezpV8nSvDIEanqJahdcY+OAaWTvzSwgOfZGLzmfryr3UadL9tWr6pZOvRvNnJHa1YlxBYvYCEOMmQ9jbQD92/QSJmNZKFvTWq2It+NQHBCUAgZm/SFWaKzGeh4nagEuVVbheHBiiQByl9Dz4ycAjVWa0NRJP1LphtEpFG2vm4p6Esqpl+BWLUTAbUbzClOYAjlnxgQWo4zPvGRf8f4+8NR83d7/VionE0z2dcwXO0XjQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aWDEpSDs5uXICe4hDRpfi5RrtQUdYSTHa7PyGunXDLE=;
+ b=MRtp+y+fOLutInWHqW+2cLKDF4QQUfP3WmZYaGE7lX7+9RqmLnnIuFuZWLNyCgmofWPunNnlzhS+4J9fmAME5Q92RIM0A/9Ek1EtevLnwlLPvRWd13bRQdK29GE8f9X4l5YibdE+SpDGgyOji0Noj3tDDp7qtWlocloZk+8ksFInIlVizZDDWJ/M7Y5Hs/h1gPR76zznpnQbL/zdW/2eF6roItvnETwvpS8OEcwW9ltRuAVDJwhMn0K0t81SCir+9gA4x4tugpe6smtT4562YCEJIIztdkiH0URq0lMo2nXi69ZBqYLSHRngAJmMAUkU25isX3xWN3xyXRFDp+dlag==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aWDEpSDs5uXICe4hDRpfi5RrtQUdYSTHa7PyGunXDLE=;
+ b=IMgsz7f9J2zibvUDLgX2R7rIgsnyNzPPPN9c74LgMMFGMrsOthnFiny95lNMtcdC8GuUCkLuidK11+2E9FpVlLcrDIvUMR+HOjvvERRbF0pZNrjQNtje5mawNbo9bT+/MkiOXNLhSPN6SpPCeAzTQrXPyVzh+rSBFwO8ZAPAux4=
+Received: from BYAPR11MB2917.namprd11.prod.outlook.com (20.177.225.216) by
+ BYAPR11MB3319.namprd11.prod.outlook.com (20.177.127.81) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2665.22; Mon, 27 Jan 2020 07:18:27 +0000
+Received: from BYAPR11MB2917.namprd11.prod.outlook.com
+ ([fe80::e91c:4b6e:321d:cbe8]) by BYAPR11MB2917.namprd11.prod.outlook.com
+ ([fe80::e91c:4b6e:321d:cbe8%7]) with mapi id 15.20.2665.025; Mon, 27 Jan 2020
+ 07:18:26 +0000
+From:   "Skidanov, Alexey" <alexey.skidanov@intel.com>
+To:     "bhelgaas@google.com" <bhelgaas@google.com>,
+        "logang@deltatee.com" <logang@deltatee.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "christian.koenig@amd.com" <christian.koenig@amd.com>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "Heilper, Anat" <anat.heilper@intel.com>,
+        "Zadicario, Guy" <guy.zadicario@intel.com>
+Subject: Disabling ACS for peer-to-peer support
+Thread-Topic: Disabling ACS for peer-to-peer support
+Thread-Index: AdXU3xN5Q2BD/xtgQwWkaPIJp9pGCA==
+Date:   Mon, 27 Jan 2020 07:18:26 +0000
+Message-ID: <BYAPR11MB29171883468FD79722FF3652EE0B0@BYAPR11MB2917.namprd11.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.2.0.6
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=alexey.skidanov@intel.com; 
+x-originating-ip: [134.191.233.121]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d28f1fed-828c-467e-19fd-08d7a2f91a5c
+x-ms-traffictypediagnostic: BYAPR11MB3319:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR11MB3319430F844D498404B5807DEE0B0@BYAPR11MB3319.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3631;
+x-forefront-prvs: 02951C14DC
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(396003)(346002)(376002)(39860400002)(136003)(189003)(199004)(107886003)(5660300002)(52536014)(2906002)(54906003)(55016002)(4326008)(7696005)(478600001)(33656002)(9686003)(86362001)(66574012)(81156014)(71200400001)(8676002)(81166006)(8936002)(6506007)(66946007)(186003)(76116006)(64756008)(66556008)(66476007)(316002)(26005)(110136005)(66446008);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR11MB3319;H:BYAPR11MB2917.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: XqLY3xBptl7kIYnoZ9qybQOEWh4FedD8tDYRenCF5LXA99uZXRpite8moo/2B4J5EG4XxutF9r64uqb/o9nGFoXpiaJFfkFwVebGKhNNlqfCXJeZrzI037nV/hJb3Uu/NiYIWv6kCt4x9PbhxUmJgAFbz3+Ynh98515+SeL3OEc5TgThfEXbs0FzsFrFoUHaH+0KqbuuBuRfNPopeSuX13IB36c3CnFwTPqkjeSlDueVCyYFHko6VLKTnb7B5bnC+IfHuP0EIah+Wfqzlvdzk8gkaC5TCCWjQtyOA1Xvx3RafZtih0TgHzMMdM92WMbGRaY76Y7EgJZc1sJGEA1Mk3OsLEzpr2DCfuka3TH8ZplW/Rpt+Wzw7t/Nwt2gxGL1WE29aTwyHrFfo2U84ykj8Gx1SRUpUTOlmFNARAZxwzFJQN4opHdPesTBzpTZ3swo
+x-ms-exchange-antispam-messagedata: yVTaNQDsKAD907sFlgdt6+e3ChbnKTjxM9l27HAcrjwkv1iWTNOcVmLOVW4rmYJBef3JAfAQTogIW8HrF8fjjHhOkE54GvkbVeJMBWCxiEgpIor4Ly8B4OG8IeK/LNI3Da40BDZXciZeE2nV5rlwDg==
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-CrossTenant-Network-Message-Id: d28f1fed-828c-467e-19fd-08d7a2f91a5c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jan 2020 07:18:26.7605
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: MuErOEbuDYGXcAyT/QHJ9voG2hPu0DMutxleuwVnxe3w8TRP+s2hda9/WA6CI5VFktnnl8uwYJXsHanKT24p/qM6vgWlZf/WYeKoMgtmty0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB3319
+X-OriginatorOrg: intel.com
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/host-vmd
-branch HEAD: dab0198413d227f13be7da8abf0d5bc8620427f0  x86/PCI: Remove X86_DEV_DMA_OPS
+Hello,
 
-elapsed time: 2894m
+I have recently found the below commit to disabling ACS bits. Using kernel =
+parameter is pretty simple but requires to know in advance which devices mi=
+ght be participated in peer-to-peer sessions.
 
-configs tested: 234
-configs skipped: 0
+ Why we can't disable the ACS bits *after* the driver is initialized (and t=
+here is a request to connect between two peers) and not *during* device dis=
+covering?.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Thanks,
+Alexey
 
-riscv                            allmodconfig
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
-x86_64               randconfig-f001-20200125
-x86_64               randconfig-f002-20200125
-x86_64               randconfig-f003-20200125
-i386                 randconfig-f001-20200125
-i386                 randconfig-f002-20200125
-i386                 randconfig-f003-20200125
-arc                  randconfig-a001-20200125
-arm                  randconfig-a001-20200125
-arm64                randconfig-a001-20200125
-ia64                 randconfig-a001-20200125
-powerpc              randconfig-a001-20200125
-sparc                randconfig-a001-20200125
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-arm64                               defconfig
-x86_64               randconfig-h001-20200126
-x86_64               randconfig-h002-20200126
-x86_64               randconfig-h003-20200126
-i386                 randconfig-h001-20200126
-i386                 randconfig-h002-20200126
-i386                 randconfig-h003-20200126
-arm                              allmodconfig
-arm64                            allmodconfig
-x86_64               randconfig-b001-20200125
-x86_64               randconfig-b002-20200125
-x86_64               randconfig-b003-20200125
-i386                 randconfig-b001-20200125
-i386                 randconfig-b002-20200125
-i386                 randconfig-b003-20200125
-s390                             alldefconfig
-s390                             allmodconfig
-s390                              allnoconfig
-s390                             allyesconfig
-s390                          debug_defconfig
-s390                                defconfig
-s390                       zfcpdump_defconfig
-csky                 randconfig-a001-20200126
-openrisc             randconfig-a001-20200126
-s390                 randconfig-a001-20200126
-sh                   randconfig-a001-20200126
-xtensa               randconfig-a001-20200126
-arm                               allnoconfig
-arm                              allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-i386                             alldefconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-h8300                     edosk2674_defconfig
-h8300                    h8300h-sim_defconfig
-h8300                       h8s-sim_defconfig
-m68k                             allmodconfig
-m68k                       m5475evb_defconfig
-m68k                          multi_defconfig
-m68k                           sun3_defconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-arc                              allyesconfig
-arc                                 defconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-arc                  randconfig-a001-20200126
-arm                  randconfig-a001-20200126
-arm64                randconfig-a001-20200126
-ia64                 randconfig-a001-20200126
-powerpc              randconfig-a001-20200126
-sparc                randconfig-a001-20200126
-x86_64               randconfig-a001-20200126
-x86_64               randconfig-a002-20200126
-x86_64               randconfig-a003-20200126
-i386                 randconfig-a001-20200126
-i386                 randconfig-a002-20200126
-i386                 randconfig-a003-20200126
-x86_64               randconfig-b001-20200126
-x86_64               randconfig-b002-20200126
-x86_64               randconfig-b003-20200126
-i386                 randconfig-b001-20200126
-i386                 randconfig-b002-20200126
-i386                 randconfig-b003-20200126
-alpha                               defconfig
-csky                                defconfig
-nds32                             allnoconfig
-nds32                               defconfig
-x86_64               randconfig-g001-20200125
-x86_64               randconfig-g002-20200125
-x86_64               randconfig-g003-20200125
-i386                 randconfig-g001-20200125
-i386                 randconfig-g002-20200125
-i386                 randconfig-g003-20200125
-x86_64               randconfig-d001-20200125
-x86_64               randconfig-d002-20200125
-x86_64               randconfig-d003-20200125
-i386                 randconfig-d001-20200125
-i386                 randconfig-d002-20200125
-i386                 randconfig-d003-20200125
-c6x                  randconfig-a001-20200126
-h8300                randconfig-a001-20200126
-microblaze           randconfig-a001-20200126
-nios2                randconfig-a001-20200126
-sparc64              randconfig-a001-20200126
-x86_64               randconfig-h001-20200125
-x86_64               randconfig-h002-20200125
-x86_64               randconfig-h003-20200125
-i386                 randconfig-h001-20200125
-i386                 randconfig-h002-20200125
-i386                 randconfig-h003-20200125
-alpha                randconfig-a001-20200126
-m68k                 randconfig-a001-20200126
-mips                 randconfig-a001-20200126
-nds32                randconfig-a001-20200126
-parisc               randconfig-a001-20200126
-riscv                randconfig-a001-20200126
-x86_64               randconfig-g001-20200126
-x86_64               randconfig-g002-20200126
-x86_64               randconfig-g003-20200126
-i386                 randconfig-g001-20200126
-i386                 randconfig-g002-20200126
-i386                 randconfig-g003-20200126
-x86_64               randconfig-e001-20200125
-x86_64               randconfig-e002-20200125
-x86_64               randconfig-e003-20200125
-i386                 randconfig-e001-20200125
-i386                 randconfig-e002-20200125
-i386                 randconfig-e003-20200125
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                                defconfig
-parisc                            allnoconfig
-parisc                            allyesonfig
-parisc                         b180_defconfig
-parisc                        c3000_defconfig
-parisc                              defconfig
-x86_64               randconfig-a001-20200125
-x86_64               randconfig-a002-20200125
-x86_64               randconfig-a003-20200125
-i386                 randconfig-a001-20200125
-i386                 randconfig-a002-20200125
-i386                 randconfig-a003-20200125
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-x86_64               randconfig-e001-20200126
-x86_64               randconfig-e002-20200126
-x86_64               randconfig-e003-20200126
-i386                 randconfig-e001-20200126
-i386                 randconfig-e002-20200126
-i386                 randconfig-e003-20200126
-csky                 randconfig-a001-20200125
-openrisc             randconfig-a001-20200125
-s390                 randconfig-a001-20200125
-xtensa               randconfig-a001-20200125
-x86_64               randconfig-c001-20200126
-x86_64               randconfig-c002-20200126
-x86_64               randconfig-c003-20200126
-i386                 randconfig-c001-20200126
-i386                 randconfig-c002-20200126
-i386                 randconfig-c003-20200126
-x86_64               randconfig-c001-20200125
-x86_64               randconfig-c002-20200125
-x86_64               randconfig-c003-20200125
-i386                 randconfig-c001-20200125
-i386                 randconfig-c002-20200125
-i386                 randconfig-c003-20200125
-sh                               allmodconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-x86_64               randconfig-f001-20200126
-x86_64               randconfig-f002-20200126
-x86_64               randconfig-f003-20200126
-i386                 randconfig-f001-20200126
-i386                 randconfig-f002-20200126
-i386                 randconfig-f003-20200126
-c6x                  randconfig-a001-20200125
-h8300                randconfig-a001-20200125
-microblaze           randconfig-a001-20200125
-nios2                randconfig-a001-20200125
-sparc64              randconfig-a001-20200125
-um                                  defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-alpha                randconfig-a001-20200125
-m68k                 randconfig-a001-20200125
-mips                 randconfig-a001-20200125
-nds32                randconfig-a001-20200125
-parisc               randconfig-a001-20200125
-riscv                randconfig-a001-20200125
-x86_64               randconfig-d001-20200126
-x86_64               randconfig-d002-20200126
-x86_64               randconfig-d003-20200126
-i386                 randconfig-d001-20200126
-i386                 randconfig-d002-20200126
-i386                 randconfig-d003-20200126
 
----
-0-DAY kernel test infrastructure                 Open Source Technology Center
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+commit aaca43fda742223e4f62bd73e13055f5364e9a9b
+Author: Logan Gunthorpe <logang@deltatee.com>
+Date:   Mon Jul 30 10:18:40 2018 -0600
+
+    PCI: Add "pci=3Ddisable_acs_redir=3D" parameter for peer-to-peer suppor=
+t
+
+    To support peer-to-peer traffic on a segment of the PCI hierarchy, we m=
+ust
+    disable the ACS redirect bits for select PCI bridges.  The bridges must=
+ be
+    selected before the devices are discovered by the kernel and the IOMMU
+    groups created.  Therefore, add a kernel command line parameter to spec=
+ify
+    devices which must have their ACS bits disabled.
+
+    The new parameter takes a list of devices separated by a semicolon.  Ea=
+ch;
+    device specified will have its ACS redirect bits disabled.  This is
+    similar to the existing 'resource_alignment' parameter.
+
+    The ACS Request P2P Request Redirect, P2P Completion Redirect and P2P
+    Egress Control bits are disabled, which is sufficient to always allow
+    passing P2P traffic uninterrupted.  The bits are set after the kernel
+    (optionally) enables the ACS bits itself.  It is also done regardless o=
+f
+    whether the kernel or platform firmware sets the bits.
+
+    If the user tries to disable the ACS redirect for a device without the =
+ACS
+    capability, print a warning to dmesg.
+
+    Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+    [bhelgaas: reorder to add the generic code first and move the
+    device-specific quirk to subsequent patches]
+    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+    Reviewed-by: Stephen Bates <sbates@raithlin.com>
+    Reviewed-by: Alex Williamson <alex.williamson@redhat.com>
+    Acked-by: Christian K=F6nig <christian.koenig@amd.com>
