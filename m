@@ -2,106 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C19914A567
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Jan 2020 14:50:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A062514A87F
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Jan 2020 17:58:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbgA0NuV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Jan 2020 08:50:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49118 "EHLO mail.kernel.org"
+        id S1726026AbgA0Q61 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Jan 2020 11:58:27 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:42086 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726179AbgA0NuV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 27 Jan 2020 08:50:21 -0500
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAFAB20716;
-        Mon, 27 Jan 2020 13:50:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580133020;
-        bh=atKi/hig5oa208QWZFD8TZszOxZ5B4cSJZX4YGxigSY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Ppwnn+C0bHwhyX5YuUuKPtr8x6i/aljl9+E29gLmAB9RItz+McXL26DzXO9ILhWqG
-         hVG7tz8x3mV1sD90WcZUsdkvKcpVvnCCe66twlpkOXYlW3DuI7sh2afv1MmnVEL8H/
-         OtaGynkdEJq1v9t/S5y7gZyKiQYz1X+eNG3/2bTM=
-Date:   Mon, 27 Jan 2020 07:50:17 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, Keith Busch <keith.busch@intel.com>,
-        Huong Nguyen <huong.nguyen@dell.com>,
-        Austin Bolen <Austin.Bolen@dell.com>
-Subject: Re: [PATCH v13 4/8] PCI/DPC: Add Error Disconnect Recover (EDR)
- support
-Message-ID: <20200127135017.GA260782@google.com>
+        id S1725955AbgA0Q61 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 27 Jan 2020 11:58:27 -0500
+Received: from [172.16.1.162]
+        by ale.deltatee.com with esmtp (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1iw7iT-00031k-Dd; Mon, 27 Jan 2020 09:58:26 -0700
+To:     =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        "Skidanov, Alexey" <alexey.skidanov@intel.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "Heilper, Anat" <anat.heilper@intel.com>,
+        "Zadicario, Guy" <guy.zadicario@intel.com>
+References: <BYAPR11MB29171883468FD79722FF3652EE0B0@BYAPR11MB2917.namprd11.prod.outlook.com>
+ <3b62f9d6-5b93-e252-3419-3fe5307f7935@amd.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <c09a2da5-25e5-445c-3f34-ca6c96686130@deltatee.com>
+Date:   Mon, 27 Jan 2020 09:58:15 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200125232500.GA112031@skuppusw-desk.amr.corp.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <3b62f9d6-5b93-e252-3419-3fe5307f7935@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: guy.zadicario@intel.com, anat.heilper@intel.com, linux-pci@vger.kernel.org, alex.williamson@redhat.com, bhelgaas@google.com, alexey.skidanov@intel.com, christian.koenig@amd.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        GREYLIST_ISWHITE autolearn=ham autolearn_force=no version=3.4.2
+Subject: Re: Disabling ACS for peer-to-peer support
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Jan 25, 2020 at 03:25:00PM -0800, Kuppuswamy Sathyanarayanan wrote:
-> On Fri, Jan 24, 2020 at 09:04:50AM -0600, Bjorn Helgaas wrote:
-> > On Sat, Jan 18, 2020 at 08:00:33PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> > > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > > 
-> > > As per ACPI specification r6.3, sec 5.6.6, when firmware owns Downstream
-> > > Port Containment (DPC), its expected to use the "Error Disconnect
-> > > Recover" (EDR) notification to alert OSPM of a DPC event and if OS
-> > > supports EDR, its expected to handle the software state invalidation and
-> > > port recovery in OS, and also let firmware know the recovery status via
-> > > _OST ACPI call. Related _OST status codes can be found in ACPI
-> > > specification r6.3, sec 6.3.5.2.
-> > > 
-> > > Also, as per PCI firmware specification r3.2 Downstream Port Containment
-> > > Related Enhancements ECN, sec 4.5.1, table 4-6, If DPC is controlled by
-> > > firmware (firmware first mode), firmware is responsible for
-> > > configuring the DPC and OS is responsible for error recovery. Also, OS
-> > > is allowed to modify DPC registers only during the EDR notification
-> > > window. So with EDR support, OS should provide DPC port services even in
-> > > firmware first mode.
-> ...
 
-> > > +		acpi_status astatus;
-> > > +
-> > > +		dpc->adev = adev;
-> > > +
-> > > +		astatus = acpi_install_notify_handler(adev->handle,
-> > > +						      ACPI_SYSTEM_NOTIFY,
-> > > +						      edr_handle_event,
-> > > +						      dpc);
-> > 
-> > I think there are a couple issues with the ECN here:
-> > 
-> >   - The ECN allows EDR notifications on host bridges (sec 4.5.1, table
-> >     4-4), but it does not allow the "Locate" _DSM under host bridges
-> >     (sec 4.6.13).
-> > 
-> >   - The ECN allows EDR notifications on root ports or switch ports
-> >     that do not support DPC (sec 4.5.1), but it does not allow the
-> >     "Locate" _DSM on those ports (sec 4.6.13).
+
+On 2020-01-27 1:18 a.m., Christian König wrote:
+> Am 27.01.20 um 08:18 schrieb Skidanov, Alexey:
+>> Hello,
+>>
+>> I have recently found the below commit to disabling ACS bits. Using kernel parameter is pretty simple but requires to know in advance which devices might be participated in peer-to-peer sessions.
+>>
+>>   Why we can't disable the ACS bits *after* the driver is initialized (and there is a request to connect between two peers) and not *during* device discovering?.
 > 
-> Can you please give more details on where its mentioned? Following is
-> the copy of "Locate" _DSM location related specification. All it says is,
-> this object can be placed under any object representing root port or
-> switch port. It does not seem to add any restrictions. Please let me  know
-> your comments.
-> 
-> Location:
-> This object can be placed under any object representing a DPC capable
-> PCI Express Root Port or Switch Downstream Port. If a port implements
-> this DSM, its child devices cannot instantiate this DSM function
+> That's exactly what was initially proposed but we have seen hardware 
+> which reacts allergic to disabling those bits on the fly.
 
-You quoted it: "This object [the 'Locate' _DSM] can be placed under
-any object representing a *DPC capable* PCI Express Root Port or Switch
-Downstream Port."
+I wasn't aware of that and haven't seen anything like that.
 
-If the intention was to allow the Locate _DSM for *any* root ports or
-switch downstream ports, the spec should not include the "DPC capable"
-restriction.
+> Please read up the discussion on the mailing list leading to this patch.
 
-Bjorn
+The issue was the IOMMU code does not allow for any kind of dynamic
+changes in the groups devices are assigned in. In theory, this could be
+possible but you'd still at least have to unbind the devices from their
+driver because you definitely can't change the IOMMU group while there
+are DMA requests in flight. Ultimately it's easier for most use cases to
+just disable it on boot.
+
+Logan
