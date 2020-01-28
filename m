@@ -2,79 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E6E8D14B39A
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2020 12:41:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EA19C14B466
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2020 13:45:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726059AbgA1LlP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Jan 2020 06:41:15 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:34740 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725941AbgA1LlO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Jan 2020 06:41:14 -0500
-Received: by mail-lj1-f195.google.com with SMTP id x7so14307071ljc.1
-        for <linux-pci@vger.kernel.org>; Tue, 28 Jan 2020 03:41:13 -0800 (PST)
+        id S1726059AbgA1MpJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Jan 2020 07:45:09 -0500
+Received: from mail-co1nam11on2048.outbound.protection.outlook.com ([40.107.220.48]:6167
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725852AbgA1MpI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 28 Jan 2020 07:45:08 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=j+3tMCf99v/wXsSvzPwtkQlhbJQyqi1cqv2ChV9jVv9BhUpPufBlnXJ7T598fZcBwLwPs8jOPQ6ejzQv5kbDBAakrahrparzDJs28VS2+rwfhz4X36mP7W3BiIOACxvBNnhlr5ZYhw6XYfNSVx8jx81wzfmlAM+Qcti78bh84k3Wbi8JI8QFLOLcCUHZ9LlySOQldnhRM+Z+3LnTrt+oo/aivAEgi3UeoBbIFHbILgEU1ZZAl5F7Spd7X2tei/Ex9wLl6Jog/p3RzkHNxw+cG2FGiSpXuNNYqQ9IH+AaF68+eCzJy3CHqP28dSSDXbRSOctelMoeOcgEMvrA5hkfsA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=422ZksD2qtj8kZOJfFkot1HYa1vrDLwdrBy81V30CU0=;
+ b=g/X7nCR6CdNjGvrhQtKc+Y6WAwy04wmzCZ1IHYJWae9u4VUrdmxxqWR/BEprpfArisVDS4RYBmXIijbUJQNy6bVgeHgP11ks24vyGWBDZC8vWGqtpA/iqEBusWgZtgHhASEB3sop6xbGAfx4U9y+mmurAaAgFn+HV5Puf7+SpovtUV1hTl2Ewhx5ZUn7Y9pj4IBKCBUbyTT6SqLOnSqSjbi72Qadib1nlxo8CtXizBjVy5NnFfgWAdtVE9lmRzk19QexUiGdPtkSQ5CG+FN2kqu2GiZY+r01Ce0kfXytT852735MOimxmbw697gsaEJ+S1/79R/oo5GRfB3nImYA3A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=google.com smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=ED3lx+kwU0inDNGcCmyEX9CWBzuv7bcPK4RBun7XBaA=;
-        b=ULVAvYqTua9SO8AspWBKjZeoZzRXpD6PJQqo2Xt6J9L4zypRXKhIXt/fVYhTbmfxTu
-         nWd/BWgZiiImRyYJ84N13AectjrLntxSfttFacBFA+iSwg9c4FDW1eIRkgBvbO0B1JQL
-         AWv1x7YKE0ccnACnRZEhSIYHMAl3x+SNl7Ctyiex2rt0B+xsES7pwWRR4a4CRPkhpKpk
-         U3f+KJk5+eFWUYYC9LZLSsome4FelAfLDHg72cqp6oZxKyUMAlQGNYx+Ymbe7dK47goL
-         52q1yERF/Ul9g2KVqYGP/eqxWMdwgqZHE0oq1tYeIliNIRZhj+Vsn0eGFO4FPhHmE3y4
-         /+qQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=ED3lx+kwU0inDNGcCmyEX9CWBzuv7bcPK4RBun7XBaA=;
-        b=DI6yNXFVhKyB0N4S1ikqMikI/Oor0RTP5S9DPJADq8qR+fPoDFLMLxueJzTAt6t8JW
-         3obemGAOv9Dgt9bP8R6VvxqCe4bnclk7wE8bicas0bJZwoDhhoJAHGCKpFe4sg++5lwW
-         u3sUiSOYsPm5uk5VZpF5ZUM/4icgbLzUU+tITQr+9ocZse5aWXHqngkkMAPKewxeO7+5
-         4beteJEk7PQT+sTQmlPZfc8LPXBekADcGEqPVuAOXXTuWJc49bnzr5cyfPr8LvY/rSBs
-         D2NuuzashwtrbjYI/bKDRDkFFyj2x/X+bbDtuiFEtG8QlHh0i32QHG7BdbdapOvygWqg
-         63iA==
-X-Gm-Message-State: APjAAAWudraKmLaw+atNbN6iUks9LnXwTZU2cZwbdsSVKUAAaWce/9Pr
-        ab+Lr2mXm+BYJkBjmv01u7Z6TxZpMYp9TB9c8Vk=
-X-Google-Smtp-Source: APXvYqxVjU5HphizVIKCwmcGZkv2SOmJKsGCDC8PiDCKbLsrFZVLnb55av9+kHrAf8Epqy33Xz1uXI4N0nPihLQVbmA=
-X-Received: by 2002:a05:651c:448:: with SMTP id g8mr13238145ljg.35.1580211672372;
- Tue, 28 Jan 2020 03:41:12 -0800 (PST)
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=422ZksD2qtj8kZOJfFkot1HYa1vrDLwdrBy81V30CU0=;
+ b=Kd7apfQLEc4NnAKYTS+W8XTQbOoWQiQ2vbAN8dGVt+sZEfVsdZI0alFjIehSH3cekpNlInWFWRuBRgNqyl8gdGbO8C95AlsETqX3ts46LJGbFUW+yDSJpac9z6Rv/Fxt1knqm1hI/xCiq4NWSD5XuWUTAP/VrX6392bVKVJudWU=
+Received: from MN2PR02CA0018.namprd02.prod.outlook.com (2603:10b6:208:fc::31)
+ by BN8PR02MB5954.namprd02.prod.outlook.com (2603:10b6:408:bb::32) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2665.20; Tue, 28 Jan
+ 2020 12:45:05 +0000
+Received: from CY1NAM02FT003.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e45::208) by MN2PR02CA0018.outlook.office365.com
+ (2603:10b6:208:fc::31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2665.20 via Frontend
+ Transport; Tue, 28 Jan 2020 12:45:05 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; google.com; dkim=none (message not signed)
+ header.d=none;google.com; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ CY1NAM02FT003.mail.protection.outlook.com (10.152.74.151) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2665.18
+ via Frontend Transport; Tue, 28 Jan 2020 12:45:05 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <bharat.kumar.gogada@xilinx.com>)
+        id 1iwQEq-0007b8-Mh; Tue, 28 Jan 2020 04:45:04 -0800
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <bharat.kumar.gogada@xilinx.com>)
+        id 1iwQEl-0006rI-Iz; Tue, 28 Jan 2020 04:44:59 -0800
+Received: from xsj-pvapsmtp01 (smtp2.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 00SCiphB016792;
+        Tue, 28 Jan 2020 04:44:51 -0800
+Received: from [10.140.9.2] (helo=xhdbharatku40.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <bharat.kumar.gogada@xilinx.com>)
+        id 1iwQEd-0006pq-0k; Tue, 28 Jan 2020 04:44:51 -0800
+From:   Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     bhelgaas@google.com, rgummal@xilinx.com,
+        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Subject: [PATCH v4 0/2] Adding support for Versal CPM as Root Port driver.
+Date:   Tue, 28 Jan 2020 18:14:41 +0530
+Message-Id: <1580215483-8835-1-git-send-email-bharat.kumar.gogada@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(39860400002)(136003)(396003)(199004)(189003)(6666004)(2906002)(356004)(8676002)(4744005)(7696005)(186003)(36756003)(26005)(426003)(2616005)(336012)(107886003)(4326008)(316002)(81156014)(81166006)(70586007)(5660300002)(9786002)(478600001)(8936002)(70206006);DIR:OUT;SFP:1101;SCL:1;SRVR:BN8PR02MB5954;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
 MIME-Version: 1.0
-Received: by 2002:ab3:180d:0:0:0:0:0 with HTTP; Tue, 28 Jan 2020 03:41:11
- -0800 (PST)
-Reply-To: ghaziahmed@myself.com
-From:   Ghazi Ahmed <ghaziahmed538@gmail.com>
-Date:   Tue, 28 Jan 2020 03:41:11 -0800
-Message-ID: <CAF+M2O5syZXd99NUD4EexPKEC2W33fS7y49gbP+JnV-pxcyT8w@mail.gmail.com>
-Subject: YOUR URGENT RESPONSE IS NEEDED
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 29a82f6a-a205-480d-ebbe-08d7a3efe64f
+X-MS-TrafficTypeDiagnostic: BN8PR02MB5954:
+X-Microsoft-Antispam-PRVS: <BN8PR02MB5954B0528B501797D4C2ED1FA50A0@BN8PR02MB5954.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:3513;
+X-Forefront-PRVS: 029651C7A1
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: KWhvAF3hrksp0LpriNrNHRJHGedAA5qnBVNAdiugGRwWty/XNwSNltBTbuBW/SvY+5QmI3p5b+u2BnFr6/Oq5RurRxcAHIItzvxlr8McZs71i8HUCGnoKvXk8qFPgDBvJG/xR2cLq0BfxuoQBx+8H9YZRXjtxHindj+HtJGpy/8/n+Shwvat0F1+I0s5MnQFU9mTJX8A+IvEKaMjf+HySwNM49j9pGsd2VNAGAv0TseNMhrR9cGY5sKwQRWNnYmF0lDa5Amboy3zVpcYbeSUuSPO9Sm3XYteYJQtaUG4HVD29/JQ/kdjSQ7PPF5Ijz5+Yzy0aYGGi7YuVYKlf9gL2jbsW+7kMJZbyRVUmOrEw7w7l5Va5GzbItkiZz4YpD6qtZno2Wba7bOSBb2lnHL3tQ5Hl02dyFDqHZzMnWRT+h7kmyVNvVUDa8zPUrEsV+kd
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jan 2020 12:45:05.1442
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 29a82f6a-a205-480d-ebbe-08d7a3efe64f
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR02MB5954
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-I have a business proposal in the tune of $10.2m USD for you to handle
-with me. I have opportunity to transfer this abandon fund to your bank
-account in your country which belongs to our client.
+- Add support for Versal CPM as Root port.
+- The Versal ACAP devices include CCIX-PCIe Module (CPM). The integrated
+  block for CPM along with the integrated bridge can function
+  as PCIe Root Port.
+- Versal CPM uses GICv3 ITS feature for assigning MSI/MSI-X
+  vectors and handling MSI/MSI-X interrupts.
+- Bridge error and legacy interrupts in Versal CPM are handled using
+  Versal CPM specific MISC interrupt line.
 
-I am inviting you in this transaction where this money can be shared
-between us at ratio of 50/50% and help the needy around us don=E2=80=99t be
-afraid of anything I am with you I will instruct you what you will do
-to maintain this fund.
+Bharat Kumar Gogada (2):
+  PCI: xilinx-cpm: Add device tree binding for Versal CPM host bridge.
+  PCI: xilinx-cpm: Add Versal CPM Root Port driver
 
-Please kindly contact me with your information's if you are interested
-in this tranasction for more details(ghaziahmed@myself.com)
+ .../devicetree/bindings/pci/xilinx-versal-cpm.txt  |  66 +++
+ drivers/pci/controller/Kconfig                     |   8 +
+ drivers/pci/controller/Makefile                    |   1 +
+ drivers/pci/controller/pcie-xilinx-cpm.c           | 506 +++++++++++++++++++++
+ 4 files changed, 581 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/xilinx-versal-cpm.txt
+ create mode 100644 drivers/pci/controller/pcie-xilinx-cpm.c
 
-1. Your Full Name.....................
-2. Your Address......................
-3. Your Country of Origin.............
-4. What do you do for living ...............
-5. Your Age..........................
-6. Gender.........................
-7. Your ID card copy and telephone number for easy communication...........=
-....
+-- 
+2.7.4
 
-Mr.Ghazi Ahmed
