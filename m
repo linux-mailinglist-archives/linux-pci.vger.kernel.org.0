@@ -2,75 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C004214BEC4
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2020 18:41:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 067D714C25B
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2020 22:51:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726492AbgA1Rlr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Jan 2020 12:41:47 -0500
-Received: from foss.arm.com ([217.140.110.172]:32956 "EHLO foss.arm.com"
+        id S1726234AbgA1Vvf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Jan 2020 16:51:35 -0500
+Received: from mx2.suse.de ([195.135.220.15]:57388 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726066AbgA1Rlr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 28 Jan 2020 12:41:47 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 096BA328;
-        Tue, 28 Jan 2020 09:41:47 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3EFED3F52E;
-        Tue, 28 Jan 2020 09:41:46 -0800 (PST)
-Date:   Tue, 28 Jan 2020 17:41:41 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     "Derrick, Jonathan" <jonathan.derrick@intel.com>
-Cc:     "Kalakota, SushmaX" <sushmax.kalakota@intel.com>,
-        "kbusch@kernel.org" <kbusch@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "helgaas@kernel.org" <helgaas@kernel.org>
-Subject: Re: [PATCH v3] PCI: vmd: Add two VMD Device IDs
-Message-ID: <20200128174141.GA16324@e121166-lin.cambridge.arm.com>
-References: <20200108220510.12063-1-sushmax.kalakota@intel.com>
- <95e7feafca42f6f5c20f05d827f2bca29525ade5.camel@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <95e7feafca42f6f5c20f05d827f2bca29525ade5.camel@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        id S1726211AbgA1Vvf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 28 Jan 2020 16:51:35 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id AAE21ACE0;
+        Tue, 28 Jan 2020 21:51:32 +0000 (UTC)
+Message-ID: <1580248285.18755.2.camel@suse.de>
+Subject: Re: [PATCH v2] PCI: pciehp: Make sure pciehp_isr clears interrupt
+ events
+From:   Enzo Matsumiya <ematsumiya@suse.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
+        lukas@wunner.de, Stuart Hayes <stuart.w.hayes@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Date:   Tue, 28 Jan 2020 18:51:25 -0300
+In-Reply-To: <41285254-1bc1-3ffe-383e-276dc7193990@gmail.com>
+References: <20191120222043.53432-1-stuart.w.hayes@gmail.com>
+         <41285254-1bc1-3ffe-383e-276dc7193990@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 04:50:36PM +0000, Derrick, Jonathan wrote:
-> Gentle reminder this one's good to go
-
-Applied to pci/vmd, we should be able to squeeze this in v5.6.
-
-Apologies for the delay.
-
-Lorenzo
-
-> On Wed, 2020-01-08 at 15:05 -0700, Sushma Kalakota wrote:
-> > Add new VMD device IDs that require the bus restriction mode.
+On Mon, 2020-01-20 at 10:10 -0600, Stuart Hayes wrote:
+> On 11/20/19 4:20 PM, Stuart Hayes wrote:
+> > Without this patch, a pciehp hotplug port can stop generating
+> > interrupts
+> > on hotplug events, so device adds and removals will not be seen.
 > > 
-> > Signed-off-by: Sushma Kalakota <sushmax.kalakota@intel.com>
-> > Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
+> > The pciehp interrupt handler pciehp_isr() will read the slot status
+> > register and then write back to it to clear the bits that caused
+> > the
+> > interrupt. If a different interrupt event bit gets set between the
+> > read and
+> > the write, pciehp_isr will exit without having cleared all of the
+> > interrupt
+> > event bits. If this happens, and the port is using an MSI interrupt
+> > where
+> > per-vector masking is not supported, we won't get any more hotplug
+> > interrupts from that device.
+> > 
+> > That is expected behavior, according to the PCI Express Base
+> > Specification
+> > Revision 5.0 Version 1.0, section 6.7.3.4, "Software Notification
+> > of Hot-
+> > Plug Events".
+> > 
+> > Because the "presence detect changed" and "data link layer state
+> > changed"
+> > event bits are both getting set at nearly the same time when a
+> > device is
+> > added or removed, this is more likely to happen than it might seem.
+> > The
+> > issue was found (and can be reproduced rather easily) by connecting
+> > and
+> > disconnecting an NVMe storage device on at least one system model.
+> > 
+> > This issue was found while adding and removing various NVMe storage
+> > devices
+> > on an AMD PCIe port (PCI device 0x1022/0x1483).
+> > 
+> > This patch fixes this issue by modifying pciehp_isr() by looping
+> > back and
+> > re-reading the slot status register immediately after writing to
+> > it, until
+> > it sees that all of the event status bits have been cleared.
+> > 
+> > Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
 > > ---
-> > v2->v3 Removed from pci_ids.h
-> > v1->v2 Squashed
+> > v2:
+> >   * fixed ctrl_warn() call
+> >   * improved comments
+> >   * added pvm_capable flag and changed pciehp_isr() to loop back
+> > only when
+> >     pvm_capable flag not set (suggested by Lukas Wunner)
+> >   
+> >  drivers/pci/hotplug/pciehp.h     |  3 ++
+> >  drivers/pci/hotplug/pciehp_hpc.c | 50
+> > ++++++++++++++++++++++++++++----
+> >  2 files changed, 47 insertions(+), 6 deletions(-)
 > > 
-> >  drivers/pci/controller/vmd.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> > 
-> > diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-> > index 212842263f55..c502b6c0daf5 100644
-> > --- a/drivers/pci/controller/vmd.c
-> > +++ b/drivers/pci/controller/vmd.c
-> > @@ -868,6 +868,10 @@ static const struct pci_device_id vmd_ids[] = {
-> >  	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_VMD_28C0),
-> >  		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW |
-> >  				VMD_FEAT_HAS_BUS_RESTRICTIONS,},
-> > +	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x467f),
-> > +		.driver_data = VMD_FEAT_HAS_BUS_RESTRICTIONS,},
-> > +	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x4c3d),
-> > +		.driver_data = VMD_FEAT_HAS_BUS_RESTRICTIONS,},
-> >  	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_VMD_9A0B),
-> >  		.driver_data = VMD_FEAT_HAS_BUS_RESTRICTIONS,},
-> >  	{0,}
+> 
+> Bjorn,
+> 
+> Please let me know if I could do anything to help get this patch
+> accepted.
+> 
+> Thanks!
+> Stuart
+> 
+
+Hi, can someone please review/accept this patch please? It fixes NVMe
+hotplug operations in SLES15-SP1.
+
+Thanks,
+
+Enzo
