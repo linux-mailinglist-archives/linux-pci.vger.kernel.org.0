@@ -2,76 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 82A4C14BE5A
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2020 18:14:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 137E314BEBD
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2020 18:40:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726066AbgA1ROA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Jan 2020 12:14:00 -0500
-Received: from mga07.intel.com ([134.134.136.100]:50553 "EHLO mga07.intel.com"
+        id S1726233AbgA1Rkv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Jan 2020 12:40:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725881AbgA1ROA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 28 Jan 2020 12:14:00 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Jan 2020 08:50:37 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,374,1574150400"; 
-   d="scan'208";a="217665209"
-Received: from orsmsx102.amr.corp.intel.com ([10.22.225.129])
-  by orsmga007.jf.intel.com with ESMTP; 28 Jan 2020 08:50:37 -0800
-Received: from orsmsx112.amr.corp.intel.com (10.22.240.13) by
- ORSMSX102.amr.corp.intel.com (10.22.225.129) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 28 Jan 2020 08:50:37 -0800
-Received: from orsmsx101.amr.corp.intel.com ([169.254.8.100]) by
- ORSMSX112.amr.corp.intel.com ([169.254.3.36]) with mapi id 14.03.0439.000;
- Tue, 28 Jan 2020 08:50:36 -0800
-From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
-To:     "Kalakota, SushmaX" <sushmax.kalakota@intel.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
-CC:     "kbusch@kernel.org" <kbusch@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "helgaas@kernel.org" <helgaas@kernel.org>
-Subject: Re: [PATCH v3] PCI: vmd: Add two VMD Device IDs
-Thread-Topic: [PATCH v3] PCI: vmd: Add two VMD Device IDs
-Thread-Index: AQHVxm8hDoDGz5oM1Eew6W0GkAvE4KgA71yA
-Date:   Tue, 28 Jan 2020 16:50:36 +0000
-Message-ID: <95e7feafca42f6f5c20f05d827f2bca29525ade5.camel@intel.com>
-References: <20200108220510.12063-1-sushmax.kalakota@intel.com>
-In-Reply-To: <20200108220510.12063-1-sushmax.kalakota@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.255.0.144]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <4813E9BC3090EC459C9D54F8DF68FB85@intel.com>
-Content-Transfer-Encoding: base64
+        id S1726066AbgA1Rku (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 28 Jan 2020 12:40:50 -0500
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F8872465B;
+        Tue, 28 Jan 2020 17:40:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580233250;
+        bh=xvhgfQQ5L9TDXPMISXTC3Sh2WZWsStbYQGl8G7pS4r8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Z8Xfe+ORuHL9ioZ5kXpem+/RFpCCtHqRtviOviDKDoaZvD+VfUjnIDGERZxa4zI3M
+         mYO+oB/LvIezXMP/fbvV9ZtA0mgKvLgINK/eg0gZRL8KlYcnoBszzTIPzr4AtHNPwA
+         h4fQ+s6Mpm9Mga/4+8MwrI9ucCkFeTqyH7b0iEgU=
+Date:   Tue, 28 Jan 2020 11:40:47 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Muni Sekhar <munisekharrms@gmail.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: pcie: xilinx: kernel hang - ISR readl()
+Message-ID: <20200128174047.GA181400@google.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHhAz+jddRTi++jTXgPMMm8H0LQC=nz7kRLOodQGD0SRki7g=A@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-R2VudGxlIHJlbWluZGVyIHRoaXMgb25lJ3MgZ29vZCB0byBnbw0KDQpPbiBXZWQsIDIwMjAtMDEt
-MDggYXQgMTU6MDUgLTA3MDAsIFN1c2htYSBLYWxha290YSB3cm90ZToNCj4gQWRkIG5ldyBWTUQg
-ZGV2aWNlIElEcyB0aGF0IHJlcXVpcmUgdGhlIGJ1cyByZXN0cmljdGlvbiBtb2RlLg0KPiANCj4g
-U2lnbmVkLW9mZi1ieTogU3VzaG1hIEthbGFrb3RhIDxzdXNobWF4LmthbGFrb3RhQGludGVsLmNv
-bT4NCj4gU2lnbmVkLW9mZi1ieTogSm9uIERlcnJpY2sgPGpvbmF0aGFuLmRlcnJpY2tAaW50ZWwu
-Y29tPg0KPiAtLS0NCj4gdjItPnYzIFJlbW92ZWQgZnJvbSBwY2lfaWRzLmgNCj4gdjEtPnYyIFNx
-dWFzaGVkDQo+IA0KPiAgZHJpdmVycy9wY2kvY29udHJvbGxlci92bWQuYyB8IDQgKysrKw0KPiAg
-MSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvcGNpL2NvbnRyb2xsZXIvdm1kLmMgYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL3ZtZC5jDQo+
-IGluZGV4IDIxMjg0MjI2M2Y1NS4uYzUwMmI2YzBkYWY1IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJz
-L3BjaS9jb250cm9sbGVyL3ZtZC5jDQo+ICsrKyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvdm1k
-LmMNCj4gQEAgLTg2OCw2ICs4NjgsMTAgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBwY2lfZGV2aWNl
-X2lkIHZtZF9pZHNbXSA9IHsNCj4gIAl7UENJX0RFVklDRShQQ0lfVkVORE9SX0lEX0lOVEVMLCBQ
-Q0lfREVWSUNFX0lEX0lOVEVMX1ZNRF8yOEMwKSwNCj4gIAkJLmRyaXZlcl9kYXRhID0gVk1EX0ZF
-QVRfSEFTX01FTUJBUl9TSEFET1cgfA0KPiAgCQkJCVZNRF9GRUFUX0hBU19CVVNfUkVTVFJJQ1RJ
-T05TLH0sDQo+ICsJe1BDSV9ERVZJQ0UoUENJX1ZFTkRPUl9JRF9JTlRFTCwgMHg0NjdmKSwNCj4g
-KwkJLmRyaXZlcl9kYXRhID0gVk1EX0ZFQVRfSEFTX0JVU19SRVNUUklDVElPTlMsfSwNCj4gKwl7
-UENJX0RFVklDRShQQ0lfVkVORE9SX0lEX0lOVEVMLCAweDRjM2QpLA0KPiArCQkuZHJpdmVyX2Rh
-dGEgPSBWTURfRkVBVF9IQVNfQlVTX1JFU1RSSUNUSU9OUyx9LA0KPiAgCXtQQ0lfREVWSUNFKFBD
-SV9WRU5ET1JfSURfSU5URUwsIFBDSV9ERVZJQ0VfSURfSU5URUxfVk1EXzlBMEIpLA0KPiAgCQku
-ZHJpdmVyX2RhdGEgPSBWTURfRkVBVF9IQVNfQlVTX1JFU1RSSUNUSU9OUyx9LA0KPiAgCXswLH0N
-Cg==
+On Sat, Jan 18, 2020 at 07:16:14AM +0530, Muni Sekhar wrote:
+> On Thu, Jan 9, 2020 at 10:05 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >
+> > On Thu, Jan 09, 2020 at 08:47:51AM +0530, Muni Sekhar wrote:
+> > > On Thu, Jan 9, 2020 at 1:45 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > On Tue, Jan 07, 2020 at 09:45:13PM +0530, Muni Sekhar wrote:
+> > > > > Hi,
+> > > > >
+> > > > > I have module with Xilinx FPGA. It implements UART(s), SPI(s),
+> > > > > parallel I/O and interfaces them to the Host CPU via PCI Express bus.
+> > > > > I see that my system freezes without capturing the crash dump for
+> > > > > certain tests. I debugged this issue and it was tracked down to the
+> > > > > below mentioned interrupt handler code.
+> > > > >
+> > > > >
+> > > > > In ISR, first reads the Interrupt Status register using ‘readl()’ as
+> > > > > given below.
+> > > > >     status = readl(ctrl->reg + INT_STATUS);
+> > > > >
+> > > > >
+> > > > > And then clears the pending interrupts using ‘writel()’ as given blow.
+> > > > >         writel(status, ctrl->reg + INT_STATUS);
+> > > > >
+> > > > >
+> > > > > I've noticed a kernel hang if INT_STATUS register read again after
+> > > > > clearing the pending interrupts.
+> > > > >
+> > > > > Can someone clarify me why the kernel hangs without crash dump incase
+> > > > > if I read the INT_STATUS register using readl() after clearing the
+> > > > > pending bits?
+> > > > >
+> > > > > Can readl() block?
+> > > >
+> > > > readl() should not block in software.  Obviously at the hardware CPU
+> > > > instruction level, the read instruction has to wait for the result of
+> > > > the read.  Since that data is provided by the device, i.e., your FPGA,
+> > > > it's possible there's a problem there.
+> > >
+> > > Thank you very much for your reply.
+> > > Where can I find the details about what is protocol for reading the
+> > > ‘memory mapped IO’? Can you point me to any useful links..
+> > > I tried locate the exact point of the kernel code where CPU waits for
+> > > read instruction as given below.
+> > > readl() -> __raw_readl() -> return *(const volatile u32 __force *)add
+> > > Do I need to check for the assembly instructions, here?
+> >
+> > The C pointer dereference, e.g., "*address", will be some sort of a
+> > "load" instruction in assembly.  The CPU wait isn't explicit; it's
+> > just that when you load a value, the CPU waits for the value.
+> >
+> > > > Can you tell whether the FPGA has received the Memory Read for
+> > > > INT_STATUS and sent the completion?
+> I have not seen any ‘missing’ completions on the logic analyser. Is
+> there any other ways to debug this one?
+
+If you see the Memory Read and the associated Completion, and you
+still see a hang in the kernel, then mostly likely the problem is not
+in PCIe.
+
+I would start by trying to prove that the instruction after the
+readl() is or is not executed.
+
+Bjorn
