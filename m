@@ -2,104 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 137E314BEBD
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2020 18:40:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C004214BEC4
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Jan 2020 18:41:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726233AbgA1Rkv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Jan 2020 12:40:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39818 "EHLO mail.kernel.org"
+        id S1726492AbgA1Rlr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Jan 2020 12:41:47 -0500
+Received: from foss.arm.com ([217.140.110.172]:32956 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726066AbgA1Rku (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 28 Jan 2020 12:40:50 -0500
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F8872465B;
-        Tue, 28 Jan 2020 17:40:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580233250;
-        bh=xvhgfQQ5L9TDXPMISXTC3Sh2WZWsStbYQGl8G7pS4r8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Z8Xfe+ORuHL9ioZ5kXpem+/RFpCCtHqRtviOviDKDoaZvD+VfUjnIDGERZxa4zI3M
-         mYO+oB/LvIezXMP/fbvV9ZtA0mgKvLgINK/eg0gZRL8KlYcnoBszzTIPzr4AtHNPwA
-         h4fQ+s6Mpm9Mga/4+8MwrI9ucCkFeTqyH7b0iEgU=
-Date:   Tue, 28 Jan 2020 11:40:47 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Muni Sekhar <munisekharrms@gmail.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: pcie: xilinx: kernel hang - ISR readl()
-Message-ID: <20200128174047.GA181400@google.com>
+        id S1726066AbgA1Rlr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 28 Jan 2020 12:41:47 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 096BA328;
+        Tue, 28 Jan 2020 09:41:47 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3EFED3F52E;
+        Tue, 28 Jan 2020 09:41:46 -0800 (PST)
+Date:   Tue, 28 Jan 2020 17:41:41 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     "Derrick, Jonathan" <jonathan.derrick@intel.com>
+Cc:     "Kalakota, SushmaX" <sushmax.kalakota@intel.com>,
+        "kbusch@kernel.org" <kbusch@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "helgaas@kernel.org" <helgaas@kernel.org>
+Subject: Re: [PATCH v3] PCI: vmd: Add two VMD Device IDs
+Message-ID: <20200128174141.GA16324@e121166-lin.cambridge.arm.com>
+References: <20200108220510.12063-1-sushmax.kalakota@intel.com>
+ <95e7feafca42f6f5c20f05d827f2bca29525ade5.camel@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHhAz+jddRTi++jTXgPMMm8H0LQC=nz7kRLOodQGD0SRki7g=A@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <95e7feafca42f6f5c20f05d827f2bca29525ade5.camel@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Jan 18, 2020 at 07:16:14AM +0530, Muni Sekhar wrote:
-> On Thu, Jan 9, 2020 at 10:05 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > On Thu, Jan 09, 2020 at 08:47:51AM +0530, Muni Sekhar wrote:
-> > > On Thu, Jan 9, 2020 at 1:45 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > On Tue, Jan 07, 2020 at 09:45:13PM +0530, Muni Sekhar wrote:
-> > > > > Hi,
-> > > > >
-> > > > > I have module with Xilinx FPGA. It implements UART(s), SPI(s),
-> > > > > parallel I/O and interfaces them to the Host CPU via PCI Express bus.
-> > > > > I see that my system freezes without capturing the crash dump for
-> > > > > certain tests. I debugged this issue and it was tracked down to the
-> > > > > below mentioned interrupt handler code.
-> > > > >
-> > > > >
-> > > > > In ISR, first reads the Interrupt Status register using ‘readl()’ as
-> > > > > given below.
-> > > > >     status = readl(ctrl->reg + INT_STATUS);
-> > > > >
-> > > > >
-> > > > > And then clears the pending interrupts using ‘writel()’ as given blow.
-> > > > >         writel(status, ctrl->reg + INT_STATUS);
-> > > > >
-> > > > >
-> > > > > I've noticed a kernel hang if INT_STATUS register read again after
-> > > > > clearing the pending interrupts.
-> > > > >
-> > > > > Can someone clarify me why the kernel hangs without crash dump incase
-> > > > > if I read the INT_STATUS register using readl() after clearing the
-> > > > > pending bits?
-> > > > >
-> > > > > Can readl() block?
-> > > >
-> > > > readl() should not block in software.  Obviously at the hardware CPU
-> > > > instruction level, the read instruction has to wait for the result of
-> > > > the read.  Since that data is provided by the device, i.e., your FPGA,
-> > > > it's possible there's a problem there.
-> > >
-> > > Thank you very much for your reply.
-> > > Where can I find the details about what is protocol for reading the
-> > > ‘memory mapped IO’? Can you point me to any useful links..
-> > > I tried locate the exact point of the kernel code where CPU waits for
-> > > read instruction as given below.
-> > > readl() -> __raw_readl() -> return *(const volatile u32 __force *)add
-> > > Do I need to check for the assembly instructions, here?
-> >
-> > The C pointer dereference, e.g., "*address", will be some sort of a
-> > "load" instruction in assembly.  The CPU wait isn't explicit; it's
-> > just that when you load a value, the CPU waits for the value.
-> >
-> > > > Can you tell whether the FPGA has received the Memory Read for
-> > > > INT_STATUS and sent the completion?
-> I have not seen any ‘missing’ completions on the logic analyser. Is
-> there any other ways to debug this one?
+On Tue, Jan 28, 2020 at 04:50:36PM +0000, Derrick, Jonathan wrote:
+> Gentle reminder this one's good to go
 
-If you see the Memory Read and the associated Completion, and you
-still see a hang in the kernel, then mostly likely the problem is not
-in PCIe.
+Applied to pci/vmd, we should be able to squeeze this in v5.6.
 
-I would start by trying to prove that the instruction after the
-readl() is or is not executed.
+Apologies for the delay.
 
-Bjorn
+Lorenzo
+
+> On Wed, 2020-01-08 at 15:05 -0700, Sushma Kalakota wrote:
+> > Add new VMD device IDs that require the bus restriction mode.
+> > 
+> > Signed-off-by: Sushma Kalakota <sushmax.kalakota@intel.com>
+> > Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
+> > ---
+> > v2->v3 Removed from pci_ids.h
+> > v1->v2 Squashed
+> > 
+> >  drivers/pci/controller/vmd.c | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> > 
+> > diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+> > index 212842263f55..c502b6c0daf5 100644
+> > --- a/drivers/pci/controller/vmd.c
+> > +++ b/drivers/pci/controller/vmd.c
+> > @@ -868,6 +868,10 @@ static const struct pci_device_id vmd_ids[] = {
+> >  	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_VMD_28C0),
+> >  		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW |
+> >  				VMD_FEAT_HAS_BUS_RESTRICTIONS,},
+> > +	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x467f),
+> > +		.driver_data = VMD_FEAT_HAS_BUS_RESTRICTIONS,},
+> > +	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x4c3d),
+> > +		.driver_data = VMD_FEAT_HAS_BUS_RESTRICTIONS,},
+> >  	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_VMD_9A0B),
+> >  		.driver_data = VMD_FEAT_HAS_BUS_RESTRICTIONS,},
+> >  	{0,}
