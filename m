@@ -2,34 +2,34 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9867814CD62
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Jan 2020 16:30:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2799C14CD64
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Jan 2020 16:30:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727091AbgA2PaD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S1727077AbgA2PaD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Wed, 29 Jan 2020 10:30:03 -0500
-Received: from mta-02.yadro.com ([89.207.88.252]:55796 "EHLO mta-01.yadro.com"
+Received: from mta-02.yadro.com ([89.207.88.252]:55828 "EHLO mta-01.yadro.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727077AbgA2PaC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S1727089AbgA2PaC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Wed, 29 Jan 2020 10:30:02 -0500
 Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 1E5B54762B;
+        by mta-01.yadro.com (Postfix) with ESMTP id 8F2B54760E;
         Wed, 29 Jan 2020 15:30:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
         content-type:content-type:content-transfer-encoding:mime-version
         :references:in-reply-to:x-mailer:message-id:date:date:subject
         :subject:from:from:received:received:received; s=mta-01; t=
-        1580311799; x=1582126200; bh=C47aqFnigDF5PDyzO6/Lpy6uwW+MgjBh1/M
-        SfttIRBc=; b=g7WOw6jJIZtp+aSUnL011b4sCehSvbBah5AppzuJ5CnKmID6VuB
-        tWzWaq1PVe8XN9ay/N/XDaO9+//l3S5vk4q1iDFbXoqWvBfAypOsI5lTg2/dUWkC
-        YccmwyUxXDco4Rwr/D7nCtHHurMmeB/VlbWTX1e2dTDN4WGF2ZNUbx6o=
+        1580311800; x=1582126201; bh=2yTzKg+TDE6N0Xk7XBl/HHmcLf+ovCl90d3
+        fnsUpweM=; b=pVRfNt4ytmK4hw21P9wgws4GrHMaJpGc7mkPLOu/PXx51/StZtW
+        Eq2PVRzIGFaHVOU7VRZfzE7O1n1Edfgcq9RYYidtUF0qFAgWi46AmebZPO3Ig4TL
+        y8H+ryUmWTgPLpEY4tA2xUDiwB5i6UvlVAYRbr1IYuk5wbmbbxuePtsU=
 X-Virus-Scanned: amavisd-new at yadro.com
 Received: from mta-01.yadro.com ([127.0.0.1])
         by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id gtXl5HZZe5JH; Wed, 29 Jan 2020 18:29:59 +0300 (MSK)
+        with ESMTP id 1v0Et-47D0TQ; Wed, 29 Jan 2020 18:30:00 +0300 (MSK)
 Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id 3A39A47604;
+        by mta-01.yadro.com (Postfix) with ESMTPS id 6F96447611;
         Wed, 29 Jan 2020 18:29:53 +0300 (MSK)
 Received: from NB-148.yadro.com (172.17.15.136) by T-EXCH-02.corp.yadro.com
  (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
@@ -40,9 +40,9 @@ To:     <linux-pci@vger.kernel.org>
 CC:     Bjorn Helgaas <helgaas@kernel.org>, Stefan Roese <sr@denx.de>,
         <linux@yadro.com>,
         Sergei Miroshnichenko <s.miroshnichenko@yadro.com>
-Subject: [PATCH v7 13/26] PCI: hotplug: Add support of immovable BARs to pci_assign_resource()
-Date:   Wed, 29 Jan 2020 18:29:24 +0300
-Message-ID: <20200129152937.311162-14-s.miroshnichenko@yadro.com>
+Subject: [PATCH v7 14/26] PCI: hotplug: Sort immovable BARs before assignment
+Date:   Wed, 29 Jan 2020 18:29:25 +0300
+Message-ID: <20200129152937.311162-15-s.miroshnichenko@yadro.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200129152937.311162-1-s.miroshnichenko@yadro.com>
 References: <20200129152937.311162-1-s.miroshnichenko@yadro.com>
@@ -57,105 +57,151 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The PCI_FIXED and other immovable BARs must be assigned after the bridge
-windows of parent bridge and before "usual" BARs, but currently they are
-assigned the last by the pdev_assign_fixed_resources().
+Immovable BARs and bridge windows containing immovable BARs must be
+assigned before the "usual" ones.
 
-Let the immovable BARs be handled by pci_assign_resource() in the same way
-as it does for movable ones, assigning them in correct order, unifying the
-code.
+When assigning an immovable BAR/bridge window, its start address is chosen
+to be the lowest possible. To prevent conflicts, sort such resources based
+on the start address of their immovable areas.
 
-Allow matching IORESOURCE_PCI_FIXED prefetchable BARs to non-prefetchable
-windows, so they follow the same rules as immovable BARs.
+Add support of immovable BARs and bridge windows to pdev_sort_resources().
 
 Signed-off-by: Sergei Miroshnichenko <s.miroshnichenko@yadro.com>
 ---
- drivers/pci/pci.h       |  2 ++
- drivers/pci/setup-bus.c | 25 ++++++++++++++++++-------
- drivers/pci/setup-res.c |  5 ++++-
- 3 files changed, 24 insertions(+), 8 deletions(-)
+ drivers/pci/setup-bus.c | 66 +++++++++++++++++++++++++++++++++++------
+ 1 file changed, 57 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index ddd6fd33f9c3..3ffbee2c3243 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -293,6 +293,8 @@ void pci_bus_put(struct pci_bus *bus);
- bool pci_dev_bar_movable(struct pci_dev *dev, struct resource *res);
- void pci_bus_update_realloc_range(struct pci_bus *bus);
- 
-+int assign_fixed_resource_on_bus(struct pci_bus *b, struct resource *r);
-+
- /* PCIe link information */
- #define PCIE_SPEED2STR(speed) \
- 	((speed) == PCIE_SPEED_16_0GT ? "16 GT/s" : \
 diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index 71babb968830..cdbf4afe1334 100644
+index cdbf4afe1334..573d5c67c136 100644
 --- a/drivers/pci/setup-bus.c
 +++ b/drivers/pci/setup-bus.c
-@@ -1356,21 +1356,31 @@ void pci_bus_size_bridges(struct pci_bus *bus)
+@@ -122,9 +122,9 @@ static resource_size_t get_res_add_align(struct list_head *head,
+ 	return dev_res ? dev_res->min_align : 0;
  }
- EXPORT_SYMBOL(pci_bus_size_bridges);
  
--static void assign_fixed_resource_on_bus(struct pci_bus *b, struct resource *r)
-+int assign_fixed_resource_on_bus(struct pci_bus *b, struct resource *r)
+-
+ /* Sort resources by alignment */
+-static void pdev_sort_resources(struct pci_dev *dev, struct list_head *head)
++static void pdev_sort_resources(struct pci_dev *dev, struct list_head *head,
++				struct list_head *head_immovables)
  {
  	int i;
- 	struct resource *parent_r;
--	unsigned long mask = IORESOURCE_IO | IORESOURCE_MEM |
--			     IORESOURCE_PREFETCH;
-+	unsigned long mask = IORESOURCE_TYPE_BITS;
  
- 	pci_bus_for_each_resource(b, parent_r, i) {
- 		if (!parent_r)
+@@ -136,17 +136,31 @@ static void pdev_sort_resources(struct pci_dev *dev, struct list_head *head)
+ 		struct pci_dev_resource *dev_res, *tmp;
+ 		resource_size_t r_align;
+ 		struct list_head *n;
++		struct resource *fixed_res = NULL;
+ 
+ 		r = &dev->resource[i];
+ 
+-		if (r->flags & IORESOURCE_PCI_FIXED)
++		if (!(r->flags) || r->parent)
  			continue;
  
--		if ((r->flags & mask) == (parent_r->flags & mask) &&
--		    resource_contains(parent_r, r))
--			request_resource(parent_r, r);
-+		if ((r->flags & mask) != (parent_r->flags & mask))
-+			continue;
+-		if (!(r->flags) || r->parent)
++		if (pci_can_move_bars) {
++			if (i >= PCI_BRIDGE_RESOURCES &&
++			    dev->subordinate) {
++				int idx = i - PCI_BRIDGE_RESOURCES;
 +
-+		if (parent_r->flags & IORESOURCE_PREFETCH &&
-+		    !(r->flags & IORESOURCE_PREFETCH))
-+			continue;
++				fixed_res = &dev->subordinate->immovable_range[idx];
++			} else if (!pci_dev_bar_movable(dev, r)) {
++				fixed_res = r;
++			}
 +
-+		if (resource_contains(parent_r, r)) {
-+			if (!request_resource(parent_r, r))
-+				return 0;
++			if (fixed_res && fixed_res->start >= fixed_res->end)
++				fixed_res = NULL;
++		} else if (r->flags & IORESOURCE_PCI_FIXED) {
+ 			continue;
 +		}
- 	}
+ 
+ 		r_align = pci_resource_alignment(dev, r);
+-		if (!r_align) {
++		if (!r_align && !fixed_res) {
+ 			pci_warn(dev, "BAR %d: %pR has bogus alignment\n",
+ 				 i, r);
+ 			continue;
+@@ -158,6 +172,30 @@ static void pdev_sort_resources(struct pci_dev *dev, struct list_head *head)
+ 		tmp->res = r;
+ 		tmp->dev = dev;
+ 
++		if (fixed_res) {
++			n = head_immovables;
++			list_for_each_entry(dev_res, head_immovables, list) {
++				struct resource *c_fixed_res = NULL;
++				int c_resno = dev_res->res - dev_res->dev->resource;
++				int br_idx = c_resno - PCI_BRIDGE_RESOURCES;
++				struct pci_bus *cbus = dev_res->dev->subordinate;
 +
-+	dev_err(&b->dev, "failed to assign immovable %pR\n", r);
-+	return -EBUSY;
++				if (br_idx >= 0)
++					c_fixed_res = &cbus->immovable_range[br_idx];
++				else
++					c_fixed_res = dev_res->res;
++
++				if (fixed_res->start < c_fixed_res->start) {
++					n = &dev_res->list;
++					break;
++				}
++			}
++			/* Insert it just before n */
++			list_add_tail(&tmp->list, n);
++
++			continue;
++		}
++
+ 		/* Fallback is smallest one or list is empty */
+ 		n = head;
+ 		list_for_each_entry(dev_res, head, list) {
+@@ -176,7 +214,8 @@ static void pdev_sort_resources(struct pci_dev *dev, struct list_head *head)
+ 	}
  }
  
- /*
-@@ -1410,7 +1420,8 @@ void __pci_bus_assign_resources(const struct pci_bus *bus,
- 		if (!pci_dev_bars_enabled(dev))
- 			continue;
+-static void __dev_sort_resources(struct pci_dev *dev, struct list_head *head)
++static void __dev_sort_resources(struct pci_dev *dev, struct list_head *head,
++				 struct list_head *head_immovables)
+ {
+ 	u16 class = dev->class >> 8;
  
--		pdev_assign_fixed_resources(dev);
-+		if (!pci_can_move_bars)
-+			pdev_assign_fixed_resources(dev);
+@@ -195,7 +234,7 @@ static void __dev_sort_resources(struct pci_dev *dev, struct list_head *head)
+ 			return;
+ 	}
  
- 		b = dev->subordinate;
- 		if (!b)
-diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
-index 3582ae68840b..a7d81816d1ea 100644
---- a/drivers/pci/setup-res.c
-+++ b/drivers/pci/setup-res.c
-@@ -339,7 +339,10 @@ int pci_assign_resource(struct pci_dev *dev, int resno)
- 	resource_size_t align, size;
- 	int ret;
+-	pdev_sort_resources(dev, head);
++	pdev_sort_resources(dev, head, head_immovables);
+ }
  
--	if (res->flags & IORESOURCE_PCI_FIXED)
-+	if (pci_can_move_bars && !pci_dev_bar_movable(dev, res) &&
-+	    resno < PCI_ROM_RESOURCE && res->start)
-+		return assign_fixed_resource_on_bus(dev->bus, res);
-+	else if (!pci_can_move_bars && res->flags & IORESOURCE_PCI_FIXED)
- 		return 0;
+ static inline void reset_resource(struct resource *res)
+@@ -493,8 +532,13 @@ static void pdev_assign_resources_sorted(struct pci_dev *dev,
+ 					 struct list_head *fail_head)
+ {
+ 	LIST_HEAD(head);
++	LIST_HEAD(head_immovables);
++
++	__dev_sort_resources(dev, &head, &head_immovables);
++
++	if (!list_empty(&head_immovables))
++		__assign_resources_sorted(&head_immovables, NULL, NULL);
  
- 	res->flags |= IORESOURCE_UNSET;
+-	__dev_sort_resources(dev, &head);
+ 	__assign_resources_sorted(&head, add_head, fail_head);
+ 
+ }
+@@ -505,9 +549,13 @@ static void pbus_assign_resources_sorted(const struct pci_bus *bus,
+ {
+ 	struct pci_dev *dev;
+ 	LIST_HEAD(head);
++	LIST_HEAD(head_immovables);
+ 
+ 	list_for_each_entry(dev, &bus->devices, bus_list)
+-		__dev_sort_resources(dev, &head);
++		__dev_sort_resources(dev, &head, &head_immovables);
++
++	if (!list_empty(&head_immovables))
++		__assign_resources_sorted(&head_immovables, NULL, NULL);
+ 
+ 	__assign_resources_sorted(&head, realloc_head, fail_head);
+ }
 -- 
 2.24.1
 
