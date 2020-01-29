@@ -2,34 +2,34 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8653314CD5F
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Jan 2020 16:30:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E7F514CD5C
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Jan 2020 16:30:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbgA2PaB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Jan 2020 10:30:01 -0500
-Received: from mta-02.yadro.com ([89.207.88.252]:55796 "EHLO mta-01.yadro.com"
+        id S1727082AbgA2PaA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Jan 2020 10:30:00 -0500
+Received: from mta-02.yadro.com ([89.207.88.252]:55788 "EHLO mta-01.yadro.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726952AbgA2PaA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S1726913AbgA2PaA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Wed, 29 Jan 2020 10:30:00 -0500
 Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 00CC947625;
-        Wed, 29 Jan 2020 15:29:58 +0000 (UTC)
+        by mta-01.yadro.com (Postfix) with ESMTP id 3BCF34762A;
+        Wed, 29 Jan 2020 15:29:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
         content-type:content-type:content-transfer-encoding:mime-version
         :references:in-reply-to:x-mailer:message-id:date:date:subject
         :subject:from:from:received:received:received; s=mta-01; t=
-        1580311796; x=1582126197; bh=bWnPaZUGtbi755uNVGa6pv8QekKJ1F945uz
-        Qa4YKads=; b=BFcO7pGtHhDhpnYj12iWmNGEnNJgLpsLtC8ou+5xfIqQh5BUAM8
-        xL4lPmbIEpPJwM1GEfSPu0hUk+snWgaza/l2PshXKlK/0nU9lrDlg9+yBur91GA6
-        Sxvrcz3K7EqEQjKQwJpp3r+llVWSHaeimyZmyjVzZZDkrxf0GLCmvu3E=
+        1580311798; x=1582126199; bh=hfrGP7ZuV7gZotJUWNFmK1pWrC8q21FdDJn
+        WkhmZCp4=; b=SooZxLkirNPJsmv/J/eaBXlKuMPIRKkxD1/DGAxyKFdBoWYHlNr
+        w4fxUkeiOMmHHNn2ax/vm/LRj8/WdTh8/KObqhQLnOJANdeGc1N15xjFvsQSPZ/D
+        uTbSgSG6JJv5mNtJxFJ0AgLUDbGbcePqOqSBJPh/k/wCSqQAEuPMzBdM=
 X-Virus-Scanned: amavisd-new at yadro.com
 Received: from mta-01.yadro.com ([127.0.0.1])
         by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id kjgEAHxNDe3v; Wed, 29 Jan 2020 18:29:56 +0300 (MSK)
+        with ESMTP id xfoJSsSlqrZr; Wed, 29 Jan 2020 18:29:58 +0300 (MSK)
 Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id 945E44760F;
+        by mta-01.yadro.com (Postfix) with ESMTPS id D037447603;
         Wed, 29 Jan 2020 18:29:52 +0300 (MSK)
 Received: from NB-148.yadro.com (172.17.15.136) by T-EXCH-02.corp.yadro.com
  (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
@@ -40,9 +40,9 @@ To:     <linux-pci@vger.kernel.org>
 CC:     Bjorn Helgaas <helgaas@kernel.org>, Stefan Roese <sr@denx.de>,
         <linux@yadro.com>,
         Sergei Miroshnichenko <s.miroshnichenko@yadro.com>
-Subject: [PATCH v7 10/26] PCI: Include fixed and immovable BARs into the bus size calculating
-Date:   Wed, 29 Jan 2020 18:29:21 +0300
-Message-ID: <20200129152937.311162-11-s.miroshnichenko@yadro.com>
+Subject: [PATCH v7 11/26] PCI: hotplug: movable BARs: Compute limits for relocated bridge windows
+Date:   Wed, 29 Jan 2020 18:29:22 +0300
+Message-ID: <20200129152937.311162-12-s.miroshnichenko@yadro.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200129152937.311162-1-s.miroshnichenko@yadro.com>
 References: <20200129152937.311162-1-s.miroshnichenko@yadro.com>
@@ -57,83 +57,162 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The only difference between the fixed/immovable and movable BARs is a size
-and offset preservation after they are released (the corresponding struct
-resource* detached from a bridge window for a while during a bus rescan).
+With enabled movable BARs, bridge windows are recalculated during each PCI
+rescan. Some of the BARs below a bridge may be immovable: these areas are
+represented by the .immovable_range field in struct pci_bus.
 
-Include fixed/immovable BARs into result of pbus_size_mem().
+If a bridge window size is equal to its immovable range, it can only be
+assigned to the start of this range. But if a bridge window size is larger,
+and this difference in size is denoted as "delta", the window can start
+from (immovable_range.start - delta) to (immovable_range.start), and it can
+end from (immovable_range.end) to (immovable_range.end + delta). This range
+(the new .realloc_range field in struct pci_bus) must then be compared with
+immovable ranges of neighbouring bridges to guarantee absence of
+intersections.
+
+This patch only calculates valid ranges for reallocated bridges during pci
+rescan, and the next one will make use of these values during allocation.
 
 Signed-off-by: Sergei Miroshnichenko <s.miroshnichenko@yadro.com>
 ---
- drivers/pci/setup-bus.c | 29 ++++++++++++++++++++++++++++-
- 1 file changed, 28 insertions(+), 1 deletion(-)
+ drivers/pci/pci.h       |  1 +
+ drivers/pci/setup-bus.c | 86 +++++++++++++++++++++++++++++++++++++++++
+ include/linux/pci.h     |  6 +++
+ 3 files changed, 93 insertions(+)
 
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 5f2051c8531c..ddd6fd33f9c3 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -291,6 +291,7 @@ struct pci_bus *pci_bus_get(struct pci_bus *bus);
+ void pci_bus_put(struct pci_bus *bus);
+ 
+ bool pci_dev_bar_movable(struct pci_dev *dev, struct resource *res);
++void pci_bus_update_realloc_range(struct pci_bus *bus);
+ 
+ /* PCIe link information */
+ #define PCIE_SPEED2STR(speed) \
 diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index e87fefa12f62..5874c352b41e 100644
+index 5874c352b41e..71babb968830 100644
 --- a/drivers/pci/setup-bus.c
 +++ b/drivers/pci/setup-bus.c
-@@ -891,6 +891,11 @@ static void pbus_size_io(struct pci_bus *bus, resource_size_t min_size,
- 	resource_size_t children_add_size = 0;
- 	resource_size_t min_align, align;
+@@ -1837,6 +1837,91 @@ static enum enable_type pci_realloc_detect(struct pci_bus *bus,
+ }
+ #endif
  
-+	resource_size_t fixed_start = bus->immovable_range[0].start;
-+	resource_size_t fixed_end = bus->immovable_range[0].end;
-+	resource_size_t fixed_size = (fixed_start < fixed_end) ?
-+		(fixed_end - fixed_start + 1) : 0;
++/*
++ * Calculate the address margins where the bridge windows may be allocated to fit all
++ * the fixed and immovable BARs beneath.
++ */
++void pci_bus_update_realloc_range(struct pci_bus *bus)
++{
++	struct pci_dev *dev;
++	struct pci_bus *parent = bus->parent;
++	int idx;
 +
- 	if (!b_res)
- 		return;
- 
-@@ -898,6 +903,9 @@ static void pbus_size_io(struct pci_bus *bus, resource_size_t min_size,
- 	if (b_res->parent)
- 		return;
- 
-+	if (min_size < fixed_size)
-+		min_size = fixed_size;
++	list_for_each_entry(dev, &bus->devices, bus_list)
++		if (dev->subordinate)
++			pci_bus_update_realloc_range(dev->subordinate);
 +
- 	min_align = window_alignment(bus, IORESOURCE_IO);
- 	list_for_each_entry(dev, &bus->devices, bus_list) {
- 		int i;
-@@ -1006,6 +1014,15 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
- 	resource_size_t children_add_size = 0;
- 	resource_size_t children_add_align = 0;
- 	resource_size_t add_align = 0;
-+	int idx = pci_get_bridge_resource_idx(b_res);
++	if (!parent || !bus->self)
++		return;
 +
-+	resource_size_t fixed_start = bus->immovable_range[idx].start;
-+	resource_size_t fixed_end = bus->immovable_range[idx].end;
-+	resource_size_t fixed_size = (fixed_start < fixed_end) ?
-+		(fixed_end - fixed_start + 1) : 0;
++	for (idx = 0; idx < PCI_BRIDGE_RESOURCE_NUM; ++idx) {
++		struct resource *immovable_range = &bus->immovable_range[idx];
++		resource_size_t window_size = resource_size(bus->resource[idx]);
++		resource_size_t realloc_start, realloc_end;
 +
-+	if (min_size < fixed_size)
-+		min_size = fixed_size;
- 
- 	if (!b_res)
- 		return -ENOSPC;
-@@ -1028,12 +1045,22 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
- 			struct resource *r = &dev->resource[i];
- 			resource_size_t r_size;
- 
--			if (r->parent || (r->flags & IORESOURCE_PCI_FIXED) ||
-+			if (r->parent ||
- 			    ((r->flags & mask) != type &&
- 			     (r->flags & mask) != type2 &&
- 			     (r->flags & mask) != type3))
- 				continue;
- 			r_size = resource_size(r);
++		bus->realloc_range[idx].start = 0;
++		bus->realloc_range[idx].end = 0;
 +
-+			if (pci_can_move_bars && !pci_dev_bar_movable(dev, r)) {
-+				size += r_size;
++		/* Check if there any immovable BARs under the bridge */
++		if (immovable_range->start >= immovable_range->end)
++			continue;
 +
-+				continue;
-+			} else if (!pci_can_move_bars &&
-+				   (r->flags & IORESOURCE_PCI_FIXED)) {
++		/* The lowest possible address where the bridge window can start */
++		realloc_start = immovable_range->end - window_size + 1;
++		/* The highest possible address where the bridge window can end */
++		realloc_end = immovable_range->start + window_size - 1;
++
++		if (realloc_start > immovable_range->start)
++			realloc_start = immovable_range->start;
++
++		if (realloc_end < immovable_range->end)
++			realloc_end = immovable_range->end;
++
++		/*
++		 * Check that realloc range doesn't intersect with hard fixed ranges
++		 * of neighboring bridges
++		 */
++		list_for_each_entry(dev, &parent->devices, bus_list) {
++			struct pci_bus *neighbor = dev->subordinate;
++			struct resource *n_imm_range;
++
++			if (!neighbor) {
++				int i;
++
++				for (i = 0; i < PCI_BRIDGE_RESOURCE_NUM; ++i) {
++					struct resource *nr = &dev->resource[i];
++
++					if (!nr->flags ||
++					    !nr->start ||
++					    pci_dev_bar_movable(dev, nr))
++						continue;
++
++					if (nr->end < immovable_range->start &&
++					    nr->end > realloc_start)
++						realloc_start = nr->end;
++				}
++
 +				continue;
 +			}
 +
- #ifdef CONFIG_PCI_IOV
- 			/* Put SRIOV requested res to the optional list */
- 			if (realloc_head && i >= PCI_IOV_RESOURCES &&
++			if (neighbor == bus)
++				continue;
++
++			n_imm_range = &neighbor->immovable_range[idx];
++
++			if (n_imm_range->start >= n_imm_range->end)
++				continue;
++
++			if (n_imm_range->end < immovable_range->start &&
++			    n_imm_range->end > realloc_start)
++				realloc_start = n_imm_range->end;
++		}
++
++		bus->realloc_range[idx].start = realloc_start;
++		bus->realloc_range[idx].end = realloc_end;
++	}
++}
++
+ /*
+  * First try will not touch PCI bridge res.
+  * Second and later try will clear small leaf bridge res.
+@@ -1856,6 +1941,7 @@ void pci_assign_unassigned_root_bus_resources(struct pci_bus *bus)
+ 
+ 	if (pci_can_move_bars) {
+ 		__pci_bus_size_bridges(bus, NULL);
++		pci_bus_update_realloc_range(bus);
+ 		__pci_bus_assign_resources(bus, NULL, NULL);
+ 
+ 		goto dump;
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index d6eb498f7997..8830a254405f 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -588,6 +588,12 @@ struct pci_bus {
+ 	 */
+ 	struct resource immovable_range[PCI_BRIDGE_RESOURCE_NUM];
+ 
++	/*
++	 * Acceptable address range, where the bridge window may reside, considering its
++	 * size, so it will cover all the fixed and immovable BARs below.
++	 */
++	struct resource realloc_range[PCI_BRIDGE_RESOURCE_NUM];
++
+ 	struct pci_ops	*ops;		/* Configuration access functions */
+ 	struct msi_controller *msi;	/* MSI controller */
+ 	void		*sysdata;	/* Hook for sys-specific extension */
 -- 
 2.24.1
 
