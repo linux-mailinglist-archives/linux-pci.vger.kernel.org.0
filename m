@@ -2,103 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A38D014CD63
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Jan 2020 16:30:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 31D8414D00F
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Jan 2020 19:02:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbgA2PaK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Jan 2020 10:30:10 -0500
-Received: from mta-02.yadro.com ([89.207.88.252]:55810 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727112AbgA2PaK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 29 Jan 2020 10:30:10 -0500
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id CA9C24764A;
-        Wed, 29 Jan 2020 15:30:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        content-type:content-type:content-transfer-encoding:mime-version
-        :references:in-reply-to:x-mailer:message-id:date:date:subject
-        :subject:from:from:received:received:received; s=mta-01; t=
-        1580311807; x=1582126208; bh=nTwQVNqKc1oZ/BG+7BiUIzTNNF70SzPZsJQ
-        u1kL4W+I=; b=jubS1uzIZkFvGtcwhmM8/Y1bvbiTy5/dm25FTfOqI8R3Ego1Qlv
-        0BCSqLgeGOtAUgkMHxbNWvDQAl+jNL/XpT3YbFJmkna/B0Z4hrCRWWyAo+gdIBPX
-        9uVgJtOrjWymI3wy/z4vQcc0RH+Ss4/pL8FPBpWpdeEiz1AUDSuBscW4=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id LhPz2JvsOZeb; Wed, 29 Jan 2020 18:30:07 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id DE2BC47608;
-        Wed, 29 Jan 2020 18:29:55 +0300 (MSK)
-Received: from NB-148.yadro.com (172.17.15.136) by T-EXCH-02.corp.yadro.com
- (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.1.669.32; Wed, 29
- Jan 2020 18:29:55 +0300
-From:   Sergei Miroshnichenko <s.miroshnichenko@yadro.com>
-To:     <linux-pci@vger.kernel.org>
-CC:     Bjorn Helgaas <helgaas@kernel.org>, Stefan Roese <sr@denx.de>,
-        <linux@yadro.com>,
-        Sergei Miroshnichenko <s.miroshnichenko@yadro.com>
-Subject: [PATCH v7 26/26] PCI/portdrv: Declare support of movable BARs
-Date:   Wed, 29 Jan 2020 18:29:37 +0300
-Message-ID: <20200129152937.311162-27-s.miroshnichenko@yadro.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200129152937.311162-1-s.miroshnichenko@yadro.com>
-References: <20200129152937.311162-1-s.miroshnichenko@yadro.com>
+        id S1726851AbgA2SCA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Jan 2020 13:02:00 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:39785 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726116AbgA2SCA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Jan 2020 13:02:00 -0500
+Received: by mail-lf1-f67.google.com with SMTP id t23so320820lfk.6
+        for <linux-pci@vger.kernel.org>; Wed, 29 Jan 2020 10:01:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=v49qSJDDhvOaRsBI9gc+tYZ4RfGmEGHF1xKb4v6wLhw=;
+        b=XIzrCznP9I3gq08sozdu3CWZBayLW7ZkHxJeQxM+XmEdLhqmWxUHfD3rocLMQ2MXdY
+         XP89vxP5NvtBFfL7hPVxhlhj6bl9yyT13nUd5CkifWcfrpdgAF6+hihMrGBflE4yVM5k
+         2HJWDzCDAQp8LGiZCQ9KXSJ8hZULCEJiiM0ns=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=v49qSJDDhvOaRsBI9gc+tYZ4RfGmEGHF1xKb4v6wLhw=;
+        b=BdO+6qNhQHVLRW0FXkLBZ0sy0BT9Xv6pmNwcwdK2eskFSRC6/kGn4Lf9L5ov9Gpphb
+         iviGYfGs8GKt42E9FS7C40mVZjhJRRjp7B118mPaqTmBrZ4mdKpzGFfZEcS8aDDyfy4Q
+         x9EkVLiU3qJFkmVOzDJa1DGioJDRrmvpmqmCRjiGHInAocedTheFtAn4WIq5wzFlIl0x
+         lzNq4ZzR1k0PMR0Ig51p5/ysRUBGKbxM5gPmlE8aXC4oUmNTJVMSXslDEZ9F+QBK5B2N
+         Mq9qJaznDv3nS5w0KQb4UJla8nnoBEwjVRF8H+h2zxdoFR9Bv1H79AnRpFsTlSeg/oPd
+         eqvA==
+X-Gm-Message-State: APjAAAU8TNSYii2nWfjOvqtfpiHq0c9CFmuFMXFm57JlLoWrl8KQxDLx
+        xKrT8vnsVaoKQ+3/uvNQo1n+vaQeFM4=
+X-Google-Smtp-Source: APXvYqyIdDPCACdZrqRHFMObBGsL5ApNYtlffXCkI6mlMNVoeGBT65lCxKmntHMVxpyjivpb/6EiGQ==
+X-Received: by 2002:ac2:555c:: with SMTP id l28mr288555lfk.52.1580320916608;
+        Wed, 29 Jan 2020 10:01:56 -0800 (PST)
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
+        by smtp.gmail.com with ESMTPSA id y11sm1745247lfc.27.2020.01.29.10.01.36
+        for <linux-pci@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Jan 2020 10:01:37 -0800 (PST)
+Received: by mail-lf1-f48.google.com with SMTP id b15so330909lfc.4
+        for <linux-pci@vger.kernel.org>; Wed, 29 Jan 2020 10:01:36 -0800 (PST)
+X-Received: by 2002:a19:c205:: with SMTP id l5mr259903lfc.159.1580320896113;
+ Wed, 29 Jan 2020 10:01:36 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [172.17.15.136]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-02.corp.yadro.com (172.17.10.102)
+References: <20200117162444.v2.1.I9c7e72144ef639cc135ea33ef332852a6b33730f@changeid>
+ <CACK8Z6Ft95qj4e_fsA32r_bcz2SsHOW1xxqZJt3_DBAJw=NMGA@mail.gmail.com>
+ <CAE=gft6fKQWExW-=xjZGzXs30XohfpA5SKggvL2WtYXAHmzMew@mail.gmail.com>
+ <87y2tytv5i.fsf@nanos.tec.linutronix.de> <87eevqkpgn.fsf@nanos.tec.linutronix.de>
+ <CAE=gft6YiM5S1A7iJYJTd5zmaAa8=nhLE3B94JtWa+XW-qVSqQ@mail.gmail.com>
+ <CAE=gft5xta4XCJtctWe=R3w=kVr598JCbk9VSRue04nzKAk3CQ@mail.gmail.com>
+ <CAE=gft7MqQ3Mej5oCT=gw6ZLMSTHoSyMGOFz=-hae-eRZvXLxA@mail.gmail.com>
+ <87d0b82a9o.fsf@nanos.tec.linutronix.de> <CAE=gft7C5HTmcTLsXqXbCtcYDeKG6bCJ0gmgwVNc0PDHLJ5y_A@mail.gmail.com>
+ <878slwmpu9.fsf@nanos.tec.linutronix.de> <87imkv63yf.fsf@nanos.tec.linutronix.de>
+ <CAE=gft7Gu0ah4qcbsEB1X+kUMagCzPR+cdCfn2caofcGV+tBjA@mail.gmail.com> <87pnf342pr.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <87pnf342pr.fsf@nanos.tec.linutronix.de>
+From:   Evan Green <evgreen@chromium.org>
+Date:   Wed, 29 Jan 2020 10:00:59 -0800
+X-Gmail-Original-Message-ID: <CAE=gft69hQcbmT46b1T8eLdPFyb9Pp-sDYd5JfPsZ2JWL4PXqQ@mail.gmail.com>
+Message-ID: <CAE=gft69hQcbmT46b1T8eLdPFyb9Pp-sDYd5JfPsZ2JWL4PXqQ@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI/MSI: Avoid torn updates to MSI pairs
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Rajat Jain <rajatja@google.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        x86@kernel.org, Marc Zyngier <maz@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Currently there are no reliable way to determine if a driver uses BARs of
-its devices (their struct resource don't always have a child), so if it
-doesn't explicitly support movable BARs, they are considered immovable.
+On Tue, Jan 28, 2020 at 2:48 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Evan,
+>
+> Evan Green <evgreen@chromium.org> writes:
+> > On Tue, Jan 28, 2020 at 6:38 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >> The patch is only lightly tested, but so far it survived.
+> >>
+> >
+> > Hi Thomas,
+> > Thanks for the patch, I gave it a try. I get the following splat, then a hang:
+> >
+> > [   62.238406]        CPU0
+> > [   62.241135]        ----
+> > [   62.243863]   lock(vector_lock);
+> > [   62.247467]   lock(vector_lock);
+> > [   62.251071]
+> > [   62.251071]  *** DEADLOCK ***
+> > [   62.251071]
+> > [   62.257687]  May be due to missing lock nesting notation
+> > [   62.257687]
+> > [   62.265274] 2 locks held by migration/1/17:
+> > [   62.269946]  #0: 00000000cfa9d8c3 (&irq_desc_lock_class){-.-.}, at:
+> > irq_migrate_all_off_this_cpu+0x44/0x28f
+> > [   62.280846]  #1: 000000006885da2d (vector_lock){-.-.}, at:
+> > msi_set_affinity+0x13c/0x27b
+> > [   62.289801]
+> > [   62.289801] stack backtrace:
+> > [   62.294669] CPU: 1 PID: 17 Comm: migration/1 Not tainted 4.19.96 #2
+> > [   62.310713] Call Trace:
+> > [   62.313446]  dump_stack+0xac/0x11e
+> > [   62.317255]  __lock_acquire+0x64f/0x19bc
+> > [   62.321646]  ? find_held_lock+0x3d/0xb8
+> > [   62.325936]  ? pci_conf1_write+0x4f/0xdf
+> > [   62.330320]  lock_acquire+0x1b2/0x1fa
+> > [   62.334413]  ? apic_retrigger_irq+0x31/0x63
+> > [   62.339097]  _raw_spin_lock_irqsave+0x51/0x7d
+> > [   62.343972]  ? apic_retrigger_irq+0x31/0x63
+> > [   62.348646]  apic_retrigger_irq+0x31/0x63
+> > [   62.353124]  msi_set_affinity+0x25a/0x27b
+>
+> Bah. I'm sure I looked at that call chain, noticed the double vector
+> lock and then forgot. Delta patch below.
 
-The portdrv driver for PCI switches don't use BARs, so add empty hooks
-.rescan_prepare() and .rescan_done() to increase chances to allocate new
-BARs for new devices.
-
-Signed-off-by: Sergei Miroshnichenko <s.miroshnichenko@yadro.com>
----
- drivers/pci/pcie/portdrv_pci.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
-index 160d67c59310..df1faf2fed86 100644
---- a/drivers/pci/pcie/portdrv_pci.c
-+++ b/drivers/pci/pcie/portdrv_pci.c
-@@ -205,6 +205,14 @@ static const struct pci_error_handlers pcie_portdrv_err_handler = {
- 	.resume = pcie_portdrv_err_resume,
- };
- 
-+static void pcie_portdrv_rescan_prepare(struct pci_dev *pdev)
-+{
-+}
-+
-+static void pcie_portdrv_rescan_done(struct pci_dev *pdev)
-+{
-+}
-+
- static struct pci_driver pcie_portdriver = {
- 	.name		= "pcieport",
- 	.id_table	= &port_pci_ids[0],
-@@ -215,6 +223,9 @@ static struct pci_driver pcie_portdriver = {
- 
- 	.err_handler	= &pcie_portdrv_err_handler,
- 
-+	.rescan_prepare	= pcie_portdrv_rescan_prepare,
-+	.rescan_done	= pcie_portdrv_rescan_done,
-+
- 	.driver.pm	= PCIE_PORTDRV_PM_OPS,
- };
- 
--- 
-2.24.1
-
+It's working well with the delta patch, been running for about an hour
+with no issues.
+-Evan
