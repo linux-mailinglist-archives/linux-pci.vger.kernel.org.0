@@ -2,34 +2,34 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 20A5C14CD6A
+	by mail.lfdr.de (Postfix) with ESMTP id 9A73714CD6B
 	for <lists+linux-pci@lfdr.de>; Wed, 29 Jan 2020 16:30:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbgA2PaG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S1727069AbgA2PaG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Wed, 29 Jan 2020 10:30:06 -0500
-Received: from mta-02.yadro.com ([89.207.88.252]:55810 "EHLO mta-01.yadro.com"
+Received: from mta-02.yadro.com ([89.207.88.252]:55796 "EHLO mta-01.yadro.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727069AbgA2PaF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S1727097AbgA2PaF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Wed, 29 Jan 2020 10:30:05 -0500
 Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id B997F47615;
-        Wed, 29 Jan 2020 15:30:04 +0000 (UTC)
+        by mta-01.yadro.com (Postfix) with ESMTP id 1C9FB4763A;
+        Wed, 29 Jan 2020 15:30:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
         content-type:content-type:content-transfer-encoding:mime-version
         :references:in-reply-to:x-mailer:message-id:date:date:subject
         :subject:from:from:received:received:received; s=mta-01; t=
-        1580311803; x=1582126204; bh=KIR0MC8rCtR1zPZojKGWoiMuTlUAufIezN8
-        /SU4Jg5Q=; b=Wl5fEsm3fMTOSCoZfQa4kn6YpNUakWRTG9okSYRfwGJ9uJz72Z5
-        xk7hC1LAYvhqHj2yWVgKj7bATi3v1dGzAb/ItBCCH7T6LEwbxcJ6PoH9kbXsKokj
-        vz4Wq72HQatsMYCamaB/vMfztBPkJi+m44OojS46CjOeCLx6XtDxqBLA=
+        1580311804; x=1582126205; bh=KmV3hNPn7rKXFMzBEaQhlsXjxbcPu4B8Qcn
+        sWgcAriE=; b=vE43uwmkmDO1eg2FoQh6i2DvpOlmKI8sgGRa4xEYfbwTu9MACBr
+        ZI5zV+i2eDC/84XFjdE98T1eqJbbppEEnw6v20ZWe8dfL5T7MqC3J6VL+feTfbro
+        1SSlNgppQ9ZPkDTc6vAcuXC1bRdeiIh+cmXoTR9PuUtf+sC/quqfPJlk=
 X-Virus-Scanned: amavisd-new at yadro.com
 Received: from mta-01.yadro.com ([127.0.0.1])
         by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 93xQ11qWup73; Wed, 29 Jan 2020 18:30:03 +0300 (MSK)
+        with ESMTP id iQ7Yf_K5I6yF; Wed, 29 Jan 2020 18:30:04 +0300 (MSK)
 Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id A21EA47619;
+        by mta-01.yadro.com (Postfix) with ESMTPS id CE1124761D;
         Wed, 29 Jan 2020 18:29:54 +0300 (MSK)
 Received: from NB-148.yadro.com (172.17.15.136) by T-EXCH-02.corp.yadro.com
  (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
@@ -39,11 +39,10 @@ From:   Sergei Miroshnichenko <s.miroshnichenko@yadro.com>
 To:     <linux-pci@vger.kernel.org>
 CC:     Bjorn Helgaas <helgaas@kernel.org>, Stefan Roese <sr@denx.de>,
         <linux@yadro.com>,
-        Sergei Miroshnichenko <s.miroshnichenko@yadro.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH v7 20/26] PNP: Don't reserve BARs for PCI when enabled movable BARs
-Date:   Wed, 29 Jan 2020 18:29:31 +0300
-Message-ID: <20200129152937.311162-21-s.miroshnichenko@yadro.com>
+        Sergei Miroshnichenko <s.miroshnichenko@yadro.com>
+Subject: [PATCH v7 21/26] PCI: hotplug: Don't disable the released bridge windows immediately
+Date:   Wed, 29 Jan 2020 18:29:32 +0300
+Message-ID: <20200129152937.311162-22-s.miroshnichenko@yadro.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200129152937.311162-1-s.miroshnichenko@yadro.com>
 References: <20200129152937.311162-1-s.miroshnichenko@yadro.com>
@@ -58,40 +57,41 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-When the Movable BARs feature is supported, the PCI subsystem is able to
-distribute existing BARs and allocate the new ones itself, without need to
-reserve gaps by BIOS.
+On a hotplug event with enabled BAR movement, calculating the new bridge
+windows takes some time. During this procedure, the structures that
+represent these windows are "released" - means marked for recalculation by
+setting to zero.
 
-CC: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+When the new bridge windows are ready, they are written to the registers of
+every bridge via pci_setup_bridges().
+
+Currently, bridge's registers are updated immediately after releasing a
+window to disable it. But if a driver doesn't yet support movable BARs, it
+doesn't stop MEM transactions during the hotplug, so disabled bridge
+windows will break them.
+
+Let the bridge windows remain operating after releasing, as they will be
+updated to the new values in the end of a hotplug event.
+
 Signed-off-by: Sergei Miroshnichenko <s.miroshnichenko@yadro.com>
 ---
- drivers/pnp/system.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/pci/setup-bus.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pnp/system.c b/drivers/pnp/system.c
-index 6950503741eb..16cd260a609d 100644
---- a/drivers/pnp/system.c
-+++ b/drivers/pnp/system.c
-@@ -12,6 +12,7 @@
- #include <linux/device.h>
- #include <linux/init.h>
- #include <linux/slab.h>
-+#include <linux/pci.h>
- #include <linux/kernel.h>
- #include <linux/ioport.h>
- 
-@@ -58,6 +59,11 @@ static void reserve_resources_of_dev(struct pnp_dev *dev)
- 	struct resource *res;
- 	int i;
- 
-+#ifdef CONFIG_PCI
-+	if (pci_can_move_bars)
-+		return;
-+#endif
-+
- 	for (i = 0; (res = pnp_get_resource(dev, IORESOURCE_IO, i)); i++) {
- 		if (res->flags & IORESOURCE_DISABLED)
- 			continue;
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index 573d5c67c136..dd94b4ed7358 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -1708,7 +1708,8 @@ static void pci_bridge_release_resources(struct pci_bus *bus,
+ 		/* Avoiding touch the one without PREF */
+ 		if (type & IORESOURCE_PREFETCH)
+ 			type = IORESOURCE_PREFETCH;
+-		__pci_setup_bridge(bus, type);
++		if (!pci_can_move_bars)
++			__pci_setup_bridge(bus, type);
+ 		/* For next child res under same bridge */
+ 		r->flags = old_flags;
+ 	}
 -- 
 2.24.1
 
