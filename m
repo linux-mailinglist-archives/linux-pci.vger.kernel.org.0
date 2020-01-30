@@ -2,53 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6014014DF11
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Jan 2020 17:26:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CC7B614DF57
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Jan 2020 17:42:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727291AbgA3Q0L (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Jan 2020 11:26:11 -0500
-Received: from verein.lst.de ([213.95.11.211]:40905 "EHLO verein.lst.de"
+        id S1727241AbgA3Qmh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Jan 2020 11:42:37 -0500
+Received: from verein.lst.de ([213.95.11.211]:40977 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727241AbgA3Q0L (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 30 Jan 2020 11:26:11 -0500
+        id S1727224AbgA3Qmh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 30 Jan 2020 11:42:37 -0500
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id 07E0468B20; Thu, 30 Jan 2020 17:26:07 +0100 (CET)
-Date:   Thu, 30 Jan 2020 17:26:06 +0100
+        id B46FF68B20; Thu, 30 Jan 2020 17:42:35 +0100 (CET)
+Date:   Thu, 30 Jan 2020 17:42:35 +0100
 From:   Christoph Hellwig <hch@lst.de>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        Alexandru Gagniuc <alex_gagniuc@dellteam.com>,
-        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jan Vesely <jano.vesely@gmail.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Austin Bolen <austin_bolen@dell.com>,
-        Shyam Iyer <Shyam_Iyer@dell.com>,
-        Sinan Kaya <okaya@kernel.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: Issues with "PCI/LINK: Report degraded links via link
- bandwidth notification"
-Message-ID: <20200130162606.GB6377@lst.de>
-References: <20200115221008.GA191037@google.com> <20200120023326.GA149019@google.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: pci-usb/pci-sata broken with LPAE config after "reduce use of
+ block bounce buffers"
+Message-ID: <20200130164235.GA6705@lst.de>
+References: <120f7c3e-363d-deb0-a347-782ac869ee0d@ti.com> <20200130075833.GC30735@lst.de> <4a41bd0d-6491-3822-172a-fbca8a6abba5@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200120023326.GA149019@google.com>
+In-Reply-To: <4a41bd0d-6491-3822-172a-fbca8a6abba5@ti.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Jan 19, 2020 at 08:33:26PM -0600, Bjorn Helgaas wrote:
-> NVMe, GPU folks, do your drivers or devices change PCIe link
-> speed/width for power saving or other reasons?  When CONFIG_PCIE_BW=y,
-> the PCI core interprets changes like that as problems that need to be
-> reported.
+On Thu, Jan 30, 2020 at 01:39:58PM +0530, Kishon Vijay Abraham I wrote:
+> Hi Christoph,
+> 
+> On 30/01/20 1:28 pm, Christoph Hellwig wrote:
+> > On Fri, Nov 15, 2019 at 04:29:31PM +0530, Kishon Vijay Abraham I wrote:
+> >> Hi Christoph,
+> >>
+> >> I think we are encountering a case where the connected PCIe card (like PCIe USB
+> >> card) supports 64-bit addressing and the ARM core supports 64-bit addressing
+> >> but the PCIe controller in the SoC to which PCIe card is connected supports
+> >> only 32-bits.
+> >>
+> >> Here dma APIs can provide an address above the 32 bit region to the PCIe card.
+> >> However this will fail when the card tries to access the provided address via
+> >> the PCIe controller.
+> > 
+> > What kernel version do you test?  The classic arm version of dma_capable
+> > doesn't take the bus dma mask into account.  In Linux 5.5 I switched
+> > ARM to use the generic version in
+> > 
+> > 130c1ccbf55 ("dma-direct: unify the dma_capable definitions")
+> > 
+> > so with that this case is supposed to work, without that it doesn't
+> > have much of a chance.
+> 
+> I got into a new issue in 5.5 kernel with NVMe card wherein I get the
+> below warn dump. This is different from the issue I initially posted
+> seen with USB and SATA cards (I was getting a data mismatch then). With
+> 5.5 kernel I don't see those issues anymore in USB card. I only see the
+> below warn dump with NVMe card.
 
-The NVMe driver doesn't.  For devices I don't know of any, but Ican't
-find anything in the spec that would forbid it.
+Can you throw in a little debug printk if this comes from
+dma_direct_possible or swiotlb_map?
