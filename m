@@ -2,202 +2,150 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EC12214F09F
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Jan 2020 17:34:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 082A114F0FA
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Jan 2020 17:59:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726157AbgAaQeU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 31 Jan 2020 11:34:20 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:44808 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbgAaQeU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 31 Jan 2020 11:34:20 -0500
-Received: by mail-lj1-f195.google.com with SMTP id q8so7704920ljj.11;
-        Fri, 31 Jan 2020 08:34:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=rVk7M4gYPu86cgQ1So8LoJbxA77sG+PGy1cjE43BUxw=;
-        b=Q1RNrkco8oJmb4qm8h8JK+tx2kOBaKVwC4ENwcuBF9leg9BALyybP+jSbSGTh0pH+W
-         fwi5a4jxwU5b7GdJhKOksn93GT8i/SqGWyhyi9A2ol3KkOxS1RT9OnZ2l+IENHPcbOOf
-         Asd3UhH4jkSHvjKb2WSztjSEOtGO1T6/EKVpgFr09tzufmdhl7ZgBeHYhI5R9oPL2G4p
-         O0XXlU2hX77unIK13NQ32BIpyVI4RjpPTHWc2bYqpm9oyCy2tfF1pTTJFGLVS9SywHH5
-         d/6j3FbCWy1BRGu74TMMzA9TpQF7JU35bKzKazmXm1sRkfDQRV/Cnzwfd23mgqP2VUuh
-         gnFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=rVk7M4gYPu86cgQ1So8LoJbxA77sG+PGy1cjE43BUxw=;
-        b=QHzL3PYlPULTbqm8nuCmTK9rKmOmy3EgJmGrxMLagBY9Qi2Zp5a3KzlUYWPjzL0ZBT
-         7+pMzKzKqVfSis2RmpTmdZ30o3ng/de7rwh4ofIQQ/NhmKOUEB5l06swtnNHH6c/hJLt
-         sUAfK8JGEaXrWZOxtus9mLZ0rWvIIO2ckgN6EagScqyGtAvdh5Jj52F1Cq3UMAMemsqC
-         l+ljZTuVyHToZt6NBEqm/yOJoziuNw2tkuFsm1pjxkKhXApdqGk3E3TBzwKwPfnxhq17
-         ATUCMT+kfupMnYa6vLXRj3UT+FEVKiDSzX7G42cDvYCdkyJO2yTr1AoHTbYe/rSIcxnI
-         1tvw==
-X-Gm-Message-State: APjAAAVDnmmDTtTtawLQSR5IU+Kr0vf5xjnnl4dSHqhmbFaTV+241e1w
-        IeYxJMwXwkcioLfOS9vmJf+9EC27t4eKhiqrNm9jAGhy
-X-Google-Smtp-Source: APXvYqyQM7lg4jmHwHYH6zJL6QogrN9+0F9lGLdiR/nKZk9ErDODUTx34W5medZl0f3g9PAzFqJnqDTB1vAxF3MRcTo=
-X-Received: by 2002:a2e:978c:: with SMTP id y12mr6264141lji.167.1580488457582;
- Fri, 31 Jan 2020 08:34:17 -0800 (PST)
+        id S1726604AbgAaQ7u (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 31 Jan 2020 11:59:50 -0500
+Received: from mta-02.yadro.com ([89.207.88.252]:41746 "EHLO mta-01.yadro.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726252AbgAaQ7t (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 31 Jan 2020 11:59:49 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id 762B34799F;
+        Fri, 31 Jan 2020 16:59:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        mime-version:content-transfer-encoding:content-id:content-type
+        :content-type:content-language:accept-language:in-reply-to
+        :references:message-id:date:date:subject:subject:from:from
+        :received:received:received:received; s=mta-01; t=1580489985; x=
+        1582304386; bh=RF+aNb5W48PxX9pYt/PWbbgyXE64qwW+ONgeU+D4Buk=; b=a
+        NarOgVKaBvLaix1UHA2rP1fBbK9VqN6Xtpaefosf/uWEx4XPDi6UaEMp9W15dh4o
+        PcvgsyQHLz/dnk5FZwwBAanNa6NG0nUHBtYOnMCS+HibCHgzxbeA20yKc7bp3vHU
+        3gXndAZxkO7+5yDy6FJHYoRrr5HgVcz6ZuEAGepfJs=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id qvCKXR2B34lJ; Fri, 31 Jan 2020 19:59:45 +0300 (MSK)
+Received: from T-EXCH-01.corp.yadro.com (t-exch-01.corp.yadro.com [172.17.10.101])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mta-01.yadro.com (Postfix) with ESMTPS id 6DABD47998;
+        Fri, 31 Jan 2020 19:59:45 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (172.17.10.102) by
+ T-EXCH-01.corp.yadro.com (172.17.10.101) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
+ 15.1.669.32; Fri, 31 Jan 2020 19:59:44 +0300
+Received: from T-EXCH-02.corp.yadro.com ([fe80::19dd:9b61:5447:ff23]) by
+ T-EXCH-02.corp.yadro.com ([fe80::19dd:9b61:5447:ff23%14]) with mapi id
+ 15.01.0669.032; Fri, 31 Jan 2020 19:59:44 +0300
+From:   Sergei Miroshnichenko <s.miroshnichenko@yadro.com>
+To:     "helgaas@kernel.org" <helgaas@kernel.org>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux@yadro.com" <linux@yadro.com>, "sr@denx.de" <sr@denx.de>
+Subject: Re: [PATCH v7 09/26] PCI: hotplug: Calculate immovable parts of
+ bridge windows
+Thread-Topic: [PATCH v7 09/26] PCI: hotplug: Calculate immovable parts of
+ bridge windows
+Thread-Index: AQHV1rj2hqut6rsu3UmdakMtPQf/b6gDiECAgAFHrwA=
+Date:   Fri, 31 Jan 2020 16:59:44 +0000
+Message-ID: <c9112d99415bdbd626362c63a3c473bafcc5ec26.camel@yadro.com>
+References: <20200130212655.GA128349@google.com>
+In-Reply-To: <20200130212655.GA128349@google.com>
+Accept-Language: en-US, ru-RU
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [172.17.15.136]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <0E74EAB7CCD40C4E84605CEF2E0322A9@yadro.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <CAHhAz+ijB_SNqRiC1Fn0Uw3OpiS7go4dPPYm6YZckaQ0fuq=QQ@mail.gmail.com>
- <20200130190040.GA96992@google.com>
-In-Reply-To: <20200130190040.GA96992@google.com>
-From:   Muni Sekhar <munisekharrms@gmail.com>
-Date:   Fri, 31 Jan 2020 22:04:05 +0530
-Message-ID: <CAHhAz+i4HVymeCzyPFRe+1E0R8_nD4LHmHApD2BrLfoWRKSJFA@mail.gmail.com>
-Subject: Re: pcie: xilinx: kernel hang - ISR readl()
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 12:30 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Thu, Jan 30, 2020 at 09:37:48PM +0530, Muni Sekhar wrote:
-> > On Thu, Jan 9, 2020 at 10:05 AM Bjorn Helgaas <helgaas@kernel.org> wrot=
-e:
-> > >
-> > > On Thu, Jan 09, 2020 at 08:47:51AM +0530, Muni Sekhar wrote:
-> > > > On Thu, Jan 9, 2020 at 1:45 AM Bjorn Helgaas <helgaas@kernel.org> w=
-rote:
-> > > > > On Tue, Jan 07, 2020 at 09:45:13PM +0530, Muni Sekhar wrote:
-> > > > > > Hi,
-> > > > > >
-> > > > > > I have module with Xilinx FPGA. It implements UART(s), SPI(s),
-> > > > > > parallel I/O and interfaces them to the Host CPU via PCI Expres=
-s bus.
-> > > > > > I see that my system freezes without capturing the crash dump f=
-or
-> > > > > > certain tests. I debugged this issue and it was tracked down to=
- the
-> > > > > > below mentioned interrupt handler code.
-> > > > > >
-> > > > > >
-> > > > > > In ISR, first reads the Interrupt Status register using =E2=80=
-=98readl()=E2=80=99 as
-> > > > > > given below.
-> > > > > >     status =3D readl(ctrl->reg + INT_STATUS);
-> > > > > >
-> > > > > >
-> > > > > > And then clears the pending interrupts using =E2=80=98writel()=
-=E2=80=99 as given blow.
-> > > > > >         writel(status, ctrl->reg + INT_STATUS);
-> > > > > >
-> > > > > >
-> > > > > > I've noticed a kernel hang if INT_STATUS register read again af=
-ter
-> > > > > > clearing the pending interrupts.
-> > > > > >
-> > > > > > Can someone clarify me why the kernel hangs without crash dump =
-incase
-> > > > > > if I read the INT_STATUS register using readl() after clearing =
-the
-> > > > > > pending bits?
-> > > > > >
-> > > > > > Can readl() block?
-> > > > >
-> > > > > readl() should not block in software.  Obviously at the hardware =
-CPU
-> > > > > instruction level, the read instruction has to wait for the resul=
-t of
-> > > > > the read.  Since that data is provided by the device, i.e., your =
-FPGA,
-> > > > > it's possible there's a problem there.
-> > > >
-> > > > Thank you very much for your reply.
-> > > > Where can I find the details about what is protocol for reading the
-> > > > =E2=80=98memory mapped IO=E2=80=99? Can you point me to any useful =
-links..
-> > > > I tried locate the exact point of the kernel code where CPU waits f=
-or
-> > > > read instruction as given below.
-> > > > readl() -> __raw_readl() -> return *(const volatile u32 __force *)a=
-dd
-> > > > Do I need to check for the assembly instructions, here?
-> > >
-> > > The C pointer dereference, e.g., "*address", will be some sort of a
-> > > "load" instruction in assembly.  The CPU wait isn't explicit; it's
-> > > just that when you load a value, the CPU waits for the value.
-> > >
-> > > > > Can you tell whether the FPGA has received the Memory Read for
-> > > > > INT_STATUS and sent the completion?
-> > > >
-> > > > Is there a way to know this with the help of software debugging(eit=
-her
-> > > > enabling dynamic debugging or adding new debug prints)? Can you ple=
-ase
-> > > > point some tools\hw needed to find this?
-> > >
-> > > You could learn this either via a PCIe analyzer (expensive piece of
-> > > hardware) or possibly some logic in the FPGA that would log PCIe
-> > > transactions in a buffer and make them accessible via some other
-> > > interface (you mentioned it had parallel and other interfaces).
-> > >
-> > > > > On the architectures I'm familiar with, if a device doesn't respo=
-nd,
-> > > > > something would eventually time out so the CPU doesn't wait forev=
-er.
-> > > >
-> > > > What is timeout here? I mean how long CPU waits for completion? Sin=
-ce
-> > > > this code runs from interrupt context, does it causes the system to
-> > > > freeze if timeout is more?
-> > >
-> > > The Root Port should have a Completion Timeout.  This is required by
-> > > the PCIe spec.  The *reporting* of the timeout is somewhat
-> > > implementation-specific since the reporting is outside the PCIe
-> > > domain.  I don't know the duration of the timeout, but it certainly
-> > > shouldn't be long enough to look like a "system freeze".
-> > Does kernel writes to PCIe configuration space register =E2=80=98Device
-> > Control 2 Register=E2=80=99 (Offset 0x28)? When I tried to read this re=
-gister,
-> > I noticed bit 4 is set (which disables completion timeouts) and rest
-> > all other bits are zero. So, Completion Timeout detection mechanism is
-> > disabled, right? If so what could be the reason for this?
->
-> To my knowledge Linux doesn't set PCI_EXP_DEVCTL2_COMP_TMOUT_DIS
-> except for one powerpc case.  You can check yourself by using cscope
-> or grep to look for PCI_EXP_DEVCTL2_COMP_TMOUT_DIS or PCI_EXP_DEVCTL2.
->
-> If you're seeing bit 4 (PCI_EXP_DEVCTL2_COMP_TMOUT_DIS) set, it's
-> likely because firmware set it.  You can try booting with
-> "pci=3Dearlydump" to see what's there before Linux starts changing
-> things.
-
-[    0.000000] pci 0000:01:00.0 config space:
-
-                 00: 56 15 55 55 07 00 10 00 00 00 00 05 10 00 00 00
-                 10: 00 00 40 d0 00 00 00 00 00 00 00 00 00 00 00 00
-                 20: 00 00 00 00 00 00 00 00 00 00 00 00 00 40 00 00
-                 30: 00 00 00 00 40 00 00 00 00 00 00 00 0b 01 00 00
-                 40: 01 48 03 00 08 00 00 00 05 60 00 00 00 00 00 00
-                 50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-                 60: 10 00 02 00 c2 8f 00 00 00 28 01 00 21 f4 03 00
-                 70: 01 00 21 00 00 00 00 00 00 00 00 00 00 00 00 00
-                 80: 00 00 00 00 02 00 00 00 10 00 00 00 00 00 00 00
-                 90: 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00
-                 a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-                 b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-                 c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-                 d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-                 e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-                 f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-
-
-Device Control 2" is located @offset 0x28 in PCI Express Capability
-Structure. But where does 'PCI Express Capability Structure' located
-in the above mentioned 'PCI Express Configuration Space'?
->
-> Bjorn
-
-
-
---=20
-Thanks,
-Sekhar
+T24gVGh1LCAyMDIwLTAxLTMwIGF0IDE1OjI2IC0wNjAwLCBCam9ybiBIZWxnYWFzIHdyb3RlOg0K
+PiBPbiBXZWQsIEphbiAyOSwgMjAyMCBhdCAwNjoyOToyMFBNICswMzAwLCBTZXJnZWkgTWlyb3No
+bmljaGVua28NCj4gd3JvdGU6DQo+ID4gV2hlbiBtb3ZhYmxlIEJBUnMgYXJlIGVuYWJsZWQsIGFu
+ZCBpZiBhIGJyaWRnZSBjb250YWlucyBhIGRldmljZQ0KPiA+IHdpdGggZml4ZWQNCj4gPiAoSU9S
+RVNPVVJDRV9QQ0lfRklYRUQpIG9yIGltbW92YWJsZSBCQVJzLCB0aGUgY29ycmVzcG9uZGluZyB3
+aW5kb3dzDQo+ID4gY2FuJ3QNCj4gDQo+IFdoYXQgaXMgdGhlIGRpZmZlcmVuY2UgYmV0d2VlbiBm
+aXhlZCAoSU9SRVNPVVJDRV9QQ0lfRklYRUQpIGFuZA0KPiBpbW1vdmFibGUgQkFScz8gIEknbSBo
+ZXNpdGFudCB0byBhZGQgYSBuZXcgY29uY2VwdCAoImltbW92YWJsZSIpIHdpdGgNCj4gYSBkaWZm
+ZXJlbnQgbmFtZSBidXQgdmVyeSBzaW1pbGFyIG1lYW5pbmcuDQo+IA0KPiBJIHVuZGVyc3RhbmQg
+dGhhdCBpbiB0aGUgY2FzZSBvZiBicmlkZ2Ugd2luZG93cywgeW91IG1heSBuZWVkIHRvDQo+IHRy
+YWNrDQo+IG9ubHkgcGFydCBvZiB0aGUgd2luZG93LCBhcyBvcHBvc2VkIHRvIGEgQkFSIHdoZXJl
+IHRoZSBlbnRpcmUgQkFSIGhhcw0KPiB0byBiZSBlaXRoZXIgZml4ZWQgb3IgbW92YWJsZSwgYnV0
+IEkgdGhpbmsgYWRkaW5nIGEgbmV3IHRlcm0gd2lsbCBiZQ0KPiBjb25mdXNpbmcuDQo+IA0KDQpJ
+IHRob3VnaHQgdGhlIHRlcm0gImZpeGVkIEJBUiIgaGFzIHNvbWUgbGVnYWN5IHNjZW50LCBhbmQg
+dGhvc2UgbWFya2VkDQp3aXRoIGZsYWcgSU9SRVNPVVJDRV9QQ0lfRklYRUQgYXJlIGZpeGVkIGZv
+cmV2ZXIuIEJ1dCBhIEJBUiBtYXkgYmVjb21lDQptb3ZhYmxlIGFmdGVyIHJtbW9kLWluZyBpdHMg
+ZHJpdmVyIHRoYXQgZGlkbid0IHN1cHBvcnQgbW92YWJsZSBCQVJzLg0KDQpTdGlsbCwgdGhlIElP
+UkVTT1VSQ0VfUENJX0ZJWEVEIGlzIHVzZWQganVzdCBhIGZldyB0aW1lcyBpbiB0aGUga2VybmVs
+LA0Kc28gdGhlICJmaXhlZCBCQVIiIHRlcm0gaXMgcHJvYmFibHkgbm90IHNvIHdlbGwtZXN0YWJs
+aXNoZWQsIHNvIEkgZG9uJ3QNCm1pbmQgcmVmZXJyaW5nIGFsbCBub24tbW92YWJsZXMgYXMgImZp
+eGVkIjogYm90aCBtYXJrZWQgd2l0aCB0aGUgZmxhZw0KYW5kIG5vdC4gV2lsbCBjaGFuZ2UgYWxs
+IG9mIHRoZW0gaW4gdjguDQoNCj4gPiBiZSBtb3ZlZCB0b28gZmFyIGF3YXkgZnJvbSB0aGVpciBv
+cmlnaW5hbCBwb3NpdGlvbnMgLSB0aGV5IG11c3QNCj4gPiBzdGlsbA0KPiA+IGNvbnRhaW4gYWxs
+IHRoZSBmaXhlZC9pbW1vdmFibGUgQkFScywgbGlrZSB0aGF0Og0KPiA+IA0KPiA+IDEpIFdpbmRv
+dyBwb3NpdGlvbiBiZWZvcmUgYSBidXMgcmVzY2FuOg0KPiA+IA0KPiA+ICAgIHwgPC0tICAgICAg
+ICAgICAgICAgICAgICByb290IGJyaWRnZQ0KPiA+IHdpbmRvdyAgICAgICAgICAgICAgICAgICAg
+ICAgIC0tPiB8DQo+ID4gICAgfCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICB8DQo+ID4gICAgfCB8IDwtLSAg
+ICAgYnJpZGdlIHdpbmRvdyAgICAtLT4NCj4gPiB8ICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIHwNCj4gPiAgICB8IHwgbW92YWJsZSBCQVJzIHwgKipmaXhlZCBCQVIqKg0KPiA+
+IHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfA0KPiA+ICAgICAgICBeXl5e
+Xl5eXl5eXl4NCj4gPiANCj4gPiAyKSBQb3NzaWJsZSB2YWxpZCBvdXRjb21lIGFmdGVyIHJlc2Nh
+biBhbmQgbW92ZToNCj4gPiANCj4gPiAgICB8IDwtLSAgICAgICAgICAgICAgICAgICAgcm9vdCBi
+cmlkZ2UNCj4gPiB3aW5kb3cgICAgICAgICAgICAgICAgICAgICAgICAtLT4gfA0KPiA+ICAgIHwg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICANCj4gPiAgICAgICAgfA0KPiA+ICAgIHwgICAgICAgICAgICAgICAgfCA8LS0gICAgIGJy
+aWRnZSB3aW5kb3cgICAgLS0+DQo+ID4gfCAgICAgICAgICAgICAgICAgICAgICB8DQo+ID4gICAg
+fCAgICAgICAgICAgICAgICB8ICoqZml4ZWQgQkFSKiogfCBNb3ZhYmxlIEJBUnMNCj4gPiB8ICAg
+ICAgICAgICAgICAgICAgICAgIHwNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIF5eXl5eXl5eXl5eXg0KPiA+IA0KPiA+IEFuIGltbW92YWJsZSBhcmVhIG9mIGEgYnJp
+ZGdlIHdpbmRvdyBpcyBhIHJhbmdlIHRoYXQgY292ZXJzIGFsbCB0aGUNCj4gPiBmaXhlZA0KPiA+
+IGFuZCBpbW1vdmFibGUgQkFScyBvZiBkaXJlY3QgY2hpbGRyZW4sIGFuZCBhbGwgdGhlIGZpeGVk
+IGFyZWEgb2YNCj4gPiBjaGlsZHJlbg0KPiA+IGJyaWRnZXM6DQo+ID4gDQo+ID4gICAgfCA8LS0g
+ICAgICAgICAgICAgICAgICAgIHJvb3QgYnJpZGdlDQo+ID4gd2luZG93ICAgICAgICAgICAgICAg
+ICAgICAgICAgLS0+IHwNCj4gPiAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgDQo+ID4gICAgICAgIHwNCj4gPiAgICB8ICB8
+IDwtLSAgICAgICAgICAgICAgICAgIGJyaWRnZSB3aW5kb3cgbGV2ZWwgMSAgICAgICAgICAgICAg
+ICAtDQo+ID4gLT4gfCAgIHwNCj4gPiAgICB8ICB8ICoqKioqKioqKioqKioqKioqKioqIGltbW92
+YWJsZSBhcmVhDQo+ID4gKioqKioqKioqKioqKioqKioqKiAgICAgICB8ICAgfA0KPiA+ICAgIHwg
+IHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICANCj4gPiAgICB8ICAgfA0KPiA+ICAgIHwgIHwgKipmaXhlZCBCQVIqKiB8IDwtLSAgICAg
+IGJyaWRnZSB3aW5kb3cgbGV2ZWwgMiAgICAgLS0+IHwNCj4gPiBCQVJzIHwgICB8DQo+ID4gICAg
+fCAgfCAgICAgICAgICAgICAgIHwgKioqKioqKioqKiogaW1tb3ZhYmxlIGFyZWEgKioqKioqKioq
+KioNCj4gPiB8ICAgICAgfCAgIHwNCj4gPiAgICB8ICB8ICAgICAgICAgICAgICAgfCAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgDQo+ID4gICAgfCAgIHwNCj4gPiAg
+ICB8ICB8ICAgICAgICAgICAgICAgfCAqKmZpeGVkIEJBUioqIHwgIEJBUnMgIHwgKipmaXhlZCBC
+QVIqKg0KPiA+IHwgICAgICB8ICAgfA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgXl5eXg0KPiA+IA0KPiA+IFRvIHN0b3JlIHRoZXNlIGFyZWFzLCB0aGUgLmlt
+bW92YWJsZV9yYW5nZSBmaWVsZCBoYXMgYmVlbiBhZGRlZCB0bw0KPiA+IHN0cnVjdA0KPiA+IHBj
+aV9idXMgZm9yIGV2ZXJ5IGJyaWRnZSB3aW5kb3cgdHlwZTogSU8sIE1FTSBhbmQgUFJFRkVUQ0gu
+IEl0IGlzDQo+ID4gZmlsbGVkDQo+ID4gcmVjdXJzaXZlbHkgZnJvbSBsZWF2ZXMgdG8gdGhlIHJv
+b3QgYmVmb3JlIGEgcmVzY2FuLg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IFNlcmdlaSBNaXJv
+c2huaWNoZW5rbyA8cy5taXJvc2huaWNoZW5rb0B5YWRyby5jb20+DQo+ID4gLS0tDQo+ID4gIGRy
+aXZlcnMvcGNpL3BjaS5oICAgfCAxNCArKysrKysrKw0KPiA+ICBkcml2ZXJzL3BjaS9wcm9iZS5j
+IHwgODgNCj4gPiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysN
+Cj4gPiAgaW5jbHVkZS9saW51eC9wY2kuaCB8ICA2ICsrKysNCj4gPiAgMyBmaWxlcyBjaGFuZ2Vk
+LCAxMDggaW5zZXJ0aW9ucygrKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9w
+Y2kuaCBiL2RyaXZlcnMvcGNpL3BjaS5oDQo+ID4gaW5kZXggM2I0Yzk4Mjc3MmQzLi41ZjIwNTFj
+ODUzMWMgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9wY2kvcGNpLmgNCj4gPiArKysgYi9kcml2
+ZXJzL3BjaS9wY2kuaA0KPiA+IEBAIC00MDQsNiArNDA0LDIwIEBAIHN0YXRpYyBpbmxpbmUgYm9v
+bA0KPiA+IHBjaV9kZXZfaXNfZGlzY29ubmVjdGVkKGNvbnN0IHN0cnVjdCBwY2lfZGV2ICpkZXYp
+DQo+ID4gIAlyZXR1cm4gZGV2LT5lcnJvcl9zdGF0ZSA9PSBwY2lfY2hhbm5lbF9pb19wZXJtX2Zh
+aWx1cmU7DQo+ID4gIH0NCj4gPiAgDQo+ID4gK3N0YXRpYyBpbmxpbmUgaW50IHBjaV9nZXRfYnJp
+ZGdlX3Jlc291cmNlX2lkeChzdHJ1Y3QgcmVzb3VyY2UgKnIpDQo+ID4gK3sNCj4gPiArCWludCBp
+ZHggPSAxOw0KPiA+ICsNCj4gPiArCWlmIChyLT5mbGFncyAmIElPUkVTT1VSQ0VfSU8pDQo+ID4g
+KwkJaWR4ID0gMDsNCj4gPiArCWVsc2UgaWYgKCEoci0+ZmxhZ3MgJiBJT1JFU09VUkNFX1BSRUZF
+VENIKSkNCj4gPiArCQlpZHggPSAxOw0KPiA+ICsJZWxzZSBpZiAoci0+ZmxhZ3MgJiBJT1JFU09V
+UkNFX01FTV82NCkNCj4gPiArCQlpZHggPSAyOw0KPiANCj4gUmFuZG9tIG5pdDogTm8gdmFyaWFi
+bGVzIG9yIGVsc2VzIHJlcXVpcmVkOg0KPiANCj4gICBpZiAoci0+ZmxhZ3MgJiBJT1JFU09VUkNF
+X0lPKQ0KPiAgICAgcmV0dXJuIDA7DQo+ICAgaWYgKCEoci0+ZmxhZ3MgJiBJT1JFU09VUkNFX1BS
+RUZFVENIKSkNCj4gICAgIHJldHVybiAxOw0KPiAgIC4uLg0KPiANCg0KVGhhbmsgeW91IQ0KDQpC
+ZXN0IHJlZ2FyZHMsDQpTZXJnZQ0KDQo+ID4gKwlyZXR1cm4gaWR4Ow0KPiA+ICt9DQo=
