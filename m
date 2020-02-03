@@ -2,147 +2,236 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 564F115036E
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Feb 2020 10:38:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1924415037B
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Feb 2020 10:41:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727747AbgBCJiF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 3 Feb 2020 04:38:05 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:9364 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727368AbgBCJiF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 Feb 2020 04:38:05 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e37e9e50001>; Mon, 03 Feb 2020 01:37:41 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 03 Feb 2020 01:38:04 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 03 Feb 2020 01:38:04 -0800
-Received: from [10.25.73.244] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 3 Feb
- 2020 09:38:00 +0000
-Subject: Re: [PATCH V2 0/5] Add support to defer core initialization
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-CC:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <lorenzo.pieralisi@arm.com>, <andrew.murray@arm.com>,
-        <bhelgaas@google.com>, <thierry.reding@gmail.com>,
-        <Jisheng.Zhang@synaptics.com>, <jonathanh@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20200103100736.27627-1-vidyas@nvidia.com>
- <a8678df3-141b-51ab-b0cb-5e88c6ac91b5@nvidia.com>
- <680a58ec-5d09-3e3b-2fd6-544c32732818@nvidia.com>
- <ca911119-da45-4cbd-b173-2ac8397fd79a@ti.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <ebd5fe6b-0713-a4bf-8eff-600c088d2667@nvidia.com>
-Date:   Mon, 3 Feb 2020 15:07:57 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1727328AbgBCJl0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 3 Feb 2020 04:41:26 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:53391 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727933AbgBCJlX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 Feb 2020 04:41:23 -0500
+Received: by mail-wm1-f67.google.com with SMTP id s10so14991023wmh.3
+        for <linux-pci@vger.kernel.org>; Mon, 03 Feb 2020 01:41:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=thegoodpenguin-co-uk.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Ug26zZ8NwNX6MbD6XFC1XGn9DuxiiYnmekD3r0bSHbs=;
+        b=EMKBtmenrbdEvZ13+jrPUkndzYHG4j3jJkw0MuFUP8A7i4RJzU7rdZ821A0bv47wTc
+         q9jM3YhkiYtqNfBQjeX+btm0e0Z3W+PECcTkdmm6gRMEKjQ6RzbRa1A+WSO+PN4DCwE2
+         G7zfQDsQ8lJB5Lleekcd3WscSL3mCHyxqJRJngPscEIaoZPrIg7r3CDGGW+kSgGxSs2j
+         zAyIyF4p3tb02R8jDiuRxSUM3XrldR42iXwwbkDee5YWCKgPTS/8nqdAOcXqfy0zTvIC
+         YTvo26+sR86NEW53pnCrUJYfjB8Yf7iTvvV8Iw0C7yt0jDbR0l+XOV4ipBzkLcVT8B4R
+         UTBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Ug26zZ8NwNX6MbD6XFC1XGn9DuxiiYnmekD3r0bSHbs=;
+        b=c7k7FD9NX7kfZPxcCBzpDLw80RGTS5FinaktWxPrL73drJu5HSXZPVrLmfeBkZ7QmQ
+         i3J/vTdMsiORaoeJed17Gs9VMG6lT9lwP3LLdp5aJR/SIzmRL+exDtVgpqvLIOnHxyhk
+         i/d+A4NPFOdzS3Y4JNjXSD0oTEs4aOsH6BM8vwQmuOQpn/Saepp6NkwA/vozjk/URUoy
+         CJFRYNMmaEZG2QkGMfdPPYDIXDX5mweEcdAc1TPtSvw9+Meod/7oQmaENuKfwoXc6AHG
+         myAmDhRnJGN2K13augbaiLH8F/CofUHf3qMYbDgPOGXz3/KoQyn7DXBXZVR9HlUjAnTf
+         3nqg==
+X-Gm-Message-State: APjAAAXYm8UZ1zBcpPl0sJ+m56R5rDmY73/WN5hx0DgwcvWDE3Sirtep
+        h5RmLo09rL8sgpjxKLHimti7Ig==
+X-Google-Smtp-Source: APXvYqxResj+dGE1o2ECZDHO94QPdR6aP+d0QknNmNfT8VIu6KZRZWZS5O5TIVJGfyQ3c8GkRqFJSA==
+X-Received: by 2002:a1c:5445:: with SMTP id p5mr27657789wmi.75.1580722880976;
+        Mon, 03 Feb 2020 01:41:20 -0800 (PST)
+Received: from big-machine ([2a00:23c5:dd80:8400:459c:4174:f0ee:1b26])
+        by smtp.gmail.com with ESMTPSA id s8sm20064267wmf.45.2020.02.03.01.41.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 01:41:20 -0800 (PST)
+Date:   Mon, 3 Feb 2020 09:41:18 +0000
+From:   Andrew Murray <amurray@thegoodpenguin.co.uk>
+To:     Boqun Feng <boqun.feng@gmail.com>
+Cc:     linux-pci@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Michael Kelley <mikelley@microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v2 2/3] PCI: hv: Move retarget related structures into
+ tlfs header
+Message-ID: <20200203094118.GD20189@big-machine>
+References: <20200203050313.69247-1-boqun.feng@gmail.com>
+ <20200203050313.69247-3-boqun.feng@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <ca911119-da45-4cbd-b173-2ac8397fd79a@ti.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580722661; bh=rMCJ2AUZQbRi9iswPSyGqc1LNxDxGbkp9R6e0a3YQiw=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=Nj93hjhqUG9qxwhUp9zj8rDHbC8d/ESjEbYiB6by7JT+1i0/alc/tmc9LCpKHlq/y
-         G8tM+4DNLygeljLsUvucqb+S45L0+U7VfXhhikcuoTKYhxrBNTtXzzdHG4fw+sN4zY
-         kJWKDxn8alOFYL/uqzfd86NU0MmCNhUOfd3YaDQGWEbXNslIAECyFk/2z3mE9KNza1
-         mnW91B/oHH4vqNDmI/k5sJe+EGmqiCsjCDKNBtKGXrgOzSvDbfegPPhib8ANy9BUUk
-         G5iEkxLCo/hZPgpiNZw09j5iLxCu/Bp7BYeOdcURsjyqP9j9sjoSSxjTbLyo09oT+3
-         IGHh6OHr/UiMA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200203050313.69247-3-boqun.feng@gmail.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Mon, Feb 03, 2020 at 01:03:12PM +0800, Boqun Feng wrote:
+> Currently, retarget_msi_interrupt and other structures it relys on are
+> defined in pci-hyperv.c. However, those structures are actually defined
+> in Hypervisor Top-Level Functional Specification [1] and may be
+> different in sizes of fields or layout from architecture to
+> architecture. Therefore, this patch moves those definitions into x86's
 
+Nit: Rather than 'Therefore, this patch moves ...' - how about 'Let's move
+...'?
 
-On 1/23/2020 3:25 PM, Kishon Vijay Abraham I wrote:
-> External email: Use caution opening links or attachments
->=20
->=20
-> Hi Vidya Sagar,
->=20
-> On 23/01/20 2:54 pm, Vidya Sagar wrote:
->> Hi Kishon,
->> Apologies for pinging again. Could you please review this series?
->>
->> Thanks,
->> Vidya Sagar
->>
->> On 1/11/2020 5:18 PM, Vidya Sagar wrote:
->>> Hi Kishon,
->>> Could you please review this series?
->>>
->>> Also, this series depends on the following change of yours
->>> http://patchwork.ozlabs.org/patch/1109884/
->>> Whats the plan to get this merged?
->=20
-> I've posted the endpoint improvements as a separate series
-> http://lore.kernel.org/r/20191231100331.6316-1-kishon@ti.com
->=20
-> I'd prefer this series gets tested by others. I'm also planning to test
-> this series. Sorry for the delay. I'll test review and test this series
-> early next week.
-Hi Kishon,
-Just wanted to know if you got time to test review my patches.
+> tlfs header file to support virtual PCI on non-x86 architectures in the
+> future.
+> 
+> Besides, while I'm at it, rename retarget_msi_interrupt to
+
+Nit: 'Besides, while I'm at it' - this type of wording describes what
+*you've* done rather than what the patch is doing. You could replace
+that quoted text with 'Additionally, '
+
+> hv_retarget_msi_interrupt for the consistent name convention, also
+
+Nit: s/name/naming
+
+> mirroring the name in TLFS.
+> 
+> [1]: https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/reference/tlfs
+> 
+> Signed-off-by: Boqun Feng (Microsoft) <boqun.feng@gmail.com>
+> ---
+>  arch/x86/include/asm/hyperv-tlfs.h  | 31 ++++++++++++++++++++++++++
+>  drivers/pci/controller/pci-hyperv.c | 34 ++---------------------------
+>  2 files changed, 33 insertions(+), 32 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
+> index 739bd89226a5..4a76e442481a 100644
+> --- a/arch/x86/include/asm/hyperv-tlfs.h
+> +++ b/arch/x86/include/asm/hyperv-tlfs.h
+> @@ -911,4 +911,35 @@ struct hv_tlb_flush_ex {
+>  struct hv_partition_assist_pg {
+>  	u32 tlb_lock_count;
+>  };
+> +
+> +struct hv_interrupt_entry {
+> +	u32 source;			/* 1 for MSI(-X) */
+> +	u32 reserved1;
+> +	u32 address;
+> +	u32 data;
+> +} __packed;
+
+Why have you added __packed here? There is no mention of this change in the
+commit log? Is it needed?
+
+> +
+> +/*
+> + * flags for hv_device_interrupt_target.flags
+> + */
+> +#define HV_DEVICE_INTERRUPT_TARGET_MULTICAST		1
+> +#define HV_DEVICE_INTERRUPT_TARGET_PROCESSOR_SET	2
+> +
+> +struct hv_device_interrupt_target {
+> +	u32 vector;
+> +	u32 flags;
+> +	union {
+> +		u64 vp_mask;
+> +		struct hv_vpset vp_set;
+> +	};
+> +} __packed;
+
+Same here.
+
+> +
+> +/* HvRetargetDeviceInterrupt hypercall */
+> +struct hv_retarget_device_interrupt {
+> +	u64 partition_id;
+
+Why drop the 'self' comment?
+
+> +	u64 device_id;
+> +	struct hv_interrupt_entry int_entry;
+> +	u64 reserved2;
+> +	struct hv_device_interrupt_target int_target;
+> +} __packed __aligned(8);
+>  #endif
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index aacfcc90d929..0d9b74503577 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -406,36 +406,6 @@ struct pci_eject_response {
+>  
+>  static int pci_ring_size = (4 * PAGE_SIZE);
+>  
+> -struct hv_interrupt_entry {
+> -	u32	source;			/* 1 for MSI(-X) */
+> -	u32	reserved1;
+> -	u32	address;
+> -	u32	data;
+> -};
+> -
+> -/*
+> - * flags for hv_device_interrupt_target.flags
+> - */
+> -#define HV_DEVICE_INTERRUPT_TARGET_MULTICAST		1
+> -#define HV_DEVICE_INTERRUPT_TARGET_PROCESSOR_SET	2
+> -
+> -struct hv_device_interrupt_target {
+> -	u32	vector;
+> -	u32	flags;
+> -	union {
+> -		u64		 vp_mask;
+> -		struct hv_vpset vp_set;
+> -	};
+> -};
+> -
+> -struct retarget_msi_interrupt {
+> -	u64	partition_id;		/* use "self" */
+> -	u64	device_id;
+> -	struct hv_interrupt_entry int_entry;
+> -	u64	reserved2;
+> -	struct hv_device_interrupt_target int_target;
+> -} __packed __aligned(8);
+> -
+>  /*
+>   * Driver specific state.
+>   */
+> @@ -482,7 +452,7 @@ struct hv_pcibus_device {
+>  	struct workqueue_struct *wq;
+>  
+>  	/* hypercall arg, must not cross page boundary */
+> -	struct retarget_msi_interrupt retarget_msi_interrupt_params;
+> +	struct hv_retarget_device_interrupt retarget_msi_interrupt_params;
+>  
+>  	/*
+>  	 * Don't put anything here: retarget_msi_interrupt_params must be last
+> @@ -1178,7 +1148,7 @@ static void hv_irq_unmask(struct irq_data *data)
+>  {
+>  	struct msi_desc *msi_desc = irq_data_get_msi_desc(data);
+>  	struct irq_cfg *cfg = irqd_cfg(data);
+> -	struct retarget_msi_interrupt *params;
+> +	struct hv_retarget_device_interrupt *params;
+
+pci-hyperv.c also makes use of retarget_msi_interrupt_lock - it's really clear
+from this name what it protects, however your rename now makes this more
+confusing.
+
+Likewise there is a comment in hv_pci_probe that refers to
+retarget_msi_interrupt_params which is now stale.
+
+It may be helpful to rename hv_retarget_device_interrupt for consistency with
+the docs - however please make sure you catch all the references - I'd suggest
+that the move and the rename are in different patches.
 
 Thanks,
-Vidya Sagar
 
->=20
-> Thanks
-> Kishon
->=20
->>>
->>> Thanks,
->>> Vidya Sagar
->>>
->>> On 1/3/20 3:37 PM, Vidya Sagar wrote:
->>>> EPC/DesignWare core endpoint subsystems assume that the core
->>>> registers are
->>>> available always for SW to initialize. But, that may not be the case
->>>> always.
->>>> For example, Tegra194 hardware has the core running on a clock that
->>>> is derived
->>>> from reference clock that is coming into the endpoint system from host=
-.
->>>> Hence core is made available asynchronously based on when host system
->>>> is going
->>>> for enumeration of devices. To accommodate this kind of hardwares,
->>>> support is
->>>> required to defer the core initialization until the respective
->>>> platform driver
->>>> informs the EPC/DWC endpoint sub-systems that the core is indeed
->>>> available for
->>>> initiaization. This patch series is attempting to add precisely that.
->>>> This series is based on Kishon's patch that adds notification mechanis=
-m
->>>> support from EPC to EPF @ http://patchwork.ozlabs.org/patch/1109884/
->>>>
->>>> Vidya Sagar (5):
->>>>     PCI: endpoint: Add core init notifying feature
->>>>     PCI: dwc: Refactor core initialization code for EP mode
->>>>     PCI: endpoint: Add notification for core init completion
->>>>     PCI: dwc: Add API to notify core initialization completion
->>>>     PCI: pci-epf-test: Add support to defer core initialization
->>>>
->>>>    .../pci/controller/dwc/pcie-designware-ep.c   |=C2=A0 79 +++++++---=
---
->>>>    drivers/pci/controller/dwc/pcie-designware.h  |=C2=A0 11 ++
->>>>    drivers/pci/endpoint/functions/pci-epf-test.c | 118 ++++++++++++---=
----
->>>>    drivers/pci/endpoint/pci-epc-core.c           |=C2=A0 19 ++-
->>>>    include/linux/pci-epc.h                       |=C2=A0=C2=A0 2 +
->>>>    include/linux/pci-epf.h                       |=C2=A0=C2=A0 5 +
->>>>    6 files changed, 164 insertions(+), 70 deletions(-)
->>>>
+Andrew Murray
+
+>  	struct hv_pcibus_device *hbus;
+>  	struct cpumask *dest;
+>  	cpumask_var_t tmp;
+> -- 
+> 2.24.1
+> 
