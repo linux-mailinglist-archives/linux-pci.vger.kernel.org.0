@@ -2,256 +2,229 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 053CC150849
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Feb 2020 15:21:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E7F0A15087F
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Feb 2020 15:36:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbgBCOV5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 3 Feb 2020 09:21:57 -0500
-Received: from verein.lst.de ([213.95.11.211]:56262 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727802AbgBCOV5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 3 Feb 2020 09:21:57 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 5621D68B20; Mon,  3 Feb 2020 15:21:55 +0100 (CET)
-Date:   Mon, 3 Feb 2020 15:21:55 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: pci-usb/pci-sata broken with LPAE config after "reduce use of
- block bounce buffers"
-Message-ID: <20200203142155.GA16388@lst.de>
-References: <120f7c3e-363d-deb0-a347-782ac869ee0d@ti.com> <20200130075833.GC30735@lst.de> <4a41bd0d-6491-3822-172a-fbca8a6abba5@ti.com> <20200130164235.GA6705@lst.de> <f76af743-dcb5-f59d-b315-f2332a9dc906@ti.com>
+        id S1728464AbgBCOf4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 3 Feb 2020 09:35:56 -0500
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:39481 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728090AbgBCOfz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 Feb 2020 09:35:55 -0500
+Received: by mail-qv1-f67.google.com with SMTP id y8so6882741qvk.6;
+        Mon, 03 Feb 2020 06:35:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=pHZXEZfxcArrJOwFLOO5B25gH5Nf7M6GMePV8H95wz8=;
+        b=AN4jrTsY0Be0qFeBI9ikRLgxslO22TK9D1lt7ekoGyu3ID/zgEWhSNVupxjTkfAwxZ
+         RyklxvFtDIJzsnMWV9zv2YBMZWMtNgNTSG0RhwM7waizdUZJv4Yolq1UseGtKmfN4AlG
+         523oxjEUuqbaxJghOAZ2wLYFOObEbNB8BYnW43sb7bdgk+n6zPYYiiGZrSiXYaZAJF5U
+         D4dnArJCuHz5mLrlCfrFE5sAmPQcA6ikoOOc/SmeiOyF6oLimoxK+FiVMdIY1FjMIbbp
+         0XLFnJjUPmrI4YCpuDOGG2azN0IBRGLHF7Ee7qkkwezHahQF5sj8HAx2FTsGIQDMI92c
+         qHFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=pHZXEZfxcArrJOwFLOO5B25gH5Nf7M6GMePV8H95wz8=;
+        b=Qj4R9ps0BbKwstnXV53H/CEEx9XMMpxoLxXjXK4g2U1mMuMKxkYXQYmwB6ErziT2iV
+         L4KnFG12bTN+Rj8OBTICLdtfoOwSbd76r2F8CETQ4l7SWV7r1vROkkITKOWDmMUv/OLn
+         OgYGoqadk/WIl/ppftN3FTCwc/zA8bqSp/1OYcQob/Kl5dYEtVejNIzq6QmyuM0H5RCc
+         ahpnaTAvnIhaxt81rqeEoG2iKmdFnWEK4y7A381Cy2XIelDCJe/KI36XXXV/zg32NrkX
+         Wh/FfdfE1zO7/gMsRmMHMKujAr9/ve0e9nVdc4+PBmpxwUUtTQBYTzYnnwNWkWp5jvI6
+         MEjg==
+X-Gm-Message-State: APjAAAUZIqXn/OnYtzF8R+yPMXpceN7WMd+mNjsQQAbnaBt59ReJsFOR
+        Gdv6gZr75mB/KEo/zSVGjzY=
+X-Google-Smtp-Source: APXvYqz2HVVFSAa8uHQTrlSI3OhLdRF470sd06dYwwzRxF3/fPsupj9vDFDZEBqMNubVa0aYJMX5hg==
+X-Received: by 2002:ad4:4b08:: with SMTP id r8mr23469453qvw.250.1580740554339;
+        Mon, 03 Feb 2020 06:35:54 -0800 (PST)
+Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
+        by smtp.gmail.com with ESMTPSA id y26sm10320882qtc.94.2020.02.03.06.35.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 03 Feb 2020 06:35:53 -0800 (PST)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailauth.nyi.internal (Postfix) with ESMTP id F307E22076;
+        Mon,  3 Feb 2020 09:35:52 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Mon, 03 Feb 2020 09:35:53 -0500
+X-ME-Sender: <xms:xy84XttKeqh-gEQBxwPA7O1wcftgh5R6j1HrJc4iCNBRU1xMSuoZGg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrgeejgdeihecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhunhcu
+    hfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucfkphephedvrd
+    duheehrdduuddurdejudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgr
+    ihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqd
+    eiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhl
+    rdgtohhmsehfihigmhgvrdhnrghmvg
+X-ME-Proxy: <xmx:xy84XrUwqTqDlXrEOy3a-4hDTr1RqwBGNrCO4l3nOYY4diUTEohGaw>
+    <xmx:xy84XmrxUVgY6rxtgT_eM73yjc8rIyKzW2JEtf46MXyzuQgJjmNCLA>
+    <xmx:xy84XmrMHXee9CTrkoNKbXcfj7xPp4QGXyZGcdYPkESWy6NUGo3-aA>
+    <xmx:yC84XrVUQM4PYFvQRz9qqQmG05aMITRnwhR3rbkEWU1bcpyLopjULeXBLiQ>
+Received: from localhost (unknown [52.155.111.71])
+        by mail.messagingengine.com (Postfix) with ESMTPA id BFF233060272;
+        Mon,  3 Feb 2020 09:35:50 -0500 (EST)
+Date:   Mon, 3 Feb 2020 22:35:49 +0800
+From:   Boqun Feng <boqun.feng@gmail.com>
+To:     Andrew Murray <amurray@thegoodpenguin.co.uk>
+Cc:     linux-pci@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Michael Kelley <mikelley@microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v2 3/3] PCI: hv: Introduce hv_msi_entry
+Message-ID: <20200203143549.GG83200@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+References: <20200203050313.69247-1-boqun.feng@gmail.com>
+ <20200203050313.69247-4-boqun.feng@gmail.com>
+ <20200203095140.GE20189@big-machine>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="liOOAslEiF7prFVr"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f76af743-dcb5-f59d-b315-f2332a9dc906@ti.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20200203095140.GE20189@big-machine>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
---liOOAslEiF7prFVr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, Jan 31, 2020 at 05:14:01PM +0530, Kishon Vijay Abraham I wrote:
-> > Can you throw in a little debug printk if this comes from
-> > dma_direct_possible or swiotlb_map?
+On Mon, Feb 03, 2020 at 09:51:40AM +0000, Andrew Murray wrote:
+> On Mon, Feb 03, 2020 at 01:03:13PM +0800, Boqun Feng wrote:
+> > Add a new structure (hv_msi_entry), which is also defined int tlfs, to
 > 
-> I could see swiotlb_tbl_map_single() returning DMA_MAPPING_ERROR.
+> s/int/in the/ ?
 > 
-> Kernel with debug print:
-> https://github.com/kishon/linux-wip.git nvm_dma_issue
+
+Good catch, will fix.
+
+> > describe the msi entry for HVCALL_RETARGET_INTERRUPT. The structure is
+> > needed because its layout may be different from architecture to
+> > architecture.
+> > 
+> > Also add a new generic interface hv_set_msi_address_from_desc() to allow
+> > different archs to set the msi address from msi_desc.
+> > 
+> > No functional change, only preparation for the future support of virtual
+> > PCI on non-x86 architectures.
+> > 
+> > Signed-off-by: Boqun Feng (Microsoft) <boqun.feng@gmail.com>
+> > ---
+> >  arch/x86/include/asm/hyperv-tlfs.h  | 11 +++++++++--
+> >  arch/x86/include/asm/mshyperv.h     |  5 +++++
+> >  drivers/pci/controller/pci-hyperv.c |  4 ++--
+> >  3 files changed, 16 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
+> > index 4a76e442481a..953b3ad38746 100644
+> > --- a/arch/x86/include/asm/hyperv-tlfs.h
+> > +++ b/arch/x86/include/asm/hyperv-tlfs.h
+> > @@ -912,11 +912,18 @@ struct hv_partition_assist_pg {
+> >  	u32 tlb_lock_count;
+> >  };
+> >  
+> > +union hv_msi_entry {
+> > +	u64 as_uint64;
+> > +	struct {
+> > +		u32 address;
+> > +		u32 data;
+> > +	} __packed;
+> > +};
+> > +
+> >  struct hv_interrupt_entry {
+> >  	u32 source;			/* 1 for MSI(-X) */
+> >  	u32 reserved1;
+> > -	u32 address;
+> > -	u32 data;
+> > +	union hv_msi_entry msi_entry;
+> >  } __packed;
+> >  
+> >  /*
+> > diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
+> > index 6b79515abb82..3bdaa3b6e68f 100644
+> > --- a/arch/x86/include/asm/mshyperv.h
+> > +++ b/arch/x86/include/asm/mshyperv.h
+> > @@ -240,6 +240,11 @@ bool hv_vcpu_is_preempted(int vcpu);
+> >  static inline void hv_apic_init(void) {}
+> >  #endif
+> >  
+> > +#define hv_set_msi_address_from_desc(msi_entry, msi_desc)	\
+> > +do {								\
+> > +	(msi_entry)->address = (msi_desc)->msg.address_lo;	\
+> > +} while (0)
 > 
-> Full log: https://pastebin.ubuntu.com/p/Xf2ngxc3kB/
+> Given that this is a single statement, is there really a need for the do ; while(0) ?
+> 
 
-Ok, this mostly like means we allocate a swiotlb buffer that isn't
-actually addressable.  To verify that can you post the output with the
-first attached patch?  If it shows the overflow message added there,
-please try if the second patch fixes it.
+I choose to use do ; while (0) because I don't want code like the
+following to be able to compile:
 
---liOOAslEiF7prFVr
-Content-Type: text/x-patch; charset=us-ascii
-Content-Disposition: attachment; filename="0001-dma-direct-improve-swiotlb-error-reporting.patch"
+	hv_set_msi_address_from_desc(...) /* semicolon is missing */
+	a = b;
 
-From b72e7e81954c02e83f59f0caa56360d6faab0355 Mon Sep 17 00:00:00 2001
-From: Christoph Hellwig <hch@lst.de>
-Date: Mon, 3 Feb 2020 14:44:38 +0100
-Subject: dma-direct: improve swiotlb error reporting
+But now think more about this, I think it's probably better to define
+this as a function..
 
-Untangle the way how dma_direct_map_page calls into swiotlb to
-be able to properly report errors where the swiotlb DMA address
-overflows the mask separately from overflows in the !swiotlb case.
+> 
+> > +
+> >  #else /* CONFIG_HYPERV */
+> >  static inline void hyperv_init(void) {}
+> >  static inline void hyperv_setup_mmu_ops(void) {}
+> > diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> > index 0d9b74503577..2240f2b3643e 100644
+> > --- a/drivers/pci/controller/pci-hyperv.c
+> > +++ b/drivers/pci/controller/pci-hyperv.c
+> > @@ -1170,8 +1170,8 @@ static void hv_irq_unmask(struct irq_data *data)
+> >  	memset(params, 0, sizeof(*params));
+> >  	params->partition_id = HV_PARTITION_ID_SELF;
+> >  	params->int_entry.source = 1; /* MSI(-X) */
+> > -	params->int_entry.address = msi_desc->msg.address_lo;
+> > -	params->int_entry.data = msi_desc->msg.data;
+> > +	hv_set_msi_address_from_desc(&params->int_entry.msi_entry, msi_desc);
+> > +	params->int_entry.msi_entry.data = msi_desc->msg.data;
+> 
+> If the layout may differ, then don't we also need a wrapper for data?
+> 
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- include/linux/swiotlb.h | 11 +++--------
- kernel/dma/direct.c     | 17 ++++++++---------
- kernel/dma/swiotlb.c    | 42 +++++++++++++++++++++++------------------
- 3 files changed, 35 insertions(+), 35 deletions(-)
+On x86 hv_msi_entry is:
 
-diff --git a/include/linux/swiotlb.h b/include/linux/swiotlb.h
-index cde3dc18e21a..046bb94bd4d6 100644
---- a/include/linux/swiotlb.h
-+++ b/include/linux/swiotlb.h
-@@ -64,6 +64,9 @@ extern void swiotlb_tbl_sync_single(struct device *hwdev,
- 				    size_t size, enum dma_data_direction dir,
- 				    enum dma_sync_target target);
- 
-+dma_addr_t swiotlb_map(struct device *dev, phys_addr_t phys,
-+		size_t size, enum dma_data_direction dir, unsigned long attrs);
-+
- #ifdef CONFIG_SWIOTLB
- extern enum swiotlb_force swiotlb_force;
- extern phys_addr_t io_tlb_start, io_tlb_end;
-@@ -73,8 +76,6 @@ static inline bool is_swiotlb_buffer(phys_addr_t paddr)
- 	return paddr >= io_tlb_start && paddr < io_tlb_end;
- }
- 
--bool swiotlb_map(struct device *dev, phys_addr_t *phys, dma_addr_t *dma_addr,
--		size_t size, enum dma_data_direction dir, unsigned long attrs);
- void __init swiotlb_exit(void);
- unsigned int swiotlb_max_segment(void);
- size_t swiotlb_max_mapping_size(struct device *dev);
-@@ -85,12 +86,6 @@ static inline bool is_swiotlb_buffer(phys_addr_t paddr)
- {
- 	return false;
- }
--static inline bool swiotlb_map(struct device *dev, phys_addr_t *phys,
--		dma_addr_t *dma_addr, size_t size, enum dma_data_direction dir,
--		unsigned long attrs)
--{
--	return false;
--}
- static inline void swiotlb_exit(void)
- {
- }
-diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-index 6af7ae83c4ad..e16baa9aa233 100644
---- a/kernel/dma/direct.c
-+++ b/kernel/dma/direct.c
-@@ -357,13 +357,6 @@ void dma_direct_unmap_sg(struct device *dev, struct scatterlist *sgl,
- EXPORT_SYMBOL(dma_direct_unmap_sg);
- #endif
- 
--static inline bool dma_direct_possible(struct device *dev, dma_addr_t dma_addr,
--		size_t size)
--{
--	return swiotlb_force != SWIOTLB_FORCE &&
--		dma_capable(dev, dma_addr, size, true);
--}
--
- dma_addr_t dma_direct_map_page(struct device *dev, struct page *page,
- 		unsigned long offset, size_t size, enum dma_data_direction dir,
- 		unsigned long attrs)
-@@ -371,8 +364,14 @@ dma_addr_t dma_direct_map_page(struct device *dev, struct page *page,
- 	phys_addr_t phys = page_to_phys(page) + offset;
- 	dma_addr_t dma_addr = phys_to_dma(dev, phys);
- 
--	if (unlikely(!dma_direct_possible(dev, dma_addr, size)) &&
--	    !swiotlb_map(dev, &phys, &dma_addr, size, dir, attrs)) {
-+	if (unlikely(swiotlb_force == SWIOTLB_FORCE))
-+		return swiotlb_map(dev, phys, size, dir, attrs);
-+
-+	if (unlikely(!dma_capable(dev, dma_addr, size, true))) {
-+		if (IS_ENABLED(CONFIG_SWIOTLB) &&
-+		    swiotlb_force != SWIOTLB_NO_FORCE)
-+			return swiotlb_map(dev, phys, size, dir, attrs);
-+
- 		report_addr(dev, dma_addr, size);
- 		return DMA_MAPPING_ERROR;
- 	}
-diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
-index 9280d6f8271e..0341d01e4614 100644
---- a/kernel/dma/swiotlb.c
-+++ b/kernel/dma/swiotlb.c
-@@ -22,6 +22,7 @@
- 
- #include <linux/cache.h>
- #include <linux/dma-direct.h>
-+#include <linux/dma-noncoherent.h>
- #include <linux/mm.h>
- #include <linux/export.h>
- #include <linux/spinlock.h>
-@@ -656,35 +657,40 @@ void swiotlb_tbl_sync_single(struct device *hwdev, phys_addr_t tlb_addr,
- }
- 
- /*
-- * Create a swiotlb mapping for the buffer at @phys, and in case of DMAing
-+ * Create a swiotlb mapping for the buffer at @page, and in case of DMAing
-  * to the device copy the data into it as well.
-  */
--bool swiotlb_map(struct device *dev, phys_addr_t *phys, dma_addr_t *dma_addr,
--		size_t size, enum dma_data_direction dir, unsigned long attrs)
-+dma_addr_t swiotlb_map(struct device *dev, phys_addr_t paddr, size_t size,
-+		enum dma_data_direction dir, unsigned long attrs)
- {
--	trace_swiotlb_bounced(dev, *dma_addr, size, swiotlb_force);
-+	phys_addr_t swiotlb_addr;
-+	dma_addr_t dma_addr;
- 
--	if (unlikely(swiotlb_force == SWIOTLB_NO_FORCE)) {
--		dev_warn_ratelimited(dev,
--			"Cannot do DMA to address %pa\n", phys);
--		return false;
--	}
-+	trace_swiotlb_bounced(dev, phys_to_dma(dev, paddr), size,
-+			      swiotlb_force);
- 
- 	/* Oh well, have to allocate and map a bounce buffer. */
--	*phys = swiotlb_tbl_map_single(dev, __phys_to_dma(dev, io_tlb_start),
--			*phys, size, size, dir, attrs);
--	if (*phys == (phys_addr_t)DMA_MAPPING_ERROR)
--		return false;
-+	swiotlb_addr = swiotlb_tbl_map_single(dev,
-+			__phys_to_dma(dev, io_tlb_start),
-+			paddr, size, size, dir, attrs);
-+	if (swiotlb_addr == (phys_addr_t)DMA_MAPPING_ERROR)
-+		return DMA_MAPPING_ERROR;
- 
- 	/* Ensure that the address returned is DMA'ble */
--	*dma_addr = __phys_to_dma(dev, *phys);
--	if (unlikely(!dma_capable(dev, *dma_addr, size, true))) {
--		swiotlb_tbl_unmap_single(dev, *phys, size, size, dir,
-+	dma_addr = __phys_to_dma(dev, swiotlb_addr);
-+	if (unlikely(!dma_capable(dev, dma_addr, size, true))) {
-+		swiotlb_tbl_unmap_single(dev, swiotlb_addr, size, size, dir,
- 			attrs | DMA_ATTR_SKIP_CPU_SYNC);
--		return false;
-+		dev_err_once(dev,
-+			"swiotlb addr %pad+%zu overflow (mask %llx, bus limit %llx).\n",
-+			&dma_addr, size, *dev->dma_mask, dev->bus_dma_limit);
-+		WARN_ON_ONCE(1);
-+		return DMA_MAPPING_ERROR;
- 	}
- 
--	return true;
-+	if (!dev_is_dma_coherent(dev) && !(attrs & DMA_ATTR_SKIP_CPU_SYNC))
-+		arch_sync_dma_for_device(swiotlb_addr, size, dir);
-+	return dma_addr;
- }
- 
- size_t swiotlb_max_mapping_size(struct device *dev)
--- 
-2.24.1
+	{
+		u32 address;
+		u32 data;
+	}
 
+and on ARM64 it is:
 
---liOOAslEiF7prFVr
-Content-Type: text/x-patch; charset=us-ascii
-Content-Disposition: attachment; filename="0003-arm-dma-mapping-allocate-swiotlb-bottom-up.patch"
+	{
+		u64 address;
+		u32 data;
+		u32 reserved;
+	}
 
-From d15217ee1e1f361ab064dfed82252b4124dd6b36 Mon Sep 17 00:00:00 2001
-From: Christoph Hellwig <hch@lst.de>
-Date: Mon, 3 Feb 2020 14:57:57 +0100
-Subject: arm/dma-mapping: allocate swiotlb bottom up
+So currently, setting msi_entry.data doesn't need a wrapper for
+different archs. But now you mention it, probably a better way is to
+provide a wrapper hv_set_msi_entry_from_desc(), which sets both address
+and data instead of hv_set_msi_address_from_desc().
 
-Allocate the swiotlb buffer as low as possible to increase the chance
-of it to be actually addressable.
+Thanks for looking into the whole patchset!
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- arch/arm/mm/init.c | 2 ++
- 1 file changed, 2 insertions(+)
+Regards,
+Boqun
 
-diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
-index 3ef204137e73..3951fcd560ff 100644
---- a/arch/arm/mm/init.c
-+++ b/arch/arm/mm/init.c
-@@ -471,7 +471,9 @@ static void __init free_highpages(void)
- void __init mem_init(void)
- {
- #ifdef CONFIG_ARM_LPAE
-+	memblock_set_bottom_up(true);
- 	swiotlb_init(1);
-+	memblock_set_bottom_up(false);
- #endif
- 
- 	set_max_mapnr(pfn_to_page(max_pfn) - mem_map);
--- 
-2.24.1
-
-
---liOOAslEiF7prFVr--
+> Thanks,
+> 
+> Andrew Murray
+> 
+> >  	params->device_id = (hbus->hdev->dev_instance.b[5] << 24) |
+> >  			   (hbus->hdev->dev_instance.b[4] << 16) |
+> >  			   (hbus->hdev->dev_instance.b[7] << 8) |
+> > -- 
+> > 2.24.1
+> > 
