@@ -2,144 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 46E8F150351
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Feb 2020 10:25:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 564F115036E
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Feb 2020 10:38:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726369AbgBCJZb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 3 Feb 2020 04:25:31 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39029 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726244AbgBCJZa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 Feb 2020 04:25:30 -0500
-Received: by mail-wr1-f66.google.com with SMTP id y11so16962711wrt.6
-        for <linux-pci@vger.kernel.org>; Mon, 03 Feb 2020 01:25:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=thegoodpenguin-co-uk.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=F9yu2wtiNO9AUs6nrKy2by5yqmhTTOqT7fKPke38AkA=;
-        b=IrJckNU3TBy2Ho2bFZT/sDmmNA89gz9uNI1I08zCGhFGKvXfO4vweB2nmJSN5YsKsz
-         9/zJJ1M89N6Mvjz0m9hDX3GK2ebobSvAi+TWW/29be5h1rnJrgTH7yy4vAPfdX3fw0nm
-         mzz4HtL4SiBvNNpfhiK8hYs9RMM/Z+fK1ne0EPb6sRkkyby4laEWtx9aiL5EhWDncZef
-         PtzeS10ymMQlChGaOeTgMZw4sdLkSmSxPnPI4Y+q0cv1GQJs//H6UCIilrAldZSSaCRE
-         87nn70bfkP2KB/hg/MAnp/gqTRkrkPLgTts/3thKG2qc1Ms7U5o0stuV6NzswbnVctbu
-         lhuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=F9yu2wtiNO9AUs6nrKy2by5yqmhTTOqT7fKPke38AkA=;
-        b=XTfTEonOkUv0K8v5RLtbee6meHCLWK8UtDVc9SlVPqRAl3uiv3KwhMN5xGdsALkP3K
-         +ZDzAnsmUOkA7VLlPhfwTG5cmb1LgcHd+oKnBO8SPyc2ISQ6E2ott87GFF+bspQ1YGxS
-         FdAtR4xPcImktha9aoYn4XA9zfajW1aYijKLRyuC77vOk2xsbn6JkpflasMeneQnBBMg
-         sZbrf7fUl3st7l3j15j8YB0+ZIVRfpMOdkUU33wexCgvUL2qxqan82itFNcEoHSTrR7K
-         F7awioLsY8Y50FumXu37OCn23yK7NUPSyhzsSlfZMb7s5+hk4ZVuE1Ov/OMKAf1eWM8H
-         O3Ig==
-X-Gm-Message-State: APjAAAXi8hbQbP/0F6Mxq9BXLXBVj1nrt9Rs6JzZdkBAyWzO1LEXdQZf
-        Wmg4u8Pv1bK4aUI4f3ILApNvqA==
-X-Google-Smtp-Source: APXvYqxMp3Ck8IjM3P3+ox8B3yR/DSErPTTa6J5xqFm1bMcpTRQZ39Yvj8v9HY3lGBV2CsuW0xEyMw==
-X-Received: by 2002:adf:f787:: with SMTP id q7mr11348594wrp.297.1580721928632;
-        Mon, 03 Feb 2020 01:25:28 -0800 (PST)
-Received: from big-machine ([2a00:23c5:dd80:8400:459c:4174:f0ee:1b26])
-        by smtp.gmail.com with ESMTPSA id b18sm24549847wru.50.2020.02.03.01.25.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 01:25:27 -0800 (PST)
-Date:   Mon, 3 Feb 2020 09:25:25 +0000
-From:   Andrew Murray <amurray@thegoodpenguin.co.uk>
-To:     Boqun Feng <boqun.feng@gmail.com>
-Cc:     linux-pci@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Sasha Levin <sashal@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>, x86@kernel.org,
-        Michael Kelley <mikelley@microsoft.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "K. Y. Srinivasan" <kys@microsoft.com>
-Subject: Re: [PATCH v2 1/3] PCI: hv: Move hypercall related definitions into
- tlfs header
-Message-ID: <20200203092525.GC20189@big-machine>
-References: <20200203050313.69247-1-boqun.feng@gmail.com>
- <20200203050313.69247-2-boqun.feng@gmail.com>
+        id S1727747AbgBCJiF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 3 Feb 2020 04:38:05 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:9364 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727368AbgBCJiF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 Feb 2020 04:38:05 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e37e9e50001>; Mon, 03 Feb 2020 01:37:41 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 03 Feb 2020 01:38:04 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 03 Feb 2020 01:38:04 -0800
+Received: from [10.25.73.244] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 3 Feb
+ 2020 09:38:00 +0000
+Subject: Re: [PATCH V2 0/5] Add support to defer core initialization
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+CC:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <lorenzo.pieralisi@arm.com>, <andrew.murray@arm.com>,
+        <bhelgaas@google.com>, <thierry.reding@gmail.com>,
+        <Jisheng.Zhang@synaptics.com>, <jonathanh@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20200103100736.27627-1-vidyas@nvidia.com>
+ <a8678df3-141b-51ab-b0cb-5e88c6ac91b5@nvidia.com>
+ <680a58ec-5d09-3e3b-2fd6-544c32732818@nvidia.com>
+ <ca911119-da45-4cbd-b173-2ac8397fd79a@ti.com>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <ebd5fe6b-0713-a4bf-8eff-600c088d2667@nvidia.com>
+Date:   Mon, 3 Feb 2020 15:07:57 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200203050313.69247-2-boqun.feng@gmail.com>
+In-Reply-To: <ca911119-da45-4cbd-b173-2ac8397fd79a@ti.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1580722661; bh=rMCJ2AUZQbRi9iswPSyGqc1LNxDxGbkp9R6e0a3YQiw=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Nj93hjhqUG9qxwhUp9zj8rDHbC8d/ESjEbYiB6by7JT+1i0/alc/tmc9LCpKHlq/y
+         G8tM+4DNLygeljLsUvucqb+S45L0+U7VfXhhikcuoTKYhxrBNTtXzzdHG4fw+sN4zY
+         kJWKDxn8alOFYL/uqzfd86NU0MmCNhUOfd3YaDQGWEbXNslIAECyFk/2z3mE9KNza1
+         mnW91B/oHH4vqNDmI/k5sJe+EGmqiCsjCDKNBtKGXrgOzSvDbfegPPhib8ANy9BUUk
+         G5iEkxLCo/hZPgpiNZw09j5iLxCu/Bp7BYeOdcURsjyqP9j9sjoSSxjTbLyo09oT+3
+         IGHh6OHr/UiMA==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Feb 03, 2020 at 01:03:11PM +0800, Boqun Feng wrote:
-> Currently HVCALL_RETARGET_INTERRUPT and HV_PARTITION_ID_SELF are defined
-> in pci-hyperv.c. However, similar to other hypercall related definitions
-> , it makes more sense to put them in the tlfs header file.
 
-Nit: please keep the comma attached to the previous word - even if that
-means you need to move the word with it to the next line to maintain line
-limits.
 
-> 
-> Besides, these definitions are arch-dependent, so for the support of
-> virtual PCI on non-x86 archs in the future, move them into arch-specific
-> tlfs header file.
-> 
-> Signed-off-by: Boqun Feng (Microsoft) <boqun.feng@gmail.com>
-> ---
->  arch/x86/include/asm/hyperv-tlfs.h  | 3 +++
->  drivers/pci/controller/pci-hyperv.c | 6 ------
->  2 files changed, 3 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
-> index 5f10f7f2098d..739bd89226a5 100644
-> --- a/arch/x86/include/asm/hyperv-tlfs.h
-> +++ b/arch/x86/include/asm/hyperv-tlfs.h
-> @@ -376,6 +376,7 @@ struct hv_tsc_emulation_status {
->  #define HVCALL_SEND_IPI_EX			0x0015
->  #define HVCALL_POST_MESSAGE			0x005c
->  #define HVCALL_SIGNAL_EVENT			0x005d
-> +#define HVCALL_RETARGET_INTERRUPT		0x007e
->  #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_SPACE 0x00af
->  #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_LIST 0x00b0
->  
-> @@ -405,6 +406,8 @@ enum HV_GENERIC_SET_FORMAT {
->  	HV_GENERIC_SET_ALL,
->  };
->  
-> +#define HV_PARTITION_ID_SELF                    ((u64)-1)
-> +
->  #define HV_HYPERCALL_RESULT_MASK	GENMASK_ULL(15, 0)
->  #define HV_HYPERCALL_FAST_BIT		BIT(16)
->  #define HV_HYPERCALL_VARHEAD_OFFSET	17
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index 9977abff92fc..aacfcc90d929 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -406,12 +406,6 @@ struct pci_eject_response {
->  
->  static int pci_ring_size = (4 * PAGE_SIZE);
->  
-> -/*
-> - * Definitions or interrupt steering hypercall.
-> - */
-> -#define HV_PARTITION_ID_SELF		((u64)-1)
-> -#define HVCALL_RETARGET_INTERRUPT	0x7e
-> -
+On 1/23/2020 3:25 PM, Kishon Vijay Abraham I wrote:
+> External email: Use caution opening links or attachments
+>=20
+>=20
+> Hi Vidya Sagar,
+>=20
+> On 23/01/20 2:54 pm, Vidya Sagar wrote:
+>> Hi Kishon,
+>> Apologies for pinging again. Could you please review this series?
+>>
+>> Thanks,
+>> Vidya Sagar
+>>
+>> On 1/11/2020 5:18 PM, Vidya Sagar wrote:
+>>> Hi Kishon,
+>>> Could you please review this series?
+>>>
+>>> Also, this series depends on the following change of yours
+>>> http://patchwork.ozlabs.org/patch/1109884/
+>>> Whats the plan to get this merged?
+>=20
+> I've posted the endpoint improvements as a separate series
+> http://lore.kernel.org/r/20191231100331.6316-1-kishon@ti.com
+>=20
+> I'd prefer this series gets tested by others. I'm also planning to test
+> this series. Sorry for the delay. I'll test review and test this series
+> early next week.
+Hi Kishon,
+Just wanted to know if you got time to test review my patches.
 
-Reviewed-by: Andrew Murray <amurray@thegoodpenguin.co.uk>
+Thanks,
+Vidya Sagar
 
->  struct hv_interrupt_entry {
->  	u32	source;			/* 1 for MSI(-X) */
->  	u32	reserved1;
-> -- 
-> 2.24.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>=20
+> Thanks
+> Kishon
+>=20
+>>>
+>>> Thanks,
+>>> Vidya Sagar
+>>>
+>>> On 1/3/20 3:37 PM, Vidya Sagar wrote:
+>>>> EPC/DesignWare core endpoint subsystems assume that the core
+>>>> registers are
+>>>> available always for SW to initialize. But, that may not be the case
+>>>> always.
+>>>> For example, Tegra194 hardware has the core running on a clock that
+>>>> is derived
+>>>> from reference clock that is coming into the endpoint system from host=
+.
+>>>> Hence core is made available asynchronously based on when host system
+>>>> is going
+>>>> for enumeration of devices. To accommodate this kind of hardwares,
+>>>> support is
+>>>> required to defer the core initialization until the respective
+>>>> platform driver
+>>>> informs the EPC/DWC endpoint sub-systems that the core is indeed
+>>>> available for
+>>>> initiaization. This patch series is attempting to add precisely that.
+>>>> This series is based on Kishon's patch that adds notification mechanis=
+m
+>>>> support from EPC to EPF @ http://patchwork.ozlabs.org/patch/1109884/
+>>>>
+>>>> Vidya Sagar (5):
+>>>>     PCI: endpoint: Add core init notifying feature
+>>>>     PCI: dwc: Refactor core initialization code for EP mode
+>>>>     PCI: endpoint: Add notification for core init completion
+>>>>     PCI: dwc: Add API to notify core initialization completion
+>>>>     PCI: pci-epf-test: Add support to defer core initialization
+>>>>
+>>>>    .../pci/controller/dwc/pcie-designware-ep.c   |=C2=A0 79 +++++++---=
+--
+>>>>    drivers/pci/controller/dwc/pcie-designware.h  |=C2=A0 11 ++
+>>>>    drivers/pci/endpoint/functions/pci-epf-test.c | 118 ++++++++++++---=
+---
+>>>>    drivers/pci/endpoint/pci-epc-core.c           |=C2=A0 19 ++-
+>>>>    include/linux/pci-epc.h                       |=C2=A0=C2=A0 2 +
+>>>>    include/linux/pci-epf.h                       |=C2=A0=C2=A0 5 +
+>>>>    6 files changed, 164 insertions(+), 70 deletions(-)
+>>>>
