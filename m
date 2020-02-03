@@ -2,164 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 39AFB150DD4
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Feb 2020 17:47:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 59321150E2C
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Feb 2020 17:51:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729437AbgBCQ1f (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 3 Feb 2020 11:27:35 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:57974 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729435AbgBCQ1e (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 Feb 2020 11:27:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=GlhiWZUF/YX3gEFzvjYXVXI3s+IP0haz6QdP1XP2Q4c=; b=kgo2mZARm8v3jQFbI3uCEpxH6U
-        NrmKQla4px8BTh70BOn737Z9BQ9vJ+P6KkOfQOO+oDa3aX79Mo8HTpZdx0ixdfGULQnTa+x7CIZaW
-        4FvO8K4pY8lG89evFWlYd5jmRkfuuTibRnswe4k1mfSvHdlsgFWKUalivplkEc9Se3/+Y8HqHY8LW
-        s2VxB3aNiEISZsdJrK+ijLNY3K0vXqtib3rE7usWPMxSnamH2ZaxOmiDv/Uf91pjSS+siRzJgAXdp
-        2cC05VxR7Ub15GuCb4+zJBk4YyYwZ8cDHUFewBU0hsmd+MMK0xgNfeLHZu4DCGNYQoMDkMZ9ToE0C
-        yXoNhI1Q==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iyeZQ-00016X-5u; Mon, 03 Feb 2020 16:27:32 +0000
-Subject: Re: linux-next: Tree for Feb 3 (arch/x86/{various}; all PCI-related)
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        X86 ML <x86@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>
-References: <20200203142334.4f699874@canb.auug.org.au>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <b569f6f3-a757-5bbb-3e1a-9d78b12709b7@infradead.org>
-Date:   Mon, 3 Feb 2020 08:27:31 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1727319AbgBCQvz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 3 Feb 2020 11:51:55 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:10144 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728074AbgBCQvz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:51:55 -0500
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 9C6C7707665075F96F12;
+        Tue,  4 Feb 2020 00:51:50 +0800 (CST)
+Received: from DESKTOP-6T4S3DQ.china.huawei.com (10.202.226.55) by
+ DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
+ 14.3.439.0; Tue, 4 Feb 2020 00:51:41 +0800
+From:   Shiju Jose <shiju.jose@huawei.com>
+To:     <linux-acpi@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <rjw@rjwysocki.net>,
+        <helgaas@kernel.org>, <lenb@kernel.org>, <bp@alien8.de>,
+        <james.morse@arm.com>, <tony.luck@intel.com>,
+        <gregkh@linuxfoundation.org>, <zhangliguang@linux.alibaba.com>,
+        <tglx@linutronix.de>
+CC:     <linuxarm@huawei.com>, <jonathan.cameron@huawei.com>,
+        <tanxiaofei@huawei.com>, <yangyicong@hisilicon.com>,
+        Shiju Jose <shiju.jose@huawei.com>
+Subject: [PATCH v3 0/2] ACPI: APEI: Add support to notify the vendor specific HW errors
+Date:   Mon, 3 Feb 2020 16:51:20 +0000
+Message-ID: <20200203165122.17748-1-shiju.jose@huawei.com>
+X-Mailer: git-send-email 2.19.2.windows.1
+In-Reply-To: <Shiju Jose>
+References: <Shiju Jose>
 MIME-Version: 1.0
-In-Reply-To: <20200203142334.4f699874@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.202.226.55]
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2/2/20 7:23 PM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Please do not add any v5.7 material to your linux-next included
-> branches until after v5.6-rc1 has been released.
-> 
-> News: I have added an htmldocs build to the end of my day.  It seems to
-> be building at the moment, but has many warnings.
-> 
-> Changes since 20200131:
-> 
+Presently the vendor drivers are unable to do the recovery for the
+vendor specific recoverable HW errors, reported to the APEI driver
+in the vendor defined sections, because APEI driver does not support
+reporting the same to the vendor drivers.
 
-(trying this again, with more Cc:s since last week's report [on Jan. 28]
-got no response)
+This patch set
+1. add an interface to the APEI driver to enable the vendor
+drivers to register the event handling functions for the corresponding
+vendor specific HW errors and report the error to the vendor driver.
 
+2. add driver to handle HiSilicon hip08 PCIe controller's errors
+   which is an example application of the above APEI interface.
 
-on x86_64:
+Changes:
 
-# CONFIG_PCI is not set
+V3:
+1. Fix the comments from Bjorn Helgaas.
 
-Several source files will not build when CONFIG_PCI is not set/enabled.
+V2:
+1. Changes in the HiSilicon PCIe controller's error handling driver
+   for the comments from Bjorn Helgaas.
+   
+2. Changes in the APEI interface to support reporting the vendor error
+   for module with multiple devices, but use the same section type.
+   In the error handler will use socket id/sub module id etc to distinguish
+   the device.
 
-Examples:
+V1:  
+1. Fix comments from James Morse.
 
-  CC      arch/x86/events/amd/ibs.o
-In file included from ../include/linux/pci.h:1778:0,
-                 from ../arch/x86/events/amd/ibs.c:12:
-../arch/x86/include/asm/pci.h: In function '__pcibus_to_node':
-../arch/x86/include/asm/pci.h:126:9: error: implicit declaration of function 'to_pci_sysdata'; did you mean 'to_pci_dev'? [-Werror=implicit-function-declaration]
-  return to_pci_sysdata(bus)->node;
-         ^~~~~~~~~~~~~~
-         to_pci_dev
-../arch/x86/include/asm/pci.h:126:28: error: invalid type argument of '->' (have 'int')
-  return to_pci_sysdata(bus)->node;
-                            ^~
+2. add driver to handle HiSilicon hip08 PCIe controller's errors,
+   which is an application of the above interface.
 
-  CC      arch/x86/kernel/cpu/cacheinfo.o
-In file included from ../include/linux/pci.h:1778:0,
-                 from ../arch/x86/kernel/cpu/cacheinfo.c:17:
-../arch/x86/include/asm/pci.h: In function '__pcibus_to_node':
-../arch/x86/include/asm/pci.h:126:9: error: implicit declaration of function 'to_pci_sysdata'; did you mean 'to_pci_bus'? [-Werror=implicit-function-declaration]
-  return to_pci_sysdata(bus)->node;
-         ^~~~~~~~~~~~~~
-         to_pci_bus
-../arch/x86/include/asm/pci.h:126:28: error: invalid type argument of '->' (have 'int')
-  return to_pci_sysdata(bus)->node;
-                            ^~
+Shiju Jose (1):
+  ACPI: APEI: Add support to notify the vendor specific HW errors
 
-  CC      arch/x86/kernel/apic/io_apic.o
-In file included from ../include/linux/pci.h:1778:0,
-                 from ../arch/x86/kernel/apic/io_apic.c:40:
-../arch/x86/include/asm/pci.h: In function '__pcibus_to_node':
-../arch/x86/include/asm/pci.h:126:9: error: implicit declaration of function 'to_pci_sysdata'; did you mean 'to_pci_bus'? [-Werror=implicit-function-declaration]
-  return to_pci_sysdata(bus)->node;
-         ^~~~~~~~~~~~~~
-         to_pci_bus
-../arch/x86/include/asm/pci.h:126:28: error: invalid type argument of '->' (have 'int')
-  return to_pci_sysdata(bus)->node;
-                            ^~
+Yicong Yang (1):
+  PCI: HIP: Add handling of HiSilicon HIP PCIe controller's errors
 
-  CC      arch/x86/kernel/setup.o
-In file included from ../include/linux/pci.h:1778:0,
-                 from ../arch/x86/kernel/setup.c:16:
-../arch/x86/include/asm/pci.h: In function '__pcibus_to_node':
-../arch/x86/include/asm/pci.h:126:9: error: implicit declaration of function 'to_pci_sysdata'; did you mean 'to_pci_bus'? [-Werror=implicit-function-declaration]
-  return to_pci_sysdata(bus)->node;
-         ^~~~~~~~~~~~~~
-         to_pci_bus
-../arch/x86/include/asm/pci.h:126:28: error: invalid type argument of '->' (have 'int')
-  return to_pci_sysdata(bus)->node;
-                            ^~
-
-  CC      arch/x86/kernel/x86_init.o
-In file included from ../include/linux/pci.h:1778:0,
-                 from ../arch/x86/kernel/x86_init.c:9:
-../arch/x86/include/asm/pci.h: In function '__pcibus_to_node':
-../arch/x86/include/asm/pci.h:126:9: error: implicit declaration of function 'to_pci_sysdata'; did you mean 'to_pci_bus'? [-Werror=implicit-function-declaration]
-  return to_pci_sysdata(bus)->node;
-         ^~~~~~~~~~~~~~
-         to_pci_bus
-../arch/x86/include/asm/pci.h:126:28: error: invalid type argument of '->' (have 'int')
-  return to_pci_sysdata(bus)->node;
-                            ^~
-
-  CC      arch/x86/kernel/irqinit.o
-In file included from ../include/linux/pci.h:1778:0,
-                 from ../arch/x86/include/asm/prom.h:15,
-                 from ../arch/x86/kernel/irqinit.c:29:
-../arch/x86/include/asm/pci.h: In function '__pcibus_to_node':
-../arch/x86/include/asm/pci.h:126:9: error: implicit declaration of function 'to_pci_sysdata'; did you mean 'to_pci_dev'? [-Werror=implicit-function-declaration]
-  return to_pci_sysdata(bus)->node;
-         ^~~~~~~~~~~~~~
-         to_pci_dev
-../arch/x86/include/asm/pci.h:126:28: error: invalid type argument of '->' (have 'int')
-  return to_pci_sysdata(bus)->node;
-                            ^~
-
-
-That's just a sample:
-
-$ buildsummary.pl build-r9671.out 
-file: arch/x86/boot/header.S: errors: 1, warnings: 0
-file: arch/x86/include/asm/pci.h: errors: 234, warnings: 0
-build-r9671.out: totals: error/warning files: 2, errors: 235, warnings: 0, Section mismatches: 0
-
-
-
+ drivers/acpi/apei/ghes.c                 | 116 ++++++++++-
+ drivers/pci/controller/Kconfig           |   8 +
+ drivers/pci/controller/Makefile          |   1 +
+ drivers/pci/controller/pcie-hisi-error.c | 334 +++++++++++++++++++++++++++++++
+ include/acpi/ghes.h                      |  56 ++++++
+ 5 files changed, 510 insertions(+), 5 deletions(-)
+ create mode 100644 drivers/pci/controller/pcie-hisi-error.c
 
 -- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+1.9.1
+
+
