@@ -2,166 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7DD7615039B
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Feb 2020 10:51:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 22F3F1503C0
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Feb 2020 11:01:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726272AbgBCJvp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 3 Feb 2020 04:51:45 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41937 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726258AbgBCJvo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 Feb 2020 04:51:44 -0500
-Received: by mail-wr1-f66.google.com with SMTP id c9so17086921wrw.8
-        for <linux-pci@vger.kernel.org>; Mon, 03 Feb 2020 01:51:43 -0800 (PST)
+        id S1727455AbgBCKBH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 3 Feb 2020 05:01:07 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34563 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726836AbgBCKBG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 Feb 2020 05:01:06 -0500
+Received: by mail-pf1-f195.google.com with SMTP id i6so7319199pfc.1
+        for <linux-pci@vger.kernel.org>; Mon, 03 Feb 2020 02:01:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=thegoodpenguin-co-uk.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=rnDPBSUuVuYgxfTH/LE+fCmpX3/NqS6sW9R93j88kKg=;
-        b=CPpgzeMv6frDZeN7Ohf8Ni6aGL9A7BPf33E1PJD2dRObj80331n8Tq2PNB26N3uflb
-         v9XTi3vrj3ujEYXIplN6/HZBrorzao1cmnSQi44JxS3QX/7z9dFujRdPvBiGo1NcQXTO
-         AHWfYj4HJylTEAucXZWvYAKMaKJfFZWOq14wL5mPKmOZlY86fUtKOyMu8uws9LgHG8Qj
-         2EAlBBbFhM1XtHjw0KrqvrlqeQB5+4Iusl/A7bEqPeIvYsmjcYW3Cj3LH6i3v5EJpKMY
-         k+JfJnBM/NxsO0ke0m6V+TCXaADzCwbqK4KVb4EU08drZwMQsMJZ/dYnmsfdmAX2rTZu
-         VYzA==
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=52LKly4I/06lXfcJFtdMnMF93D7j0fEQtz6/eHGU+Gs=;
+        b=C8IJ3DD/gA7N2tWcI7cVIzv4xHS7PN57131IkW4XEmMiKfoqL76qpJ0nwTr8ZO9mGH
+         71QCsxjlrjwfwmzP48fHozkpOD5z3lUzvPN/ArLnTj1FVvCiH1HS1R670y9ieZGMtCg9
+         EbgVuU6QuSZgweSBvXMURFNbgeqYICOL3eTvD4xWvUsm9N4+Na1tyOM3SupTvCyYLNF+
+         WJ7XvBuGYMLa201CnYYU8MO9SwC4Akb1Oyd8qkCa6o13c7wrxWcE1l0uJAgRwJ8yx459
+         L1iLTkkSpaBxEyEEgNCkU4cbNezOGUD48uXpVFIJcsbDN3BXmaduFzOExxx3T15wy6qy
+         sSKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=rnDPBSUuVuYgxfTH/LE+fCmpX3/NqS6sW9R93j88kKg=;
-        b=uQS+3CFRXbP1Y+0yZt9oJYNj8swEzM/9899hU+DMxfQbDdyO196X6UDy9iKEPN0+Dn
-         EBt9B59HAwZsmQoq3v+vMGZZ6vWuXQe6fxf+YuXaUiwReao0xsvF+xKnFSErIH3ffnYa
-         ayUIJYKtMnZ0gFmkNiqMlteASI0VMs6qN7/3at70iiI6ZnP+iUzur83XTsC1GSTKemt5
-         H70lI5MsysjAWeIqN/JlAl+nzG+2FldU/R1MYABtXVoLicWf0XINyb+i3XxK7RpqjEXQ
-         0Cv8wKCWM82s2toy+4Gcxc+Erh7pPqWd0x4+8T/DCYEa45jrenenFQcHjFNaJXxrL77+
-         5rGg==
-X-Gm-Message-State: APjAAAXPxI+aJR3QDslNMl4+IVfcibw0LWKO/xwdD7G5yjso/AIq4+Ou
-        +n1hEU/d8gO67oJ4gWNNQATMtA==
-X-Google-Smtp-Source: APXvYqw7V7B7iGDd6nFgnka0ziI8dHLkn3HmGFeQJiw3wbFDH3xDp2B94hEuTX3mpEjB0xaTbYrdsA==
-X-Received: by 2002:adf:ca07:: with SMTP id o7mr14000110wrh.49.1580723502887;
-        Mon, 03 Feb 2020 01:51:42 -0800 (PST)
-Received: from big-machine ([2a00:23c5:dd80:8400:459c:4174:f0ee:1b26])
-        by smtp.gmail.com with ESMTPSA id t1sm23821080wma.43.2020.02.03.01.51.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 01:51:41 -0800 (PST)
-Date:   Mon, 3 Feb 2020 09:51:40 +0000
-From:   Andrew Murray <amurray@thegoodpenguin.co.uk>
-To:     Boqun Feng <boqun.feng@gmail.com>
-Cc:     linux-pci@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Michael Kelley <mikelley@microsoft.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v2 3/3] PCI: hv: Introduce hv_msi_entry
-Message-ID: <20200203095140.GE20189@big-machine>
-References: <20200203050313.69247-1-boqun.feng@gmail.com>
- <20200203050313.69247-4-boqun.feng@gmail.com>
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=52LKly4I/06lXfcJFtdMnMF93D7j0fEQtz6/eHGU+Gs=;
+        b=EL92bNh2LDnwdAFhTu7VIFDVThDU4P12PS2MJ1M6pBiroQt9jIYiylK5ilOZrjxku5
+         jJCAsFng1mG366Ve1fAo12wbemAsLV2rEQZpvERJj7k3Y8mHtDTF6q1EC+sWYfKDayHK
+         /1BfUjHBLkWrtg9zkHNc2GLVkSr2iOfbceg23N7l+JIUM92l78bMjp+P27MUmUstQq4K
+         gtSDOI2NuEr85SarGxThu4Ve1ugFe7rRTRdr/kszoTRcTA/fzKih4b+nRDjaaSByvjm2
+         4nf0IvMEUu9xm1mKo14423heHIZrKJ42Wr2Gv21xFguw2w4zH7YeKClrZnD6sSbsOMXI
+         XRYg==
+X-Gm-Message-State: APjAAAXf6Uyd51H0kKv7vjIKQ0q0gcAHU/1pfKR3KnTxFEHkRoQj3eIU
+        MNJuKGMYHqeRQF5SgaN8EoBNOz59tde5sN4kwRc=
+X-Google-Smtp-Source: APXvYqyztN6vBapb8zTq3vRMhbXWkQ+Vq64UK9aTOlrPKB9EbT+BC0nhIFt4ooB6fZZ6WNhv0G501Joby+TeCyk5LVM=
+X-Received: by 2002:a63:515d:: with SMTP id r29mr16565423pgl.265.1580724065863;
+ Mon, 03 Feb 2020 02:01:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200203050313.69247-4-boqun.feng@gmail.com>
+Received: by 2002:a17:90b:34e:0:0:0:0 with HTTP; Mon, 3 Feb 2020 02:01:05
+ -0800 (PST)
+Reply-To: suleman1945mohammed@gmail.com
+From:   "Mr.Suleman Mohammed" <djamiladoro@gmail.com>
+Date:   Mon, 3 Feb 2020 02:01:05 -0800
+Message-ID: <CAO34-w-Lx9+LXUYYkVKNKb7ZN9WXwzXT3D6DguQpOGw3ws5rKA@mail.gmail.com>
+Subject: I am Mr.Suleman Mohammed
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Feb 03, 2020 at 01:03:13PM +0800, Boqun Feng wrote:
-> Add a new structure (hv_msi_entry), which is also defined int tlfs, to
+--=20
+Hello Dear,
 
-s/int/in the/ ?
+I am Mr.Suleman Mohammed and I work with UNITED BANK OF AFRICA. Please
+Can you use ATM Visa card to withdraw money at ATM cash machine in
+your country? I want to transfer money to you from my country; it=E2=80=99s
+part of money taken by some old politician that was forced out of
+power.
 
-> describe the msi entry for HVCALL_RETARGET_INTERRUPT. The structure is
-> needed because its layout may be different from architecture to
-> architecture.
-> 
-> Also add a new generic interface hv_set_msi_address_from_desc() to allow
-> different archs to set the msi address from msi_desc.
-> 
-> No functional change, only preparation for the future support of virtual
-> PCI on non-x86 architectures.
-> 
-> Signed-off-by: Boqun Feng (Microsoft) <boqun.feng@gmail.com>
-> ---
->  arch/x86/include/asm/hyperv-tlfs.h  | 11 +++++++++--
->  arch/x86/include/asm/mshyperv.h     |  5 +++++
->  drivers/pci/controller/pci-hyperv.c |  4 ++--
->  3 files changed, 16 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
-> index 4a76e442481a..953b3ad38746 100644
-> --- a/arch/x86/include/asm/hyperv-tlfs.h
-> +++ b/arch/x86/include/asm/hyperv-tlfs.h
-> @@ -912,11 +912,18 @@ struct hv_partition_assist_pg {
->  	u32 tlb_lock_count;
->  };
->  
-> +union hv_msi_entry {
-> +	u64 as_uint64;
-> +	struct {
-> +		u32 address;
-> +		u32 data;
-> +	} __packed;
-> +};
-> +
->  struct hv_interrupt_entry {
->  	u32 source;			/* 1 for MSI(-X) */
->  	u32 reserved1;
-> -	u32 address;
-> -	u32 data;
-> +	union hv_msi_entry msi_entry;
->  } __packed;
->  
->  /*
-> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-> index 6b79515abb82..3bdaa3b6e68f 100644
-> --- a/arch/x86/include/asm/mshyperv.h
-> +++ b/arch/x86/include/asm/mshyperv.h
-> @@ -240,6 +240,11 @@ bool hv_vcpu_is_preempted(int vcpu);
->  static inline void hv_apic_init(void) {}
->  #endif
->  
-> +#define hv_set_msi_address_from_desc(msi_entry, msi_desc)	\
-> +do {								\
-> +	(msi_entry)->address = (msi_desc)->msg.address_lo;	\
-> +} while (0)
+I will change the account details to yours, and apply for a visa card
+with your details in our bank, they will send the visa card to you and
+you will be withdrawing money with it and always send my own
+percentage of the money, and the money we are talking about is
+$6.5Million us dollars.
 
-Given that this is a single statement, is there really a need for the do ; while(0) ?
+Whatever amount you withdraw daily, you will send 50% to me and you
+will take 50%, the visa card and the bank account will be on your
+name, I will be waiting for your information as soon as possible.
+Your name...........................................
+
+Age.................................................
+
+Sex.................................................
+
+Country.............................................
+
+Occupation..........................................
+
+Phone number........................................
 
 
-> +
->  #else /* CONFIG_HYPERV */
->  static inline void hyperv_init(void) {}
->  static inline void hyperv_setup_mmu_ops(void) {}
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index 0d9b74503577..2240f2b3643e 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -1170,8 +1170,8 @@ static void hv_irq_unmask(struct irq_data *data)
->  	memset(params, 0, sizeof(*params));
->  	params->partition_id = HV_PARTITION_ID_SELF;
->  	params->int_entry.source = 1; /* MSI(-X) */
-> -	params->int_entry.address = msi_desc->msg.address_lo;
-> -	params->int_entry.data = msi_desc->msg.data;
-> +	hv_set_msi_address_from_desc(&params->int_entry.msi_entry, msi_desc);
-> +	params->int_entry.msi_entry.data = msi_desc->msg.data;
+Best Regards.
 
-If the layout may differ, then don't we also need a wrapper for data?
+Mr.Suleman Mohammed
 
-Thanks,
-
-Andrew Murray
-
->  	params->device_id = (hbus->hdev->dev_instance.b[5] << 24) |
->  			   (hbus->hdev->dev_instance.b[4] << 16) |
->  			   (hbus->hdev->dev_instance.b[7] << 8) |
-> -- 
-> 2.24.1
-> 
+MAIL.....suleman1945mohammed@gmail.com
