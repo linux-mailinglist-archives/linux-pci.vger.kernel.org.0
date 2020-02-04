@@ -2,113 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 30708151EEB
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Feb 2020 18:08:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DE961522BE
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Feb 2020 00:05:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727423AbgBDRIJ convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Tue, 4 Feb 2020 12:08:09 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:58056 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727296AbgBDRIJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Feb 2020 12:08:09 -0500
-Received: from mail-pl1-f197.google.com ([209.85.214.197])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1iz1gE-0004xT-Vu
-        for linux-pci@vger.kernel.org; Tue, 04 Feb 2020 17:08:07 +0000
-Received: by mail-pl1-f197.google.com with SMTP id j8so5990645plk.1
-        for <linux-pci@vger.kernel.org>; Tue, 04 Feb 2020 09:08:06 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=VK8o/brIxoX1s4YNqEOpFV00pzKNl1VdxAXl7AvMf/M=;
-        b=BNnoZASsXKTZq4vtykD+AyLnjstr195/V2m3cPkpcSmFgTgBMpjCmfZLYzECCA+Up9
-         06roc5rWHsH2F3DGkZwU9t80tCId6zOo2/nGSEazozZZKJxcbvhK/gMgZKyj8/H/qfK/
-         05CacTvPRvp63kroLl0OXqlMc6++K/TrEMMKP8qVrDZQ+lqht1XVPbogouy14qqxg8vM
-         uBmZ8IDRXeS2kMfBjaZGN4ors1dV3bmNngsTHQaUn4pOGI8AwM52xIV2voa0bJlcvwTL
-         43iiWYwkGw+an9vbtG/6Jo+IXHNMn2SSyI30vmZwMXhb1WewlKqmKVMuLWy/yNcTT+2G
-         3oFA==
-X-Gm-Message-State: APjAAAVslwRER8IexW/UN6tNxjRMFnhxQTVzADOAYusaSh1VFKDU8HJk
-        CnCu75cPOHXrft8/Mg5QddWsk6LckmnEioq6LGCKxwYds3IIraKxt2sAGjKlWMiCxFNJe0F+GL1
-        Nti92GY9jQbBHNYtpc+6bkPWApEaOCtjWRhjB/g==
-X-Received: by 2002:a65:620d:: with SMTP id d13mr33097684pgv.252.1580836085681;
-        Tue, 04 Feb 2020 09:08:05 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwyu4JftCXZjXWe/rkUQ0qIvUvwOzDjWRnR5K/gUoHhVSTeuzXeDQPVaHG+xKV0lD+6RnwKmQ==
-X-Received: by 2002:a65:620d:: with SMTP id d13mr33097648pgv.252.1580836085315;
-        Tue, 04 Feb 2020 09:08:05 -0800 (PST)
-Received: from 2001-b011-380f-35a3-4cfd-361b-ac7d-6a8c.dynamic-ip6.hinet.net (2001-b011-380f-35a3-4cfd-361b-ac7d-6a8c.dynamic-ip6.hinet.net. [2001:b011:380f:35a3:4cfd:361b:ac7d:6a8c])
-        by smtp.gmail.com with ESMTPSA id z5sm26260221pfq.3.2020.02.04.09.08.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Feb 2020 09:08:04 -0800 (PST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
-Subject: Re: [PATCH] PCI: Avoid ASMedia XHCI USB PME# from D0 defect
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <20191219192006.16270-1-kai.heng.feng@canonical.com>
-Date:   Wed, 5 Feb 2020 01:08:00 +0800
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <DECD6DEE-E67C-43BA-8510-067ADBFBD50E@canonical.com>
-References: <20191219192006.16270-1-kai.heng.feng@canonical.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-X-Mailer: Apple Mail (2.3608.60.0.2.5)
+        id S1727710AbgBDXFo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Feb 2020 18:05:44 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42420 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727609AbgBDXFo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Feb 2020 18:05:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580857543;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=50yJ/0uSQd8YRp4Nzpt7nFwJU44bA7UT36hqDKQZmJc=;
+        b=TZxM/3haiTtCkhp6j1IFQXCq254ZD8+17Vsj0txbfa0Rse90I1MUHaVokzKc8qWbqX6tjJ
+        2LSR9gYDHh7zRFCSP+1dnXykAvIzT+KJpGMy3UXRCKIsjjrByuIEl9dQ6SL3mL96Vt9Chq
+        MhpByx/UZ4yQ+EoIzD9jk2ZZH+gSKa8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-63-_PGm0uoKPEO2dpkXo_Cobw-1; Tue, 04 Feb 2020 18:05:39 -0500
+X-MC-Unique: _PGm0uoKPEO2dpkXo_Cobw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E1C5F1085926;
+        Tue,  4 Feb 2020 23:05:37 +0000 (UTC)
+Received: from gimli.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 88DEA1084194;
+        Tue,  4 Feb 2020 23:05:34 +0000 (UTC)
+Subject: [RFC PATCH 0/7] vfio/pci: SR-IOV support
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     kvm@vger.kernel.org
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dev@dpdk.org, mtosatti@redhat.com, thomas@monjalon.net,
+        bluca@debian.org, jerinjacobk@gmail.com,
+        bruce.richardson@intel.com, cohuck@redhat.com
+Date:   Tue, 04 Feb 2020 16:05:34 -0700
+Message-ID: <158085337582.9445.17682266437583505502.stgit@gimli.home>
+User-Agent: StGit/0.19-dirty
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
+There seems to be an ongoing desire to use userspace, vfio-based
+drivers for both SR-IOV PF and VF devices.  The fundamental issue
+with this concept is that the VF is not fully independent of the PF
+driver.  Minimally the PF driver might be able to deny service to the
+VF, VF data paths might be dependent on the state of the PF device,
+or the PF my have some degree of ability to inspect or manipulate the
+VF data.  It therefore would seem irresponsible to unleash VFs onto
+the system, managed by a user owned PF.
 
-> On Dec 20, 2019, at 03:20, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
-> 
-> The ASMedia USB XHCI Controller claims to support generating PME# while
-> in D0:
-> 
-> 01:00.0 USB controller: ASMedia Technology Inc. Device 2142 (prog-if 30 [XHCI])
->        Subsystem: SUNIX Co., Ltd. Device 312b
->        Capabilities: [78] Power Management version 3
->                Flags: PMEClk- DSI- D1- D2- AuxCurrent=55mA PME(D0+,D1-,D2-,D3hot-,D3cold-)
->                Status: D0 NoSoftRst+ PME-Enable+ DSel=0 DScale=0 PME-
-> 
-> However PME# only gets asserted when plugging USB 2.0 or USB 1.1
-> devices, but not for USB 3.0 devices.
-> 
-> So remove PCI_PM_CAP_PME_D0 to avoid using PME under D0.
-> 
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=205919
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+We address this in a few ways in this series.  First, we can use a bus
+notifier and the driver_override facility to make sure VFs are bound
+to the vfio-pci driver by default.  This should eliminate the chance
+that a VF is accidentally bound and used by host drivers.  We don't
+however remove the ability for a host admin to change this override.
 
-Would it be possible to merge this patch? Thanks.
+The next issue we need to address is how we let userspace drivers
+opt-in to this participation with the PF driver.  We do not want an
+admin to be able to unwittingly assign one of these VFs to a tenant
+that isn't working in collaboration with the PF driver.  We could use
+IOMMU grouping, but this seems to push too far towards tightly coupled
+PF and VF drivers.  This series introduces a "VF token", implemented
+as a UUID, as a shared secret between PF and VF drivers.  The token
+needs to be set by the PF driver and used as part of the device
+matching by the VF driver.  Provisions in the code also account for
+restarting the PF driver with active VF drivers, requiring the PF to
+use the current token to re-gain access to the PF.
 
-Kai-Heng
+The above solutions introduce a bit of a modification to the VFIO ABI
+and an additional ABI extension.  The modification is that the
+VFIO_GROUP_GET_DEVICE_FD ioctl is specified to require a char string
+from the user providing the device name.  For this solution, we extend
+the syntax to allow the device name followed by key/value pairs.  In
+this case we add "vf_token=3e7e882e-1daf-417f-ad8d-882eea5ee337", for
+example.  These options are expected to be space separated.  Matching
+these key/value pairs is entirely left to the vfio bus driver (ex.
+vfio-pci) and the internal ops structure is extended to allow this
+optional support.  This extension should be fully backwards compatible
+to existing userspace, such code will simply fail to open these newly
+exposed devices, as intended.
 
-> ---
-> drivers/pci/quirks.c | 11 +++++++++++
-> 1 file changed, 11 insertions(+)
-> 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 79379b4c9d7a..24c71555dc77 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -5436,3 +5436,14 @@ static void quirk_reset_lenovo_thinkpad_p50_nvgpu(struct pci_dev *pdev)
-> DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, 0x13b1,
-> 			      PCI_CLASS_DISPLAY_VGA, 8,
-> 			      quirk_reset_lenovo_thinkpad_p50_nvgpu);
-> +
-> +/*
-> + * Device [1b21:2142]
-> + * When in D0, PME# doesn't get asserted when plugging USB 3.0 device.
-> + */
-> +static void pci_fixup_no_d0_pme(struct pci_dev *dev)
-> +{
-> +	pci_info(dev, "PME# does not work under D0, disabling it\n");
-> +	dev->pme_support &= ~(PCI_PM_CAP_PME_D0 >> PCI_PM_CAP_PME_SHIFT);
-> +}
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x2142, pci_fixup_no_d0_pme);
-> -- 
-> 2.17.1
-> 
+I've been debating whether instead of the above we should allow the
+user to get the device fd as normal, but restrict the interfaces until
+the user authenticates, but I'm afraid this would be a less backwards
+compatible solution.  It would be just as unclear to the user why a
+device read/write/mmap/ioctl failed as it might be to why getting the
+device fd could fail.  However in the latter case, I believe we do a
+better job of restricting how far userspace code might go before they
+ultimately fail.  I'd welcome discussion in the space, and or course
+the extension of the GET_DEVICE_FD string.
+
+Finally, the user needs to be able to set a VF token.  I add a
+VFIO_DEVICE_FEATURE ioctl for this that's meant to be reusable for
+getting, setting, and probing arbitrary features of a device.
+
+I'll reply to this cover letter with a very basic example of a QEMU
+update to support this interface, though I haven't found a device yet
+that behaves well with the PF running in one VM with the VF in
+another, or really even just a PF running in a VM with SR-IOV enabled.
+I know these devices exist though, and I suspect QEMU will not be the
+primary user of this support for now, but this behavior reaffirms my
+concerns to prevent mis-use.
+
+Please comment.  In particular, does this approach meet the DPDK needs
+for userspace PF and VF drivers, with the hopefully minor hurdle of
+sharing a token between drivers.  The token is of course left to
+userspace how to manage, and might be static (and not very secret) for
+a given set of drivers.  Thanks,
+
+Alex
+
+---
+
+Alex Williamson (7):
+      vfio: Include optional device match in vfio_device_ops callbacks
+      vfio/pci: Implement match ops
+      vfio/pci: Introduce VF token
+      vfio: Introduce VFIO_DEVICE_FEATURE ioctl and first user
+      vfio/pci: Add sriov_configure support
+      vfio/pci: Remove dev_fmt definition
+      vfio/pci: Cleanup .probe() exit paths
+
+
+ drivers/vfio/pci/vfio_pci.c         |  315 ++++++++++++++++++++++++++++++++---
+ drivers/vfio/pci/vfio_pci_private.h |   10 +
+ drivers/vfio/vfio.c                 |   19 ++
+ include/linux/vfio.h                |    3 
+ include/uapi/linux/vfio.h           |   37 ++++
+ 5 files changed, 356 insertions(+), 28 deletions(-)
 
