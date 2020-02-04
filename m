@@ -2,105 +2,113 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CAAC15150A
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Feb 2020 05:38:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 44A55151C44
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Feb 2020 15:33:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbgBDEia (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 3 Feb 2020 23:38:30 -0500
-Received: from bmailout3.hostsharing.net ([176.9.242.62]:52629 "EHLO
-        bmailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726992AbgBDEi3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 Feb 2020 23:38:29 -0500
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout3.hostsharing.net (Postfix) with ESMTPS id D0B35101C051A;
-        Tue,  4 Feb 2020 05:38:25 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 7C426DFAA5; Tue,  4 Feb 2020 05:38:25 +0100 (CET)
-Date:   Tue, 4 Feb 2020 05:38:25 +0100
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Alex Deucher <alexdeucher@gmail.com>
-Cc:     Dave Airlie <airlied@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Ben Skeggs <skeggsb@gmail.com>,
-        Karol Herbst <karolherbst@gmail.com>,
-        "Alex G." <mr.nuke.me@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Alexandru Gagniuc <alex_gagniuc@dellteam.com>,
-        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jan Vesely <jano.vesely@gmail.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Austin Bolen <austin_bolen@dell.com>,
-        Shyam Iyer <Shyam_Iyer@dell.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: Issues with "PCI/LINK: Report degraded links via link bandwidth
- notification"
-Message-ID: <20200204043825.thpbqpz3ao7zqvlh@wunner.de>
-References: <20200120023326.GA149019@google.com>
- <b9764896-102c-84cb-32ea-c2a122b6f0db@gmail.com>
- <8409fd7ad6b83da75c914a71accf522953a460a0.camel@pengutronix.de>
- <CAPM=9twvggZqVu=HmXZMN70+-6hAPGdog-dGFnM7jp3RhjAB9w@mail.gmail.com>
- <CAPM=9tz9dOLL=onbA-73T-hwzFYMXjSywCufqmnM7bP5dT_x0Q@mail.gmail.com>
- <CADnq5_PRQJmG_NYHmqWhv2R1utaNf0LcTVgFA7LMeYr75fy55w@mail.gmail.com>
+        id S1727314AbgBDOdO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Feb 2020 09:33:14 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:60978 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727256AbgBDOdN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Feb 2020 09:33:13 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 014ENEvJ174913;
+        Tue, 4 Feb 2020 14:31:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type : in-reply-to;
+ s=corp-2019-08-05; bh=pt2dhiYXg1N/Fuw4ZspxpERuJ9G0f6yoC8gPPXAvscc=;
+ b=kffE1qec3euoQJxKNleY2033qTlUsqCITkCLMS3EGZvyvDdufuyHS5ABue8wxStJCnSK
+ 833owxFAnzfVG4w4RbpeOtZ6AXOXocFWTLDJy0K/LBx23keJERPQQ0/XSjR8vIPlSXSj
+ lzC5E3lG9EFMWYZjKHitNeLDQt+/9g6oEycsBKOfwK6WnxyvSmTo/86b/5pCAJ4x4Uqv
+ Zdj7y+wiUEpQT25mKcpOZ4pmuE1SVLL4O0X5ttn7gRir1xa7zVkVpwE+ybUgUk2F8vzg
+ SaDAKMhXRlSItv0q9wxPEc/aod+IE5NdS2BJ1gHeon1GUkZfczB2gPPAaDn7S//BNfEX cQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2xwyg9k7m4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 04 Feb 2020 14:31:58 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 014EOVJZ164778;
+        Tue, 4 Feb 2020 14:31:58 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2xxw0x3vqw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 04 Feb 2020 14:31:58 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 014EVsda006815;
+        Tue, 4 Feb 2020 14:31:54 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 04 Feb 2020 06:31:54 -0800
+Date:   Tue, 4 Feb 2020 17:31:42 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     kbuild@lists.01.org, Shiju Jose <shiju.jose@huawei.com>
+Cc:     kbuild-all@lists.01.org, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rjw@rjwysocki.net, helgaas@kernel.org, lenb@kernel.org,
+        bp@alien8.de, james.morse@arm.com, tony.luck@intel.com,
+        gregkh@linuxfoundation.org, zhangliguang@linux.alibaba.com,
+        tglx@linutronix.de, linuxarm@huawei.com,
+        jonathan.cameron@huawei.com, tanxiaofei@huawei.com,
+        yangyicong@hisilicon.com, Shiju Jose <shiju.jose@huawei.com>
+Subject: Re: [PATCH v3 2/2] PCI: HIP: Add handling of HiSilicon HIP PCIe
+ controller's errors
+Message-ID: <20200204143142.GQ11068@kadam>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CADnq5_PRQJmG_NYHmqWhv2R1utaNf0LcTVgFA7LMeYr75fy55w@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20200203165122.17748-3-shiju.jose@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9520 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2002040102
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9520 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2002040102
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Feb 03, 2020 at 04:16:36PM -0500, Alex Deucher wrote:
-> AMD has had a micro-controller on the GPU handling pcie link speeds
-> and widths dynamically (in addition to GPU clocks and voltages) for
-> about 12 years or so at this point to save power when the GPU is idle
-> and improve performance when it's required.  The micro-controller
-> changes the link parameters dynamically based on load independent of
-> the driver.  The driver can tweak the heuristics, or even disable the
-> dynamic changes, but by default it's enabled when the driver loads.
-> The ucode for this micro-controller is loaded by the driver so you'll
-> see fixed clocks and widths prior to the driver loading.  We'd need
-> some sort of opt out I suppose for periods when the driver has enabled
-> dynamic pcie power management in the micro-controller.
+Hi Shiju,
 
-Note that there are *two* bits in the Link Status Register:
+Thank you for the patch! Perhaps something to improve:
 
-* Link Autonomous Bandwidth Status
-  "This bit is Set by hardware to indicate that hardware has
-  autonomously changed Link speed or width, without the Port
-  transitioning through DL_Down status, for reasons other than to
-  attempt to correct unreliable Link operation.  This bit must be set if
-  the Physical Layer reports a speed or width change was initiated by
-  the Downstream component that was indicated as an autonomous change."
+url:    https://github.com/0day-ci/linux/commits/Shiju-Jose/ACPI-APEI-Add-support-to-notify-the-vendor-specific-HW-errors/20200204-073736
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git linux-next
 
-* Link Bandwidth Management Status
-  "This bit is Set by hardware to indicate that either of the
-  following has occurred without the Port transitioning through
-  DL_Down status. [...] Hardware has changed Link speed or width to
-  attempt to correct unreliable Link operation, either through an
-  LTSSM timeout or a higher level process."
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-See PCIe Base Spec 4.0 sec 7.8.8, 7.8.7, 4.2.6.3.3.1.
+smatch warnings:
+drivers/pci/controller/pcie-hisi-error.c:234 hisi_pcie_handle_one_error() warn: should '((((1))) << (9 + i))' be a 64 bit type?
 
-The two bits generate *separate* interrupts.  We only enable the
-interrupt for the latter.
+# https://github.com/0day-ci/linux/commit/71688ac6d222c137b66a707f8a6fdf28b48e1942
+git remote add linux-review https://github.com/0day-ci/linux
+git remote update linux-review
+git checkout 71688ac6d222c137b66a707f8a6fdf28b48e1942
+vim +234 drivers/pci/controller/pcie-hisi-error.c
 
-If AMD GPUs generate a Link Bandwidth Management Interrupt upon
-autonomously changing bandwidth for power management reasons
-(instead of to correct unreliability issues), that would be a
-spec violation.
+71688ac6d222c1 Yicong Yang 2020-02-03  228  	p += snprintf(p, end - p, "]\n");
+71688ac6d222c1 Yicong Yang 2020-02-03  229  	dev_info(dev, "\nHISI : HIP : PCIe controller error\n");
+71688ac6d222c1 Yicong Yang 2020-02-03  230  	dev_info(dev, "%s\n", buf);
+71688ac6d222c1 Yicong Yang 2020-02-03  231  
+71688ac6d222c1 Yicong Yang 2020-02-03  232  	dev_info(dev, "Reg Dump:\n");
+71688ac6d222c1 Yicong Yang 2020-02-03  233  	for (i = 0; i < HISI_PCIE_ERR_MISC_REGS; i++) {
+71688ac6d222c1 Yicong Yang 2020-02-03 @234  		if (err->val_bits & BIT(HISI_PCIE_LOCAL_VALID_ERR_MISC + i))
+                                                                            ^^^
+This should be BIT_ULL() because it goes up to 9 + 32.
 
-So the question is, do your GPUs violate the spec in this regard?
+71688ac6d222c1 Yicong Yang 2020-02-03  235  			dev_info(dev,
+71688ac6d222c1 Yicong Yang 2020-02-03  236  				 "ERR_MISC_%d=0x%x\n", i, err->err_misc[i]);
+71688ac6d222c1 Yicong Yang 2020-02-03  237  	}
+71688ac6d222c1 Yicong Yang 2020-02-03  238  
 
-Thanks,
-
-Lukas
+---
+0-DAY kernel test infrastructure                 Open Source Technology Center
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
