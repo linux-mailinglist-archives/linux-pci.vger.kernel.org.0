@@ -2,97 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C3EA6152854
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Feb 2020 10:29:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E2C9E152879
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Feb 2020 10:37:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728130AbgBEJ3q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 5 Feb 2020 04:29:46 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:38802 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728119AbgBEJ3q (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Feb 2020 04:29:46 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0159Thjg027354;
-        Wed, 5 Feb 2020 03:29:43 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1580894983;
-        bh=xLEAFY0eInQuru5nfklQ/d2iYjGo3AFkM7A7McJzMNE=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=H9KQqFuRXnvtO/geTs39ucvriUQkr7Ho8bgjK0WdTX+HDR7b20/4S3pLlpznjZXpj
-         VWcaPUKSxRt4wVB9mYE+RXmr07JgGQMDhxZC2IAzDRWwtz4yw+QWZ307kgTv+E17/G
-         tkbUZ0lpcPz7anRfepw2jzPYasQTDVOtcvUwQHCk=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0159Thv6067707;
-        Wed, 5 Feb 2020 03:29:43 -0600
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 5 Feb
- 2020 03:29:43 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 5 Feb 2020 03:29:43 -0600
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0159TfTw097331;
-        Wed, 5 Feb 2020 03:29:42 -0600
-Subject: Re: pci-usb/pci-sata broken with LPAE config after "reduce use of
- block bounce buffers"
-To:     Christoph Hellwig <hch@lst.de>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-References: <20200130075833.GC30735@lst.de>
- <4a41bd0d-6491-3822-172a-fbca8a6abba5@ti.com> <20200130164235.GA6705@lst.de>
- <f76af743-dcb5-f59d-b315-f2332a9dc906@ti.com> <20200203142155.GA16388@lst.de>
- <a5eb4f73-418a-6780-354f-175d08395e71@ti.com> <20200205074719.GA22701@lst.de>
- <4a8bf1d3-6f8e-d13e-eae0-4db54f5cab8c@ti.com> <20200205084844.GA23831@lst.de>
- <88d50d13-65c7-7ca3-59c6-56f7d66c3816@ti.com> <20200205091959.GA24413@lst.de>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <9be3bed4-3804-1b3e-a91a-ed52407524ce@ti.com>
-Date:   Wed, 5 Feb 2020 15:03:13 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        id S1728012AbgBEJhf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 5 Feb 2020 04:37:35 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:59206 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728031AbgBEJhf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 5 Feb 2020 04:37:35 -0500
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 780EE876068C6BED71B9;
+        Wed,  5 Feb 2020 17:37:33 +0800 (CST)
+Received: from [127.0.0.1] (10.65.58.147) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Wed, 5 Feb 2020
+ 17:37:26 +0800
+Subject: Re: [PATCH 0/6] Improve link speed presentation process
+To:     <helgaas@kernel.org>, <linux-pci@vger.kernel.org>
+References: <1579079063-5668-1-git-send-email-yangyicong@hisilicon.com>
+CC:     <f.fangjian@huawei.com>
+From:   Yicong Yang <yangyicong@hisilicon.com>
+Message-ID: <36d8ddfb-df1a-18cb-bd17-809bf805e8bd@hisilicon.com>
+Date:   Wed, 5 Feb 2020 17:37:38 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-In-Reply-To: <20200205091959.GA24413@lst.de>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+In-Reply-To: <1579079063-5668-1-git-send-email-yangyicong@hisilicon.com>
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Originating-IP: [10.65.58.147]
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Christoph,
+Hi Bjorn,
 
-On 05/02/20 2:49 PM, Christoph Hellwig wrote:
-> On Wed, Feb 05, 2020 at 02:48:17PM +0530, Kishon Vijay Abraham I wrote:
->> Christoph,
->>
->> On 05/02/20 2:18 PM, Christoph Hellwig wrote:
->>> On Wed, Feb 05, 2020 at 02:02:51PM +0530, Kishon Vijay Abraham I wrote:
->>>>> you try that branch?
->>>>
->>>> I see data mismatch with that branch.
->>>
->>> But previously it didn't work at all? If you disable LPAE and thus
->>> limit the available RAM, does it work without any fixes?
->>
->> Previously there was a warn dump and it gets stuck.
->>
->> With the branch you shared (with LPAE enabled), there was data mismatch.
->> With the branch you shared (with LPAE disabled), things work fine
->> (https://pastebin.ubuntu.com/p/kPNdsJd7ds/)
-> 
-> Does the miscompare still happen if you revert:
-> 
->  "dma-direct: improve DMA mask overflow reporting"
-> 
-> and
-> 
->  "dma-direct: improve swiotlb error reporting"
-> 
-> ?
+would you mind giving some comments to help me get these patches merged?
 
-Yes, I see the mismatch after reverting the above patches.
+Thanks,
+Yicong Yang
 
-Thanks
-Kishon
+On 2020/1/15 17:04, Yicong Yang wrote:
+> In this series:
+> 1. Add 32 GT/s decoding in some macros as a complementary
+> 2. Remove redundancy in speed presentation process and improve the codes.
+>
+> Currently We use switch-case statements to acquire the speed
+> string according to the pci bus speed in current_link_speed_show()
+> and pcie_get_speed_cap(). It leads to redundant and when new
+> standard comes, we have to add cases in the related functions,
+> which is easy to omit at somewhere.
+>
+> Abstract the judge statements out. Use macros and pci speed
+> arrays instead. Then only the macros and arrays need to be
+> extended when next generation comes.
+>
+> Link:
+> https://lore.kernel.org/linux-pci/20200113211728.GA113776@google.com/
+> https://lore.kernel.org/linux-pci/20200114224909.GA19633@google.com/
+>
+>
+> Yicong Yang (6):
+>   PCI: add 32 GT/s decoding in some macros
+>   PCI: Make pci_bus_speed_strings[] public
+>   PCI: Add comments for link speed info arrays
+>   PCI: Improve and rename PCIE_SPEED2STR macro
+>   PCI: Add PCIE_LNKCAP2_SLS2SPEED macro
+>   PCI: Reduce redundancy in current_link_speed_show()
+>
+>  drivers/pci/pci-sysfs.c | 26 ++++----------------------
+>  drivers/pci/pci.c       | 23 +++++++----------------
+>  drivers/pci/pci.h       | 22 +++++++++++++++-------
+>  drivers/pci/probe.c     | 37 +++++++++++++++++++++++++++++++++++++
+>  drivers/pci/slot.c      | 39 +++------------------------------------
+>  5 files changed, 66 insertions(+), 81 deletions(-)
+>
+> --
+> 2.8.1
+>
+>
+> .
+>
+
+
