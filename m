@@ -2,126 +2,45 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9609B1554BC
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2020 10:33:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FA94155616
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2020 11:54:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726417AbgBGJdu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 7 Feb 2020 04:33:50 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20279 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726626AbgBGJdu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Feb 2020 04:33:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581068028;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8PAzHny0x2QHx+dIx+vP8eKtbzz9uBF25gnK6yMYgy8=;
-        b=Z84OwjpKpwg/3A6RE14Q1vxzNkWPmtTLlsNiH7obRsjfEoC8lnPTk2NEMv+yjpL1BTtqCs
-        7sgLPpyBEc+uQ9MyScFofd8GPcbnxHY2YdDMIwYpe/n9cq8d55dNSf6X6agqMQH9uJVZkK
-        aNAXpwtsMXuJuGFRZ+SjrKfsNjaiGkA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-191-gMqxWvVyMVmcXEgZT7bA4g-1; Fri, 07 Feb 2020 04:33:43 -0500
-X-MC-Unique: gMqxWvVyMVmcXEgZT7bA4g-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A69B1101FC60;
-        Fri,  7 Feb 2020 09:33:41 +0000 (UTC)
-Received: from gondolin (ovpn-117-112.ams2.redhat.com [10.36.117.112])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3E3AC790F8;
-        Fri,  7 Feb 2020 09:33:36 +0000 (UTC)
-Date:   Fri, 7 Feb 2020 10:33:34 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dev@dpdk.org, mtosatti@redhat.com,
-        thomas@monjalon.net, bluca@debian.org, jerinjacobk@gmail.com,
-        bruce.richardson@intel.com
-Subject: Re: [RFC PATCH 1/7] vfio: Include optional device match in
- vfio_device_ops callbacks
-Message-ID: <20200207103334.25b17267.cohuck@redhat.com>
-In-Reply-To: <20200206111842.705bf58a@w520.home>
-References: <158085337582.9445.17682266437583505502.stgit@gimli.home>
-        <158085754299.9445.4389176548645142886.stgit@gimli.home>
-        <20200206121419.69997326.cohuck@redhat.com>
-        <20200206111842.705bf58a@w520.home>
-Organization: Red Hat GmbH
+        id S1726901AbgBGKyE convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Fri, 7 Feb 2020 05:54:04 -0500
+Received: from mail.gu.educaltai.ru ([193.105.235.212]:26344 "EHLO
+        mail.gu.educaltai.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726897AbgBGKyE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Feb 2020 05:54:04 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.gu.educaltai.ru (Postfix) with ESMTP id 82C3912EB5FE;
+        Wed,  5 Feb 2020 03:22:46 +0700 (+07)
+Received: from mail.gu.educaltai.ru ([127.0.0.1])
+        by localhost (mail.gu.educaltai.ru [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id A4n3R06mFKCd; Wed,  5 Feb 2020 03:22:46 +0700 (+07)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.gu.educaltai.ru (Postfix) with ESMTP id 9953D12EB565;
+        Wed,  5 Feb 2020 03:20:51 +0700 (+07)
+X-Virus-Scanned: amavisd-new at gu.educaltai.ru
+Received: from mail.gu.educaltai.ru ([127.0.0.1])
+        by localhost (mail.gu.educaltai.ru [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 811ppYR-3s-W; Wed,  5 Feb 2020 03:20:51 +0700 (+07)
+Received: from APPLE1A02.localdomain (8ta-246-13-13.telkomadsl.co.za [41.246.13.13])
+        by mail.gu.educaltai.ru (Postfix) with ESMTPSA id 1EDAB12EB490;
+        Wed,  5 Feb 2020 03:20:08 +0700 (+07)
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: Deal-Vorschlag
+To:     Recipients <LiuZhang@mail.gu.educaltai.ru>
+From:   <LiuZhang@mail.gu.educaltai.ru>, "mailto:xujie"@s-ap.com
+Date:   Wed, 05 Feb 2020 10:23:39 +0200
+Reply-To: liuzhang814@gmail.com
+Message-Id: <20200204202009.1EDAB12EB490@mail.gu.educaltai.ru>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 6 Feb 2020 11:18:42 -0700
-Alex Williamson <alex.williamson@redhat.com> wrote:
-
-> On Thu, 6 Feb 2020 12:14:19 +0100
-> Cornelia Huck <cohuck@redhat.com> wrote:
-> 
-> > On Tue, 04 Feb 2020 16:05:43 -0700
-> > Alex Williamson <alex.williamson@redhat.com> wrote:
-> >   
-> > > Allow bus drivers to provide their own callback to match a device to
-> > > the user provided string.
-> > > 
-> > > Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-> > > ---
-> > >  drivers/vfio/vfio.c  |   19 +++++++++++++++----
-> > >  include/linux/vfio.h |    3 +++
-
-> I think with your first option we arrive at something like this:
-> 
-> diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
-> index dda1726adda8..b5609a411139 100644
-> --- a/drivers/vfio/vfio.c
-> +++ b/drivers/vfio/vfio.c
-> @@ -883,14 +883,15 @@ static struct vfio_device *vfio_device_get_from_name(struct vfio_group *group,
->  
->  		if (it->ops->match) {
->  			ret = it->ops->match(it->device_data, buf);
-> -			if (ret < 0 && ret != -ENODEV) {
-> +			if (ret < 0) {
->  				device = ERR_PTR(ret);
->  				break;
->  			}
-> -		} else
-> -			ret = strcmp(dev_name(it->dev), buf);
-> +		} else {
-> +			ret = !strcmp(dev_name(it->dev), buf);
-> +		}
->  
-> -		if (!ret) {
-> +		if (ret) {
->  			device = it;
->  			vfio_device_get(device);
->  			break;
-> diff --git a/include/linux/vfio.h b/include/linux/vfio.h
-> index 755e0f0e2900..029694b977f2 100644
-> --- a/include/linux/vfio.h
-> +++ b/include/linux/vfio.h
-> @@ -26,8 +26,9 @@
->   *         operations documented below
->   * @mmap: Perform mmap(2) on a region of the device file descriptor
->   * @request: Request for the bus driver to release the device
-> - * @match: Optional device name match callback (return: 0 for match, -ENODEV
-> - *         (or >0) for no match and continue, other -errno: no match and stop)
-> + * @match: Optional device name match callback (return: 0 for no-match, >0 for
-> + *         match, -errno for abort (ex. match with insufficient or incorrect
-> + *         additional args)
->   */
->  struct vfio_device_ops {
->  	char	*name;
-> 
-> 
-> I like that.  Thanks,
-> 
-> Alex
-
-Looks good to me.
-
+Hallo, ich bin Liu Zhang, Mitarbeiter der Wing Hang Bank. Kann ich Ihnen einen Deal im Wert von anvertrauen mehreren Millionen Dollar ?
+Antwort so schnell wie möglich über meine persönliche E-Mail: liuzhang814@gmail.com
