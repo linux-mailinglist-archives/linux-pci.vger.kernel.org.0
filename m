@@ -2,38 +2,197 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D79B1534F1
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Feb 2020 17:05:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D574D153544
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Feb 2020 17:32:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727234AbgBEQFp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 5 Feb 2020 11:05:45 -0500
-Received: from verein.lst.de ([213.95.11.211]:37822 "EHLO verein.lst.de"
+        id S1726359AbgBEQct (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 5 Feb 2020 11:32:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726973AbgBEQFp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 5 Feb 2020 11:05:45 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 2499868B05; Wed,  5 Feb 2020 17:05:43 +0100 (CET)
-Date:   Wed, 5 Feb 2020 17:05:42 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: pci-usb/pci-sata broken with LPAE config after "reduce use of
- block bounce buffers"
-Message-ID: <20200205160542.GA30981@lst.de>
-References: <20200130164235.GA6705@lst.de> <f76af743-dcb5-f59d-b315-f2332a9dc906@ti.com> <20200203142155.GA16388@lst.de> <a5eb4f73-418a-6780-354f-175d08395e71@ti.com> <20200205074719.GA22701@lst.de> <4a8bf1d3-6f8e-d13e-eae0-4db54f5cab8c@ti.com> <20200205084844.GA23831@lst.de> <88d50d13-65c7-7ca3-59c6-56f7d66c3816@ti.com> <20200205091959.GA24413@lst.de> <9be3bed4-3804-1b3e-a91a-ed52407524ce@ti.com>
+        id S1727079AbgBEQct (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 5 Feb 2020 11:32:49 -0500
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AF7521741;
+        Wed,  5 Feb 2020 16:32:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580920368;
+        bh=sCuDbUD4jPn7b7s0t114aCP42GPaRxhtBp/0q9r7/Hg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=m2xVi6SnQuXqdsWJPFXH7T+iq9WWVD4M9B14mNxoJh4aAzb7SNbUpthyQWFCWctJr
+         ompo6HV7r67OTc5gOzF28HvsDV5WvkC38swhoT4ZU12xVafVsYUkA1M49nW3Kz66Td
+         yMQmAW+FtyN/DEKlfQ80Cu6kFUmSX8j9qfX2SMEs=
+Date:   Wed, 5 Feb 2020 10:32:46 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Sergei Miroshnichenko <s.miroshnichenko@yadro.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux@yadro.com" <linux@yadro.com>, "sr@denx.de" <sr@denx.de>
+Subject: Re: [PATCH v7 16/26] PCI: Ignore PCIBIOS_MIN_MEM
+Message-ID: <20200205163246.GA201899@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9be3bed4-3804-1b3e-a91a-ed52407524ce@ti.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <0efd322c37cc7a99beafc5bbf31b290db4fa4435.camel@yadro.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Feb 05, 2020 at 03:03:13PM +0530, Kishon Vijay Abraham I wrote:
-> Yes, I see the mismatch after reverting the above patches.
+On Wed, Feb 05, 2020 at 01:04:06PM +0000, Sergei Miroshnichenko wrote:
+> On Fri, 2020-01-31 at 14:27 -0600, Bjorn Helgaas wrote:
+> > On Fri, Jan 31, 2020 at 06:19:48PM +0000, Sergei Miroshnichenko
+> > wrote:
+> > > On Thu, 2020-01-30 at 17:52 -0600, Bjorn Helgaas wrote:
+> > > > On Wed, Jan 29, 2020 at 06:29:27PM +0300, Sergei Miroshnichenko
+> > > > wrote:
+> > > > > BARs and bridge windows are only allowed to be assigned to
+> > > > > their parent bus's bridge windows, going up to the root
+> > > > > complex's resources.  So additional limitations on BAR
+> > > > > address are not needed, and the PCIBIOS_MIN_MEM can be
+> > > > > ignored.
+> > > > 
+> > > > This is theoretically true, but I don't think we have reliable
+> > > > information about the host bridge windows in all cases, so
+> > > > PCIBIOS_MIN_MEM/_IO is something of an approximation.
+> > > > 
+> > > > > Besides, the value of PCIBIOS_MIN_MEM reported by the BIOS
+> > > > > 1.3 on Supermicro H11SSL-i via e820__setup_pci_gap():
+> > > > > 
+> > > > >   [mem 0xebff1000-0xfe9fffff] available for PCI devices
+> > > > > 
+> > > > > is only suitable for a single RC out of four:
+> > > > > 
+> > > > >   pci_bus 0000:00: root bus resource [mem 0xec000000-0xefffffff
+> > > > > window]
+> > > > >   pci_bus 0000:20: root bus resource [mem 0xeb800000-0xebefffff
+> > > > > window]
+> > > > >   pci_bus 0000:40: root bus resource [mem 0xeb200000-0xeb5fffff
+> > > > > window]
+> > > > >   pci_bus 0000:60: root bus resource [mem 0xe8b00000-0xeaffffff
+> > > > > window]
+> > > > > 
+> > > > > , which makes the AMD EPYC 7251 unable to boot with this
+> > > > > movable BARs patchset.
+> > > > 
+> > > > Something's wrong if this system booted before this patch set
+> > > > but not after.  We shouldn't be doing *anything* with the BARs
+> > > > until we need to, i.e., until we hot-add a device where we
+> > > > have to move things to find space for it.
+> > > 
+> > > The one breaking boot on this system initially was 17/26 of this
+> > > patchset: "PCI: hotplug: Ignore the MEM BAR offsets from
+> > > BIOS/bootloader"
+> > 
+> > I don't think that patch is a good idea.  I think we should read the
+> > current BARs and windows at boot-time and leave them alone unless we
+> > *must* change them.  I don't think we should change things
+> > preemptively to make future hotplug events easier.
+> > 
+> > > Before it the kernel just took BARs pre-assigned by BIOS. In the
+> > > same time, the same BIOS reports 0xebff1000-0xfe9fffff as
+> > > available for PCI devices, but the real root bridge windows are
+> > > 0xe8b00000-0xefffffff in total (and also 64-bit windows) - which
+> > > are also reported by the same BIOS. So the kernel was only able
+> > > to handle the 0xec000000- 0xefffffff root bus.
+> > > 
+> > > With that patch reverted the kernel was able to boot, but unable to
+> > > rescan - to reassign BARs actually.
+> > > 
+> > > > (And we don't want a bisection hole where this system can't
+> > > > boot until this patch is applied, but I assume that's
+> > > > obvious.)
+> > > > 
+> > > > > Signed-off-by: Sergei Miroshnichenko <
+> > > > > s.miroshnichenko@yadro.com>
+> > > > > ---
+> > > > >  drivers/pci/setup-res.c | 5 +++--
+> > > > >  1 file changed, 3 insertions(+), 2 deletions(-)
+> > > > > 
+> > > > > diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
+> > > > > index a7d81816d1ea..4043aab021dd 100644
+> > > > > --- a/drivers/pci/setup-res.c
+> > > > > +++ b/drivers/pci/setup-res.c
+> > > > > @@ -246,12 +246,13 @@ static int __pci_assign_resource(struct
+> > > > > pci_bus *bus, struct pci_dev *dev,
+> > > > >  		int resno, resource_size_t size,
+> > > > > resource_size_t align)
+> > > > >  {
+> > > > >  	struct resource *res = dev->resource + resno;
+> > > > > -	resource_size_t min;
+> > > > > +	resource_size_t min = 0;
+> > > > >  	int ret;
+> > > > >  	resource_size_t start = (resource_size_t)-1;
+> > > > >  	resource_size_t end = 0;
+> > > > >  
+> > > > > -	min = (res->flags & IORESOURCE_IO) ? PCIBIOS_MIN_IO :
+> > > > > PCIBIOS_MIN_MEM;
+> > > > > +	if (!pci_can_move_bars)
+> > > > > +		min = (res->flags & IORESOURCE_IO) ?
+> > > > > PCIBIOS_MIN_IO :
+> > > > > PCIBIOS_MIN_MEM;
+> > > > 
+> > > > I don't understand the connection here.  PCIBIOS_MIN_MEM and
+> > > > PCIBIOS_MIN_IO are basically ways to say "we can't put PCI
+> > > > resources below this address".
+> > > > 
+> > > > On ACPI systems, the devices in the ACPI namespace are
+> > > > supposed to tell the OS what resources they use, and obviously
+> > > > the OS should not assign those resources to anything else.  If
+> > > > Linux handled all those ACPI resources correctly and in the
+> > > > absence of firmware defects, we shouldn't need
+> > > > PCIBIOS_MIN_MEM/_IO at all.  But neither of those is currently
+> > > > true.
+> > > > 
+> > > > It's true that we should be smarter about PCIBIOS_MIN_MEM/_IO,
+> > > > but I don't think that has anything to do with whether we
+> > > > support *moving* BARs.  We have to avoid the address space
+> > > > that's already in use in *all* cases.
+> > > 
+> > > This is connected to the approach of this feature: releasing,
+> > > recalculating and reassigning the BARs and bridge windows. If
+> > > movable BARs are disabled, this bug doesn't reproduce. And the
+> > > bug doesn't let the system boot when BARs are allowed to move.
+> > > That's why I've tied these together.
+> > 
+> > My point is just that logically this has nothing to do with
+> > movable BARs.
+> > 
+> > > This line setting the "min" to PCIBIOS_MIN_* is there untouched
+> > > since the first kernel git commit in 2005 - could it be that all
+> > > systems are just fine now, having their root bridge windows set
+> > > up correctly?
+> > 
+> > I don't understand the question, sorry.
+> 
+> I mean, every BAR assigned here can't reside outside of a host
+> IO/MEM bridge window, which is a bus->resource[n] set up by the
+> platform code, and their .start fields are seemed to be duplicated
+> by the PCIBIOS_MIN_* values - from the platform code as well. But
+> the .start fields are seem to be correct (aren't they?), and the
+> PCIBIOS_MIN_* values are sometimes definitely not.
+> 
+> What can be a reliable test to check if PCIBIOS_MIN_* are safe to
+> ignore unconditionally? Could it be a separate flag instead of the
+> pci_can_move_bars here?
+> 
+> Would it be fine for a start to ignore the PCIBIOS_MIN_* if it lies
+> completely outside of host bridge windows? So at least AMD EPYC can
+> obtain its hotplug power.
 
-In which case the data mismatch is very likely due to a different root
-cause.
+PCIBIOS_MIN_* has a long history and it touches every arch, so you'd
+have to make sure this is safe for all of them.
+
+On x86, PCIBIOS_MIN_MEM is computed from the e820 memory map and is
+basically a guess because the e820 map is only incidentally related to
+ACPI device resource usage.  I could imagine making the x86
+computation smarter by looking at the PNP0A03/PNP0A08 _CRS
+information.
+
+> > > > >  	if (pci_can_move_bars && dev->subordinate && resno >=
+> > > > > PCI_BRIDGE_RESOURCES) {
+> > > > >  		struct pci_bus *child_bus = dev->subordinate;
+> > > > > -- 
+> > > > > 2.24.1
+> > > > > 
