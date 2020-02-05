@@ -2,108 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4325315387F
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Feb 2020 19:54:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BAD1D1538AC
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Feb 2020 20:03:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbgBESyt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 5 Feb 2020 13:54:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34428 "EHLO mail.kernel.org"
+        id S1727149AbgBETDk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 5 Feb 2020 14:03:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727033AbgBESyt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 5 Feb 2020 13:54:49 -0500
+        id S1726822AbgBETDk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 5 Feb 2020 14:03:40 -0500
 Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C90A214AF;
-        Wed,  5 Feb 2020 18:54:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4114217BA;
+        Wed,  5 Feb 2020 19:03:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580928888;
-        bh=gluyRShhWV7MUVWMFGR5oPnvaFvLOBbs1W1HSk3nqAM=;
+        s=default; t=1580929419;
+        bh=s4sCPMZzjx09ipN9D6fBvtZZmWenqnm+d8znhpi4TZk=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Vul4b2ZVfTFd8XXQiF7s8qo28DvIFssRc2FIh7VdGVZ/xvP5VGvgsuUn2rmtzTtkO
-         sTq+9/hsfrRA9C0hI3dhv3ursQrxAbfvJbTjpROBsYU8P+HmHo7IV6s4n+FdVt16KG
-         PhFmud9JcSnSXmsCMD9EBKzgPvG656ruiQQALjZE=
-Date:   Wed, 5 Feb 2020 12:54:46 -0600
+        b=0AKQV4UfO1b+QsLo33c8vCAfvP7G5/ZUeMPltiu7YqChu+hOnUoUKqMGhMMwaiPys
+         z9n6XYK5WgOjl8qvi/DXwGj+inl7NMbZEXz5QFPnx7Rx3VZ9MSmi6a0Uz251GXAWWp
+         dYNBRi0Mieb69JSfl2NBHUVqU/FJpm5ijtfC31xU=
+Date:   Wed, 5 Feb 2020 13:03:37 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Yicong Yang <yangyicong@hisilicon.com>
-Cc:     linux-pci@vger.kernel.org, f.fangjian@huawei.com
-Subject: Re: [PATCH 5/6] PCI: Add PCIE_LNKCAP2_SLS2SPEED macro
-Message-ID: <20200205185446.GA231340@google.com>
+To:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, Keith Busch <keith.busch@intel.com>
+Subject: Re: [PATCH v13 1/8] PCI/ERR: Update error status after reset_link()
+Message-ID: <20200205190337.GA232001@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1579079063-5668-6-git-send-email-yangyicong@hisilicon.com>
+In-Reply-To: <20200205182800.GB112031@skuppusw-desk.amr.corp.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 05:04:22PM +0800, Yicong Yang wrote:
-> Add PCIE_LNKCAP2_SLS2SPEED macro for transforming raw link cap 2
-> value to link speed. Use it in pcie_get_speed_cap() to reduce
-> redundancy. We'll not touch the functions when new link
-> speed comes.
-
-The patch seems OK to me, but I don't see where it reduces redundancy.
-There was one copy of "lnkcap2 & PCI_EXP_LNKCAP2_SLS_32_0GB" before,
-and there's one copy after.  It's just moved from pci.c to pci.h.
-Or am I missing something?
-
-> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
-> ---
->  drivers/pci/pci.c | 17 ++++-------------
->  drivers/pci/pci.h |  9 +++++++++
->  2 files changed, 13 insertions(+), 13 deletions(-)
+On Wed, Feb 05, 2020 at 10:28:00AM -0800, Kuppuswamy Sathyanarayanan wrote:
+> Hi Bjorn,
 > 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index dce32ce..2ef4030 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -5780,19 +5780,10 @@ enum pci_bus_speed pcie_get_speed_cap(struct pci_dev *dev)
->  	 * where only 2.5 GT/s and 5.0 GT/s speeds were defined.
->  	 */
->  	pcie_capability_read_dword(dev, PCI_EXP_LNKCAP2, &lnkcap2);
-> -	if (lnkcap2) { /* PCIe r3.0-compliant */
-> -		if (lnkcap2 & PCI_EXP_LNKCAP2_SLS_32_0GB)
-> -			return PCIE_SPEED_32_0GT;
-> -		else if (lnkcap2 & PCI_EXP_LNKCAP2_SLS_16_0GB)
-> -			return PCIE_SPEED_16_0GT;
-> -		else if (lnkcap2 & PCI_EXP_LNKCAP2_SLS_8_0GB)
-> -			return PCIE_SPEED_8_0GT;
-> -		else if (lnkcap2 & PCI_EXP_LNKCAP2_SLS_5_0GB)
-> -			return PCIE_SPEED_5_0GT;
-> -		else if (lnkcap2 & PCI_EXP_LNKCAP2_SLS_2_5GB)
-> -			return PCIE_SPEED_2_5GT;
-> -		return PCI_SPEED_UNKNOWN;
-> -	}
-> +
-> +	/* PCIe r3.0-compliant */
-> +	if (lnkcap2)
-> +		return PCIE_LNKCAP2_SLS2SPEED(lnkcap2);
->  
->  	pcie_capability_read_dword(dev, PCI_EXP_LNKCAP, &lnkcap);
->  	if ((lnkcap & PCI_EXP_LNKCAP_SLS) == PCI_EXP_LNKCAP_SLS_5_0GB)
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 5e1f810..3d988e9 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -290,6 +290,15 @@ void pci_disable_bridge_window(struct pci_dev *dev);
->  struct pci_bus *pci_bus_get(struct pci_bus *bus);
->  void pci_bus_put(struct pci_bus *bus);
->  
-> +/* PCIe link information from Link Capabilities 2 */
-> +#define PCIE_LNKCAP2_SLS2SPEED(lnkcap2) \
-> +	((lnkcap2) & PCI_EXP_LNKCAP2_SLS_32_0GB ? PCIE_SPEED_32_0GT : \
-> +	 (lnkcap2) & PCI_EXP_LNKCAP2_SLS_16_0GB ? PCIE_SPEED_16_0GT : \
-> +	 (lnkcap2) & PCI_EXP_LNKCAP2_SLS_8_0GB ? PCIE_SPEED_8_0GT : \
-> +	 (lnkcap2) & PCI_EXP_LNKCAP2_SLS_5_0GB ? PCIE_SPEED_5_0GT : \
-> +	 (lnkcap2) & PCI_EXP_LNKCAP2_SLS_2_5GB ? PCIE_SPEED_2_5GT : \
-> +	 PCI_SPEED_UNKNOWN)
-> +
->  /* PCIe link information */
->  #define PCI_SPEED2STR(speed) \
->  	((speed) == PCI_SPEED_UNKNOWN ? "Unknown speed" : \
+> On Sat, Jan 18, 2020 at 08:00:30PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > 
+> > Commit bdb5ac85777d ("PCI/ERR: Handle fatal error recovery") uses
+> > reset_link() to recover from fatal errors. But during fatal error
+> > recovery, if the initial value of error status is
+> > PCI_ERS_RESULT_DISCONNECT or PCI_ERS_RESULT_NO_AER_DRIVER then
+> > even after successful recovery (using reset_link()) pcie_do_recovery()
+> > will report the recovery result as failure. So update the status of
+> > error after reset_link().
+> 
+> Since this patch has no dependency on EDR, can we merge it first?
+
+We *could*, but I don't think there's any benefit.  bdb5ac85777d
+appeared in v4.20, so this wouldn't really be a candidate for v5.6.
+
+I'm expecting (hoping, anyway) that we'll merge this whole series for
+v5.7.  For minor bugfixes like this one, we should add stable tags so
+they'll get backported.
+
+> > Fixes: bdb5ac85777d ("PCI/ERR: Handle fatal error recovery")
+> > Cc: Ashok Raj <ashok.raj@intel.com>
+> > Cc: Keith Busch <keith.busch@intel.com>
+> > Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > Acked-by: Keith Busch <keith.busch@intel.com>
+> > ---
+> >  drivers/pci/pcie/err.c | 8 +++++---
+> >  1 file changed, 5 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> > index b0e6048a9208..71639055511e 100644
+> > --- a/drivers/pci/pcie/err.c
+> > +++ b/drivers/pci/pcie/err.c
+> > @@ -204,9 +204,11 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
+> >  	else
+> >  		pci_walk_bus(bus, report_normal_detected, &status);
+> >  
+> > -	if (state == pci_channel_io_frozen &&
+> > -	    reset_link(dev, service) != PCI_ERS_RESULT_RECOVERED)
+> > -		goto failed;
+> > +	if (state == pci_channel_io_frozen) {
+> > +		status = reset_link(dev, service);
+> > +		if (status != PCI_ERS_RESULT_RECOVERED)
+> > +			goto failed;
+> > +	}
+> >  
+> >  	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
+> >  		status = PCI_ERS_RESULT_RECOVERED;
+> > -- 
+> > 2.21.0
+> > 
+> 
 > -- 
-> 2.8.1
-> 
+> Sathyanarayanan Kuppuswamy
+> Linux kernel developer
