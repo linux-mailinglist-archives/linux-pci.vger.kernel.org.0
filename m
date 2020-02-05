@@ -2,72 +2,182 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 18BB0153073
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Feb 2020 13:15:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B1D7215315F
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Feb 2020 14:04:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726748AbgBEMPb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 5 Feb 2020 07:15:31 -0500
-Received: from mx2.suse.de ([195.135.220.15]:47212 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726575AbgBEMPb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 5 Feb 2020 07:15:31 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 81B68ACC6;
-        Wed,  5 Feb 2020 12:15:29 +0000 (UTC)
-Message-ID: <1580904900.9756.9.camel@suse.com>
-Subject: Re: system generating an NMI due to 80696f991424d ("PCI: pciehp:
- Tolerate Presence Detect hardwired to zero")
-From:   Oliver Neukum <oneukum@suse.com>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     David Yang <mmyangfl@gmail.com>, Rajat Jain <rajatja@google.com>,
-        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
-        Stuart Hayes <stuart.w.hayes@gmail.com>
-Date:   Wed, 05 Feb 2020 13:15:00 +0100
-In-Reply-To: <20200116053500.chp4rsbeflg3qrdr@wunner.de>
-References: <1579083986.15925.31.camel@suse.com>
-         <20200115112429.yrj5v2zhvxkoupbw@wunner.de>
-         <20200116053500.chp4rsbeflg3qrdr@wunner.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1726960AbgBENEK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 5 Feb 2020 08:04:10 -0500
+Received: from mta-02.yadro.com ([89.207.88.252]:49834 "EHLO mta-01.yadro.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726386AbgBENEK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 5 Feb 2020 08:04:10 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id 5BCEC4799B;
+        Wed,  5 Feb 2020 13:04:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        mime-version:content-transfer-encoding:content-id:content-type
+        :content-type:content-language:accept-language:in-reply-to
+        :references:message-id:date:date:subject:subject:from:from
+        :received:received:received:received; s=mta-01; t=1580907846; x=
+        1582722247; bh=SPzfdCuGdOdkhjJPrR1CCHwfahQy8tXOH+sst986zFc=; b=Q
+        J3JkuqLjmGGdzqavUJWt1Givvb+b5HlxSNDfY/ZPs5GO3dAMr4X8Dwk3heNoTpFw
+        DZ7ybdh59EeM/k52YzO98WAvxVxX/Gqyr8nhHj47aw7afOgxNLo1deMe9YMmOWvz
+        1BTQfrwyNGIsaYq5P/Z4I+IgSr9xzxMsvYAyDEtMhE=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id b_UqWiIYWbwP; Wed,  5 Feb 2020 16:04:06 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mta-01.yadro.com (Postfix) with ESMTPS id C672147999;
+        Wed,  5 Feb 2020 16:04:06 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (172.17.10.102) by
+ T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
+ 15.1.669.32; Wed, 5 Feb 2020 16:04:06 +0300
+Received: from T-EXCH-02.corp.yadro.com ([fe80::19dd:9b61:5447:ff23]) by
+ T-EXCH-02.corp.yadro.com ([fe80::19dd:9b61:5447:ff23%14]) with mapi id
+ 15.01.0669.032; Wed, 5 Feb 2020 16:04:06 +0300
+From:   Sergei Miroshnichenko <s.miroshnichenko@yadro.com>
+To:     "helgaas@kernel.org" <helgaas@kernel.org>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux@yadro.com" <linux@yadro.com>, "sr@denx.de" <sr@denx.de>
+Subject: Re: [PATCH v7 16/26] PCI: Ignore PCIBIOS_MIN_MEM
+Thread-Topic: [PATCH v7 16/26] PCI: Ignore PCIBIOS_MIN_MEM
+Thread-Index: AQHV1rj3MLBuXSpu+0eGhF8XhxKbvKgDsP4AgAE1ToCAACOmAIAHX86A
+Date:   Wed, 5 Feb 2020 13:04:06 +0000
+Message-ID: <0efd322c37cc7a99beafc5bbf31b290db4fa4435.camel@yadro.com>
+References: <20200131202722.GA88769@google.com>
+In-Reply-To: <20200131202722.GA88769@google.com>
+Accept-Language: en-US, ru-RU
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [172.17.15.136]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <07FF37C53C3DCF49AB158AD5345BFABE@yadro.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Am Donnerstag, den 16.01.2020, 06:35 +0100 schrieb Lukas Wunner:
-> [cc += Stuart]
-> 
-> On Wed, Jan 15, 2020 at 12:24:29PM +0100, Lukas Wunner wrote:
-> > On Wed, Jan 15, 2020 at 11:26:26AM +0100, Oliver Neukum wrote:
-> > > I got a bug report about some systems generating an NMI and
-> > > subsequently crashing bisected down to 80696f991424d.
-> > > Apparently these systems do not react well to __pciehp_enable_slot
-> > > while no card is present. Restoring the check to __pciehp_enable_slot()
-> > > removed in 80696f991424d makes the current kernels work.
-> > 
-> > That's odd, these systems must be setting the Data Link Layer Link Active
-> > bit in the Link Status Register even though no card is present.
-> 
-> Recent PCIe versions allow turning off in-band presence detect, in which
-> case the DLLLA bit can be set even though Presence Detect is not set.
-> You may be dealing with one of those systems but without full dmesg
-> and lspci output this is just an educated guess.
-> 
-> A series was submitted by Dell last year to support disabling in-band
-> presence detect, but it hasn't been merged yet by Bjorn:
-> 
-> https://lore.kernel.org/linux-pci/20191025190047.38130-1-stuart.w.hayes@gmail.com/
-> 
-> You may want to try if that series helps.
-
-Hi,
-
-it has been tested and it does the job. May I ask whether you could
-ack it or propose necessary changes, so that we can proceed?
-
-	Regards
-		Oliver
-
+T24gRnJpLCAyMDIwLTAxLTMxIGF0IDE0OjI3IC0wNjAwLCBCam9ybiBIZWxnYWFzIHdyb3RlOg0K
+PiBPbiBGcmksIEphbiAzMSwgMjAyMCBhdCAwNjoxOTo0OFBNICswMDAwLCBTZXJnZWkgTWlyb3No
+bmljaGVua28NCj4gd3JvdGU6DQo+ID4gT24gVGh1LCAyMDIwLTAxLTMwIGF0IDE3OjUyIC0wNjAw
+LCBCam9ybiBIZWxnYWFzIHdyb3RlOg0KPiA+ID4gT24gV2VkLCBKYW4gMjksIDIwMjAgYXQgMDY6
+Mjk6MjdQTSArMDMwMCwgU2VyZ2VpIE1pcm9zaG5pY2hlbmtvDQo+ID4gPiB3cm90ZToNCj4gPiA+
+ID4gQkFScyBhbmQgYnJpZGdlIHdpbmRvd3MgYXJlIG9ubHkgYWxsb3dlZCB0byBiZSBhc3NpZ25l
+ZCB0bw0KPiA+ID4gPiB0aGVpcg0KPiA+ID4gPiBwYXJlbnQgYnVzJ3MgYnJpZGdlIHdpbmRvd3Ms
+IGdvaW5nIHVwIHRvIHRoZSByb290IGNvbXBsZXgncw0KPiA+ID4gPiByZXNvdXJjZXMuDQo+ID4g
+PiA+IFNvIGFkZGl0aW9uYWwgbGltaXRhdGlvbnMgb24gQkFSIGFkZHJlc3MgYXJlIG5vdCBuZWVk
+ZWQsIGFuZA0KPiA+ID4gPiB0aGUNCj4gPiA+ID4gUENJQklPU19NSU5fTUVNIGNhbiBiZSBpZ25v
+cmVkLg0KPiA+ID4gDQo+ID4gPiBUaGlzIGlzIHRoZW9yZXRpY2FsbHkgdHJ1ZSwgYnV0IEkgZG9u
+J3QgdGhpbmsgd2UgaGF2ZSByZWxpYWJsZQ0KPiA+ID4gaW5mb3JtYXRpb24gYWJvdXQgdGhlIGhv
+c3QgYnJpZGdlIHdpbmRvd3MgaW4gYWxsIGNhc2VzLCBzbw0KPiA+ID4gUENJQklPU19NSU5fTUVN
+L19JTyBpcyBzb21ldGhpbmcgb2YgYW4gYXBwcm94aW1hdGlvbi4NCj4gPiA+IA0KPiA+ID4gPiBC
+ZXNpZGVzLCB0aGUgdmFsdWUgb2YgUENJQklPU19NSU5fTUVNIHJlcG9ydGVkIGJ5IHRoZSBCSU9T
+IDEuMw0KPiA+ID4gPiBvbg0KPiA+ID4gPiBTdXBlcm1pY3JvIEgxMVNTTC1pIHZpYSBlODIwX19z
+ZXR1cF9wY2lfZ2FwKCk6DQo+ID4gPiA+IA0KPiA+ID4gPiAgIFttZW0gMHhlYmZmMTAwMC0weGZl
+OWZmZmZmXSBhdmFpbGFibGUgZm9yIFBDSSBkZXZpY2VzDQo+ID4gPiA+IA0KPiA+ID4gPiBpcyBv
+bmx5IHN1aXRhYmxlIGZvciBhIHNpbmdsZSBSQyBvdXQgb2YgZm91cjoNCj4gPiA+ID4gDQo+ID4g
+PiA+ICAgcGNpX2J1cyAwMDAwOjAwOiByb290IGJ1cyByZXNvdXJjZSBbbWVtIDB4ZWMwMDAwMDAt
+MHhlZmZmZmZmZg0KPiA+ID4gPiB3aW5kb3ddDQo+ID4gPiA+ICAgcGNpX2J1cyAwMDAwOjIwOiBy
+b290IGJ1cyByZXNvdXJjZSBbbWVtIDB4ZWI4MDAwMDAtMHhlYmVmZmZmZg0KPiA+ID4gPiB3aW5k
+b3ddDQo+ID4gPiA+ICAgcGNpX2J1cyAwMDAwOjQwOiByb290IGJ1cyByZXNvdXJjZSBbbWVtIDB4
+ZWIyMDAwMDAtMHhlYjVmZmZmZg0KPiA+ID4gPiB3aW5kb3ddDQo+ID4gPiA+ICAgcGNpX2J1cyAw
+MDAwOjYwOiByb290IGJ1cyByZXNvdXJjZSBbbWVtIDB4ZThiMDAwMDAtMHhlYWZmZmZmZg0KPiA+
+ID4gPiB3aW5kb3ddDQo+ID4gPiA+IA0KPiA+ID4gPiAsIHdoaWNoIG1ha2VzIHRoZSBBTUQgRVBZ
+QyA3MjUxIHVuYWJsZSB0byBib290IHdpdGggdGhpcw0KPiA+ID4gPiBtb3ZhYmxlDQo+ID4gPiA+
+IEJBUnMNCj4gPiA+ID4gcGF0Y2hzZXQuDQo+ID4gPiANCj4gPiA+IFNvbWV0aGluZydzIHdyb25n
+IGlmIHRoaXMgc3lzdGVtIGJvb3RlZCBiZWZvcmUgdGhpcyBwYXRjaCBzZXQgYnV0DQo+ID4gPiBu
+b3QNCj4gPiA+IGFmdGVyLiAgV2Ugc2hvdWxkbid0IGJlIGRvaW5nICphbnl0aGluZyogd2l0aCB0
+aGUgQkFScyB1bnRpbCB3ZQ0KPiA+ID4gbmVlZA0KPiA+ID4gdG8sIGkuZS4sIHVudGlsIHdlIGhv
+dC1hZGQgYSBkZXZpY2Ugd2hlcmUgd2UgaGF2ZSB0byBtb3ZlIHRoaW5ncw0KPiA+ID4gdG8NCj4g
+PiA+IGZpbmQgc3BhY2UgZm9yIGl0Lg0KPiA+IA0KPiA+IFRoZSBvbmUgYnJlYWtpbmcgYm9vdCBv
+biB0aGlzIHN5c3RlbSBpbml0aWFsbHkgd2FzIDE3LzI2IG9mIHRoaXMNCj4gPiBwYXRjaHNldDog
+IlBDSTogaG90cGx1ZzogSWdub3JlIHRoZSBNRU0gQkFSIG9mZnNldHMgZnJvbQ0KPiA+IEJJT1Mv
+Ym9vdGxvYWRlciINCj4gDQo+IEkgZG9uJ3QgdGhpbmsgdGhhdCBwYXRjaCBpcyBhIGdvb2QgaWRl
+YS4gIEkgdGhpbmsgd2Ugc2hvdWxkIHJlYWQgdGhlDQo+IGN1cnJlbnQgQkFScyBhbmQgd2luZG93
+cyBhdCBib290LXRpbWUgYW5kIGxlYXZlIHRoZW0gYWxvbmUgdW5sZXNzIHdlDQo+ICptdXN0KiBj
+aGFuZ2UgdGhlbS4gIEkgZG9uJ3QgdGhpbmsgd2Ugc2hvdWxkIGNoYW5nZSB0aGluZ3MNCj4gcHJl
+ZW1wdGl2ZWx5IHRvIG1ha2UgZnV0dXJlIGhvdHBsdWcgZXZlbnRzIGVhc2llci4NCj4gDQo+ID4g
+QmVmb3JlIGl0IHRoZSBrZXJuZWwganVzdCB0b29rIEJBUnMgcHJlLWFzc2lnbmVkIGJ5IEJJT1Mu
+IEluIHRoZQ0KPiA+IHNhbWUNCj4gPiB0aW1lLCB0aGUgc2FtZSBCSU9TIHJlcG9ydHMgMHhlYmZm
+MTAwMC0weGZlOWZmZmZmIGFzIGF2YWlsYWJsZSBmb3INCj4gPiBQQ0kNCj4gPiBkZXZpY2VzLCBi
+dXQgdGhlIHJlYWwgcm9vdCBicmlkZ2Ugd2luZG93cyBhcmUgMHhlOGIwMDAwMC0weGVmZmZmZmZm
+IA0KPiA+IGluDQo+ID4gdG90YWwgKGFuZCBhbHNvIDY0LWJpdCB3aW5kb3dzKSAtIHdoaWNoIGFy
+ZSBhbHNvIHJlcG9ydGVkIGJ5IHRoZQ0KPiA+IHNhbWUNCj4gPiBCSU9TLiBTbyB0aGUga2VybmVs
+IHdhcyBvbmx5IGFibGUgdG8gaGFuZGxlIHRoZSAweGVjMDAwMDAwLQ0KPiA+IDB4ZWZmZmZmZmYN
+Cj4gPiByb290IGJ1cy4NCj4gPiANCj4gPiBXaXRoIHRoYXQgcGF0Y2ggcmV2ZXJ0ZWQgdGhlIGtl
+cm5lbCB3YXMgYWJsZSB0byBib290LCBidXQgdW5hYmxlIHRvDQo+ID4gcmVzY2FuIC0gdG8gcmVh
+c3NpZ24gQkFScyBhY3R1YWxseS4NCj4gPiANCj4gPiA+IChBbmQgd2UgZG9uJ3Qgd2FudCBhIGJp
+c2VjdGlvbiBob2xlIHdoZXJlIHRoaXMgc3lzdGVtIGNhbid0IGJvb3QNCj4gPiA+IHVudGlsDQo+
+ID4gPiB0aGlzIHBhdGNoIGlzIGFwcGxpZWQsIGJ1dCBJIGFzc3VtZSB0aGF0J3Mgb2J2aW91cy4p
+DQo+ID4gPiANCj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogU2VyZ2VpIE1pcm9zaG5pY2hlbmtvIDwN
+Cj4gPiA+ID4gcy5taXJvc2huaWNoZW5rb0B5YWRyby5jb20+DQo+ID4gPiA+IC0tLQ0KPiA+ID4g
+PiAgZHJpdmVycy9wY2kvc2V0dXAtcmVzLmMgfCA1ICsrKy0tDQo+ID4gPiA+ICAxIGZpbGUgY2hh
+bmdlZCwgMyBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KPiA+ID4gPiANCj4gPiA+ID4g
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL3NldHVwLXJlcy5jIGIvZHJpdmVycy9wY2kvc2V0dXAt
+cmVzLmMNCj4gPiA+ID4gaW5kZXggYTdkODE4MTZkMWVhLi40MDQzYWFiMDIxZGQgMTAwNjQ0DQo+
+ID4gPiA+IC0tLSBhL2RyaXZlcnMvcGNpL3NldHVwLXJlcy5jDQo+ID4gPiA+ICsrKyBiL2RyaXZl
+cnMvcGNpL3NldHVwLXJlcy5jDQo+ID4gPiA+IEBAIC0yNDYsMTIgKzI0NiwxMyBAQCBzdGF0aWMg
+aW50IF9fcGNpX2Fzc2lnbl9yZXNvdXJjZShzdHJ1Y3QNCj4gPiA+ID4gcGNpX2J1cyAqYnVzLCBz
+dHJ1Y3QgcGNpX2RldiAqZGV2LA0KPiA+ID4gPiAgCQlpbnQgcmVzbm8sIHJlc291cmNlX3NpemVf
+dCBzaXplLA0KPiA+ID4gPiByZXNvdXJjZV9zaXplX3QgYWxpZ24pDQo+ID4gPiA+ICB7DQo+ID4g
+PiA+ICAJc3RydWN0IHJlc291cmNlICpyZXMgPSBkZXYtPnJlc291cmNlICsgcmVzbm87DQo+ID4g
+PiA+IC0JcmVzb3VyY2Vfc2l6ZV90IG1pbjsNCj4gPiA+ID4gKwlyZXNvdXJjZV9zaXplX3QgbWlu
+ID0gMDsNCj4gPiA+ID4gIAlpbnQgcmV0Ow0KPiA+ID4gPiAgCXJlc291cmNlX3NpemVfdCBzdGFy
+dCA9IChyZXNvdXJjZV9zaXplX3QpLTE7DQo+ID4gPiA+ICAJcmVzb3VyY2Vfc2l6ZV90IGVuZCA9
+IDA7DQo+ID4gPiA+ICANCj4gPiA+ID4gLQltaW4gPSAocmVzLT5mbGFncyAmIElPUkVTT1VSQ0Vf
+SU8pID8gUENJQklPU19NSU5fSU8gOg0KPiA+ID4gPiBQQ0lCSU9TX01JTl9NRU07DQo+ID4gPiA+
+ICsJaWYgKCFwY2lfY2FuX21vdmVfYmFycykNCj4gPiA+ID4gKwkJbWluID0gKHJlcy0+ZmxhZ3Mg
+JiBJT1JFU09VUkNFX0lPKSA/DQo+ID4gPiA+IFBDSUJJT1NfTUlOX0lPIDoNCj4gPiA+ID4gUENJ
+QklPU19NSU5fTUVNOw0KPiA+ID4gDQo+ID4gPiBJIGRvbid0IHVuZGVyc3RhbmQgdGhlIGNvbm5l
+Y3Rpb24gaGVyZS4gIFBDSUJJT1NfTUlOX01FTSBhbmQNCj4gPiA+IFBDSUJJT1NfTUlOX0lPIGFy
+ZSBiYXNpY2FsbHkgd2F5cyB0byBzYXkgIndlIGNhbid0IHB1dCBQQ0kNCj4gPiA+IHJlc291cmNl
+cw0KPiA+ID4gYmVsb3cgdGhpcyBhZGRyZXNzIi4NCj4gPiA+IA0KPiA+ID4gT24gQUNQSSBzeXN0
+ZW1zLCB0aGUgZGV2aWNlcyBpbiB0aGUgQUNQSSBuYW1lc3BhY2UgYXJlIHN1cHBvc2VkDQo+ID4g
+PiB0bw0KPiA+ID4gdGVsbCB0aGUgT1Mgd2hhdCByZXNvdXJjZXMgdGhleSB1c2UsIGFuZCBvYnZp
+b3VzbHkgdGhlIE9TIHNob3VsZA0KPiA+ID4gbm90DQo+ID4gPiBhc3NpZ24gdGhvc2UgcmVzb3Vy
+Y2VzIHRvIGFueXRoaW5nIGVsc2UuICBJZiBMaW51eCBoYW5kbGVkIGFsbA0KPiA+ID4gdGhvc2UN
+Cj4gPiA+IEFDUEkgcmVzb3VyY2VzIGNvcnJlY3RseSBhbmQgaW4gdGhlIGFic2VuY2Ugb2YgZmly
+bXdhcmUgZGVmZWN0cywNCj4gPiA+IHdlDQo+ID4gPiBzaG91bGRuJ3QgbmVlZCBQQ0lCSU9TX01J
+Tl9NRU0vX0lPIGF0IGFsbC4gIEJ1dCBuZWl0aGVyIG9mIHRob3NlDQo+ID4gPiBpcw0KPiA+ID4g
+Y3VycmVudGx5IHRydWUuDQo+ID4gPiANCj4gPiA+IEl0J3MgdHJ1ZSB0aGF0IHdlIHNob3VsZCBi
+ZSBzbWFydGVyIGFib3V0IFBDSUJJT1NfTUlOX01FTS9fSU8sDQo+ID4gPiBidXQgSQ0KPiA+ID4g
+ZG9uJ3QgdGhpbmsgdGhhdCBoYXMgYW55dGhpbmcgdG8gZG8gd2l0aCB3aGV0aGVyIHdlIHN1cHBv
+cnQNCj4gPiA+ICptb3ZpbmcqDQo+ID4gPiBCQVJzLiAgV2UgaGF2ZSB0byBhdm9pZCB0aGUgYWRk
+cmVzcyBzcGFjZSB0aGF0J3MgYWxyZWFkeSBpbiB1c2UNCj4gPiA+IGluDQo+ID4gPiAqYWxsKiBj
+YXNlcy4NCj4gPiANCj4gPiBUaGlzIGlzIGNvbm5lY3RlZCB0byB0aGUgYXBwcm9hY2ggb2YgdGhp
+cyBmZWF0dXJlOiByZWxlYXNpbmcsDQo+ID4gcmVjYWxjdWxhdGluZyBhbmQgcmVhc3NpZ25pbmcg
+dGhlIEJBUnMgYW5kIGJyaWRnZSB3aW5kb3dzLiBJZg0KPiA+IG1vdmFibGUNCj4gPiBCQVJzIGFy
+ZSBkaXNhYmxlZCwgdGhpcyBidWcgZG9lc24ndCByZXByb2R1Y2UuIEFuZCB0aGUgYnVnIGRvZXNu
+J3QNCj4gPiBsZXQNCj4gPiB0aGUgc3lzdGVtIGJvb3Qgd2hlbiBCQVJzIGFyZSBhbGxvd2VkIHRv
+IG1vdmUuIFRoYXQncyB3aHkgSSd2ZSB0aWVkDQo+ID4gdGhlc2UgdG9nZXRoZXIuDQo+IA0KPiBN
+eSBwb2ludCBpcyBqdXN0IHRoYXQgbG9naWNhbGx5IHRoaXMgaGFzIG5vdGhpbmcgdG8gZG8gd2l0
+aCBtb3ZhYmxlDQo+IEJBUnMuDQo+IA0KPiA+IFRoaXMgbGluZSBzZXR0aW5nIHRoZSAibWluIiB0
+byBQQ0lCSU9TX01JTl8qIGlzIHRoZXJlIHVudG91Y2hlZA0KPiA+IHNpbmNlDQo+ID4gdGhlIGZp
+cnN0IGtlcm5lbCBnaXQgY29tbWl0IGluIDIwMDUgLSBjb3VsZCBpdCBiZSB0aGF0IGFsbCBzeXN0
+ZW1zDQo+ID4gYXJlDQo+ID4ganVzdCBmaW5lIG5vdywgaGF2aW5nIHRoZWlyIHJvb3QgYnJpZGdl
+IHdpbmRvd3Mgc2V0IHVwIGNvcnJlY3RseT8NCj4gDQo+IEkgZG9uJ3QgdW5kZXJzdGFuZCB0aGUg
+cXVlc3Rpb24sIHNvcnJ5Lg0KPiANCg0KDQpJIG1lYW4sIGV2ZXJ5IEJBUiBhc3NpZ25lZCBoZXJl
+IGNhbid0IHJlc2lkZSBvdXRzaWRlIG9mIGEgaG9zdCBJTy9NRU0NCmJyaWRnZSB3aW5kb3csIHdo
+aWNoIGlzIGEgYnVzLT5yZXNvdXJjZVtuXSBzZXQgdXAgYnkgdGhlIHBsYXRmb3JtIGNvZGUsDQph
+bmQgdGhlaXIgLnN0YXJ0IGZpZWxkcyBhcmUgc2VlbWVkIHRvIGJlIGR1cGxpY2F0ZWQgYnkgdGhl
+DQpQQ0lCSU9TX01JTl8qIHZhbHVlcyAtIGZyb20gdGhlIHBsYXRmb3JtIGNvZGUgYXMgd2VsbC4g
+QnV0IHRoZSAuc3RhcnQNCmZpZWxkcyBhcmUgc2VlbSB0byBiZSBjb3JyZWN0IChhcmVuJ3QgdGhl
+eT8pLCBhbmQgdGhlIFBDSUJJT1NfTUlOXyoNCnZhbHVlcyBhcmUgc29tZXRpbWVzIGRlZmluaXRl
+bHkgbm90Lg0KDQpXaGF0IGNhbiBiZSBhIHJlbGlhYmxlIHRlc3QgdG8gY2hlY2sgaWYgUENJQklP
+U19NSU5fKiBhcmUgc2FmZSB0bw0KaWdub3JlIHVuY29uZGl0aW9uYWxseT8gQ291bGQgaXQgYmUg
+YSBzZXBhcmF0ZSBmbGFnIGluc3RlYWQgb2YgdGhlDQpwY2lfY2FuX21vdmVfYmFycyBoZXJlPw0K
+DQpXb3VsZCBpdCBiZSBmaW5lIGZvciBhIHN0YXJ0IHRvIGlnbm9yZSB0aGUgUENJQklPU19NSU5f
+KiBpZiBpdCBsaWVzDQpjb21wbGV0ZWx5IG91dHNpZGUgb2YgaG9zdCBicmlkZ2Ugd2luZG93cz8g
+U28gYXQgbGVhc3QgQU1EIEVQWUMgY2FuDQpvYnRhaW4gaXRzIGhvdHBsdWcgcG93ZXIuDQoNCkJl
+c3QgcmVnYXJkcywNClNlcmdlDQoNCj4gPiA+ID4gIAlpZiAocGNpX2Nhbl9tb3ZlX2JhcnMgJiYg
+ZGV2LT5zdWJvcmRpbmF0ZSAmJiByZXNubyA+PQ0KPiA+ID4gPiBQQ0lfQlJJREdFX1JFU09VUkNF
+Uykgew0KPiA+ID4gPiAgCQlzdHJ1Y3QgcGNpX2J1cyAqY2hpbGRfYnVzID0gZGV2LT5zdWJvcmRp
+bmF0ZTsNCj4gPiA+ID4gLS0gDQo+ID4gPiA+IDIuMjQuMQ0KPiA+ID4gPiANCg==
