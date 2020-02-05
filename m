@@ -2,197 +2,253 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D574D153544
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Feb 2020 17:32:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EF8EC153576
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Feb 2020 17:42:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbgBEQct (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 5 Feb 2020 11:32:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42042 "EHLO mail.kernel.org"
+        id S1727468AbgBEQm7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 5 Feb 2020 11:42:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727079AbgBEQct (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 5 Feb 2020 11:32:49 -0500
+        id S1726359AbgBEQm7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 5 Feb 2020 11:42:59 -0500
 Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AF7521741;
-        Wed,  5 Feb 2020 16:32:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74E2C218AC;
+        Wed,  5 Feb 2020 16:42:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580920368;
-        bh=sCuDbUD4jPn7b7s0t114aCP42GPaRxhtBp/0q9r7/Hg=;
+        s=default; t=1580920977;
+        bh=Ij2N/v6BAs4xhD/0CaP23N/8PXjhCD7yww5yVmsXsFs=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=m2xVi6SnQuXqdsWJPFXH7T+iq9WWVD4M9B14mNxoJh4aAzb7SNbUpthyQWFCWctJr
-         ompo6HV7r67OTc5gOzF28HvsDV5WvkC38swhoT4ZU12xVafVsYUkA1M49nW3Kz66Td
-         yMQmAW+FtyN/DEKlfQ80Cu6kFUmSX8j9qfX2SMEs=
-Date:   Wed, 5 Feb 2020 10:32:46 -0600
+        b=YE2F1raRg1RLYSd/WZJgtfGOsZgG9NU+3Wp7/DAGGtsY7Iag5As1pXrZl/1SyBO12
+         xey67AQL9KyQqMVzeEINJy0cynOdrj3mBwV6yJUCU9aS1qNl24cl1TW0svmcjcrE3b
+         AtEqnYhGgi5BZYk430LXZjxSR2SYdbgHKIdWARyY=
+Date:   Wed, 5 Feb 2020 10:42:56 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Sergei Miroshnichenko <s.miroshnichenko@yadro.com>
 Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "linux@yadro.com" <linux@yadro.com>, "sr@denx.de" <sr@denx.de>
-Subject: Re: [PATCH v7 16/26] PCI: Ignore PCIBIOS_MIN_MEM
-Message-ID: <20200205163246.GA201899@google.com>
+Subject: Re: [PATCH v7 17/26] PCI: hotplug: Ignore the MEM BAR offsets from
+ BIOS/bootloader
+Message-ID: <20200205164255.GA205474@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0efd322c37cc7a99beafc5bbf31b290db4fa4435.camel@yadro.com>
+In-Reply-To: <8d3dbb43dfc668b6e436fbcc78d63f14c88a056f.camel@yadro.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Feb 05, 2020 at 01:04:06PM +0000, Sergei Miroshnichenko wrote:
-> On Fri, 2020-01-31 at 14:27 -0600, Bjorn Helgaas wrote:
-> > On Fri, Jan 31, 2020 at 06:19:48PM +0000, Sergei Miroshnichenko
+On Wed, Feb 05, 2020 at 11:01:32AM +0000, Sergei Miroshnichenko wrote:
+> On Fri, 2020-01-31 at 14:31 -0600, Bjorn Helgaas wrote:
+> > On Wed, Jan 29, 2020 at 06:29:28PM +0300, Sergei Miroshnichenko
 > > wrote:
-> > > On Thu, 2020-01-30 at 17:52 -0600, Bjorn Helgaas wrote:
-> > > > On Wed, Jan 29, 2020 at 06:29:27PM +0300, Sergei Miroshnichenko
-> > > > wrote:
-> > > > > BARs and bridge windows are only allowed to be assigned to
-> > > > > their parent bus's bridge windows, going up to the root
-> > > > > complex's resources.  So additional limitations on BAR
-> > > > > address are not needed, and the PCIBIOS_MIN_MEM can be
-> > > > > ignored.
-> > > > 
-> > > > This is theoretically true, but I don't think we have reliable
-> > > > information about the host bridge windows in all cases, so
-> > > > PCIBIOS_MIN_MEM/_IO is something of an approximation.
-> > > > 
-> > > > > Besides, the value of PCIBIOS_MIN_MEM reported by the BIOS
-> > > > > 1.3 on Supermicro H11SSL-i via e820__setup_pci_gap():
-> > > > > 
-> > > > >   [mem 0xebff1000-0xfe9fffff] available for PCI devices
-> > > > > 
-> > > > > is only suitable for a single RC out of four:
-> > > > > 
-> > > > >   pci_bus 0000:00: root bus resource [mem 0xec000000-0xefffffff
-> > > > > window]
-> > > > >   pci_bus 0000:20: root bus resource [mem 0xeb800000-0xebefffff
-> > > > > window]
-> > > > >   pci_bus 0000:40: root bus resource [mem 0xeb200000-0xeb5fffff
-> > > > > window]
-> > > > >   pci_bus 0000:60: root bus resource [mem 0xe8b00000-0xeaffffff
-> > > > > window]
-> > > > > 
-> > > > > , which makes the AMD EPYC 7251 unable to boot with this
-> > > > > movable BARs patchset.
-> > > > 
-> > > > Something's wrong if this system booted before this patch set
-> > > > but not after.  We shouldn't be doing *anything* with the BARs
-> > > > until we need to, i.e., until we hot-add a device where we
-> > > > have to move things to find space for it.
+> > > BAR allocation by BIOS/UEFI/bootloader/firmware may be
+> > > non-optimal and it may even clash with the kernel's BAR
+> > > assignment algorithm.
 > > > 
-> > > The one breaking boot on this system initially was 17/26 of this
-> > > patchset: "PCI: hotplug: Ignore the MEM BAR offsets from
-> > > BIOS/bootloader"
-> > 
-> > I don't think that patch is a good idea.  I think we should read the
-> > current BARs and windows at boot-time and leave them alone unless we
-> > *must* change them.  I don't think we should change things
-> > preemptively to make future hotplug events easier.
-> > 
-> > > Before it the kernel just took BARs pre-assigned by BIOS. In the
-> > > same time, the same BIOS reports 0xebff1000-0xfe9fffff as
-> > > available for PCI devices, but the real root bridge windows are
-> > > 0xe8b00000-0xefffffff in total (and also 64-bit windows) - which
-> > > are also reported by the same BIOS. So the kernel was only able
-> > > to handle the 0xec000000- 0xefffffff root bus.
+> > > For example, sometimes BIOS doesn't reserve space for SR-IOV
+> > > BARs, and this bridge window can neither extend (blocked by
+> > > immovable BARs) nor move (the device itself is immovable).
 > > > 
-> > > With that patch reverted the kernel was able to boot, but unable to
-> > > rescan - to reassign BARs actually.
+> > > With this patch the kernel will use its own methods of BAR
+> > > allocating when possible, increasing the chances of successful
+> > > boot and hotplug.
 > > > 
-> > > > (And we don't want a bisection hole where this system can't
-> > > > boot until this patch is applied, but I assume that's
-> > > > obvious.)
-> > > > 
-> > > > > Signed-off-by: Sergei Miroshnichenko <
-> > > > > s.miroshnichenko@yadro.com>
-> > > > > ---
-> > > > >  drivers/pci/setup-res.c | 5 +++--
-> > > > >  1 file changed, 3 insertions(+), 2 deletions(-)
-> > > > > 
-> > > > > diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
-> > > > > index a7d81816d1ea..4043aab021dd 100644
-> > > > > --- a/drivers/pci/setup-res.c
-> > > > > +++ b/drivers/pci/setup-res.c
-> > > > > @@ -246,12 +246,13 @@ static int __pci_assign_resource(struct
-> > > > > pci_bus *bus, struct pci_dev *dev,
-> > > > >  		int resno, resource_size_t size,
-> > > > > resource_size_t align)
-> > > > >  {
-> > > > >  	struct resource *res = dev->resource + resno;
-> > > > > -	resource_size_t min;
-> > > > > +	resource_size_t min = 0;
-> > > > >  	int ret;
-> > > > >  	resource_size_t start = (resource_size_t)-1;
-> > > > >  	resource_size_t end = 0;
-> > > > >  
-> > > > > -	min = (res->flags & IORESOURCE_IO) ? PCIBIOS_MIN_IO :
-> > > > > PCIBIOS_MIN_MEM;
-> > > > > +	if (!pci_can_move_bars)
-> > > > > +		min = (res->flags & IORESOURCE_IO) ?
-> > > > > PCIBIOS_MIN_IO :
-> > > > > PCIBIOS_MIN_MEM;
-> > > > 
-> > > > I don't understand the connection here.  PCIBIOS_MIN_MEM and
-> > > > PCIBIOS_MIN_IO are basically ways to say "we can't put PCI
-> > > > resources below this address".
-> > > > 
-> > > > On ACPI systems, the devices in the ACPI namespace are
-> > > > supposed to tell the OS what resources they use, and obviously
-> > > > the OS should not assign those resources to anything else.  If
-> > > > Linux handled all those ACPI resources correctly and in the
-> > > > absence of firmware defects, we shouldn't need
-> > > > PCIBIOS_MIN_MEM/_IO at all.  But neither of those is currently
-> > > > true.
-> > > > 
-> > > > It's true that we should be smarter about PCIBIOS_MIN_MEM/_IO,
-> > > > but I don't think that has anything to do with whether we
-> > > > support *moving* BARs.  We have to avoid the address space
-> > > > that's already in use in *all* cases.
+> > > Signed-off-by: Sergei Miroshnichenko <s.miroshnichenko@yadro.com>
+> > > ---
+> > >  drivers/pci/probe.c | 16 ++++++++++++++--
+> > >  1 file changed, 14 insertions(+), 2 deletions(-)
 > > > 
-> > > This is connected to the approach of this feature: releasing,
-> > > recalculating and reassigning the BARs and bridge windows. If
-> > > movable BARs are disabled, this bug doesn't reproduce. And the
-> > > bug doesn't let the system boot when BARs are allowed to move.
-> > > That's why I've tied these together.
+> > > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> > > index bb584038d5b4..f8f643dac6d1 100644
+> > > --- a/drivers/pci/probe.c
+> > > +++ b/drivers/pci/probe.c
+> > > @@ -306,6 +306,14 @@ int __pci_read_base(struct pci_dev *dev, enum
+> > > pci_bar_type type,
+> > >  			 pos, (unsigned long long)region.start);
+> > >  	}
+> > >  
+> > > +	if (pci_can_move_bars && res->start && !(res->flags &
+> > > IORESOURCE_IO)) {
+> > > +		pci_warn(dev, "ignore the current offset of BAR %llx-
+> > > %llx\n",
+> > > +			 l64, l64 + sz64 - 1);
+> > > +		res->start = 0;
+> > > +		res->end = sz64 - 1;
+> > > +		res->flags |= IORESOURCE_SIZEALIGN;
+> > > +	}
+> > > +
+> > >  	goto out;
+> > >  
+> > >  
+> > > @@ -528,8 +536,10 @@ void pci_read_bridge_bases(struct pci_bus
+> > > *child)
+> > >  		child->resource[i] = &dev-
+> > > >resource[PCI_BRIDGE_RESOURCES+i];
+> > >  
+> > >  	pci_read_bridge_io(child);
+> > > -	pci_read_bridge_mmio(child);
+> > > -	pci_read_bridge_mmio_pref(child);
+> > > +	if (!pci_can_move_bars) {
+> > > +		pci_read_bridge_mmio(child);
+> > > +		pci_read_bridge_mmio_pref(child);
+> > > +	}
 > > 
-> > My point is just that logically this has nothing to do with
-> > movable BARs.
+> > I mentioned this in another response, but I'll repeat it here to
+> > comment on the code directly: I don't think we should have feature
+> > tests like this "!pci_can_move_bars" scattered around, and I don't
+> > want basic behaviors like reading bridge windows during enumeration
+> > to
+> > depend on it.
 > > 
-> > > This line setting the "min" to PCIBIOS_MIN_* is there untouched
-> > > since the first kernel git commit in 2005 - could it be that all
-> > > systems are just fine now, having their root bridge windows set
-> > > up correctly?
-> > 
-> > I don't understand the question, sorry.
+> > There's no obvious reason why we should ignore bridge windows if we
+> > support movable BARs.
 > 
-> I mean, every BAR assigned here can't reside outside of a host
-> IO/MEM bridge window, which is a bus->resource[n] set up by the
-> platform code, and their .start fields are seemed to be duplicated
-> by the PCIBIOS_MIN_* values - from the platform code as well. But
-> the .start fields are seem to be correct (aren't they?), and the
-> PCIBIOS_MIN_* values are sometimes definitely not.
+> That patch solves a problem which is non-fatal during boot, but is
+> breaking this whole patchset when trying a PCI rescan. On a specific
+> machine we have a popular i350 network card:
 > 
-> What can be a reliable test to check if PCIBIOS_MIN_* are safe to
-> ignore unconditionally? Could it be a separate flag instead of the
-> pci_can_move_bars here?
+> $ lspci -tv
+> -[0000:00]-...
+>            +-01.1-[02]--+-00.0  Intel Corporation I350 Gigabit Network
+> Connection
+>            |            +-00.1  Intel Corporation I350 Gigabit Network
+> Connection
+>            |            +-00.2  Intel Corporation I350 Gigabit Network
+> Connection
+>            |            \-00.3  Intel Corporation I350 Gigabit Network
+> Connection
 > 
-> Would it be fine for a start to ignore the PCIBIOS_MIN_* if it lies
-> completely outside of host bridge windows? So at least AMD EPYC can
-> obtain its hotplug power.
+> On the "ROG STRIX Z370-F GAMING, BIOS 0612 03/01/2018" motherboard and
+> vanilla kernel, not every BAR is allocated:
+> 
+> $ dmesg -t
+>   ...
+>   pci 0000:00:01.0: PCI bridge to [bus 01]
+>   pci 0000:00:01.0:   bridge window [mem 0xf7700000-0xf78fffff]
+>   pci 0000:02:00.0: BAR 7: assigned [mem 0xf7490000-0xf74affff]
+>   pci 0000:02:00.0: BAR 10: assigned [mem 0xf74b0000-0xf74cffff]
+>   pci 0000:02:00.1: BAR 7: assigned [mem 0xf74d0000-0xf74effff]
+>   pci 0000:02:00.1: BAR 10: no space for [mem size 0x00020000]
+>   pci 0000:02:00.1: BAR 10: failed to assign [mem size 0x00020000]
+>   pci 0000:02:00.2: BAR 7: no space for [mem size 0x00020000]
+>   pci 0000:02:00.2: BAR 7: failed to assign [mem size 0x00020000]
+>   pci 0000:02:00.2: BAR 10: no space for [mem size 0x00020000]
+>   pci 0000:02:00.2: BAR 10: failed to assign [mem size 0x00020000]
+>   pci 0000:02:00.3: BAR 7: no space for [mem size 0x00020000]
+>   pci 0000:02:00.3: BAR 7: failed to assign [mem size 0x00020000]
+>   pci 0000:02:00.3: BAR 10: no space for [mem size 0x00020000]
+>   pci 0000:02:00.3: BAR 10: failed to assign [mem size 0x00020000]
+>   pci 0000:00:01.1: PCI bridge to [bus 02]
+> 
+> $ sudo cat /proc/iomem
+>   ...
+>   f7000000-f74fffff : PCI Bus 0000:02
+>     f7000000-f70fffff : 0000:02:00.3
+>       f7000000-f70fffff : igb
+>     f7100000-f71fffff : 0000:02:00.2
+>       f7100000-f71fffff : igb
+>     f7200000-f72fffff : 0000:02:00.1
+>       f7200000-f72fffff : igb
+>     f7300000-f73fffff : 0000:02:00.0
+>       f7300000-f73fffff : igb
+>     f7400000-f747ffff : 0000:02:00.0
+>     f7480000-f7483fff : 0000:02:00.3
+>       f7480000-f7483fff : igb
+>     f7484000-f7487fff : 0000:02:00.2
+>       f7484000-f7487fff : igb
+>     f7488000-f748bfff : 0000:02:00.1
+>       f7488000-f748bfff : igb
+>     f748c000-f748ffff : 0000:02:00.0
+>       f748c000-f748ffff : igb
+>     f7490000-f74affff : 0000:02:00.0
+>     f74b0000-f74cffff : 0000:02:00.0
+>     f74d0000-f74effff : 0000:02:00.1
+> 
+> But when allowing the kernel to allocate BARs properly, the map is
+> full:
+> 
+>   c8200000-c87fffff : PCI Bus 0000:02
+>     c8200000-c82fffff : 0000:02:00.0
+>       c8200000-c82fffff : igb
+>     c8300000-c83fffff : 0000:02:00.1
+>       c8300000-c83fffff : igb
+>     c8400000-c84fffff : 0000:02:00.2
+>       c8400000-c84fffff : igb
+>     c8500000-c85fffff : 0000:02:00.3
+>       c8500000-c85fffff : igb
+>     c8600000-c867ffff : 0000:02:00.0
+>     c8680000-c8683fff : 0000:02:00.0
+>       c8680000-c8683fff : igb
+>     c8684000-c86a3fff : 0000:02:00.0
+>     c86a4000-c86c3fff : 0000:02:00.0
+>     c86c4000-c86c7fff : 0000:02:00.1
+>       c86c4000-c86c7fff : igb
+>     c86c8000-c86e7fff : 0000:02:00.1
+>     c86e8000-c8707fff : 0000:02:00.1
+>     c8708000-c870bfff : 0000:02:00.2
+>       c8708000-c870bfff : igb
+>     c870c000-c872bfff : 0000:02:00.2
+>     c872c000-c874bfff : 0000:02:00.2
+>     c874c000-c874ffff : 0000:02:00.3
+>       c874c000-c874ffff : igb
+>     c8750000-c876ffff : 0000:02:00.3
+>     c8770000-c878ffff : 0000:02:00.3
+> 
+> In this particular case the "repaired" BARs are not vital and are not
+> used by the igb driver, but in general such behavior of BIOS can lead
+> to a non-working setup.
+> 
+> So ignoring pre-set BARs and bridge windows may be useful on its own,
+> but it is also provides a working starting point required by this
+> patchset, otherwise it will need to track such BARs impossible to
+> assign, and don't try to assign them during a next PCI rescan.
+> 
+> The reason I've tied this feature to the "movable BARs" flag is that I
+> know at least one exception demanding a workaround - VGA. So I wanted
+> to provide a flag to disable it in case of other unforeseen
+> consequences, and the only feature depends on this - is movable BARs.
 
-PCIBIOS_MIN_* has a long history and it touches every arch, so you'd
-have to make sure this is safe for all of them.
+If we need exceptions for broken or legacy devices, we should check
+for those explicitly.
 
-On x86, PCIBIOS_MIN_MEM is computed from the e820 memory map and is
-basically a guess because the e820 map is only incidentally related to
-ACPI device resource usage.  I could imagine making the x86
-computation smarter by looking at the PNP0A03/PNP0A08 _CRS
-information.
+If we fail to assign some BARs at boot, I think it's reasonable to try
+to reassign things before drivers claim the devices.  But support for
+that should be in a reassignment path, not in the general enumeration
+path.  And, since drivers aren't involved yet, it probably doesn't
+even depend on pci_can_move_bars.
 
-> > > > >  	if (pci_can_move_bars && dev->subordinate && resno >=
-> > > > > PCI_BRIDGE_RESOURCES) {
-> > > > >  		struct pci_bus *child_bus = dev->subordinate;
-> > > > > -- 
-> > > > > 2.24.1
-> > > > > 
+> The [07/26] "PCI: hotplug: Don't allow hot-added devices to steal
+> resources" patch introduces an additional step in BAR assignment:
+>  - try to assign every existing BAR + BARs of the hot-added device;
+>  - it if fails, disable BARs for the hot-added device and retry without
+>    them.
+> 
+> A possible way to work-around non-working BARs could be adding more
+> steps:
+>  - first try to assign every existing BAR + BARs not worked previously
+>    + "hot-added" BARs;
+>  - if it fails, retry without those BARs which weren't working before;
+>  - if it still fails, retry without "hot-added" BARs.
+> 
+> Best regards,
+> Serge
+> 
+> > >  	if (dev->transparent) {
+> > >  		pci_bus_for_each_resource(child->parent, res, i) {
+> > > @@ -2945,6 +2955,8 @@ int pci_host_probe(struct pci_host_bridge
+> > > *bridge)
+> > >  		pci_bus_claim_resources(bus);
+> > >  	} else {
+> > >  		pci_bus_size_bridges(bus);
+> > > +		if (pci_can_move_bars)
+> > > +			pci_bus_update_realloc_range(bus);
+> > >  		pci_bus_assign_resources(bus);
+> > >  
+> > >  		list_for_each_entry(child, &bus->children, node)
+> > > -- 
+> > > 2.24.1
+> > > 
