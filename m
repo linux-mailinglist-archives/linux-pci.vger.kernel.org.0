@@ -2,202 +2,72 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 74A93152993
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Feb 2020 12:01:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 18BB0153073
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Feb 2020 13:15:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727562AbgBELBg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 5 Feb 2020 06:01:36 -0500
-Received: from mta-02.yadro.com ([89.207.88.252]:43318 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727170AbgBELBg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 5 Feb 2020 06:01:36 -0500
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 3C4E84799C;
-        Wed,  5 Feb 2020 11:01:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        mime-version:content-transfer-encoding:content-id:content-type
-        :content-type:content-language:accept-language:in-reply-to
-        :references:message-id:date:date:subject:subject:from:from
-        :received:received:received:received; s=mta-01; t=1580900492; x=
-        1582714893; bh=lguqsFYq5mjb++Ec048hEzxT0EW0hT9oKjT3QgHrYBk=; b=m
-        xrgZFGNdG+QUo+TRkPqzjWhuTc9sKhtZzZHZWDbsvx0Zl8JRHMiFnaidUA0WK+sh
-        YMosyvvrF7rzESzs+hmWtiDCVJSDWVCwSydTbejq4AHMqtCuaBOsI70TCd5VCyfd
-        GoCgiAnvLK1whrPhztv+6beTwM+JCTj83Yb9s/6j3Y=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 8XiLw55E56sC; Wed,  5 Feb 2020 14:01:32 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id B39F84799A;
-        Wed,  5 Feb 2020 14:01:32 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (172.17.10.102) by
- T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.669.32; Wed, 5 Feb 2020 14:01:32 +0300
-Received: from T-EXCH-02.corp.yadro.com ([fe80::19dd:9b61:5447:ff23]) by
- T-EXCH-02.corp.yadro.com ([fe80::19dd:9b61:5447:ff23%14]) with mapi id
- 15.01.0669.032; Wed, 5 Feb 2020 14:01:32 +0300
-From:   Sergei Miroshnichenko <s.miroshnichenko@yadro.com>
-To:     "helgaas@kernel.org" <helgaas@kernel.org>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux@yadro.com" <linux@yadro.com>, "sr@denx.de" <sr@denx.de>
-Subject: Re: [PATCH v7 17/26] PCI: hotplug: Ignore the MEM BAR offsets from
- BIOS/bootloader
-Thread-Topic: [PATCH v7 17/26] PCI: hotplug: Ignore the MEM BAR offsets from
- BIOS/bootloader
-Thread-Index: AQHV1rj4TQ3rG+CXGUGwSRfB02iao6gFCxoAgAc8Z4A=
-Date:   Wed, 5 Feb 2020 11:01:32 +0000
-Message-ID: <8d3dbb43dfc668b6e436fbcc78d63f14c88a056f.camel@yadro.com>
-References: <20200131203130.GA89598@google.com>
-In-Reply-To: <20200131203130.GA89598@google.com>
-Accept-Language: en-US, ru-RU
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [172.17.15.136]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <604F9D45C002AA45B4135ED6FF9FB82F@yadro.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+        id S1726748AbgBEMPb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 5 Feb 2020 07:15:31 -0500
+Received: from mx2.suse.de ([195.135.220.15]:47212 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726575AbgBEMPb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 5 Feb 2020 07:15:31 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 81B68ACC6;
+        Wed,  5 Feb 2020 12:15:29 +0000 (UTC)
+Message-ID: <1580904900.9756.9.camel@suse.com>
+Subject: Re: system generating an NMI due to 80696f991424d ("PCI: pciehp:
+ Tolerate Presence Detect hardwired to zero")
+From:   Oliver Neukum <oneukum@suse.com>
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     David Yang <mmyangfl@gmail.com>, Rajat Jain <rajatja@google.com>,
+        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
+        Stuart Hayes <stuart.w.hayes@gmail.com>
+Date:   Wed, 05 Feb 2020 13:15:00 +0100
+In-Reply-To: <20200116053500.chp4rsbeflg3qrdr@wunner.de>
+References: <1579083986.15925.31.camel@suse.com>
+         <20200115112429.yrj5v2zhvxkoupbw@wunner.de>
+         <20200116053500.chp4rsbeflg3qrdr@wunner.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTAxLTMxIGF0IDE0OjMxIC0wNjAwLCBCam9ybiBIZWxnYWFzIHdyb3RlOg0K
-PiBPbiBXZWQsIEphbiAyOSwgMjAyMCBhdCAwNjoyOToyOFBNICswMzAwLCBTZXJnZWkgTWlyb3No
-bmljaGVua28NCj4gd3JvdGU6DQo+ID4gQkFSIGFsbG9jYXRpb24gYnkgQklPUy9VRUZJL2Jvb3Rs
-b2FkZXIvZmlybXdhcmUgbWF5IGJlIG5vbi1vcHRpbWFsDQo+ID4gYW5kDQo+ID4gaXQgbWF5IGV2
-ZW4gY2xhc2ggd2l0aCB0aGUga2VybmVsJ3MgQkFSIGFzc2lnbm1lbnQgYWxnb3JpdGhtLg0KPiA+
-IA0KPiA+IEZvciBleGFtcGxlLCBzb21ldGltZXMgQklPUyBkb2Vzbid0IHJlc2VydmUgc3BhY2Ug
-Zm9yIFNSLUlPViBCQVJzLA0KPiA+IGFuZA0KPiA+IHRoaXMgYnJpZGdlIHdpbmRvdyBjYW4gbmVp
-dGhlciBleHRlbmQgKGJsb2NrZWQgYnkgaW1tb3ZhYmxlIEJBUnMpDQo+ID4gbm9yDQo+ID4gbW92
-ZSAodGhlIGRldmljZSBpdHNlbGYgaXMgaW1tb3ZhYmxlKS4NCj4gPiANCj4gPiBXaXRoIHRoaXMg
-cGF0Y2ggdGhlIGtlcm5lbCB3aWxsIHVzZSBpdHMgb3duIG1ldGhvZHMgb2YgQkFSDQo+ID4gYWxs
-b2NhdGluZw0KPiA+IHdoZW4gcG9zc2libGUsIGluY3JlYXNpbmcgdGhlIGNoYW5jZXMgb2Ygc3Vj
-Y2Vzc2Z1bCBib290IGFuZA0KPiA+IGhvdHBsdWcuDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTog
-U2VyZ2VpIE1pcm9zaG5pY2hlbmtvIDxzLm1pcm9zaG5pY2hlbmtvQHlhZHJvLmNvbT4NCj4gPiAt
-LS0NCj4gPiAgZHJpdmVycy9wY2kvcHJvYmUuYyB8IDE2ICsrKysrKysrKysrKysrLS0NCj4gPiAg
-MSBmaWxlIGNoYW5nZWQsIDE0IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+ID4gDQo+
-ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL3Byb2JlLmMgYi9kcml2ZXJzL3BjaS9wcm9iZS5j
-DQo+ID4gaW5kZXggYmI1ODQwMzhkNWI0Li5mOGY2NDNkYWM2ZDEgMTAwNjQ0DQo+ID4gLS0tIGEv
-ZHJpdmVycy9wY2kvcHJvYmUuYw0KPiA+ICsrKyBiL2RyaXZlcnMvcGNpL3Byb2JlLmMNCj4gPiBA
-QCAtMzA2LDYgKzMwNiwxNCBAQCBpbnQgX19wY2lfcmVhZF9iYXNlKHN0cnVjdCBwY2lfZGV2ICpk
-ZXYsIGVudW0NCj4gPiBwY2lfYmFyX3R5cGUgdHlwZSwNCj4gPiAgCQkJIHBvcywgKHVuc2lnbmVk
-IGxvbmcgbG9uZylyZWdpb24uc3RhcnQpOw0KPiA+ICAJfQ0KPiA+ICANCj4gPiArCWlmIChwY2lf
-Y2FuX21vdmVfYmFycyAmJiByZXMtPnN0YXJ0ICYmICEocmVzLT5mbGFncyAmDQo+ID4gSU9SRVNP
-VVJDRV9JTykpIHsNCj4gPiArCQlwY2lfd2FybihkZXYsICJpZ25vcmUgdGhlIGN1cnJlbnQgb2Zm
-c2V0IG9mIEJBUiAlbGx4LQ0KPiA+ICVsbHhcbiIsDQo+ID4gKwkJCSBsNjQsIGw2NCArIHN6NjQg
-LSAxKTsNCj4gPiArCQlyZXMtPnN0YXJ0ID0gMDsNCj4gPiArCQlyZXMtPmVuZCA9IHN6NjQgLSAx
-Ow0KPiA+ICsJCXJlcy0+ZmxhZ3MgfD0gSU9SRVNPVVJDRV9TSVpFQUxJR047DQo+ID4gKwl9DQo+
-ID4gKw0KPiA+ICAJZ290byBvdXQ7DQo+ID4gIA0KPiA+ICANCj4gPiBAQCAtNTI4LDggKzUzNiwx
-MCBAQCB2b2lkIHBjaV9yZWFkX2JyaWRnZV9iYXNlcyhzdHJ1Y3QgcGNpX2J1cw0KPiA+ICpjaGls
-ZCkNCj4gPiAgCQljaGlsZC0+cmVzb3VyY2VbaV0gPSAmZGV2LQ0KPiA+ID5yZXNvdXJjZVtQQ0lf
-QlJJREdFX1JFU09VUkNFUytpXTsNCj4gPiAgDQo+ID4gIAlwY2lfcmVhZF9icmlkZ2VfaW8oY2hp
-bGQpOw0KPiA+IC0JcGNpX3JlYWRfYnJpZGdlX21taW8oY2hpbGQpOw0KPiA+IC0JcGNpX3JlYWRf
-YnJpZGdlX21taW9fcHJlZihjaGlsZCk7DQo+ID4gKwlpZiAoIXBjaV9jYW5fbW92ZV9iYXJzKSB7
-DQo+ID4gKwkJcGNpX3JlYWRfYnJpZGdlX21taW8oY2hpbGQpOw0KPiA+ICsJCXBjaV9yZWFkX2Jy
-aWRnZV9tbWlvX3ByZWYoY2hpbGQpOw0KPiA+ICsJfQ0KPiANCj4gSSBtZW50aW9uZWQgdGhpcyBp
-biBhbm90aGVyIHJlc3BvbnNlLCBidXQgSSdsbCByZXBlYXQgaXQgaGVyZSB0bw0KPiBjb21tZW50
-IG9uIHRoZSBjb2RlIGRpcmVjdGx5OiBJIGRvbid0IHRoaW5rIHdlIHNob3VsZCBoYXZlIGZlYXR1
-cmUNCj4gdGVzdHMgbGlrZSB0aGlzICIhcGNpX2Nhbl9tb3ZlX2JhcnMiIHNjYXR0ZXJlZCBhcm91
-bmQsIGFuZCBJIGRvbid0DQo+IHdhbnQgYmFzaWMgYmVoYXZpb3JzIGxpa2UgcmVhZGluZyBicmlk
-Z2Ugd2luZG93cyBkdXJpbmcgZW51bWVyYXRpb24NCj4gdG8NCj4gZGVwZW5kIG9uIGl0Lg0KPiAN
-Cj4gVGhlcmUncyBubyBvYnZpb3VzIHJlYXNvbiB3aHkgd2Ugc2hvdWxkIGlnbm9yZSBicmlkZ2Ug
-d2luZG93cyBpZiB3ZQ0KPiBzdXBwb3J0IG1vdmFibGUgQkFScy4NCj4gDQoNCg0KVGhhdCBwYXRj
-aCBzb2x2ZXMgYSBwcm9ibGVtIHdoaWNoIGlzIG5vbi1mYXRhbCBkdXJpbmcgYm9vdCwgYnV0IGlz
-DQpicmVha2luZyB0aGlzIHdob2xlIHBhdGNoc2V0IHdoZW4gdHJ5aW5nIGEgUENJIHJlc2Nhbi4g
-T24gYSBzcGVjaWZpYw0KbWFjaGluZSB3ZSBoYXZlIGEgcG9wdWxhciBpMzUwIG5ldHdvcmsgY2Fy
-ZDoNCg0KJCBsc3BjaSAtdHYNCi1bMDAwMDowMF0tLi4uDQogICAgICAgICAgICstMDEuMS1bMDJd
-LS0rLTAwLjAgIEludGVsIENvcnBvcmF0aW9uIEkzNTAgR2lnYWJpdCBOZXR3b3JrDQpDb25uZWN0
-aW9uDQogICAgICAgICAgIHwgICAgICAgICAgICArLTAwLjEgIEludGVsIENvcnBvcmF0aW9uIEkz
-NTAgR2lnYWJpdCBOZXR3b3JrDQpDb25uZWN0aW9uDQogICAgICAgICAgIHwgICAgICAgICAgICAr
-LTAwLjIgIEludGVsIENvcnBvcmF0aW9uIEkzNTAgR2lnYWJpdCBOZXR3b3JrDQpDb25uZWN0aW9u
-DQogICAgICAgICAgIHwgICAgICAgICAgICBcLTAwLjMgIEludGVsIENvcnBvcmF0aW9uIEkzNTAg
-R2lnYWJpdCBOZXR3b3JrDQpDb25uZWN0aW9uDQoNCk9uIHRoZSAiUk9HIFNUUklYIFozNzAtRiBH
-QU1JTkcsIEJJT1MgMDYxMiAwMy8wMS8yMDE4IiBtb3RoZXJib2FyZCBhbmQNCnZhbmlsbGEga2Vy
-bmVsLCBub3QgZXZlcnkgQkFSIGlzIGFsbG9jYXRlZDoNCg0KJCBkbWVzZyAtdA0KICAuLi4NCiAg
-cGNpIDAwMDA6MDA6MDEuMDogUENJIGJyaWRnZSB0byBbYnVzIDAxXQ0KICBwY2kgMDAwMDowMDow
-MS4wOiAgIGJyaWRnZSB3aW5kb3cgW21lbSAweGY3NzAwMDAwLTB4Zjc4ZmZmZmZdDQogIHBjaSAw
-MDAwOjAyOjAwLjA6IEJBUiA3OiBhc3NpZ25lZCBbbWVtIDB4Zjc0OTAwMDAtMHhmNzRhZmZmZl0N
-CiAgcGNpIDAwMDA6MDI6MDAuMDogQkFSIDEwOiBhc3NpZ25lZCBbbWVtIDB4Zjc0YjAwMDAtMHhm
-NzRjZmZmZl0NCiAgcGNpIDAwMDA6MDI6MDAuMTogQkFSIDc6IGFzc2lnbmVkIFttZW0gMHhmNzRk
-MDAwMC0weGY3NGVmZmZmXQ0KICBwY2kgMDAwMDowMjowMC4xOiBCQVIgMTA6IG5vIHNwYWNlIGZv
-ciBbbWVtIHNpemUgMHgwMDAyMDAwMF0NCiAgcGNpIDAwMDA6MDI6MDAuMTogQkFSIDEwOiBmYWls
-ZWQgdG8gYXNzaWduIFttZW0gc2l6ZSAweDAwMDIwMDAwXQ0KICBwY2kgMDAwMDowMjowMC4yOiBC
-QVIgNzogbm8gc3BhY2UgZm9yIFttZW0gc2l6ZSAweDAwMDIwMDAwXQ0KICBwY2kgMDAwMDowMjow
-MC4yOiBCQVIgNzogZmFpbGVkIHRvIGFzc2lnbiBbbWVtIHNpemUgMHgwMDAyMDAwMF0NCiAgcGNp
-IDAwMDA6MDI6MDAuMjogQkFSIDEwOiBubyBzcGFjZSBmb3IgW21lbSBzaXplIDB4MDAwMjAwMDBd
-DQogIHBjaSAwMDAwOjAyOjAwLjI6IEJBUiAxMDogZmFpbGVkIHRvIGFzc2lnbiBbbWVtIHNpemUg
-MHgwMDAyMDAwMF0NCiAgcGNpIDAwMDA6MDI6MDAuMzogQkFSIDc6IG5vIHNwYWNlIGZvciBbbWVt
-IHNpemUgMHgwMDAyMDAwMF0NCiAgcGNpIDAwMDA6MDI6MDAuMzogQkFSIDc6IGZhaWxlZCB0byBh
-c3NpZ24gW21lbSBzaXplIDB4MDAwMjAwMDBdDQogIHBjaSAwMDAwOjAyOjAwLjM6IEJBUiAxMDog
-bm8gc3BhY2UgZm9yIFttZW0gc2l6ZSAweDAwMDIwMDAwXQ0KICBwY2kgMDAwMDowMjowMC4zOiBC
-QVIgMTA6IGZhaWxlZCB0byBhc3NpZ24gW21lbSBzaXplIDB4MDAwMjAwMDBdDQogIHBjaSAwMDAw
-OjAwOjAxLjE6IFBDSSBicmlkZ2UgdG8gW2J1cyAwMl0NCg0KJCBzdWRvIGNhdCAvcHJvYy9pb21l
-bQ0KICAuLi4NCiAgZjcwMDAwMDAtZjc0ZmZmZmYgOiBQQ0kgQnVzIDAwMDA6MDINCiAgICBmNzAw
-MDAwMC1mNzBmZmZmZiA6IDAwMDA6MDI6MDAuMw0KICAgICAgZjcwMDAwMDAtZjcwZmZmZmYgOiBp
-Z2INCiAgICBmNzEwMDAwMC1mNzFmZmZmZiA6IDAwMDA6MDI6MDAuMg0KICAgICAgZjcxMDAwMDAt
-ZjcxZmZmZmYgOiBpZ2INCiAgICBmNzIwMDAwMC1mNzJmZmZmZiA6IDAwMDA6MDI6MDAuMQ0KICAg
-ICAgZjcyMDAwMDAtZjcyZmZmZmYgOiBpZ2INCiAgICBmNzMwMDAwMC1mNzNmZmZmZiA6IDAwMDA6
-MDI6MDAuMA0KICAgICAgZjczMDAwMDAtZjczZmZmZmYgOiBpZ2INCiAgICBmNzQwMDAwMC1mNzQ3
-ZmZmZiA6IDAwMDA6MDI6MDAuMA0KICAgIGY3NDgwMDAwLWY3NDgzZmZmIDogMDAwMDowMjowMC4z
-DQogICAgICBmNzQ4MDAwMC1mNzQ4M2ZmZiA6IGlnYg0KICAgIGY3NDg0MDAwLWY3NDg3ZmZmIDog
-MDAwMDowMjowMC4yDQogICAgICBmNzQ4NDAwMC1mNzQ4N2ZmZiA6IGlnYg0KICAgIGY3NDg4MDAw
-LWY3NDhiZmZmIDogMDAwMDowMjowMC4xDQogICAgICBmNzQ4ODAwMC1mNzQ4YmZmZiA6IGlnYg0K
-ICAgIGY3NDhjMDAwLWY3NDhmZmZmIDogMDAwMDowMjowMC4wDQogICAgICBmNzQ4YzAwMC1mNzQ4
-ZmZmZiA6IGlnYg0KICAgIGY3NDkwMDAwLWY3NGFmZmZmIDogMDAwMDowMjowMC4wDQogICAgZjc0
-YjAwMDAtZjc0Y2ZmZmYgOiAwMDAwOjAyOjAwLjANCiAgICBmNzRkMDAwMC1mNzRlZmZmZiA6IDAw
-MDA6MDI6MDAuMQ0KDQpCdXQgd2hlbiBhbGxvd2luZyB0aGUga2VybmVsIHRvIGFsbG9jYXRlIEJB
-UnMgcHJvcGVybHksIHRoZSBtYXAgaXMNCmZ1bGw6DQoNCiAgYzgyMDAwMDAtYzg3ZmZmZmYgOiBQ
-Q0kgQnVzIDAwMDA6MDINCiAgICBjODIwMDAwMC1jODJmZmZmZiA6IDAwMDA6MDI6MDAuMA0KICAg
-ICAgYzgyMDAwMDAtYzgyZmZmZmYgOiBpZ2INCiAgICBjODMwMDAwMC1jODNmZmZmZiA6IDAwMDA6
-MDI6MDAuMQ0KICAgICAgYzgzMDAwMDAtYzgzZmZmZmYgOiBpZ2INCiAgICBjODQwMDAwMC1jODRm
-ZmZmZiA6IDAwMDA6MDI6MDAuMg0KICAgICAgYzg0MDAwMDAtYzg0ZmZmZmYgOiBpZ2INCiAgICBj
-ODUwMDAwMC1jODVmZmZmZiA6IDAwMDA6MDI6MDAuMw0KICAgICAgYzg1MDAwMDAtYzg1ZmZmZmYg
-OiBpZ2INCiAgICBjODYwMDAwMC1jODY3ZmZmZiA6IDAwMDA6MDI6MDAuMA0KICAgIGM4NjgwMDAw
-LWM4NjgzZmZmIDogMDAwMDowMjowMC4wDQogICAgICBjODY4MDAwMC1jODY4M2ZmZiA6IGlnYg0K
-ICAgIGM4Njg0MDAwLWM4NmEzZmZmIDogMDAwMDowMjowMC4wDQogICAgYzg2YTQwMDAtYzg2YzNm
-ZmYgOiAwMDAwOjAyOjAwLjANCiAgICBjODZjNDAwMC1jODZjN2ZmZiA6IDAwMDA6MDI6MDAuMQ0K
-ICAgICAgYzg2YzQwMDAtYzg2YzdmZmYgOiBpZ2INCiAgICBjODZjODAwMC1jODZlN2ZmZiA6IDAw
-MDA6MDI6MDAuMQ0KICAgIGM4NmU4MDAwLWM4NzA3ZmZmIDogMDAwMDowMjowMC4xDQogICAgYzg3
-MDgwMDAtYzg3MGJmZmYgOiAwMDAwOjAyOjAwLjINCiAgICAgIGM4NzA4MDAwLWM4NzBiZmZmIDog
-aWdiDQogICAgYzg3MGMwMDAtYzg3MmJmZmYgOiAwMDAwOjAyOjAwLjINCiAgICBjODcyYzAwMC1j
-ODc0YmZmZiA6IDAwMDA6MDI6MDAuMg0KICAgIGM4NzRjMDAwLWM4NzRmZmZmIDogMDAwMDowMjow
-MC4zDQogICAgICBjODc0YzAwMC1jODc0ZmZmZiA6IGlnYg0KICAgIGM4NzUwMDAwLWM4NzZmZmZm
-IDogMDAwMDowMjowMC4zDQogICAgYzg3NzAwMDAtYzg3OGZmZmYgOiAwMDAwOjAyOjAwLjMNCg0K
-SW4gdGhpcyBwYXJ0aWN1bGFyIGNhc2UgdGhlICJyZXBhaXJlZCIgQkFScyBhcmUgbm90IHZpdGFs
-IGFuZCBhcmUgbm90DQp1c2VkIGJ5IHRoZSBpZ2IgZHJpdmVyLCBidXQgaW4gZ2VuZXJhbCBzdWNo
-IGJlaGF2aW9yIG9mIEJJT1MgY2FuIGxlYWQNCnRvIGEgbm9uLXdvcmtpbmcgc2V0dXAuDQoNClNv
-IGlnbm9yaW5nIHByZS1zZXQgQkFScyBhbmQgYnJpZGdlIHdpbmRvd3MgbWF5IGJlIHVzZWZ1bCBv
-biBpdHMgb3duLA0KYnV0IGl0IGlzIGFsc28gcHJvdmlkZXMgYSB3b3JraW5nIHN0YXJ0aW5nIHBv
-aW50IHJlcXVpcmVkIGJ5IHRoaXMNCnBhdGNoc2V0LCBvdGhlcndpc2UgaXQgd2lsbCBuZWVkIHRv
-IHRyYWNrIHN1Y2ggQkFScyBpbXBvc3NpYmxlIHRvDQphc3NpZ24sIGFuZCBkb24ndCB0cnkgdG8g
-YXNzaWduIHRoZW0gZHVyaW5nIGEgbmV4dCBQQ0kgcmVzY2FuLg0KDQpUaGUgcmVhc29uIEkndmUg
-dGllZCB0aGlzIGZlYXR1cmUgdG8gdGhlICJtb3ZhYmxlIEJBUnMiIGZsYWcgaXMgdGhhdCBJDQpr
-bm93IGF0IGxlYXN0IG9uZSBleGNlcHRpb24gZGVtYW5kaW5nIGEgd29ya2Fyb3VuZCAtIFZHQS4g
-U28gSSB3YW50ZWQNCnRvIHByb3ZpZGUgYSBmbGFnIHRvIGRpc2FibGUgaXQgaW4gY2FzZSBvZiBv
-dGhlciB1bmZvcmVzZWVuDQpjb25zZXF1ZW5jZXMsIGFuZCB0aGUgb25seSBmZWF0dXJlIGRlcGVu
-ZHMgb24gdGhpcyAtIGlzIG1vdmFibGUgQkFScy4NCg0KVGhlIFswNy8yNl0gIlBDSTogaG90cGx1
-ZzogRG9uJ3QgYWxsb3cgaG90LWFkZGVkIGRldmljZXMgdG8gc3RlYWwNCnJlc291cmNlcyIgcGF0
-Y2ggaW50cm9kdWNlcyBhbiBhZGRpdGlvbmFsIHN0ZXAgaW4gQkFSIGFzc2lnbm1lbnQ6DQogLSB0
-cnkgdG8gYXNzaWduIGV2ZXJ5IGV4aXN0aW5nIEJBUiArIEJBUnMgb2YgdGhlIGhvdC1hZGRlZCBk
-ZXZpY2U7DQogLSBpdCBpZiBmYWlscywgZGlzYWJsZSBCQVJzIGZvciB0aGUgaG90LWFkZGVkIGRl
-dmljZSBhbmQgcmV0cnkgd2l0aG91dA0KICAgdGhlbS4NCg0KQSBwb3NzaWJsZSB3YXkgdG8gd29y
-ay1hcm91bmQgbm9uLXdvcmtpbmcgQkFScyBjb3VsZCBiZSBhZGRpbmcgbW9yZQ0Kc3RlcHM6DQog
-LSBmaXJzdCB0cnkgdG8gYXNzaWduIGV2ZXJ5IGV4aXN0aW5nIEJBUiArIEJBUnMgbm90IHdvcmtl
-ZCBwcmV2aW91c2x5DQogICArICJob3QtYWRkZWQiIEJBUnM7DQogLSBpZiBpdCBmYWlscywgcmV0
-cnkgd2l0aG91dCB0aG9zZSBCQVJzIHdoaWNoIHdlcmVuJ3Qgd29ya2luZyBiZWZvcmU7DQogLSBp
-ZiBpdCBzdGlsbCBmYWlscywgcmV0cnkgd2l0aG91dCAiaG90LWFkZGVkIiBCQVJzLg0KDQpCZXN0
-IHJlZ2FyZHMsDQpTZXJnZQ0KDQo+ID4gIAlpZiAoZGV2LT50cmFuc3BhcmVudCkgew0KPiA+ICAJ
-CXBjaV9idXNfZm9yX2VhY2hfcmVzb3VyY2UoY2hpbGQtPnBhcmVudCwgcmVzLCBpKSB7DQo+ID4g
-QEAgLTI5NDUsNiArMjk1NSw4IEBAIGludCBwY2lfaG9zdF9wcm9iZShzdHJ1Y3QgcGNpX2hvc3Rf
-YnJpZGdlDQo+ID4gKmJyaWRnZSkNCj4gPiAgCQlwY2lfYnVzX2NsYWltX3Jlc291cmNlcyhidXMp
-Ow0KPiA+ICAJfSBlbHNlIHsNCj4gPiAgCQlwY2lfYnVzX3NpemVfYnJpZGdlcyhidXMpOw0KPiA+
-ICsJCWlmIChwY2lfY2FuX21vdmVfYmFycykNCj4gPiArCQkJcGNpX2J1c191cGRhdGVfcmVhbGxv
-Y19yYW5nZShidXMpOw0KPiA+ICAJCXBjaV9idXNfYXNzaWduX3Jlc291cmNlcyhidXMpOw0KPiA+
-ICANCj4gPiAgCQlsaXN0X2Zvcl9lYWNoX2VudHJ5KGNoaWxkLCAmYnVzLT5jaGlsZHJlbiwgbm9k
-ZSkNCj4gPiAtLSANCj4gPiAyLjI0LjENCj4gPiANCg==
+Am Donnerstag, den 16.01.2020, 06:35 +0100 schrieb Lukas Wunner:
+> [cc += Stuart]
+> 
+> On Wed, Jan 15, 2020 at 12:24:29PM +0100, Lukas Wunner wrote:
+> > On Wed, Jan 15, 2020 at 11:26:26AM +0100, Oliver Neukum wrote:
+> > > I got a bug report about some systems generating an NMI and
+> > > subsequently crashing bisected down to 80696f991424d.
+> > > Apparently these systems do not react well to __pciehp_enable_slot
+> > > while no card is present. Restoring the check to __pciehp_enable_slot()
+> > > removed in 80696f991424d makes the current kernels work.
+> > 
+> > That's odd, these systems must be setting the Data Link Layer Link Active
+> > bit in the Link Status Register even though no card is present.
+> 
+> Recent PCIe versions allow turning off in-band presence detect, in which
+> case the DLLLA bit can be set even though Presence Detect is not set.
+> You may be dealing with one of those systems but without full dmesg
+> and lspci output this is just an educated guess.
+> 
+> A series was submitted by Dell last year to support disabling in-band
+> presence detect, but it hasn't been merged yet by Bjorn:
+> 
+> https://lore.kernel.org/linux-pci/20191025190047.38130-1-stuart.w.hayes@gmail.com/
+> 
+> You may want to try if that series helps.
+
+Hi,
+
+it has been tested and it does the job. May I ask whether you could
+ack it or propose necessary changes, so that we can proceed?
+
+	Regards
+		Oliver
+
