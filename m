@@ -2,102 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 07E4F15274A
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Feb 2020 08:58:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0476215278C
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Feb 2020 09:29:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728062AbgBEH6C convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Wed, 5 Feb 2020 02:58:02 -0500
-Received: from mga09.intel.com ([134.134.136.24]:42374 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725497AbgBEH6C (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 5 Feb 2020 02:58:02 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Feb 2020 23:58:00 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,405,1574150400"; 
-   d="scan'208";a="264134381"
-Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
-  by fmsmga002.fm.intel.com with ESMTP; 04 Feb 2020 23:58:00 -0800
-Received: from fmsmsx157.amr.corp.intel.com (10.18.116.73) by
- FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 4 Feb 2020 23:57:59 -0800
-Received: from shsmsx101.ccr.corp.intel.com (10.239.4.153) by
- FMSMSX157.amr.corp.intel.com (10.18.116.73) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 4 Feb 2020 23:57:38 -0800
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.5]) by
- SHSMSX101.ccr.corp.intel.com ([169.254.1.222]) with mapi id 14.03.0439.000;
- Wed, 5 Feb 2020 15:57:36 +0800
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dev@dpdk.org" <dev@dpdk.org>,
-        "mtosatti@redhat.com" <mtosatti@redhat.com>,
-        "thomas@monjalon.net" <thomas@monjalon.net>,
-        "bluca@debian.org" <bluca@debian.org>,
-        "jerinjacobk@gmail.com" <jerinjacobk@gmail.com>,
-        "Richardson, Bruce" <bruce.richardson@intel.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>
-Subject: RE: [RFC PATCH 0/7] vfio/pci: SR-IOV support
-Thread-Topic: [RFC PATCH 0/7] vfio/pci: SR-IOV support
-Thread-Index: AQHV26+tAcTUgIsbdUG5kuoMQU0tFqgLJReAgAESvVA=
-Date:   Wed, 5 Feb 2020 07:57:36 +0000
-Message-ID: <A2975661238FB949B60364EF0F2C25743A1ABFF9@SHSMSX104.ccr.corp.intel.com>
-References: <158085337582.9445.17682266437583505502.stgit@gimli.home>
- <20200204161737.34696b91@w520.home>
-In-Reply-To: <20200204161737.34696b91@w520.home>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZWJkYjRjOWQtNDUxYi00MDk1LWEwNGEtOTJlZDY2MjE4Nzc2IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiRHl3WlJ2bzBQR0lFa2ErVVZjZWFHYlpGN2xPNlwvelU0ZjFxVUtvamZQdzR3bVFIUXBEUzlvbm1UcVwvRU5sZmQ5In0=
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S1727068AbgBEI3Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 5 Feb 2020 03:29:25 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:60608 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726490AbgBEI3Y (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Feb 2020 03:29:24 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0158TLex011830;
+        Wed, 5 Feb 2020 02:29:21 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580891361;
+        bh=4oK9YdhqZWluCHwyBCGvW+a+C9BUXc1zb6pM3j/qtsc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=QBGgSXL4NEvqL3KDpD8Bri+gh840FxyqIrE3bQSUKfDeeqv6ZLH2M3dRA9ndwrpAI
+         dyFYe5+zUPEsTpm0nnsNDID6f9zY4spch/xaWezgSB+pFkNSOY83k+cBrqaf4MnNmu
+         pUvFN2XhvJWlnaBq6NrMJDBSE+r/9ZMlefHbAlCw=
+Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0158TLJF119163
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 5 Feb 2020 02:29:21 -0600
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 5 Feb
+ 2020 02:29:21 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 5 Feb 2020 02:29:21 -0600
+Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0158TJW5120032;
+        Wed, 5 Feb 2020 02:29:20 -0600
+Subject: Re: pci-usb/pci-sata broken with LPAE config after "reduce use of
+ block bounce buffers"
+To:     Christoph Hellwig <hch@lst.de>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+References: <120f7c3e-363d-deb0-a347-782ac869ee0d@ti.com>
+ <20200130075833.GC30735@lst.de> <4a41bd0d-6491-3822-172a-fbca8a6abba5@ti.com>
+ <20200130164235.GA6705@lst.de> <f76af743-dcb5-f59d-b315-f2332a9dc906@ti.com>
+ <20200203142155.GA16388@lst.de> <a5eb4f73-418a-6780-354f-175d08395e71@ti.com>
+ <20200205074719.GA22701@lst.de>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <4a8bf1d3-6f8e-d13e-eae0-4db54f5cab8c@ti.com>
+Date:   Wed, 5 Feb 2020 14:02:51 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
+In-Reply-To: <20200205074719.GA22701@lst.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> From: Alex Williamson <alex.williamson@redhat.com>
-> Sent: Wednesday, February 5, 2020 7:18 AM
-> To: kvm@vger.kernel.org
-> Subject: Re: [RFC PATCH 0/7] vfio/pci: SR-IOV support
-> 
-> 
-> Promised example QEMU test case...
-> 
-> commit 3557c63bcb286c71f3f7242cad632edd9e297d26
-> Author: Alex Williamson <alex.williamson@redhat.com>
-> Date:   Tue Feb 4 13:47:41 2020 -0700
-> 
->     vfio-pci: QEMU support for vfio-pci VF tokens
-> 
->     Example support for using a vf_token to gain access to a device as
->     well as using the VFIO_DEVICE_FEATURE interface to set the VF token.
->     Note that the kernel will disregard the additional option where it's
->     not required, such as opening the PF with no VF users, so we can
->     always provide it.
-> 
->     NB. It's unclear whether there's value to this QEMU support without
->     further exposure of SR-IOV within a VM.  This is meant mostly as a
->     test case where the real initial users will likely be DPDK drivers.
-> 
->     Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Christoph,
 
-Just curious how UUID is used across the test. Should the QEMU
-which opens VFs add the vfio_token=UUID or the QEMU which
-opens PF add the vfio_token=UUID? or both should add vfio_token=UUID.
+On 05/02/20 1:17 PM, Christoph Hellwig wrote:
+> On Wed, Feb 05, 2020 at 10:45:24AM +0530, Kishon Vijay Abraham I wrote:
+>>> Ok, this mostly like means we allocate a swiotlb buffer that isn't
+>>> actually addressable.  To verify that can you post the output with the
+>>> first attached patch?  If it shows the overflow message added there,
+>>> please try if the second patch fixes it.
+>>
+>> I'm seeing some sort of busy loop after applying your 1st patch. I sent
+>> a SysRq to see where it is stuck
+> 
+> And that shows up just with the patch?  Really strange as it doesn't
+> change any blockig points.  What also is strange is that I don't see
+> any of the warnings that should be there.  FYI, the slightly updated
+> version of the patch that went through my testing it here:
+> 
+>     git://git.infradead.org/users/hch/misc.git swiotlb-debug
+> 
+> Gitweb:
+> 
+>     http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/swiotlb-debug
+> 
+> this also includes what was the second patch in the previous mail.  Can
+> you try that branch?
 
-Regards,
-Yi Liu
+I see data mismatch with that branch.
 
+Kernel log: https://pastebin.ubuntu.com/p/9g9cm7GzRh/
+Kernel Config: https://pastebin.ubuntu.com/p/gYfpRDdVry/
+Repo: https://github.com/kishon/linux-wip.git swiotlb-debug (Added an
+additional patch for fixing a interrupt issue over your branch).
 
+Thanks
+Kishon
