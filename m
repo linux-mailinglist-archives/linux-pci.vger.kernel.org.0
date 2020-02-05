@@ -2,163 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 65CC915387B
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Feb 2020 19:51:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4325315387F
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Feb 2020 19:54:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727033AbgBESvB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 5 Feb 2020 13:51:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33712 "EHLO mail.kernel.org"
+        id S1726822AbgBESyt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 5 Feb 2020 13:54:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726822AbgBESvB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 5 Feb 2020 13:51:01 -0500
+        id S1727033AbgBESyt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 5 Feb 2020 13:54:49 -0500
 Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59F382072B;
-        Wed,  5 Feb 2020 18:50:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C90A214AF;
+        Wed,  5 Feb 2020 18:54:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580928659;
-        bh=gRNXIpOTr9I3us/dMaucqB1GRVvRskh476Qst8YvB74=;
+        s=default; t=1580928888;
+        bh=gluyRShhWV7MUVWMFGR5oPnvaFvLOBbs1W1HSk3nqAM=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=V7MPqcYaWQwEQLTEtz07vS2DhYGuhLVRuaGrEzTuH8H1JCucxHBXndOPEojG26DgT
-         ANfWoT7ocxPpsLbYMlXpARq2dJNcnmvER8L7SpGtihu51KJavBqN4BrCOwAQq/5EjY
-         4YVycY1f1uF5mPgD7lwazU9arkNrt0ysZAJxtYb4=
-Date:   Wed, 5 Feb 2020 12:50:57 -0600
+        b=Vul4b2ZVfTFd8XXQiF7s8qo28DvIFssRc2FIh7VdGVZ/xvP5VGvgsuUn2rmtzTtkO
+         sTq+9/hsfrRA9C0hI3dhv3ursQrxAbfvJbTjpROBsYU8P+HmHo7IV6s4n+FdVt16KG
+         PhFmud9JcSnSXmsCMD9EBKzgPvG656ruiQQALjZE=
+Date:   Wed, 5 Feb 2020 12:54:46 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Yicong Yang <yangyicong@hisilicon.com>
 Cc:     linux-pci@vger.kernel.org, f.fangjian@huawei.com
-Subject: Re: [PATCH 4/6] PCI: Improve and rename PCIE_SPEED2STR macro
-Message-ID: <20200205185057.GA230486@google.com>
+Subject: Re: [PATCH 5/6] PCI: Add PCIE_LNKCAP2_SLS2SPEED macro
+Message-ID: <20200205185446.GA231340@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1579079063-5668-5-git-send-email-yangyicong@hisilicon.com>
+In-Reply-To: <1579079063-5668-6-git-send-email-yangyicong@hisilicon.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 05:04:21PM +0800, Yicong Yang wrote:
-> Use pci_bus_speed_strings[] array to refactor PCIE_SPEED2STR macro.
-> Rename PCIE_SPEED2STR with PCI_SPEED2STR as it's also used to
-> decode non-PCIe speeds. Modify bus_speed_read() and
-> __pcie_print_link_status() with PCI_SPEED2STR macro.
+On Wed, Jan 15, 2020 at 05:04:22PM +0800, Yicong Yang wrote:
+> Add PCIE_LNKCAP2_SLS2SPEED macro for transforming raw link cap 2
+> value to link speed. Use it in pcie_get_speed_cap() to reduce
+> redundancy. We'll not touch the functions when new link
+> speed comes.
 
-This looks like it should be split into two or three patches.
-
-  - Rename
-  - Fiddle with the "PCIe" suffix
-  - Refactor with pci_bus_speed_strings[]
-
-I don't know the right order for these.
+The patch seems OK to me, but I don't see where it reduces redundancy.
+There was one copy of "lnkcap2 & PCI_EXP_LNKCAP2_SLS_32_0GB" before,
+and there's one copy after.  It's just moved from pci.c to pci.h.
+Or am I missing something?
 
 > Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
 > ---
-> 
-> I don't add a boundary check in PCI_SPEED2STR macro because:
-> 1. we cannot get the array size of an extern one using ARRAY_SIZE
-> 2. It is the *speed* should be check valid or not when assigned,
-> rather than checking it here. Actually we do make it valid when
-> assigned, the speed is either a valid value or PCI_SPEED_UNKNOWN.
-> And it's ensured in pcie_get_speed_cap(), pci_set_bus_speed()
-> when probe, and pcie_link_speed[] array. Please check again for
-> sure.
-
-I'm a little nervous about this because bus->cur_bus_speed and
-bus->max_bus_speed are set several places where we can't validate them
-(powerpc, s390, faraday_pci_probe(), cpqhpc_probe(), get_max_bus_speed
-(ibmphp), shpc_get_max_bus_speed(), etc).
-
-I don't think we can avoid out-of-bounds references by relying on all
-those places to get it right, especially since some of these can read
-speeds from hardware, so new hardware can give us a bus speed that old
-software won't know about.
-
->  drivers/pci/pci-sysfs.c |  2 +-
->  drivers/pci/pci.c       |  6 +++---
->  drivers/pci/pci.h       | 10 +++-------
->  drivers/pci/slot.c      | 10 +++-------
->  4 files changed, 10 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> index 13f766d..f4eafbc 100644
-> --- a/drivers/pci/pci-sysfs.c
-> +++ b/drivers/pci/pci-sysfs.c
-> @@ -156,7 +156,7 @@ static ssize_t max_link_speed_show(struct device *dev,
->  {
->  	struct pci_dev *pdev = to_pci_dev(dev);
-> 
-> -	return sprintf(buf, "%s\n", PCIE_SPEED2STR(pcie_get_speed_cap(pdev)));
-> +	return sprintf(buf, "%s\n", PCI_SPEED2STR(pcie_get_speed_cap(pdev)));
->  }
->  static DEVICE_ATTR_RO(max_link_speed);
+>  drivers/pci/pci.c | 17 ++++-------------
+>  drivers/pci/pci.h |  9 +++++++++
+>  2 files changed, 13 insertions(+), 13 deletions(-)
 > 
 > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index e87196c..dce32ce 100644
+> index dce32ce..2ef4030 100644
 > --- a/drivers/pci/pci.c
 > +++ b/drivers/pci/pci.c
-> @@ -5868,14 +5868,14 @@ void __pcie_print_link_status(struct pci_dev *dev, bool verbose)
->  	if (bw_avail >= bw_cap && verbose)
->  		pci_info(dev, "%u.%03u Gb/s available PCIe bandwidth (%s x%d link)\n",
->  			 bw_cap / 1000, bw_cap % 1000,
-> -			 PCIE_SPEED2STR(speed_cap), width_cap);
-> +			 PCI_SPEED2STR(speed_cap), width_cap);
->  	else if (bw_avail < bw_cap)
->  		pci_info(dev, "%u.%03u Gb/s available PCIe bandwidth, limited by %s x%d link at %s (capable of %u.%03u Gb/s with %s x%d link)\n",
->  			 bw_avail / 1000, bw_avail % 1000,
-> -			 PCIE_SPEED2STR(speed), width,
-> +			 PCI_SPEED2STR(speed), width,
->  			 limiting_dev ? pci_name(limiting_dev) : "<unknown>",
->  			 bw_cap / 1000, bw_cap % 1000,
-> -			 PCIE_SPEED2STR(speed_cap), width_cap);
-> +			 PCI_SPEED2STR(speed_cap), width_cap);
->  }
-> 
->  /**
+> @@ -5780,19 +5780,10 @@ enum pci_bus_speed pcie_get_speed_cap(struct pci_dev *dev)
+>  	 * where only 2.5 GT/s and 5.0 GT/s speeds were defined.
+>  	 */
+>  	pcie_capability_read_dword(dev, PCI_EXP_LNKCAP2, &lnkcap2);
+> -	if (lnkcap2) { /* PCIe r3.0-compliant */
+> -		if (lnkcap2 & PCI_EXP_LNKCAP2_SLS_32_0GB)
+> -			return PCIE_SPEED_32_0GT;
+> -		else if (lnkcap2 & PCI_EXP_LNKCAP2_SLS_16_0GB)
+> -			return PCIE_SPEED_16_0GT;
+> -		else if (lnkcap2 & PCI_EXP_LNKCAP2_SLS_8_0GB)
+> -			return PCIE_SPEED_8_0GT;
+> -		else if (lnkcap2 & PCI_EXP_LNKCAP2_SLS_5_0GB)
+> -			return PCIE_SPEED_5_0GT;
+> -		else if (lnkcap2 & PCI_EXP_LNKCAP2_SLS_2_5GB)
+> -			return PCIE_SPEED_2_5GT;
+> -		return PCI_SPEED_UNKNOWN;
+> -	}
+> +
+> +	/* PCIe r3.0-compliant */
+> +	if (lnkcap2)
+> +		return PCIE_LNKCAP2_SLS2SPEED(lnkcap2);
+>  
+>  	pcie_capability_read_dword(dev, PCI_EXP_LNKCAP, &lnkcap);
+>  	if ((lnkcap & PCI_EXP_LNKCAP_SLS) == PCI_EXP_LNKCAP_SLS_5_0GB)
 > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 5fb1d76..5e1f810 100644
+> index 5e1f810..3d988e9 100644
 > --- a/drivers/pci/pci.h
 > +++ b/drivers/pci/pci.h
-> @@ -291,13 +291,9 @@ struct pci_bus *pci_bus_get(struct pci_bus *bus);
+> @@ -290,6 +290,15 @@ void pci_disable_bridge_window(struct pci_dev *dev);
+>  struct pci_bus *pci_bus_get(struct pci_bus *bus);
 >  void pci_bus_put(struct pci_bus *bus);
-> 
+>  
+> +/* PCIe link information from Link Capabilities 2 */
+> +#define PCIE_LNKCAP2_SLS2SPEED(lnkcap2) \
+> +	((lnkcap2) & PCI_EXP_LNKCAP2_SLS_32_0GB ? PCIE_SPEED_32_0GT : \
+> +	 (lnkcap2) & PCI_EXP_LNKCAP2_SLS_16_0GB ? PCIE_SPEED_16_0GT : \
+> +	 (lnkcap2) & PCI_EXP_LNKCAP2_SLS_8_0GB ? PCIE_SPEED_8_0GT : \
+> +	 (lnkcap2) & PCI_EXP_LNKCAP2_SLS_5_0GB ? PCIE_SPEED_5_0GT : \
+> +	 (lnkcap2) & PCI_EXP_LNKCAP2_SLS_2_5GB ? PCIE_SPEED_2_5GT : \
+> +	 PCI_SPEED_UNKNOWN)
+> +
 >  /* PCIe link information */
-> -#define PCIE_SPEED2STR(speed) \
-> -	((speed) == PCIE_SPEED_32_0GT ? "32 GT/s" : \
-> -	 (speed) == PCIE_SPEED_16_0GT ? "16 GT/s" : \
-> -	 (speed) == PCIE_SPEED_8_0GT ? "8 GT/s" : \
-> -	 (speed) == PCIE_SPEED_5_0GT ? "5 GT/s" : \
-> -	 (speed) == PCIE_SPEED_2_5GT ? "2.5 GT/s" : \
-> -	 "Unknown speed")
-> +#define PCI_SPEED2STR(speed) \
-> +	((speed) == PCI_SPEED_UNKNOWN ? "Unknown speed" : \
-> +	 pci_bus_speed_strings[speed])
-> 
->  /* PCIe speed to Mb/s reduced by encoding overhead */
->  #define PCIE_SPEED2MBS_ENC(speed) \
-> diff --git a/drivers/pci/slot.c b/drivers/pci/slot.c
-> index 140dafb..871d598 100644
-> --- a/drivers/pci/slot.c
-> +++ b/drivers/pci/slot.c
-> @@ -51,14 +51,10 @@ static ssize_t address_read_file(struct pci_slot *slot, char *buf)
-> 
->  static ssize_t bus_speed_read(enum pci_bus_speed speed, char *buf)
->  {
-> -	const char *speed_string;
-> +	if (speed <= PCI_SPEED_133MHz_PCIX_533)
-> +		return sprintf(buf, "%s\n", PCI_SPEED2STR(speed));
-> 
-> -	if (speed == PCI_SPEED_UNKNOWN)
-> -		speed_string = "Unknown";
-> -	else
-> -		speed_string = pci_bus_speed_strings[speed];
-> -
-> -	return sprintf(buf, "%s\n", speed_string);
-> +	return sprintf(buf, "%s PCIe\n", PCI_SPEED2STR(speed));
->  }
-> 
->  static ssize_t max_speed_read_file(struct pci_slot *slot, char *buf)
-> --
+>  #define PCI_SPEED2STR(speed) \
+>  	((speed) == PCI_SPEED_UNKNOWN ? "Unknown speed" : \
+> -- 
 > 2.8.1
 > 
