@@ -2,118 +2,158 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 596231525C2
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Feb 2020 06:12:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B0B60152659
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Feb 2020 07:34:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725770AbgBEFL5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 5 Feb 2020 00:11:57 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:34386 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725468AbgBEFL5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Feb 2020 00:11:57 -0500
+        id S1725793AbgBEGd4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 5 Feb 2020 01:33:56 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:50144 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725468AbgBEGdz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Feb 2020 01:33:55 -0500
 Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0155Brh7096960;
-        Tue, 4 Feb 2020 23:11:53 -0600
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0156XjvP117119;
+        Wed, 5 Feb 2020 00:33:45 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1580879514;
-        bh=KViLbGAz8uHNLASTEWLNpPoUqZMUu7u7/HXDd+GsplU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=KZGfgdvQidyfbzs/9IRDpiGHndW6VlDLwr7xT10Ry4PY6a5CqjQX/Vx0IjW6WdfkW
-         26x19Xk6BQH+LZpffrQ3qZYV6RSFqXjp488ugUBvXUE5ypTxsUzuW+1yuQeofMuKnZ
-         ymj0ZC6X6CGR3KQ0pUSyGcjV8GFwrJhY63t9JM9I=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0155BrZn092610
+        s=ti-com-17Q1; t=1580884425;
+        bh=oq7M5D4MHfw58kUSHUZ2et32/o3xpjb9uBa074gAXtA=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=kKMB39BkYrq0YXMigUT8w5YVkK7oeHBdyoK0/K+qW+gov5/5NA58d6e6FkH6LwwLp
+         WFBLSmOr/GA7Y+hWGTJIYUwehS/lUmEiVuqa1mCErXaeqVyFRlcVmDHB2vgn/W2uoX
+         MMwDoHyw8Qv3aviomTIwxFpdZcAp0ppeyQgq2nSc=
+Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0156Xj4v080383
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 4 Feb 2020 23:11:53 -0600
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 4 Feb
- 2020 23:11:53 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+        Wed, 5 Feb 2020 00:33:45 -0600
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 5 Feb
+ 2020 00:33:44 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 4 Feb 2020 23:11:53 -0600
+ Frontend Transport; Wed, 5 Feb 2020 00:33:44 -0600
 Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0155BqJo112619;
-        Tue, 4 Feb 2020 23:11:52 -0600
-Subject: Re: pci-usb/pci-sata broken with LPAE config after "reduce use of
- block bounce buffers"
-To:     Christoph Hellwig <hch@lst.de>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-References: <120f7c3e-363d-deb0-a347-782ac869ee0d@ti.com>
- <20200130075833.GC30735@lst.de> <4a41bd0d-6491-3822-172a-fbca8a6abba5@ti.com>
- <20200130164235.GA6705@lst.de> <f76af743-dcb5-f59d-b315-f2332a9dc906@ti.com>
- <20200203142155.GA16388@lst.de>
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0156Xadk124007;
+        Wed, 5 Feb 2020 00:33:38 -0600
+Subject: Re: [PATCH V2 0/5] Add support to defer core initialization
 From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <a5eb4f73-418a-6780-354f-175d08395e71@ti.com>
-Date:   Wed, 5 Feb 2020 10:45:24 +0530
+To:     Vidya Sagar <vidyas@nvidia.com>, <lorenzo.pieralisi@arm.com>,
+        <andrew.murray@arm.com>, Tom Joseph <tjoseph@cadence.com>,
+        Milind Parab <mparab@cadence.com>
+CC:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <bhelgaas@google.com>, <thierry.reding@gmail.com>,
+        <Jisheng.Zhang@synaptics.com>, <jonathanh@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20200103100736.27627-1-vidyas@nvidia.com>
+ <a8678df3-141b-51ab-b0cb-5e88c6ac91b5@nvidia.com>
+ <680a58ec-5d09-3e3b-2fd6-544c32732818@nvidia.com>
+ <ca911119-da45-4cbd-b173-2ac8397fd79a@ti.com>
+Message-ID: <b4af8353-3a56-fa31-3391-056050c0440a@ti.com>
+Date:   Wed, 5 Feb 2020 12:07:08 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.1
 MIME-Version: 1.0
-In-Reply-To: <20200203142155.GA16388@lst.de>
-Content-Type: text/plain; charset="windows-1252"
+In-Reply-To: <ca911119-da45-4cbd-b173-2ac8397fd79a@ti.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Christoph,
++Tom, Milind
 
-On 03/02/20 7:51 PM, Christoph Hellwig wrote:
-> On Fri, Jan 31, 2020 at 05:14:01PM +0530, Kishon Vijay Abraham I wrote:
->>> Can you throw in a little debug printk if this comes from
->>> dma_direct_possible or swiotlb_map?
->>
->> I could see swiotlb_tbl_map_single() returning DMA_MAPPING_ERROR.
->>
->> Kernel with debug print:
->> https://github.com/kishon/linux-wip.git nvm_dma_issue
->>
->> Full log: https://pastebin.ubuntu.com/p/Xf2ngxc3kB/
+Hi,
+
+On 23/01/20 3:25 PM, Kishon Vijay Abraham I wrote:
+> Hi Vidya Sagar,
 > 
-> Ok, this mostly like means we allocate a swiotlb buffer that isn't
-> actually addressable.  To verify that can you post the output with the
-> first attached patch?  If it shows the overflow message added there,
-> please try if the second patch fixes it.
+> On 23/01/20 2:54 pm, Vidya Sagar wrote:
+>> Hi Kishon,
+>> Apologies for pinging again. Could you please review this series?
+>>
+>> Thanks,
+>> Vidya Sagar
+>>
+>> On 1/11/2020 5:18 PM, Vidya Sagar wrote:
+>>> Hi Kishon,
+>>> Could you please review this series?
+>>>
+>>> Also, this series depends on the following change of yours
+>>> http://patchwork.ozlabs.org/patch/1109884/
+>>> Whats the plan to get this merged?
+> 
+> I've posted the endpoint improvements as a separate series
+> http://lore.kernel.org/r/20191231100331.6316-1-kishon@ti.com
+> 
+> I'd prefer this series gets tested by others. I'm also planning to test
+> this series. Sorry for the delay. I'll test review and test this series
+> early next week.
 
-I'm seeing some sort of busy loop after applying your 1st patch. I sent
-a SysRq to see where it is stuck
+I tested this series with DRA7 configured in EP mode. So for the series
+itself
 
-[  182.641398] sysrq: Show Blocked State
-[  182.645080]   task                PC stack   pid father
-[  182.650359] sync            D    0  2101   1901 0x00000000
-[  182.655889] [<c0a399b8>] (__schedule) from [<c0a39e54>]
-(schedule+0xa0/0x138)
-[  182.663063] [<c0a39e54>] (schedule) from [<c0a3a484>]
-(io_schedule+0x14/0x34)
-[  182.670237] [<c0a3a484>] (io_schedule) from [<c02eebec>]
-(wait_on_page_bit+0x14c/0x1a8)
-[  182.678283] [<c02eebec>] (wait_on_page_bit) from [<c02edaa4>]
-(__filemap_fdatawait_range+0x94/0xec)
-[  182.687374] [<c02edaa4>] (__filemap_fdatawait_range) from
-[<c02edb8c>] (filemap_fdatawait_keep_errors+0x24/0x50)
-[  182.697601] [<c02edb8c>] (filemap_fdatawait_keep_errors) from
-[<c0385a84>] (sync_inodes_sb+0x1a8/0x23c)
-[  182.707041] [<c0385a84>] (sync_inodes_sb) from [<c035bd84>]
-(iterate_supers+0x88/0xdc)
-[  182.714998] [<c035bd84>] (iterate_supers) from [<c0389be4>]
-(ksys_sync+0x40/0xb8)
-[  182.722519] [<c0389be4>] (ksys_sync) from [<c0389c64>]
-(sys_sync+0x8/0x10)
-[  182.729429] [<c0389c64>] (sys_sync) from [<c0201000>]
-(ret_fast_syscall+0x0/0x4c)
-[  182.736943] Exception stack(0xe5461fa8 to 0xe5461ff0)
-[  182.742016] 1fa0:                   be8a8db4 be8a8db8 00000000
-ffffffff 00000000 0009d6b8
-[  182.750230] 1fc0: be8a8db4 be8a8db8 00000001 00000024 be8a8db4
-00000000 b6f0b000 0009d6dc
-[  182.758443] 1fe0: b6e2e3d0 be8a8c1c 00064821 b6e2e3dc
+Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
 
-Full log here: https://pastebin.ubuntu.com/p/q6yDtP9vxR/
+Tom, Can you test this series in Cadence platform?
+
+Lorenzo, Andrew,
+
+How do you want to go about merging this series? This series depends on
+[1] which in turn is dependent on two other series. If required, I can
+rebase [1] on mainline kernel and remove it's dependencies with the
+other series. That way this series and [1] could be merged. And the
+other series could be worked later. Kindly let me know.
 
 Thanks
 Kishon
+
+[1] ->
+https://lore.kernel.org/linux-pci/20191231100331.6316-1-kishon@ti.com/
 > 
+> Thanks
+> Kishon
+> 
+>>>
+>>> Thanks,
+>>> Vidya Sagar
+>>>
+>>> On 1/3/20 3:37 PM, Vidya Sagar wrote:
+>>>> EPC/DesignWare core endpoint subsystems assume that the core
+>>>> registers are
+>>>> available always for SW to initialize. But, that may not be the case
+>>>> always.
+>>>> For example, Tegra194 hardware has the core running on a clock that
+>>>> is derived
+>>>> from reference clock that is coming into the endpoint system from host.
+>>>> Hence core is made available asynchronously based on when host system
+>>>> is going
+>>>> for enumeration of devices. To accommodate this kind of hardwares,
+>>>> support is
+>>>> required to defer the core initialization until the respective
+>>>> platform driver
+>>>> informs the EPC/DWC endpoint sub-systems that the core is indeed
+>>>> available for
+>>>> initiaization. This patch series is attempting to add precisely that.
+>>>> This series is based on Kishon's patch that adds notification mechanism
+>>>> support from EPC to EPF @ http://patchwork.ozlabs.org/patch/1109884/
+>>>>
+>>>> Vidya Sagar (5):
+>>>>    PCI: endpoint: Add core init notifying feature
+>>>>    PCI: dwc: Refactor core initialization code for EP mode
+>>>>    PCI: endpoint: Add notification for core init completion
+>>>>    PCI: dwc: Add API to notify core initialization completion
+>>>>    PCI: pci-epf-test: Add support to defer core initialization
+>>>>
+>>>>   .../pci/controller/dwc/pcie-designware-ep.c   |  79 +++++++-----
+>>>>   drivers/pci/controller/dwc/pcie-designware.h  |  11 ++
+>>>>   drivers/pci/endpoint/functions/pci-epf-test.c | 118 ++++++++++++------
+>>>>   drivers/pci/endpoint/pci-epc-core.c           |  19 ++-
+>>>>   include/linux/pci-epc.h                       |   2 +
+>>>>   include/linux/pci-epf.h                       |   5 +
+>>>>   6 files changed, 164 insertions(+), 70 deletions(-)
+>>>>
