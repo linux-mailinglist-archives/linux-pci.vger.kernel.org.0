@@ -2,54 +2,41 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E5371154302
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Feb 2020 12:27:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 41B0E154313
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Feb 2020 12:30:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727505AbgBFL13 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Feb 2020 06:27:29 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40444 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727060AbgBFL13 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Feb 2020 06:27:29 -0500
-Received: by mail-wm1-f66.google.com with SMTP id t14so6601275wmi.5
-        for <linux-pci@vger.kernel.org>; Thu, 06 Feb 2020 03:27:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=thegoodpenguin-co-uk.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=DhWg+zpdSqsW8rxWEiaaZAwp7E2BBzkWJY6y23Nf9HU=;
-        b=muKUaEKfnmdex2xux9VRn97Fyh2mmm6dgo7Z4NzuaTE++qIXJ3R+6ePGB7umg//9LW
-         FKN8elSrBErbld5boWBqNcSUvl9pfVrv5mXp/pXO4BJttqmkjgY0cXSVs/+rjGvOSO9T
-         BJWwgPlHrfLqo6Vqvheynora+vQInsIBdKAeqmdTynbzPpodGpNnscfk2ehufxwe6kWn
-         wa3TVmsyD5xn0x14Po47+2nP1X5mI+WnG0ieORzop8RanyKcUjy/C9auh+w4baTf7HUH
-         TKFxO+wROoPQ/kz2lX7bVEozXVIA+esLEtqH1slZtgJCwB2HnbE6kiJsAs7e5ut0+R8g
-         ncjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=DhWg+zpdSqsW8rxWEiaaZAwp7E2BBzkWJY6y23Nf9HU=;
-        b=e5TrbH3ReujlLxEw49ChCX1kIxkWERFkhBJEnu0Bv+mC136wobnjg7WlJ42XxDdXau
-         9daleNiITgt3Dl8IB2swtfzzZJ/KdnCCCJCQd10A88bDabMPRJCk2Sr34OvrRpSr6VWh
-         6h+ZFVKJ3V7xkqjMDu5wi1QhjnA9h2N0jhvnp+2m5po/SxHYb8qXi/N3vZVWd4cQI36r
-         Z6k60hsrDGaQ8+tKrpyNMjGPemwdEgdddBc9ryFFLCwQNHmKsNJwhlEpUe6177IOMv8T
-         /VsViA3Fy+Tc23Z+yJci55g6q1Fk5XcGcn4js5BdBPjmY8FEdeIvfYXgFYrSik2OLnM7
-         bgvA==
-X-Gm-Message-State: APjAAAVHDlJy4s0rG25WxqAEkPeZFMp6Cb3YtZM79BT2zp4L5YM0Spdl
-        3HtFUDBxyIzrvO3/JPmWpHPNnA==
-X-Google-Smtp-Source: APXvYqwSsh7dUxDsfBDsS/7Q3iLOvZND5C4QfZ6rnRc8hHTEMsls6EvjrbZbVmJ14vQg12Ie6nC2vA==
-X-Received: by 2002:a7b:cb49:: with SMTP id v9mr4221349wmj.160.1580988445988;
-        Thu, 06 Feb 2020 03:27:25 -0800 (PST)
-Received: from big-machine ([2a00:23c5:dd80:8400:94e8:de94:574e:efb1])
-        by smtp.gmail.com with ESMTPSA id o4sm3721797wrx.25.2020.02.06.03.27.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 03:27:25 -0800 (PST)
-Date:   Thu, 6 Feb 2020 11:27:23 +0000
-From:   Andrew Murray <amurray@thegoodpenguin.co.uk>
-To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc:     Andrew Murray <andrew.murray@arm.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        id S1727628AbgBFLah (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Feb 2020 06:30:37 -0500
+Received: from mail-eopbgr20058.outbound.protection.outlook.com ([40.107.2.58]:12228
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727530AbgBFLah (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 6 Feb 2020 06:30:37 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Mpo+vDAMaTztZR0ckxKEcOoEMw1ne9sUvql3iUn1nWUom5hyjhZQy9KjWs227YcZE7q/lDrbyWwU/3viPeWtbEpX2XCjAtrXJuyARWbODalKHgGsDyb5HpPkZR797v/hmiLJ9fUPGbr4AAoGB2KJWKjYD6Og/hSXyT2Ki51zj9MyafcRZdvdEg5jM10KHDU9ggk45PHgQ7yQnpS3MkCF3rEe8sV9aGWKH5/ytOwhT3RjnHp4QepgkDbKjwdIylpfWVvSyoCxDSRQtHbBLyZTAvd/mAW66XfZ9D9lUI1gJy/qiT70vi+VANYTkxXb3zs84T4Hu4VBuVZrlDAfOsVesA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+5Io4TX6LAKmK0W+1EE0p4CWbvyuONhhsXTJr/ANKSU=;
+ b=FYdB8AHh6vES4gpRHB0Y90qeYGXzU9co+cS6lh7jMQZ+jJkbF/Ot0KCGH4HZRRXZKmjZqr+dCXnYNufBlrZ7kwLT/zkEimD1ZgzpvV7TKLy84r55vt/fSxYsnAde/zrsbbs+W8X7eTRBg3kb40dLLItvgotH1Hs+ZPlRS34TiABYDH6tfqHF2uJluBgojeC0m0ZDlRxp/se56U707XubupZItETPVmweMZIWfURslm2zT6owS/wTE4awXpylyIu/OV8Ts0pFzeE6tdDkXHsx8UAksoKQpTiIsFYPCRBfPvr2J8G+abTu/Ab7YTt4T/9qdruNjmmaG/bFqSUDLoWPng==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+5Io4TX6LAKmK0W+1EE0p4CWbvyuONhhsXTJr/ANKSU=;
+ b=ZBUbLZRhpnhxWHJRPS/5HMjv13K0XcFWixOt5nERgbA52cPYH4kc46kvTHhDapgY/fWrT/XPm1eiCNOdVSrsOsiVDT8cpkEL94HI2j1RGPaaQQOQJSLq5D5Hb7lp8IfQp5KaEJDCx0KAF5q97sNrbWGVYUZl2P64qHN3L8rcCkQ=
+Received: from DB8PR04MB6747.eurprd04.prod.outlook.com (20.179.250.159) by
+ DB8PR04MB6553.eurprd04.prod.outlook.com (20.179.251.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2686.30; Thu, 6 Feb 2020 11:30:26 +0000
+Received: from DB8PR04MB6747.eurprd04.prod.outlook.com
+ ([fe80::104b:e88b:b0d3:cdaa]) by DB8PR04MB6747.eurprd04.prod.outlook.com
+ ([fe80::104b:e88b:b0d3:cdaa%4]) with mapi id 15.20.2686.035; Thu, 6 Feb 2020
+ 11:30:26 +0000
+From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
+To:     Andrew Murray <andrew.murray@arm.com>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
@@ -68,428 +55,160 @@ Cc:     Andrew Murray <andrew.murray@arm.com>,
         Mingkai Hu <mingkai.hu@nxp.com>,
         "M.h. Lian" <minghuan.lian@nxp.com>,
         Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: Re: [PATCHv9 01/12] PCI: mobiveil: Re-abstract the private structure
-Message-ID: <20200206112723.GA19388@big-machine>
+Subject: RE: [PATCHv9 03/12] PCI: mobiveil: Collect the interrupt related
+ operations into a routine
+Thread-Topic: [PATCHv9 03/12] PCI: mobiveil: Collect the interrupt related
+ operations into a routine
+Thread-Index: AQHVn1T4QPVpuPxbfUOAcnzZ5mJ3hqfou2sAgCRdAeA=
+Date:   Thu, 6 Feb 2020 11:30:26 +0000
+Message-ID: <DB8PR04MB6747A8CA819635359CDC73B1841D0@DB8PR04MB6747.eurprd04.prod.outlook.com>
 References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
- <20191120034451.30102-2-Zhiqiang.Hou@nxp.com>
- <20200113100931.GG42593@e119886-lin.cambridge.arm.com>
- <DB8PR04MB67476FE40D1396B2F61F5683841D0@DB8PR04MB6747.eurprd04.prod.outlook.com>
+ <20191120034451.30102-4-Zhiqiang.Hou@nxp.com>
+ <20200113103431.GI42593@e119886-lin.cambridge.arm.com>
+In-Reply-To: <20200113103431.GI42593@e119886-lin.cambridge.arm.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=zhiqiang.hou@nxp.com; 
+x-originating-ip: [92.121.68.129]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 1e6429e6-2f5f-4430-4402-08d7aaf7f69a
+x-ms-traffictypediagnostic: DB8PR04MB6553:|DB8PR04MB6553:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB8PR04MB65533DDB7EA0131FC43D8EB5841D0@DB8PR04MB6553.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0305463112
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(136003)(376002)(366004)(396003)(199004)(189003)(86362001)(52536014)(54906003)(66946007)(76116006)(316002)(33656002)(66476007)(66556008)(64756008)(66446008)(478600001)(7416002)(6916009)(55016002)(5660300002)(4326008)(9686003)(7696005)(71200400001)(186003)(8936002)(81166006)(8676002)(2906002)(81156014)(53546011)(26005)(6506007);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB6553;H:DB8PR04MB6747.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: AuwsSekDOrhWgZT1+8dtsNbQB5F3GF1kVssznF1QuluZIRs/rUthWha7yEJfryvSqJPwM3MK0Pui4u4+yn+BNMKlWgakdR1oUjFof4GgAbdo+9gPCecyLoaVkjiUJnLz595xwnL0i6TJagNY+maSnqZkEBJ8rzpF8X+nJjBAclvJ4Qv5yVnTOJ5hVDbm3Go7gHh48E00DIcpNrimDjpBE5Z6XP4rpaHMz+CJmUjUzBY2+91ZgyY/OHYdAg9OhmvkiIJJ6YbU72sywTh/rKSWGuPuco7hVSHhoTYou2tIH+K9xEXDbYNQQEXNeN7rJFaBOkQTfZ5QJzL/ASvnqUzQN5NS6LNoHlv4zdibT3rpFTcA4+fMT8qaSEVSqXPyRK1CRwARn3Z9A6p5rR3Cg+L5QbIwW/gLZSThofU6ozRErk/PgEqeNafLCLbnGtsE9MeP
+x-ms-exchange-antispam-messagedata: s+9LKBsSvhVfO2MSEpVfX50/KrvXdGM6iAXogjZTCJTGL8d+HTFHUt4uihBeAh2F09Wlqk997RJ0fUY8SgbAfdzfi22BrnWWDMEAja2Xg7LHWvUYjiqnk43j3eMj40HTaWWEWCHhU20Ie868avKR8w==
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <DB8PR04MB67476FE40D1396B2F61F5683841D0@DB8PR04MB6747.eurprd04.prod.outlook.com>
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1e6429e6-2f5f-4430-4402-08d7aaf7f69a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Feb 2020 11:30:26.5344
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: r9iEtvvylHyUd6PpcJNu4BxxrFvT11ILTFVYLxN0aOmg/3eKxr6YsItThAYk0NkeDRmSJuDTAT6dFRtbZ+yi4g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6553
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 11:04:29AM +0000, Z.q. Hou wrote:
-> Hi Andrew,
-> 
-> Thanks a lot for your comments!
-> Sorry for my delay respond!
-> 
-> > -----Original Message-----
-> > From: Andrew Murray <andrew.murray@arm.com>
-> > Sent: 2020年1月13日 18:10
-> > To: Z.q. Hou <zhiqiang.hou@nxp.com>
-> > Cc: linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > bhelgaas@google.com; robh+dt@kernel.org; arnd@arndb.de;
-> > mark.rutland@arm.com; l.subrahmanya@mobiveil.co.in;
-> > shawnguo@kernel.org; m.karthikeyan@mobiveil.co.in; Leo Li
-> > <leoyang.li@nxp.com>; lorenzo.pieralisi@arm.com;
-> > catalin.marinas@arm.com; will.deacon@arm.com; Mingkai Hu
-> > <mingkai.hu@nxp.com>; M.h. Lian <minghuan.lian@nxp.com>; Xiaowei Bao
-> > <xiaowei.bao@nxp.com>
-> > Subject: Re: [PATCHv9 01/12] PCI: mobiveil: Re-abstract the private structure
-> > 
-> > On Wed, Nov 20, 2019 at 03:45:23AM +0000, Z.q. Hou wrote:
-> > > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> > >
-> > > The Mobiveil PCIe controller can work in either Root Complex mode or
-> > > Endpoint mode. So introduce a new structure root_port, and abstract
-> > > the RC related members into it.
-> > 
-> > The first sentence explains the trigger for this work, the second explains what
-> > you are changing, it would be helpful to also describe why you need to make
-> > this change. You could do this by extending the last sentence, e.g.
-> > 
-> > "So introduce a new structure root_port, and abstract the RC  related
-> > members into it such that it can be used by both ..."
-> > 
-> > As this series doesn't actually add a EP driver, this abstraction isn't needed
-> > now - but it is nice to have - it may be helpful to explain this.
-> > 
-> > The email subject could also more precisely explain what this patch does.
-> 
-> Thanks for the good suggestions! Will change in v10.
-> 
-> > 
-> > 
-> > >
-> > > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> > > ---
-> > > V9:
-> > >  - New patch splited from the #1 of V8 patches to make it easy to review.
-> > 
-> > Indeed, it's much nicer to review - thanks.
-> > 
-> > 
-> > >
-> > >  drivers/pci/controller/pcie-mobiveil.c | 99
-> > > ++++++++++++++++----------
-> > >  1 file changed, 60 insertions(+), 39 deletions(-)
-> > >
-> > > diff --git a/drivers/pci/controller/pcie-mobiveil.c
-> > > b/drivers/pci/controller/pcie-mobiveil.c
-> > > index 3a696ca45bfa..5fd26e376af2 100644
-> > > --- a/drivers/pci/controller/pcie-mobiveil.c
-> > > +++ b/drivers/pci/controller/pcie-mobiveil.c
-> > > @@ -3,7 +3,10 @@
-> > >   * PCIe host controller driver for Mobiveil PCIe Host controller
-> > >   *
-> > >   * Copyright (c) 2018 Mobiveil Inc.
-> > > + * Copyright 2019 NXP
-> > > + *
-> > >   * Author: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-> > > + * Recode: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> > 
-> > As per my previous feedback, I'm not sure the value of using the term refactor
-> > or a synonym of it. And I certaintly don't want to encourage anyone that
-> > modifies this file to add a similar tag when the information is easily visible via
-> > GIT and the get_maintainers script.
-> 
-> Will remove the recode tag in v10.
-> 
-> > 
-> > >   */
-> > >
-> > >  #include <linux/delay.h>
-> > > @@ -138,22 +141,27 @@ struct mobiveil_msi {			/* MSI
-> > information */
-> > >  	DECLARE_BITMAP(msi_irq_in_use, PCI_NUM_MSI);  };
-> > >
-> > > +struct root_port {
-> > > +	char root_bus_nr;
-> > > +	void __iomem *config_axi_slave_base;	/* endpoint config base */
-> > > +	struct resource *ob_io_res;
-> > > +	int irq;
-> > > +	raw_spinlock_t intx_mask_lock;
-> > > +	struct irq_domain *intx_domain;
-> > > +	struct mobiveil_msi msi;
-> > > +	struct pci_host_bridge *bridge;
-> > > +};
-> > 
-> > Please prefix with mobiveil given we have mobiveil related structures inside it.
-> 
-> Do you mean s/root_port/mobiveil_root_port/ ?
-
-Yes!
-
-Thanks,
-
-Andrew Murray
-
-> 
-> Thanks,
-> Zhiqiang
-> 
-> > 
-> > (Also on your respin, please rebase as per Olof's feedback).
-> > 
-> > Thanks,
-> > 
-> > Andrew Murray
-> > 
-> > > +
-> > >  struct mobiveil_pcie {
-> > >  	struct platform_device *pdev;
-> > > -	void __iomem *config_axi_slave_base;	/* endpoint config base */
-> > >  	void __iomem *csr_axi_slave_base;	/* root port config base */
-> > >  	void __iomem *apb_csr_base;	/* MSI register base */
-> > >  	phys_addr_t pcie_reg_base;	/* Physical PCIe Controller Base */
-> > > -	struct irq_domain *intx_domain;
-> > > -	raw_spinlock_t intx_mask_lock;
-> > > -	int irq;
-> > >  	int apio_wins;
-> > >  	int ppio_wins;
-> > >  	int ob_wins_configured;		/* configured outbound windows */
-> > >  	int ib_wins_configured;		/* configured inbound windows */
-> > > -	struct resource *ob_io_res;
-> > > -	char root_bus_nr;
-> > > -	struct mobiveil_msi msi;
-> > > +	struct root_port rp;
-> > >  };
-> > >
-> > >  /*
-> > > @@ -281,16 +289,17 @@ static bool mobiveil_pcie_link_up(struct
-> > > mobiveil_pcie *pcie)  static bool mobiveil_pcie_valid_device(struct
-> > > pci_bus *bus, unsigned int devfn)  {
-> > >  	struct mobiveil_pcie *pcie = bus->sysdata;
-> > > +	struct root_port *rp = &pcie->rp;
-> > >
-> > >  	/* Only one device down on each root port */
-> > > -	if ((bus->number == pcie->root_bus_nr) && (devfn > 0))
-> > > +	if ((bus->number == rp->root_bus_nr) && (devfn > 0))
-> > >  		return false;
-> > >
-> > >  	/*
-> > >  	 * Do not read more than one device on the bus directly
-> > >  	 * attached to RC
-> > >  	 */
-> > > -	if ((bus->primary == pcie->root_bus_nr) && (PCI_SLOT(devfn) > 0))
-> > > +	if ((bus->primary == rp->root_bus_nr) && (PCI_SLOT(devfn) > 0))
-> > >  		return false;
-> > >
-> > >  	return true;
-> > > @@ -304,13 +313,14 @@ static void __iomem
-> > *mobiveil_pcie_map_bus(struct pci_bus *bus,
-> > >  					   unsigned int devfn, int where)  {
-> > >  	struct mobiveil_pcie *pcie = bus->sysdata;
-> > > +	struct root_port *rp = &pcie->rp;
-> > >  	u32 value;
-> > >
-> > >  	if (!mobiveil_pcie_valid_device(bus, devfn))
-> > >  		return NULL;
-> > >
-> > >  	/* RC config access */
-> > > -	if (bus->number == pcie->root_bus_nr)
-> > > +	if (bus->number == rp->root_bus_nr)
-> > >  		return pcie->csr_axi_slave_base + where;
-> > >
-> > >  	/*
-> > > @@ -325,7 +335,7 @@ static void __iomem
-> > *mobiveil_pcie_map_bus(struct
-> > > pci_bus *bus,
-> > >
-> > >  	mobiveil_csr_writel(pcie, value,
-> > PAB_AXI_AMAP_PEX_WIN_L(WIN_NUM_0));
-> > >
-> > > -	return pcie->config_axi_slave_base + where;
-> > > +	return rp->config_axi_slave_base + where;
-> > >  }
-> > >
-> > >  static struct pci_ops mobiveil_pcie_ops = { @@ -339,7 +349,8 @@
-> > > static void mobiveil_pcie_isr(struct irq_desc *desc)
-> > >  	struct irq_chip *chip = irq_desc_get_chip(desc);
-> > >  	struct mobiveil_pcie *pcie = irq_desc_get_handler_data(desc);
-> > >  	struct device *dev = &pcie->pdev->dev;
-> > > -	struct mobiveil_msi *msi = &pcie->msi;
-> > > +	struct root_port *rp = &pcie->rp;
-> > > +	struct mobiveil_msi *msi = &rp->msi;
-> > >  	u32 msi_data, msi_addr_lo, msi_addr_hi;
-> > >  	u32 intr_status, msi_status;
-> > >  	unsigned long shifted_status;
-> > > @@ -365,7 +376,7 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
-> > >  		shifted_status >>= PAB_INTX_START;
-> > >  		do {
-> > >  			for_each_set_bit(bit, &shifted_status, PCI_NUM_INTX) {
-> > > -				virq = irq_find_mapping(pcie->intx_domain,
-> > > +				virq = irq_find_mapping(rp->intx_domain,
-> > >  							bit + 1);
-> > >  				if (virq)
-> > >  					generic_handle_irq(virq);
-> > > @@ -424,15 +435,16 @@ static int mobiveil_pcie_parse_dt(struct
-> > mobiveil_pcie *pcie)
-> > >  	struct device *dev = &pcie->pdev->dev;
-> > >  	struct platform_device *pdev = pcie->pdev;
-> > >  	struct device_node *node = dev->of_node;
-> > > +	struct root_port *rp = &pcie->rp;
-> > >  	struct resource *res;
-> > >
-> > >  	/* map config resource */
-> > >  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> > >  					   "config_axi_slave");
-> > > -	pcie->config_axi_slave_base = devm_pci_remap_cfg_resource(dev, res);
-> > > -	if (IS_ERR(pcie->config_axi_slave_base))
-> > > -		return PTR_ERR(pcie->config_axi_slave_base);
-> > > -	pcie->ob_io_res = res;
-> > > +	rp->config_axi_slave_base = devm_pci_remap_cfg_resource(dev, res);
-> > > +	if (IS_ERR(rp->config_axi_slave_base))
-> > > +		return PTR_ERR(rp->config_axi_slave_base);
-> > > +	rp->ob_io_res = res;
-> > >
-> > >  	/* map csr resource */
-> > >  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, @@
-> > -455,9
-> > > +467,9 @@ static int mobiveil_pcie_parse_dt(struct mobiveil_pcie *pcie)
-> > >  	if (of_property_read_u32(node, "ppio-wins", &pcie->ppio_wins))
-> > >  		pcie->ppio_wins = MAX_PIO_WINDOWS;
-> > >
-> > > -	pcie->irq = platform_get_irq(pdev, 0);
-> > > -	if (pcie->irq <= 0) {
-> > > -		dev_err(dev, "failed to map IRQ: %d\n", pcie->irq);
-> > > +	rp->irq = platform_get_irq(pdev, 0);
-> > > +	if (rp->irq <= 0) {
-> > > +		dev_err(dev, "failed to map IRQ: %d\n", rp->irq);
-> > >  		return -ENODEV;
-> > >  	}
-> > >
-> > > @@ -564,9 +576,9 @@ static int mobiveil_bringup_link(struct
-> > > mobiveil_pcie *pcie)  static void mobiveil_pcie_enable_msi(struct
-> > > mobiveil_pcie *pcie)  {
-> > >  	phys_addr_t msg_addr = pcie->pcie_reg_base;
-> > > -	struct mobiveil_msi *msi = &pcie->msi;
-> > > +	struct mobiveil_msi *msi = &pcie->rp.msi;
-> > >
-> > > -	pcie->msi.num_of_vectors = PCI_NUM_MSI;
-> > > +	msi->num_of_vectors = PCI_NUM_MSI;
-> > >  	msi->msi_pages_phys = (phys_addr_t)msg_addr;
-> > >
-> > >  	writel_relaxed(lower_32_bits(msg_addr),
-> > > @@ -579,7 +591,8 @@ static void mobiveil_pcie_enable_msi(struct
-> > > mobiveil_pcie *pcie)
-> > >
-> > >  static int mobiveil_host_init(struct mobiveil_pcie *pcie)  {
-> > > -	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
-> > > +	struct root_port *rp = &pcie->rp;
-> > > +	struct pci_host_bridge *bridge = rp->bridge;
-> > >  	u32 value, pab_ctrl, type;
-> > >  	struct resource_entry *win;
-> > >
-> > > @@ -629,8 +642,8 @@ static int mobiveil_host_init(struct mobiveil_pcie
-> > *pcie)
-> > >  	 */
-> > >
-> > >  	/* config outbound translation window */
-> > > -	program_ob_windows(pcie, WIN_NUM_0, pcie->ob_io_res->start, 0,
-> > > -			   CFG_WINDOW_TYPE, resource_size(pcie->ob_io_res));
-> > > +	program_ob_windows(pcie, WIN_NUM_0, rp->ob_io_res->start, 0,
-> > > +			   CFG_WINDOW_TYPE, resource_size(rp->ob_io_res));
-> > >
-> > >  	/* memory inbound translation window */
-> > >  	program_ib_windows(pcie, WIN_NUM_0, 0, 0, MEM_WINDOW_TYPE,
-> > > IB_WIN_SIZE); @@ -667,32 +680,36 @@ static void
-> > > mobiveil_mask_intx_irq(struct irq_data *data)  {
-> > >  	struct irq_desc *desc = irq_to_desc(data->irq);
-> > >  	struct mobiveil_pcie *pcie;
-> > > +	struct root_port *rp;
-> > >  	unsigned long flags;
-> > >  	u32 mask, shifted_val;
-> > >
-> > >  	pcie = irq_desc_get_chip_data(desc);
-> > > +	rp = &pcie->rp;
-> > >  	mask = 1 << ((data->hwirq + PAB_INTX_START) - 1);
-> > > -	raw_spin_lock_irqsave(&pcie->intx_mask_lock, flags);
-> > > +	raw_spin_lock_irqsave(&rp->intx_mask_lock, flags);
-> > >  	shifted_val = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
-> > >  	shifted_val &= ~mask;
-> > >  	mobiveil_csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
-> > > -	raw_spin_unlock_irqrestore(&pcie->intx_mask_lock, flags);
-> > > +	raw_spin_unlock_irqrestore(&rp->intx_mask_lock, flags);
-> > >  }
-> > >
-> > >  static void mobiveil_unmask_intx_irq(struct irq_data *data)  {
-> > >  	struct irq_desc *desc = irq_to_desc(data->irq);
-> > >  	struct mobiveil_pcie *pcie;
-> > > +	struct root_port *rp;
-> > >  	unsigned long flags;
-> > >  	u32 shifted_val, mask;
-> > >
-> > >  	pcie = irq_desc_get_chip_data(desc);
-> > > +	rp = &pcie->rp;
-> > >  	mask = 1 << ((data->hwirq + PAB_INTX_START) - 1);
-> > > -	raw_spin_lock_irqsave(&pcie->intx_mask_lock, flags);
-> > > +	raw_spin_lock_irqsave(&rp->intx_mask_lock, flags);
-> > >  	shifted_val = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
-> > >  	shifted_val |= mask;
-> > >  	mobiveil_csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
-> > > -	raw_spin_unlock_irqrestore(&pcie->intx_mask_lock, flags);
-> > > +	raw_spin_unlock_irqrestore(&rp->intx_mask_lock, flags);
-> > >  }
-> > >
-> > >  static struct irq_chip intx_irq_chip = { @@ -760,7 +777,7 @@ static
-> > > int mobiveil_irq_msi_domain_alloc(struct irq_domain *domain,
-> > >  					 unsigned int nr_irqs, void *args)  {
-> > >  	struct mobiveil_pcie *pcie = domain->host_data;
-> > > -	struct mobiveil_msi *msi = &pcie->msi;
-> > > +	struct mobiveil_msi *msi = &pcie->rp.msi;
-> > >  	unsigned long bit;
-> > >
-> > >  	WARN_ON(nr_irqs != 1);
-> > > @@ -787,7 +804,7 @@ static void mobiveil_irq_msi_domain_free(struct
-> > > irq_domain *domain,  {
-> > >  	struct irq_data *d = irq_domain_get_irq_data(domain, virq);
-> > >  	struct mobiveil_pcie *pcie = irq_data_get_irq_chip_data(d);
-> > > -	struct mobiveil_msi *msi = &pcie->msi;
-> > > +	struct mobiveil_msi *msi = &pcie->rp.msi;
-> > >
-> > >  	mutex_lock(&msi->lock);
-> > >
-> > > @@ -808,9 +825,9 @@ static int mobiveil_allocate_msi_domains(struct
-> > > mobiveil_pcie *pcie)  {
-> > >  	struct device *dev = &pcie->pdev->dev;
-> > >  	struct fwnode_handle *fwnode = of_node_to_fwnode(dev->of_node);
-> > > -	struct mobiveil_msi *msi = &pcie->msi;
-> > > +	struct mobiveil_msi *msi = &pcie->rp.msi;
-> > >
-> > > -	mutex_init(&pcie->msi.lock);
-> > > +	mutex_init(&msi->lock);
-> > >  	msi->dev_domain = irq_domain_add_linear(NULL,
-> > msi->num_of_vectors,
-> > >  						&msi_domain_ops, pcie);
-> > >  	if (!msi->dev_domain) {
-> > > @@ -834,18 +851,19 @@ static int mobiveil_pcie_init_irq_domain(struct
-> > > mobiveil_pcie *pcie)  {
-> > >  	struct device *dev = &pcie->pdev->dev;
-> > >  	struct device_node *node = dev->of_node;
-> > > +	struct root_port *rp = &pcie->rp;
-> > >  	int ret;
-> > >
-> > >  	/* setup INTx */
-> > > -	pcie->intx_domain = irq_domain_add_linear(node, PCI_NUM_INTX,
-> > > -						  &intx_domain_ops, pcie);
-> > > +	rp->intx_domain = irq_domain_add_linear(node, PCI_NUM_INTX,
-> > > +						&intx_domain_ops, pcie);
-> > >
-> > > -	if (!pcie->intx_domain) {
-> > > +	if (!rp->intx_domain) {
-> > >  		dev_err(dev, "Failed to get a INTx IRQ domain\n");
-> > >  		return -ENOMEM;
-> > >  	}
-> > >
-> > > -	raw_spin_lock_init(&pcie->intx_mask_lock);
-> > > +	raw_spin_lock_init(&rp->intx_mask_lock);
-> > >
-> > >  	/* setup MSI */
-> > >  	ret = mobiveil_allocate_msi_domains(pcie);
-> > > @@ -862,6 +880,7 @@ static int mobiveil_pcie_probe(struct
-> > platform_device *pdev)
-> > >  	struct pci_bus *child;
-> > >  	struct pci_host_bridge *bridge;
-> > >  	struct device *dev = &pdev->dev;
-> > > +	struct root_port *rp;
-> > >  	int ret;
-> > >
-> > >  	/* allocate the PCIe port */
-> > > @@ -870,6 +889,8 @@ static int mobiveil_pcie_probe(struct
-> > platform_device *pdev)
-> > >  		return -ENOMEM;
-> > >
-> > >  	pcie = pci_host_bridge_priv(bridge);
-> > > +	rp = &pcie->rp;
-> > > +	rp->bridge = bridge;
-> > >
-> > >  	pcie->pdev = pdev;
-> > >
-> > > @@ -904,12 +925,12 @@ static int mobiveil_pcie_probe(struct
-> > platform_device *pdev)
-> > >  		return ret;
-> > >  	}
-> > >
-> > > -	irq_set_chained_handler_and_data(pcie->irq, mobiveil_pcie_isr, pcie);
-> > > +	irq_set_chained_handler_and_data(rp->irq, mobiveil_pcie_isr, pcie);
-> > >
-> > >  	/* Initialize bridge */
-> > >  	bridge->dev.parent = dev;
-> > >  	bridge->sysdata = pcie;
-> > > -	bridge->busnr = pcie->root_bus_nr;
-> > > +	bridge->busnr = rp->root_bus_nr;
-> > >  	bridge->ops = &mobiveil_pcie_ops;
-> > >  	bridge->map_irq = of_irq_parse_and_map_pci;
-> > >  	bridge->swizzle_irq = pci_common_swizzle;
-> > > --
-> > > 2.17.1
-> > >
+SGkgQW5kcmV3LA0KDQpUaGFua3MgYSBsb3QgZm9yIHlvdXIgY29tbWVudHMhDQoNCj4gLS0tLS1P
+cmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQW5kcmV3IE11cnJheSA8YW5kcmV3Lm11cnJh
+eUBhcm0uY29tPg0KPiBTZW50OiAyMDIwxOox1MIxM8jVIDE4OjM1DQo+IFRvOiBaLnEuIEhvdSA8
+emhpcWlhbmcuaG91QG54cC5jb20+DQo+IENjOiBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOyBs
+aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5r
+ZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiBiaGVsZ2Fhc0Bnb29n
+bGUuY29tOyByb2JoK2R0QGtlcm5lbC5vcmc7IGFybmRAYXJuZGIuZGU7DQo+IG1hcmsucnV0bGFu
+ZEBhcm0uY29tOyBsLnN1YnJhaG1hbnlhQG1vYml2ZWlsLmNvLmluOw0KPiBzaGF3bmd1b0BrZXJu
+ZWwub3JnOyBtLmthcnRoaWtleWFuQG1vYml2ZWlsLmNvLmluOyBMZW8gTGkNCj4gPGxlb3lhbmcu
+bGlAbnhwLmNvbT47IGxvcmVuem8ucGllcmFsaXNpQGFybS5jb207DQo+IGNhdGFsaW4ubWFyaW5h
+c0Bhcm0uY29tOyB3aWxsLmRlYWNvbkBhcm0uY29tOyBNaW5na2FpIEh1DQo+IDxtaW5na2FpLmh1
+QG54cC5jb20+OyBNLmguIExpYW4gPG1pbmdodWFuLmxpYW5AbnhwLmNvbT47IFhpYW93ZWkgQmFv
+DQo+IDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIdjkgMDMvMTJd
+IFBDSTogbW9iaXZlaWw6IENvbGxlY3QgdGhlIGludGVycnVwdCByZWxhdGVkDQo+IG9wZXJhdGlv
+bnMgaW50byBhIHJvdXRpbmUNCj4gDQo+IE9uIFdlZCwgTm92IDIwLCAyMDE5IGF0IDAzOjQ1OjM3
+QU0gKzAwMDAsIFoucS4gSG91IHdyb3RlOg0KPiA+IEZyb206IEhvdSBaaGlxaWFuZyA8WmhpcWlh
+bmcuSG91QG54cC5jb20+DQo+ID4NCj4gPiBDb2xsZWN0IHRoZSBpbnRlcnJ1cHQgaW5pdGlhbGl6
+YXRpb24gcmVsYXRlZCBvcGVyYXRpb25zIGludG8gYSBuZXcNCj4gPiByb3V0aW5lIHRvIG1ha2Ug
+aXQgbW9yZSByZWFkYWJsZS4NCj4gDQo+IEkgcHJlZmVyIHRoZSB3b3JkICdmdW5jdGlvbicgaW5z
+dGVhZCBvZiByb3V0aW5lLiBBbHNvIGluZGljYXRlIHdoeSwgbm90IG9ubHkgaXMgaXQNCj4gbmlj
+ZXIgYnV0IGl0IGlzIGluIHByZXBhcmF0aW9uIGZvciBFUCBzdXBwb3J0Lg0KDQpXaWxsIHJlcGxh
+Y2UgdGhlICdyb3V0aW5lJyB3aXRoICdmdW5jdGlvbicsIGl0IGlzIG9ubHkgdXNlZCBpbiBSQyBt
+b2RlLCBub3QgdXNlZCBpbiBFUCBtb2RlLg0KDQo+IA0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTog
+SG91IFpoaXFpYW5nIDxaaGlxaWFuZy5Ib3VAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiBWOToNCj4g
+PiAgLSBOZXcgcGF0Y2ggc3BsaXRlZCBmcm9tIHRoZSAjMSBvZiBWOCBwYXRjaGVzIHRvIG1ha2Ug
+aXQgZWFzeSB0byByZXZpZXcuDQo+ID4NCj4gPiAgZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2ll
+LW1vYml2ZWlsLmMgfCA2NQ0KPiA+ICsrKysrKysrKysrKysrKysrLS0tLS0tLS0tDQo+ID4gIDEg
+ZmlsZSBjaGFuZ2VkLCA0MiBpbnNlcnRpb25zKCspLCAyMyBkZWxldGlvbnMoLSkNCj4gPg0KPiA+
+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL3BjaWUtbW9iaXZlaWwuYw0KPiA+
+IGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2llLW1vYml2ZWlsLmMNCj4gPiBpbmRleCA5N2Y2
+ODJjYTdjN2EuLjUxMmIyN2EwNTM2ZSAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3BjaS9jb250
+cm9sbGVyL3BjaWUtbW9iaXZlaWwuYw0KPiA+ICsrKyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIv
+cGNpZS1tb2JpdmVpbC5jDQo+ID4gQEAgLTQ1NCwxMiArNDU0LDYgQEAgc3RhdGljIGludCBtb2Jp
+dmVpbF9wY2llX3BhcnNlX2R0KHN0cnVjdA0KPiBtb2JpdmVpbF9wY2llICpwY2llKQ0KPiA+ICAJ
+CXJldHVybiBQVFJfRVJSKHBjaWUtPmNzcl9heGlfc2xhdmVfYmFzZSk7DQo+ID4gIAlwY2llLT5w
+Y2llX3JlZ19iYXNlID0gcmVzLT5zdGFydDsNCj4gPg0KPiA+IC0JLyogbWFwIE1TSSBjb25maWcg
+cmVzb3VyY2UgKi8NCj4gPiAtCXJlcyA9IHBsYXRmb3JtX2dldF9yZXNvdXJjZV9ieW5hbWUocGRl
+diwgSU9SRVNPVVJDRV9NRU0sDQo+ICJhcGJfY3NyIik7DQo+ID4gLQlwY2llLT5hcGJfY3NyX2Jh
+c2UgPSBkZXZtX3BjaV9yZW1hcF9jZmdfcmVzb3VyY2UoZGV2LCByZXMpOw0KPiA+IC0JaWYgKElT
+X0VSUihwY2llLT5hcGJfY3NyX2Jhc2UpKQ0KPiA+IC0JCXJldHVybiBQVFJfRVJSKHBjaWUtPmFw
+Yl9jc3JfYmFzZSk7DQo+ID4gLQ0KPiA+ICAJLyogcmVhZCB0aGUgbnVtYmVyIG9mIHdpbmRvd3Mg
+cmVxdWVzdGVkICovDQo+ID4gIAlpZiAob2ZfcHJvcGVydHlfcmVhZF91MzIobm9kZSwgImFwaW8t
+d2lucyIsICZwY2llLT5hcGlvX3dpbnMpKQ0KPiA+ICAJCXBjaWUtPmFwaW9fd2lucyA9IE1BWF9Q
+SU9fV0lORE9XUzsNCj4gPiBAQCAtNDY3LDEyICs0NjEsNiBAQCBzdGF0aWMgaW50IG1vYml2ZWls
+X3BjaWVfcGFyc2VfZHQoc3RydWN0DQo+IG1vYml2ZWlsX3BjaWUgKnBjaWUpDQo+ID4gIAlpZiAo
+b2ZfcHJvcGVydHlfcmVhZF91MzIobm9kZSwgInBwaW8td2lucyIsICZwY2llLT5wcGlvX3dpbnMp
+KQ0KPiA+ICAJCXBjaWUtPnBwaW9fd2lucyA9IE1BWF9QSU9fV0lORE9XUzsNCj4gPg0KPiA+IC0J
+cnAtPmlycSA9IHBsYXRmb3JtX2dldF9pcnEocGRldiwgMCk7DQo+ID4gLQlpZiAocnAtPmlycSA8
+PSAwKSB7DQo+ID4gLQkJZGV2X2VycihkZXYsICJmYWlsZWQgdG8gbWFwIElSUTogJWRcbiIsIHJw
+LT5pcnEpOw0KPiA+IC0JCXJldHVybiAtRU5PREVWOw0KPiA+IC0JfQ0KPiA+IC0NCj4gPiAgCXJl
+dHVybiAwOw0KPiA+ICB9DQo+ID4NCj4gPiBAQCAtNjE4LDkgKzYwNiw2IEBAIHN0YXRpYyBpbnQg
+bW9iaXZlaWxfaG9zdF9pbml0KHN0cnVjdCBtb2JpdmVpbF9wY2llDQo+ICpwY2llKQ0KPiA+ICAJ
+cGFiX2N0cmwgfD0gKDEgPDwgQU1CQV9QSU9fRU5BQkxFX1NISUZUKSB8ICgxIDw8DQo+IFBFWF9Q
+SU9fRU5BQkxFX1NISUZUKTsNCj4gPiAgCW1vYml2ZWlsX2Nzcl93cml0ZWwocGNpZSwgcGFiX2N0
+cmwsIFBBQl9DVFJMKTsNCj4gPg0KPiA+IC0JbW9iaXZlaWxfY3NyX3dyaXRlbChwY2llLCAoUEFC
+X0lOVFBfSU5UWF9NQVNLIHwNCj4gUEFCX0lOVFBfTVNJX01BU0spLA0KPiA+IC0JCQkgICAgUEFC
+X0lOVFBfQU1CQV9NSVNDX0VOQik7DQo+ID4gLQ0KPiA+ICAJLyoNCj4gPiAgCSAqIHByb2dyYW0g
+UElPIEVuYWJsZSBCaXQgdG8gMSBhbmQgQ29uZmlnIFdpbmRvdyBFbmFibGUgQml0IHRvIDEgaW4N
+Cj4gPiAgCSAqIFBBQl9BWElfUElPX0NUUkwgUmVnaXN0ZXINCj4gPiBAQCAtNjcwLDkgKzY1NSw2
+IEBAIHN0YXRpYyBpbnQgbW9iaXZlaWxfaG9zdF9pbml0KHN0cnVjdCBtb2JpdmVpbF9wY2llDQo+
+ICpwY2llKQ0KPiA+ICAJdmFsdWUgfD0gKFBDSV9DTEFTU19CUklER0VfUENJIDw8IDE2KTsNCj4g
+PiAgCW1vYml2ZWlsX2Nzcl93cml0ZWwocGNpZSwgdmFsdWUsIFBBQl9JTlRQX0FYSV9QSU9fQ0xB
+U1MpOw0KPiA+DQo+ID4gLQkvKiBzZXR1cCBNU0kgaGFyZHdhcmUgcmVnaXN0ZXJzICovDQo+ID4g
+LQltb2JpdmVpbF9wY2llX2VuYWJsZV9tc2kocGNpZSk7DQo+ID4gLQ0KPiA+ICAJcmV0dXJuIDA7
+DQo+ID4gIH0NCj4gPg0KPiA+IEBAIC04NzMsNiArODU1LDQ2IEBAIHN0YXRpYyBpbnQgbW9iaXZl
+aWxfcGNpZV9pbml0X2lycV9kb21haW4oc3RydWN0DQo+IG1vYml2ZWlsX3BjaWUgKnBjaWUpDQo+
+ID4gIAlyZXR1cm4gMDsNCj4gPiAgfQ0KPiA+DQo+ID4gK3N0YXRpYyBpbnQgbW9iaXZlaWxfcGNp
+ZV9pbnRlcnJ1cHRfaW5pdChzdHJ1Y3QgbW9iaXZlaWxfcGNpZSAqcGNpZSkgew0KPiA+ICsJc3Ry
+dWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiA9IHBjaWUtPnBkZXY7DQo+ID4gKwlzdHJ1Y3QgZGV2
+aWNlICpkZXYgPSAmcGRldi0+ZGV2Ow0KPiA+ICsJc3RydWN0IHJvb3RfcG9ydCAqcnAgPSAmcGNp
+ZS0+cnA7DQo+ID4gKwlzdHJ1Y3QgcmVzb3VyY2UgKnJlczsNCj4gPiArCWludCByZXQ7DQo+ID4g
+Kw0KPiA+ICsJLyogbWFwIE1TSSBjb25maWcgcmVzb3VyY2UgKi8NCj4gPiArCXJlcyA9IHBsYXRm
+b3JtX2dldF9yZXNvdXJjZV9ieW5hbWUocGRldiwgSU9SRVNPVVJDRV9NRU0sDQo+ICJhcGJfY3Ny
+Iik7DQo+ID4gKwlwY2llLT5hcGJfY3NyX2Jhc2UgPSBkZXZtX3BjaV9yZW1hcF9jZmdfcmVzb3Vy
+Y2UoZGV2LCByZXMpOw0KPiA+ICsJaWYgKElTX0VSUihwY2llLT5hcGJfY3NyX2Jhc2UpKQ0KPiA+
+ICsJCXJldHVybiBQVFJfRVJSKHBjaWUtPmFwYl9jc3JfYmFzZSk7DQo+ID4gKw0KPiA+ICsJLyog
+c2V0dXAgTVNJIGhhcmR3YXJlIHJlZ2lzdGVycyAqLw0KPiA+ICsJbW9iaXZlaWxfcGNpZV9lbmFi
+bGVfbXNpKHBjaWUpOw0KPiANCj4gRG9lcyB0aGlzIG5lZWQgdG8gY29tZSBhZnRlciBtb2JpdmVp
+bF9wY2llX2luaXRfaXJxX2RvbWFpbiAtIGdpdmVuIHRoYXQgdGhpcw0KPiBmdW5jdGlvbiBzZXRz
+IHVwIHRoZSBpcnEgZG9tYWluIGZvciBNU0k/DQoNCk5vLCBJIGRvbid0IHRoaW5rIHNvLCBiZWNh
+dXNlIEkgZGlkbid0IGNoYW5nZSB0aGUgcmVsYXRpdmUgb3JkZXIgb2YgdGhlIDIgZnVuY3Rpb25z
+DQp5b3UgbWVudGlvbmVkLg0KDQpUaGFua3MsDQpaaGlxaWFuZw0KDQo+IA0KPiBUaGFua3MsDQo+
+IA0KPiBBbmRyZXcgTXVycmF5DQo+IA0KPiA+ICsNCj4gPiArCXJwLT5pcnEgPSBwbGF0Zm9ybV9n
+ZXRfaXJxKHBkZXYsIDApOw0KPiA+ICsJaWYgKHJwLT5pcnEgPD0gMCkgew0KPiA+ICsJCWRldl9l
+cnIoZGV2LCAiZmFpbGVkIHRvIG1hcCBJUlE6ICVkXG4iLCBycC0+aXJxKTsNCj4gPiArCQlyZXR1
+cm4gLUVOT0RFVjsNCj4gPiArCX0NCj4gPiArDQo+ID4gKwkvKiBpbml0aWFsaXplIHRoZSBJUlEg
+ZG9tYWlucyAqLw0KPiA+ICsJcmV0ID0gbW9iaXZlaWxfcGNpZV9pbml0X2lycV9kb21haW4ocGNp
+ZSk7DQo+ID4gKwlpZiAocmV0KSB7DQo+ID4gKwkJZGV2X2VycihkZXYsICJGYWlsZWQgY3JlYXRp
+bmcgSVJRIERvbWFpblxuIik7DQo+ID4gKwkJcmV0dXJuIHJldDsNCj4gPiArCX0NCj4gPiArDQo+
+ID4gKwlpcnFfc2V0X2NoYWluZWRfaGFuZGxlcl9hbmRfZGF0YShycC0+aXJxLCBtb2JpdmVpbF9w
+Y2llX2lzciwgcGNpZSk7DQo+ID4gKw0KPiA+ICsJLyogRW5hYmxlIGludGVycnVwdHMgKi8NCj4g
+PiArCW1vYml2ZWlsX2Nzcl93cml0ZWwocGNpZSwgKFBBQl9JTlRQX0lOVFhfTUFTSyB8DQo+IFBB
+Ql9JTlRQX01TSV9NQVNLKSwNCj4gPiArCQkJICAgIFBBQl9JTlRQX0FNQkFfTUlTQ19FTkIpOw0K
+PiA+ICsNCj4gPiArDQo+ID4gKwlyZXR1cm4gMDsNCj4gPiArfQ0KPiA+ICsNCj4gPiAgaW50IG1v
+Yml2ZWlsX3BjaWVfaG9zdF9wcm9iZShzdHJ1Y3QgbW9iaXZlaWxfcGNpZSAqcGNpZSkgIHsNCj4g
+PiAgCXN0cnVjdCByb290X3BvcnQgKnJwID0gJnBjaWUtPnJwOw0KPiA+IEBAIC05MDYsMTUgKzky
+OCwxMiBAQCBpbnQgbW9iaXZlaWxfcGNpZV9ob3N0X3Byb2JlKHN0cnVjdA0KPiBtb2JpdmVpbF9w
+Y2llICpwY2llKQ0KPiA+ICAJCXJldHVybiByZXQ7DQo+ID4gIAl9DQo+ID4NCj4gPiAtCS8qIGlu
+aXRpYWxpemUgdGhlIElSUSBkb21haW5zICovDQo+ID4gLQlyZXQgPSBtb2JpdmVpbF9wY2llX2lu
+aXRfaXJxX2RvbWFpbihwY2llKTsNCj4gPiArCXJldCA9IG1vYml2ZWlsX3BjaWVfaW50ZXJydXB0
+X2luaXQocGNpZSk7DQo+ID4gIAlpZiAocmV0KSB7DQo+ID4gLQkJZGV2X2VycihkZXYsICJGYWls
+ZWQgY3JlYXRpbmcgSVJRIERvbWFpblxuIik7DQo+ID4gKwkJZGV2X2VycihkZXYsICJJbnRlcnJ1
+cHQgaW5pdCBmYWlsZWRcbiIpOw0KPiA+ICAJCXJldHVybiByZXQ7DQo+ID4gIAl9DQo+ID4NCj4g
+PiAtCWlycV9zZXRfY2hhaW5lZF9oYW5kbGVyX2FuZF9kYXRhKHJwLT5pcnEsIG1vYml2ZWlsX3Bj
+aWVfaXNyLCBwY2llKTsNCj4gPiAtDQo+ID4gIAkvKiBJbml0aWFsaXplIGJyaWRnZSAqLw0KPiA+
+ICAJYnJpZGdlLT5kZXYucGFyZW50ID0gZGV2Ow0KPiA+ICAJYnJpZGdlLT5zeXNkYXRhID0gcGNp
+ZTsNCj4gPiAtLQ0KPiA+IDIuMTcuMQ0KPiA+DQo=
