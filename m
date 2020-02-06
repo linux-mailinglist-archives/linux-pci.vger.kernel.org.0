@@ -2,519 +2,415 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0ACCC15462A
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Feb 2020 15:29:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 219E6154999
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Feb 2020 17:47:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbgBFO3a (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Feb 2020 09:29:30 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:35656 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728101AbgBFO31 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Feb 2020 09:29:27 -0500
-Received: by mail-wr1-f67.google.com with SMTP id w12so7483685wrt.2
-        for <linux-pci@vger.kernel.org>; Thu, 06 Feb 2020 06:29:25 -0800 (PST)
+        id S1727835AbgBFQqq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Feb 2020 11:46:46 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36899 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727593AbgBFQqp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Feb 2020 11:46:45 -0500
+Received: by mail-wm1-f67.google.com with SMTP id f129so812634wmf.2;
+        Thu, 06 Feb 2020 08:46:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=thegoodpenguin-co-uk.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=sHzvz8ECz4i4fq/RjQVDBciamQYKgTQqlpJVkiTjp7U=;
-        b=SF5U6rMk15CC4rXONdlX+n8CkxqZP1CdYBrm12BWjRl2O7QAibUV3p84xtyG99PSgN
-         hkVbWfTEx1EfhbE+/1hBprLNtx5ryQOSzqzGxOmW0ON0wrWEE1NJwwqWZdAUZ4nv5elX
-         byRdMzi/rTQjarhxnnC/29fc5TNelvfj9IbeMzrz5V5K88t/5rSxbE5e5cDQ497c/Heu
-         iSZN7lFhCELAEp9BnBEk8zzCC1Ag8yunraQMkmohHF1IbT9dz+PK/OrpoEur6/ErG6Oh
-         jmsvXIn9TSMP/FABOz0dzXa9duoL2jLKqM/Se5MsQzZ2RUwvBmoLEommvleZM1GShuDn
-         ftzQ==
+         :content-disposition:in-reply-to:user-agent;
+        bh=wUnXfgSgnNmu56cvC7CfJncoSF9G9qEgH4w6vXBb080=;
+        b=smav1Dn7EXl+YvPaqnsrkK5OdII5/B1+7blMjoYdZa0BjMqwjSHtI0PjEpNz5sgLwj
+         XKL+K4YzdykrLslpE0JlpHkktTOwZ2qWiBcbLKbfMt5MYlHlnWzJGeZhz9qG8vqKJ1LK
+         Bs93cYobln1zqsFXkrzfj3tuewZiatYRGbVNhdZ9fg18QOIk/4NSFlZ2EXyyVGLgOqdD
+         /zVRtfSLDaSzlEgfo3bzYJobFGwdiKIaUheLJvaD3ElY5Q0fJ02zzkuUe2kYqzimbWSP
+         5FUsJQWImVm9dxAlj5YwaS2CG1TewhvpLRE3zwi6yrJrSxwhhZWWvQdS+xL+cxitBgh5
+         fFcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=sHzvz8ECz4i4fq/RjQVDBciamQYKgTQqlpJVkiTjp7U=;
-        b=dHRg2/cLiKsBfpqelYdUj7z4HDpj5tzl8StUr80B4VRoERTVMRiJ04pbh7MexrBZWH
-         BqxyQukcfoYxAB9zTA39AfqlVn+fKw4CqwZr9/JfWyjI0EkebXNm0pVoLL3WFIfB+SjX
-         tTaB6XcVpAa1spANJ7j97/dlqhtA+HI9SMJ84+K0Hm/obOb/3cLZwBAQf3py9Ktq0rwk
-         /8MyWC5Yv+h4uESEMLb/o7jul+gp1qhsbddhu92iVkBCznzjI4Yd//BH0R4xxtn0VmQm
-         efMkZulZ+BMz+AU8whZpbruPVP6LrNHNXA/andx/JaOHmQw5f8Rzo8dCoydsVMmWq0jN
-         Id/g==
-X-Gm-Message-State: APjAAAWcS3xsSJrYPn34Nu+d4xQv8m32E0RvVyQWr8Hgoa/YDrl93mVb
-        e6Zk93C2eRu1OD4VIcuf2IkLRQ==
-X-Google-Smtp-Source: APXvYqxSqwe+38JNQ83XhQONAtuFv3VJgbE/d+JBNtrWFz8CAT2pR3tuat6z8LdpQj+0cwuegzXEpQ==
-X-Received: by 2002:adf:e543:: with SMTP id z3mr3949759wrm.369.1580999364405;
-        Thu, 06 Feb 2020 06:29:24 -0800 (PST)
-Received: from big-machine ([2a00:23c5:dd80:8400:94e8:de94:574e:efb1])
-        by smtp.gmail.com with ESMTPSA id e16sm4317772wrs.73.2020.02.06.06.29.23
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wUnXfgSgnNmu56cvC7CfJncoSF9G9qEgH4w6vXBb080=;
+        b=mlrXqUk36FRTtnv/FxcSBvDl4DFKsbyS4PLMjaejuzbyLRp/Q4y1mXjcmg54YSGrpD
+         ubFROiaAHR+oBQ2+PZ7pb/rJW0h1C7Ivtx+PxKOypUThVA/7WqA0M9ltH1oiwhqbPtG6
+         kYTqJ9Dcu8ATUGojZ9D8EhjjqEsTTai2fkDfLh8opcPd9sfVxe3AN1M+VO5+8u7YkL5o
+         sCz2GoOMeATWipdF38Z7JMo4+U2/5E/HkGpSiEUoEAZWr/RXWb+0jseCkE3rUbpyP+iO
+         Ey4fI1lYK9UUoXxSisM3n10HMX8yZ8sAOJ+ZiT3jfZaaGBIO8J21dtRTDky1vgP0aV12
+         Wxfw==
+X-Gm-Message-State: APjAAAUTfqz4A378kYpJVm+LzAw2wxgL1+eaZ8GyPPVfZhxIJ0Wtl6Mp
+        p386lo61T9DcShMfkITp7dg=
+X-Google-Smtp-Source: APXvYqwMljafdZnMQ27eNfgVJEqR6DehQRw+E3wLOJOJft/Jq12Ak3Z13XYi3dQ8phS3P/ewVHFkpw==
+X-Received: by 2002:a1c:a515:: with SMTP id o21mr5574898wme.85.1581007601957;
+        Thu, 06 Feb 2020 08:46:41 -0800 (PST)
+Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
+        by smtp.gmail.com with ESMTPSA id q124sm14476939wme.2.2020.02.06.08.46.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 06:29:23 -0800 (PST)
-Date:   Thu, 6 Feb 2020 14:29:21 +0000
-From:   Andrew Murray <amurray@thegoodpenguin.co.uk>
-To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc:     Andrew Murray <andrew.murray@arm.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
-        Leo Li <leoyang.li@nxp.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: Re: [PATCHv9 10/12] PCI: mobiveil: Add PCIe Gen4 RC driver for NXP
- Layerscape SoCs
-Message-ID: <20200206142921.GB19388@big-machine>
-References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
- <20191120034451.30102-11-Zhiqiang.Hou@nxp.com>
- <20200113120249.GO42593@e119886-lin.cambridge.arm.com>
- <DB8PR04MB6747A139456AE03F92B72294841D0@DB8PR04MB6747.eurprd04.prod.outlook.com>
+        Thu, 06 Feb 2020 08:46:40 -0800 (PST)
+Date:   Thu, 6 Feb 2020 17:46:39 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Vidya Sagar <vidyas@nvidia.com>, bjorn@helgaas.com,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Andrew Murray <andrew.murray@arm.com>, treding@nvidia.com,
+        jonathanh@nvidia.com, linux-tegra@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH] PCI: Add MCFG quirks for Tegra194 host controllers
+Message-ID: <20200206164639.GA2182011@ulmo>
+References: <20200103174935.5612-1-vidyas@nvidia.com>
+ <CABhMZUUHGEEhsJ-+foSsodqtKXyX5ZNPkGgv_VzXz=Qv+NVcUA@mail.gmail.com>
+ <9a767725-9671-6402-4e1c-a648f5a7860b@nvidia.com>
+ <20200117121736.GA7072@e121166-lin.cambridge.arm.com>
+ <20200120111042.GA203160@ulmo>
+ <20200120151849.GA24402@e121166-lin.cambridge.arm.com>
+ <20200121134435.GC899558@ulmo>
+ <20200123104941.GA7179@e121166-lin.cambridge.arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="a8Wt8u1KmwUX3Y2C"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <DB8PR04MB6747A139456AE03F92B72294841D0@DB8PR04MB6747.eurprd04.prod.outlook.com>
+In-Reply-To: <20200123104941.GA7179@e121166-lin.cambridge.arm.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 01:45:57PM +0000, Z.q. Hou wrote:
-> Hi Andrew,
-> 
-> Thanks a lot for your comments!
-> 
-> > -----Original Message-----
-> > From: Andrew Murray <andrew.murray@arm.com>
-> > Sent: 2020年1月13日 20:03
-> > To: Z.q. Hou <zhiqiang.hou@nxp.com>
-> > Cc: linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > bhelgaas@google.com; robh+dt@kernel.org; arnd@arndb.de;
-> > mark.rutland@arm.com; l.subrahmanya@mobiveil.co.in;
-> > shawnguo@kernel.org; m.karthikeyan@mobiveil.co.in; Leo Li
-> > <leoyang.li@nxp.com>; lorenzo.pieralisi@arm.com;
-> > catalin.marinas@arm.com; will.deacon@arm.com; Mingkai Hu
-> > <mingkai.hu@nxp.com>; M.h. Lian <minghuan.lian@nxp.com>; Xiaowei Bao
-> > <xiaowei.bao@nxp.com>
-> > Subject: Re: [PATCHv9 10/12] PCI: mobiveil: Add PCIe Gen4 RC driver for NXP
-> > Layerscape SoCs
-> > 
-> > On Wed, Nov 20, 2019 at 03:46:23AM +0000, Z.q. Hou wrote:
-> > > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> > >
-> > > This PCIe controller is based on the Mobiveil GPEX IP, which is
-> > > compatible with the PCI Express™ Base Specification, Revision 4.0.
-> > >
-> > > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> > > Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
-> > > ---
-> > >  drivers/pci/controller/mobiveil/Kconfig       |  10 +
-> > >  drivers/pci/controller/mobiveil/Makefile      |   1 +
-> > >  .../mobiveil/pcie-layerscape-gen4.c           | 274
-> > ++++++++++++++++++
-> > >  .../pci/controller/mobiveil/pcie-mobiveil.h   |  16 +-
-> > >  4 files changed, 299 insertions(+), 2 deletions(-)  create mode
-> > > 100644 drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c
-> > >
-> > > diff --git a/drivers/pci/controller/mobiveil/Kconfig
-> > > b/drivers/pci/controller/mobiveil/Kconfig
-> > > index 64343c07bfed..c823be8dab1c 100644
-> > > --- a/drivers/pci/controller/mobiveil/Kconfig
-> > > +++ b/drivers/pci/controller/mobiveil/Kconfig
-> > > @@ -21,4 +21,14 @@ config PCIE_MOBIVEIL_PLAT
-> > >  	  Soft IP. It has up to 8 outbound and inbound windows
-> > >  	  for address translation and it is a PCIe Gen4 IP.
-> > >
-> > > +config PCIE_LAYERSCAPE_GEN4
-> > > +	bool "Freescale Layerscape PCIe Gen4 controller"
-> > > +	depends on PCI
-> > > +	depends on OF && (ARM64 || ARCH_LAYERSCAPE)
-> > > +	depends on PCI_MSI_IRQ_DOMAIN
-> > > +	select PCIE_MOBIVEIL_HOST
-> > > +	help
-> > > +	  Say Y here if you want PCIe Gen4 controller support on
-> > > +	  Layerscape SoCs. The PCIe controller can work in RC or
-> > > +	  EP mode according to RCW[HOST_AGT_PEX] setting.
-> > 
-> > I think you can remove the last sentence - it doesn't give any value to users of
-> > KConfig.
-> 
-> OK, will remove it in v10.
-> 
-> > 
-> > 
-> > >  endmenu
-> > > diff --git a/drivers/pci/controller/mobiveil/Makefile
-> > > b/drivers/pci/controller/mobiveil/Makefile
-> > > index 9fb6d1c6504d..99d879de32d6 100644
-> > > --- a/drivers/pci/controller/mobiveil/Makefile
-> > > +++ b/drivers/pci/controller/mobiveil/Makefile
-> > > @@ -2,3 +2,4 @@
-> > >  obj-$(CONFIG_PCIE_MOBIVEIL) += pcie-mobiveil.o
-> > >  obj-$(CONFIG_PCIE_MOBIVEIL_HOST) += pcie-mobiveil-host.o
-> > >  obj-$(CONFIG_PCIE_MOBIVEIL_PLAT) += pcie-mobiveil-plat.o
-> > > +obj-$(CONFIG_PCIE_LAYERSCAPE_GEN4) += pcie-layerscape-gen4.o
-> > > diff --git a/drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c
-> > > b/drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c
-> > > new file mode 100644
-> > > index 000000000000..6c0d3e2532db
-> > > --- /dev/null
-> > > +++ b/drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c
-> > > @@ -0,0 +1,274 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * PCIe Gen4 host controller driver for NXP Layerscape SoCs
-> > > + *
-> > > + * Copyright 2019 NXP
-> > > + *
-> > > + * Author: Zhiqiang Hou <Zhiqiang.Hou@nxp.com>  */
-> > > +
-> > > +#include <linux/kernel.h>
-> > > +#include <linux/interrupt.h>
-> > > +#include <linux/init.h>
-> > > +#include <linux/of_pci.h>
-> > > +#include <linux/of_platform.h>
-> > > +#include <linux/of_irq.h>
-> > > +#include <linux/of_address.h>
-> > > +#include <linux/pci.h>
-> > > +#include <linux/platform_device.h>
-> > > +#include <linux/resource.h>
-> > > +#include <linux/mfd/syscon.h>
-> > > +#include <linux/regmap.h>
-> > > +
-> > > +#include "pcie-mobiveil.h"
-> > > +
-> > > +/* LUT and PF control registers */
-> > > +#define PCIE_LUT_OFF			0x80000
-> > > +#define PCIE_PF_OFF			0xc0000
-> > > +#define PCIE_PF_INT_STAT		0x18
-> > > +#define PF_INT_STAT_PABRST		BIT(31)
-> > > +
-> > > +#define PCIE_PF_DBG			0x7fc
-> > > +#define PF_DBG_LTSSM_MASK		0x3f
-> > > +#define PF_DBG_LTSSM_L0			0x2d /* L0 state */
-> > > +#define PF_DBG_WE			BIT(31)
-> > > +#define PF_DBG_PABR			BIT(27)
-> > > +
-> > > +#define to_ls_pcie_g4(x)		platform_get_drvdata((x)->pdev)
-> > > +
-> > > +struct ls_pcie_g4 {
-> > > +	struct mobiveil_pcie pci;
-> > > +	struct delayed_work dwork;
-> > > +	int irq;
-> > > +};
-> > > +
-> > > +static inline u32 ls_pcie_g4_lut_readl(struct ls_pcie_g4 *pcie, u32
-> > > +off) {
-> > > +	return ioread32(pcie->pci.csr_axi_slave_base + PCIE_LUT_OFF + off);
-> > > +}
-> > > +
-> > > +static inline void ls_pcie_g4_lut_writel(struct ls_pcie_g4 *pcie,
-> > > +					 u32 off, u32 val)
-> > > +{
-> > > +	iowrite32(val, pcie->pci.csr_axi_slave_base + PCIE_LUT_OFF + off); }
-> > > +
-> > > +static inline u32 ls_pcie_g4_pf_readl(struct ls_pcie_g4 *pcie, u32
-> > > +off) {
-> > > +	return ioread32(pcie->pci.csr_axi_slave_base + PCIE_PF_OFF + off); }
-> > > +
-> > > +static inline void ls_pcie_g4_pf_writel(struct ls_pcie_g4 *pcie,
-> > > +					u32 off, u32 val)
-> > > +{
-> > > +	iowrite32(val, pcie->pci.csr_axi_slave_base + PCIE_PF_OFF + off); }
-> > > +
-> > > +static bool ls_pcie_g4_is_bridge(struct ls_pcie_g4 *pcie) {
-> > > +	struct mobiveil_pcie *mv_pci = &pcie->pci;
-> > > +	u32 header_type;
-> > > +
-> > > +	header_type = mobiveil_csr_readb(mv_pci, PCI_HEADER_TYPE);
-> > > +	header_type &= 0x7f;
-> > > +
-> > > +	return header_type == PCI_HEADER_TYPE_BRIDGE; }
-> > > +
-> > > +static int ls_pcie_g4_link_up(struct mobiveil_pcie *pci) {
-> > > +	struct ls_pcie_g4 *pcie = to_ls_pcie_g4(pci);
-> > > +	u32 state;
-> > > +
-> > > +	state = ls_pcie_g4_pf_readl(pcie, PCIE_PF_DBG);
-> > > +	state =	state & PF_DBG_LTSSM_MASK;
-> > > +
-> > > +	if (state == PF_DBG_LTSSM_L0)
-> > > +		return 1;
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static void ls_pcie_g4_disable_interrupt(struct ls_pcie_g4 *pcie) {
-> > > +	struct mobiveil_pcie *mv_pci = &pcie->pci;
-> > > +
-> > > +	mobiveil_csr_writel(mv_pci, 0, PAB_INTP_AMBA_MISC_ENB); }
-> > > +
-> > > +static void ls_pcie_g4_enable_interrupt(struct ls_pcie_g4 *pcie) {
-> > > +	struct mobiveil_pcie *mv_pci = &pcie->pci;
-> > > +	u32 val;
-> > > +
-> > > +	/* Clear the interrupt status */
-> > > +	mobiveil_csr_writel(mv_pci, 0xffffffff, PAB_INTP_AMBA_MISC_STAT);
-> > > +
-> > > +	val = PAB_INTP_INTX_MASK | PAB_INTP_MSI | PAB_INTP_RESET |
-> > > +	      PAB_INTP_PCIE_UE | PAB_INTP_IE_PMREDI | PAB_INTP_IE_EC;
-> > > +	mobiveil_csr_writel(mv_pci, val, PAB_INTP_AMBA_MISC_ENB); }
-> > > +
-> > > +static void ls_pcie_g4_reinit_hw(struct ls_pcie_g4 *pcie) {
-> > > +	struct mobiveil_pcie *mv_pci = &pcie->pci;
-> > > +	struct device *dev = &mv_pci->pdev->dev;
-> > > +	u32 val, act_stat;
-> > > +	int to = 100;
-> > > +
-> > > +	/* Poll for pab_csb_reset to set and PAB activity to clear */
-> > > +	do {
-> > > +		usleep_range(10, 15);
-> > > +		val = ls_pcie_g4_pf_readl(pcie, PCIE_PF_INT_STAT);
-> > > +		act_stat = mobiveil_csr_readl(mv_pci, PAB_ACTIVITY_STAT);
-> > > +	} while (((val & PF_INT_STAT_PABRST) == 0 || act_stat) && to--);
-> > > +	if (to < 0) {
-> > > +		dev_err(dev, "Poll PABRST&PABACT timeout\n");
-> > > +		return;
-> > 
-> > If a timeout happens here - the caller has no idea this has happened and yet
-> > the following work doesn't get done. Isn't this a problem?
-> 
-> Will change the return value type to 'int' in v10, so that the caller can know the fail.
-> 
-> > 
-> > > +	}
-> > > +
-> > > +	/* clear PEX_RESET bit in PEX_PF0_DBG register */
-> > > +	val = ls_pcie_g4_pf_readl(pcie, PCIE_PF_DBG);
-> > > +	val |= PF_DBG_WE;
-> > > +	ls_pcie_g4_pf_writel(pcie, PCIE_PF_DBG, val);
-> > > +
-> > > +	val = ls_pcie_g4_pf_readl(pcie, PCIE_PF_DBG);
-> > > +	val |= PF_DBG_PABR;
-> > > +	ls_pcie_g4_pf_writel(pcie, PCIE_PF_DBG, val);
-> > > +
-> > > +	val = ls_pcie_g4_pf_readl(pcie, PCIE_PF_DBG);
-> > > +	val &= ~PF_DBG_WE;
-> > > +	ls_pcie_g4_pf_writel(pcie, PCIE_PF_DBG, val);
-> > > +
-> > > +	mobiveil_host_init(mv_pci, true);
-> > 
-> > Can mobiveil_host_init fail?
-> 
-> It should not fail, only register programming operations were left in this function.
-> 
-> > 
-> > > +
-> > > +	to = 100;
-> > > +	while (!ls_pcie_g4_link_up(mv_pci) && to--)
-> > > +		usleep_range(200, 250);
-> > > +	if (to < 0)
-> > > +		dev_err(dev, "PCIe link training timeout\n"); }
-> > > +
-> > > +static irqreturn_t ls_pcie_g4_isr(int irq, void *dev_id) {
-> > > +	struct ls_pcie_g4 *pcie = (struct ls_pcie_g4 *)dev_id;
-> > > +	struct mobiveil_pcie *mv_pci = &pcie->pci;
-> > > +	u32 val;
-> > > +
-> > > +	val = mobiveil_csr_readl(mv_pci, PAB_INTP_AMBA_MISC_STAT);
-> > > +	if (!val)
-> > > +		return IRQ_NONE;
-> > > +
-> > > +	if (val & PAB_INTP_RESET) {
-> > 
-> > Can you explain why this is needed (perhaps also in the cover letter)?
-> 
-> The hot reset will result in the RC crash, so need the ISR to reset the RC.
-> 
-> > 
-> > > +		ls_pcie_g4_disable_interrupt(pcie);
-> > > +		schedule_delayed_work(&pcie->dwork, msecs_to_jiffies(1));
-> > > +	}
-> > > +
-> > > +	mobiveil_csr_writel(mv_pci, val, PAB_INTP_AMBA_MISC_STAT);
-> > > +
-> > > +	return IRQ_HANDLED;
-> > > +}
-> > > +
-> > > +static int ls_pcie_g4_interrupt_init(struct mobiveil_pcie *mv_pci) {
-> > > +	struct ls_pcie_g4 *pcie = to_ls_pcie_g4(mv_pci);
-> > > +	struct platform_device *pdev = mv_pci->pdev;
-> > > +	struct device *dev = &pdev->dev;
-> > > +	int ret;
-> > > +
-> > > +	pcie->irq = platform_get_irq_byname(pdev, "intr");
-> > > +	if (pcie->irq < 0) {
-> > > +		dev_err(dev, "Can't get 'intr' IRQ, errno = %d\n", pcie->irq);
-> > > +		return pcie->irq;
-> > > +	}
-> > > +	ret = devm_request_irq(dev, pcie->irq, ls_pcie_g4_isr,
-> > > +			       IRQF_SHARED, pdev->name, pcie);
-> > > +	if (ret) {
-> > > +		dev_err(dev, "Can't register PCIe IRQ, errno = %d\n", ret);
-> > > +		return  ret;
-> > > +	}
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static void ls_pcie_g4_reset(struct work_struct *work) {
-> > > +	struct delayed_work *dwork = container_of(work, struct delayed_work,
-> > > +						  work);
-> > > +	struct ls_pcie_g4 *pcie = container_of(dwork, struct ls_pcie_g4, dwork);
-> > > +	struct mobiveil_pcie *mv_pci = &pcie->pci;
-> > > +	u16 ctrl;
-> > > +
-> > > +	ctrl = mobiveil_csr_readw(mv_pci, PCI_BRIDGE_CONTROL);
-> > > +	ctrl &= ~PCI_BRIDGE_CTL_BUS_RESET;
-> > > +	mobiveil_csr_writew(mv_pci, ctrl, PCI_BRIDGE_CONTROL);
-> > > +	ls_pcie_g4_reinit_hw(pcie);
-> > > +	ls_pcie_g4_enable_interrupt(pcie);
-> > > +}
-> > > +
-> > > +static struct mobiveil_rp_ops ls_pcie_g4_rp_ops = {
-> > > +	.interrupt_init = ls_pcie_g4_interrupt_init, };
-> > > +
-> > > +static const struct mobiveil_pab_ops ls_pcie_g4_pab_ops = {
-> > > +	.link_up = ls_pcie_g4_link_up,
-> > > +};
-> > > +
-> > > +static int __init ls_pcie_g4_probe(struct platform_device *pdev) {
-> > > +	struct device *dev = &pdev->dev;
-> > > +	struct pci_host_bridge *bridge;
-> > > +	struct mobiveil_pcie *mv_pci;
-> > > +	struct ls_pcie_g4 *pcie;
-> > > +	struct device_node *np = dev->of_node;
-> > > +	int ret;
-> > > +
-> > > +	if (!of_parse_phandle(np, "msi-parent", 0)) {
-> > > +		dev_err(dev, "Failed to find msi-parent\n");
-> > > +		return -EINVAL;
-> > > +	}
-> > > +
-> > > +	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
-> > > +	if (!bridge)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	pcie = pci_host_bridge_priv(bridge);
-> > > +	mv_pci = &pcie->pci;
-> > > +
-> > > +	mv_pci->pdev = pdev;
-> > > +	mv_pci->ops = &ls_pcie_g4_pab_ops;
-> > > +	mv_pci->rp.ops = &ls_pcie_g4_rp_ops;
-> > > +	mv_pci->rp.bridge = bridge;
-> > > +
-> > > +	platform_set_drvdata(pdev, pcie);
-> > > +
-> > > +	INIT_DELAYED_WORK(&pcie->dwork, ls_pcie_g4_reset);
-> > > +
-> > > +	ret = mobiveil_pcie_host_probe(mv_pci);
-> > > +	if (ret) {
-> > > +		dev_err(dev, "Fail to probe\n");
-> > > +		return  ret;
-> > > +	}
-> > > +
-> > > +	if (!ls_pcie_g4_is_bridge(pcie))
-> > 
-> > Is this a check that could apply to all host bridge drivers and thus live in
-> > mobiveil_pcie_host_probe?
-> 
-> Yes, will do in v10.
-> 
-> > 
-> > > +		return -ENODEV;
-> > > +
-> > > +	ls_pcie_g4_enable_interrupt(pcie);
-> > 
-> > Is there an issue here in that we enable interrupts *after* telling the kernel
-> > about our controller? (Same applies for bailing if the IP isn't a bridge).
-> 
-> Andrew, I don't understand the issue, can you help to explain?
 
-If I recall correctly mobiveil_pcie_host_probe tells the kernel there is a PCI host
-bridge and allows it to start enumerating the tree - at this point surely interrupts
-may be expected - however we don't enable them until after this point. I'd assume
-we'd need to get the hardware into a state where it can handle interrupts before
-telling the kernel it can use this host bridge.
+--a8Wt8u1KmwUX3Y2C
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Likewise is ls_pcie_g4_is_bridge returns false we fail the probe yet the kernel may
-already be enumerating the bus.
+On Thu, Jan 23, 2020 at 10:49:41AM +0000, Lorenzo Pieralisi wrote:
+> On Tue, Jan 21, 2020 at 02:44:35PM +0100, Thierry Reding wrote:
+> > On Mon, Jan 20, 2020 at 03:18:49PM +0000, Lorenzo Pieralisi wrote:
+> > > On Mon, Jan 20, 2020 at 12:10:42PM +0100, Thierry Reding wrote:
+> > >=20
+> > > [...]
+> > >=20
+> > > > > > Currently the BSP has the kernel booting through Device Tree me=
+chanism
+> > > > > > and there is a plan to support UEFI based boot as well in the f=
+uture software
+> > > > > > releases for which we need this quirky way of handling ECAM.
+> > > > > > Tegra194 is going to be the only and last chip with this issue =
+and next chip
+> > > > > > in line in Tegra SoC series will be fully compliant with ECAM.
+> > > > >=20
+> > > > > ACPI on ARM64 works on a standard subset of systems, defined by t=
+he
+> > > > > ARM SBSA:
+> > > > >=20
+> > > > > http://infocenter.arm.com/help/topic/com.arm.doc.den0029c/Server_=
+Base_System_Architecture_v6_0_ARM_DEN_0029C_SBSA_6_0.pdf
+> > > >=20
+> > > > I don't understand what you're saying here. Are you saying that you=
+ want
+> > > > to prevent vendors from upstreaming code that they need to support =
+their
+> > > > ACPI based platforms? I understand that the lack of support for pro=
+per
+> > > > ECAM means that a platform will not be SBSA compatible, but I wasn't
+> > > > aware that lack of SBSA compatibility meant that a platform would be
+> > > > prohibited from implementing ACPI support in an upstream kernel.
+> > >=20
+> > > ACPI on ARM64 requires a set of HW components described in the SBSA.
+> > >=20
+> > > If those HW requirements are not fulfilled you can't bootstrap an ARM=
+64
+> > > system with ACPI - it is as simple as that.
+> >=20
+> > That's an odd statement. We do in fact have an ARM64 system that doesn't
+> > fulfill the ECAM requirement and yet it successfully boots with ACPI.
+>=20
+> I know very well (but that's not a reason to break the PCIe
+> specification).
+>=20
+> Still, the mistake you are making is thinking that ACPI compliancy
+> stops at the MCFG quirk. Adding another quirk to the MCFG list will make
+> PCI enumerates but there is more to that, eg MSI/IOMMU and that's
+> just an example.
+>=20
+> There are platforms in that MCFG list that eg can't do MSI which
+> basically means they are useless - you look at it as yet another hook
+> into MCFG, I look at it with history in mind and from an ACPI ARM64
+> maintainership perspective.
+>=20
+> So first thing to do is to post full support for this host controller
+> inclusive of MSI/INTx (which AFAICS is another piece of HW that is
+> not SBSA compliant since DWC uses a funnel to trigger MSIs) and
+> IOMMU, then we will see how to proceed.
+>=20
+> Look at this (and again, that's just an example but AFAICS it applies to
+> this host bridge as well):
+>=20
+> https://lore.kernel.org/linux-pci/VE1PR04MB67029FB127DBF4A725CB9698904E0@=
+VE1PR04MB6702.eurprd04.prod.outlook.com
 
-Thanks,
+So it turns out we indeed have the same issue with MSIs since Tegra194
+uses the same DesignWare controller that others do (looks like at least
+HiSilicon and Annapurna Labs are in the same boat). That said, most
+drivers fallback to legacy interrupts and that works fine. Agreed that
+it isn't ideal, but it's about as good as it's going to get on this
+hardware.
 
-Andrew Murray
+> > >                                             It is not even appropriate
+> > > to discuss this on a Linux mailing list anymore since it is HW
+> > > requirements and it has been public information since ACPI on ARM64 w=
+as
+> > > first enabled.
+> >=20
+> > Erm... we're discussing Linux patches. Why would it be inappropriate to
+> > discuss them on a Linux mailing list?
+>=20
+> I am not discussing Linux patches at all - I am telling you that the
+> DWC host controller is not a) PCIe spec compliant b) SBSA compliant
+> and there is nothing to review from a Linux kernel code perspective.
+>=20
+> This is just another quirk to enumerate with ACPI a non-compliant
+> system, if Bjorn is willing to take it go for it.
 
-> 
-> Thanks,
-> Zhiqiang
-> 
-> > 
-> > Thanks,
-> > 
-> > Andrew Murray
-> > 
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static const struct of_device_id ls_pcie_g4_of_match[] = {
-> > > +	{ .compatible = "fsl,lx2160a-pcie", },
-> > > +	{ },
-> > > +};
-> > > +
-> > > +static struct platform_driver ls_pcie_g4_driver = {
-> > > +	.driver = {
-> > > +		.name = "layerscape-pcie-gen4",
-> > > +		.of_match_table = ls_pcie_g4_of_match,
-> > > +		.suppress_bind_attrs = true,
-> > > +	},
-> > > +};
-> > > +
-> > > +builtin_platform_driver_probe(ls_pcie_g4_driver, ls_pcie_g4_probe);
-> > > diff --git a/drivers/pci/controller/mobiveil/pcie-mobiveil.h
-> > > b/drivers/pci/controller/mobiveil/pcie-mobiveil.h
-> > > index 750a7fd95bc1..c57a68d2bac4 100644
-> > > --- a/drivers/pci/controller/mobiveil/pcie-mobiveil.h
-> > > +++ b/drivers/pci/controller/mobiveil/pcie-mobiveil.h
-> > > @@ -43,6 +43,8 @@
-> > >  #define  PAGE_LO_MASK			0x3ff
-> > >  #define  PAGE_SEL_OFFSET_SHIFT		10
-> > >
-> > > +#define PAB_ACTIVITY_STAT		0x81c
-> > > +
-> > >  #define PAB_AXI_PIO_CTRL		0x0840
-> > >  #define  APIO_EN_MASK			0xf
-> > >
-> > > @@ -51,8 +53,18 @@
-> > >
-> > >  #define PAB_INTP_AMBA_MISC_ENB		0x0b0c
-> > >  #define PAB_INTP_AMBA_MISC_STAT		0x0b1c
-> > > -#define  PAB_INTP_INTX_MASK		0x01e0
-> > > -#define  PAB_INTP_MSI_MASK		0x8
-> > > +#define  PAB_INTP_RESET			BIT(1)
-> > > +#define  PAB_INTP_MSI			BIT(3)
-> > > +#define  PAB_INTP_INTA			BIT(5)
-> > > +#define  PAB_INTP_INTB			BIT(6)
-> > > +#define  PAB_INTP_INTC			BIT(7)
-> > > +#define  PAB_INTP_INTD			BIT(8)
-> > > +#define  PAB_INTP_PCIE_UE		BIT(9)
-> > > +#define  PAB_INTP_IE_PMREDI		BIT(29)
-> > > +#define  PAB_INTP_IE_EC			BIT(30)
-> > > +#define  PAB_INTP_MSI_MASK		PAB_INTP_MSI
-> > > +#define  PAB_INTP_INTX_MASK		(PAB_INTP_INTA |
-> > PAB_INTP_INTB |\
-> > > +					PAB_INTP_INTC | PAB_INTP_INTD)
-> > >
-> > >  #define PAB_AXI_AMAP_CTRL(win)		PAB_REG_ADDR(0x0ba0,
-> > win)
-> > >  #define  WIN_ENABLE_SHIFT		0
-> > > --
-> > > 2.17.1
-> > >
+Yeah, I'd like to hear Bjorn's opinion on this. I understand that this
+is far from an ideal situation and I'd much prefer that this chip was
+compliant. But for historical reasons it isn't. This chip was designed
+before SBSA became the quasi standard. Tegra194 also isn't a server
+chip to begin with, so SBSA compliance would likely not have been the
+main objective.
+
+> > > > > These patches will have to be carried out of tree, the MCFG quirk
+> > > > > mechanism (merged as Bjorn said more than three years ago) was su=
+pposed
+> > > > > to be a temporary plaster to bootstrap server platforms with teet=
+hing
+> > > > > issues, the aim is to remove it eventually not to add more code t=
+o it
+> > > > > indefinitely.
+> > > >=20
+> > > > Now, I fully agree that quirks are suboptimal and we'd all prefer i=
+f we
+> > > > didn't have to deal with them. Unfortunately the reality is that
+> > > > mistakes happen and hardware doesn't always work the way we want it=
+ to.
+> > > > There's plenty of other quirk mechanisms in the kernel, and frankly=
+ this
+> > > > one isn't really that bad in comparison.
+> > >=20
+> > > Because you don't have to maintain it ;) - I think I said what I had =
+to
+> > > say about the MCFG mechanism in the past - it has been three years
+> > > and counting - it is time to remove it rather that adding to it.
+> >=20
+> > What makes you think you can simply remove this without breaking support
+> > for all of the devices that currently rely on the quirks?
+>=20
+> Don't you think I know ? I said "eventually" for a reason, read what
+> I write.
+
+I read what you wrote. My point is that even "eventually" things are
+going to break if you just rip out the quirks.
+
+> > > > > So I am afraid but this quirk (and any other coming our way) will=
+ not be
+> > > > > merged in an upstream kernel anymore - for any queries please put=
+ Nvidia
+> > > > > in touch.
+> > > >=20
+> > > > Again, I don't understand what you're trying to achieve here. You s=
+eem
+> > > > to be saying that we categorically can't support this hardware beca=
+use
+> > > > it isn't fully SBSA compatible.
+> > >=20
+> > > I am not trying to achieve anything - I am just stating public
+> > > information - let me repeat it again for interested readers: to
+> > > bootstrap an ARM64 system with ACPI the platform HW design must follow
+> > > the SBSA guidelines.
+> >=20
+> > Can you clarify for me where I can find this public information? What
+> > I've been able to find suggests that that SBSA-compliant systems would
+> > typically run ACPI, but I can't find anything about SBSA compliance
+> > being a prerequisite for booting a system with ACPI.
+>=20
+> https://developer.arm.com/architectures/platform-design/server-systems
+>=20
+> Read: SBSA/SBBR
+>=20
+> /Documentation/arm64/arm-acpi.rst
+>=20
+> > I can understand why someone might *wish* for that to always be true,
+> > but it seems to be a bit far removed from reality.
+>=20
+> It is reality and it is not a *wish*, Nvidia will comply - even if
+> *eventually* we end up merging this code.
+
+I already said that we reported these findings to the hardware team and
+this is hopefully going to allow us to be SBSA compliant in future
+chips. However, it's too late for Tegra194 and we can't retroactively
+fix it.
+
+> > > > Do you have any alternative suggestions on how we can support this =
+in an
+> > > > upstream kernel?
+> > >=20
+> > > Booting with a device tree ?
+> >=20
+> > We can already do that, but should that prevent us from making UEFI and
+> > ACPI an alternative boot mechanism?
+>=20
+> Why do you need ACPI support ? What for ?
+
+Customers have requested it and they want to be able to use an upstream
+kernel.
+
+> > > > We realized a while ago that we cannot achieve proper ECAM on Tegra=
+194
+> > > > because of some issues with the hardware and we've provided this as
+> > > > feedback to the hardware engineers. As a result, the next generatio=
+n of
+> > > > Tegra should no longer suffer from these issues.
+> > >=20
+> > > We will bootstrap next generation Tegra with ACPI then, there are
+> > > SBSA tests available for compliancy - again, that's a matter for
+> > > Nvidia and Arm to settle, not a mailing list discussion.
+> >=20
+> > I don't understand why you keep insisting on this. The mailing lists are
+> > where kernel patches are discussed, are they not?
+>=20
+> See above.
+>=20
+> > > > As for Tegra194, that chip taped out two years ago and it isn't pos=
+sible
+> > > > to make it fully ECAM compliant other than by revising the chip, wh=
+ich,
+> > > > frankly, isn't going to happen.
+> > > >=20
+> > > > So I see two options here: either we find a way of dealing with thi=
+s, by
+> > > > either merging this quirk or finding an alternative solution, or we=
+ make
+> > > > the decision that some hardware just can't be supported.
+> > > >=20
+> > > > The former is fairly common, whereas I've never heard of the latter.
+> > >=20
+> > > What does this mean ? Should I wreck the upstream kernel to make it b=
+oot
+> > > with ACPI on *any* ARM64 platform out there then ?
+> >=20
+> > Heh... you must have a very low opinion of the upstream kernel if you
+> > think merging these 100 lines of code is going to wreck it.
+>=20
+> I have a very high opinion of the upstream kernel and that's why
+> as I said above I think in terms of overall ACPI ARM64 maintainership
+> rather than a platform quirk to get ACPI PCI enumeration going.
+
+=46rom a maintenance point of view things aren't going to change much just
+because we add these additional quirks. These are for the same IP that's
+already supported by other quirks for other platforms and the code lives
+entirely in the DesignWare driver, so I don't see how this negatively
+impacts maintainability of the kernel.
+
+> > And if you look at the patch, the bulk (95/109 lines) is actually in the
+> > Tegra194 PCIe driver and only 14/109 lines are added to the MCFG quirks.
+> > That's hardly the kind of change that's going to wreck the kernel.
+>=20
+> See above, show us the rest of the story.
+
+Like I said, not much we can do about MSI support without more driver-
+specific code. But since we can fallback to legacy interrupts, things
+end up working fine.
+
+Again, I fully realize that this isn't ideal and I'd rather prefer we
+didn't have to add this. But I'm also realistic and understand that
+hardware designs aren't always perfect, no matter how much we want them
+to be. The best we can do is take the lessons learned and try to make
+the next chip better.
+
+> > > My stance is clear above and the ACPI PCI programming model - inclusi=
+ve
+> > > of firmware - has been there since ACPI was deployed, if ACPI support
+> > > is required HW must comply, either that or it is out of tree patches
+> > > and I can't be blamed for that.
+> >=20
+> > Looking at the existing quirks table, there's evidently a number of
+> > people that didn't get the memo. The issue seems to be fairly common,
+> > yet for some reason you're singling out Tegra194.
+>=20
+> The issue is not very common at all. I said it before and I repeat it
+> again: those MCFG quirks were merged more than three years ago to help
+> bootstrap ACPI ARM64 ecosystem on early HW and ACPI for ARM64 is meant
+> for server (SBSA/SBBR compliant) systems, for other platforms DT is the
+> firmware of choice, ACPI on those does not work well (and *I* will have
+> to work around it).
+
+Like I said, Tegra194 is not a server chip. But it turns out that people
+want to use ACPI on non-server systems as well. The website that you
+linked to above:
+
+	https://developer.arm.com/architectures/platform-design/server-systems
+
+even says that SBSA is being extended to other segments. So, again, this
+means that we either have to say, collectively, that we don't want to
+support ACPI on ARM64 except on systems that are fully SBSA compliant or
+we have to find a way to make things work. I'm not sure we really want
+the first option and the quirk is a good compromise to get us the second
+option.
+
+> I am not singling out anybody, read the mailing lists and you will
+> realize. You asked for this patch to be reviewed, I told you what
+> my thoughts are and this patch implications - you want to go ahead,
+> ask Bjorn to merge it but at least we do it with the broader
+> consequences in mind.
+
+You seemed to be categorically rejecting this patch only because the
+system wasn't fully SBSA compliant. Given that other, non-SBSA compliant
+devices are currently supported, it certainly seemed like you were
+singling out.
+
+Anyway, like you said, it's ultimately up to Bjorn to take this or not,
+so it's not productive to go back and forth on this between the two of
+us.
+
+Perhaps a more productive way to go forward would be to look at what you
+had in mind in terms of a deprecation plan for the MCFG quirks. One idea
+that came up as we were discussing this internally was to move the quirk
+code into the DesignWare driver. That is, instead of having this code
+live in the ACPI code and referencing the DesignWare code, it'd be the
+DesignWare driver itself that would initialize PCI. This would have the
+added benefit that MSIs could be used, since the DesignWare driver does
+have the means of decoding which MSI occurred. The same code that is
+used to do this when booting from DT could be reused when booting from
+ACPI.
+
+The benefits here would be that we'd move the code out of the quirks, so
+we'd be effectively relying less on those quirks, which in turn would
+help to deprecate them.
+
+Now, I'm not exactly sure I understand your concerns regarding
+maintainability of these quirks, so maybe that proposal isn't really
+what you're looking for. Perhaps you have a better idea?
+
+Thierry
+
+--a8Wt8u1KmwUX3Y2C
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl48QuoACgkQ3SOs138+
+s6FINw/+IiaQso2PWwbDpJndE6aicM2XkpjFzV8J16kq+U5e3Tp/+hRBliLM+dKa
+hMPiX7tZyozHYad2ciK8PzFbxzMYgfc4Hh8z/3wkdk0igOnj81CyXgleL8CiDiVh
+U2yCP0y+yj30yxIds4j7jPT/+lzEaOmwMy7OYRsbKz4GeJox0JgEzZxo3J+8Uceo
+nyJcFPKt9LsWatFC7fVVmouEzJV7N69accsrjO0e1jB17Fe8VNy/BY0ha9obJ2UU
++rq1u7SMjQLxeJVMf/GEQ8e1dIJOMN2QorsLvPjRCh08p/CGXaF4NxesEIld2zoN
+1o989PFShzOH9fKGOehKFjhhQidVBvJCqdgC8FE6K4OaPrVjDKLEl1W2d6+xRsKT
+pWf1A6Amalo+Oo9RPWu89F/FUemp5ubfEMuUf0AEpkZYNZwdLGzJeQ4y99EGpuUA
+gYpUi/cxjLFogPabdu15O12kzRuP5H8AWtdgXWNK0v4bpVI5U4Nn0ELT/PFXI9OP
+aq19f0RjOFMhW7gEtZHRiduLZbNvYj9j5eZ3mLSW2YNXpQLjYe2zSVyojxBntvFZ
+0Uacra+kSs9UWBOmULkb2aaaZhxM2Ai20FmDZU03TsLB1l87/TsT6CpObTSAfedf
+XCr4PK7QVkt4Q8GBRc/qMQTDMl3IaLpEKjebDJo0DMBFTuJ31jM=
+=Nx6C
+-----END PGP SIGNATURE-----
+
+--a8Wt8u1KmwUX3Y2C--
