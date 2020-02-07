@@ -2,91 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BD792156118
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2020 23:20:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CC2CE1561A5
+	for <lists+linux-pci@lfdr.de>; Sat,  8 Feb 2020 01:00:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbgBGWUj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 7 Feb 2020 17:20:39 -0500
-Received: from ale.deltatee.com ([207.54.116.67]:35214 "EHLO ale.deltatee.com"
+        id S1727048AbgBHAAO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 7 Feb 2020 19:00:14 -0500
+Received: from mga03.intel.com ([134.134.136.65]:58200 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727032AbgBGWUj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 7 Feb 2020 17:20:39 -0500
-Received: from s0106ac1f6bb1ecac.cg.shawcable.net ([70.73.163.230] helo=[192.168.11.155])
-        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1j0BzJ-0004Bd-Az; Fri, 07 Feb 2020 15:20:38 -0700
-To:     Andrew Maier <andrew.maier@eideticom.com>, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200207221219.4309-1-andrew.maier@eideticom.com>
-Cc:     Armen Baloyan <abaloyan@gigaio.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <a70eb8eb-c584-0a53-07a9-9078b68712e4@deltatee.com>
-Date:   Fri, 7 Feb 2020 15:20:35 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200207221219.4309-1-andrew.maier@eideticom.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 70.73.163.230
-X-SA-Exim-Rcpt-To: abaloyan@gigaio.com, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, andrew.maier@eideticom.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        SURBL_BLOCKED,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.2
-Subject: Re: [PATCH v2] PCI/P2PDMA: Add the remaining Intel Sky Lake-E root
- ports to the whitelist
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+        id S1727032AbgBHAAO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 7 Feb 2020 19:00:14 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Feb 2020 16:00:13 -0800
+X-IronPort-AV: E=Sophos;i="5.70,415,1574150400"; 
+   d="scan'208";a="225545673"
+Received: from nsgsw-rhel7p6.lm.intel.com ([10.232.116.83])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Feb 2020 16:00:12 -0800
+From:   Jon Derrick <jonathan.derrick@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Pawel Baldysiak <pawel.baldysiak@intel.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Jon Derrick <jonathan.derrick@intel.com>
+Subject: [RFC 0/9] PCIe Hotplug Slot Emulation driver
+Date:   Fri,  7 Feb 2020 16:59:58 -0700
+Message-Id: <1581120007-5280-1-git-send-email-jonathan.derrick@intel.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-+cc Armen
+This set adds an emulation driver for PCIe Hotplug. There may be platforms with
+specific configurations that can support hotplug but don't provide the logical
+slot hotplug hardware. For instance, the platform may use an
+electrically-tolerant interposer between the slot and the device.
 
-On 2020-02-07 3:12 p.m., Andrew Maier wrote:
-> Add the three remaining Intel Sky Lake-E host root ports to the
-> whitelist of p2pdma.
-> 
-> P2P has been tested and is working on this system.
-> 
-> Signed-off-by: Andrew Maier <andrew.maier@eideticom.com>
-> ---
-> Resending this as I rebased it onto the latest patches.
+This driver utilizes the pci-bridge-emul architecture to manage register reads
+and writes. The underlying functionality of the hotplug emulation driver uses
+the Data Link Layer Link Active Reporting mechanism in a polling loop, but can
+tolerate other event sources such as AER or DPC.
 
-Right, this is the same machine Armen already sent, so I've CC'd him.
+When enabled and a slot is managed by the driver, all port services are managed
+by the kernel. This is done to ensure that firmware hotplug and error
+architecture does not (correctly) halt/machine check the system when hotplug is
+performed on a non-hotplug slot.
 
-Looks like we're just adding the extra possible root ports from the PCI
-IDs database:
+The driver offers two active mode: Auto and Force.
+auto: The driver will bind to non-hotplug slots
+force: The driver will bind to all slots and overrides the slot's services
 
-2031	Sky Lake-E PCI Express Root Port B	
-2032	Sky Lake-E PCI Express Root Port C	
-2033	Sky Lake-E PCI Express Root Port D
+There are three kernel params:
+pciehp.pciehp_emul_mode={off, auto, force}
+pciehp.pciehp_emul_time=<msecs polling time> (def 1000, min 100, max 60000)
+pciehp.pciehp_emul_ports=<PCI [S]BDF/ID format string>
 
-Makes sense to me, thanks,
+The pciehp_emul_ports kernel parameter takes a semi-colon tokenized string
+representing PCI [S]BDFs and IDs. The pciehp_emul_mode will then be applied to
+only those slots, leaving other slots unmanaged by pciehp_emul.
 
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+The string follows the pci_dev_str_match() format:
 
->  drivers/pci/p2pdma.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-> index 9a8a38384121..b73b10bce0df 100644
-> --- a/drivers/pci/p2pdma.c
-> +++ b/drivers/pci/p2pdma.c
-> @@ -291,6 +291,9 @@ static const struct pci_p2pdma_whitelist_entry {
->  	{PCI_VENDOR_ID_INTEL,	0x2f01, REQ_SAME_HOST_BRIDGE},
->  	/* Intel SkyLake-E */
->  	{PCI_VENDOR_ID_INTEL,	0x2030, 0},
-> +	{PCI_VENDOR_ID_INTEL,	0x2031, 0},
-> +	{PCI_VENDOR_ID_INTEL,	0x2032, 0},
-> +	{PCI_VENDOR_ID_INTEL,	0x2033, 0},
->  	{PCI_VENDOR_ID_INTEL,	0x2020, 0},
->  	{}
->  };
-> 
+  [<domain>:]<bus>:<device>.<func>[/<device>.<func>]*
+  pci:<vendor>:<device>[:<subvendor>:<subdevice>]
+
+When using the path format, the path for the device can be obtained
+using 'lspci -t' and further specified using the upstream bridge and the
+downstream port's device-function to be more robust against bus
+renumbering.
+
+When using the vendor-device format, a value of '0' in any field acts as
+a wildcard for that field, matching all values.
+
+The driver is enabled with CONFIG_HOTPLUG_PCI_PCIE_EMUL=y.
+
+The driver should be considered 'use at own risk' unless the platform/hardware
+vendor recommends this mode.
+
+Jon Derrick (9):
+  PCI: pci-bridge-emul: Update PCIe register behaviors
+  PCI: pci-bridge-emul: Eliminate reserved member
+  PCI: pci-bridge-emul: Provide a helper to set behavior
+  PCI: pciehp: Indirect slot register operations
+  PCI: Add pcie_port_slot_emulated stub
+  PCI: pciehp: Expose the poll loop to other drivers
+  PCI: Move pci_dev_str_match to search.c
+  PCI: pciehp: Add hotplug slot emulation driver
+  PCI: pciehp: Wire up pcie_port_emulate_slot and pciehp_emul
+
+ drivers/pci/hotplug/Makefile      |   4 +
+ drivers/pci/hotplug/pciehp.h      |  28 +++
+ drivers/pci/hotplug/pciehp_emul.c | 378 ++++++++++++++++++++++++++++++++++++++
+ drivers/pci/hotplug/pciehp_hpc.c  | 136 ++++++++++----
+ drivers/pci/pci-acpi.c            |   3 +
+ drivers/pci/pci-bridge-emul.c     |  95 +++++-----
+ drivers/pci/pci-bridge-emul.h     |  10 +
+ drivers/pci/pci.c                 | 163 ----------------
+ drivers/pci/pcie/Kconfig          |  14 ++
+ drivers/pci/pcie/portdrv_core.c   |  14 +-
+ drivers/pci/probe.c               |   2 +-
+ drivers/pci/search.c              | 162 ++++++++++++++++
+ include/linux/pci.h               |   8 +
+ 13 files changed, 775 insertions(+), 242 deletions(-)
+ create mode 100644 drivers/pci/hotplug/pciehp_emul.c
+
+-- 
+1.8.3.1
+
