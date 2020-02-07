@@ -2,457 +2,371 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5083E1555BF
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2020 11:32:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E487155A07
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2020 15:50:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgBGKcj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 7 Feb 2020 05:32:39 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:10168 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726587AbgBGKcj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 7 Feb 2020 05:32:39 -0500
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id C9C44E1A1822B74C0509;
-        Fri,  7 Feb 2020 18:32:23 +0800 (CST)
-Received: from DESKTOP-6T4S3DQ.china.huawei.com (10.47.88.120) by
- DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 7 Feb 2020 18:32:13 +0800
-From:   Shiju Jose <shiju.jose@huawei.com>
-To:     <linux-acpi@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <rjw@rjwysocki.net>,
-        <helgaas@kernel.org>, <lenb@kernel.org>, <bp@alien8.de>,
-        <james.morse@arm.com>, <tony.luck@intel.com>,
-        <gregkh@linuxfoundation.org>, <zhangliguang@linux.alibaba.com>,
-        <tglx@linutronix.de>
-CC:     <linuxarm@huawei.com>, <jonathan.cameron@huawei.com>,
-        <tanxiaofei@huawei.com>, <yangyicong@hisilicon.com>,
-        Shiju Jose <shiju.jose@huawei.com>
-Subject: [PATCH v4 2/2] PCI: HIP: Add handling of HiSilicon HIP PCIe controller errors
-Date:   Fri, 7 Feb 2020 10:31:43 +0000
-Message-ID: <20200207103143.20104-3-shiju.jose@huawei.com>
-X-Mailer: git-send-email 2.19.2.windows.1
-In-Reply-To: <20200207103143.20104-1-shiju.jose@huawei.com>
-References: <Shiju Jose>
- <20200207103143.20104-1-shiju.jose@huawei.com>
+        id S1726956AbgBGOuE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 7 Feb 2020 09:50:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55936 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726874AbgBGOuE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 7 Feb 2020 09:50:04 -0500
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0764320720;
+        Fri,  7 Feb 2020 14:50:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581087003;
+        bh=KqaeTN64wY2BvZofsx8i3u+SHrgmi7tPSHZDrSFoQhw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=murR2FpKhvUIrQqWnJKp3lHOQk6qxM/LNQRH/2xnBcWtAuDXhXpnVzsm1CKKngc3T
+         ZEjegCPBSVCvWEL4A0aD6C8eV88eqVUCaeetcr/aOLwW6UTg1ylaz9bIrgnPbbGJRq
+         Ce6HS5u6U5HDh2yTzdGzoavzb8iAmOeZMlj3fphY=
+Date:   Fri, 7 Feb 2020 08:50:01 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Vidya Sagar <vidyas@nvidia.com>, bjorn@helgaas.com,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Andrew Murray <andrew.murray@arm.com>, treding@nvidia.com,
+        jonathanh@nvidia.com, linux-tegra@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH] PCI: Add MCFG quirks for Tegra194 host controllers
+Message-ID: <20200207145001.GA183417@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.47.88.120]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200206164639.GA2182011@ulmo>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Yicong Yang <yangyicong@hisilicon.com>
+On Thu, Feb 06, 2020 at 05:46:39PM +0100, Thierry Reding wrote:
+> On Thu, Jan 23, 2020 at 10:49:41AM +0000, Lorenzo Pieralisi wrote:
+> > On Tue, Jan 21, 2020 at 02:44:35PM +0100, Thierry Reding wrote:
+> > > On Mon, Jan 20, 2020 at 03:18:49PM +0000, Lorenzo Pieralisi wrote:
+> > > > On Mon, Jan 20, 2020 at 12:10:42PM +0100, Thierry Reding wrote:
+> > > > 
+> > > > [...]
+> > > > 
+> > > > > > > Currently the BSP has the kernel booting through Device
+> > > > > > > Tree mechanism and there is a plan to support UEFI based
+> > > > > > > boot as well in the future software releases for which
+> > > > > > > we need this quirky way of handling ECAM.  Tegra194 is
+> > > > > > > going to be the only and last chip with this issue and
+> > > > > > > next chip in line in Tegra SoC series will be fully
+> > > > > > > compliant with ECAM.
+> > > > > > 
+> > > > > > ACPI on ARM64 works on a standard subset of systems,
+> > > > > > defined by the ARM SBSA:
+> > > > > > 
+> > > > > > http://infocenter.arm.com/help/topic/com.arm.doc.den0029c/Server_Base_System_Architecture_v6_0_ARM_DEN_0029C_SBSA_6_0.pdf
+> > > > > 
+> > > > > I don't understand what you're saying here. Are you saying
+> > > > > that you want to prevent vendors from upstreaming code that
+> > > > > they need to support their ACPI based platforms? I
+> > > > > understand that the lack of support for proper ECAM means
+> > > > > that a platform will not be SBSA compatible, but I wasn't
+> > > > > aware that lack of SBSA compatibility meant that a platform
+> > > > > would be prohibited from implementing ACPI support in an
+> > > > > upstream kernel.
 
-The HiSilicon HIP PCIe controller is capable of handling errors
-on root port and perform port reset separately at each root port.
+"Vendors upstreaming code to support ACPI-based platforms" is a
+concept that really doesn't fit in the ACPI model.  More below.
 
-This patch add error handling driver for HIP PCIe controller to log
-and report recoverable errors. Perform root port reset and restore
-link status after the recovery.
+> > > > ACPI on ARM64 requires a set of HW components described in the
+> > > > SBSA.
+> > > > 
+> > > > If those HW requirements are not fulfilled you can't bootstrap
+> > > > an ARM64 system with ACPI - it is as simple as that.
+> > > 
+> > > That's an odd statement. We do in fact have an ARM64 system that
+> > > doesn't fulfill the ECAM requirement and yet it successfully
+> > > boots with ACPI.
+> > 
+> > I know very well (but that's not a reason to break the PCIe
+> > specification).
+> > 
+> > Still, the mistake you are making is thinking that ACPI compliancy
+> > stops at the MCFG quirk. Adding another quirk to the MCFG list
+> > will make PCI enumerates but there is more to that, eg MSI/IOMMU
+> > and that's just an example.
+> > 
+> > There are platforms in that MCFG list that eg can't do MSI which
+> > basically means they are useless - you look at it as yet another
+> > hook into MCFG, I look at it with history in mind and from an ACPI
+> > ARM64 maintainership perspective.
+> > 
+> > So first thing to do is to post full support for this host
+> > controller inclusive of MSI/INTx (which AFAICS is another piece of
+> > HW that is not SBSA compliant since DWC uses a funnel to trigger
+> > MSIs) and IOMMU, then we will see how to proceed.
+> > 
+> > Look at this (and again, that's just an example but AFAICS it
+> > applies to this host bridge as well):
+> > 
+> > https://lore.kernel.org/linux-pci/VE1PR04MB67029FB127DBF4A725CB9698904E0@VE1PR04MB6702.eurprd04.prod.outlook.com
+> 
+> So it turns out we indeed have the same issue with MSIs since
+> Tegra194 uses the same DesignWare controller that others do (looks
+> like at least HiSilicon and Annapurna Labs are in the same boat).
+> That said, most drivers fallback to legacy interrupts and that works
+> fine. Agreed that it isn't ideal, but it's about as good as it's
+> going to get on this hardware.
+> 
+> > > > It is not even appropriate to discuss this on a Linux mailing
+> > > > list anymore since it is HW requirements and it has been
+> > > > public information since ACPI on ARM64 was first enabled.
+> > > 
+> > > Erm... we're discussing Linux patches. Why would it be
+> > > inappropriate to discuss them on a Linux mailing list?
+> > 
+> > I am not discussing Linux patches at all - I am telling you that
+> > the DWC host controller is not a) PCIe spec compliant b) SBSA
+> > compliant and there is nothing to review from a Linux kernel code
+> > perspective.
+> > 
+> > This is just another quirk to enumerate with ACPI a non-compliant
+> > system, if Bjorn is willing to take it go for it.
+> 
+> Yeah, I'd like to hear Bjorn's opinion on this. I understand that
+> this is far from an ideal situation and I'd much prefer that this
+> chip was compliant. But for historical reasons it isn't. This chip
+> was designed before SBSA became the quasi standard. Tegra194 also
+> isn't a server chip to begin with, so SBSA compliance would likely
+> not have been the main objective.
+> 
+> > > > > > These patches will have to be carried out of tree, the
+> > > > > > MCFG quirk mechanism (merged as Bjorn said more than three
+> > > > > > years ago) was supposed to be a temporary plaster to
+> > > > > > bootstrap server platforms with teething issues, the aim
+> > > > > > is to remove it eventually not to add more code to it
+> > > > > > indefinitely.
+> > > > > 
+> > > > > Now, I fully agree that quirks are suboptimal and we'd all
+> > > > > prefer if we didn't have to deal with them. Unfortunately
+> > > > > the reality is that mistakes happen and hardware doesn't
+> > > > > always work the way we want it to.  There's plenty of other
+> > > > > quirk mechanisms in the kernel, and frankly this one isn't
+> > > > > really that bad in comparison.
+> > > > 
+> > > > Because you don't have to maintain it ;) - I think I said what
+> > > > I had to say about the MCFG mechanism in the past - it has
+> > > > been three years and counting - it is time to remove it rather
+> > > > that adding to it.
+> > > 
+> > > What makes you think you can simply remove this without breaking
+> > > support for all of the devices that currently rely on the
+> > > quirks?
+> > 
+> > Don't you think I know ? I said "eventually" for a reason, read
+> > what I write.
+> 
+> I read what you wrote. My point is that even "eventually" things are
+> going to break if you just rip out the quirks.
 
-Following are some of the PCIe controller's recoverable errors
-1. completion transmission timeout error.
-2. CRS retry counter over the threshold error.
-3. ECC 2 bit errors
-4. AXI bresponse/rresponse errors etc.
+I doubt we'll actually remove quirks; I suspect Lorenzo meant that in
+future hardware we should be removing the *need* for the quirks.  They
+are annoyances and they do make maintenance more difficult, but in
+general I don't think we should remove things that are being used.
 
-Also fix the following Smatch warning:
-warn: should '((((1))) << (9 + i))' be a 64 bit type?
-if (err->val_bits & BIT(HISI_PCIE_LOCAL_VALID_ERR_MISC + i))
-     ^^^ This should be BIT_ULL() because it goes up to 9 + 32.
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+> > > > > > So I am afraid but this quirk (and any other coming our
+> > > > > > way) will not be merged in an upstream kernel anymore -
+> > > > > > for any queries please put Nvidia in touch.
+> > > > > 
+> > > > > Again, I don't understand what you're trying to achieve
+> > > > > here. You seem to be saying that we categorically can't
+> > > > > support this hardware because it isn't fully SBSA
+> > > > > compatible.
+> > > > 
+> > > > I am not trying to achieve anything - I am just stating public
+> > > > information - let me repeat it again for interested readers:
+> > > > to bootstrap an ARM64 system with ACPI the platform HW design
+> > > > must follow the SBSA guidelines.
+> > > 
+> > > Can you clarify for me where I can find this public information?
+> > > What I've been able to find suggests that that SBSA-compliant
+> > > systems would typically run ACPI, but I can't find anything
+> > > about SBSA compliance being a prerequisite for booting a system
+> > > with ACPI.
+> > 
+> > https://developer.arm.com/architectures/platform-design/server-systems
+> > 
+> > Read: SBSA/SBBR
+> > 
+> > /Documentation/arm64/arm-acpi.rst
+> > 
+> > > I can understand why someone might *wish* for that to always be
+> > > true, but it seems to be a bit far removed from reality.
+> > 
+> > It is reality and it is not a *wish*, Nvidia will comply - even if
+> > *eventually* we end up merging this code.
+> 
+> I already said that we reported these findings to the hardware team
+> and this is hopefully going to allow us to be SBSA compliant in
+> future chips. However, it's too late for Tegra194 and we can't
+> retroactively fix it.
+> 
+> > > > > Do you have any alternative suggestions on how we can
+> > > > > support this in an upstream kernel?
+> > > > 
+> > > > Booting with a device tree ?
+> > > 
+> > > We can already do that, but should that prevent us from making
+> > > UEFI and ACPI an alternative boot mechanism?
+> > 
+> > Why do you need ACPI support ? What for ?
+> 
+> Customers have requested it and they want to be able to use an
+> upstream kernel.
+> 
+> > > > > We realized a while ago that we cannot achieve proper ECAM
+> > > > > on Tegra194 because of some issues with the hardware and
+> > > > > we've provided this as feedback to the hardware engineers.
+> > > > > As a result, the next generation of Tegra should no longer
+> > > > > suffer from these issues.
+> > > > 
+> > > > We will bootstrap next generation Tegra with ACPI then, there
+> > > > are SBSA tests available for compliancy - again, that's a
+> > > > matter for Nvidia and Arm to settle, not a mailing list
+> > > > discussion.
+> > > 
+> > > I don't understand why you keep insisting on this. The mailing
+> > > lists are where kernel patches are discussed, are they not?
+> > 
+> > See above.
+> > 
+> > > > > As for Tegra194, that chip taped out two years ago and it
+> > > > > isn't possible to make it fully ECAM compliant other than by
+> > > > > revising the chip, which, frankly, isn't going to happen.
+> > > > > 
+> > > > > So I see two options here: either we find a way of dealing
+> > > > > with this, by either merging this quirk or finding an
+> > > > > alternative solution, or we make the decision that some
+> > > > > hardware just can't be supported.
+> > > > > 
+> > > > > The former is fairly common, whereas I've never heard of the
+> > > > > latter.
+> > > > 
+> > > > What does this mean ? Should I wreck the upstream kernel to
+> > > > make it boot with ACPI on *any* ARM64 platform out there then
+> > > > ?
+> > > 
+> > > Heh... you must have a very low opinion of the upstream kernel
+> > > if you think merging these 100 lines of code is going to wreck
+> > > it.
+> > 
+> > I have a very high opinion of the upstream kernel and that's why
+> > as I said above I think in terms of overall ACPI ARM64
+> > maintainership rather than a platform quirk to get ACPI PCI
+> > enumeration going.
+> 
+> From a maintenance point of view things aren't going to change much
+> just because we add these additional quirks. These are for the same
+> IP that's already supported by other quirks for other platforms and
+> the code lives entirely in the DesignWare driver, so I don't see how
+> this negatively impacts maintainability of the kernel.
+> 
+> > > And if you look at the patch, the bulk (95/109 lines) is
+> > > actually in the Tegra194 PCIe driver and only 14/109 lines are
+> > > added to the MCFG quirks.  That's hardly the kind of change
+> > > that's going to wreck the kernel.
+> > 
+> > See above, show us the rest of the story.
+> 
+> Like I said, not much we can do about MSI support without more
+> driver- specific code. But since we can fallback to legacy
+> interrupts, things end up working fine.
+> 
+> Again, I fully realize that this isn't ideal and I'd rather prefer
+> we didn't have to add this. But I'm also realistic and understand
+> that hardware designs aren't always perfect, no matter how much we
+> want them to be. The best we can do is take the lessons learned and
+> try to make the next chip better.
+> 
+> > > > My stance is clear above and the ACPI PCI programming model -
+> > > > inclusive of firmware - has been there since ACPI was
+> > > > deployed, if ACPI support is required HW must comply, either
+> > > > that or it is out of tree patches and I can't be blamed for
+> > > > that.
+> > > 
+> > > Looking at the existing quirks table, there's evidently a number
+> > > of people that didn't get the memo. The issue seems to be fairly
+> > > common, yet for some reason you're singling out Tegra194.
+> > 
+> > The issue is not very common at all. I said it before and I repeat
+> > it again: those MCFG quirks were merged more than three years ago
+> > to help bootstrap ACPI ARM64 ecosystem on early HW and ACPI for
+> > ARM64 is meant for server (SBSA/SBBR compliant) systems, for other
+> > platforms DT is the firmware of choice, ACPI on those does not
+> > work well (and *I* will have to work around it).
+> 
+> Like I said, Tegra194 is not a server chip. But it turns out that
+> people want to use ACPI on non-server systems as well. The website
+> that you linked to above:
+> 
+> 	https://developer.arm.com/architectures/platform-design/server-systems
+> 
+> even says that SBSA is being extended to other segments. So, again,
+> this means that we either have to say, collectively, that we don't
+> want to support ACPI on ARM64 except on systems that are fully SBSA
+> compliant or we have to find a way to make things work. I'm not sure
+> we really want the first option and the quirk is a good compromise
+> to get us the second option.
+> 
+> > I am not singling out anybody, read the mailing lists and you will
+> > realize. You asked for this patch to be reviewed, I told you what
+> > my thoughts are and this patch implications - you want to go
+> > ahead, ask Bjorn to merge it but at least we do it with the
+> > broader consequences in mind.
+> 
+> You seemed to be categorically rejecting this patch only because the
+> system wasn't fully SBSA compliant. Given that other, non-SBSA
+> compliant devices are currently supported, it certainly seemed like
+> you were singling out.
+> 
+> Anyway, like you said, it's ultimately up to Bjorn to take this or
+> not, so it's not productive to go back and forth on this between the
+> two of us.
+> 
+> Perhaps a more productive way to go forward would be to look at what
+> you had in mind in terms of a deprecation plan for the MCFG quirks.
+> One idea that came up as we were discussing this internally was to
+> move the quirk code into the DesignWare driver. That is, instead of
+> having this code live in the ACPI code and referencing the
+> DesignWare code, it'd be the DesignWare driver itself that would
+> initialize PCI. This would have the added benefit that MSIs could be
+> used, since the DesignWare driver does have the means of decoding
+> which MSI occurred. The same code that is used to do this when
+> booting from DT could be reused when booting from ACPI.
 
-Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
-Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
---
-drivers/pci/controller/Kconfig           |   8 +
-drivers/pci/controller/Makefile          |   1 +
-drivers/pci/controller/pcie-hisi-error.c | 336 +++++++++++++++++++++++++++++++
-3 files changed, 345 insertions(+)
-create mode 100644 drivers/pci/controller/pcie-hisi-error.c
----
- drivers/pci/controller/Kconfig           |   8 +
- drivers/pci/controller/Makefile          |   1 +
- drivers/pci/controller/pcie-hisi-error.c | 334 +++++++++++++++++++++++++++++++
- 3 files changed, 343 insertions(+)
- create mode 100644 drivers/pci/controller/pcie-hisi-error.c
+I think the idea of moving this code around misses the fundamental
+point that bringing up a new system with ACPI should require *zero*
+kernel changes.  It's not a question of where in the kernel quirks
+live; it's simply that no drivers (DesignWare or other), no quirks,
+no config changes, no new code at all should be required.
 
-diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-index c77069c..5dad1ca 100644
---- a/drivers/pci/controller/Kconfig
-+++ b/drivers/pci/controller/Kconfig
-@@ -260,6 +260,14 @@ config PCI_HYPERV_INTERFACE
- 	  The Hyper-V PCI Interface is a helper driver allows other drivers to
- 	  have a common interface with the Hyper-V PCI frontend driver.
- 
-+config PCIE_HISI_ERR
-+	depends on ARM64 || COMPILE_TEST
-+	depends on ACPI
-+	bool "HiSilicon HIP PCIe controller error handling driver"
-+	help
-+	  Say Y here if you want error handling support
-+	  for the PCIe controller's errors on HiSilicon HIP SoCs
-+
- source "drivers/pci/controller/dwc/Kconfig"
- source "drivers/pci/controller/cadence/Kconfig"
- endmenu
-diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
-index 3d4f597..2d1565f 100644
---- a/drivers/pci/controller/Makefile
-+++ b/drivers/pci/controller/Makefile
-@@ -28,6 +28,7 @@ obj-$(CONFIG_PCIE_MEDIATEK) += pcie-mediatek.o
- obj-$(CONFIG_PCIE_MOBIVEIL) += pcie-mobiveil.o
- obj-$(CONFIG_PCIE_TANGO_SMP8759) += pcie-tango.o
- obj-$(CONFIG_VMD) += vmd.o
-+obj-$(CONFIG_PCIE_HISI_ERR) += pcie-hisi-error.o
- # pcie-hisi.o quirks are needed even without CONFIG_PCIE_DW
- obj-y				+= dwc/
- 
-diff --git a/drivers/pci/controller/pcie-hisi-error.c b/drivers/pci/controller/pcie-hisi-error.c
-new file mode 100644
-index 0000000..7867612
---- /dev/null
-+++ b/drivers/pci/controller/pcie-hisi-error.c
-@@ -0,0 +1,334 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Driver for handling the PCIe controller errors on
-+ * HiSilicon HIP SoCs.
-+ *
-+ * Copyright (c) 2018-2019 HiSilicon Limited.
-+ */
-+
-+#include <linux/acpi.h>
-+#include <acpi/ghes.h>
-+#include <linux/delay.h>
-+#include <linux/pci.h>
-+#include <linux/platform_device.h>
-+#include <linux/kfifo.h>
-+#include <linux/spinlock.h>
-+
-+#include "../pci.h"
-+
-+#define HISI_PCIE_ERR_RECOVER_RING_SIZE           16
-+#define	HISI_PCIE_ERR_INFO_SIZE	1024
-+
-+/* HISI PCIe controller error definitions */
-+#define HISI_PCIE_ERR_MISC_REGS	33
-+
-+#define HISI_PCIE_SUB_MODULE_ID_AP	0
-+#define HISI_PCIE_SUB_MODULE_ID_TL	1
-+#define HISI_PCIE_SUB_MODULE_ID_MAC	2
-+#define HISI_PCIE_SUB_MODULE_ID_DL	3
-+#define HISI_PCIE_SUB_MODULE_ID_SDI	4
-+
-+#define HISI_PCIE_LOCAL_VALID_VERSION		BIT(0)
-+#define HISI_PCIE_LOCAL_VALID_SOC_ID		BIT(1)
-+#define HISI_PCIE_LOCAL_VALID_SOCKET_ID		BIT(2)
-+#define HISI_PCIE_LOCAL_VALID_NIMBUS_ID		BIT(3)
-+#define HISI_PCIE_LOCAL_VALID_SUB_MODULE_ID	BIT(4)
-+#define HISI_PCIE_LOCAL_VALID_CORE_ID		BIT(5)
-+#define HISI_PCIE_LOCAL_VALID_PORT_ID		BIT(6)
-+#define HISI_PCIE_LOCAL_VALID_ERR_TYPE		BIT(7)
-+#define HISI_PCIE_LOCAL_VALID_ERR_SEVERITY	BIT(8)
-+#define HISI_PCIE_LOCAL_VALID_ERR_MISC		9
-+
-+#define HISI_ERR_SEV_RECOVERABLE	0
-+#define HISI_ERR_SEV_FATAL		1
-+#define HISI_ERR_SEV_CORRECTED		2
-+#define HISI_ERR_SEV_NONE		3
-+
-+static guid_t hisi_pcie_sec_type = GUID_INIT(0xB2889FC9, 0xE7D7, 0x4F9D,
-+			0xA8, 0x67, 0xAF, 0x42, 0xE9, 0x8B, 0xE7, 0x72);
-+
-+#define HISI_PCIE_CORE_ID(v)             ((v) >> 3)
-+#define HISI_PCIE_PORT_ID(core, v)       (((v) >> 1) + ((core) << 3))
-+#define HISI_PCIE_CORE_PORT_ID(v)        (((v) % 8) << 1)
-+
-+struct hisi_pcie_err_data {
-+	u64   val_bits;
-+	u8    version;
-+	u8    soc_id;
-+	u8    socket_id;
-+	u8    nimbus_id;
-+	u8    sub_module_id;
-+	u8    core_id;
-+	u8    port_id;
-+	u8    err_severity;
-+	u16   err_type;
-+	u8    reserv[2];
-+	u32   err_misc[HISI_PCIE_ERR_MISC_REGS];
-+};
-+
-+struct hisi_pcie_err_info {
-+	struct hisi_pcie_err_data err_data;
-+	struct platform_device *pdev;
-+};
-+
-+static char *hisi_pcie_sub_module_name(u8 id)
-+{
-+	switch (id) {
-+	case HISI_PCIE_SUB_MODULE_ID_AP: return "AP Layer";
-+	case HISI_PCIE_SUB_MODULE_ID_TL: return "TL Layer";
-+	case HISI_PCIE_SUB_MODULE_ID_MAC: return "MAC Layer";
-+	case HISI_PCIE_SUB_MODULE_ID_DL: return "DL Layer";
-+	case HISI_PCIE_SUB_MODULE_ID_SDI: return "SDI Layer";
-+	}
-+
-+	return "unknown";
-+}
-+
-+static char *hisi_pcie_err_severity(u8 err_sev)
-+{
-+	switch (err_sev) {
-+	case HISI_ERR_SEV_RECOVERABLE: return "recoverable";
-+	case HISI_ERR_SEV_FATAL: return "fatal";
-+	case HISI_ERR_SEV_CORRECTED: return "corrected";
-+	case HISI_ERR_SEV_NONE: return "none";
-+	}
-+
-+	return "unknown";
-+}
-+
-+static int hisi_pcie_port_reset(struct platform_device *pdev,
-+					u32 chip_id, u32 port_id)
-+{
-+	struct device *dev = &pdev->dev;
-+	acpi_handle handle = ACPI_HANDLE(dev);
-+	union acpi_object arg[3];
-+	struct acpi_object_list arg_list;
-+	acpi_status s;
-+	unsigned long long data = 0;
-+
-+	arg[0].type = ACPI_TYPE_INTEGER;
-+	arg[0].integer.value = chip_id;
-+	arg[1].type = ACPI_TYPE_INTEGER;
-+	arg[1].integer.value = HISI_PCIE_CORE_ID(port_id);
-+	arg[2].type = ACPI_TYPE_INTEGER;
-+	arg[2].integer.value = HISI_PCIE_CORE_PORT_ID(port_id);
-+
-+	arg_list.count = 3;
-+	arg_list.pointer = arg;
-+
-+	/* Call the ACPI handle to reset root port */
-+	s = acpi_evaluate_integer(handle, "RST", &arg_list, &data);
-+	if (ACPI_FAILURE(s)) {
-+		dev_err(dev, "No RST method\n");
-+		return -EIO;
-+	}
-+
-+	if (data) {
-+		dev_err(dev, "Failed to Reset\n");
-+		return -EIO;
-+	}
-+
-+	return 0;
-+}
-+
-+static int hisi_pcie_port_do_recovery(struct platform_device *dev,
-+				      u32 chip_id, u32 port_id)
-+{
-+	acpi_status s;
-+	struct device *device = &dev->dev;
-+	acpi_handle root_handle = ACPI_HANDLE(device);
-+	struct acpi_pci_root *pci_root;
-+	struct pci_bus *root_bus;
-+	struct pci_dev *pdev;
-+	u32 domain, busnr, devfn;
-+
-+	s = acpi_get_parent(root_handle, &root_handle);
-+	if (ACPI_FAILURE(s))
-+		return -ENODEV;
-+	pci_root = acpi_pci_find_root(root_handle);
-+	if (!pci_root)
-+		return -ENODEV;
-+	root_bus = pci_root->bus;
-+	domain = pci_root->segment;
-+
-+	busnr = root_bus->number;
-+	devfn = PCI_DEVFN(port_id, 0);
-+	pdev = pci_get_domain_bus_and_slot(domain, busnr, devfn);
-+	if (!pdev) {
-+		dev_info(device, "Fail to get root port %04x:%02x:%02x.%d device\n",
-+			 domain, busnr, PCI_SLOT(devfn), PCI_FUNC(devfn));
-+		return -ENODEV;
-+	}
-+
-+	pci_stop_and_remove_bus_device_locked(pdev);
-+	pci_dev_put(pdev);
-+
-+	if (hisi_pcie_port_reset(dev, chip_id, port_id))
-+		return -EIO;
-+
-+	/*
-+	 * The initialization time of subordinate devices after
-+	 * hot reset is no more than 1s, which is required by
-+	 * the PCI spec v5.0 sec 6.6.1. The time will shorten
-+	 * if Readiness Notifications mechanisms are used. But
-+	 * wait 1s here to adapt any conditions.
-+	 */
-+	ssleep(1UL);
-+
-+	/* add root port and downstream devices */
-+	pci_lock_rescan_remove();
-+	pci_rescan_bus(root_bus);
-+	pci_unlock_rescan_remove();
-+
-+	return 0;
-+}
-+
-+static void hisi_pcie_handle_one_error(const struct hisi_pcie_err_data *err,
-+				    struct platform_device *pdev)
-+{
-+	char buf[HISI_PCIE_ERR_INFO_SIZE];
-+	char *p = buf, *end = buf + sizeof(buf);
-+	struct device *dev = &pdev->dev;
-+	u32 i;
-+	int rc;
-+
-+	if (err->val_bits == 0) {
-+		dev_warn(dev, "%s: no valid error information\n", __func__);
-+		return;
-+	}
-+
-+	/* Logging */
-+	p += snprintf(p, end - p, "[ Table version=%d ", err->version);
-+	if (err->val_bits & HISI_PCIE_LOCAL_VALID_SOC_ID)
-+		p += snprintf(p, end - p, "SOC ID=%d ", err->soc_id);
-+
-+	if (err->val_bits & HISI_PCIE_LOCAL_VALID_SOCKET_ID)
-+		p += snprintf(p, end - p, "socket ID=%d ", err->socket_id);
-+
-+	if (err->val_bits & HISI_PCIE_LOCAL_VALID_NIMBUS_ID)
-+		p += snprintf(p, end - p, "nimbus ID=%d ", err->nimbus_id);
-+
-+	if (err->val_bits & HISI_PCIE_LOCAL_VALID_SUB_MODULE_ID)
-+		p += snprintf(p, end - p, "sub module=%s ",
-+			      hisi_pcie_sub_module_name(err->sub_module_id));
-+
-+	if (err->val_bits & HISI_PCIE_LOCAL_VALID_CORE_ID)
-+		p += snprintf(p, end - p, "core ID=core%d ", err->core_id);
-+
-+	if (err->val_bits & HISI_PCIE_LOCAL_VALID_PORT_ID)
-+		p += snprintf(p, end - p, "port ID=port%d ", err->port_id);
-+
-+	if (err->val_bits & HISI_PCIE_LOCAL_VALID_ERR_SEVERITY)
-+		p += snprintf(p, end - p, "error severity=%s ",
-+			      hisi_pcie_err_severity(err->err_severity));
-+
-+	if (err->val_bits & HISI_PCIE_LOCAL_VALID_ERR_TYPE)
-+		p += snprintf(p, end - p, "error type=0x%x ", err->err_type);
-+
-+	p += snprintf(p, end - p, "]\n");
-+	dev_info(dev, "\nHISI : HIP : PCIe controller error\n");
-+	dev_info(dev, "%s\n", buf);
-+
-+	dev_info(dev, "Reg Dump:\n");
-+	for (i = 0; i < HISI_PCIE_ERR_MISC_REGS; i++) {
-+		if (err->val_bits & BIT_ULL(HISI_PCIE_LOCAL_VALID_ERR_MISC + i))
-+			dev_info(dev,
-+				 "ERR_MISC_%d=0x%x\n", i, err->err_misc[i]);
-+	}
-+
-+	/* Recovery for the PCIe controller errors */
-+	if (err->err_severity == HISI_ERR_SEV_RECOVERABLE) {
-+		/* try reset PCI port for the error recovery */
-+		rc = hisi_pcie_port_do_recovery(pdev, err->socket_id,
-+				HISI_PCIE_PORT_ID(err->core_id, err->port_id));
-+		if (rc) {
-+			dev_info(dev, "fail to do hisi pcie port reset\n");
-+			return;
-+		}
-+	}
-+}
-+
-+static DEFINE_KFIFO(hisi_pcie_err_recover_ring, struct hisi_pcie_err_info,
-+		    HISI_PCIE_ERR_RECOVER_RING_SIZE);
-+static DEFINE_SPINLOCK(hisi_pcie_err_recover_ring_lock);
-+
-+static void hisi_pcie_err_recover_work_func(struct work_struct *work)
-+{
-+	struct hisi_pcie_err_info pcie_err_entry;
-+
-+	while (kfifo_get(&hisi_pcie_err_recover_ring, &pcie_err_entry)) {
-+		hisi_pcie_handle_one_error(&pcie_err_entry.err_data,
-+					pcie_err_entry.pdev);
-+	}
-+}
-+
-+static DECLARE_WORK(hisi_pcie_err_recover_work,
-+		    hisi_pcie_err_recover_work_func);
-+
-+static int hisi_pcie_error_handle(struct acpi_hest_generic_data *gdata,
-+				  int sev, void *data)
-+{
-+	const struct hisi_pcie_err_data *err_data =
-+					acpi_hest_get_payload(gdata);
-+	struct hisi_pcie_err_info err_info;
-+	struct platform_device *pdev = data;
-+	struct device *dev = &pdev->dev;
-+	u8 socket;
-+
-+	if (device_property_read_u8(dev, "socket", &socket))
-+		return GHES_EVENT_NONE;
-+
-+	if (err_data->socket_id != socket)
-+		return GHES_EVENT_NONE;
-+
-+	memcpy(&err_info.err_data, err_data, sizeof(*err_data));
-+	err_info.pdev = pdev;
-+
-+	if (kfifo_in_spinlocked(&hisi_pcie_err_recover_ring, &err_info, 1,
-+				&hisi_pcie_err_recover_ring_lock))
-+		schedule_work(&hisi_pcie_err_recover_work);
-+	else
-+		dev_warn(dev, "queue full when recovering PCIe controller error\n");
-+
-+	return GHES_EVENT_HANDLED;
-+}
-+
-+static int hisi_pcie_err_handler_probe(struct platform_device *pdev)
-+{
-+	int ret;
-+
-+	ret = ghes_register_event_handler(hisi_pcie_sec_type,
-+					  hisi_pcie_error_handle, pdev);
-+	if (ret) {
-+		dev_err(&pdev->dev, "%s : ghes_register_event_handler fail\n",
-+			__func__);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int hisi_pcie_err_handler_remove(struct platform_device *pdev)
-+{
-+	ghes_unregister_event_handler(hisi_pcie_sec_type, pdev);
-+
-+	return 0;
-+}
-+
-+static const struct acpi_device_id hisi_pcie_acpi_match[] = {
-+	{ "HISI0361", 0 },
-+	{ }
-+};
-+
-+static struct platform_driver hisi_pcie_err_handler_driver = {
-+	.driver = {
-+		.name	= "hisi-pcie-err-handler",
-+		.acpi_match_table = hisi_pcie_acpi_match,
-+	},
-+	.probe		= hisi_pcie_err_handler_probe,
-+	.remove		= hisi_pcie_err_handler_remove,
-+};
-+module_platform_driver(hisi_pcie_err_handler_driver);
-+
-+MODULE_DESCRIPTION("HiSilicon HIP PCIe controller error handling driver");
-+MODULE_LICENSE("GPL v2");
--- 
-1.9.1
+One should be able to take a RHEL/SUSE/Ubuntu/etc CD released years
+ago and boot it on hardware designed today.  If that CD doesn't boot,
+the starting assumption is that the OEM needs to fix the hardware or
+firmware.  This is standard operating procedure in the x86 world, and
+it's essential if we want to participate in the upstream and distro
+world.
+
+> The benefits here would be that we'd move the code out of the
+> quirks, so we'd be effectively relying less on those quirks, which
+> in turn would help to deprecate them.
+> 
+> Now, I'm not exactly sure I understand your concerns regarding
+> maintainability of these quirks, so maybe that proposal isn't really
+> what you're looking for. Perhaps you have a better idea?
+> 
+> Thierry
 
 
