@@ -2,132 +2,324 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A9CB155F12
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2020 21:14:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ECACF155FB9
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2020 21:40:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbgBGUOA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 7 Feb 2020 15:14:00 -0500
-Received: from mail-eopbgr80084.outbound.protection.outlook.com ([40.107.8.84]:35917
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727005AbgBGUOA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 7 Feb 2020 15:14:00 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WXvvFOtm19CjMBblWTUjDWN7GJiOBEVapMGfYZ7W6RIXLB0Mh74a2c9eD/QF9NabZX4Z5JZsU+xaPYTfJkiKz9zdAuZ7EGuFNwMfhBjYVI1EeK0Yk6yfiU8v5d6h0zouqV0ZZvoyxYHVsV4+CjBxDXZ1WpoaQoNupPzJ/95upOz1rJVa+cwAnE8GeTXWMH3WXgRgoss8lTE54Y2OxJ5G1WqpO4WSyLz3PkCWRNAESFoJ994oLGXtlLSBnWz7M2XXb/yeB5H8Zwj2xhxt65warbRF+Hf8xNNnLQZfwsFDeKy/QiyjrJ9sJl0c3y3JZ1/X4S/QJaB1xTLO7/vBDG5VVQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+nVSxILu2NSluh2V2bOpM56jAgefbc1WS80B+w2eVJU=;
- b=Bndh+iEA8D8Fv+hAqI0LbgU+9H+o9D/E3/zGhXbbMu/cCknrCMhfp591FBky8DVfE8nojsPBUDDQOidCzS3cglN1Q6Mc7jdgvgLjI2FFG/DutV6LO0YGGoyKwINk9GAPCciu66wfCGXXyI/biN1N492DZ+Ky+YCryY0XFv0I5W/1o79SkANZPteOx6cbucp1byMLHl0hIt4JPdAY2JzvxdxP6m7YfeXrDqfzpCcelmhU7zS1jyDhEfrP5KqXhBZssloRkj60hOW/v2+OrgTy5JljbKAmjPAZpK0zWpDkVfwXTLwAAHr1xkHBhggkbv7HO8/4XDa3ZL6HJZpLa+Wk9w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+nVSxILu2NSluh2V2bOpM56jAgefbc1WS80B+w2eVJU=;
- b=TZOltWcMX8n5ADZt6wWLz5v678aYyyEXhmaLwMXUU0/QAmk3qgaKp7O1yjjjrzI1NgKVNQiDDGANwgzCJ/k0yhhBLHmVXqG2naEQHCMAtdhG0PsbY1NwI7LAHFzQ0pRiS4RFBBCQSuX5kNR+tZ8aRWFaAlhbZhU0ow6VERv98A0=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
- VI1PR05MB4749.eurprd05.prod.outlook.com (20.176.8.31) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2707.24; Fri, 7 Feb 2020 20:13:56 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1c00:7925:d5c6:d60d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1c00:7925:d5c6:d60d%7]) with mapi id 15.20.2707.024; Fri, 7 Feb 2020
- 20:13:56 +0000
-Date:   Fri, 7 Feb 2020 16:13:51 -0400
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
-        linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Stephen Bates <sbates@raithlin.com>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Don Dutile <ddutile@redhat.com>,
-        Thomas =?utf-8?Q?Hellstr=C3=B6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>, Joao Martins <joao.m.martins@oracle.com>
-Subject: Re: [LSF/MM TOPIC] get_user_pages() for PCI BAR Memory
-Message-ID: <20200207201351.GN23346@mellanox.com>
-References: <20200207182457.GM23346@mellanox.com>
- <20200207194620.GG8731@bombadil.infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200207194620.GG8731@bombadil.infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: BL0PR02CA0103.namprd02.prod.outlook.com
- (2603:10b6:208:51::44) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
+        id S1727048AbgBGUkO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 7 Feb 2020 15:40:14 -0500
+Received: from mga14.intel.com ([192.55.52.115]:48746 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727028AbgBGUkO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 7 Feb 2020 15:40:14 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Feb 2020 12:40:14 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,414,1574150400"; 
+   d="scan'208";a="226576979"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga008.fm.intel.com with ESMTP; 07 Feb 2020 12:40:13 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1j0AQ8-000EtZ-HB; Sat, 08 Feb 2020 04:40:12 +0800
+Date:   Sat, 08 Feb 2020 04:39:18 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:for-linus] BUILD SUCCESS
+ 2e34673be0bd6bb0c6c496a861cbc3f7431e7ce3
+Message-ID: <5e3dcaf6.PRpBiJpia6pISyJ0%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Received: from mlx.ziepe.ca (142.68.57.212) by BL0PR02CA0103.namprd02.prod.outlook.com (2603:10b6:208:51::44) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2707.21 via Frontend Transport; Fri, 7 Feb 2020 20:13:55 +0000
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1j0A0d-0000sW-Vp; Fri, 07 Feb 2020 16:13:51 -0400
-X-Originating-IP: [142.68.57.212]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: b92a5428-b0c1-453d-5d58-08d7ac0a4229
-X-MS-TrafficTypeDiagnostic: VI1PR05MB4749:
-X-Microsoft-Antispam-PRVS: <VI1PR05MB4749F6CB89714AAFB645CDEFCF1C0@VI1PR05MB4749.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2150;
-X-Forefront-PRVS: 0306EE2ED4
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39850400004)(346002)(136003)(396003)(376002)(366004)(189003)(199004)(66556008)(66476007)(9746002)(9786002)(2906002)(5660300002)(2616005)(54906003)(66946007)(4326008)(1076003)(478600001)(316002)(36756003)(33656002)(52116002)(6916009)(8936002)(86362001)(8676002)(26005)(186003)(81166006)(81156014)(7416002)(24400500001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB4749;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: yCVcdDDXUv6Pdeh4O8KwQO//WabT6Mn7XZi57msj6z1XhvaJ3HJhTQNbEZf+/Ln0doG8+uAoam6b29gG7r/W73Y3WxFxDGgpjGts0Msm5ErCNS89rPBTxFhcfl487EDs8IdvgoEbhryppYLvGKa9eP+fZfGB7Vnbn8c7rGTU6FtMxUZLElVY9hG7vQVC1RVaz6+X/jx8IEjYZQ0/BS/nnsMQACtGRZR4Wd8x/i1/LyKLBCOXIKltbVWijGulO5TSSiHJY8wIPKRgooPtKzoUbEAOKl6CqV1lJIf9lZg3V6haxscioG0J2HzTYuiMzmIC0fLEQcLChxBqrNrHRXzRqx4/McT60C1hOLaLNaVPN9j6NCfaPl5P8KtQeH+WCr2DjyJz2wj8LqvLylzVm6VvYwhwYKf0siVZ40C57VkUlAYoPdbGsREzpWn4QSmDwj+lbtmQ2YC3mNBP1VBCDUJ8fKiogyqVxolX5ZKYzfZ4ABGSshiEXHYdVMtqtaKkY3Xj
-X-MS-Exchange-AntiSpam-MessageData: BKG4w4grMJkUyVNeDWSVlLmKzkc5icD1qrr5jHU2FHjUKUSk1+ybgqUbPN3318h94WQ8XQsf4UGXsEyefz9IiI2gtF7cEh6YlgzSTORdnYZC7uXHw3yqrl15zORSGA50mdfgA9/zLVjZ2CsnyiHdeA==
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b92a5428-b0c1-453d-5d58-08d7ac0a4229
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2020 20:13:56.1578
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: pmaY5ua65wuZQjzAMJy/oz9pfYdB47GoN5F35inFHuB5gFvnbxcRSWqQiSN/10UimE9FNqW3QdAgmsZny+L1Lg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4749
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Feb 07, 2020 at 11:46:20AM -0800, Matthew Wilcox wrote:
-> > 
-> >  Christian König <christian.koenig@amd.com>
-> >  Daniel Vetter <daniel.vetter@ffwll.ch>
-> >  Logan Gunthorpe <logang@deltatee.com>
-> >  Stephen Bates <sbates@raithlin.com>
-> >  Jérôme Glisse <jglisse@redhat.com>
-> >  Ira Weiny <iweiny@intel.com>
-> >  Christoph Hellwig <hch@lst.de>
-> >  John Hubbard <jhubbard@nvidia.com>
-> >  Ralph Campbell <rcampbell@nvidia.com>
-> >  Dan Williams <dan.j.williams@intel.com>
-> >  Don Dutile <ddutile@redhat.com>
-> 
-> That's a long list, and you're missing 
-> 
-> "Thomas Hellström (VMware)" <thomas_os@shipmail.org>
-> Joao Martins <joao.m.martins@oracle.com>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  for-linus
+branch HEAD: 2e34673be0bd6bb0c6c496a861cbc3f7431e7ce3  PCI/ATS: Use PF PASID for VFs
 
-Great, thanks, I'm not really aware of what the related work is
-though?
+elapsed time: 2883m
 
-> both of whom have been working on related projects (for PFNs without pages).
-> Hey, you missed me too!  ;-)
+configs tested: 269
+configs skipped: 4
 
-Ah I was not daring to propose a discussion on 'PFNs without pages'
-again :)
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-The early exploratory work here has been creating ZONE_DEVICE pages as
-is already done for P2P and now moving to also mmap them to userspace.
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm                         at91_dt_defconfig
+arm                           efm32_defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                        multi_v7_defconfig
+arm                        shmobile_defconfig
+arm                           sunxi_defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+sparc                            allyesconfig
+s390                                defconfig
+sh                          rsk7269_defconfig
+h8300                       h8s-sim_defconfig
+nds32                             allnoconfig
+sparc64                          allmodconfig
+alpha                               defconfig
+powerpc                       ppc64_defconfig
+ia64                             allyesconfig
+riscv                               defconfig
+parisc                              defconfig
+riscv                    nommu_virt_defconfig
+s390                       zfcpdump_defconfig
+m68k                          multi_defconfig
+ia64                                defconfig
+m68k                             allmodconfig
+arc                                 defconfig
+sparc64                          allyesconfig
+microblaze                      mmu_defconfig
+powerpc                           allnoconfig
+m68k                       m5475evb_defconfig
+parisc                            allnoconfig
+um                           x86_64_defconfig
+csky                                defconfig
+sh                                allnoconfig
+m68k                           sun3_defconfig
+xtensa                          iss_defconfig
+sh                            titan_defconfig
+microblaze                    nommu_defconfig
+powerpc                             defconfig
+i386                             alldefconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+ia64                             alldefconfig
+ia64                             allmodconfig
+ia64                              allnoconfig
+c6x                              allyesconfig
+c6x                        evmc6678_defconfig
+nios2                         10m50_defconfig
+nios2                         3c120_defconfig
+openrisc                    or1ksim_defconfig
+openrisc                 simple_smp_defconfig
+xtensa                       common_defconfig
+nds32                               defconfig
+h8300                     edosk2674_defconfig
+h8300                    h8300h-sim_defconfig
+arc                              allyesconfig
+powerpc                          rhel-kconfig
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                             allmodconfig
+mips                              allnoconfig
+mips                             allyesconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+parisc                         b180_defconfig
+parisc                        c3000_defconfig
+parisc                            allyesonfig
+x86_64               randconfig-a001-20200207
+x86_64               randconfig-a002-20200207
+x86_64               randconfig-a003-20200207
+i386                 randconfig-a001-20200207
+i386                 randconfig-a002-20200207
+i386                 randconfig-a003-20200207
+x86_64               randconfig-a001-20200206
+x86_64               randconfig-a002-20200206
+x86_64               randconfig-a003-20200206
+i386                 randconfig-a001-20200206
+i386                 randconfig-a002-20200206
+i386                 randconfig-a003-20200206
+alpha                randconfig-a001-20200206
+m68k                 randconfig-a001-20200206
+mips                 randconfig-a001-20200206
+nds32                randconfig-a001-20200206
+parisc               randconfig-a001-20200206
+riscv                randconfig-a001-20200206
+alpha                randconfig-a001-20200207
+m68k                 randconfig-a001-20200207
+mips                 randconfig-a001-20200207
+nds32                randconfig-a001-20200207
+parisc               randconfig-a001-20200207
+c6x                  randconfig-a001-20200206
+h8300                randconfig-a001-20200206
+microblaze           randconfig-a001-20200206
+nios2                randconfig-a001-20200206
+sparc64              randconfig-a001-20200206
+c6x                  randconfig-a001-20200207
+h8300                randconfig-a001-20200207
+microblaze           randconfig-a001-20200207
+nios2                randconfig-a001-20200207
+sparc64              randconfig-a001-20200207
+csky                 randconfig-a001-20200206
+openrisc             randconfig-a001-20200206
+s390                 randconfig-a001-20200206
+sh                   randconfig-a001-20200206
+xtensa               randconfig-a001-20200206
+csky                 randconfig-a001-20200207
+openrisc             randconfig-a001-20200207
+s390                 randconfig-a001-20200207
+xtensa               randconfig-a001-20200207
+x86_64               randconfig-b001-20200207
+x86_64               randconfig-b002-20200207
+x86_64               randconfig-b003-20200207
+i386                 randconfig-b001-20200207
+i386                 randconfig-b002-20200207
+i386                 randconfig-b003-20200207
+x86_64               randconfig-b001-20200206
+x86_64               randconfig-b002-20200206
+x86_64               randconfig-b003-20200206
+i386                 randconfig-b001-20200206
+i386                 randconfig-b002-20200206
+i386                 randconfig-b003-20200206
+x86_64               randconfig-b001-20200205
+x86_64               randconfig-b002-20200205
+x86_64               randconfig-b003-20200205
+i386                 randconfig-b001-20200205
+i386                 randconfig-b002-20200205
+i386                 randconfig-b003-20200205
+x86_64               randconfig-c001-20200206
+x86_64               randconfig-c002-20200206
+x86_64               randconfig-c003-20200206
+i386                 randconfig-c001-20200206
+i386                 randconfig-c002-20200206
+i386                 randconfig-c003-20200206
+x86_64               randconfig-c001-20200207
+x86_64               randconfig-c002-20200207
+x86_64               randconfig-c003-20200207
+i386                 randconfig-c001-20200207
+i386                 randconfig-c002-20200207
+i386                 randconfig-c003-20200207
+x86_64               randconfig-c001-20200204
+x86_64               randconfig-c002-20200204
+x86_64               randconfig-c003-20200204
+i386                 randconfig-c001-20200204
+i386                 randconfig-c002-20200204
+i386                 randconfig-c003-20200204
+x86_64               randconfig-d001-20200206
+x86_64               randconfig-d002-20200206
+x86_64               randconfig-d003-20200206
+i386                 randconfig-d001-20200206
+i386                 randconfig-d002-20200206
+i386                 randconfig-d003-20200206
+x86_64               randconfig-d001-20200205
+x86_64               randconfig-d002-20200205
+x86_64               randconfig-d003-20200205
+i386                 randconfig-d001-20200205
+i386                 randconfig-d002-20200205
+i386                 randconfig-d003-20200205
+x86_64               randconfig-d001-20200207
+x86_64               randconfig-d002-20200207
+x86_64               randconfig-d003-20200207
+i386                 randconfig-d001-20200207
+i386                 randconfig-d002-20200207
+i386                 randconfig-d003-20200207
+x86_64               randconfig-e001-20200206
+x86_64               randconfig-e002-20200206
+x86_64               randconfig-e003-20200206
+i386                 randconfig-e001-20200206
+i386                 randconfig-e002-20200206
+i386                 randconfig-e003-20200206
+x86_64               randconfig-e001-20200207
+x86_64               randconfig-e002-20200207
+x86_64               randconfig-e003-20200207
+i386                 randconfig-e001-20200207
+i386                 randconfig-e002-20200207
+i386                 randconfig-e003-20200207
+x86_64               randconfig-f001-20200205
+x86_64               randconfig-f002-20200205
+x86_64               randconfig-f003-20200205
+i386                 randconfig-f001-20200205
+i386                 randconfig-f002-20200205
+i386                 randconfig-f003-20200205
+x86_64               randconfig-f001-20200207
+x86_64               randconfig-f002-20200207
+x86_64               randconfig-f003-20200207
+i386                 randconfig-f001-20200207
+i386                 randconfig-f002-20200207
+i386                 randconfig-f003-20200207
+x86_64               randconfig-f001-20200204
+x86_64               randconfig-f002-20200204
+x86_64               randconfig-f003-20200204
+i386                 randconfig-f001-20200204
+i386                 randconfig-f002-20200204
+i386                 randconfig-f003-20200204
+x86_64               randconfig-g001-20200206
+x86_64               randconfig-g002-20200206
+x86_64               randconfig-g003-20200206
+i386                 randconfig-g001-20200206
+i386                 randconfig-g002-20200206
+i386                 randconfig-g003-20200206
+x86_64               randconfig-g001-20200207
+x86_64               randconfig-g002-20200207
+x86_64               randconfig-g003-20200207
+i386                 randconfig-g001-20200207
+i386                 randconfig-g002-20200207
+i386                 randconfig-g003-20200207
+x86_64               randconfig-h001-20200206
+x86_64               randconfig-h002-20200206
+x86_64               randconfig-h003-20200206
+i386                 randconfig-h001-20200206
+i386                 randconfig-h002-20200206
+i386                 randconfig-h003-20200206
+x86_64               randconfig-h001-20200205
+x86_64               randconfig-h002-20200205
+x86_64               randconfig-h003-20200205
+i386                 randconfig-h001-20200205
+i386                 randconfig-h002-20200205
+i386                 randconfig-h003-20200205
+x86_64               randconfig-h001-20200207
+x86_64               randconfig-h002-20200207
+x86_64               randconfig-h003-20200207
+i386                 randconfig-h001-20200207
+i386                 randconfig-h002-20200207
+i386                 randconfig-h003-20200207
+x86_64               randconfig-h001-20200204
+x86_64               randconfig-h002-20200204
+x86_64               randconfig-h003-20200204
+i386                 randconfig-h001-20200204
+i386                 randconfig-h002-20200204
+i386                 randconfig-h003-20200204
+arc                  randconfig-a001-20200205
+arm                  randconfig-a001-20200205
+arm64                randconfig-a001-20200205
+ia64                 randconfig-a001-20200205
+powerpc              randconfig-a001-20200205
+sparc                randconfig-a001-20200205
+arc                  randconfig-a001-20200207
+arm                  randconfig-a001-20200207
+arm64                randconfig-a001-20200207
+ia64                 randconfig-a001-20200207
+powerpc              randconfig-a001-20200207
+sparc                randconfig-a001-20200207
+riscv                            allmodconfig
+riscv                             allnoconfig
+riscv                            allyesconfig
+riscv                          rv32_defconfig
+s390                             alldefconfig
+s390                             allmodconfig
+s390                              allnoconfig
+s390                             allyesconfig
+s390                          debug_defconfig
+sh                               allmodconfig
+sh                  sh7785lcr_32bit_defconfig
+sparc                               defconfig
+sparc64                           allnoconfig
+sparc64                             defconfig
+um                                  defconfig
+um                             i386_defconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                               rhel-7.6
 
-Jason
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
