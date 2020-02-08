@@ -2,113 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 452EC1566D3
-	for <lists+linux-pci@lfdr.de>; Sat,  8 Feb 2020 19:38:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BB1315672A
+	for <lists+linux-pci@lfdr.de>; Sat,  8 Feb 2020 19:41:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728508AbgBHShH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 8 Feb 2020 13:37:07 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54527 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728237AbgBHShG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 8 Feb 2020 13:37:06 -0500
-Received: by mail-wm1-f66.google.com with SMTP id g1so5698979wmh.4;
-        Sat, 08 Feb 2020 10:37:04 -0800 (PST)
+        id S1727499AbgBHSlv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 8 Feb 2020 13:41:51 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36041 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727471AbgBHSlv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 8 Feb 2020 13:41:51 -0500
+Received: by mail-wm1-f67.google.com with SMTP id p17so6236464wma.1
+        for <linux-pci@vger.kernel.org>; Sat, 08 Feb 2020 10:41:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=hRkPExrL63331yWhoKi03csinXjXhPNQwWmMbM7w46o=;
-        b=UEC0UpG2p14iHJSU4WkX6eWFx9d1ZrjGwMix75y6gn4mB9vo2Bz6OdbOAiTVnDFNdA
-         kHaNYBVtSdWUb18uYt8Re2C4VmqtY2KceHrDEzhVTPz56EF+OLyaOorEsPkZsK9Nbsd6
-         wz64iQkTrWLpcoNNc8Hn5TUKkPQonvA/P8nBTKbRvODetvF85EV4PPhEnGa7/GYjmZaY
-         x2l6XgCInciUapSaXHUipQ+PN6LW3H+ypy/b0/gIKCUXccGDLWT52kK2XyAd0wDY7STv
-         CILOQSijsDnx98PqipPyD/awNKYdaLa1audtC62ntVJ0kHpwpvk3ufeHtzE6Lov0Tojl
-         LDaQ==
+        d=thegoodpenguin-co-uk.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=yuFklzcmtRlyLzv28Ill1R4mgHWH5TmE6qKQbk/+SAw=;
+        b=PC7GCXBLVaH++NIE2VO7Iz9G/Y/xg+cgxbNn/Mb5pX0FZoyds4F6n2d+vpiLq277RG
+         0YSAFlcouBuJRAtwPPUONwgacaa2cHeCAXLQB4YJOS8a0NYPwatgK/Bh1YKlcrV6E/vI
+         oQZGn8dng8h1jiQl6B8uafkRWemydqoinVXJzMOYVkF8HIhJshQAnXjY822aVvLKc98N
+         NSUiESBI6TjVBz//88dLXEQZZC48wfozkvmpIHES+0XpJLtk506iuTNYhtMMuZmByA7D
+         DTL+racOYWYdvwHLkcAFgxZ8nQ5LjiGtYS174Q6WDWXRfuN3KURY5U2+c2DjfXzCCfLy
+         0JDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=hRkPExrL63331yWhoKi03csinXjXhPNQwWmMbM7w46o=;
-        b=s3/AP4Ajs79BJwVjIeZIpDhSxubXXclIw7Uy+uX4c7L/WvxuEFZhuVls4ecIPoZZsk
-         /3K65NlI660iBHc2yJ4R35kbTaRN1Rdo/kctRDEVLZ8o6Hr3REqx+GLZQ2OcNCxNh3Pv
-         vQV4Vj8ISglyhIhvxRlx70V5WkPqtlITjc/CJfYbdwc1EEX3uWu90GEfvCOAVj6a+ozE
-         vZeSpaokMIM+uQfpnO+w+riMBvZvryQp5UzAgyb0szx53kCCy7PBhaTJ6wbGzo779onQ
-         fhEYl+u3qFnklBmsfftrNtXulzt5lXHoEtucOi6OU1QZ3dZTsck8NHzpNQENGDUYYj6x
-         KreA==
-X-Gm-Message-State: APjAAAVVgMU9PJSxedrl7d2U0LKQkc0YZ8wmLAgM/zWVkC9vwydVWykl
-        JVbBeBPztqnoauleFgZY41k=
-X-Google-Smtp-Source: APXvYqwFu7OC7ixOqiSrg18we1AFkhBXmQoqPIvj66lfI/PTesneFDIRfoJbBRYAkWP5qo2AT7T7xQ==
-X-Received: by 2002:a1c:3b09:: with SMTP id i9mr5239091wma.31.1581187023994;
-        Sat, 08 Feb 2020 10:37:03 -0800 (PST)
-Received: from prasmi.home ([2a00:23c8:2510:d000:a553:90a1:93f5:e306])
-        by smtp.gmail.com with ESMTPSA id b67sm8404385wmc.38.2020.02.08.10.37.02
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=yuFklzcmtRlyLzv28Ill1R4mgHWH5TmE6qKQbk/+SAw=;
+        b=Ar8Noz5sFy0UYHlBbf22iw3cZDlNAiouWb1jFicNEM4J1d9BTzDOQRldI8lVmvPmT/
+         abcFX9rA+1O0me3JnNeLbSIZ62C6kmjRCzjKCTQ2KkeBp3wm9J/LnLi0JzjPsOvZqjSz
+         RtZlaW9XIAYk7AUBs9FcQQO7tdHw3jS6tSw/f7SbsLfGTpduB5mOeAnamvEmxzqAFTCj
+         d+Zjj6l0fgUG7O+tsZLZf3PawHVrLeSNmt0ZXdrUS/x2PBSm84l56Q/jsKbi1lo61jp4
+         EipVUXXTsRM4Lf/yMJoNMxiFapI0oBsFdpIGg2lG0IPF1tfa1LWAsr8YavM6s+O1Y7xM
+         BpBg==
+X-Gm-Message-State: APjAAAUPtc4v2KxNja0FwsG1Ss2U50OJKn0QIwlew4gwzp1+JDcpULt6
+        2M751z66ErixxR8vyzfG9+v0w00Upqs=
+X-Google-Smtp-Source: APXvYqzm1fxtYdTOVS15Th1+jHBLOfEKmyzv8y7MpeitOvzf+LvrpOfxMrHYnN2nQpTT2F0aHIRgng==
+X-Received: by 2002:a1c:44d:: with SMTP id 74mr5517319wme.53.1581187309223;
+        Sat, 08 Feb 2020 10:41:49 -0800 (PST)
+Received: from big-machine ([2a00:23c5:dd80:8400:201c:bfcb:d69f:2329])
+        by smtp.gmail.com with ESMTPSA id k7sm7984506wmi.19.2020.02.08.10.41.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Feb 2020 10:37:03 -0800 (PST)
-From:   Lad Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
+        Sat, 08 Feb 2020 10:41:48 -0800 (PST)
+Date:   Sat, 8 Feb 2020 18:41:47 +0000
+From:   Andrew Murray <amurray@thegoodpenguin.co.uk>
+To:     Marek Vasut <marek.vasut@gmail.com>
+Cc:     Andrew Murray <andrew.murray@arm.com>,
+        Simon Horman <horms@verge.net.au>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
         Marek Vasut <marek.vasut+renesas@gmail.com>,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Cc:     Andrew Murray <andrew.murray@arm.com>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v4 6/6] misc: pci_endpoint_test: Add Device ID for RZ/G2E PCIe controller
-Date:   Sat,  8 Feb 2020 18:36:41 +0000
-Message-Id: <20200208183641.6674-7-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200208183641.6674-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20200208183641.6674-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: [RFC PATCH] PCI: rcar: Fix incorrect programming of OB windows
+Message-ID: <20200208184147.GC19388@big-machine>
+References: <20191004132941.6660-1-andrew.murray@arm.com>
+ <20191216120607.GV24359@e119886-lin.cambridge.arm.com>
+ <0e6e7353-c92b-d819-771b-f9b58684a3d4@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0e6e7353-c92b-d819-771b-f9b58684a3d4@gmail.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add RZ/G2E in pci_device_id table so that pci-epf-test can be used for
-testing PCIe EP in RZ/G2E.
+On Sat, Feb 08, 2020 at 10:46:25AM +0100, Marek Vasut wrote:
+> On 12/16/19 1:06 PM, Andrew Murray wrote:
+> > On Fri, Oct 04, 2019 at 02:29:41PM +0100, Andrew Murray wrote:
+> >> The outbound windows (PCIEPAUR(x), PCIEPALR(x)) describe a mapping between
+> >> a CPU address (which is determined by the window number 'x') and a
+> >> programmed PCI address - Thus allowing the controller to translate CPU
+> >> accesses into PCI accesses.
+> >>
+> >> However the existing code incorrectly writes the CPU address - lets fix
+> >> this by writing the PCI address instead.
+> >>
+> >> For memory transactions, existing DT users describe a 1:1 identity mapping
+> >> and thus this change should have no effect. However the same isn't true for
+> >> I/O.
+> >>
+> >> Fixes: c25da4778803 ("PCI: rcar: Add Renesas R-Car PCIe driver")
+> >> Signed-off-by: Andrew Murray <andrew.murray@arm.com>
+> >>
+> >> ---
+> >> This hasn't been tested, so keen for someone to give it a try.
+> >>
+> >> Also keen for someone to confirm my understanding that the RCar windows
+> >> expect PCI addresses and that res->start refers to CPU addresses. If this
+> >> is correct then it's possible the I/O doesn't work correctly.
+> > 
+> > Marek/Yoshihiro - any feedback on this?
+> 
+> It does indeed look correct,
+> Reviewed-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+> 
+> # On R8A77951 Salvator-XS with Intel 8086:f1a5 600P SSD
+> # On R8A77965 Salvator-XS with Intel 8086:10d3 82574L NIC
+> Tested-by: Marek Vasut <marek.vasut+renesas@gmail.com>
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- drivers/misc/pci_endpoint_test.c | 3 +++
- 1 file changed, 3 insertions(+)
+Thanks for testing - much appreciated!
 
-diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-index a5e3170..3c84e9a 100644
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -66,6 +66,8 @@
- 
- #define PCI_DEVICE_ID_TI_AM654			0xb00c
- 
-+#define PCI_DEVICE_ID_RENESAS_RZG2E		0x002d
-+
- #define is_am654_pci_dev(pdev)		\
- 		((pdev)->device == PCI_DEVICE_ID_TI_AM654)
- 
-@@ -797,6 +799,7 @@ static const struct pci_device_id pci_endpoint_test_tbl[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_AM654),
- 	  .driver_data = (kernel_ulong_t)&am654_data
- 	},
-+	{ PCI_DEVICE(PCI_VENDOR_ID_RENESAS, PCI_DEVICE_ID_RENESAS_RZG2E) },
- 	{ }
- };
- MODULE_DEVICE_TABLE(pci, pci_endpoint_test_tbl);
--- 
-2.7.4
-
+Andrew Murray
