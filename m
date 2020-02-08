@@ -2,198 +2,249 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D8881565C7
-	for <lists+linux-pci@lfdr.de>; Sat,  8 Feb 2020 18:43:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EFC551566C1
+	for <lists+linux-pci@lfdr.de>; Sat,  8 Feb 2020 19:38:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727341AbgBHRni (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 8 Feb 2020 12:43:38 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:33775 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727303AbgBHRni (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 8 Feb 2020 12:43:38 -0500
-Received: by mail-qk1-f196.google.com with SMTP id h4so2497352qkm.0
-        for <linux-pci@vger.kernel.org>; Sat, 08 Feb 2020 09:43:37 -0800 (PST)
+        id S1727858AbgBHSgv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 8 Feb 2020 13:36:51 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:34140 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727964AbgBHSgs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 8 Feb 2020 13:36:48 -0500
+Received: by mail-wm1-f66.google.com with SMTP id s144so5398303wme.1;
+        Sat, 08 Feb 2020 10:36:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=RXOY4tl2NWvYiA+9B1bjUhFyy6o+KncngEC6FkOXeRQ=;
-        b=FzZBppVgZsGVLHJCNwTuIO91PPyU6iQP5MiZWrob6/Rcc0sixNyXlewVV/aF5/j9Mr
-         vGN+67tzlTy638EHdJSc0tlJZ2cr8XRJSokxNNNYu6viqGdW1cOWhHC4gduie1JHs+Ew
-         Pc8PSJ7ltkEPZOFUWo7JwOe90Y00CVZeZ+4jRethpKqAYkB+CjTWIrSA9+xQSNi7BgU8
-         Brcs6hAoyh2TZUP7F6Bi/owlQr6z70SHRg4hdezUf3yXXAkvr8ISs11z625HtS1D/ckm
-         1s3+czshyLWCdsZSoaXypRLdsb7cCWhlo0/9PHaYqWS+ymLWcuDeiOR77wfOfOFS1egf
-         V9Pw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YeKsOFV6oCWMp1G6zbkmxmW95xEaWFUUaBROFZ39rKw=;
+        b=nJQzGevq167s/0vY+EdXZ9/SSkS8gcRMyKvXG3w6SuN8E60vurwBhj8T+F6vdM9mbu
+         TH9m5dXVD6MK8e1QEpWl9JAhyNnX22Y55A+Shn3g89lXiWqGha16WjedNlsbjljbktc/
+         An0NBmhLABkt5ncKHoJ6ZR8fWnCM8oN3eFP+wl0CKodGC5Uv3oa4mAUhHljDmtCp0bIy
+         TaDh3GkGiqMaUFNFuA6IBe20fFOlAD4A0LrvfkzqdrXziPUuZUAjF+d3lscPmLrx0MX7
+         DDun/v0zgErN5pTib1/xWLZxAH1mD/bFs6jbLQWH4w7JeAyUXmbsn/aeyJQmXAxDro4x
+         taRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=RXOY4tl2NWvYiA+9B1bjUhFyy6o+KncngEC6FkOXeRQ=;
-        b=Kw+FsRozKbzEGwZOf1wYH1luqw4W4f72r9uLSiF72zdPGcvzM/Ch31RAyI1wUWtvEh
-         ieADQVEYlyb281K5Bfgtc3LKGZwYsmHaa7NZjwjuuNxYitjAZxK48LwG4TNWlHdYb6yP
-         m5GhxbQG+3hg1pNAEayNuKt+bbjYitl4z+9tgVbdwrDyBKv6oBfd8hB548g2id2HbXl9
-         divxfo6ekqCm10BXff7k3+n6BFUp/LdXxrrMP9Kxj9JUZ8h69JR+u43yb/DQBHxCNwda
-         EoznvKdsWFAE2ZOKG5pj3G9zTLv9ID8oGwXp+jO6N7kkJSFTgAPSJxqrNkrdO1tHuNq5
-         P8fQ==
-X-Gm-Message-State: APjAAAXHvMioRJHTiGZsW0EfTaMMT9Nw4OmGlLr0bEt9+CBOCtR2ayj1
-        wh95sotp8Jp2MkQOVQX+Df3u0A==
-X-Google-Smtp-Source: APXvYqxzirwyqXFHWPODUquYEjgCHsUJ0gGw1BEGndQY7RmsWigC7oZAzZDxtZayUsiFT2tKDr4MBQ==
-X-Received: by 2002:a05:620a:110c:: with SMTP id o12mr4274060qkk.66.1581183816511;
-        Sat, 08 Feb 2020 09:43:36 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id e130sm3101412qkb.72.2020.02.08.09.43.35
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 08 Feb 2020 09:43:35 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1j0U8l-0003SY-7J; Sat, 08 Feb 2020 13:43:35 -0400
-Date:   Sat, 8 Feb 2020 13:43:35 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>
-Cc:     lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
-        linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Stephen Bates <sbates@raithlin.com>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Ira Weiny <iweiny@intel.com>, Christoph Hellwig <hch@lst.de>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Don Dutile <ddutile@redhat.com>
-Subject: Re: [LSF/MM TOPIC] get_user_pages() for PCI BAR Memory
-Message-ID: <20200208174335.GL25297@ziepe.ca>
-References: <20200207182457.GM23346@mellanox.com>
- <20e3149e-4240-13e7-d16e-3975cfbe4d38@amd.com>
- <20200208135405.GO23346@mellanox.com>
- <7a2792b1-3d9f-c921-28ac-8c2475684869@amd.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YeKsOFV6oCWMp1G6zbkmxmW95xEaWFUUaBROFZ39rKw=;
+        b=ru7bSM/cTYmQr+jwM/lC/kD/gwOxPAu2qOFsdiMEoOii5HDEiXhUxksV1yfEKcixOX
+         vBCjCNnWfm24y8jak6CdFDKrObWhfCdFnCT0idLgK42wyodKfkiYSL8m/l8r0yE4jO5W
+         DJq9IXH4WplhNZm38U9wpEL0/LTK1ZDk0JLuLYIrW3GlwIdxqJiKNU1aZKYfg7zVYFIS
+         GC19YWhYzuk8ExALRsrRNDixeAcmbCxLwkRYrnTDikd5N4Rrt1DQs0b7jtS3ANn5ySJC
+         k6By2TBPsZiwxF2DFTkkHdhjlE1b4hmXmVNF47pzqWTPS5+fnG61BwYRXekFeWwhM4Uo
+         nD0g==
+X-Gm-Message-State: APjAAAWwSpk3ClsNzSvZSWXPS0sNoxwcGtmOcbPJiSE66gF7uV02OXC6
+        g5WWL1pLyCNpYSiEkpx8tnM=
+X-Google-Smtp-Source: APXvYqx+EDqd8IWWdWrwvtGi1TTNxyCXcePbuTT3glwCJUSORKLO9Fmn6P/nD85FemfTWKXehaD28g==
+X-Received: by 2002:a7b:c19a:: with SMTP id y26mr5644407wmi.152.1581187005690;
+        Sat, 08 Feb 2020 10:36:45 -0800 (PST)
+Received: from prasmi.home ([2a00:23c8:2510:d000:a553:90a1:93f5:e306])
+        by smtp.gmail.com with ESMTPSA id b67sm8404385wmc.38.2020.02.08.10.36.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 Feb 2020 10:36:44 -0800 (PST)
+From:   Lad Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>
+Cc:     Andrew Murray <andrew.murray@arm.com>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v4 0/6] Add support for PCIe controller to work in endpoint mode on R-Car SoCs
+Date:   Sat,  8 Feb 2020 18:36:35 +0000
+Message-Id: <20200208183641.6674-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <7a2792b1-3d9f-c921-28ac-8c2475684869@amd.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Feb 08, 2020 at 05:38:51PM +0100, Christian König wrote:
-> Am 08.02.20 um 14:54 schrieb Jason Gunthorpe:
-> > On Sat, Feb 08, 2020 at 02:10:59PM +0100, Christian König wrote:
-> > > > For patch sets, we've seen a number of attempts so far, but little has
-> > > > been merged yet. Common elements of past discussions have been:
-> > > >    - Building struct page for BAR memory
-> > > >    - Stuffing BAR memory into scatter/gather lists, bios and skbs
-> > > >    - DMA mapping BAR memory
-> > > >    - Referencing BAR memory without a struct page
-> > > >    - Managing lifetime of BAR memory across multiple drivers
-> > > I can only repeat Jérôme that this most likely will never work correctly
-> > > with get_user_pages().
-> > I suppose I'm using 'get_user_pages()' as something of a placeholder
-> > here to refer to the existing family of kernel DMA consumers that call
-> > get_user_pages to work on VMA backed process visible memory.
-> > 
-> > We have to have something like get_user_pages() because the kernel
-> > call-sites are fundamentally only dealing with userspace VA. That is
-> > how their uAPIs are designed, and we want to keep them working.
-> > 
-> > So, if something doesn't fit into get_user_pages(), ie because it
-> > doesn't have a VMA in the first place, then that is some other
-> > discussion. DMA buf seems like a pretty good answer.
-> 
-> Well we do have a VMA, but I strongly think that get_user_pages() is the
-> wrong approach for the job.
-> 
-> What we should do instead is to grab the VMA for the addresses and then say
-> through the vm_operations_struct: "Hello I'm driver X and want to do P2P
-> with you. Who are you? What are your capabilities? Should we use PCIe or
-> shortcut through some other interconnect? etc etc ect...".
+This patch series adds support for PCIe controller on rcar to work in
+endpoint mode, this also extends the epf framework to handle base region
+for mapping PCI address locally..
 
-This is a very topical discussion. So far all the non-struct page
-approaches have fallen down in some way or another.
+Note:
+The cadence/rockchip/designware endpoint drivers are build tested only.
 
-The big problem with a VMA centric scheme is that the VMA is ephemeral
-relative to the DMA mapping, so when it comes time to unmap it is not
-so clear what to do to 'put' the reference. There has also been
-resistance to adding new ops to a VMA.
+Changes for v4:
+1] Fixed dtb_check error reported by Rob
+2] Fixed review comments reported by Kishon
+   a] Dropped pci_epc_find_best_fit_window()
+   b] Fixed initializing mem ptr in __pci_epc_mem_init()
+   c] Dropped map_size from pci_epc_mem_window structure
 
-For instance a 'get dma buf' VMA op would solve the lifetime problems,
-but significantly complicates most of the existing get_user_pages()
-users as they now have to track lists of dma buf pointers so they can
-de-ref the dma bufs that covered the user VA range during 'get'
+Changes for v3:
+1] Fixed review comments from Bjorn and Kishon.
+3] Converted to DT schema
 
-FWIW, if the outcome of the discussion was to have some 'get dma buf'
-VMA op that would probably be reasonable. I've talked about this
-before with various people, it isn't quite as good as struct pages,
-but some subsystems like RDMA can probably make it work.
+Changes for v2:
+1] Fixed review comments from Biju for dt-bindings to include an example
+   for a tested platform.
+2] Fixed review comments from Kishon to extend the features of outbound
+   regions in epf framework.
+3] Added support to parse outbound-ranges in OF.
 
-> > > E.g. you have memory which is not even CPU addressable, but can be shared
-> > > between GPUs using XGMI, NVLink, SLI etc....
-> > For this kind of memory if it is mapped into a VMA with
-> > DEVICE_PRIVATE, as Jerome has imagined, then it would be part of this
-> > discussion.
-> 
-> I think what Jerome had in mind with its P2P ideas around HMM was that we
-> could do this with anonymous memory which was migrated to a GPU device. That
-> turned out to be rather complicated because you would need to be able to
-> figure out to which driver you need to talk to for the migrated address,
-> which in turn wasn't related to the VMA in any way.
+lspci output on host:
+=====================
 
-Jerome's VMA proposal tied explicitly the lifetime of the VMA to the
-lifetime of the DMA map by forcing the use of 'shared virtual memory'
-(ie mmu notifiers, etc) techniques which have a very narrow usability
-with HW. This is how the lifetime problem was solved in those patches.
+01:00.0 Unassigned class [ff00]: Renesas Technology Corp. Device 002d
+        Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
+        Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+        Latency: 0
+        Interrupt: pin A routed to IRQ 152
+        Region 0: Memory at fe200200 (64-bit, non-prefetchable) [size=128]
+        Region 2: Memory at fe200000 (64-bit, non-prefetchable) [size=256]
+        Region 4: Memory at fe200100 (64-bit, non-prefetchable) [size=256]
+        Capabilities: [40] Power Management version 3
+                Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
+                Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
+        Capabilities: [50] MSI: Enable- Count=1/1 Maskable+ 64bit+
+                Address: 00000004fa36d000  Data: 0001
+                Masking: fffffffe  Pending: 00000000
+        Capabilities: [70] Express (v2) Endpoint, MSI 00
+                DevCap: MaxPayload 128 bytes, PhantFunc 0, Latency L0s unlimited, L1 unlimited
+                        ExtTag+ AttnBtn- AttnInd- PwrInd- RBE+ FLReset- SlotPowerLimit 0.000W
+                DevCtl: Report errors: Correctable- Non-Fatal- Fatal- Unsupported-
+                        RlxdOrd- ExtTag+ PhantFunc- AuxPwr- NoSnoop+
+                        MaxPayload 128 bytes, MaxReadReq 128 bytes
+                DevSta: CorrErr+ UncorrErr+ FatalErr- UnsuppReq+ AuxPwr- TransPend-
+                LnkCap: Port #0, Speed 5GT/s, Width x1, ASPM L0s, Exit Latency L0s unlimited
+                        ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp-
+                LnkCtl: ASPM Disabled; RCB 64 bytes Disabled- CommClk-
+                        ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+                LnkSta: Speed 5GT/s, Width x1, TrErr- Train- SlotClk- DLActive- BWMgmt- ABWMgmt-
+                DevCap2: Completion Timeout: Not Supported, TimeoutDis+, LTR-, OBFF Not Supported
+                         AtomicOpsCap: 32bit- 64bit- 128bitCAS-
+                DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-, LTR-, OBFF Disabled
+                         AtomicOpsCtl: ReqEn-
+                LnkCtl2: Target Link Speed: 5GT/s, EnterCompliance- SpeedDis-
+                         Transmit Margin: Normal Operating Range, EnterModifiedCompliance- ComplianceSOS-
+                         Compliance De-emphasis: -6dB
+                LnkSta2: Current De-emphasis Level: -6dB, EqualizationComplete-, EqualizationPhase1-
+                         EqualizationPhase2-, EqualizationPhase3-, LinkEqualizationRequest-
+        Capabilities: [100 v1] Virtual Channel
+                Caps:   LPEVC=0 RefClk=100ns PATEntryBits=1
+                Arb:    Fixed- WRR32- WRR64- WRR128-
+                Ctrl:   ArbSelect=Fixed
+                Status: InProgress-
+                VC0:    Caps:   PATOffset=00 MaxTimeSlots=1 RejSnoopTrans-
+                        Arb:    Fixed- WRR32- WRR64- WRR128- TWRR128- WRR256-
+                        Ctrl:   Enable+ ID=0 ArbSelect=Fixed TC/VC=ff
+                        Status: NegoPending- InProgress-
+        Kernel driver in use: pci-endpoint-test
 
-This path has huge drawbacks for everything that is not a GPU use
-case. Ie we can't fit it into virtio to solve it's current P2P DMA
-problem.
+BAR Test
+========
+root@g2e:~# pcitest -b 0
+BAR0:           OKAY
+root@g2e:~# pcitest -b 1
+BAR1:           NOT OKAY
+root@g2e:~# pcitest -b 2
+BAR2:           OKAY
+root@g2e:~# pcitest -b 3
+BAR3:           NOT OKAY
+root@g2e:~# pcitest -b 4
+BAR4:           OKAY
+root@g2e:~# pcitest -b 5
+BAR5:           NOT OKAY
 
-> > > So we need to figure out how express DMA addresses outside of the CPU
-> > > address space first before we can even think about something like extending
-> > > get_user_pages() for P2P in an HMM scenario.
-> > Why?
-> 
-> Because that's how get_user_pages() works. IIRC you call it with userspace
-> address+length and get a filled struct pages and VMAs array in return.
-> 
-> When you don't have CPU addresses for you memory the whole idea of that
-> interface falls apart. So I think we need to get away from get_user_pages()
-> and work more high level here.
+Note: BAR test for 1/3/5 fail because they are configured to be 64bits
 
-get_user_pages() is struct page focused, and there is some general
-expectation that GPUs will have to create DEVICE_PRIVATE struct pages
-for their entire hidden memory so that they can do all the HMM tricks
-with anonymous memory. They also have to recongize the DEVICE_PIVATE
-pages during hmm driven page faults.
+Interrupt Test
+==============
+root@g2e:~# pcitest -i 0
+SET IRQ TYPE TO LEGACY:         OKAY
+root@g2e:~# pcitest -l
+LEGACY IRQ:     OKAY
 
-Removing the DEVICE_PRIVATE from the anonymous page setup seems
-impossible at the current moment - thus it seems like we are stuck
-with struct pages, may as well use them?
+Read Test
+=========
+root@g2e:~# pcitest -r -s 1
+READ (      1 bytes):           OKAY
+root@g2e:~# pcitest -r -s 1024
+READ (   1024 bytes):           OKAY
+root@g2e:~# pcitest -r -s 1025
+READ (   1025 bytes):           OKAY
+root@g2e:~# pcitest -r -s 1024000
+READ (1024000 bytes):           OKAY
+root@g2e:~# pcitest -r -s 1024001
+READ (1024001 bytes):           OKAY
 
-Literally nobody like this, but all the non-struct-page proposals have
-failed to get traction so far.
+Write Test
+==========
+root@g2e:~# pcitest -w -s 1
+WRITE (      1 bytes):          OKAY
+root@g2e:~# pcitest -w -s 1024
+WRITE (   1024 bytes):          OKAY
+root@g2e:~# pcitest -w -s 1025
+WRITE (   1025 bytes):          OKAY
+root@g2e:~# pcitest -w -s 1024000
+WRITE (1024000 bytes):          OKAY
+root@g2e:~# pcitest -w -s 1024001
+WRITE (1024001 bytes):          OKAY
 
-> > Improving the p2pdma subsystem to handle more complex cases like CPU
-> > invisible memory and interconnect is a different topic, I think :)
-> 
-> Well you can of course ignore those, but P2P over PCIe is actually only a
-> rather specific use case and I would say when we start to tackle this we
-> should come up with something that works in all areas.
+Copy Test
+=========
+root@g2e:~# pcitest -c -s 1
+COPY (      1 bytes):           OKAY
+root@g2e:~# pcitest -c -s 1024
+COPY (   1024 bytes):           OKAY
+root@g2e:~# pcitest -c -s 1025
+COPY (   1025 bytes):           OKAY
+root@g2e:~# pcitest -c -s 1024000
+COPY (1024000 bytes):           OKAY
+root@g2e:~# pcitest -c -s 1024001
+COPY (1024001 bytes):           OKAY
 
-Well, it is the general 'standard based' problem.
+Lad Prabhakar (6):
+  PCI: rcar: Preparation for adding endpoint support
+  PCI: rcar: Fix calculating mask for PCIEPAMR register
+  PCI: endpoint: Add support to handle multiple base for mapping
+    outbound memory
+  dt-bindings: PCI: rcar: Add bindings for R-Car PCIe endpoint
+    controller
+  PCI: rcar: Add support for rcar PCIe controller in endpoint mode
+  misc: pci_endpoint_test: Add Device ID for RZ/G2E PCIe controller
 
-Frankly, I don't think the general kernel community can tackle the
-undocumented proprietary interconnect problem, as nobody really knows
-what these things are. The people building these things needs to lead
-that forward somehow.
+ .../devicetree/bindings/pci/rcar-pci-ep.yaml       |   76 ++
+ arch/arm64/configs/defconfig                       |    2 +-
+ drivers/misc/pci_endpoint_test.c                   |    3 +
+ drivers/pci/controller/Kconfig                     |   11 +-
+ drivers/pci/controller/Makefile                    |    3 +-
+ drivers/pci/controller/cadence/pcie-cadence-ep.c   |    7 +-
+ drivers/pci/controller/dwc/pcie-designware-ep.c    |   29 +-
+ drivers/pci/controller/pcie-rcar-ep.c              |  492 ++++++++
+ drivers/pci/controller/pcie-rcar-host.c            | 1044 +++++++++++++++++
+ drivers/pci/controller/pcie-rcar.c                 | 1232 +-------------------
+ drivers/pci/controller/pcie-rcar.h                 |  132 +++
+ drivers/pci/controller/pcie-rockchip-ep.c          |    7 +-
+ drivers/pci/endpoint/pci-epc-mem.c                 |  166 ++-
+ include/linux/pci-epc.h                            |   39 +-
+ 14 files changed, 1982 insertions(+), 1261 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
+ create mode 100644 drivers/pci/controller/pcie-rcar-ep.c
+ create mode 100644 drivers/pci/controller/pcie-rcar-host.c
+ create mode 100644 drivers/pci/controller/pcie-rcar.h
 
-Today, the closest we have, is the DEVICE_PRIVATE 'loopback' that
-things like nouveau attempt to implement. They are supposed to be
-able to translate the DEVICE_PRIVATE pages into some 'device internal'
-address. Presumably that can reach through the device internal
-interconnect, but I don't know if nouveau has gone that far.
+-- 
+2.7.4
 
-Jason
