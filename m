@@ -2,98 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A54E156865
-	for <lists+linux-pci@lfdr.de>; Sun,  9 Feb 2020 03:29:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D9906156A2A
+	for <lists+linux-pci@lfdr.de>; Sun,  9 Feb 2020 13:55:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727532AbgBIC3z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 8 Feb 2020 21:29:55 -0500
-Received: from mail-lj1-f169.google.com ([209.85.208.169]:34514 "EHLO
-        mail-lj1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726474AbgBIC3z (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 8 Feb 2020 21:29:55 -0500
-Received: by mail-lj1-f169.google.com with SMTP id x7so3334925ljc.1
-        for <linux-pci@vger.kernel.org>; Sat, 08 Feb 2020 18:29:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=nx/RkjGQp2URWYpqxzV14Ixfmtxdez1Qovps0w+xE50=;
-        b=XkUQwQZbgu/D3qzt7/9SisB8OzhMPtIzd2ES607DGEmAmC73hHMAR0j2ir0CqEkLJ2
-         4CQYnwKaH+tDRVmRdF6HSloMq9eoKYmwFf6gwi7OUnXC6p3imgZYsxk83q49WP/6Pevm
-         XJ45/7ntkpUJUaSA6xAPy/PghQgxb34IwisacT9lTjak3KrFgh5d6JzR5wHSwACEjq3O
-         aXA6TSeysqHE/TUILGngqgZcKyN3n7t2Sgzgv5VuuYcfN65BGbtETvUMq54jrEBV3A/1
-         lMOPG/NuG2bKA7hW1n+GYhhQffrR84lH3KTvUqtLz6BJbj74f8eWdXwiOJmoRAhxf+3k
-         xbtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=nx/RkjGQp2URWYpqxzV14Ixfmtxdez1Qovps0w+xE50=;
-        b=dFpTaDU3V6FVirG9qYpc9UR+C723KKGRvGS8PMw1HLDPGkxf1D6NmVFT+J35qOk16q
-         5rae0Y4pSJp+VeD8oJOLhTvPwBQV1pzIDIXAyC7NwSfhiQFKFG0DSEpSjRg7447doyOF
-         xieVtoHOQ6hgJgBFzZrVjF3FTmx3pzYS9mqIlJI9HyMHFFAGnPGAZ6T5/27zasXmwJQp
-         yyt5zlGuh0tQZEZm7Jlclqtnr5wrDMp3fEFY6v9T3MdekveX0lpn7bUetaG+Lu0xsKFi
-         JD8krZMYqGoIMmv0Kk+ZSfSezZFHpnpUsYXKfwWpcl6bWTHVclX7WqCeDWGC+eLY36NK
-         zTyg==
-X-Gm-Message-State: APjAAAUc+h5i00iZ8v3Rpw99mRBA8EvImK7uuJagNH0GL0rhVXFdi+dy
-        1AzoZJX1JLeXzj/9nIW+qnSnHHZx7+SSWKtGuEvpIchv
-X-Google-Smtp-Source: APXvYqy7WlhV3iQnS7/8hT8JyMeoPckRy4o4wcgxUtH4IghReTBe5sMeAOIt6As70SwOCeJ1L0VaJbEK3F7ZkZCVZZU=
-X-Received: by 2002:a2e:8016:: with SMTP id j22mr3882769ljg.24.1581215392822;
- Sat, 08 Feb 2020 18:29:52 -0800 (PST)
+        id S1727626AbgBIMzq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 9 Feb 2020 07:55:46 -0500
+Received: from bmailout2.hostsharing.net ([83.223.78.240]:38087 "EHLO
+        bmailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727514AbgBIMzq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 9 Feb 2020 07:55:46 -0500
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout2.hostsharing.net (Postfix) with ESMTPS id D916628004EA1;
+        Sun,  9 Feb 2020 13:55:43 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id AD5FAECCD6; Sun,  9 Feb 2020 13:55:43 +0100 (CET)
+Date:   Sun, 9 Feb 2020 13:55:43 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Stuart Hayes <stuart.w.hayes@gmail.com>,
+        Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Enzo Matsumiya <ematsumiya@suse.de>
+Subject: Re: [PATCH v2] PCI: pciehp: Make sure pciehp_isr clears interrupt
+ events
+Message-ID: <20200209125543.k7u5y6omptbpmwo6@wunner.de>
+References: <20191120222043.53432-1-stuart.w.hayes@gmail.com>
+ <20200129005151.GA247355@google.com>
 MIME-Version: 1.0
-From:   Muni Sekhar <munisekharrms@gmail.com>
-Date:   Sun, 9 Feb 2020 07:59:41 +0530
-Message-ID: <CAHhAz+j9ukzVia8_V3FisLCpT2GsKbmhWtJpQudtWUJcSAki+w@mail.gmail.com>
-Subject: pcie: kernel log - BAR 15: no space for... BAR 15: failed to assign..
-To:     linux-pci@vger.kernel.org,
-        kernelnewbies <kernelnewbies@kernelnewbies.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200129005151.GA247355@google.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi all,
+On Tue, Jan 28, 2020 at 06:51:51PM -0600, Bjorn Helgaas wrote:
+> On Wed, Nov 20, 2019 at 05:20:43PM -0500, Stuart Hayes wrote:
+> > -	pcie_capability_write_word(pdev, PCI_EXP_SLTSTA, events);
+> > +	if (status) {
+> > +		pcie_capability_write_word(pdev, PCI_EXP_SLTSTA, status);
+> > +
+> > +		/*
+> > +		 * If MSI per-vector masking is not supported by the port,
+> > +		 * all of the event bits must be zero before the port will
+> > +		 * send a new interrupt (see PCI Express Base Specification
+> > +		 * Revision 5.0 Version 1.0, section 6.7.3.4, "Software
+> > +		 * Notification of Hot-Plug Events"). So in that case, if
+> > +		 * event bit gets set between the read and the write of
+> > +		 * PCI_EXP_SLTSTA, we need to loop back and try again.
+> > +		 */
+> > +		if (!ctrl->pvm_capable) {
+> 
+> I don't know what whether the MSI vector is masked or not at this
+> point
 
-After rebooting the system following messages are seen in dmesg.
-Not sure if these indicate a problem. Can some one look at these and
-confirm if this is problem or can be ignored ?
+I think MSIs are handled by handle_edge_irq(), which, unlike
+handle_level_irq(), does not mask the IRQ by default.
 
-Also any suggestions as to what would cause this?
-
-[    1.084728] pci 0000:00:1c.0: BAR 15: no space for [mem size
-0x00200000 64bit pref]
-[    1.084813] pci 0000:00:1c.0: BAR 15: failed to assign [mem size
-0x00200000 64bit pref]
-[    1.084890] pci 0000:00:1c.2: BAR 14: no space for [mem size 0x00200000]
-[    1.084949] pci 0000:00:1c.2: BAR 14: failed to assign [mem size 0x00200000]
-[    1.085037] pci 0000:00:1c.2: BAR 15: no space for [mem size
-0x00200000 64bit pref]
-[    1.085108] pci 0000:00:1c.2: BAR 15: failed to assign [mem size
-0x00200000 64bit pref]
-[    1.085199] pci 0000:00:1c.3: BAR 15: no space for [mem size
-0x00200000 64bit pref]
-[    1.085270] pci 0000:00:1c.3: BAR 15: failed to assign [mem size
-0x00200000 64bit pref]
-[    1.085343] pci 0000:00:1c.0: BAR 13: assigned [io  0x1000-0x1fff]
-[    1.085403] pci 0000:00:1c.2: BAR 13: assigned [io  0x2000-0x2fff]
-[    1.085470] pci 0000:00:1c.3: BAR 15: no space for [mem size
-0x00200000 64bit pref]
-[    1.085540] pci 0000:00:1c.3: BAR 15: failed to assign [mem size
-0x00200000 64bit pref]
-[    1.085613] pci 0000:00:1c.2: BAR 14: no space for [mem size 0x00200000]
-[    1.085672] pci 0000:00:1c.2: BAR 14: failed to assign [mem size 0x00200000]
-[    1.085738] pci 0000:00:1c.2: BAR 15: no space for [mem size
-0x00200000 64bit pref]
-[    1.085808] pci 0000:00:1c.2: BAR 15: failed to assign [mem size
-0x00200000 64bit pref]
-[    1.085884] pci 0000:00:1c.0: BAR 15: no space for [mem size
-0x00200000 64bit pref]
-[    1.085954] pci 0000:00:1c.0: BAR 15: failed to assign [mem size
-0x00200000 64bit pref]
-[    1.086026] pci 0000:00:1c.0: PCI bridge to [bus 01]
-[    1.086083] pci 0000:00:1c.0:   bridge window [io  0x1000-0x1fff]
-[    1.086144] pci 0000:00:1c.0:   bridge window [mem 0xd0400000-0xd07fffff]
+We could call disable_irq_nosync() / enable_irq() to mask the IRQ and
+immediately unmask it after writing to the slot status register if the
+interrupt uses MSI / MSI-X (and not INTx), thereby forcing another
+interrupt if new bits have been set in the meantime.  But I suspect this
+approach may not work if PVM is unsupported.
 
 
--- 
+> I see that Lukas took a look at this earlier; I'd really like to have
+> his reviewed-by, since he's the expert on this code.
+
+Hm, should we add an entry for pciehp to MAINTAINERS and list me as R: or M:?
+
 Thanks,
-Sekhar
+
+Lukas
