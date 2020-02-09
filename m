@@ -2,98 +2,70 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E9B2156AEF
-	for <lists+linux-pci@lfdr.de>; Sun,  9 Feb 2020 16:03:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CA9A9156B0D
+	for <lists+linux-pci@lfdr.de>; Sun,  9 Feb 2020 16:37:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727707AbgBIPDb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 9 Feb 2020 10:03:31 -0500
-Received: from bmailout1.hostsharing.net ([83.223.95.100]:51627 "EHLO
-        bmailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727473AbgBIPDb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 9 Feb 2020 10:03:31 -0500
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 1BABC3000469E;
-        Sun,  9 Feb 2020 16:03:29 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id E5810129957; Sun,  9 Feb 2020 16:03:28 +0100 (CET)
-Date:   Sun, 9 Feb 2020 16:03:28 +0100
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Stuart Hayes <stuart.w.hayes@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Austin Bolen <austin_bolen@dell.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, narendra_k@dell.com
-Subject: Re: [PATCH v3] PCI: pciehp: Make sure pciehp_isr clears interrupt
- events
-Message-ID: <20200209150328.2x2zumhqbs6fihmc@wunner.de>
-References: <20200207195450.52026-1-stuart.w.hayes@gmail.com>
+        id S1727725AbgBIPhs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 9 Feb 2020 10:37:48 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:42502 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727661AbgBIPhs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 9 Feb 2020 10:37:48 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1j0oeO-00053e-Kc; Sun, 09 Feb 2020 16:37:36 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id AAB4D100F5A; Sun,  9 Feb 2020 16:37:35 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     sean.v.kelley@linux.intel.com, Kar Hin Ong <kar.hin.ong@ni.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-rt-users <linux-rt-users@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "x86\@kernel.org" <x86@kernel.org>,
+        "linux-pci\@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Julia Cartwright <julia.cartwright@ni.com>,
+        Keng Soon Cheah <keng.soon.cheah@ni.com>,
+        Gratian Crisan <gratian.crisan@ni.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: RE: Re: "oneshot" interrupt causes another interrupt to be fired erroneously in Haswell system
+In-Reply-To: <87muaetj4p.fsf@nanos.tec.linutronix.de>
+References: <20191031230532.GA170712@google.com> <alpine.DEB.2.21.1911050017410.17054@nanos.tec.linutronix.de> <MN2PR04MB625594021250E0FB92EC955DC3780@MN2PR04MB6255.namprd04.prod.outlook.com> <87a76oxqv1.fsf@nanos.tec.linutronix.de> <MN2PR04MB62551D8B240966B02ED71516C3360@MN2PR04MB6255.namprd04.prod.outlook.com> <87muanwwhb.fsf@nanos.tec.linutronix.de> <8f1e5981b519acb5edf53b5392c81ef7cbf6a3eb.camel@linux.intel.com> <87muaetj4p.fsf@nanos.tec.linutronix.de>
+Date:   Sun, 09 Feb 2020 16:37:35 +0100
+Message-ID: <8736bjlqkg.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200207195450.52026-1-stuart.w.hayes@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Feb 07, 2020 at 02:54:50PM -0500, Stuart Hayes wrote:
-> +/*
-> + * Set a limit to how many times the ISR will loop reading and writing the
-> + * slot status register trying to clear the event bits.  These bits should
-> + * not toggle rapidly, and there are only six possible events that could
-> + * generate this interrupt.  If we still see events after this many reads,
-> + * there is likely a bit stuck.
-> + */
-> +#define MAX_ISR_STATUS_READS 6
+Sean,
 
-Actually only *three* possible events could generate this interrupt
-because pcie_enable_notification() only enables DLLSC, CCIE and
-either of ABP or PDC.
+Thomas Gleixner <tglx@linutronix.de> writes:
+> Sean V Kelley <sean.v.kelley@linux.intel.com> writes:
+>> So I will ensure we actually create useful information pointing to this
+>> behavior either in kernel docs or online as in a white paper or both.
+>
+> Great.
+>
+>>> As we have already quirks in drivers/pci/quirks.c which handle the
+>>> same issue on older chipsets, we really should add one for these kind
+>>> of systems to avoid fiddling with the BIOS (which you can, but most
+>>> people cannot).
+>
+>> Agreed, and I will follow-up with Kar Hin Ong to get them added.
+>
+> Much appreciated.
 
-
-> -	pcie_capability_write_word(pdev, PCI_EXP_SLTSTA, events);
-> +	if (status) {
-> +		pcie_capability_write_word(pdev, PCI_EXP_SLTSTA, status);
-
-Writing "events" instead of "status" would seem to be more advantageous
-because it reduces the number of loops.  Say you read PDC in the first
-loop iteration, then DLLSC in the second loop iteration and shortly
-before writing the register, PDC transitions to 1.  If you write
-"events", you can make do with 2 loop iterations, if you write "status"
-you'll need 3.
-
-
-> +
-> +		/*
-> +		 * Unless the MSI happens to be masked, all of the event
-> +		 * bits must be zero before the port will send a new
-> +		 * interrupt (see PCI Express Base Specification Rev 5.0
-> +		 * Version 1.0, section 6.7.3.4, "Software Notification of
-> +		 * Hot-Plug Events"). So, if an event bit gets set between
-> +		 * the read and the write of PCI_EXP_SLTSTA, we need to
-> +		 * loop back and try again.
-> +		 */
-> +		if (status_reads++ < MAX_ISR_STATUS_READS)
-> +			goto read_status;
-
-Please use "pci_dev_msi_enabled(pdev)" as conditional for the if-clause,
-we don't need this with INTx.
-
-
-Using a for (;;) or do/while loop that you jump out of if
-(!status || !pci_dev_msi_enabled(pdev)) might be more readable
-than a goto, but I'm not sure.
+Any update on this?
 
 Thanks,
 
-Lukas
+        tglx
