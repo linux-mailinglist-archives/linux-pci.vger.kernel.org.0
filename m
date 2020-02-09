@@ -2,27 +2,28 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 66F6E156A84
-	for <lists+linux-pci@lfdr.de>; Sun,  9 Feb 2020 14:08:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E9B2156AEF
+	for <lists+linux-pci@lfdr.de>; Sun,  9 Feb 2020 16:03:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727704AbgBINId (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 9 Feb 2020 08:08:33 -0500
-Received: from bmailout2.hostsharing.net ([83.223.78.240]:57277 "EHLO
-        bmailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727682AbgBINId (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 9 Feb 2020 08:08:33 -0500
+        id S1727707AbgBIPDb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 9 Feb 2020 10:03:31 -0500
+Received: from bmailout1.hostsharing.net ([83.223.95.100]:51627 "EHLO
+        bmailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727473AbgBIPDb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 9 Feb 2020 10:03:31 -0500
 Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout2.hostsharing.net (Postfix) with ESMTPS id 977BB2800A29A;
-        Sun,  9 Feb 2020 14:08:31 +0100 (CET)
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 1BABC3000469E;
+        Sun,  9 Feb 2020 16:03:29 +0100 (CET)
 Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 5C2C5DA4BE; Sun,  9 Feb 2020 14:08:31 +0100 (CET)
-Date:   Sun, 9 Feb 2020 14:08:31 +0100
+        id E5810129957; Sun,  9 Feb 2020 16:03:28 +0100 (CET)
+Date:   Sun, 9 Feb 2020 16:03:28 +0100
 From:   Lukas Wunner <lukas@wunner.de>
 To:     Stuart Hayes <stuart.w.hayes@gmail.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Austin Bolen <austin_bolen@dell.com>,
+        Keith Busch <kbusch@kernel.org>,
         Alexandru Gagniuc <mr.nuke.me@gmail.com>,
         "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
@@ -30,51 +31,68 @@ Cc:     Bjorn Helgaas <helgaas@kernel.org>,
         "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
         Sinan Kaya <okaya@kernel.org>,
         Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Enzo Matsumiya <ematsumiya@suse.de>,
-        kbusch@kernel.org
-Subject: Re: [PATCH v2] PCI: pciehp: Make sure pciehp_isr clears interrupt
+        linux-kernel@vger.kernel.org, narendra_k@dell.com
+Subject: Re: [PATCH v3] PCI: pciehp: Make sure pciehp_isr clears interrupt
  events
-Message-ID: <20200209130831.lfrfylascfzh4d4y@wunner.de>
-References: <20200129005151.GA247355@google.com>
- <97162f37-9cde-d349-52e0-c1aaa70ec7a9@gmail.com>
+Message-ID: <20200209150328.2x2zumhqbs6fihmc@wunner.de>
+References: <20200207195450.52026-1-stuart.w.hayes@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <97162f37-9cde-d349-52e0-c1aaa70ec7a9@gmail.com>
+In-Reply-To: <20200207195450.52026-1-stuart.w.hayes@gmail.com>
 User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jan 29, 2020 at 03:55:21PM -0600, Stuart Hayes wrote:
-> On 1/28/20 6:51 PM, Bjorn Helgaas wrote:
-> > I don't understand this limit of six.  We clear a status bit above,
-> > but what's to prevent that same bit from being set again after we read
-> > it but before we write it?
-> 
-> I think the nature of the status bits (power fault, link active, etc)
-> means that they shouldn't be toggling at a high frequency, and there are
-> only six status bits that can cause this interrupt, which is why I chose
-> six.  But it is really just an arbitrary number that should be larger
-> than any non-broken system would ever get to, just to safeguard against
-> getting stuck in the ISR.
+On Fri, Feb 07, 2020 at 02:54:50PM -0500, Stuart Hayes wrote:
+> +/*
+> + * Set a limit to how many times the ISR will loop reading and writing the
+> + * slot status register trying to clear the event bits.  These bits should
+> + * not toggle rapidly, and there are only six possible events that could
+> + * generate this interrupt.  If we still see events after this many reads,
+> + * there is likely a bit stuck.
+> + */
+> +#define MAX_ISR_STATUS_READS 6
 
-From v4.9 until v4.18 we already had a loop which did what you're
-trying to achieve here.  It was added by commit fad214b0aa72
-("PCI: pciehp: Process all hotplug events before looking for new ones").
+Actually only *three* possible events could generate this interrupt
+because pcie_enable_notification() only enables DLLSC, CCIE and
+either of ABP or PDC.
 
-v4.9 is an LTS stable kernel, it's being used a lot and noone ever
-complained about the ISR getting stuck.  So it seems safe to me to
-drop the limit of six.  It can be added later if issues do get
-reported.
 
-I'm sorry that I dropped the loop when refactoring the code for v4.19.
-The commit message made it seem that the loop was necessary because we
-might otherwise miss events.  However my refactoring made the code *cope*
-with missed events, so the loop seemed unnecessary.  I didn't realize
-that the loop is also necessary to avoid missing *interrupts* in the
-MSI case.
+> -	pcie_capability_write_word(pdev, PCI_EXP_SLTSTA, events);
+> +	if (status) {
+> +		pcie_capability_write_word(pdev, PCI_EXP_SLTSTA, status);
+
+Writing "events" instead of "status" would seem to be more advantageous
+because it reduces the number of loops.  Say you read PDC in the first
+loop iteration, then DLLSC in the second loop iteration and shortly
+before writing the register, PDC transitions to 1.  If you write
+"events", you can make do with 2 loop iterations, if you write "status"
+you'll need 3.
+
+
+> +
+> +		/*
+> +		 * Unless the MSI happens to be masked, all of the event
+> +		 * bits must be zero before the port will send a new
+> +		 * interrupt (see PCI Express Base Specification Rev 5.0
+> +		 * Version 1.0, section 6.7.3.4, "Software Notification of
+> +		 * Hot-Plug Events"). So, if an event bit gets set between
+> +		 * the read and the write of PCI_EXP_SLTSTA, we need to
+> +		 * loop back and try again.
+> +		 */
+> +		if (status_reads++ < MAX_ISR_STATUS_READS)
+> +			goto read_status;
+
+Please use "pci_dev_msi_enabled(pdev)" as conditional for the if-clause,
+we don't need this with INTx.
+
+
+Using a for (;;) or do/while loop that you jump out of if
+(!status || !pci_dev_msi_enabled(pdev)) might be more readable
+than a goto, but I'm not sure.
 
 Thanks,
 
