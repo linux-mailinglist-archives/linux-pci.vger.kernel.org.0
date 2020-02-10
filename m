@@ -2,188 +2,171 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3947615826E
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Feb 2020 19:33:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D1E21582CB
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Feb 2020 19:39:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727681AbgBJSdd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 10 Feb 2020 13:33:33 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:34280 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726950AbgBJSdd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 Feb 2020 13:33:33 -0500
-Received: by mail-io1-f65.google.com with SMTP id z193so8730901iof.1
-        for <linux-pci@vger.kernel.org>; Mon, 10 Feb 2020 10:33:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=B+jHtAnJKkOCwyeMPvS5vGcxcEKKBJbfgvWPh9lpFCs=;
-        b=PdwRXeWHiFH8yrpQPYpR0uye2yAyLKDZSAPha/h4Mbr5H5Oj09gWLIhL2M7t7QAK5s
-         OgkWH4mTDX6zzUNkwCryxEGrAR1iwW8YBoVj2bJjKWPhnJLL9DpeT/b8HPXDGoBsv97s
-         FVfQYfUH1eWx+xXVRLylK51uI380jwjqt2trAny+zTRTP0QXjC8e0mGrVinkItDsiHv6
-         4sz0lz5WCBoQsWHYoAWzIYKcpH4dRoeeM3KJR54Srcl/ci30YYHbj6BwghIvJdgflaBd
-         N3jOvp46mkeMNlm70JAWogJwSOWt9p2KwrdVabQd8z7247nhhvXPAB6U9PDqElw4WH6C
-         xKhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=B+jHtAnJKkOCwyeMPvS5vGcxcEKKBJbfgvWPh9lpFCs=;
-        b=OagrfGLErcAWgfUp9LlPh05Waw7EmLKV48GxNDtcU7hFd5hBHaJuHah1E2L5lw3PYJ
-         +NVXnWbRzS5K1Nhjj/vqm+oUWtk8sTWvFo68HsdlFAydj+fXnY5fgkuc1pbYP+VIbFCh
-         C8h3tneFr5Pj9jWVviierA6sZEcei7wMH5MNic4mWlmOzxt5UY/3fEXvHxY+3JEy++DY
-         SEAM9rQEXd5/U+t46jidk945ZfbiZiGBdJY9ss5tw4jNXFb8E/Bc3m9liDhiQCDndELW
-         bc+yNsHyP+KBILZON9vpJ9zLZjGT7r33Meaqded/Te0pRoo/3raM50W+/ThE0Ch3nCv3
-         wisg==
-X-Gm-Message-State: APjAAAXMiJ03CNfNqHcoro3uk9pO6oi0S6rVyynOcGnvkCvh+VsoaZAe
-        c7Rlp8lMgH5ITY2jsGAtuZaLu2CZaus9VB/TVx3oWg==
-X-Google-Smtp-Source: APXvYqyoFf5sGjg09a7wIuIWH9xR+u53nYPNlmA8qKwgvkkGi0OrCh08SZa//aX1Vvd7AaJvFvK08wvjN6inWFOQMwI=
-X-Received: by 2002:a02:9581:: with SMTP id b1mr10894223jai.11.1581359612398;
- Mon, 10 Feb 2020 10:33:32 -0800 (PST)
+        id S1727705AbgBJSjq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 10 Feb 2020 13:39:46 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:43758 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726816AbgBJSjq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 10 Feb 2020 13:39:46 -0500
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1j1Dxz-0007VY-PE; Mon, 10 Feb 2020 11:39:33 -0700
+To:     Jason Gunthorpe <jgg@ziepe.ca>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
+Cc:     lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
+        linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Stephen Bates <sbates@raithlin.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Ira Weiny <iweiny@intel.com>, Christoph Hellwig <hch@lst.de>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Don Dutile <ddutile@redhat.com>
+References: <20200207182457.GM23346@mellanox.com>
+ <20e3149e-4240-13e7-d16e-3975cfbe4d38@amd.com>
+ <20200208135405.GO23346@mellanox.com>
+ <7a2792b1-3d9f-c921-28ac-8c2475684869@amd.com>
+ <20200208174335.GL25297@ziepe.ca>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <d43fb3e9-0cda-4a73-849d-813b62169a4c@deltatee.com>
+Date:   Mon, 10 Feb 2020 11:39:28 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com> <CAOesGMjAQSfx1WZr6b1kNX=Exipj_f4X_f39Db7AxXr4xG4Tkg@mail.gmail.com>
- <DB8PR04MB6747DA8E1480DCF3EFF67C9284500@DB8PR04MB6747.eurprd04.prod.outlook.com>
- <20200110153347.GA29372@e121166-lin.cambridge.arm.com> <CAOesGMj9X1c7eJ4gX2QWXSNszPkRn68E4pkrSCxKMYJG7JHwsg@mail.gmail.com>
- <DB8PR04MB67473114B315FBCC97D0C6F9841D0@DB8PR04MB6747.eurprd04.prod.outlook.com>
- <CAOesGMieMXHWBO_p9YJXWWneC47g+TGDt9SVfvnp5tShj5gbPw@mail.gmail.com>
- <20200210152257.GD25745@shell.armlinux.org.uk> <CAOesGMj6B-X1s8-mYqS0N6GJXdKka1MxaNV=33D1H++h7bmXrA@mail.gmail.com>
- <20200210161553.GE25745@shell.armlinux.org.uk>
-In-Reply-To: <20200210161553.GE25745@shell.armlinux.org.uk>
-From:   Olof Johansson <olof@lixom.net>
-Date:   Mon, 10 Feb 2020 19:33:19 +0100
-Message-ID: <CAOesGMjJS0SfNwQoBqL8Y1G4Uj0YDBf+EWP4MHCnVWnZF2DyyA@mail.gmail.com>
-Subject: Re: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
- driver for NXP Layerscape SoCs
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "Z.q. Hou" <zhiqiang.hou@nxp.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        honeycomb-users@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200208174335.GL25297@ziepe.ca>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: ddutile@redhat.com, dan.j.williams@intel.com, rcampbell@nvidia.com, jhubbard@nvidia.com, hch@lst.de, iweiny@intel.com, jglisse@redhat.com, sbates@raithlin.com, daniel.vetter@ffwll.ch, linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org, linux-mm@kvack.org, lsf-pc@lists.linux-foundation.org, christian.koenig@amd.com, jgg@ziepe.ca
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        GREYLIST_ISWHITE autolearn=ham autolearn_force=no version=3.4.2
+Subject: Re: [LSF/MM TOPIC] get_user_pages() for PCI BAR Memory
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[cc:ing honeycomb-users, didn't think of that earlier]
-
-On Mon, Feb 10, 2020 at 5:16 PM Russell King - ARM Linux admin
-<linux@armlinux.org.uk> wrote:
->
-> On Mon, Feb 10, 2020 at 04:28:23PM +0100, Olof Johansson wrote:
-> > On Mon, Feb 10, 2020 at 4:23 PM Russell King - ARM Linux admin
-> > <linux@armlinux.org.uk> wrote:
-> > >
-> > > On Mon, Feb 10, 2020 at 04:12:30PM +0100, Olof Johansson wrote:
-> > > > On Thu, Feb 6, 2020 at 11:57 AM Z.q. Hou <zhiqiang.hou@nxp.com> wrote:
-> > > > >
-> > > > > Hi Olof,
-> > > > >
-> > > > > Thanks a lot for your comments!
-> > > > > And sorry for my delay respond!
-> > > >
-> > > > Actually, they apply with only minor conflicts on top of current -next.
-> > > >
-> > > > Bjorn, any chance we can get you to pick these up pretty soon? They
-> > > > enable full use of a promising ARM developer system, the SolidRun
-> > > > HoneyComb, and would be quite valuable for me and others to be able to
-> > > > use with mainline or -next without any additional patches applied --
-> > > > which this patchset achieves.
-> > > >
-> > > > I know there are pending revisions based on feedback. I'll leave it up
-> > > > to you and others to determine if that can be done with incremental
-> > > > patches on top, or if it should be fixed before the initial patchset
-> > > > is applied. But all in all, it's holding up adaption by me and surely
-> > > > others of a very interesting platform -- I'm looking to replace my
-> > > > aging MacchiatoBin with one of these and would need PCIe/NVMe to work
-> > > > before I do.
-> > >
-> > > If you're going to be using NVMe, make sure you use a power-fail safe
-> > > version; I've already had one instance where ext4 failed to mount
-> > > because of a corrupted journal using an XPG SX8200 after the Honeycomb
-> > > Serror'd, and then I powered it down after a few hours before later
-> > > booting it back up.
-> > >
-> > > EXT4-fs (nvme0n1p2): INFO: recovery required on readonly filesystem
-> > > EXT4-fs (nvme0n1p2): write access will be enabled during recovery
-> > > JBD2: journal transaction 80849 on nvme0n1p2-8 is corrupt.
-> > > EXT4-fs (nvme0n1p2): error loading journal
-> >
-> > Hmm, using btrfs on mine, not sure if the exposure is similar or not.
->
-> As I understand the problem, it isn't a filesystem issue.  It's a data
-> integrity issue with the NVMe over power fail, how they cache the data,
-> and ultimately write it to the nand flash.
->
-> Have a read of:
->
-> https://www.kingston.com/en/solutions/servers-data-centers/ssd-power-loss-protection
->
-> As NVMe and SSD are basically the same underlying technology (the host
-> interface is different) and the issues I've heard, and now experienced
-> with my NVMe, I think the above is a good pointer to the problems of
-> flash mass storage.
->
-> As I understand it, the problem occurs when the mapping table has not
-> been written back to flash, power is lost without the Standby Immediate
-> command being sent, and there is no way for the firmware to quickly
-> save the table.  On subsequent power up, the firmware has to
-> reconstruct the mapping table, and depending on how that is done,
-> incorrect (old?) data may be returned for some blocks.
->
-> That can happen to any blocks on the drive, which means any data can
-> be at risk from a power loss event, whether that is a power failure
-> or after a crash.
-
-Makes me suspect if there's some board-level power/reset sequencing
-issue, or if there's a problem with one card going down disabling
-others. I haven't read the specs enough to know what's expected
-behavior but I've seen similar issues on other platforms so take it
-with a grain of salt.
-
-> > Do you know if the SErr was due to a known issue and/or if it's
-> > something that's fixed in production silicon?
->
-> The SError is triggered by something on the PCIe side of things; if I
-> leave the Mellanox PCIe card out, then I don't get them.  The errata
-> patches I have merged into my tree help a bit, turning the code from
-> being unable to boot without a SError with the card plugged in, to
-> being able to boot and last a while - but the SErrors still eventually
-> come, maybe taking a few days... and that's without the Mellanox
-> ethernet interface being up.
->
-> > (I still can't enable SMMU since across a warm reboot it fails
-> > *completely*, with nothing coming up and working. NXP folks, you
-> > listening? :)
->
-> Is it just a warm reboot?  I thought I saw SMMU activity on a cold
-> boot as well, implying that there were devices active that Linux
-> did not know about.
-
-Yeah, 100% reproducible on warm reboot -- every single time. Not on
-cold boot though (100% success rate as far as I remember). I boot with
-kernel on NVMe on PCIe, native 1GbE for networking. u-boot from SD
-card.
-
-This is with the SolidRun u-boot from GitHub.
 
 
--Olof
+On 2020-02-08 10:43 a.m., Jason Gunthorpe wrote:
+> On Sat, Feb 08, 2020 at 05:38:51PM +0100, Christian König wrote:
+>> Am 08.02.20 um 14:54 schrieb Jason Gunthorpe:
+>>> On Sat, Feb 08, 2020 at 02:10:59PM +0100, Christian König wrote:
+>>>>> For patch sets, we've seen a number of attempts so far, but little has
+>>>>> been merged yet. Common elements of past discussions have been:
+>>>>>    - Building struct page for BAR memory
+>>>>>    - Stuffing BAR memory into scatter/gather lists, bios and skbs
+>>>>>    - DMA mapping BAR memory
+>>>>>    - Referencing BAR memory without a struct page
+>>>>>    - Managing lifetime of BAR memory across multiple drivers
+>>>> I can only repeat Jérôme that this most likely will never work correctly
+>>>> with get_user_pages().
+>>> I suppose I'm using 'get_user_pages()' as something of a placeholder
+>>> here to refer to the existing family of kernel DMA consumers that call
+>>> get_user_pages to work on VMA backed process visible memory.
+>>>
+>>> We have to have something like get_user_pages() because the kernel
+>>> call-sites are fundamentally only dealing with userspace VA. That is
+>>> how their uAPIs are designed, and we want to keep them working.
+>>>
+>>> So, if something doesn't fit into get_user_pages(), ie because it
+>>> doesn't have a VMA in the first place, then that is some other
+>>> discussion. DMA buf seems like a pretty good answer.
+>>
+>> Well we do have a VMA, but I strongly think that get_user_pages() is the
+>> wrong approach for the job.
+>>
+>> What we should do instead is to grab the VMA for the addresses and then say
+>> through the vm_operations_struct: "Hello I'm driver X and want to do P2P
+>> with you. Who are you? What are your capabilities? Should we use PCIe or
+>> shortcut through some other interconnect? etc etc ect...".
+> 
+> This is a very topical discussion. So far all the non-struct page
+> approaches have fallen down in some way or another.
+> 
+> The big problem with a VMA centric scheme is that the VMA is ephemeral
+> relative to the DMA mapping, so when it comes time to unmap it is not
+> so clear what to do to 'put' the reference. There has also been
+> resistance to adding new ops to a VMA.
+> 
+> For instance a 'get dma buf' VMA op would solve the lifetime problems,
+> but significantly complicates most of the existing get_user_pages()
+> users as they now have to track lists of dma buf pointers so they can
+> de-ref the dma bufs that covered the user VA range during 'get'
+> 
+> FWIW, if the outcome of the discussion was to have some 'get dma buf'
+> VMA op that would probably be reasonable. I've talked about this
+> before with various people, it isn't quite as good as struct pages,
+> but some subsystems like RDMA can probably make it work.
+> 
+>>>> E.g. you have memory which is not even CPU addressable, but can be shared
+>>>> between GPUs using XGMI, NVLink, SLI etc....
+>>> For this kind of memory if it is mapped into a VMA with
+>>> DEVICE_PRIVATE, as Jerome has imagined, then it would be part of this
+>>> discussion.
+>>
+>> I think what Jerome had in mind with its P2P ideas around HMM was that we
+>> could do this with anonymous memory which was migrated to a GPU device. That
+>> turned out to be rather complicated because you would need to be able to
+>> figure out to which driver you need to talk to for the migrated address,
+>> which in turn wasn't related to the VMA in any way.
+> 
+> Jerome's VMA proposal tied explicitly the lifetime of the VMA to the
+> lifetime of the DMA map by forcing the use of 'shared virtual memory'
+> (ie mmu notifiers, etc) techniques which have a very narrow usability
+> with HW. This is how the lifetime problem was solved in those patches.
+> 
+> This path has huge drawbacks for everything that is not a GPU use
+> case. Ie we can't fit it into virtio to solve it's current P2P DMA
+> problem.
+> 
+>>>> So we need to figure out how express DMA addresses outside of the CPU
+>>>> address space first before we can even think about something like extending
+>>>> get_user_pages() for P2P in an HMM scenario.
+>>> Why?
+>>
+>> Because that's how get_user_pages() works. IIRC you call it with userspace
+>> address+length and get a filled struct pages and VMAs array in return.
+>>
+>> When you don't have CPU addresses for you memory the whole idea of that
+>> interface falls apart. So I think we need to get away from get_user_pages()
+>> and work more high level here.
+> 
+> get_user_pages() is struct page focused, and there is some general
+> expectation that GPUs will have to create DEVICE_PRIVATE struct pages
+> for their entire hidden memory so that they can do all the HMM tricks
+> with anonymous memory. They also have to recongize the DEVICE_PIVATE
+> pages during hmm driven page faults.
+> 
+> Removing the DEVICE_PRIVATE from the anonymous page setup seems
+> impossible at the current moment - thus it seems like we are stuck
+> with struct pages, may as well use them?
+> 
+> Literally nobody like this, but all the non-struct-page proposals have
+> failed to get traction so far.
+
+Yes, I agree with Jason. We need to be able to make incremental progress
+on things that we can do today. We can't be stuck making no progress
+because every time something is proposed someone pops up and says it
+won't work for some significantly more complicated use case. Supporting
+existing P2P DMA functionality in userspace is a use case that people
+care about and we shouldn't be that far away from supporting with the
+existing struct page infrastructure we have today.
+
+Supporting buses the CPU has no visibility into is a separate discussion
+for after we've made more progress on the easier cases. Or, until more
+cleanup has gone into making struct page more replaceable with something
+else.
+
+Logan
