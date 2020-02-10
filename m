@@ -2,148 +2,143 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 799D2156C61
-	for <lists+linux-pci@lfdr.de>; Sun,  9 Feb 2020 21:25:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A3BF156DF1
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Feb 2020 04:40:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727419AbgBIUZQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 9 Feb 2020 15:25:16 -0500
-Received: from bmailout2.hostsharing.net ([83.223.78.240]:54433 "EHLO
-        bmailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727416AbgBIUZP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 9 Feb 2020 15:25:15 -0500
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout2.hostsharing.net (Postfix) with ESMTPS id 064102800BB92;
-        Sun,  9 Feb 2020 21:25:13 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id BF09A14BAA7; Sun,  9 Feb 2020 21:25:12 +0100 (CET)
-Date:   Sun, 9 Feb 2020 21:25:12 +0100
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Stuart Hayes <stuart.w.hayes@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Austin Bolen <austin_bolen@dell.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, narendra_k@dell.com
-Subject: Re: [PATCH v3] PCI: pciehp: Make sure pciehp_isr clears interrupt
- events
-Message-ID: <20200209202512.rzaqoc7tydo2ouog@wunner.de>
-References: <20200207195450.52026-1-stuart.w.hayes@gmail.com>
- <20200209150328.2x2zumhqbs6fihmc@wunner.de>
- <20200209180722.ikuyjignnd7ddfp5@wunner.de>
+        id S1727369AbgBJDkI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 9 Feb 2020 22:40:08 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:40632 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726950AbgBJDkI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 9 Feb 2020 22:40:08 -0500
+Received: by mail-qk1-f196.google.com with SMTP id b7so5222430qkl.7;
+        Sun, 09 Feb 2020 19:40:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=frfitOFXox86XEifRvZU8CHfdOpsMURa7f2gjVq2U28=;
+        b=iWycGiy96SWpQJ31sL6iYLl3KcJ0dFgExK3vPC1U1Fedgb3NlUkSaKIEFQfH9YvVLC
+         ln8/R5P8WT6z9PWn02Fop2/cllNGbdbj5ep2xctdG6NThRWxxA9MKl4zIQ5A7cxfBSKr
+         CCGoA4yLGYtDsSGQZUMOXsfilqpP/GG9O2C5Z40P9Dc3OobsNaimCzo7VuWd47HqG7lQ
+         pl3eYuC/F6aMi1cFdKIlJYCMwzr3c6sjkMPPUbqYCBFpIG82lK8+KjCt4HBtfdfwMRny
+         GNU28UQd/oxAZ7VdbmFrwXBFxuwmvMld0M22OC9av7R6TS5MqW2yh0iHDSr5UrL7M+jw
+         /ylw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=frfitOFXox86XEifRvZU8CHfdOpsMURa7f2gjVq2U28=;
+        b=rktBsOTLKrd5zfNd9AQRxWfSXpCX/CEBbc3nS2Wlw4Km7L0Av2RYHS+Hrc99VCbvBY
+         lETa7FJeOFnAA6OVbOoRTgnp45WYJVWY0FjCA+9ofHnrQzV9VQfBoncNAOigFKlqoXzC
+         3QW523MQ7nw4oo+TPD2ppamdmDVzFP7Jt5hSmi/8H6bo1aMhGp0o2ocA32vpRgQgoakF
+         B7/U6ifh447zLv3aQ9F9WmQEGipFMVLbD9N+Ey36bWP7EBrIzfcR4mc27vkecwAZBWZg
+         b4bXdW5T9HtNtpLKhcfoPVQIPnVuJjbBoR7PJvevb8oqXxxPqlcVYnxlMLyCvkY7CSCm
+         NSlA==
+X-Gm-Message-State: APjAAAXigqkRsVwlP2isjCJ4lBi/OYdP4P9T4vP0V88XIjx0va299gxG
+        GEQSrDsRlfoP0pLx6PJP+QM=
+X-Google-Smtp-Source: APXvYqy5b4i4DNfRHydf+m6nmbdF5HggBHGwaG5kMgg6NU4ZOf720NShyORmng4qsE7dxslJkWlUdQ==
+X-Received: by 2002:a37:e10f:: with SMTP id c15mr8958157qkm.331.1581306007417;
+        Sun, 09 Feb 2020 19:40:07 -0800 (PST)
+Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
+        by smtp.gmail.com with ESMTPSA id h4sm5471601qtp.24.2020.02.09.19.40.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 09 Feb 2020 19:40:06 -0800 (PST)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailauth.nyi.internal (Postfix) with ESMTP id 5C3B921F34;
+        Sun,  9 Feb 2020 22:40:05 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Sun, 09 Feb 2020 22:40:05 -0500
+X-ME-Sender: <xms:kNBAXhWsLdcLV5cUxDW5opGAKDs4sQWXvOnfHGzIRHTVpVekWHC-Mw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedriedtgddvkecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenog
+    fuohhrthgvugftvggtihhpvdculdegtddmnecujfgurhephffvufffkffoggfgsedtkeer
+    tdertddtnecuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesgh
+    hmrghilhdrtghomheqnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphephedv
+    rdduheehrdduuddurdejudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
+    grihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithih
+    qdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrih
+    hlrdgtohhmsehfihigmhgvrdhnrghmvg
+X-ME-Proxy: <xmx:kNBAXuCj-GPfaTSVhcn-B_H330oKSgKg0IrD60tUjHS2ufrJ1Z-Z6w>
+    <xmx:kNBAXkpRd1EKS-4cdLOqnj_ek9htrQ-5dxXYJnao9cLe2w0nHJTGDQ>
+    <xmx:kNBAXq00Y7ybEDx318PH8LWF-N9dEWx-qj7i8iGU4pqSp90_wXT9Bg>
+    <xmx:ldBAXtdqqKvhaiNWE0B3vSM1N5p0ryPyzeJ3sxIRtCk4o3Zk4K5SHCwsHr8>
+Received: from localhost (unknown [52.155.111.71])
+        by mail.messagingengine.com (Postfix) with ESMTPA id A8C6730606FB;
+        Sun,  9 Feb 2020 22:39:59 -0500 (EST)
+From:   Boqun Feng <boqun.feng@gmail.com>
+To:     linux-pci@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Michael Kelley <mikelley@microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Boqun Feng <boqun.feng@gmail.com>
+Subject: [PATCH v3 0/3] PCI: hv: Generify pci-hyperv.c
+Date:   Mon, 10 Feb 2020 11:39:50 +0800
+Message-Id: <20200210033953.99692-1-boqun.feng@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200209180722.ikuyjignnd7ddfp5@wunner.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Feb 09, 2020 at 07:07:22PM +0100, Lukas Wunner wrote:
-> Actually, scratch that.  After thinking about this problem for a day
-> I've come up with a much simpler and more elegant solution.  Could you
-> test if the below works for you?
+Hi,
 
-Sorry, I missed a few things:
+This is the first part for virtual PCI support of Hyper-V guest on
+ARM64. The whole patchset doesn't have any functional change, but only
+refactors the pci-hyperv.c code to make it more arch-independent.
 
-* pm_runtime_put() is called too often in the MSI case.
-* If only the CC bit is set or if ignore_hotplug is set, the function
-  may return prematurely without re-reading the Slot Status register.
-* Returning IRQ_NONE in the MSI case even though the IRQ thread was woken
-  may incorrectly signal a spurious interrupt to the genirq code.
-  It's better to return IRQ_HANDLED instead.
+Previous version:
+v1: https://lore.kernel.org/lkml/20200121015713.69691-1-boqun.feng@gmail.com/
+v2: https://lore.kernel.org/linux-arm-kernel/20200203050313.69247-1-boqun.feng@gmail.com/
 
-Below is another attempt.  I'll have to take a look at this with a
-fresh pair of eyeballs though to verify I haven't overlooked anything
-else and also to determine if this is actually simpler than Stuart's
-approach.  Again, the advantage here is that processing of the events
-by the IRQ thread is sped up by not delaying it until the Slot Status
-register has settled.
+Changes since v2:
 
-Thanks.
+*	Rebased on 5.6-rc1
 
--- >8 --
-diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-index c3e3f53..db5baa5 100644
---- a/drivers/pci/hotplug/pciehp_hpc.c
-+++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -530,6 +530,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
- 	struct controller *ctrl = (struct controller *)dev_id;
- 	struct pci_dev *pdev = ctrl_dev(ctrl);
- 	struct device *parent = pdev->dev.parent;
-+	irqreturn_t ret = IRQ_NONE;
- 	u16 status, events;
- 
- 	/*
-@@ -553,6 +554,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
- 		}
- 	}
- 
-+read_status:
- 	pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &status);
- 	if (status == (u16) ~0) {
- 		ctrl_info(ctrl, "%s: no response from device\n", __func__);
-@@ -579,13 +581,11 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
- 	if (!events) {
- 		if (parent)
- 			pm_runtime_put(parent);
--		return IRQ_NONE;
-+		return ret;
- 	}
- 
- 	pcie_capability_write_word(pdev, PCI_EXP_SLTSTA, events);
- 	ctrl_dbg(ctrl, "pending interrupts %#06x from Slot Status\n", events);
--	if (parent)
--		pm_runtime_put(parent);
- 
- 	/*
- 	 * Command Completed notifications are not deferred to the
-@@ -595,21 +595,33 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
- 		ctrl->cmd_busy = 0;
- 		smp_mb();
- 		wake_up(&ctrl->queue);
--
--		if (events == PCI_EXP_SLTSTA_CC)
--			return IRQ_HANDLED;
--
- 		events &= ~PCI_EXP_SLTSTA_CC;
- 	}
- 
- 	if (pdev->ignore_hotplug) {
- 		ctrl_dbg(ctrl, "ignoring hotplug event %#06x\n", events);
--		return IRQ_HANDLED;
-+		events = 0;
- 	}
- 
- 	/* Save pending events for consumption by IRQ thread. */
- 	atomic_or(events, &ctrl->pending_events);
--	return IRQ_WAKE_THREAD;
-+
-+	/*
-+	 * In MSI mode, all event bits must be zero before the port will send
-+	 * a new interrupt (PCIe Base Spec r5.0 sec 6.7.3.4).  So re-read the
-+	 * Slot Status register in case a bit was set between read and write.
-+	 */
-+	if (pci_dev_msi_enabled(pdev) && !pciehp_poll_mode) {
-+		irq_wake_thread(irq, ctrl);
-+		ret = IRQ_HANDLED;
-+		goto read_status;
-+	}
-+
-+	if (parent)
-+		pm_runtime_put(parent);
-+	if (events)
-+		return IRQ_WAKE_THREAD;
-+	return IRQ_HANDLED;
- }
- 
- static irqreturn_t pciehp_ist(int irq, void *dev_id)
+*	Reword commit logs as per Andrew's suggestion.
+
+*	It makes more sense to have a generic interface to set the whole
+	msi_entry rather than only the "address" field. So change
+	hv_set_msi_address_from_desc() to hv_set_msi_entry_from_desc().
+	Additionally, make it an inline function as per the suggestion
+	of Andrew and Thomas.
+
+*	Add the missing comment saying the partition_id of
+	hv_retarget_device_interrupt must be self.
+
+*	Add the explanation for why "__packed" is needed for TLFS
+	structures.
+
+I've done compile and boot test of this patchset, also done some tests
+with a pass-through NVMe device.
+
+Suggestions and comments are welcome!
+
+Regards,
+Boqun
+
+Boqun Feng (3):
+  PCI: hv: Move hypercall related definitions into tlfs header
+  PCI: hv: Move retarget related structures into tlfs header
+  PCI: hv: Introduce hv_msi_entry
+
+ arch/x86/include/asm/hyperv-tlfs.h  | 41 +++++++++++++++++++++++++++
+ arch/x86/include/asm/mshyperv.h     |  8 ++++++
+ drivers/pci/controller/pci-hyperv.c | 43 ++---------------------------
+ 3 files changed, 52 insertions(+), 40 deletions(-)
+
+-- 
+2.24.1
+
