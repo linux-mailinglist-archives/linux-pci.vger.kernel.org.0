@@ -2,90 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E71D4158937
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Feb 2020 05:49:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BC2B81589CD
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Feb 2020 06:57:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727279AbgBKEtm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 10 Feb 2020 23:49:42 -0500
-Received: from bmailout2.hostsharing.net ([83.223.78.240]:33757 "EHLO
-        bmailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727121AbgBKEtm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 Feb 2020 23:49:42 -0500
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout2.hostsharing.net (Postfix) with ESMTPS id 752DA2800BB55;
-        Tue, 11 Feb 2020 05:49:40 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 44C58DD1F; Tue, 11 Feb 2020 05:49:40 +0100 (CET)
-Date:   Tue, 11 Feb 2020 05:49:40 +0100
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Stuart Hayes <stuart.w.hayes@gmail.com>,
-        Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Libor Pechacek <lpechacek@suse.cz>
-Subject: Re: [PATCH v4 0/3] PCI: pciehp: Do not turn off slot if presence
- comes up after link
-Message-ID: <20200211044940.72z4vcgbgxwbc7po@wunner.de>
-References: <20191025190047.38130-1-stuart.w.hayes@gmail.com>
- <20200211000816.GA89075@google.com>
+        id S1727434AbgBKF5S (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 Feb 2020 00:57:18 -0500
+Received: from mail-il1-f181.google.com ([209.85.166.181]:45604 "EHLO
+        mail-il1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726942AbgBKF5S (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Feb 2020 00:57:18 -0500
+Received: by mail-il1-f181.google.com with SMTP id p8so2410344iln.12
+        for <linux-pci@vger.kernel.org>; Mon, 10 Feb 2020 21:57:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=HAEG6nzgcO61BogqEKDUJfSYIpiRXlW/vi6snRf5VYA=;
+        b=kUJ0D9qrtcZO3dwYTBEnsb7nXNnjdT5KgH/RfCW97TBorc/Jm8MOOTvsPWo3RsanVm
+         CKkyrkM1LtRBYRUG8FK8O8AS/vTz9XjNPC9UF3BBntButrs3qOt7szJqZN5SK5HNgDhB
+         1h3yuk/69g3BNLkHvxM+bqjTVu6p59FFj92SjU/0kfevbhp6220Zoxe5eIoXFf56V1jG
+         1sn9K+VXseDtjcpdCesUEvGAraWRjCitDiMbJxNWX0FlGxGU0rj7APhttYE0zK4/3gWl
+         +K8OyFa2GmEVheg/4LZ0/7kxUN/B+Xh9dElHOYbNt+6ezDjlXxe6eVcjUEVcZ2Jq4kkx
+         AWww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=HAEG6nzgcO61BogqEKDUJfSYIpiRXlW/vi6snRf5VYA=;
+        b=P9AntUCv8Iri5f1yRoGRgYW1YXJmMkFJZ/9W/S71W+ZEg2W0BeBav4ZuVzGbk1BAFz
+         7RiQEMzroMX6z3RUNkDVYKV8VynEAmXOo9OyoCsVy87Z1ATcEoDzv1x0Vhc9GgzDSJ/y
+         dxY2dLGgin7gArabn1gcAl9b+++m7e4STFfCmPVdZviRxPbGaMLBYd2EpG/e4uZYq4ra
+         VO3L7pbQnVd8Vfo+6IlDuJS8piu0tEwdP1Ehq986EW4wl8tQxTnlnc6DuuemHIPwssyH
+         apqU5g2xQAy1+yRx8rLOg4yKHmnq1VSxuNsupXEn5Igo37QX1oPCDd/3y6Dlfk7/f4VE
+         24pw==
+X-Gm-Message-State: APjAAAUGxNNj37T3iLl4ie59gqiGxAKbwR8L3HLRVHbSXLqK6kWaB5qk
+        YbjFRiwhOp1YbsDZ50qYH0jY21lQG6pM1k0pl8gJq9X1
+X-Google-Smtp-Source: APXvYqxog9BOUqILFx/T7T+yiSk7Ommlraf66DZuMygqxMf0AjuqYOapMxOKozSOWepOCIZ6tglrHZOCkc4TIuOAj80=
+X-Received: by 2002:a92:7301:: with SMTP id o1mr4898483ilc.272.1581400637648;
+ Mon, 10 Feb 2020 21:57:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200211000816.GA89075@google.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+From:   Chen Yu <yu.chen.surf@gmail.com>
+Date:   Tue, 11 Feb 2020 13:57:06 +0800
+Message-ID: <CADjb_WR1tBHAuP9wZFnx1bJu3ZKAK8BDPMzDwc1-8nX_WVHLvA@mail.gmail.com>
+Subject: [RFC][pci/pm] pci config space save restore issues during suspend/resume
+To:     linux-pci@vger.kernel.org
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, Len Brown <lenb@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Chen Yu <yu.c.chen@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 06:08:16PM -0600, Bjorn Helgaas wrote:
-> used ctrl_info() instead of pci_info() (I would actually like to change
-> the whole driver to use pci_info(), but better to be consistent for now)
+Hi,
+We found two issues in the code during suspend:
 
-Most of the ctrl_info() calls prepend "Slot(%s): " to the message.
-However that prefix can only be used once pci_hp_initialize() has
-been called.
+1. Andy Shevchenko found that, the save restore of pci config space
+    might cause potential issue. Current code uses
+    pci_read_config_dword() to read pci config header. However
+    hardware is not obliged to react correctly when trying to read
+    two/three 'adjacent' pci config registers with one dword read.
 
-It would probably make sense to change ctrl_info() to always
-include the prefix and change those invocations of ctrl_info()
-which happen when the slot is not yet or no longer registered,
-to pci_info().
+    Q1: Should we save/restore the pci config space header according
+    to the PCI spec strictly(pci_read_config_dword() for 32bit, while
+pci_read_config_word()
+    for 16bits, etc)?
 
+2. The pci config space of some problematic devices(or due to firmware
+    bug) might become inaccessible after resumed from S3(suspend to mem)
+    on VM.
 
-> @@ -930,7 +940,7 @@ struct controller *pcie_init(struct pcie_device *dev)
->  		PCI_EXP_SLTSTA_MRLSC | PCI_EXP_SLTSTA_CC |
->  		PCI_EXP_SLTSTA_DLLSC | PCI_EXP_SLTSTA_PDC);
->  
-> -	ctrl_info(ctrl, "Slot #%d AttnBtn%c PwrCtrl%c MRL%c AttnInd%c PwrInd%c HotPlug%c Surprise%c Interlock%c NoCompl%c LLActRep%c%s\n",
-> +	ctrl_info(ctrl, "Slot #%d AttnBtn%c PwrCtrl%c MRL%c AttnInd%c PwrInd%c HotPlug%c Surprise%c Interlock%c NoCompl%c IbPresDis%c LLActRep%c%s\n",
->  		(slot_cap & PCI_EXP_SLTCAP_PSN) >> 19,
->  		FLAG(slot_cap, PCI_EXP_SLTCAP_ABP),
->  		FLAG(slot_cap, PCI_EXP_SLTCAP_PCP),
-> @@ -941,19 +951,10 @@ struct controller *pcie_init(struct pcie_device *dev)
->  		FLAG(slot_cap, PCI_EXP_SLTCAP_HPS),
->  		FLAG(slot_cap, PCI_EXP_SLTCAP_EIP),
->  		FLAG(slot_cap, PCI_EXP_SLTCAP_NCCS),
-> +		ctrl->inband_presence_disabled,
->  		FLAG(link_cap, PCI_EXP_LNKCAP_DLLLARC),
->  		pdev->broken_cmd_compl ? " (with Cmd Compl erratum)" : "");
+    Q2: Should we do sanity check on pci config space before saving them?
+    Say, invoke pci_dev_is_present() before suspend, if the pci config space is
+    not sane, bypass the config space saving process, because there's no need
+    to save invalid pci config space.
 
-I've just reviewed the resulting commits on pci/hotplug once more and
-think there's a small issue here:  If ctrl->inband_presence_disabled is 0,
-the string will contain ASCII character 0 (end of string) and if it's 1
-it will contain ASCII character 1 (start of header).  A possible solution
-would be FLAG(ctrl->inband_presence_disabled, 1).
-
-(The real solution would probably to have a printk format for this kind
-of thing.)
-
-Thanks,
-
-Lukas
+Comments would be appreciated.
+-- 
+thanks,
+Chenyu
