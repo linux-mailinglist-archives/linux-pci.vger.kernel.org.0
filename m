@@ -2,129 +2,124 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E9D7159111
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Feb 2020 14:58:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F776159189
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Feb 2020 15:06:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730000AbgBKN5t (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 Feb 2020 08:57:49 -0500
-Received: from wnew1-smtp.messagingengine.com ([64.147.123.26]:41711 "EHLO
-        wnew1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729509AbgBKN5t (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Feb 2020 08:57:49 -0500
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailnew.west.internal (Postfix) with ESMTP id 3E42970F;
-        Tue, 11 Feb 2020 08:57:47 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Tue, 11 Feb 2020 08:57:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=monjalon.net; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding:content-type; s=mesmtp;
-         bh=noAzCHI04Ek8RDpgVHZPtuU30mmVFLmEki2n2dFXUfk=; b=hEAdjWREXeec
-        UBe4OGm3aAkBhgEuC6s/I22PkSk8Qp5WD9sZd2YG3U1I9YFFI1jI2JPfe7CE8kua
-        a9cwQ8EDSb1wXlcDnnJxxz05qpS73YVTsL1jk9BUPMwYuZQo55VetRWR4jgubvkw
-        VE0SEnS5aHX6ey2GRCcfRVDcGKBgVuY=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; bh=noAzCHI04Ek8RDpgVHZPtuU30mmVFLmEki2n2dFXU
-        fk=; b=y5Paqyy4NiV6O7SNz07Qb80FTYAjxZH4YjIhM2t1gTxOdGMvkqxirSsjJ
-        Q6fSwKqri9dK8G3gtNgxo1R640+6+xgzBlaGD1ayurch2P6wA5yLj8n78rvxaiGI
-        Yd544n7+BS/0xChp4rzcHA5C4jkZDNiP2D4jcv+yyhWPyakBFyKM+hF5ezz0B+Tv
-        wVJpwUb4yM7QOHA7St4ivDthMER/Mxt+eMyQio8kRsUURkvHDRfHa5hZOTeTu77r
-        M0V9DbaHQcHuuWh7yYn1Tou9rsdsc1u3gZLL/OpXADtsIVOv9fN1fTxIelwXcRg2
-        zRedtOWfwsJyFjmaVOP8u1ziPH/5g==
-X-ME-Sender: <xms:2rJCXpDm4fNVO8qyaB36A6ti_RSmVSf2tsLD7ela3qvNr7hgN6edGA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrieefgdehlecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkjghfggfgtgesthfuredttddtvdenucfhrhhomhepvfhhohhmrghs
-    ucfoohhnjhgrlhhonhcuoehthhhomhgrshesmhhonhhjrghlohhnrdhnvghtqeenucfkph
-    epjeejrddufeegrddvtdefrddukeegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghr
-    rghmpehmrghilhhfrhhomhepthhhohhmrghssehmohhnjhgrlhhonhdrnhgvth
-X-ME-Proxy: <xmx:2rJCXq7fF8aqvNdXEcyrvltANgu3CGdUxC0WpymCsa7MaNj8jgW4VA>
-    <xmx:2rJCXv2jjxQEkHCAQQYcMaI-DJDPYIKZPbiGvfK8f24-MoY664lTzw>
-    <xmx:2rJCXlSQdpgKERW12Dki5jngEP_sTxf67BMK7q97PS56vK1cDBp-dA>
-    <xmx:2rJCXuSprx1LlVxeacnKLUvMQm8fKQ7rvAe4dbSq2z_2yE6U4nH1TxQxK-0>
-Received: from xps.localnet (184.203.134.77.rev.sfr.net [77.134.203.184])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 4AB833060840;
-        Tue, 11 Feb 2020 08:57:45 -0500 (EST)
-From:   Thomas Monjalon <thomas@monjalon.net>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     dev@dpdk.org, kvm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dev@dpdk.org, mtosatti@redhat.com,
-        Luca Boccassi <bluca@debian.org>,
-        "Richardson, Bruce" <bruce.richardson@intel.com>,
-        cohuck@redhat.com, Vamsi Attunuru <vattunuru@marvell.com>,
-        Jerin Jacob <jerinjacobk@gmail.com>
-Subject: Re: [dpdk-dev] [RFC PATCH 0/7] vfio/pci: SR-IOV support
-Date:   Tue, 11 Feb 2020 14:57:44 +0100
-Message-ID: <2203508.9fHWaBTJ5E@xps>
-In-Reply-To: <CALBAE1Oz2u+cmoL8LhEZ-4paXEebKh3DzfWGLQLQx0oaW=tBXw@mail.gmail.com>
-References: <158085337582.9445.17682266437583505502.stgit@gimli.home> <CALBAE1Oz2u+cmoL8LhEZ-4paXEebKh3DzfWGLQLQx0oaW=tBXw@mail.gmail.com>
+        id S1729598AbgBKOGO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 Feb 2020 09:06:14 -0500
+Received: from mail-lj1-f180.google.com ([209.85.208.180]:42770 "EHLO
+        mail-lj1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729574AbgBKOGO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Feb 2020 09:06:14 -0500
+Received: by mail-lj1-f180.google.com with SMTP id d10so11706024ljl.9
+        for <linux-pci@vger.kernel.org>; Tue, 11 Feb 2020 06:06:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ffv1ImNg5xaZOr9NJU0d1Cd2bSa64FxyHxnvwn2bOTc=;
+        b=OtNW1Gu7bHz2EHBDbS/tgNmCFt+LhEs8HNJmfyZyQpg4Sjp+e+q2tt6bMfkrxD5ReD
+         utXuE4kGw9XCMSrYvWm7tutHLQx555l/DZBHbLwlFbaRQjLPcNKmjRAxoLo6KBm0Cu7G
+         UZDiYfX2ZDMwCfINRpmaKp9PSSynowjxQ2ugiKWg+E2iCW1PIkbW2RJSJWD4+JZLaMxD
+         ZH5NI+NuRaWcp851rxZAB9+xEz2ZwiNi9mVF1QTwsWP849OaQmlW9W4KIi2fORo5BVgR
+         K5YDPIoloPBTGn++6RlJyyVzF72sF24DOsrGOLa0IMWqlbFV1wUbOKVtgGxtWW/bvT8H
+         WTWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ffv1ImNg5xaZOr9NJU0d1Cd2bSa64FxyHxnvwn2bOTc=;
+        b=ahYY0mpoubuH4NVxr6JF+4xcZe3+B5H3ZVE/0mXr7FYhEIY9P1R5kZ8nQ/yRsr8tvc
+         de0YQFY/h7aJsgc7JavCcgl8vJx8shectHKMPkCby5knjeWzACPQLktcgDohB0Bl3fNT
+         liZdVP9yD/Rg+isqK4IKF3CWeE6QrfWWAXqs6ej3bKwJ2UrYDy+Sb7Vr4gzUd3V6FNLb
+         VF155eG80uCWsDhdFwR0VVnBCepzMsQg5HTNOQDHd89y0WLGSC9N2PUhOnVhYT4VHgHh
+         MZPvMGHPy76s0sLlBOJh0NSvcdIbtrw5bMo/capxDvII685Vwk9nTuLRJDKCZ2MnGzXR
+         ulWg==
+X-Gm-Message-State: APjAAAWrXQnrfiTP9B5nxtIhnkZZ1zZb4FIuwHfwh9FqsH8SSHSMyRMN
+        L2Ww5x+09n1kumiTaOoBJg7HEz6jDpCTMB/ixdzSoXSl
+X-Google-Smtp-Source: APXvYqxVx4AAwT5qsKeAzKc2kl4/f/lgMGU2mxCxYgCtQWrE3gMzdSlQ1gDvhK3WqWgYafdtyVr0/zzyM0x5bjCjcKQ=
+X-Received: by 2002:a2e:9218:: with SMTP id k24mr4221713ljg.262.1581429972097;
+ Tue, 11 Feb 2020 06:06:12 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+References: <CAHhAz+j9ukzVia8_V3FisLCpT2GsKbmhWtJpQudtWUJcSAki+w@mail.gmail.com>
+ <20200210222834.GA74627@google.com>
+In-Reply-To: <20200210222834.GA74627@google.com>
+From:   Muni Sekhar <munisekharrms@gmail.com>
+Date:   Tue, 11 Feb 2020 19:36:00 +0530
+Message-ID: <CAHhAz+jdEK73ji4MsuV3jsDih8qNG5p9Ywzn_1iuTseGNp2cBQ@mail.gmail.com>
+Subject: Re: pcie: kernel log - BAR 15: no space for... BAR 15: failed to assign..
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org,
+        kernelnewbies <kernelnewbies@kernelnewbies.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-11/02/2020 12:18, Jerin Jacob:
-> On Wed, Feb 5, 2020 at 4:35 AM Alex Williamson wrote:
+On Tue, Feb 11, 2020 at 3:58 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Sun, Feb 09, 2020 at 07:59:41AM +0530, Muni Sekhar wrote:
+> > Hi all,
 > >
-> > There seems to be an ongoing desire to use userspace, vfio-based
-> > drivers for both SR-IOV PF and VF devices.  The fundamental issue
-> > with this concept is that the VF is not fully independent of the PF
-> > driver.  Minimally the PF driver might be able to deny service to the
-> > VF, VF data paths might be dependent on the state of the PF device,
-> > or the PF my have some degree of ability to inspect or manipulate the
-> > VF data.  It therefore would seem irresponsible to unleash VFs onto
-> > the system, managed by a user owned PF.
+> > After rebooting the system following messages are seen in dmesg.
+> > Not sure if these indicate a problem. Can some one look at these and
+> > confirm if this is problem or can be ignored ?
 > >
-> > We address this in a few ways in this series.  First, we can use a bus
-> > notifier and the driver_override facility to make sure VFs are bound
-> > to the vfio-pci driver by default.  This should eliminate the chance
-> > that a VF is accidentally bound and used by host drivers.  We don't
-> > however remove the ability for a host admin to change this override.
+> > Also any suggestions as to what would cause this?
 > >
-> > The next issue we need to address is how we let userspace drivers
-> > opt-in to this participation with the PF driver.  We do not want an
-> > admin to be able to unwittingly assign one of these VFs to a tenant
-> > that isn't working in collaboration with the PF driver.  We could use
-> > IOMMU grouping, but this seems to push too far towards tightly coupled
-> > PF and VF drivers.  This series introduces a "VF token", implemented
-> > as a UUID, as a shared secret between PF and VF drivers.  The token
-> > needs to be set by the PF driver and used as part of the device
-> > matching by the VF driver.  Provisions in the code also account for
-> > restarting the PF driver with active VF drivers, requiring the PF to
-> > use the current token to re-gain access to the PF.
-> 
-> Thanks Alex for the series. DPDK realizes this use-case through, an out of
-> tree igb_uio module, for non VFIO devices. Supporting this use case, with
-> VFIO, will be a great enhancement for DPDK as we are planning to
-> get rid of out of tree modules any focus only on userspace aspects.
-[..]
-> Regarding the use case where  PF bound to DPDK/VFIO and
-> VF bound to DPDK/VFIO are _two different_ processes then sharing the UUID
-> will be a little tricky thing in terms of usage. But if that is the
-> purpose of bringing UUID to the equation then it fine.
-> 
-> Overall this series looks good to me.  We can test the next non-RFC
-> series and give
-> Tested-by by after testing with DPDK.
-[..]
-> > Please comment.  In particular, does this approach meet the DPDK needs
-> > for userspace PF and VF drivers, with the hopefully minor hurdle of
-> > sharing a token between drivers.  The token is of course left to
-> > userspace how to manage, and might be static (and not very secret) for
-> > a given set of drivers.  Thanks,
+> > [    1.084728] pci 0000:00:1c.0: BAR 15: no space for [mem size
+> > 0x00200000 64bit pref]
+> > [    1.084813] pci 0000:00:1c.0: BAR 15: failed to assign [mem size
+> > 0x00200000 64bit pref]
+> > [    1.084890] pci 0000:00:1c.2: BAR 14: no space for [mem size 0x00200000]
+> > [    1.084949] pci 0000:00:1c.2: BAR 14: failed to assign [mem size 0x00200000]
+> > [    1.085037] pci 0000:00:1c.2: BAR 15: no space for [mem size
+> > 0x00200000 64bit pref]
+> > [    1.085108] pci 0000:00:1c.2: BAR 15: failed to assign [mem size
+> > 0x00200000 64bit pref]
+> > [    1.085199] pci 0000:00:1c.3: BAR 15: no space for [mem size
+> > 0x00200000 64bit pref]
+> > [    1.085270] pci 0000:00:1c.3: BAR 15: failed to assign [mem size
+> > 0x00200000 64bit pref]
+> > [    1.085343] pci 0000:00:1c.0: BAR 13: assigned [io  0x1000-0x1fff]
+> > [    1.085403] pci 0000:00:1c.2: BAR 13: assigned [io  0x2000-0x2fff]
+> > [    1.085470] pci 0000:00:1c.3: BAR 15: no space for [mem size
+> > 0x00200000 64bit pref]
+> > [    1.085540] pci 0000:00:1c.3: BAR 15: failed to assign [mem size
+> > 0x00200000 64bit pref]
+> > [    1.085613] pci 0000:00:1c.2: BAR 14: no space for [mem size 0x00200000]
+> > [    1.085672] pci 0000:00:1c.2: BAR 14: failed to assign [mem size 0x00200000]
+> > [    1.085738] pci 0000:00:1c.2: BAR 15: no space for [mem size
+> > 0x00200000 64bit pref]
+> > [    1.085808] pci 0000:00:1c.2: BAR 15: failed to assign [mem size
+> > 0x00200000 64bit pref]
+> > [    1.085884] pci 0000:00:1c.0: BAR 15: no space for [mem size
+> > 0x00200000 64bit pref]
+> > [    1.085954] pci 0000:00:1c.0: BAR 15: failed to assign [mem size
+> > 0x00200000 64bit pref]
+> > [    1.086026] pci 0000:00:1c.0: PCI bridge to [bus 01]
+> > [    1.086083] pci 0000:00:1c.0:   bridge window [io  0x1000-0x1fff]
+> > [    1.086144] pci 0000:00:1c.0:   bridge window [mem 0xd0400000-0xd07fffff]
+>
+> The "no space" and "failed to assign" messages are all for bridge
+> windows (13 is the I/O window, 14 is the MMIO window, 15 is the MMIO
+> pref window).  I can't tell if you have any devices below these
+> bridges (lspci would show them).  If you don't have any devices below
+> these bridges, you can ignore the messages.
+I have the devices below these bridges. FPGA endpoint is connected to
+'00:1c.0 PCI bridge' and Ethernet controller is connected to '00:1c.3
+PCI bridge'.
+Does these messages impact the functionality of the connected devices?
+If so what kind of impact and is there any solution for this?
+Also, I'd like to know why "no space" and "failed to assign" messages displayed?
 
-Thanks Alex, it looks to be a great improvement.
 
-In the meantime, DPDK is going to move igb_uio (an out-of-tree
-Linux kernel module) from the main DPDK repository to a side-repo.
-This move and this patchset will hopefully encourage using VFIO.
-As Jerin said, DPDK prefers relying on upstream Linux modules.
+>
+> Bjorn
 
 
+
+-- 
+Thanks,
+Sekhar
