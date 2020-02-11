@@ -2,165 +2,138 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 91667159A5D
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Feb 2020 21:16:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B5017159CBB
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Feb 2020 00:05:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731720AbgBKUQI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 Feb 2020 15:16:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58506 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730885AbgBKUQI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 11 Feb 2020 15:16:08 -0500
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727777AbgBKXFa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 Feb 2020 18:05:30 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:38583 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727199AbgBKXF3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Feb 2020 18:05:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581462329;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=kHSxze2a1nRCn20xOJSopREUpsR/wHcjPJb/ZM+x9bk=;
+        b=cuf1MEOA5h+f01D6QDFP4WIvIBaGxTJMKuiTB6fXMhPbCizrqNEvj3nkAmjV6Y0ZYY+me0
+        MTb69t8KiBsfA8VCI95doVOEpcrZUJDbCb4LivWjdEzgHi/fp4EWS9zBFXvEHJvTBVVXVG
+        0dNG73SJbsoLIu/TF5TdtZMcASSqfbo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-403-ov1zL7QkOzGol9JblHnMjg-1; Tue, 11 Feb 2020 18:05:22 -0500
+X-MC-Unique: ov1zL7QkOzGol9JblHnMjg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB9F520708;
-        Tue, 11 Feb 2020 20:16:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581452167;
-        bh=ABXVYrbw9dS6gSoPYpOPwTNVYBSiH780ujkxeoyOglk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=JB8XqvpPApUB78qp2LO8A4zN2oF0lKNSoSIQfny5x7sx17csIDKTv80tEMh+Zj18t
-         KlHJwodMiscs+qEpsHbnkqbh/P/QVSZHYt03D3fAz9SMbsjvP4+Rw3lVd50O1ei3yf
-         nUSD6t48lLCpD02C7aCNFAiLSUVrQOGA+bDVWA/I=
-Date:   Tue, 11 Feb 2020 14:16:05 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Muni Sekhar <munisekharrms@gmail.com>
-Cc:     linux-pci@vger.kernel.org,
-        kernelnewbies <kernelnewbies@kernelnewbies.org>
-Subject: Re: pcie: kernel log - BAR 15: no space for... BAR 15: failed to
- assign..
-Message-ID: <20200211201605.GA235978@google.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6F81718FF660;
+        Tue, 11 Feb 2020 23:05:20 +0000 (UTC)
+Received: from gimli.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2EAC160BF1;
+        Tue, 11 Feb 2020 23:05:17 +0000 (UTC)
+Subject: [PATCH 0/7] vfio/pci: SR-IOV support
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     kvm@vger.kernel.org
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dev@dpdk.org, mtosatti@redhat.com, thomas@monjalon.net,
+        bluca@debian.org, jerinjacobk@gmail.com,
+        bruce.richardson@intel.com, cohuck@redhat.com
+Date:   Tue, 11 Feb 2020 16:05:16 -0700
+Message-ID: <158145472604.16827.15751375540102298130.stgit@gimli.home>
+User-Agent: StGit/0.19-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHhAz+jXDfwWA=+Cb0fXooZHHRNyYLF2ykeO8pHaXH2fw5a2sQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 10:02:13PM +0530, Muni Sekhar wrote:
-> On Tue, Feb 11, 2020 at 8:10 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Tue, Feb 11, 2020 at 07:36:00PM +0530, Muni Sekhar wrote:
-> > > On Tue, Feb 11, 2020 at 3:58 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > On Sun, Feb 09, 2020 at 07:59:41AM +0530, Muni Sekhar wrote:
-> > > > > Hi all,
-> > > > >
-> > > > > After rebooting the system following messages are seen in dmesg.
-> > > > > Not sure if these indicate a problem. Can some one look at these and
-> > > > > confirm if this is problem or can be ignored ?
-> > > > >
-> > > > > Also any suggestions as to what would cause this?
-> > > > >
-> > > > > [    1.084728] pci 0000:00:1c.0: BAR 15: no space for [mem size
-> > > > > 0x00200000 64bit pref]
-> > > > > [    1.084813] pci 0000:00:1c.0: BAR 15: failed to assign [mem size
-> > > > > 0x00200000 64bit pref]
-> > > > > [    1.084890] pci 0000:00:1c.2: BAR 14: no space for [mem size 0x00200000]
-> > > > > [    1.084949] pci 0000:00:1c.2: BAR 14: failed to assign [mem size 0x00200000]
-> > > > > [    1.085037] pci 0000:00:1c.2: BAR 15: no space for [mem size
-> > > > > 0x00200000 64bit pref]
-> > > > > [    1.085108] pci 0000:00:1c.2: BAR 15: failed to assign [mem size
-> > > > > 0x00200000 64bit pref]
-> > > > > [    1.085199] pci 0000:00:1c.3: BAR 15: no space for [mem size
-> > > > > 0x00200000 64bit pref]
-> > > > > [    1.085270] pci 0000:00:1c.3: BAR 15: failed to assign [mem size
-> > > > > 0x00200000 64bit pref]
-> > > > > [    1.085343] pci 0000:00:1c.0: BAR 13: assigned [io  0x1000-0x1fff]
-> > > > > [    1.085403] pci 0000:00:1c.2: BAR 13: assigned [io  0x2000-0x2fff]
-> > > > > [    1.085470] pci 0000:00:1c.3: BAR 15: no space for [mem size
-> > > > > 0x00200000 64bit pref]
-> > > > > [    1.085540] pci 0000:00:1c.3: BAR 15: failed to assign [mem size
-> > > > > 0x00200000 64bit pref]
-> > > > > [    1.085613] pci 0000:00:1c.2: BAR 14: no space for [mem size 0x00200000]
-> > > > > [    1.085672] pci 0000:00:1c.2: BAR 14: failed to assign [mem size 0x00200000]
-> > > > > [    1.085738] pci 0000:00:1c.2: BAR 15: no space for [mem size
-> > > > > 0x00200000 64bit pref]
-> > > > > [    1.085808] pci 0000:00:1c.2: BAR 15: failed to assign [mem size
-> > > > > 0x00200000 64bit pref]
-> > > > > [    1.085884] pci 0000:00:1c.0: BAR 15: no space for [mem size
-> > > > > 0x00200000 64bit pref]
-> > > > > [    1.085954] pci 0000:00:1c.0: BAR 15: failed to assign [mem size
-> > > > > 0x00200000 64bit pref]
-> > > > > [    1.086026] pci 0000:00:1c.0: PCI bridge to [bus 01]
-> > > > > [    1.086083] pci 0000:00:1c.0:   bridge window [io  0x1000-0x1fff]
-> > > > > [    1.086144] pci 0000:00:1c.0:   bridge window [mem 0xd0400000-0xd07fffff]
-> > > >
-> > > > The "no space" and "failed to assign" messages are all for bridge
-> > > > windows (13 is the I/O window, 14 is the MMIO window, 15 is the MMIO
-> > > > pref window).  I can't tell if you have any devices below these
-> > > > bridges (lspci would show them).  If you don't have any devices below
-> > > > these bridges, you can ignore the messages.
-> > >
-> > > I have the devices below these bridges. FPGA endpoint is connected to
-> > > '00:1c.0 PCI bridge' and Ethernet controller is connected to '00:1c.3
-> > > PCI bridge'.
-> > > Does these messages impact the functionality of the connected devices?
-> >
-> > Yes.  We tried to allocate 0x00200000 of prefetchable MMIO to 00:1c.0
-> > for use by the FPGA endpoint.  But this failed, so there is no
-> > prefetchable MMIO available for the FPGA.  The 0xd0400000-0xd07fffff
-> > non-prefetachable MMIO space *is* available for it.
-> >
-> > Similarly, we were unable to allocate 0x00200000 of prefetchable MMIO
-> > for the 00:1c.3 bridge for use by the ethernet controller.  I don't
-> > know what non-prefetchable MMIO space was allocated or what the NIC
-> > needs.
-> >
-> > "lspci -v" will show you what the FPGA and the NIC need.
-> >
-> > > If so what kind of impact and is there any solution for this?
-> >
-> > > Also, I'd like to know why "no space" and "failed to assign"
-> > > messages displayed?
-> >
-> > These messages mean we tried to allocate space for the bridges but we
-> > unable to do so.  This is because either the host bridge didn't have
-> > big enough apertures (on x86, these usually come from ACPI _CRS
-> > methods), or there's a bug in the Linux allocation algorithms.
-> >
-> > I can't tell anything more without seeing the complete dmesg log,
-> > which contains the host bridge aperture information and the BAR sizes
-> > of the FPGA and NIC.
-> Thank you for the clarification. dmesg log is attached.
-> If PCI bridge aperture is small, What is the most sensible way to proceed?
+Given the mostly positive feedback from the RFC[1], here's a new
+non-RFC revision.  Changes since RFC:
 
-Here's the relevant info from your dmesg log:
+ - vfio_device_ops.match semantics refined
+ - Use helpers for struct pci_dev.physfn to avoid breakage without
+   CONFIG_PCI_IOV
+ - Relax to allow SR-IOV configuration changes while PF is opened.
+   There are potentially interesting use cases here, including
+   perhaps QEMU emulating an SR-IOV capability and calling out
+   to a privileged entity to manipulate sriov_numvfs and corral
+   the resulting devices.
+ - Retest vfio_device_feature.argsz to include uuid length.
+ - Add Connie's R-b on 6/7
 
-  PCI host bridge to bus 0000:00
-  pci_bus 0000:00: root bus resource [io  0x0d00-0xffff window]
-  pci_bus 0000:00: root bus resource [mem 0xc0000000-0xd0c18ffe window]
-  pci_bus 0000:00: root bus resource [bus 00-ff]
-  pci 0000:00:1c.0: PCI bridge to [bus 01]
-  pci 0000:00:1c.0:   bridge window [mem 0xd0400000-0xd07fffff]
-  pci 0000:01:00.0: [1556:5555] type 00 class 0x050000 # FPGA
-  pci 0000:01:00.0: reg 0x10: [mem 0xd0400000-0xd07fffff]
-  pci 0000:00:1c.3: PCI bridge to [bus 03]
-  pci 0000:00:1c.3:   bridge window [io  0xd000-0xdfff]
-  pci 0000:00:1c.3:   bridge window [mem 0xd0a00000-0xd0bfffff]
-  pci 0000:03:00.0: [8086:1533] type 00 class 0x020000 # I210 NIC
-  pci 0000:03:00.0: reg 0x10: [mem 0xd0a00000-0xd0afffff]
-  pci 0000:03:00.0: reg 0x18: [io  0xd000-0xd01f]
-  pci 0000:03:00.0: reg 0x1c: [mem 0xd0b00000-0xd0b03fff]
+I still wish we had a solution to make it less opaque to the user
+why a VFIO_GROUP_GET_DEVICE_FD() has failed if a VF token is
+required, but this is still the best I've been able to come up with.
+If there are objections or better ideas, please raise them now.
 
-The FPGA at 01:00.0 has one non-prefetchable memory BAR and is
-assigned [mem 0xd0400000-0xd07fffff].  That range is inside the host
-bridge aperture ([mem 0xc0000000-0xd0c18ffe window]) and is routed
-through the 00:1c.0 bridge (bridge window [mem 0xd0400000-0xd07fffff]).
-So the FPGA resources are fine.
+The synopsis of this series is that we have an ongoing desire to drive
+PCIe SR-IOV PFs from userspace with VFIO.  There's an immediate need
+for this with DPDK drivers and potentially interesting future use
+cases in virtualization.  We've been reluctant to add this support
+previously due to the dependency and trust relationship between the
+VF device and PF driver.  Minimally the PF driver can induce a denial
+of service to the VF, but depending on the specific implementation,
+the PF driver might also be responsible for moving data between VFs
+or have direct access to the state of the VF, including data or state
+otherwise private to the VF or VF driver.
 
-The fact that Linux tried and failed to allocate prefetchable memory
-space for the bridge is immaterial because the FPGA can't use
-prefetchable memory anyway.
+To help resolve these concerns, we introduce a VF token into the VFIO
+PCI ABI, which acts as a shared secret key between drivers.  The
+userspace PF driver is required to set the VF token to a known value
+and userspace VF drivers are required to provide the token to access
+the VF device.  If a PF driver is restarted with VF drivers in use, it
+must also provide the current token in order to prevent a rogue
+untrusted PF driver from replacing a known driver.  The degree to
+which this new token is considered secret is left to the userspace
+drivers, the kernel intentionally provides no means to retrieve the
+current token.
 
-The NIC at 03:00.0 is similar: it has two non-prefetchable memory BARs
-and one I/O BAR.  They're all assigned valid space, and the fact that
-Linux tried and failed to allocate prefetchable memory space for the
-bridge makes no difference because the NIC can't use it.
+Note that the above token is only required for this new model where
+both the PF and VF devices are usable through vfio-pci.  Existing
+models of VFIO drivers where the PF is used without SR-IOV enabled
+or the VF is bound to a userspace driver with an in-kernel, host PF
+driver are unaffected.
 
-So these messages do not indicate a problem.  Maybe there's something
-we can do to make this more clear to the user.
+The latter configuration above also highlights a new inverted scenario
+that is now possible, a userspace PF driver with in-kernel VF drivers.
+I believe this is a scenario that should be allowed, but should not be
+enabled by default.  This series includes code to set a default
+driver_override for VFs sourced from a vfio-pci user owned PF, such
+that the VFs are also bound to vfio-pci.  This model is compatible
+with tools like driverctl and allows the system administrator to
+decide if other bindings should be enabled.  The VF token interface
+above exists only between vfio-pci PF and VF drivers, once a VF is
+bound to another driver, the administrator has effectively pronounced
+the device as trusted.  The vfio-pci driver will note alternate
+binding in dmesg for logging and debugging purposes.
 
-Bjorn
+Please review, comment, and test.  The example QEMU implementation
+provided with the RFC[2] is still current for this version.  Thanks,
+
+Alex
+
+[1] https://lore.kernel.org/lkml/158085337582.9445.17682266437583505502.stgit@gimli.home/
+[2] https://lore.kernel.org/lkml/20200204161737.34696b91@w520.home/
+---
+
+Alex Williamson (7):
+      vfio: Include optional device match in vfio_device_ops callbacks
+      vfio/pci: Implement match ops
+      vfio/pci: Introduce VF token
+      vfio: Introduce VFIO_DEVICE_FEATURE ioctl and first user
+      vfio/pci: Add sriov_configure support
+      vfio/pci: Remove dev_fmt definition
+      vfio/pci: Cleanup .probe() exit paths
+
+
+ drivers/vfio/pci/vfio_pci.c         |  312 ++++++++++++++++++++++++++++++++---
+ drivers/vfio/pci/vfio_pci_private.h |   10 +
+ drivers/vfio/vfio.c                 |   20 ++
+ include/linux/vfio.h                |    4 
+ include/uapi/linux/vfio.h           |   37 ++++
+ 5 files changed, 355 insertions(+), 28 deletions(-)
+
