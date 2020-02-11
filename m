@@ -2,122 +2,189 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 987EA158CCB
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Feb 2020 11:36:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B0FF7158D66
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Feb 2020 12:19:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728333AbgBKKgq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 Feb 2020 05:36:46 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:58926 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728237AbgBKKgq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 11 Feb 2020 05:36:46 -0500
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 454D39C8AD51EEFAD1D2;
-        Tue, 11 Feb 2020 18:36:44 +0800 (CST)
-Received: from [127.0.0.1] (10.65.58.147) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Tue, 11 Feb 2020
- 18:36:34 +0800
-Subject: Re: PCI: bus resource allocation error
-To:     Bjorn Helgaas <helgaas@kernel.org>, <linux-pci@vger.kernel.org>,
-        "Nicholas Johnson" <nicholas.johnson-opensource@outlook.com.au>
-References: <f0cab9da-8e74-e923-a2fe-591d065228ee@hisilicon.com>
-CC:     fangjian 00545541 <f.fangjian@huawei.com>
-From:   Yicong Yang <yangyicong@hisilicon.com>
-Message-ID: <2e588019-0a42-c386-7314-e1cf5dbc3371@hisilicon.com>
-Date:   Tue, 11 Feb 2020 18:36:42 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        id S1728553AbgBKLTE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 Feb 2020 06:19:04 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:44373 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727761AbgBKLTE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Feb 2020 06:19:04 -0500
+Received: by mail-il1-f194.google.com with SMTP id s85so3083078ill.11;
+        Tue, 11 Feb 2020 03:19:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rVhcVjlq8na3czw/tkwf6l6sePScsOfYU5Ogr7k0eCs=;
+        b=jhM+87nIV3eGnOzI14WbJNrPKm1HIDv1USv22qODslUnAdL8F6u/kl61BxSpUOTnW4
+         xZfVVaajACAOZw+wxOUBKyxBjupzu/ErjqCyQD0iSgVqVP7l2q8KOOSRFZIyT4JiBq6K
+         NjNBWnlrJ7A0/ZnaU/nWC7qvGwzm6sEfZOKgzSncc1YwHqePggXpcG3QlQ9DiNQFINo8
+         2qN3krHATdz6m5NZOlpfV47HNzgcMQ6XB9B291HeVn78wmzUayrPbTOaiTgUaBLHKkrX
+         x/ajVJmuewSo2LRLOHlDcqkqJS1Jb5DhWnwimEEda3wtR4Ts7kxuu7G+n+4tu6ZuYfIi
+         lC+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rVhcVjlq8na3czw/tkwf6l6sePScsOfYU5Ogr7k0eCs=;
+        b=trBsuCdFfreE7U4bN2o5TgQZ4L0qjo0j5/F8GYHmEE5LHXh9fe/FYTPZeJuIkyGkqD
+         nCvnM1WwN40uK/fcDYpTSd4YNa96CC0K+WRnucvuM6ueR8V4DKDRsbcNuy2ayLw3iBxH
+         xTw9p8BLRQe2hVqQCIPoufLyv0PK5y6nbt0pBNbddXT35Q4oIRmdAQYM9DQQs+msedQ2
+         9v0ptihqNp+hXx/qja68XmTpoZ66czkVy0iDeEtw0VQkk+bdy4chfF66We0JW+6S2wkr
+         s9qushjV814HSu5+w59NkLsdRTJt0qJUQw7DFhaDnzJyRMJyMbxjNudx4rKlZRC8bRZF
+         yCFQ==
+X-Gm-Message-State: APjAAAXgNPEq4R3DNnLZAO+d5/iesGm+drpaCdE2QljuRB5+O6kNKSfp
+        WxqKTbD3dAv7/NdNhaAzih6O3rP8nAkuDs90NHY=
+X-Google-Smtp-Source: APXvYqwpJFGGow05e+peGMiccU09OXwxzA3q7JgF8vOUFvh3CVcgIle2N9uPDYB0Zu84nghhzJetQpekPDvKMOVQPjY=
+X-Received: by 2002:a92:50a:: with SMTP id q10mr6210854ile.294.1581419943357;
+ Tue, 11 Feb 2020 03:19:03 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <f0cab9da-8e74-e923-a2fe-591d065228ee@hisilicon.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.65.58.147]
-X-CFilter-Loop: Reflected
+References: <158085337582.9445.17682266437583505502.stgit@gimli.home>
+In-Reply-To: <158085337582.9445.17682266437583505502.stgit@gimli.home>
+From:   Jerin Jacob <jerinjacobk@gmail.com>
+Date:   Tue, 11 Feb 2020 16:48:47 +0530
+Message-ID: <CALBAE1Oz2u+cmoL8LhEZ-4paXEebKh3DzfWGLQLQx0oaW=tBXw@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/7] vfio/pci: SR-IOV support
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dpdk-dev <dev@dpdk.org>,
+        mtosatti@redhat.com, Thomas Monjalon <thomas@monjalon.net>,
+        Luca Boccassi <bluca@debian.org>,
+        "Richardson, Bruce" <bruce.richardson@intel.com>,
+        cohuck@redhat.com, Vamsi Attunuru <vattunuru@marvell.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn and Nicholas,
+On Wed, Feb 5, 2020 at 4:35 AM Alex Williamson
+<alex.williamson@redhat.com> wrote:
+>
+> There seems to be an ongoing desire to use userspace, vfio-based
+> drivers for both SR-IOV PF and VF devices.  The fundamental issue
+> with this concept is that the VF is not fully independent of the PF
+> driver.  Minimally the PF driver might be able to deny service to the
+> VF, VF data paths might be dependent on the state of the PF device,
+> or the PF my have some degree of ability to inspect or manipulate the
+> VF data.  It therefore would seem irresponsible to unleash VFs onto
+> the system, managed by a user owned PF.
+>
+> We address this in a few ways in this series.  First, we can use a bus
+> notifier and the driver_override facility to make sure VFs are bound
+> to the vfio-pci driver by default.  This should eliminate the chance
+> that a VF is accidentally bound and used by host drivers.  We don't
+> however remove the ability for a host admin to change this override.
+>
+> The next issue we need to address is how we let userspace drivers
+> opt-in to this participation with the PF driver.  We do not want an
+> admin to be able to unwittingly assign one of these VFs to a tenant
+> that isn't working in collaboration with the PF driver.  We could use
+> IOMMU grouping, but this seems to push too far towards tightly coupled
+> PF and VF drivers.  This series introduces a "VF token", implemented
+> as a UUID, as a shared secret between PF and VF drivers.  The token
+> needs to be set by the PF driver and used as part of the device
+> matching by the VF driver.  Provisions in the code also account for
+> restarting the PF driver with active VF drivers, requiring the PF to
+> use the current token to re-gain access to the PF.
 
-Would you mind looking at the this and help me with the issues?
+Thanks Alex for the series. DPDK realizes this use-case through, an out of
+tree igb_uio module, for non VFIO devices. Supporting this use case, with
+VFIO, will be a great enhancement for DPDK as we are planning to
+get rid of out of tree modules any focus only on userspace aspects.
 
-I reproduced the issues on another machine and pasted the console log along with
-the lspci info on https://paste.ubuntu.com/p/5VHVnKWSty/.
+From the DPDK perspective, we have following use-cases
 
-As it has been a long time since last mail, I briefly illustrate the issues below:
+1) VF representer or OVS/vSwitch  use cases where
+DPDK PF acts as an HW switch to steer traffic to VF
+using the rte_flow library backed by HW CAMs.
 
-There are 4 functions of a network card under one root port as below:
- +-[0000:7c]---00.0-[7d]--+-00.0  Device 19e5:a222
- |                        +-00.1  Device 19e5:a222
- |                        +-00.2  Device 19e5:a222
- |                        \-00.3  Device 19e5:a221
+2) Unlike, other PCI class of devices, Network class of PCIe devices
+would have additional
+capability on the PF devices such as promiscuous mode support etc
+leverage that in DPDK
+PF and VF use cases.
 
-When I remove one function and rescan the bus[7c], the kernel print the error
-message as below:
+That would boil down to the use of the following topology.
+a)  PF bound to DPDK/VFIO  and  VF bound to Linux
+b)  PF bound to DPDK/VFIO  and  VF bound to DPDK/VFIO
 
-[  391.770030] pci 0000:7d:00.3: [19e5:a221] type 00 class 0x020000
-[  391.776024] pci 0000:7d:00.3: reg 0x10: [mem 0x1210c0000-0x1210cffff 64bit pref]
-[  391.783394] pci 0000:7d:00.3: reg 0x18: [mem 0x120c00000-0x120cfffff 64bit pref]
-[  391.790786] pci 0000:7d:00.3: reg 0x224: [mem 0x1210d0000-0x1210dffff 64bit pref]
-[  391.798238] pci 0000:7d:00.3: VF(n) BAR0 space: [mem 0x1210d0000-0x1210fffff 64bit pref] (contains BAR0 for 3 VFs)
-[  391.808543] pci 0000:7d:00.3: reg 0x22c: [mem 0x120d00000-0x120dfffff 64bit pref]
-[  391.815994] pci 0000:7d:00.3: VF(n) BAR2 space: [mem 0x120d00000-0x120ffffff 64bit pref] (contains BAR2 for 3 VFs)
-[  391.826391] pci 0000:7c:00.0: bridge window [mem 0x00100000-0x002fffff] to [bus 7d] add_size 300000 add_align 100000
-[  391.836869] pci 0000:7c:00.0: BAR 14: no space for [mem size 0x00500000]
-                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-[  391.843543] pci 0000:7c:00.0: BAR 14: failed to assign [mem size 0x00500000]
-                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-[  391.850562] pci 0000:7c:00.0: BAR 14: no space for [mem size 0x00200000]
-                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-[  391.857237] pci 0000:7c:00.0: BAR 14: failed to assign [mem size 0x00200000]
-                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ 
-or the machine in the pastebin prints:
+Tested the use case (a) and it works this patch. Tested use case(b), it
+works with patch provided both PF and VF under the same application.
 
-[  790.671091] pci 0000:7d:00.3: Removing from iommu group 5
-[  937.541937] pci 0000:7d:00.3: [19e5:a221] type 00 class 0x020000
-[  937.541949] pci 0000:7d:00.3: reg 0x10: [mem 0x1221f0000-0x1221fffff 64bit pref]
-[  937.541953] pci 0000:7d:00.3: reg 0x18: [mem 0x121f00000-0x121ffffff 64bit pref]
-[  937.542113] pci 0000:7c:00.0: BAR 14: no space for [mem size 0x00200000]
-                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-[  937.542116] pci 0000:7c:00.0: BAR 14: failed to assign [mem size 0x00200000]
-                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-[  937.542120] pci 0000:7d:00.3: BAR 2: assigned [mem 0x121f00000-0x121ffffff 64bit pref]
-[  937.542125] pci 0000:7d:00.3: BAR 0: assigned [mem 0x1221f0000-0x1221fffff 64bit pref]
-[  937.542253] hns3 0000:7d:00.3: Adding to iommu group 5
+Regarding the use case where  PF bound to DPDK/VFIO and
+VF bound to DPDK/VFIO are _two different_ processes then sharing the UUID
+will be a little tricky thing in terms of usage. But if that is the
+purpose of bringing
+UUID to the equation then it fine.
 
-Both the function and the root ports work well, and the function get the resource it requested as before
-remove. So from my perspective the message shouldn't be printed and should be eliminated.
-
-I looked into the codes and got some informations:
-
-when echo 1 > bus_rescan, kernel calls:
-    pci_rescan_bus()
-        pci_assign_unassigned_bus_resources()
-            __pci_bus_size_bridges()
-               /* first try to put the resource in 64 bit MMIO window(Bar 15). 
-                * As it's not empty, function will return directly.
-                */
-               pbus_size_mem()
-
-               /* Then try to put rest resource in 32-bit MMIO window(Bar 14)
-                * As it's not occupied by any functions, the resources are
-                * put here. As no io memory is reserved in the bios for bar14,
-                * error message prints when allocated.
-                */
-               pbus_size_mem() /* problem is here */
-
-In pbus_size_mem(), kernel try to size the bar to contain function resource.
-If it's occupied by any function (judged by find_bus_resource_of_type() in
-pbus_size_mem()), it'll return directly without any sizing. Otherwise the bar
-will be sized to put the request resource in.
-
-It's just a rescan process, the bar size shouldn't be sized or allocated by
-calling __pci_bus_size_bridges(). As previous resource space in the bar
-reserved and the function will demands no extra spaces after rescan.
-The current process seems unreasonable.
-
-Thanks,
-Yicong Yang
+Overall this series looks good to me.  We can test the next non-RFC
+series and give
+Tested-by by after testing with DPDK.
 
 
+>
+> The above solutions introduce a bit of a modification to the VFIO ABI
+> and an additional ABI extension.  The modification is that the
+> VFIO_GROUP_GET_DEVICE_FD ioctl is specified to require a char string
+> from the user providing the device name.  For this solution, we extend
+> the syntax to allow the device name followed by key/value pairs.  In
+> this case we add "vf_token=3e7e882e-1daf-417f-ad8d-882eea5ee337", for
+> example.  These options are expected to be space separated.  Matching
+> these key/value pairs is entirely left to the vfio bus driver (ex.
+> vfio-pci) and the internal ops structure is extended to allow this
+> optional support.  This extension should be fully backwards compatible
+> to existing userspace, such code will simply fail to open these newly
+> exposed devices, as intended.
+>
+> I've been debating whether instead of the above we should allow the
+> user to get the device fd as normal, but restrict the interfaces until
+> the user authenticates, but I'm afraid this would be a less backwards
+> compatible solution.  It would be just as unclear to the user why a
+> device read/write/mmap/ioctl failed as it might be to why getting the
+> device fd could fail.  However in the latter case, I believe we do a
+> better job of restricting how far userspace code might go before they
+> ultimately fail.  I'd welcome discussion in the space, and or course
+> the extension of the GET_DEVICE_FD string.
+>
+> Finally, the user needs to be able to set a VF token.  I add a
+> VFIO_DEVICE_FEATURE ioctl for this that's meant to be reusable for
+> getting, setting, and probing arbitrary features of a device.
+>
+> I'll reply to this cover letter with a very basic example of a QEMU
+> update to support this interface, though I haven't found a device yet
+> that behaves well with the PF running in one VM with the VF in
+> another, or really even just a PF running in a VM with SR-IOV enabled.
+> I know these devices exist though, and I suspect QEMU will not be the
+> primary user of this support for now, but this behavior reaffirms my
+> concerns to prevent mis-use.
+>
+> Please comment.  In particular, does this approach meet the DPDK needs
+> for userspace PF and VF drivers, with the hopefully minor hurdle of
+> sharing a token between drivers.  The token is of course left to
+> userspace how to manage, and might be static (and not very secret) for
+> a given set of drivers.  Thanks,
+>
+> Alex
+>
+> ---
+>
+> Alex Williamson (7):
+>       vfio: Include optional device match in vfio_device_ops callbacks
+>       vfio/pci: Implement match ops
+>       vfio/pci: Introduce VF token
+>       vfio: Introduce VFIO_DEVICE_FEATURE ioctl and first user
+>       vfio/pci: Add sriov_configure support
+>       vfio/pci: Remove dev_fmt definition
+>       vfio/pci: Cleanup .probe() exit paths
+>
+>
+>  drivers/vfio/pci/vfio_pci.c         |  315 ++++++++++++++++++++++++++++++++---
+>  drivers/vfio/pci/vfio_pci_private.h |   10 +
+>  drivers/vfio/vfio.c                 |   19 ++
+>  include/linux/vfio.h                |    3
+>  include/uapi/linux/vfio.h           |   37 ++++
+>  5 files changed, 356 insertions(+), 28 deletions(-)
+>
