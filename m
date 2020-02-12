@@ -2,827 +2,215 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6AF7C15B363
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Feb 2020 23:08:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DFB6115B3B9
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Feb 2020 23:31:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728098AbgBLWIA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Feb 2020 17:08:00 -0500
-Received: from mga05.intel.com ([192.55.52.43]:64968 "EHLO mga05.intel.com"
+        id S1729132AbgBLWbg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Feb 2020 17:31:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727564AbgBLWIA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 12 Feb 2020 17:08:00 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Feb 2020 14:07:58 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,434,1574150400"; 
-   d="scan'208";a="281352672"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 12 Feb 2020 14:07:57 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1j20Am-0001IO-Jc; Thu, 13 Feb 2020 06:07:56 +0800
-Date:   Thu, 13 Feb 2020 06:07:25 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/review/cpumask] BUILD REGRESSION
- 50fcb29e443db489b159054e9d5f4d8663812da2
-Message-ID: <5e44771d.omXSZehDBRQLl+f/%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1727564AbgBLWbg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 12 Feb 2020 17:31:36 -0500
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 553FE21734;
+        Wed, 12 Feb 2020 22:31:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581546695;
+        bh=XZLsMgDRQN99NwlGx4tVdur3BW98DgmN7qNxFIqIhO0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=A+6M+QmjGNZYuFhvHOjbCVqvmbkdChNWLI9cLj75Ido9OjjMuPl2j5W67NtNIxEBN
+         6XMfO/DnfLBW7dG6/SjCT1dgZa7KrAkf7Ep1b9TyusJT0HWKC4rhqJGcnOk4ckYqI8
+         MxD1CSBuLTNO+iKwdr8prDHrchpBTQnHvQU1hC/k=
+Date:   Wed, 12 Feb 2020 16:31:33 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Yicong Yang <yangyicong@hisilicon.com>
+Cc:     linux-pci@vger.kernel.org, f.fangjian@huawei.com,
+        huangdaode@huawei.com
+Subject: Re: [PATCH v2] PCI: Make pci_bus_speed_strings[] public
+Message-ID: <20200212223133.GA177061@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <1580986687-9644-1-git-send-email-yangyicong@hisilicon.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/review/cpumask
-branch HEAD: 50fcb29e443db489b159054e9d5f4d8663812da2  Unify ia64
+On Thu, Feb 06, 2020 at 06:58:07PM +0800, Yicong Yang wrote:
+> pci_bus_speed_strings[] in slot.c defines universal speed information.
+> Currently it is only used to decode bus speed in slot.c, while elsewhere
+> use judgement statements repeatly to decode speed information. For
+> example, in PCIE_SPEED2STR and current_link_speed_show() in sysfs.
+> 
+> Make it public and move to probe.c so that we can reuse it for decoding
+> speed information in sysfs or dmesg log. Remove "PCIe" suffix of PCIe
+> bus speed strings to reduce redundancy.
+> 
+> Add pci_bus_speed_strings_size for boundary check purpose, to avoid
+> acquiring size of an external array by ARRAY_SIZE macro.
+> 
+> Link:https://lore.kernel.org/linux-pci/20200205183531.GA229621@google.com/
+> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+> ---
+> 
+> change since v1:
+> 1. split the patch from series as suggested
 
-Regressions in current branch:
+That's not what I said.  What I said was:
 
-arch/ia64/include/asm/topology.h:29:24: warning: pointer type mismatch in conditional expression
-arch/ia64/include/asm/topology.h:52:6: note: in expansion of macro 'cpumask_of_node'
-arch/ia64/kernel/acpi.c:862:20: note: in expansion of macro 'cpumask_of_node'
-arch/ia64/kernel/iosapic.c:658:14: note: in expansion of macro 'cpumask_of_node'
-arch/ia64/kernel/numa.c:27:28: error: passing argument 2 of 'cpumask_test_cpu' from incompatible pointer type [-Werror=incompatible-pointer-types]
-arch/ia64/kernel/numa.c:35:23: error: passing argument 2 of 'cpumask_set_cpu' from incompatible pointer type [-Werror=incompatible-pointer-types]
-arch/ia64/kernel/numa.c:44:25: error: passing argument 2 of 'cpumask_clear_cpu' from incompatible pointer type [-Werror=incompatible-pointer-types]
-arch/ia64/kernel/numa.c:59:17: error: passing argument 1 of 'cpumask_clear' from incompatible pointer type [-Werror=incompatible-pointer-types]
-arch/s390/include/asm/topology.h:81:9: error: return from incompatible pointer type [-Werror=incompatible-pointer-types]
-arch/sparc/include/asm/topology_64.h:15:24: warning: pointer type mismatch in conditional expression
-arch/sparc/include/asm/topology_64.h:31:3: note: in expansion of macro 'cpumask_of_node'
-arch/sparc/kernel/of_device_64.c:629:28: note: in expansion of macro 'cpumask_of_node'
-arch/sparc/kernel/pci_msi.c:290:28: note: in expansion of macro 'cpumask_of_node'
-arch/sparc/mm/init_64.c:1126:17: error: passing argument 1 of 'cpumask_setall' from incompatible pointer type [-Werror=incompatible-pointer-types]
-arch/sparc/mm/init_64.c:1464:15: error: passing argument 1 of 'cpumask_copy' from incompatible pointer type [-Werror=incompatible-pointer-types]
-drivers/base/node.c:42:20: note: in expansion of macro 'cpumask_of_node'
-drivers/base/node.c:43:20: note: in expansion of macro 'cpumask_of_node'
-drivers/block/mtip32xx/mtip32xx.c:3896:14: note: in expansion of macro 'cpumask_of_node'
-drivers/block/mtip32xx/mtip32xx.c:4078:3: note: in expansion of macro 'dev_info'
-drivers/dma/dmaengine.c:228:25: note: in expansion of macro 'cpumask_of_node'
-drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c:1421:21: note: in expansion of macro 'cpumask_of_node'
-drivers/pci/pci-driver.c:356:25: note: in expansion of macro 'cpumask_of_node'
-drivers/pci/pci-driver.c:356:9: note: in expansion of macro 'cpumask_any_and'
-drivers/pci/pci-sysfs.c:112:34: note: in expansion of macro 'cpumask_of_pcibus'
-drivers/pci/pci-sysfs.c:85:8: note: in expansion of macro 'cpumask_of_node'
-drivers/scsi/megaraid/megaraid_sas_base.c:5789:5: note: in expansion of macro 'cpumask_of_node'
-drivers/scsi/mpt3sas/mpt3sas_base.c:3017:17: note: in expansion of macro 'cpumask_of_node'
-include/linux/dev_printk.h:110:33: note: in expansion of macro 'nr_cpus_node'
-include/linux/topology.h:227:9: note: in expansion of macro 'cpumask_of_node'
-include/linux/topology.h:44:7: note: in expansion of macro 'nr_cpus_node'
-kernel/irq/manage.c:468:36: note: in expansion of macro 'cpumask_of_node'
-kernel/sched/core.c:2037:14: note: in expansion of macro 'cpumask_of_node'
-kernel/sched/core.c:2039:14: note: in expansion of macro 'cpumask_of_node'
-kernel/sched/core.c:2048:14: note: in expansion of macro 'cpumask_of_node'
-kernel/sched/core.c:2050:14: note: in expansion of macro 'cpumask_of_node'
-kernel/sched/topology.c:1644:28: note: in expansion of macro 'cpumask_of_node'
-kernel/sched/topology.c:1653:28: note: in expansion of macro 'cpumask_of_node'
-kernel/smp.c:382:13: note: in expansion of macro 'cpumask_of_node'
-kernel/workqueue.c:1549:24: note: in expansion of macro 'cpumask_of_node'
-kernel/workqueue.c:1549:8: note: in expansion of macro 'cpumask_any_and'
-lib/cpu_rmap.c:183:7: note: in expansion of macro 'cpumask_of_node'
-lib/cpumask.c:219:25: note: in expansion of macro 'cpumask_of_node'
-mm/compaction.c:2633:34: note: in expansion of macro 'cpumask_of_node'
-mm/compaction.c:2635:34: note: in expansion of macro 'cpumask_of_node'
-mm/page_alloc.c:1775:34: note: in expansion of macro 'cpumask_of_node'
-mm/page_alloc.c:5524:30: note: in expansion of macro 'cpumask_of_node'
-mm/slab.c:819:24: note: in expansion of macro 'nr_cpus_node'
-mm/slab.c:945:31: note: in expansion of macro 'cpumask_of_node'
-mm/vmscan.c:3873:34: note: in expansion of macro 'cpumask_of_node'
-mm/vmscan.c:3898:34: note: in expansion of macro 'cpumask_of_node'
-mm/vmscan.c:3968:34: note: in expansion of macro 'cpumask_of_node'
-mm/vmstat.c:1918:22: note: in expansion of macro 'cpumask_of_node'
-mm/vmstat.c:1920:22: note: in expansion of macro 'cpumask_of_node'
-mm/vmstat.c:1968:22: note: in expansion of macro 'cpumask_of_node'
-net/sunrpc/svc.c:124:6: note: in expansion of macro 'nr_cpus_node'
-net/sunrpc/svc.c:205:2: note: in expansion of macro 'for_each_node_with_cpus'
-net/sunrpc/svc.c:324:30: note: in expansion of macro 'cpumask_of_node'
+  This needs to say exactly where this change will be observed: /proc
+  file, /sys file, dmesg, etc.  I would prefer that an observable
+  change be in its own patch instead of being a by-product of a
+  structural change like this one.
 
-Error ids grouped by kconfigs:
+That means I want a tiny patch that changes the strings a user will
+see and a specific example in the commit log to show what change the
+user will see.  For example, if it were in sysfs the changelog could
+say something like:
 
-recent_errors
-|-- ia64-alldefconfig
-|   |-- arch-ia64-include-asm-topology.h:note:in-expansion-of-macro-cpumask_of_node
-|   |-- arch-ia64-include-asm-topology.h:warning:pointer-type-mismatch-in-conditional-expression
-|   |-- arch-ia64-kernel-acpi.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- arch-ia64-kernel-iosapic.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- arch-ia64-kernel-numa.c:error:passing-argument-of-cpumask_clear-from-incompatible-pointer-type
-|   |-- arch-ia64-kernel-numa.c:error:passing-argument-of-cpumask_clear_cpu-from-incompatible-pointer-type
-|   |-- arch-ia64-kernel-numa.c:error:passing-argument-of-cpumask_set_cpu-from-incompatible-pointer-type
-|   |-- arch-ia64-kernel-numa.c:error:passing-argument-of-cpumask_test_cpu-from-incompatible-pointer-type
-|   |-- drivers-base-node.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-pci-pci-driver.c:note:in-expansion-of-macro-cpumask_any_and
-|   |-- drivers-pci-pci-driver.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-pci-pci-sysfs.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-pci-pci-sysfs.c:note:in-expansion-of-macro-cpumask_of_pcibus
-|   |-- include-linux-topology.h:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-irq-manage.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-sched-core.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-sched-topology.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-smp.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-workqueue.c:note:in-expansion-of-macro-cpumask_any_and
-|   |-- kernel-workqueue.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- lib-cpumask.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- mm-compaction.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- mm-page_alloc.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- mm-vmscan.c:note:in-expansion-of-macro-cpumask_of_node
-|   `-- mm-vmstat.c:note:in-expansion-of-macro-cpumask_of_node
-|-- ia64-allmodconfig
-|   |-- arch-ia64-include-asm-topology.h:note:in-expansion-of-macro-cpumask_of_node
-|   |-- arch-ia64-include-asm-topology.h:warning:pointer-type-mismatch-in-conditional-expression
-|   |-- arch-ia64-kernel-acpi.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- arch-ia64-kernel-iosapic.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- arch-ia64-kernel-numa.c:error:passing-argument-of-cpumask_clear-from-incompatible-pointer-type
-|   |-- arch-ia64-kernel-numa.c:error:passing-argument-of-cpumask_clear_cpu-from-incompatible-pointer-type
-|   |-- arch-ia64-kernel-numa.c:error:passing-argument-of-cpumask_set_cpu-from-incompatible-pointer-type
-|   |-- arch-ia64-kernel-numa.c:error:passing-argument-of-cpumask_test_cpu-from-incompatible-pointer-type
-|   |-- drivers-base-node.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-block-mtip32xx-mtip32xx.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-block-mtip32xx-mtip32xx.c:note:in-expansion-of-macro-dev_info
-|   |-- drivers-dma-dmaengine.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-net-ethernet-hisilicon-hns3-hns3pf-hclge_main.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-pci-pci-driver.c:note:in-expansion-of-macro-cpumask_any_and
-|   |-- drivers-pci-pci-driver.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-pci-pci-sysfs.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-pci-pci-sysfs.c:note:in-expansion-of-macro-cpumask_of_pcibus
-|   |-- drivers-scsi-megaraid-megaraid_sas_base.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- include-linux-dev_printk.h:note:in-expansion-of-macro-nr_cpus_node
-|   |-- include-linux-topology.h:note:in-expansion-of-macro-cpumask_of_node
-|   |-- include-linux-topology.h:note:in-expansion-of-macro-nr_cpus_node
-|   |-- kernel-irq-manage.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-sched-core.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-sched-topology.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-smp.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-workqueue.c:note:in-expansion-of-macro-cpumask_any_and
-|   |-- kernel-workqueue.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- lib-cpu_rmap.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- lib-cpumask.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- mm-compaction.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- mm-page_alloc.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- mm-vmscan.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- mm-vmstat.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- net-sunrpc-svc.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- net-sunrpc-svc.c:note:in-expansion-of-macro-for_each_node_with_cpus
-|   `-- net-sunrpc-svc.c:note:in-expansion-of-macro-nr_cpus_node
-|-- ia64-allnoconfig
-|   |-- arch-ia64-include-asm-topology.h:note:in-expansion-of-macro-cpumask_of_node
-|   |-- arch-ia64-include-asm-topology.h:warning:pointer-type-mismatch-in-conditional-expression
-|   |-- arch-ia64-kernel-acpi.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- arch-ia64-kernel-iosapic.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- arch-ia64-kernel-numa.c:error:passing-argument-of-cpumask_clear-from-incompatible-pointer-type
-|   |-- arch-ia64-kernel-numa.c:error:passing-argument-of-cpumask_clear_cpu-from-incompatible-pointer-type
-|   |-- arch-ia64-kernel-numa.c:error:passing-argument-of-cpumask_set_cpu-from-incompatible-pointer-type
-|   |-- arch-ia64-kernel-numa.c:error:passing-argument-of-cpumask_test_cpu-from-incompatible-pointer-type
-|   |-- drivers-base-node.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-pci-pci-driver.c:note:in-expansion-of-macro-cpumask_any_and
-|   |-- drivers-pci-pci-driver.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-pci-pci-sysfs.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-pci-pci-sysfs.c:note:in-expansion-of-macro-cpumask_of_pcibus
-|   |-- include-linux-topology.h:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-irq-manage.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-sched-core.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-sched-topology.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-smp.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-workqueue.c:note:in-expansion-of-macro-cpumask_any_and
-|   |-- kernel-workqueue.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- lib-cpumask.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- mm-page_alloc.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- mm-vmscan.c:note:in-expansion-of-macro-cpumask_of_node
-|   `-- mm-vmstat.c:note:in-expansion-of-macro-cpumask_of_node
-|-- ia64-allyesconfig
-|   |-- arch-ia64-include-asm-topology.h:note:in-expansion-of-macro-cpumask_of_node
-|   |-- arch-ia64-include-asm-topology.h:warning:pointer-type-mismatch-in-conditional-expression
-|   |-- arch-ia64-kernel-acpi.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- arch-ia64-kernel-iosapic.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- arch-ia64-kernel-numa.c:error:passing-argument-of-cpumask_clear-from-incompatible-pointer-type
-|   |-- arch-ia64-kernel-numa.c:error:passing-argument-of-cpumask_clear_cpu-from-incompatible-pointer-type
-|   |-- arch-ia64-kernel-numa.c:error:passing-argument-of-cpumask_set_cpu-from-incompatible-pointer-type
-|   |-- arch-ia64-kernel-numa.c:error:passing-argument-of-cpumask_test_cpu-from-incompatible-pointer-type
-|   |-- drivers-base-node.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-block-mtip32xx-mtip32xx.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-block-mtip32xx-mtip32xx.c:note:in-expansion-of-macro-dev_info
-|   |-- drivers-dma-dmaengine.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-net-ethernet-hisilicon-hns3-hns3pf-hclge_main.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-pci-pci-driver.c:note:in-expansion-of-macro-cpumask_any_and
-|   |-- drivers-pci-pci-driver.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-pci-pci-sysfs.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-pci-pci-sysfs.c:note:in-expansion-of-macro-cpumask_of_pcibus
-|   |-- drivers-scsi-megaraid-megaraid_sas_base.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- include-linux-dev_printk.h:note:in-expansion-of-macro-nr_cpus_node
-|   |-- include-linux-topology.h:note:in-expansion-of-macro-cpumask_of_node
-|   |-- include-linux-topology.h:note:in-expansion-of-macro-nr_cpus_node
-|   |-- kernel-irq-manage.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-sched-core.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-sched-topology.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-smp.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-workqueue.c:note:in-expansion-of-macro-cpumask_any_and
-|   |-- kernel-workqueue.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- lib-cpu_rmap.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- lib-cpumask.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- mm-compaction.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- mm-page_alloc.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- mm-vmscan.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- mm-vmstat.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- net-sunrpc-svc.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- net-sunrpc-svc.c:note:in-expansion-of-macro-for_each_node_with_cpus
-|   `-- net-sunrpc-svc.c:note:in-expansion-of-macro-nr_cpus_node
-|-- ia64-bigsur_defconfig
-|   |-- arch-ia64-include-asm-topology.h:note:in-expansion-of-macro-cpumask_of_node
-|   |-- arch-ia64-include-asm-topology.h:warning:pointer-type-mismatch-in-conditional-expression
-|   |-- arch-ia64-kernel-acpi.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- arch-ia64-kernel-iosapic.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- arch-ia64-kernel-numa.c:error:passing-argument-of-cpumask_clear-from-incompatible-pointer-type
-|   |-- arch-ia64-kernel-numa.c:error:passing-argument-of-cpumask_clear_cpu-from-incompatible-pointer-type
-|   |-- arch-ia64-kernel-numa.c:error:passing-argument-of-cpumask_set_cpu-from-incompatible-pointer-type
-|   |-- arch-ia64-kernel-numa.c:error:passing-argument-of-cpumask_test_cpu-from-incompatible-pointer-type
-|   |-- drivers-base-node.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-pci-pci-driver.c:note:in-expansion-of-macro-cpumask_any_and
-|   |-- drivers-pci-pci-driver.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-pci-pci-sysfs.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-pci-pci-sysfs.c:note:in-expansion-of-macro-cpumask_of_pcibus
-|   |-- include-linux-topology.h:note:in-expansion-of-macro-cpumask_of_node
-|   |-- include-linux-topology.h:note:in-expansion-of-macro-nr_cpus_node
-|   |-- kernel-irq-manage.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-sched-core.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-sched-topology.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-smp.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-workqueue.c:note:in-expansion-of-macro-cpumask_any_and
-|   |-- kernel-workqueue.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- lib-cpu_rmap.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- lib-cpumask.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- mm-compaction.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- mm-page_alloc.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- mm-vmscan.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- mm-vmstat.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- net-sunrpc-svc.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- net-sunrpc-svc.c:note:in-expansion-of-macro-for_each_node_with_cpus
-|   `-- net-sunrpc-svc.c:note:in-expansion-of-macro-nr_cpus_node
-|-- ia64-defconfig
-|   |-- arch-ia64-include-asm-topology.h:note:in-expansion-of-macro-cpumask_of_node
-|   |-- arch-ia64-include-asm-topology.h:warning:pointer-type-mismatch-in-conditional-expression
-|   |-- arch-ia64-kernel-acpi.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- arch-ia64-kernel-iosapic.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- arch-ia64-kernel-numa.c:error:passing-argument-of-cpumask_clear-from-incompatible-pointer-type
-|   |-- arch-ia64-kernel-numa.c:error:passing-argument-of-cpumask_clear_cpu-from-incompatible-pointer-type
-|   |-- arch-ia64-kernel-numa.c:error:passing-argument-of-cpumask_set_cpu-from-incompatible-pointer-type
-|   |-- arch-ia64-kernel-numa.c:error:passing-argument-of-cpumask_test_cpu-from-incompatible-pointer-type
-|   |-- drivers-base-node.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-pci-pci-driver.c:note:in-expansion-of-macro-cpumask_any_and
-|   |-- drivers-pci-pci-driver.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-pci-pci-sysfs.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-pci-pci-sysfs.c:note:in-expansion-of-macro-cpumask_of_pcibus
-|   |-- include-linux-topology.h:note:in-expansion-of-macro-cpumask_of_node
-|   |-- include-linux-topology.h:note:in-expansion-of-macro-nr_cpus_node
-|   |-- kernel-irq-manage.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-sched-core.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-sched-topology.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-smp.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-workqueue.c:note:in-expansion-of-macro-cpumask_any_and
-|   |-- kernel-workqueue.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- lib-cpu_rmap.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- lib-cpumask.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- mm-compaction.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- mm-page_alloc.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- mm-vmscan.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- mm-vmstat.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- net-sunrpc-svc.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- net-sunrpc-svc.c:note:in-expansion-of-macro-for_each_node_with_cpus
-|   `-- net-sunrpc-svc.c:note:in-expansion-of-macro-nr_cpus_node
-|-- ia64-generic_defconfig
-|   |-- arch-ia64-include-asm-topology.h:note:in-expansion-of-macro-cpumask_of_node
-|   |-- arch-ia64-include-asm-topology.h:warning:pointer-type-mismatch-in-conditional-expression
-|   |-- arch-ia64-kernel-acpi.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- arch-ia64-kernel-iosapic.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- arch-ia64-kernel-numa.c:error:passing-argument-of-cpumask_clear-from-incompatible-pointer-type
-|   |-- arch-ia64-kernel-numa.c:error:passing-argument-of-cpumask_clear_cpu-from-incompatible-pointer-type
-|   |-- arch-ia64-kernel-numa.c:error:passing-argument-of-cpumask_set_cpu-from-incompatible-pointer-type
-|   |-- arch-ia64-kernel-numa.c:error:passing-argument-of-cpumask_test_cpu-from-incompatible-pointer-type
-|   |-- drivers-base-node.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-pci-pci-driver.c:note:in-expansion-of-macro-cpumask_any_and
-|   |-- drivers-pci-pci-driver.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-pci-pci-sysfs.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-pci-pci-sysfs.c:note:in-expansion-of-macro-cpumask_of_pcibus
-|   |-- include-linux-topology.h:note:in-expansion-of-macro-cpumask_of_node
-|   |-- include-linux-topology.h:note:in-expansion-of-macro-nr_cpus_node
-|   |-- kernel-irq-manage.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-sched-core.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-sched-topology.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-smp.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-workqueue.c:note:in-expansion-of-macro-cpumask_any_and
-|   |-- kernel-workqueue.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- lib-cpu_rmap.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- lib-cpumask.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- mm-compaction.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- mm-page_alloc.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- mm-vmscan.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- mm-vmstat.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- net-sunrpc-svc.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- net-sunrpc-svc.c:note:in-expansion-of-macro-for_each_node_with_cpus
-|   `-- net-sunrpc-svc.c:note:in-expansion-of-macro-nr_cpus_node
-|-- ia64-randconfig-a001-20200212
-|   |-- arch-ia64-include-asm-topology.h:note:in-expansion-of-macro-cpumask_of_node
-|   |-- arch-ia64-include-asm-topology.h:warning:pointer-type-mismatch-in-conditional-expression
-|   |-- arch-ia64-kernel-acpi.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- arch-ia64-kernel-iosapic.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- arch-ia64-kernel-numa.c:error:passing-argument-of-cpumask_clear-from-incompatible-pointer-type
-|   |-- arch-ia64-kernel-numa.c:error:passing-argument-of-cpumask_clear_cpu-from-incompatible-pointer-type
-|   |-- arch-ia64-kernel-numa.c:error:passing-argument-of-cpumask_set_cpu-from-incompatible-pointer-type
-|   |-- arch-ia64-kernel-numa.c:error:passing-argument-of-cpumask_test_cpu-from-incompatible-pointer-type
-|   |-- drivers-base-node.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-dma-dmaengine.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-pci-pci-driver.c:note:in-expansion-of-macro-cpumask_any_and
-|   |-- drivers-pci-pci-driver.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-pci-pci-sysfs.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-pci-pci-sysfs.c:note:in-expansion-of-macro-cpumask_of_pcibus
-|   |-- include-linux-topology.h:note:in-expansion-of-macro-cpumask_of_node
-|   |-- include-linux-topology.h:note:in-expansion-of-macro-nr_cpus_node
-|   |-- kernel-irq-manage.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-sched-core.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-sched-topology.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-smp.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-workqueue.c:note:in-expansion-of-macro-cpumask_any_and
-|   |-- kernel-workqueue.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- lib-cpu_rmap.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- lib-cpumask.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- mm-compaction.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- mm-page_alloc.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- mm-vmscan.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- mm-vmstat.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- net-sunrpc-svc.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- net-sunrpc-svc.c:note:in-expansion-of-macro-for_each_node_with_cpus
-|   `-- net-sunrpc-svc.c:note:in-expansion-of-macro-nr_cpus_node
-|-- s390-allmodconfig
-|   `-- arch-s390-include-asm-topology.h:error:return-from-incompatible-pointer-type
-|-- s390-allyesconfig
-|   `-- arch-s390-include-asm-topology.h:error:return-from-incompatible-pointer-type
-|-- s390-debug_defconfig
-|   `-- arch-s390-include-asm-topology.h:error:return-from-incompatible-pointer-type
-|-- s390-defconfig
-|   `-- arch-s390-include-asm-topology.h:error:return-from-incompatible-pointer-type
-|-- s390-randconfig-a001-20200212
-|   `-- arch-s390-include-asm-topology.h:error:return-from-incompatible-pointer-type
-|-- sparc-allmodconfig
-|   |-- arch-sparc-include-asm-topology_64.h:warning:pointer-type-mismatch-in-conditional-expression
-|   |-- arch-sparc-mm-init_64.c:error:passing-argument-of-cpumask_copy-from-incompatible-pointer-type
-|   |-- arch-sparc-mm-init_64.c:error:passing-argument-of-cpumask_setall-from-incompatible-pointer-type
-|   |-- drivers-base-node.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-block-mtip32xx-mtip32xx.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-block-mtip32xx-mtip32xx.c:note:in-expansion-of-macro-dev_info
-|   |-- include-linux-dev_printk.h:note:in-expansion-of-macro-nr_cpus_node
-|   `-- include-linux-topology.h:note:in-expansion-of-macro-cpumask_of_node
-|-- sparc-allyesconfig
-|   |-- arch-sparc-include-asm-topology_64.h:note:in-expansion-of-macro-cpumask_of_node
-|   |-- arch-sparc-include-asm-topology_64.h:warning:pointer-type-mismatch-in-conditional-expression
-|   |-- arch-sparc-kernel-of_device_64.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- arch-sparc-kernel-pci_msi.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- arch-sparc-mm-init_64.c:error:passing-argument-of-cpumask_copy-from-incompatible-pointer-type
-|   |-- arch-sparc-mm-init_64.c:error:passing-argument-of-cpumask_setall-from-incompatible-pointer-type
-|   |-- drivers-base-node.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-block-mtip32xx-mtip32xx.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-block-mtip32xx-mtip32xx.c:note:in-expansion-of-macro-dev_info
-|   |-- drivers-dma-dmaengine.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-net-ethernet-hisilicon-hns3-hns3pf-hclge_main.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-pci-pci-driver.c:note:in-expansion-of-macro-cpumask_any_and
-|   |-- drivers-pci-pci-driver.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-pci-pci-sysfs.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-pci-pci-sysfs.c:note:in-expansion-of-macro-cpumask_of_pcibus
-|   |-- drivers-scsi-megaraid-megaraid_sas_base.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- include-linux-dev_printk.h:note:in-expansion-of-macro-nr_cpus_node
-|   |-- include-linux-topology.h:note:in-expansion-of-macro-cpumask_of_node
-|   |-- include-linux-topology.h:note:in-expansion-of-macro-nr_cpus_node
-|   |-- kernel-irq-manage.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-sched-core.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-sched-topology.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-smp.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-workqueue.c:note:in-expansion-of-macro-cpumask_any_and
-|   |-- kernel-workqueue.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- lib-cpu_rmap.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- lib-cpumask.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- mm-compaction.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- mm-page_alloc.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- mm-vmscan.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- mm-vmstat.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- net-sunrpc-svc.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- net-sunrpc-svc.c:note:in-expansion-of-macro-for_each_node_with_cpus
-|   `-- net-sunrpc-svc.c:note:in-expansion-of-macro-nr_cpus_node
-|-- sparc64-allmodconfig
-|   |-- arch-sparc-include-asm-topology_64.h:note:in-expansion-of-macro-cpumask_of_node
-|   |-- arch-sparc-include-asm-topology_64.h:warning:pointer-type-mismatch-in-conditional-expression
-|   |-- arch-sparc-kernel-of_device_64.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- arch-sparc-kernel-pci_msi.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- arch-sparc-mm-init_64.c:error:passing-argument-of-cpumask_copy-from-incompatible-pointer-type
-|   |-- arch-sparc-mm-init_64.c:error:passing-argument-of-cpumask_setall-from-incompatible-pointer-type
-|   |-- drivers-base-node.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-block-mtip32xx-mtip32xx.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-block-mtip32xx-mtip32xx.c:note:in-expansion-of-macro-dev_info
-|   |-- drivers-dma-dmaengine.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-net-ethernet-hisilicon-hns3-hns3pf-hclge_main.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-pci-pci-driver.c:note:in-expansion-of-macro-cpumask_any_and
-|   |-- drivers-pci-pci-driver.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-pci-pci-sysfs.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-pci-pci-sysfs.c:note:in-expansion-of-macro-cpumask_of_pcibus
-|   |-- drivers-scsi-megaraid-megaraid_sas_base.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- include-linux-dev_printk.h:note:in-expansion-of-macro-nr_cpus_node
-|   |-- include-linux-topology.h:note:in-expansion-of-macro-cpumask_of_node
-|   |-- include-linux-topology.h:note:in-expansion-of-macro-nr_cpus_node
-|   |-- kernel-irq-manage.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-sched-core.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-sched-topology.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-smp.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-workqueue.c:note:in-expansion-of-macro-cpumask_any_and
-|   |-- kernel-workqueue.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- lib-cpu_rmap.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- lib-cpumask.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- mm-compaction.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- mm-page_alloc.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- mm-vmscan.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- mm-vmstat.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- net-sunrpc-svc.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- net-sunrpc-svc.c:note:in-expansion-of-macro-for_each_node_with_cpus
-|   `-- net-sunrpc-svc.c:note:in-expansion-of-macro-nr_cpus_node
-|-- sparc64-allyesconfig
-|   |-- arch-sparc-include-asm-topology_64.h:note:in-expansion-of-macro-cpumask_of_node
-|   |-- arch-sparc-include-asm-topology_64.h:warning:pointer-type-mismatch-in-conditional-expression
-|   |-- arch-sparc-kernel-of_device_64.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- arch-sparc-kernel-pci_msi.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- arch-sparc-mm-init_64.c:error:passing-argument-of-cpumask_copy-from-incompatible-pointer-type
-|   |-- arch-sparc-mm-init_64.c:error:passing-argument-of-cpumask_setall-from-incompatible-pointer-type
-|   |-- drivers-base-node.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-block-mtip32xx-mtip32xx.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-block-mtip32xx-mtip32xx.c:note:in-expansion-of-macro-dev_info
-|   |-- drivers-dma-dmaengine.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-net-ethernet-hisilicon-hns3-hns3pf-hclge_main.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-pci-pci-driver.c:note:in-expansion-of-macro-cpumask_any_and
-|   |-- drivers-pci-pci-driver.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-pci-pci-sysfs.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-pci-pci-sysfs.c:note:in-expansion-of-macro-cpumask_of_pcibus
-|   |-- drivers-scsi-megaraid-megaraid_sas_base.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- include-linux-dev_printk.h:note:in-expansion-of-macro-nr_cpus_node
-|   |-- include-linux-topology.h:note:in-expansion-of-macro-cpumask_of_node
-|   |-- include-linux-topology.h:note:in-expansion-of-macro-nr_cpus_node
-|   |-- kernel-irq-manage.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-sched-core.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-sched-topology.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-smp.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-workqueue.c:note:in-expansion-of-macro-cpumask_any_and
-|   |-- kernel-workqueue.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- lib-cpu_rmap.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- lib-cpumask.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- mm-compaction.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- mm-page_alloc.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- mm-vmscan.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- mm-vmstat.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- net-sunrpc-svc.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- net-sunrpc-svc.c:note:in-expansion-of-macro-for_each_node_with_cpus
-|   `-- net-sunrpc-svc.c:note:in-expansion-of-macro-nr_cpus_node
-|-- sparc64-defconfig
-|   |-- arch-sparc-include-asm-topology_64.h:note:in-expansion-of-macro-cpumask_of_node
-|   |-- arch-sparc-include-asm-topology_64.h:warning:pointer-type-mismatch-in-conditional-expression
-|   |-- arch-sparc-kernel-of_device_64.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- arch-sparc-kernel-pci_msi.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- arch-sparc-mm-init_64.c:error:passing-argument-of-cpumask_copy-from-incompatible-pointer-type
-|   |-- arch-sparc-mm-init_64.c:error:passing-argument-of-cpumask_setall-from-incompatible-pointer-type
-|   |-- drivers-base-node.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-pci-pci-driver.c:note:in-expansion-of-macro-cpumask_any_and
-|   |-- drivers-pci-pci-driver.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-pci-pci-sysfs.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- drivers-pci-pci-sysfs.c:note:in-expansion-of-macro-cpumask_of_pcibus
-|   |-- include-linux-topology.h:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-irq-manage.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-sched-core.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-sched-topology.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-smp.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- kernel-workqueue.c:note:in-expansion-of-macro-cpumask_any_and
-|   |-- kernel-workqueue.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- lib-cpu_rmap.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- lib-cpumask.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- mm-compaction.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- mm-page_alloc.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- mm-slab.c:note:in-expansion-of-macro-cpumask_of_node
-|   |-- mm-slab.c:note:in-expansion-of-macro-nr_cpus_node
-|   |-- mm-vmscan.c:note:in-expansion-of-macro-cpumask_of_node
-|   `-- mm-vmstat.c:note:in-expansion-of-macro-cpumask_of_node
-`-- sparc64-randconfig-a001-20200212
-    |-- arch-sparc-include-asm-topology_64.h:note:in-expansion-of-macro-cpumask_of_node
-    |-- arch-sparc-include-asm-topology_64.h:warning:pointer-type-mismatch-in-conditional-expression
-    |-- arch-sparc-kernel-of_device_64.c:note:in-expansion-of-macro-cpumask_of_node
-    |-- arch-sparc-mm-init_64.c:error:passing-argument-of-cpumask_copy-from-incompatible-pointer-type
-    |-- arch-sparc-mm-init_64.c:error:passing-argument-of-cpumask_setall-from-incompatible-pointer-type
-    |-- drivers-base-node.c:note:in-expansion-of-macro-cpumask_of_node
-    |-- drivers-pci-pci-driver.c:note:in-expansion-of-macro-cpumask_any_and
-    |-- drivers-pci-pci-driver.c:note:in-expansion-of-macro-cpumask_of_node
-    |-- drivers-pci-pci-sysfs.c:note:in-expansion-of-macro-cpumask_of_node
-    |-- drivers-pci-pci-sysfs.c:note:in-expansion-of-macro-cpumask_of_pcibus
-    |-- include-linux-topology.h:note:in-expansion-of-macro-cpumask_of_node
-    |-- include-linux-topology.h:note:in-expansion-of-macro-nr_cpus_node
-    |-- kernel-irq-manage.c:note:in-expansion-of-macro-cpumask_of_node
-    |-- kernel-sched-core.c:note:in-expansion-of-macro-cpumask_of_node
-    |-- kernel-sched-topology.c:note:in-expansion-of-macro-cpumask_of_node
-    |-- kernel-smp.c:note:in-expansion-of-macro-cpumask_of_node
-    |-- kernel-workqueue.c:note:in-expansion-of-macro-cpumask_any_and
-    |-- kernel-workqueue.c:note:in-expansion-of-macro-cpumask_of_node
-    |-- lib-cpu_rmap.c:note:in-expansion-of-macro-cpumask_of_node
-    |-- lib-cpumask.c:note:in-expansion-of-macro-cpumask_of_node
-    |-- mm-compaction.c:note:in-expansion-of-macro-cpumask_of_node
-    |-- mm-page_alloc.c:note:in-expansion-of-macro-cpumask_of_node
-    |-- mm-slab.c:note:in-expansion-of-macro-cpumask_of_node
-    |-- mm-slab.c:note:in-expansion-of-macro-nr_cpus_node
-    |-- mm-vmscan.c:note:in-expansion-of-macro-cpumask_of_node
-    |-- mm-vmstat.c:note:in-expansion-of-macro-cpumask_of_node
-    |-- net-sunrpc-svc.c:note:in-expansion-of-macro-cpumask_of_node
-    |-- net-sunrpc-svc.c:note:in-expansion-of-macro-for_each_node_with_cpus
-    `-- net-sunrpc-svc.c:note:in-expansion-of-macro-nr_cpus_node
+  -/sys/devices/pci0000:00/0000:00:1c.0/max_link_speed:8 GT/s PCIe
+  +/sys/devices/pci0000:00/0000:00:1c.0/max_link_speed:8 GT/s
 
-elapsed time: 2884m
+I still don't know exactly *where* the change is (it's not in sysfs; I
+just made up the example above).  But something like the above would
+tell me exactly what files are affected and what the change looks
+like.  That's the information people would need to update programs
+that parse the file.
 
-configs tested: 275
-configs skipped: 22
+And the patch itself should be something like:
 
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-sparc                            allyesconfig
-csky                                defconfig
-s390                                defconfig
-riscv                    nommu_virt_defconfig
-sparc                               defconfig
-nds32                             allnoconfig
-mips                      fuloong2e_defconfig
-s390                       zfcpdump_defconfig
-i386                                defconfig
-sh                                allnoconfig
-riscv                          rv32_defconfig
-s390                             allyesconfig
-riscv                               defconfig
-nds32                               defconfig
-xtensa                       common_defconfig
-openrisc                 simple_smp_defconfig
-powerpc                             defconfig
-s390                             allmodconfig
-mips                             allyesconfig
-sh                  sh7785lcr_32bit_defconfig
-m68k                       m5475evb_defconfig
-um                           x86_64_defconfig
-h8300                       h8s-sim_defconfig
-ia64                              allnoconfig
-parisc                              defconfig
-powerpc                           allnoconfig
-ia64                             allyesconfig
-h8300                     edosk2674_defconfig
-s390                          debug_defconfig
-i386                             alldefconfig
-powerpc                       ppc64_defconfig
-mips                              allnoconfig
-alpha                               defconfig
-ia64                             alldefconfig
-i386                              allnoconfig
-microblaze                    nommu_defconfig
-mips                      malta_kvm_defconfig
-m68k                           sun3_defconfig
-i386                             allyesconfig
-ia64                             allmodconfig
-ia64                                defconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-xtensa                          iss_defconfig
-h8300                    h8300h-sim_defconfig
-m68k                             allmodconfig
-m68k                          multi_defconfig
-arc                                 defconfig
-arc                              allyesconfig
-powerpc                          rhel-kconfig
-microblaze                      mmu_defconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                           allyesconfig
-parisc                         b180_defconfig
-parisc                        c3000_defconfig
-i386                 randconfig-a003-20200211
-i386                 randconfig-a001-20200211
-i386                 randconfig-a002-20200211
-x86_64               randconfig-a002-20200211
-x86_64               randconfig-a003-20200211
-x86_64               randconfig-a001-20200211
-x86_64               randconfig-a001-20200212
-x86_64               randconfig-a002-20200212
-x86_64               randconfig-a003-20200212
-i386                 randconfig-a001-20200212
-i386                 randconfig-a002-20200212
-i386                 randconfig-a003-20200212
-x86_64               randconfig-a001-20200213
-x86_64               randconfig-a002-20200213
-x86_64               randconfig-a003-20200213
-i386                 randconfig-a001-20200213
-i386                 randconfig-a002-20200213
-i386                 randconfig-a003-20200213
-parisc               randconfig-a001-20200211
-riscv                randconfig-a001-20200211
-mips                 randconfig-a001-20200211
-m68k                 randconfig-a001-20200211
-nds32                randconfig-a001-20200211
-alpha                randconfig-a001-20200211
-alpha                randconfig-a001-20200212
-m68k                 randconfig-a001-20200212
-nds32                randconfig-a001-20200212
-parisc               randconfig-a001-20200212
-riscv                randconfig-a001-20200212
-c6x                  randconfig-a001-20200211
-h8300                randconfig-a001-20200211
-microblaze           randconfig-a001-20200211
-nios2                randconfig-a001-20200211
-sparc64              randconfig-a001-20200211
-c6x                  randconfig-a001-20200212
-h8300                randconfig-a001-20200212
-microblaze           randconfig-a001-20200212
-nios2                randconfig-a001-20200212
-sparc64              randconfig-a001-20200212
-csky                 randconfig-a001-20200212
-openrisc             randconfig-a001-20200212
-s390                 randconfig-a001-20200212
-sh                   randconfig-a001-20200212
-xtensa               randconfig-a001-20200212
-csky                 randconfig-a001-20200213
-openrisc             randconfig-a001-20200213
-s390                 randconfig-a001-20200213
-sh                   randconfig-a001-20200213
-xtensa               randconfig-a001-20200213
-sh                   randconfig-a001-20200211
-s390                 randconfig-a001-20200211
-xtensa               randconfig-a001-20200211
-openrisc             randconfig-a001-20200211
-csky                 randconfig-a001-20200211
-x86_64               randconfig-b001-20200211
-x86_64               randconfig-b002-20200211
-x86_64               randconfig-b003-20200211
-i386                 randconfig-b001-20200211
-i386                 randconfig-b002-20200211
-i386                 randconfig-b003-20200211
-x86_64               randconfig-b001-20200212
-x86_64               randconfig-b002-20200212
-x86_64               randconfig-b003-20200212
-i386                 randconfig-b001-20200212
-i386                 randconfig-b002-20200212
-i386                 randconfig-b003-20200212
-x86_64               randconfig-b001-20200213
-x86_64               randconfig-b002-20200213
-x86_64               randconfig-b003-20200213
-i386                 randconfig-b001-20200213
-i386                 randconfig-b002-20200213
-i386                 randconfig-b003-20200213
-i386                 randconfig-c002-20200211
-x86_64               randconfig-c003-20200211
-i386                 randconfig-c001-20200211
-x86_64               randconfig-c002-20200211
-x86_64               randconfig-c001-20200211
-i386                 randconfig-c003-20200211
-x86_64               randconfig-c001-20200212
-x86_64               randconfig-c002-20200212
-x86_64               randconfig-c003-20200212
-i386                 randconfig-c001-20200212
-i386                 randconfig-c002-20200212
-i386                 randconfig-c003-20200212
-x86_64               randconfig-c001-20200213
-x86_64               randconfig-c002-20200213
-x86_64               randconfig-c003-20200213
-i386                 randconfig-c001-20200213
-i386                 randconfig-c002-20200213
-i386                 randconfig-c003-20200213
-x86_64               randconfig-d001-20200212
-x86_64               randconfig-d002-20200212
-x86_64               randconfig-d003-20200212
-i386                 randconfig-d001-20200212
-i386                 randconfig-d002-20200212
-i386                 randconfig-d003-20200212
-x86_64               randconfig-d001-20200211
-x86_64               randconfig-d002-20200211
-x86_64               randconfig-d003-20200211
-i386                 randconfig-d001-20200211
-i386                 randconfig-d002-20200211
-i386                 randconfig-d003-20200211
-i386                 randconfig-e001-20200211
-i386                 randconfig-e003-20200211
-x86_64               randconfig-e001-20200211
-x86_64               randconfig-e002-20200211
-i386                 randconfig-e002-20200211
-x86_64               randconfig-e003-20200211
-x86_64               randconfig-e001-20200212
-x86_64               randconfig-e002-20200212
-x86_64               randconfig-e003-20200212
-i386                 randconfig-e001-20200212
-i386                 randconfig-e002-20200212
-i386                 randconfig-e003-20200212
-x86_64               randconfig-e001-20200213
-x86_64               randconfig-e002-20200213
-x86_64               randconfig-e003-20200213
-i386                 randconfig-e001-20200213
-i386                 randconfig-e002-20200213
-i386                 randconfig-e003-20200213
-x86_64               randconfig-f001-20200212
-x86_64               randconfig-f002-20200212
-x86_64               randconfig-f003-20200212
-i386                 randconfig-f001-20200212
-i386                 randconfig-f002-20200212
-i386                 randconfig-f003-20200212
-x86_64               randconfig-f001-20200211
-x86_64               randconfig-f002-20200211
-x86_64               randconfig-f003-20200211
-i386                 randconfig-f001-20200211
-i386                 randconfig-f002-20200211
-i386                 randconfig-f003-20200211
-x86_64               randconfig-g001-20200211
-x86_64               randconfig-g002-20200211
-x86_64               randconfig-g003-20200211
-i386                 randconfig-g001-20200211
-i386                 randconfig-g002-20200211
-i386                 randconfig-g003-20200211
-x86_64               randconfig-g001-20200212
-x86_64               randconfig-g002-20200212
-x86_64               randconfig-g003-20200212
-i386                 randconfig-g001-20200212
-i386                 randconfig-g002-20200212
-i386                 randconfig-g003-20200212
-x86_64               randconfig-g001-20200213
-x86_64               randconfig-g002-20200213
-x86_64               randconfig-g003-20200213
-i386                 randconfig-g001-20200213
-i386                 randconfig-g002-20200213
-i386                 randconfig-g003-20200213
-x86_64               randconfig-h001-20200211
-x86_64               randconfig-h002-20200211
-x86_64               randconfig-h003-20200211
-i386                 randconfig-h001-20200211
-i386                 randconfig-h002-20200211
-i386                 randconfig-h003-20200211
-x86_64               randconfig-h001-20200212
-x86_64               randconfig-h002-20200212
-x86_64               randconfig-h003-20200212
-i386                 randconfig-h001-20200212
-i386                 randconfig-h002-20200212
-i386                 randconfig-h003-20200212
-x86_64               randconfig-h001-20200213
-x86_64               randconfig-h002-20200213
-x86_64               randconfig-h003-20200213
-i386                 randconfig-h001-20200213
-i386                 randconfig-h002-20200213
-i386                 randconfig-h003-20200213
-arc                  randconfig-a001-20200211
-arm                  randconfig-a001-20200211
-arm64                randconfig-a001-20200211
-ia64                 randconfig-a001-20200211
-powerpc              randconfig-a001-20200211
-sparc                randconfig-a001-20200211
-arc                  randconfig-a001-20200212
-arm                  randconfig-a001-20200212
-arm64                randconfig-a001-20200212
-ia64                 randconfig-a001-20200212
-powerpc              randconfig-a001-20200212
-sparc                randconfig-a001-20200212
-riscv                            allmodconfig
-riscv                             allnoconfig
-riscv                            allyesconfig
-s390                             alldefconfig
-s390                              allnoconfig
-sh                          rsk7269_defconfig
-sh                               allmodconfig
-sh                            titan_defconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-um                                  defconfig
-um                             i386_defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
+  +       "8.0 GT/s",             /* 0x16 */
+  -       "8.0 GT/s PCIe",        /* 0x16 */
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+*without* the code moving between files.  This patch is basically
+identical to the first one [1] except that you made it separate from
+the series.
+
+This appears to change the strings *and* move them from slot.c to
+probe.c.  Those are two different things, and putting them together in
+one patch makes it harder for people to figure out what's changing.
+
+There should be one patch that *only* changes the strings and another
+that *only* moves them from slot.c to probe.c.
+
+And I don't want them as separate patches *outside* the series.  That
+just makes the series itself not apply correctly.  They should be *in*
+the series so the whole thing applies cleanly on my "master" brance
+(v5.6-rc1).
+
+[1] https://lore.kernel.org/r/1579079063-5668-3-git-send-email-yangyicong@hisilicon.com
+
+> 2. add pci_bus_speed_strings_size for boundary check in bus_speed_read()
+> 
+>  drivers/pci/pci.h   |  2 ++
+>  drivers/pci/probe.c | 30 ++++++++++++++++++++++++++++++
+>  drivers/pci/slot.c  | 31 +------------------------------
+>  3 files changed, 33 insertions(+), 30 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 6394e77..e6bcc06 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -12,6 +12,8 @@
+>  #define PCI_VSEC_ID_INTEL_TBT	0x1234	/* Thunderbolt */
+> 
+>  extern const unsigned char pcie_link_speed[];
+> +extern const char *pci_bus_speed_strings[];
+> +extern const int pci_bus_speed_strings_size;
+>  extern bool pci_early_dump;
+> 
+>  bool pcie_cap_has_lnkctl(const struct pci_dev *dev);
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 512cb43..6ce47d8 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -678,6 +678,36 @@ const unsigned char pcie_link_speed[] = {
+>  	PCI_SPEED_UNKNOWN		/* F */
+>  };
+> 
+> +/* these strings match up with the values in pci_bus_speed */
+> +const char *pci_bus_speed_strings[] = {
+> +	"33 MHz PCI",		/* 0x00 */
+> +	"66 MHz PCI",		/* 0x01 */
+> +	"66 MHz PCI-X",		/* 0x02 */
+> +	"100 MHz PCI-X",	/* 0x03 */
+> +	"133 MHz PCI-X",	/* 0x04 */
+> +	NULL,			/* 0x05 */
+> +	NULL,			/* 0x06 */
+> +	NULL,			/* 0x07 */
+> +	NULL,			/* 0x08 */
+> +	"66 MHz PCI-X 266",	/* 0x09 */
+> +	"100 MHz PCI-X 266",	/* 0x0a */
+> +	"133 MHz PCI-X 266",	/* 0x0b */
+> +	"Unknown AGP",		/* 0x0c */
+> +	"1x AGP",		/* 0x0d */
+> +	"2x AGP",		/* 0x0e */
+> +	"4x AGP",		/* 0x0f */
+> +	"8x AGP",		/* 0x10 */
+> +	"66 MHz PCI-X 533",	/* 0x11 */
+> +	"100 MHz PCI-X 533",	/* 0x12 */
+> +	"133 MHz PCI-X 533",	/* 0x13 */
+> +	"2.5 GT/s",	/* 0x14 */
+> +	"5.0 GT/s",	/* 0x15 */
+> +	"8.0 GT/s",	/* 0x16 */
+> +	"16.0 GT/s",	/* 0x17 */
+> +	"32.0 GT/s",	/* 0x18 */
+> +};
+> +const int pci_bus_speed_strings_size = ARRAY_SIZE(pci_bus_speed_strings);
+> +
+>  void pcie_update_link_speed(struct pci_bus *bus, u16 linksta)
+>  {
+>  	bus->cur_bus_speed = pcie_link_speed[linksta & PCI_EXP_LNKSTA_CLS];
+> diff --git a/drivers/pci/slot.c b/drivers/pci/slot.c
+> index ae4aa0e..fb7c172 100644
+> --- a/drivers/pci/slot.c
+> +++ b/drivers/pci/slot.c
+> @@ -49,40 +49,11 @@ static ssize_t address_read_file(struct pci_slot *slot, char *buf)
+>  				slot->number);
+>  }
+> 
+> -/* these strings match up with the values in pci_bus_speed */
+> -static const char *pci_bus_speed_strings[] = {
+> -	"33 MHz PCI",		/* 0x00 */
+> -	"66 MHz PCI",		/* 0x01 */
+> -	"66 MHz PCI-X",		/* 0x02 */
+> -	"100 MHz PCI-X",	/* 0x03 */
+> -	"133 MHz PCI-X",	/* 0x04 */
+> -	NULL,			/* 0x05 */
+> -	NULL,			/* 0x06 */
+> -	NULL,			/* 0x07 */
+> -	NULL,			/* 0x08 */
+> -	"66 MHz PCI-X 266",	/* 0x09 */
+> -	"100 MHz PCI-X 266",	/* 0x0a */
+> -	"133 MHz PCI-X 266",	/* 0x0b */
+> -	"Unknown AGP",		/* 0x0c */
+> -	"1x AGP",		/* 0x0d */
+> -	"2x AGP",		/* 0x0e */
+> -	"4x AGP",		/* 0x0f */
+> -	"8x AGP",		/* 0x10 */
+> -	"66 MHz PCI-X 533",	/* 0x11 */
+> -	"100 MHz PCI-X 533",	/* 0x12 */
+> -	"133 MHz PCI-X 533",	/* 0x13 */
+> -	"2.5 GT/s PCIe",	/* 0x14 */
+> -	"5.0 GT/s PCIe",	/* 0x15 */
+> -	"8.0 GT/s PCIe",	/* 0x16 */
+> -	"16.0 GT/s PCIe",	/* 0x17 */
+> -	"32.0 GT/s PCIe",	/* 0x18 */
+> -};
+> -
+>  static ssize_t bus_speed_read(enum pci_bus_speed speed, char *buf)
+>  {
+>  	const char *speed_string;
+> 
+> -	if (speed < ARRAY_SIZE(pci_bus_speed_strings))
+> +	if (speed < pci_bus_speed_strings_size)
+>  		speed_string = pci_bus_speed_strings[speed];
+>  	else
+>  		speed_string = "Unknown";
+> --
+> 2.8.1
+> 
