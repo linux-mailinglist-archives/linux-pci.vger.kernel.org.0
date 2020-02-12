@@ -2,234 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 08E1415A92D
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Feb 2020 13:29:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DC0815AA9D
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Feb 2020 15:01:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbgBLM35 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Feb 2020 07:29:57 -0500
-Received: from mta-02.yadro.com ([89.207.88.252]:47304 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725887AbgBLM34 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 12 Feb 2020 07:29:56 -0500
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 79F11494C2;
-        Wed, 12 Feb 2020 12:29:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        mime-version:content-transfer-encoding:content-id:content-type
-        :content-type:content-language:accept-language:in-reply-to
-        :references:message-id:date:date:subject:subject:from:from
-        :received:received:received:received; s=mta-01; t=1581510592; x=
-        1583324993; bh=eK0SoOH7IQcjGjhhruAMhWOGB3MFfCET9qf8z+zKZDQ=; b=v
-        VLYUXXSl10jskCkHTfvAyqqacWlNY3dhAzO1tPDDrTXPCMmSmBf+0bUYCiIxYhxC
-        8UPogD4OYKSHWkXObYcHjJIwczsw6GO+2m/33yMrLSWcVaq7TJP27EeCcW00WypI
-        UunMySJGcyhUg+0qzb3KaCO8uLQGflPr3r1q7Vv+uw=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id haJ9NFCFOkIw; Wed, 12 Feb 2020 15:29:52 +0300 (MSK)
-Received: from T-EXCH-01.corp.yadro.com (t-exch-01.corp.yadro.com [172.17.10.101])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        id S1727781AbgBLOBa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Feb 2020 09:01:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53054 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725887AbgBLOBa (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 12 Feb 2020 09:01:30 -0500
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id 7D17747996;
-        Wed, 12 Feb 2020 15:29:51 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (172.17.10.102) by
- T-EXCH-01.corp.yadro.com (172.17.10.101) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.669.32; Wed, 12 Feb 2020 15:29:51 +0300
-Received: from T-EXCH-02.corp.yadro.com ([fe80::19dd:9b61:5447:ff23]) by
- T-EXCH-02.corp.yadro.com ([fe80::19dd:9b61:5447:ff23%14]) with mapi id
- 15.01.0669.032; Wed, 12 Feb 2020 15:29:50 +0300
-From:   Sergei Miroshnichenko <s.miroshnichenko@yadro.com>
-To:     "helgaas@kernel.org" <helgaas@kernel.org>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux@yadro.com" <linux@yadro.com>, "sr@denx.de" <sr@denx.de>
-Subject: Re: [PATCH v7 17/26] PCI: hotplug: Ignore the MEM BAR offsets from
- BIOS/bootloader
-Thread-Topic: [PATCH v7 17/26] PCI: hotplug: Ignore the MEM BAR offsets from
- BIOS/bootloader
-Thread-Index: AQHV1rj4TQ3rG+CXGUGwSRfB02iao6gFCxoAgAc8Z4CAAF9kAIAKuZqA
-Date:   Wed, 12 Feb 2020 12:29:50 +0000
-Message-ID: <602f752c774378bccd6f2d0a47e3a86e8151bdd9.camel@yadro.com>
-References: <20200205164255.GA205474@google.com>
-In-Reply-To: <20200205164255.GA205474@google.com>
-Accept-Language: en-US, ru-RU
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [172.17.15.136]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <0FD3A89CA02DCE46AA7D033587E03498@yadro.com>
-Content-Transfer-Encoding: base64
+        by mail.kernel.org (Postfix) with ESMTPSA id EEEDB20658;
+        Wed, 12 Feb 2020 14:01:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581516089;
+        bh=k9etYqQgRrkh7cyiZwIyrLs0t114fOpffvtkOo61KWY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=EPX57e7K2CocHRjleSrYsOC4jcMI5oxr+HevHew+S+JLsugZIC+yBlaB/zNAvFapK
+         UZKM6UR6vbTNWupREPcs7S6z357GJD+mZV4emsonCxc74ssTH9I3BK6QzchZrhXNXT
+         P5IrxlIh5dph6VfbTvbebxGRjB9m1vimurMg3Zds=
+Date:   Wed, 12 Feb 2020 08:01:28 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Lad Prabhakar <prabhakar.csengg@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Andrew Murray <andrew.murray@arm.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [PATCH v4 1/6] PCI: rcar: Preparation for adding endpoint support
+Message-ID: <20200212140127.GA127398@google.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200208183641.6674-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTAyLTA1IGF0IDEwOjQyIC0wNjAwLCBCam9ybiBIZWxnYWFzIHdyb3RlOg0K
-PiBPbiBXZWQsIEZlYiAwNSwgMjAyMCBhdCAxMTowMTozMkFNICswMDAwLCBTZXJnZWkgTWlyb3No
-bmljaGVua28NCj4gd3JvdGU6DQo+ID4gT24gRnJpLCAyMDIwLTAxLTMxIGF0IDE0OjMxIC0wNjAw
-LCBCam9ybiBIZWxnYWFzIHdyb3RlOg0KPiA+ID4gT24gV2VkLCBKYW4gMjksIDIwMjAgYXQgMDY6
-Mjk6MjhQTSArMDMwMCwgU2VyZ2VpIE1pcm9zaG5pY2hlbmtvDQo+ID4gPiB3cm90ZToNCj4gPiA+
-ID4gQkFSIGFsbG9jYXRpb24gYnkgQklPUy9VRUZJL2Jvb3Rsb2FkZXIvZmlybXdhcmUgbWF5IGJl
-DQo+ID4gPiA+IG5vbi1vcHRpbWFsIGFuZCBpdCBtYXkgZXZlbiBjbGFzaCB3aXRoIHRoZSBrZXJu
-ZWwncyBCQVINCj4gPiA+ID4gYXNzaWdubWVudCBhbGdvcml0aG0uDQo+ID4gPiA+IA0KPiA+ID4g
-PiBGb3IgZXhhbXBsZSwgc29tZXRpbWVzIEJJT1MgZG9lc24ndCByZXNlcnZlIHNwYWNlIGZvciBT
-Ui1JT1YNCj4gPiA+ID4gQkFScywgYW5kIHRoaXMgYnJpZGdlIHdpbmRvdyBjYW4gbmVpdGhlciBl
-eHRlbmQgKGJsb2NrZWQgYnkNCj4gPiA+ID4gaW1tb3ZhYmxlIEJBUnMpIG5vciBtb3ZlICh0aGUg
-ZGV2aWNlIGl0c2VsZiBpcyBpbW1vdmFibGUpLg0KPiA+ID4gPiANCj4gPiA+ID4gV2l0aCB0aGlz
-IHBhdGNoIHRoZSBrZXJuZWwgd2lsbCB1c2UgaXRzIG93biBtZXRob2RzIG9mIEJBUg0KPiA+ID4g
-PiBhbGxvY2F0aW5nIHdoZW4gcG9zc2libGUsIGluY3JlYXNpbmcgdGhlIGNoYW5jZXMgb2Ygc3Vj
-Y2Vzc2Z1bA0KPiA+ID4gPiBib290IGFuZCBob3RwbHVnLg0KPiA+ID4gPiANCj4gPiA+ID4gU2ln
-bmVkLW9mZi1ieTogU2VyZ2VpIE1pcm9zaG5pY2hlbmtvIDwNCj4gPiA+ID4gcy5taXJvc2huaWNo
-ZW5rb0B5YWRyby5jb20+DQo+ID4gPiA+IC0tLQ0KPiA+ID4gPiAgZHJpdmVycy9wY2kvcHJvYmUu
-YyB8IDE2ICsrKysrKysrKysrKysrLS0NCj4gPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxNCBpbnNl
-cnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KPiA+ID4gPiANCj4gPiA+ID4gZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvcGNpL3Byb2JlLmMgYi9kcml2ZXJzL3BjaS9wcm9iZS5jDQo+ID4gPiA+IGluZGV4
-IGJiNTg0MDM4ZDViNC4uZjhmNjQzZGFjNmQxIDEwMDY0NA0KPiA+ID4gPiAtLS0gYS9kcml2ZXJz
-L3BjaS9wcm9iZS5jDQo+ID4gPiA+ICsrKyBiL2RyaXZlcnMvcGNpL3Byb2JlLmMNCj4gPiA+ID4g
-QEAgLTMwNiw2ICszMDYsMTQgQEAgaW50IF9fcGNpX3JlYWRfYmFzZShzdHJ1Y3QgcGNpX2RldiAq
-ZGV2LA0KPiA+ID4gPiBlbnVtDQo+ID4gPiA+IHBjaV9iYXJfdHlwZSB0eXBlLA0KPiA+ID4gPiAg
-CQkJIHBvcywgKHVuc2lnbmVkIGxvbmcNCj4gPiA+ID4gbG9uZylyZWdpb24uc3RhcnQpOw0KPiA+
-ID4gPiAgCX0NCj4gPiA+ID4gIA0KPiA+ID4gPiArCWlmIChwY2lfY2FuX21vdmVfYmFycyAmJiBy
-ZXMtPnN0YXJ0ICYmICEocmVzLT5mbGFncyAmDQo+ID4gPiA+IElPUkVTT1VSQ0VfSU8pKSB7DQo+
-ID4gPiA+ICsJCXBjaV93YXJuKGRldiwgImlnbm9yZSB0aGUgY3VycmVudCBvZmZzZXQgb2YgQkFS
-DQo+ID4gPiA+ICVsbHgtDQo+ID4gPiA+ICVsbHhcbiIsDQo+ID4gPiA+ICsJCQkgbDY0LCBsNjQg
-KyBzejY0IC0gMSk7DQo+ID4gPiA+ICsJCXJlcy0+c3RhcnQgPSAwOw0KPiA+ID4gPiArCQlyZXMt
-PmVuZCA9IHN6NjQgLSAxOw0KPiA+ID4gPiArCQlyZXMtPmZsYWdzIHw9IElPUkVTT1VSQ0VfU0la
-RUFMSUdOOw0KPiA+ID4gPiArCX0NCj4gPiA+ID4gKw0KPiA+ID4gPiAgCWdvdG8gb3V0Ow0KPiA+
-ID4gPiAgDQo+ID4gPiA+ICANCj4gPiA+ID4gQEAgLTUyOCw4ICs1MzYsMTAgQEAgdm9pZCBwY2lf
-cmVhZF9icmlkZ2VfYmFzZXMoc3RydWN0IHBjaV9idXMNCj4gPiA+ID4gKmNoaWxkKQ0KPiA+ID4g
-PiAgCQljaGlsZC0+cmVzb3VyY2VbaV0gPSAmZGV2LQ0KPiA+ID4gPiA+IHJlc291cmNlW1BDSV9C
-UklER0VfUkVTT1VSQ0VTK2ldOw0KPiA+ID4gPiAgDQo+ID4gPiA+ICAJcGNpX3JlYWRfYnJpZGdl
-X2lvKGNoaWxkKTsNCj4gPiA+ID4gLQlwY2lfcmVhZF9icmlkZ2VfbW1pbyhjaGlsZCk7DQo+ID4g
-PiA+IC0JcGNpX3JlYWRfYnJpZGdlX21taW9fcHJlZihjaGlsZCk7DQo+ID4gPiA+ICsJaWYgKCFw
-Y2lfY2FuX21vdmVfYmFycykgew0KPiA+ID4gPiArCQlwY2lfcmVhZF9icmlkZ2VfbW1pbyhjaGls
-ZCk7DQo+ID4gPiA+ICsJCXBjaV9yZWFkX2JyaWRnZV9tbWlvX3ByZWYoY2hpbGQpOw0KPiA+ID4g
-PiArCX0NCj4gPiA+IA0KPiA+ID4gSSBtZW50aW9uZWQgdGhpcyBpbiBhbm90aGVyIHJlc3BvbnNl
-LCBidXQgSSdsbCByZXBlYXQgaXQgaGVyZSB0bw0KPiA+ID4gY29tbWVudCBvbiB0aGUgY29kZSBk
-aXJlY3RseTogSSBkb24ndCB0aGluayB3ZSBzaG91bGQgaGF2ZQ0KPiA+ID4gZmVhdHVyZQ0KPiA+
-ID4gdGVzdHMgbGlrZSB0aGlzICIhcGNpX2Nhbl9tb3ZlX2JhcnMiIHNjYXR0ZXJlZCBhcm91bmQs
-IGFuZCBJDQo+ID4gPiBkb24ndA0KPiA+ID4gd2FudCBiYXNpYyBiZWhhdmlvcnMgbGlrZSByZWFk
-aW5nIGJyaWRnZSB3aW5kb3dzIGR1cmluZw0KPiA+ID4gZW51bWVyYXRpb24NCj4gPiA+IHRvDQo+
-ID4gPiBkZXBlbmQgb24gaXQuDQo+ID4gPiANCj4gPiA+IFRoZXJlJ3Mgbm8gb2J2aW91cyByZWFz
-b24gd2h5IHdlIHNob3VsZCBpZ25vcmUgYnJpZGdlIHdpbmRvd3MgaWYNCj4gPiA+IHdlDQo+ID4g
-PiBzdXBwb3J0IG1vdmFibGUgQkFScy4NCj4gPiANCj4gPiBUaGF0IHBhdGNoIHNvbHZlcyBhIHBy
-b2JsZW0gd2hpY2ggaXMgbm9uLWZhdGFsIGR1cmluZyBib290LCBidXQgaXMNCj4gPiBicmVha2lu
-ZyB0aGlzIHdob2xlIHBhdGNoc2V0IHdoZW4gdHJ5aW5nIGEgUENJIHJlc2Nhbi4gT24gYQ0KPiA+
-IHNwZWNpZmljDQo+ID4gbWFjaGluZSB3ZSBoYXZlIGEgcG9wdWxhciBpMzUwIG5ldHdvcmsgY2Fy
-ZDoNCj4gPiANCj4gPiAkIGxzcGNpIC10dg0KPiA+IC1bMDAwMDowMF0tLi4uDQo+ID4gICAgICAg
-ICAgICArLTAxLjEtWzAyXS0tKy0wMC4wICBJbnRlbCBDb3Jwb3JhdGlvbiBJMzUwIEdpZ2FiaXQN
-Cj4gPiBOZXR3b3JrDQo+ID4gQ29ubmVjdGlvbg0KPiA+ICAgICAgICAgICAgfCAgICAgICAgICAg
-ICstMDAuMSAgSW50ZWwgQ29ycG9yYXRpb24gSTM1MCBHaWdhYml0DQo+ID4gTmV0d29yaw0KPiA+
-IENvbm5lY3Rpb24NCj4gPiAgICAgICAgICAgIHwgICAgICAgICAgICArLTAwLjIgIEludGVsIENv
-cnBvcmF0aW9uIEkzNTAgR2lnYWJpdA0KPiA+IE5ldHdvcmsNCj4gPiBDb25uZWN0aW9uDQo+ID4g
-ICAgICAgICAgICB8ICAgICAgICAgICAgXC0wMC4zICBJbnRlbCBDb3Jwb3JhdGlvbiBJMzUwIEdp
-Z2FiaXQNCj4gPiBOZXR3b3JrDQo+ID4gQ29ubmVjdGlvbg0KPiA+IA0KPiA+IE9uIHRoZSAiUk9H
-IFNUUklYIFozNzAtRiBHQU1JTkcsIEJJT1MgMDYxMiAwMy8wMS8yMDE4IiBtb3RoZXJib2FyZA0K
-PiA+IGFuZA0KPiA+IHZhbmlsbGEga2VybmVsLCBub3QgZXZlcnkgQkFSIGlzIGFsbG9jYXRlZDoN
-Cj4gPiANCj4gPiAkIGRtZXNnIC10DQo+ID4gICAuLi4NCj4gPiAgIHBjaSAwMDAwOjAwOjAxLjA6
-IFBDSSBicmlkZ2UgdG8gW2J1cyAwMV0NCj4gPiAgIHBjaSAwMDAwOjAwOjAxLjA6ICAgYnJpZGdl
-IHdpbmRvdyBbbWVtIDB4Zjc3MDAwMDAtMHhmNzhmZmZmZl0NCj4gPiAgIHBjaSAwMDAwOjAyOjAw
-LjA6IEJBUiA3OiBhc3NpZ25lZCBbbWVtIDB4Zjc0OTAwMDAtMHhmNzRhZmZmZl0NCj4gPiAgIHBj
-aSAwMDAwOjAyOjAwLjA6IEJBUiAxMDogYXNzaWduZWQgW21lbSAweGY3NGIwMDAwLTB4Zjc0Y2Zm
-ZmZdDQo+ID4gICBwY2kgMDAwMDowMjowMC4xOiBCQVIgNzogYXNzaWduZWQgW21lbSAweGY3NGQw
-MDAwLTB4Zjc0ZWZmZmZdDQo+ID4gICBwY2kgMDAwMDowMjowMC4xOiBCQVIgMTA6IG5vIHNwYWNl
-IGZvciBbbWVtIHNpemUgMHgwMDAyMDAwMF0NCj4gPiAgIHBjaSAwMDAwOjAyOjAwLjE6IEJBUiAx
-MDogZmFpbGVkIHRvIGFzc2lnbiBbbWVtIHNpemUgMHgwMDAyMDAwMF0NCj4gPiAgIHBjaSAwMDAw
-OjAyOjAwLjI6IEJBUiA3OiBubyBzcGFjZSBmb3IgW21lbSBzaXplIDB4MDAwMjAwMDBdDQo+ID4g
-ICBwY2kgMDAwMDowMjowMC4yOiBCQVIgNzogZmFpbGVkIHRvIGFzc2lnbiBbbWVtIHNpemUgMHgw
-MDAyMDAwMF0NCj4gPiAgIHBjaSAwMDAwOjAyOjAwLjI6IEJBUiAxMDogbm8gc3BhY2UgZm9yIFtt
-ZW0gc2l6ZSAweDAwMDIwMDAwXQ0KPiA+ICAgcGNpIDAwMDA6MDI6MDAuMjogQkFSIDEwOiBmYWls
-ZWQgdG8gYXNzaWduIFttZW0gc2l6ZSAweDAwMDIwMDAwXQ0KPiA+ICAgcGNpIDAwMDA6MDI6MDAu
-MzogQkFSIDc6IG5vIHNwYWNlIGZvciBbbWVtIHNpemUgMHgwMDAyMDAwMF0NCj4gPiAgIHBjaSAw
-MDAwOjAyOjAwLjM6IEJBUiA3OiBmYWlsZWQgdG8gYXNzaWduIFttZW0gc2l6ZSAweDAwMDIwMDAw
-XQ0KPiA+ICAgcGNpIDAwMDA6MDI6MDAuMzogQkFSIDEwOiBubyBzcGFjZSBmb3IgW21lbSBzaXpl
-IDB4MDAwMjAwMDBdDQo+ID4gICBwY2kgMDAwMDowMjowMC4zOiBCQVIgMTA6IGZhaWxlZCB0byBh
-c3NpZ24gW21lbSBzaXplIDB4MDAwMjAwMDBdDQo+ID4gICBwY2kgMDAwMDowMDowMS4xOiBQQ0kg
-YnJpZGdlIHRvIFtidXMgMDJdDQo+ID4gDQo+ID4gJCBzdWRvIGNhdCAvcHJvYy9pb21lbQ0KPiA+
-ICAgLi4uDQo+ID4gICBmNzAwMDAwMC1mNzRmZmZmZiA6IFBDSSBCdXMgMDAwMDowMg0KPiA+ICAg
-ICBmNzAwMDAwMC1mNzBmZmZmZiA6IDAwMDA6MDI6MDAuMw0KPiA+ICAgICAgIGY3MDAwMDAwLWY3
-MGZmZmZmIDogaWdiDQo+ID4gICAgIGY3MTAwMDAwLWY3MWZmZmZmIDogMDAwMDowMjowMC4yDQo+
-ID4gICAgICAgZjcxMDAwMDAtZjcxZmZmZmYgOiBpZ2INCj4gPiAgICAgZjcyMDAwMDAtZjcyZmZm
-ZmYgOiAwMDAwOjAyOjAwLjENCj4gPiAgICAgICBmNzIwMDAwMC1mNzJmZmZmZiA6IGlnYg0KPiA+
-ICAgICBmNzMwMDAwMC1mNzNmZmZmZiA6IDAwMDA6MDI6MDAuMA0KPiA+ICAgICAgIGY3MzAwMDAw
-LWY3M2ZmZmZmIDogaWdiDQo+ID4gICAgIGY3NDAwMDAwLWY3NDdmZmZmIDogMDAwMDowMjowMC4w
-DQo+ID4gICAgIGY3NDgwMDAwLWY3NDgzZmZmIDogMDAwMDowMjowMC4zDQo+ID4gICAgICAgZjc0
-ODAwMDAtZjc0ODNmZmYgOiBpZ2INCj4gPiAgICAgZjc0ODQwMDAtZjc0ODdmZmYgOiAwMDAwOjAy
-OjAwLjINCj4gPiAgICAgICBmNzQ4NDAwMC1mNzQ4N2ZmZiA6IGlnYg0KPiA+ICAgICBmNzQ4ODAw
-MC1mNzQ4YmZmZiA6IDAwMDA6MDI6MDAuMQ0KPiA+ICAgICAgIGY3NDg4MDAwLWY3NDhiZmZmIDog
-aWdiDQo+ID4gICAgIGY3NDhjMDAwLWY3NDhmZmZmIDogMDAwMDowMjowMC4wDQo+ID4gICAgICAg
-Zjc0OGMwMDAtZjc0OGZmZmYgOiBpZ2INCj4gPiAgICAgZjc0OTAwMDAtZjc0YWZmZmYgOiAwMDAw
-OjAyOjAwLjANCj4gPiAgICAgZjc0YjAwMDAtZjc0Y2ZmZmYgOiAwMDAwOjAyOjAwLjANCj4gPiAg
-ICAgZjc0ZDAwMDAtZjc0ZWZmZmYgOiAwMDAwOjAyOjAwLjENCj4gPiANCj4gPiBCdXQgd2hlbiBh
-bGxvd2luZyB0aGUga2VybmVsIHRvIGFsbG9jYXRlIEJBUnMgcHJvcGVybHksIHRoZSBtYXAgaXMN
-Cj4gPiBmdWxsOg0KPiA+IA0KPiA+ICAgYzgyMDAwMDAtYzg3ZmZmZmYgOiBQQ0kgQnVzIDAwMDA6
-MDINCj4gPiAgICAgYzgyMDAwMDAtYzgyZmZmZmYgOiAwMDAwOjAyOjAwLjANCj4gPiAgICAgICBj
-ODIwMDAwMC1jODJmZmZmZiA6IGlnYg0KPiA+ICAgICBjODMwMDAwMC1jODNmZmZmZiA6IDAwMDA6
-MDI6MDAuMQ0KPiA+ICAgICAgIGM4MzAwMDAwLWM4M2ZmZmZmIDogaWdiDQo+ID4gICAgIGM4NDAw
-MDAwLWM4NGZmZmZmIDogMDAwMDowMjowMC4yDQo+ID4gICAgICAgYzg0MDAwMDAtYzg0ZmZmZmYg
-OiBpZ2INCj4gPiAgICAgYzg1MDAwMDAtYzg1ZmZmZmYgOiAwMDAwOjAyOjAwLjMNCj4gPiAgICAg
-ICBjODUwMDAwMC1jODVmZmZmZiA6IGlnYg0KPiA+ICAgICBjODYwMDAwMC1jODY3ZmZmZiA6IDAw
-MDA6MDI6MDAuMA0KPiA+ICAgICBjODY4MDAwMC1jODY4M2ZmZiA6IDAwMDA6MDI6MDAuMA0KPiA+
-ICAgICAgIGM4NjgwMDAwLWM4NjgzZmZmIDogaWdiDQo+ID4gICAgIGM4Njg0MDAwLWM4NmEzZmZm
-IDogMDAwMDowMjowMC4wDQo+ID4gICAgIGM4NmE0MDAwLWM4NmMzZmZmIDogMDAwMDowMjowMC4w
-DQo+ID4gICAgIGM4NmM0MDAwLWM4NmM3ZmZmIDogMDAwMDowMjowMC4xDQo+ID4gICAgICAgYzg2
-YzQwMDAtYzg2YzdmZmYgOiBpZ2INCj4gPiAgICAgYzg2YzgwMDAtYzg2ZTdmZmYgOiAwMDAwOjAy
-OjAwLjENCj4gPiAgICAgYzg2ZTgwMDAtYzg3MDdmZmYgOiAwMDAwOjAyOjAwLjENCj4gPiAgICAg
-Yzg3MDgwMDAtYzg3MGJmZmYgOiAwMDAwOjAyOjAwLjINCj4gPiAgICAgICBjODcwODAwMC1jODcw
-YmZmZiA6IGlnYg0KPiA+ICAgICBjODcwYzAwMC1jODcyYmZmZiA6IDAwMDA6MDI6MDAuMg0KPiA+
-ICAgICBjODcyYzAwMC1jODc0YmZmZiA6IDAwMDA6MDI6MDAuMg0KPiA+ICAgICBjODc0YzAwMC1j
-ODc0ZmZmZiA6IDAwMDA6MDI6MDAuMw0KPiA+ICAgICAgIGM4NzRjMDAwLWM4NzRmZmZmIDogaWdi
-DQo+ID4gICAgIGM4NzUwMDAwLWM4NzZmZmZmIDogMDAwMDowMjowMC4zDQo+ID4gICAgIGM4Nzcw
-MDAwLWM4NzhmZmZmIDogMDAwMDowMjowMC4zDQo+ID4gDQo+ID4gSW4gdGhpcyBwYXJ0aWN1bGFy
-IGNhc2UgdGhlICJyZXBhaXJlZCIgQkFScyBhcmUgbm90IHZpdGFsIGFuZCBhcmUNCj4gPiBub3QN
-Cj4gPiB1c2VkIGJ5IHRoZSBpZ2IgZHJpdmVyLCBidXQgaW4gZ2VuZXJhbCBzdWNoIGJlaGF2aW9y
-IG9mIEJJT1MgY2FuDQo+ID4gbGVhZA0KPiA+IHRvIGEgbm9uLXdvcmtpbmcgc2V0dXAuDQo+ID4g
-DQo+ID4gU28gaWdub3JpbmcgcHJlLXNldCBCQVJzIGFuZCBicmlkZ2Ugd2luZG93cyBtYXkgYmUg
-dXNlZnVsIG9uIGl0cw0KPiA+IG93biwNCj4gPiBidXQgaXQgaXMgYWxzbyBwcm92aWRlcyBhIHdv
-cmtpbmcgc3RhcnRpbmcgcG9pbnQgcmVxdWlyZWQgYnkgdGhpcw0KPiA+IHBhdGNoc2V0LCBvdGhl
-cndpc2UgaXQgd2lsbCBuZWVkIHRvIHRyYWNrIHN1Y2ggQkFScyBpbXBvc3NpYmxlIHRvDQo+ID4g
-YXNzaWduLCBhbmQgZG9uJ3QgdHJ5IHRvIGFzc2lnbiB0aGVtIGR1cmluZyBhIG5leHQgUENJIHJl
-c2Nhbi4NCj4gPiANCj4gPiBUaGUgcmVhc29uIEkndmUgdGllZCB0aGlzIGZlYXR1cmUgdG8gdGhl
-ICJtb3ZhYmxlIEJBUnMiIGZsYWcgaXMNCj4gPiB0aGF0IEkNCj4gPiBrbm93IGF0IGxlYXN0IG9u
-ZSBleGNlcHRpb24gZGVtYW5kaW5nIGEgd29ya2Fyb3VuZCAtIFZHQS4gU28gSQ0KPiA+IHdhbnRl
-ZA0KPiA+IHRvIHByb3ZpZGUgYSBmbGFnIHRvIGRpc2FibGUgaXQgaW4gY2FzZSBvZiBvdGhlciB1
-bmZvcmVzZWVuDQo+ID4gY29uc2VxdWVuY2VzLCBhbmQgdGhlIG9ubHkgZmVhdHVyZSBkZXBlbmRz
-IG9uIHRoaXMgLSBpcyBtb3ZhYmxlDQo+ID4gQkFScy4NCj4gDQo+IElmIHdlIG5lZWQgZXhjZXB0
-aW9ucyBmb3IgYnJva2VuIG9yIGxlZ2FjeSBkZXZpY2VzLCB3ZSBzaG91bGQgY2hlY2sNCj4gZm9y
-IHRob3NlIGV4cGxpY2l0bHkuDQo+IA0KPiBJZiB3ZSBmYWlsIHRvIGFzc2lnbiBzb21lIEJBUnMg
-YXQgYm9vdCwgSSB0aGluayBpdCdzIHJlYXNvbmFibGUgdG8NCj4gdHJ5DQo+IHRvIHJlYXNzaWdu
-IHRoaW5ncyBiZWZvcmUgZHJpdmVycyBjbGFpbSB0aGUgZGV2aWNlcy4gIEJ1dCBzdXBwb3J0IGZv
-cg0KPiB0aGF0IHNob3VsZCBiZSBpbiBhIHJlYXNzaWdubWVudCBwYXRoLCBub3QgaW4gdGhlIGdl
-bmVyYWwgZW51bWVyYXRpb24NCj4gcGF0aC4gIEFuZCwgc2luY2UgZHJpdmVycyBhcmVuJ3QgaW52
-b2x2ZWQgeWV0LCBpdCBwcm9iYWJseSBkb2Vzbid0DQo+IGV2ZW4gZGVwZW5kIG9uIHBjaV9jYW5f
-bW92ZV9iYXJzLg0KPiANCg0KVGhhbmtzIGZvciB0aGUgYWR2aWNlLCBpdCB3b3JrZWQhIE5vdyBJ
-J20gdmFsaWRhdGluZyBpbiB0aGUgZW5kIG9mDQpfX2luaXQgcGNpX2Fzc2lnbl91bmFzc2lnbmVk
-X3Jlc291cmNlcygpIHRoYXQgZXZlcnkgZGV2aWNlIGdvdCBkZXNpcmVkDQpCQVJzLCBvdGhlcndp
-c2UgY2FsbCB0byBwY2lfcmVzY2FuX2J1cygpLCB3aGljaCBpcyBhbGxvd2VkIHRvIG1vdmUgQkFS
-cw0KLSBpbmRlZWQgbm90IHlldCBjYXB0dXJlZCBieSBkcml2ZXJzIGF0IHRoaXMgc3RhZ2UuIFRo
-aXMgd2lsbCBiZQ0Kc3VibWl0dGVkIGluIHY4Lg0KDQpTZXJnZQ0KDQo+ID4gVGhlIFswNy8yNl0g
-IlBDSTogaG90cGx1ZzogRG9uJ3QgYWxsb3cgaG90LWFkZGVkIGRldmljZXMgdG8gc3RlYWwNCj4g
-PiByZXNvdXJjZXMiIHBhdGNoIGludHJvZHVjZXMgYW4gYWRkaXRpb25hbCBzdGVwIGluIEJBUiBh
-c3NpZ25tZW50Og0KPiA+ICAtIHRyeSB0byBhc3NpZ24gZXZlcnkgZXhpc3RpbmcgQkFSICsgQkFS
-cyBvZiB0aGUgaG90LWFkZGVkIGRldmljZTsNCj4gPiAgLSBpdCBpZiBmYWlscywgZGlzYWJsZSBC
-QVJzIGZvciB0aGUgaG90LWFkZGVkIGRldmljZSBhbmQgcmV0cnkNCj4gPiB3aXRob3V0DQo+ID4g
-ICAgdGhlbS4NCj4gPiANCj4gPiBBIHBvc3NpYmxlIHdheSB0byB3b3JrLWFyb3VuZCBub24td29y
-a2luZyBCQVJzIGNvdWxkIGJlIGFkZGluZyBtb3JlDQo+ID4gc3RlcHM6DQo+ID4gIC0gZmlyc3Qg
-dHJ5IHRvIGFzc2lnbiBldmVyeSBleGlzdGluZyBCQVIgKyBCQVJzIG5vdCB3b3JrZWQNCj4gPiBw
-cmV2aW91c2x5DQo+ID4gICAgKyAiaG90LWFkZGVkIiBCQVJzOw0KPiA+ICAtIGlmIGl0IGZhaWxz
-LCByZXRyeSB3aXRob3V0IHRob3NlIEJBUnMgd2hpY2ggd2VyZW4ndCB3b3JraW5nDQo+ID4gYmVm
-b3JlOw0KPiA+ICAtIGlmIGl0IHN0aWxsIGZhaWxzLCByZXRyeSB3aXRob3V0ICJob3QtYWRkZWQi
-IEJBUnMuDQo+ID4gDQo+ID4gQmVzdCByZWdhcmRzLA0KPiA+IFNlcmdlDQo+ID4gDQo+ID4gPiA+
-ICAJaWYgKGRldi0+dHJhbnNwYXJlbnQpIHsNCj4gPiA+ID4gIAkJcGNpX2J1c19mb3JfZWFjaF9y
-ZXNvdXJjZShjaGlsZC0+cGFyZW50LCByZXMsDQo+ID4gPiA+IGkpIHsNCj4gPiA+ID4gQEAgLTI5
-NDUsNiArMjk1NSw4IEBAIGludCBwY2lfaG9zdF9wcm9iZShzdHJ1Y3QgcGNpX2hvc3RfYnJpZGdl
-DQo+ID4gPiA+ICpicmlkZ2UpDQo+ID4gPiA+ICAJCXBjaV9idXNfY2xhaW1fcmVzb3VyY2VzKGJ1
-cyk7DQo+ID4gPiA+ICAJfSBlbHNlIHsNCj4gPiA+ID4gIAkJcGNpX2J1c19zaXplX2JyaWRnZXMo
-YnVzKTsNCj4gPiA+ID4gKwkJaWYgKHBjaV9jYW5fbW92ZV9iYXJzKQ0KPiA+ID4gPiArCQkJcGNp
-X2J1c191cGRhdGVfcmVhbGxvY19yYW5nZShidXMpOw0KPiA+ID4gPiAgCQlwY2lfYnVzX2Fzc2ln
-bl9yZXNvdXJjZXMoYnVzKTsNCj4gPiA+ID4gIA0KPiA+ID4gPiAgCQlsaXN0X2Zvcl9lYWNoX2Vu
-dHJ5KGNoaWxkLCAmYnVzLT5jaGlsZHJlbiwNCj4gPiA+ID4gbm9kZSkNCj4gPiA+ID4gLS0gDQo+
-ID4gPiA+IDIuMjQuMQ0KPiA+ID4gPiANCg==
+To make the changelog from "git log --oneline" read nicely, the
+subject should begin with a verb, e.g.,
+
+  PCI: rcar: Move shareable code to a common file
+
+On Sat, Feb 08, 2020 at 06:36:36PM +0000, Lad Prabhakar wrote:
+> Prepare for adding endpoint support to rcar controller, there are no
+> functional changes with this patch, a common file is created so that
+> it can be shared with endpoint driver.
+
+This commit log doesn't tell us what this patch does.  "Prepare"
+conveys no real information.  It's a giant patch and it's difficult
+to verify that there's no functional change.
+
+I *think* what you did was move most of the #defines from pcie-rcar.c
+to pcie-rcar.h and most of the code from pcie-rcar.c to
+pcie-rcar-host.c.  And in both case, these were strict *moves* without
+any changes.  If that's the case, please say that explicitly in the
+commit log.
+
+That's good; thanks for making this a separate patch so it's not
+mingled with real changes.
+
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+>  arch/arm64/configs/defconfig            |    2 +-
+>  drivers/pci/controller/Kconfig          |    4 +-
+>  drivers/pci/controller/Makefile         |    2 +-
+>  drivers/pci/controller/pcie-rcar-host.c | 1044 ++++++++++++++++++++++++++
+>  drivers/pci/controller/pcie-rcar.c      | 1229 ++-----------------------------
+>  drivers/pci/controller/pcie-rcar.h      |  126 ++++
+>  6 files changed, 1227 insertions(+), 1180 deletions(-)
+>  create mode 100644 drivers/pci/controller/pcie-rcar-host.c
+>  create mode 100644 drivers/pci/controller/pcie-rcar.h
+> 
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index b2f6673..8a1f51d 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -182,7 +182,7 @@ CONFIG_HOTPLUG_PCI=y
+>  CONFIG_HOTPLUG_PCI_ACPI=y
+>  CONFIG_PCI_AARDVARK=y
+>  CONFIG_PCI_TEGRA=y
+> -CONFIG_PCIE_RCAR=y
+> +CONFIG_PCIE_RCAR_HOST=y
+>  CONFIG_PCI_HOST_GENERIC=y
+>  CONFIG_PCI_XGENE=y
+>  CONFIG_PCIE_ALTERA=y
+> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+> index f84e5ff..94bb5e9 100644
+> --- a/drivers/pci/controller/Kconfig
+> +++ b/drivers/pci/controller/Kconfig
+> @@ -54,12 +54,12 @@ config PCI_RCAR_GEN2
+>  	  There are 3 internal PCI controllers available with a single
+>  	  built-in EHCI/OHCI host controller present on each one.
+>  
+> -config PCIE_RCAR
+> +config PCIE_RCAR_HOST
+
+The config symbol change should be mentioned in the commit log.  In
+general we try to avoid changing config symbols because it's likely to
+confuse people who keep their .config and update their kernel.  But I
+guess your audience is probably pretty small.
+
+>  	bool "Renesas R-Car PCIe controller"
+
+The description needs to be updated, too.  This is what people will
+see in menuconfig.
+
+>  	depends on ARCH_RENESAS || COMPILE_TEST
+>  	depends on PCI_MSI_IRQ_DOMAIN
+>  	help
+> -	  Say Y here if you want PCIe controller support on R-Car SoCs.
+> +	  Say Y here if you want PCIe controller support on R-Car SoCs in host mode.
+
+Wrap this so it fits in 80 columns like the rest of the file.
+
+Bjorn
