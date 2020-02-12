@@ -2,218 +2,213 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DC6AA15A7B9
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Feb 2020 12:22:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 75E0E15A8EC
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Feb 2020 13:17:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728334AbgBLLWM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Feb 2020 06:22:12 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:51802 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728315AbgBLLWL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Feb 2020 06:22:11 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01CBLvGN014361;
-        Wed, 12 Feb 2020 05:21:57 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1581506517;
-        bh=LAHbe1ep18MRMLKppKExizKw+8T2sbESWHHKJMLTnvs=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=sCaAqDj2+59ftqzv0t66V8M3cHSXhnCnXnMfmhnOhOD0SnTx2ejUnoePSJ87Z7AcV
-         66MqYyfeLQhDS4NFUOfzjkHDJqKgjI8I2GSgskNDzIWjL2l/VSMfqUi5/4QCdkIQmp
-         ziXGgYyxU+ZUdb2stNJoc7hZc8yEfLb75gXqVcSo=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01CBLv5F113060
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 12 Feb 2020 05:21:57 -0600
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 12
- Feb 2020 05:21:57 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 12 Feb 2020 05:21:57 -0600
-Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01CBLc5b049841;
-        Wed, 12 Feb 2020 05:21:54 -0600
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Athani Nadeem Ladkhan <nadeem@cadence.com>,
-        Tom Joseph <tjoseph@cadence.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH v2 5/5] PCI: endpoint: Assign function number for each PF in EPC core
-Date:   Wed, 12 Feb 2020 16:55:14 +0530
-Message-ID: <20200212112514.2000-6-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200212112514.2000-1-kishon@ti.com>
-References: <20200212112514.2000-1-kishon@ti.com>
+        id S1726146AbgBLMRB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Feb 2020 07:17:01 -0500
+Received: from mta-02.yadro.com ([89.207.88.252]:44936 "EHLO mta-01.yadro.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725945AbgBLMRB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 12 Feb 2020 07:17:01 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id E92D5493B9;
+        Wed, 12 Feb 2020 12:16:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        mime-version:content-transfer-encoding:content-id:content-type
+        :content-type:content-language:accept-language:in-reply-to
+        :references:message-id:date:date:subject:subject:from:from
+        :received:received:received:received; s=mta-01; t=1581509816; x=
+        1583324217; bh=bh7BBVtP/Pjwmv/9yjOu86jOjqUjh7ESSWRj1PaveSs=; b=C
+        AFGCsJIejrh8KNuQsaNOTz6fS8J3ZXqOaMFkKdRcVY3y+w/t8reOjtnbSQj4DtZW
+        3sQEL1w0zODkR8ll6tviR4nxG9rsbiz04zu80W0WoDQ4/kWEu2sqnwV7YgDMwdrE
+        qizl52WOO2E5fB8ZEHOA0wrwqFz/cn+zjtu8mUieCM=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id ILpVCLJeYDBQ; Wed, 12 Feb 2020 15:16:56 +0300 (MSK)
+Received: from T-EXCH-01.corp.yadro.com (t-exch-01.corp.yadro.com [172.17.10.101])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mta-01.yadro.com (Postfix) with ESMTPS id 28128494C2;
+        Wed, 12 Feb 2020 15:16:56 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (172.17.10.102) by
+ T-EXCH-01.corp.yadro.com (172.17.10.101) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
+ 15.1.669.32; Wed, 12 Feb 2020 15:16:55 +0300
+Received: from T-EXCH-02.corp.yadro.com ([fe80::19dd:9b61:5447:ff23]) by
+ T-EXCH-02.corp.yadro.com ([fe80::19dd:9b61:5447:ff23%14]) with mapi id
+ 15.01.0669.032; Wed, 12 Feb 2020 15:16:55 +0300
+From:   Sergei Miroshnichenko <s.miroshnichenko@yadro.com>
+To:     "helgaas@kernel.org" <helgaas@kernel.org>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux@yadro.com" <linux@yadro.com>, "sr@denx.de" <sr@denx.de>
+Subject: Re: [PATCH v7 16/26] PCI: Ignore PCIBIOS_MIN_MEM
+Thread-Topic: [PATCH v7 16/26] PCI: Ignore PCIBIOS_MIN_MEM
+Thread-Index: AQHV1rj3MLBuXSpu+0eGhF8XhxKbvKgDsP4AgAE1ToCAACOmAIAHX86AgAA6TgCACrjVAA==
+Date:   Wed, 12 Feb 2020 12:16:55 +0000
+Message-ID: <e37cfad84e85126c7a16323a1f26e9968ae67650.camel@yadro.com>
+References: <20200205163246.GA201899@google.com>
+In-Reply-To: <20200205163246.GA201899@google.com>
+Accept-Language: en-US, ru-RU
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [172.17.15.136]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <972C773F1BC5644DA0DEAD9813011F48@yadro.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The PCIe endpoint core relies on the drivers that invoke the
-pci_epc_add_epf() API to allocate and assign a function number
-to each physical function (PF). Since endpoint function device can
-be created by multiple mechanisms (configfs, devicetree, etc..),
-allowing each of these mechanisms to assign a function number
-would result in mutliple endpoint function devices having the
-same function number. In order to avoid this, let EPC core assign
-a function number to the endpoint device.
-
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- drivers/pci/endpoint/pci-ep-cfs.c   | 27 +++++----------------------
- drivers/pci/endpoint/pci-epc-core.c | 26 ++++++++++++++++++++++----
- include/linux/pci-epc.h             |  2 ++
- 3 files changed, 29 insertions(+), 26 deletions(-)
-
-diff --git a/drivers/pci/endpoint/pci-ep-cfs.c b/drivers/pci/endpoint/pci-ep-cfs.c
-index d1288a0bd530..e7e8367eead1 100644
---- a/drivers/pci/endpoint/pci-ep-cfs.c
-+++ b/drivers/pci/endpoint/pci-ep-cfs.c
-@@ -29,7 +29,6 @@ struct pci_epc_group {
- 	struct config_group group;
- 	struct pci_epc *epc;
- 	bool start;
--	unsigned long function_num_map;
- };
- 
- static inline struct pci_epf_group *to_pci_epf_group(struct config_item *item)
-@@ -89,37 +88,22 @@ static int pci_epc_epf_link(struct config_item *epc_item,
- 			    struct config_item *epf_item)
- {
- 	int ret;
--	u32 func_no = 0;
- 	struct pci_epf_group *epf_group = to_pci_epf_group(epf_item);
- 	struct pci_epc_group *epc_group = to_pci_epc_group(epc_item);
- 	struct pci_epc *epc = epc_group->epc;
- 	struct pci_epf *epf = epf_group->epf;
- 
--	func_no = find_first_zero_bit(&epc_group->function_num_map,
--				      BITS_PER_LONG);
--	if (func_no >= BITS_PER_LONG)
--		return -EINVAL;
--
--	set_bit(func_no, &epc_group->function_num_map);
--	epf->func_no = func_no;
--
- 	ret = pci_epc_add_epf(epc, epf);
- 	if (ret)
--		goto err_add_epf;
-+		return ret;
- 
- 	ret = pci_epf_bind(epf);
--	if (ret)
--		goto err_epf_bind;
-+	if (ret) {
-+		pci_epc_remove_epf(epc, epf);
-+		return ret;
-+	}
- 
- 	return 0;
--
--err_epf_bind:
--	pci_epc_remove_epf(epc, epf);
--
--err_add_epf:
--	clear_bit(func_no, &epc_group->function_num_map);
--
--	return ret;
- }
- 
- static void pci_epc_epf_unlink(struct config_item *epc_item,
-@@ -134,7 +118,6 @@ static void pci_epc_epf_unlink(struct config_item *epc_item,
- 
- 	epc = epc_group->epc;
- 	epf = epf_group->epf;
--	clear_bit(epf->func_no, &epc_group->function_num_map);
- 	pci_epf_unbind(epf);
- 	pci_epc_remove_epf(epc, epf);
- }
-diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-index e51a12ed85bb..dc1c673534e0 100644
---- a/drivers/pci/endpoint/pci-epc-core.c
-+++ b/drivers/pci/endpoint/pci-epc-core.c
-@@ -471,22 +471,39 @@ EXPORT_SYMBOL_GPL(pci_epc_write_header);
-  */
- int pci_epc_add_epf(struct pci_epc *epc, struct pci_epf *epf)
- {
-+	u32 func_no;
-+	int ret = 0;
-+
- 	if (epf->epc)
- 		return -EBUSY;
- 
- 	if (IS_ERR(epc))
- 		return -EINVAL;
- 
--	if (epf->func_no > epc->max_functions - 1)
--		return -EINVAL;
-+	mutex_lock(&epc->lock);
-+	func_no = find_first_zero_bit(&epc->function_num_map,
-+				      BITS_PER_LONG);
-+	if (func_no >= BITS_PER_LONG) {
-+		ret = -EINVAL;
-+		goto ret;
-+	}
-+
-+	if (func_no > epc->max_functions - 1) {
-+		dev_err(&epc->dev, "Exceeding max supported Function Number\n");
-+		ret = -EINVAL;
-+		goto ret;
-+	}
- 
-+	set_bit(func_no, &epc->function_num_map);
-+	epf->func_no = func_no;
- 	epf->epc = epc;
- 
--	mutex_lock(&epc->lock);
- 	list_add_tail(&epf->list, &epc->pci_epf);
-+
-+ret:
- 	mutex_unlock(&epc->lock);
- 
--	return 0;
-+	return ret;
- }
- EXPORT_SYMBOL_GPL(pci_epc_add_epf);
- 
-@@ -503,6 +520,7 @@ void pci_epc_remove_epf(struct pci_epc *epc, struct pci_epf *epf)
- 		return;
- 
- 	mutex_lock(&epc->lock);
-+	clear_bit(epf->func_no, &epc->function_num_map);
- 	list_del(&epf->list);
- 	epf->epc = NULL;
- 	mutex_unlock(&epc->lock);
-diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-index 4e3e527c49d1..ccaf6e3fa931 100644
---- a/include/linux/pci-epc.h
-+++ b/include/linux/pci-epc.h
-@@ -92,6 +92,7 @@ struct pci_epc_mem {
-  * @max_functions: max number of functions that can be configured in this EPC
-  * @group: configfs group representing the PCI EPC device
-  * @lock: mutex to protect pci_epc ops
-+ * @function_num_map: bitmap to manage physical function number
-  * @notifier: used to notify EPF of any EPC events (like linkup)
-  */
- struct pci_epc {
-@@ -103,6 +104,7 @@ struct pci_epc {
- 	struct config_group		*group;
- 	/* mutex to protect against concurrent access of EP controller */
- 	struct mutex			lock;
-+	unsigned long			function_num_map;
- 	struct atomic_notifier_head	notifier;
- };
- 
--- 
-2.17.1
-
+T24gV2VkLCAyMDIwLTAyLTA1IGF0IDEwOjMyIC0wNjAwLCBCam9ybiBIZWxnYWFzIHdyb3RlOg0K
+PiBPbiBXZWQsIEZlYiAwNSwgMjAyMCBhdCAwMTowNDowNlBNICswMDAwLCBTZXJnZWkgTWlyb3No
+bmljaGVua28NCj4gd3JvdGU6DQo+ID4gT24gRnJpLCAyMDIwLTAxLTMxIGF0IDE0OjI3IC0wNjAw
+LCBCam9ybiBIZWxnYWFzIHdyb3RlOg0KPiA+ID4gT24gRnJpLCBKYW4gMzEsIDIwMjAgYXQgMDY6
+MTk6NDhQTSArMDAwMCwgU2VyZ2VpIE1pcm9zaG5pY2hlbmtvDQo+ID4gPiB3cm90ZToNCj4gPiA+
+ID4gT24gVGh1LCAyMDIwLTAxLTMwIGF0IDE3OjUyIC0wNjAwLCBCam9ybiBIZWxnYWFzIHdyb3Rl
+Og0KPiA+ID4gPiA+IE9uIFdlZCwgSmFuIDI5LCAyMDIwIGF0IDA2OjI5OjI3UE0gKzAzMDAsIFNl
+cmdlaQ0KPiA+ID4gPiA+IE1pcm9zaG5pY2hlbmtvDQo+ID4gPiA+ID4gd3JvdGU6DQo+ID4gPiA+
+ID4gPiBCQVJzIGFuZCBicmlkZ2Ugd2luZG93cyBhcmUgb25seSBhbGxvd2VkIHRvIGJlIGFzc2ln
+bmVkIHRvDQo+ID4gPiA+ID4gPiB0aGVpciBwYXJlbnQgYnVzJ3MgYnJpZGdlIHdpbmRvd3MsIGdv
+aW5nIHVwIHRvIHRoZSByb290DQo+ID4gPiA+ID4gPiBjb21wbGV4J3MgcmVzb3VyY2VzLiAgU28g
+YWRkaXRpb25hbCBsaW1pdGF0aW9ucyBvbiBCQVINCj4gPiA+ID4gPiA+IGFkZHJlc3MgYXJlIG5v
+dCBuZWVkZWQsIGFuZCB0aGUgUENJQklPU19NSU5fTUVNIGNhbiBiZQ0KPiA+ID4gPiA+ID4gaWdu
+b3JlZC4NCj4gPiA+ID4gPiANCj4gPiA+ID4gPiBUaGlzIGlzIHRoZW9yZXRpY2FsbHkgdHJ1ZSwg
+YnV0IEkgZG9uJ3QgdGhpbmsgd2UgaGF2ZQ0KPiA+ID4gPiA+IHJlbGlhYmxlDQo+ID4gPiA+ID4g
+aW5mb3JtYXRpb24gYWJvdXQgdGhlIGhvc3QgYnJpZGdlIHdpbmRvd3MgaW4gYWxsIGNhc2VzLCBz
+bw0KPiA+ID4gPiA+IFBDSUJJT1NfTUlOX01FTS9fSU8gaXMgc29tZXRoaW5nIG9mIGFuIGFwcHJv
+eGltYXRpb24uDQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiBCZXNpZGVzLCB0aGUgdmFsdWUgb2Yg
+UENJQklPU19NSU5fTUVNIHJlcG9ydGVkIGJ5IHRoZSBCSU9TDQo+ID4gPiA+ID4gPiAxLjMgb24g
+U3VwZXJtaWNybyBIMTFTU0wtaSB2aWEgZTgyMF9fc2V0dXBfcGNpX2dhcCgpOg0KPiA+ID4gPiA+
+ID4gDQo+ID4gPiA+ID4gPiAgIFttZW0gMHhlYmZmMTAwMC0weGZlOWZmZmZmXSBhdmFpbGFibGUg
+Zm9yIFBDSSBkZXZpY2VzDQo+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+IGlzIG9ubHkgc3VpdGFi
+bGUgZm9yIGEgc2luZ2xlIFJDIG91dCBvZiBmb3VyOg0KPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4g
+PiAgIHBjaV9idXMgMDAwMDowMDogcm9vdCBidXMgcmVzb3VyY2UgW21lbSAweGVjMDAwMDAwLQ0K
+PiA+ID4gPiA+ID4gMHhlZmZmZmZmZg0KPiA+ID4gPiA+ID4gd2luZG93XQ0KPiA+ID4gPiA+ID4g
+ICBwY2lfYnVzIDAwMDA6MjA6IHJvb3QgYnVzIHJlc291cmNlIFttZW0gMHhlYjgwMDAwMC0NCj4g
+PiA+ID4gPiA+IDB4ZWJlZmZmZmYNCj4gPiA+ID4gPiA+IHdpbmRvd10NCj4gPiA+ID4gPiA+ICAg
+cGNpX2J1cyAwMDAwOjQwOiByb290IGJ1cyByZXNvdXJjZSBbbWVtIDB4ZWIyMDAwMDAtDQo+ID4g
+PiA+ID4gPiAweGViNWZmZmZmDQo+ID4gPiA+ID4gPiB3aW5kb3ddDQo+ID4gPiA+ID4gPiAgIHBj
+aV9idXMgMDAwMDo2MDogcm9vdCBidXMgcmVzb3VyY2UgW21lbSAweGU4YjAwMDAwLQ0KPiA+ID4g
+PiA+ID4gMHhlYWZmZmZmZg0KPiA+ID4gPiA+ID4gd2luZG93XQ0KPiA+ID4gPiA+ID4gDQo+ID4g
+PiA+ID4gPiAsIHdoaWNoIG1ha2VzIHRoZSBBTUQgRVBZQyA3MjUxIHVuYWJsZSB0byBib290IHdp
+dGggdGhpcw0KPiA+ID4gPiA+ID4gbW92YWJsZSBCQVJzIHBhdGNoc2V0Lg0KPiA+ID4gPiA+IA0K
+PiA+ID4gPiA+IFNvbWV0aGluZydzIHdyb25nIGlmIHRoaXMgc3lzdGVtIGJvb3RlZCBiZWZvcmUg
+dGhpcyBwYXRjaCBzZXQNCj4gPiA+ID4gPiBidXQgbm90IGFmdGVyLiAgV2Ugc2hvdWxkbid0IGJl
+IGRvaW5nICphbnl0aGluZyogd2l0aCB0aGUNCj4gPiA+ID4gPiBCQVJzDQo+ID4gPiA+ID4gdW50
+aWwgd2UgbmVlZCB0bywgaS5lLiwgdW50aWwgd2UgaG90LWFkZCBhIGRldmljZSB3aGVyZSB3ZQ0K
+PiA+ID4gPiA+IGhhdmUgdG8gbW92ZSB0aGluZ3MgdG8gZmluZCBzcGFjZSBmb3IgaXQuDQo+ID4g
+PiA+IA0KPiA+ID4gPiBUaGUgb25lIGJyZWFraW5nIGJvb3Qgb24gdGhpcyBzeXN0ZW0gaW5pdGlh
+bGx5IHdhcyAxNy8yNiBvZg0KPiA+ID4gPiB0aGlzDQo+ID4gPiA+IHBhdGNoc2V0OiAiUENJOiBo
+b3RwbHVnOiBJZ25vcmUgdGhlIE1FTSBCQVIgb2Zmc2V0cyBmcm9tDQo+ID4gPiA+IEJJT1MvYm9v
+dGxvYWRlciINCj4gPiA+IA0KPiA+ID4gSSBkb24ndCB0aGluayB0aGF0IHBhdGNoIGlzIGEgZ29v
+ZCBpZGVhLiAgSSB0aGluayB3ZSBzaG91bGQgcmVhZA0KPiA+ID4gdGhlDQo+ID4gPiBjdXJyZW50
+IEJBUnMgYW5kIHdpbmRvd3MgYXQgYm9vdC10aW1lIGFuZCBsZWF2ZSB0aGVtIGFsb25lIHVubGVz
+cw0KPiA+ID4gd2UNCj4gPiA+ICptdXN0KiBjaGFuZ2UgdGhlbS4gIEkgZG9uJ3QgdGhpbmsgd2Ug
+c2hvdWxkIGNoYW5nZSB0aGluZ3MNCj4gPiA+IHByZWVtcHRpdmVseSB0byBtYWtlIGZ1dHVyZSBo
+b3RwbHVnIGV2ZW50cyBlYXNpZXIuDQo+ID4gPiANCj4gPiA+ID4gQmVmb3JlIGl0IHRoZSBrZXJu
+ZWwganVzdCB0b29rIEJBUnMgcHJlLWFzc2lnbmVkIGJ5IEJJT1MuIEluDQo+ID4gPiA+IHRoZQ0K
+PiA+ID4gPiBzYW1lIHRpbWUsIHRoZSBzYW1lIEJJT1MgcmVwb3J0cyAweGViZmYxMDAwLTB4ZmU5
+ZmZmZmYgYXMNCj4gPiA+ID4gYXZhaWxhYmxlIGZvciBQQ0kgZGV2aWNlcywgYnV0IHRoZSByZWFs
+IHJvb3QgYnJpZGdlIHdpbmRvd3MgYXJlDQo+ID4gPiA+IDB4ZThiMDAwMDAtMHhlZmZmZmZmZiBp
+biB0b3RhbCAoYW5kIGFsc28gNjQtYml0IHdpbmRvd3MpIC0NCj4gPiA+ID4gd2hpY2gNCj4gPiA+
+ID4gYXJlIGFsc28gcmVwb3J0ZWQgYnkgdGhlIHNhbWUgQklPUy4gU28gdGhlIGtlcm5lbCB3YXMg
+b25seSBhYmxlDQo+ID4gPiA+IHRvIGhhbmRsZSB0aGUgMHhlYzAwMDAwMC0gMHhlZmZmZmZmZiBy
+b290IGJ1cy4NCj4gPiA+ID4gDQo+ID4gPiA+IFdpdGggdGhhdCBwYXRjaCByZXZlcnRlZCB0aGUg
+a2VybmVsIHdhcyBhYmxlIHRvIGJvb3QsIGJ1dA0KPiA+ID4gPiB1bmFibGUgdG8NCj4gPiA+ID4g
+cmVzY2FuIC0gdG8gcmVhc3NpZ24gQkFScyBhY3R1YWxseS4NCj4gPiA+ID4gDQo+ID4gPiA+ID4g
+KEFuZCB3ZSBkb24ndCB3YW50IGEgYmlzZWN0aW9uIGhvbGUgd2hlcmUgdGhpcyBzeXN0ZW0gY2Fu
+J3QNCj4gPiA+ID4gPiBib290IHVudGlsIHRoaXMgcGF0Y2ggaXMgYXBwbGllZCwgYnV0IEkgYXNz
+dW1lIHRoYXQncw0KPiA+ID4gPiA+IG9idmlvdXMuKQ0KPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4g
+U2lnbmVkLW9mZi1ieTogU2VyZ2VpIE1pcm9zaG5pY2hlbmtvIDwNCj4gPiA+ID4gPiA+IHMubWly
+b3NobmljaGVua29AeWFkcm8uY29tPg0KPiA+ID4gPiA+ID4gLS0tDQo+ID4gPiA+ID4gPiAgZHJp
+dmVycy9wY2kvc2V0dXAtcmVzLmMgfCA1ICsrKy0tDQo+ID4gPiA+ID4gPiAgMSBmaWxlIGNoYW5n
+ZWQsIDMgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCj4gPiA+ID4gPiA+IA0KPiA+ID4g
+PiA+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL3NldHVwLXJlcy5jIGIvZHJpdmVycy9wY2kv
+c2V0dXAtDQo+ID4gPiA+ID4gPiByZXMuYw0KPiA+ID4gPiA+ID4gaW5kZXggYTdkODE4MTZkMWVh
+Li40MDQzYWFiMDIxZGQgMTAwNjQ0DQo+ID4gPiA+ID4gPiAtLS0gYS9kcml2ZXJzL3BjaS9zZXR1
+cC1yZXMuYw0KPiA+ID4gPiA+ID4gKysrIGIvZHJpdmVycy9wY2kvc2V0dXAtcmVzLmMNCj4gPiA+
+ID4gPiA+IEBAIC0yNDYsMTIgKzI0NiwxMyBAQCBzdGF0aWMgaW50DQo+ID4gPiA+ID4gPiBfX3Bj
+aV9hc3NpZ25fcmVzb3VyY2Uoc3RydWN0DQo+ID4gPiA+ID4gPiBwY2lfYnVzICpidXMsIHN0cnVj
+dCBwY2lfZGV2ICpkZXYsDQo+ID4gPiA+ID4gPiAgCQlpbnQgcmVzbm8sIHJlc291cmNlX3NpemVf
+dCBzaXplLA0KPiA+ID4gPiA+ID4gcmVzb3VyY2Vfc2l6ZV90IGFsaWduKQ0KPiA+ID4gPiA+ID4g
+IHsNCj4gPiA+ID4gPiA+ICAJc3RydWN0IHJlc291cmNlICpyZXMgPSBkZXYtPnJlc291cmNlICsg
+cmVzbm87DQo+ID4gPiA+ID4gPiAtCXJlc291cmNlX3NpemVfdCBtaW47DQo+ID4gPiA+ID4gPiAr
+CXJlc291cmNlX3NpemVfdCBtaW4gPSAwOw0KPiA+ID4gPiA+ID4gIAlpbnQgcmV0Ow0KPiA+ID4g
+PiA+ID4gIAlyZXNvdXJjZV9zaXplX3Qgc3RhcnQgPSAocmVzb3VyY2Vfc2l6ZV90KS0xOw0KPiA+
+ID4gPiA+ID4gIAlyZXNvdXJjZV9zaXplX3QgZW5kID0gMDsNCj4gPiA+ID4gPiA+ICANCj4gPiA+
+ID4gPiA+IC0JbWluID0gKHJlcy0+ZmxhZ3MgJiBJT1JFU09VUkNFX0lPKSA/IFBDSUJJT1NfTUlO
+X0lPIDoNCj4gPiA+ID4gPiA+IFBDSUJJT1NfTUlOX01FTTsNCj4gPiA+ID4gPiA+ICsJaWYgKCFw
+Y2lfY2FuX21vdmVfYmFycykNCj4gPiA+ID4gPiA+ICsJCW1pbiA9IChyZXMtPmZsYWdzICYgSU9S
+RVNPVVJDRV9JTykgPw0KPiA+ID4gPiA+ID4gUENJQklPU19NSU5fSU8gOg0KPiA+ID4gPiA+ID4g
+UENJQklPU19NSU5fTUVNOw0KPiA+ID4gPiA+IA0KPiA+ID4gPiA+IEkgZG9uJ3QgdW5kZXJzdGFu
+ZCB0aGUgY29ubmVjdGlvbiBoZXJlLiAgUENJQklPU19NSU5fTUVNIGFuZA0KPiA+ID4gPiA+IFBD
+SUJJT1NfTUlOX0lPIGFyZSBiYXNpY2FsbHkgd2F5cyB0byBzYXkgIndlIGNhbid0IHB1dCBQQ0kN
+Cj4gPiA+ID4gPiByZXNvdXJjZXMgYmVsb3cgdGhpcyBhZGRyZXNzIi4NCj4gPiA+ID4gPiANCj4g
+PiA+ID4gPiBPbiBBQ1BJIHN5c3RlbXMsIHRoZSBkZXZpY2VzIGluIHRoZSBBQ1BJIG5hbWVzcGFj
+ZSBhcmUNCj4gPiA+ID4gPiBzdXBwb3NlZCB0byB0ZWxsIHRoZSBPUyB3aGF0IHJlc291cmNlcyB0
+aGV5IHVzZSwgYW5kDQo+ID4gPiA+ID4gb2J2aW91c2x5DQo+ID4gPiA+ID4gdGhlIE9TIHNob3Vs
+ZCBub3QgYXNzaWduIHRob3NlIHJlc291cmNlcyB0byBhbnl0aGluZw0KPiA+ID4gPiA+IGVsc2Uu
+ICBJZg0KPiA+ID4gPiA+IExpbnV4IGhhbmRsZWQgYWxsIHRob3NlIEFDUEkgcmVzb3VyY2VzIGNv
+cnJlY3RseSBhbmQgaW4gdGhlDQo+ID4gPiA+ID4gYWJzZW5jZSBvZiBmaXJtd2FyZSBkZWZlY3Rz
+LCB3ZSBzaG91bGRuJ3QgbmVlZA0KPiA+ID4gPiA+IFBDSUJJT1NfTUlOX01FTS9fSU8gYXQgYWxs
+LiAgQnV0IG5laXRoZXIgb2YgdGhvc2UgaXMNCj4gPiA+ID4gPiBjdXJyZW50bHkNCj4gPiA+ID4g
+PiB0cnVlLg0KPiA+ID4gPiA+IA0KPiA+ID4gPiA+IEl0J3MgdHJ1ZSB0aGF0IHdlIHNob3VsZCBi
+ZSBzbWFydGVyIGFib3V0DQo+ID4gPiA+ID4gUENJQklPU19NSU5fTUVNL19JTywNCj4gPiA+ID4g
+PiBidXQgSSBkb24ndCB0aGluayB0aGF0IGhhcyBhbnl0aGluZyB0byBkbyB3aXRoIHdoZXRoZXIg
+d2UNCj4gPiA+ID4gPiBzdXBwb3J0ICptb3ZpbmcqIEJBUnMuICBXZSBoYXZlIHRvIGF2b2lkIHRo
+ZSBhZGRyZXNzIHNwYWNlDQo+ID4gPiA+ID4gdGhhdCdzIGFscmVhZHkgaW4gdXNlIGluICphbGwq
+IGNhc2VzLg0KPiA+ID4gPiANCj4gPiA+ID4gVGhpcyBpcyBjb25uZWN0ZWQgdG8gdGhlIGFwcHJv
+YWNoIG9mIHRoaXMgZmVhdHVyZTogcmVsZWFzaW5nLA0KPiA+ID4gPiByZWNhbGN1bGF0aW5nIGFu
+ZCByZWFzc2lnbmluZyB0aGUgQkFScyBhbmQgYnJpZGdlIHdpbmRvd3MuIElmDQo+ID4gPiA+IG1v
+dmFibGUgQkFScyBhcmUgZGlzYWJsZWQsIHRoaXMgYnVnIGRvZXNuJ3QgcmVwcm9kdWNlLiBBbmQg
+dGhlDQo+ID4gPiA+IGJ1ZyBkb2Vzbid0IGxldCB0aGUgc3lzdGVtIGJvb3Qgd2hlbiBCQVJzIGFy
+ZSBhbGxvd2VkIHRvIG1vdmUuDQo+ID4gPiA+IFRoYXQncyB3aHkgSSd2ZSB0aWVkIHRoZXNlIHRv
+Z2V0aGVyLg0KPiA+ID4gDQo+ID4gPiBNeSBwb2ludCBpcyBqdXN0IHRoYXQgbG9naWNhbGx5IHRo
+aXMgaGFzIG5vdGhpbmcgdG8gZG8gd2l0aA0KPiA+ID4gbW92YWJsZSBCQVJzLg0KPiA+ID4gDQo+
+ID4gPiA+IFRoaXMgbGluZSBzZXR0aW5nIHRoZSAibWluIiB0byBQQ0lCSU9TX01JTl8qIGlzIHRo
+ZXJlIHVudG91Y2hlZA0KPiA+ID4gPiBzaW5jZSB0aGUgZmlyc3Qga2VybmVsIGdpdCBjb21taXQg
+aW4gMjAwNSAtIGNvdWxkIGl0IGJlIHRoYXQNCj4gPiA+ID4gYWxsDQo+ID4gPiA+IHN5c3RlbXMg
+YXJlIGp1c3QgZmluZSBub3csIGhhdmluZyB0aGVpciByb290IGJyaWRnZSB3aW5kb3dzIHNldA0K
+PiA+ID4gPiB1cCBjb3JyZWN0bHk/DQo+ID4gPiANCj4gPiA+IEkgZG9uJ3QgdW5kZXJzdGFuZCB0
+aGUgcXVlc3Rpb24sIHNvcnJ5Lg0KPiA+IA0KPiA+IEkgbWVhbiwgZXZlcnkgQkFSIGFzc2lnbmVk
+IGhlcmUgY2FuJ3QgcmVzaWRlIG91dHNpZGUgb2YgYSBob3N0DQo+ID4gSU8vTUVNIGJyaWRnZSB3
+aW5kb3csIHdoaWNoIGlzIGEgYnVzLT5yZXNvdXJjZVtuXSBzZXQgdXAgYnkgdGhlDQo+ID4gcGxh
+dGZvcm0gY29kZSwgYW5kIHRoZWlyIC5zdGFydCBmaWVsZHMgYXJlIHNlZW1lZCB0byBiZSBkdXBs
+aWNhdGVkDQo+ID4gYnkgdGhlIFBDSUJJT1NfTUlOXyogdmFsdWVzIC0gZnJvbSB0aGUgcGxhdGZv
+cm0gY29kZSBhcyB3ZWxsLiBCdXQNCj4gPiB0aGUgLnN0YXJ0IGZpZWxkcyBhcmUgc2VlbSB0byBi
+ZSBjb3JyZWN0IChhcmVuJ3QgdGhleT8pLCBhbmQgdGhlDQo+ID4gUENJQklPU19NSU5fKiB2YWx1
+ZXMgYXJlIHNvbWV0aW1lcyBkZWZpbml0ZWx5IG5vdC4NCj4gPiANCj4gPiBXaGF0IGNhbiBiZSBh
+IHJlbGlhYmxlIHRlc3QgdG8gY2hlY2sgaWYgUENJQklPU19NSU5fKiBhcmUgc2FmZSB0bw0KPiA+
+IGlnbm9yZSB1bmNvbmRpdGlvbmFsbHk/IENvdWxkIGl0IGJlIGEgc2VwYXJhdGUgZmxhZyBpbnN0
+ZWFkIG9mIHRoZQ0KPiA+IHBjaV9jYW5fbW92ZV9iYXJzIGhlcmU/DQo+ID4gDQo+ID4gV291bGQg
+aXQgYmUgZmluZSBmb3IgYSBzdGFydCB0byBpZ25vcmUgdGhlIFBDSUJJT1NfTUlOXyogaWYgaXQg
+bGllcw0KPiA+IGNvbXBsZXRlbHkgb3V0c2lkZSBvZiBob3N0IGJyaWRnZSB3aW5kb3dzPyBTbyBh
+dCBsZWFzdCBBTUQgRVBZQyBjYW4NCj4gPiBvYnRhaW4gaXRzIGhvdHBsdWcgcG93ZXIuDQo+IA0K
+PiBQQ0lCSU9TX01JTl8qIGhhcyBhIGxvbmcgaGlzdG9yeSBhbmQgaXQgdG91Y2hlcyBldmVyeSBh
+cmNoLCBzbyB5b3UnZA0KPiBoYXZlIHRvIG1ha2Ugc3VyZSB0aGlzIGlzIHNhZmUgZm9yIGFsbCBv
+ZiB0aGVtLg0KPiANCg0KUmlnaHQsIEkgc2hvdWxkIHJld29yayB0aGlzIGNoYW5nZSBhbmQgbWFr
+ZSBpdCB4ODYtc3BlY2lmaWMgLSB0aGUgb25seQ0KcGxhdGZvcm0gd2hlcmUgSSd2ZSBlbmNvdW50
+ZXJlZCB0aGlzIGlzc3VlIChpbnZhbGlkIFBDSUJJT1NfTUlOX01FTQ0KZnJvbSB0aGUgZTgyMCBt
+ZW1vcnkgbWFwLCBwcmV2ZW50aW5nIGhvdHBsdWcpLg0KDQo+IE9uIHg4NiwgUENJQklPU19NSU5f
+TUVNIGlzIGNvbXB1dGVkIGZyb20gdGhlIGU4MjAgbWVtb3J5IG1hcCBhbmQgaXMNCj4gYmFzaWNh
+bGx5IGEgZ3Vlc3MgYmVjYXVzZSB0aGUgZTgyMCBtYXAgaXMgb25seSBpbmNpZGVudGFsbHkgcmVs
+YXRlZA0KPiB0bw0KPiBBQ1BJIGRldmljZSByZXNvdXJjZSB1c2FnZS4gIEkgY291bGQgaW1hZ2lu
+ZSBtYWtpbmcgdGhlIHg4Ng0KPiBjb21wdXRhdGlvbiBzbWFydGVyIGJ5IGxvb2tpbmcgYXQgdGhl
+IFBOUDBBMDMvUE5QMEEwOCBfQ1JTDQo+IGluZm9ybWF0aW9uLg0KPiANCg0KV291bGQgaXQgYmUg
+YWNjZXB0YWJsZSB0byBzZXQgUENJQklPU19NSU5fTUVNIHRvIHplcm8gZm9yIHg4NiBpbg0KYXJj
+aC94ODYvaW5jbHVkZS9hc20vcGNpLmggPyBJJ3ZlIGRlYnVnZ2VkIFBDcyBpbiBteSBwb3NzZXNz
+aW9uLCBhbmQgSQ0Kc2VlIHRoZXJlIGV2ZXJ5IEFDUElfUkVTT1VSQ0VfVFlQRV9BRERSRVNTKiBh
+bmQNCkFDUElfUkVTT1VSQ0VfVFlQRV9GSVhFRF9NRU1PUlkqIHJlc291cmNlIGV4dHJhY3RlZCBm
+cm9tIHRoZSBBQ1BJIGFyZQ0KZXZlbnR1YWxseSByZXByZXNlbnRlZCBpbiAvcHJvYy9pb21lbSBh
+bmQgL3Byb2MvaW9wb3J0cywgc28gdGhlIGtlcm5lbA0KY2FuJ3QgcHV0IGRldmljZSBCQVJzIGlu
+IHRoZXNlIHJlc2VydmVkIGFkZHJlc3MgcmFuZ2VzLg0KDQpUaGFua3MsDQpTZXJnZQ0KDQo+ID4g
+PiA+ID4gPiAgCWlmIChwY2lfY2FuX21vdmVfYmFycyAmJiBkZXYtPnN1Ym9yZGluYXRlICYmIHJl
+c25vID49DQo+ID4gPiA+ID4gPiBQQ0lfQlJJREdFX1JFU09VUkNFUykgew0KPiA+ID4gPiA+ID4g
+IAkJc3RydWN0IHBjaV9idXMgKmNoaWxkX2J1cyA9IGRldi0+c3Vib3JkaW5hdGU7DQo+ID4gPiA+
+ID4gPiAtLSANCj4gPiA+ID4gPiA+IDIuMjQuMQ0KPiA+ID4gPiA+ID4gDQo=
