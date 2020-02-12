@@ -2,190 +2,176 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 17E9715A2F8
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Feb 2020 09:13:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D5F3515A795
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Feb 2020 12:19:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728415AbgBLINL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Feb 2020 03:13:11 -0500
-Received: from mail-lj1-f172.google.com ([209.85.208.172]:40379 "EHLO
-        mail-lj1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728287AbgBLINL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Feb 2020 03:13:11 -0500
-Received: by mail-lj1-f172.google.com with SMTP id n18so1217539ljo.7
-        for <linux-pci@vger.kernel.org>; Wed, 12 Feb 2020 00:13:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cSzFH/sCCdv/1TUzNwifZbbH6Z/8YZwip7w5s4aKqiQ=;
-        b=tk9sYesE5oGDBtD7lIFDMUygr8FXr300pewoT/V9HNaWUeYVNEePbdcFeaaLgIjtxU
-         kNL8gAKQN1XCbE2Pt28fGYq4g57/wnkueZad1ohM2bVhZTN4EbRNMPGr3GN36TRM4flC
-         y1AHJxIrE+ugkVWChg0FU6M1UFI2Ubj7YrmTKxQNwklF0m0DMsvE1Mia3D3LJS5IkQts
-         aqTA1DRIjcjG65PcbueGAy42j5bz+EnlU9GYcTSEiCU7BIz+MakIuIZs3Mopviv7IzlF
-         5l0cOiB45F+xVwnDy7XDSNhg2Gm8cW1R+CxzaeKm+Lw5IkGCx+4eIUaI82Z04xS9z9H6
-         RI6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cSzFH/sCCdv/1TUzNwifZbbH6Z/8YZwip7w5s4aKqiQ=;
-        b=h7a5D5aVlUZH9dVfYWDL5spfdOUDdn5XetVICERmxKHSJI/sfee7DmGB58p0NEltwR
-         QMcTltBhNe6WnuHsjpoeSRSDidQMiqeA1BJ2rgDn7KK7LjyygzBFY8yBF1KhlYsXMUQz
-         vyKu+C0tpWnbsTl8g8XMA0qBcs3yV6oFmFgPcYU6iRYXdxBjuZixWt3wOKx3OPg3zd9l
-         hA7ZRrWL5+6d/DVZTkjkGQtrXLVpdtLRzTh735cVcStw71c5VY1x+Vhgmi5xlvd3UJMk
-         HNpn78AOtTM73pTDN3kdm0jXO0cQrCFwLsSjXJi6f1mZ4FoZI7d6+YjV8SIN06rBitsq
-         BQGw==
-X-Gm-Message-State: APjAAAWgHIt2uYviFmblGfb/gCLOJQ88kzKMgs2LlrXq2rCwjE7Oe0tf
-        4zO9fzWfFu15ubhZxsskXtxDoAk+KkOKnyrMMmY=
-X-Google-Smtp-Source: APXvYqx6b9KLdEed9L+Lr+/tiOOUdL7AH2ho6PtomHVtRUcoT6mHbYXR8Tz78uhYrTdYRA72HiEw8+CKWuPSGTczLrk=
-X-Received: by 2002:a2e:978c:: with SMTP id y12mr6908234lji.167.1581495188352;
- Wed, 12 Feb 2020 00:13:08 -0800 (PST)
+        id S1727264AbgBLLTs convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Wed, 12 Feb 2020 06:19:48 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:48303 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727007AbgBLLTs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Feb 2020 06:19:48 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1j1q3T-0002hT-0l; Wed, 12 Feb 2020 12:19:43 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id D4D42100F5A; Wed, 12 Feb 2020 12:19:41 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Evan Green <evgreen@chromium.org>, Rajat Jain <rajatja@google.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Marc Zyngier <maz@kernel.org>
+Subject: Re: "Plug non-maskable MSI affinity race" triggers a warning with CPU hotplugs
+In-Reply-To: <FE2AA412-40A7-4FA2-A9E8-C7FA2919BD1D@lca.pw>
+References: <FE2AA412-40A7-4FA2-A9E8-C7FA2919BD1D@lca.pw>
+Date:   Wed, 12 Feb 2020 12:19:41 +0100
+Message-ID: <878sl8xdbm.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <CAHhAz+jXDfwWA=+Cb0fXooZHHRNyYLF2ykeO8pHaXH2fw5a2sQ@mail.gmail.com>
- <20200211201605.GA235978@google.com>
-In-Reply-To: <20200211201605.GA235978@google.com>
-From:   Muni Sekhar <munisekharrms@gmail.com>
-Date:   Wed, 12 Feb 2020 13:42:56 +0530
-Message-ID: <CAHhAz+hyFOt_k1Pc9u-WMHWjXq-7jT_yn2u2VbnPpg4R8w8TXA@mail.gmail.com>
-Subject: Re: pcie: kernel log - BAR 15: no space for... BAR 15: failed to assign..
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org,
-        kernelnewbies <kernelnewbies@kernelnewbies.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 1:46 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Tue, Feb 11, 2020 at 10:02:13PM +0530, Muni Sekhar wrote:
-> > On Tue, Feb 11, 2020 at 8:10 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > On Tue, Feb 11, 2020 at 07:36:00PM +0530, Muni Sekhar wrote:
-> > > > On Tue, Feb 11, 2020 at 3:58 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > > On Sun, Feb 09, 2020 at 07:59:41AM +0530, Muni Sekhar wrote:
-> > > > > > Hi all,
-> > > > > >
-> > > > > > After rebooting the system following messages are seen in dmesg.
-> > > > > > Not sure if these indicate a problem. Can some one look at these and
-> > > > > > confirm if this is problem or can be ignored ?
-> > > > > >
-> > > > > > Also any suggestions as to what would cause this?
-> > > > > >
-> > > > > > [    1.084728] pci 0000:00:1c.0: BAR 15: no space for [mem size
-> > > > > > 0x00200000 64bit pref]
-> > > > > > [    1.084813] pci 0000:00:1c.0: BAR 15: failed to assign [mem size
-> > > > > > 0x00200000 64bit pref]
-> > > > > > [    1.084890] pci 0000:00:1c.2: BAR 14: no space for [mem size 0x00200000]
-> > > > > > [    1.084949] pci 0000:00:1c.2: BAR 14: failed to assign [mem size 0x00200000]
-> > > > > > [    1.085037] pci 0000:00:1c.2: BAR 15: no space for [mem size
-> > > > > > 0x00200000 64bit pref]
-> > > > > > [    1.085108] pci 0000:00:1c.2: BAR 15: failed to assign [mem size
-> > > > > > 0x00200000 64bit pref]
-> > > > > > [    1.085199] pci 0000:00:1c.3: BAR 15: no space for [mem size
-> > > > > > 0x00200000 64bit pref]
-> > > > > > [    1.085270] pci 0000:00:1c.3: BAR 15: failed to assign [mem size
-> > > > > > 0x00200000 64bit pref]
-> > > > > > [    1.085343] pci 0000:00:1c.0: BAR 13: assigned [io  0x1000-0x1fff]
-> > > > > > [    1.085403] pci 0000:00:1c.2: BAR 13: assigned [io  0x2000-0x2fff]
-> > > > > > [    1.085470] pci 0000:00:1c.3: BAR 15: no space for [mem size
-> > > > > > 0x00200000 64bit pref]
-> > > > > > [    1.085540] pci 0000:00:1c.3: BAR 15: failed to assign [mem size
-> > > > > > 0x00200000 64bit pref]
-> > > > > > [    1.085613] pci 0000:00:1c.2: BAR 14: no space for [mem size 0x00200000]
-> > > > > > [    1.085672] pci 0000:00:1c.2: BAR 14: failed to assign [mem size 0x00200000]
-> > > > > > [    1.085738] pci 0000:00:1c.2: BAR 15: no space for [mem size
-> > > > > > 0x00200000 64bit pref]
-> > > > > > [    1.085808] pci 0000:00:1c.2: BAR 15: failed to assign [mem size
-> > > > > > 0x00200000 64bit pref]
-> > > > > > [    1.085884] pci 0000:00:1c.0: BAR 15: no space for [mem size
-> > > > > > 0x00200000 64bit pref]
-> > > > > > [    1.085954] pci 0000:00:1c.0: BAR 15: failed to assign [mem size
-> > > > > > 0x00200000 64bit pref]
-> > > > > > [    1.086026] pci 0000:00:1c.0: PCI bridge to [bus 01]
-> > > > > > [    1.086083] pci 0000:00:1c.0:   bridge window [io  0x1000-0x1fff]
-> > > > > > [    1.086144] pci 0000:00:1c.0:   bridge window [mem 0xd0400000-0xd07fffff]
-> > > > >
-> > > > > The "no space" and "failed to assign" messages are all for bridge
-> > > > > windows (13 is the I/O window, 14 is the MMIO window, 15 is the MMIO
-> > > > > pref window).  I can't tell if you have any devices below these
-> > > > > bridges (lspci would show them).  If you don't have any devices below
-> > > > > these bridges, you can ignore the messages.
-> > > >
-> > > > I have the devices below these bridges. FPGA endpoint is connected to
-> > > > '00:1c.0 PCI bridge' and Ethernet controller is connected to '00:1c.3
-> > > > PCI bridge'.
-> > > > Does these messages impact the functionality of the connected devices?
-> > >
-> > > Yes.  We tried to allocate 0x00200000 of prefetchable MMIO to 00:1c.0
-> > > for use by the FPGA endpoint.  But this failed, so there is no
-> > > prefetchable MMIO available for the FPGA.  The 0xd0400000-0xd07fffff
-> > > non-prefetachable MMIO space *is* available for it.
-> > >
-> > > Similarly, we were unable to allocate 0x00200000 of prefetchable MMIO
-> > > for the 00:1c.3 bridge for use by the ethernet controller.  I don't
-> > > know what non-prefetchable MMIO space was allocated or what the NIC
-> > > needs.
-> > >
-> > > "lspci -v" will show you what the FPGA and the NIC need.
-> > >
-> > > > If so what kind of impact and is there any solution for this?
-> > >
-> > > > Also, I'd like to know why "no space" and "failed to assign"
-> > > > messages displayed?
-> > >
-> > > These messages mean we tried to allocate space for the bridges but we
-> > > unable to do so.  This is because either the host bridge didn't have
-> > > big enough apertures (on x86, these usually come from ACPI _CRS
-> > > methods), or there's a bug in the Linux allocation algorithms.
-> > >
-> > > I can't tell anything more without seeing the complete dmesg log,
-> > > which contains the host bridge aperture information and the BAR sizes
-> > > of the FPGA and NIC.
-> > Thank you for the clarification. dmesg log is attached.
-> > If PCI bridge aperture is small, What is the most sensible way to proceed?
->
-> Here's the relevant info from your dmesg log:
->
->   PCI host bridge to bus 0000:00
->   pci_bus 0000:00: root bus resource [io  0x0d00-0xffff window]
->   pci_bus 0000:00: root bus resource [mem 0xc0000000-0xd0c18ffe window]
->   pci_bus 0000:00: root bus resource [bus 00-ff]
->   pci 0000:00:1c.0: PCI bridge to [bus 01]
->   pci 0000:00:1c.0:   bridge window [mem 0xd0400000-0xd07fffff]
->   pci 0000:01:00.0: [1556:5555] type 00 class 0x050000 # FPGA
->   pci 0000:01:00.0: reg 0x10: [mem 0xd0400000-0xd07fffff]
->   pci 0000:00:1c.3: PCI bridge to [bus 03]
->   pci 0000:00:1c.3:   bridge window [io  0xd000-0xdfff]
->   pci 0000:00:1c.3:   bridge window [mem 0xd0a00000-0xd0bfffff]
->   pci 0000:03:00.0: [8086:1533] type 00 class 0x020000 # I210 NIC
->   pci 0000:03:00.0: reg 0x10: [mem 0xd0a00000-0xd0afffff]
->   pci 0000:03:00.0: reg 0x18: [io  0xd000-0xd01f]
->   pci 0000:03:00.0: reg 0x1c: [mem 0xd0b00000-0xd0b03fff]
->
-> The FPGA at 01:00.0 has one non-prefetchable memory BAR and is
-> assigned [mem 0xd0400000-0xd07fffff].  That range is inside the host
-> bridge aperture ([mem 0xc0000000-0xd0c18ffe window]) and is routed
-> through the 00:1c.0 bridge (bridge window [mem 0xd0400000-0xd07fffff]).
-> So the FPGA resources are fine.
->
-> The fact that Linux tried and failed to allocate prefetchable memory
-> space for the bridge is immaterial because the FPGA can't use
-> prefetchable memory anyway.
->
-> The NIC at 03:00.0 is similar: it has two non-prefetchable memory BARs
-> and one I/O BAR.  They're all assigned valid space, and the fact that
-> Linux tried and failed to allocate prefetchable memory space for the
-> bridge makes no difference because the NIC can't use it.
->
-> So these messages do not indicate a problem.  Maybe there's something
-> we can do to make this more clear to the user.
-Thank you for the detailed explanation.
->
-> Bjorn
+Qian,
 
+Qian Cai <cai@lca.pw> writes:
 
+> The linux-next commit 6f1a4891a592 (“x86/apic/msi: Plug non-maskable
+> MSI affinity race”) Introduced a bug which is always triggered during
+> the CPU hotplugs on this server. See the trace and line numbers below.
 
--- 
+Thanks for the report.
+
+> WARNING: CPU: 0 PID: 2794 at arch/x86/kernel/apic/msi.c:103 msi_set_affinity+0x278/0x330 
+> CPU: 0 PID: 2794 Comm: irqbalance Tainted: G             L    5.6.0-rc1-next-20200211 #1 
+> irq_do_set_affinity at kernel/irq/manage.c:259
+> irq_setup_affinity at kernel/irq/manage.c:474
+> irq_select_affinity_usr at kernel/irq/manage.c:496
+> write_irq_affinity.isra.0+0x137/0x1e0 
+> irq_affinity_proc_write+0x19/0x20
+...
+
+I'm glad I added this WARN_ON(). This unearthed another long standing
+bug. If user space writes a bogus affinity mask, i.e. no online CPUs
+then it calls irq_select_affinity_usr().
+
+This was introduced for ALPHA in
+
+  eee45269b0f5 ("[PATCH] Alpha: convert to generic irq framework (generic part)")
+
+and subsequently made available for all architectures in
+
+  18404756765c ("genirq: Expose default irq affinity mask (take 3)")
+
+which already introduced the circumvention of the affinity setting
+restrictions for interrupts which cannot be moved in process context.
+
+The whole exercise is bogus in various aspects:
+
+    1) If the interrupt is already started up then there is absolutely
+       no point to honour a bogus interrupt affinity setting from user
+       space. The interrupt is already assigned to an online CPU and it
+       does not make any sense to reassign it to some other randomly
+       chosen online CPU.
+
+    2) If the interupt is not yet started up then there is no point
+       either. A subsequent startup of the interrupt will invoke
+       irq_setup_affinity() anyway which will chose a valid target CPU.
+
+So the right thing to do is to just return -EINVAL in case user space
+wrote an affinity mask which does not contain any online CPUs, except for
+ALPHA which has it's own magic sauce for this.
+
+Can you please test the patch below?
+
 Thanks,
-Sekhar
+
+        tglx
+
+8<---------------
+diff --git a/kernel/irq/internals.h b/kernel/irq/internals.h
+index 3924fbe829d4..c9d8eb7f5c02 100644
+--- a/kernel/irq/internals.h
++++ b/kernel/irq/internals.h
+@@ -128,8 +128,6 @@ static inline void unregister_handler_proc(unsigned int irq,
+ 
+ extern bool irq_can_set_affinity_usr(unsigned int irq);
+ 
+-extern int irq_select_affinity_usr(unsigned int irq);
+-
+ extern void irq_set_thread_affinity(struct irq_desc *desc);
+ 
+ extern int irq_do_set_affinity(struct irq_data *data,
+diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
+index 3089a60ea8f9..7eee98c38f25 100644
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -481,23 +481,9 @@ int irq_setup_affinity(struct irq_desc *desc)
+ {
+ 	return irq_select_affinity(irq_desc_get_irq(desc));
+ }
+-#endif
++#endif /* CONFIG_AUTO_IRQ_AFFINITY */
++#endif /* CONFIG_SMP */
+ 
+-/*
+- * Called when a bogus affinity is set via /proc/irq
+- */
+-int irq_select_affinity_usr(unsigned int irq)
+-{
+-	struct irq_desc *desc = irq_to_desc(irq);
+-	unsigned long flags;
+-	int ret;
+-
+-	raw_spin_lock_irqsave(&desc->lock, flags);
+-	ret = irq_setup_affinity(desc);
+-	raw_spin_unlock_irqrestore(&desc->lock, flags);
+-	return ret;
+-}
+-#endif
+ 
+ /**
+  *	irq_set_vcpu_affinity - Set vcpu affinity for the interrupt
+diff --git a/kernel/irq/proc.c b/kernel/irq/proc.c
+index 9e5783d98033..af488b037808 100644
+--- a/kernel/irq/proc.c
++++ b/kernel/irq/proc.c
+@@ -111,6 +111,28 @@ static int irq_affinity_list_proc_show(struct seq_file *m, void *v)
+ 	return show_irq_affinity(AFFINITY_LIST, m);
+ }
+ 
++#ifndef CONFIG_AUTO_IRQ_AFFINITY
++static inline int irq_select_affinity_usr(unsigned int irq)
++{
++	/*
++	 * If the interrupt is started up already then this fails. The
++	 * interrupt is assigned to an online CPU already. There is no
++	 * point to move it around randomly. Tell user space that the
++	 * selected mask is bogus.
++	 *
++	 * If not then any change to the affinity is pointless because the
++	 * startup code invokes irq_setup_affinity() which will select
++	 * a online CPU anyway.
++	 */
++	return -EINVAL;
++}
++#else
++/* ALPHA magic affinity auto selector. Keep it for historical reasons. */
++static inline int irq_select_affinity_usr(unsigned int irq)
++{
++	return irq_select_affinity(irq);
++}
++#endif
+ 
+ static ssize_t write_irq_affinity(int type, struct file *file,
+ 		const char __user *buffer, size_t count, loff_t *pos)
