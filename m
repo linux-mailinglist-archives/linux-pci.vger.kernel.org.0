@@ -2,176 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D5F3515A795
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Feb 2020 12:19:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1DEC415A7A5
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Feb 2020 12:22:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727264AbgBLLTs convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Wed, 12 Feb 2020 06:19:48 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:48303 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727007AbgBLLTs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Feb 2020 06:19:48 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1j1q3T-0002hT-0l; Wed, 12 Feb 2020 12:19:43 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id D4D42100F5A; Wed, 12 Feb 2020 12:19:41 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Evan Green <evgreen@chromium.org>, Rajat Jain <rajatja@google.com>,
+        id S1728121AbgBLLVw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Feb 2020 06:21:52 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:48448 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727279AbgBLLVw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Feb 2020 06:21:52 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01CBLiPH021367;
+        Wed, 12 Feb 2020 05:21:44 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1581506504;
+        bh=OKW4SgkgKNhhGYTzK/oI4Jq7PUrtd1o0Bfyk+239kPk=;
+        h=From:To:CC:Subject:Date;
+        b=L1xQkKehpDONKfTMgp5Lsurvxdvs9ksbGC/j4mh/yEsZGYT+ASpmTTe++UR6w231S
+         50NMU+Hp0RPKMnkLACl2DfYOR8JDJx6NSDrMPTvxTw8kaJuWuM25mjhcKMTD2A+8b1
+         M2iWRdcePIIIwSB2tKijplIQk0xFOJorvSR/shMU=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01CBLihi078506;
+        Wed, 12 Feb 2020 05:21:44 -0600
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 12
+ Feb 2020 05:21:41 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 12 Feb 2020 05:21:41 -0600
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01CBLc5W049841;
+        Wed, 12 Feb 2020 05:21:38 -0600
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Marc Zyngier <maz@kernel.org>
-Subject: Re: "Plug non-maskable MSI affinity race" triggers a warning with CPU hotplugs
-In-Reply-To: <FE2AA412-40A7-4FA2-A9E8-C7FA2919BD1D@lca.pw>
-References: <FE2AA412-40A7-4FA2-A9E8-C7FA2919BD1D@lca.pw>
-Date:   Wed, 12 Feb 2020 12:19:41 +0100
-Message-ID: <878sl8xdbm.fsf@nanos.tec.linutronix.de>
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Athani Nadeem Ladkhan <nadeem@cadence.com>,
+        Tom Joseph <tjoseph@cadence.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH v2 0/5] PCI: Endpoint: Miscellaneous improvements
+Date:   Wed, 12 Feb 2020 16:55:09 +0530
+Message-ID: <20200212112514.2000-1-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Qian,
+Changes from v1:
+Rebased to Linux 5.6-rc1 and removed dependencies to my other series
+to unblock [1]
 
-Qian Cai <cai@lca.pw> writes:
+[1] -> http://lore.kernel.org/r/20200103100736.27627-1-vidyas@nvidia.com
 
-> The linux-next commit 6f1a4891a592 (“x86/apic/msi: Plug non-maskable
-> MSI affinity race”) Introduced a bug which is always triggered during
-> the CPU hotplugs on this server. See the trace and line numbers below.
+v1 of this patch series can be found @
+http://lore.kernel.org/r/20191231100331.6316-1-kishon@ti.com
 
-Thanks for the report.
+This series adds miscellaneous improvements to PCIe endpoint core.
+1) Protect concurrent access to memory allocation in pci-epc-mem
+2) Replace spinlock with mutex in pci-epc-core and also use
+   notification chain mechanism to notify EPC events to EPF driver.
+3) Since endpoint function device can be created by multiple
+   mechanisms (configfs, devicetree, etc..), allowing each of these
+   mechanisms to assign a function number would result in mutliple
+   endpoint function devices having the same function number. In order
+   to avoid this, let EPC core assign a function number to the
+   endpoint device.
 
-> WARNING: CPU: 0 PID: 2794 at arch/x86/kernel/apic/msi.c:103 msi_set_affinity+0x278/0x330 
-> CPU: 0 PID: 2794 Comm: irqbalance Tainted: G             L    5.6.0-rc1-next-20200211 #1 
-> irq_do_set_affinity at kernel/irq/manage.c:259
-> irq_setup_affinity at kernel/irq/manage.c:474
-> irq_select_affinity_usr at kernel/irq/manage.c:496
-> write_irq_affinity.isra.0+0x137/0x1e0 
-> irq_affinity_proc_write+0x19/0x20
-...
+Kishon Vijay Abraham I (5):
+  PCI: endpoint: Use notification chain mechanism to notify EPC events
+    to EPF
+  PCI: endpoint: Replace spinlock with mutex
+  PCI: endpoint: Protect concurrent access to memory allocation with
+    mutex
+  PCI: endpoint: Protect concurrent access to pci_epf_ops with mutex
+  PCI: endpoint: Assign function number for each PF in EPC core
 
-I'm glad I added this WARN_ON(). This unearthed another long standing
-bug. If user space writes a bogus affinity mask, i.e. no online CPUs
-then it calls irq_select_affinity_usr().
+ drivers/pci/endpoint/functions/pci-epf-test.c |  13 +-
+ drivers/pci/endpoint/pci-ep-cfs.c             |  27 +----
+ drivers/pci/endpoint/pci-epc-core.c           | 113 ++++++++----------
+ drivers/pci/endpoint/pci-epc-mem.c            |  10 +-
+ drivers/pci/endpoint/pci-epf-core.c           |  33 ++---
+ include/linux/pci-epc.h                       |  19 ++-
+ include/linux/pci-epf.h                       |   9 +-
+ 7 files changed, 108 insertions(+), 116 deletions(-)
 
-This was introduced for ALPHA in
+-- 
+2.17.1
 
-  eee45269b0f5 ("[PATCH] Alpha: convert to generic irq framework (generic part)")
-
-and subsequently made available for all architectures in
-
-  18404756765c ("genirq: Expose default irq affinity mask (take 3)")
-
-which already introduced the circumvention of the affinity setting
-restrictions for interrupts which cannot be moved in process context.
-
-The whole exercise is bogus in various aspects:
-
-    1) If the interrupt is already started up then there is absolutely
-       no point to honour a bogus interrupt affinity setting from user
-       space. The interrupt is already assigned to an online CPU and it
-       does not make any sense to reassign it to some other randomly
-       chosen online CPU.
-
-    2) If the interupt is not yet started up then there is no point
-       either. A subsequent startup of the interrupt will invoke
-       irq_setup_affinity() anyway which will chose a valid target CPU.
-
-So the right thing to do is to just return -EINVAL in case user space
-wrote an affinity mask which does not contain any online CPUs, except for
-ALPHA which has it's own magic sauce for this.
-
-Can you please test the patch below?
-
-Thanks,
-
-        tglx
-
-8<---------------
-diff --git a/kernel/irq/internals.h b/kernel/irq/internals.h
-index 3924fbe829d4..c9d8eb7f5c02 100644
---- a/kernel/irq/internals.h
-+++ b/kernel/irq/internals.h
-@@ -128,8 +128,6 @@ static inline void unregister_handler_proc(unsigned int irq,
- 
- extern bool irq_can_set_affinity_usr(unsigned int irq);
- 
--extern int irq_select_affinity_usr(unsigned int irq);
--
- extern void irq_set_thread_affinity(struct irq_desc *desc);
- 
- extern int irq_do_set_affinity(struct irq_data *data,
-diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
-index 3089a60ea8f9..7eee98c38f25 100644
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -481,23 +481,9 @@ int irq_setup_affinity(struct irq_desc *desc)
- {
- 	return irq_select_affinity(irq_desc_get_irq(desc));
- }
--#endif
-+#endif /* CONFIG_AUTO_IRQ_AFFINITY */
-+#endif /* CONFIG_SMP */
- 
--/*
-- * Called when a bogus affinity is set via /proc/irq
-- */
--int irq_select_affinity_usr(unsigned int irq)
--{
--	struct irq_desc *desc = irq_to_desc(irq);
--	unsigned long flags;
--	int ret;
--
--	raw_spin_lock_irqsave(&desc->lock, flags);
--	ret = irq_setup_affinity(desc);
--	raw_spin_unlock_irqrestore(&desc->lock, flags);
--	return ret;
--}
--#endif
- 
- /**
-  *	irq_set_vcpu_affinity - Set vcpu affinity for the interrupt
-diff --git a/kernel/irq/proc.c b/kernel/irq/proc.c
-index 9e5783d98033..af488b037808 100644
---- a/kernel/irq/proc.c
-+++ b/kernel/irq/proc.c
-@@ -111,6 +111,28 @@ static int irq_affinity_list_proc_show(struct seq_file *m, void *v)
- 	return show_irq_affinity(AFFINITY_LIST, m);
- }
- 
-+#ifndef CONFIG_AUTO_IRQ_AFFINITY
-+static inline int irq_select_affinity_usr(unsigned int irq)
-+{
-+	/*
-+	 * If the interrupt is started up already then this fails. The
-+	 * interrupt is assigned to an online CPU already. There is no
-+	 * point to move it around randomly. Tell user space that the
-+	 * selected mask is bogus.
-+	 *
-+	 * If not then any change to the affinity is pointless because the
-+	 * startup code invokes irq_setup_affinity() which will select
-+	 * a online CPU anyway.
-+	 */
-+	return -EINVAL;
-+}
-+#else
-+/* ALPHA magic affinity auto selector. Keep it for historical reasons. */
-+static inline int irq_select_affinity_usr(unsigned int irq)
-+{
-+	return irq_select_affinity(irq);
-+}
-+#endif
- 
- static ssize_t write_irq_affinity(int type, struct file *file,
- 		const char __user *buffer, size_t count, loff_t *pos)
