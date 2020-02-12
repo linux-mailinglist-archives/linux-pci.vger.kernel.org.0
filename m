@@ -2,28 +2,28 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5DC0815AA9D
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Feb 2020 15:01:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 725B815AAAF
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Feb 2020 15:04:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727781AbgBLOBa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Feb 2020 09:01:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53054 "EHLO mail.kernel.org"
+        id S1728287AbgBLOEg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Feb 2020 09:04:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725887AbgBLOBa (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 12 Feb 2020 09:01:30 -0500
+        id S1727781AbgBLOEg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 12 Feb 2020 09:04:36 -0500
 Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EEEDB20658;
-        Wed, 12 Feb 2020 14:01:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7839A20724;
+        Wed, 12 Feb 2020 14:04:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581516089;
-        bh=k9etYqQgRrkh7cyiZwIyrLs0t114fOpffvtkOo61KWY=;
+        s=default; t=1581516275;
+        bh=o9BHn+9tET4BD0g8kAYLMhwyFEa94It7nBIG65XyVow=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=EPX57e7K2CocHRjleSrYsOC4jcMI5oxr+HevHew+S+JLsugZIC+yBlaB/zNAvFapK
-         UZKM6UR6vbTNWupREPcs7S6z357GJD+mZV4emsonCxc74ssTH9I3BK6QzchZrhXNXT
-         P5IrxlIh5dph6VfbTvbebxGRjB9m1vimurMg3Zds=
-Date:   Wed, 12 Feb 2020 08:01:28 -0600
+        b=ybhA5sw1XC0h+W6Zeya0JSyVEIzLi+xMgWYE+Dwss2uAZuddrdzio//rz6eimr3jf
+         5fLzed0lzlgiW1e3gJzM4JGdbsZRLPLhAOBWjt9aGVTFpyj7hLZk6qW6Tax2jy+LJS
+         zVOS8XI3s1D5+v5kCab07CmDWyahtMIe3CLy9eEY=
+Date:   Wed, 12 Feb 2020 08:04:34 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Lad Prabhakar <prabhakar.csengg@gmail.com>
 Cc:     Rob Herring <robh+dt@kernel.org>,
@@ -46,93 +46,65 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org,
         Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH v4 1/6] PCI: rcar: Preparation for adding endpoint support
-Message-ID: <20200212140127.GA127398@google.com>
+Subject: Re: [PATCH v4 2/6] PCI: rcar: Fix calculating mask for PCIEPAMR
+ register
+Message-ID: <20200212140434.GA129189@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200208183641.6674-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200208183641.6674-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-To make the changelog from "git log --oneline" read nicely, the
-subject should begin with a verb, e.g.,
+On Sat, Feb 08, 2020 at 06:36:37PM +0000, Lad Prabhakar wrote:
+> The mask value was calculated incorrectly for PCIEPAMR register if the
+> size was less the 128bytes, this patch fixes the above by adding a check
+> on size.
 
-  PCI: rcar: Move shareable code to a common file
-
-On Sat, Feb 08, 2020 at 06:36:36PM +0000, Lad Prabhakar wrote:
-> Prepare for adding endpoint support to rcar controller, there are no
-> functional changes with this patch, a common file is created so that
-> it can be shared with endpoint driver.
-
-This commit log doesn't tell us what this patch does.  "Prepare"
-conveys no real information.  It's a giant patch and it's difficult
-to verify that there's no functional change.
-
-I *think* what you did was move most of the #defines from pcie-rcar.c
-to pcie-rcar.h and most of the code from pcie-rcar.c to
-pcie-rcar-host.c.  And in both case, these were strict *moves* without
-any changes.  If that's the case, please say that explicitly in the
-commit log.
-
-That's good; thanks for making this a separate patch so it's not
-mingled with real changes.
+s/less the/less than/
+s/128bytes,/128 bytes./
+s/this patch fixes the above/Fix this issue/
 
 > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > ---
->  arch/arm64/configs/defconfig            |    2 +-
->  drivers/pci/controller/Kconfig          |    4 +-
->  drivers/pci/controller/Makefile         |    2 +-
->  drivers/pci/controller/pcie-rcar-host.c | 1044 ++++++++++++++++++++++++++
->  drivers/pci/controller/pcie-rcar.c      | 1229 ++-----------------------------
->  drivers/pci/controller/pcie-rcar.h      |  126 ++++
->  6 files changed, 1227 insertions(+), 1180 deletions(-)
->  create mode 100644 drivers/pci/controller/pcie-rcar-host.c
->  create mode 100644 drivers/pci/controller/pcie-rcar.h
+>  drivers/pci/controller/pcie-rcar.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 > 
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index b2f6673..8a1f51d 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -182,7 +182,7 @@ CONFIG_HOTPLUG_PCI=y
->  CONFIG_HOTPLUG_PCI_ACPI=y
->  CONFIG_PCI_AARDVARK=y
->  CONFIG_PCI_TEGRA=y
-> -CONFIG_PCIE_RCAR=y
-> +CONFIG_PCIE_RCAR_HOST=y
->  CONFIG_PCI_HOST_GENERIC=y
->  CONFIG_PCI_XGENE=y
->  CONFIG_PCIE_ALTERA=y
-> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> index f84e5ff..94bb5e9 100644
-> --- a/drivers/pci/controller/Kconfig
-> +++ b/drivers/pci/controller/Kconfig
-> @@ -54,12 +54,12 @@ config PCI_RCAR_GEN2
->  	  There are 3 internal PCI controllers available with a single
->  	  built-in EHCI/OHCI host controller present on each one.
+> diff --git a/drivers/pci/controller/pcie-rcar.c b/drivers/pci/controller/pcie-rcar.c
+> index d5568db..c76a92a 100644
+> --- a/drivers/pci/controller/pcie-rcar.c
+> +++ b/drivers/pci/controller/pcie-rcar.c
+> @@ -71,7 +71,7 @@ void rcar_pcie_set_outbound(int win, void __iomem *base,
+>  	/* Setup PCIe address space mappings for each resource */
+>  	resource_size_t res_start;
+>  	resource_size_t size;
+> -	u32 mask;
+> +	u32 mask = 0x0;
 >  
-> -config PCIE_RCAR
-> +config PCIE_RCAR_HOST
+>  	rcar_pci_write_reg(base, 0x00000000, PCIEPTCTLR(win));
+>  
+> @@ -80,7 +80,8 @@ void rcar_pcie_set_outbound(int win, void __iomem *base,
+>  	 * keeps things pretty simple.
+>  	 */
+>  	size = resource_size(res);
+> -	mask = (roundup_pow_of_two(size) / SZ_128) - 1;
+> +	if (size > 128)
+> +		mask = (roundup_pow_of_two(size) / SZ_128) - 1;
 
-The config symbol change should be mentioned in the commit log.  In
-general we try to avoid changing config symbols because it's likely to
-confuse people who keep their .config and update their kernel.  But I
-guess your audience is probably pretty small.
+I would put the "mask = 0x0" right here so it's all in one place,
+i.e.,
 
->  	bool "Renesas R-Car PCIe controller"
+  if (size > 128)
+    mask = (roundup_pow_of_two(size) / SZ_128) - 1;
+  else
+    mask = 0x0;
 
-The description needs to be updated, too.  This is what people will
-see in menuconfig.
-
->  	depends on ARCH_RENESAS || COMPILE_TEST
->  	depends on PCI_MSI_IRQ_DOMAIN
->  	help
-> -	  Say Y here if you want PCIe controller support on R-Car SoCs.
-> +	  Say Y here if you want PCIe controller support on R-Car SoCs in host mode.
-
-Wrap this so it fits in 80 columns like the rest of the file.
-
-Bjorn
+>  	rcar_pci_write_reg(base, mask << 7, PCIEPAMR(win));
+>  
+>  	if (!host) {
+> -- 
+> 2.7.4
+> 
