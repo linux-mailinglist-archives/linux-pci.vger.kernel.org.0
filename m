@@ -2,40 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DD55815A7BB
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Feb 2020 12:22:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DC6AA15A7B9
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Feb 2020 12:22:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727429AbgBLLWT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Feb 2020 06:22:19 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:56652 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727347AbgBLLWB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Feb 2020 06:22:01 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01CBLshx065881;
-        Wed, 12 Feb 2020 05:21:54 -0600
+        id S1728334AbgBLLWM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Feb 2020 06:22:12 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:51802 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728315AbgBLLWL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Feb 2020 06:22:11 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01CBLvGN014361;
+        Wed, 12 Feb 2020 05:21:57 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1581506514;
-        bh=oIzF4wPqwNRg9UTf2H8Siu9HoiPwFp65VY06zJhiVqk=;
+        s=ti-com-17Q1; t=1581506517;
+        bh=LAHbe1ep18MRMLKppKExizKw+8T2sbESWHHKJMLTnvs=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=nSY1jsqjHa2Qgw0k6K8Ez7NsKHKzWMZWRpiVV53kejmOM5/PEzVRrAROGp1AexVkU
-         ZQ444/s2dF/68W3J2f6lUNjNSbwqYLsX+aQvP+QmATYHlCB6+z2k5DnMoH8kUUxHfX
-         pMLcq+XAI1QOlKB86ImppIsjLRYdM7nb8TEjJfnM=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01CBLs17059868
+        b=sCaAqDj2+59ftqzv0t66V8M3cHSXhnCnXnMfmhnOhOD0SnTx2ejUnoePSJ87Z7AcV
+         66MqYyfeLQhDS4NFUOfzjkHDJqKgjI8I2GSgskNDzIWjL2l/VSMfqUi5/4QCdkIQmp
+         ziXGgYyxU+ZUdb2stNJoc7hZc8yEfLb75gXqVcSo=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01CBLv5F113060
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 12 Feb 2020 05:21:54 -0600
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+        Wed, 12 Feb 2020 05:21:57 -0600
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 12
- Feb 2020 05:21:54 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ Feb 2020 05:21:57 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 12 Feb 2020 05:21:54 -0600
+ Frontend Transport; Wed, 12 Feb 2020 05:21:57 -0600
 Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01CBLc5a049841;
-        Wed, 12 Feb 2020 05:21:51 -0600
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01CBLc5b049841;
+        Wed, 12 Feb 2020 05:21:54 -0600
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -45,9 +45,9 @@ To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Tom Joseph <tjoseph@cadence.com>
 CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH v2 4/5] PCI: endpoint: Protect concurrent access to pci_epf_ops with mutex
-Date:   Wed, 12 Feb 2020 16:55:13 +0530
-Message-ID: <20200212112514.2000-5-kishon@ti.com>
+Subject: [PATCH v2 5/5] PCI: endpoint: Assign function number for each PF in EPC core
+Date:   Wed, 12 Feb 2020 16:55:14 +0530
+Message-ID: <20200212112514.2000-6-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200212112514.2000-1-kishon@ti.com>
 References: <20200212112514.2000-1-kishon@ti.com>
@@ -59,79 +59,161 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Protect concurrent access to pci_epf_ops with mutex.
+The PCIe endpoint core relies on the drivers that invoke the
+pci_epc_add_epf() API to allocate and assign a function number
+to each physical function (PF). Since endpoint function device can
+be created by multiple mechanisms (configfs, devicetree, etc..),
+allowing each of these mechanisms to assign a function number
+would result in mutliple endpoint function devices having the
+same function number. In order to avoid this, let EPC core assign
+a function number to the endpoint device.
 
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- drivers/pci/endpoint/pci-epf-core.c | 11 ++++++++++-
- include/linux/pci-epf.h             |  3 +++
- 2 files changed, 13 insertions(+), 1 deletion(-)
+ drivers/pci/endpoint/pci-ep-cfs.c   | 27 +++++----------------------
+ drivers/pci/endpoint/pci-epc-core.c | 26 ++++++++++++++++++++++----
+ include/linux/pci-epc.h             |  2 ++
+ 3 files changed, 29 insertions(+), 26 deletions(-)
 
-diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/pci-epf-core.c
-index 93f28c65ace0..6e0648991b5c 100644
---- a/drivers/pci/endpoint/pci-epf-core.c
-+++ b/drivers/pci/endpoint/pci-epf-core.c
-@@ -35,7 +35,9 @@ void pci_epf_unbind(struct pci_epf *epf)
- 		return;
- 	}
- 
-+	mutex_lock(&epf->lock);
- 	epf->driver->ops->unbind(epf);
-+	mutex_unlock(&epf->lock);
- 	module_put(epf->driver->owner);
- }
- EXPORT_SYMBOL_GPL(pci_epf_unbind);
-@@ -49,6 +51,8 @@ EXPORT_SYMBOL_GPL(pci_epf_unbind);
-  */
- int pci_epf_bind(struct pci_epf *epf)
- {
-+	int ret;
-+
- 	if (!epf->driver) {
- 		dev_WARN(&epf->dev, "epf device not bound to driver\n");
- 		return -EINVAL;
-@@ -57,7 +61,11 @@ int pci_epf_bind(struct pci_epf *epf)
- 	if (!try_module_get(epf->driver->owner))
- 		return -EAGAIN;
- 
--	return epf->driver->ops->bind(epf);
-+	mutex_lock(&epf->lock);
-+	ret = epf->driver->ops->bind(epf);
-+	mutex_unlock(&epf->lock);
-+
-+	return ret;
- }
- EXPORT_SYMBOL_GPL(pci_epf_bind);
- 
-@@ -252,6 +260,7 @@ struct pci_epf *pci_epf_create(const char *name)
- 	device_initialize(dev);
- 	dev->bus = &pci_epf_bus_type;
- 	dev->type = &pci_epf_type;
-+	mutex_init(&epf->lock);
- 
- 	ret = dev_set_name(dev, "%s", name);
- 	if (ret) {
-diff --git a/include/linux/pci-epf.h b/include/linux/pci-epf.h
-index 4993f7f6439b..bcdf4f07bde7 100644
---- a/include/linux/pci-epf.h
-+++ b/include/linux/pci-epf.h
-@@ -110,6 +110,7 @@ struct pci_epf_bar {
-  * @driver: the EPF driver to which this EPF device is bound
-  * @list: to add pci_epf as a list of PCI endpoint functions to pci_epc
-  * @nb: notifier block to notify EPF of any EPC events (like linkup)
-+ * @lock: mutex to protect pci_epf_ops
-  */
- struct pci_epf {
- 	struct device		dev;
-@@ -124,6 +125,8 @@ struct pci_epf {
- 	struct pci_epf_driver	*driver;
- 	struct list_head	list;
- 	struct notifier_block   nb;
-+	/* mutex to protect against concurrent access of pci_epf_ops */
-+	struct mutex		lock;
+diff --git a/drivers/pci/endpoint/pci-ep-cfs.c b/drivers/pci/endpoint/pci-ep-cfs.c
+index d1288a0bd530..e7e8367eead1 100644
+--- a/drivers/pci/endpoint/pci-ep-cfs.c
++++ b/drivers/pci/endpoint/pci-ep-cfs.c
+@@ -29,7 +29,6 @@ struct pci_epc_group {
+ 	struct config_group group;
+ 	struct pci_epc *epc;
+ 	bool start;
+-	unsigned long function_num_map;
  };
  
- #define to_pci_epf(epf_dev) container_of((epf_dev), struct pci_epf, dev)
+ static inline struct pci_epf_group *to_pci_epf_group(struct config_item *item)
+@@ -89,37 +88,22 @@ static int pci_epc_epf_link(struct config_item *epc_item,
+ 			    struct config_item *epf_item)
+ {
+ 	int ret;
+-	u32 func_no = 0;
+ 	struct pci_epf_group *epf_group = to_pci_epf_group(epf_item);
+ 	struct pci_epc_group *epc_group = to_pci_epc_group(epc_item);
+ 	struct pci_epc *epc = epc_group->epc;
+ 	struct pci_epf *epf = epf_group->epf;
+ 
+-	func_no = find_first_zero_bit(&epc_group->function_num_map,
+-				      BITS_PER_LONG);
+-	if (func_no >= BITS_PER_LONG)
+-		return -EINVAL;
+-
+-	set_bit(func_no, &epc_group->function_num_map);
+-	epf->func_no = func_no;
+-
+ 	ret = pci_epc_add_epf(epc, epf);
+ 	if (ret)
+-		goto err_add_epf;
++		return ret;
+ 
+ 	ret = pci_epf_bind(epf);
+-	if (ret)
+-		goto err_epf_bind;
++	if (ret) {
++		pci_epc_remove_epf(epc, epf);
++		return ret;
++	}
+ 
+ 	return 0;
+-
+-err_epf_bind:
+-	pci_epc_remove_epf(epc, epf);
+-
+-err_add_epf:
+-	clear_bit(func_no, &epc_group->function_num_map);
+-
+-	return ret;
+ }
+ 
+ static void pci_epc_epf_unlink(struct config_item *epc_item,
+@@ -134,7 +118,6 @@ static void pci_epc_epf_unlink(struct config_item *epc_item,
+ 
+ 	epc = epc_group->epc;
+ 	epf = epf_group->epf;
+-	clear_bit(epf->func_no, &epc_group->function_num_map);
+ 	pci_epf_unbind(epf);
+ 	pci_epc_remove_epf(epc, epf);
+ }
+diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+index e51a12ed85bb..dc1c673534e0 100644
+--- a/drivers/pci/endpoint/pci-epc-core.c
++++ b/drivers/pci/endpoint/pci-epc-core.c
+@@ -471,22 +471,39 @@ EXPORT_SYMBOL_GPL(pci_epc_write_header);
+  */
+ int pci_epc_add_epf(struct pci_epc *epc, struct pci_epf *epf)
+ {
++	u32 func_no;
++	int ret = 0;
++
+ 	if (epf->epc)
+ 		return -EBUSY;
+ 
+ 	if (IS_ERR(epc))
+ 		return -EINVAL;
+ 
+-	if (epf->func_no > epc->max_functions - 1)
+-		return -EINVAL;
++	mutex_lock(&epc->lock);
++	func_no = find_first_zero_bit(&epc->function_num_map,
++				      BITS_PER_LONG);
++	if (func_no >= BITS_PER_LONG) {
++		ret = -EINVAL;
++		goto ret;
++	}
++
++	if (func_no > epc->max_functions - 1) {
++		dev_err(&epc->dev, "Exceeding max supported Function Number\n");
++		ret = -EINVAL;
++		goto ret;
++	}
+ 
++	set_bit(func_no, &epc->function_num_map);
++	epf->func_no = func_no;
+ 	epf->epc = epc;
+ 
+-	mutex_lock(&epc->lock);
+ 	list_add_tail(&epf->list, &epc->pci_epf);
++
++ret:
+ 	mutex_unlock(&epc->lock);
+ 
+-	return 0;
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(pci_epc_add_epf);
+ 
+@@ -503,6 +520,7 @@ void pci_epc_remove_epf(struct pci_epc *epc, struct pci_epf *epf)
+ 		return;
+ 
+ 	mutex_lock(&epc->lock);
++	clear_bit(epf->func_no, &epc->function_num_map);
+ 	list_del(&epf->list);
+ 	epf->epc = NULL;
+ 	mutex_unlock(&epc->lock);
+diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
+index 4e3e527c49d1..ccaf6e3fa931 100644
+--- a/include/linux/pci-epc.h
++++ b/include/linux/pci-epc.h
+@@ -92,6 +92,7 @@ struct pci_epc_mem {
+  * @max_functions: max number of functions that can be configured in this EPC
+  * @group: configfs group representing the PCI EPC device
+  * @lock: mutex to protect pci_epc ops
++ * @function_num_map: bitmap to manage physical function number
+  * @notifier: used to notify EPF of any EPC events (like linkup)
+  */
+ struct pci_epc {
+@@ -103,6 +104,7 @@ struct pci_epc {
+ 	struct config_group		*group;
+ 	/* mutex to protect against concurrent access of EP controller */
+ 	struct mutex			lock;
++	unsigned long			function_num_map;
+ 	struct atomic_notifier_head	notifier;
+ };
+ 
 -- 
 2.17.1
 
