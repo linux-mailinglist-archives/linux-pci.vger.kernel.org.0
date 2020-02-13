@@ -2,117 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CA8115C9F8
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2020 19:08:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F0F2215CA39
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2020 19:23:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726282AbgBMSIa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 13 Feb 2020 13:08:30 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:40447 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727989AbgBMSI3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Feb 2020 13:08:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581617308;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=deHttPInqFs6xYAV0uYMAcNgDa9/Kd+C12ssa7guPmc=;
-        b=B8peDb9yPCsqGPiHQm21/XV9WI/T6EJcUHqtVGg81UWeATZuTxea1x/G/GThvxdh75rsp9
-        6lKngCvp+T+kix1E2iDlaz40q7nABOKeFFAXKCH2bmwFLMOCUc+m0VHI5F1O2E/eTqzSxg
-        KpZItfC4T4eHmSn2pk9nw71NPGHqjks=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-141-iTjufJ3TOB2pFQOEgpdEsg-1; Thu, 13 Feb 2020 13:08:23 -0500
-X-MC-Unique: iTjufJ3TOB2pFQOEgpdEsg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8AA217A583;
-        Thu, 13 Feb 2020 18:08:21 +0000 (UTC)
-Received: from gondolin (ovpn-117-100.ams2.redhat.com [10.36.117.100])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2DF891000325;
-        Thu, 13 Feb 2020 18:08:16 +0000 (UTC)
-Date:   Thu, 13 Feb 2020 19:08:13 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dev@dpdk.org, mtosatti@redhat.com,
-        thomas@monjalon.net, bluca@debian.org, jerinjacobk@gmail.com,
-        bruce.richardson@intel.com
-Subject: Re: [PATCH 4/7] vfio: Introduce VFIO_DEVICE_FEATURE ioctl and first
- user
-Message-ID: <20200213190813.1bcd1a15.cohuck@redhat.com>
-In-Reply-To: <20200213103957.0d75034b@w520.home>
-References: <158145472604.16827.15751375540102298130.stgit@gimli.home>
-        <158146235133.16827.7215789038918853214.stgit@gimli.home>
-        <20200213134121.54b8debb.cohuck@redhat.com>
-        <20200213103957.0d75034b@w520.home>
-Organization: Red Hat GmbH
+        id S1728263AbgBMSWy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 13 Feb 2020 13:22:54 -0500
+Received: from mga03.intel.com ([134.134.136.65]:45466 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725781AbgBMSWy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 13 Feb 2020 13:22:54 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Feb 2020 10:22:51 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,437,1574150400"; 
+   d="scan'208";a="313809151"
+Received: from skuppusw-desk.jf.intel.com ([10.7.201.16])
+  by orsmga001.jf.intel.com with ESMTP; 13 Feb 2020 10:22:51 -0800
+From:   sathyanarayanan.kuppuswamy@linux.intel.com
+To:     bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: [PATCH v15 0/5] Add Error Disconnect Recover (EDR) support
+Date:   Thu, 13 Feb 2020 10:20:12 -0800
+Message-Id: <cover.1581617873.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 13 Feb 2020 10:39:57 -0700
-Alex Williamson <alex.williamson@redhat.com> wrote:
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-> On Thu, 13 Feb 2020 13:41:21 +0100
-> Cornelia Huck <cohuck@redhat.com> wrote:
-> 
-> > On Tue, 11 Feb 2020 16:05:51 -0700
-> > Alex Williamson <alex.williamson@redhat.com> wrote:
+This patchset adds support for following features:
 
-> > > +struct vfio_device_feature {
-> > > +	__u32	argsz;
-> > > +	__u32	flags;
-> > > +#define VFIO_DEVICE_FEATURE_MASK	(0xffff) /* 16-bit feature index */
-> > > +#define VFIO_DEVICE_FEATURE_GET		(1 << 16) /* Get feature into data[] */
-> > > +#define VFIO_DEVICE_FEATURE_SET		(1 << 17) /* Set feature from data[] */
-> > > +#define VFIO_DEVICE_FEATURE_PROBE	(1 << 18) /* Probe feature support */
-> > > +	__u8	data[];
-> > > +};    
-> > 
-> > I'm not sure I'm a fan of cramming both feature selection and operation
-> > selection into flags. What about:
-> > 
-> > struct vfio_device_feature {
-> > 	__u32 argsz;
-> > 	__u32 flags;
-> > /* GET/SET/PROBE #defines */
-> > 	__u32 feature;
-> > 	__u8  data[];
-> > };  
-> 
-> Then data is unaligned so we either need to expand feature or add
-> padding.  So this makes the structure at least 8 bytes bigger and buys
-> us...?  What's so special about the bottom half of flags that we can't
-> designate it as the flags that specify the feature?  We still have
-> another 13 bits of flags for future use.
+1. Error Disconnect Recover (EDR) support.
+2. _OSC based negotiation support for DPC.
 
-It is more my general dislike of bit fiddling here, no strong
-objection, certainly.
+You can find EDR spec in the following link.
 
-> 
-> > Getting/setting more than one feature at the same time does not sound
-> > like a common use case; you would need to specify some kind of
-> > algorithm for that anyway, and just doing it individually seems much
-> > easier than that.  
-> 
-> Yup.  I just figured 2^16 features is a nice way to make use of the
-> structure vs 2^32 features and 4 bytes of padding or 2^64 features.  I
-> don't think I'm being optimistic in thinking we'll have far less than
-> 16K features and we can always reserve feature 0xffff as an extended
-> feature where the first 8-bytes of data defines that extended feature
-> index.
+https://members.pcisig.com/wg/PCI-SIG/document/12614
 
-Agreed, we're probably not going to end up with a flood of features
-here.
+Changes since v14:
+ * Rebased on top of v5.6-rc1
 
-Anyway, much of this seems to be a matter of personal taste, so let's
-keep it as it is.
+Changes since v13:
+ * Moved all EDR related code to edr.c
+ * Addressed Bjorns comments.
+
+Changes since v12:
+ * Addressed Bjorns comments.
+ * Added check for CONFIG_PCIE_EDR before requesting DPC control from firmware.
+ * Removed ff_check parameter from AER APIs.
+ * Used macros for _OST return status values in DPC driver.
+
+Changes since v11:
+ * Allowed error recovery to proceed after successful reset_link().
+ * Used correct ACPI handle for sending EDR status.
+ * Rebased on top of v5.5-rc5
+
+Changes since v10:
+ * Added "edr_enabled" member to dpc priv structure, which is used to cache EDR
+   enabling status based on status of pcie_ports_dpc_native and FF mode.
+ * Changed type of _DSM argument from Integer to Package in acpi_enable_dpc_port()
+   function to fix ACPI related boot warnings.
+ * Rebased on top of v5.5-rc3
+
+Changes since v9:
+ * Removed caching of pcie_aer_get_firmware_first() in dpc driver.
+ * Added proper spec reference in git log for patch 5 & 7.
+ * Added new function parameter "ff_check" to pci_cleanup_aer_uncorrect_error_status(),
+   pci_aer_clear_fatal_status() and pci_cleanup_aer_error_status_regs() functions.
+ * Rebased on top of v5.4-rc5
+
+Changes since v8:
+ * Rebased on top of v5.4-rc1
+
+Changes since v7:
+ * Updated DSM version number to match the spec.
+
+Changes since v6:
+ * Modified the order of patches to enable EDR only after all necessary support is added in kernel.
+ * Addressed Bjorn comments.
+
+Changes since v5:
+ * Addressed Keith's comments.
+ * Added additional check for FF mode in pci_aer_init().
+ * Updated commit history of "PCI/DPC: Add support for DPC recovery on NON_FATAL errors" patch.
+
+Changes since v4:
+ * Rebased on top of v5.3-rc1
+ * Fixed lock/unlock issue in edr_handle_event().
+ * Merged "Update error status after reset_link()" patch into this patchset.
+
+Changes since v3:
+ * Moved EDR related ACPI functions/definitions to pci-acpi.c
+ * Modified commit history in few patches to include spec reference.
+ * Added support to handle DPC triggered by NON_FATAL errors.
+ * Added edr_lock to protect PCI device receiving duplicate EDR notifications.
+ * Addressed Bjorn comments.
+
+Changes since v2:
+ * Split EDR support patch into multiple patches.
+ * Addressed Bjorn comments.
+
+Changes since v1:
+ * Rebased on top of v5.1-rc1
+
+Kuppuswamy Sathyanarayanan (5):
+  PCI/ERR: Update error status after reset_link()
+  PCI/DPC: Remove pcie_device reference from dpc_dev structure
+  PCI/EDR: Export AER, DPC and error recovery functions
+  PCI/DPC: Add Error Disconnect Recover (EDR) support
+  PCI/ACPI: Enable EDR support
+
+ drivers/acpi/pci_root.c   |  16 +++
+ drivers/pci/pci-acpi.c    |   3 +
+ drivers/pci/pci.h         |   8 ++
+ drivers/pci/pcie/Kconfig  |  10 ++
+ drivers/pci/pcie/Makefile |   1 +
+ drivers/pci/pcie/aer.c    |  39 ++++--
+ drivers/pci/pcie/dpc.c    |  92 ++++++++------
+ drivers/pci/pcie/dpc.h    |  20 +++
+ drivers/pci/pcie/edr.c    | 259 ++++++++++++++++++++++++++++++++++++++
+ drivers/pci/pcie/err.c    |  36 ++++--
+ drivers/pci/probe.c       |   1 +
+ include/linux/acpi.h      |   6 +-
+ include/linux/pci-acpi.h  |   8 ++
+ include/linux/pci.h       |   1 +
+ 14 files changed, 442 insertions(+), 58 deletions(-)
+ create mode 100644 drivers/pci/pcie/dpc.h
+ create mode 100644 drivers/pci/pcie/edr.c
+
+-- 
+2.21.0
 
