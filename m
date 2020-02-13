@@ -2,147 +2,159 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 48BCA15B7E4
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2020 04:43:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DC5215B7F9
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2020 04:54:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729519AbgBMDnx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Feb 2020 22:43:53 -0500
-Received: from mail-eopbgr1320124.outbound.protection.outlook.com ([40.107.132.124]:17747
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729515AbgBMDnx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 12 Feb 2020 22:43:53 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=a5EHSoxBgmEvkHe0ZMDgSRyIsOFYDq7ttavonhlXl9DV53bnRNQqAWA6u5wP4QX2k4RZfb8VaAhgle/RF9HdXJIUeXMO1RzdS7akdlQy8N5kIJzH5vRwshzFAR6QfieZ9VrDfdZo0RHxMnoIEMCj7TC8W4cynPEWmts+NbS2n5xUxD6g5Tlcg2YZIcyhD+8HPWaXdKfmRUXOgrr6EU+fCFFJHhvXceiLc8H8PqoGiV2kAZ89O1WRR7t7ZkHBP5LJpBQMoH9qbFVcTEGIqRDK0sar9fnLYDGHBWjf0oWev6FaTwiOiuQ4SFUOzyLeZYwNgEwCrujDdYZIk61j8P7m5w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=E3gYpHuQ0uuFtArwD91pE95y0Kyk/Kj4d4PSaGcdKDw=;
- b=msooulSJI6F7aQUMhbkcuMzlszJQW29HpK9BdHUnP2GtLEG0j6JWa4H4lWZ+ecl3JONaQ7K/zZwDLKppSJVFCQ/tpQebjo0+R7y1mn3tZs4iDBEldtrXrnAgPXTMe7RJZtLzLYFJgVCdWAjSiPiXUzHMAuCTw8j65L0JgWWZhMyXySXAF+V9FPmsA7a9vs//ulk4ljdoqxtKrV8Rn6hqKsJ9NyviNzyKT+nCDz1risgMZq9eUlau0ZLUM9Cj9FuCrXoDseFwlZbNUsjnBetPaxRL18sgOs65HGAavGe1e4VxmE8MiA2RMoHW24HG+fibtkV5T1Rc2Yushc8mNsHz5Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=E3gYpHuQ0uuFtArwD91pE95y0Kyk/Kj4d4PSaGcdKDw=;
- b=ecwo4Nj4XufLoNr4axg32ZFPnmVQvUmgBi+8gJqQG8/ChFh3datX3yx4ua3AgpY7WQRxooZp1Yqbm07MDtKzUztz7JnJmQRk8v6xqBWqzZQR18IqvD2cmJ6hieoDxmjE62zXHgAZ1AILDiZvXjo2XseulP/ZvduBpWti/oob1Mc=
-Received: from HK0P153MB0148.APCP153.PROD.OUTLOOK.COM (52.133.156.139) by
- HK0P153MB0292.APCP153.PROD.OUTLOOK.COM (52.132.236.145) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.2; Thu, 13 Feb 2020 03:43:41 +0000
-Received: from HK0P153MB0148.APCP153.PROD.OUTLOOK.COM
- ([fe80::58ea:c6ae:4ea3:8432]) by HK0P153MB0148.APCP153.PROD.OUTLOOK.COM
- ([fe80::58ea:c6ae:4ea3:8432%5]) with mapi id 15.20.2750.007; Thu, 13 Feb 2020
- 03:43:41 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
+        id S1729547AbgBMDyL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Feb 2020 22:54:11 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:41582 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729443AbgBMDyK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Feb 2020 22:54:10 -0500
+Received: by mail-pg1-f195.google.com with SMTP id 70so2322261pgf.8;
+        Wed, 12 Feb 2020 19:54:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=H/W4ZsogubSvOWP8PRioC/ncvLkj+MK+j9+5NGXzQhQ=;
+        b=fBRhQ8hcGWQmFrIA1kKhuSNnTSjEtbh2K2WxKPUSlOgth5hal4qoOGt8g2ctEAaimz
+         yUf4/mGFPMpRxbSSUswIOI1vH0AC67u2A/rbwlLW9fvwpLNcUuRTyEbH6HD6lPFWIdA0
+         40iBmtz0IJdbR4tNssnDV5gClTVyoxmAXjxnbqkQdZnOqXHebEKAWH9S7soEFh25xu+g
+         R1S73evSgxWEe94Dan8MqYHlZ46GUSF+iZnDBhzP0y41lutU0FFQ8t9Kyb3Ehk/vwFC2
+         2CsuUnebImnqanLqPCwMGTxI1Kj6gcSak65eK2v7GD1nA1QIPws0NkrLtNoRv4uXFkFI
+         dr+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=H/W4ZsogubSvOWP8PRioC/ncvLkj+MK+j9+5NGXzQhQ=;
+        b=IKPbnP0wNDe3J3g751IoMBiIhiqcrsM4SCNA0YYgBE8akHeSeLQFTrbpry471EvxU5
+         yF+IyXDUZIHQJmvdHndLH+FSC2arbS+shz3RtrE45IFtrSIVAadhlo1XbMfyLT9BoM/F
+         pYVKcxvLSwOeQREVUlnjBIXb6njckiCLVcEOypVnPLzSRGaJscSvpsim0FD7AQVbsCDc
+         iPZKIG/EYVyUoX5iSGiR7QoBxentH8zf4j9r0rAsr9d47pkDfWDc6Al1UIo91J+3b/k0
+         Tw3ZTtuh9snPvCaIDsOtRDJNRftJfKSJvMhrYLKPiu6FSvXdb/Oe+oQNPAt3xrE62fGF
+         AzZA==
+X-Gm-Message-State: APjAAAX+eaea4tbkCdWeJy5J36qxZqg+VhZ224K5vbpNhZ2ghAXNCmaE
+        f910H1f+s9mJiqoApQxoBIpo2a9k
+X-Google-Smtp-Source: APXvYqyTCrx0Oqlg+YHS89ugGZlZqK21U2+BWQIY3WFLAH+dOF3hU4pUe3ThLfQHh5XC0p++ktm5Dw==
+X-Received: by 2002:aa7:8299:: with SMTP id s25mr11339038pfm.261.1581566049238;
+        Wed, 12 Feb 2020 19:54:09 -0800 (PST)
+Received: from [10.230.28.123] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id r6sm729707pfh.91.2020.02.12.19.54.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Feb 2020 19:54:08 -0800 (PST)
+Subject: Re: [PATCH 0/3] PCI: brcmstb: Add Broadcom STB support
+To:     Jaedon Shin <jaedon.shin@gmail.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Jim Quinlan <james.quinlan@Broadcom.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] PCI: hv: Replace zero-length array with flexible-array
- member
-Thread-Topic: [PATCH] PCI: hv: Replace zero-length array with flexible-array
- member
-Thread-Index: AQHV4gsYucMpvat5UUSDAQTTiNi7uKgYdpbQ
-Date:   Thu, 13 Feb 2020 03:43:40 +0000
-Message-ID: <HK0P153MB0148FB68FCBAE908CA5991C3BF1A0@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
-References: <20200213005048.GA9662@embeddedor.com>
-In-Reply-To: <20200213005048.GA9662@embeddedor.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-02-13T03:43:39.3474924Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=d08b85ce-1d8f-49a6-889f-41446c59405c;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2601:600:a280:7f70:c129:4d3:3571:d407]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 4606557a-eba4-4e46-f2fb-08d7b036eb03
-x-ms-traffictypediagnostic: HK0P153MB0292:|HK0P153MB0292:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <HK0P153MB029260484E69915796A17CB7BF1A0@HK0P153MB0292.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 031257FE13
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(346002)(39860400002)(366004)(396003)(136003)(199004)(189003)(86362001)(316002)(81166006)(7696005)(8676002)(71200400001)(186003)(54906003)(8936002)(110136005)(81156014)(2906002)(66946007)(478600001)(4326008)(33656002)(6506007)(10290500003)(66476007)(9686003)(76116006)(66556008)(55016002)(66446008)(64756008)(5660300002)(8990500004)(52536014);DIR:OUT;SFP:1102;SCL:1;SRVR:HK0P153MB0292;H:HK0P153MB0148.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: YSE02fdnMPCXUG62qEdDjJ0uONQgagRNo2hOKPEV/MLAE1JsEqDuADeT89ewcEjlyXpWnEXD0I5Goc7JlHVTt7+54Z5OVuwGCYBroEOxt2/8Rti0V0Zw/PkZ0soxCmrlPRdxHuneVBnvP0gagm0LcX1e1txYLPkfYyKmtZhdYgMvTJ0TIXQw5eIYMJtgWkgr2ADrRL5E6iRSMKcgT2huYfU+BKlTU5taLIFCo3K1SSu/qf4Gg/n19KqqOsWkRVTxxvDvBgdOtI7gRawXKEC6rKd63CGB/CqdwRxo7iDDKEYke4/3attlGr1ZbHqMU3FENBF/oKnELDv2HpMagXeq1IvFnW7W2ldQ0fqUL/s0xjbzda+L0g4+KhSJVuZWo0BQJrA5Kcap8+Y19kbwriLt/Ht+AZpGJ1nTC0/iiF27S7Eh7JWV6A6/rSUvBCNKGPmv
-x-ms-exchange-antispam-messagedata: C6SRptTY+1NYk3NMp4rBVKap3aWX5FSM9mq8M04jH1+rnWlV+Z6tp2+Xpof7hkXhsKdlEi0gb7xMrCGErm8et+RUA22bvaPp7KZMjM4pK6i0dwxSdiy7xKg81cBGmfW4QyP09yBM+OK0QVA7I0qOWakamtVlOanTFSO+G1ZwkCh9cENu9DDsA9lkD1wSWDboEbAJvf9oHD0z6hfjbDxKUw==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Gregory Fong <gregory.0xf0@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pci@vger.kernel.org
+References: <20200213025930.27943-1-jaedon.shin@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ a9BQwACgnzGuH1BVeT2J0Ra+ZYgkx7DaPR0=
+Message-ID: <6ba4bb21-034b-93f0-d4b7-13ac7c5a925d@gmail.com>
+Date:   Wed, 12 Feb 2020 19:54:05 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4606557a-eba4-4e46-f2fb-08d7b036eb03
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Feb 2020 03:43:40.9674
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 0RB9BCpfTZOnsZXet7cJAV1ddN6XmbzFnq2MTgtrriizcK6njOEChJa+i6J9kpGHnBQuiasTCzlxfemUWFsIiA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0292
+In-Reply-To: <20200213025930.27943-1-jaedon.shin@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> From: linux-hyperv-owner@vger.kernel.org
-> <linux-hyperv-owner@vger.kernel.org> On Behalf Of Gustavo A. R. Silva
-> Sent: Wednesday, February 12, 2020 4:51 PM
->  ...
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2]=
-,
-> introduced in C99:
->=20
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
->=20
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
->=20
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
->=20
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
->=20
-> This issue was found with the help of Coccinelle.
++Jim,
 
-Looks good to me. Thanks, Gustavo!
-=20
-Reviewed-by: Dexuan Cui <decui@microsoft.com>
+On 2/12/2020 6:59 PM, Jaedon Shin wrote:
+> This series enables the ARM based Broadcom STB SoCs and supports GPIO
+> based regulators for its power supplies. and this has an improvement on
+> devm_ APIS.
 
-FWIW, it looks there are a lot of more to fix in the kernel tree: the below
-commands return 1373 for me:
+Which ARM-based SoCs did you try this on? We still have an issue with
+the multiple dma-ranges that must be handled to support 7445 with memory
+in the extension regions as well as 7278 and 7216.
 
-grep -nr '\[0\];$' * | grep '\.h:' | grep -v =3D | wc -l
+See comments in specific patches.
 
-Running the commands against the kernel/ directory returns 3.
+> 
+> Jaedon Shin (3):
+>   PCI: brcmstb: Enable ARCH_BRCMSTB
+>   PCI: brcmstb: Add regulator support
+>   PCI: brcmstb: Drop clk_put when probe fails and remove
+> 
+>  .../bindings/pci/brcm,stb-pcie.yaml           |  8 +-
+>  drivers/gpio/gpio-brcmstb.c                   | 13 +++-
+>  drivers/pci/controller/Kconfig                |  2 +-
+>  drivers/pci/controller/pcie-brcmstb.c         | 78 ++++++++++++++++++-
+>  4 files changed, 97 insertions(+), 4 deletions(-)
+> 
 
-Thanks,
--- Dexuan
+-- 
+Florian
