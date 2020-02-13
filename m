@@ -2,498 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 405CF15B7D3
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2020 04:34:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 48BCA15B7E4
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2020 04:43:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729573AbgBMDe6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Feb 2020 22:34:58 -0500
-Received: from mga03.intel.com ([134.134.136.65]:54627 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729515AbgBMDe6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 12 Feb 2020 22:34:58 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Feb 2020 19:34:56 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,434,1574150400"; 
-   d="scan'208";a="228015876"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga008.fm.intel.com with ESMTP; 12 Feb 2020 19:34:54 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1j25HC-0006XB-Bx; Thu, 13 Feb 2020 11:34:54 +0800
-Date:   Thu, 13 Feb 2020 11:34:34 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/hotplug] BUILD REGRESSION
- c4e85e3f147644d222f7d2da21a812f8ff3b7cbc
-Message-ID: <5e44c3ca.8RJIqACJZHoHqRvC%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1729519AbgBMDnx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Feb 2020 22:43:53 -0500
+Received: from mail-eopbgr1320124.outbound.protection.outlook.com ([40.107.132.124]:17747
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729515AbgBMDnx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 12 Feb 2020 22:43:53 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=a5EHSoxBgmEvkHe0ZMDgSRyIsOFYDq7ttavonhlXl9DV53bnRNQqAWA6u5wP4QX2k4RZfb8VaAhgle/RF9HdXJIUeXMO1RzdS7akdlQy8N5kIJzH5vRwshzFAR6QfieZ9VrDfdZo0RHxMnoIEMCj7TC8W4cynPEWmts+NbS2n5xUxD6g5Tlcg2YZIcyhD+8HPWaXdKfmRUXOgrr6EU+fCFFJHhvXceiLc8H8PqoGiV2kAZ89O1WRR7t7ZkHBP5LJpBQMoH9qbFVcTEGIqRDK0sar9fnLYDGHBWjf0oWev6FaTwiOiuQ4SFUOzyLeZYwNgEwCrujDdYZIk61j8P7m5w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=E3gYpHuQ0uuFtArwD91pE95y0Kyk/Kj4d4PSaGcdKDw=;
+ b=msooulSJI6F7aQUMhbkcuMzlszJQW29HpK9BdHUnP2GtLEG0j6JWa4H4lWZ+ecl3JONaQ7K/zZwDLKppSJVFCQ/tpQebjo0+R7y1mn3tZs4iDBEldtrXrnAgPXTMe7RJZtLzLYFJgVCdWAjSiPiXUzHMAuCTw8j65L0JgWWZhMyXySXAF+V9FPmsA7a9vs//ulk4ljdoqxtKrV8Rn6hqKsJ9NyviNzyKT+nCDz1risgMZq9eUlau0ZLUM9Cj9FuCrXoDseFwlZbNUsjnBetPaxRL18sgOs65HGAavGe1e4VxmE8MiA2RMoHW24HG+fibtkV5T1Rc2Yushc8mNsHz5Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=E3gYpHuQ0uuFtArwD91pE95y0Kyk/Kj4d4PSaGcdKDw=;
+ b=ecwo4Nj4XufLoNr4axg32ZFPnmVQvUmgBi+8gJqQG8/ChFh3datX3yx4ua3AgpY7WQRxooZp1Yqbm07MDtKzUztz7JnJmQRk8v6xqBWqzZQR18IqvD2cmJ6hieoDxmjE62zXHgAZ1AILDiZvXjo2XseulP/ZvduBpWti/oob1Mc=
+Received: from HK0P153MB0148.APCP153.PROD.OUTLOOK.COM (52.133.156.139) by
+ HK0P153MB0292.APCP153.PROD.OUTLOOK.COM (52.132.236.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2750.2; Thu, 13 Feb 2020 03:43:41 +0000
+Received: from HK0P153MB0148.APCP153.PROD.OUTLOOK.COM
+ ([fe80::58ea:c6ae:4ea3:8432]) by HK0P153MB0148.APCP153.PROD.OUTLOOK.COM
+ ([fe80::58ea:c6ae:4ea3:8432%5]) with mapi id 15.20.2750.007; Thu, 13 Feb 2020
+ 03:43:41 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>
+CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] PCI: hv: Replace zero-length array with flexible-array
+ member
+Thread-Topic: [PATCH] PCI: hv: Replace zero-length array with flexible-array
+ member
+Thread-Index: AQHV4gsYucMpvat5UUSDAQTTiNi7uKgYdpbQ
+Date:   Thu, 13 Feb 2020 03:43:40 +0000
+Message-ID: <HK0P153MB0148FB68FCBAE908CA5991C3BF1A0@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
+References: <20200213005048.GA9662@embeddedor.com>
+In-Reply-To: <20200213005048.GA9662@embeddedor.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-02-13T03:43:39.3474924Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=d08b85ce-1d8f-49a6-889f-41446c59405c;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2601:600:a280:7f70:c129:4d3:3571:d407]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 4606557a-eba4-4e46-f2fb-08d7b036eb03
+x-ms-traffictypediagnostic: HK0P153MB0292:|HK0P153MB0292:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <HK0P153MB029260484E69915796A17CB7BF1A0@HK0P153MB0292.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 031257FE13
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(346002)(39860400002)(366004)(396003)(136003)(199004)(189003)(86362001)(316002)(81166006)(7696005)(8676002)(71200400001)(186003)(54906003)(8936002)(110136005)(81156014)(2906002)(66946007)(478600001)(4326008)(33656002)(6506007)(10290500003)(66476007)(9686003)(76116006)(66556008)(55016002)(66446008)(64756008)(5660300002)(8990500004)(52536014);DIR:OUT;SFP:1102;SCL:1;SRVR:HK0P153MB0292;H:HK0P153MB0148.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: YSE02fdnMPCXUG62qEdDjJ0uONQgagRNo2hOKPEV/MLAE1JsEqDuADeT89ewcEjlyXpWnEXD0I5Goc7JlHVTt7+54Z5OVuwGCYBroEOxt2/8Rti0V0Zw/PkZ0soxCmrlPRdxHuneVBnvP0gagm0LcX1e1txYLPkfYyKmtZhdYgMvTJ0TIXQw5eIYMJtgWkgr2ADrRL5E6iRSMKcgT2huYfU+BKlTU5taLIFCo3K1SSu/qf4Gg/n19KqqOsWkRVTxxvDvBgdOtI7gRawXKEC6rKd63CGB/CqdwRxo7iDDKEYke4/3attlGr1ZbHqMU3FENBF/oKnELDv2HpMagXeq1IvFnW7W2ldQ0fqUL/s0xjbzda+L0g4+KhSJVuZWo0BQJrA5Kcap8+Y19kbwriLt/Ht+AZpGJ1nTC0/iiF27S7Eh7JWV6A6/rSUvBCNKGPmv
+x-ms-exchange-antispam-messagedata: C6SRptTY+1NYk3NMp4rBVKap3aWX5FSM9mq8M04jH1+rnWlV+Z6tp2+Xpof7hkXhsKdlEi0gb7xMrCGErm8et+RUA22bvaPp7KZMjM4pK6i0dwxSdiy7xKg81cBGmfW4QyP09yBM+OK0QVA7I0qOWakamtVlOanTFSO+G1ZwkCh9cENu9DDsA9lkD1wSWDboEbAJvf9oHD0z6hfjbDxKUw==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4606557a-eba4-4e46-f2fb-08d7b036eb03
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Feb 2020 03:43:40.9674
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 0RB9BCpfTZOnsZXet7cJAV1ddN6XmbzFnq2MTgtrriizcK6njOEChJa+i6J9kpGHnBQuiasTCzlxfemUWFsIiA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0292
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/hotplug
-branch HEAD: c4e85e3f147644d222f7d2da21a812f8ff3b7cbc  PCI: pciehp: Add DMI table for in-band presence disabled
+> From: linux-hyperv-owner@vger.kernel.org
+> <linux-hyperv-owner@vger.kernel.org> On Behalf Of Gustavo A. R. Silva
+> Sent: Wednesday, February 12, 2020 4:51 PM
+>  ...
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2]=
+,
+> introduced in C99:
+>=20
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+>=20
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+>=20
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+>=20
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+>=20
+> This issue was found with the help of Coccinelle.
 
-Regressions in current branch:
+Looks good to me. Thanks, Gustavo!
+=20
+Reviewed-by: Dexuan Cui <decui@microsoft.com>
 
-drivers/pci/hotplug/pciehp.h:40:2: note: in expansion of macro 'pci_info'
-drivers/pci/hotplug/pciehp_hpc.c:268:12: error: 'ctrl' undeclared (first use in this function); did you mean 'to_ctrl'?
-drivers/pci/hotplug/pciehp_hpc.c:268:2: note: in expansion of macro 'ctrl_info'
-drivers/pci/hotplug/pciehp_hpc.c:287:12: error: 'ctrl' undeclared (first use in this function); did you mean 'to_ctrl'?
-drivers/pci/hotplug/pciehp_hpc.c:287:2: note: in expansion of macro 'ctrl_info'
+FWIW, it looks there are a lot of more to fix in the kernel tree: the below
+commands return 1373 for me:
 
-Error ids grouped by kconfigs:
+grep -nr '\[0\];$' * | grep '\.h:' | grep -v =3D | wc -l
 
-recent_errors
-|-- alpha-randconfig-a001-20200213
-|   |-- drivers-pci-hotplug-pciehp.h:note:in-expansion-of-macro-pci_info
-|   |-- drivers-pci-hotplug-pciehp_hpc.c:error:ctrl-undeclared-(first-use-in-this-function)-did-you-mean-to_ctrl
-|   `-- drivers-pci-hotplug-pciehp_hpc.c:note:in-expansion-of-macro-ctrl_info
-|-- arm-allmodconfig
-|   |-- drivers-pci-hotplug-pciehp.h:note:in-expansion-of-macro-pci_info
-|   |-- drivers-pci-hotplug-pciehp_hpc.c:error:ctrl-undeclared-(first-use-in-this-function)-did-you-mean-to_ctrl
-|   `-- drivers-pci-hotplug-pciehp_hpc.c:note:in-expansion-of-macro-ctrl_info
-|-- arm-allyesconfig
-|   |-- drivers-pci-hotplug-pciehp.h:note:in-expansion-of-macro-pci_info
-|   |-- drivers-pci-hotplug-pciehp_hpc.c:error:ctrl-undeclared-(first-use-in-this-function)-did-you-mean-to_ctrl
-|   `-- drivers-pci-hotplug-pciehp_hpc.c:note:in-expansion-of-macro-ctrl_info
-|-- arm64-allmodconfig
-|   |-- drivers-pci-hotplug-pciehp.h:note:in-expansion-of-macro-pci_info
-|   |-- drivers-pci-hotplug-pciehp_hpc.c:error:ctrl-undeclared-(first-use-in-this-function)-did-you-mean-to_ctrl
-|   `-- drivers-pci-hotplug-pciehp_hpc.c:note:in-expansion-of-macro-ctrl_info
-|-- arm64-allyesconfig
-|   |-- drivers-pci-hotplug-pciehp.h:note:in-expansion-of-macro-pci_info
-|   |-- drivers-pci-hotplug-pciehp_hpc.c:error:ctrl-undeclared-(first-use-in-this-function)-did-you-mean-to_ctrl
-|   `-- drivers-pci-hotplug-pciehp_hpc.c:note:in-expansion-of-macro-ctrl_info
-|-- i386-allmodconfig
-|   |-- drivers-pci-hotplug-pciehp.h:note:in-expansion-of-macro-pci_info
-|   |-- drivers-pci-hotplug-pciehp_hpc.c:error:ctrl-undeclared-(first-use-in-this-function)-did-you-mean-to_ctrl
-|   `-- drivers-pci-hotplug-pciehp_hpc.c:note:in-expansion-of-macro-ctrl_info
-|-- i386-allyesconfig
-|   |-- drivers-pci-hotplug-pciehp.h:note:in-expansion-of-macro-pci_info
-|   |-- drivers-pci-hotplug-pciehp_hpc.c:error:ctrl-undeclared-(first-use-in-this-function)-did-you-mean-to_ctrl
-|   `-- drivers-pci-hotplug-pciehp_hpc.c:note:in-expansion-of-macro-ctrl_info
-|-- i386-randconfig-d003-20200211
-|   |-- drivers-pci-hotplug-pciehp.h:note:in-expansion-of-macro-pci_info
-|   |-- drivers-pci-hotplug-pciehp_hpc.c:error:ctrl-undeclared-(first-use-in-this-function)-did-you-mean-to_ctrl
-|   `-- drivers-pci-hotplug-pciehp_hpc.c:note:in-expansion-of-macro-ctrl_info
-|-- i386-randconfig-e001-20200212
-|   |-- drivers-pci-hotplug-pciehp.h:note:in-expansion-of-macro-pci_info
-|   |-- drivers-pci-hotplug-pciehp_hpc.c:error:ctrl-undeclared-(first-use-in-this-function)-did-you-mean-to_ctrl
-|   `-- drivers-pci-hotplug-pciehp_hpc.c:note:in-expansion-of-macro-ctrl_info
-|-- i386-randconfig-g002-20200213
-|   |-- drivers-pci-hotplug-pciehp.h:note:in-expansion-of-macro-pci_info
-|   |-- drivers-pci-hotplug-pciehp_hpc.c:error:ctrl-undeclared-(first-use-in-this-function)-did-you-mean-to_ctrl
-|   `-- drivers-pci-hotplug-pciehp_hpc.c:note:in-expansion-of-macro-ctrl_info
-|-- ia64-allmodconfig
-|   |-- drivers-pci-hotplug-pciehp.h:note:in-expansion-of-macro-pci_info
-|   |-- drivers-pci-hotplug-pciehp_hpc.c:error:ctrl-undeclared-(first-use-in-this-function)-did-you-mean-to_ctrl
-|   `-- drivers-pci-hotplug-pciehp_hpc.c:note:in-expansion-of-macro-ctrl_info
-|-- ia64-allyesconfig
-|   |-- drivers-pci-hotplug-pciehp.h:note:in-expansion-of-macro-pci_info
-|   |-- drivers-pci-hotplug-pciehp_hpc.c:error:ctrl-undeclared-(first-use-in-this-function)-did-you-mean-to_ctrl
-|   `-- drivers-pci-hotplug-pciehp_hpc.c:note:in-expansion-of-macro-ctrl_info
-|-- ia64-randconfig-a001-20200212
-|   |-- drivers-pci-hotplug-pciehp.h:note:in-expansion-of-macro-pci_info
-|   |-- drivers-pci-hotplug-pciehp_hpc.c:error:ctrl-undeclared-(first-use-in-this-function)-did-you-mean-to_ctrl
-|   `-- drivers-pci-hotplug-pciehp_hpc.c:note:in-expansion-of-macro-ctrl_info
-|-- mips-allmodconfig
-|   |-- drivers-pci-hotplug-pciehp.h:note:in-expansion-of-macro-pci_info
-|   |-- drivers-pci-hotplug-pciehp_hpc.c:error:ctrl-undeclared-(first-use-in-this-function)-did-you-mean-to_ctrl
-|   `-- drivers-pci-hotplug-pciehp_hpc.c:note:in-expansion-of-macro-ctrl_info
-|-- mips-allyesconfig
-|   |-- drivers-pci-hotplug-pciehp.h:note:in-expansion-of-macro-pci_info
-|   |-- drivers-pci-hotplug-pciehp_hpc.c:error:ctrl-undeclared-(first-use-in-this-function)-did-you-mean-to_ctrl
-|   `-- drivers-pci-hotplug-pciehp_hpc.c:note:in-expansion-of-macro-ctrl_info
-|-- parisc-allyesconfig
-|   |-- drivers-pci-hotplug-pciehp.h:note:in-expansion-of-macro-pci_info
-|   |-- drivers-pci-hotplug-pciehp_hpc.c:error:ctrl-undeclared-(first-use-in-this-function)-did-you-mean-to_ctrl
-|   `-- drivers-pci-hotplug-pciehp_hpc.c:note:in-expansion-of-macro-ctrl_info
-|-- riscv-allmodconfig
-|   |-- drivers-pci-hotplug-pciehp.h:note:in-expansion-of-macro-pci_info
-|   |-- drivers-pci-hotplug-pciehp_hpc.c:error:ctrl-undeclared-(first-use-in-this-function)-did-you-mean-to_ctrl
-|   `-- drivers-pci-hotplug-pciehp_hpc.c:note:in-expansion-of-macro-ctrl_info
-|-- riscv-allyesconfig
-|   |-- drivers-pci-hotplug-pciehp.h:note:in-expansion-of-macro-pci_info
-|   |-- drivers-pci-hotplug-pciehp_hpc.c:error:ctrl-undeclared-(first-use-in-this-function)-did-you-mean-to_ctrl
-|   `-- drivers-pci-hotplug-pciehp_hpc.c:note:in-expansion-of-macro-ctrl_info
-|-- s390-allmodconfig
-|   |-- drivers-pci-hotplug-pciehp.h:note:in-expansion-of-macro-pci_info
-|   |-- drivers-pci-hotplug-pciehp_hpc.c:error:ctrl-undeclared-(first-use-in-this-function)-did-you-mean-to_ctrl
-|   `-- drivers-pci-hotplug-pciehp_hpc.c:note:in-expansion-of-macro-ctrl_info
-|-- s390-allyesconfig
-|   |-- drivers-pci-hotplug-pciehp.h:note:in-expansion-of-macro-pci_info
-|   |-- drivers-pci-hotplug-pciehp_hpc.c:error:ctrl-undeclared-(first-use-in-this-function)-did-you-mean-to_ctrl
-|   `-- drivers-pci-hotplug-pciehp_hpc.c:note:in-expansion-of-macro-ctrl_info
-|-- sparc-allyesconfig
-|   |-- drivers-pci-hotplug-pciehp.h:note:in-expansion-of-macro-pci_info
-|   |-- drivers-pci-hotplug-pciehp_hpc.c:error:ctrl-undeclared-(first-use-in-this-function)-did-you-mean-to_ctrl
-|   `-- drivers-pci-hotplug-pciehp_hpc.c:note:in-expansion-of-macro-ctrl_info
-|-- sparc64-allmodconfig
-|   |-- drivers-pci-hotplug-pciehp.h:note:in-expansion-of-macro-pci_info
-|   |-- drivers-pci-hotplug-pciehp_hpc.c:error:ctrl-undeclared-(first-use-in-this-function)-did-you-mean-to_ctrl
-|   `-- drivers-pci-hotplug-pciehp_hpc.c:note:in-expansion-of-macro-ctrl_info
-|-- sparc64-allyesconfig
-|   |-- drivers-pci-hotplug-pciehp.h:note:in-expansion-of-macro-pci_info
-|   |-- drivers-pci-hotplug-pciehp_hpc.c:error:ctrl-undeclared-(first-use-in-this-function)-did-you-mean-to_ctrl
-|   `-- drivers-pci-hotplug-pciehp_hpc.c:note:in-expansion-of-macro-ctrl_info
-|-- sparc64-randconfig-a001-20200211
-|   |-- drivers-pci-hotplug-pciehp.h:note:in-expansion-of-macro-pci_info
-|   |-- drivers-pci-hotplug-pciehp_hpc.c:error:ctrl-undeclared-(first-use-in-this-function)-did-you-mean-to_ctrl
-|   `-- drivers-pci-hotplug-pciehp_hpc.c:note:in-expansion-of-macro-ctrl_info
-|-- x86_64-allmodconfig
-|   |-- drivers-pci-hotplug-pciehp.h:note:in-expansion-of-macro-pci_info
-|   |-- drivers-pci-hotplug-pciehp_hpc.c:error:ctrl-undeclared-(first-use-in-this-function)-did-you-mean-to_ctrl
-|   `-- drivers-pci-hotplug-pciehp_hpc.c:note:in-expansion-of-macro-ctrl_info
-|-- x86_64-allyesconfig
-|   |-- drivers-pci-hotplug-pciehp.h:note:in-expansion-of-macro-pci_info
-|   |-- drivers-pci-hotplug-pciehp_hpc.c:error:ctrl-undeclared-(first-use-in-this-function)-did-you-mean-to_ctrl
-|   `-- drivers-pci-hotplug-pciehp_hpc.c:note:in-expansion-of-macro-ctrl_info
-|-- x86_64-fedora-25
-|   |-- drivers-pci-hotplug-pciehp.h:note:in-expansion-of-macro-pci_info
-|   |-- drivers-pci-hotplug-pciehp_hpc.c:error:ctrl-undeclared-(first-use-in-this-function)-did-you-mean-to_ctrl
-|   `-- drivers-pci-hotplug-pciehp_hpc.c:note:in-expansion-of-macro-ctrl_info
-|-- x86_64-lkp
-|   |-- drivers-pci-hotplug-pciehp.h:note:in-expansion-of-macro-pci_info
-|   |-- drivers-pci-hotplug-pciehp_hpc.c:error:ctrl-undeclared-(first-use-in-this-function)-did-you-mean-to_ctrl
-|   `-- drivers-pci-hotplug-pciehp_hpc.c:note:in-expansion-of-macro-ctrl_info
-|-- x86_64-randconfig-a002-20200212
-|   |-- drivers-pci-hotplug-pciehp.h:note:in-expansion-of-macro-pci_info
-|   |-- drivers-pci-hotplug-pciehp_hpc.c:error:ctrl-undeclared-(first-use-in-this-function)-did-you-mean-to_ctrl
-|   `-- drivers-pci-hotplug-pciehp_hpc.c:note:in-expansion-of-macro-ctrl_info
-|-- x86_64-randconfig-b001-20200212
-|   |-- drivers-pci-hotplug-pciehp.h:note:in-expansion-of-macro-pci_info
-|   |-- drivers-pci-hotplug-pciehp_hpc.c:error:ctrl-undeclared-(first-use-in-this-function)-did-you-mean-to_ctrl
-|   `-- drivers-pci-hotplug-pciehp_hpc.c:note:in-expansion-of-macro-ctrl_info
-|-- x86_64-randconfig-c002-20200213
-|   |-- drivers-pci-hotplug-pciehp.h:note:in-expansion-of-macro-pci_info
-|   |-- drivers-pci-hotplug-pciehp_hpc.c:error:ctrl-undeclared-(first-use-in-this-function)-did-you-mean-to_ctrl
-|   `-- drivers-pci-hotplug-pciehp_hpc.c:note:in-expansion-of-macro-ctrl_info
-|-- x86_64-randconfig-e002-20200213
-|   |-- drivers-pci-hotplug-pciehp.h:note:in-expansion-of-macro-pci_info
-|   |-- drivers-pci-hotplug-pciehp_hpc.c:error:ctrl-undeclared-(first-use-in-this-function)-did-you-mean-to_ctrl
-|   `-- drivers-pci-hotplug-pciehp_hpc.c:note:in-expansion-of-macro-ctrl_info
-|-- x86_64-randconfig-f002-20200213
-|   |-- drivers-pci-hotplug-pciehp.h:note:in-expansion-of-macro-pci_info
-|   |-- drivers-pci-hotplug-pciehp_hpc.c:error:ctrl-undeclared-(first-use-in-this-function)-did-you-mean-to_ctrl
-|   `-- drivers-pci-hotplug-pciehp_hpc.c:note:in-expansion-of-macro-ctrl_info
-|-- x86_64-randconfig-g001-20200211
-|   |-- drivers-pci-hotplug-pciehp.h:note:in-expansion-of-macro-pci_info
-|   |-- drivers-pci-hotplug-pciehp_hpc.c:error:ctrl-undeclared-(first-use-in-this-function)-did-you-mean-to_ctrl
-|   `-- drivers-pci-hotplug-pciehp_hpc.c:note:in-expansion-of-macro-ctrl_info
-|-- x86_64-rhel
-|   |-- drivers-pci-hotplug-pciehp.h:note:in-expansion-of-macro-pci_info
-|   |-- drivers-pci-hotplug-pciehp_hpc.c:error:ctrl-undeclared-(first-use-in-this-function)-did-you-mean-to_ctrl
-|   `-- drivers-pci-hotplug-pciehp_hpc.c:note:in-expansion-of-macro-ctrl_info
-|-- x86_64-rhel-7.2-clear
-|   |-- drivers-pci-hotplug-pciehp.h:note:in-expansion-of-macro-pci_info
-|   |-- drivers-pci-hotplug-pciehp_hpc.c:error:ctrl-undeclared-(first-use-in-this-function)-did-you-mean-to_ctrl
-|   `-- drivers-pci-hotplug-pciehp_hpc.c:note:in-expansion-of-macro-ctrl_info
-`-- x86_64-rhel-7.6
-    |-- drivers-pci-hotplug-pciehp.h:note:in-expansion-of-macro-pci_info
-    |-- drivers-pci-hotplug-pciehp_hpc.c:error:ctrl-undeclared-(first-use-in-this-function)-did-you-mean-to_ctrl
-    `-- drivers-pci-hotplug-pciehp_hpc.c:note:in-expansion-of-macro-ctrl_info
+Running the commands against the kernel/ directory returns 3.
 
-elapsed time: 2885m
-
-configs tested: 286
-configs skipped: 0
-
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-sparc                            allyesconfig
-riscv                               defconfig
-s390                          debug_defconfig
-s390                                defconfig
-um                                  defconfig
-alpha                               defconfig
-powerpc                           allnoconfig
-c6x                              allyesconfig
-microblaze                      mmu_defconfig
-i386                                defconfig
-openrisc                 simple_smp_defconfig
-parisc                            allnoconfig
-m68k                           sun3_defconfig
-ia64                                defconfig
-i386                             alldefconfig
-parisc                              defconfig
-ia64                             allyesconfig
-s390                             allyesconfig
-ia64                             alldefconfig
-nds32                               defconfig
-powerpc                       ppc64_defconfig
-s390                             alldefconfig
-mips                              allnoconfig
-microblaze                    nommu_defconfig
-nios2                         10m50_defconfig
-i386                             allyesconfig
-i386                              allnoconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-c6x                        evmc6678_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-csky                                defconfig
-nds32                             allnoconfig
-h8300                     edosk2674_defconfig
-h8300                    h8300h-sim_defconfig
-h8300                       h8s-sim_defconfig
-m68k                             allmodconfig
-m68k                       m5475evb_defconfig
-m68k                          multi_defconfig
-arc                              allyesconfig
-arc                                 defconfig
-powerpc                             defconfig
-powerpc                          rhel-kconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                             allyesconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-parisc                           allyesconfig
-parisc                         b180_defconfig
-parisc                        c3000_defconfig
-i386                 randconfig-a003-20200211
-x86_64               randconfig-a001-20200213
-x86_64               randconfig-a002-20200213
-x86_64               randconfig-a003-20200213
-i386                 randconfig-a001-20200213
-i386                 randconfig-a002-20200213
-i386                 randconfig-a003-20200213
-x86_64               randconfig-a001-20200212
-x86_64               randconfig-a002-20200212
-x86_64               randconfig-a003-20200212
-i386                 randconfig-a001-20200212
-i386                 randconfig-a002-20200212
-i386                 randconfig-a003-20200212
-riscv                randconfig-a001-20200211
-parisc               randconfig-a001-20200211
-m68k                 randconfig-a001-20200211
-nds32                randconfig-a001-20200211
-alpha                randconfig-a001-20200211
-alpha                randconfig-a001-20200212
-m68k                 randconfig-a001-20200212
-nds32                randconfig-a001-20200212
-parisc               randconfig-a001-20200212
-riscv                randconfig-a001-20200212
-alpha                randconfig-a001-20200213
-m68k                 randconfig-a001-20200213
-mips                 randconfig-a001-20200213
-nds32                randconfig-a001-20200213
-parisc               randconfig-a001-20200213
-riscv                randconfig-a001-20200213
-c6x                  randconfig-a001-20200212
-h8300                randconfig-a001-20200212
-microblaze           randconfig-a001-20200212
-nios2                randconfig-a001-20200212
-sparc64              randconfig-a001-20200212
-c6x                  randconfig-a001-20200213
-h8300                randconfig-a001-20200213
-microblaze           randconfig-a001-20200213
-nios2                randconfig-a001-20200213
-sparc64              randconfig-a001-20200213
-h8300                randconfig-a001-20200211
-nios2                randconfig-a001-20200211
-microblaze           randconfig-a001-20200211
-sparc64              randconfig-a001-20200211
-c6x                  randconfig-a001-20200211
-sh                   randconfig-a001-20200211
-s390                 randconfig-a001-20200211
-xtensa               randconfig-a001-20200211
-openrisc             randconfig-a001-20200211
-csky                 randconfig-a001-20200211
-csky                 randconfig-a001-20200212
-openrisc             randconfig-a001-20200212
-s390                 randconfig-a001-20200212
-sh                   randconfig-a001-20200212
-xtensa               randconfig-a001-20200212
-csky                 randconfig-a001-20200213
-openrisc             randconfig-a001-20200213
-s390                 randconfig-a001-20200213
-sh                   randconfig-a001-20200213
-xtensa               randconfig-a001-20200213
-x86_64               randconfig-b001-20200212
-x86_64               randconfig-b002-20200212
-x86_64               randconfig-b003-20200212
-i386                 randconfig-b001-20200212
-i386                 randconfig-b002-20200212
-i386                 randconfig-b003-20200212
-x86_64               randconfig-b001-20200213
-x86_64               randconfig-b002-20200213
-x86_64               randconfig-b003-20200213
-i386                 randconfig-b001-20200213
-i386                 randconfig-b002-20200213
-i386                 randconfig-b003-20200213
-x86_64               randconfig-b001-20200211
-x86_64               randconfig-b002-20200211
-x86_64               randconfig-b003-20200211
-i386                 randconfig-b001-20200211
-i386                 randconfig-b002-20200211
-i386                 randconfig-b003-20200211
-x86_64               randconfig-c001-20200211
-x86_64               randconfig-c002-20200211
-x86_64               randconfig-c003-20200211
-i386                 randconfig-c001-20200211
-i386                 randconfig-c002-20200211
-i386                 randconfig-c003-20200211
-x86_64               randconfig-c001-20200213
-x86_64               randconfig-c002-20200213
-x86_64               randconfig-c003-20200213
-i386                 randconfig-c001-20200213
-i386                 randconfig-c002-20200213
-i386                 randconfig-c003-20200213
-x86_64               randconfig-c001-20200212
-x86_64               randconfig-c002-20200212
-x86_64               randconfig-c003-20200212
-i386                 randconfig-c001-20200212
-i386                 randconfig-c002-20200212
-i386                 randconfig-c003-20200212
-x86_64               randconfig-d003-20200211
-x86_64               randconfig-d001-20200211
-i386                 randconfig-d003-20200211
-x86_64               randconfig-d002-20200211
-i386                 randconfig-d001-20200211
-i386                 randconfig-d002-20200211
-x86_64               randconfig-d001-20200212
-x86_64               randconfig-d002-20200212
-x86_64               randconfig-d003-20200212
-i386                 randconfig-d001-20200212
-i386                 randconfig-d002-20200212
-i386                 randconfig-d003-20200212
-x86_64               randconfig-e001-20200212
-x86_64               randconfig-e002-20200212
-x86_64               randconfig-e003-20200212
-i386                 randconfig-e001-20200212
-i386                 randconfig-e002-20200212
-i386                 randconfig-e003-20200212
-x86_64               randconfig-e001-20200213
-x86_64               randconfig-e002-20200213
-x86_64               randconfig-e003-20200213
-i386                 randconfig-e001-20200213
-i386                 randconfig-e002-20200213
-i386                 randconfig-e003-20200213
-i386                 randconfig-f001-20200211
-x86_64               randconfig-f002-20200211
-i386                 randconfig-f002-20200211
-x86_64               randconfig-f001-20200211
-x86_64               randconfig-f003-20200211
-i386                 randconfig-f003-20200211
-x86_64               randconfig-f001-20200212
-x86_64               randconfig-f002-20200212
-x86_64               randconfig-f003-20200212
-i386                 randconfig-f001-20200212
-i386                 randconfig-f002-20200212
-i386                 randconfig-f003-20200212
-x86_64               randconfig-f001-20200213
-x86_64               randconfig-f002-20200213
-x86_64               randconfig-f003-20200213
-i386                 randconfig-f001-20200213
-i386                 randconfig-f002-20200213
-i386                 randconfig-f003-20200213
-x86_64               randconfig-g001-20200212
-x86_64               randconfig-g002-20200212
-x86_64               randconfig-g003-20200212
-i386                 randconfig-g001-20200212
-i386                 randconfig-g002-20200212
-i386                 randconfig-g003-20200212
-x86_64               randconfig-g001-20200211
-x86_64               randconfig-g002-20200211
-x86_64               randconfig-g003-20200211
-i386                 randconfig-g001-20200211
-i386                 randconfig-g002-20200211
-i386                 randconfig-g003-20200211
-x86_64               randconfig-g001-20200213
-x86_64               randconfig-g002-20200213
-x86_64               randconfig-g003-20200213
-i386                 randconfig-g001-20200213
-i386                 randconfig-g002-20200213
-i386                 randconfig-g003-20200213
-x86_64               randconfig-h001-20200211
-x86_64               randconfig-h002-20200211
-x86_64               randconfig-h003-20200211
-i386                 randconfig-h001-20200211
-i386                 randconfig-h002-20200211
-i386                 randconfig-h003-20200211
-x86_64               randconfig-h001-20200212
-x86_64               randconfig-h002-20200212
-x86_64               randconfig-h003-20200212
-i386                 randconfig-h001-20200212
-i386                 randconfig-h002-20200212
-i386                 randconfig-h003-20200212
-x86_64               randconfig-h001-20200213
-x86_64               randconfig-h002-20200213
-x86_64               randconfig-h003-20200213
-i386                 randconfig-h001-20200213
-i386                 randconfig-h002-20200213
-i386                 randconfig-h003-20200213
-arc                  randconfig-a001-20200211
-arm                  randconfig-a001-20200211
-arm64                randconfig-a001-20200211
-ia64                 randconfig-a001-20200211
-powerpc              randconfig-a001-20200211
-sparc                randconfig-a001-20200211
-arc                  randconfig-a001-20200212
-arm                  randconfig-a001-20200212
-arm64                randconfig-a001-20200212
-ia64                 randconfig-a001-20200212
-powerpc              randconfig-a001-20200212
-sparc                randconfig-a001-20200212
-arc                  randconfig-a001-20200213
-arm                  randconfig-a001-20200213
-arm64                randconfig-a001-20200213
-ia64                 randconfig-a001-20200213
-powerpc              randconfig-a001-20200213
-sparc                randconfig-a001-20200213
-riscv                            allmodconfig
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-s390                             allmodconfig
-s390                              allnoconfig
-s390                       zfcpdump_defconfig
-sh                               allmodconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Thanks,
+-- Dexuan
