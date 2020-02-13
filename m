@@ -2,58 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7EBBA15BC6D
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2020 11:14:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3202915BC6E
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2020 11:14:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729657AbgBMKOq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 13 Feb 2020 05:14:46 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46146 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729428AbgBMKOq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Feb 2020 05:14:46 -0500
-Received: by mail-wr1-f65.google.com with SMTP id z7so5888876wrl.13
+        id S1729662AbgBMKOr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 13 Feb 2020 05:14:47 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37875 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729494AbgBMKOr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Feb 2020 05:14:47 -0500
+Received: by mail-wr1-f67.google.com with SMTP id w15so5921065wru.4
         for <linux-pci@vger.kernel.org>; Thu, 13 Feb 2020 02:14:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=75Ftdk1VkfsWCfyfd11tlv6ByY0EWRz2RXyuqWcTsCk=;
-        b=MXBaowXsv5/KjGlJHGIVcJorZztVg4eKrM/0w4F0HaKMkhG7uZ2qpG0X5g06zIZ8KR
-         JnvtB5DqxM5AgwN7+3b7Wzy/vFzqAreJ/+vi5VJzrqZ7NhUOdm/sjLs0apfmXzQOdYkf
-         Os4dy5aCRHTv04//SmgM6n1wj/O42Jp8ACsQy+/eig82sByEXqlJhyFrDIIA/eGWwOXO
-         1diY5LShRv4n2zK8u1QDFgf0OQ3NB/zGYXZyfr4uUbUEwvA7vOThvs8tguvgjdcGGU93
-         ajPMjEjhiF4BL/q+Faw5CpisW0B6BCxtZnVvi+Ecuv97amlyxGaybdu2D6eh5DGwV4Lc
-         GUSA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ffFCJH69MWS3gu5TdGiWJyiqlV+lu2ttPiLstT+myYY=;
+        b=VOc/AgqCKj2uTb+3PxiP+vBussxkp9Xnkbwfwzzx43saT/PGOSRy1wb3R9u4IgsK4H
+         QgtZXTOA8HRdd+QcPOE+4QaCBUzelwLymRIyf4YS4nbzZy999MRyw3Gmdb9+lqXo9o+x
+         cSvl76aBS1KTII8O9Sjj1wtfsi3eqx84csvK9F4ALVE3r1MwmAJ7UnQYUyo+qXg44Ck7
+         Rzm3M0YkppAGyWJDQjiKghiJpi3EopMafcdcxQQf7qBr5Su45pBtfRQMKyfT/Y3eL+ox
+         drtFFFENjIz5kvdy+A9naZ5w8nxw6A1hFcgvMhUgOOBUMShrobEgffwcpxdcOXCLIE+l
+         rAtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=75Ftdk1VkfsWCfyfd11tlv6ByY0EWRz2RXyuqWcTsCk=;
-        b=m6qpk9PC9fWJYNXJVUM5NynBM1tAkAWZNw+lynpXuYk16pLotzRCNUqiy41kbu7w9Z
-         xG6tCpBDWjFk61HGFoinBc9fYfSmdRS1q721RCeA+EgKKD/lAaYzx0a1VcUO2YBEOkCZ
-         6m/g1u0nC2ni7DwYdp1oaZZ//8dWS/2hExVaCvN2trv0kk1W5gbLxeYJxv66bsf4GeEh
-         lV1XFgVHtfYHyWrv7hy8uaFtytbfS0dD4PyMdao0y/ZUmjpWSkjNYGO8wkATUCP9LA3j
-         d4S0qQRiGx6Dhq5l1S3Cqw2yRMeWKRQIPpmkDJeTZQ8/CoCweAbn3k7i3pMOBYoH02VO
-         SOIA==
-X-Gm-Message-State: APjAAAW5oWC7XoIXSLM2I1Z9FaRWzK4gXTkAW6WwQ1ZD6TJSdAYdcxuc
-        c6VxFcHTtOkrhPeEGoobJ557jVu7An4=
-X-Google-Smtp-Source: APXvYqyaY1njF+rZBaq9zhF3XVnI+fBQ+a+gjM1pwH0+xif4vevn+377YjCqBR53sPA0jLv2qnJW8w==
-X-Received: by 2002:a05:6000:1:: with SMTP id h1mr19408168wrx.380.1581588884202;
-        Thu, 13 Feb 2020 02:14:44 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ffFCJH69MWS3gu5TdGiWJyiqlV+lu2ttPiLstT+myYY=;
+        b=NEBPuBASjAC60252fK3Wwu+ZIrddCan9yZIgsssmQ4C60MQz4VlTCggZKf16+onLF9
+         P45fR8hUcnIovO6f4/ypmSVnpO6N97EuBxFuMZuyTiFe7LnjgXaZnlCOZz6KY/bR7fjz
+         1ATadOeaLWl8qhr+jHpmqP8tEWEIGabW2cIqKaeMDamAZagsurfArHGhYx7nEWvWUvNi
+         p0Irg/2RAOH2tLNMJ9rVVJ6wRQUMMRGWppMErP+thOJP2caT+oGx4HAS/brZwW1bWBv5
+         AmSqaDhd2Mx81gMnLIJmjVQXdr4YS2Kg+8wK57eorgbAgMjzx75HY+YHItNZ52/LF6x8
+         SvXg==
+X-Gm-Message-State: APjAAAXslyNNvgilgqQf50R2xwW2ZEgdrEQru8rZ31xVZ8YoU+tPMufy
+        bNmnt3HSyDfKhmgJhGj/8BGet2eG6yA=
+X-Google-Smtp-Source: APXvYqyGI8je5B1PaESIUTiNN6WwNtME2/884yAwDWfvmieJ+C+jPQfGseYc8+Y0Ju3V7vGv/sHu1Q==
+X-Received: by 2002:adf:b193:: with SMTP id q19mr20678957wra.78.1581588885058;
+        Thu, 13 Feb 2020 02:14:45 -0800 (PST)
 Received: from localhost.localdomain ([2001:171b:2276:930:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id y131sm2428059wmc.13.2020.02.13.02.14.43
+        by smtp.gmail.com with ESMTPSA id y131sm2428059wmc.13.2020.02.13.02.14.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 02:14:43 -0800 (PST)
+        Thu, 13 Feb 2020 02:14:44 -0800 (PST)
 From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
 To:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         iommu@lists.linux-foundation.org, will@kernel.org,
         bhelgaas@google.com
 Cc:     joro@8bytes.org, robin.murphy@arm.com, jonathan.cameron@huawei.com,
         zhangfei.gao@linaro.org
-Subject: [PATCH 0/4] iommu: Finish off PASID support for Arm SMMUv3
-Date:   Thu, 13 Feb 2020 11:14:31 +0100
-Message-Id: <20200213101435.229932-1-jean-philippe@linaro.org>
+Subject: [PATCH 1/4] PCI/ATS: Export symbols of PASID functions
+Date:   Thu, 13 Feb 2020 11:14:32 +0100
+Message-Id: <20200213101435.229932-2-jean-philippe@linaro.org>
 X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200213101435.229932-1-jean-philippe@linaro.org>
+References: <20200213101435.229932-1-jean-philippe@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
@@ -61,26 +63,48 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Support for context descriptor tables was added to the SMMUv3 driver by
-commit 87f42391f6a5 ("iommu/arm-smmu-v3: Add support for Substream
-IDs"). The last patch enabling PASID in PCI devices couldn't be included
-right away since it would have prevented from building SMMUv3 as a
-module, another feature introduced in Linux v5.6. Export the relevant
-symbols in patch 1 before using them in patch 2. Patches 3 and 4 address
-the other remaining comments for the PASID series [1].
+The Arm SMMUv3 driver uses pci_{enable,disable}_pasid() and related
+functions.  Export them to allow the driver to be built as a module.
 
-[1] https://lore.kernel.org/linux-iommu/20200114154007.GC2579@willie-the-truck/
+Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+---
+ drivers/pci/ats.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Jean-Philippe Brucker (4):
-  PCI/ATS: Export symbols of PASID functions
-  iommu/arm-smmu-v3: Add support for PCI PASID
-  iommu/arm-smmu-v3: Batch context descriptor invalidation
-  iommu/arm-smmu-v3: Write level-1 descriptors atomically
-
- drivers/iommu/arm-smmu-v3.c | 78 +++++++++++++++++++++++++++++++++++--
- drivers/pci/ats.c           |  4 ++
- 2 files changed, 78 insertions(+), 4 deletions(-)
-
+diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+index 3ef0bb281e7c..390e92f2d8d1 100644
+--- a/drivers/pci/ats.c
++++ b/drivers/pci/ats.c
+@@ -366,6 +366,7 @@ int pci_enable_pasid(struct pci_dev *pdev, int features)
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(pci_enable_pasid);
+ 
+ /**
+  * pci_disable_pasid - Disable the PASID capability
+@@ -390,6 +391,7 @@ void pci_disable_pasid(struct pci_dev *pdev)
+ 
+ 	pdev->pasid_enabled = 0;
+ }
++EXPORT_SYMBOL_GPL(pci_disable_pasid);
+ 
+ /**
+  * pci_restore_pasid_state - Restore PASID capabilities
+@@ -441,6 +443,7 @@ int pci_pasid_features(struct pci_dev *pdev)
+ 
+ 	return supported;
+ }
++EXPORT_SYMBOL_GPL(pci_pasid_features);
+ 
+ #define PASID_NUMBER_SHIFT	8
+ #define PASID_NUMBER_MASK	(0x1f << PASID_NUMBER_SHIFT)
+@@ -469,4 +472,5 @@ int pci_max_pasids(struct pci_dev *pdev)
+ 
+ 	return (1 << supported);
+ }
++EXPORT_SYMBOL_GPL(pci_max_pasids);
+ #endif /* CONFIG_PCI_PASID */
 -- 
 2.25.0
 
