@@ -2,54 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5099315B801
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2020 04:58:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A06615B805
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2020 05:01:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729546AbgBMD6u (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Feb 2020 22:58:50 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:39741 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729443AbgBMD6t (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Feb 2020 22:58:49 -0500
-Received: by mail-pl1-f193.google.com with SMTP id g6so1783915plp.6;
-        Wed, 12 Feb 2020 19:58:49 -0800 (PST)
+        id S1729515AbgBMEBI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Feb 2020 23:01:08 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36394 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729470AbgBMEBI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Feb 2020 23:01:08 -0500
+Received: by mail-pg1-f193.google.com with SMTP id d9so2347532pgu.3;
+        Wed, 12 Feb 2020 20:01:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=nbjlYlfhBY+UHixlStQoXg09UzzSEedx4Ji7HfMzHdM=;
-        b=r83nfN4fsprCVE1aSKVNuRsBosnAaXuj8OAOXQnK9NZcEZoax/+3O9pDtiT0ckjr/3
-         Jr2Zd0Wu9B2NqDMPiHJLDUURZ5eIcgHbzRmHFiEc+SYOGuIhC2luO5w0lAXxAWpU960L
-         ATr43Qc3e5BSwGROmyt+nUO316SSXw+8xQQYh9ETGmL73E6erZhF7+WuhOiYU6Q/zKNZ
-         vJmapTmBUmrzpmIbKXRCbvg6utUsXIwLcgu+j/HioTKNBg7aW+DwManzcsP0kXRZSWzT
-         oOwDchiZLcRLuvd4XwBnS+Mu2u7p1CLQJ3URYG+Y6Nw53uvnKClepBDg5kjq9yPfztWv
-         GYrw==
+        bh=S8e5vp+IFpuolpVDbO9Tnu/3yLOcXGZxXhR3cBHJ/mE=;
+        b=p4ZnJD3+dxF9x7FAjg9UMl7sJ0xo6e5SMnM3D3mwcTXdcS5Js97vGxAw3dcYKGMPOp
+         /2u/cfceZjFRTOfkEk7rYNx37Fy1SufWRmEsWzoJhvB9gHHFW1s/m8YDN117clJVm1zp
+         UJedZejpro2iOuNDQmVFstWM/d8JJfbak0pWSZ46qfN3MB7Z1mAxx8VdMQIqzIo5cHsI
+         s9P/m1uL447cwsOqZ07ciS6n/zwtytKNERfhoicgrkxny3xLlYOCQIlt0ndT8qSrbPO2
+         e7wMwrmz7Ufg5MF3GahZ1/jclyiwPsMiUXxcWAHD0TpEGGYGNMyZo3Q0/kKvZJ58es5o
+         et9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=nbjlYlfhBY+UHixlStQoXg09UzzSEedx4Ji7HfMzHdM=;
-        b=HME02aybe9G6/iGHPzsNocIP7kecChhTdpbvBhAB0dAMzGKmUJnR3HfsGJKWx1WILs
-         7x7mXm0yS/020710pqUyTdKVgvAJokcWBRNx2KvuGRS2VeUBmf7JDxeoaKTdMTztzaru
-         KDC29zlXtotraxdrdmAJZlczb0+DfgvJATTnrkKQ9bWlpcV+qTJFoRrYamKyV/dXEfEW
-         jqlDRfVf2+KHZ8Xg7O/A/DdCmHC+yN02xpGnMpRk3GhP/02n49CpdaqW1S516a1fZPUS
-         WnAX1MlzAUVKWcnP22auLBN31pa910U0dpWEcXinuKOg2Qz60xjWeC0azOvuxN/rGLTH
-         JeVg==
-X-Gm-Message-State: APjAAAUpWj2lMkQJE99JHPW1O6RaRKIXfotg4awbVOBVp9DU7//+//vN
-        Spy7VzOQX2a18q8fxRiDq7QjQhKe
-X-Google-Smtp-Source: APXvYqwqtvCWTmCYtQaF20qYQgf9s9NKbxvuHishOIDtG3QhneQz0PtJAh8BwsO/OvTmuRHBWtVUjQ==
-X-Received: by 2002:a17:902:b696:: with SMTP id c22mr25276386pls.97.1581566328537;
-        Wed, 12 Feb 2020 19:58:48 -0800 (PST)
+        bh=S8e5vp+IFpuolpVDbO9Tnu/3yLOcXGZxXhR3cBHJ/mE=;
+        b=elIE41TyHsF7c1Cv6ryWIZORssQSn97xhHqg4s0x+BY/il5X1Nvg/22CwextcrPyvi
+         KQJrVbxz2FOBx651OZyzh8+Urul/NrtySPznxE5P7GydSenFyf3IRvN+IG3qyk3i4HEP
+         ove3ocKbz71xAYFXKMfLU12TH6ZZFZEtFpxLpGGdNvPkISXcx69ZOuSu4JAQB/j1ePx1
+         NUtxKFrPomNhvGrZGkmwqGVoSXjzE/1LnqkuxHQ56T2r3iQmaHcC3kCeChGzTqRwrVaY
+         K1lExqIvRggEtctv/Vtm5Fxf97pdZXME1oa6nPz4jW2pz1BxFEmTtqa7msn3z5JafQcn
+         YbGw==
+X-Gm-Message-State: APjAAAW6bVvE/k5VTXAeVsJCryht71d6c+ol0cWkXpLkkctZM3gePb91
+        dZg0kE3fvSvW57y6RL4nuJbyoMH0
+X-Google-Smtp-Source: APXvYqy5G9kD4HBcM1/R2+rH+zOH4+XyTE8tqgPBZM8mdAxYZxmCoyeahK14OUOZwKSI9n+9NFxydQ==
+X-Received: by 2002:a63:584:: with SMTP id 126mr16159646pgf.447.1581566465760;
+        Wed, 12 Feb 2020 20:01:05 -0800 (PST)
 Received: from [10.230.28.123] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id a35sm638912pgl.20.2020.02.12.19.58.47
+        by smtp.gmail.com with ESMTPSA id x28sm616855pgc.83.2020.02.12.20.01.04
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Feb 2020 19:58:48 -0800 (PST)
-Subject: Re: [PATCH 2/3] PCI: brcmstb: Add regulator support
+        Wed, 12 Feb 2020 20:01:05 -0800 (PST)
+Subject: Re: [PATCH 3/3] PCI: brcmstb: Drop clk_put when probe fails and
+ remove
 To:     Jaedon Shin <jaedon.shin@gmail.com>,
         Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         bcm-kernel-feedback-list@broadcom.com,
-        Jim Quinlan <james.quinlan@Broadcom.com>
+        Jim Quinlan <james.quinlan@broadcom.com>
 Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -61,7 +62,7 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-pci@vger.kernel.org
 References: <20200213025930.27943-1-jaedon.shin@gmail.com>
- <20200213025930.27943-3-jaedon.shin@gmail.com>
+ <20200213025930.27943-4-jaedon.shin@gmail.com>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Autocrypt: addr=f.fainelli@gmail.com; keydata=
  mQGiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
@@ -117,12 +118,12 @@ Autocrypt: addr=f.fainelli@gmail.com; keydata=
  caxTGgc5zzQHeX67eMzrGomG3ZnIxmd1sAbgvJUDaD2GrYlulfwGWwWyTNbWRvMighVdPkSF
  6XFgQaosWxkV0OELLy2N485YrTr2Uq64VKyxpncLh50e2RnyAJ9qfUATKC9NgZjRvBztfqy4
  a9BQwACgnzGuH1BVeT2J0Ra+ZYgkx7DaPR0=
-Message-ID: <aaa85a4d-8b36-893e-3e7a-dc27b4d6bae5@gmail.com>
-Date:   Wed, 12 Feb 2020 19:58:45 -0800
+Message-ID: <0d75656c-071f-1a06-6eca-c67366dcd03a@gmail.com>
+Date:   Wed, 12 Feb 2020 20:01:02 -0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.2
 MIME-Version: 1.0
-In-Reply-To: <20200213025930.27943-3-jaedon.shin@gmail.com>
+In-Reply-To: <20200213025930.27943-4-jaedon.shin@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -134,110 +135,33 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 
 On 2/12/2020 6:59 PM, Jaedon Shin wrote:
-> ARM-based Broadcom STB SoCs have GPIO-based voltage regulator for PCIe
-> turning off/on power supplies.
+> devm_clk_get* APIs are device managed and get freed automatically when
+> the device detaches. so there is no reason to explicitly call clk_put()
+> in probe or remove functions.
 > 
 > Signed-off-by: Jaedon Shin <jaedon.shin@gmail.com>
+
+Fixes: c0452137034b ("PCI: brcmstb: Add Broadcom STB PCIe host
+controller driver")
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+
+
 > ---
->  drivers/gpio/gpio-brcmstb.c           | 13 ++++-
->  drivers/pci/controller/pcie-brcmstb.c | 76 +++++++++++++++++++++++++++
->  2 files changed, 88 insertions(+), 1 deletion(-)
+>  drivers/pci/controller/pcie-brcmstb.c | 1 -
+>  1 file changed, 1 deletion(-)
 > 
-> diff --git a/drivers/gpio/gpio-brcmstb.c b/drivers/gpio/gpio-brcmstb.c
-> index 05e3f99ae59c..0cee5fcd2782 100644
-> --- a/drivers/gpio/gpio-brcmstb.c
-> +++ b/drivers/gpio/gpio-brcmstb.c
-> @@ -777,7 +777,18 @@ static struct platform_driver brcmstb_gpio_driver = {
->  	.remove = brcmstb_gpio_remove,
->  	.shutdown = brcmstb_gpio_shutdown,
->  };
-> -module_platform_driver(brcmstb_gpio_driver);
-> +
-> +static int __init brcmstb_gpio_init(void)
-> +{
-> +	return platform_driver_register(&brcmstb_gpio_driver);
-> +}
-> +subsys_initcall(brcmstb_gpio_init);
-> +
-> +static void __exit brcmstb_gpio_exit(void)
-> +{
-> +	platform_driver_unregister(&brcmstb_gpio_driver);
-> +}
-> +module_exit(brcmstb_gpio_exit);
-
-We do this in the downstream tree, but there is no reason, we should
-just deal with EPROBE_DEFER being returned from the regulator subsystem
-until the GPIO provide is available.
-
-[snip]
-
-> +static void brcm_pcie_regulator_init(struct brcm_pcie *pcie)
-> +{
-> +	struct device_node *np = pcie->dev->of_node;
-> +	struct device *dev = pcie->dev;
-> +	const char *name;
-> +	struct regulator *reg;
-> +	int i;
-> +
-> +	pcie->num_regs = of_property_count_strings(np, "supply-names");
-> +	if (pcie->num_regs <= 0) {
-> +		pcie->num_regs = 0;
-> +		return;
-> +	}
-> +
-> +	pcie->regs = devm_kcalloc(dev, pcie->num_regs, sizeof(pcie->regs[0]),
-> +				  GFP_KERNEL);
-> +	if (!pcie->regs) {
-> +		pcie->num_regs = 0;
-> +		return;
-> +	}
-> +
-> +	for (i = 0; i < pcie->num_regs; i++) {
-> +		if (of_property_read_string_index(np, "supply-names", i, &name))
-> +			continue;
-> +
-> +		reg = devm_regulator_get_optional(dev, name);
-> +		if (IS_ERR(reg))
-> +			continue;
-
-You need to handle EPROBE_DEFER here and propagate that back to the
-caller to defer the entire driver from probing until the regulator
-providers are available.
-
-> +
-> +		pcie->regs[i] = reg;
-> +	}
-> +}
-> +#else
-> +static inline void brcm_pcie_regulator_enable(struct brcm_pcie *pcie) { }
-> +static inline void brcm_pcie_regulator_disable(struct brcm_pcie *pcie) { }
-> +static inline void brcm_pcie_regulator_init(struct brcm_pcie *pcie) { }
-> +#endif
-> +
->  /*
->   * This is to convert the size of the inbound "BAR" region to the
->   * non-linear values of PCIE_X_MISC_RC_BAR[123]_CONFIG_LO.SIZE
-> @@ -898,6 +970,7 @@ static void __brcm_pcie_remove(struct brcm_pcie *pcie)
->  {
->  	brcm_msi_remove(pcie);
+> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+> index 0e0ca39a680b..3e48d9e238bb 100644
+> --- a/drivers/pci/controller/pcie-brcmstb.c
+> +++ b/drivers/pci/controller/pcie-brcmstb.c
+> @@ -972,7 +972,6 @@ static void __brcm_pcie_remove(struct brcm_pcie *pcie)
 >  	brcm_pcie_turn_off(pcie);
-> +	brcm_pcie_regulator_disable(pcie);
+>  	brcm_pcie_regulator_disable(pcie);
 >  	clk_disable_unprepare(pcie->clk);
->  	clk_put(pcie->clk);
+> -	clk_put(pcie->clk);
 >  }
-> @@ -955,6 +1028,9 @@ static int brcm_pcie_probe(struct platform_device *pdev)
->  		return ret;
->  	}
 >  
-> +	brcm_pcie_regulator_init(pcie);
-> +	brcm_pcie_regulator_enable(pcie);
-
-And deal with errors here.
-
-> +
->  	ret = brcm_pcie_setup(pcie);
->  	if (ret)
->  		goto fail;
+>  static int brcm_pcie_remove(struct platform_device *pdev)
 > 
 
 -- 
