@@ -2,22 +2,22 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 305D215B66D
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2020 02:13:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D58C115B6D7
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2020 02:48:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729190AbgBMBNy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Feb 2020 20:13:54 -0500
-Received: from gateway24.websitewelcome.com ([192.185.51.202]:28313 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729185AbgBMBNy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Feb 2020 20:13:54 -0500
-X-Greylist: delayed 1379 seconds by postgrey-1.27 at vger.kernel.org; Wed, 12 Feb 2020 20:13:52 EST
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id 337A154AC7
-        for <linux-pci@vger.kernel.org>; Wed, 12 Feb 2020 18:50:53 -0600 (CST)
+        id S1729469AbgBMBsy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Feb 2020 20:48:54 -0500
+Received: from gateway22.websitewelcome.com ([192.185.47.163]:34154 "EHLO
+        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729333AbgBMBsx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Feb 2020 20:48:53 -0500
+X-Greylist: delayed 1776 seconds by postgrey-1.27 at vger.kernel.org; Wed, 12 Feb 2020 20:48:52 EST
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway22.websitewelcome.com (Postfix) with ESMTP id DCEBC7EC
+        for <linux-pci@vger.kernel.org>; Wed, 12 Feb 2020 18:52:24 -0600 (CST)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id 22iTj0mKb8vkB22iTjyhid; Wed, 12 Feb 2020 18:50:53 -0600
+        id 22jwjCKZ2AGTX22jwjOTJ6; Wed, 12 Feb 2020 18:52:24 -0600
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
@@ -25,30 +25,23 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
         List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=oNtS80ALTefLju8sXnhUYyqruAR8Cl5rZOZKlDdi3/o=; b=O6E89Kl1z/UOh3gllATe8Wi3cR
-        x/TDcLBjptHyATw2n2/d70Tr9OQ6VklUFJ3eo1Dch4M/zLSE3I86K4Z0l6QofCllkVSMqjzWASmgb
-        mwO7JjC7vu/UR8xY4HZbrhTQv86mqRvXFBL/mpmKOXR6cWHbyz9qEk3s7M/Jq+VIbh1lQ3JAW2fAa
-        g00iYXlgXl4PSG+tjDrntzMx2Lnkzp95Ydn0Llxu3ctF2XvNAbFqYBatLgJWt9CqJ/ATAcf/xiRII
-        H4X74kdy9YqbtQ6XiZ1gi3NjY7Q2CSLPjW5wSXLL7FvRpazRxUu3ospLuWRT2i6Oyt9RwDmv78VGa
-        4dlntZ9w==;
-Received: from [200.68.141.42] (port=17629 helo=embeddedor)
+        bh=5757znZEcKNE8shq95boWLVSi/ziQ21brLl/oUcyXoM=; b=jf/taqfsOGtyyeJF8aKUd1ZDIN
+        vePbajlrmHcxYxPBVSHOWFUHMxIjTvIZFCADlnKzCQYe6i38c0TWW1iBT3KJ+TgF+4qGxM24DRHgS
+        7RR0gEZfC0xTRSZGIai/DiQDymW7ZngJb3IdzhyojB8eNXnOt3kMBhwX1p21pFVuwWC3aDPUc10ZJ
+        u59hiQroxBDv4LOfDLZ88VRfwxB+vjoHZZKxDqzG3RD8bn+BzcbCp7rmTf2y6sfCKfj/uutAgGKdS
+        GPI5+md7Agd7BY5019sTYEd0XJ/X++B2TykqhBOWOkKy4kMsxZ+LDw2D7APnj1K2VZmWoh686LEHI
+        sworcfag==;
+Received: from [200.68.141.42] (port=21707 helo=embeddedor)
         by gator4166.hostgator.com with esmtpa (Exim 4.92)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1j22iQ-003lou-MG; Wed, 12 Feb 2020 18:50:51 -0600
-Date:   Wed, 12 Feb 2020 18:50:48 -0600
+        id 1j22jv-003mS8-1n; Wed, 12 Feb 2020 18:52:23 -0600
+Date:   Wed, 12 Feb 2020 18:52:21 -0600
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] PCI: hv: Replace zero-length array with flexible-array member
-Message-ID: <20200213005048.GA9662@embeddedor.com>
+Subject: [PATCH] PCI: Replace zero-length array with flexible-array member
+Message-ID: <20200213005221.GA10532@embeddedor.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -61,13 +54,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 200.68.141.42
 X-Source-L: No
-X-Exim-ID: 1j22iQ-003lou-MG
+X-Exim-ID: 1j22jv-003mS8-1n
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.141.42]:17629
+X-Source-Sender: (embeddedor) [200.68.141.42]:21707
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 72
+X-Email-Count: 75
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: linux-pci-owner@vger.kernel.org
@@ -105,40 +98,22 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- drivers/pci/controller/pci-hyperv.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/pci/pci.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 9977abff92fc..be957268f9d6 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -260,7 +260,7 @@ struct pci_packet {
- 				int resp_packet_size);
- 	void *compl_ctxt;
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index d828ca835a98..3217b8cdb1e0 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -1521,7 +1521,7 @@ EXPORT_SYMBOL(pci_restore_state);
  
--	struct pci_message message[0];
-+	struct pci_message message[];
+ struct pci_saved_state {
+ 	u32 config_space[16];
+-	struct pci_cap_saved_data cap[0];
++	struct pci_cap_saved_data cap[];
  };
  
- /*
-@@ -296,7 +296,7 @@ struct pci_bus_d0_entry {
- struct pci_bus_relations {
- 	struct pci_incoming_message incoming;
- 	u32 device_count;
--	struct pci_function_description func[0];
-+	struct pci_function_description func[];
- } __packed;
- 
- struct pci_q_res_req_response {
-@@ -508,7 +508,7 @@ struct hv_dr_work {
- struct hv_dr_state {
- 	struct list_head list_entry;
- 	u32 device_count;
--	struct pci_function_description func[0];
-+	struct pci_function_description func[];
- };
- 
- enum hv_pcichild_state {
+ /**
 -- 
 2.23.0
 
