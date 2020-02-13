@@ -2,167 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A06615B805
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2020 05:01:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A81B15B81C
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2020 05:09:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729515AbgBMEBI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Feb 2020 23:01:08 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:36394 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729470AbgBMEBI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Feb 2020 23:01:08 -0500
-Received: by mail-pg1-f193.google.com with SMTP id d9so2347532pgu.3;
-        Wed, 12 Feb 2020 20:01:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=S8e5vp+IFpuolpVDbO9Tnu/3yLOcXGZxXhR3cBHJ/mE=;
-        b=p4ZnJD3+dxF9x7FAjg9UMl7sJ0xo6e5SMnM3D3mwcTXdcS5Js97vGxAw3dcYKGMPOp
-         /2u/cfceZjFRTOfkEk7rYNx37Fy1SufWRmEsWzoJhvB9gHHFW1s/m8YDN117clJVm1zp
-         UJedZejpro2iOuNDQmVFstWM/d8JJfbak0pWSZ46qfN3MB7Z1mAxx8VdMQIqzIo5cHsI
-         s9P/m1uL447cwsOqZ07ciS6n/zwtytKNERfhoicgrkxny3xLlYOCQIlt0ndT8qSrbPO2
-         e7wMwrmz7Ufg5MF3GahZ1/jclyiwPsMiUXxcWAHD0TpEGGYGNMyZo3Q0/kKvZJ58es5o
-         et9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=S8e5vp+IFpuolpVDbO9Tnu/3yLOcXGZxXhR3cBHJ/mE=;
-        b=elIE41TyHsF7c1Cv6ryWIZORssQSn97xhHqg4s0x+BY/il5X1Nvg/22CwextcrPyvi
-         KQJrVbxz2FOBx651OZyzh8+Urul/NrtySPznxE5P7GydSenFyf3IRvN+IG3qyk3i4HEP
-         ove3ocKbz71xAYFXKMfLU12TH6ZZFZEtFpxLpGGdNvPkISXcx69ZOuSu4JAQB/j1ePx1
-         NUtxKFrPomNhvGrZGkmwqGVoSXjzE/1LnqkuxHQ56T2r3iQmaHcC3kCeChGzTqRwrVaY
-         K1lExqIvRggEtctv/Vtm5Fxf97pdZXME1oa6nPz4jW2pz1BxFEmTtqa7msn3z5JafQcn
-         YbGw==
-X-Gm-Message-State: APjAAAW6bVvE/k5VTXAeVsJCryht71d6c+ol0cWkXpLkkctZM3gePb91
-        dZg0kE3fvSvW57y6RL4nuJbyoMH0
-X-Google-Smtp-Source: APXvYqy5G9kD4HBcM1/R2+rH+zOH4+XyTE8tqgPBZM8mdAxYZxmCoyeahK14OUOZwKSI9n+9NFxydQ==
-X-Received: by 2002:a63:584:: with SMTP id 126mr16159646pgf.447.1581566465760;
-        Wed, 12 Feb 2020 20:01:05 -0800 (PST)
-Received: from [10.230.28.123] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id x28sm616855pgc.83.2020.02.12.20.01.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Feb 2020 20:01:05 -0800 (PST)
-Subject: Re: [PATCH 3/3] PCI: brcmstb: Drop clk_put when probe fails and
- remove
-To:     Jaedon Shin <jaedon.shin@gmail.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Jim Quinlan <james.quinlan@broadcom.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Gregory Fong <gregory.0xf0@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org
-References: <20200213025930.27943-1-jaedon.shin@gmail.com>
- <20200213025930.27943-4-jaedon.shin@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; keydata=
- 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
- a9BQwACgnzGuH1BVeT2J0Ra+ZYgkx7DaPR0=
-Message-ID: <0d75656c-071f-1a06-6eca-c67366dcd03a@gmail.com>
-Date:   Wed, 12 Feb 2020 20:01:02 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
-MIME-Version: 1.0
-In-Reply-To: <20200213025930.27943-4-jaedon.shin@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        id S1729640AbgBMEJo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Feb 2020 23:09:44 -0500
+Received: from mail-eopbgr150080.outbound.protection.outlook.com ([40.107.15.80]:18305
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729555AbgBMEJn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 12 Feb 2020 23:09:43 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fr+IRcZ4RxPr0YmQwdKIOBmCmu1DXqG7X38Hr/eazSnnylboI/UX3kKAK4gNAz09+zp3/aP9TCt4t4r/WpGghaXSYzDgIDNFb/bAQ7XLxWUgRkdAl2XrUPcUQtD3lmGTHpFvh8ZgxXqzaLEXoF7yuPq82VE2XwwKEt53Pd5lKj7QZ9fj+6lT50NVgftaRGbOwj/Y9Ak+1Zh6HqC2aNn+7er9jIa3+dvxzSvhFQefgzCApcS1KRXDZRtmyV3BaoeLToaUQxkEBSAXGlUMwoAqsqHDIswbRE/xnVPuskBfID1/EZZXO3OCWr69K9Vhcj0dJGVmEPw5vzDyoLeBv0cPdQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=r4Hh0QblikEoU7VGAmR1c9Kd4Ow2pfg5W6cYvypFkew=;
+ b=GrK5pYavFbB+00dYvCofYFm4lrTlO+SX9w15al7uW/szWutNXJUahKCBSj21OHSMy7E1TFzea/0v5ZHICVqswqBCW23Wg8FETFF321qeq7BYFlNijRXKHZ99Gyh2tP3+da7dS62+8Bv4sdn1fg4SHQddSCc8IhKte0b3zG8EvhSprETJtZ3E2NuBMONCoAEJlqWa1g9lw2+zfSozhewb3n1cz4EYQO6WQZNsCmIuEZT5bfGk3+LYUiWCtEeet4iDgLfrvStDcVtEbfkDshFzj0Owx8V0l/WmS15YV2UMhIUx6nCh4Ot3MEC+b1kVBqrN7u5ZbMd5AcxRgyq3Eat14Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=r4Hh0QblikEoU7VGAmR1c9Kd4Ow2pfg5W6cYvypFkew=;
+ b=bbANXkpT5JwqBTp/oAgILIJUxZCTG0p39Ub9ffvDMwR+d7YjYbbswUvDXp2WhdvWW+Oc0uIfohMr9ctYLqFXWZiEf3oKpwomQ5wMAXn3tIW391lYNFuspQLKTbE2W8ae4NdS2Dy0+F9kzA0Ef0r3FSW5OWiBviFWnpamAskBH2A=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=zhiqiang.hou@nxp.com; 
+Received: from DB8PR04MB6747.eurprd04.prod.outlook.com (20.179.250.159) by
+ DB8PR04MB7084.eurprd04.prod.outlook.com (52.135.63.71) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2729.23; Thu, 13 Feb 2020 04:09:40 +0000
+Received: from DB8PR04MB6747.eurprd04.prod.outlook.com
+ ([fe80::104b:e88b:b0d3:cdaa]) by DB8PR04MB6747.eurprd04.prod.outlook.com
+ ([fe80::104b:e88b:b0d3:cdaa%4]) with mapi id 15.20.2707.030; Thu, 13 Feb 2020
+ 04:09:40 +0000
+From:   Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
+To:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bhelgaas@google.com, robh+dt@kernel.org, andrew.murray@arm.com,
+        arnd@arndb.de, mark.rutland@arm.com, l.subrahmanya@mobiveil.co.in,
+        shawnguo@kernel.org, m.karthikeyan@mobiveil.co.in,
+        leoyang.li@nxp.com, lorenzo.pieralisi@arm.com,
+        catalin.marinas@arm.com, will.deacon@arm.com
+Cc:     Mingkai.Hu@nxp.com, Minghuan.Lian@nxp.com, Xiaowei.Bao@nxp.com,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Subject: [PATCHv10 00/13] PCI: Recode Mobiveil driver and add PCIe Gen4 driver for NXP Layerscape SoCs
+Date:   Thu, 13 Feb 2020 12:06:31 +0800
+Message-Id: <20200213040644.45858-1-Zhiqiang.Hou@nxp.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: HK2PR04CA0069.apcprd04.prod.outlook.com
+ (2603:1096:202:15::13) To DB8PR04MB6747.eurprd04.prod.outlook.com
+ (2603:10a6:10:10b::31)
+MIME-Version: 1.0
+Received: from localhost.localdomain (119.31.174.73) by HK2PR04CA0069.apcprd04.prod.outlook.com (2603:1096:202:15::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.24 via Frontend Transport; Thu, 13 Feb 2020 04:09:34 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [119.31.174.73]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 906d8492-fe66-4721-f325-08d7b03a8bee
+X-MS-TrafficTypeDiagnostic: DB8PR04MB7084:|DB8PR04MB7084:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DB8PR04MB7084C7AFAAC5E5615B860962841A0@DB8PR04MB7084.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
+X-Forefront-PRVS: 031257FE13
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(6029001)(4636009)(376002)(366004)(136003)(396003)(39860400002)(346002)(189003)(199004)(36756003)(6506007)(5660300002)(26005)(66476007)(7416002)(66556008)(66946007)(6512007)(4326008)(52116002)(6666004)(16526019)(86362001)(478600001)(1076003)(2616005)(956004)(6486002)(81156014)(8676002)(81166006)(8936002)(186003)(2906002)(316002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB7084;H:DB8PR04MB6747.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 5xemg9WW0zFbq38cOO8ZUUMoKd6YY8O1z53f/q1hyv3T1BaUkOzzsk9ZzaNj8Pc/4bFuI+9LacfSWSTlwZBDZ22HhTmLTNhPHREi2DwpV04bXCFXB6hT/17rYouBHeDpzv3g0TK6U4EvJVxfDMyYJEPREeeqdwDCPBpZWHA39ANteDuby/9oLCvaZ6y7EIBC1bWHfhJ0guJCkFZ2JNJTAVs6rXY1FvHcx2jdDjpHycmPAYt1MZLonT+rrDS6MbA4wwUAkNphs1YJ0cdKz7+XanIhu1zphW10e+pyCFIVwBby6fep13eEwyrS7m1jiaG6q1JcgTy61xMmr9VxkizjwLuEkdPp3jc0HThlHGz/iZIW0SjHgmTNiUpVJ1f+ynIK+qXN6PHfJdCTzZJ1JSLIoV/GPSNqKYORenDOltvSOc1/J/OBN6sKJX7HXzSIW0izis54PPz8cuosBaF5YqpkRGLctZC1jwzITIJPUCzcO3r1zW30Zt9U4Jz0fVgXXYhd
+X-MS-Exchange-AntiSpam-MessageData: pvfklXitTc7g1Nswv4vC+5PATpq28c3BSv8x0gouKNbdwwzr4yEn1sDBt+fHqAAb62aUeGnQZV0ayX8nv8gVAnEIpy0Dd1cU+/1kvdVF9qsgucEayAzPMgti12gFJQ+CE8fSBp1Wnhr5TEacz/ojkg==
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 906d8492-fe66-4721-f325-08d7b03a8bee
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Feb 2020 04:09:40.1947
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: p+Asztjl9owD1xPEwxHkAP0HsiUpjApoEgb98AdL0BURl3izIfHzvBZ4M5FCf1BKepWzKPSSNUhl1QyH10k+iA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB7084
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
+This patch set is to recode the Mobiveil driver and add
+PCIe support for NXP Layerscape series SoCs integrated
+Mobiveil's PCIe Gen4 controller.
 
-On 2/12/2020 6:59 PM, Jaedon Shin wrote:
-> devm_clk_get* APIs are device managed and get freed automatically when
-> the device detaches. so there is no reason to explicitly call clk_put()
-> in probe or remove functions.
-> 
-> Signed-off-by: Jaedon Shin <jaedon.shin@gmail.com>
+Hou Zhiqiang (13):
+  PCI: mobiveil: Introduce a new structure mobiveil_root_port
+  PCI: mobiveil: Move the host initialization into a function
+  PCI: mobiveil: Collect the interrupt related operations into a
+    function
+  PCI: mobiveil: Modularize the Mobiveil PCIe Host Bridge IP driver
+  PCI: mobiveil: Add callback function for interrupt initialization
+  PCI: mobiveil: Add callback function for link up check
+  PCI: mobiveil: Allow mobiveil_host_init() to be used to re-init host
+  PCI: mobiveil: Add 8-bit and 16-bit CSR register accessors
+  PCI: mobiveil: Add Header Type field check
+  dt-bindings: PCI: Add NXP Layerscape SoCs PCIe Gen4 controller
+  PCI: mobiveil: Add PCIe Gen4 RC driver for NXP Layerscape SoCs
+  arm64: dts: lx2160a: Add PCIe controller DT nodes
+  arm64: defconfig: Enable CONFIG_PCIE_LAYERSCAPE_GEN4
 
-Fixes: c0452137034b ("PCI: brcmstb: Add Broadcom STB PCIe host
-controller driver")
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-
-
-> ---
->  drivers/pci/controller/pcie-brcmstb.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> index 0e0ca39a680b..3e48d9e238bb 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -972,7 +972,6 @@ static void __brcm_pcie_remove(struct brcm_pcie *pcie)
->  	brcm_pcie_turn_off(pcie);
->  	brcm_pcie_regulator_disable(pcie);
->  	clk_disable_unprepare(pcie->clk);
-> -	clk_put(pcie->clk);
->  }
->  
->  static int brcm_pcie_remove(struct platform_device *pdev)
-> 
+ .../bindings/pci/layerscape-pcie-gen4.txt     |  52 ++
+ MAINTAINERS                                   |  10 +-
+ .../arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 163 +++++
+ arch/arm64/configs/defconfig                  |   1 +
+ drivers/pci/controller/Kconfig                |  11 +-
+ drivers/pci/controller/Makefile               |   2 +-
+ drivers/pci/controller/mobiveil/Kconfig       |  33 +
+ drivers/pci/controller/mobiveil/Makefile      |   5 +
+ .../mobiveil/pcie-layerscape-gen4.c           | 267 +++++++++
+ .../pcie-mobiveil-host.c}                     | 564 ++++--------------
+ .../controller/mobiveil/pcie-mobiveil-plat.c  |  61 ++
+ .../pci/controller/mobiveil/pcie-mobiveil.c   | 230 +++++++
+ .../pci/controller/mobiveil/pcie-mobiveil.h   | 226 +++++++
+ 13 files changed, 1170 insertions(+), 455 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/layerscape-pcie-gen4.txt
+ create mode 100644 drivers/pci/controller/mobiveil/Kconfig
+ create mode 100644 drivers/pci/controller/mobiveil/Makefile
+ create mode 100644 drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c
+ rename drivers/pci/controller/{pcie-mobiveil.c => mobiveil/pcie-mobiveil-host.c} (54%)
+ create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil-plat.c
+ create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil.c
+ create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil.h
 
 -- 
-Florian
+2.17.1
+
