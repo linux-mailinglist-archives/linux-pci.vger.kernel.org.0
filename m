@@ -2,50 +2,50 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DC5215B7F9
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2020 04:54:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B39BD15B7FE
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2020 04:58:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729547AbgBMDyL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Feb 2020 22:54:11 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:41582 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729443AbgBMDyK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Feb 2020 22:54:10 -0500
-Received: by mail-pg1-f195.google.com with SMTP id 70so2322261pgf.8;
-        Wed, 12 Feb 2020 19:54:09 -0800 (PST)
+        id S1729555AbgBMD6U (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Feb 2020 22:58:20 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:54760 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729546AbgBMD6T (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Feb 2020 22:58:19 -0500
+Received: by mail-pj1-f66.google.com with SMTP id dw13so1770265pjb.4;
+        Wed, 12 Feb 2020 19:58:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=H/W4ZsogubSvOWP8PRioC/ncvLkj+MK+j9+5NGXzQhQ=;
-        b=fBRhQ8hcGWQmFrIA1kKhuSNnTSjEtbh2K2WxKPUSlOgth5hal4qoOGt8g2ctEAaimz
-         yUf4/mGFPMpRxbSSUswIOI1vH0AC67u2A/rbwlLW9fvwpLNcUuRTyEbH6HD6lPFWIdA0
-         40iBmtz0IJdbR4tNssnDV5gClTVyoxmAXjxnbqkQdZnOqXHebEKAWH9S7soEFh25xu+g
-         R1S73evSgxWEe94Dan8MqYHlZ46GUSF+iZnDBhzP0y41lutU0FFQ8t9Kyb3Ehk/vwFC2
-         2CsuUnebImnqanLqPCwMGTxI1Kj6gcSak65eK2v7GD1nA1QIPws0NkrLtNoRv4uXFkFI
-         dr+w==
+        bh=zflr/iTTksVOfsKcKKhy40p87pCDdvscArKQByKqnJU=;
+        b=gGJVyL7BsiZXQYacCcTjJRxYbRyq4Mb/9NpptkzACR8alkdq52ihmtiv34uVyxsMwW
+         CuR9PLy/gQ/XfW8CN+e6QoSpxn+pO+1PcupAN1ZlhM3jEsQUqYWeZktGIMI/66sLCuu+
+         qmsF3IeyKnMT17G5fBvSBdObfzOP3tCC+u9hay0Rq+D4CyYQW5bcVaiN5m/GCv6bswB0
+         g9Dkszh8lPHfj9F/zndQvGRimvbaISIgjfNzJ6hN3LO2Mnl13t9VAAYnO2s5i5i9gS5J
+         ltqYwjER2crZLpTWD7rWA+wmKB1B/HfpDwjG1BgCSfVXwTKHAgFue8wQFyV4WqMOwI99
+         pqpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=H/W4ZsogubSvOWP8PRioC/ncvLkj+MK+j9+5NGXzQhQ=;
-        b=IKPbnP0wNDe3J3g751IoMBiIhiqcrsM4SCNA0YYgBE8akHeSeLQFTrbpry471EvxU5
-         yF+IyXDUZIHQJmvdHndLH+FSC2arbS+shz3RtrE45IFtrSIVAadhlo1XbMfyLT9BoM/F
-         pYVKcxvLSwOeQREVUlnjBIXb6njckiCLVcEOypVnPLzSRGaJscSvpsim0FD7AQVbsCDc
-         iPZKIG/EYVyUoX5iSGiR7QoBxentH8zf4j9r0rAsr9d47pkDfWDc6Al1UIo91J+3b/k0
-         Tw3ZTtuh9snPvCaIDsOtRDJNRftJfKSJvMhrYLKPiu6FSvXdb/Oe+oQNPAt3xrE62fGF
-         AzZA==
-X-Gm-Message-State: APjAAAX+eaea4tbkCdWeJy5J36qxZqg+VhZ224K5vbpNhZ2ghAXNCmaE
-        f910H1f+s9mJiqoApQxoBIpo2a9k
-X-Google-Smtp-Source: APXvYqyTCrx0Oqlg+YHS89ugGZlZqK21U2+BWQIY3WFLAH+dOF3hU4pUe3ThLfQHh5XC0p++ktm5Dw==
-X-Received: by 2002:aa7:8299:: with SMTP id s25mr11339038pfm.261.1581566049238;
-        Wed, 12 Feb 2020 19:54:09 -0800 (PST)
+        bh=zflr/iTTksVOfsKcKKhy40p87pCDdvscArKQByKqnJU=;
+        b=GbOyfp29hgR0m1xDEK1lC6UDM1yDsnIhDpxDTN55IiXjjX/pHxHdvbbpBP8yMufg0u
+         328qOy6GUqV9tTXNhFy69kkyk5IDHK+IFoSpK4Vj2JeFq827rsOXDFsKiBI5+VYNZrU/
+         ZJVzNoZZU950/vbVGJavpE+lQeLemV/tZ4G0eL5D6jxp+BIGEhYawHMWZxTu1bfLo35R
+         oYLFkXeIDt/pilSS0iAELRWe4tVoByrAuasQqpOF3UibHkxYSo2tjZjKPE+rv2rH0tK7
+         fDZvdALkR7rEDxg3Dj0EWqnREbiMQW9fgaTCSth77Ba9/8H6R0wI6Qv2C/+pufHH54XI
+         yJ7A==
+X-Gm-Message-State: APjAAAXhLapAzSy5CrtxU/+VoXJUOYAyeKgWu5Vcur08H0Bb16+OS2B1
+        Gmi7dVvPQ9gWJhiWr8VWLg7NFCLw
+X-Google-Smtp-Source: APXvYqwuO3xb8g50J9gUStoHDo3kKWwD+ioqZ3XXXFnLjU0OJNa9TSoszeWoysa0wzqRaBN0pZ4hjA==
+X-Received: by 2002:a17:902:7790:: with SMTP id o16mr11256809pll.271.1581566299005;
+        Wed, 12 Feb 2020 19:58:19 -0800 (PST)
 Received: from [10.230.28.123] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id r6sm729707pfh.91.2020.02.12.19.54.07
+        by smtp.gmail.com with ESMTPSA id u13sm621020pjn.29.2020.02.12.19.58.17
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Feb 2020 19:54:08 -0800 (PST)
-Subject: Re: [PATCH 0/3] PCI: brcmstb: Add Broadcom STB support
+        Wed, 12 Feb 2020 19:58:18 -0800 (PST)
+Subject: Re: [PATCH 1/3] PCI: brcmstb: Enable ARCH_BRCMSTB
 To:     Jaedon Shin <jaedon.shin@gmail.com>,
         Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         bcm-kernel-feedback-list@broadcom.com,
@@ -61,6 +61,7 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-pci@vger.kernel.org
 References: <20200213025930.27943-1-jaedon.shin@gmail.com>
+ <20200213025930.27943-2-jaedon.shin@gmail.com>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Autocrypt: addr=f.fainelli@gmail.com; keydata=
  mQGiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
@@ -116,12 +117,12 @@ Autocrypt: addr=f.fainelli@gmail.com; keydata=
  caxTGgc5zzQHeX67eMzrGomG3ZnIxmd1sAbgvJUDaD2GrYlulfwGWwWyTNbWRvMighVdPkSF
  6XFgQaosWxkV0OELLy2N485YrTr2Uq64VKyxpncLh50e2RnyAJ9qfUATKC9NgZjRvBztfqy4
  a9BQwACgnzGuH1BVeT2J0Ra+ZYgkx7DaPR0=
-Message-ID: <6ba4bb21-034b-93f0-d4b7-13ac7c5a925d@gmail.com>
-Date:   Wed, 12 Feb 2020 19:54:05 -0800
+Message-ID: <6c6d240d-b9d3-907b-df79-8823a281e480@gmail.com>
+Date:   Wed, 12 Feb 2020 19:58:16 -0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.2
 MIME-Version: 1.0
-In-Reply-To: <20200213025930.27943-1-jaedon.shin@gmail.com>
+In-Reply-To: <20200213025930.27943-2-jaedon.shin@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -130,31 +131,51 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-+Jim,
+
 
 On 2/12/2020 6:59 PM, Jaedon Shin wrote:
-> This series enables the ARM based Broadcom STB SoCs and supports GPIO
-> based regulators for its power supplies. and this has an improvement on
-> devm_ APIS.
-
-Which ARM-based SoCs did you try this on? We still have an issue with
-the multiple dma-ranges that must be handled to support 7445 with memory
-in the extension regions as well as 7278 and 7216.
-
-See comments in specific patches.
-
+> Add PCIe support for ARM-based Broadcom STB SoCs.
 > 
-> Jaedon Shin (3):
->   PCI: brcmstb: Enable ARCH_BRCMSTB
->   PCI: brcmstb: Add regulator support
->   PCI: brcmstb: Drop clk_put when probe fails and remove
+> Signed-off-by: Jaedon Shin <jaedon.shin@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml | 8 +++++++-
+>  drivers/pci/controller/Kconfig                           | 2 +-
+>  drivers/pci/controller/pcie-brcmstb.c                    | 1 +
+>  3 files changed, 9 insertions(+), 2 deletions(-)
 > 
->  .../bindings/pci/brcm,stb-pcie.yaml           |  8 +-
->  drivers/gpio/gpio-brcmstb.c                   | 13 +++-
->  drivers/pci/controller/Kconfig                |  2 +-
->  drivers/pci/controller/pcie-brcmstb.c         | 78 ++++++++++++++++++-
->  4 files changed, 97 insertions(+), 4 deletions(-)
-> 
+> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> index 77d3e81a437b..fb1a78606f78 100644
+> --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> @@ -14,7 +14,13 @@ allOf:
+>  
+>  properties:
+>    compatible:
+> -    const: brcm,bcm2711-pcie # The Raspberry Pi 4
+> +    oneOf:
+> +      - description:
+> +          BCM2711 based Boards
+> +        const: brcm,bcm2711-pcie
+> +      - description:
+> +          ARM-based BCM7XXX Broadcom STB Boards
+> +        const: brcm,bcm7445-pcie
 
+You would also need to document the regulator properties as optional here.
+
+>  
+>    reg:
+>      maxItems: 1
+> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+> index 20bf00f587bd..c60a27cff81a 100644
+> --- a/drivers/pci/controller/Kconfig
+> +++ b/drivers/pci/controller/Kconfig
+> @@ -254,7 +254,7 @@ config VMD
+>  
+>  config PCIE_BRCMSTB
+>  	tristate "Broadcom Brcmstb PCIe host controller"
+> -	depends on ARCH_BCM2835 || COMPILE_TEST
+> +	depends on ARCH_BCM2835 || ARCH_BRCMSTB || COMPILE_TEST
+
+This part looks entirely reasonable.
 -- 
 Florian
