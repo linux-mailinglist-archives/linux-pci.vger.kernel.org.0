@@ -2,222 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 061C215F8CB
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2020 22:33:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DE29A15F909
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2020 22:55:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389316AbgBNVdZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 Feb 2020 16:33:25 -0500
-Received: from mga14.intel.com ([192.55.52.115]:64984 "EHLO mga14.intel.com"
+        id S2387427AbgBNVyc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 Feb 2020 16:54:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389305AbgBNVdZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 14 Feb 2020 16:33:25 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Feb 2020 13:33:24 -0800
-X-IronPort-AV: E=Sophos;i="5.70,441,1574150400"; 
-   d="scan'208";a="227742893"
-Received: from mravago-mobl.amr.corp.intel.com (HELO arch-ashland-svkelley.intel.com) ([10.252.135.120])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 14 Feb 2020 13:33:24 -0800
-From:   Sean V Kelley <sean.v.kelley@linux.intel.com>
-To:     tglx@linutronix.de, bhelgaas@google.com, corbet@lwn.net,
-        mingo@redhat.com, bp@alien8.de
-Cc:     x86@kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        kar.hin.ong@ni.com, sassmann@kpanic.de,
-        Sean V Kelley <sean.v.kelley@linux.intel.com>
-Subject: [PATCH 2/2] Documentation:PCI: Add background on Boot Interrupts
-Date:   Fri, 14 Feb 2020 13:33:13 -0800
-Message-Id: <20200214213313.66622-3-sean.v.kelley@linux.intel.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200214213313.66622-1-sean.v.kelley@linux.intel.com>
-References: <20200214213313.66622-1-sean.v.kelley@linux.intel.com>
+        id S1728911AbgBNVyc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 14 Feb 2020 16:54:32 -0500
+Received: from localhost (unknown [65.119.211.164])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A914A24649;
+        Fri, 14 Feb 2020 21:54:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581717271;
+        bh=4EaJD4cBQj2ixLoQQ9Ro1z/eRAHDR7cjQ7KLJA2dnYQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cH50z6/hQ484QtdtM5AbiW5rhX8uAxBJ1xvtyDj7AaCp7i2VBV/JQskY7FIW/iJEK
+         qb+yMvXEQrefwv+MBxWKsHs94qopKbTcKYeH7mwqR5UFKZ2KRvwzXt2SDqNx1hrBca
+         VV0MIrjMZotasSKN6+pva+GYlfR5aLKTZIPWmGyw=
+Date:   Fri, 14 Feb 2020 16:47:30 -0500
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@google.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Joerg Roedel <jroedel@suse.de>, Will Deacon <will@kernel.org>,
+        John Garry <john.garry@huawei.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.5 253/542] PCI/ATS: Restore EXPORT_SYMBOL_GPL()
+ for pci_{enable,disable}_ats()
+Message-ID: <20200214214730.GC4193448@kroah.com>
+References: <20200214154854.6746-1-sashal@kernel.org>
+ <20200214154854.6746-253-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200214154854.6746-253-sashal@kernel.org>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Improve understanding of the PCI quirks for this legacy PCI interrupt
-behavior to the benefit of developers and users alike.
+On Fri, Feb 14, 2020 at 10:44:05AM -0500, Sasha Levin wrote:
+> From: Greg Kroah-Hartman <gregkh@google.com>
+> 
+> [ Upstream commit bb950bca5d522119f8b9ce3f6cbac4841c6d6517 ]
+> 
+> Commit d355bb209783 ("PCI/ATS: Remove unnecessary EXPORT_SYMBOL_GPL()")
+> unexported a bunch of symbols from the PCI core since the only external
+> users were non-modular IOMMU drivers. Although most of those symbols
+> can remain private for now, 'pci_{enable,disable_ats()' is required for
+> the ARM SMMUv3 driver to build as a module, otherwise we get a build
+> failure as follows:
+> 
+>   | ERROR: "pci_enable_ats" [drivers/iommu/arm-smmu-v3.ko] undefined!
+>   | ERROR: "pci_disable_ats" [drivers/iommu/arm-smmu-v3.ko] undefined!
+> 
+> Re-export these two functions so that the ARM SMMUv3 driver can be build
+> as a module.
+> 
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Joerg Roedel <jroedel@suse.de>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@google.com>
+> [will: rewrote commit message]
+> Signed-off-by: Will Deacon <will@kernel.org>
+> Tested-by: John Garry <john.garry@huawei.com> # smmu v3
+> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/pci/ats.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+> index b6f064c885c37..3ef0bb281e7cc 100644
+> --- a/drivers/pci/ats.c
+> +++ b/drivers/pci/ats.c
+> @@ -69,6 +69,7 @@ int pci_enable_ats(struct pci_dev *dev, int ps)
+>  	dev->ats_enabled = 1;
+>  	return 0;
+>  }
+> +EXPORT_SYMBOL_GPL(pci_enable_ats);
+>  
+>  /**
+>   * pci_disable_ats - disable the ATS capability
+> @@ -87,6 +88,7 @@ void pci_disable_ats(struct pci_dev *dev)
+>  
+>  	dev->ats_enabled = 0;
+>  }
+> +EXPORT_SYMBOL_GPL(pci_disable_ats);
+>  
+>  void pci_restore_ats_state(struct pci_dev *dev)
+>  {
+> -- 
+> 2.20.1
+> 
 
-Signed-off-by: Sean V Kelley <sean.v.kelley@linux.intel.com>
----
- Documentation/PCI/boot-interrupts.rst | 153 ++++++++++++++++++++++++++
- Documentation/PCI/index.rst           |   1 +
- 2 files changed, 154 insertions(+)
- create mode 100644 Documentation/PCI/boot-interrupts.rst
+This isn't needed to be backported as the problem it solves is not in
+the 5.5 or older kernels, it only showed up in 5.6-rc1, and this was
+part of a larger patchset.
 
-diff --git a/Documentation/PCI/boot-interrupts.rst b/Documentation/PCI/boot-interrupts.rst
-new file mode 100644
-index 000000000000..632c080994fc
---- /dev/null
-+++ b/Documentation/PCI/boot-interrupts.rst
-@@ -0,0 +1,153 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+===============
-+Boot Interrupts
-+===============
-+
-+:Author: - Sean V Kelley <sean.v.kelley@linux.intel.com>
-+
-+Overview
-+========
-+
-+On PCI Express, interrupts are represented with either MSI or inbound interrupt
-+messages (Assert_INTx/Deassert_INTx). The integrated IO-APIC in a given Core
-+IO converts the legacy interrupt messages from PCI Express to MSI interrupts.
-+If the IO-APIC is disabled (via the mask bits in the IO-APIC table entries),
-+the messages are routed to the legacy PCH. This in-band interrupt mechanism was
-+traditionally necessary for systems that did not support the IO-APIC and for
-+boot. Intel in the past has used the term "boot interrupts" to describe this
-+mechanism. Further, the PCI Express protocol describes this in-band legacy
-+wire-interrupt INTx mechanism for I/O devices to signal PCI-style level
-+interrupts. The subsequent paragraphs describe problems with the Core IO
-+handling of INTx message routing to the PCH and mitigation within BIOS and
-+the OS.
-+
-+
-+Problem
-+=======
-+
-+When in-band legacy INTx messages are forwarded to the PCH, they in turn
-+trigger a new interrupt for which the OS likely lacks a handler. When an
-+interrupt goes unhandled over time, they are tracked by the Linux kernel
-+as Spurious Interrupts. The IRQ will be disabled by the Linux kernel after
-+it reaches a specific count with the error "nobody cared". This disabled
-+IRQ now prevents valid usage by an existing interrupt which may happen to
-+share the IRQ line.
-+
-+irq 19: nobody cared (try booting with the "irqpoll" option)
-+CPU: 0 PID: 2988 Comm: irq/34-nipalk Tainted: 4.14.87-rt49-02410-g4a640ec-dirty #1
-+Hardware name: National Instruments NI PXIe-8880/NI PXIe-8880, BIOS 2.1.5f1 01/09/2020
-+Call Trace:
-+<IRQ>
-+ ? dump_stack+0x46/0x5e
-+ ? __report_bad_irq+0x2e/0xb0
-+ ? note_interrupt+0x242/0x290
-+ ? nNIKAL100_memoryRead16+0x8/0x10 [nikal]
-+ ? handle_irq_event_percpu+0x55/0x70
-+ ? handle_irq_event+0x4f/0x80
-+ ? handle_fasteoi_irq+0x81/0x180
-+ ? handle_irq+0x1c/0x30
-+ ? do_IRQ+0x41/0xd0
-+ ? common_interrupt+0x84/0x84
-+</IRQ>
-+
-+handlers:
-+irq_default_primary_handler threaded usb_hcd_irq
-+Disabling IRQ #19
-+
-+
-+Conditions
-+==========
-+
-+The use of threaded interrupts is the most likely condition to trigger this
-+problem today. Threaded interrupts may not be reenabled after the IRQ handler
-+wakes. These "one shot" conditions mean that the threaded interrupt needs to
-+keep the interrupt line masked until the threaded handler has run. Especially
-+when dealing with high data rate interrupts, the thread needs to run to completion
-+otherwise some handlers will end up in stack overflows since the interrupt
-+of the issuing device is still active.
-+
-+Affected Chipsets
-+=================
-+
-+The legacy interrupt forwarding mechansim exists today in a number of devices
-+including but not limited to chipsets from AMD/ATI, Broadcom, and Intel. Changes
-+made through the mitigations below have been applied to drivers/pci/quirks.c
-+
-+Starting with ICX there are no longer any IO-APICs in the Core IO's devices.
-+IO-APIC is only in the PCH.  Devices connected to the Core IO's PCIE Root Ports
-+will use native MSI/MSI-X mechanisms.
-+
-+Mitigations
-+===========
-+
-+The mitigations take the form of PCI quirks. The preference has been to first
-+identify and make use of a means to disable the routing to the PCH. In such a
-+case a quirk to disable boot interrupt generation can be added.[1]
-+
-+Intel® 6300ESB I/O Controller Hub
-+Alternate Base Address Register:
-+ BIE: Boot Interrupt Enable
-+	0 = Boot interrupt is enabled.
-+	1 = Boot interrupt is disabled.
-+
-+Intel® Sandy Bridge through Sky Lake based Xeon servers:
-+Coherent Interface Protocol Interrupt Control
-+ dis_intx_route2pch/dis_intx_route2ich/dis_intx_route2dmi2:
-+	When this bit is set. Local INTx messages received from the
-+	Intel® Quick Data DMA/PCI Express ports are not routed to legacy
-+	PCH - they are either converted into MSI via the integrated IO-APIC
-+	(if the IO-APIC mask bit is clear in the appropriate entries)
-+	or cause no further action (when mask bit is set)
-+
-+In the absence of a way to directly disable the routing, another approach
-+has been to make use of PCI Interrupt pin to INTx routing tables for purposes
-+of redirecting the interrupt handler to the rerouted interrupt line by default.
-+Therefore, on chipsets where this INTx routing cannot be disabled, the
-+Linux kernel will reroute the valid interrupt to its legacy interrupt. This
-+redirection of the handler will prevent the occurrence of the spurious
-+interrupt detection which would ordinarily disable the IRQ line due to
-+excessive unhandled counts.[2]
-+
-+The config option X86_REROUTE_FOR_BROKEN_BOOT_IRQS exists to enable
-+(or disable) the redirection of the interrupt handler to the PCH interrupt
-+line. The option can be overridden by either pci=ioapicreroute or
-+pci=noioapicreroute.[3]
-+
-+
-+More Documentation
-+==================
-+
-+There is an overview of the legacy interrupt handling mentioned in several
-+datasheets (6300ESB and 6700PXH below). While largely the same, it provides
-+insight into the evolution of its handling with chipsets.
-+
-+Example of disabling of the boot interrupt
-+------------------------------------------
-+
-+Intel® 6300ESB I/O Controller Hub (Document # 300641-004US)
-+	2.15.2 PCI Express Legacy INTx Support and Boot Interrupt
-+	https://www.intel.com/content/dam/doc/datasheet/6300esb-io-controller-hub-datasheet.pdf
-+
-+Intel® Xeon® Processor E5-1600/2400/2600/4600 v3 Product Families
-+Datasheet - Volume 2: Registers (Dcument # 330784-003)
-+	6.6.41 cipintrc Coherent Interface Protocol Interrupt Control
-+	https://www.intel.com/content/dam/www/public/us/en/documents/datasheets/xeon-e5-v3-datasheet-vol-2.pdf
-+
-+Example of handler rerouting
-+----------------------------
-+
-+Intel® 6700PXH 64-bit PCI Hub (Document # 302628)
-+	2.15.2 PCI Express Legacy INTx Support and Boot Interrupt
-+	https://www.intel.com/content/dam/doc/datasheet/6700pxh-64-bit-pci-hub-datasheet.pdf
-+
-+
-+If you have any legacy PCI interrupt questions that aren't answered, email me.
-+
-+Cheers,
-+    Sean V Kelley
-+    sean.v.kelley@linux.intel.com
-+
-+[1] https://lore.kernel.org/lkml/12131949181903-git-send-email-sassmann@suse.de/
-+[2] https://lore.kernel.org/lkml/12131949182094-git-send-email-sassmann@suse.de/
-+[3] https://lore.kernel.org/lkml/487C8EA7.6020205@suse.de/
-diff --git a/Documentation/PCI/index.rst b/Documentation/PCI/index.rst
-index 6768305e4c26..8f66feaafd4f 100644
---- a/Documentation/PCI/index.rst
-+++ b/Documentation/PCI/index.rst
-@@ -16,3 +16,4 @@ Linux PCI Bus Subsystem
-    pci-error-recovery
-    pcieaer-howto
-    endpoint/index
-+   boot-interrupts
--- 
-2.25.0
+So please drop from everywhere, thanks.
 
+greg k-h
