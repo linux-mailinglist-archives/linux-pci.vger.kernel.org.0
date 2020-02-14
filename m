@@ -2,38 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 24AC915E4FA
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2020 17:39:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D09615E3C9
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2020 17:32:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393537AbgBNQjE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 Feb 2020 11:39:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59470 "EHLO mail.kernel.org"
+        id S2406224AbgBNQZu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 Feb 2020 11:25:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405585AbgBNQXS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:23:18 -0500
+        id S2406215AbgBNQZt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:25:49 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E926A24776;
-        Fri, 14 Feb 2020 16:23:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2C4B247D0;
+        Fri, 14 Feb 2020 16:25:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697397;
-        bh=dsqEi709l+qenfWhaHd3mIIG/QwcXpRGZyNSwjjHc4Q=;
+        s=default; t=1581697548;
+        bh=Zd1A/nqkeu6VMjWcugt+ULvaZDsKoAratpep8cXZ2yQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OVLC7nOIpQkfTk5d8oBr536SqcTcVnlupXIN4C7xLdgtAZPWFtOTZFyPnDZ+gtYnS
-         LqrJi9EjqbMnx8ptmpxRp+mFyRPWLzi1ddQdlQkbm9DFQRS6tzsxcJs3MP2g/8W5a8
-         bDe9fj9YLOVJevmEXXHJM0o+vI8PCNhWLHsGcdEE=
+        b=LhvDEbYXehtxbTwk3+kEc5Cy1yzxvih4HSXyo7fGWweN5bLW5qNIoW53Y6fZC5O4G
+         HBCPBWZvh7g851WogHm3qChsi40HGpBAktqLkbKRoGY5e1s8HIrH6ypv6XP28THkG2
+         tZjhHwZBmsI+ukGlue2oBx8dA4mXcWOTWK8mzkXc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Logan Gunthorpe <logang@deltatee.com>, Kit Chow <kchow@gigaio.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 091/141] PCI: Don't disable bridge BARs when assigning bus resources
-Date:   Fri, 14 Feb 2020 11:20:31 -0500
-Message-Id: <20200214162122.19794-91-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 067/100] PCI: Don't disable bridge BARs when assigning bus resources
+Date:   Fri, 14 Feb 2020 11:23:51 -0500
+Message-Id: <20200214162425.21071-67-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
-References: <20200214162122.19794-1-sashal@kernel.org>
+In-Reply-To: <20200214162425.21071-1-sashal@kernel.org>
+References: <20200214162425.21071-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -105,10 +105,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 16 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index f30ca75b5b6c7..e631636a0aa50 100644
+index 1723ac1b30e10..fe2865a0da395 100644
 --- a/drivers/pci/setup-bus.c
 +++ b/drivers/pci/setup-bus.c
-@@ -1833,12 +1833,18 @@ void pci_assign_unassigned_root_bus_resources(struct pci_bus *bus)
+@@ -1760,12 +1760,18 @@ void pci_assign_unassigned_root_bus_resources(struct pci_bus *bus)
  	/* restore size and flags */
  	list_for_each_entry(fail_res, &fail_head, list) {
  		struct resource *res = fail_res->res;
@@ -129,7 +129,7 @@ index f30ca75b5b6c7..e631636a0aa50 100644
  	}
  	free_list(&fail_head);
  
-@@ -1904,12 +1910,18 @@ void pci_assign_unassigned_bridge_resources(struct pci_dev *bridge)
+@@ -1826,12 +1832,18 @@ void pci_assign_unassigned_bridge_resources(struct pci_dev *bridge)
  	/* restore size and flags */
  	list_for_each_entry(fail_res, &fail_head, list) {
  		struct resource *res = fail_res->res;
