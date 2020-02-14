@@ -2,108 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DAC215D5DB
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2020 11:35:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 978D015D61E
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2020 11:55:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729122AbgBNKfi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 Feb 2020 05:35:38 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43486 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729026AbgBNKfh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Feb 2020 05:35:37 -0500
-Received: by mail-wr1-f68.google.com with SMTP id r11so10279414wrq.10;
-        Fri, 14 Feb 2020 02:35:36 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=d7W1kdbHZqWV0I8rRc8UL4aroe3yEEgP807NUkElh44=;
-        b=rmntURPkIoIZcotuYijTnwMcaJ2d0HXv7V82S+K4mL6fc0xXjU9BPy3QV4AKl7k+RX
-         lcEJ/NKh0i/JdMiLLmHFRp3ZDQ8cqsvufuQa1h5Y+2Yli2ehZh74mNX8LkmbPed3/opo
-         TDTuZyrR2/owku+wvr7eFoSWWVTtF7AnF2+YwrR7v9VAL+F/tCdSJkBn2itBDlRBoWX4
-         KNzDiz+Ushgmy4HviSYwlfe+Npuncb2yOqrTQuN9kwVlE7Sup4hJJzsA5D/RqscCuMA5
-         1YobqgUB/+A5QE0Jm6PvOr5dP1pW8MROJius+DHYTkWRrq9JocViGZZONdIGEL8vRNRZ
-         WB+Q==
-X-Gm-Message-State: APjAAAU5HWhR1grC0OYDhCW2E+7Amilq5SozAEBQPqlRdnHZ01Ix4zxe
-        VBruuCMVgU7sdvBNd9ysfdI=
-X-Google-Smtp-Source: APXvYqxRqilIpNGUEWipv7odi3hZcxmVRPxaGJ6+TTBzUNyr4734mUC6t2/YruBJvqTTxvAKh5cwyg==
-X-Received: by 2002:adf:dd0b:: with SMTP id a11mr3556774wrm.150.1581676535349;
-        Fri, 14 Feb 2020 02:35:35 -0800 (PST)
-Received: from localhost (ip-37-188-133-87.eurotel.cz. [37.188.133.87])
-        by smtp.gmail.com with ESMTPSA id v8sm6607606wrw.2.2020.02.14.02.35.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 02:35:34 -0800 (PST)
-Date:   Fri, 14 Feb 2020 11:35:33 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Jason Gunthorpe <jgg@mellanox.com>,
-        lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
-        linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Stephen Bates <sbates@raithlin.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Don Dutile <ddutile@redhat.com>,
-        Thomas =?iso-8859-1?Q?Hellstr=F6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>, Joao Martins <joao.m.martins@oracle.com>
-Subject: Re: [LSF/MM TOPIC] get_user_pages() for PCI BAR Memory
-Message-ID: <20200214103533.GS31689@dhcp22.suse.cz>
-References: <20200207182457.GM23346@mellanox.com>
- <20200207194620.GG8731@bombadil.infradead.org>
- <20200207201351.GN23346@mellanox.com>
- <20200207204201.GH8731@bombadil.infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200207204201.GH8731@bombadil.infradead.org>
+        id S1728807AbgBNKzn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 Feb 2020 05:55:43 -0500
+Received: from mx2.suse.de ([195.135.220.15]:48358 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726220AbgBNKzn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 14 Feb 2020 05:55:43 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 49556ADDA;
+        Fri, 14 Feb 2020 10:55:41 +0000 (UTC)
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20200213025930.27943-4-jaedon.shin@gmail.com>
+Date:   Fri, 14 Feb 2020 11:55:23 +0100
+From:   "Nicolas Saenz Julienne" <nsaenzjulienne@suse.de>
+To:     "Jaedon Shin" <jaedon.shin@gmail.com>,
+        "Florian Fainelli" <f.fainelli@gmail.com>,
+        <bcm-kernel-feedback-list@broadcom.com>
+Cc:     "Mark Rutland" <mark.rutland@arm.com>,
+        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
+        <linux-gpio@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        "Jaedon Shin" <jaedon.shin@gmail.com>,
+        "Bartosz Golaszewski" <bgolaszewski@baylibre.com>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        "Gregory Fong" <gregory.0xf0@gmail.com>,
+        "Bjorn Helgaas" <bhelgaas@google.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        "Andrew Murray" <amurray@thegoodpenguin.co.uk>
+Subject: Re: [PATCH 3/3] PCI: brcmstb: Drop clk_put when probe fails and
+ remove
+Message-Id: <C0LTYJ7DK8YA.1TZ11JH5XC7JB@linux-9qgx>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri 07-02-20 12:42:01, Matthew Wilcox wrote:
-> On Fri, Feb 07, 2020 at 04:13:51PM -0400, Jason Gunthorpe wrote:
-> > On Fri, Feb 07, 2020 at 11:46:20AM -0800, Matthew Wilcox wrote:
-> > > > 
-> > > >  Christian König <christian.koenig@amd.com>
-> > > >  Daniel Vetter <daniel.vetter@ffwll.ch>
-> > > >  Logan Gunthorpe <logang@deltatee.com>
-> > > >  Stephen Bates <sbates@raithlin.com>
-> > > >  Jérôme Glisse <jglisse@redhat.com>
-> > > >  Ira Weiny <iweiny@intel.com>
-> > > >  Christoph Hellwig <hch@lst.de>
-> > > >  John Hubbard <jhubbard@nvidia.com>
-> > > >  Ralph Campbell <rcampbell@nvidia.com>
-> > > >  Dan Williams <dan.j.williams@intel.com>
-> > > >  Don Dutile <ddutile@redhat.com>
-> > > 
-> > > That's a long list, and you're missing 
-> > > 
-> > > "Thomas Hellström (VMware)" <thomas_os@shipmail.org>
-> > > Joao Martins <joao.m.martins@oracle.com>
-> > 
-> > Great, thanks, I'm not really aware of what the related work is
-> > though?
-> 
-> Thomas has been working on huge pages for graphics BARs, so that's involved
-> touching 'special' (ie pageless) VMAs:
-> https://lore.kernel.org/linux-mm/20200205125353.2760-1-thomas_os@shipmail.org/
-> 
-> Joao has been working on removing the need for KVM hosts to have struct pages
-> that cover the memory of their guests:
-> https://lore.kernel.org/linux-mm/20200110190313.17144-1-joao.m.martins@oracle.com/
+On Thu Feb 13, 2020 at 11:59 AM, Jaedon Shin wrote:
+> devm_clk_get* APIs are device managed and get freed automatically when
+> the device detaches. so there is no reason to explicitly call clk_put()
+> in probe or remove functions.
+>
+> Signed-off-by: Jaedon Shin <jaedon.shin@gmail.com>
+> ---
 
-I do not see those people requesting attendance. Please note that the
-deadline is approaching. Hint hint...
+Acked-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
--- 
-Michal Hocko
-SUSE Labs
+Thanks!
+
+> drivers/pci/controller/pcie-brcmstb.c | 1 -
+> 1 file changed, 1 deletion(-)
+>
+> diff --git a/drivers/pci/controller/pcie-brcmstb.c
+> b/drivers/pci/controller/pcie-brcmstb.c
+> index 0e0ca39a680b..3e48d9e238bb 100644
+> --- a/drivers/pci/controller/pcie-brcmstb.c
+> +++ b/drivers/pci/controller/pcie-brcmstb.c
+> @@ -972,7 +972,6 @@ static void __brcm_pcie_remove(struct brcm_pcie
+> *pcie)
+> brcm_pcie_turn_off(pcie);
+> brcm_pcie_regulator_disable(pcie);
+> clk_disable_unprepare(pcie->clk);
+> - clk_put(pcie->clk);
+> }
+> =20
+> static int brcm_pcie_remove(struct platform_device *pdev)
+> --
+> 2.21.0
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
