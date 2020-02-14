@@ -2,39 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7CDE215F005
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2020 18:52:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 81F3915EF29
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2020 18:46:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388774AbgBNRwJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 Feb 2020 12:52:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42814 "EHLO mail.kernel.org"
+        id S2389329AbgBNQCW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 Feb 2020 11:02:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388300AbgBNP6k (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:58:40 -0500
+        id S2388718AbgBNQCV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:02:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD1712067D;
-        Fri, 14 Feb 2020 15:58:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14EC4217F4;
+        Fri, 14 Feb 2020 16:02:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695919;
-        bh=h4NPam10N3eignnDowrf5YwosObCNIFmYck3owIaMUg=;
+        s=default; t=1581696140;
+        bh=ZcUzQxygeVJz1o5yxME7aj3M2UwDiUg43GIMxLnHJpU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h6F4WA7jI0O6GA7aJ+/SXJ7jaPE7bPnYBtaGnqJJhw91YtpTU8fRfnNyVBkdM/fQU
-         Lkx6cVxx+ZeLKJfgjl/gqEoLKfAVFY8dR44doZIYEqdnwmt01D30adcO+MaFDmbYxk
-         5+fLkQX3ss6qh6Uj1HaFYBBbReTnpB/CVBZgOy4s=
+        b=K5GbgXrlkT/MmX85YyButZFDsVZBZs0vWVSs+Hg88MMqXID0gxuipTx7etbiTa5gB
+         /VxllhZKNSPh5VZbSAG752y77NPkR/Ve0LRGdxEp4u1+IfCQSsr3wTkddCuNMvWOgv
+         Xc2Y4FIxMRMGtCXHWzObdFuOIxIdX/k6JtgmD80g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dongdong Liu <liudongdong3@huawei.com>,
+Cc:     James Sewart <jamessewart@arista.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 457/542] PCI/AER: Initialize aer_fifo
-Date:   Fri, 14 Feb 2020 10:47:29 -0500
-Message-Id: <20200214154854.6746-457-sashal@kernel.org>
+        Logan Gunthorpe <logang@deltatee.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 022/459] PCI: Fix pci_add_dma_alias() bitmask size
+Date:   Fri, 14 Feb 2020 10:54:32 -0500
+Message-Id: <20200214160149.11681-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
-References: <20200214154854.6746-1-sashal@kernel.org>
+In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
+References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -44,47 +44,75 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Dongdong Liu <liudongdong3@huawei.com>
+From: James Sewart <jamessewart@arista.com>
 
-[ Upstream commit d95f20c4f07020ebc605f3b46af4b6db9eb5fc99 ]
+[ Upstream commit f8bf2aeb651b3460a4b36fd7ba1ba1d31777d35c ]
 
-Previously we did not call INIT_KFIFO() for aer_fifo.  This leads to
-kfifo_put() sometimes returning 0 (queue full) when in fact it is not.
+The number of possible devfns is 256, but pci_add_dma_alias() allocated a
+bitmap of size 255.  Fix this off-by-one error.
 
-It is easy to reproduce the problem by using aer-inject:
+This fixes commits 338c3149a221 ("PCI: Add support for multiple DMA
+aliases") and c6635792737b ("PCI: Allocate dma_alias_mask with
+bitmap_zalloc()"), but I doubt it was possible to see a problem because
+it takes 4 64-bit longs (or 8 32-bit longs) to hold 255 bits, and
+bitmap_zalloc() doesn't save the 255-bit size anywhere.
 
-  $ aer-inject -s :82:00.0 multiple-corr-nonfatal
-
-The content of the multiple-corr-nonfatal file is as below:
-
-  AER
-  COR RCVR
-  HL 0 1 2 3
-  AER
-  UNCOR POISON_TLP
-  HL 4 5 6 7
-
-Fixes: 27c1ce8bbed7 ("PCI/AER: Use kfifo for tracking events instead of reimplementing it")
-Link: https://lore.kernel.org/r/1579767991-103898-1-git-send-email-liudongdong3@huawei.com
-Signed-off-by: Dongdong Liu <liudongdong3@huawei.com>
+[bhelgaas: commit log, move #define to drivers/pci/pci.h, include loop
+limit fix from Qian Cai:
+https://lore.kernel.org/r/20191218170004.5297-1-cai@lca.pw]
+Signed-off-by: James Sewart <jamessewart@arista.com>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pcie/aer.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pci/pci.c    | 2 +-
+ drivers/pci/pci.h    | 3 +++
+ drivers/pci/search.c | 4 ++--
+ 3 files changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index 1ca86f2e01665..4a818b07a1afb 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -1445,6 +1445,7 @@ static int aer_probe(struct pcie_device *dev)
- 		return -ENOMEM;
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index fcfaadc774eef..cbf3d3889874c 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -5894,7 +5894,7 @@ EXPORT_SYMBOL_GPL(pci_pr3_present);
+ void pci_add_dma_alias(struct pci_dev *dev, u8 devfn)
+ {
+ 	if (!dev->dma_alias_mask)
+-		dev->dma_alias_mask = bitmap_zalloc(U8_MAX, GFP_KERNEL);
++		dev->dma_alias_mask = bitmap_zalloc(MAX_NR_DEVFNS, GFP_KERNEL);
+ 	if (!dev->dma_alias_mask) {
+ 		pci_warn(dev, "Unable to allocate DMA alias mask\n");
+ 		return;
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 3f6947ee3324a..273d60cb0762d 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -4,6 +4,9 @@
  
- 	rpc->rpd = port;
-+	INIT_KFIFO(rpc->aer_fifo);
- 	set_service_data(dev, rpc);
+ #include <linux/pci.h>
  
- 	status = devm_request_threaded_irq(device, dev->irq, aer_irq, aer_isr,
++/* Number of possible devfns: 0.0 to 1f.7 inclusive */
++#define MAX_NR_DEVFNS 256
++
+ #define PCI_FIND_CAP_TTL	48
+ 
+ #define PCI_VSEC_ID_INTEL_TBT	0x1234	/* Thunderbolt */
+diff --git a/drivers/pci/search.c b/drivers/pci/search.c
+index bade14002fd8a..e4dbdef5aef05 100644
+--- a/drivers/pci/search.c
++++ b/drivers/pci/search.c
+@@ -41,9 +41,9 @@ int pci_for_each_dma_alias(struct pci_dev *pdev,
+ 	 * DMA, iterate over that too.
+ 	 */
+ 	if (unlikely(pdev->dma_alias_mask)) {
+-		u8 devfn;
++		unsigned int devfn;
+ 
+-		for_each_set_bit(devfn, pdev->dma_alias_mask, U8_MAX) {
++		for_each_set_bit(devfn, pdev->dma_alias_mask, MAX_NR_DEVFNS) {
+ 			ret = fn(pdev, PCI_DEVID(pdev->bus->number, devfn),
+ 				 data);
+ 			if (ret)
 -- 
 2.20.1
 
