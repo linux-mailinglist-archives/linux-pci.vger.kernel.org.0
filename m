@@ -2,92 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 343B215ED10
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2020 18:32:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 01A0215F44C
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2020 19:23:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387585AbgBNRbr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 Feb 2020 12:31:47 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39589 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390207AbgBNQG5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Feb 2020 11:06:57 -0500
-Received: by mail-wr1-f68.google.com with SMTP id y11so11491202wrt.6
-        for <linux-pci@vger.kernel.org>; Fri, 14 Feb 2020 08:06:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=skMhNoTugJ6zTST/t+E4o/R9M7w7is4uxoA6SOGqsOo=;
-        b=fdOPmNYPBxSQT0jzJbJlZa3aOnpBcmQ+NPrr4Xy/noKSZhKiX9i700NF6ESveRM+Lv
-         xTlEA1Dwu5xMjQ894g+vUCiUoiXJGH+9uqSEd9o2xzn1WnXBxozF1VYbMXmoEsWOI7Ry
-         VttQ14b8IQqqdioUurOE0pSQgDT+LFulxpzhp8JiELjG1etHKs2URbJKkPzfQT0G9AVW
-         l+jYo4OTMH9FxAWzZoIlKcG2Fb8KRGv+u1ESgU+kpLZWNwv13bfAppOjhXZ6quP3XM1U
-         Pad34GfIYydgU733zs8YsgE+pFsFictetmwnoEgjad+U0KtYYSRY9thw1TtP3FGx8H5B
-         IPvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=skMhNoTugJ6zTST/t+E4o/R9M7w7is4uxoA6SOGqsOo=;
-        b=jpjKwKlvkbVYYgnJ2vlQidFmS9qZhwLkRNIJYnqeirvehPWHwzCKpvAtRW3rDQk+vh
-         Antch6E/kEdBYJ4ZITka1ZDX1Nz3FF6A6TuL3GX+XnY0+lZRGq7qlC5/EXwXqcB0hEFK
-         r2s+xRXzyGotB3mEmw4nivjZpARUZIjvRNzc4O/C6FEqO2KuUNq5GdE+sHzMmoh9YIEk
-         uheYDdLwH3oAqsUnMGEExL3+JDl0uaBRg0J1JpIJ5jdpbOBWdTxy8fo3NBhTXhXT/gQt
-         l929hnZE95/Zc/fgGPGwCIoes+IPeyEc0q0dDbM7gi29YBZcD/dWuNp35QBoOZXRMEst
-         Rb6Q==
-X-Gm-Message-State: APjAAAVPBuGkzjHJ8Qz7BrNzVjW5JYj04rY6lo0KgJwb7XKyT1SCVXLH
-        VQde1J1ruxPBnPyJOKfiFTfj3Q==
-X-Google-Smtp-Source: APXvYqxyqmg7e8LeAx5P9P0xO6XsDZ38hCrdbxzCLwg/PkzE30ga5qHV2iVyIHRd9cU6DZhhE39m0A==
-X-Received: by 2002:adf:f6c8:: with SMTP id y8mr4652778wrp.167.1581696416079;
-        Fri, 14 Feb 2020 08:06:56 -0800 (PST)
-Received: from localhost.localdomain ([2001:171b:2276:930:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id s139sm8133213wme.35.2020.02.14.08.06.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 08:06:55 -0800 (PST)
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     iommu@lists.linux-foundation.org,
-        virtualization@lists.linux-foundation.org,
-        linux-pci@vger.kernel.org
-Cc:     joro@8bytes.org, bhelgaas@google.com, mst@redhat.com,
-        jasowang@redhat.com, kevin.tian@intel.com,
-        sebastien.boeuf@intel.com, eric.auger@redhat.com,
-        jacob.jun.pan@intel.com
-Subject: [PATCH 3/3] iommu/virtio: Enable x86 support
-Date:   Fri, 14 Feb 2020 17:04:13 +0100
-Message-Id: <20200214160413.1475396-4-jean-philippe@linaro.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200214160413.1475396-1-jean-philippe@linaro.org>
-References: <20200214160413.1475396-1-jean-philippe@linaro.org>
+        id S2394817AbgBNSUO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 Feb 2020 13:20:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54068 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730379AbgBNPuL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:50:11 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 110E32467D;
+        Fri, 14 Feb 2020 15:50:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581695410;
+        bh=URkh1b8UiRSNyvBORbxFf1FqHBMydbBaRt0r6nWpiPA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=NpbLhW8H4yytVpNBgkY+2ar2oeHpD8ERCz9yTtSgQBsbqzu4fnxq0efsOvP9F61PN
+         Wpe9mZljy0IXC6Gl7EauJRNTDnuxjTcx4QxZ1fOpis17Diaj9p4wWxdyWGOSOzdWIV
+         3V99xWf/WvCxztzlXEuxDTSKwUuHAsJ0luGtGW4s=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        Doug Meyer <dmeyer@gigaio.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 058/542] PCI/switchtec: Fix vep_vector_number ioread width
+Date:   Fri, 14 Feb 2020 10:40:50 -0500
+Message-Id: <20200214154854.6746-58-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
+References: <20200214154854.6746-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-With the built-in topology description in place, x86 platforms can now
-use the virtio-iommu.
+From: Logan Gunthorpe <logang@deltatee.com>
 
-Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+[ Upstream commit 9375646b4cf03aee81bc6c305aa18cc80b682796 ]
+
+vep_vector_number is actually a 16 bit register which should be read with
+ioread16() instead of ioread32().
+
+Fixes: 080b47def5e5 ("MicroSemi Switchtec management interface driver")
+Link: https://lore.kernel.org/r/20200106190337.2428-3-logang@deltatee.com
+Reported-by: Doug Meyer <dmeyer@gigaio.com>
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/pci/switch/switchtec.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-index 068d4e0e3541..adcbda44d473 100644
---- a/drivers/iommu/Kconfig
-+++ b/drivers/iommu/Kconfig
-@@ -508,8 +508,9 @@ config HYPERV_IOMMU
- config VIRTIO_IOMMU
- 	bool "Virtio IOMMU driver"
- 	depends on VIRTIO=y
--	depends on ARM64
-+	depends on (ARM64 || X86)
- 	select IOMMU_API
-+	select IOMMU_DMA
- 	select INTERVAL_TREE
- 	help
- 	  Para-virtualised IOMMU driver with virtio.
+diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
+index 88091bbfe77f2..29412451f9e1f 100644
+--- a/drivers/pci/switch/switchtec.c
++++ b/drivers/pci/switch/switchtec.c
+@@ -1276,7 +1276,7 @@ static int switchtec_init_isr(struct switchtec_dev *stdev)
+ 	if (nvecs < 0)
+ 		return nvecs;
+ 
+-	event_irq = ioread32(&stdev->mmio_part_cfg->vep_vector_number);
++	event_irq = ioread16(&stdev->mmio_part_cfg->vep_vector_number);
+ 	if (event_irq < 0 || event_irq >= nvecs)
+ 		return -EFAULT;
+ 
 -- 
-2.25.0
+2.20.1
 
