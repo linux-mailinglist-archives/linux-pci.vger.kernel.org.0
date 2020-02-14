@@ -2,76 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C91015CFC5
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2020 03:16:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C490D15D144
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2020 05:57:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728479AbgBNCQy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 13 Feb 2020 21:16:54 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:36269 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728052AbgBNCQy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Feb 2020 21:16:54 -0500
-Received: by mail-pl1-f194.google.com with SMTP id a6so3123220plm.3;
-        Thu, 13 Feb 2020 18:16:53 -0800 (PST)
+        id S1728479AbgBNE5P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 13 Feb 2020 23:57:15 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40375 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727965AbgBNE5O (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Feb 2020 23:57:14 -0500
+Received: by mail-pg1-f194.google.com with SMTP id z7so4315989pgk.7
+        for <linux-pci@vger.kernel.org>; Thu, 13 Feb 2020 20:57:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=8WSL1srlKefaq0F99EUBxceVRB2zzk2pjFciJq1lmoM=;
-        b=NviinCR0oMk4qI4d2mKpLelYKzpQrp168dLQKrlj2kGO1vz2PooZPaDa58pTKuwiQc
-         +ImsVH0fIz2PhVv7JiphElbM/R7o2yInpZJzBxOvBZnuQsx+OnEyy5Lr+Hxcb7atN33h
-         aiCUdtlXGcFTMIZCodFcmaZMAU7b0RZxSQTnYz1cX9F625xfnyK8TghCjskieEN21fOR
-         wFmWJJ/VYgfrOtZMvrkNl5MIQGsBxmZ2K6GQvFuQ3k0hIfEAf0srbU9VVEfi8cOKPJ6w
-         rOI3aTNoHYZkKEdu7PAOr5FFeFy1+4PT7Xy8X1BpGQWN/8VWjVSBHzxumCbBF12ynXwm
-         QJag==
+        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=cIzuxZ8H3fSttOIKqxXbQh1izcjEUCB+1ElK2xj9vV8=;
+        b=SXjb7zXKBadI5y0ccm/NU2bxDHfK8DcmalP/xcaTzeIJceHXPMNEH7cs97S3myq7WF
+         skTwI7s8WeW7yWGdBkJQgGMBgusRvIZgBVYOuz/D8Z5M0J+pvslm0fyN9+mntFOqCuIy
+         rCbyU9ZL8tLkLjN9vc4a5wxMGbgfj/CG3pxkjL4doB6VBAbH6oDuc0rKdqToJh2Gqtzc
+         aqwt0t8DbUTisbd8jRJiaCGlAeuBwVzAf5T8u5z8tRetvKOgCEfmikQEtKil/hdd//bW
+         MzjaOMf7IDUZE/Ltme777ECoobkopDUfp6wDKMt6No8JYcV3CZmkymqU5LUvLQUpQ40o
+         8B6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=8WSL1srlKefaq0F99EUBxceVRB2zzk2pjFciJq1lmoM=;
-        b=dzA7+PgMqe20xWijGYf0+5M1JgLyNLRj0SMf7rnnJBLyoKvSnltsxavMyNZVcAYmzl
-         W4VPSWO3T1/btqKFX/Y5lAk2eZw7F2kDOmEct5Ap9vhxvKhSCu+uOGzEUrTjhiYyaxVl
-         ZbHQjk5HMyVwvI9iBOPjSiqDKBPtu6wOPVFD/n4T8eU2s24abCrme5neNWIuHa1kTyBX
-         1o8FL4wGHQQim6G9+j/5VX+isSJ3zUSQpwviOwVU1XbLvJlmgpuO4fc4AMaH0dVaf66E
-         e3apfbE6llEal35SLC0mvBwLdnhcY9aydV8rthHucI2M3m7q/mXc6VepV1LARZVXTzDo
-         4BbA==
-X-Gm-Message-State: APjAAAUck9OwDz8VkOQCbgyRtdxDvA7iowZwRfkVr1FT2ijjK11d95EC
-        VfYfb6sBnPkh+8LdGLzlAuY=
-X-Google-Smtp-Source: APXvYqwNycUdK+Z3JjK94o6igrgT3OAssaL84DBuSI3TwCZhtiJC9QPgSpnSDRlkxK/Ov/efHtWGPw==
-X-Received: by 2002:a17:90a:9b88:: with SMTP id g8mr673097pjp.72.1581646613285;
-        Thu, 13 Feb 2020 18:16:53 -0800 (PST)
-Received: from [172.16.1.120] ([125.130.116.2])
-        by smtp.gmail.com with ESMTPSA id h26sm4890855pfr.9.2020.02.13.18.16.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Feb 2020 18:16:52 -0800 (PST)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
-Subject: Re: [PATCH 0/3] PCI: brcmstb: Add Broadcom STB support
-From:   Jaedon Shin <jaedon.shin@gmail.com>
-In-Reply-To: <CA+-6iNyjXnz4tYk4edupbhsjvyh==MA0bJ+311k_wBcDHQHJ9g@mail.gmail.com>
-Date:   Fri, 14 Feb 2020 11:16:47 +0900
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Gregory Fong <gregory.0xf0@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <EC33C637-FBEB-49EE-9C0C-E119E1839F37@gmail.com>
-References: <20200213025930.27943-1-jaedon.shin@gmail.com>
- <6ba4bb21-034b-93f0-d4b7-13ac7c5a925d@gmail.com>
- <44052F86-D0DD-4FDD-A62B-09280E956405@gmail.com>
- <CA+-6iNyjXnz4tYk4edupbhsjvyh==MA0bJ+311k_wBcDHQHJ9g@mail.gmail.com>
-To:     Jim Quinlan <james.quinlan@Broadcom.com>
-X-Mailer: Apple Mail (2.3608.60.0.2.5)
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=cIzuxZ8H3fSttOIKqxXbQh1izcjEUCB+1ElK2xj9vV8=;
+        b=umBbBhIH+Rv4YDIHJM8aDyxKXit2t0nBCgRzZUg7QaAsNDTNyDt9x4BJ9LnnKdWtR/
+         xEJ6CogjSL4UPrWk4b0lWWrtfpQF0kLVoa3zU2kwaXDh4X7SUBrniu+PC9Y+Yx7JgIy+
+         eJiQlDRhPxMGvYX2KBB86/hz7tbZXEfNKKFBjktZZ2aoM18JBhxjX3jS8L8RLRAGoYav
+         aWvp3IUfw3hWOBhIIMwp30Sd5Xe9cpr7NfGIGgyQEBC+bGVBh8c4QS0YXAHpwb6IBhSw
+         FJDhhBLSvpsCPavoWoXXOhuGhA/FHWjbc0HRU+N1OLBgv7IsudGrYOTlIWkFDZjoOPws
+         82hA==
+X-Gm-Message-State: APjAAAVeQvd7vYgIxVubwHNfxaFAfbQ5tZQaPmoYWW9q19m/HrHkKcIc
+        IKzcErHy5yAva+iYHLTrT4tV9Q==
+X-Google-Smtp-Source: APXvYqzCZZ9/IPKP6dWYRV+5Yjqawbc9CwEExjLrPccEseurkIAonc045+ZiuZM7bJEabIgfkI4b+A==
+X-Received: by 2002:a63:3343:: with SMTP id z64mr1502319pgz.429.1581656232560;
+        Thu, 13 Feb 2020 20:57:12 -0800 (PST)
+Received: from [10.61.2.175] ([122.99.82.10])
+        by smtp.gmail.com with ESMTPSA id o19sm11589602pjr.2.2020.02.13.20.57.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Feb 2020 20:57:11 -0800 (PST)
+Subject: Re: [PATCH 0/7] vfio/pci: SR-IOV support
+To:     Alex Williamson <alex.williamson@redhat.com>, kvm@vger.kernel.org
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dev@dpdk.org, mtosatti@redhat.com, thomas@monjalon.net,
+        bluca@debian.org, jerinjacobk@gmail.com,
+        bruce.richardson@intel.com, cohuck@redhat.com
+References: <158145472604.16827.15751375540102298130.stgit@gimli.home>
+From:   Alexey Kardashevskiy <aik@ozlabs.ru>
+Autocrypt: addr=aik@ozlabs.ru; keydata=
+ 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
+Message-ID: <22153755-598f-d25c-55a2-799c008d8d2b@ozlabs.ru>
+Date:   Fri, 14 Feb 2020 15:57:04 +1100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
+MIME-Version: 1.0
+In-Reply-To: <158145472604.16827.15751375540102298130.stgit@gimli.home>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
@@ -79,78 +142,104 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 
 
-> 2020. 2. 14. =EC=98=A4=EC=A0=84 12:54, Jim Quinlan =
-<james.quinlan@Broadcom.com> =EC=9E=91=EC=84=B1:
->=20
-> On Thu, Feb 13, 2020 at 12:15 AM Jaedon Shin <jaedon.shin@gmail.com> =
-wrote:
->>=20
->>=20
->>> 2020. 2. 13. =EC=98=A4=ED=9B=84 12:54, Florian Fainelli =
-<f.fainelli@gmail.com> =EC=9E=91=EC=84=B1:
->>>=20
->>> +Jim,
->>>=20
->>> On 2/12/2020 6:59 PM, Jaedon Shin wrote:
->>>> This series enables the ARM based Broadcom STB SoCs and supports =
-GPIO
->>>> based regulators for its power supplies. and this has an =
-improvement on
->>>> devm_ APIS.
->>>=20
->>> Which ARM-based SoCs did you try this on? We still have an issue =
-with
->>> the multiple dma-ranges that must be handled to support 7445 with =
-memory
->>> in the extension regions as well as 7278 and 7216.
->>=20
->>=20
->> I'm using BCM72604 which has only one memc. and device is Qualcomm =
-Atheros
->> QCA6174 Wi-Fi module.
->>=20
-> You apparently have a simple enough memory configuration such that the
-> current upstream driver will work.  But this will not work for a
-> 7445-based chip or other BCM7xxx chips that either have a memory
-> region extension or a non-zero system memory offset.
+On 12/02/2020 10:05, Alex Williamson wrote:
+> Given the mostly positive feedback from the RFC[1], here's a new
+> non-RFC revision.  Changes since RFC:
+> 
+>  - vfio_device_ops.match semantics refined
+>  - Use helpers for struct pci_dev.physfn to avoid breakage without
+>    CONFIG_PCI_IOV
+>  - Relax to allow SR-IOV configuration changes while PF is opened.
+>    There are potentially interesting use cases here, including
+>    perhaps QEMU emulating an SR-IOV capability and calling out
+>    to a privileged entity to manipulate sriov_numvfs and corral
+>    the resulting devices.
+>  - Retest vfio_device_feature.argsz to include uuid length.
+>  - Add Connie's R-b on 6/7
+> 
+> I still wish we had a solution to make it less opaque to the user
+> why a VFIO_GROUP_GET_DEVICE_FD() has failed if a VF token is
+> required, but this is still the best I've been able to come up with.
+> If there are objections or better ideas, please raise them now.
+> 
+> The synopsis of this series is that we have an ongoing desire to drive
+> PCIe SR-IOV PFs from userspace with VFIO.  There's an immediate need
+> for this with DPDK drivers and potentially interesting future use
+> cases in virtualization.  We've been reluctant to add this support
+> previously due to the dependency and trust relationship between the
+> VF device and PF driver.  Minimally the PF driver can induce a denial
+> of service to the VF, but depending on the specific implementation,
+> the PF driver might also be responsible for moving data between VFs
+> or have direct access to the state of the VF, including data or state
+> otherwise private to the VF or VF driver.
+> 
+> To help resolve these concerns, we introduce a VF token into the VFIO
+> PCI ABI, which acts as a shared secret key between drivers.  The
+> userspace PF driver is required to set the VF token to a known value
+> and userspace VF drivers are required to provide the token to access
+> the VF device.  If a PF driver is restarted with VF drivers in use, it
+> must also provide the current token in order to prevent a rogue
+> untrusted PF driver from replacing a known driver.  The degree to
+> which this new token is considered secret is left to the userspace
+> drivers, the kernel intentionally provides no means to retrieve the
+> current token.
+> 
+> Note that the above token is only required for this new model where
+> both the PF and VF devices are usable through vfio-pci.  Existing
+> models of VFIO drivers where the PF is used without SR-IOV enabled
+> or the VF is bound to a userspace driver with an in-kernel, host PF
+> driver are unaffected.
+> 
+> The latter configuration above also highlights a new inverted scenario
+> that is now possible, a userspace PF driver with in-kernel VF drivers.
+> I believe this is a scenario that should be allowed, but should not be
+> enabled by default.  This series includes code to set a default
+> driver_override for VFs sourced from a vfio-pci user owned PF, such
+> that the VFs are also bound to vfio-pci.  This model is compatible
+> with tools like driverctl and allows the system administrator to
+> decide if other bindings should be enabled.  The VF token interface
+> above exists only between vfio-pci PF and VF drivers, once a VF is
+> bound to another driver, the administrator has effectively pronounced
+> the device as trusted.  The vfio-pci driver will note alternate
+> binding in dmesg for logging and debugging purposes.
+> 
+> Please review, comment, and test.  The example QEMU implementation
+> provided with the RFC[2] is still current for this version.  Thanks,
 
-I fully agree. It's not yet ready to enable ARM based BCM7445 SoCs. We'd =
-better
-not add ARCH_BRCMSTB and "brcm,bcm7445-pcie" string until the multi dma-
-range problem is solved.
 
->=20
-> IIRC, similar regulator code was submitted before as part of the
-> complete driver that could handle our curious DMA situation, but was
-> rejected because someone objected to us using a  generic list of
-> regulators without specific explanation for each in the device tree
-> documentations.  I hope you have better luck :-)
+It is a cool feature. One question - what device have you tested it with?
 
-I'll refer to.
+Does not a PF want to control/manage VFs on a PF driver side? I am
+thinking of Mellanox CX5 or similar NIC and it acts as an managed
+ethernet switch which might want to do something to VFs and VFs may not
+work as expected without PF's native driver doing things to it, or this
+is not a concern, is it? Thanks,
 
-Thanks,
-Jaedon
 
->=20
-> Thanks,
-> Jim
->>>=20
->>> See comments in specific patches.
->>>=20
->>>>=20
->>>> Jaedon Shin (3):
->>>> PCI: brcmstb: Enable ARCH_BRCMSTB
->>>> PCI: brcmstb: Add regulator support
->>>> PCI: brcmstb: Drop clk_put when probe fails and remove
->>>>=20
->>>> .../bindings/pci/brcm,stb-pcie.yaml           |  8 +-
->>>> drivers/gpio/gpio-brcmstb.c                   | 13 +++-
->>>> drivers/pci/controller/Kconfig                |  2 +-
->>>> drivers/pci/controller/pcie-brcmstb.c         | 78 =
-++++++++++++++++++-
->>>> 4 files changed, 97 insertions(+), 4 deletions(-)
->>>>=20
->>>=20
->>> --
->>> Florian
+> 
+> Alex
+> 
+> [1] https://lore.kernel.org/lkml/158085337582.9445.17682266437583505502.stgit@gimli.home/
+> [2] https://lore.kernel.org/lkml/20200204161737.34696b91@w520.home/
+> ---
+> 
+> Alex Williamson (7):
+>       vfio: Include optional device match in vfio_device_ops callbacks
+>       vfio/pci: Implement match ops
+>       vfio/pci: Introduce VF token
+>       vfio: Introduce VFIO_DEVICE_FEATURE ioctl and first user
+>       vfio/pci: Add sriov_configure support
+>       vfio/pci: Remove dev_fmt definition
+>       vfio/pci: Cleanup .probe() exit paths
+> 
+> 
+>  drivers/vfio/pci/vfio_pci.c         |  312 ++++++++++++++++++++++++++++++++---
+>  drivers/vfio/pci/vfio_pci_private.h |   10 +
+>  drivers/vfio/vfio.c                 |   20 ++
+>  include/linux/vfio.h                |    4 
+>  include/uapi/linux/vfio.h           |   37 ++++
+>  5 files changed, 355 insertions(+), 28 deletions(-)
+> 
 
+-- 
+Alexey
