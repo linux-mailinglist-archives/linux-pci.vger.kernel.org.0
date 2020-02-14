@@ -2,36 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A33A315E9D5
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2020 18:10:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CCBB915E92C
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2020 18:05:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392007AbgBNRJp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 Feb 2020 12:09:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42916 "EHLO mail.kernel.org"
+        id S2392689AbgBNRFV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 Feb 2020 12:05:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403940AbgBNQNs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:13:48 -0500
+        id S2404087AbgBNQPI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:15:08 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F2B2246D9;
-        Fri, 14 Feb 2020 16:13:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F29A3246EA;
+        Fri, 14 Feb 2020 16:15:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696828;
-        bh=Xs1RqRXIkyN0/rD5GmpQxSzni0ZbVlti+J5ScEHxGAg=;
+        s=default; t=1581696906;
+        bh=m5Cbde0MkyTIfAZXk2VOebFijI7ViAMm6mqjcgfmBt0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NrIxt7kP2OZNbZXeTeYiTJ/yu2ahAmTxg1mb4o7YqEx7iv6vxwHhy1HwlkKy7TbVS
-         T+uUwnFZQ9oR/FyFCtOcy6DxyxlClFIzG3neHkKyTU2l0PzYzdypefeXTTiYHYy2XJ
-         xX8JY/e7bFRGCNwYyGA629mnwuuG0CdexWIKzaYw=
+        b=tivexfug0HrCFYhwJ2FPHRUGb+vBlCqtyVo7SKAB/Mo44P1YudNNKbw9zHQUIV0fs
+         DkmyjMiDq8NmwHC+r17Dlu//r7Hus59rdvYV2he/RDZySlhXP9VH+yzXH83rQXdVKZ
+         aH1YeIwFt2mV9xXJQ2vnguJu7/TWrdMkpO0/xaCY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniel Drake <drake@endlessm.com>,
+Cc:     Logan Gunthorpe <logang@deltatee.com>, Kit Chow <kchow@gigaio.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 094/252] PCI: Increase D3 delay for AMD Ryzen5/7 XHCI controllers
-Date:   Fri, 14 Feb 2020 11:09:09 -0500
-Message-Id: <20200214161147.15842-94-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 156/252] PCI: Don't disable bridge BARs when assigning bus resources
+Date:   Fri, 14 Feb 2020 11:10:11 -0500
+Message-Id: <20200214161147.15842-156-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -44,67 +43,113 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Daniel Drake <drake@endlessm.com>
+From: Logan Gunthorpe <logang@deltatee.com>
 
-[ Upstream commit 3030df209aa8cf831b9963829bd9f94900ee8032 ]
+[ Upstream commit 9db8dc6d0785225c42a37be7b44d1b07b31b8957 ]
 
-On Asus UX434DA (AMD Ryzen7 3700U) and Asus X512DK (AMD Ryzen5 3500U), the
-XHCI controller fails to resume from runtime suspend or s2idle, and USB
-becomes unusable from that point.
+Some PCI bridges implement BARs in addition to bridge windows.  For
+example, here's a PLX switch:
 
-  xhci_hcd 0000:03:00.4: Refused to change power state, currently in D3
-  xhci_hcd 0000:03:00.4: enabling device (0000 -> 0002)
-  xhci_hcd 0000:03:00.4: WARN: xHC restore state timeout
-  xhci_hcd 0000:03:00.4: PCI post-resume error -110!
-  xhci_hcd 0000:03:00.4: HC died; cleaning up
+  04:00.0 PCI bridge: PLX Technology, Inc. PEX 8724 24-Lane, 6-Port PCI
+            Express Gen 3 (8 GT/s) Switch, 19 x 19mm FCBGA (rev ca)
+	    (prog-if 00 [Normal decode])
+      Flags: bus master, fast devsel, latency 0, IRQ 30, NUMA node 0
+      Memory at 90a00000 (32-bit, non-prefetchable) [size=256K]
+      Bus: primary=04, secondary=05, subordinate=0a, sec-latency=0
+      I/O behind bridge: 00002000-00003fff
+      Memory behind bridge: 90000000-909fffff
+      Prefetchable memory behind bridge: 0000380000800000-0000380000bfffff
 
-During suspend, a transition to D3cold is attempted, however the affected
-platforms do not seem to cut the power to the PCI device when in this
-state, so the device stays in D3hot.
+Previously, when the kernel assigned resource addresses (with the
+pci=realloc command line parameter, for example) it could clear the struct
+resource corresponding to the BAR.  When this happened, lspci would report
+this BAR as "ignored":
 
-Upon resume, the D3hot-to-D0 transition is successful only if the D3 delay
-is increased to 20ms. The transition failure does not appear to be
-detectable as a CRS condition. Add a PCI quirk to increase the delay on the
-affected hardware.
+   Region 0: Memory at <ignored> (32-bit, non-prefetchable) [size=256K]
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=205587
-Link: http://lkml.kernel.org/r/CAD8Lp47Vh69gQjROYG69=waJgL7hs1PwnLonL9+27S_TcRhixA@mail.gmail.com
-Link: https://lore.kernel.org/r/20191127053836.31624-2-drake@endlessm.com
-Signed-off-by: Daniel Drake <drake@endlessm.com>
+This is because the kernel reports a zero start address and zero flags
+in the corresponding sysfs resource file and in /proc/bus/pci/devices.
+Investigation with 'lspci -x', however, shows the BIOS-assigned address
+will still be programmed in the device's BAR registers.
+
+It's clearly a bug that the kernel lost track of the BAR value, but in most
+cases, this still won't result in a visible issue because nothing uses the
+memory, so nothing is affected.  However, when an IOMMU is in use, it will
+not reserve this space in the IOVA because the kernel no longer thinks the
+range is valid.  (See dmar_init_reserved_ranges() for the Intel
+implementation of this.)
+
+Without the proper reserved range, a DMA mapping may allocate an IOVA that
+matches a bridge BAR, which results in DMA accesses going to the BAR
+instead of the intended RAM.
+
+The problem was in pci_assign_unassigned_root_bus_resources().  When any
+resource from a bridge device fails to get assigned, the code set the
+resource's flags to zero.  This makes sense for bridge windows, as they
+will be re-enabled later, but for regular BARs, it makes the kernel
+permanently lose track of the fact that they decode address space.
+
+Change pci_assign_unassigned_root_bus_resources() and
+pci_assign_unassigned_bridge_resources() so they only clear "res->flags"
+for bridge *windows*, not bridge BARs.
+
+Fixes: da7822e5ad71 ("PCI: update bridge resources to get more big ranges when allocating space (again)")
+Link: https://lore.kernel.org/r/20200108213208.4612-1-logang@deltatee.com
+[bhelgaas: commit log, check for pci_is_bridge()]
+Reported-by: Kit Chow <kchow@gigaio.com>
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/quirks.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/pci/setup-bus.c | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 798d46a266037..419dda6dbd166 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -1866,6 +1866,22 @@ static void quirk_radeon_pm(struct pci_dev *dev)
- }
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6741, quirk_radeon_pm);
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index 79b1824e83b47..8e5b00a420a55 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -1820,12 +1820,18 @@ void pci_assign_unassigned_root_bus_resources(struct pci_bus *bus)
+ 	/* restore size and flags */
+ 	list_for_each_entry(fail_res, &fail_head, list) {
+ 		struct resource *res = fail_res->res;
++		int idx;
  
-+/*
-+ * Ryzen5/7 XHCI controllers fail upon resume from runtime suspend or s2idle.
-+ * https://bugzilla.kernel.org/show_bug.cgi?id=205587
-+ *
-+ * The kernel attempts to transition these devices to D3cold, but that seems
-+ * to be ineffective on the platforms in question; the PCI device appears to
-+ * remain on in D3hot state. The D3hot-to-D0 transition then requires an
-+ * extended delay in order to succeed.
-+ */
-+static void quirk_ryzen_xhci_d3hot(struct pci_dev *dev)
-+{
-+	quirk_d3hot_delay(dev, 20);
-+}
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x15e0, quirk_ryzen_xhci_d3hot);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x15e1, quirk_ryzen_xhci_d3hot);
+ 		res->start = fail_res->start;
+ 		res->end = fail_res->end;
+ 		res->flags = fail_res->flags;
+-		if (fail_res->dev->subordinate)
+-			res->flags = 0;
 +
- #ifdef CONFIG_X86_IO_APIC
- static int dmi_disable_ioapicreroute(const struct dmi_system_id *d)
- {
++		if (pci_is_bridge(fail_res->dev)) {
++			idx = res - &fail_res->dev->resource[0];
++			if (idx >= PCI_BRIDGE_RESOURCES &&
++			    idx <= PCI_BRIDGE_RESOURCE_END)
++				res->flags = 0;
++		}
+ 	}
+ 	free_list(&fail_head);
+ 
+@@ -2066,12 +2072,18 @@ void pci_assign_unassigned_bridge_resources(struct pci_dev *bridge)
+ 	/* restore size and flags */
+ 	list_for_each_entry(fail_res, &fail_head, list) {
+ 		struct resource *res = fail_res->res;
++		int idx;
+ 
+ 		res->start = fail_res->start;
+ 		res->end = fail_res->end;
+ 		res->flags = fail_res->flags;
+-		if (fail_res->dev->subordinate)
+-			res->flags = 0;
++
++		if (pci_is_bridge(fail_res->dev)) {
++			idx = res - &fail_res->dev->resource[0];
++			if (idx >= PCI_BRIDGE_RESOURCES &&
++			    idx <= PCI_BRIDGE_RESOURCE_END)
++				res->flags = 0;
++		}
+ 	}
+ 	free_list(&fail_head);
+ 
 -- 
 2.20.1
 
