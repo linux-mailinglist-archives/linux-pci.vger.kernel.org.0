@@ -2,154 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CCBB915E92C
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2020 18:05:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 667FC15E8D9
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2020 18:03:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392689AbgBNRFV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 Feb 2020 12:05:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45172 "EHLO mail.kernel.org"
+        id S2404397AbgBNRDT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 Feb 2020 12:03:19 -0500
+Received: from foss.arm.com ([217.140.110.172]:40718 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404087AbgBNQPI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:15:08 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F29A3246EA;
-        Fri, 14 Feb 2020 16:15:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696906;
-        bh=m5Cbde0MkyTIfAZXk2VOebFijI7ViAMm6mqjcgfmBt0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tivexfug0HrCFYhwJ2FPHRUGb+vBlCqtyVo7SKAB/Mo44P1YudNNKbw9zHQUIV0fs
-         DkmyjMiDq8NmwHC+r17Dlu//r7Hus59rdvYV2he/RDZySlhXP9VH+yzXH83rQXdVKZ
-         aH1YeIwFt2mV9xXJQ2vnguJu7/TWrdMkpO0/xaCY=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Logan Gunthorpe <logang@deltatee.com>, Kit Chow <kchow@gigaio.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 156/252] PCI: Don't disable bridge BARs when assigning bus resources
-Date:   Fri, 14 Feb 2020 11:10:11 -0500
-Message-Id: <20200214161147.15842-156-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
-References: <20200214161147.15842-1-sashal@kernel.org>
+        id S2404321AbgBNRDT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 14 Feb 2020 12:03:19 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ABC8B328;
+        Fri, 14 Feb 2020 09:03:18 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 683133F68E;
+        Fri, 14 Feb 2020 09:03:17 -0800 (PST)
+Subject: Re: [PATCH 2/3] PCI: Add DMA configuration for virtual platforms
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        iommu@lists.linux-foundation.org,
+        virtualization@lists.linux-foundation.org,
+        linux-pci@vger.kernel.org
+Cc:     kevin.tian@intel.com, mst@redhat.com, sebastien.boeuf@intel.com,
+        jacob.jun.pan@intel.com, bhelgaas@google.com, jasowang@redhat.com
+References: <20200214160413.1475396-1-jean-philippe@linaro.org>
+ <20200214160413.1475396-3-jean-philippe@linaro.org>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <393cce27-dbed-f075-2a67-9882bed801e7@arm.com>
+Date:   Fri, 14 Feb 2020 17:03:16 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200214160413.1475396-3-jean-philippe@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Logan Gunthorpe <logang@deltatee.com>
+On 14/02/2020 4:04 pm, Jean-Philippe Brucker wrote:
+> Hardware platforms usually describe the IOMMU topology using either
+> device-tree pointers or vendor-specific ACPI tables.  For virtual
+> platforms that don't provide a device-tree, the virtio-iommu device
+> contains a description of the endpoints it manages.  That information
+> allows us to probe endpoints after the IOMMU is probed (possibly as late
+> as userspace modprobe), provided it is discovered early enough.
+> 
+> Add a hook to pci_dma_configure(), which returns -EPROBE_DEFER if the
+> endpoint is managed by a vIOMMU that will be loaded later, or 0 in any
+> other case to avoid disturbing the normal DMA configuration methods.
+> When CONFIG_VIRTIO_IOMMU_TOPOLOGY isn't selected, the call to
+> virt_dma_configure() is compiled out.
+> 
+> As long as the information is consistent, platforms can provide both a
+> device-tree and a built-in topology, and the IOMMU infrastructure is
+> able to deal with multiple DMA configuration methods.
 
-[ Upstream commit 9db8dc6d0785225c42a37be7b44d1b07b31b8957 ]
+Urgh, it's already been established[1] that having IOMMU setup tied to 
+DMA configuration at driver probe time is not just conceptually wrong 
+but actually broken, so the concept here worries me a bit. In a world 
+where of_iommu_configure() and friends are being called much earlier 
+around iommu_probe_device() time, how badly will this fall apart?
 
-Some PCI bridges implement BARs in addition to bridge windows.  For
-example, here's a PLX switch:
+Robin.
 
-  04:00.0 PCI bridge: PLX Technology, Inc. PEX 8724 24-Lane, 6-Port PCI
-            Express Gen 3 (8 GT/s) Switch, 19 x 19mm FCBGA (rev ca)
-	    (prog-if 00 [Normal decode])
-      Flags: bus master, fast devsel, latency 0, IRQ 30, NUMA node 0
-      Memory at 90a00000 (32-bit, non-prefetchable) [size=256K]
-      Bus: primary=04, secondary=05, subordinate=0a, sec-latency=0
-      I/O behind bridge: 00002000-00003fff
-      Memory behind bridge: 90000000-909fffff
-      Prefetchable memory behind bridge: 0000380000800000-0000380000bfffff
+[1] 
+https://lore.kernel.org/linux-iommu/9625faf4-48ef-2dd3-d82f-931d9cf26976@huawei.com/
 
-Previously, when the kernel assigned resource addresses (with the
-pci=realloc command line parameter, for example) it could clear the struct
-resource corresponding to the BAR.  When this happened, lspci would report
-this BAR as "ignored":
-
-   Region 0: Memory at <ignored> (32-bit, non-prefetchable) [size=256K]
-
-This is because the kernel reports a zero start address and zero flags
-in the corresponding sysfs resource file and in /proc/bus/pci/devices.
-Investigation with 'lspci -x', however, shows the BIOS-assigned address
-will still be programmed in the device's BAR registers.
-
-It's clearly a bug that the kernel lost track of the BAR value, but in most
-cases, this still won't result in a visible issue because nothing uses the
-memory, so nothing is affected.  However, when an IOMMU is in use, it will
-not reserve this space in the IOVA because the kernel no longer thinks the
-range is valid.  (See dmar_init_reserved_ranges() for the Intel
-implementation of this.)
-
-Without the proper reserved range, a DMA mapping may allocate an IOVA that
-matches a bridge BAR, which results in DMA accesses going to the BAR
-instead of the intended RAM.
-
-The problem was in pci_assign_unassigned_root_bus_resources().  When any
-resource from a bridge device fails to get assigned, the code set the
-resource's flags to zero.  This makes sense for bridge windows, as they
-will be re-enabled later, but for regular BARs, it makes the kernel
-permanently lose track of the fact that they decode address space.
-
-Change pci_assign_unassigned_root_bus_resources() and
-pci_assign_unassigned_bridge_resources() so they only clear "res->flags"
-for bridge *windows*, not bridge BARs.
-
-Fixes: da7822e5ad71 ("PCI: update bridge resources to get more big ranges when allocating space (again)")
-Link: https://lore.kernel.org/r/20200108213208.4612-1-logang@deltatee.com
-[bhelgaas: commit log, check for pci_is_bridge()]
-Reported-by: Kit Chow <kchow@gigaio.com>
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pci/setup-bus.c | 20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index 79b1824e83b47..8e5b00a420a55 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -1820,12 +1820,18 @@ void pci_assign_unassigned_root_bus_resources(struct pci_bus *bus)
- 	/* restore size and flags */
- 	list_for_each_entry(fail_res, &fail_head, list) {
- 		struct resource *res = fail_res->res;
-+		int idx;
- 
- 		res->start = fail_res->start;
- 		res->end = fail_res->end;
- 		res->flags = fail_res->flags;
--		if (fail_res->dev->subordinate)
--			res->flags = 0;
-+
-+		if (pci_is_bridge(fail_res->dev)) {
-+			idx = res - &fail_res->dev->resource[0];
-+			if (idx >= PCI_BRIDGE_RESOURCES &&
-+			    idx <= PCI_BRIDGE_RESOURCE_END)
-+				res->flags = 0;
-+		}
- 	}
- 	free_list(&fail_head);
- 
-@@ -2066,12 +2072,18 @@ void pci_assign_unassigned_bridge_resources(struct pci_dev *bridge)
- 	/* restore size and flags */
- 	list_for_each_entry(fail_res, &fail_head, list) {
- 		struct resource *res = fail_res->res;
-+		int idx;
- 
- 		res->start = fail_res->start;
- 		res->end = fail_res->end;
- 		res->flags = fail_res->flags;
--		if (fail_res->dev->subordinate)
--			res->flags = 0;
-+
-+		if (pci_is_bridge(fail_res->dev)) {
-+			idx = res - &fail_res->dev->resource[0];
-+			if (idx >= PCI_BRIDGE_RESOURCES &&
-+			    idx <= PCI_BRIDGE_RESOURCE_END)
-+				res->flags = 0;
-+		}
- 	}
- 	free_list(&fail_head);
- 
--- 
-2.20.1
-
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> ---
+>   drivers/pci/pci-driver.c | 5 +++++
+>   1 file changed, 5 insertions(+)
+> 
+> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> index 0454ca0e4e3f..69303a814f21 100644
+> --- a/drivers/pci/pci-driver.c
+> +++ b/drivers/pci/pci-driver.c
+> @@ -18,6 +18,7 @@
+>   #include <linux/kexec.h>
+>   #include <linux/of_device.h>
+>   #include <linux/acpi.h>
+> +#include <linux/virt_iommu.h>
+>   #include "pci.h"
+>   #include "pcie/portdrv.h"
+>   
+> @@ -1602,6 +1603,10 @@ static int pci_dma_configure(struct device *dev)
+>   	struct device *bridge;
+>   	int ret = 0;
+>   
+> +	ret = virt_dma_configure(dev);
+> +	if (ret)
+> +		return ret;
+> +
+>   	bridge = pci_get_host_bridge_device(to_pci_dev(dev));
+>   
+>   	if (IS_ENABLED(CONFIG_OF) && bridge->parent &&
+> 
