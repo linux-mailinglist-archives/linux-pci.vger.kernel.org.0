@@ -2,91 +2,155 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3799415CC8B
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2020 21:47:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C91015CFC5
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2020 03:16:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728209AbgBMUrM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 13 Feb 2020 15:47:12 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:42662 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728138AbgBMUrL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Feb 2020 15:47:11 -0500
-Received: by mail-oi1-f193.google.com with SMTP id j132so7205250oih.9;
-        Thu, 13 Feb 2020 12:47:09 -0800 (PST)
+        id S1728479AbgBNCQy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 13 Feb 2020 21:16:54 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:36269 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728052AbgBNCQy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Feb 2020 21:16:54 -0500
+Received: by mail-pl1-f194.google.com with SMTP id a6so3123220plm.3;
+        Thu, 13 Feb 2020 18:16:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=8WSL1srlKefaq0F99EUBxceVRB2zzk2pjFciJq1lmoM=;
+        b=NviinCR0oMk4qI4d2mKpLelYKzpQrp168dLQKrlj2kGO1vz2PooZPaDa58pTKuwiQc
+         +ImsVH0fIz2PhVv7JiphElbM/R7o2yInpZJzBxOvBZnuQsx+OnEyy5Lr+Hxcb7atN33h
+         aiCUdtlXGcFTMIZCodFcmaZMAU7b0RZxSQTnYz1cX9F625xfnyK8TghCjskieEN21fOR
+         wFmWJJ/VYgfrOtZMvrkNl5MIQGsBxmZ2K6GQvFuQ3k0hIfEAf0srbU9VVEfi8cOKPJ6w
+         rOI3aTNoHYZkKEdu7PAOr5FFeFy1+4PT7Xy8X1BpGQWN/8VWjVSBHzxumCbBF12ynXwm
+         QJag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XXUb9OkK0jyVXlwIZacZ5ml8iLKHL5sOLBosp9LkOuw=;
-        b=iinFK52+BB//9nZLeChcdoJlu+7l8518EnWmayEfdLjRFznz2HfDhDPVLlOEKcgYAC
-         NCM1Os5q2PNRBwrOshGjEIACF9Pq5HXARAGuaeDQQIRz9RLPzuEzuGhbv+SAxPth5eMG
-         0hVt/LNwfvQFrXr7u4jgWQHhb8LvIMeh8RR0AnhSmWGE6IbBjUMhFm9DthT8LxiSilRu
-         szL/mxkVbr+I5g4v6C1iloIxcszvgqHvpK7RlTFYc0nWn0rXjS9viCFbf0C2SOGa9pWA
-         DrQCF03SAKj+iUIlZctRevbBItBDbJ4UqSd3ANtchsqPQ3ZUpxFl7WGFZ43Pt+tfm4HK
-         AYhw==
-X-Gm-Message-State: APjAAAVJUoNqog4VniFXg/KVOf8vvZydFQ4lQpYbFSFyZNYgQ79oc1Wv
-        z+F7zqjhoP3f3XzLQl0A3g==
-X-Google-Smtp-Source: APXvYqwG789BSM2bdMrY7tCbnbzbFJAtUdPIv2m1lllFDCiiHnH1f41Be9ptAltKdWOERzAIjQvefQ==
-X-Received: by 2002:aca:f1c6:: with SMTP id p189mr4342232oih.159.1581626829428;
-        Thu, 13 Feb 2020 12:47:09 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id d131sm1168918oia.36.2020.02.13.12.47.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 12:47:08 -0800 (PST)
-Received: (nullmailer pid 2814 invoked by uid 1000);
-        Thu, 13 Feb 2020 20:47:08 -0000
-Date:   Thu, 13 Feb 2020 14:47:08 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Shawn Lin <shawn.lin@rock-chips.com>
-Cc:     Heiko Stuebner <heiko@sntech.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=8WSL1srlKefaq0F99EUBxceVRB2zzk2pjFciJq1lmoM=;
+        b=dzA7+PgMqe20xWijGYf0+5M1JgLyNLRj0SMf7rnnJBLyoKvSnltsxavMyNZVcAYmzl
+         W4VPSWO3T1/btqKFX/Y5lAk2eZw7F2kDOmEct5Ap9vhxvKhSCu+uOGzEUrTjhiYyaxVl
+         ZbHQjk5HMyVwvI9iBOPjSiqDKBPtu6wOPVFD/n4T8eU2s24abCrme5neNWIuHa1kTyBX
+         1o8FL4wGHQQim6G9+j/5VX+isSJ3zUSQpwviOwVU1XbLvJlmgpuO4fc4AMaH0dVaf66E
+         e3apfbE6llEal35SLC0mvBwLdnhcY9aydV8rthHucI2M3m7q/mXc6VepV1LARZVXTzDo
+         4BbA==
+X-Gm-Message-State: APjAAAUck9OwDz8VkOQCbgyRtdxDvA7iowZwRfkVr1FT2ijjK11d95EC
+        VfYfb6sBnPkh+8LdGLzlAuY=
+X-Google-Smtp-Source: APXvYqwNycUdK+Z3JjK94o6igrgT3OAssaL84DBuSI3TwCZhtiJC9QPgSpnSDRlkxK/Ov/efHtWGPw==
+X-Received: by 2002:a17:90a:9b88:: with SMTP id g8mr673097pjp.72.1581646613285;
+        Thu, 13 Feb 2020 18:16:53 -0800 (PST)
+Received: from [172.16.1.120] ([125.130.116.2])
+        by smtp.gmail.com with ESMTPSA id h26sm4890855pfr.9.2020.02.13.18.16.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 13 Feb 2020 18:16:52 -0800 (PST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
+Subject: Re: [PATCH 0/3] PCI: brcmstb: Add Broadcom STB support
+From:   Jaedon Shin <jaedon.shin@gmail.com>
+In-Reply-To: <CA+-6iNyjXnz4tYk4edupbhsjvyh==MA0bJ+311k_wBcDHQHJ9g@mail.gmail.com>
+Date:   Fri, 14 Feb 2020 11:16:47 +0900
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        bcm-kernel-feedback-list@broadcom.com,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, William Wu <william.wu@rock-chips.com>,
-        Simon Xue <xxm@rock-chips.com>,
-        linux-rockchip@lists.infradead.org,
-        Shawn Lin <shawn.lin@rock-chips.com>
-Subject: Re: [PATCH v2 4/6] dt-bindings: rockchip: Add DesignWare based PCIe
- controller
-Message-ID: <20200213204708.GA2363@bogus>
-References: <1581574091-240890-1-git-send-email-shawn.lin@rock-chips.com>
- <1581574091-240890-5-git-send-email-shawn.lin@rock-chips.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1581574091-240890-5-git-send-email-shawn.lin@rock-chips.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Gregory Fong <gregory.0xf0@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pci@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <EC33C637-FBEB-49EE-9C0C-E119E1839F37@gmail.com>
+References: <20200213025930.27943-1-jaedon.shin@gmail.com>
+ <6ba4bb21-034b-93f0-d4b7-13ac7c5a925d@gmail.com>
+ <44052F86-D0DD-4FDD-A62B-09280E956405@gmail.com>
+ <CA+-6iNyjXnz4tYk4edupbhsjvyh==MA0bJ+311k_wBcDHQHJ9g@mail.gmail.com>
+To:     Jim Quinlan <james.quinlan@Broadcom.com>
+X-Mailer: Apple Mail (2.3608.60.0.2.5)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 13 Feb 2020 14:08:09 +0800, Shawn Lin wrote:
-> From: Simon Xue <xxm@rock-chips.com>
-> 
-> Signed-off-by: Simon Xue <xxm@rock-chips.com>
-> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
-> 
-> ---
-> 
-> Changes in v2:
-> - fix yaml format
-> 
->  .../devicetree/bindings/pci/rockchip-dw-pcie.yaml  | 148 +++++++++++++++++++++
->  1 file changed, 148 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-> 
 
-My bot found errors running 'make dt_binding_check' on your patch:
 
-Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
-Error: Documentation/devicetree/bindings/pci/rockchip-dw-pcie.example.dts:24.26-27 syntax error
-FATAL ERROR: Unable to parse input tree
-scripts/Makefile.lib:300: recipe for target 'Documentation/devicetree/bindings/pci/rockchip-dw-pcie.example.dt.yaml' failed
-make[1]: *** [Documentation/devicetree/bindings/pci/rockchip-dw-pcie.example.dt.yaml] Error 1
-Makefile:1263: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+> 2020. 2. 14. =EC=98=A4=EC=A0=84 12:54, Jim Quinlan =
+<james.quinlan@Broadcom.com> =EC=9E=91=EC=84=B1:
+>=20
+> On Thu, Feb 13, 2020 at 12:15 AM Jaedon Shin <jaedon.shin@gmail.com> =
+wrote:
+>>=20
+>>=20
+>>> 2020. 2. 13. =EC=98=A4=ED=9B=84 12:54, Florian Fainelli =
+<f.fainelli@gmail.com> =EC=9E=91=EC=84=B1:
+>>>=20
+>>> +Jim,
+>>>=20
+>>> On 2/12/2020 6:59 PM, Jaedon Shin wrote:
+>>>> This series enables the ARM based Broadcom STB SoCs and supports =
+GPIO
+>>>> based regulators for its power supplies. and this has an =
+improvement on
+>>>> devm_ APIS.
+>>>=20
+>>> Which ARM-based SoCs did you try this on? We still have an issue =
+with
+>>> the multiple dma-ranges that must be handled to support 7445 with =
+memory
+>>> in the extension regions as well as 7278 and 7216.
+>>=20
+>>=20
+>> I'm using BCM72604 which has only one memc. and device is Qualcomm =
+Atheros
+>> QCA6174 Wi-Fi module.
+>>=20
+> You apparently have a simple enough memory configuration such that the
+> current upstream driver will work.  But this will not work for a
+> 7445-based chip or other BCM7xxx chips that either have a memory
+> region extension or a non-zero system memory offset.
 
-See https://patchwork.ozlabs.org/patch/1237300
-Please check and re-submit.
+I fully agree. It's not yet ready to enable ARM based BCM7445 SoCs. We'd =
+better
+not add ARCH_BRCMSTB and "brcm,bcm7445-pcie" string until the multi dma-
+range problem is solved.
+
+>=20
+> IIRC, similar regulator code was submitted before as part of the
+> complete driver that could handle our curious DMA situation, but was
+> rejected because someone objected to us using a  generic list of
+> regulators without specific explanation for each in the device tree
+> documentations.  I hope you have better luck :-)
+
+I'll refer to.
+
+Thanks,
+Jaedon
+
+>=20
+> Thanks,
+> Jim
+>>>=20
+>>> See comments in specific patches.
+>>>=20
+>>>>=20
+>>>> Jaedon Shin (3):
+>>>> PCI: brcmstb: Enable ARCH_BRCMSTB
+>>>> PCI: brcmstb: Add regulator support
+>>>> PCI: brcmstb: Drop clk_put when probe fails and remove
+>>>>=20
+>>>> .../bindings/pci/brcm,stb-pcie.yaml           |  8 +-
+>>>> drivers/gpio/gpio-brcmstb.c                   | 13 +++-
+>>>> drivers/pci/controller/Kconfig                |  2 +-
+>>>> drivers/pci/controller/pcie-brcmstb.c         | 78 =
+++++++++++++++++++-
+>>>> 4 files changed, 97 insertions(+), 4 deletions(-)
+>>>>=20
+>>>=20
+>>> --
+>>> Florian
+
