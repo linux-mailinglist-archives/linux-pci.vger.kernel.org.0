@@ -2,36 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 81F3915EF29
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2020 18:46:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 11CB415EEF3
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2020 18:44:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389329AbgBNQCW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 Feb 2020 11:02:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48622 "EHLO mail.kernel.org"
+        id S2389520AbgBNQDB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 Feb 2020 11:03:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388718AbgBNQCV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:02:21 -0500
+        id S2389076AbgBNQDA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:03:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14EC4217F4;
-        Fri, 14 Feb 2020 16:02:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 272642082F;
+        Fri, 14 Feb 2020 16:02:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696140;
-        bh=ZcUzQxygeVJz1o5yxME7aj3M2UwDiUg43GIMxLnHJpU=;
+        s=default; t=1581696179;
+        bh=cdBuiAVRy0pOtOROH6mccpHZwIddggqEXbohsQkh8WM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K5GbgXrlkT/MmX85YyButZFDsVZBZs0vWVSs+Hg88MMqXID0gxuipTx7etbiTa5gB
-         /VxllhZKNSPh5VZbSAG752y77NPkR/Ve0LRGdxEp4u1+IfCQSsr3wTkddCuNMvWOgv
-         Xc2Y4FIxMRMGtCXHWzObdFuOIxIdX/k6JtgmD80g=
+        b=AYHf22tJr/xf2eDzhnO0WaBjpnW17bQa3hjG9B70FXT4/lAZQpEuvUECO2zAcTdWT
+         +J7BYF1OLJwXAfnvGU2ZKXALWV9s3KIa2dr4hevsQ1mV+XiG5Z03X2T0WOQ4Dpm636
+         kI9YfnyY+RPk1S0unEsx7Wk917MRog4l595GTol0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Sewart <jamessewart@arista.com>,
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        Doug Meyer <dmeyer@gigaio.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
         Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 022/459] PCI: Fix pci_add_dma_alias() bitmask size
-Date:   Fri, 14 Feb 2020 10:54:32 -0500
-Message-Id: <20200214160149.11681-22-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 051/459] PCI/switchtec: Fix vep_vector_number ioread width
+Date:   Fri, 14 Feb 2020 10:55:01 -0500
+Message-Id: <20200214160149.11681-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -44,75 +44,36 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: James Sewart <jamessewart@arista.com>
+From: Logan Gunthorpe <logang@deltatee.com>
 
-[ Upstream commit f8bf2aeb651b3460a4b36fd7ba1ba1d31777d35c ]
+[ Upstream commit 9375646b4cf03aee81bc6c305aa18cc80b682796 ]
 
-The number of possible devfns is 256, but pci_add_dma_alias() allocated a
-bitmap of size 255.  Fix this off-by-one error.
+vep_vector_number is actually a 16 bit register which should be read with
+ioread16() instead of ioread32().
 
-This fixes commits 338c3149a221 ("PCI: Add support for multiple DMA
-aliases") and c6635792737b ("PCI: Allocate dma_alias_mask with
-bitmap_zalloc()"), but I doubt it was possible to see a problem because
-it takes 4 64-bit longs (or 8 32-bit longs) to hold 255 bits, and
-bitmap_zalloc() doesn't save the 255-bit size anywhere.
-
-[bhelgaas: commit log, move #define to drivers/pci/pci.h, include loop
-limit fix from Qian Cai:
-https://lore.kernel.org/r/20191218170004.5297-1-cai@lca.pw]
-Signed-off-by: James Sewart <jamessewart@arista.com>
+Fixes: 080b47def5e5 ("MicroSemi Switchtec management interface driver")
+Link: https://lore.kernel.org/r/20200106190337.2428-3-logang@deltatee.com
+Reported-by: Doug Meyer <dmeyer@gigaio.com>
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pci.c    | 2 +-
- drivers/pci/pci.h    | 3 +++
- drivers/pci/search.c | 4 ++--
- 3 files changed, 6 insertions(+), 3 deletions(-)
+ drivers/pci/switch/switchtec.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index fcfaadc774eef..cbf3d3889874c 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -5894,7 +5894,7 @@ EXPORT_SYMBOL_GPL(pci_pr3_present);
- void pci_add_dma_alias(struct pci_dev *dev, u8 devfn)
- {
- 	if (!dev->dma_alias_mask)
--		dev->dma_alias_mask = bitmap_zalloc(U8_MAX, GFP_KERNEL);
-+		dev->dma_alias_mask = bitmap_zalloc(MAX_NR_DEVFNS, GFP_KERNEL);
- 	if (!dev->dma_alias_mask) {
- 		pci_warn(dev, "Unable to allocate DMA alias mask\n");
- 		return;
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 3f6947ee3324a..273d60cb0762d 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -4,6 +4,9 @@
+diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
+index 465d6afd826e8..efa6abc86995f 100644
+--- a/drivers/pci/switch/switchtec.c
++++ b/drivers/pci/switch/switchtec.c
+@@ -1276,7 +1276,7 @@ static int switchtec_init_isr(struct switchtec_dev *stdev)
+ 	if (nvecs < 0)
+ 		return nvecs;
  
- #include <linux/pci.h>
+-	event_irq = ioread32(&stdev->mmio_part_cfg->vep_vector_number);
++	event_irq = ioread16(&stdev->mmio_part_cfg->vep_vector_number);
+ 	if (event_irq < 0 || event_irq >= nvecs)
+ 		return -EFAULT;
  
-+/* Number of possible devfns: 0.0 to 1f.7 inclusive */
-+#define MAX_NR_DEVFNS 256
-+
- #define PCI_FIND_CAP_TTL	48
- 
- #define PCI_VSEC_ID_INTEL_TBT	0x1234	/* Thunderbolt */
-diff --git a/drivers/pci/search.c b/drivers/pci/search.c
-index bade14002fd8a..e4dbdef5aef05 100644
---- a/drivers/pci/search.c
-+++ b/drivers/pci/search.c
-@@ -41,9 +41,9 @@ int pci_for_each_dma_alias(struct pci_dev *pdev,
- 	 * DMA, iterate over that too.
- 	 */
- 	if (unlikely(pdev->dma_alias_mask)) {
--		u8 devfn;
-+		unsigned int devfn;
- 
--		for_each_set_bit(devfn, pdev->dma_alias_mask, U8_MAX) {
-+		for_each_set_bit(devfn, pdev->dma_alias_mask, MAX_NR_DEVFNS) {
- 			ret = fn(pdev, PCI_DEVID(pdev->bus->number, devfn),
- 				 data);
- 			if (ret)
 -- 
 2.20.1
 
