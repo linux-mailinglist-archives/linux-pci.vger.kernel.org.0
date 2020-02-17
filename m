@@ -2,125 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 145E5161659
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2020 16:40:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D48A11617C3
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2020 17:20:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729016AbgBQPkY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Feb 2020 10:40:24 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46843 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728555AbgBQPkY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Feb 2020 10:40:24 -0500
-Received: by mail-wr1-f68.google.com with SMTP id z7so20253244wrl.13
-        for <linux-pci@vger.kernel.org>; Mon, 17 Feb 2020 07:40:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=uBL44HTwPsTzK1hTlXHwrWPFvRz4I8cxeuhUA7nfr3s=;
-        b=QUNDlRjh2O+ooQ41KWBChztMd4j9tV2M8HiE6TDGhh6KZcCXQYdQmMqHkRy/oPre/d
-         E+T64sT8TUAqvGZCkZWcpAPXMK/psI/SMbqtUXH8WD/97O+XqMwt7rE0VgfYpg4SGCTu
-         72DvsxmGQ2FHB1KOF86wT5RUdwe9l5E14uXBkwlKILpzWF5nOlDot/mlGYQpzffkiZng
-         dV1PcmwTrlY7TdA4Y7kgPv5XUqhxhLqt6oG02ccYRx64/bgjYrAaemMkV8MHRgYP/RlA
-         RNsfj1wDY4F+M6s4FATLU+2N+UfYeGwZGxIXM15btV8V9U0AnPqJn9J60Be6mPZjxKkb
-         OLhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=uBL44HTwPsTzK1hTlXHwrWPFvRz4I8cxeuhUA7nfr3s=;
-        b=WIy+VFRWT03b95RJM1R4VUMIF7ro0FBLa/pCFsvP8HwDYt69TymB5bObdIgqFM6QGv
-         X04FZBJ79gU6rz1JiOWbP4UoeemKWZrsT9lKpy54ECNpAKNIjBTGTgnHCKyLYX6rUZde
-         M+ixS8UPFUBB+0jskCg/smwX7E8n8lwaK0Vj1Q1UmNmSbNojUQYl0QGNpU5NXNpwOFgd
-         9PelNVMHIcoBqWwM012gGCoUPQraKbJQjZgG8qg+KT55HYH2k1YfV4CFAlHdaz/rs1lb
-         swR/Rlqzt3JrxPb8YU4G+qJ4NJo5/Zb76RRvFUGozzqW/T1LlGKcCBeJH3EjSH3ghcTB
-         dASw==
-X-Gm-Message-State: APjAAAXBYALunFlL9h+ggczrUxex8G1AR9RzqJ7QxeB7az/XVmPNLSrN
-        /R7sTj+0eM+e5KEcODIhF8TzPQ==
-X-Google-Smtp-Source: APXvYqyK3wvWFPYLO6Oneazyxhd5g+tje1jkIBunochJVdUjHRcEMjjKDjk9tOFHPoHKB9Cr5dnXww==
-X-Received: by 2002:adf:f109:: with SMTP id r9mr22236398wro.406.1581954021861;
-        Mon, 17 Feb 2020 07:40:21 -0800 (PST)
-Received: from myrica ([2001:171b:2276:930:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id v131sm1106010wme.23.2020.02.17.07.40.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2020 07:40:21 -0800 (PST)
-Date:   Mon, 17 Feb 2020 16:40:12 +0100
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     will@kernel.org, robh+dt@kernel.org, lorenzo.pieralisi@arm.com,
-        joro@8bytes.org, baolu.lu@linux.intel.com,
-        linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-acpi@vger.kernel.org, iommu@lists.linux-foundation.org,
-        corbet@lwn.net, mark.rutland@arm.com, liviu.dudau@arm.com,
-        sudeep.holla@arm.com, guohanjun@huawei.com, rjw@rjwysocki.net,
-        lenb@kernel.org, robin.murphy@arm.com, dwmw2@infradead.org,
-        amurray@thegoodpenguin.co.uk, frowand.list@gmail.com
-Subject: Re: [PATCH 02/11] PCI: Add ats_supported host bridge flag
-Message-ID: <20200217154012.GD1650092@myrica>
-References: <20200213165049.508908-3-jean-philippe@linaro.org>
- <20200215211047.GA124796@google.com>
+        id S1729150AbgBQQUx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Feb 2020 11:20:53 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:54962 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728463AbgBQQUr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Feb 2020 11:20:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=xaj/Kq62ILPzY7lAW5KXKzbtsac5+1LbvXT8O3/lHog=; b=oKpZEejT4yP0H+tnFLoKeHJiun
+        UNsEhOWK8lSoROqORqyGeFzdZfOWjNONfo/VChPdJn1dmpBUD8ac7geSH/P6acQRsFuc45v9w9qU/
+        Sd5mZ2oQSALiLbw665nLt7FoTMYCYv29I5OzpSwFQnjqsMEfWl9IrxMCrmyh6qD7i/vSudsOzYfgl
+        MMaJ9X80nD39XEYCUDBmHj94G4ZcTAJwLNMXX5lHa9sFdWHOVD9rg+D/rLP8D8O7OG3qCqPLy1gVG
+        1ofQqpUnoi0k3Jd954Tbr+RMvvc3yNg/ZTXyOdf965FgxfjcEaWrxW1XoNQDLgpJnGc3EVsQREpEj
+        GwrqfB3Q==;
+Received: from ip-109-41-129-189.web.vodafone.de ([109.41.129.189] helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j3j8Y-00042B-3S; Mon, 17 Feb 2020 16:20:46 +0000
+Received: from mchehab by bombadil.infradead.org with local (Exim 4.92.3)
+        (envelope-from <mchehab@bombadil.infradead.org>)
+        id 1j3j8W-000fpW-5m; Mon, 17 Feb 2020 17:20:44 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: [PATCH v2 12/24] docs: pci: endpoint/function/binding/pci-test.txt convert to ReST
+Date:   Mon, 17 Feb 2020 17:20:30 +0100
+Message-Id: <84d6075c17ce9a1c5c214f2f11ea55d951fdc3bd.1581956285.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <cover.1581956285.git.mchehab+huawei@kernel.org>
+References: <cover.1581956285.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200215211047.GA124796@google.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Feb 15, 2020 at 03:10:47PM -0600, Bjorn Helgaas wrote:
-> On Thu, Feb 13, 2020 at 05:50:40PM +0100, Jean-Philippe Brucker wrote:
-> > Each vendor has their own way of describing whether a host bridge
-> > supports ATS.  The Intel and AMD ACPI tables selectively enable or
-> > disable ATS per device or sub-tree, while Arm has a single bit for each
-> > host bridge.  For those that need it, add an ats_supported bit to the
-> > host bridge structure.
-> > 
-> > Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> > ---
-> >  drivers/pci/probe.c | 7 +++++++
-> >  include/linux/pci.h | 1 +
-> >  2 files changed, 8 insertions(+)
-> > 
-> > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> > index 512cb4312ddd..75c0a25af44e 100644
-> > --- a/drivers/pci/probe.c
-> > +++ b/drivers/pci/probe.c
-> > @@ -598,6 +598,13 @@ static void pci_init_host_bridge(struct pci_host_bridge *bridge)
-> >  	bridge->native_shpc_hotplug = 1;
-> >  	bridge->native_pme = 1;
-> >  	bridge->native_ltr = 1;
-> > +
-> > +	/*
-> > +	 * Some systems may disable ATS at the host bridge (ACPI IORT,
-> > +	 * device-tree), other filter it with a smaller granularity (ACPI DMAR
-> > +	 * and IVRS).
-> > +	 */
-> > +	bridge->ats_supported = 1;
-> 
-> The cover letter says it's important to enable ATS only if the host
-> bridge supports it.  From the other patches, it looks like we learn if
-> the host bridge supports ATS from either a DT "ats-supported" property
-> or an ACPI IORT table.  If that's the case, shouldn't the default here
-> be "ATS is *not* supported"?
+Convert this file to ReST by adding a proper title to it and
+use the right markups for a table.
 
-The ACPI IVRS table (AMD) doesn't have a property for the host bridge, it
-can only deselect ATS for a sub-range of devices. Similarly the DMAR table
-(Intel) declares that ATS is supported either by the whole PCIe domain or
-for sub-ranges of devices. I selected ats_supported at the bridge by
-default since IVRS needs it and DMAR has its own fine-grained ATS support
-configuration.
+While here, add a SPDX header.
 
-I'm still not sure this is the right approach, given that the
-ats_supported bridge property doesn't exactly correspond to a firmware
-property on all platforms. Maybe the device-tree implementation should
-follow the IORT one where each device carries a fwspec property stating
-"root-complex supports ATS". But it isn't nice either so I tried a cleaner
-implementation (as discussed with Robin back on the ATS-with-SMMUv3 series
-[1]).
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ .../endpoint/function/binding/pci-test.rst    | 26 +++++++++++++++++++
+ .../endpoint/function/binding/pci-test.txt    | 19 --------------
+ Documentation/PCI/endpoint/index.rst          |  2 ++
+ 3 files changed, 28 insertions(+), 19 deletions(-)
+ create mode 100644 Documentation/PCI/endpoint/function/binding/pci-test.rst
+ delete mode 100644 Documentation/PCI/endpoint/function/binding/pci-test.txt
 
-Thanks,
-Jean
+diff --git a/Documentation/PCI/endpoint/function/binding/pci-test.rst b/Documentation/PCI/endpoint/function/binding/pci-test.rst
+new file mode 100644
+index 000000000000..57ee866fb165
+--- /dev/null
++++ b/Documentation/PCI/endpoint/function/binding/pci-test.rst
+@@ -0,0 +1,26 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++==========================
++PCI Test Endpoint Function
++==========================
++
++name: Should be "pci_epf_test" to bind to the pci_epf_test driver.
++
++Configurable Fields:
++
++================   ===========================================================
++vendorid	   should be 0x104c
++deviceid	   should be 0xb500 for DRA74x and 0xb501 for DRA72x
++revid		   don't care
++progif_code	   don't care
++subclass_code	   don't care
++baseclass_code	   should be 0xff
++cache_line_size	   don't care
++subsys_vendor_id   don't care
++subsys_id	   don't care
++interrupt_pin	   Should be 1 - INTA, 2 - INTB, 3 - INTC, 4 -INTD
++msi_interrupts	   Should be 1 to 32 depending on the number of MSI interrupts
++		   to test
++msix_interrupts	   Should be 1 to 2048 depending on the number of MSI-X
++		   interrupts to test
++================   ===========================================================
+diff --git a/Documentation/PCI/endpoint/function/binding/pci-test.txt b/Documentation/PCI/endpoint/function/binding/pci-test.txt
+deleted file mode 100644
+index cd76ba47394b..000000000000
+--- a/Documentation/PCI/endpoint/function/binding/pci-test.txt
++++ /dev/null
+@@ -1,19 +0,0 @@
+-PCI TEST ENDPOINT FUNCTION
+-
+-name: Should be "pci_epf_test" to bind to the pci_epf_test driver.
+-
+-Configurable Fields:
+-vendorid	 : should be 0x104c
+-deviceid	 : should be 0xb500 for DRA74x and 0xb501 for DRA72x
+-revid		 : don't care
+-progif_code	 : don't care
+-subclass_code	 : don't care
+-baseclass_code	 : should be 0xff
+-cache_line_size	 : don't care
+-subsys_vendor_id : don't care
+-subsys_id	 : don't care
+-interrupt_pin	 : Should be 1 - INTA, 2 - INTB, 3 - INTC, 4 -INTD
+-msi_interrupts	 : Should be 1 to 32 depending on the number of MSI interrupts
+-		   to test
+-msix_interrupts	 : Should be 1 to 2048 depending on the number of MSI-X
+-		   interrupts to test
+diff --git a/Documentation/PCI/endpoint/index.rst b/Documentation/PCI/endpoint/index.rst
+index d114ea74b444..4ca7439fbfc9 100644
+--- a/Documentation/PCI/endpoint/index.rst
++++ b/Documentation/PCI/endpoint/index.rst
+@@ -11,3 +11,5 @@ PCI Endpoint Framework
+    pci-endpoint-cfs
+    pci-test-function
+    pci-test-howto
++
++   function/binding/pci-test
+-- 
+2.24.1
 
-[1] https://lore.kernel.org/linux-iommu/c10c7adb-c7f6-f8c6-05cc-f4f143427a2d@arm.com/
