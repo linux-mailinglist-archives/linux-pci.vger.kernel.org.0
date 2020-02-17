@@ -2,130 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D48A11617C3
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2020 17:20:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C86EA161D35
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2020 23:16:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729150AbgBQQUx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Feb 2020 11:20:53 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:54962 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728463AbgBQQUr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Feb 2020 11:20:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=xaj/Kq62ILPzY7lAW5KXKzbtsac5+1LbvXT8O3/lHog=; b=oKpZEejT4yP0H+tnFLoKeHJiun
-        UNsEhOWK8lSoROqORqyGeFzdZfOWjNONfo/VChPdJn1dmpBUD8ac7geSH/P6acQRsFuc45v9w9qU/
-        Sd5mZ2oQSALiLbw665nLt7FoTMYCYv29I5OzpSwFQnjqsMEfWl9IrxMCrmyh6qD7i/vSudsOzYfgl
-        MMaJ9X80nD39XEYCUDBmHj94G4ZcTAJwLNMXX5lHa9sFdWHOVD9rg+D/rLP8D8O7OG3qCqPLy1gVG
-        1ofQqpUnoi0k3Jd954Tbr+RMvvc3yNg/ZTXyOdf965FgxfjcEaWrxW1XoNQDLgpJnGc3EVsQREpEj
-        GwrqfB3Q==;
-Received: from ip-109-41-129-189.web.vodafone.de ([109.41.129.189] helo=bombadil.infradead.org)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j3j8Y-00042B-3S; Mon, 17 Feb 2020 16:20:46 +0000
-Received: from mchehab by bombadil.infradead.org with local (Exim 4.92.3)
-        (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1j3j8W-000fpW-5m; Mon, 17 Feb 2020 17:20:44 +0100
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: [PATCH v2 12/24] docs: pci: endpoint/function/binding/pci-test.txt convert to ReST
-Date:   Mon, 17 Feb 2020 17:20:30 +0100
-Message-Id: <84d6075c17ce9a1c5c214f2f11ea55d951fdc3bd.1581956285.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <cover.1581956285.git.mchehab+huawei@kernel.org>
-References: <cover.1581956285.git.mchehab+huawei@kernel.org>
+        id S1726069AbgBQWQi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Feb 2020 17:16:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46322 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725966AbgBQWQi (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 17 Feb 2020 17:16:38 -0500
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBD792072C;
+        Mon, 17 Feb 2020 22:16:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581977797;
+        bh=Wa3oMCbR6JOT61299277MzPIraBqpzZLGf9/ONDtbD0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ntdSpJceuJSgpwTK1K8pcJANPmqUDciWlYcFq74aipHqDJeSypsxWkclBVWaIRcJm
+         OfVwJO25zGz6qGaSSSorSO0YppsEibtYoSDnOrlSvCJMXncHaaBU6/X5jd+3d05hJ0
+         DeAF7iMDjYLAGWEF8rcBwxP9g3Hr+wAWncuzO5Fw=
+Date:   Mon, 17 Feb 2020 16:16:35 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     linux-pci@vger.kernel.org
+Cc:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: [bugzilla-daemon@bugzilla.kernel.org: [Bug 206459] New: thinkpad
+ thunderbolt 3 dock gen2 pci memory allocation errors on Yoga C940 unless
+ plugged in before boot]
+Message-ID: <20200217221635.GA30914@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Convert this file to ReST by adding a proper title to it and
-use the right markups for a table.
+----- Forwarded message from bugzilla-daemon@bugzilla.kernel.org -----
 
-While here, add a SPDX header.
+Date: Fri, 07 Feb 2020 19:52:30 +0000
+From: bugzilla-daemon@bugzilla.kernel.org
+To: bjorn@helgaas.com
+Subject: [Bug 206459] New: thinkpad thunderbolt 3 dock gen2 pci memory
+	allocation errors on Yoga C940 unless plugged in before boot
+Message-ID: <bug-206459-41252@https.bugzilla.kernel.org/>
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- .../endpoint/function/binding/pci-test.rst    | 26 +++++++++++++++++++
- .../endpoint/function/binding/pci-test.txt    | 19 --------------
- Documentation/PCI/endpoint/index.rst          |  2 ++
- 3 files changed, 28 insertions(+), 19 deletions(-)
- create mode 100644 Documentation/PCI/endpoint/function/binding/pci-test.rst
- delete mode 100644 Documentation/PCI/endpoint/function/binding/pci-test.txt
+https://bugzilla.kernel.org/show_bug.cgi?id=206459
 
-diff --git a/Documentation/PCI/endpoint/function/binding/pci-test.rst b/Documentation/PCI/endpoint/function/binding/pci-test.rst
-new file mode 100644
-index 000000000000..57ee866fb165
---- /dev/null
-+++ b/Documentation/PCI/endpoint/function/binding/pci-test.rst
-@@ -0,0 +1,26 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+==========================
-+PCI Test Endpoint Function
-+==========================
-+
-+name: Should be "pci_epf_test" to bind to the pci_epf_test driver.
-+
-+Configurable Fields:
-+
-+================   ===========================================================
-+vendorid	   should be 0x104c
-+deviceid	   should be 0xb500 for DRA74x and 0xb501 for DRA72x
-+revid		   don't care
-+progif_code	   don't care
-+subclass_code	   don't care
-+baseclass_code	   should be 0xff
-+cache_line_size	   don't care
-+subsys_vendor_id   don't care
-+subsys_id	   don't care
-+interrupt_pin	   Should be 1 - INTA, 2 - INTB, 3 - INTC, 4 -INTD
-+msi_interrupts	   Should be 1 to 32 depending on the number of MSI interrupts
-+		   to test
-+msix_interrupts	   Should be 1 to 2048 depending on the number of MSI-X
-+		   interrupts to test
-+================   ===========================================================
-diff --git a/Documentation/PCI/endpoint/function/binding/pci-test.txt b/Documentation/PCI/endpoint/function/binding/pci-test.txt
-deleted file mode 100644
-index cd76ba47394b..000000000000
---- a/Documentation/PCI/endpoint/function/binding/pci-test.txt
-+++ /dev/null
-@@ -1,19 +0,0 @@
--PCI TEST ENDPOINT FUNCTION
--
--name: Should be "pci_epf_test" to bind to the pci_epf_test driver.
--
--Configurable Fields:
--vendorid	 : should be 0x104c
--deviceid	 : should be 0xb500 for DRA74x and 0xb501 for DRA72x
--revid		 : don't care
--progif_code	 : don't care
--subclass_code	 : don't care
--baseclass_code	 : should be 0xff
--cache_line_size	 : don't care
--subsys_vendor_id : don't care
--subsys_id	 : don't care
--interrupt_pin	 : Should be 1 - INTA, 2 - INTB, 3 - INTC, 4 -INTD
--msi_interrupts	 : Should be 1 to 32 depending on the number of MSI interrupts
--		   to test
--msix_interrupts	 : Should be 1 to 2048 depending on the number of MSI-X
--		   interrupts to test
-diff --git a/Documentation/PCI/endpoint/index.rst b/Documentation/PCI/endpoint/index.rst
-index d114ea74b444..4ca7439fbfc9 100644
---- a/Documentation/PCI/endpoint/index.rst
-+++ b/Documentation/PCI/endpoint/index.rst
-@@ -11,3 +11,5 @@ PCI Endpoint Framework
-    pci-endpoint-cfs
-    pci-test-function
-    pci-test-howto
-+
-+   function/binding/pci-test
+            Bug ID: 206459
+           Summary: thinkpad thunderbolt 3 dock gen2 pci memory allocation
+                    errors on Yoga C940 unless plugged in before boot
+           Product: Drivers
+           Version: 2.5
+    Kernel Version: 5.5.2
+          Hardware: Intel
+                OS: Linux
+              Tree: Mainline
+            Status: NEW
+          Severity: normal
+          Priority: P1
+         Component: PCI
+          Assignee: drivers_pci@kernel-bugs.osdl.org
+          Reporter: benoitg@coeus.ca
+        Regression: No
+
+Created attachment 287231
+  --> https://bugzilla.kernel.org/attachment.cgi?id=287231&action=edit
+acpidump
+
+I have thinkpad thunderbolt 3 dock gen2 dock I am trying to use with a New
+Lenovo Yoga C940-14IIL laptop.  Laptop is very recent hardware, with a 10th gen
+intel cpu, and a bios with very few options :(
+
+- The dock works fine when plugged-in before boot.
+- The dock does NOT work when plugged after the system booted.
+- The dock does NOT work when plugged-in at boot, subsequently unplugged and
+plugged back in.
+- The dock work fine in windows, in all the above scenarios
+
+When it fails, it fails with memory allocation messages such as:
+
+[ 342.507320] pci 0000:2b:00.0: BAR 14: no space for [mem size 0x0c200000]
+[ 342.507323] pci 0000:2b:00.0: BAR 14: failed to assign [mem size 0x0c200000]
+
+Things I tried:
+- Ubuntu kernel 5.3.0-26, same symptoms
+- Kernel mainline 5.4.12, same symptoms
+- Kernel mainline 5.5.2, same symptoms, but gets a little further allocating
+memory on the second pass.
+- Plugging the dock after powering up the laptop, but at the grub screen before
+boot. In this case the dock works fine after boot.
+
+Other potentially useful information to narrow it down:
+
+- The tests were done with only an ethernet cable and power plugged into the
+dock to minimize the number of moving parts...
+
+- Dock and laptop both have the very latest firmware as of 2020-02-07
+cat /sys/bus/thunderbolt/devices/0-0/nvm_version
+72.0
+cat /sys/bus/thunderbolt/devices/0-3/nvm_version
+50.0
+
+- Unfortunately I cannot procure older firmware for the dock to know if the
+laptop or the dock is the source of the problem (As this dock was released over
+a year ago, and I cannot find any specific relevant problems with Linux)
+
+- The screens connected to the displayports on the dock always work. But but
+all other ports (USB, ethernet, sound fail) when plugged-in after boot.
+
+- Doesn't seem to be a thunderbolt authorization problem:
+tbtadm devices 
+0-3     Lenovo  ThinkPad Thunderbolt 3 Dock     authorized      not in ACL
+
+Originally reported to ubuntu in:
+https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1860284
+
 -- 
-2.24.1
+You are receiving this mail because:
+You are watching the assignee of the bug.
 
+----- End forwarded message -----
