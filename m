@@ -2,80 +2,113 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 85D2C160B87
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2020 08:22:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 35CD0160DEC
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2020 10:01:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725985AbgBQHWv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Feb 2020 02:22:51 -0500
-Received: from mail3-bck.iservicesmail.com ([217.130.24.85]:3725 "EHLO
-        mail3-bck.iservicesmail.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725873AbgBQHWv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Feb 2020 02:22:51 -0500
-IronPort-SDR: 5dIdp8QJv3D0cVJg1LH/hbDfQdX75s0MhzeZGCocp7h28mpyuNP3Lg2NEigv9JNSFgXmgUTusr
- PlOaqdKtlWWw==
-IronPort-PHdr: =?us-ascii?q?9a23=3AANCMoh0uhxFYkvNQsmDT+DRfVm0co7zxezQtwd?=
- =?us-ascii?q?8Zse0RI/ad9pjvdHbS+e9qxAeQG9mCt7Qb1qGP6/uocFdDyKjCmUhKSIZLWR?=
- =?us-ascii?q?4BhJdetC0bK+nBN3fGKuX3ZTcxBsVIWQwt1Xi6NU9IBJS2PAWK8TW94jEIBx?=
- =?us-ascii?q?rwKxd+KPjrFY7OlcS30P2594HObwlSizexfLx/IA+0oAjRucUanJduJ6gswR?=
- =?us-ascii?q?bVv3VEfPhbymxvKV+PhRj3+92+/IRk8yReuvIh89BPXKDndKkmTrJWESorPX?=
- =?us-ascii?q?kt6MLkqRfMQw2P5mABUmoNiRpHHxLF7BDhUZjvtCbxq/dw1zObPc3ySrA0RC?=
- =?us-ascii?q?ii4qJ2QxLmlCsLKzg0+3zRh8dtjqxUvQihqgRxzYDUeoGbKvlwcL7SctwGSm?=
- =?us-ascii?q?RMRdpRWi5dDY+gc4cDE/QNMOBFpIf9vVsOqh6+CBG2Cuzx1j9HmGX21rA63O?=
- =?us-ascii?q?QmFwHG0xErEtUWsHTTttX1KL0dXPuozKnOzDXDdO9W2S3n54fVaB8tu/CMXa?=
- =?us-ascii?q?5pfMfX1EIhFBvFg02OpYD4PT6ZzPkBvmaH4+Z6S+6ihHQrpg9xrzWp28wikJ?=
- =?us-ascii?q?PGhpgPxVDB7Sh5xYE1KsCmR0Njet6kFYdQtzmdN4trXsMuW2Fotzg+yr0BoZ?=
- =?us-ascii?q?O7eTIFyJUjxx7FdfOHd5SE7x35WOaPJjd3mWhqeLy4hxa070es0PPzVtKs3F?=
- =?us-ascii?q?ZLqCpKjMXMu2gT2xDO6MWLUOZx80m91TqVyQze5ftILE40mKbDLp4u2L8wlp?=
- =?us-ascii?q?4dsUTZGS/2nV37jLeRdkU+5uin8f/qYqjgpp+dLI90lhv+Pb4zlcOlG+g4Mx?=
- =?us-ascii?q?QOU3CB+eugzL3j4VH5QLJSg/0yk6nZto3aJMsCqq6hHwBV050u6wiwDzi4yt?=
- =?us-ascii?q?QUh3oHI0xfeBKBkYfpP0vCIPfiDfew0ByQl2JvxvbbLvj5CZTlMHfOivHicK?=
- =?us-ascii?q?x75koazxA8nupS/5ZFNrZUGP/vV1W5i9veAVdtKwGozvz4D9Ny1oAeQmiEKq?=
- =?us-ascii?q?CcOaLW91SP47R8DfOLYdottSrwMbAa4PjhxSshnkUBdIG025oMdGqxEv0gIl?=
- =?us-ascii?q?nPMimkucsIDWpf5ll2d+ftklDXCTM=3D?=
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2G9TQABPkpelyMYgtlmgkOBPgIBgUU?=
- =?us-ascii?q?QUiASjGOGa1QGcx+DQ4ZShRaBAIMzhgcTDIFbDQEBAQEBNQIEAQGEQIIEJDw?=
- =?us-ascii?q?CDQIDDQEBBgEBAQEBBQQBAQIQAQEBAQEIFgaFc4I7IoNwIA85SkwBDgGDV4J?=
- =?us-ascii?q?LAQEKKaxxDQ0ChR6CTAQKgQiBGyOBNgMBAYwhGnmBB4EjIYIrCAGCAYJ/ARI?=
- =?us-ascii?q?BboJIglkEjVISIYlFmDSBaloElmuCOQEPiBaENwOCWg+BC4MdgwmBZ4RSgX+?=
- =?us-ascii?q?fZoQUV4Egc3EzGggwgW4agSBPGA2ON44rAkCBFxACT4tJgjIBAQ?=
-X-IPAS-Result: =?us-ascii?q?A2G9TQABPkpelyMYgtlmgkOBPgIBgUUQUiASjGOGa1QGc?=
- =?us-ascii?q?x+DQ4ZShRaBAIMzhgcTDIFbDQEBAQEBNQIEAQGEQIIEJDwCDQIDDQEBBgEBA?=
- =?us-ascii?q?QEBBQQBAQIQAQEBAQEIFgaFc4I7IoNwIA85SkwBDgGDV4JLAQEKKaxxDQ0Ch?=
- =?us-ascii?q?R6CTAQKgQiBGyOBNgMBAYwhGnmBB4EjIYIrCAGCAYJ/ARIBboJIglkEjVISI?=
- =?us-ascii?q?YlFmDSBaloElmuCOQEPiBaENwOCWg+BC4MdgwmBZ4RSgX+fZoQUV4Egc3EzG?=
- =?us-ascii?q?ggwgW4agSBPGA2ON44rAkCBFxACT4tJgjIBAQ?=
-X-IronPort-AV: E=Sophos;i="5.70,451,1574118000"; 
-   d="scan'208";a="338052188"
-Received: from mailrel04.vodafone.es ([217.130.24.35])
-  by mail02.vodafone.es with ESMTP; 17 Feb 2020 08:22:50 +0100
-Received: (qmail 1807 invoked from network); 17 Feb 2020 06:34:36 -0000
-Received: from unknown (HELO 192.168.1.163) (mariapazos@[217.217.179.17])
-          (envelope-sender <porta@unistrada.it>)
-          by mailrel04.vodafone.es (qmail-ldap-1.03) with SMTP
-          for <linux-pci@vger.kernel.org>; 17 Feb 2020 06:34:36 -0000
-Date:   Mon, 17 Feb 2020 07:34:36 +0100 (CET)
-From:   Peter Wong <porta@unistrada.it>
-Reply-To: Peter Wong <peterwonghkhsbc@gmail.com>
-To:     linux-pci@vger.kernel.org
-Message-ID: <23324288.419891.1581921276315.JavaMail.cash@217.130.24.55>
-Subject: Investment opportunity
+        id S1728658AbgBQJBT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Feb 2020 04:01:19 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38012 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728563AbgBQJBT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Feb 2020 04:01:19 -0500
+Received: by mail-wm1-f65.google.com with SMTP id a9so17476341wmj.3
+        for <linux-pci@vger.kernel.org>; Mon, 17 Feb 2020 01:01:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Brb83lZtOeRlFQ/bRFw4GYUb2M+D+Mxxk7UBESF/VJw=;
+        b=vNWO019J+EkB584lxB0GckEDBBfH9ga5QOX2gtMZmlcfhbgC0Vv5GmIo5ilaSatuO2
+         kMSqQIkDKb/9GkARhFt5fjiTnpLzJitIxxwFAF4X4QDAiVHDqAmOIX3hqh5JfBhdQftH
+         dnw56ku8wO3Dq/q3esdhDBSrDZuYgp648W4LVQ5+WDqyOnMyk8swSfl7vUs8V0QhnEF7
+         1cB1XatwZx/9GCZIPOx8a1Fl74Y6n+cP0GoUEsisqUKYTz/T+zCJCwLW+enQ7kW8LcPP
+         FyO+FZAwPZDSUhjufHRqzLvKZzQ11+6Ea2LykfxSLnGlM4AmKJgvyYq1fDVKd4SI7DOx
+         rojw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Brb83lZtOeRlFQ/bRFw4GYUb2M+D+Mxxk7UBESF/VJw=;
+        b=Vh3TuGKzsNGo9x0e89fJW57/rnmfBjonAMoYZWOjkNINR2e14UhnslDKP/iq4iPNMq
+         mjsq0bDiNfgO4IdaI5ZGCm0TexNGTpchInjXspnh62WWNggjMbtFMiGEohoGIfJ40esw
+         T4laBM1OnTFaQmIUF+r60Z5Ucc0aByniFe+kr0zk+ufw6/n6RomQqiDORpcy7jlNM1qZ
+         fXtSTaPnLyoLKMwFo9/lDNs03ILn8zfLAtXNj59zi8a/tjEXrtZnx+BFGPY5uHhGhPzG
+         7+r9lXtjQVuYg+OQwsyYV6q0oCxo0MWYL6S5ronLjU0eEM4iTPVT6Mmk8cXXsj+8HOUF
+         gboA==
+X-Gm-Message-State: APjAAAW97oGJhpgE67kPs6B+NvdybIXUmKt3/dSyojCEY8NjljJP29M6
+        VnLG1YUXBWxngLIK5TjtMugOKg==
+X-Google-Smtp-Source: APXvYqzkpI772n/UQE5ai98F9d50e69d9O8VM028XZHeVkrEWip8LT7SDvd/+yCMdba14AIMpFdK4Q==
+X-Received: by 2002:a1c:4008:: with SMTP id n8mr21058614wma.121.1581930076262;
+        Mon, 17 Feb 2020 01:01:16 -0800 (PST)
+Received: from myrica ([2001:171b:2276:930:116c:c27a:3e7f:5eaf])
+        by smtp.gmail.com with ESMTPSA id a26sm19566259wmm.18.2020.02.17.01.01.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Feb 2020 01:01:15 -0800 (PST)
+Date:   Mon, 17 Feb 2020 10:01:07 +0100
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        iommu@lists.linux-foundation.org,
+        virtualization@lists.linux-foundation.org,
+        linux-pci@vger.kernel.org, kevin.tian@intel.com,
+        sebastien.boeuf@intel.com, jacob.jun.pan@intel.com,
+        bhelgaas@google.com, jasowang@redhat.com
+Subject: Re: [PATCH 3/3] iommu/virtio: Enable x86 support
+Message-ID: <20200217090107.GA1650092@myrica>
+References: <20200214160413.1475396-1-jean-philippe@linaro.org>
+ <20200214160413.1475396-4-jean-philippe@linaro.org>
+ <311a1885-c619-3c8d-29dd-14fbfbf74898@arm.com>
+ <20200216045006-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20200216045006-mutt-send-email-mst@kernel.org>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Greetings,
-Please check the attached email for a buisness proposal to explore.
-Looking forward to hearing from you for more details.
-Sincerely: Peter Wong
+On Sun, Feb 16, 2020 at 04:50:33AM -0500, Michael S. Tsirkin wrote:
+> On Fri, Feb 14, 2020 at 04:57:11PM +0000, Robin Murphy wrote:
+> > On 14/02/2020 4:04 pm, Jean-Philippe Brucker wrote:
+> > > With the built-in topology description in place, x86 platforms can now
+> > > use the virtio-iommu.
+> > > 
+> > > Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> > > ---
+> > >   drivers/iommu/Kconfig | 3 ++-
+> > >   1 file changed, 2 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
+> > > index 068d4e0e3541..adcbda44d473 100644
+> > > --- a/drivers/iommu/Kconfig
+> > > +++ b/drivers/iommu/Kconfig
+> > > @@ -508,8 +508,9 @@ config HYPERV_IOMMU
+> > >   config VIRTIO_IOMMU
+> > >   	bool "Virtio IOMMU driver"
+> > >   	depends on VIRTIO=y
+> > > -	depends on ARM64
+> > > +	depends on (ARM64 || X86)
+> > >   	select IOMMU_API
+> > > +	select IOMMU_DMA
+> > 
+> > Can that have an "if X86" for clarity? AIUI it's not necessary for
+> > virtio-iommu itself (and really shouldn't be), but is merely to satisfy the
+> > x86 arch code's expectation that IOMMU drivers bring their own DMA ops,
+> > right?
+> > 
+> > Robin.
+> 
+> In fact does not this work on any platform now?
 
+There is ongoing work to use the generic IOMMU_DMA ops on X86. AMD IOMMU
+has been converted recently [1] but VT-d still implements its own DMA ops
+(conversion patches are on the list [2]). On Arm the arch Kconfig selects
+IOMMU_DMA, and I assume we'll have the same on X86 once Tom's work is
+complete. Until then I can add a "if X86" here for clarity.
 
+Thanks,
+Jean
 
-
-----------------------------------------------------
-This email was sent by the shareware version of Postman Professional.
-
+[1] https://lore.kernel.org/linux-iommu/20190613223901.9523-1-murphyt7@tcd.ie/
+[2] https://lore.kernel.org/linux-iommu/20191221150402.13868-1-murphyt7@tcd.ie/
