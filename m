@@ -2,89 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6CF3F1610E2
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2020 12:17:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F5A71610B8
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2020 12:11:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729403AbgBQLRT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Feb 2020 06:17:19 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:44210 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728776AbgBQLRT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 17 Feb 2020 06:17:19 -0500
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id DD8DE19B8D2595DAF6C5;
-        Mon, 17 Feb 2020 19:17:15 +0800 (CST)
-Received: from localhost.localdomain (10.67.165.24) by
- DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 17 Feb 2020 19:17:07 +0800
-From:   Yicong Yang <yangyicong@hisilicon.com>
-To:     <helgaas@kernel.org>, <linux-pci@vger.kernel.org>
-CC:     <f.fangjian@huawei.com>, <huangdaode@huawei.com>
-Subject: [PATCH v4 10/10] PCI: Reduce redundancy in current_link_speed_show()
-Date:   Mon, 17 Feb 2020 19:13:04 +0800
-Message-ID: <1581937984-40353-11-git-send-email-yangyicong@hisilicon.com>
-X-Mailer: git-send-email 2.8.1
-In-Reply-To: <1581937984-40353-1-git-send-email-yangyicong@hisilicon.com>
-References: <1581937984-40353-1-git-send-email-yangyicong@hisilicon.com>
+        id S1728115AbgBQLLy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Feb 2020 06:11:54 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:52666 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727513AbgBQLLx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Feb 2020 06:11:53 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01HBBlQB039631;
+        Mon, 17 Feb 2020 05:11:47 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1581937907;
+        bh=YUlkxjL/5rW7/xSy0zkSYbWN6Df5HFgJ5tv8RMZL+nQ=;
+        h=From:To:CC:Subject:Date;
+        b=aPguU36PRPwnNWqe00LmaSV66/DGBMf8mdFtljWYkmQa5H4p/sCNIXdSrW78iWlbx
+         jEIZB+hpMGEnvRPBtb+Imc/wLuJkS673EknFIBcw4EvfGEsNbSHrTtulLMH2Y0Mm9C
+         QmlemScm18BkRFlc3RcfFR2U91C624YLAURT8Ow8=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01HBBlA2049795;
+        Mon, 17 Feb 2020 05:11:47 -0600
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 17
+ Feb 2020 05:11:46 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 17 Feb 2020 05:11:46 -0600
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01HBBhYK030042;
+        Mon, 17 Feb 2020 05:11:44 -0600
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Rob Herring <robh+dt@kernel.org>, Tom Joseph <tjoseph@cadence.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>
+CC:     Mark Rutland <mark.rutland@arm.com>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH v2 0/2] dt-bindings: Convert Cadence PCIe RC/EP to DT Schema
+Date:   Mon, 17 Feb 2020 16:45:17 +0530
+Message-ID: <20200217111519.29163-1-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.67.165.24]
-X-CFilter-Loop: Reflected
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Remove switch-case statements in current_link_speed_show(). Use
-pcie_link_speed[] array to get link speed and PCI_SPEED2STR macro
-to get link speed string.
+Cadence PCIe IP is used by multiple SoC vendors (e.g. TI). Cadence
+themselves have a validation platform for validating the PCIe IP which
+is already in the upstream kernel. Right now the binding only exists for
+Cadence platform and this will result in adding redundant binding schema
+for any platform using Cadence PCIe core.
 
-Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
----
- drivers/pci/pci-sysfs.c | 24 +++---------------------
- 1 file changed, 3 insertions(+), 21 deletions(-)
+This series:
+1) Create cdns-pcie.yaml which includes properties that are applicable
+   to both host mode and endpoint mode of Cadence PCIe core.
+2) Create cdns-pcie-host.yaml to include properties that are specific to
+   host mode of Cadence PCIe core. cdns-pcie-host.yaml will include
+   cdns-pcie.yaml.
+3) Create cdns-pcie-ep.yaml to include properties that are specific to
+   endpoint mode of Cadence PCIe core. cdns-pcie-ep.yaml will include
+   cdns-pcie.yaml.
+4) Remove cdns,cdns-pcie-ep.txt and cdns,cdns-pcie-host.txt which had
+   the binding for Cadence "platform" and add cdns,cdns-pcie-host.yaml
+   and cdns,cdns-pcie-ep.yaml schema for Cadence Platform. The schema
+   for Cadence platform then includes schema for Cadence PCIe core.
 
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index f4eafbc..eaece10 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -175,33 +175,15 @@ static ssize_t current_link_speed_show(struct device *dev,
- 	struct pci_dev *pci_dev = to_pci_dev(dev);
- 	u16 linkstat;
- 	int err;
--	const char *speed;
-+	enum pci_bus_speed speed;
- 
- 	err = pcie_capability_read_word(pci_dev, PCI_EXP_LNKSTA, &linkstat);
- 	if (err)
- 		return -EINVAL;
- 
--	switch (linkstat & PCI_EXP_LNKSTA_CLS) {
--	case PCI_EXP_LNKSTA_CLS_32_0GB:
--		speed = "32 GT/s";
--		break;
--	case PCI_EXP_LNKSTA_CLS_16_0GB:
--		speed = "16 GT/s";
--		break;
--	case PCI_EXP_LNKSTA_CLS_8_0GB:
--		speed = "8 GT/s";
--		break;
--	case PCI_EXP_LNKSTA_CLS_5_0GB:
--		speed = "5 GT/s";
--		break;
--	case PCI_EXP_LNKSTA_CLS_2_5GB:
--		speed = "2.5 GT/s";
--		break;
--	default:
--		speed = "Unknown speed";
--	}
-+	speed = pcie_link_speed[linkstat & PCI_EXP_LNKSTA_CLS];
- 
--	return sprintf(buf, "%s\n", speed);
-+	return sprintf(buf, "%s\n", PCI_SPEED2STR(speed));
- }
- static DEVICE_ATTR_RO(current_link_speed);
- 
+Changes from v1:
+*) Fix maximum values of num-lanes and cdns,no-bar-match-nbits
+*) Fix example DT node for PCIe Endpoint.
+
+Ref: Patches to convert Cadence driver to library
+     https://lkml.org/lkml/2019/11/11/317
+
+Some of this was initially part of [1], but to accelerate it getting
+into upstream, sending this as a separate series.
+
+[1] -> [1] -> http://lore.kernel.org/r/20200106102058.19183-1-kishon@ti.com
+
+Kishon Vijay Abraham I (2):
+  dt-bindings: PCI: cadence: Add PCIe RC/EP DT schema for Cadence PCIe
+  dt-bindings: PCI: Convert PCIe Host/Endpoint in Cadence platform to DT
+    schema
+
+ .../bindings/pci/cdns,cdns-pcie-ep.txt        | 27 -------
+ .../bindings/pci/cdns,cdns-pcie-ep.yaml       | 48 ++++++++++++
+ .../bindings/pci/cdns,cdns-pcie-host.txt      | 66 ----------------
+ .../bindings/pci/cdns,cdns-pcie-host.yaml     | 76 +++++++++++++++++++
+ .../devicetree/bindings/pci/cdns-pcie-ep.yaml | 22 ++++++
+ .../bindings/pci/cdns-pcie-host.yaml          | 27 +++++++
+ .../devicetree/bindings/pci/cdns-pcie.yaml    | 45 +++++++++++
+ MAINTAINERS                                   |  2 +-
+ 8 files changed, 219 insertions(+), 94 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
+ delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie.yaml
+
 -- 
-2.8.1
+2.17.1
 
