@@ -2,17 +2,17 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CA3E1610E4
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2020 12:17:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 388011610E6
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2020 12:17:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728609AbgBQLRT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Feb 2020 06:17:19 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:44218 "EHLO huawei.com"
+        id S1728667AbgBQLRV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Feb 2020 06:17:21 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:44212 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728653AbgBQLRT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 17 Feb 2020 06:17:19 -0500
+        id S1729315AbgBQLRV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 17 Feb 2020 06:17:21 -0500
 Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id E1A6C8A2DBB9A09D7996;
+        by Forcepoint Email with ESMTP id D9DB24020B379EB5A77B;
         Mon, 17 Feb 2020 19:17:15 +0800 (CST)
 Received: from localhost.localdomain (10.67.165.24) by
  DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
@@ -20,9 +20,9 @@ Received: from localhost.localdomain (10.67.165.24) by
 From:   Yicong Yang <yangyicong@hisilicon.com>
 To:     <helgaas@kernel.org>, <linux-pci@vger.kernel.org>
 CC:     <f.fangjian@huawei.com>, <huangdaode@huawei.com>
-Subject: [PATCH v4 04/10] PCI: Add comments for link speed info arrays
-Date:   Mon, 17 Feb 2020 19:12:58 +0800
-Message-ID: <1581937984-40353-5-git-send-email-yangyicong@hisilicon.com>
+Subject: [PATCH v4 05/10] PCI: brcmstb: Use pcie_link_speed[] to decode link speed
+Date:   Mon, 17 Feb 2020 19:12:59 +0800
+Message-ID: <1581937984-40353-6-git-send-email-yangyicong@hisilicon.com>
 X-Mailer: git-send-email 2.8.1
 In-Reply-To: <1581937984-40353-1-git-send-email-yangyicong@hisilicon.com>
 References: <1581937984-40353-1-git-send-email-yangyicong@hisilicon.com>
@@ -35,40 +35,28 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add comments for pcix_bus_speed[] and pcie_link_speed[] arrays.
-Indicating the capabilities which the information from.
+pcie_link_speed[] is used to decode link speed from link
+capability register. Use it in brcm_pcie_setup() to display
+the link speed rather than using the offset.
 
 Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
 ---
- drivers/pci/probe.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/pci/controller/pcie-brcmstb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 6ce47d8..b97f969 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -640,6 +640,10 @@ void pci_free_host_bridge(struct pci_host_bridge *bridge)
- }
- EXPORT_SYMBOL(pci_free_host_bridge);
+diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+index d20aabc..a390a29 100644
+--- a/drivers/pci/controller/pcie-brcmstb.c
++++ b/drivers/pci/controller/pcie-brcmstb.c
+@@ -824,7 +824,7 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+ 	cls = FIELD_GET(PCI_EXP_LNKSTA_CLS, lnksta);
+ 	nlw = FIELD_GET(PCI_EXP_LNKSTA_NLW, lnksta);
+ 	dev_info(dev, "link up, %s x%u %s\n",
+-		 PCIE_SPEED2STR(cls + PCI_SPEED_133MHz_PCIX_533),
++		 PCIE_SPEED2STR(pcie_link_speed[cls]),
+ 		 nlw, ssc_good ? "(SSC)" : "(!SSC)");
  
-+/*
-+ * these indices represent secondary bus mode and
-+ * frequency from  PCI_X_SSTATUS_FREQ
-+ */
- static const unsigned char pcix_bus_speed[] = {
- 	PCI_SPEED_UNKNOWN,		/* 0 */
- 	PCI_SPEED_66MHz_PCIX,		/* 1 */
-@@ -659,6 +663,10 @@ static const unsigned char pcix_bus_speed[] = {
- 	PCI_SPEED_133MHz_PCIX_533	/* F */
- };
- 
-+/*
-+ * these indices represent PCIe link speed from
-+ * PCI_EXP_LNKCAP, PCI_EXP_LNKSTA, PCI_EXP_LNKCAP2
-+ */
- const unsigned char pcie_link_speed[] = {
- 	PCI_SPEED_UNKNOWN,		/* 0 */
- 	PCIE_SPEED_2_5GT,		/* 1 */
+ 	/* PCIe->SCB endian mode for BAR */
 -- 
 2.8.1
 
