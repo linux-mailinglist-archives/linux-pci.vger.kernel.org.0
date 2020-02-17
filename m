@@ -2,178 +2,170 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 91735161F6E
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2020 04:18:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 986ED16230F
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2020 10:10:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726245AbgBRDSg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Feb 2020 22:18:36 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:38772 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726237AbgBRDSg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 17 Feb 2020 22:18:36 -0500
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 3C7E6C7E0EA2E52A80A4;
-        Tue, 18 Feb 2020 11:18:33 +0800 (CST)
-Received: from [127.0.0.1] (10.65.58.147) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Tue, 18 Feb 2020
- 11:18:24 +0800
-Subject: Re: PCI: bus resource allocation error
-To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        "Bjorn Helgaas" <helgaas@kernel.org>
-References: <f0cab9da-8e74-e923-a2fe-591d065228ee@hisilicon.com>
- <2e588019-0a42-c386-7314-e1cf5dbc3371@hisilicon.com>
- <SL2P216MB04433D05965A7D1C0E6A4BD680180@SL2P216MB0443.KORP216.PROD.OUTLOOK.COM>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        fangjian 00545541 <f.fangjian@huawei.com>
-From:   Yicong Yang <yangyicong@hisilicon.com>
-Message-ID: <80dcfe64-e66a-feef-fbc7-f094b2ab423c@hisilicon.com>
-Date:   Tue, 18 Feb 2020 11:18:34 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        id S1726347AbgBRJKg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 18 Feb 2020 04:10:36 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:35180 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726186AbgBRJKg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Feb 2020 04:10:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=gtxCElNvSCXWFICx33F89B+eF/cQ+L9FjqnWYk2rKuI=; b=h/D+gqw5OmQpGOwUjnu/fi4+kH
+        bT0h8EUVx9iIS8HNfPlJzJPk40KKUsFKNf009z67RPKZuDo+88sdToDM6wpb5+YlEa7V9G6OJvFol
+        R8RQl98kwCpA4ooFYQSURvPloAPXb0/KOMWODRXhBfm93RtLstFP639AaaseMhA7rBw6OI8LTEr+J
+        PXc4gR41BMqKLfnINKvS8pLmCqR3uXPMYK/daZvPEV9ynEWBeYzh1jVee6AgvUIOeV700uQ2EOPBg
+        z3vWEhpNHMY0ljZor0m1CokA7zJdOq2gDEs8oPaHQ9a9htLoD+FYLhrx/s8ITQGSuGwynWgVTIITp
+        vszoRJOw==;
+Received: from tmo-109-126.customers.d1-online.com ([80.187.109.126] helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j3ytn-00046s-Vd; Tue, 18 Feb 2020 09:10:36 +0000
+Received: from mchehab by bombadil.infradead.org with local (Exim 4.92.3)
+        (envelope-from <mchehab@bombadil.infradead.org>)
+        id 1j3j8V-000foa-PM; Mon, 17 Feb 2020 17:20:43 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Paul Mackerras <paulus@samba.org>,
+        linux-arm-kernel@lists.infradead.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-sh@vger.kernel.org,
+        Will Deacon <will@kernel.org>,
+        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        linux-crypto@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        keyrings@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        David Howells <dhowells@redhat.com>, linux-pci@vger.kernel.org,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>, linux-pm@vger.kernel.org,
+        Javi Merino <javi.merino@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: [PATCH v2 00/24] Manually convert  thermal, crypto and misc devices to ReST
+Date:   Mon, 17 Feb 2020 17:20:18 +0100
+Message-Id: <cover.1581956285.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <SL2P216MB04433D05965A7D1C0E6A4BD680180@SL2P216MB0443.KORP216.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.65.58.147]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Nicholas,
 
+Manually convert some files from thermal, crypto and misc-devices
+to ReST format.
 
-On 2020/2/11 21:43, Nicholas Johnson wrote:
->> There are 4 functions of a network card under one root port as below:
->>  +-[0000:7c]---00.0-[7d]--+-00.0  Device 19e5:a222
->>  |                        +-00.1  Device 19e5:a222
->>  |                        +-00.2  Device 19e5:a222
->>  |                        \-00.3  Device 19e5:a221
->>
->> When I remove one function and rescan the bus[7c], the kernel print the error
->> message as below:
-> Why do you need to remove and rescan the bus? It is possible that we 
-> should be addressing the problem of why you have the need to do that in 
-> the first place, rather than why the rescan does not work.
+This patch is against linux-next 20200217 tag.
 
-It is found in a test procedure coincidently. There is no certain condition to do it,
-but the problem does exists.
+v2: 
 
+- a small change at patch 2 to avoid uneeded whitespace changes;
+- added 13 new patches at the end
 
->
->> [  391.770030] pci 0000:7d:00.3: [19e5:a221] type 00 class 0x020000
->> [  391.776024] pci 0000:7d:00.3: reg 0x10: [mem 0x1210c0000-0x1210cffff 64bit pref]
->> [  391.783394] pci 0000:7d:00.3: reg 0x18: [mem 0x120c00000-0x120cfffff 64bit pref]
->> [  391.790786] pci 0000:7d:00.3: reg 0x224: [mem 0x1210d0000-0x1210dffff 64bit pref]
->> [  391.798238] pci 0000:7d:00.3: VF(n) BAR0 space: [mem 0x1210d0000-0x1210fffff 64bit pref] (contains BAR0 for 3 VFs)
->> [  391.808543] pci 0000:7d:00.3: reg 0x22c: [mem 0x120d00000-0x120dfffff 64bit pref]
->> [  391.815994] pci 0000:7d:00.3: VF(n) BAR2 space: [mem 0x120d00000-0x120ffffff 64bit pref] (contains BAR2 for 3 VFs)
->> [  391.826391] pci 0000:7c:00.0: bridge window [mem 0x00100000-0x002fffff] to [bus 7d] add_size 300000 add_align 100000
->> [  391.836869] pci 0000:7c:00.0: BAR 14: no space for [mem size 0x00500000]
->>                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
->> [  391.843543] pci 0000:7c:00.0: BAR 14: failed to assign [mem size 0x00500000]
->>                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
->> [  391.850562] pci 0000:7c:00.0: BAR 14: no space for [mem size 0x00200000]
->>                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
->> [  391.857237] pci 0000:7c:00.0: BAR 14: failed to assign [mem size 0x00200000]
->>                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ 
->> or the machine in the pastebin prints:
->>
->> [  790.671091] pci 0000:7d:00.3: Removing from iommu group 5
->> [  937.541937] pci 0000:7d:00.3: [19e5:a221] type 00 class 0x020000
->> [  937.541949] pci 0000:7d:00.3: reg 0x10: [mem 0x1221f0000-0x1221fffff 64bit pref]
->> [  937.541953] pci 0000:7d:00.3: reg 0x18: [mem 0x121f00000-0x121ffffff 64bit pref]
->> [  937.542113] pci 0000:7c:00.0: BAR 14: no space for [mem size 0x00200000]
->>                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
->> [  937.542116] pci 0000:7c:00.0: BAR 14: failed to assign [mem size 0x00200000]
->>                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
->> [  937.542120] pci 0000:7d:00.3: BAR 2: assigned [mem 0x121f00000-0x121ffffff 64bit pref]
->> [  937.542125] pci 0000:7d:00.3: BAR 0: assigned [mem 0x1221f0000-0x1221fffff 64bit pref]
->> [  937.542253] hns3 0000:7d:00.3: Adding to iommu group 5
->>
->> Both the function and the root ports work well, and the function get the resource it requested as before
->> remove. So from my perspective the message shouldn't be printed and should be eliminated.
->>
->> I looked into the codes and got some informations:
->>
->> when echo 1 > bus_rescan, kernel calls:
->>     pci_rescan_bus()
->>         pci_assign_unassigned_bus_resources()
->>             __pci_bus_size_bridges()
->>                /* first try to put the resource in 64 bit MMIO window(Bar 15). 
->>                 * As it's not empty, function will return directly.
->>                 */
->>                pbus_size_mem()
->>
->>                /* Then try to put rest resource in 32-bit MMIO window(Bar 14)
->>                 * As it's not occupied by any functions, the resources are
->>                 * put here. As no io memory is reserved in the bios for bar14,
->>                 * error message prints when allocated.
->>                 */
->>                pbus_size_mem() /* problem is here */
->>
->> In pbus_size_mem(), kernel try to size the bar to contain function resource.
->> If it's occupied by any function (judged by find_bus_resource_of_type() in
->> pbus_size_mem()), it'll return directly without any sizing. Otherwise the bar
->> will be sized to put the request resource in.
->>
->> It's just a rescan process, the bar size shouldn't be sized or allocated by
->> calling __pci_bus_size_bridges(). As previous resource space in the bar
->> reserved and the function will demands no extra spaces after rescan.
->> The current process seems unreasonable.
-> If the BIOS assigned the resources with different packing than what the 
-> kernel would do, then the rescan may not fit into the space. You can try 
-> pci=realloc,nocrs if you have not already. Your system looks like it is 
-> ARM64 so you cannot use pci=nocrs, unfortunately. The ideal situation is 
-> if the kernel throws away everything the BIOS did and does everything 
-> itself (assuming that this will not cause platform conflicts). But there 
-> is no way of doing this without modifying the kernel, and I am not sure 
-> how to do it fully.
+Mauro Carvalho Chehab (24):
+  docs: thermal: convert cpu-idle-cooling.rst to ReST
+  docs: crypto: convert asymmetric-keys.txt to ReST
+  docs: crypto: convert api-intro.txt to ReST format
+  docs: crypto: convert async-tx-api.txt to ReST format
+  docs: crypto: descore-readme.txt: convert to ReST format
+  docs: misc-devices/spear-pcie-gadget.txt: convert to ReST
+  docs: misc-devices/pci-endpoint-test.txt: convert to ReST
+  docs: misc-devices/pci-endpoint-test.txt: convert to ReST
+  docs: misc-devices/c2port.txt: convert to ReST format
+  docs: misc-devices/bh1770glc.txt: convert to ReST
+  docs: misc-devices/apds990x.txt: convert to ReST format
+  docs: pci: endpoint/function/binding/pci-test.txt convert to ReST
+  docs: arm64: convert perf.txt to ReST format
+  docs: cpu-freq: convert index.txt to ReST
+  docs: cpu-freq: convert amd-powernow.txt to ReST
+  docs: cpu-freq: convert core.txt to ReST
+  docs: cpu-freq: convert cpu-drivers.txt to ReST
+  docs: cpu-freq: convert cpufreq-nforce2.txt to ReST
+  docs: cpu-freq: convert cpufreq-stats.txt to ReST
+  docs: cpu-freq: convert pcc-cpufreq.txt to ReST
+  docs: powerpc: convert vcpudispatch_stats.txt to ReST
+  docs: sh: convert new-machine.txt to ReST
+  docs: sh: convert register-banks.txt to ReST
+  docs: trace: ring-buffer-design.txt: convert to ReST format
 
-pci=realloc affects when allocating the root bridge and root bus. So it doesn't
-meet the condition here, as the root bus resource has been allocated and the problem
-occurs when allocating and assigning resource on subordinate bus [7d]. And it does do
-no help as I add pci=realloc when boot.
+ .../endpoint/function/binding/pci-test.rst    |  26 +
+ .../endpoint/function/binding/pci-test.txt    |  19 -
+ Documentation/PCI/endpoint/index.rst          |   2 +
+ Documentation/arm64/index.rst                 |   1 +
+ Documentation/arm64/{perf.txt => perf.rst}    |   7 +-
+ .../{amd-powernow.txt => amd-powernow.rst}    |  12 +-
+ Documentation/cpu-freq/{core.txt => core.rst} |  65 +-
+ .../{cpu-drivers.txt => cpu-drivers.rst}      | 129 ++-
+ ...pufreq-nforce2.txt => cpufreq-nforce2.rst} |  18 +-
+ .../{cpufreq-stats.txt => cpufreq-stats.rst}  | 121 +--
+ Documentation/cpu-freq/index.rst              |  42 +
+ Documentation/cpu-freq/index.txt              |  56 --
+ .../{pcc-cpufreq.txt => pcc-cpufreq.rst}      |  86 +-
+ .../crypto/{api-intro.txt => api-intro.rst}   | 186 ++--
+ ...symmetric-keys.txt => asymmetric-keys.rst} |  91 +-
+ .../{async-tx-api.txt => async-tx-api.rst}    | 253 +++---
+ ...{descore-readme.txt => descore-readme.rst} | 152 +++-
+ Documentation/crypto/index.rst                |   5 +
+ .../driver-api/thermal/cpu-idle-cooling.rst   |  18 +-
+ Documentation/driver-api/thermal/index.rst    |   1 +
+ Documentation/index.rst                       |   1 +
+ .../{ad525x_dpot.txt => ad525x_dpot.rst}      |  24 +-
+ .../{apds990x.txt => apds990x.rst}            |  31 +-
+ .../{bh1770glc.txt => bh1770glc.rst}          |  45 +-
+ .../misc-devices/{c2port.txt => c2port.rst}   |  58 +-
+ Documentation/misc-devices/index.rst          |   6 +
+ .../misc-devices/pci-endpoint-test.rst        |  56 ++
+ .../misc-devices/pci-endpoint-test.txt        |  41 -
+ .../misc-devices/spear-pcie-gadget.rst        | 170 ++++
+ .../misc-devices/spear-pcie-gadget.txt        | 130 ---
+ Documentation/powerpc/index.rst               |   1 +
+ ...patch_stats.txt => vcpudispatch_stats.rst} |  17 +-
+ Documentation/sh/index.rst                    |   6 +
+ .../sh/{new-machine.txt => new-machine.rst}   | 193 +++--
+ ...{register-banks.txt => register-banks.rst} |  12 +-
+ Documentation/trace/index.rst                 |   1 +
+ ...ffer-design.txt => ring-buffer-design.rst} | 802 ++++++++++--------
+ 37 files changed, 1603 insertions(+), 1281 deletions(-)
+ create mode 100644 Documentation/PCI/endpoint/function/binding/pci-test.rst
+ delete mode 100644 Documentation/PCI/endpoint/function/binding/pci-test.txt
+ rename Documentation/arm64/{perf.txt => perf.rst} (95%)
+ rename Documentation/cpu-freq/{amd-powernow.txt => amd-powernow.rst} (89%)
+ rename Documentation/cpu-freq/{core.txt => core.rst} (69%)
+ rename Documentation/cpu-freq/{cpu-drivers.txt => cpu-drivers.rst} (72%)
+ rename Documentation/cpu-freq/{cpufreq-nforce2.txt => cpufreq-nforce2.rst} (55%)
+ rename Documentation/cpu-freq/{cpufreq-stats.txt => cpufreq-stats.rst} (53%)
+ create mode 100644 Documentation/cpu-freq/index.rst
+ delete mode 100644 Documentation/cpu-freq/index.txt
+ rename Documentation/cpu-freq/{pcc-cpufreq.txt => pcc-cpufreq.rst} (80%)
+ rename Documentation/crypto/{api-intro.txt => api-intro.rst} (70%)
+ rename Documentation/crypto/{asymmetric-keys.txt => asymmetric-keys.rst} (91%)
+ rename Documentation/crypto/{async-tx-api.txt => async-tx-api.rst} (55%)
+ rename Documentation/crypto/{descore-readme.txt => descore-readme.rst} (81%)
+ rename Documentation/misc-devices/{ad525x_dpot.txt => ad525x_dpot.rst} (85%)
+ rename Documentation/misc-devices/{apds990x.txt => apds990x.rst} (86%)
+ rename Documentation/misc-devices/{bh1770glc.txt => bh1770glc.rst} (83%)
+ rename Documentation/misc-devices/{c2port.txt => c2port.rst} (59%)
+ create mode 100644 Documentation/misc-devices/pci-endpoint-test.rst
+ delete mode 100644 Documentation/misc-devices/pci-endpoint-test.txt
+ create mode 100644 Documentation/misc-devices/spear-pcie-gadget.rst
+ delete mode 100644 Documentation/misc-devices/spear-pcie-gadget.txt
+ rename Documentation/powerpc/{vcpudispatch_stats.txt => vcpudispatch_stats.rst} (94%)
+ rename Documentation/sh/{new-machine.txt => new-machine.rst} (73%)
+ rename Documentation/sh/{register-banks.txt => register-banks.rst} (88%)
+ rename Documentation/trace/{ring-buffer-design.txt => ring-buffer-design.rst} (55%)
 
-Luckily, I found your patch c13704f5685d ("PCI: Avoid double hpmemsize MMIO window assignment")
-which have solved the problem. It's merged in v5.5 kernel so I didn't test it as the
-issues happened on v5.4.
-
-The find_free_bus_resource() is modified to find_bus_resource_of_type() in the patch, and it'll return the
-first assigned resource matching the target type rather than previous NULL if not found. Then when
-allocating target resource (64 bit pref) in 64 bit pref bar15 when first time call pbus_size_mem(),
-we'll get success 0 rather than -ENOSPEC. Then we'll not try to put the target resource in
-bar14 subsequently as previous did, which will avoid opening bar14 and wrong allocating. Thanks for you
-good work!
-
-But for me it still seems unnecessary to call __pci_bus_size_bridges() to try to size
-the bus in a rescan routine, actually it seems redundant here. Is it possible to call
-__pci_bus_assign_resources() in pci_rescan_bus() directly? However, I haven't look further
-in it, just thoughts.
-
-Thanks,
-Yicong Yang
-
->
-> However, I have come to find that the code in drivers/pci/setup-bus.c is 
-> very old and full of holes. It does require a re-write (in my opinion, 
-> and some other people have agreed to some extent), which I want to do, 
-> but will need much more experience before I can pull something like that 
-> off and get it accepted by others.
->
-> Unfortunately without the system in front of me and the ability to make 
-> lots of changes to the kernel very quickly to find a fix, I might not be 
-> able to figure it out.
->
->> Thanks,
->> Yicong Yang
->>
->>
-> Regards,
-> Nicholas
->
-> .
->
+-- 
+2.24.1
 
 
