@@ -2,27 +2,27 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E97F1610DE
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2020 12:17:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CA3E1610E4
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2020 12:17:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728619AbgBQLRO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Feb 2020 06:17:14 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:57146 "EHLO huawei.com"
+        id S1728609AbgBQLRT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Feb 2020 06:17:19 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:44218 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728524AbgBQLRO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 17 Feb 2020 06:17:14 -0500
+        id S1728653AbgBQLRT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 17 Feb 2020 06:17:19 -0500
 Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id C5B26C6133B427D6669F;
-        Mon, 17 Feb 2020 19:17:10 +0800 (CST)
+        by Forcepoint Email with ESMTP id E1A6C8A2DBB9A09D7996;
+        Mon, 17 Feb 2020 19:17:15 +0800 (CST)
 Received: from localhost.localdomain (10.67.165.24) by
  DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
  14.3.439.0; Mon, 17 Feb 2020 19:17:05 +0800
 From:   Yicong Yang <yangyicong@hisilicon.com>
 To:     <helgaas@kernel.org>, <linux-pci@vger.kernel.org>
 CC:     <f.fangjian@huawei.com>, <huangdaode@huawei.com>
-Subject: [PATCH v4 03/10] PCI: Remove PCIe suffix in pci_bus_speed_strings[]
-Date:   Mon, 17 Feb 2020 19:12:57 +0800
-Message-ID: <1581937984-40353-4-git-send-email-yangyicong@hisilicon.com>
+Subject: [PATCH v4 04/10] PCI: Add comments for link speed info arrays
+Date:   Mon, 17 Feb 2020 19:12:58 +0800
+Message-ID: <1581937984-40353-5-git-send-email-yangyicong@hisilicon.com>
 X-Mailer: git-send-email 2.8.1
 In-Reply-To: <1581937984-40353-1-git-send-email-yangyicong@hisilicon.com>
 References: <1581937984-40353-1-git-send-email-yangyicong@hisilicon.com>
@@ -35,53 +35,40 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Remove "PCIe" suffix of PCIe speed strings in
-pci_bus_speed_strings[] array. For example, if we use the
-array to decode link speed in __pcie_print_link_status,
-it'll lead to redundancy like:
-- nvme 0000:01:00.0: 16.000 Gb/s available PCIe bandwidth,
-  limited by 5 GT/s x4 link at 0000:00:01.1 (capable of
-  31.504 Gb/s with 8 GT/s x4 link)
-+ nvme 0000:01:00.0: 16.000 Gb/s available PCIe bandwidth,
-  limited by 5 GT/s PCIe x4 link at 0000:00:01.1 (capable
-  of 31.504 Gb/s with 8 GT/s PCIe x4 link)
+Add comments for pcix_bus_speed[] and pcie_link_speed[] arrays.
+Indicating the capabilities which the information from.
 
-The patch introduces changes in sysfs when display
-bus speed of certain slot from cur_bus_speed/max_bus_speed
-in /sys/bus/pci/slots/*. It may looks like:
--/sys/bus/pci/slots/0/cur_bus_speed: 8 GT/s PCIe
-+/sys/bus/pci/slots/0/cur_bus_speed: 8 GT/s
-The following patch will compensate and display slot
-bus speed with "PCIe" suffix as before.
-
-[1] https://lore.kernel.org/linux-pci/20200114224909.GA19633@google.com
-[2] https://lore.kernel.org/linux-pci/20200205183531.GA229621@google.com
 Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
 ---
- drivers/pci/probe.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/pci/probe.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 4e997e7..6ce47d8 100644
+index 6ce47d8..b97f969 100644
 --- a/drivers/pci/probe.c
 +++ b/drivers/pci/probe.c
-@@ -700,11 +700,11 @@ const char *pci_bus_speed_strings[] = {
- 	"66 MHz PCI-X 533",	/* 0x11 */
- 	"100 MHz PCI-X 533",	/* 0x12 */
- 	"133 MHz PCI-X 533",	/* 0x13 */
--	"2.5 GT/s PCIe",	/* 0x14 */
--	"5.0 GT/s PCIe",	/* 0x15 */
--	"8.0 GT/s PCIe",	/* 0x16 */
--	"16.0 GT/s PCIe",	/* 0x17 */
--	"32.0 GT/s PCIe",	/* 0x18 */
-+	"2.5 GT/s",	/* 0x14 */
-+	"5.0 GT/s",	/* 0x15 */
-+	"8.0 GT/s",	/* 0x16 */
-+	"16.0 GT/s",	/* 0x17 */
-+	"32.0 GT/s",	/* 0x18 */
- };
- const int pci_bus_speed_strings_size = ARRAY_SIZE(pci_bus_speed_strings);
+@@ -640,6 +640,10 @@ void pci_free_host_bridge(struct pci_host_bridge *bridge)
+ }
+ EXPORT_SYMBOL(pci_free_host_bridge);
  
++/*
++ * these indices represent secondary bus mode and
++ * frequency from  PCI_X_SSTATUS_FREQ
++ */
+ static const unsigned char pcix_bus_speed[] = {
+ 	PCI_SPEED_UNKNOWN,		/* 0 */
+ 	PCI_SPEED_66MHz_PCIX,		/* 1 */
+@@ -659,6 +663,10 @@ static const unsigned char pcix_bus_speed[] = {
+ 	PCI_SPEED_133MHz_PCIX_533	/* F */
+ };
+ 
++/*
++ * these indices represent PCIe link speed from
++ * PCI_EXP_LNKCAP, PCI_EXP_LNKSTA, PCI_EXP_LNKCAP2
++ */
+ const unsigned char pcie_link_speed[] = {
+ 	PCI_SPEED_UNKNOWN,		/* 0 */
+ 	PCIE_SPEED_2_5GT,		/* 1 */
 -- 
 2.8.1
 
