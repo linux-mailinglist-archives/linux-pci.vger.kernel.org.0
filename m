@@ -2,281 +2,133 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 017881611C6
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2020 13:14:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9106B161239
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2020 13:40:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbgBQMOQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Feb 2020 07:14:16 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:4181 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbgBQMOP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Feb 2020 07:14:15 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e4a83760000>; Mon, 17 Feb 2020 04:13:42 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 17 Feb 2020 04:14:13 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 17 Feb 2020 04:14:13 -0800
-Received: from [10.24.47.202] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 17 Feb
- 2020 12:14:11 +0000
-Subject: Re: [PATCH v2 1/5] PCI: endpoint: Use notification chain mechanism to
- notify EPC events to EPF
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        id S1728264AbgBQMkj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Feb 2020 07:40:39 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54258 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728268AbgBQMkj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Feb 2020 07:40:39 -0500
+Received: by mail-wm1-f65.google.com with SMTP id s10so17004767wmh.3
+        for <linux-pci@vger.kernel.org>; Mon, 17 Feb 2020 04:40:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=VM4sr45eMsFNfm3I8AuewKPZ2mzCi8kc40UVw+7O2LQ=;
+        b=xB+yOUMH1+HqPIVwYA3f+1KohCCBUZKzi2se4L7bK+0Hs0L2ST4OcrzccxNLIKZSZL
+         meF2am7U3/daqiwqZ2iYjulCYMVLvp6cA+U2CEevmBa4//Ar02kR0gI8SOaoXc2FPtNM
+         4mii9R/d783fyE/dxumDzGZA8y7IOZs1u0FLd3Z4kzBmSygQEGxTGUYOe5fqlT9fjxx2
+         FBivVrn9YMs6qKmDf7fYx4XhyXb2rq9Zz7yxrlKls/r0+mqTuKY6553nH6pjvXf0vhDz
+         dxEhqGpoCEOSpWjK878ms0OPbBVieYrKP3NYoCNhXJO1KEiCzbAQp4gwPxSiLHMZGPv/
+         8yrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=VM4sr45eMsFNfm3I8AuewKPZ2mzCi8kc40UVw+7O2LQ=;
+        b=Bu4+Ce1LcnrTkFBqRv/sYuGbXvVIyfv/yytI6Kv3edkirZtYFssH+6pZxA30kDEGRW
+         +OXDyr5lrNXFPV3NpvU7ZWBkDwftEqM1aI1N5UxeFlnUHJXHOHtPbeCE/Y4HVnk8lCxv
+         Mv9dIoWOtESIO37vuLGpqTisLcoN1KDPZnO9WpcN8bBglKLgyH2EJq5x5YbWu9V7t5vl
+         cvOmaHvBuG4/cIaTQXpa8cJlmEVa0vdFB4/TGt8TJVnNDxrLv2uf+GrKgaCjuA7PfKYc
+         PtybT45fYjPUfIXWjdDfJ4BNVVF4yMJlWcVVexAO0n7HG8L5w/QqOimQER7V4Go/ERlS
+         arsQ==
+X-Gm-Message-State: APjAAAUUNcaLPd7Hv0WkMkFEhwtUX8Vw5wLELiIn9VTCc8+9TRh6kzJF
+        phSSk5wiGpp+2vBtIR0a4f4RipY6tKqG5A==
+X-Google-Smtp-Source: APXvYqw7OaMmOiCFpqSYiEkkioeWfbwcKs6q33Y3t8Kyrhd1NgY0z99Vh6YZxCeeeslYOpZSiSCuUQ==
+X-Received: by 2002:a7b:c0d9:: with SMTP id s25mr21509184wmh.98.1581943237117;
+        Mon, 17 Feb 2020 04:40:37 -0800 (PST)
+Received: from myrica ([2001:171b:2276:930:116c:c27a:3e7f:5eaf])
+        by smtp.gmail.com with ESMTPSA id d16sm917782wrg.27.2020.02.17.04.40.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Feb 2020 04:40:36 -0800 (PST)
+Date:   Mon, 17 Feb 2020 13:40:28 +0100
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, Will Deacon <will@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
+        linux-acpi@vger.kernel.org,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        David Woodhouse <dwmw2@infradead.org>,
         Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Athani Nadeem Ladkhan <nadeem@cadence.com>,
-        Tom Joseph <tjoseph@cadence.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200212112514.2000-1-kishon@ti.com>
- <20200212112514.2000-2-kishon@ti.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <cd12fb22-702d-f639-eaf7-68ca96b3c6d0@nvidia.com>
-Date:   Mon, 17 Feb 2020 17:44:07 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH 03/11] PCI: OF: Check whether the host bridge supports ATS
+Message-ID: <20200217124028.GC1650092@myrica>
+References: <20200213165049.508908-1-jean-philippe@linaro.org>
+ <20200213165049.508908-4-jean-philippe@linaro.org>
+ <CAL_JsqKZP9u7bFsVT=5TzqmnHWm_bvH39ffkbN3q9-k32ynVig@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200212112514.2000-2-kishon@ti.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1581941622; bh=OMM5i494/gXFbrccRpTS3JbNUp8xz1TYTKuZ+laJN4A=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=TN+d0wgIJp8QFgOtDnXRhFxppEfLd4MWXrGMq3OJH+Nks3mCaiWetVB0mf38K/9s+
-         IhvjIt0+ZgHL43KkQFgNqi7mboD7elHVtgODokpyBmp9OEmNPXRoe9B0IwjeeP+Hm8
-         aEL3nKB0QiNzdSAdXw+wtycPj3Cil9sp/+7u9/Wnfi0bfCAeoXI9vSv9NZl2B3KRqy
-         4E3IPNItg82Gg3Cdcrg7/XH7zjuhAtvaS+Va/bo/SW9uuaH9edP7trWtWznx/stxlR
-         b/Yo04WI6O38Pjfvdekr+DuTGuvWSJ7Kh66vMYDBEwxlgPhFVwektGHsHqkNMJOU23
-         EVJ7NBaZREITA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKZP9u7bFsVT=5TzqmnHWm_bvH39ffkbN3q9-k32ynVig@mail.gmail.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Thu, Feb 13, 2020 at 12:26:46PM -0600, Rob Herring wrote:
+> On Thu, Feb 13, 2020 at 10:52 AM Jean-Philippe Brucker
+> <jean-philippe@linaro.org> wrote:
+> >
+> > Copy the ats-supported flag into the pci_host_bridge structure.
+> >
+> > Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> > ---
+> >  drivers/pci/controller/pci-host-common.c | 1 +
+> >  drivers/pci/of.c                         | 9 +++++++++
+> >  include/linux/of_pci.h                   | 3 +++
+> >  3 files changed, 13 insertions(+)
+> >
+> > diff --git a/drivers/pci/controller/pci-host-common.c b/drivers/pci/controller/pci-host-common.c
+> > index 250a3fc80ec6..a6ac927be291 100644
+> > --- a/drivers/pci/controller/pci-host-common.c
+> > +++ b/drivers/pci/controller/pci-host-common.c
+> > @@ -92,6 +92,7 @@ int pci_host_common_probe(struct platform_device *pdev,
+> >                 return ret;
+> >         }
+> >
+> > +       of_pci_host_check_ats(bridge);
+> >         platform_set_drvdata(pdev, bridge->bus);
+> >         return 0;
+> >  }
+> > diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> > index 81ceeaa6f1d5..4b8a877f1e9f 100644
+> > --- a/drivers/pci/of.c
+> > +++ b/drivers/pci/of.c
+> > @@ -576,6 +576,15 @@ int pci_parse_request_of_pci_ranges(struct device *dev,
+> >  }
+> >  EXPORT_SYMBOL_GPL(pci_parse_request_of_pci_ranges);
+> >
+> > +void of_pci_host_check_ats(struct pci_host_bridge *bridge)
+> > +{
+> > +       struct device_node *np = bridge->bus->dev.of_node;
+> > +
+> > +       if (!np)
+> > +               return;
+> > +
+> > +       bridge->ats_supported = of_property_read_bool(np, "ats-supported");
+> > +}
+> 
+> Not really any point in a common function if we expect this to be only
+> for ECAM hosts which it seems to be based on the binding.
 
+I'll move this to pci-host-common.c
 
-On 2/12/2020 4:55 PM, Kishon Vijay Abraham I wrote:
-> External email: Use caution opening links or attachments
-> 
-> 
-> Use atomic_notifier_call_chain() to notify EPC events like linkup to EPF
-> driver instead of using linkup ops in EPF driver. This is in preparation
-> for adding proper locking mechanism to EPF ops. This will also enable to
-> add more events (in addition to linkup) in the future.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->   drivers/pci/endpoint/functions/pci-epf-test.c | 13 ++++++++---
->   drivers/pci/endpoint/pci-epc-core.c           |  9 ++------
->   drivers/pci/endpoint/pci-epf-core.c           | 22 +------------------
->   include/linux/pci-epc.h                       |  8 +++++++
->   include/linux/pci-epf.h                       |  6 ++---
->   5 files changed, 23 insertions(+), 35 deletions(-)
-> 
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> index 5d74f81ddfe4..bddff15052cc 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> @@ -360,12 +360,16 @@ static void pci_epf_test_cmd_handler(struct work_struct *work)
->                             msecs_to_jiffies(1));
->   }
-> 
-> -static void pci_epf_test_linkup(struct pci_epf *epf)
-> +static int pci_epf_test_notifier(struct notifier_block *nb, unsigned long val,
-> +                                void *data)
->   {
-> +       struct pci_epf *epf = container_of(nb, struct pci_epf, nb);
->          struct pci_epf_test *epf_test = epf_get_drvdata(epf);
-> 
->          queue_delayed_work(kpcitest_workqueue, &epf_test->cmd_handler,
->                             msecs_to_jiffies(1));
-> +
-> +       return NOTIFY_OK;
->   }
-> 
->   static void pci_epf_test_unbind(struct pci_epf *epf)
-> @@ -546,8 +550,12 @@ static int pci_epf_test_bind(struct pci_epf *epf)
->                  }
->          }
-> 
-> -       if (!linkup_notifier)
-> +       if (linkup_notifier) {
-> +               epf->nb.notifier_call = pci_epf_test_notifier;
-> +               pci_epc_register_notifier(epc, &epf->nb);
-> +       } else {
->                  queue_work(kpcitest_workqueue, &epf_test->cmd_handler.work);
-> +       }
-> 
->          return 0;
->   }
-> @@ -580,7 +588,6 @@ static int pci_epf_test_probe(struct pci_epf *epf)
->   static struct pci_epf_ops ops = {
->          .unbind = pci_epf_test_unbind,
->          .bind   = pci_epf_test_bind,
-> -       .linkup = pci_epf_test_linkup,
->   };
-> 
->   static struct pci_epf_driver test_driver = {
-> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-> index 2091508c1620..2f6436599fcb 100644
-> --- a/drivers/pci/endpoint/pci-epc-core.c
-> +++ b/drivers/pci/endpoint/pci-epc-core.c
-> @@ -539,16 +539,10 @@ EXPORT_SYMBOL_GPL(pci_epc_remove_epf);
->    */
->   void pci_epc_linkup(struct pci_epc *epc)
->   {
-> -       unsigned long flags;
-> -       struct pci_epf *epf;
-> -
->          if (!epc || IS_ERR(epc))
->                  return;
-> 
-> -       spin_lock_irqsave(&epc->lock, flags);
-> -       list_for_each_entry(epf, &epc->pci_epf, list)
-> -               pci_epf_linkup(epf);
-> -       spin_unlock_irqrestore(&epc->lock, flags);
-> +       atomic_notifier_call_chain(&epc->notifier, 0, NULL);
->   }
->   EXPORT_SYMBOL_GPL(pci_epc_linkup);
-> 
-> @@ -612,6 +606,7 @@ __pci_epc_create(struct device *dev, const struct pci_epc_ops *ops,
-> 
->          spin_lock_init(&epc->lock);
->          INIT_LIST_HEAD(&epc->pci_epf);
-> +       ATOMIC_INIT_NOTIFIER_HEAD(&epc->notifier);
-> 
->          device_initialize(&epc->dev);
->          epc->dev.class = pci_epc_class;
-> diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/pci-epf-core.c
-> index fb1306de8f40..93f28c65ace0 100644
-> --- a/drivers/pci/endpoint/pci-epf-core.c
-> +++ b/drivers/pci/endpoint/pci-epf-core.c
-> @@ -20,26 +20,6 @@ static DEFINE_MUTEX(pci_epf_mutex);
->   static struct bus_type pci_epf_bus_type;
->   static const struct device_type pci_epf_type;
-> 
-> -/**
-> - * pci_epf_linkup() - Notify the function driver that EPC device has
-> - *                   established a connection with the Root Complex.
-> - * @epf: the EPF device bound to the EPC device which has established
-> - *      the connection with the host
-> - *
-> - * Invoke to notify the function driver that EPC device has established
-> - * a connection with the Root Complex.
-> - */
-> -void pci_epf_linkup(struct pci_epf *epf)
-> -{
-> -       if (!epf->driver) {
-> -               dev_WARN(&epf->dev, "epf device not bound to driver\n");
-> -               return;
-> -       }
-> -
-> -       epf->driver->ops->linkup(epf);
-> -}
-> -EXPORT_SYMBOL_GPL(pci_epf_linkup);
-> -
->   /**
->    * pci_epf_unbind() - Notify the function driver that the binding between the
->    *                   EPF device and EPC device has been lost
-> @@ -214,7 +194,7 @@ int __pci_epf_register_driver(struct pci_epf_driver *driver,
->          if (!driver->ops)
->                  return -EINVAL;
-> 
-> -       if (!driver->ops->bind || !driver->ops->unbind || !driver->ops->linkup)
-> +       if (!driver->ops->bind || !driver->ops->unbind)
->                  return -EINVAL;
-> 
->          driver->driver.bus = &pci_epf_bus_type;
-> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-> index 56f1846b9d39..36644ccd32ac 100644
-> --- a/include/linux/pci-epc.h
-> +++ b/include/linux/pci-epc.h
-> @@ -89,6 +89,7 @@ struct pci_epc_mem {
->    * @max_functions: max number of functions that can be configured in this EPC
->    * @group: configfs group representing the PCI EPC device
->    * @lock: spinlock to protect pci_epc ops
-> + * @notifier: used to notify EPF of any EPC events (like linkup)
->    */
->   struct pci_epc {
->          struct device                   dev;
-> @@ -99,6 +100,7 @@ struct pci_epc {
->          struct config_group             *group;
->          /* spinlock to protect against concurrent access of EP controller */
->          spinlock_t                      lock;
-> +       struct atomic_notifier_head     notifier;
->   };
-> 
->   /**
-> @@ -141,6 +143,12 @@ static inline void *epc_get_drvdata(struct pci_epc *epc)
->          return dev_get_drvdata(&epc->dev);
->   }
-> 
-> +static inline int
-> +pci_epc_register_notifier(struct pci_epc *epc, struct notifier_block *nb)
-> +{
-> +       return atomic_notifier_chain_register(&epc->notifier, nb);
-> +}
-> +
->   struct pci_epc *
->   __devm_pci_epc_create(struct device *dev, const struct pci_epc_ops *ops,
->                        struct module *owner);
-> diff --git a/include/linux/pci-epf.h b/include/linux/pci-epf.h
-> index 2d6f07556682..4993f7f6439b 100644
-> --- a/include/linux/pci-epf.h
-> +++ b/include/linux/pci-epf.h
-> @@ -55,13 +55,10 @@ struct pci_epf_header {
->    * @bind: ops to perform when a EPC device has been bound to EPF device
->    * @unbind: ops to perform when a binding has been lost between a EPC device
->    *         and EPF device
-> - * @linkup: ops to perform when the EPC device has established a connection with
-> - *         a host system
->    */
->   struct pci_epf_ops {
->          int     (*bind)(struct pci_epf *epf);
->          void    (*unbind)(struct pci_epf *epf);
-> -       void    (*linkup)(struct pci_epf *epf);
->   };
-> 
->   /**
-> @@ -112,6 +109,7 @@ struct pci_epf_bar {
->    * @epc: the EPC device to which this EPF device is bound
->    * @driver: the EPF driver to which this EPF device is bound
->    * @list: to add pci_epf as a list of PCI endpoint functions to pci_epc
-> + * @nb: notifier block to notify EPF of any EPC events (like linkup)
->    */
->   struct pci_epf {
->          struct device           dev;
-> @@ -125,6 +123,7 @@ struct pci_epf {
->          struct pci_epc          *epc;
->          struct pci_epf_driver   *driver;
->          struct list_head        list;
-> +       struct notifier_block   nb;
->   };
-> 
->   #define to_pci_epf(epf_dev) container_of((epf_dev), struct pci_epf, dev)
-> @@ -154,5 +153,4 @@ void *pci_epf_alloc_space(struct pci_epf *epf, size_t size, enum pci_barno bar,
->   void pci_epf_free_space(struct pci_epf *epf, void *addr, enum pci_barno bar);
->   int pci_epf_bind(struct pci_epf *epf);
->   void pci_epf_unbind(struct pci_epf *epf);
-> -void pci_epf_linkup(struct pci_epf *epf);
->   #endif /* __LINUX_PCI_EPF_H */
-> --
-> 2.17.1
-> 
-
-Tested with the help of series @ 
-http://patchwork.ozlabs.org/project/linux-pci/list/?series=158959
-
-Tested-by: Vidya Sagar <vidyas@nvidia.com>
-
-
+Thanks,
+Jean
