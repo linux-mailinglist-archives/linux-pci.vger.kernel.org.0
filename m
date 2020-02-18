@@ -2,613 +2,178 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D86C9161E15
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2020 00:55:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 91735161F6E
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2020 04:18:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726002AbgBQXzx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Feb 2020 18:55:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58654 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725987AbgBQXzx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 17 Feb 2020 18:55:53 -0500
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C22372053B;
-        Mon, 17 Feb 2020 23:55:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581983751;
-        bh=TDm1qMXYXzetKeXEXHFehcq7bqCqPcMajceU7CQMzZ4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=dWJnimuLVFLIVP6tH/BZK1Q9n9UrCpD6sIvBJqarSKMAG4r+X7Jh8JzFmM2COnYqe
-         hjdqld2BrO+WyNqCYFc9GgD4gXMFbA4tMBXrq82Z1cY9kIlF3O1a8M9/apQCc9HR8a
-         M6FTKhAStOCud6wWHa4VcH5UHraB0LNsuuAj0jx8=
-Date:   Mon, 17 Feb 2020 17:55:49 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rgummal@xilinx.com, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>
-Subject: Re: [PATCH v5 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port driver
-Message-ID: <20200217235549.GA47074@google.com>
+        id S1726245AbgBRDSg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Feb 2020 22:18:36 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:38772 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726237AbgBRDSg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 17 Feb 2020 22:18:36 -0500
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 3C7E6C7E0EA2E52A80A4;
+        Tue, 18 Feb 2020 11:18:33 +0800 (CST)
+Received: from [127.0.0.1] (10.65.58.147) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Tue, 18 Feb 2020
+ 11:18:24 +0800
+Subject: Re: PCI: bus resource allocation error
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        "Bjorn Helgaas" <helgaas@kernel.org>
+References: <f0cab9da-8e74-e923-a2fe-591d065228ee@hisilicon.com>
+ <2e588019-0a42-c386-7314-e1cf5dbc3371@hisilicon.com>
+ <SL2P216MB04433D05965A7D1C0E6A4BD680180@SL2P216MB0443.KORP216.PROD.OUTLOOK.COM>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        fangjian 00545541 <f.fangjian@huawei.com>
+From:   Yicong Yang <yangyicong@hisilicon.com>
+Message-ID: <80dcfe64-e66a-feef-fbc7-f094b2ab423c@hisilicon.com>
+Date:   Tue, 18 Feb 2020 11:18:34 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1580400771-12382-3-git-send-email-bharat.kumar.gogada@xilinx.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <SL2P216MB04433D05965A7D1C0E6A4BD680180@SL2P216MB0443.KORP216.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.65.58.147]
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Lorenzo and Andrew take care of drivers/pci/controllers/*.  I'm sure
-this is on their radar already but I cc'd them for good measure.
+Hi Nicholas,
 
-On Thu, Jan 30, 2020 at 09:42:51PM +0530, Bharat Kumar Gogada wrote:
-> - Add support for Versal CPM as Root Port.
-> - The Versal ACAP devices include CCIX-PCIe Module (CPM). The integrated
->   block for CPM along with the integrated bridge can function
->   as PCIe Root Port.
-> - CPM Versal uses GICv3 ITS feature for achieving assigning MSI/MSI-X
->   vectors and handling MSI/MSI-X interrupts.
-> - Bridge error and legacy interrupts in Versal CPM are handled using
->   Versal CPM specific MISC interrupt line.
-> 
-> Changes v5:
-> - Removed xilinx_cpm_pcie_valid_device function
 
-I don't include this sort of history in the commit log because it's
-not really of enduring interest.  Lorenzo will probably take it out
-for you, so no need to repost just for that.
+On 2020/2/11 21:43, Nicholas Johnson wrote:
+>> There are 4 functions of a network card under one root port as below:
+>>  +-[0000:7c]---00.0-[7d]--+-00.0  Device 19e5:a222
+>>  |                        +-00.1  Device 19e5:a222
+>>  |                        +-00.2  Device 19e5:a222
+>>  |                        \-00.3  Device 19e5:a221
+>>
+>> When I remove one function and rescan the bus[7c], the kernel print the error
+>> message as below:
+> Why do you need to remove and rescan the bus? It is possible that we 
+> should be addressing the problem of why you have the need to do that in 
+> the first place, rather than why the rescan does not work.
 
-> Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-> ---
->  drivers/pci/controller/Kconfig           |   8 +
->  drivers/pci/controller/Makefile          |   1 +
->  drivers/pci/controller/pcie-xilinx-cpm.c | 491 +++++++++++++++++++++++++++++++
->  3 files changed, 500 insertions(+)
->  create mode 100644 drivers/pci/controller/pcie-xilinx-cpm.c
-> 
-> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> index c77069c..362f4db 100644
-> --- a/drivers/pci/controller/Kconfig
-> +++ b/drivers/pci/controller/Kconfig
-> @@ -81,6 +81,14 @@ config PCIE_XILINX
->  	  Say 'Y' here if you want kernel to support the Xilinx AXI PCIe
->  	  Host Bridge driver.
->  
-> +config PCIE_XILINX_CPM
+It is found in a test procedure coincidently. There is no certain condition to do it,
+but the problem does exists.
 
-I would consider making this PCIE_XILINX_CPM_HOST because many of
-these chips can be either a host or an endpoint, and if you add _HOST
-now there is room for a future endpoint driver.  E.g., see
-CONFIG_PCI_DRA7XX_HOST and CONFIG_PCI_DRA7XX_EP.
 
-> +	bool "Xilinx Versal CPM host bridge support"
-> +	depends on ARCH_ZYNQMP || COMPILE_TEST
-> +	help
-> +	  Say 'Y' here if you want kernel support for the
-> +	  Xilinx Versal CPM host bridge. The driver supports
-> +	  MSI/MSI-X interrupts using GICv3 ITS feature.
-> +
->  config PCI_XGENE
->  	bool "X-Gene PCIe controller"
->  	depends on ARM64 || COMPILE_TEST
-> diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
-> index 3d4f597..6c936e9 100644
-> --- a/drivers/pci/controller/Makefile
-> +++ b/drivers/pci/controller/Makefile
-> @@ -12,6 +12,7 @@ obj-$(CONFIG_PCI_HOST_COMMON) += pci-host-common.o
->  obj-$(CONFIG_PCI_HOST_GENERIC) += pci-host-generic.o
->  obj-$(CONFIG_PCIE_XILINX) += pcie-xilinx.o
->  obj-$(CONFIG_PCIE_XILINX_NWL) += pcie-xilinx-nwl.o
-> +obj-$(CONFIG_PCIE_XILINX_CPM) += pcie-xilinx-cpm.o
->  obj-$(CONFIG_PCI_V3_SEMI) += pci-v3-semi.o
->  obj-$(CONFIG_PCI_XGENE_MSI) += pci-xgene-msi.o
->  obj-$(CONFIG_PCI_VERSATILE) += pci-versatile.o
-> diff --git a/drivers/pci/controller/pcie-xilinx-cpm.c b/drivers/pci/controller/pcie-xilinx-cpm.c
-> new file mode 100644
-> index 0000000..4e4c0f0
-> --- /dev/null
-> +++ b/drivers/pci/controller/pcie-xilinx-cpm.c
-> @@ -0,0 +1,491 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * PCIe host controller driver for Xilinx Versal CPM DMA Bridge
-> + *
-> + * (C) Copyright 2019 - 2020, Xilinx, Inc.
-> + */
-> +
-> +#include <linux/interrupt.h>
-> +#include <linux/irq.h>
-> +#include <linux/irqdomain.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_pci.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/pci.h>
-> +#include <linux/platform_device.h>
-> +
-> +#include "../pci.h"
-> +
-> +/* Register definitions */
-> +#define XILINX_CPM_PCIE_REG_IDR		0x00000E10
-> +#define XILINX_CPM_PCIE_REG_IMR		0x00000E14
-> +#define XILINX_CPM_PCIE_REG_PSCR	0x00000E1C
-> +#define XILINX_CPM_PCIE_REG_RPSC	0x00000E20
-> +#define XILINX_CPM_PCIE_REG_RPEFR	0x00000E2C
-> +#define XILINX_CPM_PCIE_REG_IDRN	0x00000E38
-> +#define XILINX_CPM_PCIE_REG_IDRN_MASK	0x00000E3C
-> +#define XILINX_CPM_PCIE_MISC_IR_STATUS	0x00000340
-> +#define XILINX_CPM_PCIE_MISC_IR_ENABLE	0x00000348
-> +#define XILINX_CPM_PCIE_MISC_IR_LOCAL	BIT(1)
-> +
-> +/* Interrupt registers definitions */
-> +#define XILINX_CPM_PCIE_INTR_LINK_DOWN		BIT(0)
-> +#define XILINX_CPM_PCIE_INTR_HOT_RESET		BIT(3)
-> +#define XILINX_CPM_PCIE_INTR_CFG_TIMEOUT	BIT(8)
-> +#define XILINX_CPM_PCIE_INTR_CORRECTABLE	BIT(9)
-> +#define XILINX_CPM_PCIE_INTR_NONFATAL		BIT(10)
-> +#define XILINX_CPM_PCIE_INTR_FATAL		BIT(11)
-> +#define XILINX_CPM_PCIE_INTR_INTX		BIT(16)
-> +#define XILINX_CPM_PCIE_INTR_MSI		BIT(17)
-> +#define XILINX_CPM_PCIE_INTR_SLV_UNSUPP		BIT(20)
-> +#define XILINX_CPM_PCIE_INTR_SLV_UNEXP		BIT(21)
-> +#define XILINX_CPM_PCIE_INTR_SLV_COMPL		BIT(22)
-> +#define XILINX_CPM_PCIE_INTR_SLV_ERRP		BIT(23)
-> +#define XILINX_CPM_PCIE_INTR_SLV_CMPABT		BIT(24)
-> +#define XILINX_CPM_PCIE_INTR_SLV_ILLBUR		BIT(25)
-> +#define XILINX_CPM_PCIE_INTR_MST_DECERR		BIT(26)
-> +#define XILINX_CPM_PCIE_INTR_MST_SLVERR		BIT(27)
-> +#define XILINX_CPM_PCIE_IMR_ALL_MASK		0x1FF39FF9
-> +#define XILINX_CPM_PCIE_IDR_ALL_MASK		0xFFFFFFFF
-> +#define XILINX_CPM_PCIE_IDRN_MASK		GENMASK(19, 16)
-> +#define XILINX_CPM_PCIE_INTR_CFG_PCIE_TIMEOUT	BIT(4)
-> +#define XILINX_CPM_PCIE_INTR_CFG_ERR_POISON	BIT(12)
-> +#define XILINX_CPM_PCIE_INTR_PME_TO_ACK_RCVD	BIT(15)
-> +#define XILINX_CPM_PCIE_INTR_PM_PME_RCVD	BIT(17)
-> +#define XILINX_CPM_PCIE_INTR_SLV_PCIE_TIMEOUT	BIT(28)
-> +#define XILINX_CPM_PCIE_IDRN_SHIFT		16
-> +
-> +/* Root Port Error FIFO Read Register definitions */
-> +#define XILINX_CPM_PCIE_RPEFR_ERR_VALID		BIT(18)
-> +#define XILINX_CPM_PCIE_RPEFR_REQ_ID		GENMASK(15, 0)
-> +#define XILINX_CPM_PCIE_RPEFR_ALL_MASK		0xFFFFFFFF
-> +
-> +/* Root Port Status/control Register definitions */
-> +#define XILINX_CPM_PCIE_REG_RPSC_BEN		BIT(0)
-> +
-> +/* Phy Status/Control Register definitions */
-> +#define XILINX_CPM_PCIE_REG_PSCR_LNKUP		BIT(11)
-> +
-> +/* ECAM definitions */
-> +#define ECAM_BUS_NUM_SHIFT		20
-> +#define ECAM_DEV_NUM_SHIFT		12
-> +
-> +/**
-> + * struct xilinx_cpm_pcie_port - PCIe port information
-> + * @reg_base: Bridge Register Base
-> + * @cpm_base: CPM System Level Control and Status Register(SLCR) Base
-> + * @irq: Interrupt number
-> + * @root_busno: Root Bus number
-> + * @dev: Device pointer
-> + * @leg_domain: Legacy IRQ domain pointer
-> + * @irq_misc: Legacy and error interrupt number
-> + */
-> +struct xilinx_cpm_pcie_port {
-> +	void __iomem *reg_base;
-> +	void __iomem *cpm_base;
-> +	u32 irq;
-> +	u8 root_busno;
-> +	struct device *dev;
-> +	struct irq_domain *leg_domain;
-> +	int irq_misc;
-> +};
-> +
-> +static inline u32 pcie_read(struct xilinx_cpm_pcie_port *port, u32 reg)
-> +{
-> +	return readl(port->reg_base + reg);
-> +}
-> +
-> +static inline void pcie_write(struct xilinx_cpm_pcie_port *port,
-> +			      u32 val, u32 reg)
-> +{
-> +	writel(val, port->reg_base + reg);
-> +}
-> +
-> +static inline bool cpm_pcie_link_up(struct xilinx_cpm_pcie_port *port)
-> +{
-> +	return (pcie_read(port, XILINX_CPM_PCIE_REG_PSCR) &
-> +		XILINX_CPM_PCIE_REG_PSCR_LNKUP) ? 1 : 0;
-> +}
-> +
-> +/**
-> + * xilinx_cpm_pcie_clear_err_interrupts - Clear Error Interrupts
-> + * @port: PCIe port information
-> + */
-> +static void cpm_pcie_clear_err_interrupts(struct xilinx_cpm_pcie_port *port)
-> +{
-> +	unsigned long val = pcie_read(port, XILINX_CPM_PCIE_REG_RPEFR);
-> +
-> +	if (val & XILINX_CPM_PCIE_RPEFR_ERR_VALID) {
-> +		dev_dbg(port->dev, "Requester ID %lu\n",
-> +			val & XILINX_CPM_PCIE_RPEFR_REQ_ID);
-> +		pcie_write(port, XILINX_CPM_PCIE_RPEFR_ALL_MASK,
-> +			   XILINX_CPM_PCIE_REG_RPEFR);
-> +	}
-> +}
-> +
-> +/**
-> + * xilinx_cpm_pcie_map_bus - Get configuration base
-> + * @bus: PCI Bus structure
-> + * @devfn: Device/function
-> + * @where: Offset from base
-> + *
-> + * Return: Base address of the configuration space needed to be
-> + *	   accessed.
-> + */
-> +static void __iomem *xilinx_cpm_pcie_map_bus(struct pci_bus *bus,
-> +					     unsigned int devfn, int where)
-> +{
-> +	struct xilinx_cpm_pcie_port *port = bus->sysdata;
-> +	int relbus;
-> +
-> +	relbus = (bus->number << ECAM_BUS_NUM_SHIFT) |
-> +		 (devfn << ECAM_DEV_NUM_SHIFT);
-> +
-> +	return port->reg_base + relbus + where;
+>
+>> [  391.770030] pci 0000:7d:00.3: [19e5:a221] type 00 class 0x020000
+>> [  391.776024] pci 0000:7d:00.3: reg 0x10: [mem 0x1210c0000-0x1210cffff 64bit pref]
+>> [  391.783394] pci 0000:7d:00.3: reg 0x18: [mem 0x120c00000-0x120cfffff 64bit pref]
+>> [  391.790786] pci 0000:7d:00.3: reg 0x224: [mem 0x1210d0000-0x1210dffff 64bit pref]
+>> [  391.798238] pci 0000:7d:00.3: VF(n) BAR0 space: [mem 0x1210d0000-0x1210fffff 64bit pref] (contains BAR0 for 3 VFs)
+>> [  391.808543] pci 0000:7d:00.3: reg 0x22c: [mem 0x120d00000-0x120dfffff 64bit pref]
+>> [  391.815994] pci 0000:7d:00.3: VF(n) BAR2 space: [mem 0x120d00000-0x120ffffff 64bit pref] (contains BAR2 for 3 VFs)
+>> [  391.826391] pci 0000:7c:00.0: bridge window [mem 0x00100000-0x002fffff] to [bus 7d] add_size 300000 add_align 100000
+>> [  391.836869] pci 0000:7c:00.0: BAR 14: no space for [mem size 0x00500000]
+>>                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>> [  391.843543] pci 0000:7c:00.0: BAR 14: failed to assign [mem size 0x00500000]
+>>                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>> [  391.850562] pci 0000:7c:00.0: BAR 14: no space for [mem size 0x00200000]
+>>                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>> [  391.857237] pci 0000:7c:00.0: BAR 14: failed to assign [mem size 0x00200000]
+>>                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ 
+>> or the machine in the pastebin prints:
+>>
+>> [  790.671091] pci 0000:7d:00.3: Removing from iommu group 5
+>> [  937.541937] pci 0000:7d:00.3: [19e5:a221] type 00 class 0x020000
+>> [  937.541949] pci 0000:7d:00.3: reg 0x10: [mem 0x1221f0000-0x1221fffff 64bit pref]
+>> [  937.541953] pci 0000:7d:00.3: reg 0x18: [mem 0x121f00000-0x121ffffff 64bit pref]
+>> [  937.542113] pci 0000:7c:00.0: BAR 14: no space for [mem size 0x00200000]
+>>                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>> [  937.542116] pci 0000:7c:00.0: BAR 14: failed to assign [mem size 0x00200000]
+>>                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>> [  937.542120] pci 0000:7d:00.3: BAR 2: assigned [mem 0x121f00000-0x121ffffff 64bit pref]
+>> [  937.542125] pci 0000:7d:00.3: BAR 0: assigned [mem 0x1221f0000-0x1221fffff 64bit pref]
+>> [  937.542253] hns3 0000:7d:00.3: Adding to iommu group 5
+>>
+>> Both the function and the root ports work well, and the function get the resource it requested as before
+>> remove. So from my perspective the message shouldn't be printed and should be eliminated.
+>>
+>> I looked into the codes and got some informations:
+>>
+>> when echo 1 > bus_rescan, kernel calls:
+>>     pci_rescan_bus()
+>>         pci_assign_unassigned_bus_resources()
+>>             __pci_bus_size_bridges()
+>>                /* first try to put the resource in 64 bit MMIO window(Bar 15). 
+>>                 * As it's not empty, function will return directly.
+>>                 */
+>>                pbus_size_mem()
+>>
+>>                /* Then try to put rest resource in 32-bit MMIO window(Bar 14)
+>>                 * As it's not occupied by any functions, the resources are
+>>                 * put here. As no io memory is reserved in the bios for bar14,
+>>                 * error message prints when allocated.
+>>                 */
+>>                pbus_size_mem() /* problem is here */
+>>
+>> In pbus_size_mem(), kernel try to size the bar to contain function resource.
+>> If it's occupied by any function (judged by find_bus_resource_of_type() in
+>> pbus_size_mem()), it'll return directly without any sizing. Otherwise the bar
+>> will be sized to put the request resource in.
+>>
+>> It's just a rescan process, the bar size shouldn't be sized or allocated by
+>> calling __pci_bus_size_bridges(). As previous resource space in the bar
+>> reserved and the function will demands no extra spaces after rescan.
+>> The current process seems unreasonable.
+> If the BIOS assigned the resources with different packing than what the 
+> kernel would do, then the rescan may not fit into the space. You can try 
+> pci=realloc,nocrs if you have not already. Your system looks like it is 
+> ARM64 so you cannot use pci=nocrs, unfortunately. The ideal situation is 
+> if the kernel throws away everything the BIOS did and does everything 
+> itself (assuming that this will not cause platform conflicts). But there 
+> is no way of doing this without modifying the kernel, and I am not sure 
+> how to do it fully.
 
-I *think* this is exactly pci_ecam_map_bus(), so maybe you could just
-use pci_generic_ecam_ops instead of defining xilinx_cpm_pcie_ops?  If
-so, congratulations, you've achieved what seems to be almost
-impossible.
+pci=realloc affects when allocating the root bridge and root bus. So it doesn't
+meet the condition here, as the root bus resource has been allocated and the problem
+occurs when allocating and assigning resource on subordinate bus [7d]. And it does do
+no help as I add pci=realloc when boot.
 
-> +}
-> +
-> +/* PCIe operations */
-> +static struct pci_ops xilinx_cpm_pcie_ops = {
-> +	.map_bus = xilinx_cpm_pcie_map_bus,
-> +	.read	= pci_generic_config_read,
-> +	.write	= pci_generic_config_write,
-> +};
-> +
-> +/**
-> + * xilinx_cpm_pcie_intx_map - Set the handler for the INTx and mark IRQ as valid
-> + * @domain: IRQ domain
-> + * @irq: Virtual IRQ number
-> + * @hwirq: HW interrupt number
-> + *
-> + * Return: Always returns 0.
-> + */
-> +static int xilinx_cpm_pcie_intx_map(struct irq_domain *domain,
-> +				    unsigned int irq, irq_hw_number_t hwirq)
-> +{
-> +	irq_set_chip_and_handler(irq, &dummy_irq_chip, handle_simple_irq);
-> +	irq_set_chip_data(irq, domain->host_data);
-> +	irq_set_status_flags(irq, IRQ_LEVEL);
-> +
-> +	return 0;
-> +}
-> +
-> +/* INTx IRQ Domain operations */
-> +static const struct irq_domain_ops intx_domain_ops = {
-> +	.map = xilinx_cpm_pcie_intx_map,
-> +	.xlate = pci_irqd_intx_xlate,
-> +};
-> +
-> +/**
-> + * xilinx_cpm_pcie_intr_handler - Interrupt Service Handler
-> + * @irq: IRQ number
-> + * @data: PCIe port information
-> + *
-> + * Return: IRQ_HANDLED on success and IRQ_NONE on failure
-> + */
-> +static irqreturn_t xilinx_cpm_pcie_intr_handler(int irq, void *data)
-> +{
-> +	struct xilinx_cpm_pcie_port *port = data;
-> +	struct device *dev = port->dev;
-> +	u32 val, mask, status, bit;
-> +	unsigned long intr_val;
-> +
-> +	/* Read interrupt decode and mask registers */
-> +	val = pcie_read(port, XILINX_CPM_PCIE_REG_IDR);
-> +	mask = pcie_read(port, XILINX_CPM_PCIE_REG_IMR);
-> +
-> +	status = val & mask;
-> +	if (!status)
-> +		return IRQ_NONE;
-> +
-> +	if (status & XILINX_CPM_PCIE_INTR_LINK_DOWN)
-> +		dev_warn(dev, "Link Down\n");
-> +
-> +	if (status & XILINX_CPM_PCIE_INTR_HOT_RESET)
-> +		dev_info(dev, "Hot reset\n");
-> +
-> +	if (status & XILINX_CPM_PCIE_INTR_CFG_TIMEOUT)
-> +		dev_warn(dev, "ECAM access timeout\n");
-> +
-> +	if (status & XILINX_CPM_PCIE_INTR_CORRECTABLE) {
-> +		dev_warn(dev, "Correctable error message\n");
-> +		cpm_pcie_clear_err_interrupts(port);
-> +	}
-> +
-> +	if (status & XILINX_CPM_PCIE_INTR_NONFATAL) {
-> +		dev_warn(dev, "Non fatal error message\n");
-> +		cpm_pcie_clear_err_interrupts(port);
-> +	}
-> +
-> +	if (status & XILINX_CPM_PCIE_INTR_FATAL) {
-> +		dev_warn(dev, "Fatal error message\n");
-> +		cpm_pcie_clear_err_interrupts(port);
-> +	}
-> +
-> +	if (status & XILINX_CPM_PCIE_INTR_INTX) {
-> +		/* Handle INTx Interrupt */
-> +		intr_val = pcie_read(port, XILINX_CPM_PCIE_REG_IDRN);
-> +		intr_val = intr_val >> XILINX_CPM_PCIE_IDRN_SHIFT;
-> +
-> +		for_each_set_bit(bit, &intr_val, PCI_NUM_INTX)
-> +			generic_handle_irq(irq_find_mapping(port->leg_domain,
-> +							    bit));
-> +	}
-> +
-> +	if (status & XILINX_CPM_PCIE_INTR_SLV_UNSUPP)
-> +		dev_warn(dev, "Slave unsupported request\n");
-> +
-> +	if (status & XILINX_CPM_PCIE_INTR_SLV_UNEXP)
-> +		dev_warn(dev, "Slave unexpected completion\n");
-> +
-> +	if (status & XILINX_CPM_PCIE_INTR_SLV_COMPL)
-> +		dev_warn(dev, "Slave completion timeout\n");
-> +
-> +	if (status & XILINX_CPM_PCIE_INTR_SLV_ERRP)
-> +		dev_warn(dev, "Slave Error Poison\n");
-> +
-> +	if (status & XILINX_CPM_PCIE_INTR_SLV_CMPABT)
-> +		dev_warn(dev, "Slave Completer Abort\n");
-> +
-> +	if (status & XILINX_CPM_PCIE_INTR_SLV_ILLBUR)
-> +		dev_warn(dev, "Slave Illegal Burst\n");
-> +
-> +	if (status & XILINX_CPM_PCIE_INTR_MST_DECERR)
-> +		dev_warn(dev, "Master decode error\n");
-> +
-> +	if (status & XILINX_CPM_PCIE_INTR_MST_SLVERR)
-> +		dev_warn(dev, "Master slave error\n");
-> +
-> +	if (status & XILINX_CPM_PCIE_INTR_CFG_PCIE_TIMEOUT)
-> +		dev_warn(dev, "PCIe ECAM access timeout\n");
-> +
-> +	if (status & XILINX_CPM_PCIE_INTR_CFG_ERR_POISON)
-> +		dev_warn(dev, "ECAM poisoned completion received\n");
-> +
-> +	if (status & XILINX_CPM_PCIE_INTR_PME_TO_ACK_RCVD)
-> +		dev_warn(dev, "PME_TO_ACK message received\n");
-> +
-> +	if (status & XILINX_CPM_PCIE_INTR_PM_PME_RCVD)
-> +		dev_warn(dev, "PM_PME message received\n");
-> +
-> +	if (status & XILINX_CPM_PCIE_INTR_SLV_PCIE_TIMEOUT)
-> +		dev_warn(dev, "PCIe completion timeout received\n");
-> +
-> +	/* Clear the Interrupt Decode register */
-> +	pcie_write(port, status, XILINX_CPM_PCIE_REG_IDR);
-> +
-> +	/*
-> +	 * XILINX_CPM_PCIE_MISC_IR_STATUS register is mapped to
-> +	 * CPM SLCR block.
-> +	 */
-> +	val = readl(port->cpm_base + XILINX_CPM_PCIE_MISC_IR_STATUS);
-> +	if (val)
-> +		writel(val, port->cpm_base + XILINX_CPM_PCIE_MISC_IR_STATUS);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +/**
-> + * xilinx_cpm_pcie_init_irq_domain - Initialize IRQ domain
-> + * @port: PCIe port information
-> + *
-> + * Return: '0' on success and error value on failure
-> + */
-> +static int xilinx_cpm_pcie_init_irq_domain(struct xilinx_cpm_pcie_port *port)
-> +{
-> +	struct device *dev = port->dev;
-> +	struct device_node *node = dev->of_node;
-> +	struct device_node *pcie_intc_node;
-> +
-> +	/* Setup INTx */
-> +	pcie_intc_node = of_get_next_child(node, NULL);
-> +	if (!pcie_intc_node) {
-> +		dev_err(dev, "No PCIe Intc node found\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	port->leg_domain = irq_domain_add_linear(pcie_intc_node, PCI_NUM_INTX,
-> +						 &intx_domain_ops,
-> +						 port);
-> +	if (!port->leg_domain) {
-> +		dev_err(dev, "Failed to get a INTx IRQ domain\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * xilinx_cpm_pcie_init_port - Initialize hardware
-> + * @port: PCIe port information
-> + */
-> +static void xilinx_cpm_pcie_init_port(struct xilinx_cpm_pcie_port *port)
-> +{
-> +	if (cpm_pcie_link_up(port))
-> +		dev_info(port->dev, "PCIe Link is UP\n");
-> +	else
-> +		dev_info(port->dev, "PCIe Link is DOWN\n");
-> +
-> +	/* Disable all interrupts */
-> +	pcie_write(port, ~XILINX_CPM_PCIE_IDR_ALL_MASK,
-> +		   XILINX_CPM_PCIE_REG_IMR);
-> +
-> +	/* Clear pending interrupts */
-> +	pcie_write(port, pcie_read(port, XILINX_CPM_PCIE_REG_IDR) &
-> +		   XILINX_CPM_PCIE_IMR_ALL_MASK,
-> +		   XILINX_CPM_PCIE_REG_IDR);
-> +
-> +	/* Enable all interrupts */
-> +	pcie_write(port, XILINX_CPM_PCIE_IMR_ALL_MASK,
-> +		   XILINX_CPM_PCIE_REG_IMR);
-> +	pcie_write(port, XILINX_CPM_PCIE_IDRN_MASK,
-> +		   XILINX_CPM_PCIE_REG_IDRN_MASK);
-> +
-> +	/*
-> +	 * XILINX_CPM_PCIE_MISC_IR_ENABLE register is mapped to
-> +	 * CPM SLCR block.
-> +	 */
-> +	writel(XILINX_CPM_PCIE_MISC_IR_LOCAL,
-> +	       port->cpm_base + XILINX_CPM_PCIE_MISC_IR_ENABLE);
-> +	/* Enable the Bridge enable bit */
-> +	pcie_write(port, pcie_read(port, XILINX_CPM_PCIE_REG_RPSC) |
-> +		   XILINX_CPM_PCIE_REG_RPSC_BEN,
-> +		   XILINX_CPM_PCIE_REG_RPSC);
-> +}
-> +
-> +static int xilinx_cpm_request_misc_irq(struct xilinx_cpm_pcie_port *port)
-> +{
-> +	struct device *dev = port->dev;
-> +	struct platform_device *pdev = to_platform_device(dev);
-> +	int err;
-> +
-> +	port->irq_misc = platform_get_irq_byname(pdev, "misc");
-> +	if (port->irq_misc <= 0) {
-> +		dev_err(dev, "Unable to find misc IRQ line\n");
-> +		return port->irq_misc;
-> +	}
-> +	err = devm_request_irq(dev, port->irq_misc,
-> +			       xilinx_cpm_pcie_intr_handler,
-> +			       IRQF_SHARED | IRQF_NO_THREAD,
-> +			       "xilinx-pcie", port);
-> +	if (err) {
-> +		dev_err(dev, "unable to request misc IRQ line %d\n",
-> +			port->irq_misc);
-> +		return err;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * xilinx_cpm_pcie_parse_dt - Parse Device tree
-> + * @port: PCIe port information
-> + *
-> + * Return: '0' on success and error value on failure
-> + */
-> +static int xilinx_cpm_pcie_parse_dt(struct xilinx_cpm_pcie_port *port)
-> +{
-> +	struct device *dev = port->dev;
-> +	struct platform_device *pdev = to_platform_device(dev);
-> +	struct resource *res;
-> +	int err;
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "cfg");
-> +	port->reg_base = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(port->reg_base))
-> +		return PTR_ERR(port->reg_base);
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> +					   "cpm_slcr");
-> +	port->cpm_base = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(port->cpm_base))
-> +		return PTR_ERR(port->cpm_base);
-> +
-> +	err = xilinx_cpm_request_misc_irq(port);
-> +	if (err)
-> +		return err;
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * xilinx_cpm_pcie_probe - Probe function
-> + * @pdev: Platform device pointer
-> + *
-> + * Return: '0' on success and error value on failure
-> + */
-> +static int xilinx_cpm_pcie_probe(struct platform_device *pdev)
-> +{
-> +	struct xilinx_cpm_pcie_port *port;
-> +	struct device *dev = &pdev->dev;
-> +	struct pci_bus *bus;
-> +	struct pci_bus *child;
-> +	struct pci_host_bridge *bridge;
-> +	int err;
-> +
-> +	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*port));
-> +	if (!bridge)
-> +		return -ENODEV;
-> +
-> +	port = pci_host_bridge_priv(bridge);
-> +
-> +	port->dev = dev;
-> +
-> +	err = xilinx_cpm_pcie_parse_dt(port);
-> +	if (err) {
-> +		dev_err(dev, "Parsing DT failed\n");
-> +		return err;
-> +	}
-> +
-> +	xilinx_cpm_pcie_init_port(port);
-> +
-> +	err = xilinx_cpm_pcie_init_irq_domain(port);
-> +	if (err) {
-> +		dev_err(dev, "Failed creating IRQ Domain\n");
-> +		return err;
-> +	}
-> +
-> +	err = pci_parse_request_of_pci_ranges(dev, &bridge->windows,
-> +					      &bridge->dma_ranges, NULL);
-> +	if (err) {
-> +		dev_err(dev, "Getting bridge resources failed\n");
-> +		return err;
-> +	}
-> +
-> +	bridge->dev.parent = dev;
-> +	bridge->sysdata = port;
-> +	bridge->busnr = port->root_busno;
-> +	bridge->ops = &xilinx_cpm_pcie_ops;
-> +	bridge->map_irq = of_irq_parse_and_map_pci;
-> +	bridge->swizzle_irq = pci_common_swizzle;
-> +
-> +	err = pci_scan_root_bus_bridge(bridge);
-> +	if (err)
-> +		return err;
-> +
-> +	bus = bridge->bus;
-> +
-> +	pci_assign_unassigned_bus_resources(bus);
-> +	list_for_each_entry(child, &bus->children, node)
-> +		pcie_bus_configure_settings(child);
-> +	pci_bus_add_devices(bus);
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id xilinx_cpm_pcie_of_match[] = {
-> +	{ .compatible = "xlnx,versal-cpm-host-1.00", },
-> +	{}
-> +};
-> +
-> +static struct platform_driver xilinx_cpm_pcie_driver = {
-> +	.driver = {
-> +		.name = "xilinx-cpm-pcie",
-> +		.of_match_table = xilinx_cpm_pcie_of_match,
-> +		.suppress_bind_attrs = true,
-> +	},
-> +	.probe = xilinx_cpm_pcie_probe,
-> +};
-> +
-> +builtin_platform_driver(xilinx_cpm_pcie_driver);
-> -- 
-> 2.7.4
-> 
+Luckily, I found your patch c13704f5685d ("PCI: Avoid double hpmemsize MMIO window assignment")
+which have solved the problem. It's merged in v5.5 kernel so I didn't test it as the
+issues happened on v5.4.
+
+The find_free_bus_resource() is modified to find_bus_resource_of_type() in the patch, and it'll return the
+first assigned resource matching the target type rather than previous NULL if not found. Then when
+allocating target resource (64 bit pref) in 64 bit pref bar15 when first time call pbus_size_mem(),
+we'll get success 0 rather than -ENOSPEC. Then we'll not try to put the target resource in
+bar14 subsequently as previous did, which will avoid opening bar14 and wrong allocating. Thanks for you
+good work!
+
+But for me it still seems unnecessary to call __pci_bus_size_bridges() to try to size
+the bus in a rescan routine, actually it seems redundant here. Is it possible to call
+__pci_bus_assign_resources() in pci_rescan_bus() directly? However, I haven't look further
+in it, just thoughts.
+
+Thanks,
+Yicong Yang
+
+>
+> However, I have come to find that the code in drivers/pci/setup-bus.c is 
+> very old and full of holes. It does require a re-write (in my opinion, 
+> and some other people have agreed to some extent), which I want to do, 
+> but will need much more experience before I can pull something like that 
+> off and get it accepted by others.
+>
+> Unfortunately without the system in front of me and the ability to make 
+> lots of changes to the kernel very quickly to find a fix, I might not be 
+> able to figure it out.
+>
+>> Thanks,
+>> Yicong Yang
+>>
+>>
+> Regards,
+> Nicholas
+>
+> .
+>
+
+
