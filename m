@@ -2,82 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0014616348F
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2020 22:13:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B8BC163BD4
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2020 05:09:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbgBRVNv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 18 Feb 2020 16:13:51 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:39649 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbgBRVNv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Feb 2020 16:13:51 -0500
-Received: by mail-oi1-f196.google.com with SMTP id z2so21610187oih.6;
-        Tue, 18 Feb 2020 13:13:50 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Wsp21LIcG4NslijziS7uyMDJScAYzOtQaO+9/p80IQ4=;
-        b=Gn4kmXJu9n+uXGhlbfM9KPlbi5ycH4xKUSLbngI4euPIE/5WlodKz25tj2XHe1BQO8
-         xNzavCIzz50qIB4nBht9+qyPoznu+UM5iZJpOPhWXkcCefa11U9uAvyp9KX4x7RHosXu
-         ShT7FMEoKFxuF6MvwgiDECAgw0JFNbMTsZLKuTFWydWxE2kxBscJDniJI1iEWC7KZNbz
-         FvwBxrIX/2PTtvmP1PgWhGZaBZ0OXkhhn7NxL+Us5Ynp9mw5uBTRK98RjrHd9HiKj7NN
-         /+5SDiP3j1Y6qdoO9BWRQqw7Ss4OaWpcXRfVBSTBiUWAQHExlu6cGNtvL4SUmm8mWgOz
-         QBKA==
-X-Gm-Message-State: APjAAAWWY1wTEeRHNyBSUA2BVamo+lEiKfdwaABl5FjrZE7d5F4kIiIr
-        RJ330liDWIbi5LpjPN7Ciw==
-X-Google-Smtp-Source: APXvYqzV9oocyBJZGvkp1bADAbLS2xQl21KF+EyRyietsBdKoEM/3HRmoC9kQcpKj2d8Pz3raOUtlA==
-X-Received: by 2002:aca:3542:: with SMTP id c63mr2575156oia.135.1582060430256;
-        Tue, 18 Feb 2020 13:13:50 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id m185sm13530oia.26.2020.02.18.13.13.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 13:13:49 -0800 (PST)
-Received: (nullmailer pid 15304 invoked by uid 1000);
-        Tue, 18 Feb 2020 21:13:48 -0000
-Date:   Tue, 18 Feb 2020 15:13:48 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Lad Prabhakar <prabhakar.csengg@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        linux-renesas-soc@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Andrew Murray <andrew.murray@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 4/6] dt-bindings: PCI: rcar: Add bindings for R-Car
- PCIe  endpoint controller
-Message-ID: <20200218211348.GA15246@bogus>
-References: <20200208183641.6674-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200208183641.6674-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        id S1726467AbgBSEJH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 18 Feb 2020 23:09:07 -0500
+Received: from zmail.nuczu.edu.ua ([91.234.43.158]:59891 "EHLO
+        zmail.nuczu.edu.ua" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726439AbgBSEJG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Feb 2020 23:09:06 -0500
+X-Greylist: delayed 7419 seconds by postgrey-1.27 at vger.kernel.org; Tue, 18 Feb 2020 23:09:06 EST
+Received: from localhost (localhost [127.0.0.1])
+        by zmail.nuczu.edu.ua (Postfix) with ESMTP id D27C14FD2A5;
+        Wed, 19 Feb 2020 02:17:35 +0200 (EET)
+Received: from zmail.nuczu.edu.ua ([127.0.0.1])
+        by localhost (zmail.nuczu.edu.ua [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id UUIWzOnEYMOz; Wed, 19 Feb 2020 02:17:35 +0200 (EET)
+Received: from localhost (localhost [127.0.0.1])
+        by zmail.nuczu.edu.ua (Postfix) with ESMTP id C21504FDCD2;
+        Tue, 18 Feb 2020 23:27:31 +0200 (EET)
+DKIM-Filter: OpenDKIM Filter v2.10.3 zmail.nuczu.edu.ua C21504FDCD2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nuczu.edu.ua;
+        s=A52E72AE-E4EF-11E9-9906-53CE3145A657; t=1582061252;
+        bh=o+H3O7n1+zJcXo0FhJs7spyf8HmE4ClnBa/Y2Gk0DL0=;
+        h=MIME-Version:To:From:Date:Message-Id;
+        b=LZgtfTdbMYmO4luxnX6s8Hl4lSueVjt6P5STiODo/ZHNF9snIf0Z5eY5coXmIiI7d
+         wMEj0v6QKmZUtczeO6NMR4x/rltTM0+AX2N8ck8U7xGK8vvAGK5SJpudwSbSTUHIuo
+         CwjMPW0ZeSBb5MlWMYzQdPnWKAiKiCpIB6F6jpySYk5Rg1zbX8GjMJoaimAA5SeKaX
+         0+kVC+OzJUAp0f1UO6FzydkxPPpuhDBZC1PfUT3Yx8QkCNqhcad4kW3jyIfykHOOx0
+         Yaj2ywxq7h52/ySvkj59+vulF7MDWeKuGFxuOJcSvTMfCe5X70O879fYQ/0M1NkoDP
+         bF8uMkyRebNsQ==
+X-Virus-Scanned: amavisd-new at nuczu.edu.ua
+Received: from zmail.nuczu.edu.ua ([127.0.0.1])
+        by localhost (zmail.nuczu.edu.ua [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 05Lh52I8_EAq; Tue, 18 Feb 2020 23:27:31 +0200 (EET)
+Received: from [10.109.183.140] (unknown [105.12.3.161])
+        by zmail.nuczu.edu.ua (Postfix) with ESMTPSA id 7B9AD4F974F;
+        Tue, 18 Feb 2020 22:08:31 +0200 (EET)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200208183641.6674-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: =?utf-8?q?Wohlt=C3=A4tigkeitsspende_von_2=2E000=2E000_Euro?=
+To:     Recipients <dushkin@nuczu.edu.ua>
+From:   ''Michael weirsky'' <dushkin@nuczu.edu.ua>
+Date:   Tue, 18 Feb 2020 22:08:19 +0200
+Reply-To: mikeweirskyspende@gmail.com
+Message-Id: <20200218200832.7B9AD4F974F@zmail.nuczu.edu.ua>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat,  8 Feb 2020 18:36:39 +0000, Lad Prabhakar wrote:
-> This patch adds the bindings for the R-Car PCIe endpoint driver.
-> 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
->  .../devicetree/bindings/pci/rcar-pci-ep.yaml       | 76 ++++++++++++++++++++++
->  1 file changed, 76 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
-> 
+Lieber Freund,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Ich bin Herr Mike Weirsky, New Jersey, Vereinigte Staaten von Amerika, der =
+Mega-Gewinner von $ 273million In Mega Millions Jackpot, spende ich an 5 zu=
+f=C3=A4llige Personen, wenn Sie diese E-Mail erhalten, dann wurde Ihre E-Ma=
+il nach einem Spinball ausgew=C3=A4hlt.Ich habe den gr=C3=B6=C3=9Ften Teil =
+meines Verm=C3=B6gens auf eine Reihe von Wohlt=C3=A4tigkeitsorganisationen =
+und Organisationen verteilt.Ich habe mich freiwillig dazu entschieden, die =
+Summe von =E2=82=AC 2.000.000,00 an Sie als eine der ausgew=C3=A4hlten 5 zu=
+ spenden, um meine Gewinne zu =C3=BCberpr=C3=BCfen.
+Das ist dein Spendencode: [MW530342019]
+www.youtube.com/watch?v=3Dun8yRTmrYMY
+
+Antworten Sie mit dem SPENDE-CODE an diese =
+
+
+E-Mail:mikeweirskyspende@gmail.com
+
+Ich hoffe, Sie und Ihre Familie gl=C3=BCcklich zu machen.
+
+Gr=C3=BC=C3=9Fe
+Herr Mike Weirsky
