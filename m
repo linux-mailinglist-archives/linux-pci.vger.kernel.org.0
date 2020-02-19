@@ -2,33 +2,31 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 397CD164476
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2020 13:40:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 398BF16446A
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2020 13:39:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727705AbgBSMjz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Feb 2020 07:39:55 -0500
-Received: from mx2.suse.de ([195.135.220.15]:52870 "EHLO mx2.suse.de"
+        id S1727649AbgBSMjr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Feb 2020 07:39:47 -0500
+Received: from mx2.suse.de ([195.135.220.15]:52888 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726530AbgBSMjq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S1727592AbgBSMjq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Wed, 19 Feb 2020 07:39:46 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 69A2CB9C6;
-        Wed, 19 Feb 2020 12:39:44 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 38868B4D1;
+        Wed, 19 Feb 2020 12:39:45 +0000 (UTC)
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 To:     linux-kernel@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>
+        Mathias Nyman <mathias.nyman@intel.com>
 Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org,
-        tim.gover@raspberrypi.org, linux-pci@vger.kernel.org,
-        wahrenst@gmx.net, Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH v2 3/4] PCI: brcmstb: Wait for Raspberry Pi's firmware when present
-Date:   Wed, 19 Feb 2020 13:39:32 +0100
-Message-Id: <20200219123933.2792-4-nsaenzjulienne@suse.de>
+        linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com, f.fainelli@gmail.com,
+        gregkh@linuxfoundation.org, tim.gover@raspberrypi.org,
+        linux-pci@vger.kernel.org, wahrenst@gmx.net,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: [PATCH v2 4/4] USB: pci-quirks: Add Raspberry Pi 4 quirk
+Date:   Wed, 19 Feb 2020 13:39:33 +0100
+Message-Id: <20200219123933.2792-5-nsaenzjulienne@suse.de>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200219123933.2792-1-nsaenzjulienne@suse.de>
 References: <20200219123933.2792-1-nsaenzjulienne@suse.de>
@@ -39,54 +37,56 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-xHCI's PCI fixup, run at the end of pcie-brcmstb's probe, depends on
-RPi4's VideoCore firmware interface to be up and running. It's possible
-for both initializations to race, so make sure it's available prior
-starting.
+On the Raspberry Pi 4, after a PCI reset, VL805's firmware may either be
+loaded directly from an EEPROM or, if not present, by the SoC's
+VideCore. Inform VideCore that VL805 was just reset.
 
 Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 ---
- drivers/pci/controller/pcie-brcmstb.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ drivers/usb/host/pci-quirks.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index d20aabc26273..9600052f768c 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -28,6 +28,8 @@
- #include <linux/string.h>
- #include <linux/types.h>
- 
+diff --git a/drivers/usb/host/pci-quirks.c b/drivers/usb/host/pci-quirks.c
+index beb2efa71341..aee2eaa3f0e1 100644
+--- a/drivers/usb/host/pci-quirks.c
++++ b/drivers/usb/host/pci-quirks.c
+@@ -16,6 +16,9 @@
+ #include <linux/export.h>
+ #include <linux/acpi.h>
+ #include <linux/dmi.h>
++
 +#include <soc/bcm2835/raspberrypi-firmware.h>
 +
- #include "../pci.h"
+ #include "pci-quirks.h"
+ #include "xhci-ext-caps.h"
  
- /* BRCM_PCIE_CAP_REGS - Offset for the mandatory capability config regs */
-@@ -917,11 +919,24 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+@@ -1243,11 +1246,26 @@ static void quirk_usb_handoff_xhci(struct pci_dev *pdev)
+ 
+ static void quirk_usb_early_handoff(struct pci_dev *pdev)
  {
- 	struct device_node *np = pdev->dev.of_node, *msi_np;
- 	struct pci_host_bridge *bridge;
-+	struct device_node *fw_np;
- 	struct brcm_pcie *pcie;
- 	struct pci_bus *child;
- 	struct resource *res;
- 	int ret;
- 
-+	/*
-+	 * We have to wait for the Raspberry Pi's firmware interface to be up
-+	 * as some PCI fixups depend on it.
-+	 */
-+	fw_np = of_find_compatible_node(NULL, NULL,
-+					"raspberrypi,bcm2835-firmware");
-+	if (fw_np && !rpi_firmware_get(fw_np)) {
-+		of_node_put(fw_np);
-+		return -EPROBE_DEFER;
-+	}
-+	of_node_put(fw_np);
++	int ret;
 +
- 	bridge = devm_pci_alloc_host_bridge(&pdev->dev, sizeof(*pcie));
- 	if (!bridge)
- 		return -ENOMEM;
+ 	/* Skip Netlogic mips SoC's internal PCI USB controller.
+ 	 * This device does not need/support EHCI/OHCI handoff
+ 	 */
+ 	if (pdev->vendor == 0x184e)	/* vendor Netlogic */
+ 		return;
++
++	if (pdev->vendor == PCI_VENDOR_ID_VIA && pdev->device == 0x3483) {
++		ret = rpi_firmware_init_vl805(pdev);
++		if (ret)
++			/*
++			 * Firmware might be outdated, or else, something
++			 * failed, keep going and hope for the best.
++			 */
++			dev_warn(&pdev->dev,
++				 "Failed to load VL805's firmware: %d\n",
++				 ret);
++	}
++
+ 	if (pdev->class != PCI_CLASS_SERIAL_USB_UHCI &&
+ 			pdev->class != PCI_CLASS_SERIAL_USB_OHCI &&
+ 			pdev->class != PCI_CLASS_SERIAL_USB_EHCI &&
 -- 
 2.25.0
 
