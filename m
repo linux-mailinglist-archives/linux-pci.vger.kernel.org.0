@@ -2,125 +2,229 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 82B6C164EC4
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2020 20:22:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F13FC164FCA
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2020 21:24:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbgBSTWC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Feb 2020 14:22:02 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:43443 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726643AbgBSTWC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Feb 2020 14:22:02 -0500
-Received: by mail-pl1-f196.google.com with SMTP id p11so459016plq.10
-        for <linux-pci@vger.kernel.org>; Wed, 19 Feb 2020 11:22:01 -0800 (PST)
+        id S1727277AbgBSUYm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Feb 2020 15:24:42 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:33112 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727036AbgBSUYl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Feb 2020 15:24:41 -0500
+Received: by mail-lj1-f193.google.com with SMTP id y6so1800918lji.0
+        for <linux-pci@vger.kernel.org>; Wed, 19 Feb 2020 12:24:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=fNyeUEKMDXco+f5Gr/DTD6fZuo/Z/fNiUWmps4qVNiM=;
-        b=F4dKmYn37998FSEwAVJIJ13HtzqZYxYanNuNVDOrckCAcCzDalwmtvEv8eaCwU4JWc
-         OaD/TGnYeN3c5kqTQIoYIteZH4/lOpo0EFTRLfLVEiPjDsuQr3NaCwpNW7gpcNPipdxD
-         yspz+StYfhcin6GNXfngrYioGCvryRYNr+w5w=
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AjNq+luC626vZsiRuPi6VGu1LC8KCw/yq1nc0im58SM=;
+        b=blXaIirhJ4Rkmd3O/qCBwDL0uB/EBB4pdKJ3DIAAUgs9ukw0IZcEQGOAQx+UnH8FPE
+         ng9F56X1U9zMRjRnxcaVcYyY2GtMlJdARUvhWlFIxk3zK31OX4oPN0Tib+wStHYLrV/C
+         /RpybVE7itjdGSyJbZ5scSfW5donvZVLui9SNqoyO9JtAzIgDjTsocj1ti3NUrX6fQpm
+         wbEszrQ72npVKruZSfkUbsCh0RrvaQB8p8B0jY2E2j7PzgACFuCEvvnQ7K6LVi5V/pyn
+         kmuhjGo52kT609hcGac2CvAsN/VhyGduiEy/VhFoBel2fLoYv2h2oIHIidwysIU+kIkW
+         eykw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=fNyeUEKMDXco+f5Gr/DTD6fZuo/Z/fNiUWmps4qVNiM=;
-        b=MhWFDKIteLbYODK3Byt2yznYk1l9qYCQGAhj4zCjn2jrmg425oUJtd9BU3xB2CGNxw
-         /w1vYv3wjYMLwoVXBsKu36fu7AyZRGkL4mkge6jUU0rKTpdCr8isG3hwtSZGvTr1DMNy
-         vt6sCo6Ax20+as0/jzbAHlEXDkWW2bMklzt5vMsfVy+EPVGt2K2jfq0OcBTHiJakUc1A
-         n5g7fLQRuvYHk5f6Sk1FmQT9oUlSyb28GQKzEixTW6y/q42JgxlSqTlIcpeWQZYNXLg6
-         r+e4sgxIeoJ5QEkGBovEd3viuileT+R+67t65MvmNdWQKfaXTmTS3hevOzr/Z48Na7Sb
-         lgWQ==
-X-Gm-Message-State: APjAAAVqlvtaykrWH2i909cUMk3NI6DTHaKMVkh+IPCjNxKac1cdHFZx
-        X/ISGCRfG+xjmWdB8/u8/DVAkg==
-X-Google-Smtp-Source: APXvYqxvLSqbL57XLB1HSQgzv+lSozrrOo3DLhYYy8Kx2J4x0eKq0ai0JH+f3c0UJxa1T7sQ83OEtQ==
-X-Received: by 2002:a17:902:b909:: with SMTP id bf9mr26106967plb.96.1582140121379;
-        Wed, 19 Feb 2020 11:22:01 -0800 (PST)
-Received: from [10.67.49.41] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id z19sm390351pfn.49.2020.02.19.11.21.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Feb 2020 11:22:00 -0800 (PST)
-Subject: Re: [PATCH v2 3/4] PCI: brcmstb: Wait for Raspberry Pi's firmware
- when present
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        linux-kernel@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>
-Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org,
-        tim.gover@raspberrypi.org, linux-pci@vger.kernel.org,
-        wahrenst@gmx.net, Bjorn Helgaas <bhelgaas@google.com>
-References: <20200219123933.2792-1-nsaenzjulienne@suse.de>
- <20200219123933.2792-4-nsaenzjulienne@suse.de>
-From:   Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; prefer-encrypt=mutual; keydata=
- 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
- OXY+VnhOn2EcREN7qdAKw0j9Sw==
-Message-ID: <10a53db8-960e-eea7-1e8d-790de9a79e71@broadcom.com>
-Date:   Wed, 19 Feb 2020 11:21:51 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AjNq+luC626vZsiRuPi6VGu1LC8KCw/yq1nc0im58SM=;
+        b=dKbD2ukOjKFe6FbjysWiYUBwF3jL5FYUVSf0i0UreC8lpbE/Yg+o+RczmVmzYwBkJ7
+         7n/UzccnhFS5eYmon59k0Nl+c0d2usL7PgJuRcOMvUUkt6KARFlOpnu7FWjImsb6DLoG
+         2FNodeQU6t2Te2YuKTcYk9RO4Rv0hMR3WEw0RvD7x1M05AZDvtu45k6yZKc0S47hwK/A
+         PZ2JN+uyJtGEO4C5aDUrZVt0HB8ygl74voS4X2nGQAOAP7yUqB8fRuCDExF4PYW26Uek
+         GYP6o3vIScw0kJb+AVJ0mbpIaLve+r1fYiyF+taRE1ctdwXyxKZ4O+6aNNZ0pokkXZv/
+         st1Q==
+X-Gm-Message-State: APjAAAXtIynW00d7OHTeny1nsmW+RaTd41jV1g9vjgKugd1H2rIJK7ik
+        RbJxZfnvykzil3Z69Dv8G3iIqDvkElKBE8WCZhMBJQ==
+X-Google-Smtp-Source: APXvYqxgHXZwrYpIii3KVNAmPG6QvHVjvWv4SWm6MAEXn/50rv4vkJCi3U0P/EINz0+qnRV23HANiDOMjMn73htXwmI=
+X-Received: by 2002:a2e:8698:: with SMTP id l24mr16980675lji.94.1582143877350;
+ Wed, 19 Feb 2020 12:24:37 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200219123933.2792-4-nsaenzjulienne@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20170821192907.8695-3-ard.biesheuvel@linaro.org>
+ <1581728065-5862-1-git-send-email-alan.mikhak@sifive.com> <CAKv+Gu9W0v9owp85hkAatwCvu-y9z4BZxvbKf92N-s_nnD910Q@mail.gmail.com>
+ <867e0o6ssr.wl-maz@kernel.org> <CABEDWGxDz6njYYQN879XnGmY2vxOKvbygeg=9nBK54U6WP8_ug@mail.gmail.com>
+ <20200219081148.5307e30a@why> <CAKv+Gu_Vxa_E65=PtH5r3QuR4S2XeN=pB6ZoLF7b0SYniKdTYg@mail.gmail.com>
+In-Reply-To: <CAKv+Gu_Vxa_E65=PtH5r3QuR4S2XeN=pB6ZoLF7b0SYniKdTYg@mail.gmail.com>
+From:   Alan Mikhak <alan.mikhak@sifive.com>
+Date:   Wed, 19 Feb 2020 12:24:25 -0800
+Message-ID: <CABEDWGxXrEcnW_HOrAuKGgNkJR5-SjkPWNgOGU1Y_7fTxc7x=w@mail.gmail.com>
+Subject: Re: [PATCH 2/3] pci: designware: add separate driver for the MSI part
+ of the RC
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Graeme Gregory <graeme.gregory@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Leif Lindholm <leif@nuviainc.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2/19/20 4:39 AM, Nicolas Saenz Julienne wrote:
-> xHCI's PCI fixup, run at the end of pcie-brcmstb's probe, depends on
-> RPi4's VideoCore firmware interface to be up and running. It's possible
-> for both initializations to race, so make sure it's available prior
-> starting.
-> 
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+On Wed, Feb 19, 2020 at 12:17 AM Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> On Wed, 19 Feb 2020 at 09:11, Marc Zyngier <maz@kernel.org> wrote:
+> >
+> > On Tue, 18 Feb 2020 11:09:10 -0800
+> > Alan Mikhak <alan.mikhak@sifive.com> wrote:
+> >
+> > > On Sat, Feb 15, 2020 at 2:36 AM Marc Zyngier <maz@kernel.org> wrote:
+> > > >
+> > > > On Sat, 15 Feb 2020 09:35:56 +0000,
+> > > > Ard Biesheuvel <ardb@kernel.org> wrote:
+> > > > >
+> > > > > (updated some email addresses in cc, including my own)
+> > > > >
+> > > > > On Sat, 15 Feb 2020 at 01:54, Alan Mikhak <alan.mikhak@sifive.com> wrote:
+> > > > > >
+> > > > > > Hi..
+> > > > > >
+> > > > > > What is the right approach for adding MSI support for the generic
+> > > > > > Linux PCI host driver?
+> > > > > >
+> > > > > > I came across this patch which seems to address a similar
+> > > > > > situation. It seems to have been dropped in v3 of the patchset
+> > > > > > with the explanation "drop MSI patch [for now], since it
+> > > > > > turns out we may not need it".
+> > > > > >
+> > > > > > [PATCH 2/3] pci: designware: add separate driver for the MSI part of the RC
+> > > > > > https://lore.kernel.org/linux-pci/20170821192907.8695-3-ard.biesheuvel@linaro.org/
+> > > > > >
+> > > > > > [PATCH v2 2/3] pci: designware: add separate driver for the MSI part of the RC
+> > > > > > https://lore.kernel.org/linux-pci/20170824184321.19432-3-ard.biesheuvel@linaro.org/
+> > > > > >
+> > > > > > [PATCH v3 0/2] pci: add support for firmware initialized designware RCs
+> > > > > > https://lore.kernel.org/linux-pci/20170828180437.2646-1-ard.biesheuvel@linaro.org/
+> > > > > >
+> > > > >
+> > > > > For the platform in question, it turned out that we could use the MSI
+> > > > > block of the core's GIC interrupt controller directly, which is a much
+> > > > > better solution.
+> > > > >
+> > > > > In general, turning MSIs into wired interrupts is not a great idea,
+> > > > > since the whole point of MSIs is that they are sufficiently similar to
+> > > > > other DMA transactions to ensure that the interrupt won't arrive
+> > > > > before the related memory transactions have completed.
+> > > > >
+> > > > > If your interrupt controller does not have this capability, then yes,
+> > > > > you are stuck with this little widget that decodes an inbound write to
+> > > > > a magic address and turns it into a wired interrupt.
+> > > >
+> > > > I can only second this. It is much better to have a generic block
+> > > > implementing MSI *in a non multiplexed way*, for multiple reasons:
+> > > >
+> > > > - the interrupt vs DMA race that Ard mentions above,
+> > > >
+> > > > - MSIs are very often used to describe the state of per-CPU queues. If
+> > > >   you multiplex MSIs behind a single multiplexing interrupt, it is
+> > > >   always the same CPU that gets interrupted, and you don't benefit
+> > > >   from having multiple queues at all.
+> > > >
+> > > > Even if you have to implement the support as a bunch of wired
+> > > > interrupts, there is still a lot of value in keeping a 1:1 mapping
+> > > > between MSIs and wires.
+> > > >
+> > > > Thanks,
+> > > >
+> > > >         M.
+> > > >
+> > > > --
+> > > > Jazz is not dead, it just smells funny.
+> > >
+> > > Ard and Marc, Thanks for you comments. I will take a look at the code
+> > > related to MSI block of GIC interrupt controller for some reference.
+> >
+> > GICv2m or GICv3 MBI are probably your best bets. Don't get anywhere near
+> > the GICv3 ITS, there lies madness. ;-)
+> >
+>
+> True, but for the record, it is the GICv3 ITS that I used on the
+> platform in question, allowing me to ignore the pseudo-MSI widget
+> entirely.
+>
+> > > I am looking into supporting MSI in a non-multiplexed way when using
+> > > ECAM and the generic Linux PCI host driver when Linux is booted
+> > > from U-Boot.
+> >
+> > I don't really get the relationship between ECAM and MSIs. They should
+> > be fairly independent, unless that has to do with the allowing the MSI
+> > doorbell to be reached from the PCIe endpoint.
+> >
+>
+> The idea is that the PCIe RC is programmed by firmware, and exposed to
+> the OS as generic ECAM. If you have enough iATU registers and enough
+> free address space, that is perfectly feasible.
+>
+> The problem is that the generic ECAM binding does not have any
+> provisions for MSI doorbell widgets that turn inbound writes to a
+> magic address into a wired interrupt. My patch models this as a
+> separate device, which allows a generic ECAM DT node to refer to it as
+> its MSI parent.
+>
+>
+> > > Specifically, what is the right approach for sharing the physical
+> > > address of the MSI data block used in Linux with U-Boot?
+> > >
+> > > I imagine the Linux driver for MSI interrupt controller allocates
+> > > some DMA-able memory for use as the MSI data block. The
+> > > U-Boot PCIe driver would program an inbound ATU region to
+> > > map mem writes from endpoint devices to that MSI data block
+> > > before booting Linux.
+> >
+> > The "MSI block" is really a piece of HW, not memory. So whatever you
+> > have to program in the PCIe RC must allow an endpoint to reach that
+> > device with a 32bit write.
+> >
+>
+> Indeed. Either your interrupt controller or your PCIe RC needs to
+> implement the doorbell, but using the former is by far the preferred
+> option.
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Ard and Marc, Thank you so much for your insightful comments.
 
-It does not look like there is something making sure that
-CONFIG_RASPBERRYPI_FIRMWARE is being selected or depended on, should we
-have a "default XHCI_PCI" added to drivers/firmware/Kconfig?
--- 
-Florian
+The generic PCI host driver uses ECAM as the access method to
+read/write PCI configuration registers but has no support for MSI.
+I imagine I could use the MSI widget model from Art's patch to
+implement a separate Linux interrupt handler for MSI interrupts.
+
+I'm not sure but the MSI widget seems to multiplex MSI interrupts
+to one wired interrupt since its MSI doorbell is a u32 value. The widget
+also has code for programming the address of the doorbell into
+Designware PCIe IP registers.
+
+I imagine I would separate the lines of code that programs the
+PCIe IP MSI registers and move that non-generic PCIe code from
+Linux to U-Boot "firmware". The MSI interrupt handler would
+then become more of a generic PCI MSI interrupt handler.
+
+The "MSI block" I refer to is a page of memory that I see being
+allocated and mapped for dma access from endpoint devices
+in the Designware PCI host driver function dw_pcie_msi_init().
+The physical address of this MSI data block is programmed into
+Designware PCIe IP MSI registers by Designware host driver.
+I believe this is the target memory where endpoint MSI write
+requests would be targeted to. I imagine an inbound ATU region
+maps the bus transaction to a physical address within this MSI
+data block to support non-multiplexed MSI interrupt handling.
+
+Whether the doorbell is a u32 value or a block of memory,
+the chicken or the egg dilemma I have is how to share the
+address of the MSI data block between Linux and U-Boot.
+Since all programming code for PCIe IP would reside in the
+U-Boot PCIe driver, U-Boot would need to know the address
+of the MSI data block before it boots Linux. However, if the MSI
+interrupt widget dynamically allocates the MSI data block, it
+would contain no code to program the address into the PCIe IP.
+
+I wonder if the MSI data block can be a reserved block of
+memory whose physical address is predetermined and shared
+via the "reg" entry for the MSI widget between Linux and
+U-Boot? Would that make sense?
+
+Regards,
+Alan
