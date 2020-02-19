@@ -2,171 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E3DF164724
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2020 15:38:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EB83C164950
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2020 16:57:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbgBSOiT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Feb 2020 09:38:19 -0500
-Received: from mailout2.hostsharing.net ([83.223.78.233]:49149 "EHLO
-        mailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbgBSOiT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Feb 2020 09:38:19 -0500
-X-Greylist: delayed 414 seconds by postgrey-1.27 at vger.kernel.org; Wed, 19 Feb 2020 09:38:17 EST
+        id S1726652AbgBSP51 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Feb 2020 10:57:27 -0500
+Received: from bmailout3.hostsharing.net ([176.9.242.62]:58581 "EHLO
+        bmailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726651AbgBSP50 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Feb 2020 10:57:26 -0500
 Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by mailout2.hostsharing.net (Postfix) with ESMTPS id 94C02102E8A3B;
-        Wed, 19 Feb 2020 15:31:22 +0100 (CET)
-Received: from localhost (unknown [87.130.102.138])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by h08.hostsharing.net (Postfix) with ESMTPSA id 4B44060EBB3D;
-        Wed, 19 Feb 2020 15:31:22 +0100 (CET)
-X-Mailbox-Line: From 78b4ced5072bfe6e369d20e8b47c279b8c7af12e Mon Sep 17 00:00:00 2001
-Message-Id: <78b4ced5072bfe6e369d20e8b47c279b8c7af12e.1582121613.git.lukas@wunner.de>
-In-Reply-To: <20200207195450.52026-1-stuart.w.hayes@gmail.com>
-References: <20200207195450.52026-1-stuart.w.hayes@gmail.com>
+        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 6AE27101E694F;
+        Wed, 19 Feb 2020 16:57:24 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 16111ECCD0; Wed, 19 Feb 2020 16:57:24 +0100 (CET)
+Date:   Wed, 19 Feb 2020 16:57:24 +0100
 From:   Lukas Wunner <lukas@wunner.de>
-Date:   Wed, 19 Feb 2020 15:31:13 +0100
-Subject: [PATCH v4] PCI: pciehp: Fix MSI interrupt race
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Stuart Hayes <stuart.w.hayes@gmail.com>
-Cc:     Austin Bolen <austin_bolen@dell.com>,
+To:     Stuart Hayes <stuart.w.hayes@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Austin Bolen <austin_bolen@dell.com>,
         Keith Busch <kbusch@kernel.org>,
         Alexandru Gagniuc <mr.nuke.me@gmail.com>,
         "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
         Sinan Kaya <okaya@kernel.org>,
         Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org, narendra_k@dell.com,
         Enzo Matsumiya <ematsumiya@suse.com>
+Subject: Re: [PATCH v3] PCI: pciehp: Make sure pciehp_isr clears interrupt
+ events
+Message-ID: <20200219155724.4jm2yt75u4s2t3tn@wunner.de>
+References: <20200207195450.52026-1-stuart.w.hayes@gmail.com>
+ <20200209150328.2x2zumhqbs6fihmc@wunner.de>
+ <20200209180722.ikuyjignnd7ddfp5@wunner.de>
+ <20200209202512.rzaqoc7tydo2ouog@wunner.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200209202512.rzaqoc7tydo2ouog@wunner.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Stuart Hayes <stuart.w.hayes@gmail.com>
+On Sun, Feb 09, 2020 at 09:25:12PM +0100, Lukas Wunner wrote:
+> Below is another attempt.  I'll have to take a look at this with a
+> fresh pair of eyeballs though to verify I haven't overlooked anything
+> else and also to determine if this is actually simpler than Stuart's
+> approach.  Again, the advantage here is that processing of the events
+> by the IRQ thread is sped up by not delaying it until the Slot Status
+> register has settled.
 
-Without this commit, a PCIe hotplug port can stop generating interrupts
-on hotplug events, so device adds and removals will not be seen:
+After some deliberation I've come full circle and think that Stuart's
+approach is actually better than mine:
 
-The pciehp interrupt handler pciehp_isr() reads the Slot Status register
-and then writes back to it to clear the bits that caused the interrupt.
-If a different interrupt event bit gets set between the read and the
-write, pciehp_isr() returns without having cleared all of the interrupt
-event bits.  If this happens when the MSI isn't masked (which by default
-it isn't in handle_edge_irq(), and which it will never be when MSI
-per-vector masking is not supported), we won't get any more hotplug
-interrupts from that device.
+I thought that my approach would speed up processing of events by
+waking the IRQ thread immediately after the first loop iteration.
+But I've realized that right at the beginning of the IRQ thread,
+synchronize_hardirq() is called, so the IRQ thread will wait for
+the hardirq handler to finish before actually processing the events.
 
-That is expected behavior, according to the PCIe Base Spec r5.0, section
-6.7.3.4, "Software Notification of Hot-Plug Events".
+The rationale for the call to synchronize_hardirq() is that the
+IRQ thread was woken, but now sees that the hardirq handler is
+running (again) to collect more events.  In that situation it makes
+sense to wait for them to be collected before starting to process
+events.
 
-Because the Presence Detect Changed and Data Link Layer State Changed
-event bits can both get set at nearly the same time when a device is
-added or removed, this is more likely to happen than it might seem.
-The issue was found (and can be reproduced rather easily) by connecting
-and disconnecting an NVMe storage device on at least one system model
-where the NVMe devices were being connected to an AMD PCIe port (PCI
-device 0x1022/0x1483).
+Is the synchronize_hardirq() absolutely necessary?  Not really,
+but I still think that it makes sense.  In reality, the latency
+for additional loop iterations is likely small, so it's probably
+not worth to optimize for immediate processing after the first
+loop iteration.
 
-Fix the issue by modifying pciehp_isr() to loop back and re-read the
-Slot Status register immediately after writing to it, until it sees that
-all of the event status bits have been cleared.
+Stuart's approach is also less intrusive and doesn't change the
+logic as much as my approach does.  His patch therefore lends
+itself better for backporting to stable.
 
-Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
-[lukas: drop loop count limitation, write "events" instead of "status",
-don't loop back in INTx and poll modes, tweak code comment & commit msg]
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
----
-v4 (lukas):
-  * drop "MAX_ISR_STATUS_READS" loop count limitation
-  * drop unnecessary braces around PCI_EXP_SLTSTA_* flags
-  * write "events" instead of "status" variable to Slot Status register
-    to avoid unnecessary loop iterations if the same bit gets set
-    repeatedly
-  * don't loop back in INTx and poll modes
-  * shorten and tweak code comment & commit message
+So I've just respun Stuart's v3 patch, taking into account the
+review comments I had sent for it.  I've taken the liberty to make
+some editorial changes to the commit message and code comment.
+Stuart & Bjorn, if you don't like these, please feel free to roll
+back my changes to them as you see fit.
 
-v3:
-  * removed pvm_capable flag (from v2) since MSI may not be masked
-    regardless of whether per-vector masking is supported
-  * tweaked comments
+I realize now that I forgot to add the following tags,
+Bjorn, could you add them if/when applying?
 
-v2:
-  * fixed ctrl_warn() call
-  * improved comments
-  * added pvm_capable flag and changed pciehp_isr() to loop back only when
-    pvm_capable flag not set (suggested by Lukas Wunner)
+Fixes: 7b4ce26bcf69 ("PCI: pciehp: Convert to threaded IRQ")
+Cc: stable@vger.kernel.org # v4.19+
 
- drivers/pci/hotplug/pciehp_hpc.c | 26 ++++++++++++++++++++------
- 1 file changed, 20 insertions(+), 6 deletions(-)
+Thanks!
 
-diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-index 8a2cb1764386..f64d10df9eb5 100644
---- a/drivers/pci/hotplug/pciehp_hpc.c
-+++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -527,7 +527,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
- 	struct controller *ctrl = (struct controller *)dev_id;
- 	struct pci_dev *pdev = ctrl_dev(ctrl);
- 	struct device *parent = pdev->dev.parent;
--	u16 status, events;
-+	u16 status, events = 0;
- 
- 	/*
- 	 * Interrupts only occur in D3hot or shallower and only if enabled
-@@ -552,6 +552,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
- 		}
- 	}
- 
-+read_status:
- 	pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &status);
- 	if (status == (u16) ~0) {
- 		ctrl_info(ctrl, "%s: no response from device\n", __func__);
-@@ -564,24 +565,37 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
- 	 * Slot Status contains plain status bits as well as event
- 	 * notification bits; right now we only want the event bits.
- 	 */
--	events = status & (PCI_EXP_SLTSTA_ABP | PCI_EXP_SLTSTA_PFD |
--			   PCI_EXP_SLTSTA_PDC | PCI_EXP_SLTSTA_CC |
--			   PCI_EXP_SLTSTA_DLLSC);
-+	status &= PCI_EXP_SLTSTA_ABP | PCI_EXP_SLTSTA_PFD |
-+		  PCI_EXP_SLTSTA_PDC | PCI_EXP_SLTSTA_CC |
-+		  PCI_EXP_SLTSTA_DLLSC;
- 
- 	/*
- 	 * If we've already reported a power fault, don't report it again
- 	 * until we've done something to handle it.
- 	 */
- 	if (ctrl->power_fault_detected)
--		events &= ~PCI_EXP_SLTSTA_PFD;
-+		status &= ~PCI_EXP_SLTSTA_PFD;
- 
-+	events |= status;
- 	if (!events) {
- 		if (parent)
- 			pm_runtime_put(parent);
- 		return IRQ_NONE;
- 	}
- 
--	pcie_capability_write_word(pdev, PCI_EXP_SLTSTA, events);
-+	if (status) {
-+		pcie_capability_write_word(pdev, PCI_EXP_SLTSTA, events);
-+
-+		/*
-+		 * In MSI mode, all event bits must be zero before the port
-+		 * will send a new interrupt (PCIe Base Spec r5.0 sec 6.7.3.4).
-+		 * So re-read the Slot Status register in case a bit was set
-+		 * between read and write.
-+		 */
-+		if (pci_dev_msi_enabled(pdev) && !pciehp_poll_mode)
-+			goto read_status;
-+	}
-+
- 	ctrl_dbg(ctrl, "pending interrupts %#06x from Slot Status\n", events);
- 	if (parent)
- 		pm_runtime_put(parent);
--- 
-2.24.0
-
+Lukas
