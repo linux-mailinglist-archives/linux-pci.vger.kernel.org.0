@@ -2,51 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 49910164E9C
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2020 20:13:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 29AA7164EA8
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2020 20:15:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726643AbgBSTNj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Feb 2020 14:13:39 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:46415 "EHLO
+        id S1726645AbgBSTPW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Feb 2020 14:15:22 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:44129 "EHLO
         mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726651AbgBSTNj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Feb 2020 14:13:39 -0500
-Received: by mail-pf1-f196.google.com with SMTP id k29so523295pfp.13;
-        Wed, 19 Feb 2020 11:13:37 -0800 (PST)
+        with ESMTP id S1726609AbgBSTPW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Feb 2020 14:15:22 -0500
+Received: by mail-pf1-f196.google.com with SMTP id y5so529217pfb.11;
+        Wed, 19 Feb 2020 11:15:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=GaeEvRJ+U0D+wNkfFCcrdBKWhLq8Qq+UPgEp3MG8ofk=;
-        b=WlANGQ2cKcCc8ukDLFFq4WkYBaa/XhtmYTJrNzq3bqJ/HuBgnndm8sNgqmWCJqu/2n
-         drksQBDmvlV3Qtd7LcWc+YoHD5fAjAhxLdVP/AL3qJYxcoDCzVsqEDccbU73aqGq/6Tu
-         /jiibBS+dXisg0WsSauU+3D2iYyJppccYVWbhH7D5GKqHc8uhNyY95iiKlv0tahkxVjq
-         ByLZqMfPynkDvEFY7QUMZ3AWjw2hBIF/UuKpgOmHn0zB1u3LutGuGAPgw6GfRiz8q+5R
-         FzlO9r6XYT7V+PmlxLl6ljocmaIZMmjLAmZND7r+hjZbTvIMxsR1Atuy1RyS4q0l92hT
-         K0vw==
+        bh=2zEHOco7QzZ9vaVw4GQ0CN4vwjsRv+RVGKpumkhb5GU=;
+        b=tSseXEsRzFSuZb4RaMTcizdxiKwxvPX3//HWY3MdQvniSRMStqeuH2gB3REfk7Dsh7
+         zBdPH1fGRg3vXQ9zRuTPLnBV9iwQbsMAVB7WpltokDdWQh2PsE7dbnk0yq/vxhQbL+3p
+         0b4lPp7A1dCcGZ0ylT9ifa0NMu+yke6jxF9m6Hse0MMu9GnBf1rEKaGxRzhFbFpm/wt5
+         VNpd2KIyJlZ6drl7lmpuLxwNUsMpQTxIJzwzj7i/gMGJRNBT5FFqF7XBxjWF4Ke4iIrm
+         49CEWiKDkBSrHocJd/VQKWs3KYVGos3VSZynxH5nn3BSPR5wn3PfH38aXlyF2zc88vJA
+         r+UA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=GaeEvRJ+U0D+wNkfFCcrdBKWhLq8Qq+UPgEp3MG8ofk=;
-        b=PHQ5LGjtDc0hEL2pSMQtpQ2EbOSHFtIshHhUPtIE56JHgqm437YhK67q+ZcnUpbWDQ
-         bySnp1P4zpqzhK4M8o+LUebjYhSABScKkd0pogCSNXE1kohI10017Oe+T3ejke8gj3my
-         s7KF9GlxJsaxa1kCnyvR1WhLOpx+N/43qj3lvwXAUUtk6n85vmkeejLpbqw1BsxYv07a
-         8YR6+bG+wK250JHVd5OqTm0OjV+1cOOGQ2XgkqSosMjus6VLn6Aubl/2AI1MUbBgWZbH
-         MAz/hUCVfHnjisTlK417M/6xvP3hNZaCsSLYamzLnWG9FqyrRUIuq8Q3e+qZPmISoVyN
-         sUJA==
-X-Gm-Message-State: APjAAAVE2vgTHCoH9NJttK2QBbIz4UegHDUg+5Vz5Ab9SM1Cgbijve9h
-        d4bzXG+DS+82/pa+nDJClmk=
-X-Google-Smtp-Source: APXvYqwDbtT3gaVvHVYf8Jg+WvBKuOzUgyZ+Zk3aZd1zaz6J6yT7HOUuQbipb+dCWrKk7bi3Q6D4Ew==
-X-Received: by 2002:a63:cc09:: with SMTP id x9mr10110391pgf.339.1582139616747;
-        Wed, 19 Feb 2020 11:13:36 -0800 (PST)
+        bh=2zEHOco7QzZ9vaVw4GQ0CN4vwjsRv+RVGKpumkhb5GU=;
+        b=aPtu6l+kBofTG9YvHXPanY+kn78BvtzAl6NQvwNWmMoF8A5/UxreFrsKp2Grhkg2rB
+         6ItYTpZvElh5QPac9H+HBHb/aEhbGErogT0qnqc5hUnZtBRHKzzrgA7OeoluQRcwny4D
+         WbUEWW7rcg3L2xdsZdrKsDIhht9S+JNVxWSqJFykBFgLPADiyGVtKMbzh27Eta9JTh0K
+         15EDiAR5SNequ9qAH+qrPw/ms5ZWGIHq6EW88EKickA9HoTiPfc47gT3LcREyur+almr
+         K5w1Fq5DyFNP1h7g1lohparYglDXzPSh1hfqPY+Y9tWDEi0QK0VhZSblRBuTZXstmbiB
+         X0Uw==
+X-Gm-Message-State: APjAAAUlkkkVrymT+stLs/cIbR/fc5fgVdm1/iz+/tWqmKWTditxNXkv
+        gXUIDueZ844vgNLsXPxcC58=
+X-Google-Smtp-Source: APXvYqyq3LTZQ1hG+kWceiD95Lk5ozghhvAU+rYXpMNfL/pVnY0HFspm5XHxmnjcx6GItMtSj7aB8g==
+X-Received: by 2002:aa7:8699:: with SMTP id d25mr28006271pfo.139.1582139720968;
+        Wed, 19 Feb 2020 11:15:20 -0800 (PST)
 Received: from [10.67.49.41] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id b15sm387429pft.58.2020.02.19.11.13.34
+        by smtp.googlemail.com with ESMTPSA id b1sm407827pfp.44.2020.02.19.11.15.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Feb 2020 11:13:36 -0800 (PST)
-Subject: Re: [PATCH v2 2/4] firmware: raspberrypi: Introduce vl805 init
- routine
+        Wed, 19 Feb 2020 11:15:19 -0800 (PST)
+Subject: Re: [PATCH v2 1/4] soc: bcm2835: Sync xHCI reset firmware property
+ with downstream
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         linux-kernel@vger.kernel.org,
         Florian Fainelli <f.fainelli@gmail.com>,
@@ -58,7 +58,7 @@ Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
         tim.gover@raspberrypi.org, linux-pci@vger.kernel.org,
         wahrenst@gmx.net
 References: <20200219123933.2792-1-nsaenzjulienne@suse.de>
- <20200219123933.2792-3-nsaenzjulienne@suse.de>
+ <20200219123933.2792-2-nsaenzjulienne@suse.de>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  xsDiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
@@ -114,12 +114,12 @@ Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  HvsHIcv4lxCWkFXkwsuWqzEKK6kxVpRDoEQPDj+Oy/ZJ5fYuMbkdHrlegwoQ64LrqdmiVVPC
  TwQYEQIADwIbDAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2Do+FAJ956xSz2XpDHql+Wg/2qv3b
  G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <538b8ba7-e6d3-e8f2-0cc6-ce3485bc7848@gmail.com>
-Date:   Wed, 19 Feb 2020 11:13:30 -0800
+Message-ID: <ab378eb2-b285-86b8-8473-643a6075f1ed@gmail.com>
+Date:   Wed, 19 Feb 2020 11:15:11 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200219123933.2792-3-nsaenzjulienne@suse.de>
+In-Reply-To: <20200219123933.2792-2-nsaenzjulienne@suse.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -129,34 +129,9 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 On 2/19/20 4:39 AM, Nicolas Saenz Julienne wrote:
-> On the Raspberry Pi 4, after a PCI reset, VL805's firmware may either be
-> loaded directly from an EEPROM or, if not present, by the SoC's
-> VideCore. The function informs VideCore that VL805 was just reset, or
-> requests for a probe defer.
-> 
-> Based on Tim Gover's downstream implementation.
+> The property is needed in order to trigger VL805's firmware load.
 > 
 > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> ---
-
-[snip]
-
-
-> diff --git a/include/soc/bcm2835/raspberrypi-firmware.h b/include/soc/bcm2835/raspberrypi-firmware.h
-> index cc9cdbc66403..a37c3a461d2a 100644
-> --- a/include/soc/bcm2835/raspberrypi-firmware.h
-> +++ b/include/soc/bcm2835/raspberrypi-firmware.h
-> @@ -8,6 +8,7 @@
->  
->  #include <linux/types.h>
->  #include <linux/of_device.h>
-> +#include <linux/pci.h>
-
-I would move this inclusion where we need it, which is in
-drivers/firmware/raspberrypi.c and only provide a forward declaration
-here (avoids needless rebuilds).
-
-With that:
 
 Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
