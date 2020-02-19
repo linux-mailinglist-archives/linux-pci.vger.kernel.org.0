@@ -2,99 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EB83C164950
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2020 16:57:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B7A8164E0F
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2020 19:54:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbgBSP51 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Feb 2020 10:57:27 -0500
-Received: from bmailout3.hostsharing.net ([176.9.242.62]:58581 "EHLO
-        bmailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726651AbgBSP50 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Feb 2020 10:57:26 -0500
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 6AE27101E694F;
-        Wed, 19 Feb 2020 16:57:24 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 16111ECCD0; Wed, 19 Feb 2020 16:57:24 +0100 (CET)
-Date:   Wed, 19 Feb 2020 16:57:24 +0100
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Stuart Hayes <stuart.w.hayes@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Austin Bolen <austin_bolen@dell.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, narendra_k@dell.com,
-        Enzo Matsumiya <ematsumiya@suse.com>
-Subject: Re: [PATCH v3] PCI: pciehp: Make sure pciehp_isr clears interrupt
- events
-Message-ID: <20200219155724.4jm2yt75u4s2t3tn@wunner.de>
-References: <20200207195450.52026-1-stuart.w.hayes@gmail.com>
- <20200209150328.2x2zumhqbs6fihmc@wunner.de>
- <20200209180722.ikuyjignnd7ddfp5@wunner.de>
- <20200209202512.rzaqoc7tydo2ouog@wunner.de>
+        id S1726856AbgBSSyD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Feb 2020 13:54:03 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:28978 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726648AbgBSSyC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Feb 2020 13:54:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582138441;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=ooAVZmPqmpejcE1lho8HJzD9Jr6TIc1QTP2vQodr9hU=;
+        b=Rg0ZKshp8M0pAWk5gZuBEelgHbs2ORrC0rE/Rqtr5/rnNszDExFMOODikKlfYvoRoCnk9D
+        EOZkoXkMU6Ufghls0w8C3+1YkkFpteX5ek0aSwpmZPQIosDuuaboy6j6JgPCcTxyJmKA41
+        3H6gfoUC7wUDnSDz0CHMvarukTOpyhM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-56-JYUDF0GWNu6vXN8CwF6baQ-1; Wed, 19 Feb 2020 13:53:51 -0500
+X-MC-Unique: JYUDF0GWNu6vXN8CwF6baQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1F401107ACC5;
+        Wed, 19 Feb 2020 18:53:50 +0000 (UTC)
+Received: from gimli.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 80B505C1B0;
+        Wed, 19 Feb 2020 18:53:46 +0000 (UTC)
+Subject: [PATCH v2 0/7] vfio/pci: SR-IOV support
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     kvm@vger.kernel.org
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dev@dpdk.org, mtosatti@redhat.com, thomas@monjalon.net,
+        bluca@debian.org, jerinjacobk@gmail.com,
+        bruce.richardson@intel.com, cohuck@redhat.com
+Date:   Wed, 19 Feb 2020 11:53:46 -0700
+Message-ID: <158213716959.17090.8399427017403507114.stgit@gimli.home>
+User-Agent: StGit/0.19-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200209202512.rzaqoc7tydo2ouog@wunner.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Feb 09, 2020 at 09:25:12PM +0100, Lukas Wunner wrote:
-> Below is another attempt.  I'll have to take a look at this with a
-> fresh pair of eyeballs though to verify I haven't overlooked anything
-> else and also to determine if this is actually simpler than Stuart's
-> approach.  Again, the advantage here is that processing of the events
-> by the IRQ thread is sped up by not delaying it until the Slot Status
-> register has settled.
+Changes since v1 are primarily to patch 3/7 where the commit log is
+rewritten, along with option parsing and failure logging based on
+upstream discussions.  The primary user visible difference is that
+option parsing is now much more strict.  If a vf_token option is
+provided that cannot be used, we generate an error.  As a result of
+this, opening a PF with a vf_token option will serve as a mechanism of
+setting the vf_token.  This seems like a more user friendly API than
+the alternative of sometimes requiring the option (VFs in use) and
+sometimes rejecting it, and upholds our desire that the option is
+always either used or rejected.
 
-After some deliberation I've come full circle and think that Stuart's
-approach is actually better than mine:
+This also means that the VFIO_DEVICE_FEATURE ioctl is not the only
+means of setting the VF token, which might call into question whether
+we absolutely need this new ioctl.  Currently I'm keeping it because I
+can imagine use cases, for example if a hypervisor were to support
+SR-IOV, the PF device might be opened without consideration for a VF
+token and we'd require the hypservisor to close and re-open the PF in
+order to set a known VF token, which is impractical.
 
-I thought that my approach would speed up processing of events by
-waking the IRQ thread immediately after the first loop iteration.
-But I've realized that right at the beginning of the IRQ thread,
-synchronize_hardirq() is called, so the IRQ thread will wait for
-the hardirq handler to finish before actually processing the events.
+Series overview (same as provided with v1):
 
-The rationale for the call to synchronize_hardirq() is that the
-IRQ thread was woken, but now sees that the hardirq handler is
-running (again) to collect more events.  In that situation it makes
-sense to wait for them to be collected before starting to process
-events.
+The synopsis of this series is that we have an ongoing desire to drive
+PCIe SR-IOV PFs from userspace with VFIO.  There's an immediate need
+for this with DPDK drivers and potentially interesting future use
+cases in virtualization.  We've been reluctant to add this support
+previously due to the dependency and trust relationship between the
+VF device and PF driver.  Minimally the PF driver can induce a denial
+of service to the VF, but depending on the specific implementation,
+the PF driver might also be responsible for moving data between VFs
+or have direct access to the state of the VF, including data or state
+otherwise private to the VF or VF driver.
 
-Is the synchronize_hardirq() absolutely necessary?  Not really,
-but I still think that it makes sense.  In reality, the latency
-for additional loop iterations is likely small, so it's probably
-not worth to optimize for immediate processing after the first
-loop iteration.
+To help resolve these concerns, we introduce a VF token into the VFIO
+PCI ABI, which acts as a shared secret key between drivers.  The
+userspace PF driver is required to set the VF token to a known value
+and userspace VF drivers are required to provide the token to access
+the VF device.  If a PF driver is restarted with VF drivers in use, it
+must also provide the current token in order to prevent a rogue
+untrusted PF driver from replacing a known driver.  The degree to
+which this new token is considered secret is left to the userspace
+drivers, the kernel intentionally provides no means to retrieve the
+current token.
 
-Stuart's approach is also less intrusive and doesn't change the
-logic as much as my approach does.  His patch therefore lends
-itself better for backporting to stable.
+Note that the above token is only required for this new model where
+both the PF and VF devices are usable through vfio-pci.  Existing
+models of VFIO drivers where the PF is used without SR-IOV enabled
+or the VF is bound to a userspace driver with an in-kernel, host PF
+driver are unaffected.
 
-So I've just respun Stuart's v3 patch, taking into account the
-review comments I had sent for it.  I've taken the liberty to make
-some editorial changes to the commit message and code comment.
-Stuart & Bjorn, if you don't like these, please feel free to roll
-back my changes to them as you see fit.
+The latter configuration above also highlights a new inverted scenario
+that is now possible, a userspace PF driver with in-kernel VF drivers.
+I believe this is a scenario that should be allowed, but should not be
+enabled by default.  This series includes code to set a default
+driver_override for VFs sourced from a vfio-pci user owned PF, such
+that the VFs are also bound to vfio-pci.  This model is compatible
+with tools like driverctl and allows the system administrator to
+decide if other bindings should be enabled.  The VF token interface
+above exists only between vfio-pci PF and VF drivers, once a VF is
+bound to another driver, the administrator has effectively pronounced
+the device as trusted.  The vfio-pci driver will note alternate
+binding in dmesg for logging and debugging purposes.
 
-I realize now that I forgot to add the following tags,
-Bjorn, could you add them if/when applying?
+Please review, comment, and test.  The example QEMU implementation
+provided with the RFC is still current for this version.  Thanks,
 
-Fixes: 7b4ce26bcf69 ("PCI: pciehp: Convert to threaded IRQ")
-Cc: stable@vger.kernel.org # v4.19+
+Alex
 
-Thanks!
+RFC: https://lore.kernel.org/lkml/158085337582.9445.17682266437583505502.stgit@gimli.home/
+v1: https://lore.kernel.org/lkml/158145472604.16827.15751375540102298130.stgit@gimli.home/
 
-Lukas
+---
+
+Alex Williamson (7):
+      vfio: Include optional device match in vfio_device_ops callbacks
+      vfio/pci: Implement match ops
+      vfio/pci: Introduce VF token
+      vfio: Introduce VFIO_DEVICE_FEATURE ioctl and first user
+      vfio/pci: Add sriov_configure support
+      vfio/pci: Remove dev_fmt definition
+      vfio/pci: Cleanup .probe() exit paths
+
+
+ drivers/vfio/pci/vfio_pci.c         |  383 +++++++++++++++++++++++++++++++++--
+ drivers/vfio/pci/vfio_pci_private.h |   10 +
+ drivers/vfio/vfio.c                 |   20 +-
+ include/linux/vfio.h                |    4 
+ include/uapi/linux/vfio.h           |   37 +++
+ 5 files changed, 426 insertions(+), 28 deletions(-)
+
