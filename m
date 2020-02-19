@@ -2,229 +2,210 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F13FC164FCA
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2020 21:24:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BC359164FD2
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2020 21:27:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727277AbgBSUYm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Feb 2020 15:24:42 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:33112 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727036AbgBSUYl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Feb 2020 15:24:41 -0500
-Received: by mail-lj1-f193.google.com with SMTP id y6so1800918lji.0
-        for <linux-pci@vger.kernel.org>; Wed, 19 Feb 2020 12:24:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AjNq+luC626vZsiRuPi6VGu1LC8KCw/yq1nc0im58SM=;
-        b=blXaIirhJ4Rkmd3O/qCBwDL0uB/EBB4pdKJ3DIAAUgs9ukw0IZcEQGOAQx+UnH8FPE
-         ng9F56X1U9zMRjRnxcaVcYyY2GtMlJdARUvhWlFIxk3zK31OX4oPN0Tib+wStHYLrV/C
-         /RpybVE7itjdGSyJbZ5scSfW5donvZVLui9SNqoyO9JtAzIgDjTsocj1ti3NUrX6fQpm
-         wbEszrQ72npVKruZSfkUbsCh0RrvaQB8p8B0jY2E2j7PzgACFuCEvvnQ7K6LVi5V/pyn
-         kmuhjGo52kT609hcGac2CvAsN/VhyGduiEy/VhFoBel2fLoYv2h2oIHIidwysIU+kIkW
-         eykw==
+        id S1727035AbgBSU1D (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Feb 2020 15:27:03 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:44873 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726651AbgBSU1C (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Feb 2020 15:27:02 -0500
+Received: by mail-ot1-f65.google.com with SMTP id h9so1426933otj.11;
+        Wed, 19 Feb 2020 12:27:02 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AjNq+luC626vZsiRuPi6VGu1LC8KCw/yq1nc0im58SM=;
-        b=dKbD2ukOjKFe6FbjysWiYUBwF3jL5FYUVSf0i0UreC8lpbE/Yg+o+RczmVmzYwBkJ7
-         7n/UzccnhFS5eYmon59k0Nl+c0d2usL7PgJuRcOMvUUkt6KARFlOpnu7FWjImsb6DLoG
-         2FNodeQU6t2Te2YuKTcYk9RO4Rv0hMR3WEw0RvD7x1M05AZDvtu45k6yZKc0S47hwK/A
-         PZ2JN+uyJtGEO4C5aDUrZVt0HB8ygl74voS4X2nGQAOAP7yUqB8fRuCDExF4PYW26Uek
-         GYP6o3vIScw0kJb+AVJ0mbpIaLve+r1fYiyF+taRE1ctdwXyxKZ4O+6aNNZ0pokkXZv/
-         st1Q==
-X-Gm-Message-State: APjAAAXtIynW00d7OHTeny1nsmW+RaTd41jV1g9vjgKugd1H2rIJK7ik
-        RbJxZfnvykzil3Z69Dv8G3iIqDvkElKBE8WCZhMBJQ==
-X-Google-Smtp-Source: APXvYqxgHXZwrYpIii3KVNAmPG6QvHVjvWv4SWm6MAEXn/50rv4vkJCi3U0P/EINz0+qnRV23HANiDOMjMn73htXwmI=
-X-Received: by 2002:a2e:8698:: with SMTP id l24mr16980675lji.94.1582143877350;
- Wed, 19 Feb 2020 12:24:37 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CdW2v94vclBbMClu4Uts81wJU8rv+QPDvyeeQ3vvmNk=;
+        b=L7mQF17uPy56+VtZKx73GNovD30OoV6vbmZaLrjTaLP0ucrC61rr2jkEyqp4pQNQtj
+         uJetKm+AwBifEq7nMfkofGKF75/GDisHt/6H+DY6CcagPPyM6bKbMsZYQTrcmpF4coyF
+         8ZrJI+yLfpxGdJh2dbODGO5kx497b8V+Vcp9NJVNo++MIWHnSPPobZOQNz4iKLqS+Vt1
+         CDyy/zgukKtwj7Rfvijhzc/DBPNfS/CkWl6X7iwEPXPaB6pYzgJ2DxuwebrV66d6ETKH
+         vcuO2rf4TfXOTw2GeYqzwZaXFpm4J5mhxixsk6sTGWCb5uMmzbvupwTeTzCuiy4PMHL1
+         zrig==
+X-Gm-Message-State: APjAAAUYrBtd8R9wxz8D0ZzxoFjoYH9nYAwGpT+zSPsdvoRoSGQb1M+g
+        r2hyaQ9l81F3wAyPp2ptTA==
+X-Google-Smtp-Source: APXvYqz+hinonc4v6VST89rZ3Ydv6zU5hyEVqM43ywd3Axx39ymW7FHAQ8T8eXK1+IvzATwTNIBD2w==
+X-Received: by 2002:a9d:3b09:: with SMTP id z9mr21138164otb.195.1582144021801;
+        Wed, 19 Feb 2020 12:27:01 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id a1sm285965oti.2.2020.02.19.12.27.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 12:27:01 -0800 (PST)
+Received: (nullmailer pid 13831 invoked by uid 1000);
+        Wed, 19 Feb 2020 20:27:00 -0000
+Date:   Wed, 19 Feb 2020 14:27:00 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Tom Joseph <tjoseph@cadence.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Mark Rutland <mark.rutland@arm.com>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: PCI: cadence: Add PCIe RC/EP DT
+ schema for Cadence PCIe
+Message-ID: <20200219202700.GA21908@bogus>
+References: <20200217111519.29163-1-kishon@ti.com>
+ <20200217111519.29163-2-kishon@ti.com>
 MIME-Version: 1.0
-References: <20170821192907.8695-3-ard.biesheuvel@linaro.org>
- <1581728065-5862-1-git-send-email-alan.mikhak@sifive.com> <CAKv+Gu9W0v9owp85hkAatwCvu-y9z4BZxvbKf92N-s_nnD910Q@mail.gmail.com>
- <867e0o6ssr.wl-maz@kernel.org> <CABEDWGxDz6njYYQN879XnGmY2vxOKvbygeg=9nBK54U6WP8_ug@mail.gmail.com>
- <20200219081148.5307e30a@why> <CAKv+Gu_Vxa_E65=PtH5r3QuR4S2XeN=pB6ZoLF7b0SYniKdTYg@mail.gmail.com>
-In-Reply-To: <CAKv+Gu_Vxa_E65=PtH5r3QuR4S2XeN=pB6ZoLF7b0SYniKdTYg@mail.gmail.com>
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-Date:   Wed, 19 Feb 2020 12:24:25 -0800
-Message-ID: <CABEDWGxXrEcnW_HOrAuKGgNkJR5-SjkPWNgOGU1Y_7fTxc7x=w@mail.gmail.com>
-Subject: Re: [PATCH 2/3] pci: designware: add separate driver for the MSI part
- of the RC
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Graeme Gregory <graeme.gregory@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Leif Lindholm <leif@nuviainc.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200217111519.29163-2-kishon@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 12:17 AM Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> On Wed, 19 Feb 2020 at 09:11, Marc Zyngier <maz@kernel.org> wrote:
-> >
-> > On Tue, 18 Feb 2020 11:09:10 -0800
-> > Alan Mikhak <alan.mikhak@sifive.com> wrote:
-> >
-> > > On Sat, Feb 15, 2020 at 2:36 AM Marc Zyngier <maz@kernel.org> wrote:
-> > > >
-> > > > On Sat, 15 Feb 2020 09:35:56 +0000,
-> > > > Ard Biesheuvel <ardb@kernel.org> wrote:
-> > > > >
-> > > > > (updated some email addresses in cc, including my own)
-> > > > >
-> > > > > On Sat, 15 Feb 2020 at 01:54, Alan Mikhak <alan.mikhak@sifive.com> wrote:
-> > > > > >
-> > > > > > Hi..
-> > > > > >
-> > > > > > What is the right approach for adding MSI support for the generic
-> > > > > > Linux PCI host driver?
-> > > > > >
-> > > > > > I came across this patch which seems to address a similar
-> > > > > > situation. It seems to have been dropped in v3 of the patchset
-> > > > > > with the explanation "drop MSI patch [for now], since it
-> > > > > > turns out we may not need it".
-> > > > > >
-> > > > > > [PATCH 2/3] pci: designware: add separate driver for the MSI part of the RC
-> > > > > > https://lore.kernel.org/linux-pci/20170821192907.8695-3-ard.biesheuvel@linaro.org/
-> > > > > >
-> > > > > > [PATCH v2 2/3] pci: designware: add separate driver for the MSI part of the RC
-> > > > > > https://lore.kernel.org/linux-pci/20170824184321.19432-3-ard.biesheuvel@linaro.org/
-> > > > > >
-> > > > > > [PATCH v3 0/2] pci: add support for firmware initialized designware RCs
-> > > > > > https://lore.kernel.org/linux-pci/20170828180437.2646-1-ard.biesheuvel@linaro.org/
-> > > > > >
-> > > > >
-> > > > > For the platform in question, it turned out that we could use the MSI
-> > > > > block of the core's GIC interrupt controller directly, which is a much
-> > > > > better solution.
-> > > > >
-> > > > > In general, turning MSIs into wired interrupts is not a great idea,
-> > > > > since the whole point of MSIs is that they are sufficiently similar to
-> > > > > other DMA transactions to ensure that the interrupt won't arrive
-> > > > > before the related memory transactions have completed.
-> > > > >
-> > > > > If your interrupt controller does not have this capability, then yes,
-> > > > > you are stuck with this little widget that decodes an inbound write to
-> > > > > a magic address and turns it into a wired interrupt.
-> > > >
-> > > > I can only second this. It is much better to have a generic block
-> > > > implementing MSI *in a non multiplexed way*, for multiple reasons:
-> > > >
-> > > > - the interrupt vs DMA race that Ard mentions above,
-> > > >
-> > > > - MSIs are very often used to describe the state of per-CPU queues. If
-> > > >   you multiplex MSIs behind a single multiplexing interrupt, it is
-> > > >   always the same CPU that gets interrupted, and you don't benefit
-> > > >   from having multiple queues at all.
-> > > >
-> > > > Even if you have to implement the support as a bunch of wired
-> > > > interrupts, there is still a lot of value in keeping a 1:1 mapping
-> > > > between MSIs and wires.
-> > > >
-> > > > Thanks,
-> > > >
-> > > >         M.
-> > > >
-> > > > --
-> > > > Jazz is not dead, it just smells funny.
-> > >
-> > > Ard and Marc, Thanks for you comments. I will take a look at the code
-> > > related to MSI block of GIC interrupt controller for some reference.
-> >
-> > GICv2m or GICv3 MBI are probably your best bets. Don't get anywhere near
-> > the GICv3 ITS, there lies madness. ;-)
-> >
->
-> True, but for the record, it is the GICv3 ITS that I used on the
-> platform in question, allowing me to ignore the pseudo-MSI widget
-> entirely.
->
-> > > I am looking into supporting MSI in a non-multiplexed way when using
-> > > ECAM and the generic Linux PCI host driver when Linux is booted
-> > > from U-Boot.
-> >
-> > I don't really get the relationship between ECAM and MSIs. They should
-> > be fairly independent, unless that has to do with the allowing the MSI
-> > doorbell to be reached from the PCIe endpoint.
-> >
->
-> The idea is that the PCIe RC is programmed by firmware, and exposed to
-> the OS as generic ECAM. If you have enough iATU registers and enough
-> free address space, that is perfectly feasible.
->
-> The problem is that the generic ECAM binding does not have any
-> provisions for MSI doorbell widgets that turn inbound writes to a
-> magic address into a wired interrupt. My patch models this as a
-> separate device, which allows a generic ECAM DT node to refer to it as
-> its MSI parent.
->
->
-> > > Specifically, what is the right approach for sharing the physical
-> > > address of the MSI data block used in Linux with U-Boot?
-> > >
-> > > I imagine the Linux driver for MSI interrupt controller allocates
-> > > some DMA-able memory for use as the MSI data block. The
-> > > U-Boot PCIe driver would program an inbound ATU region to
-> > > map mem writes from endpoint devices to that MSI data block
-> > > before booting Linux.
-> >
-> > The "MSI block" is really a piece of HW, not memory. So whatever you
-> > have to program in the PCIe RC must allow an endpoint to reach that
-> > device with a 32bit write.
-> >
->
-> Indeed. Either your interrupt controller or your PCIe RC needs to
-> implement the doorbell, but using the former is by far the preferred
-> option.
+On Mon, Feb 17, 2020 at 04:45:18PM +0530, Kishon Vijay Abraham I wrote:
+> Add PCIe Host (RC) and Endpoint (EP) device tree schema for Cadence
+> PCIe core library. Platforms using Cadence PCIe core can include the
+> schemas added here in the platform specific schemas.
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  .../devicetree/bindings/pci/cdns-pcie-ep.yaml | 22 +++++++++
+>  .../bindings/pci/cdns-pcie-host.yaml          | 27 +++++++++++
+>  .../devicetree/bindings/pci/cdns-pcie.yaml    | 45 +++++++++++++++++++
+>  3 files changed, 94 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
+> new file mode 100644
+> index 000000000000..b22d54605009
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
+> @@ -0,0 +1,22 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/pci/cdns-pcie-ep.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Cadence PCIe Endpoint
+> +
+> +maintainers:
+> +  - Tom Joseph <tjoseph@cadence.com>
+> +
+> +allOf:
+> +  - $ref: "cdns-pcie.yaml#"
+> +
+> +properties:
+> +  max-functions:
+> +    description: Maximum number of functions that can be configured
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint8
+> +    minimum: 1
+> +    default: 1
+> +    maximum: 256
 
-Ard and Marc, Thank you so much for your insightful comments.
+Create a pcie-ep.yaml and put this there as every endpoint binding 
+seems to use this and I'm sure there's more properties to come. 
 
-The generic PCI host driver uses ECAM as the access method to
-read/write PCI configuration registers but has no support for MSI.
-I imagine I could use the MSI widget model from Art's patch to
-implement a separate Linux interrupt handler for MSI interrupts.
+Also, the max can only be 255.
 
-I'm not sure but the MSI widget seems to multiplex MSI interrupts
-to one wired interrupt since its MSI doorbell is a u32 value. The widget
-also has code for programming the address of the doorbell into
-Designware PCIe IP registers.
+> diff --git a/Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml b/Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
+> new file mode 100644
+> index 000000000000..ab6e43b636ec
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
+> @@ -0,0 +1,27 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/pci/cdns-pcie-host.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Cadence PCIe Host
+> +
+> +maintainers:
+> +  - Tom Joseph <tjoseph@cadence.com>
+> +
+> +allOf:
+> +  - $ref: "/schemas/pci/pci-bus.yaml#"
+> +  - $ref: "cdns-pcie.yaml#"
+> +
+> +properties:
+> +  cdns,no-bar-match-nbits:
+> +    description:
+> +      Set into the no BAR match register to configure the number of least
+> +      significant bits kept during inbound (PCIe -> AXI) address translations
 
-I imagine I would separate the lines of code that programs the
-PCIe IP MSI registers and move that non-generic PCIe code from
-Linux to U-Boot "firmware". The MSI interrupt handler would
-then become more of a generic PCI MSI interrupt handler.
+This should probably be deprecated IMO. This info should really be 
+extracted from sizes in 'dma-ranges'.
 
-The "MSI block" I refer to is a page of memory that I see being
-allocated and mapped for dma access from endpoint devices
-in the Designware PCI host driver function dw_pcie_msi_init().
-The physical address of this MSI data block is programmed into
-Designware PCIe IP MSI registers by Designware host driver.
-I believe this is the target memory where endpoint MSI write
-requests would be targeted to. I imagine an inbound ATU region
-maps the bus transaction to a physical address within this MSI
-data block to support non-multiplexed MSI interrupt handling.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +    minimum: 0
+> +    maximum: 64
+> +    default: 32
+> +
+> +  msi-parent: true
+> diff --git a/Documentation/devicetree/bindings/pci/cdns-pcie.yaml b/Documentation/devicetree/bindings/pci/cdns-pcie.yaml
+> new file mode 100644
+> index 000000000000..fd690b062de1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/cdns-pcie.yaml
+> @@ -0,0 +1,45 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/pci/cdns-pcie.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Cadence PCIe Core
+> +
+> +maintainers:
+> +  - Tom Joseph <tjoseph@cadence.com>
+> +
+> +properties:
+> +  max-link-speed:
+> +    description: maximum link speed
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +    minimum: 1
+> +    maximum: 4
 
-Whether the doorbell is a u32 value or a block of memory,
-the chicken or the egg dilemma I have is how to share the
-address of the MSI data block between Linux and U-Boot.
-Since all programming code for PCIe IP would reside in the
-U-Boot PCIe driver, U-Boot would need to know the address
-of the MSI data block before it boots Linux. However, if the MSI
-interrupt widget dynamically allocates the MSI data block, it
-would contain no code to program the address into the PCIe IP.
+Standard property in pci-bus.yaml, no need to define it again.
 
-I wonder if the MSI data block can be a reserved block of
-memory whose physical address is predetermined and shared
-via the "reg" entry for the MSI widget between Linux and
-U-Boot? Would that make sense?
+> +
+> +  num-lanes:
+> +    description: maximum number of lanes
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +    minimum: 1
+> +    maximum: 16
 
-Regards,
-Alan
+This should be added to pci-bus.yaml. Assume here it is.
+
+> +
+> +  cdns,max-outbound-regions:
+> +    description: maximum number of outbound regions
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +    minimum: 1
+> +    maximum: 32
+> +    default: 32
+
+This too should be deprecated IMO. It is nothing more than error 
+checking number of 'ranges' entries. But deprecating should be a 
+follow-up.
+
+> +
+> +  phys:
+> +    description:
+> +      One per lane if more than one in the list. If only one PHY listed it must
+> +      manage all lanes.
+> +    minItems: 1
+> +    maxItems: 16
+> +
+> +  phy-names:
+> +    items:
+> +      - const: pcie-phy
+> +    # FIXME: names when more than 1
+> -- 
+> 2.17.1
+> 
