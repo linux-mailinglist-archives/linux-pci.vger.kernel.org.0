@@ -2,181 +2,171 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C6071645A2
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2020 14:36:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E3DF164724
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2020 15:38:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727280AbgBSNg5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Feb 2020 08:36:57 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:11945 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727402AbgBSNg5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Feb 2020 08:36:57 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e4d39b00000>; Wed, 19 Feb 2020 05:35:44 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 19 Feb 2020 05:36:55 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 19 Feb 2020 05:36:55 -0800
-Received: from [10.24.47.202] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 19 Feb
- 2020 13:36:51 +0000
-Subject: Re: [PATCH V2 0/5] Add support to defer core initialization
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        <lorenzo.pieralisi@arm.com>, <andrew.murray@arm.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Milind Parab <mparab@cadence.com>
-CC:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <bhelgaas@google.com>, <thierry.reding@gmail.com>,
-        <Jisheng.Zhang@synaptics.com>, <jonathanh@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20200103100736.27627-1-vidyas@nvidia.com>
- <a8678df3-141b-51ab-b0cb-5e88c6ac91b5@nvidia.com>
- <680a58ec-5d09-3e3b-2fd6-544c32732818@nvidia.com>
- <ca911119-da45-4cbd-b173-2ac8397fd79a@ti.com>
- <b4af8353-3a56-fa31-3391-056050c0440a@ti.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <7e8dafcd-bc3f-4acc-7023-85e24bebdd94@nvidia.com>
-Date:   Wed, 19 Feb 2020 19:06:47 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
-MIME-Version: 1.0
-In-Reply-To: <b4af8353-3a56-fa31-3391-056050c0440a@ti.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1582119344; bh=saeAo+6CA9nP1TJZ3V+aw49+kvyess3aW/RdMbEEWdU=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=jp7782EC/XBpgy64sS1ExDLberT7kmom0+EBPoa/JwCeJ5eBcWoqvElVUL8DW/c4o
-         P4iVpEXDd/7Mx4IDFG1joWasBHaG3MOlqSe+9n9FF8DvtPnqOuym4bVylqIvLAM/L+
-         f3gI2Vo1PEOJvkCSdq4jsp1uKjD7inZKg7M5UxefeizVWMwXLVNGHHbumwD80AwEbS
-         JNl3QToqG1MEzF3FQSdIcigF8fHyudTFK0KtXBjvZfyaCZLPVhwEHyV+jGYJrZCQFI
-         PZGFgopOAcJfe0twr3LizdPO+NaTnuVUEcl/Y0ZaGwpsDhwQjDh+ViOW72J/F1hxZP
-         3dn1vExWmp9vg==
+        id S1726593AbgBSOiT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Feb 2020 09:38:19 -0500
+Received: from mailout2.hostsharing.net ([83.223.78.233]:49149 "EHLO
+        mailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbgBSOiT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Feb 2020 09:38:19 -0500
+X-Greylist: delayed 414 seconds by postgrey-1.27 at vger.kernel.org; Wed, 19 Feb 2020 09:38:17 EST
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by mailout2.hostsharing.net (Postfix) with ESMTPS id 94C02102E8A3B;
+        Wed, 19 Feb 2020 15:31:22 +0100 (CET)
+Received: from localhost (unknown [87.130.102.138])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by h08.hostsharing.net (Postfix) with ESMTPSA id 4B44060EBB3D;
+        Wed, 19 Feb 2020 15:31:22 +0100 (CET)
+X-Mailbox-Line: From 78b4ced5072bfe6e369d20e8b47c279b8c7af12e Mon Sep 17 00:00:00 2001
+Message-Id: <78b4ced5072bfe6e369d20e8b47c279b8c7af12e.1582121613.git.lukas@wunner.de>
+In-Reply-To: <20200207195450.52026-1-stuart.w.hayes@gmail.com>
+References: <20200207195450.52026-1-stuart.w.hayes@gmail.com>
+From:   Lukas Wunner <lukas@wunner.de>
+Date:   Wed, 19 Feb 2020 15:31:13 +0100
+Subject: [PATCH v4] PCI: pciehp: Fix MSI interrupt race
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Stuart Hayes <stuart.w.hayes@gmail.com>
+Cc:     Austin Bolen <austin_bolen@dell.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, narendra_k@dell.com,
+        Enzo Matsumiya <ematsumiya@suse.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Lorenzo, Andrew,
-Kishon did rebase [1] mentioned below and removed dependencies.
-New patch series is available
-@ http://patchwork.ozlabs.org/project/linux-pci/list/?series=3D158088
+From: Stuart Hayes <stuart.w.hayes@gmail.com>
 
-I rebased my patches on top of this and is available for review
-@ http://patchwork.ozlabs.org/project/linux-pci/list/?series=3D158959
+Without this commit, a PCIe hotplug port can stop generating interrupts
+on hotplug events, so device adds and removals will not be seen:
 
-Please let us know the way forward towards merging these patches.
+The pciehp interrupt handler pciehp_isr() reads the Slot Status register
+and then writes back to it to clear the bits that caused the interrupt.
+If a different interrupt event bit gets set between the read and the
+write, pciehp_isr() returns without having cleared all of the interrupt
+event bits.  If this happens when the MSI isn't masked (which by default
+it isn't in handle_edge_irq(), and which it will never be when MSI
+per-vector masking is not supported), we won't get any more hotplug
+interrupts from that device.
 
-Thanks,
-Vidya Sagar
+That is expected behavior, according to the PCIe Base Spec r5.0, section
+6.7.3.4, "Software Notification of Hot-Plug Events".
 
-On 2/5/2020 12:07 PM, Kishon Vijay Abraham I wrote:
-> External email: Use caution opening links or attachments
->=20
->=20
-> +Tom, Milind
->=20
-> Hi,
->=20
-> On 23/01/20 3:25 PM, Kishon Vijay Abraham I wrote:
->> Hi Vidya Sagar,
->>
->> On 23/01/20 2:54 pm, Vidya Sagar wrote:
->>> Hi Kishon,
->>> Apologies for pinging again. Could you please review this series?
->>>
->>> Thanks,
->>> Vidya Sagar
->>>
->>> On 1/11/2020 5:18 PM, Vidya Sagar wrote:
->>>> Hi Kishon,
->>>> Could you please review this series?
->>>>
->>>> Also, this series depends on the following change of yours
->>>> http://patchwork.ozlabs.org/patch/1109884/
->>>> Whats the plan to get this merged?
->>
->> I've posted the endpoint improvements as a separate series
->> http://lore.kernel.org/r/20191231100331.6316-1-kishon@ti.com
->>
->> I'd prefer this series gets tested by others. I'm also planning to test
->> this series. Sorry for the delay. I'll test review and test this series
->> early next week.
->=20
-> I tested this series with DRA7 configured in EP mode. So for the series
-> itself
->=20
-> Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
->=20
-> Tom, Can you test this series in Cadence platform?
->=20
-> Lorenzo, Andrew,
->=20
-> How do you want to go about merging this series? This series depends on
-> [1] which in turn is dependent on two other series. If required, I can
-> rebase [1] on mainline kernel and remove it's dependencies with the
-> other series. That way this series and [1] could be merged. And the
-> other series could be worked later. Kindly let me know.
->=20
-> Thanks
-> Kishon
->=20
-> [1] ->
-> https://lore.kernel.org/linux-pci/20191231100331.6316-1-kishon@ti.com/
->>
->> Thanks
->> Kishon
->>
->>>>
->>>> Thanks,
->>>> Vidya Sagar
->>>>
->>>> On 1/3/20 3:37 PM, Vidya Sagar wrote:
->>>>> EPC/DesignWare core endpoint subsystems assume that the core
->>>>> registers are
->>>>> available always for SW to initialize. But, that may not be the case
->>>>> always.
->>>>> For example, Tegra194 hardware has the core running on a clock that
->>>>> is derived
->>>>> from reference clock that is coming into the endpoint system from hos=
-t.
->>>>> Hence core is made available asynchronously based on when host system
->>>>> is going
->>>>> for enumeration of devices. To accommodate this kind of hardwares,
->>>>> support is
->>>>> required to defer the core initialization until the respective
->>>>> platform driver
->>>>> informs the EPC/DWC endpoint sub-systems that the core is indeed
->>>>> available for
->>>>> initiaization. This patch series is attempting to add precisely that.
->>>>> This series is based on Kishon's patch that adds notification mechani=
-sm
->>>>> support from EPC to EPF @ http://patchwork.ozlabs.org/patch/1109884/
->>>>>
->>>>> Vidya Sagar (5):
->>>>>     PCI: endpoint: Add core init notifying feature
->>>>>     PCI: dwc: Refactor core initialization code for EP mode
->>>>>     PCI: endpoint: Add notification for core init completion
->>>>>     PCI: dwc: Add API to notify core initialization completion
->>>>>     PCI: pci-epf-test: Add support to defer core initialization
->>>>>
->>>>>    .../pci/controller/dwc/pcie-designware-ep.c   |=C2=A0 79 +++++++--=
+Because the Presence Detect Changed and Data Link Layer State Changed
+event bits can both get set at nearly the same time when a device is
+added or removed, this is more likely to happen than it might seem.
+The issue was found (and can be reproduced rather easily) by connecting
+and disconnecting an NVMe storage device on at least one system model
+where the NVMe devices were being connected to an AMD PCIe port (PCI
+device 0x1022/0x1483).
+
+Fix the issue by modifying pciehp_isr() to loop back and re-read the
+Slot Status register immediately after writing to it, until it sees that
+all of the event status bits have been cleared.
+
+Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
+[lukas: drop loop count limitation, write "events" instead of "status",
+don't loop back in INTx and poll modes, tweak code comment & commit msg]
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
 ---
->>>>>    drivers/pci/controller/dwc/pcie-designware.h  |=C2=A0 11 ++
->>>>>    drivers/pci/endpoint/functions/pci-epf-test.c | 118 ++++++++++++--=
-----
->>>>>    drivers/pci/endpoint/pci-epc-core.c           |=C2=A0 19 ++-
->>>>>    include/linux/pci-epc.h                       |=C2=A0=C2=A0 2 +
->>>>>    include/linux/pci-epf.h                       |=C2=A0=C2=A0 5 +
->>>>>    6 files changed, 164 insertions(+), 70 deletions(-)
->>>>>
+v4 (lukas):
+  * drop "MAX_ISR_STATUS_READS" loop count limitation
+  * drop unnecessary braces around PCI_EXP_SLTSTA_* flags
+  * write "events" instead of "status" variable to Slot Status register
+    to avoid unnecessary loop iterations if the same bit gets set
+    repeatedly
+  * don't loop back in INTx and poll modes
+  * shorten and tweak code comment & commit message
+
+v3:
+  * removed pvm_capable flag (from v2) since MSI may not be masked
+    regardless of whether per-vector masking is supported
+  * tweaked comments
+
+v2:
+  * fixed ctrl_warn() call
+  * improved comments
+  * added pvm_capable flag and changed pciehp_isr() to loop back only when
+    pvm_capable flag not set (suggested by Lukas Wunner)
+
+ drivers/pci/hotplug/pciehp_hpc.c | 26 ++++++++++++++++++++------
+ 1 file changed, 20 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+index 8a2cb1764386..f64d10df9eb5 100644
+--- a/drivers/pci/hotplug/pciehp_hpc.c
++++ b/drivers/pci/hotplug/pciehp_hpc.c
+@@ -527,7 +527,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
+ 	struct controller *ctrl = (struct controller *)dev_id;
+ 	struct pci_dev *pdev = ctrl_dev(ctrl);
+ 	struct device *parent = pdev->dev.parent;
+-	u16 status, events;
++	u16 status, events = 0;
+ 
+ 	/*
+ 	 * Interrupts only occur in D3hot or shallower and only if enabled
+@@ -552,6 +552,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
+ 		}
+ 	}
+ 
++read_status:
+ 	pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &status);
+ 	if (status == (u16) ~0) {
+ 		ctrl_info(ctrl, "%s: no response from device\n", __func__);
+@@ -564,24 +565,37 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
+ 	 * Slot Status contains plain status bits as well as event
+ 	 * notification bits; right now we only want the event bits.
+ 	 */
+-	events = status & (PCI_EXP_SLTSTA_ABP | PCI_EXP_SLTSTA_PFD |
+-			   PCI_EXP_SLTSTA_PDC | PCI_EXP_SLTSTA_CC |
+-			   PCI_EXP_SLTSTA_DLLSC);
++	status &= PCI_EXP_SLTSTA_ABP | PCI_EXP_SLTSTA_PFD |
++		  PCI_EXP_SLTSTA_PDC | PCI_EXP_SLTSTA_CC |
++		  PCI_EXP_SLTSTA_DLLSC;
+ 
+ 	/*
+ 	 * If we've already reported a power fault, don't report it again
+ 	 * until we've done something to handle it.
+ 	 */
+ 	if (ctrl->power_fault_detected)
+-		events &= ~PCI_EXP_SLTSTA_PFD;
++		status &= ~PCI_EXP_SLTSTA_PFD;
+ 
++	events |= status;
+ 	if (!events) {
+ 		if (parent)
+ 			pm_runtime_put(parent);
+ 		return IRQ_NONE;
+ 	}
+ 
+-	pcie_capability_write_word(pdev, PCI_EXP_SLTSTA, events);
++	if (status) {
++		pcie_capability_write_word(pdev, PCI_EXP_SLTSTA, events);
++
++		/*
++		 * In MSI mode, all event bits must be zero before the port
++		 * will send a new interrupt (PCIe Base Spec r5.0 sec 6.7.3.4).
++		 * So re-read the Slot Status register in case a bit was set
++		 * between read and write.
++		 */
++		if (pci_dev_msi_enabled(pdev) && !pciehp_poll_mode)
++			goto read_status;
++	}
++
+ 	ctrl_dbg(ctrl, "pending interrupts %#06x from Slot Status\n", events);
+ 	if (parent)
+ 		pm_runtime_put(parent);
+-- 
+2.24.0
+
