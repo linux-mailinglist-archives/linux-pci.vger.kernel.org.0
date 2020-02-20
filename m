@@ -2,85 +2,271 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 76BDB165277
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2020 23:24:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B3B2165527
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2020 03:39:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727727AbgBSWY5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Feb 2020 17:24:57 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:34831 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727163AbgBSWY5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Feb 2020 17:24:57 -0500
-Received: by mail-oi1-f193.google.com with SMTP id b18so25521148oie.2;
-        Wed, 19 Feb 2020 14:24:57 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bw/arhxO0zD6uxPv9B55JT/z9CSekm6k6Bmp/kVtLV0=;
-        b=iDoyGV5c0sHKnm8fR8KkHHXF/ntWO0w46zg5ISA1UjqFbYZT6PWEJgNscnK/WbzFiq
-         zST2+piKM7q4lOxSJE3idurDkXnWN9cSm6HbTejthJM8QihAnSXj8sXAo7xbKMTtaAS7
-         R+WoTJmlNxUJkgnSnwOknoV1cqtrkw7YI9ZMijGBZoRy9hvljRb3nHsjSnn0202Hxko5
-         ctpdzYwDrwk5IAm+qS6+AOz7vbKP3Y95XtDb/Qv/Y2j1gvtcBF4uxDIfF+BjDYotZnno
-         20hfTkJf79AF5oeNR9v6EGFKZ/8u7aOzMtdKfUJeOVRhd5US+KM0S1fes2AIirl+AuPS
-         hjwQ==
-X-Gm-Message-State: APjAAAUGzG6jwCLUc/rfUKD8lpIHVFw6wRIecqwf7YvXqQxbHcZIFltT
-        MvGzhud4J5MSdT4SGnsLUg==
-X-Google-Smtp-Source: APXvYqzZzuIwDzmzfqhTKUe49az+Etwqyco/nG1nDw+t4D7VEkxMrWlgNAsahLPneOunxOSWnXEiHQ==
-X-Received: by 2002:aca:d903:: with SMTP id q3mr6124909oig.12.1582151096719;
-        Wed, 19 Feb 2020 14:24:56 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id l80sm428436oib.37.2020.02.19.14.24.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 14:24:56 -0800 (PST)
-Received: (nullmailer pid 16262 invoked by uid 1000);
-        Wed, 19 Feb 2020 22:24:54 -0000
-Date:   Wed, 19 Feb 2020 16:24:54 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     bhelgaas@google.com, will@kernel.org, robh+dt@kernel.org,
-        lorenzo.pieralisi@arm.com, joro@8bytes.org,
-        baolu.lu@linux.intel.com, linux-doc@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
-        iommu@lists.linux-foundation.org, corbet@lwn.net,
-        mark.rutland@arm.com, liviu.dudau@arm.com, sudeep.holla@arm.com,
-        guohanjun@huawei.com, rjw@rjwysocki.net, lenb@kernel.org,
-        robin.murphy@arm.com, dwmw2@infradead.org,
-        amurray@thegoodpenguin.co.uk, frowand.list@gmail.com
-Subject: Re: [PATCH 01/11] dt-bindings: PCI: generic: Add ats-supported
- property
-Message-ID: <20200219222454.GA16221@bogus>
-References: <20200213165049.508908-1-jean-philippe@linaro.org>
- <20200213165049.508908-2-jean-philippe@linaro.org>
+        id S1727469AbgBTCjL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Feb 2020 21:39:11 -0500
+Received: from mga11.intel.com ([192.55.52.93]:57754 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727402AbgBTCjL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 19 Feb 2020 21:39:11 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Feb 2020 18:39:10 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,462,1574150400"; 
+   d="scan'208";a="383001434"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 19 Feb 2020 18:39:09 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1j4bk4-0005F9-9s; Thu, 20 Feb 2020 10:39:08 +0800
+Date:   Thu, 20 Feb 2020 10:38:40 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:review/02-17-yicong-speed-v4] BUILD SUCCESS
+ dda5aba681c4cb87450ef4fdeb683d4e516091d7
+Message-ID: <5e4df130.8OGVT8/DP4AvPs2p%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200213165049.508908-2-jean-philippe@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 13 Feb 2020 17:50:39 +0100, Jean-Philippe Brucker wrote:
-> Add a way for firmware to tell the OS that ATS is supported by the PCI
-> root complex. An endpoint with ATS enabled may send Translation Requests
-> and Translated Memory Requests, which look just like Normal Memory
-> Requests with a non-zero AT field. So a root controller that ignores the
-> AT field may simply forward the request to the IOMMU as a Normal Memory
-> Request, which could end badly. In any case, the endpoint will be
-> unusable.
-> 
-> The ats-supported property allows the OS to only enable ATS in endpoints
-> if the root controller can handle ATS requests. Only add the property to
-> pcie-host-ecam-generic for the moment. For non-generic root controllers,
-> availability of ATS can be inferred from the compatible string.
-> 
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> ---
->  Documentation/devicetree/bindings/pci/host-generic-pci.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  review/02-17-yicong-speed-v4
+branch HEAD: dda5aba681c4cb87450ef4fdeb683d4e516091d7  PCI: Reduce redundancy in current_link_speed_show()
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+elapsed time: 2883m
+
+configs tested: 216
+configs skipped: 0
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+arm                         at91_dt_defconfig
+arm                           efm32_defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                        multi_v7_defconfig
+arm                        shmobile_defconfig
+arm                           sunxi_defconfig
+arm64                               defconfig
+sparc                            allyesconfig
+nios2                         10m50_defconfig
+xtensa                          iss_defconfig
+s390                       zfcpdump_defconfig
+parisc                            allnoconfig
+riscv                            allyesconfig
+ia64                              allnoconfig
+mips                             allyesconfig
+powerpc                             defconfig
+sparc64                          allyesconfig
+s390                             allmodconfig
+m68k                           sun3_defconfig
+sh                            titan_defconfig
+sparc64                             defconfig
+openrisc                    or1ksim_defconfig
+sh                               allmodconfig
+i386                              allnoconfig
+riscv                          rv32_defconfig
+sh                                allnoconfig
+s390                                defconfig
+s390                          debug_defconfig
+sh                  sh7785lcr_32bit_defconfig
+powerpc                           allnoconfig
+s390                              allnoconfig
+mips                      malta_kvm_defconfig
+i386                             alldefconfig
+i386                             allyesconfig
+i386                                defconfig
+ia64                             alldefconfig
+ia64                             allmodconfig
+ia64                             allyesconfig
+ia64                                defconfig
+c6x                              allyesconfig
+c6x                        evmc6678_defconfig
+nios2                         3c120_defconfig
+openrisc                 simple_smp_defconfig
+xtensa                       common_defconfig
+alpha                               defconfig
+csky                                defconfig
+nds32                             allnoconfig
+nds32                               defconfig
+h8300                     edosk2674_defconfig
+h8300                    h8300h-sim_defconfig
+h8300                       h8s-sim_defconfig
+m68k                             allmodconfig
+m68k                       m5475evb_defconfig
+m68k                          multi_defconfig
+arc                              allyesconfig
+arc                                 defconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                             allmodconfig
+mips                              allnoconfig
+mips                      fuloong2e_defconfig
+parisc                           allyesconfig
+parisc                generic-32bit_defconfig
+parisc                generic-64bit_defconfig
+x86_64               randconfig-a001-20200218
+x86_64               randconfig-a002-20200218
+x86_64               randconfig-a003-20200218
+i386                 randconfig-a001-20200218
+i386                 randconfig-a002-20200218
+i386                 randconfig-a003-20200218
+x86_64               randconfig-a001-20200219
+x86_64               randconfig-a002-20200219
+x86_64               randconfig-a003-20200219
+i386                 randconfig-a001-20200219
+i386                 randconfig-a002-20200219
+i386                 randconfig-a003-20200219
+alpha                randconfig-a001-20200219
+m68k                 randconfig-a001-20200219
+nds32                randconfig-a001-20200219
+parisc               randconfig-a001-20200219
+riscv                randconfig-a001-20200219
+c6x                  randconfig-a001-20200219
+h8300                randconfig-a001-20200219
+microblaze           randconfig-a001-20200219
+nios2                randconfig-a001-20200219
+sparc64              randconfig-a001-20200219
+csky                 randconfig-a001-20200219
+openrisc             randconfig-a001-20200219
+s390                 randconfig-a001-20200219
+xtensa               randconfig-a001-20200219
+x86_64               randconfig-b001-20200219
+x86_64               randconfig-b002-20200219
+x86_64               randconfig-b003-20200219
+i386                 randconfig-b001-20200219
+i386                 randconfig-b002-20200219
+i386                 randconfig-b003-20200219
+x86_64               randconfig-b001-20200218
+x86_64               randconfig-b002-20200218
+x86_64               randconfig-b003-20200218
+i386                 randconfig-b001-20200218
+i386                 randconfig-b002-20200218
+i386                 randconfig-b003-20200218
+x86_64               randconfig-c001-20200219
+x86_64               randconfig-c002-20200219
+x86_64               randconfig-c003-20200219
+i386                 randconfig-c001-20200219
+i386                 randconfig-c002-20200219
+i386                 randconfig-c003-20200219
+x86_64               randconfig-c001-20200218
+x86_64               randconfig-c002-20200218
+x86_64               randconfig-c003-20200218
+i386                 randconfig-c001-20200218
+i386                 randconfig-c002-20200218
+i386                 randconfig-c003-20200218
+x86_64               randconfig-c001-20200220
+x86_64               randconfig-c002-20200220
+x86_64               randconfig-c003-20200220
+i386                 randconfig-c001-20200220
+i386                 randconfig-c002-20200220
+i386                 randconfig-c003-20200220
+x86_64               randconfig-d001-20200219
+x86_64               randconfig-d002-20200219
+x86_64               randconfig-d003-20200219
+i386                 randconfig-d001-20200219
+i386                 randconfig-d002-20200219
+i386                 randconfig-d003-20200219
+x86_64               randconfig-d001-20200218
+x86_64               randconfig-d002-20200218
+x86_64               randconfig-d003-20200218
+i386                 randconfig-d001-20200218
+i386                 randconfig-d002-20200218
+i386                 randconfig-d003-20200218
+x86_64               randconfig-e001-20200219
+x86_64               randconfig-e002-20200219
+x86_64               randconfig-e003-20200219
+i386                 randconfig-e001-20200219
+i386                 randconfig-e002-20200219
+i386                 randconfig-e003-20200219
+x86_64               randconfig-e001-20200218
+x86_64               randconfig-e002-20200218
+x86_64               randconfig-e003-20200218
+i386                 randconfig-e001-20200218
+i386                 randconfig-e002-20200218
+i386                 randconfig-e003-20200218
+x86_64               randconfig-f001-20200218
+x86_64               randconfig-f002-20200218
+x86_64               randconfig-f003-20200218
+i386                 randconfig-f001-20200218
+i386                 randconfig-f002-20200218
+i386                 randconfig-f003-20200218
+x86_64               randconfig-f001-20200219
+x86_64               randconfig-f002-20200219
+x86_64               randconfig-f003-20200219
+i386                 randconfig-f001-20200219
+i386                 randconfig-f002-20200219
+i386                 randconfig-f003-20200219
+x86_64               randconfig-f001-20200220
+x86_64               randconfig-f002-20200220
+x86_64               randconfig-f003-20200220
+i386                 randconfig-f001-20200220
+i386                 randconfig-f002-20200220
+i386                 randconfig-f003-20200220
+x86_64               randconfig-g001-20200218
+x86_64               randconfig-g002-20200218
+x86_64               randconfig-g003-20200218
+i386                 randconfig-g001-20200218
+i386                 randconfig-g002-20200218
+i386                 randconfig-g003-20200218
+x86_64               randconfig-g001-20200219
+x86_64               randconfig-g002-20200219
+x86_64               randconfig-g003-20200219
+i386                 randconfig-g001-20200219
+i386                 randconfig-g002-20200219
+i386                 randconfig-g003-20200219
+x86_64               randconfig-h001-20200219
+x86_64               randconfig-h002-20200219
+x86_64               randconfig-h003-20200219
+i386                 randconfig-h001-20200219
+i386                 randconfig-h002-20200219
+i386                 randconfig-h003-20200219
+arc                  randconfig-a001-20200219
+arm                  randconfig-a001-20200219
+arm64                randconfig-a001-20200219
+ia64                 randconfig-a001-20200219
+powerpc              randconfig-a001-20200219
+sparc                randconfig-a001-20200219
+riscv                            allmodconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                    nommu_virt_defconfig
+s390                             alldefconfig
+s390                             allyesconfig
+sh                          rsk7269_defconfig
+sparc                               defconfig
+sparc64                          allmodconfig
+sparc64                           allnoconfig
+um                                  defconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                               rhel-7.6
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
