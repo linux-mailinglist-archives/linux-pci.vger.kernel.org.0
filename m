@@ -2,223 +2,307 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6FA66166728
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2020 20:29:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 011D01669E2
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2020 22:33:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728248AbgBTT3p (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Feb 2020 14:29:45 -0500
-Received: from mga01.intel.com ([192.55.52.88]:16662 "EHLO mga01.intel.com"
+        id S1729087AbgBTVdb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Feb 2020 16:33:31 -0500
+Received: from mga09.intel.com ([134.134.136.24]:12800 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728964AbgBTT3p (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 20 Feb 2020 14:29:45 -0500
+        id S1726670AbgBTVdb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 20 Feb 2020 16:33:31 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Feb 2020 11:29:44 -0800
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Feb 2020 13:33:30 -0800
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,465,1574150400"; 
-   d="scan'208";a="228993659"
-Received: from ykim6-mobl1.amr.corp.intel.com (HELO arch-ashland-svkelley.intel.com) ([10.254.188.97])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 20 Feb 2020 11:29:44 -0800
-From:   Sean V Kelley <sean.v.kelley@linux.intel.com>
-To:     tglx@linutronix.de, bhelgaas@google.com, corbet@lwn.net,
-        mingo@redhat.com, bp@alien8.de
-Cc:     x86@kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        kar.hin.ong@ni.com, sassmann@kpanic.de,
-        Sean V Kelley <sean.v.kelley@linux.intel.com>
-Subject: [PATCH v2 2/2] Documentation:PCI: Add background on Boot Interrupts
-Date:   Thu, 20 Feb 2020 11:29:30 -0800
-Message-Id: <20200220192930.64820-3-sean.v.kelley@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200220192930.64820-1-sean.v.kelley@linux.intel.com>
-References: <20200220192930.64820-1-sean.v.kelley@linux.intel.com>
+   d="scan'208";a="240145464"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga006.jf.intel.com with ESMTP; 20 Feb 2020 13:33:28 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1j4tRo-000Br2-1s; Fri, 21 Feb 2020 05:33:28 +0800
+Date:   Fri, 21 Feb 2020 05:32:46 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:pci/hotplug] BUILD SUCCESS
+ 66d2c07eef45e6db477b543a946cfe895a8f9f2a
+Message-ID: <5e4efafe.0bQE984NCHs5OYyi%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Improve understanding of the PCI quirks for this legacy PCI interrupt
-behavior to the benefit of developers and users alike.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/hotplug
+branch HEAD: 66d2c07eef45e6db477b543a946cfe895a8f9f2a  PCI: pciehp: Add DMI table for in-band presence disabled
 
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Sean V Kelley <sean.v.kelley@linux.intel.com>
+elapsed time: 2884m
+
+configs tested: 252
+configs skipped: 0
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+arm                         at91_dt_defconfig
+arm                           efm32_defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                        multi_v7_defconfig
+arm                        shmobile_defconfig
+arm                           sunxi_defconfig
+arm64                               defconfig
+sparc                            allyesconfig
+sparc64                          allmodconfig
+s390                             allmodconfig
+openrisc                 simple_smp_defconfig
+nios2                         10m50_defconfig
+xtensa                       common_defconfig
+s390                          debug_defconfig
+c6x                        evmc6678_defconfig
+sparc64                             defconfig
+openrisc                    or1ksim_defconfig
+ia64                             allyesconfig
+riscv                    nommu_virt_defconfig
+ia64                                defconfig
+um                                  defconfig
+h8300                    h8300h-sim_defconfig
+nios2                         3c120_defconfig
+h8300                       h8s-sim_defconfig
+riscv                            allyesconfig
+ia64                             alldefconfig
+powerpc                             defconfig
+sh                               allmodconfig
+sh                                allnoconfig
+ia64                              allnoconfig
+s390                                defconfig
+sh                  sh7785lcr_32bit_defconfig
+um                           x86_64_defconfig
+s390                              allnoconfig
+mips                      malta_kvm_defconfig
+riscv                             allnoconfig
+alpha                               defconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+arc                                 defconfig
+m68k                             allmodconfig
+parisc                generic-64bit_defconfig
+sh                            titan_defconfig
+i386                             alldefconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+ia64                             allmodconfig
+c6x                              allyesconfig
+xtensa                          iss_defconfig
+csky                                defconfig
+nds32                             allnoconfig
+nds32                               defconfig
+h8300                     edosk2674_defconfig
+m68k                       m5475evb_defconfig
+m68k                          multi_defconfig
+m68k                           sun3_defconfig
+arc                              allyesconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                             allmodconfig
+mips                              allnoconfig
+mips                             allyesconfig
+mips                      fuloong2e_defconfig
+parisc                            allnoconfig
+parisc                           allyesconfig
+parisc                generic-32bit_defconfig
+x86_64               randconfig-a001-20200219
+x86_64               randconfig-a002-20200219
+x86_64               randconfig-a003-20200219
+i386                 randconfig-a001-20200219
+i386                 randconfig-a002-20200219
+i386                 randconfig-a003-20200219
+x86_64               randconfig-a001-20200220
+x86_64               randconfig-a002-20200220
+x86_64               randconfig-a003-20200220
+i386                 randconfig-a001-20200220
+i386                 randconfig-a002-20200220
+i386                 randconfig-a003-20200220
+x86_64               randconfig-a001-20200218
+x86_64               randconfig-a002-20200218
+x86_64               randconfig-a003-20200218
+i386                 randconfig-a001-20200218
+i386                 randconfig-a002-20200218
+i386                 randconfig-a003-20200218
+parisc               randconfig-a001-20200219
+riscv                randconfig-a001-20200219
+mips                 randconfig-a001-20200219
+m68k                 randconfig-a001-20200219
+alpha                randconfig-a001-20200219
+nds32                randconfig-a001-20200219
+alpha                randconfig-a001-20200220
+m68k                 randconfig-a001-20200220
+mips                 randconfig-a001-20200220
+nds32                randconfig-a001-20200220
+parisc               randconfig-a001-20200220
+riscv                randconfig-a001-20200220
+c6x                  randconfig-a001-20200220
+h8300                randconfig-a001-20200220
+microblaze           randconfig-a001-20200220
+nios2                randconfig-a001-20200220
+sparc64              randconfig-a001-20200220
+c6x                  randconfig-a001-20200219
+h8300                randconfig-a001-20200219
+microblaze           randconfig-a001-20200219
+nios2                randconfig-a001-20200219
+sparc64              randconfig-a001-20200219
+csky                 randconfig-a001-20200219
+openrisc             randconfig-a001-20200219
+s390                 randconfig-a001-20200219
+xtensa               randconfig-a001-20200219
+csky                 randconfig-a001-20200220
+openrisc             randconfig-a001-20200220
+s390                 randconfig-a001-20200220
+sh                   randconfig-a001-20200220
+xtensa               randconfig-a001-20200220
+sh                   randconfig-a001-20200219
+x86_64               randconfig-b001-20200220
+x86_64               randconfig-b002-20200220
+x86_64               randconfig-b003-20200220
+i386                 randconfig-b001-20200220
+i386                 randconfig-b002-20200220
+i386                 randconfig-b003-20200220
+x86_64               randconfig-b001-20200219
+x86_64               randconfig-b002-20200219
+x86_64               randconfig-b003-20200219
+i386                 randconfig-b001-20200219
+i386                 randconfig-b002-20200219
+i386                 randconfig-b003-20200219
+x86_64               randconfig-c001-20200220
+x86_64               randconfig-c002-20200220
+x86_64               randconfig-c003-20200220
+i386                 randconfig-c001-20200220
+i386                 randconfig-c002-20200220
+i386                 randconfig-c003-20200220
+x86_64               randconfig-c001-20200219
+x86_64               randconfig-c002-20200219
+x86_64               randconfig-c003-20200219
+i386                 randconfig-c001-20200219
+i386                 randconfig-c002-20200219
+i386                 randconfig-c003-20200219
+x86_64               randconfig-d001-20200219
+x86_64               randconfig-d002-20200219
+x86_64               randconfig-d003-20200219
+i386                 randconfig-d001-20200219
+i386                 randconfig-d002-20200219
+i386                 randconfig-d003-20200219
+x86_64               randconfig-d001-20200220
+x86_64               randconfig-d002-20200220
+x86_64               randconfig-d003-20200220
+i386                 randconfig-d001-20200220
+i386                 randconfig-d002-20200220
+i386                 randconfig-d003-20200220
+x86_64               randconfig-d001-20200218
+x86_64               randconfig-d002-20200218
+x86_64               randconfig-d003-20200218
+i386                 randconfig-d001-20200218
+i386                 randconfig-d002-20200218
+i386                 randconfig-d003-20200218
+x86_64               randconfig-e001-20200219
+x86_64               randconfig-e002-20200219
+x86_64               randconfig-e003-20200219
+i386                 randconfig-e001-20200219
+i386                 randconfig-e002-20200219
+i386                 randconfig-e003-20200219
+x86_64               randconfig-e001-20200220
+x86_64               randconfig-e002-20200220
+x86_64               randconfig-e003-20200220
+i386                 randconfig-e001-20200220
+i386                 randconfig-e002-20200220
+i386                 randconfig-e003-20200220
+x86_64               randconfig-f001-20200219
+x86_64               randconfig-f002-20200219
+x86_64               randconfig-f003-20200219
+i386                 randconfig-f001-20200219
+i386                 randconfig-f002-20200219
+i386                 randconfig-f003-20200219
+x86_64               randconfig-f001-20200220
+x86_64               randconfig-f002-20200220
+x86_64               randconfig-f003-20200220
+i386                 randconfig-f001-20200220
+i386                 randconfig-f002-20200220
+i386                 randconfig-f003-20200220
+x86_64               randconfig-g001-20200219
+x86_64               randconfig-g002-20200219
+x86_64               randconfig-g003-20200219
+i386                 randconfig-g001-20200219
+i386                 randconfig-g002-20200219
+i386                 randconfig-g003-20200219
+x86_64               randconfig-g001-20200220
+x86_64               randconfig-g002-20200220
+x86_64               randconfig-g003-20200220
+i386                 randconfig-g001-20200220
+i386                 randconfig-g002-20200220
+i386                 randconfig-g003-20200220
+x86_64               randconfig-g001-20200218
+x86_64               randconfig-g002-20200218
+x86_64               randconfig-g003-20200218
+i386                 randconfig-g001-20200218
+i386                 randconfig-g002-20200218
+i386                 randconfig-g003-20200218
+x86_64               randconfig-h001-20200219
+x86_64               randconfig-h002-20200219
+x86_64               randconfig-h003-20200219
+i386                 randconfig-h001-20200219
+i386                 randconfig-h002-20200219
+i386                 randconfig-h003-20200219
+x86_64               randconfig-h001-20200220
+x86_64               randconfig-h002-20200220
+x86_64               randconfig-h003-20200220
+i386                 randconfig-h001-20200220
+i386                 randconfig-h002-20200220
+i386                 randconfig-h003-20200220
+arc                  randconfig-a001-20200219
+arm                  randconfig-a001-20200219
+arm64                randconfig-a001-20200219
+ia64                 randconfig-a001-20200219
+powerpc              randconfig-a001-20200219
+sparc                randconfig-a001-20200219
+arc                  randconfig-a001-20200220
+arm                  randconfig-a001-20200220
+arm64                randconfig-a001-20200220
+ia64                 randconfig-a001-20200220
+powerpc              randconfig-a001-20200220
+sparc                randconfig-a001-20200220
+riscv                            allmodconfig
+s390                             alldefconfig
+s390                             allyesconfig
+s390                       zfcpdump_defconfig
+sh                          rsk7269_defconfig
+sparc                               defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+um                             i386_defconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                               rhel-7.6
+
 ---
- Documentation/PCI/boot-interrupts.rst | 153 ++++++++++++++++++++++++++
- Documentation/PCI/index.rst           |   1 +
- 2 files changed, 154 insertions(+)
- create mode 100644 Documentation/PCI/boot-interrupts.rst
-
-diff --git a/Documentation/PCI/boot-interrupts.rst b/Documentation/PCI/boot-interrupts.rst
-new file mode 100644
-index 000000000000..b4d42481fd7f
---- /dev/null
-+++ b/Documentation/PCI/boot-interrupts.rst
-@@ -0,0 +1,153 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+===============
-+Boot Interrupts
-+===============
-+
-+:Author: - Sean V Kelley <sean.v.kelley@linux.intel.com>
-+
-+Overview
-+========
-+
-+On PCI Express, interrupts are represented with either MSI or inbound interrupt
-+messages (Assert_INTx/Deassert_INTx). The integrated IO-APIC in a given Core
-+IO converts the legacy interrupt messages from PCI Express to MSI interrupts.
-+If the IO-APIC is disabled (via the mask bits in the IO-APIC table entries),
-+the messages are routed to the legacy PCH. This in-band interrupt mechanism was
-+traditionally necessary for systems that did not support the IO-APIC and for
-+boot. Intel in the past has used the term "boot interrupts" to describe this
-+mechanism. Further, the PCI Express protocol describes this in-band legacy
-+wire-interrupt INTx mechanism for I/O devices to signal PCI-style level
-+interrupts. The subsequent paragraphs describe problems with the Core IO
-+handling of INTx message routing to the PCH and mitigation within BIOS and
-+the OS.
-+
-+
-+Problem
-+=======
-+
-+When in-band legacy INTx messages are forwarded to the PCH, they in turn
-+trigger a new interrupt for which the OS likely lacks a handler. When an
-+interrupt goes unhandled over time, they are tracked by the Linux kernel
-+as Spurious Interrupts. The IRQ will be disabled by the Linux kernel after
-+it reaches a specific count with the error "nobody cared". This disabled
-+IRQ now prevents valid usage by an existing interrupt which may happen to
-+share the IRQ line.
-+
-+irq 19: nobody cared (try booting with the "irqpoll" option)
-+CPU: 0 PID: 2988 Comm: irq/34-nipalk Tainted: 4.14.87-rt49-02410-g4a640ec-dirty #1
-+Hardware name: National Instruments NI PXIe-8880/NI PXIe-8880, BIOS 2.1.5f1 01/09/2020
-+Call Trace:
-+<IRQ>
-+ ? dump_stack+0x46/0x5e
-+ ? __report_bad_irq+0x2e/0xb0
-+ ? note_interrupt+0x242/0x290
-+ ? nNIKAL100_memoryRead16+0x8/0x10 [nikal]
-+ ? handle_irq_event_percpu+0x55/0x70
-+ ? handle_irq_event+0x4f/0x80
-+ ? handle_fasteoi_irq+0x81/0x180
-+ ? handle_irq+0x1c/0x30
-+ ? do_IRQ+0x41/0xd0
-+ ? common_interrupt+0x84/0x84
-+</IRQ>
-+
-+handlers:
-+irq_default_primary_handler threaded usb_hcd_irq
-+Disabling IRQ #19
-+
-+
-+Conditions
-+==========
-+
-+The use of threaded interrupts is the most likely condition to trigger this
-+problem today. Threaded interrupts may not be reenabled after the IRQ handler
-+wakes. These "one shot" conditions mean that the threaded interrupt needs to
-+keep the interrupt line masked until the threaded handler has run. Especially
-+when dealing with high data rate interrupts, the thread needs to run to completion
-+otherwise some handlers will end up in stack overflows since the interrupt
-+of the issuing device is still active.
-+
-+Affected Chipsets
-+=================
-+
-+The legacy interrupt forwarding mechansim exists today in a number of devices
-+including but not limited to chipsets from AMD/ATI, Broadcom, and Intel. Changes
-+made through the mitigations below have been applied to drivers/pci/quirks.c
-+
-+Starting with ICX there are no longer any IO-APICs in the Core IO's devices.
-+IO-APIC is only in the PCH.  Devices connected to the Core IO's PCIE Root Ports
-+will use native MSI/MSI-X mechanisms.
-+
-+Mitigations
-+===========
-+
-+The mitigations take the form of PCI quirks. The preference has been to first
-+identify and make use of a means to disable the routing to the PCH. In such a
-+case a quirk to disable boot interrupt generation can be added.[1]
-+
-+Intel® 6300ESB I/O Controller Hub
-+Alternate Base Address Register:
-+ BIE: Boot Interrupt Enable
-+	0 = Boot interrupt is enabled.
-+	1 = Boot interrupt is disabled.
-+
-+Intel® Sandy Bridge through Sky Lake based Xeon servers:
-+Coherent Interface Protocol Interrupt Control
-+ dis_intx_route2pch/dis_intx_route2ich/dis_intx_route2dmi2:
-+	When this bit is set. Local INTx messages received from the
-+	Intel® Quick Data DMA/PCI Express ports are not routed to legacy
-+	PCH - they are either converted into MSI via the integrated IO-APIC
-+	(if the IO-APIC mask bit is clear in the appropriate entries)
-+	or cause no further action (when mask bit is set)
-+
-+In the absence of a way to directly disable the routing, another approach
-+has been to make use of PCI Interrupt pin to INTx routing tables for purposes
-+of redirecting the interrupt handler to the rerouted interrupt line by default.
-+Therefore, on chipsets where this INTx routing cannot be disabled, the
-+Linux kernel will reroute the valid interrupt to its legacy interrupt. This
-+redirection of the handler will prevent the occurrence of the spurious
-+interrupt detection which would ordinarily disable the IRQ line due to
-+excessive unhandled counts.[2]
-+
-+The config option X86_REROUTE_FOR_BROKEN_BOOT_IRQS exists to enable
-+(or disable) the redirection of the interrupt handler to the PCH interrupt
-+line. The option can be overridden by either pci=ioapicreroute or
-+pci=noioapicreroute.[3]
-+
-+
-+More Documentation
-+==================
-+
-+There is an overview of the legacy interrupt handling mentioned in several
-+datasheets (6300ESB and 6700PXH below). While largely the same, it provides
-+insight into the evolution of its handling with chipsets.
-+
-+Example of disabling of the boot interrupt
-+------------------------------------------
-+
-+Intel® 6300ESB I/O Controller Hub (Document # 300641-004US)
-+	5.7.3 Boot Interrupt
-+	https://www.intel.com/content/dam/doc/datasheet/6300esb-io-controller-hub-datasheet.pdf
-+
-+Intel® Xeon® Processor E5-1600/2400/2600/4600 v3 Product Families
-+Datasheet - Volume 2: Registers (Dcument # 330784-003)
-+	6.6.41 cipintrc Coherent Interface Protocol Interrupt Control
-+	https://www.intel.com/content/dam/www/public/us/en/documents/datasheets/xeon-e5-v3-datasheet-vol-2.pdf
-+
-+Example of handler rerouting
-+----------------------------
-+
-+Intel® 6700PXH 64-bit PCI Hub (Document # 302628)
-+	2.15.2 PCI Express Legacy INTx Support and Boot Interrupt
-+	https://www.intel.com/content/dam/doc/datasheet/6700pxh-64-bit-pci-hub-datasheet.pdf
-+
-+
-+If you have any legacy PCI interrupt questions that aren't answered, email me.
-+
-+Cheers,
-+    Sean V Kelley
-+    sean.v.kelley@linux.intel.com
-+
-+[1] https://lore.kernel.org/lkml/12131949181903-git-send-email-sassmann@suse.de/
-+[2] https://lore.kernel.org/lkml/12131949182094-git-send-email-sassmann@suse.de/
-+[3] https://lore.kernel.org/lkml/487C8EA7.6020205@suse.de/
-diff --git a/Documentation/PCI/index.rst b/Documentation/PCI/index.rst
-index 6768305e4c26..8f66feaafd4f 100644
---- a/Documentation/PCI/index.rst
-+++ b/Documentation/PCI/index.rst
-@@ -16,3 +16,4 @@ Linux PCI Bus Subsystem
-    pci-error-recovery
-    pcieaer-howto
-    endpoint/index
-+   boot-interrupts
--- 
-2.25.1
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
