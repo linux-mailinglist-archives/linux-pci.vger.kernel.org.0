@@ -2,112 +2,166 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ECA6D165C73
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2020 12:08:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5817C1661B1
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2020 17:01:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726215AbgBTLIM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Feb 2020 06:08:12 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:56041 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726700AbgBTLIL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Feb 2020 06:08:11 -0500
-Received: by mail-wm1-f65.google.com with SMTP id q9so1517947wmj.5;
-        Thu, 20 Feb 2020 03:08:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ar2G2uxRG/czZkeC4MUfsnBfTqnZVt+SalROTcfSNAY=;
-        b=LdSMyATcrqVq+1wkPrk2DT2ZfZt2yYVUkGrN3dZc2e9GCaYjFW2jfg6adajl9cTeR0
-         Sh46U1Lcksm7ZWGzs9357FvencneOf4Dp7RBf084zYNUYdX4qccvc8UnIwJf5oim0agh
-         LWbiNjL8OUKDNZtHvK9cY5QCnjbIBhUkorV/r3rF+Frpkmt0cwXzR5YsCFboiMgcAEiy
-         t8UhNn8EQJIZfgdjftYudM4OBUMDpguUrTzk5yE64pCoD2MRltDerrR9/n/PT5Ef+mGg
-         rdEU4d3BkHzR9UiwvQQu3JIRYqedO1eikPrL4Boi/NNf355DcVTNDVgYXX9VLinZdRyz
-         Q24g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ar2G2uxRG/czZkeC4MUfsnBfTqnZVt+SalROTcfSNAY=;
-        b=pUDFnu8gdTBs2R0J6WmXV4Lyghf0VlaepQFqttnwwcil8vPUNeqXK2HNMyH/KM5LpB
-         GtGLGMaQQSlIBRKLCMvXr4OoIGnvIrBPVC5sa5Pvz8dNeaIyoy0QSxkLHylXCwbD+MFv
-         ztPj2heieAkSIov3GpkGH6M8fw+bRRzbWFy3hD0zndnQqrBNsqpFHoMX94xOJQ76sMml
-         PcAVcoUvjgW+L/rWE4gC/Iwxl3KKzC56Te4CmouullmRkWQM3P4aeUxh8rUyAl6wnpW1
-         Ili9sNwAQC08q/VoCWJGz2seqVegrjgmyFqepwEzLoFoU24sDy5H2lW/UK36f55g6pzj
-         hERQ==
-X-Gm-Message-State: APjAAAWdoceqrg+4qFH3ktnje9y5PrCFTEVsctYLUNxgwv/vFDrrZXJi
-        yhvVHyp64KbkfQlaxWWBHSt2i8Fxq/bZJqh4pFs=
-X-Google-Smtp-Source: APXvYqwdc8JQs/LddLHuBYujJ23zXBp/eT+FPZZtoMagGjYaa1MnuIvWCAZ57NpM1eGriyGn0BTbc3wrw1d/1bZ5oYw=
-X-Received: by 2002:a7b:cc97:: with SMTP id p23mr3838372wma.89.1582196889370;
- Thu, 20 Feb 2020 03:08:09 -0800 (PST)
+        id S1728598AbgBTQBH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Feb 2020 11:01:07 -0500
+Received: from foss.arm.com ([217.140.110.172]:45498 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728414AbgBTQBH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 20 Feb 2020 11:01:07 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3DA5C31B;
+        Thu, 20 Feb 2020 08:01:06 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 418113F6CF;
+        Thu, 20 Feb 2020 08:01:04 -0800 (PST)
+Date:   Thu, 20 Feb 2020 16:00:54 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>, andrew.murray@arm.com,
+        Tom Joseph <tjoseph@cadence.com>,
+        Milind Parab <mparab@cadence.com>, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, bhelgaas@google.com,
+        thierry.reding@gmail.com, Jisheng.Zhang@synaptics.com,
+        jonathanh@nvidia.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V2 0/5] Add support to defer core initialization
+Message-ID: <20200220160044.GA8859@e121166-lin.cambridge.arm.com>
+References: <20200103100736.27627-1-vidyas@nvidia.com>
+ <a8678df3-141b-51ab-b0cb-5e88c6ac91b5@nvidia.com>
+ <680a58ec-5d09-3e3b-2fd6-544c32732818@nvidia.com>
+ <ca911119-da45-4cbd-b173-2ac8397fd79a@ti.com>
+ <b4af8353-3a56-fa31-3391-056050c0440a@ti.com>
+ <7e8dafcd-bc3f-4acc-7023-85e24bebdd94@nvidia.com>
 MIME-Version: 1.0
-References: <20200213025930.27943-1-jaedon.shin@gmail.com> <20200213025930.27943-3-jaedon.shin@gmail.com>
- <aaa85a4d-8b36-893e-3e7a-dc27b4d6bae5@gmail.com>
-In-Reply-To: <aaa85a4d-8b36-893e-3e7a-dc27b4d6bae5@gmail.com>
-From:   Gregory Fong <gregory.0xf0@gmail.com>
-Date:   Thu, 20 Feb 2020 03:07:41 -0800
-Message-ID: <CADtm3G40-2EQcQxisiDTd=DkPbMP4gCi4E5TsvDRL6ph51TEVQ@mail.gmail.com>
-Subject: Re: [PATCH 2/3] PCI: brcmstb: Add regulator support
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Jaedon Shin <jaedon.shin@gmail.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7e8dafcd-bc3f-4acc-7023-85e24bebdd94@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 7:58 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
-> On 2/12/2020 6:59 PM, Jaedon Shin wrote:
-> > ARM-based Broadcom STB SoCs have GPIO-based voltage regulator for PCIe
-> > turning off/on power supplies.
-> >
-> > Signed-off-by: Jaedon Shin <jaedon.shin@gmail.com>
-> > ---
-> >  drivers/gpio/gpio-brcmstb.c           | 13 ++++-
-> >  drivers/pci/controller/pcie-brcmstb.c | 76 +++++++++++++++++++++++++++
-> >  2 files changed, 88 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/gpio/gpio-brcmstb.c b/drivers/gpio/gpio-brcmstb.c
-> > index 05e3f99ae59c..0cee5fcd2782 100644
-> > --- a/drivers/gpio/gpio-brcmstb.c
-> > +++ b/drivers/gpio/gpio-brcmstb.c
-> > @@ -777,7 +777,18 @@ static struct platform_driver brcmstb_gpio_driver = {
-> >       .remove = brcmstb_gpio_remove,
-> >       .shutdown = brcmstb_gpio_shutdown,
-> >  };
-> > -module_platform_driver(brcmstb_gpio_driver);
-> > +
-> > +static int __init brcmstb_gpio_init(void)
-> > +{
-> > +     return platform_driver_register(&brcmstb_gpio_driver);
-> > +}
-> > +subsys_initcall(brcmstb_gpio_init);
-> > +
-> > +static void __exit brcmstb_gpio_exit(void)
-> > +{
-> > +     platform_driver_unregister(&brcmstb_gpio_driver);
-> > +}
-> > +module_exit(brcmstb_gpio_exit);
->
-> We do this in the downstream tree, but there is no reason, we should
-> just deal with EPROBE_DEFER being returned from the regulator subsystem
-> until the GPIO provide is available.
->
+On Wed, Feb 19, 2020 at 07:06:47PM +0530, Vidya Sagar wrote:
+> Hi Lorenzo, Andrew,
+> Kishon did rebase [1] mentioned below and removed dependencies.
+> New patch series is available
+> @ http://patchwork.ozlabs.org/project/linux-pci/list/?series=158088
+> 
+> I rebased my patches on top of this and is available for review
+> @ http://patchwork.ozlabs.org/project/linux-pci/list/?series=158959
+> 
+> Please let us know the way forward towards merging these patches.
 
-Agreed, also see this thread from January 2016:
-https://lore.kernel.org/linux-mips/568EAA99.1020603@gmail.com/
+Hi Vidya,
 
-Best regards,
-Gregory
+I shall have a look shortly, I have planned to start queueing patches
+from next week.
+
+Thanks,
+Lorenzo
+
+> Thanks,
+> Vidya Sagar
+> 
+> On 2/5/2020 12:07 PM, Kishon Vijay Abraham I wrote:
+> > External email: Use caution opening links or attachments
+> > 
+> > 
+> > +Tom, Milind
+> > 
+> > Hi,
+> > 
+> > On 23/01/20 3:25 PM, Kishon Vijay Abraham I wrote:
+> > > Hi Vidya Sagar,
+> > > 
+> > > On 23/01/20 2:54 pm, Vidya Sagar wrote:
+> > > > Hi Kishon,
+> > > > Apologies for pinging again. Could you please review this series?
+> > > > 
+> > > > Thanks,
+> > > > Vidya Sagar
+> > > > 
+> > > > On 1/11/2020 5:18 PM, Vidya Sagar wrote:
+> > > > > Hi Kishon,
+> > > > > Could you please review this series?
+> > > > > 
+> > > > > Also, this series depends on the following change of yours
+> > > > > http://patchwork.ozlabs.org/patch/1109884/
+> > > > > Whats the plan to get this merged?
+> > > 
+> > > I've posted the endpoint improvements as a separate series
+> > > http://lore.kernel.org/r/20191231100331.6316-1-kishon@ti.com
+> > > 
+> > > I'd prefer this series gets tested by others. I'm also planning to test
+> > > this series. Sorry for the delay. I'll test review and test this series
+> > > early next week.
+> > 
+> > I tested this series with DRA7 configured in EP mode. So for the series
+> > itself
+> > 
+> > Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+> > 
+> > Tom, Can you test this series in Cadence platform?
+> > 
+> > Lorenzo, Andrew,
+> > 
+> > How do you want to go about merging this series? This series depends on
+> > [1] which in turn is dependent on two other series. If required, I can
+> > rebase [1] on mainline kernel and remove it's dependencies with the
+> > other series. That way this series and [1] could be merged. And the
+> > other series could be worked later. Kindly let me know.
+> > 
+> > Thanks
+> > Kishon
+> > 
+> > [1] ->
+> > https://lore.kernel.org/linux-pci/20191231100331.6316-1-kishon@ti.com/
+> > > 
+> > > Thanks
+> > > Kishon
+> > > 
+> > > > > 
+> > > > > Thanks,
+> > > > > Vidya Sagar
+> > > > > 
+> > > > > On 1/3/20 3:37 PM, Vidya Sagar wrote:
+> > > > > > EPC/DesignWare core endpoint subsystems assume that the core
+> > > > > > registers are
+> > > > > > available always for SW to initialize. But, that may not be the case
+> > > > > > always.
+> > > > > > For example, Tegra194 hardware has the core running on a clock that
+> > > > > > is derived
+> > > > > > from reference clock that is coming into the endpoint system from host.
+> > > > > > Hence core is made available asynchronously based on when host system
+> > > > > > is going
+> > > > > > for enumeration of devices. To accommodate this kind of hardwares,
+> > > > > > support is
+> > > > > > required to defer the core initialization until the respective
+> > > > > > platform driver
+> > > > > > informs the EPC/DWC endpoint sub-systems that the core is indeed
+> > > > > > available for
+> > > > > > initiaization. This patch series is attempting to add precisely that.
+> > > > > > This series is based on Kishon's patch that adds notification mechanism
+> > > > > > support from EPC to EPF @ http://patchwork.ozlabs.org/patch/1109884/
+> > > > > > 
+> > > > > > Vidya Sagar (5):
+> > > > > >     PCI: endpoint: Add core init notifying feature
+> > > > > >     PCI: dwc: Refactor core initialization code for EP mode
+> > > > > >     PCI: endpoint: Add notification for core init completion
+> > > > > >     PCI: dwc: Add API to notify core initialization completion
+> > > > > >     PCI: pci-epf-test: Add support to defer core initialization
+> > > > > > 
+> > > > > >    .../pci/controller/dwc/pcie-designware-ep.c   |  79 +++++++-----
+> > > > > >    drivers/pci/controller/dwc/pcie-designware.h  |  11 ++
+> > > > > >    drivers/pci/endpoint/functions/pci-epf-test.c | 118 ++++++++++++------
+> > > > > >    drivers/pci/endpoint/pci-epc-core.c           |  19 ++-
+> > > > > >    include/linux/pci-epc.h                       |   2 +
+> > > > > >    include/linux/pci-epf.h                       |   5 +
+> > > > > >    6 files changed, 164 insertions(+), 70 deletions(-)
+> > > > > > 
