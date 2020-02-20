@@ -2,49 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 33BB11664D4
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2020 18:29:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C78041664DD
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2020 18:31:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728629AbgBTR33 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Feb 2020 12:29:29 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39972 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728460AbgBTR33 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Feb 2020 12:29:29 -0500
-Received: by mail-wm1-f68.google.com with SMTP id t14so2942207wmi.5
-        for <linux-pci@vger.kernel.org>; Thu, 20 Feb 2020 09:29:27 -0800 (PST)
+        id S1728115AbgBTRbU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Feb 2020 12:31:20 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:39763 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728173AbgBTRbT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Feb 2020 12:31:19 -0500
+Received: by mail-wr1-f65.google.com with SMTP id y11so5553434wrt.6
+        for <linux-pci@vger.kernel.org>; Thu, 20 Feb 2020 09:31:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=thegoodpenguin-co-uk.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=Q4qx3jqbEI2LXNLHh2qRlEwTiPf4rASGS8w/sDrnmwg=;
-        b=n1Zj7J6egyyu4XSEYNvVUsPUeC5N+ThU079hVverQJdLd2AnzZZi+nOVLVMiYmD/d1
-         VLNAtYvTyKBk2g3m4+c54bVWhSvP4hn2rZk81KnDZ4j7zlDNJUyzaJ9lkFsqbdyimamA
-         2azfNkSSpWMwnok41dG0eHUk6YUAWnKXAaRLBRBRBqBREaYrOcaPeOm9w3GFOKA+Lrjq
-         fX3CyMHoE0gmNRULIVXotRQX+QVtk9AglCEf0fXIUzZFIo7aYyu5o4X95BzxLSwYgFIF
-         o5TYPi1ofCdxQkjrz0/0aNtECIQOfrRXA3hou5A3EmDEPIzhbeXqiZ9bg8X4PUM9MQbD
-         NuTg==
+        bh=S0OEZb6ZbfxyZGgdO3oC5v/q0OGeZVw3eP9vYvQiG/U=;
+        b=0AO/dMDS1M6O3Y1MAIlce7yX8iZStnkbe4FyCLeA2xCR158t3j4xoLga0nF5rgnqPg
+         Yqjj5zlXqWS0D8fXu0a/+PZ/2rfBs0tDFvLqAfuUlCIlWOVCu5WG7SupP6am6Z5rGoTA
+         jCj3zcSICrEASFhHK4YaAxnu3Aust4K9d5WhKM5mJwiPuNDu//O/EhcZSXwhb8ccxCyd
+         7igtONy2I24pkPH+B3o0x4y/vYLnL77dwu8HqZOYZ/YKdX5eHh3uAdfKx+LJGkG1/G5I
+         vr24oMKwrdCmqODcC3ENKCBPeMQX72lKc0KEiut+vq/sUCCazXRcZZVEltq2iE+RIhb9
+         sCcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=Q4qx3jqbEI2LXNLHh2qRlEwTiPf4rASGS8w/sDrnmwg=;
-        b=F6AutYvCt9MTqbj3757+nLgZ1Suw+j2aEE81GrEM9lBnB6iBflYjeFGuvQYDYdOtZm
-         uWPJ3HiBTw6QeSt5hpdFbuW+FzHT9EeE3lYSFKKL8jcGWD1sSu5SxGUWU7VaNNs6DvD4
-         PqrXBj0SKzW6G2RboDYun/sVHXl2HfKaAoNfQwt5nTRXpq/8/3NxaauQ+j3+/3/b9fOe
-         8ehZ74BmkrBB66wHeOQLCil4gsjQ0JVc4vks5w2M9FBG/wsWEWx3Rs1vguW0MoLYiJC7
-         o6sQXBdkX5VKhpn0aqVtNqcOCZeJIdAU3OLgpIvnAGt46mBfJB1kXculCKdTbUj0fyCF
-         k5ew==
-X-Gm-Message-State: APjAAAVNSY1XV0s3axSDLWDg8USwe5TbFMjb2Bi9KGclEbORw8geSJjU
-        28HFEiJ+xpROJAGut5lq2WX/8w==
-X-Google-Smtp-Source: APXvYqyuQKe1vF0yue4IgSN9scP6sj+6hjjPhnMRt+A7UulmjNFLWqQr6QTq4iwV57oNLCIAzEIlYw==
-X-Received: by 2002:a7b:ce8b:: with SMTP id q11mr5753542wmj.100.1582219767346;
-        Thu, 20 Feb 2020 09:29:27 -0800 (PST)
+        bh=S0OEZb6ZbfxyZGgdO3oC5v/q0OGeZVw3eP9vYvQiG/U=;
+        b=dPyvKASshhSKNGrnXsUq3J/e3Z/vq8cSWDrTsUqwbsPZYzvKedbuKo5NRrwcddecIy
+         J+jIFHj/3xlcKOp++h3n2zdp23iplfO67WDTiXQQU+VsYW05HC+g//mdFUSVz9WrDPwj
+         7jc4ng1KzkS7lCS649AKXYAa/SSzIgX72mH0JbzESkm/wwA8XFpNFVHWtqh8ULYWPbar
+         Hfu9nKeRPBIqxc5RE6/K3qW8JmYpGzID+Zi1S/DG3ISWEupn5zgXEDSgQMMOQ64dNHRQ
+         KOA76mMS32Kd3DpbNX0o6KX1O9ZHUSU8MiNSK0Siv0EyxY78uQGHhchd5I1WyK+i7YI3
+         sK1w==
+X-Gm-Message-State: APjAAAWQn0LN/eouRy1d2X8SEaXqNJq52o9u+hOITZhoSfsWktFbqai/
+        7RemR8jspvUlFWOd2Y5aAgTEhA==
+X-Google-Smtp-Source: APXvYqyyzZXO5TSoVkK6w2z4UIzWud060LimIz9UfXnvzAZJj1Wld1YI6Wn1KKd/pHRwbYWs9NTRwg==
+X-Received: by 2002:adf:f744:: with SMTP id z4mr38804520wrp.318.1582219877525;
+        Thu, 20 Feb 2020 09:31:17 -0800 (PST)
 Received: from big-machine ([2a00:23c5:dd80:8400:98d8:49e6:cdcc:25df])
-        by smtp.gmail.com with ESMTPSA id e1sm244147wrt.84.2020.02.20.09.29.26
+        by smtp.gmail.com with ESMTPSA id y8sm8190wma.10.2020.02.20.09.31.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 09:29:26 -0800 (PST)
-Date:   Thu, 20 Feb 2020 17:29:24 +0000
+        Thu, 20 Feb 2020 09:31:17 -0800 (PST)
+Date:   Thu, 20 Feb 2020 17:31:15 +0000
 From:   Andrew Murray <amurray@thegoodpenguin.co.uk>
 To:     Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
 Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
@@ -55,77 +55,67 @@ Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         leoyang.li@nxp.com, lorenzo.pieralisi@arm.com,
         catalin.marinas@arm.com, will.deacon@arm.com, Mingkai.Hu@nxp.com,
         Minghuan.Lian@nxp.com, Xiaowei.Bao@nxp.com
-Subject: Re: [PATCHv10 08/13] PCI: mobiveil: Add 8-bit and 16-bit CSR
- register accessors
-Message-ID: <20200220172924.GI19388@big-machine>
+Subject: Re: [PATCHv10 09/13] PCI: mobiveil: Add Header Type field check
+Message-ID: <20200220173115.GJ19388@big-machine>
 References: <20200213040644.45858-1-Zhiqiang.Hou@nxp.com>
- <20200213040644.45858-9-Zhiqiang.Hou@nxp.com>
+ <20200213040644.45858-10-Zhiqiang.Hou@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200213040644.45858-9-Zhiqiang.Hou@nxp.com>
+In-Reply-To: <20200213040644.45858-10-Zhiqiang.Hou@nxp.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 12:06:39PM +0800, Zhiqiang Hou wrote:
+On Thu, Feb 13, 2020 at 12:06:40PM +0800, Zhiqiang Hou wrote:
 > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 > 
-> There are some 8-bit and 16-bit registers in PCIe configuration
-> space, so add these accessors accordingly.
+> Check the Header Type and exit from the host driver initialization if
+> it is not in host mode.
 > 
 > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
-> Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
 
 Reviewed-by: Andrew Murray <amurray@thegoodpenguin.co.uk>
 
 > ---
 > V10:
->  - Changed the return types to reflect the size of the access.
+>  - New patch separated from #10 of v9.
 > 
->  .../pci/controller/mobiveil/pcie-mobiveil.h   | 23 +++++++++++++++++++
->  1 file changed, 23 insertions(+)
+>  .../pci/controller/mobiveil/pcie-mobiveil-host.c    | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
 > 
-> diff --git a/drivers/pci/controller/mobiveil/pcie-mobiveil.h b/drivers/pci/controller/mobiveil/pcie-mobiveil.h
-> index 623c5f0c4441..72c62b4d8f7b 100644
-> --- a/drivers/pci/controller/mobiveil/pcie-mobiveil.h
-> +++ b/drivers/pci/controller/mobiveil/pcie-mobiveil.h
-> @@ -182,10 +182,33 @@ static inline u32 mobiveil_csr_readl(struct mobiveil_pcie *pcie, u32 off)
->  	return mobiveil_csr_read(pcie, off, 0x4);
+> diff --git a/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c b/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
+> index 44dd641fede3..db7028788d91 100644
+> --- a/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
+> +++ b/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
+> @@ -554,6 +554,16 @@ static int mobiveil_pcie_interrupt_init(struct mobiveil_pcie *pcie)
+>  	return mobiveil_pcie_integrated_interrupt_init(pcie);
 >  }
 >  
-> +static inline u16 mobiveil_csr_readw(struct mobiveil_pcie *pcie, u32 off)
+> +static bool mobiveil_pcie_is_bridge(struct mobiveil_pcie *pcie)
 > +{
-> +	return mobiveil_csr_read(pcie, off, 0x2);
+> +	u32 header_type;
+> +
+> +	header_type = mobiveil_csr_readb(pcie, PCI_HEADER_TYPE);
+> +	header_type &= 0x7f;
+> +
+> +	return header_type == PCI_HEADER_TYPE_BRIDGE;
 > +}
 > +
-> +static inline u8 mobiveil_csr_readb(struct mobiveil_pcie *pcie, u32 off)
-> +{
-> +	return mobiveil_csr_read(pcie, off, 0x1);
-> +}
-> +
-> +
->  static inline void mobiveil_csr_writel(struct mobiveil_pcie *pcie, u32 val,
->  				       u32 off)
+>  int mobiveil_pcie_host_probe(struct mobiveil_pcie *pcie)
 >  {
->  	mobiveil_csr_write(pcie, val, off, 0x4);
->  }
+>  	struct mobiveil_root_port *rp = &pcie->rp;
+> @@ -569,6 +579,9 @@ int mobiveil_pcie_host_probe(struct mobiveil_pcie *pcie)
+>  		return ret;
+>  	}
 >  
-> +static inline void mobiveil_csr_writew(struct mobiveil_pcie *pcie, u16 val,
-> +				       u32 off)
-> +{
-> +	mobiveil_csr_write(pcie, val, off, 0x2);
-> +}
+> +	if (!mobiveil_pcie_is_bridge(pcie))
+> +		return -ENODEV;
 > +
-> +static inline void mobiveil_csr_writeb(struct mobiveil_pcie *pcie, u8 val,
-> +				       u32 off)
-> +{
-> +	mobiveil_csr_write(pcie, val, off, 0x1);
-> +}
-> +
->  #endif /* _PCIE_MOBIVEIL_H */
+>  	/* parse the host bridge base addresses from the device tree file */
+>  	ret = pci_parse_request_of_pci_ranges(dev, &bridge->windows,
+>  					      &bridge->dma_ranges, NULL);
 > -- 
 > 2.17.1
 > 
