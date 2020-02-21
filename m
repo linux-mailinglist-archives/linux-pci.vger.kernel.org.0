@@ -2,112 +2,87 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 63C0E168062
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2020 15:35:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 24CA716807A
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2020 15:40:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728396AbgBUOf3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 Feb 2020 09:35:29 -0500
-Received: from foss.arm.com ([217.140.110.172]:40708 "EHLO foss.arm.com"
+        id S1728177AbgBUOkI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 Feb 2020 09:40:08 -0500
+Received: from foss.arm.com ([217.140.110.172]:40806 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727096AbgBUOf3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 21 Feb 2020 09:35:29 -0500
+        id S1728068AbgBUOkH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 21 Feb 2020 09:40:07 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8DFE81FB;
-        Fri, 21 Feb 2020 06:35:28 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 153A01FB;
+        Fri, 21 Feb 2020 06:40:07 -0800 (PST)
 Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 553413F703;
-        Fri, 21 Feb 2020 06:35:27 -0800 (PST)
-Date:   Fri, 21 Feb 2020 14:35:25 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9988D3F703;
+        Fri, 21 Feb 2020 06:40:05 -0800 (PST)
+Date:   Fri, 21 Feb 2020 14:40:03 +0000
 From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: qcom: Fix the fixup of PCI_VENDOR_ID_QCOM
-Message-ID: <20200221143525.GC15440@e121166-lin.cambridge.arm.com>
-References: <20191227012717.78965-1-bjorn.andersson@linaro.org>
- <9e5ee7e8-aa63-e82c-8135-acc77b476c87@mm-sol.com>
- <38acf5fc-85aa-7090-e666-97a1281e9905@free.fr>
- <20191229024547.GH3755841@builder>
- <9c7d69cc-29e7-07c5-1e93-e9fdadf370a6@free.fr>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        sashal@kernel.org, bhelgaas@google.com,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
+        Alexander.Levin@microsoft.com
+Subject: Re: [PATCH] PCI: hv: Use kfree(hbus) in hv_pci_probe()'s error
+ handling path
+Message-ID: <20200221144003.GD15440@e121166-lin.cambridge.arm.com>
+References: <1578350351-129783-1-git-send-email-decui@microsoft.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9c7d69cc-29e7-07c5-1e93-e9fdadf370a6@free.fr>
+In-Reply-To: <1578350351-129783-1-git-send-email-decui@microsoft.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Dec 30, 2019 at 09:25:28PM +0100, Marc Gonzalez wrote:
-> On 29/12/2019 03:45, Bjorn Andersson wrote:
+On Mon, Jan 06, 2020 at 02:39:11PM -0800, Dexuan Cui wrote:
+> Now that we use kzalloc() to allocate the hbus buffer, we should use
+> kfree() in the error path as well.
 > 
-> > On Sat 28 Dec 07:41 PST 2019, Marc Gonzalez wrote:
-> > 
-> >> On 27/12/2019 09:51, Stanimir Varbanov wrote:
-> >>
-> >>> On 12/27/19 3:27 AM, Bjorn Andersson wrote:
-> >>>
-> >>>> There exists non-bridge PCIe devices with PCI_VENDOR_ID_QCOM, so limit
-> >>>> the fixup to only affect the relevant PCIe bridges.
-> >>>>
-> >>>> Cc: stable@vger.kernel.org
-> >>>> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> >>>> ---
-> >>>>
-> >>>> Stan, I picked up all the suggested device id's from the previous thread and
-> >>>> added 0x1000 for QCS404. I looked at creating platform specific defines in
-> >>>> pci_ids.h, but SDM845 has both 106 and 107... Please let me know if you would
-> >>>> prefer that I do this anyway.
-> >>>
-> >>> Looks good,
-> >>>
-> >>> Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
-> >>>
-> >>>>  drivers/pci/controller/dwc/pcie-qcom.c | 8 +++++++-
-> >>>>  1 file changed, 7 insertions(+), 1 deletion(-)
-> >>>>
-> >>>> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> >>>> index 5ea527a6bd9f..138e1a2d21cc 100644
-> >>>> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> >>>> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> >>>> @@ -1439,7 +1439,13 @@ static void qcom_fixup_class(struct pci_dev *dev)
-> >>>>  {
-> >>>>  	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
-> >>>>  }
-> >>>> -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCI_ANY_ID, qcom_fixup_class);
-> >>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0101, qcom_fixup_class);
-> >>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0104, qcom_fixup_class);
-> >>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0106, qcom_fixup_class);
-> >>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0107, qcom_fixup_class);
-> >>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0302, qcom_fixup_class);
-> >>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1000, qcom_fixup_class);
-> >>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1001, qcom_fixup_class);
-> >>
-> >> Hrmmm... still not CCed on the patch,
-> > 
-> > You are Cc'ed on the patch, but as usual your mail server responds "451
-> > too many errors from your ip" and throw my emails away.
-> > 
-> >> and still don't think the fixup is required(?) for 0x106 and 0x107.
-> >>
-> > 
-> > I re-read your reply in my v1 thread. So we know that 0x104 doesn't need
-> > the fixup, so presumably only 0x101 needs the fixup?
-> 
-> I apologize for the tone of my reply. I did not mean to sound
-> so snarky.
-> 
-> All I can say is that, if I remember correctly, the fixup was
-> not necessary on apq8098 (0x0105) and it was probably not
-> required on msm8996 and sdm845. For older platforms, all bets
-> are off.
+> Also remove the type casting, since it's unnecessary in C.
 
-How are we proceeding with this patch then ?
+Two unrelated logical changes -> two patches please, I know it is
+tempting but it is important to split logical changes into separate
+patches.
 
 Thanks,
 Lorenzo
+
+> Fixes: 877b911a5ba0 ("PCI: hv: Avoid a kmemleak false positive caused by the hbus buffer")
+> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> ---
+> 
+> Sorry for missing the error handling path.
+> 
+>  drivers/pci/controller/pci-hyperv.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index 9977abff92fc..15011a349520 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -2922,7 +2922,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+>  	 * positive by using kmemleak_alloc() and kmemleak_free() to ask
+>  	 * kmemleak to track and scan the hbus buffer.
+>  	 */
+> -	hbus = (struct hv_pcibus_device *)kzalloc(HV_HYP_PAGE_SIZE, GFP_KERNEL);
+> +	hbus = kzalloc(HV_HYP_PAGE_SIZE, GFP_KERNEL);
+>  	if (!hbus)
+>  		return -ENOMEM;
+>  	hbus->state = hv_pcibus_init;
+> @@ -3058,7 +3058,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+>  free_dom:
+>  	hv_put_dom_num(hbus->sysdata.domain);
+>  free_bus:
+> -	free_page((unsigned long)hbus);
+> +	kfree(hbus);
+>  	return ret;
+>  }
+>  
+> -- 
+> 2.19.1
+> 
