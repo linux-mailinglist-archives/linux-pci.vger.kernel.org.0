@@ -2,102 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B784C1685B9
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2020 18:57:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EA24D168706
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2020 19:54:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728385AbgBUR5I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 Feb 2020 12:57:08 -0500
-Received: from foss.arm.com ([217.140.110.172]:44954 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725995AbgBUR5I (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 21 Feb 2020 12:57:08 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 557BE30E;
-        Fri, 21 Feb 2020 09:57:07 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 969893F6CF;
-        Fri, 21 Feb 2020 09:57:06 -0800 (PST)
-Date:   Fri, 21 Feb 2020 17:57:03 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Jaedon Shin <jaedon.shin@gmail.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Gregory Fong <gregory.0xf0@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org, Jim Quinlan <james.quinlan@Broadcom.com>
-Subject: Re: [PATCH v2 1/2] PCI: brcmstb: Add regulator support
-Message-ID: <20200221175703.GJ5546@sirena.org.uk>
-References: <20200221033640.55163-1-jaedon.shin@gmail.com>
- <20200221033640.55163-2-jaedon.shin@gmail.com>
- <20200221121231.GA5546@sirena.org.uk>
- <40c4de9c-efdc-4fae-ad6d-1ba51fbbece1@gmail.com>
- <20200221171127.GH5546@sirena.org.uk>
- <aff7e72b-c6d3-9d66-2726-1014a040b601@gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="wRtZRu2mMGBZ6YQ7"
-Content-Disposition: inline
-In-Reply-To: <aff7e72b-c6d3-9d66-2726-1014a040b601@gmail.com>
-X-Cookie: Dead? No excuse for laying off work.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1729430AbgBUSyN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 Feb 2020 13:54:13 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:42243 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726150AbgBUSyN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Feb 2020 13:54:13 -0500
+Received: by mail-ed1-f65.google.com with SMTP id e10so3588703edv.9;
+        Fri, 21 Feb 2020 10:54:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=6H7czC/EWWOLG+c9dDSZL0yrJluOEN5LNYAxJRlBPZQ=;
+        b=Nj1J0Jd4bERbsqqC2RdvzymFWFfEKiqalI2qOX8Sjgq5gmNzefkKgNuBCDGQMxTqfL
+         sxVlAk4X06dQpEngnbk3tRqzaiAZJIZp6bzcOm1ft2qMYaL/Mf+95n3Q+mk6aQBcG2c4
+         D/Pn+vstVBh076/KljES7r5GvWzMPS3x2lHc5AY93eaZTg/5W/LfsAUodTTk7DAbHZHy
+         gd2nbpjSFHjWvWmVfQPWiYG5lyjGWVVP5VJrFNUMBzr+7ud2hCak1kznKB+WIGmxOjTU
+         rjngGRSkpqVXjTSQ21868E17hoWwDrY3/1nSSyNx/uPwNYs/AV8LJjiEw3NcREqL9Q/1
+         93vA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=6H7czC/EWWOLG+c9dDSZL0yrJluOEN5LNYAxJRlBPZQ=;
+        b=qEt7e1VSsO6AdMfjpnAGX8p79mBb8PvdolHJ+Z7rpwfstK041RAOLzrVtIWChq02O0
+         aILJrRDVJTmUiS3PSVCCe8eGPUU99WwfxQO2H8f+ZrSLp9NXq8XvnVZlhHb+3vfbYfNj
+         DId91pk8VtYJppfNBKQhCuKZIk/4s/xcDaPiI2bpb9ki/JLWcznwC1JRImFwAULDmIJS
+         xC2Z+Q2SLUul5oxpbSbNIByM6/hFW6KPGdPAU56ltL0Y7Ym/qibrZuH66grU3+oDvspk
+         m6D1FBlu8bXh9V57PmIC6B5Z82219EgoO/YHWV69hYd3CdPMHSIHUmICWhjdix+NIrfP
+         3NSw==
+X-Gm-Message-State: APjAAAVlAMwKg+YNG3ajk4/R/O6jVjhHklc3Pgppz4Vz3Yn6XFV/MQli
+        FC1Qs+OwlR9m5Rlv05Qhma2iDez0iIM=
+X-Google-Smtp-Source: APXvYqw4D+LbiKAlW0MqDTX69Z2BKZfFCJPr23ydy58+Tn3OdmEKcevzhzN9ulkIeQBfs59EFEdPig==
+X-Received: by 2002:aa7:d9c6:: with SMTP id v6mr35455979eds.107.1582311251283;
+        Fri, 21 Feb 2020 10:54:11 -0800 (PST)
+Received: from felia.fritz.box ([2001:16b8:2d0c:d000:34f3:c27:3def:c058])
+        by smtp.gmail.com with ESMTPSA id v2sm307158ejj.44.2020.02.21.10.54.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2020 10:54:10 -0800 (PST)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To:     Tom Joseph <tjoseph@cadence.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     linux-pci@vger.kernel.org, Joe Perches <joe@perches.com>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH] MAINTAINERS: adjust entry to moving cadence drivers
+Date:   Fri, 21 Feb 2020 19:54:02 +0100
+Message-Id: <20200221185402.4703-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Commit de80f95ccb9c ("PCI: cadence: Move all files to per-device cadence
+directory") moved files of the pci cadence drivers, but did not adjust
+the entry in MAINTAINERS.
 
---wRtZRu2mMGBZ6YQ7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Since then, ./scripts/get_maintainer.pl --self-test complains:
 
-On Fri, Feb 21, 2020 at 09:50:42AM -0800, Florian Fainelli wrote:
-> On 2/21/20 9:11 AM, Mark Brown wrote:
+  warning: no file matches F: drivers/pci/controller/pcie-cadence*
 
-> > The framework and/or driver can enumerate firmware information without
-> > actually powering up the devices of course.
+So, repair the MAINTAINERS entry now.
 
-> The issue is not enumeration, it is ensuring that you will be able to
-> establish the PCIe link with the EP. If there is no pci_device created
-> because the bus scanning returned a link down, there is not much that
-> can be done. Also the question is whether this logic belongs in the PCI
-> bus layer or the driver.
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+---
+Tom, Andrew, please ack. Lorenzo, please pick this patch.
+applies cleanly on current master and next-20200221
 
-Given that the interface with the devices is all standardized I'd have
-expected it to be in the bus code as a first pass.
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> > I would not be surprised to learn that most systems just mark the device
-> > supplies always on, it's not like the devices will be able to use them
-> > normally anyway.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 4beb8dc4c7eb..d8f690f0e838 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12740,7 +12740,7 @@ M:	Tom Joseph <tjoseph@cadence.com>
+ L:	linux-pci@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/pci/cdns,*.txt
+-F:	drivers/pci/controller/pcie-cadence*
++F:	drivers/pci/controller/cadence/
+ 
+ PCI DRIVER FOR FREESCALE LAYERSCAPE
+ M:	Minghuan Lian <minghuan.Lian@nxp.com>
+-- 
+2.17.1
 
-> In the downstream PCIe driver which is this one is just a subset of
-> until we close the gap, we have some additional logical to determine
-> whether the EP device is wakeup enabled in order to leave its regulators
-> turned on during system sleep so as to permit Wake-on-WLAN for instance.
-
-Is that just using standard PCI stuff or is it custom for embedded
-applications?
-
---wRtZRu2mMGBZ6YQ7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5QGe8ACgkQJNaLcl1U
-h9DPMgf/e4r5Gwi7L6QWp74/t0ncNlE8lT+mvnemgaNumxi8HWK/smVU+t35gvxo
-dbdIrGGZLffZHrlCjmYjeVNjVLcWTFFr8XlczAjrSnbnlf1pnefF5Y+nN80hSZtR
-mwQ50gnCPgM11jx7xybWdvJQczugxSG1bQnhSgi+E8wLtZi1MoGFo3NWkv1jMNr8
-WcLdLgWdfAHnmhTVXYEuyxnpaO3HSDrmlQl8RGSalG/GvjrfSAjdQKVVmttjPGYc
-HUgkJOLoTbNKtCMhZAQf3Y2hm8VAPuOlBkD0t1P1086I29uIctKE7LhxF553P3TR
-mROjcuI9gQATJMw7UINisqe11KMyGw==
-=88yz
------END PGP SIGNATURE-----
-
---wRtZRu2mMGBZ6YQ7--
