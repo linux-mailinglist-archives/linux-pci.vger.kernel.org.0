@@ -2,148 +2,111 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 42AA5166EF4
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2020 06:21:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DFF3A167B0E
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2020 11:45:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725973AbgBUFVt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 Feb 2020 00:21:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50150 "EHLO mail.kernel.org"
+        id S1726913AbgBUKpD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 Feb 2020 05:45:03 -0500
+Received: from foss.arm.com ([217.140.110.172]:36426 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725800AbgBUFVt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 21 Feb 2020 00:21:49 -0500
-Received: from localhost (c-98-207-104-244.hsd1.ca.comcast.net [98.207.104.244])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BD0D208C4;
-        Fri, 21 Feb 2020 05:21:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582262508;
-        bh=k+xWkXE9GanKA1I/TU4Il80HQEcFWT0VW7It7YnO+zk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=rZFfbt3Ind5n5SyHSLZN3GqLiBN5qUpHq45nLTBbtrWN4pYOamrXosFr3rLw5C/H3
-         KXTCjKCkEVfNrc3FHCGrEZdoEj4qiNosTJKLYEpodgKj5VoLN/LxWXvyGg7shdIyqf
-         2OguAs98pfUFkh7ppaynQ/11UWTr64XVMtVAZPTc=
-Date:   Thu, 20 Feb 2020 23:21:47 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Stuart Hayes <stuart.w.hayes@gmail.com>
-Cc:     Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lukas@wunner.de
-Subject: Re: [PATCH v4 3/3] PCI: pciehp: Add dmi table for in-band presence
- disabled
-Message-ID: <20200221052147.GA154040@google.com>
+        id S1727077AbgBUKpD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 21 Feb 2020 05:45:03 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7B45C31B;
+        Fri, 21 Feb 2020 02:45:02 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 63E163F68F;
+        Fri, 21 Feb 2020 02:45:00 -0800 (PST)
+Date:   Fri, 21 Feb 2020 10:44:54 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Boqun Feng <boqun.feng@gmail.com>
+Cc:     linux-pci@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Michael Kelley <mikelley@microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v3 0/3] PCI: hv: Generify pci-hyperv.c
+Message-ID: <20200221104454.GA8595@e121166-lin.cambridge.arm.com>
+References: <20200210033953.99692-1-boqun.feng@gmail.com>
+ <20200221023344.GJ69864@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191025190047.38130-4-stuart.w.hayes@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200221023344.GJ69864@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 03:00:47PM -0400, Stuart Hayes wrote:
-> Some systems have in-band presence detection disabled for hot-plug PCI
-> slots, but do not report this in the slot capabilities 2 (SLTCAP2) register.
-
-This doesn't seem quite accurate to me.  PCI_EXP_SLTCAP2_IBPD does not
-actually tell us whether in-band presence detection is disabled.  It
-only tells us whether it *can* be disabled.
-
-I think I know what you mean, but this text suggests that
-PCI_EXP_SLTCAP2_IBPD not being set is the defect, and I don't think it
-is.  IIUC, even if PCI_EXP_SLTCAP2_IBPD were set,
-PCI_EXP_SLTCTL_IBPD_DISABLE would have no effect because in-band
-presence detect just isn't supported at all regardless of how we set
-PCI_EXP_SLTCTL_IBPD_DISABLE.
-
-> On these systems, presence detect can become active well after the link is
-> reported to be active, which can cause the slots to be disabled after a
-> device is connected.
+On Fri, Feb 21, 2020 at 10:33:44AM +0800, Boqun Feng wrote:
+> Ping ;-)
 > 
-> Add a dmi table to flag these systems as having in-band presence disabled.
+> Any suggestion or plan on this patchset?
+
+Hi,
+
+I shall have a look shortly, thanks.
+
+Lorenzo
+
+> Thanks and Regards,
+> Boqun
 > 
-> Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
-> ---
-> v4
->   add comment to dmi table
-> 
->  drivers/pci/hotplug/pciehp_hpc.c | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
-> 
-> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-> index 02d95ab27a12..9541735bd0aa 100644
-> --- a/drivers/pci/hotplug/pciehp_hpc.c
-> +++ b/drivers/pci/hotplug/pciehp_hpc.c
-> @@ -14,6 +14,7 @@
->  
->  #define dev_fmt(fmt) "pciehp: " fmt
->  
-> +#include <linux/dmi.h>
->  #include <linux/kernel.h>
->  #include <linux/types.h>
->  #include <linux/jiffies.h>
-> @@ -26,6 +27,24 @@
->  #include "../pci.h"
->  #include "pciehp.h"
->  
-> +static const struct dmi_system_id inband_presence_disabled_dmi_table[] = {
-> +	/*
-> +	 * Match all Dell systems, as some Dell systems have inband
-> +	 * presence disabled on NVMe slots (but don't support the bit to
-
-Is there something that restricts these slots to being used only for
-NVMe?  If not, I'd rather simply say that some Root Ports don't
-support in-band presence detect.  You say it's "disabled", which
-suggests that it could be *enabled*.  But I have the impression that
-it's actually just not supported at all (or maybe it's disabled by the
-BIOS via some non-architected mechanism).
-
-> +	 * report it). Setting inband presence disabled should have no
-> +	 * negative effect, except on broken hotplug slots that never
-> +	 * assert presence detect--and those will still work, they will
-> +	 * just have a bit of extra delay before being probed.
-> +	 */
-> +	{
-> +		.ident = "Dell System",
-> +		.matches = {
-> +			DMI_MATCH(DMI_OEM_STRING, "Dell System"),
-> +		},
-> +	},
-> +	{}
-> +};
-> +
->  static inline struct pci_dev *ctrl_dev(struct controller *ctrl)
->  {
->  	return ctrl->pcie->port;
-> @@ -895,6 +914,9 @@ struct controller *pcie_init(struct pcie_device *dev)
->  		ctrl->inband_presence_disabled = 1;
->  	}
->  
-> +	if (dmi_first_match(inband_presence_disabled_dmi_table))
-> +		ctrl->inband_presence_disabled = 1;
-
-This doesn't seem quite right: the DMI table should only apply to
-built-in ports, not to ports on plugin cards.
-
-If we plug in a switch with hotplug-capable downstream ports, and
-those ports do not advertise PCI_EXP_SLTCAP2_IBPD, I think this code
-sets "inband_presence_disabled" for those ports even though it is not
-disabled.
-
-IIUC, that will make this plugin card behave differently in a Dell
-system than it will in other systems, and that doesn't seem right to
-me.
-
->  	/*
->  	 * If empty slot's power status is on, turn power off.  The IRQ isn't
->  	 * requested yet, so avoid triggering a notification with this command.
-> -- 
-> 2.18.1
-> 
+> On Mon, Feb 10, 2020 at 11:39:50AM +0800, Boqun Feng wrote:
+> > Hi,
+> > 
+> > This is the first part for virtual PCI support of Hyper-V guest on
+> > ARM64. The whole patchset doesn't have any functional change, but only
+> > refactors the pci-hyperv.c code to make it more arch-independent.
+> > 
+> > Previous version:
+> > v1: https://lore.kernel.org/lkml/20200121015713.69691-1-boqun.feng@gmail.com/
+> > v2: https://lore.kernel.org/linux-arm-kernel/20200203050313.69247-1-boqun.feng@gmail.com/
+> > 
+> > Changes since v2:
+> > 
+> > *	Rebased on 5.6-rc1
+> > 
+> > *	Reword commit logs as per Andrew's suggestion.
+> > 
+> > *	It makes more sense to have a generic interface to set the whole
+> > 	msi_entry rather than only the "address" field. So change
+> > 	hv_set_msi_address_from_desc() to hv_set_msi_entry_from_desc().
+> > 	Additionally, make it an inline function as per the suggestion
+> > 	of Andrew and Thomas.
+> > 
+> > *	Add the missing comment saying the partition_id of
+> > 	hv_retarget_device_interrupt must be self.
+> > 
+> > *	Add the explanation for why "__packed" is needed for TLFS
+> > 	structures.
+> > 
+> > I've done compile and boot test of this patchset, also done some tests
+> > with a pass-through NVMe device.
+> > 
+> > Suggestions and comments are welcome!
+> > 
+> > Regards,
+> > Boqun
+> > 
+> > Boqun Feng (3):
+> >   PCI: hv: Move hypercall related definitions into tlfs header
+> >   PCI: hv: Move retarget related structures into tlfs header
+> >   PCI: hv: Introduce hv_msi_entry
+> > 
+> >  arch/x86/include/asm/hyperv-tlfs.h  | 41 +++++++++++++++++++++++++++
+> >  arch/x86/include/asm/mshyperv.h     |  8 ++++++
+> >  drivers/pci/controller/pci-hyperv.c | 43 ++---------------------------
+> >  3 files changed, 52 insertions(+), 40 deletions(-)
+> > 
+> > -- 
+> > 2.24.1
+> > 
