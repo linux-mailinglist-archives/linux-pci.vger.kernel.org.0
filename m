@@ -2,123 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EE8C016912C
-	for <lists+linux-pci@lfdr.de>; Sat, 22 Feb 2020 19:14:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D2AF51696F9
+	for <lists+linux-pci@lfdr.de>; Sun, 23 Feb 2020 10:10:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbgBVSOP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 22 Feb 2020 13:14:15 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:36636 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726310AbgBVSOP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 22 Feb 2020 13:14:15 -0500
-Received: by mail-oi1-f195.google.com with SMTP id c16so5049164oic.3;
-        Sat, 22 Feb 2020 10:14:14 -0800 (PST)
+        id S1726208AbgBWJKB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 23 Feb 2020 04:10:01 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34334 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725980AbgBWJKB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 23 Feb 2020 04:10:01 -0500
+Received: by mail-wr1-f68.google.com with SMTP id n10so6845417wrm.1;
+        Sun, 23 Feb 2020 01:09:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-         :cc;
-        bh=wMQ3G8kaOVH0ihUQElGiW0JuHb2R8FaxxPppamq/tQA=;
-        b=aDIueX7pw6x8YMKhYRmjDRoA6YurfllH+G6jkwW8LnR8ID1BIcNSV0w7tXNuROkVfG
-         pM1Z9S37VGRz+XlzCJvJv5IvmOW0QALqb74XAaz/47e8NGnhgsMCpp/gRDpbPpNQaCNn
-         v5tX7/EYx1cuxCwkpsnmgol52Fd1HHT9+LuLWZKwHwYjwjl4kSYtKsziWb+cl/gfdHk3
-         XKQN09ZDJYc1xyWdYPy1ilYdhTx96BWSLd9SNY/oGUILQZJkMC+iS2hVRTYPhFR6UbS2
-         V7iysw2fIAjXj+3vb+uXTUg8Nq+OWOJ5fNQNdCFlaEN+rxqnIwFiWnRo87nWry93aXDF
-         BBqQ==
+        h=from:to:cc:subject:date:message-id;
+        bh=ZNp+EvVTHUsQTuzdSBoBSK7Xad89HXC39l9IXgu0L6k=;
+        b=qgn/kwOXb6rkHNyIZ6bRJng6LH3lH/HQl5AZwfwLmx0GS4J8ExGX9cHMVHTZ6gusnp
+         IxdZB3kMaWI9O5J58icoAOeghd7kIJXFSaavCppXoXS0C5m3QARTQhU6Q57ozihS0u7K
+         BM8LR6pw3Q2yk8nHMMjekoD5UTYdHdJ3hrjbUTWeJncaHnsoJk74/rvV9u/jbZD6CjH/
+         1yjLIPRfXIQKpf6Bn68PMnc8yvQrLQ4yW+qAI90qtMXww/UmKLdkGUPgI9+ZqqmGRzWc
+         bb2CfW3OuE9pYU3+GjUS0v/aUAcKONVTMl8Q7cxujjpxhnQwr0+XE1q+d9nSeEyDWDLr
+         wSLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-         :message-id:subject:to:cc;
-        bh=wMQ3G8kaOVH0ihUQElGiW0JuHb2R8FaxxPppamq/tQA=;
-        b=gaxd5LczH+WBiWyvEEgYPoDTU/HKT64V3wVLvJMyZ2+PS8LySd3oP4Usxpqvv+7Ko7
-         p05OUVYVjXmxBIxPWo5X5VWOjUY9y8wkeokGyLO/kz3zeFRzmN2i9T05wv9+SoUz2dKV
-         hZcmmGZUgfOH0/f0pRW+wT2/D5LA/ZDJ4xpk6wgn1ybPc7Bshsoc9yd5DwADu3oEzbr/
-         T3LW0uyqnYCpybmJzhOG5Izq3n1V9sT6WJsW8Qu+k46AGgY6HcOvG5Vq1StPgsJf0LtN
-         rjrUnLoz5SgbfVz/eZF7Mbn9NSG1JvvrWn5bx5otxiCRWnirMzb9OSdvkawChWCmr5iH
-         0gJg==
-X-Gm-Message-State: APjAAAXkfn65cHCdyI6jgEAAaYtaiWsplxq1DoMbSg2UUEDjWnr0aax/
-        MJVT/huQ8Fm7joC4fvBPV77esev79QiKCOhOr+k=
-X-Google-Smtp-Source: APXvYqxOt3rVvt54mdXIMY9NZ8D8uyKW+3kYbeVDIOUY7JrcrRf0N2Y4L5AOoI2DUCemeM2HW+ZB6QgmaeOFg9ApASY=
-X-Received: by 2002:aca:c401:: with SMTP id u1mr6991120oif.62.1582395254316;
- Sat, 22 Feb 2020 10:14:14 -0800 (PST)
-MIME-Version: 1.0
-Received: by 2002:a9d:12e:0:0:0:0:0 with HTTP; Sat, 22 Feb 2020 10:14:13 -0800 (PST)
-In-Reply-To: <20200222165617.GA207731@google.com>
-References: <20191029170250.GA43972@google.com> <20200222165617.GA207731@google.com>
-From:   "Michael ." <keltoiboy@gmail.com>
-Date:   Sun, 23 Feb 2020 05:14:13 +1100
-Message-ID: <CAFjuqNgOO89nVhju1R3m0q_P+y97vr+xo6--0yy34P63LFBY-g@mail.gmail.com>
-Subject: Re: PCI device function not being enumerated [Was: PCMCIA not working
- on Panasonic Toughbook CF-29]
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Dominik Brodowski <linux@dominikbrodowski.net>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Trevor Jacobs <trevor_jacobs@aol.com>,
-        Kris Cleveland <tridentperfusion@yahoo.com>,
-        Jeff <bluerocksaddles@willitsonline.com>,
-        Morgan Klym <moklym@gmail.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Philip Langdale <philipl@overt.org>,
-        Pierre Ossman <pierre@ossman.eu>,
-        Maxim Levitsky <maximlevitsky@gmail.com>,
-        linux-mmc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ZNp+EvVTHUsQTuzdSBoBSK7Xad89HXC39l9IXgu0L6k=;
+        b=ivuiVWRwNkrKIbMf4gkkhVLkc35wYK5SRsyUDo/7jr5MBNSbz9E42Ci5/KYrZNZbRz
+         KAJTZ2M1zkpu17QijUqp1UTNCiW6o41f9Yq8C4HQoy/CgYcYSPk6BmxLoRnLgjW+0F7+
+         d09vpmfml4k/5Qo49nMRLUOWbCd716X0LyeyTB6tYfliXGNCVuPorfG1hzPxnY8Umy+7
+         pVc10y3i83HQqaqdOf2MSdL9NxwHsSz04b3qCxN5kAjvP0n1bURJ7g4pyJb246VnqdPQ
+         nGA/knF1W/NuXDrv9s4WB7/zlmUdDafemO3R0ICB6cDQR+FgQPY/usDLt/jKLa1VbC7V
+         a4AQ==
+X-Gm-Message-State: APjAAAU19n4qFUhYK89AV2QG66k7PquwzZrq77k5pWjeMZwaT98uhV7Y
+        ET+mlXmUsKp5hbeIkqHsUnk=
+X-Google-Smtp-Source: APXvYqynWcijyO/xnVA8R+8xgwTevrjbD+iuKtHMtHFQDIaNbai1TGHrC8jRZpNnLtRHAd/Ruv6k3g==
+X-Received: by 2002:a5d:5381:: with SMTP id d1mr58709265wrv.259.1582448998448;
+        Sun, 23 Feb 2020 01:09:58 -0800 (PST)
+Received: from felia.fritz.box ([2001:16b8:2de2:db00:5dbb:1717:2cb6:4104])
+        by smtp.gmail.com with ESMTPSA id d9sm12657464wrx.94.2020.02.23.01.09.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 Feb 2020 01:09:58 -0800 (PST)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To:     David Daney <david.daney@cavium.com>,
+        Robert Richter <rrichter@marvell.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Will Deacon <will@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, Joe Perches <joe@perches.com>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH] MAINTAINERS: clean up PCIE DRIVER FOR CAVIUM THUNDERX
+Date:   Sun, 23 Feb 2020 10:09:50 +0100
+Message-Id: <20200223090950.5259-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn, yes this is still unfixed.
-I'm sorry that I haven't been able to pursue this but the weather in
-Australia has been horrendous since October last year. Your proposals
-sound good but are way beyond my knowledge and skill level to
-implement. I, and my friends, are happy to help in any way we can.
-Cheers.
-Michael.
+Commit e1ac611f57c9 ("dt-bindings: PCI: Convert generic host binding to
+DT schema") combines all information from pci-thunder-{pem,ecam}.txt
+into host-generic-pci.yaml, and deleted the two files in
+Documentation/devicetree/bindings/pci/.
 
-P.S. I apologise for the double reply
+Since then, ./scripts/get_maintainer.pl --self-test complains:
 
-On 23/02/2020, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> On Tue, Oct 29, 2019 at 12:02:50PM -0500, Bjorn Helgaas wrote:
->> [+cc Ulf, Philip, Pierre, Maxim, linux-mmc; see [1] for beginning of
->> thread, [2] for problem report and the patch Michael tested]
->>
->> On Tue, Oct 29, 2019 at 07:58:27PM +1100, Michael . wrote:
->> > Bjorn and Dominik.
->> > I am happy to let you know the patch did the trick, it compiled well
->> > on 5.4-rc4 and my friends in the CC list have tested the modified
->> > kernel and confirmed that both slots are now working as they should.
->> > As a group of dedicated Toughbook users and Linux users please accept
->> > our thanks your efforts and assistance is greatly appreciated.
->> >
->> > Now that we know this patch works what kernel do you think it will be
->> > released in? Will it make 5.4 or will it be put into 5.5 development
->> > for further testing?
->>
->> That patch was not intended to be a fix; it was just to test my guess
->> that the quirk might be related.
->>
->> Removing the quirk solved the problem *you're* seeing, but the quirk
->> was added in the first place to solve some other problem, and if we
->> simply remove the quirk, we may reintroduce the original problem.
->>
->> So we have to look at the history and figure out some way to solve
->> both problems.  I cc'd some people who might have insight.  Here are
->> some commits that look relevant:
->>
->>   5ae70296c85f ("mmc: Disabler for Ricoh MMC controller")
->>   03cd8f7ebe0c ("ricoh_mmc: port from driver to pci quirk")
->>
->>
->> [1]
->> https://lore.kernel.org/r/CAFjuqNi+knSb9WVQOahCVFyxsiqoGgwoM7Z1aqDBebNzp_-jYw@mail.gmail.com/
->> [2] https://lore.kernel.org/r/20191021160952.GA229204@google.com/
->
-> I guess this problem is still unfixed?  I hate the fact that we broke
-> something that used to work.
->
-> Maybe we need some sort of DMI check in ricoh_mmc_fixup_rl5c476() so
-> we skip it for Toughbooks?  Or maybe we limit the quirk to the
-> machines where it was originally needed?
->
-> Bjorn
->
+  no file matches F: Documentation/devicetree/bindings/pci/pci-thunder-*
+
+As the PCIE DRIVER FOR CAVIUM THUNDERX-relevant information is only a
+small part of the host-generic-pci.yaml, do not add this file to the
+PCIE DRIVER FOR CAVIUM THUNDERX entry, and only drop the reference to
+the removed files.
+
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+---
+Robert, are you still the maintainer of this driver?
+Rob Herring, please pick this patch.
+applies cleanly on current master and next-20200221
+
+ MAINTAINERS | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2af5fa73155e..d43a8f9769db 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12953,7 +12953,6 @@ M:	Robert Richter <rrichter@marvell.com>
+ L:	linux-pci@vger.kernel.org
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ S:	Supported
+-F:	Documentation/devicetree/bindings/pci/pci-thunder-*
+ F:	drivers/pci/controller/pci-thunder-*
+ 
+ PCIE DRIVER FOR HISILICON
+-- 
+2.17.1
+
