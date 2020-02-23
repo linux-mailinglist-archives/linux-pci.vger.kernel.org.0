@@ -2,101 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D2AF51696F9
-	for <lists+linux-pci@lfdr.de>; Sun, 23 Feb 2020 10:10:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 84B59169787
+	for <lists+linux-pci@lfdr.de>; Sun, 23 Feb 2020 13:21:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726208AbgBWJKB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 23 Feb 2020 04:10:01 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34334 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725980AbgBWJKB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 23 Feb 2020 04:10:01 -0500
-Received: by mail-wr1-f68.google.com with SMTP id n10so6845417wrm.1;
-        Sun, 23 Feb 2020 01:09:59 -0800 (PST)
+        id S1727274AbgBWMVn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 23 Feb 2020 07:21:43 -0500
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:6040 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726023AbgBWMVn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 23 Feb 2020 07:21:43 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=ZNp+EvVTHUsQTuzdSBoBSK7Xad89HXC39l9IXgu0L6k=;
-        b=qgn/kwOXb6rkHNyIZ6bRJng6LH3lH/HQl5AZwfwLmx0GS4J8ExGX9cHMVHTZ6gusnp
-         IxdZB3kMaWI9O5J58icoAOeghd7kIJXFSaavCppXoXS0C5m3QARTQhU6Q57ozihS0u7K
-         BM8LR6pw3Q2yk8nHMMjekoD5UTYdHdJ3hrjbUTWeJncaHnsoJk74/rvV9u/jbZD6CjH/
-         1yjLIPRfXIQKpf6Bn68PMnc8yvQrLQ4yW+qAI90qtMXww/UmKLdkGUPgI9+ZqqmGRzWc
-         bb2CfW3OuE9pYU3+GjUS0v/aUAcKONVTMl8Q7cxujjpxhnQwr0+XE1q+d9nSeEyDWDLr
-         wSLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ZNp+EvVTHUsQTuzdSBoBSK7Xad89HXC39l9IXgu0L6k=;
-        b=ivuiVWRwNkrKIbMf4gkkhVLkc35wYK5SRsyUDo/7jr5MBNSbz9E42Ci5/KYrZNZbRz
-         KAJTZ2M1zkpu17QijUqp1UTNCiW6o41f9Yq8C4HQoy/CgYcYSPk6BmxLoRnLgjW+0F7+
-         d09vpmfml4k/5Qo49nMRLUOWbCd716X0LyeyTB6tYfliXGNCVuPorfG1hzPxnY8Umy+7
-         pVc10y3i83HQqaqdOf2MSdL9NxwHsSz04b3qCxN5kAjvP0n1bURJ7g4pyJb246VnqdPQ
-         nGA/knF1W/NuXDrv9s4WB7/zlmUdDafemO3R0ICB6cDQR+FgQPY/usDLt/jKLa1VbC7V
-         a4AQ==
-X-Gm-Message-State: APjAAAU19n4qFUhYK89AV2QG66k7PquwzZrq77k5pWjeMZwaT98uhV7Y
-        ET+mlXmUsKp5hbeIkqHsUnk=
-X-Google-Smtp-Source: APXvYqynWcijyO/xnVA8R+8xgwTevrjbD+iuKtHMtHFQDIaNbai1TGHrC8jRZpNnLtRHAd/Ruv6k3g==
-X-Received: by 2002:a5d:5381:: with SMTP id d1mr58709265wrv.259.1582448998448;
-        Sun, 23 Feb 2020 01:09:58 -0800 (PST)
-Received: from felia.fritz.box ([2001:16b8:2de2:db00:5dbb:1717:2cb6:4104])
-        by smtp.gmail.com with ESMTPSA id d9sm12657464wrx.94.2020.02.23.01.09.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Feb 2020 01:09:58 -0800 (PST)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     David Daney <david.daney@cavium.com>,
-        Robert Richter <rrichter@marvell.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Will Deacon <will@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, Joe Perches <joe@perches.com>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH] MAINTAINERS: clean up PCIE DRIVER FOR CAVIUM THUNDERX
-Date:   Sun, 23 Feb 2020 10:09:50 +0100
-Message-Id: <20200223090950.5259-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1582460503; x=1613996503;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=nFrfdEws7Mg6zyQ4vp2uvz+5RN3YBvaRiyf1ods/ycM=;
+  b=qr7So0LfAjjfoRM5yCbNbM7ZmI8J/okB/A0/dO00fRpCisTTMj/L7E7J
+   BYz9Ehz7LTuUxAfbP158YM9LUR6wEvROOV4pQYg4A3h/n6W/xApWRy2Zo
+   ZIof30xn2KxA6/QqOTG93Jnu1v7Qij6pbGtT2tQXsa4eJWRcWtTQ7inYK
+   k=;
+IronPort-SDR: bqmpiaEdSnFT+aLdoDqmhEhdjReMPlSgzPXC3sB/A+Tf7QRYOd3pEc4VN/VRkAa0HLpPJxLCgN
+ KYGqsX5cogVw==
+X-IronPort-AV: E=Sophos;i="5.70,476,1574121600"; 
+   d="scan'208";a="26903876"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-c5104f52.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 23 Feb 2020 12:21:41 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2a-c5104f52.us-west-2.amazon.com (Postfix) with ESMTPS id C26E0A39EB;
+        Sun, 23 Feb 2020 12:21:40 +0000 (UTC)
+Received: from EX13D12EUA001.ant.amazon.com (10.43.165.48) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1236.3; Sun, 23 Feb 2020 12:21:40 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
+ EX13D12EUA001.ant.amazon.com (10.43.165.48) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Sun, 23 Feb 2020 12:21:39 +0000
+Received: from u961addbe640f56.ant.amazon.com (10.28.84.111) by
+ mail-relay.amazon.com (10.43.61.243) with Microsoft SMTP Server id
+ 15.0.1367.3 via Frontend Transport; Sun, 23 Feb 2020 12:21:37 +0000
+From:   Stanislav Spassov <stanspas@amazon.com>
+To:     <linux-pci@vger.kernel.org>
+CC:     Stanislav Spassov <stanspas@amazon.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        =?UTF-8?q?Jan=20H=20=2E=20Sch=C3=B6nherr?= <jschoenh@amazon.de>,
+        Wei Wang <wawei@amazon.de>
+Subject: [PATCH 0/3] Improve PCI device post-reset readiness polling
+Date:   Sun, 23 Feb 2020 13:20:54 +0100
+Message-ID: <20200223122057.6504-1-stanspas@amazon.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Commit e1ac611f57c9 ("dt-bindings: PCI: Convert generic host binding to
-DT schema") combines all information from pci-thunder-{pem,ecam}.txt
-into host-generic-pci.yaml, and deleted the two files in
-Documentation/devicetree/bindings/pci/.
+From: Stanislav Spassov <stanspas@amazon.de>
 
-Since then, ./scripts/get_maintainer.pl --self-test complains:
+Enable the global maximum polling time to be configured on the kernel
+command line, and make per-device overrides possible. This allows the
+default timeout to be lowered while accomodating devices that require
+more time to finish initialization after a reset.
 
-  no file matches F: Documentation/devicetree/bindings/pci/pci-thunder-*
+When Configuration Request Retry Status Software Visibility is enabled
+on the parent PCIe Root Port, it is better to poll the PCI_VENDOR_ID
+register to get the special CRS behavior specified in the PCI Express
+Base Specification. Polling a different register can result in system
+crashes due to core timeouts when the Root Port autonomously keeps
+retrying the Configuration Read without reporting back to the CPU.
 
-As the PCIE DRIVER FOR CAVIUM THUNDERX-relevant information is only a
-small part of the host-generic-pci.yaml, do not add this file to the
-PCIE DRIVER FOR CAVIUM THUNDERX entry, and only drop the reference to
-the removed files.
+Wei Wang (1):
+  PCI: Make PCIE_RESET_READY_POLL_MS configurable
 
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
----
-Robert, are you still the maintainer of this driver?
-Rob Herring, please pick this patch.
-applies cleanly on current master and next-20200221
+Stanislav Spassov (2):
+  PCI: Introduce per-device reset_ready_poll override
+  PCI: Add CRS handling to pci_dev_wait()
 
- MAINTAINERS | 1 -
- 1 file changed, 1 deletion(-)
+ .../admin-guide/kernel-parameters.txt         |   5 +
+ drivers/pci/pci.c                             | 157 +++++++++++++++---
+ drivers/pci/probe.c                           |   2 +
+ include/linux/pci.h                           |   1 +
+ 4 files changed, 138 insertions(+), 27 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2af5fa73155e..d43a8f9769db 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12953,7 +12953,6 @@ M:	Robert Richter <rrichter@marvell.com>
- L:	linux-pci@vger.kernel.org
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Supported
--F:	Documentation/devicetree/bindings/pci/pci-thunder-*
- F:	drivers/pci/controller/pci-thunder-*
- 
- PCIE DRIVER FOR HISILICON
+
+base-commit: bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9
 -- 
-2.17.1
+2.25.1
+
+
+
+
+Amazon Development Center Germany GmbH
+Krausenstr. 38
+10117 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
+Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
+Sitz: Berlin
+Ust-ID: DE 289 237 879
+
+
 
