@@ -2,43 +2,43 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 84B59169787
-	for <lists+linux-pci@lfdr.de>; Sun, 23 Feb 2020 13:21:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 34FAD169789
+	for <lists+linux-pci@lfdr.de>; Sun, 23 Feb 2020 13:22:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727274AbgBWMVn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 23 Feb 2020 07:21:43 -0500
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:6040 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbgBWMVn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 23 Feb 2020 07:21:43 -0500
+        id S1726806AbgBWMWH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 23 Feb 2020 07:22:07 -0500
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:1449 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726023AbgBWMWH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 23 Feb 2020 07:22:07 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1582460503; x=1613996503;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=nFrfdEws7Mg6zyQ4vp2uvz+5RN3YBvaRiyf1ods/ycM=;
-  b=qr7So0LfAjjfoRM5yCbNbM7ZmI8J/okB/A0/dO00fRpCisTTMj/L7E7J
-   BYz9Ehz7LTuUxAfbP158YM9LUR6wEvROOV4pQYg4A3h/n6W/xApWRy2Zo
-   ZIof30xn2KxA6/QqOTG93Jnu1v7Qij6pbGtT2tQXsa4eJWRcWtTQ7inYK
-   k=;
-IronPort-SDR: bqmpiaEdSnFT+aLdoDqmhEhdjReMPlSgzPXC3sB/A+Tf7QRYOd3pEc4VN/VRkAa0HLpPJxLCgN
- KYGqsX5cogVw==
+  t=1582460527; x=1613996527;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=lcnFscn91LfowQE1gEh7+eQLC7A7aDyLt4mHbYDGrHA=;
+  b=O+aizZUKCk2eEzQvzG5zk5oscFFqeifYNncIfWVpfGipu8gvDABCxbM3
+   rwwUj/xdYplE0EyAEmdkIpQua/aSfx4sqdJ1SnVVo5Q/MAWaffQzSccFx
+   L4Y+KwZ5EH5iCS+gGLwJ+0W5h+xCrnSYIFsoHVcyLQsCg2Nd9t4Pql/qI
+   4=;
+IronPort-SDR: TFIxAe00BbZavzHlPTEmqgSi2DF904VMgNoZ2FtfNhN1GWI//hLEJJBGYdSFBnFskiLYt8LpHW
+ svwjO7/zbhAQ==
 X-IronPort-AV: E=Sophos;i="5.70,476,1574121600"; 
-   d="scan'208";a="26903876"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-c5104f52.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 23 Feb 2020 12:21:41 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2a-c5104f52.us-west-2.amazon.com (Postfix) with ESMTPS id C26E0A39EB;
-        Sun, 23 Feb 2020 12:21:40 +0000 (UTC)
-Received: from EX13D12EUA001.ant.amazon.com (10.43.165.48) by
+   d="scan'208";a="18479465"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2a-1c1b5cdd.us-west-2.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 23 Feb 2020 12:21:54 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-1c1b5cdd.us-west-2.amazon.com (Postfix) with ESMTPS id CBA09A1BEC;
+        Sun, 23 Feb 2020 12:21:52 +0000 (UTC)
+Received: from EX13D12EUC002.ant.amazon.com (10.43.164.134) by
  EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1236.3; Sun, 23 Feb 2020 12:21:40 +0000
+ id 15.0.1236.3; Sun, 23 Feb 2020 12:21:52 +0000
 Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
- EX13D12EUA001.ant.amazon.com (10.43.165.48) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Sun, 23 Feb 2020 12:21:39 +0000
+ EX13D12EUC002.ant.amazon.com (10.43.164.134) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Sun, 23 Feb 2020 12:21:51 +0000
 Received: from u961addbe640f56.ant.amazon.com (10.28.84.111) by
  mail-relay.amazon.com (10.43.61.243) with Microsoft SMTP Server id
- 15.0.1367.3 via Frontend Transport; Sun, 23 Feb 2020 12:21:37 +0000
+ 15.0.1367.3 via Frontend Transport; Sun, 23 Feb 2020 12:21:49 +0000
 From:   Stanislav Spassov <stanspas@amazon.com>
 To:     <linux-pci@vger.kernel.org>
 CC:     Stanislav Spassov <stanspas@amazon.de>,
@@ -46,11 +46,14 @@ CC:     Stanislav Spassov <stanspas@amazon.de>,
         Thomas Gleixner <tglx@linutronix.de>,
         Andrew Morton <akpm@linux-foundation.org>,
         =?UTF-8?q?Jan=20H=20=2E=20Sch=C3=B6nherr?= <jschoenh@amazon.de>,
-        Wei Wang <wawei@amazon.de>
-Subject: [PATCH 0/3] Improve PCI device post-reset readiness polling
-Date:   Sun, 23 Feb 2020 13:20:54 +0100
-Message-ID: <20200223122057.6504-1-stanspas@amazon.com>
+        Wei Wang <wawei@amazon.de>, Jonathan Corbet <corbet@lwn.net>,
+        <linux-doc@vger.kernel.org>
+Subject: [PATCH 1/3] PCI: Make PCIE_RESET_READY_POLL_MS configurable
+Date:   Sun, 23 Feb 2020 13:20:55 +0100
+Message-ID: <20200223122057.6504-2-stanspas@amazon.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200223122057.6504-1-stanspas@amazon.com>
+References: <20200223122057.6504-1-stanspas@amazon.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -59,35 +62,96 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Stanislav Spassov <stanspas@amazon.de>
+From: Wei Wang <wawei@amazon.de>
 
-Enable the global maximum polling time to be configured on the kernel
-command line, and make per-device overrides possible. This allows the
-default timeout to be lowered while accomodating devices that require
-more time to finish initialization after a reset.
+The resonable value for the maximum time to wait for a PCI device to be
+ready after reset varies depending on the platform and the reliability
+of its set of devices.
 
-When Configuration Request Retry Status Software Visibility is enabled
-on the parent PCIe Root Port, it is better to poll the PCI_VENDOR_ID
-register to get the special CRS behavior specified in the PCI Express
-Base Specification. Polling a different register can result in system
-crashes due to core timeouts when the Root Port autonomously keeps
-retrying the Configuration Read without reporting back to the CPU.
+Signed-off-by: Wei Wang <wawei@amazon.de>
+Signed-off-by: Stanislav Spassov <stanspas@amazon.de>
+---
+ .../admin-guide/kernel-parameters.txt         |  5 +++++
+ drivers/pci/pci.c                             | 22 ++++++++++++++-----
+ 2 files changed, 22 insertions(+), 5 deletions(-)
 
-Wei Wang (1):
-  PCI: Make PCIE_RESET_READY_POLL_MS configurable
-
-Stanislav Spassov (2):
-  PCI: Introduce per-device reset_ready_poll override
-  PCI: Add CRS handling to pci_dev_wait()
-
- .../admin-guide/kernel-parameters.txt         |   5 +
- drivers/pci/pci.c                             | 157 +++++++++++++++---
- drivers/pci/probe.c                           |   2 +
- include/linux/pci.h                           |   1 +
- 4 files changed, 138 insertions(+), 27 deletions(-)
-
-
-base-commit: bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index dbc22d684627..5e4dade9acc8 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -3653,6 +3653,11 @@
+ 		nomsi	Do not use MSI for native PCIe PME signaling (this makes
+ 			all PCIe root ports use INTx for all services).
+ 
++	pcie_reset_ready_poll_ms= [PCI,PCIE]
++			Specifies timeout for PCI(e) device readiness polling
++			after device reset (in milliseconds).
++			Default: 60000 = 60 seconds
++
+ 	pcmv=		[HW,PCMCIA] BadgePAD 4
+ 
+ 	pd_ignore_unused
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index d828ca835a98..db9b58ab6c68 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -149,7 +149,19 @@ static int __init pcie_port_pm_setup(char *str)
+ __setup("pcie_port_pm=", pcie_port_pm_setup);
+ 
+ /* Time to wait after a reset for device to become responsive */
+-#define PCIE_RESET_READY_POLL_MS 60000
++#define PCIE_RESET_READY_POLL_MS_DEFAULT 60000
++
++int __read_mostly pcie_reset_ready_poll_ms = PCIE_RESET_READY_POLL_MS_DEFAULT;
++
++static int __init pcie_reset_ready_poll_ms_setup(char *str)
++{
++	int timeout;
++
++	if (!kstrtoint(str, 0, &timeout))
++		pcie_reset_ready_poll_ms = timeout;
++	return 1;
++}
++__setup("pcie_reset_ready_poll_ms=", pcie_reset_ready_poll_ms_setup);
+ 
+ /**
+  * pci_bus_max_busnr - returns maximum PCI bus number of given bus' children
+@@ -4506,7 +4518,7 @@ int pcie_flr(struct pci_dev *dev)
+ 	 */
+ 	msleep(100);
+ 
+-	return pci_dev_wait(dev, "FLR", PCIE_RESET_READY_POLL_MS);
++	return pci_dev_wait(dev, "FLR", pcie_reset_ready_poll_ms);
+ }
+ EXPORT_SYMBOL_GPL(pcie_flr);
+ 
+@@ -4551,7 +4563,7 @@ static int pci_af_flr(struct pci_dev *dev, int probe)
+ 	 */
+ 	msleep(100);
+ 
+-	return pci_dev_wait(dev, "AF_FLR", PCIE_RESET_READY_POLL_MS);
++	return pci_dev_wait(dev, "AF_FLR", pcie_reset_ready_poll_ms);
+ }
+ 
+ /**
+@@ -4596,7 +4608,7 @@ static int pci_pm_reset(struct pci_dev *dev, int probe)
+ 	pci_write_config_word(dev, dev->pm_cap + PCI_PM_CTRL, csr);
+ 	pci_dev_d3_sleep(dev);
+ 
+-	return pci_dev_wait(dev, "PM D3hot->D0", PCIE_RESET_READY_POLL_MS);
++	return pci_dev_wait(dev, "PM D3hot->D0", pcie_reset_ready_poll_ms);
+ }
+ 
+ /**
+@@ -4826,7 +4838,7 @@ int pci_bridge_secondary_bus_reset(struct pci_dev *dev)
+ {
+ 	pcibios_reset_secondary_bus(dev);
+ 
+-	return pci_dev_wait(dev, "bus reset", PCIE_RESET_READY_POLL_MS);
++	return pci_dev_wait(dev, "bus reset", pcie_reset_ready_poll_ms);
+ }
+ EXPORT_SYMBOL_GPL(pci_bridge_secondary_bus_reset);
+ 
 -- 
 2.25.1
 
