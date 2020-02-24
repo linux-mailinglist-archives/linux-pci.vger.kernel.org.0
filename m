@@ -2,120 +2,149 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7BDB116A820
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2020 15:16:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E683816A824
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2020 15:16:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727589AbgBXOPy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 Feb 2020 09:15:54 -0500
-Received: from foss.arm.com ([217.140.110.172]:37852 "EHLO foss.arm.com"
+        id S1727763AbgBXOP4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 Feb 2020 09:15:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727489AbgBXOPy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 24 Feb 2020 09:15:54 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC83730E;
-        Mon, 24 Feb 2020 06:15:53 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0D6CA3F534;
-        Mon, 24 Feb 2020 06:15:51 -0800 (PST)
-Date:   Mon, 24 Feb 2020 14:15:49 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Remi Pommarel <repk@triplefau.lt>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Yue Wang <yue.wang@Amlogic.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v6 0/7] PCI: amlogic: Make PCIe working reliably on AXG
- platforms
-Message-ID: <20200224141549.GB15614@e121166-lin.cambridge.arm.com>
-References: <20200123232943.10229-1-repk@triplefau.lt>
+        id S1727581AbgBXOPz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 24 Feb 2020 09:15:55 -0500
+Received: from localhost (52.sub-174-234-140.myvzw.com [174.234.140.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B01D520880;
+        Mon, 24 Feb 2020 14:15:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582553754;
+        bh=XCz98vLZW6w/xNhdXjYLn54ZixK2JilGaitOtPGmMvs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=CiqJ30OyI8S16FM0s04k11u8hdvW/ESmAR0LgjcOX3sDn0jmkQnhIKAK+66JUKaJl
+         TcnQ17I7B1cjisYZGQP23ile5qHfOKb+aY2TPcwFmbrG7ppVrUmQOJ4ZHd3a3NdLGg
+         Z+FB1pzImqT5cmXjYfSJSAMfBWz1JpYVsppB54z8=
+Date:   Mon, 24 Feb 2020 08:15:51 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Stanislav Spassov <stanspas@amazon.com>
+Cc:     linux-pci@vger.kernel.org, Stanislav Spassov <stanspas@amazon.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jan H =?iso-8859-1?Q?=2E_Sch=F6nherr?= <jschoenh@amazon.de>,
+        Wei Wang <wawei@amazon.de>, Jonathan Corbet <corbet@lwn.net>,
+        linux-doc@vger.kernel.org, Ashok Raj <ashok.raj@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Sinan Kaya <okaya@kernel.org>, Rajat Jain <rajatja@google.com>
+Subject: Re: [PATCH 1/3] PCI: Make PCIE_RESET_READY_POLL_MS configurable
+Message-ID: <20200224141551.GA217704@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200123232943.10229-1-repk@triplefau.lt>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200223122057.6504-2-stanspas@amazon.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 12:29:36AM +0100, Remi Pommarel wrote:
-> PCIe device probing failures have been seen on AXG platforms and were
-> due to unreliable clock signal output. Setting HHI_MIPI_CNTL0[26] bit
-> in MIPI's PHY registers solved the problem. This bit controls band gap
-> reference.
-> 
-> As discussed here [1] one of these shared MIPI/PCIE analog PHY register
-> bits was implemented in the clock driver as CLKID_MIPI_ENABLE. This adds
-> a PHY driver to control this bit instead, as well as setting the band
-> gap one in order to get reliable PCIE communication.
-> 
-> While at it add another PHY driver to control PCIE only PHY registers,
-> making AXG code more similar to G12A platform thus allowing to remove
-> some specific platform handling in pci-meson driver.
-> 
-> Please note that CLKID_MIPI_ENABLE removable will be done in a different
-> serie.
-> 
-> Changes since v5:
->  - Add additionalProperties in device tree binding documentation
->  - Make analog PHY required
-> 
-> Changes since v4:
->  - Rename the shared MIPI/PCIe PHY to analog
->  - Chain the MIPI/PCIe PHY to the PCIe one
-> 
-> Changes since v3:
->  - Go back to the shared MIPI/PCIe phy driver solution from v2
->  - Remove syscon usage
->  - Add all dt-bindings documentation
-> 
-> Changes since v2:
->  - Remove shared MIPI/PCIE device driver and use syscon to access register
->    in PCIE only driver instead
->  - Include devicetree documentation
-> 
-> Changes sinve v1:
->  - Move HHI_MIPI_CNTL0 bit control in its own PHY driver
->  - Add a PHY driver for PCIE_PHY registers
->  - Modify pci-meson.c to make use of both PHYs and remove specific
->    handling for AXG and G12A
-> 
-> [1] https://lkml.org/lkml/2019/12/16/119
-> 
-> Remi Pommarel (7):
->   dt-bindings: Add AXG PCIE PHY bindings
->   dt-bindings: Add AXG shared MIPI/PCIE analog PHY bindings
->   dt-bindings: PCI: meson: Update PCIE bindings documentation
->   arm64: dts: meson-axg: Add PCIE PHY nodes
->   phy: amlogic: Add Amlogic AXG MIPI/PCIE analog PHY Driver
->   phy: amlogic: Add Amlogic AXG PCIE PHY Driver
->   PCI: amlogic: Use AXG PCIE
-> 
->  .../bindings/pci/amlogic,meson-pcie.txt       |  22 +-
->  .../amlogic,meson-axg-mipi-pcie-analog.yaml   |  35 ++++
->  .../bindings/phy/amlogic,meson-axg-pcie.yaml  |  52 +++++
->  arch/arm64/boot/dts/amlogic/meson-axg.dtsi    |  16 ++
->  drivers/pci/controller/dwc/pci-meson.c        | 116 ++---------
->  drivers/phy/amlogic/Kconfig                   |  22 ++
->  drivers/phy/amlogic/Makefile                  |  12 +-
->  .../amlogic/phy-meson-axg-mipi-pcie-analog.c  | 188 +++++++++++++++++
->  drivers/phy/amlogic/phy-meson-axg-pcie.c      | 192 ++++++++++++++++++
->  9 files changed, 543 insertions(+), 112 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-axg-mipi-pcie-analog.yaml
->  create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-axg-pcie.yaml
->  create mode 100644 drivers/phy/amlogic/phy-meson-axg-mipi-pcie-analog.c
->  create mode 100644 drivers/phy/amlogic/phy-meson-axg-pcie.c
+[+cc Ashok, Alex, Sinan, Rajat]
 
-Hi Remi,
+On Sun, Feb 23, 2020 at 01:20:55PM +0100, Stanislav Spassov wrote:
+> From: Wei Wang <wawei@amazon.de>
+> 
+> The resonable value for the maximum time to wait for a PCI device to be
+> ready after reset varies depending on the platform and the reliability
+> of its set of devices.
 
-I am ready to pull this series in, do you want me to ? Or you prefer
-it to go via a different tree upstream ?
+There are several mechanisms in the spec for reducing these times,
+e.g., Readiness Notifications (PCIe r5.0, sec 6.23), the Readiness
+Time Reporting capability (sec 7.9.17), and ACPI _DSM methods (PCI
+Firmware Spec r3.2, sec 4.6.8, 4.6.9).
 
-Thanks,
-Lorenzo
+I would much rather use standard mechanisms like those instead of
+adding kernel parameters.  A user would have to use trial and error
+to figure out the value to use with a parameter like this, and that
+doesn't feel like a robust approach.
+
+> Signed-off-by: Wei Wang <wawei@amazon.de>
+> Signed-off-by: Stanislav Spassov <stanspas@amazon.de>
+> ---
+>  .../admin-guide/kernel-parameters.txt         |  5 +++++
+>  drivers/pci/pci.c                             | 22 ++++++++++++++-----
+>  2 files changed, 22 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index dbc22d684627..5e4dade9acc8 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -3653,6 +3653,11 @@
+>  		nomsi	Do not use MSI for native PCIe PME signaling (this makes
+>  			all PCIe root ports use INTx for all services).
+>  
+> +	pcie_reset_ready_poll_ms= [PCI,PCIE]
+> +			Specifies timeout for PCI(e) device readiness polling
+> +			after device reset (in milliseconds).
+> +			Default: 60000 = 60 seconds
+> +
+>  	pcmv=		[HW,PCMCIA] BadgePAD 4
+>  
+>  	pd_ignore_unused
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index d828ca835a98..db9b58ab6c68 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -149,7 +149,19 @@ static int __init pcie_port_pm_setup(char *str)
+>  __setup("pcie_port_pm=", pcie_port_pm_setup);
+>  
+>  /* Time to wait after a reset for device to become responsive */
+> -#define PCIE_RESET_READY_POLL_MS 60000
+> +#define PCIE_RESET_READY_POLL_MS_DEFAULT 60000
+> +
+> +int __read_mostly pcie_reset_ready_poll_ms = PCIE_RESET_READY_POLL_MS_DEFAULT;
+> +
+> +static int __init pcie_reset_ready_poll_ms_setup(char *str)
+> +{
+> +	int timeout;
+> +
+> +	if (!kstrtoint(str, 0, &timeout))
+> +		pcie_reset_ready_poll_ms = timeout;
+> +	return 1;
+> +}
+> +__setup("pcie_reset_ready_poll_ms=", pcie_reset_ready_poll_ms_setup);
+>  
+>  /**
+>   * pci_bus_max_busnr - returns maximum PCI bus number of given bus' children
+> @@ -4506,7 +4518,7 @@ int pcie_flr(struct pci_dev *dev)
+>  	 */
+>  	msleep(100);
+>  
+> -	return pci_dev_wait(dev, "FLR", PCIE_RESET_READY_POLL_MS);
+> +	return pci_dev_wait(dev, "FLR", pcie_reset_ready_poll_ms);
+>  }
+>  EXPORT_SYMBOL_GPL(pcie_flr);
+>  
+> @@ -4551,7 +4563,7 @@ static int pci_af_flr(struct pci_dev *dev, int probe)
+>  	 */
+>  	msleep(100);
+>  
+> -	return pci_dev_wait(dev, "AF_FLR", PCIE_RESET_READY_POLL_MS);
+> +	return pci_dev_wait(dev, "AF_FLR", pcie_reset_ready_poll_ms);
+>  }
+>  
+>  /**
+> @@ -4596,7 +4608,7 @@ static int pci_pm_reset(struct pci_dev *dev, int probe)
+>  	pci_write_config_word(dev, dev->pm_cap + PCI_PM_CTRL, csr);
+>  	pci_dev_d3_sleep(dev);
+>  
+> -	return pci_dev_wait(dev, "PM D3hot->D0", PCIE_RESET_READY_POLL_MS);
+> +	return pci_dev_wait(dev, "PM D3hot->D0", pcie_reset_ready_poll_ms);
+>  }
+>  
+>  /**
+> @@ -4826,7 +4838,7 @@ int pci_bridge_secondary_bus_reset(struct pci_dev *dev)
+>  {
+>  	pcibios_reset_secondary_bus(dev);
+>  
+> -	return pci_dev_wait(dev, "bus reset", PCIE_RESET_READY_POLL_MS);
+> +	return pci_dev_wait(dev, "bus reset", pcie_reset_ready_poll_ms);
+>  }
+>  EXPORT_SYMBOL_GPL(pci_bridge_secondary_bus_reset);
