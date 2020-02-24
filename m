@@ -2,57 +2,57 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 09E6C16AC7D
+	by mail.lfdr.de (Postfix) with ESMTP id 8A06E16AC7E
 	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2020 17:59:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728039AbgBXQ7J (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S1727746AbgBXQ7J (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Mon, 24 Feb 2020 11:59:09 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36733 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727746AbgBXQ7I (ORCPT
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55848 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727980AbgBXQ7I (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Feb 2020 11:59:08 -0500
-Received: by mail-wm1-f68.google.com with SMTP id p17so61666wma.1
-        for <linux-pci@vger.kernel.org>; Mon, 24 Feb 2020 08:59:06 -0800 (PST)
+Received: by mail-wm1-f65.google.com with SMTP id q9so31919wmj.5
+        for <linux-pci@vger.kernel.org>; Mon, 24 Feb 2020 08:59:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=XLHzcG1rM7CKaHACIaWqlr851SfTiMG1TWiRRSjmhnI=;
-        b=cYA2Ki3712y1AnkYyhSFyI0gPtpDlkJM+1q36yhaQXLM5yHq3MpQEGpQGFn5acTJNq
-         F0BBJHCxoFTbdxkeT2vlUqDSU2bBZcU0lb8elvwHyd4Vg/zVkkyjhd5+jJVBYTxNoe/1
-         T887AvB5daQAFRCqRCHFVryjl79Ik52OOPX76rCW6nsW+PTelLhaY0/XaXm/hm7XJZOT
-         bDtyCARPGJe9qEjvAqV4E1zbPS4JHztKZyP48RYwOQ+6UtYGoT41rVTvmBpGTezTRswQ
-         jOK+z0mNca9ZAwbWfU/DpnD214mbXaRo45wfSK3F3fh4dc+SQHsQqOySm7gSx2MTFu0R
-         hVPA==
+        bh=HsNqDpM5GYOb0rP3SKvjSjiXAgrPp7/dDnFzXTvMfm0=;
+        b=fxdWSvL7/PlqMuOjCbpoyDK0oOMZfWMx8Bn0sQViiqiE3H2JO3U4xq75c/gD0NU1IB
+         5LX+dV8sT5h1EGNCfmF3/Oc4OwWIiPSscSgJ9EdoXDkOLYlFea7GgkHZEKGQ4n3RX2xc
+         tE0Z9fTNGrynG92HHnK+qNkjvWnd1/LmhQMR8Wkp+U8ifjROHa1WaQQXNc85lp2jIC+P
+         lz56h7v5lvnlEFIVnmE4jx/Q/BDcbY3YEs++7gzkztWZ4dCkTt2gdyf4zasHzdwGusEP
+         V4s2WLd6VesfOZIZPnXJjsJsg1FHR6SX/xW3H+Vqf2K7q/htUfeBaETDNaFwfGHo9nb3
+         TUyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=XLHzcG1rM7CKaHACIaWqlr851SfTiMG1TWiRRSjmhnI=;
-        b=Ly+PtY5GLA1cpZ4NXANWW1DWKFcFp5w9A8tXHI/JJvTn4MYIUBbTAwk0AVJMdFth3E
-         lzSDzlgk2GqSYU2Q7mPZHl2lwzB4iv/QfnERbd9GVmlQcHNFaFc7xUvZWlWXvCpqPYkO
-         o6Zmc12ETH0/jQ27Xd1hlvu7BSCErGgNTY+H/1nFMvml58vuGkPbBbZkzsTtW8WoP03/
-         Y4WbeW6USe9nC8bslTFsNtM4htLeCzRYToxtLUGi5dp5Kk5NqzGymwvv5LpqgYlY5YHk
-         gK6+aXlxOOOBA8dyoWJLnM3OnGPBlS4WsGYxQSe5EqTfaTzbzyxpRb6sinwTZMmsH37r
-         BF7A==
-X-Gm-Message-State: APjAAAW62p7j7ZaBnWnztQvsmXYZSDXjmQOUaNLFx/zzOzybK/rAdmfm
-        5EVjG0gjAcgtoiMx2FliUEPOh2xDUDQ=
-X-Google-Smtp-Source: APXvYqyAQvDHFPlwol084YtmoxeK9ALvce8BoTf5MrLynyThLVJi07+L0kfZvMdagU1zen+M1p+zPA==
-X-Received: by 2002:a7b:c088:: with SMTP id r8mr33668wmh.18.1582563545996;
-        Mon, 24 Feb 2020 08:59:05 -0800 (PST)
+        bh=HsNqDpM5GYOb0rP3SKvjSjiXAgrPp7/dDnFzXTvMfm0=;
+        b=iPXPj85TnvnhdbFMfG5nUXIM/e6zkjizZpwBJebMs7Hn8wCy15Y1o9CcyTYq+qgT0S
+         rQ5xvIZdx7MkYt3MQ5f3Wnmi7Cg1vzlGNvVPJJOmo02rdv7U6sr8bH3y6FPZ9LmZPAo3
+         JIDyCbguhYi4lOiUeVzpFnxS6g1N5CUYphc8q4w6gVyPQHJLFFY8Pxcp7bWD08uhn2YT
+         FZNJMk5PvHXNaP6KNEyDF06yhz+it9+JSdc9yu/M+3i2rV8n8UNepCriscRfFaNISbD0
+         7G+POn/xI/X5lKnIbaoxB8tmVwA3mWeAG4OGiJxDJXz9K0MS7ZviG+4Kheko4rtC25VI
+         hTIg==
+X-Gm-Message-State: APjAAAWfZU6HYnEpii9dRfZDYcL3m0WFyvANSKf5Pl+Ow3joU+pvDdiV
+        tAKBlgcB19lAQqr53BpMkqhAxh8f3+c=
+X-Google-Smtp-Source: APXvYqxzLvSxV15TQeDzuS7Vx3zfQgb1/0PPrdplrfLn1QNB4Up5cq5+1azMjxbcKStUM/cjgwhbxA==
+X-Received: by 2002:a7b:c416:: with SMTP id k22mr35940wmi.10.1582563546869;
+        Mon, 24 Feb 2020 08:59:06 -0800 (PST)
 Received: from localhost.localdomain ([2001:171b:c9a8:fbc0:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id b10sm19473978wrt.90.2020.02.24.08.59.05
+        by smtp.gmail.com with ESMTPSA id b10sm19473978wrt.90.2020.02.24.08.59.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 08:59:05 -0800 (PST)
+        Mon, 24 Feb 2020 08:59:06 -0800 (PST)
 From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
 To:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         iommu@lists.linux-foundation.org, will@kernel.org,
         bhelgaas@google.com
 Cc:     joro@8bytes.org, robin.murphy@arm.com, jonathan.cameron@huawei.com,
         zhangfei.gao@linaro.org, robh@kernel.org
-Subject: [PATCH v2 4/6] iommu/arm-smmu-v3: Add command queue batching helpers
-Date:   Mon, 24 Feb 2020 17:58:44 +0100
-Message-Id: <20200224165846.345993-5-jean-philippe@linaro.org>
+Subject: [PATCH v2 5/6] iommu/arm-smmu-v3: Batch context descriptor invalidation
+Date:   Mon, 24 Feb 2020 17:58:45 +0100
+Message-Id: <20200224165846.345993-6-jean-philippe@linaro.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200224165846.345993-1-jean-philippe@linaro.org>
 References: <20200224165846.345993-1-jean-philippe@linaro.org>
@@ -63,88 +63,41 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-As more functions will implement command queue batching, add two helpers
-to simplify building a command list.
+Rather than publishing one command at a time when invalidating a context
+descriptor, batch the commands for all SIDs in the domain.
 
 Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 ---
- drivers/iommu/arm-smmu-v3.c | 37 ++++++++++++++++++++++++++-----------
- 1 file changed, 26 insertions(+), 11 deletions(-)
+ drivers/iommu/arm-smmu-v3.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index 068a16d0eabe..beeec366bc41 100644
+index beeec366bc41..12b2a0fa747e 100644
 --- a/drivers/iommu/arm-smmu-v3.c
 +++ b/drivers/iommu/arm-smmu-v3.c
-@@ -548,6 +548,11 @@ struct arm_smmu_cmdq {
- 	atomic_t			lock;
- };
+@@ -1512,6 +1512,7 @@ static void arm_smmu_sync_cd(struct arm_smmu_domain *smmu_domain,
+ 	size_t i;
+ 	unsigned long flags;
+ 	struct arm_smmu_master *master;
++	struct arm_smmu_cmdq_batch cmds = {};
+ 	struct arm_smmu_device *smmu = smmu_domain->smmu;
+ 	struct arm_smmu_cmdq_ent cmd = {
+ 		.opcode	= CMDQ_OP_CFGI_CD,
+@@ -1525,12 +1526,12 @@ static void arm_smmu_sync_cd(struct arm_smmu_domain *smmu_domain,
+ 	list_for_each_entry(master, &smmu_domain->devices, domain_head) {
+ 		for (i = 0; i < master->num_sids; i++) {
+ 			cmd.cfgi.sid = master->sids[i];
+-			arm_smmu_cmdq_issue_cmd(smmu, &cmd);
++			arm_smmu_cmdq_batch_add(smmu, &cmds, &cmd);
+ 		}
+ 	}
+ 	spin_unlock_irqrestore(&smmu_domain->devices_lock, flags);
  
-+struct arm_smmu_cmdq_batch {
-+	u64				cmds[CMDQ_BATCH_ENTRIES * CMDQ_ENT_DWORDS];
-+	int				num;
-+};
-+
- struct arm_smmu_evtq {
- 	struct arm_smmu_queue		q;
- 	u32				max_stalls;
-@@ -1482,6 +1487,24 @@ static int arm_smmu_cmdq_issue_sync(struct arm_smmu_device *smmu)
- 	return arm_smmu_cmdq_issue_cmdlist(smmu, NULL, 0, true);
+-	arm_smmu_cmdq_issue_sync(smmu);
++	arm_smmu_cmdq_batch_submit(smmu, &cmds);
  }
  
-+static void arm_smmu_cmdq_batch_add(struct arm_smmu_device *smmu,
-+				    struct arm_smmu_cmdq_batch *cmds,
-+				    struct arm_smmu_cmdq_ent *cmd)
-+{
-+	if (cmds->num == CMDQ_BATCH_ENTRIES) {
-+		arm_smmu_cmdq_issue_cmdlist(smmu, cmds->cmds, cmds->num, false);
-+		cmds->num = 0;
-+	}
-+	arm_smmu_cmdq_build_cmd(&cmds->cmds[cmds->num * CMDQ_ENT_DWORDS], cmd);
-+	cmds->num++;
-+}
-+
-+static int arm_smmu_cmdq_batch_submit(struct arm_smmu_device *smmu,
-+				      struct arm_smmu_cmdq_batch *cmds)
-+{
-+	return arm_smmu_cmdq_issue_cmdlist(smmu, cmds->cmds, cmds->num, true);
-+}
-+
- /* Context descriptor manipulation functions */
- static void arm_smmu_sync_cd(struct arm_smmu_domain *smmu_domain,
- 			     int ssid, bool leaf)
-@@ -2220,10 +2243,9 @@ static void arm_smmu_tlb_inv_range(unsigned long iova, size_t size,
- 				   size_t granule, bool leaf,
- 				   struct arm_smmu_domain *smmu_domain)
- {
--	u64 cmds[CMDQ_BATCH_ENTRIES * CMDQ_ENT_DWORDS];
- 	struct arm_smmu_device *smmu = smmu_domain->smmu;
- 	unsigned long start = iova, end = iova + size;
--	int i = 0;
-+	struct arm_smmu_cmdq_batch cmds = {};
- 	struct arm_smmu_cmdq_ent cmd = {
- 		.tlbi = {
- 			.leaf	= leaf,
-@@ -2242,18 +2264,11 @@ static void arm_smmu_tlb_inv_range(unsigned long iova, size_t size,
- 	}
- 
- 	while (iova < end) {
--		if (i == CMDQ_BATCH_ENTRIES) {
--			arm_smmu_cmdq_issue_cmdlist(smmu, cmds, i, false);
--			i = 0;
--		}
--
- 		cmd.tlbi.addr = iova;
--		arm_smmu_cmdq_build_cmd(&cmds[i * CMDQ_ENT_DWORDS], &cmd);
-+		arm_smmu_cmdq_batch_add(smmu, &cmds, &cmd);
- 		iova += granule;
--		i++;
- 	}
--
--	arm_smmu_cmdq_issue_cmdlist(smmu, cmds, i, true);
-+	arm_smmu_cmdq_batch_submit(smmu, &cmds);
- 
- 	/*
- 	 * Unfortunately, this can't be leaf-only since we may have
+ static int arm_smmu_alloc_cd_leaf_table(struct arm_smmu_device *smmu,
 -- 
 2.25.0
 
