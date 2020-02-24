@@ -2,104 +2,157 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DBB8B16AE50
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2020 19:05:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A87B416AEA6
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2020 19:24:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727426AbgBXSFK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 Feb 2020 13:05:10 -0500
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:59374 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726208AbgBXSFK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Feb 2020 13:05:10 -0500
+        id S1727901AbgBXSYb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 Feb 2020 13:24:31 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42439 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727877AbgBXSYb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Feb 2020 13:24:31 -0500
+Received: by mail-wr1-f65.google.com with SMTP id p18so7932866wre.9
+        for <linux-pci@vger.kernel.org>; Mon, 24 Feb 2020 10:24:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1582567509; x=1614103509;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:mime-version:
-   content-transfer-encoding;
-  bh=NICTr+BaOX4Un/cBgH5SEx9jaL0bDATdWKKW2yJzuZw=;
-  b=r4yN1bgn9RkytyJqLHbERAdrLhkEwMvxVfRJ6b6VRxrY29fJm26XB75N
-   RFQjJmw/UBLVVQShHvEL1Vl2xPW7UyPLsokltCOkgaIRGfb+WUd4xySRi
-   zAOkMmG2nZRfAQ5B87qhmiNBr1gHBSEMcjuGSIDLz8FhQdrHoq/UHHfn0
-   k=;
-IronPort-SDR: z7ITEUughIkabfK3Xr+wsEWnnCK2TwXSqWSu8s7cbFFlMe3xEo35j2AlbF4jpW0RhxeGi4WqAc
- 7a0Is+ZGrvwg==
-X-IronPort-AV: E=Sophos;i="5.70,480,1574121600"; 
-   d="scan'208";a="27168047"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-17c49630.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 24 Feb 2020 18:05:07 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1e-17c49630.us-east-1.amazon.com (Postfix) with ESMTPS id 97490A07B7;
-        Mon, 24 Feb 2020 18:05:04 +0000 (UTC)
-Received: from EX13D09EUC002.ant.amazon.com (10.43.164.73) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1236.3; Mon, 24 Feb 2020 18:05:03 +0000
-Received: from EX13D04EUB003.ant.amazon.com (10.43.166.235) by
- EX13D09EUC002.ant.amazon.com (10.43.164.73) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 24 Feb 2020 18:05:02 +0000
-Received: from EX13D04EUB003.ant.amazon.com ([10.43.166.235]) by
- EX13D04EUB003.ant.amazon.com ([10.43.166.235]) with mapi id 15.00.1497.000;
- Mon, 24 Feb 2020 18:05:02 +0000
-From:   "Spassov, Stanislav" <stanspas@amazon.de>
-To:     "helgaas@kernel.org" <helgaas@kernel.org>
-CC:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "ashok.raj@intel.com" <ashok.raj@intel.com>,
-        "okaya@kernel.org" <okaya@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "Wang, Wei" <wawei@amazon.de>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "Schoenherr, Jan H." <jschoenh@amazon.de>,
-        "rajatja@google.com" <rajatja@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH 2/3] PCI: Introduce per-device reset_ready_poll override
-Thread-Topic: [PATCH 2/3] PCI: Introduce per-device reset_ready_poll override
-Thread-Index: AQHV6kPY0XP3tPNngEia4H4MvyG6HagqapsAgAA6uoA=
-Date:   Mon, 24 Feb 2020 18:05:02 +0000
-Message-ID: <52543631a871ba576b9711d5b6a3fad12019cece.camel@amazon.de>
-References: <20200224143450.GA219843@google.com>
-In-Reply-To: <20200224143450.GA219843@google.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.166.10]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <113798D59EBFB64783DEB04E8D0D2988@amazon.com>
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JRxfwTIy/8+3jEzlkFDZdgky1C85KqEMpExdkb37WLo=;
+        b=s25B8T+S35H/O6yszlE4ht/8dnZTVbVI45eoc18FEdUcuiqMOkNv2En79g5o74Mjb1
+         zO0yPt9INl3chhwisC9rzUkdJf0KZaX+EEaOzn4at8814D7OV6Ve3Y/q4pwkE9wi4gYu
+         4NYIQP85Zbbc1PlNfDZfjeA3U8wAvoenL2JO0jnQMn9vhAAuMTLgi9jQn9Q1AdYeuJJU
+         BkB5JJMJxdDXUmmSYzWum50ng/h3NEbyy9CZzm/kqZ1bBayTgnMnxX3UOetLLAqiANAe
+         ytqloaU+0oK0O/ROB9DQ4hPFo9/4wTvVQGYWlX4dBA8x+YHwhPudv6KQaaVQDMvhpCtT
+         SQXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JRxfwTIy/8+3jEzlkFDZdgky1C85KqEMpExdkb37WLo=;
+        b=dGMD0aLRKdeCQFsQLaMMLOMezQPpjI0o2GjViYImetoYgs9WqDD7FNEM9MGzTYpu0/
+         nkCS0xGx4kXjuuKjJvZjFdxquJL8swpv7TmGxrNKyCkvcFZfv1u0mwqeGXyDyiTgJ0A0
+         kTp7OEtRMlBa6n3/Ajx3GCVkQDdId9afjAqBhGorIGI0QUwkmRA3QSYaJVthHD+Vt9Vl
+         JhvzoxWuQaOjpJBUZbBE1VF4p/mOzw0aVuNoWnkr/8HhNDYd/AdU6oK7YWJSZ2LvW/zb
+         VkppOQ55CrkxhbzrHxJLlpDNCsNQYK0n9/HfLtcdK9prGECdW/SGx+TzJqYIL8+FuVHH
+         dvew==
+X-Gm-Message-State: APjAAAUymHq/ByewxKPi/UtmzgLetIwkxe5+xmdAyUVVlPAJnvON93/J
+        U3mqLzXKE9JYzGhSnYX7CFPBHg==
+X-Google-Smtp-Source: APXvYqzE3blpq1LSjWRjclFKCyKwQ41mykQ2DJWxVVDjuNwoKAu6osDlQgygC/xn0dF39ObvsiZRIA==
+X-Received: by 2002:adf:fec4:: with SMTP id q4mr9813022wrs.368.1582568669522;
+        Mon, 24 Feb 2020 10:24:29 -0800 (PST)
+Received: from localhost.localdomain ([2001:171b:c9a8:fbc0:116c:c27a:3e7f:5eaf])
+        by smtp.gmail.com with ESMTPSA id n3sm304255wmc.27.2020.02.24.10.24.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2020 10:24:29 -0800 (PST)
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org
+Cc:     joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        catalin.marinas@arm.com, will@kernel.org, robin.murphy@arm.com,
+        kevin.tian@intel.com, baolu.lu@linux.intel.com,
+        Jonathan.Cameron@huawei.com, jacob.jun.pan@linux.intel.com,
+        christian.koenig@amd.com, yi.l.liu@intel.com,
+        zhangfei.gao@linaro.org
+Subject: [PATCH v4 00/26] iommu: Shared Virtual Addressing and SMMUv3 support
+Date:   Mon, 24 Feb 2020 19:23:35 +0100
+Message-Id: <20200224182401.353359-1-jean-philippe@linaro.org>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTAyLTI0IGF0IDA4OjM0IC0wNjAwLCBCam9ybiBIZWxnYWFzIHdyb3RlOg0K
-PiBJIGxpa2UgdGhlIGZhY3RvcmluZyBvdXQgb2YgdGhlIHRpbWVvdXQsIHNpbmNlIGFsbCBjYWxs
-ZXJzIG9mDQo+IHBjaV9kZXZfd2FpdCgpIHN1cHBseSB0aGUgc2FtZSB2YWx1ZS4gIFRoYXQgY291
-bGQgYmUgaXRzIG93biBzZXBhcmF0ZQ0KPiBwcmVsaW1pbmFyeSBwYXRjaC4uLg0KDQpBZ3JlZWQu
-IFRoZSBuZXh0IHZlcnNpb24gb2YgdGhpcyBwYXRjaCBzZXJpZXMgd2lsbCBkbyB0aGUgcmVmYWN0
-b3Igc2VwYXJhdGVseS4NCg0KSSBhbSB0aGlua2luZyB3ZSBtaWdodCBhbHNvIHdhbnQgdG8gcmVw
-bGFjZSB0aGUgInJlc2V0X3R5cGUiIHdpdGggYW4gZW51bQ0KdGhhdCBpbmRleGVzIGludG8gYW4g
-YXJyYXkgdG8gZ2V0IHRoZSBzdHJpbmcsIGJ1dCAtLSBtb3JlIGltcG9ydGFudGx5IC0tDQppbmRl
-eGVzIGludG8gYW4gYXJyYXkgb2YgcGVyLWRldmljZSBvdmVycmlkZXMgZm9yIHRoZSB2YXJpb3Vz
-IHJlc2V0IHR5cGVzLg0KQXMgcGVyIGRpc2N1c3Npb24gb24gUEFUQ0ggMSwgSSBub3RpY2VkIHRo
-ZSBBQ1BJIF9EU00gbWV0aG9kIGRldGFpbGVkIGluDQpQQ0kgRmlybXdhcmUgU3BlYyByMy4yLCA0
-LjYuOSBjYW4gcHJvdmlkZSBpbmRpdmlkdWFsIGRlbGF5IHZhbHVlcyBmb3IgZml2ZQ0KZGlmZmVy
-ZW50IHNjZW5hcmlvcyAoQ29udmVudGlvbmFsIFJlc2V0LCBETF9VcCwgRkxSLCBEM2hvdCB0byBE
-MCwgVkYgRW5hYmxlKSwNCnNvIHdlIHNob3VsZCBwcm9iYWJseSBzdG9yZSBlYWNoIG9mIHRoZW0g
-aW4gc3RydWN0IHBjaV9kZXYuDQoNCj4gSSdtIGEgbGl0dGxlIHdhcnkgb2YgImxvd2VyaW5nIHRo
-ZSBnbG9iYWwgZGVmYXVsdCBwb3N0LXJlc2V0IHRpbWVvdXQiDQo+IGJlY2F1c2UgdGhhdCdzIG5v
-dCBzYWZlIGluIGdlbmVyYWwuICBGb3IgZXhhbXBsZSwgYSBob3QtYWRkZWQgZGV2aWNlDQo+IHRo
-YXQgaXMgY29tcGxldGVseSBzcGVjIGNvbXBsaWFudCByZWdhcmRpbmcgcG9zdC1yZXNldCB0aW1p
-bmcgbWF5IG5vdA0KPiB3b3JrIGNvcnJlY3RseSBpZiB3ZSd2ZSBsb3dlcmVkIGEgZ2xvYmFsIHRp
-bWVvdXQuDQo+IA0KDQpUaGF0IG1ha2VzIHNlbnNlLiBIb3dldmVyLCB0aGUgdGltZW91dCBpcyBj
-dXJyZW50bHkgMSBtaW51dGUuDQpUaGUgb25seSB1c2VyIG9mIHRoaXMgdmFsdWUgaXMgcGNpX2Rl
-dl93YWl0KCksIHdoaWNoIGlzIGl0c2VsZg0Kb25seSBpbnZva2VkIGFzIHBhcnQgb2YgdmFyaW91
-cyByZXNldHMuIEFyZSB0aGVyZSBhbnkgc2NlbmFyaW9zDQp3aGVyZSB0aGF0IG11Y2ggdGltZSBp
-cyB0cnVseSBuZWVkZWQgYWZ0ZXIgYSBkZXZpY2UgcmVzZXQ/DQoNCg0KCgoKQW1hem9uIERldmVs
-b3BtZW50IENlbnRlciBHZXJtYW55IEdtYkgKS3JhdXNlbnN0ci4gMzgKMTAxMTcgQmVybGluCkdl
-c2NoYWVmdHNmdWVocnVuZzogQ2hyaXN0aWFuIFNjaGxhZWdlciwgSm9uYXRoYW4gV2Vpc3MKRWlu
-Z2V0cmFnZW4gYW0gQW10c2dlcmljaHQgQ2hhcmxvdHRlbmJ1cmcgdW50ZXIgSFJCIDE0OTE3MyBC
-ClNpdHo6IEJlcmxpbgpVc3QtSUQ6IERFIDI4OSAyMzcgODc5CgoK
+Shared Virtual Addressing (SVA) allows to share process page tables with
+devices using the IOMMU. Add a generic implementation of the IOMMU SVA
+API, and add support in the Arm SMMUv3 driver.
+
+Previous versions of this patchset were sent over a year ago [1][2] but
+we've made a lot of progress since then:
+
+* ATS support for SMMUv3 was merged in v5.2.
+* The bind() and fault reporting APIs have been merged in v5.3.
+* IOASID were added in v5.5.
+* SMMUv3 PASID was added in v5.6, with some pending for v5.7.
+
+* The first user of the bind() API will be merged in v5.7 [3]. The zip
+  accelerator is also the first piece of hardware that I've been able to
+  use for testing (previous versions were developed with software models)
+  and I now have tools for evaluating SVA performance. Unfortunately I
+  still don't have hardware that supports ATS and PRI; the zip accelerator
+  uses stall.
+
+These are the remaining changes for SVA support in SMMUv3. Since v3 [1]
+I fixed countless bugs and - I think - addressed everyone's comments.
+Thanks to recent MMU notifier rework, iommu-sva.c is a lot more
+straightforward. I'm still unhappy with the complicated locking in the
+SMMUv3 driver resulting from patch 12 (Seize private ASID), but I
+haven't found anything better.
+
+Please find all SVA patches on branches sva/current and sva/zip-devel at
+https://jpbrucker.net/git/linux
+
+[1] https://lore.kernel.org/linux-iommu/20180920170046.20154-1-jean-philippe.brucker@arm.com/
+[2] https://lore.kernel.org/linux-iommu/20180511190641.23008-1-jean-philippe.brucker@arm.com/
+[3] https://lore.kernel.org/linux-iommu/1581407665-13504-1-git-send-email-zhangfei.gao@linaro.org/
+
+Jean-Philippe Brucker (26):
+  mm/mmu_notifiers: pass private data down to alloc_notifier()
+  iommu/sva: Manage process address spaces
+  iommu: Add a page fault handler
+  iommu/sva: Search mm by PASID
+  iommu/iopf: Handle mm faults
+  iommu/sva: Register page fault handler
+  arm64: mm: Pin down ASIDs for sharing mm with devices
+  iommu/io-pgtable-arm: Move some definitions to a header
+  iommu/arm-smmu-v3: Manage ASIDs with xarray
+  arm64: cpufeature: Export symbol read_sanitised_ftr_reg()
+  iommu/arm-smmu-v3: Share process page tables
+  iommu/arm-smmu-v3: Seize private ASID
+  iommu/arm-smmu-v3: Add support for VHE
+  iommu/arm-smmu-v3: Enable broadcast TLB maintenance
+  iommu/arm-smmu-v3: Add SVA feature checking
+  iommu/arm-smmu-v3: Add dev_to_master() helper
+  iommu/arm-smmu-v3: Implement mm operations
+  iommu/arm-smmu-v3: Hook up ATC invalidation to mm ops
+  iommu/arm-smmu-v3: Add support for Hardware Translation Table Update
+  iommu/arm-smmu-v3: Maintain a SID->device structure
+  iommu/arm-smmu-v3: Ratelimit event dump
+  dt-bindings: document stall property for IOMMU masters
+  iommu/arm-smmu-v3: Add stall support for platform devices
+  PCI/ATS: Add PRI stubs
+  PCI/ATS: Export symbols of PRI functions
+  iommu/arm-smmu-v3: Add support for PRI
+
+ .../devicetree/bindings/iommu/iommu.txt       |   18 +
+ arch/arm64/include/asm/mmu.h                  |    1 +
+ arch/arm64/include/asm/mmu_context.h          |   11 +-
+ arch/arm64/kernel/cpufeature.c                |    1 +
+ arch/arm64/mm/context.c                       |  103 +-
+ drivers/iommu/Kconfig                         |   13 +
+ drivers/iommu/Makefile                        |    2 +
+ drivers/iommu/arm-smmu-v3.c                   | 1354 +++++++++++++++--
+ drivers/iommu/io-pgfault.c                    |  533 +++++++
+ drivers/iommu/io-pgtable-arm.c                |   27 +-
+ drivers/iommu/io-pgtable-arm.h                |   30 +
+ drivers/iommu/iommu-sva.c                     |  596 ++++++++
+ drivers/iommu/iommu-sva.h                     |   64 +
+ drivers/iommu/iommu.c                         |    1 +
+ drivers/iommu/of_iommu.c                      |    5 +-
+ drivers/misc/sgi-gru/grutlbpurge.c            |    4 +-
+ drivers/pci/ats.c                             |    4 +
+ include/linux/iommu.h                         |   73 +
+ include/linux/mmu_notifier.h                  |   10 +-
+ include/linux/pci-ats.h                       |    8 +
+ mm/mmu_notifier.c                             |    6 +-
+ 21 files changed, 2699 insertions(+), 165 deletions(-)
+ create mode 100644 drivers/iommu/io-pgfault.c
+ create mode 100644 drivers/iommu/io-pgtable-arm.h
+ create mode 100644 drivers/iommu/iommu-sva.c
+ create mode 100644 drivers/iommu/iommu-sva.h
+
+-- 
+2.25.0
 
