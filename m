@@ -2,278 +2,187 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E2667169E43
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2020 07:11:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CA09169FDF
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2020 09:18:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726452AbgBXGLk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 Feb 2020 01:11:40 -0500
-Received: from mail-eopbgr130042.outbound.protection.outlook.com ([40.107.13.42]:52256
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725895AbgBXGLk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 24 Feb 2020 01:11:40 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LPsVLUTdNfhXf1LfPgWbOkMjtrAyS17hAhTK0+/1G2hx9M7f88T+bUvSfoUVMQUCkbM6HeQHwmshEObdnb/D7Rb107JLcm3uu/BB+vBqpqs8T3nTxyQcCHNINNcH/fdXqdkrOANOy2+6tOFb6FlO8VZjwmAhzMLYzF/w+iq8Fp0F7HMYa5qIrcEkE7sz84fDD+I28x1hBrxVtXiHvS50QxH3Gvno1svS2oH+RTxZ5aWIYkSaEAammF2R6dqkrKbCHL2wKKc4WSoKeqak1U3cUei9vtU52PS9ApkbGL1EMv2H3fRLgqXflIKCzoze27Zuje0Wdi3JI3JfiPzWm1JX6A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oTOC+Bii6ePWjXxoI4at/bvTUqYpaBoqkxvw7G+sdko=;
- b=GFR0iwYzxw0WX1+zzws/s5yPhNrap8B6Ks/NQNSizMdHPAkBu9mm1A3q1x5jqXo2YzGQ0Uu89eRw9+MgYJ6qGZmKIm9GHzfNrGMnVepuutmWE4sjySX7tRG68yKNOAmucEltDsYCPJBJxzxrlV6TGMrDmd/DRBPKwRq7zYqTb8NtxdkER9NLv5vwq+LI/yvwFVeR7eUU4YbhxryfywBTxfZbztrjVmcZ3f8X5V85NPaPYIOHNRIHUPa+UzHOu4v9cBXyiayRZqa3fB/nbFuP8DAoorEwKtpo8GWL5WUjpBukfjMiicz9Ec43v4tmSkGDEvDosLVFYjqZJogpZpDUiw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oTOC+Bii6ePWjXxoI4at/bvTUqYpaBoqkxvw7G+sdko=;
- b=pYvpyMRexuK/7XEK3erZaR1dK+QwliesiVeM5GLwNTFVesQPSI8zZiDVWbhR5E1AxDIQQCqdRXPLQXe6QviYUyMImytm5BHPl2ht2BflHirMjDL1mpAX4Q4RfNCugSf2hq7yFVe12k1z0MAzdDPlPPEspEijWeacshHCvkSPCBQ=
-Received: from DB8PR04MB6747.eurprd04.prod.outlook.com (20.179.250.159) by
- DB8PR04MB5659.eurprd04.prod.outlook.com (20.179.10.141) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.21; Mon, 24 Feb 2020 06:11:34 +0000
-Received: from DB8PR04MB6747.eurprd04.prod.outlook.com
- ([fe80::104b:e88b:b0d3:cdaa]) by DB8PR04MB6747.eurprd04.prod.outlook.com
- ([fe80::104b:e88b:b0d3:cdaa%4]) with mapi id 15.20.2750.021; Mon, 24 Feb 2020
- 06:11:34 +0000
-From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
-        Leo Li <leoyang.li@nxp.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: RE: [PATCHv10 12/13] arm64: dts: lx2160a: Add PCIe controller DT
- nodes
-Thread-Topic: [PATCHv10 12/13] arm64: dts: lx2160a: Add PCIe controller DT
- nodes
-Thread-Index: AQHV4iOXLNKGRl8bAUutlzjf4GryuKgpnxEAgABOxjA=
-Date:   Mon, 24 Feb 2020 06:11:33 +0000
-Message-ID: <DB8PR04MB67477DDF8E9176070387C3B784EC0@DB8PR04MB6747.eurprd04.prod.outlook.com>
-References: <20200213040644.45858-1-Zhiqiang.Hou@nxp.com>
- <20200213040644.45858-13-Zhiqiang.Hou@nxp.com>
- <20200224012809.GB14331@dragon>
-In-Reply-To: <20200224012809.GB14331@dragon>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=zhiqiang.hou@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 68997dde-36d4-4685-e3e8-08d7b8f06622
-x-ms-traffictypediagnostic: DB8PR04MB5659:|DB8PR04MB5659:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB8PR04MB5659658246C32A080F800D8F84EC0@DB8PR04MB5659.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5516;
-x-forefront-prvs: 032334F434
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(136003)(376002)(366004)(346002)(199004)(189003)(26005)(71200400001)(316002)(8676002)(54906003)(52536014)(81166006)(33656002)(53546011)(6506007)(2906002)(478600001)(81156014)(7696005)(9686003)(8936002)(5660300002)(55016002)(6916009)(186003)(76116006)(64756008)(66556008)(4326008)(86362001)(7416002)(66946007)(66446008)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB5659;H:DB8PR04MB6747.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: rjVqfpQfOINw4/8YiOmk4OeW/H4/1uV8co+LWF9G4LP0SIXYxkZzVAxAs72tRw5KvtYxGyPftHswk2UOBwwzbzZZZJ7CLGTdc73rrsi1BdGMvQMC0cgAVV3friNTTU04tal+I5y+4XlWKc2JYijYZkmTVRm/MGBb8tt55csf/I4CIexbuMdDxQgsJX2B5I9RtLwOVqceXVLYhsQ6m+XRwEf5AD8lsbfbpDG0UEJ9Ke3SPykFl5xzWBrvuryWVCXH2f418Q0tUK2eLEDQR+z6vsCC2R4xED0kwTqstgToPFlBawQ3EhsJHUv1EeVhCEvBwR8gjQIa8gq3RvL4EkH/yy8qtv1dDDXjyaJR7HikkSgvSR6GT3JjLYiC7Rd7hLuQqYHAzv2dxDyF/x8LNDX61fNjQfO7nR42NwQ76YnIeqskBdWNSnPBe2QwrKtqbRiV
-x-ms-exchange-antispam-messagedata: +DU2IN43gz38oV0S9o+Kzwf6OmMTlfubNC1I/KAt2IXrnLgSi+RypWla/ivizUbMN38v+RHdnB/7jdDKYpzncHxGl3hAnhS4ey2ysQ5lCEfPwqjLTuiHME4VMbqeGqkvhTKpR9dLzboLhzEmQD63Gg==
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        id S1727115AbgBXISt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 Feb 2020 03:18:49 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:60135 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbgBXISs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Feb 2020 03:18:48 -0500
+X-Greylist: delayed 448 seconds by postgrey-1.27 at vger.kernel.org; Mon, 24 Feb 2020 03:18:48 EST
+Received: from mwalle01.sab.local. (unknown [213.135.10.150])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 7C5B122ED5;
+        Mon, 24 Feb 2020 09:11:17 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1582531878;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=uunZrjy3s12DlnbMOTQxFCthmdhavGDhtf/Hy0AGfm4=;
+        b=m9o9jxnJg36uapNHQq8CiIPZZ86tRsoXEi2xbTjK5WeVWxg1a1X3z/QkoZVdwrQgymsIsx
+        YNvAOcuus8KyqKkUNvDDZQrM8CyYSbKuSUyS/Tq+PQ5SNfwbAA0dVxjM3YQkUOmp16v8SO
+        pBdHRGdFQ157gdiJUdjz9ZF7weMgNA8=
+From:   Michael Walle <michael@walle.cc>
+To:     xiaowei.bao@nxp.com
+Cc:     Zhiqiang.Hou@nxp.com, bhelgaas@google.com,
+        devicetree@vger.kernel.org, leoyang.li@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        lorenzo.pieralisi@arm.com, mark.rutland@arm.com,
+        minghuan.Lian@nxp.com, mingkai.hu@nxp.com, robh+dt@kernel.org,
+        roy.zang@nxp.com, shawnguo@kernel.org,
+        Michael Walle <michael@walle.cc>
+Subject: Re: [PATCH v6 2/3] arm64: dts: ls1028a: Add PCIe controller DT nodes
+Date:   Mon, 24 Feb 2020 09:11:05 +0100
+Message-Id: <20200224081105.13878-1-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190902034319.14026-2-xiaowei.bao@nxp.com>
+References: <20190902034319.14026-2-xiaowei.bao@nxp.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 68997dde-36d4-4685-e3e8-08d7b8f06622
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Feb 2020 06:11:34.0409
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: dczA/Dp64g0SFQCZR7gyN8wMv855f5jr78GotKWVCgPjvA+AGGB9F6SjXJaxhIZOVYJ2ARdwaNpv1Ay/isnMbQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB5659
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++++
+X-Spam-Level: ******
+X-Rspamd-Server: web
+X-Spam-Status: Yes, score=6.40
+X-Spam-Score: 6.40
+X-Rspamd-Queue-Id: 7C5B122ED5
+X-Spamd-Result: default: False [6.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         R_MISSING_CHARSET(2.50)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         BROKEN_CONTENT_TYPE(1.50)[];
+         NEURAL_SPAM(0.00)[0.765];
+         DKIM_SIGNED(0.00)[];
+         DBL_PROHIBIT(0.00)[0.51.225.64:email,0.53.103.224:email];
+         RCPT_COUNT_TWELVE(0.00)[17];
+         MID_CONTAINS_FROM(1.00)[];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:12941, ipnet:213.135.0.0/19, country:DE];
+         SUSPICIOUS_RECIPS(1.50)[]
+X-Spam: Yes
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-SGkgU2hhd24sDQoNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBTaGF3
-biBHdW8gPHNoYXduZ3VvQGtlcm5lbC5vcmc+DQo+IFNlbnQ6IDIwMjDE6jLUwjI0yNUgOToyOA0K
-PiBUbzogWi5xLiBIb3UgPHpoaXFpYW5nLmhvdUBueHAuY29tPg0KPiBDYzogbGludXgtcGNpQHZn
-ZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiBk
-ZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsN
-Cj4gYmhlbGdhYXNAZ29vZ2xlLmNvbTsgcm9iaCtkdEBrZXJuZWwub3JnOyBhbmRyZXcubXVycmF5
-QGFybS5jb207DQo+IGFybmRAYXJuZGIuZGU7IG1hcmsucnV0bGFuZEBhcm0uY29tOyBsLnN1YnJh
-aG1hbnlhQG1vYml2ZWlsLmNvLmluOw0KPiBtLmthcnRoaWtleWFuQG1vYml2ZWlsLmNvLmluOyBM
-ZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNvbT47DQo+IGxvcmVuem8ucGllcmFsaXNpQGFybS5jb207
-IGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29tOw0KPiB3aWxsLmRlYWNvbkBhcm0uY29tOyBNaW5na2Fp
-IEh1IDxtaW5na2FpLmh1QG54cC5jb20+OyBNLmguIExpYW4NCj4gPG1pbmdodWFuLmxpYW5Abnhw
-LmNvbT47IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiBTdWJqZWN0OiBSZTog
-W1BBVENIdjEwIDEyLzEzXSBhcm02NDogZHRzOiBseDIxNjBhOiBBZGQgUENJZSBjb250cm9sbGVy
-IERUDQo+IG5vZGVzDQo+IA0KPiBPbiBUaHUsIEZlYiAxMywgMjAyMCBhdCAxMjowNjo0M1BNICsw
-ODAwLCBaaGlxaWFuZyBIb3Ugd3JvdGU6DQo+ID4gRnJvbTogSG91IFpoaXFpYW5nIDxaaGlxaWFu
-Zy5Ib3VAbnhwLmNvbT4NCj4gPg0KPiA+IFRoZSBMWDIxNjBBIGludGVncmF0ZWQgNiBQQ0llIEdl
-bjQgY29udHJvbGxlcnMuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBIb3UgWmhpcWlhbmcgPFpo
-aXFpYW5nLkhvdUBueHAuY29tPg0KPiA+IFJldmlld2VkLWJ5OiBNaW5naHVhbiBMaWFuIDxNaW5n
-aHVhbi5MaWFuQG54cC5jb20+DQo+ID4gLS0tDQo+ID4gVjEwOg0KPiA+ICAtIE5vIGNoYW5nZQ0K
-PiA+DQo+ID4gIC4uLi9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWx4MjE2MGEuZHRzaSB8
-IDE2Mw0KPiA+ICsrKysrKysrKysrKysrKysrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMTYzIGlu
-c2VydGlvbnMoKykNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2Zy
-ZWVzY2FsZS9mc2wtbHgyMTYwYS5kdHNpDQo+ID4gYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVz
-Y2FsZS9mc2wtbHgyMTYwYS5kdHNpDQo+ID4gaW5kZXggZTVlZTU1OTFlNTJiLi5hZWUyODEwZDkx
-Y2MgMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWx4
-MjE2MGEuZHRzaQ0KPiA+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1s
-eDIxNjBhLmR0c2kNCj4gPiBAQCAtMTA3Niw1ICsxMDc2LDE2OCBAQA0KPiA+ICAJCQkJfTsNCj4g
-PiAgCQkJfTsNCj4gPiAgCQl9Ow0KPiA+ICsNCj4gPiArCQlwY2llQDM0MDAwMDAgew0KPiANCj4g
-VGhlIG5vZGVzIHNob3VsZCBiZSBzb3J0ZWQgaW4gdW5pdC1hZGRyZXNzLiAgVGhhdCBzYWlkLCB0
-aGV5IHNob3VsZCBiZQ0KPiBhZGRlZCBhZnRlciBhdGEzOiBzYXRhQDMyMzAwMDAuDQo+IA0KPiA+
-ICsJCQljb21wYXRpYmxlID0gImZzbCxseDIxNjBhLXBjaWUiOw0KPiA+ICsJCQlyZWcgPSA8MHgw
-MCAweDAzNDAwMDAwIDB4MCAweDAwMTAwMDAwICAgLyogY29udHJvbGxlcg0KPiByZWdpc3RlcnMg
-Ki8NCj4gPiArCQkJICAgICAgIDB4ODAgMHgwMDAwMDAwMCAweDAgMHgwMDAwMTAwMD47IC8qIGNv
-bmZpZ3VyYXRpb24NCj4gc3BhY2UgKi8NCj4gPiArCQkJcmVnLW5hbWVzID0gImNzcl9heGlfc2xh
-dmUiLCAiY29uZmlnX2F4aV9zbGF2ZSI7DQo+ID4gKwkJCWludGVycnVwdHMgPSA8R0lDX1NQSSAx
-MDggSVJRX1RZUEVfTEVWRUxfSElHSD4sIC8qIEFFUg0KPiBpbnRlcnJ1cHQgKi8NCj4gPiArCQkJ
-CSAgICAgPEdJQ19TUEkgMTA4IElSUV9UWVBFX0xFVkVMX0hJR0g+LCAvKiBQTUUNCj4gaW50ZXJy
-dXB0ICovDQo+ID4gKwkJCQkgICAgIDxHSUNfU1BJIDEwOCBJUlFfVFlQRV9MRVZFTF9ISUdIPjsg
-LyoNCj4gY29udHJvbGxlciBpbnRlcnJ1cHQgKi8NCj4gPiArCQkJaW50ZXJydXB0LW5hbWVzID0g
-ImFlciIsICJwbWUiLCAiaW50ciI7DQo+ID4gKwkJCSNhZGRyZXNzLWNlbGxzID0gPDM+Ow0KPiA+
-ICsJCQkjc2l6ZS1jZWxscyA9IDwyPjsNCj4gPiArCQkJZGV2aWNlX3R5cGUgPSAicGNpIjsNCj4g
-PiArCQkJZG1hLWNvaGVyZW50Ow0KPiA+ICsJCQlhcGlvLXdpbnMgPSA8OD47DQo+ID4gKwkJCXBw
-aW8td2lucyA9IDw4PjsNCj4gPiArCQkJYnVzLXJhbmdlID0gPDB4MCAweGZmPjsNCj4gPiArCQkJ
-cmFuZ2VzID0gPDB4ODIwMDAwMDAgMHgwIDB4NDAwMDAwMDAgMHg4MCAweDQwMDAwMDAwIDB4MA0K
-PiAweDQwMDAwMDAwPjsgLyogbm9uLXByZWZldGNoYWJsZSBtZW1vcnkgKi8NCj4gPiArCQkJbXNp
-LXBhcmVudCA9IDwmaXRzPjsNCj4gPiArCQkJI2ludGVycnVwdC1jZWxscyA9IDwxPjsNCj4gPiAr
-CQkJaW50ZXJydXB0LW1hcC1tYXNrID0gPDAgMCAwIDc+Ow0KPiA+ICsJCQlpbnRlcnJ1cHQtbWFw
-ID0gPDAwMDAgMCAwIDEgJmdpYyAwIDAgR0lDX1NQSSAxMDkNCj4gSVJRX1RZUEVfTEVWRUxfSElH
-SD4sDQo+ID4gKwkJCQkJPDAwMDAgMCAwIDIgJmdpYyAwIDAgR0lDX1NQSSAxMTANCj4gSVJRX1RZ
-UEVfTEVWRUxfSElHSD4sDQo+ID4gKwkJCQkJPDAwMDAgMCAwIDMgJmdpYyAwIDAgR0lDX1NQSSAx
-MTENCj4gSVJRX1RZUEVfTEVWRUxfSElHSD4sDQo+ID4gKwkJCQkJPDAwMDAgMCAwIDQgJmdpYyAw
-IDAgR0lDX1NQSSAxMTINCj4gSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+ID4gKwkJCXN0YXR1cyA9
-ICJkaXNhYmxlZCI7DQo+ID4gKwkJfTsNCj4gPiArDQo+ID4gKwkJcGNpZUAzNTAwMDAwIHsNCj4g
-PiArCQkJY29tcGF0aWJsZSA9ICJmc2wsbHgyMTYwYS1wY2llIjsNCj4gPiArCQkJcmVnID0gPDB4
-MDAgMHgwMzUwMDAwMCAweDAgMHgwMDEwMDAwMCAgIC8qIGNvbnRyb2xsZXINCj4gcmVnaXN0ZXJz
-ICovDQo+ID4gKwkJCSAgICAgICAweDg4IDB4MDAwMDAwMDAgMHgwIDB4MDAwMDEwMDA+OyAvKiBj
-b25maWd1cmF0aW9uDQo+IHNwYWNlICovDQo+ID4gKwkJCXJlZy1uYW1lcyA9ICJjc3JfYXhpX3Ns
-YXZlIiwgImNvbmZpZ19heGlfc2xhdmUiOw0KPiA+ICsJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkg
-MTEzIElSUV9UWVBFX0xFVkVMX0hJR0g+LCAvKiBBRVINCj4gaW50ZXJydXB0ICovDQo+ID4gKwkJ
-CQkgICAgIDxHSUNfU1BJIDExMyBJUlFfVFlQRV9MRVZFTF9ISUdIPiwgLyogUE1FDQo+IGludGVy
-cnVwdCAqLw0KPiA+ICsJCQkJICAgICA8R0lDX1NQSSAxMTMgSVJRX1RZUEVfTEVWRUxfSElHSD47
-IC8qDQo+IGNvbnRyb2xsZXIgaW50ZXJydXB0ICovDQo+ID4gKwkJCWludGVycnVwdC1uYW1lcyA9
-ICJhZXIiLCAicG1lIiwgImludHIiOw0KPiA+ICsJCQkjYWRkcmVzcy1jZWxscyA9IDwzPjsNCj4g
-PiArCQkJI3NpemUtY2VsbHMgPSA8Mj47DQo+ID4gKwkJCWRldmljZV90eXBlID0gInBjaSI7DQo+
-ID4gKwkJCWRtYS1jb2hlcmVudDsNCj4gPiArCQkJYXBpby13aW5zID0gPDg+Ow0KPiA+ICsJCQlw
-cGlvLXdpbnMgPSA8OD47DQo+ID4gKwkJCWJ1cy1yYW5nZSA9IDwweDAgMHhmZj47DQo+ID4gKwkJ
-CXJhbmdlcyA9IDwweDgyMDAwMDAwIDB4MCAweDQwMDAwMDAwIDB4ODggMHg0MDAwMDAwMCAweDAN
-Cj4gMHg0MDAwMDAwMD47IC8qIG5vbi1wcmVmZXRjaGFibGUgbWVtb3J5ICovDQo+ID4gKwkJCW1z
-aS1wYXJlbnQgPSA8Jml0cz47DQo+ID4gKwkJCSNpbnRlcnJ1cHQtY2VsbHMgPSA8MT47DQo+ID4g
-KwkJCWludGVycnVwdC1tYXAtbWFzayA9IDwwIDAgMCA3PjsNCj4gPiArCQkJaW50ZXJydXB0LW1h
-cCA9IDwwMDAwIDAgMCAxICZnaWMgMCAwIEdJQ19TUEkgMTE0DQo+IElSUV9UWVBFX0xFVkVMX0hJ
-R0g+LA0KPiA+ICsJCQkJCTwwMDAwIDAgMCAyICZnaWMgMCAwIEdJQ19TUEkgMTE1DQo+IElSUV9U
-WVBFX0xFVkVMX0hJR0g+LA0KPiA+ICsJCQkJCTwwMDAwIDAgMCAzICZnaWMgMCAwIEdJQ19TUEkg
-MTE2DQo+IElSUV9UWVBFX0xFVkVMX0hJR0g+LA0KPiA+ICsJCQkJCTwwMDAwIDAgMCA0ICZnaWMg
-MCAwIEdJQ19TUEkgMTE3DQo+IElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KPiA+ICsJCQlzdGF0dXMg
-PSAiZGlzYWJsZWQiOw0KPiA+ICsJCX07DQo+ID4gKw0KPiA+ICsJCXBjaWVAMzYwMDAwMCB7DQo+
-ID4gKwkJCWNvbXBhdGlibGUgPSAiZnNsLGx4MjE2MGEtcGNpZSI7DQo+ID4gKwkJCXJlZyA9IDww
-eDAwIDB4MDM2MDAwMDAgMHgwIDB4MDAxMDAwMDAgICAvKiBjb250cm9sbGVyDQo+IHJlZ2lzdGVy
-cyAqLw0KPiA+ICsJCQkgICAgICAgMHg5MCAweDAwMDAwMDAwIDB4MCAweDAwMDAxMDAwPjsgLyog
-Y29uZmlndXJhdGlvbg0KPiBzcGFjZSAqLw0KPiA+ICsJCQlyZWctbmFtZXMgPSAiY3NyX2F4aV9z
-bGF2ZSIsICJjb25maWdfYXhpX3NsYXZlIjsNCj4gPiArCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJ
-IDExOCBJUlFfVFlQRV9MRVZFTF9ISUdIPiwgLyogQUVSDQo+IGludGVycnVwdCAqLw0KPiA+ICsJ
-CQkJICAgICA8R0lDX1NQSSAxMTggSVJRX1RZUEVfTEVWRUxfSElHSD4sIC8qIFBNRQ0KPiBpbnRl
-cnJ1cHQgKi8NCj4gPiArCQkJCSAgICAgPEdJQ19TUEkgMTE4IElSUV9UWVBFX0xFVkVMX0hJR0g+
-OyAvKg0KPiBjb250cm9sbGVyIGludGVycnVwdCAqLw0KPiA+ICsJCQlpbnRlcnJ1cHQtbmFtZXMg
-PSAiYWVyIiwgInBtZSIsICJpbnRyIjsNCj4gPiArCQkJI2FkZHJlc3MtY2VsbHMgPSA8Mz47DQo+
-ID4gKwkJCSNzaXplLWNlbGxzID0gPDI+Ow0KPiA+ICsJCQlkZXZpY2VfdHlwZSA9ICJwY2kiOw0K
-PiA+ICsJCQlkbWEtY29oZXJlbnQ7DQo+ID4gKwkJCWFwaW8td2lucyA9IDwyNTY+Ow0KPiA+ICsJ
-CQlwcGlvLXdpbnMgPSA8MjQ+Ow0KPiA+ICsJCQlidXMtcmFuZ2UgPSA8MHgwIDB4ZmY+Ow0KPiA+
-ICsJCQlyYW5nZXMgPSA8MHg4MjAwMDAwMCAweDAgMHg0MDAwMDAwMCAweDkwIDB4NDAwMDAwMDAg
-MHgwDQo+IDB4NDAwMDAwMDA+OyAvKiBub24tcHJlZmV0Y2hhYmxlIG1lbW9yeSAqLw0KPiA+ICsJ
-CQltc2ktcGFyZW50ID0gPCZpdHM+Ow0KPiA+ICsJCQkjaW50ZXJydXB0LWNlbGxzID0gPDE+Ow0K
-PiA+ICsJCQlpbnRlcnJ1cHQtbWFwLW1hc2sgPSA8MCAwIDAgNz47DQo+ID4gKwkJCWludGVycnVw
-dC1tYXAgPSA8MDAwMCAwIDAgMSAmZ2ljIDAgMCBHSUNfU1BJIDExOQ0KPiBJUlFfVFlQRV9MRVZF
-TF9ISUdIPiwNCj4gPiArCQkJCQk8MDAwMCAwIDAgMiAmZ2ljIDAgMCBHSUNfU1BJIDEyMA0KPiBJ
-UlFfVFlQRV9MRVZFTF9ISUdIPiwNCj4gPiArCQkJCQk8MDAwMCAwIDAgMyAmZ2ljIDAgMCBHSUNf
-U1BJIDEyMQ0KPiBJUlFfVFlQRV9MRVZFTF9ISUdIPiwNCj4gPiArCQkJCQk8MDAwMCAwIDAgNCAm
-Z2ljIDAgMCBHSUNfU1BJIDEyMg0KPiBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCj4gPiArCQkJc3Rh
-dHVzID0gImRpc2FibGVkIjsNCj4gPiArCQl9Ow0KPiA+ICsNCj4gPiArCQlwY2llQDM3MDAwMDAg
-ew0KPiA+ICsJCQljb21wYXRpYmxlID0gImZzbCxseDIxNjBhLXBjaWUiOw0KPiA+ICsJCQlyZWcg
-PSA8MHgwMCAweDAzNzAwMDAwIDB4MCAweDAwMTAwMDAwICAgLyogY29udHJvbGxlcg0KPiByZWdp
-c3RlcnMgKi8NCj4gPiArCQkJICAgICAgIDB4OTggMHgwMDAwMDAwMCAweDAgMHgwMDAwMTAwMD47
-IC8qIGNvbmZpZ3VyYXRpb24NCj4gc3BhY2UgKi8NCj4gPiArCQkJcmVnLW5hbWVzID0gImNzcl9h
-eGlfc2xhdmUiLCAiY29uZmlnX2F4aV9zbGF2ZSI7DQo+ID4gKwkJCWludGVycnVwdHMgPSA8R0lD
-X1NQSSAxMjMgSVJRX1RZUEVfTEVWRUxfSElHSD4sIC8qIEFFUg0KPiBpbnRlcnJ1cHQgKi8NCj4g
-PiArCQkJCSAgICAgPEdJQ19TUEkgMTIzIElSUV9UWVBFX0xFVkVMX0hJR0g+LCAvKiBQTUUNCj4g
-aW50ZXJydXB0ICovDQo+ID4gKwkJCQkgICAgIDxHSUNfU1BJIDEyMyBJUlFfVFlQRV9MRVZFTF9I
-SUdIPjsgLyoNCj4gY29udHJvbGxlciBpbnRlcnJ1cHQgKi8NCj4gPiArCQkJaW50ZXJydXB0LW5h
-bWVzID0gImFlciIsICJwbWUiLCAiaW50ciI7DQo+ID4gKwkJCSNhZGRyZXNzLWNlbGxzID0gPDM+
-Ow0KPiA+ICsJCQkjc2l6ZS1jZWxscyA9IDwyPjsNCj4gPiArCQkJZGV2aWNlX3R5cGUgPSAicGNp
-IjsNCj4gPiArCQkJZG1hLWNvaGVyZW50Ow0KPiA+ICsJCQlhcGlvLXdpbnMgPSA8OD47DQo+ID4g
-KwkJCXBwaW8td2lucyA9IDw4PjsNCj4gPiArCQkJYnVzLXJhbmdlID0gPDB4MCAweGZmPjsNCj4g
-PiArCQkJcmFuZ2VzID0gPDB4ODIwMDAwMDAgMHgwIDB4NDAwMDAwMDAgMHg5OCAweDQwMDAwMDAw
-IDB4MA0KPiAweDQwMDAwMDAwPjsgLyogbm9uLXByZWZldGNoYWJsZSBtZW1vcnkgKi8NCj4gPiAr
-CQkJbXNpLXBhcmVudCA9IDwmaXRzPjsNCj4gPiArCQkJI2ludGVycnVwdC1jZWxscyA9IDwxPjsN
-Cj4gPiArCQkJaW50ZXJydXB0LW1hcC1tYXNrID0gPDAgMCAwIDc+Ow0KPiA+ICsJCQlpbnRlcnJ1
-cHQtbWFwID0gPDAwMDAgMCAwIDEgJmdpYyAwIDAgR0lDX1NQSSAxMjQNCj4gSVJRX1RZUEVfTEVW
-RUxfSElHSD4sDQo+ID4gKwkJCQkJPDAwMDAgMCAwIDIgJmdpYyAwIDAgR0lDX1NQSSAxMjUNCj4g
-SVJRX1RZUEVfTEVWRUxfSElHSD4sDQo+ID4gKwkJCQkJPDAwMDAgMCAwIDMgJmdpYyAwIDAgR0lD
-X1NQSSAxMjYNCj4gSVJRX1RZUEVfTEVWRUxfSElHSD4sDQo+ID4gKwkJCQkJPDAwMDAgMCAwIDQg
-JmdpYyAwIDAgR0lDX1NQSSAxMjcNCj4gSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+ID4gKwkJCXN0
-YXR1cyA9ICJkaXNhYmxlZCI7DQo+ID4gKwkJfTsNCj4gPiArDQo+ID4gKwkJcGNpZUAzODAwMDAw
-IHsNCj4gPiArCQkJY29tcGF0aWJsZSA9ICJmc2wsbHgyMTYwYS1wY2llIjsNCj4gPiArCQkJcmVn
-ID0gPDB4MDAgMHgwMzgwMDAwMCAweDAgMHgwMDEwMDAwMCAgIC8qIGNvbnRyb2xsZXINCj4gcmVn
-aXN0ZXJzICovDQo+ID4gKwkJCSAgICAgICAweGEwIDB4MDAwMDAwMDAgMHgwIDB4MDAwMDEwMDA+
-OyAvKiBjb25maWd1cmF0aW9uDQo+IHNwYWNlICovDQo+ID4gKwkJCXJlZy1uYW1lcyA9ICJjc3Jf
-YXhpX3NsYXZlIiwgImNvbmZpZ19heGlfc2xhdmUiOw0KPiA+ICsJCQlpbnRlcnJ1cHRzID0gPEdJ
-Q19TUEkgMTI4IElSUV9UWVBFX0xFVkVMX0hJR0g+LCAvKiBBRVINCj4gaW50ZXJydXB0ICovDQo+
-ID4gKwkJCQkgICAgIDxHSUNfU1BJIDEyOCBJUlFfVFlQRV9MRVZFTF9ISUdIPiwgLyogUE1FDQo+
-IGludGVycnVwdCAqLw0KPiA+ICsJCQkJICAgICA8R0lDX1NQSSAxMjggSVJRX1RZUEVfTEVWRUxf
-SElHSD47IC8qDQo+IGNvbnRyb2xsZXIgaW50ZXJydXB0ICovDQo+ID4gKwkJCWludGVycnVwdC1u
-YW1lcyA9ICJhZXIiLCAicG1lIiwgImludHIiOw0KPiA+ICsJCQkjYWRkcmVzcy1jZWxscyA9IDwz
-PjsNCj4gPiArCQkJI3NpemUtY2VsbHMgPSA8Mj47DQo+ID4gKwkJCWRldmljZV90eXBlID0gInBj
-aSI7DQo+ID4gKwkJCWRtYS1jb2hlcmVudDsNCj4gPiArCQkJYXBpby13aW5zID0gPDI1Nj47DQo+
-ID4gKwkJCXBwaW8td2lucyA9IDwyND47DQo+ID4gKwkJCWJ1cy1yYW5nZSA9IDwweDAgMHhmZj47
-DQo+ID4gKwkJCXJhbmdlcyA9IDwweDgyMDAwMDAwIDB4MCAweDQwMDAwMDAwIDB4YTAgMHg0MDAw
-MDAwMCAweDANCj4gMHg0MDAwMDAwMD47IC8qIG5vbi1wcmVmZXRjaGFibGUgbWVtb3J5ICovDQo+
-ID4gKwkJCW1zaS1wYXJlbnQgPSA8Jml0cz47DQo+ID4gKwkJCSNpbnRlcnJ1cHQtY2VsbHMgPSA8
-MT47DQo+ID4gKwkJCWludGVycnVwdC1tYXAtbWFzayA9IDwwIDAgMCA3PjsNCj4gPiArCQkJaW50
-ZXJydXB0LW1hcCA9IDwwMDAwIDAgMCAxICZnaWMgMCAwIEdJQ19TUEkgMTI5DQo+IElSUV9UWVBF
-X0xFVkVMX0hJR0g+LA0KPiA+ICsJCQkJCTwwMDAwIDAgMCAyICZnaWMgMCAwIEdJQ19TUEkgMTMw
-DQo+IElSUV9UWVBFX0xFVkVMX0hJR0g+LA0KPiA+ICsJCQkJCTwwMDAwIDAgMCAzICZnaWMgMCAw
-IEdJQ19TUEkgMTMxDQo+IElSUV9UWVBFX0xFVkVMX0hJR0g+LA0KPiA+ICsJCQkJCTwwMDAwIDAg
-MCA0ICZnaWMgMCAwIEdJQ19TUEkgMTMyDQo+IElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KPiA+ICsJ
-CQlzdGF0dXMgPSAiZGlzYWJsZWQiOw0KPiA+ICsJCX07DQo+ID4gKw0KPiA+ICsJCXBjaWVAMzkw
-MDAwMCB7DQo+ID4gKwkJCWNvbXBhdGlibGUgPSAiZnNsLGx4MjE2MGEtcGNpZSI7DQo+ID4gKwkJ
-CXJlZyA9IDwweDAwIDB4MDM5MDAwMDAgMHgwIDB4MDAxMDAwMDAgICAvKiBjb250cm9sbGVyDQo+
-IHJlZ2lzdGVycyAqLw0KPiA+ICsJCQkgICAgICAgMHhhOCAweDAwMDAwMDAwIDB4MCAweDAwMDAx
-MDAwPjsgLyogY29uZmlndXJhdGlvbg0KPiBzcGFjZSAqLw0KPiA+ICsJCQlyZWctbmFtZXMgPSAi
-Y3NyX2F4aV9zbGF2ZSIsICJjb25maWdfYXhpX3NsYXZlIjsNCj4gPiArCQkJaW50ZXJydXB0cyA9
-IDxHSUNfU1BJIDEwMyBJUlFfVFlQRV9MRVZFTF9ISUdIPiwgLyogQUVSDQo+IGludGVycnVwdCAq
-Lw0KPiA+ICsJCQkJICAgICA8R0lDX1NQSSAxMDMgSVJRX1RZUEVfTEVWRUxfSElHSD4sIC8qIFBN
-RQ0KPiBpbnRlcnJ1cHQgKi8NCj4gPiArCQkJCSAgICAgPEdJQ19TUEkgMTAzIElSUV9UWVBFX0xF
-VkVMX0hJR0g+OyAvKg0KPiBjb250cm9sbGVyIGludGVycnVwdCAqLw0KPiA+ICsJCQlpbnRlcnJ1
-cHQtbmFtZXMgPSAiYWVyIiwgInBtZSIsICJpbnRyIjsNCj4gPiArCQkJI2FkZHJlc3MtY2VsbHMg
-PSA8Mz47DQo+ID4gKwkJCSNzaXplLWNlbGxzID0gPDI+Ow0KPiA+ICsJCQlkZXZpY2VfdHlwZSA9
-ICJwY2kiOw0KPiA+ICsJCQlkbWEtY29oZXJlbnQ7DQo+ID4gKwkJCWFwaW8td2lucyA9IDw4PjsN
-Cj4gPiArCQkJcHBpby13aW5zID0gPDg+Ow0KPiA+ICsJCQlidXMtcmFuZ2UgPSA8MHgwIDB4ZmY+
-Ow0KPiA+ICsJCQlyYW5nZXMgPSA8MHg4MjAwMDAwMCAweDAgMHg0MDAwMDAwMCAweGE4IDB4NDAw
-MDAwMDAgMHgwDQo+IDB4NDAwMDAwMDA+OyAvKiBub24tcHJlZmV0Y2hhYmxlIG1lbW9yeSAqLw0K
-PiA+ICsJCQltc2ktcGFyZW50ID0gPCZpdHM+Ow0KPiA+ICsJCQkjaW50ZXJydXB0LWNlbGxzID0g
-PDE+Ow0KPiA+ICsJCQlpbnRlcnJ1cHQtbWFwLW1hc2sgPSA8MCAwIDAgNz47DQo+ID4gKwkJCWlu
-dGVycnVwdC1tYXAgPSA8MDAwMCAwIDAgMSAmZ2ljIDAgMCBHSUNfU1BJIDEwNA0KPiBJUlFfVFlQ
-RV9MRVZFTF9ISUdIPiwNCj4gPiArCQkJCQk8MDAwMCAwIDAgMiAmZ2ljIDAgMCBHSUNfU1BJIDEw
-NQ0KPiBJUlFfVFlQRV9MRVZFTF9ISUdIPiwNCj4gPiArCQkJCQk8MDAwMCAwIDAgMyAmZ2ljIDAg
-MCBHSUNfU1BJIDEwNg0KPiBJUlFfVFlQRV9MRVZFTF9ISUdIPiwNCj4gPiArCQkJCQk8MDAwMCAw
-IDAgNCAmZ2ljIDAgMCBHSUNfU1BJIDEwNw0KPiBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCj4gPiAr
-CQkJc3RhdHVzID0gImRpc2FibGVkIjsNCj4gPiArCQl9Ow0KPiA+ICsNCj4gDQo+IFVubmVjZXNz
-YXJ5IG5ld2xpbmUuDQo+IA0KPiBJIGZpeGVkIHRoZW0gdXAgYW5kIGFwcGxpZWQgdGhlIHBhdGNo
-Lg0KDQpUaGFua3MgYSBsb3QgZm9yIHlvdXIgaGVscCENCg0KVGhhbmtzLA0KWmhpcWlhbmcNCg0K
-PiANCj4gU2hhd24NCj4gDQo+ID4gIAl9Ow0KPiA+ICB9Ow0KPiA+IC0tDQo+ID4gMi4xNy4xDQo+
-ID4NCg==
+Hi Xiaowei, Hi Shawn,
+
+> LS1028a implements 2 PCIe 3.0 controllers.
+
+Patch 1/3 and 3/3 are in Linus' tree but nobody seems to care about this patch
+anymore :(
+
+This doesn't work well with the IOMMU, because the iommu-map property is
+missing. The bootloader needs the &smmu phandle to fixup the entry. See
+below.
+
+Shawn, will you add this patch to your tree once its fixed, considering it
+just adds the device tree node for the LS1028A?
+
+> 
+> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> ---
+> v2:
+>  - Fix up the legacy INTx allocate failed issue.
+> v3:
+>  - No change.
+> v4:
+>  - Remove the num-lanes property.
+> v5:
+>  - Add the num-viewport property.
+> v6:
+>  - move num-viewport to 8.
+> 
+>  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 52 ++++++++++++++++++++++++++
+>  1 file changed, 52 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> index 72b9a75..c043b1d 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> @@ -625,6 +625,58 @@
+>  			};
+>  		};
+>  
+> +		pcie@3400000 {
+> +			compatible = "fsl,ls1028a-pcie";
+> +			reg = <0x00 0x03400000 0x0 0x00100000   /* controller registers */
+> +			       0x80 0x00000000 0x0 0x00002000>; /* configuration space */
+> +			reg-names = "regs", "config";
+> +			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
+> +				     <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>; /* aer interrupt */
+> +			interrupt-names = "pme", "aer";
+> +			#address-cells = <3>;
+> +			#size-cells = <2>;
+> +			device_type = "pci";
+> +			dma-coherent;
+> +			num-viewport = <8>;
+> +			bus-range = <0x0 0xff>;
+> +			ranges = <0x81000000 0x0 0x00000000 0x80 0x00010000 0x0 0x00010000   /* downstream I/O */
+> +				  0x82000000 0x0 0x40000000 0x80 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
+> +			msi-parent = <&its>;
+iommu-map = <0 &smmu 0 0>; /* fixed up by bootloader */
+
+> +			#interrupt-cells = <1>;
+> +			interrupt-map-mask = <0 0 0 7>;
+> +			interrupt-map = <0000 0 0 1 &gic 0 0 GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0000 0 0 2 &gic 0 0 GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0000 0 0 3 &gic 0 0 GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0000 0 0 4 &gic 0 0 GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
+> +			status = "disabled";
+> +		};
+> +
+> +		pcie@3500000 {
+> +			compatible = "fsl,ls1028a-pcie";
+> +			reg = <0x00 0x03500000 0x0 0x00100000   /* controller registers */
+> +			       0x88 0x00000000 0x0 0x00002000>; /* configuration space */
+> +			reg-names = "regs", "config";
+> +			interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "pme", "aer";
+> +			#address-cells = <3>;
+> +			#size-cells = <2>;
+> +			device_type = "pci";
+> +			dma-coherent;
+> +			num-viewport = <8>;
+> +			bus-range = <0x0 0xff>;
+> +			ranges = <0x81000000 0x0 0x00000000 0x88 0x00010000 0x0 0x00010000   /* downstream I/O */
+> +				  0x82000000 0x0 0x40000000 0x88 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
+> +			msi-parent = <&its>;
+likewise
+
+
+With these two fixes:
+
+Tested-by: Michael Walle <michael@walle.cc>
+
+-michael
+
+> +			#interrupt-cells = <1>;
+> +			interrupt-map-mask = <0 0 0 7>;
+> +			interrupt-map = <0000 0 0 1 &gic 0 0 GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0000 0 0 2 &gic 0 0 GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0000 0 0 3 &gic 0 0 GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0000 0 0 4 &gic 0 0 GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
+> +			status = "disabled";
+> +		};
+> +
+>  		pcie@1f0000000 { /* Integrated Endpoint Root Complex */
+>  			compatible = "pci-host-ecam-generic";
+>  			reg = <0x01 0xf0000000 0x0 0x100000>;
+> -- 
+> 2.9.5
+> 
+> 
