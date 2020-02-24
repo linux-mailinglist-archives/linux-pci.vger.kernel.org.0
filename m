@@ -2,149 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D69E516A5FC
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2020 13:20:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E2C5F16A6C2
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2020 14:05:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727461AbgBXMUf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 Feb 2020 07:20:35 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:1262 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726778AbgBXMUe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Feb 2020 07:20:34 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e53bf450000>; Mon, 24 Feb 2020 04:19:18 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 24 Feb 2020 04:20:33 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 24 Feb 2020 04:20:33 -0800
-Received: from [10.24.47.202] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 24 Feb
- 2020 12:20:29 +0000
-Subject: Re: [PATCH V3 4/5] PCI: dwc: Add API to notify core initialization
- completion
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <andrew.murray@arm.com>, <bhelgaas@google.com>, <kishon@ti.com>,
-        <thierry.reding@gmail.com>, <Jisheng.Zhang@synaptics.com>,
-        <jonathanh@nvidia.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20200217121036.3057-1-vidyas@nvidia.com>
- <20200217121036.3057-5-vidyas@nvidia.com>
- <20200224113217.GA11120@e121166-lin.cambridge.arm.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <77748536-4f9a-1357-8180-91c1da2e912e@nvidia.com>
-Date:   Mon, 24 Feb 2020 17:50:26 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        id S1727460AbgBXNFd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 Feb 2020 08:05:33 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:59064 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727429AbgBXNFd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Feb 2020 08:05:33 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01OD5QSX086053;
+        Mon, 24 Feb 2020 07:05:26 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582549526;
+        bh=SYBU5pE8qnsxWqM4agBgkitC2zqD/Vs7Rlu+vfpZ/Ho=;
+        h=From:To:CC:Subject:Date;
+        b=qaXmMS83KZP/tQwPkjqI+cxGanvDxPNW5OPXVqIlt3rIKoW/oLGjdfE8zSCwiGXyJ
+         zMx6Pwgmz8SHLEQEiO/ReNuzlX0G3vpR8rT3VI7d0CcGPTTfm5s1DdQFJKlC2QHfFO
+         tvyr/eoFJlcKfrWpoo367AhsiuXndgqbB8gRuTGY=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01OD5Q6L109411;
+        Mon, 24 Feb 2020 07:05:26 -0600
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 24
+ Feb 2020 07:05:25 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 24 Feb 2020 07:05:25 -0600
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01OD5M7N017839;
+        Mon, 24 Feb 2020 07:05:23 -0600
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Bjorn Helgaas <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: [PATCH v3 0/4] dt-bindings: Convert Cadence PCIe RC/EP to DT Schema
+Date:   Mon, 24 Feb 2020 18:39:01 +0530
+Message-ID: <20200224130905.952-1-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20200224113217.GA11120@e121166-lin.cambridge.arm.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1582546758; bh=yBaGSW1tBg/TBcMPrMVU3SdLiOlKXH9yWql7w5S0VZ0=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=F+KXVqLQfjPEj9ipmfMVbfvaXuVy8HnlqbSojs68TnUtUAwYqLtjhUVe00jBFuMPE
-         +zVsseHf4zIjZOibRY+rSBBCbezsnYgL5/r8RKb4mP4ttL8EQ6I8DMVThfCzxcMBUd
-         dwmdYARtalyO1s0aTKOz0fB5WiI160feH+JF3uHjJNeMxCE9j7t0AHyS1NC+YY51cP
-         egF2FQA0PVEN8nqjZnP/JvKME9/ODY15Bft5JvJeI9g2sklHwV5QKw7FMTdliIib8p
-         U6eKyy1si+vG5zRx+VsuAaaPogZM47E8q7IDlLNST3GAAovGGPjJNIZI4FLLminUar
-         NSVPJuo7AqpmA==
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Cadence PCIe IP is used by multiple SoC vendors (e.g. TI). Cadence
+themselves have a validation platform for validating the PCIe IP which
+is already in the upstream kernel. Right now the binding only exists for
+Cadence platform and this will result in adding redundant binding schema
+for any platform using Cadence PCIe core.
 
+This series:
+1) Create cdns-pcie.yaml which includes properties that are applicable
+   to both host mode and endpoint mode of Cadence PCIe core.
+2) Create cdns-pcie-host.yaml to include properties that are specific to
+   host mode of Cadence PCIe core. cdns-pcie-host.yaml will include
+   cdns-pcie.yaml.
+3) Create cdns-pcie-ep.yaml to include properties that are specific to
+   endpoint mode of Cadence PCIe core. cdns-pcie-ep.yaml will include
+   cdns-pcie.yaml.
+4) Remove cdns,cdns-pcie-ep.txt and cdns,cdns-pcie-host.txt which had
+   the binding for Cadence "platform" and add cdns,cdns-pcie-host.yaml
+   and cdns,cdns-pcie-ep.yaml schema for Cadence Platform. The schema
+   for Cadence platform then includes schema for Cadence PCIe core.
 
-On 2/24/2020 5:02 PM, Lorenzo Pieralisi wrote:
-> External email: Use caution opening links or attachments
-> 
-> 
-> On Mon, Feb 17, 2020 at 05:40:35PM +0530, Vidya Sagar wrote:
->> Add a new API dw_pcie_ep_init_notify() to let platform drivers
->> call it when the core is available for initialization.
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->> V3:
->> * Added Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
->>
->> V2:
->> * None
->>
->>   drivers/pci/controller/dwc/pcie-designware-ep.c | 7 +++++++
->>   drivers/pci/controller/dwc/pcie-designware.h    | 5 +++++
->>   2 files changed, 12 insertions(+)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
->> index 84a102df9f62..dfbb806c25bf 100644
->> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
->> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
->> @@ -19,6 +19,13 @@ void dw_pcie_ep_linkup(struct dw_pcie_ep *ep)
->>        pci_epc_linkup(epc);
->>   }
->>
->> +void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep)
->> +{
->> +     struct pci_epc *epc = ep->epc;
->> +
->> +     pci_epc_init_notify(epc);
->> +}
-> 
-> Do we really need this wrapper ? I would drop this code and I would
-> appreciate if you could post tegra changes benefiting from this
-> series, at the moment I don't see any user of this newly added
-> infrastructure.
-I've posted that series also for review
-@ http://patchwork.ozlabs.org/project/linux-pci/list/?series=152889
-Sorry if I have to create explicit dependency by some means. I'm not
-aware of that and would like to know if that exists. All that I did was 
-to mention this as a dependency for the other (Tegra change) series.
+Changes from v2:
+*) Created "pci-ep.yaml" for common endpoint controller bindings
+*) Deprecate "cdns,max-outbound-regions" and "cdns,no-bar-match-nbits"
+   binding
 
-Thanks,
-Vidya Sagar
+Changes from v1:
+*) Fix maximum values of num-lanes and cdns,no-bar-match-nbits
+*) Fix example DT node for PCIe Endpoint.
 
-> 
-> Thanks,
-> Lorenzo
-> 
->>   static void __dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar,
->>                                   int flags)
->>   {
->> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
->> index b67b7f756bc2..aa98fbd50807 100644
->> --- a/drivers/pci/controller/dwc/pcie-designware.h
->> +++ b/drivers/pci/controller/dwc/pcie-designware.h
->> @@ -412,6 +412,7 @@ static inline int dw_pcie_allocate_domains(struct pcie_port *pp)
->>   void dw_pcie_ep_linkup(struct dw_pcie_ep *ep);
->>   int dw_pcie_ep_init(struct dw_pcie_ep *ep);
->>   int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep);
->> +void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep);
->>   void dw_pcie_ep_exit(struct dw_pcie_ep *ep);
->>   int dw_pcie_ep_raise_legacy_irq(struct dw_pcie_ep *ep, u8 func_no);
->>   int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
->> @@ -434,6 +435,10 @@ static inline int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
->>        return 0;
->>   }
->>
->> +static inline void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep)
->> +{
->> +}
->> +
->>   static inline void dw_pcie_ep_exit(struct dw_pcie_ep *ep)
->>   {
->>   }
->> --
->> 2.17.1
->>
+Ref: Patches to convert Cadence driver to library
+     https://lkml.org/lkml/2019/11/11/317
+
+Some of this was initially part of [1], but to accelerate it getting
+into upstream, sending this as a separate series.
+
+[1] -> http://lore.kernel.org/r/20200106102058.19183-1-kishon@ti.com
+
+Kishon Vijay Abraham I (4):
+  dt-bindings: PCI: Add PCI Endpoint Controller Schema
+  dt-bindings: PCI: cadence: Add PCIe RC/EP DT schema for Cadence PCIe
+  dt-bindings: PCI: Convert PCIe Host/Endpoint in Cadence platform to DT
+    schema
+  dt-bindings: PCI: cadence: Deprecate inbound/outbound specific
+    bindings
+
+ .../bindings/pci/cdns,cdns-pcie-ep.txt        | 27 -------
+ .../bindings/pci/cdns,cdns-pcie-ep.yaml       | 49 ++++++++++++
+ .../bindings/pci/cdns,cdns-pcie-host.txt      | 66 ----------------
+ .../bindings/pci/cdns,cdns-pcie-host.yaml     | 75 +++++++++++++++++++
+ .../bindings/pci/cdns-pcie-host.yaml          | 28 +++++++
+ .../devicetree/bindings/pci/cdns-pcie.yaml    | 32 ++++++++
+ .../devicetree/bindings/pci/pci-ep.yaml       | 41 ++++++++++
+ MAINTAINERS                                   |  2 +-
+ 8 files changed, 226 insertions(+), 94 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
+ delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/pci-ep.yaml
+
+-- 
+2.17.1
+
