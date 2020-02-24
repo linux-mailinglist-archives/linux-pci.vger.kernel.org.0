@@ -2,85 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6CD3016AC60
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2020 17:57:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 891B716AC7C
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2020 17:59:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727883AbgBXQ53 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 Feb 2020 11:57:29 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:38685 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727874AbgBXQ53 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Feb 2020 11:57:29 -0500
-Received: by mail-ot1-f67.google.com with SMTP id z9so9327833oth.5;
-        Mon, 24 Feb 2020 08:57:28 -0800 (PST)
+        id S1727644AbgBXQ7I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 Feb 2020 11:59:08 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35574 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728039AbgBXQ7F (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Feb 2020 11:59:05 -0500
+Received: by mail-wm1-f67.google.com with SMTP id b17so71280wmb.0
+        for <linux-pci@vger.kernel.org>; Mon, 24 Feb 2020 08:59:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=scmbAO6wzrt+IWcheRPZehqNHYX56WQHidyo5gafnSg=;
+        b=lTdy9mhOFPsmoLMiWYWzUPwO5/L1ZW/zHrw5WHhTOGFGqo0qp1pO1XqXgivCA5tu8f
+         4WQQor5LDVG67jiip5XJXjVu0KBJp/48upaRAm3sUJkDdX8PI8Y/dZ2sqayP4YFM7Lth
+         M6NG+tFPUc0L24XYFzihuldbhJ9jKoGp/GZFOaf6/CoDo5RnB+s36ZN5IY188JGQYAua
+         D1Q+Xkpfkhq1pefdMw0+/huUWPOh1m1Yli+CU0oFvjD/jwECwDIQHByH5vst8JzbuY8K
+         pPjJqk1eTJaZLDapQ2r9fU/Bhlrc+tTo4251aNoGDPfuLR/VY5I8Ze3QoL1+aHlvUZRj
+         ecdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6g/0/6uHeJ9SHvtHOygjn4v068gQNv45K/NSYSZDP4E=;
-        b=U4bVxMHNwJ6W7JIAPFLUPteLmJJA0QGPR31VfFdSP8+ZGFAdgDOYzlj0ym5qD1aIJM
-         Bmib+pRnAW4kq0/k8psdKx5rpJLLXoV8zu5Qv6C5XJPUuHov3HldBPDZwnhZVekqAkfy
-         aQymTIFOScZk02GEXFHyuE75t4Zhw0GfDZCgFqSD+Z//bMVDFVmUS5Hyc4GPJkISlo2u
-         VTf962Unq7aK78r8TtxckMzbAf7f0I4aJKmv4nco3IKg8Y8POpM5s+xspmcX5WZII3q9
-         CkHNZBug1qUSRBzuSut9u2erF2aRNolrksI7E4U6j7w9nf8Mp1s/CF5ZSwK4kaOP5hIL
-         Sq/g==
-X-Gm-Message-State: APjAAAXpeCOe1ykqxhRx9rHz7u29dcVf1xT9Zuap25zZ3IkYOHbr/NW7
-        /jPesK7HPXFUGqWp4eDsgg==
-X-Google-Smtp-Source: APXvYqzBSMqtk4LzoxQnFIH5IwbuCE4Q4g+OfNbeilXK0aQ5gXGWn1SAYGX3ICKI7wCB5mXfcqXu7A==
-X-Received: by 2002:a05:6830:1d8b:: with SMTP id y11mr42737812oti.4.1582563448155;
-        Mon, 24 Feb 2020 08:57:28 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id a1sm4610066oti.2.2020.02.24.08.57.26
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=scmbAO6wzrt+IWcheRPZehqNHYX56WQHidyo5gafnSg=;
+        b=pxTy+LHJxCdAk4ujWUum85+K9Bubz4NQQb1E0kRil1yQAgiIBstyRs851Exsd3/pRI
+         B1Q9vL4CdeSWRkwGlvKootv9wihuALXv9mADMWB4YyVfQefiRL9rqLisjpQsMS19X3vV
+         8Gjoa6uzFCuE/Cojf6OsOJhMnAa9dUKnDAsnF+mKHea+Omj55H2Yl2k2SWKFCBbGxDmX
+         WpCgpysEKE6ZQGrs3xi7n6AnF8b5UMUAODVK7qRsXezsZDSlWnG/lL9WEEjXylmPi6fW
+         dy9qnaMomsARX/TcyA9pt+gUGLrboL7M2QwZqXCNMG7UHI0bnNEXzRdk2XwnfAp4ZFwf
+         exBQ==
+X-Gm-Message-State: APjAAAUTm3kYr2xF8AaBbNqq+2ubhrBewCyTQ9PIGn+lI7H72gh+gnAb
+        +1+hDzRX4Nt4/qEjGYSZgaz2629kZoU=
+X-Google-Smtp-Source: APXvYqxpXn2k4aIHPUjRRSjdhBRuWiMSxycEwYczmhlVZO7EaXRfsvHlrCGZTCB+GlB0NKSXYk0O+w==
+X-Received: by 2002:a1c:4144:: with SMTP id o65mr22387669wma.81.1582563542078;
+        Mon, 24 Feb 2020 08:59:02 -0800 (PST)
+Received: from localhost.localdomain ([2001:171b:c9a8:fbc0:116c:c27a:3e7f:5eaf])
+        by smtp.gmail.com with ESMTPSA id b10sm19473978wrt.90.2020.02.24.08.59.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 08:57:27 -0800 (PST)
-Received: (nullmailer pid 27821 invoked by uid 1000);
-        Mon, 24 Feb 2020 16:57:26 -0000
-Date:   Mon, 24 Feb 2020 10:57:26 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc:     David Daney <david.daney@cavium.com>,
-        Robert Richter <rrichter@marvell.com>,
-        Will Deacon <will@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, Joe Perches <joe@perches.com>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: clean up PCIE DRIVER FOR CAVIUM THUNDERX
-Message-ID: <20200224165726.GA27161@bogus>
-References: <20200223090950.5259-1-lukas.bulwahn@gmail.com>
+        Mon, 24 Feb 2020 08:59:01 -0800 (PST)
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org, will@kernel.org,
+        bhelgaas@google.com
+Cc:     joro@8bytes.org, robin.murphy@arm.com, jonathan.cameron@huawei.com,
+        zhangfei.gao@linaro.org, robh@kernel.org
+Subject: [PATCH v2 0/6] iommu/arm-smmu-v3: Finish PASID support and command queue batching
+Date:   Mon, 24 Feb 2020 17:58:40 +0100
+Message-Id: <20200224165846.345993-1-jean-philippe@linaro.org>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200223090950.5259-1-lukas.bulwahn@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Feb 23, 2020 at 10:09:50AM +0100, Lukas Bulwahn wrote:
-> Commit e1ac611f57c9 ("dt-bindings: PCI: Convert generic host binding to
-> DT schema") combines all information from pci-thunder-{pem,ecam}.txt
-> into host-generic-pci.yaml, and deleted the two files in
-> Documentation/devicetree/bindings/pci/.
-> 
-> Since then, ./scripts/get_maintainer.pl --self-test complains:
-> 
->   no file matches F: Documentation/devicetree/bindings/pci/pci-thunder-*
-> 
-> As the PCIE DRIVER FOR CAVIUM THUNDERX-relevant information is only a
-> small part of the host-generic-pci.yaml, do not add this file to the
-> PCIE DRIVER FOR CAVIUM THUNDERX entry, and only drop the reference to
-> the removed files.
-> 
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-> ---
-> Robert, are you still the maintainer of this driver?
-> Rob Herring, please pick this patch.
-> applies cleanly on current master and next-20200221
+Finish off PASID support for SMMUv3, and batch command queue.
 
-Applied, thanks.
+Since v1 [1]:
+* Added patch 4 to factor command queue batching
+* Included patch 6 from Rob [2]
 
-Rob
+[1] https://lore.kernel.org/linux-iommu/20200213101435.229932-1-jean-philippe@linaro.org/
+[2] https://lore.kernel.org/linux-iommu/20200213205600.19690-1-robh@kernel.org/
+
+Jean-Philippe Brucker (5):
+  PCI/ATS: Export symbols of PASID functions
+  iommu/arm-smmu-v3: Add support for PCI PASID
+  iommu/arm-smmu-v3: Write level-1 descriptors atomically
+  iommu/arm-smmu-v3: Add command queue batching helpers
+  iommu/arm-smmu-v3: Batch context descriptor invalidation
+
+Rob Herring (1):
+  iommu/arm-smmu-v3: Batch ATC invalidation commands
+
+ drivers/iommu/arm-smmu-v3.c | 139 ++++++++++++++++++++++++++++--------
+ drivers/pci/ats.c           |   4 ++
+ 2 files changed, 115 insertions(+), 28 deletions(-)
+
+-- 
+2.25.0
+
