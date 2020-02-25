@@ -2,170 +2,140 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 98FEE16B89F
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2020 05:56:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B5A1616B96C
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2020 07:09:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728776AbgBYE4M (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 Feb 2020 23:56:12 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:55192 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728725AbgBYE4L (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Feb 2020 23:56:11 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01P4u4rJ005344;
-        Mon, 24 Feb 2020 22:56:04 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582606564;
-        bh=Hi3alq/PW0I95g8l0i49IRWre9otN2P6q1NyxVUBRIM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=lRKk+qOVCrAFp2ZUgV9fdGqiLAneXtVAgGjDSU8tVxnLiNJsv2AiCuO39r+xqwvW/
-         B0gqdYxfL+sN0NQywS0W8wwx/ryYigAvqzUufIHOYBvwpSLY0S6Ny8EQKa3xkh7ODA
-         hYLtFFlCXV/7/R/+EPy4pOcuncOrWCvhNtFKLubs=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01P4u4X1051429
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 24 Feb 2020 22:56:04 -0600
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 24
- Feb 2020 22:56:03 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 24 Feb 2020 22:56:03 -0600
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01P4u01w018889;
-        Mon, 24 Feb 2020 22:56:01 -0600
-Subject: Re: [PATCH v2 2/2] dt-bindings: PCI: Convert PCIe Host/Endpoint in
- Cadence platform to DT schema
-To:     Rob Herring <robh@kernel.org>
-CC:     Tom Joseph <tjoseph@cadence.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Mark Rutland <mark.rutland@arm.com>,
-        PCI <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200217111519.29163-1-kishon@ti.com>
- <20200217111519.29163-3-kishon@ti.com> <20200219203205.GA14068@bogus>
- <2b927c66-d640-fb11-878a-c69a459a28f8@ti.com>
- <CAL_JsqLYScxGySy8xaN-UB6URfw8K_jSiuSXwVoTU9-RdJecww@mail.gmail.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <9be3291f-b0a8-a30f-57ad-f38bc7a8197c@ti.com>
-Date:   Tue, 25 Feb 2020 10:29:44 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        id S1727048AbgBYGJZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Feb 2020 01:09:25 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47955 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727028AbgBYGJZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Feb 2020 01:09:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582610964;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0IoUDI0r2nKt/KLH2gl0wTcdvg0oCDvDokn7okiLyHg=;
+        b=R4Kf+dOoIrZfig0mugI2di0BsODBOtZtaylwB/xm/qf3avyTjlsveNw53EQoQv4W2cg9of
+        QdTKyFpouMVjtJlUu+iQvv3Wv4pcHznNe7TQPkYnxYDYSIxOLE5B8sn4iAD3hxytv9ipfk
+        I1AxJymjBV4hsiENLb+V79YWeU4BhMQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-323-KEF-yYO0OPWKOZhO7cB7og-1; Tue, 25 Feb 2020 01:09:20 -0500
+X-MC-Unique: KEF-yYO0OPWKOZhO7cB7og-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1FB92107ACC5;
+        Tue, 25 Feb 2020 06:09:19 +0000 (UTC)
+Received: from [10.72.13.170] (ovpn-13-170.pek2.redhat.com [10.72.13.170])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AA7141001902;
+        Tue, 25 Feb 2020 06:09:09 +0000 (UTC)
+Subject: Re: [PATCH v2 0/7] vfio/pci: SR-IOV support
+To:     "Tian, Kevin" <kevin.tian@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dev@dpdk.org" <dev@dpdk.org>,
+        "mtosatti@redhat.com" <mtosatti@redhat.com>,
+        "thomas@monjalon.net" <thomas@monjalon.net>,
+        "bluca@debian.org" <bluca@debian.org>,
+        "jerinjacobk@gmail.com" <jerinjacobk@gmail.com>,
+        "Richardson, Bruce" <bruce.richardson@intel.com>,
+        "cohuck@redhat.com" <cohuck@redhat.com>
+References: <158213716959.17090.8399427017403507114.stgit@gimli.home>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D79A8A7@SHSMSX104.ccr.corp.intel.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <a6c04bac-0a37-f4c0-876e-e5cf2a8a6c3f@redhat.com>
+Date:   Tue, 25 Feb 2020 14:09:07 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqLYScxGySy8xaN-UB6URfw8K_jSiuSXwVoTU9-RdJecww@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D79A8A7@SHSMSX104.ccr.corp.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Rob,
 
-On 24/02/20 8:56 pm, Rob Herring wrote:
-> On Mon, Feb 24, 2020 at 4:14 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+On 2020/2/25 =E4=B8=8A=E5=8D=8810:33, Tian, Kevin wrote:
+>> From: Alex Williamson
+>> Sent: Thursday, February 20, 2020 2:54 AM
 >>
->> Hi Rob,
+>> Changes since v1 are primarily to patch 3/7 where the commit log is
+>> rewritten, along with option parsing and failure logging based on
+>> upstream discussions.  The primary user visible difference is that
+>> option parsing is now much more strict.  If a vf_token option is
+>> provided that cannot be used, we generate an error.  As a result of
+>> this, opening a PF with a vf_token option will serve as a mechanism of
+>> setting the vf_token.  This seems like a more user friendly API than
+>> the alternative of sometimes requiring the option (VFs in use) and
+>> sometimes rejecting it, and upholds our desire that the option is
+>> always either used or rejected.
 >>
->> On 20/02/20 2:02 am, Rob Herring wrote:
->>> On Mon, Feb 17, 2020 at 04:45:19PM +0530, Kishon Vijay Abraham I wrote:
->>>> Include Cadence core DT schema and define the Cadence platform DT schema
->>>> for both Host and Endpoint mode. Note: The Cadence core DT schema could
->>>> be included for other platforms using Cadence PCIe core.
->>>>
->>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->>>> ---
->>>>  .../bindings/pci/cdns,cdns-pcie-ep.txt        | 27 -------
->>>>  .../bindings/pci/cdns,cdns-pcie-ep.yaml       | 48 ++++++++++++
->>>>  .../bindings/pci/cdns,cdns-pcie-host.txt      | 66 ----------------
->>>>  .../bindings/pci/cdns,cdns-pcie-host.yaml     | 76 +++++++++++++++++++
->>>>  MAINTAINERS                                   |  2 +-
->>>>  5 files changed, 125 insertions(+), 94 deletions(-)
->>>>  delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
->>>>  create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
->>>>  delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
->>>>  create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
->>>
->>>
->>>> diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
->>>> new file mode 100644
->>>> index 000000000000..2f605297f862
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
->>>> @@ -0,0 +1,76 @@
->>>> +# SPDX-License-Identifier: GPL-2.0-only
->>>> +%YAML 1.2
->>>> +---
->>>> +$id: http://devicetree.org/schemas/pci/cdns,cdns-pcie-host.yaml#
->>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>>> +
->>>> +title: Cadence PCIe host controller
->>>> +
->>>> +maintainers:
->>>> +  - Tom Joseph <tjoseph@cadence.com>
->>>> +
->>>> +allOf:
->>>> +  - $ref: /schemas/pci/pci-bus.yaml#
->>>> +  - $ref: "cdns-pcie-host.yaml#"
->>>> +
->>>> +properties:
->>>> +  compatible:
->>>> +    const: cdns,cdns-pcie-host
->>>> +
->>>> +  reg:
->>>> +    maxItems: 3
->>>> +
->>>> +  reg-names:
->>>> +    items:
->>>> +      - const: reg
->>>> +      - const: cfg
->>>> +      - const: mem
->>>> +
->>>> +  msi-parent: true
->>>> +
->>>> +required:
->>>> +  - reg
->>>> +  - reg-names
->>>> +
->>>> +examples:
->>>> +  - |
->>>> +    bus {
->>>> +        #address-cells = <2>;
->>>> +        #size-cells = <2>;
->>>> +
->>>> +        pcie@fb000000 {
->>>> +            compatible = "cdns,cdns-pcie-host";
->>>> +            device_type = "pci";
->>>> +            #address-cells = <3>;
->>>> +            #size-cells = <2>;
->>>> +            bus-range = <0x0 0xff>;
->>>> +            linux,pci-domain = <0>;
->>>> +            cdns,max-outbound-regions = <16>;
->>>> +            cdns,no-bar-match-nbits = <32>;
->>>
->>>> +            vendor-id = /bits/ 16 <0x17cd>;
->>>> +            device-id = /bits/ 16 <0x0200>;
->>>
->>> Please make these 32-bit as that is what the spec says.
+>> This also means that the VFIO_DEVICE_FEATURE ioctl is not the only
+>> means of setting the VF token, which might call into question whether
+>> we absolutely need this new ioctl.  Currently I'm keeping it because I
+>> can imagine use cases, for example if a hypervisor were to support
+>> SR-IOV, the PF device might be opened without consideration for a VF
+>> token and we'd require the hypservisor to close and re-open the PF in
+>> order to set a known VF token, which is impractical.
 >>
->> Can you clarify this is mentioned in which spec? PCI spec has both of
->> these 16 bits and I checked the PCI binding doc but couldn't spot the
->> size of these fields.
->>
->> [1] -> https://www.devicetree.org/open-firmware/bindings/pci/pci2_1.pdf
-> 
-> Section 4.1.2.1. The key point is the type is 'encode-int' which means
-> 32-bit. Keep in mind, that 16-bits was not a defined type when this
-> spec was written. We added that for FDT.
-> 
-> Also, look at other instances of reading 'vendor-id' in the kernel.
+>> Series overview (same as provided with v1):
+> Thanks for doing this!
+>
+>> The synopsis of this series is that we have an ongoing desire to drive
+>> PCIe SR-IOV PFs from userspace with VFIO.  There's an immediate need
+>> for this with DPDK drivers and potentially interesting future use
+> Can you provide a link to the DPDK discussion?
+>
+>> cases in virtualization.  We've been reluctant to add this support
+>> previously due to the dependency and trust relationship between the
+>> VF device and PF driver.  Minimally the PF driver can induce a denial
+>> of service to the VF, but depending on the specific implementation,
+>> the PF driver might also be responsible for moving data between VFs
+>> or have direct access to the state of the VF, including data or state
+>> otherwise private to the VF or VF driver.
+> Just a loud thinking. While the motivation of VF token sounds reasonabl=
+e
+> to me, I'm curious why the same concern is not raised in other usages.
+> For example, there is no such design in virtio framework, where the
+> virtio device could also be restarted, putting in separate process (vho=
+st-user),
+> and even in separate VM (virtio-vhost-user), etc.
 
-Thanks for clarifying.
 
-Regards
-Kishon
+AFAIK, the restart could only be triggered by either VM or qemu. But=20
+yes, the datapath could be offloaded.
+
+But I'm not sure introducing another dedicated mechanism is better than=20
+using the exist generic POSIX mechanism to make sure the connection=20
+(AF_UINX) is secure.
+
+
+>   Of course the para-
+> virtualized attribute of virtio implies some degree of trust, but as yo=
+u
+> mentioned many SR-IOV implementations support VF->PF communication
+> which also implies some level of trust. It's perfectly fine if VFIO jus=
+t tries
+> to do better than other sub-systems, but knowing how other people
+> tackle the similar problem may make the whole picture clearer. =F0=9F=98=
+=8A
+>
+> +Jason.
+
+
+I'm not quite sure e.g allowing userspace PF driver with kernel VF=20
+driver would not break the assumption of kernel security model. At least=20
+we should forbid a unprivileged PF driver running in userspace.
+
+Thanks
+
