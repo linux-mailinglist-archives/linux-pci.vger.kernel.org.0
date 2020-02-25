@@ -2,233 +2,640 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A36A16C055
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2020 13:09:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B554116C2D0
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2020 14:55:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730399AbgBYMIy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Feb 2020 07:08:54 -0500
-Received: from foss.arm.com ([217.140.110.172]:49958 "EHLO foss.arm.com"
+        id S1730209AbgBYNza (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Feb 2020 08:55:30 -0500
+Received: from foss.arm.com ([217.140.110.172]:51096 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729458AbgBYMIx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 25 Feb 2020 07:08:53 -0500
+        id S1729680AbgBYNza (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 25 Feb 2020 08:55:30 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EFD47113E;
-        Tue, 25 Feb 2020 04:08:52 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 88B3531B;
+        Tue, 25 Feb 2020 03:30:05 -0800 (PST)
 Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 35F0C3F6CF;
-        Tue, 25 Feb 2020 04:08:51 -0800 (PST)
-Date:   Tue, 25 Feb 2020 12:08:41 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AE3A43F6CF;
+        Tue, 25 Feb 2020 03:30:04 -0800 (PST)
+Date:   Tue, 25 Feb 2020 11:30:02 +0000
 From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        andrew.murray@arm.com, bhelgaas@google.com, kishon@ti.com,
-        thierry.reding@gmail.com, Jisheng.Zhang@synaptics.com,
-        jonathanh@nvidia.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V3 5/5] PCI: pci-epf-test: Add support to defer core
- initialization
-Message-ID: <20200225120832.GA7710@e121166-lin.cambridge.arm.com>
-References: <20200217121036.3057-1-vidyas@nvidia.com>
- <20200217121036.3057-6-vidyas@nvidia.com>
+To:     Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bhelgaas@google.com, rgummal@xilinx.com
+Subject: Re: [PATCH v5 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port driver
+Message-ID: <20200225113002.GB5089@e121166-lin.cambridge.arm.com>
+References: <1580400771-12382-1-git-send-email-bharat.kumar.gogada@xilinx.com>
+ <1580400771-12382-3-git-send-email-bharat.kumar.gogada@xilinx.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200217121036.3057-6-vidyas@nvidia.com>
+In-Reply-To: <1580400771-12382-3-git-send-email-bharat.kumar.gogada@xilinx.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 05:40:36PM +0530, Vidya Sagar wrote:
-> Add support to defer core initialization and to receive a notifier
-> when core is ready to accommodate platforms where core is not for
-> initialization untile reference clock from host is available.
+On Thu, Jan 30, 2020 at 09:42:51PM +0530, Bharat Kumar Gogada wrote:
+> - Add support for Versal CPM as Root Port.
+> - The Versal ACAP devices include CCIX-PCIe Module (CPM). The integrated
+>   block for CPM along with the integrated bridge can function
+>   as PCIe Root Port.
+> - CPM Versal uses GICv3 ITS feature for achieving assigning MSI/MSI-X
+>   vectors and handling MSI/MSI-X interrupts.
 
-I don't understand this commit log, please reword it and fix
-the typos, I would merge it then, thanks.
+This is not relevant information.
 
-Lorenzo
+> - Bridge error and legacy interrupts in Versal CPM are handled using
+>   Versal CPM specific MISC interrupt line.
+> 
+> Changes v5:
+> - Removed xilinx_cpm_pcie_valid_device function
 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+Remove Changes log from the commit log.
+
+> Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
 > ---
-> V3:
-> * Added Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+>  drivers/pci/controller/Kconfig           |   8 +
+>  drivers/pci/controller/Makefile          |   1 +
+>  drivers/pci/controller/pcie-xilinx-cpm.c | 491 +++++++++++++++++++++++++++++++
+>  3 files changed, 500 insertions(+)
+>  create mode 100644 drivers/pci/controller/pcie-xilinx-cpm.c
 > 
-> V2:
-> * Addressed review comments from Kishon
-> 
->  drivers/pci/endpoint/functions/pci-epf-test.c | 118 ++++++++++++------
->  1 file changed, 77 insertions(+), 41 deletions(-)
-> 
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> index bddff15052cc..be04c6220265 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> @@ -360,18 +360,6 @@ static void pci_epf_test_cmd_handler(struct work_struct *work)
->  			   msecs_to_jiffies(1));
->  }
+> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+> index c77069c..362f4db 100644
+> --- a/drivers/pci/controller/Kconfig
+> +++ b/drivers/pci/controller/Kconfig
+> @@ -81,6 +81,14 @@ config PCIE_XILINX
+>  	  Say 'Y' here if you want kernel to support the Xilinx AXI PCIe
+>  	  Host Bridge driver.
 >  
-> -static int pci_epf_test_notifier(struct notifier_block *nb, unsigned long val,
-> -				 void *data)
-> -{
-> -	struct pci_epf *epf = container_of(nb, struct pci_epf, nb);
-> -	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
-> -
-> -	queue_delayed_work(kpcitest_workqueue, &epf_test->cmd_handler,
-> -			   msecs_to_jiffies(1));
-> -
-> -	return NOTIFY_OK;
-> -}
-> -
->  static void pci_epf_test_unbind(struct pci_epf *epf)
->  {
->  	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
-> @@ -428,6 +416,78 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
->  	return 0;
->  }
->  
-> +static int pci_epf_test_core_init(struct pci_epf *epf)
+> +config PCIE_XILINX_CPM
+> +	bool "Xilinx Versal CPM host bridge support"
+> +	depends on ARCH_ZYNQMP || COMPILE_TEST
+> +	help
+> +	  Say 'Y' here if you want kernel support for the
+> +	  Xilinx Versal CPM host bridge. The driver supports
+> +	  MSI/MSI-X interrupts using GICv3 ITS feature.
+> +
+>  config PCI_XGENE
+>  	bool "X-Gene PCIe controller"
+>  	depends on ARM64 || COMPILE_TEST
+> diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
+> index 3d4f597..6c936e9 100644
+> --- a/drivers/pci/controller/Makefile
+> +++ b/drivers/pci/controller/Makefile
+> @@ -12,6 +12,7 @@ obj-$(CONFIG_PCI_HOST_COMMON) += pci-host-common.o
+>  obj-$(CONFIG_PCI_HOST_GENERIC) += pci-host-generic.o
+>  obj-$(CONFIG_PCIE_XILINX) += pcie-xilinx.o
+>  obj-$(CONFIG_PCIE_XILINX_NWL) += pcie-xilinx-nwl.o
+> +obj-$(CONFIG_PCIE_XILINX_CPM) += pcie-xilinx-cpm.o
+>  obj-$(CONFIG_PCI_V3_SEMI) += pci-v3-semi.o
+>  obj-$(CONFIG_PCI_XGENE_MSI) += pci-xgene-msi.o
+>  obj-$(CONFIG_PCI_VERSATILE) += pci-versatile.o
+> diff --git a/drivers/pci/controller/pcie-xilinx-cpm.c b/drivers/pci/controller/pcie-xilinx-cpm.c
+> new file mode 100644
+> index 0000000..4e4c0f0
+> --- /dev/null
+> +++ b/drivers/pci/controller/pcie-xilinx-cpm.c
+> @@ -0,0 +1,491 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * PCIe host controller driver for Xilinx Versal CPM DMA Bridge
+> + *
+> + * (C) Copyright 2019 - 2020, Xilinx, Inc.
+> + */
+> +
+> +#include <linux/interrupt.h>
+> +#include <linux/irq.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_pci.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/pci.h>
+> +#include <linux/platform_device.h>
+> +
+> +#include "../pci.h"
+> +
+> +/* Register definitions */
+> +#define XILINX_CPM_PCIE_REG_IDR		0x00000E10
+> +#define XILINX_CPM_PCIE_REG_IMR		0x00000E14
+> +#define XILINX_CPM_PCIE_REG_PSCR	0x00000E1C
+> +#define XILINX_CPM_PCIE_REG_RPSC	0x00000E20
+> +#define XILINX_CPM_PCIE_REG_RPEFR	0x00000E2C
+> +#define XILINX_CPM_PCIE_REG_IDRN	0x00000E38
+> +#define XILINX_CPM_PCIE_REG_IDRN_MASK	0x00000E3C
+> +#define XILINX_CPM_PCIE_MISC_IR_STATUS	0x00000340
+> +#define XILINX_CPM_PCIE_MISC_IR_ENABLE	0x00000348
+> +#define XILINX_CPM_PCIE_MISC_IR_LOCAL	BIT(1)
+> +
+> +/* Interrupt registers definitions */
+> +#define XILINX_CPM_PCIE_INTR_LINK_DOWN		BIT(0)
+> +#define XILINX_CPM_PCIE_INTR_HOT_RESET		BIT(3)
+> +#define XILINX_CPM_PCIE_INTR_CFG_TIMEOUT	BIT(8)
+> +#define XILINX_CPM_PCIE_INTR_CORRECTABLE	BIT(9)
+> +#define XILINX_CPM_PCIE_INTR_NONFATAL		BIT(10)
+> +#define XILINX_CPM_PCIE_INTR_FATAL		BIT(11)
+> +#define XILINX_CPM_PCIE_INTR_INTX		BIT(16)
+> +#define XILINX_CPM_PCIE_INTR_MSI		BIT(17)
+> +#define XILINX_CPM_PCIE_INTR_SLV_UNSUPP		BIT(20)
+> +#define XILINX_CPM_PCIE_INTR_SLV_UNEXP		BIT(21)
+> +#define XILINX_CPM_PCIE_INTR_SLV_COMPL		BIT(22)
+> +#define XILINX_CPM_PCIE_INTR_SLV_ERRP		BIT(23)
+> +#define XILINX_CPM_PCIE_INTR_SLV_CMPABT		BIT(24)
+> +#define XILINX_CPM_PCIE_INTR_SLV_ILLBUR		BIT(25)
+> +#define XILINX_CPM_PCIE_INTR_MST_DECERR		BIT(26)
+> +#define XILINX_CPM_PCIE_INTR_MST_SLVERR		BIT(27)
+> +#define XILINX_CPM_PCIE_IMR_ALL_MASK		0x1FF39FF9
+> +#define XILINX_CPM_PCIE_IDR_ALL_MASK		0xFFFFFFFF
+> +#define XILINX_CPM_PCIE_IDRN_MASK		GENMASK(19, 16)
+> +#define XILINX_CPM_PCIE_INTR_CFG_PCIE_TIMEOUT	BIT(4)
+> +#define XILINX_CPM_PCIE_INTR_CFG_ERR_POISON	BIT(12)
+> +#define XILINX_CPM_PCIE_INTR_PME_TO_ACK_RCVD	BIT(15)
+> +#define XILINX_CPM_PCIE_INTR_PM_PME_RCVD	BIT(17)
+> +#define XILINX_CPM_PCIE_INTR_SLV_PCIE_TIMEOUT	BIT(28)
+> +#define XILINX_CPM_PCIE_IDRN_SHIFT		16
+> +
+> +/* Root Port Error FIFO Read Register definitions */
+> +#define XILINX_CPM_PCIE_RPEFR_ERR_VALID		BIT(18)
+> +#define XILINX_CPM_PCIE_RPEFR_REQ_ID		GENMASK(15, 0)
+> +#define XILINX_CPM_PCIE_RPEFR_ALL_MASK		0xFFFFFFFF
+> +
+> +/* Root Port Status/control Register definitions */
+> +#define XILINX_CPM_PCIE_REG_RPSC_BEN		BIT(0)
+> +
+> +/* Phy Status/Control Register definitions */
+> +#define XILINX_CPM_PCIE_REG_PSCR_LNKUP		BIT(11)
+> +
+> +/* ECAM definitions */
+> +#define ECAM_BUS_NUM_SHIFT		20
+> +#define ECAM_DEV_NUM_SHIFT		12
+
+You don't need these ECAM_* defines, you can use pci_generic_ecam_ops.
+
+> +
+> +/**
+> + * struct xilinx_cpm_pcie_port - PCIe port information
+> + * @reg_base: Bridge Register Base
+> + * @cpm_base: CPM System Level Control and Status Register(SLCR) Base
+> + * @irq: Interrupt number
+> + * @root_busno: Root Bus number
+> + * @dev: Device pointer
+> + * @leg_domain: Legacy IRQ domain pointer
+> + * @irq_misc: Legacy and error interrupt number
+> + */
+> +struct xilinx_cpm_pcie_port {
+> +	void __iomem *reg_base;
+> +	void __iomem *cpm_base;
+> +	u32 irq;
+> +	u8 root_busno;
+> +	struct device *dev;
+> +	struct irq_domain *leg_domain;
+> +	int irq_misc;
+> +};
+> +
+> +static inline u32 pcie_read(struct xilinx_cpm_pcie_port *port, u32 reg)
 > +{
-> +	struct pci_epf_header *header = epf->header;
-> +	const struct pci_epc_features *epc_features;
-> +	struct pci_epc *epc = epf->epc;
-> +	struct device *dev = &epf->dev;
-> +	bool msix_capable = false;
-> +	bool msi_capable = true;
-> +	int ret;
+> +	return readl(port->reg_base + reg);
+> +}
 > +
-> +	epc_features = pci_epc_get_features(epc, epf->func_no);
-> +	if (epc_features) {
-> +		msix_capable = epc_features->msix_capable;
-> +		msi_capable = epc_features->msi_capable;
+> +static inline void pcie_write(struct xilinx_cpm_pcie_port *port,
+> +			      u32 val, u32 reg)
+> +{
+> +	writel(val, port->reg_base + reg);
+> +}
+> +
+> +static inline bool cpm_pcie_link_up(struct xilinx_cpm_pcie_port *port)
+> +{
+> +	return (pcie_read(port, XILINX_CPM_PCIE_REG_PSCR) &
+> +		XILINX_CPM_PCIE_REG_PSCR_LNKUP) ? 1 : 0;
+
+	u32 val = pcie_read(port, XILINX_CPM_PCIE_REG_PSCR);
+
+	return val & XILINX_CPM_PCIE_REG_PSCR_LNKUP;
+
+And this function call is not that informative anyway - it is used just
+to print a log whose usefulness is questionable.
+
+> +}
+> +
+> +/**
+> + * xilinx_cpm_pcie_clear_err_interrupts - Clear Error Interrupts
+> + * @port: PCIe port information
+> + */
+> +static void cpm_pcie_clear_err_interrupts(struct xilinx_cpm_pcie_port *port)
+> +{
+> +	unsigned long val = pcie_read(port, XILINX_CPM_PCIE_REG_RPEFR);
+> +
+> +	if (val & XILINX_CPM_PCIE_RPEFR_ERR_VALID) {
+> +		dev_dbg(port->dev, "Requester ID %lu\n",
+> +			val & XILINX_CPM_PCIE_RPEFR_REQ_ID);
+> +		pcie_write(port, XILINX_CPM_PCIE_RPEFR_ALL_MASK,
+> +			   XILINX_CPM_PCIE_REG_RPEFR);
+> +	}
+> +}
+> +
+> +/**
+> + * xilinx_cpm_pcie_map_bus - Get configuration base
+> + * @bus: PCI Bus structure
+> + * @devfn: Device/function
+> + * @where: Offset from base
+> + *
+> + * Return: Base address of the configuration space needed to be
+> + *	   accessed.
+> + */
+> +static void __iomem *xilinx_cpm_pcie_map_bus(struct pci_bus *bus,
+> +					     unsigned int devfn, int where)
+> +{
+> +	struct xilinx_cpm_pcie_port *port = bus->sysdata;
+> +	int relbus;
+> +
+> +	relbus = (bus->number << ECAM_BUS_NUM_SHIFT) |
+> +		 (devfn << ECAM_DEV_NUM_SHIFT);
+> +
+> +	return port->reg_base + relbus + where;
+> +}
+
+You don't need this function, you can rely on pci_generic_ecam_ops.
+
+> +/* PCIe operations */
+> +static struct pci_ops xilinx_cpm_pcie_ops = {
+> +	.map_bus = xilinx_cpm_pcie_map_bus,
+> +	.read	= pci_generic_config_read,
+> +	.write	= pci_generic_config_write,
+> +};
+
+See above.
+
+> +
+> +/**
+> + * xilinx_cpm_pcie_intx_map - Set the handler for the INTx and mark IRQ as valid
+> + * @domain: IRQ domain
+> + * @irq: Virtual IRQ number
+> + * @hwirq: HW interrupt number
+> + *
+> + * Return: Always returns 0.
+> + */
+> +static int xilinx_cpm_pcie_intx_map(struct irq_domain *domain,
+> +				    unsigned int irq, irq_hw_number_t hwirq)
+> +{
+> +	irq_set_chip_and_handler(irq, &dummy_irq_chip, handle_simple_irq);
+
+INTX are level IRQs, the flow handler must be handle_level_irq.
+
+> +	irq_set_chip_data(irq, domain->host_data);
+> +	irq_set_status_flags(irq, IRQ_LEVEL);
+
+The way INTX are handled in this patch is wrong. You must set-up
+a chained IRQ with the appropriate flow handler, current code
+uses an IRQ action and that's an IRQ layer violation and it goes
+without saying that it is almost certainly broken.
+
+Please read drivers/pci/controller/pci-ft100.c code, that's the
+way INTX must be handled; I planned to take that code and make
+it a library, please use the same IRQ domain set-up.
+
+> +	return 0;
+> +}
+> +
+> +/* INTx IRQ Domain operations */
+> +static const struct irq_domain_ops intx_domain_ops = {
+> +	.map = xilinx_cpm_pcie_intx_map,
+> +	.xlate = pci_irqd_intx_xlate,
+
+This is wrong, wrong, wrong. There is no need for xlat'ing anything
+see my reply on the DT bindings.
+
+> +};
+> +
+> +/**
+> + * xilinx_cpm_pcie_intr_handler - Interrupt Service Handler
+> + * @irq: IRQ number
+> + * @data: PCIe port information
+> + *
+> + * Return: IRQ_HANDLED on success and IRQ_NONE on failure
+> + */
+> +static irqreturn_t xilinx_cpm_pcie_intr_handler(int irq, void *data)
+
+Bad. This must be a chained IRQ flow handler, not an IRQ action.
+
+> +{
+> +	struct xilinx_cpm_pcie_port *port = data;
+> +	struct device *dev = port->dev;
+> +	u32 val, mask, status, bit;
+> +	unsigned long intr_val;
+> +
+> +	/* Read interrupt decode and mask registers */
+> +	val = pcie_read(port, XILINX_CPM_PCIE_REG_IDR);
+> +	mask = pcie_read(port, XILINX_CPM_PCIE_REG_IMR);
+> +
+> +	status = val & mask;
+> +	if (!status)
+> +		return IRQ_NONE;
+> +
+> +	if (status & XILINX_CPM_PCIE_INTR_LINK_DOWN)
+> +		dev_warn(dev, "Link Down\n");
+> +
+> +	if (status & XILINX_CPM_PCIE_INTR_HOT_RESET)
+> +		dev_info(dev, "Hot reset\n");
+> +
+> +	if (status & XILINX_CPM_PCIE_INTR_CFG_TIMEOUT)
+> +		dev_warn(dev, "ECAM access timeout\n");
+> +
+> +	if (status & XILINX_CPM_PCIE_INTR_CORRECTABLE) {
+> +		dev_warn(dev, "Correctable error message\n");
+> +		cpm_pcie_clear_err_interrupts(port);
 > +	}
 > +
-> +	ret = pci_epc_write_header(epc, epf->func_no, header);
-> +	if (ret) {
-> +		dev_err(dev, "Configuration header write failed\n");
-> +		return ret;
+> +	if (status & XILINX_CPM_PCIE_INTR_NONFATAL) {
+> +		dev_warn(dev, "Non fatal error message\n");
+> +		cpm_pcie_clear_err_interrupts(port);
 > +	}
 > +
-> +	ret = pci_epf_test_set_bar(epf);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (msi_capable) {
-> +		ret = pci_epc_set_msi(epc, epf->func_no, epf->msi_interrupts);
-> +		if (ret) {
-> +			dev_err(dev, "MSI configuration failed\n");
-> +			return ret;
-> +		}
+> +	if (status & XILINX_CPM_PCIE_INTR_FATAL) {
+> +		dev_warn(dev, "Fatal error message\n");
+> +		cpm_pcie_clear_err_interrupts(port);
 > +	}
 > +
-> +	if (msix_capable) {
-> +		ret = pci_epc_set_msix(epc, epf->func_no, epf->msix_interrupts);
-> +		if (ret) {
-> +			dev_err(dev, "MSI-X configuration failed\n");
-> +			return ret;
-> +		}
+> +	if (status & XILINX_CPM_PCIE_INTR_INTX) {
+> +		/* Handle INTx Interrupt */
+> +		intr_val = pcie_read(port, XILINX_CPM_PCIE_REG_IDRN);
+> +		intr_val = intr_val >> XILINX_CPM_PCIE_IDRN_SHIFT;
+> +
+> +		for_each_set_bit(bit, &intr_val, PCI_NUM_INTX)
+> +			generic_handle_irq(irq_find_mapping(port->leg_domain,
+> +							    bit));
+> +	}
+> +
+> +	if (status & XILINX_CPM_PCIE_INTR_SLV_UNSUPP)
+> +		dev_warn(dev, "Slave unsupported request\n");
+> +
+> +	if (status & XILINX_CPM_PCIE_INTR_SLV_UNEXP)
+> +		dev_warn(dev, "Slave unexpected completion\n");
+> +
+> +	if (status & XILINX_CPM_PCIE_INTR_SLV_COMPL)
+> +		dev_warn(dev, "Slave completion timeout\n");
+> +
+> +	if (status & XILINX_CPM_PCIE_INTR_SLV_ERRP)
+> +		dev_warn(dev, "Slave Error Poison\n");
+> +
+> +	if (status & XILINX_CPM_PCIE_INTR_SLV_CMPABT)
+> +		dev_warn(dev, "Slave Completer Abort\n");
+> +
+> +	if (status & XILINX_CPM_PCIE_INTR_SLV_ILLBUR)
+> +		dev_warn(dev, "Slave Illegal Burst\n");
+> +
+> +	if (status & XILINX_CPM_PCIE_INTR_MST_DECERR)
+> +		dev_warn(dev, "Master decode error\n");
+> +
+> +	if (status & XILINX_CPM_PCIE_INTR_MST_SLVERR)
+> +		dev_warn(dev, "Master slave error\n");
+> +
+> +	if (status & XILINX_CPM_PCIE_INTR_CFG_PCIE_TIMEOUT)
+> +		dev_warn(dev, "PCIe ECAM access timeout\n");
+> +
+> +	if (status & XILINX_CPM_PCIE_INTR_CFG_ERR_POISON)
+> +		dev_warn(dev, "ECAM poisoned completion received\n");
+> +
+> +	if (status & XILINX_CPM_PCIE_INTR_PME_TO_ACK_RCVD)
+> +		dev_warn(dev, "PME_TO_ACK message received\n");
+> +
+> +	if (status & XILINX_CPM_PCIE_INTR_PM_PME_RCVD)
+> +		dev_warn(dev, "PM_PME message received\n");
+> +
+> +	if (status & XILINX_CPM_PCIE_INTR_SLV_PCIE_TIMEOUT)
+> +		dev_warn(dev, "PCIe completion timeout received\n");
+> +
+> +	/* Clear the Interrupt Decode register */
+> +	pcie_write(port, status, XILINX_CPM_PCIE_REG_IDR);
+> +
+> +	/*
+> +	 * XILINX_CPM_PCIE_MISC_IR_STATUS register is mapped to
+> +	 * CPM SLCR block.
+> +	 */
+> +	val = readl(port->cpm_base + XILINX_CPM_PCIE_MISC_IR_STATUS);
+> +	if (val)
+> +		writel(val, port->cpm_base + XILINX_CPM_PCIE_MISC_IR_STATUS);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +/**
+> + * xilinx_cpm_pcie_init_irq_domain - Initialize IRQ domain
+> + * @port: PCIe port information
+> + *
+> + * Return: '0' on success and error value on failure
+> + */
+> +static int xilinx_cpm_pcie_init_irq_domain(struct xilinx_cpm_pcie_port *port)
+> +{
+> +	struct device *dev = port->dev;
+> +	struct device_node *node = dev->of_node;
+> +	struct device_node *pcie_intc_node;
+> +
+> +	/* Setup INTx */
+> +	pcie_intc_node = of_get_next_child(node, NULL);
+> +	if (!pcie_intc_node) {
+> +		dev_err(dev, "No PCIe Intc node found\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	port->leg_domain = irq_domain_add_linear(pcie_intc_node, PCI_NUM_INTX,
+> +						 &intx_domain_ops,
+> +						 port);
+> +	if (!port->leg_domain) {
+> +		dev_err(dev, "Failed to get a INTx IRQ domain\n");
+> +		return -ENOMEM;
 > +	}
 > +
 > +	return 0;
 > +}
 > +
-> +static int pci_epf_test_notifier(struct notifier_block *nb, unsigned long val,
-> +				 void *data)
+> +/**
+> + * xilinx_cpm_pcie_init_port - Initialize hardware
+> + * @port: PCIe port information
+> + */
+> +static void xilinx_cpm_pcie_init_port(struct xilinx_cpm_pcie_port *port)
 > +{
-> +	struct pci_epf *epf = container_of(nb, struct pci_epf, nb);
-> +	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
-> +	int ret;
+> +	if (cpm_pcie_link_up(port))
+> +		dev_info(port->dev, "PCIe Link is UP\n");
+> +	else
+> +		dev_info(port->dev, "PCIe Link is DOWN\n");
 > +
-> +	switch (val) {
-> +	case CORE_INIT:
-> +		ret = pci_epf_test_core_init(epf);
-> +		if (ret)
-> +			return NOTIFY_BAD;
-> +		break;
+> +	/* Disable all interrupts */
+> +	pcie_write(port, ~XILINX_CPM_PCIE_IDR_ALL_MASK,
+> +		   XILINX_CPM_PCIE_REG_IMR);
 > +
-> +	case LINK_UP:
-> +		queue_delayed_work(kpcitest_workqueue, &epf_test->cmd_handler,
-> +				   msecs_to_jiffies(1));
-> +		break;
+> +	/* Clear pending interrupts */
+> +	pcie_write(port, pcie_read(port, XILINX_CPM_PCIE_REG_IDR) &
+> +		   XILINX_CPM_PCIE_IMR_ALL_MASK,
+> +		   XILINX_CPM_PCIE_REG_IDR);
 > +
-> +	default:
-> +		dev_err(&epf->dev, "Invalid EPF test notifier event\n");
-> +		return NOTIFY_BAD;
-> +	}
+> +	/* Enable all interrupts */
+> +	pcie_write(port, XILINX_CPM_PCIE_IMR_ALL_MASK,
+> +		   XILINX_CPM_PCIE_REG_IMR);
+> +	pcie_write(port, XILINX_CPM_PCIE_IDRN_MASK,
+> +		   XILINX_CPM_PCIE_REG_IDRN_MASK);
 > +
-> +	return NOTIFY_OK;
+> +	/*
+> +	 * XILINX_CPM_PCIE_MISC_IR_ENABLE register is mapped to
+> +	 * CPM SLCR block.
+> +	 */
+> +	writel(XILINX_CPM_PCIE_MISC_IR_LOCAL,
+> +	       port->cpm_base + XILINX_CPM_PCIE_MISC_IR_ENABLE);
+> +	/* Enable the Bridge enable bit */
+> +	pcie_write(port, pcie_read(port, XILINX_CPM_PCIE_REG_RPSC) |
+> +		   XILINX_CPM_PCIE_REG_RPSC_BEN,
+> +		   XILINX_CPM_PCIE_REG_RPSC);
 > +}
 > +
->  static int pci_epf_test_alloc_space(struct pci_epf *epf)
->  {
->  	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
-> @@ -496,14 +556,11 @@ static int pci_epf_test_bind(struct pci_epf *epf)
->  {
->  	int ret;
->  	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
-> -	struct pci_epf_header *header = epf->header;
->  	const struct pci_epc_features *epc_features;
->  	enum pci_barno test_reg_bar = BAR_0;
->  	struct pci_epc *epc = epf->epc;
-> -	struct device *dev = &epf->dev;
->  	bool linkup_notifier = false;
-> -	bool msix_capable = false;
-> -	bool msi_capable = true;
-> +	bool core_init_notifier = false;
->  
->  	if (WARN_ON_ONCE(!epc))
->  		return -EINVAL;
-> @@ -511,8 +568,7 @@ static int pci_epf_test_bind(struct pci_epf *epf)
->  	epc_features = pci_epc_get_features(epc, epf->func_no);
->  	if (epc_features) {
->  		linkup_notifier = epc_features->linkup_notifier;
-> -		msix_capable = epc_features->msix_capable;
-> -		msi_capable = epc_features->msi_capable;
-> +		core_init_notifier = epc_features->core_init_notifier;
->  		test_reg_bar = pci_epc_get_first_free_bar(epc_features);
->  		pci_epf_configure_bar(epf, epc_features);
->  	}
-> @@ -520,34 +576,14 @@ static int pci_epf_test_bind(struct pci_epf *epf)
->  	epf_test->test_reg_bar = test_reg_bar;
->  	epf_test->epc_features = epc_features;
->  
-> -	ret = pci_epc_write_header(epc, epf->func_no, header);
-> -	if (ret) {
-> -		dev_err(dev, "Configuration header write failed\n");
-> -		return ret;
-> -	}
-> -
->  	ret = pci_epf_test_alloc_space(epf);
->  	if (ret)
->  		return ret;
->  
-> -	ret = pci_epf_test_set_bar(epf);
-> -	if (ret)
-> -		return ret;
-> -
-> -	if (msi_capable) {
-> -		ret = pci_epc_set_msi(epc, epf->func_no, epf->msi_interrupts);
-> -		if (ret) {
-> -			dev_err(dev, "MSI configuration failed\n");
-> -			return ret;
-> -		}
-> -	}
-> -
-> -	if (msix_capable) {
-> -		ret = pci_epc_set_msix(epc, epf->func_no, epf->msix_interrupts);
-> -		if (ret) {
-> -			dev_err(dev, "MSI-X configuration failed\n");
-> +	if (!core_init_notifier) {
-> +		ret = pci_epf_test_core_init(epf);
-> +		if (ret)
->  			return ret;
-> -		}
->  	}
->  
->  	if (linkup_notifier) {
+> +static int xilinx_cpm_request_misc_irq(struct xilinx_cpm_pcie_port *port)
+> +{
+> +	struct device *dev = port->dev;
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	int err;
+> +
+> +	port->irq_misc = platform_get_irq_byname(pdev, "misc");
+> +	if (port->irq_misc <= 0) {
+> +		dev_err(dev, "Unable to find misc IRQ line\n");
+> +		return port->irq_misc;
+> +	}
+> +	err = devm_request_irq(dev, port->irq_misc,
+> +			       xilinx_cpm_pcie_intr_handler,
+> +			       IRQF_SHARED | IRQF_NO_THREAD,
+> +			       "xilinx-pcie", port);
+
+Nope. See above.
+
+> +	if (err) {
+> +		dev_err(dev, "unable to request misc IRQ line %d\n",
+> +			port->irq_misc);
+> +		return err;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * xilinx_cpm_pcie_parse_dt - Parse Device tree
+> + * @port: PCIe port information
+> + *
+> + * Return: '0' on success and error value on failure
+> + */
+> +static int xilinx_cpm_pcie_parse_dt(struct xilinx_cpm_pcie_port *port)
+> +{
+> +	struct device *dev = port->dev;
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	struct resource *res;
+> +	int err;
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "cfg");
+> +	port->reg_base = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(port->reg_base))
+> +		return PTR_ERR(port->reg_base);
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> +					   "cpm_slcr");
+> +	port->cpm_base = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(port->cpm_base))
+> +		return PTR_ERR(port->cpm_base);
+> +
+> +	err = xilinx_cpm_request_misc_irq(port);
+> +	if (err)
+> +		return err;
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * xilinx_cpm_pcie_probe - Probe function
+> + * @pdev: Platform device pointer
+> + *
+> + * Return: '0' on success and error value on failure
+> + */
+> +static int xilinx_cpm_pcie_probe(struct platform_device *pdev)
+> +{
+> +	struct xilinx_cpm_pcie_port *port;
+> +	struct device *dev = &pdev->dev;
+> +	struct pci_bus *bus;
+> +	struct pci_bus *child;
+> +	struct pci_host_bridge *bridge;
+> +	int err;
+> +
+> +	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*port));
+> +	if (!bridge)
+> +		return -ENODEV;
+> +
+> +	port = pci_host_bridge_priv(bridge);
+> +
+> +	port->dev = dev;
+> +
+> +	err = xilinx_cpm_pcie_parse_dt(port);
+> +	if (err) {
+> +		dev_err(dev, "Parsing DT failed\n");
+> +		return err;
+> +	}
+> +
+> +	xilinx_cpm_pcie_init_port(port);
+> +
+> +	err = xilinx_cpm_pcie_init_irq_domain(port);
+> +	if (err) {
+> +		dev_err(dev, "Failed creating IRQ Domain\n");
+> +		return err;
+> +	}
+
+If subsequent calls fail from now onwards, there is work carried
+out in this initialization to be undone, which isn't, please add
+it.
+
+Thanks,
+Lorenzo
+
+> +
+> +	err = pci_parse_request_of_pci_ranges(dev, &bridge->windows,
+> +					      &bridge->dma_ranges, NULL);
+> +	if (err) {
+> +		dev_err(dev, "Getting bridge resources failed\n");
+> +		return err;
+> +	}
+> +
+> +	bridge->dev.parent = dev;
+> +	bridge->sysdata = port;
+> +	bridge->busnr = port->root_busno;
+> +	bridge->ops = &xilinx_cpm_pcie_ops;
+> +	bridge->map_irq = of_irq_parse_and_map_pci;
+> +	bridge->swizzle_irq = pci_common_swizzle;
+> +
+> +	err = pci_scan_root_bus_bridge(bridge);
+> +	if (err)
+> +		return err;
+> +
+> +	bus = bridge->bus;
+> +
+> +	pci_assign_unassigned_bus_resources(bus);
+> +	list_for_each_entry(child, &bus->children, node)
+> +		pcie_bus_configure_settings(child);
+> +	pci_bus_add_devices(bus);
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id xilinx_cpm_pcie_of_match[] = {
+> +	{ .compatible = "xlnx,versal-cpm-host-1.00", },
+> +	{}
+> +};
+> +
+> +static struct platform_driver xilinx_cpm_pcie_driver = {
+> +	.driver = {
+> +		.name = "xilinx-cpm-pcie",
+> +		.of_match_table = xilinx_cpm_pcie_of_match,
+> +		.suppress_bind_attrs = true,
+> +	},
+> +	.probe = xilinx_cpm_pcie_probe,
+> +};
+> +
+> +builtin_platform_driver(xilinx_cpm_pcie_driver);
 > -- 
-> 2.17.1
+> 2.7.4
 > 
