@@ -2,640 +2,207 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B554116C2D0
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2020 14:55:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9BB3B16C2C9
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2020 14:53:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730209AbgBYNza (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Feb 2020 08:55:30 -0500
-Received: from foss.arm.com ([217.140.110.172]:51096 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729680AbgBYNza (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 25 Feb 2020 08:55:30 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 88B3531B;
-        Tue, 25 Feb 2020 03:30:05 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AE3A43F6CF;
-        Tue, 25 Feb 2020 03:30:04 -0800 (PST)
-Date:   Tue, 25 Feb 2020 11:30:02 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bhelgaas@google.com, rgummal@xilinx.com
-Subject: Re: [PATCH v5 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port driver
-Message-ID: <20200225113002.GB5089@e121166-lin.cambridge.arm.com>
-References: <1580400771-12382-1-git-send-email-bharat.kumar.gogada@xilinx.com>
- <1580400771-12382-3-git-send-email-bharat.kumar.gogada@xilinx.com>
+        id S1730370AbgBYNxo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Feb 2020 08:53:44 -0500
+Received: from mail-bn8nam11on2077.outbound.protection.outlook.com ([40.107.236.77]:7257
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729065AbgBYNxo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 25 Feb 2020 08:53:44 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Y0EOgh4w5cj9Anx+rpU2R/knvqGIgnOlJYfR26xHR1f4WDzA6+iuOJikunj0y7pYOMDnLCsMsOKeFPU2c0dt379l8XiIEFl+HluSE08OtEPUwE/gpSYZDGgQUUd0Bdm5IlheUedCH/H4ITgEAtLrECeKaABlusgm4OPwM/Txc+Nog6WNOTjTp9Z6Y+pI+uqPjszdGJxEyixupQvFfVhjABu+3e/g83LlUUH+G03qiE8QHjjIYoKdzTaS2YPuRPYTuOGUgCdFSCcZzn7xruBr5sHns2iBgOaRnCXsrZY+qYoI2gn3WGRuGR33o782gfB037UCsZZskoVFp0ktjvVT7g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Z/tRXFh5cywy7PlV5Q88yHHPDOWdqiruyWu5By+svX0=;
+ b=i/fM6Jv3B1Ksib90CuZ1bRmYv+2N9XUXP+83cVYWPuhgrP47ViHSR/AOG1/9DBNJoLlIaBOO7+mHosk9BODHqKDIsa4RQFmEzqsJ/hcaabXSABeG1NbMAZOnYlSO+M5FwypPurgN/nyD4MBT0gioo47dZnz2qwRmZSgB9vv36A7MeFWGFI1kE++GQOIxEtmJ1KHWAzSjPF49pgrziX0/eQEGzLGtL/WZzZSBubwrzb72N2FihPE0DGYMpcl3EMnCJUjgldpKQvwHi/2Ai8yJodDYJGqxiHjQKfhIb5jtyp6NLOWvw/XzC36laMn7kmsk+3ybdilE+3If08C22UHGIg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
+ dkim=pass header.d=xilinx.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Z/tRXFh5cywy7PlV5Q88yHHPDOWdqiruyWu5By+svX0=;
+ b=mC54EQb8nWDoaxQ0pwVlN4idoCQXsvwAvfL6aR9mBAWNg3mcjCRggQv6ZHBvMTxksKGmO2gKmNIlZMgmy3HnByX+911JdpLgyIecjBpuhJhKaS3q2pIlGFn654ddBzqn0Jkwz+nDTN9CoJ5j5nHc9qS0DHoWRo62SJ+Muw6d4Is=
+Received: from MN2PR02MB6336.namprd02.prod.outlook.com (2603:10b6:208:1b8::30)
+ by MN2PR02MB6975.namprd02.prod.outlook.com (2603:10b6:208:205::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.21; Tue, 25 Feb
+ 2020 13:53:39 +0000
+Received: from MN2PR02MB6336.namprd02.prod.outlook.com
+ ([fe80::f452:65fb:14c7:dd6b]) by MN2PR02MB6336.namprd02.prod.outlook.com
+ ([fe80::f452:65fb:14c7:dd6b%7]) with mapi id 15.20.2750.021; Tue, 25 Feb 2020
+ 13:53:39 +0000
+From:   Bharat Kumar Gogada <bharatku@xilinx.com>
+To:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        Ravikiran Gummaluri <rgummal@xilinx.com>
+Subject: RE: [PATCH 1/2] PCI: Versal CPM: Add device tree binding forversal
+ CPM host controller
+Thread-Topic: [PATCH 1/2] PCI: Versal CPM: Add device tree binding forversal
+ CPM host controller
+Thread-Index: AQHVtypssK4lIAAUvEC8dXg0z5iyHagsJpcAgAAw40A=
+Date:   Tue, 25 Feb 2020 13:53:38 +0000
+Message-ID: <MN2PR02MB6336EE21A8BBBD36788D2108A5ED0@MN2PR02MB6336.namprd02.prod.outlook.com>
+References: <1576842072-32027-1-git-send-email-bharat.kumar.gogada@xilinx.com>
+ <1576842072-32027-2-git-send-email-bharat.kumar.gogada@xilinx.com>
+ <20200225105808.GA5089@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20200225105808.GA5089@e121166-lin.cambridge.arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=bharatku@xilinx.com; 
+x-originating-ip: [149.199.50.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 739b0ecd-ddae-46ce-db24-08d7b9fa1e05
+x-ms-traffictypediagnostic: MN2PR02MB6975:|MN2PR02MB6975:
+x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR02MB69753E5A57B1683D3906F02EA5ED0@MN2PR02MB6975.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0324C2C0E2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(366004)(396003)(39860400002)(136003)(199004)(189003)(2906002)(81156014)(81166006)(8676002)(6506007)(66946007)(316002)(71200400001)(54906003)(5660300002)(55016002)(52536014)(9686003)(66446008)(64756008)(66556008)(66476007)(4326008)(8936002)(107886003)(33656002)(6916009)(7696005)(86362001)(26005)(76116006)(478600001)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR02MB6975;H:MN2PR02MB6336.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 5tBqFWZzBis9RO3HSqaFLHTCGIhzQ4yfNtLYQhVFciy5iWjvegWUprW+axBBZWmCEUIxtG9uYqq0SgClO6Z/bcNlHlkSjX/0HTh8YWbUh3Gk4wsMPQ8hsslXAl2z6HbWwM7jvJmy/2/qKpXvE+rS3crNB5xFyXPtXGQlXzdp1qKrsQGUDxexk3J5B1R/dw0ZZV5VIPmvDv1W/pTQWr4qwJnLD0KnmCqZfvf2YEdedYsHwbrrTwLSe2zxH7tZMMPeacTkE0w/Wx/D5FO73+K1TnElSCaLQj12dpobG5DEFcVg/sG8NHM2+Xml0lD0GoL0Mgv5osy/tcqR2aPIATUuQtwDNtBZTPktgM0FWMixMzz4w/qwqDKdWY4nY70fvY9ln5lesH8l+b3hAoupz0DHTDW7J8VRa6LsWR8b6WKgkkYqb0+O3Q/4FxZ3nk82bCFH
+x-ms-exchange-antispam-messagedata: ZI2TgfKw3bHMKg3Fbl8naL6X1VdxP6GQWFzG8lvXbx9ZTY6u7aK9IN8Q8nvAjvDEorEI8/AenpDzUVA5G38R6vARcT8ySglK/LOeb2z2//5ZV8MTZ/VJY7e3K5h3qY4T1jTLahgEojMG91B9H0+6Bg==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1580400771-12382-3-git-send-email-bharat.kumar.gogada@xilinx.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 739b0ecd-ddae-46ce-db24-08d7b9fa1e05
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Feb 2020 13:53:39.1538
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Yb3LO5H5Quoili6h5CCV6vV05SDrwnl4LH53WvIIzdRau4YRBsH/89UO/HbwwyH0krhs5y+T7xjAGccATziNFw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR02MB6975
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 09:42:51PM +0530, Bharat Kumar Gogada wrote:
-> - Add support for Versal CPM as Root Port.
-> - The Versal ACAP devices include CCIX-PCIe Module (CPM). The integrated
->   block for CPM along with the integrated bridge can function
->   as PCIe Root Port.
-> - CPM Versal uses GICv3 ITS feature for achieving assigning MSI/MSI-X
->   vectors and handling MSI/MSI-X interrupts.
-
-This is not relevant information.
-
-> - Bridge error and legacy interrupts in Versal CPM are handled using
->   Versal CPM specific MISC interrupt line.
-> 
-> Changes v5:
-> - Removed xilinx_cpm_pcie_valid_device function
-
-Remove Changes log from the commit log.
-
-> Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-> ---
->  drivers/pci/controller/Kconfig           |   8 +
->  drivers/pci/controller/Makefile          |   1 +
->  drivers/pci/controller/pcie-xilinx-cpm.c | 491 +++++++++++++++++++++++++++++++
->  3 files changed, 500 insertions(+)
->  create mode 100644 drivers/pci/controller/pcie-xilinx-cpm.c
-> 
-> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> index c77069c..362f4db 100644
-> --- a/drivers/pci/controller/Kconfig
-> +++ b/drivers/pci/controller/Kconfig
-> @@ -81,6 +81,14 @@ config PCIE_XILINX
->  	  Say 'Y' here if you want kernel to support the Xilinx AXI PCIe
->  	  Host Bridge driver.
->  
-> +config PCIE_XILINX_CPM
-> +	bool "Xilinx Versal CPM host bridge support"
-> +	depends on ARCH_ZYNQMP || COMPILE_TEST
-> +	help
-> +	  Say 'Y' here if you want kernel support for the
-> +	  Xilinx Versal CPM host bridge. The driver supports
-> +	  MSI/MSI-X interrupts using GICv3 ITS feature.
-> +
->  config PCI_XGENE
->  	bool "X-Gene PCIe controller"
->  	depends on ARM64 || COMPILE_TEST
-> diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
-> index 3d4f597..6c936e9 100644
-> --- a/drivers/pci/controller/Makefile
-> +++ b/drivers/pci/controller/Makefile
-> @@ -12,6 +12,7 @@ obj-$(CONFIG_PCI_HOST_COMMON) += pci-host-common.o
->  obj-$(CONFIG_PCI_HOST_GENERIC) += pci-host-generic.o
->  obj-$(CONFIG_PCIE_XILINX) += pcie-xilinx.o
->  obj-$(CONFIG_PCIE_XILINX_NWL) += pcie-xilinx-nwl.o
-> +obj-$(CONFIG_PCIE_XILINX_CPM) += pcie-xilinx-cpm.o
->  obj-$(CONFIG_PCI_V3_SEMI) += pci-v3-semi.o
->  obj-$(CONFIG_PCI_XGENE_MSI) += pci-xgene-msi.o
->  obj-$(CONFIG_PCI_VERSATILE) += pci-versatile.o
-> diff --git a/drivers/pci/controller/pcie-xilinx-cpm.c b/drivers/pci/controller/pcie-xilinx-cpm.c
-> new file mode 100644
-> index 0000000..4e4c0f0
-> --- /dev/null
-> +++ b/drivers/pci/controller/pcie-xilinx-cpm.c
-> @@ -0,0 +1,491 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * PCIe host controller driver for Xilinx Versal CPM DMA Bridge
-> + *
-> + * (C) Copyright 2019 - 2020, Xilinx, Inc.
-> + */
-> +
-> +#include <linux/interrupt.h>
-> +#include <linux/irq.h>
-> +#include <linux/irqdomain.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_pci.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/pci.h>
-> +#include <linux/platform_device.h>
-> +
-> +#include "../pci.h"
-> +
-> +/* Register definitions */
-> +#define XILINX_CPM_PCIE_REG_IDR		0x00000E10
-> +#define XILINX_CPM_PCIE_REG_IMR		0x00000E14
-> +#define XILINX_CPM_PCIE_REG_PSCR	0x00000E1C
-> +#define XILINX_CPM_PCIE_REG_RPSC	0x00000E20
-> +#define XILINX_CPM_PCIE_REG_RPEFR	0x00000E2C
-> +#define XILINX_CPM_PCIE_REG_IDRN	0x00000E38
-> +#define XILINX_CPM_PCIE_REG_IDRN_MASK	0x00000E3C
-> +#define XILINX_CPM_PCIE_MISC_IR_STATUS	0x00000340
-> +#define XILINX_CPM_PCIE_MISC_IR_ENABLE	0x00000348
-> +#define XILINX_CPM_PCIE_MISC_IR_LOCAL	BIT(1)
-> +
-> +/* Interrupt registers definitions */
-> +#define XILINX_CPM_PCIE_INTR_LINK_DOWN		BIT(0)
-> +#define XILINX_CPM_PCIE_INTR_HOT_RESET		BIT(3)
-> +#define XILINX_CPM_PCIE_INTR_CFG_TIMEOUT	BIT(8)
-> +#define XILINX_CPM_PCIE_INTR_CORRECTABLE	BIT(9)
-> +#define XILINX_CPM_PCIE_INTR_NONFATAL		BIT(10)
-> +#define XILINX_CPM_PCIE_INTR_FATAL		BIT(11)
-> +#define XILINX_CPM_PCIE_INTR_INTX		BIT(16)
-> +#define XILINX_CPM_PCIE_INTR_MSI		BIT(17)
-> +#define XILINX_CPM_PCIE_INTR_SLV_UNSUPP		BIT(20)
-> +#define XILINX_CPM_PCIE_INTR_SLV_UNEXP		BIT(21)
-> +#define XILINX_CPM_PCIE_INTR_SLV_COMPL		BIT(22)
-> +#define XILINX_CPM_PCIE_INTR_SLV_ERRP		BIT(23)
-> +#define XILINX_CPM_PCIE_INTR_SLV_CMPABT		BIT(24)
-> +#define XILINX_CPM_PCIE_INTR_SLV_ILLBUR		BIT(25)
-> +#define XILINX_CPM_PCIE_INTR_MST_DECERR		BIT(26)
-> +#define XILINX_CPM_PCIE_INTR_MST_SLVERR		BIT(27)
-> +#define XILINX_CPM_PCIE_IMR_ALL_MASK		0x1FF39FF9
-> +#define XILINX_CPM_PCIE_IDR_ALL_MASK		0xFFFFFFFF
-> +#define XILINX_CPM_PCIE_IDRN_MASK		GENMASK(19, 16)
-> +#define XILINX_CPM_PCIE_INTR_CFG_PCIE_TIMEOUT	BIT(4)
-> +#define XILINX_CPM_PCIE_INTR_CFG_ERR_POISON	BIT(12)
-> +#define XILINX_CPM_PCIE_INTR_PME_TO_ACK_RCVD	BIT(15)
-> +#define XILINX_CPM_PCIE_INTR_PM_PME_RCVD	BIT(17)
-> +#define XILINX_CPM_PCIE_INTR_SLV_PCIE_TIMEOUT	BIT(28)
-> +#define XILINX_CPM_PCIE_IDRN_SHIFT		16
-> +
-> +/* Root Port Error FIFO Read Register definitions */
-> +#define XILINX_CPM_PCIE_RPEFR_ERR_VALID		BIT(18)
-> +#define XILINX_CPM_PCIE_RPEFR_REQ_ID		GENMASK(15, 0)
-> +#define XILINX_CPM_PCIE_RPEFR_ALL_MASK		0xFFFFFFFF
-> +
-> +/* Root Port Status/control Register definitions */
-> +#define XILINX_CPM_PCIE_REG_RPSC_BEN		BIT(0)
-> +
-> +/* Phy Status/Control Register definitions */
-> +#define XILINX_CPM_PCIE_REG_PSCR_LNKUP		BIT(11)
-> +
-> +/* ECAM definitions */
-> +#define ECAM_BUS_NUM_SHIFT		20
-> +#define ECAM_DEV_NUM_SHIFT		12
-
-You don't need these ECAM_* defines, you can use pci_generic_ecam_ops.
-
-> +
-> +/**
-> + * struct xilinx_cpm_pcie_port - PCIe port information
-> + * @reg_base: Bridge Register Base
-> + * @cpm_base: CPM System Level Control and Status Register(SLCR) Base
-> + * @irq: Interrupt number
-> + * @root_busno: Root Bus number
-> + * @dev: Device pointer
-> + * @leg_domain: Legacy IRQ domain pointer
-> + * @irq_misc: Legacy and error interrupt number
-> + */
-> +struct xilinx_cpm_pcie_port {
-> +	void __iomem *reg_base;
-> +	void __iomem *cpm_base;
-> +	u32 irq;
-> +	u8 root_busno;
-> +	struct device *dev;
-> +	struct irq_domain *leg_domain;
-> +	int irq_misc;
-> +};
-> +
-> +static inline u32 pcie_read(struct xilinx_cpm_pcie_port *port, u32 reg)
-> +{
-> +	return readl(port->reg_base + reg);
-> +}
-> +
-> +static inline void pcie_write(struct xilinx_cpm_pcie_port *port,
-> +			      u32 val, u32 reg)
-> +{
-> +	writel(val, port->reg_base + reg);
-> +}
-> +
-> +static inline bool cpm_pcie_link_up(struct xilinx_cpm_pcie_port *port)
-> +{
-> +	return (pcie_read(port, XILINX_CPM_PCIE_REG_PSCR) &
-> +		XILINX_CPM_PCIE_REG_PSCR_LNKUP) ? 1 : 0;
-
-	u32 val = pcie_read(port, XILINX_CPM_PCIE_REG_PSCR);
-
-	return val & XILINX_CPM_PCIE_REG_PSCR_LNKUP;
-
-And this function call is not that informative anyway - it is used just
-to print a log whose usefulness is questionable.
-
-> +}
-> +
-> +/**
-> + * xilinx_cpm_pcie_clear_err_interrupts - Clear Error Interrupts
-> + * @port: PCIe port information
-> + */
-> +static void cpm_pcie_clear_err_interrupts(struct xilinx_cpm_pcie_port *port)
-> +{
-> +	unsigned long val = pcie_read(port, XILINX_CPM_PCIE_REG_RPEFR);
-> +
-> +	if (val & XILINX_CPM_PCIE_RPEFR_ERR_VALID) {
-> +		dev_dbg(port->dev, "Requester ID %lu\n",
-> +			val & XILINX_CPM_PCIE_RPEFR_REQ_ID);
-> +		pcie_write(port, XILINX_CPM_PCIE_RPEFR_ALL_MASK,
-> +			   XILINX_CPM_PCIE_REG_RPEFR);
-> +	}
-> +}
-> +
-> +/**
-> + * xilinx_cpm_pcie_map_bus - Get configuration base
-> + * @bus: PCI Bus structure
-> + * @devfn: Device/function
-> + * @where: Offset from base
-> + *
-> + * Return: Base address of the configuration space needed to be
-> + *	   accessed.
-> + */
-> +static void __iomem *xilinx_cpm_pcie_map_bus(struct pci_bus *bus,
-> +					     unsigned int devfn, int where)
-> +{
-> +	struct xilinx_cpm_pcie_port *port = bus->sysdata;
-> +	int relbus;
-> +
-> +	relbus = (bus->number << ECAM_BUS_NUM_SHIFT) |
-> +		 (devfn << ECAM_DEV_NUM_SHIFT);
-> +
-> +	return port->reg_base + relbus + where;
-> +}
-
-You don't need this function, you can rely on pci_generic_ecam_ops.
-
-> +/* PCIe operations */
-> +static struct pci_ops xilinx_cpm_pcie_ops = {
-> +	.map_bus = xilinx_cpm_pcie_map_bus,
-> +	.read	= pci_generic_config_read,
-> +	.write	= pci_generic_config_write,
-> +};
-
-See above.
-
-> +
-> +/**
-> + * xilinx_cpm_pcie_intx_map - Set the handler for the INTx and mark IRQ as valid
-> + * @domain: IRQ domain
-> + * @irq: Virtual IRQ number
-> + * @hwirq: HW interrupt number
-> + *
-> + * Return: Always returns 0.
-> + */
-> +static int xilinx_cpm_pcie_intx_map(struct irq_domain *domain,
-> +				    unsigned int irq, irq_hw_number_t hwirq)
-> +{
-> +	irq_set_chip_and_handler(irq, &dummy_irq_chip, handle_simple_irq);
-
-INTX are level IRQs, the flow handler must be handle_level_irq.
-
-> +	irq_set_chip_data(irq, domain->host_data);
-> +	irq_set_status_flags(irq, IRQ_LEVEL);
-
-The way INTX are handled in this patch is wrong. You must set-up
-a chained IRQ with the appropriate flow handler, current code
-uses an IRQ action and that's an IRQ layer violation and it goes
-without saying that it is almost certainly broken.
-
-Please read drivers/pci/controller/pci-ft100.c code, that's the
-way INTX must be handled; I planned to take that code and make
-it a library, please use the same IRQ domain set-up.
-
-> +	return 0;
-> +}
-> +
-> +/* INTx IRQ Domain operations */
-> +static const struct irq_domain_ops intx_domain_ops = {
-> +	.map = xilinx_cpm_pcie_intx_map,
-> +	.xlate = pci_irqd_intx_xlate,
-
-This is wrong, wrong, wrong. There is no need for xlat'ing anything
-see my reply on the DT bindings.
-
-> +};
-> +
-> +/**
-> + * xilinx_cpm_pcie_intr_handler - Interrupt Service Handler
-> + * @irq: IRQ number
-> + * @data: PCIe port information
-> + *
-> + * Return: IRQ_HANDLED on success and IRQ_NONE on failure
-> + */
-> +static irqreturn_t xilinx_cpm_pcie_intr_handler(int irq, void *data)
-
-Bad. This must be a chained IRQ flow handler, not an IRQ action.
-
-> +{
-> +	struct xilinx_cpm_pcie_port *port = data;
-> +	struct device *dev = port->dev;
-> +	u32 val, mask, status, bit;
-> +	unsigned long intr_val;
-> +
-> +	/* Read interrupt decode and mask registers */
-> +	val = pcie_read(port, XILINX_CPM_PCIE_REG_IDR);
-> +	mask = pcie_read(port, XILINX_CPM_PCIE_REG_IMR);
-> +
-> +	status = val & mask;
-> +	if (!status)
-> +		return IRQ_NONE;
-> +
-> +	if (status & XILINX_CPM_PCIE_INTR_LINK_DOWN)
-> +		dev_warn(dev, "Link Down\n");
-> +
-> +	if (status & XILINX_CPM_PCIE_INTR_HOT_RESET)
-> +		dev_info(dev, "Hot reset\n");
-> +
-> +	if (status & XILINX_CPM_PCIE_INTR_CFG_TIMEOUT)
-> +		dev_warn(dev, "ECAM access timeout\n");
-> +
-> +	if (status & XILINX_CPM_PCIE_INTR_CORRECTABLE) {
-> +		dev_warn(dev, "Correctable error message\n");
-> +		cpm_pcie_clear_err_interrupts(port);
-> +	}
-> +
-> +	if (status & XILINX_CPM_PCIE_INTR_NONFATAL) {
-> +		dev_warn(dev, "Non fatal error message\n");
-> +		cpm_pcie_clear_err_interrupts(port);
-> +	}
-> +
-> +	if (status & XILINX_CPM_PCIE_INTR_FATAL) {
-> +		dev_warn(dev, "Fatal error message\n");
-> +		cpm_pcie_clear_err_interrupts(port);
-> +	}
-> +
-> +	if (status & XILINX_CPM_PCIE_INTR_INTX) {
-> +		/* Handle INTx Interrupt */
-> +		intr_val = pcie_read(port, XILINX_CPM_PCIE_REG_IDRN);
-> +		intr_val = intr_val >> XILINX_CPM_PCIE_IDRN_SHIFT;
-> +
-> +		for_each_set_bit(bit, &intr_val, PCI_NUM_INTX)
-> +			generic_handle_irq(irq_find_mapping(port->leg_domain,
-> +							    bit));
-> +	}
-> +
-> +	if (status & XILINX_CPM_PCIE_INTR_SLV_UNSUPP)
-> +		dev_warn(dev, "Slave unsupported request\n");
-> +
-> +	if (status & XILINX_CPM_PCIE_INTR_SLV_UNEXP)
-> +		dev_warn(dev, "Slave unexpected completion\n");
-> +
-> +	if (status & XILINX_CPM_PCIE_INTR_SLV_COMPL)
-> +		dev_warn(dev, "Slave completion timeout\n");
-> +
-> +	if (status & XILINX_CPM_PCIE_INTR_SLV_ERRP)
-> +		dev_warn(dev, "Slave Error Poison\n");
-> +
-> +	if (status & XILINX_CPM_PCIE_INTR_SLV_CMPABT)
-> +		dev_warn(dev, "Slave Completer Abort\n");
-> +
-> +	if (status & XILINX_CPM_PCIE_INTR_SLV_ILLBUR)
-> +		dev_warn(dev, "Slave Illegal Burst\n");
-> +
-> +	if (status & XILINX_CPM_PCIE_INTR_MST_DECERR)
-> +		dev_warn(dev, "Master decode error\n");
-> +
-> +	if (status & XILINX_CPM_PCIE_INTR_MST_SLVERR)
-> +		dev_warn(dev, "Master slave error\n");
-> +
-> +	if (status & XILINX_CPM_PCIE_INTR_CFG_PCIE_TIMEOUT)
-> +		dev_warn(dev, "PCIe ECAM access timeout\n");
-> +
-> +	if (status & XILINX_CPM_PCIE_INTR_CFG_ERR_POISON)
-> +		dev_warn(dev, "ECAM poisoned completion received\n");
-> +
-> +	if (status & XILINX_CPM_PCIE_INTR_PME_TO_ACK_RCVD)
-> +		dev_warn(dev, "PME_TO_ACK message received\n");
-> +
-> +	if (status & XILINX_CPM_PCIE_INTR_PM_PME_RCVD)
-> +		dev_warn(dev, "PM_PME message received\n");
-> +
-> +	if (status & XILINX_CPM_PCIE_INTR_SLV_PCIE_TIMEOUT)
-> +		dev_warn(dev, "PCIe completion timeout received\n");
-> +
-> +	/* Clear the Interrupt Decode register */
-> +	pcie_write(port, status, XILINX_CPM_PCIE_REG_IDR);
-> +
-> +	/*
-> +	 * XILINX_CPM_PCIE_MISC_IR_STATUS register is mapped to
-> +	 * CPM SLCR block.
-> +	 */
-> +	val = readl(port->cpm_base + XILINX_CPM_PCIE_MISC_IR_STATUS);
-> +	if (val)
-> +		writel(val, port->cpm_base + XILINX_CPM_PCIE_MISC_IR_STATUS);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +/**
-> + * xilinx_cpm_pcie_init_irq_domain - Initialize IRQ domain
-> + * @port: PCIe port information
-> + *
-> + * Return: '0' on success and error value on failure
-> + */
-> +static int xilinx_cpm_pcie_init_irq_domain(struct xilinx_cpm_pcie_port *port)
-> +{
-> +	struct device *dev = port->dev;
-> +	struct device_node *node = dev->of_node;
-> +	struct device_node *pcie_intc_node;
-> +
-> +	/* Setup INTx */
-> +	pcie_intc_node = of_get_next_child(node, NULL);
-> +	if (!pcie_intc_node) {
-> +		dev_err(dev, "No PCIe Intc node found\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	port->leg_domain = irq_domain_add_linear(pcie_intc_node, PCI_NUM_INTX,
-> +						 &intx_domain_ops,
-> +						 port);
-> +	if (!port->leg_domain) {
-> +		dev_err(dev, "Failed to get a INTx IRQ domain\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * xilinx_cpm_pcie_init_port - Initialize hardware
-> + * @port: PCIe port information
-> + */
-> +static void xilinx_cpm_pcie_init_port(struct xilinx_cpm_pcie_port *port)
-> +{
-> +	if (cpm_pcie_link_up(port))
-> +		dev_info(port->dev, "PCIe Link is UP\n");
-> +	else
-> +		dev_info(port->dev, "PCIe Link is DOWN\n");
-> +
-> +	/* Disable all interrupts */
-> +	pcie_write(port, ~XILINX_CPM_PCIE_IDR_ALL_MASK,
-> +		   XILINX_CPM_PCIE_REG_IMR);
-> +
-> +	/* Clear pending interrupts */
-> +	pcie_write(port, pcie_read(port, XILINX_CPM_PCIE_REG_IDR) &
-> +		   XILINX_CPM_PCIE_IMR_ALL_MASK,
-> +		   XILINX_CPM_PCIE_REG_IDR);
-> +
-> +	/* Enable all interrupts */
-> +	pcie_write(port, XILINX_CPM_PCIE_IMR_ALL_MASK,
-> +		   XILINX_CPM_PCIE_REG_IMR);
-> +	pcie_write(port, XILINX_CPM_PCIE_IDRN_MASK,
-> +		   XILINX_CPM_PCIE_REG_IDRN_MASK);
-> +
-> +	/*
-> +	 * XILINX_CPM_PCIE_MISC_IR_ENABLE register is mapped to
-> +	 * CPM SLCR block.
-> +	 */
-> +	writel(XILINX_CPM_PCIE_MISC_IR_LOCAL,
-> +	       port->cpm_base + XILINX_CPM_PCIE_MISC_IR_ENABLE);
-> +	/* Enable the Bridge enable bit */
-> +	pcie_write(port, pcie_read(port, XILINX_CPM_PCIE_REG_RPSC) |
-> +		   XILINX_CPM_PCIE_REG_RPSC_BEN,
-> +		   XILINX_CPM_PCIE_REG_RPSC);
-> +}
-> +
-> +static int xilinx_cpm_request_misc_irq(struct xilinx_cpm_pcie_port *port)
-> +{
-> +	struct device *dev = port->dev;
-> +	struct platform_device *pdev = to_platform_device(dev);
-> +	int err;
-> +
-> +	port->irq_misc = platform_get_irq_byname(pdev, "misc");
-> +	if (port->irq_misc <= 0) {
-> +		dev_err(dev, "Unable to find misc IRQ line\n");
-> +		return port->irq_misc;
-> +	}
-> +	err = devm_request_irq(dev, port->irq_misc,
-> +			       xilinx_cpm_pcie_intr_handler,
-> +			       IRQF_SHARED | IRQF_NO_THREAD,
-> +			       "xilinx-pcie", port);
-
-Nope. See above.
-
-> +	if (err) {
-> +		dev_err(dev, "unable to request misc IRQ line %d\n",
-> +			port->irq_misc);
-> +		return err;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * xilinx_cpm_pcie_parse_dt - Parse Device tree
-> + * @port: PCIe port information
-> + *
-> + * Return: '0' on success and error value on failure
-> + */
-> +static int xilinx_cpm_pcie_parse_dt(struct xilinx_cpm_pcie_port *port)
-> +{
-> +	struct device *dev = port->dev;
-> +	struct platform_device *pdev = to_platform_device(dev);
-> +	struct resource *res;
-> +	int err;
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "cfg");
-> +	port->reg_base = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(port->reg_base))
-> +		return PTR_ERR(port->reg_base);
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> +					   "cpm_slcr");
-> +	port->cpm_base = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(port->cpm_base))
-> +		return PTR_ERR(port->cpm_base);
-> +
-> +	err = xilinx_cpm_request_misc_irq(port);
-> +	if (err)
-> +		return err;
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * xilinx_cpm_pcie_probe - Probe function
-> + * @pdev: Platform device pointer
-> + *
-> + * Return: '0' on success and error value on failure
-> + */
-> +static int xilinx_cpm_pcie_probe(struct platform_device *pdev)
-> +{
-> +	struct xilinx_cpm_pcie_port *port;
-> +	struct device *dev = &pdev->dev;
-> +	struct pci_bus *bus;
-> +	struct pci_bus *child;
-> +	struct pci_host_bridge *bridge;
-> +	int err;
-> +
-> +	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*port));
-> +	if (!bridge)
-> +		return -ENODEV;
-> +
-> +	port = pci_host_bridge_priv(bridge);
-> +
-> +	port->dev = dev;
-> +
-> +	err = xilinx_cpm_pcie_parse_dt(port);
-> +	if (err) {
-> +		dev_err(dev, "Parsing DT failed\n");
-> +		return err;
-> +	}
-> +
-> +	xilinx_cpm_pcie_init_port(port);
-> +
-> +	err = xilinx_cpm_pcie_init_irq_domain(port);
-> +	if (err) {
-> +		dev_err(dev, "Failed creating IRQ Domain\n");
-> +		return err;
-> +	}
-
-If subsequent calls fail from now onwards, there is work carried
-out in this initialization to be undone, which isn't, please add
-it.
-
-Thanks,
-Lorenzo
-
-> +
-> +	err = pci_parse_request_of_pci_ranges(dev, &bridge->windows,
-> +					      &bridge->dma_ranges, NULL);
-> +	if (err) {
-> +		dev_err(dev, "Getting bridge resources failed\n");
-> +		return err;
-> +	}
-> +
-> +	bridge->dev.parent = dev;
-> +	bridge->sysdata = port;
-> +	bridge->busnr = port->root_busno;
-> +	bridge->ops = &xilinx_cpm_pcie_ops;
-> +	bridge->map_irq = of_irq_parse_and_map_pci;
-> +	bridge->swizzle_irq = pci_common_swizzle;
-> +
-> +	err = pci_scan_root_bus_bridge(bridge);
-> +	if (err)
-> +		return err;
-> +
-> +	bus = bridge->bus;
-> +
-> +	pci_assign_unassigned_bus_resources(bus);
-> +	list_for_each_entry(child, &bus->children, node)
-> +		pcie_bus_configure_settings(child);
-> +	pci_bus_add_devices(bus);
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id xilinx_cpm_pcie_of_match[] = {
-> +	{ .compatible = "xlnx,versal-cpm-host-1.00", },
-> +	{}
-> +};
-> +
-> +static struct platform_driver xilinx_cpm_pcie_driver = {
-> +	.driver = {
-> +		.name = "xilinx-cpm-pcie",
-> +		.of_match_table = xilinx_cpm_pcie_of_match,
-> +		.suppress_bind_attrs = true,
-> +	},
-> +	.probe = xilinx_cpm_pcie_probe,
-> +};
-> +
-> +builtin_platform_driver(xilinx_cpm_pcie_driver);
-> -- 
-> 2.7.4
-> 
+>=20
+> On Fri, Dec 20, 2019 at 05:11:11PM +0530, Bharat Kumar Gogada wrote:
+> > Adding device tree binding documentation for versal CPM Root Port drive=
+r.
+> >
+> > Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+> > ---
+> >  .../devicetree/bindings/pci/xilinx-versal-cpm.txt  | 66
+> > ++++++++++++++++++++++
+> >  1 file changed, 66 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/pci/xilinx-versal-cpm.txt
+> >
+> > diff --git
+> > a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.txt
+> > b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.txt
+> > new file mode 100644
+> > index 0000000..35f8556
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.txt
+> > @@ -0,0 +1,66 @@
+> > +* Xilinx Versal CPM DMA Root Port Bridge DT description
+> > +
+> > +Required properties:
+> > +- #address-cells: Address representation for root ports, set to <3>
+> > +- #size-cells: Size representation for root ports, set to <2>
+> > +- #interrupt-cells: specifies the number of cells needed to encode an
+> > +	interrupt source. The value must be 1.
+> > +- compatible: Should contain "xlnx,versal-cpm-host-1.00"
+> > +- reg: Should contain configuration space (includes bridge registers) =
+and
+> > +	CPM system level control and status registers, and length
+> > +- reg-names: Must include the following entries:
+> > +	"cfg": configuration space region and bridge registers
+> > +	"cpm_slcr": CPM system level control and status registers
+> > +- interrupts: Should contain AXI PCIe interrupt
+> > +- interrupt-map-mask,
+> > +  interrupt-map: standard PCI properties to define the mapping of the
+> > +	PCI interface to interrupt numbers.
+> > +- ranges: ranges for the PCI memory regions (I/O space region is not
+> > +	supported by hardware)
+> > +	Please refer to the standard PCI bus binding document for a more
+> > +	detailed explanation
+> > +- msi-map: Maps a Requester ID to an MSI controller and associated MSI
+> > +	sideband data
+> > +- interrupt-names: Must include the following entries:
+> > +	"misc": interrupt asserted when legacy or error interrupt is
+> > +received
+> > +
+> > +Interrupt controller child node
+> > ++++++++++++++++++++++++++++++++
+> > +Required properties:
+> > +- interrupt-controller: identifies the node as an interrupt
+> > +controller
+> > +- #address-cells: specifies the number of cells needed to encode an
+> > +	address. The value must be 0.
+> > +- #interrupt-cells: specifies the number of cells needed to encode an
+> > +	interrupt source. The value must be 1.
+> > +
+> > +
+> > +Refer to the following binding document for more detailed description
+> > +on the use of 'msi-map':
+> > +	 Documentation/devicetree/bindings/pci/pci-msi.txt
+> > +
+> > +Example:
+> > +	pci@fca10000 {
+> > +		#address-cells =3D <3>;
+> > +		#interrupt-cells =3D <1>;
+> > +		#size-cells =3D <2>;
+> > +		compatible =3D "xlnx,versal-cpm-host-1.00";
+> > +		interrupt-map =3D <0 0 0 1 &pcie_intc_0 1>,
+> > +				<0 0 0 2 &pcie_intc_0 2>,
+> > +				<0 0 0 3 &pcie_intc_0 3>,
+> > +				<0 0 0 4 &pcie_intc_0 4>;
+>=20
+> This is wrong, interrupts map to pin 0,1,2,3 of pcie_intc.
+>=20
+> That's what's forcing you to use the pci_irqd_intx_xlate() function and t=
+hat's
+> completely wrong.
+>=20
+> I should find a way to write a common binding for all the host bridges in=
+terrupt-
+> map since this comes up over and over again.
+>=20
+> Please have a look at:
+>=20
+> Documentation/devicetree/bindings/pci/faraday,ftpci100.txt
+Thanks Lorenzo, will fix this in next patch.
+>=20
+>=20
+> > +		interrupt-map-mask =3D <0 0 0 7>;
+> > +		interrupt-parent =3D <&gic>;
+> > +		interrupt-names =3D "misc";
+> > +		interrupts =3D <0 72 4>;
+> > +		ranges =3D <0x02000000 0x00000000 0xE0000000 0x0
+> 0xE0000000 0x00000000 0x10000000>,
+> > +			 <0x43000000 0x00000080 0x00000000 0x00000080
+> 0x00000000 0x00000000 0x80000000>;
+> > +		msi-map =3D <0x0 &its_gic 0x0 0x10000>;
+> > +		reg =3D <0x6 0x00000000 0x0 0x1000000>,
+> > +		      <0x0 0xFCA10000 0x0 0x1000>;
+> > +		reg-names =3D "cfg", "cpm_slcr";
+> > +		pcie_intc_0: pci-interrupt-controller {
+> > +			#address-cells =3D <0>;
+> > +			#interrupt-cells =3D <1>;
+> > +			interrupt-controller ;
+> > +		};
+> > +	};
+> > --
+> > 2.7.4
+> >
