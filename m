@@ -2,140 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B5A1616B96C
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2020 07:09:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FA1A16B99F
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2020 07:23:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbgBYGJZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Feb 2020 01:09:25 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47955 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727028AbgBYGJZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Feb 2020 01:09:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582610964;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0IoUDI0r2nKt/KLH2gl0wTcdvg0oCDvDokn7okiLyHg=;
-        b=R4Kf+dOoIrZfig0mugI2di0BsODBOtZtaylwB/xm/qf3avyTjlsveNw53EQoQv4W2cg9of
-        QdTKyFpouMVjtJlUu+iQvv3Wv4pcHznNe7TQPkYnxYDYSIxOLE5B8sn4iAD3hxytv9ipfk
-        I1AxJymjBV4hsiENLb+V79YWeU4BhMQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-323-KEF-yYO0OPWKOZhO7cB7og-1; Tue, 25 Feb 2020 01:09:20 -0500
-X-MC-Unique: KEF-yYO0OPWKOZhO7cB7og-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1FB92107ACC5;
-        Tue, 25 Feb 2020 06:09:19 +0000 (UTC)
-Received: from [10.72.13.170] (ovpn-13-170.pek2.redhat.com [10.72.13.170])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AA7141001902;
-        Tue, 25 Feb 2020 06:09:09 +0000 (UTC)
-Subject: Re: [PATCH v2 0/7] vfio/pci: SR-IOV support
-To:     "Tian, Kevin" <kevin.tian@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dev@dpdk.org" <dev@dpdk.org>,
-        "mtosatti@redhat.com" <mtosatti@redhat.com>,
-        "thomas@monjalon.net" <thomas@monjalon.net>,
-        "bluca@debian.org" <bluca@debian.org>,
-        "jerinjacobk@gmail.com" <jerinjacobk@gmail.com>,
-        "Richardson, Bruce" <bruce.richardson@intel.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>
-References: <158213716959.17090.8399427017403507114.stgit@gimli.home>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D79A8A7@SHSMSX104.ccr.corp.intel.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <a6c04bac-0a37-f4c0-876e-e5cf2a8a6c3f@redhat.com>
-Date:   Tue, 25 Feb 2020 14:09:07 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1729009AbgBYGX6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Feb 2020 01:23:58 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:33137 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbgBYGX6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Feb 2020 01:23:58 -0500
+Received: by mail-wm1-f68.google.com with SMTP id m10so1457785wmc.0;
+        Mon, 24 Feb 2020 22:23:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=XpoCQmnnCoX+EypbLxK5wzw5eTUegrwSIJVovT9oIng=;
+        b=LtvmPH06lEPFG8OMZr7AWSiUxP2nhinlf0Z31SrJfHdhmPxKNOalF+o47G7XNsP2iU
+         /8RdGJlXHGUuoin0ZV8LkVbMAsAQTHmD0g/6h4j0TYQKIDEfhRpIFkC+IZtxrf/MKcrO
+         EEG9EMP5ueeVl3sjEgP/zKaW6pYLoa0fclnYExT3ZqLz+fVNY+FZuBzE922FOJo3ElR4
+         2TUIxRNthSYs+5S5cwEINKDatmDWQ0Zze6bYxLOKyzRThPBjC6DEPYKQOgctq6l4Cn/W
+         f0pJsJfnll2bhyzz5d7C9APxrCuM6otCPgO13gs/qnt2EWqBYIFyLdlJBBKl8uedC9WF
+         xSww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=XpoCQmnnCoX+EypbLxK5wzw5eTUegrwSIJVovT9oIng=;
+        b=qKJtJtAuZ5VaTc3EejnodqtB0+3gzHi3xg2Aexea7nWWsYd7cLUSQwHtJxYOJF5tLL
+         9J2GAMLB202IdMaWVCwL12uDnzz4STfYdIA0rpt1yc4IQuMo5UcEeSai7/X6VxzxpTR8
+         A3j4hMDL0tz4PZqg9Jop8/Ym3B24EAGWmIAvahW67ynjV2tWnBrU53Mt6GgdfIimxVz+
+         Y7x+HZjYS/ssWuFvLf4njes+liwA25BAkHJr7gjm8IvG+jBPuXpPmHyLnedRK+5R4LcS
+         JSoPXNS0VisLcP3lmPt3D0Gkk5zVpq16rIXu4tSqVnpw6OToFyop/dmGBvsLa9nYe4JG
+         82lQ==
+X-Gm-Message-State: APjAAAXNfUiF9zhFKe1Jx8XJ3769jMftHwlYR1fTc/fyGGwbp4JweSMx
+        kjpjfwFwAJrAJxoDZiXAoEU=
+X-Google-Smtp-Source: APXvYqxFarTonU8f+JPpOAAw/pmNuxJbNOWDYR4F86yTdLQ2YTkbLgsv346IwIWXaxzH05PFdi3kZg==
+X-Received: by 2002:a05:600c:2107:: with SMTP id u7mr3329593wml.54.1582611835918;
+        Mon, 24 Feb 2020 22:23:55 -0800 (PST)
+Received: from ?IPv6:2003:ea:8f29:6000:d5d8:c920:d17:5c? (p200300EA8F296000D5D8C9200D17005C.dip0.t-ipconnect.de. [2003:ea:8f29:6000:d5d8:c920:d17:5c])
+        by smtp.googlemail.com with ESMTPSA id l6sm23742710wrn.26.2020.02.24.22.23.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Feb 2020 22:23:55 -0800 (PST)
+Subject: Re: [PATCH 0/9] PCI: add and use constant PCI_STATUS_ERROR_BITS and
+ helper pci_status_get_and_clear_errors
+To:     David Miller <davem@davemloft.net>
+Cc:     bhelgaas@google.com, nic_swsd@realtek.com, mlindner@marvell.com,
+        stephen@networkplumber.org, clemens@ladisch.de, perex@perex.cz,
+        tiwai@suse.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        alsa-devel@alsa-project.org
+References: <5939f711-92aa-e7ed-2a26-4f1e4169f786@gmail.com>
+ <20200224.153352.364779446032996784.davem@davemloft.net>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <eb522c30-8d9b-0223-c152-9f2bd972c23b@gmail.com>
+Date:   Tue, 25 Feb 2020 07:23:50 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D79A8A7@SHSMSX104.ccr.corp.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200224.153352.364779446032996784.davem@davemloft.net>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-On 2020/2/25 =E4=B8=8A=E5=8D=8810:33, Tian, Kevin wrote:
->> From: Alex Williamson
->> Sent: Thursday, February 20, 2020 2:54 AM
+On 25.02.2020 00:33, David Miller wrote:
+> From: Heiner Kallweit <hkallweit1@gmail.com>
+> Date: Mon, 24 Feb 2020 22:20:08 +0100
+> 
+>> Few drivers have own definitions for this constant, so move it to the
+>> PCI core. In addition there are several places where the following
+>> code sequence is used:
+>> 1. Read PCI_STATUS
+>> 2. Mask out non-error bits
+>> 3. Action based on set error bits
+>> 4. Write back set error bits to clear them
 >>
->> Changes since v1 are primarily to patch 3/7 where the commit log is
->> rewritten, along with option parsing and failure logging based on
->> upstream discussions.  The primary user visible difference is that
->> option parsing is now much more strict.  If a vf_token option is
->> provided that cannot be used, we generate an error.  As a result of
->> this, opening a PF with a vf_token option will serve as a mechanism of
->> setting the vf_token.  This seems like a more user friendly API than
->> the alternative of sometimes requiring the option (VFs in use) and
->> sometimes rejecting it, and upholds our desire that the option is
->> always either used or rejected.
+>> As this is a repeated pattern, add a helper to the PCI core.
 >>
->> This also means that the VFIO_DEVICE_FEATURE ioctl is not the only
->> means of setting the VF token, which might call into question whether
->> we absolutely need this new ioctl.  Currently I'm keeping it because I
->> can imagine use cases, for example if a hypervisor were to support
->> SR-IOV, the PF device might be opened without consideration for a VF
->> token and we'd require the hypservisor to close and re-open the PF in
->> order to set a known VF token, which is impractical.
->>
->> Series overview (same as provided with v1):
-> Thanks for doing this!
->
->> The synopsis of this series is that we have an ongoing desire to drive
->> PCIe SR-IOV PFs from userspace with VFIO.  There's an immediate need
->> for this with DPDK drivers and potentially interesting future use
-> Can you provide a link to the DPDK discussion?
->
->> cases in virtualization.  We've been reluctant to add this support
->> previously due to the dependency and trust relationship between the
->> VF device and PF driver.  Minimally the PF driver can induce a denial
->> of service to the VF, but depending on the specific implementation,
->> the PF driver might also be responsible for moving data between VFs
->> or have direct access to the state of the VF, including data or state
->> otherwise private to the VF or VF driver.
-> Just a loud thinking. While the motivation of VF token sounds reasonabl=
-e
-> to me, I'm curious why the same concern is not raised in other usages.
-> For example, there is no such design in virtio framework, where the
-> virtio device could also be restarted, putting in separate process (vho=
-st-user),
-> and even in separate VM (virtio-vhost-user), etc.
-
-
-AFAIK, the restart could only be triggered by either VM or qemu. But=20
-yes, the datapath could be offloaded.
-
-But I'm not sure introducing another dedicated mechanism is better than=20
-using the exist generic POSIX mechanism to make sure the connection=20
-(AF_UINX) is secure.
-
-
->   Of course the para-
-> virtualized attribute of virtio implies some degree of trust, but as yo=
-u
-> mentioned many SR-IOV implementations support VF->PF communication
-> which also implies some level of trust. It's perfectly fine if VFIO jus=
-t tries
-> to do better than other sub-systems, but knowing how other people
-> tackle the similar problem may make the whole picture clearer. =F0=9F=98=
-=8A
->
-> +Jason.
-
-
-I'm not quite sure e.g allowing userspace PF driver with kernel VF=20
-driver would not break the assumption of kernel security model. At least=20
-we should forbid a unprivileged PF driver running in userspace.
-
-Thanks
-
+>> Most affected drivers are network drivers. But as it's about core
+>> PCI functionality, I suppose the series should go through the PCI
+>> tree.
+> 
+> Heiner, something is up with this submission.
+> 
+> The subject line here says 0/9, but the patches say N/8 and patch #8 never
+> showed up on the list.
+> 
+> Sort out what this should be and resubmit, thank you.
+> 
+Oops, sorry. I'll resubmit.
