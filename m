@@ -2,162 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E3C1316BCDC
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2020 10:00:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EB81C16BCF6
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2020 10:07:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729153AbgBYJA1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Feb 2020 04:00:27 -0500
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:36135 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726916AbgBYJA1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Feb 2020 04:00:27 -0500
-Received: by mail-qv1-f65.google.com with SMTP id ff2so5390365qvb.3;
-        Tue, 25 Feb 2020 01:00:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=QzFKLT7CioGxjxI7dzMDjcHznX5Nnr+6ELaaegdUFkY=;
-        b=K++mGY+kZvZ348XctWkxGdiLnzN6dwnRoGnNRDHDVHQgLIz/7T0fn00F2Ah+DwQ+OY
-         9/0tU/cbwMXWl8/J54ykzB+RZSNK+DIK8TIYp2BAkxHDBrRzuioNXhsj2PO8gQI9QSZ6
-         dREvlXEX4hWJHRLB/RscgGjuhpdNU5aA9Kks+UbWS7FT5ohZglXBuuYozM1WKrupfb94
-         TMm6KQDRWsq6Wsy+xSjh3KyebYkqd96/ZZ3mNvWlLrOYjgArlPEEbCDI2MH0s4OfMwSA
-         VxtLLv92Z4H3/G+9DcSlb1KPIpA8iAwwBEt4z28ew2UJdg05Dv3dMn9Ht7K8ETkfS9zq
-         k6xQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=QzFKLT7CioGxjxI7dzMDjcHznX5Nnr+6ELaaegdUFkY=;
-        b=hbcyob6Ln/sKV631BdfXW2hD4fhgb5L43sYlaU4Yya3NtdxK4XAa2xd6VbwqeIApHB
-         9hAx5RgJTa5wAlFWgWFwOivPgZNmCXz3DWspak3sYHu1EZvYzom5+HNEpT2aSZ7YPDCY
-         ab3Dysy92eXxjqxpH6p/aJpiCQBIyC1CMRpB+/lAm37hrDIaB7T7hSkY4xb+QivDXj2w
-         PzDLOuX4JXUvwyfQms/6NYExLnMhBcYZ2eIBNZPvl+ZlgBK5bS7lteDLSdSlFziRYY6W
-         S92SGewQWeoQ2GeXTCq3vmevTe9FNsY7HXQLpG22ej5SVlzBdbP6C7ITLiawb2nKRFFL
-         pryg==
-X-Gm-Message-State: APjAAAWQks8dK/NVuwZY/EIicdHjnZxP1wcVyKS4COHsUqWG2Vmruxk9
-        izEsGdX+usvbTDiU1jC3DBBlkEtVexcRNFZ4fU6cteO3
-X-Google-Smtp-Source: APXvYqwEItTB9zvBYThitayOPuzzlG9VjbwnKhQz3AUqUPE5VAncXdb6x2Ge7Zx+7P1w66TkNonyrxwjHTgdmo44EEQ=
-X-Received: by 2002:ad4:518b:: with SMTP id b11mr50461721qvp.195.1582621226162;
- Tue, 25 Feb 2020 01:00:26 -0800 (PST)
+        id S1729729AbgBYJHP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Feb 2020 04:07:15 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:47740 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729393AbgBYJHP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Feb 2020 04:07:15 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01P977uH037671;
+        Tue, 25 Feb 2020 03:07:07 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582621627;
+        bh=S9JO7kVucepr2c7FcYvWKG1W++5dKQhcs5rmNi9JnCQ=;
+        h=From:To:CC:Subject:Date;
+        b=o2NK+KRa1IrpPenLR6X0crRq0B0cOTg0+6Lun6EQBUL42YzZv+7SaO49UTYmMJxhm
+         T1GD278D27d/YxA3UmW+3W9ToN/PjmzLgd7DUsQhFG/bpitbJEvKO3X9ABuJlGoaIM
+         y7I7UBXwZKs82JL/YwKnZS42Zf/q/5u/u3qtKJWg=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01P9771J034879
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 25 Feb 2020 03:07:07 -0600
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 25
+ Feb 2020 03:07:07 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 25 Feb 2020 03:07:07 -0600
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01P973Po052643;
+        Tue, 25 Feb 2020 03:07:04 -0600
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alan Mikhak <alan.mikhak@sifive.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH 0/5] PCI: functions/pci-epf-test: Add DMA data transfer
+Date:   Tue, 25 Feb 2020 14:41:25 +0530
+Message-ID: <20200225091130.29467-1-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <CAGgoGu5u7WZUUaoVYvVWS5nuNZz25PgR=uHkqvzXV5xFOC7KuA@mail.gmail.com>
-In-Reply-To: <CAGgoGu5u7WZUUaoVYvVWS5nuNZz25PgR=uHkqvzXV5xFOC7KuA@mail.gmail.com>
-From:   Fawad Lateef <fawadlateef@gmail.com>
-Date:   Tue, 25 Feb 2020 10:00:14 +0100
-Message-ID: <CAGgoGu6xQ2aV5kcmxcOm2Q=zPEY3mu3fOaCXKPxaz17vptzcmA@mail.gmail.com>
-Subject: Re: Help needed in understanding weird PCIe issue on imx6q (PCIe just
- goes bad)
-To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi again,
+Patch series uses dma engine APIs in pci-epf-test to transfer data using
+DMA. It also adds an option "-d" in pcitest for the user to indicate
+whether DMA has to be used for data transfer. This also prints
+throughput information for data transfer.
 
-Can someone guide me what is going on?
+Kishon Vijay Abraham I (5):
+  PCI: endpoint: functions/pci-epf-test: Add DMA support to transfer
+    data
+  PCI: endpoint: functions/pci-epf-test: Print throughput information
+  misc: pci_endpoint_test: Use streaming DMA APIs for buffer allocation
+  tools: PCI: Add 'd' command line option to support DMA
+  misc: pci_endpoint_test: Add support to get DMA option from userspace
 
-Thanks,
+ drivers/misc/pci_endpoint_test.c              | 165 ++++++++++--
+ drivers/pci/endpoint/functions/pci-epf-test.c | 253 +++++++++++++++++-
+ include/uapi/linux/pcitest.h                  |   5 +
+ tools/pci/pcitest.c                           |  20 +-
+ 4 files changed, 412 insertions(+), 31 deletions(-)
 
--- Fawad Lateef
+-- 
+2.17.1
 
-On Sat, 22 Feb 2020 at 16:25, Fawad Lateef <fawadlateef@gmail.com> wrote:
->
-> Hello,
->
-> I am trying to figure-out an issue on our i.MX6Q platform based design
-> where PCIe interface goes bad.
->
-> We have a Phytec i.MX6Q eMMC SOM, attached to our custom designed
-> board. PCIe root-complex from i.MX6Q is attached to PLX switch
-> (PEX8605).
->
-> Linux kernel version is 4.19.9x and also 4.14.134 (from phytec's
-> linux-mainline repo). Kernel do not have PCIe hot-plug and PNP enabled
-> in config.
->
-> PLX switch #PERST is attached to a GPIO pin and stays in disable state
-> until Linux is booted. So at boot time only PCIe root-complex is
-> initialized by kernel.
->
-> After boot if I do "lspci -v"  and see everything good from PCIe
-> root-complex (below):
->
-> ~ # lspci -v
-> 00:00.0 PCI bridge: Synopsys, Inc. Device abcd (rev 01) (prog-if 00
-> [Normal decode])
-> Flags: bus master, fast devsel, latency 0, IRQ 295
-> Memory at 01000000 (32-bit, non-prefetchable) [size=1M]
-> Bus: primary=00, secondary=01, subordinate=ff, sec-latency=0
-> I/O behind bridge: None
-> Memory behind bridge: None
-> Prefetchable memory behind bridge: None
-> [virtual] Expansion ROM at 01100000 [disabled] [size=64K]
-> Capabilities: [40] Power Management version 3
-> Capabilities: [50] MSI: Enable+ Count=1/1 Maskable+ 64bit+
-> Capabilities: [70] Express Root Port (Slot-), MSI 00
-> Capabilities: [100] Advanced Error Reporting
-> Capabilities: [140] Virtual Channel
-> Kernel driver in use: pcieport
->
->
-> Then I enable the #PERST pin of PLX switch, everything is still good
-> (no rescan on Linux is done yet)
->
-> ~ # echo 139 > /sys/class/gpio/export
-> ~ # echo out > /sys/class/gpio/gpio139/direction
-> ~ # echo 1 > /sys/class/gpio/gpio139/value
-> ~ # lspci -v
-> 00:00.0 PCI bridge: Synopsys, Inc. Device abcd (rev 01) (prog-if 00
-> [Normal decode])
-> Flags: bus master, fast devsel, latency 0, IRQ 295
-> Memory at 01000000 (32-bit, non-prefetchable) [size=1M]
-> Bus: primary=00, secondary=01, subordinate=ff, sec-latency=0
-> I/O behind bridge: None
-> Memory behind bridge: None
-> Prefetchable memory behind bridge: None
-> [virtual] Expansion ROM at 01100000 [disabled] [size=64K]
-> Capabilities: [40] Power Management version 3
-> Capabilities: [50] MSI: Enable+ Count=1/1 Maskable+ 64bit+
-> Capabilities: [70] Express Root Port (Slot-), MSI 00
-> Capabilities: [100] Advanced Error Reporting
-> Capabilities: [140] Virtual Channel
-> Kernel driver in use: pcieport
->
->
-> Now just disable/put-in-reset the PLX switch (Linux don't see the
-> switch yet, as no rescan on PCIe was done). Now "lspci -v" and
-> root-complex goes bad.
->
-> ~ # echo 0 > /sys/class/gpio/gpio139/value
-> ~ # lspci -v
-> 00:00.0 PCI bridge: Synopsys, Inc. Device abcd (rev 01) (prog-if 00
-> [Normal decode])
-> Flags: fast devsel, IRQ 295
-> Memory at 01000000 (64-bit, prefetchable) [disabled] [size=1M]
-> Bus: primary=00, secondary=00, subordinate=00, sec-latency=0
-> I/O behind bridge: 00000000-00000fff [size=4K]
-> Memory behind bridge: 00000000-000fffff [size=1M]
-> Prefetchable memory behind bridge: 00000000-000fffff [size=1M]
-> [virtual] Expansion ROM at 01100000 [disabled] [size=64K]
-> Capabilities: [40] Power Management version 3
-> Capabilities: [50] MSI: Enable- Count=1/1 Maskable+ 64bit+
-> Capabilities: [70] Express Root Port (Slot-), MSI 00
-> Capabilities: [100] Advanced Error Reporting
-> Capabilities: [140] Virtual Channel
-> Kernel driver in use: pcieport
->
-> ~ # uname -a
-> Linux buildroot-2019.08-imx6 4.14.134-phy2 #1 SMP Thu Feb 20 12:13:33
-> UTC 2020 armv7l GNU/Linux
-> ~ #
->
->
-> I am really not sure what is going wrong here. Did I am missing
-> something basic?
->
-> Thanks in advance,
->
-> -- Fawad Lateef
