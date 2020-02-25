@@ -2,98 +2,113 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C44E16BD36
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2020 10:25:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8216E16BE3A
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2020 11:05:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729921AbgBYJZ3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Feb 2020 04:25:29 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35894 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729891AbgBYJZ3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Feb 2020 04:25:29 -0500
-Received: by mail-wm1-f65.google.com with SMTP id p17so2348606wma.1
-        for <linux-pci@vger.kernel.org>; Tue, 25 Feb 2020 01:25:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=xXjKrsLdZZ8wwVwaLKEsCAigMvn6xhJRvLjeY9bym8I=;
-        b=xSQI/AECo2FF/n1rzar450UsJu6LS++K752YYamCvDgC3gmDDtm//+VyDKm1Kbo2U6
-         UGZi3S+eGAsV0JhiWc2Y+ce9bAn+BhCUIiuI6B59vwHIUTq6SUXNmlTzd15+Ahi5vRFG
-         ukAPDmTylaGIN6SKk9F1PWSiE0RSVvcWjauHpIV3567yMuNz7dwqRHqE/6rGd5/HRMTP
-         eH8jduDDQ5OHpK9lVCEJlTuHYN+7fQfK4nUzE+8LOZ/Mm/LwrJnTJ2SDMtvUVs3fepv6
-         tBSVxhhsDR+XbgoksqEMbEYIIMKi+cx4SZ96EM24GLhZV/KdTnpP6eY2JcEYDfuCgCzQ
-         cgpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=xXjKrsLdZZ8wwVwaLKEsCAigMvn6xhJRvLjeY9bym8I=;
-        b=SvR67FtNF5LqiSP1CsGJYL4REVne5MG4brW3qFHZUKp/4o9BiYAOc39ehYFCHbMXa0
-         i8nUYplCinmDqjFsbXLh2vmwTu7posel/JzRg7Z+bm3EQ/fFGesfLojtpFqS6s5lvvtJ
-         nwnGOKwRlWquaq9YMzSty+uLRYCOfl35yvwgVN5F4Lamx0Oj0i5xZpQTK9Z/xdimaWr8
-         BVnS4RjMV/mw5AnRcyzNsbE3SpTgcBxJW8KCDQqWihxlxTrKRNNyK1ugaHydkcnDJQ+v
-         D4jf6qc77mEdP1MfYfDe+lQgHM4O2T2its5pQxEB3oeFOCkk808yAnuUdsqJJVquV+Bo
-         ZK1A==
-X-Gm-Message-State: APjAAAV/WxAlCRhXguxwvPW/L/hbEcUtUaplQ8QuKP33gi/8/rrXtoKH
-        g+8fZ3CUbgUoiGgsphkwxnU43Q==
-X-Google-Smtp-Source: APXvYqyRPbcxq+DpGxqy4QJ4Y+9sIc/9udtBlHtjdqBZpekzFx+Ms4VTHLdlkurRNx5P5V2Nn5l0Xg==
-X-Received: by 2002:a7b:c204:: with SMTP id x4mr4229923wmi.20.1582622727153;
-        Tue, 25 Feb 2020 01:25:27 -0800 (PST)
-Received: from myrica ([2001:171b:c9a8:fbc0:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id x21sm3115712wmi.30.2020.02.25.01.25.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 01:25:26 -0800 (PST)
-Date:   Tue, 25 Feb 2020 10:25:19 +0100
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Xu Zaibo <xuzaibo@huawei.com>
-Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, mark.rutland@arm.com, kevin.tian@intel.com,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        catalin.marinas@arm.com, robin.murphy@arm.com, robh+dt@kernel.org,
-        zhangfei.gao@linaro.org, will@kernel.org, christian.koenig@amd.com
-Subject: Re: [PATCH v4 03/26] iommu: Add a page fault handler
-Message-ID: <20200225092519.GC375953@myrica>
-References: <20200224182401.353359-1-jean-philippe@linaro.org>
- <20200224182401.353359-4-jean-philippe@linaro.org>
- <cb8b5a85-7f1a-8eb7-85bd-db2f553f066d@huawei.com>
+        id S1729462AbgBYKFK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Feb 2020 05:05:10 -0500
+Received: from mx.socionext.com ([202.248.49.38]:34642 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727016AbgBYKFK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 25 Feb 2020 05:05:10 -0500
+Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 25 Feb 2020 19:05:08 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 51B8618008B;
+        Tue, 25 Feb 2020 19:05:08 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Tue, 25 Feb 2020 19:05:08 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id C82F81A0006;
+        Tue, 25 Feb 2020 19:05:07 +0900 (JST)
+Received: from [10.213.132.48] (unknown [10.213.132.48])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id AFFD212013D;
+        Tue, 25 Feb 2020 19:05:07 +0900 (JST)
+Date:   Tue, 25 Feb 2020 19:05:07 +0900
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH RESEND] PCI: endpoint: Fix clearing start entry in configfs
+Cc:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200221141553.GA15440@e121166-lin.cambridge.arm.com>
+References: <1576844677-24933-1-git-send-email-hayashi.kunihiko@socionext.com> <20200221141553.GA15440@e121166-lin.cambridge.arm.com>
+Message-Id: <20200225190506.7DFA.4A936039@socionext.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cb8b5a85-7f1a-8eb7-85bd-db2f553f066d@huawei.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Becky! ver. 2.70 [ja]
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Zaibo,
+Hi Lorenzo,
 
-On Tue, Feb 25, 2020 at 11:30:05AM +0800, Xu Zaibo wrote:
-> > +struct iopf_queue *
-> > +iopf_queue_alloc(const char *name, iopf_queue_flush_t flush, void *cookie)
-> > +{
-> > +	struct iopf_queue *queue;
-> > +
-> > +	queue = kzalloc(sizeof(*queue), GFP_KERNEL);
-> > +	if (!queue)
-> > +		return NULL;
-> > +
-> > +	/*
-> > +	 * The WQ is unordered because the low-level handler enqueues faults by
-> > +	 * group. PRI requests within a group have to be ordered, but once
-> > +	 * that's dealt with, the high-level function can handle groups out of
-> > +	 * order.
-> > +	 */
-> > +	queue->wq = alloc_workqueue("iopf_queue/%s", WQ_UNBOUND, 0, name);
-> Should this workqueue use 'WQ_HIGHPRI | WQ_UNBOUND' or some flags like this
-> to decrease the unexpected
-> latency of I/O PageFault here? Or maybe, workqueue will show an uncontrolled
-> latency, even in a busy system.
+On Fri, 21 Feb 2020 14:15:53 +0000 <lorenzo.pieralisi@arm.com> wrote:
 
-I'll investigate the effect of these flags. So far I've only run on
-completely idle systems but it would be interesting to add some
-workqueue-heavy load in my tests.
+> On Fri, Dec 20, 2019 at 09:24:37PM +0900, Kunihiko Hayashi wrote:
+> > The value of 'start' entry is no change whenever writing 0 to configfs.
+> > So the endpoint that stopped once can't restart.
+> > 
+> > The following command lines are an example restarting endpoint and
+> > reprogramming configurations after receiving bus-reset.
+> > 
+> >     echo 0 > controllers/66000000.pcie-ep/start
+> >     rm controllers/66000000.pcie-ep/func1
+> >     ln -s functions/pci_epf_test/func1 controllers/66000000.pcie-ep/
+> >     echo 1 > controllers/66000000.pcie-ep/start
+> > 
+> > However, the first 'echo' can't set 0 to 'start', so the last 'echo' can't
+> > restart endpoint.
+> 
+> I think your description is not correct - pci_epc_group->start is
+> just used to check if an endpoint has been started or not (in
+> pci_epc_epf_unlink() and that's a WARN_ON) but nonetheless this
+> looks like a bug and ought to be fixed.
 
-Thanks,
-Jean
+When pci_epc_group->start keeps 1 after starting this controller with
+'echo 1 > start', we can never unlink the func1 from the controller
+because of WARN_ON.
+
+I think that unlink/re-link play initialization role of configfs
+through 'unbind' and 'bind' functions. However, we can't re-initialize
+configfs.
+
+If this is the intended behavior, my patch will make no sense.
+
+> I need Kishon's ACK to proceed.
+
+I think so, too.
+
+Thank you,
+
+> 
+> Thanks,
+> Lorenzo
+> 
+> > Fixes: d74679911610 ("PCI: endpoint: Introduce configfs entry for configuring EP functions")
+> > Cc: Kishon Vijay Abraham I <kishon@ti.com>
+> > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> > ---
+> >  drivers/pci/endpoint/pci-ep-cfs.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/drivers/pci/endpoint/pci-ep-cfs.c b/drivers/pci/endpoint/pci-ep-cfs.c
+> > index d1288a0..4fead88 100644
+> > --- a/drivers/pci/endpoint/pci-ep-cfs.c
+> > +++ b/drivers/pci/endpoint/pci-ep-cfs.c
+> > @@ -58,6 +58,7 @@ static ssize_t pci_epc_start_store(struct config_item *item, const char *page,
+> >  
+> >  	if (!start) {
+> >  		pci_epc_stop(epc);
+> > +		epc_group->start = 0;
+> >  		return len;
+> >  	}
+> >  
+> > -- 
+> > 2.7.4
+> > 
+
+---
+Best Regards,
+Kunihiko Hayashi
+
