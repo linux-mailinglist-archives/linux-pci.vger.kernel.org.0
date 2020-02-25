@@ -2,180 +2,115 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 22AA816F136
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2020 22:35:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 151ED16F3E8
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2020 00:53:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726421AbgBYVfd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Feb 2020 16:35:33 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:56067 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgBYVfd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Feb 2020 16:35:33 -0500
-Received: by mail-wm1-f68.google.com with SMTP id q9so771157wmj.5;
-        Tue, 25 Feb 2020 13:35:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=1C/K5Wsm9LPHzaz/4XpwnKAwYVbjEpz36KnNrq8NU6A=;
-        b=H3rodxzqGzN4uqzCFXakGUegaCrnGqQBj076s1/t+ZJ7F+rkUIC/oHl3pPwrITc+QK
-         rLYAMLWJ+S9U1Zr8FMmP0WgZwPDiiRx8LIcWnKBBXLL8YHGfOkYUvZJkWWS0h6r6LeWQ
-         riPSMjAmdYalm3BL3wFUrG5dtpN7+Cx23tzs8X16Vpcl9rOLFMlws8ZaoSXnSTineKms
-         L/F6EZD8Ia2bi2uYdIO05251bydHkLy+4+EbB0kIaRsljRdaTpIuuG9GafGWC/AjqxmH
-         S/Nz0R8EE3gTsXsjp2aRtYPXELVnXO0Muy8Q0qYWABY5cIGeSKKgknpnBYp/mtZhuFG3
-         G9xA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1C/K5Wsm9LPHzaz/4XpwnKAwYVbjEpz36KnNrq8NU6A=;
-        b=Y9KtnYS2uhJr67aRYhTV6K/hWesKopIzUOhKjbmEtzXgJYIpW4iDI8fvlloZjbOL0a
-         G/Bgczg0UUZ/1hHWy45wljp6BdRrv4BxX53zu+uHdIe5D3rkIx3wlnAab1G44l7AM00w
-         8brz2dXrPBQh9CF1n0uS/2lC0z8VAC3X08HWyleiuFLOv0EuybBi2t9ROsWmBNkArn0y
-         GgOtX933dyA8GnKqrnZc4QJQCUdKIjS7IaZsX76nkq1cmw3Celja/U1EfpQS1vAOtN9Y
-         hJAc6nkimpLDvO3Nu9XmUdcg7xsrY4oaRE9wNv4tf/u5Xv8o+dCl5cqckGzkgSvsitls
-         IzEQ==
-X-Gm-Message-State: APjAAAWumPJjlk91RhcNkokdbExyc9TxNdQxeTdhLwgtZOnxn+LJZY7t
-        etE3mBmrX3Vj9jvuiymFHvg=
-X-Google-Smtp-Source: APXvYqyWYGcFLzI85kNXTDFApx8I2QRip0B35i+/HX9sh1K62R6K8sQleTspdjAn0n60QhMt6lohQA==
-X-Received: by 2002:a1c:541b:: with SMTP id i27mr1230756wmb.137.1582666530486;
-        Tue, 25 Feb 2020 13:35:30 -0800 (PST)
-Received: from ?IPv6:2003:ea:8f29:6000:3571:9abd:5d7f:e3ab? (p200300EA8F29600035719ABD5D7FE3AB.dip0.t-ipconnect.de. [2003:ea:8f29:6000:3571:9abd:5d7f:e3ab])
-        by smtp.googlemail.com with ESMTPSA id k7sm5575667wmi.19.2020.02.25.13.35.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Feb 2020 13:35:30 -0800 (PST)
-Subject: Re: [PATCH v3 1/8] PCI: add constant PCI_STATUS_ERROR_BITS
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Realtek linux nic maintainers <nic_swsd@realtek.com>,
-        David Miller <davem@davemloft.net>,
-        Mirko Lindner <mlindner@marvell.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Clemens Ladisch <clemens@ladisch.de>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        alsa-devel@alsa-project.org
-References: <20200225205047.GA194679@google.com>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <79cca560-1ef5-f9bf-b90d-b2199dd5aedb@gmail.com>
-Date:   Tue, 25 Feb 2020 22:35:15 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1729536AbgBYXxJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Feb 2020 18:53:09 -0500
+Received: from mail.willitsonline.com ([216.7.65.54]:51616 "EHLO
+        mail.willitsonline.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729393AbgBYXxI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Feb 2020 18:53:08 -0500
+X-Greylist: delayed 377 seconds by postgrey-1.27 at vger.kernel.org; Tue, 25 Feb 2020 18:53:08 EST
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by mail.willitsonline.com (Postfix) with ESMTP id EADF5111E21
+        for <linux-pci@vger.kernel.org>; Tue, 25 Feb 2020 15:46:50 -0800 (PST)
+X-Virus-Scanned: Debian amavisd-new at iredmail2.willitsonline.com
+Received: from mail.willitsonline.com ([127.0.0.1])
+        by localhost (iredmail2.willitsonline.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id tGcskKKMnjLs for <linux-pci@vger.kernel.org>;
+        Tue, 25 Feb 2020 15:46:50 -0800 (PST)
+Received: from _ (localhost.localdomain [127.0.0.1])
+        (Authenticated sender: bluerocksaddles@willitsonline.com)
+        by mail.willitsonline.com (Postfix) with ESMTPSA id E6052111D61;
+        Tue, 25 Feb 2020 15:46:35 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200225205047.GA194679@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Tue, 25 Feb 2020 15:46:35 -0800
+From:   bluerocksaddles@willitsonline.com
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        "Michael ." <keltoiboy@gmail.com>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Trevor Jacobs <trevor_jacobs@aol.com>,
+        Kris Cleveland <tridentperfusion@yahoo.com>,
+        Morgan Klym <moklym@gmail.com>,
+        Philip Langdale <philipl@overt.org>,
+        Pierre Ossman <pierre@ossman.eu>,
+        Maxim Levitsky <maximlevitsky@gmail.com>,
+        linux-mmc@vger.kernel.org
+Subject: Re: PCI device function not being enumerated [Was: PCMCIA not working
+ on Panasonic Toughbook CF-29]
+In-Reply-To: <CAPDyKFq_exHufHyibFCjS78PTZ7duS9ZSt3vi18CNM6+jMmwnw@mail.gmail.com>
+References: <20191029170250.GA43972@google.com>
+ <20200222165617.GA207731@google.com>
+ <CAPDyKFq_exHufHyibFCjS78PTZ7duS9ZSt3vi18CNM6+jMmwnw@mail.gmail.com>
+Message-ID: <37a39a53a54ca4ae09b4cfa9d999a47e@willitsonline.com>
+X-Sender: bluerocksaddles@willitsonline.com
+User-Agent: Roundcube Webmail
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 25.02.2020 21:50, Bjorn Helgaas wrote:
-> On Tue, Feb 25, 2020 at 03:03:44PM +0100, Heiner Kallweit wrote:
-> 
-> Run "git log --oneline drivers/pci" and make yours match.  In
-> particular, capitalize the first word ("Add").  Same for the other PCI
-> patches.  I don't know the drivers/net convention, but please find and
-> follow that as well.
-> 
->> This constant is used (with different names) in more than one driver,
->> so move it to the PCI core.
-> 
-> The driver constants in *this* patch at least use the same name.
-> 
-Right, I have to fix the description.
+Bjorn,
 
->> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
->> ---
->>  drivers/net/ethernet/marvell/skge.h | 6 ------
->>  drivers/net/ethernet/marvell/sky2.h | 6 ------
->>  include/uapi/linux/pci_regs.h       | 7 +++++++
->>  3 files changed, 7 insertions(+), 12 deletions(-)
->>
->> diff --git a/drivers/net/ethernet/marvell/skge.h b/drivers/net/ethernet/marvell/skge.h
->> index 6fa7b6a34..e149bdfe1 100644
->> --- a/drivers/net/ethernet/marvell/skge.h
->> +++ b/drivers/net/ethernet/marvell/skge.h
->> @@ -15,12 +15,6 @@
->>  #define  PCI_VPD_ROM_SZ	7L<<14	/* VPD ROM size 0=256, 1=512, ... */
->>  #define  PCI_REV_DESC	1<<2	/* Reverse Descriptor bytes */
->>  
->> -#define PCI_STATUS_ERROR_BITS (PCI_STATUS_DETECTED_PARITY | \
->> -			       PCI_STATUS_SIG_SYSTEM_ERROR | \
->> -			       PCI_STATUS_REC_MASTER_ABORT | \
->> -			       PCI_STATUS_REC_TARGET_ABORT | \
->> -			       PCI_STATUS_PARITY)
->> -
->>  enum csr_regs {
->>  	B0_RAP	= 0x0000,
->>  	B0_CTST	= 0x0004,
->> diff --git a/drivers/net/ethernet/marvell/sky2.h b/drivers/net/ethernet/marvell/sky2.h
->> index b02b65230..851d8ed34 100644
->> --- a/drivers/net/ethernet/marvell/sky2.h
->> +++ b/drivers/net/ethernet/marvell/sky2.h
->> @@ -252,12 +252,6 @@ enum {
->>  };
->>  
->>  
->> -#define PCI_STATUS_ERROR_BITS (PCI_STATUS_DETECTED_PARITY | \
->> -			       PCI_STATUS_SIG_SYSTEM_ERROR | \
->> -			       PCI_STATUS_REC_MASTER_ABORT | \
->> -			       PCI_STATUS_REC_TARGET_ABORT | \
->> -			       PCI_STATUS_PARITY)
->> -
->>  enum csr_regs {
->>  	B0_RAP		= 0x0000,
->>  	B0_CTST		= 0x0004,
->> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
->> index 543769048..9b84a1278 100644
->> --- a/include/uapi/linux/pci_regs.h
->> +++ b/include/uapi/linux/pci_regs.h
->> @@ -68,6 +68,13 @@
->>  #define  PCI_STATUS_SIG_SYSTEM_ERROR	0x4000 /* Set when we drive SERR */
->>  #define  PCI_STATUS_DETECTED_PARITY	0x8000 /* Set on parity error */
->>  
->> +#define PCI_STATUS_ERROR_BITS (PCI_STATUS_DETECTED_PARITY  | \
->> +			       PCI_STATUS_SIG_SYSTEM_ERROR | \
->> +			       PCI_STATUS_REC_MASTER_ABORT | \
->> +			       PCI_STATUS_REC_TARGET_ABORT | \
->> +			       PCI_STATUS_SIG_TARGET_ABORT | \
->> +			       PCI_STATUS_PARITY)
-> 
-> This actually *adds* PCI_STATUS_SIG_TARGET_ABORT, which is not in the
-> driver definitions.  At the very least that should be mentioned in the
-> commit log.
-> 
-> Ideally the addition would be in its own patch so it's obvious and
-> bisectable, but I see the problem -- the subsequent patches
-> consolidate things that aren't really quite the same.  One alternative
-> would be to have preliminary patches that change the drivers
-> individually so they all use this new mask, then do the consolidation
-> afterwards.
-> 
-I checked the other patches and we'd need such preliminary patches
-for three of them:
-marvell: misses PCI_STATUS_SIG_TARGET_ABORT
-skfp: misses PCI_STATUS_REC_TARGET_ABORT
-r8169: misses PCI_STATUS_PARITY
+If you folks need a test unit or five, let me know. I can donate any 
+Mark CF-29 to the project. (MK 2 or 3 will duplicate the "problem".) 
+They are non-pae 386.
 
-> There is pitifully little documentation about the use of include/uapi,
-> but AFAICT that is for the user API, and this isn't part of that.  I
-> think this #define could go in include/linux/pci.h instead.
+Jeff
+
+On 2020-02-25 07:03, Ulf Hansson wrote:
+> On Sat, 22 Feb 2020 at 17:56, Bjorn Helgaas <helgaas@kernel.org> wrote:
+>> 
+>> On Tue, Oct 29, 2019 at 12:02:50PM -0500, Bjorn Helgaas wrote:
+>> > [+cc Ulf, Philip, Pierre, Maxim, linux-mmc; see [1] for beginning of
+>> > thread, [2] for problem report and the patch Michael tested]
+>> >
+>> > On Tue, Oct 29, 2019 at 07:58:27PM +1100, Michael . wrote:
+>> > > Bjorn and Dominik.
+>> > > I am happy to let you know the patch did the trick, it compiled well
+>> > > on 5.4-rc4 and my friends in the CC list have tested the modified
+>> > > kernel and confirmed that both slots are now working as they should.
+>> > > As a group of dedicated Toughbook users and Linux users please accept
+>> > > our thanks your efforts and assistance is greatly appreciated.
+>> > >
+>> > > Now that we know this patch works what kernel do you think it will be
+>> > > released in? Will it make 5.4 or will it be put into 5.5 development
+>> > > for further testing?
+>> >
+>> > That patch was not intended to be a fix; it was just to test my guess
+>> > that the quirk might be related.
+>> >
+>> > Removing the quirk solved the problem *you're* seeing, but the quirk
+>> > was added in the first place to solve some other problem, and if we
+>> > simply remove the quirk, we may reintroduce the original problem.
+>> >
+>> > So we have to look at the history and figure out some way to solve
+>> > both problems.  I cc'd some people who might have insight.  Here are
+>> > some commits that look relevant:
+>> >
+>> >   5ae70296c85f ("mmc: Disabler for Ricoh MMC controller")
+>> >   03cd8f7ebe0c ("ricoh_mmc: port from driver to pci quirk")
+>> >
+>> >
+>> > [1] https://lore.kernel.org/r/CAFjuqNi+knSb9WVQOahCVFyxsiqoGgwoM7Z1aqDBebNzp_-jYw@mail.gmail.com/
+>> > [2] https://lore.kernel.org/r/20191021160952.GA229204@google.com/
+>> 
+>> I guess this problem is still unfixed?  I hate the fact that we broke
+>> something that used to work.
+>> 
+>> Maybe we need some sort of DMI check in ricoh_mmc_fixup_rl5c476() so
+>> we skip it for Toughbooks?  Or maybe we limit the quirk to the
+>> machines where it was originally needed?
 > 
-OK, then I'll change the series accordingly.
-
->> +
->>  #define PCI_CLASS_REVISION	0x08	/* High 24 bits are class, low 8 revision */
->>  #define PCI_REVISION_ID		0x08	/* Revision ID */
->>  #define PCI_CLASS_PROG		0x09	/* Reg. Level Programming Interface */
->> -- 
->> 2.25.1
->>
->>
->>
->>
-
+> Both options seems reasonable to me. Do you have time to put together a 
+> patch?
+> 
+> Kind regards
+> Uffe
