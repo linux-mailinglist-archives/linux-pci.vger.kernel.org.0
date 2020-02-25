@@ -2,115 +2,180 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D24ED16B622
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2020 01:00:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CC93416B7CA
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2020 03:33:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728493AbgBYAAs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 Feb 2020 19:00:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35742 "EHLO mail.kernel.org"
+        id S1727696AbgBYCdc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 Feb 2020 21:33:32 -0500
+Received: from mga03.intel.com ([134.134.136.65]:60727 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728087AbgBYAAr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 24 Feb 2020 19:00:47 -0500
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02E512072D;
-        Tue, 25 Feb 2020 00:00:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582588847;
-        bh=gwS/i+DWi3hdA8lPEyvHJTerkxuBZv1xV2gPBKS2M5w=;
-        h=Date:From:To:Cc:Subject:From;
-        b=g9eLU5CbKhXJP4dy9vd1i8Akt4dC2/E0I6fCfPKpy4QlwiNDvCy7WUN4XxdH/cORF
-         Z9Eygk0MUX1d2RxZ4QthQ1d/E3aQ+ye7GYqdYubR20HGUlAWRBGQAKqQQTTI8NfwE1
-         zajmtbaYj2Ba25NKvNx/2/wBGo9Jp/reAZ/usTHI=
-Date:   Mon, 24 Feb 2020 18:00:45 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     linux-pci@vger.kernel.org
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        email-ext@laposte.net
-Subject: [bugzilla-daemon@bugzilla.kernel.org: [Bug 206657] New: Lenovo C940
- freeze during Thunderbolt3 dock connection/disconnection unless plugged
- before boot]
-Message-ID: <20200225000045.GA153739@google.com>
+        id S1726962AbgBYCdc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 24 Feb 2020 21:33:32 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 18:33:31 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,482,1574150400"; 
+   d="scan'208";a="231318571"
+Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
+  by fmsmga008.fm.intel.com with ESMTP; 24 Feb 2020 18:33:30 -0800
+Received: from FMSMSX110.amr.corp.intel.com (10.18.116.10) by
+ FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 24 Feb 2020 18:33:30 -0800
+Received: from shsmsx103.ccr.corp.intel.com (10.239.4.69) by
+ fmsmsx110.amr.corp.intel.com (10.18.116.10) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 24 Feb 2020 18:33:29 -0800
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.5]) by
+ SHSMSX103.ccr.corp.intel.com ([169.254.4.196]) with mapi id 14.03.0439.000;
+ Tue, 25 Feb 2020 10:33:28 +0800
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dev@dpdk.org" <dev@dpdk.org>,
+        "mtosatti@redhat.com" <mtosatti@redhat.com>,
+        "thomas@monjalon.net" <thomas@monjalon.net>,
+        "bluca@debian.org" <bluca@debian.org>,
+        "jerinjacobk@gmail.com" <jerinjacobk@gmail.com>,
+        "Richardson, Bruce" <bruce.richardson@intel.com>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        Jason Wang <jasowang@redhat.com>
+Subject: RE: [PATCH v2 0/7] vfio/pci: SR-IOV support
+Thread-Topic: [PATCH v2 0/7] vfio/pci: SR-IOV support
+Thread-Index: AQHV51X+m51PiOSLOUuJWfsX8scipqgrMXbg
+Date:   Tue, 25 Feb 2020 02:33:27 +0000
+Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D79A8A7@SHSMSX104.ccr.corp.intel.com>
+References: <158213716959.17090.8399427017403507114.stgit@gimli.home>
+In-Reply-To: <158213716959.17090.8399427017403507114.stgit@gimli.home>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNjQ3OGNkOTQtODFjOS00MjUyLWJkN2QtM2NmNDg3NDNhN2MyIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiSk5kR3JLOXNjMUJTUGZ2WGd2ZGlkV0ttZkFtOWUzWkNDYWo5bmQyeHpRVmtDWDk0TlVuZVB0cDlEUGpWeHZuSiJ9
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
------ Forwarded message from bugzilla-daemon@bugzilla.kernel.org -----
-
-Date: Mon, 24 Feb 2020 20:55:05 +0000
-From: bugzilla-daemon@bugzilla.kernel.org
-To: bjorn@helgaas.com
-Subject: [Bug 206657] New: Lenovo C940 freeze during Thunderbolt3 dock
-	connection/disconnection unless plugged before boot
-Message-ID: <bug-206657-41252@https.bugzilla.kernel.org/>
-
-https://bugzilla.kernel.org/show_bug.cgi?id=206657
-
-            Bug ID: 206657
-           Summary: Lenovo C940 freeze during Thunderbolt3 dock
-                    connection/disconnection unless plugged before boot
-           Product: Drivers
-           Version: 2.5
-    Kernel Version: 5.6-rc2
-          Hardware: All
-                OS: Linux
-              Tree: Mainline
-            Status: NEW
-          Severity: normal
-          Priority: P1
-         Component: PCI
-          Assignee: drivers_pci@kernel-bugs.osdl.org
-          Reporter: email-ext@laposte.net
-        Regression: No
-
-Created attachment 287591
-  --> https://bugzilla.kernel.org/attachment.cgi?id=287591&action=edit
-Dmesg log when disconnecting dock
-
-Hello,
-
-I have a Lenovo C940 under Manjaro with unstable packages and Kernel 5.6-rc2
-using a OWC Thunderbolt3 dock. If I connect the dock before boot, it will work
-correctly. However, if a connect/disconnect it after boot it won't be recognize
-and will lead soon after to system crash. The gnome icons start to disappear
-and when using commands on terminal input/output failure errors appear.
-
-I found another bug which seems related to mine, but in my case it leads to
-system crash:
-https://bugzilla.kernel.org/show_bug.cgi?id=206459. 
-
-I am encountering another problem with USB-C drive on thunderbolt3 ports
-working if connected before boot and not otherwise. But without leading to
-system crash:
-https://bugzilla.kernel.org/show_bug.cgi?id=206649
-
-I joined dmesg where disconnection starts at time 185 with some errors occuring
-just after like:
-[  184.038519] usb usb6: USB disconnect, device number 1
-[  184.038523] usb 6-3: USB disconnect, device number 2
-[  184.167256] usb 5-4: Not enough bandwidth for altsetting 1
-[  184.167260] usb 5-4: 1:1: usb_set_interface failed (-19)
-
-Also the journalctl shows some errors:
-
-fév 23 17:55:06 pc-de-user kernel: usb usb6: USB disconnect, device number 1
-fév 23 17:55:06 pc-de-user kernel: usb 6-3: USB disconnect, device number 2
-fév 23 17:55:06 pc-de-user kernel: usb 5-4: Not enough bandwidth for altsetting
-1
-fév 23 17:55:06 pc-de-user kernel: usb 5-4: 1:1: usb_set_interface failed (-19)
-
-Then the system crashes showing "input/output failures" just by using some
-commands like "ls" or "cat".
-
--- 
-You are receiving this mail because:
-You are watching the assignee of the bug.
-
------ End forwarded message -----
+PiBGcm9tOiBBbGV4IFdpbGxpYW1zb24NCj4gU2VudDogVGh1cnNkYXksIEZlYnJ1YXJ5IDIwLCAy
+MDIwIDI6NTQgQU0NCj4gDQo+IENoYW5nZXMgc2luY2UgdjEgYXJlIHByaW1hcmlseSB0byBwYXRj
+aCAzLzcgd2hlcmUgdGhlIGNvbW1pdCBsb2cgaXMNCj4gcmV3cml0dGVuLCBhbG9uZyB3aXRoIG9w
+dGlvbiBwYXJzaW5nIGFuZCBmYWlsdXJlIGxvZ2dpbmcgYmFzZWQgb24NCj4gdXBzdHJlYW0gZGlz
+Y3Vzc2lvbnMuICBUaGUgcHJpbWFyeSB1c2VyIHZpc2libGUgZGlmZmVyZW5jZSBpcyB0aGF0DQo+
+IG9wdGlvbiBwYXJzaW5nIGlzIG5vdyBtdWNoIG1vcmUgc3RyaWN0LiAgSWYgYSB2Zl90b2tlbiBv
+cHRpb24gaXMNCj4gcHJvdmlkZWQgdGhhdCBjYW5ub3QgYmUgdXNlZCwgd2UgZ2VuZXJhdGUgYW4g
+ZXJyb3IuICBBcyBhIHJlc3VsdCBvZg0KPiB0aGlzLCBvcGVuaW5nIGEgUEYgd2l0aCBhIHZmX3Rv
+a2VuIG9wdGlvbiB3aWxsIHNlcnZlIGFzIGEgbWVjaGFuaXNtIG9mDQo+IHNldHRpbmcgdGhlIHZm
+X3Rva2VuLiAgVGhpcyBzZWVtcyBsaWtlIGEgbW9yZSB1c2VyIGZyaWVuZGx5IEFQSSB0aGFuDQo+
+IHRoZSBhbHRlcm5hdGl2ZSBvZiBzb21ldGltZXMgcmVxdWlyaW5nIHRoZSBvcHRpb24gKFZGcyBp
+biB1c2UpIGFuZA0KPiBzb21ldGltZXMgcmVqZWN0aW5nIGl0LCBhbmQgdXBob2xkcyBvdXIgZGVz
+aXJlIHRoYXQgdGhlIG9wdGlvbiBpcw0KPiBhbHdheXMgZWl0aGVyIHVzZWQgb3IgcmVqZWN0ZWQu
+DQo+IA0KPiBUaGlzIGFsc28gbWVhbnMgdGhhdCB0aGUgVkZJT19ERVZJQ0VfRkVBVFVSRSBpb2N0
+bCBpcyBub3QgdGhlIG9ubHkNCj4gbWVhbnMgb2Ygc2V0dGluZyB0aGUgVkYgdG9rZW4sIHdoaWNo
+IG1pZ2h0IGNhbGwgaW50byBxdWVzdGlvbiB3aGV0aGVyDQo+IHdlIGFic29sdXRlbHkgbmVlZCB0
+aGlzIG5ldyBpb2N0bC4gIEN1cnJlbnRseSBJJ20ga2VlcGluZyBpdCBiZWNhdXNlIEkNCj4gY2Fu
+IGltYWdpbmUgdXNlIGNhc2VzLCBmb3IgZXhhbXBsZSBpZiBhIGh5cGVydmlzb3Igd2VyZSB0byBz
+dXBwb3J0DQo+IFNSLUlPViwgdGhlIFBGIGRldmljZSBtaWdodCBiZSBvcGVuZWQgd2l0aG91dCBj
+b25zaWRlcmF0aW9uIGZvciBhIFZGDQo+IHRva2VuIGFuZCB3ZSdkIHJlcXVpcmUgdGhlIGh5cHNl
+cnZpc29yIHRvIGNsb3NlIGFuZCByZS1vcGVuIHRoZSBQRiBpbg0KPiBvcmRlciB0byBzZXQgYSBr
+bm93biBWRiB0b2tlbiwgd2hpY2ggaXMgaW1wcmFjdGljYWwuDQo+IA0KPiBTZXJpZXMgb3ZlcnZp
+ZXcgKHNhbWUgYXMgcHJvdmlkZWQgd2l0aCB2MSk6DQoNClRoYW5rcyBmb3IgZG9pbmcgdGhpcyEg
+DQoNCj4gDQo+IFRoZSBzeW5vcHNpcyBvZiB0aGlzIHNlcmllcyBpcyB0aGF0IHdlIGhhdmUgYW4g
+b25nb2luZyBkZXNpcmUgdG8gZHJpdmUNCj4gUENJZSBTUi1JT1YgUEZzIGZyb20gdXNlcnNwYWNl
+IHdpdGggVkZJTy4gIFRoZXJlJ3MgYW4gaW1tZWRpYXRlIG5lZWQNCj4gZm9yIHRoaXMgd2l0aCBE
+UERLIGRyaXZlcnMgYW5kIHBvdGVudGlhbGx5IGludGVyZXN0aW5nIGZ1dHVyZSB1c2UNCg0KQ2Fu
+IHlvdSBwcm92aWRlIGEgbGluayB0byB0aGUgRFBESyBkaXNjdXNzaW9uPyANCg0KPiBjYXNlcyBp
+biB2aXJ0dWFsaXphdGlvbi4gIFdlJ3ZlIGJlZW4gcmVsdWN0YW50IHRvIGFkZCB0aGlzIHN1cHBv
+cnQNCj4gcHJldmlvdXNseSBkdWUgdG8gdGhlIGRlcGVuZGVuY3kgYW5kIHRydXN0IHJlbGF0aW9u
+c2hpcCBiZXR3ZWVuIHRoZQ0KPiBWRiBkZXZpY2UgYW5kIFBGIGRyaXZlci4gIE1pbmltYWxseSB0
+aGUgUEYgZHJpdmVyIGNhbiBpbmR1Y2UgYSBkZW5pYWwNCj4gb2Ygc2VydmljZSB0byB0aGUgVkYs
+IGJ1dCBkZXBlbmRpbmcgb24gdGhlIHNwZWNpZmljIGltcGxlbWVudGF0aW9uLA0KPiB0aGUgUEYg
+ZHJpdmVyIG1pZ2h0IGFsc28gYmUgcmVzcG9uc2libGUgZm9yIG1vdmluZyBkYXRhIGJldHdlZW4g
+VkZzDQo+IG9yIGhhdmUgZGlyZWN0IGFjY2VzcyB0byB0aGUgc3RhdGUgb2YgdGhlIFZGLCBpbmNs
+dWRpbmcgZGF0YSBvciBzdGF0ZQ0KPiBvdGhlcndpc2UgcHJpdmF0ZSB0byB0aGUgVkYgb3IgVkYg
+ZHJpdmVyLg0KDQpKdXN0IGEgbG91ZCB0aGlua2luZy4gV2hpbGUgdGhlIG1vdGl2YXRpb24gb2Yg
+VkYgdG9rZW4gc291bmRzIHJlYXNvbmFibGUNCnRvIG1lLCBJJ20gY3VyaW91cyB3aHkgdGhlIHNh
+bWUgY29uY2VybiBpcyBub3QgcmFpc2VkIGluIG90aGVyIHVzYWdlcy4NCkZvciBleGFtcGxlLCB0
+aGVyZSBpcyBubyBzdWNoIGRlc2lnbiBpbiB2aXJ0aW8gZnJhbWV3b3JrLCB3aGVyZSB0aGUNCnZp
+cnRpbyBkZXZpY2UgY291bGQgYWxzbyBiZSByZXN0YXJ0ZWQsIHB1dHRpbmcgaW4gc2VwYXJhdGUg
+cHJvY2VzcyAodmhvc3QtdXNlciksDQphbmQgZXZlbiBpbiBzZXBhcmF0ZSBWTSAodmlydGlvLXZo
+b3N0LXVzZXIpLCBldGMuIE9mIGNvdXJzZSB0aGUgcGFyYS0NCnZpcnR1YWxpemVkIGF0dHJpYnV0
+ZSBvZiB2aXJ0aW8gaW1wbGllcyBzb21lIGRlZ3JlZSBvZiB0cnVzdCwgYnV0IGFzIHlvdQ0KbWVu
+dGlvbmVkIG1hbnkgU1ItSU9WIGltcGxlbWVudGF0aW9ucyBzdXBwb3J0IFZGLT5QRiBjb21tdW5p
+Y2F0aW9uDQp3aGljaCBhbHNvIGltcGxpZXMgc29tZSBsZXZlbCBvZiB0cnVzdC4gSXQncyBwZXJm
+ZWN0bHkgZmluZSBpZiBWRklPIGp1c3QgdHJpZXMNCnRvIGRvIGJldHRlciB0aGFuIG90aGVyIHN1
+Yi1zeXN0ZW1zLCBidXQga25vd2luZyBob3cgb3RoZXIgcGVvcGxlDQp0YWNrbGUgdGhlIHNpbWls
+YXIgcHJvYmxlbSBtYXkgbWFrZSB0aGUgd2hvbGUgcGljdHVyZSBjbGVhcmVyLiDwn5iKDQoNCitK
+YXNvbi4NCg0KPiANCj4gVG8gaGVscCByZXNvbHZlIHRoZXNlIGNvbmNlcm5zLCB3ZSBpbnRyb2R1
+Y2UgYSBWRiB0b2tlbiBpbnRvIHRoZSBWRklPDQo+IFBDSSBBQkksIHdoaWNoIGFjdHMgYXMgYSBz
+aGFyZWQgc2VjcmV0IGtleSBiZXR3ZWVuIGRyaXZlcnMuICBUaGUNCj4gdXNlcnNwYWNlIFBGIGRy
+aXZlciBpcyByZXF1aXJlZCB0byBzZXQgdGhlIFZGIHRva2VuIHRvIGEga25vd24gdmFsdWUNCj4g
+YW5kIHVzZXJzcGFjZSBWRiBkcml2ZXJzIGFyZSByZXF1aXJlZCB0byBwcm92aWRlIHRoZSB0b2tl
+biB0byBhY2Nlc3MNCj4gdGhlIFZGIGRldmljZS4gIElmIGEgUEYgZHJpdmVyIGlzIHJlc3RhcnRl
+ZCB3aXRoIFZGIGRyaXZlcnMgaW4gdXNlLCBpdA0KPiBtdXN0IGFsc28gcHJvdmlkZSB0aGUgY3Vy
+cmVudCB0b2tlbiBpbiBvcmRlciB0byBwcmV2ZW50IGEgcm9ndWUNCj4gdW50cnVzdGVkIFBGIGRy
+aXZlciBmcm9tIHJlcGxhY2luZyBhIGtub3duIGRyaXZlci4gIFRoZSBkZWdyZWUgdG8NCj4gd2hp
+Y2ggdGhpcyBuZXcgdG9rZW4gaXMgY29uc2lkZXJlZCBzZWNyZXQgaXMgbGVmdCB0byB0aGUgdXNl
+cnNwYWNlDQo+IGRyaXZlcnMsIHRoZSBrZXJuZWwgaW50ZW50aW9uYWxseSBwcm92aWRlcyBubyBt
+ZWFucyB0byByZXRyaWV2ZSB0aGUNCj4gY3VycmVudCB0b2tlbi4NCg0KSSdtIHdvbmRlcmluZyB3
+aGV0aGVyIHRoZSB0b2tlbiBpZGVhIGNhbiBiZSB1c2VkIGJleW9uZCBTUi1JT1YsIGUuZy4NCigx
+KSB3ZSBtYXkgYWxsb3cgdmZpbyB1c2VyIHNwYWNlIHRvIG1hbmFnZSBTY2FsYWJsZSBJT1YgaW4g
+dGhlIGZ1dHVyZSwNCndoaWNoIGZhY2VzIHRoZSBzaW1pbGFyIGNoYWxsZW5nZSBiZXR3ZWVuIHRo
+ZSBQRiBhbmQgbWRldjsgKDIpIHRoZQ0KdG9rZW4gbWlnaHQgYmUgdXNlZCBhcyBhIGNhbm9uaWNh
+bCB3YXkgdG8gcmVwbGFjZSBvZmYtdHJlZSBhY3Mtb3ZlcnJpZGUNCndvcmthcm91bmQsIHNheSwg
+YWxsb3dpbmcgdGhlIGFkbWluIHRvIGFzc2lnbiBkZXZpY2VzIHdpdGhpbiB0aGUgDQpzYW1lIGlv
+bW11IGdyb3VwIHRvIGRpZmZlcmVudCBWTXMgd2hpY2ggdHJ1c3QgZWFjaCBvdGhlci4gSSdtIG5v
+dA0Kc3VyZSBob3cgbXVjaCBjb21wbGV4aXR5IHdpbGwgYmUgZnVydGhlciBpbnRyb2R1Y2VkLCBi
+dXQgaXQncyBncmVhdGx5DQphcHByZWNpYXRlZCBpZiB5b3UgY2FuIGhlbHAgdGhpbmsgYSBiaXQg
+YW5kIGlmIGZlYXNpYmxlIGFic3RyYWN0IHNvbWUgDQpsb2dpYyBpbiB2ZmlvIGNvcmUgbGF5ZXIg
+Zm9yIHN1Y2ggcG90ZW50aWFsIHVzYWdlcy4uLg0KDQo+IA0KPiBOb3RlIHRoYXQgdGhlIGFib3Zl
+IHRva2VuIGlzIG9ubHkgcmVxdWlyZWQgZm9yIHRoaXMgbmV3IG1vZGVsIHdoZXJlDQo+IGJvdGgg
+dGhlIFBGIGFuZCBWRiBkZXZpY2VzIGFyZSB1c2FibGUgdGhyb3VnaCB2ZmlvLXBjaS4gIEV4aXN0
+aW5nDQo+IG1vZGVscyBvZiBWRklPIGRyaXZlcnMgd2hlcmUgdGhlIFBGIGlzIHVzZWQgd2l0aG91
+dCBTUi1JT1YgZW5hYmxlZA0KPiBvciB0aGUgVkYgaXMgYm91bmQgdG8gYSB1c2Vyc3BhY2UgZHJp
+dmVyIHdpdGggYW4gaW4ta2VybmVsLCBob3N0IFBGDQo+IGRyaXZlciBhcmUgdW5hZmZlY3RlZC4N
+Cj4gDQo+IFRoZSBsYXR0ZXIgY29uZmlndXJhdGlvbiBhYm92ZSBhbHNvIGhpZ2hsaWdodHMgYSBu
+ZXcgaW52ZXJ0ZWQgc2NlbmFyaW8NCj4gdGhhdCBpcyBub3cgcG9zc2libGUsIGEgdXNlcnNwYWNl
+IFBGIGRyaXZlciB3aXRoIGluLWtlcm5lbCBWRiBkcml2ZXJzLg0KPiBJIGJlbGlldmUgdGhpcyBp
+cyBhIHNjZW5hcmlvIHRoYXQgc2hvdWxkIGJlIGFsbG93ZWQsIGJ1dCBzaG91bGQgbm90IGJlDQo+
+IGVuYWJsZWQgYnkgZGVmYXVsdC4gIFRoaXMgc2VyaWVzIGluY2x1ZGVzIGNvZGUgdG8gc2V0IGEg
+ZGVmYXVsdA0KPiBkcml2ZXJfb3ZlcnJpZGUgZm9yIFZGcyBzb3VyY2VkIGZyb20gYSB2ZmlvLXBj
+aSB1c2VyIG93bmVkIFBGLCBzdWNoDQo+IHRoYXQgdGhlIFZGcyBhcmUgYWxzbyBib3VuZCB0byB2
+ZmlvLXBjaS4gIFRoaXMgbW9kZWwgaXMgY29tcGF0aWJsZQ0KPiB3aXRoIHRvb2xzIGxpa2UgZHJp
+dmVyY3RsIGFuZCBhbGxvd3MgdGhlIHN5c3RlbSBhZG1pbmlzdHJhdG9yIHRvDQo+IGRlY2lkZSBp
+ZiBvdGhlciBiaW5kaW5ncyBzaG91bGQgYmUgZW5hYmxlZC4gIFRoZSBWRiB0b2tlbiBpbnRlcmZh
+Y2UNCj4gYWJvdmUgZXhpc3RzIG9ubHkgYmV0d2VlbiB2ZmlvLXBjaSBQRiBhbmQgVkYgZHJpdmVy
+cywgb25jZSBhIFZGIGlzDQo+IGJvdW5kIHRvIGFub3RoZXIgZHJpdmVyLCB0aGUgYWRtaW5pc3Ry
+YXRvciBoYXMgZWZmZWN0aXZlbHkgcHJvbm91bmNlZA0KPiB0aGUgZGV2aWNlIGFzIHRydXN0ZWQu
+ICBUaGUgdmZpby1wY2kgZHJpdmVyIHdpbGwgbm90ZSBhbHRlcm5hdGUNCj4gYmluZGluZyBpbiBk
+bWVzZyBmb3IgbG9nZ2luZyBhbmQgZGVidWdnaW5nIHB1cnBvc2VzLg0KPiANCj4gUGxlYXNlIHJl
+dmlldywgY29tbWVudCwgYW5kIHRlc3QuICBUaGUgZXhhbXBsZSBRRU1VIGltcGxlbWVudGF0aW9u
+DQo+IHByb3ZpZGVkIHdpdGggdGhlIFJGQyBpcyBzdGlsbCBjdXJyZW50IGZvciB0aGlzIHZlcnNp
+b24uICBUaGFua3MsDQo+IA0KPiBBbGV4DQo+IA0KPiBSRkM6DQo+IGh0dHBzOi8vbG9yZS5rZXJu
+ZWwub3JnL2xrbWwvMTU4MDg1MzM3NTgyLjk0NDUuMTc2ODIyNjY0Mzc1ODM1MDU1MDIuc3RnDQo+
+IGl0QGdpbWxpLmhvbWUvDQo+IHYxOg0KPiBodHRwczovL2xvcmUua2VybmVsLm9yZy9sa21sLzE1
+ODE0NTQ3MjYwNC4xNjgyNy4xNTc1MTM3NTU0MDEwMjI5ODEzMC5zdA0KPiBnaXRAZ2ltbGkuaG9t
+ZS8NCj4gDQo+IC0tLQ0KPiANCj4gQWxleCBXaWxsaWFtc29uICg3KToNCj4gICAgICAgdmZpbzog
+SW5jbHVkZSBvcHRpb25hbCBkZXZpY2UgbWF0Y2ggaW4gdmZpb19kZXZpY2Vfb3BzIGNhbGxiYWNr
+cw0KPiAgICAgICB2ZmlvL3BjaTogSW1wbGVtZW50IG1hdGNoIG9wcw0KPiAgICAgICB2ZmlvL3Bj
+aTogSW50cm9kdWNlIFZGIHRva2VuDQo+ICAgICAgIHZmaW86IEludHJvZHVjZSBWRklPX0RFVklD
+RV9GRUFUVVJFIGlvY3RsIGFuZCBmaXJzdCB1c2VyDQo+ICAgICAgIHZmaW8vcGNpOiBBZGQgc3Jp
+b3ZfY29uZmlndXJlIHN1cHBvcnQNCj4gICAgICAgdmZpby9wY2k6IFJlbW92ZSBkZXZfZm10IGRl
+ZmluaXRpb24NCj4gICAgICAgdmZpby9wY2k6IENsZWFudXAgLnByb2JlKCkgZXhpdCBwYXRocw0K
+PiANCj4gDQo+ICBkcml2ZXJzL3ZmaW8vcGNpL3ZmaW9fcGNpLmMgICAgICAgICB8ICAzODMNCj4g
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0NCj4gIGRyaXZlcnMvdmZpby9wY2kv
+dmZpb19wY2lfcHJpdmF0ZS5oIHwgICAxMCArDQo+ICBkcml2ZXJzL3ZmaW8vdmZpby5jICAgICAg
+ICAgICAgICAgICB8ICAgMjAgKy0NCj4gIGluY2x1ZGUvbGludXgvdmZpby5oICAgICAgICAgICAg
+ICAgIHwgICAgNA0KPiAgaW5jbHVkZS91YXBpL2xpbnV4L3ZmaW8uaCAgICAgICAgICAgfCAgIDM3
+ICsrKw0KPiAgNSBmaWxlcyBjaGFuZ2VkLCA0MjYgaW5zZXJ0aW9ucygrKSwgMjggZGVsZXRpb25z
+KC0pDQoNCg==
