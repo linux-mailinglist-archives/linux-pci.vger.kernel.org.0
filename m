@@ -2,126 +2,133 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A31ED16F9EC
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2020 09:45:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 44B6016FAD0
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2020 10:35:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbgBZIpN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 Feb 2020 03:45:13 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:44650 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725872AbgBZIpN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 26 Feb 2020 03:45:13 -0500
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 730B97C1AE6C45ED5204;
-        Wed, 26 Feb 2020 16:44:54 +0800 (CST)
-Received: from [127.0.0.1] (10.67.101.242) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Wed, 26 Feb 2020
- 16:44:53 +0800
-Subject: Re: [PATCH v4 23/26] iommu/arm-smmu-v3: Add stall support for
- platform devices
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        <iommu@lists.linux-foundation.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-pci@vger.kernel.org>, <linux-mm@kvack.org>
-References: <20200224182401.353359-1-jean-philippe@linaro.org>
- <20200224182401.353359-24-jean-philippe@linaro.org>
-CC:     <mark.rutland@arm.com>, <kevin.tian@intel.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        <catalin.marinas@arm.com>, <robin.murphy@arm.com>,
-        <robh+dt@kernel.org>, <zhangfei.gao@linaro.org>, <will@kernel.org>,
-        <christian.koenig@amd.com>
-From:   Xu Zaibo <xuzaibo@huawei.com>
-Message-ID: <db6fc8c2-2ff3-631f-2294-c1b49acd27aa@huawei.com>
-Date:   Wed, 26 Feb 2020 16:44:53 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        id S1726082AbgBZJf0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 Feb 2020 04:35:26 -0500
+Received: from ns.mm-sol.com ([37.157.136.199]:34387 "EHLO extserv.mm-sol.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726764AbgBZJfZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 26 Feb 2020 04:35:25 -0500
+X-Greylist: delayed 477 seconds by postgrey-1.27 at vger.kernel.org; Wed, 26 Feb 2020 04:35:24 EST
+Received: from [192.168.27.209] (unknown [37.157.136.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by extserv.mm-sol.com (Postfix) with ESMTPSA id 296ADCF89;
+        Wed, 26 Feb 2020 11:27:26 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
+        t=1582709246; bh=9MPQJJaQlLFtjkVxyv5S5xHtxbzX1vQNXtMjE8xkyQo=;
+        h=From:Subject:To:Cc:Date:From;
+        b=mUk101MkKZlI/CTWli1Fy0qEor3s6M5jdtemHsXgKXmQKvEPEkzpIYklH+p3Mlahb
+         oRv7eAMsfDxKA9dU3cZfmVLTRCZwC4fwOArA0KRJHivsKpDNMK9wP6yQqAdF8Uii6g
+         OrXk8GwPryJOgOdFg1zUIq0aZc6SnLXQ94JUUxqOuwXm6vbHHN8KtPN01fqCX1OXXt
+         pFj6peWM5gmFEMCLcrycAR0V43gbuhpbLPsc1Ss87LJNp9nLUXHhkpbzV4/xtuXyYn
+         6OSAopjYtL/Z/VSfNN6igAhDt0PVrRNNOpO8zz33rWhyT4OO6fZEVtPEHA3xiqq2YJ
+         VwJWj09wIvItQ==
+From:   Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: Re: [PATCH v2] PCI: qcom: Fix the fixup of PCI_VENDOR_ID_QCOM
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20191227012717.78965-1-bjorn.andersson@linaro.org>
+ <9e5ee7e8-aa63-e82c-8135-acc77b476c87@mm-sol.com>
+ <38acf5fc-85aa-7090-e666-97a1281e9905@free.fr>
+ <20191229024547.GH3755841@builder>
+ <9c7d69cc-29e7-07c5-1e93-e9fdadf370a6@free.fr>
+ <20200221143525.GC15440@e121166-lin.cambridge.arm.com>
+Message-ID: <d9282b27-63ea-b1d6-1e43-9c7359f5f8d4@mm-sol.com>
+Date:   Wed, 26 Feb 2020 11:27:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200224182401.353359-24-jean-philippe@linaro.org>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+In-Reply-To: <20200221143525.GC15440@e121166-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.101.242]
-X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+Hi Lorenzo,
 
+On 2/21/20 4:35 PM, Lorenzo Pieralisi wrote:
+> On Mon, Dec 30, 2019 at 09:25:28PM +0100, Marc Gonzalez wrote:
+>> On 29/12/2019 03:45, Bjorn Andersson wrote:
+>>
+>>> On Sat 28 Dec 07:41 PST 2019, Marc Gonzalez wrote:
+>>>
+>>>> On 27/12/2019 09:51, Stanimir Varbanov wrote:
+>>>>
+>>>>> On 12/27/19 3:27 AM, Bjorn Andersson wrote:
+>>>>>
+>>>>>> There exists non-bridge PCIe devices with PCI_VENDOR_ID_QCOM, so limit
+>>>>>> the fixup to only affect the relevant PCIe bridges.
+>>>>>>
+>>>>>> Cc: stable@vger.kernel.org
+>>>>>> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>>>>>> ---
+>>>>>>
+>>>>>> Stan, I picked up all the suggested device id's from the previous thread and
+>>>>>> added 0x1000 for QCS404. I looked at creating platform specific defines in
+>>>>>> pci_ids.h, but SDM845 has both 106 and 107... Please let me know if you would
+>>>>>> prefer that I do this anyway.
+>>>>>
+>>>>> Looks good,
+>>>>>
+>>>>> Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+>>>>>
+>>>>>>  drivers/pci/controller/dwc/pcie-qcom.c | 8 +++++++-
+>>>>>>  1 file changed, 7 insertions(+), 1 deletion(-)
+>>>>>>
+>>>>>> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+>>>>>> index 5ea527a6bd9f..138e1a2d21cc 100644
+>>>>>> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+>>>>>> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+>>>>>> @@ -1439,7 +1439,13 @@ static void qcom_fixup_class(struct pci_dev *dev)
+>>>>>>  {
+>>>>>>  	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
+>>>>>>  }
+>>>>>> -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCI_ANY_ID, qcom_fixup_class);
+>>>>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0101, qcom_fixup_class);
+>>>>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0104, qcom_fixup_class);
+>>>>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0106, qcom_fixup_class);
+>>>>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0107, qcom_fixup_class);
+>>>>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0302, qcom_fixup_class);
+>>>>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1000, qcom_fixup_class);
+>>>>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1001, qcom_fixup_class);
+>>>>
+>>>> Hrmmm... still not CCed on the patch,
+>>>
+>>> You are Cc'ed on the patch, but as usual your mail server responds "451
+>>> too many errors from your ip" and throw my emails away.
+>>>
+>>>> and still don't think the fixup is required(?) for 0x106 and 0x107.
+>>>>
+>>>
+>>> I re-read your reply in my v1 thread. So we know that 0x104 doesn't need
+>>> the fixup, so presumably only 0x101 needs the fixup?
+>>
+>> I apologize for the tone of my reply. I did not mean to sound
+>> so snarky.
+>>
+>> All I can say is that, if I remember correctly, the fixup was
+>> not necessary on apq8098 (0x0105) and it was probably not
+>> required on msm8996 and sdm845. For older platforms, all bets
+>> are off.
+> 
+> How are we proceeding with this patch then ?
 
-On 2020/2/25 2:23, Jean-Philippe Brucker wrote:
-> From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
->
-> The SMMU provides a Stall model for handling page faults in platform
-> devices. It is similar to PCI PRI, but doesn't require devices to have
-> their own translation cache. Instead, faulting transactions are parked and
-> the OS is given a chance to fix the page tables and retry the transaction.
->
-> Enable stall for devices that support it (opt-in by firmware). When an
-> event corresponds to a translation error, call the IOMMU fault handler. If
-> the fault is recoverable, it will call us back to terminate or continue
-> the stall.
->
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> ---
->   drivers/iommu/arm-smmu-v3.c | 271 ++++++++++++++++++++++++++++++++++--
->   drivers/iommu/of_iommu.c    |   5 +-
->   include/linux/iommu.h       |   2 +
->   3 files changed, 269 insertions(+), 9 deletions(-)
->
-> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-> index 6a5987cce03f..da5dda5ba26a 100644
-> --- a/drivers/iommu/arm-smmu-v3.c
-> +++ b/drivers/iommu/arm-smmu-v3.c
-> @@ -374,6 +374,13 @@
->   #define CMDQ_PRI_1_GRPID		GENMASK_ULL(8, 0)
->   #define CMDQ_PRI_1_RESP			GENMASK_ULL(13, 12)
->   
-[...]
-> +static int arm_smmu_page_response(struct device *dev,
-> +				  struct iommu_fault_event *unused,
-> +				  struct iommu_page_response *resp)
-> +{
-> +	struct arm_smmu_cmdq_ent cmd = {0};
-> +	struct arm_smmu_master *master = dev_iommu_fwspec_get(dev)->iommu_priv;
-Here can use 'dev_to_master' ?
+It took too much time, please take it as-is in v2 with my Ack.
 
-Cheers,
-Zaibo
+We can drop the not-affected SoCs with follow-up patches once we are
+sure that we do not break the supported SoCs.
 
-.
-> +	int sid = master->streams[0].id;
-> +
-> +	if (master->stall_enabled) {
-> +		cmd.opcode		= CMDQ_OP_RESUME;
-> +		cmd.resume.sid		= sid;
-> +		cmd.resume.stag		= resp->grpid;
-> +		switch (resp->code) {
-> +		case IOMMU_PAGE_RESP_INVALID:
-> +		case IOMMU_PAGE_RESP_FAILURE:
-> +			cmd.resume.resp = CMDQ_RESUME_0_RESP_ABORT;
-> +			break;
-> +		case IOMMU_PAGE_RESP_SUCCESS:
-> +			cmd.resume.resp = CMDQ_RESUME_0_RESP_RETRY;
-> +			break;
-> +		default:
-> +			return -EINVAL;
-> +		}
-> +	} else {
-> +		/* TODO: insert PRI response here */
-> +		return -ENODEV;
-> +	}
-> +
-> +	arm_smmu_cmdq_issue_cmd(master->smmu, &cmd);
-> +	/*
-> +	 * Don't send a SYNC, it doesn't do anything for RESUME or PRI_RESP.
-> +	 * RESUME consumption guarantees that the stalled transaction will be
-> +	 * terminated... at some point in the future. PRI_RESP is fire and
-> +	 * forget.
-> +	 */
-> +
-> +	return 0;
-> +}
-> +
-[...]
-
+-- 
+regards,
+Stan
