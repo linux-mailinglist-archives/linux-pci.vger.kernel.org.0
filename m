@@ -2,107 +2,249 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B274316F6A4
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2020 05:51:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C933B16F6C3
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2020 06:06:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726089AbgBZEvJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Feb 2020 23:51:09 -0500
-Received: from mail-qv1-f51.google.com ([209.85.219.51]:39607 "EHLO
-        mail-qv1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726046AbgBZEvJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Feb 2020 23:51:09 -0500
-Received: by mail-qv1-f51.google.com with SMTP id y8so757840qvk.6;
-        Tue, 25 Feb 2020 20:51:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=aVk24eLY14K87OU1OB1xgRnj/7rTwtwPZpvkthfcADk=;
-        b=d3+VJ6ImQ8PNewkBm3dvALg/VYUIIY+pxIrYJwAoNyrcT52kEPGyTX4NBdE4k+YCSR
-         c0Zy3/LNfKwzOKyytGbqnInfSj+y+5fAUr/4dmLzkyYC4dZxYTFheluz26HCnrt76mr1
-         4pbNbHfgppu3jRIcZlowuZ+eaFd4Uj/IreXvWwHnVw603SEW5uD8l2djXvPE94STKtbT
-         KuGNFvS0fRTYSvsrDcF9Yq0ADcm0Z3qvpcjECwKDyk18HNgq0G/1exbTan3P653BH0DF
-         4nXtyzJrvr4KHRT17SJ988PeR0Mtf6VEp5sfuR3wEorl559E9OTVPwwT8c0dBGQNj4t0
-         TPSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aVk24eLY14K87OU1OB1xgRnj/7rTwtwPZpvkthfcADk=;
-        b=cILNXnMEbVai1CFF5DlpiJIr2Ash+ISHbFK6a6EfxyEKSC9XUUkN7XTWuVC1BwNCsA
-         VWcvPKphAQBcmNDdD7z5B659o3i17gXduPfUZPgro7Fv8rjDVCBVEJCJY14PUi7mC9Fh
-         JN95dcR0MD3nQf36bnrhVLkbyVx6cr6VP8ocXrObizVWzdHpz2eAx8DKlnsMq2+nFEkC
-         +PGcYYOLMXuFW0M1RgGAIdyABrbd+YImdzE1Yw1mxEJCTAmsnJdDdDPdFrqhmLEiffrW
-         WcB3aNfTHGTWfNfRey4Lo3aHm6kHnPS1ORTlu5e0w2mLVU1UrYVGfoWl6zja2rhH5sfz
-         IDTg==
-X-Gm-Message-State: APjAAAUXTIC7n7xnnDFF3xinAGwjIjKUbk4tb7hspvy2YlrUoHgvk2pg
-        hw224Lc7YuXU2GBbjPzi/FE=
-X-Google-Smtp-Source: APXvYqzrO/kdo5/NmFkfe4u8fWu+qQ+icG/nIF1hLBupDzs9uXXpSn8gx4XQs1XMp1SD1t6+YvByLA==
-X-Received: by 2002:a0c:cd8e:: with SMTP id v14mr3118531qvm.182.1582692667662;
-        Tue, 25 Feb 2020 20:51:07 -0800 (PST)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id q5sm501066qkf.14.2020.02.25.20.51.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 20:51:07 -0800 (PST)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Tue, 25 Feb 2020 23:51:05 -0500
-To:     Trevor Jacobs <trevor_jacobs@aol.com>
-Cc:     "Michael ." <keltoiboy@gmail.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kris Cleveland <tridentperfusion@yahoo.com>,
-        Jeff <bluerocksaddles@willitsonline.com>,
-        Morgan Klym <moklym@gmail.com>,
-        Philip Langdale <philipl@overt.org>,
-        Pierre Ossman <pierre@ossman.eu>,
-        Maxim Levitsky <maximlevitsky@gmail.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
-Subject: Re: PCI device function not being enumerated [Was: PCMCIA not
- working on Panasonic Toughbook CF-29]
-Message-ID: <20200226045104.GA2191053@rani.riverdale.lan>
-References: <20191029170250.GA43972@google.com>
- <20200222165617.GA207731@google.com>
- <CAPDyKFq_exHufHyibFCjS78PTZ7duS9ZSt3vi18CNM6+jMmwnw@mail.gmail.com>
- <20200226011310.GA2116625@rani.riverdale.lan>
- <CAFjuqNg_NW7hcssWmMTtt=ioY143qn76ooT7GRhxEEe9ZVCqeQ@mail.gmail.com>
- <6e9db1f6-60c4-872b-c7c8-96ee411aa3ca@aol.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <6e9db1f6-60c4-872b-c7c8-96ee411aa3ca@aol.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1726046AbgBZFGP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 Feb 2020 00:06:15 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:46620 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbgBZFGP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 Feb 2020 00:06:15 -0500
+Received: by linux.microsoft.com (Postfix, from userid 1004)
+        id 16AAE2007682; Tue, 25 Feb 2020 21:06:13 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 16AAE2007682
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
+        s=default; t=1582693573;
+        bh=hlRUdAVX3wkkEvhxQ0g5cLC1pC4DW7vjuNNBNi2C4zw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=GfNSYy4QyOY61lNClJNafG0vUD1g7JYqzNK94hJX8LDmGi2TKHBs2tnGsmF1lO+7C
+         fNCMqQR1NML0SU6UXvergDI8KXfAorvJpk9PeYqYufYpSDA3P4mvJ4w3FlNlqFG/Eq
+         wBMWrL/WoQLSdBBD3ZaTGLwg8Q/z6TFXMmENEaOY=
+From:   longli@linuxonhyperv.com
+To:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Long Li <longli@microsoft.com>
+Subject: [Patch v5 1/2] PCI: hv: Decouple the func definition in hv_dr_state from VSP message
+Date:   Tue, 25 Feb 2020 21:06:07 -0800
+Message-Id: <1582693568-64759-1-git-send-email-longli@linuxonhyperv.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 09:12:48PM -0600, Trevor Jacobs wrote:
-> That's correct, I tested a bunch of the old distros including slackware, 
-> and 2.6.32 is where the problem began.
-> 
-> Also, the Panasonic Toughbook CF-29s effected that we tested are the 
-> later marks, MK4 and MK5 for certain. The MK2 CF-29 worked just fine 
-> because it has different hardware supporting the PCMCIA slots. I have 
-> not tested a MK3 but suspect it would work ok as it also uses the older 
-> hardware.
-> 
-> Thanks for your help guys!
-> Trevor
-> 
+From: Long Li <longli@microsoft.com>
 
-Right, the distros probably all enabled MMC_RICOH_MMC earlier than
-upstream. Can you test a custom kernel based off your distro kernel but
-just disabling that config option? That's probably the easiest fix
-currently, even though not ideal. Perhaps there should be a command line
-option to disable specific pci quirks to make this easier.
+hv_dr_state is used to find present PCI devices on the bus. The structure
+reuses struct pci_function_description from VSP message to describe a
+device.
 
-An ideal fix is I feel hard, given this quirk is based on undocumented
-config registers -- it worked on Dell machines (that's where the
-original authors seem to have gotten their info from), perhaps they had
-only one Cardbus slot, but the code ends up disabling your second
-Cardbus slot instead of disabling the MMC controller.
+To prepare support for pci_function_description v2, decouple this
+dependence in hv_dr_state so it can work with both v1 and v2 VSP messages.
+
+There is no functionality change.
+
+Signed-off-by: Long Li <longli@microsoft.com>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+---
+Changes
+v2: Changed some spaces to tabs, changed failure code to -ENOMEM
+v3: Revised comment for function hv_pci_devices_present(), reformatted patch title
+v4: Fixed spelling
+v5: Rebased to current tree
+
+ drivers/pci/controller/pci-hyperv.c | 100 +++++++++++++++++++++++++-----------
+ 1 file changed, 70 insertions(+), 30 deletions(-)
+
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index 15011a3..dea197f 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -505,10 +505,24 @@ struct hv_dr_work {
+ 	struct hv_pcibus_device *bus;
+ };
+ 
++struct hv_pcidev_description {
++	u16	v_id;	/* vendor ID */
++	u16	d_id;	/* device ID */
++	u8	rev;
++	u8	prog_intf;
++	u8	subclass;
++	u8	base_class;
++	u32	subsystem_id;
++	union	win_slot_encoding win_slot;
++	u32	ser;	/* serial number */
++	u32	flags;
++	u16	virtual_numa_node;
++};
++
+ struct hv_dr_state {
+ 	struct list_head list_entry;
+ 	u32 device_count;
+-	struct pci_function_description func[0];
++	struct hv_pcidev_description func[0];
+ };
+ 
+ enum hv_pcichild_state {
+@@ -525,7 +539,7 @@ struct hv_pci_dev {
+ 	refcount_t refs;
+ 	enum hv_pcichild_state state;
+ 	struct pci_slot *pci_slot;
+-	struct pci_function_description desc;
++	struct hv_pcidev_description desc;
+ 	bool reported_missing;
+ 	struct hv_pcibus_device *hbus;
+ 	struct work_struct wrk;
+@@ -1877,7 +1891,7 @@ static void q_resource_requirements(void *context, struct pci_response *resp,
+  * Return: Pointer to the new tracking struct
+  */
+ static struct hv_pci_dev *new_pcichild_device(struct hv_pcibus_device *hbus,
+-		struct pci_function_description *desc)
++		struct hv_pcidev_description *desc)
+ {
+ 	struct hv_pci_dev *hpdev;
+ 	struct pci_child_message *res_req;
+@@ -1988,7 +2002,7 @@ static void pci_devices_present_work(struct work_struct *work)
+ {
+ 	u32 child_no;
+ 	bool found;
+-	struct pci_function_description *new_desc;
++	struct hv_pcidev_description *new_desc;
+ 	struct hv_pci_dev *hpdev;
+ 	struct hv_pcibus_device *hbus;
+ 	struct list_head removed;
+@@ -2107,17 +2121,15 @@ static void pci_devices_present_work(struct work_struct *work)
+ }
+ 
+ /**
+- * hv_pci_devices_present() - Handles list of new children
++ * hv_pci_start_relations_work() - Queue work to start device discovery
+  * @hbus:	Root PCI bus, as understood by this driver
+- * @relations:	Packet from host listing children
++ * @dr:		The list of children returned from host
+  *
+- * This function is invoked whenever a new list of devices for
+- * this bus appears.
++ * Return:  0 on success, -errno on failure
+  */
+-static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
+-				   struct pci_bus_relations *relations)
++static int hv_pci_start_relations_work(struct hv_pcibus_device *hbus,
++				       struct hv_dr_state *dr)
+ {
+-	struct hv_dr_state *dr;
+ 	struct hv_dr_work *dr_wrk;
+ 	unsigned long flags;
+ 	bool pending_dr;
+@@ -2125,29 +2137,15 @@ static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
+ 	if (hbus->state == hv_pcibus_removing) {
+ 		dev_info(&hbus->hdev->device,
+ 			 "PCI VMBus BUS_RELATIONS: ignored\n");
+-		return;
++		return -ENOENT;
+ 	}
+ 
+ 	dr_wrk = kzalloc(sizeof(*dr_wrk), GFP_NOWAIT);
+ 	if (!dr_wrk)
+-		return;
+-
+-	dr = kzalloc(offsetof(struct hv_dr_state, func) +
+-		     (sizeof(struct pci_function_description) *
+-		      (relations->device_count)), GFP_NOWAIT);
+-	if (!dr)  {
+-		kfree(dr_wrk);
+-		return;
+-	}
++		return -ENOMEM;
+ 
+ 	INIT_WORK(&dr_wrk->wrk, pci_devices_present_work);
+ 	dr_wrk->bus = hbus;
+-	dr->device_count = relations->device_count;
+-	if (dr->device_count != 0) {
+-		memcpy(dr->func, relations->func,
+-		       sizeof(struct pci_function_description) *
+-		       dr->device_count);
+-	}
+ 
+ 	spin_lock_irqsave(&hbus->device_list_lock, flags);
+ 	/*
+@@ -2165,6 +2163,47 @@ static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
+ 		get_hvpcibus(hbus);
+ 		queue_work(hbus->wq, &dr_wrk->wrk);
+ 	}
++
++	return 0;
++}
++
++/**
++ * hv_pci_devices_present() - Handle list of new children
++ * @hbus:      Root PCI bus, as understood by this driver
++ * @relations: Packet from host listing children
++ *
++ * Process a new list of devices on the bus. The list of devices is
++ * discovered by VSP and sent to us via VSP message PCI_BUS_RELATIONS,
++ * whenever a new list of devices for this bus appears.
++ */
++static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
++				   struct pci_bus_relations *relations)
++{
++	struct hv_dr_state *dr;
++	int i;
++
++	dr = kzalloc(offsetof(struct hv_dr_state, func) +
++		     (sizeof(struct hv_pcidev_description) *
++		      (relations->device_count)), GFP_NOWAIT);
++
++	if (!dr)
++		return;
++
++	dr->device_count = relations->device_count;
++	for (i = 0; i < dr->device_count; i++) {
++		dr->func[i].v_id = relations->func[i].v_id;
++		dr->func[i].d_id = relations->func[i].d_id;
++		dr->func[i].rev = relations->func[i].rev;
++		dr->func[i].prog_intf = relations->func[i].prog_intf;
++		dr->func[i].subclass = relations->func[i].subclass;
++		dr->func[i].base_class = relations->func[i].base_class;
++		dr->func[i].subsystem_id = relations->func[i].subsystem_id;
++		dr->func[i].win_slot = relations->func[i].win_slot;
++		dr->func[i].ser = relations->func[i].ser;
++	}
++
++	if (hv_pci_start_relations_work(hbus, dr))
++		kfree(dr);
+ }
+ 
+ /**
+@@ -3069,7 +3108,7 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool hibernating)
+ 		struct pci_packet teardown_packet;
+ 		u8 buffer[sizeof(struct pci_message)];
+ 	} pkt;
+-	struct pci_bus_relations relations;
++	struct hv_dr_state *dr;
+ 	struct hv_pci_compl comp_pkt;
+ 	int ret;
+ 
+@@ -3082,8 +3121,9 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool hibernating)
+ 
+ 	if (!hibernating) {
+ 		/* Delete any children which might still exist. */
+-		memset(&relations, 0, sizeof(relations));
+-		hv_pci_devices_present(hbus, &relations);
++		dr = kzalloc(sizeof(*dr), GFP_KERNEL);
++		if (dr && hv_pci_start_relations_work(hbus, dr))
++			kfree(dr);
+ 	}
+ 
+ 	ret = hv_send_resources_released(hdev);
+-- 
+1.8.3.1
+
