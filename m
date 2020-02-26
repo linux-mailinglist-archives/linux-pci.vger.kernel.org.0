@@ -2,110 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AAB1916FCEB
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2020 12:05:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F37D816FDBA
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2020 12:31:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726440AbgBZLF5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 Feb 2020 06:05:57 -0500
-Received: from foss.arm.com ([217.140.110.172]:33972 "EHLO foss.arm.com"
+        id S1728072AbgBZLbR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 Feb 2020 06:31:17 -0500
+Received: from foss.arm.com ([217.140.110.172]:34384 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726425AbgBZLF5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 26 Feb 2020 06:05:57 -0500
+        id S1727954AbgBZLbR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 26 Feb 2020 06:31:17 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 40A841FB;
-        Wed, 26 Feb 2020 03:05:56 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E99611FB;
+        Wed, 26 Feb 2020 03:31:16 -0800 (PST)
 Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0B7463FA00;
-        Wed, 26 Feb 2020 03:05:54 -0800 (PST)
-Date:   Wed, 26 Feb 2020 11:05:49 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 28D233FA00;
+        Wed, 26 Feb 2020 03:31:16 -0800 (PST)
+Date:   Wed, 26 Feb 2020 11:31:05 +0000
 From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>, stable@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: qcom: Fix the fixup of PCI_VENDOR_ID_QCOM
-Message-ID: <20200226110549.GA16284@e121166-lin.cambridge.arm.com>
-References: <20191227012717.78965-1-bjorn.andersson@linaro.org>
- <20200226102255.GA13830@e121166-lin.cambridge.arm.com>
- <4e1587e9-352c-a2de-d136-18506500641d@mm-sol.com>
+To:     Shawn Guo <shawn.guo@linaro.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, Jun Nie <jun.nie@linaro.org>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 2/2] PCI: histb: Correct PCIe reset operation
+Message-ID: <20200226113105.GA16925@e121166-lin.cambridge.arm.com>
+References: <20200109032851.13377-1-shawn.guo@linaro.org>
+ <20200109032851.13377-3-shawn.guo@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4e1587e9-352c-a2de-d136-18506500641d@mm-sol.com>
+In-Reply-To: <20200109032851.13377-3-shawn.guo@linaro.org>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 12:56:23PM +0200, Stanimir Varbanov wrote:
-> Hi Lorenzo,
+On Thu, Jan 09, 2020 at 11:28:51AM +0800, Shawn Guo wrote:
+> The PCIe reset via GPIO in the driver never worked as expected.  Per
+> "Power Sequencing and Reset Signal Timings" table in
+> PCI EXPRESS CARD ELECTROMECHANICAL SPECIFICATION, the PERST# should be
+> deasserted after minimum of 100us once REFCLK is stable.
 > 
-> On 2/26/20 12:22 PM, Lorenzo Pieralisi wrote:
-> > On Thu, Dec 26, 2019 at 05:27:17PM -0800, Bjorn Andersson wrote:
-> >> There exists non-bridge PCIe devices with PCI_VENDOR_ID_QCOM, so limit
-> >> the fixup to only affect the relevant PCIe bridges.
-> >>
-> >> Cc: stable@vger.kernel.org
-> > 
-> > Hi Bjorn,
-> > 
-> > to simplify stable's merging, would you mind helping me with
-> > the stable releases you want this patch to apply to please ?
-> > 
+> The assertion has been done when the GPIO is being requested, and
+> deassertion should be done in host enabling rather than disabling. Also
+> a bit wait is added to ensure device get ready after reset.
 > 
-> We've to have this in the patch:
-> 
-> Cc: stable@vger.kernel.org # v5.2+
-> Fixes: 322f03436692 ("PCI: qcom: Use default config space read function")
+> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+> ---
+>  drivers/pci/controller/dwc/pcie-histb.c | 20 ++++++++++++++------
+>  1 file changed, 14 insertions(+), 6 deletions(-)
 
-Done, applied to pci/qcom for v5.7.
+Shawn,
+
+this looks like a fix, please tag it as such and let me know if
+it has to be backported, in which case also the previous patch
+should I assume.
 
 Thanks,
 Lorenzo
 
-> > I will apply it then.
-> > 
-> > Thanks,
-> > Lorenzo
-> > 
-> >> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> >> ---
-> >>
-> >> Stan, I picked up all the suggested device id's from the previous thread and
-> >> added 0x1000 for QCS404. I looked at creating platform specific defines in
-> >> pci_ids.h, but SDM845 has both 106 and 107... Please let me know if you would
-> >> prefer that I do this anyway.
-> >>
-> >>  drivers/pci/controller/dwc/pcie-qcom.c | 8 +++++++-
-> >>  1 file changed, 7 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> >> index 5ea527a6bd9f..138e1a2d21cc 100644
-> >> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> >> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> >> @@ -1439,7 +1439,13 @@ static void qcom_fixup_class(struct pci_dev *dev)
-> >>  {
-> >>  	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
-> >>  }
-> >> -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCI_ANY_ID, qcom_fixup_class);
-> >> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0101, qcom_fixup_class);
-> >> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0104, qcom_fixup_class);
-> >> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0106, qcom_fixup_class);
-> >> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0107, qcom_fixup_class);
-> >> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0302, qcom_fixup_class);
-> >> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1000, qcom_fixup_class);
-> >> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1001, qcom_fixup_class);
-> >>  
-> >>  static struct platform_driver qcom_pcie_driver = {
-> >>  	.probe = qcom_pcie_probe,
-> >> -- 
-> >> 2.24.0
-> >>
-> 
+> diff --git a/drivers/pci/controller/dwc/pcie-histb.c b/drivers/pci/controller/dwc/pcie-histb.c
+> index 112254619ed0..67c27a8036c7 100644
+> --- a/drivers/pci/controller/dwc/pcie-histb.c
+> +++ b/drivers/pci/controller/dwc/pcie-histb.c
+> @@ -219,9 +219,6 @@ static void histb_pcie_host_disable(struct histb_pcie *hipcie)
+>  	clk_disable_unprepare(hipcie->sys_clk);
+>  	clk_disable_unprepare(hipcie->bus_clk);
+>  
+> -	if (hipcie->reset_gpio)
+> -		gpiod_set_value_cansleep(hipcie->reset_gpio, 0);
+> -
+>  	if (hipcie->vpcie)
+>  		regulator_disable(hipcie->vpcie);
+>  }
+> @@ -242,9 +239,6 @@ static int histb_pcie_host_enable(struct pcie_port *pp)
+>  		}
+>  	}
+>  
+> -	if (hipcie->reset_gpio)
+> -		gpiod_set_value_cansleep(hipcie->reset_gpio, 1);
+> -
+>  	ret = clk_prepare_enable(hipcie->bus_clk);
+>  	if (ret) {
+>  		dev_err(dev, "cannot prepare/enable bus clk\n");
+> @@ -278,6 +272,20 @@ static int histb_pcie_host_enable(struct pcie_port *pp)
+>  	reset_control_assert(hipcie->bus_reset);
+>  	reset_control_deassert(hipcie->bus_reset);
+>  
+> +	if (hipcie->reset_gpio) {
+> +		/*
+> +		 * "Power Sequencing and Reset Signal Timings" table in
+> +		 * PCI EXPRESS CARD ELECTROMECHANICAL SPECIFICATION, indicates
+> +		 * PERST# should be deasserted after minimum of 100us
+> +		 * once REFCLK is stable.
+> +		 */
+> +		usleep_range(100, 200);
+> +		gpiod_set_value_cansleep(hipcie->reset_gpio, 0);
+> +
+> +		/* wait 1ms for device to be ready */
+> +		usleep_range(1000, 2000);
+> +	}
+> +
+>  	return 0;
+>  
+>  err_aux_clk:
 > -- 
-> regards,
-> Stan
+> 2.17.1
+> 
