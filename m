@@ -2,446 +2,591 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E90216F4A2
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2020 02:02:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 791EB16F4A4
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2020 02:02:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729346AbgBZBCg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Feb 2020 20:02:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35700 "EHLO mail.kernel.org"
+        id S1729763AbgBZBCo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Feb 2020 20:02:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729277AbgBZBCf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 25 Feb 2020 20:02:35 -0500
+        id S1729277AbgBZBCo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 25 Feb 2020 20:02:44 -0500
 Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1553221927;
-        Wed, 26 Feb 2020 01:02:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D07721927;
+        Wed, 26 Feb 2020 01:02:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582678954;
-        bh=+cqG95PWdHdpMkQZjcSk9THnDiK0AYs7biYALdUZYt4=;
+        s=default; t=1582678963;
+        bh=kOebg9IxkONhDmNDrC/O5ZV17/q47b5rBmqJSnxmMLM=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=qtQalXoz2L+6jfvm1LvHcLNMyYspl+zPoXxwcta/mEfhDyOe/FXs4OSx07tV2PReT
-         RWhyGgmANqAUObw1CIwIaP7UL3DcYuz9KyQH21Km9+toi2302LgGFHFw+6lkqj+FVZ
-         Qg9vbypzi15LUgF4tsGzANsiNX73rBvparD7xE/Y=
-Date:   Tue, 25 Feb 2020 19:02:31 -0600
+        b=johD/2Ft/WM9/T/2/9+tHsb0Sp2evto2GE87o+xytfIcq273MTdfYS7G31G1g+3kM
+         SwLQErxsJaHBbL6/KffSoiQK3s4+I19bYV/YyHBCTOzpW5o6B+vVcMTbZfWoDfS7/I
+         BoZr8gMUJFdbXMx1UFoBNhWcCHDoAON6p51gsjjA=
+Date:   Tue, 25 Feb 2020 19:02:40 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     sathyanarayanan.kuppuswamy@linux.intel.com
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         ashok.raj@intel.com
-Subject: Re: [PATCH v15 4/5] PCI/DPC: Add Error Disconnect Recover (EDR)
- support
-Message-ID: <20200226010231.GA238440@google.com>
+Subject: Re: [PATCH v15 3/5] PCI/EDR: Export AER, DPC and error recovery
+ functions
+Message-ID: <20200226010240.GA202867@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <62010ece0cb912318e493eaa743ad98be462b954.1581617873.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <b2494cde6711c0157cbd93b4fc4ec85e987af8fe.1581617873.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 10:20:16AM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+On Thu, Feb 13, 2020 at 10:20:15AM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
 > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 > 
-> As per ACPI specification r6.3, sec 5.6.6, when firmware owns Downstream
-> Port Containment (DPC), its expected to use the "Error Disconnect
-> Recover" (EDR) notification to alert OSPM of a DPC event and if OS
-> supports EDR, its expected to handle the software state invalidation and
-> port recovery in OS, and also let firmware know the recovery status via
-> _OST ACPI call. Related _OST status codes can be found in ACPI
-> specification r6.3, sec 6.3.5.2.
+> This is a preparatory patch for adding EDR support.
 > 
-> Also, as per PCI firmware specification r3.2 Downstream Port Containment
-> Related Enhancements ECN, sec 4.5.1, table 4-6, If DPC is controlled by
-> firmware (firmware first mode), firmware is responsible for
-> configuring the DPC and OS is responsible for error recovery. Also, OS
-> is allowed to modify DPC registers only during the EDR notification
-> window.
+> As per the Downstream Port Containment Related Enhancements ECN to the
+> PCI Firmware Specification r3.2, sec 4.5.1, table 4-6, If DPC is
+> controlled by firmware, firmware is responsible for initializing
+> Downstream Port Containment Extended Capability Structures per firmware
+> policy. Further, the OS is permitted to read or write DPC Control and
+> Status registers of a port while processing an Error Disconnect Recover
+> notification from firmware on that port. Error Disconnect Recover
+> notification processing begins with the Error Disconnect Recover notify
+> from Firmware, and ends when the OS releases DPC by clearing the DPC
+> Trigger Status bit.Firmware can read DPC Trigger Status bit to determine
+> the ownership of DPC Control and Status registers. Firmware is not
+> permitted to write to DPC Control and Status registers if DPC Trigger
+> Status is set i.e. the link is in DPC state. Outside of the Error
+> Disconnect Recover notification processing window, the OS is not
+> permitted to modify DPC Control or Status registers; only firmware
+> is allowed to.
+> 
+> To add EDR support we need to re-use some of the existing DPC,
+> AER and pCIE error recovery functions. So add necessary interfaces.
 > 
 > Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 > ---
->  drivers/pci/pci-acpi.c    |   3 +
->  drivers/pci/pcie/Kconfig  |  10 ++
->  drivers/pci/pcie/Makefile |   1 +
->  drivers/pci/pcie/edr.c    | 257 ++++++++++++++++++++++++++++++++++++++
->  include/linux/pci-acpi.h  |   8 ++
->  5 files changed, 279 insertions(+)
->  create mode 100644 drivers/pci/pcie/edr.c
+>  drivers/pci/pci.h      |  8 ++++
+>  drivers/pci/pcie/aer.c | 39 ++++++++++++++------
+>  drivers/pci/pcie/dpc.c | 84 +++++++++++++++++++++++++-----------------
+>  drivers/pci/pcie/dpc.h | 20 ++++++++++
+>  drivers/pci/pcie/err.c | 30 ++++++++++++---
+>  5 files changed, 131 insertions(+), 50 deletions(-)
+>  create mode 100644 drivers/pci/pcie/dpc.h
 > 
-> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> index 0c02d500158f..6af5d6a04990 100644
-> --- a/drivers/pci/pci-acpi.c
-> +++ b/drivers/pci/pci-acpi.c
-> @@ -1258,6 +1258,7 @@ static void pci_acpi_setup(struct device *dev)
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 6394e7746fb5..136f27cf3871 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -443,6 +443,9 @@ struct aer_err_info {
 >  
->  	acpi_pci_wakeup(pci_dev, false);
->  	acpi_device_power_add_dependent(adev, dev);
-> +	pci_acpi_add_edr_notifier(pci_dev);
+>  int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info);
+>  void aer_print_error(struct pci_dev *dev, struct aer_err_info *info);
+> +int pci_aer_clear_err_uncor_status(struct pci_dev *dev);
+> +void pci_aer_clear_err_fatal_status(struct pci_dev *dev);
+> +int pci_aer_clear_err_status_regs(struct pci_dev *dev);
+>  #endif	/* CONFIG_PCIEAER */
+>  
+>  #ifdef CONFIG_PCIE_DPC
+> @@ -549,6 +552,11 @@ static inline int pci_dev_specific_disable_acs_redir(struct pci_dev *dev)
+>  /* PCI error reporting and recovery */
+>  void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
+>  		      u32 service);
+> +pci_ers_result_t pcie_do_recovery_common(struct pci_dev *dev,
+> +				enum pci_channel_state state,
+> +				u32 service,
+> +				pci_ers_result_t (*reset_cb)(void *cb_data),
+> +				void *cb_data);
+>  
+>  bool pcie_wait_for_link(struct pci_dev *pdev, bool active);
+>  #ifdef CONFIG_PCIEASPM
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 4a818b07a1af..399836aa07f4 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -376,7 +376,7 @@ void pci_aer_clear_device_status(struct pci_dev *dev)
+>  	pcie_capability_write_word(dev, PCI_EXP_DEVSTA, sta);
 >  }
 >  
->  static void pci_acpi_cleanup(struct device *dev)
-> @@ -1276,6 +1277,8 @@ static void pci_acpi_cleanup(struct device *dev)
+> -int pci_cleanup_aer_uncorrect_error_status(struct pci_dev *dev)
+> +int pci_aer_clear_err_uncor_status(struct pci_dev *dev)
+>  {
+>  	int pos;
+>  	u32 status, sev;
+> @@ -385,9 +385,6 @@ int pci_cleanup_aer_uncorrect_error_status(struct pci_dev *dev)
+>  	if (!pos)
+>  		return -EIO;
 >  
->  		device_set_wakeup_capable(dev, false);
->  	}
-> +
-> +	pci_acpi_remove_edr_notifier(pci_dev);
+> -	if (pcie_aer_get_firmware_first(dev))
+> -		return -EIO;
+> -
+>  	/* Clear status bits for ERR_NONFATAL errors only */
+>  	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_STATUS, &status);
+>  	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_SEVER, &sev);
+> @@ -397,9 +394,17 @@ int pci_cleanup_aer_uncorrect_error_status(struct pci_dev *dev)
+>  
+>  	return 0;
 >  }
->  
->  static bool pci_acpi_bus_match(struct device *dev)
-> diff --git a/drivers/pci/pcie/Kconfig b/drivers/pci/pcie/Kconfig
-> index 6e3c04b46fb1..772b1f4cb19e 100644
-> --- a/drivers/pci/pcie/Kconfig
-> +++ b/drivers/pci/pcie/Kconfig
-> @@ -140,3 +140,13 @@ config PCIE_BW
->  	  This enables PCI Express Bandwidth Change Notification.  If
->  	  you know link width or rate changes occur only to correct
->  	  unreliable links, you may answer Y.
 > +
-> +config PCIE_EDR
-> +	bool "PCI Express Error Disconnect Recover support"
-> +	depends on PCIE_DPC && ACPI
-> +	help
-> +	  This option adds Error Disconnect Recover support as specified
-> +	  in the Downstream Port Containment Related Enhancements ECN to
-> +	  the PCI Firmware Specification r3.2.  Enable this if you want to
-> +	  support hybrid DPC model which uses both firmware and OS to
-> +	  implement DPC.
-> diff --git a/drivers/pci/pcie/Makefile b/drivers/pci/pcie/Makefile
-> index efb9d2e71e9e..68da9280ff11 100644
-> --- a/drivers/pci/pcie/Makefile
-> +++ b/drivers/pci/pcie/Makefile
-> @@ -13,3 +13,4 @@ obj-$(CONFIG_PCIE_PME)		+= pme.o
->  obj-$(CONFIG_PCIE_DPC)		+= dpc.o
->  obj-$(CONFIG_PCIE_PTM)		+= ptm.o
->  obj-$(CONFIG_PCIE_BW)		+= bw_notification.o
-> +obj-$(CONFIG_PCIE_EDR)		+= edr.o
-> diff --git a/drivers/pci/pcie/edr.c b/drivers/pci/pcie/edr.c
-> new file mode 100644
-> index 000000000000..b3e9103585a1
-> --- /dev/null
-> +++ b/drivers/pci/pcie/edr.c
-> @@ -0,0 +1,257 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * PCI DPC Error Disconnect Recover support driver
-> + * Author: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> + *
-> + * Copyright (C) 2020 Intel Corp.
-> + */
-> +
-> +#define dev_fmt(fmt) "EDR: " fmt
-> +
-> +#include <linux/pci.h>
-> +#include <linux/pci-acpi.h>
-> +
-> +#include "portdrv.h"
-> +#include "dpc.h"
-> +#include "../pci.h"
-> +
-> +#define EDR_PORT_ENABLE_DSM		0x0C
-> +#define EDR_PORT_LOCATE_DSM		0x0D
-> +#define EDR_OST_SUCCESS			0x80
-> +#define EDR_OST_FAILED			0x81
-> +
-> +/*
-> + * _DSM wrapper function to enable/disable DPC port.
-> + * @pdev   : PCI device structure.
-> + * @enable: status of DPC port (0 or 1).
-
-Either line up these colons or join them with the parameter names
-(also below).
-
-> + * returns 0 on success or errno on failure.
-> + */
-> +static int acpi_enable_dpc_port(struct pci_dev *pdev, bool enable)
-
-We only call this with "true", so the "enable" parameter is pointless.
-
+> +int pci_cleanup_aer_uncorrect_error_status(struct pci_dev *dev)
 > +{
-> +	struct acpi_device *adev = ACPI_COMPANION(&pdev->dev);
-> +	union acpi_object *obj, argv4, req;
-> +	int status = 0;
+> +	if (pcie_aer_get_firmware_first(dev))
+> +		return -EIO;
 > +
-> +	req.type = ACPI_TYPE_INTEGER;
-> +	req.integer.value = enable;
+> +	return pci_aer_clear_err_uncor_status(dev);
+> +}
+>  EXPORT_SYMBOL_GPL(pci_cleanup_aer_uncorrect_error_status);
+>  
+> -void pci_aer_clear_fatal_status(struct pci_dev *dev)
+> +void pci_aer_clear_err_fatal_status(struct pci_dev *dev)
+>  {
+>  	int pos;
+>  	u32 status, sev;
+> @@ -408,9 +413,6 @@ void pci_aer_clear_fatal_status(struct pci_dev *dev)
+>  	if (!pos)
+>  		return;
+>  
+> -	if (pcie_aer_get_firmware_first(dev))
+> -		return;
+> -
+>  	/* Clear status bits for ERR_FATAL errors only */
+>  	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_STATUS, &status);
+>  	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_SEVER, &sev);
+> @@ -419,7 +421,15 @@ void pci_aer_clear_fatal_status(struct pci_dev *dev)
+>  		pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_STATUS, status);
+>  }
+>  
+> -int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
+> +void pci_aer_clear_fatal_status(struct pci_dev *dev)
+> +{
+> +	if (pcie_aer_get_firmware_first(dev))
+> +		return;
 > +
-> +	argv4.type = ACPI_TYPE_PACKAGE;
-> +	argv4.package.count = 1;
-> +	argv4.package.elements = &req;
+> +	return pci_aer_clear_err_fatal_status(dev);
+> +}
+> +
+> +int pci_aer_clear_err_status_regs(struct pci_dev *dev)
+>  {
+>  	int pos;
+>  	u32 status;
+> @@ -432,9 +442,6 @@ int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
+>  	if (!pos)
+>  		return -EIO;
+>  
+> -	if (pcie_aer_get_firmware_first(dev))
+> -		return -EIO;
+> -
+>  	port_type = pci_pcie_type(dev);
+>  	if (port_type == PCI_EXP_TYPE_ROOT_PORT) {
+>  		pci_read_config_dword(dev, pos + PCI_ERR_ROOT_STATUS, &status);
+> @@ -450,6 +457,14 @@ int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
+>  	return 0;
+>  }
+>  
+> +int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
+> +{
+> +	if (pcie_aer_get_firmware_first(dev))
+> +		return -EIO;
+> +
+> +	return pci_aer_clear_err_status_regs(dev);
+> +}
+
+We started with these:
+
+  pci_cleanup_aer_uncorrect_error_status()
+  pci_aer_clear_fatal_status()
+  pci_cleanup_aer_error_status_regs()
+
+This was already a mess.  They do basically similar things, but the
+function names are a complete jumble.  Let's start with preliminary
+patches to name them consistently, e.g.,
+
+  pci_aer_clear_nonfatal_status()
+  pci_aer_clear_fatal_status()
+  pci_aer_clear_status()
+
+Now, for EDR you eventually add this in edr_handle_event():
+
+  edr_handle_event()
+  {
+    ...
+    pci_aer_clear_err_uncor_status(pdev);
+    pci_aer_clear_err_fatal_status(pdev);
+    pci_aer_clear_err_status_regs(pdev);
+
+I see that this path needs to clear the status even in the
+firmware-first case, so you do need some change for that.  But
+pci_aer_clear_err_status_regs() does exactly the same thing as
+pci_aer_clear_err_uncor_status() and pci_aer_clear_err_fatal_status()
+plus a little more (clearing PCI_ERR_ROOT_STATUS), so it should be
+sufficient to just call pci_aer_clear_err_status_regs().
+
+So I don't think you need to make wrappers for
+pci_aer_clear_nonfatal_status() and pci_aer_clear_fatal_status() at
+all since they're not needed by the EDR path.
+
+You *do* need a wrapper for pci_aer_clear_status(), but instead of
+just adding random words ("err", "regs") to the name, please name it
+something like pci_aer_raw_clear_status() as a hint that it skips
+some sort of check.
+
+I would split this into a separate patch.  This patch contains a bunch
+of things that aren't really related except that they're needed for
+EDR.  I think it will be more readable if each patch just does one
+piece of it.
+
+>  void pci_save_aer_state(struct pci_dev *dev)
+>  {
+>  	struct pci_cap_saved_state *save_state;
+> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+> index 99fca8400956..acae12dbf9ff 100644
+> --- a/drivers/pci/pcie/dpc.c
+> +++ b/drivers/pci/pcie/dpc.c
+> @@ -15,15 +15,9 @@
+>  #include <linux/pci.h>
+>  
+>  #include "portdrv.h"
+> +#include "dpc.h"
+>  #include "../pci.h"
+>  
+> -struct dpc_dev {
+> -	struct pci_dev		*pdev;
+> -	u16			cap_pos;
+> -	bool			rp_extensions;
+> -	u8			rp_log_size;
+> -};
+
+Adding dpc.h shouldn't be in this patch because there's no need for a
+separate dpc.h file yet -- it's only included this one place.  I'm not
+positive a dpc.h is needed at all -- see comments on patch [4/5].
+
+>  static const char * const rp_pio_error_string[] = {
+>  	"Configuration Request received UR Completion",	 /* Bit Position 0  */
+>  	"Configuration Request received CA Completion",	 /* Bit Position 1  */
+> @@ -117,36 +111,44 @@ static int dpc_wait_rp_inactive(struct dpc_dev *dpc)
+>  	return 0;
+>  }
+>  
+> -static pci_ers_result_t dpc_reset_link(struct pci_dev *pdev)
+> +pci_ers_result_t dpc_reset_link_common(struct dpc_dev *dpc)
+>  {
+
+I don't see why you need to split this into dpc_reset_link_common()
+and dpc_reset_link().  IIUC, you split it so the DPC driver path can
+supply a pci_dev * via
+
+  dpc_handler
+    pcie_do_recovery
+      pcie_do_recovery_common(..., NULL, NULL)
+        reset_link(..., NULL, NULL)
+          driver->reset_link(pdev)
+            dpc_reset_link(pdev)
+              dpc = to_dpc_dev(pdev)
+              dpc_reset_link_common(dpc)
+
+while the EDR path can supply a dpc_dev * via
+
+  edr_handle_event
+    pcie_do_recovery_common(..., edr_dpc_reset_link, dpc)
+      reset_link(..., edr_dpc_reset_link, dpc)
+        edr_dpc_reset_link(dpc)
+          dpc_reset_link_common(dpc)
+
+But it looks like you *could* make these paths look like:
+
+  dpc_handler
+    pcie_do_recovery
+      pcie_do_recovery_common(..., NULL, NULL)
+        reset_link(..., NULL, NULL)
+          driver->reset_link(pdev)
+            dpc_reset_link(pdev)
+
+  edr_handle_event
+    pcie_do_recovery_common(..., dpc_reset_link, pdev)
+      reset_link(..., dpc_reset_link, pdev)
+        dpc_reset_link(pdev)
+
+and you wouldn't need edr_dpc_reset_link() at all and you wouldn't
+have to split dpc_reset_link_common() out.
+
+> -	struct dpc_dev *dpc;
+>  	u16 cap;
+>  
+> -	/*
+> -	 * DPC disables the Link automatically in hardware, so it has
+> -	 * already been reset by the time we get here.
+> -	 */
+> -	dpc = to_dpc_dev(pdev);
+>  	cap = dpc->cap_pos;
+>  
+>  	/*
+>  	 * Wait until the Link is inactive, then clear DPC Trigger Status
+>  	 * to allow the Port to leave DPC.
+>  	 */
+> -	pcie_wait_for_link(pdev, false);
+> +	pcie_wait_for_link(dpc->pdev, false);
+
+I'm hoping you don't need to split this out at all, but if you do,
+adding
+
+  struct pci_dev *pdev = dpc->pdev;
+
+at the top will avoid these needless diffs.
+
+>  	if (dpc->rp_extensions && dpc_wait_rp_inactive(dpc))
+>  		return PCI_ERS_RESULT_DISCONNECT;
+>  
+> -	pci_write_config_word(pdev, cap + PCI_EXP_DPC_STATUS,
+> +	pci_write_config_word(dpc->pdev, cap + PCI_EXP_DPC_STATUS,
+>  			      PCI_EXP_DPC_STATUS_TRIGGER);
+>  
+> -	if (!pcie_wait_for_link(pdev, true))
+> +	if (!pcie_wait_for_link(dpc->pdev, true))
+>  		return PCI_ERS_RESULT_DISCONNECT;
+>  
+>  	return PCI_ERS_RESULT_RECOVERED;
+>  }
+>  
+> +static pci_ers_result_t dpc_reset_link(struct pci_dev *pdev)
+> +{
+> +	struct dpc_dev *dpc;
 > +
 > +	/*
-> +	 * Per the Downstream Port Containment Related Enhancements ECN to
-> +	 * the PCI Firmware Specification r3.2, sec 4.6.12,
-> +	 * EDR_PORT_ENABLE_DSM is optional.  Return success if it's not
-> +	 * implemented.
-> +	 */
-> +	obj = acpi_evaluate_dsm(adev->handle, &pci_acpi_dsm_guid, 5,
-> +				EDR_PORT_ENABLE_DSM, &argv4);
-> +	if (!obj)
-> +		return 0;
+> +	 * DPC disables the Link automatically in hardware, so it has
+> +	 * already been reset by the time we get here.
+> + 	 */
+> +	dpc = to_dpc_dev(pdev);
 > +
-> +	if (obj->type != ACPI_TYPE_INTEGER || obj->integer.value != enable)
-> +		status = -EIO;
+> +	return dpc_reset_link_common(dpc);
 > +
-> +	ACPI_FREE(obj);
+> +}
+> +
+>  static void dpc_process_rp_pio_error(struct dpc_dev *dpc)
+>  {
+>  	struct pci_dev *pdev = dpc->pdev;
+> @@ -224,10 +226,9 @@ static int dpc_get_aer_uncorrect_severity(struct pci_dev *dev,
+>  	return 1;
+>  }
+>  
+> -static irqreturn_t dpc_handler(int irq, void *context)
+> +void dpc_process_error(struct dpc_dev *dpc)
+>  {
+>  	struct aer_err_info info;
+> -	struct dpc_dev *dpc = context;
+>  	struct pci_dev *pdev = dpc->pdev;
+>  	u16 cap = dpc->cap_pos, status, source, reason, ext_reason;
+>  
+> @@ -257,6 +258,14 @@ static irqreturn_t dpc_handler(int irq, void *context)
+>  		pci_cleanup_aer_uncorrect_error_status(pdev);
+>  		pci_aer_clear_fatal_status(pdev);
+>  	}
+> +}
+> +
+> +static irqreturn_t dpc_handler(int irq, void *context)
+> +{
+> +	struct dpc_dev *dpc = context;
+> +	struct pci_dev *pdev = dpc->pdev;
+> +
+> +	dpc_process_error(dpc);
+>  
+>  	/* We configure DPC so it only triggers on ERR_FATAL */
+>  	pcie_do_recovery(pdev, pci_channel_io_frozen, PCIE_PORT_SERVICE_DPC);
+> @@ -282,6 +291,25 @@ static irqreturn_t dpc_irq(int irq, void *context)
+>  	return IRQ_HANDLED;
+>  }
+>  
+> +void dpc_dev_init(struct pci_dev *pdev, struct dpc_dev *dpc)
+> +{
+
+Can you include the kzalloc() here so we don't have to do the alloc in
+pci_acpi_add_edr_notifier()?
+
+I think there's also a leak there: pci_acpi_add_edr_notifier()
+kzallocs a struct dpc_dev, but I don't see a corresponding kfree().
+
+> +	dpc->cap_pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_DPC);
+
+I think we need to check cap_pos for non-zero here.  It's arguably
+safe today because portdrv only calls dpc_probe() when
+PCIE_PORT_SERVICE_DPC is set and we only set that if there's a DPC
+capability.  But that's a long ways away from here and it's
+convoluted, so it's pretty hard to verify that it's safe.
+
+When we add EDR into the picture and call this from
+pci_acpi_add_edr_notifier() and edr_handle_event(), I'm pretty sure
+it's not safe at all because we have no idea whether the device has a
+DPC capability.
+
+Factoring out dpc_dev_init() and the kzalloc() would be a simple
+cleanup-type patch all by itself, so it could be separated out for
+ease of reviewing.
+
+> +	dpc->pdev = pdev;
+> +	pci_read_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CAP, &dpc->cap);
+> +	pci_read_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL, &dpc->ctl);
+> +
+> +	dpc->rp_extensions = (dpc->cap & PCI_EXP_DPC_CAP_RP_EXT);
+> +	if (dpc->rp_extensions) {
+> +		dpc->rp_log_size =
+> +			(dpc->cap & PCI_EXP_DPC_RP_PIO_LOG_SIZE) >> 8;
+> +		if (dpc->rp_log_size < 4 || dpc->rp_log_size > 9) {
+> +			pci_err(pdev, "RP PIO log size %u is invalid\n",
+> +				dpc->rp_log_size);
+> +			dpc->rp_log_size = 0;
+> +		}
+> +	}
+> +}
+> +
+>  #define FLAG(x, y) (((x) & (y)) ? '+' : '-')
+>  static int dpc_probe(struct pcie_device *dev)
+>  {
+> @@ -298,8 +326,8 @@ static int dpc_probe(struct pcie_device *dev)
+>  	if (!dpc)
+>  		return -ENOMEM;
+>  
+> -	dpc->cap_pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_DPC);
+> -	dpc->pdev = pdev;
+> +	dpc_dev_init(pdev, dpc);
+> +
+>  	set_service_data(dev, dpc);
+>  
+>  	status = devm_request_threaded_irq(device, dev->irq, dpc_irq,
+> @@ -311,18 +339,8 @@ static int dpc_probe(struct pcie_device *dev)
+>  		return status;
+>  	}
+>  
+> -	pci_read_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CAP, &cap);
+> -	pci_read_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL, &ctl);
+> -
+> -	dpc->rp_extensions = (cap & PCI_EXP_DPC_CAP_RP_EXT);
+> -	if (dpc->rp_extensions) {
+> -		dpc->rp_log_size = (cap & PCI_EXP_DPC_RP_PIO_LOG_SIZE) >> 8;
+> -		if (dpc->rp_log_size < 4 || dpc->rp_log_size > 9) {
+> -			pci_err(pdev, "RP PIO log size %u is invalid\n",
+> -				dpc->rp_log_size);
+> -			dpc->rp_log_size = 0;
+> -		}
+> -	}
+> +	ctl = dpc->ctl;
+> +	cap = dpc->cap;
+>  
+>  	ctl = (ctl & 0xfff4) | PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN;
+>  	pci_write_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL, ctl);
+> diff --git a/drivers/pci/pcie/dpc.h b/drivers/pci/pcie/dpc.h
+> new file mode 100644
+> index 000000000000..2d82bc917fcb
+> --- /dev/null
+> +++ b/drivers/pci/pcie/dpc.h
+> @@ -0,0 +1,20 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef DRIVERS_PCIE_DPC_H
+> +#define DRIVERS_PCIE_DPC_H
+> +
+> +#include <linux/pci.h>
+> +
+> +struct dpc_dev {
+> +	struct pci_dev		*pdev;
+> +	u16			cap_pos;
+> +	bool			rp_extensions;
+> +	u8			rp_log_size;
+> +	u16			ctl;
+> +	u16			cap;
+> +};
+> +
+> +pci_ers_result_t dpc_reset_link_common(struct dpc_dev *dpc);
+> +void dpc_process_error(struct dpc_dev *dpc);
+> +void dpc_dev_init(struct pci_dev *pdev, struct dpc_dev *dpc);
+> +
+> +#endif /* DRIVERS_PCIE_DPC_H */
+> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> index eefefe03857a..e7b9dfae9035 100644
+> --- a/drivers/pci/pcie/err.c
+> +++ b/drivers/pci/pcie/err.c
+> @@ -162,11 +162,18 @@ static pci_ers_result_t default_reset_link(struct pci_dev *dev)
+>  	return rc ? PCI_ERS_RESULT_DISCONNECT : PCI_ERS_RESULT_RECOVERED;
+>  }
+>  
+> -static pci_ers_result_t reset_link(struct pci_dev *dev, u32 service)
+> +static pci_ers_result_t reset_link(struct pci_dev *dev, u32 service,
+> +				   pci_ers_result_t (*reset_cb)(void *cb_data),
+> +				   void *cb_data)
+
+This rejiggering of reset_link() and pcie_do_recovery() is unrelated
+to the rest (except that it's needed for EDR, of course), so maybe
+could be a separate patch.
+
+We could also consider changing the interface of pcie_do_recovery() to
+just add reset_cb and cb_data, and change the existing callers to pass
+NULL, NULL.  Then we wouldn't need pcie_do_recovery_common().  I'm not
+sure which way would be better.
+
+>  {
+>  	pci_ers_result_t status;
+>  	struct pcie_port_service_driver *driver = NULL;
+>  
+> +	if (reset_cb) {
+> +		status = reset_cb(cb_data);
+> +		goto done;
+> +	}
+> +
+>  	driver = pcie_port_find_service(dev, service);
+>  	if (driver && driver->reset_link) {
+>  		status = driver->reset_link(dev);
+> @@ -178,6 +185,7 @@ static pci_ers_result_t reset_link(struct pci_dev *dev, u32 service)
+>  		return PCI_ERS_RESULT_DISCONNECT;
+>  	}
+>  
+> +done:
+>  	if (status != PCI_ERS_RESULT_RECOVERED) {
+>  		pci_printk(KERN_DEBUG, dev, "link reset at upstream device %s failed\n",
+>  			pci_name(dev));
+> @@ -187,8 +195,11 @@ static pci_ers_result_t reset_link(struct pci_dev *dev, u32 service)
+>  	return status;
+>  }
+>  
+> -void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
+> -		      u32 service)
+> +pci_ers_result_t pcie_do_recovery_common(struct pci_dev *dev,
+> +				enum pci_channel_state state,
+> +				u32 service,
+> +				pci_ers_result_t (*reset_cb)(void *cb_data),
+> +				void *cb_data)
+>  {
+>  	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
+>  	struct pci_bus *bus;
+> @@ -209,7 +220,7 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
+>  		pci_walk_bus(bus, report_normal_detected, &status);
+>  
+>  	if (state == pci_channel_io_frozen) {
+> -		status = reset_link(dev, service);
+> +		status = reset_link(dev, service, reset_cb, cb_data);
+>  		if (status != PCI_ERS_RESULT_RECOVERED)
+>  			goto failed;
+>  	}
+> @@ -240,11 +251,20 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
+>  	pci_aer_clear_device_status(dev);
+>  	pci_cleanup_aer_uncorrect_error_status(dev);
+>  	pci_info(dev, "device recovery successful\n");
+> -	return;
+> +
+> +	return status;
+>  
+>  failed:
+>  	pci_uevent_ers(dev, PCI_ERS_RESULT_DISCONNECT);
+>  
+>  	/* TODO: Should kernel panic here? */
+>  	pci_info(dev, "device recovery failed\n");
 > +
 > +	return status;
 > +}
 > +
-> +/*
-> + * _DSM wrapper function to locate DPC port.
-> + * @pdev   : Device which received EDR event.
-> + *
-> + * returns pci_dev or NULL.
-> + */
-> +static struct pci_dev *acpi_locate_dpc_port(struct pci_dev *pdev)
+> +void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
+> +		      u32 service)
 > +{
-> +	struct acpi_device *adev = ACPI_COMPANION(&pdev->dev);
-> +	union acpi_object *obj;
-> +	u16 port;
-> +
-> +	obj = acpi_evaluate_dsm(adev->handle, &pci_acpi_dsm_guid, 5,
-> +				EDR_PORT_LOCATE_DSM, NULL);
-> +	if (!obj)
-> +		return pci_dev_get(pdev);
-> +
-> +	if (obj->type != ACPI_TYPE_INTEGER) {
-
-If this happens, it's a firmware defect, isn't it?  I think maybe we
-should warn here.  I know we warn below ("No valid port found"), but
-that doesn't give any clue about the fact that firmware screwed up.
-
-> +		ACPI_FREE(obj);
-> +		return NULL;
-> +	}
-> +
-> +	/*
-> +	 * Firmware returns DPC port BDF details in following format:
-> +	 *	15:8 = bus
-> +	 *	 7:3 = device
-> +	 *	 2:0 = function
-> +	 */
-> +	port = obj->integer.value;
-> +
-> +	ACPI_FREE(obj);
-> +
-> +	return pci_get_domain_bus_and_slot(pci_domain_nr(pdev->bus),
-> +					   PCI_BUS_NUM(port), port & 0xff);
-> +}
-> +
-> +/*
-> + * _OST wrapper function to let firmware know the status of EDR event.
-> + * @pdev   : Device used to send _OST.
-> + * @edev   : Device which experienced EDR event.
-> + * @status: Status of EDR event.
-> + */
-> +static int acpi_send_edr_status(struct pci_dev *pdev, struct pci_dev *edev,
-> +				u16 status)
-> +{
-> +	struct acpi_device *adev = ACPI_COMPANION(&pdev->dev);
-> +	u32 ost_status;
-> +
-> +	pci_dbg(pdev, "Sending EDR status :%#x\n", status);
-> +
-> +	ost_status =  PCI_DEVID(edev->bus->number, edev->devfn);
-> +	ost_status = (ost_status << 16) | status;
-> +
-> +	status = acpi_evaluate_ost(adev->handle,
-> +				   ACPI_NOTIFY_DISCONNECT_RECOVER,
-> +				   ost_status, NULL);
-> +	if (ACPI_FAILURE(status))
-> +		return -EINVAL;
-> +
-> +	return 0;
-> +}
-> +
-> +pci_ers_result_t edr_dpc_reset_link(void *cb_data)
-> +{
-> +	return dpc_reset_link_common(cb_data);
-> +}
-> +
-> +static void edr_handle_event(acpi_handle handle, u32 event, void *data)
-> +{
-> +	struct dpc_dev *dpc = data, ndpc;
-
-There's actually very little use of struct dpc_dev in this file.  I
-bet with a little elbow grease, we could remove it completely and just
-use the pci_dev * or maybe an opaque pointer.
-
-> +	struct pci_dev *pdev = dpc->pdev;
-> +	pci_ers_result_t estate = PCI_ERS_RESULT_DISCONNECT;
-> +	u16 status;
-> +
-> +	pci_info(pdev, "ACPI event %#x received\n", event);
-> +
-> +	if (event != ACPI_NOTIFY_DISCONNECT_RECOVER)
-> +		return;
-> +
-> +	/*
-> +	 * Check if _DSM(0xD) is available, and if present locate the
-> +	 * port which issued EDR event.
-> +	 */
-> +	pdev = acpi_locate_dpc_port(pdev);
-
-This function name should include "get" since it's part of the
-pci_dev_get()/pci_dev_put() sequence.
-
-> +	if (!pdev) {
-> +		pci_err(dpc->pdev, "No valid port found\n");
-> +		return;
-> +	}
-> +
-> +	if (pdev != dpc->pdev) {
-> +		pci_warn(pdev, "Initializing dpc again\n");
-> +		dpc_dev_init(pdev, &ndpc);
-
-This seems...  I'm not sure what.  I guess it's really just reading
-the DPC capability for use by dpc_process_error(), so maybe it's OK.
-But it's a little strange to read.
-
-Is this something we should be warning about?  I think the ECR says
-it's legitimate to return a child device, doesn't it?
-
-> +		dpc= &ndpc;
-
-Space before "=".
-
-> +	}
-> +
-> +	/*
-> +	 * If port does not support DPC, just send the OST:
-> +	 */
-> +	if (!dpc->cap_pos)
-> +		goto send_ost;
-> +
-> +	/* Check if there is a valid DPC trigger */
-> +	pci_read_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_STATUS, &status);
-> +	if (!(status & PCI_EXP_DPC_STATUS_TRIGGER)) {
-> +		pci_err(pdev, "Invalid DPC trigger %#010x\n", status);
-> +		goto send_ost;
-> +	}
-> +
-> +	dpc_process_error(dpc);
-> +
-> +	/* Clear AER registers */
-> +	pci_aer_clear_err_uncor_status(pdev);
-> +	pci_aer_clear_err_fatal_status(pdev);
-> +	pci_aer_clear_err_status_regs(pdev);
-> +
-> +	/*
-> +	 * Irrespective of whether the DPC event is triggered by
-> +	 * ERR_FATAL or ERR_NONFATAL, since the link is already down,
-> +	 * use the FATAL error recovery path for both cases.
-> +	 */
-> +	estate = pcie_do_recovery_common(pdev, pci_channel_io_frozen, -1,
-> +					 edr_dpc_reset_link, dpc);
-> +send_ost:
-> +
-> +	/* Use ACPI handle of DPC event device for sending EDR status */
-> +	dpc = data;
-
-I think it'd be clearer to reserve "dpc" for the device that received
-the notification and to which we send the status, and use a different
-"e_dpc" or something for the dpc_process_error() and related code.
-
-> +	/*
-> +	 * If recovery is successful, send _OST(0xF, BDF << 16 | 0x80)
-> +	 * to firmware. If not successful, send _OST(0xF, BDF << 16 | 0x81).
-> +	 */
-> +	if (estate == PCI_ERS_RESULT_RECOVERED)
-> +		acpi_send_edr_status(dpc->pdev, pdev, EDR_OST_SUCCESS);
-> +	else
-> +		acpi_send_edr_status(dpc->pdev, pdev, EDR_OST_FAILED);
-> +
-> +	pci_dev_put(pdev);
-> +}
-> +
-> +int pci_acpi_add_edr_notifier(struct pci_dev *pdev)
-> +{
-> +	struct acpi_device *adev = ACPI_COMPANION(&pdev->dev);
-> +	struct dpc_dev *dpc;
-> +	acpi_status astatus;
-> +	int status;
-> +
-> +	/*
-> +	 * Per the Downstream Port Containment Related Enhancements ECN to
-> +	 * the PCI Firmware Spec, r3.2, sec 4.5.1, table 4-6, EDR support
-> +	 * can only be enabled if DPC is controlled by firmware.
-> +	 *
-> +	 * TODO: Remove dependency on ACPI FIRMWARE_FIRST bit to
-> +	 * determine ownership of DPC between firmware or OS.
-
-Extend the comment to say how we *should* determine ownership.
-
-> +	 */
-> +	if (!pcie_aer_get_firmware_first(pdev) || pcie_ports_dpc_native)
-> +		return -ENODEV;
-> +
-> +	if (!adev)
-> +		return 0;
-> +
-> +	dpc = devm_kzalloc(&pdev->dev, sizeof(*dpc), GFP_KERNEL);
-
-This kzalloc should be in dpc.c, not here.
-
-And I don't see a corresponding free.
-
-> +	if (!dpc)
-> +		return -ENOMEM;
-> +
-> +	dpc_dev_init(pdev, dpc);
-> +
-> +	astatus = acpi_install_notify_handler(adev->handle,
-> +					      ACPI_SYSTEM_NOTIFY,
-> +					      edr_handle_event, dpc);
-> +	if (ACPI_FAILURE(astatus)) {
-> +		pci_err(pdev, "Install ACPI_SYSTEM_NOTIFY handler failed\n");
-> +		return -EBUSY;
-> +	}
-> +
-> +	status = acpi_enable_dpc_port(pdev, true);
-> +	if (status) {
-> +		pci_warn(pdev, "Enable DPC port failed\n");
-> +		acpi_remove_notify_handler(adev->handle,
-> +					   ACPI_SYSTEM_NOTIFY,
-> +					   edr_handle_event);
-> +		return status;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +void pci_acpi_remove_edr_notifier(struct pci_dev *pdev)
-> +{
-> +	struct acpi_device *adev = ACPI_COMPANION(&pdev->dev);
-> +
-> +	if (!adev)
-> +		return;
-> +
-> +	acpi_remove_notify_handler(adev->handle, ACPI_SYSTEM_NOTIFY,
-> +				   edr_handle_event);
-> +}
-> diff --git a/include/linux/pci-acpi.h b/include/linux/pci-acpi.h
-> index 62b7fdcc661c..a430e5fc50f3 100644
-> --- a/include/linux/pci-acpi.h
-> +++ b/include/linux/pci-acpi.h
-> @@ -112,6 +112,14 @@ extern const guid_t pci_acpi_dsm_guid;
->  #define RESET_DELAY_DSM			0x08
->  #define FUNCTION_DELAY_DSM		0x09
->  
-> +#ifdef CONFIG_PCIE_EDR
-> +int pci_acpi_add_edr_notifier(struct pci_dev *pdev);
-> +void pci_acpi_remove_edr_notifier(struct pci_dev *pdev);
-> +#else
-> +static inline int pci_acpi_add_edr_notifier(struct pci_dev *pdev) { return 0; }
-> +static inline void pci_acpi_remove_edr_notifier(struct pci_dev *pdev) { }
-> +#endif /* CONFIG_PCIE_EDR */
-> +
->  #else	/* CONFIG_ACPI */
->  static inline void acpi_pci_add_bus(struct pci_bus *bus) { }
->  static inline void acpi_pci_remove_bus(struct pci_bus *bus) { }
+> +	pcie_do_recovery_common(dev, state, service, NULL, NULL);
+>  }
 > -- 
 > 2.21.0
 > 
