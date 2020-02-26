@@ -2,183 +2,468 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D18A117090D
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2020 20:47:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D806F170A3F
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2020 22:13:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727296AbgBZTqx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 Feb 2020 14:46:53 -0500
-Received: from mail.willitsonline.com ([216.7.65.54]:56263 "EHLO
-        mail.willitsonline.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727252AbgBZTqx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 Feb 2020 14:46:53 -0500
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by mail.willitsonline.com (Postfix) with ESMTP id 91AC3111D8C
-        for <linux-pci@vger.kernel.org>; Wed, 26 Feb 2020 11:46:52 -0800 (PST)
-X-Virus-Scanned: Debian amavisd-new at iredmail2.willitsonline.com
-Received: from mail.willitsonline.com ([127.0.0.1])
-        by localhost (iredmail2.willitsonline.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id I4jTN0plhFCj for <linux-pci@vger.kernel.org>;
-        Wed, 26 Feb 2020 11:46:52 -0800 (PST)
-Received: from _ (localhost.localdomain [127.0.0.1])
-        (Authenticated sender: bluerocksaddles@willitsonline.com)
-        by mail.willitsonline.com (Postfix) with ESMTPSA id AF76A111D7A;
-        Wed, 26 Feb 2020 11:46:36 -0800 (PST)
+        id S1727486AbgBZVNg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 Feb 2020 16:13:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45234 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727446AbgBZVNg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 26 Feb 2020 16:13:36 -0500
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65A562072D;
+        Wed, 26 Feb 2020 21:13:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582751614;
+        bh=QB7sm49iV1NEqLzd36KkS8ak6oX92ZTcl2ZapBbZzFw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=0pjj0F+0DG+5XSigTyoDV+GCTlHE1e5y4KxeIrPZLvnIdMg8SIOqQWjdIT/3LxCCU
+         tZwD6K60/Ky9+Cj70G/UCtnh3vYXQohfVa6CTbM29RcVLVWXFrj0Qcc2QHC32YmtVG
+         raHaSaz/+uK2CH5lcWUYw/9/xSzJLz2+pWmZEQ4k=
+Date:   Wed, 26 Feb 2020 15:13:32 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com
+Subject: Re: [PATCH v15 3/5] PCI/EDR: Export AER, DPC and error recovery
+ functions
+Message-ID: <20200226211332.GA147989@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 26 Feb 2020 11:46:36 -0800
-From:   bluerocksaddles@willitsonline.com
-To:     "Michael ." <keltoiboy@gmail.com>
-Cc:     Philip Langdale <philipl@overt.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Trevor Jacobs <trevor_jacobs@aol.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kris Cleveland <tridentperfusion@yahoo.com>,
-        Morgan Klym <moklym@gmail.com>,
-        Pierre Ossman <pierre@ossman.eu>,
-        Maxim Levitsky <maximlevitsky@gmail.com>,
-        linux-mmc@vger.kernel.org
-Subject: Re: PCI device function not being enumerated [Was: PCMCIA not working
- on Panasonic Toughbook CF-29]
-In-Reply-To: <CAFjuqNh8ja3maOFev4S9zOSi04yAvnyEo2GTTxjr1pbQvmAW=A@mail.gmail.com>
-References: <20191029170250.GA43972@google.com>
- <20200222165617.GA207731@google.com>
- <CAPDyKFq_exHufHyibFCjS78PTZ7duS9ZSt3vi18CNM6+jMmwnw@mail.gmail.com>
- <20200226011310.GA2116625@rani.riverdale.lan>
- <CAFjuqNg_NW7hcssWmMTtt=ioY143qn76ooT7GRhxEEe9ZVCqeQ@mail.gmail.com>
- <6e9db1f6-60c4-872b-c7c8-96ee411aa3ca@aol.com>
- <20200226045104.GA2191053@rani.riverdale.lan>
- <20200225212054.09865e0b@fido6>
- <CAFjuqNh8ja3maOFev4S9zOSi04yAvnyEo2GTTxjr1pbQvmAW=A@mail.gmail.com>
-Message-ID: <edab20f582d4402baeca9bb80e612ee2@willitsonline.com>
-X-Sender: bluerocksaddles@willitsonline.com
-User-Agent: Roundcube Webmail
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <909a4ca0-58ac-8f8c-ff3b-ee48acda26c8@linux.intel.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Somewhere in these messages is a clue....in that SD reader was involved.
+On Wed, Feb 26, 2020 at 11:30:43AM -0800, Kuppuswamy Sathyanarayanan wrote:
+> On 2/25/20 5:02 PM, Bjorn Helgaas wrote:
+> > On Thu, Feb 13, 2020 at 10:20:15AM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> > > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > > ...
 
-MK 4 and 5 have SD whilst MK 1, 2 and three do not.
+> > > +int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
+> > > +{
+> > > +	if (pcie_aer_get_firmware_first(dev))
+> > > +		return -EIO;
+> > > +
+> > > +	return pci_aer_clear_err_status_regs(dev);
+> > > +}
+> > We started with these:
+> > 
+> >    pci_cleanup_aer_uncorrect_error_status()
+> >    pci_aer_clear_fatal_status()
+> >    pci_cleanup_aer_error_status_regs()
+> > 
+> > This was already a mess.  They do basically similar things, but the
+> > function names are a complete jumble.  Let's start with preliminary
+> > patches to name them consistently, e.g.,
+> > 
+> >    pci_aer_clear_nonfatal_status()
+> >    pci_aer_clear_fatal_status()
+> >    pci_aer_clear_status()
+> > 
+> > Now, for EDR you eventually add this in edr_handle_event():
+> > 
+> >    edr_handle_event()
+> >    {
+> >      ...
+> >      pci_aer_clear_err_uncor_status(pdev);
+> >      pci_aer_clear_err_fatal_status(pdev);
+> >      pci_aer_clear_err_status_regs(pdev);
+> > 
+> > I see that this path needs to clear the status even in the
+> > firmware-first case, so you do need some change for that.  But
+> > pci_aer_clear_err_status_regs() does exactly the same thing as
+> > pci_aer_clear_err_uncor_status() and pci_aer_clear_err_fatal_status()
+> > plus a little more (clearing PCI_ERR_ROOT_STATUS), so it should be
+> > sufficient to just call pci_aer_clear_err_status_regs().
+> > 
+> > So I don't think you need to make wrappers for
+> > pci_aer_clear_nonfatal_status() and pci_aer_clear_fatal_status() at
+> > all since they're not needed by the EDR path.
+> > 
+> > You *do* need a wrapper for pci_aer_clear_status(), but instead of
+> > just adding random words ("err", "regs") to the name, please name it
+> > something like pci_aer_raw_clear_status() as a hint that it skips
+> > some sort of check.
+
+What do you think about the above?
+
+> > I would split this into a separate patch.  This patch contains a bunch
+> > of things that aren't really related except that they're needed for
+> > EDR.  I think it will be more readable if each patch just does one
+> > piece of it.
+>
+> Ok. I will split it into multiple patches. I just grouped them together
+> as a preparatory patch for adding EDR support.
+
+Sounds good.
+
+> > > diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+> > > index 99fca8400956..acae12dbf9ff 100644
+> > > --- a/drivers/pci/pcie/dpc.c
+> > > +++ b/drivers/pci/pcie/dpc.c
+> > > @@ -15,15 +15,9 @@
+> > >   #include <linux/pci.h>
+> > >   #include "portdrv.h"
+> > > +#include "dpc.h"
+> > >   #include "../pci.h"
+> > > -struct dpc_dev {
+> > > -	struct pci_dev		*pdev;
+> > > -	u16			cap_pos;
+> > > -	bool			rp_extensions;
+> > > -	u8			rp_log_size;
+> > > -};
+
+> > Adding dpc.h shouldn't be in this patch because there's no need for a
+> > separate dpc.h file yet -- it's only included this one place.  I'm not
+> > positive a dpc.h is needed at all -- see comments on patch [4/5].
+
+> Yes, if we use pdev in dpc functions used by EDR code, we should
+> not need it.
+
+I think struct dpc_dev might be more trouble than it's worth.  I
+attached a possible patch at the end that folds the 25 bits of
+DPC-related info into the struct pci_dev and gets rid of struct
+dpc_dev completely.  I compiled it but haven't tested it.
+
+> > > -static pci_ers_result_t dpc_reset_link(struct pci_dev *pdev)
+> > > +pci_ers_result_t dpc_reset_link_common(struct dpc_dev *dpc)
+> > >   {
+> > I don't see why you need to split this into dpc_reset_link_common()
+> > and dpc_reset_link().  IIUC, you split it so the DPC driver path can
+> > supply a pci_dev * via
+> > 
+> >    dpc_handler
+> >      pcie_do_recovery
+> >        pcie_do_recovery_common(..., NULL, NULL)
+> >          reset_link(..., NULL, NULL)
+> >            driver->reset_link(pdev)
+> >              dpc_reset_link(pdev)
+> >                dpc = to_dpc_dev(pdev)
+>
+> I have split it mainly because of dpc_dev dependency. If we use
+> dpc_reset_link(pdev) directly it will try to find related dpc_dev using
+> to_dpc_dev() function. But this will not work in FF mode where DPC
+> is handled by firmware and hence we will not have DPC pcie_port
+> service driver enumerated for this device.
+
+The patch below might help this case.
+
+> > > +void dpc_dev_init(struct pci_dev *pdev, struct dpc_dev *dpc)
+> > > +{
+> > Can you include the kzalloc() here so we don't have to do the alloc in
+> > pci_acpi_add_edr_notifier()?
+
+> Currently dpc driver allocates dpc_dev structure using pcie_port->device
+> reference in its devm_alloc* calls. But if we allocate dpc_dev inside
+> this function we should use pci_dev->dev reference for it. Is it OK to us
+> pci_dev->dev reference for DPC driver allocations ?
+
+I think the patch below would solve this issue too because we don't
+need the alloc at all.
+
+> > I think there's also a leak there: pci_acpi_add_edr_notifier()
+> > kzallocs a struct dpc_dev, but I don't see a corresponding kfree().
+
+> since we are using devm_allocs, It should be freed when removing
+> the PCI device right?
+
+Oh, right, sorry.
 
 
+commit 7fb9f4495711 ("PCI/DPC: Move data to struct pci_dev")
+Author: Bjorn Helgaas <bhelgaas@google.com>
+Date:   Wed Feb 26 08:00:55 2020 -0600
 
-On 2020-02-25 22:10, Michael . wrote:
->> Someone with access to real hardware could
->> easily experiment with changing that magic value and seeing if it
->> changes which function is disabled.
-> 
-> One of our members has offered to supply a machine to a dev that can
-> use it to test any theory.
-> 
-> It is nearly beyond the scope of the majority of us to do much more
-> than just testing. We appreciate all the effort the devs put in and
-> are willing to help in anyway we can but we aren't kernel devs.
-> 
-> I, personally, use Debian. Others use Debian based distros such as MX
-> and Mint. We have been able to test many different distros such as
-> those listed in other comments but don't have the skills or expertise
-> to do much more. It is our hope that this discussion and subsequent
-> effort may enable others who prefer distros other than Debian based
-> distros can use a CF-29 (and possibly earlier) Toughbook with the
-> distro of their choice without having to rebuild a kernel so they can
-> use hardware that worked back in 2010. To do this the fix needs to be
-> at the kernel dev level not a local enthusiast level because while I
-> can rebuild a Debian kernel I can't rebuild a Fedora or Arch or
-> Slackware kernel.
-> 
-> I did a search about this issue before I made initial contact late
-> last year and the issue was discovered on more than Toughbooks and
-> posted about on various sites not long after distros moved from
-> 2.6.32. It seems back then people just got new machines that didn't
-> have a 2nd slot so the search for an answer stopped. Us Toughbook
-> users are a loyal group we use our machines because they are exactly
-> what we need and they take alot of "punishment" taht other machines
-> simply cannot handle. Our machines are used rather than recycled or
-> worse still just left to sit in waste management facilities in a
-> country that the western world dumps its rubbish in, we are Linux and
-> Toughbook enthusiasts and hope to be able to keep our machines running
-> for many years to come with all their native capabilities working as
-> they were designed to but using a modern Linux instead of Windows XP
-> or Windows 7. (that wasn't a pep talk, its just an explanation of why
-> we are passionate about this).
-> 
-> Let us know what you need us to do, we will let you know if we are
-> capable of it and give you any feedback you ask for. Over the weekend
-> I will try to rebuild a Debian kernel with the relevant option
-> disabled, provide it to my peers for testing and report back here what
-> the outcome is.
-> 
-> Thank you all for all your time and effort, it is truly appreciated.
-> Cheers.
-> Michael.
-> 
-> On 26/02/2020, Philip Langdale <philipl@overt.org> wrote:
->> On Tue, 25 Feb 2020 23:51:05 -0500
->> Arvind Sankar <nivedita@alum.mit.edu> wrote:
->> 
->>> On Tue, Feb 25, 2020 at 09:12:48PM -0600, Trevor Jacobs wrote:
->>> > That's correct, I tested a bunch of the old distros including
->>> > slackware, and 2.6.32 is where the problem began.
->>> >
->>> > Also, the Panasonic Toughbook CF-29s effected that we tested are
->>> > the later marks, MK4 and MK5 for certain. The MK2 CF-29 worked just
->>> > fine because it has different hardware supporting the PCMCIA slots.
->>> > I have not tested a MK3 but suspect it would work ok as it also
->>> > uses the older hardware.
->>> >
->>> > Thanks for your help guys!
->>> > Trevor
->>> >
->>> 
->>> Right, the distros probably all enabled MMC_RICOH_MMC earlier than
->>> upstream. Can you test a custom kernel based off your distro kernel
->>> but just disabling that config option? That's probably the easiest 
->>> fix
->>> currently, even though not ideal. Perhaps there should be a command
->>> line option to disable specific pci quirks to make this easier.
->>> 
->>> An ideal fix is I feel hard, given this quirk is based on 
->>> undocumented
->>> config registers -- it worked on Dell machines (that's where the
->>> original authors seem to have gotten their info from), perhaps they
->>> had only one Cardbus slot, but the code ends up disabling your second
->>> Cardbus slot instead of disabling the MMC controller.
->> 
->> Keeping in mind that this was 12+ years ago, you can at least still
->> read the original discussion in the archives. My original Dell laptop
->> (XPS m1330) had no cardbus slots at all, and used the r5c832
->> controller. There was a subsequent change that I was not involved with
->> which added support for the rl5c476, which is the problematic device 
->> in
->> this thread.
->> 
->> As a hypothesis, based on the observed behaviour, the quirk (keeping 
->> in
->> mind that these are magic configuration register values that are not
->> documented) probably disabled function 1, regardless of what it is, 
->> and
->> the original example that motivated adding the rl5c476 quirk probably
->> had one cardbus slot and the card reader functions were all moved up
->> one, or something along those lines.
->> 
->> Truly making this smart would then involve having the code enumerate
->> the pci functions and identify the one that is the unwanted mmc
->> controller, based on function ID or class or whatever, and then
->> disabling that (assuming the magic can be reverse engineered: eg, the
->> current magic ORs the disable flag with 0x02 - chances are, that's the
->> index of the function: 0x01 would be the 0th function, 0x04 would be
->> the 2nd function, etc). Someone with access to real hardware could
->> easily experiment with changing that magic value and seeing if it
->> changes which function is disabled.
->> 
->> Good luck.
->> 
->> --phil
->> 
+    PCI/DPC: Move data to struct pci_dev
+    
+
+diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+index e06f42f58d3d..6b116d7fdb89 100644
+--- a/drivers/pci/pcie/dpc.c
++++ b/drivers/pci/pcie/dpc.c
+@@ -17,13 +17,6 @@
+ #include "portdrv.h"
+ #include "../pci.h"
+ 
+-struct dpc_dev {
+-	struct pcie_device	*dev;
+-	u16			cap_pos;
+-	bool			rp_extensions;
+-	u8			rp_log_size;
+-};
+-
+ static const char * const rp_pio_error_string[] = {
+ 	"Configuration Request received UR Completion",	 /* Bit Position 0  */
+ 	"Configuration Request received CA Completion",	 /* Bit Position 1  */
+@@ -46,63 +39,42 @@ static const char * const rp_pio_error_string[] = {
+ 	"Memory Request Completion Timeout",		 /* Bit Position 18 */
+ };
+ 
+-static struct dpc_dev *to_dpc_dev(struct pci_dev *dev)
+-{
+-	struct device *device;
+-
+-	device = pcie_port_find_device(dev, PCIE_PORT_SERVICE_DPC);
+-	if (!device)
+-		return NULL;
+-	return get_service_data(to_pcie_device(device));
+-}
+-
+ void pci_save_dpc_state(struct pci_dev *dev)
+ {
+-	struct dpc_dev *dpc;
+ 	struct pci_cap_saved_state *save_state;
+ 	u16 *cap;
+ 
+ 	if (!pci_is_pcie(dev))
+ 		return;
+ 
+-	dpc = to_dpc_dev(dev);
+-	if (!dpc)
+-		return;
+-
+ 	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_DPC);
+ 	if (!save_state)
+ 		return;
+ 
+ 	cap = (u16 *)&save_state->cap.data[0];
+-	pci_read_config_word(dev, dpc->cap_pos + PCI_EXP_DPC_CTL, cap);
++	pci_read_config_word(dev, dev->dpc_cap + PCI_EXP_DPC_CTL, cap);
+ }
+ 
+ void pci_restore_dpc_state(struct pci_dev *dev)
+ {
+-	struct dpc_dev *dpc;
+ 	struct pci_cap_saved_state *save_state;
+ 	u16 *cap;
+ 
+ 	if (!pci_is_pcie(dev))
+ 		return;
+ 
+-	dpc = to_dpc_dev(dev);
+-	if (!dpc)
+-		return;
+-
+ 	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_DPC);
+ 	if (!save_state)
+ 		return;
+ 
+ 	cap = (u16 *)&save_state->cap.data[0];
+-	pci_write_config_word(dev, dpc->cap_pos + PCI_EXP_DPC_CTL, *cap);
++	pci_write_config_word(dev, dev->dpc_cap + PCI_EXP_DPC_CTL, *cap);
+ }
+ 
+-static int dpc_wait_rp_inactive(struct dpc_dev *dpc)
++static int dpc_wait_rp_inactive(struct pci_dev *pdev)
+ {
+ 	unsigned long timeout = jiffies + HZ;
+-	struct pci_dev *pdev = dpc->dev->port;
+-	u16 cap = dpc->cap_pos, status;
++	u16 cap = pdev->dpc_cap, status;
+ 
+ 	pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
+ 	while (status & PCI_EXP_DPC_RP_BUSY &&
+@@ -119,15 +91,13 @@ static int dpc_wait_rp_inactive(struct dpc_dev *dpc)
+ 
+ static pci_ers_result_t dpc_reset_link(struct pci_dev *pdev)
+ {
+-	struct dpc_dev *dpc;
+ 	u16 cap;
+ 
+ 	/*
+ 	 * DPC disables the Link automatically in hardware, so it has
+ 	 * already been reset by the time we get here.
+ 	 */
+-	dpc = to_dpc_dev(pdev);
+-	cap = dpc->cap_pos;
++	cap = pdev->dpc_cap;
+ 
+ 	/*
+ 	 * Wait until the Link is inactive, then clear DPC Trigger Status
+@@ -135,7 +105,7 @@ static pci_ers_result_t dpc_reset_link(struct pci_dev *pdev)
+ 	 */
+ 	pcie_wait_for_link(pdev, false);
+ 
+-	if (dpc->rp_extensions && dpc_wait_rp_inactive(dpc))
++	if (pdev->dpc_rp_extensions && dpc_wait_rp_inactive(pdev))
+ 		return PCI_ERS_RESULT_DISCONNECT;
+ 
+ 	pci_write_config_word(pdev, cap + PCI_EXP_DPC_STATUS,
+@@ -147,10 +117,9 @@ static pci_ers_result_t dpc_reset_link(struct pci_dev *pdev)
+ 	return PCI_ERS_RESULT_RECOVERED;
+ }
+ 
+-static void dpc_process_rp_pio_error(struct dpc_dev *dpc)
++static void dpc_process_rp_pio_error(struct pci_dev *pdev)
+ {
+-	struct pci_dev *pdev = dpc->dev->port;
+-	u16 cap = dpc->cap_pos, dpc_status, first_error;
++	u16 cap = pdev->dpc_cap, dpc_status, first_error;
+ 	u32 status, mask, sev, syserr, exc, dw0, dw1, dw2, dw3, log, prefix;
+ 	int i;
+ 
+@@ -175,7 +144,7 @@ static void dpc_process_rp_pio_error(struct dpc_dev *dpc)
+ 				first_error == i ? " (First)" : "");
+ 	}
+ 
+-	if (dpc->rp_log_size < 4)
++	if (pdev->dpc_rp_log_size < 4)
+ 		goto clear_status;
+ 	pci_read_config_dword(pdev, cap + PCI_EXP_DPC_RP_PIO_HEADER_LOG,
+ 			      &dw0);
+@@ -188,12 +157,12 @@ static void dpc_process_rp_pio_error(struct dpc_dev *dpc)
+ 	pci_err(pdev, "TLP Header: %#010x %#010x %#010x %#010x\n",
+ 		dw0, dw1, dw2, dw3);
+ 
+-	if (dpc->rp_log_size < 5)
++	if (pdev->dpc_rp_log_size < 5)
+ 		goto clear_status;
+ 	pci_read_config_dword(pdev, cap + PCI_EXP_DPC_RP_PIO_IMPSPEC_LOG, &log);
+ 	pci_err(pdev, "RP PIO ImpSpec Log %#010x\n", log);
+ 
+-	for (i = 0; i < dpc->rp_log_size - 5; i++) {
++	for (i = 0; i < pdev->dpc_rp_log_size - 5; i++) {
+ 		pci_read_config_dword(pdev,
+ 			cap + PCI_EXP_DPC_RP_PIO_TLPPREFIX_LOG, &prefix);
+ 		pci_err(pdev, "TLP Prefix Header: dw%d, %#010x\n", i, prefix);
+@@ -226,10 +195,9 @@ static int dpc_get_aer_uncorrect_severity(struct pci_dev *dev,
+ 
+ static irqreturn_t dpc_handler(int irq, void *context)
+ {
++	struct pci_dev *pdev = context;
++	u16 cap = pdev->dpc_cap, status, source, reason, ext_reason;
+ 	struct aer_err_info info;
+-	struct dpc_dev *dpc = context;
+-	struct pci_dev *pdev = dpc->dev->port;
+-	u16 cap = dpc->cap_pos, status, source, reason, ext_reason;
+ 
+ 	pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
+ 	pci_read_config_word(pdev, cap + PCI_EXP_DPC_SOURCE_ID, &source);
+@@ -248,8 +216,8 @@ static irqreturn_t dpc_handler(int irq, void *context)
+ 				     "reserved error");
+ 
+ 	/* show RP PIO error detail information */
+-	if (dpc->rp_extensions && reason == 3 && ext_reason == 0)
+-		dpc_process_rp_pio_error(dpc);
++	if (pdev->dpc_rp_extensions && reason == 3 && ext_reason == 0)
++		dpc_process_rp_pio_error(pdev);
+ 	else if (reason == 0 &&
+ 		 dpc_get_aer_uncorrect_severity(pdev, &info) &&
+ 		 aer_get_device_error_info(pdev, &info)) {
+@@ -266,9 +234,8 @@ static irqreturn_t dpc_handler(int irq, void *context)
+ 
+ static irqreturn_t dpc_irq(int irq, void *context)
+ {
+-	struct dpc_dev *dpc = (struct dpc_dev *)context;
+-	struct pci_dev *pdev = dpc->dev->port;
+-	u16 cap = dpc->cap_pos, status;
++	struct pci_dev *pdev = context;
++	u16 cap = pdev->dpc_cap, status;
+ 
+ 	pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
+ 
+@@ -285,7 +252,6 @@ static irqreturn_t dpc_irq(int irq, void *context)
+ #define FLAG(x, y) (((x) & (y)) ? '+' : '-')
+ static int dpc_probe(struct pcie_device *dev)
+ {
+-	struct dpc_dev *dpc;
+ 	struct pci_dev *pdev = dev->port;
+ 	struct device *device = &dev->device;
+ 	int status;
+@@ -294,43 +260,37 @@ static int dpc_probe(struct pcie_device *dev)
+ 	if (pcie_aer_get_firmware_first(pdev) && !pcie_ports_dpc_native)
+ 		return -ENOTSUPP;
+ 
+-	dpc = devm_kzalloc(device, sizeof(*dpc), GFP_KERNEL);
+-	if (!dpc)
+-		return -ENOMEM;
+-
+-	dpc->cap_pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_DPC);
+-	dpc->dev = dev;
+-	set_service_data(dev, dpc);
++	pdev->dpc_cap = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_DPC);
+ 
+ 	status = devm_request_threaded_irq(device, dev->irq, dpc_irq,
+ 					   dpc_handler, IRQF_SHARED,
+-					   "pcie-dpc", dpc);
++					   "pcie-dpc", pdev);
+ 	if (status) {
+ 		pci_warn(pdev, "request IRQ%d failed: %d\n", dev->irq,
+ 			 status);
+ 		return status;
+ 	}
+ 
+-	pci_read_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CAP, &cap);
+-	pci_read_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL, &ctl);
++	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CAP, &cap);
++	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl);
+ 
+-	dpc->rp_extensions = (cap & PCI_EXP_DPC_CAP_RP_EXT);
+-	if (dpc->rp_extensions) {
+-		dpc->rp_log_size = (cap & PCI_EXP_DPC_RP_PIO_LOG_SIZE) >> 8;
+-		if (dpc->rp_log_size < 4 || dpc->rp_log_size > 9) {
++	pdev->dpc_rp_extensions = (cap & PCI_EXP_DPC_CAP_RP_EXT) ? 1 : 0;
++	if (pdev->dpc_rp_extensions) {
++		pdev->dpc_rp_log_size = (cap & PCI_EXP_DPC_RP_PIO_LOG_SIZE) >> 8;
++		if (pdev->dpc_rp_log_size < 4 || pdev->dpc_rp_log_size > 9) {
+ 			pci_err(pdev, "RP PIO log size %u is invalid\n",
+-				dpc->rp_log_size);
+-			dpc->rp_log_size = 0;
++				pdev->dpc_rp_log_size);
++			pdev->dpc_rp_log_size = 0;
+ 		}
+ 	}
+ 
+ 	ctl = (ctl & 0xfff4) | PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN;
+-	pci_write_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL, ctl);
++	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl);
+ 
+ 	pci_info(pdev, "error containment capabilities: Int Msg #%d, RPExt%c PoisonedTLP%c SwTrigger%c RP PIO Log %d, DL_ActiveErr%c\n",
+ 		 cap & PCI_EXP_DPC_IRQ, FLAG(cap, PCI_EXP_DPC_CAP_RP_EXT),
+ 		 FLAG(cap, PCI_EXP_DPC_CAP_POISONED_TLP),
+-		 FLAG(cap, PCI_EXP_DPC_CAP_SW_TRIGGER), dpc->rp_log_size,
++		 FLAG(cap, PCI_EXP_DPC_CAP_SW_TRIGGER), pdev->dpc_rp_log_size,
+ 		 FLAG(cap, PCI_EXP_DPC_CAP_DL_ACTIVE));
+ 
+ 	pci_add_ext_cap_save_buffer(pdev, PCI_EXT_CAP_ID_DPC, sizeof(u16));
+@@ -339,13 +299,12 @@ static int dpc_probe(struct pcie_device *dev)
+ 
+ static void dpc_remove(struct pcie_device *dev)
+ {
+-	struct dpc_dev *dpc = get_service_data(dev);
+ 	struct pci_dev *pdev = dev->port;
+ 	u16 ctl;
+ 
+-	pci_read_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL, &ctl);
++	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl);
+ 	ctl &= ~(PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN);
+-	pci_write_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL, ctl);
++	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl);
+ }
+ 
+ static struct pcie_port_service_driver dpcdriver = {
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 3840a541a9de..a0b7e7a53741 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -444,6 +444,11 @@ struct pci_dev {
+ 	const struct attribute_group **msi_irq_groups;
+ #endif
+ 	struct pci_vpd *vpd;
++#ifdef CONFIG_PCIE_DPC
++	u16		dpc_cap;
++	unsigned int	dpc_rp_extensions:1;
++	u8		dpc_rp_log_size;
++#endif
+ #ifdef CONFIG_PCI_ATS
+ 	union {
+ 		struct pci_sriov	*sriov;		/* PF: SR-IOV info */
