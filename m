@@ -2,256 +2,294 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A1DEF16FE32
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2020 12:48:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EEFCE16FE84
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2020 12:59:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728380AbgBZLr7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 Feb 2020 06:47:59 -0500
-Received: from foss.arm.com ([217.140.110.172]:34730 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727590AbgBZLr7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 26 Feb 2020 06:47:59 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 82E5B1FB;
-        Wed, 26 Feb 2020 03:47:58 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1A3F43FA00;
-        Wed, 26 Feb 2020 03:47:56 -0800 (PST)
-Date:   Wed, 26 Feb 2020 11:47:47 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     longli@linuxonhyperv.com
-Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Long Li <longli@microsoft.com>
-Subject: Re: [Patch v5 1/2] PCI: hv: Decouple the func definition in
- hv_dr_state from VSP message
-Message-ID: <20200226114731.GA18289@e121166-lin.cambridge.arm.com>
-References: <1582693568-64759-1-git-send-email-longli@linuxonhyperv.com>
+        id S1726388AbgBZL7f (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 Feb 2020 06:59:35 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:1069 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbgBZL7e (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 Feb 2020 06:59:34 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e565d970000>; Wed, 26 Feb 2020 03:59:19 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 26 Feb 2020 03:59:32 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 26 Feb 2020 03:59:32 -0800
+Received: from [10.25.74.250] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 26 Feb
+ 2020 11:59:28 +0000
+Subject: Re: [PATCH V3 5/5] PCI: pci-epf-test: Add support to defer core
+ initialization
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <andrew.murray@arm.com>, <bhelgaas@google.com>, <kishon@ti.com>,
+        <thierry.reding@gmail.com>, <Jisheng.Zhang@synaptics.com>,
+        <jonathanh@nvidia.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20200217121036.3057-1-vidyas@nvidia.com>
+ <20200217121036.3057-6-vidyas@nvidia.com>
+ <20200225120832.GA7710@e121166-lin.cambridge.arm.com>
+ <ac537e94-7ec8-de61-322a-8a8c7ff48ac5@nvidia.com>
+ <20200226100749.GA13197@e121166-lin.cambridge.arm.com>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <ad4eb93b-0c99-42f8-d1ee-3e5513b9be0a@nvidia.com>
+Date:   Wed, 26 Feb 2020 17:29:25 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1582693568-64759-1-git-send-email-longli@linuxonhyperv.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200226100749.GA13197@e121166-lin.cambridge.arm.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1582718359; bh=ATXt1WS4GNEvZyxJqERlqZmbCuP69KF1XDahM/zOBOA=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=nEMzr1EI2esFJmbzUY+7K4QW8obtsb1d/9DM91uPJK/uKxXQNtd6vY1tL0Wop9clg
+         jecwP6OyCgdfkMX/sBjhHYAJjwkmTuGctAvgJxme6+dhuOM38JJBMTVGJBpJoOp3l4
+         79pa/S6h6L7ClkKT036sXC6lozMpae0+pcmX4x+CYR+e+r2C16DJ16x4rzUzL8cICa
+         UXnUcPEWnaE7W8UK7CVvziwfEQSpT7u3r7I7upQCyLsvgrRWZdueQ0g2qpcyDc/WXf
+         W5qLSB53Wj/ACa9ybnrLI4qlMkXZ/WrzOYLx2pK6TR0685s4YUi5baFXxoHtXrIgNH
+         PrA9VLVMu3MGw==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 09:06:07PM -0800, longli@linuxonhyperv.com wrote:
-> From: Long Li <longli@microsoft.com>
-> 
-> hv_dr_state is used to find present PCI devices on the bus. The structure
-> reuses struct pci_function_description from VSP message to describe a
-> device.
-> 
-> To prepare support for pci_function_description v2, decouple this
-> dependence in hv_dr_state so it can work with both v1 and v2 VSP messages.
-> 
-> There is no functionality change.
-> 
-> Signed-off-by: Long Li <longli@microsoft.com>
-> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-> ---
-> Changes
-> v2: Changed some spaces to tabs, changed failure code to -ENOMEM
-> v3: Revised comment for function hv_pci_devices_present(), reformatted patch title
-> v4: Fixed spelling
-> v5: Rebased to current tree
-> 
->  drivers/pci/controller/pci-hyperv.c | 100 +++++++++++++++++++++++++-----------
->  1 file changed, 70 insertions(+), 30 deletions(-)
 
-Applied the series to pci/hv for v5.7.
 
+On 2/26/2020 3:37 PM, Lorenzo Pieralisi wrote:
+> External email: Use caution opening links or attachments
+> 
+> 
+> On Tue, Feb 25, 2020 at 11:43:07PM +0530, Vidya Sagar wrote:
+>>
+>>
+>> On 2/25/2020 5:38 PM, Lorenzo Pieralisi wrote:
+>>> External email: Use caution opening links or attachments
+>>>
+>>>
+>>> On Mon, Feb 17, 2020 at 05:40:36PM +0530, Vidya Sagar wrote:
+>>>> Add support to defer core initialization and to receive a notifier
+>>>> when core is ready to accommodate platforms where core is not for
+>>>> initialization untile reference clock from host is available.
+>>>
+>>> I don't understand this commit log, please reword it and fix
+>>> the typos, I would merge it then, thanks.
+>> Would the following be ok?
+>>
+>> Add support to defer DWC core initialization for the endpoint mode of
+> 
+> I removed "DWC" since this is not what this patch is actually doing.
+> 
+>> operation. Initialization would resume based on the notifier
+>> mechanism. This would enable support for implementations like Tegra194
+>> for endpoint mode operation, where the core initialization needs to be
+>> deferred until the PCIe reference clock is available from the host
+>> system.
+>>
+>> If it is ok, I'll send new patch series with this commit log.
+> 
+> No need, merged in pci/endpoint for v5.7, thanks.
 Thanks,
-Lorenzo
+Vidya Sagar
 
 > 
-> index 15011a3..dea197f 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -505,10 +505,24 @@ struct hv_dr_work {
->  	struct hv_pcibus_device *bus;
->  };
->  
-> +struct hv_pcidev_description {
-> +	u16	v_id;	/* vendor ID */
-> +	u16	d_id;	/* device ID */
-> +	u8	rev;
-> +	u8	prog_intf;
-> +	u8	subclass;
-> +	u8	base_class;
-> +	u32	subsystem_id;
-> +	union	win_slot_encoding win_slot;
-> +	u32	ser;	/* serial number */
-> +	u32	flags;
-> +	u16	virtual_numa_node;
-> +};
-> +
->  struct hv_dr_state {
->  	struct list_head list_entry;
->  	u32 device_count;
-> -	struct pci_function_description func[0];
-> +	struct hv_pcidev_description func[0];
->  };
->  
->  enum hv_pcichild_state {
-> @@ -525,7 +539,7 @@ struct hv_pci_dev {
->  	refcount_t refs;
->  	enum hv_pcichild_state state;
->  	struct pci_slot *pci_slot;
-> -	struct pci_function_description desc;
-> +	struct hv_pcidev_description desc;
->  	bool reported_missing;
->  	struct hv_pcibus_device *hbus;
->  	struct work_struct wrk;
-> @@ -1877,7 +1891,7 @@ static void q_resource_requirements(void *context, struct pci_response *resp,
->   * Return: Pointer to the new tracking struct
->   */
->  static struct hv_pci_dev *new_pcichild_device(struct hv_pcibus_device *hbus,
-> -		struct pci_function_description *desc)
-> +		struct hv_pcidev_description *desc)
->  {
->  	struct hv_pci_dev *hpdev;
->  	struct pci_child_message *res_req;
-> @@ -1988,7 +2002,7 @@ static void pci_devices_present_work(struct work_struct *work)
->  {
->  	u32 child_no;
->  	bool found;
-> -	struct pci_function_description *new_desc;
-> +	struct hv_pcidev_description *new_desc;
->  	struct hv_pci_dev *hpdev;
->  	struct hv_pcibus_device *hbus;
->  	struct list_head removed;
-> @@ -2107,17 +2121,15 @@ static void pci_devices_present_work(struct work_struct *work)
->  }
->  
->  /**
-> - * hv_pci_devices_present() - Handles list of new children
-> + * hv_pci_start_relations_work() - Queue work to start device discovery
->   * @hbus:	Root PCI bus, as understood by this driver
-> - * @relations:	Packet from host listing children
-> + * @dr:		The list of children returned from host
->   *
-> - * This function is invoked whenever a new list of devices for
-> - * this bus appears.
-> + * Return:  0 on success, -errno on failure
->   */
-> -static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
-> -				   struct pci_bus_relations *relations)
-> +static int hv_pci_start_relations_work(struct hv_pcibus_device *hbus,
-> +				       struct hv_dr_state *dr)
->  {
-> -	struct hv_dr_state *dr;
->  	struct hv_dr_work *dr_wrk;
->  	unsigned long flags;
->  	bool pending_dr;
-> @@ -2125,29 +2137,15 @@ static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
->  	if (hbus->state == hv_pcibus_removing) {
->  		dev_info(&hbus->hdev->device,
->  			 "PCI VMBus BUS_RELATIONS: ignored\n");
-> -		return;
-> +		return -ENOENT;
->  	}
->  
->  	dr_wrk = kzalloc(sizeof(*dr_wrk), GFP_NOWAIT);
->  	if (!dr_wrk)
-> -		return;
-> -
-> -	dr = kzalloc(offsetof(struct hv_dr_state, func) +
-> -		     (sizeof(struct pci_function_description) *
-> -		      (relations->device_count)), GFP_NOWAIT);
-> -	if (!dr)  {
-> -		kfree(dr_wrk);
-> -		return;
-> -	}
-> +		return -ENOMEM;
->  
->  	INIT_WORK(&dr_wrk->wrk, pci_devices_present_work);
->  	dr_wrk->bus = hbus;
-> -	dr->device_count = relations->device_count;
-> -	if (dr->device_count != 0) {
-> -		memcpy(dr->func, relations->func,
-> -		       sizeof(struct pci_function_description) *
-> -		       dr->device_count);
-> -	}
->  
->  	spin_lock_irqsave(&hbus->device_list_lock, flags);
->  	/*
-> @@ -2165,6 +2163,47 @@ static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
->  		get_hvpcibus(hbus);
->  		queue_work(hbus->wq, &dr_wrk->wrk);
->  	}
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * hv_pci_devices_present() - Handle list of new children
-> + * @hbus:      Root PCI bus, as understood by this driver
-> + * @relations: Packet from host listing children
-> + *
-> + * Process a new list of devices on the bus. The list of devices is
-> + * discovered by VSP and sent to us via VSP message PCI_BUS_RELATIONS,
-> + * whenever a new list of devices for this bus appears.
-> + */
-> +static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
-> +				   struct pci_bus_relations *relations)
-> +{
-> +	struct hv_dr_state *dr;
-> +	int i;
-> +
-> +	dr = kzalloc(offsetof(struct hv_dr_state, func) +
-> +		     (sizeof(struct hv_pcidev_description) *
-> +		      (relations->device_count)), GFP_NOWAIT);
-> +
-> +	if (!dr)
-> +		return;
-> +
-> +	dr->device_count = relations->device_count;
-> +	for (i = 0; i < dr->device_count; i++) {
-> +		dr->func[i].v_id = relations->func[i].v_id;
-> +		dr->func[i].d_id = relations->func[i].d_id;
-> +		dr->func[i].rev = relations->func[i].rev;
-> +		dr->func[i].prog_intf = relations->func[i].prog_intf;
-> +		dr->func[i].subclass = relations->func[i].subclass;
-> +		dr->func[i].base_class = relations->func[i].base_class;
-> +		dr->func[i].subsystem_id = relations->func[i].subsystem_id;
-> +		dr->func[i].win_slot = relations->func[i].win_slot;
-> +		dr->func[i].ser = relations->func[i].ser;
-> +	}
-> +
-> +	if (hv_pci_start_relations_work(hbus, dr))
-> +		kfree(dr);
->  }
->  
->  /**
-> @@ -3069,7 +3108,7 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool hibernating)
->  		struct pci_packet teardown_packet;
->  		u8 buffer[sizeof(struct pci_message)];
->  	} pkt;
-> -	struct pci_bus_relations relations;
-> +	struct hv_dr_state *dr;
->  	struct hv_pci_compl comp_pkt;
->  	int ret;
->  
-> @@ -3082,8 +3121,9 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool hibernating)
->  
->  	if (!hibernating) {
->  		/* Delete any children which might still exist. */
-> -		memset(&relations, 0, sizeof(relations));
-> -		hv_pci_devices_present(hbus, &relations);
-> +		dr = kzalloc(sizeof(*dr), GFP_KERNEL);
-> +		if (dr && hv_pci_start_relations_work(hbus, dr))
-> +			kfree(dr);
->  	}
->  
->  	ret = hv_send_resources_released(hdev);
-> -- 
-> 1.8.3.1
+> Lorenzo
 > 
+>> Thanks,
+>> Vidya Sagar
+>>>
+>>> Lorenzo
+>>>
+>>>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>>>> Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>>> ---
+>>>> V3:
+>>>> * Added Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>>>
+>>>> V2:
+>>>> * Addressed review comments from Kishon
+>>>>
+>>>>    drivers/pci/endpoint/functions/pci-epf-test.c | 118 ++++++++++++------
+>>>>    1 file changed, 77 insertions(+), 41 deletions(-)
+>>>>
+>>>> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+>>>> index bddff15052cc..be04c6220265 100644
+>>>> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+>>>> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+>>>> @@ -360,18 +360,6 @@ static void pci_epf_test_cmd_handler(struct work_struct *work)
+>>>>                            msecs_to_jiffies(1));
+>>>>    }
+>>>>
+>>>> -static int pci_epf_test_notifier(struct notifier_block *nb, unsigned long val,
+>>>> -                              void *data)
+>>>> -{
+>>>> -     struct pci_epf *epf = container_of(nb, struct pci_epf, nb);
+>>>> -     struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+>>>> -
+>>>> -     queue_delayed_work(kpcitest_workqueue, &epf_test->cmd_handler,
+>>>> -                        msecs_to_jiffies(1));
+>>>> -
+>>>> -     return NOTIFY_OK;
+>>>> -}
+>>>> -
+>>>>    static void pci_epf_test_unbind(struct pci_epf *epf)
+>>>>    {
+>>>>         struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+>>>> @@ -428,6 +416,78 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
+>>>>         return 0;
+>>>>    }
+>>>>
+>>>> +static int pci_epf_test_core_init(struct pci_epf *epf)
+>>>> +{
+>>>> +     struct pci_epf_header *header = epf->header;
+>>>> +     const struct pci_epc_features *epc_features;
+>>>> +     struct pci_epc *epc = epf->epc;
+>>>> +     struct device *dev = &epf->dev;
+>>>> +     bool msix_capable = false;
+>>>> +     bool msi_capable = true;
+>>>> +     int ret;
+>>>> +
+>>>> +     epc_features = pci_epc_get_features(epc, epf->func_no);
+>>>> +     if (epc_features) {
+>>>> +             msix_capable = epc_features->msix_capable;
+>>>> +             msi_capable = epc_features->msi_capable;
+>>>> +     }
+>>>> +
+>>>> +     ret = pci_epc_write_header(epc, epf->func_no, header);
+>>>> +     if (ret) {
+>>>> +             dev_err(dev, "Configuration header write failed\n");
+>>>> +             return ret;
+>>>> +     }
+>>>> +
+>>>> +     ret = pci_epf_test_set_bar(epf);
+>>>> +     if (ret)
+>>>> +             return ret;
+>>>> +
+>>>> +     if (msi_capable) {
+>>>> +             ret = pci_epc_set_msi(epc, epf->func_no, epf->msi_interrupts);
+>>>> +             if (ret) {
+>>>> +                     dev_err(dev, "MSI configuration failed\n");
+>>>> +                     return ret;
+>>>> +             }
+>>>> +     }
+>>>> +
+>>>> +     if (msix_capable) {
+>>>> +             ret = pci_epc_set_msix(epc, epf->func_no, epf->msix_interrupts);
+>>>> +             if (ret) {
+>>>> +                     dev_err(dev, "MSI-X configuration failed\n");
+>>>> +                     return ret;
+>>>> +             }
+>>>> +     }
+>>>> +
+>>>> +     return 0;
+>>>> +}
+>>>> +
+>>>> +static int pci_epf_test_notifier(struct notifier_block *nb, unsigned long val,
+>>>> +                              void *data)
+>>>> +{
+>>>> +     struct pci_epf *epf = container_of(nb, struct pci_epf, nb);
+>>>> +     struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+>>>> +     int ret;
+>>>> +
+>>>> +     switch (val) {
+>>>> +     case CORE_INIT:
+>>>> +             ret = pci_epf_test_core_init(epf);
+>>>> +             if (ret)
+>>>> +                     return NOTIFY_BAD;
+>>>> +             break;
+>>>> +
+>>>> +     case LINK_UP:
+>>>> +             queue_delayed_work(kpcitest_workqueue, &epf_test->cmd_handler,
+>>>> +                                msecs_to_jiffies(1));
+>>>> +             break;
+>>>> +
+>>>> +     default:
+>>>> +             dev_err(&epf->dev, "Invalid EPF test notifier event\n");
+>>>> +             return NOTIFY_BAD;
+>>>> +     }
+>>>> +
+>>>> +     return NOTIFY_OK;
+>>>> +}
+>>>> +
+>>>>    static int pci_epf_test_alloc_space(struct pci_epf *epf)
+>>>>    {
+>>>>         struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+>>>> @@ -496,14 +556,11 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+>>>>    {
+>>>>         int ret;
+>>>>         struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+>>>> -     struct pci_epf_header *header = epf->header;
+>>>>         const struct pci_epc_features *epc_features;
+>>>>         enum pci_barno test_reg_bar = BAR_0;
+>>>>         struct pci_epc *epc = epf->epc;
+>>>> -     struct device *dev = &epf->dev;
+>>>>         bool linkup_notifier = false;
+>>>> -     bool msix_capable = false;
+>>>> -     bool msi_capable = true;
+>>>> +     bool core_init_notifier = false;
+>>>>
+>>>>         if (WARN_ON_ONCE(!epc))
+>>>>                 return -EINVAL;
+>>>> @@ -511,8 +568,7 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+>>>>         epc_features = pci_epc_get_features(epc, epf->func_no);
+>>>>         if (epc_features) {
+>>>>                 linkup_notifier = epc_features->linkup_notifier;
+>>>> -             msix_capable = epc_features->msix_capable;
+>>>> -             msi_capable = epc_features->msi_capable;
+>>>> +             core_init_notifier = epc_features->core_init_notifier;
+>>>>                 test_reg_bar = pci_epc_get_first_free_bar(epc_features);
+>>>>                 pci_epf_configure_bar(epf, epc_features);
+>>>>         }
+>>>> @@ -520,34 +576,14 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+>>>>         epf_test->test_reg_bar = test_reg_bar;
+>>>>         epf_test->epc_features = epc_features;
+>>>>
+>>>> -     ret = pci_epc_write_header(epc, epf->func_no, header);
+>>>> -     if (ret) {
+>>>> -             dev_err(dev, "Configuration header write failed\n");
+>>>> -             return ret;
+>>>> -     }
+>>>> -
+>>>>         ret = pci_epf_test_alloc_space(epf);
+>>>>         if (ret)
+>>>>                 return ret;
+>>>>
+>>>> -     ret = pci_epf_test_set_bar(epf);
+>>>> -     if (ret)
+>>>> -             return ret;
+>>>> -
+>>>> -     if (msi_capable) {
+>>>> -             ret = pci_epc_set_msi(epc, epf->func_no, epf->msi_interrupts);
+>>>> -             if (ret) {
+>>>> -                     dev_err(dev, "MSI configuration failed\n");
+>>>> -                     return ret;
+>>>> -             }
+>>>> -     }
+>>>> -
+>>>> -     if (msix_capable) {
+>>>> -             ret = pci_epc_set_msix(epc, epf->func_no, epf->msix_interrupts);
+>>>> -             if (ret) {
+>>>> -                     dev_err(dev, "MSI-X configuration failed\n");
+>>>> +     if (!core_init_notifier) {
+>>>> +             ret = pci_epf_test_core_init(epf);
+>>>> +             if (ret)
+>>>>                         return ret;
+>>>> -             }
+>>>>         }
+>>>>
+>>>>         if (linkup_notifier) {
+>>>> --
+>>>> 2.17.1
+>>>>
