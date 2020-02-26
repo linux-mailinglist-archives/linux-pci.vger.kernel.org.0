@@ -2,152 +2,87 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 290AB170C8E
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2020 00:27:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DDC7170CAB
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2020 00:40:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727749AbgBZX1Q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 Feb 2020 18:27:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54114 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726413AbgBZX1Q (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 26 Feb 2020 18:27:16 -0500
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 798F920658;
-        Wed, 26 Feb 2020 23:27:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582759634;
-        bh=sRKFXIOdMt3uKwrueRgdk4RpTv6iY5xBSrnyJV5ot80=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=wHc72kbgn4rQ84i+w9kYe4ishVjAv196COq/bzb6sBIlV/oVJD95iJfDKF9UMY8uq
-         JklwyX/EVfC8vbzXYnhAbEKlizG22rOzXaWCuYyAocjWndGja5tUn8bpETfZY4UxDD
-         /KSnICnecF0p6mgn7deljGzUVr+eWbVW7vaRGo2I=
-Date:   Wed, 26 Feb 2020 17:27:13 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
+        id S1727940AbgBZXk3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 Feb 2020 18:40:29 -0500
+Received: from mail-lj1-f173.google.com ([209.85.208.173]:41767 "EHLO
+        mail-lj1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727935AbgBZXk3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 Feb 2020 18:40:29 -0500
+Received: by mail-lj1-f173.google.com with SMTP id h23so1124165ljc.8;
+        Wed, 26 Feb 2020 15:40:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/zvwuQzMVyu/TdqK56I2p7OTWodLcL8mzDknB3/DWOE=;
+        b=XI6hYN+NzZh/3ZislvkBSf4E7btI9gXm0ArDRVNuwWX9/kaHdAjXTvgMDWCvhtGUIW
+         Dl97JEHdcSjr6tczhNN8zlMURx8PoCZBVEM5BZpjPcJCMzIjMfXPtjqJA2YTIUBrZkDw
+         DZ+BxF9ReLYoSoUwIFSO3UI+ScKklW3LmS2vJ5dcX6Wejjcj2nTzCE2K54AK2BZ3bEqL
+         84fp3Kw83xfC8r3NMPJAeMqKERf56bxUVoQJhZ2B8BH9bhwSyvjNHYL96+M4mcneKbmr
+         VaGDqFWnJ76qFBBjuIJYjzo5nn5MmgJAiSxTwbLCiQT9b268UvcETkSMRDuT04GP8UzU
+         ePNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/zvwuQzMVyu/TdqK56I2p7OTWodLcL8mzDknB3/DWOE=;
+        b=le0m3Yw9pVSfz1yKgddGMFcq6IM5IFgfq2ctnET5UZt2VOy7q9WXVXE+8tZ8e8hp0i
+         w6eitWNiC2wy+r9dLjONQAjEu2DAe7FpZ+ZPy2F0ZzXyNv1OfrUE8DpF+AQJMEIWVZEh
+         r48BHx2AoftCyPndSK2lWEfq3dQzm1S8Kzi13iTxFRD2sb7l8tOTmhGtqRLr6RwTfq8v
+         7UB8PGKAicF8/3foG8ZeHK+cyVhCN56t5PIz2DYo4ZydqKhCbUqVF2Ib8rMRp0triPZS
+         fn7mWOASIS+/f9YoPdoki7mJkDA5vt0E69tQsIWaaAEV3x1p6jbJsocEbNt0HikWeq1C
+         Ow3A==
+X-Gm-Message-State: ANhLgQ27l5klWOfqi/JNXpj5e5WCYsjiv1CPAxbZg7WJHsFVbSknHicr
+        HwiWZjRZf8UKZYbHhPkQds9ujSylBLzI0pv22dA=
+X-Google-Smtp-Source: ADFU+vt2buvIg9JM2Lv2YYTip1+/nm3zBcKpuSZlqnqJiGj6BZ9KuP7zrxsN00bhWw/8BpqXuFsDhAV2na66RVkh3bY=
+X-Received: by 2002:a2e:b78e:: with SMTP id n14mr842381ljo.269.1582760426044;
+ Wed, 26 Feb 2020 15:40:26 -0800 (PST)
+MIME-Version: 1.0
+References: <CAGgoGu5u7WZUUaoVYvVWS5nuNZz25PgR=uHkqvzXV5xFOC7KuA@mail.gmail.com>
+In-Reply-To: <CAGgoGu5u7WZUUaoVYvVWS5nuNZz25PgR=uHkqvzXV5xFOC7KuA@mail.gmail.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Wed, 26 Feb 2020 20:40:23 -0300
+Message-ID: <CAOMZO5DvPr3srStsJ6KQph_v_=7=YGdcM4GQzi9yK+Km-wFBiQ@mail.gmail.com>
+Subject: Re: Help needed in understanding weird PCIe issue on imx6q (PCIe just
+ goes bad)
 To:     Fawad Lateef <fawadlateef@gmail.com>
 Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org, Richard Zhu <hongxing.zhu@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: Help needed in understanding weird PCIe issue on imx6q (PCIe
- just goes bad)
-Message-ID: <20200226232713.GA191903@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200226232550.GA191068@google.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Richard, Lucas]
+Hi Fawad,
 
-On Wed, Feb 26, 2020 at 05:25:52PM -0600, Bjorn Helgaas wrote:
-> On Sat, Feb 22, 2020 at 04:25:41PM +0100, Fawad Lateef wrote:
-> > Hello,
-> > 
-> > I am trying to figure-out an issue on our i.MX6Q platform based design
-> > where PCIe interface goes bad.
-> > 
-> > We have a Phytec i.MX6Q eMMC SOM, attached to our custom designed
-> > board. PCIe root-complex from i.MX6Q is attached to PLX switch
-> > (PEX8605).
-> > 
-> > Linux kernel version is 4.19.9x and also 4.14.134 (from phytec's
-> > linux-mainline repo). Kernel do not have PCIe hot-plug and PNP enabled
-> > in config.
-> > 
-> > PLX switch #PERST is attached to a GPIO pin and stays in disable state
-> > until Linux is booted. So at boot time only PCIe root-complex is
-> > initialized by kernel.
-> > 
-> > After boot if I do "lspci -v"  and see everything good from PCIe
-> > root-complex (below):
-> > 
-> > ~ # lspci -v
-> > 00:00.0 PCI bridge: Synopsys, Inc. Device abcd (rev 01) (prog-if 00
-> > [Normal decode])
-> > Flags: bus master, fast devsel, latency 0, IRQ 295
-> > Memory at 01000000 (32-bit, non-prefetchable) [size=1M]
-> > Bus: primary=00, secondary=01, subordinate=ff, sec-latency=0
-> > I/O behind bridge: None
-> > Memory behind bridge: None
-> > Prefetchable memory behind bridge: None
-> > [virtual] Expansion ROM at 01100000 [disabled] [size=64K]
-> > Capabilities: [40] Power Management version 3
-> > Capabilities: [50] MSI: Enable+ Count=1/1 Maskable+ 64bit+
-> > Capabilities: [70] Express Root Port (Slot-), MSI 00
-> > Capabilities: [100] Advanced Error Reporting
-> > Capabilities: [140] Virtual Channel
-> > Kernel driver in use: pcieport
-> > 
-> > 
-> > Then I enable the #PERST pin of PLX switch, everything is still good
-> > (no rescan on Linux is done yet)
-> > 
-> > ~ # echo 139 > /sys/class/gpio/export
-> > ~ # echo out > /sys/class/gpio/gpio139/direction
-> > ~ # echo 1 > /sys/class/gpio/gpio139/value
-> > ~ # lspci -v
-> > 00:00.0 PCI bridge: Synopsys, Inc. Device abcd (rev 01) (prog-if 00
-> > [Normal decode])
-> > Flags: bus master, fast devsel, latency 0, IRQ 295
-> > Memory at 01000000 (32-bit, non-prefetchable) [size=1M]
-> > Bus: primary=00, secondary=01, subordinate=ff, sec-latency=0
-> > I/O behind bridge: None
-> > Memory behind bridge: None
-> > Prefetchable memory behind bridge: None
-> > [virtual] Expansion ROM at 01100000 [disabled] [size=64K]
-> > Capabilities: [40] Power Management version 3
-> > Capabilities: [50] MSI: Enable+ Count=1/1 Maskable+ 64bit+
-> > Capabilities: [70] Express Root Port (Slot-), MSI 00
-> > Capabilities: [100] Advanced Error Reporting
-> > Capabilities: [140] Virtual Channel
-> > Kernel driver in use: pcieport
-> > 
-> > 
-> > Now just disable/put-in-reset the PLX switch (Linux don't see the
-> > switch yet, as no rescan on PCIe was done). Now "lspci -v" and
-> > root-complex goes bad.
-> > 
-> > ~ # echo 0 > /sys/class/gpio/gpio139/value
-> > ~ # lspci -v
-> > 00:00.0 PCI bridge: Synopsys, Inc. Device abcd (rev 01) (prog-if 00
-> > [Normal decode])
-> > Flags: fast devsel, IRQ 295
-> > Memory at 01000000 (64-bit, prefetchable) [disabled] [size=1M]
-> > Bus: primary=00, secondary=00, subordinate=00, sec-latency=0
-> > I/O behind bridge: 00000000-00000fff [size=4K]
-> > Memory behind bridge: 00000000-000fffff [size=1M]
-> > Prefetchable memory behind bridge: 00000000-000fffff [size=1M]
-> > [virtual] Expansion ROM at 01100000 [disabled] [size=64K]
-> > Capabilities: [40] Power Management version 3
-> > Capabilities: [50] MSI: Enable- Count=1/1 Maskable+ 64bit+
-> > Capabilities: [70] Express Root Port (Slot-), MSI 00
-> > Capabilities: [100] Advanced Error Reporting
-> > Capabilities: [140] Virtual Channel
-> > Kernel driver in use: pcieport
-> > 
-> > ~ # uname -a
-> > Linux buildroot-2019.08-imx6 4.14.134-phy2 #1 SMP Thu Feb 20 12:13:33
-> > UTC 2020 armv7l GNU/Linux
-> > ~ #
-> > 
-> > 
-> > I am really not sure what is going wrong here. Did I am missing
-> > something basic?
-> 
-> I agree, it looks like something's wrong, but I really don't have any
-> ideas.
-> 
-> I would start by using "lspci -xxxx" to see the actual values we get
-> from config space.  It looks like we're reading zeros from at least
-> the bus and window registers.
-> 
-> You could also instrument the i.MX config accessors in case there's
-> something strange going on there.  Maybe try to reproduce this on a
-> current upstream kernel?
-> 
-> Bjorn
+On Sat, Feb 22, 2020 at 12:26 PM Fawad Lateef <fawadlateef@gmail.com> wrote:
+>
+> Hello,
+>
+> I am trying to figure-out an issue on our i.MX6Q platform based design
+> where PCIe interface goes bad.
+>
+> We have a Phytec i.MX6Q eMMC SOM, attached to our custom designed
+> board. PCIe root-complex from i.MX6Q is attached to PLX switch
+> (PEX8605).
+>
+> Linux kernel version is 4.19.9x and also 4.14.134 (from phytec's
+
+Does it happen with 5.4 or 5.5 too?
+
+Which dts are you using?
+
+> Then I enable the #PERST pin of PLX switch, everything is still good
+> (no rescan on Linux is done yet)
+>
+> ~ # echo 139 > /sys/class/gpio/export
+> ~ # echo out > /sys/class/gpio/gpio139/direction
+> ~ # echo 1 > /sys/class/gpio/gpio139/value
+
+Not sure why you toggle the PERST pin from userspace.
+
+You should do it via reset-gpio property in the device tree.
