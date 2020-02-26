@@ -2,498 +2,886 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D9431707EA
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2020 19:45:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C2D2170873
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2020 20:07:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbgBZSpN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 Feb 2020 13:45:13 -0500
-Received: from mga05.intel.com ([192.55.52.43]:15629 "EHLO mga05.intel.com"
+        id S1727078AbgBZTHx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 Feb 2020 14:07:53 -0500
+Received: from mga03.intel.com ([134.134.136.65]:29066 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726878AbgBZSpN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 26 Feb 2020 13:45:13 -0500
+        id S1727035AbgBZTHx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 26 Feb 2020 14:07:53 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 10:45:11 -0800
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 11:07:52 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,489,1574150400"; 
-   d="scan'208";a="231899635"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga008.fm.intel.com with ESMTP; 26 Feb 2020 10:45:11 -0800
-Received: from [10.7.201.16] (skuppusw-desk.jf.intel.com [10.7.201.16])
-        by linux.intel.com (Postfix) with ESMTP id DF668580544;
-        Wed, 26 Feb 2020 10:45:10 -0800 (PST)
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v15 4/5] PCI/DPC: Add Error Disconnect Recover (EDR)
- support
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com
-References: <20200226010231.GA238440@google.com>
-From:   Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Organization: Intel
-Message-ID: <c961e365-6a5b-01f7-091a-c374848943fe@linux.intel.com>
-Date:   Wed, 26 Feb 2020 10:42:27 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+   d="scan'208";a="256431520"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga002.jf.intel.com with ESMTP; 26 Feb 2020 11:07:51 -0800
+Date:   Wed, 26 Feb 2020 11:13:20 -0800
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, joro@8bytes.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, catalin.marinas@arm.com, will@kernel.org,
+        robin.murphy@arm.com, kevin.tian@intel.com,
+        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
+        christian.koenig@amd.com, yi.l.liu@intel.com,
+        zhangfei.gao@linaro.org,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v4 02/26] iommu/sva: Manage process address spaces
+Message-ID: <20200226111320.3b6e6d3d@jacob-builder>
+In-Reply-To: <20200224182401.353359-3-jean-philippe@linaro.org>
+References: <20200224182401.353359-1-jean-philippe@linaro.org>
+        <20200224182401.353359-3-jean-philippe@linaro.org>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200226010231.GA238440@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-HI Bjorn,
+Hi Jean,
 
-Thanks for the review.
+A few comments inline. I am also trying to converge to the common sva
+APIs. I sent out the first step w/o iopage fault and the generic ops
+you have here.
 
-On 2/25/20 5:02 PM, Bjorn Helgaas wrote:
-> On Thu, Feb 13, 2020 at 10:20:16AM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
->> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>
->> As per ACPI specification r6.3, sec 5.6.6, when firmware owns Downstream
->> Port Containment (DPC), its expected to use the "Error Disconnect
->> Recover" (EDR) notification to alert OSPM of a DPC event and if OS
->> supports EDR, its expected to handle the software state invalidation and
->> port recovery in OS, and also let firmware know the recovery status via
->> _OST ACPI call. Related _OST status codes can be found in ACPI
->> specification r6.3, sec 6.3.5.2.
->>
->> Also, as per PCI firmware specification r3.2 Downstream Port Containment
->> Related Enhancements ECN, sec 4.5.1, table 4-6, If DPC is controlled by
->> firmware (firmware first mode), firmware is responsible for
->> configuring the DPC and OS is responsible for error recovery. Also, OS
->> is allowed to modify DPC registers only during the EDR notification
->> window.
->>
->> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->> ---
->>   drivers/pci/pci-acpi.c    |   3 +
->>   drivers/pci/pcie/Kconfig  |  10 ++
->>   drivers/pci/pcie/Makefile |   1 +
->>   drivers/pci/pcie/edr.c    | 257 ++++++++++++++++++++++++++++++++++++++
->>   include/linux/pci-acpi.h  |   8 ++
->>   5 files changed, 279 insertions(+)
->>   create mode 100644 drivers/pci/pcie/edr.c
->>
->> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
->> index 0c02d500158f..6af5d6a04990 100644
->> --- a/drivers/pci/pci-acpi.c
->> +++ b/drivers/pci/pci-acpi.c
->> @@ -1258,6 +1258,7 @@ static void pci_acpi_setup(struct device *dev)
->>   
->>   	acpi_pci_wakeup(pci_dev, false);
->>   	acpi_device_power_add_dependent(adev, dev);
->> +	pci_acpi_add_edr_notifier(pci_dev);
->>   }
->>   
->>   static void pci_acpi_cleanup(struct device *dev)
->> @@ -1276,6 +1277,8 @@ static void pci_acpi_cleanup(struct device *dev)
->>   
->>   		device_set_wakeup_capable(dev, false);
->>   	}
->> +
->> +	pci_acpi_remove_edr_notifier(pci_dev);
->>   }
->>   
->>   static bool pci_acpi_bus_match(struct device *dev)
->> diff --git a/drivers/pci/pcie/Kconfig b/drivers/pci/pcie/Kconfig
->> index 6e3c04b46fb1..772b1f4cb19e 100644
->> --- a/drivers/pci/pcie/Kconfig
->> +++ b/drivers/pci/pcie/Kconfig
->> @@ -140,3 +140,13 @@ config PCIE_BW
->>   	  This enables PCI Express Bandwidth Change Notification.  If
->>   	  you know link width or rate changes occur only to correct
->>   	  unreliable links, you may answer Y.
->> +
->> +config PCIE_EDR
->> +	bool "PCI Express Error Disconnect Recover support"
->> +	depends on PCIE_DPC && ACPI
->> +	help
->> +	  This option adds Error Disconnect Recover support as specified
->> +	  in the Downstream Port Containment Related Enhancements ECN to
->> +	  the PCI Firmware Specification r3.2.  Enable this if you want to
->> +	  support hybrid DPC model which uses both firmware and OS to
->> +	  implement DPC.
->> diff --git a/drivers/pci/pcie/Makefile b/drivers/pci/pcie/Makefile
->> index efb9d2e71e9e..68da9280ff11 100644
->> --- a/drivers/pci/pcie/Makefile
->> +++ b/drivers/pci/pcie/Makefile
->> @@ -13,3 +13,4 @@ obj-$(CONFIG_PCIE_PME)		+= pme.o
->>   obj-$(CONFIG_PCIE_DPC)		+= dpc.o
->>   obj-$(CONFIG_PCIE_PTM)		+= ptm.o
->>   obj-$(CONFIG_PCIE_BW)		+= bw_notification.o
->> +obj-$(CONFIG_PCIE_EDR)		+= edr.o
->> diff --git a/drivers/pci/pcie/edr.c b/drivers/pci/pcie/edr.c
->> new file mode 100644
->> index 000000000000..b3e9103585a1
->> --- /dev/null
->> +++ b/drivers/pci/pcie/edr.c
->> @@ -0,0 +1,257 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * PCI DPC Error Disconnect Recover support driver
->> + * Author: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->> + *
->> + * Copyright (C) 2020 Intel Corp.
->> + */
->> +
->> +#define dev_fmt(fmt) "EDR: " fmt
->> +
->> +#include <linux/pci.h>
->> +#include <linux/pci-acpi.h>
->> +
->> +#include "portdrv.h"
->> +#include "dpc.h"
->> +#include "../pci.h"
->> +
->> +#define EDR_PORT_ENABLE_DSM		0x0C
->> +#define EDR_PORT_LOCATE_DSM		0x0D
->> +#define EDR_OST_SUCCESS			0x80
->> +#define EDR_OST_FAILED			0x81
->> +
->> +/*
->> + * _DSM wrapper function to enable/disable DPC port.
->> + * @pdev   : PCI device structure.
->> + * @enable: status of DPC port (0 or 1).
-> Either line up these colons or join them with the parameter names
-> (also below).
-ok. will do it.
->
->> + * returns 0 on success or errno on failure.
->> + */
->> +static int acpi_enable_dpc_port(struct pci_dev *pdev, bool enable)
-> We only call this with "true", so the "enable" parameter is pointless.
-Makes sense. I will remove it. We can add it if needed in future.
->
->> +{
->> +	struct acpi_device *adev = ACPI_COMPANION(&pdev->dev);
->> +	union acpi_object *obj, argv4, req;
->> +	int status = 0;
->> +
->> +	req.type = ACPI_TYPE_INTEGER;
->> +	req.integer.value = enable;
->> +
->> +	argv4.type = ACPI_TYPE_PACKAGE;
->> +	argv4.package.count = 1;
->> +	argv4.package.elements = &req;
->> +
->> +	/*
->> +	 * Per the Downstream Port Containment Related Enhancements ECN to
->> +	 * the PCI Firmware Specification r3.2, sec 4.6.12,
->> +	 * EDR_PORT_ENABLE_DSM is optional.  Return success if it's not
->> +	 * implemented.
->> +	 */
->> +	obj = acpi_evaluate_dsm(adev->handle, &pci_acpi_dsm_guid, 5,
->> +				EDR_PORT_ENABLE_DSM, &argv4);
->> +	if (!obj)
->> +		return 0;
->> +
->> +	if (obj->type != ACPI_TYPE_INTEGER || obj->integer.value != enable)
->> +		status = -EIO;
->> +
->> +	ACPI_FREE(obj);
->> +
->> +	return status;
->> +}
->> +
->> +/*
->> + * _DSM wrapper function to locate DPC port.
->> + * @pdev   : Device which received EDR event.
->> + *
->> + * returns pci_dev or NULL.
->> + */
->> +static struct pci_dev *acpi_locate_dpc_port(struct pci_dev *pdev)
->> +{
->> +	struct acpi_device *adev = ACPI_COMPANION(&pdev->dev);
->> +	union acpi_object *obj;
->> +	u16 port;
->> +
->> +	obj = acpi_evaluate_dsm(adev->handle, &pci_acpi_dsm_guid, 5,
->> +				EDR_PORT_LOCATE_DSM, NULL);
->> +	if (!obj)
->> +		return pci_dev_get(pdev);
->> +
->> +	if (obj->type != ACPI_TYPE_INTEGER) {
-> If this happens, it's a firmware defect, isn't it?  I think maybe we
-> should warn here.  I know we warn below ("No valid port found"), but
-> that doesn't give any clue about the fact that firmware screwed up.
-I will add it in next version.
->
->> +		ACPI_FREE(obj);
->> +		return NULL;
->> +	}
->> +
->> +	/*
->> +	 * Firmware returns DPC port BDF details in following format:
->> +	 *	15:8 = bus
->> +	 *	 7:3 = device
->> +	 *	 2:0 = function
->> +	 */
->> +	port = obj->integer.value;
->> +
->> +	ACPI_FREE(obj);
->> +
->> +	return pci_get_domain_bus_and_slot(pci_domain_nr(pdev->bus),
->> +					   PCI_BUS_NUM(port), port & 0xff);
->> +}
->> +
->> +/*
->> + * _OST wrapper function to let firmware know the status of EDR event.
->> + * @pdev   : Device used to send _OST.
->> + * @edev   : Device which experienced EDR event.
->> + * @status: Status of EDR event.
->> + */
->> +static int acpi_send_edr_status(struct pci_dev *pdev, struct pci_dev *edev,
->> +				u16 status)
->> +{
->> +	struct acpi_device *adev = ACPI_COMPANION(&pdev->dev);
->> +	u32 ost_status;
->> +
->> +	pci_dbg(pdev, "Sending EDR status :%#x\n", status);
->> +
->> +	ost_status =  PCI_DEVID(edev->bus->number, edev->devfn);
->> +	ost_status = (ost_status << 16) | status;
->> +
->> +	status = acpi_evaluate_ost(adev->handle,
->> +				   ACPI_NOTIFY_DISCONNECT_RECOVER,
->> +				   ost_status, NULL);
->> +	if (ACPI_FAILURE(status))
->> +		return -EINVAL;
->> +
->> +	return 0;
->> +}
->> +
->> +pci_ers_result_t edr_dpc_reset_link(void *cb_data)
->> +{
->> +	return dpc_reset_link_common(cb_data);
->> +}
->> +
->> +static void edr_handle_event(acpi_handle handle, u32 event, void *data)
->> +{
->> +	struct dpc_dev *dpc = data, ndpc;
-> There's actually very little use of struct dpc_dev in this file.  I
-> bet with a little elbow grease, we could remove it completely and just
-> use the pci_dev * or maybe an opaque pointer.
-Yes, we could remove it. But it might need some more changes to
-dpc driver functions. I can think of two ways,
+On Mon, 24 Feb 2020 19:23:37 +0100
+Jean-Philippe Brucker <jean-philippe@linaro.org> wrote:
 
-1. Re-factor the DPC driver not to use dpc_dev structure and just use
-pci_dev in their functions implementation. But this might lead to
-re-reading following dpc_dev structure members every time we
-use it in dpc driver functions.
+> From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+> 
+> Add a small library to help IOMMU drivers manage process address
+> spaces bound to their devices. Register an MMU notifier to track
+> modification on each address space bound to one or more devices.
+> 
+> IOMMU drivers must implement the io_mm_ops and can then use the
+> helpers provided by this library to easily implement the SVA API
+> introduced by commit 26b25a2b98e4. The io_mm_ops are:
+> 
+> void *alloc(struct mm_struct *)
+>   Allocate a PASID context private to the IOMMU driver. There is a
+>   single context per mm. IOMMU drivers may perform arch-specific
+>   operations in there, for example pinning down a CPU ASID (on Arm).
+> 
+> int attach(struct device *, int pasid, void *ctx, bool attach_domain)
+>   Attach a context to the device, by setting up the PASID table entry.
+> 
+> int invalidate(struct device *, int pasid, void *ctx,
+>                unsigned long vaddr, size_t size)
+>   Invalidate TLB entries for this address range.
+> 
+> int detach(struct device *, int pasid, void *ctx, bool detach_domain)
+>   Detach a context from the device, by clearing the PASID table entry
+>   and invalidating cached entries.
+> 
+> void free(void *ctx)
+you meant release()?
 
-(Currently in dpc driver probe they cache the following device parameters )
+>   Free a context.
+> 
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> ---
+>  drivers/iommu/Kconfig     |   7 +
+>  drivers/iommu/Makefile    |   1 +
+>  drivers/iommu/iommu-sva.c | 561
+> ++++++++++++++++++++++++++++++++++++++ drivers/iommu/iommu-sva.h |
+> 64 +++++ drivers/iommu/iommu.c     |   1 +
+>  include/linux/iommu.h     |   3 +
+>  6 files changed, 637 insertions(+)
+>  create mode 100644 drivers/iommu/iommu-sva.c
+>  create mode 100644 drivers/iommu/iommu-sva.h
+> 
+> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
+> index d2fade984999..acca20e2da2f 100644
+> --- a/drivers/iommu/Kconfig
+> +++ b/drivers/iommu/Kconfig
+> @@ -102,6 +102,13 @@ config IOMMU_DMA
+>  	select IRQ_MSI_IOMMU
+>  	select NEED_SG_DMA_LENGTH
+>  
+> +# Shared Virtual Addressing library
+> +config IOMMU_SVA
+> +	bool
+> +	select IOASID
+> +	select IOMMU_API
+> +	select MMU_NOTIFIER
+> +
+>  config FSL_PAMU
+>  	bool "Freescale IOMMU support"
+>  	depends on PCI
+> diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
+> index 9f33fdb3bb05..40c800dd4e3e 100644
+> --- a/drivers/iommu/Makefile
+> +++ b/drivers/iommu/Makefile
+> @@ -37,3 +37,4 @@ obj-$(CONFIG_S390_IOMMU) += s390-iommu.o
+>  obj-$(CONFIG_QCOM_IOMMU) += qcom_iommu.o
+>  obj-$(CONFIG_HYPERV_IOMMU) += hyperv-iommu.o
+>  obj-$(CONFIG_VIRTIO_IOMMU) += virtio-iommu.o
+> +obj-$(CONFIG_IOMMU_SVA) += iommu-sva.o
+> diff --git a/drivers/iommu/iommu-sva.c b/drivers/iommu/iommu-sva.c
+> new file mode 100644
+> index 000000000000..64f1d1c82383
+> --- /dev/null
+> +++ b/drivers/iommu/iommu-sva.c
+> @@ -0,0 +1,561 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Manage PASIDs and bind process address spaces to devices.
+> + *
+> + * Copyright (C) 2018 ARM Ltd.
+> + */
+> +
+> +#include <linux/idr.h>
+> +#include <linux/ioasid.h>
+> +#include <linux/iommu.h>
+> +#include <linux/sched/mm.h>
+> +#include <linux/slab.h>
+> +#include <linux/spinlock.h>
+> +
+> +#include "iommu-sva.h"
+> +
+> +/**
+> + * DOC: io_mm model
+> + *
+> + * The io_mm keeps track of process address spaces shared between
+> CPU and IOMMU.
+> + * The following example illustrates the relation between structures
+> + * iommu_domain, io_mm and iommu_sva. The iommu_sva struct is a bond
+> between
+> + * io_mm and device. A device can have multiple io_mm and an io_mm
+> may be bound
+> + * to multiple devices.
+> + *              ___________________________
+> + *             |  IOMMU domain A           |
+> + *             |  ________________         |
+> + *             | |  IOMMU group   |        +------- io_pgtables
+> + *             | |                |        |
+> + *             | |   dev 00:00.0 ----+------- bond 1 --- io_mm X
+> + *             | |________________|   \    |
+> + *             |                       '----- bond 2 ---.
+> + *             |___________________________|             \
+> + *              ___________________________               \
+> + *             |  IOMMU domain B           |             io_mm Y
+> + *             |  ________________         |             / /
+> + *             | |  IOMMU group   |        |            / /
+> + *             | |                |        |           / /
+> + *             | |   dev 00:01.0 ------------ bond 3 -' /
+> + *             | |   dev 00:01.1 ------------ bond 4 --'
+> + *             | |________________|        |
+> + *             |                           +------- io_pgtables
+> + *             |___________________________|
+> + *
+> + * In this example, device 00:00.0 is in domain A, devices 00:01.*
+> are in domain
+> + * B. All devices within the same domain access the same address
+> spaces.
+Hmm, devices in domain A has access to both X & Y, isn't it
+contradictory?
 
-   9         u16                     cap_pos;
-  10         bool                    rp_extensions;
-  11         u8                      rp_log_size;
-  12         u16                     ctl;
-  13         u16                     cap;
+> Device
+> + * 00:00.0 accesses address spaces X and Y, each corresponding to an
+> mm_struct.
+> + * Devices 00:01.* only access address space Y. In addition each
+> + * IOMMU_DOMAIN_DMA domain has a private address space, io_pgtable,
+> that is
+> + * managed with iommu_map()/iommu_unmap(), and isn't shared with the
+> CPU MMU.
+So this would allow IOVA and SVA co-exist in the same address space?
+I guess this is the PASID 0 for DMA request w/o PASID. If that is the
+case, perhaps needs more explanation since the private address space
+also has a private PASID within the domain.
 
-2. We can create a new variant of dpc_process_err() which depends on 
-pci_dev
-structure and move the dpc_dev initialization to it. Downside is, we 
-should do this
-initialization every time we get DPC event (which should be rare).
+> + *
+> + * To obtain the above configuration, users would for instance issue
+> the
+> + * following calls:
+> + *
+> + *     iommu_sva_bind_device(dev 00:00.0, mm X, ...) -> bond 1
+> + *     iommu_sva_bind_device(dev 00:00.0, mm Y, ...) -> bond 2
+> + *     iommu_sva_bind_device(dev 00:01.0, mm Y, ...) -> bond 3
+> + *     iommu_sva_bind_device(dev 00:01.1, mm Y, ...) -> bond 4
+> + *
+> + * A single Process Address Space ID (PASID) is allocated for each
+> mm. In the
+> + * example, devices use PASID 1 to read/write into address space X
+> and PASID 2
+> + * to read/write into address space Y. Calling iommu_sva_get_pasid()
+> on bond 1
+> + * returns 1, and calling it on bonds 2-4 returns 2.
+> + *
+> + * Hardware tables describing this configuration in the IOMMU would
+> typically
+> + * look like this:
+> + *
+> + *                                PASID tables
+> + *                                 of domain A
+> + *                              .->+--------+
+> + *                             / 0 |        |-------> io_pgtable
+> + *                            /    +--------+
+> + *            Device tables  /   1 |        |-------> pgd X
+> + *              +--------+  /      +--------+
+> + *      00:00.0 |      A |-'     2 |        |--.
+> + *              +--------+         +--------+   \
+> + *              :        :       3 |        |    \
+> + *              +--------+         +--------+     --> pgd Y
+> + *      00:01.0 |      B |--.                    /
+> + *              +--------+   \                  |
+> + *      00:01.1 |      B |----+   PASID tables  |
+> + *              +--------+     \   of domain B  |
+> + *                              '->+--------+   |
+> + *                               0 |        |-- | --> io_pgtable
+> + *                                 +--------+   |
+> + *                               1 |        |   |
+> + *                                 +--------+   |
+> + *                               2 |        |---'
+> + *                                 +--------+
+> + *                               3 |        |
+> + *                                 +--------+
+> + *
+> + * With this model, a single call binds all devices in a given
+> domain to an
+> + * address space. Other devices in the domain will get the same bond
+> implicitly.
+> + * However, users must issue one bind() for each device, because
+> IOMMUs may
+> + * implement SVA differently. Furthermore, mandating one bind() per
+> device
+> + * allows the driver to perform sanity-checks on device capabilities.
+> + *
+> + * In some IOMMUs, one entry of the PASID table (typically the first
+> one) can
+> + * hold non-PASID translations. In this case PASID 0 is reserved and
+> the first
+> + * entry points to the io_pgtable pointer. In other IOMMUs the
+> io_pgtable
+> + * pointer is held in the device table and PASID 0 is available to
+> the
+> + * allocator.
+> + */
+> +
+> +struct io_mm {
+> +	struct list_head		devices;
+> +	struct mm_struct		*mm;
+> +	struct mmu_notifier		notifier;
+> +
+> +	/* Late initialization */
+> +	const struct io_mm_ops		*ops;
+> +	void				*ctx;
+> +	int				pasid;
+> +};
+> +
+> +#define to_io_mm(mmu_notifier)	container_of(mmu_notifier,
+> struct io_mm, notifier) +#define to_iommu_bond(handle)
+> container_of(handle, struct iommu_bond, sva) +
+> +struct iommu_bond {
+> +	struct iommu_sva		sva;
+> +	struct io_mm __rcu		*io_mm;
+> +
+> +	struct list_head		mm_head;
+> +	void				*drvdata;
+> +	struct rcu_head			rcu_head;
+> +	refcount_t			refs;
+> +};
+> +
+> +static DECLARE_IOASID_SET(shared_pasid);
+> +
+> +static struct mmu_notifier_ops iommu_mmu_notifier_ops;
+> +
+> +/*
+> + * Serializes modifications of bonds.
+> + * Lock order: Device SVA mutex; global SVA mutex; IOASID lock
+> + */
+> +static DEFINE_MUTEX(iommu_sva_lock);
+> +
+> +struct io_mm_alloc_params {
+> +	const struct io_mm_ops *ops;
+> +	int min_pasid, max_pasid;
+> +};
+> +
+> +static struct mmu_notifier *io_mm_alloc(struct mm_struct *mm, void
+> *privdata) +{
+> +	int ret;
+> +	struct io_mm *io_mm;
+> +	struct io_mm_alloc_params *params = privdata;
+> +
+> +	io_mm = kzalloc(sizeof(*io_mm), GFP_KERNEL);
+> +	if (!io_mm)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	io_mm->mm = mm;
+> +	io_mm->ops = params->ops;
+> +	INIT_LIST_HEAD(&io_mm->devices);
+> +
+> +	io_mm->pasid = ioasid_alloc(&shared_pasid, params->min_pasid,
+> +				    params->max_pasid, io_mm->mm);
+> +	if (io_mm->pasid == INVALID_IOASID) {
+> +		ret = -ENOSPC;
+> +		goto err_free_io_mm;
+> +	}
+> +
+> +	io_mm->ctx = params->ops->alloc(mm);
+> +	if (IS_ERR(io_mm->ctx)) {
+> +		ret = PTR_ERR(io_mm->ctx);
+> +		goto err_free_pasid;
+> +	}
+> +	return &io_mm->notifier;
+> +
+> +err_free_pasid:
+> +	ioasid_free(io_mm->pasid);
+> +err_free_io_mm:
+> +	kfree(io_mm);
+> +	return ERR_PTR(ret);
+> +}
+> +
+> +static void io_mm_free(struct mmu_notifier *mn)
+> +{
+> +	struct io_mm *io_mm = to_io_mm(mn);
+> +
+> +	WARN_ON(!list_empty(&io_mm->devices));
+> +
+> +	io_mm->ops->release(io_mm->ctx);
+> +	ioasid_free(io_mm->pasid);
+> +	kfree(io_mm);
+> +}
+> +
+> +/*
+> + * io_mm_get - Allocate an io_mm or get the existing one for the
+> given mm
+> + * @mm: the mm
+> + * @ops: callbacks for the IOMMU driver
+> + * @min_pasid: minimum PASID value (inclusive)
+> + * @max_pasid: maximum PASID value (inclusive)
+> + *
+> + * Returns a valid io_mm or an error pointer.
+> + */
+> +static struct io_mm *io_mm_get(struct mm_struct *mm,
+> +			       const struct io_mm_ops *ops,
+> +			       int min_pasid, int max_pasid)
+> +{
+> +	struct io_mm *io_mm;
+> +	struct mmu_notifier *mn;
+> +	struct io_mm_alloc_params params = {
+> +		.ops		= ops,
+> +		.min_pasid	= min_pasid,
+> +		.max_pasid	= max_pasid,
+> +	};
+> +
+> +	/*
+> +	 * A single notifier can exist for this (ops, mm) pair.
+> Allocate it if
+> +	 * necessary.
+> +	 */
+> +	mn = mmu_notifier_get(&iommu_mmu_notifier_ops, mm, &params);
+> +	if (IS_ERR(mn))
+> +		return ERR_CAST(mn);
+> +	io_mm = to_io_mm(mn);
+> +
+> +	if (WARN_ON(io_mm->ops != ops)) {
+> +		mmu_notifier_put(mn);
+> +		return ERR_PTR(-EINVAL);
+> +	}
+> +
+> +	return io_mm;
+> +}
+> +
+> +static void io_mm_put(struct io_mm *io_mm)
+> +{
+> +	mmu_notifier_put(&io_mm->notifier);
+> +}
+> +
+> +static struct iommu_sva *
+> +io_mm_attach(struct device *dev, struct io_mm *io_mm, void *drvdata)
+> +{
+> +	int ret = 0;
+> +	bool attach_domain = true;
+> +	struct iommu_bond *bond, *tmp;
+> +	struct iommu_domain *domain, *other;
+> +	struct iommu_sva_param *param = dev->iommu_param->sva_param;
+> +
+> +	domain = iommu_get_domain_for_dev(dev);
+> +
+> +	bond = kzalloc(sizeof(*bond), GFP_KERNEL);
+> +	if (!bond)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	bond->sva.dev	= dev;
+> +	bond->drvdata	= drvdata;
+> +	refcount_set(&bond->refs, 1);
+> +	RCU_INIT_POINTER(bond->io_mm, io_mm);
+> +
+> +	mutex_lock(&iommu_sva_lock);
+> +	/* Is it already bound to the device or domain? */
+> +	list_for_each_entry(tmp, &io_mm->devices, mm_head) {
+> +		if (tmp->sva.dev != dev) {
+> +			other =
+> iommu_get_domain_for_dev(tmp->sva.dev);
+> +			if (domain == other)
+> +				attach_domain = false;
+> +
+> +			continue;
+At this point, we already know this is a new device trying to attach to
+one of io_mm's existing domains. So there is no need to continue
+checking, right? Perhaps check like this?
+-               if (tmp->sva.dev != dev) {
++               if (tmp->sva.dev != dev && attach_domain) {
 
-void dpc_process_error(struct pci_dev *pdev)
-{
-     struct dpc_dev dpc;
-     dpc_dev_init(pdev, &dpc);
 
-    ....
+> +		}
+> +
+> +		if (WARN_ON(tmp->drvdata != drvdata)) {
+> +			ret = -EINVAL;
+> +			goto err_free;
+> +		}
+> +
+> +		/*
+> +		 * Hold a single io_mm reference per bond. Note that
+> we can't
+> +		 * return an error after this, otherwise the caller
+> would drop
+> +		 * an additional reference to the io_mm.
+> +		 */
+> +		refcount_inc(&tmp->refs);
+> +		io_mm_put(io_mm);
+> +		kfree(bond);
+Can bond be allocated after searching for existing bond or domain? If
+so, we can avoid free bond here.
 
-}
+> +		mutex_unlock(&iommu_sva_lock);
+> +		return &tmp->sva;
+> +	}
+> +
+> +	list_add_rcu(&bond->mm_head, &io_mm->devices);
+> +	param->nr_bonds++;
+> +	mutex_unlock(&iommu_sva_lock);
+> +
+> +	ret = io_mm->ops->attach(bond->sva.dev, io_mm->pasid,
+> io_mm->ctx,
+> +				 attach_domain);
+For VT-d, if a device trying to do SVA bind, there would not be a DMA
+domain. SVA should own the entire address space, no IOVA. So this
+attach() call is for VT-d driver to setup the first PASID table entry
+regardless attach_domain is true or false?
 
-Let me know your comments.
+> +	if (ret)
+> +		goto err_remove;
+> +
+> +	return &bond->sva;
+> +
+> +err_remove:
+> +	/*
+> +	 * At this point concurrent threads may have started to
+> access the
+> +	 * io_mm->devices list in order to invalidate address
+> ranges, which
+> +	 * requires to free the bond via kfree_rcu()
+> +	 */
+> +	mutex_lock(&iommu_sva_lock);
+> +	param->nr_bonds--;
+> +	list_del_rcu(&bond->mm_head);
+> +
+> +err_free:
+> +	mutex_unlock(&iommu_sva_lock);
+> +	kfree_rcu(bond, rcu_head);
+> +	return ERR_PTR(ret);
+> +}
+> +
+> +static void io_mm_detach_locked(struct iommu_bond *bond)
+> +{
+> +	struct io_mm *io_mm;
+> +	struct iommu_bond *tmp;
+> +	bool detach_domain = true;
+> +	struct iommu_domain *domain, *other;
+> +
+> +	io_mm = rcu_dereference_protected(bond->io_mm,
+> +
+> lockdep_is_held(&iommu_sva_lock));
+> +	if (!io_mm)
+> +		return;
+> +
+> +	domain = iommu_get_domain_for_dev(bond->sva.dev);
+> +
+> +	/* Are other devices in the same domain still attached to
+> this mm? */
+> +	list_for_each_entry(tmp, &io_mm->devices, mm_head) {
+> +		if (tmp == bond)
+> +			continue;
+> +		other = iommu_get_domain_for_dev(tmp->sva.dev);
+> +		if (domain == other) {
+> +			detach_domain = false;
+> +			break;
+> +		}
+> +	}
+> +
+> +	io_mm->ops->detach(bond->sva.dev, io_mm->pasid, io_mm->ctx,
+> +			   detach_domain);
+> +
+> +	list_del_rcu(&bond->mm_head);
+> +	RCU_INIT_POINTER(bond->io_mm, NULL);
+> +
+> +	/* Free after RCU grace period */
+> +	io_mm_put(io_mm);
+> +}
+> +
+> +/*
+> + * io_mm_release - release MMU notifier
+> + *
+> + * Called when the mm exits. Some devices may still be bound to the
+> io_mm. A few
+> + * things need to be done before it is safe to release:
+> + *
+> + * - Tell the device driver to stop using this PASID.
+> + * - Clear the PASID table and invalidate TLBs.
+> + * - Drop all references to this io_mm.
+> + */
+> +static void io_mm_release(struct mmu_notifier *mn, struct mm_struct
+> *mm) +{
+> +	struct iommu_bond *bond, *next;
+> +	struct io_mm *io_mm = to_io_mm(mn);
+> +
+> +	mutex_lock(&iommu_sva_lock);
+> +	list_for_each_entry_safe(bond, next, &io_mm->devices,
+> mm_head) {
+> +		struct device *dev = bond->sva.dev;
+> +		struct iommu_sva *sva = &bond->sva;
+> +
+> +		if (sva->ops && sva->ops->mm_exit &&
+> +		    sva->ops->mm_exit(dev, sva, bond->drvdata))
+> +			dev_WARN(dev, "possible leak of PASID %u",
+> +				 io_mm->pasid);
+> +
+> +		/* unbind() frees the bond, we just detach it */
+> +		io_mm_detach_locked(bond);
+> +	}
+> +	mutex_unlock(&iommu_sva_lock);
+> +}
+> +
+> +static void io_mm_invalidate_range(struct mmu_notifier *mn,
+> +				   struct mm_struct *mm, unsigned
+> long start,
+> +				   unsigned long end)
+> +{
+> +	struct iommu_bond *bond;
+> +	struct io_mm *io_mm = to_io_mm(mn);
+> +
+> +	rcu_read_lock();
+> +	list_for_each_entry_rcu(bond, &io_mm->devices, mm_head)
+> +		io_mm->ops->invalidate(bond->sva.dev, io_mm->pasid,
+> io_mm->ctx,
+> +				       start, end - start);
+> +	rcu_read_unlock();
+> +}
+> +
+> +static struct mmu_notifier_ops iommu_mmu_notifier_ops = {
+> +	.alloc_notifier		= io_mm_alloc,
+> +	.free_notifier		= io_mm_free,
+> +	.release		= io_mm_release,
+> +	.invalidate_range	= io_mm_invalidate_range,
+> +};
+> +
+> +struct iommu_sva *
+> +iommu_sva_bind_generic(struct device *dev, struct mm_struct *mm,
+> +		       const struct io_mm_ops *ops, void *drvdata)
+> +{
+> +	struct io_mm *io_mm;
+> +	struct iommu_sva *handle;
+> +	struct iommu_param *param = dev->iommu_param;
+> +
+> +	if (!param)
+> +		return ERR_PTR(-ENODEV);
+> +
+> +	mutex_lock(&param->sva_lock);
+> +	if (!param->sva_param) {
+> +		handle = ERR_PTR(-ENODEV);
+> +		goto out_unlock;
+> +	}
+> +
+> +	io_mm = io_mm_get(mm, ops, param->sva_param->min_pasid,
+> +			  param->sva_param->max_pasid);
+> +	if (IS_ERR(io_mm)) {
+> +		handle = ERR_CAST(io_mm);
+> +		goto out_unlock;
+> +	}
+> +
+> +	handle = io_mm_attach(dev, io_mm, drvdata);
+> +	if (IS_ERR(handle))
+> +		io_mm_put(io_mm);
+> +
+> +out_unlock:
+> +	mutex_unlock(&param->sva_lock);
+> +	return handle;
+> +}
+> +EXPORT_SYMBOL_GPL(iommu_sva_bind_generic);
+> +
+> +static void iommu_sva_unbind_locked(struct iommu_bond *bond)
+> +{
+> +	struct device *dev = bond->sva.dev;
+> +	struct iommu_sva_param *param = dev->iommu_param->sva_param;
+> +
+> +	if (!refcount_dec_and_test(&bond->refs))
+> +		return;
+> +
+dont you need to free bond here?
 
->
->> +	struct pci_dev *pdev = dpc->pdev;
->> +	pci_ers_result_t estate = PCI_ERS_RESULT_DISCONNECT;
->> +	u16 status;
->> +
->> +	pci_info(pdev, "ACPI event %#x received\n", event);
->> +
->> +	if (event != ACPI_NOTIFY_DISCONNECT_RECOVER)
->> +		return;
->> +
->> +	/*
->> +	 * Check if _DSM(0xD) is available, and if present locate the
->> +	 * port which issued EDR event.
->> +	 */
->> +	pdev = acpi_locate_dpc_port(pdev);
-> This function name should include "get" since it's part of the
-> pci_dev_get()/pci_dev_put() sequence.
-How about acpi_dpc_port_get(pdev) ?
->
->> +	if (!pdev) {
->> +		pci_err(dpc->pdev, "No valid port found\n");
->> +		return;
->> +	}
->> +
->> +	if (pdev != dpc->pdev) {
->> +		pci_warn(pdev, "Initializing dpc again\n");
->> +		dpc_dev_init(pdev, &ndpc);
-> This seems...  I'm not sure what.  I guess it's really just reading
-> the DPC capability for use by dpc_process_error(), so maybe it's OK.
-> But it's a little strange to read.
->
-> Is this something we should be warning about?
-No this is a valid case. it will only happen if we have a non-acpi based 
-switch
-attached to root port.
->   I think the ECR says
-> it's legitimate to return a child device, doesn't it?
->
->> +		dpc= &ndpc;
-> Space before "=".
-will fix it in next version.
->
->> +	}
->> +
->> +	/*
->> +	 * If port does not support DPC, just send the OST:
->> +	 */
->> +	if (!dpc->cap_pos)
->> +		goto send_ost;
->> +
->> +	/* Check if there is a valid DPC trigger */
->> +	pci_read_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_STATUS, &status);
->> +	if (!(status & PCI_EXP_DPC_STATUS_TRIGGER)) {
->> +		pci_err(pdev, "Invalid DPC trigger %#010x\n", status);
->> +		goto send_ost;
->> +	}
->> +
->> +	dpc_process_error(dpc);
->> +
->> +	/* Clear AER registers */
->> +	pci_aer_clear_err_uncor_status(pdev);
->> +	pci_aer_clear_err_fatal_status(pdev);
->> +	pci_aer_clear_err_status_regs(pdev);
->> +
->> +	/*
->> +	 * Irrespective of whether the DPC event is triggered by
->> +	 * ERR_FATAL or ERR_NONFATAL, since the link is already down,
->> +	 * use the FATAL error recovery path for both cases.
->> +	 */
->> +	estate = pcie_do_recovery_common(pdev, pci_channel_io_frozen, -1,
->> +					 edr_dpc_reset_link, dpc);
->> +send_ost:
->> +
->> +	/* Use ACPI handle of DPC event device for sending EDR status */
->> +	dpc = data;
-> I think it'd be clearer to reserve "dpc" for the device that received
-> the notification and to which we send the status, and use a different
-> "e_dpc" or something for the dpc_process_error() and related code.
-ok. will make this change in next version.
->
->> +	/*
->> +	 * If recovery is successful, send _OST(0xF, BDF << 16 | 0x80)
->> +	 * to firmware. If not successful, send _OST(0xF, BDF << 16 | 0x81).
->> +	 */
->> +	if (estate == PCI_ERS_RESULT_RECOVERED)
->> +		acpi_send_edr_status(dpc->pdev, pdev, EDR_OST_SUCCESS);
->> +	else
->> +		acpi_send_edr_status(dpc->pdev, pdev, EDR_OST_FAILED);
->> +
->> +	pci_dev_put(pdev);
->> +}
->> +
->> +int pci_acpi_add_edr_notifier(struct pci_dev *pdev)
->> +{
->> +	struct acpi_device *adev = ACPI_COMPANION(&pdev->dev);
->> +	struct dpc_dev *dpc;
->> +	acpi_status astatus;
->> +	int status;
->> +
->> +	/*
->> +	 * Per the Downstream Port Containment Related Enhancements ECN to
->> +	 * the PCI Firmware Spec, r3.2, sec 4.5.1, table 4-6, EDR support
->> +	 * can only be enabled if DPC is controlled by firmware.
->> +	 *
->> +	 * TODO: Remove dependency on ACPI FIRMWARE_FIRST bit to
->> +	 * determine ownership of DPC between firmware or OS.
-> Extend the comment to say how we *should* determine ownership.
-Yes, ownership should be based on _OSC negotiation. I will add necessary
-comments here.
->
->> +	 */
->> +	if (!pcie_aer_get_firmware_first(pdev) || pcie_ports_dpc_native)
->> +		return -ENODEV;
->> +
->> +	if (!adev)
->> +		return 0;
->> +
->> +	dpc = devm_kzalloc(&pdev->dev, sizeof(*dpc), GFP_KERNEL);
-> This kzalloc should be in dpc.c, not here.
->
-> And I don't see a corresponding free.
-It will be freed when removing the pdev right ? Do you want to free it 
-explicitly in this driver ?
->
->> +	if (!dpc)
->> +		return -ENOMEM;
->> +
->> +	dpc_dev_init(pdev, dpc);
->> +
->> +	astatus = acpi_install_notify_handler(adev->handle,
->> +					      ACPI_SYSTEM_NOTIFY,
->> +					      edr_handle_event, dpc);
->> +	if (ACPI_FAILURE(astatus)) {
->> +		pci_err(pdev, "Install ACPI_SYSTEM_NOTIFY handler failed\n");
->> +		return -EBUSY;
->> +	}
->> +
->> +	status = acpi_enable_dpc_port(pdev, true);
->> +	if (status) {
->> +		pci_warn(pdev, "Enable DPC port failed\n");
->> +		acpi_remove_notify_handler(adev->handle,
->> +					   ACPI_SYSTEM_NOTIFY,
->> +					   edr_handle_event);
->> +		return status;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +void pci_acpi_remove_edr_notifier(struct pci_dev *pdev)
->> +{
->> +	struct acpi_device *adev = ACPI_COMPANION(&pdev->dev);
->> +
->> +	if (!adev)
->> +		return;
->> +
->> +	acpi_remove_notify_handler(adev->handle, ACPI_SYSTEM_NOTIFY,
->> +				   edr_handle_event);
->> +}
->> diff --git a/include/linux/pci-acpi.h b/include/linux/pci-acpi.h
->> index 62b7fdcc661c..a430e5fc50f3 100644
->> --- a/include/linux/pci-acpi.h
->> +++ b/include/linux/pci-acpi.h
->> @@ -112,6 +112,14 @@ extern const guid_t pci_acpi_dsm_guid;
->>   #define RESET_DELAY_DSM			0x08
->>   #define FUNCTION_DELAY_DSM		0x09
->>   
->> +#ifdef CONFIG_PCIE_EDR
->> +int pci_acpi_add_edr_notifier(struct pci_dev *pdev);
->> +void pci_acpi_remove_edr_notifier(struct pci_dev *pdev);
->> +#else
->> +static inline int pci_acpi_add_edr_notifier(struct pci_dev *pdev) { return 0; }
->> +static inline void pci_acpi_remove_edr_notifier(struct pci_dev *pdev) { }
->> +#endif /* CONFIG_PCIE_EDR */
->> +
->>   #else	/* CONFIG_ACPI */
->>   static inline void acpi_pci_add_bus(struct pci_bus *bus) { }
->>   static inline void acpi_pci_remove_bus(struct pci_bus *bus) { }
->> -- 
->> 2.21.0
->>
--- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
+> +	io_mm_detach_locked(bond);
+> +	param->nr_bonds--;
+> +	kfree_rcu(bond, rcu_head);
+> +}
+> +
+> +void iommu_sva_unbind_generic(struct iommu_sva *handle)
+> +{
+> +	struct iommu_param *param = handle->dev->iommu_param;
+> +
+> +	if (WARN_ON(!param))
+> +		return;
+> +
+> +	mutex_lock(&param->sva_lock);
+> +	mutex_lock(&iommu_sva_lock);
+> +	iommu_sva_unbind_locked(to_iommu_bond(handle));
+> +	mutex_unlock(&iommu_sva_lock);
+> +	mutex_unlock(&param->sva_lock);
+> +}
+> +EXPORT_SYMBOL_GPL(iommu_sva_unbind_generic);
+> +
+> +/**
+> + * iommu_sva_enable() - Enable Shared Virtual Addressing for a device
+> + * @dev: the device
+> + * @sva_param: the parameters.
+> + *
+> + * Called by an IOMMU driver to setup the SVA parameters
+> + * @sva_param is duplicated and can be freed when this function
+> returns.
+> + *
+> + * Return 0 if initialization succeeded, or an error.
+> + */
+IOMMU vendor driver usually dont know when the device SVA feature will
+be used until bind call. So we pretty much have to call this for every
+device during init time?
 
+> +int iommu_sva_enable(struct device *dev, struct iommu_sva_param
+> *sva_param) +{
+> +	int ret;
+> +	struct iommu_sva_param *new_param;
+> +	struct iommu_param *param = dev->iommu_param;
+> +
+> +	if (!param)
+> +		return -ENODEV;
+> +
+> +	new_param = kmemdup(sva_param, sizeof(*new_param),
+> GFP_KERNEL);
+> +	if (!new_param)
+> +		return -ENOMEM;
+> +
+> +	mutex_lock(&param->sva_lock);
+> +	if (param->sva_param) {
+> +		ret = -EEXIST;
+> +		goto err_unlock;
+> +	}
+> +
+> +	dev->iommu_param->sva_param = new_param;
+> +	mutex_unlock(&param->sva_lock);
+> +	return 0;
+> +
+> +err_unlock:
+> +	mutex_unlock(&param->sva_lock);
+> +	kfree(new_param);
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(iommu_sva_enable);
+> +
+> +/**
+> + * iommu_sva_disable() - Disable Shared Virtual Addressing for a
+> device
+> + * @dev: the device
+> + *
+> + * IOMMU drivers call this to disable SVA.
+> + */
+> +int iommu_sva_disable(struct device *dev)
+> +{
+> +	int ret = 0;
+> +	struct iommu_param *param = dev->iommu_param;
+> +
+> +	if (!param)
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&param->sva_lock);
+> +	if (!param->sva_param) {
+> +		ret = -ENODEV;
+> +		goto out_unlock;
+> +	}
+> +
+> +	/* Require that all contexts are unbound */
+> +	if (param->sva_param->nr_bonds) {
+> +		ret = -EBUSY;
+> +		goto out_unlock;
+> +	}
+> +
+> +	kfree(param->sva_param);
+> +	param->sva_param = NULL;
+> +out_unlock:
+> +	mutex_unlock(&param->sva_lock);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(iommu_sva_disable);
+> +
+> +bool iommu_sva_enabled(struct device *dev)
+> +{
+> +	bool enabled;
+> +	struct iommu_param *param = dev->iommu_param;
+> +
+> +	if (!param)
+> +		return false;
+> +
+> +	mutex_lock(&param->sva_lock);
+> +	enabled = !!param->sva_param;
+> +	mutex_unlock(&param->sva_lock);
+> +	return enabled;
+> +}
+> +EXPORT_SYMBOL_GPL(iommu_sva_enabled);
+> +
+> +int iommu_sva_get_pasid_generic(struct iommu_sva *handle)
+> +{
+> +	struct io_mm *io_mm;
+> +	int pasid = IOMMU_PASID_INVALID;
+> +	struct iommu_bond *bond = to_iommu_bond(handle);
+> +
+> +	rcu_read_lock();
+> +	io_mm = rcu_dereference(bond->io_mm);
+> +	if (io_mm)
+> +		pasid = io_mm->pasid;
+> +	rcu_read_unlock();
+> +	return pasid;
+> +}
+> +EXPORT_SYMBOL_GPL(iommu_sva_get_pasid_generic);
+> diff --git a/drivers/iommu/iommu-sva.h b/drivers/iommu/iommu-sva.h
+> new file mode 100644
+> index 000000000000..dd55c2db0936
+> --- /dev/null
+> +++ b/drivers/iommu/iommu-sva.h
+> @@ -0,0 +1,64 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * SVA library for IOMMU drivers
+> + */
+> +#ifndef _IOMMU_SVA_H
+> +#define _IOMMU_SVA_H
+> +
+> +#include <linux/iommu.h>
+> +#include <linux/kref.h>
+> +#include <linux/mmu_notifier.h>
+> +
+> +struct io_mm_ops {
+> +	/* Allocate a PASID context for an mm */
+> +	void *(*alloc)(struct mm_struct *mm);
+> +
+> +	/*
+> +	 * Attach a PASID context to a device. Write the entry into
+> the PASID
+> +	 * table.
+> +	 *
+> +	 * @attach_domain is true when no other device in the IOMMU
+> domain is
+> +	 *   already attached to this context. IOMMU drivers that
+> share the
+> +	 *   PASID tables within a domain don't need to write the
+> PASID entry
+> +	 *   when @attach_domain is false.
+> +	 */
+If we have per device PASID table, then we need to set up PASID table
+entry regardless of the domain sharing. What is confusing to me is that
+domain is for DMA isolation on request w/o PASID, but with SVA we don't
+really care about domains. Sorry, it has been a long time since we
+discussed this. I think will work for VT-d but just wanted to make sure
+I understand the intentions.
+
+> +	int (*attach)(struct device *dev, int pasid, void *ctx,
+> +		      bool attach_domain);
+> +
+> +	/*
+> +	 * Detach a PASID context from a device. Clear the entry
+> from the PASID
+> +	 * table and invalidate if necessary.
+> +	 *
+> +	 * @detach_domain is true when no other device in the IOMMU
+> domain is
+> +	 *   still attached to this context. IOMMU drivers that
+> share the PASID
+> +	 *   table within a domain don't need to clear the PASID
+> entry when
+> +	 *   @detach_domain is false, only invalidate the caches.
+> +	 */
+> +	void (*detach)(struct device *dev, int pasid, void *ctx,
+> +		       bool detach_domain);
+> +
+> +	/* Invalidate a range of addresses. Cannot sleep. */
+> +	void (*invalidate)(struct device *dev, int pasid, void *ctx,
+> +			   unsigned long vaddr, size_t size);
+> +
+> +	/* Free a context. Cannot sleep. */
+> +	void (*release)(void *ctx);
+> +};
+> +
+> +struct iommu_sva_param {
+> +	u32			min_pasid;
+> +	u32			max_pasid;
+> +	int			nr_bonds;
+> +};
+> +
+> +struct iommu_sva *
+> +iommu_sva_bind_generic(struct device *dev, struct mm_struct *mm,
+> +		       const struct io_mm_ops *ops, void *drvdata);
+> +void iommu_sva_unbind_generic(struct iommu_sva *handle);
+> +int iommu_sva_get_pasid_generic(struct iommu_sva *handle);
+> +
+> +int iommu_sva_enable(struct device *dev, struct iommu_sva_param
+> *sva_param); +int iommu_sva_disable(struct device *dev);
+> +bool iommu_sva_enabled(struct device *dev);
+> +
+> +#endif /* _IOMMU_SVA_H */
+> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> index 3e3528436e0b..c8bd972c1788 100644
+> --- a/drivers/iommu/iommu.c
+> +++ b/drivers/iommu/iommu.c
+> @@ -164,6 +164,7 @@ static struct iommu_param
+> *iommu_get_dev_param(struct device *dev) return NULL;
+>  
+>  	mutex_init(&param->lock);
+> +	mutex_init(&param->sva_lock);
+>  	dev->iommu_param = param;
+>  	return param;
+>  }
+> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+> index 1739f8a7a4b4..83397ae88d2d 100644
+> --- a/include/linux/iommu.h
+> +++ b/include/linux/iommu.h
+> @@ -368,6 +368,7 @@ struct iommu_fault_param {
+>   * struct iommu_param - collection of per-device IOMMU data
+>   *
+>   * @fault_param: IOMMU detected device fault reporting data
+> + * @sva_param: IOMMU parameter for SVA
+>   *
+>   * TODO: migrate other per device data pointers under
+> iommu_dev_data, e.g.
+>   *	struct iommu_group	*iommu_group;
+> @@ -376,6 +377,8 @@ struct iommu_fault_param {
+>  struct iommu_param {
+>  	struct mutex lock;
+>  	struct iommu_fault_param *fault_param;
+> +	struct mutex sva_lock;
+> +	struct iommu_sva_param *sva_param;
+>  };
+>  
+>  int  iommu_device_register(struct iommu_device *iommu);
+
+Thanks,
+
+Jacob
