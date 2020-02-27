@@ -2,83 +2,151 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 24159171E45
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2020 15:26:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C20C17252D
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2020 18:34:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388418AbgB0OJw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 Feb 2020 09:09:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47874 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730257AbgB0OJu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:09:50 -0500
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1729512AbgB0ReY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 Feb 2020 12:34:24 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:57716 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729678AbgB0ReX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Feb 2020 12:34:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582824862;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=JIy4soTckrnNxIx60AnqK7b811MaH6RrRiwbpQXEFw0=;
+        b=M3GFR0oOCJVc6u7Ht5kzByEtB+NrLn2EkGE5SA76mc8f0EiFz/XWJVlrfBeLfX7srzdVet
+        rhxY1dIY18iefsxFjP5rwiHSlbH/7AIjXNI1deJvAyaXRONJedgnI2i3Qz4b1pIwp7wgV8
+        wdS7cNQM9K/0SYhAH53CYqUM9FcnHMI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-168-IVUUXeErOcCf36RRUaAqvA-1; Thu, 27 Feb 2020 12:34:16 -0500
+X-MC-Unique: IVUUXeErOcCf36RRUaAqvA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E06EB20578;
-        Thu, 27 Feb 2020 14:09:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812590;
-        bh=X9rl3ZGCnjqX0Ce24td4V97fsDt8ivYeM1csu23KtbA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=LFdE44vcMhziqC8vsqlprJou46T1FdXaTAU/cTGFMoy+JuvwXVnfxZvhShBpXVo9/
-         Ejhv5CEdeoWe0x4rO3WB6EcngNXFybpnYhP+JD2koCrpknOOJ7hjlr6e3SwMwZqf6O
-         tGDeNshu3lujRonV6asb77lm++OB/Rz3dhevOyAw=
-Date:   Thu, 27 Feb 2020 08:09:48 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>
-Subject: Re: [PATCH] pci: brcmstb: Fix build on 32bit ARM platforms with
- older compilers
-Message-ID: <20200227140948.GA78063@google.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 26AD2800D54;
+        Thu, 27 Feb 2020 17:34:15 +0000 (UTC)
+Received: from gondolin (ovpn-117-2.ams2.redhat.com [10.36.117.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BAE625C578;
+        Thu, 27 Feb 2020 17:34:10 +0000 (UTC)
+Date:   Thu, 27 Feb 2020 18:34:07 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dev@dpdk.org, mtosatti@redhat.com,
+        thomas@monjalon.net, bluca@debian.org, jerinjacobk@gmail.com,
+        bruce.richardson@intel.com
+Subject: Re: [PATCH v2 4/7] vfio: Introduce VFIO_DEVICE_FEATURE ioctl and
+ first user
+Message-ID: <20200227183407.74a5c5b4.cohuck@redhat.com>
+In-Reply-To: <158213845865.17090.13613582696110253458.stgit@gimli.home>
+References: <158213716959.17090.8399427017403507114.stgit@gimli.home>
+        <158213845865.17090.13613582696110253458.stgit@gimli.home>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200227115146.24515-1-m.szyprowski@samsung.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 12:51:46PM +0100, Marek Szyprowski wrote:
-> Some older compilers have no implementation for the helper for 64-bit
-> unsigned division/modulo, so linking pcie-brcmstb driver causes the
-> "undefined reference to `__aeabi_uldivmod'" error.
-> 
-> *rc_bar2_size is always a power of two, because it is calculated as:
-> "1ULL << fls64(entry->res->end - entry->res->start)", so the modulo
-> operation in the subsequent check can be replaced by a simple logical
-> AND with a proper mask.
-> 
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+On Wed, 19 Feb 2020 11:54:18 -0700
+Alex Williamson <alex.williamson@redhat.com> wrote:
 
-Applied to for-linus for v5.6, thanks!  I added acks from Nicolas and
-Lorenzo and also the Fixes: tag from Lorenzo.
-
+> The VFIO_DEVICE_FEATURE ioctl is meant to be a general purpose, device
+> agnostic ioctl for setting, retrieving, and probing device features.
+> This implementation provides a 16-bit field for specifying a feature
+> index, where the data porition of the ioctl is determined by the
+> semantics for the given feature.  Additional flag bits indicate the
+> direction and nature of the operation; SET indicates user data is
+> provided into the device feature, GET indicates the device feature is
+> written out into user data.  The PROBE flag augments determining
+> whether the given feature is supported, and if provided, whether the
+> given operation on the feature is supported.
+> 
+> The first user of this ioctl is for setting the vfio-pci VF token,
+> where the user provides a shared secret key (UUID) on a SR-IOV PF
+> device, which users must provide when opening associated VF devices.
+> 
+> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 > ---
->  drivers/pci/controller/pcie-brcmstb.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/vfio/pci/vfio_pci.c |   52 +++++++++++++++++++++++++++++++++++++++++++
+>  include/uapi/linux/vfio.h   |   37 +++++++++++++++++++++++++++++++
+>  2 files changed, 89 insertions(+)
 > 
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> index d20aabc26273..3a10e678c7f4 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -670,7 +670,7 @@ static inline int brcm_pcie_get_rc_bar2_size_and_offset(struct brcm_pcie *pcie,
->  	 *   outbound memory @ 3GB). So instead it will  start at the 1x
->  	 *   multiple of its size
->  	 */
-> -	if (!*rc_bar2_size || *rc_bar2_offset % *rc_bar2_size ||
-> +	if (!*rc_bar2_size || (*rc_bar2_offset & (*rc_bar2_size - 1)) ||
->  	    (*rc_bar2_offset < SZ_4G && *rc_bar2_offset > SZ_2G)) {
->  		dev_err(dev, "Invalid rc_bar2_offset/size: size 0x%llx, off 0x%llx\n",
->  			*rc_bar2_size, *rc_bar2_offset);
-> -- 
-> 2.17.1
-> 
+> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+> index 8dd6ef9543ca..e4d5d26e5e71 100644
+> --- a/drivers/vfio/pci/vfio_pci.c
+> +++ b/drivers/vfio/pci/vfio_pci.c
+> @@ -1180,6 +1180,58 @@ static long vfio_pci_ioctl(void *device_data,
+>  
+>  		return vfio_pci_ioeventfd(vdev, ioeventfd.offset,
+>  					  ioeventfd.data, count, ioeventfd.fd);
+> +	} else if (cmd == VFIO_DEVICE_FEATURE) {
+> +		struct vfio_device_feature feature;
+> +		uuid_t uuid;
+> +
+> +		minsz = offsetofend(struct vfio_device_feature, flags);
+> +
+> +		if (copy_from_user(&feature, (void __user *)arg, minsz))
+> +			return -EFAULT;
+> +
+> +		if (feature.argsz < minsz)
+> +			return -EINVAL;
+> +
+> +		if (feature.flags & ~(VFIO_DEVICE_FEATURE_MASK |
+> +				      VFIO_DEVICE_FEATURE_SET |
+> +				      VFIO_DEVICE_FEATURE_GET |
+> +				      VFIO_DEVICE_FEATURE_PROBE))
+> +			return -EINVAL;
+
+GET|SET|PROBE is well-defined, but what about GET|SET without PROBE? Do
+we want to fence this in the generic ioctl handler part? Or is there
+any sane way to implement that (read and then write back something?)
+
+> +
+> +		switch (feature.flags & VFIO_DEVICE_FEATURE_MASK) {
+> +		case VFIO_DEVICE_FEATURE_PCI_VF_TOKEN:
+> +			if (!vdev->vf_token)
+> +				return -ENOTTY;
+> +
+> +			/*
+> +			 * We do not support GET of the VF Token UUID as this
+> +			 * could expose the token of the previous device user.
+> +			 */
+> +			if (feature.flags & VFIO_DEVICE_FEATURE_GET)
+> +				return -EINVAL;
+> +
+> +			if (feature.flags & VFIO_DEVICE_FEATURE_PROBE)
+> +				return 0;
+> +
+> +			/* Don't SET unless told to do so */
+> +			if (!(feature.flags & VFIO_DEVICE_FEATURE_SET))
+> +				return -EINVAL;
+> +
+> +			if (feature.argsz < minsz + sizeof(uuid))
+> +				return -EINVAL;
+> +
+> +			if (copy_from_user(&uuid, (void __user *)(arg + minsz),
+> +					   sizeof(uuid)))
+> +				return -EFAULT;
+> +
+> +			mutex_lock(&vdev->vf_token->lock);
+> +			uuid_copy(&vdev->vf_token->uuid, &uuid);
+> +			mutex_unlock(&vdev->vf_token->lock);
+> +
+> +			return 0;
+> +		default:
+> +			return -ENOTTY;
+> +		}
+>  	}
+>  
+>  	return -ENOTTY;
+(...)
+
