@@ -2,93 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 42188172BBE
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2020 23:49:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 286AE172BD2
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2020 00:03:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730163AbgB0Wtd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 Feb 2020 17:49:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47160 "EHLO mail.kernel.org"
+        id S1729708AbgB0XDH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 Feb 2020 18:03:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726845AbgB0Wtc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 27 Feb 2020 17:49:32 -0500
+        id S1729704AbgB0XDH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 27 Feb 2020 18:03:07 -0500
 Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0C79246A1;
-        Thu, 27 Feb 2020 22:49:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 153F724699;
+        Thu, 27 Feb 2020 23:03:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582843772;
-        bh=9yKc/e6VcXVqziF8urj2FFyiwuVGnAgdVsS7OTQTt3w=;
+        s=default; t=1582844586;
+        bh=P4oQur2XtbC7njpdq9saO0WFyxGYlvu37AkdrE90ojM=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=BKL6tO98C/MKfs1ioY0s9UzQGIQAfNKkkDI59ybMMbUeR5ZDsBi3N/CqTWAATMVJS
-         Az5R5T59PHMPa6DR6p7X6+DU/AhBTxeqlqkapmz/Q+VO7DGxDLnR890A9x0Bzm2m5k
-         blRRYgxQfTuR8Rmb7ephwImEtxmuhvDZ4lNLgxO8=
-Date:   Thu, 27 Feb 2020 16:49:30 -0600
+        b=Ab/ivqhTkf+ewF6Z6ueVsZWH8gpWMsjsA8g80EYH6a2VrhhUKmBtCXh5KDs4RoEc2
+         XLEPIiVK6idFLATH0jGnUkwTvFXgSIkiWGt9Gyo+vvRKuYsXYdLgcctmu+TQA3nYh+
+         2K330rNBqyiKGpoyLfWNZYrie9O4Dglxtr21SBhs=
+Date:   Thu, 27 Feb 2020 17:03:04 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Sean V Kelley <sean.v.kelley@linux.intel.com>
-Cc:     tglx@linutronix.de, corbet@lwn.net, mingo@redhat.com, bp@alien8.de,
-        x86@kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        kar.hin.ong@ni.com, sassmann@kpanic.de
-Subject: Re: [PATCH v2 0/2] pci: Add boot interrupt quirk mechanism for Xeon
- chipsets
-Message-ID: <20200227224930.GA158759@google.com>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 12/24] docs: pci:
+ endpoint/function/binding/pci-test.txt convert to ReST
+Message-ID: <20200227230304.GA159790@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200220192930.64820-1-sean.v.kelley@linux.intel.com>
+In-Reply-To: <84d6075c17ce9a1c5c214f2f11ea55d951fdc3bd.1581956285.git.mchehab+huawei@kernel.org>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 11:29:28AM -0800, Sean V Kelley wrote:
-> Changes since v1 [1]:
+On Mon, Feb 17, 2020 at 05:20:30PM +0100, Mauro Carvalho Chehab wrote:
+> Convert this file to ReST by adding a proper title to it and
+> use the right markups for a table.
 > 
-> - Correct Documentation section title for 6300ESB chipset.
-> (Jonathan Derrick)
+> While here, add a SPDX header.
 > 
-> - Use consistent abbreviations in comments for IO-APIC and Core IO.
-> (Andy Shevchenko)
-> 
-> - Retained Reviewed-by tag due to no technical changes.
-> 
-> [1]: https://lore.kernel.org/lkml/20200214213313.66622-1-sean.v.kelley@linux.intel.com/
-> 
-> Bjorn, I'm open for it to go to stable as well.
-> 
-> --
-> 
-> When IRQ lines on secondary or higher IO-APICs are masked (e.g.,
-> Real-Time threaded interrupts), many chipsets redirect IRQs on
-> this line to the legacy PCH and in turn the base IO-APIC in the
-> system. The unhandled interrupts on the base IO-APIC will be
-> identified by the Linux kernel as Spurious Interrupts and can
-> lead to disabled IRQ lines.
-> 
-> Disabling this legacy PCI interrupt routing is chipset-specific and
-> varies in mechanism between chipset vendors and across generations.
-> In some cases the mechanism is exposed to BIOS but not all BIOS
-> vendors chose to pick it up. With the increasing usage of RT as it
-> marches towards mainline, additional issues have been raised with
-> more recent Xeon chipsets.
-> 
-> This patchset disables the boot interrupt on these Xeon chipsets where
-> this is possible with an additional mechanism. In addition, this
-> patchset includes documentation covering the background of this quirk.
-> 
-> 
-> Sean V Kelley (2):
->   pci: Add boot interrupt quirk mechanism for Xeon chipsets
->   Documentation:PCI: Add background on Boot Interrupts
-> 
->  Documentation/PCI/boot-interrupts.rst | 153 ++++++++++++++++++++++++++
->  Documentation/PCI/index.rst           |   1 +
->  drivers/pci/quirks.c                  |  80 ++++++++++++--
->  3 files changed, 227 insertions(+), 7 deletions(-)
->  create mode 100644 Documentation/PCI/boot-interrupts.rst
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Applied to pci/interrupts for v5.7.  I added a stable tag.
+FWIW,
 
-Thanks a lot; this is really a nice piece of work!
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+
+I assume you'll merge this, Jonathan.  Let me know if I should do
+anything else with this.
+
+> ---
+>  .../endpoint/function/binding/pci-test.rst    | 26 +++++++++++++++++++
+>  .../endpoint/function/binding/pci-test.txt    | 19 --------------
+>  Documentation/PCI/endpoint/index.rst          |  2 ++
+>  3 files changed, 28 insertions(+), 19 deletions(-)
+>  create mode 100644 Documentation/PCI/endpoint/function/binding/pci-test.rst
+>  delete mode 100644 Documentation/PCI/endpoint/function/binding/pci-test.txt
+> 
+> diff --git a/Documentation/PCI/endpoint/function/binding/pci-test.rst b/Documentation/PCI/endpoint/function/binding/pci-test.rst
+> new file mode 100644
+> index 000000000000..57ee866fb165
+> --- /dev/null
+> +++ b/Documentation/PCI/endpoint/function/binding/pci-test.rst
+> @@ -0,0 +1,26 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +==========================
+> +PCI Test Endpoint Function
+> +==========================
+> +
+> +name: Should be "pci_epf_test" to bind to the pci_epf_test driver.
+> +
+> +Configurable Fields:
+> +
+> +================   ===========================================================
+> +vendorid	   should be 0x104c
+> +deviceid	   should be 0xb500 for DRA74x and 0xb501 for DRA72x
+> +revid		   don't care
+> +progif_code	   don't care
+> +subclass_code	   don't care
+> +baseclass_code	   should be 0xff
+> +cache_line_size	   don't care
+> +subsys_vendor_id   don't care
+> +subsys_id	   don't care
+> +interrupt_pin	   Should be 1 - INTA, 2 - INTB, 3 - INTC, 4 -INTD
+> +msi_interrupts	   Should be 1 to 32 depending on the number of MSI interrupts
+> +		   to test
+> +msix_interrupts	   Should be 1 to 2048 depending on the number of MSI-X
+> +		   interrupts to test
+> +================   ===========================================================
+> diff --git a/Documentation/PCI/endpoint/function/binding/pci-test.txt b/Documentation/PCI/endpoint/function/binding/pci-test.txt
+> deleted file mode 100644
+> index cd76ba47394b..000000000000
+> --- a/Documentation/PCI/endpoint/function/binding/pci-test.txt
+> +++ /dev/null
+> @@ -1,19 +0,0 @@
+> -PCI TEST ENDPOINT FUNCTION
+> -
+> -name: Should be "pci_epf_test" to bind to the pci_epf_test driver.
+> -
+> -Configurable Fields:
+> -vendorid	 : should be 0x104c
+> -deviceid	 : should be 0xb500 for DRA74x and 0xb501 for DRA72x
+> -revid		 : don't care
+> -progif_code	 : don't care
+> -subclass_code	 : don't care
+> -baseclass_code	 : should be 0xff
+> -cache_line_size	 : don't care
+> -subsys_vendor_id : don't care
+> -subsys_id	 : don't care
+> -interrupt_pin	 : Should be 1 - INTA, 2 - INTB, 3 - INTC, 4 -INTD
+> -msi_interrupts	 : Should be 1 to 32 depending on the number of MSI interrupts
+> -		   to test
+> -msix_interrupts	 : Should be 1 to 2048 depending on the number of MSI-X
+> -		   interrupts to test
+> diff --git a/Documentation/PCI/endpoint/index.rst b/Documentation/PCI/endpoint/index.rst
+> index d114ea74b444..4ca7439fbfc9 100644
+> --- a/Documentation/PCI/endpoint/index.rst
+> +++ b/Documentation/PCI/endpoint/index.rst
+> @@ -11,3 +11,5 @@ PCI Endpoint Framework
+>     pci-endpoint-cfs
+>     pci-test-function
+>     pci-test-howto
+> +
+> +   function/binding/pci-test
+> -- 
+> 2.24.1
+> 
