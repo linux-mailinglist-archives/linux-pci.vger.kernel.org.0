@@ -2,87 +2,91 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7DDC7170CAB
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2020 00:40:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 48839170E57
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2020 03:19:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbgBZXk3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 Feb 2020 18:40:29 -0500
-Received: from mail-lj1-f173.google.com ([209.85.208.173]:41767 "EHLO
-        mail-lj1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727935AbgBZXk3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 Feb 2020 18:40:29 -0500
-Received: by mail-lj1-f173.google.com with SMTP id h23so1124165ljc.8;
-        Wed, 26 Feb 2020 15:40:28 -0800 (PST)
+        id S1728266AbgB0CTz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 Feb 2020 21:19:55 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:38755 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728238AbgB0CTz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 Feb 2020 21:19:55 -0500
+Received: by mail-ed1-f65.google.com with SMTP id p23so1335696edr.5
+        for <linux-pci@vger.kernel.org>; Wed, 26 Feb 2020 18:19:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=/zvwuQzMVyu/TdqK56I2p7OTWodLcL8mzDknB3/DWOE=;
-        b=XI6hYN+NzZh/3ZislvkBSf4E7btI9gXm0ArDRVNuwWX9/kaHdAjXTvgMDWCvhtGUIW
-         Dl97JEHdcSjr6tczhNN8zlMURx8PoCZBVEM5BZpjPcJCMzIjMfXPtjqJA2YTIUBrZkDw
-         DZ+BxF9ReLYoSoUwIFSO3UI+ScKklW3LmS2vJ5dcX6Wejjcj2nTzCE2K54AK2BZ3bEqL
-         84fp3Kw83xfC8r3NMPJAeMqKERf56bxUVoQJhZ2B8BH9bhwSyvjNHYL96+M4mcneKbmr
-         VaGDqFWnJ76qFBBjuIJYjzo5nn5MmgJAiSxTwbLCiQT9b268UvcETkSMRDuT04GP8UzU
-         ePNQ==
+        bh=hcoWdnerPpa+zK/P0vhU/glnANAYYkOXJMkEDIK7xws=;
+        b=wzbCuA9QiXCM7mHhhSCgncYM8569BHI6sWQ+xH1QRtBzu+lzaH6WeTEIwDfMt7p0Ve
+         kiY32WrT84HIo+OtF8SQZxzonFiHqkdMXF+IGiI0YU70fn3Yak7fPKNlAClyc6Q8jWt0
+         HEK20pyCaYwE1yXgb+J8ziQ+apUmgP/QQhi2sMskhkZ4uWJXi3afcJjszVHHTz4U4IQc
+         wCD6KMycSs0go0RrEh+g7DdkFYx629BAY2wVNidtyFBhPmfWlg/rsr94w6fi+L/XuC6i
+         2rcv5mv0bve+MGvrg4j1uXlpC00w3blFDCELnEdT9hyZIKkFoqrGsjdBTeeUyYTXa6Nk
+         w+pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=/zvwuQzMVyu/TdqK56I2p7OTWodLcL8mzDknB3/DWOE=;
-        b=le0m3Yw9pVSfz1yKgddGMFcq6IM5IFgfq2ctnET5UZt2VOy7q9WXVXE+8tZ8e8hp0i
-         w6eitWNiC2wy+r9dLjONQAjEu2DAe7FpZ+ZPy2F0ZzXyNv1OfrUE8DpF+AQJMEIWVZEh
-         r48BHx2AoftCyPndSK2lWEfq3dQzm1S8Kzi13iTxFRD2sb7l8tOTmhGtqRLr6RwTfq8v
-         7UB8PGKAicF8/3foG8ZeHK+cyVhCN56t5PIz2DYo4ZydqKhCbUqVF2Ib8rMRp0triPZS
-         fn7mWOASIS+/f9YoPdoki7mJkDA5vt0E69tQsIWaaAEV3x1p6jbJsocEbNt0HikWeq1C
-         Ow3A==
-X-Gm-Message-State: ANhLgQ27l5klWOfqi/JNXpj5e5WCYsjiv1CPAxbZg7WJHsFVbSknHicr
-        HwiWZjRZf8UKZYbHhPkQds9ujSylBLzI0pv22dA=
-X-Google-Smtp-Source: ADFU+vt2buvIg9JM2Lv2YYTip1+/nm3zBcKpuSZlqnqJiGj6BZ9KuP7zrxsN00bhWw/8BpqXuFsDhAV2na66RVkh3bY=
-X-Received: by 2002:a2e:b78e:: with SMTP id n14mr842381ljo.269.1582760426044;
- Wed, 26 Feb 2020 15:40:26 -0800 (PST)
+        bh=hcoWdnerPpa+zK/P0vhU/glnANAYYkOXJMkEDIK7xws=;
+        b=hzdXGGDLNkI7vQGBXAG9uD4RD1god9TpisKXRfwLhbG2VGSIkWreejJX66yvqiFVVX
+         8gUUC5aCsz+r0g5RKjSL19ieosZo15VQnhMwz097vbwoLGDspZZrTrjKj8nLlq3Q+LxE
+         UJuBUjG4YPUNA/OcBhVylQGpKq007V4g5ArbUbXrUWqiQwGnZ9jRvDBxe8eAjFApnfvO
+         shX+rqokvW5k47gH5QtHyHv3Jj1/kE7NC07KsJYewksRkuz+pBqTfJbmuL7AyGFft1p/
+         nHNM95fYdD+8MsrMRuarGKeCKpRTrxthscnrzk37cLKxQLJLGCIY6G1R0+h+vTolSyB/
+         +0Hg==
+X-Gm-Message-State: APjAAAWEjBIse53unATrj+IPQcYooVnptqhP5DHZ31akjgHwOB8xDqXh
+        izM80xOx0E6HSRp2qY5qOsR+4wgG8nJRKCfvGhi4qQ==
+X-Google-Smtp-Source: APXvYqxV82iVTF2fjXLhO7hMAa9T8sAAsObqUH93eZ2i9gkhZj1PxFnbPWvO6D5UsLB2NwghFAoAYCwXFQNOl1l1nGw=
+X-Received: by 2002:a50:ef1a:: with SMTP id m26mr1299388eds.289.1582769991844;
+ Wed, 26 Feb 2020 18:19:51 -0800 (PST)
 MIME-Version: 1.0
-References: <CAGgoGu5u7WZUUaoVYvVWS5nuNZz25PgR=uHkqvzXV5xFOC7KuA@mail.gmail.com>
-In-Reply-To: <CAGgoGu5u7WZUUaoVYvVWS5nuNZz25PgR=uHkqvzXV5xFOC7KuA@mail.gmail.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Wed, 26 Feb 2020 20:40:23 -0300
-Message-ID: <CAOMZO5DvPr3srStsJ6KQph_v_=7=YGdcM4GQzi9yK+Km-wFBiQ@mail.gmail.com>
-Subject: Re: Help needed in understanding weird PCIe issue on imx6q (PCIe just
- goes bad)
-To:     Fawad Lateef <fawadlateef@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org
+References: <20200109032851.13377-1-shawn.guo@linaro.org> <20200109032851.13377-3-shawn.guo@linaro.org>
+ <20200226113105.GA16925@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20200226113105.GA16925@e121166-lin.cambridge.arm.com>
+From:   Shawn Guo <shawn.guo@linaro.org>
+Date:   Thu, 27 Feb 2020 10:19:41 +0800
+Message-ID: <CAAQ0ZWR0JNxJV=Ly1yONGo-9cYTt8DZPwp+Qsfuger1katEFHg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] PCI: histb: Correct PCIe reset operation
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, Jun Nie <jun.nie@linaro.org>,
+        linux-pci@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Fawad,
-
-On Sat, Feb 22, 2020 at 12:26 PM Fawad Lateef <fawadlateef@gmail.com> wrote:
+On Wed, Feb 26, 2020 at 7:31 PM Lorenzo Pieralisi
+<lorenzo.pieralisi@arm.com> wrote:
 >
-> Hello,
+> On Thu, Jan 09, 2020 at 11:28:51AM +0800, Shawn Guo wrote:
+> > The PCIe reset via GPIO in the driver never worked as expected.  Per
+> > "Power Sequencing and Reset Signal Timings" table in
+> > PCI EXPRESS CARD ELECTROMECHANICAL SPECIFICATION, the PERST# should be
+> > deasserted after minimum of 100us once REFCLK is stable.
+> >
+> > The assertion has been done when the GPIO is being requested, and
+> > deassertion should be done in host enabling rather than disabling. Also
+> > a bit wait is added to ensure device get ready after reset.
+> >
+> > Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+> > ---
+> >  drivers/pci/controller/dwc/pcie-histb.c | 20 ++++++++++++++------
+> >  1 file changed, 14 insertions(+), 6 deletions(-)
 >
-> I am trying to figure-out an issue on our i.MX6Q platform based design
-> where PCIe interface goes bad.
+> Shawn,
 >
-> We have a Phytec i.MX6Q eMMC SOM, attached to our custom designed
-> board. PCIe root-complex from i.MX6Q is attached to PLX switch
-> (PEX8605).
->
-> Linux kernel version is 4.19.9x and also 4.14.134 (from phytec's
+> this looks like a fix, please tag it as such and let me know if
+> it has to be backported, in which case also the previous patch
+> should I assume.
 
-Does it happen with 5.4 or 5.5 too?
+Hi Lorenzo,
 
-Which dts are you using?
+It is a fix, but we recently realized that the problem needs to be
+fixed in a way that does not break existing DTB.  So please ignore the
+series for now, and we will try to work out a better one.  Sorry that
+we did not update the thread in time.
 
-> Then I enable the #PERST pin of PLX switch, everything is still good
-> (no rescan on Linux is done yet)
->
-> ~ # echo 139 > /sys/class/gpio/export
-> ~ # echo out > /sys/class/gpio/gpio139/direction
-> ~ # echo 1 > /sys/class/gpio/gpio139/value
-
-Not sure why you toggle the PERST pin from userspace.
-
-You should do it via reset-gpio property in the device tree.
+Shawn
