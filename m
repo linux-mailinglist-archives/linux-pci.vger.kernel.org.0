@@ -2,155 +2,200 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BC13F1726F7
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2020 19:22:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BF792172913
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2020 20:59:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729385AbgB0SWK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 Feb 2020 13:22:10 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2475 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729142AbgB0SWJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 27 Feb 2020 13:22:09 -0500
-Received: from LHREML710-CAH.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 99F00611DC9F15BD25C9;
-        Thu, 27 Feb 2020 18:22:08 +0000 (GMT)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- LHREML710-CAH.china.huawei.com (10.201.108.33) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 27 Feb 2020 18:22:07 +0000
-Received: from localhost (10.202.226.57) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 27 Feb
- 2020 18:22:07 +0000
-Date:   Thu, 27 Feb 2020 18:22:06 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-CC:     <iommu@lists.linux-foundation.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-pci@vger.kernel.org>, <linux-mm@kvack.org>,
-        <mark.rutland@arm.com>, <kevin.tian@intel.com>,
-        <jacob.jun.pan@linux.intel.com>, <catalin.marinas@arm.com>,
-        <joro@8bytes.org>, <robin.murphy@arm.com>, <robh+dt@kernel.org>,
-        <yi.l.liu@intel.com>, <zhangfei.gao@linaro.org>, <will@kernel.org>,
-        <christian.koenig@amd.com>, <baolu.lu@linux.intel.com>
-Subject: Re: [PATCH v4 00/26] iommu: Shared Virtual Addressing and SMMUv3
- support
-Message-ID: <20200227182206.000075aa@Huawei.com>
-In-Reply-To: <20200224182401.353359-1-jean-philippe@linaro.org>
-References: <20200224182401.353359-1-jean-philippe@linaro.org>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        id S1730576AbgB0T7P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 Feb 2020 14:59:15 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:35203 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729594AbgB0T7P (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Feb 2020 14:59:15 -0500
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1j7PJJ-0004HJ-3F; Thu, 27 Feb 2020 20:59:05 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id E24DD1040A9; Thu, 27 Feb 2020 20:59:03 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     sathyanarayanan.kuppuswamy@linux.intel.com
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        Keith Busch <keith.busch@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v1 1/1] x86/apic/vector: Fix NULL pointer exception in irq_complete_move()
+In-Reply-To: <f54208d62407901b5de15ce8c3d078c70fc7a1d0.1582313239.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+References: <f54208d62407901b5de15ce8c3d078c70fc7a1d0.1582313239.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Date:   Thu, 27 Feb 2020 20:59:03 +0100
+Message-ID: <87tv3bls3c.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.57]
-X-ClientProxiedBy: lhreml721-chm.china.huawei.com (10.201.108.72) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 24 Feb 2020 19:23:35 +0100
-Jean-Philippe Brucker <jean-philippe@linaro.org> wrote:
+sathyanarayanan.kuppuswamy@linux.intel.com writes:
+> If an IRQ is scheduled using generic_handle_irq() function in a non IRQ
+> path, the irq_regs per CPU variable will not be set. Hence calling
+> irq_complete_move() function in this scenario leads to NULL pointer
+> de-reference exception. One example for this issue is, triggering fake
+> AER errors using PCIe aer_inject framework. So add addition check for
 
-> Shared Virtual Addressing (SVA) allows to share process page tables with
-> devices using the IOMMU. Add a generic implementation of the IOMMU SVA
-> API, and add support in the Arm SMMUv3 driver.
-> 
-> Previous versions of this patchset were sent over a year ago [1][2] but
-> we've made a lot of progress since then:
-> 
-> * ATS support for SMMUv3 was merged in v5.2.
-> * The bind() and fault reporting APIs have been merged in v5.3.
-> * IOASID were added in v5.5.
-> * SMMUv3 PASID was added in v5.6, with some pending for v5.7.
-> 
-> * The first user of the bind() API will be merged in v5.7 [3]. The zip
->   accelerator is also the first piece of hardware that I've been able to
->   use for testing (previous versions were developed with software models)
->   and I now have tools for evaluating SVA performance. Unfortunately I
->   still don't have hardware that supports ATS and PRI; the zip accelerator
->   uses stall.
-> 
-> These are the remaining changes for SVA support in SMMUv3. Since v3 [1]
-> I fixed countless bugs and - I think - addressed everyone's comments.
-> Thanks to recent MMU notifier rework, iommu-sva.c is a lot more
-> straightforward. I'm still unhappy with the complicated locking in the
-> SMMUv3 driver resulting from patch 12 (Seize private ASID), but I
-> haven't found anything better.
-> 
-> Please find all SVA patches on branches sva/current and sva/zip-devel at
-> https://jpbrucker.net/git/linux
-> 
-> [1] https://lore.kernel.org/linux-iommu/20180920170046.20154-1-jean-philippe.brucker@arm.com/
-> [2] https://lore.kernel.org/linux-iommu/20180511190641.23008-1-jean-philippe.brucker@arm.com/
-> [3] https://lore.kernel.org/linux-iommu/1581407665-13504-1-git-send-email-zhangfei.gao@linaro.org/
+What?
 
-Hi Jean-Phillippe.
+This is completely broken to begin with. You are fixing the wrong
+end. The broken commit is:
 
-Great to see this progressing.  Other than the few places I've commented
-it all looks good to me.
+390e2db82480 ("PCI/AER: Abstract AER interrupt handling")
+
+I have to admit that it was already broken before that commit because
+calling just the interrupt handler w/o serialization is as wrong as it
+gets, but then calling a random function just because it's accessible
+and does not explode in the face is not much better.
+
+> [   58.368269]  handle_edge_irq+0x7d/0x1e0
+> [   58.368272]  generic_handle_irq+0x27/0x30
+> [   58.368278]  aer_inject_write+0x53a/0x720
+> [   58.368283]  __vfs_write+0x36/0x1b0
+> [   58.368289]  ? common_file_perm+0x47/0x130
+> [   58.368293]  ? security_file_permission+0x2e/0xf0
+> [   58.368295]  vfs_write+0xa5/0x180
+> [   58.368296]  ksys_write+0x52/0xc0
+> [   58.368300]  do_syscall_64+0x48/0x120
+> [   58.368307]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Calling generic_handle_irq() through a sysfs write is in the worst case
+going to corrupt state and that NULL pointer dereference is just one
+particular effect which made this bogosity visible.
+
+Even if you "fixed" this particular case, invoking this when an
+interrupt affinity change is scheduled will also wreckage state. In the
+best case it will only trigger the already existing WARN_ON() in the MSI
+code when the interrupt in question is MSI and the invocation happens on
+the wrong CPU. But there are worse things which can happen.
+
+We are neither going to paper over it by just silently preventing this
+particular NULL pointer dereference nor are we going to sprinkle more
+checks all over the place just to deal with this. The interrupt delivery
+hardware trainwreck of x86 CPUs is fragile as hell and we have enough
+horrible code already to deal with that. No need for self inflicted
+horrors.
+
+The proper fix for this is below as it prevents the abuse of this
+interface.
+
+This will not break the AER error injection as it has been broken
+forever. It just makes sure that the brokeness is not propagating
+through the core code.
+
+The right thing to make AER injection work is to inject the interrupt
+via the retrigger mechanism, which will send an IPI. There is no core
+interface for this, but that's a solvable problem.
 
 Thanks,
 
-Jonathan
+        tglx
 
-> 
-> Jean-Philippe Brucker (26):
->   mm/mmu_notifiers: pass private data down to alloc_notifier()
->   iommu/sva: Manage process address spaces
->   iommu: Add a page fault handler
->   iommu/sva: Search mm by PASID
->   iommu/iopf: Handle mm faults
->   iommu/sva: Register page fault handler
->   arm64: mm: Pin down ASIDs for sharing mm with devices
->   iommu/io-pgtable-arm: Move some definitions to a header
->   iommu/arm-smmu-v3: Manage ASIDs with xarray
->   arm64: cpufeature: Export symbol read_sanitised_ftr_reg()
->   iommu/arm-smmu-v3: Share process page tables
->   iommu/arm-smmu-v3: Seize private ASID
->   iommu/arm-smmu-v3: Add support for VHE
->   iommu/arm-smmu-v3: Enable broadcast TLB maintenance
->   iommu/arm-smmu-v3: Add SVA feature checking
->   iommu/arm-smmu-v3: Add dev_to_master() helper
->   iommu/arm-smmu-v3: Implement mm operations
->   iommu/arm-smmu-v3: Hook up ATC invalidation to mm ops
->   iommu/arm-smmu-v3: Add support for Hardware Translation Table Update
->   iommu/arm-smmu-v3: Maintain a SID->device structure
->   iommu/arm-smmu-v3: Ratelimit event dump
->   dt-bindings: document stall property for IOMMU masters
->   iommu/arm-smmu-v3: Add stall support for platform devices
->   PCI/ATS: Add PRI stubs
->   PCI/ATS: Export symbols of PRI functions
->   iommu/arm-smmu-v3: Add support for PRI
-> 
->  .../devicetree/bindings/iommu/iommu.txt       |   18 +
->  arch/arm64/include/asm/mmu.h                  |    1 +
->  arch/arm64/include/asm/mmu_context.h          |   11 +-
->  arch/arm64/kernel/cpufeature.c                |    1 +
->  arch/arm64/mm/context.c                       |  103 +-
->  drivers/iommu/Kconfig                         |   13 +
->  drivers/iommu/Makefile                        |    2 +
->  drivers/iommu/arm-smmu-v3.c                   | 1354 +++++++++++++++--
->  drivers/iommu/io-pgfault.c                    |  533 +++++++
->  drivers/iommu/io-pgtable-arm.c                |   27 +-
->  drivers/iommu/io-pgtable-arm.h                |   30 +
->  drivers/iommu/iommu-sva.c                     |  596 ++++++++
->  drivers/iommu/iommu-sva.h                     |   64 +
->  drivers/iommu/iommu.c                         |    1 +
->  drivers/iommu/of_iommu.c                      |    5 +-
->  drivers/misc/sgi-gru/grutlbpurge.c            |    4 +-
->  drivers/pci/ats.c                             |    4 +
->  include/linux/iommu.h                         |   73 +
->  include/linux/mmu_notifier.h                  |   10 +-
->  include/linux/pci-ats.h                       |    8 +
->  mm/mmu_notifier.c                             |    6 +-
->  21 files changed, 2699 insertions(+), 165 deletions(-)
->  create mode 100644 drivers/iommu/io-pgfault.c
->  create mode 100644 drivers/iommu/io-pgtable-arm.h
->  create mode 100644 drivers/iommu/iommu-sva.c
->  create mode 100644 drivers/iommu/iommu-sva.h
-> 
+8<-----------------
+diff --git a/arch/x86/kernel/apic/vector.c b/arch/x86/kernel/apic/vector.c
+index 2c5676b0a6e7..d7c4a3b815a6 100644
+--- a/arch/x86/kernel/apic/vector.c
++++ b/arch/x86/kernel/apic/vector.c
+@@ -556,6 +556,7 @@ static int x86_vector_alloc_irqs(struct irq_domain *domain, unsigned int virq,
+ 		irqd->chip_data = apicd;
+ 		irqd->hwirq = virq + i;
+ 		irqd_set_single_target(irqd);
++		irqd_set_handle_enforce_irqctx(irqd);
+ 		/*
+ 		 * Legacy vectors are already assigned when the IOAPIC
+ 		 * takes them over. They stay on the same vector. This is
+diff --git a/include/linux/irq.h b/include/linux/irq.h
+index 3ed5a055b5f4..9315fbb87db3 100644
+--- a/include/linux/irq.h
++++ b/include/linux/irq.h
+@@ -211,6 +211,8 @@ struct irq_data {
+  * IRQD_CAN_RESERVE		- Can use reservation mode
+  * IRQD_MSI_NOMASK_QUIRK	- Non-maskable MSI quirk for affinity change
+  *				  required
++ * IRQD_HANDLE_ENFORCE_IRQCTX	- Enforce that handle_irq_*() is only invoked
++ *				  from actual interrupt context.
+  */
+ enum {
+ 	IRQD_TRIGGER_MASK		= 0xf,
+@@ -234,6 +236,7 @@ enum {
+ 	IRQD_DEFAULT_TRIGGER_SET	= (1 << 25),
+ 	IRQD_CAN_RESERVE		= (1 << 26),
+ 	IRQD_MSI_NOMASK_QUIRK		= (1 << 27),
++	IRQD_HANDLE_ENFORCE_IRQCTX	= (1 << 28),
+ };
+ 
+ #define __irqd_to_state(d) ACCESS_PRIVATE((d)->common, state_use_accessors)
+@@ -303,6 +306,16 @@ static inline bool irqd_is_single_target(struct irq_data *d)
+ 	return __irqd_to_state(d) & IRQD_SINGLE_TARGET;
+ }
+ 
++static inline void irqd_set_handle_enforce_irqctx(struct irq_data *d)
++{
++	__irqd_to_state(d) |= IRQD_HANDLE_ENFORCE_IRQCTX;
++}
++
++static inline bool irqd_is_handle_enforce_irqctx(struct irq_data *d)
++{
++	return __irqd_to_state(d) & IRQD_HANDLE_ENFORCE_IRQCTX;
++}
++
+ static inline bool irqd_is_wakeup_set(struct irq_data *d)
+ {
+ 	return __irqd_to_state(d) & IRQD_WAKEUP_STATE;
+diff --git a/kernel/irq/internals.h b/kernel/irq/internals.h
+index 3924fbe829d4..4561f971bc74 100644
+--- a/kernel/irq/internals.h
++++ b/kernel/irq/internals.h
+@@ -427,6 +427,10 @@ static inline struct cpumask *irq_desc_get_pending_mask(struct irq_desc *desc)
+ {
+ 	return desc->pending_mask;
+ }
++static inline bool handle_enforce_irqctx(struct irq_data *data)
++{
++	return irqd_is_handle_enforce_irqctx(data);
++}
+ bool irq_fixup_move_pending(struct irq_desc *desc, bool force_clear);
+ #else /* CONFIG_GENERIC_PENDING_IRQ */
+ static inline bool irq_can_move_pcntxt(struct irq_data *data)
+@@ -453,6 +457,10 @@ static inline bool irq_fixup_move_pending(struct irq_desc *desc, bool fclear)
+ {
+ 	return false;
+ }
++static inline bool handle_enforce_irqctx(struct irq_data *data)
++{
++	return false;
++}
+ #endif /* !CONFIG_GENERIC_PENDING_IRQ */
+ 
+ #if !defined(CONFIG_IRQ_DOMAIN) || !defined(CONFIG_IRQ_DOMAIN_HIERARCHY)
+diff --git a/kernel/irq/irqdesc.c b/kernel/irq/irqdesc.c
+index 98a5f10d1900..b3e9a66dd079 100644
+--- a/kernel/irq/irqdesc.c
++++ b/kernel/irq/irqdesc.c
+@@ -638,9 +638,15 @@ void irq_init_desc(unsigned int irq)
+ int generic_handle_irq(unsigned int irq)
+ {
+ 	struct irq_desc *desc = irq_to_desc(irq);
++	struct irq_data *data;
+ 
+ 	if (!desc)
+ 		return -EINVAL;
++
++	data = irq_desc_get_irq_data(desc);
++	if (WARN_ON_ONCE(!in_irq() && handle_enforce_irqctx(data)))
++		return -EPERM;
++
+ 	generic_handle_irq_desc(desc);
+ 	return 0;
+ }
 
 
