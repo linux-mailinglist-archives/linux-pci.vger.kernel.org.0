@@ -2,91 +2,186 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 48839170E57
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2020 03:19:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B2EA171646
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2020 12:48:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728266AbgB0CTz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 Feb 2020 21:19:55 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:38755 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728238AbgB0CTz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 Feb 2020 21:19:55 -0500
-Received: by mail-ed1-f65.google.com with SMTP id p23so1335696edr.5
-        for <linux-pci@vger.kernel.org>; Wed, 26 Feb 2020 18:19:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hcoWdnerPpa+zK/P0vhU/glnANAYYkOXJMkEDIK7xws=;
-        b=wzbCuA9QiXCM7mHhhSCgncYM8569BHI6sWQ+xH1QRtBzu+lzaH6WeTEIwDfMt7p0Ve
-         kiY32WrT84HIo+OtF8SQZxzonFiHqkdMXF+IGiI0YU70fn3Yak7fPKNlAClyc6Q8jWt0
-         HEK20pyCaYwE1yXgb+J8ziQ+apUmgP/QQhi2sMskhkZ4uWJXi3afcJjszVHHTz4U4IQc
-         wCD6KMycSs0go0RrEh+g7DdkFYx629BAY2wVNidtyFBhPmfWlg/rsr94w6fi+L/XuC6i
-         2rcv5mv0bve+MGvrg4j1uXlpC00w3blFDCELnEdT9hyZIKkFoqrGsjdBTeeUyYTXa6Nk
-         w+pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hcoWdnerPpa+zK/P0vhU/glnANAYYkOXJMkEDIK7xws=;
-        b=hzdXGGDLNkI7vQGBXAG9uD4RD1god9TpisKXRfwLhbG2VGSIkWreejJX66yvqiFVVX
-         8gUUC5aCsz+r0g5RKjSL19ieosZo15VQnhMwz097vbwoLGDspZZrTrjKj8nLlq3Q+LxE
-         UJuBUjG4YPUNA/OcBhVylQGpKq007V4g5ArbUbXrUWqiQwGnZ9jRvDBxe8eAjFApnfvO
-         shX+rqokvW5k47gH5QtHyHv3Jj1/kE7NC07KsJYewksRkuz+pBqTfJbmuL7AyGFft1p/
-         nHNM95fYdD+8MsrMRuarGKeCKpRTrxthscnrzk37cLKxQLJLGCIY6G1R0+h+vTolSyB/
-         +0Hg==
-X-Gm-Message-State: APjAAAWEjBIse53unATrj+IPQcYooVnptqhP5DHZ31akjgHwOB8xDqXh
-        izM80xOx0E6HSRp2qY5qOsR+4wgG8nJRKCfvGhi4qQ==
-X-Google-Smtp-Source: APXvYqxV82iVTF2fjXLhO7hMAa9T8sAAsObqUH93eZ2i9gkhZj1PxFnbPWvO6D5UsLB2NwghFAoAYCwXFQNOl1l1nGw=
-X-Received: by 2002:a50:ef1a:: with SMTP id m26mr1299388eds.289.1582769991844;
- Wed, 26 Feb 2020 18:19:51 -0800 (PST)
+        id S1728916AbgB0LsY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 Feb 2020 06:48:24 -0500
+Received: from foss.arm.com ([217.140.110.172]:49094 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728904AbgB0LsY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 27 Feb 2020 06:48:24 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 05CAB1FB;
+        Thu, 27 Feb 2020 03:48:24 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 025253F73B;
+        Thu, 27 Feb 2020 03:48:21 -0800 (PST)
+Date:   Thu, 27 Feb 2020 11:48:16 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     bhelgaas@google.com, robh+dt@kernel.org, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, andrew.murray@arm.com, kishon@ti.com,
+        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V3 5/5] PCI: tegra: Add support for PCIe endpoint mode in
+ Tegra194
+Message-ID: <20200227114816.GA11443@e121166-lin.cambridge.arm.com>
+References: <20200113181411.32743-1-vidyas@nvidia.com>
+ <20200113181411.32743-6-vidyas@nvidia.com>
 MIME-Version: 1.0
-References: <20200109032851.13377-1-shawn.guo@linaro.org> <20200109032851.13377-3-shawn.guo@linaro.org>
- <20200226113105.GA16925@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20200226113105.GA16925@e121166-lin.cambridge.arm.com>
-From:   Shawn Guo <shawn.guo@linaro.org>
-Date:   Thu, 27 Feb 2020 10:19:41 +0800
-Message-ID: <CAAQ0ZWR0JNxJV=Ly1yONGo-9cYTt8DZPwp+Qsfuger1katEFHg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] PCI: histb: Correct PCIe reset operation
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, Jun Nie <jun.nie@linaro.org>,
-        linux-pci@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200113181411.32743-6-vidyas@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 7:31 PM Lorenzo Pieralisi
-<lorenzo.pieralisi@arm.com> wrote:
->
-> On Thu, Jan 09, 2020 at 11:28:51AM +0800, Shawn Guo wrote:
-> > The PCIe reset via GPIO in the driver never worked as expected.  Per
-> > "Power Sequencing and Reset Signal Timings" table in
-> > PCI EXPRESS CARD ELECTROMECHANICAL SPECIFICATION, the PERST# should be
-> > deasserted after minimum of 100us once REFCLK is stable.
-> >
-> > The assertion has been done when the GPIO is being requested, and
-> > deassertion should be done in host enabling rather than disabling. Also
-> > a bit wait is added to ensure device get ready after reset.
-> >
-> > Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-> > ---
-> >  drivers/pci/controller/dwc/pcie-histb.c | 20 ++++++++++++++------
-> >  1 file changed, 14 insertions(+), 6 deletions(-)
->
-> Shawn,
->
-> this looks like a fix, please tag it as such and let me know if
-> it has to be backported, in which case also the previous patch
-> should I assume.
+On Mon, Jan 13, 2020 at 11:44:11PM +0530, Vidya Sagar wrote:
+> Add support for the endpoint mode of Synopsys DesignWare core based
+> dual mode PCIe controllers present in Tegra194 SoC.
+> 
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+> V3:
+> * Addressed Thierry's review comments
 
-Hi Lorenzo,
+I need his ACK to merge this series.
 
-It is a fix, but we recently realized that the problem needs to be
-fixed in a way that does not break existing DTB.  So please ignore the
-series for now, and we will try to work out a better one.  Sorry that
-we did not update the thread in time.
+[...]
 
-Shawn
+> +static int tegra_pcie_ep_work_thread(void *p)
+> +{
+> +	struct tegra_pcie_dw *pcie = (struct tegra_pcie_dw *)p;
+> +	u32 event;
+> +
+> +	while (true) {
+> +		wait_event_interruptible(pcie->wq,
+> +					 !kfifo_is_empty(&pcie->event_fifo));
+> +
+> +		if (kthread_should_stop())
+> +			break;
+> +
+> +		if (!kfifo_get(&pcie->event_fifo, &event)) {
+> +			dev_warn(pcie->dev, "EVENT FIFO is empty\n");
+> +			continue;
+> +		}
+> +
+> +		switch (event) {
+> +		case EP_PEX_RST_DEASSERT:
+> +			dev_info(pcie->dev, "EVENT: EP_PEX_RST_DEASSERT\n");
+> +			pex_ep_event_pex_rst_deassert(pcie);
+> +			break;
+> +
+> +		case EP_PEX_RST_ASSERT:
+> +			dev_info(pcie->dev, "EVENT: EP_PEX_RST_ASSERT\n");
+> +			pex_ep_event_pex_rst_assert(pcie);
+> +			break;
+> +
+> +		case EP_HOT_RST_DONE:
+> +			dev_info(pcie->dev, "EVENT: EP_HOT_RST_DONE\n");
+> +			pex_ep_event_hot_rst_done(pcie);
+> +			break;
+> +
+> +		case EP_BME_CHANGE:
+> +			dev_info(pcie->dev, "EVENT: EP_BME_CHANGE\n");
+> +			pex_ep_event_bme_change(pcie);
+> +			break;
+> +
+> +		case EP_EVENT_EXIT:
+> +			dev_info(pcie->dev, "EVENT: EP_EVENT_EXIT\n");
+> +			return 0;
+> +
+> +		default:
+> +			dev_warn(pcie->dev, "Invalid PCIe EP event: %u\n",
+> +				 event);
+> +			break;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static irqreturn_t tegra_pcie_ep_pex_rst_irq(int irq, void *arg)
+> +{
+> +	struct tegra_pcie_dw *pcie = arg;
+> +
+> +	if (gpiod_get_value(pcie->pex_rst_gpiod)) {
+> +		if (!kfifo_put(&pcie->event_fifo, EP_PEX_RST_ASSERT)) {
+> +			dev_err(pcie->dev, "EVENT FIFO is full\n");
+> +			return IRQ_HANDLED;
+> +		}
+> +	} else {
+> +		if (!kfifo_put(&pcie->event_fifo, EP_PEX_RST_DEASSERT)) {
+> +			dev_err(pcie->dev, "EVENT FIFO is full\n");
+> +			return IRQ_HANDLED;
+> +		}
+> +	}
+> +
+> +	wake_up(&pcie->wq);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+
+[...]
+
+> +static int tegra_pcie_config_ep(struct tegra_pcie_dw *pcie,
+> +				struct platform_device *pdev)
+> +{
+> +	struct dw_pcie *pci = &pcie->pci;
+> +	struct device *dev = pcie->dev;
+> +	struct dw_pcie_ep *ep;
+> +	struct resource *res;
+> +	char *name;
+> +	int ret;
+> +
+> +	ep = &pci->ep;
+> +	ep->ops = &pcie_ep_ops;
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "addr_space");
+> +	if (!res)
+> +		return -EINVAL;
+> +
+> +	ep->phys_base = res->start;
+> +	ep->addr_size = resource_size(res);
+> +	ep->page_size = SZ_64K;
+> +
+> +	ret = gpiod_set_debounce(pcie->pex_rst_gpiod, PERST_DEBOUNCE_TIME);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to set PERST GPIO debounce time: %d\n",
+> +			ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = gpiod_to_irq(pcie->pex_rst_gpiod);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to get IRQ for PERST GPIO: %d\n", ret);
+> +		return ret;
+> +	}
+> +	pcie->pex_rst_irq = (unsigned int)ret;
+> +
+> +	name = devm_kasprintf(dev, GFP_KERNEL, "tegra_pcie_%u_pex_rst_irq",
+> +			      pcie->cid);
+> +	if (!name) {
+> +		dev_err(dev, "Failed to create PERST IRQ string\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	irq_set_status_flags(pcie->pex_rst_irq, IRQ_NOAUTOEN);
+> +
+> +	ret = devm_request_irq(dev, pcie->pex_rst_irq,
+> +			       tegra_pcie_ep_pex_rst_irq,
+> +			       IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
+> +			       name, (void *)pcie);
+
+I have the impression that a threaded IRQ is what you need, which
+will also remove some boilerplate in the process. Any reason why
+you can't use a threaded IRQ instead of a standalone kthread ?
+
+Thanks,
+Lorenzo
