@@ -2,157 +2,212 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 277B5173A1D
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2020 15:43:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 871FB173A24
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2020 15:44:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbgB1OnR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 28 Feb 2020 09:43:17 -0500
-Received: from mail-eopbgr30041.outbound.protection.outlook.com ([40.107.3.41]:8612
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726738AbgB1OnQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 28 Feb 2020 09:43:16 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bKkyk3RXC2oHNVI/SluA1iCjafT+Co5le65TSwzW9YTX6ML+nUpkjG+G5O+Dchsu8SLUUIywJbpHl/mSXjehl/koHI+jZduTJjdZ/oSKOaULA5tN8oxvw+EvMJ4jK1ttMzf//OSIzReHnGNVYwpl3sNANvwJCcYUcN2U8ksf4G1PxG5VvMD07IJz+jsjUL+vjTzeK4RGKGkkn0qlGJDJxldDtYEzIXoHmevoLDaz3+Wq2Jl0UiL8cMrjF9iqRRN2rYcdKR5RDre2G53mHIKA0ffaeK8lYbRz+nLRo5kgcUELEarjscfLPdNFTlupa/xgGQjbxuaAH4RhvF6Xqbd5dQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=v+9elaxFY5PfUCxGjMVKC1sDGQxQnBMDNc+ZPS4PJUc=;
- b=mDrhKarQU9o4NaYpZiDKP/Qg7k2xKGoZeTy2Gz5+Xt8AcUxF7gI2rhD4iCbxICacgUB9cMvOfxtflKHbG2iTu9EeCkP4VpVww9rECfJ/7H7/NFhJ71CxwymCYJtRruwJlQPygWJyJMJvzK/u17SAgXhT7W2p9pqOo+RjyI+CrklSctiy37K8ft1vPJN3xfdMI3phCOqiNUOeF8IpcvPUSL0gcsx9J0DC3QSH3n0DIF5J+L/yxaTXoPbYBKaHtIz+hOqQpX9l4bW2Q17ToFbblUJSOMzOpkZCO+Ui+h8smFxQD3vlE/gHVrrzQqYBbfqXKxMn7SR6eF85C7vGX/8EXQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=v+9elaxFY5PfUCxGjMVKC1sDGQxQnBMDNc+ZPS4PJUc=;
- b=kvugOp3nNa9oLH/pTlLKvlmgvfNqBfZMrsVUwdlUrN/NhKLRzUDKQBrV51ib8rs1x0MmYSN31OMFhLG67zrrpGkKdJsrqSYxkBErgLryzJ7E4l/L4h3KN4RGEFlI5FDhexbLlTtTLWmfKayJ4C1lUrEEcEpHxwSyU8V8QTCovvQ=
-Received: from AM5PR04MB3299.eurprd04.prod.outlook.com (10.173.255.158) by
- AM5PR04MB3057.eurprd04.prod.outlook.com (10.175.229.143) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2772.16; Fri, 28 Feb 2020 14:43:13 +0000
-Received: from AM5PR04MB3299.eurprd04.prod.outlook.com
- ([fe80::308c:e154:899b:507e]) by AM5PR04MB3299.eurprd04.prod.outlook.com
- ([fe80::308c:e154:899b:507e%5]) with mapi id 15.20.2772.018; Fri, 28 Feb 2020
- 14:43:13 +0000
-From:   Xiaowei Bao <xiaowei.bao@nxp.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-Subject: RE: [PATCH v4 08/11] PCI: layerscape: Modify the MSIX to the doorbell
- mode
-Thread-Topic: [PATCH v4 08/11] PCI: layerscape: Modify the MSIX to the
- doorbell mode
-Thread-Index: AQHVcn/v76ltSUnI6keAnyjCe5OUV6gxcsQAgAAxMyA=
-Date:   Fri, 28 Feb 2020 14:43:12 +0000
-Message-ID: <AM5PR04MB329992BADD5D2CFA613A6D19F5E80@AM5PR04MB3299.eurprd04.prod.outlook.com>
-References: <20190924021849.3185-1-xiaowei.bao@nxp.com>
- <20190924021849.3185-9-xiaowei.bao@nxp.com>
- <55752e77-1094-4cbf-2822-e10b875b4dd9@ti.com>
-In-Reply-To: <55752e77-1094-4cbf-2822-e10b875b4dd9@ti.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=xiaowei.bao@nxp.com; 
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 95bd2900-650b-451c-e350-08d7bc5c89e9
-x-ms-traffictypediagnostic: AM5PR04MB3057:|AM5PR04MB3057:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM5PR04MB3057DBC9735C9D51891F1B21F5E80@AM5PR04MB3057.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0327618309
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(39860400002)(366004)(346002)(376002)(199004)(189003)(186003)(52536014)(33656002)(5660300002)(26005)(316002)(6506007)(8936002)(53546011)(81156014)(81166006)(8676002)(7696005)(7416002)(2906002)(66556008)(55016002)(110136005)(45080400002)(478600001)(966005)(86362001)(71200400001)(44832011)(9686003)(66446008)(64756008)(66946007)(76116006)(66476007)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR04MB3057;H:AM5PR04MB3299.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: YragBf6unc6znv6fxOLWr2QNjfBy1Ii2VL00ezabfavlJ/7oHoXKTEo5UMiPjxtE9kzh2wKk+VsCTh9kVWZID4b8/QVFmEMXgODxVo9+d1UhE/Je0Q6xv7v/kCftBHZZJtQpNLpUbheJEccW7RneKx643XPJFd5a9xfpy96QboGCRb4pfeGPpCQdaUsQe4xFjlT8H28i/9Lx1gyajdW3cfljYh6QdOMfOHriQa5FdQhE6LsntG8aGdh6UTDKKFvWyoKNRAX+nZTFn96k3QQ/8qW3c8H4yHdXL8jcd/DGsM/KjaCI3XrvoZKrH52hZY9LvJgJZ6M99X0hJpbBKMdYp87Wc/olVh8i70EiI+GWgLbX4f+eHwKAkrBRwPpXENxGhvefyGNdYR1/1Z/llCDeiuQz5ZJ30p8MwhdnyGLxqFMKGbMizfLls9wcdqsjpelq/COqIUvCjKQBUbXewUUDBmWYxTt+4z8CMAuF0KA8g3u1sXxiwtCnmcDMxY19PQHRpRzFUv0r6xLEQVKBVFbOqel4XtnLgXnL988xjsM6IUa5O+NXtzfnq0J6z9PWkxfCscy2TjEY+S3ckzjCZejqug==
-x-ms-exchange-antispam-messagedata: SFBcfQ2PhkW9DfWLZ+V33RTrdO73ISzIHMgh6Pbues3gW5ozqWaAjqoTvtSZ3IsBDKp7ggFBzjdcUZXOTFVzyIr3J1Z/uidKtWiGVEPsCA7gTDlf+6pf6gGiROgFck9oowpcJb9H9lOvSNkp4fQElw==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1726682AbgB1OoO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 28 Feb 2020 09:44:14 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:39291 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726860AbgB1OoO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 28 Feb 2020 09:44:14 -0500
+Received: by mail-wr1-f67.google.com with SMTP id y17so3229225wrn.6
+        for <linux-pci@vger.kernel.org>; Fri, 28 Feb 2020 06:44:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=QMl+VBaGMao7gyBNUaUbW1tLbhMPTZJMdvofJak/bmM=;
+        b=Eyk6vY0Af0pgRHDvnoOLJKEE9DaGoa+4z0NJ0t/WaE+0vf6ERLTI5+gCSTL4JKeEc7
+         arJUIl26vcb7lA32WK3mE1Z9pObCrTyBu370u//nTiHn54Qsk9vtBAlncLuZo9K0V9Bo
+         few19oXa3fshNwMeLE1X36r0Kl70yyi9UUOxcD7HXOQk57UJt7R/uONrD0jw5QwBKUEP
+         XNLUCyENocPiBEBMYBsa65NNpXfx1bwVRSoKhuPD+Y1BFMRjqLFWjj7Bjg+11i79QgS1
+         AuuGvqPiln8Z0uHDmfdS0ONpDj/sxIKSFG/mkvrKTjD2nZHB7B4UWE1XulydcVQDQVxM
+         5WkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=QMl+VBaGMao7gyBNUaUbW1tLbhMPTZJMdvofJak/bmM=;
+        b=eMnXwzkx1wLoWHfu5E2sECVXfI3RIKOs1F5MWvilIJU8/U09SuRdE7uMSCxYjjkwnK
+         20KrQYb80hU5S82QjM0lJvesin5dA+BWIDSi7kD6T74+NVc4C5RabRvSK5CVdRSRbgUV
+         jlVPT2t3X5ovrGMegPbRhHgJ0M2XmDMM5zWfm8iCkVE4lTQgSWRxHBphaQOacx7z+4sW
+         c3IGaj28pBRkwZvQYzZI3jREL9iF6/bqYYtiZxw4GER5iYU15TEZan/nY1KgkWWtHHvH
+         scBZZgX1XeuRyLqyGpYi7cNbdlaKV+xUO+gy7fPnr3a5Upc9mwTJL8/A3wYvE3q2pBQc
+         +RoQ==
+X-Gm-Message-State: APjAAAU2eTHicEUHbrN93j3s+IZ2/4xL6yVWzxpbXcmQEdnpAl8n11Yb
+        KbdEQw6uw+rTdPtR/a6QytEfCg==
+X-Google-Smtp-Source: APXvYqw6DykiBE32SqEJ+HnRwk8TuEFmQqrz2Fb4Wvuo7oVY88B0FHH4nfUvdWL5pnDIWaqbqIxz+g==
+X-Received: by 2002:adf:f648:: with SMTP id x8mr5477186wrp.198.1582901051368;
+        Fri, 28 Feb 2020 06:44:11 -0800 (PST)
+Received: from myrica ([2001:171b:c9a8:fbc0:116c:c27a:3e7f:5eaf])
+        by smtp.gmail.com with ESMTPSA id o27sm13045012wro.27.2020.02.28.06.44.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Feb 2020 06:44:10 -0800 (PST)
+Date:   Fri, 28 Feb 2020 15:44:04 +0100
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, joro@8bytes.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, catalin.marinas@arm.com, will@kernel.org,
+        robin.murphy@arm.com, kevin.tian@intel.com,
+        baolu.lu@linux.intel.com, jacob.jun.pan@linux.intel.com,
+        christian.koenig@amd.com, yi.l.liu@intel.com,
+        zhangfei.gao@linaro.org,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Subject: Re: [PATCH v4 03/26] iommu: Add a page fault handler
+Message-ID: <20200228144404.GD2156@myrica>
+References: <20200224182401.353359-1-jean-philippe@linaro.org>
+ <20200224182401.353359-4-jean-philippe@linaro.org>
+ <20200226135933.000061a0@Huawei.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 95bd2900-650b-451c-e350-08d7bc5c89e9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Feb 2020 14:43:13.0395
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: TkPwD2XsIfGEWrvIxG2TcRothGJAoKL8E/7IsIuXVBExui8WG4FcQzBd8h5ds2OwDCSE+ZKuDWLSPURXMPu7SA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR04MB3057
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200226135933.000061a0@Huawei.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogS2lzaG9uIFZpamF5IEFi
-cmFoYW0gSSA8a2lzaG9uQHRpLmNvbT4NCj4gU2VudDogMjAyMOW5tDLmnIgyOOaXpSAxOTo0MQ0K
-PiBUbzogWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54cC5jb20+OyByb2JoK2R0QGtlcm5lbC5v
-cmc7DQo+IG1hcmsucnV0bGFuZEBhcm0uY29tOyBzaGF3bmd1b0BrZXJuZWwub3JnOyBMZW8gTGkN
-Cj4gPGxlb3lhbmcubGlAbnhwLmNvbT47IGxvcmVuem8ucGllcmFsaXNpQGFybS5jb207IE0uaC4g
-TGlhbg0KPiA8bWluZ2h1YW4ubGlhbkBueHAuY29tPjsgTWluZ2thaSBIdSA8bWluZ2thaS5odUBu
-eHAuY29tPjsgUm95IFphbmcNCj4gPHJveS56YW5nQG54cC5jb20+OyBqaW5nb29oYW4xQGdtYWls
-LmNvbTsNCj4gZ3VzdGF2by5waW1lbnRlbEBzeW5vcHN5cy5jb207IGFuZHJldy5tdXJyYXlAYXJt
-LmNvbTsNCj4gbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0
-cy5pbmZyYWRlYWQub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2Vy
-bmVsQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcNCj4g
-U3ViamVjdDogUmU6IFtQQVRDSCB2NCAwOC8xMV0gUENJOiBsYXllcnNjYXBlOiBNb2RpZnkgdGhl
-IE1TSVggdG8gdGhlDQo+IGRvb3JiZWxsIG1vZGUNCj4gDQo+IEhpIFhpYW93ZWksDQo+IA0KPiBP
-biAyNC8wOS8xOSA3OjQ4IGFtLCBYaWFvd2VpIEJhbyB3cm90ZToNCj4gPiBkd19wY2llX2VwX3Jh
-aXNlX21zaXhfaXJxIHdhcyBuZXZlciBjYWxsZWQgaW4gdGhlIGV4aXNpdG5nIGRyaXZlcg0KPiA+
-IGJlZm9yZSwgYmVjYXVzZSB0aGUgbHMxMDQ2YSBwbGF0Zm9ybSBkb24ndCBzdXBwb3J0IHRoZSBN
-U0lYIGZlYXR1cmUNCj4gPiBhbmQgbXNpeF9jYXBhYmxlIHdhcyBhbHdheXMgc2V0IHRvIGZhbHNl
-Lg0KPiA+IE5vdyB0aGF0IGFkZCB0aGUgbHMxMDg4YSBwbGF0Zm9ybSB3aXRoIE1TSVggc3VwcG9y
-dCwgYnV0IHRoZSBleGlzdGluZw0KPiA+IGR3X3BjaWVfZXBfcmFpc2VfbXNpeF9pcnEgZG9lc24n
-dCB3b3JrLCBzbyB1c2UgdGhlIGRvb3JiZWxsIG1ldGhvZCB0bw0KPiA+IHN1cHBvcnQgdGhlIE1T
-SVggZmVhdHVyZS4NCj4gDQo+IA0KPiBJdCBkb2VzIHdvcmsgYWZ0ZXIgWzFdLiBTbyB0aGUgY29t
-bWl0IG1lc3NhZ2UgbWlnaHQgbm90IGJlIGV4YWN0bHkgdHJ1ZS4NCg0KR290IGl0LCBJIHdpbGwg
-dmVyaWZ5IGl0IHdpdGggeW91ciBwYXRjaCwgZG8geW91IG1lYW4gdGhhdCBJIHNob3VsZCBjb3Jy
-ZWN0IHRoZSBjb21taXQgDQptZXNzYWdlPyBJIHRoaW5rIHdlIGNhbiByZXNlcnZlIG15IE1TSS1Y
-IHBhdGNoLCB0aGlzIHBhdGNoIGNhbiBwcm92aWRlIGFub3RoZXIgDQpNU0ktWCB0cmlnZ2VyIHdh
-eSwgYW5kIHRoaXMgd2F5IGlzIGNsZWFybHkgc3RhdGVkIGluIHRoZSBEV0MgbWFudWFsLCB0aGFu
-a3MsIHBsZWFzZQ0KZ2l2ZSB5b3VyIGNvbW1lbnRzLg0KDQpUaGFua3MNClhpYW93ZWkNCg0KPiAN
-Cj4gWzFdIC0+DQo+IGh0dHBzOi8vZXVyMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5j
-b20vP3VybD1odHRwcyUzQSUyRiUyRmxvcmUua2UNCj4gcm5lbC5vcmclMkZyJTJGMjAyMDAyMjUw
-ODE3MDMuODg1Ny0xLWtpc2hvbiU0MHRpLmNvbSZhbXA7ZGF0YT0wMiUNCj4gN0MwMSU3Q3hpYW93
-ZWkuYmFvJTQwbnhwLmNvbSU3Qzg0MTkxZGYwY2QwOTQ1MWVmM2U2MDhkN2JjNDI3NzQ1DQo+ICU3
-QzY4NmVhMWQzYmMyYjRjNmZhOTJjZDk5YzVjMzAxNjM1JTdDMCU3QzAlN0M2MzcxODQ4NjU5Njk2
-ODQNCj4gMTY5JmFtcDtzZGF0YT1LOWZ2YnBRNHh1dVpLaFdUNlVWMk00U1Z5SHhRM0xqcHVKUXp0
-a3RMYVJJJTNEJg0KPiBhbXA7cmVzZXJ2ZWQ9MA0KPiANCj4gVGhhbmtzDQo+IEtpc2hvbg0KPiAN
-Cj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29t
-Pg0KPiA+IFJldmlld2VkLWJ5OiBBbmRyZXcgTXVycmF5IDxhbmRyZXcubXVycmF5QGFybS5jb20+
-DQo+ID4gLS0tDQo+ID4gdjI6DQo+ID4gIC0gTm8gY2hhbmdlDQo+ID4gdjM6DQo+ID4gIC0gTW9k
-aWZ5IHRoZSBjb21taXQgbWVzc2FnZSBtYWtlIGl0IGNsZWFybHkuDQo+ID4gdjQ6DQo+ID4gIC0g
-Tm8gY2hhbmdlDQo+ID4NCj4gPiAgZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpLWxheWVy
-c2NhcGUtZXAuYyB8IDMgKystDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyks
-IDEgZGVsZXRpb24oLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9s
-bGVyL2R3Yy9wY2ktbGF5ZXJzY2FwZS1lcC5jDQo+ID4gYi9kcml2ZXJzL3BjaS9jb250cm9sbGVy
-L2R3Yy9wY2ktbGF5ZXJzY2FwZS1lcC5jDQo+ID4gaW5kZXggMWUwNzI4Ny4uNWYwY2I5OSAxMDA2
-NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktbGF5ZXJzY2FwZS1l
-cC5jDQo+ID4gKysrIGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpLWxheWVyc2NhcGUt
-ZXAuYw0KPiA+IEBAIC03OSw3ICs3OSw4IEBAIHN0YXRpYyBpbnQgbHNfcGNpZV9lcF9yYWlzZV9p
-cnEoc3RydWN0IGR3X3BjaWVfZXAgKmVwLA0KPiB1OCBmdW5jX25vLA0KPiA+ICAJY2FzZSBQQ0lf
-RVBDX0lSUV9NU0k6DQo+ID4gIAkJcmV0dXJuIGR3X3BjaWVfZXBfcmFpc2VfbXNpX2lycShlcCwg
-ZnVuY19ubywgaW50ZXJydXB0X251bSk7DQo+ID4gIAljYXNlIFBDSV9FUENfSVJRX01TSVg6DQo+
-ID4gLQkJcmV0dXJuIGR3X3BjaWVfZXBfcmFpc2VfbXNpeF9pcnEoZXAsIGZ1bmNfbm8sIGludGVy
-cnVwdF9udW0pOw0KPiA+ICsJCXJldHVybiBkd19wY2llX2VwX3JhaXNlX21zaXhfaXJxX2Rvb3Ji
-ZWxsKGVwLCBmdW5jX25vLA0KPiA+ICsJCQkJCQkJICBpbnRlcnJ1cHRfbnVtKTsNCj4gPiAgCWRl
-ZmF1bHQ6DQo+ID4gIAkJZGV2X2VycihwY2ktPmRldiwgIlVOS05PV04gSVJRIHR5cGVcbiIpOw0K
-PiA+ICAJCXJldHVybiAtRUlOVkFMOw0KPiA+DQo=
+On Wed, Feb 26, 2020 at 01:59:33PM +0000, Jonathan Cameron wrote:
+> > +static int iopf_complete(struct device *dev, struct iopf_fault *iopf,
+> > +			 enum iommu_page_response_code status)
+> 
+> This is called once per group.  Should name reflect that?
+
+Ok
+
+[...]
+> > +/**
+> > + * iommu_queue_iopf - IO Page Fault handler
+> > + * @evt: fault event
+> > + * @cookie: struct device, passed to iommu_register_device_fault_handler.
+> > + *
+> > + * Add a fault to the device workqueue, to be handled by mm.
+> > + *
+> > + * Return: 0 on success and <0 on error.
+> > + */
+> > +int iommu_queue_iopf(struct iommu_fault *fault, void *cookie)
+> > +{
+> > +	int ret;
+> > +	struct iopf_group *group;
+> > +	struct iopf_fault *iopf, *next;
+> > +	struct iopf_device_param *iopf_param;
+> > +
+> > +	struct device *dev = cookie;
+> > +	struct iommu_param *param = dev->iommu_param;
+> > +
+> > +	if (WARN_ON(!mutex_is_locked(&param->lock)))
+> > +		return -EINVAL;
+> 
+> Just curious...
+> 
+> Why do we always need a runtime check on this rather than say,
+> using lockdep_assert_held or similar?
+
+I probably didn't know about lockdep_assert at the time :)
+
+> > +	/*
+> > +	 * It is incredibly easy to find ourselves in a deadlock situation if
+> > +	 * we're not careful, because we're taking the opposite path as
+> > +	 * iommu_queue_iopf:
+> > +	 *
+> > +	 *   iopf_queue_flush_dev()   |  PRI queue handler
+> > +	 *    lock(&param->lock)      |   iommu_queue_iopf()
+> > +	 *     queue->flush()         |    lock(&param->lock)
+> > +	 *      wait PRI queue empty  |
+> > +	 *
+> > +	 * So we can't hold the device param lock while flushing. Take a
+> > +	 * reference to the device param instead, to prevent the queue from
+> > +	 * going away.
+> > +	 */
+> > +	mutex_lock(&param->lock);
+> > +	iopf_param = param->iopf_param;
+> > +	if (iopf_param) {
+> > +		queue = param->iopf_param->queue;
+> > +		iopf_param->busy = true;
+> 
+> Describing this as taking a reference is not great...
+> I'd change the comment to set a flag or something like that.
+> 
+> Is there any potential of multiple copies of this running against
+> each other?  I've not totally gotten my head around when this
+> might be called yet.
+
+Yes it's allowed, this should be a refcount
+
+[...]
+> > +int iopf_queue_remove_device(struct iopf_queue *queue, struct device *dev)
+> > +{
+> > +	int ret = -EINVAL;
+> > +	struct iopf_fault *iopf, *next;
+> > +	struct iopf_device_param *iopf_param;
+> > +	struct iommu_param *param = dev->iommu_param;
+> > +
+> > +	if (!param || !queue)
+> > +		return -EINVAL;
+> > +
+> > +	do {
+> > +		mutex_lock(&queue->lock);
+> > +		mutex_lock(&param->lock);
+> > +		iopf_param = param->iopf_param;
+> > +		if (iopf_param && iopf_param->queue == queue) {
+> > +			if (iopf_param->busy) {
+> > +				ret = -EBUSY;
+> > +			} else {
+> > +				list_del(&iopf_param->queue_list);
+> > +				param->iopf_param = NULL;
+> > +				ret = 0;
+> > +			}
+> > +		}
+> > +		mutex_unlock(&param->lock);
+> > +		mutex_unlock(&queue->lock);
+> > +
+> > +		/*
+> > +		 * If there is an ongoing flush, wait for it to complete and
+> > +		 * then retry. iopf_param isn't going away since we're the only
+> > +		 * thread that can free it.
+> > +		 */
+> > +		if (ret == -EBUSY)
+> > +			wait_event(iopf_param->wq_head, !iopf_param->busy);
+> > +		else if (ret)
+> > +			return ret;
+> > +	} while (ret == -EBUSY);
+> 
+> I'm in two minds about the next comment (so up to you)...
+> 
+> Currently this looks a bit odd.  Would you be better off just having a separate
+> parameter for busy and explicit separate handling for the error path?
+> 
+> 	bool busy;
+> 	int ret = 0;
+> 
+> 	do {
+> 		mutex_lock(&queue->lock);
+> 		mutex_lock(&param->lock);
+> 		iopf_param = param->iopf_param;
+> 		if (iopf_param && iopf_param->queue == queue) {
+> 			busy = iopf_param->busy;
+> 			if (!busy) {
+> 				list_del(&iopf_param->queue_list);
+> 				param->iopf_param = NULL;
+> 			}
+> 		} else {
+> 			ret = -EINVAL;
+> 		}
+> 		mutex_unlock(&param->lock);
+> 		mutex_unlock(&queue->lock);
+> 		if (ret)
+> 			return ret;
+> 		if (busy)
+> 			wait_event(iopf_param->wq_head, !iopf_param->busy);
+> 		
+> 	} while (busy);
+> 
+> 	..
+
+Sure, I think it looks better
+
+Thanks,
+Jean
