@@ -2,241 +2,180 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E001173CD4
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2020 17:26:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 27477173D1E
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2020 17:36:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726118AbgB1Q0n (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 28 Feb 2020 11:26:43 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2480 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725730AbgB1Q0n (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 28 Feb 2020 11:26:43 -0500
-Received: from lhreml704-cah.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 0714367CCA21321329BA;
-        Fri, 28 Feb 2020 16:26:41 +0000 (GMT)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- lhreml704-cah.china.huawei.com (10.201.108.45) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 28 Feb 2020 16:26:40 +0000
-Received: from localhost (10.202.226.57) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Fri, 28 Feb
- 2020 16:26:40 +0000
-Date:   Fri, 28 Feb 2020 16:26:37 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-CC:     <iommu@lists.linux-foundation.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-pci@vger.kernel.org>, <linux-mm@kvack.org>,
-        <joro@8bytes.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <robin.murphy@arm.com>, <kevin.tian@intel.com>,
-        <baolu.lu@linux.intel.com>, <jacob.jun.pan@linux.intel.com>,
-        <christian.koenig@amd.com>, <yi.l.liu@intel.com>,
-        <zhangfei.gao@linaro.org>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Subject: Re: [PATCH v4 02/26] iommu/sva: Manage process address spaces
-Message-ID: <20200228162637.00007f4c@Huawei.com>
-In-Reply-To: <20200228144304.GC2156@myrica>
-References: <20200224182401.353359-1-jean-philippe@linaro.org>
-        <20200224182401.353359-3-jean-philippe@linaro.org>
-        <20200226123506.000076fb@Huawei.com>
-        <20200228144304.GC2156@myrica>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        id S1725876AbgB1Qgx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 28 Feb 2020 11:36:53 -0500
+Received: from mga07.intel.com ([134.134.136.100]:22052 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725827AbgB1Qgw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 28 Feb 2020 11:36:52 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2020 08:36:51 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,496,1574150400"; 
+   d="scan'208";a="285710074"
+Received: from orsmsx109.amr.corp.intel.com ([10.22.240.7])
+  by FMSMGA003.fm.intel.com with ESMTP; 28 Feb 2020 08:36:51 -0800
+Received: from orsmsx116.amr.corp.intel.com (10.22.240.14) by
+ ORSMSX109.amr.corp.intel.com (10.22.240.7) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 28 Feb 2020 08:36:51 -0800
+Received: from orsmsx101.amr.corp.intel.com ([169.254.8.110]) by
+ ORSMSX116.amr.corp.intel.com ([169.254.7.180]) with mapi id 14.03.0439.000;
+ Fri, 28 Feb 2020 08:36:50 -0800
+From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
+To:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "paulmck@kernel.org" <paulmck@kernel.org>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "helgaas@kernel.org" <helgaas@kernel.org>
+Subject: Re: [PATCH v2] PCI: vmd: Add indirection layer to vmd irq lists
+Thread-Topic: [PATCH v2] PCI: vmd: Add indirection layer to vmd irq lists
+Thread-Index: AQHVkB7j0q30tk564k6l6sATXqWN2qd11iQAgAkNUICAstGyAIAAOTQAgAAiDAA=
+Date:   Fri, 28 Feb 2020 16:36:50 +0000
+Message-ID: <85ed447452dc6f49222711e1d513d7a41e9842c7.camel@intel.com>
+References: <1572527333-6212-1-git-send-email-jonathan.derrick@intel.com>
+         <20191031231126.GG20975@paulmck-ThinkPad-P72>
+         <14aa0466567ebf9bff1301c81214a449c581c998.camel@intel.com>
+         <20200228111010.GA4064@e121166-lin.cambridge.arm.com>
+         <20200228143454.GI2935@paulmck-ThinkPad-P72>
+In-Reply-To: <20200228143454.GI2935@paulmck-ThinkPad-P72>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.255.4.216]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <23B5A8A7B3E31E43A6CA431363AD74C1@intel.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.57]
-X-ClientProxiedBy: lhreml727-chm.china.huawei.com (10.201.108.78) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 28 Feb 2020 15:43:04 +0100
-Jean-Philippe Brucker <jean-philippe@linaro.org> wrote:
-
-> On Wed, Feb 26, 2020 at 12:35:06PM +0000, Jonathan Cameron wrote:
-> > > + * A single Process Address Space ID (PASID) is allocated for each mm. In the
-> > > + * example, devices use PASID 1 to read/write into address space X and PASID 2
-> > > + * to read/write into address space Y. Calling iommu_sva_get_pasid() on bond 1
-> > > + * returns 1, and calling it on bonds 2-4 returns 2.
-> > > + *
-> > > + * Hardware tables describing this configuration in the IOMMU would typically
-> > > + * look like this:
-> > > + *
-> > > + *                                PASID tables
-> > > + *                                 of domain A
-> > > + *                              .->+--------+
-> > > + *                             / 0 |        |-------> io_pgtable
-> > > + *                            /    +--------+
-> > > + *            Device tables  /   1 |        |-------> pgd X
-> > > + *              +--------+  /      +--------+
-> > > + *      00:00.0 |      A |-'     2 |        |--.
-> > > + *              +--------+         +--------+   \
-> > > + *              :        :       3 |        |    \
-> > > + *              +--------+         +--------+     --> pgd Y
-> > > + *      00:01.0 |      B |--.                    /
-> > > + *              +--------+   \                  |
-> > > + *      00:01.1 |      B |----+   PASID tables  |
-> > > + *              +--------+     \   of domain B  |
-> > > + *                              '->+--------+   |
-> > > + *                               0 |        |-- | --> io_pgtable
-> > > + *                                 +--------+   |
-> > > + *                               1 |        |   |
-> > > + *                                 +--------+   |
-> > > + *                               2 |        |---'
-> > > + *                                 +--------+
-> > > + *                               3 |        |
-> > > + *                                 +--------+
-> > > + *
-> > > + * With this model, a single call binds all devices in a given domain to an
-> > > + * address space. Other devices in the domain will get the same bond implicitly.
-> > > + * However, users must issue one bind() for each device, because IOMMUs may
-> > > + * implement SVA differently. Furthermore, mandating one bind() per device
-> > > + * allows the driver to perform sanity-checks on device capabilities.  
-> >   
-> > > + *
-> > > + * In some IOMMUs, one entry of the PASID table (typically the first one) can
-> > > + * hold non-PASID translations. In this case PASID 0 is reserved and the first
-> > > + * entry points to the io_pgtable pointer. In other IOMMUs the io_pgtable
-> > > + * pointer is held in the device table and PASID 0 is available to the
-> > > + * allocator.  
-> > 
-> > Is it worth hammering home in here that we can only do this because the PASID space
-> > is global (with exception of PASID 0)?  It's a convenient simplification but not
-> > necessarily a hardware restriction so perhaps we should remind people somewhere in here?  
-> 
-> I could add this four paragraphs up:
-> 
-> "A single Process Address Space ID (PASID) is allocated for each mm. It is
-> a choice made for the Linux SVA implementation, not a hardware
-> restriction."
-
-Perfect.
-
-> 
-> > > + */
-> > > +
-> > > +struct io_mm {
-> > > +	struct list_head		devices;
-> > > +	struct mm_struct		*mm;
-> > > +	struct mmu_notifier		notifier;
-> > > +
-> > > +	/* Late initialization */
-> > > +	const struct io_mm_ops		*ops;
-> > > +	void				*ctx;
-> > > +	int				pasid;
-> > > +};
-> > > +
-> > > +#define to_io_mm(mmu_notifier)	container_of(mmu_notifier, struct io_mm, notifier)
-> > > +#define to_iommu_bond(handle)	container_of(handle, struct iommu_bond, sva)  
-> > 
-> > Code ordering wise, do we want this after the definition of iommu_bond?
-> > 
-> > For both of these it's a bit non obvious what they come 'from'.
-> > I wouldn't naturally assume to_io_mm gets me from notifier to the io_mm
-> > for example.  Not sure it matters though if these are only used in a few
-> > places.  
-> 
-> Right, I can rename the first one to mn_to_io_mm(). The second one I think
-> might be good enough.
-
-Agreed. The second one does feel more natural.
-
-> 
-> 
-> > > +static struct iommu_sva *
-> > > +io_mm_attach(struct device *dev, struct io_mm *io_mm, void *drvdata)
-> > > +{
-> > > +	int ret = 0;  
-> > 
-> > I'm fairly sure this is set in all paths below.  Now, of course the
-> > compiler might not think that in which case fair enough :)
-> >   
-> > > +	bool attach_domain = true;
-> > > +	struct iommu_bond *bond, *tmp;
-> > > +	struct iommu_domain *domain, *other;
-> > > +	struct iommu_sva_param *param = dev->iommu_param->sva_param;
-> > > +
-> > > +	domain = iommu_get_domain_for_dev(dev);
-> > > +
-> > > +	bond = kzalloc(sizeof(*bond), GFP_KERNEL);
-> > > +	if (!bond)
-> > > +		return ERR_PTR(-ENOMEM);
-> > > +
-> > > +	bond->sva.dev	= dev;
-> > > +	bond->drvdata	= drvdata;
-> > > +	refcount_set(&bond->refs, 1);
-> > > +	RCU_INIT_POINTER(bond->io_mm, io_mm);
-> > > +
-> > > +	mutex_lock(&iommu_sva_lock);
-> > > +	/* Is it already bound to the device or domain? */
-> > > +	list_for_each_entry(tmp, &io_mm->devices, mm_head) {
-> > > +		if (tmp->sva.dev != dev) {
-> > > +			other = iommu_get_domain_for_dev(tmp->sva.dev);
-> > > +			if (domain == other)
-> > > +				attach_domain = false;
-> > > +
-> > > +			continue;
-> > > +		}
-> > > +
-> > > +		if (WARN_ON(tmp->drvdata != drvdata)) {
-> > > +			ret = -EINVAL;
-> > > +			goto err_free;
-> > > +		}
-> > > +
-> > > +		/*
-> > > +		 * Hold a single io_mm reference per bond. Note that we can't
-> > > +		 * return an error after this, otherwise the caller would drop
-> > > +		 * an additional reference to the io_mm.
-> > > +		 */
-> > > +		refcount_inc(&tmp->refs);
-> > > +		io_mm_put(io_mm);
-> > > +		kfree(bond);  
-> > 
-> > Free outside the lock would be ever so slightly more logical given we allocated
-> > before taking the lock.
-> >   
-> > > +		mutex_unlock(&iommu_sva_lock);
-> > > +		return &tmp->sva;
-> > > +	}
-> > > +
-> > > +	list_add_rcu(&bond->mm_head, &io_mm->devices);
-> > > +	param->nr_bonds++;
-> > > +	mutex_unlock(&iommu_sva_lock);
-> > > +
-> > > +	ret = io_mm->ops->attach(bond->sva.dev, io_mm->pasid, io_mm->ctx,
-> > > +				 attach_domain);
-> > > +	if (ret)
-> > > +		goto err_remove;
-> > > +
-> > > +	return &bond->sva;
-> > > +
-> > > +err_remove:
-> > > +	/*
-> > > +	 * At this point concurrent threads may have started to access the
-> > > +	 * io_mm->devices list in order to invalidate address ranges, which
-> > > +	 * requires to free the bond via kfree_rcu()
-> > > +	 */
-> > > +	mutex_lock(&iommu_sva_lock);
-> > > +	param->nr_bonds--;
-> > > +	list_del_rcu(&bond->mm_head);
-> > > +
-> > > +err_free:
-> > > +	mutex_unlock(&iommu_sva_lock);
-> > > +	kfree_rcu(bond, rcu_head);  
-> > 
-> > I don't suppose it matters really but we don't need the rcu free if
-> > we follow the err_free goto.  Perhaps we are cleaner in this case
-> > to not use a unified exit path but do that case inline?  
-> 
-> Agreed, though I moved the kzalloc() later as suggested by Jacob, I think
-> it looks a little better and simplifies the error paths
-> 
-> Thanks,
-> Jean
-Jonathan
-
+T24gRnJpLCAyMDIwLTAyLTI4IGF0IDA2OjM0IC0wODAwLCBQYXVsIEUuIE1jS2VubmV5IHdyb3Rl
+Og0KPiBPbiBGcmksIEZlYiAyOCwgMjAyMCBhdCAxMToxMDoxMEFNICswMDAwLCBMb3JlbnpvIFBp
+ZXJhbGlzaSB3cm90ZToNCj4gPiBPbiBXZWQsIE5vdiAwNiwgMjAxOSBhdCAwNDoyNToyNVBNICsw
+MDAwLCBEZXJyaWNrLCBKb25hdGhhbiB3cm90ZToNCj4gPiA+IE9uIFRodSwgMjAxOS0xMC0zMSBh
+dCAxNjoxMSAtMDcwMCwgUGF1bCBFLiBNY0tlbm5leSB3cm90ZToNCj4gPiA+ID4gT24gVGh1LCBP
+Y3QgMzEsIDIwMTkgYXQgMDc6MDg6NTNBTSAtMDYwMCwgSm9uIERlcnJpY2sgd3JvdGU6DQo+ID4g
+PiA+ID4gV2l0aCBDT05GSUdfTUFYU01QIGFuZCBDT05GSUdfUFJPVkVfTE9DS0lORywgdGhlIHNp
+emUgb2YgYW4gc3JjdV9zdHJ1Y3QgY2FuDQo+ID4gPiA+ID4gZ3JvdyBxdWl0ZSBsYXJnZS4gSW4g
+b25lIGNvbXBpbGF0aW9uIGluc3RhbmNlIGl0IHByb2R1Y2VkIGEgNzRLaUIgZGF0YQ0KPiA+ID4g
+PiA+IHN0cnVjdHVyZS4gVGhlc2UgYXJlIGVtYmVkZGVkIGluIHRoZSB2bWRfaXJxX2xpc3Qgc3Ry
+dWN0LCBhbmQgYSBOPTY0IGFsbG9jYXRpb24NCj4gPiA+ID4gPiBjYW4gZXhjZWVkIE1BWF9PUkRF
+UiwgdmlvbGF0aW5nIHJlY2xhaW0gcnVsZXMuDQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4gICBzdHJ1
+Y3Qgc3JjdV9zdHJ1Y3Qgew0KPiA+ID4gPiA+ICAgICAgICAgICBzdHJ1Y3Qgc3JjdV9ub2RlICAg
+bm9kZVs1MjFdOyAgICAgICAgICAgICAgICAgICAgLyogICAgIDAgNzUwMjQgKi8NCj4gPiA+ID4g
+PiAgICAgICAgICAgLyogLS0tIGNhY2hlbGluZSAxMTcyIGJvdW5kYXJ5ICg3NTAwOCBieXRlcykg
+d2FzIDE2IGJ5dGVzIGFnbyAtLS0gKi8NCj4gPiA+ID4gPiAgICAgICAgICAgc3RydWN0IHNyY3Vf
+bm9kZSAqICAgICAgICAgbGV2ZWxbNF07ICAgICAgICAgICAgIC8qIDc1MDI0ICAgIDMyICovDQo+
+ID4gPiA+ID4gICAgICAgICAgIHN0cnVjdCBtdXRleCAgICAgICBzcmN1X2NiX211dGV4OyAgICAg
+ICAgICAgICAgICAvKiA3NTA1NiAgIDEyOCAqLw0KPiA+ID4gPiA+ICAgICAgICAgICAvKiAtLS0g
+Y2FjaGVsaW5lIDExNzQgYm91bmRhcnkgKDc1MTM2IGJ5dGVzKSB3YXMgNDggYnl0ZXMgYWdvIC0t
+LSAqLw0KPiA+ID4gPiA+ICAgICAgICAgICBzcGlubG9ja190ICAgICAgICAgICAgICAgICBsb2Nr
+OyAgICAgICAgICAgICAgICAgLyogNzUxODQgICAgNTYgKi8NCj4gPiA+ID4gPiAgICAgICAgICAg
+LyogLS0tIGNhY2hlbGluZSAxMTc1IGJvdW5kYXJ5ICg3NTIwMCBieXRlcykgd2FzIDQwIGJ5dGVz
+IGFnbyAtLS0gKi8NCj4gPiA+ID4gPiAgICAgICAgICAgc3RydWN0IG11dGV4ICAgICAgIHNyY3Vf
+Z3BfbXV0ZXg7ICAgICAgICAgICAgICAgIC8qIDc1MjQwICAgMTI4ICovDQo+ID4gPiA+ID4gICAg
+ICAgICAgIC8qIC0tLSBjYWNoZWxpbmUgMTE3NyBib3VuZGFyeSAoNzUzMjggYnl0ZXMpIHdhcyA0
+MCBieXRlcyBhZ28gLS0tICovDQo+ID4gPiA+ID4gICAgICAgICAgIHVuc2lnbmVkIGludCAgICAg
+ICAgICAgICAgIHNyY3VfaWR4OyAgICAgICAgICAgICAvKiA3NTM2OCAgICAgNCAqLw0KPiA+ID4g
+PiA+IA0KPiA+ID4gPiA+ICAgICAgICAgICAvKiBYWFggNCBieXRlcyBob2xlLCB0cnkgdG8gcGFj
+ayAqLw0KPiA+ID4gPiA+IA0KPiA+ID4gPiA+ICAgICAgICAgICBsb25nIHVuc2lnbmVkIGludCAg
+ICAgICAgICBzcmN1X2dwX3NlcTsgICAgICAgICAgLyogNzUzNzYgICAgIDggKi8NCj4gPiA+ID4g
+PiAgICAgICAgICAgbG9uZyB1bnNpZ25lZCBpbnQgICAgICAgICAgc3JjdV9ncF9zZXFfbmVlZGVk
+OyAgIC8qIDc1Mzg0ICAgICA4ICovDQo+ID4gPiA+ID4gICAgICAgICAgIC8qIC0tLSBjYWNoZWxp
+bmUgMTE3OCBib3VuZGFyeSAoNzUzOTIgYnl0ZXMpIC0tLSAqLw0KPiA+ID4gPiA+ICAgICAgICAg
+ICBsb25nIHVuc2lnbmVkIGludCAgICAgICAgICBzcmN1X2dwX3NlcV9uZWVkZWRfZXhwOyAvKiA3
+NTM5MiAgICAgOCAqLw0KPiA+ID4gPiA+ICAgICAgICAgICBsb25nIHVuc2lnbmVkIGludCAgICAg
+ICAgICBzcmN1X2xhc3RfZ3BfZW5kOyAgICAgLyogNzU0MDAgICAgIDggKi8NCj4gPiA+ID4gPiAg
+ICAgICAgICAgc3RydWN0IHNyY3VfZGF0YSAqICAgICAgICAgc2RhOyAgICAgICAgICAgICAgICAg
+IC8qIDc1NDA4ICAgICA4ICovDQo+ID4gPiA+ID4gICAgICAgICAgIGxvbmcgdW5zaWduZWQgaW50
+ICAgICAgICAgIHNyY3VfYmFycmllcl9zZXE7ICAgICAvKiA3NTQxNiAgICAgOCAqLw0KPiA+ID4g
+PiA+ICAgICAgICAgICBzdHJ1Y3QgbXV0ZXggICAgICAgc3JjdV9iYXJyaWVyX211dGV4OyAgICAg
+ICAgICAgLyogNzU0MjQgICAxMjggKi8NCj4gPiA+ID4gPiAgICAgICAgICAgLyogLS0tIGNhY2hl
+bGluZSAxMTgwIGJvdW5kYXJ5ICg3NTUyMCBieXRlcykgd2FzIDMyIGJ5dGVzIGFnbyAtLS0gKi8N
+Cj4gPiA+ID4gPiAgICAgICAgICAgc3RydWN0IGNvbXBsZXRpb24gIHNyY3VfYmFycmllcl9jb21w
+bGV0aW9uOyAgICAgIC8qIDc1NTUyICAgIDgwICovDQo+ID4gPiA+ID4gICAgICAgICAgIC8qIC0t
+LSBjYWNoZWxpbmUgMTE4MSBib3VuZGFyeSAoNzU1ODQgYnl0ZXMpIHdhcyA0OCBieXRlcyBhZ28g
+LS0tICovDQo+ID4gPiA+ID4gICAgICAgICAgIGF0b21pY190ICAgICAgICAgICAgICAgICAgIHNy
+Y3VfYmFycmllcl9jcHVfY250OyAvKiA3NTYzMiAgICAgNCAqLw0KPiA+ID4gPiA+IA0KPiA+ID4g
+PiA+ICAgICAgICAgICAvKiBYWFggNCBieXRlcyBob2xlLCB0cnkgdG8gcGFjayAqLw0KPiA+ID4g
+PiA+IA0KPiA+ID4gPiA+ICAgICAgICAgICBzdHJ1Y3QgZGVsYXllZF93b3JrIHdvcms7ICAgICAg
+ICAgICAgICAgICAgICAgICAgLyogNzU2NDAgICAxNTIgKi8NCj4gPiA+ID4gPiANCj4gPiA+ID4g
+PiAgICAgICAgICAgLyogWFhYIGxhc3Qgc3RydWN0IGhhcyA0IGJ5dGVzIG9mIHBhZGRpbmcgKi8N
+Cj4gPiA+ID4gPiANCj4gPiA+ID4gPiAgICAgICAgICAgLyogLS0tIGNhY2hlbGluZSAxMTg0IGJv
+dW5kYXJ5ICg3NTc3NiBieXRlcykgd2FzIDE2IGJ5dGVzIGFnbyAtLS0gKi8NCj4gPiA+ID4gPiAg
+ICAgICAgICAgc3RydWN0IGxvY2tkZXBfbWFwIGRlcF9tYXA7ICAgICAgICAgICAgICAgICAgICAg
+IC8qIDc1NzkyICAgIDMyICovDQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4gICAgICAgICAgIC8qIHNp
+emU6IDc1ODI0LCBjYWNoZWxpbmVzOiAxMTg1LCBtZW1iZXJzOiAxNyAqLw0KPiA+ID4gPiA+ICAg
+ICAgICAgICAvKiBzdW0gbWVtYmVyczogNzU4MTYsIGhvbGVzOiAyLCBzdW0gaG9sZXM6IDggKi8N
+Cj4gPiA+ID4gPiAgICAgICAgICAgLyogcGFkZGluZ3M6IDEsIHN1bSBwYWRkaW5nczogNCAqLw0K
+PiA+ID4gPiA+ICAgICAgICAgICAvKiBsYXN0IGNhY2hlbGluZTogNDggYnl0ZXMgKi8NCj4gPiA+
+ID4gPiAgIH07DQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4gV2l0aCBOPTY0IFZNRCBJUlEgbGlzdHMs
+IHRoaXMgd291bGQgYWxsb2NhdGUgNC42TWlCIGluIGEgc2luZ2xlIGNhbGwuIFRoaXMNCj4gPiA+
+ID4gPiB2aW9sYXRlcyBNQVhfT1JERVIgcmVjbGFpbSBydWxlcyB3aGVuIFBBR0VfU0laRT00MDk2
+IGFuZA0KPiA+ID4gPiA+IE1BWF9PUkRFUl9OUl9QQUdFUz0xMDI0LCBhbmQgaW52b2tlcyB0aGUg
+Zm9sbG93aW5nIHdhcm5pbmcgaW4gbW0vcGFnZV9hbGxvYy5jOg0KPiA+ID4gPiA+IA0KPiA+ID4g
+PiA+ICAgLyoNCj4gPiA+ID4gPiAgICAqIFRoZXJlIGFyZSBzZXZlcmFsIHBsYWNlcyB3aGVyZSB3
+ZSBhc3N1bWUgdGhhdCB0aGUgb3JkZXIgdmFsdWUgaXMgc2FuZQ0KPiA+ID4gPiA+ICAgICogc28g
+YmFpbCBvdXQgZWFybHkgaWYgdGhlIHJlcXVlc3QgaXMgb3V0IG9mIGJvdW5kLg0KPiA+ID4gPiA+
+ICAgICovDQo+ID4gPiA+ID4gICBpZiAodW5saWtlbHkob3JkZXIgPj0gTUFYX09SREVSKSkgew0K
+PiA+ID4gPiA+ICAgCVdBUk5fT05fT05DRSghKGdmcF9tYXNrICYgX19HRlBfTk9XQVJOKSk7DQo+
+ID4gPiA+ID4gICAJcmV0dXJuIE5VTEw7DQo+ID4gPiA+ID4gICB9DQo+ID4gPiA+ID4gDQo+ID4g
+PiA+ID4gVGhpcyBwYXRjaCBjaGFuZ2VzIHRoZSBpcnEgbGlzdCBhcnJheSBpbnRvIGFuIGFycmF5
+IG9mIHBvaW50ZXJzIHRvIGlycQ0KPiA+ID4gPiA+IGxpc3RzIHRvIGF2b2lkIGFsbG9jYXRpb24g
+ZmFpbHVyZXMgd2l0aCBncmVhdGVyIG1zaXggY291bnRzLg0KPiA+ID4gPiA+IA0KPiA+ID4gPiA+
+IFRoaXMgcGF0Y2ggYWxzbyByZXZlcnRzIGNvbW1pdCBiMzE4MjIyNzdhYmNkN2M4M2QxYzFjMGFm
+ODc2ZGE5Y2NkZjNiN2Q2Lg0KPiA+ID4gPiA+IFRoZSBpbmRleF9mcm9tX2lycXMoKSBoZWxwZXIg
+d2FzIGFkZGVkIHRvIGNhbGN1bGF0ZSB0aGUgaXJxIGxpc3QgaW5kZXgNCj4gPiA+ID4gPiBmcm9t
+IHRoZSBhcnJheSBvZiBpcnFzLCBpbiBvcmRlciB0byBzaHJpbmsgdm1kX2lycV9saXN0IGZvciBw
+ZXJmb3JtYW5jZS4NCj4gPiA+ID4gPiANCj4gPiA+ID4gPiBEdWUgdG8gdGhlIGVtYmVkZGVkIHNy
+Y3Vfc3RydWN0IHdpdGhpbiB0aGUgdm1kX2lycV9saXN0IHN0cnVjdCBoYXZpbmcgYQ0KPiA+ID4g
+PiA+IHZhcnlpbmcgc2l6ZSBkZXBlbmRpbmcgb24gYSBudW1iZXIgb2YgZmFjdG9ycywgdGhlIHZt
+ZF9pcnFfbGlzdCBzdHJ1Y3QNCj4gPiA+ID4gPiBubyBsb25nZXIgZ3VhcmFudGVlcyBvcHRpbWFs
+IGRhdGEgc3RydWN0dXJlIHNpemUgYW5kIGdyYW51bGFyaXR5Lg0KPiA+ID4gPiA+IA0KPiA+ID4g
+PiA+IFNpZ25lZC1vZmYtYnk6IEpvbiBEZXJyaWNrIDxqb25hdGhhbi5kZXJyaWNrQGludGVsLmNv
+bT4NCj4gPiA+ID4gPiAtLS0NCj4gPiA+ID4gPiBBZGRlZCBQYXVsIHRvIG1ha2UgaGltIGF3YXJl
+IG9mIHNyY3Vfc3RydWN0IHNpemUgd2l0aCB0aGVzZSBvcHRpb25zDQo+ID4gPiA+IA0KPiA+ID4g
+PiBUaGVyZSB3YXMgc29tZSBkaXNjdXNzaW9uIG9mIG1ha2luZyB0aGUgc3JjdV9zdHJ1Y3Qgc3Ry
+dWN0dXJlJ3MgLT5ub2RlW10NCj4gPiA+ID4gYXJyYXkgYmUgc2VwYXJhdGVseSBhbGxvY2F0ZWQs
+IHdoaWNoIHdvdWxkIGFsbG93IHRoaXMgYXJyYXkgdG8gYmUNCj4gPiA+ID4gcmlnaHRzaXplIGZv
+ciB0aGUgc3lzdGVtIGluIHF1ZXN0aW9uLiAgSG93ZXZlciwgSSBiZWxpZXZlIHRoZXkgZW5kZWQg
+dXANCj4gPiA+ID4gaW5zdGVhZCBzZXBhcmF0ZWx5IGFsbG9jYXRpbmcgdGhlIHNyY3Vfc3RydWN0
+IHN0cnVjdHVyZSBpdHNlbGYuDQo+ID4gPiA+IA0KPiA+ID4gPiBXaXRob3V0IGRvaW5nIHNvbWV0
+aGluZyBsaWtlIHRoYXQsIEkgYW0ga2luZCBvZiBzdHVjay4gIEFmdGVyIGFsbCwNCj4gPiA+ID4g
+YXQgY29tcGlsZSB0aW1lLCB0aGUga2VybmVsIGJ1aWxkIHN5c3RlbSB0ZWxscyBTUkNVIHRoYXQg
+aXQgbmVlZHMgdG8NCj4gPiA+ID4gYmUgcHJlcGFyZWQgdG8gcnVuIG9uIHN5c3RlbXMgd2l0aCB0
+aG91c2FuZHMgb2YgQ1BVcy4gIFdoaWNoIHJlcXVpcmVzDQo+ID4gPiA+IHN1YnN0YW50aWFsIG1l
+bW9yeSB0byBrZWVwIHRyYWNrIG9mIGFsbCB0aG9zZSBDUFVzLiAgV2hpY2ggYXJlIG5vdA0KPiA+
+ID4gPiBwcmVzZW50IG9uIG1vc3Qgc3lzdGVtcy4NCj4gPiA+ID4gDQo+ID4gPiA+IFRob3VnaHRz
+Pw0KPiA+ID4gDQo+ID4gPiBZZXMgSSBoYXZlbid0IHNlZW4gYW4gZWxlZ2FudCBzb2x1dGlvbiBv
+dGhlciB0aGFuIG1ha2luZyB1c2VycyBhd2FyZQ0KPiA+ID4gb2YgdGhlIHNpdHVhdGlvbi4NCj4g
+PiA+IA0KPiA+ID4gVGhhbmtzIGZvciB5b3VyIGlucHV0DQo+ID4gDQo+ID4gSm9uLCBQYXVsLA0K
+PiA+IA0KPiA+IEkgZG9uJ3Qga25vdyBpZiB0aGVyZSB3YXMgYW55IGZ1cnRoZXIgZGV2ZWxvcG1l
+bnQgaW4gdGhpcyBhcmVhIGluIHRoZQ0KPiA+IG1lYW50aW1lLCBzaG91bGQgd2UgcHJvY2VlZCB3
+aXRoIHRoaXMgcGF0Y2ggPw0KPiANCj4gTGV0IG1lIGJlIG1vcmUgZXhwbGljaXQuICBXb3VsZCBp
+dCBiZSBoZWxwZnVsIHRvIHlvdSBndXlzIGlmIHRoZXJlIHdhcw0KPiBhIHZhcmlhYmxlLXNpemVk
+IC0+bm9kZVtdIGFycmF5IHRoYXQgaXMgc2VwYXJhdGVseSBhbGxvY2F0ZWQ/ICBJZiBzbywNCj4g
+cGxlYXNlIGRvIHRlbGwgbWUuICBBZnRlciBhbGwsIEkgY2Fubm90IHJlYWQgeW91ciBtaW5kcyAg
+Oy0pDQo+IA0KRnJhbmtseSBJJ20gbm90IHZlcnNlZCBlbm91Z2ggaW4gUkNVIHRvIGtub3cgdGhl
+IGltcGxpY2F0aW9ucyBvZiB0aGlzDQpjaGFuZ2UuIEhvdyBvZnRlbiBoYXZlIHlvdSBjb21lIGFj
+cm9zcyB0aGUgc2FtZSBpc3N1ZSBJIGFtIGZhY2luZz8gSXMNCml0IHdvcnRoIHRoZSBlZmZvcnQg
+dmVyc3VzIG15IGFic3RyYWN0aW9uPyBXaWxsIGl0IGFmZmVjdCBwZXJmb3JtYW5jZQ0Kb3Igd2ls
+bCB0aGUgU2xlZXBhYmxlIGNvbXBvbmVudCBhYnNvcmIgaXQ/DQoNCj4gQW4gaW5zdGFuY2Ugb2Yg
+c3VjaCBhIHZhcmlhbnQgd291bGQgbm90IGJlIGF2YWlsYWJsZSB2aWEgREVGSU5FX1NSQ1UoKSwN
+Cj4gd2hpY2ggYXQgY29tcGlsZSB0aW1lIHdvdWxkIGFic29sdXRlbHkgbmVlZCB0byBhbGxvY2F0
+ZSBhcyBtYW55IGVsZW1lbnRzDQo+IGFzIEtjb25maWcgc2FpZCB0byBhbGxvY2F0ZS4gDQpTbyB0
+aGUgaW1wbGljYXRpb24gaXMgdGhhdCBpdCBuZWVkcyBhbGxvY2F0aW9uIGxhdGVyIHZpYQ0KaW5p
+dF9zcmN1X3N0cnVjdD8NCg0KPiBJbiBhZGRpdGlvbiwgaW5zdGFuY2VzIG9mIHNyY3Vfc3RydWN0
+DQo+IHRha2luZyB0aGlzIGFwcHJvYWNoIHdvdWxkIG5vdCBiZSB1c2FibGUgdW50aWwgYWZ0ZXIg
+aW5pdF9zcmN1X3N0cnVjdCgpDQo+IHdhcyBpbnZva2VkLCB3aGljaCB3b3VsZCBhbGxvY2F0ZSBh
+IHJpZ2h0LXNpemVkIC0+bm9kZSBhcnJheS4NClNvIHNpbWlsYXIgdG8gb3RoZXIgbG9jayBpbml0
+IGZ1bmN0aW9ucy4gQXJlIHRoZXJlIGV4aXN0aW5nIHVzZXJzIGRvaW5nDQpSQ1UgYmVmb3JlIGlu
+aXRfc3JjdV9zdHJ1Y3QgaXMgY2FsbGVkPw0KDQo+IA0KPiBBZ2Fpbiwgd291bGQgdGhpcyBiZSBo
+ZWxwZnVsPw0KPiANCj4gCQkJCQkJCVRoYW54LCBQYXVsDQo=
