@@ -2,164 +2,175 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 841101739F3
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2020 15:35:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 74220173A06
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2020 15:39:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbgB1Oe4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 28 Feb 2020 09:34:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36054 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726561AbgB1Oe4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 28 Feb 2020 09:34:56 -0500
-Received: from paulmck-ThinkPad-P72.home (199-192-87-166.static.wiline.com [199.192.87.166])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 523512469F;
-        Fri, 28 Feb 2020 14:34:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582900495;
-        bh=w3UA1fKXCu+uvMVyxVCYKL1pRR3K84thi2LNljYiuJs=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=IFlyVVE3wEX6cV10osvVSZ29QRyW+OG67t9GAaxaKoX5ypfFtq8LZoMqSkKOBN1DM
-         Lhg8QocR6b1QSr21Bv7AhpRsh+CIDEqjMrVXaoD33hXmyxeby0fAVfYOjtBi+k1rNY
-         NjLqHPoZFckXPsnGU6c36tNE71nxQdc5JqocqA0E=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id D56CD35226D1; Fri, 28 Feb 2020 06:34:54 -0800 (PST)
-Date:   Fri, 28 Feb 2020 06:34:54 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     "Derrick, Jonathan" <jonathan.derrick@intel.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "helgaas@kernel.org" <helgaas@kernel.org>
-Subject: Re: [PATCH v2] PCI: vmd: Add indirection layer to vmd irq lists
-Message-ID: <20200228143454.GI2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <1572527333-6212-1-git-send-email-jonathan.derrick@intel.com>
- <20191031231126.GG20975@paulmck-ThinkPad-P72>
- <14aa0466567ebf9bff1301c81214a449c581c998.camel@intel.com>
- <20200228111010.GA4064@e121166-lin.cambridge.arm.com>
+        id S1726990AbgB1Ojp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 28 Feb 2020 09:39:45 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43623 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726388AbgB1Ojo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 28 Feb 2020 09:39:44 -0500
+Received: by mail-wr1-f67.google.com with SMTP id e10so1766316wrr.10
+        for <linux-pci@vger.kernel.org>; Fri, 28 Feb 2020 06:39:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=0bZtBK6HC94nIEacPL+V6SajMXEMTp9BAFVguJlaz+Q=;
+        b=v7jFCl7OdeBWLjzPqqQAjqPrO/bujVk3YQ+hyShHLUfXRhZTEjht+G1EeKmiALwmrF
+         +K7WW2uAYpZmtBzezuv2w6JdJBKpUdrsVHMYifTW3ola4TSC2f9DFxhquGsIb9CwsYcj
+         I013dyyZ6/sIBNapnY1ANl/WmtPXa7OasfQA2NEYVXDTycNT7T/szrd8fPkyKttzDOhS
+         AkrRy0wJlbcKiLL14UW8NPqnhuTmdqHG+yqHosj5GBL25ODsv4IeTcjj/P24pxnowkqO
+         vgOp2+gPP2nbd/AjqXRm5VyhdRF+ZL9iukIU6Y4I/BilXyOX38XdNblyty+GogNj1crk
+         MH+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=0bZtBK6HC94nIEacPL+V6SajMXEMTp9BAFVguJlaz+Q=;
+        b=p+mK1RqJUa2u5QfnPmI4onWnn1xfvcGPNUfg9nTrVvKQEloxWfIqGyHREEVT4bWD5y
+         VPxTZWr6ybuz2tLQpLcsTRSOThr65yRZgl0Wj581LAtLLFWfjwc3LXlHIU6rujgAELNA
+         b52Tcr5SM3flAAIrehNoSaI7nfDCnryoyWkuozbLP+hSgtTKLQG926oVRy0sxQeI2H+I
+         SDx9RuCZOPADp69IhzGfJTjOstKMvpSsVhHRN12KlE0UjYaFQ7UkrqFEw+vJh9tkIof7
+         2WSnS26oRa+QkN3ASOYIrxjW7j4iCjHqCJC5FLb/NjtZLI3u9yRFAIcXtwUKs2W+g3Hs
+         cbJQ==
+X-Gm-Message-State: APjAAAXqz+s2Rg4EGrv3j/kJHa5tVesye53m2LednIUMKuO/8ilRLVzW
+        4fUzUDULFEQSeN1g0tI1fUEGLQ==
+X-Google-Smtp-Source: APXvYqy36tgbgxq6aX9f3yrenPgU8REug1w3SCjW1FgRUfJhNgTMxVBJWR+Ek+IeYzLIg7r0rI/Bvg==
+X-Received: by 2002:adf:ec0e:: with SMTP id x14mr4896046wrn.270.1582900782663;
+        Fri, 28 Feb 2020 06:39:42 -0800 (PST)
+Received: from myrica ([2001:171b:c9a8:fbc0:116c:c27a:3e7f:5eaf])
+        by smtp.gmail.com with ESMTPSA id a7sm2294800wmj.12.2020.02.28.06.39.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Feb 2020 06:39:42 -0800 (PST)
+Date:   Fri, 28 Feb 2020 15:39:35 +0100
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     mark.rutland@arm.com, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, will@kernel.org,
+        Dimitri Sivanich <sivanich@sgi.com>, catalin.marinas@arm.com,
+        zhangfei.gao@linaro.org, devicetree@vger.kernel.org,
+        kevin.tian@intel.com, Arnd Bergmann <arnd@arndb.de>,
+        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        iommu@lists.linux-foundation.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        robin.murphy@arm.com, christian.koenig@amd.com
+Subject: Re: [PATCH v4 01/26] mm/mmu_notifiers: pass private data down to
+ alloc_notifier()
+Message-ID: <20200228143935.GA2156@myrica>
+References: <20200224182401.353359-1-jean-philippe@linaro.org>
+ <20200224182401.353359-2-jean-philippe@linaro.org>
+ <20200224190056.GT31668@ziepe.ca>
+ <20200225092439.GB375953@myrica>
+ <20200225140814.GW31668@ziepe.ca>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200228111010.GA4064@e121166-lin.cambridge.arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200225140814.GW31668@ziepe.ca>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 11:10:10AM +0000, Lorenzo Pieralisi wrote:
-> On Wed, Nov 06, 2019 at 04:25:25PM +0000, Derrick, Jonathan wrote:
-> > On Thu, 2019-10-31 at 16:11 -0700, Paul E. McKenney wrote:
-> > > On Thu, Oct 31, 2019 at 07:08:53AM -0600, Jon Derrick wrote:
-> > > > With CONFIG_MAXSMP and CONFIG_PROVE_LOCKING, the size of an srcu_struct can
-> > > > grow quite large. In one compilation instance it produced a 74KiB data
-> > > > structure. These are embedded in the vmd_irq_list struct, and a N=64 allocation
-> > > > can exceed MAX_ORDER, violating reclaim rules.
+On Tue, Feb 25, 2020 at 10:08:14AM -0400, Jason Gunthorpe wrote:
+> On Tue, Feb 25, 2020 at 10:24:39AM +0100, Jean-Philippe Brucker wrote:
+> > On Mon, Feb 24, 2020 at 03:00:56PM -0400, Jason Gunthorpe wrote:
+> > > On Mon, Feb 24, 2020 at 07:23:36PM +0100, Jean-Philippe Brucker wrote:
+> > > > The new allocation scheme introduced by 2c7933f53f6b ("mm/mmu_notifiers:
+> > > > add a get/put scheme for the registration") provides a convenient way
+> > > > for users to attach notifier data to an mm. However, it would be even
+> > > > better to create this notifier data atomically.
 > > > > 
-> > > >   struct srcu_struct {
-> > > >           struct srcu_node   node[521];                    /*     0 75024 */
-> > > >           /* --- cacheline 1172 boundary (75008 bytes) was 16 bytes ago --- */
-> > > >           struct srcu_node *         level[4];             /* 75024    32 */
-> > > >           struct mutex       srcu_cb_mutex;                /* 75056   128 */
-> > > >           /* --- cacheline 1174 boundary (75136 bytes) was 48 bytes ago --- */
-> > > >           spinlock_t                 lock;                 /* 75184    56 */
-> > > >           /* --- cacheline 1175 boundary (75200 bytes) was 40 bytes ago --- */
-> > > >           struct mutex       srcu_gp_mutex;                /* 75240   128 */
-> > > >           /* --- cacheline 1177 boundary (75328 bytes) was 40 bytes ago --- */
-> > > >           unsigned int               srcu_idx;             /* 75368     4 */
-> > > > 
-> > > >           /* XXX 4 bytes hole, try to pack */
-> > > > 
-> > > >           long unsigned int          srcu_gp_seq;          /* 75376     8 */
-> > > >           long unsigned int          srcu_gp_seq_needed;   /* 75384     8 */
-> > > >           /* --- cacheline 1178 boundary (75392 bytes) --- */
-> > > >           long unsigned int          srcu_gp_seq_needed_exp; /* 75392     8 */
-> > > >           long unsigned int          srcu_last_gp_end;     /* 75400     8 */
-> > > >           struct srcu_data *         sda;                  /* 75408     8 */
-> > > >           long unsigned int          srcu_barrier_seq;     /* 75416     8 */
-> > > >           struct mutex       srcu_barrier_mutex;           /* 75424   128 */
-> > > >           /* --- cacheline 1180 boundary (75520 bytes) was 32 bytes ago --- */
-> > > >           struct completion  srcu_barrier_completion;      /* 75552    80 */
-> > > >           /* --- cacheline 1181 boundary (75584 bytes) was 48 bytes ago --- */
-> > > >           atomic_t                   srcu_barrier_cpu_cnt; /* 75632     4 */
-> > > > 
-> > > >           /* XXX 4 bytes hole, try to pack */
-> > > > 
-> > > >           struct delayed_work work;                        /* 75640   152 */
-> > > > 
-> > > >           /* XXX last struct has 4 bytes of padding */
-> > > > 
-> > > >           /* --- cacheline 1184 boundary (75776 bytes) was 16 bytes ago --- */
-> > > >           struct lockdep_map dep_map;                      /* 75792    32 */
-> > > > 
-> > > >           /* size: 75824, cachelines: 1185, members: 17 */
-> > > >           /* sum members: 75816, holes: 2, sum holes: 8 */
-> > > >           /* paddings: 1, sum paddings: 4 */
-> > > >           /* last cacheline: 48 bytes */
-> > > >   };
-> > > > 
-> > > > With N=64 VMD IRQ lists, this would allocate 4.6MiB in a single call. This
-> > > > violates MAX_ORDER reclaim rules when PAGE_SIZE=4096 and
-> > > > MAX_ORDER_NR_PAGES=1024, and invokes the following warning in mm/page_alloc.c:
-> > > > 
-> > > >   /*
-> > > >    * There are several places where we assume that the order value is sane
-> > > >    * so bail out early if the request is out of bound.
-> > > >    */
-> > > >   if (unlikely(order >= MAX_ORDER)) {
-> > > >   	WARN_ON_ONCE(!(gfp_mask & __GFP_NOWARN));
-> > > >   	return NULL;
-> > > >   }
-> > > > 
-> > > > This patch changes the irq list array into an array of pointers to irq
-> > > > lists to avoid allocation failures with greater msix counts.
-> > > > 
-> > > > This patch also reverts commit b31822277abcd7c83d1c1c0af876da9ccdf3b7d6.
-> > > > The index_from_irqs() helper was added to calculate the irq list index
-> > > > from the array of irqs, in order to shrink vmd_irq_list for performance.
-> > > > 
-> > > > Due to the embedded srcu_struct within the vmd_irq_list struct having a
-> > > > varying size depending on a number of factors, the vmd_irq_list struct
-> > > > no longer guarantees optimal data structure size and granularity.
-> > > > 
-> > > > Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
-> > > > ---
-> > > > Added Paul to make him aware of srcu_struct size with these options
+> > > > Since the alloc_notifier() callback only takes an mm argument at the
+> > > > moment, some users have to perform the allocation in two times.
+> > > > alloc_notifier() initially creates an incomplete structure, which is
+> > > > then finalized using more context once mmu_notifier_get() returns. This
+> > > > second step requires carrying an initialization lock in the notifier
+> > > > data and playing dirty tricks to order memory accesses against live
+> > > > invalidation.
 > > > 
-> > > There was some discussion of making the srcu_struct structure's ->node[]
-> > > array be separately allocated, which would allow this array to be
-> > > rightsize for the system in question.  However, I believe they ended up
-> > > instead separately allocating the srcu_struct structure itself.
+> > > This was the intended pattern. Tthere shouldn't be an real issue as
+> > > there shouldn't be any data on which to invalidate, ie the later patch
+> > > does:
 > > > 
-> > > Without doing something like that, I am kind of stuck.  After all,
-> > > at compile time, the kernel build system tells SRCU that it needs to
-> > > be prepared to run on systems with thousands of CPUs.  Which requires
-> > > substantial memory to keep track of all those CPUs.  Which are not
-> > > present on most systems.
+> > > +       list_for_each_entry_rcu(bond, &io_mm->devices, mm_head)
 > > > 
-> > > Thoughts?
+> > > And that list is empty post-allocation, so no 'dirty tricks' required.
 > > 
-> > Yes I haven't seen an elegant solution other than making users aware
-> > of the situation.
+> > Before introducing this patch I had the following code:
 > > 
-> > Thanks for your input
+> > +	list_for_each_entry_rcu(bond, &io_mm->devices, mm_head) {
+> > +		/*
+> > +		 * To ensure that we observe the initialization of io_mm fields
+> > +		 * by io_mm_finalize() before the registration of this bond to
+> > +		 * the list by io_mm_attach(), introduce an address dependency
+> > +		 * between bond and io_mm. It pairs with the smp_store_release()
+> > +		 * from list_add_rcu().
+> > +		 */
+> > +		io_mm = rcu_dereference(bond->io_mm);
 > 
-> Jon, Paul,
+> A rcu_dereference isn't need here, just a normal derference is fine.
+
+bond->io_mm is annotated with __rcu (for iommu_sva_get_pasid_generic(),
+which does bond->io_mm under rcu_read_lock())
+
 > 
-> I don't know if there was any further development in this area in the
-> meantime, should we proceed with this patch ?
+> > +		io_mm->ops->invalidate(bond->sva.dev, io_mm->pasid, io_mm->ctx,
+> > +				       start, end - start);
+> > +	}
+> > 
+> > (1) io_mm_get() would obtain an empty io_mm from iommu_notifier_get().
+> > (2) then io_mm_finalize() would initialize io_mm->ops, io_mm->ctx, etc.
+> > (3) finally io_mm_attach() would add the bond to io_mm->devices.
+> > 
+> > Since the above code can run before (2) it needs to observe valid
+> > io_mm->ctx, io_mm->ops initialized by (2) after obtaining the bond
+> > initialized by (3). Which I believe requires the address dependency from
+> > the rcu_dereference() above or some stronger barrier to pair with the
+> > list_add_rcu().
+> 
+> The list_for_each_entry_rcu() is an acquire that already pairs with
+> the release in list_add_rcu(), all you need is a data dependency chain
+> starting on bond to be correct on ordering.
+> 
+> But this is super tricky :\
+> 
+> > If io_mm->ctx and io_mm->ops are already valid before the
+> > mmu notifier is published, then we don't need that stuff.
+> 
+> So, this trickyness with RCU is not a bad reason to introduce the priv
+> scheme, maybe explain it in the commit message?
 
-Let me be more explicit.  Would it be helpful to you guys if there was
-a variable-sized ->node[] array that is separately allocated?  If so,
-please do tell me.  After all, I cannot read your minds  ;-)
+Ok, I've added this to the commit message:
 
-An instance of such a variant would not be available via DEFINE_SRCU(),
-which at compile time would absolutely need to allocate as many elements
-as Kconfig said to allocate.  In addition, instances of srcu_struct
-taking this approach would not be usable until after init_srcu_struct()
-was invoked, which would allocate a right-sized ->node array.
+    The IOMMU SVA module, which attaches an mm to multiple devices,
+    exemplifies this situation. In essence it does:
 
-Again, would this be helpful?
+            mmu_notifier_get()
+              alloc_notifier()
+                 A = kzalloc()
+              /* MMU notifier is published */
+            A->ctx = ctx;                           // (1)
+            device->A = A;
+            list_add_rcu(device, A->devices);       // (2)
 
-							Thanx, Paul
+    The invalidate notifier, which may start running before A is fully
+    initialized at (1), does the following:
+
+            io_mm_invalidate(A)
+              list_for_each_entry_rcu(device, A->devices)
+                A = device->A;                      // (3)
+                device->invalidate(A->ctx)
+
+    To ensure that an invalidate() thread observes write (1) before (2), it
+    needs the address dependency (3). The resulting code is subtle and
+    difficult to understand. If instead we fully initialize object A before
+    publishing the MMU notifier, we don't need the complexity added by (3).
+
+
+I'll try to improve the wording before sending next version.
+
+Thanks,
+Jean
