@@ -2,14 +2,14 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EDC64172DDD
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2020 02:03:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1BDE4172DD9
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2020 02:03:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730592AbgB1BCq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 Feb 2020 20:02:46 -0500
-Received: from mga14.intel.com ([192.55.52.115]:40111 "EHLO mga14.intel.com"
+        id S1730534AbgB1BCp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 Feb 2020 20:02:45 -0500
+Received: from mga14.intel.com ([192.55.52.115]:40114 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730538AbgB1BCp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S1730577AbgB1BCp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Thu, 27 Feb 2020 20:02:45 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
@@ -17,7 +17,7 @@ Received: from orsmga001.jf.intel.com ([10.7.209.18])
   by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 17:02:43 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,493,1574150400"; 
-   d="scan'208";a="317977008"
+   d="scan'208";a="317977010"
 Received: from skuppusw-desk.jf.intel.com ([10.7.201.16])
   by orsmga001.jf.intel.com with ESMTP; 27 Feb 2020 17:02:42 -0800
 From:   sathyanarayanan.kuppuswamy@linux.intel.com
@@ -26,9 +26,9 @@ Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         ashok.raj@intel.com,
         Kuppuswamy Sathyanarayanan 
         <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: [PATCH v16 5/9] PCI/DPC: Cache DPC capabilities in pci_init_capabilities()
-Date:   Thu, 27 Feb 2020 16:59:47 -0800
-Message-Id: <a3a634b6c6012773e9e668c2110e13a5bd196bb8.1582850766.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: [PATCH v16 6/9] PCI/AER: Allow clearing Error Status Register in FF mode
+Date:   Thu, 27 Feb 2020 16:59:48 -0800
+Message-Id: <9e71cba3596213b40d7c280bf57d8938189c2866.1582850766.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1582850766.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 References: <cover.1582850766.git.sathyanarayanan.kuppuswamy@linux.intel.com>
@@ -41,89 +41,87 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-Since we need to re-use DPC error handling routines in Error Disconnect
-Recover (EDR) driver, move the initalization and caching of DPC
-capabilities to pci_init_capabilities().
+As per PCI firmware specification r3.2 System Firmware Intermediary
+(SFI) _OSC and DPC Updates ECR
+(https://members.pcisig.com/wg/PCI-SIG/document/13563), sec titled "DPC
+Event Handling Implementation Note", page 10, Error Disconnect Recover
+(EDR) support allows OS to handle error recovery and clearing Error
+Registers even in FF mode. So create new API pci_aer_raw_clear_status()
+which allows clearing AER registers without FF mode checks.
 
 Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 ---
  drivers/pci/pci.h      |  2 ++
- drivers/pci/pcie/dpc.c | 32 ++++++++++++++++++++------------
- 2 files changed, 22 insertions(+), 12 deletions(-)
+ drivers/pci/pcie/aer.c | 22 ++++++++++++++++++----
+ 2 files changed, 20 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index c2c35f152cde..e57e78b619f8 100644
+index e57e78b619f8..c239e6dd2542 100644
 --- a/drivers/pci/pci.h
 +++ b/drivers/pci/pci.h
-@@ -448,9 +448,11 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info);
- #ifdef CONFIG_PCIE_DPC
- void pci_save_dpc_state(struct pci_dev *dev);
- void pci_restore_dpc_state(struct pci_dev *dev);
-+void pci_dpc_init(struct pci_dev *pdev);
+@@ -655,6 +655,7 @@ extern const struct attribute_group aer_stats_attr_group;
+ void pci_aer_clear_fatal_status(struct pci_dev *dev);
+ void pci_aer_clear_device_status(struct pci_dev *dev);
+ int pci_cleanup_aer_error_status_regs(struct pci_dev *dev);
++int pci_aer_raw_clear_status(struct pci_dev *dev);
  #else
- static inline void pci_save_dpc_state(struct pci_dev *dev) {}
- static inline void pci_restore_dpc_state(struct pci_dev *dev) {}
-+static inline void pci_dpc_init(struct pci_dev *pdev) {}
+ static inline void pci_no_aer(void) { }
+ static inline void pci_aer_init(struct pci_dev *d) { }
+@@ -665,6 +666,7 @@ static inline int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
+ {
+ 	return -EINVAL;
+ }
++int pci_aer_raw_clear_status(struct pci_dev *dev) { return -EINVAL; }
  #endif
  
- #ifdef CONFIG_PCI_ATS
-diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-index 114358d62ddf..57e7f94b98cf 100644
---- a/drivers/pci/pcie/dpc.c
-+++ b/drivers/pci/pcie/dpc.c
-@@ -249,6 +249,26 @@ static irqreturn_t dpc_irq(int irq, void *context)
- 	return IRQ_HANDLED;
+ #ifdef CONFIG_ACPI
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index 1235eca0a2e6..70a1493d8aa6 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -420,7 +420,16 @@ void pci_aer_clear_fatal_status(struct pci_dev *dev)
+ 		pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_STATUS, status);
  }
  
-+void pci_dpc_init(struct pci_dev *pdev)
+-int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
++/**
++ * pci_aer_raw_clear_status - Clear AER error registers.
++ * @dev: the PCI device
++ *
++ * NOTE: Allows clearing error registers in both FF and
++ * non FF modes.
++ *
++ * Returns 0 on success, or negative on failure.
++ */
++int pci_aer_raw_clear_status(struct pci_dev *dev)
+ {
+ 	int pos;
+ 	u32 status;
+@@ -433,9 +442,6 @@ int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
+ 	if (!pos)
+ 		return -EIO;
+ 
+-	if (pcie_aer_get_firmware_first(dev))
+-		return -EIO;
+-
+ 	port_type = pci_pcie_type(dev);
+ 	if (port_type == PCI_EXP_TYPE_ROOT_PORT) {
+ 		pci_read_config_dword(dev, pos + PCI_ERR_ROOT_STATUS, &status);
+@@ -451,6 +457,14 @@ int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
+ 	return 0;
+ }
+ 
++int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
 +{
-+	u16 cap;
++	if (pcie_aer_get_firmware_first(dev))
++		return -EIO;
 +
-+	pdev->dpc_cap = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_DPC);
-+	if (!pdev->dpc_cap)
-+		return;
-+
-+	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CAP, &cap);
-+	pdev->dpc_rp_extensions = (cap & PCI_EXP_DPC_CAP_RP_EXT) ? 1 : 0;
-+	if (pdev->dpc_rp_extensions) {
-+		pdev->dpc_rp_log_size = (cap & PCI_EXP_DPC_RP_PIO_LOG_SIZE) >> 8;
-+		if (pdev->dpc_rp_log_size < 4 || pdev->dpc_rp_log_size > 9) {
-+			pci_err(pdev, "RP PIO log size %u is invalid\n",
-+				pdev->dpc_rp_log_size);
-+			pdev->dpc_rp_log_size = 0;
-+		}
-+	}
++	return pci_aer_raw_clear_status(dev);
 +}
 +
- #define FLAG(x, y) (((x) & (y)) ? '+' : '-')
- static int dpc_probe(struct pcie_device *dev)
+ void pci_save_aer_state(struct pci_dev *dev)
  {
-@@ -260,8 +280,6 @@ static int dpc_probe(struct pcie_device *dev)
- 	if (pcie_aer_get_firmware_first(pdev) && !pcie_ports_dpc_native)
- 		return -ENOTSUPP;
- 
--	pdev->dpc_cap = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_DPC);
--
- 	status = devm_request_threaded_irq(device, dev->irq, dpc_irq,
- 					   dpc_handler, IRQF_SHARED,
- 					   "pcie-dpc", pdev);
-@@ -274,16 +292,6 @@ static int dpc_probe(struct pcie_device *dev)
- 	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CAP, &cap);
- 	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl);
- 
--	pdev->dpc_rp_extensions = (cap & PCI_EXP_DPC_CAP_RP_EXT) ? 1 : 0;
--	if (pdev->dpc_rp_extensions) {
--		pdev->dpc_rp_log_size = (cap & PCI_EXP_DPC_RP_PIO_LOG_SIZE) >> 8;
--		if (pdev->dpc_rp_log_size < 4 || pdev->dpc_rp_log_size > 9) {
--			pci_err(pdev, "RP PIO log size %u is invalid\n",
--				pdev->dpc_rp_log_size);
--			pdev->dpc_rp_log_size = 0;
--		}
--	}
--
- 	ctl = (ctl & 0xfff4) | PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN;
- 	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl);
- 
+ 	struct pci_cap_saved_state *save_state;
 -- 
 2.21.0
 
