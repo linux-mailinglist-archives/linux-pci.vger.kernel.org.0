@@ -2,85 +2,221 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 02575172C72
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2020 00:45:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AAB76172CD5
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2020 01:13:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729809AbgB0XpA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 Feb 2020 18:45:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47738 "EHLO mail.kernel.org"
+        id S1730009AbgB1ANx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 Feb 2020 19:13:53 -0500
+Received: from mga04.intel.com ([192.55.52.120]:42011 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729796AbgB0Xo7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 27 Feb 2020 18:44:59 -0500
-Received: from [10.92.140.40] (unknown [167.220.149.40])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33AC32469B;
-        Thu, 27 Feb 2020 23:44:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582847099;
-        bh=jS7+mPtdTkiNXDE3akD6Uj8BOQ6aBPXUdvAiHiiF+a0=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=TARKyIdG28sunPLcAMYM25ara3hoVOHzWIaKr9YDES8Cduaq59iEm8/vlhUga1sJ0
-         H8rhfwiFmUp60gcNyX1Nu1yuWcu5Me3SqVRYJ3DqA+YodXNjE8o1MfNrySG/0gI9+m
-         yZYo5K02d1/+GOnioBzzo/N+3kTTSOBrm9cHy7vg=
-Subject: Re: [PATCH 1/3] PCI: Make PCIE_RESET_READY_POLL_MS configurable
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        "Spassov, Stanislav" <stanspas@amazon.de>
-Cc:     "corbet@lwn.net" <corbet@lwn.net>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "ashok.raj@intel.com" <ashok.raj@intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "Wang, Wei" <wawei@amazon.de>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "Schoenherr, Jan H." <jschoenh@amazon.de>,
-        "rajatja@google.com" <rajatja@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
-References: <20200227214534.GA143139@google.com>
-From:   Sinan Kaya <okaya@kernel.org>
-Autocrypt: addr=okaya@kernel.org; keydata=
- mQENBFrnOrUBCADGOL0kF21B6ogpOkuYvz6bUjO7NU99PKhXx1MfK/AzK+SFgxJF7dMluoF6
- uT47bU7zb7HqACH6itTgSSiJeSoq86jYoq5s4JOyaj0/18Hf3/YBah7AOuwk6LtV3EftQIhw
- 9vXqCnBwP/nID6PQ685zl3vH68yzF6FVNwbDagxUz/gMiQh7scHvVCjiqkJ+qu/36JgtTYYw
- 8lGWRcto6gr0eTF8Wd8f81wspmUHGsFdN/xPsZPKMw6/on9oOj3AidcR3P9EdLY4qQyjvcNC
- V9cL9b5I/Ud9ghPwW4QkM7uhYqQDyh3SwgEFudc+/RsDuxjVlg9CFnGhS0nPXR89SaQZABEB
- AAG0HVNpbmFuIEtheWEgPG9rYXlhQGtlcm5lbC5vcmc+iQFOBBMBCAA4FiEEYdOlMSE+a7/c
- ckrQvGF4I+4LAFcFAlztcAoCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQvGF4I+4L
- AFfidAf/VKHInxep0Z96iYkIq42432HTZUrxNzG9IWk4HN7c3vTJKv2W+b9pgvBF1SmkyQSy
- 8SJ3Zd98CO6FOHA1FigFyZahVsme+T0GsS3/OF1kjrtMktoREr8t0rK0yKpCTYVdlkHadxmR
- Qs5xLzW1RqKlrNigKHI2yhgpMwrpzS+67F1biT41227sqFzW9urEl/jqGJXaB6GV+SRKSHN+
- ubWXgE1NkmfAMeyJPKojNT7ReL6eh3BNB/Xh1vQJew+AE50EP7o36UXghoUktnx6cTkge0ZS
- qgxuhN33cCOU36pWQhPqVSlLTZQJVxuCmlaHbYWvye7bBOhmiuNKhOzb3FcgT7kBDQRa5zq1
- AQgAyRq/7JZKOyB8wRx6fHE0nb31P75kCnL3oE+smKW/sOcIQDV3C7mZKLf472MWB1xdr4Tm
- eXeL/wT0QHapLn5M5wWghC80YvjjdolHnlq9QlYVtvl1ocAC28y43tKJfklhHiwMNDJfdZbw
- 9lQ2h+7nccFWASNUu9cqZOABLvJcgLnfdDpnSzOye09VVlKr3NHgRyRZa7me/oFJCxrJlKAl
- 2hllRLt0yV08o7i14+qmvxI2EKLX9zJfJ2rGWLTVe3EJBnCsQPDzAUVYSnTtqELu2AGzvDiM
- gatRaosnzhvvEK+kCuXuCuZlRWP7pWSHqFFuYq596RRG5hNGLbmVFZrCxQARAQABiQEfBBgB
- CAAJBQJa5zq1AhsMAAoJELxheCPuCwBX2UYH/2kkMC4mImvoClrmcMsNGijcZHdDlz8NFfCI
- gSb3NHkarnA7uAg8KJuaHUwBMk3kBhv2BGPLcmAknzBIehbZ284W7u3DT9o1Y5g+LDyx8RIi
- e7pnMcC+bE2IJExCVf2p3PB1tDBBdLEYJoyFz/XpdDjZ8aVls/pIyrq+mqo5LuuhWfZzPPec
- 9EiM2eXpJw+Rz+vKjSt1YIhg46YbdZrDM2FGrt9ve3YaM5H0lzJgq/JQPKFdbd5MB0X37Qc+
- 2m/A9u9SFnOovA42DgXUyC2cSbIJdPWOK9PnzfXqF3sX9Aol2eLUmQuLpThJtq5EHu6FzJ7Y
- L+s0nPaNMKwv/Xhhm6Y=
-Message-ID: <e162efcd-70fd-3390-2452-4915af1c9171@kernel.org>
-Date:   Thu, 27 Feb 2020 18:44:56 -0500
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1729876AbgB1ANx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 27 Feb 2020 19:13:53 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 16:13:52 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,493,1574150400"; 
+   d="scan'208";a="232372403"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga008.fm.intel.com with ESMTP; 27 Feb 2020 16:13:52 -0800
+Received: from [10.7.201.16] (skuppusw-desk.jf.intel.com [10.7.201.16])
+        by linux.intel.com (Postfix) with ESMTP id EACD058052E;
+        Thu, 27 Feb 2020 16:13:51 -0800 (PST)
+Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v1 1/1] x86/apic/vector: Fix NULL pointer exception in
+ irq_complete_move()
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        Keith Busch <keith.busch@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+References: <f54208d62407901b5de15ce8c3d078c70fc7a1d0.1582313239.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <87tv3bls3c.fsf@nanos.tec.linutronix.de>
+From:   Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Organization: Intel
+Message-ID: <f2139304-1cc9-7838-87a8-86f490fd2974@linux.intel.com>
+Date:   Thu, 27 Feb 2020 16:11:07 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200227214534.GA143139@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <87tv3bls3c.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2/27/2020 4:45 PM, Bjorn Helgaas wrote:
-> The 60 second timeout came from 821cdad5c46c ("PCI: Wait up to 60
-> seconds for device to become ready after FLR") and is probably too
-> long.  We probably should pick a smaller value based on numbers from
-> the spec and make quirks for devices that needed more time.
 
-If I remember right, there was no time mention about how long to
-wait. Spec says device should send CRS as long as it is not ready.
+On 2/27/20 11:59 AM, Thomas Gleixner wrote:
+> sathyanarayanan.kuppuswamy@linux.intel.com writes:
+>> If an IRQ is scheduled using generic_handle_irq() function in a non IRQ
+>> path, the irq_regs per CPU variable will not be set. Hence calling
+>> irq_complete_move() function in this scenario leads to NULL pointer
+>> de-reference exception. One example for this issue is, triggering fake
+>> AER errors using PCIe aer_inject framework. So add addition check for
+> What?
+>
+> This is completely broken to begin with. You are fixing the wrong
+> end. The broken commit is:
+>
+> 390e2db82480 ("PCI/AER: Abstract AER interrupt handling")
+>
+> I have to admit that it was already broken before that commit because
+> calling just the interrupt handler w/o serialization is as wrong as it
+> gets, but then calling a random function just because it's accessible
+> and does not explode in the face is not much better.
+>
+>> [   58.368269]  handle_edge_irq+0x7d/0x1e0
+>> [   58.368272]  generic_handle_irq+0x27/0x30
+>> [   58.368278]  aer_inject_write+0x53a/0x720
+>> [   58.368283]  __vfs_write+0x36/0x1b0
+>> [   58.368289]  ? common_file_perm+0x47/0x130
+>> [   58.368293]  ? security_file_permission+0x2e/0xf0
+>> [   58.368295]  vfs_write+0xa5/0x180
+>> [   58.368296]  ksys_write+0x52/0xc0
+>> [   58.368300]  do_syscall_64+0x48/0x120
+>> [   58.368307]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> Calling generic_handle_irq() through a sysfs write is in the worst case
+> going to corrupt state and that NULL pointer dereference is just one
+> particular effect which made this bogosity visible.
+>
+> Even if you "fixed" this particular case, invoking this when an
+> interrupt affinity change is scheduled will also wreckage state. In the
+> best case it will only trigger the already existing WARN_ON() in the MSI
+> code when the interrupt in question is MSI and the invocation happens on
+> the wrong CPU. But there are worse things which can happen.
+>
+> We are neither going to paper over it by just silently preventing this
+> particular NULL pointer dereference nor are we going to sprinkle more
+> checks all over the place just to deal with this. The interrupt delivery
+> hardware trainwreck of x86 CPUs is fragile as hell and we have enough
+> horrible code already to deal with that. No need for self inflicted
+> horrors.
+>
+> The proper fix for this is below as it prevents the abuse of this
+> interface.
+>
+> This will not break the AER error injection as it has been broken
+> forever. It just makes sure that the brokeness is not propagating
+> through the core code.
+>
+> The right thing to make AER injection work is to inject the interrupt
+> via the retrigger mechanism, which will send an IPI. There is no core
+> interface for this, but that's a solvable problem.
+Thanks for the review. I better take the IPI approach to solve the problem.
+
+Along with this patch, may be adding a comment to generic_handle_irq()
+about who the expected callers should also prevent people from using
+it in wrong way.
+>
+> Thanks,
+>
+>          tglx
+>
+> 8<-----------------
+> diff --git a/arch/x86/kernel/apic/vector.c b/arch/x86/kernel/apic/vector.c
+> index 2c5676b0a6e7..d7c4a3b815a6 100644
+> --- a/arch/x86/kernel/apic/vector.c
+> +++ b/arch/x86/kernel/apic/vector.c
+> @@ -556,6 +556,7 @@ static int x86_vector_alloc_irqs(struct irq_domain *domain, unsigned int virq,
+>   		irqd->chip_data = apicd;
+>   		irqd->hwirq = virq + i;
+>   		irqd_set_single_target(irqd);
+> +		irqd_set_handle_enforce_irqctx(irqd);
+>   		/*
+>   		 * Legacy vectors are already assigned when the IOAPIC
+>   		 * takes them over. They stay on the same vector. This is
+> diff --git a/include/linux/irq.h b/include/linux/irq.h
+> index 3ed5a055b5f4..9315fbb87db3 100644
+> --- a/include/linux/irq.h
+> +++ b/include/linux/irq.h
+> @@ -211,6 +211,8 @@ struct irq_data {
+>    * IRQD_CAN_RESERVE		- Can use reservation mode
+>    * IRQD_MSI_NOMASK_QUIRK	- Non-maskable MSI quirk for affinity change
+>    *				  required
+> + * IRQD_HANDLE_ENFORCE_IRQCTX	- Enforce that handle_irq_*() is only invoked
+> + *				  from actual interrupt context.
+>    */
+>   enum {
+>   	IRQD_TRIGGER_MASK		= 0xf,
+> @@ -234,6 +236,7 @@ enum {
+>   	IRQD_DEFAULT_TRIGGER_SET	= (1 << 25),
+>   	IRQD_CAN_RESERVE		= (1 << 26),
+>   	IRQD_MSI_NOMASK_QUIRK		= (1 << 27),
+> +	IRQD_HANDLE_ENFORCE_IRQCTX	= (1 << 28),
+>   };
+>   
+>   #define __irqd_to_state(d) ACCESS_PRIVATE((d)->common, state_use_accessors)
+> @@ -303,6 +306,16 @@ static inline bool irqd_is_single_target(struct irq_data *d)
+>   	return __irqd_to_state(d) & IRQD_SINGLE_TARGET;
+>   }
+>   
+> +static inline void irqd_set_handle_enforce_irqctx(struct irq_data *d)
+> +{
+> +	__irqd_to_state(d) |= IRQD_HANDLE_ENFORCE_IRQCTX;
+> +}
+> +
+> +static inline bool irqd_is_handle_enforce_irqctx(struct irq_data *d)
+> +{
+> +	return __irqd_to_state(d) & IRQD_HANDLE_ENFORCE_IRQCTX;
+> +}
+> +
+>   static inline bool irqd_is_wakeup_set(struct irq_data *d)
+>   {
+>   	return __irqd_to_state(d) & IRQD_WAKEUP_STATE;
+> diff --git a/kernel/irq/internals.h b/kernel/irq/internals.h
+> index 3924fbe829d4..4561f971bc74 100644
+> --- a/kernel/irq/internals.h
+> +++ b/kernel/irq/internals.h
+> @@ -427,6 +427,10 @@ static inline struct cpumask *irq_desc_get_pending_mask(struct irq_desc *desc)
+>   {
+>   	return desc->pending_mask;
+>   }
+> +static inline bool handle_enforce_irqctx(struct irq_data *data)
+> +{
+> +	return irqd_is_handle_enforce_irqctx(data);
+> +}
+>   bool irq_fixup_move_pending(struct irq_desc *desc, bool force_clear);
+>   #else /* CONFIG_GENERIC_PENDING_IRQ */
+>   static inline bool irq_can_move_pcntxt(struct irq_data *data)
+> @@ -453,6 +457,10 @@ static inline bool irq_fixup_move_pending(struct irq_desc *desc, bool fclear)
+>   {
+>   	return false;
+>   }
+> +static inline bool handle_enforce_irqctx(struct irq_data *data)
+> +{
+> +	return false;
+> +}
+>   #endif /* !CONFIG_GENERIC_PENDING_IRQ */
+>   
+>   #if !defined(CONFIG_IRQ_DOMAIN) || !defined(CONFIG_IRQ_DOMAIN_HIERARCHY)
+> diff --git a/kernel/irq/irqdesc.c b/kernel/irq/irqdesc.c
+> index 98a5f10d1900..b3e9a66dd079 100644
+> --- a/kernel/irq/irqdesc.c
+> +++ b/kernel/irq/irqdesc.c
+> @@ -638,9 +638,15 @@ void irq_init_desc(unsigned int irq)
+>   int generic_handle_irq(unsigned int irq)
+>   {
+>   	struct irq_desc *desc = irq_to_desc(irq);
+> +	struct irq_data *data;
+>   
+>   	if (!desc)
+>   		return -EINVAL;
+> +
+> +	data = irq_desc_get_irq_data(desc);
+> +	if (WARN_ON_ONCE(!in_irq() && handle_enforce_irqctx(data)))
+> +		return -EPERM;
+> +
+>   	generic_handle_irq_desc(desc);
+>   	return 0;
+>   }
+>
+>
+>
+-- 
+Sathyanarayanan Kuppuswamy
+Linux kernel developer
+
