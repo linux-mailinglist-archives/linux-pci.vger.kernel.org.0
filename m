@@ -2,106 +2,138 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ED1F6173A79
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2020 15:57:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2FC00173AA4
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2020 16:04:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726562AbgB1O5V (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 28 Feb 2020 09:57:21 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:35229 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726905AbgB1O5V (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 28 Feb 2020 09:57:21 -0500
-Received: by mail-qt1-f193.google.com with SMTP id 88so2210746qtc.2
-        for <linux-pci@vger.kernel.org>; Fri, 28 Feb 2020 06:57:20 -0800 (PST)
+        id S1726905AbgB1PEh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 28 Feb 2020 10:04:37 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42525 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726796AbgB1PEg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 28 Feb 2020 10:04:36 -0500
+Received: by mail-wr1-f65.google.com with SMTP id p18so3275439wre.9
+        for <linux-pci@vger.kernel.org>; Fri, 28 Feb 2020 07:04:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=aXNQ0NABVZ/Zc8fXXYZpSz3dqh4Ns6QlhvK6/kwYM2k=;
-        b=fx3F0RVJpvuGR0vU2fusOG/NqXxNQdLCppTq9XL99VJF79clWgcp5+agQ8Bkdn764W
-         /6H4SP43zfEgHKiNsbn3EkZXEI5eftR/AZNv5GJYTZnxTXZRyq9aw7ICgIKMn8l0jnUx
-         9LorGB67BgZ2aphSqsGjJO2u/nt3IEPqyy6blQp30BdEWnEUxTjjCoo7zwPmwtZJlkI3
-         e+qGqpZDRkSLznZ8x2vUdH6CsaxJ2HRW27+fCzEtPp5EqdbjknklIN9PHhf1PYIBAg+F
-         PuUEX6g64YI1DZfAu0ym87ZYgi2PkqOOc/+5zxlIRaH10PX0tdO8PBQJ2rqvbzBeuTgk
-         IVvQ==
+         :content-disposition:in-reply-to;
+        bh=2wX7TVsRPWlph7pT/yUYa9EScRJx6Bt/ZtuI3MJeqc0=;
+        b=QmD58Jr5s6XBLi75aKomne6pIfi3eAwBW2uYAgqcgi9rYL6G2b64JBuAhhJ1f4te+t
+         YMUkbgfFABgR0aUFU4JS096/XwdfBA48niRJ6aEs7tCqepHjgsV+l2E6wcg2Pjfx8yDo
+         nf2skHBkoT9WNffr5CVK3OP/PqPaYbv3aLmg1bq6Ck4RCaCb9gSeMd1pwHi25t4XMDZ2
+         wTbnbrTrIL7bSS1pZZd4ftBNuWdi6gB3+KHzkO3i4r62kLW9iRm0F/3xPVeufpfeXlyV
+         F/ABlN3x4IYUOzxYknE1CmZaru7JzdyANO9LsTAgaHuR2Jzumx6YW0C7y8C7WKLy44Wn
+         wxpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aXNQ0NABVZ/Zc8fXXYZpSz3dqh4Ns6QlhvK6/kwYM2k=;
-        b=lWq/fftP1qvp7hix4tcsN1Xy/y8DeHlJILSHoGXB3XAQpzdMqwM+rvPAkIKCB1h/NE
-         UmY2EC6M8xbVjxlk9gThXV1p9ZCZjBOCQojnmzphVign1V8+XG6Kx54HbaO6VxWJp3yh
-         UOl5GlErw+aiDYAWLORq9QNzqtwuh7tTuHlpWFGRfUSH+FZqVG89/cEsjlKTFa/6k2PS
-         CfG+Jqc3fRnRwCS9NWbHqslXs2zBJKV7EKhYONz+x+cVSnQSAl/yE9fE36hJr4MtcEVl
-         2fF1m6trAjNG7TvJUfh+rW0g1DKaOFVb6XNiv1BOpEEyQrj7VcpxlJifaFmjBS3bwEH7
-         vdCw==
-X-Gm-Message-State: APjAAAU1EPpfZ+bjnOC1KVWtjnrg8R4E7peMLhnpVI71hLoT/rGU1ocM
-        Nd2f6KUUHV17Vip0aPwd/hsTlw==
-X-Google-Smtp-Source: APXvYqxZGwk4KQ+YAY4GsyBgYKpbiHklk+KncMw+8qgpUr+ys9QfMTdjm4TizVQ6yPrtfGJb79x/jw==
-X-Received: by 2002:ac8:2939:: with SMTP id y54mr4410279qty.109.1582901840269;
-        Fri, 28 Feb 2020 06:57:20 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id f7sm5133445qtj.92.2020.02.28.06.57.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 28 Feb 2020 06:57:19 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1j7h4p-00034R-0q; Fri, 28 Feb 2020 10:57:19 -0400
-Date:   Fri, 28 Feb 2020 10:57:19 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, joro@8bytes.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, catalin.marinas@arm.com, will@kernel.org,
-        robin.murphy@arm.com, kevin.tian@intel.com,
-        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
-        christian.koenig@amd.com, yi.l.liu@intel.com,
-        zhangfei.gao@linaro.org,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Subject: Re: [PATCH v4 02/26] iommu/sva: Manage process address spaces
-Message-ID: <20200228145718.GR31668@ziepe.ca>
+         :mime-version:content-disposition:in-reply-to;
+        bh=2wX7TVsRPWlph7pT/yUYa9EScRJx6Bt/ZtuI3MJeqc0=;
+        b=Wjt31jsGVdCIobKI28pBkHYFAY8FiY4kDQblJlWvGWL775Zm9Uh+4TuQ1Uo5t5I9Wv
+         8b1SoidaS1d8heLMe4iAktZGfUqx+zRea49jD5nxF5oEyFAHMFDem17YKpLmAj2pWqYD
+         FkiJyRt9E/QxldWGqnEM/P8bSZwZ/0tCMpiWDaDwvfU3FbgDKmUehMHNTDP3e1/0OfVw
+         tIhXwFN4efC9s7lnwihY2DqaIvDsBAvM1FlUZ8FcnwQBNTKZtBM+6WINKeYIdyWztqvB
+         PtLotksD+9duq7DEKLbUhA/DykB1zJK1hFWgoerfO61ZBv0PW30bZZHsqt7+1aFSf2Tq
+         6uNQ==
+X-Gm-Message-State: APjAAAWf4eTY+cT4tHjQudYvnIUzmh6ZG52XKgYWTO8FzvFHaeSc7kFU
+        v+iiYaqqOeaA7liI+7Ox4esZnA==
+X-Google-Smtp-Source: APXvYqy8YEE7PhfU6kfB6vVMG12QSn14jY2m/pgfxhc5df3Dfge/vtzS0lAN1v8FM3HtzCFu1cbkug==
+X-Received: by 2002:adf:b19d:: with SMTP id q29mr5140671wra.211.1582902275442;
+        Fri, 28 Feb 2020 07:04:35 -0800 (PST)
+Received: from myrica ([2001:171b:c9a8:fbc0:116c:c27a:3e7f:5eaf])
+        by smtp.gmail.com with ESMTPSA id w19sm2377341wmc.22.2020.02.28.07.04.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Feb 2020 07:04:34 -0800 (PST)
+Date:   Fri, 28 Feb 2020 16:04:27 +0100
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     mark.rutland@arm.com, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, will@kernel.org,
+        Dimitri Sivanich <sivanich@sgi.com>, catalin.marinas@arm.com,
+        zhangfei.gao@linaro.org, devicetree@vger.kernel.org,
+        kevin.tian@intel.com, Arnd Bergmann <arnd@arndb.de>,
+        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        iommu@lists.linux-foundation.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        robin.murphy@arm.com, christian.koenig@amd.com
+Subject: Re: [PATCH v4 01/26] mm/mmu_notifiers: pass private data down to
+ alloc_notifier()
+Message-ID: <20200228150427.GF2156@myrica>
 References: <20200224182401.353359-1-jean-philippe@linaro.org>
- <20200224182401.353359-3-jean-philippe@linaro.org>
- <20200226111320.3b6e6d3d@jacob-builder>
- <20200228144007.GB2156@myrica>
+ <20200224182401.353359-2-jean-philippe@linaro.org>
+ <20200224190056.GT31668@ziepe.ca>
+ <20200225092439.GB375953@myrica>
+ <20200225140814.GW31668@ziepe.ca>
+ <20200228143935.GA2156@myrica>
+ <20200228144844.GQ31668@ziepe.ca>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200228144007.GB2156@myrica>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200228144844.GQ31668@ziepe.ca>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 03:40:07PM +0100, Jean-Philippe Brucker wrote:
-> > > Device
-> > > + * 00:00.0 accesses address spaces X and Y, each corresponding to an
-> > > mm_struct.
-> > > + * Devices 00:01.* only access address space Y. In addition each
-> > > + * IOMMU_DOMAIN_DMA domain has a private address space, io_pgtable,
-> > > that is
-> > > + * managed with iommu_map()/iommu_unmap(), and isn't shared with the
-> > > CPU MMU.
-> > So this would allow IOVA and SVA co-exist in the same address space?
+On Fri, Feb 28, 2020 at 10:48:44AM -0400, Jason Gunthorpe wrote:
+> On Fri, Feb 28, 2020 at 03:39:35PM +0100, Jean-Philippe Brucker wrote:
+> > > > +	list_for_each_entry_rcu(bond, &io_mm->devices, mm_head) {
+> > > > +		/*
+> > > > +		 * To ensure that we observe the initialization of io_mm fields
+> > > > +		 * by io_mm_finalize() before the registration of this bond to
+> > > > +		 * the list by io_mm_attach(), introduce an address dependency
+> > > > +		 * between bond and io_mm. It pairs with the smp_store_release()
+> > > > +		 * from list_add_rcu().
+> > > > +		 */
+> > > > +		io_mm = rcu_dereference(bond->io_mm);
+> > > 
+> > > A rcu_dereference isn't need here, just a normal derference is fine.
+> > 
+> > bond->io_mm is annotated with __rcu (for iommu_sva_get_pasid_generic(),
+> > which does bond->io_mm under rcu_read_lock())
 > 
-> Hmm, not in the same address space, but they can co-exist in a device. In
-> fact the endpoint I'm testing (hisi zip accelerator) already needs normal
-> DMA alongside SVA for queue management. This one is integrated on an
-> Arm-based platform so shouldn't be a concern for VT-d at the moment, but
-> I suspect we might see more of this kind of device with mixed DMA.
+> I'm surprised the bond->io_mm can change over the lifetime of the
+> bond memory..
 
-Probably the most interesting usecases for PASID definately require
-this, so this is more than a "suspect we might see"
+The normal lifetime of the bond is between device driver calls to bind()
+and unbind(). If the mm exits early, though, we clear bond->io_mm. The
+bond is then stale but can only be freed when the device driver releases
+it with unbind().
 
-We want to see the privileged kernel control the general behavior of
-the PCI function and delegate only some DMAs to PASIDs associated with
-the user mm_struct. The device is always trusted the label its DMA
-properly.
+> 
+> > > > If io_mm->ctx and io_mm->ops are already valid before the
+> > > > mmu notifier is published, then we don't need that stuff.
+> > > 
+> > > So, this trickyness with RCU is not a bad reason to introduce the priv
+> > > scheme, maybe explain it in the commit message?
+> > 
+> > Ok, I've added this to the commit message:
+> > 
+> >     The IOMMU SVA module, which attaches an mm to multiple devices,
+> >     exemplifies this situation. In essence it does:
+> > 
+> >             mmu_notifier_get()
+> >               alloc_notifier()
+> >                  A = kzalloc()
+> >               /* MMU notifier is published */
+> >             A->ctx = ctx;                           // (1)
+> >             device->A = A;
+> >             list_add_rcu(device, A->devices);       // (2)
+> > 
+> >     The invalidate notifier, which may start running before A is fully
+> >     initialized at (1), does the following:
+> > 
+> >             io_mm_invalidate(A)
+> >               list_for_each_entry_rcu(device, A->devices)
+> >                 A = device->A;                      // (3)
+> 
+> I would drop the work around from the decription, it is enough to say
+> that the line below needs to observe (1) after (2) and this is
+> trivially achieved by moving (1) to before publishing the notifier so
+> the core MM locking can be used.
 
-These programming models are already being used for years now with the
-opencapi implementation.
+Ok, will do
 
-Jason
+Thanks,
+Jean
