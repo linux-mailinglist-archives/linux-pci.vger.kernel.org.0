@@ -2,22 +2,22 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A8A4A172DE5
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2020 02:03:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 85F7D172DE9
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2020 02:03:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730582AbgB1BDG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 Feb 2020 20:03:06 -0500
-Received: from mga14.intel.com ([192.55.52.115]:40114 "EHLO mga14.intel.com"
+        id S1730712AbgB1BDN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 Feb 2020 20:03:13 -0500
+Received: from mga14.intel.com ([192.55.52.115]:40111 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730559AbgB1BCo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S1730551AbgB1BCo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Thu, 27 Feb 2020 20:02:44 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 17:02:43 -0800
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 17:02:42 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,493,1574150400"; 
-   d="scan'208";a="317976997"
+   d="scan'208";a="317976998"
 Received: from skuppusw-desk.jf.intel.com ([10.7.201.16])
   by orsmga001.jf.intel.com with ESMTP; 27 Feb 2020 17:02:42 -0800
 From:   sathyanarayanan.kuppuswamy@linux.intel.com
@@ -25,11 +25,10 @@ To:     bhelgaas@google.com
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         ashok.raj@intel.com,
         Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Keith Busch <keith.busch@intel.com>
-Subject: [PATCH v16 1/9] PCI/ERR: Update error status after reset_link()
-Date:   Thu, 27 Feb 2020 16:59:43 -0800
-Message-Id: <15e702a33cc27314f9d43a06ccb408086a229cef.1582850766.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: [PATCH v16 2/9] PCI/AER: Move pci_cleanup_aer_error_status_regs() declaration to pci.h
+Date:   Thu, 27 Feb 2020 16:59:44 -0800
+Message-Id: <ca897f459ccb6da6bad81e3893d8daf9e865fac1.1582850766.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1582850766.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 References: <cover.1582850766.git.sathyanarayanan.kuppuswamy@linux.intel.com>
@@ -42,53 +41,60 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-Commit bdb5ac85777d ("PCI/ERR: Handle fatal error recovery") uses
-reset_link() to recover from fatal errors. But during fatal error
-recovery, if the initial value of error status is
-PCI_ERS_RESULT_DISCONNECT or PCI_ERS_RESULT_NO_AER_DRIVER then
-even after successful recovery (using reset_link()) pcie_do_recovery()
-will report the recovery result as failure. So update the status of
-error after reset_link().
+Since pci_cleanup_aer_error_status_regs() is only used within
+drivers/pci/* directory move the function declaration to pci.h.
 
-You can reproduce this issue by triggering a SW DPC using "DPC
-Software Trigger" bit in "DPC Control Register". You should see recovery
-failed dmesg log as below.
-
-[  164.659982] pcieport 0000:00:16.0: DPC: containment event,
-status:0x1f27 source:0x0000
-[  164.659989] pcieport 0000:00:16.0: DPC: software trigger detected
-[  164.659994] pci 0000:04:00.0: AER: can't recover (no error_detected
-callback)
-[  164.794300] pcieport 0000:00:16.0: AER: device recovery failed
-
-Fixes: bdb5ac85777d ("PCI/ERR: Handle fatal error recovery")
-Cc: Ashok Raj <ashok.raj@intel.com>
-Cc: Keith Busch <keith.busch@intel.com>
 Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Acked-by: Keith Busch <keith.busch@intel.com>
 ---
- drivers/pci/pcie/err.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/pci/pci.h   | 5 +++++
+ include/linux/aer.h | 5 -----
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-index 01dfc8bb7ca0..eefefe03857a 100644
---- a/drivers/pci/pcie/err.c
-+++ b/drivers/pci/pcie/err.c
-@@ -208,9 +208,11 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
- 	else
- 		pci_walk_bus(bus, report_normal_detected, &status);
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 6394e7746fb5..a4c360515a69 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -651,12 +651,17 @@ void pci_aer_exit(struct pci_dev *dev);
+ extern const struct attribute_group aer_stats_attr_group;
+ void pci_aer_clear_fatal_status(struct pci_dev *dev);
+ void pci_aer_clear_device_status(struct pci_dev *dev);
++int pci_cleanup_aer_error_status_regs(struct pci_dev *dev);
+ #else
+ static inline void pci_no_aer(void) { }
+ static inline void pci_aer_init(struct pci_dev *d) { }
+ static inline void pci_aer_exit(struct pci_dev *d) { }
+ static inline void pci_aer_clear_fatal_status(struct pci_dev *dev) { }
+ static inline void pci_aer_clear_device_status(struct pci_dev *dev) { }
++static inline int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
++{
++	return -EINVAL;
++}
+ #endif
  
--	if (state == pci_channel_io_frozen &&
--	    reset_link(dev, service) != PCI_ERS_RESULT_RECOVERED)
--		goto failed;
-+	if (state == pci_channel_io_frozen) {
-+		status = reset_link(dev, service);
-+		if (status != PCI_ERS_RESULT_RECOVERED)
-+			goto failed;
-+	}
- 
- 	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
- 		status = PCI_ERS_RESULT_RECOVERED;
+ #ifdef CONFIG_ACPI
+diff --git a/include/linux/aer.h b/include/linux/aer.h
+index fa19e01f418a..4e4b4960a3d8 100644
+--- a/include/linux/aer.h
++++ b/include/linux/aer.h
+@@ -45,7 +45,6 @@ struct aer_capability_regs {
+ int pci_enable_pcie_error_reporting(struct pci_dev *dev);
+ int pci_disable_pcie_error_reporting(struct pci_dev *dev);
+ int pci_cleanup_aer_uncorrect_error_status(struct pci_dev *dev);
+-int pci_cleanup_aer_error_status_regs(struct pci_dev *dev);
+ void pci_save_aer_state(struct pci_dev *dev);
+ void pci_restore_aer_state(struct pci_dev *dev);
+ #else
+@@ -61,10 +60,6 @@ static inline int pci_cleanup_aer_uncorrect_error_status(struct pci_dev *dev)
+ {
+ 	return -EINVAL;
+ }
+-static inline int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
+-{
+-	return -EINVAL;
+-}
+ static inline void pci_save_aer_state(struct pci_dev *dev) {}
+ static inline void pci_restore_aer_state(struct pci_dev *dev) {}
+ #endif
 -- 
 2.21.0
 
