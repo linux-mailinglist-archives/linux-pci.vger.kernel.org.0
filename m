@@ -2,22 +2,22 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B132172DDB
+	by mail.lfdr.de (Postfix) with ESMTP id EDC64172DDD
 	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2020 02:03:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730599AbgB1BCq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S1730592AbgB1BCq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Thu, 27 Feb 2020 20:02:46 -0500
-Received: from mga14.intel.com ([192.55.52.115]:40114 "EHLO mga14.intel.com"
+Received: from mga14.intel.com ([192.55.52.115]:40111 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730563AbgB1BCo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 27 Feb 2020 20:02:44 -0500
+        id S1730538AbgB1BCp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 27 Feb 2020 20:02:45 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
   by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 17:02:43 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,493,1574150400"; 
-   d="scan'208";a="317977004"
+   d="scan'208";a="317977008"
 Received: from skuppusw-desk.jf.intel.com ([10.7.201.16])
   by orsmga001.jf.intel.com with ESMTP; 27 Feb 2020 17:02:42 -0800
 From:   sathyanarayanan.kuppuswamy@linux.intel.com
@@ -26,9 +26,9 @@ Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         ashok.raj@intel.com,
         Kuppuswamy Sathyanarayanan 
         <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: [PATCH v16 4/9] PCI/ERR: Return status of pcie_do_recovery()
-Date:   Thu, 27 Feb 2020 16:59:46 -0800
-Message-Id: <7be7df50b2d88470b563b464e274307f13ffdbce.1582850766.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: [PATCH v16 5/9] PCI/DPC: Cache DPC capabilities in pci_init_capabilities()
+Date:   Thu, 27 Feb 2020 16:59:47 -0800
+Message-Id: <a3a634b6c6012773e9e668c2110e13a5bd196bb8.1582850766.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1582850766.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 References: <cover.1582850766.git.sathyanarayanan.kuppuswamy@linux.intel.com>
@@ -41,75 +41,89 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-As per the Downstream Port Containment Related Enhancements ECN to the
-PCI Firmware Specification r3.2, sec 4.5.1, table 4-4, Support for Error
-Disconnect Recover (EDR) implies that the OS will invalidate the
-software state associated with child devices of the port without
-attempting to access the child device hardware. If the OS supports
-Downstream Port Containment (DPC), as indicated by the OS setting bit 7
-of _OSC control field, the OS shall attempt to recover the child devices
-if the port implements the Downstream Port Containment Extended
-Capability. If the OS continues operation, the OS must inform the
-Firmware of the status of the recovery operation via the _OST method.
-
-So in adding EDR support, to report status of error recovery via _OST,
-we need to know the status of error recovery. So add support to return
-the status of pcie_do_recovery() function.
+Since we need to re-use DPC error handling routines in Error Disconnect
+Recover (EDR) driver, move the initalization and caching of DPC
+capabilities to pci_init_capabilities().
 
 Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 ---
- drivers/pci/pci.h      |  5 +++--
- drivers/pci/pcie/err.c | 10 ++++++----
- 2 files changed, 9 insertions(+), 6 deletions(-)
+ drivers/pci/pci.h      |  2 ++
+ drivers/pci/pcie/dpc.c | 32 ++++++++++++++++++++------------
+ 2 files changed, 22 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 2962200bfe35..c2c35f152cde 100644
+index c2c35f152cde..e57e78b619f8 100644
 --- a/drivers/pci/pci.h
 +++ b/drivers/pci/pci.h
-@@ -547,8 +547,9 @@ static inline int pci_dev_specific_disable_acs_redir(struct pci_dev *dev)
+@@ -448,9 +448,11 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info);
+ #ifdef CONFIG_PCIE_DPC
+ void pci_save_dpc_state(struct pci_dev *dev);
+ void pci_restore_dpc_state(struct pci_dev *dev);
++void pci_dpc_init(struct pci_dev *pdev);
+ #else
+ static inline void pci_save_dpc_state(struct pci_dev *dev) {}
+ static inline void pci_restore_dpc_state(struct pci_dev *dev) {}
++static inline void pci_dpc_init(struct pci_dev *pdev) {}
  #endif
  
- /* PCI error reporting and recovery */
--void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
--		      pci_ers_result_t (*reset_cb)(struct pci_dev *pdev));
-+pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
-+			enum pci_channel_state state,
-+			pci_ers_result_t (*reset_cb)(struct pci_dev *pdev));
- 
- bool pcie_wait_for_link(struct pci_dev *pdev, bool active);
- #ifdef CONFIG_PCIEASPM
-diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-index 05f87bc9d011..b560f0096a70 100644
---- a/drivers/pci/pcie/err.c
-+++ b/drivers/pci/pcie/err.c
-@@ -186,9 +186,9 @@ static pci_ers_result_t reset_link(struct pci_dev *dev,
- 	return status;
+ #ifdef CONFIG_PCI_ATS
+diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+index 114358d62ddf..57e7f94b98cf 100644
+--- a/drivers/pci/pcie/dpc.c
++++ b/drivers/pci/pcie/dpc.c
+@@ -249,6 +249,26 @@ static irqreturn_t dpc_irq(int irq, void *context)
+ 	return IRQ_HANDLED;
  }
  
--void pcie_do_recovery(struct pci_dev *dev,
--		      enum pci_channel_state state,
--		      pci_ers_result_t (*reset_cb)(struct pci_dev *pdev))
-+pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
-+			enum pci_channel_state state,
-+			pci_ers_result_t (*reset_cb)(struct pci_dev *pdev))
- {
- 	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
- 	struct pci_bus *bus;
-@@ -240,11 +240,13 @@ void pcie_do_recovery(struct pci_dev *dev,
- 	pci_aer_clear_device_status(dev);
- 	pci_cleanup_aer_uncorrect_error_status(dev);
- 	pci_info(dev, "device recovery successful\n");
--	return;
-+	return status;
- 
- failed:
- 	pci_uevent_ers(dev, PCI_ERS_RESULT_DISCONNECT);
- 
- 	/* TODO: Should kernel panic here? */
- 	pci_info(dev, "device recovery failed\n");
++void pci_dpc_init(struct pci_dev *pdev)
++{
++	u16 cap;
 +
-+	return status;
- }
++	pdev->dpc_cap = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_DPC);
++	if (!pdev->dpc_cap)
++		return;
++
++	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CAP, &cap);
++	pdev->dpc_rp_extensions = (cap & PCI_EXP_DPC_CAP_RP_EXT) ? 1 : 0;
++	if (pdev->dpc_rp_extensions) {
++		pdev->dpc_rp_log_size = (cap & PCI_EXP_DPC_RP_PIO_LOG_SIZE) >> 8;
++		if (pdev->dpc_rp_log_size < 4 || pdev->dpc_rp_log_size > 9) {
++			pci_err(pdev, "RP PIO log size %u is invalid\n",
++				pdev->dpc_rp_log_size);
++			pdev->dpc_rp_log_size = 0;
++		}
++	}
++}
++
+ #define FLAG(x, y) (((x) & (y)) ? '+' : '-')
+ static int dpc_probe(struct pcie_device *dev)
+ {
+@@ -260,8 +280,6 @@ static int dpc_probe(struct pcie_device *dev)
+ 	if (pcie_aer_get_firmware_first(pdev) && !pcie_ports_dpc_native)
+ 		return -ENOTSUPP;
+ 
+-	pdev->dpc_cap = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_DPC);
+-
+ 	status = devm_request_threaded_irq(device, dev->irq, dpc_irq,
+ 					   dpc_handler, IRQF_SHARED,
+ 					   "pcie-dpc", pdev);
+@@ -274,16 +292,6 @@ static int dpc_probe(struct pcie_device *dev)
+ 	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CAP, &cap);
+ 	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl);
+ 
+-	pdev->dpc_rp_extensions = (cap & PCI_EXP_DPC_CAP_RP_EXT) ? 1 : 0;
+-	if (pdev->dpc_rp_extensions) {
+-		pdev->dpc_rp_log_size = (cap & PCI_EXP_DPC_RP_PIO_LOG_SIZE) >> 8;
+-		if (pdev->dpc_rp_log_size < 4 || pdev->dpc_rp_log_size > 9) {
+-			pci_err(pdev, "RP PIO log size %u is invalid\n",
+-				pdev->dpc_rp_log_size);
+-			pdev->dpc_rp_log_size = 0;
+-		}
+-	}
+-
+ 	ctl = (ctl & 0xfff4) | PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN;
+ 	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl);
+ 
 -- 
 2.21.0
 
