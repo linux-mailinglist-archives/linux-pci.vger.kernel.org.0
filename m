@@ -2,180 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 27477173D1E
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2020 17:36:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E4BA173E7D
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2020 18:29:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725876AbgB1Qgx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 28 Feb 2020 11:36:53 -0500
-Received: from mga07.intel.com ([134.134.136.100]:22052 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725827AbgB1Qgw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 28 Feb 2020 11:36:52 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2020 08:36:51 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,496,1574150400"; 
-   d="scan'208";a="285710074"
-Received: from orsmsx109.amr.corp.intel.com ([10.22.240.7])
-  by FMSMGA003.fm.intel.com with ESMTP; 28 Feb 2020 08:36:51 -0800
-Received: from orsmsx116.amr.corp.intel.com (10.22.240.14) by
- ORSMSX109.amr.corp.intel.com (10.22.240.7) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 28 Feb 2020 08:36:51 -0800
-Received: from orsmsx101.amr.corp.intel.com ([169.254.8.110]) by
- ORSMSX116.amr.corp.intel.com ([169.254.7.180]) with mapi id 14.03.0439.000;
- Fri, 28 Feb 2020 08:36:50 -0800
-From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
-To:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "paulmck@kernel.org" <paulmck@kernel.org>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "helgaas@kernel.org" <helgaas@kernel.org>
-Subject: Re: [PATCH v2] PCI: vmd: Add indirection layer to vmd irq lists
-Thread-Topic: [PATCH v2] PCI: vmd: Add indirection layer to vmd irq lists
-Thread-Index: AQHVkB7j0q30tk564k6l6sATXqWN2qd11iQAgAkNUICAstGyAIAAOTQAgAAiDAA=
-Date:   Fri, 28 Feb 2020 16:36:50 +0000
-Message-ID: <85ed447452dc6f49222711e1d513d7a41e9842c7.camel@intel.com>
-References: <1572527333-6212-1-git-send-email-jonathan.derrick@intel.com>
-         <20191031231126.GG20975@paulmck-ThinkPad-P72>
-         <14aa0466567ebf9bff1301c81214a449c581c998.camel@intel.com>
-         <20200228111010.GA4064@e121166-lin.cambridge.arm.com>
-         <20200228143454.GI2935@paulmck-ThinkPad-P72>
-In-Reply-To: <20200228143454.GI2935@paulmck-ThinkPad-P72>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.255.4.216]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <23B5A8A7B3E31E43A6CA431363AD74C1@intel.com>
-Content-Transfer-Encoding: base64
+        id S1725827AbgB1R26 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 28 Feb 2020 12:28:58 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:33652 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbgB1R26 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 28 Feb 2020 12:28:58 -0500
+Received: by mail-wr1-f65.google.com with SMTP id x7so3911240wrr.0
+        for <linux-pci@vger.kernel.org>; Fri, 28 Feb 2020 09:28:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EDWWoTJbUPJSVCIJnNm6Wi0YGdvuuWr/P/xyLJLCk5U=;
+        b=H4pQ634+yQ7qGjgO8zR+xD8XcI9Di0PGvk0yGoDGT/LnLSteh5D+LF/aOTxvzyQKqL
+         wszmDWK64moeyGZUDZGlntRAS/3Y5WyC9fSUFaK6YwNKzO0aHVq3gFzj6Tp4s4eQBwDV
+         PcjhDt7clUVl21EiBFvydMX2zCpceyfoCxUSJHV0EpihzC1vEMdlCG27jIe5Rd/YLkof
+         s9OvcH+UyBHP7odt6xKjYB1uMyZOvdSuwM6V1GHHOxb7sydbeai6HuPgxYNgKZ77SeQk
+         MRoh/GxNqF47ccfCarTJ4OXZYk3y1qywuHrCBI9DRP9uo3IQxW3c9m1ycnZWqQ6MXxbw
+         3LRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EDWWoTJbUPJSVCIJnNm6Wi0YGdvuuWr/P/xyLJLCk5U=;
+        b=iOfpS7lwdwBL7kJdF3VEWKQQPbv+Ps8dC6GiucuVuMOoZdTGCDmdxyromBii/1kBIr
+         yTlEwwHFeZ+YEpxF64KmbWaDbk6zkxdfbFsR8w122c9ZPJoMjOwhEBJZSGyehuY3okcD
+         BB7xawCQIqcjji/OLKr7JkJReoyxJdhxXAqwo+h+WCqXMDjtsIbS81hS1aeeaGVkMAUv
+         sdmqIXYJFzfG3oj/FNcHQjRqZhL6Yde3UmJtolWZifY6C/ci46B+BAqMo0+Q9l+9oY9x
+         XetvEMuTq2Q6uaNzRR+ouWXXCwMVC+wZWJDJHC+oE3RSa7TFnhbrQjaNna0x38pidHcI
+         RYyQ==
+X-Gm-Message-State: APjAAAVuzFkc9z7h5gQixsnFCK/XttO7Tu2IJhyG3mdCMy3LF00qKyY+
+        uT9PjJ97W6fPWUai/dExOiPMDw==
+X-Google-Smtp-Source: APXvYqydXuly5JQHJ1HEed03Ol9Dp7NV7BSYwLykhnt9GR9cgCgCDHMep13CruAx/WMAigTJ+22vnQ==
+X-Received: by 2002:adf:cc85:: with SMTP id p5mr5682702wrj.196.1582910935615;
+        Fri, 28 Feb 2020 09:28:55 -0800 (PST)
+Received: from localhost.localdomain ([2001:171b:c9a8:fbc0:116c:c27a:3e7f:5eaf])
+        by smtp.gmail.com with ESMTPSA id m125sm3004795wmf.8.2020.02.28.09.28.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Feb 2020 09:28:55 -0800 (PST)
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     iommu@lists.linux-foundation.org,
+        virtualization@lists.linux-foundation.org,
+        linux-pci@vger.kernel.org
+Cc:     joro@8bytes.org, bhelgaas@google.com, mst@redhat.com,
+        jasowang@redhat.com, kevin.tian@intel.com,
+        sebastien.boeuf@intel.com, eric.auger@redhat.com,
+        jacob.jun.pan@intel.com, robin.murphy@arm.com,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>
+Subject: [PATCH v2 0/3] virtio-iommu on x86 and non-devicetree platforms
+Date:   Fri, 28 Feb 2020 18:25:35 +0100
+Message-Id: <20200228172537.377327-1-jean-philippe@linaro.org>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTAyLTI4IGF0IDA2OjM0IC0wODAwLCBQYXVsIEUuIE1jS2VubmV5IHdyb3Rl
-Og0KPiBPbiBGcmksIEZlYiAyOCwgMjAyMCBhdCAxMToxMDoxMEFNICswMDAwLCBMb3JlbnpvIFBp
-ZXJhbGlzaSB3cm90ZToNCj4gPiBPbiBXZWQsIE5vdiAwNiwgMjAxOSBhdCAwNDoyNToyNVBNICsw
-MDAwLCBEZXJyaWNrLCBKb25hdGhhbiB3cm90ZToNCj4gPiA+IE9uIFRodSwgMjAxOS0xMC0zMSBh
-dCAxNjoxMSAtMDcwMCwgUGF1bCBFLiBNY0tlbm5leSB3cm90ZToNCj4gPiA+ID4gT24gVGh1LCBP
-Y3QgMzEsIDIwMTkgYXQgMDc6MDg6NTNBTSAtMDYwMCwgSm9uIERlcnJpY2sgd3JvdGU6DQo+ID4g
-PiA+ID4gV2l0aCBDT05GSUdfTUFYU01QIGFuZCBDT05GSUdfUFJPVkVfTE9DS0lORywgdGhlIHNp
-emUgb2YgYW4gc3JjdV9zdHJ1Y3QgY2FuDQo+ID4gPiA+ID4gZ3JvdyBxdWl0ZSBsYXJnZS4gSW4g
-b25lIGNvbXBpbGF0aW9uIGluc3RhbmNlIGl0IHByb2R1Y2VkIGEgNzRLaUIgZGF0YQ0KPiA+ID4g
-PiA+IHN0cnVjdHVyZS4gVGhlc2UgYXJlIGVtYmVkZGVkIGluIHRoZSB2bWRfaXJxX2xpc3Qgc3Ry
-dWN0LCBhbmQgYSBOPTY0IGFsbG9jYXRpb24NCj4gPiA+ID4gPiBjYW4gZXhjZWVkIE1BWF9PUkRF
-UiwgdmlvbGF0aW5nIHJlY2xhaW0gcnVsZXMuDQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4gICBzdHJ1
-Y3Qgc3JjdV9zdHJ1Y3Qgew0KPiA+ID4gPiA+ICAgICAgICAgICBzdHJ1Y3Qgc3JjdV9ub2RlICAg
-bm9kZVs1MjFdOyAgICAgICAgICAgICAgICAgICAgLyogICAgIDAgNzUwMjQgKi8NCj4gPiA+ID4g
-PiAgICAgICAgICAgLyogLS0tIGNhY2hlbGluZSAxMTcyIGJvdW5kYXJ5ICg3NTAwOCBieXRlcykg
-d2FzIDE2IGJ5dGVzIGFnbyAtLS0gKi8NCj4gPiA+ID4gPiAgICAgICAgICAgc3RydWN0IHNyY3Vf
-bm9kZSAqICAgICAgICAgbGV2ZWxbNF07ICAgICAgICAgICAgIC8qIDc1MDI0ICAgIDMyICovDQo+
-ID4gPiA+ID4gICAgICAgICAgIHN0cnVjdCBtdXRleCAgICAgICBzcmN1X2NiX211dGV4OyAgICAg
-ICAgICAgICAgICAvKiA3NTA1NiAgIDEyOCAqLw0KPiA+ID4gPiA+ICAgICAgICAgICAvKiAtLS0g
-Y2FjaGVsaW5lIDExNzQgYm91bmRhcnkgKDc1MTM2IGJ5dGVzKSB3YXMgNDggYnl0ZXMgYWdvIC0t
-LSAqLw0KPiA+ID4gPiA+ICAgICAgICAgICBzcGlubG9ja190ICAgICAgICAgICAgICAgICBsb2Nr
-OyAgICAgICAgICAgICAgICAgLyogNzUxODQgICAgNTYgKi8NCj4gPiA+ID4gPiAgICAgICAgICAg
-LyogLS0tIGNhY2hlbGluZSAxMTc1IGJvdW5kYXJ5ICg3NTIwMCBieXRlcykgd2FzIDQwIGJ5dGVz
-IGFnbyAtLS0gKi8NCj4gPiA+ID4gPiAgICAgICAgICAgc3RydWN0IG11dGV4ICAgICAgIHNyY3Vf
-Z3BfbXV0ZXg7ICAgICAgICAgICAgICAgIC8qIDc1MjQwICAgMTI4ICovDQo+ID4gPiA+ID4gICAg
-ICAgICAgIC8qIC0tLSBjYWNoZWxpbmUgMTE3NyBib3VuZGFyeSAoNzUzMjggYnl0ZXMpIHdhcyA0
-MCBieXRlcyBhZ28gLS0tICovDQo+ID4gPiA+ID4gICAgICAgICAgIHVuc2lnbmVkIGludCAgICAg
-ICAgICAgICAgIHNyY3VfaWR4OyAgICAgICAgICAgICAvKiA3NTM2OCAgICAgNCAqLw0KPiA+ID4g
-PiA+IA0KPiA+ID4gPiA+ICAgICAgICAgICAvKiBYWFggNCBieXRlcyBob2xlLCB0cnkgdG8gcGFj
-ayAqLw0KPiA+ID4gPiA+IA0KPiA+ID4gPiA+ICAgICAgICAgICBsb25nIHVuc2lnbmVkIGludCAg
-ICAgICAgICBzcmN1X2dwX3NlcTsgICAgICAgICAgLyogNzUzNzYgICAgIDggKi8NCj4gPiA+ID4g
-PiAgICAgICAgICAgbG9uZyB1bnNpZ25lZCBpbnQgICAgICAgICAgc3JjdV9ncF9zZXFfbmVlZGVk
-OyAgIC8qIDc1Mzg0ICAgICA4ICovDQo+ID4gPiA+ID4gICAgICAgICAgIC8qIC0tLSBjYWNoZWxp
-bmUgMTE3OCBib3VuZGFyeSAoNzUzOTIgYnl0ZXMpIC0tLSAqLw0KPiA+ID4gPiA+ICAgICAgICAg
-ICBsb25nIHVuc2lnbmVkIGludCAgICAgICAgICBzcmN1X2dwX3NlcV9uZWVkZWRfZXhwOyAvKiA3
-NTM5MiAgICAgOCAqLw0KPiA+ID4gPiA+ICAgICAgICAgICBsb25nIHVuc2lnbmVkIGludCAgICAg
-ICAgICBzcmN1X2xhc3RfZ3BfZW5kOyAgICAgLyogNzU0MDAgICAgIDggKi8NCj4gPiA+ID4gPiAg
-ICAgICAgICAgc3RydWN0IHNyY3VfZGF0YSAqICAgICAgICAgc2RhOyAgICAgICAgICAgICAgICAg
-IC8qIDc1NDA4ICAgICA4ICovDQo+ID4gPiA+ID4gICAgICAgICAgIGxvbmcgdW5zaWduZWQgaW50
-ICAgICAgICAgIHNyY3VfYmFycmllcl9zZXE7ICAgICAvKiA3NTQxNiAgICAgOCAqLw0KPiA+ID4g
-PiA+ICAgICAgICAgICBzdHJ1Y3QgbXV0ZXggICAgICAgc3JjdV9iYXJyaWVyX211dGV4OyAgICAg
-ICAgICAgLyogNzU0MjQgICAxMjggKi8NCj4gPiA+ID4gPiAgICAgICAgICAgLyogLS0tIGNhY2hl
-bGluZSAxMTgwIGJvdW5kYXJ5ICg3NTUyMCBieXRlcykgd2FzIDMyIGJ5dGVzIGFnbyAtLS0gKi8N
-Cj4gPiA+ID4gPiAgICAgICAgICAgc3RydWN0IGNvbXBsZXRpb24gIHNyY3VfYmFycmllcl9jb21w
-bGV0aW9uOyAgICAgIC8qIDc1NTUyICAgIDgwICovDQo+ID4gPiA+ID4gICAgICAgICAgIC8qIC0t
-LSBjYWNoZWxpbmUgMTE4MSBib3VuZGFyeSAoNzU1ODQgYnl0ZXMpIHdhcyA0OCBieXRlcyBhZ28g
-LS0tICovDQo+ID4gPiA+ID4gICAgICAgICAgIGF0b21pY190ICAgICAgICAgICAgICAgICAgIHNy
-Y3VfYmFycmllcl9jcHVfY250OyAvKiA3NTYzMiAgICAgNCAqLw0KPiA+ID4gPiA+IA0KPiA+ID4g
-PiA+ICAgICAgICAgICAvKiBYWFggNCBieXRlcyBob2xlLCB0cnkgdG8gcGFjayAqLw0KPiA+ID4g
-PiA+IA0KPiA+ID4gPiA+ICAgICAgICAgICBzdHJ1Y3QgZGVsYXllZF93b3JrIHdvcms7ICAgICAg
-ICAgICAgICAgICAgICAgICAgLyogNzU2NDAgICAxNTIgKi8NCj4gPiA+ID4gPiANCj4gPiA+ID4g
-PiAgICAgICAgICAgLyogWFhYIGxhc3Qgc3RydWN0IGhhcyA0IGJ5dGVzIG9mIHBhZGRpbmcgKi8N
-Cj4gPiA+ID4gPiANCj4gPiA+ID4gPiAgICAgICAgICAgLyogLS0tIGNhY2hlbGluZSAxMTg0IGJv
-dW5kYXJ5ICg3NTc3NiBieXRlcykgd2FzIDE2IGJ5dGVzIGFnbyAtLS0gKi8NCj4gPiA+ID4gPiAg
-ICAgICAgICAgc3RydWN0IGxvY2tkZXBfbWFwIGRlcF9tYXA7ICAgICAgICAgICAgICAgICAgICAg
-IC8qIDc1NzkyICAgIDMyICovDQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4gICAgICAgICAgIC8qIHNp
-emU6IDc1ODI0LCBjYWNoZWxpbmVzOiAxMTg1LCBtZW1iZXJzOiAxNyAqLw0KPiA+ID4gPiA+ICAg
-ICAgICAgICAvKiBzdW0gbWVtYmVyczogNzU4MTYsIGhvbGVzOiAyLCBzdW0gaG9sZXM6IDggKi8N
-Cj4gPiA+ID4gPiAgICAgICAgICAgLyogcGFkZGluZ3M6IDEsIHN1bSBwYWRkaW5nczogNCAqLw0K
-PiA+ID4gPiA+ICAgICAgICAgICAvKiBsYXN0IGNhY2hlbGluZTogNDggYnl0ZXMgKi8NCj4gPiA+
-ID4gPiAgIH07DQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4gV2l0aCBOPTY0IFZNRCBJUlEgbGlzdHMs
-IHRoaXMgd291bGQgYWxsb2NhdGUgNC42TWlCIGluIGEgc2luZ2xlIGNhbGwuIFRoaXMNCj4gPiA+
-ID4gPiB2aW9sYXRlcyBNQVhfT1JERVIgcmVjbGFpbSBydWxlcyB3aGVuIFBBR0VfU0laRT00MDk2
-IGFuZA0KPiA+ID4gPiA+IE1BWF9PUkRFUl9OUl9QQUdFUz0xMDI0LCBhbmQgaW52b2tlcyB0aGUg
-Zm9sbG93aW5nIHdhcm5pbmcgaW4gbW0vcGFnZV9hbGxvYy5jOg0KPiA+ID4gPiA+IA0KPiA+ID4g
-PiA+ICAgLyoNCj4gPiA+ID4gPiAgICAqIFRoZXJlIGFyZSBzZXZlcmFsIHBsYWNlcyB3aGVyZSB3
-ZSBhc3N1bWUgdGhhdCB0aGUgb3JkZXIgdmFsdWUgaXMgc2FuZQ0KPiA+ID4gPiA+ICAgICogc28g
-YmFpbCBvdXQgZWFybHkgaWYgdGhlIHJlcXVlc3QgaXMgb3V0IG9mIGJvdW5kLg0KPiA+ID4gPiA+
-ICAgICovDQo+ID4gPiA+ID4gICBpZiAodW5saWtlbHkob3JkZXIgPj0gTUFYX09SREVSKSkgew0K
-PiA+ID4gPiA+ICAgCVdBUk5fT05fT05DRSghKGdmcF9tYXNrICYgX19HRlBfTk9XQVJOKSk7DQo+
-ID4gPiA+ID4gICAJcmV0dXJuIE5VTEw7DQo+ID4gPiA+ID4gICB9DQo+ID4gPiA+ID4gDQo+ID4g
-PiA+ID4gVGhpcyBwYXRjaCBjaGFuZ2VzIHRoZSBpcnEgbGlzdCBhcnJheSBpbnRvIGFuIGFycmF5
-IG9mIHBvaW50ZXJzIHRvIGlycQ0KPiA+ID4gPiA+IGxpc3RzIHRvIGF2b2lkIGFsbG9jYXRpb24g
-ZmFpbHVyZXMgd2l0aCBncmVhdGVyIG1zaXggY291bnRzLg0KPiA+ID4gPiA+IA0KPiA+ID4gPiA+
-IFRoaXMgcGF0Y2ggYWxzbyByZXZlcnRzIGNvbW1pdCBiMzE4MjIyNzdhYmNkN2M4M2QxYzFjMGFm
-ODc2ZGE5Y2NkZjNiN2Q2Lg0KPiA+ID4gPiA+IFRoZSBpbmRleF9mcm9tX2lycXMoKSBoZWxwZXIg
-d2FzIGFkZGVkIHRvIGNhbGN1bGF0ZSB0aGUgaXJxIGxpc3QgaW5kZXgNCj4gPiA+ID4gPiBmcm9t
-IHRoZSBhcnJheSBvZiBpcnFzLCBpbiBvcmRlciB0byBzaHJpbmsgdm1kX2lycV9saXN0IGZvciBw
-ZXJmb3JtYW5jZS4NCj4gPiA+ID4gPiANCj4gPiA+ID4gPiBEdWUgdG8gdGhlIGVtYmVkZGVkIHNy
-Y3Vfc3RydWN0IHdpdGhpbiB0aGUgdm1kX2lycV9saXN0IHN0cnVjdCBoYXZpbmcgYQ0KPiA+ID4g
-PiA+IHZhcnlpbmcgc2l6ZSBkZXBlbmRpbmcgb24gYSBudW1iZXIgb2YgZmFjdG9ycywgdGhlIHZt
-ZF9pcnFfbGlzdCBzdHJ1Y3QNCj4gPiA+ID4gPiBubyBsb25nZXIgZ3VhcmFudGVlcyBvcHRpbWFs
-IGRhdGEgc3RydWN0dXJlIHNpemUgYW5kIGdyYW51bGFyaXR5Lg0KPiA+ID4gPiA+IA0KPiA+ID4g
-PiA+IFNpZ25lZC1vZmYtYnk6IEpvbiBEZXJyaWNrIDxqb25hdGhhbi5kZXJyaWNrQGludGVsLmNv
-bT4NCj4gPiA+ID4gPiAtLS0NCj4gPiA+ID4gPiBBZGRlZCBQYXVsIHRvIG1ha2UgaGltIGF3YXJl
-IG9mIHNyY3Vfc3RydWN0IHNpemUgd2l0aCB0aGVzZSBvcHRpb25zDQo+ID4gPiA+IA0KPiA+ID4g
-PiBUaGVyZSB3YXMgc29tZSBkaXNjdXNzaW9uIG9mIG1ha2luZyB0aGUgc3JjdV9zdHJ1Y3Qgc3Ry
-dWN0dXJlJ3MgLT5ub2RlW10NCj4gPiA+ID4gYXJyYXkgYmUgc2VwYXJhdGVseSBhbGxvY2F0ZWQs
-IHdoaWNoIHdvdWxkIGFsbG93IHRoaXMgYXJyYXkgdG8gYmUNCj4gPiA+ID4gcmlnaHRzaXplIGZv
-ciB0aGUgc3lzdGVtIGluIHF1ZXN0aW9uLiAgSG93ZXZlciwgSSBiZWxpZXZlIHRoZXkgZW5kZWQg
-dXANCj4gPiA+ID4gaW5zdGVhZCBzZXBhcmF0ZWx5IGFsbG9jYXRpbmcgdGhlIHNyY3Vfc3RydWN0
-IHN0cnVjdHVyZSBpdHNlbGYuDQo+ID4gPiA+IA0KPiA+ID4gPiBXaXRob3V0IGRvaW5nIHNvbWV0
-aGluZyBsaWtlIHRoYXQsIEkgYW0ga2luZCBvZiBzdHVjay4gIEFmdGVyIGFsbCwNCj4gPiA+ID4g
-YXQgY29tcGlsZSB0aW1lLCB0aGUga2VybmVsIGJ1aWxkIHN5c3RlbSB0ZWxscyBTUkNVIHRoYXQg
-aXQgbmVlZHMgdG8NCj4gPiA+ID4gYmUgcHJlcGFyZWQgdG8gcnVuIG9uIHN5c3RlbXMgd2l0aCB0
-aG91c2FuZHMgb2YgQ1BVcy4gIFdoaWNoIHJlcXVpcmVzDQo+ID4gPiA+IHN1YnN0YW50aWFsIG1l
-bW9yeSB0byBrZWVwIHRyYWNrIG9mIGFsbCB0aG9zZSBDUFVzLiAgV2hpY2ggYXJlIG5vdA0KPiA+
-ID4gPiBwcmVzZW50IG9uIG1vc3Qgc3lzdGVtcy4NCj4gPiA+ID4gDQo+ID4gPiA+IFRob3VnaHRz
-Pw0KPiA+ID4gDQo+ID4gPiBZZXMgSSBoYXZlbid0IHNlZW4gYW4gZWxlZ2FudCBzb2x1dGlvbiBv
-dGhlciB0aGFuIG1ha2luZyB1c2VycyBhd2FyZQ0KPiA+ID4gb2YgdGhlIHNpdHVhdGlvbi4NCj4g
-PiA+IA0KPiA+ID4gVGhhbmtzIGZvciB5b3VyIGlucHV0DQo+ID4gDQo+ID4gSm9uLCBQYXVsLA0K
-PiA+IA0KPiA+IEkgZG9uJ3Qga25vdyBpZiB0aGVyZSB3YXMgYW55IGZ1cnRoZXIgZGV2ZWxvcG1l
-bnQgaW4gdGhpcyBhcmVhIGluIHRoZQ0KPiA+IG1lYW50aW1lLCBzaG91bGQgd2UgcHJvY2VlZCB3
-aXRoIHRoaXMgcGF0Y2ggPw0KPiANCj4gTGV0IG1lIGJlIG1vcmUgZXhwbGljaXQuICBXb3VsZCBp
-dCBiZSBoZWxwZnVsIHRvIHlvdSBndXlzIGlmIHRoZXJlIHdhcw0KPiBhIHZhcmlhYmxlLXNpemVk
-IC0+bm9kZVtdIGFycmF5IHRoYXQgaXMgc2VwYXJhdGVseSBhbGxvY2F0ZWQ/ICBJZiBzbywNCj4g
-cGxlYXNlIGRvIHRlbGwgbWUuICBBZnRlciBhbGwsIEkgY2Fubm90IHJlYWQgeW91ciBtaW5kcyAg
-Oy0pDQo+IA0KRnJhbmtseSBJJ20gbm90IHZlcnNlZCBlbm91Z2ggaW4gUkNVIHRvIGtub3cgdGhl
-IGltcGxpY2F0aW9ucyBvZiB0aGlzDQpjaGFuZ2UuIEhvdyBvZnRlbiBoYXZlIHlvdSBjb21lIGFj
-cm9zcyB0aGUgc2FtZSBpc3N1ZSBJIGFtIGZhY2luZz8gSXMNCml0IHdvcnRoIHRoZSBlZmZvcnQg
-dmVyc3VzIG15IGFic3RyYWN0aW9uPyBXaWxsIGl0IGFmZmVjdCBwZXJmb3JtYW5jZQ0Kb3Igd2ls
-bCB0aGUgU2xlZXBhYmxlIGNvbXBvbmVudCBhYnNvcmIgaXQ/DQoNCj4gQW4gaW5zdGFuY2Ugb2Yg
-c3VjaCBhIHZhcmlhbnQgd291bGQgbm90IGJlIGF2YWlsYWJsZSB2aWEgREVGSU5FX1NSQ1UoKSwN
-Cj4gd2hpY2ggYXQgY29tcGlsZSB0aW1lIHdvdWxkIGFic29sdXRlbHkgbmVlZCB0byBhbGxvY2F0
-ZSBhcyBtYW55IGVsZW1lbnRzDQo+IGFzIEtjb25maWcgc2FpZCB0byBhbGxvY2F0ZS4gDQpTbyB0
-aGUgaW1wbGljYXRpb24gaXMgdGhhdCBpdCBuZWVkcyBhbGxvY2F0aW9uIGxhdGVyIHZpYQ0KaW5p
-dF9zcmN1X3N0cnVjdD8NCg0KPiBJbiBhZGRpdGlvbiwgaW5zdGFuY2VzIG9mIHNyY3Vfc3RydWN0
-DQo+IHRha2luZyB0aGlzIGFwcHJvYWNoIHdvdWxkIG5vdCBiZSB1c2FibGUgdW50aWwgYWZ0ZXIg
-aW5pdF9zcmN1X3N0cnVjdCgpDQo+IHdhcyBpbnZva2VkLCB3aGljaCB3b3VsZCBhbGxvY2F0ZSBh
-IHJpZ2h0LXNpemVkIC0+bm9kZSBhcnJheS4NClNvIHNpbWlsYXIgdG8gb3RoZXIgbG9jayBpbml0
-IGZ1bmN0aW9ucy4gQXJlIHRoZXJlIGV4aXN0aW5nIHVzZXJzIGRvaW5nDQpSQ1UgYmVmb3JlIGlu
-aXRfc3JjdV9zdHJ1Y3QgaXMgY2FsbGVkPw0KDQo+IA0KPiBBZ2Fpbiwgd291bGQgdGhpcyBiZSBo
-ZWxwZnVsPw0KPiANCj4gCQkJCQkJCVRoYW54LCBQYXVsDQo=
+Add a topology description to the virtio-iommu driver and enable x86
+platforms.
+
+Two minor changes since v1 [1]:
+* Don't setup DMA twice in patch 1
+* Clarify the CONFIG_IOMMU_DMA selection in patch 3
+
+And rebased on top of "iommu/virtio: Build virtio-iommu as a module"
+which Joerg picked up for v5.7.
+
+--- Copy-paste from v1:
+The built-in description is an array in the virtio config space. The
+driver parses the config space early and postpones endpoint probe until
+the virtio-iommu device is ready. Each element in the array describes
+either a PCI range or a single MMIO endpoint, and their associated
+endpoint IDs:
+
+struct virtio_iommu_topo_pci_range {
+	__le16 type;			/* 1: PCI range */
+	__le16 hierarchy;		/* PCI domain number */
+	__le16 requester_start;		/* First BDF */
+	__le16 requester_end;		/* Last BDF */
+	__le32 endpoint_start;		/* First endpoint ID */
+};
+
+struct virtio_iommu_topo_endpoint {
+	__le16 type;			/* 2: Endpoint */
+	__le16 reserved;		/* 0 */
+	__le32 endpoint;		/* Endpoint ID */
+	__le64 address;			/* First MMIO address */
+};
+
+You can find the QEMU patches based on Eric's latest device on my
+virtio-iommu/devel branch [2]. I test on both x86 q35, and aarch64 virt
+machine with edk2.
+---
+
+[1] https://lore.kernel.org/linux-iommu/20200214160413.1475396-1-jean-philippe@linaro.org/
+[2] https://jpbrucker.net/git/qemu virtio-iommu/devel
+
+Jean-Philippe Brucker (3):
+  iommu/virtio: Add topology description to virtio-iommu config space
+  PCI: Add DMA configuration for virtual platforms
+  iommu/virtio: Enable x86 support
+
+ MAINTAINERS                           |   2 +
+ drivers/iommu/Kconfig                 |  13 +-
+ drivers/iommu/Makefile                |   1 +
+ drivers/iommu/virtio-iommu-topology.c | 343 ++++++++++++++++++++++++++
+ drivers/iommu/virtio-iommu.c          |   3 +
+ drivers/pci/pci-driver.c              |   5 +
+ include/linux/virt_iommu.h            |  19 ++
+ include/uapi/linux/virtio_iommu.h     |  26 ++
+ 8 files changed, 411 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/iommu/virtio-iommu-topology.c
+ create mode 100644 include/linux/virt_iommu.h
+
+-- 
+2.25.0
+
