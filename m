@@ -2,275 +2,215 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5AB351744B0
-	for <lists+linux-pci@lfdr.de>; Sat, 29 Feb 2020 04:22:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EACDC1745AF
+	for <lists+linux-pci@lfdr.de>; Sat, 29 Feb 2020 10:10:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726046AbgB2DWF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 28 Feb 2020 22:22:05 -0500
-Received: from mga09.intel.com ([134.134.136.24]:41704 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726764AbgB2DWF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 28 Feb 2020 22:22:05 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2020 19:22:03 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,498,1574150400"; 
-   d="scan'208";a="411605857"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 28 Feb 2020 19:22:01 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1j7shU-000AAP-Lt; Sat, 29 Feb 2020 11:22:00 +0800
-Date:   Sat, 29 Feb 2020 11:21:44 +0800
-From:   kbuild test robot <lkp@intel.com>
+        id S1726695AbgB2JKG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 29 Feb 2020 04:10:06 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:11122 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726671AbgB2JKG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 29 Feb 2020 04:10:06 -0500
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 71B57A3709A10591C0BB;
+        Sat, 29 Feb 2020 17:10:02 +0800 (CST)
+Received: from [127.0.0.1] (10.65.58.147) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Sat, 29 Feb 2020
+ 17:09:55 +0800
+Subject: Re: [PATCH v5 3/4] PCI: Use pci_speed_string() for all PCI/PCI-X/PCIe
+ strings
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/interrupts] BUILD SUCCESS
- d81977cb6b841e38a619e15f81f297750e8fb8d3
-Message-ID: <5e59d8c8.pYFawYxL1JWkIplU%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+References: <20200229030706.17835-1-helgaas@kernel.org>
+ <20200229030706.17835-4-helgaas@kernel.org>
+CC:     Jay Fang <f.fangjian@huawei.com>, <huangdaode@huawei.com>,
+        <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
+From:   Yicong Yang <yangyicong@hisilicon.com>
+Message-ID: <4592a4cc-8064-2575-3a15-ae61dd03c23e@hisilicon.com>
+Date:   Sat, 29 Feb 2020 17:10:38 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <20200229030706.17835-4-helgaas@kernel.org>
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.65.58.147]
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/interrupts
-branch HEAD: d81977cb6b841e38a619e15f81f297750e8fb8d3  Documentation: PCI: Add background on Boot Interrupts
+Hi Bjorn,
 
-elapsed time: 1070m
 
-configs tested: 220
-configs skipped: 0
+On 2020/2/29 11:07, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
+>
+> Previously some PCI speed strings came from pci_speed_string(), some came
+> from the PCIe-specific PCIE_SPEED2STR(), and some came from a PCIe-specific
+> switch statement.  These methods were inconsistent:
+>
+>   pci_speed_string()     PCIE_SPEED2STR()     switch
+>   ------------------     ----------------     ------
+>   33 MHz PCI
+>   ...
+>   2.5 GT/s PCIe          2.5 GT/s             2.5 GT/s
+>   5.0 GT/s PCIe          5 GT/s               5 GT/s
+>   8.0 GT/s PCIe          8 GT/s               8 GT/s
+>   16.0 GT/s PCIe         16 GT/s              16 GT/s
+>   32.0 GT/s PCIe         32 GT/s              32 GT/s
+>
+> Standardize on pci_speed_string() as the single source of these strings.
+>
+> Note that this adds ".0" and "PCIe" to some messages, including sysfs
+> "max_link_speed" files, a brcmstb "link up" message, and the link status
+> dmesg logging, e.g.,
+>
+>   nvme 0000:01:00.0: 16.000 Gb/s available PCIe bandwidth, limited by 5.0 GT/s PCIe x4 link at 0000:00:01.1 (capable of 31.504 Gb/s with 8.0 GT/s PCIe x4 link)
+>
+> I think it's better to standardize on a single version of the speed text.
+> Previously we had strings like this:
+>
+>   /sys/bus/pci/slots/0/cur_bus_speed: 8.0 GT/s PCIe
+>   /sys/bus/pci/slots/0/max_bus_speed: 8.0 GT/s PCIe
+>   /sys/devices/pci0000:00/0000:00:1c.0/current_link_speed: 8 GT/s
+>   /sys/devices/pci0000:00/0000:00:1c.0/max_link_speed: 8 GT/s
+>
+> This changes the latter two to match the slots files:
+>
+>   /sys/devices/pci0000:00/0000:00:1c.0/current_link_speed: 8.0 GT/s PCIe
+>   /sys/devices/pci0000:00/0000:00:1c.0/max_link_speed: 8.0 GT/s PCIe
+>
+> Based-on-patch by: Yicong Yang <yangyicong@hisilicon.com>
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
+>  drivers/pci/controller/pcie-brcmstb.c |  3 +--
+>  drivers/pci/pci-sysfs.c               | 27 +++++----------------------
+>  drivers/pci/pci.c                     |  6 +++---
+>  drivers/pci/pci.h                     |  9 ---------
+>  4 files changed, 9 insertions(+), 36 deletions(-)
+>
+> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+> index d20aabc26273..41e88f1667bf 100644
+> --- a/drivers/pci/controller/pcie-brcmstb.c
+> +++ b/drivers/pci/controller/pcie-brcmstb.c
+> @@ -823,8 +823,7 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+>  	lnksta = readw(base + BRCM_PCIE_CAP_REGS + PCI_EXP_LNKSTA);
+>  	cls = FIELD_GET(PCI_EXP_LNKSTA_CLS, lnksta);
+>  	nlw = FIELD_GET(PCI_EXP_LNKSTA_NLW, lnksta);
+> -	dev_info(dev, "link up, %s x%u %s\n",
+> -		 PCIE_SPEED2STR(cls + PCI_SPEED_133MHz_PCIX_533),
+> +	dev_info(dev, "link up, %s x%u %s\n", pci_speed_string(cls),
+>  		 nlw, ssc_good ? "(SSC)" : "(!SSC)");
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Here comes the problem. cls is not a pci_bus_speed enumerate. The PCIe link speed decodes
+from PCI_EXP_LNKSTA is from 0x000, we'll get the *wrong* string if passing cls directly to
+pci_speed_string(). pcie_link_speed[](drivers/pci/probe.c, line 662) array should be used
+here to do the conversion.
 
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm                           efm32_defconfig
-arm                         at91_dt_defconfig
-arm                        shmobile_defconfig
-arm64                               defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                           sunxi_defconfig
-arm                        multi_v7_defconfig
-sparc                            allyesconfig
-mips                      fuloong2e_defconfig
-sh                          rsk7269_defconfig
-sparc64                          allyesconfig
-i386                                defconfig
-h8300                     edosk2674_defconfig
-s390                              allnoconfig
-sparc                               defconfig
-openrisc                    or1ksim_defconfig
-arc                              allyesconfig
-s390                             allyesconfig
-s390                       zfcpdump_defconfig
-nios2                         3c120_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sparc64                           allnoconfig
-i386                              allnoconfig
-nds32                             allnoconfig
-i386                             alldefconfig
-i386                             allyesconfig
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                                defconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-alpha                               defconfig
-csky                                defconfig
-nds32                               defconfig
-h8300                       h8s-sim_defconfig
-m68k                       m5475evb_defconfig
-m68k                             allmodconfig
-h8300                    h8300h-sim_defconfig
-m68k                           sun3_defconfig
-m68k                          multi_defconfig
-arc                                 defconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                      malta_kvm_defconfig
-parisc                            allnoconfig
-parisc                           allyesconfig
-parisc                generic-32bit_defconfig
-parisc                generic-64bit_defconfig
-x86_64               randconfig-a001-20200228
-x86_64               randconfig-a002-20200228
-x86_64               randconfig-a003-20200228
-i386                 randconfig-a001-20200228
-i386                 randconfig-a002-20200228
-i386                 randconfig-a003-20200228
-alpha                randconfig-a001-20200228
-m68k                 randconfig-a001-20200228
-mips                 randconfig-a001-20200228
-nds32                randconfig-a001-20200228
-parisc               randconfig-a001-20200228
-riscv                randconfig-a001-20200228
-alpha                randconfig-a001-20200229
-m68k                 randconfig-a001-20200229
-nds32                randconfig-a001-20200229
-parisc               randconfig-a001-20200229
-riscv                randconfig-a001-20200229
-c6x                  randconfig-a001-20200229
-h8300                randconfig-a001-20200229
-microblaze           randconfig-a001-20200229
-nios2                randconfig-a001-20200229
-sparc64              randconfig-a001-20200229
-c6x                  randconfig-a001-20200228
-h8300                randconfig-a001-20200228
-microblaze           randconfig-a001-20200228
-nios2                randconfig-a001-20200228
-sparc64              randconfig-a001-20200228
-csky                 randconfig-a001-20200228
-openrisc             randconfig-a001-20200228
-s390                 randconfig-a001-20200228
-sh                   randconfig-a001-20200228
-xtensa               randconfig-a001-20200228
-csky                 randconfig-a001-20200229
-openrisc             randconfig-a001-20200229
-s390                 randconfig-a001-20200229
-xtensa               randconfig-a001-20200229
-x86_64               randconfig-b001-20200228
-x86_64               randconfig-b002-20200228
-x86_64               randconfig-b003-20200228
-i386                 randconfig-b001-20200228
-i386                 randconfig-b002-20200228
-i386                 randconfig-b003-20200228
-x86_64               randconfig-c001-20200228
-x86_64               randconfig-c002-20200228
-x86_64               randconfig-c003-20200228
-i386                 randconfig-c001-20200228
-i386                 randconfig-c002-20200228
-i386                 randconfig-c003-20200228
-x86_64               randconfig-c001-20200229
-x86_64               randconfig-c002-20200229
-x86_64               randconfig-c003-20200229
-i386                 randconfig-c001-20200229
-i386                 randconfig-c002-20200229
-i386                 randconfig-c003-20200229
-x86_64               randconfig-d001-20200228
-x86_64               randconfig-d002-20200228
-x86_64               randconfig-d003-20200228
-i386                 randconfig-d001-20200228
-i386                 randconfig-d002-20200228
-i386                 randconfig-d003-20200228
-x86_64               randconfig-d001-20200229
-x86_64               randconfig-d002-20200229
-x86_64               randconfig-d003-20200229
-i386                 randconfig-d001-20200229
-i386                 randconfig-d002-20200229
-i386                 randconfig-d003-20200229
-x86_64               randconfig-e001-20200228
-x86_64               randconfig-e002-20200228
-x86_64               randconfig-e003-20200228
-i386                 randconfig-e001-20200228
-i386                 randconfig-e002-20200228
-i386                 randconfig-e003-20200228
-x86_64               randconfig-e001-20200229
-x86_64               randconfig-e002-20200229
-x86_64               randconfig-e003-20200229
-i386                 randconfig-e001-20200229
-i386                 randconfig-e002-20200229
-i386                 randconfig-e003-20200229
-x86_64               randconfig-f001-20200228
-x86_64               randconfig-f002-20200228
-x86_64               randconfig-f003-20200228
-i386                 randconfig-f001-20200228
-i386                 randconfig-f002-20200228
-i386                 randconfig-f003-20200228
-x86_64               randconfig-f001-20200229
-x86_64               randconfig-f002-20200229
-x86_64               randconfig-f003-20200229
-i386                 randconfig-f001-20200229
-i386                 randconfig-f002-20200229
-i386                 randconfig-f003-20200229
-x86_64               randconfig-g001-20200228
-x86_64               randconfig-g002-20200228
-x86_64               randconfig-g003-20200228
-i386                 randconfig-g001-20200228
-i386                 randconfig-g002-20200228
-i386                 randconfig-g003-20200228
-x86_64               randconfig-g001-20200229
-x86_64               randconfig-g002-20200229
-x86_64               randconfig-g003-20200229
-i386                 randconfig-g001-20200229
-i386                 randconfig-g002-20200229
-i386                 randconfig-g003-20200229
-i386                 randconfig-h003-20200228
-i386                 randconfig-h002-20200228
-x86_64               randconfig-h002-20200228
-x86_64               randconfig-h003-20200228
-x86_64               randconfig-h001-20200228
-i386                 randconfig-h001-20200228
-x86_64               randconfig-h001-20200229
-x86_64               randconfig-h002-20200229
-x86_64               randconfig-h003-20200229
-i386                 randconfig-h001-20200229
-i386                 randconfig-h002-20200229
-i386                 randconfig-h003-20200229
-arc                  randconfig-a001-20200229
-arm                  randconfig-a001-20200229
-arm64                randconfig-a001-20200229
-ia64                 randconfig-a001-20200229
-powerpc              randconfig-a001-20200229
-sparc                randconfig-a001-20200229
-arc                  randconfig-a001-20200228
-arm                  randconfig-a001-20200228
-arm64                randconfig-a001-20200228
-ia64                 randconfig-a001-20200228
-powerpc              randconfig-a001-20200228
-sparc                randconfig-a001-20200228
-riscv                            allmodconfig
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-s390                             alldefconfig
-s390                             allmodconfig
-s390                          debug_defconfig
-s390                                defconfig
-sh                               allmodconfig
-sh                                allnoconfig
-sh                            titan_defconfig
-sparc64                          allmodconfig
-sparc64                             defconfig
-um                                  defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
++ dev_info(dev, "link up, %s x%u %s\n", pci_speed_string(pcie_link_speed[cls]),
+           nlw, ssc_good ? "(SSC)" : "(!SSC)";
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+The other parts of the series are fine with me.
+
+Regards,
+Yicong Yang
+
+
+>  
+>  	/* PCIe->SCB endian mode for BAR */
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index 13f766db0684..d123d1087061 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -156,7 +156,8 @@ static ssize_t max_link_speed_show(struct device *dev,
+>  {
+>  	struct pci_dev *pdev = to_pci_dev(dev);
+>  
+> -	return sprintf(buf, "%s\n", PCIE_SPEED2STR(pcie_get_speed_cap(pdev)));
+> +	return sprintf(buf, "%s\n",
+> +		       pci_speed_string(pcie_get_speed_cap(pdev)));
+>  }
+>  static DEVICE_ATTR_RO(max_link_speed);
+>  
+> @@ -175,33 +176,15 @@ static ssize_t current_link_speed_show(struct device *dev,
+>  	struct pci_dev *pci_dev = to_pci_dev(dev);
+>  	u16 linkstat;
+>  	int err;
+> -	const char *speed;
+> +	enum pci_bus_speed speed;
+>  
+>  	err = pcie_capability_read_word(pci_dev, PCI_EXP_LNKSTA, &linkstat);
+>  	if (err)
+>  		return -EINVAL;
+>  
+> -	switch (linkstat & PCI_EXP_LNKSTA_CLS) {
+> -	case PCI_EXP_LNKSTA_CLS_32_0GB:
+> -		speed = "32 GT/s";
+> -		break;
+> -	case PCI_EXP_LNKSTA_CLS_16_0GB:
+> -		speed = "16 GT/s";
+> -		break;
+> -	case PCI_EXP_LNKSTA_CLS_8_0GB:
+> -		speed = "8 GT/s";
+> -		break;
+> -	case PCI_EXP_LNKSTA_CLS_5_0GB:
+> -		speed = "5 GT/s";
+> -		break;
+> -	case PCI_EXP_LNKSTA_CLS_2_5GB:
+> -		speed = "2.5 GT/s";
+> -		break;
+> -	default:
+> -		speed = "Unknown speed";
+> -	}
+> +	speed = pcie_link_speed[linkstat & PCI_EXP_LNKSTA_CLS];
+>  
+> -	return sprintf(buf, "%s\n", speed);
+> +	return sprintf(buf, "%s\n", pci_speed_string(speed));
+>  }
+>  static DEVICE_ATTR_RO(current_link_speed);
+>  
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index d828ca835a98..421587badecf 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -5872,14 +5872,14 @@ void __pcie_print_link_status(struct pci_dev *dev, bool verbose)
+>  	if (bw_avail >= bw_cap && verbose)
+>  		pci_info(dev, "%u.%03u Gb/s available PCIe bandwidth (%s x%d link)\n",
+>  			 bw_cap / 1000, bw_cap % 1000,
+> -			 PCIE_SPEED2STR(speed_cap), width_cap);
+> +			 pci_speed_string(speed_cap), width_cap);
+>  	else if (bw_avail < bw_cap)
+>  		pci_info(dev, "%u.%03u Gb/s available PCIe bandwidth, limited by %s x%d link at %s (capable of %u.%03u Gb/s with %s x%d link)\n",
+>  			 bw_avail / 1000, bw_avail % 1000,
+> -			 PCIE_SPEED2STR(speed), width,
+> +			 pci_speed_string(speed), width,
+>  			 limiting_dev ? pci_name(limiting_dev) : "<unknown>",
+>  			 bw_cap / 1000, bw_cap % 1000,
+> -			 PCIE_SPEED2STR(speed_cap), width_cap);
+> +			 pci_speed_string(speed_cap), width_cap);
+>  }
+>  
+>  /**
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 809753b10fad..01f5d7f449a5 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -292,15 +292,6 @@ void pci_disable_bridge_window(struct pci_dev *dev);
+>  struct pci_bus *pci_bus_get(struct pci_bus *bus);
+>  void pci_bus_put(struct pci_bus *bus);
+>  
+> -/* PCIe link information */
+> -#define PCIE_SPEED2STR(speed) \
+> -	((speed) == PCIE_SPEED_32_0GT ? "32 GT/s" : \
+> -	 (speed) == PCIE_SPEED_16_0GT ? "16 GT/s" : \
+> -	 (speed) == PCIE_SPEED_8_0GT ? "8 GT/s" : \
+> -	 (speed) == PCIE_SPEED_5_0GT ? "5 GT/s" : \
+> -	 (speed) == PCIE_SPEED_2_5GT ? "2.5 GT/s" : \
+> -	 "Unknown speed")
+> -
+>  /* PCIe speed to Mb/s reduced by encoding overhead */
+>  #define PCIE_SPEED2MBS_ENC(speed) \
+>  	((speed) == PCIE_SPEED_32_0GT ? 32000*128/130 : \
+
+
