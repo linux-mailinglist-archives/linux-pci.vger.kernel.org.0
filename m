@@ -2,34 +2,34 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E66991744A6
-	for <lists+linux-pci@lfdr.de>; Sat, 29 Feb 2020 04:07:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E3201744A7
+	for <lists+linux-pci@lfdr.de>; Sat, 29 Feb 2020 04:07:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726603AbgB2DHa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 28 Feb 2020 22:07:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53574 "EHLO mail.kernel.org"
+        id S1726627AbgB2DHb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 28 Feb 2020 22:07:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726046AbgB2DHa (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 28 Feb 2020 22:07:30 -0500
+        id S1726046AbgB2DHb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 28 Feb 2020 22:07:31 -0500
 Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0F82246B5;
-        Sat, 29 Feb 2020 03:07:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D36562467B;
+        Sat, 29 Feb 2020 03:07:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582945649;
-        bh=Gb4XRiPdPvDOoIEsmKUJcQ0NQ1HsQ3LnGbxoVTQnNIQ=;
+        s=default; t=1582945651;
+        bh=k5NwHrWEieKFCAahxQ2mBl7JL9RU365PWXXzYz13YOM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mb4YgEnfRLP6JRXmmKxmpxU1qwKJ5Qqvum2MTeQCRztZVZaAXFWZNsZxCJ5Bx8LKd
-         3fiK6J/gOMyyHQRh5Nby8LSZbDxDdsJGF4XvIaf/kQCnpyAmPRiMDLxadAWGI+nrGr
-         A63N1MaB1hZCxhWSbVjCawexL9NsDTb1rAMjaBKE=
+        b=EULNDcdg9sbHLQaqKGYG09Hu5EGIYjUMHTJPINjkx4LuEFtnFgHbsJL42xsNPoLyz
+         LBmlQhkOweecLBzxq8SEsAHJM/tW6ZZ5oR9f5NDF1fgv9l8CT9AXwIaIDIx6/2K7lk
+         0Hrjhn5w2yzP+0G9mfZHFGx+MGIW1KKvbzDOwOHM=
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Yicong Yang <yangyicong@hisilicon.com>
 Cc:     Jay Fang <f.fangjian@huawei.com>, huangdaode@huawei.com,
         linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH v5 3/4] PCI: Use pci_speed_string() for all PCI/PCI-X/PCIe strings
-Date:   Fri, 28 Feb 2020 21:07:05 -0600
-Message-Id: <20200229030706.17835-4-helgaas@kernel.org>
+Subject: [PATCH v5 4/4] PCI: Add PCIE_LNKCAP2_SLS2SPEED() macro
+Date:   Fri, 28 Feb 2020 21:07:06 -0600
+Message-Id: <20200229030706.17835-5-helgaas@kernel.org>
 X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
 In-Reply-To: <20200229030706.17835-1-helgaas@kernel.org>
 References: <20200229030706.17835-1-helgaas@kernel.org>
@@ -40,156 +40,65 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+From: Yicong Yang <yangyicong@hisilicon.com>
 
-Previously some PCI speed strings came from pci_speed_string(), some came
-from the PCIe-specific PCIE_SPEED2STR(), and some came from a PCIe-specific
-switch statement.  These methods were inconsistent:
+Add PCIE_LNKCAP2_SLS2SPEED macro for transforming raw Link Capabilities 2
+values to the pci_bus_speed. This is next to PCIE_SPEED2MBS_ENC() to make
+it easier to update both places when adding support for new speeds.
 
-  pci_speed_string()     PCIE_SPEED2STR()     switch
-  ------------------     ----------------     ------
-  33 MHz PCI
-  ...
-  2.5 GT/s PCIe          2.5 GT/s             2.5 GT/s
-  5.0 GT/s PCIe          5 GT/s               5 GT/s
-  8.0 GT/s PCIe          8 GT/s               8 GT/s
-  16.0 GT/s PCIe         16 GT/s              16 GT/s
-  32.0 GT/s PCIe         32 GT/s              32 GT/s
-
-Standardize on pci_speed_string() as the single source of these strings.
-
-Note that this adds ".0" and "PCIe" to some messages, including sysfs
-"max_link_speed" files, a brcmstb "link up" message, and the link status
-dmesg logging, e.g.,
-
-  nvme 0000:01:00.0: 16.000 Gb/s available PCIe bandwidth, limited by 5.0 GT/s PCIe x4 link at 0000:00:01.1 (capable of 31.504 Gb/s with 8.0 GT/s PCIe x4 link)
-
-I think it's better to standardize on a single version of the speed text.
-Previously we had strings like this:
-
-  /sys/bus/pci/slots/0/cur_bus_speed: 8.0 GT/s PCIe
-  /sys/bus/pci/slots/0/max_bus_speed: 8.0 GT/s PCIe
-  /sys/devices/pci0000:00/0000:00:1c.0/current_link_speed: 8 GT/s
-  /sys/devices/pci0000:00/0000:00:1c.0/max_link_speed: 8 GT/s
-
-This changes the latter two to match the slots files:
-
-  /sys/devices/pci0000:00/0000:00:1c.0/current_link_speed: 8.0 GT/s PCIe
-  /sys/devices/pci0000:00/0000:00:1c.0/max_link_speed: 8.0 GT/s PCIe
-
-Based-on-patch by: Yicong Yang <yangyicong@hisilicon.com>
+Link: https://lore.kernel.org/r/1581937984-40353-10-git-send-email-yangyicong@hisilicon.com
+Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- drivers/pci/controller/pcie-brcmstb.c |  3 +--
- drivers/pci/pci-sysfs.c               | 27 +++++----------------------
- drivers/pci/pci.c                     |  6 +++---
- drivers/pci/pci.h                     |  9 ---------
- 4 files changed, 9 insertions(+), 36 deletions(-)
+ drivers/pci/pci.c | 17 ++++-------------
+ drivers/pci/pci.h |  9 +++++++++
+ 2 files changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index d20aabc26273..41e88f1667bf 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -823,8 +823,7 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
- 	lnksta = readw(base + BRCM_PCIE_CAP_REGS + PCI_EXP_LNKSTA);
- 	cls = FIELD_GET(PCI_EXP_LNKSTA_CLS, lnksta);
- 	nlw = FIELD_GET(PCI_EXP_LNKSTA_NLW, lnksta);
--	dev_info(dev, "link up, %s x%u %s\n",
--		 PCIE_SPEED2STR(cls + PCI_SPEED_133MHz_PCIX_533),
-+	dev_info(dev, "link up, %s x%u %s\n", pci_speed_string(cls),
- 		 nlw, ssc_good ? "(SSC)" : "(!SSC)");
- 
- 	/* PCIe->SCB endian mode for BAR */
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 13f766db0684..d123d1087061 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -156,7 +156,8 @@ static ssize_t max_link_speed_show(struct device *dev,
- {
- 	struct pci_dev *pdev = to_pci_dev(dev);
- 
--	return sprintf(buf, "%s\n", PCIE_SPEED2STR(pcie_get_speed_cap(pdev)));
-+	return sprintf(buf, "%s\n",
-+		       pci_speed_string(pcie_get_speed_cap(pdev)));
- }
- static DEVICE_ATTR_RO(max_link_speed);
- 
-@@ -175,33 +176,15 @@ static ssize_t current_link_speed_show(struct device *dev,
- 	struct pci_dev *pci_dev = to_pci_dev(dev);
- 	u16 linkstat;
- 	int err;
--	const char *speed;
-+	enum pci_bus_speed speed;
- 
- 	err = pcie_capability_read_word(pci_dev, PCI_EXP_LNKSTA, &linkstat);
- 	if (err)
- 		return -EINVAL;
- 
--	switch (linkstat & PCI_EXP_LNKSTA_CLS) {
--	case PCI_EXP_LNKSTA_CLS_32_0GB:
--		speed = "32 GT/s";
--		break;
--	case PCI_EXP_LNKSTA_CLS_16_0GB:
--		speed = "16 GT/s";
--		break;
--	case PCI_EXP_LNKSTA_CLS_8_0GB:
--		speed = "8 GT/s";
--		break;
--	case PCI_EXP_LNKSTA_CLS_5_0GB:
--		speed = "5 GT/s";
--		break;
--	case PCI_EXP_LNKSTA_CLS_2_5GB:
--		speed = "2.5 GT/s";
--		break;
--	default:
--		speed = "Unknown speed";
--	}
-+	speed = pcie_link_speed[linkstat & PCI_EXP_LNKSTA_CLS];
- 
--	return sprintf(buf, "%s\n", speed);
-+	return sprintf(buf, "%s\n", pci_speed_string(speed));
- }
- static DEVICE_ATTR_RO(current_link_speed);
- 
 diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index d828ca835a98..421587badecf 100644
+index 421587badecf..e79cccbbdd39 100644
 --- a/drivers/pci/pci.c
 +++ b/drivers/pci/pci.c
-@@ -5872,14 +5872,14 @@ void __pcie_print_link_status(struct pci_dev *dev, bool verbose)
- 	if (bw_avail >= bw_cap && verbose)
- 		pci_info(dev, "%u.%03u Gb/s available PCIe bandwidth (%s x%d link)\n",
- 			 bw_cap / 1000, bw_cap % 1000,
--			 PCIE_SPEED2STR(speed_cap), width_cap);
-+			 pci_speed_string(speed_cap), width_cap);
- 	else if (bw_avail < bw_cap)
- 		pci_info(dev, "%u.%03u Gb/s available PCIe bandwidth, limited by %s x%d link at %s (capable of %u.%03u Gb/s with %s x%d link)\n",
- 			 bw_avail / 1000, bw_avail % 1000,
--			 PCIE_SPEED2STR(speed), width,
-+			 pci_speed_string(speed), width,
- 			 limiting_dev ? pci_name(limiting_dev) : "<unknown>",
- 			 bw_cap / 1000, bw_cap % 1000,
--			 PCIE_SPEED2STR(speed_cap), width_cap);
-+			 pci_speed_string(speed_cap), width_cap);
- }
+@@ -5784,19 +5784,10 @@ enum pci_bus_speed pcie_get_speed_cap(struct pci_dev *dev)
+ 	 * where only 2.5 GT/s and 5.0 GT/s speeds were defined.
+ 	 */
+ 	pcie_capability_read_dword(dev, PCI_EXP_LNKCAP2, &lnkcap2);
+-	if (lnkcap2) { /* PCIe r3.0-compliant */
+-		if (lnkcap2 & PCI_EXP_LNKCAP2_SLS_32_0GB)
+-			return PCIE_SPEED_32_0GT;
+-		else if (lnkcap2 & PCI_EXP_LNKCAP2_SLS_16_0GB)
+-			return PCIE_SPEED_16_0GT;
+-		else if (lnkcap2 & PCI_EXP_LNKCAP2_SLS_8_0GB)
+-			return PCIE_SPEED_8_0GT;
+-		else if (lnkcap2 & PCI_EXP_LNKCAP2_SLS_5_0GB)
+-			return PCIE_SPEED_5_0GT;
+-		else if (lnkcap2 & PCI_EXP_LNKCAP2_SLS_2_5GB)
+-			return PCIE_SPEED_2_5GT;
+-		return PCI_SPEED_UNKNOWN;
+-	}
++
++	/* PCIe r3.0-compliant */
++	if (lnkcap2)
++		return PCIE_LNKCAP2_SLS2SPEED(lnkcap2);
  
- /**
+ 	pcie_capability_read_dword(dev, PCI_EXP_LNKCAP, &lnkcap);
+ 	if ((lnkcap & PCI_EXP_LNKCAP_SLS) == PCI_EXP_LNKCAP_SLS_5_0GB)
 diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 809753b10fad..01f5d7f449a5 100644
+index 01f5d7f449a5..75d027ecfbcd 100644
 --- a/drivers/pci/pci.h
 +++ b/drivers/pci/pci.h
-@@ -292,15 +292,6 @@ void pci_disable_bridge_window(struct pci_dev *dev);
+@@ -292,6 +292,15 @@ void pci_disable_bridge_window(struct pci_dev *dev);
  struct pci_bus *pci_bus_get(struct pci_bus *bus);
  void pci_bus_put(struct pci_bus *bus);
  
--/* PCIe link information */
--#define PCIE_SPEED2STR(speed) \
--	((speed) == PCIE_SPEED_32_0GT ? "32 GT/s" : \
--	 (speed) == PCIE_SPEED_16_0GT ? "16 GT/s" : \
--	 (speed) == PCIE_SPEED_8_0GT ? "8 GT/s" : \
--	 (speed) == PCIE_SPEED_5_0GT ? "5 GT/s" : \
--	 (speed) == PCIE_SPEED_2_5GT ? "2.5 GT/s" : \
--	 "Unknown speed")
--
++/* PCIe link information from Link Capabilities 2 */
++#define PCIE_LNKCAP2_SLS2SPEED(lnkcap2) \
++	((lnkcap2) & PCI_EXP_LNKCAP2_SLS_32_0GB ? PCIE_SPEED_32_0GT : \
++	 (lnkcap2) & PCI_EXP_LNKCAP2_SLS_16_0GB ? PCIE_SPEED_16_0GT : \
++	 (lnkcap2) & PCI_EXP_LNKCAP2_SLS_8_0GB ? PCIE_SPEED_8_0GT : \
++	 (lnkcap2) & PCI_EXP_LNKCAP2_SLS_5_0GB ? PCIE_SPEED_5_0GT : \
++	 (lnkcap2) & PCI_EXP_LNKCAP2_SLS_2_5GB ? PCIE_SPEED_2_5GT : \
++	 PCI_SPEED_UNKNOWN)
++
  /* PCIe speed to Mb/s reduced by encoding overhead */
  #define PCIE_SPEED2MBS_ENC(speed) \
  	((speed) == PCIE_SPEED_32_0GT ? 32000*128/130 : \
