@@ -2,137 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 341B617483C
-	for <lists+linux-pci@lfdr.de>; Sat, 29 Feb 2020 18:01:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9AC2817488D
+	for <lists+linux-pci@lfdr.de>; Sat, 29 Feb 2020 19:04:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727183AbgB2RBW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 29 Feb 2020 12:01:22 -0500
-Received: from relay12.mail.gandi.net ([217.70.178.232]:57985 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727176AbgB2RBW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 29 Feb 2020 12:01:22 -0500
-Received: from localhost (lfbn-ren-1-591-115.w81-53.abo.wanadoo.fr [81.53.169.115])
-        (Authenticated sender: repk@triplefau.lt)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 47DB6200004;
-        Sat, 29 Feb 2020 17:01:17 +0000 (UTC)
-Date:   Sat, 29 Feb 2020 18:10:12 +0100
-From:   Remi Pommarel <repk@triplefau.lt>
-To:     Kevin Hilman <khilman@baylibre.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Yue Wang <yue.wang@amlogic.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v6 0/7] PCI: amlogic: Make PCIe working reliably on AXG
- platforms
-Message-ID: <20200229171012.GN2248@voidbox>
-References: <20200123232943.10229-1-repk@triplefau.lt>
- <20200224141549.GB15614@e121166-lin.cambridge.arm.com>
- <7h8sklbcmo.fsf@baylibre.com>
+        id S1727464AbgB2SEA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 29 Feb 2020 13:04:00 -0500
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:45042 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727209AbgB2SD7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 29 Feb 2020 13:03:59 -0500
+Received: from callcc.thunk.org (75-104-88-164.mobility.exede.net [75.104.88.164] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 01TI3N6m018652
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 29 Feb 2020 13:03:30 -0500
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 2E9B042045B; Sat, 29 Feb 2020 13:03:23 -0500 (EST)
+Date:   Sat, 29 Feb 2020 13:03:23 -0500
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Olof Johansson <olof@lixom.net>, Jon Nettleton <jon@solid-run.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "Z.q. Hou" <zhiqiang.hou@nxp.com>,
+        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
+ driver for NXP Layerscape SoCs
+Message-ID: <20200229180323.GC7378@mit.edu>
+References: <DB8PR04MB6747DA8E1480DCF3EFF67C9284500@DB8PR04MB6747.eurprd04.prod.outlook.com>
+ <20200110153347.GA29372@e121166-lin.cambridge.arm.com>
+ <CAOesGMj9X1c7eJ4gX2QWXSNszPkRn68E4pkrSCxKMYJG7JHwsg@mail.gmail.com>
+ <DB8PR04MB67473114B315FBCC97D0C6F9841D0@DB8PR04MB6747.eurprd04.prod.outlook.com>
+ <CAOesGMieMXHWBO_p9YJXWWneC47g+TGDt9SVfvnp5tShj5gbPw@mail.gmail.com>
+ <20200210152257.GD25745@shell.armlinux.org.uk>
+ <20200229095550.GX25745@shell.armlinux.org.uk>
+ <20200229110456.GY25745@shell.armlinux.org.uk>
+ <20200229151907.GA7378@mit.edu>
+ <20200229170328.GD25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7h8sklbcmo.fsf@baylibre.com>
+In-Reply-To: <20200229170328.GD25745@shell.armlinux.org.uk>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi
-
-On Sat, Feb 29, 2020 at 05:07:43PM +0100, Kevin Hilman wrote:
-> Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> writes:
+On Sat, Feb 29, 2020 at 05:03:28PM +0000, Russell King - ARM Linux admin wrote:
+> > There's a test-appliance designed to be run on ARM64 here[1].
+> > 
+> > [1] https://kernel.org/pub/linux/kernel/people/tytso/kvm-xfstests/xfstests-amd64.tar.xz
 > 
-> > On Fri, Jan 24, 2020 at 12:29:36AM +0100, Remi Pommarel wrote:
-> >> PCIe device probing failures have been seen on AXG platforms and were
-> >> due to unreliable clock signal output. Setting HHI_MIPI_CNTL0[26] bit
-> >> in MIPI's PHY registers solved the problem. This bit controls band gap
-> >> reference.
-> >> 
-> >> As discussed here [1] one of these shared MIPI/PCIE analog PHY register
-> >> bits was implemented in the clock driver as CLKID_MIPI_ENABLE. This adds
-> >> a PHY driver to control this bit instead, as well as setting the band
-> >> gap one in order to get reliable PCIE communication.
-> >> 
-> >> While at it add another PHY driver to control PCIE only PHY registers,
-> >> making AXG code more similar to G12A platform thus allowing to remove
-> >> some specific platform handling in pci-meson driver.
-> >> 
-> >> Please note that CLKID_MIPI_ENABLE removable will be done in a different
-> >> serie.
-> >> 
-> >> Changes since v5:
-> >>  - Add additionalProperties in device tree binding documentation
-> >>  - Make analog PHY required
-> >> 
-> >> Changes since v4:
-> >>  - Rename the shared MIPI/PCIe PHY to analog
-> >>  - Chain the MIPI/PCIe PHY to the PCIe one
-> >> 
-> >> Changes since v3:
-> >>  - Go back to the shared MIPI/PCIe phy driver solution from v2
-> >>  - Remove syscon usage
-> >>  - Add all dt-bindings documentation
-> >> 
-> >> Changes since v2:
-> >>  - Remove shared MIPI/PCIE device driver and use syscon to access register
-> >>    in PCIE only driver instead
-> >>  - Include devicetree documentation
-> >> 
-> >> Changes sinve v1:
-> >>  - Move HHI_MIPI_CNTL0 bit control in its own PHY driver
-> >>  - Add a PHY driver for PCIE_PHY registers
-> >>  - Modify pci-meson.c to make use of both PHYs and remove specific
-> >>    handling for AXG and G12A
-> >> 
-> >> [1] https://lkml.org/lkml/2019/12/16/119
-> >> 
-> >> Remi Pommarel (7):
-> >>   dt-bindings: Add AXG PCIE PHY bindings
-> >>   dt-bindings: Add AXG shared MIPI/PCIE analog PHY bindings
-> >>   dt-bindings: PCI: meson: Update PCIE bindings documentation
-> >>   arm64: dts: meson-axg: Add PCIE PHY nodes
-> >>   phy: amlogic: Add Amlogic AXG MIPI/PCIE analog PHY Driver
-> >>   phy: amlogic: Add Amlogic AXG PCIE PHY Driver
-> >>   PCI: amlogic: Use AXG PCIE
-> >> 
-> >>  .../bindings/pci/amlogic,meson-pcie.txt       |  22 +-
-> >>  .../amlogic,meson-axg-mipi-pcie-analog.yaml   |  35 ++++
-> >>  .../bindings/phy/amlogic,meson-axg-pcie.yaml  |  52 +++++
-> >>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi    |  16 ++
-> >>  drivers/pci/controller/dwc/pci-meson.c        | 116 ++---------
-> >>  drivers/phy/amlogic/Kconfig                   |  22 ++
-> >>  drivers/phy/amlogic/Makefile                  |  12 +-
-> >>  .../amlogic/phy-meson-axg-mipi-pcie-analog.c  | 188 +++++++++++++++++
-> >>  drivers/phy/amlogic/phy-meson-axg-pcie.c      | 192 ++++++++++++++++++
-> >>  9 files changed, 543 insertions(+), 112 deletions(-)
-> >>  create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-axg-mipi-pcie-analog.yaml
-> >>  create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-axg-pcie.yaml
-> >>  create mode 100644 drivers/phy/amlogic/phy-meson-axg-mipi-pcie-analog.c
-> >>  create mode 100644 drivers/phy/amlogic/phy-meson-axg-pcie.c
-> >
-> > Hi Remi,
-> >
-> > I am ready to pull this series in, do you want me to ? Or you prefer
-> > it to go via a different tree upstream ?
-> 
-> To avoid conflicts, I'll take the DT patch (PATCH 4/7) through my
-> amlogic tree, but feel free to take the rest.
+> The filename seems to say "amd64" not "arm64" ?
 
-Hi Lorenzo, Kevin,
+Sorry, I cut and pasted the wrong link: s/amd64/arm64/
 
-The only issue I see here is that PATCH 6/7 does not have any
-Reviewed-by/Acked-by, but if that is ok with you that will be nice to
-have this upstream, thanks.
+If there are arm64-specific locking issues, we can probably flush them
+out if we could figure out some way of running some of the stress
+tests in xfstests.  I don't know a whole lot about arm-64
+architectures; would running xfstests on, say, an Amazon AWS arm-based
+VM be representative of your new architecture?  Or are there a lot of
+sub-architecture differences in the arm-64 world?
 
-Sorry for the mail delivery error you could have received, silly me
-forgot to renew the domain name.
-
-Thanks
-
-Remi
+						- Ted
