@@ -2,361 +2,188 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A7EFA174713
-	for <lists+linux-pci@lfdr.de>; Sat, 29 Feb 2020 14:32:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BCE8174753
+	for <lists+linux-pci@lfdr.de>; Sat, 29 Feb 2020 15:24:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbgB2Ncx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 29 Feb 2020 08:32:53 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:43344 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726998AbgB2Ncx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 29 Feb 2020 08:32:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=y7GPcpbrEFsg3Kfwu1RdbSFuSbDIImcUEIM8ir32cq0=; b=0RHo2Z068fLncnGlNSzCml0t2
-        vKfV3ubrdoLQe3t8E5L0nxBR5M5wtrLRCFAkXPT4kPi0CGQFb2uOH6/U84qmagvwM9z0akVc38hOq
-        ciNkhRXebZZNQWtULP0CjwVrX8OY9x5yT9gKbYQICiYyP7RBE58UzLG/0es7ZNK6/qBVtDLILcXry
-        QBGo+Ck0fU0nc+qDSUzyDKJtFjqcKMZyuqpI/BIczfFjB6crLu4ImuZKroHHBD6MifhEXUfUB+WzA
-        C6YSSUkUxKX0G31q26xdHWIQeTa7L3thd3wqR5YLshfyDrX0a0LZ+rDYeJuiGsO7acZgq2dLkqzVL
-        1/HyYb10g==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:46862)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1j82ER-0001iZ-72; Sat, 29 Feb 2020 13:32:39 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1j82EM-000306-En; Sat, 29 Feb 2020 13:32:34 +0000
-Date:   Sat, 29 Feb 2020 13:32:34 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Olof Johansson <olof@lixom.net>, Jon Nettleton <jon@solid-run.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>
-Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "Z.q. Hou" <zhiqiang.hou@nxp.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
- driver for NXP Layerscape SoCs
-Message-ID: <20200229133234.GA25745@shell.armlinux.org.uk>
-References: <CAOesGMjAQSfx1WZr6b1kNX=Exipj_f4X_f39Db7AxXr4xG4Tkg@mail.gmail.com>
- <DB8PR04MB6747DA8E1480DCF3EFF67C9284500@DB8PR04MB6747.eurprd04.prod.outlook.com>
- <20200110153347.GA29372@e121166-lin.cambridge.arm.com>
- <CAOesGMj9X1c7eJ4gX2QWXSNszPkRn68E4pkrSCxKMYJG7JHwsg@mail.gmail.com>
- <DB8PR04MB67473114B315FBCC97D0C6F9841D0@DB8PR04MB6747.eurprd04.prod.outlook.com>
- <CAOesGMieMXHWBO_p9YJXWWneC47g+TGDt9SVfvnp5tShj5gbPw@mail.gmail.com>
- <20200210152257.GD25745@shell.armlinux.org.uk>
- <20200229095550.GX25745@shell.armlinux.org.uk>
- <20200229110456.GY25745@shell.armlinux.org.uk>
- <20200229120828.GZ25745@shell.armlinux.org.uk>
+        id S1727069AbgB2OYN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 29 Feb 2020 09:24:13 -0500
+Received: from mga09.intel.com ([134.134.136.24]:20293 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727050AbgB2OYN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 29 Feb 2020 09:24:13 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Feb 2020 06:24:12 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,500,1574150400"; 
+   d="scan'208";a="232825654"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga008.fm.intel.com with ESMTP; 29 Feb 2020 06:24:10 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1j832H-0003a4-Nc; Sat, 29 Feb 2020 22:24:09 +0800
+Date:   Sat, 29 Feb 2020 22:23:27 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     kbuild-all@lists.01.org, iommu@lists.linux-foundation.org,
+        virtualization@lists.linux-foundation.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] iommu/virtio: Enable x86 support
+Message-ID: <202002292217.iPza6SpM%lkp@intel.com>
+References: <20200228172537.377327-4-jean-philippe@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200229120828.GZ25745@shell.armlinux.org.uk>
+In-Reply-To: <20200228172537.377327-4-jean-philippe@linaro.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Feb 29, 2020 at 12:08:28PM +0000, Russell King - ARM Linux admin wrote:
-> On Sat, Feb 29, 2020 at 11:04:56AM +0000, Russell King - ARM Linux admin wrote:
-> > On Sat, Feb 29, 2020 at 09:55:50AM +0000, Russell King - ARM Linux admin wrote:
-> > > On Mon, Feb 10, 2020 at 03:22:57PM +0000, Russell King - ARM Linux admin wrote:
-> > > > On Mon, Feb 10, 2020 at 04:12:30PM +0100, Olof Johansson wrote:
-> > > > > On Thu, Feb 6, 2020 at 11:57 AM Z.q. Hou <zhiqiang.hou@nxp.com> wrote:
-> > > > > >
-> > > > > > Hi Olof,
-> > > > > >
-> > > > > > Thanks a lot for your comments!
-> > > > > > And sorry for my delay respond!
-> > > > > 
-> > > > > Actually, they apply with only minor conflicts on top of current -next.
-> > > > > 
-> > > > > Bjorn, any chance we can get you to pick these up pretty soon? They
-> > > > > enable full use of a promising ARM developer system, the SolidRun
-> > > > > HoneyComb, and would be quite valuable for me and others to be able to
-> > > > > use with mainline or -next without any additional patches applied --
-> > > > > which this patchset achieves.
-> > > > > 
-> > > > > I know there are pending revisions based on feedback. I'll leave it up
-> > > > > to you and others to determine if that can be done with incremental
-> > > > > patches on top, or if it should be fixed before the initial patchset
-> > > > > is applied. But all in all, it's holding up adaption by me and surely
-> > > > > others of a very interesting platform -- I'm looking to replace my
-> > > > > aging MacchiatoBin with one of these and would need PCIe/NVMe to work
-> > > > > before I do.
-> > > > 
-> > > > If you're going to be using NVMe, make sure you use a power-fail safe
-> > > > version; I've already had one instance where ext4 failed to mount
-> > > > because of a corrupted journal using an XPG SX8200 after the Honeycomb
-> > > > Serror'd, and then I powered it down after a few hours before later
-> > > > booting it back up.
-> > > > 
-> > > > EXT4-fs (nvme0n1p2): INFO: recovery required on readonly filesystem
-> > > > EXT4-fs (nvme0n1p2): write access will be enabled during recovery
-> > > > JBD2: journal transaction 80849 on nvme0n1p2-8 is corrupt.
-> > > > EXT4-fs (nvme0n1p2): error loading journal
-> > > 
-> > > ... and last night, I just got more ext4fs errors on the NVMe, without
-> > > any unclean power cycles:
-> > > 
-> > > [73729.556544] EXT4-fs error (device nvme0n1p2): ext4_lookup:1700: inode #917524: comm rm: iget: checksum invalid
-> > > [73729.565354] Aborting journal on device nvme0n1p2-8.
-> > > [73729.568995] EXT4-fs (nvme0n1p2): Remounting filesystem read-only
-> > > [73729.569077] EXT4-fs error (device nvme0n1p2): ext4_journal_check_start:61: Detected aborted journal
-> > > [73729.573741] EXT4-fs error (device nvme0n1p2): ext4_lookup:1700: inode #917524: comm rm: iget: checksum invalid
-> > > [73729.593330] EXT4-fs error (device nvme0n1p2): ext4_lookup:1700: inode #917524: comm mv: iget: checksum invalid
-> > > 
-> > > The affected file is /var/backups/dpkg.status.6.gz
-> > > 
-> > > It was cleanly shut down and powered off on the 22nd February, booted
-> > > yesterday morning followed by another reboot a few minutes later.
-> > > 
-> > > What worries me is the fact that corruption has happened - and if that
-> > > happens to a file rather than an inode, it will likely go unnoticed
-> > > for a considerably longer time.
-> > > 
-> > > I think I'm getting to the point of deciding NVMe or the LX2160A to be
-> > > just too unreliable for serious use.  I hadn't noticed any issues when
-> > > using the rootfs on the eMMC, so it suggests either the NVMe is
-> > > unreliable, or there's a problem with PCIe on this platform (which we
-> > > kind of know about with Jon's GPU rendering issues.)
-> > 
-> > Adding Ted and Andreas...
-> > 
-> > Here's the debugfs -n "id" output for dpkg.status.5.gz (which is fine,
-> > and probably a similar size):
-> > 
-> > debugfs:  id <917527>
-> > 0000  a481 0000 30ff 0300 bd8e 475e bd77 4f5e  ....0.....G^.wO^
-> > 0020  29ca 345e 0000 0000 0000 0100 0002 0000  ).4^............
-> > 0040  0000 0800 0100 0000 0af3 0100 0400 0000  ................
-> > 0060  0000 0000 0000 0000 4000 0000 8087 3800  ........@.....8.
-> > 0100  0000 0000 0000 0000 0000 0000 0000 0000  ................
-> > *
-> > 0140  0000 0000 c40b 4c0a 0000 0000 0000 0000  ......L.........
-> > 0160  0000 0000 0000 0000 0000 0000 3884 0000  ............8...
-> > 0200  2000 95f2 44b8 bdc9 a4d2 9883 c861 dc92   ...D........a..
-> > 0220  bd31 4a5e ecc5 260c 0000 0000 0000 0000  .1J^..&.........
-> > 0240  0000 0000 0000 0000 0000 0000 0000 0000  ................
-> > *
-> > 
-> > and for the affected inode:
-> > debugfs:  id <917524>
-> > 0000  a481 0000 30ff 0300 3d3d 465e bd77 4f5e  ....0...==F^.wO^
-> > 0020  29ca 345e 0000 0000 0000 0100 0002 0000  ).4^............
-> > 0040  0000 0800 0100 0000 0af3 0100 0400 0000  ................
-> > 0060  0000 0000 0000 0000 4000 0000 c088 3800  ........@.....8.
-> > 0100  0000 0000 0000 0000 0000 0000 0000 0000  ................
-> > *
-> > 0140  0000 0000 5fc4 cfb4 0000 0000 0000 0000  ...._...........
-> > 0160  0000 0000 0000 0000 0000 0000 af23 0000  .............#..
-> > 0200  2000 1cc3 ac95 c9c8 a4d2 9883 583e addf   ...........X>..
-> > 0220  3de0 485e b04d 7151 0000 0000 0000 0000  =.H^.MqQ........
-> > 0240  0000 0000 0000 0000 0000 0000 0000 0000  ................
-> > *
-> > 
-> > and "stat" output:
-> > debugfs:  stat <917527>
-> > Inode: 917527   Type: regular    Mode:  0644   Flags: 0x80000
-> > Generation: 172755908    Version: 0x00000000:00000001
-> > User:     0   Group:     0   Project:     0   Size: 261936
-> > File ACL: 0
-> > Links: 1   Blockcount: 512
-> > Fragment:  Address: 0    Number: 0    Size: 0
-> >  ctime: 0x5e4f77bd:c9bdb844 -- Fri Feb 21 06:25:01 2020
-> >  atime: 0x5e478ebd:92dc61c8 -- Sat Feb 15 06:25:01 2020
-> >  mtime: 0x5e34ca29:8398d2a4 -- Sat Feb  1 00:45:29 2020
-> > crtime: 0x5e4a31bd:0c26c5ec -- Mon Feb 17 06:25:01 2020
-> > Size of extra inode fields: 32
-> > Inode checksum: 0xf2958438
-> > EXTENTS:
-> > (0-63):3704704-3704767
-> > debugfs:  stat <917524>
-> > Inode: 917524   Type: regular    Mode:  0644   Flags: 0x80000
-> > Generation: 3033515103    Version: 0x00000000:00000001
-> > User:     0   Group:     0   Project:     0   Size: 261936
-> > File ACL: 0
-> > Links: 1   Blockcount: 512
-> > Fragment:  Address: 0    Number: 0    Size: 0
-> >  ctime: 0x5e4f77bd:c8c995ac -- Fri Feb 21 06:25:01 2020
-> >  atime: 0x5e463d3d:dfad3e58 -- Fri Feb 14 06:25:01 2020
-> >  mtime: 0x5e34ca29:8398d2a4 -- Sat Feb  1 00:45:29 2020
-> > crtime: 0x5e48e03d:51714db0 -- Sun Feb 16 06:25:01 2020
-> > Size of extra inode fields: 32
-> > Inode checksum: 0xc31c23af
-> > EXTENTS:
-> > (0-63):3705024-3705087
-> > 
-> > When using sif (set_inode_info) to re-set the UID to 0 on this (so
-> > provoke the checksum to be updated):
-> > 
-> > debugfs:  id <917524>
-> > 0000  a481 0000 30ff 0300 3d3d 465e bd77 4f5e  ....0...==F^.wO^
-> > 0020  29ca 345e 0000 0000 0000 0100 0002 0000  ).4^............
-> > 0040  0000 0800 0100 0000 0af3 0100 0400 0000  ................
-> > 0060  0000 0000 0000 0000 4000 0000 c088 3800  ........@.....8.
-> > 0100  0000 0000 0000 0000 0000 0000 0000 0000  ................
-> > *
-> > 0140  0000 0000 5fc4 cfb4 0000 0000 0000 0000  ...._...........
-> > 0160  0000 0000 0000 0000 0000 0000 b61f 0000  ................
-> >                                     ^^^^
-> > 0200  2000 aa15 ac95 c9c8 a4d2 9883 583e addf   ...........X>..
-> >            ^^^^
-> > 0220  3de0 485e b04d 7151 0000 0000 0000 0000  =.H^.MqQ........
-> > 0240  0000 0000 0000 0000 0000 0000 0000 0000  ................
-> > *
-> > 
-> > The values with "^^^^" are the checksum, which are the only values
-> > that have changed here - the checksum is now 0x15aa1fb6 rather than
-> > 0xc31c23af.
-> > 
-> > With that changed, running e2fsck -n on the filesystem results in a
-> > pass:
-> > 
-> > root@cex7:~# e2fsck -n /dev/nvme0n1p2
-> > e2fsck 1.44.5 (15-Dec-2018)
-> > Warning: skipping journal recovery because doing a read-only filesystem check.
-> > /dev/nvme0n1p2 contains a file system with errors, check forced.
-> > Pass 1: Checking inodes, blocks, and sizes
-> > Pass 2: Checking directory structure
-> > Pass 3: Checking directory connectivity
-> > Pass 4: Checking reference counts
-> > Pass 5: Checking group summary information
-> > /dev/nvme0n1p2: 121163/2097152 files (0.1% non-contiguous), 1349227/8388608 blocks
-> > 
-> > and the file now appears to be intact (being a gzip file, gzip verifies
-> > that the contents are now as it expects.)
-> > 
-> > So, it looks like the _only_ issue is that the checksum on the inode
-> > became invalid, which seems to suggest that it *isn't* a NVMe nor PCIe
-> > issue.
-> > 
-> > I wonder whether the journal would contain anything useful, but I don't
-> > know how to use debugfs to find that out - while I can dump the journal,
-> > I'd need to know which block contains the inode, and then work out where
-> > in the journal that block was going to be written.  If that would help,
-> > let me know ASAP as I'll hold off rebooting the platform for a while
-> > (which means the filesystem will remain as-is - and yes, I have the
-> > debugfs file for e2undo to put stuff back.)  Maybe it's possible to pull
-> > the block number out of the e2undo file?
-> 
-> Okay, the inode was stored in block 3670049, and the journal appears
-> to contains no entries for that block.
-> 
-> > tune2fs says:
-> > 
-> > Checksum type:            crc32c
-> > Checksum:                 0x682f91b9
-> > 
-> > I guess this is what is used to checksum the inodes?  If so, it's using
-> > the kernel's crc32c-generic driver (according to /proc/crypto).
-> > 
-> > Could it be a race condition, or some problem that's specific to the
-> > ARM64 kernel that's provoking this corruption?
-> 
-> Something else occurs to me:
-> 
-> root@cex7:~# ls -li --time=ctime --full-time /var/backups/dpkg.status*
-> 917622 -rw-r--r-- 1 root root 999052 2020-02-29 06:25:01.852231277 +0000 /var/backups/dpkg.status
-> 917583 -rw-r--r-- 1 root root 999052 2020-02-21 06:25:01.958160960 +0000 /var/backups/dpkg.status.0
-> 917520 -rw-r--r-- 1 root root 261936 2020-02-21 06:25:01.954161050 +0000 /var/backups/dpkg.status.1.gz
-> 917531 -rw-r--r-- 1 root root 261936 2020-02-21 06:25:01.854163293 +0000 /var/backups/dpkg.status.2.gz
-> 917532 -rw-r--r-- 1 root root 261936 2020-02-21 06:25:01.850163383 +0000 /var/backups/dpkg.status.3.gz
-> 917509 -rw-r--r-- 1 root root 261936 2020-02-21 06:25:01.850163383 +0000 /var/backups/dpkg.status.4.gz
-> 917527 -rw-r--r-- 1 root root 261936 2020-02-21 06:25:01.846163473 +0000 /var/backups/dpkg.status.5.gz
-> 917524 -rw-r--r-- 1 root root 261936 2020-02-21 06:25:01.842163563 +0000 /var/backups/dpkg.status.6.gz
-> 
-> So the last time that the kernel changed inode 917524 was on the 21th
-> of February, probably when it was last renamed by logrotate, and like
-> several other files stored in the same inode block.  Yet, _only_ the
-> checksum for 917524 was corrupted, the rest were fine.
-> 
-> I would guess that logrotate behaves as follows:
-> - remove /var/backups/dpkg.status.6.gz
-> - rename /var/backups/dpkg.status.5.gz to /var/backups/dpkg.status.6.gz
-> - repeat for other dpkg.status.*.gz files
-> - gzip /var/backups/dpkg.status.0 to /var/backups/dpkg.status.1.gz
-> - rename /var/backups/dpkg.status to /var/backups/dpkg.status.0
-> - create new /var/backups/dpkg.status
-> 
-> Looking at the inode block in the e2undo file, inode 917524 is at
-> offset 0x300 into the block, which means the first inode in the
-> block is 917521 and the last is 917536, which means we have several
-> of the dpkg.status.* files that are stored in this inode block.
-> 
-> That would've meant that the inode for /var/backups/dpkg.status.6.gz
-> would have been updated just before the inode for
-> /var/backups/dpkg.status.5.gz.  I wonder if the inode block was
-> written out somehow out of order, with the ctime for
-> /var/backups/dpkg.status.6.gz having been updated but not the checksum
-> as a result of the later changes - maybe as a result of having
-> executed on a different CPU?  That would suggest a weakness in the
-> ARM64 locking implementation, coherency issues, or interconnect issues.
+Hi Jean-Philippe,
 
-Looking at the errata configuration, I have:
+I love your patch! Perhaps something to improve:
 
-# ARM errata workarounds via the alternatives framework
-#
-CONFIG_ARM64_WORKAROUND_CLEAN_CACHE=y
-CONFIG_ARM64_ERRATUM_826319=y
-CONFIG_ARM64_ERRATUM_827319=y
-CONFIG_ARM64_ERRATUM_824069=y
-CONFIG_ARM64_ERRATUM_819472=y
-CONFIG_ARM64_ERRATUM_832075=y
-CONFIG_ARM64_ERRATUM_834220=y
-CONFIG_ARM64_ERRATUM_845719=y
-CONFIG_ARM64_ERRATUM_843419=y
-CONFIG_ARM64_ERRATUM_1024718=y
-CONFIG_ARM64_ERRATUM_1418040=y
-CONFIG_ARM64_ERRATUM_1165522=y
-CONFIG_ARM64_ERRATUM_1286807=y
-CONFIG_ARM64_ERRATUM_1319367=y
-CONFIG_ARM64_ERRATUM_1463225=y
-# CONFIG_ARM64_ERRATUM_1542419 is not set
-# CONFIG_CAVIUM_ERRATUM_22375 is not set
-# CONFIG_CAVIUM_ERRATUM_23154 is not set
-# CONFIG_CAVIUM_ERRATUM_27456 is not set
-# CONFIG_CAVIUM_ERRATUM_30115 is not set
-# CONFIG_CAVIUM_TX2_ERRATUM_219 is not set
-CONFIG_QCOM_FALKOR_ERRATUM_1003=y
-CONFIG_ARM64_WORKAROUND_REPEAT_TLBI=y
-CONFIG_QCOM_FALKOR_ERRATUM_1009=y
-CONFIG_QCOM_QDF2400_ERRATUM_0065=y
-# CONFIG_SOCIONEXT_SYNQUACER_PREITS is not set
-# CONFIG_HISILICON_ERRATUM_161600802 is not set
-CONFIG_QCOM_FALKOR_ERRATUM_E1041=y
-# CONFIG_FUJITSU_ERRATUM_010001 is not set
-# end of ARM errata workarounds via the alternatives framework
-...
-CONFIG_FSL_ERRATUM_A008585=y
-CONFIG_HISILICON_ERRATUM_161010101=y
-CONFIG_ARM64_ERRATUM_858921=y
+[auto build test WARNING on iommu/next]
+[cannot apply to pci/next linus/master v5.6-rc3 next-20200228]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
 
-so I don't think it's a missing errata kconfig setting, unless there's
-an erratum that isn't in v5.5 that's necessary.
+url:    https://github.com/0day-ci/linux/commits/Jean-Philippe-Brucker/virtio-iommu-on-x86-and-non-devicetree-platforms/20200229-085019
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git next
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.1-173-ge0787745-dirty
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+
+
+sparse warnings: (new ones prefixed by >>)
+
+>> drivers/iommu/virtio-iommu.c:1024:9: sparse: sparse: incompatible types in comparison expression (different base types):
+>> drivers/iommu/virtio-iommu.c:1024:9: sparse:    restricted __le64 *
+>> drivers/iommu/virtio-iommu.c:1024:9: sparse:    unsigned long long *
+   drivers/iommu/virtio-iommu.c:1036:9: sparse: sparse: incompatible types in comparison expression (different base types):
+   drivers/iommu/virtio-iommu.c:1036:9: sparse:    restricted __le64 *
+   drivers/iommu/virtio-iommu.c:1036:9: sparse:    unsigned long long *
+   drivers/iommu/virtio-iommu.c:1040:9: sparse: sparse: incompatible types in comparison expression (different base types):
+   drivers/iommu/virtio-iommu.c:1040:9: sparse:    restricted __le64 *
+   drivers/iommu/virtio-iommu.c:1040:9: sparse:    unsigned long long *
+   drivers/iommu/virtio-iommu.c:1044:9: sparse: sparse: incompatible types in comparison expression (different base types):
+>> drivers/iommu/virtio-iommu.c:1044:9: sparse:    restricted __le32 *
+>> drivers/iommu/virtio-iommu.c:1044:9: sparse:    unsigned int *
+   drivers/iommu/virtio-iommu.c:1048:9: sparse: sparse: incompatible types in comparison expression (different base types):
+   drivers/iommu/virtio-iommu.c:1048:9: sparse:    restricted __le32 *
+   drivers/iommu/virtio-iommu.c:1048:9: sparse:    unsigned int *
+   drivers/iommu/virtio-iommu.c:1052:9: sparse: sparse: incompatible types in comparison expression (different base types):
+   drivers/iommu/virtio-iommu.c:1052:9: sparse:    restricted __le32 *
+   drivers/iommu/virtio-iommu.c:1052:9: sparse:    unsigned int *
+
+vim +1024 drivers/iommu/virtio-iommu.c
+
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15   996  
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15   997  static int viommu_probe(struct virtio_device *vdev)
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15   998  {
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15   999  	struct device *parent_dev = vdev->dev.parent;
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1000  	struct viommu_dev *viommu = NULL;
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1001  	struct device *dev = &vdev->dev;
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1002  	u64 input_start = 0;
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1003  	u64 input_end = -1UL;
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1004  	int ret;
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1005  
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1006  	if (!virtio_has_feature(vdev, VIRTIO_F_VERSION_1) ||
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1007  	    !virtio_has_feature(vdev, VIRTIO_IOMMU_F_MAP_UNMAP))
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1008  		return -ENODEV;
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1009  
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1010  	viommu = devm_kzalloc(dev, sizeof(*viommu), GFP_KERNEL);
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1011  	if (!viommu)
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1012  		return -ENOMEM;
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1013  
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1014  	spin_lock_init(&viommu->request_lock);
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1015  	ida_init(&viommu->domain_ids);
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1016  	viommu->dev = dev;
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1017  	viommu->vdev = vdev;
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1018  	INIT_LIST_HEAD(&viommu->requests);
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1019  
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1020  	ret = viommu_init_vqs(viommu);
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1021  	if (ret)
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1022  		return ret;
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1023  
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15 @1024  	virtio_cread(vdev, struct virtio_iommu_config, page_size_mask,
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1025  		     &viommu->pgsize_bitmap);
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1026  
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1027  	if (!viommu->pgsize_bitmap) {
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1028  		ret = -EINVAL;
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1029  		goto err_free_vqs;
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1030  	}
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1031  
+ae24fb49d01103 Jean-Philippe Brucker 2019-07-22  1032  	viommu->map_flags = VIRTIO_IOMMU_MAP_F_READ | VIRTIO_IOMMU_MAP_F_WRITE;
+ae24fb49d01103 Jean-Philippe Brucker 2019-07-22  1033  	viommu->last_domain = ~0U;
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1034  
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1035  	/* Optional features */
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1036  	virtio_cread_feature(vdev, VIRTIO_IOMMU_F_INPUT_RANGE,
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1037  			     struct virtio_iommu_config, input_range.start,
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1038  			     &input_start);
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1039  
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1040  	virtio_cread_feature(vdev, VIRTIO_IOMMU_F_INPUT_RANGE,
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1041  			     struct virtio_iommu_config, input_range.end,
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1042  			     &input_end);
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1043  
+ae24fb49d01103 Jean-Philippe Brucker 2019-07-22 @1044  	virtio_cread_feature(vdev, VIRTIO_IOMMU_F_DOMAIN_RANGE,
+ae24fb49d01103 Jean-Philippe Brucker 2019-07-22  1045  			     struct virtio_iommu_config, domain_range.start,
+ae24fb49d01103 Jean-Philippe Brucker 2019-07-22  1046  			     &viommu->first_domain);
+ae24fb49d01103 Jean-Philippe Brucker 2019-07-22  1047  
+ae24fb49d01103 Jean-Philippe Brucker 2019-07-22  1048  	virtio_cread_feature(vdev, VIRTIO_IOMMU_F_DOMAIN_RANGE,
+ae24fb49d01103 Jean-Philippe Brucker 2019-07-22  1049  			     struct virtio_iommu_config, domain_range.end,
+ae24fb49d01103 Jean-Philippe Brucker 2019-07-22  1050  			     &viommu->last_domain);
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1051  
+2a5a314874450d Jean-Philippe Brucker 2019-01-15  1052  	virtio_cread_feature(vdev, VIRTIO_IOMMU_F_PROBE,
+2a5a314874450d Jean-Philippe Brucker 2019-01-15  1053  			     struct virtio_iommu_config, probe_size,
+2a5a314874450d Jean-Philippe Brucker 2019-01-15  1054  			     &viommu->probe_size);
+2a5a314874450d Jean-Philippe Brucker 2019-01-15  1055  
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1056  	viommu->geometry = (struct iommu_domain_geometry) {
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1057  		.aperture_start	= input_start,
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1058  		.aperture_end	= input_end,
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1059  		.force_aperture	= true,
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1060  	};
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1061  
+ae24fb49d01103 Jean-Philippe Brucker 2019-07-22  1062  	if (virtio_has_feature(vdev, VIRTIO_IOMMU_F_MMIO))
+ae24fb49d01103 Jean-Philippe Brucker 2019-07-22  1063  		viommu->map_flags |= VIRTIO_IOMMU_MAP_F_MMIO;
+ae24fb49d01103 Jean-Philippe Brucker 2019-07-22  1064  
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1065  	viommu_ops.pgsize_bitmap = viommu->pgsize_bitmap;
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1066  
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1067  	virtio_device_ready(vdev);
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1068  
+169a126c6e88a9 Jean-Philippe Brucker 2019-01-15  1069  	/* Populate the event queue with buffers */
+169a126c6e88a9 Jean-Philippe Brucker 2019-01-15  1070  	ret = viommu_fill_evtq(viommu);
+169a126c6e88a9 Jean-Philippe Brucker 2019-01-15  1071  	if (ret)
+169a126c6e88a9 Jean-Philippe Brucker 2019-01-15  1072  		goto err_free_vqs;
+169a126c6e88a9 Jean-Philippe Brucker 2019-01-15  1073  
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1074  	ret = iommu_device_sysfs_add(&viommu->iommu, dev, NULL, "%s",
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1075  				     virtio_bus_name(vdev));
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1076  	if (ret)
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1077  		goto err_free_vqs;
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1078  
+136495ceb43b56 Jean-Philippe Brucker 2020-02-28  1079  	virt_set_iommu_ops(dev->parent, &viommu_ops);
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1080  	iommu_device_set_ops(&viommu->iommu, &viommu_ops);
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1081  	iommu_device_set_fwnode(&viommu->iommu, parent_dev->fwnode);
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1082  
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1083  	iommu_device_register(&viommu->iommu);
+edcd69ab9a323b Jean-Philippe Brucker 2019-01-15  1084  
+
+:::::: The code at line 1024 was first introduced by commit
+:::::: edcd69ab9a323b7ac7a86e1c44b6c9c46598391f iommu: Add virtio-iommu driver
+
+:::::: TO: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+:::::: CC: Michael S. Tsirkin <mst@redhat.com>
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
