@@ -2,93 +2,61 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A244174DE0
-	for <lists+linux-pci@lfdr.de>; Sun,  1 Mar 2020 15:59:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B4A917538F
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Mar 2020 07:13:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726418AbgCAO7l (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 1 Mar 2020 09:59:41 -0500
-Received: from mail.rc.ru ([151.236.222.147]:38482 "EHLO mail.rc.ru"
+        id S1726232AbgCBGN0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 2 Mar 2020 01:13:26 -0500
+Received: from mail.dsns.gov.ua ([194.0.148.101]:47304 "EHLO mail.dsns.gov.ua"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726151AbgCAO7l (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 1 Mar 2020 09:59:41 -0500
-X-Greylist: delayed 1771 seconds by postgrey-1.27 at vger.kernel.org; Sun, 01 Mar 2020 09:59:39 EST
-Received: from mail.rc.ru ([2a01:7e00:e000:1bf::1]:55860)
-        by mail.rc.ru with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ink@jurassic.park.msu.ru>)
-        id 1j8Pba-0006Aa-1m; Sun, 01 Mar 2020 14:30:06 +0000
-Date:   Sun, 1 Mar 2020 14:30:04 +0000
-From:   Ivan Kokshaysky <ink@jurassic.park.msu.ru>
-To:     Matt Turner <mattst88@gmail.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Yinghai Lu <yinghai@kernel.org>, linux-pci@vger.kernel.org,
-        linux-alpha <linux-alpha@vger.kernel.org>,
-        Richard Henderson <rth@twiddle.net>,
-        Jay Estabrook <jay.estabrook@gmail.com>
-Subject: Re: Some Alphas broken by f75b99d5a77d (PCI: Enforce bus address
- limits in resource allocation)
-Message-ID: <20200301143004.GA20720@mail.rc.ru>
-References: <CAEdQ38GUhL0R4c7ZjEZv89TmqQ0cwhnvBawxuXonSb9On=+B6A@mail.gmail.com>
- <20200222165556.GA207281@google.com>
- <CAEdQ38EzZfUJA-8zg-DgczYTwkxqFL-AThxu0_fC2V-GkXGi2Q@mail.gmail.com>
+        id S1725446AbgCBGNZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 2 Mar 2020 01:13:25 -0500
+X-Greylist: delayed 25093 seconds by postgrey-1.27 at vger.kernel.org; Mon, 02 Mar 2020 01:13:21 EST
+Received: from localhost (localhost [127.0.0.1])
+        by mail.dsns.gov.ua (Postfix) with ESMTP id BBE291FC7B1A;
+        Sun,  1 Mar 2020 22:27:30 +0200 (EET)
+Received: from mail.dsns.gov.ua ([127.0.0.1])
+        by localhost (mail.dsns.gov.ua [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id S75rTB7JEydT; Sun,  1 Mar 2020 22:27:30 +0200 (EET)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.dsns.gov.ua (Postfix) with ESMTP id 5BA411FA620B;
+        Sun,  1 Mar 2020 22:21:45 +0200 (EET)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.dsns.gov.ua 5BA411FA620B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dsns.gov.ua;
+        s=1E60DAC0-2607-11E9-81E6-7A77C2B36653; t=1583094106;
+        bh=njlCkWFc0hcw8eBX6ul4CN7Q0eDgIqGtksJn7ge99kc=;
+        h=Date:From:Message-ID:MIME-Version;
+        b=MNqv7wxPb5ptLZpegGrPa1iHEdOJdTNOKGb2U9Q58t3BFdT49XFh6vgS/zn8rC/5g
+         kv0SFE7rEwzovJv/Mhtz0k+GVvpPt7OCD6QywRS3XLVVTQ78OZWx7bJkET3c0Qby4R
+         GlMOw+XvvGVgeWiXN9SkeMoUw7yQdk4qHeiKR3brBdFqXyTdhi1fcOA0x5ea9y4Mdf
+         uJ+lLv+3ajPY0nYC6Y5zKKiMiGl1+zwhzFU1RmzBc/0/750Vn7x0OrSXsrCa3svrBg
+         LELzoQhKe29LUs7spnxLrcWYu/C9WVYycts6au+voFgGIbvN7QkHkUp9tFmmQWi/eZ
+         UlVPHz07I6+5Q==
+X-Virus-Scanned: amavisd-new at dsns.gov.ua
+Received: from mail.dsns.gov.ua ([127.0.0.1])
+        by localhost (mail.dsns.gov.ua [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 6j_p4uF_JICh; Sun,  1 Mar 2020 22:21:45 +0200 (EET)
+Received: from mail.dsns.gov.ua (localhost [127.0.0.1])
+        by mail.dsns.gov.ua (Postfix) with ESMTP id A04FF1FC5450;
+        Sun,  1 Mar 2020 21:59:28 +0200 (EET)
+Date:   Sun, 1 Mar 2020 21:59:28 +0200 (EET)
+From:   Peter Wong <sport08@dsns.gov.ua>
+Reply-To: petrwong@hotmail.com
+Message-ID: <464635221.3674166.1583092768623.JavaMail.zimbra@dsns.gov.ua>
+Subject: Hello
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEdQ38EzZfUJA-8zg-DgczYTwkxqFL-AThxu0_fC2V-GkXGi2Q@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [5.154.174.49, 172.68.102.151]
+X-Mailer: Zimbra 8.8.15_GA_3899 (zclient/8.8.15_GA_3899)
+Thread-Index: 3O/8ccrlbZdxQ9U2SgkVgLNKDcW1Og==
+Thread-Topic: Hello
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 03:51:01PM -0800, Matt Turner wrote:
-> On Sat, Feb 22, 2020 at 8:55 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > On Mon, Apr 16, 2018 at 07:33:57AM -0700, Matt Turner wrote:
-> > > Commit f75b99d5a77d63f20e07bd276d5a427808ac8ef6 (PCI: Enforce bus
-> > > address limits in resource allocation) broke Alpha systems using
-> > > CONFIG_ALPHA_NAUTILUS. Alpha is 64-bit, but Nautilus systems use a
-> > > 32-bit AMD 751/761 chipset. arch/alpha/kernel/sys_nautilus.c maps PCI
-> > > into the upper addresses just below 4GB.
-> > >
-> > > I can get a working kernel by ifdef'ing out the code in
-> > > drivers/pci/bus.c:pci_bus_alloc_resource. We can't tie
-> > > PCI_BUS_ADDR_T_64BIT to ALPHA_NAUTILUS without breaking generic
-> > > kernels.
-> > >
-> > > How can we get Nautilus working again?
-> >
-> > I don't see a resolution in this thread, so I assume this is still
-> > broken?  Anybody have any more ideas?
-> 
-> Indeed, still broken.
-> 
-> I can add Kconfig logic to unselect ARCH_DMA_ADDR_T_64BIT if
-> ALPHA_NAUTILUS, but then generic kernels won't work on Nautilus. It
-> doesn't look like we have any way of opting out of
-> ARCH_DMA_ADDR_T_64BIT at runtime, and doing enough plumbing to make
-> that work is not worth it for such niche hardware. Maybe removing
-> Nautilus from the generic kernel build is what I should do until such
-> a time that we really fix this?
-> 
-> Or maybe I could put a hack in pci.c that more or less undoes
-> d56dbf5bab8c on Nautilus. #if defined CONFIG_ARCH_DMA_ADDR_T_64BIT &&
-> !defined SYS_NAUTILUS.
-> 
-> Or maybe I just need to take a weekend and try to understand the PCI
-> code, instead of applying patches I don't understand and praying :)
-> 
-> Thoughts? Other suggestions?
 
-Well, it's difficult to debug without hardware in hand.
 
-Actually, I have one of those machines, but I had to write it off
-5-6 years ago as it started crashing like crazy, sometimes in SRM
-console even before boot. Interestingly enough, the problem might be
-not with the motherboard as I thought, but with the video adapter -
-yesterday I tried this UP1500 without AGP card, it booted fine and
-worked a couple of hours without any problem, which is pretty
-encouraging.
-
-So next week I'm going to return the poor guy to service (put it
-into enclosure, replace old fans and so on). Then we will see.
+Can we talk now?
