@@ -2,170 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 92ABD176765
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Mar 2020 23:33:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 678171767A9
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Mar 2020 23:47:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726758AbgCBWdO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 2 Mar 2020 17:33:14 -0500
-Received: from mga05.intel.com ([192.55.52.43]:41130 "EHLO mga05.intel.com"
+        id S1726785AbgCBWrf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 2 Mar 2020 17:47:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726752AbgCBWdN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 2 Mar 2020 17:33:13 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 14:33:12 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,508,1574150400"; 
-   d="scan'208";a="258122045"
-Received: from jekeller-mobl1.amr.corp.intel.com (HELO [134.134.177.106]) ([134.134.177.106])
-  by orsmga002.jf.intel.com with ESMTP; 02 Mar 2020 14:33:12 -0800
-Subject: Re: [PATCH 1/5] pci: introduce pci_get_dsn
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, netdev@vger.kernel.org,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        QLogic-Storage-Upstream@cavium.com,
-        Michael Chan <michael.chan@broadcom.com>
-References: <20200302222510.GA172509@google.com>
-From:   Jacob Keller <jacob.e.keller@intel.com>
-Organization: Intel Corporation
-Message-ID: <ccec830f-b932-366a-de61-46159a99b5c9@intel.com>
-Date:   Mon, 2 Mar 2020 14:33:12 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1726728AbgCBWrf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 2 Mar 2020 17:47:35 -0500
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36EB8208C3;
+        Mon,  2 Mar 2020 22:47:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583189254;
+        bh=G5VGNDsOUPLinc1753Al2KL9STYmJ6m3x0fpad9Cwfk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=mU8uZkSw1wxdHfFSi3rAtL6aNWR0eSieMXdoUEKXLOgJifSYOlGI0WUBJwXr1hJph
+         pJgk4FOCZrWB/IFne7rtBSXL6PBpW9f9rmf0XTrsj89DalDX1gCY7snsldLp7ad0OJ
+         C92PYps9Dlb/dxktqefQDcKUyHkIG3iEuJ4+wPZ8=
+Date:   Mon, 2 Mar 2020 16:47:32 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Matt Turner <mattst88@gmail.com>
+Cc:     Yinghai Lu <yinghai@kernel.org>, linux-pci@vger.kernel.org,
+        linux-alpha <linux-alpha@vger.kernel.org>,
+        Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Jay Estabrook <jay.estabrook@gmail.com>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: Some Alphas broken by f75b99d5a77d (PCI: Enforce bus address
+ limits in resource allocation)
+Message-ID: <20200302224732.GA175863@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20200302222510.GA172509@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEdQ38EzZfUJA-8zg-DgczYTwkxqFL-AThxu0_fC2V-GkXGi2Q@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 3/2/2020 2:25 PM, Bjorn Helgaas wrote:
->   PCI: Introduce pci_get_dsn()
-> 
-> I learned this from "git log --oneline drivers/pci/pci.c".  It looks
-> like the other patches could benefit from this as well.
-> 
+[+cc Nicholas, Ben, beginning of thread:
+https://lore.kernel.org/r/CAEdQ38GUhL0R4c7ZjEZv89TmqQ0cwhnvBawxuXonSb9On=+B6A@mail.gmail.com]
 
-Sure, will follow that precedent.
-
-> On Thu, Feb 27, 2020 at 02:36:31PM -0800, Jacob Keller wrote:
->> Several device drivers read their Device Serial Number from the PCIe
->> extended config space.
->>
->> Introduce a new helper function, pci_get_dsn, which will read the
->> eight bytes of the DSN into the provided buffer.
+On Fri, Feb 28, 2020 at 03:51:01PM -0800, Matt Turner wrote:
+> On Sat, Feb 22, 2020 at 8:55 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >
+> > On Mon, Apr 16, 2018 at 07:33:57AM -0700, Matt Turner wrote:
+> > > Commit f75b99d5a77d63f20e07bd276d5a427808ac8ef6 (PCI: Enforce bus
+> > > address limits in resource allocation) broke Alpha systems using
+> > > CONFIG_ALPHA_NAUTILUS. Alpha is 64-bit, but Nautilus systems use a
+> > > 32-bit AMD 751/761 chipset. arch/alpha/kernel/sys_nautilus.c maps PCI
+> > > into the upper addresses just below 4GB.
+> > >
+> > > I can get a working kernel by ifdef'ing out the code in
+> > > drivers/pci/bus.c:pci_bus_alloc_resource. We can't tie
+> > > PCI_BUS_ADDR_T_64BIT to ALPHA_NAUTILUS without breaking generic
+> > > kernels.
+> > >
+> > > How can we get Nautilus working again?
+> >
+> > I don't see a resolution in this thread, so I assume this is still
+> > broken?  Anybody have any more ideas?
 > 
-> "pci_get_dsn()"
+> Indeed, still broken.
 > 
->> Signed-off-by: Jacob Keller <jacob.e.keller@intel.com>
->> Cc: Bjorn Helgaas <bhelgaas@google.com>
->> Cc: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
->> Cc: QLogic-Storage-Upstream@cavium.com
->> Cc: Michael Chan <michael.chan@broadcom.com>
->> ---
->>  drivers/pci/pci.c   | 33 +++++++++++++++++++++++++++++++++
->>  include/linux/pci.h |  5 +++++
->>  2 files changed, 38 insertions(+)
->>
->> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
->> index d828ca835a98..12d8101724d7 100644
->> --- a/drivers/pci/pci.c
->> +++ b/drivers/pci/pci.c
->> @@ -33,6 +33,7 @@
->>  #include <linux/pci-ats.h>
->>  #include <asm/setup.h>
->>  #include <asm/dma.h>
->> +#include <asm/unaligned.h>
->>  #include <linux/aer.h>
->>  #include "pci.h"
->>  
->> @@ -557,6 +558,38 @@ int pci_find_ext_capability(struct pci_dev *dev, int cap)
->>  }
->>  EXPORT_SYMBOL_GPL(pci_find_ext_capability);
->>  
->> +/**
->> + * pci_get_dsn - Read the 8-byte Device Serial Number
->> + * @dev: PCI device to query
->> + * @dsn: storage for the DSN. Must be at least 8 bytes
->> + *
->> + * Looks up the PCI_EXT_CAP_ID_DSN and reads the 8 bytes into the dsn storage.
->> + * Returns -EOPNOTSUPP if the device does not have the capability.
->> + */
->> +int pci_get_dsn(struct pci_dev *dev, u8 dsn[])
->> +{
->> +	u32 dword;
->> +	int pos;
->> +
->> +
->> +	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DSN);
->> +	if (!pos)
->> +		return -EOPNOTSUPP;
->> +
->> +	/*
->> +	 * The Device Serial Number is two dwords offset 4 bytes from the
->> +	 * capability position.
->> +	 */
->> +	pos += 4;
->> +	pci_read_config_dword(dev, pos, &dword);
->> +	put_unaligned_le32(dword, &dsn[0]);
->> +	pci_read_config_dword(dev, pos + 4, &dword);
->> +	put_unaligned_le32(dword, &dsn[4]);
+> I can add Kconfig logic to unselect ARCH_DMA_ADDR_T_64BIT if
+> ALPHA_NAUTILUS, but then generic kernels won't work on Nautilus. It
+> doesn't look like we have any way of opting out of
+> ARCH_DMA_ADDR_T_64BIT at runtime, and doing enough plumbing to make
+> that work is not worth it for such niche hardware. Maybe removing
+> Nautilus from the generic kernel build is what I should do until such
+> a time that we really fix this?
 > 
-> Since the serial number is a 64-bit value, can we just return a u64
-> and let the caller worry about any alignment and byte-order issues?
+> Or maybe I could put a hack in pci.c that more or less undoes
+> d56dbf5bab8c on Nautilus. #if defined CONFIG_ARCH_DMA_ADDR_T_64BIT &&
+> !defined SYS_NAUTILUS.
 > 
-> This would be the only use of asm/unaligned.h in driver/pci, and I
-> don't think DSN should be that special.
+> Or maybe I just need to take a weekend and try to understand the PCI
+> code, instead of applying patches I don't understand and praying :)
 
-I suppose that's fair, but it ends up leaving most callers having to fix
-this immediately after calling this function.
+I don't have any *useful* ideas, but I think we did screw up the PCI
+resource discovery when we started assuming that we know the host
+bridge apertures up front.
 
-> 
-> I think it's OK if we return 0 if the device doesn't have a DSN
-> capability.  A DSN that actually contains a zero serial number would
-> be dubious at best.
-
-Hmm. I was trying to match how pre-existing code behaved, based on the
-ice and bnxt drivers.
-
-By returning 0s, we'd have to then perform a memcmp or something to
-catch it.
-
-> 
->> +	return 0;
->> +}
->> +EXPORT_SYMBOL_GPL(pci_get_dsn);
->> +
->>  static int __pci_find_next_ht_cap(struct pci_dev *dev, int pos, int ht_cap)
->>  {
->>  	int rc, ttl = PCI_FIND_CAP_TTL;
->> diff --git a/include/linux/pci.h b/include/linux/pci.h
->> index 3840a541a9de..883562323df3 100644
->> --- a/include/linux/pci.h
->> +++ b/include/linux/pci.h
->> @@ -1045,6 +1045,8 @@ int pci_find_ht_capability(struct pci_dev *dev, int ht_cap);
->>  int pci_find_next_ht_capability(struct pci_dev *dev, int pos, int ht_cap);
->>  struct pci_bus *pci_find_next_bus(const struct pci_bus *from);
->>  
->> +int pci_get_dsn(struct pci_dev *dev, u8 dsn[]);
->> +
->>  struct pci_dev *pci_get_device(unsigned int vendor, unsigned int device,
->>  			       struct pci_dev *from);
->>  struct pci_dev *pci_get_subsys(unsigned int vendor, unsigned int device,
->> @@ -1699,6 +1701,9 @@ static inline int pci_find_next_capability(struct pci_dev *dev, u8 post,
->>  static inline int pci_find_ext_capability(struct pci_dev *dev, int cap)
->>  { return 0; }
->>  
->> +static inline int pci_get_dsn(struct pci_dev *dev, u8 dsn[])
->> +{ return -EOPNOTSUPP; }
->> +
->>  /* Power management related routines */
->>  static inline int pci_save_state(struct pci_dev *dev) { return 0; }
->>  static inline void pci_restore_state(struct pci_dev *dev) { }
->> -- 
->> 2.25.0.368.g28a2d05eebfb
->>
+That's generally true for many ACPI and DT systems, but in principle,
+we *should* be able to enumerate the devices and learn their resource
+requirements before computing the required host bridge apertures and
+assigning the BARs.
