@@ -2,118 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 234351762BA
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Mar 2020 19:30:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BE8E11762FD
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Mar 2020 19:45:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727491AbgCBSar (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 2 Mar 2020 13:30:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52208 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727268AbgCBSar (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 2 Mar 2020 13:30:47 -0500
-Received: from [10.92.140.24] (unknown [167.220.149.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87CA124676;
-        Mon,  2 Mar 2020 18:30:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583173846;
-        bh=2eVK1AtuSn8+UNKrDC4S7gLe4Rv5HLzujGn3iumTNBk=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=dJNxp8TQgrZIb8wKphs5RGuslTef4V1oP4Yri5ZcqJ1BrDOMciyA7d65zeMLJbIZ5
-         kI0tLYxDST1x22lJT7dwvKBKddZzq+Hrtf0V1XEbu17ZUF0pgDBn+8iTpGLl0jcG2/
-         k9bi8VjOJgQlUe3NNJWsxMRtw3rUBHrcA+kNXsgs=
-Subject: Re: [PATCH 1/3] PCI: Make PCIE_RESET_READY_POLL_MS configurable
-To:     "Raj, Ashok" <ashok.raj@intel.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        "Spassov, Stanislav" <stanspas@amazon.de>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "Wang, Wei" <wawei@amazon.de>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "Schoenherr, Jan H." <jschoenh@amazon.de>,
-        "rajatja@google.com" <rajatja@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
-References: <20200227214534.GA143139@google.com>
- <e162efcd-70fd-3390-2452-4915af1c9171@kernel.org>
- <20200228021855.GA57330@otc-nc-03>
- <51d5948e-8d53-432e-8ec2-46704c3e8d41@kernel.org>
- <20200302173728.GA77115@otc-nc-03>
-From:   Sinan Kaya <okaya@kernel.org>
-Autocrypt: addr=okaya@kernel.org; keydata=
- mQENBFrnOrUBCADGOL0kF21B6ogpOkuYvz6bUjO7NU99PKhXx1MfK/AzK+SFgxJF7dMluoF6
- uT47bU7zb7HqACH6itTgSSiJeSoq86jYoq5s4JOyaj0/18Hf3/YBah7AOuwk6LtV3EftQIhw
- 9vXqCnBwP/nID6PQ685zl3vH68yzF6FVNwbDagxUz/gMiQh7scHvVCjiqkJ+qu/36JgtTYYw
- 8lGWRcto6gr0eTF8Wd8f81wspmUHGsFdN/xPsZPKMw6/on9oOj3AidcR3P9EdLY4qQyjvcNC
- V9cL9b5I/Ud9ghPwW4QkM7uhYqQDyh3SwgEFudc+/RsDuxjVlg9CFnGhS0nPXR89SaQZABEB
- AAG0HVNpbmFuIEtheWEgPG9rYXlhQGtlcm5lbC5vcmc+iQFOBBMBCAA4FiEEYdOlMSE+a7/c
- ckrQvGF4I+4LAFcFAlztcAoCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQvGF4I+4L
- AFfidAf/VKHInxep0Z96iYkIq42432HTZUrxNzG9IWk4HN7c3vTJKv2W+b9pgvBF1SmkyQSy
- 8SJ3Zd98CO6FOHA1FigFyZahVsme+T0GsS3/OF1kjrtMktoREr8t0rK0yKpCTYVdlkHadxmR
- Qs5xLzW1RqKlrNigKHI2yhgpMwrpzS+67F1biT41227sqFzW9urEl/jqGJXaB6GV+SRKSHN+
- ubWXgE1NkmfAMeyJPKojNT7ReL6eh3BNB/Xh1vQJew+AE50EP7o36UXghoUktnx6cTkge0ZS
- qgxuhN33cCOU36pWQhPqVSlLTZQJVxuCmlaHbYWvye7bBOhmiuNKhOzb3FcgT7kBDQRa5zq1
- AQgAyRq/7JZKOyB8wRx6fHE0nb31P75kCnL3oE+smKW/sOcIQDV3C7mZKLf472MWB1xdr4Tm
- eXeL/wT0QHapLn5M5wWghC80YvjjdolHnlq9QlYVtvl1ocAC28y43tKJfklhHiwMNDJfdZbw
- 9lQ2h+7nccFWASNUu9cqZOABLvJcgLnfdDpnSzOye09VVlKr3NHgRyRZa7me/oFJCxrJlKAl
- 2hllRLt0yV08o7i14+qmvxI2EKLX9zJfJ2rGWLTVe3EJBnCsQPDzAUVYSnTtqELu2AGzvDiM
- gatRaosnzhvvEK+kCuXuCuZlRWP7pWSHqFFuYq596RRG5hNGLbmVFZrCxQARAQABiQEfBBgB
- CAAJBQJa5zq1AhsMAAoJELxheCPuCwBX2UYH/2kkMC4mImvoClrmcMsNGijcZHdDlz8NFfCI
- gSb3NHkarnA7uAg8KJuaHUwBMk3kBhv2BGPLcmAknzBIehbZ284W7u3DT9o1Y5g+LDyx8RIi
- e7pnMcC+bE2IJExCVf2p3PB1tDBBdLEYJoyFz/XpdDjZ8aVls/pIyrq+mqo5LuuhWfZzPPec
- 9EiM2eXpJw+Rz+vKjSt1YIhg46YbdZrDM2FGrt9ve3YaM5H0lzJgq/JQPKFdbd5MB0X37Qc+
- 2m/A9u9SFnOovA42DgXUyC2cSbIJdPWOK9PnzfXqF3sX9Aol2eLUmQuLpThJtq5EHu6FzJ7Y
- L+s0nPaNMKwv/Xhhm6Y=
-Message-ID: <885cef84-575b-b564-f5b4-75848486466c@kernel.org>
-Date:   Mon, 2 Mar 2020 13:30:44 -0500
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1727372AbgCBSpG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 2 Mar 2020 13:45:06 -0500
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:59617 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727341AbgCBSpG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 Mar 2020 13:45:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1583174707; x=1614710707;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=hkOjHPX+DVf2nZPCTNoZLyZ12zG0FGhF70ycSnOI4YE=;
+  b=VBNO3iome1jp29N2FXv9gr/d2dlO1yBMXO5DYnFYtv4zuyulVlJFqxXU
+   yK7OI4HgEdT1WM3UzWExGApopDXNxOdf313tSayW0QQQeSP8+8yaw4bjg
+   f/e5e1HO+fBoQAofLgqRHnDubzXGeiBYop1YcbP6FMqB8ArEPYakkphQ/
+   w=;
+IronPort-SDR: FyqZn5GKa83zN/2HPODG1Zu/40IPKKzGCR+IJSHPfkW3u7kf7Wz9CQ/vuFc1+FZ+EYRvwXD8RD
+ qHMIS4Be188Q==
+X-IronPort-AV: E=Sophos;i="5.70,507,1574121600"; 
+   d="scan'208";a="20320295"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2c-168cbb73.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 02 Mar 2020 18:45:04 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2c-168cbb73.us-west-2.amazon.com (Postfix) with ESMTPS id 47300A24CF;
+        Mon,  2 Mar 2020 18:45:03 +0000 (UTC)
+Received: from EX13D12EUA004.ant.amazon.com (10.43.165.162) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1236.3; Mon, 2 Mar 2020 18:45:02 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (10.43.161.207) by
+ EX13D12EUA004.ant.amazon.com (10.43.165.162) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 2 Mar 2020 18:45:01 +0000
+Received: from u961addbe640f56.ant.amazon.com (10.28.84.111) by
+ mail-relay.amazon.com (10.43.161.249) with Microsoft SMTP Server id
+ 15.0.1367.3 via Frontend Transport; Mon, 2 Mar 2020 18:44:57 +0000
+From:   Stanislav Spassov <stanspas@amazon.com>
+To:     <linux-pci@vger.kernel.org>
+CC:     Stanislav Spassov <stanspas@amazon.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        =?UTF-8?q?Jan=20H=20=2E=20Sch=C3=B6nherr?= <jschoenh@amazon.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "Sinan Kaya" <okaya@kernel.org>, Rajat Jain <rajatja@google.com>
+Subject: [PATCH v2 00/17] Improve PCI device post-reset readiness polling
+Date:   Mon, 2 Mar 2020 19:44:12 +0100
+Message-ID: <20200302184429.12880-1-stanspas@amazon.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200302173728.GA77115@otc-nc-03>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 3/2/2020 12:37 PM, Raj, Ashok wrote:
->> 1 second is too aggressive. We already have proof that several PCIe
->> cards take their time during FLR especially FPGA cards in the orders
->> of 10 seconds.
-> Aren't the rules specified in 7.9.17 Rediness Time Reporting Extended Capability
-> sufficient to cover this?
-> 
+From: Stanislav Spassov <stanspas@amazon.de>
 
-Yes, readiness would work too but it is not a mandatory feature.
-Readiness is yet another alternative to CRS advertised as the new
-flashy way of doing things. Problem is backwards compatibility.
+The first version of this patch series can be found here:
+https://lore.kernel.org/linux-pci/20200223122057.6504-1-stanspas@amazon.com
 
-Do you want to break all existing/legacy drivers for an optional/new
-spec defined feature?
+Originally, this patch series aimed to only solve an issue where
+pci_dev_wait can cause system crashes. After a reset, a hung device may
+keep responding with CRS completions indefinitely. If CRS Software
+Visibility is enabled on the Root Port, attempting to read any register
+other than PCI_VENDOR_ID will cause the Root Port to autonomously retry
+the request without reporting back to the CPU core. Unless the number of
+retries or the amount of time spent retrying is limited by
+platform-specific means, this scenario leads to low-level platform
+timeouts (such as a TOR Timeout), which easily escalate to a crash.
 
-> If a device doesn't have them we could let the driver supply this value
-> as a device specific value to override the default.
-> 
->> Current code is waiting up to 60 seconds. If card shows up before that
->> we happily return.
->>
-> But in 7.9.17.2 Readiness Time Reporting 1 Register, says devices
-> can defer reporting by not setting the valid bit, but if it remains
-> clear after 60s system software can assume no valid values will be reported.
-> 
-> Maybe keep the system default to something more reasonable (after some
-> testing in the community), and do this insane 60s for devices that 
-> support the optional reporting capability?
+The feedback on the first version of this patch series inspired a
+deeper dive into the PCI Firmware Spec (_DSM functions 8 and 9),
+which revealed several different types of delays that can be overriden
+on a per-device basis to avoid waiting for too long on device that are
+known to come back quickly after reset. The kernel already stores such
+overrides for some, but not all of the delays.
 
-I think we should add readiness capability on top of CRS but not
-exclusively.
+While adding the infrastructure to allow overriding delays, I discovered
+and addressed several inconsistencies between what the PCIE
+Base Specification says and what the code does, and came up with more
+improvements all around device resets and readiness polling.
 
-If readiness is supported, do the spec defined behavior.
-If not supported, fallback to CRS for legacy devices.
+This patch series now paves the way for Readiness Time Reporting capability
+support, and touches upon (in comments) some changes that would be
+required for supporting Readiness Notifications.
 
-I remember Bjorn mentioning about readiness capability. Maybe, this is
-the time to implement it.
+Stanislav Spassov (17):
+  PCI: Fall back to slot/bus reset if softer methods timeout
+  PCI: Remove unused PCI_PM_BUS_WAIT
+  PCI: Use pci_bridge_wait_for_secondary_bus after SBR
+  PCI: Do not override delay for D0->D3hot transition
+  PCI: Fix handling of _DSM 8 (avoiding reset delays)
+  PCI: Fix us->ms conversion in pci_acpi_optimize_delay
+  PCI: Clean up and document PM/reset delays
+  PCI: Add more delay overrides to struct pci_dev
+  PCI: Generalize pci_bus_max_d3cold_delay to pci_bus_max_delay
+  PCI: Use correct delay in pci_bridge_wait_for_secondary_bus
+  PCI: Refactor pci_dev_wait to remove timeout parameter
+  PCI: Refactor pci_dev_wait to take pci_init_event
+  PCI: Cache CRS Software Visibiliy in struct pci_dev
+  PCI: Introduce per-device reset_ready_poll override
+  PCI: Refactor polling loop out of pci_dev_wait
+  PCI: Add CRS handling to pci_dev_wait()
+  PCI: Lower PCIE_RESET_READY_POLL_MS from 1m to 1s
+
+ Documentation/power/pci.rst         |   4 +-
+ arch/x86/pci/intel_mid_pci.c        |   2 +-
+ drivers/hid/intel-ish-hid/ipc/ipc.c |   2 +-
+ drivers/mfd/intel-lpss-pci.c        |   2 +-
+ drivers/net/ethernet/marvell/sky2.c |   2 +-
+ drivers/pci/iov.c                   |   4 +-
+ drivers/pci/pci-acpi.c              | 106 +++++++++----
+ drivers/pci/pci-driver.c            |   4 +-
+ drivers/pci/pci.c                   | 233 +++++++++++++++++++---------
+ drivers/pci/pci.h                   |  81 +++++++++-
+ drivers/pci/probe.c                 |  10 +-
+ drivers/pci/quirks.c                |   9 +-
+ include/linux/pci-acpi.h            |   8 +-
+ include/linux/pci.h                 |  45 +++++-
+ 14 files changed, 388 insertions(+), 124 deletions(-)
+
+
+base-commit: bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9
+-- 
+2.25.1
+
+
+
+
+Amazon Development Center Germany GmbH
+Krausenstr. 38
+10117 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
+Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
+Sitz: Berlin
+Ust-ID: DE 289 237 879
+
+
+
