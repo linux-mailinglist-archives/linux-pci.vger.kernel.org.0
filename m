@@ -2,85 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A4EC177501
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Mar 2020 12:08:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C639D1775EC
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Mar 2020 13:32:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728022AbgCCLI3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Mar 2020 06:08:29 -0500
-Received: from mx2.suse.de ([195.135.220.15]:45256 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727880AbgCCLI3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 3 Mar 2020 06:08:29 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 94B6DB235;
-        Tue,  3 Mar 2020 11:08:27 +0000 (UTC)
-Message-ID: <312c3305eef7534d534729d598372dbf5f3985cf.camel@suse.de>
-Subject: Re: [PATCH v3 0/4] Raspberry Pi 4 VL805 firmware load support
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Oliver Neukum <oneukum@suse.com>, linux-kernel@vger.kernel.org
-Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, f.fainelli@gmail.com,
-        gregkh@linuxfoundation.org, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org, wahrenst@gmx.net,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>
-Date:   Tue, 03 Mar 2020 12:08:25 +0100
-In-Reply-To: <1583225019.12738.6.camel@suse.com>
-References: <20200302155528.19505-1-nsaenzjulienne@suse.de>
-         <1583225019.12738.6.camel@suse.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-sEW+kSSPV6dhPiAM6dbu"
-User-Agent: Evolution 3.34.4 
+        id S1729012AbgCCMc2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Mar 2020 07:32:28 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:45696 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727121AbgCCMc1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Mar 2020 07:32:27 -0500
+Received: by mail-lj1-f195.google.com with SMTP id e18so3271428ljn.12
+        for <linux-pci@vger.kernel.org>; Tue, 03 Mar 2020 04:32:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=09C3nnwIuE/Iv16DhL+XJHp/9c9nE6JdQTn3LQR/p8s=;
+        b=NOmn4fZ6ZQck6AWMHcmBlACN1BXy0lJdTB1/Jw/iBWqIQGRgSIFe2rCNOKm35tPlJ3
+         gjOlpLQvpdQb5BA8who3vOvUxIYrQOJpPVO3qf+9tkUEEyCYkM8jNvlYVFrGMG7Imbhx
+         2v5c+QTAbKhHAo8rljJvBk3An2XZfS6owXRIA+VOgV4Cz9F05vJfVLPlcwoITEf8LoCU
+         4HospiLurW6FgPZRobgmSND9qac431GQvJDsfFlYgpRSXJhZQlZ8p0u9WFmrQdbvPs6J
+         +PLwuryjoBrk0LdX0qi42M07pXoOp5LijnO6YZxul6PWmsf3UZ643SBZj8G3Ztji7Fap
+         Hmow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=09C3nnwIuE/Iv16DhL+XJHp/9c9nE6JdQTn3LQR/p8s=;
+        b=fKhQYT3SzcgoJmIHOfi+deoqAxND1EjFJPZZMFyJI/NxQGInWRr5BdlrexN4Q+dP96
+         6wRq/mXpqGEAdvVfdw+0i5bPHS5gE3oZVdoZl2ZbnRBTurT0wASND25BSUlCOE7COtqS
+         CaLoBdE2sbXnVzavzqaaW+5rA2UC15wbjL6eUAxYyd4JHktHsPhc4v75a7J8irQ+mrMk
+         7PV24Oa/+DdpJlnpIdsmtzYsdFzeXgJ//9uMPL4yhqo6H8cAY2loeVlqmgyd6h1LNh5i
+         VWjfkgMNud2R8B+pb1YHJI473sojofE5laMbvUhHd+mq82DUDdZW9PscNvrDc4KUjSRB
+         jvWQ==
+X-Gm-Message-State: ANhLgQ3Y0gD7RX6zWazU2edeKTj1X58WGwvIB5nIVx9BajJ5HkS0R7IB
+        sGitxVzqcf1TbswTBZYgc6g=
+X-Google-Smtp-Source: ADFU+vv/mvvDez3Wq3BzeVeAtUC1Lq1Br/bEtF+kctKU89NGa60IoGevQw0hPAxf5BH783YlnPeZIQ==
+X-Received: by 2002:a2e:8754:: with SMTP id q20mr2274725ljj.258.1583238744478;
+        Tue, 03 Mar 2020 04:32:24 -0800 (PST)
+Received: from localhost ([89.207.88.249])
+        by smtp.gmail.com with ESMTPSA id 67sm8759384ljj.31.2020.03.03.04.32.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2020 04:32:23 -0800 (PST)
+Date:   Tue, 3 Mar 2020 15:32:23 +0300
+From:   Alexander Fomichev <fomichev.ru@gmail.com>
+To:     linux-ntb@googlegroups.com, linux-pci@vger.kernel.org
+Cc:     linux@yadro.com, Logan Gunthorpe <logang@deltatee.com>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Jon Mason <jdmason@kudzu.us>, Allen Hubbe <allenbh@gmail.com>,
+        Dave Jiang <dave.jiang@intel.com>
+Subject: Re: [PATCH RESEND] ntb_hw_switchtec: Fix ntb_mw_clear_trans
+ returning error if size == 0
+Message-ID: <20200303123223.i3fvwfmbhklfq2l5@yadro.com>
+References: <20190710084427.7iqrhapxa7jo5v6y@yadro.com>
+ <20200122131510.d5ckfj22idh56ef5@yadro.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200122131510.d5ckfj22idh56ef5@yadro.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Ping?
 
---=-sEW+kSSPV6dhPiAM6dbu
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+CC: Jon Mason <jdmason@kudzu.us>
+CC: Dave Jiang <dave.jiang@intel.com>
+CC: Allen Hubbe <allenbh@gmail.com>
+CC: Kurt Schwemmer <kurt.schwemmer@microsemi.com>
+CC: Logan Gunthorpe <logang@deltatee.com>
 
-Hi Oliver,
-
-On Tue, 2020-03-03 at 09:43 +0100, Oliver Neukum wrote:
-> Am Montag, den 02.03.2020, 16:55 +0100 schrieb Nicolas Saenz Julienne:
-> > On the Raspberry Pi 4, after a PCI reset, VL805's firmware may either b=
-e
-> > loaded directly from an EEPROM or, if not present, by the SoC's
-> > VideCore. This series adds support for the later.
->=20
-> What happens if runtime PM strikes, in particular, how do
-> you deal with D4cold?
-
-The RPi4 PCIe driver doesn't support runtime PM for now. Neither upstream n=
-or
-downstream. So I'd say it's not a problem. The same goes for suspend/resume=
-,
-which IIRC the Raspberry Pi foundation doesn't support.
-
-Regards,
-Nicolas
-
-
---=-sEW+kSSPV6dhPiAM6dbu
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl5eOqkACgkQlfZmHno8
-x/730ggAtedF+4sYfc1p/xdd/IO7Clu3ry4x2yh+qY/per8vXN+9dzI79YgdwAtg
-SlRDlijesH4//PYu7gdwIqaF86WMYuPCRT8Q8mWlcL+Lrgz1GGkmFSuFDnGH0nep
-M0L9F0BXK+efUQhKuTtdtRP2UJXg00bKI4hVHLtEHNGrOZYJoVKmxjDlw2n20KSO
-zjq6rt6HvCCUH1saZC4r6++T3EhCG1QjUAoyycsAJKNH86xc+P5VV9+cQfH1zJpI
-Rim6oxWfTT69JUb9DY5NkA0xWWFpV/4YyTW9gQiXgQgIBrsCcYLlu+B/xhZwifKm
-ITeQhFnX2203t32AD+fEBIJUmxNaJg==
-=XmXV
------END PGP SIGNATURE-----
-
---=-sEW+kSSPV6dhPiAM6dbu--
-
+On Wed, Jan 22, 2020 at 04:15:13PM +0300, Alexander Fomichev wrote:
+> Somehow this patch was lost. The problem is still actual.
+> Please, add to upstream.
+> 
+> On Wed, Jul 10, 2019 at 11:44:27AM +0300, Alexander Fomichev wrote:
+> > ntb_mw_set_trans should work as ntb_mw_clear_trans when size == 0 and/or
+> > addr == 0. But error in xlate_pos checking condition prevents this.
+> > Fix the condition to make ntb_mw_clear_trans working.
+> > 
+> > Signed-off-by: Alexander Fomichev <fomichev.ru@gmail.com>
+> > Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+> > ---
+> >  drivers/ntb/hw/mscc/ntb_hw_switchtec.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/ntb/hw/mscc/ntb_hw_switchtec.c b/drivers/ntb/hw/mscc/ntb_hw_switchtec.c
+> > index 1e2f627d3bac..19d46af19650 100644
+> > --- a/drivers/ntb/hw/mscc/ntb_hw_switchtec.c
+> > +++ b/drivers/ntb/hw/mscc/ntb_hw_switchtec.c
+> > @@ -299,7 +299,7 @@ static int switchtec_ntb_mw_set_trans(struct ntb_dev *ntb, int pidx, int widx,
+> >  	if (widx >= switchtec_ntb_mw_count(ntb, pidx))
+> >  		return -EINVAL;
+> >  
+> > -	if (xlate_pos < 12)
+> > +	if (size != 0 && xlate_pos < 12)
+> >  		return -EINVAL;
+> >  
+> >  	if (!IS_ALIGNED(addr, BIT_ULL(xlate_pos))) {
+> > -- 
+> > 2.17.1
+> 
+> -- 
+> Regards,
+>   Alexander
