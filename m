@@ -2,94 +2,179 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 20CB6177CA4
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Mar 2020 18:02:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 32902177CC1
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Mar 2020 18:05:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730416AbgCCRBd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Mar 2020 12:01:33 -0500
-Received: from foss.arm.com ([217.140.110.172]:49824 "EHLO foss.arm.com"
+        id S1730534AbgCCREo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Mar 2020 12:04:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727175AbgCCRBd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:01:33 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9C5CE2F;
-        Tue,  3 Mar 2020 09:01:32 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9B8393F534;
-        Tue,  3 Mar 2020 09:01:30 -0800 (PST)
-Date:   Tue, 3 Mar 2020 17:01:16 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     bhelgaas@google.com, robh+dt@kernel.org, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, andrew.murray@arm.com, kishon@ti.com,
-        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V4 0/5] Add support for PCIe endpoint mode in Tegra194
-Message-ID: <20200303170103.GA9641@e121166-lin.cambridge.arm.com>
-References: <20200303105418.2840-1-vidyas@nvidia.com>
+        id S1729000AbgCCREo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:04:44 -0500
+Received: from localhost (odyssey.drury.edu [64.22.249.253])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4203D20836;
+        Tue,  3 Mar 2020 17:04:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583255083;
+        bh=bk85Xz7NknJrsTjKyhov1Bic6DhuQc8uI72oheQ6XTo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=qNCb/zCik+KlUt63trn4jH/HOKpvdCE0AYNJTPur9ziG9LAGwYOv73I5VIFmF/7JB
+         ZPj90kUy1w8igSGgUR6q7Rm7LT8wQzr+IOxG6YOa4of9kqMYaQDpcYl6ccbs12k2uT
+         GCmC54BnsdxA3oveFfm/0R/btd6caA/zk3wSzX7E=
+Date:   Tue, 3 Mar 2020 11:04:42 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     sathyanarayanan.kuppuswamy@linux.intel.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com
+Subject: Re: [PATCH v16 3/9] PCI/ERR: Remove service dependency in
+ pcie_do_recovery()
+Message-ID: <20200303170442.GA89997@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200303105418.2840-1-vidyas@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <152c530a3ca8780ae85c2325f97f5f35f5d3602f.1582850766.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 04:24:13PM +0530, Vidya Sagar wrote:
-> Tegra194 has three (C0, C4 & C5) dual mode PCIe controllers that can operate
-> either in root port mode or in end point mode but only in one mode at a time.
-> Platform P2972-0000 supports enabling endpoint mode for C5 controller. This
-> patch series adds support for PCIe endpoint mode in both the driver as well as
-> in DT.
-> This patch series depends on the changes made for Synopsys DesignWare endpoint
-> mode subsystem that are recently accepted.
-> @ https://patchwork.kernel.org/project/linux-pci/list/?series=202211
-> which in turn depends on the patch made by Kishon
-> @ https://patchwork.kernel.org/patch/10975123/
-> which is also under review.
+On Thu, Feb 27, 2020 at 04:59:45PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 > 
-> V4:
-> * Started using threaded irqs instead of kthreads
+> Currently we pass PCIe service type parameter to pcie_do_recovery()
+> function which was in-turn used by reset_link() function to identify
+> the underlying pci_port_service_driver and then initiate the driver
+> specific reset_link call. Instead of using this roundabout way, we
+> can just pass the driver specific reset_link callback function when
+> calling pcie_do_recovery() function.
 
-Hi Vidya,
+I love this!  And I think pcie_port_find_service() is now unused.  I
+can add a patch to remove it.
 
-sorry for the bother, may I ask you to rebase the series (after
-answering Thierry's query) on top of my pci/endpoint branch please ?
-
-Please resend it and I will merge patches {1,2,5} then.
-
-Thanks,
-Lorenzo
-
-> V3:
-> * Re-ordered patches in the series to make the driver change as the last patch
-> * Took care of Thierry's review comments
+> This change will also enable non PCIe service driver to call
+> pcie_do_recovery() function. This is required for adding Error
+> Disconnect Recover (EDR) support.
 > 
-> V2:
-> * Addressed Thierry & Bjorn's review comments
-> * Added EP mode specific binding documentation to already existing binding documentation file
-> * Removed patch that enables GPIO controller nodes explicitly as they are enabled already
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> ---
+>  drivers/pci/pci.h      |  2 +-
+>  drivers/pci/pcie/aer.c | 11 +++++------
+>  drivers/pci/pcie/dpc.c |  2 +-
+>  drivers/pci/pcie/err.c | 16 ++++++++--------
+>  4 files changed, 15 insertions(+), 16 deletions(-)
 > 
-> Vidya Sagar (5):
->   soc/tegra: bpmp: Update ABI header
->   dt-bindings: PCI: tegra: Add DT support for PCIe EP nodes in Tegra194
->   arm64: tegra: Add PCIe endpoint controllers nodes for Tegra194
->   arm64: tegra: Add support for PCIe endpoint mode in P2972-0000
->     platform
->   PCI: tegra: Add support for PCIe endpoint mode in Tegra194
-> 
->  .../bindings/pci/nvidia,tegra194-pcie.txt     | 125 +++-
->  .../boot/dts/nvidia/tegra194-p2972-0000.dts   |  18 +
->  arch/arm64/boot/dts/nvidia/tegra194.dtsi      |  99 +++
->  drivers/pci/controller/dwc/Kconfig            |  30 +-
->  drivers/pci/controller/dwc/pcie-tegra194.c    | 681 +++++++++++++++++-
->  include/soc/tegra/bpmp-abi.h                  |  10 +-
->  6 files changed, 918 insertions(+), 45 deletions(-)
-> 
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index a4c360515a69..2962200bfe35 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -548,7 +548,7 @@ static inline int pci_dev_specific_disable_acs_redir(struct pci_dev *dev)
+>  
+>  /* PCI error reporting and recovery */
+>  void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
+> -		      u32 service);
+> +		      pci_ers_result_t (*reset_cb)(struct pci_dev *pdev));
+>  
+>  bool pcie_wait_for_link(struct pci_dev *pdev, bool active);
+>  #ifdef CONFIG_PCIEASPM
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 4a818b07a1af..1235eca0a2e6 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -102,6 +102,7 @@ struct aer_stats {
+>  #define ERR_UNCOR_ID(d)			(d >> 16)
+>  
+>  static int pcie_aer_disable;
+> +static pci_ers_result_t aer_root_reset(struct pci_dev *dev);
+>  
+>  void pci_no_aer(void)
+>  {
+> @@ -1053,11 +1054,9 @@ static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
+>  					info->status);
+>  		pci_aer_clear_device_status(dev);
+>  	} else if (info->severity == AER_NONFATAL)
+> -		pcie_do_recovery(dev, pci_channel_io_normal,
+> -				 PCIE_PORT_SERVICE_AER);
+> +		pcie_do_recovery(dev, pci_channel_io_normal, aer_root_reset);
+>  	else if (info->severity == AER_FATAL)
+> -		pcie_do_recovery(dev, pci_channel_io_frozen,
+> -				 PCIE_PORT_SERVICE_AER);
+> +		pcie_do_recovery(dev, pci_channel_io_frozen, aer_root_reset);
+>  	pci_dev_put(dev);
+>  }
+>  
+> @@ -1094,10 +1093,10 @@ static void aer_recover_work_func(struct work_struct *work)
+>  		cper_print_aer(pdev, entry.severity, entry.regs);
+>  		if (entry.severity == AER_NONFATAL)
+>  			pcie_do_recovery(pdev, pci_channel_io_normal,
+> -					 PCIE_PORT_SERVICE_AER);
+> +					 aer_root_reset);
+>  		else if (entry.severity == AER_FATAL)
+>  			pcie_do_recovery(pdev, pci_channel_io_frozen,
+> -					 PCIE_PORT_SERVICE_AER);
+> +					 aer_root_reset);
+>  		pci_dev_put(pdev);
+>  	}
+>  }
+> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+> index 6b116d7fdb89..114358d62ddf 100644
+> --- a/drivers/pci/pcie/dpc.c
+> +++ b/drivers/pci/pcie/dpc.c
+> @@ -227,7 +227,7 @@ static irqreturn_t dpc_handler(int irq, void *context)
+>  	}
+>  
+>  	/* We configure DPC so it only triggers on ERR_FATAL */
+> -	pcie_do_recovery(pdev, pci_channel_io_frozen, PCIE_PORT_SERVICE_DPC);
+> +	pcie_do_recovery(pdev, pci_channel_io_frozen, dpc_reset_link);
+>  
+>  	return IRQ_HANDLED;
+>  }
+> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> index eefefe03857a..05f87bc9d011 100644
+> --- a/drivers/pci/pcie/err.c
+> +++ b/drivers/pci/pcie/err.c
+> @@ -162,14 +162,13 @@ static pci_ers_result_t default_reset_link(struct pci_dev *dev)
+>  	return rc ? PCI_ERS_RESULT_DISCONNECT : PCI_ERS_RESULT_RECOVERED;
+>  }
+>  
+> -static pci_ers_result_t reset_link(struct pci_dev *dev, u32 service)
+> +static pci_ers_result_t reset_link(struct pci_dev *dev,
+> +			pci_ers_result_t (*reset_cb)(struct pci_dev *pdev))
+>  {
+>  	pci_ers_result_t status;
+> -	struct pcie_port_service_driver *driver = NULL;
+>  
+> -	driver = pcie_port_find_service(dev, service);
+> -	if (driver && driver->reset_link) {
+> -		status = driver->reset_link(dev);
+> +	if (reset_cb) {
+> +		status = reset_cb(dev);
+>  	} else if (pcie_downstream_port(dev)) {
+>  		status = default_reset_link(dev);
+>  	} else {
+> @@ -187,8 +186,9 @@ static pci_ers_result_t reset_link(struct pci_dev *dev, u32 service)
+>  	return status;
+>  }
+>  
+> -void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
+> -		      u32 service)
+> +void pcie_do_recovery(struct pci_dev *dev,
+> +		      enum pci_channel_state state,
+> +		      pci_ers_result_t (*reset_cb)(struct pci_dev *pdev))
+>  {
+>  	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
+>  	struct pci_bus *bus;
+> @@ -209,7 +209,7 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
+>  		pci_walk_bus(bus, report_normal_detected, &status);
+>  
+>  	if (state == pci_channel_io_frozen) {
+> -		status = reset_link(dev, service);
+> +		status = reset_link(dev, reset_cb);
+>  		if (status != PCI_ERS_RESULT_RECOVERED)
+>  			goto failed;
+>  	}
 > -- 
-> 2.17.1
+> 2.21.0
 > 
