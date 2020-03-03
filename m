@@ -2,96 +2,150 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 523A6177828
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Mar 2020 15:03:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B244F17793A
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Mar 2020 15:38:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728070AbgCCOCd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Mar 2020 09:02:33 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22717 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728568AbgCCOCd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Mar 2020 09:02:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583244151;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=vURXmaMa/jNw8/wDeynB3tRJrpHBF8mvDGbk4U2gsFk=;
-        b=CdDnilo2CaRiZcQGnSgCW1FwlNhcC+MA8v3HLKVxjj1ntlnDudZvf6jpWo6RWQi7jqzham
-        ZI1Z8HjYboMewTfRRrobe7lUDD2y0bLpfCi43yYg2moVLSkvRRxDfYns5eCLadWCssuQDa
-        e+ekJ8VBFp+bwBljOuySa8ahlYI3zYs=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-343-Qg1pKOhPP8Wu9r3KCrqBeg-1; Tue, 03 Mar 2020 09:02:30 -0500
-X-MC-Unique: Qg1pKOhPP8Wu9r3KCrqBeg-1
-Received: by mail-qk1-f200.google.com with SMTP id x21so2161480qkn.18
-        for <linux-pci@vger.kernel.org>; Tue, 03 Mar 2020 06:02:30 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=vURXmaMa/jNw8/wDeynB3tRJrpHBF8mvDGbk4U2gsFk=;
-        b=hDLeEo0jvDA2a8ADJnkP5XBsdK5AelvL6Wtd9toMG9tJCDY1MMEyefj+DXBHW+LMR0
-         FPzHcsmqirrZSyptgv7hlOOZL0D8KPsWDopavFJqtRsQZg/1eQz2c0cF0cMUTEHb1+OO
-         V70IdhBXoOmPT2fwOcYkqPtTDT3ytmoY7vnI8Zq/g3J8Hi2TrGY1GHCc+KSEQ5huHp1D
-         PWnN7uaUF9J0ADo1nb+t2afrU8XpPcWSIDNWEUAEsQ7sFfUxEobvBFBzAmaN7KD2wZfU
-         2cf5qILYV5Em8ftVJbA6ScHXsAw5evh59avZ0KdEy2wtk6HUk9Z+sS7BRWlAlFNVQrgz
-         pWUA==
-X-Gm-Message-State: ANhLgQ1EK2T/B7jM5ky8ruvbz9lQ5Nim6Q14al1wh68td6/PW0+EkC7Y
-        4GAp3bplB1o0rJLyhimpajWMRNY0QGnPv9edaB4gSEmPIf6tUppCT8Zwxii2pgpCE9/Wt3D3LKP
-        7/Q/vEKjNmrGKF3KYZyop
-X-Received: by 2002:ac8:8d6:: with SMTP id y22mr4331359qth.85.1583244149957;
-        Tue, 03 Mar 2020 06:02:29 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vsrHkcUNU/JWr3iaSlnrdpMaoXDL9dgR2gjUhWQ2iO+BPmktHURohbRSLr525HkXxY5rlNBXQ==
-X-Received: by 2002:ac8:8d6:: with SMTP id y22mr4331328qth.85.1583244149723;
-        Tue, 03 Mar 2020 06:02:29 -0800 (PST)
-Received: from redhat.com (bzq-79-180-48-224.red.bezeqint.net. [79.180.48.224])
-        by smtp.gmail.com with ESMTPSA id j7sm8343441qti.14.2020.03.03.06.02.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 06:02:28 -0800 (PST)
-Date:   Tue, 3 Mar 2020 09:02:23 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        iommu@lists.linux-foundation.org,
-        virtualization@lists.linux-foundation.org,
-        linux-pci@vger.kernel.org, bhelgaas@google.com,
-        jasowang@redhat.com, kevin.tian@intel.com,
-        sebastien.boeuf@intel.com, eric.auger@redhat.com,
-        jacob.jun.pan@intel.com, robin.murphy@arm.com
-Subject: Re: [PATCH v2 1/3] iommu/virtio: Add topology description to
- virtio-iommu config space
-Message-ID: <20200303090046-mutt-send-email-mst@kernel.org>
-References: <20200228172537.377327-1-jean-philippe@linaro.org>
- <20200228172537.377327-2-jean-philippe@linaro.org>
- <20200302161611.GD7829@8bytes.org>
+        id S1727576AbgCCOia (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Mar 2020 09:38:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34014 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726766AbgCCOi3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 3 Mar 2020 09:38:29 -0500
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E767E20838;
+        Tue,  3 Mar 2020 14:38:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583246309;
+        bh=elj28SC1BBksBJDG9rtk+GAZOY8nGE3uwbpMfH0H8kE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ymecdNsmzO/RdyoCzvt+ifRaflAViNZudlRJ82N84Ku2Mi4A7UPNdobvStDFNf1bo
+         uw3JPwVfgbMGEagfkCy2/sO8sjc7hoQrXMDmH+fkc12ACTfVG6j1SwFwy/L+b5H72a
+         PXlL/HL/CaD0J7a7HEKlPT48stIB0zU2Hi7FCN7E=
+Date:   Tue, 3 Mar 2020 08:38:27 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Mikel Rychliski <mikel@mikelr.com>
+Cc:     amd-gfx@lists.freedesktop.org, linux-pci@vger.kernel.org,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        Matthew Garrett <matthewgarrett@google.com>
+Subject: Re: [PATCH 2/4] PCI: Use ioremap, not phys_to_virt for platform rom
+Message-ID: <20200303143827.GA78253@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200302161611.GD7829@8bytes.org>
+In-Reply-To: <20200303033457.12180-3-mikel@mikelr.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 05:16:12PM +0100, Joerg Roedel wrote:
-> On Fri, Feb 28, 2020 at 06:25:36PM +0100, Jean-Philippe Brucker wrote:
-> > This solution isn't elegant nor foolproof, but is the best we can do at
-> > the moment and works with existing virtio-iommu implementations. It also
-> > enables an IOMMU for lightweight hypervisors that do not rely on
-> > firmware methods for booting.
-> 
-> I appreciate the enablement on x86, but putting the conmfiguration into
-> mmio-space isn't really something I want to see upstream.
+Cosmetics:
 
-It's in virtio config space, not in mmio-space. With a PCI virtio-IOMMU
-device this will be in memory.
+s/ioremap/ioremap()/ (also in commit log)
+s/phys_to_virt/phys_to_virt()/ (also in commit log)
+s/pci_platform_rom/pci_platform_rom()/ (commit log)
+s/rom/ROM/
 
-> What is the
-> problem with defining an ACPI table instead? This would also make things
-> work on AARCH64 UEFI machines.
+On Mon, Mar 02, 2020 at 10:34:55PM -0500, Mikel Rychliski wrote:
+> On some EFI systems, the video BIOS is provided by the EFI firmware.  The
+> boot stub code stores the physical address of the ROM image in pdev->rom.
+> Currently we attempt to access this pointer using phys_to_virt, which
+> doesn't work with CONFIG_HIGHMEM.
 > 
-> Regards,
+> On these systems, attempting to load the radeon module on a x86_32 kernel
+> can result in the following:
 > 
-> 	Joerg
+>     BUG: unable to handle page fault for address: 3e8ed03c
+>     #PF: supervisor read access in kernel mode
+>     #PF: error_code(0x0000) - not-present page
+>     *pde = 00000000
+>     Oops: 0000 [#1] PREEMPT SMP
+>     CPU: 0 PID: 317 Comm: systemd-udevd Not tainted 5.6.0-rc3-next-20200228 #2
+>     Hardware name: Apple Computer, Inc. MacPro1,1/Mac-F4208DC8, BIOS     MP11.88Z.005C.B08.0707021221 07/02/07
+>     EIP: radeon_get_bios+0x5ed/0xe50 [radeon]
+>     Code: 00 00 84 c0 0f 85 12 fd ff ff c7 87 64 01 00 00 00 00 00 00 8b 47 08 8b 55 b0 e8 1e 83 e1 d6 85 c0 74 1a 8b 55 c0 85 d2 74 13 <80> 38 55 75 0e 80 78 01 aa 0f 84 a4 03 00 00 8d 74 26 00 68 dc 06
+>     EAX: 3e8ed03c EBX: 00000000 ECX: 3e8ed03c EDX: 00010000
+>     ESI: 00040000 EDI: eec04000 EBP: eef3fc60 ESP: eef3fbe0
+>     DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010206
+>     CR0: 80050033 CR2: 3e8ed03c CR3: 2ec77000 CR4: 000006d0
+>     Call Trace:
+>      ? register_client+0x34/0xe0
+>      ? register_client+0xab/0xe0
+>      r520_init+0x26/0x240 [radeon]
+>      radeon_device_init+0x533/0xa50 [radeon]
+>      radeon_driver_load_kms+0x80/0x220 [radeon]
+>      drm_dev_register+0xa7/0x180 [drm]
+>      radeon_pci_probe+0x10f/0x1a0 [radeon]
+>      pci_device_probe+0xd4/0x140
+>      really_probe+0x13d/0x3b0
+>      driver_probe_device+0x56/0xd0
+>      device_driver_attach+0x49/0x50
+>      __driver_attach+0x79/0x130
+>      ? device_driver_attach+0x50/0x50
+>      bus_for_each_dev+0x5b/0xa0
+>      driver_attach+0x19/0x20
+>      ? device_driver_attach+0x50/0x50
+>      bus_add_driver+0x117/0x1d0
+>      ? pci_bus_num_vf+0x20/0x20
+>      driver_register+0x66/0xb0
+>      ? 0xf80f4000
+>      __pci_register_driver+0x3d/0x40
+>      radeon_init+0x82/0x1000 [radeon]
+>      do_one_initcall+0x42/0x200
+>      ? kvfree+0x25/0x30
+>      ? __vunmap+0x206/0x230
+>      ? kmem_cache_alloc_trace+0x16f/0x220
+>      ? do_init_module+0x21/0x220
+>      do_init_module+0x50/0x220
+>      load_module+0x1f26/0x2200
+>      sys_init_module+0x12d/0x160
+>      do_fast_syscall_32+0x82/0x250
+>      entry_SYSENTER_32+0xa5/0xf8
+> 
+> Fix the issue by using ioremap instead of phys_to_virt in pci_platform_rom.
+> 
+> Signed-off-by: Mikel Rychliski <mikel@mikelr.com>
+> ---
+>  drivers/pci/rom.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pci/rom.c b/drivers/pci/rom.c
+> index 137bf0cee897..e352798eed0c 100644
+> --- a/drivers/pci/rom.c
+> +++ b/drivers/pci/rom.c
+> @@ -197,8 +197,7 @@ void pci_unmap_rom(struct pci_dev *pdev, void __iomem *rom)
+>  EXPORT_SYMBOL(pci_unmap_rom);
+>  
+>  /**
+> - * pci_platform_rom - provides a pointer to any ROM image provided by the
+> - * platform
+> + * pci_platform_rom - ioremap the ROM image provided by the platform
+>   * @pdev: pointer to pci device struct
+>   * @size: pointer to receive size of pci window over ROM
+>   */
+> @@ -206,7 +205,7 @@ void __iomem *pci_platform_rom(struct pci_dev *pdev, size_t *size)
+>  {
+>  	if (pdev->rom && pdev->romlen) {
+>  		*size = pdev->romlen;
+> -		return phys_to_virt((phys_addr_t)pdev->rom);
+> +		return ioremap(pdev->rom, pdev->romlen);
 
+This changes the interface of pci_platform_rom() (the caller is now
+responsible for doing an iounmap()).  That should be mentioned in the
+function comment, and I think the subsequent patches should be
+squashed into this one so the interface change and the caller changes
+are done simultaneously.
+
+Also, it looks like nvbios_platform.init() (platform_init()) needs a
+similar change?
+
+>  	}
+>  
+>  	return NULL;
+> -- 
+> 2.13.7
+> 
