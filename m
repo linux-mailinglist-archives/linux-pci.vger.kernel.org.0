@@ -2,179 +2,308 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 32902177CC1
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Mar 2020 18:05:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F7EC177D37
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Mar 2020 18:19:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730534AbgCCREo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Mar 2020 12:04:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58510 "EHLO mail.kernel.org"
+        id S1728882AbgCCRT1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Mar 2020 12:19:27 -0500
+Received: from foss.arm.com ([217.140.110.172]:50112 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729000AbgCCREo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:04:44 -0500
-Received: from localhost (odyssey.drury.edu [64.22.249.253])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4203D20836;
-        Tue,  3 Mar 2020 17:04:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583255083;
-        bh=bk85Xz7NknJrsTjKyhov1Bic6DhuQc8uI72oheQ6XTo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=qNCb/zCik+KlUt63trn4jH/HOKpvdCE0AYNJTPur9ziG9LAGwYOv73I5VIFmF/7JB
-         ZPj90kUy1w8igSGgUR6q7Rm7LT8wQzr+IOxG6YOa4of9kqMYaQDpcYl6ccbs12k2uT
-         GCmC54BnsdxA3oveFfm/0R/btd6caA/zk3wSzX7E=
-Date:   Tue, 3 Mar 2020 11:04:42 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     sathyanarayanan.kuppuswamy@linux.intel.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com
-Subject: Re: [PATCH v16 3/9] PCI/ERR: Remove service dependency in
- pcie_do_recovery()
-Message-ID: <20200303170442.GA89997@google.com>
+        id S1728533AbgCCRT1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:19:27 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ED91F2F;
+        Tue,  3 Mar 2020 09:19:25 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 470403F534;
+        Tue,  3 Mar 2020 09:19:24 -0800 (PST)
+Date:   Tue, 3 Mar 2020 17:19:21 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Remi Pommarel <repk@triplefau.lt>,
+        Neil Armstrong <narmstrong@baylibre.com>, kishon@ti.com
+Cc:     Yue Wang <yue.wang@Amlogic.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v6 5/7] phy: amlogic: Add Amlogic AXG MIPI/PCIE analog
+ PHY Driver
+Message-ID: <20200303171921.GB9641@e121166-lin.cambridge.arm.com>
+References: <20200123232943.10229-1-repk@triplefau.lt>
+ <20200123232943.10229-6-repk@triplefau.lt>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <152c530a3ca8780ae85c2325f97f5f35f5d3602f.1582850766.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20200123232943.10229-6-repk@triplefau.lt>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 04:59:45PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+On Fri, Jan 24, 2020 at 12:29:41AM +0100, Remi Pommarel wrote:
+> This adds support for the MIPI analog PHY which is also used for PCIE
+> found in the Amlogic AXG SoC Family.
 > 
-> Currently we pass PCIe service type parameter to pcie_do_recovery()
-> function which was in-turn used by reset_link() function to identify
-> the underlying pci_port_service_driver and then initiate the driver
-> specific reset_link call. Instead of using this roundabout way, we
-> can just pass the driver specific reset_link callback function when
-> calling pcie_do_recovery() function.
-
-I love this!  And I think pcie_port_find_service() is now unused.  I
-can add a patch to remove it.
-
-> This change will also enable non PCIe service driver to call
-> pcie_do_recovery() function. This is required for adding Error
-> Disconnect Recover (EDR) support.
+> MIPI or PCIE selection is done by the #phy-cells, making the mode
+> static and exclusive.
 > 
-> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> For now only PCIE fonctionality is supported.
+> 
+> This PHY will be used to replace the mipi_enable clock gating logic
+> which was mistakenly added in the clock subsystem. This also activate
+> a non documented band gap bit in those registers that allows reliable
+> PCIE clock signal generation on AXG platforms.
+> 
+> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
 > ---
->  drivers/pci/pci.h      |  2 +-
->  drivers/pci/pcie/aer.c | 11 +++++------
->  drivers/pci/pcie/dpc.c |  2 +-
->  drivers/pci/pcie/err.c | 16 ++++++++--------
->  4 files changed, 15 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index a4c360515a69..2962200bfe35 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -548,7 +548,7 @@ static inline int pci_dev_specific_disable_acs_redir(struct pci_dev *dev)
->  
->  /* PCI error reporting and recovery */
->  void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
-> -		      u32 service);
-> +		      pci_ers_result_t (*reset_cb)(struct pci_dev *pdev));
->  
->  bool pcie_wait_for_link(struct pci_dev *pdev, bool active);
->  #ifdef CONFIG_PCIEASPM
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 4a818b07a1af..1235eca0a2e6 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -102,6 +102,7 @@ struct aer_stats {
->  #define ERR_UNCOR_ID(d)			(d >> 16)
->  
->  static int pcie_aer_disable;
-> +static pci_ers_result_t aer_root_reset(struct pci_dev *dev);
->  
->  void pci_no_aer(void)
->  {
-> @@ -1053,11 +1054,9 @@ static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
->  					info->status);
->  		pci_aer_clear_device_status(dev);
->  	} else if (info->severity == AER_NONFATAL)
-> -		pcie_do_recovery(dev, pci_channel_io_normal,
-> -				 PCIE_PORT_SERVICE_AER);
-> +		pcie_do_recovery(dev, pci_channel_io_normal, aer_root_reset);
->  	else if (info->severity == AER_FATAL)
-> -		pcie_do_recovery(dev, pci_channel_io_frozen,
-> -				 PCIE_PORT_SERVICE_AER);
-> +		pcie_do_recovery(dev, pci_channel_io_frozen, aer_root_reset);
->  	pci_dev_put(dev);
->  }
->  
-> @@ -1094,10 +1093,10 @@ static void aer_recover_work_func(struct work_struct *work)
->  		cper_print_aer(pdev, entry.severity, entry.regs);
->  		if (entry.severity == AER_NONFATAL)
->  			pcie_do_recovery(pdev, pci_channel_io_normal,
-> -					 PCIE_PORT_SERVICE_AER);
-> +					 aer_root_reset);
->  		else if (entry.severity == AER_FATAL)
->  			pcie_do_recovery(pdev, pci_channel_io_frozen,
-> -					 PCIE_PORT_SERVICE_AER);
-> +					 aer_root_reset);
->  		pci_dev_put(pdev);
->  	}
->  }
-> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-> index 6b116d7fdb89..114358d62ddf 100644
-> --- a/drivers/pci/pcie/dpc.c
-> +++ b/drivers/pci/pcie/dpc.c
-> @@ -227,7 +227,7 @@ static irqreturn_t dpc_handler(int irq, void *context)
->  	}
->  
->  	/* We configure DPC so it only triggers on ERR_FATAL */
-> -	pcie_do_recovery(pdev, pci_channel_io_frozen, PCIE_PORT_SERVICE_DPC);
-> +	pcie_do_recovery(pdev, pci_channel_io_frozen, dpc_reset_link);
->  
->  	return IRQ_HANDLED;
->  }
-> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-> index eefefe03857a..05f87bc9d011 100644
-> --- a/drivers/pci/pcie/err.c
-> +++ b/drivers/pci/pcie/err.c
-> @@ -162,14 +162,13 @@ static pci_ers_result_t default_reset_link(struct pci_dev *dev)
->  	return rc ? PCI_ERS_RESULT_DISCONNECT : PCI_ERS_RESULT_RECOVERED;
->  }
->  
-> -static pci_ers_result_t reset_link(struct pci_dev *dev, u32 service)
-> +static pci_ers_result_t reset_link(struct pci_dev *dev,
-> +			pci_ers_result_t (*reset_cb)(struct pci_dev *pdev))
->  {
->  	pci_ers_result_t status;
-> -	struct pcie_port_service_driver *driver = NULL;
->  
-> -	driver = pcie_port_find_service(dev, service);
-> -	if (driver && driver->reset_link) {
-> -		status = driver->reset_link(dev);
-> +	if (reset_cb) {
-> +		status = reset_cb(dev);
->  	} else if (pcie_downstream_port(dev)) {
->  		status = default_reset_link(dev);
->  	} else {
-> @@ -187,8 +186,9 @@ static pci_ers_result_t reset_link(struct pci_dev *dev, u32 service)
->  	return status;
->  }
->  
-> -void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
-> -		      u32 service)
-> +void pcie_do_recovery(struct pci_dev *dev,
-> +		      enum pci_channel_state state,
-> +		      pci_ers_result_t (*reset_cb)(struct pci_dev *pdev))
->  {
->  	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
->  	struct pci_bus *bus;
-> @@ -209,7 +209,7 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
->  		pci_walk_bus(bus, report_normal_detected, &status);
->  
->  	if (state == pci_channel_io_frozen) {
-> -		status = reset_link(dev, service);
-> +		status = reset_link(dev, reset_cb);
->  		if (status != PCI_ERS_RESULT_RECOVERED)
->  			goto failed;
->  	}
+>  drivers/phy/amlogic/Kconfig                   |  11 +
+>  drivers/phy/amlogic/Makefile                  |  11 +-
+>  .../amlogic/phy-meson-axg-mipi-pcie-analog.c  | 188 ++++++++++++++++++
+>  3 files changed, 205 insertions(+), 5 deletions(-)
+>  create mode 100644 drivers/phy/amlogic/phy-meson-axg-mipi-pcie-analog.c
+
+Kishon, Neil,
+
+can you please review/ack this patch and patch 6 ?
+
+I would like to queue the series shortly, thanks.
+
+Lorenzo
+
+> diff --git a/drivers/phy/amlogic/Kconfig b/drivers/phy/amlogic/Kconfig
+> index af774ac2b934..8c9cf2403591 100644
+> --- a/drivers/phy/amlogic/Kconfig
+> +++ b/drivers/phy/amlogic/Kconfig
+> @@ -59,3 +59,14 @@ config PHY_MESON_G12A_USB3_PCIE
+>  	  Enable this to support the Meson USB3 + PCIE Combo PHY found
+>  	  in Meson G12A SoCs.
+>  	  If unsure, say N.
+> +
+> +config PHY_MESON_AXG_MIPI_PCIE_ANALOG
+> +	tristate "Meson AXG MIPI + PCIE analog PHY driver"
+> +	default ARCH_MESON
+> +	depends on OF && (ARCH_MESON || COMPILE_TEST)
+> +	select GENERIC_PHY
+> +	select REGMAP_MMIO
+> +	help
+> +	  Enable this to support the Meson MIPI + PCIE analog PHY
+> +	  found in Meson AXG SoCs.
+> +	  If unsure, say N.
+> diff --git a/drivers/phy/amlogic/Makefile b/drivers/phy/amlogic/Makefile
+> index 11d1c42ac2be..0aecf92d796a 100644
+> --- a/drivers/phy/amlogic/Makefile
+> +++ b/drivers/phy/amlogic/Makefile
+> @@ -1,6 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+> -obj-$(CONFIG_PHY_MESON8B_USB2)		+= phy-meson8b-usb2.o
+> -obj-$(CONFIG_PHY_MESON_GXL_USB2)	+= phy-meson-gxl-usb2.o
+> -obj-$(CONFIG_PHY_MESON_G12A_USB2)	+= phy-meson-g12a-usb2.o
+> -obj-$(CONFIG_PHY_MESON_GXL_USB3)	+= phy-meson-gxl-usb3.o
+> -obj-$(CONFIG_PHY_MESON_G12A_USB3_PCIE)	+= phy-meson-g12a-usb3-pcie.o
+> +obj-$(CONFIG_PHY_MESON8B_USB2)			+= phy-meson8b-usb2.o
+> +obj-$(CONFIG_PHY_MESON_GXL_USB2)		+= phy-meson-gxl-usb2.o
+> +obj-$(CONFIG_PHY_MESON_G12A_USB2)		+= phy-meson-g12a-usb2.o
+> +obj-$(CONFIG_PHY_MESON_GXL_USB3)		+= phy-meson-gxl-usb3.o
+> +obj-$(CONFIG_PHY_MESON_G12A_USB3_PCIE)		+= phy-meson-g12a-usb3-pcie.o
+> +obj-$(CONFIG_PHY_MESON_AXG_MIPI_PCIE_ANALOG)	+= phy-meson-axg-mipi-pcie-analog.o
+> diff --git a/drivers/phy/amlogic/phy-meson-axg-mipi-pcie-analog.c b/drivers/phy/amlogic/phy-meson-axg-mipi-pcie-analog.c
+> new file mode 100644
+> index 000000000000..1431cbf885e1
+> --- /dev/null
+> +++ b/drivers/phy/amlogic/phy-meson-axg-mipi-pcie-analog.c
+> @@ -0,0 +1,188 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Amlogic AXG MIPI + PCIE analog PHY driver
+> + *
+> + * Copyright (C) 2019 Remi Pommarel <repk@triplefau.lt>
+> + */
+> +#include <linux/module.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/regmap.h>
+> +#include <linux/platform_device.h>
+> +#include <dt-bindings/phy/phy.h>
+> +
+> +#define HHI_MIPI_CNTL0 0x00
+> +#define		HHI_MIPI_CNTL0_COMMON_BLOCK	GENMASK(31, 28)
+> +#define		HHI_MIPI_CNTL0_ENABLE		BIT(29)
+> +#define		HHI_MIPI_CNTL0_BANDGAP		BIT(26)
+> +#define		HHI_MIPI_CNTL0_DECODE_TO_RTERM	GENMASK(15, 12)
+> +#define		HHI_MIPI_CNTL0_OUTPUT_EN	BIT(3)
+> +
+> +#define HHI_MIPI_CNTL1 0x01
+> +#define		HHI_MIPI_CNTL1_CH0_CML_PDR_EN	BIT(12)
+> +#define		HHI_MIPI_CNTL1_LP_ABILITY	GENMASK(5, 4)
+> +#define		HHI_MIPI_CNTL1_LP_RESISTER	BIT(3)
+> +#define		HHI_MIPI_CNTL1_INPUT_SETTING	BIT(2)
+> +#define		HHI_MIPI_CNTL1_INPUT_SEL	BIT(1)
+> +#define		HHI_MIPI_CNTL1_PRBS7_EN		BIT(0)
+> +
+> +#define HHI_MIPI_CNTL2 0x02
+> +#define		HHI_MIPI_CNTL2_CH_PU		GENMASK(31, 25)
+> +#define		HHI_MIPI_CNTL2_CH_CTL		GENMASK(24, 19)
+> +#define		HHI_MIPI_CNTL2_CH0_DIGDR_EN	BIT(18)
+> +#define		HHI_MIPI_CNTL2_CH_DIGDR_EN	BIT(17)
+> +#define		HHI_MIPI_CNTL2_LPULPS_EN	BIT(16)
+> +#define		HHI_MIPI_CNTL2_CH_EN(n)		BIT(15 - (n))
+> +#define		HHI_MIPI_CNTL2_CH0_LP_CTL	GENMASK(10, 1)
+> +
+> +struct phy_axg_mipi_pcie_analog_priv {
+> +	struct phy *phy;
+> +	unsigned int mode;
+> +	struct regmap *regmap;
+> +};
+> +
+> +static const struct regmap_config phy_axg_mipi_pcie_analog_regmap_conf = {
+> +	.reg_bits = 8,
+> +	.val_bits = 32,
+> +	.reg_stride = 4,
+> +	.max_register = HHI_MIPI_CNTL2,
+> +};
+> +
+> +static int phy_axg_mipi_pcie_analog_power_on(struct phy *phy)
+> +{
+> +	struct phy_axg_mipi_pcie_analog_priv *priv = phy_get_drvdata(phy);
+> +
+> +	/* MIPI not supported yet */
+> +	if (priv->mode != PHY_TYPE_PCIE)
+> +		return -EINVAL;
+> +
+> +	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
+> +			   HHI_MIPI_CNTL0_BANDGAP, HHI_MIPI_CNTL0_BANDGAP);
+> +
+> +	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
+> +			   HHI_MIPI_CNTL0_ENABLE, HHI_MIPI_CNTL0_ENABLE);
+> +	return 0;
+> +}
+> +
+> +static int phy_axg_mipi_pcie_analog_power_off(struct phy *phy)
+> +{
+> +	struct phy_axg_mipi_pcie_analog_priv *priv = phy_get_drvdata(phy);
+> +
+> +	/* MIPI not supported yet */
+> +	if (priv->mode != PHY_TYPE_PCIE)
+> +		return -EINVAL;
+> +
+> +	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
+> +			   HHI_MIPI_CNTL0_BANDGAP, 0);
+> +	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
+> +			   HHI_MIPI_CNTL0_ENABLE, 0);
+> +	return 0;
+> +}
+> +
+> +static int phy_axg_mipi_pcie_analog_init(struct phy *phy)
+> +{
+> +	return 0;
+> +}
+> +
+> +static int phy_axg_mipi_pcie_analog_exit(struct phy *phy)
+> +{
+> +	return 0;
+> +}
+> +
+> +static const struct phy_ops phy_axg_mipi_pcie_analog_ops = {
+> +	.init = phy_axg_mipi_pcie_analog_init,
+> +	.exit = phy_axg_mipi_pcie_analog_exit,
+> +	.power_on = phy_axg_mipi_pcie_analog_power_on,
+> +	.power_off = phy_axg_mipi_pcie_analog_power_off,
+> +	.owner = THIS_MODULE,
+> +};
+> +
+> +static struct phy *phy_axg_mipi_pcie_analog_xlate(struct device *dev,
+> +						  struct of_phandle_args *args)
+> +{
+> +	struct phy_axg_mipi_pcie_analog_priv *priv = dev_get_drvdata(dev);
+> +	unsigned int mode;
+> +
+> +	if (args->args_count != 1) {
+> +		dev_err(dev, "invalid number of arguments\n");
+> +		return ERR_PTR(-EINVAL);
+> +	}
+> +
+> +	mode = args->args[0];
+> +
+> +	/* MIPI mode is not supported yet */
+> +	if (mode != PHY_TYPE_PCIE) {
+> +		dev_err(dev, "invalid phy mode select argument\n");
+> +		return ERR_PTR(-EINVAL);
+> +	}
+> +
+> +	priv->mode = mode;
+> +	return priv->phy;
+> +}
+> +
+> +static int phy_axg_mipi_pcie_analog_probe(struct platform_device *pdev)
+> +{
+> +	struct phy_provider *phy;
+> +	struct device *dev = &pdev->dev;
+> +	struct phy_axg_mipi_pcie_analog_priv *priv;
+> +	struct device_node *np = dev->of_node;
+> +	struct regmap *map;
+> +	struct resource *res;
+> +	void __iomem *base;
+> +	int ret;
+> +
+> +	priv = devm_kmalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	base = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(base)) {
+> +		dev_err(dev, "failed to get regmap base\n");
+> +		return PTR_ERR(base);
+> +	}
+> +
+> +	map = devm_regmap_init_mmio(dev, base,
+> +				    &phy_axg_mipi_pcie_analog_regmap_conf);
+> +	if (IS_ERR(map)) {
+> +		dev_err(dev, "failed to get HHI regmap\n");
+> +		return PTR_ERR(map);
+> +	}
+> +	priv->regmap = map;
+> +
+> +	priv->phy = devm_phy_create(dev, np, &phy_axg_mipi_pcie_analog_ops);
+> +	if (IS_ERR(priv->phy)) {
+> +		ret = PTR_ERR(priv->phy);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(dev, "failed to create PHY\n");
+> +		return ret;
+> +	}
+> +
+> +	phy_set_drvdata(priv->phy, priv);
+> +	dev_set_drvdata(dev, priv);
+> +
+> +	phy = devm_of_phy_provider_register(dev,
+> +					    phy_axg_mipi_pcie_analog_xlate);
+> +
+> +	return PTR_ERR_OR_ZERO(phy);
+> +}
+> +
+> +static const struct of_device_id phy_axg_mipi_pcie_analog_of_match[] = {
+> +	{
+> +		.compatible = "amlogic,axg-mipi-pcie-analog-phy",
+> +	},
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, phy_axg_mipi_pcie_analog_of_match);
+> +
+> +static struct platform_driver phy_axg_mipi_pcie_analog_driver = {
+> +	.probe = phy_axg_mipi_pcie_analog_probe,
+> +	.driver = {
+> +		.name = "phy-axg-mipi-pcie-analog",
+> +		.of_match_table = phy_axg_mipi_pcie_analog_of_match,
+> +	},
+> +};
+> +module_platform_driver(phy_axg_mipi_pcie_analog_driver);
+> +
+> +MODULE_AUTHOR("Remi Pommarel <repk@triplefau.lt>");
+> +MODULE_DESCRIPTION("Amlogic AXG MIPI + PCIE analog PHY driver");
+> +MODULE_LICENSE("GPL v2");
 > -- 
-> 2.21.0
+> 2.24.1
 > 
