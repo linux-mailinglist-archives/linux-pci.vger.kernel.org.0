@@ -2,90 +2,129 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F1AB71779D4
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Mar 2020 16:02:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 715FC1779E2
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Mar 2020 16:05:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728393AbgCCPCS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Mar 2020 10:02:18 -0500
-Received: from foss.arm.com ([217.140.110.172]:48366 "EHLO foss.arm.com"
+        id S1727993AbgCCPDu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Mar 2020 10:03:50 -0500
+Received: from foss.arm.com ([217.140.110.172]:48408 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728183AbgCCPCS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 3 Mar 2020 10:02:18 -0500
+        id S1727851AbgCCPDu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 3 Mar 2020 10:03:50 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 49A8AFEC;
-        Tue,  3 Mar 2020 07:02:17 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 75598101E;
+        Tue,  3 Mar 2020 07:03:49 -0800 (PST)
 Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4DE6E3F6C4;
-        Tue,  3 Mar 2020 07:02:15 -0800 (PST)
-Date:   Tue, 3 Mar 2020 15:02:09 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8F1493F6C4;
+        Tue,  3 Mar 2020 07:03:47 -0800 (PST)
+Date:   Tue, 3 Mar 2020 15:03:45 +0000
 From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Vidya Sagar <vidyas@nvidia.com>, bhelgaas@google.com,
-        robh+dt@kernel.org, jonathanh@nvidia.com, andrew.murray@arm.com,
-        kishon@ti.com, gustavo.pimentel@synopsys.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V4 0/5] Add support for PCIe endpoint mode in Tegra194
-Message-ID: <20200303150209.GA6334@e121166-lin.cambridge.arm.com>
-References: <20200303105418.2840-1-vidyas@nvidia.com>
- <20200303134053.GC2854899@ulmo>
+To:     Kevin Hilman <khilman@baylibre.com>
+Cc:     Remi Pommarel <repk@triplefau.lt>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Yue Wang <yue.wang@Amlogic.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v6 0/7] PCI: amlogic: Make PCIe working reliably on AXG
+ platforms
+Message-ID: <20200303150345.GB6334@e121166-lin.cambridge.arm.com>
+References: <20200123232943.10229-1-repk@triplefau.lt>
+ <20200224141549.GB15614@e121166-lin.cambridge.arm.com>
+ <7h8sklbcmo.fsf@baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200303134053.GC2854899@ulmo>
+In-Reply-To: <7h8sklbcmo.fsf@baylibre.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 02:40:53PM +0100, Thierry Reding wrote:
-> On Tue, Mar 03, 2020 at 04:24:13PM +0530, Vidya Sagar wrote:
-> > Tegra194 has three (C0, C4 & C5) dual mode PCIe controllers that can operate
-> > either in root port mode or in end point mode but only in one mode at a time.
-> > Platform P2972-0000 supports enabling endpoint mode for C5 controller. This
-> > patch series adds support for PCIe endpoint mode in both the driver as well as
-> > in DT.
-> > This patch series depends on the changes made for Synopsys DesignWare endpoint
-> > mode subsystem that are recently accepted.
-> > @ https://patchwork.kernel.org/project/linux-pci/list/?series=202211
-> > which in turn depends on the patch made by Kishon
-> > @ https://patchwork.kernel.org/patch/10975123/
-> > which is also under review.
-> > 
-> > V4:
-> > * Started using threaded irqs instead of kthreads
-> > 
-> > V3:
-> > * Re-ordered patches in the series to make the driver change as the last patch
-> > * Took care of Thierry's review comments
-> > 
-> > V2:
-> > * Addressed Thierry & Bjorn's review comments
-> > * Added EP mode specific binding documentation to already existing binding documentation file
-> > * Removed patch that enables GPIO controller nodes explicitly as they are enabled already
-> > 
-> > Vidya Sagar (5):
-> >   soc/tegra: bpmp: Update ABI header
-> >   dt-bindings: PCI: tegra: Add DT support for PCIe EP nodes in Tegra194
-> >   arm64: tegra: Add PCIe endpoint controllers nodes for Tegra194
-> >   arm64: tegra: Add support for PCIe endpoint mode in P2972-0000
-> >     platform
-> >   PCI: tegra: Add support for PCIe endpoint mode in Tegra194
+On Sat, Feb 29, 2020 at 05:07:43PM +0100, Kevin Hilman wrote:
+> Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> writes:
 > 
-> Hi Lorenzo,
+> > On Fri, Jan 24, 2020 at 12:29:36AM +0100, Remi Pommarel wrote:
+> >> PCIe device probing failures have been seen on AXG platforms and were
+> >> due to unreliable clock signal output. Setting HHI_MIPI_CNTL0[26] bit
+> >> in MIPI's PHY registers solved the problem. This bit controls band gap
+> >> reference.
+> >> 
+> >> As discussed here [1] one of these shared MIPI/PCIE analog PHY register
+> >> bits was implemented in the clock driver as CLKID_MIPI_ENABLE. This adds
+> >> a PHY driver to control this bit instead, as well as setting the band
+> >> gap one in order to get reliable PCIE communication.
+> >> 
+> >> While at it add another PHY driver to control PCIE only PHY registers,
+> >> making AXG code more similar to G12A platform thus allowing to remove
+> >> some specific platform handling in pci-meson driver.
+> >> 
+> >> Please note that CLKID_MIPI_ENABLE removable will be done in a different
+> >> serie.
+> >> 
+> >> Changes since v5:
+> >>  - Add additionalProperties in device tree binding documentation
+> >>  - Make analog PHY required
+> >> 
+> >> Changes since v4:
+> >>  - Rename the shared MIPI/PCIe PHY to analog
+> >>  - Chain the MIPI/PCIe PHY to the PCIe one
+> >> 
+> >> Changes since v3:
+> >>  - Go back to the shared MIPI/PCIe phy driver solution from v2
+> >>  - Remove syscon usage
+> >>  - Add all dt-bindings documentation
+> >> 
+> >> Changes since v2:
+> >>  - Remove shared MIPI/PCIE device driver and use syscon to access register
+> >>    in PCIE only driver instead
+> >>  - Include devicetree documentation
+> >> 
+> >> Changes sinve v1:
+> >>  - Move HHI_MIPI_CNTL0 bit control in its own PHY driver
+> >>  - Add a PHY driver for PCIE_PHY registers
+> >>  - Modify pci-meson.c to make use of both PHYs and remove specific
+> >>    handling for AXG and G12A
+> >> 
+> >> [1] https://lkml.org/lkml/2019/12/16/119
+> >> 
+> >> Remi Pommarel (7):
+> >>   dt-bindings: Add AXG PCIE PHY bindings
+> >>   dt-bindings: Add AXG shared MIPI/PCIE analog PHY bindings
+> >>   dt-bindings: PCI: meson: Update PCIE bindings documentation
+> >>   arm64: dts: meson-axg: Add PCIE PHY nodes
+> >>   phy: amlogic: Add Amlogic AXG MIPI/PCIE analog PHY Driver
+> >>   phy: amlogic: Add Amlogic AXG PCIE PHY Driver
+> >>   PCI: amlogic: Use AXG PCIE
+> >> 
+> >>  .../bindings/pci/amlogic,meson-pcie.txt       |  22 +-
+> >>  .../amlogic,meson-axg-mipi-pcie-analog.yaml   |  35 ++++
+> >>  .../bindings/phy/amlogic,meson-axg-pcie.yaml  |  52 +++++
+> >>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi    |  16 ++
+> >>  drivers/pci/controller/dwc/pci-meson.c        | 116 ++---------
+> >>  drivers/phy/amlogic/Kconfig                   |  22 ++
+> >>  drivers/phy/amlogic/Makefile                  |  12 +-
+> >>  .../amlogic/phy-meson-axg-mipi-pcie-analog.c  | 188 +++++++++++++++++
+> >>  drivers/phy/amlogic/phy-meson-axg-pcie.c      | 192 ++++++++++++++++++
+> >>  9 files changed, 543 insertions(+), 112 deletions(-)
+> >>  create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-axg-mipi-pcie-analog.yaml
+> >>  create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-axg-pcie.yaml
+> >>  create mode 100644 drivers/phy/amlogic/phy-meson-axg-mipi-pcie-analog.c
+> >>  create mode 100644 drivers/phy/amlogic/phy-meson-axg-pcie.c
+> >
+> > Hi Remi,
+> >
+> > I am ready to pull this series in, do you want me to ? Or you prefer
+> > it to go via a different tree upstream ?
 > 
-> I've acked patches 1, 2 and 5 of the series. I think you're going to
-> need to apply patch 1 in order to satisfy a build-time dependency from
-> patch 5. I can apply patches 3 and 4 to the Tegra tree since they're
-> only adding device tree content that may conflict with some other
-> patches that I have in the Tegra tree.
-> 
-> Does that sound reasonable?
+> To avoid conflicts, I'll take the DT patch (PATCH 4/7) through my
+> amlogic tree, but feel free to take the rest.
 
-Sure, that's absolutely fine by me, I will do.
+That works for me Kevin, thanks !
 
-Thanks,
 Lorenzo
