@@ -2,93 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 04032178477
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Mar 2020 22:01:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9817F1786C1
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Mar 2020 00:57:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732201AbgCCVBS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Mar 2020 16:01:18 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:45168 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732028AbgCCVBR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Mar 2020 16:01:17 -0500
-Received: by mail-io1-f67.google.com with SMTP id w9so5199158iob.12;
-        Tue, 03 Mar 2020 13:01:16 -0800 (PST)
+        id S1727725AbgCCX53 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Mar 2020 18:57:29 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:34635 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727707AbgCCX53 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Mar 2020 18:57:29 -0500
+Received: by mail-lf1-f67.google.com with SMTP id w27so4340593lfc.1
+        for <linux-pci@vger.kernel.org>; Tue, 03 Mar 2020 15:57:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=sifive.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Inwyixh/Xliqd570k8wVQbSetvAGQIzEHwC5SASHA5I=;
-        b=dSCmO0gjO6N6Ep7LHrxh+zXrLbsdS2opusnGKvBzMO3qlt47Bu43mQqlgXpuEJXfX9
-         xO/AHiFd2YDEw/jDVx6M0htzF1p57qgWPHUH9WReVeEDYMqIIEb3y7d+fBBJcvN2qPXF
-         6/5bi4FiRucesnNOfYkHB0WnLhpRFL5apuuogE/0DixF+dYGyYpyVa7Ap8fB2eHPMRHG
-         8J01udvAw2EUpUHlNLMWlYSLs0/8JAnJ5ZgfaaswREzRjCjMMTbqwH2XL+hXmxnIx4Pl
-         PqwU/WmcVq09M+wzSpmrYRfZN8E7xH1UV3TnyUv4kp4TBTT6AOOlHrzdz/b6pJkeJRrf
-         FTMQ==
+        bh=fIWGur3bsHzpzpsDDYwv29XnZSnnJNIFZvGbNS4jrEo=;
+        b=kDnUpYpdn4DAr4q2+USJm5D+Fm0EG/v+rd4s9F6wFuVXBRLXddHQ+/f0t4DFkkQ+3Q
+         eBcaSIqkYIuy53rq98q1mHS3xL2RtzGAIQO2CLrUnJdK4EJtDXeVl6PdXaACwg1yxD83
+         KLoXEudsQ8rXYTgIgtth79gb8JOYaXvThTtjUTvrkO2UnUDAZKVhOyQ0sM0Dh8y0cy7T
+         x7c6ZJRQeiva4BdwyggRsrozYSAaI1lq79XSN90vSRowrZlPAbE1G13Qdg4Ro+8djiBX
+         ZGGI3UFY12ilEHoXGE8jE5rpfmGBT8LYcI/8AzDqCZMiPlySSJpfsoVgP1G8NnIC+kRj
+         tEkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Inwyixh/Xliqd570k8wVQbSetvAGQIzEHwC5SASHA5I=;
-        b=Yiyu/hYEizuHCTu3d5SA7GcAsI/mxDTEYEcRPde7Yr4xbeJ4nKxffCh3bcwpz+yXLp
-         4GKOkCsPn5FVkfg29YdzzlIowP+enil37rwKTyJOiUnebuuLz/RNZkZxY2ZhpMxx9Dbr
-         WmJKDtGrqv8lGEp2w5afc88C35I40JtIj9RAR2geYOMX3gxQT+ofc0mTYHCsOdRSztiO
-         2ck8yjdoRcCYYLnFSmQ+8l0yOSBeRaxRKJOdni0pRtV5fwdM490RHmpXfmfkuj6ysKu+
-         t2jMpdGHvct3bAW9Vi6z7Hp4VoORQ6bekAU3EJ1nIOea/1VQWFNOEgHxCP6msfuACPXH
-         q/4Q==
-X-Gm-Message-State: ANhLgQ1P0d71ruqhiA8wDrr1IoB/Ijk+K9MwgZKsuFey0vhib/OrS/7Z
-        KopyYy4PU5Fr6QSkJZdIhOpZZofr003zU2xRyao=
-X-Google-Smtp-Source: ADFU+vtbkYWtBm/HrVENxCPKK0eVn5EKnhXHq5pDUwR6Q53DQW/c7/4/OU0/6ovo/ftmDbmJ0Gn1Ux28zNMQ3zNobwY=
-X-Received: by 2002:a5d:9c93:: with SMTP id p19mr5792564iop.81.1583269275868;
- Tue, 03 Mar 2020 13:01:15 -0800 (PST)
+        bh=fIWGur3bsHzpzpsDDYwv29XnZSnnJNIFZvGbNS4jrEo=;
+        b=rZqV3ab3KDOE4TMV9K8lgGhUCZxmo2mTBexxyVuGsrS+n07x9mjYQUTzYQ6KfmHRMg
+         VxxikvkcJIRPo0ksjbsX+J+k1uX+5cwksfjmPneY8xLP2KEhZCEUO+EUBNOI9nNJajR3
+         4Pmw52fay7my6S405kdmsrRxzcb4/ASg/RWKmiT3Vr9fnuYJw5kZHYmZsgIDL9Qb3bvM
+         2sfTauc0CdF1TGa2SmLD7PlEtGW3z7LbN2LLBMWtDbnjEWMseIuxyE6xPpiqVcLf1Amu
+         z4apZcLeQwIUE1n4eb/99v8pfxTOXB/RsNNxHF9A2gtcB+EYVazFEyTpE61jJByKKYIb
+         zw3Q==
+X-Gm-Message-State: ANhLgQ3lmXZijdJ5QoM7tJsmJTMVykDD+aLY1fu1pm6+fcdj7Ugw6Nzn
+        DqVHRcRej3LHQMTkWSgiuVv7mfF+OfvLsKeopPAmrw==
+X-Google-Smtp-Source: ADFU+vuSXV6dJHAw44cUBpwZDzV0Ata45u0U9iunTKOnYcvhn4CAzW/6jGOxJT8MXZjlles3cvD5zW2DxOE8xH8AoFU=
+X-Received: by 2002:a19:ca15:: with SMTP id a21mr232523lfg.67.1583279845785;
+ Tue, 03 Mar 2020 15:57:25 -0800 (PST)
 MIME-Version: 1.0
-References: <20191225192118.283637-1-kasong@redhat.com> <20200222165631.GA213225@google.com>
- <CACPcB9dv1YPhRmyWvtdt2U4g=XXU7dK4bV4HB1dvCVMTpPFdzA@mail.gmail.com> <CABeXuvqm1iUGt1GWC9eujuoaACdPiZ2X=3LjKJ5JXKZcXD_z_g@mail.gmail.com>
-In-Reply-To: <CABeXuvqm1iUGt1GWC9eujuoaACdPiZ2X=3LjKJ5JXKZcXD_z_g@mail.gmail.com>
-From:   Deepa Dinamani <deepa.kernel@gmail.com>
-Date:   Tue, 3 Mar 2020 13:01:04 -0800
-Message-ID: <CABeXuvonZpwWfcUef4PeihTJkgH2ZC_RCKuLR3rH3Re4hx36Aw@mail.gmail.com>
-Subject: Re: [RFC PATCH] PCI, kdump: Clear bus master bit upon shutdown in
- kdump kernel
-To:     Kairui Song <kasong@redhat.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Khalid Aziz <khalid@gonehiking.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org, kexec@lists.infradead.org,
-        Jerry Hoemann <jerry.hoemann@hpe.com>,
-        Baoquan He <bhe@redhat.com>, Randy Wright <rwright@hpe.com>,
-        Dave Young <dyoung@redhat.com>,
-        Myron Stowe <myron.stowe@redhat.com>
+References: <20200225091130.29467-1-kishon@ti.com> <1582665067-20462-1-git-send-email-alan.mikhak@sifive.com>
+ <7e1202a3-037b-d1f3-f2bf-1b8964787ebd@ti.com> <CABEDWGz=4E8mYx0usw4A1UAMHrq+MGyKOX47yO7Cdgmcq=aOag@mail.gmail.com>
+In-Reply-To: <CABEDWGz=4E8mYx0usw4A1UAMHrq+MGyKOX47yO7Cdgmcq=aOag@mail.gmail.com>
+From:   Alan Mikhak <alan.mikhak@sifive.com>
+Date:   Tue, 3 Mar 2020 15:57:13 -0800
+Message-ID: <CABEDWGwejv-1h=pLt_o5n=Mct+6r9oQdQCLT7GZSMgBR2bDJHg@mail.gmail.com>
+Subject: Re: [PATCH 1/5] PCI: endpoint: functions/pci-epf-test: Add DMA
+ support to transfer data
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     amurray@thegoodpenguin.co.uk, arnd@arndb.de,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        linux-pci <linux-pci@vger.kernel.org>, lorenzo.pieralisi@arm.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-I looked at this some more. Looks like we do not clear irqs when we do
-a kexec reboot. And, the bootup code maintains the same table for the
-kexec-ed kernel. I'm looking at the following code in
-intel_irq_remapping.c:
+On Wed, Feb 26, 2020 at 9:39 AM Alan Mikhak <alan.mikhak@sifive.com> wrote:
+>
+> On Tue, Feb 25, 2020 at 9:27 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+> >
+> > Hi Alan,
+> >
+> > On 26/02/20 2:41 am, Alan Mikhak wrote:
+> > > @@ -380,6 +572,7 @@ static void pci_epf_test_unbind(struct pci_epf *epf)
+> > >         int bar;
+> > >
+> > >         cancel_delayed_work(&epf_test->cmd_handler);
+> > > +       pci_epf_clean_dma_chan(epf_test);
+> > >         pci_epc_stop(epc);
+> > >         for (bar = 0; bar < PCI_STD_NUM_BARS; bar++) {
+> > >                 epf_bar = &epf->bar[bar];
+> > > @@ -550,6 +743,12 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+> > >                 }
+> > >         }
+> > >
+> > > +       epf_test->dma_supported = true;
+> > > +
+> > > +       ret = pci_epf_init_dma_chan(epf_test);
+> > > +       if (ret)
+> > > +               epf_test->dma_supported = false;
+> > > +
+> > >         if (linkup_notifier) {
+> > >                 epf->nb.notifier_call = pci_epf_test_notifier;
+> > >                 pci_epc_register_notifier(epc, &epf->nb);
+> > >
+> > > Hi Kishon,
+> > >
+> > > Looking forward to building and trying this patch series on
+> > > a platform I work on.
 
-        if (ir_pre_enabled(iommu)) {
-                if (!is_kdump_kernel()) {
-                        pr_warn("IRQ remapping was enabled on %s but
-we are not in kdump mode\n",
-                                iommu->name);
-                        clear_ir_pre_enabled(iommu);
-                        iommu_disable_irq_remapping(iommu);
-                } else if (iommu_load_old_irte(iommu))
-                        pr_err("Failed to copy IR table for %s from
-previous kernel\n",
-                               iommu->name);
-                else
-                        pr_info("Copied IR table for %s from previous kernel\n",
-                                iommu->name);
-        }
+Hi Kishon,
 
-Would cleaning the interrupts(like in the non kdump path above) just
-before shutdown help here? This should clear the interrupts enabled
-for all the devices in the current kernel. So when kdump kernel
-starts, it starts clean. This should probably help block out the
-interrupts from a device that does not have a driver.
+I applied this v1 patch series to kernel.org linux 5.6-rc3 and built for
+x86_64 Debian and riscv. I verified that when I execute the pcitest
+command on the x86_64 host with -d flag, the riscv endpoint performs
+the transfer by using an available dma channel.
 
--Deepa
+Regards,
+Alan
+
+> > >
+> > > Would you please point me to where I can find the patches
+> > > which add pci_epf_init_dma_chan() and pci_epf_clean_dma_chan()
+> > > to Linux PCI Endpoint Framework?
+> >
+> > I've added these functions in pci-epf-test itself instead of adding in
+> > the core files. I realized adding it in core files may not be helpful if
+> > the endpoint function decides to use more number of DMA channels etc.,
+>
+> Thanks Kishon,
+>
+> I now realize they are in [PATCH 1/5] of this series. May I suggest renaming
+> them to pci_epf_test_init_dma_chan() and pci_epf_test_cleanup_dma_chan()?
+> With just pci_epf in their name, I was looking for them in pci-epf-core.c.
+>
+> Regards,
+> Alan
+>
+> >
+> > Thanks
+> > Kishon
