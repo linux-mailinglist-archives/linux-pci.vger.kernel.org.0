@@ -2,86 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 43E99177D9E
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Mar 2020 18:36:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E55DD1781B3
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Mar 2020 20:02:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728291AbgCCRgx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Mar 2020 12:36:53 -0500
-Received: from mga17.intel.com ([192.55.52.151]:47673 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727993AbgCCRgx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:36:53 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 09:36:47 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
-   d="scan'208";a="229000291"
-Received: from jekeller-mobl1.amr.corp.intel.com (HELO [134.134.177.106]) ([134.134.177.106])
-  by orsmga007.jf.intel.com with ESMTP; 03 Mar 2020 09:36:47 -0800
-Subject: Re: [PATCH v2 6/6] nfp: Use pci_get_dsn()
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     linux-pci@vger.kernel.org, netdev@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        David Miller <davem@davemloft.net>
-References: <CABhMZUXJ_Omt-+fwa4Oz-Ly=J+NM8+8Ryv-Ad1u_bgEpDRH7RQ@mail.gmail.com>
- <20200303022506.1792776-1-jacob.e.keller@intel.com>
- <20200303022506.1792776-7-jacob.e.keller@intel.com>
- <20200302194044.27eb9e5a@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-From:   Jacob Keller <jacob.e.keller@intel.com>
-Organization: Intel Corporation
-Message-ID: <fe15eb21-76c8-643d-9561-d3d2e12670f8@intel.com>
-Date:   Tue, 3 Mar 2020 09:36:47 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1733293AbgCCSF2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Mar 2020 13:05:28 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:33772 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388201AbgCCSF1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Mar 2020 13:05:27 -0500
+Received: by mail-il1-f194.google.com with SMTP id r4so3614243iln.0
+        for <linux-pci@vger.kernel.org>; Tue, 03 Mar 2020 10:05:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=42VRx4KA+cD1ZZnhz/34yl/kjJSKnU+ahvHX6e7S6BM=;
+        b=d57E+TjYnXBS5utFthqgjCzs5gzf2YK9WH5NGkJridOgtqp3wVAUPcyEBFtGiCER54
+         6WxsYg6g2KxpFGatddSsjazp+hKl/oyJ5OKJ2uC9KJtcATRNo83GGTHGVPilGREyURxn
+         Z1AWyRZRo/ls3PYs/eXVbfhGle8wc+vQa7nE8xliAofU32+n8Bxn9AxGOega5QSRynXM
+         n+wqCsJmmPzJF44r5ZkDoUidFxTZjorvsWAVZOXOixMNlr7ypx7VaGK/zals4SMfkjZx
+         EJ/HJ18Xw2Sxnr6D7Xe4VCnARhfWRa8yWu1eyAm8GayQVmhlaVfsPmlIK6SzOSEAMnfJ
+         gSBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=42VRx4KA+cD1ZZnhz/34yl/kjJSKnU+ahvHX6e7S6BM=;
+        b=LSE659h3/ENWB5jicu8rEXdK2uVRuY4BwO1eqUBX22zG0NNUXHs4kgk9eOgXgjYUvr
+         SvPGg6hljXh9NC7VkpeEfA4+kyhnukTznnlgzKtcnPZFoKKQTWBOlaqxsWOJ6JFnj+g9
+         ijnAYriV9R/2Km+rSfGRoun25OtMX+XuODzT+RdIzfiqviRVvVQvSjn3fU9C1D7VLtjh
+         XnkP0TalBd+OOymGTh+0qBGADjoIk2lIqBZrA07QD5HMmz7QFl8YU2c18aH20sOv4OlH
+         DVBMqSpoOBN6KUYtGUzV2f4P5YVBmU7wxzOC6NnLVQzpRn81/Y7i6InwRius+DUUHNx1
+         OF2Q==
+X-Gm-Message-State: ANhLgQ030M/9Ul9pfkoWaUNyAgSm6dRkyqZKCXTw1YkB9gWxOvwTYI4K
+        hh+ADRbham4wK1DiLaGbw1VLQpVfmHiRJb/g/JE=
+X-Google-Smtp-Source: ADFU+vtyrSYL7z1VjGtve+7Jvf5g505V9ftsCJZgfM7HFZ1owQBkqegEuKlaj0Ww/sjlhpmjswSK17r3U09Gjdqh6DY=
+X-Received: by 2002:a92:d2c5:: with SMTP id w5mr256087ilg.196.1583258726270;
+ Tue, 03 Mar 2020 10:05:26 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200302194044.27eb9e5a@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Received: by 2002:a02:9f04:0:0:0:0:0 with HTTP; Tue, 3 Mar 2020 10:05:25 -0800 (PST)
+Reply-To: dr.challynoah@gmail.com
+From:   DR CHALLY NOAH <mayorabrahamedge404@gmail.com>
+Date:   Tue, 3 Mar 2020 19:05:25 +0100
+Message-ID: <CALqVJWdXs9icUMy7WWz15chUBSHbuLgeF4vj_6SPuetvkiJYVw@mail.gmail.com>
+Subject: Hello Dear
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 3/2/2020 7:40 PM, Jakub Kicinski wrote:
-> On Mon,  2 Mar 2020 18:25:05 -0800 Jacob Keller wrote:
->> Use the newly added pci_get_dsn() function for obtaining the 64-bit
->> Device Serial Number in the nfp6000_read_serial and
->> nfp_6000_get_interface functions.
->>
->> pci_get_dsn() reports the Device Serial number as a u64 value created by
->> combining two pci_read_config_dword functions. The lower 16 bits
->> represent the device interface value, and the next 48 bits represent the
->> serial value. Use put_unaligned_be32 and put_unaligned_be16 to convert
->> the serial value portion into a Big Endian formatted serial u8 array.
->>
->> Signed-off-by: Jacob Keller <jacob.e.keller@intel.com>
->> Cc: Jakub Kicinski <kuba@kernel.org>
-> 
-> Reviewed-by: Jakub Kicinski <kuba@kernel.org>
-> 
-> Thanks!
-> 
->> -	pci_read_config_dword(pdev, pos + 4, &reg);
->> -	put_unaligned_be16(reg >> 16, serial + 4);
->> -	pci_read_config_dword(pdev, pos + 8, &reg);
->> -	put_unaligned_be32(reg, serial);
->> +	put_unaligned_be32((u32)(dsn >> 32), serial);
->> +	put_unaligned_be16((u16)(dsn >> 16), serial + 4);
-> 
-> nit: the casts and extra brackets should be unnecessary, in case
->      you're respinning..
-> 
-
-Ah, yea because the argument will get converted properly by the
-function. It's a bit of a habit since we use one of the -W warnings that
-warns about implicit conversions that use truncation. I can remove them
-if I need to respin.
-
-It looks like this got picked up by one of the kbuild bots but got
-applied without the main PCI patch that implemented pci_get_dsn.
-
-Thanks,
-Jake
+Hello Dear,
+What Have Kept You Waiting To Claim Your $600,000.00 USD Compensation Award?
+This said fund was issued out by the UNITED NATIONS To compensate
+you.Please If You Have Not Claim Your Fund (Award),Kindly contact me
+at   DR.CHALLYNOAH@GMAIL.COM   for further details on how to proceed your
+fund (award)release to you or better still reply back Immediately You
+Receive This Information For An Urgent Confirmation And Release Of Your
+Fund To You Without Delays, as your email was listed among those to be
+compensated this year.Congratulations..
+Best Regards,
+Dr Chally Noah.
+Minister Of Finance On Foreign Remittance:
