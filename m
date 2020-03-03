@@ -2,135 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A299D177821
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Mar 2020 15:03:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 523A6177828
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Mar 2020 15:03:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727936AbgCCOAR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Mar 2020 09:00:17 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42038 "EHLO
+        id S1728070AbgCCOCd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Mar 2020 09:02:33 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22717 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727804AbgCCOAR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Mar 2020 09:00:17 -0500
+        with ESMTP id S1728568AbgCCOCd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Mar 2020 09:02:33 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583244016;
+        s=mimecast20190719; t=1583244151;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=aa6HtSeh49MIF/xjAgoQ7EQau/N+kwzDq7RM+vAw+Uo=;
-        b=idd0hF0HzLrt9N4JAL6p2MgfJHMl1rOYhQcnYk8y5kNu9jvhn9Bq42IGjoH0qmCBZfu56J
-        Mu2GLx9fG+gSzuXywk6E1dmYPNKhNAWy8LaSaDuzo2qGMcS55fnjwXL1pCiLh2lflee+P5
-        0IsPPknNIWIZ+/Bm9aZ9tRsurEaYiCg=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-421-NCMDcq-zPIyCwkc3tSwcsw-1; Tue, 03 Mar 2020 09:00:13 -0500
-X-MC-Unique: NCMDcq-zPIyCwkc3tSwcsw-1
-Received: by mail-qt1-f197.google.com with SMTP id k20so2228612qtm.11
-        for <linux-pci@vger.kernel.org>; Tue, 03 Mar 2020 06:00:13 -0800 (PST)
+        bh=vURXmaMa/jNw8/wDeynB3tRJrpHBF8mvDGbk4U2gsFk=;
+        b=CdDnilo2CaRiZcQGnSgCW1FwlNhcC+MA8v3HLKVxjj1ntlnDudZvf6jpWo6RWQi7jqzham
+        ZI1Z8HjYboMewTfRRrobe7lUDD2y0bLpfCi43yYg2moVLSkvRRxDfYns5eCLadWCssuQDa
+        e+ekJ8VBFp+bwBljOuySa8ahlYI3zYs=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-343-Qg1pKOhPP8Wu9r3KCrqBeg-1; Tue, 03 Mar 2020 09:02:30 -0500
+X-MC-Unique: Qg1pKOhPP8Wu9r3KCrqBeg-1
+Received: by mail-qk1-f200.google.com with SMTP id x21so2161480qkn.18
+        for <linux-pci@vger.kernel.org>; Tue, 03 Mar 2020 06:02:30 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=aa6HtSeh49MIF/xjAgoQ7EQau/N+kwzDq7RM+vAw+Uo=;
-        b=gP5t16JXDBr6M/Tj/QjYpiLQKZECMY54ujUhd3nZML86OhcBts7ia0MqdTvze/+t9e
-         LUG1ro1IdlauzBZ1yjRkTqC9fynwxCWgR1YITmesCyVG4E59mYeNv6B5hpJ97yNB1R17
-         xcIEUNnZEtVvYUL8hQQ2ehC0dHXi8+XDz8dtrTSmreGu7AXp9GIJBTrRUlSkPJKyPK80
-         W/2YTusPAf5n0bHApKbNEyFXwEek7iM+5D4A35Ddvc4MrDHsGukmUP85cDXyo+07KO4Y
-         BSB28DHiSmbGEzPeRftSUYiUau9y57Zxti51MMu/EWGwEcK29Jc4GT+b4+wFtZnr6J5N
-         /4+w==
-X-Gm-Message-State: ANhLgQ1aKTsSzQHZo1cZe1FOImkFcI3kkcVs0IUeJkeq/y9kr7fj2c2/
-        Y+84yhPCGwMIAYSHlhs07nbu+oXA1FhW9dIS2m+7l1lpsyjVDDyJgkWGolcQbART8swwI2UtWzp
-        XDkwO7Csb29NSLunHDXFH
-X-Received: by 2002:ac8:1c7a:: with SMTP id j55mr4453349qtk.311.1583244012062;
-        Tue, 03 Mar 2020 06:00:12 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vuZwadsAvkhUcJH4/W47LkbDsji9AWmjLQIpqUobhWh56z5UC579vb1nzWGmKUdc6OPFj59sQ==
-X-Received: by 2002:ac8:1c7a:: with SMTP id j55mr4453330qtk.311.1583244011778;
-        Tue, 03 Mar 2020 06:00:11 -0800 (PST)
+        bh=vURXmaMa/jNw8/wDeynB3tRJrpHBF8mvDGbk4U2gsFk=;
+        b=hDLeEo0jvDA2a8ADJnkP5XBsdK5AelvL6Wtd9toMG9tJCDY1MMEyefj+DXBHW+LMR0
+         FPzHcsmqirrZSyptgv7hlOOZL0D8KPsWDopavFJqtRsQZg/1eQz2c0cF0cMUTEHb1+OO
+         V70IdhBXoOmPT2fwOcYkqPtTDT3ytmoY7vnI8Zq/g3J8Hi2TrGY1GHCc+KSEQ5huHp1D
+         PWnN7uaUF9J0ADo1nb+t2afrU8XpPcWSIDNWEUAEsQ7sFfUxEobvBFBzAmaN7KD2wZfU
+         2cf5qILYV5Em8ftVJbA6ScHXsAw5evh59avZ0KdEy2wtk6HUk9Z+sS7BRWlAlFNVQrgz
+         pWUA==
+X-Gm-Message-State: ANhLgQ1EK2T/B7jM5ky8ruvbz9lQ5Nim6Q14al1wh68td6/PW0+EkC7Y
+        4GAp3bplB1o0rJLyhimpajWMRNY0QGnPv9edaB4gSEmPIf6tUppCT8Zwxii2pgpCE9/Wt3D3LKP
+        7/Q/vEKjNmrGKF3KYZyop
+X-Received: by 2002:ac8:8d6:: with SMTP id y22mr4331359qth.85.1583244149957;
+        Tue, 03 Mar 2020 06:02:29 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vsrHkcUNU/JWr3iaSlnrdpMaoXDL9dgR2gjUhWQ2iO+BPmktHURohbRSLr525HkXxY5rlNBXQ==
+X-Received: by 2002:ac8:8d6:: with SMTP id y22mr4331328qth.85.1583244149723;
+        Tue, 03 Mar 2020 06:02:29 -0800 (PST)
 Received: from redhat.com (bzq-79-180-48-224.red.bezeqint.net. [79.180.48.224])
-        by smtp.gmail.com with ESMTPSA id j1sm9081095qtd.66.2020.03.03.06.00.08
+        by smtp.gmail.com with ESMTPSA id j7sm8343441qti.14.2020.03.03.06.02.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 06:00:10 -0800 (PST)
-Date:   Tue, 3 Mar 2020 09:00:05 -0500
+        Tue, 03 Mar 2020 06:02:28 -0800 (PST)
+Date:   Tue, 3 Mar 2020 09:02:23 -0500
 From:   "Michael S. Tsirkin" <mst@redhat.com>
 To:     Joerg Roedel <joro@8bytes.org>
-Cc:     Auger Eric <eric.auger@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+Cc:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
         iommu@lists.linux-foundation.org,
         virtualization@lists.linux-foundation.org,
         linux-pci@vger.kernel.org, bhelgaas@google.com,
         jasowang@redhat.com, kevin.tian@intel.com,
-        sebastien.boeuf@intel.com, jacob.jun.pan@intel.com,
-        robin.murphy@arm.com
+        sebastien.boeuf@intel.com, eric.auger@redhat.com,
+        jacob.jun.pan@intel.com, robin.murphy@arm.com
 Subject: Re: [PATCH v2 1/3] iommu/virtio: Add topology description to
  virtio-iommu config space
-Message-ID: <20200303084753-mutt-send-email-mst@kernel.org>
+Message-ID: <20200303090046-mutt-send-email-mst@kernel.org>
 References: <20200228172537.377327-1-jean-philippe@linaro.org>
  <20200228172537.377327-2-jean-philippe@linaro.org>
  <20200302161611.GD7829@8bytes.org>
- <9004f814-2f7c-9024-3465-6f9661b97b7a@redhat.com>
- <20200303130155.GA13185@8bytes.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200303130155.GA13185@8bytes.org>
+In-Reply-To: <20200302161611.GD7829@8bytes.org>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 02:01:56PM +0100, Joerg Roedel wrote:
-> Hi Eric,
+On Mon, Mar 02, 2020 at 05:16:12PM +0100, Joerg Roedel wrote:
+> On Fri, Feb 28, 2020 at 06:25:36PM +0100, Jean-Philippe Brucker wrote:
+> > This solution isn't elegant nor foolproof, but is the best we can do at
+> > the moment and works with existing virtio-iommu implementations. It also
+> > enables an IOMMU for lightweight hypervisors that do not rely on
+> > firmware methods for booting.
 > 
-> On Tue, Mar 03, 2020 at 11:19:20AM +0100, Auger Eric wrote:
-> > Michael has pushed this solution (putting the "configuration in the PCI
-> > config space"), I think for those main reasons:
-> > - ACPI may not be supported on some archs/hyps
-> 
-> But on those there is device-tree, right?
+> I appreciate the enablement on x86, but putting the conmfiguration into
+> mmio-space isn't really something I want to see upstream.
 
-Not necessarily. E.g. some power systems have neither.
-There are also systems looking to bypass ACPI e.g. for boot speed.
+It's in virtio config space, not in mmio-space. With a PCI virtio-IOMMU
+device this will be in memory.
 
-
-> > - the virtio-iommu is a PCIe device so binding should not need ACPI
-> > description
-> 
-> The other x86 IOMMUs are PCI devices too and they definitly need a ACPI
-> table to be configured.
-> 
-> > Another issue with ACPI integration is we have different flavours of
-> > tables that exist: IORT, DMAR, IVRS
-> 
-> An integration with IORT might be the best, but if it is not possible
-> ther can be a new table-type for Virtio-iommu. That would still follow
-> platform best practices.
-> 
-> > x86 ACPI integration was suggested with IORT. But it seems ARM is
-> > reluctant to extend IORT to support para-virtualized IOMMU. So the VIOT
-> > was proposed as a different atternative in "[RFC 00/13] virtio-iommu on
-> > non-devicetree platforms"
-> > (https://patchwork.kernel.org/cover/11257727/). Proposing a table that
-> > may be used by different vendors seems to be a challenging issue here.
-> 
-> Yeah, if I am reading that right this proposes a one-fits-all solution.
-> That is not needed as the other x86 IOMMUs already have their tables
-> defined and implemented. There is no need to change anything there.
-> 
-> > So even if the above solution does not look perfect, it looked a
-> > sensible compromise given the above arguments. Please could you explain
-> > what are the most compelling arguments against it?
-> 
-> It is a hack and should be avoided if at all possible.
-
-That sentence doesn't really answer the question, does it?
-
-> And defining an
-> own ACPI table type seems very much possible.
-
-Frankly with platform specific interfaces like ACPI, virtio-iommu is
-much less compelling.  Describing topology as part of the device in a
-way that is first, portable, and second, is a good fit for hypervisors,
-is to me one of the main reasons virtio-iommu makes sense at all.
-
+> What is the
+> problem with defining an ACPI table instead? This would also make things
+> work on AARCH64 UEFI machines.
 > 
 > Regards,
 > 
