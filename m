@@ -2,106 +2,129 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D158178F87
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Mar 2020 12:25:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3CC3517905A
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Mar 2020 13:28:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729283AbgCDLZn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 Mar 2020 06:25:43 -0500
-Received: from mx2.suse.de ([195.135.220.15]:40210 "EHLO mx2.suse.de"
+        id S2387925AbgCDM2R (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 Mar 2020 07:28:17 -0500
+Received: from foss.arm.com ([217.140.110.172]:33686 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728953AbgCDLZm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 4 Mar 2020 06:25:42 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 01303AC77;
-        Wed,  4 Mar 2020 11:25:40 +0000 (UTC)
-Message-ID: <720dd2a49b6efea353367effe25c29ebb4c9aa23.camel@suse.de>
-Subject: Re: [PATCH v3 4/4] USB: pci-quirks: Add Raspberry Pi 4 quirk
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     f.fainelli@gmail.com, Mathias Nyman <mathias.nyman@intel.com>,
-        linux-pci@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, tim.gover@raspberrypi.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, wahrenst@gmx.net
-Date:   Wed, 04 Mar 2020 12:25:39 +0100
-In-Reply-To: <20200304090555.GC1429273@kroah.com>
-References: <20200302155528.19505-1-nsaenzjulienne@suse.de>
-         <20200302155528.19505-5-nsaenzjulienne@suse.de>
-         <20200304090555.GC1429273@kroah.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-P5OQO7Po4GtPGRWMR0Yz"
-User-Agent: Evolution 3.34.4 
+        id S2387801AbgCDM2R (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 4 Mar 2020 07:28:17 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7A82331B;
+        Wed,  4 Mar 2020 04:28:16 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CF4C83F534;
+        Wed,  4 Mar 2020 04:28:14 -0800 (PST)
+Date:   Wed, 4 Mar 2020 12:28:12 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Kevin Hilman <khilman@baylibre.com>
+Cc:     Remi Pommarel <repk@triplefau.lt>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Yue Wang <yue.wang@Amlogic.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v6 0/7] PCI: amlogic: Make PCIe working reliably on AXG
+ platforms
+Message-ID: <20200304122812.GB6613@e121166-lin.cambridge.arm.com>
+References: <20200123232943.10229-1-repk@triplefau.lt>
+ <20200224141549.GB15614@e121166-lin.cambridge.arm.com>
+ <7h8sklbcmo.fsf@baylibre.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7h8sklbcmo.fsf@baylibre.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Sat, Feb 29, 2020 at 05:07:43PM +0100, Kevin Hilman wrote:
+> Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> writes:
+> 
+> > On Fri, Jan 24, 2020 at 12:29:36AM +0100, Remi Pommarel wrote:
+> >> PCIe device probing failures have been seen on AXG platforms and were
+> >> due to unreliable clock signal output. Setting HHI_MIPI_CNTL0[26] bit
+> >> in MIPI's PHY registers solved the problem. This bit controls band gap
+> >> reference.
+> >> 
+> >> As discussed here [1] one of these shared MIPI/PCIE analog PHY register
+> >> bits was implemented in the clock driver as CLKID_MIPI_ENABLE. This adds
+> >> a PHY driver to control this bit instead, as well as setting the band
+> >> gap one in order to get reliable PCIE communication.
+> >> 
+> >> While at it add another PHY driver to control PCIE only PHY registers,
+> >> making AXG code more similar to G12A platform thus allowing to remove
+> >> some specific platform handling in pci-meson driver.
+> >> 
+> >> Please note that CLKID_MIPI_ENABLE removable will be done in a different
+> >> serie.
+> >> 
+> >> Changes since v5:
+> >>  - Add additionalProperties in device tree binding documentation
+> >>  - Make analog PHY required
+> >> 
+> >> Changes since v4:
+> >>  - Rename the shared MIPI/PCIe PHY to analog
+> >>  - Chain the MIPI/PCIe PHY to the PCIe one
+> >> 
+> >> Changes since v3:
+> >>  - Go back to the shared MIPI/PCIe phy driver solution from v2
+> >>  - Remove syscon usage
+> >>  - Add all dt-bindings documentation
+> >> 
+> >> Changes since v2:
+> >>  - Remove shared MIPI/PCIE device driver and use syscon to access register
+> >>    in PCIE only driver instead
+> >>  - Include devicetree documentation
+> >> 
+> >> Changes sinve v1:
+> >>  - Move HHI_MIPI_CNTL0 bit control in its own PHY driver
+> >>  - Add a PHY driver for PCIE_PHY registers
+> >>  - Modify pci-meson.c to make use of both PHYs and remove specific
+> >>    handling for AXG and G12A
+> >> 
+> >> [1] https://lkml.org/lkml/2019/12/16/119
+> >> 
+> >> Remi Pommarel (7):
+> >>   dt-bindings: Add AXG PCIE PHY bindings
+> >>   dt-bindings: Add AXG shared MIPI/PCIE analog PHY bindings
+> >>   dt-bindings: PCI: meson: Update PCIE bindings documentation
+> >>   arm64: dts: meson-axg: Add PCIE PHY nodes
+> >>   phy: amlogic: Add Amlogic AXG MIPI/PCIE analog PHY Driver
+> >>   phy: amlogic: Add Amlogic AXG PCIE PHY Driver
+> >>   PCI: amlogic: Use AXG PCIE
+> >> 
+> >>  .../bindings/pci/amlogic,meson-pcie.txt       |  22 +-
+> >>  .../amlogic,meson-axg-mipi-pcie-analog.yaml   |  35 ++++
+> >>  .../bindings/phy/amlogic,meson-axg-pcie.yaml  |  52 +++++
+> >>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi    |  16 ++
+> >>  drivers/pci/controller/dwc/pci-meson.c        | 116 ++---------
+> >>  drivers/phy/amlogic/Kconfig                   |  22 ++
+> >>  drivers/phy/amlogic/Makefile                  |  12 +-
+> >>  .../amlogic/phy-meson-axg-mipi-pcie-analog.c  | 188 +++++++++++++++++
+> >>  drivers/phy/amlogic/phy-meson-axg-pcie.c      | 192 ++++++++++++++++++
+> >>  9 files changed, 543 insertions(+), 112 deletions(-)
+> >>  create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-axg-mipi-pcie-analog.yaml
+> >>  create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-axg-pcie.yaml
+> >>  create mode 100644 drivers/phy/amlogic/phy-meson-axg-mipi-pcie-analog.c
+> >>  create mode 100644 drivers/phy/amlogic/phy-meson-axg-pcie.c
+> >
+> > Hi Remi,
+> >
+> > I am ready to pull this series in, do you want me to ? Or you prefer
+> > it to go via a different tree upstream ?
+> 
+> To avoid conflicts, I'll take the DT patch (PATCH 4/7) through my
+> amlogic tree, but feel free to take the rest.
 
---=-P5OQO7Po4GtPGRWMR0Yz
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Applied patches [1,2,3,5,6,7] to pci/amlogic for v5.7, thanks.
 
-On Wed, 2020-03-04 at 10:05 +0100, Greg KH wrote:
-> On Mon, Mar 02, 2020 at 04:55:28PM +0100, Nicolas Saenz Julienne wrote:
-> > @@ -1243,11 +1246,26 @@ static void quirk_usb_handoff_xhci(struct pci_d=
-ev
-> > *pdev)
-> > =20
-> >  static void quirk_usb_early_handoff(struct pci_dev *pdev)
-> >  {
-> > +	int ret;
-> > +
-> >  	/* Skip Netlogic mips SoC's internal PCI USB controller.
-> >  	 * This device does not need/support EHCI/OHCI handoff
-> >  	 */
-> >  	if (pdev->vendor =3D=3D 0x184e)	/* vendor Netlogic */
-> >  		return;
-> > +
-> > +	if (pdev->vendor =3D=3D PCI_VENDOR_ID_VIA && pdev->device =3D=3D 0x34=
-83) {
-> > +		ret =3D rpi_firmware_init_vl805(pdev);
-> > +		if (ret)
-> > +			/*
-> > +			 * Firmware might be outdated, or else, something
-> > +			 * failed, keep going and hope for the best.
-> > +			 */
-> > +			dev_warn(&pdev->dev,
-> > +				 "Failed to load VL805's firmware: %d\n",
-> > +				 ret);
->=20
-> {} please.
->=20
-> Also, you might want to provide a better warning, something like:
-> 	"Failed to load VL805's firmware, will continue to attempt to
-> 	work, but bad things might happen, you should fix this..."
->=20
-> or something to give people a chance to know what to do here.
-
-Noted
-
-Thanks,
-Nicolas
-
-
---=-P5OQO7Po4GtPGRWMR0Yz
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl5fkDMACgkQlfZmHno8
-x/7MtAf8CcxhF9NY9+Rz70jvj0WDqPx3fSwK9zhR2dRTvjZnvANlYSMO5C+3TMDs
-93AzERTD0PYCma+vaOy0dWKyfDNixuWdYTD88a5Z5Z9dbu0NhViE+x1CtE9lVVlp
-6eqFpj+3oR9QiB4bsoRECcsfzGhVGrTOIQhNjkIxghDwDTrN7gjFzZy/d1VGToFU
-/SLh8F2KMjErxbE4x1MkDHiaXJr8OD9la8SfQ5w4Yi/YgMJhpp+2kin0A2p85JMf
-HB3uIDMVrqkTT57Ayk6qTbJocMKd7r0sX7X2rdUEtoI/jkX1uaAhETlVDJv43MM2
-a9oF+6wL2C8gTCegxH5BSpp5ittxBA==
-=sAjn
------END PGP SIGNATURE-----
-
---=-P5OQO7Po4GtPGRWMR0Yz--
-
+Lorenzo
