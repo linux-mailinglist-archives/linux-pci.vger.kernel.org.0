@@ -2,215 +2,326 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F04F178D79
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Mar 2020 10:33:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EFF36178EB9
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Mar 2020 11:44:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728946AbgCDJd2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 Mar 2020 04:33:28 -0500
-Received: from mga11.intel.com ([192.55.52.93]:14299 "EHLO mga11.intel.com"
+        id S1728953AbgCDKon (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 Mar 2020 05:44:43 -0500
+Received: from foss.arm.com ([217.140.110.172]:60734 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728916AbgCDJd2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 4 Mar 2020 04:33:28 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2020 01:33:27 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,513,1574150400"; 
-   d="scan'208";a="352054757"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 04 Mar 2020 01:33:24 -0800
-Received: by lahna (sSMTP sendmail emulation); Wed, 04 Mar 2020 11:33:24 +0200
-Date:   Wed, 4 Mar 2020 11:33:24 +0200
-From:   Mika Westerberg <mika.westerberg@intel.com>
-To:     Karol Herbst <kherbst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Lyude Paul <lyude@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Subject: Re: [PATCH v6] pci: prevent putting nvidia GPUs into lower device
- states on certain intel bridges
-Message-ID: <20200304093324.GI2540@lahna.fi.intel.com>
-References: <20200303101052.133631-1-kherbst@redhat.com>
+        id S1728387AbgCDKom (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 4 Mar 2020 05:44:42 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D780130E;
+        Wed,  4 Mar 2020 02:44:41 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 084C93F534;
+        Wed,  4 Mar 2020 02:44:39 -0800 (PST)
+Date:   Wed, 4 Mar 2020 10:44:34 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Remi Pommarel <repk@triplefau.lt>, kishon@ti.com,
+        Yue Wang <yue.wang@Amlogic.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v6 5/7] phy: amlogic: Add Amlogic AXG MIPI/PCIE analog
+ PHY Driver
+Message-ID: <20200304104434.GA6613@e121166-lin.cambridge.arm.com>
+References: <20200123232943.10229-1-repk@triplefau.lt>
+ <20200123232943.10229-6-repk@triplefau.lt>
+ <20200303171921.GB9641@e121166-lin.cambridge.arm.com>
+ <af715acf-9ea4-8a82-92d3-578d09aec760@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200303101052.133631-1-kherbst@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <af715acf-9ea4-8a82-92d3-578d09aec760@baylibre.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
-
-On Tue, Mar 03, 2020 at 11:10:52AM +0100, Karol Herbst wrote:
-> Fixes state transitions of Nvidia Pascal GPUs from D3cold into higher device
-> states.
-
-I think it is good to explain bit more here why this fix is needed.
-
-> v2: convert to pci_dev quirk
->     put a proper technical explanation of the issue as a in-code comment
-> v3: disable it only for certain combinations of intel and nvidia hardware
-> v4: simplify quirk by setting flag on the GPU itself
-> v5: restructure quirk to make it easier to add new IDs
->     fix whitespace issues
->     fix potential NULL pointer access
->     update the quirk documentation
-> v6: move quirk into nouveau
-
-This information typically goes under the '---' line.
-
-> Signed-off-by: Karol Herbst <kherbst@redhat.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Lyude Paul <lyude@redhat.com>
-> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-> Cc: Mika Westerberg <mika.westerberg@intel.com>
-
-I have few minor comments but regardless,
-
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-
-> Cc: linux-pci@vger.kernel.org
-> Cc: linux-pm@vger.kernel.org
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: nouveau@lists.freedesktop.org
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=205623
-> ---
->  drivers/gpu/drm/nouveau/nouveau_drm.c | 56 +++++++++++++++++++++++++++
->  drivers/pci/pci.c                     |  8 ++++
->  include/linux/pci.h                   |  1 +
->  3 files changed, 65 insertions(+)
+On Wed, Mar 04, 2020 at 10:08:55AM +0100, Neil Armstrong wrote:
+> Hi Lorenzo,
 > 
-> diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouveau/nouveau_drm.c
-> index 2cd83849600f..51d3a7ba7731 100644
-> --- a/drivers/gpu/drm/nouveau/nouveau_drm.c
-> +++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
-> @@ -618,6 +618,59 @@ nouveau_drm_device_fini(struct drm_device *dev)
->  	kfree(drm);
->  }
->  
-> +/*
-> + * On some Intel PCIe bridge controllers doing a
-> + * D0 -> D3hot -> D3cold -> D0 sequence causes Nvidia GPUs to not reappear.
-> + * Skipping the intermediate D3hot step seems to make it work again. Thise is
-                                                                        ^^^^^
-Thise -> This
+> 
+> On 03/03/2020 18:19, Lorenzo Pieralisi wrote:
+> > On Fri, Jan 24, 2020 at 12:29:41AM +0100, Remi Pommarel wrote:
+> >> This adds support for the MIPI analog PHY which is also used for PCIE
+> >> found in the Amlogic AXG SoC Family.
+> >>
+> >> MIPI or PCIE selection is done by the #phy-cells, making the mode
+> >> static and exclusive.
+> >>
+> >> For now only PCIE fonctionality is supported.
+> >>
+> >> This PHY will be used to replace the mipi_enable clock gating logic
+> >> which was mistakenly added in the clock subsystem. This also activate
+> >> a non documented band gap bit in those registers that allows reliable
+> >> PCIE clock signal generation on AXG platforms.
+> >>
+> >> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+> >> ---
+> >>  drivers/phy/amlogic/Kconfig                   |  11 +
+> >>  drivers/phy/amlogic/Makefile                  |  11 +-
+> >>  .../amlogic/phy-meson-axg-mipi-pcie-analog.c  | 188 ++++++++++++++++++
+> >>  3 files changed, 205 insertions(+), 5 deletions(-)
+> >>  create mode 100644 drivers/phy/amlogic/phy-meson-axg-mipi-pcie-analog.c
+> > 
+> > Kishon, Neil,
+> > 
+> > can you please review/ack this patch and patch 6 ?
+> 
+> Sure, it was already acked by jerome, but it's also ok for me:
+> 
+> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
 
-> + * probably caused by not meeting the expectation the involved AML code has
-> + * when the GPU is put into D3hot state before invoking it.
-> + *
-> + * This leads to various manifestations of this issue:
-> + *  - AML code execution to power on the GPU hits an infinite loop (as the
-> + *    code waits on device memory to change).
-> + *  - kernel crashes, as all PCI reads return -1, which most code isn't able
-> + *    to handle well enough.
-> + *
-> + * In all cases dmesg will contain at least one line like this:
-> + * 'nouveau 0000:01:00.0: Refused to change power state, currently in D3'
-> + * followed by a lot of nouveau timeouts.
-> + *
-> + * In the \_SB.PCI0.PEG0.PG00._OFF code deeper down writes bit 0x80 to the not
-> + * documented PCI config space register 0x248 of the Intel PCIe bridge
-> + * controller (0x1901) in order to change the state of the PCIe link between
-> + * the PCIe port and the GPU. There are alternative code paths using other
-> + * registers, which seem to work fine (executed pre Windows 8):
-> + *  - 0xbc bit 0x20 (publicly available documentation claims 'reserved')
-> + *  - 0xb0 bit 0x10 (link disable)
-> + * Changing the conditions inside the firmware by poking into the relevant
-> + * addresses does resolve the issue, but it seemed to be ACPI private memory
-> + * and not any device accessible memory at all, so there is no portable way of
-> + * changing the conditions.
-> + * On a XPS 9560 that means bits [0,3] on \CPEX need to be cleared.
-> + *
-> + * The only systems where this behavior can be seen are hybrid graphics laptops
-> + * with a secondary Nvidia Maxwell, Pascal or Turing GPU. Its unclear wheather
-                                                             ^^^         ^^^^^^^^
-Its -> It's
-wheather -> whether
+Thanks. Sorry for the pedantry but on patch (6) too.
 
-> + * this issue only occurs in combination with listed Intel PCIe bridge
-> + * controllers and the mentioned GPUs or other devices as well.
-> + *
-> + * documentation on the PCIe bridge controller can be found in the
-> + * "7th Generation Intel® Processor Families for H Platforms Datasheet Volume 2"
-> + * Section "12 PCI Express* Controller (x16) Registers"
-> + */
-> +
-> +static void quirk_broken_nv_runpm(struct pci_dev *dev)
-> +{
-> +	struct pci_dev *bridge = pci_upstream_bridge(dev);
-> +
-> +	if (!bridge || bridge->vendor != PCI_VENDOR_ID_INTEL)
-> +		return;
-> +
-> +	switch (bridge->device) {
-> +	case 0x1901:
-> +		dev->parent_d3cold = 1;
+Lorenzo
 
-I think it is better to add
-
-		break;
-
-here.
-
-> +	}
-> +}
-> +
->  static int nouveau_drm_probe(struct pci_dev *pdev,
->  			     const struct pci_device_id *pent)
->  {
-> @@ -699,6 +752,7 @@ static int nouveau_drm_probe(struct pci_dev *pdev,
->  	if (ret)
->  		goto fail_drm_dev_init;
->  
-> +	quirk_broken_nv_runpm(pdev);
->  	return 0;
->  
->  fail_drm_dev_init:
-> @@ -737,6 +791,8 @@ nouveau_drm_remove(struct pci_dev *pdev)
->  {
->  	struct drm_device *dev = pci_get_drvdata(pdev);
->  
-> +	/* revert our workaround */
-> +	pdev->parent_d3cold = false;
->  	nouveau_drm_device_remove(dev);
->  }
->  
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 951099279192..6ece05723fa2 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -860,6 +860,14 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
->  	   || (state == PCI_D2 && !dev->d2_support))
->  		return -EIO;
->  
-> +	/*
-> +	 * Power management can be disabled for certain devices as they don't
-> +	 * come back up later on runtime_resume. We rely on platform means to
-> +	 * cut power consumption instead (e.g. ACPI).
-> +	 */
-> +	if (state != PCI_D0 && dev->parent_d3cold)
-> +		return 0;
-> +
->  	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
->  	if (pmcsr == (u16) ~0) {
->  		pci_err(dev, "can't change power state from %s to %s (config space inaccessible)\n",
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 930fab293073..3e5938b91966 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -340,6 +340,7 @@ struct pci_dev {
->  	unsigned int	no_d3cold:1;	/* D3cold is forbidden */
->  	unsigned int	bridge_d3:1;	/* Allow D3 for bridge */
->  	unsigned int	d3cold_allowed:1;	/* D3cold is allowed by user */
-> +	unsigned int	parent_d3cold:1;	/* power manage the parent instead */
-
-Just to be consistent with the other comments, start with a capital
-letter:
-
-	unsigned int	parent_d3cold:1;	/* Power manage the parent instead */
+> Neil
+> > 
+> > I would like to queue the series shortly, thanks.
+> > 
+> > Lorenzo
+> > 
+> >> diff --git a/drivers/phy/amlogic/Kconfig b/drivers/phy/amlogic/Kconfig
+> >> index af774ac2b934..8c9cf2403591 100644
+> >> --- a/drivers/phy/amlogic/Kconfig
+> >> +++ b/drivers/phy/amlogic/Kconfig
+> >> @@ -59,3 +59,14 @@ config PHY_MESON_G12A_USB3_PCIE
+> >>  	  Enable this to support the Meson USB3 + PCIE Combo PHY found
+> >>  	  in Meson G12A SoCs.
+> >>  	  If unsure, say N.
+> >> +
+> >> +config PHY_MESON_AXG_MIPI_PCIE_ANALOG
+> >> +	tristate "Meson AXG MIPI + PCIE analog PHY driver"
+> >> +	default ARCH_MESON
+> >> +	depends on OF && (ARCH_MESON || COMPILE_TEST)
+> >> +	select GENERIC_PHY
+> >> +	select REGMAP_MMIO
+> >> +	help
+> >> +	  Enable this to support the Meson MIPI + PCIE analog PHY
+> >> +	  found in Meson AXG SoCs.
+> >> +	  If unsure, say N.
+> >> diff --git a/drivers/phy/amlogic/Makefile b/drivers/phy/amlogic/Makefile
+> >> index 11d1c42ac2be..0aecf92d796a 100644
+> >> --- a/drivers/phy/amlogic/Makefile
+> >> +++ b/drivers/phy/amlogic/Makefile
+> >> @@ -1,6 +1,7 @@
+> >>  # SPDX-License-Identifier: GPL-2.0-only
+> >> -obj-$(CONFIG_PHY_MESON8B_USB2)		+= phy-meson8b-usb2.o
+> >> -obj-$(CONFIG_PHY_MESON_GXL_USB2)	+= phy-meson-gxl-usb2.o
+> >> -obj-$(CONFIG_PHY_MESON_G12A_USB2)	+= phy-meson-g12a-usb2.o
+> >> -obj-$(CONFIG_PHY_MESON_GXL_USB3)	+= phy-meson-gxl-usb3.o
+> >> -obj-$(CONFIG_PHY_MESON_G12A_USB3_PCIE)	+= phy-meson-g12a-usb3-pcie.o
+> >> +obj-$(CONFIG_PHY_MESON8B_USB2)			+= phy-meson8b-usb2.o
+> >> +obj-$(CONFIG_PHY_MESON_GXL_USB2)		+= phy-meson-gxl-usb2.o
+> >> +obj-$(CONFIG_PHY_MESON_G12A_USB2)		+= phy-meson-g12a-usb2.o
+> >> +obj-$(CONFIG_PHY_MESON_GXL_USB3)		+= phy-meson-gxl-usb3.o
+> >> +obj-$(CONFIG_PHY_MESON_G12A_USB3_PCIE)		+= phy-meson-g12a-usb3-pcie.o
+> >> +obj-$(CONFIG_PHY_MESON_AXG_MIPI_PCIE_ANALOG)	+= phy-meson-axg-mipi-pcie-analog.o
+> >> diff --git a/drivers/phy/amlogic/phy-meson-axg-mipi-pcie-analog.c b/drivers/phy/amlogic/phy-meson-axg-mipi-pcie-analog.c
+> >> new file mode 100644
+> >> index 000000000000..1431cbf885e1
+> >> --- /dev/null
+> >> +++ b/drivers/phy/amlogic/phy-meson-axg-mipi-pcie-analog.c
+> >> @@ -0,0 +1,188 @@
+> >> +// SPDX-License-Identifier: GPL-2.0
+> >> +/*
+> >> + * Amlogic AXG MIPI + PCIE analog PHY driver
+> >> + *
+> >> + * Copyright (C) 2019 Remi Pommarel <repk@triplefau.lt>
+> >> + */
+> >> +#include <linux/module.h>
+> >> +#include <linux/phy/phy.h>
+> >> +#include <linux/regmap.h>
+> >> +#include <linux/platform_device.h>
+> >> +#include <dt-bindings/phy/phy.h>
+> >> +
+> >> +#define HHI_MIPI_CNTL0 0x00
+> >> +#define		HHI_MIPI_CNTL0_COMMON_BLOCK	GENMASK(31, 28)
+> >> +#define		HHI_MIPI_CNTL0_ENABLE		BIT(29)
+> >> +#define		HHI_MIPI_CNTL0_BANDGAP		BIT(26)
+> >> +#define		HHI_MIPI_CNTL0_DECODE_TO_RTERM	GENMASK(15, 12)
+> >> +#define		HHI_MIPI_CNTL0_OUTPUT_EN	BIT(3)
+> >> +
+> >> +#define HHI_MIPI_CNTL1 0x01
+> >> +#define		HHI_MIPI_CNTL1_CH0_CML_PDR_EN	BIT(12)
+> >> +#define		HHI_MIPI_CNTL1_LP_ABILITY	GENMASK(5, 4)
+> >> +#define		HHI_MIPI_CNTL1_LP_RESISTER	BIT(3)
+> >> +#define		HHI_MIPI_CNTL1_INPUT_SETTING	BIT(2)
+> >> +#define		HHI_MIPI_CNTL1_INPUT_SEL	BIT(1)
+> >> +#define		HHI_MIPI_CNTL1_PRBS7_EN		BIT(0)
+> >> +
+> >> +#define HHI_MIPI_CNTL2 0x02
+> >> +#define		HHI_MIPI_CNTL2_CH_PU		GENMASK(31, 25)
+> >> +#define		HHI_MIPI_CNTL2_CH_CTL		GENMASK(24, 19)
+> >> +#define		HHI_MIPI_CNTL2_CH0_DIGDR_EN	BIT(18)
+> >> +#define		HHI_MIPI_CNTL2_CH_DIGDR_EN	BIT(17)
+> >> +#define		HHI_MIPI_CNTL2_LPULPS_EN	BIT(16)
+> >> +#define		HHI_MIPI_CNTL2_CH_EN(n)		BIT(15 - (n))
+> >> +#define		HHI_MIPI_CNTL2_CH0_LP_CTL	GENMASK(10, 1)
+> >> +
+> >> +struct phy_axg_mipi_pcie_analog_priv {
+> >> +	struct phy *phy;
+> >> +	unsigned int mode;
+> >> +	struct regmap *regmap;
+> >> +};
+> >> +
+> >> +static const struct regmap_config phy_axg_mipi_pcie_analog_regmap_conf = {
+> >> +	.reg_bits = 8,
+> >> +	.val_bits = 32,
+> >> +	.reg_stride = 4,
+> >> +	.max_register = HHI_MIPI_CNTL2,
+> >> +};
+> >> +
+> >> +static int phy_axg_mipi_pcie_analog_power_on(struct phy *phy)
+> >> +{
+> >> +	struct phy_axg_mipi_pcie_analog_priv *priv = phy_get_drvdata(phy);
+> >> +
+> >> +	/* MIPI not supported yet */
+> >> +	if (priv->mode != PHY_TYPE_PCIE)
+> >> +		return -EINVAL;
+> >> +
+> >> +	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
+> >> +			   HHI_MIPI_CNTL0_BANDGAP, HHI_MIPI_CNTL0_BANDGAP);
+> >> +
+> >> +	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
+> >> +			   HHI_MIPI_CNTL0_ENABLE, HHI_MIPI_CNTL0_ENABLE);
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static int phy_axg_mipi_pcie_analog_power_off(struct phy *phy)
+> >> +{
+> >> +	struct phy_axg_mipi_pcie_analog_priv *priv = phy_get_drvdata(phy);
+> >> +
+> >> +	/* MIPI not supported yet */
+> >> +	if (priv->mode != PHY_TYPE_PCIE)
+> >> +		return -EINVAL;
+> >> +
+> >> +	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
+> >> +			   HHI_MIPI_CNTL0_BANDGAP, 0);
+> >> +	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
+> >> +			   HHI_MIPI_CNTL0_ENABLE, 0);
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static int phy_axg_mipi_pcie_analog_init(struct phy *phy)
+> >> +{
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static int phy_axg_mipi_pcie_analog_exit(struct phy *phy)
+> >> +{
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static const struct phy_ops phy_axg_mipi_pcie_analog_ops = {
+> >> +	.init = phy_axg_mipi_pcie_analog_init,
+> >> +	.exit = phy_axg_mipi_pcie_analog_exit,
+> >> +	.power_on = phy_axg_mipi_pcie_analog_power_on,
+> >> +	.power_off = phy_axg_mipi_pcie_analog_power_off,
+> >> +	.owner = THIS_MODULE,
+> >> +};
+> >> +
+> >> +static struct phy *phy_axg_mipi_pcie_analog_xlate(struct device *dev,
+> >> +						  struct of_phandle_args *args)
+> >> +{
+> >> +	struct phy_axg_mipi_pcie_analog_priv *priv = dev_get_drvdata(dev);
+> >> +	unsigned int mode;
+> >> +
+> >> +	if (args->args_count != 1) {
+> >> +		dev_err(dev, "invalid number of arguments\n");
+> >> +		return ERR_PTR(-EINVAL);
+> >> +	}
+> >> +
+> >> +	mode = args->args[0];
+> >> +
+> >> +	/* MIPI mode is not supported yet */
+> >> +	if (mode != PHY_TYPE_PCIE) {
+> >> +		dev_err(dev, "invalid phy mode select argument\n");
+> >> +		return ERR_PTR(-EINVAL);
+> >> +	}
+> >> +
+> >> +	priv->mode = mode;
+> >> +	return priv->phy;
+> >> +}
+> >> +
+> >> +static int phy_axg_mipi_pcie_analog_probe(struct platform_device *pdev)
+> >> +{
+> >> +	struct phy_provider *phy;
+> >> +	struct device *dev = &pdev->dev;
+> >> +	struct phy_axg_mipi_pcie_analog_priv *priv;
+> >> +	struct device_node *np = dev->of_node;
+> >> +	struct regmap *map;
+> >> +	struct resource *res;
+> >> +	void __iomem *base;
+> >> +	int ret;
+> >> +
+> >> +	priv = devm_kmalloc(dev, sizeof(*priv), GFP_KERNEL);
+> >> +	if (!priv)
+> >> +		return -ENOMEM;
+> >> +
+> >> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> >> +	base = devm_ioremap_resource(dev, res);
+> >> +	if (IS_ERR(base)) {
+> >> +		dev_err(dev, "failed to get regmap base\n");
+> >> +		return PTR_ERR(base);
+> >> +	}
+> >> +
+> >> +	map = devm_regmap_init_mmio(dev, base,
+> >> +				    &phy_axg_mipi_pcie_analog_regmap_conf);
+> >> +	if (IS_ERR(map)) {
+> >> +		dev_err(dev, "failed to get HHI regmap\n");
+> >> +		return PTR_ERR(map);
+> >> +	}
+> >> +	priv->regmap = map;
+> >> +
+> >> +	priv->phy = devm_phy_create(dev, np, &phy_axg_mipi_pcie_analog_ops);
+> >> +	if (IS_ERR(priv->phy)) {
+> >> +		ret = PTR_ERR(priv->phy);
+> >> +		if (ret != -EPROBE_DEFER)
+> >> +			dev_err(dev, "failed to create PHY\n");
+> >> +		return ret;
+> >> +	}
+> >> +
+> >> +	phy_set_drvdata(priv->phy, priv);
+> >> +	dev_set_drvdata(dev, priv);
+> >> +
+> >> +	phy = devm_of_phy_provider_register(dev,
+> >> +					    phy_axg_mipi_pcie_analog_xlate);
+> >> +
+> >> +	return PTR_ERR_OR_ZERO(phy);
+> >> +}
+> >> +
+> >> +static const struct of_device_id phy_axg_mipi_pcie_analog_of_match[] = {
+> >> +	{
+> >> +		.compatible = "amlogic,axg-mipi-pcie-analog-phy",
+> >> +	},
+> >> +	{ },
+> >> +};
+> >> +MODULE_DEVICE_TABLE(of, phy_axg_mipi_pcie_analog_of_match);
+> >> +
+> >> +static struct platform_driver phy_axg_mipi_pcie_analog_driver = {
+> >> +	.probe = phy_axg_mipi_pcie_analog_probe,
+> >> +	.driver = {
+> >> +		.name = "phy-axg-mipi-pcie-analog",
+> >> +		.of_match_table = phy_axg_mipi_pcie_analog_of_match,
+> >> +	},
+> >> +};
+> >> +module_platform_driver(phy_axg_mipi_pcie_analog_driver);
+> >> +
+> >> +MODULE_AUTHOR("Remi Pommarel <repk@triplefau.lt>");
+> >> +MODULE_DESCRIPTION("Amlogic AXG MIPI + PCIE analog PHY driver");
+> >> +MODULE_LICENSE("GPL v2");
+> >> -- 
+> >> 2.24.1
+> >>
+> 
