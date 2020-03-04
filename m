@@ -2,86 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0EAD417917B
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Mar 2020 14:37:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D24B3179196
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Mar 2020 14:42:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729499AbgCDNhM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 Mar 2020 08:37:12 -0500
-Received: from 8bytes.org ([81.169.241.247]:49992 "EHLO theia.8bytes.org"
+        id S1728432AbgCDNmB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 Mar 2020 08:42:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729494AbgCDNhM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 4 Mar 2020 08:37:12 -0500
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 3690C3A4; Wed,  4 Mar 2020 14:37:11 +0100 (CET)
-Date:   Wed, 4 Mar 2020 14:37:08 +0100
-From:   Joerg Roedel <joro@8bytes.org>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Auger Eric <eric.auger@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        iommu@lists.linux-foundation.org,
-        virtualization@lists.linux-foundation.org,
-        linux-pci@vger.kernel.org, bhelgaas@google.com,
-        jasowang@redhat.com, kevin.tian@intel.com,
-        sebastien.boeuf@intel.com, jacob.jun.pan@intel.com,
-        robin.murphy@arm.com
-Subject: Re: [PATCH v2 1/3] iommu/virtio: Add topology description to
- virtio-iommu config space
-Message-ID: <20200304133707.GB4177@8bytes.org>
-References: <20200228172537.377327-1-jean-philippe@linaro.org>
- <20200228172537.377327-2-jean-philippe@linaro.org>
- <20200302161611.GD7829@8bytes.org>
- <9004f814-2f7c-9024-3465-6f9661b97b7a@redhat.com>
- <20200303130155.GA13185@8bytes.org>
- <20200303084753-mutt-send-email-mst@kernel.org>
- <20200303155318.GA3954@8bytes.org>
- <20200303105523-mutt-send-email-mst@kernel.org>
+        id S1725795AbgCDNmB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 4 Mar 2020 08:42:01 -0500
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3588F2146E;
+        Wed,  4 Mar 2020 13:42:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583329320;
+        bh=f1Y2hYI2F6EVeEKTqa2xdZCYpPUDDIjI7ki27j/xyVg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=1az3IsPQVMk+8zuLHZ/l1wDKs2ypB/IzAiW56V8dWq6RBbuUXQsM4d+hOHub8wy7A
+         SjIo1r4Vlz6ayqA5fIcg6dKb4Hv5Dc0OGz5bxbz7Iiihrwzcf6+7hvX8gDiQUDeIS0
+         zpZ/iWnEu7bcNB+r5KT8aISHkWHDytxxb+VBwYZM=
+Date:   Wed, 4 Mar 2020 07:41:59 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Realtek linux nic maintainers <nic_swsd@realtek.com>,
+        David Miller <davem@davemloft.net>,
+        Mirko Lindner <mlindner@marvell.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: Re: [PATCH v4 04/10] PCI: Add constant PCI_STATUS_ERROR_BITS
+Message-ID: <20200304134159.GA193414@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200303105523-mutt-send-email-mst@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <175dca23-c3b1-e297-ef35-4100f1c96879@gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Michael,
+On Sat, Feb 29, 2020 at 11:23:44PM +0100, Heiner Kallweit wrote:
+> This collection of PCI error bits is used in more than one driver,
+> so move it to the PCI core.
+> 
+> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 
-On Tue, Mar 03, 2020 at 11:09:41AM -0500, Michael S. Tsirkin wrote:
-> No. It's coded into the hardware. Which might even be practical
-> for bare-metal (e.g. on-board flash), but is very practical
-> when the device is part of a hypervisor.
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-If its that way on PPC, than fine for them. But since this is enablement
-for x86, it should follow the x86 platform best practices, and that
-means describing hardware through ACPI.
-
-> This "hardware" is actually part of hypervisor so there's no
-> reason it can't be completely self-descriptive. It's specified
-> by the same entity as the "firmware".
-
-That is just an implementation detail. Yes, QEMU emulates the hardware
-and builds the ACPI tables. But it could also be implemented in a way
-where the ACPI tables are build by guest firmware.
-
-> I don't see why it would be much faster. The interface isn't that
-> different from command queues of VTD.
-
-VirtIO IOMMU doesn't need to build page-tables that the hypervisor then
-has to shadow, which makes things much faster. If you emulate one of the
-other IOMMUs (VT-d or AMD-Vi) the code has to shadow the full page-table
-at once when device passthrough is used. VirtIO-IOMMU doesn't need that,
-and that makes it much faster and efficient.
-
-> Making ACPI meet the goals of embedded projects such as kata containers
-> would be a gigantic task with huge stability implications.  By
-> comparison this 400-line parser is well contained and does the job.  I
-> didn't yet see compelling reasons not to merge this, but I'll be
-> interested to see some more specific concerns.
-
-An ACPI table parse wouldn't need more lines of code. For embedded
-systems there is still the DT way of describing things.
-
-Regards,
-
-	Joerg
+> ---
+> v4:
+> - move new constant to include/linux/pci.h
+> - improve commit description
+> ---
+>  drivers/net/ethernet/marvell/skge.h | 7 -------
+>  drivers/net/ethernet/marvell/sky2.h | 7 -------
+>  include/linux/pci.h                 | 7 +++++++
+>  3 files changed, 7 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/marvell/skge.h b/drivers/net/ethernet/marvell/skge.h
+> index e76c03c87..e149bdfe1 100644
+> --- a/drivers/net/ethernet/marvell/skge.h
+> +++ b/drivers/net/ethernet/marvell/skge.h
+> @@ -15,13 +15,6 @@
+>  #define  PCI_VPD_ROM_SZ	7L<<14	/* VPD ROM size 0=256, 1=512, ... */
+>  #define  PCI_REV_DESC	1<<2	/* Reverse Descriptor bytes */
+>  
+> -#define PCI_STATUS_ERROR_BITS (PCI_STATUS_DETECTED_PARITY | \
+> -			       PCI_STATUS_SIG_SYSTEM_ERROR | \
+> -			       PCI_STATUS_REC_MASTER_ABORT | \
+> -			       PCI_STATUS_REC_TARGET_ABORT | \
+> -			       PCI_STATUS_SIG_TARGET_ABORT | \
+> -			       PCI_STATUS_PARITY)
+> -
+>  enum csr_regs {
+>  	B0_RAP	= 0x0000,
+>  	B0_CTST	= 0x0004,
+> diff --git a/drivers/net/ethernet/marvell/sky2.h b/drivers/net/ethernet/marvell/sky2.h
+> index aee87f838..851d8ed34 100644
+> --- a/drivers/net/ethernet/marvell/sky2.h
+> +++ b/drivers/net/ethernet/marvell/sky2.h
+> @@ -252,13 +252,6 @@ enum {
+>  };
+>  
+>  
+> -#define PCI_STATUS_ERROR_BITS (PCI_STATUS_DETECTED_PARITY | \
+> -			       PCI_STATUS_SIG_SYSTEM_ERROR | \
+> -			       PCI_STATUS_REC_MASTER_ABORT | \
+> -			       PCI_STATUS_REC_TARGET_ABORT | \
+> -			       PCI_STATUS_SIG_TARGET_ABORT | \
+> -			       PCI_STATUS_PARITY)
+> -
+>  enum csr_regs {
+>  	B0_RAP		= 0x0000,
+>  	B0_CTST		= 0x0004,
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 3840a541a..101d71e0a 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -42,6 +42,13 @@
+>  
+>  #include <linux/pci_ids.h>
+>  
+> +#define PCI_STATUS_ERROR_BITS (PCI_STATUS_DETECTED_PARITY  | \
+> +			       PCI_STATUS_SIG_SYSTEM_ERROR | \
+> +			       PCI_STATUS_REC_MASTER_ABORT | \
+> +			       PCI_STATUS_REC_TARGET_ABORT | \
+> +			       PCI_STATUS_SIG_TARGET_ABORT | \
+> +			       PCI_STATUS_PARITY)
+> +
+>  /*
+>   * The PCI interface treats multi-function devices as independent
+>   * devices.  The slot/function address of each device is encoded
+> -- 
+> 2.25.1
+> 
+> 
