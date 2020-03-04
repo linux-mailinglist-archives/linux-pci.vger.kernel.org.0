@@ -2,14 +2,14 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C22E178879
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Mar 2020 03:39:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D57E5178883
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Mar 2020 03:39:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387643AbgCDCjK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S2387648AbgCDCjK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Tue, 3 Mar 2020 21:39:10 -0500
-Received: from mga12.intel.com ([192.55.52.136]:44650 "EHLO mga12.intel.com"
+Received: from mga12.intel.com ([192.55.52.136]:44652 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387624AbgCDCjI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S2387626AbgCDCjI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Tue, 3 Mar 2020 21:39:08 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
@@ -17,16 +17,16 @@ Received: from orsmga008.jf.intel.com ([10.7.209.65])
   by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 18:39:07 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
-   d="scan'208";a="233866898"
+   d="scan'208";a="233866902"
 Received: from skuppusw-desk.jf.intel.com ([10.7.201.16])
   by orsmga008.jf.intel.com with ESMTP; 03 Mar 2020 18:39:06 -0800
 From:   sathyanarayanan.kuppuswamy@linux.intel.com
 To:     bhelgaas@google.com
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         ashok.raj@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: [PATCH v17 04/12] PCI: portdrv: remove unnecessary pcie_port_find_service()
-Date:   Tue,  3 Mar 2020 18:36:27 -0800
-Message-Id: <2d2e15ac7079baa5883e2a1c06e11985e375cdff.1583286655.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: [PATCH v17 05/12] PCI: portdrv: remove reset_link member from pcie_port_service_driver
+Date:   Tue,  3 Mar 2020 18:36:28 -0800
+Message-Id: <13d4866abf46f034f706f255287258cda99fadb4.1583286655.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1583286655.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 References: <cover.1583286655.git.sathyanarayanan.kuppuswamy@linux.intel.com>
@@ -39,60 +39,59 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-Since pcie_do_recovery() has been refactored to not to depend
-on PCIe service driver, we no longer have any users for
-pcie_port_find_service() function. So just remove it.
+reset_link member in struct pcie_port_service_driver was
+mainly added to let pcie_do_recovery() trigger the driver
+specific reset_link() on PCIe fatal errors. But after
+modifying the pcie_do_recovery() function to accept reset_link
+callback as function parameter, we no longer have need to use
+or set reset_link in struct pcie_port_service_driver. So remove
+it.
 
 Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 ---
- drivers/pci/pcie/portdrv.h      |  2 --
- drivers/pci/pcie/portdrv_core.c | 21 ---------------------
- 2 files changed, 23 deletions(-)
+ drivers/pci/pcie/aer.c     | 1 -
+ drivers/pci/pcie/dpc.c     | 1 -
+ drivers/pci/pcie/portdrv.h | 3 ---
+ 3 files changed, 5 deletions(-)
 
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index 1235eca0a2e6..c0540c3761dc 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -1500,7 +1500,6 @@ static struct pcie_port_service_driver aerdriver = {
+ 
+ 	.probe		= aer_probe,
+ 	.remove		= aer_remove,
+-	.reset_link	= aer_root_reset,
+ };
+ 
+ /**
+diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+index 114358d62ddf..1ae5d94944eb 100644
+--- a/drivers/pci/pcie/dpc.c
++++ b/drivers/pci/pcie/dpc.c
+@@ -313,7 +313,6 @@ static struct pcie_port_service_driver dpcdriver = {
+ 	.service	= PCIE_PORT_SERVICE_DPC,
+ 	.probe		= dpc_probe,
+ 	.remove		= dpc_remove,
+-	.reset_link	= dpc_reset_link,
+ };
+ 
+ int __init pcie_dpc_init(void)
 diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
-index 1e673619b101..c5da165ce016 100644
+index c5da165ce016..64b5e081cdb2 100644
 --- a/drivers/pci/pcie/portdrv.h
 +++ b/drivers/pci/pcie/portdrv.h
-@@ -161,7 +161,5 @@ static inline int pcie_aer_get_firmware_first(struct pci_dev *pci_dev)
- }
- #endif
+@@ -92,9 +92,6 @@ struct pcie_port_service_driver {
+ 	/* Device driver may resume normal operations */
+ 	void (*error_resume)(struct pci_dev *dev);
  
--struct pcie_port_service_driver *pcie_port_find_service(struct pci_dev *dev,
--							u32 service);
- struct device *pcie_port_find_device(struct pci_dev *dev, u32 service);
- #endif /* _PORTDRV_H_ */
-diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
-index 5075cb9e850c..50a9522ab07d 100644
---- a/drivers/pci/pcie/portdrv_core.c
-+++ b/drivers/pci/pcie/portdrv_core.c
-@@ -458,27 +458,6 @@ static int find_service_iter(struct device *device, void *data)
- 	return 0;
- }
+-	/* Link Reset Capability - AER service driver specific */
+-	pci_ers_result_t (*reset_link)(struct pci_dev *dev);
+-
+ 	int port_type;  /* Type of the port this driver can handle */
+ 	u32 service;    /* Port service this device represents */
  
--/**
-- * pcie_port_find_service - find the service driver
-- * @dev: PCI Express port the service is associated with
-- * @service: Service to find
-- *
-- * Find PCI Express port service driver associated with given service
-- */
--struct pcie_port_service_driver *pcie_port_find_service(struct pci_dev *dev,
--							u32 service)
--{
--	struct pcie_port_service_driver *drv;
--	struct portdrv_service_data pdrvs;
--
--	pdrvs.drv = NULL;
--	pdrvs.service = service;
--	device_for_each_child(&dev->dev, &pdrvs, find_service_iter);
--
--	drv = pdrvs.drv;
--	return drv;
--}
--
- /**
-  * pcie_port_find_device - find the struct device
-  * @dev: PCI Express port the service is associated with
 -- 
 2.25.1
 
