@@ -2,109 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DBC8517ADFD
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Mar 2020 19:22:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 36A7E17AE9A
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Mar 2020 19:59:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726004AbgCESWj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Mar 2020 13:22:39 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:45761 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725948AbgCESWj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Mar 2020 13:22:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583432557;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=90RLHPqVNEZEMrWwkgjpPMMkSbZ9eZRo8m2gr4E/ffQ=;
-        b=X6lJoe//wIbzEpTbF5V9izN51b9RMXNH8T9JVh+2zWsb0W4rLbwpAaKq9hJ2oiCdlBhP5k
-        OUNrdmWcHkimtLhOIAuY/srrG+j5MJELRRzCoZ7T3H8iE+JTUgV/W0VfVW/gvmPNYZvsmk
-        8RLPocprFVhx5c2yaIw1jBdaU25aFWQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-140-FZVPSvRgM1yuOakSm6mTpA-1; Thu, 05 Mar 2020 13:22:35 -0500
-X-MC-Unique: FZVPSvRgM1yuOakSm6mTpA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1725989AbgCES7t (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 Mar 2020 13:59:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49874 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725974AbgCES7t (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 5 Mar 2020 13:59:49 -0500
+Received: from localhost (odyssey.drury.edu [64.22.249.253])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 23DBB13F6;
-        Thu,  5 Mar 2020 18:22:34 +0000 (UTC)
-Received: from w520.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6B5AB8F34E;
-        Thu,  5 Mar 2020 18:22:31 +0000 (UTC)
-Date:   Thu, 5 Mar 2020 11:22:30 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dev@dpdk.org" <dev@dpdk.org>,
-        "mtosatti@redhat.com" <mtosatti@redhat.com>,
-        "thomas@monjalon.net" <thomas@monjalon.net>,
-        "bluca@debian.org" <bluca@debian.org>,
-        "jerinjacobk@gmail.com" <jerinjacobk@gmail.com>,
-        "Richardson, Bruce" <bruce.richardson@intel.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>
-Subject: Re: [PATCH v2 5/7] vfio/pci: Add sriov_configure support
-Message-ID: <20200305112230.0dd77712@w520.home>
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D79A943@SHSMSX104.ccr.corp.intel.com>
-References: <158213716959.17090.8399427017403507114.stgit@gimli.home>
-        <158213846731.17090.37693075723046377.stgit@gimli.home>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D79A943@SHSMSX104.ccr.corp.intel.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id B7752206E2;
+        Thu,  5 Mar 2020 18:59:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583434788;
+        bh=uzvWwK4iXXA140bVXUMyz25//ogiOnp/uH+7SiSRj1k=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=cEhtgog95EpseE8u/JsJbdOzirgAHaNdRwZyCvPqUcaCZIFwV8oIDdqZtj/J2w93s
+         tzYXFCq/YkjCCl7XAq2XPnNbFvDKjfKLHNVAn7QZ0tbw3hzWIzWsumD37oWsVCdgkR
+         WQwCQG2i4s+wrlTmA+JmU3pjWqBcAswUwQZrIOws=
+Date:   Thu, 5 Mar 2020 12:59:46 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     Christoph Hellwig <hch@infradead.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ashok.raj@intel.com
+Subject: Re: [PATCH v16 7/9] PCI/DPC: Export DPC error recovery functions
+Message-ID: <20200305185946.GA99050@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b4d0be7f-1cbe-22c9-ebb1-e2205ff5a732@linux.intel.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 25 Feb 2020 03:08:00 +0000
-"Tian, Kevin" <kevin.tian@intel.com> wrote:
-
-> > From: Alex Williamson
-> > Sent: Thursday, February 20, 2020 2:54 AM
-> > 
-> > With the VF Token interface we can now expect that a vfio userspace
-> > driver must be in collaboration with the PF driver, an unwitting
-> > userspace driver will not be able to get past the GET_DEVICE_FD step
-> > in accessing the device.  We can now move on to actually allowing
-> > SR-IOV to be enabled by vfio-pci on the PF.  Support for this is not
-> > enabled by default in this commit, but it does provide a module option
-> > for this to be enabled (enable_sriov=1).  Enabling VFs is rather
-> > straightforward, except we don't want to risk that a VF might get
-> > autoprobed and bound to other drivers, so a bus notifier is used to
-> > "capture" VFs to vfio-pci using the driver_override support.  We
-> > assume any later action to bind the device to other drivers is
-> > condoned by the system admin and allow it with a log warning.
-> > 
-> > vfio-pci will disable SR-IOV on a PF before releasing the device,
-> > allowing a VF driver to be assured other drivers cannot take over the
-> > PF and that any other userspace driver must know the shared VF token.
-> > This support also does not provide a mechanism for the PF userspace
-> > driver itself to manipulate SR-IOV through the vfio API.  With this
-> > patch SR-IOV can only be enabled via the host sysfs interface and the
-> > PF driver user cannot create or remove VFs.  
+On Thu, Mar 05, 2020 at 09:42:21AM -0800, Kuppuswamy Sathyanarayanan wrote:
+> Hi,
 > 
-> I'm not sure how many devices can be properly configured simply 
-> with pci_enable_sriov. It is not unusual to require PF driver prepare
-> something before turning PCI SR-IOV capability. If you look kernel
-> PF drivers, there are only two using generic pci_sriov_configure_
-> simple (simple wrapper like pci_enable_sriov), while most others
-> implementing their own callback. However vfio itself has no idea
-> thus I'm not sure how an user knows whether using this option can
-> actually meet his purpose. I may miss something here, possibly 
-> using DPDK as an example will make it clearer.
+> On 3/5/20 8:37 AM, Christoph Hellwig wrote:
+> > Please fix your subject.  Nothing is being exported in this patch.
+> I will do it. I meant it as its being used outside dpc..
 
-There is still the entire vfio userspace driver interface.  Imagine for
-example that QEMU emulates the SR-IOV capability and makes a call out
-to libvirt (or maybe runs with privs for the PF SR-IOV sysfs attribs)
-when the guest enables SR-IOV.  Can't we assume that any PF specific
-support can still be performed in the userspace/guest driver, leaving
-us with a very simple and generic sriov_configure callback in vfio-pci?
-Thanks,
-
-Alex
-
+I'll update this.  I have some other tweaks so I'll post an updated
+series soon.
