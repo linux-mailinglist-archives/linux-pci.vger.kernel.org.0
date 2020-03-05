@@ -2,223 +2,360 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 12E0E17A00C
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Mar 2020 07:39:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E6B5617A05A
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Mar 2020 08:01:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725858AbgCEGjQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Mar 2020 01:39:16 -0500
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:52144 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725844AbgCEGjQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Mar 2020 01:39:16 -0500
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0256Vas5003923;
-        Wed, 4 Mar 2020 22:38:59 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pfpt0818;
- bh=xeGb4iVm9qCO64h/1xu6V38CPmzScchi1hE2OKu7HBU=;
- b=iAMGfIUWF48sDpStNxSr/2i4FEgC+L18/5izaO0STgo5Ic6TqIr1g5rOo04+zm5AVhhq
- Wc9XfEOpLaxmnwrQI/Mbx7zUQEz4uqNhctjrRqbR3W3t5cXJoa4tAz5ytEq9PCY0y9Do
- iI+ogS3hlfeIilXfL+tSKQgI69fZ5ztpp8ZkVyTTr7BYMQk4CbFBZnga1YEBIBXuxOkw
- YbSORXJl9AuvBRfNIEMG3OGofdnca5bdIGfpozsDOPQKDdKQ9Qoai5UxxrkfjajSJ1Kw
- qnac0ON3Peh7CvzlGzXshXt8+pVUrNYne385tGsbiQdqQtrIzOvxo0dnPxZ52afxCB1T fQ== 
-Received: from sc-exch03.marvell.com ([199.233.58.183])
-        by mx0b-0016f401.pphosted.com with ESMTP id 2yhn0y4jh1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 04 Mar 2020 22:38:59 -0800
-Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH03.marvell.com
- (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 4 Mar
- 2020 22:38:57 -0800
-Received: from SC-EXCH03.marvell.com (10.93.176.83) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 4 Mar
- 2020 22:38:56 -0800
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.103)
- by SC-EXCH03.marvell.com (10.93.176.83) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2 via Frontend Transport; Wed, 4 Mar 2020 22:38:56 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Q6pma/xBxW+/gW9w6EbbS9pAdH0MVl3Io4xYosGDg2SVUGYp1b1XFm+0UEymdV7LwbQZoJuw2s8nW4kPym4aaKr2ZUmuqgRXddIKhThESBBRBJ6jblf9mRYwQkKYin2FmzYExpANKQ1wp7tlX+Yr6SbiXzzlJ/1lClT7WzwoSUTTJuWt2C9v403YeYU3xoqqdqa+Ih+/9Jlj4tZ26fTZIcj+lADXP6WEi85fBHIZztrxodjNpjfM2aUwOQBiSZoi7ZxubY7v1y5naks91Y9pitOnx612luNIoyXN24Jrp8gCBkDplAa/9fa1vbKawCoFwzsJJCGVXPOmUgGJ1bii5A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xeGb4iVm9qCO64h/1xu6V38CPmzScchi1hE2OKu7HBU=;
- b=VQcFWlqdiemVcJxeakm/3Uf6ovsWJyQ0hL7GtI47TrobABMpS2Ffr0UJJhJ0zn3pDyXJPdm4KIq4sim3IXk+ioRz+CEfOXbqN63ndGsixXpksyNXdwXdtDLH/XhjVZI/mr8yOQF2OUw5Ea6LR0GEGmYiVs1HknUIu12UuV/L7QzW1OF1LG9Kb+B2W36D7RIJ65Z22cZmiyoi//gyAeaWZFlfIlyEOZxPWgpMp6NIGRpXoYL0CdCd+Kd5cgzz9mFyahZwJvAIefPHHL9KETyu6EgVX7e8Jmp+NWiS7u5Yd/6A+L9PjaXVjAxc7AAZ9pr7mPCM95kGwjkatSqzEqI60w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
+        id S1725880AbgCEHAu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 Mar 2020 02:00:50 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36904 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725877AbgCEHAu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Mar 2020 02:00:50 -0500
+Received: by mail-wr1-f65.google.com with SMTP id 6so167466wre.4
+        for <linux-pci@vger.kernel.org>; Wed, 04 Mar 2020 23:00:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xeGb4iVm9qCO64h/1xu6V38CPmzScchi1hE2OKu7HBU=;
- b=pEQNknRshbH4xLfnMgtF7/eTynH1tblZvqTxV7bqu7n7vLGSecEa0Qe1y5DjZwCZnDI8N4WnxtWXOPTw3nVSneloij4lsbxXrZQuFFCC38hg+lDMic6AzauM6UdXK9aZ+AfRU/zQ4LHtJ0I1xb5Kj248Ecisgo8MhrZWPCec7Sg=
-Received: from MWHPR18MB1645.namprd18.prod.outlook.com (2603:10b6:300:ca::9)
- by MWHPR18MB1248.namprd18.prod.outlook.com (2603:10b6:320:2d::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.14; Thu, 5 Mar
- 2020 06:38:54 +0000
-Received: from MWHPR18MB1645.namprd18.prod.outlook.com
- ([fe80::d99d:e2e7:c30c:b9da]) by MWHPR18MB1645.namprd18.prod.outlook.com
- ([fe80::d99d:e2e7:c30c:b9da%3]) with mapi id 15.20.2772.019; Thu, 5 Mar 2020
- 06:38:53 +0000
-From:   Vamsi Krishna Attunuru <vattunuru@marvell.com>
-To:     Alex Williamson <alex.williamson@redhat.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dev@dpdk.org" <dev@dpdk.org>,
-        "mtosatti@redhat.com" <mtosatti@redhat.com>,
-        "thomas@monjalon.net" <thomas@monjalon.net>,
-        "bluca@debian.org" <bluca@debian.org>,
-        "jerinjacobk@gmail.com" <jerinjacobk@gmail.com>,
-        "bruce.richardson@intel.com" <bruce.richardson@intel.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>
-Subject: RE: [dpdk-dev] [PATCH v2 0/7] vfio/pci: SR-IOV support
-Thread-Topic: [dpdk-dev] [PATCH v2 0/7] vfio/pci: SR-IOV support
-Thread-Index: AQHV51X7eLKwmiSOk0SM9CYSJOQVqqg5oG3Q
-Date:   Thu, 5 Mar 2020 06:38:53 +0000
-Message-ID: <MWHPR18MB1645DCF80543381CF9115D09A6E20@MWHPR18MB1645.namprd18.prod.outlook.com>
-References: <158213716959.17090.8399427017403507114.stgit@gimli.home>
-In-Reply-To: <158213716959.17090.8399427017403507114.stgit@gimli.home>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [103.227.96.173]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: dd2f770b-993b-46d2-7cdd-08d7c0cfdfa5
-x-ms-traffictypediagnostic: MWHPR18MB1248:
-x-microsoft-antispam-prvs: <MWHPR18MB1248252816DF8918D5E2C37EA6E20@MWHPR18MB1248.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:167;
-x-forefront-prvs: 03333C607F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39850400004)(396003)(346002)(376002)(136003)(189003)(199004)(52536014)(71200400001)(6506007)(316002)(2906002)(19627235002)(33656002)(5660300002)(66446008)(66476007)(66556008)(66946007)(64756008)(7696005)(76116006)(55016002)(81166006)(7416002)(86362001)(186003)(9686003)(54906003)(8936002)(26005)(478600001)(4326008)(8676002)(966005)(53546011)(81156014)(110136005);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR18MB1248;H:MWHPR18MB1645.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: MMJ/T2QkaRvE1WfLpUE3R3MjvUDVPxeDGJOuVQTbi/U9vSKGNzpG00xqv5gLZ2twCLXcu5QFhoxcZTPEOQtVSShfpE8YM4zO/TftPJLEioyyTd2ncjxQFMB1T7EiOEd/hb2upjJY0Mmbg6RZdzFEKseOHia1bgbtaEW6rofjr8EZ3yeiRR6+zy2Gm09xhnkPOcEXnww9YZd5sccZ4P4Nf/h9tQkAsJFAtz1i5A9n355QYtfQKofCamlGGx7fGOqerGq2xoPLq9SPFvkjiap0uyO/l72WZA0fmtgH4Z6glsuJH8hT3HOx4jjRuL2/XxZX2aA7LC4HeB1sPYGEZkw8SlP0rnvteno7FeHws2j3cPkSVbm/CgwuoAXlV50C4OJ0pW1pTer9ccvDY1vR2adVyzqUTztpaPwBlg+KuzaSTvGAk/NmBRtEPKf6a6W1g1me4i8FbsiQ6QwZ1QGZZ1zCwnhhPWINDxCNO+TND5wg8NU7gS4+kAqQHH0BRaTCyzuitZefBImBHJDZVr0moH+gBw==
-x-ms-exchange-antispam-messagedata: 8f56Kjbj7Yjtk8zknSdCpQv7AkQpgFyiwxh7iLvrXQVTahfMG1LuoL1FcOcoCqTCyphsMCZ0l+ZcUKNq+ri1Ylu7S73Elplxhsq8nzZBU6LCUP8MGZceDib3h3gISAwrc0tRzi30sQLjz398modj3w==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:cc:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding;
+        bh=SNZNXgpCj8D5NmCfQWXK2tzGvCIs7LAx4I2gEpQmkJE=;
+        b=C8UzPkZ/RRPRJMMwJOM9ZlV7JX9uod0msoVvq4GfidfjSFfmZuSzckevyxLX754v0o
+         D/k3e9zR+s9pWcJhOeSoQ31lE56obUEW6/y8IIc4YTtIcanT6N1XWLYgHAj+cJ3CSJh7
+         bx3cYgT3UDX+/0+1Jv9520YExpCAF0tPxZCOyHg5fpdQFgy201aF65unT45FXyqPFm0z
+         ezoNgCpdG8NJv+5mjK9RbbiUxiIbAcvsO/Hpfyeg6xbTy3aiNjbKTrjdDlBQbYYwqnMC
+         oqMHUrTxFzm+LG9BeWJSvdYQaFDdTs/rAv1T8Zgp5IcvxZknSoToIcoyGEjAuHtimU57
+         vy0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
+        bh=SNZNXgpCj8D5NmCfQWXK2tzGvCIs7LAx4I2gEpQmkJE=;
+        b=nTeg+/tQKrcXyccPAW+1YMDMUjUDWGZ3EpJgwMvYWfUq70KbueahK9qFGRL10GpFqu
+         ckd4S3IQ3aV+yds2kDuXMUVCXouQxqX02zfLN6tRomSOon3OMeUmX6E9NhaGKs30fCl7
+         mmxfQeWYQxGMwwXln/ajA9oVGCRRnStt8xI6wMMeIJ69lFKARQXLkzKW/7JtmduXIjir
+         5Rxv2uuWVt3DTLCvjLDg+EAYe2g1/oZn2TbokIE8Iy8/dKq9kwCctik6WVbCKjrVEmX4
+         jFnRPOlggGIHsShx+8Wm+MU+pZUk8v37+QiZW3eqEyAJxn7vzXjt3L01aiwp3JpIgQd7
+         7DuA==
+X-Gm-Message-State: ANhLgQ0XYLPQwKLikz4FV+DuYks0R7UiHtT8FkIN5/fRD3mrx5ISEuNi
+        cnhyfqGGOUzkxTLg7RHwT4WpzSvCEVhm7A==
+X-Google-Smtp-Source: ADFU+vssMsXpnSqZ0Q+3r3WjknsIVemMmpglb9UzphXFlHgEsxOIGOpQYESqITdqYyP9yC87tYUo3g==
+X-Received: by 2002:adf:e910:: with SMTP id f16mr8418753wrm.20.1583391644891;
+        Wed, 04 Mar 2020 23:00:44 -0800 (PST)
+Received: from Armstrongs-MacBook-Pro.local ([2a01:e35:2ec0:82b0:dcde:37cb:d694:5b35])
+        by smtp.gmail.com with ESMTPSA id e11sm41561583wrm.80.2020.03.04.23.00.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 04 Mar 2020 23:00:44 -0800 (PST)
+Subject: Re: [PATCH v6 6/7] phy: amlogic: Add Amlogic AXG PCIE PHY Driver
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Remi Pommarel <repk@triplefau.lt>
+References: <20200123232943.10229-1-repk@triplefau.lt>
+ <20200123232943.10229-7-repk@triplefau.lt>
+ <14627e42-4894-6674-4911-3205ea8f5e55@ti.com> <20200304130811.GP2248@voidbox>
+ <a6f8ac2f-f49a-f53e-1b44-fc446c3d7964@ti.com>
+Cc:     Yue Wang <yue.wang@amlogic.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-pci@vger.kernel.org
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Message-ID: <6f5cad19-3879-84ae-26bf-2fd065af2e0d@baylibre.com>
+Date:   Thu, 5 Mar 2020 08:00:42 +0100
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:45.0)
+ Gecko/20100101 Thunderbird/45.8.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: dd2f770b-993b-46d2-7cdd-08d7c0cfdfa5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Mar 2020 06:38:53.7673
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: PbM9HNJMbJjf2P7POLeWkqXfSJXn1L5x1kJoIBKeUX6YKQoatkaAX/TEQBv6bx9ODc+N7sbezZRBrI2ZdpmAig==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR18MB1248
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-05_01:2020-03-04,2020-03-05 signatures=0
+In-Reply-To: <a6f8ac2f-f49a-f53e-1b44-fc446c3d7964@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IGRldiA8ZGV2LWJvdW5jZXNA
-ZHBkay5vcmc+IE9uIEJlaGFsZiBPZiBBbGV4IFdpbGxpYW1zb24NCj4gU2VudDogVGh1cnNkYXks
-IEZlYnJ1YXJ5IDIwLCAyMDIwIDEyOjI0IEFNDQo+IFRvOiBrdm1Admdlci5rZXJuZWwub3JnDQo+
-IENjOiBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwu
-b3JnOyBkZXZAZHBkay5vcmc7DQo+IG10b3NhdHRpQHJlZGhhdC5jb207IHRob21hc0Btb25qYWxv
-bi5uZXQ7IGJsdWNhQGRlYmlhbi5vcmc7DQo+IGplcmluamFjb2JrQGdtYWlsLmNvbTsgYnJ1Y2Uu
-cmljaGFyZHNvbkBpbnRlbC5jb207IGNvaHVja0ByZWRoYXQuY29tDQo+IFN1YmplY3Q6IFtkcGRr
-LWRldl0gW1BBVENIIHYyIDAvN10gdmZpby9wY2k6IFNSLUlPViBzdXBwb3J0DQo+IA0KPiBDaGFu
-Z2VzIHNpbmNlIHYxIGFyZSBwcmltYXJpbHkgdG8gcGF0Y2ggMy83IHdoZXJlIHRoZSBjb21taXQg
-bG9nIGlzDQo+IHJld3JpdHRlbiwgYWxvbmcgd2l0aCBvcHRpb24gcGFyc2luZyBhbmQgZmFpbHVy
-ZSBsb2dnaW5nIGJhc2VkIG9uIHVwc3RyZWFtDQo+IGRpc2N1c3Npb25zLiAgVGhlIHByaW1hcnkg
-dXNlciB2aXNpYmxlIGRpZmZlcmVuY2UgaXMgdGhhdCBvcHRpb24gcGFyc2luZyBpcyBub3cNCj4g
-bXVjaCBtb3JlIHN0cmljdC4gIElmIGEgdmZfdG9rZW4gb3B0aW9uIGlzIHByb3ZpZGVkIHRoYXQg
-Y2Fubm90IGJlIHVzZWQsIHdlDQo+IGdlbmVyYXRlIGFuIGVycm9yLiAgQXMgYSByZXN1bHQgb2Yg
-dGhpcywgb3BlbmluZyBhIFBGIHdpdGggYSB2Zl90b2tlbiBvcHRpb24NCj4gd2lsbCBzZXJ2ZSBh
-cyBhIG1lY2hhbmlzbSBvZiBzZXR0aW5nIHRoZSB2Zl90b2tlbi4gIFRoaXMgc2VlbXMgbGlrZSBh
-IG1vcmUNCj4gdXNlciBmcmllbmRseSBBUEkgdGhhbiB0aGUgYWx0ZXJuYXRpdmUgb2Ygc29tZXRp
-bWVzIHJlcXVpcmluZyB0aGUgb3B0aW9uIChWRnMNCj4gaW4gdXNlKSBhbmQgc29tZXRpbWVzIHJl
-amVjdGluZyBpdCwgYW5kIHVwaG9sZHMgb3VyIGRlc2lyZSB0aGF0IHRoZSBvcHRpb24gaXMNCj4g
-YWx3YXlzIGVpdGhlciB1c2VkIG9yIHJlamVjdGVkLg0KPiANCj4gVGhpcyBhbHNvIG1lYW5zIHRo
-YXQgdGhlIFZGSU9fREVWSUNFX0ZFQVRVUkUgaW9jdGwgaXMgbm90IHRoZSBvbmx5IG1lYW5zDQo+
-IG9mIHNldHRpbmcgdGhlIFZGIHRva2VuLCB3aGljaCBtaWdodCBjYWxsIGludG8gcXVlc3Rpb24g
-d2hldGhlciB3ZSBhYnNvbHV0ZWx5DQo+IG5lZWQgdGhpcyBuZXcgaW9jdGwuICBDdXJyZW50bHkg
-SSdtIGtlZXBpbmcgaXQgYmVjYXVzZSBJIGNhbiBpbWFnaW5lIHVzZSBjYXNlcywNCj4gZm9yIGV4
-YW1wbGUgaWYgYSBoeXBlcnZpc29yIHdlcmUgdG8gc3VwcG9ydCBTUi1JT1YsIHRoZSBQRiBkZXZp
-Y2UgbWlnaHQgYmUNCj4gb3BlbmVkIHdpdGhvdXQgY29uc2lkZXJhdGlvbiBmb3IgYSBWRiB0b2tl
-biBhbmQgd2UnZCByZXF1aXJlIHRoZQ0KPiBoeXBzZXJ2aXNvciB0byBjbG9zZSBhbmQgcmUtb3Bl
-biB0aGUgUEYgaW4gb3JkZXIgdG8gc2V0IGEga25vd24gVkYgdG9rZW4sDQo+IHdoaWNoIGlzIGlt
-cHJhY3RpY2FsLg0KPiANCj4gU2VyaWVzIG92ZXJ2aWV3IChzYW1lIGFzIHByb3ZpZGVkIHdpdGgg
-djEpOg0KPiANCj4gVGhlIHN5bm9wc2lzIG9mIHRoaXMgc2VyaWVzIGlzIHRoYXQgd2UgaGF2ZSBh
-biBvbmdvaW5nIGRlc2lyZSB0byBkcml2ZSBQQ0llIFNSLQ0KPiBJT1YgUEZzIGZyb20gdXNlcnNw
-YWNlIHdpdGggVkZJTy4gIFRoZXJlJ3MgYW4gaW1tZWRpYXRlIG5lZWQgZm9yIHRoaXMgd2l0aA0K
-PiBEUERLIGRyaXZlcnMgYW5kIHBvdGVudGlhbGx5IGludGVyZXN0aW5nIGZ1dHVyZSB1c2UgY2Fz
-ZXMgaW4gdmlydHVhbGl6YXRpb24uDQo+IFdlJ3ZlIGJlZW4gcmVsdWN0YW50IHRvIGFkZCB0aGlz
-IHN1cHBvcnQgcHJldmlvdXNseSBkdWUgdG8gdGhlIGRlcGVuZGVuY3kNCj4gYW5kIHRydXN0IHJl
-bGF0aW9uc2hpcCBiZXR3ZWVuIHRoZSBWRiBkZXZpY2UgYW5kIFBGIGRyaXZlci4gIE1pbmltYWxs
-eSB0aGUgUEYNCj4gZHJpdmVyIGNhbiBpbmR1Y2UgYSBkZW5pYWwgb2Ygc2VydmljZSB0byB0aGUg
-VkYsIGJ1dCBkZXBlbmRpbmcgb24gdGhlIHNwZWNpZmljDQo+IGltcGxlbWVudGF0aW9uLCB0aGUg
-UEYgZHJpdmVyIG1pZ2h0IGFsc28gYmUgcmVzcG9uc2libGUgZm9yIG1vdmluZyBkYXRhDQo+IGJl
-dHdlZW4gVkZzIG9yIGhhdmUgZGlyZWN0IGFjY2VzcyB0byB0aGUgc3RhdGUgb2YgdGhlIFZGLCBp
-bmNsdWRpbmcgZGF0YSBvcg0KPiBzdGF0ZSBvdGhlcndpc2UgcHJpdmF0ZSB0byB0aGUgVkYgb3Ig
-VkYgZHJpdmVyLg0KPiANCj4gVG8gaGVscCByZXNvbHZlIHRoZXNlIGNvbmNlcm5zLCB3ZSBpbnRy
-b2R1Y2UgYSBWRiB0b2tlbiBpbnRvIHRoZSBWRklPIFBDSQ0KPiBBQkksIHdoaWNoIGFjdHMgYXMg
-YSBzaGFyZWQgc2VjcmV0IGtleSBiZXR3ZWVuIGRyaXZlcnMuICBUaGUgdXNlcnNwYWNlIFBGDQo+
-IGRyaXZlciBpcyByZXF1aXJlZCB0byBzZXQgdGhlIFZGIHRva2VuIHRvIGEga25vd24gdmFsdWUg
-YW5kIHVzZXJzcGFjZSBWRg0KPiBkcml2ZXJzIGFyZSByZXF1aXJlZCB0byBwcm92aWRlIHRoZSB0
-b2tlbiB0byBhY2Nlc3MgdGhlIFZGIGRldmljZS4gIElmIGEgUEYNCj4gZHJpdmVyIGlzIHJlc3Rh
-cnRlZCB3aXRoIFZGIGRyaXZlcnMgaW4gdXNlLCBpdCBtdXN0IGFsc28gcHJvdmlkZSB0aGUgY3Vy
-cmVudA0KPiB0b2tlbiBpbiBvcmRlciB0byBwcmV2ZW50IGEgcm9ndWUgdW50cnVzdGVkIFBGIGRy
-aXZlciBmcm9tIHJlcGxhY2luZyBhIGtub3duDQo+IGRyaXZlci4gIFRoZSBkZWdyZWUgdG8gd2hp
-Y2ggdGhpcyBuZXcgdG9rZW4gaXMgY29uc2lkZXJlZCBzZWNyZXQgaXMgbGVmdCB0byB0aGUNCj4g
-dXNlcnNwYWNlIGRyaXZlcnMsIHRoZSBrZXJuZWwgaW50ZW50aW9uYWxseSBwcm92aWRlcyBubyBt
-ZWFucyB0byByZXRyaWV2ZSB0aGUNCj4gY3VycmVudCB0b2tlbi4NCj4gDQo+IE5vdGUgdGhhdCB0
-aGUgYWJvdmUgdG9rZW4gaXMgb25seSByZXF1aXJlZCBmb3IgdGhpcyBuZXcgbW9kZWwgd2hlcmUg
-Ym90aA0KPiB0aGUgUEYgYW5kIFZGIGRldmljZXMgYXJlIHVzYWJsZSB0aHJvdWdoIHZmaW8tcGNp
-LiAgRXhpc3RpbmcgbW9kZWxzIG9mIFZGSU8NCj4gZHJpdmVycyB3aGVyZSB0aGUgUEYgaXMgdXNl
-ZCB3aXRob3V0IFNSLUlPViBlbmFibGVkIG9yIHRoZSBWRiBpcyBib3VuZCB0byBhDQo+IHVzZXJz
-cGFjZSBkcml2ZXIgd2l0aCBhbiBpbi1rZXJuZWwsIGhvc3QgUEYgZHJpdmVyIGFyZSB1bmFmZmVj
-dGVkLg0KPiANCj4gVGhlIGxhdHRlciBjb25maWd1cmF0aW9uIGFib3ZlIGFsc28gaGlnaGxpZ2h0
-cyBhIG5ldyBpbnZlcnRlZCBzY2VuYXJpbyB0aGF0IGlzDQo+IG5vdyBwb3NzaWJsZSwgYSB1c2Vy
-c3BhY2UgUEYgZHJpdmVyIHdpdGggaW4ta2VybmVsIFZGIGRyaXZlcnMuDQo+IEkgYmVsaWV2ZSB0
-aGlzIGlzIGEgc2NlbmFyaW8gdGhhdCBzaG91bGQgYmUgYWxsb3dlZCwgYnV0IHNob3VsZCBub3Qg
-YmUgZW5hYmxlZA0KPiBieSBkZWZhdWx0LiAgVGhpcyBzZXJpZXMgaW5jbHVkZXMgY29kZSB0byBz
-ZXQgYSBkZWZhdWx0IGRyaXZlcl9vdmVycmlkZSBmb3IgVkZzDQo+IHNvdXJjZWQgZnJvbSBhIHZm
-aW8tcGNpIHVzZXIgb3duZWQgUEYsIHN1Y2ggdGhhdCB0aGUgVkZzIGFyZSBhbHNvIGJvdW5kIHRv
-DQo+IHZmaW8tcGNpLiAgVGhpcyBtb2RlbCBpcyBjb21wYXRpYmxlIHdpdGggdG9vbHMgbGlrZSBk
-cml2ZXJjdGwgYW5kIGFsbG93cyB0aGUNCj4gc3lzdGVtIGFkbWluaXN0cmF0b3IgdG8gZGVjaWRl
-IGlmIG90aGVyIGJpbmRpbmdzIHNob3VsZCBiZSBlbmFibGVkLiAgVGhlIFZGDQo+IHRva2VuIGlu
-dGVyZmFjZSBhYm92ZSBleGlzdHMgb25seSBiZXR3ZWVuIHZmaW8tcGNpIFBGIGFuZCBWRiBkcml2
-ZXJzLCBvbmNlIGENCj4gVkYgaXMgYm91bmQgdG8gYW5vdGhlciBkcml2ZXIsIHRoZSBhZG1pbmlz
-dHJhdG9yIGhhcyBlZmZlY3RpdmVseSBwcm9ub3VuY2VkDQo+IHRoZSBkZXZpY2UgYXMgdHJ1c3Rl
-ZC4gIFRoZSB2ZmlvLXBjaSBkcml2ZXIgd2lsbCBub3RlIGFsdGVybmF0ZSBiaW5kaW5nIGluIGRt
-ZXNnDQo+IGZvciBsb2dnaW5nIGFuZCBkZWJ1Z2dpbmcgcHVycG9zZXMuDQo+IA0KPiBQbGVhc2Ug
-cmV2aWV3LCBjb21tZW50LCBhbmQgdGVzdC4gIFRoZSBleGFtcGxlIFFFTVUgaW1wbGVtZW50YXRp
-b24NCj4gcHJvdmlkZWQgd2l0aCB0aGUgUkZDIGlzIHN0aWxsIGN1cnJlbnQgZm9yIHRoaXMgdmVy
-c2lvbi4gIFRoYW5rcywNCj4gDQo+IEFsZXgNCg0KSGkgQWxleCwNCg0KVGhhbmtzIGZvciBlbmFi
-bGluZyB0aGlzIGZlYXR1cmUgc3VwcG9ydC4NCg0KVGVzdGVkLWJ5OiBWYW1zaSBBdHR1bnVydSA8
-dmF0dHVudXJ1QG1hcnZlbGwuY29tPg0KDQpUZXN0ZWQgdjIgcGF0Y2ggc2V0IHdpdGggYmVsb3cg
-RFBESyBwYXRjaC4NCmh0dHA6Ly9wYXRjaGVzLmRwZGsub3JnL3BhdGNoLzY2MjgxLw0KDQpSZWdh
-cmRzDQpBIFZhbXNpDQoNCj4gDQo+IFJGQzogaHR0cHM6Ly91cmxkZWZlbnNlLnByb29mcG9pbnQu
-Y29tL3YyL3VybD91PWh0dHBzLQ0KPiAzQV9fbG9yZS5rZXJuZWwub3JnX2xrbWxfMTU4MDg1MzM3
-NTgyLjk0NDUuMTc2ODIyNjY0Mzc1ODM1MDU1MDIuc3RnaXQtDQo+IDQwZ2ltbGkuaG9tZV8mZD1E
-d0lDYVEmYz1uS2pXZWMyYjZSMG1PeVBhejd4dGZRJnI9MnJweHhORjJxZVAwDQo+IDJnVlpJV1RW
-clctNnpOWno1LXVLdDlwUnFwUl9NM1UmbT1WLTZtS21DVEhQWmE1andlcFhVXy0NCj4gTWExX0JH
-RjBPV0pfSVJDRl9wNEdWbyZzPVluTzk4UEdLOXJvN0Y2X1haVGNjSGRZY1otDQo+IHJNTU9pbjBu
-UkZoUEQ2VXY0JmU9DQo+IHYxOiBodHRwczovL3VybGRlZmVuc2UucHJvb2Zwb2ludC5jb20vdjIv
-dXJsP3U9aHR0cHMtDQo+IDNBX19sb3JlLmtlcm5lbC5vcmdfbGttbF8xNTgxNDU0NzI2MDQuMTY4
-MjcuMTU3NTEzNzU1NDAxMDIyOTgxMzAuc3RnaXQNCj4gLQ0KPiA0MGdpbWxpLmhvbWVfJmQ9RHdJ
-Q2FRJmM9bktqV2VjMmI2UjBtT3lQYXo3eHRmUSZyPTJycHh4TkYycWVQMA0KPiAyZ1ZaSVdUVnJX
-LTZ6Tlp6NS11S3Q5cFJxcFJfTTNVJm09Vi02bUttQ1RIUFphNWp3ZXBYVV8tDQo+IE1hMV9CR0Yw
-T1dKX0lSQ0ZfcDRHVm8mcz1ydlV4TENFTndOazBHQllrY3NCVlZvYnNMZk1iNEJWNWd0Yw0KPiAz
-VnFZUVRTNCZlPQ0KPiANCj4gLS0tDQo+IA0KPiBBbGV4IFdpbGxpYW1zb24gKDcpOg0KPiAgICAg
-ICB2ZmlvOiBJbmNsdWRlIG9wdGlvbmFsIGRldmljZSBtYXRjaCBpbiB2ZmlvX2RldmljZV9vcHMg
-Y2FsbGJhY2tzDQo+ICAgICAgIHZmaW8vcGNpOiBJbXBsZW1lbnQgbWF0Y2ggb3BzDQo+ICAgICAg
-IHZmaW8vcGNpOiBJbnRyb2R1Y2UgVkYgdG9rZW4NCj4gICAgICAgdmZpbzogSW50cm9kdWNlIFZG
-SU9fREVWSUNFX0ZFQVRVUkUgaW9jdGwgYW5kIGZpcnN0IHVzZXINCj4gICAgICAgdmZpby9wY2k6
-IEFkZCBzcmlvdl9jb25maWd1cmUgc3VwcG9ydA0KPiAgICAgICB2ZmlvL3BjaTogUmVtb3ZlIGRl
-dl9mbXQgZGVmaW5pdGlvbg0KPiAgICAgICB2ZmlvL3BjaTogQ2xlYW51cCAucHJvYmUoKSBleGl0
-IHBhdGhzDQo+IA0KPiANCj4gIGRyaXZlcnMvdmZpby9wY2kvdmZpb19wY2kuYyAgICAgICAgIHwg
-IDM4Mw0KPiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLQ0KPiAgZHJpdmVycy92
-ZmlvL3BjaS92ZmlvX3BjaV9wcml2YXRlLmggfCAgIDEwICsNCj4gIGRyaXZlcnMvdmZpby92Zmlv
-LmMgICAgICAgICAgICAgICAgIHwgICAyMCArLQ0KPiAgaW5jbHVkZS9saW51eC92ZmlvLmggICAg
-ICAgICAgICAgICAgfCAgICA0DQo+ICBpbmNsdWRlL3VhcGkvbGludXgvdmZpby5oICAgICAgICAg
-ICB8ICAgMzcgKysrDQo+ICA1IGZpbGVzIGNoYW5nZWQsIDQyNiBpbnNlcnRpb25zKCspLCAyOCBk
-ZWxldGlvbnMoLSkNCg0K
+Hi,
+
+Le 05/03/2020 à 05:56, Kishon Vijay Abraham I a écrit :
+> Hi,
+> 
+> On 04/03/20 6:38 pm, Remi Pommarel wrote:
+>> On Wed, Mar 04, 2020 at 04:31:24PM +0530, Kishon Vijay Abraham I wrote:
+>>>
+>>>
+>>> On 24/01/20 4:59 am, Remi Pommarel wrote:
+>>>> This adds support for the PCI PHY found in the Amlogic AXG SoC Family.
+>>>> This will allow to mutualize code in pci-meson.c between AXG and G12A
+>>>> SoC.
+>>>>
+>>>> This PHY also uses and chains an analog PHY, which on AXG platform
+>>>> is needed to have reliable PCIe communication.
+>>>
+>>> Is the analog PHY an independent block and can be used with other PHYs?
+>>
+>> It is documented as a separate block yes, but I think it is unlikely
+>> that it will be used with other PHYs than the PCIe or the MIPI one of
+>> the AXG SoC.
+> 
+> Shouldn't we then have a single PHY driver instead of chaining PHYs?
+
+The chaining is necessary because the MIPI/PCIe analogi PHY will be reused on
+recent platform with similar MIPI DSI PHY, but these platforms have their PCIe PHY
+combined with USB3 (see g12a-usb3-pcie combo phy).
+
+Neil
+
+> 
+> Thanks
+> Kishon
+> 
+>>
+>> Thanks,
+>> Remi
+>>
+>>>
+>>> For the patch itself
+>>> Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>>
+>>> Thanks
+>>> Kishon
+>>>>
+>>>> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+>>>> ---
+>>>>  drivers/phy/amlogic/Kconfig              |  11 ++
+>>>>  drivers/phy/amlogic/Makefile             |   1 +
+>>>>  drivers/phy/amlogic/phy-meson-axg-pcie.c | 192 +++++++++++++++++++++++
+>>>>  3 files changed, 204 insertions(+)
+>>>>  create mode 100644 drivers/phy/amlogic/phy-meson-axg-pcie.c
+>>>>
+>>>> diff --git a/drivers/phy/amlogic/Kconfig b/drivers/phy/amlogic/Kconfig
+>>>> index 8c9cf2403591..71801e30d601 100644
+>>>> --- a/drivers/phy/amlogic/Kconfig
+>>>> +++ b/drivers/phy/amlogic/Kconfig
+>>>> @@ -60,6 +60,17 @@ config PHY_MESON_G12A_USB3_PCIE
+>>>>  	  in Meson G12A SoCs.
+>>>>  	  If unsure, say N.
+>>>>  
+>>>> +config PHY_MESON_AXG_PCIE
+>>>> +	tristate "Meson AXG PCIE PHY driver"
+>>>> +	default ARCH_MESON
+>>>> +	depends on OF && (ARCH_MESON || COMPILE_TEST)
+>>>> +	select GENERIC_PHY
+>>>> +	select REGMAP_MMIO
+>>>> +	help
+>>>> +	  Enable this to support the Meson MIPI + PCIE PHY found
+>>>> +	  in Meson AXG SoCs.
+>>>> +	  If unsure, say N.
+>>>> +
+>>>>  config PHY_MESON_AXG_MIPI_PCIE_ANALOG
+>>>>  	tristate "Meson AXG MIPI + PCIE analog PHY driver"
+>>>>  	default ARCH_MESON
+>>>> diff --git a/drivers/phy/amlogic/Makefile b/drivers/phy/amlogic/Makefile
+>>>> index 0aecf92d796a..e2baa133f7af 100644
+>>>> --- a/drivers/phy/amlogic/Makefile
+>>>> +++ b/drivers/phy/amlogic/Makefile
+>>>> @@ -4,4 +4,5 @@ obj-$(CONFIG_PHY_MESON_GXL_USB2)		+= phy-meson-gxl-usb2.o
+>>>>  obj-$(CONFIG_PHY_MESON_G12A_USB2)		+= phy-meson-g12a-usb2.o
+>>>>  obj-$(CONFIG_PHY_MESON_GXL_USB3)		+= phy-meson-gxl-usb3.o
+>>>>  obj-$(CONFIG_PHY_MESON_G12A_USB3_PCIE)		+= phy-meson-g12a-usb3-pcie.o
+>>>> +obj-$(CONFIG_PHY_MESON_AXG_PCIE)		+= phy-meson-axg-pcie.o
+>>>>  obj-$(CONFIG_PHY_MESON_AXG_MIPI_PCIE_ANALOG)	+= phy-meson-axg-mipi-pcie-analog.o
+>>>> diff --git a/drivers/phy/amlogic/phy-meson-axg-pcie.c b/drivers/phy/amlogic/phy-meson-axg-pcie.c
+>>>> new file mode 100644
+>>>> index 000000000000..377ed0dcd0d9
+>>>> --- /dev/null
+>>>> +++ b/drivers/phy/amlogic/phy-meson-axg-pcie.c
+>>>> @@ -0,0 +1,192 @@
+>>>> +// SPDX-License-Identifier: GPL-2.0
+>>>> +/*
+>>>> + * Amlogic AXG PCIE PHY driver
+>>>> + *
+>>>> + * Copyright (C) 2020 Remi Pommarel <repk@triplefau.lt>
+>>>> + */
+>>>> +#include <linux/module.h>
+>>>> +#include <linux/phy/phy.h>
+>>>> +#include <linux/regmap.h>
+>>>> +#include <linux/reset.h>
+>>>> +#include <linux/platform_device.h>
+>>>> +#include <linux/bitfield.h>
+>>>> +#include <dt-bindings/phy/phy.h>
+>>>> +
+>>>> +#define MESON_PCIE_REG0 0x00
+>>>> +#define		MESON_PCIE_COMMON_CLK	BIT(4)
+>>>> +#define		MESON_PCIE_PORT_SEL	GENMASK(3, 2)
+>>>> +#define		MESON_PCIE_CLK		BIT(1)
+>>>> +#define		MESON_PCIE_POWERDOWN	BIT(0)
+>>>> +
+>>>> +#define MESON_PCIE_TWO_X1		FIELD_PREP(MESON_PCIE_PORT_SEL, 0x3)
+>>>> +#define MESON_PCIE_COMMON_REF_CLK	FIELD_PREP(MESON_PCIE_COMMON_CLK, 0x1)
+>>>> +#define MESON_PCIE_PHY_INIT		(MESON_PCIE_TWO_X1 |		\
+>>>> +					 MESON_PCIE_COMMON_REF_CLK)
+>>>> +#define MESON_PCIE_RESET_DELAY		500
+>>>> +
+>>>> +struct phy_axg_pcie_priv {
+>>>> +	struct phy *phy;
+>>>> +	struct phy *analog;
+>>>> +	struct regmap *regmap;
+>>>> +	struct reset_control *reset;
+>>>> +};
+>>>> +
+>>>> +static const struct regmap_config phy_axg_pcie_regmap_conf = {
+>>>> +	.reg_bits = 8,
+>>>> +	.val_bits = 32,
+>>>> +	.reg_stride = 4,
+>>>> +	.max_register = MESON_PCIE_REG0,
+>>>> +};
+>>>> +
+>>>> +static int phy_axg_pcie_power_on(struct phy *phy)
+>>>> +{
+>>>> +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
+>>>> +	int ret;
+>>>> +
+>>>> +	ret = phy_power_on(priv->analog);
+>>>> +	if (ret != 0)
+>>>> +		return ret;
+>>>> +
+>>>> +	regmap_update_bits(priv->regmap, MESON_PCIE_REG0,
+>>>> +			   MESON_PCIE_POWERDOWN, 0);
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>> +static int phy_axg_pcie_power_off(struct phy *phy)
+>>>> +{
+>>>> +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
+>>>> +	int ret;
+>>>> +
+>>>> +	ret = phy_power_off(priv->analog);
+>>>> +	if (ret != 0)
+>>>> +		return ret;
+>>>> +
+>>>> +	regmap_update_bits(priv->regmap, MESON_PCIE_REG0,
+>>>> +			   MESON_PCIE_POWERDOWN, 1);
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>> +static int phy_axg_pcie_init(struct phy *phy)
+>>>> +{
+>>>> +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
+>>>> +	int ret;
+>>>> +
+>>>> +	ret = phy_init(priv->analog);
+>>>> +	if (ret != 0)
+>>>> +		return ret;
+>>>> +
+>>>> +	regmap_write(priv->regmap, MESON_PCIE_REG0, MESON_PCIE_PHY_INIT);
+>>>> +	return reset_control_reset(priv->reset);
+>>>> +}
+>>>> +
+>>>> +static int phy_axg_pcie_exit(struct phy *phy)
+>>>> +{
+>>>> +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
+>>>> +	int ret;
+>>>> +
+>>>> +	ret = phy_exit(priv->analog);
+>>>> +	if (ret != 0)
+>>>> +		return ret;
+>>>> +
+>>>> +	return reset_control_reset(priv->reset);
+>>>> +}
+>>>> +
+>>>> +static int phy_axg_pcie_reset(struct phy *phy)
+>>>> +{
+>>>> +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
+>>>> +	int ret = 0;
+>>>> +
+>>>> +	ret = phy_reset(priv->analog);
+>>>> +	if (ret != 0)
+>>>> +		goto out;
+>>>> +
+>>>> +	ret = reset_control_assert(priv->reset);
+>>>> +	if (ret != 0)
+>>>> +		goto out;
+>>>> +	udelay(MESON_PCIE_RESET_DELAY);
+>>>> +
+>>>> +	ret = reset_control_deassert(priv->reset);
+>>>> +	if (ret != 0)
+>>>> +		goto out;
+>>>> +	udelay(MESON_PCIE_RESET_DELAY);
+>>>> +
+>>>> +out:
+>>>> +	return ret;
+>>>> +}
+>>>> +
+>>>> +static const struct phy_ops phy_axg_pcie_ops = {
+>>>> +	.init = phy_axg_pcie_init,
+>>>> +	.exit = phy_axg_pcie_exit,
+>>>> +	.power_on = phy_axg_pcie_power_on,
+>>>> +	.power_off = phy_axg_pcie_power_off,
+>>>> +	.reset = phy_axg_pcie_reset,
+>>>> +	.owner = THIS_MODULE,
+>>>> +};
+>>>> +
+>>>> +static int phy_axg_pcie_probe(struct platform_device *pdev)
+>>>> +{
+>>>> +	struct phy_provider *pphy;
+>>>> +	struct device *dev = &pdev->dev;
+>>>> +	struct phy_axg_pcie_priv *priv;
+>>>> +	struct device_node *np = dev->of_node;
+>>>> +	struct resource *res;
+>>>> +	void __iomem *base;
+>>>> +	int ret;
+>>>> +
+>>>> +	priv = devm_kmalloc(dev, sizeof(*priv), GFP_KERNEL);
+>>>> +	if (!priv)
+>>>> +		return -ENOMEM;
+>>>> +
+>>>> +	priv->phy = devm_phy_create(dev, np, &phy_axg_pcie_ops);
+>>>> +	if (IS_ERR(priv->phy)) {
+>>>> +		ret = PTR_ERR(priv->phy);
+>>>> +		if (ret != -EPROBE_DEFER)
+>>>> +			dev_err(dev, "failed to create PHY\n");
+>>>> +		return ret;
+>>>> +	}
+>>>> +
+>>>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>>> +	base = devm_ioremap_resource(dev, res);
+>>>> +	if (IS_ERR(base))
+>>>> +		return PTR_ERR(base);
+>>>> +
+>>>> +	priv->regmap = devm_regmap_init_mmio(dev, base,
+>>>> +					     &phy_axg_pcie_regmap_conf);
+>>>> +	if (IS_ERR(priv->regmap))
+>>>> +		return PTR_ERR(priv->regmap);
+>>>> +
+>>>> +	priv->reset = devm_reset_control_array_get(dev, false, false);
+>>>> +	if (IS_ERR(priv->reset))
+>>>> +		return PTR_ERR(priv->reset);
+>>>> +
+>>>> +	priv->analog = devm_phy_get(dev, "analog");
+>>>> +	if (IS_ERR(priv->analog))
+>>>> +		return PTR_ERR(priv->analog);
+>>>> +
+>>>> +	phy_set_drvdata(priv->phy, priv);
+>>>> +	dev_set_drvdata(dev, priv);
+>>>> +	pphy = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
+>>>> +
+>>>> +	return PTR_ERR_OR_ZERO(pphy);
+>>>> +}
+>>>> +
+>>>> +static const struct of_device_id phy_axg_pcie_of_match[] = {
+>>>> +	{
+>>>> +		.compatible = "amlogic,axg-pcie-phy",
+>>>> +	},
+>>>> +	{ },
+>>>> +};
+>>>> +MODULE_DEVICE_TABLE(of, phy_axg_pcie_of_match);
+>>>> +
+>>>> +static struct platform_driver phy_axg_pcie_driver = {
+>>>> +	.probe = phy_axg_pcie_probe,
+>>>> +	.driver = {
+>>>> +		.name = "phy-axg-pcie",
+>>>> +		.of_match_table = phy_axg_pcie_of_match,
+>>>> +	},
+>>>> +};
+>>>> +module_platform_driver(phy_axg_pcie_driver);
+>>>> +
+>>>> +MODULE_AUTHOR("Remi Pommarel <repk@triplefau.lt>");
+>>>> +MODULE_DESCRIPTION("Amlogic AXG PCIE PHY driver");
+>>>> +MODULE_LICENSE("GPL v2");
+>>>>
