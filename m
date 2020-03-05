@@ -2,40 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9FF4517A30D
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Mar 2020 11:25:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C50BB17A310
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Mar 2020 11:27:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726048AbgCEKZz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Mar 2020 05:25:55 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:33470 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbgCEKZz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Mar 2020 05:25:55 -0500
+        id S1727030AbgCEKZ5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 Mar 2020 05:25:57 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:38102 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725946AbgCEKZ5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Mar 2020 05:25:57 -0500
 Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 025APlWP062329;
-        Thu, 5 Mar 2020 04:25:47 -0600
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 025APoSn079823;
+        Thu, 5 Mar 2020 04:25:50 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1583403947;
-        bh=67cJhbV6Sc6CacSrpS4iujpMiPELAghBczXEmeuLeBo=;
-        h=From:To:CC:Subject:Date;
-        b=g+ZkUxQxWCrBENEQmI68w9sBMAYU9JI7q/SSzJd7Plo2ijqQxOA1SWmPWzQ4+z5uS
-         2yxMrkfo4fQvCSkM9H9soZQLrcaqvu6FEGzT/iQmmtrsTCVUn93qTfwPic/bfHXva8
-         8YR8cBfTYxQ6Ra5h71ysT4Dc2dBmelhyUs2yQ3D0=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 025APlsZ116674
+        s=ti-com-17Q1; t=1583403950;
+        bh=ZaLMbewo0jDd2UsQo+Q19S/MGyXATZ0zPdlLLmQCJxo=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=QTliI5PtRy5efKz9wzZ7B6nHlkFFUNK6VkPEhtLTZZdPZAk8hqWlkdqob5aA+wMaG
+         aB/Lr+vkqvYjQuYiO23rEL2FCgnJdL2dqtDWmMF+2vIDJwXLJtq4rEjnowgVYmDnnp
+         V4nd+u/rooc2+dRi5fhS/wRpLa48t381ke8XCYIc=
+Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 025APoI1116701
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 5 Mar 2020 04:25:47 -0600
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+        Thu, 5 Mar 2020 04:25:50 -0600
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 5 Mar
- 2020 04:25:47 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ 2020 04:25:50 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 5 Mar 2020 04:25:47 -0600
+ Frontend Transport; Thu, 5 Mar 2020 04:25:50 -0600
 Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 025APijD013418;
-        Thu, 5 Mar 2020 04:25:45 -0600
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 025APijE013418;
+        Thu, 5 Mar 2020 04:25:47 -0600
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Tom Joseph <tjoseph@cadence.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -43,10 +43,12 @@ To:     Tom Joseph <tjoseph@cadence.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <kishon@ti.com>
-Subject: [PATCH v5 0/4] dt-bindings: Convert Cadence PCIe RC/EP to DT Schema
-Date:   Thu, 5 Mar 2020 16:00:13 +0530
-Message-ID: <20200305103017.16706-1-kishon@ti.com>
+Subject: [PATCH v5 1/4] dt-bindings: PCI: Add PCI Endpoint Controller Schema
+Date:   Thu, 5 Mar 2020 16:00:14 +0530
+Message-ID: <20200305103017.16706-2-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200305103017.16706-1-kishon@ti.com>
+References: <20200305103017.16706-1-kishon@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
@@ -55,78 +57,62 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Cadence PCIe IP is used by multiple SoC vendors (e.g. TI). Cadence
-themselves have a validation platform for validating the PCIe IP which
-is already in the upstream kernel. Right now the binding only exists for
-Cadence platform and this will result in adding redundant binding schema
-for any platform using Cadence PCIe core.
+Define a common schema for PCI Endpoint Controllers.
 
-This series:
-1) Create cdns-pcie.yaml which includes properties that are applicable
-   to both host mode and endpoint mode of Cadence PCIe core.
-2) Create cdns-pcie-host.yaml to include properties that are specific to
-   host mode of Cadence PCIe core. cdns-pcie-host.yaml will include
-   cdns-pcie.yaml.
-3) Create cdns-pcie-ep.yaml to include properties that are specific to
-   endpoint mode of Cadence PCIe core. cdns-pcie-ep.yaml will include
-   cdns-pcie.yaml.
-4) Remove cdns,cdns-pcie-ep.txt and cdns,cdns-pcie-host.txt which had
-   the binding for Cadence "platform" and add cdns,cdns-pcie-host.yaml
-   and cdns,cdns-pcie-ep.yaml schema for Cadence Platform. The schema
-   for Cadence platform then includes schema for Cadence PCIe core.
-
-Changes from v4:
-*) Deprecate "cdns,max-outbound-regions" only for host mode. For EP mode
-   this will be a mandatory property.
-
-Changes from v3:
-*) Add "Reviewed-by: Rob Herring <robh@kernel.org>"
-*) Fix typo in SPDX header
-
-Changes from v2:
-*) Created "pci-ep.yaml" for common endpoint controller bindings
-*) Deprecate "cdns,max-outbound-regions" and "cdns,no-bar-match-nbits"
-   binding
-
-Changes from v1:
-*) Fix maximum values of num-lanes and cdns,no-bar-match-nbits
-*) Fix example DT node for PCIe Endpoint.
-
-Ref: Patches to convert Cadence driver to library
-     https://lkml.org/lkml/2019/11/11/317
-
-Some of this was initially part of [1], but to accelerate it getting
-into upstream, sending this as a separate series.
-
-[1] -> http://lore.kernel.org/r/20200106102058.19183-1-kishon@ti.com
-
-Kishon Vijay Abraham I (4):
-  dt-bindings: PCI: Add PCI Endpoint Controller Schema
-  dt-bindings: PCI: cadence: Add PCIe RC/EP DT schema for Cadence PCIe
-  dt-bindings: PCI: Convert PCIe Host/Endpoint in Cadence platform to DT
-    schema
-  dt-bindings: PCI: cadence: Deprecate inbound/outbound specific
-    bindings
-
- .../bindings/pci/cdns,cdns-pcie-ep.txt        | 27 -------
- .../bindings/pci/cdns,cdns-pcie-ep.yaml       | 49 ++++++++++++
- .../bindings/pci/cdns,cdns-pcie-host.txt      | 66 ----------------
- .../bindings/pci/cdns,cdns-pcie-host.yaml     | 75 +++++++++++++++++++
- .../devicetree/bindings/pci/cdns-pcie-ep.yaml | 25 +++++++
- .../bindings/pci/cdns-pcie-host.yaml          | 37 +++++++++
- .../devicetree/bindings/pci/cdns-pcie.yaml    | 23 ++++++
- .../devicetree/bindings/pci/pci-ep.yaml       | 41 ++++++++++
- MAINTAINERS                                   |  2 +-
- 9 files changed, 251 insertions(+), 94 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
- create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
- delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
- create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
- create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
- create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
- create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie.yaml
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/pci/pci-ep.yaml       | 41 +++++++++++++++++++
+ 1 file changed, 41 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/pci/pci-ep.yaml
 
+diff --git a/Documentation/devicetree/bindings/pci/pci-ep.yaml b/Documentation/devicetree/bindings/pci/pci-ep.yaml
+new file mode 100644
+index 000000000000..b3df100705b0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/pci-ep.yaml
+@@ -0,0 +1,41 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pci/pci-ep.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: PCI Endpoint Controller Schema
++
++description: |
++  Common properties for PCI Endpoint Controller Nodes.
++
++maintainers:
++  - Kishon Vijay Abraham I <kishon@ti.com>
++
++properties:
++  $nodename:
++    pattern: "^pcie-ep@"
++
++  max-functions:
++    description: Maximum number of functions that can be configured
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint8
++    minimum: 1
++    default: 1
++    maximum: 255
++
++  max-link-speed:
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++    enum: [ 1, 2, 3, 4 ]
++
++  num-lanes:
++    description: maximum number of lanes
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++    minimum: 1
++    default: 1
++    maximum: 16
++
++required:
++  - compatible
 -- 
 2.17.1
 
