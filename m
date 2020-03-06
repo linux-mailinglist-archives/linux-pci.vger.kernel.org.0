@@ -2,144 +2,203 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BA6417C656
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Mar 2020 20:31:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5293617C6A6
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Mar 2020 20:59:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbgCFTbw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 Mar 2020 14:31:52 -0500
-Received: from mga02.intel.com ([134.134.136.20]:27677 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726533AbgCFTbw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 6 Mar 2020 14:31:52 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 11:31:51 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,523,1574150400"; 
-   d="scan'208";a="234941927"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga008.fm.intel.com with ESMTP; 06 Mar 2020 11:31:51 -0800
-Received: from [10.7.201.16] (skuppusw-desk.jf.intel.com [10.7.201.16])
-        by linux.intel.com (Postfix) with ESMTP id 462105802C8;
-        Fri,  6 Mar 2020 11:31:51 -0800 (PST)
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [patch 7/7] PCI/AER: Fix the broken interrupt injection
-From:   Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Marc Zyngier <maz@kernel.org>, x86@kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Keith Busch <kbusch@kernel.org>
-References: <20200306130341.199467200@linutronix.de>
- <20200306130624.098374457@linutronix.de>
- <08c51309-0bd1-9696-4f4b-4f7425762268@linux.intel.com>
-Organization: Intel
-Message-ID: <0d48a902-3168-ed1e-3c25-f7af19f19fbc@linux.intel.com>
-Date:   Fri, 6 Mar 2020 11:29:30 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1725922AbgCFT7F (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 Mar 2020 14:59:05 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:45064 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725873AbgCFT7F (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 Mar 2020 14:59:05 -0500
+Received: by mail-ot1-f66.google.com with SMTP id f21so3610754otp.12;
+        Fri, 06 Mar 2020 11:59:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=9iMEAOJp31ZT3tbWUq0vVLKvRWpPQYGZdT0+aeaOx0U=;
+        b=puBHa+EImZpqs7EwGJ/YJHv+T/U6xfKvKJpTI3fIoKsp3WvXacEwlGNnSlR3ynznrP
+         fyHfEWsQ9NO/NfM+bWi2Wpovh+gumYQ9UxatPIU8Q2md9A7VWmHexcbRAbCd1XxV9vSC
+         S7Q+fAw8IX3GXZkrXHn/HhuZs3l9iLm2M2NW056NdvmsO0md2aMezTcdG4ezxQuQiD/L
+         SnojqdWKfgVX8lBZEswBsZSeINJFE6bD5g6+OmrjDJ2taRMzV+H/2wEgKMkWylpHWcf2
+         0cd4WiXzqTv8YEm6iVMO8lYRiIXpldz5r5YcBjnf76wsaM+eMl5NIBlYFSFe4LUv2czV
+         9M7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9iMEAOJp31ZT3tbWUq0vVLKvRWpPQYGZdT0+aeaOx0U=;
+        b=S2tDOavAVbGkKce1o0vnvCOt4yJTdqjGeaw+Vrpg9fwfSMeCrhqIO+2RTdZCC7ckpR
+         jgB80hgp9KunTFIFmFSpg40qTz8a0qIIQNBkJSKwqIa8H7UFpELrwI6Jq/G7fUcEHIVt
+         HUhRDglXkOa3Uab1CF61xLTFPkVTKwGSb3hq7tnThWDFBd+t1Gj1E1AvuwZbdEwdpl8C
+         wwonCNQSh0WW1/W2gFDqmXlqKnRxCq0hxacdmUxioa48npbKCcDVqN1I2zkpBFOnm+wl
+         GZylo7KSE6eEFRHE7NQmOmORuuk+c38pyyfTl4uPi4Di5MDIiRjLxxBH3ng/s1w6/HDL
+         5CYA==
+X-Gm-Message-State: ANhLgQ0nQHk8ikl+BO0rwW95YuSa9XFDIeDTXbjRG/nVo9uMZWCQX8x8
+        cPq75q9Zk3PZbpzqUHEQsy+qyafQwQ+qqw==
+X-Google-Smtp-Source: ADFU+vve+niu4SAo5/TFA8c8/hIWThZFju8y6ueh+HqfbYM8guXHo+GPOAUwp3p+L80vfYmevZYR6Q==
+X-Received: by 2002:a05:6830:1e07:: with SMTP id s7mr3984755otr.85.1583524744150;
+        Fri, 06 Mar 2020 11:59:04 -0800 (PST)
+Received: from [100.71.96.87] ([143.166.81.254])
+        by smtp.gmail.com with ESMTPSA id v140sm67853oif.56.2020.03.06.11.59.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 06 Mar 2020 11:59:02 -0800 (PST)
+Subject: Re: [PATCH v4] PCI: pciehp: Fix MSI interrupt race
+To:     Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Austin Bolen <austin_bolen@dell.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, narendra_k@dell.com,
+        Enzo Matsumiya <ematsumiya@suse.com>
+References: <20200207195450.52026-1-stuart.w.hayes@gmail.com>
+ <78b4ced5072bfe6e369d20e8b47c279b8c7af12e.1582121613.git.lukas@wunner.de>
+From:   Stuart Hayes <stuart.w.hayes@gmail.com>
+Message-ID: <860e81c0-8030-57cd-2847-a8a7a9bbda5c@gmail.com>
+Date:   Fri, 6 Mar 2020 13:59:01 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <08c51309-0bd1-9696-4f4b-4f7425762268@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <78b4ced5072bfe6e369d20e8b47c279b8c7af12e.1582121613.git.lukas@wunner.de>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
-On 3/6/20 10:32 AM, Kuppuswamy Sathyanarayanan wrote:
->
-> On 3/6/20 5:03 AM, Thomas Gleixner wrote:
->> The AER error injection mechanism just blindly abuses 
->> generic_handle_irq()
->> which is really not meant for consumption by random drivers. The 
->> include of
->> linux/irq.h should have been a red flag in the first place. Driver code,
->> unless implementing interrupt chips or low level hypervisor 
->> functionality
->> has absolutely no business with that.
->>
->> Invoking generic_handle_irq() from non interrupt handling context can 
->> have
->> nasty side effects at least on x86 due to the hardware trainwreck which
->> makes interrupt affinity changes a fragile beast. Sathyanarayanan 
->> triggered
->> a NULL pointer dereference in the low level APIC code that way. While 
->> the
->> particular pointer could be checked this would only paper over the issue
->> because there are other ways to trigger warnings or silently corrupt 
->> state.
->>
->> Invoke the new irq_inject_interrupt() mechanism, which has the necessary
->> sanity checks in place and injects the interrupt via the irq_retrigger()
->> mechanism, which is at least halfways safe vs. the fragile x86 affinity
->> change mechanics.
->>
->> It's safe on x86 as it does not corrupt state, but it still can cause a
->> premature completion of an interrupt affinity change causing the 
->> interrupt
->> line to become stale. Very unlikely, but possible.
->>
->> For regular operations this is a non issue as AER error injection is 
->> meant
->> for debugging and testing and not for usage on production systems. 
->> People
->> using this should better know what they are doing.
-> It looks good to me.
->
-> Reviewed-by: Kuppuswamy Sathyanarayanan 
-> <sathyanarayanan.kuppuswamy@linux.intel.com>
-> Tested-by: Kuppuswamy Sathyanarayanan 
-> <sathyanarayanan.kuppuswamy@linux.intel.com>
->>
->> Fixes: 390e2db82480 ("PCI/AER: Abstract AER interrupt handling")
-This patch is merged in v4.20 kernel. So this fix could be a candidate 
-for stable fix.
->> Reported-by: sathyanarayanan.kuppuswamy@linux.intel.com
->> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
->> ---
->>   drivers/pci/pcie/Kconfig      |    1 +
->>   drivers/pci/pcie/aer_inject.c |    6 ++----
->>   2 files changed, 3 insertions(+), 4 deletions(-)
->>
->> --- a/drivers/pci/pcie/Kconfig
->> +++ b/drivers/pci/pcie/Kconfig
->> @@ -34,6 +34,7 @@ config PCIEAER
->>   config PCIEAER_INJECT
->>       tristate "PCI Express error injection support"
->>       depends on PCIEAER
->> +    select GENERIC_IRQ_INJECTION
->>       help
->>         This enables PCI Express Root Port Advanced Error Reporting
->>         (AER) software error injector.
->> --- a/drivers/pci/pcie/aer_inject.c
->> +++ b/drivers/pci/pcie/aer_inject.c
->> @@ -16,7 +16,7 @@
->>     #include <linux/module.h>
->>   #include <linux/init.h>
->> -#include <linux/irq.h>
->> +#include <linux/interrupt.h>
->>   #include <linux/miscdevice.h>
->>   #include <linux/pci.h>
->>   #include <linux/slab.h>
->> @@ -468,9 +468,7 @@ static int aer_inject(struct aer_error_i
->>           }
->>           pci_info(edev->port, "Injecting errors %08x/%08x into 
->> device %s\n",
->>                einj->cor_status, einj->uncor_status, pci_name(dev));
->> -        local_irq_disable();
->> -        generic_handle_irq(edev->irq);
->> -        local_irq_enable();
->> +        ret = irq_inject_interrupt(edev->irq);
->>       } else {
->>           pci_err(rpdev, "AER device not found\n");
->>           ret = -ENODEV;
->>
--- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
 
+On 2/19/20 8:31 AM, Lukas Wunner wrote:
+> From: Stuart Hayes <stuart.w.hayes@gmail.com>
+> 
+> Without this commit, a PCIe hotplug port can stop generating interrupts
+> on hotplug events, so device adds and removals will not be seen:
+> 
+> The pciehp interrupt handler pciehp_isr() reads the Slot Status register
+> and then writes back to it to clear the bits that caused the interrupt.
+> If a different interrupt event bit gets set between the read and the
+> write, pciehp_isr() returns without having cleared all of the interrupt
+> event bits.  If this happens when the MSI isn't masked (which by default
+> it isn't in handle_edge_irq(), and which it will never be when MSI
+> per-vector masking is not supported), we won't get any more hotplug
+> interrupts from that device.
+> 
+> That is expected behavior, according to the PCIe Base Spec r5.0, section
+> 6.7.3.4, "Software Notification of Hot-Plug Events".
+> 
+> Because the Presence Detect Changed and Data Link Layer State Changed
+> event bits can both get set at nearly the same time when a device is
+> added or removed, this is more likely to happen than it might seem.
+> The issue was found (and can be reproduced rather easily) by connecting
+> and disconnecting an NVMe storage device on at least one system model
+> where the NVMe devices were being connected to an AMD PCIe port (PCI
+> device 0x1022/0x1483).
+> 
+> Fix the issue by modifying pciehp_isr() to loop back and re-read the
+> Slot Status register immediately after writing to it, until it sees that
+> all of the event status bits have been cleared.
+> 
+> Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
+> [lukas: drop loop count limitation, write "events" instead of "status",
+> don't loop back in INTx and poll modes, tweak code comment & commit msg]
+> Signed-off-by: Lukas Wunner <lukas@wunner.de>
+> ---
+> v4 (lukas):
+>   * drop "MAX_ISR_STATUS_READS" loop count limitation
+>   * drop unnecessary braces around PCI_EXP_SLTSTA_* flags
+>   * write "events" instead of "status" variable to Slot Status register
+>     to avoid unnecessary loop iterations if the same bit gets set
+>     repeatedly
+>   * don't loop back in INTx and poll modes
+>   * shorten and tweak code comment & commit message
+> 
+> v3:
+>   * removed pvm_capable flag (from v2) since MSI may not be masked
+>     regardless of whether per-vector masking is supported
+>   * tweaked comments
+> 
+> v2:
+>   * fixed ctrl_warn() call
+>   * improved comments
+>   * added pvm_capable flag and changed pciehp_isr() to loop back only when
+>     pvm_capable flag not set (suggested by Lukas Wunner)
+> 
+>  drivers/pci/hotplug/pciehp_hpc.c | 26 ++++++++++++++++++++------
+>  1 file changed, 20 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+> index 8a2cb1764386..f64d10df9eb5 100644
+> --- a/drivers/pci/hotplug/pciehp_hpc.c
+> +++ b/drivers/pci/hotplug/pciehp_hpc.c
+> @@ -527,7 +527,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
+>  	struct controller *ctrl = (struct controller *)dev_id;
+>  	struct pci_dev *pdev = ctrl_dev(ctrl);
+>  	struct device *parent = pdev->dev.parent;
+> -	u16 status, events;
+> +	u16 status, events = 0;
+>  
+>  	/*
+>  	 * Interrupts only occur in D3hot or shallower and only if enabled
+> @@ -552,6 +552,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
+>  		}
+>  	}
+>  
+> +read_status:
+>  	pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &status);
+>  	if (status == (u16) ~0) {
+>  		ctrl_info(ctrl, "%s: no response from device\n", __func__);
+> @@ -564,24 +565,37 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
+>  	 * Slot Status contains plain status bits as well as event
+>  	 * notification bits; right now we only want the event bits.
+>  	 */
+> -	events = status & (PCI_EXP_SLTSTA_ABP | PCI_EXP_SLTSTA_PFD |
+> -			   PCI_EXP_SLTSTA_PDC | PCI_EXP_SLTSTA_CC |
+> -			   PCI_EXP_SLTSTA_DLLSC);
+> +	status &= PCI_EXP_SLTSTA_ABP | PCI_EXP_SLTSTA_PFD |
+> +		  PCI_EXP_SLTSTA_PDC | PCI_EXP_SLTSTA_CC |
+> +		  PCI_EXP_SLTSTA_DLLSC;
+>  
+>  	/*
+>  	 * If we've already reported a power fault, don't report it again
+>  	 * until we've done something to handle it.
+>  	 */
+>  	if (ctrl->power_fault_detected)
+> -		events &= ~PCI_EXP_SLTSTA_PFD;
+> +		status &= ~PCI_EXP_SLTSTA_PFD;
+>  
+> +	events |= status;
+>  	if (!events) {
+>  		if (parent)
+>  			pm_runtime_put(parent);
+>  		return IRQ_NONE;
+>  	}
+>  
+> -	pcie_capability_write_word(pdev, PCI_EXP_SLTSTA, events);
+> +	if (status) {
+> +		pcie_capability_write_word(pdev, PCI_EXP_SLTSTA, events);
+> +
+> +		/*
+> +		 * In MSI mode, all event bits must be zero before the port
+> +		 * will send a new interrupt (PCIe Base Spec r5.0 sec 6.7.3.4).
+> +		 * So re-read the Slot Status register in case a bit was set
+> +		 * between read and write.
+> +		 */
+> +		if (pci_dev_msi_enabled(pdev) && !pciehp_poll_mode)
+> +			goto read_status;
+> +	}
+> +
+>  	ctrl_dbg(ctrl, "pending interrupts %#06x from Slot Status\n", events);
+>  	if (parent)
+>  		pm_runtime_put(parent);
+> 
+
+If it helps, you can add...
+Tested-by: Stuart Hayes <stuart.w.hayes@gmail.com>
