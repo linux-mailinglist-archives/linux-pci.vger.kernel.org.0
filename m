@@ -2,100 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C63F917C2A1
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Mar 2020 17:11:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2619917C2B0
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Mar 2020 17:15:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726162AbgCFQLn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 Mar 2020 11:11:43 -0500
-Received: from mga11.intel.com ([192.55.52.93]:11194 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726140AbgCFQLn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 6 Mar 2020 11:11:43 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 08:11:40 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,518,1574150400"; 
-   d="scan'208";a="259595493"
-Received: from skuppusw-mobl5.amr.corp.intel.com (HELO [10.251.4.58]) ([10.251.4.58])
-  by orsmga002.jf.intel.com with ESMTP; 06 Mar 2020 08:11:42 -0800
-Subject: Re: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
- in FF mode
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com
-References: <20200306160401.GA165033@google.com>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <ee591afe-f022-9152-9c6f-34fe9987077e@linux.intel.com>
-Date:   Fri, 6 Mar 2020 08:11:41 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1726368AbgCFQP3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 Mar 2020 11:15:29 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:38207 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726237AbgCFQP2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 Mar 2020 11:15:28 -0500
+Received: by mail-wm1-f67.google.com with SMTP id u9so2971500wml.3
+        for <linux-pci@vger.kernel.org>; Fri, 06 Mar 2020 08:15:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ao7/80FHIHDLP/KCunZJJgILy66emPF5N72zFy2TR8A=;
+        b=ZzXz4A8vycCJh4RNBaNwHExa5FzLad69MAK4BZ+5/as1gVnRbY6GMPLpDuEkpCKWF6
+         y6CsRjCx5QLX391p185dlNAY1Zcap1EnGsNaLq9XDn4MYET7xEWLNyB/6LDuPN6MRygC
+         YZ5w1hGW0XSmAZgBTL6frJPrhb9fznVH9L9vwRNdIecRFk8QGoUr/L+Knolbah0v2qev
+         1VwkncH2BAtFZIbRxurp6iliV7mw4l8C3XnXlu/qVJcZHUrF9gIymPJHAlq33QsB4aQ6
+         QXgqfDAnyXp5rPLLQMnU0kpgkNyKPGKwvV48byaa1UK7DgR+lESHtDBsR9KfL7wvFZWh
+         kldw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ao7/80FHIHDLP/KCunZJJgILy66emPF5N72zFy2TR8A=;
+        b=XPogQvWWGFbVF0cyGDpNL39oZiWl1nuxamjOo0SYtm7PmgxJW1QTe+aesyRQixnaGU
+         lJE4Gptuzaai447Azbe0MvLL+O/MXGCUDExGM9yyvB4zuqa0CQWdTX+7XRZPStIFzEbb
+         86EuA8HuBo/FdcCfQFun8oSsRCUM3PlUMgOuYiqBjT5Toh51+7eFq3OEeSx2h0G5mXRz
+         88CpDrr1gUaBYbZS4iCSLrOTB7LqEzjr5zrR3da3tpWF9Z9MbTLC9+VjLddR3xXffpaR
+         QUoY1wiCIch1bY7NttwpGIrig7hFo5oy7O+qBU7UXpqyqSl5RvEeODSzTYBLpqcOGwOB
+         jRSQ==
+X-Gm-Message-State: ANhLgQ22r9nCLF+5mJRdRKwlZgIwsmXW8J1sbOoBrff4vFRft67uYJZR
+        HUvLRgnJpzjA1C4/Lj7Utb0VOQ==
+X-Google-Smtp-Source: ADFU+vu2BwVlJ/z2C8XR7GuNqHPcvrDYuSW70Gsa5PRrlPgFIIEEdN81oD/hv1UjzmKlfbVNO9GZjg==
+X-Received: by 2002:a1c:7f86:: with SMTP id a128mr5012462wmd.185.1583511326318;
+        Fri, 06 Mar 2020 08:15:26 -0800 (PST)
+Received: from myrica ([2001:171b:c9a8:fbc0:116c:c27a:3e7f:5eaf])
+        by smtp.gmail.com with ESMTPSA id i21sm3449182wmb.23.2020.03.06.08.15.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Mar 2020 08:15:25 -0800 (PST)
+Date:   Fri, 6 Mar 2020 17:15:19 +0100
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     mark.rutland@arm.com, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, will@kernel.org,
+        Dimitri Sivanich <sivanich@sgi.com>, catalin.marinas@arm.com,
+        zhangfei.gao@linaro.org, devicetree@vger.kernel.org,
+        kevin.tian@intel.com, Arnd Bergmann <arnd@arndb.de>,
+        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        iommu@lists.linux-foundation.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        robin.murphy@arm.com, christian.koenig@amd.com
+Subject: Re: [PATCH v4 01/26] mm/mmu_notifiers: pass private data down to
+ alloc_notifier()
+Message-ID: <20200306161519.GB99609@myrica>
+References: <20200225092439.GB375953@myrica>
+ <20200225140814.GW31668@ziepe.ca>
+ <20200228143935.GA2156@myrica>
+ <20200228144844.GQ31668@ziepe.ca>
+ <20200228150427.GF2156@myrica>
+ <20200228151339.GS31668@ziepe.ca>
+ <20200306095614.GA50020@myrica>
+ <20200306130919.GJ31668@ziepe.ca>
+ <20200306143556.GA99609@myrica>
+ <20200306145245.GK31668@ziepe.ca>
 MIME-Version: 1.0
-In-Reply-To: <20200306160401.GA165033@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200306145245.GK31668@ziepe.ca>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Fri, Mar 06, 2020 at 10:52:45AM -0400, Jason Gunthorpe wrote:
+> On Fri, Mar 06, 2020 at 03:35:56PM +0100, Jean-Philippe Brucker wrote:
+> > On Fri, Mar 06, 2020 at 09:09:19AM -0400, Jason Gunthorpe wrote:
+> > > On Fri, Mar 06, 2020 at 10:56:14AM +0100, Jean-Philippe Brucker wrote:
+> > > > I tried to keep it simple like that: normally mmu_notifier_get() is called
+> > > > in bind(), and mmu_notifier_put() is called in unbind(). 
+> > > > 
+> > > > Multiple device drivers may call bind() with the same mm. Each bind()
+> > > > calls mmu_notifier_get(), obtains the same io_mm, and returns a new bond
+> > > > (a device<->mm link). Each bond is freed by calling unbind(), which calls
+> > > > mmu_notifier_put().
+> > > > 
+> > > > That's the most common case. Now if the process is killed and the mm
+> > > > disappears, we do need to avoid use-after-free caused by DMA of the
+> > > > mappings and the page tables. 
+> > > 
+> > > This is why release must do invalidate all - but it doesn't need to do
+> > > any more - as no SPTE can be established without a mmget() - and
+> > > mmget() is no longer possible past release.
+> > 
+> > In our case we don't have SPTEs, the whole pgd is shared between MMU and
+> > IOMMU (isolated using PASID tables).
+> 
+> Okay, but this just means that 'invalidate all' also requires
+> switching the PASID to use some pgd that is permanently 'all fail'.
+> 
+> > At this point no one told the device to stop working on this queue,
+> > it may still be doing DMA on this address space.
+> 
+> Sure, but there are lots of cases where a defective user space can
+> cause pages under active DMA to disappear, like munmap for
+> instance. Process exit is really no different, the PASID should take
+> errors and the device & driver should do whatever error flow it has.
 
+We do have the possibility to shut things down in order, so to me this
+feels like a band-aid. The idea has come up before though [1], and I'm not
+strongly opposed to this model, but I'm still not convinced it's
+necessary. It does add more complexity to IOMMU drivers, to avoid printing
+out the errors that we wouldn't otherwise see, whereas device drivers need
+in any case to implement the logic that forces stop DMA.
 
-On 3/6/2020 8:04 AM, Bjorn Helgaas wrote:
-> On Thu, Mar 05, 2020 at 09:45:46PM -0800, Kuppuswamy, Sathyanarayanan wrote:
->> On 3/3/2020 6:36 PM, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
->>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>>
->>> As per PCI firmware specification r3.2 System Firmware Intermediary
->>> (SFI) _OSC and DPC Updates ECR
->>> (https://members.pcisig.com/wg/PCI-SIG/document/13563), sec titled "DPC
->>> Event Handling Implementation Note", page 10, Error Disconnect Recover
->>> (EDR) support allows OS to handle error recovery and clearing Error
->>> Registers even in FF mode. So create new API pci_aer_raw_clear_status()
->>> which allows clearing AER registers without FF mode checks.
->>>
->>> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>> ---
->>>    drivers/pci/pci.h      |  2 ++
->>>    drivers/pci/pcie/aer.c | 22 ++++++++++++++++++----
->>>    2 files changed, 20 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
->>> index e57e78b619f8..c239e6dd2542 100644
->>> --- a/drivers/pci/pci.h
->>> +++ b/drivers/pci/pci.h
->>> @@ -655,6 +655,7 @@ extern const struct attribute_group aer_stats_attr_group;
->>>    void pci_aer_clear_fatal_status(struct pci_dev *dev);
->>>    void pci_aer_clear_device_status(struct pci_dev *dev);
->>>    int pci_cleanup_aer_error_status_regs(struct pci_dev *dev);
->>> +int pci_aer_raw_clear_status(struct pci_dev *dev);
->>>    #else
->>>    static inline void pci_no_aer(void) { }
->>>    static inline void pci_aer_init(struct pci_dev *d) { }
->>> @@ -665,6 +666,7 @@ static inline int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
->>>    {
->>>    	return -EINVAL;
->>>    }
->>> +int pci_aer_raw_clear_status(struct pci_dev *dev) { return -EINVAL; }
-> 
->> It's missing static specifier. It needs to be fixed. I can fix it in
->> next version.  Bjorn, if there is no need for next version, can you
->> please make this change?
-> 
-> pci_aer_raw_clear_status() is defined in aer.c and called from aer.c
-> and edr.c, so I do not think it can be static.  Am I missing
-> something?
-> 
-> I have a review/edr branch that I hope becomes what will be applied.
-For kernel configs that does not define CONFIG_PCIEAER, it will create 
-redefinition error since pci.h can be included in many files.
-> 
-> Bjorn
-> 
+Thanks,
+Jean
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+[1] https://lore.kernel.org/linux-iommu/4d68da96-0ad5-b412-5987-2f7a6aa796c3@amd.com/
+
+> 
+> Involving a complex driver flow in the exit_mmap path seems like
+> dangerous complexity to me.
+> 
+> Jason
