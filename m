@@ -2,188 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 35E2D17C2D3
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Mar 2020 17:24:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 66B2117C331
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Mar 2020 17:42:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726099AbgCFQY4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 Mar 2020 11:24:56 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53084 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726166AbgCFQY4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 Mar 2020 11:24:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583511894;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7YQYjXtX5SKdhVMtcrZUxIhpmnZ5HnjhJ3UoT3fYhZg=;
-        b=LY7UJ70lXFR42091GCPhoJBwtcfG8X/VXX5VULhWbLbwkRZ4sU85yf5AEMTixF+1hjAWok
-        UuM13h2573RmYqzgPttiw3ab0fO41J/DXnic61CxSfD2F9K50AH/swj/gMJR8if7XPp0xQ
-        Al3mNBdzFNGJGEWLYQYh7pzpmJBe/iQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-373-mnL3Hbc1OhqwozznM0zX_A-1; Fri, 06 Mar 2020 11:24:52 -0500
-X-MC-Unique: mnL3Hbc1OhqwozznM0zX_A-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726579AbgCFQmB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 Mar 2020 11:42:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41534 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726178AbgCFQmB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 6 Mar 2020 11:42:01 -0500
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D9D1EDBF1;
-        Fri,  6 Mar 2020 16:24:50 +0000 (UTC)
-Received: from x1.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CDA8660C63;
-        Fri,  6 Mar 2020 16:24:46 +0000 (UTC)
-Date:   Fri, 6 Mar 2020 09:24:45 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dev@dpdk.org" <dev@dpdk.org>,
-        "mtosatti@redhat.com" <mtosatti@redhat.com>,
-        "thomas@monjalon.net" <thomas@monjalon.net>,
-        "bluca@debian.org" <bluca@debian.org>,
-        "jerinjacobk@gmail.com" <jerinjacobk@gmail.com>,
-        "Richardson, Bruce" <bruce.richardson@intel.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>
-Subject: Re: [PATCH v2 0/7] vfio/pci: SR-IOV support
-Message-ID: <20200306092445.1bd4611c@x1.home>
-In-Reply-To: <3e8db1d0-8afc-f1e9-e857-aead4717fa11@redhat.com>
-References: <158213716959.17090.8399427017403507114.stgit@gimli.home>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D79A8A7@SHSMSX104.ccr.corp.intel.com>
-        <a6c04bac-0a37-f4c0-876e-e5cf2a8a6c3f@redhat.com>
-        <20200305101406.02703e2a@w520.home>
-        <3e8db1d0-8afc-f1e9-e857-aead4717fa11@redhat.com>
-Organization: Red Hat
+        by mail.kernel.org (Postfix) with ESMTPSA id 785572073D;
+        Fri,  6 Mar 2020 16:41:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583512920;
+        bh=DStAMwpUFKCJjVHMSmPwm1TPMEHOzo1D99MN2bb/uMo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=HUXQp/mrePRhxF0ttHn34h8iL7Oylz99OR1/AuNhuBJlq61yPLaR9rz2v4fAa8jxI
+         VVXxEnzdt5ZJWzQRRYwNwo8krFPuY3gxm93QZ/IhyEaYtkbfqFy7PzOKHMwN3Kgriv
+         NLgUqrC1Av/IJ4Pymgcrm9Vhc/n/Jxc5b6ccFVok=
+Date:   Fri, 6 Mar 2020 10:41:57 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com
+Subject: Re: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
+ in FF mode
+Message-ID: <20200306164157.GA175224@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ee591afe-f022-9152-9c6f-34fe9987077e@linux.intel.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 6 Mar 2020 11:35:21 +0800
-Jason Wang <jasowang@redhat.com> wrote:
+On Fri, Mar 06, 2020 at 08:11:41AM -0800, Kuppuswamy, Sathyanarayanan wrote:
+> On 3/6/2020 8:04 AM, Bjorn Helgaas wrote:
+> > On Thu, Mar 05, 2020 at 09:45:46PM -0800, Kuppuswamy, Sathyanarayanan wrote:
+> > > On 3/3/2020 6:36 PM, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> > > > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > > > 
+> > > > As per PCI firmware specification r3.2 System Firmware Intermediary
+> > > > (SFI) _OSC and DPC Updates ECR
+> > > > (https://members.pcisig.com/wg/PCI-SIG/document/13563), sec titled "DPC
+> > > > Event Handling Implementation Note", page 10, Error Disconnect Recover
+> > > > (EDR) support allows OS to handle error recovery and clearing Error
+> > > > Registers even in FF mode. So create new API pci_aer_raw_clear_status()
+> > > > which allows clearing AER registers without FF mode checks.
+> > > > 
+> > > > Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > > > ---
+> > > >    drivers/pci/pci.h      |  2 ++
+> > > >    drivers/pci/pcie/aer.c | 22 ++++++++++++++++++----
+> > > >    2 files changed, 20 insertions(+), 4 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> > > > index e57e78b619f8..c239e6dd2542 100644
+> > > > --- a/drivers/pci/pci.h
+> > > > +++ b/drivers/pci/pci.h
+> > > > @@ -655,6 +655,7 @@ extern const struct attribute_group aer_stats_attr_group;
+> > > >    void pci_aer_clear_fatal_status(struct pci_dev *dev);
+> > > >    void pci_aer_clear_device_status(struct pci_dev *dev);
+> > > >    int pci_cleanup_aer_error_status_regs(struct pci_dev *dev);
+> > > > +int pci_aer_raw_clear_status(struct pci_dev *dev);
+> > > >    #else
+> > > >    static inline void pci_no_aer(void) { }
+> > > >    static inline void pci_aer_init(struct pci_dev *d) { }
+> > > > @@ -665,6 +666,7 @@ static inline int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
+> > > >    {
+> > > >    	return -EINVAL;
+> > > >    }
+> > > > +int pci_aer_raw_clear_status(struct pci_dev *dev) { return -EINVAL; }
+> > 
+> > > It's missing static specifier. It needs to be fixed. I can fix it in
+> > > next version.  Bjorn, if there is no need for next version, can you
+> > > please make this change?
+> > 
+> > pci_aer_raw_clear_status() is defined in aer.c and called from aer.c
+> > and edr.c, so I do not think it can be static.  Am I missing
+> > something?
 
-> On 2020/3/6 =E4=B8=8A=E5=8D=881:14, Alex Williamson wrote:
-> > On Tue, 25 Feb 2020 14:09:07 +0800
-> > Jason Wang <jasowang@redhat.com> wrote:
-> > =20
-> >> On 2020/2/25 =E4=B8=8A=E5=8D=8810:33, Tian, Kevin wrote: =20
-> >>>> From: Alex Williamson
-> >>>> Sent: Thursday, February 20, 2020 2:54 AM
-> >>>>
-> >>>> Changes since v1 are primarily to patch 3/7 where the commit log is
-> >>>> rewritten, along with option parsing and failure logging based on
-> >>>> upstream discussions.  The primary user visible difference is that
-> >>>> option parsing is now much more strict.  If a vf_token option is
-> >>>> provided that cannot be used, we generate an error.  As a result of
-> >>>> this, opening a PF with a vf_token option will serve as a mechanism =
-of
-> >>>> setting the vf_token.  This seems like a more user friendly API than
-> >>>> the alternative of sometimes requiring the option (VFs in use) and
-> >>>> sometimes rejecting it, and upholds our desire that the option is
-> >>>> always either used or rejected.
-> >>>>
-> >>>> This also means that the VFIO_DEVICE_FEATURE ioctl is not the only
-> >>>> means of setting the VF token, which might call into question whether
-> >>>> we absolutely need this new ioctl.  Currently I'm keeping it because=
- I
-> >>>> can imagine use cases, for example if a hypervisor were to support
-> >>>> SR-IOV, the PF device might be opened without consideration for a VF
-> >>>> token and we'd require the hypservisor to close and re-open the PF in
-> >>>> order to set a known VF token, which is impractical.
-> >>>>
-> >>>> Series overview (same as provided with v1): =20
-> >>> Thanks for doing this!
-> >>>    =20
-> >>>> The synopsis of this series is that we have an ongoing desire to dri=
-ve
-> >>>> PCIe SR-IOV PFs from userspace with VFIO.  There's an immediate need
-> >>>> for this with DPDK drivers and potentially interesting future use =20
-> >>> Can you provide a link to the DPDK discussion?
-> >>>    =20
-> >>>> cases in virtualization.  We've been reluctant to add this support
-> >>>> previously due to the dependency and trust relationship between the
-> >>>> VF device and PF driver.  Minimally the PF driver can induce a denial
-> >>>> of service to the VF, but depending on the specific implementation,
-> >>>> the PF driver might also be responsible for moving data between VFs
-> >>>> or have direct access to the state of the VF, including data or state
-> >>>> otherwise private to the VF or VF driver. =20
-> >>> Just a loud thinking. While the motivation of VF token sounds reasona=
-ble
-> >>> to me, I'm curious why the same concern is not raised in other usages.
-> >>> For example, there is no such design in virtio framework, where the
-> >>> virtio device could also be restarted, putting in separate process (v=
-host-user),
-> >>> and even in separate VM (virtio-vhost-user), etc. =20
-> >>
-> >> AFAIK, the restart could only be triggered by either VM or qemu. But
-> >> yes, the datapath could be offloaded.
-> >>
-> >> But I'm not sure introducing another dedicated mechanism is better than
-> >> using the exist generic POSIX mechanism to make sure the connection
-> >> (AF_UINX) is secure.
-> >>
-> >> =20
-> >>>    Of course the para-
-> >>> virtualized attribute of virtio implies some degree of trust, but as =
-you
-> >>> mentioned many SR-IOV implementations support VF->PF communication
-> >>> which also implies some level of trust. It's perfectly fine if VFIO j=
-ust tries
-> >>> to do better than other sub-systems, but knowing how other people
-> >>> tackle the similar problem may make the whole picture clearer. =F0=9F=
-=98=8A
-> >>>
-> >>> +Jason. =20
-> >>
-> >> I'm not quite sure e.g allowing userspace PF driver with kernel VF
-> >> driver would not break the assumption of kernel security model. At lea=
-st
-> >> we should forbid a unprivileged PF driver running in userspace. =20
-> > It might be useful to have your opinion on this series, because that's
-> > exactly what we're trying to do here.  Various environments, DPDK
-> > specifically, want a userspace PF driver.  This series takes steps to
-> > mitigate the risk of having such a driver, such as requiring this VF
-> > token interface to extend the VFIO interface and validate participation
-> > around a PF that is not considered trusted by the kernel. =20
->=20
->=20
-> I may miss something. But what happens if:
->=20
-> - PF driver is running by unprivileged user
-> - PF is programmed to send translated DMA request
-> - Then unprivileged user can mangle the kernel data
+> For kernel configs that does not define CONFIG_PCIEAER, it will create
+> redefinition error since pci.h can be included in many files.
 
-ATS is a security risk regardless of SR-IOV, how does this change it?
-Thanks,
+Oh, right, I thought you were talking about the definition in aer.c.
+The stub in pci.h is missing "inline" as well as "static".
 
-Alex
-
-> > We also set
-> > a driver_override to try to make sure no host kernel driver can
-> > automatically bind to a VF of a user owned PF, only vfio-pci, but we
-> > don't prevent the admin from creating configurations where the VFs are
-> > used by other host kernel drivers.
-> >
-> > I think the question Kevin is inquiring about is whether virtio devices
-> > are susceptible to the type of collaborative, shared key environment
-> > we're creating here.  For example, can a VM or qemu have access to
-> > reset a virtio device in a way that could affect other devices, ex. FLR
-> > on a PF that could interfere with VF operation.  Thanks, =20
->=20
->=20
-> Right, but I'm not sure it can be done only via virtio or need support=20
-> from transport (e.g PCI).
->=20
-> Thanks
->=20
->=20
-> >
-> > Alex
-> > =20
-
+Fixed.
