@@ -2,72 +2,87 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 95CDD17BB6B
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Mar 2020 12:16:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E8DF17BBE8
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Mar 2020 12:43:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726314AbgCFLQ1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 Mar 2020 06:16:27 -0500
-Received: from foss.arm.com ([217.140.110.172]:59816 "EHLO foss.arm.com"
+        id S1726633AbgCFLn5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 Mar 2020 06:43:57 -0500
+Received: from mx2.suse.de ([195.135.220.15]:39220 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726212AbgCFLQ1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 6 Mar 2020 06:16:27 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9223D31B;
-        Fri,  6 Mar 2020 03:16:26 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AD18D3F6C4;
-        Fri,  6 Mar 2020 03:16:25 -0800 (PST)
-Date:   Fri, 6 Mar 2020 11:16:20 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Bharat Kumar Gogada <bharatku@xilinx.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        Ravikiran Gummaluri <rgummal@xilinx.com>,
-        "maz@kernel.org" <maz@kernel.org>
-Subject: Re: [PATCH v5 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port driver
-Message-ID: <20200306111620.GA10297@e121166-lin.cambridge.arm.com>
-References: <1580400771-12382-1-git-send-email-bharat.kumar.gogada@xilinx.com>
- <1580400771-12382-3-git-send-email-bharat.kumar.gogada@xilinx.com>
- <20200225114013.GB6913@e121166-lin.cambridge.arm.com>
- <MN2PR02MB63365B50058B35AA37341BC9A5ED0@MN2PR02MB6336.namprd02.prod.outlook.com>
- <20200228104442.GA2874@e121166-lin.cambridge.arm.com>
- <MN2PR02MB6336569F378683B05B262D4AA5E80@MN2PR02MB6336.namprd02.prod.outlook.com>
+        id S1725827AbgCFLn5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 6 Mar 2020 06:43:57 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 1C4D0AC23;
+        Fri,  6 Mar 2020 11:43:55 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com, f.fainelli@gmail.com,
+        gregkh@linuxfoundation.org, tim.gover@raspberrypi.org,
+        linux-pci@vger.kernel.org, wahrenst@gmx.net,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>
+Subject: [PATCH v4 0/4]  USB: pci-quirks: Add Raspberry Pi 4 quirk
+Date:   Fri,  6 Mar 2020 12:43:44 +0100
+Message-Id: <20200306114348.5172-1-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MN2PR02MB6336569F378683B05B262D4AA5E80@MN2PR02MB6336.namprd02.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 12:48:48PM +0000, Bharat Kumar Gogada wrote:
-> > Subject: Re: [PATCH v5 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port driver
-> > 
-> > [+MarcZ, FHI]
-> > 
-> > On Tue, Feb 25, 2020 at 02:39:56PM +0000, Bharat Kumar Gogada wrote:
-> > 
-> > [...]
-> > 
-> > > > > +/* ECAM definitions */
-> > > > > +#define ECAM_BUS_NUM_SHIFT		20
-> > > > > +#define ECAM_DEV_NUM_SHIFT		12
-> > > >
-> > > > You don't need these ECAM_* defines, you can use pci_generic_ecam_ops.
-> > > Does this need separate ranges region for ECAM space ?
-> > > We have ECAM and controller space in same region.
-> > 
-> > You can create an ECAM window with pci_ecam_create where *cfgres
-> > represent the ECAM area, I don't get what you mean by "same region".
-> > 
-> > Do you mean "contiguous" ? Or something else ?
-> Yes, contiguous; within ECAM region some space is for controller registers.
+On the Raspberry Pi 4, after a PCI reset, VL805's firmware may either be
+loaded directly from an EEPROM or, if not present, by the SoC's
+VideCore. This series adds support for the later.
 
-What does that mean ? I don't get it. Can you explain to me how this
-address space works please ?
+Note that there are a set of constraints we have to consider (some of
+them I missed on v1):
+ - We need to make sure the VideoCore firmware interface is up and
+   running before running the VL805 firmware load call.
 
-Thanks,
-Lorenzo
+ - There is no way to discern RPi4's VL805 chip from other platforms',
+   so we need the firmware load to happen *before* running
+   quirk_usb_handoff_xhci(). Failure to do so results in an unwarranted
+   5 second wait while the fixup code polls xHC's unexisting state.
+
+As per Stefan Wahren's comments I tested the behaviour on outdated
+firmware. Boards dependent on this will not boot if firmware is not
+up-to-date. Older boards with outdated firmware will fail to execute the
+VideoCore firmware call, but xHCI will perform reliably. I added a
+warning printout in case of failure.
+
+I'm aware that Florian Fianelli noted on the previous revision that
+waiting on the VideoCore firmware interface during PCIe's probe is far
+from ideal. But this was before taking into account the second
+constraint mentioned above. Impact on non RPi4 boards is minimal.
+
+---
+
+Changes since v3:
+ - Addressed Greg's comments
+
+There was no v2, my bad.
+
+Changes since v1:
+ - Addressed Floarians comments
+
+Nicolas Saenz Julienne (4):
+  soc: bcm2835: Sync xHCI reset firmware property with downstream
+  firmware: raspberrypi: Introduce vl805 init routine
+  PCI: brcmstb: Wait for Raspberry Pi's firmware when present
+  USB: pci-quirks: Add Raspberry Pi 4 quirk
+
+ drivers/firmware/Kconfig                   |  1 +
+ drivers/firmware/raspberrypi.c             | 38 ++++++++++++++++++++++
+ drivers/pci/controller/pcie-brcmstb.c      | 15 +++++++++
+ drivers/usb/host/pci-quirks.c              | 16 +++++++++
+ include/soc/bcm2835/raspberrypi-firmware.h |  9 ++++-
+ 5 files changed, 78 insertions(+), 1 deletion(-)
+
+-- 
+2.25.1
+
