@@ -2,246 +2,262 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AC32217C77C
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Mar 2020 22:01:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E031A17C803
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Mar 2020 22:47:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726237AbgCFVBC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 Mar 2020 16:01:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49784 "EHLO mail.kernel.org"
+        id S1726162AbgCFVr4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 Mar 2020 16:47:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726090AbgCFVBB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 6 Mar 2020 16:01:01 -0500
+        id S1726090AbgCFVr4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 6 Mar 2020 16:47:56 -0500
 Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BA3B206D7;
-        Fri,  6 Mar 2020 21:00:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 576CF20674;
+        Fri,  6 Mar 2020 21:47:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583528460;
-        bh=Sy4KFR4r8QdJfg8LfiNBvKO9NlCApQTxg0eOZExhoMI=;
+        s=default; t=1583531275;
+        bh=di4o/XwNKabmqbfoz57lh67Izeky9Hbs6uCzon43+iw=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Cskbmn3VUCdxsS2WPiQ0VB7YHHgSdLKHV6ps431PVH9MpLZ/ksdjZnhiLMWMry/en
-         e4nP3yV7BhB7Ey5s4E0E1+p98CJTYsZ+o//WJ0z/SobVHqxc2h4NRoMMEryOQWdDPR
-         JrY/yBv29tF++YxqrrwzrgFHW59Ye8KvegWqyXlI=
-Date:   Fri, 6 Mar 2020 15:00:58 -0600
+        b=e9nfcihwM1RmJCSX5ncglfDwLNzE0hfdRJCS8hhGdbcK+sna4MIPHiiWhVV5o+1gh
+         cRgXdQQ44L11GpmV47bbMTkt5KQw6XItktIq0VjhJgy+TIYVlll6Fga6nnPZh/FT6c
+         sJk0PdWc2LbnSVwFK/ZAKR2Cn/qIxOKW6o3V84mI=
+Date:   Fri, 6 Mar 2020 15:47:53 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH v17 11/12] PCI/DPC: Add Error Disconnect Recover (EDR)
- support
-Message-ID: <20200306210058.GA210797@google.com>
+To:     =?iso-8859-1?Q?Lu=EDs?= Mendes <luis.p.mendes@gmail.com>
+Cc:     linux-pci@vger.kernel.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: Problem with PCIe enumeration of Google/Coral TPU Edge module on
+ Linux
+Message-ID: <20200306214753.GA235309@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <5384cf38-4b33-f95b-4bb9-b82f0dc63a1f@linux.intel.com>
+In-Reply-To: <CAEzXK1r0Er039iERnc2KJ4jn7ySNUOG9H=Ha8TD8XroVqiZjgg@mail.gmail.com>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 10:32:33PM -0800, Kuppuswamy, Sathyanarayanan wrote:
-> On 3/5/2020 7:47 PM, Bjorn Helgaas wrote:
-> > On Tue, Mar 03, 2020 at 06:36:34PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> > > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > 
-> > > +void pci_acpi_add_edr_notifier(struct pci_dev *pdev)
-> > > +{
-> > > +	struct acpi_device *adev = ACPI_COMPANION(&pdev->dev);
-> > > +	acpi_status astatus;
-> > > +
-> > > +	if (!adev) {
-> > > +		pci_dbg(pdev, "No valid ACPI node, so skip EDR init\n");
-> > > +		return;
-> > > +	}
-> > > +
-> > > +	/*
-> > > +	 * Per the Downstream Port Containment Related Enhancements ECN to
-> > > +	 * the PCI Firmware Spec, r3.2, sec 4.5.1, table 4-6, EDR support
-> > > +	 * can only be enabled if DPC is controlled by firmware.
-> > > +	 *
-> > > +	 * TODO: Remove dependency on ACPI FIRMWARE_FIRST bit to
-> > > +	 * determine ownership of DPC between firmware or OS.
-> > > +	 * Per the Downstream Port Containment Related Enhancements
-> > > +	 * ECN to the PCI Firmware Spec, r3.2, sec 4.5.1, table 4-5,
-> > > +	 * OS can use bit 7 of _OSC control field to negotiate control
-> > > +	 * over DPC Capability.
-> > > +	 */
-> > > +	if (!pcie_aer_get_firmware_first(pdev) || pcie_ports_dpc_native) {
-> > > +		pci_dbg(pdev, "OS handles AER/DPC, so skip EDR init\n");
-> > > +		return;
-> > > +	}
-> > > +
-> > > +	astatus = acpi_install_notify_handler(adev->handle, ACPI_SYSTEM_NOTIFY,
-> > > +					      edr_handle_event, pdev);
-> > 
-> > I think this is still problematic.  You mentioned Alex's work
-> > [1,2].  We do need to revisit those patches, but I don't really
-> > want to defer *this* question of the EDR notify handler.
-> > Negotiating support of AER/DPC/EDR is already complicated, and I
-> > don't want to complicate it even more by merging something we
-> > already know is not quite right.
-> > 
-> > I don't understand your comment that "EDR can only be enabled if
-> > DPC is controlled by firmware."  I don't see anything in table 4-6
-> > to that effect.  The only mention of EDR there is to say that the
-> > OS can access the DPC capability in the EDR processing window,
-> > i.e., after the OS receives the EDR notification and before it
-> > clears DPC Trigger Status.
+[+cc Thomas, Jason, Nicholas, Ben]
+
+On Fri, Mar 06, 2020 at 02:32:59PM +0000, Luís Mendes wrote:
+> Hi,
 > 
-> Please check the following spec reference (from table 4-6).
+> I'm trying to use Google/Coral TPU Edge modules for a project, on
+> arm64 and armhf, but BAR0 doesn't get assigned during the enumeration
+> of PCIe devices and consequently pci_enable_device(...) fails on BAR0
+> resource with value -22 (EINVAL) (resource has null parent) when
+> loading gasket/apex driver.
 > 
->     If control of this feature was requested and denied, firmware is
->     responsible for initializing Downstream Port Containment
->     Extended Capability Structures per firmware policy. Further, the
->     OS is permitted to read or write DPC Control and Status
->     registers of a port while processing an Error Disconnect Recover
->     notification from firmware on that port.
+> I'm also trying to adapt gasket/apex to run on armhf, but anyhow that
+> is not the root cause for this issue.
 > 
-> It specifies firmware is expected to use EDR notification *only*
-> when the control of DPC is requested and denied (which means
-> firmware owns the DPC).
+> Relevant Log extracts follow in attachment.
 
-No, I don't think it says that.  This section tells us how to use _OSC
-to negotiate ownership of DPC.  The first sentence you quoted
-basically says that if firmware retains control of DPC, firmware is
-responsible for initializing the DPC capability.  That part is pretty
-obvious: "firmware owns it, so firmware is responsible for configuring
-it."
+Hi Luís,
 
-The second sentence is important because it's an exception to the
-general rule of "the OS can't touch things owned by the firmware." The
-exception is that even if firmware retains control of DPC, the OS is
-allowed to access DPC registers during the EDR notification window.
+Thanks for the report, and sorry for the problem you're tripping over.
+I cc'd a few folks who might be interested.
 
-There is nothing here about when firmware is allowed to use EDR.
-
-> Although it does not explicitly state that we should install EDR
-> notification handler only if firmware owns DPC, it mentions that EDR
-> notification is only used if firmware owns DPC. So why should we
-> install it if it's not going to be used when OS owns DPC.
-
-It does not say anything about "EDR notification only being used if
-firmware owns DPC."
-
-We should install an EDR notify handler because we told the firmware
-that we support EDR notifications.  I don't think we should make it
-any more complicated than that.
-
-> Also check the following reference from section 2 of EDR ECN. It also
-> clarifies EDR feature is only used when firmware owns DPC.
+> [    6.983880] mvebu-pcie soc:pcie: /soc/pcie/pcie@1,0: reset gpio is active low
+> [    6.993528] hub 4-1:1.0: 4 ports detected
+> [    6.993749] mvebu-pcie soc:pcie: /soc/pcie/pcie@2,0: reset gpio is active low
+> [    7.106741]  sdb: sdb1
+> [    7.109826] sd 2:0:0:0: [sdb] Attached SCSI removable disk
+> [    7.242916] mvebu-pcie soc:pcie: PCI host bridge to bus 0000:00
+> [    7.248854] pci_bus 0000:00: root bus resource [bus 00-ff]
+> [    7.254370] pci_bus 0000:00: root bus resource [mem 0xd0000000-0xefffffff]
+> [    7.261267] pci_bus 0000:00: root bus resource [io  0x1000-0xeffff]
+> [    7.267621] pci 0000:00:01.0: [11ab:6828] type 01 class 0x060400
+> [    7.273662] pci 0000:00:01.0: reg 0x38: [mem 0x00000000-0x000007ff pref]
+> [    7.293971] PCI: bus0: Fast back to back transfers disabled
+> [    7.299558] pci 0000:00:01.0: bridge configuration invalid ([bus 00-00]), reconfiguring
+> [    7.315694] pci 0000:01:00.0: [1ac1:089a] type 00 class 0x0000ff
+> [    7.321749] pci 0000:01:00.0: reg 0x10: [mem 0x00000000-0x00003fff 64bit pref]
+> [    7.322814] usb 4-1.1: new high-speed USB device number 3 using xhci-hcd
+> [    7.329004] pci 0000:01:00.0: reg 0x18: [mem 0x00000000-0x000fffff 64bit pref]
+> [    7.343111] pci 0000:01:00.0: 2.000 Gb/s available PCIe bandwidth, limited by 2.5 GT/s x1 link at 0000:00:01.0 (capable of 4.000 Gb/s with 5 GT/s x1 link)
+> [    7.383442] PCI: bus1: Fast back to back transfers disabled
+> [    7.389031] pci_bus 0000:01: busn_res: [bus 01-ff] end is updated to 01
+> [    7.495604] pci 0000:00:02.0: ASPM: current common clock configuration is broken, reconfiguring
+> [    7.552513] pci 0000:00:01.0: BAR 8: assigned [mem 0xe8000000-0xe81fffff]
+> [    7.565611] pci 0000:00:01.0: BAR 6: assigned [mem 0xe8200000-0xe82007ff pref]
+> [    7.580096] pci 0000:00:01.0: PCI bridge to [bus 01]
+> [    7.585079] pci 0000:00:01.0:   bridge window [mem 0xe8000000-0xe81fffff]
+> [    7.653228] pcieport 0000:00:01.0: enabling device (0140 -> 0142)
 > 
->     PCIe Base Specification suggests that Downstream Port Containment
->     may be controlled either by the Firmware or the Operating System. It
->     also suggests that the Firmware retain ownership of Downstream Port
->     Containment if it also owns AER. When the Firmware owns Downstream
->     Port Containment, *it is expected to use the new â€œError Disconnect
->     Recoverâ€ notification to alert OSPM of a Downstream Port Containment
->     event*.
-
-The text in section 2 will not become part of the spec, so we can't
-rely on it to tell us how to implement things.  Even if it did, this
-section does not say "OS should only install an EDR notify handler if
-firmware owns DPC."  It just means that if firmware owns DPC, the OS
-will not learn about DPC events directly via DPC interrupts, so
-firmware has to use another mechanism, e.g., EDR, to tell the OS about
-them.
-
-If an OS requests DPC control, it must support both DPC and EDR (sec
-4.5.2.4).  However, I think an OS may support EDR but not DPC
-(although your patches don't support this configuration).  In that
-case the OS would set the _OSC "EDR Supported" bit, but it would not
-request DPC control.  Then the EDR notify handler would "invalidate
-the software state associated with child devices of the port" (table
-4-4), but it would not "attempt to recover the child devices of ports
-implementing DPC."
-
-> > EDR is a general ACPI feature that is not PCI-specific.  For EDR
-> > on PCI devices, OS support is advertised via _OSC *Support* (table
-> > 4-4), which says:
-> > 
-> >    Error Disconnect Recover Supported
-> > 
-> >    The OS sets this bit to 1 if it supports Error Disconnect
-> >    Recover notification on PCI Express Host Bridges, Root Ports
-> >    and Switch Downstream Ports. Otherwise, the OS sets this bit to
-> >    0.
-> > 
-> > I think that means that if we set the "Error Disconnect Recover
-> > Supported" _OSC bit (OSC_PCI_EDR_SUPPORT), we must install a
-> > handler for EDR notifications.  We set OSC_PCI_EDR_SUPPORT
-> > whenever CONFIG_PCIE_EDR=y, so I think we should install the
-> > notify handler here unconditionally (since this file is compiled
-> > only when CONFIG_PCIE_EDR=y).
 > 
-> Although spec does not provide any restrictions on when to install
-> EDR notification, it provides reference that notification is only
-> used if firmware owns DPC. So when OS owns DPC, there is no need to
-> install them at all.
+> [   11.188025] gasket: module is from the staging directory, the quality is unknown, you have been warned.
+> [   11.217048] apex: module is from the staging directory, the quality is unknown, you have been warned.
+> [   11.217926] apex 0000:01:00.0: can't enable device: BAR 0 [mem 0x00000000-0x00003fff 64bit pref] not claimed
+> [   11.227825] apex 0000:01:00.0: error enabling PCI device
 
-I disagree that the spec tells us that EDR is only used when firmware
-owns DPC.
+It looks like we did assign space for the bridge window leading to
+01:00.0, but failed to assign space to the 01:00.0 BAR itself.
 
-Even if it did, pcie_aer_get_firmware_first() only looks at HEST
-tables.  There *might* be some connection between those and DPC
-ownership, but that's internal to firmware and I think it's just
-asking for trouble if we rely on that connection.
+I don't know offhand why that would be.  Can you put the entire dmesg
+log somewhere we can see?  That will tell us what kernel you're using
+and possibly other useful things.
 
-> Although installing them when OS owns DPC should not affect
-> anything, it also opens up a additional way for firmware to mess up
-> things. For example, consider a case when firmware gives OS control
-> of DPC, but still sends EDR notification to OS. Although it's
-> unrealistic, I am just giving an example.
+Does the same problem happen with other devices, or does it only
+happen with the gasket/apex combination?  There shouldn't be anything
+device-specific in the PCI core resource assignment code.
 
-Can you outline the problem that occurs in this scenario?  It seems
-like the EDR notify handler could still work.  The OS can access DPC
-at any time (not just during the EDR window).
-
-> > I don't think we should even test pcie_ports_dpc_native here.  If we
-> > told the platform we can handle EDR notifications, we should be
-> > prepared to get them, regardless of whether the user booted with
-> > "pcie_ports=dpc-native".
+> 00:01.0 PCI bridge: Marvell Technology Group Ltd. Device 6828 (rev 04) (prog-if 00 [Normal decode])
+> 	Device tree node: /sys/firmware/devicetree/base/soc/pcie/pcie@1,0
+> 	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr+ Stepping- SERR+ FastB2B- DisINTx-
+> 	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+> 	Latency: 0, Cache Line Size: 64 bytes
+> 	Bus: primary=00, secondary=01, subordinate=01, sec-latency=0
+> 	I/O behind bridge: 0000f000-00000fff [empty]
+> 	Memory behind bridge: e8000000-e81fffff [size=2M]
+> 	Prefetchable memory behind bridge: 00000000-000fffff [size=1M]
+> 	Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- <SERR- <PERR-
+> 	[virtual] Expansion ROM at e8200000 [disabled] [size=2K]
+> 	BridgeCtl: Parity+ SERR+ NoISA- VGA- VGA16- MAbort+ >Reset- FastB2B-
+> 		PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
+> 	Capabilities: [40] Express (v2) Root Port (Slot+), MSI 00
+> 		DevCap:	MaxPayload 128 bytes, PhantFunc 0
+> 			ExtTag- RBE+
+> 		DevCtl:	CorrErr- NonFatalErr- FatalErr- UnsupReq-
+> 			RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop-
+> 			MaxPayload 128 bytes, MaxReadReq 512 bytes
+> 		DevSta:	CorrErr+ NonFatalErr- FatalErr- UnsupReq- AuxPwr- TransPend-
+> 		LnkCap:	Port #0, Speed 5GT/s, Width x1, ASPM L0s L1, Exit Latency L0s <256ns, L1 unlimited
+> 			ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp-
+> 		LnkCtl:	ASPM Disabled; RCB 64 bytes Disabled- CommClk-
+> 			ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+> 		LnkSta:	Speed 5GT/s (ok), Width x1 (ok)
+> 			TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
+> 		SltCap:	AttnBtn- PwrCtrl- MRL- AttnInd- PwrInd- HotPlug- Surprise-
+> 			Slot #0, PowerLimit 0.000W; Interlock- NoCompl-
+> 		SltCtl:	Enable: AttnBtn- PwrFlt- MRL- PresDet- CmdCplt- HPIrq- LinkChg-
+> 			Control: AttnInd Unknown, PwrInd Unknown, Power- Interlock-
+> 		SltSta:	Status: AttnBtn- PowerFlt- MRL- CmdCplt- PresDet+ Interlock-
+> 			Changed: MRL- PresDet- LinkState-
+> 		RootCtl: ErrCorrectable- ErrNon-Fatal- ErrFatal- PMEIntEna- CRSVisible-
+> 		RootCap: CRSVisible-
+> 		RootSta: PME ReqID 0000, PMEStatus- PMEPending-
+> 		DevCap2: Completion Timeout: Not Supported, TimeoutDis-, LTR-, OBFF Not Supported ARIFwd-
+> 			 AtomicOpsCap: Routing- 32bit- 64bit- 128bitCAS-
+> 		DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-, LTR-, OBFF Disabled ARIFwd-
+> 			 AtomicOpsCtl: ReqEn- EgressBlck-
+> 		LnkCtl2: Target Link Speed: 2.5GT/s, EnterCompliance- SpeedDis-
+> 			 Transmit Margin: Normal Operating Range, EnterModifiedCompliance- ComplianceSOS-
+> 			 Compliance De-emphasis: -6dB
+> 		LnkSta2: Current De-emphasis Level: -6dB, EqualizationComplete-, EqualizationPhase1-
+> 			 EqualizationPhase2-, EqualizationPhase3-, LinkEqualizationRequest-
 > 
-> As per the command line parameter documentation, setting
-> pcie_ports=dpc-native means, we will be using native PCIe service
-> for DPC.  So if DPC is handled by OS, as per my argument mentioned
-> above (EDR is only useful if DPC handled by firmware), there is no
-> use in installing EDR notification.
+> 00:02.0 PCI bridge: Marvell Technology Group Ltd. Device 6828 (rev 04) (prog-if 00 [Normal decode])
+> 	Device tree node: /sys/firmware/devicetree/base/soc/pcie/pcie@2,0
+> 	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr+ Stepping- SERR+ FastB2B- DisINTx-
+> 	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+> 	Latency: 0, Cache Line Size: 64 bytes
+> 	Bus: primary=00, secondary=02, subordinate=02, sec-latency=0
+> 	I/O behind bridge: 00010000-00010fff [size=4K]
+> 	Memory behind bridge: d0000000-e7ffffff [size=384M]
+> 	Prefetchable memory behind bridge: 00000000-000fffff [size=1M]
+> 	Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- <SERR- <PERR-
+> 	[virtual] Expansion ROM at e8300000 [disabled] [size=2K]
+> 	BridgeCtl: Parity+ SERR+ NoISA- VGA- VGA16- MAbort+ >Reset- FastB2B-
+> 		PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
+> 	Capabilities: [40] Express (v2) Root Port (Slot+), MSI 00
+> 		DevCap:	MaxPayload 128 bytes, PhantFunc 0
+> 			ExtTag- RBE+
+> 		DevCtl:	CorrErr- NonFatalErr- FatalErr- UnsupReq-
+> 			RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop-
+> 			MaxPayload 128 bytes, MaxReadReq 512 bytes
+> 		DevSta:	CorrErr+ NonFatalErr- FatalErr- UnsupReq- AuxPwr- TransPend-
+> 		LnkCap:	Port #0, Speed 5GT/s, Width x1, ASPM L0s L1, Exit Latency L0s <256ns, L1 unlimited
+> 			ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp-
+> 		LnkCtl:	ASPM Disabled; RCB 64 bytes Disabled- CommClk+
+> 			ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+> 		LnkSta:	Speed 2.5GT/s (downgraded), Width x1 (ok)
+> 			TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
+> 		SltCap:	AttnBtn- PwrCtrl- MRL- AttnInd- PwrInd- HotPlug- Surprise-
+> 			Slot #0, PowerLimit 0.000W; Interlock- NoCompl-
+> 		SltCtl:	Enable: AttnBtn- PwrFlt- MRL- PresDet- CmdCplt- HPIrq- LinkChg-
+> 			Control: AttnInd Unknown, PwrInd Unknown, Power- Interlock-
+> 		SltSta:	Status: AttnBtn- PowerFlt- MRL- CmdCplt- PresDet+ Interlock-
+> 			Changed: MRL- PresDet- LinkState-
+> 		RootCtl: ErrCorrectable- ErrNon-Fatal- ErrFatal- PMEIntEna- CRSVisible-
+> 		RootCap: CRSVisible-
+> 		RootSta: PME ReqID 0000, PMEStatus- PMEPending-
+> 		DevCap2: Completion Timeout: Not Supported, TimeoutDis-, LTR-, OBFF Not Supported ARIFwd-
+> 			 AtomicOpsCap: Routing- 32bit- 64bit- 128bitCAS-
+> 		DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-, LTR-, OBFF Disabled ARIFwd-
+> 			 AtomicOpsCtl: ReqEn- EgressBlck-
+> 		LnkCtl2: Target Link Speed: 2.5GT/s, EnterCompliance- SpeedDis-
+> 			 Transmit Margin: Normal Operating Range, EnterModifiedCompliance- ComplianceSOS-
+> 			 Compliance De-emphasis: -6dB
+> 		LnkSta2: Current De-emphasis Level: -6dB, EqualizationComplete-, EqualizationPhase1-
+> 			 EqualizationPhase2-, EqualizationPhase3-, LinkEqualizationRequest-
 > 
-> https://github.com/torvalds/linux/blob/master/Documentation/admin-guide/kernel-parameters.txt#L3642
+> 01:00.0 Non-VGA unclassified device: Device 1ac1:089a (prog-if ff)
+> 	Subsystem: Device 1ac1:089a
+> 	Control: I/O- Mem- BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr+ Stepping- SERR+ FastB2B- DisINTx-
+> 	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+> 	Interrupt: pin A routed to IRQ 48
+> 	Region 0: [virtual] Memory at <unassigned> (64-bit, prefetchable) [size=16K]
+> 	Region 2: [virtual] Memory at <unassigned> (64-bit, prefetchable) [size=1M]
+> 	Capabilities: [80] Express (v2) Endpoint, MSI 00
+> 		DevCap:	MaxPayload 256 bytes, PhantFunc 0, Latency L0s <64ns, L1 <1us
+> 			ExtTag+ AttnBtn- AttnInd- PwrInd- RBE+ FLReset- SlotPowerLimit 0.000W
+> 		DevCtl:	CorrErr- NonFatalErr- FatalErr- UnsupReq-
+> 			RlxdOrd+ ExtTag+ PhantFunc- AuxPwr- NoSnoop+
+> 			MaxPayload 128 bytes, MaxReadReq 512 bytes
+> 		DevSta:	CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr- TransPend-
+> 		LnkCap:	Port #1, Speed 5GT/s, Width x1, ASPM L0s L1, Exit Latency L0s <64ns, L1 <1us
+> 			ClockPM+ Surprise- LLActRep- BwNot- ASPMOptComp+
+> 		LnkCtl:	ASPM Disabled; RCB 64 bytes Disabled- CommClk-
+> 			ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+> 		LnkSta:	Speed 5GT/s (ok), Width x1 (ok)
+> 			TrErr- Train- SlotClk- DLActive- BWMgmt- ABWMgmt-
+> 		DevCap2: Completion Timeout: Range ABCD, TimeoutDis+, LTR+, OBFF Not Supported
+> 			 AtomicOpsCap: 32bit- 64bit- 128bitCAS-
+> 		DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-, LTR-, OBFF Disabled
+> 			 AtomicOpsCtl: ReqEn-
+> 		LnkCtl2: Target Link Speed: 5GT/s, EnterCompliance- SpeedDis-
+> 			 Transmit Margin: Normal Operating Range, EnterModifiedCompliance- ComplianceSOS-
+> 			 Compliance De-emphasis: -6dB
+> 		LnkSta2: Current De-emphasis Level: -6dB, EqualizationComplete-, EqualizationPhase1-
+> 			 EqualizationPhase2-, EqualizationPhase3-, LinkEqualizationRequest-
+> 	Capabilities: [d0] MSI-X: Enable- Count=128 Masked-
+> 		Vector table: BAR=2 offset=00046800
+> 		PBA: BAR=2 offset=00046068
+> 	Capabilities: [e0] MSI: Enable- Count=1/32 Maskable- 64bit+
+> 		Address: 0000000000000000  Data: 0000
+> 	Capabilities: [f8] Power Management version 3
+> 		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
+> 		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
+> 	Capabilities: [100 v1] Vendor Specific Information: ID=1556 Rev=1 Len=008 <?>
+> 	Capabilities: [108 v1] Latency Tolerance Reporting
+> 		Max snoop latency: 0ns
+> 		Max no snoop latency: 0ns
+> 	Capabilities: [110 v1] L1 PM Substates
+> 		L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+ L1_PM_Substates+
+> 			  PortCommonModeRestoreTime=10us PortTPowerOnTime=10us
+> 		L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2- ASPM_L1.1-
+> 			   T_CommonMode=0us LTR1.2_Threshold=0ns
+> 		L1SubCtl2: T_PwrOn=10us
+> 	Capabilities: [200 v2] Advanced Error Reporting
+> 		UESta:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
+> 		UEMsk:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
+> 		UESvrt:	DLP+ SDES- TLP- FCP+ CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP+ ECRC- UnsupReq- ACSViol-
+> 		CESta:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr-
+> 		CEMsk:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr+
+> 		AERCap:	First Error Pointer: 00, ECRCGenCap+ ECRCGenEn- ECRCChkCap+ ECRCChkEn-
+> 			MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
+> 		HeaderLog: 00000000 00000000 00000000 00000000
+> 	Kernel modules: apex
 > 
-> dpc-native - Use native PCIe service for DPC only.
+> 
+> 
 
-It doesn't hurt anything to install a notify handler that never
-receives a notification.  It might be an issue if we tell firmware
-we're prepared for notifications but we don't install a handler.
-
-> > It's conceivable that pcie_ports_dpc_native should make us do
-> > something different in the notify handler after we *get* a
-> > notification, but I doubt we should even worry about that.
-> > 
-> > IIUC, pcie_ports_dpc_native exists because Linux DPC originally worked
-> > even if the OS didn't have control of AER.  eed85ff4c0da7 ("PCI/DPC:
-> > Enable DPC only if AER is available") meant that if Linux didn't have
-> > control of AER, DPC no longer worked.  "pcie_ports=dpc-native" is
-> > basically a way to get that previous behavior of Linux DPC regardless
-> > of AER control.
-> > 
-> > I don't think that issue applies to EDR.  There's no concept of an OS
-> > "enabling" or "being granted control of" EDR.  The OS merely
-> > advertises that "yes, I'm prepared to handle EDR notifications".
-> > AFAICT, the ECR says nothing about EDR support being conditional on OS
-> > control of AER or DPC.  The notify *handler* might need to do
-> > different things depending on whether we have AER or DPC control, but
-> > the handler itself should be registered regardless.
-> > 
-> > [1] https://lore.kernel.org/linux-pci/20181115231605.24352-1-mr.nuke.me@gmail.com/
-> > [2] https://lore.kernel.org/linux-pci/20190326172343.28946-1-mr.nuke.me@gmail.com/
-> > 
-> 
-> -- 
-> Sathyanarayanan Kuppuswamy
-> Linux Kernel Developer
