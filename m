@@ -2,190 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 132F717CF0D
-	for <lists+linux-pci@lfdr.de>; Sat,  7 Mar 2020 16:27:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D85A17CF63
+	for <lists+linux-pci@lfdr.de>; Sat,  7 Mar 2020 18:21:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726105AbgCGP1D (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 7 Mar 2020 10:27:03 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:40586 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726086AbgCGP1C (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 7 Mar 2020 10:27:02 -0500
-Received: by mail-ed1-f66.google.com with SMTP id a13so6315543edu.7
-        for <linux-pci@vger.kernel.org>; Sat, 07 Mar 2020 07:27:01 -0800 (PST)
+        id S1726116AbgCGRVS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 7 Mar 2020 12:21:18 -0500
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:49686 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726109AbgCGRVS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 7 Mar 2020 12:21:18 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=t12eETEjMIcs0wGP/ExUn8HDfm4Jhs8gw92OYew6NSo=;
-        b=TFu60l9vlLEssswYzLe/zM4wqtf641+8tEW4ZrzmCXbuQH7+6XzPXiB0yUXmcN2u8q
-         9k9mCGUjDKQgVXbOt+Mr9ed1BlX+Ono8OE4gzdyk+4+soCf8nnDjElZP3j0329uAb1PA
-         dnSYm7jOzdA4C+bFlTTfkkrpQzfaSqk8GfPMY6Pji+PlkAFeDp0VY6Q+e/CfXRThLFM/
-         mHIA1Gu+rvyOqrfJ9XLsivDYIWx+dXsKs2mHsMmGe2oZ0HaDf83+2gh8L1SCdw6nuVE6
-         qzRk4148l+6wuv9oTyyicX03SfIz6RtaKhwwqwXPiawqdP18BOp1+8ml+oT7XYhGejOE
-         9cxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=t12eETEjMIcs0wGP/ExUn8HDfm4Jhs8gw92OYew6NSo=;
-        b=DJmDb8Mb1rS3LFN9JWV4AZWa7CzGfvEwQjXkDdi6cdgtdtZmmPPXrzt5PEdVGzHE8S
-         HkLmnvvXJsnnanqreD1x/yjOgQEcUcc4xS/I2h1P3AfSaSMBcP9Y+CJJ5AjKYDesvA5W
-         IjdA5rBiNhthoxu8VYm52Zxac1gKd+xHjzjeswJulB1S7NvP4CNGM+hRwkhwXEXMw4y1
-         GPAyezAqJOQALDo40+sn9Yhv8SXb/TtKENeNnKuZ4bOqrrAv8Vz4vS1PzNWRVHa80UMH
-         G/HVkxJ2SQR86RjlOrIwfq1LrZqajZLGQmXeQWebpUrPPAiLPczRk+5uSOQQ9UiaHVC4
-         V7xQ==
-X-Gm-Message-State: ANhLgQ3YO0C95cMhvMyOyCepKrnMmaf64U6wV5qtCR8FSKI38KYBbJUM
-        IpzSN6aJYwcpmheNf6UIR2L4rnR4w2s1aZG7MZw=
-X-Google-Smtp-Source: ADFU+vv8M0XT+DzZ5jcfljNd5Vh0UVIuU586NDwLW13dCrMAlU4clLCxDDewhhRP/kiM3Nuky9cpA8HB02WJ/54HLAM=
-X-Received: by 2002:aa7:c54a:: with SMTP id s10mr8776067edr.345.1583594820692;
- Sat, 07 Mar 2020 07:27:00 -0800 (PST)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1583601677; x=1615137677;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=wp1srcZz+c4pufjKhqF12RrK2cgk334AwrOVe4A37rw=;
+  b=I/SOaXI35KSBhauMS7aI7fyWcbJKv5+NAY7+Wt7FtAALr6jK0MiIA3qq
+   Hfnv9U0pU241Bq33ApQUAI2U0nrTByyDwi7udjSsVbHIJiU7ckDxoLgP7
+   l/HyRm7HjAycp1co9cWvg/UvyuRU4hYwqJ9AJ5kBGPNIl2kNxvcoishyD
+   Q=;
+IronPort-SDR: X1GH5KzOMRj0ZmroU1PxwsCCRMq/lwmgmWaeUlwltS4uDPVFDUzK4mLzm7MJG8y5DRAKZrytya
+ gnQR8eYSazAw==
+X-IronPort-AV: E=Sophos;i="5.70,526,1574121600"; 
+   d="scan'208";a="21473155"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-a70de69e.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 07 Mar 2020 17:21:05 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1e-a70de69e.us-east-1.amazon.com (Postfix) with ESMTPS id 705A5A2CE4;
+        Sat,  7 Mar 2020 17:21:01 +0000 (UTC)
+Received: from EX13D12EUC002.ant.amazon.com (10.43.164.134) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1236.3; Sat, 7 Mar 2020 17:21:00 +0000
+Received: from EX13MTAUEE002.ant.amazon.com (10.43.62.24) by
+ EX13D12EUC002.ant.amazon.com (10.43.164.134) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Sat, 7 Mar 2020 17:20:59 +0000
+Received: from u961addbe640f56.ant.amazon.com (10.28.84.111) by
+ mail-relay.amazon.com (10.43.62.224) with Microsoft SMTP Server id
+ 15.0.1367.3 via Frontend Transport; Sat, 7 Mar 2020 17:20:56 +0000
+From:   Stanislav Spassov <stanspas@amazon.com>
+To:     <linux-pci@vger.kernel.org>
+CC:     Stanislav Spassov <stanspas@amazon.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        =?UTF-8?q?Jan=20H=20=2E=20Sch=C3=B6nherr?= <jschoenh@amazon.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "Sinan Kaya" <okaya@kernel.org>, Rajat Jain <rajatja@google.com>
+Subject: [PATCH v4 0/3] Improve PCI device post-reset readiness polling
+Date:   Sat, 7 Mar 2020 18:20:41 +0100
+Message-ID: <20200307172044.29645-1-stanspas@amazon.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <CAEzXK1r0Er039iERnc2KJ4jn7ySNUOG9H=Ha8TD8XroVqiZjgg@mail.gmail.com>
- <20200306214753.GA235309@google.com> <CAEzXK1p-Vp5hyirYi3-b2SS+0pVTJZ3988+1iigEp4UM1VXmvw@mail.gmail.com>
-In-Reply-To: <CAEzXK1p-Vp5hyirYi3-b2SS+0pVTJZ3988+1iigEp4UM1VXmvw@mail.gmail.com>
-From:   =?UTF-8?B?THXDrXMgTWVuZGVz?= <luis.p.mendes@gmail.com>
-Date:   Sat, 7 Mar 2020 15:26:49 +0000
-Message-ID: <CAEzXK1oukcnjgkY8Y6rkHcBAKwSvTDJsJVCf7nix4eoPPFsNqg@mail.gmail.com>
-Subject: Re: Problem with PCIe enumeration of Google/Coral TPU Edge module on Linux
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Linux PCI <linux-pci@vger.kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+From: Stanislav Spassov <stanspas@amazon.de>
 
-A quick look at the logs, makes me wonder if BAR0-BAR5 are only being
-assigned to IO space on device by Linux, and BAR6 is the first bar
-index that Linux is assigning on armhf/arm64 for mem space. If so,
-that would be wrong because registers 0x10 and and 0x18 are BAR0 and
-BAR2.
-The TP-Link Gigabit LAN card that is installed on the other PCIe slot
-has BAR 0 enabled but it is IO space and according to the registers
-for the mem space, in that device, seen in dmesg, they are regs 0x18
-and 0x20, or, BAR 2 and BAR 4, but Linux is assigning them to have
-indices BAR 6 and BAR 8, since they are MEM space devices.
-That looks wrong.... maybe the TP-Link device is working just because
-BAR 0 does happen to exist in this case, which happens to be the
-minimal requirement that allows pci_enable_device(...) to work,
-passing in the test 'if (!r->parent)' performed by
-pci_enable_resources(...) at drivers/pci/setup-res.c. Since most PCIe
-cards have IO space, this generally works.
-Can it be?
+The first version of this patch series can be found here:
+https://lore.kernel.org/linux-pci/20200223122057.6504-1-stanspas@amazon.com
 
-Lu=C3=ADs
+The goal of this patch series is to solve an issue where pci_dev_wait
+can cause system crashes. After a reset, a hung device may keep
+responding with CRS completions indefinitely. If CRS Software Visibility
+is enabled on the Root Port, attempting to read any register other than
+PCI_VENDOR_ID will cause the Root Port to autonomously retry the request
+without reporting back to the CPU core. Unless the number of retries or
+the amount of time spent retrying is limited by platform-specific means,
+this scenario leads to low-level platform timeouts (such as a TOR
+Timeout), which can easily escalate to a crash.
 
-On Sat, Mar 7, 2020 at 12:11 PM Lu=C3=ADs Mendes <luis.p.mendes@gmail.com> =
-wrote:
->
-> Hi Bjorn,
->
-> Thanks for your help.
->
-> On Fri, Mar 6, 2020 at 9:47 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > [+cc Thomas, Jason, Nicholas, Ben]
-> >
-> > On Fri, Mar 06, 2020 at 02:32:59PM +0000, Lu=C3=ADs Mendes wrote:
-> > > Hi,
-> > >
-> > > I'm trying to use Google/Coral TPU Edge modules for a project, on
-> > > arm64 and armhf, but BAR0 doesn't get assigned during the enumeration
-> > > of PCIe devices and consequently pci_enable_device(...) fails on BAR0
-> > > resource with value -22 (EINVAL) (resource has null parent) when
-> > > loading gasket/apex driver.
-> > >
-> > > I'm also trying to adapt gasket/apex to run on armhf, but anyhow that
-> > > is not the root cause for this issue.
-> > >
-> > > Relevant Log extracts follow in attachment.
-> >
-> > Hi Lu=C3=ADs,
-> >
-> > Thanks for the report, and sorry for the problem you're tripping over.
-> > I cc'd a few folks who might be interested.
-> >
-> > > [    6.983880] mvebu-pcie soc:pcie: /soc/pcie/pcie@1,0: reset gpio is=
- active low
-> > > [    6.993528] hub 4-1:1.0: 4 ports detected
-> > > [    6.993749] mvebu-pcie soc:pcie: /soc/pcie/pcie@2,0: reset gpio is=
- active low
-> > > [    7.106741]  sdb: sdb1
-> > > [    7.109826] sd 2:0:0:0: [sdb] Attached SCSI removable disk
-> > > [    7.242916] mvebu-pcie soc:pcie: PCI host bridge to bus 0000:00
-> > > [    7.248854] pci_bus 0000:00: root bus resource [bus 00-ff]
-> > > [    7.254370] pci_bus 0000:00: root bus resource [mem 0xd0000000-0xe=
-fffffff]
-> > > [    7.261267] pci_bus 0000:00: root bus resource [io  0x1000-0xeffff=
-]
-> > > [    7.267621] pci 0000:00:01.0: [11ab:6828] type 01 class 0x060400
-> > > [    7.273662] pci 0000:00:01.0: reg 0x38: [mem 0x00000000-0x000007ff=
- pref]
-> > > [    7.293971] PCI: bus0: Fast back to back transfers disabled
-> > > [    7.299558] pci 0000:00:01.0: bridge configuration invalid ([bus 0=
-0-00]), reconfiguring
-> > > [    7.315694] pci 0000:01:00.0: [1ac1:089a] type 00 class 0x0000ff
-> > > [    7.321749] pci 0000:01:00.0: reg 0x10: [mem 0x00000000-0x00003fff=
- 64bit pref]
-> > > [    7.322814] usb 4-1.1: new high-speed USB device number 3 using xh=
-ci-hcd
-> > > [    7.329004] pci 0000:01:00.0: reg 0x18: [mem 0x00000000-0x000fffff=
- 64bit pref]
-> > > [    7.343111] pci 0000:01:00.0: 2.000 Gb/s available PCIe bandwidth,=
- limited by 2.5 GT/s x1 link at 0000:00:01.0 (capable of 4.000 Gb/s with 5 =
-GT/s x1 link)
-> > > [    7.383442] PCI: bus1: Fast back to back transfers disabled
-> > > [    7.389031] pci_bus 0000:01: busn_res: [bus 01-ff] end is updated =
-to 01
-> > > [    7.495604] pci 0000:00:02.0: ASPM: current common clock configura=
-tion is broken, reconfiguring
-> > > [    7.552513] pci 0000:00:01.0: BAR 8: assigned [mem 0xe8000000-0xe8=
-1fffff]
-> > > [    7.565611] pci 0000:00:01.0: BAR 6: assigned [mem 0xe8200000-0xe8=
-2007ff pref]
-> > > [    7.580096] pci 0000:00:01.0: PCI bridge to [bus 01]
-> > > [    7.585079] pci 0000:00:01.0:   bridge window [mem 0xe8000000-0xe8=
-1fffff]
-> > > [    7.653228] pcieport 0000:00:01.0: enabling device (0140 -> 0142)
-> > >
-> > >
-> > > [   11.188025] gasket: module is from the staging directory, the qual=
-ity is unknown, you have been warned.
-> > > [   11.217048] apex: module is from the staging directory, the qualit=
-y is unknown, you have been warned.
-> > > [   11.217926] apex 0000:01:00.0: can't enable device: BAR 0 [mem 0x0=
-0000000-0x00003fff 64bit pref] not claimed
-> > > [   11.227825] apex 0000:01:00.0: error enabling PCI device
-> >
-> > It looks like we did assign space for the bridge window leading to
-> > 01:00.0, but failed to assign space to the 01:00.0 BAR itself.
-> >
-> > I don't know offhand why that would be.  Can you put the entire dmesg
-> > log somewhere we can see?  That will tell us what kernel you're using
-> > and possibly other useful things.
->
-> Sure, complete dmesg is available at: https://pastebin.ubuntu.com/p/qnzJ5=
-6kM7k/
-> This is a custom built machine based on the Armada 388 armhf SoC, that
-> I am using, but I've also tried an arm64 machine from Toradex, an
-> Apalis IMX8QM with the Apalis Eval board, producing similar results
-> with different kernels and also different ARM architectures.
-> >
-> > Does the same problem happen with other devices, or does it only
-> > happen with the gasket/apex combination?  There shouldn't be anything
-> > device-specific in the PCI core resource assignment code.
->
-> This issue seems to happen only with the Coral Edge TPU device, but it
-> happens independently of whether the gasket/apex driver module is
-> loaded or not. The BAR 0 of the Coral device is not assigned either
-> way.
->
-> Lu=C3=ADs
+Feedback on the v1 inspired a lot of additional improvements all around the
+device reset codepaths and reducing post-reset delays. These improvements
+were published as part of v2 (v3 is just small build fixes).
+
+It looks like there is immediate demand specifically for the CRS work,
+so I am once again reducing the series to just that. The reset will be
+posted as a separate patch series that will likely require more time and
+iterations to stabilize.
+
+Changes since v3:
+- In pci_dev_wait(), added "timeout -= waited" to account the time spent
+  polling PCI_VENDOR_ID before falling back to polling PCI_COMMAND if
+  device readiness could not be positively established via CRS (i.e.,
+  if we stopped receiving CRS completions but did not receive a valid
+  vendor ID due to dealing with an SR-IOV VF, or due to a different error)
+- Simplified the commit message of "PCI: Add CRS handling to pci_dev_wait()"
+  to avoid confusion as to when Root Ports will autonomously retry requests
+  that resulted in CRS completions.
+
+Stanislav Spassov (3):
+  PCI: Refactor polling loop out of pci_dev_wait
+  PCI: Cache CRS Software Visibiliy in struct pci_dev
+  PCI: Add CRS handling to pci_dev_wait()
+
+ drivers/pci/pci.c   | 109 +++++++++++++++++++++++++++++++++++---------
+ drivers/pci/probe.c |   8 +++-
+ include/linux/pci.h |   3 ++
+ 3 files changed, 98 insertions(+), 22 deletions(-)
+
+
+base-commit: bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9
+-- 
+2.25.1
+
+
+
+
+Amazon Development Center Germany GmbH
+Krausenstr. 38
+10117 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
+Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
+Sitz: Berlin
+Ust-ID: DE 289 237 879
+
+
+
