@@ -2,44 +2,44 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AA87F17CDB5
-	for <lists+linux-pci@lfdr.de>; Sat,  7 Mar 2020 11:58:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E9A5F17CDCF
+	for <lists+linux-pci@lfdr.de>; Sat,  7 Mar 2020 12:30:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726043AbgCGK6g (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 7 Mar 2020 05:58:36 -0500
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:34560 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbgCGK6f (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 7 Mar 2020 05:58:35 -0500
+        id S1726104AbgCGLaz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 7 Mar 2020 06:30:55 -0500
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:1776 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726086AbgCGLaz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 7 Mar 2020 06:30:55 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1583578714; x=1615114714;
+  t=1583580653; x=1615116653;
   h=from:to:cc:subject:date:message-id:references:
    in-reply-to:content-id:mime-version:
    content-transfer-encoding;
-  bh=HE+L5+d0MRh91wk/A8LGVxzEsAhd6dVWq6NIdabQ6bg=;
-  b=R0JUuWcOkjo10bElMaiLM5Deh7kxMV6u2HCONBuYjWpf0rAqPa9Lvrmf
-   naNIZKXFEk70VyAUgQd0Jznu/PkkY6qNWFOJtVArJc6Lq0tsoztkN6yQ2
-   EHuzY8ywwHVANFyHCcS7sLNyALcc4I5cugQColJzDFbDr9v9t4tg3cvw9
-   s=;
-IronPort-SDR: 5yrTaXXAkHr+8gRNP5bmowFzM6UWr20Oz0xzw/ToRxth6PBi+iSoDRgE/p2NqH1erXegU6qdx+
- jNQ7ta9M3BGg==
+  bh=DFpsOxrHOqsf0PQAJMXueEicUk8UR3W/BgR/3MNxtGQ=;
+  b=kx8zo4x93/8NT/ABPXIkAyyZo2Up2E66QoDTeIwVet8hYa9xCi1tyG0c
+   7tzRlGxRJWPIwKbqkZxBMaRuPhLe/mh0N/Npquo68C4O73nvLvKVgx8bJ
+   xgUI6y72q4MPlLAo6/0980+ea6ObVz2hvo9FUSsRCwiuAk4OXoyoOrHuV
+   Q=;
+IronPort-SDR: TVStLvUeAY3cWlpbB4oPKkh+oDA9sILjqRezunIG3dlMAeC36jziCEbc+HO8qYdc6zwS/hZK9v
+ dhgte9maTtDQ==
 X-IronPort-AV: E=Sophos;i="5.70,525,1574121600"; 
-   d="scan'208";a="20213594"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 07 Mar 2020 10:58:21 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com (Postfix) with ESMTPS id C01E7A2A47;
-        Sat,  7 Mar 2020 10:58:17 +0000 (UTC)
+   d="scan'208";a="29821054"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2c-168cbb73.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 07 Mar 2020 11:30:51 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2c-168cbb73.us-west-2.amazon.com (Postfix) with ESMTPS id B77A4A20FD;
+        Sat,  7 Mar 2020 11:30:49 +0000 (UTC)
 Received: from EX13D04EUB003.ant.amazon.com (10.43.166.235) by
  EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1236.3; Sat, 7 Mar 2020 10:58:17 +0000
+ id 15.0.1236.3; Sat, 7 Mar 2020 11:30:49 +0000
 Received: from EX13D04EUB003.ant.amazon.com (10.43.166.235) by
  EX13D04EUB003.ant.amazon.com (10.43.166.235) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Sat, 7 Mar 2020 10:58:16 +0000
+ id 15.0.1497.2; Sat, 7 Mar 2020 11:30:46 +0000
 Received: from EX13D04EUB003.ant.amazon.com ([10.43.166.235]) by
  EX13D04EUB003.ant.amazon.com ([10.43.166.235]) with mapi id 15.00.1497.006;
- Sat, 7 Mar 2020 10:58:16 +0000
+ Sat, 7 Mar 2020 11:30:46 +0000
 From:   "Spassov, Stanislav" <stanspas@amazon.de>
 To:     "Spassov, Stanislav" <stanspas@amazon.de>,
         "rafael@kernel.org" <rafael@kernel.org>
@@ -48,24 +48,30 @@ CC:     "corbet@lwn.net" <corbet@lwn.net>,
         "ashok.raj@intel.com" <ashok.raj@intel.com>,
         "okaya@kernel.org" <okaya@kernel.org>,
         "tglx@linutronix.de" <tglx@linutronix.de>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
         "lkp@intel.com" <lkp@intel.com>,
+        "amurray@thegoodpenguin.co.uk" <amurray@thegoodpenguin.co.uk>,
+        "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>,
         "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
         "Schoenherr, Jan H." <jschoenh@amazon.de>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "jason@lakedaemon.net" <jason@lakedaemon.net>,
         "rajatja@google.com" <rajatja@google.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "bhelgaas@google.com" <bhelgaas@google.com>,
+        "lenb@kernel.org" <lenb@kernel.org>,
         "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
-Subject: Re: [PATCH v3 04/17] PCI: Do not override delay for D0->D3hot
- transition
-Thread-Topic: [PATCH v3 04/17] PCI: Do not override delay for D0->D3hot
- transition
-Thread-Index: AQHV9G9NgVU7SP3RrUKHvPMb4vrnaw==
-Date:   Sat, 7 Mar 2020 10:58:15 +0000
-Message-ID: <5556ec9ccb09796b8555db51a0079dcbd7a49a9e.camel@amazon.de>
+Subject: Re: [PATCH v3 07/17] PCI: Clean up and document PM/reset delays
+Thread-Topic: [PATCH v3 07/17] PCI: Clean up and document PM/reset delays
+Thread-Index: AQHV9HPXqrNJUMOXV0awv4Rv3HN/bA==
+Date:   Sat, 7 Mar 2020 11:30:45 +0000
+Message-ID: <575f12241914cc6fa48e250f24db92af560cc375.camel@amazon.de>
 References: <20200303132852.13184-1-stanspas@amazon.com>
-         <20200303132852.13184-5-stanspas@amazon.com>
-         <CAJZ5v0hVFGqWsZbHwYu2uJrdwzVp1m-HDaTCS+A-+qpw5FwuQQ@mail.gmail.com>
-In-Reply-To: <CAJZ5v0hVFGqWsZbHwYu2uJrdwzVp1m-HDaTCS+A-+qpw5FwuQQ@mail.gmail.com>
+         <20200303132852.13184-8-stanspas@amazon.com>
+         <CAJZ5v0gD4XweLHQzQfRiBxWz8O5mFsc5Chj4JNhX+5ja6Cxrig@mail.gmail.com>
+In-Reply-To: <CAJZ5v0gD4XweLHQzQfRiBxWz8O5mFsc5Chj4JNhX+5ja6Cxrig@mail.gmail.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -74,7 +80,7 @@ x-ms-exchange-messagesentrepresentingtype: 1
 x-ms-exchange-transport-fromentityheader: Hosted
 x-originating-ip: [10.43.164.196]
 Content-Type: text/plain; charset="utf-8"
-Content-ID: <744F4DFEB6896341A7CD43D202656105@amazon.com>
+Content-ID: <1C301443B08B384BA0AF6268820C3620@amazon.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Sender: linux-pci-owner@vger.kernel.org
@@ -82,33 +88,29 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTAzLTAzIGF0IDE5OjU3ICswMTAwLCBSYWZhZWwgSi4gV3lzb2NraSB3cm90
-ZToNCj4gPiBCb3RoIHNwZWNpZmljYXRpb25zIHRoYXQgZG9jdW1lbnQgbWVjaGFuaXNtcyBmb3Ig
-b3ZlcnJpZGluZyB0aGUNCj4gPiBEM2hvdC0+RDAgd2FpdGluZyB0aW1lIG9ubHkgc3BlYWsgb2Yg
-dGhpcyBzcGVjaWZpYyBkaXJlY3Rpb24uDQo+ID4gTm90aGluZyBpcyBtZW50aW9uZWQgYWJvdXQg
-dGhlIG9wcG9zaXRlIChEKi0+RDNob3QpIGV4Y2VwdCBmb3INCj4gPiB0aGUgZGVmYXVsdCB2YWx1
-ZSBvZiAxMG1zIGluIFBDSSBFeHByZXNzIEJhc2UgU3BlY2lmaWNhdGlvbg0KPiA+IHI1LjAgKE1h
-eSAyMiwgMjAxOSksIFNlY3Rpb24gNS45ICJTdGF0ZSBUcmFuc2l0aW9uIFJlY292ZXJ5IFRpbWUN
-Cj4gPiBSZXF1aXJlbWVudHMiLg0KPiANCj4gVW5sZXNzIHlvdSBoYXZlIGEgc3BlY2lmaWMgZXhh
-bXBsZSBvZiBhIHN5c3RlbSBvbiB3aGljaCB0aGUgY3VycmVudA0KPiBjb2RlIGRvZXNuJ3Qgd29y
-ayAoYW5kIHdoaWNoIHNob3VsZCBiZSBtZW50aW9uZWQgaGVyZSksIEkgZG9uJ3QgdGhpbmsNCj4g
-dGhhdCBpdCBpcyBhIGdvb2QgaWRlYSB0byBtYWtlIHRoaXMgY2hhbmdlLg0KPiANCg0KSSBkbyBu
-b3QgaGF2ZSBhIHNwZWNpZmljIGV4YW1wbGUgZm9yIGEgZmFpbGluZyBzeXN0ZW0gaGVyZS4gVGhl
-IGludGVudGlvbg0KaXMgcHVyZWx5IHRvIGJyaW5nIHRoZSBjb2RlIGluIGxpbmUgd2l0aCB3aGF0
-DQp0aGUgc3BlYyBzYXlzIChvciBpbiB0aGlzIGNhc2U6DQp3aGF0IHRoZSBzcGVjIGRvZXMgbm90
-IHNheSkuDQoNCj4gVGhlcmUgYXJlIHN5c3RlbXMgaW4gd2hpY2ggaXQgd291bGQgbWFrZSBhIG1l
-YXN1cmFibGUgZGlmZmVyZW5jZSBpbg0KPiB0aGluZ3MgbGlrZSB0aGUgdGltZSBpdCB0YWtlcyB0
-byBzdXNwZW5kIHRoZSBzeXN0ZW0uDQoNClRoaXMgcGF0Y2ggb25seSBhZmZlY3RzIHRoZSBEMC0+
-RDNob3QgZGVsYXkgd2l0aGluIHBjaV9wbV9yZXNldCgpLg0KKEkgd2lsbCBtYWtlIHRoaXMgbW9y
-ZSBleHBsaWNpdCBpbiB0aGUgY29tbWl0IHRpdGxlL21lc3NhZ2UuKQ0KVGhlIFBNIHJlc2V0IGlz
-IG9ubHkgZXZlciBpbnZva2VkIGZyb20gX19wY2lfcmVzZXRfZnVuY3Rpb25fbG9ja2VkKCkNCmFu
-ZCBwY2lfcHJvYmVfcmVzZXRfZnVuY3Rpb24oKS4gU3BlY2lmaWNhbGx5LCBwY2lfc2V0X3Bvd2Vy
-X3N0YXRlKCkgaXMgdW50b3VjaGVkLg0KSSBhbSBub3Qgd2VsbCB2ZXJzZWQgaW50byB0aGUgc3lz
-dGVtIHN1c3BlbmQgY29kZSwgYnV0IHVubGVzcyB3ZSBhcmUgcmVzZXR0aW5nIHRoZQ0KZGV2aWNl
-cyB0aGVyZSwgdGhpcyBwYXRjaCBzaG91bGQgbm90IGFmZmVjdCBzeXN0ZW0gc3VzcGVuZCB0aW1l
-IGF0IGFsbC4NCgoKCkFtYXpvbiBEZXZlbG9wbWVudCBDZW50ZXIgR2VybWFueSBHbWJICktyYXVz
-ZW5zdHIuIDM4CjEwMTE3IEJlcmxpbgpHZXNjaGFlZnRzZnVlaHJ1bmc6IENocmlzdGlhbiBTY2hs
-YWVnZXIsIEpvbmF0aGFuIFdlaXNzCkVpbmdldHJhZ2VuIGFtIEFtdHNnZXJpY2h0IENoYXJsb3R0
-ZW5idXJnIHVudGVyIEhSQiAxNDkxNzMgQgpTaXR6OiBCZXJsaW4KVXN0LUlEOiBERSAyODkgMjM3
-IDg3OQoKCg==
+T24gVHVlLCAyMDIwLTAzLTAzIGF0IDIwOjAzICswMTAwLCBSYWZhZWwgSi4gV3lzb2NraSB3cm90
+ZToNCj4gDQo+IFdoYXQgIm1hZ2ljIG51bWJlcnMiIGV4YWN0bHkgZG8geW91IG1lYW4/ICBUaGUg
+U1JJT1YgYW5kIEZMUiBkZWxheXM/DQo+IFdoeSBub3QgdG8gYmUgbW9yZSBzcGVjaWZpYyBoZXJl
+IGlmIHNvPw0KDQpZb3UgYXJlIHJpZ2h0LiBJIGFtIGV4dGVuZGluZyB0aGUgY29tbWl0IG1lc3Nh
+Z2UgbGlrZSB0aGlzIGZvciB0aGUgbmV4dCB2ZXJzaW9uOg0KDQogICAgUENJOiBDbGVhbiB1cCBh
+bmQgZG9jdW1lbnQgUE0vcmVzZXQgZGVsYXlzDQogICAgDQogICAgVGhlIGV4aXN0aW5nIHNldCBv
+ZiBQQ0lfUE1fKiBjb25zdGFudHMgaGFzIHNvbWUgaW5jb25zaXN0ZW5jaWVzIChfV0FJVA0KICAg
+IHZzIF9ERUxBWSBzdWZmaXgpLCBhbmQgZG9lcyBub3QgY292ZXIgYWxsIHRoZSBzY2VuYXJpb3Mg
+dGhhdCB0aGUgUENJZQ0KICAgIHNwZWNpZmljYXRpb25zIG1hbmRhdGVzIHdhaXRpbmcgcGVyaW9k
+cyBmb3IuDQogICAgDQogICAgSW4gcHJlcGFyYXRpb24gZm9yIGFkZGluZyBpbmZyYXN0cnVjdHVy
+ZSB0byBvdmVycmlkZSwgb24gYSBwZXItZGV2aWNlDQogICAgYmFzaXMsIHRoZSBpbmRpdmlkdWFs
+IHdhaXRpbmcgcGVyaW9kcyB1c2luZyBzdGFuZGFyZGl6ZWQgbWVjaGFuaXNtcywNCiAgICB0aGlz
+IGNvbW1pdCBpbnRyb2R1Y2VzIGFuZCBkb2N1bWVudHMgY29uc3RhbnRzIHByb3ZpZGluZyB0aGUg
+ZGVmYXVsdA0KICAgIHZhbHVlcyBmb3IgdmFyaW91cyB3YWl0aW5nIHNjZW5hcmlvcyBhbGwgYXJv
+dW5kIFBDSSBkZXZpY2UgcmVzZXRzLA0KICAgIFBNIHN0YXRlIGNoYW5nZXMsIGFuZCBlbmFibGlu
+ZyBTUi1JT1YgVkZzLg0KICAgIA0KICAgIFNldmVyYWwgaW5zdGFuY2VzIG9mICdtc2xlZXAoMTAw
+KScgaW4gdGhlIEZMUiBhbmQgVkYgZW5hYmxlIGNvZGVwYXRocw0KICAgIGhhdmUgYmVlbiBhZGp1
+c3RlZCB0byB1c2UgdGhlIG5ld2x5IGludHJvZHVjZWQgY29uc3RhbnRzIGluc3RlYWQuDQogICAg
+Q29ycmVzcG9uZGluZyBleHBsYW5hdG9yeSBjb2RlIGNvbW1lbnRzIHdlcmUgcmVtb3ZlZCwgYXMg
+dGhleSBhcmUgbm93DQogICAgc3VwZXJzZWRlZCBieSB0aGUgZG9jdW1lbnRhdGlvbiBvZiB0aGUg
+Y29uc3RhbnRzLg0KCgoKQW1hem9uIERldmVsb3BtZW50IENlbnRlciBHZXJtYW55IEdtYkgKS3Jh
+dXNlbnN0ci4gMzgKMTAxMTcgQmVybGluCkdlc2NoYWVmdHNmdWVocnVuZzogQ2hyaXN0aWFuIFNj
+aGxhZWdlciwgSm9uYXRoYW4gV2Vpc3MKRWluZ2V0cmFnZW4gYW0gQW10c2dlcmljaHQgQ2hhcmxv
+dHRlbmJ1cmcgdW50ZXIgSFJCIDE0OTE3MyBCClNpdHo6IEJlcmxpbgpVc3QtSUQ6IERFIDI4OSAy
+MzcgODc5CgoK
 
