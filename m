@@ -2,115 +2,164 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E9A5F17CDCF
-	for <lists+linux-pci@lfdr.de>; Sat,  7 Mar 2020 12:30:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 031E817CE02
+	for <lists+linux-pci@lfdr.de>; Sat,  7 Mar 2020 13:11:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726104AbgCGLaz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 7 Mar 2020 06:30:55 -0500
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:1776 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726086AbgCGLaz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 7 Mar 2020 06:30:55 -0500
+        id S1726114AbgCGMLv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 7 Mar 2020 07:11:51 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:41033 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726065AbgCGMLv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 7 Mar 2020 07:11:51 -0500
+Received: by mail-ed1-f65.google.com with SMTP id m25so5840352edq.8
+        for <linux-pci@vger.kernel.org>; Sat, 07 Mar 2020 04:11:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1583580653; x=1615116653;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:mime-version:
-   content-transfer-encoding;
-  bh=DFpsOxrHOqsf0PQAJMXueEicUk8UR3W/BgR/3MNxtGQ=;
-  b=kx8zo4x93/8NT/ABPXIkAyyZo2Up2E66QoDTeIwVet8hYa9xCi1tyG0c
-   7tzRlGxRJWPIwKbqkZxBMaRuPhLe/mh0N/Npquo68C4O73nvLvKVgx8bJ
-   xgUI6y72q4MPlLAo6/0980+ea6ObVz2hvo9FUSsRCwiuAk4OXoyoOrHuV
-   Q=;
-IronPort-SDR: TVStLvUeAY3cWlpbB4oPKkh+oDA9sILjqRezunIG3dlMAeC36jziCEbc+HO8qYdc6zwS/hZK9v
- dhgte9maTtDQ==
-X-IronPort-AV: E=Sophos;i="5.70,525,1574121600"; 
-   d="scan'208";a="29821054"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2c-168cbb73.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 07 Mar 2020 11:30:51 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2c-168cbb73.us-west-2.amazon.com (Postfix) with ESMTPS id B77A4A20FD;
-        Sat,  7 Mar 2020 11:30:49 +0000 (UTC)
-Received: from EX13D04EUB003.ant.amazon.com (10.43.166.235) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1236.3; Sat, 7 Mar 2020 11:30:49 +0000
-Received: from EX13D04EUB003.ant.amazon.com (10.43.166.235) by
- EX13D04EUB003.ant.amazon.com (10.43.166.235) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Sat, 7 Mar 2020 11:30:46 +0000
-Received: from EX13D04EUB003.ant.amazon.com ([10.43.166.235]) by
- EX13D04EUB003.ant.amazon.com ([10.43.166.235]) with mapi id 15.00.1497.006;
- Sat, 7 Mar 2020 11:30:46 +0000
-From:   "Spassov, Stanislav" <stanspas@amazon.de>
-To:     "Spassov, Stanislav" <stanspas@amazon.de>,
-        "rafael@kernel.org" <rafael@kernel.org>
-CC:     "corbet@lwn.net" <corbet@lwn.net>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "ashok.raj@intel.com" <ashok.raj@intel.com>,
-        "okaya@kernel.org" <okaya@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "lkp@intel.com" <lkp@intel.com>,
-        "amurray@thegoodpenguin.co.uk" <amurray@thegoodpenguin.co.uk>,
-        "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "Schoenherr, Jan H." <jschoenh@amazon.de>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "jason@lakedaemon.net" <jason@lakedaemon.net>,
-        "rajatja@google.com" <rajatja@google.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
-Subject: Re: [PATCH v3 07/17] PCI: Clean up and document PM/reset delays
-Thread-Topic: [PATCH v3 07/17] PCI: Clean up and document PM/reset delays
-Thread-Index: AQHV9HPXqrNJUMOXV0awv4Rv3HN/bA==
-Date:   Sat, 7 Mar 2020 11:30:45 +0000
-Message-ID: <575f12241914cc6fa48e250f24db92af560cc375.camel@amazon.de>
-References: <20200303132852.13184-1-stanspas@amazon.com>
-         <20200303132852.13184-8-stanspas@amazon.com>
-         <CAJZ5v0gD4XweLHQzQfRiBxWz8O5mFsc5Chj4JNhX+5ja6Cxrig@mail.gmail.com>
-In-Reply-To: <CAJZ5v0gD4XweLHQzQfRiBxWz8O5mFsc5Chj4JNhX+5ja6Cxrig@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.164.196]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <1C301443B08B384BA0AF6268820C3620@amazon.com>
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=3k42LStM+IlcgAERjIQAwb7o/QoooUTT83BLWSnKdTA=;
+        b=QX4ziUdSOKXtdHF0+0glwxG7kiUzjlnLKATOvI9JfKqQN7Wwi772gu3YTIHW3+YnuF
+         ofAVK3dQXzu+8jCGYYrWahu30mEC7DtLWLr+wSEpLgP4VwF9xbqM1b5Lq3zzr/ikhzAe
+         SKlv2zP2eQisXfQUk+/hzNHhRaIoT6Bx/O4UAM/aJQb41TEVy0Z5FqVxfRUcA6wrD4mO
+         5P3jMv//yYqvppeVJXpZHxLYxsDtY1DJd1lXtM8+zofDDAVAbnALdlVhQYaNT+bjcwd9
+         XnF9DZKM9vx+GzgoC7eRyvR6tEKwjVBdcsaYNViFnHIq0idpu/r/TjwiXsncRZrxhXqP
+         rajA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=3k42LStM+IlcgAERjIQAwb7o/QoooUTT83BLWSnKdTA=;
+        b=BTDMtrQmOfO+6uIolXYXwk+LlKoRaJ+9lgwwIpl32uCr0juBH15WzA9/tlmNr1ZzR8
+         Hn9hdRY31SVmZPnEFrxnIwfW0AOkCXif4X9nQhPCl7Cs4/2aZcK1h6g5BO+vskk0sLUp
+         sfcwmoMGMfdyL/Yh0Ar0F8jgPwbXxlo7R39bB2TrdwakITBZQUU6Cc7LL/dcg3mKVmPr
+         0s8RnBB/P0UwPwZznMipkhi7Ww4pvfQdX0INxbYN0YyRhqKAXRj4YOsK45LbYEIpLsdR
+         MELJpSmq1aTIl2hRMCMy5D4c1lCV4DA2LI3iAyAf+op5uD0/swoim2P7GqI51s1c6IYz
+         lDvA==
+X-Gm-Message-State: ANhLgQ3ACzZsWM7KHHA+rNSSBIieQ1BvVxZrttbCoj7lnlO7dvOaQapD
+        EGlkodh+YG4FGSBEoRLKi8+4qFSSuAPN2oSfBjYAMNGe
+X-Google-Smtp-Source: ADFU+vugP1c2QX71xR8pLYisXtypRtbKBDqWO2bI8jut3pLmAOg+5zZxTbO0LC2aQyj2IlBoNwJfKmUd8t/9bqBNXyQ=
+X-Received: by 2002:a17:906:4ada:: with SMTP id u26mr7053015ejt.20.1583583107579;
+ Sat, 07 Mar 2020 04:11:47 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: base64
+References: <CAEzXK1r0Er039iERnc2KJ4jn7ySNUOG9H=Ha8TD8XroVqiZjgg@mail.gmail.com>
+ <20200306214753.GA235309@google.com>
+In-Reply-To: <20200306214753.GA235309@google.com>
+From:   =?UTF-8?B?THXDrXMgTWVuZGVz?= <luis.p.mendes@gmail.com>
+Date:   Sat, 7 Mar 2020 12:11:36 +0000
+Message-ID: <CAEzXK1p-Vp5hyirYi3-b2SS+0pVTJZ3988+1iigEp4UM1VXmvw@mail.gmail.com>
+Subject: Re: Problem with PCIe enumeration of Google/Coral TPU Edge module on Linux
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Linux PCI <linux-pci@vger.kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTAzLTAzIGF0IDIwOjAzICswMTAwLCBSYWZhZWwgSi4gV3lzb2NraSB3cm90
-ZToNCj4gDQo+IFdoYXQgIm1hZ2ljIG51bWJlcnMiIGV4YWN0bHkgZG8geW91IG1lYW4/ICBUaGUg
-U1JJT1YgYW5kIEZMUiBkZWxheXM/DQo+IFdoeSBub3QgdG8gYmUgbW9yZSBzcGVjaWZpYyBoZXJl
-IGlmIHNvPw0KDQpZb3UgYXJlIHJpZ2h0LiBJIGFtIGV4dGVuZGluZyB0aGUgY29tbWl0IG1lc3Nh
-Z2UgbGlrZSB0aGlzIGZvciB0aGUgbmV4dCB2ZXJzaW9uOg0KDQogICAgUENJOiBDbGVhbiB1cCBh
-bmQgZG9jdW1lbnQgUE0vcmVzZXQgZGVsYXlzDQogICAgDQogICAgVGhlIGV4aXN0aW5nIHNldCBv
-ZiBQQ0lfUE1fKiBjb25zdGFudHMgaGFzIHNvbWUgaW5jb25zaXN0ZW5jaWVzIChfV0FJVA0KICAg
-IHZzIF9ERUxBWSBzdWZmaXgpLCBhbmQgZG9lcyBub3QgY292ZXIgYWxsIHRoZSBzY2VuYXJpb3Mg
-dGhhdCB0aGUgUENJZQ0KICAgIHNwZWNpZmljYXRpb25zIG1hbmRhdGVzIHdhaXRpbmcgcGVyaW9k
-cyBmb3IuDQogICAgDQogICAgSW4gcHJlcGFyYXRpb24gZm9yIGFkZGluZyBpbmZyYXN0cnVjdHVy
-ZSB0byBvdmVycmlkZSwgb24gYSBwZXItZGV2aWNlDQogICAgYmFzaXMsIHRoZSBpbmRpdmlkdWFs
-IHdhaXRpbmcgcGVyaW9kcyB1c2luZyBzdGFuZGFyZGl6ZWQgbWVjaGFuaXNtcywNCiAgICB0aGlz
-IGNvbW1pdCBpbnRyb2R1Y2VzIGFuZCBkb2N1bWVudHMgY29uc3RhbnRzIHByb3ZpZGluZyB0aGUg
-ZGVmYXVsdA0KICAgIHZhbHVlcyBmb3IgdmFyaW91cyB3YWl0aW5nIHNjZW5hcmlvcyBhbGwgYXJv
-dW5kIFBDSSBkZXZpY2UgcmVzZXRzLA0KICAgIFBNIHN0YXRlIGNoYW5nZXMsIGFuZCBlbmFibGlu
-ZyBTUi1JT1YgVkZzLg0KICAgIA0KICAgIFNldmVyYWwgaW5zdGFuY2VzIG9mICdtc2xlZXAoMTAw
-KScgaW4gdGhlIEZMUiBhbmQgVkYgZW5hYmxlIGNvZGVwYXRocw0KICAgIGhhdmUgYmVlbiBhZGp1
-c3RlZCB0byB1c2UgdGhlIG5ld2x5IGludHJvZHVjZWQgY29uc3RhbnRzIGluc3RlYWQuDQogICAg
-Q29ycmVzcG9uZGluZyBleHBsYW5hdG9yeSBjb2RlIGNvbW1lbnRzIHdlcmUgcmVtb3ZlZCwgYXMg
-dGhleSBhcmUgbm93DQogICAgc3VwZXJzZWRlZCBieSB0aGUgZG9jdW1lbnRhdGlvbiBvZiB0aGUg
-Y29uc3RhbnRzLg0KCgoKQW1hem9uIERldmVsb3BtZW50IENlbnRlciBHZXJtYW55IEdtYkgKS3Jh
-dXNlbnN0ci4gMzgKMTAxMTcgQmVybGluCkdlc2NoYWVmdHNmdWVocnVuZzogQ2hyaXN0aWFuIFNj
-aGxhZWdlciwgSm9uYXRoYW4gV2Vpc3MKRWluZ2V0cmFnZW4gYW0gQW10c2dlcmljaHQgQ2hhcmxv
-dHRlbmJ1cmcgdW50ZXIgSFJCIDE0OTE3MyBCClNpdHo6IEJlcmxpbgpVc3QtSUQ6IERFIDI4OSAy
-MzcgODc5CgoK
+Hi Bjorn,
 
+Thanks for your help.
+
+On Fri, Mar 6, 2020 at 9:47 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> [+cc Thomas, Jason, Nicholas, Ben]
+>
+> On Fri, Mar 06, 2020 at 02:32:59PM +0000, Lu=C3=ADs Mendes wrote:
+> > Hi,
+> >
+> > I'm trying to use Google/Coral TPU Edge modules for a project, on
+> > arm64 and armhf, but BAR0 doesn't get assigned during the enumeration
+> > of PCIe devices and consequently pci_enable_device(...) fails on BAR0
+> > resource with value -22 (EINVAL) (resource has null parent) when
+> > loading gasket/apex driver.
+> >
+> > I'm also trying to adapt gasket/apex to run on armhf, but anyhow that
+> > is not the root cause for this issue.
+> >
+> > Relevant Log extracts follow in attachment.
+>
+> Hi Lu=C3=ADs,
+>
+> Thanks for the report, and sorry for the problem you're tripping over.
+> I cc'd a few folks who might be interested.
+>
+> > [    6.983880] mvebu-pcie soc:pcie: /soc/pcie/pcie@1,0: reset gpio is a=
+ctive low
+> > [    6.993528] hub 4-1:1.0: 4 ports detected
+> > [    6.993749] mvebu-pcie soc:pcie: /soc/pcie/pcie@2,0: reset gpio is a=
+ctive low
+> > [    7.106741]  sdb: sdb1
+> > [    7.109826] sd 2:0:0:0: [sdb] Attached SCSI removable disk
+> > [    7.242916] mvebu-pcie soc:pcie: PCI host bridge to bus 0000:00
+> > [    7.248854] pci_bus 0000:00: root bus resource [bus 00-ff]
+> > [    7.254370] pci_bus 0000:00: root bus resource [mem 0xd0000000-0xeff=
+fffff]
+> > [    7.261267] pci_bus 0000:00: root bus resource [io  0x1000-0xeffff]
+> > [    7.267621] pci 0000:00:01.0: [11ab:6828] type 01 class 0x060400
+> > [    7.273662] pci 0000:00:01.0: reg 0x38: [mem 0x00000000-0x000007ff p=
+ref]
+> > [    7.293971] PCI: bus0: Fast back to back transfers disabled
+> > [    7.299558] pci 0000:00:01.0: bridge configuration invalid ([bus 00-=
+00]), reconfiguring
+> > [    7.315694] pci 0000:01:00.0: [1ac1:089a] type 00 class 0x0000ff
+> > [    7.321749] pci 0000:01:00.0: reg 0x10: [mem 0x00000000-0x00003fff 6=
+4bit pref]
+> > [    7.322814] usb 4-1.1: new high-speed USB device number 3 using xhci=
+-hcd
+> > [    7.329004] pci 0000:01:00.0: reg 0x18: [mem 0x00000000-0x000fffff 6=
+4bit pref]
+> > [    7.343111] pci 0000:01:00.0: 2.000 Gb/s available PCIe bandwidth, l=
+imited by 2.5 GT/s x1 link at 0000:00:01.0 (capable of 4.000 Gb/s with 5 GT=
+/s x1 link)
+> > [    7.383442] PCI: bus1: Fast back to back transfers disabled
+> > [    7.389031] pci_bus 0000:01: busn_res: [bus 01-ff] end is updated to=
+ 01
+> > [    7.495604] pci 0000:00:02.0: ASPM: current common clock configurati=
+on is broken, reconfiguring
+> > [    7.552513] pci 0000:00:01.0: BAR 8: assigned [mem 0xe8000000-0xe81f=
+ffff]
+> > [    7.565611] pci 0000:00:01.0: BAR 6: assigned [mem 0xe8200000-0xe820=
+07ff pref]
+> > [    7.580096] pci 0000:00:01.0: PCI bridge to [bus 01]
+> > [    7.585079] pci 0000:00:01.0:   bridge window [mem 0xe8000000-0xe81f=
+ffff]
+> > [    7.653228] pcieport 0000:00:01.0: enabling device (0140 -> 0142)
+> >
+> >
+> > [   11.188025] gasket: module is from the staging directory, the qualit=
+y is unknown, you have been warned.
+> > [   11.217048] apex: module is from the staging directory, the quality =
+is unknown, you have been warned.
+> > [   11.217926] apex 0000:01:00.0: can't enable device: BAR 0 [mem 0x000=
+00000-0x00003fff 64bit pref] not claimed
+> > [   11.227825] apex 0000:01:00.0: error enabling PCI device
+>
+> It looks like we did assign space for the bridge window leading to
+> 01:00.0, but failed to assign space to the 01:00.0 BAR itself.
+>
+> I don't know offhand why that would be.  Can you put the entire dmesg
+> log somewhere we can see?  That will tell us what kernel you're using
+> and possibly other useful things.
+
+Sure, complete dmesg is available at: https://pastebin.ubuntu.com/p/qnzJ56k=
+M7k/
+This is a custom built machine based on the Armada 388 armhf SoC, that
+I am using, but I've also tried an arm64 machine from Toradex, an
+Apalis IMX8QM with the Apalis Eval board, producing similar results
+with different kernels and also different ARM architectures.
+>
+> Does the same problem happen with other devices, or does it only
+> happen with the gasket/apex combination?  There shouldn't be anything
+> device-specific in the PCI core resource assignment code.
+
+This issue seems to happen only with the Coral Edge TPU device, but it
+happens independently of whether the gasket/apex driver module is
+loaded or not. The BAR 0 of the Coral device is not assigned either
+way.
+
+Lu=C3=ADs
