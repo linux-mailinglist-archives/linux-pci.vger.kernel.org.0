@@ -2,215 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F80817D052
-	for <lists+linux-pci@lfdr.de>; Sat,  7 Mar 2020 22:38:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A5B2217D1F0
+	for <lists+linux-pci@lfdr.de>; Sun,  8 Mar 2020 06:51:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726180AbgCGVi5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 7 Mar 2020 16:38:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59592 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726138AbgCGVi5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 7 Mar 2020 16:38:57 -0500
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5325D20684;
-        Sat,  7 Mar 2020 21:38:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583617135;
-        bh=wRRDVf3Gu6/R5mPXakBzTEOVe5CDIlaU/6Qd7toQ40I=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=aom06JkBavFmYYgfaRnEw+EaXp1rdNfkuWnxEnUxLSK9208/Nb1Z9EKYVbyvODCp7
-         1XN2KKIbZEXayNrywA61RO8Juhf523XbqTGeK+FrjOKs9ila5yswSql81EvkdODiCb
-         2DsJIxGVetkHYzKYKu95HC7QGO/+dtCM15/UagBg=
-Date:   Sat, 7 Mar 2020 15:38:53 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     =?iso-8859-1?Q?Lu=EDs?= Mendes <luis.p.mendes@gmail.com>
-Cc:     Linux PCI <linux-pci@vger.kernel.org>,
+        id S1725904AbgCHFvU convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Sun, 8 Mar 2020 00:51:20 -0500
+Received: from mail-oln040092254040.outbound.protection.outlook.com ([40.92.254.40]:24944
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725854AbgCHFvU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 8 Mar 2020 00:51:20 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Z0RMCzJ08xlb6IowY5vtA4cKadiFuFBYpZFN432R6qNg28sHhSGbdZA6Gp1wG5hmlfUT0eBbaJzWEQVzDgpET6CRutpmlgSbMAvrGs/W9INBQTL6Hv6PgDeB50Dp92MP95jai9seFl4Yq+BEEpTnpjrVyy5ICyHjuiP7XZ0Fz2v83EZNHl/WQUP+1FL/3XosJyAARaaZtOAB5JREvPEpAKKIGKW8bktOkAGc8L0ZbMKkGZuQtMj3Mx9/Oupe8sm4Cz1A73LwZrzwuMOi1UrzOabDY6x/6rF+E87ke0ot4uaJEl5hTzy2ArGWGc3P2V4ZcMLr67C/z6uVFGmeF0jz3g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LCZIqMvJ9AIxz6iKpFb+m1B3DnMG1kJ68TSHXJjlgVc=;
+ b=ODaUUQC8xNVICHsh2AIShGeqhgqJtPbWxl6N1IMXPjIPQekBGdHjnIoGoFB7hZNvMJ7zTm6fExrmMtC+qhTxwlv6qzYjVYhVbhicfuDg8lfUF3ilnFjjiOLJhew7NuGT64g4i/WPVZ3JJR4oSlmLoMd5kKOHG2yWsO8rOgCSbfyZbpnoA8S3H787p0Xk9/avwSe66z2z9eoijmQEseyvfd3s+WX3lOMqedOo36oT85AMEGvXb339cmU8357gswzKekQy+nYubmtP93fAEFu79A/+yOv5AmPX+dn9gAFOrLCJ6kAXRLMoG8QBFvh1Pzv+buc32igytTgjelQI5/1hEA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from SG2APC01FT042.eop-APC01.prod.protection.outlook.com
+ (2a01:111:e400:7ebd::38) by
+ SG2APC01HT012.eop-APC01.prod.protection.outlook.com (2a01:111:e400:7ebd::213)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.11; Sun, 8 Mar
+ 2020 05:51:15 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.250.51) by
+ SG2APC01FT042.mail.protection.outlook.com (10.152.251.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2793.11 via Frontend Transport; Sun, 8 Mar 2020 05:51:15 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::a5dc:fc1:6544:5cb2]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::a5dc:fc1:6544:5cb2%7]) with mapi id 15.20.2793.013; Sun, 8 Mar 2020
+ 05:51:15 +0000
+Received: from nicholas-dell-linux (2001:44b8:605f:11:6375:33df:328c:d925) by MEAPR01CA0036.ausprd01.prod.outlook.com (2603:10c6:201::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.14 via Frontend Transport; Sun, 8 Mar 2020 05:51:13 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     =?iso-8859-1?Q?Lu=EDs_Mendes?= <luis.p.mendes@gmail.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Jason Cooper <jason@lakedaemon.net>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
         Benjamin Herrenschmidt <benh@kernel.crashing.org>
 Subject: Re: Problem with PCIe enumeration of Google/Coral TPU Edge module on
  Linux
-Message-ID: <20200307213853.GA208095@google.com>
+Thread-Topic: Problem with PCIe enumeration of Google/Coral TPU Edge module on
+ Linux
+Thread-Index: AQHV9ADoyzr1FzCb40+Hnw+tD7TMTKg9CxYAgAA2i4CAAGf1gIAAiYYA
+Date:   Sun, 8 Mar 2020 05:51:15 +0000
+Message-ID: <PSXP216MB04382D268822AD1C3D9A57C780E10@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+References: <CAEzXK1oukcnjgkY8Y6rkHcBAKwSvTDJsJVCf7nix4eoPPFsNqg@mail.gmail.com>
+ <20200307213853.GA208095@google.com>
+In-Reply-To: <20200307213853.GA208095@google.com>
+Accept-Language: en-AU, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MEAPR01CA0036.ausprd01.prod.outlook.com (2603:10c6:201::24)
+ To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (2603:1096:300:d::20)
+x-incomingtopheadermarker: OriginalChecksum:30CCFDE5AF84E386076D929E87157DDEAC41B98066E20B2D9B47DEFFCA4F0E96;UpperCasedChecksum:202F98E55639649378129A8166832D2EAB92E58D714A613F1F96A47CA46AA052;SizeAsReceived:7964;Count:50
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [+MNZiwBfwmLSXpIyPoSeysq4imRbYO5z+LGGiSXnGg7Ao39gjDdwvTUqPcmLKjJy]
+x-microsoft-original-message-id: <20200308055106.GA3897@nicholas-dell-linux>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 50
+x-eopattributedmessage: 0
+x-ms-office365-filtering-correlation-id: f272a69c-e447-48ee-a078-08d7c324b6b2
+x-ms-traffictypediagnostic: SG2APC01HT012:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ex/tL8we8Hxq0wATIyh0nsth5z+3Nef5qH3dNg6i2m1i6Cpr4y19V4KCU+O5U27QUbSShSVbDhCvpIYNxg4dA+TpUtrJbzxQjblG2gS8Mu8KdkoOpIbK51AE5eaGTN4n7n9JUtxOMOwEt8zqZ2AXe2RNTveXq3MIan+IC7jCo4wzTigwF3BogTpVMmFKFkC2
+x-ms-exchange-antispam-messagedata: Z8497FmibK+/F+IO4fSfG109fThccCx3yvXOWj1y11p0gSSQ/TuHHl8NnN7r3noUtW3DxWDoiXoXkc4l9Lx+HaAO0cZudeKsvny4G909HL2hujfYc6q39dytWItiPaj3h0fdSxKXhXbFy1orG5FNJ3IJT++3Cp291fOYmUkdIj5Jte/p9cP/O5sBmaqQPORgFc9mtbZrHCs78QUVfDpVnA==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <81A2855E68486C4FA7671F4D3525D507@KORP216.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEzXK1oukcnjgkY8Y6rkHcBAKwSvTDJsJVCf7nix4eoPPFsNqg@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: f272a69c-e447-48ee-a078-08d7c324b6b2
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Mar 2020 05:51:15.1621
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2APC01HT012
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Mar 07, 2020 at 03:26:49PM +0000, Luís Mendes wrote:
-> Hi,
-> 
-> A quick look at the logs, makes me wonder if BAR0-BAR5 are only being
-> assigned to IO space on device by Linux, and BAR6 is the first bar
-> index that Linux is assigning on armhf/arm64 for mem space. If so,
-> that would be wrong because registers 0x10 and and 0x18 are BAR0 and
-> BAR2.
-
-BAR0-5 are the standard BARs and can be either mem or I/O space.
-64-bit mem BARs take two slots, e.g.,
-
-  pci 0000:02:00.0: reg 0x18: [mem 0x00000000-0x00000fff 64bit]
-  pci 0000:02:00.0: reg 0x20: [mem 0x00000000-0x00003fff 64bit pref]
-
-These are BAR2 (at 0x18 and 0x1c) and BAR4 (at 0x20 and 0x24).
-
-> The TP-Link Gigabit LAN card that is installed on the other PCIe slot
-> has BAR 0 enabled but it is IO space and according to the registers
-> for the mem space, in that device, seen in dmesg, they are regs 0x18
-> and 0x20, or, BAR 2 and BAR 4, but Linux is assigning them to have
-> indices BAR 6 and BAR 8, since they are MEM space devices.
-
-Our logging is a little screwed up: sometimes we print "reg 0x10",
-other times "BAR 0":
-
-  pci 0000:02:00.0: reg 0x10: [io  0x0000-0x00ff]
-  pci 0000:02:00.0: reg 0x18: [mem 0x00000000-0x00000fff 64bit]
-  pci 0000:02:00.0: reg 0x20: [mem 0x00000000-0x00003fff 64bit pref]
-  pci 0000:02:00.0: BAR 4: assigned [mem 0xd0200000-0xd0203fff 64bit pref]
-  pci 0000:02:00.0: BAR 2: assigned [mem 0xd0204000-0xd0204fff 64bit]
-  pci 0000:02:00.0: BAR 0: assigned [io  0x10000-0x100ff]
-
-Anyway, we end up with this, which looks fine:
-
-  BAR0 (reg 0x10):       [io  0x10000-0x100ff]
-  BAR2 (reg 0x18, 0x1c): [mem 0xd0204000-0xd0204fff 64bit]
-  BAR4 (reg 0x20, 0x24): [mem 0xd0200000-0xd0203fff 64bit pref]
-
-"BAR 6" is for option ROMs.  You have bridges with option ROMS (seems
-sort of unusual, but legal), and we assign space for them:
-
-  pci 0000:00:01.0: reg 0x38: [mem 0x00000000-0x000007ff pref]
-  pci 0000:00:01.0: BAR 6: assigned [mem 0xd0300000-0xd03007ff pref]
-  pci 0000:00:01.0: BAR 8: assigned [mem 0xd0000000-0xd01fffff]
-  pci 0000:00:01.0: PCI bridge to [bus 01]
-  pci 0000:00:01.0:   bridge window [mem 0xd0000000-0xd01fffff]
-
-  pci 0000:00:02.0: reg 0x38: [mem 0x00000000-0x000007ff pref]
-  pci 0000:00:02.0: BAR 6: assigned [mem 0xd0400000-0xd04007ff pref]
-  pci 0000:00:02.0: BAR 8: assigned [mem 0xd0200000-0xd02fffff]
-  pci 0000:00:02.0: PCI bridge to [bus 02]
-  pci 0000:00:02.0:   bridge window [io  0x10000-0x10fff]
-  pci 0000:00:02.0:   bridge window [mem 0xd0200000-0xd02fffff]
-
-You don't have CONFIG_PCI_IOV enabled (see the enum in <linux/pci.h>),
-so "BAR7" is is the bridge I/O window, "BAR8" is the MMIO window, and
-"BAR9" is the prefetchable MMIO window.
-
-The problematic device needs 16KB + 1MB of prefetchable memory space:
-
-  pci 0000:01:00.0: reg 0x10: [mem 0x00000000-0x00003fff 64bit pref]
-  pci 0000:01:00.0: reg 0x18: [mem 0x00000000-0x000fffff 64bit pref]
-
-The bridge leading to it has a 2MB non-prefetchable window:
-
-  pci 0000:00:01.0: PCI bridge to [bus 01]
-  pci 0000:00:01.0:   bridge window [mem 0xd0000000-0xd01fffff]
-
-That *should* work -- it's not prefetchable, but if we don't have
-prefetchable space, non-prefetchable space should also work (with poor
-performance, of course).  But maybe the fallback from prefetchable to
-non-prefetchable space is broken or something.
-
-> That looks wrong.... maybe the TP-Link device is working just because
-> BAR 0 does happen to exist in this case, which happens to be the
-> minimal requirement that allows pci_enable_device(...) to work,
-> passing in the test 'if (!r->parent)' performed by
-> pci_enable_resources(...) at drivers/pci/setup-res.c. Since most PCIe
-> cards have IO space, this generally works.
-> Can it be?
-> 
-> Luís
-> 
-> On Sat, Mar 7, 2020 at 12:11 PM Luís Mendes <luis.p.mendes@gmail.com> wrote:
-> >
-> > Hi Bjorn,
-> >
-> > Thanks for your help.
-> >
-> > On Fri, Mar 6, 2020 at 9:47 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+Hi,
+> > On Sat, Mar 7, 2020 at 12:11 PM Luís Mendes <luis.p.mendes@gmail.com> wrote:
+> > > This issue seems to happen only with the Coral Edge TPU device, but it
+> > > happens independently of whether the gasket/apex driver module is
+> > > loaded or not. The BAR 0 of the Coral device is not assigned either
+> > > way.
 > > >
-> > > [+cc Thomas, Jason, Nicholas, Ben]
-> > >
-> > > On Fri, Mar 06, 2020 at 02:32:59PM +0000, Luís Mendes wrote:
-> > > > Hi,
-> > > >
-> > > > I'm trying to use Google/Coral TPU Edge modules for a project, on
-> > > > arm64 and armhf, but BAR0 doesn't get assigned during the enumeration
-> > > > of PCIe devices and consequently pci_enable_device(...) fails on BAR0
-> > > > resource with value -22 (EINVAL) (resource has null parent) when
-> > > > loading gasket/apex driver.
-> > > >
-> > > > I'm also trying to adapt gasket/apex to run on armhf, but anyhow that
-> > > > is not the root cause for this issue.
-> > > >
-> > > > Relevant Log extracts follow in attachment.
-> > >
-> > > Hi Luís,
-> > >
-> > > Thanks for the report, and sorry for the problem you're tripping over.
-> > > I cc'd a few folks who might be interested.
-> > >
-> > > > [    6.983880] mvebu-pcie soc:pcie: /soc/pcie/pcie@1,0: reset gpio is active low
-> > > > [    6.993528] hub 4-1:1.0: 4 ports detected
-> > > > [    6.993749] mvebu-pcie soc:pcie: /soc/pcie/pcie@2,0: reset gpio is active low
-> > > > [    7.106741]  sdb: sdb1
-> > > > [    7.109826] sd 2:0:0:0: [sdb] Attached SCSI removable disk
-> > > > [    7.242916] mvebu-pcie soc:pcie: PCI host bridge to bus 0000:00
-> > > > [    7.248854] pci_bus 0000:00: root bus resource [bus 00-ff]
-> > > > [    7.254370] pci_bus 0000:00: root bus resource [mem 0xd0000000-0xefffffff]
-> > > > [    7.261267] pci_bus 0000:00: root bus resource [io  0x1000-0xeffff]
-> > > > [    7.267621] pci 0000:00:01.0: [11ab:6828] type 01 class 0x060400
-> > > > [    7.273662] pci 0000:00:01.0: reg 0x38: [mem 0x00000000-0x000007ff pref]
-> > > > [    7.293971] PCI: bus0: Fast back to back transfers disabled
-> > > > [    7.299558] pci 0000:00:01.0: bridge configuration invalid ([bus 00-00]), reconfiguring
-> > > > [    7.315694] pci 0000:01:00.0: [1ac1:089a] type 00 class 0x0000ff
-> > > > [    7.321749] pci 0000:01:00.0: reg 0x10: [mem 0x00000000-0x00003fff 64bit pref]
-> > > > [    7.322814] usb 4-1.1: new high-speed USB device number 3 using xhci-hcd
-> > > > [    7.329004] pci 0000:01:00.0: reg 0x18: [mem 0x00000000-0x000fffff 64bit pref]
-> > > > [    7.343111] pci 0000:01:00.0: 2.000 Gb/s available PCIe bandwidth, limited by 2.5 GT/s x1 link at 0000:00:01.0 (capable of 4.000 Gb/s with 5 GT/s x1 link)
-> > > > [    7.383442] PCI: bus1: Fast back to back transfers disabled
-> > > > [    7.389031] pci_bus 0000:01: busn_res: [bus 01-ff] end is updated to 01
-> > > > [    7.495604] pci 0000:00:02.0: ASPM: current common clock configuration is broken, reconfiguring
-> > > > [    7.552513] pci 0000:00:01.0: BAR 8: assigned [mem 0xe8000000-0xe81fffff]
-> > > > [    7.565611] pci 0000:00:01.0: BAR 6: assigned [mem 0xe8200000-0xe82007ff pref]
-> > > > [    7.580096] pci 0000:00:01.0: PCI bridge to [bus 01]
-> > > > [    7.585079] pci 0000:00:01.0:   bridge window [mem 0xe8000000-0xe81fffff]
-> > > > [    7.653228] pcieport 0000:00:01.0: enabling device (0140 -> 0142)
-> > > >
-> > > >
-> > > > [   11.188025] gasket: module is from the staging directory, the quality is unknown, you have been warned.
-> > > > [   11.217048] apex: module is from the staging directory, the quality is unknown, you have been warned.
-> > > > [   11.217926] apex 0000:01:00.0: can't enable device: BAR 0 [mem 0x00000000-0x00003fff 64bit pref] not claimed
-> > > > [   11.227825] apex 0000:01:00.0: error enabling PCI device
-> > >
-> > > It looks like we did assign space for the bridge window leading to
-> > > 01:00.0, but failed to assign space to the 01:00.0 BAR itself.
-> > >
-> > > I don't know offhand why that would be.  Can you put the entire dmesg
-> > > log somewhere we can see?  That will tell us what kernel you're using
-> > > and possibly other useful things.
-> >
-> > Sure, complete dmesg is available at: https://pastebin.ubuntu.com/p/qnzJ56kM7k/
-> > This is a custom built machine based on the Armada 388 armhf SoC, that
-> > I am using, but I've also tried an arm64 machine from Toradex, an
-> > Apalis IMX8QM with the Apalis Eval board, producing similar results
-> > with different kernels and also different ARM architectures.
-> > >
-> > > Does the same problem happen with other devices, or does it only
-> > > happen with the gasket/apex combination?  There shouldn't be anything
-> > > device-specific in the PCI core resource assignment code.
-> >
-> > This issue seems to happen only with the Coral Edge TPU device, but it
-> > happens independently of whether the gasket/apex driver module is
-> > loaded or not. The BAR 0 of the Coral device is not assigned either
-> > way.
-> >
-> > Luís
+> > > Luís
+
+So the problem only occurs with the Coral Edge TPU device, so there is a 
+possibility that it is not a problem with the platform, or something 
+caused by the combination of the TPU and platform. Is it possible to put 
+the TPU into an X86 system with the same kernel version(s) to add more 
+evidence to this theory? If it works on X86 then we can focus on the 
+differences between X86 and ARM.
+
+Also, please revert c13704f5685d "PCI: Avoid double hpmemsize MMIO 
+window assignment" or try with Linux v5.4 which does not have this 
+commit, just to rule out the possibility of it causing issues. This 
+patch helps me and also solved the problem of one other person using an 
+ARM computer who came to us regarding a problem. However, it could also 
+adversely affect unknown use cases - it is impossible to completely rule 
+out, due to the nature of how drivers/pci/setup-bus.c is written.
+
+Kind regards,
+Nicholas
