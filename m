@@ -2,117 +2,316 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A5B2217D1F0
-	for <lists+linux-pci@lfdr.de>; Sun,  8 Mar 2020 06:51:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0712717D470
+	for <lists+linux-pci@lfdr.de>; Sun,  8 Mar 2020 16:30:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725904AbgCHFvU convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Sun, 8 Mar 2020 00:51:20 -0500
-Received: from mail-oln040092254040.outbound.protection.outlook.com ([40.92.254.40]:24944
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725854AbgCHFvU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 8 Mar 2020 00:51:20 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Z0RMCzJ08xlb6IowY5vtA4cKadiFuFBYpZFN432R6qNg28sHhSGbdZA6Gp1wG5hmlfUT0eBbaJzWEQVzDgpET6CRutpmlgSbMAvrGs/W9INBQTL6Hv6PgDeB50Dp92MP95jai9seFl4Yq+BEEpTnpjrVyy5ICyHjuiP7XZ0Fz2v83EZNHl/WQUP+1FL/3XosJyAARaaZtOAB5JREvPEpAKKIGKW8bktOkAGc8L0ZbMKkGZuQtMj3Mx9/Oupe8sm4Cz1A73LwZrzwuMOi1UrzOabDY6x/6rF+E87ke0ot4uaJEl5hTzy2ArGWGc3P2V4ZcMLr67C/z6uVFGmeF0jz3g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LCZIqMvJ9AIxz6iKpFb+m1B3DnMG1kJ68TSHXJjlgVc=;
- b=ODaUUQC8xNVICHsh2AIShGeqhgqJtPbWxl6N1IMXPjIPQekBGdHjnIoGoFB7hZNvMJ7zTm6fExrmMtC+qhTxwlv6qzYjVYhVbhicfuDg8lfUF3ilnFjjiOLJhew7NuGT64g4i/WPVZ3JJR4oSlmLoMd5kKOHG2yWsO8rOgCSbfyZbpnoA8S3H787p0Xk9/avwSe66z2z9eoijmQEseyvfd3s+WX3lOMqedOo36oT85AMEGvXb339cmU8357gswzKekQy+nYubmtP93fAEFu79A/+yOv5AmPX+dn9gAFOrLCJ6kAXRLMoG8QBFvh1Pzv+buc32igytTgjelQI5/1hEA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from SG2APC01FT042.eop-APC01.prod.protection.outlook.com
- (2a01:111:e400:7ebd::38) by
- SG2APC01HT012.eop-APC01.prod.protection.outlook.com (2a01:111:e400:7ebd::213)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.11; Sun, 8 Mar
- 2020 05:51:15 +0000
-Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.250.51) by
- SG2APC01FT042.mail.protection.outlook.com (10.152.251.18) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.11 via Frontend Transport; Sun, 8 Mar 2020 05:51:15 +0000
-Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- ([fe80::a5dc:fc1:6544:5cb2]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- ([fe80::a5dc:fc1:6544:5cb2%7]) with mapi id 15.20.2793.013; Sun, 8 Mar 2020
- 05:51:15 +0000
-Received: from nicholas-dell-linux (2001:44b8:605f:11:6375:33df:328c:d925) by MEAPR01CA0036.ausprd01.prod.outlook.com (2603:10c6:201::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.14 via Frontend Transport; Sun, 8 Mar 2020 05:51:13 +0000
-From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+        id S1726271AbgCHPaN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 8 Mar 2020 11:30:13 -0400
+Received: from mail.rc.ru ([151.236.222.147]:43446 "EHLO mail.rc.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726259AbgCHPaN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 8 Mar 2020 11:30:13 -0400
+Received: from mail.rc.ru ([2a01:7e00:e000:1bf::1]:60842)
+        by mail.rc.ru with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ink@jurassic.park.msu.ru>)
+        id 1jAxsT-0004l5-Sm; Sun, 08 Mar 2020 15:30:05 +0000
+Date:   Sun, 8 Mar 2020 15:30:04 +0000
+From:   Ivan Kokshaysky <ink@jurassic.park.msu.ru>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     =?iso-8859-1?Q?Lu=EDs_Mendes?= <luis.p.mendes@gmail.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Jason Cooper <jason@lakedaemon.net>,
+Cc:     Matt Turner <mattst88@gmail.com>, Yinghai Lu <yinghai@kernel.org>,
+        linux-pci@vger.kernel.org,
+        linux-alpha <linux-alpha@vger.kernel.org>,
+        Richard Henderson <rth@twiddle.net>,
+        Jay Estabrook <jay.estabrook@gmail.com>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
         Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: Problem with PCIe enumeration of Google/Coral TPU Edge module on
- Linux
-Thread-Topic: Problem with PCIe enumeration of Google/Coral TPU Edge module on
- Linux
-Thread-Index: AQHV9ADoyzr1FzCb40+Hnw+tD7TMTKg9CxYAgAA2i4CAAGf1gIAAiYYA
-Date:   Sun, 8 Mar 2020 05:51:15 +0000
-Message-ID: <PSXP216MB04382D268822AD1C3D9A57C780E10@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
-References: <CAEzXK1oukcnjgkY8Y6rkHcBAKwSvTDJsJVCf7nix4eoPPFsNqg@mail.gmail.com>
- <20200307213853.GA208095@google.com>
-In-Reply-To: <20200307213853.GA208095@google.com>
-Accept-Language: en-AU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MEAPR01CA0036.ausprd01.prod.outlook.com (2603:10c6:201::24)
- To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (2603:1096:300:d::20)
-x-incomingtopheadermarker: OriginalChecksum:30CCFDE5AF84E386076D929E87157DDEAC41B98066E20B2D9B47DEFFCA4F0E96;UpperCasedChecksum:202F98E55639649378129A8166832D2EAB92E58D714A613F1F96A47CA46AA052;SizeAsReceived:7964;Count:50
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [+MNZiwBfwmLSXpIyPoSeysq4imRbYO5z+LGGiSXnGg7Ao39gjDdwvTUqPcmLKjJy]
-x-microsoft-original-message-id: <20200308055106.GA3897@nicholas-dell-linux>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 50
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: f272a69c-e447-48ee-a078-08d7c324b6b2
-x-ms-traffictypediagnostic: SG2APC01HT012:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ex/tL8we8Hxq0wATIyh0nsth5z+3Nef5qH3dNg6i2m1i6Cpr4y19V4KCU+O5U27QUbSShSVbDhCvpIYNxg4dA+TpUtrJbzxQjblG2gS8Mu8KdkoOpIbK51AE5eaGTN4n7n9JUtxOMOwEt8zqZ2AXe2RNTveXq3MIan+IC7jCo4wzTigwF3BogTpVMmFKFkC2
-x-ms-exchange-antispam-messagedata: Z8497FmibK+/F+IO4fSfG109fThccCx3yvXOWj1y11p0gSSQ/TuHHl8NnN7r3noUtW3DxWDoiXoXkc4l9Lx+HaAO0cZudeKsvny4G909HL2hujfYc6q39dytWItiPaj3h0fdSxKXhXbFy1orG5FNJ3IJT++3Cp291fOYmUkdIj5Jte/p9cP/O5sBmaqQPORgFc9mtbZrHCs78QUVfDpVnA==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <81A2855E68486C4FA7671F4D3525D507@KORP216.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8BIT
+Subject: Re: Some Alphas broken by f75b99d5a77d (PCI: Enforce bus address
+ limits in resource allocation)
+Message-ID: <20200308153004.GA17675@mail.rc.ru>
+References: <CAEdQ38EzZfUJA-8zg-DgczYTwkxqFL-AThxu0_fC2V-GkXGi2Q@mail.gmail.com>
+ <20200302224732.GA175863@google.com>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: f272a69c-e447-48ee-a078-08d7c324b6b2
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Mar 2020 05:51:15.1621
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2APC01HT012
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200302224732.GA175863@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
-> > On Sat, Mar 7, 2020 at 12:11 PM Luís Mendes <luis.p.mendes@gmail.com> wrote:
-> > > This issue seems to happen only with the Coral Edge TPU device, but it
-> > > happens independently of whether the gasket/apex driver module is
-> > > loaded or not. The BAR 0 of the Coral device is not assigned either
-> > > way.
+On Mon, Mar 02, 2020 at 04:47:32PM -0600, Bjorn Helgaas wrote:
+> [+cc Nicholas, Ben, beginning of thread:
+> https://lore.kernel.org/r/CAEdQ38GUhL0R4c7ZjEZv89TmqQ0cwhnvBawxuXonSb9On=+B6A@mail.gmail.com]
+> 
+> On Fri, Feb 28, 2020 at 03:51:01PM -0800, Matt Turner wrote:
+> > On Sat, Feb 22, 2020 at 8:55 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
 > > >
-> > > Luís
+> > > On Mon, Apr 16, 2018 at 07:33:57AM -0700, Matt Turner wrote:
+> > > > Commit f75b99d5a77d63f20e07bd276d5a427808ac8ef6 (PCI: Enforce bus
+> > > > address limits in resource allocation) broke Alpha systems using
+> > > > CONFIG_ALPHA_NAUTILUS. Alpha is 64-bit, but Nautilus systems use a
+> > > > 32-bit AMD 751/761 chipset. arch/alpha/kernel/sys_nautilus.c maps PCI
+> > > > into the upper addresses just below 4GB.
+> > > >
+> > > > I can get a working kernel by ifdef'ing out the code in
+> > > > drivers/pci/bus.c:pci_bus_alloc_resource. We can't tie
+> > > > PCI_BUS_ADDR_T_64BIT to ALPHA_NAUTILUS without breaking generic
+> > > > kernels.
+> > > >
+> > > > How can we get Nautilus working again?
+> > >
+> > > I don't see a resolution in this thread, so I assume this is still
+> > > broken?  Anybody have any more ideas?
+> > 
+> > Indeed, still broken.
+> > 
+> > I can add Kconfig logic to unselect ARCH_DMA_ADDR_T_64BIT if
+> > ALPHA_NAUTILUS, but then generic kernels won't work on Nautilus. It
+> > doesn't look like we have any way of opting out of
+> > ARCH_DMA_ADDR_T_64BIT at runtime, and doing enough plumbing to make
+> > that work is not worth it for such niche hardware. Maybe removing
+> > Nautilus from the generic kernel build is what I should do until such
+> > a time that we really fix this?
+> > 
+> > Or maybe I could put a hack in pci.c that more or less undoes
+> > d56dbf5bab8c on Nautilus. #if defined CONFIG_ARCH_DMA_ADDR_T_64BIT &&
+> > !defined SYS_NAUTILUS.
+> > 
+> > Or maybe I just need to take a weekend and try to understand the PCI
+> > code, instead of applying patches I don't understand and praying :)
+> 
+> I don't have any *useful* ideas, but I think we did screw up the PCI
+> resource discovery when we started assuming that we know the host
+> bridge apertures up front.
+> 
+> That's generally true for many ACPI and DT systems, but in principle,
+> we *should* be able to enumerate the devices and learn their resource
+> requirements before computing the required host bridge apertures and
+> assigning the BARs.
 
-So the problem only occurs with the Coral Edge TPU device, so there is a 
-possibility that it is not a problem with the platform, or something 
-caused by the combination of the TPU and platform. Is it possible to put 
-the TPU into an X86 system with the same kernel version(s) to add more 
-evidence to this theory? If it works on X86 then we can focus on the 
-differences between X86 and ARM.
+Wholeheartedly agree. In fact, changes to generic PCI code required
+for proper root bus sizing are quite minimal now since we have
+struct pci_host_bridge. It's mostly additional checks for bus->self
+being NULL (as it normally is on the root bus) in the
+__pci_bus_size_bridges() path, plus new bridge->size_windows flag.
+See patch below (tested on UP1500). Note that on irongate we're
+only interested in calculation of non-prefetchable PCI memory aperture,
+but one can do the same for io and prefetchable memory as well.
 
-Also, please revert c13704f5685d "PCI: Avoid double hpmemsize MMIO 
-window assignment" or try with Linux v5.4 which does not have this 
-commit, just to rule out the possibility of it causing issues. This 
-patch helps me and also solved the problem of one other person using an 
-ARM computer who came to us regarding a problem. However, it could also 
-adversely affect unknown use cases - it is impossible to completely rule 
-out, due to the nature of how drivers/pci/setup-bus.c is written.
+Ivan.
 
-Kind regards,
-Nicholas
+diff --git a/arch/alpha/kernel/sys_nautilus.c b/arch/alpha/kernel/sys_nautilus.c
+index cd9a112d67ff..84eaf7f54982 100644
+--- a/arch/alpha/kernel/sys_nautilus.c
++++ b/arch/alpha/kernel/sys_nautilus.c
+@@ -187,10 +187,6 @@ nautilus_machine_check(unsigned long vector, unsigned long la_ptr)
+ 
+ extern void pcibios_claim_one_bus(struct pci_bus *);
+ 
+-static struct resource irongate_io = {
+-	.name	= "Irongate PCI IO",
+-	.flags	= IORESOURCE_IO,
+-};
+ static struct resource irongate_mem = {
+ 	.name	= "Irongate PCI MEM",
+ 	.flags	= IORESOURCE_MEM,
+@@ -211,14 +207,13 @@ nautilus_init_pci(void)
+ 	struct pci_dev *irongate;
+ 	unsigned long bus_align, bus_size, pci_mem;
+ 	unsigned long memtop = max_low_pfn << PAGE_SHIFT;
+-	int ret;
+ 
+ 	bridge = pci_alloc_host_bridge(0);
+ 	if (!bridge)
+ 		return;
+ 
+ 	pci_add_resource(&bridge->windows, &ioport_resource);
+-	pci_add_resource(&bridge->windows, &iomem_resource);
++	pci_add_resource(&bridge->windows, &irongate_mem);
+ 	pci_add_resource(&bridge->windows, &busn_resource);
+ 	bridge->dev.parent = NULL;
+ 	bridge->sysdata = hose;
+@@ -226,59 +221,47 @@ nautilus_init_pci(void)
+ 	bridge->ops = alpha_mv.pci_ops;
+ 	bridge->swizzle_irq = alpha_mv.pci_swizzle;
+ 	bridge->map_irq = alpha_mv.pci_map_irq;
++	bridge->size_windows = 1;
+ 
+ 	/* Scan our single hose.  */
+-	ret = pci_scan_root_bus_bridge(bridge);
+-	if (ret) {
++	if (pci_scan_root_bus_bridge(bridge)) {
+ 		pci_free_host_bridge(bridge);
+ 		return;
+ 	}
+-
+ 	bus = hose->bus = bridge->bus;
+ 	pcibios_claim_one_bus(bus);
+ 
+-	irongate = pci_get_domain_bus_and_slot(pci_domain_nr(bus), 0, 0);
+-	bus->self = irongate;
+-	bus->resource[0] = &irongate_io;
+-	bus->resource[1] = &irongate_mem;
+-
+ 	pci_bus_size_bridges(bus);
+ 
+-	/* IO port range. */
+-	bus->resource[0]->start = 0;
+-	bus->resource[0]->end = 0xffff;
+-
+-	/* Set up PCI memory range - limit is hardwired to 0xffffffff,
+-	   base must be at aligned to 16Mb. */
+-	bus_align = bus->resource[1]->start;
+-	bus_size = bus->resource[1]->end + 1 - bus_align;
++	/* Now we have PCI memory resources size and alignment stored
++	   in irongate_mem. Set up PCI memory range - limit is hardwired
++	   to 0xffffffff, base must be aligned to 16Mb. */
++	bus_align = irongate_mem.start;
++	bus_size = irongate_mem.end + 1 - bus_align;
+ 	if (bus_align < 0x1000000UL)
+ 		bus_align = 0x1000000UL;
+ 
+ 	pci_mem = (0x100000000UL - bus_size) & -bus_align;
+ 
+-	bus->resource[1]->start = pci_mem;
+-	bus->resource[1]->end = 0xffffffffUL;
+-	if (request_resource(&iomem_resource, bus->resource[1]) < 0)
++	irongate_mem.start = pci_mem;
++	irongate_mem.end = 0xffffffffUL;
++	if (request_resource(&iomem_resource, &irongate_mem) < 0)
+ 		printk(KERN_ERR "Failed to request MEM on hose 0\n");
+ 
++	printk(KERN_INFO "Irongate pci_mem %pR\n", &irongate_mem);
++
+ 	if (pci_mem < memtop)
+ 		memtop = pci_mem;
+ 	if (memtop > alpha_mv.min_mem_address) {
+ 		free_reserved_area(__va(alpha_mv.min_mem_address),
+ 				   __va(memtop), -1, NULL);
+-		printk("nautilus_init_pci: %ldk freed\n",
++		printk(KERN_INFO "nautilus_init_pci: %ldk freed\n",
+ 			(memtop - alpha_mv.min_mem_address) >> 10);
+ 	}
+-
+ 	if ((IRONGATE0->dev_vendor >> 16) > 0x7006)	/* Albacore? */
+ 		IRONGATE0->pci_mem = pci_mem;
+ 
+ 	pci_bus_assign_resources(bus);
+-
+-	/* pci_common_swizzle() relies on bus->self being NULL
+-	   for the root bus, so just clear it. */
+-	bus->self = NULL;
+ 	pci_bus_add_devices(bus);
+ }
+ 
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index f2461bf9243d..aecc81338a1f 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -846,7 +846,7 @@ static resource_size_t window_alignment(struct pci_bus *bus, unsigned long type)
+ 		 * Per spec, I/O windows are 4K-aligned, but some bridges have
+ 		 * an extension to support 1K alignment.
+ 		 */
+-		if (bus->self->io_window_1k)
++		if (bus->self && bus->self->io_window_1k)
+ 			align = PCI_P2P_DEFAULT_IO_ALIGN_1K;
+ 		else
+ 			align = PCI_P2P_DEFAULT_IO_ALIGN;
+@@ -920,7 +920,7 @@ static void pbus_size_io(struct pci_bus *bus, resource_size_t min_size,
+ 		calculate_iosize(size, min_size, size1, add_size, children_add_size,
+ 			resource_size(b_res), min_align);
+ 	if (!size0 && !size1) {
+-		if (b_res->start || b_res->end)
++		if (bus->self && (b_res->start || b_res->end))
+ 			pci_info(bus->self, "disabling bridge window %pR to %pR (unused)\n",
+ 				 b_res, &bus->busn_res);
+ 		b_res->flags = 0;
+@@ -930,7 +930,7 @@ static void pbus_size_io(struct pci_bus *bus, resource_size_t min_size,
+ 	b_res->start = min_align;
+ 	b_res->end = b_res->start + size0 - 1;
+ 	b_res->flags |= IORESOURCE_STARTALIGN;
+-	if (size1 > size0 && realloc_head) {
++	if (bus->self && size1 > size0 && realloc_head) {
+ 		add_to_list(realloc_head, bus->self, b_res, size1-size0,
+ 			    min_align);
+ 		pci_info(bus->self, "bridge window %pR to %pR add_size %llx\n",
+@@ -1073,7 +1073,7 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
+ 		calculate_memsize(size, min_size, add_size, children_add_size,
+ 				resource_size(b_res), add_align);
+ 	if (!size0 && !size1) {
+-		if (b_res->start || b_res->end)
++		if (bus->self && (b_res->start || b_res->end))
+ 			pci_info(bus->self, "disabling bridge window %pR to %pR (unused)\n",
+ 				 b_res, &bus->busn_res);
+ 		b_res->flags = 0;
+@@ -1082,7 +1082,7 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
+ 	b_res->start = min_align;
+ 	b_res->end = size0 + min_align - 1;
+ 	b_res->flags |= IORESOURCE_STARTALIGN;
+-	if (size1 > size0 && realloc_head) {
++	if (bus->self && size1 > size0 && realloc_head) {
+ 		add_to_list(realloc_head, bus->self, b_res, size1-size0, add_align);
+ 		pci_info(bus->self, "bridge window %pR to %pR add_size %llx add_align %llx\n",
+ 			   b_res, &bus->busn_res,
+@@ -1196,8 +1196,9 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
+ 	unsigned long mask, prefmask, type2 = 0, type3 = 0;
+ 	resource_size_t additional_io_size = 0, additional_mmio_size = 0,
+ 			additional_mmio_pref_size = 0;
+-	struct resource *b_res;
+-	int ret;
++	struct resource *pref;
++	struct pci_host_bridge *host;
++	int hdr_type, i, ret;
+ 
+ 	list_for_each_entry(dev, &bus->devices, bus_list) {
+ 		struct pci_bus *b = dev->subordinate;
+@@ -1217,10 +1218,20 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
+ 	}
+ 
+ 	/* The root bus? */
+-	if (pci_is_root_bus(bus))
+-		return;
++	if (pci_is_root_bus(bus)) {
++		host = to_pci_host_bridge(bus->bridge);
++		if (!host->size_windows)
++			return;
++		pci_bus_for_each_resource(bus, pref, i)
++			if (pref && (pref->flags & IORESOURCE_PREFETCH))
++				break;
++		hdr_type = -1;
++	} else {
++		pref = &bus->self->resource[PCI_BRIDGE_RESOURCES + 2];
++		hdr_type = bus->self->hdr_type;
++	}
+ 
+-	switch (bus->self->hdr_type) {
++	switch (hdr_type) {
+ 	case PCI_HEADER_TYPE_CARDBUS:
+ 		/* Don't size CardBuses yet */
+ 		break;
+@@ -1242,10 +1253,9 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
+ 		 * the size required to put all 64-bit prefetchable
+ 		 * resources in it.
+ 		 */
+-		b_res = &bus->self->resource[PCI_BRIDGE_RESOURCES];
+ 		mask = IORESOURCE_MEM;
+ 		prefmask = IORESOURCE_MEM | IORESOURCE_PREFETCH;
+-		if (b_res[2].flags & IORESOURCE_MEM_64) {
++		if (pref && (pref->flags & IORESOURCE_MEM_64)) {
+ 			prefmask |= IORESOURCE_MEM_64;
+ 			ret = pbus_size_mem(bus, prefmask, prefmask,
+ 				prefmask, prefmask,
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 3840a541a9de..681c79b4dc85 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -511,6 +511,7 @@ struct pci_host_bridge {
+ 	unsigned int	native_pme:1;		/* OS may use PCIe PME */
+ 	unsigned int	native_ltr:1;		/* OS may use PCIe LTR */
+ 	unsigned int	preserve_config:1;	/* Preserve FW resource setup */
++	unsigned int	size_windows:1;		/* Enable root bus sizing */
+ 
+ 	/* Resource alignment requirements */
+ 	resource_size_t (*align_resource)(struct pci_dev *dev,
