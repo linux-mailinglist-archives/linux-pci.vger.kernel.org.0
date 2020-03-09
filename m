@@ -2,215 +2,113 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B86417D84F
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Mar 2020 04:37:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1CF4317DAB6
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Mar 2020 09:24:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbgCIDhE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 8 Mar 2020 23:37:04 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35934 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726788AbgCIDhE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 8 Mar 2020 23:37:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583725022;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=S0qLVKfYZK8pYenESepAxVRIXfABKBnhJdpq7W8RSUA=;
-        b=fCsYG5F2c/j7p+LxsK7SJu3WHPEpdfleoVZ0Ttuk23Jkx1bpNEI/w/d01Js2QSlVwDYgbS
-        DfbAGbbvEfZ+OoQoHQGKI/JR5Xp0Gw0Zczc6ysuklktadqltg26n5U/eZJ6DsXADkymgEF
-        Is7CG+RJWN8J0jr7mGTVEfh99AMYM4U=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-47-VoLRSUGNOjaqQVz4KT5Ihg-1; Sun, 08 Mar 2020 23:36:59 -0400
-X-MC-Unique: VoLRSUGNOjaqQVz4KT5Ihg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 65DFC477;
-        Mon,  9 Mar 2020 03:36:57 +0000 (UTC)
-Received: from [10.72.13.185] (ovpn-13-185.pek2.redhat.com [10.72.13.185])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2A06D9008F;
-        Mon,  9 Mar 2020 03:36:47 +0000 (UTC)
-Subject: Re: [PATCH v2 0/7] vfio/pci: SR-IOV support
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dev@dpdk.org" <dev@dpdk.org>,
-        "mtosatti@redhat.com" <mtosatti@redhat.com>,
-        "thomas@monjalon.net" <thomas@monjalon.net>,
-        "bluca@debian.org" <bluca@debian.org>,
-        "jerinjacobk@gmail.com" <jerinjacobk@gmail.com>,
-        "Richardson, Bruce" <bruce.richardson@intel.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>
-References: <158213716959.17090.8399427017403507114.stgit@gimli.home>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D79A8A7@SHSMSX104.ccr.corp.intel.com>
- <a6c04bac-0a37-f4c0-876e-e5cf2a8a6c3f@redhat.com>
- <20200305101406.02703e2a@w520.home>
- <3e8db1d0-8afc-f1e9-e857-aead4717fa11@redhat.com>
- <20200306092445.1bd4611c@x1.home>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <d9ac428f-c764-014c-db5b-3f94d8f3e626@redhat.com>
-Date:   Mon, 9 Mar 2020 11:36:46 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200306092445.1bd4611c@x1.home>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-Content-Transfer-Encoding: quoted-printable
+        id S1726744AbgCIIXt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 9 Mar 2020 04:23:49 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:55952 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726391AbgCIIXr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 9 Mar 2020 04:23:47 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxb9_+_GVesb4YAA--.12S2;
+        Mon, 09 Mar 2020 16:23:27 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     linux-mips@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: [PATCH 0/6] Add basic support for Loongson 7A1000 bridge chip
+Date:   Mon,  9 Mar 2020 16:23:20 +0800
+Message-Id: <1583742206-29163-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9Dxb9_+_GVesb4YAA--.12S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxCrWfZF1DZryrZrW3tF4Dtwb_yoW5GF48pa
+        y5A3Z5Grs8Wry7AFn3ZryUur4rArZ3JrZFqa12qr1UuasxX3WYvr93KF45Jr47Z348Kay8
+        WryrGrWUGFsxC3DanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9014x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+        6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
+        1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+        6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr
+        0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E
+        8cxan2IY04v7MxkIecxEwVAFwVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbV
+        WUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF
+        67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42
+        IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1U
+        MIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIda
+        VFxhVjvjDU0xZFpf9x0JU4a0PUUUUU=
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+The Loongson 7A1000 bridge chip has been released for several years
+since the second half of 2017, but it is not supported by the Linux
+mainline kernel while it only works well with the Loongson internal
+kernel version. When I update the latest version of Linux mainline
+kernel on the Loongson 3A3000 CPU and 7A1000 bridge chip system,
+the boot process failed and I feel depressed.
 
-On 2020/3/7 =E4=B8=8A=E5=8D=8812:24, Alex Williamson wrote:
-> On Fri, 6 Mar 2020 11:35:21 +0800
-> Jason Wang <jasowang@redhat.com> wrote:
->
->> On 2020/3/6 =E4=B8=8A=E5=8D=881:14, Alex Williamson wrote:
->>> On Tue, 25 Feb 2020 14:09:07 +0800
->>> Jason Wang <jasowang@redhat.com> wrote:
->>>  =20
->>>> On 2020/2/25 =E4=B8=8A=E5=8D=8810:33, Tian, Kevin wrote:
->>>>>> From: Alex Williamson
->>>>>> Sent: Thursday, February 20, 2020 2:54 AM
->>>>>>
->>>>>> Changes since v1 are primarily to patch 3/7 where the commit log i=
-s
->>>>>> rewritten, along with option parsing and failure logging based on
->>>>>> upstream discussions.  The primary user visible difference is that
->>>>>> option parsing is now much more strict.  If a vf_token option is
->>>>>> provided that cannot be used, we generate an error.  As a result o=
-f
->>>>>> this, opening a PF with a vf_token option will serve as a mechanis=
-m of
->>>>>> setting the vf_token.  This seems like a more user friendly API th=
-an
->>>>>> the alternative of sometimes requiring the option (VFs in use) and
->>>>>> sometimes rejecting it, and upholds our desire that the option is
->>>>>> always either used or rejected.
->>>>>>
->>>>>> This also means that the VFIO_DEVICE_FEATURE ioctl is not the only
->>>>>> means of setting the VF token, which might call into question whet=
-her
->>>>>> we absolutely need this new ioctl.  Currently I'm keeping it becau=
-se I
->>>>>> can imagine use cases, for example if a hypervisor were to support
->>>>>> SR-IOV, the PF device might be opened without consideration for a =
-VF
->>>>>> token and we'd require the hypservisor to close and re-open the PF=
- in
->>>>>> order to set a known VF token, which is impractical.
->>>>>>
->>>>>> Series overview (same as provided with v1):
->>>>> Thanks for doing this!
->>>>>     =20
->>>>>> The synopsis of this series is that we have an ongoing desire to d=
-rive
->>>>>> PCIe SR-IOV PFs from userspace with VFIO.  There's an immediate ne=
-ed
->>>>>> for this with DPDK drivers and potentially interesting future use
->>>>> Can you provide a link to the DPDK discussion?
->>>>>     =20
->>>>>> cases in virtualization.  We've been reluctant to add this support
->>>>>> previously due to the dependency and trust relationship between th=
-e
->>>>>> VF device and PF driver.  Minimally the PF driver can induce a den=
-ial
->>>>>> of service to the VF, but depending on the specific implementation=
-,
->>>>>> the PF driver might also be responsible for moving data between VF=
-s
->>>>>> or have direct access to the state of the VF, including data or st=
-ate
->>>>>> otherwise private to the VF or VF driver.
->>>>> Just a loud thinking. While the motivation of VF token sounds reaso=
-nable
->>>>> to me, I'm curious why the same concern is not raised in other usag=
-es.
->>>>> For example, there is no such design in virtio framework, where the
->>>>> virtio device could also be restarted, putting in separate process =
-(vhost-user),
->>>>> and even in separate VM (virtio-vhost-user), etc.
->>>> AFAIK, the restart could only be triggered by either VM or qemu. But
->>>> yes, the datapath could be offloaded.
->>>>
->>>> But I'm not sure introducing another dedicated mechanism is better t=
-han
->>>> using the exist generic POSIX mechanism to make sure the connection
->>>> (AF_UINX) is secure.
->>>>
->>>>  =20
->>>>>     Of course the para-
->>>>> virtualized attribute of virtio implies some degree of trust, but a=
-s you
->>>>> mentioned many SR-IOV implementations support VF->PF communication
->>>>> which also implies some level of trust. It's perfectly fine if VFIO=
- just tries
->>>>> to do better than other sub-systems, but knowing how other people
->>>>> tackle the similar problem may make the whole picture clearer. =F0=9F=
-=98=8A
->>>>>
->>>>> +Jason.
->>>> I'm not quite sure e.g allowing userspace PF driver with kernel VF
->>>> driver would not break the assumption of kernel security model. At l=
-east
->>>> we should forbid a unprivileged PF driver running in userspace.
->>> It might be useful to have your opinion on this series, because that'=
-s
->>> exactly what we're trying to do here.  Various environments, DPDK
->>> specifically, want a userspace PF driver.  This series takes steps to
->>> mitigate the risk of having such a driver, such as requiring this VF
->>> token interface to extend the VFIO interface and validate participati=
-on
->>> around a PF that is not considered trusted by the kernel.
->>
->> I may miss something. But what happens if:
->>
->> - PF driver is running by unprivileged user
->> - PF is programmed to send translated DMA request
->> - Then unprivileged user can mangle the kernel data
-> ATS is a security risk regardless of SR-IOV, how does this change it?
-> Thanks,
+The 7A1000 bridge chip is used a lot with 3A3000 or 3A4000 CPU in
+the most Loongson desktop and sever products, it is important to
+support Loongson 7A1000 bridge chip by the Linux mainline kernel.
 
+This patch series adds the basic support for the Loongson 7A1000
+bridge chip, when apply these patches based on linux-5.6-rc5, the
+boot process is successful and we can login normally used with the
+latest firmware and discrete graphics card, the next work to do is
+power management and some other controller device drivers.
 
-My understanding is the ATS only happen for some bugous devices. Some=20
-hardware has on-chip IOMMU, this probably means unprivileged userspace=20
-PF driver can control the on-chip IOMMU in this case.
+Additionally, when I git clone mips code [1], the speed is too slow
+and clone always failed, so this patch series is based on the latest
+linux-5.6-rc5 [2].
 
-Thanks
+If you have any questions and suggestions, please let me know.
 
+Thanks,
 
->
-> Alex
->
->>> We also set
->>> a driver_override to try to make sure no host kernel driver can
->>> automatically bind to a VF of a user owned PF, only vfio-pci, but we
->>> don't prevent the admin from creating configurations where the VFs ar=
-e
->>> used by other host kernel drivers.
->>>
->>> I think the question Kevin is inquiring about is whether virtio devic=
-es
->>> are susceptible to the type of collaborative, shared key environment
->>> we're creating here.  For example, can a VM or qemu have access to
->>> reset a virtio device in a way that could affect other devices, ex. F=
-LR
->>> on a PF that could interfere with VF operation.  Thanks,
->>
->> Right, but I'm not sure it can be done only via virtio or need support
->> from transport (e.g PCI).
->>
->> Thanks
->>
->>
->>> Alex
->>>  =20
+Tiezhu Yang
+
+[1] git clone https://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git
+[2] git clone https://github.com/torvalds/linux.git
+
+Tiezhu Yang (6):
+  PCI: Add Loongson vendor ID and 7A1000 device IDs
+  AHCI: Add support for Loongson 7A1000 SATA controller
+  MIPS: Loongson: Use firmware arguments to get board name
+  MIPS: Loongson: Add DMA support for 7A1000
+  MIPS: Loongson: Add PCI support for 7A1000
+  MIPS: Loongson: Add support for 7A1000 interrupt controller
+
+ arch/mips/include/asm/mach-loongson64/boot_param.h |   2 +
+ arch/mips/include/asm/mach-loongson64/ioaicu.h     | 166 +++++++++++
+ arch/mips/include/asm/mach-loongson64/irq.h        |   2 +
+ arch/mips/include/asm/mach-loongson64/pci.h        |   1 +
+ arch/mips/loongson64/Makefile                      |   2 +-
+ arch/mips/loongson64/dma.c                         |  49 +++-
+ arch/mips/loongson64/env.c                         |   5 +
+ arch/mips/loongson64/init.c                        |  13 +
+ arch/mips/loongson64/ioaicu.c                      | 305 +++++++++++++++++++++
+ arch/mips/loongson64/irq.c                         |  20 +-
+ arch/mips/loongson64/pci.c                         |  12 +-
+ arch/mips/loongson64/smp.c                         |  11 +-
+ arch/mips/pci/Makefile                             |   2 +-
+ arch/mips/pci/ops-loongson3-ls7a.c                 | 132 +++++++++
+ drivers/ata/ahci.c                                 |   8 +
+ include/linux/pci_ids.h                            |  18 ++
+ 16 files changed, 733 insertions(+), 15 deletions(-)
+ create mode 100644 arch/mips/include/asm/mach-loongson64/ioaicu.h
+ create mode 100644 arch/mips/loongson64/ioaicu.c
+ create mode 100644 arch/mips/pci/ops-loongson3-ls7a.c
+
+-- 
+2.1.0
 
