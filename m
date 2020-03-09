@@ -2,18 +2,18 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CF4317DAB6
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Mar 2020 09:24:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B474A17DAAD
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Mar 2020 09:24:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbgCIIXt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 9 Mar 2020 04:23:49 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:55952 "EHLO loongson.cn"
+        id S1726491AbgCIIXq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 9 Mar 2020 04:23:46 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:55946 "EHLO loongson.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726391AbgCIIXr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 9 Mar 2020 04:23:47 -0400
+        id S1726384AbgCIIXq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 9 Mar 2020 04:23:46 -0400
 Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxb9_+_GVesb4YAA--.12S2;
-        Mon, 09 Mar 2020 16:23:27 +0800 (CST)
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxb9_+_GVesb4YAA--.12S3;
+        Mon, 09 Mar 2020 16:23:29 +0800 (CST)
 From:   Tiezhu Yang <yangtiezhu@loongson.cn>
 To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Huacai Chen <chenhc@lemote.com>,
@@ -23,92 +23,74 @@ To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
 Cc:     linux-mips@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
         Xuefeng Li <lixuefeng@loongson.cn>
-Subject: [PATCH 0/6] Add basic support for Loongson 7A1000 bridge chip
-Date:   Mon,  9 Mar 2020 16:23:20 +0800
-Message-Id: <1583742206-29163-1-git-send-email-yangtiezhu@loongson.cn>
+Subject: [PATCH 1/6] PCI: Add Loongson vendor ID and 7A1000 device IDs
+Date:   Mon,  9 Mar 2020 16:23:21 +0800
+Message-Id: <1583742206-29163-2-git-send-email-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9Dxb9_+_GVesb4YAA--.12S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxCrWfZF1DZryrZrW3tF4Dtwb_yoW5GF48pa
-        y5A3Z5Grs8Wry7AFn3ZryUur4rArZ3JrZFqa12qr1UuasxX3WYvr93KF45Jr47Z348Kay8
-        WryrGrWUGFsxC3DanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9014x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-        6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
-        1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
-        6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr
-        0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E
-        8cxan2IY04v7MxkIecxEwVAFwVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbV
-        WUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF
-        67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42
-        IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1U
-        MIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIda
-        VFxhVjvjDU0xZFpf9x0JU4a0PUUUUU=
+In-Reply-To: <1583742206-29163-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1583742206-29163-1-git-send-email-yangtiezhu@loongson.cn>
+X-CM-TRANSID: AQAAf9Dxb9_+_GVesb4YAA--.12S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxJr48KrWrury8CF1DXr1UKFg_yoW8WF4Dpr
+        10vrZ3KFs7trWxZwn7trn8GrWfJF4qy34DuFya9F45JFnxXw48JwnFvFs8CrW2qrs3X3y7
+        Zr4qk3y7G3ZIywUanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUPC14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
+        x26xkF7I0E14v26r1I6r4UM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+        Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84
+        ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr0_GcWl
+        e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI
+        8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwAC
+        jcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0x
+        kIwI1lc2xSY4AK67AK6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4U
+        MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67
+        AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0
+        cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z2
+        80aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI
+        43ZEXa7VUUgo7tUUUUU==
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The Loongson 7A1000 bridge chip has been released for several years
-since the second half of 2017, but it is not supported by the Linux
-mainline kernel while it only works well with the Loongson internal
-kernel version. When I update the latest version of Linux mainline
-kernel on the Loongson 3A3000 CPU and 7A1000 bridge chip system,
-the boot process failed and I feel depressed.
+Add the Loongson vendor ID and 7A1000 device IDs to pci_ids.h
+to be used by the controller driver in the future.
 
-The 7A1000 bridge chip is used a lot with 3A3000 or 3A4000 CPU in
-the most Loongson desktop and sever products, it is important to
-support Loongson 7A1000 bridge chip by the Linux mainline kernel.
+The Loongson IDs can be found at the following link:
+https://git.kernel.org/pub/scm/utils/pciutils/pciutils.git/tree/pci.ids
 
-This patch series adds the basic support for the Loongson 7A1000
-bridge chip, when apply these patches based on linux-5.6-rc5, the
-boot process is successful and we can login normally used with the
-latest firmware and discrete graphics card, the next work to do is
-power management and some other controller device drivers.
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ include/linux/pci_ids.h | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-Additionally, when I git clone mips code [1], the speed is too slow
-and clone always failed, so this patch series is based on the latest
-linux-5.6-rc5 [2].
-
-If you have any questions and suggestions, please let me know.
-
-Thanks,
-
-Tiezhu Yang
-
-[1] git clone https://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git
-[2] git clone https://github.com/torvalds/linux.git
-
-Tiezhu Yang (6):
-  PCI: Add Loongson vendor ID and 7A1000 device IDs
-  AHCI: Add support for Loongson 7A1000 SATA controller
-  MIPS: Loongson: Use firmware arguments to get board name
-  MIPS: Loongson: Add DMA support for 7A1000
-  MIPS: Loongson: Add PCI support for 7A1000
-  MIPS: Loongson: Add support for 7A1000 interrupt controller
-
- arch/mips/include/asm/mach-loongson64/boot_param.h |   2 +
- arch/mips/include/asm/mach-loongson64/ioaicu.h     | 166 +++++++++++
- arch/mips/include/asm/mach-loongson64/irq.h        |   2 +
- arch/mips/include/asm/mach-loongson64/pci.h        |   1 +
- arch/mips/loongson64/Makefile                      |   2 +-
- arch/mips/loongson64/dma.c                         |  49 +++-
- arch/mips/loongson64/env.c                         |   5 +
- arch/mips/loongson64/init.c                        |  13 +
- arch/mips/loongson64/ioaicu.c                      | 305 +++++++++++++++++++++
- arch/mips/loongson64/irq.c                         |  20 +-
- arch/mips/loongson64/pci.c                         |  12 +-
- arch/mips/loongson64/smp.c                         |  11 +-
- arch/mips/pci/Makefile                             |   2 +-
- arch/mips/pci/ops-loongson3-ls7a.c                 | 132 +++++++++
- drivers/ata/ahci.c                                 |   8 +
- include/linux/pci_ids.h                            |  18 ++
- 16 files changed, 733 insertions(+), 15 deletions(-)
- create mode 100644 arch/mips/include/asm/mach-loongson64/ioaicu.h
- create mode 100644 arch/mips/loongson64/ioaicu.c
- create mode 100644 arch/mips/pci/ops-loongson3-ls7a.c
-
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index 352c0d7..0125ab4 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -3113,4 +3113,22 @@
+ 
+ #define PCI_VENDOR_ID_NCUBE		0x10ff
+ 
++#define PCI_VENDOR_ID_LOONGSON			0x0014
++#define PCI_DEVICE_ID_LOONGSON_7A1000_HT	0x7a00
++#define PCI_DEVICE_ID_LOONGSON_7A1000_APB	0x7a02
++#define PCI_DEVICE_ID_LOONGSON_7A1000_GMAC	0x7a03
++#define PCI_DEVICE_ID_LOONGSON_7A1000_OTG	0x7a04
++#define PCI_DEVICE_ID_LOONGSON_7A1000_DC	0x7a06
++#define PCI_DEVICE_ID_LOONGSON_7A1000_HDA	0x7a07
++#define PCI_DEVICE_ID_LOONGSON_7A1000_SATA	0x7a08
++#define PCI_DEVICE_ID_LOONGSON_7A1000_PCIE_X1	0x7a09
++#define PCI_DEVICE_ID_LOONGSON_7A1000_SPI	0x7a0b
++#define PCI_DEVICE_ID_LOONGSON_7A1000_LPC	0x7a0c
++#define PCI_DEVICE_ID_LOONGSON_7A1000_DMA	0x7a0f
++#define PCI_DEVICE_ID_LOONGSON_7A1000_EHCI	0x7a14
++#define PCI_DEVICE_ID_LOONGSON_7A1000_GPU	0x7a15
++#define PCI_DEVICE_ID_LOONGSON_7A1000_PCIE_X4	0x7a19
++#define PCI_DEVICE_ID_LOONGSON_7A1000_OHCI	0x7a24
++#define PCI_DEVICE_ID_LOONGSON_7A1000_PCIE_X8	0x7a29
++
+ #endif /* _LINUX_PCI_IDS_H */
 -- 
 2.1.0
 
