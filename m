@@ -2,143 +2,213 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 236C017EEBD
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Mar 2020 03:38:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2057617EEBF
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Mar 2020 03:40:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbgCJCia (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 9 Mar 2020 22:38:30 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:56682 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726703AbgCJCi3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 9 Mar 2020 22:38:29 -0400
-Received: from [10.130.0.70] (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxj2mZ_WZeQgcZAA--.51S3;
-        Tue, 10 Mar 2020 10:38:19 +0800 (CST)
-Subject: =?UTF-8?Q?Re:_=e5=9b=9e=e5=a4=8d:[PATCH_3/6]_MIPS:_Loongson:_Use_fi?=
- =?UTF-8?Q?rmware_arguments_to_get_board_name?=
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-References: <1583742206-29163-1-git-send-email-yangtiezhu@loongson.cn>
- <1583742206-29163-4-git-send-email-yangtiezhu@loongson.cn>
- <170be7063d1.c7d52ae02285.4730966984142345992@flygoat.com>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        linux-mips <linux-mips@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-ide <linux-ide@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Xuefeng Li <lixuefeng@loongson.cn>
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <d01a5855-5b77-e792-a48c-49f2d153523e@loongson.cn>
-Date:   Tue, 10 Mar 2020 10:38:17 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        id S1726156AbgCJCkV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 9 Mar 2020 22:40:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41024 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725845AbgCJCkU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 9 Mar 2020 22:40:20 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E35BC24649;
+        Tue, 10 Mar 2020 02:40:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583808019;
+        bh=thZR4xgd9Km1KMkUd1NC2KGyM22wzciXvrzay68+csg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=usFrvnyhs6J8UIJOGPI1EylG6Nc/j7AVBXJ9CvFXNAYZZVTbScLk3nOW+E8qiASct
+         OI3GrQNZ8wtuUwMeJ7HfvC9/m651DlPDuZZUnDKQoGQheOAJfFNl7gR1iLY0tLUlOM
+         KuPkEkuUfoe1kphvo6Zc4AvXHhTpxz+eD1JKXT+4=
+Date:   Mon, 9 Mar 2020 21:40:17 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     sathyanarayanan.kuppuswamy@linux.intel.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, Austin Bolen <austin_bolen@dell.com>
+Subject: Re: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
+ in FF mode
+Message-ID: <20200310024017.GA231196@google.com>
 MIME-Version: 1.0
-In-Reply-To: <170be7063d1.c7d52ae02285.4730966984142345992@flygoat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf9Dxj2mZ_WZeQgcZAA--.51S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxZFy3WFW8Zry3Jr4rWF1xXwb_yoW5Wr45pa
-        n3Aa4vgr45Kr17ur98trW3Crnaya98KFs7GFW2v3WUKa4DKw1aqF98G3W8GrZrAF1UKFy0
-        qryfKr4kCa1xG37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUB214x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-        6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
-        4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2Wl
-        Yx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbV
-        WUJVW8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-        Y2ka0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCY02Avz4vE14v_Gr1l42xK82IYc2Ij64
-        vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-        jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
-        x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK
-        8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
-        kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUF3kuDUUUU
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <29fb514a0d86e9bcc75cec4ea8474cd4db33adbf.1583286655.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 03/09/2020 04:36 PM, Jiaxun Yang wrote:
->
->   ---- 在 星期一, 2020-03-09 16:23:23 Tiezhu Yang <yangtiezhu@loongson.cn> 撰写 ----
->   > In order to distinguish various types of bridge chip such as AMD RS780E
->   > or Loongson 7A1000, we can use firmware arguments to get board name.
->   >
-> Hi Tiezhu,
->
-> Thanks for your contribution.
-> Your series is sightly conflict with my "modernize" series. But that's fine,
-> if your code can meet mainline requirement, I'm going to adjust my works.
+[+cc Austin, tentative Linux patches on this git branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/tree/drivers/pci/pcie?h=review/edr]
 
-Hi Jiaxun,
+On Tue, Mar 03, 2020 at 06:36:32PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> 
+> As per PCI firmware specification r3.2 System Firmware Intermediary
+> (SFI) _OSC and DPC Updates ECR
+> (https://members.pcisig.com/wg/PCI-SIG/document/13563), sec titled "DPC
+> Event Handling Implementation Note", page 10, Error Disconnect Recover
+> (EDR) support allows OS to handle error recovery and clearing Error
+> Registers even in FF mode. So create new API pci_aer_raw_clear_status()
+> which allows clearing AER registers without FF mode checks.
 
-Thanks very much for your kindly reply.
+I see that this ECR was released as an ECN a few days ago:
+https://members.pcisig.com/wg/PCI-SIG/document/14076
+Regrettably the title in the PDF still says "ECR" (the rendered title
+*page* says "ENGINEERING CHANGE NOTIFICATION", but some metadata
+buried in the file says "ECR - SFI _OSC Support and DPC Updates".
 
->
-> See my comments bellow.
->
->   > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
->   > ---
->   >  arch/mips/include/asm/mach-loongson64/boot_param.h | 1 +
->   >  arch/mips/loongson64/env.c                         | 5 +++++
->   >  2 files changed, 6 insertions(+)
->   >
->   > diff --git a/arch/mips/include/asm/mach-loongson64/boot_param.h b/arch/mips/include/asm/mach-loongson64/boot_param.h
->   > index 8c286be..225a563 100644
->   > --- a/arch/mips/include/asm/mach-loongson64/boot_param.h
->   > +++ b/arch/mips/include/asm/mach-loongson64/boot_param.h
->   > @@ -217,5 +217,6 @@ struct loongson_system_configuration {
->   >
->   >  extern struct efi_memory_map_loongson *loongson_memmap;
->   >  extern struct loongson_system_configuration loongson_sysconf;
->   > +extern struct board_devices *eboard;
->   >
->   >  #endif
->   > diff --git a/arch/mips/loongson64/env.c b/arch/mips/loongson64/env.c
->   > index 0daeb7b..a244a8c 100644
->   > --- a/arch/mips/loongson64/env.c
->   > +++ b/arch/mips/loongson64/env.c
->   > @@ -24,6 +24,9 @@ EXPORT_SYMBOL(cpu_clock_freq);
->   >  struct efi_memory_map_loongson *loongson_memmap;
->   >  struct loongson_system_configuration loongson_sysconf;
->   >
->   > +struct board_devices *eboard;
->   > +EXPORT_SYMBOL(eboard);
->
-> Can we make it as a part of struct loongson_sysconf and export that struct?
-> Memory of struct eboard is not managed by kernel,  we shouldn't export such symbol.
+Anyway, I think I see the note you refer to (now on page 12):
 
-OK, I will do it.
+  IMPLEMENTATION NOTE
+  DPC Event Handling
 
->
-> Also I noticed that you're checking PCH type repeatly in other subsystems. Can you just
-> determine the PCH type here?
+  The flow chart below documents the behavior when firmware maintains
+  control of AER and DPC and grants control of PCIe Hot-Plug to the
+  operating system.
 
-Yes, of course.
+  ...
 
-Thanks,
+  Capture and clear device AER status. OS may choose to offline
+  devices3, either via SW (not load driver) or HW (power down device,
+  disable Link5,6,7). Otherwise process _HPX, complete device
+  enumeration, load drivers
 
-Tiezhu Yang
+This clearly suggests that the OS should clear device AER status.
+However, according to the intro text, firmware has retained control of
+AER, so what gives the OS the right to clear AER status?
 
->
->   > +
->   >  u64 loongson_chipcfg[MAX_PACKAGES] = {0xffffffffbfc00180};
->   >  u64 loongson_chiptemp[MAX_PACKAGES];
->   >  u64 loongson_freqctrl[MAX_PACKAGES];
->   > @@ -51,6 +54,8 @@ void __init prom_init_env(void)
->   >          ((u64)loongson_p + loongson_p->system_offset);
->   >      ecpu = (struct efi_cpuinfo_loongson *)
->   >          ((u64)loongson_p + loongson_p->cpu_offset);
->   > +    eboard = (struct board_devices *)
->   > +        ((u64)loongson_p + loongson_p->boarddev_table_offset);
->   >      eirq_source = (struct irq_source_routing_table *)
->   >          ((u64)loongson_p + loongson_p->irq_offset);
->   >      loongson_memmap = (struct efi_memory_map_loongson *)
->   > --
->   > 2.1.0
->   >
->   >
+The Downstream Port Containment Related Enhancements ECN (sec 4.5.1,
+table 4-6) contains an exception that allows the OS to read/write
+DPC registers during recovery.  But
 
+  - that is for *DPC* registers, not for AER registers, and
+
+  - that exception only applies between OS receipt of the EDR
+    notification and OS release of DPC by clearing the DPC Trigger
+    Status bit.
+
+The flowchart in the SFI ECN shows the OS releasing DPC before
+clearing AER status:
+
+  - Receive EDR notification
+
+  - Cleanup - Notify and unload child drivers below Port
+
+  - Bring Port out of DPC, clear port error status, assign bus numbers
+    to child devices.
+
+    I assume this box includes clearing DPC error status and clearing
+    Trigger Status?  They seem to be out of order in the box.
+
+  - Evaluate _OST
+
+  - Capture and clear device AER status.
+
+    This seems suspect to me.  Where does it say the OS is allowed to
+    write AER status when firmware retains control of AER?
+
+This patch series does things in this order:
+
+  - Receive EDR notification (edr_handle_event(), edr.c)
+
+  - Read, log, and clear DPC error regs (dpc_process_error(), dpc.c).
+
+    This also clears AER uncorrectable error status when the relevant
+    HEST entries do not have the FIRMWARE_FIRST bit set.  I think this
+    is incorrect: the test should be based the _OSC negotiation for
+    AER ownership, not on the HEST entries.  But this problem
+    pre-dates this patch series.
+
+  - Clear AER status (pci_aer_raw_clear_status(), aer.c).
+
+    This is at least inside the EDR recovery window, but again, I
+    don't see where it says the OS is allowed to write the AER status.
+
+  - Attempt recovery (pcie_do_recovery(), err.c)
+
+  - Clear DPC Trigger Status (dpc_reset_link(), dpc.c)
+
+  - Evaluate _OST (acpi_send_edr_status(), edr.c)
+
+What am I missing?
+
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> ---
+>  drivers/pci/pci.h      |  2 ++
+>  drivers/pci/pcie/aer.c | 22 ++++++++++++++++++----
+>  2 files changed, 20 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index e57e78b619f8..c239e6dd2542 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -655,6 +655,7 @@ extern const struct attribute_group aer_stats_attr_group;
+>  void pci_aer_clear_fatal_status(struct pci_dev *dev);
+>  void pci_aer_clear_device_status(struct pci_dev *dev);
+>  int pci_cleanup_aer_error_status_regs(struct pci_dev *dev);
+> +int pci_aer_raw_clear_status(struct pci_dev *dev);
+>  #else
+>  static inline void pci_no_aer(void) { }
+>  static inline void pci_aer_init(struct pci_dev *d) { }
+> @@ -665,6 +666,7 @@ static inline int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
+>  {
+>  	return -EINVAL;
+>  }
+> +int pci_aer_raw_clear_status(struct pci_dev *dev) { return -EINVAL; }
+>  #endif
+>  
+>  #ifdef CONFIG_ACPI
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index c0540c3761dc..41afefa562b7 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -420,7 +420,16 @@ void pci_aer_clear_fatal_status(struct pci_dev *dev)
+>  		pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_STATUS, status);
+>  }
+>  
+> -int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
+> +/**
+> + * pci_aer_raw_clear_status - Clear AER error registers.
+> + * @dev: the PCI device
+> + *
+> + * NOTE: Allows clearing error registers in both FF and
+> + * non FF modes.
+> + *
+> + * Returns 0 on success, or negative on failure.
+> + */
+> +int pci_aer_raw_clear_status(struct pci_dev *dev)
+>  {
+>  	int pos;
+>  	u32 status;
+> @@ -433,9 +442,6 @@ int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
+>  	if (!pos)
+>  		return -EIO;
+>  
+> -	if (pcie_aer_get_firmware_first(dev))
+> -		return -EIO;
+> -
+>  	port_type = pci_pcie_type(dev);
+>  	if (port_type == PCI_EXP_TYPE_ROOT_PORT) {
+>  		pci_read_config_dword(dev, pos + PCI_ERR_ROOT_STATUS, &status);
+> @@ -451,6 +457,14 @@ int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
+>  	return 0;
+>  }
+>  
+> +int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
+> +{
+> +	if (pcie_aer_get_firmware_first(dev))
+> +		return -EIO;
+> +
+> +	return pci_aer_raw_clear_status(dev);
+> +}
+> +
+>  void pci_save_aer_state(struct pci_dev *dev)
+>  {
+>  	struct pci_cap_saved_state *save_state;
+> -- 
+> 2.25.1
+> 
