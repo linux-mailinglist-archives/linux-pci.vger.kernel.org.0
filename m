@@ -2,231 +2,323 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 105191807EC
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Mar 2020 20:27:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A6C6E180843
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Mar 2020 20:39:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727264AbgCJT06 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 10 Mar 2020 15:26:58 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:40022 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726497AbgCJT06 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Mar 2020 15:26:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583868417;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=vBBQf8YSJ+Mjo+kqeDTD8Z4+zLQIuCyl3eitu/ifyRg=;
-        b=gLOKaX4FUFgxhYjSeRfVd8SGQnJIggupH6sYrpniPJAQcX4Im4tnjUci7+QK/uIG0gc7Yt
-        yQ2QASGsp3VA2PKKaBKdbQxeKnR6bCi24sNMhv3KhGMdR94Ef8Igwtv1vcYRWCxTq5Z+7A
-        I7CC//hj5GnxWAT/Eh0pJ5jo3hlKz4U=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-21-f9-bCNDLMWmCNJvte--G1Q-1; Tue, 10 Mar 2020 15:26:50 -0400
-X-MC-Unique: f9-bCNDLMWmCNJvte--G1Q-1
-Received: by mail-wr1-f69.google.com with SMTP id y5so6547704wrq.8
-        for <linux-pci@vger.kernel.org>; Tue, 10 Mar 2020 12:26:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vBBQf8YSJ+Mjo+kqeDTD8Z4+zLQIuCyl3eitu/ifyRg=;
-        b=TlX2v/YLO5Il1ogmUnzVZpj3uRLUhbE3nA5GWkDny9Itryko4Y1rtWX9X6x8CH2SHt
-         tCdqd9oyLDWxgHxuPp4SLaCfyvQvHcvu4oLE1UcVc10+Zk2MmJzhHWVIyWQiREwEUrk3
-         4BBB50UUW1eRAok5AcIumhW54Odvt/T3ugr069ApaViAkPWFiChGxs/KKoFzfQedFTYU
-         oYzY3UbmDpTIVq2vj2fVqPHve17T/oIe+Fu2LIcwetdpk0BzKv7GDQ/DKQiavsY/BrcK
-         lbwLReeSxoYAz9lm7hSiYz4q1bIx5jtVbGllM6PGD3u+Lrg/m2sdX44JRR1ARXtDMrIq
-         oebA==
-X-Gm-Message-State: ANhLgQ2b18ScM6pEVVNmabn+YrnPC9WZu7lErn/0mUcVvTFXGsuYgtCD
-        V3O0S9AVzOc3rlgA8acwz/iTidKwi6Fe/JpIIok60KzEndNfYSnOz7tV3eQ0CrcvYwhPwMuXkK/
-        R8vVALA5yEbUnWoPcb4ZY
-X-Received: by 2002:a7b:c153:: with SMTP id z19mr3416623wmi.37.1583868409468;
-        Tue, 10 Mar 2020 12:26:49 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vulmI+P5MpROhNKaiKOfzCCxtCMi66TM8UrbbQOxyf42qxjAGtaVwzF6sV60157AZSfFYTJtQ==
-X-Received: by 2002:a7b:c153:: with SMTP id z19mr3416586wmi.37.1583868409147;
-        Tue, 10 Mar 2020 12:26:49 -0700 (PDT)
-Received: from kherbst.pingu.com ([2a02:8308:b0be:6900:482c:9537:40:83ba])
-        by smtp.gmail.com with ESMTPSA id c8sm58633569wru.7.2020.03.10.12.26.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 12:26:48 -0700 (PDT)
-From:   Karol Herbst <kherbst@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Karol Herbst <kherbst@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lyude Paul <lyude@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mika Westerberg <mika.westerberg@intel.com>,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH v7] pci: prevent putting nvidia GPUs into lower device states on certain intel bridges
-Date:   Tue, 10 Mar 2020 20:26:27 +0100
-Message-Id: <20200310192627.437947-1-kherbst@redhat.com>
-X-Mailer: git-send-email 2.24.1
+        id S1726604AbgCJTjK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 10 Mar 2020 15:39:10 -0400
+Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:1108 "EHLO
+        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726497AbgCJTjJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Mar 2020 15:39:09 -0400
+X-Greylist: delayed 5083 seconds by postgrey-1.27 at vger.kernel.org; Tue, 10 Mar 2020 15:39:07 EDT
+Received: from pps.filterd (m0170393.ppops.net [127.0.0.1])
+        by mx0a-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02AHvsKw022204;
+        Tue, 10 Mar 2020 14:14:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : references : content-type :
+ content-transfer-encoding : mime-version; s=smtpout1;
+ bh=qoOEggxv7eMK/hYbpNs78wkoejPyvI7FJOGsE7klJ48=;
+ b=HdiMZg3zsw41HJZ3EWF1Oo2zOxBprFp4cf1SR446FVV5M/GcuAJsy/TP1kyhCbSm2lXr
+ VDXEGTOKt5p2lxgSGz3X8/9dALzxg9ZhWpFyiDbeQPiPh8U4AKmaXa83fN4PWM5/GeEJ
+ o35rcHiPkxnSz2X6Ugkad/wRh53Ef7NsZKZZgye4+SR9frH/4BioHBqbpt/Endv4hM0N
+ P8mqkKYRq5pxyTyh+47M70Rdw6d5k7UODsYR+zv60N18rJe1uXhtxAzM8uFFIV8cG1iW
+ wD4csnUxqQUv7uw+zNl3/3bMMdX65ALZyFF9VY5vXmvAL0ZrgOQCGEmDLPfw2Tv9YLRz bQ== 
+Received: from mx0b-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
+        by mx0a-00154904.pphosted.com with ESMTP id 2ym7trknc6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 10 Mar 2020 14:14:23 -0400
+Received: from pps.filterd (m0134318.ppops.net [127.0.0.1])
+        by mx0a-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02AIAuOq031981;
+        Tue, 10 Mar 2020 14:14:22 -0400
+Received: from ausc60pc101.us.dell.com (ausc60pc101.us.dell.com [143.166.85.206])
+        by mx0a-00154901.pphosted.com with ESMTP id 2yp9jhew32-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 10 Mar 2020 14:14:22 -0400
+X-LoopCount0: from 10.166.132.132
+X-PREM-Routing: D-Outbound
+X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
+   d="scan'208";a="1534426643"
+From:   <Austin.Bolen@dell.com>
+To:     <sathyanarayanan.kuppuswamy@linux.intel.com>, <helgaas@kernel.org>,
+        <Austin.Bolen@dell.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <ashok.raj@intel.com>
+Subject: Re: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
+ in FF mode
+Thread-Topic: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
+ in FF mode
+Thread-Index: AQHV9oVCCTYsDGOZY0iqPe3akO+s+A==
+Date:   Tue, 10 Mar 2020 18:14:20 +0000
+Message-ID: <0476c948e73f4c68a9bf221afccfcf7e@AUSX13MPC107.AMER.DELL.COM>
+References: <20200310024017.GA231196@google.com>
+ <de0cd5cc-9b59-882c-e40a-9bf00d20fbd4@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [143.166.24.60]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-10_12:2020-03-10,2020-03-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
+ mlxscore=0 bulkscore=0 spamscore=0 clxscore=1011 suspectscore=0
+ mlxlogscore=999 priorityscore=1501 impostorscore=0 adultscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003100109
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 bulkscore=0
+ phishscore=0 mlxlogscore=999 spamscore=0 adultscore=0 impostorscore=0
+ suspectscore=0 clxscore=1011 mlxscore=0 malwarescore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003100109
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Fixes the infamous 'runtime PM' bug many users are facing on Laptops with
-Nvidia Pascal GPUs by skipping said PCI power state changes on the GPU.
-
-Depending on the used kernel there might be messages like those in demsg:
-
-"nouveau 0000:01:00.0: Refused to change power state, currently in D3"
-"nouveau 0000:01:00.0: can't change power state from D3cold to D0 (config
-space inaccessible)"
-followed by backtraces of kernel crashes or timeouts within nouveau.
-
-It's still unkown why this issue exists, but this is a reliable workaround
-and solves a very annoying issue for user having to choose between a
-crashing kernel or higher power consumption of their Laptops.
-
-Signed-off-by: Karol Herbst <kherbst@redhat.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Lyude Paul <lyude@redhat.com>
-Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-Cc: Mika Westerberg <mika.westerberg@intel.com>
-Cc: linux-pci@vger.kernel.org
-Cc: linux-pm@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org
-Cc: nouveau@lists.freedesktop.org
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=205623
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-
----
-v2: convert to pci_dev quirk
-    put a proper technical explanation of the issue as a in-code comment
-v3: disable it only for certain combinations of intel and nvidia hardware
-v4: simplify quirk by setting flag on the GPU itself
-v5: restructure quirk to make it easier to add new IDs
-    fix whitespace issues
-    fix potential NULL pointer access
-    update the quirk documentation
-v6: move quirk into nouveau
-v7: fix typos and commit message
-
- drivers/gpu/drm/nouveau/nouveau_drm.c | 57 +++++++++++++++++++++++++++
- drivers/pci/pci.c                     |  8 ++++
- include/linux/pci.h                   |  1 +
- 3 files changed, 66 insertions(+)
-
-diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouveau/nouveau_drm.c
-index b65ae817eabf..2c86f0248305 100644
---- a/drivers/gpu/drm/nouveau/nouveau_drm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
-@@ -618,6 +618,60 @@ nouveau_drm_device_fini(struct drm_device *dev)
- 	kfree(drm);
- }
- 
-+/*
-+ * On some Intel PCIe bridge controllers doing a
-+ * D0 -> D3hot -> D3cold -> D0 sequence causes Nvidia GPUs to not reappear.
-+ * Skipping the intermediate D3hot step seems to make it work again. This is
-+ * probably caused by not meeting the expectation the involved AML code has
-+ * when the GPU is put into D3hot state before invoking it.
-+ *
-+ * This leads to various manifestations of this issue:
-+ *  - AML code execution to power on the GPU hits an infinite loop (as the
-+ *    code waits on device memory to change).
-+ *  - kernel crashes, as all PCI reads return -1, which most code isn't able
-+ *    to handle well enough.
-+ *
-+ * In all cases dmesg will contain at least one line like this:
-+ * 'nouveau 0000:01:00.0: Refused to change power state, currently in D3'
-+ * followed by a lot of nouveau timeouts.
-+ *
-+ * In the \_SB.PCI0.PEG0.PG00._OFF code deeper down writes bit 0x80 to the not
-+ * documented PCI config space register 0x248 of the Intel PCIe bridge
-+ * controller (0x1901) in order to change the state of the PCIe link between
-+ * the PCIe port and the GPU. There are alternative code paths using other
-+ * registers, which seem to work fine (executed pre Windows 8):
-+ *  - 0xbc bit 0x20 (publicly available documentation claims 'reserved')
-+ *  - 0xb0 bit 0x10 (link disable)
-+ * Changing the conditions inside the firmware by poking into the relevant
-+ * addresses does resolve the issue, but it seemed to be ACPI private memory
-+ * and not any device accessible memory at all, so there is no portable way of
-+ * changing the conditions.
-+ * On a XPS 9560 that means bits [0,3] on \CPEX need to be cleared.
-+ *
-+ * The only systems where this behavior can be seen are hybrid graphics laptops
-+ * with a secondary Nvidia Maxwell, Pascal or Turing GPU. It's unclear whether
-+ * this issue only occurs in combination with listed Intel PCIe bridge
-+ * controllers and the mentioned GPUs or other devices as well.
-+ *
-+ * documentation on the PCIe bridge controller can be found in the
-+ * "7th Generation Intel® Processor Families for H Platforms Datasheet Volume 2"
-+ * Section "12 PCI Express* Controller (x16) Registers"
-+ */
-+
-+static void quirk_broken_nv_runpm(struct pci_dev *dev)
-+{
-+	struct pci_dev *bridge = pci_upstream_bridge(dev);
-+
-+	if (!bridge || bridge->vendor != PCI_VENDOR_ID_INTEL)
-+		return;
-+
-+	switch (bridge->device) {
-+	case 0x1901:
-+		dev->parent_d3cold = 1;
-+		break;
-+	}
-+}
-+
- static int nouveau_drm_probe(struct pci_dev *pdev,
- 			     const struct pci_device_id *pent)
- {
-@@ -699,6 +753,7 @@ static int nouveau_drm_probe(struct pci_dev *pdev,
- 	if (ret)
- 		goto fail_drm_dev_init;
- 
-+	quirk_broken_nv_runpm(pdev);
- 	return 0;
- 
- fail_drm_dev_init:
-@@ -735,6 +790,8 @@ nouveau_drm_remove(struct pci_dev *pdev)
- {
- 	struct drm_device *dev = pci_get_drvdata(pdev);
- 
-+	/* revert our workaround */
-+	pdev->parent_d3cold = false;
- 	nouveau_drm_device_remove(dev);
- 	pci_disable_device(pdev);
- }
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index d828ca835a98..9c4044fc2553 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -861,6 +861,14 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
- 	   || (state == PCI_D2 && !dev->d2_support))
- 		return -EIO;
- 
-+	/*
-+	 * Power management can be disabled for certain devices as they don't
-+	 * come back up later on runtime_resume. We rely on platform means to
-+	 * cut power consumption instead (e.g. ACPI).
-+	 */
-+	if (state != PCI_D0 && dev->parent_d3cold)
-+		return 0;
-+
- 	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
- 	if (pmcsr == (u16) ~0) {
- 		pci_err(dev, "can't change power state from %s to %s (config space inaccessible)\n",
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 3840a541a9de..3c01f043519a 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -340,6 +340,7 @@ struct pci_dev {
- 	unsigned int	no_d3cold:1;	/* D3cold is forbidden */
- 	unsigned int	bridge_d3:1;	/* Allow D3 for bridge */
- 	unsigned int	d3cold_allowed:1;	/* D3cold is allowed by user */
-+	unsigned int	parent_d3cold:1;	/* Power manage the parent instead */
- 	unsigned int	mmio_always_on:1;	/* Disallow turning off io/mem
- 						   decoding during BAR sizing */
- 	unsigned int	wakeup_prepared:1;
--- 
-2.24.1
-
+On 3/9/2020 11:28 PM, Kuppuswamy, Sathyanarayanan wrote:=0A=
+> =0A=
+> [EXTERNAL EMAIL]=0A=
+> =0A=
+> Hi Bjorn,=0A=
+> =0A=
+> On 3/9/2020 7:40 PM, Bjorn Helgaas wrote:=0A=
+>> [+cc Austin, tentative Linux patches on this git branch:=0A=
+>> https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/tree/dri=
+vers/pci/pcie?h=3Dreview/edr]=0A=
+>>=0A=
+>> On Tue, Mar 03, 2020 at 06:36:32PM -0800, sathyanarayanan.kuppuswamy@lin=
+ux.intel.com wrote:=0A=
+>>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.inte=
+l.com>=0A=
+>>>=0A=
+>>> As per PCI firmware specification r3.2 System Firmware Intermediary=0A=
+>>> (SFI) _OSC and DPC Updates ECR=0A=
+>>> (https://members.pcisig.com/wg/PCI-SIG/document/13563), sec titled "DPC=
+=0A=
+>>> Event Handling Implementation Note", page 10, Error Disconnect Recover=
+=0A=
+>>> (EDR) support allows OS to handle error recovery and clearing Error=0A=
+>>> Registers even in FF mode. So create new API pci_aer_raw_clear_status()=
+=0A=
+>>> which allows clearing AER registers without FF mode checks.=0A=
+>>=0A=
+>> I see that this ECR was released as an ECN a few days ago:=0A=
+>> https://members.pcisig.com/wg/PCI-SIG/document/14076=0A=
+>> Regrettably the title in the PDF still says "ECR" (the rendered title=0A=
+>> *page* says "ENGINEERING CHANGE NOTIFICATION", but some metadata=0A=
+>> buried in the file says "ECR - SFI _OSC Support and DPC Updates".=0A=
+=0A=
+I'll see if PCI-SIG can update the metadata and repost.=0A=
+=0A=
+>>=0A=
+>> Anyway, I think I see the note you refer to (now on page 12):=0A=
+>>=0A=
+>>     IMPLEMENTATION NOTE=0A=
+>>     DPC Event Handling=0A=
+>>=0A=
+>>     The flow chart below documents the behavior when firmware maintains=
+=0A=
+>>     control of AER and DPC and grants control of PCIe Hot-Plug to the=0A=
+>>     operating system.=0A=
+>>=0A=
+>>     ...=0A=
+>>=0A=
+>>     Capture and clear device AER status. OS may choose to offline=0A=
+>>     devices3, either via SW (not load driver) or HW (power down device,=
+=0A=
+>>     disable Link5,6,7). Otherwise process _HPX, complete device=0A=
+>>     enumeration, load drivers=0A=
+>>=0A=
+>> This clearly suggests that the OS should clear device AER status.=0A=
+>> However, according to the intro text, firmware has retained control of=
+=0A=
+>> AER, so what gives the OS the right to clear AER status?=0A=
+>>=0A=
+>> The Downstream Port Containment Related Enhancements ECN (sec 4.5.1,=0A=
+>> table 4-6) contains an exception that allows the OS to read/write=0A=
+>> DPC registers during recovery.  But=0A=
+>>=0A=
+>>     - that is for *DPC* registers, not for AER registers, and=0A=
+>>=0A=
+>>     - that exception only applies between OS receipt of the EDR=0A=
+>>       notification and OS release of DPC by clearing the DPC Trigger=0A=
+>>       Status bit.=0A=
+>>=0A=
+>> The flowchart in the SFI ECN shows the OS releasing DPC before=0A=
+>> clearing AER status:=0A=
+>>=0A=
+>>     - Receive EDR notification=0A=
+>>=0A=
+>>     - Cleanup - Notify and unload child drivers below Port=0A=
+>>=0A=
+>>     - Bring Port out of DPC, clear port error status, assign bus numbers=
+=0A=
+>>       to child devices.=0A=
+>>=0A=
+>>       I assume this box includes clearing DPC error status and clearing=
+=0A=
+>>       Trigger Status?  They seem to be out of order in the box.=0A=
+=0A=
+OS clears the DPC Trigger Status bit which will bring port below it out =0A=
+of containment. Then OS will clear the "port" error status bits (i.e., =0A=
+the AER and DPC status bits in the root port or downstream port that =0A=
+triggered containment). I don't think it would hurt to do this two steps =
+=0A=
+in reverse order but don't think it is necessary. Note that error status =
+=0A=
+bits for devices below the port in containment are cleared later after =0A=
+f/w has a chance to log them.=0A=
+=0A=
+>>=0A=
+>>     - Evaluate _OST=0A=
+>>=0A=
+>>     - Capture and clear device AER status.=0A=
+>>=0A=
+>>       This seems suspect to me.  Where does it say the OS is allowed to=
+=0A=
+>>       write AER status when firmware retains control of AER?=0A=
+>>=0A=
+>> This patch series does things in this order:=0A=
+>>=0A=
+>>     - Receive EDR notification (edr_handle_event(), edr.c)=0A=
+>>=0A=
+>>     - Read, log, and clear DPC error regs (dpc_process_error(), dpc.c).=
+=0A=
+>>=0A=
+>>       This also clears AER uncorrectable error status when the relevant=
+=0A=
+>>       HEST entries do not have the FIRMWARE_FIRST bit set.  I think this=
+=0A=
+>>       is incorrect: the test should be based the _OSC negotiation for=0A=
+>>       AER ownership, not on the HEST entries.  But this problem=0A=
+>>       pre-dates this patch series.=0A=
+>>=0A=
+>>     - Clear AER status (pci_aer_raw_clear_status(), aer.c).=0A=
+>>=0A=
+>>       This is at least inside the EDR recovery window, but again, I=0A=
+>>       don't see where it says the OS is allowed to write the AER status.=
+=0A=
+> =0A=
+> Implementation note is the only reference we have regarding clearing the=
+=0A=
+> AER registers.=0A=
+> =0A=
+> But since the spec says both DPC and AER needs to be always controlled=0A=
+> together by the either OS or firmware, and when firmware relinquishes=0A=
+> control over DPC registers in EDR notification window, we can assume=0A=
+> that we also have control over AER registers.=0A=
+> =0A=
+> But I agree that is not explicitly spelled out any where outside the=0A=
+> implementation note.=0A=
+> =0A=
+> =0A=
+> Austin,=0A=
+> =0A=
+> May be ECN (section 4.5.1, table 4-6) needs to be updated to add this=0A=
+> clarification.=0A=
+=0A=
+Sure we can update to section 4.5.1, table 4-6 to indicate when OS can =0A=
+clear the AER status bits. It will just follow what's done in the =0A=
+implementation note so I think it's acceptable to follow implementation =0A=
+guidance for now.=0A=
+=0A=
+> =0A=
+>>=0A=
+>>     - Attempt recovery (pcie_do_recovery(), err.c)=0A=
+>>=0A=
+>>     - Clear DPC Trigger Status (dpc_reset_link(), dpc.c)=0A=
+>>=0A=
+>>     - Evaluate _OST (acpi_send_edr_status(), edr.c)=0A=
+>>=0A=
+>> What am I missing?=0A=
+>>=0A=
+>>> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@l=
+inux.intel.com>=0A=
+>>> ---=0A=
+>>>    drivers/pci/pci.h      |  2 ++=0A=
+>>>    drivers/pci/pcie/aer.c | 22 ++++++++++++++++++----=0A=
+>>>    2 files changed, 20 insertions(+), 4 deletions(-)=0A=
+>>>=0A=
+>>> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h=0A=
+>>> index e57e78b619f8..c239e6dd2542 100644=0A=
+>>> --- a/drivers/pci/pci.h=0A=
+>>> +++ b/drivers/pci/pci.h=0A=
+>>> @@ -655,6 +655,7 @@ extern const struct attribute_group aer_stats_attr_=
+group;=0A=
+>>>    void pci_aer_clear_fatal_status(struct pci_dev *dev);=0A=
+>>>    void pci_aer_clear_device_status(struct pci_dev *dev);=0A=
+>>>    int pci_cleanup_aer_error_status_regs(struct pci_dev *dev);=0A=
+>>> +int pci_aer_raw_clear_status(struct pci_dev *dev);=0A=
+>>>    #else=0A=
+>>>    static inline void pci_no_aer(void) { }=0A=
+>>>    static inline void pci_aer_init(struct pci_dev *d) { }=0A=
+>>> @@ -665,6 +666,7 @@ static inline int pci_cleanup_aer_error_status_regs=
+(struct pci_dev *dev)=0A=
+>>>    {=0A=
+>>>    	return -EINVAL;=0A=
+>>>    }=0A=
+>>> +int pci_aer_raw_clear_status(struct pci_dev *dev) { return -EINVAL; }=
+=0A=
+>>>    #endif=0A=
+>>>    =0A=
+>>>    #ifdef CONFIG_ACPI=0A=
+>>> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c=0A=
+>>> index c0540c3761dc..41afefa562b7 100644=0A=
+>>> --- a/drivers/pci/pcie/aer.c=0A=
+>>> +++ b/drivers/pci/pcie/aer.c=0A=
+>>> @@ -420,7 +420,16 @@ void pci_aer_clear_fatal_status(struct pci_dev *de=
+v)=0A=
+>>>    		pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_STATUS, status);=
+=0A=
+>>>    }=0A=
+>>>    =0A=
+>>> -int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)=0A=
+>>> +/**=0A=
+>>> + * pci_aer_raw_clear_status - Clear AER error registers.=0A=
+>>> + * @dev: the PCI device=0A=
+>>> + *=0A=
+>>> + * NOTE: Allows clearing error registers in both FF and=0A=
+>>> + * non FF modes.=0A=
+>>> + *=0A=
+>>> + * Returns 0 on success, or negative on failure.=0A=
+>>> + */=0A=
+>>> +int pci_aer_raw_clear_status(struct pci_dev *dev)=0A=
+>>>    {=0A=
+>>>    	int pos;=0A=
+>>>    	u32 status;=0A=
+>>> @@ -433,9 +442,6 @@ int pci_cleanup_aer_error_status_regs(struct pci_de=
+v *dev)=0A=
+>>>    	if (!pos)=0A=
+>>>    		return -EIO;=0A=
+>>>    =0A=
+>>> -	if (pcie_aer_get_firmware_first(dev))=0A=
+>>> -		return -EIO;=0A=
+>>> -=0A=
+>>>    	port_type =3D pci_pcie_type(dev);=0A=
+>>>    	if (port_type =3D=3D PCI_EXP_TYPE_ROOT_PORT) {=0A=
+>>>    		pci_read_config_dword(dev, pos + PCI_ERR_ROOT_STATUS, &status);=0A=
+>>> @@ -451,6 +457,14 @@ int pci_cleanup_aer_error_status_regs(struct pci_d=
+ev *dev)=0A=
+>>>    	return 0;=0A=
+>>>    }=0A=
+>>>    =0A=
+>>> +int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)=0A=
+>>> +{=0A=
+>>> +	if (pcie_aer_get_firmware_first(dev))=0A=
+>>> +		return -EIO;=0A=
+>>> +=0A=
+>>> +	return pci_aer_raw_clear_status(dev);=0A=
+>>> +}=0A=
+>>> +=0A=
+>>>    void pci_save_aer_state(struct pci_dev *dev)=0A=
+>>>    {=0A=
+>>>    	struct pci_cap_saved_state *save_state;=0A=
+>>> -- =0A=
+>>> 2.25.1=0A=
+>>>=0A=
+> =0A=
+=0A=
