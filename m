@@ -2,117 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D50A017FD8E
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Mar 2020 14:29:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 69C1217FDC4
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Mar 2020 14:31:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729162AbgCJN20 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 10 Mar 2020 09:28:26 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42892 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728887AbgCJMxQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:53:16 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id D2329B134;
-        Tue, 10 Mar 2020 12:53:13 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     linux-kernel@vger.kernel.org,
-        Mathias Nyman <mathias.nyman@intel.com>
-Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, f.fainelli@gmail.com,
-        gregkh@linuxfoundation.org, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org, wahrenst@gmx.net,
-        sergei.shtylyov@cogentembedded.com,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: [PATCH v5 4/4] USB: pci-quirks: Add Raspberry Pi 4 quirk
-Date:   Tue, 10 Mar 2020 13:52:42 +0100
-Message-Id: <20200310125243.25805-5-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200310125243.25805-1-nsaenzjulienne@suse.de>
-References: <20200310125243.25805-1-nsaenzjulienne@suse.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1728612AbgCJMu2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 10 Mar 2020 08:50:28 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:36166 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728595AbgCJMu2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:50:28 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxn9kBjWdeay0ZAA--.25S3;
+        Tue, 10 Mar 2020 20:50:11 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Bjorn Helgaas <bhelgaas@google.com>, Jens Axboe <axboe@kernel.dk>
+Cc:     linux-pci@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: [PATCH 2/2] AHCI: Add support for Loongson 7A1000 SATA controller
+Date:   Tue, 10 Mar 2020 20:50:08 +0800
+Message-Id: <1583844608-30029-2-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+In-Reply-To: <1583844608-30029-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1583844608-30029-1-git-send-email-yangtiezhu@loongson.cn>
+X-CM-TRANSID: AQAAf9Dxn9kBjWdeay0ZAA--.25S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7AFW8Wr48CFW8GFyDtr4kXrb_yoW8JFyxpF
+        43XayDKr40grWFga1DA3ykGa43JFs8Wa4xKa90k3yvqr4qyryrWryUZa47JrW7K34kW3W7
+        XFnFkw12gF4UXw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUBa14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
+        x26xkF7I0E14v26r1I6r4UM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+        Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84
+        ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AI
+        xVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
+        vE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xv
+        r2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW5JwCF04k20x
+        vY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I
+        3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIx
+        AIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAI
+        cVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2js
+        IEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUrpnLUUUUU=
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On the Raspberry Pi 4, after a PCI reset, VL805's firmware may either be
-loaded directly from an EEPROM or, if not present, by the SoC's
-VideCore. Inform VideCore that VL805 was just reset.
+Loongson 7A1000 SATA controller uses BAR0 as the base address register.
 
-Also, as this creates a dependency between XHCI_PCI and VideoCore's
-firmware interface, reflect that on the firmware interface Kconfg.
-
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
+ drivers/ata/ahci.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Changes since v4:
- - Do not split up error message
-
-Changes since v3:
- - Add more complete error message
-
-Changes since v1:
- - Make RASPBERRYPI_FIRMWARE dependent on this quirk to make sure it
-   gets compiled when needed.
-
- drivers/firmware/Kconfig      |  1 +
- drivers/usb/host/pci-quirks.c | 16 ++++++++++++++++
- 2 files changed, 17 insertions(+)
-
-diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
-index ea869addc89b..40a468d712a5 100644
---- a/drivers/firmware/Kconfig
-+++ b/drivers/firmware/Kconfig
-@@ -180,6 +180,7 @@ config ISCSI_IBFT
- config RASPBERRYPI_FIRMWARE
- 	tristate "Raspberry Pi Firmware Driver"
- 	depends on BCM2835_MBOX
-+	default XHCI_PCI
- 	help
- 	  This option enables support for communicating with the firmware on the
- 	  Raspberry Pi.
-diff --git a/drivers/usb/host/pci-quirks.c b/drivers/usb/host/pci-quirks.c
-index beb2efa71341..0dc34668bb2a 100644
---- a/drivers/usb/host/pci-quirks.c
-+++ b/drivers/usb/host/pci-quirks.c
-@@ -16,6 +16,9 @@
- #include <linux/export.h>
- #include <linux/acpi.h>
- #include <linux/dmi.h>
-+
-+#include <soc/bcm2835/raspberrypi-firmware.h>
-+
- #include "pci-quirks.h"
- #include "xhci-ext-caps.h"
+diff --git a/drivers/ata/ahci.c b/drivers/ata/ahci.c
+index 11ea1af..33d051a 100644
+--- a/drivers/ata/ahci.c
++++ b/drivers/ata/ahci.c
+@@ -40,6 +40,7 @@
+ enum {
+ 	AHCI_PCI_BAR_STA2X11	= 0,
+ 	AHCI_PCI_BAR_CAVIUM	= 0,
++	AHCI_PCI_BAR_LOONGSON	= 0,
+ 	AHCI_PCI_BAR_ENMOTUS	= 2,
+ 	AHCI_PCI_BAR_CAVIUM_GEN5	= 4,
+ 	AHCI_PCI_BAR_STANDARD	= 5,
+@@ -589,6 +590,9 @@ static const struct pci_device_id ahci_pci_tbl[] = {
+ 	/* Enmotus */
+ 	{ PCI_DEVICE(0x1c44, 0x8000), board_ahci },
  
-@@ -1243,11 +1246,24 @@ static void quirk_usb_handoff_xhci(struct pci_dev *pdev)
++	/* Loongson */
++	{ PCI_VDEVICE(LOONGSON, 0x7a08), board_ahci },
++
+ 	/* Generic, PCI class code for AHCI */
+ 	{ PCI_ANY_ID, PCI_ANY_ID, PCI_ANY_ID, PCI_ANY_ID,
+ 	  PCI_CLASS_STORAGE_SATA_AHCI, 0xffffff, board_ahci },
+@@ -1680,6 +1684,9 @@ static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 			ahci_pci_bar = AHCI_PCI_BAR_CAVIUM;
+ 		if (pdev->device == 0xa084)
+ 			ahci_pci_bar = AHCI_PCI_BAR_CAVIUM_GEN5;
++	} else if (pdev->vendor == PCI_VENDOR_ID_LOONGSON) {
++		if (pdev->device == 0x7a08)
++			ahci_pci_bar = AHCI_PCI_BAR_LOONGSON;
+ 	}
  
- static void quirk_usb_early_handoff(struct pci_dev *pdev)
- {
-+	int ret;
-+
- 	/* Skip Netlogic mips SoC's internal PCI USB controller.
- 	 * This device does not need/support EHCI/OHCI handoff
- 	 */
- 	if (pdev->vendor == 0x184e)	/* vendor Netlogic */
- 		return;
-+
-+	if (pdev->vendor == PCI_VENDOR_ID_VIA && pdev->device == 0x3483) {
-+		ret = rpi_firmware_init_vl805(pdev);
-+		if (ret) {
-+			/* Firmware might be outdated, or something failed */
-+			dev_warn(&pdev->dev,
-+				 "Failed to load VL805's firmware: %d. Will continue to attempt to work, but bad things might happen. You should fix this...\n",
-+				 ret);
-+		}
-+	}
-+
- 	if (pdev->class != PCI_CLASS_SERIAL_USB_UHCI &&
- 			pdev->class != PCI_CLASS_SERIAL_USB_OHCI &&
- 			pdev->class != PCI_CLASS_SERIAL_USB_EHCI &&
+ 	/* acquire resources */
 -- 
-2.25.1
+2.1.0
 
