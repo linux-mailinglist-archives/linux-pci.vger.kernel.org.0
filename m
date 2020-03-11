@@ -2,48 +2,48 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CF17018220E
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Mar 2020 20:19:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C10D4182210
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Mar 2020 20:19:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730962AbgCKTTV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Mar 2020 15:19:21 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38851 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730807AbgCKTTU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Mar 2020 15:19:20 -0400
-Received: by mail-pg1-f194.google.com with SMTP id x7so1718084pgh.5;
-        Wed, 11 Mar 2020 12:19:20 -0700 (PDT)
+        id S1731108AbgCKTT0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Mar 2020 15:19:26 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:41716 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730807AbgCKTT0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Mar 2020 15:19:26 -0400
+Received: by mail-pl1-f196.google.com with SMTP id t14so1533562plr.8;
+        Wed, 11 Mar 2020 12:19:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=r42oaftrh5pHz14qU1GYkB0RQE5bj151KUZhP6WCLUU=;
-        b=G2+txh85XP+S2jm9NSogjxqBUikS9Ngp6DtlfWcrAd9ufiH47Xb0eN1WLqYPThF/21
-         1CiU/fLxTDxovvO+tstyelBWaQNE54Cd9MaVw5sUNbbJll0t9oy6RoVBciTb1yx+p3n8
-         SYMIbkSRuqEWGJPp9+ILBaLuPRjrhgatYgkP4uCMx2DpqGuBtdGqDm9bz7yvAOkct02H
-         ymKsFcr0TFGylW3wkp6TPDnM7XYWoZVV1aaNU6yHrcziFZvZIJAKRJCwXzanVr0JxFdT
-         eOoxecolqmumlXalOmw6vTiAKijvk0SgCuOyhL3gDgTTbUUoHdPR+r5SudaD3n/8pHnx
-         JSmg==
+        bh=iN1lIy0/f67JfCi9KU7uh6n3lgkv7oAoZ5NZ3robPh0=;
+        b=BfRQMt0ipgIFCsbepxc9l/xVpH3h5JT7quohnIEoWdro74//CquJsdriyla9b7QShh
+         xdhsTWb+9hwl8ivWbbOHSq1aRRafUqRVsmh1R6Y0L5NZuukW/PvO/p81LYdadlpHmfPr
+         3fnhkVIi6b5tCbqP534B/yAnACgpkdWA8GZpXzMMerkdn+wN1Cio3sYXjP3FwGj0mp9K
+         SfnpSzxn4zW1Mk5XGUvc3b+PWSrQOU2Ct2eQnaifytiDdyzu1F5MMTpbTMthiWYkF9ZR
+         hwXA0ViLm+Uw4fIAWd2KBIPc6SiX0DWe2CFpr9qpPwvViXhLGUlw3ZRRnXKWakd2PtCl
+         rzJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=r42oaftrh5pHz14qU1GYkB0RQE5bj151KUZhP6WCLUU=;
-        b=UFqMRfRVbZSurBAXuDM99VAZHjYk6UKia3S/an2cQjvV1YfIs+jdWcPlDLijRPlJbG
-         /SSzbA7icVFURqm8BC7q6tvQb3SVD1gJZ0GOXVWt8KdpUKUUYd4A8v2tpdzT8EzWvVbS
-         JXTAvFVZaqfZLEOOQv/cshIpf79ry/1UMV96sLCw1hazwpeugFjx9ysx4CveS8GWb2Eb
-         xHHn+YvjRlnyYNo8DuIWo+zBCXtG9eRk+tGoEcm6lHOX6izo7lGl6Nzx1+Txgvy8QEF0
-         0+9G2C6dH6vf2AXjJMKAwa1Fda/NjHYlFjcDsCynuFjAAD5yk4LaTRssj63CGNSBlHeM
-         4rDA==
-X-Gm-Message-State: ANhLgQ1F78/TcJ0fN3gHSRlC7WXjMdihGxl5pHXnrcTEqh8UBuoP3N8R
-        elHH20ePgWDeF4O3sScz8oo+qURm/qr3pg==
-X-Google-Smtp-Source: ADFU+vtbPme6BTAJZmyevs7rgWm3h1iPQrP+b1siICnoXHB1UQz+utoRSjjlAt3zopkF2PlmJnFY3w==
-X-Received: by 2002:a62:ce48:: with SMTP id y69mr4249326pfg.178.1583954359553;
-        Wed, 11 Mar 2020 12:19:19 -0700 (PDT)
+        bh=iN1lIy0/f67JfCi9KU7uh6n3lgkv7oAoZ5NZ3robPh0=;
+        b=aVucX9oydasVrbpxKSSYCIJ9RmJ2910a0umlmKfvvvA0NERJTRvGHd3SDdTFMb7l3Z
+         ltf2jE/NNDJOObTm9O3YH7hudfwh0VJlkV2UmJ/2TRvqpeN+QE16zTDuH5NwxrFZYhz2
+         5ly2776cSrS3VR0FEf31I7f/AUPGsL3vATiNoqDsUFFLJMapu6IY3kA4PjlQhoHEIAMB
+         jvHKSOY86Axucv8+mgu0soYnu3kMrmH3A1h2MD/JZGKCTbh6W9q2iWSGvHa7bCi84j4g
+         e8iRdqK+4kKJsS6RfbvdDR0h0BzaG+CQ0bV55/Gi/A7JlKlVGEehN6A18TV0o8ieG2mS
+         hoAQ==
+X-Gm-Message-State: ANhLgQ1oxVBbV4ajhmfqB8DwThG9wPqLSEZItToC2suNQJfBH8bd+UOG
+        H/BY5bY6EBJpnfIpxBLxEaQ=
+X-Google-Smtp-Source: ADFU+vut3MyakqoUhMIetlzMKR/p4VXgaNSrjQMPOpcFkSKePWWm++E+Uy2ID9u1cYMxZFT24UeMyQ==
+X-Received: by 2002:a17:90a:d593:: with SMTP id v19mr200036pju.177.1583954365043;
+        Wed, 11 Mar 2020 12:19:25 -0700 (PDT)
 Received: from localhost.localdomain ([103.46.201.94])
-        by smtp.gmail.com with ESMTPSA id z17sm3792673pff.12.2020.03.11.12.19.14
+        by smtp.gmail.com with ESMTPSA id z17sm3792673pff.12.2020.03.11.12.19.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 12:19:19 -0700 (PDT)
+        Wed, 11 Mar 2020 12:19:24 -0700 (PDT)
 From:   Aman Sharma <amanharitsh123@gmail.com>
 Cc:     amanharitsh123@gmail.com,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
@@ -59,9 +59,9 @@ Cc:     amanharitsh123@gmail.com,
         Matthias Brugger <matthias.bgg@gmail.com>,
         linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
-Subject: [PATCH 1/5] pci: handled return value of platform_get_irq correctly
-Date:   Thu, 12 Mar 2020 00:49:02 +0530
-Message-Id: <d12a15f496ca472e100798ac2cd256fbfc1de15d.1583952276.git.amanharitsh123@gmail.com>
+Subject: [PATCH 2/5] pci: added check for return value of platform_get_irq
+Date:   Thu, 12 Mar 2020 00:49:03 +0530
+Message-Id: <53b57606d7bc2615a43b1d5159200dba0435af6d.1583952276.git.amanharitsh123@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1583952275.git.amanharitsh123@gmail.com>
 References: <cover.1583952275.git.amanharitsh123@gmail.com>
@@ -75,25 +75,23 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 Signed-off-by: Aman Sharma <amanharitsh123@gmail.com>
 ---
- drivers/pci/controller/pci-v3-semi.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pci/controller/pci-aardvark.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/pci/controller/pci-v3-semi.c b/drivers/pci/controller/pci-v3-semi.c
-index bd05221f5a22..a5bf945d2eda 100644
---- a/drivers/pci/controller/pci-v3-semi.c
-+++ b/drivers/pci/controller/pci-v3-semi.c
-@@ -777,9 +777,9 @@ static int v3_pci_probe(struct platform_device *pdev)
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index 2a20b649f40c..40a4257f0df1 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -973,6 +973,9 @@ static int advk_pcie_probe(struct platform_device *pdev)
+ 		return PTR_ERR(pcie->base);
  
- 	/* Get and request error IRQ resource */
  	irq = platform_get_irq(pdev, 0);
--	if (irq <= 0) {
-+	if (irq < 0) {
- 		dev_err(dev, "unable to obtain PCIv3 error IRQ\n");
--		return -ENODEV;
++	if (irq < 0)
 +		return irq;
- 	}
- 	ret = devm_request_irq(dev, irq, v3_irq, 0,
- 			"PCIv3 error", v3);
++
+ 	ret = devm_request_irq(dev, irq, advk_pcie_irq_handler,
+ 			       IRQF_SHARED | IRQF_NO_THREAD, "advk-pcie",
+ 			       pcie);
 -- 
 2.20.1
 
