@@ -2,125 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AB39018207E
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Mar 2020 19:15:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C8AEF18220C
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Mar 2020 20:19:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730654AbgCKSPM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Mar 2020 14:15:12 -0400
-Received: from mga01.intel.com ([192.55.52.88]:22310 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730524AbgCKSPM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 11 Mar 2020 14:15:12 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 11:15:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,541,1574150400"; 
-   d="scan'208";a="231776262"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga007.jf.intel.com with ESMTP; 11 Mar 2020 11:15:07 -0700
-Received: from [10.7.201.16] (skuppusw-desk.jf.intel.com [10.7.201.16])
-        by linux.intel.com (Postfix) with ESMTP id E147758033E;
-        Wed, 11 Mar 2020 11:15:06 -0700 (PDT)
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
- in FF mode
-To:     Bjorn Helgaas <helgaas@kernel.org>, Austin.Bolen@dell.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com
-References: <20200311171203.GA137848@google.com>
-From:   Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Organization: Intel
-Message-ID: <c405ec9a-550d-cd97-162f-c41560f40cdf@linux.intel.com>
-Date:   Wed, 11 Mar 2020 11:12:42 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1731013AbgCKTTP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Mar 2020 15:19:15 -0400
+Received: from mail-pl1-f181.google.com ([209.85.214.181]:37138 "EHLO
+        mail-pl1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730807AbgCKTTP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Mar 2020 15:19:15 -0400
+Received: by mail-pl1-f181.google.com with SMTP id f16so1543028plj.4;
+        Wed, 11 Mar 2020 12:19:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AgA8NXVVreTrbc68nE5t9RxNm/CfbmPdVBm+V/xZGZA=;
+        b=Ra5czn0cz8MQvrnhNDEap6qccGc/050Ie9lY8KvZSJx8DwxM1ldR4EKQSh5WEqaxyS
+         xYF9hUZqIDIQT3/lMwdgozbCBLLtUHRKYiEbi4jw4duvuwQOtElG9/7wO44JP0eczHRM
+         Dxsp6Bk+7yOQH4ZtBE0QVZM9RTqDk8Mwsn7lKwTiMqig9txszVT9Cf8hOh6jehBZkYGr
+         1/1bZjX/DLPSpaaBK7DGubvYsRwUorTmARB3R/VM7r9hyt9bspIR8HkN3kcvc/DTY7Hr
+         RBopIs3D719sXwKTDQ7EnjBQ3Skg3Sg35c8707QLuftGu777U7MWzc+ZUFUKozNZmMHR
+         EkyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AgA8NXVVreTrbc68nE5t9RxNm/CfbmPdVBm+V/xZGZA=;
+        b=OfEI5tVw70NbNwDWTNgzMKnxkresNMK6QtkayJQ2zwo3cMn8YdrIMBpr/CLCwcvki9
+         vDfFQpG5KN8Nx1zhE+SVTvNHwxz9++VH7jnpOoqaIk+vF8aYU3jGFeVXlwb4uM8yYa6q
+         CEIxtKCe9I4QdMRM4Uwy0qMjhaO5vZ+Gor6NUGYBBSVvJko9+jXN0QZXAdn1GXKW1A7c
+         UXPInVDDJAmlpJcmoa/+gu5HixFK17/jsDZ8fOi/Xl1KTDtTj0OiIndtGWPiz7smPYSo
+         TNSAF8Gy5EV6VxBQK5dTbv1i/txaIwfKAN20kO3v9JqNnYOoMTzqIgnmeObCfUwlaAkc
+         p7gQ==
+X-Gm-Message-State: ANhLgQ1ObXuP0kGb+m7TwprnAYsVamYHDdMGhgPSHYEwONbjm2/Eqndk
+        RiKrCzVP+Slz2+iZU0HlOZM=
+X-Google-Smtp-Source: ADFU+vut6cvW5Ep/5MnHwgb71GM6QOKN+GXWUmMoSF0wCH4v2hNV7CL9paPgi4pfd+r34U5ISQ9Azw==
+X-Received: by 2002:a17:902:b10c:: with SMTP id q12mr4569032plr.303.1583954354047;
+        Wed, 11 Mar 2020 12:19:14 -0700 (PDT)
+Received: from localhost.localdomain ([103.46.201.94])
+        by smtp.gmail.com with ESMTPSA id z17sm3792673pff.12.2020.03.11.12.19.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Mar 2020 12:19:13 -0700 (PDT)
+From:   Aman Sharma <amanharitsh123@gmail.com>
+Cc:     amanharitsh123@gmail.com,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Mans Rullgard <mans@mansr.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+Subject: [PATCH 0/5] Handled return value of platform_get_irq correctly
+Date:   Thu, 12 Mar 2020 00:49:01 +0530
+Message-Id: <cover.1583952275.git.amanharitsh123@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20200311171203.GA137848@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+As mentioned by Bjorn Helgaas in a private mail, the return value of
+platform_get_irq must be checked against the conditon of strictly
+smaller than 0 and if check must return the value recieved from
+platform_get_irq rather than any other macro like -ENODEV.
 
-On 3/11/20 10:12 AM, Bjorn Helgaas wrote:
->
->> I can just state that it's done after OST returns but before _HPX or
->> driver is loaded. Any time in that range is fine. I can't get super
->> specific here because different OSes do different things.  Even for
->> a given OS they change over time. And I need something generic
->> enough to support a wide variety of OS implementations.
-> Yeah.  I don't know how to solve this.
->
-> Linux doesn't actually unload and reload drivers for the child devices
-> (Sathy, correct me if I'm wrong here) even though DPC containment
-> takes the link down and effectively unplugs and replugs the device.  I
-> would *like* to handle it like hotplug, but some higher-level software
-> doesn't deal well with things like storage devices disappearing and
-> reappearing.
->
-> Since Linux doesn't actually re-enumerate the child devices, it
-> wouldn't evaluate _HPX again.  It would probably be cleaner if it did,
-> but it's all tied up with the whole unplug/replug problem.
-Yes, re-enumeration of child devices is handled by hot-plug path.
-AFAIK, with current PCI driver design, I think its very difficult to create
-dependency between current DPC handler and hot-plug device
-enumeration handler.
+Aman Sharma (5):
+  pci: handled return value of platform_get_irq correctly
+  pci: added check for return value of platform_get_irq
+  pci: handled return value of platform_get_irq correctly
+  pci: handled return value of platform_get_irq correctly
+  pci: added check for return value of platform_get_irq
 
->
->>> For child devices of that port, obviously it's impossible to
->>> access AER registers until DPC Trigger Status is cleared, and the
->>> flowchart says the OS shouldn't access them until after _OST.
->>>
->>> I'm actually not sure we currently do *anything* with child device
->>> AER info in the EDR path.  pcie_do_recovery() does walk the
->>> sub-hierarchy of child devices, but it only calls error handling
->>> callbacks in the child drivers; it doesn't do anything with the
->>> child AER registers itself.  And of course, this happens before
->>> _OST, so it would be too early in any case.  But maybe I'm missing
->>> something here.
->> My understanding is that the OS read/clears AER in the case where OS
->> has native control of AER.  Feedback from OSVs is they wanted to
->> continue to do that to keep the native OS controlled AER and FF
->> mechanism similar.  The other way we could have done it would be to
->> have the firmware read/clear AER and report them to OS via APEI.
-> When Linux has native control of AER, it reads/clears AER status.
-> The flowchart is for the case where firmware has AER control, so I
-> guess Linux would not field AER interrupts and wouldn't expect to
-> read/clear AER status.  So I *guess* Linux would assume APEI?  But
-> that doesn't seem to be what the flowchart assumes.
-Yes, in EDR case, based on our current Linux driver design, without
-some spec changes it will be very difficult to implement the
-clear the AER status of child devices part of the flow chart. This is the
-reason why I did not implement that part in current patch set.
-
-I think instead of depending on DPC status trigger to end the EDR
-notification window, we should depend on some sort of handshake
-between OS and firmware (may be some changes to _OST arg1 0:15 and
-use _OST for it). Above change would give us a window to clear the
-AER registers properly.
->
->>> BTW, if/when this is updated, I have another question: the _OSC
->>> DPC control bit currently allows the OS to write DPC Control
->>> during that window.  I understand the OS writing the RW1C *Status*
->>> bits to clear them, but it seems like writing the DPC Control
->>> register is likely to cause issues.  The same question would apply
->>> to the AER access we're talking about.
->> We could specify which particular bits can and can't be touched.
->> But it's hard to maintain as new bits are added.  Probably better to
->> add some guidance that OS should read/clear error status, DPC
->> Trigger Status, etc. but shouldn't change masks/severity/control
->> bits/etc.
-> Yeah.  I didn't mean at the level of individual bits; I was thinking
-> more of status/log/etc vs control registers.  But maybe even that is
-> hard, I dunno.
+ drivers/pci/controller/pci-aardvark.c  | 3 +++
+ drivers/pci/controller/pci-v3-semi.c   | 4 ++--
+ drivers/pci/controller/pcie-mediatek.c | 3 +++
+ drivers/pci/controller/pcie-mobiveil.c | 4 ++--
+ drivers/pci/controller/pcie-tango.c    | 4 ++--
+ 5 files changed, 12 insertions(+), 6 deletions(-)
 
 -- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
+2.20.1
 
