@@ -2,128 +2,142 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1424D181B38
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Mar 2020 15:31:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CF8F5181B9D
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Mar 2020 15:46:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729650AbgCKObB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Mar 2020 10:31:01 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:39693 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729309AbgCKObB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Mar 2020 10:31:01 -0400
-Received: by mail-wr1-f67.google.com with SMTP id r15so2906223wrx.6;
-        Wed, 11 Mar 2020 07:30:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VjzeEKChSA5U1RVRAuBtpoNW2CBTxFFw13vMlkz5Qxk=;
-        b=EHqlZFnV23fFnJW6akKlxvTs10LaICmJ/QCOlISSxIB0cw/p6s1ifiyS3OZVNq7Cra
-         /3936DKt8/JFJz9DaopJG5InbBeZvZQeuOQZ6Aed3ghopyfvrWaRZCF1LE/x6R5kBpJn
-         0/A1PFt0H4dOR0eMsY0VrYnR0krQmusq1cJRptn09df4Qfb6qmziQ+zua6UH2O+eMec2
-         Bw8N02JXEbs4uNpXpKNEvAUIqsava8YurAY6JtdU3NoMUaC9nfqn1m24q5apukcQLlnC
-         b1m2mUIIDODwT1Dp8udTeIrQeUioqm9GfvpINHA4RYsiD3ooKoLqmsKQjaZJENIv0tX0
-         dBGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VjzeEKChSA5U1RVRAuBtpoNW2CBTxFFw13vMlkz5Qxk=;
-        b=DzRst48KUcc5LxTJIMV84RcHd5Zq9i5tTZEs5gVRaQs+VNV+VEFCOeaNDmaVmg90uf
-         uaDyXF6E7KnF5SOSQjLZAq9GH2wJ2JRFDv3iF/XBG3ya8qXO819JHRDtDTVW+eaMIhxh
-         2yqb6Ld9lBAjxCAWH4ShfM5LTXwOvbb/02fgccV1/bN5RdzB1EBs1duAexRQeZVECQhF
-         T1OSBqaXSb4ZxX248UN56K82DJ5qwwu5M5g6+S9hTMk0pVVKNn9/iXwAOOSYketdqNXF
-         pIMhNthn+oMUFMfZMi25rfMPPFr+sepu3JP4Lm5p4E8pf7+e1ETjTGdgueRc44EGW2LL
-         lZlw==
-X-Gm-Message-State: ANhLgQ3/7b/RwVt7OfnVXNpbROxeoa+blDIczej8jd+bTiRrLFXidvRS
-        lSN+sJ1iGevVqig3tTHcvCc=
-X-Google-Smtp-Source: ADFU+vuCLwEwQ5JWv5ljZuN0njk0gngoUTdcQ0yYvpJ5vzAu66rQL6Q1YmXNCUN1Wmmj/p+P6gqpCA==
-X-Received: by 2002:a5d:5090:: with SMTP id a16mr4872952wrt.191.1583937058668;
-        Wed, 11 Mar 2020 07:30:58 -0700 (PDT)
-Received: from localhost (pD9E516A9.dip0.t-ipconnect.de. [217.229.22.169])
-        by smtp.gmail.com with ESMTPSA id 138sm3297085wmb.21.2020.03.11.07.30.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 07:30:57 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 15:30:53 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Vidya Sagar <vidyas@nvidia.com>, bhelgaas@google.com,
-        robh+dt@kernel.org, jonathanh@nvidia.com, andrew.murray@arm.com,
-        kishon@ti.com, gustavo.pimentel@synopsys.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V5 0/5] Add support for PCIe endpoint mode in Tegra194
-Message-ID: <20200311143053.GB494173@ulmo>
-References: <20200303181052.16134-1-vidyas@nvidia.com>
- <20200311105141.GA30083@e121166-lin.cambridge.arm.com>
+        id S1729198AbgCKOp7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Mar 2020 10:45:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57662 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729057AbgCKOp7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 11 Mar 2020 10:45:59 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA077206B1;
+        Wed, 11 Mar 2020 14:45:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583937957;
+        bh=8Ta0Ywuou1GN90e0Q2WNKbhuY2sBRMaHPXRr97CbkrM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=qSVKXeS48mazxKjpMGxpjI1liswrAHQ8MnJ5PIZp0eQBJkJNwKZkwmIIyM5UQX9If
+         Z2yhBncP+9wi9eZuwhHtf+7oiMH5KZc9aRtKv0yRd1sNk/4YoFZ99d8A9hM+xlYsNd
+         EPdWG0fw9tAU8xz1k8Fnloa9sZXdtdxIe2imwKuk=
+Date:   Wed, 11 Mar 2020 09:45:56 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Austin.Bolen@dell.com
+Cc:     sathyanarayanan.kuppuswamy@linux.intel.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com
+Subject: Re: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
+ in FF mode
+Message-ID: <20200311144556.GA208157@google.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="i9LlY+UWpKt15+FH"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200311105141.GA30083@e121166-lin.cambridge.arm.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+In-Reply-To: <38277b0f6c2e4c5d88e741b7354c72d1@AUSX13MPC107.AMER.DELL.COM>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Tue, Mar 10, 2020 at 08:06:21PM +0000, Austin.Bolen@dell.com wrote:
+> On 3/10/2020 2:33 PM, Bjorn Helgaas wrote:
+> > On Tue, Mar 10, 2020 at 06:14:20PM +0000, Austin.Bolen@dell.com wrote:
+> >> On 3/9/2020 11:28 PM, Kuppuswamy, Sathyanarayanan wrote:
+> >>> On 3/9/2020 7:40 PM, Bjorn Helgaas wrote:
+> >>>> [+cc Austin, tentative Linux patches on this git branch:
+> >>>> https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/tree/drivers/pci/pcie?h=review/edr]
+> >>>>
+> >>>> On Tue, Mar 03, 2020 at 06:36:32PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> >>>>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> >>>>>
+> >>>>> As per PCI firmware specification r3.2 System Firmware Intermediary
+> >>>>> (SFI) _OSC and DPC Updates ECR
+> >>>>> (https://members.pcisig.com/wg/PCI-SIG/document/13563), sec titled "DPC
+> >>>>> Event Handling Implementation Note", page 10, Error Disconnect Recover
+> >>>>> (EDR) support allows OS to handle error recovery and clearing Error
+> >>>>> Registers even in FF mode. So create new API pci_aer_raw_clear_status()
+> >>>>> which allows clearing AER registers without FF mode checks.
 
---i9LlY+UWpKt15+FH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> >> OS clears the DPC Trigger Status bit which will bring port below it out
+> >> of containment. Then OS will clear the "port" error status bits (i.e.,
+> >> the AER and DPC status bits in the root port or downstream port that
+> >> triggered containment). I don't think it would hurt to do this two steps
+> >> in reverse order but don't think it is necessary.
 
-On Wed, Mar 11, 2020 at 10:52:00AM +0000, Lorenzo Pieralisi wrote:
-> On Tue, Mar 03, 2020 at 11:40:47PM +0530, Vidya Sagar wrote:
-> > Tegra194 has three (C0, C4 & C5) dual mode PCIe controllers that can op=
-erate
-> > either in root port mode or in end point mode but only in one mode at a=
- time.
-> > Platform P2972-0000 supports enabling endpoint mode for C5 controller. =
-This
-> > patch series adds support for PCIe endpoint mode in both the driver as =
-well as
-> > in DT.
-> > This patch series depends on the changes made for Synopsys DesignWare e=
-ndpoint
-> > mode subsystem that are recently accepted.
-> > @ https://patchwork.kernel.org/project/linux-pci/list/?series=3D202211
-> > which in turn depends on the patch made by Kishon
-> > @ https://patchwork.kernel.org/patch/10975123/
-> > which is also under review.
-> >=20
-> > V5:
-> > * Rebased patch-2 on top of Lorenzo's pci/endpoint branch
-> > * Removed unwanted header files inclusion in patch-5
->=20
-> Applied patches 1,2,5 to pci/endpoint for v5.7, please let me know
-> if something is missing.
+> >> Note that error status bits for devices below the port in
+> >> containment are cleared later after f/w has a chance to log them.
 
-Great, thanks! I've picked up patches 3 and 4 into the Tegra tree for
-v5.7.
+Thanks for pointing out this wrinkle about devices below the port in
+containment.  I think we might have an issue here with the current
+series because evaluating _OST is the last thing the EDR notify
+handler does.  More below.
 
-Thierry
+> > Maybe I'm misreading the DPC enhancements ECN.  I think it says the OS
+> > can read/write DPC registers until it clears the DPC Trigger Status.
+> > If the OS clears Trigger Status first, my understanding is that we're
+> > now out of the EDR notification processing window and the OS is not
+> > permitted to write DPC registers.
+> > 
+> > If it's OK for the OS to clear Trigger Status before clearing DPC
+> > error status, what is the event that determines when the OS may no
+> > longer read/write the DPC registers?
+> 
+> I think there are a few different registers to consider... DPC
+> Control, DPC Status, various AER registers, and the RP PIO
+> registers. At this point in the flow, the firmware has already had a
+> chance to read all of them and so it really doesn't matter the order
+> the OS does those two things. The firmware isn't going to get
+> notified again until _OST so by then both operation will be done and
+> system firmware will have no idea which order the OS did them in,
+> nor will it care.  But since the existing normative text specifies
+> and order, I would just follow that.
 
---i9LlY+UWpKt15+FH
-Content-Type: application/pgp-signature; name="signature.asc"
+OK, this series clears DPC error status before clearing DPC Trigger
+Status, so I think we can keep that as-is.
 
------BEGIN PGP SIGNATURE-----
+> > There are no events after the "clear device AER status" box.  That
+> > seems to mean the OS can write the AER status registers at any
+> > time.  But the whole implementation note assumes firmware
+> > maintains control of AER.
+> 
+> In this model the OS doesn't own DPC or AER but the model allows OS
+> to touch both DPC and AER registers at certain times.  I would view
+> ownership in this case as who is the primary owner and not who is
+> the sole entity allowed to access the registers.
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl5o9hkACgkQ3SOs138+
-s6EhXg//cjYE1EBraQovAb9Meb89XpZgwlbTBz4wVpX5gGBnmOdMVLAJdqSbXdVQ
-AxZT3EVQOzy24ZqGwb118iN3a28CNYU9FLUdZM/UoPnA4NHC0Dk62cIeWUly7FU7
-geukEaBFNJSl/6EPuAo0Qobgow0Yn5anvPjKgpZ+0BKK/e/+aUYZNzFs0vpde9xq
-9PPsB1rGj0KrrDSnAFS1hxrL85yL8B5Hz2X//Zm/WFgC3C7X2lSSCL9z4RWyeT1F
-pNc41o45blCOmcA2wZi7WbaMCYkyBvQyjEmBPBTnF/6P3R+J3XWtyWcTJOSwgjby
-MHLshrbG0T4HNxFtbZ38G14Q//mCu5kYuGWLW/P3187nejD2XF1wNGYSqmwE9Eny
-zcOH7tqEofowLvCjLa3BZtHiSiAxRdwuLY4Q6nh1tEydpQqo5bKp3A52B6vjdqoo
-7GBhLvJ6tIal+dZUxI7nMz7wPdb53TrMws6rhQ4/bcb1oprZwXQzL8DGoNij6aBl
-kYU0OvWb1Wh9t+EbLa3BKdupY/OuBVK1zu6/mH1+MYTD/FZviyj+EXH8rPLbzki5
-THwdnIDEs0dvf3nEfIjXnyVfr+QrVOsrsKOpyfjHq3N0yGeOXavt1Su/XHZ8mBDX
-r2nBg9NWA2vPlngiW49ndo080lFoiG3mGmRwgk21+1HJIDdPcys=
-=QA1n
------END PGP SIGNATURE-----
+I'm not sure how to translate the idea of primary ownership into code.
 
---i9LlY+UWpKt15+FH--
+> For the normative text describing when OS clears the AER bits
+> following the informative flow chart, it could say that OS clears
+> AER as soon as possible after OST returns and before OS processes
+> _HPX and loading drivers.  Open to other suggestions as well.
+
+I'm not sure what to do with "as soon as possible" either.  That
+doesn't seem like something firmware and the OS can agree on.
+
+For the port that triggered DPC containment, I think the easiest thing
+to understand and implement would be to allow AER access during the
+same EDR processing window where DPC access is allowed.
+
+For child devices of that port, obviously it's impossible to access
+AER registers until DPC Trigger Status is cleared, and the flowchart
+says the OS shouldn't access them until after _OST.
+
+I'm actually not sure we currently do *anything* with child device AER
+info in the EDR path.  pcie_do_recovery() does walk the sub-hierarchy
+of child devices, but it only calls error handling callbacks in the
+child drivers; it doesn't do anything with the child AER registers
+itself.  And of course, this happens before _OST, so it would be too
+early in any case.  But maybe I'm missing something here.
+
+BTW, if/when this is updated, I have another question: the _OSC DPC
+control bit currently allows the OS to write DPC Control during that
+window.  I understand the OS writing the RW1C *Status* bits to clear
+them, but it seems like writing the DPC Control register is likely to
+cause issues.  The same question would apply to the AER access we're
+talking about.
+
+Bjorn
