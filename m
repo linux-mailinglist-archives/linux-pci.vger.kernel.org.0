@@ -2,48 +2,48 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D1708182216
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Mar 2020 20:19:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 23704182218
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Mar 2020 20:19:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731147AbgCKTTh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Mar 2020 15:19:37 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:33087 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730807AbgCKTTh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Mar 2020 15:19:37 -0400
-Received: by mail-pj1-f68.google.com with SMTP id o21so1853951pjs.0;
-        Wed, 11 Mar 2020 12:19:36 -0700 (PDT)
+        id S1731161AbgCKTTn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Mar 2020 15:19:43 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:41693 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730807AbgCKTTm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Mar 2020 15:19:42 -0400
+Received: by mail-pg1-f193.google.com with SMTP id b1so1712040pgm.8;
+        Wed, 11 Mar 2020 12:19:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=pOjQrnVayTgdrET4gCgzOMQ7+VznZ1NPyMucBXzQRTg=;
-        b=eZXdYYUO9MJk8vDBz2ohUHhTlFQ6OUvKe5NJC3wwMup1+78yjzPuD0a1yqr7kKDAzn
-         R6bakE9D6+2lnyfG457Nwws4+THsXyHBMV88kQa77cHLpoisL/FI1o5FbYjjD+Cho972
-         a/pSRcvr7B/YCgFV1J8wk+jRpXIpqHPrPXkUbPz86UioJj5qwacgDmZn15UmH5MpjSIm
-         NvmTKUXeA4shooBgG2EMsAcLL3Sm7nQ72CXnpIBnlTEibmiT3TrxdnaIeopIbHLfMDA9
-         iCdUKJsTETkc/0yFfjDjJIJEzpVlInD/58X/THAjQ3ciF01RAOk751kpX86fuzJRi0o3
-         d2OA==
+        bh=6tx20opC58CZx8EHUzpcUW3v0td0yDhkgy01mmgvT1k=;
+        b=CozuzMqFhVkFE6pdK3cIh6s0uXsG2lK7hYQy5IVZtcQmUzBEAvs4Pb139yfhgUcRa9
+         N2kLzQ5SjJ4V/dJTw7i+GKo/N1pv+gZxM58WXszNGBoQKI+uMjTkQV8zbt4kF/2vH6H5
+         NJvfcNhZFERyJC3It01naJmHSsln6g6kKl1vzNrulqq5LAHF4wgNhbVyandZgnizxIO/
+         cJgnDsnDD40sItIySZNC+HviwpK2K4wwHsgCEN7CPG5wC+lgXKwLhWQretoqWOKfhmxk
+         PpPlksn5E6jm5/jvgOte7D5wpDz3s+voxXT0SDhgnRs5al+E5xvjKdYFYNU988j+8gtz
+         FAuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=pOjQrnVayTgdrET4gCgzOMQ7+VznZ1NPyMucBXzQRTg=;
-        b=im5W9ds9G2tb1LIffJBVdjo6FKRMvXedDkQlplIvxaUJ4esXnjBBf5oX7ZwxCXFoVE
-         HzYmeT4pzr23bXWFfiYSRKJLei+rZjPdG+9jlvSDk5xapH+5sWKkXC24OE83RWmLCYKz
-         M8hyXx8pqaUsRdtjxRRGZurqiaJHB48v7Ge7quu+TTl2nZbcR0GdrrEFGYZDMnBXv5vs
-         i9X17IAo9c3KxZmSuLABW59LRr+89QVL61Z9bKR/thNa7gIxKgiAQaCa15A/e6iMUGWv
-         Nl2tLD9oXzGBpvpe0e9F/I0ORBL50IqXbfDhVl3Ng0rsXiehH/LBpZd5heuAVJvkdCSq
-         5JCA==
-X-Gm-Message-State: ANhLgQ1iaI6LB/7y8JS7HGrBD/rzJyzkhjJazNgNf6wi6R4WFqatEqc/
-        1SwLRxxgs+L827Of+zo0UIU=
-X-Google-Smtp-Source: ADFU+vsSzPj8KundN3q85Ksdo5biFKHHfX+UdUbQyTZOldP1FMJEG8vyFDHt7yRgWjL+jYyHW5T0Zg==
-X-Received: by 2002:a17:90b:1a8b:: with SMTP id ng11mr201893pjb.173.1583954376003;
-        Wed, 11 Mar 2020 12:19:36 -0700 (PDT)
+        bh=6tx20opC58CZx8EHUzpcUW3v0td0yDhkgy01mmgvT1k=;
+        b=jIgFx/QtIYgwYFdeAPXgprbyjO6ZrfFL18SiaZN7X3f53cLMpFBKGnbi3BbaqIit/q
+         pESNyh+pD4zSV/ki3TfG4XNqjXcR4zK/Iaow357Sgk96YXhozYMom6HiR9DWTAecja9+
+         HDenUvmU04XVTT7arLGBXyF8Ti+JRWuF0EI6CL6gsfkbAztA+Ga2mDkrP6OzatVDYLuV
+         OobbN9jH4LGZZNBGe2W8uRhB8Prp2H0HrUq90AyToV5L6h6l8YZGhl91TGthxTjnHHMD
+         LHG9BLv6lQPoENukIjQnBEjrFnE+nROWMlBeY66gY32ifrLx7Vh50A8brWNDX7aEXXQJ
+         F4ww==
+X-Gm-Message-State: ANhLgQ2VoxplZqDbwY3Gec1BAri3q1OXmFf8f+hErz3fh0TCJCr3Aq6u
+        IDJkKIejlVGJpoHFrKSq/kM=
+X-Google-Smtp-Source: ADFU+vuIATg8TgONqQwj07uaBbQTUtMOLI517xnn/BWXZKYW/0G/Tlqgwm379phb/QVQVuzVzgf6SQ==
+X-Received: by 2002:aa7:90cc:: with SMTP id k12mr2456493pfk.94.1583954381475;
+        Wed, 11 Mar 2020 12:19:41 -0700 (PDT)
 Received: from localhost.localdomain ([103.46.201.94])
-        by smtp.gmail.com with ESMTPSA id z17sm3792673pff.12.2020.03.11.12.19.31
+        by smtp.gmail.com with ESMTPSA id z17sm3792673pff.12.2020.03.11.12.19.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 12:19:35 -0700 (PDT)
+        Wed, 11 Mar 2020 12:19:41 -0700 (PDT)
 From:   Aman Sharma <amanharitsh123@gmail.com>
 Cc:     amanharitsh123@gmail.com,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
@@ -59,9 +59,9 @@ Cc:     amanharitsh123@gmail.com,
         Matthias Brugger <matthias.bgg@gmail.com>,
         linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
-Subject: [PATCH 4/5] pci: handled return value of platform_get_irq correctly
-Date:   Thu, 12 Mar 2020 00:49:05 +0530
-Message-Id: <b773b3b1ed25a0e6d5d826b6c43293473cbd24e7.1583952276.git.amanharitsh123@gmail.com>
+Subject: [PATCH 5/5] pci: added check for return value of platform_get_irq
+Date:   Thu, 12 Mar 2020 00:49:06 +0530
+Message-Id: <a36999aa5c567c65ddfaf0b54406e8583343a510.1583952276.git.amanharitsh123@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1583952275.git.amanharitsh123@gmail.com>
 References: <cover.1583952275.git.amanharitsh123@gmail.com>
@@ -75,25 +75,23 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 Signed-off-by: Aman Sharma <amanharitsh123@gmail.com>
 ---
- drivers/pci/controller/pcie-tango.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pci/controller/pcie-mediatek.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/pci/controller/pcie-tango.c b/drivers/pci/controller/pcie-tango.c
-index 21a208da3f59..18c2c4313eb5 100644
---- a/drivers/pci/controller/pcie-tango.c
-+++ b/drivers/pci/controller/pcie-tango.c
-@@ -273,9 +273,9 @@ static int tango_pcie_probe(struct platform_device *pdev)
- 		writel_relaxed(0, pcie->base + SMP8759_ENABLE + offset);
- 
- 	virq = platform_get_irq(pdev, 1);
--	if (virq <= 0) {
-+	if (virq < 0) {
- 		dev_err(dev, "Failed to map IRQ\n");
--		return -ENXIO;
-+		return virq;
+diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+index cb982891b22b..ebfa7d5a4e2d 100644
+--- a/drivers/pci/controller/pcie-mediatek.c
++++ b/drivers/pci/controller/pcie-mediatek.c
+@@ -651,6 +651,9 @@ static int mtk_pcie_setup_irq(struct mtk_pcie_port *port,
  	}
  
- 	irq_dom = irq_domain_create_linear(fwnode, MSI_MAX, &dom_ops, pcie);
+ 	port->irq = platform_get_irq(pdev, port->slot);
++	if (port->irq < 0)
++		return port->irq;
++
+ 	irq_set_chained_handler_and_data(port->irq,
+ 					 mtk_pcie_intr_handler, port);
+ 
 -- 
 2.20.1
 
