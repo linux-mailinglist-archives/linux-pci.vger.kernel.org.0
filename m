@@ -2,152 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 37DB418245B
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Mar 2020 22:59:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 47AD618246A
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Mar 2020 23:05:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729846AbgCKV7f (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Mar 2020 17:59:35 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:51805 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729823AbgCKV7f (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Mar 2020 17:59:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583963974;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=2coe0K/YOGRmQlEEVhDLe8KeocxzDyTxw0isd+7I5PM=;
-        b=TZGj1iUfzPfHkw969iXJ0Q7dgNesktYB9KjpUgl3MhF1vUBzLg9yEQX7wbyfZMeB2VBb1R
-        ie4mU43zU/b2sshO7sqBpLqiPchdTI++IKgjFR/KFOUn/R55epw1LtID3RXlQLvfGhUALN
-        uLg+oHcfMeNyffvcG7FQe2vc0p7XC8U=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-472-qtDruae_OwS7l1nxV3b4SA-1; Wed, 11 Mar 2020 17:59:32 -0400
-X-MC-Unique: qtDruae_OwS7l1nxV3b4SA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1729956AbgCKWFf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Mar 2020 18:05:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40342 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729506AbgCKWFf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 11 Mar 2020 18:05:35 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AFCE3800D4E;
-        Wed, 11 Mar 2020 21:59:30 +0000 (UTC)
-Received: from gimli.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 76DF25C1C3;
-        Wed, 11 Mar 2020 21:59:27 +0000 (UTC)
-Subject: [PATCH v3 7/7] vfio/pci: Cleanup .probe() exit paths
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     kvm@vger.kernel.org
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dev@dpdk.org, mtosatti@redhat.com, thomas@monjalon.net,
-        bluca@debian.org, jerinjacobk@gmail.com,
-        bruce.richardson@intel.com, cohuck@redhat.com, kevin.tian@intel.com
-Date:   Wed, 11 Mar 2020 15:59:27 -0600
-Message-ID: <158396396706.5601.17691989521568973524.stgit@gimli.home>
-In-Reply-To: <158396044753.5601.14804870681174789709.stgit@gimli.home>
-References: <158396044753.5601.14804870681174789709.stgit@gimli.home>
-User-Agent: StGit/0.19-dirty
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E0E820739;
+        Wed, 11 Mar 2020 22:05:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583964335;
+        bh=ycz1YvJMQ8Djb+Q4YGZvnbsSd5DxIIjDJvR0r4AEbac=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=HZRZE7SLa+VlCrTowruUOD6ZZLZ9oC+Z0wksNaUGoxSRAG+oNNxNQ8n0LNh/4R0oX
+         YU6hWt/vqCumtq3KNLfMf/QYqXJQryQI9CSXvaGfUOOs0KxqOVPaYSKpV6172MSk8Q
+         UPBAwRyK0+mfSlgtmShwfYs2ouICUKdO9Wdpkt3c=
+Date:   Wed, 11 Mar 2020 17:05:33 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Austin.Bolen@dell.com
+Cc:     sathyanarayanan.kuppuswamy@linux.intel.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com
+Subject: Re: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
+ in FF mode
+Message-ID: <20200311220533.GA196637@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <38277b0f6c2e4c5d88e741b7354c72d1@AUSX13MPC107.AMER.DELL.COM>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The cleanup is getting a tad long.
+On Tue, Mar 10, 2020 at 08:06:21PM +0000, Austin.Bolen@dell.com wrote:
+> On 3/10/2020 2:33 PM, Bjorn Helgaas wrote:
 
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
----
- drivers/vfio/pci/vfio_pci.c |   54 ++++++++++++++++++++-----------------------
- 1 file changed, 25 insertions(+), 29 deletions(-)
+> > If that's possible, it would be nice to update the metadata for the
+> > "Downstream Port Containment related Enhancements" ECN as well.  That
+> > one currently says "ECR - CardBus Header Proposal", which means that's
+> > what's in the window title bar and icons in the panel.
+> 
+> Sure, I'll check.
 
-diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-index af1ba9867201..6c6b37b5c04e 100644
---- a/drivers/vfio/pci/vfio_pci.c
-+++ b/drivers/vfio/pci/vfio_pci.c
-@@ -1598,8 +1598,8 @@ static int vfio_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 
- 	vdev = kzalloc(sizeof(*vdev), GFP_KERNEL);
- 	if (!vdev) {
--		vfio_iommu_group_put(group, &pdev->dev);
--		return -ENOMEM;
-+		ret = -ENOMEM;
-+		goto out_group_put;
- 	}
- 
- 	vdev->pdev = pdev;
-@@ -1610,43 +1610,27 @@ static int vfio_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	INIT_LIST_HEAD(&vdev->ioeventfds_list);
- 
- 	ret = vfio_add_group_dev(&pdev->dev, &vfio_pci_ops, vdev);
--	if (ret) {
--		vfio_iommu_group_put(group, &pdev->dev);
--		kfree(vdev);
--		return ret;
--	}
-+	if (ret)
-+		goto out_free;
- 
- 	ret = vfio_pci_reflck_attach(vdev);
--	if (ret) {
--		vfio_del_group_dev(&pdev->dev);
--		vfio_iommu_group_put(group, &pdev->dev);
--		kfree(vdev);
--		return ret;
--	}
-+	if (ret)
-+		goto out_del_group_dev;
- 
- 	if (pdev->is_physfn) {
- 		vdev->vf_token = kzalloc(sizeof(*vdev->vf_token), GFP_KERNEL);
- 		if (!vdev->vf_token) {
--			vfio_pci_reflck_put(vdev->reflck);
--			vfio_del_group_dev(&pdev->dev);
--			vfio_iommu_group_put(group, &pdev->dev);
--			kfree(vdev);
--			return -ENOMEM;
--		}
--
--		vdev->nb.notifier_call = vfio_pci_bus_notifier;
--		ret = bus_register_notifier(&pci_bus_type, &vdev->nb);
--		if (ret) {
--			kfree(vdev->vf_token);
--			vfio_pci_reflck_put(vdev->reflck);
--			vfio_del_group_dev(&pdev->dev);
--			vfio_iommu_group_put(group, &pdev->dev);
--			kfree(vdev);
--			return ret;
-+			ret = -ENOMEM;
-+			goto out_reflck;
- 		}
- 
- 		mutex_init(&vdev->vf_token->lock);
- 		uuid_gen(&vdev->vf_token->uuid);
-+
-+		vdev->nb.notifier_call = vfio_pci_bus_notifier;
-+		ret = bus_register_notifier(&pci_bus_type, &vdev->nb);
-+		if (ret)
-+			goto out_vf_token;
- 	}
- 
- 	if (vfio_pci_is_vga(pdev)) {
-@@ -1672,6 +1656,18 @@ static int vfio_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	}
- 
- 	return ret;
-+
-+out_vf_token:
-+	kfree(vdev->vf_token);
-+out_reflck:
-+	vfio_pci_reflck_put(vdev->reflck);
-+out_del_group_dev:
-+	vfio_del_group_dev(&pdev->dev);
-+out_free:
-+	kfree(vdev);
-+out_group_put:
-+	vfio_iommu_group_put(group, &pdev->dev);
-+	return ret;
- }
- 
- static void vfio_pci_remove(struct pci_dev *pdev)
-
+FWIW, the PCI Firmware Specification, Rev 3.2, dated "Final - Jan 28,
+2019" also has the same metadata problem.
