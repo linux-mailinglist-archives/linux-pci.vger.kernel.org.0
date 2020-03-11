@@ -2,130 +2,193 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A0861181CC6
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Mar 2020 16:48:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EDBE4181ED6
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Mar 2020 18:12:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730010AbgCKPsL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Mar 2020 11:48:11 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:1212 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729977AbgCKPsL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Mar 2020 11:48:11 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e69080d0001>; Wed, 11 Mar 2020 08:47:25 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 11 Mar 2020 08:48:10 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 11 Mar 2020 08:48:10 -0700
-Received: from [10.25.76.193] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 11 Mar
- 2020 15:48:05 +0000
-Subject: Re: [PATCH V5 0/5] Add support for PCIe endpoint mode in Tegra194
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        <thierry.reding@gmail.com>
-CC:     <bhelgaas@google.com>, <robh+dt@kernel.org>,
-        <jonathanh@nvidia.com>, <andrew.murray@arm.com>, <kishon@ti.com>,
-        <gustavo.pimentel@synopsys.com>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20200303181052.16134-1-vidyas@nvidia.com>
- <20200311105141.GA30083@e121166-lin.cambridge.arm.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <e49b3c8d-f669-007b-5d35-b8ec4f0529aa@nvidia.com>
-Date:   Wed, 11 Mar 2020 21:18:02 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1729675AbgCKRMH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Mar 2020 13:12:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38772 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726299AbgCKRMH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 11 Mar 2020 13:12:07 -0400
+Received: from localhost (165.sub-174-234-131.myvzw.com [174.234.131.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3289E20734;
+        Wed, 11 Mar 2020 17:12:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583946726;
+        bh=SDlz6mXq+YdNYkyKQd61cklNTIoTHr9DyC26899vQnU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=P2fZLADUcGo59L7OpnMvgYKe/tfthcyHmnxXJknm3Q/SJgekNqc9oymX/hvvbf0tm
+         NQ5OuGfnIIR1Skw2qbfaTG1q+zqU+dBU5Bm6F7wSLgKJlwcMwimuh/jJ9Ea0Gs1WHi
+         KK2p1Hb85H2sLmSBuRhlL3MkfrlojXVwYQfDIbxQ=
+Date:   Wed, 11 Mar 2020 12:12:03 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Austin.Bolen@dell.com
+Cc:     sathyanarayanan.kuppuswamy@linux.intel.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com
+Subject: Re: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
+ in FF mode
+Message-ID: <20200311171203.GA137848@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20200311105141.GA30083@e121166-lin.cambridge.arm.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1583941645; bh=ywvixbNO+/N+yt4O8EWdBUGbwryGxLJH9bz6Oivel4E=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=FUr9rm3ZDnaGkISW2fqFeQV6c9pGe4voXCRhfLm6YSBXRi1w8HYJNa8/I8bfNPJZ0
-         hrvJzdioW7B0VV1xDJZl38c+TJcJV+KIjyRryJyYj+nF9IqXosGb48Ru5Rzl7X9PuQ
-         xeqi9ruu0zODcJlLs68teXh/cON40ntYNfdx1DuZAkFrt9DKr8AE0NVAcbdP9PcPEg
-         y0TF7XWWQpo73L1oNJfHpDQX3qHnrJJ8qYBxYrWerdWJ6trWhksnPj6k/0qaZdNTVF
-         PkPHL/U5VcNEI8kIWQRmXkUai/qB8i/kSr2X+0RJw+0Am0rEg3tMthMIaAg/ooMlGN
-         n1/Ibsjw1TkiQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0890801daa6c4564bca1690fd8439dab@AUSX13MPC107.AMER.DELL.COM>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Wed, Mar 11, 2020 at 03:19:44PM +0000, Austin.Bolen@dell.com wrote:
+> On 3/11/2020 9:46 AM, Bjorn Helgaas wrote:
+> > On Tue, Mar 10, 2020 at 08:06:21PM +0000, Austin.Bolen@dell.com wrote:
+> >> On 3/10/2020 2:33 PM, Bjorn Helgaas wrote:
+> >>> On Tue, Mar 10, 2020 at 06:14:20PM +0000, Austin.Bolen@dell.com wrote:
+> >>>> On 3/9/2020 11:28 PM, Kuppuswamy, Sathyanarayanan wrote:
+> >>>>> On 3/9/2020 7:40 PM, Bjorn Helgaas wrote:
+> >>>>>> [+cc Austin, tentative Linux patches on this git branch:
+> >>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/tree/drivers/pci/pcie?h=review/edr]
+> >>>>>>
+> >>>>>> On Tue, Mar 03, 2020 at 06:36:32PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> >>>>>>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> >>>>>>>
+> >>>>>>> As per PCI firmware specification r3.2 System Firmware Intermediary
+> >>>>>>> (SFI) _OSC and DPC Updates ECR
+> >>>>>>> (https://members.pcisig.com/wg/PCI-SIG/document/13563), sec titled "DPC
+> >>>>>>> Event Handling Implementation Note", page 10, Error Disconnect Recover
+> >>>>>>> (EDR) support allows OS to handle error recovery and clearing Error
+> >>>>>>> Registers even in FF mode. So create new API pci_aer_raw_clear_status()
+> >>>>>>> which allows clearing AER registers without FF mode checks.
+> > 
+> >>>> OS clears the DPC Trigger Status bit which will bring port below it out
+> >>>> of containment. Then OS will clear the "port" error status bits (i.e.,
+> >>>> the AER and DPC status bits in the root port or downstream port that
+> >>>> triggered containment). I don't think it would hurt to do this two steps
+> >>>> in reverse order but don't think it is necessary.
+> > 
+> >>>> Note that error status bits for devices below the port in
+> >>>> containment are cleared later after f/w has a chance to log them.
+> > 
+> > Thanks for pointing out this wrinkle about devices below the port in
+> > containment.  I think we might have an issue here with the current
+> > series because evaluating _OST is the last thing the EDR notify
+> > handler does.  More below.
+> > 
+> >>> Maybe I'm misreading the DPC enhancements ECN.  I think it says the OS
+> >>> can read/write DPC registers until it clears the DPC Trigger Status.
+> >>> If the OS clears Trigger Status first, my understanding is that we're
+> >>> now out of the EDR notification processing window and the OS is not
+> >>> permitted to write DPC registers.
+> >>>
+> >>> If it's OK for the OS to clear Trigger Status before clearing DPC
+> >>> error status, what is the event that determines when the OS may no
+> >>> longer read/write the DPC registers?
+> >>
+> >> I think there are a few different registers to consider... DPC
+> >> Control, DPC Status, various AER registers, and the RP PIO
+> >> registers. At this point in the flow, the firmware has already had a
+> >> chance to read all of them and so it really doesn't matter the order
+> >> the OS does those two things. The firmware isn't going to get
+> >> notified again until _OST so by then both operation will be done and
+> >> system firmware will have no idea which order the OS did them in,
+> >> nor will it care.  But since the existing normative text specifies
+> >> and order, I would just follow that.
+> > 
+> > OK, this series clears DPC error status before clearing DPC Trigger
+> > Status, so I think we can keep that as-is.
+> > 
 
+> >>> There are no events after the "clear device AER status" box.
+> >>> That seems to mean the OS can write the AER status registers at
+> >>> any time.  But the whole implementation note assumes firmware
+> >>> maintains control of AER.
+> >>
+> >> In this model the OS doesn't own DPC or AER but the model allows
+> >> OS to touch both DPC and AER registers at certain times.  I would
+> >> view ownership in this case as who is the primary owner and not
+> >> who is the sole entity allowed to access the registers.
+> > 
+> > I'm not sure how to translate the idea of primary ownership into
+> > code.
+> 
+> I would just add text that said when it's ok for OS to touch these
+> bits even when they don't own them similar to what's done for the
+> DPC bits.
 
-On 3/11/2020 4:22 PM, Lorenzo Pieralisi wrote:
-> External email: Use caution opening links or attachments
-> 
-> 
-> On Tue, Mar 03, 2020 at 11:40:47PM +0530, Vidya Sagar wrote:
->> Tegra194 has three (C0, C4 & C5) dual mode PCIe controllers that can operate
->> either in root port mode or in end point mode but only in one mode at a time.
->> Platform P2972-0000 supports enabling endpoint mode for C5 controller. This
->> patch series adds support for PCIe endpoint mode in both the driver as well as
->> in DT.
->> This patch series depends on the changes made for Synopsys DesignWare endpoint
->> mode subsystem that are recently accepted.
->> @ https://patchwork.kernel.org/project/linux-pci/list/?series=202211
->> which in turn depends on the patch made by Kishon
->> @ https://patchwork.kernel.org/patch/10975123/
->> which is also under review.
->>
->> V5:
->> * Rebased patch-2 on top of Lorenzo's pci/endpoint branch
->> * Removed unwanted header files inclusion in patch-5
-> 
-> Applied patches 1,2,5 to pci/endpoint for v5.7, please let me know
-> if something is missing.
-Thanks Lorenzo and Thierry.
+I'm probably missing your intent, but that sounds like "the OS can
+read/write AER bits whenever it wants, regardless of ownership."
 
-Thanks,
-Vidya Sagar
+That doesn't sound practical to me, and I don't think it's really
+similar to DPC, where it's pretty clear that the OS can touch DPC bits
+it doesn't own but only *during the EDR processing window*.
 
+> >> For the normative text describing when OS clears the AER bits
+> >> following the informative flow chart, it could say that OS clears
+> >> AER as soon as possible after OST returns and before OS processes
+> >> _HPX and loading drivers.  Open to other suggestions as well.
+> > 
+> > I'm not sure what to do with "as soon as possible" either.  That
+> > doesn't seem like something firmware and the OS can agree on.
 > 
-> Thanks,
-> Lorenzo
+> I can just state that it's done after OST returns but before _HPX or
+> driver is loaded. Any time in that range is fine. I can't get super
+> specific here because different OSes do different things.  Even for
+> a given OS they change over time. And I need something generic
+> enough to support a wide variety of OS implementations.
+
+Yeah.  I don't know how to solve this.
+
+Linux doesn't actually unload and reload drivers for the child devices
+(Sathy, correct me if I'm wrong here) even though DPC containment
+takes the link down and effectively unplugs and replugs the device.  I
+would *like* to handle it like hotplug, but some higher-level software
+doesn't deal well with things like storage devices disappearing and
+reappearing.
+
+Since Linux doesn't actually re-enumerate the child devices, it
+wouldn't evaluate _HPX again.  It would probably be cleaner if it did,
+but it's all tied up with the whole unplug/replug problem.
+
+> > For child devices of that port, obviously it's impossible to
+> > access AER registers until DPC Trigger Status is cleared, and the
+> > flowchart says the OS shouldn't access them until after _OST.
+> > 
+> > I'm actually not sure we currently do *anything* with child device
+> > AER info in the EDR path.  pcie_do_recovery() does walk the
+> > sub-hierarchy of child devices, but it only calls error handling
+> > callbacks in the child drivers; it doesn't do anything with the
+> > child AER registers itself.  And of course, this happens before
+> > _OST, so it would be too early in any case.  But maybe I'm missing
+> > something here.
 > 
->> V4:
->> * Started using threaded irqs instead of kthreads
->>
->> V3:
->> * Re-ordered patches in the series to make the driver change as the last patch
->> * Took care of Thierry's review comments
->>
->> V2:
->> * Addressed Thierry & Bjorn's review comments
->> * Added EP mode specific binding documentation to already existing binding documentation file
->> * Removed patch that enables GPIO controller nodes explicitly as they are enabled already
->>
->> Vidya Sagar (5):
->>    soc/tegra: bpmp: Update ABI header
->>    dt-bindings: PCI: tegra: Add DT support for PCIe EP nodes in Tegra194
->>    arm64: tegra: Add PCIe endpoint controllers nodes for Tegra194
->>    arm64: tegra: Add support for PCIe endpoint mode in P2972-0000
->>      platform
->>    PCI: tegra: Add support for PCIe endpoint mode in Tegra194
->>
->>   .../bindings/pci/nvidia,tegra194-pcie.txt     | 125 +++-
->>   .../boot/dts/nvidia/tegra194-p2972-0000.dts   |  18 +
->>   arch/arm64/boot/dts/nvidia/tegra194.dtsi      |  99 +++
->>   drivers/pci/controller/dwc/Kconfig            |  30 +-
->>   drivers/pci/controller/dwc/pcie-tegra194.c    | 679 +++++++++++++++++-
->>   include/soc/tegra/bpmp-abi.h                  |  10 +-
->>   6 files changed, 916 insertions(+), 45 deletions(-)
->>
->> --
->> 2.17.1
->>
+> My understanding is that the OS read/clears AER in the case where OS
+> has native control of AER.  Feedback from OSVs is they wanted to
+> continue to do that to keep the native OS controlled AER and FF
+> mechanism similar.  The other way we could have done it would be to
+> have the firmware read/clear AER and report them to OS via APEI.
+
+When Linux has native control of AER, it reads/clears AER status.
+The flowchart is for the case where firmware has AER control, so I
+guess Linux would not field AER interrupts and wouldn't expect to
+read/clear AER status.  So I *guess* Linux would assume APEI?  But
+that doesn't seem to be what the flowchart assumes.
+
+> > BTW, if/when this is updated, I have another question: the _OSC
+> > DPC control bit currently allows the OS to write DPC Control
+> > during that window.  I understand the OS writing the RW1C *Status*
+> > bits to clear them, but it seems like writing the DPC Control
+> > register is likely to cause issues.  The same question would apply
+> > to the AER access we're talking about.
+> 
+> We could specify which particular bits can and can't be touched.
+> But it's hard to maintain as new bits are added.  Probably better to
+> add some guidance that OS should read/clear error status, DPC
+> Trigger Status, etc. but shouldn't change masks/severity/control
+> bits/etc.
+
+Yeah.  I didn't mean at the level of individual bits; I was thinking
+more of status/log/etc vs control registers.  But maybe even that is
+hard, I dunno.
