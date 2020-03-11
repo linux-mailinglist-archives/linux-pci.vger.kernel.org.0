@@ -2,121 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 127F4181781
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Mar 2020 13:08:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 99A891818A9
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Mar 2020 13:47:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729238AbgCKMIq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Mar 2020 08:08:46 -0400
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:48939 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729236AbgCKMIq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Mar 2020 08:08:46 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R261e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0TsIhGYE_1583928507;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TsIhGYE_1583928507)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 11 Mar 2020 20:08:28 +0800
-Subject: Re: [PATCH] docs: fix pointers to io-mapping.rst and io_ordering.rst
- files
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Harry Wei <harryxiyou@gmail.com>, Guan Xuetao <gxt@pku.edu.cn>,
-        Enrico Weigelt <info@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Pragat Pandya <pragat.pandya@gmail.com>,
-        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org
-References: <c0205119db4fef536272cb0a183b6c14c2c8bf4c.1583927470.git.mchehab+huawei@kernel.org>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <48725367-1a97-4e34-fa8b-b4096ed6f64d@linux.alibaba.com>
-Date:   Wed, 11 Mar 2020 20:08:27 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.5.0
+        id S1729506AbgCKMrK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Mar 2020 08:47:10 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38441 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729386AbgCKMq4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Mar 2020 08:46:56 -0400
+Received: by mail-wr1-f66.google.com with SMTP id t11so2450535wrw.5
+        for <linux-pci@vger.kernel.org>; Wed, 11 Mar 2020 05:46:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9aHr7/EWopa+d5MVT7UWPgRiU9Syfo6iTheTFisLSBg=;
+        b=FXsN33JoJealTXC3dRRue6HkzhWSIRjvlNRUP49llb/Tp1/P6LLbWK2WENByBzb932
+         Vi1Fg8Ri+qgxJrwy5zjp/NXrbWtEhuMkRTQj1X4R9I44S53W3vZuVYp8IrCbYVblbQ3t
+         O28JXtBnjgkZqXtJcIVINkr/xuwcmJ4AcO+2ctUVBEJKMuSZEV7wYUoSaD3Zco3ZO7q/
+         ujjg+wfK4m1DiebSFJn9cbZqflg/q7DAWj/98GahfRpw7xqn470ERyL3IPCqRQQaQIB0
+         0zSlrkdrriSBVsPOQ4i+h5gPOwW+U83Jz9SjjpEDyMiKdpx/YTRM4O6K6sHqODrD7YCC
+         shxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9aHr7/EWopa+d5MVT7UWPgRiU9Syfo6iTheTFisLSBg=;
+        b=mfV6QWN3eUQhniqg0FARY7W97Cw89lLVpmuE/QQQ6VO1u88T5cadtMoVyyaiaRT5Li
+         bKE26u4o0rbCiOevnDnxVTysEWLD4DMI9HAvnIU5lDAcEjpAp1Gg6ExHrG/YDobUArcp
+         JDpCw8yJPqdaFIjdqaFhygHgngUlnlyeDFc7nWi/+9kJaOhI/hw9AI4be5NChDljG4CY
+         I6KfA9zI3+k+Ljy4Us/vvzXOoayWFAMl5xnU/Afmm5xlYF4sdDHplC9cRtRaaTjA3TEN
+         YYOnzHTRj+cdcXwj0KhRr5ZjTw6bSHWEuJPzB2+oVLPNqLLCZ6do8xlueZRs0mUWu3Nn
+         OLZg==
+X-Gm-Message-State: ANhLgQ0SKxc5cMtTOvg5eFTnw8WvKNHcXbFcBwSL6Kt7AGHIVY2epl4a
+        mpb2ofwTb0EVi23htOplveFf+A==
+X-Google-Smtp-Source: ADFU+vvLjmlfZFee1kgQb0ezvJQIIb3y7DZjOUpYxqDYvVtYVhI9wjUkV+NDFpgxKBOntX41muaOsw==
+X-Received: by 2002:adf:bb81:: with SMTP id q1mr4344011wrg.110.1583930814354;
+        Wed, 11 Mar 2020 05:46:54 -0700 (PDT)
+Received: from localhost.localdomain ([2001:171b:c9a8:fbc0:116c:c27a:3e7f:5eaf])
+        by smtp.gmail.com with ESMTPSA id c2sm8380020wma.39.2020.03.11.05.46.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Mar 2020 05:46:53 -0700 (PDT)
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     bhelgaas@google.com, will@kernel.org, robh+dt@kernel.org,
+        joro@8bytes.org, baolu.lu@linux.intel.com, sudeep.holla@arm.com,
+        linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-acpi@vger.kernel.org, iommu@lists.linux-foundation.org
+Cc:     lorenzo.pieralisi@arm.com, corbet@lwn.net, mark.rutland@arm.com,
+        liviu.dudau@arm.com, guohanjun@huawei.com, rjw@rjwysocki.net,
+        lenb@kernel.org, robin.murphy@arm.com, dwmw2@infradead.org,
+        amurray@thegoodpenguin.co.uk, frowand.list@gmail.com,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>
+Subject: [PATCH v2 00/11] PCI/ATS: Device-tree support and other improvements
+Date:   Wed, 11 Mar 2020 13:44:55 +0100
+Message-Id: <20200311124506.208376-1-jean-philippe@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <c0205119db4fef536272cb0a183b6c14c2c8bf4c.1583927470.git.mchehab+huawei@kernel.org>
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Reviewed-by: Alex Shi <alex.shi@linux.alibaba.com>
+Enable ATS on device-tree based systems, and factor the common ATS
+enablement checks into pci_enable_ats().
 
-在 2020/3/11 下午7:51, Mauro Carvalho Chehab 写道:
-> Those files got moved, but cross-references still point to the
-> wrong places.
-> 
-> Fixes: fcd680727157 ("Documentation: Add io-mapping.rst to driver-api manual")
-> Fixes: d1ce350015d8 ("Documentation: Add io_ordering.rst to driver-api manual")
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
->  Documentation/PCI/pci.rst                        | 2 +-
->  Documentation/translations/zh_CN/io_ordering.txt | 4 ++--
->  arch/unicore32/include/asm/io.h                  | 2 +-
->  include/linux/io-mapping.h                       | 2 +-
->  4 files changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/PCI/pci.rst b/Documentation/PCI/pci.rst
-> index 6864f9a70f5f..8c016d8c9862 100644
-> --- a/Documentation/PCI/pci.rst
-> +++ b/Documentation/PCI/pci.rst
-> @@ -239,7 +239,7 @@ from the PCI device config space. Use the values in the pci_dev structure
->  as the PCI "bus address" might have been remapped to a "host physical"
->  address by the arch/chip-set specific kernel support.
->  
-> -See Documentation/io-mapping.txt for how to access device registers
-> +See Documentation/driver-api/io-mapping.rst for how to access device registers
->  or device memory.
->  
->  The device driver needs to call pci_request_region() to verify
-> diff --git a/Documentation/translations/zh_CN/io_ordering.txt b/Documentation/translations/zh_CN/io_ordering.txt
-> index 1f8127bdd415..7bb3086227ae 100644
-> --- a/Documentation/translations/zh_CN/io_ordering.txt
-> +++ b/Documentation/translations/zh_CN/io_ordering.txt
-> @@ -1,4 +1,4 @@
-> -Chinese translated version of Documentation/io_ordering.txt
-> +Chinese translated version of Documentation/driver-api/io_ordering.rst
->  
->  If you have any comment or update to the content, please contact the
->  original document maintainer directly.  However, if you have a problem
-> @@ -8,7 +8,7 @@ or if there is a problem with the translation.
->  
->  Chinese maintainer: Lin Yongting <linyongting@gmail.com>
->  ---------------------------------------------------------------------
-> -Documentation/io_ordering.txt 的中文翻译
-> +Documentation/driver-api/io_ordering.rst 的中文翻译
->  
->  如果想评论或更新本文的内容，请直接联系原文档的维护者。如果你使用英文
->  交流有困难的话，也可以向中文版维护者求助。如果本翻译更新不及时或者翻
-> diff --git a/arch/unicore32/include/asm/io.h b/arch/unicore32/include/asm/io.h
-> index 3ca74e1cde7d..bd4e7c332f85 100644
-> --- a/arch/unicore32/include/asm/io.h
-> +++ b/arch/unicore32/include/asm/io.h
-> @@ -27,7 +27,7 @@ extern void __uc32_iounmap(volatile void __iomem *addr);
->   * ioremap and friends.
->   *
->   * ioremap takes a PCI memory address, as specified in
-> - * Documentation/io-mapping.txt.
-> + * Documentation/driver-api/io-mapping.rst.
->   *
->   */
->  #define ioremap(cookie, size)		__uc32_ioremap(cookie, size)
-> diff --git a/include/linux/io-mapping.h b/include/linux/io-mapping.h
-> index 837058bc1c9f..b336622612f3 100644
-> --- a/include/linux/io-mapping.h
-> +++ b/include/linux/io-mapping.h
-> @@ -16,7 +16,7 @@
->   * The io_mapping mechanism provides an abstraction for mapping
->   * individual pages from an io device to the CPU in an efficient fashion.
->   *
-> - * See Documentation/io-mapping.txt
-> + * See Documentation/driver-api/io-mapping.rst
->   */
->  
->  struct io_mapping {
-> 
+Since v1 [1] I added acks and review tags, simplified patch 3 and tried
+to clarify the comment in patch 2.
+
+I'd like acks or comments on the following patches:
+* PCI on patches 2, 3 and 5
+* Arm SMMUv3 on patch 7
+* Intel VT-d on patch 8
+* arm64 DT on patch 10 
+
+Thanks,
+Jean
+
+[1] https://lore.kernel.org/linux-iommu/20200213165049.508908-1-jean-philippe@linaro.org/
+
+Jean-Philippe Brucker (11):
+  dt-bindings: PCI: generic: Add ats-supported property
+  PCI: Add ats_supported host bridge flag
+  PCI: OF: Check whether the host bridge supports ATS
+  ACPI/IORT: Check ATS capability in root complex node
+  PCI/ATS: Gather checks into pci_ats_supported()
+  iommu/amd: Use pci_ats_supported()
+  iommu/arm-smmu-v3: Use pci_ats_supported()
+  iommu/vt-d: Use pci_ats_supported()
+  ACPI/IORT: Drop ATS fwspec flag
+  arm64: dts: fast models: Enable PCIe ATS for Base RevC FVP
+  Documentation: Generalize the "pci=noats" boot parameter
+
+ .../admin-guide/kernel-parameters.txt         |  4 +-
+ .../bindings/pci/host-generic-pci.yaml        |  6 +++
+ arch/arm64/boot/dts/arm/fvp-base-revc.dts     |  1 +
+ drivers/acpi/arm64/iort.c                     | 38 +++++++++++++------
+ drivers/acpi/pci_root.c                       |  3 ++
+ drivers/iommu/amd_iommu.c                     | 12 ++----
+ drivers/iommu/arm-smmu-v3.c                   | 18 ++-------
+ drivers/iommu/intel-iommu.c                   |  9 ++---
+ drivers/pci/ats.c                             | 30 ++++++++++++++-
+ drivers/pci/controller/pci-host-common.c      | 11 ++++++
+ drivers/pci/probe.c                           |  8 ++++
+ include/linux/acpi_iort.h                     |  8 ++++
+ include/linux/iommu.h                         |  4 --
+ include/linux/pci-ats.h                       |  3 ++
+ include/linux/pci.h                           |  1 +
+ 15 files changed, 109 insertions(+), 47 deletions(-)
+
+-- 
+2.25.1
+
