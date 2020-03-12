@@ -2,99 +2,160 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F5A8183365
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Mar 2020 15:42:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DF5AA18357D
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Mar 2020 16:53:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727647AbgCLOmA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Mar 2020 10:42:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33954 "EHLO mail.kernel.org"
+        id S1726571AbgCLPxO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Mar 2020 11:53:14 -0400
+Received: from ns.iliad.fr ([212.27.33.1]:59468 "EHLO ns.iliad.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727083AbgCLOl7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 12 Mar 2020 10:41:59 -0400
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DFC5206E7;
-        Thu, 12 Mar 2020 14:41:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584024119;
-        bh=rwALx85sL9uxz9h24BYrbFnTq6oyh/cOVDhdniakHzk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=1XtiEyLN/mnOQ3bewdx1k97d0rs0nBAo4iMJlADMpY54tvJoyAfqZRVkn+pY3Mear
-         H3fiV7NixjRk6sHXRrkbfsjJ8wm/5LNnZN+pQJKFaS+gH1B2Iw/0gy43OnwJKu+JXo
-         g4f5WXrBhK/85gaNhjO46JDvgsgtlva/prm2iMWw=
-Date:   Thu, 12 Mar 2020 09:41:57 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Chen Zhou <chenzhou10@huawei.com>
-Cc:     paulus@samba.org, mpe@ellerman.id.au, tyreld@linux.ibm.com,
-        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] PCI: rpaphp: remove set but not used variable
- 'value'
-Message-ID: <20200312144157.GA110750@google.com>
+        id S1726385AbgCLPxO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 12 Mar 2020 11:53:14 -0400
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id 362C221081;
+        Thu, 12 Mar 2020 16:53:12 +0100 (CET)
+Received: from [192.168.108.51] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id 1DD28208EC;
+        Thu, 12 Mar 2020 16:53:12 +0100 (CET)
+Subject: Re: [PATCH 4/5] pci: handled return value of platform_get_irq
+ correctly
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Aman Sharma <amanharitsh123@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Mans Rullgard <mans@mansr.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+References: <20200312141102.GA93224@google.com>
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Message-ID: <b145096e-8628-c551-4846-2eb5ce0334f6@free.fr>
+Date:   Thu, 12 Mar 2020 16:53:12 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200312143800.GA109542@google.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20200312141102.GA93224@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Thu Mar 12 16:53:12 2020 +0100 (CET)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 09:38:02AM -0500, Bjorn Helgaas wrote:
-> On Thu, Mar 12, 2020 at 10:04:12PM +0800, Chen Zhou wrote:
-> > Fixes gcc '-Wunused-but-set-variable' warning:
-> > 
-> > drivers/pci/hotplug/rpaphp_core.c: In function is_php_type:
-> > drivers/pci/hotplug/rpaphp_core.c:291:16: warning:
-> > 	variable value set but not used [-Wunused-but-set-variable]
-> > 
-> > Reported-by: Hulk Robot <hulkci@huawei.com>
-> > Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-> 
-> Michael, if you want this:
-> 
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> If you don't mind, edit the subject to follow the convention, e.g.,
-> 
->   PCI: rpaphp: Remove unused variable 'value'
-> 
-> Apparently simple_strtoul() is deprecated and we're supposed to use
-> kstrtoul() instead.  Looks like kstrtoul() might simplify the code a
-> little, too, e.g.,
-> 
->   if (kstrtoul(drc_type, 0, &value) == 0)
->     return 1;
-> 
->   return 0;
+On 12/03/2020 15:11, Bjorn Helgaas wrote:
 
-I guess there are several other uses of simple_strtoul() in this file.
-Not sure if it's worth changing them all, just this one, or just the
-patch below as-is.
+> [+cc another Marc]
 
-> > ---
-> >  drivers/pci/hotplug/rpaphp_core.c | 3 +--
-> >  1 file changed, 1 insertion(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/pci/hotplug/rpaphp_core.c b/drivers/pci/hotplug/rpaphp_core.c
-> > index e408e40..5d871ef 100644
-> > --- a/drivers/pci/hotplug/rpaphp_core.c
-> > +++ b/drivers/pci/hotplug/rpaphp_core.c
-> > @@ -288,11 +288,10 @@ EXPORT_SYMBOL_GPL(rpaphp_check_drc_props);
-> >  
-> >  static int is_php_type(char *drc_type)
-> >  {
-> > -	unsigned long value;
-> >  	char *endptr;
-> >  
-> >  	/* PCI Hotplug nodes have an integer for drc_type */
-> > -	value = simple_strtoul(drc_type, &endptr, 10);
-> > +	simple_strtoul(drc_type, &endptr, 10);
-> >  	if (endptr == drc_type)
-> >  		return 0;
-> >  
-> > -- 
-> > 2.7.4
-> > 
+Doh! I should indeed have CCed maz and tglx.
+
+> On Thu, Mar 12, 2020 at 10:53:06AM +0100, Marc Gonzalez wrote:
+>
+>> On 11/03/2020 20:19, Aman Sharma wrote:
+>>
+>>> diff --git a/drivers/pci/controller/pcie-tango.c b/drivers/pci/controller/pcie-tango.c
+>>> index 21a208da3f59..18c2c4313eb5 100644
+>>> --- a/drivers/pci/controller/pcie-tango.c
+>>> +++ b/drivers/pci/controller/pcie-tango.c
+>>> @@ -273,9 +273,9 @@ static int tango_pcie_probe(struct platform_device *pdev)
+>>>  		writel_relaxed(0, pcie->base + SMP8759_ENABLE + offset);
+>>>  
+>>>  	virq = platform_get_irq(pdev, 1);
+>>> -	if (virq <= 0) {
+>>> +	if (virq < 0) {
+>>>  		dev_err(dev, "Failed to map IRQ\n");
+>>> -		return -ENXIO;
+>>> +		return virq;
+>>>  	}
+>>>  
+>>>  	irq_dom = irq_domain_create_linear(fwnode, MSI_MAX, &dom_ops, pcie);
+>>
+>> Weee, here we go again :-)
+>>
+>> https://patchwork.kernel.org/patch/11066455/
+>> https://patchwork.kernel.org/patch/10006651/
+>>
+>> Last time around, my understanding was that, going forward,
+>> the best solution was:
+>>
+>> 	virq = platform_get_irq(...)
+>> 	if (virq <= 0)
+>> 		return virq ? : -ENODEV;
+>>
+>> i.e. map 0 to -ENODEV, pass other errors as-is, remove the dev_err
+>>
+>> @Bjorn/Lorenzo did you have a change of heart?
+> 
+> Yes.  In 10006651 (Oct 20, 2017), I thought:
+> 
+>   irq = platform_get_irq(pdev, 0);
+>   if (irq <= 0)
+>     return -ENODEV;
+> 
+> was fine.  In 11066455 (Aug 7, 2019), I said I thought I was wrong and
+> that:
+> 
+>   platform_get_irq() is a generic interface and we have to be able to
+>   interpret return values consistently.  The overwhelming consensus
+>   among platform_get_irq() callers is to treat "irq < 0" as an error,
+>   and I think we should follow suit.
+>   ...
+>   I think the best pattern is:
+> 
+>     irq = platform_get_irq(pdev, i);
+>     if (irq < 0)
+>       return irq;
+> 
+> I still think what I said in 2019 is the right approach.  I do see
+> your comment in 10006651 about this pattern:
+> 
+>   if (virq <= 0)
+>     return virq ? : -ENODEV;
+> 
+> but IMHO it's too complicated for general use.  Admittedly, it's not
+> *very* complicated, but it's a relatively unusual C idiom and I
+> stumble over it every time I see it.
+
+FTR, omitting the middle operand is a GNU extension.
+https://gcc.gnu.org/onlinedocs/gcc/Conditionals.html
+The valid C idiom would be virq ? virq : -ENODEV
+
+> If 0 is a special case I think
+> it should be mapped to a negative error in arch-specific code, which I
+> think is what Linus T suggested in [1].
+
+Lorenzo, being both PCI maintainer and ARM employee should be in a
+good position to change the arch-specific code for arm and arm64?
+
+> I think there's still a large consensus that "irq < 0" is the error
+> case.  In the tree today we have about 1400 callers of
+> platform_get_irq() and platform_get_irq_byname() [2].  Of those,
+> almost 900 check for "irq < 0" [3], while only about 150 check for
+> "irq <= 0" [4] and about 15 use some variant of a "irq ? : -ENODEV"
+> pattern.
+> 
+> The bottom line is that in drivers/pci, I'd like to see either a
+> single style or a compelling argument for why some checks should be
+> "irq < 0" and others should be "irq <= 0".
+> 
+> [1] https://yarchive.net/comp/linux/zero.html
+> [2] $ git grep "=.*platform_get_irq" | wc -l
+>     1422
+> [3] $ git grep -A4 "=.*platform_get_irq" | grep "<\s*0" | wc -l
+>     894
+> [4] $ git grep -A4 "=.*platform_get_irq" | grep "<=\s*0" | wc -l
+>     151
+> [5] $ git grep -A4 "=.*platform_get_irq" | grep "return.*?.*:.*;" | wc -l
+>     15
+
+Interesting stats, thanks.
+
+Regards.
