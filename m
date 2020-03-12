@@ -2,118 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 175E0183C9B
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Mar 2020 23:36:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DB5DD183CBC
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Mar 2020 23:45:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726608AbgCLWgy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Mar 2020 18:36:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53676 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726550AbgCLWgy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 12 Mar 2020 18:36:54 -0400
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D20720716;
-        Thu, 12 Mar 2020 22:36:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584052613;
-        bh=Mw6mvQtiU1SMRyM0DpwBs+f6ymAnPty4GMG0fmVIDyU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=AJ4GOOAPB5NDv/dF15aRAnGIPDNGoatoF5uCg0OCidh3mlZDA9IiD8p04viY8CcXl
-         bVCIviAu6z7DAyWKsNTLjBD2/lmLeGXaJHOyu4J2jlgbCjBSZwT+Bf+ECFetUC2LVr
-         N/mnPmp+9+JDvPtTKXcV8qRFSgmY9j2UiJ5gEnIw=
-Date:   Thu, 12 Mar 2020 17:36:51 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     Austin.Bolen@dell.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ashok.raj@intel.com
-Subject: Re: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
- in FF mode
-Message-ID: <20200312223651.GA202733@google.com>
+        id S1726705AbgCLWpc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Mar 2020 18:45:32 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:42551 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726608AbgCLWpc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Mar 2020 18:45:32 -0400
+Received: by mail-lj1-f194.google.com with SMTP id q19so8356082ljp.9
+        for <linux-pci@vger.kernel.org>; Thu, 12 Mar 2020 15:45:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+ZeV6SGwYz2oD3/6K0sLROfW8IF3ilKt8DtskElDrSY=;
+        b=oiPs69xdfQO1PidLik8ECa+vZDnXjhz4IA9cfdIrSFWeQSVkq3f6Vuqtg7nqOSGpzz
+         aPWaBfMxN76W6k+YcI62A04x9LTXaoGqfRVdTioZMtxmFIZ2XX/m9C8hi/X99aUXJ914
+         9ZtRAdysFJjEsfngds8YFemQQIhGyWn7G4Y+IJL3vZL9RHKV9oZAdCdRXkqabn6itURW
+         KehVOuHkxHYZ9iwT8WXYqXYA8GHnZmhc1a05rnJWy6NO2Zi4yA063X/yFhLO6pNOpfVR
+         Nonz5KsXWFXaNuIPo/oM14mD6mg9ict9ghMTx/DvkJzdTyQWtVsc+S8eNXdCJTm1ZqhJ
+         Kd5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+ZeV6SGwYz2oD3/6K0sLROfW8IF3ilKt8DtskElDrSY=;
+        b=YlYYmYxzhXHTia9pHqhrHFPIMEo27PLu/xTflwK6L5haDk0Hanc2dyn3rjHBvku/7C
+         rP32Wal0FOAX3zDFX4NI1EukBuM6NdrYC8QmgDE/b+PFUciV4ZbIgIWHvEzq2FSCT/qI
+         NgdV+ftWiAZHtVcJzrk4JzpFarX5HJxz1yrvH6X+5727TauU+Py7AT3AJRbCbuHpm6v4
+         0qRV1GK0PgH9gBlwrIsRcITiH2hmBvsCTuI47wsv7CAoq8EMQkqNwXspEGtO31gN5B5K
+         mtZFCOpoVOewUHPqedWIRUErwztWZ1w2k5ADnJN35rUekoc1/yLM5FBRWiVaQbrBw8So
+         ZjFg==
+X-Gm-Message-State: ANhLgQ2yOod4+RbcrNQmklQRvy71ifAFj10H9xI22EbpizgIdxUCEuc3
+        sC9i04OblDYe+tZPr0qil11TsQemys9H7IqXXhXArA==
+X-Google-Smtp-Source: ADFU+vtWfdH9h+8ouBw1URtkmc7DSWqDje0HNsyXDSW5sqzgoSdTiC3LGQo1g/WEOkxlBaUBFPb4j6lbqK8aPWb9ouk=
+X-Received: by 2002:a2e:894d:: with SMTP id b13mr5954798ljk.99.1584053130191;
+ Thu, 12 Mar 2020 15:45:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e710fd4c-4c0e-448a-6791-beed334536ce@linux.intel.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <CACRpkdYv0U0RmT7snp+UejEXecq4wLkhc11DUniUfGYAgyXC=A@mail.gmail.com>
+ <20200312190202.GA110276@google.com>
+In-Reply-To: <20200312190202.GA110276@google.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 12 Mar 2020 23:45:21 +0100
+Message-ID: <CACRpkdZrSHTry1fmFbrAAwbVu_zi1oez-uD5-8RtOVL_H54O+w@mail.gmail.com>
+Subject: Re: [PATCH 1/5] pci: handled return value of platform_get_irq correctly
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Aman Sharma <amanharitsh123@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Mans Rullgard <mans@mansr.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 03:02:07PM -0700, Kuppuswamy Sathyanarayanan wrote:
-> On 3/12/20 2:52 PM, Bjorn Helgaas wrote:
-> > On Thu, Mar 12, 2020 at 02:29:58PM -0700, Kuppuswamy Sathyanarayanan wrote:
-> > > On 3/12/20 2:02 PM, Austin.Bolen@dell.com wrote:
-> > > > On 3/12/2020 2:53 PM, Bjorn Helgaas wrote:
-> > > > > On Wed, Mar 11, 2020 at 04:07:59PM -0700, Kuppuswamy Sathyanarayanan wrote:
-> > > > > > On 3/11/20 3:23 PM, Bjorn Helgaas wrote:
-> > > > > > > Is any synchronization needed here between the EDR path and the
-> > > > > > > hotplug/enumeration path?
-> > > > > > If we want to follow the implementation note step by step (in
-> > > > > > sequence) then we need some synchronization between EDR path and
-> > > > > > enumeration path. But if it's OK to achieve the same end result by
-> > > > > > following steps out of sequence then we don't need to create any
-> > > > > > dependency between EDR and enumeration paths. Currently we follow
-> > > > > > the latter approach.
-> > > > > What would the synchronization look like?
-> > > > > 
-> > > > > Ideally I think it would be better to follow the order in the
-> > > > > flowchart if it's not too onerous.  That will make the code easier to
-> > > > > understand.  The current situation with this dependency on pciehp and
-> > > > > what it will do leaves a lot of things implicit.
-> > > > > 
-> > > > > What happens if CONFIG_PCIE_EDR=y but CONFIG_HOTPLUG_PCI_PCIE=n?
-> > > > > 
-> > > > > IIUC, when DPC triggers, pciehp is what fields the DLLSC interrupt and
-> > > > > unbinds the drivers and removes the devices.  If that doesn't happen,
-> > > > > and Linux clears the DPC trigger to bring the link back up, will those
-> > > > > drivers try to operate uninitialized devices?
-> > > > > 
-> > > > > Does EDR need a dependency on CONFIG_HOTPLUG_PCI_PCIE?
-> > > >    From one of Sathya's other responses:
-> > > > 
-> > > > "If hotplug is not supported then there is support to enumerate
-> > > > devices via polling  or ACPI events. But a point to note
-> > > > here is, enumeration path is independent of error handler path, and
-> > > > hence there is no explicit trigger or event from error handler path
-> > > > to enumeration path to kick start the enumeration."
-> > > > 
-> > > > The EDR standard doesn't have any dependency on hot-plug. It sounds like
-> > > > in the current implementation there's some manual intervention needed if
-> > > > hot-plug is not supported?
-> > >
-> > > No, there is no need for manual intervention even in non hotplug
-> > > cases.
-> > > 
-> > > For ACPI events case, we would rely on ACPI event to kick start the
-> > > enumeration.  And for polling model, there is an independent polling
-> > > thread which will kick start the enumeration.
->
-> > I'm guessing the ACPI case works via hotplug_is_native(): if
-> > CONFIG_HOTPLUG_PCI_PCIE=n, pciehp_is_native() returns false, and
-> > acpiphp manages hotplug.
-> > 
-> > What if CONFIG_HOTPLUG_PCI_ACPI=n also?
->
-> If none of the auto scans are enabled then we might need some
-> manual trigger (rescan). But this would be needed in native
-> DPC case as well.
-> > 
-> > Where is the polling thread?
->
-> drivers/pci/hotplug/pciehp_hpc.c
+On Thu, Mar 12, 2020 at 8:02 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-Only if CONFIG_HOTPLUG_PCI_PCIE=y, obviously.  My question is about
-what happens when CONFIG_HOTPLUG_PCI_PCIE=n.
+> IIUC, in the link you mentioned, Linus T says that "dev->irq == 0"
+> means we don't have a valid IRQ.  I think that makes sense, but I'm
+> not sure it follows that 0 must be a sensical return value for
+> platform_get_irq().  It seems to me that platform_get_irq() ought to
+> return either a valid IRQ or an error, and the convention for errors
+> is a negative errno.
 
-I'm not as concerned about requiring a manual rescan.  That's
-inconvenient, but doesn't seem like a big deal because that's what you
-expect with no hotplug driver.
+OK I see your point.
 
-What I *am* worried about is calling driver callbacks on a device that
-has been reset but not initialized.  That could cause all sorts of
-havoc because the driver thinks it can trust BARs and other
-configuration.
+I would be fine of the code is changed from:
+
+if (irq <= 0)
+  error;
+
+To:
+
+if (irq < 0)
+   error retrieving IRQ
+
+if (!irq)
+   error driver requires a valid IRQ
+
+To the driver (this one in specific) the IRQ is expected and
+necessary and I think it holds for most PCI hosts.
+
+Yours,
+Linus Walleij
