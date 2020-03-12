@@ -2,95 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DFC21826BE
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Mar 2020 02:44:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 42B221827C1
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Mar 2020 05:23:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387576AbgCLBo0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Mar 2020 21:44:26 -0400
-Received: from mga07.intel.com ([134.134.136.100]:51962 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387501AbgCLBoZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 11 Mar 2020 21:44:25 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 18:44:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,543,1574150400"; 
-   d="scan'208";a="443763768"
-Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.254.208.137]) ([10.254.208.137])
-  by fmsmga006.fm.intel.com with ESMTP; 11 Mar 2020 18:44:18 -0700
-Cc:     baolu.lu@linux.intel.com, lorenzo.pieralisi@arm.com,
-        corbet@lwn.net, mark.rutland@arm.com, liviu.dudau@arm.com,
-        guohanjun@huawei.com, rjw@rjwysocki.net, lenb@kernel.org,
-        robin.murphy@arm.com, dwmw2@infradead.org,
-        amurray@thegoodpenguin.co.uk, frowand.list@gmail.com
-Subject: Re: [PATCH v2 08/11] iommu/vt-d: Use pci_ats_supported()
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        bhelgaas@google.com, will@kernel.org, robh+dt@kernel.org,
-        joro@8bytes.org, sudeep.holla@arm.com, linux-doc@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-References: <20200311124506.208376-1-jean-philippe@linaro.org>
- <20200311124506.208376-9-jean-philippe@linaro.org>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <7019230c-3c56-e6db-6704-d73f23fa39b5@linux.intel.com>
-Date:   Thu, 12 Mar 2020 09:44:16 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <20200311124506.208376-9-jean-philippe@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1726534AbgCLEXx convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Thu, 12 Mar 2020 00:23:53 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:49791 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387805AbgCLEXx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Mar 2020 00:23:53 -0400
+Received: from mail-pl1-f197.google.com ([209.85.214.197])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1jCFNv-0006nD-95
+        for linux-pci@vger.kernel.org; Thu, 12 Mar 2020 04:23:51 +0000
+Received: by mail-pl1-f197.google.com with SMTP id y4so2591131plk.3
+        for <linux-pci@vger.kernel.org>; Wed, 11 Mar 2020 21:23:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=r+xyaKNdvsLYdWd4l0whYqhAfZ5fJa+bTC8liwizQj8=;
+        b=YEhQtSFbovQ1RgLnYliEv9jOxeOdXuiCtnRQU3vAJZdA1etwMu7bHHq/Om7v5gRvec
+         7NjfZ0eD37oOyZGobiwLnXCpxqBWPSTTnyrcBl2SLvoMZZibOhmgT3/phPYT6+sUD75w
+         5h9BhOt3rdRJ87gbNI0dW7MjXa4rmjKSB70GjmnlUn19c6GU1VucGl93Fmg1agwkHCWj
+         Se/WllhZPzirQ9F96gnrl0QGb5KpqzSta7gOMKOddhXfHSParHpJ5yui0BZeUy44zX+v
+         CwQiZImXc/dF4YkCDz0caHi2EpWR3IdL3jbPfk5U2YTeAEk4LbHoOW00jV7CqHZ/Kb7X
+         RQMw==
+X-Gm-Message-State: ANhLgQ0axHxQikX+h/yTWXHpqrMTOLvx7yuSrRW6XPneTIZNxaeZrOZK
+        w96wx3sBJjkL3OHHsgqW2fnc4d1v+xdX7WODrb6IWInk/LdTTH6hlO21VNmxNV9gW2jabLDclyT
+        K4voQqhCDqQPsKWknwRIOLSEujFaL1rugOn3ZLg==
+X-Received: by 2002:a63:3f88:: with SMTP id m130mr5785974pga.337.1583987029947;
+        Wed, 11 Mar 2020 21:23:49 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vueaYoQgVXSilktc/GG+jFUFlkXljaxle0Lwg0ZpJTmkVgE8jO6UlWoCcrzZ1mPAFpxNFKfXA==
+X-Received: by 2002:a63:3f88:: with SMTP id m130mr5785959pga.337.1583987029555;
+        Wed, 11 Mar 2020 21:23:49 -0700 (PDT)
+Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
+        by smtp.gmail.com with ESMTPSA id e14sm2181297pfn.196.2020.03.11.21.23.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 11 Mar 2020 21:23:48 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
+Subject: Re: [PATCH] PCI/PM: Skip link training delay for S3 resume
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <20200311102811.GA2540@lahna.fi.intel.com>
+Date:   Thu, 12 Mar 2020 12:23:46 +0800
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <2C20385C-4BA4-4D6D-935A-AFDB97FAB5ED@canonical.com>
+References: <20200311045249.5200-1-kai.heng.feng@canonical.com>
+ <20200311102811.GA2540@lahna.fi.intel.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+X-Mailer: Apple Mail (2.3608.60.0.2.5)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Jean,
+Hi,
 
-On 2020/3/11 20:45, Jean-Philippe Brucker wrote:
-> The pci_ats_supported() function checks if a device supports ATS and is
-> allowed to use it.
+> On Mar 11, 2020, at 18:28, Mika Westerberg <mika.westerberg@linux.intel.com> wrote:
 > 
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> ---
->   drivers/iommu/intel-iommu.c | 9 +++------
->   1 file changed, 3 insertions(+), 6 deletions(-)
+> Hi,
 > 
-> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-> index 6fa6de2b6ad5..17208280ef5c 100644
-> --- a/drivers/iommu/intel-iommu.c
-> +++ b/drivers/iommu/intel-iommu.c
-> @@ -1454,8 +1454,7 @@ static void iommu_enable_dev_iotlb(struct device_domain_info *info)
->   	    !pci_reset_pri(pdev) && !pci_enable_pri(pdev, 32))
->   		info->pri_enabled = 1;
->   #endif
-> -	if (!pdev->untrusted && info->ats_supported &&
-> -	    pci_ats_page_aligned(pdev) &&
-> +	if (info->ats_supported && pci_ats_page_aligned(pdev) &&
->   	    !pci_enable_ats(pdev, VTD_PAGE_SHIFT)) {
->   		info->ats_enabled = 1;
->   		domain_update_iotlb(info->domain);
-> @@ -2611,10 +2610,8 @@ static struct dmar_domain *dmar_insert_one_dev_info(struct intel_iommu *iommu,
->   	if (dev && dev_is_pci(dev)) {
->   		struct pci_dev *pdev = to_pci_dev(info->dev);
->   
-> -		if (!pdev->untrusted &&
-> -		    !pci_ats_disabled() &&
+> On Wed, Mar 11, 2020 at 12:52:49PM +0800, Kai-Heng Feng wrote:
+>> Commit ad9001f2f411 ("PCI/PM: Add missing link delays required by the
+>> PCIe spec") added a 1100ms delay on resume for bridges that don't
+>> support Link Active Reporting.
+>> 
+>> The commit also states that the delay can be skipped for S3, as the
+>> firmware should already handled the case for us.
+> 
+> Delay can be skipped if the firmware provides _DSM with function 8
+> implemented according to PCI firmwre spec 3.2 sec 4.6.8.
 
-The pci_ats_disabled() couldn't be replaced by pci_ats_supported(). Even
-pci_ats_supported() returns true, user still can disable it. Or move
-ats_disabled into pci_ats_supported()?
+As someone who doesn't have access to the PCI spec...
+Questions below.
 
-Best regards,
-baolu
+> 
+>> So let's skip the link training delay for S3, to save 1100ms resume
+>> time.
+>> 
+>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+>> ---
+>> drivers/pci/pci-driver.c | 3 ++-
+>> 1 file changed, 2 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+>> index 0454ca0e4e3f..3050375bad04 100644
+>> --- a/drivers/pci/pci-driver.c
+>> +++ b/drivers/pci/pci-driver.c
+>> @@ -916,7 +916,8 @@ static int pci_pm_resume_noirq(struct device *dev)
+>> 	pci_fixup_device(pci_fixup_resume_early, pci_dev);
+>> 	pcie_pme_root_status_cleanup(pci_dev);
+>> 
+>> -	if (!skip_bus_pm && prev_state == PCI_D3cold)
+>> +	if (!skip_bus_pm && prev_state == PCI_D3cold
+>> +	    && !pm_resume_via_firmware())
+> 
+> So this would need to check for the _DSM result as well. We do evaluate
+> it in pci_acpi_optimize_delay() (drivers/pci/pci-acpi.c) and that ends
+> up lowering ->d3cold_delay so maybe check that here.
 
-> -		    ecap_dev_iotlb_support(iommu->ecap) &&
-> -		    pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_ATS) &&
-> +		if (ecap_dev_iotlb_support(iommu->ecap) &&
-> +		    pci_ats_supported(pdev) &&
->   		    dmar_find_matched_atsr_unit(pdev))
->   			info->ats_supported = 1;
+Do we need to wait for d3cold_delay here?
+Or we can also skip that as long as pci_acpi_dsm_guid and FUNCTION_DELAY_DSM present?
+
+Kai-Heng
+
+> 
+>> 		pci_bridge_wait_for_secondary_bus(pci_dev);
+>> 
+>> 	if (pci_has_legacy_pm_support(pci_dev))
+>> -- 
+>> 2.17.1
+
