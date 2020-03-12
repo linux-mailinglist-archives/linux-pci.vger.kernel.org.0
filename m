@@ -2,102 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DB5DD183CBC
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Mar 2020 23:45:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7122E183D77
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Mar 2020 00:39:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726705AbgCLWpc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Mar 2020 18:45:32 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:42551 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726608AbgCLWpc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Mar 2020 18:45:32 -0400
-Received: by mail-lj1-f194.google.com with SMTP id q19so8356082ljp.9
-        for <linux-pci@vger.kernel.org>; Thu, 12 Mar 2020 15:45:31 -0700 (PDT)
+        id S1726620AbgCLXjP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Mar 2020 19:39:15 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:42063 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726608AbgCLXjP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Mar 2020 19:39:15 -0400
+Received: by mail-il1-f196.google.com with SMTP id x2so7183646ila.9
+        for <linux-pci@vger.kernel.org>; Thu, 12 Mar 2020 16:39:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=+ZeV6SGwYz2oD3/6K0sLROfW8IF3ilKt8DtskElDrSY=;
-        b=oiPs69xdfQO1PidLik8ECa+vZDnXjhz4IA9cfdIrSFWeQSVkq3f6Vuqtg7nqOSGpzz
-         aPWaBfMxN76W6k+YcI62A04x9LTXaoGqfRVdTioZMtxmFIZ2XX/m9C8hi/X99aUXJ914
-         9ZtRAdysFJjEsfngds8YFemQQIhGyWn7G4Y+IJL3vZL9RHKV9oZAdCdRXkqabn6itURW
-         KehVOuHkxHYZ9iwT8WXYqXYA8GHnZmhc1a05rnJWy6NO2Zi4yA063X/yFhLO6pNOpfVR
-         Nonz5KsXWFXaNuIPo/oM14mD6mg9ict9ghMTx/DvkJzdTyQWtVsc+S8eNXdCJTm1ZqhJ
-         Kd5w==
+        bh=E2ILZNWl22AS1muXAlpbVVcHeSznVkag52uINnT+bq8=;
+        b=YOgdzH8JhMYfga2MYOd2q7yhzATVkNZuzH1f7azOE6nrbxzSX0/rBIA2lOVlycdzxI
+         ZmKNIfc2cxyP9sV0aV9jCQsX7oDn1W8/4tgLyDu5/ccHeHYQKbWnST8uxOkOmKZqsVOI
+         Pj0j5UDjKl3iMr/YUISOxz26IonD+t70GBsekOQzu69c6f2xs8hqH5yVEANY4lmgaRE5
+         i7YK72NvLuw4cdNQdx2xRU4tJvb7xX2S/o4ciDJdaVhzvcaSk8DkvW2nt57SFek0Z4nM
+         M+W8yvM3ROto8164oqck4dOcGQ9WNN9PsFSQRXMXpgdG1LpZHiF5jO+EqoMjGAGVz8Nd
+         NJwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=+ZeV6SGwYz2oD3/6K0sLROfW8IF3ilKt8DtskElDrSY=;
-        b=YlYYmYxzhXHTia9pHqhrHFPIMEo27PLu/xTflwK6L5haDk0Hanc2dyn3rjHBvku/7C
-         rP32Wal0FOAX3zDFX4NI1EukBuM6NdrYC8QmgDE/b+PFUciV4ZbIgIWHvEzq2FSCT/qI
-         NgdV+ftWiAZHtVcJzrk4JzpFarX5HJxz1yrvH6X+5727TauU+Py7AT3AJRbCbuHpm6v4
-         0qRV1GK0PgH9gBlwrIsRcITiH2hmBvsCTuI47wsv7CAoq8EMQkqNwXspEGtO31gN5B5K
-         mtZFCOpoVOewUHPqedWIRUErwztWZ1w2k5ADnJN35rUekoc1/yLM5FBRWiVaQbrBw8So
-         ZjFg==
-X-Gm-Message-State: ANhLgQ2yOod4+RbcrNQmklQRvy71ifAFj10H9xI22EbpizgIdxUCEuc3
-        sC9i04OblDYe+tZPr0qil11TsQemys9H7IqXXhXArA==
-X-Google-Smtp-Source: ADFU+vtWfdH9h+8ouBw1URtkmc7DSWqDje0HNsyXDSW5sqzgoSdTiC3LGQo1g/WEOkxlBaUBFPb4j6lbqK8aPWb9ouk=
-X-Received: by 2002:a2e:894d:: with SMTP id b13mr5954798ljk.99.1584053130191;
- Thu, 12 Mar 2020 15:45:30 -0700 (PDT)
+        bh=E2ILZNWl22AS1muXAlpbVVcHeSznVkag52uINnT+bq8=;
+        b=L9EbwZs3SwDxPT4/RaHsEVzZkmFSR59mgZrBJMd1RRIvC6AT3dFqI9SJdOt7+9XOKG
+         BZE5FNacjrBDSyGwY79E6VWAXgHzyo9I0kkpwV3aZWLm6suE1mmVSg6Z9eWtILW/hFkA
+         33WjULAdhJlHN9m0hn+059nsc2cccCAHednod8ANtsAdZaJ7bd8+hNg8HW+VQfCfucwk
+         6Um7t1jfry8VAcdMNf0K1iLVE1TS/Onbu3Bpa29Xs8ekM6wfhZcUhkdDg4IiTXaHZjqX
+         miYz4jEi84cfjqyxMM4msuOynZPZPWOU+WFbCbdW/TtFuG7lWt0Ezp8kEtzjiEbbB4nd
+         7I3A==
+X-Gm-Message-State: ANhLgQ0JJfKZEl9q1D31/xrZYyiSDrbwgyQcQCgyFKx8hdNFDR8PSqtE
+        MN4PuetQ5ClFFvIk08B69otvM8mItI+UDhKcL23uGQ==
+X-Google-Smtp-Source: ADFU+vunuYFHmMTxeXbhxXw5Uo3b21PaNtX9C+qjpC09bzDOgW+g1Oz+LN22IIBOGacrxlsq7PCOscSQslCifdDB7Rw=
+X-Received: by 2002:a92:280a:: with SMTP id l10mr11155037ilf.49.1584056352713;
+ Thu, 12 Mar 2020 16:39:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <CACRpkdYv0U0RmT7snp+UejEXecq4wLkhc11DUniUfGYAgyXC=A@mail.gmail.com>
- <20200312190202.GA110276@google.com>
-In-Reply-To: <20200312190202.GA110276@google.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 12 Mar 2020 23:45:21 +0100
-Message-ID: <CACRpkdZrSHTry1fmFbrAAwbVu_zi1oez-uD5-8RtOVL_H54O+w@mail.gmail.com>
-Subject: Re: [PATCH 1/5] pci: handled return value of platform_get_irq correctly
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Aman Sharma <amanharitsh123@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Mans Rullgard <mans@mansr.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
+References: <20190710084427.7iqrhapxa7jo5v6y@yadro.com> <20200122131510.d5ckfj22idh56ef5@yadro.com>
+ <20200303123223.i3fvwfmbhklfq2l5@yadro.com>
+In-Reply-To: <20200303123223.i3fvwfmbhklfq2l5@yadro.com>
+From:   Jon Mason <jdmason@kudzu.us>
+Date:   Thu, 12 Mar 2020 19:39:02 -0400
+Message-ID: <CAPoiz9wAFfxSNh8MZo3N4hxJ9VMbF7qcx2SOOgq_1NDN=iVVQQ@mail.gmail.com>
+Subject: Re: [PATCH RESEND] ntb_hw_switchtec: Fix ntb_mw_clear_trans returning
+ error if size == 0
+To:     Alexander Fomichev <fomichev.ru@gmail.com>
+Cc:     linux-ntb <linux-ntb@googlegroups.com>, linux-pci@vger.kernel.org,
+        linux@yadro.com, Logan Gunthorpe <logang@deltatee.com>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Dave Jiang <dave.jiang@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 8:02 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Tue, Mar 3, 2020 at 7:32 AM Alexander Fomichev <fomichev.ru@gmail.com> wrote:
+>
+> Ping?
 
-> IIUC, in the link you mentioned, Linus T says that "dev->irq == 0"
-> means we don't have a valid IRQ.  I think that makes sense, but I'm
-> not sure it follows that 0 must be a sensical return value for
-> platform_get_irq().  It seems to me that platform_get_irq() ought to
-> return either a valid IRQ or an error, and the convention for errors
-> is a negative errno.
+Sorry, I missed this somehow  :(
 
-OK I see your point.
+I just pulled it in and it should be in my github tree in the next hour or so.
 
-I would be fine of the code is changed from:
+Thanks,
+Jon
 
-if (irq <= 0)
-  error;
-
-To:
-
-if (irq < 0)
-   error retrieving IRQ
-
-if (!irq)
-   error driver requires a valid IRQ
-
-To the driver (this one in specific) the IRQ is expected and
-necessary and I think it holds for most PCI hosts.
-
-Yours,
-Linus Walleij
+>
+> CC: Jon Mason <jdmason@kudzu.us>
+> CC: Dave Jiang <dave.jiang@intel.com>
+> CC: Allen Hubbe <allenbh@gmail.com>
+> CC: Kurt Schwemmer <kurt.schwemmer@microsemi.com>
+> CC: Logan Gunthorpe <logang@deltatee.com>
+>
+> On Wed, Jan 22, 2020 at 04:15:13PM +0300, Alexander Fomichev wrote:
+> > Somehow this patch was lost. The problem is still actual.
+> > Please, add to upstream.
+> >
+> > On Wed, Jul 10, 2019 at 11:44:27AM +0300, Alexander Fomichev wrote:
+> > > ntb_mw_set_trans should work as ntb_mw_clear_trans when size == 0 and/or
+> > > addr == 0. But error in xlate_pos checking condition prevents this.
+> > > Fix the condition to make ntb_mw_clear_trans working.
+> > >
+> > > Signed-off-by: Alexander Fomichev <fomichev.ru@gmail.com>
+> > > Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+> > > ---
+> > >  drivers/ntb/hw/mscc/ntb_hw_switchtec.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/ntb/hw/mscc/ntb_hw_switchtec.c b/drivers/ntb/hw/mscc/ntb_hw_switchtec.c
+> > > index 1e2f627d3bac..19d46af19650 100644
+> > > --- a/drivers/ntb/hw/mscc/ntb_hw_switchtec.c
+> > > +++ b/drivers/ntb/hw/mscc/ntb_hw_switchtec.c
+> > > @@ -299,7 +299,7 @@ static int switchtec_ntb_mw_set_trans(struct ntb_dev *ntb, int pidx, int widx,
+> > >     if (widx >= switchtec_ntb_mw_count(ntb, pidx))
+> > >             return -EINVAL;
+> > >
+> > > -   if (xlate_pos < 12)
+> > > +   if (size != 0 && xlate_pos < 12)
+> > >             return -EINVAL;
+> > >
+> > >     if (!IS_ALIGNED(addr, BIT_ULL(xlate_pos))) {
+> > > --
+> > > 2.17.1
+> >
+> > --
+> > Regards,
+> >   Alexander
