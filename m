@@ -2,85 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A1466182595
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Mar 2020 00:10:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DFC21826BE
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Mar 2020 02:44:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731168AbgCKXKZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Mar 2020 19:10:25 -0400
-Received: from mga12.intel.com ([192.55.52.136]:12133 "EHLO mga12.intel.com"
+        id S2387576AbgCLBo0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Mar 2020 21:44:26 -0400
+Received: from mga07.intel.com ([134.134.136.100]:51962 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729739AbgCKXKZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 11 Mar 2020 19:10:25 -0400
+        id S2387501AbgCLBoZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 11 Mar 2020 21:44:25 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 16:10:25 -0700
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 18:44:24 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,542,1574150400"; 
-   d="scan'208";a="322286118"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP; 11 Mar 2020 16:10:24 -0700
-Received: from [10.7.201.16] (skuppusw-desk.jf.intel.com [10.7.201.16])
-        by linux.intel.com (Postfix) with ESMTP id 3ADED58033E;
-        Wed, 11 Mar 2020 16:10:24 -0700 (PDT)
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
- in FF mode
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Austin.Bolen@dell.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ashok.raj@intel.com
-References: <20200311222352.GA200510@google.com>
-From:   Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Organization: Intel
-Message-ID: <a4b4b4b0-3c56-51a0-4237-dd439fca3150@linux.intel.com>
-Date:   Wed, 11 Mar 2020 16:07:59 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+X-IronPort-AV: E=Sophos;i="5.70,543,1574150400"; 
+   d="scan'208";a="443763768"
+Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.254.208.137]) ([10.254.208.137])
+  by fmsmga006.fm.intel.com with ESMTP; 11 Mar 2020 18:44:18 -0700
+Cc:     baolu.lu@linux.intel.com, lorenzo.pieralisi@arm.com,
+        corbet@lwn.net, mark.rutland@arm.com, liviu.dudau@arm.com,
+        guohanjun@huawei.com, rjw@rjwysocki.net, lenb@kernel.org,
+        robin.murphy@arm.com, dwmw2@infradead.org,
+        amurray@thegoodpenguin.co.uk, frowand.list@gmail.com
+Subject: Re: [PATCH v2 08/11] iommu/vt-d: Use pci_ats_supported()
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        bhelgaas@google.com, will@kernel.org, robh+dt@kernel.org,
+        joro@8bytes.org, sudeep.holla@arm.com, linux-doc@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
+        iommu@lists.linux-foundation.org
+References: <20200311124506.208376-1-jean-philippe@linaro.org>
+ <20200311124506.208376-9-jean-philippe@linaro.org>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <7019230c-3c56-e6db-6704-d73f23fa39b5@linux.intel.com>
+Date:   Thu, 12 Mar 2020 09:44:16 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200311222352.GA200510@google.com>
+In-Reply-To: <20200311124506.208376-9-jean-philippe@linaro.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
+Hi Jean,
 
-Re-sending the response in text mode.
+On 2020/3/11 20:45, Jean-Philippe Brucker wrote:
+> The pci_ats_supported() function checks if a device supports ATS and is
+> allowed to use it.
+> 
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> ---
+>   drivers/iommu/intel-iommu.c | 9 +++------
+>   1 file changed, 3 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+> index 6fa6de2b6ad5..17208280ef5c 100644
+> --- a/drivers/iommu/intel-iommu.c
+> +++ b/drivers/iommu/intel-iommu.c
+> @@ -1454,8 +1454,7 @@ static void iommu_enable_dev_iotlb(struct device_domain_info *info)
+>   	    !pci_reset_pri(pdev) && !pci_enable_pri(pdev, 32))
+>   		info->pri_enabled = 1;
+>   #endif
+> -	if (!pdev->untrusted && info->ats_supported &&
+> -	    pci_ats_page_aligned(pdev) &&
+> +	if (info->ats_supported && pci_ats_page_aligned(pdev) &&
+>   	    !pci_enable_ats(pdev, VTD_PAGE_SHIFT)) {
+>   		info->ats_enabled = 1;
+>   		domain_update_iotlb(info->domain);
+> @@ -2611,10 +2610,8 @@ static struct dmar_domain *dmar_insert_one_dev_info(struct intel_iommu *iommu,
+>   	if (dev && dev_is_pci(dev)) {
+>   		struct pci_dev *pdev = to_pci_dev(info->dev);
+>   
+> -		if (!pdev->untrusted &&
+> -		    !pci_ats_disabled() &&
 
-On 3/11/20 3:23 PM, Bjorn Helgaas wrote:
-> Is any synchronization needed here between the EDR path and the
-> hotplug/enumeration path?
-If we want to follow the implementation note step by step (in sequence) then
-we need some synchronization between EDR path and enumeration path. But
-if its OK the achieve the same end result by following steps out of sequence
-then we don't need to create any dependency between EDR and enumeration
-paths. Currently we follow the later approach.
+The pci_ats_disabled() couldn't be replaced by pci_ats_supported(). Even
+pci_ats_supported() returns true, user still can disable it. Or move
+ats_disabled into pci_ats_supported()?
 
-For example, consider the case in flow chart where after sending success 
-_OST,
-firmware decides to stop the recovery of the device.
+Best regards,
+baolu
 
-if we follow the flow chart as its then the steps should be,
-
-1. clear the DPC status trigger
-2. Send success code via _OST, and wait for return from _OST
-3. if successful return then enumerate the child devices and reassign 
-bus numbers.
-
-In current approach the steps followed are,
-
-1. Clear the DPC status trigger.
-2. Send success code via _OST
-2. In parallel, LINK UP event path will enumerate the child devices.
-3. if firmware decides not to recover the device,  then LINK DOWN event 
-will eventually
-     remove them again.
-
--- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
-
+> -		    ecap_dev_iotlb_support(iommu->ecap) &&
+> -		    pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_ATS) &&
+> +		if (ecap_dev_iotlb_support(iommu->ecap) &&
+> +		    pci_ats_supported(pdev) &&
+>   		    dmar_find_matched_atsr_unit(pdev))
+>   			info->ats_supported = 1;
