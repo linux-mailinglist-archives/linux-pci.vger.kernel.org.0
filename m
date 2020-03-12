@@ -2,135 +2,111 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 24E7F183BD0
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Mar 2020 22:59:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F1F1C183BC0
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Mar 2020 22:52:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbgCLV7F (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Mar 2020 17:59:05 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40892 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726513AbgCLV7E (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Mar 2020 17:59:04 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02CLrCd5018716;
-        Thu, 12 Mar 2020 17:58:41 -0400
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yquesjwfw-23
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 12 Mar 2020 17:58:41 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02CLYri9007977;
-        Thu, 12 Mar 2020 21:36:14 GMT
-Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
-        by ppma02dal.us.ibm.com with ESMTP id 2yqt6q9d6m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 12 Mar 2020 21:36:13 +0000
-Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02CLaCQB41222408
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 Mar 2020 21:36:12 GMT
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 908A86E04E;
-        Thu, 12 Mar 2020 21:36:12 +0000 (GMT)
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 30B9F6E04C;
-        Thu, 12 Mar 2020 21:36:11 +0000 (GMT)
-Received: from oc6857751186.ibm.com (unknown [9.160.72.189])
-        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu, 12 Mar 2020 21:36:10 +0000 (GMT)
-Subject: Re: [PATCH -next] PCI: rpaphp: remove set but not used variable
- 'value'
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Chen Zhou <chenzhou10@huawei.com>
-Cc:     paulus@samba.org, mpe@ellerman.id.au,
-        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200312144157.GA110750@google.com>
-From:   Tyrel Datwyler <tyreld@linux.ibm.com>
-Message-ID: <f2297ff2-5ba7-da38-4630-0b8f6af4dea6@linux.ibm.com>
-Date:   Thu, 12 Mar 2020 14:36:10 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1726514AbgCLVwd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Mar 2020 17:52:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39450 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726513AbgCLVwd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 12 Mar 2020 17:52:33 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4B37206FA;
+        Thu, 12 Mar 2020 21:52:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584049952;
+        bh=xetrKM6LDYJ9gs1w1p1i3KvxcG9WdpkyTnxKOTfJ158=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=iZDruLD/esx01jsUaVmBEENE8s1u6DrLkuszVaBGC2W54LhJI9AiseKPc1pJfacrE
+         /PZ5njJR4xDh9yofvVSEWRDLrJNTSGIB/O145PIkSJOpjW9gbsS+rLI2eVSWENjm67
+         8pV7sF+5vdHXa2d42HQahTtTvprQ3Ei21Ytsgunk=
+Date:   Thu, 12 Mar 2020 16:52:30 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     Austin.Bolen@dell.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ashok.raj@intel.com
+Subject: Re: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
+ in FF mode
+Message-ID: <20200312215230.GA195113@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20200312144157.GA110750@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-12_15:2020-03-11,2020-03-12 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=0
- lowpriorityscore=0 malwarescore=0 impostorscore=0 phishscore=0
- mlxlogscore=999 spamscore=0 priorityscore=1501 mlxscore=0 adultscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003120107
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f07d850f-473f-6fa0-81f3-b38a104a5e86@linux.intel.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 3/12/20 7:41 AM, Bjorn Helgaas wrote:
-> On Thu, Mar 12, 2020 at 09:38:02AM -0500, Bjorn Helgaas wrote:
->> On Thu, Mar 12, 2020 at 10:04:12PM +0800, Chen Zhou wrote:
->>> Fixes gcc '-Wunused-but-set-variable' warning:
->>>
->>> drivers/pci/hotplug/rpaphp_core.c: In function is_php_type:
->>> drivers/pci/hotplug/rpaphp_core.c:291:16: warning:
->>> 	variable value set but not used [-Wunused-but-set-variable]
->>>
->>> Reported-by: Hulk Robot <hulkci@huawei.com>
->>> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
->>
->> Michael, if you want this:
->>
->> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
->>
->> If you don't mind, edit the subject to follow the convention, e.g.,
->>
->>   PCI: rpaphp: Remove unused variable 'value'
->>
->> Apparently simple_strtoul() is deprecated and we're supposed to use
->> kstrtoul() instead.  Looks like kstrtoul() might simplify the code a
->> little, too, e.g.,
->>
->>   if (kstrtoul(drc_type, 0, &value) == 0)
->>     return 1;
->>
->>   return 0;
+On Thu, Mar 12, 2020 at 02:29:58PM -0700, Kuppuswamy Sathyanarayanan wrote:
+> Hi,
 > 
-> I guess there are several other uses of simple_strtoul() in this file.
-> Not sure if it's worth changing them all, just this one, or just the
-> patch below as-is.
-
-If we are going to change one might as well do them all at once. If the original
-submitter wants to send the follow up that is fine, or I can send a patch when I
-have a minute.
-
--Tyrel
-
+> On 3/12/20 2:02 PM, Austin.Bolen@dell.com wrote:
+> > On 3/12/2020 2:53 PM, Bjorn Helgaas wrote:
+> > > On Wed, Mar 11, 2020 at 04:07:59PM -0700, Kuppuswamy Sathyanarayanan wrote:
+> > > > On 3/11/20 3:23 PM, Bjorn Helgaas wrote:
+> > > > > Is any synchronization needed here between the EDR path and the
+> > > > > hotplug/enumeration path?
+> > > > If we want to follow the implementation note step by step (in
+> > > > sequence) then we need some synchronization between EDR path and
+> > > > enumeration path. But if it's OK to achieve the same end result by
+> > > > following steps out of sequence then we don't need to create any
+> > > > dependency between EDR and enumeration paths. Currently we follow
+> > > > the latter approach.
+> > > What would the synchronization look like?
+> > > 
+> > > Ideally I think it would be better to follow the order in the
+> > > flowchart if it's not too onerous.  That will make the code easier to
+> > > understand.  The current situation with this dependency on pciehp and
+> > > what it will do leaves a lot of things implicit.
+> > > 
+> > > What happens if CONFIG_PCIE_EDR=y but CONFIG_HOTPLUG_PCI_PCIE=n?
+> > > 
+> > > IIUC, when DPC triggers, pciehp is what fields the DLLSC interrupt and
+> > > unbinds the drivers and removes the devices.  If that doesn't happen,
+> > > and Linux clears the DPC trigger to bring the link back up, will those
+> > > drivers try to operate uninitialized devices?
+> > > 
+> > > Does EDR need a dependency on CONFIG_HOTPLUG_PCI_PCIE?
+> >   From one of Sathya's other responses:
+> > 
+> > "If hotplug is not supported then there is support to enumerate
+> > devices via polling  or ACPI events. But a point to note
+> > here is, enumeration path is independent of error handler path, and
+> > hence there is no explicit trigger or event from error handler path
+> > to enumeration path to kick start the enumeration."
+> > 
+> > The EDR standard doesn't have any dependency on hot-plug. It sounds like
+> > in the current implementation there's some manual intervention needed if
+> > hot-plug is not supported?
+> No, there is no need for manual intervention even in non hotplug
+> cases.
 > 
->>> ---
->>>  drivers/pci/hotplug/rpaphp_core.c | 3 +--
->>>  1 file changed, 1 insertion(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/pci/hotplug/rpaphp_core.c b/drivers/pci/hotplug/rpaphp_core.c
->>> index e408e40..5d871ef 100644
->>> --- a/drivers/pci/hotplug/rpaphp_core.c
->>> +++ b/drivers/pci/hotplug/rpaphp_core.c
->>> @@ -288,11 +288,10 @@ EXPORT_SYMBOL_GPL(rpaphp_check_drc_props);
->>>  
->>>  static int is_php_type(char *drc_type)
->>>  {
->>> -	unsigned long value;
->>>  	char *endptr;
->>>  
->>>  	/* PCI Hotplug nodes have an integer for drc_type */
->>> -	value = simple_strtoul(drc_type, &endptr, 10);
->>> +	simple_strtoul(drc_type, &endptr, 10);
->>>  	if (endptr == drc_type)
->>>  		return 0;
->>>  
->>> -- 
->>> 2.7.4
->>>
+> For ACPI events case, we would rely on ACPI event to kick start the
+> enumeration.  And for polling model, there is an independent polling
+> thread which will kick start the enumeration.
 
+I'm guessing the ACPI case works via hotplug_is_native(): if
+CONFIG_HOTPLUG_PCI_PCIE=n, pciehp_is_native() returns false, and
+acpiphp manages hotplug.
+
+What if CONFIG_HOTPLUG_PCI_ACPI=n also?
+
+Where is the polling thread?
+
+> Above both enumeration models are totally independent and has
+> no dependency on error handler thread.
+
+I see they're currently independent from the EDR thread, but it's not
+clear to me that there's no dependency.  After all, both EDR and the
+hotplug paths are operating on the same devices at roughly the same
+time, so we should have some story about what keeps them from getting
+in each other's way.
+
+> We will decide which model to use based on hardware capability and
+> _OSC negotiation or kernel command line option.
