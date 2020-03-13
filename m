@@ -2,117 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CD4E1848A4
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Mar 2020 14:59:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D8721848EF
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Mar 2020 15:14:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726667AbgCMN7o (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Mar 2020 09:59:44 -0400
-Received: from foss.arm.com ([217.140.110.172]:55748 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726674AbgCMN7o (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 13 Mar 2020 09:59:44 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B429730E;
-        Fri, 13 Mar 2020 06:59:43 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 975403F67D;
-        Fri, 13 Mar 2020 06:59:42 -0700 (PDT)
-Date:   Fri, 13 Mar 2020 13:59:40 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
+        id S1726715AbgCMOOV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Mar 2020 10:14:21 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2558 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726713AbgCMOOV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 13 Mar 2020 10:14:21 -0400
+Received: from LHREML712-CAH.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 532519DCF870C169B2BA;
+        Fri, 13 Mar 2020 14:14:19 +0000 (GMT)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ LHREML712-CAH.china.huawei.com (10.201.108.35) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 13 Mar 2020 14:14:18 +0000
+Received: from localhost (10.202.226.57) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Fri, 13 Mar
+ 2020 14:14:18 +0000
+Date:   Fri, 13 Mar 2020 14:14:16 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Qi Liu <liuqi115@huawei.com>, will@kernel.org, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, linuxarm@huawei.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+CC:     Qi Liu <liuqi115@huawei.com>, <will@kernel.org>,
+        <mark.rutland@arm.com>, <bhelgaas@google.com>,
+        <linux-pci@vger.kernel.org>, <linuxarm@huawei.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
 Subject: Re: [PATCH RFC] perf:Add driver for HiSilicon PCIe PMU
-Message-ID: <20200313135940.GK42546@lakrids.cambridge.arm.com>
-References: <1584014816-1908-1-git-send-email-liuqi115@huawei.com>
- <49a04327-b58b-3103-f992-97e8838c41df@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Message-ID: <20200313141416.00002e89@Huawei.com>
 In-Reply-To: <49a04327-b58b-3103-f992-97e8838c41df@arm.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+References: <1584014816-1908-1-git-send-email-liuqi115@huawei.com>
+        <49a04327-b58b-3103-f992-97e8838c41df@arm.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.57]
+X-ClientProxiedBy: lhreml723-chm.china.huawei.com (10.201.108.74) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 01:23:53PM +0000, Robin Murphy wrote:
+On Fri, 13 Mar 2020 13:23:53 +0000
+Robin Murphy <robin.murphy@arm.com> wrote:
+
 > On 2020-03-12 12:06 pm, Qi Liu wrote:
 > > From: Qi liu <liuqi115@huawei.com>
+> > 
+> > PCIe PMU Root Complex Integrate End Point(IEP) device is
+> > supported to sample bandwidth, latency, buffer occupation,
+> > bandwidth utilization etc.
+> > Each PMU IEP device monitors multiple root ports, and each
+> > IEP is registered as a pmu in /sys/bus/event_source/devices,
+> > so users can select the target IEP, and use filter to select
+> > root port, function and event.
+> > Filtering options are:
+> > event:    - select the event.
+> > subevent: - select the subevent.
+> > port:     - select target root port.
+> > func:     - select target EP device under the port.
+> > 
+> > Example: hisi_pcie_00_14_00/event=0x08,subevent=0x04,   \
+> > port=0x05,func=0x00/ -I 1000
+> > 
+> > PMU IEP device is described by its bus, device and function,
+> > target root port is 0x05 and target EP under it is function
+> > 0x00. Subevent 0x04 of event 0x08 is sampled.
+> > 
+> > Note that in this RFC:
+> > 1. PCIe PMU IEP hardware is still in development.
+> > 2. Perf common event list is undetermined, and name of these
+> > events still need to be discussed.
+> > 3. port filter could only select one port each time.
+> > 4. There are two possible schemes of pmu registration, one is
+> > register each root port as a pmu, it is easier for users to
+> > select target port. The other one is register each IEP as pmu,
+> > for counters are per IEP, not per root port, the second scheme
+> > describes hardware PMC much more reasonable, but need to add
+> > "port" filter option to select port. We use the second one in
+> > this RFC.
+> > 
 
-[...]
+Whilst it's great to have detailed feedback, just to make it clear...
 
-> > +#define HISI_PCIE_EVENT_SHIFT_M			GENMASK(15, 0)
-> > +#define HISI_PCIE_SUBEVENT_SHIFT_M		GENMASK(31, 16)
-> > +#define HISI_PCIE_SUBEVENT_SHIFT_S		16
-> > +#define HISI_PCIE_PORT_SHIFT_M			GENMASK(7, 0)
-> > +#define HISI_PCIE_FUNC_SHIFT_M			GENMASK(15, 8)
-> > +#define HISI_PCIE_FUNC_SHIFT_S			8
-> 
-> So "SHIFT_S" means "shift" and "SHIFT_M" actually means "mask"? That's
-> unnecessarily confusing. Furthermore it might be helpful if there was a more
-> obvious distinction between hardware register fields and config fields.
+This is an RFC for the reasons above.  They include that the hardware
+is still in development - i.e. we can't test it because they've not finished
+implementation yet.
 
-Also, If you use the FIELD_GET() and FIELD_PREP() helpers, you only need
-to define the mask. See <linux/bitfield.h>.
+The intention of posting so early is to get some feedback on the general
+approach and the specific points in 2,3 and 4 above.
 
-> > +int hisi_pcie_pmu_event_init(struct perf_event *event)
-> > +{
-> > +	struct hisi_pcie_pmu *pcie_pmu = to_pcie_pmu(event->pmu);
-> > +	struct hw_perf_event *hwc = &event->hw;
-> > +	u32 subevent_id, event_id, func_id, port_id;
-> > +
-> > +	if (event->attr.type != event->pmu->type)
-> > +		return -ENOENT;
-> > +
-> > +	/*
-> > +	 * We do not support sampling as the counters are all shared by all
-> > +	 * CPU cores in a CPU die(SCCL). Also we do not support attach to a
-> 
-> Do the PCIe counters have anything to do with CPU clusters at all?
-> 
-> > +	 * task(per-process mode)
-> > +	 */
-> > +	if (is_sampling_event(event) || event->attach_state & PERF_ATTACH_TASK)
-> > +		return -EOPNOTSUPP;
-> > +
-> > +	/*
-> > +	 * The uncore counters not specific to any CPU, so cannot
-> > +	 * support per-task
-> > +	 */
-> > +	if (event->cpu < 0)
-> > +		return -EINVAL;
-> > +
-> > +	/*
-> > +	 * Validate if the events in group does not exceed the
-> > +	 * available counters in hardware.
-> > +	 */
-> > +	if (!hisi_validate_event_group(event))
-> > +		return -EINVAL;
-> > +
-> > +	event_id = event->attr.config && HISI_PCIE_EVENT_SHIFT_M;
-> 
-> Really? Are you sure you've tested this properly?
+The key fiddly point with this is that it is a shared PMU across a set
+of PCIe Root Ports (there are several of these devices on each SoC in
+the system covering a set of ports each).
+That makes for a somewhat fiddly interface, hence the RFC.
 
-If you had:
+Thanks to everyone who has reviewed though as definitely some stuff for liuqi to
+fix!
 
-#define HISI_PCI_EVENT_ID	GENMASK(15, 0)
-#define HISI_PCI_SUBEVENT_ID	GENMASK(31, 16)
+Jonathan
 
-... here you could do:
 
-	event_id = FIELD_GET(HISI_PCI_EVENT_ID, event->attr.config);
-
-> 
-> > +	subevent_id = (event->attr.config && HISI_PCIE_SUBEVENT_SHIFT_M)
-> > +		       >> HISI_PCIE_SUBEVENT_SHIFT_S;
-
-... and:
-
-	subevent_id = FIELD_GET(HISI_PCI_SUBEVENT_ID, event->attr.config);
-
-... and so on for other fields.
-
-Thanks,
-Mark.
