@@ -2,205 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B16E184118
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Mar 2020 07:52:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 24A0F184251
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Mar 2020 09:17:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726254AbgCMGwL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Mar 2020 02:52:11 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:11642 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726001AbgCMGwL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 13 Mar 2020 02:52:11 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id ED986D771866E831E924;
-        Fri, 13 Mar 2020 14:52:05 +0800 (CST)
-Received: from [127.0.0.1] (10.65.95.32) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Fri, 13 Mar 2020
- 14:51:56 +0800
-Subject: Re: [PATCH RFC] perf:Add driver for HiSilicon PCIe PMU
-To:     Bjorn Helgaas <helgaas@kernel.org>
-References: <20200312203657.GA175613@google.com>
-CC:     <will@kernel.org>, <mark.rutland@arm.com>,
-        <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linuxarm@huawei.com>,
-        <linux-kernel@vger.kernel.org>
-From:   Qi Liu <liuqi115@huawei.com>
-Message-ID: <11216b30-a198-bb85-6f88-2cdae89c5ef3@huawei.com>
-Date:   Fri, 13 Mar 2020 14:51:57 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        id S1726371AbgCMIRb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Mar 2020 04:17:31 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:36953 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726328AbgCMIRa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Mar 2020 04:17:30 -0400
+Received: by mail-lf1-f68.google.com with SMTP id j11so7128148lfg.4
+        for <linux-pci@vger.kernel.org>; Fri, 13 Mar 2020 01:17:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=tXsPcGv8Fan/bvdsN0nNGI5CETM/nKN+bYEsELNFYjE=;
+        b=dncNFMS2LpYI20o+tjF63pfNPsX8pOB4GiY6I7BAdTNhCeySB2h9wTxCr0uWt6a3J4
+         vbj5nTEItfYrZ+0xuYij2pDIyZHjqfELOc9/og6UDADghyEZMTryg0hEZbrTgmLT/hUy
+         9AYz3WAdM4N/cW3JIzBhrjtSbIFtQyJ6JFAaxYKwk1TzcGfPQlyG9HFkleQbAvnyY3/Y
+         R35qZB5eN9ZtOp4CBzuZBrftSgEcCRpLCggRmcM/RaaZjC8VPVV+IVN9arSqGeUDy99k
+         DVazLSsa+P9TFK/HodW37wEKItL3B3iXHf2FmzzKzLFIApuh2H7pCWYgZNdZ5aZmHe93
+         7r/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=tXsPcGv8Fan/bvdsN0nNGI5CETM/nKN+bYEsELNFYjE=;
+        b=Oe7Di2CPb1WVDEhP5bujKSWe72uefeWNmkrOOHyEx7EtpwDnIsMb56/RZiAYvRQUhj
+         5S8z+ytEuIYRjPlfknvR9hbkZi1PFu0Cr8L6Tbz+HQVP7kx+S+t+Y23EdoPr8P2cVO8l
+         WdKb0R48RaRpSAHHSiItry5EEeVgWy/VLUkpdg9dNwXoR3S2MSccgkOq6/6QnbXlpYyu
+         Lh5+Vsnnq5LXZhwFVLYt/FbKhZaupObVYPH4/i5leq/AWobp8yBk6VR2FwQ6p41MRPAs
+         9bM1Qo2pfQjLnSNhBHvrfv1JeRtqtZRGId/0I7db2gaPUPjq1Z43VQp7oo0/X3PHJ2Ql
+         GMYg==
+X-Gm-Message-State: ANhLgQ1bsVnbrqMFInF22mPk4IGwBbw4BgvvEMZjNA4ryeoMTFTnHnN4
+        QKvAOgjC0yuM97yOVdbwUcY=
+X-Google-Smtp-Source: ADFU+vsqY7Jn3YNpezVqsWk13XzlvAMsD1Rf3S8+1W8k9TV+G2ZzXDMMCkldC8PVIL00G/rkxn2g0A==
+X-Received: by 2002:a19:c7cd:: with SMTP id x196mr7645924lff.106.1584087448610;
+        Fri, 13 Mar 2020 01:17:28 -0700 (PDT)
+Received: from localhost ([89.207.88.249])
+        by smtp.gmail.com with ESMTPSA id g20sm4945780lfe.65.2020.03.13.01.17.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Mar 2020 01:17:27 -0700 (PDT)
+Date:   Fri, 13 Mar 2020 11:17:27 +0300
+From:   Alexander Fomichev <fomichev.ru@gmail.com>
+To:     Jon Mason <jdmason@kudzu.us>
+Cc:     linux-ntb <linux-ntb@googlegroups.com>, linux-pci@vger.kernel.org,
+        linux@yadro.com, Logan Gunthorpe <logang@deltatee.com>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Dave Jiang <dave.jiang@intel.com>
+Subject: Re: [PATCH RESEND] ntb_hw_switchtec: Fix ntb_mw_clear_trans
+ returning error if size == 0
+Message-ID: <20200313081727.fs4lfzfbuafo34nk@yadro.com>
+References: <20190710084427.7iqrhapxa7jo5v6y@yadro.com>
+ <20200122131510.d5ckfj22idh56ef5@yadro.com>
+ <20200303123223.i3fvwfmbhklfq2l5@yadro.com>
+ <CAPoiz9wAFfxSNh8MZo3N4hxJ9VMbF7qcx2SOOgq_1NDN=iVVQQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200312203657.GA175613@google.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.65.95.32]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPoiz9wAFfxSNh8MZo3N4hxJ9VMbF7qcx2SOOgq_1NDN=iVVQQ@mail.gmail.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
-Thanks for reviewing the patch.
+Thank you very much.
 
-On 2020/3/13 4:36, Bjorn Helgaas wrote:
-> Use "git log --oneline drivers/perf" to see the convention, and update
-> subject to follow suit.  At least add a space in "perf:Add".
-> 
-> On Thu, Mar 12, 2020 at 08:06:56PM +0800, Qi Liu wrote:
->> From: Qi liu <liuqi115@huawei.com>
->>
->> PCIe PMU Root Complex Integrate End Point(IEP) device is
->> supported to sample bandwidth, latency, buffer occupation,
->> bandwidth utilization etc.
->> Each PMU IEP device monitors multiple root ports, and each
->> IEP is registered as a pmu in /sys/bus/event_source/devices,
->> so users can select the target IEP, and use filter to select
->> root port, function and event.
->> Filtering options are:
->> event:    - select the event.
->> subevent: - select the subevent.
->> port:     - select target root port.
->> func:     - select target EP device under the port.
-> 
-> The above *looks* like it's supposed to be three separate paragraphs;
-> please add blank lines between them.
-> 
-> s/Integrate/Integrated/
-> 
-> I assume this is a vendor-specific device; if so, please mention the
-> vendor so it doesn't look like something generic.
-> 
-OK, thanks, We'll correct it.
->> Example: hisi_pcie_00_14_00/event=0x08,subevent=0x04,   \
->> port=0x05,func=0x00/ -I 1000
->>
->> PMU IEP device is described by its bus, device and function,
->> target root port is 0x05 and target EP under it is function
->> 0x00. Subevent 0x04 of event 0x08 is sampled.
->>
->> Note that in this RFC:
->> 1. PCIe PMU IEP hardware is still in development.
->> 2. Perf common event list is undetermined, and name of these
->> events still need to be discussed.
->> 3. port filter could only select one port each time.
->> 4. There are two possible schemes of pmu registration, one is
->> register each root port as a pmu, it is easier for users to
->> select target port. The other one is register each IEP as pmu,
->> for counters are per IEP, not per root port, the second scheme
->> describes hardware PMC much more reasonable, but need to add
->> "port" filter option to select port. We use the second one in
->> this RFC.
->>
->> Signed-off-by: Qi Liu <liuqi115@huawei.com>
->> ---
->>  drivers/perf/Kconfig             |  10 +
->>  drivers/perf/Makefile            |   1 +
->>  drivers/perf/pci/Makefile        |   2 +
->>  drivers/perf/pci/hisi_pcie_pmu.c | 887 +++++++++++++++++++++++++++++++++++++++
->>  include/linux/cpuhotplug.h       |   1 +
->>  5 files changed, 901 insertions(+)
->>  create mode 100644 drivers/perf/pci/Makefile
->>  create mode 100644 drivers/perf/pci/hisi_pcie_pmu.c
->>
->> diff --git a/drivers/perf/Kconfig b/drivers/perf/Kconfig
->> index 09ae8a9..047022b 100644
->> --- a/drivers/perf/Kconfig
->> +++ b/drivers/perf/Kconfig
->> @@ -114,6 +114,16 @@ config THUNDERX2_PMU
->>  	   The SoC has PMU support in its L3 cache controller (L3C) and
->>  	   in the DDR4 Memory Controller (DMC).
->>  
->> +config PCIE_PMU
-> 
-> This config symbol is too generic for a vendor-specific device.
-OK, We'll use HISI_PCIE_PMU here.
+Regards,
+Alexander.
 
+On Thu, Mar 12, 2020 at 07:39:02PM -0400, Jon Mason wrote:
+> On Tue, Mar 3, 2020 at 7:32 AM Alexander Fomichev <fomichev.ru@gmail.com> wrote:
+> >
+> > Ping?
 > 
->> +	tristate "PCIE PERF PMU"
->> +	depends on ARM64
->> +	default m
->> +	help
->> +	   Provide support for 1630 PCIe performance monitoring unit (PMU)
->> +	   IEP devices.
->> +	   Adds the PCIe PMU into perf events system for monitoring latency,
->> +	   bandwidth etc.
+> Sorry, I missed this somehow  :(
 > 
->> +static int hisi_pcie_pmu_irq_register(struct pci_dev *pdev,
->> +				      struct hisi_pcie_pmu *pcie_pmu)
->> +{
->> +	int irq, ret;
->> +
->> +	irq = pci_irq_vector(pdev, HISI_PCIE_EVENT_IRQ_VECTOR);
->> +	ret = request_irq(irq, hisi_pcie_pmu_irq, IRQF_SHARED,
->> +			  pcie_pmu->dev_name, pcie_pmu);
->> +	if (ret)
->> +		return ret;
->> +
->> +	pcie_pmu->irq = irq;
->> +	return ret;
+> I just pulled it in and it should be in my github tree in the next hour or so.
 > 
->   return 0;
+> Thanks,
+> Jon
 > 
->> +}
-> 
->> +static int hisi_pcie_init_pmu(struct pci_dev *pdev,
->> +			      struct hisi_pcie_pmu *pcie_pmu)
->> +{
->> +	char *name;
->> +	int ret;
->> +
->> +	hisi_get_pcie_pmu(pdev, pcie_pmu);
->> +
->> +	ret = cpuhp_state_add_instance(CPUHP_AP_PERF_ARM_HISI_PCIE_PMU_ONLINE,
->> +				       &pcie_pmu->node);
->> +	if (ret) {
->> +		pci_err(pdev, "Error %d registering hotplug;\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	/*
->> +	 * domain_id is 0x00 means continuous domain, we use bdf num to
->> +	 * select IEP. Otherwise, use domain_id + bdf.
-> 
-> I don't see what this comment applies to.  Nothing in this function
-> uses "domain_id".  In fact, pcie_pmu->domain_id is set but never used
-> anywhere.
-> 
-OK ,will delete pcie_pmu->domain_id.
->> +	 */
->> +	name = devm_kasprintf(&pdev->dev, GFP_KERNEL,
->> +			      "hisi_pcie_%x_%x_%x", pcie_pmu->bus_id,
->> +			      pcie_pmu->device_id, pcie_pmu->func_id);
-> 
->> +static int hisi_pcie_pmu_probe(struct pci_dev *pdev,
->> +			       const struct pci_device_id *id)
->> +{
->> +	struct hisi_pcie_pmu *pcie_pmu;
->> +	int ret;
->> +
->> +	pcie_pmu = devm_kzalloc(&pdev->dev, sizeof(*pcie_pmu), GFP_KERNEL);
->> +	if (!pcie_pmu)
->> +		return -ENOMEM;
->> +
->> +	pci_set_drvdata(pdev, pcie_pmu);
->> +	ret = hisi_pcie_init_dev(pdev);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret = hisi_pcie_init_pmu(pdev, pcie_pmu);
->> +	if (ret)
->> +		return ret;
->> +
->> +	return ret;
-> 
-> This is the same as:
-> 
->   return hisi_pcie_init_pmu(pdev, pcie_pmu);
-> 
->> +}
-> 
-thanks, will change it to  return hisi_pcie_init_pmu(pdev, pcie_pmu);
-> .
-> 
+> >
+> > CC: Jon Mason <jdmason@kudzu.us>
+> > CC: Dave Jiang <dave.jiang@intel.com>
+> > CC: Allen Hubbe <allenbh@gmail.com>
+> > CC: Kurt Schwemmer <kurt.schwemmer@microsemi.com>
+> > CC: Logan Gunthorpe <logang@deltatee.com>
+> >
+> > On Wed, Jan 22, 2020 at 04:15:13PM +0300, Alexander Fomichev wrote:
+> > > Somehow this patch was lost. The problem is still actual.
+> > > Please, add to upstream.
+> > >
+> > > On Wed, Jul 10, 2019 at 11:44:27AM +0300, Alexander Fomichev wrote:
+> > > > ntb_mw_set_trans should work as ntb_mw_clear_trans when size == 0 and/or
+> > > > addr == 0. But error in xlate_pos checking condition prevents this.
+> > > > Fix the condition to make ntb_mw_clear_trans working.
+> > > >
+> > > > Signed-off-by: Alexander Fomichev <fomichev.ru@gmail.com>
+> > > > Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+> > > > ---
+> > > >  drivers/ntb/hw/mscc/ntb_hw_switchtec.c | 2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/ntb/hw/mscc/ntb_hw_switchtec.c b/drivers/ntb/hw/mscc/ntb_hw_switchtec.c
+> > > > index 1e2f627d3bac..19d46af19650 100644
+> > > > --- a/drivers/ntb/hw/mscc/ntb_hw_switchtec.c
+> > > > +++ b/drivers/ntb/hw/mscc/ntb_hw_switchtec.c
+> > > > @@ -299,7 +299,7 @@ static int switchtec_ntb_mw_set_trans(struct ntb_dev *ntb, int pidx, int widx,
+> > > >     if (widx >= switchtec_ntb_mw_count(ntb, pidx))
+> > > >             return -EINVAL;
+> > > >
+> > > > -   if (xlate_pos < 12)
+> > > > +   if (size != 0 && xlate_pos < 12)
+> > > >             return -EINVAL;
+> > > >
+> > > >     if (!IS_ALIGNED(addr, BIT_ULL(xlate_pos))) {
+> > > > --
+> > > > 2.17.1
+> > >
+> > > --
+> > > Regards,
+> > >   Alexander
 
+-- 
+Regards,
+  Alexander
