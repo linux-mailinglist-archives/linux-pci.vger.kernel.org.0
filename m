@@ -2,19 +2,19 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BE31F185193
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Mar 2020 23:23:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BF10185194
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Mar 2020 23:23:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbgCMWXJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S1726838AbgCMWXJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Fri, 13 Mar 2020 18:23:09 -0400
-Received: from yyz.mikelr.com ([170.75.163.43]:57254 "EHLO yyz.mikelr.com"
+Received: from yyz.mikelr.com ([170.75.163.43]:57262 "EHLO yyz.mikelr.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726838AbgCMWXJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S1726543AbgCMWXJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Fri, 13 Mar 2020 18:23:09 -0400
 Received: from glidewell.ykf.mikelr.com (198-84-194-208.cpe.teksavvy.com [198.84.194.208])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (Client did not present a certificate)
-        by yyz.mikelr.com (Postfix) with ESMTPSA id 103123D5C5;
+        by yyz.mikelr.com (Postfix) with ESMTPSA id 47A983D5C7;
         Fri, 13 Mar 2020 18:23:08 -0400 (EDT)
 From:   Mikel Rychliski <mikel@mikelr.com>
 To:     amd-gfx@lists.freedesktop.org, linux-pci@vger.kernel.org,
@@ -26,35 +26,49 @@ Cc:     Alex Deucher <alexander.deucher@amd.com>,
         Matthew Garrett <matthewgarrett@google.com>,
         Ben Skeggs <bskeggs@redhat.com>,
         Mikel Rychliski <mikel@mikelr.com>
-Subject: [PATCH RESEND v2 0/2] Fix loading of platform ROM from 32-bit EFI
-Date:   Fri, 13 Mar 2020 18:22:56 -0400
-Message-Id: <20200313222258.15659-1-mikel@mikelr.com>
+Subject: [PATCH RESEND v2 1/2] drm/radeon: Stop directly referencing iomem
+Date:   Fri, 13 Mar 2020 18:22:57 -0400
+Message-Id: <20200313222258.15659-2-mikel@mikelr.com>
 X-Mailer: git-send-email 2.13.7
+In-Reply-To: <20200313222258.15659-1-mikel@mikelr.com>
+References: <20200313222258.15659-1-mikel@mikelr.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This patch series fixes an oops when loading the radeon driver on old Macs
-with a 32-bit EFI implementation.
+pci_platform_rom() returns an __iomem pointer which should not be
+accessed directly. Change radeon_read_platform_bios() to use
+memcpy_fromio() instead of calling kmemdup() on the __iomem pointer.
 
-Tested on a MacPro 1,1 with a Radeon X1900 XT card and 32-bit kernel.
+Signed-off-by: Mikel Rychliski <mikel@mikelr.com>
+---
+ drivers/gpu/drm/radeon/radeon_bios.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-Changes in v2:
- - Add iounmap() call in nouveau
- - Update function comment for pci_platform_rom()
- - Minor changes to commit messages
-
-Mikel Rychliski (2):
-  drm/radeon: Stop directly referencing iomem
-  PCI: Use ioremap(), not phys_to_virt() for platform ROM
-
- drivers/gpu/drm/amd/amdgpu/amdgpu_bios.c             |  1 +
- drivers/gpu/drm/nouveau/nvkm/subdev/bios/shadowpci.c | 11 ++++++++++-
- drivers/gpu/drm/radeon/radeon_bios.c                 | 12 ++++++++----
- drivers/pci/rom.c                                    |  9 ++++++---
- 4 files changed, 25 insertions(+), 8 deletions(-)
-
+diff --git a/drivers/gpu/drm/radeon/radeon_bios.c b/drivers/gpu/drm/radeon/radeon_bios.c
+index c42f73fad3e3..c3ae4c92a115 100644
+--- a/drivers/gpu/drm/radeon/radeon_bios.c
++++ b/drivers/gpu/drm/radeon/radeon_bios.c
+@@ -118,11 +118,14 @@ static bool radeon_read_platform_bios(struct radeon_device *rdev)
+ 		return false;
+ 	}
+ 
+-	if (size == 0 || bios[0] != 0x55 || bios[1] != 0xaa) {
++	rdev->bios = kzalloc(size, GFP_KERNEL);
++	if (!rdev->bios)
+ 		return false;
+-	}
+-	rdev->bios = kmemdup(bios, size, GFP_KERNEL);
+-	if (rdev->bios == NULL) {
++
++	memcpy_fromio(rdev->bios, bios, size);
++
++	if (size == 0 || rdev->bios[0] != 0x55 || rdev->bios[1] != 0xaa) {
++		kfree(rdev->bios);
+ 		return false;
+ 	}
+ 
 -- 
 2.13.7
 
