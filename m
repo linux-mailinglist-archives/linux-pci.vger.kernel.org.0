@@ -2,218 +2,224 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 329A7183FC7
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Mar 2020 04:44:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FA6918402C
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Mar 2020 06:07:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726371AbgCMDoi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Mar 2020 23:44:38 -0400
-Received: from mga06.intel.com ([134.134.136.31]:37289 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726254AbgCMDoh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 12 Mar 2020 23:44:37 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2020 20:44:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,546,1574150400"; 
-   d="scan'208";a="289913076"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 12 Mar 2020 20:44:33 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jCbFR-000I6I-5q; Fri, 13 Mar 2020 11:44:33 +0800
-Date:   Fri, 13 Mar 2020 11:43:50 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:next] BUILD SUCCESS a536a320bfa20f2599fc99ab292bb2b8a14543f1
-Message-ID: <5e6b0176.KvksqLoKQ0aY4rXL%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+        id S1726328AbgCMFHq convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Fri, 13 Mar 2020 01:07:46 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:39696 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726364AbgCMFHp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Mar 2020 01:07:45 -0400
+Received: from mail-pf1-f199.google.com ([209.85.210.199])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1jCcXt-0006dY-GX
+        for linux-pci@vger.kernel.org; Fri, 13 Mar 2020 05:07:41 +0000
+Received: by mail-pf1-f199.google.com with SMTP id x21so5518818pfp.12
+        for <linux-pci@vger.kernel.org>; Thu, 12 Mar 2020 22:07:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=ncQzByjuwOcAKkawPEjHT5r1qKMEPZtwsVn5fEPFz1E=;
+        b=Bi3VUooSCfOPFe6ZdWWLZv+IVMk1J1a86VuwWOCOy5VYStSryCbICP2zsjgBBNAhHj
+         TjRbGb17l6dnzuvQknWRxCpKukBlNlCPfrSV8n3IhVMj97X2ri8hboutJSrZ82zF8U65
+         TcpisII7fw2iKQwsOLBV92NIPa6Hb3ooG1dyPx2V5Af+Kt6R4mTGHRCkuVxT3fld8nQI
+         FIB0042lkMCrivjsCs4Hux8aNS2N/w8WwH422dgNzucH1lz/uxDzZLvD03c+WnmQZxy+
+         2UVfIiRnGn8mNs10rtecbZ7VKKOVgDuRsEwoMwIgUfFAhDN0XTVeH1qHx5DhcPB1Xcje
+         sx5g==
+X-Gm-Message-State: ANhLgQ1eFXTIacSvCEGPQEG4sZVmOl+Ftr0uj3JDNS73B/wD/yXT03hm
+        mL4QlsCFdQUexfQjjVXh3Xg5cj9YNFslva+yxDWbYaMBtWW3yiNmFPxPNmh5HJ/H4Kwk9KoCy+f
+        BiMXKJ3RHysUXUbHMQx+5838maD0gxm9vC/XEMg==
+X-Received: by 2002:a17:902:b497:: with SMTP id y23mr11533271plr.81.1584076059905;
+        Thu, 12 Mar 2020 22:07:39 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vuMJeZd+QaCu4khzw5Eqa7w9dixEYSS8h3WxUI+oPjopXK4CM4tuTtOTorwFo4uXVo0cOhpTg==
+X-Received: by 2002:a17:902:b497:: with SMTP id y23mr11533231plr.81.1584076059449;
+        Thu, 12 Mar 2020 22:07:39 -0700 (PDT)
+Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
+        by smtp.gmail.com with ESMTPSA id f69sm3931635pfa.124.2020.03.12.22.07.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 12 Mar 2020 22:07:38 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
+Subject: Re: Thunderbolt, direct-complete and long suspend/resume time of
+ Suspend-to-idle
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <20200312104158.GS2540@lahna.fi.intel.com>
+Date:   Fri, 13 Mar 2020 13:07:35 +0800
+Cc:     Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        "Shih-Yuan Lee (FourDollars)" <sylee@canonical.com>,
+        Tiffany <tiffany.wang@canonical.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <452D9D7F-A4D1-4628-8E9B-D88E2C919D7A@canonical.com>
+References: <02700895-048F-4EA1-9E18-4883E83AE210@canonical.com>
+ <20200311103840.GB2540@lahna.fi.intel.com>
+ <E3DA71C8-96A7-482E-B41F-8145979F88F4@canonical.com>
+ <20200312081509.GI2540@lahna.fi.intel.com>
+ <C687BE86-1CCB-417B-8546-77F76127B266@canonical.com>
+ <20200312104158.GS2540@lahna.fi.intel.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+X-Mailer: Apple Mail (2.3608.60.0.2.5)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  next
-branch HEAD: a536a320bfa20f2599fc99ab292bb2b8a14543f1  Merge branch 'remotes/lorenzo/pci/vmd'
 
-elapsed time: 482m
 
-configs tested: 164
-configs skipped: 0
+> On Mar 12, 2020, at 18:41, Mika Westerberg <mika.westerberg@linux.intel.com> wrote:
+> 
+> On Thu, Mar 12, 2020 at 06:10:45PM +0800, Kai-Heng Feng wrote:
+>> 
+>> 
+>>> On Mar 12, 2020, at 16:15, Mika Westerberg <mika.westerberg@linux.intel.com> wrote:
+>>> 
+>>> On Thu, Mar 12, 2020 at 12:41:08PM +0800, Kai-Heng Feng wrote:
+>>>> 
+>>>> 
+>>>>> On Mar 11, 2020, at 18:38, Mika Westerberg <mika.westerberg@linux.intel.com> wrote:
+>>>>> 
+>>>>> On Wed, Mar 11, 2020 at 01:39:51PM +0800, Kai-Heng Feng wrote:
+>>>>>> Hi,
+>>>>>> 
+>>>>>> I am currently investigating long suspend and resume time of suspend-to-idle.
+>>>>>> It's because Thunderbolt bridges need to wait for 1100ms [1] for runtime-resume on system suspend, and also for system resume.
+>>>>>> 
+>>>>>> I made a quick hack to the USB driver and xHCI driver to support direct-complete, but I failed to do so for the parent PCIe bridge as it always disables the direct-complete [2], since device_may_wakeup() returns true for the device:
+>>>>>> 
+>>>>>> 	/* Avoid direct_complete to let wakeup_path propagate. */
+>>>>>> 		if (device_may_wakeup(dev) || dev->power.wakeup_path)
+>>>>>> 			dev->power.direct_complete = false;
+>>>>> 
+>>>>> You need to be careful here because otherwise you end up situation where
+>>>>> the link is not properly trained and we tear down the whole tree of
+>>>>> devices which is worse than waiting bit more for resume.
+>>>> 
+>>>> My idea is to direct-complete when there's no PCI or USB device
+>>>> plugged into the TBT, and use pm_reuqest_resume() in complete() so it
+>>>> won't block resume() or resume_noirq().
+>>> 
+>>> Before doing that..
+>>> 
+>>>>>> Once the direct-complete is disabled, system suspend/resume is used hence the delay in [1] is making the resume really slow. 
+>>>>>> So how do we make suspend-to-idle faster? I have some ideas but I am not sure if they are feasible:
+>>>>>> - Make PM core know the runtime_suspend() already use the same wakeup as suspend(), so it doesn't need to use device_may_wakeup() check to determine direct-complete.
+>>>>>> - Remove the DPM_FLAG_NEVER_SKIP flag in pcieport driver, and use pm_request_resume() in its complete() callback to prevent blocking the resume process.
+>>>>>> - Reduce the 1100ms delay. Maybe someone knows the values used in macOS and Windows...
+>>>>> 
+>>>>> Which system this is? ICL?
+>>>> 
+>>>> CML-H + Titan Ridge.
+>>> 
+>>> .. we should really understand this better because CML-H PCH root ports
+>>> and Titan/Alpine Ridge downstream ports all support active link
+>>> reporting so instead of the 1000+100ms you should see something like
+>>> this:
+>> 
+>> Root port for discrete graphics:
+>> # lspci -vvnn -s 00:01.0                    
+>> 00:01.0 PCI bridge [0604]: Intel Corporation Xeon E3-1200 v5/E3-1500 v5/6th Gen Core Processor PCIe Controller (x16) [8086:1901] (rev 02) (prog-if 00 [Normal decode])
+>>        Capabilities: [a0] Express (v2) Root Port (Slot+), MSI 00
+>>                LnkCap: Port #2, Speed 8GT/s, Width x16, ASPM L0s L1, Exit Latency L0s <256ns, L1 <8us
+>>                        ClockPM- Surprise- LLActRep- BwNot+ ASPMOptComp+
+>>                LnkCtl: ASPM L0s L1 Enabled; RCB 64 bytes Disabled- CommClk+
+>>                        ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+> 
+> Interesting, Titan Ridge is connected to the graphics slot, no? What
+> system this is?
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+No, TBT connects to another port, which supports link active reporting.
+This is just to show not all CML-H ports support that.
 
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                               defconfig
-sparc                            allyesconfig
-microblaze                    nommu_defconfig
-ia64                             allyesconfig
-parisc                generic-32bit_defconfig
-s390                             alldefconfig
-um                                  defconfig
-i386                              allnoconfig
-i386                             alldefconfig
-i386                             allyesconfig
-i386                                defconfig
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                                defconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-alpha                               defconfig
-csky                                defconfig
-nds32                             allnoconfig
-nds32                               defconfig
-h8300                       h8s-sim_defconfig
-h8300                     edosk2674_defconfig
-m68k                       m5475evb_defconfig
-m68k                             allmodconfig
-h8300                    h8300h-sim_defconfig
-m68k                           sun3_defconfig
-m68k                          multi_defconfig
-arc                              allyesconfig
-arc                                 defconfig
-microblaze                      mmu_defconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-parisc                            allnoconfig
-parisc                generic-64bit_defconfig
-parisc                           allyesconfig
-x86_64               randconfig-a001-20200313
-x86_64               randconfig-a002-20200313
-x86_64               randconfig-a003-20200313
-i386                 randconfig-a001-20200313
-i386                 randconfig-a002-20200313
-i386                 randconfig-a003-20200313
-alpha                randconfig-a001-20200312
-m68k                 randconfig-a001-20200312
-mips                 randconfig-a001-20200312
-nds32                randconfig-a001-20200312
-parisc               randconfig-a001-20200312
-riscv                randconfig-a001-20200312
-c6x                  randconfig-a001-20200312
-h8300                randconfig-a001-20200312
-microblaze           randconfig-a001-20200312
-nios2                randconfig-a001-20200312
-sparc64              randconfig-a001-20200312
-xtensa               randconfig-a001-20200312
-openrisc             randconfig-a001-20200312
-csky                 randconfig-a001-20200312
-sh                   randconfig-a001-20200312
-s390                 randconfig-a001-20200312
-x86_64               randconfig-b001-20200311
-x86_64               randconfig-b002-20200311
-x86_64               randconfig-b003-20200311
-i386                 randconfig-b001-20200311
-i386                 randconfig-b002-20200311
-i386                 randconfig-b003-20200311
-x86_64               randconfig-b001-20200312
-x86_64               randconfig-b002-20200312
-x86_64               randconfig-b003-20200312
-i386                 randconfig-b001-20200312
-i386                 randconfig-b002-20200312
-i386                 randconfig-b003-20200312
-x86_64               randconfig-c001-20200313
-x86_64               randconfig-c002-20200313
-x86_64               randconfig-c003-20200313
-i386                 randconfig-c001-20200313
-i386                 randconfig-c002-20200313
-i386                 randconfig-c003-20200313
-x86_64               randconfig-d001-20200312
-x86_64               randconfig-d002-20200312
-x86_64               randconfig-d003-20200312
-i386                 randconfig-d001-20200312
-i386                 randconfig-d002-20200312
-i386                 randconfig-d003-20200312
-x86_64               randconfig-e001-20200313
-x86_64               randconfig-e002-20200313
-x86_64               randconfig-e003-20200313
-i386                 randconfig-e001-20200313
-i386                 randconfig-e002-20200313
-i386                 randconfig-e003-20200313
-x86_64               randconfig-g001-20200313
-x86_64               randconfig-g002-20200313
-x86_64               randconfig-g003-20200313
-i386                 randconfig-g001-20200313
-i386                 randconfig-g002-20200313
-i386                 randconfig-g003-20200313
-x86_64               randconfig-h001-20200312
-x86_64               randconfig-h002-20200312
-x86_64               randconfig-h003-20200312
-i386                 randconfig-h001-20200312
-i386                 randconfig-h002-20200312
-i386                 randconfig-h003-20200312
-arm                  randconfig-a001-20200312
-arm64                randconfig-a001-20200312
-ia64                 randconfig-a001-20200312
-powerpc              randconfig-a001-20200312
-arc                  randconfig-a001-20200312
-sparc                randconfig-a001-20200312
-riscv                            allmodconfig
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-s390                             allmodconfig
-s390                              allnoconfig
-s390                             allyesconfig
-s390                          debug_defconfig
-s390                                defconfig
-s390                       zfcpdump_defconfig
-sh                               allmodconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
+> 
+>> Thunderbolt ports:
+>> # lspci -vvvv -s 04:00
+>> 04:00.0 PCI bridge [0604]: Intel Corporation JHL7540 Thunderbolt 3 Bridge [Titan Ridge 2C 2018] [8086:15e7] (rev 06) (prog-if 00 [Normal decode])
+>>        Capabilities: [c0] Express (v2) Downstream Port (Slot+), MSI 00
+>>                LnkCap: Port #0, Speed 2.5GT/s, Width x4, ASPM L1, Exit Latency L0s <64ns, L1 <1us
+>>                        ClockPM- Surprise- LLActRep- BwNot+ ASPMOptComp+
+>>                LnkCtl: ASPM L1 Enabled; Disabled- CommClk+
+>>                        ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+> 
+> This one leads to the TBT NHI.
+> 
+>> # lspci -vvnn -s 04:01
+>> 04:01.0 PCI bridge [0604]: Intel Corporation JHL7540 Thunderbolt 3 Bridge [Titan Ridge 2C 2018] [8086:15e7] (rev 06) (prog-if 00 [Normal decode])
+>>        Capabilities: [c0] Express (v2) Downstream Port (Slot+), MSI 00
+>>                LnkCap: Port #1, Speed 2.5GT/s, Width x4, ASPM L1, Exit Latency L0s <64ns, L1 <1us
+>>                        ClockPM- Surprise- LLActRep+ BwNot+ ASPMOptComp+
+>>                LnkCtl: ASPM L1 Enabled; Disabled- CommClk-
+>>                        ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+> 
+> This one is one of the extension downstream ports and it supports active
+> link reporting.
+> 
+>> # lspci -vvnn -s 04:02 
+>> 04:02.0 PCI bridge [0604]: Intel Corporation JHL7540 Thunderbolt 3 Bridge [Titan Ridge 2C 2018] [8086:15e7] (rev 06) (prog-if 00 [Normal decode])
+>>        Capabilities: [c0] Express (v2) Downstream Port (Slot+), MSI 00
+>>                LnkCap: Port #2, Speed 2.5GT/s, Width x4, ASPM L1, Exit Latency L0s <64ns, L1 <1us
+>>                        ClockPM- Surprise- LLActRep- BwNot+ ASPMOptComp+
+>>                LnkCtl: ASPM L1 Enabled; Disabled- CommClk+
+>>                        ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+> 
+> This one leads to the xHCI.
+> 
+>> So both CML-H PCH and TBT ports report "LLActRep-".
+> 
+> So in pci_bridge_wait_for_secondary_bus() we only call
+> pcie_wait_for_link_delay() if the port supports speeds higher than 5
+> GT/s (gen2). Now if I read the above correct all the ports except the
+> root port support 2.5 GT/s (gen1) speeds so we should go to the
+> msleep(delay) branch and not call pcie_wait_for_link_delay() at all:
+> 
+>        if (pcie_get_speed_cap(dev) <= PCIE_SPEED_5_0GT) {
+>                pci_dbg(dev, "waiting %d ms for downstream link\n", delay);
+>                msleep(delay);
+>        } else {
+>                pci_dbg(dev, "waiting %d ms for downstream link, after activation\n",
+>                        delay);
+>                if (!pcie_wait_for_link_delay(dev, true, delay)) {
+>                        /* Did not train, no need to wait any further */
+>                        return;
+>                }
+>        }
+> 
+> Only explanation I have is that delay itself is set to 1000ms for some
+> reason. Can you check if that's the case and then maybe check where that
+> delay is coming from?
+> 
+>>> 1. Wait for the link + 100ms for the root port
+>>> 2. Wait for the link + 100ms for the Titan Ridge downstream ports
+>>>   (these are run paraller wrt all Titan Ridge downstream ports that have
+>>>    something connected)
+>>> 
+>>> If there is a TBT device connected then 2. is repeated for it and so on.
+>>> 
+>>> So the 1000ms+ is really unexpected. Are you running mainline kernel and
+>>> if so, can you share dmesg with CONFIG_PCI_DEBUG=y so we can see the
+>>> delays there? Maybe also add some debugging to
+>>> pcie_wait_for_link_delay() where it checks for the
+>>> !pdev->link_active_reporting and waits for 1100ms.
+>> 
+>> I added the debug log in another thread and it does reach !pdev->link_active_reporting.
+> 
+> Hmm, based on the above that should not happen :-(
+> 
+>> Let me see if patch link active reporting for the ports in PCI quirks can help.
+> 
+> Let's first investigate bit more to understand what is going on.
+> 
+> I suggest to create kernel.org bugzilla about this. Please include full
+> dmesg and 'sudo lspci -vv' output at least and of course the steps you
+> use to reproduce this.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+https://bugzilla.kernel.org/show_bug.cgi?id=206837
+
+Kai-Heng
+
