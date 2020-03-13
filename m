@@ -2,192 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 22E56184D47
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Mar 2020 18:09:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3ECA8184DCC
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Mar 2020 18:40:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726414AbgCMRJF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Mar 2020 13:09:05 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2559 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726406AbgCMRJE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 13 Mar 2020 13:09:04 -0400
-Received: from lhreml701-cah.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 08546B0FE24240643515;
-        Fri, 13 Mar 2020 17:09:02 +0000 (GMT)
-Received: from lhreml715-chm.china.huawei.com (10.201.108.66) by
- lhreml701-cah.china.huawei.com (10.201.108.42) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 13 Mar 2020 17:08:43 +0000
-Received: from lhreml715-chm.china.huawei.com (10.201.108.66) by
- lhreml715-chm.china.huawei.com (10.201.108.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 13 Mar 2020 17:08:43 +0000
-Received: from lhreml715-chm.china.huawei.com ([10.201.108.66]) by
- lhreml715-chm.china.huawei.com ([10.201.108.66]) with mapi id 15.01.1713.004;
- Fri, 13 Mar 2020 17:08:43 +0000
-From:   Shiju Jose <shiju.jose@huawei.com>
-To:     James Morse <james.morse@arm.com>
-CC:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "lenb@kernel.org" <lenb@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "zhangliguang@linux.alibaba.com" <zhangliguang@linux.alibaba.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        Linuxarm <linuxarm@huawei.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        tanxiaofei <tanxiaofei@huawei.com>,
-        yangyicong <yangyicong@huawei.com>
-Subject: RE: [PATCH v4 1/2] ACPI: APEI: Add support to notify the vendor
- specific HW errors
-Thread-Topic: [PATCH v4 1/2] ACPI: APEI: Add support to notify the vendor
- specific HW errors
-Thread-Index: AQHV3aHpvUUiw2j43UuF7uWUQ9pa06hD2fwAgAADqhCAAvwSAIAACSkg
-Date:   Fri, 13 Mar 2020 17:08:43 +0000
-Message-ID: <0a37fd4508a94a999a3d0fe0d4222052@huawei.com>
-References: <Shiju Jose> <20200207103143.20104-1-shiju.jose@huawei.com>
- <20200207103143.20104-2-shiju.jose@huawei.com>
- <4967c0e6-b264-a13a-28c7-5ca497442823@arm.com>
- <689f0c7cb0fe49d6a9df140cc1b56690@huawei.com>
- <7c1a20de-746f-8fc2-29a1-6e5d607ebb48@arm.com>
-In-Reply-To: <7c1a20de-746f-8fc2-29a1-6e5d607ebb48@arm.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.47.88.248]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1726622AbgCMRkZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Mar 2020 13:40:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33720 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726591AbgCMRkZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 13 Mar 2020 13:40:25 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DF81206CD;
+        Fri, 13 Mar 2020 17:40:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584121224;
+        bh=6fvbImJM2+423L79v8Lios4o/jqMRhWF2FJx4TGFUJU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=E+CpSLv5KGlK5qw3uBSlQcDgr4O2ZWbnnYBpgsC9K7w8gYIZEn5faBPj0peeP6k3i
+         c9Al6ee1xfP0Q6/ebnXRdicc7NSmwWO3qixPV1esrv8HsURpYr4YSVg6glDd+yOgRx
+         UOX5ILm5yVyIj7McmMJb5DiGb8stjoKlIekwaY8E=
+Date:   Fri, 13 Mar 2020 12:40:22 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Alan Mikhak <alan.mikhak@sifive.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Subject: Re: [PATCH v2 0/5] PCI: functions/pci-epf-test: Add DMA data transfer
+Message-ID: <20200313174022.GA148658@google.com>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200313165613.GA26992@e121166-lin.cambridge.arm.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-SGkgSmFtZXMsDQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IEphbWVzIE1v
-cnNlIFttYWlsdG86amFtZXMubW9yc2VAYXJtLmNvbV0NCj5TZW50OiAxMyBNYXJjaCAyMDIwIDE1
-OjE3DQo+VG86IFNoaWp1IEpvc2UgPHNoaWp1Lmpvc2VAaHVhd2VpLmNvbT4NCj5DYzogbGludXgt
-YWNwaUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0K
-Pmtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IHJqd0Byand5c29ja2kubmV0OyBoZWxnYWFzQGtlcm5l
-bC5vcmc7DQo+bGVuYkBrZXJuZWwub3JnOyBicEBhbGllbjguZGU7IHRvbnkubHVja0BpbnRlbC5j
-b207DQo+Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7IHpoYW5nbGlndWFuZ0BsaW51eC5hbGli
-YWJhLmNvbTsNCj50Z2x4QGxpbnV0cm9uaXguZGU7IExpbnV4YXJtIDxsaW51eGFybUBodWF3ZWku
-Y29tPjsgSm9uYXRoYW4gQ2FtZXJvbg0KPjxqb25hdGhhbi5jYW1lcm9uQGh1YXdlaS5jb20+OyB0
-YW54aWFvZmVpIDx0YW54aWFvZmVpQGh1YXdlaS5jb20+Ow0KPnlhbmd5aWNvbmcgPHlhbmd5aWNv
-bmdAaHVhd2VpLmNvbT4NCj5TdWJqZWN0OiBSZTogW1BBVENIIHY0IDEvMl0gQUNQSTogQVBFSTog
-QWRkIHN1cHBvcnQgdG8gbm90aWZ5IHRoZSB2ZW5kb3INCj5zcGVjaWZpYyBIVyBlcnJvcnMNCj4N
-Cj5IaSBTaGlqdSwNCj4NCj5PbiAzLzEyLzIwIDEyOjEwIFBNLCBTaGlqdSBKb3NlIHdyb3RlOg0K
-Pj4+IE9uIDA3LzAyLzIwMjAgMTA6MzEsIFNoaWp1IEpvc2Ugd3JvdGU6DQo+Pj4+IFByZXNlbnRs
-eSBBUEVJIGRvZXMgbm90IHN1cHBvcnQgcmVwb3J0aW5nIHRoZSB2ZW5kb3Igc3BlY2lmaWMgSFcN
-Cj4+Pj4gZXJyb3JzLCByZWNlaXZlZCBpbiB0aGUgdmVuZG9yIGRlZmluZWQgdGFibGUgZW50cmll
-cywgdG8gdGhlIHZlbmRvcg0KPj4+PiBkcml2ZXJzIGZvciBhbnkgcmVjb3ZlcnkuDQo+Pj4+DQo+
-Pj4+IFRoaXMgcGF0Y2ggYWRkcyB0aGUgc3VwcG9ydCB0byByZWdpc3RlciBhbmQgdW5yZWdpc3Rl
-ciB0aGUgZXJyb3INCj4+Pj4gaGFuZGxpbmcgZnVuY3Rpb24gZm9yIHRoZSB2ZW5kb3Igc3BlY2lm
-aWMgSFcgZXJyb3JzIGFuZCBub3RpZnkgdGhlDQo+Pj4+IHJlZ2lzdGVyZWQga2VybmVsIGRyaXZl
-ci4NCj4+Pg0KPj4+IElzIGl0IHBvc3NpYmxlIHRvIHVzZSB0aGUga2VybmVsJ3MgZXhpc3RpbmcN
-Cj4+PiBhdG9taWNfbm90aWZpZXJfY2hhaW5fcmVnaXN0ZXIoKSBBUEkgZm9yIHRoaXM/DQo+Pj4N
-Cj4+PiBUaGUgb25lIHRoaW5nIHRoYXQgY2FuJ3QgYmUgZG9uZSBpbiB0aGUgc2FtZSB3YXkgaXMg
-dGhlIEdVSUQgZmlsdGVyaW5nIGluDQo+Z2hlcy5jLg0KPj4+IEVhY2ggZHJpdmVyIHdvdWxkIG5l
-ZWQgdG8gY2hlY2sgaWYgdGhlIGNhbGwgbWF0Y2hlZCBhIEdVSUQgdGhleSBrbmV3DQo+Pj4gYWJv
-dXQsIGFuZCByZXR1cm4gTk9USUZZX0RPTkUgaWYgdGhleSAiZG9uJ3QgY2FyZSIuDQo+Pj4NCj4+
-PiBJIHRoaW5rIHRoaXMgcGF0Y2ggd291bGQgYmUgYSBsb3Qgc21hbGxlciBpZiBpdCB3YXMgdHdl
-YWtlZCB0byBiZQ0KPj4+IGFibGUgdG8gdXNlIHRoZSBleGlzdGluZyBBUEkuIElmIHRoZXJlIGlz
-IGEgcmVhc29uIG5vdCB0byB1c2UgaXQsIGl0DQo+Pj4gd291bGQgYmUgZ29vZCB0byBrbm93IHdo
-YXQgaXQgaXMuDQo+DQo+PiBJIHRoaW5rIHdoZW4gdXNpbmcgYXRvbWljX25vdGlmaWVyX2NoYWlu
-X3JlZ2lzdGVyIHdlIGhhdmUgZm9sbG93aW5nDQo+bGltaXRhdGlvbnMsDQo+PiAxLiBBbGwgdGhl
-IHJlZ2lzdGVyZWQgZXJyb3IgaGFuZGxlcnMgd291bGQgZ2V0IGNhbGxlZCwgdGhvdWdoIGFuIGVy
-cm9yIGlzIG5vdA0KPnJlbGF0ZWQgdG8gdGhvc2UgaGFuZGxlcnMuDQo+DQo+VGhlIG5vdGlmaWVy
-IGNoYWluIHByb3ZpZGVzIE5PVElGWV9TVE9QX01BU0ssIHNvIHRoYXQgb25lIG9mIHRoZSBjYWxs
-ZXJzIGNhbg0KPnNheSB0aGUgd29yayBpcyBkb25lLiBXZSBvbmx5IGV4cGVjdCBhIGhhbmRmdWwg
-b2YgdGhlc2UsIHNvIEkgZG9uJ3QgdGhpbmsgdGhlcmUgaXMNCj5nb2luZyB0byBiZSBhIHNjYWxh
-YmlsaXR5IHByb2JsZW0uDQpPay4gSSB3aWxsIGNoZWNrIHRoZSBlcnJvciByZXBvcnRpbmcgYnkg
-dXNpbmcgYXRvbWljX25vdGlmaWVyX2NoYWluIGFuZCB0ZXN0Lg0KDQo+DQo+DQo+PiAgICAgQWxz
-byB0aGlzIG1heSBsZWFkIHRvIG1pc2hhbmRsaW5nIG9mIHRoZSBlcnJvciBpbmZvcm1hdGlvbiBp
-ZiBhIGhhbmRsZXIgZG9lcw0KPm5vdA0KPj4gICAgIGltcGxlbWVudCBHVUlEIGNoZWNraW5nIGV0
-Yy4NCj4NCj5XaGljaCB3b3VsZCBiZSBhIGJ1ZyB3ZSBjYW4gZml4Lg0KPlRoZXJlIGlzIG5vIHBv
-aW50IHdvcnJ5aW5nIGFib3V0IGJ1Z3MgaW4gb3V0IG9mIHRyZWUgY29kZS4NCk9rLg0KDQo+DQo+
-DQo+PiAyLiBhdG9taWNfbm90aWZpZXJfY2hhaW5fcmVnaXN0ZXIgKG5vdGlmaWVyX2NoYWluX3Jl
-Z2lzdGVyKSBsb29rcyBsaWtlIGRvZXMgbm90DQo+c3VwcG9ydA0KPj4gICAgIHBhc3MgdGhlIGhh
-bmRsZXIncyBwcml2YXRlIGRhdGEgZHVyaW5nIHRoZSByZWdpc3RyYXRpb24gd2hpY2ggc3VwcG9z
-ZWQgdG8NCj4+ICAgICBwYXNzZWQgbGF0ZXIgaW4gdGhlIGNhbGwgYmFjayBmdW5jdGlvbiAqbm90
-aWZpZXJfZm5fdCguLi4gLHZvaWQgKmRhdGEpIHRvIHRoZQ0KPmhhbmRsZXIuDQo+DQo+VGhlIGNh
-bGxiYWNrIGlzIHByb3ZpZGVkIHdpdGggdGhlIHN0cnVjdCBub3RpZmllcl9ibG9jay4gQSBiaXQg
-b2YNCj5jb250YWluZXJfb2YoKSBtYWdpYyB3aWxsIGdpdmUgeW91IHdoYXRldmVyIHN0cnVjdHVy
-ZSB5b3UgZW1iZWRkZWQgaXQgaW4hDQpPay4gSSB3aWxsIGNoZWNrIHRoaXMuDQogDQo+DQo+DQo+
-PiAzLiBBbHNvIGdvdCBkaWZmaWN1bHR5IGluIHBhc3NpbmcgdGhlIGdoZXMgZXJyb3IgZGF0YShh
-Y3BpX2hlc3RfZ2VuZXJpY19kYXRhKSwNCj5HVUlEDQo+PiAgICAgZm9yIHRoZSBlcnJvciByZWNl
-aXZlZCB0byB0aGUgaGFuZGxlciB0aHJvdWdoIHRoZSBub3RpZmllcl9jaGFpbiAgY2FsbGJhY2sN
-Cj5pbnRlcmZhY2UuDQo+DQo+SGVyZSB5b3UndmUgbG9zdCBtZS4gQmVjYXVzZSB5b3UgbmVlZCB0
-byBwYXNzIG1vcmUgdGhhbiBvbmUgdGhpbmc/IENhbid0IHdlDQo+aGF2ZSBhIHN0cnVjdCBmb3Ig
-dGhhdD8NCj4NCj5CdXQsIGlzbid0IGl0IGFsbCBpbiBzdHJ1Y3QgYWNwaV9oZXN0X2dlbmVyaWNf
-ZGF0YSBhbHJlYWR5PyBUaGF0IGlzIHdoZXJlIHRoZSBndWlkDQo+YW5kIHNldmVyaXR5IGNvbWUg
-ZnJvbS4NCk9rLiAgcmlnaHQuIA0KIA0KPg0KPg0KPj4+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9h
-Y3BpL2FwZWkvZ2hlcy5jIGIvZHJpdmVycy9hY3BpL2FwZWkvZ2hlcy5jDQo+Pj4+IGluZGV4DQo+
-Pj4+IDEwM2FjYmIuLjY5ZTE4ZDcgMTAwNjQ0DQo+Pj4+IC0tLSBhL2RyaXZlcnMvYWNwaS9hcGVp
-L2doZXMuYw0KPj4+PiArKysgYi9kcml2ZXJzL2FjcGkvYXBlaS9naGVzLmMNCj4+Pj4gQEAgLTQ5
-MCw2ICs0OTAsMTA5IEBAIHN0YXRpYyB2b2lkIGdoZXNfaGFuZGxlX2FlcihzdHJ1Y3QNCj4+Pj4g
-YWNwaV9oZXN0X2dlbmVyaWNfZGF0YSAqZ2RhdGEpDQo+Pj4NCj4+Pj4gKy8qKg0KPj4+PiArICog
-Z2hlc191bnJlZ2lzdGVyX2V2ZW50X2hhbmRsZXIgLSB1bnJlZ2lzdGVyIHRoZSBwcmV2aW91c2x5
-DQo+Pj4+ICsgKiByZWdpc3RlcmVkIGV2ZW50IGhhbmRsaW5nIGZ1bmN0aW9uLg0KPj4+PiArICog
-QHNlY190eXBlOiBzZWNfdHlwZSBvZiB0aGUgY29ycmVzcG9uZGluZyBDUEVSLg0KPj4+PiArICog
-QGRhdGE6IGRyaXZlciBzcGVjaWZpYyBkYXRhIHRvIGRpc3Rpbmd1aXNoIGRldmljZXMuDQo+Pj4+
-ICsgKi8NCj4+Pj4gK3ZvaWQgZ2hlc191bnJlZ2lzdGVyX2V2ZW50X2hhbmRsZXIoZ3VpZF90IHNl
-Y190eXBlLCB2b2lkICpkYXRhKSB7DQo+Pj4+ICsJc3RydWN0IGdoZXNfZXZlbnRfbm90aWZ5ICpl
-dmVudF9ub3RpZnk7DQo+Pj4+ICsJYm9vbCBmb3VuZCA9IGZhbHNlOw0KPj4+PiArDQo+Pj4+ICsJ
-bXV0ZXhfbG9jaygmZ2hlc19ldmVudF9ub3RpZnlfbXV0ZXgpOw0KPj4+PiArCXJjdV9yZWFkX2xv
-Y2soKTsNCj4+Pj4gKwlsaXN0X2Zvcl9lYWNoX2VudHJ5X3JjdShldmVudF9ub3RpZnksDQo+Pj4+
-ICsJCQkJJmdoZXNfZXZlbnRfaGFuZGxlcl9saXN0LCBsaXN0KSB7DQo+Pj4+ICsJCWlmIChndWlk
-X2VxdWFsKCZldmVudF9ub3RpZnktPnNlY190eXBlLCAmc2VjX3R5cGUpKSB7DQo+Pj4NCj4+Pj4g
-KwkJCWlmIChkYXRhICE9IGV2ZW50X25vdGlmeS0+ZGF0YSkNCj4+Pg0KPj4+IEl0IGxvb2tzIGxp
-a2UgeW91IG5lZWQgbXVsdGlwbGUgZHJpdmVycyB0byBoYW5kbGUgdGhlIHNhbWUgR1VJRA0KPj4+
-IGJlY2F1c2Ugb2YgbXVsdGlwbGUgcm9vdCBwb3J0cy4gQ2FuJ3QgdGhlIGhhbmRsZXIgbG9va3Vw
-IHRoZSByaWdodCBkZXZpY2U/DQo+DQo+PiBUaGlzIGNoZWNrIHdhcyBiZWNhdXNlIEdVSUQgaXMg
-c2hhcmVkIGFtb25nIG11bHRpcGxlIGRldmljZXMgd2l0aCBvbmUNCj4+IGRyaXZlciBhcyBzZWVu
-IGluIHRoZSBCMjg4OUZDOSBkcml2ZXIgKHBjaWUtaGlzaS1lcnJvci5jKS4NCj4NCj4od2Ugc2hv
-dWxkIHN0b3AgY2FsbGluZyBpdCBieSBpdHMgZ3VpZCAuLi4gZG9lcyBpdCBoYXZlIGEgbmFtZT8h
-KQ0KPg0KPg0KPlRoaXMgbXVzdCBiZSBzb21lIGtpbmQgb2YgZXJyb3IgY29sbGVjdG9yIGZvciBh
-IGJ1cyByaWdodD8NCj4NCj5JIGFncmVlIHdlIG1heSBuZWVkIHRvIGhhdmUgbXVsdGlwbGUgZHJp
-dmVycyByZWdpc3RlciB0byBoYW5kbGUgdmVuZG9yIGV2ZW50cywNCj5idXQgaXQgbG9va3MgbGlr
-ZSB5b3UgYXJlIHJlZ2lzdGVyaW5nIHRoZSBzYW1lIGhhbmRsZXIgbXVsdGlwbGUgdGltZXMsIHdp
-dGgNCj5kaWZmZXJlbnQgcHJpdmF0ZSBzdHJ1Y3R1cmVzLg0KPg0KPkNhbid0IGl0IGZpbmQgdGhl
-IGFmZmVjdGVkIGRldmljZSBmcm9tIHRoZSBlcnJvciBkZXNjcmlwdGlvbj8NClllcy4gV2UgYWxy
-ZWFkeSBoYXZlIHRoZSBjb2RlIGluIHRoZSBQQ0llIGVycm9yIGhhbmRsaW5nIGRyaXZlciB0byBp
-ZGVudGlmeSB0aGUgcmlnaHQgZGV2aWNlDQpmcm9tIHRoZSBlcnJvciBpbmZvcm1hdGlvbi4NCg0K
-Pg0KPg0KPj4+PiBAQCAtNTI1LDExICs2MjgsMTQgQEAgc3RhdGljIHZvaWQgZ2hlc19kb19wcm9j
-KHN0cnVjdCBnaGVzICpnaGVzLA0KPj4+Pg0KPj4+PiAgCQkJbG9nX2FybV9od19lcnJvcihlcnIp
-Ow0KPj4+PiAgCQl9IGVsc2Ugew0KPj4+PiAtCQkJdm9pZCAqZXJyID0gYWNwaV9oZXN0X2dldF9w
-YXlsb2FkKGdkYXRhKTsNCj4+Pj4gLQ0KPj4+PiAtCQkJbG9nX25vbl9zdGFuZGFyZF9ldmVudChz
-ZWNfdHlwZSwgZnJ1X2lkLCBmcnVfdGV4dCwNCj4+Pj4gLQkJCQkJICAgICAgIHNlY19zZXYsIGVy
-ciwNCj4+Pj4gLQkJCQkJICAgICAgIGdkYXRhLT5lcnJvcl9kYXRhX2xlbmd0aCk7DQo+Pj4+ICsJ
-CQlpZiAoIWdoZXNfaGFuZGxlX25vbl9zdGFuZGFyZF9ldmVudChzZWNfdHlwZSwgZ2RhdGEsDQo+
-Pj4+ICsJCQkJCQkJICAgIHNldikpIHsNCj4+Pj4gKwkJCQl2b2lkICplcnIgPSBhY3BpX2hlc3Rf
-Z2V0X3BheWxvYWQoZ2RhdGEpOw0KPj4+PiArDQo+Pj4+ICsJCQkJbG9nX25vbl9zdGFuZGFyZF9l
-dmVudChzZWNfdHlwZSwgZnJ1X2lkLA0KPj4+PiArCQkJCQkJICAgICAgIGZydV90ZXh0LCBzZWNf
-c2V2LCBlcnIsDQo+Pj4+ICsJCQkJCQkgICAgICAgZ2RhdGEtPmVycm9yX2RhdGFfbGVuZ3RoKTsN
-Cj4+Pj4gKwkJCX0NCj4+Pg0KPj4+IFNvLCBhIHNpZGUgZWZmZWN0IG9mIHRoZSBrZXJuZWwgaGFu
-ZGxpbmcgdGhlc2UgaXMgdGhleSBubyBsb25nZXIgZ2V0DQo+Pj4gbG9nZ2VkIG91dCBvZiB0cmFj
-ZSBwb2ludHM/DQo+Pj4NCj4+PiBJIGd1ZXNzIHRoZSBkcml2ZXIgdGhlIGNsYWltcyB0aGlzIGxv
-Z3Mgc29tZSBtb3JlIGFjY3VyYXRlDQo+Pj4gaW5mb3JtYXRpb24uIEFyZSB0aGVyZSBleHBlY3Rl
-ZCB0byBiZSBhbnkgdXNlci1zcGFjZSBwcm9ncmFtcyBkb2luZw0KPj4+IHNvbWV0aGluZyB1c2Vm
-dWwgd2l0aCBCMjg4OUZDOS4uLiB0b2RheT8NCj4NCj4+IFRoZSBCMjg4OUZDOSBkcml2ZXIgZG9l
-cyBub3QgZXhwZWN0IGFueSBjb3JyZXNwb25kaW5nIHVzZXIgc3BhY2UNCj5wcm9ncmFtcy4NCj4+
-IFRoZSBkcml2ZXIgbWFpbmx5IGZvciB0aGUgZXJyb3IgcmVjb3ZlcnkgYW5kIGJhc2ljIGVycm9y
-IGRlY29kaW5nIGFuZCBsb2dnaW5nLg0KPg0KPj4gUHJldmlvdXNseSB3ZSBhZGRlZCB0aGUgZXJy
-b3IgbG9nZ2luZyBmb3IgdGhlIEIyODg5RkM5IGluIHRoZSByYXNkYWVtb24uDQo+DQo+U28gdGhp
-cyBzZXJpZXMgd291bGQgYnJlYWsgdGhlIGVycm9yIGxvZ2dpbmcgaW4gcmFzZGFlbW9uLg0KSXQg
-ZG9lcyBub3QgYWZmZWN0IHRoZSBsb2dnaW5nIGluZm9ybWF0aW9uIHRvIHRoZSB1c2VyIGZvciB0
-aGUgSGlTaWxpY29uIFBDSWUgY29udHJvbGxlciBlcnJvcnMNCmJlY2F1c2UgdGhlIGxldmVsIG9m
-IGxvZ2dpbmcgaW5mb3JtYXRpb24gaXMgdGhlIHNhbWUgYm90aCBpbiB0aGUgcmFzZGFlbW9uIGFu
-ZCBpbiB0aGUNCm5ld2x5IGFkZGluZyBIaVNpbGljb24gUENJZSBjb250cm9sbGVyIGVycm9yIGhh
-bmRsaW5nIGRyaXZlci4NCj4NCj5Vc2VyLXNwYWNlIHdvdWxkIG5lZWQgdG8gYmUgdXBncmFkZWQg
-dG8gcmVjZWl2ZSB0aGUgdHJhY2UgaW5mb3JtYXRpb24gZnJvbQ0KPnRoZSBzcGVjaWZpYyBkcml2
-ZXIgaW5zdGVhZC4gKGhvdyBkb2VzIGl0IGtub3c/ISkNCj4NCj5Db3VsZCB3ZSBsb2dfbm9uX3N0
-YW5kYXJkX2V2ZW50KCkgdW5jb25kaXRpb25hbGx5LCBtYXliZSBhZGRpbmcgYSBmaWVsZCB0bw0K
-PmluZGljYXRlIHRoYXQgYSBkcml2ZXIgY2xhaW1lZCBpdCwgc28gdGhlcmUgbWF5IGJlIG1vcmUg
-ZGF0YSBzb21ld2hlcmUgZWxzZS4uLg0Kc3VyZSwgSSB3aWxsIGNoZWNrIHRoZSBwb3NzaWJpbGl0
-eSBvZiBhZGRpbmcgdGhlIGZpZWxkIHRvIGluZGljYXRlIGRyaXZlciBjbGFpbWVkIGl0IGFuZA0K
-Y2FsbGluZyBsb2dfbm9uX3N0YW5kYXJkX2V2ZW50KCkgYWx3YXlzLg0KPg0KPg0KPlRoYW5rcywN
-Cj4NCj5KYW1lcw0KDQpUaGFua3MsDQpTaGlqdQ0K
+On Fri, Mar 13, 2020 at 04:56:13PM +0000, Lorenzo Pieralisi wrote:
+> On Tue, Mar 03, 2020 at 04:07:47PM +0530, Kishon Vijay Abraham I wrote:
+> > Patch series uses dma engine APIs in pci-epf-test to transfer data using
+> > DMA. It also adds an option "-d" in pcitest for the user to indicate
+> > whether DMA has to be used for data transfer. This also prints
+> > throughput information for data transfer.
+> > 
+> > Changes from v1:
+> > *) Fixed some of the function names from pci_epf_* to pci_epf_test_*
+> > since the DMA support is now been moved to pci-epf-test.c
+> > 
+> > Kishon Vijay Abraham I (5):
+> >   PCI: endpoint: functions/pci-epf-test: Add DMA support to transfer
+> >     data
+> >   PCI: endpoint: functions/pci-epf-test: Print throughput information
+> >   misc: pci_endpoint_test: Use streaming DMA APIs for buffer allocation
+> >   tools: PCI: Add 'd' command line option to support DMA
+> >   misc: pci_endpoint_test: Add support to get DMA option from userspace
+> > 
+> >  drivers/misc/pci_endpoint_test.c              | 165 ++++++++++--
+> >  drivers/pci/endpoint/functions/pci-epf-test.c | 253 +++++++++++++++++-
+> >  include/uapi/linux/pcitest.h                  |   5 +
+> >  tools/pci/pcitest.c                           |  20 +-
+> >  4 files changed, 412 insertions(+), 31 deletions(-)
+> 
+> Hi Kishon,
+> 
+> I had to drop this series - waiting for you to send an updated one
+> to fix the x86 build breakage - force pushed pci/endpoint out.
+
+I updated my "next" branch with this updated branch so we can at least
+test the other things on the lorenzo/pci/endpoint branch.
+
+The lorenzo/pci/mobiveil branch is also temporarily out completely for
+a build issue.
