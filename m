@@ -2,131 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 24A0F184251
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Mar 2020 09:17:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1BE57184286
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Mar 2020 09:25:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726371AbgCMIRb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Mar 2020 04:17:31 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:36953 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726328AbgCMIRa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Mar 2020 04:17:30 -0400
-Received: by mail-lf1-f68.google.com with SMTP id j11so7128148lfg.4
-        for <linux-pci@vger.kernel.org>; Fri, 13 Mar 2020 01:17:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=tXsPcGv8Fan/bvdsN0nNGI5CETM/nKN+bYEsELNFYjE=;
-        b=dncNFMS2LpYI20o+tjF63pfNPsX8pOB4GiY6I7BAdTNhCeySB2h9wTxCr0uWt6a3J4
-         vbj5nTEItfYrZ+0xuYij2pDIyZHjqfELOc9/og6UDADghyEZMTryg0hEZbrTgmLT/hUy
-         9AYz3WAdM4N/cW3JIzBhrjtSbIFtQyJ6JFAaxYKwk1TzcGfPQlyG9HFkleQbAvnyY3/Y
-         R35qZB5eN9ZtOp4CBzuZBrftSgEcCRpLCggRmcM/RaaZjC8VPVV+IVN9arSqGeUDy99k
-         DVazLSsa+P9TFK/HodW37wEKItL3B3iXHf2FmzzKzLFIApuh2H7pCWYgZNdZ5aZmHe93
-         7r/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=tXsPcGv8Fan/bvdsN0nNGI5CETM/nKN+bYEsELNFYjE=;
-        b=Oe7Di2CPb1WVDEhP5bujKSWe72uefeWNmkrOOHyEx7EtpwDnIsMb56/RZiAYvRQUhj
-         5S8z+ytEuIYRjPlfknvR9hbkZi1PFu0Cr8L6Tbz+HQVP7kx+S+t+Y23EdoPr8P2cVO8l
-         WdKb0R48RaRpSAHHSiItry5EEeVgWy/VLUkpdg9dNwXoR3S2MSccgkOq6/6QnbXlpYyu
-         Lh5+Vsnnq5LXZhwFVLYt/FbKhZaupObVYPH4/i5leq/AWobp8yBk6VR2FwQ6p41MRPAs
-         9bM1Qo2pfQjLnSNhBHvrfv1JeRtqtZRGId/0I7db2gaPUPjq1Z43VQp7oo0/X3PHJ2Ql
-         GMYg==
-X-Gm-Message-State: ANhLgQ1bsVnbrqMFInF22mPk4IGwBbw4BgvvEMZjNA4ryeoMTFTnHnN4
-        QKvAOgjC0yuM97yOVdbwUcY=
-X-Google-Smtp-Source: ADFU+vsqY7Jn3YNpezVqsWk13XzlvAMsD1Rf3S8+1W8k9TV+G2ZzXDMMCkldC8PVIL00G/rkxn2g0A==
-X-Received: by 2002:a19:c7cd:: with SMTP id x196mr7645924lff.106.1584087448610;
-        Fri, 13 Mar 2020 01:17:28 -0700 (PDT)
-Received: from localhost ([89.207.88.249])
-        by smtp.gmail.com with ESMTPSA id g20sm4945780lfe.65.2020.03.13.01.17.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Mar 2020 01:17:27 -0700 (PDT)
-Date:   Fri, 13 Mar 2020 11:17:27 +0300
-From:   Alexander Fomichev <fomichev.ru@gmail.com>
-To:     Jon Mason <jdmason@kudzu.us>
-Cc:     linux-ntb <linux-ntb@googlegroups.com>, linux-pci@vger.kernel.org,
-        linux@yadro.com, Logan Gunthorpe <logang@deltatee.com>,
-        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Dave Jiang <dave.jiang@intel.com>
-Subject: Re: [PATCH RESEND] ntb_hw_switchtec: Fix ntb_mw_clear_trans
- returning error if size == 0
-Message-ID: <20200313081727.fs4lfzfbuafo34nk@yadro.com>
-References: <20190710084427.7iqrhapxa7jo5v6y@yadro.com>
- <20200122131510.d5ckfj22idh56ef5@yadro.com>
- <20200303123223.i3fvwfmbhklfq2l5@yadro.com>
- <CAPoiz9wAFfxSNh8MZo3N4hxJ9VMbF7qcx2SOOgq_1NDN=iVVQQ@mail.gmail.com>
+        id S1726475AbgCMIZP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Mar 2020 04:25:15 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:34010 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726406AbgCMIZO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Mar 2020 04:25:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=/ZdDlbLqNOvakJ4NWfeKFrm2xJH0FxuVXIiomBTeWY0=; b=h0nC3b0lys4AAFlklVuzX011mM
+        aHVnRucRLsffajpU6AVN5ImOUq9DYUQk/8gBFO80Sg/fTAjqTJ0XiqmWvPve7tuqVDjJEqyAmYuUZ
+        bqQ/GWEiKM8bO0yKpKacYY2OQJClYNWda3Wf4EyMniDg4/SLt23w5bwyeHZu2x52xijyMGx23TdqG
+        T83ispvqZvSbDr2cgRfJPZ4jpDnloh/lNDY7Vdho5o+etQWEpjKmccgwP0uzeCdHBOnDLLv68D5vd
+        B6GTSlbxQfeBfIwAJxva6gGs6+dJtEAhcXMLMzVmW7AQktEp5K2Clsb0pU1yj3qpp0rNK3viZRG0l
+        WR2idzGg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jCfch-0005OI-Ce; Fri, 13 Mar 2020 08:24:51 +0000
+Date:   Fri, 13 Mar 2020 01:24:51 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jens Axboe <axboe@kernel.dk>, linux-mips@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
+Subject: Re: [PATCH 4/6] MIPS: Loongson: Add DMA support for 7A1000
+Message-ID: <20200313082451.GA20331@infradead.org>
+References: <1583742206-29163-1-git-send-email-yangtiezhu@loongson.cn>
+ <1583742206-29163-5-git-send-email-yangtiezhu@loongson.cn>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAPoiz9wAFfxSNh8MZo3N4hxJ9VMbF7qcx2SOOgq_1NDN=iVVQQ@mail.gmail.com>
+In-Reply-To: <1583742206-29163-5-git-send-email-yangtiezhu@loongson.cn>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Thank you very much.
+On Mon, Mar 09, 2020 at 04:23:24PM +0800, Tiezhu Yang wrote:
+> Implement __phys_to_dma() and __dma_to_phys() according to the
+> node id offset in 7A1000 DMA route config register.
 
-Regards,
-Alexander.
-
-On Thu, Mar 12, 2020 at 07:39:02PM -0400, Jon Mason wrote:
-> On Tue, Mar 3, 2020 at 7:32 AM Alexander Fomichev <fomichev.ru@gmail.com> wrote:
-> >
-> > Ping?
-> 
-> Sorry, I missed this somehow  :(
-> 
-> I just pulled it in and it should be in my github tree in the next hour or so.
-> 
-> Thanks,
-> Jon
-> 
-> >
-> > CC: Jon Mason <jdmason@kudzu.us>
-> > CC: Dave Jiang <dave.jiang@intel.com>
-> > CC: Allen Hubbe <allenbh@gmail.com>
-> > CC: Kurt Schwemmer <kurt.schwemmer@microsemi.com>
-> > CC: Logan Gunthorpe <logang@deltatee.com>
-> >
-> > On Wed, Jan 22, 2020 at 04:15:13PM +0300, Alexander Fomichev wrote:
-> > > Somehow this patch was lost. The problem is still actual.
-> > > Please, add to upstream.
-> > >
-> > > On Wed, Jul 10, 2019 at 11:44:27AM +0300, Alexander Fomichev wrote:
-> > > > ntb_mw_set_trans should work as ntb_mw_clear_trans when size == 0 and/or
-> > > > addr == 0. But error in xlate_pos checking condition prevents this.
-> > > > Fix the condition to make ntb_mw_clear_trans working.
-> > > >
-> > > > Signed-off-by: Alexander Fomichev <fomichev.ru@gmail.com>
-> > > > Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-> > > > ---
-> > > >  drivers/ntb/hw/mscc/ntb_hw_switchtec.c | 2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/drivers/ntb/hw/mscc/ntb_hw_switchtec.c b/drivers/ntb/hw/mscc/ntb_hw_switchtec.c
-> > > > index 1e2f627d3bac..19d46af19650 100644
-> > > > --- a/drivers/ntb/hw/mscc/ntb_hw_switchtec.c
-> > > > +++ b/drivers/ntb/hw/mscc/ntb_hw_switchtec.c
-> > > > @@ -299,7 +299,7 @@ static int switchtec_ntb_mw_set_trans(struct ntb_dev *ntb, int pidx, int widx,
-> > > >     if (widx >= switchtec_ntb_mw_count(ntb, pidx))
-> > > >             return -EINVAL;
-> > > >
-> > > > -   if (xlate_pos < 12)
-> > > > +   if (size != 0 && xlate_pos < 12)
-> > > >             return -EINVAL;
-> > > >
-> > > >     if (!IS_ALIGNED(addr, BIT_ULL(xlate_pos))) {
-> > > > --
-> > > > 2.17.1
-> > >
-> > > --
-> > > Regards,
-> > >   Alexander
-
--- 
-Regards,
-  Alexander
+Can you just switch Loongson over to use the dma_pfn_offset field in
+struct device?  I'd love to kill the __phys_to_dma and __dma_to_phys
+hooks wherever possible.
