@@ -2,174 +2,205 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 841151840D5
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Mar 2020 07:22:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B16E184118
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Mar 2020 07:52:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726236AbgCMGWQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Mar 2020 02:22:16 -0400
-Received: from mga05.intel.com ([192.55.52.43]:23735 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726230AbgCMGWQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 13 Mar 2020 02:22:16 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2020 23:22:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,547,1574150400"; 
-   d="scan'208";a="416195912"
-Received: from skuppusw-mobl5.amr.corp.intel.com (HELO [10.251.228.67]) ([10.251.228.67])
-  by orsmga005.jf.intel.com with ESMTP; 12 Mar 2020 23:22:14 -0700
-Subject: Re: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
- in FF mode
+        id S1726254AbgCMGwL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Mar 2020 02:52:11 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:11642 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726001AbgCMGwL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 13 Mar 2020 02:52:11 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id ED986D771866E831E924;
+        Fri, 13 Mar 2020 14:52:05 +0800 (CST)
+Received: from [127.0.0.1] (10.65.95.32) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Fri, 13 Mar 2020
+ 14:51:56 +0800
+Subject: Re: [PATCH RFC] perf:Add driver for HiSilicon PCIe PMU
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Austin.Bolen@dell.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ashok.raj@intel.com
-References: <20200312223222.GA200236@google.com>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <4d06c72d-7f77-84d5-4163-187bc62b903a@linux.intel.com>
-Date:   Thu, 12 Mar 2020 23:22:13 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+References: <20200312203657.GA175613@google.com>
+CC:     <will@kernel.org>, <mark.rutland@arm.com>,
+        <linux-pci@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linuxarm@huawei.com>,
+        <linux-kernel@vger.kernel.org>
+From:   Qi Liu <liuqi115@huawei.com>
+Message-ID: <11216b30-a198-bb85-6f88-2cdae89c5ef3@huawei.com>
+Date:   Fri, 13 Mar 2020 14:51:57 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-In-Reply-To: <20200312223222.GA200236@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200312203657.GA175613@google.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.65.95.32]
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 Hi Bjorn,
+Thanks for reviewing the patch.
 
-On 3/12/2020 3:32 PM, Bjorn Helgaas wrote:
-> On Thu, Mar 12, 2020 at 02:59:15PM -0700, Kuppuswamy Sathyanarayanan wrote:
->> Hi Bjorn,
->>
->> On 3/12/20 12:53 PM, Bjorn Helgaas wrote:
->>> On Wed, Mar 11, 2020 at 04:07:59PM -0700, Kuppuswamy Sathyanarayanan wrote:
->>>> On 3/11/20 3:23 PM, Bjorn Helgaas wrote:
->>>>> Is any synchronization needed here between the EDR path and the
->>>>> hotplug/enumeration path?
->>>> If we want to follow the implementation note step by step (in
->>>> sequence) then we need some synchronization between EDR path and
->>>> enumeration path. But if it's OK to achieve the same end result by
->>>> following steps out of sequence then we don't need to create any
->>>> dependency between EDR and enumeration paths. Currently we follow
->>>> the latter approach.
->>> What would the synchronization look like?
->> we might need some way to disable the enumeration path till
->> we get response from firmware.
->>
->> In native hot plug case, I think we can do it in two ways.
->>
->> 1. Disable hotplug notification in slot ctl registers.
->>      (pcie_disable_notification())
->> 2. Some how block hotplug driver from processing the new
->>      events (not sure how feasible its).
->>
->> Following method 1 would be easy, But I am not sure whether
->> its alright to disable them randomly. I think, unless we
->> clear the status as well, we might get some issues due to stale
->> notification history.
->>
->> For ACPI event case, I am not sure whether we have some
->> communication protocol in place to disable receiving ACPI
->> events temporarily.
->>
->> For polling model, we need to disable to the polling
->> timer thread till we receive _OST response from firmware.
->>>
->>> Ideally I think it would be better to follow the order in the
->>> flowchart if it's not too onerous.
->> None of the above changes will be pretty and I think it will
->> not be simple as well.
->>>    That will make the code easier to
->>> understand.  The current situation with this dependency on pciehp and
->>> what it will do leaves a lot of things implicit.
->>>
->>> What happens if CONFIG_PCIE_EDR=y but CONFIG_HOTPLUG_PCI_PCIE=n?
->>>
->>> IIUC, when DPC triggers, pciehp is what fields the DLLSC interrupt and
->>> unbinds the drivers and removes the devices.
->>
->>>   If that doesn't happen, and Linux clears the DPC trigger to bring
->>>   the link back up, will those drivers try to operate uninitialized
->>>   devices?
->>
->> I don't think this will happen. In DPC reset_link before we bring up
->> the device we wait for link to go down first using
->> pcie_wait_for_link(pdev, false) function.
+On 2020/3/13 4:36, Bjorn Helgaas wrote:
+> Use "git log --oneline drivers/perf" to see the convention, and update
+> subject to follow suit.  At least add a space in "perf:Add".
 > 
-> I understand that, but these child devices were reset when DPC
-> disabled the link.  When the link comes back up, their BARs contain
-> zeros.
+> On Thu, Mar 12, 2020 at 08:06:56PM +0800, Qi Liu wrote:
+>> From: Qi liu <liuqi115@huawei.com>
+>>
+>> PCIe PMU Root Complex Integrate End Point(IEP) device is
+>> supported to sample bandwidth, latency, buffer occupation,
+>> bandwidth utilization etc.
+>> Each PMU IEP device monitors multiple root ports, and each
+>> IEP is registered as a pmu in /sys/bus/event_source/devices,
+>> so users can select the target IEP, and use filter to select
+>> root port, function and event.
+>> Filtering options are:
+>> event:    - select the event.
+>> subevent: - select the subevent.
+>> port:     - select target root port.
+>> func:     - select target EP device under the port.
 > 
-> If CONFIG_HOTPLUG_PCI_PCIE=y, the DLLSC interrupt will cause pciehp to
-> unbind the driver.  It seems like the unbind races with the EDR notify
-> handler. '
-
-Agree. But even if there is a race condition, after clearing DPC trigger
-status, if hotplug driver properly removes/re-enumerates the driver then
-the end result will still be same. There should be no functional impact.
-
-  If pciehp unbinds the driver before edr_handle_event() calls
-> pcie_do_recovery(), this seems fine -- we'll call dpc_reset_link(),
-> which brings up the link, we won't call any driver callbacks because
-> there's no driver, and another DLLSC interrupt will cause pciehp to
-> re-enumerate, which will re-initialize the device, then rebind the
-> driver.
+> The above *looks* like it's supposed to be three separate paragraphs;
+> please add blank lines between them.
 > 
-> If the EDR notify handler runs before pciehp unbinds the driver,
-In the above case, from the kernel perspective device is still 
-accessible and IIUC, it will try to recover it in pcie_do_recovery()
-using one of the callbacks.
-
-int (*mmio_enabled)(struct pci_dev *dev);
-int (*slot_reset)(struct pci_dev *dev);
-void (*resume)(struct pci_dev *dev);
-
-One of these callbacks will do pci_restore_state() to restore the
-device, and IO will not attempted in these callbacks until the device
-is successfully recovered.
-
-> couldn't EDR bring up the link and call driver .mmio_enabled() before
-> the device has been initialized?
-Calling mmio_enabled in this case should not be a problem right ?
-
-Please check the following content from 
-Documentation/PCI/pci-error-recovery.rst. IIUC (following content), IO 
-will not be attempted until
-the device is successfully re-configured.
-
-STEP 2: MMIO Enabled
---------------------
-This callback is made if all drivers on a segment agree that they can
-try to recover and if no automatic link reset was performed by the HW.
-If the platform can't just re-enable IOs without a slot reset or a link
-reset, it will not call this callback, and instead will have gone
-directly to STEP 3 (Link Reset) or STEP 4 (Slot Reset)
-
+> s/Integrate/Integrated/
+> 
+> I assume this is a vendor-specific device; if so, please mention the
+> vendor so it doesn't look like something generic.
+> 
+OK, thanks, We'll correct it.
+>> Example: hisi_pcie_00_14_00/event=0x08,subevent=0x04,   \
+>> port=0x05,func=0x00/ -I 1000
+>>
+>> PMU IEP device is described by its bus, device and function,
+>> target root port is 0x05 and target EP under it is function
+>> 0x00. Subevent 0x04 of event 0x08 is sampled.
+>>
+>> Note that in this RFC:
+>> 1. PCIe PMU IEP hardware is still in development.
+>> 2. Perf common event list is undetermined, and name of these
+>> events still need to be discussed.
+>> 3. port filter could only select one port each time.
+>> 4. There are two possible schemes of pmu registration, one is
+>> register each root port as a pmu, it is easier for users to
+>> select target port. The other one is register each IEP as pmu,
+>> for counters are per IEP, not per root port, the second scheme
+>> describes hardware PMC much more reasonable, but need to add
+>> "port" filter option to select port. We use the second one in
+>> this RFC.
+>>
+>> Signed-off-by: Qi Liu <liuqi115@huawei.com>
+>> ---
+>>  drivers/perf/Kconfig             |  10 +
+>>  drivers/perf/Makefile            |   1 +
+>>  drivers/perf/pci/Makefile        |   2 +
+>>  drivers/perf/pci/hisi_pcie_pmu.c | 887 +++++++++++++++++++++++++++++++++++++++
+>>  include/linux/cpuhotplug.h       |   1 +
+>>  5 files changed, 901 insertions(+)
+>>  create mode 100644 drivers/perf/pci/Makefile
+>>  create mode 100644 drivers/perf/pci/hisi_pcie_pmu.c
+>>
+>> diff --git a/drivers/perf/Kconfig b/drivers/perf/Kconfig
+>> index 09ae8a9..047022b 100644
+>> --- a/drivers/perf/Kconfig
+>> +++ b/drivers/perf/Kconfig
+>> @@ -114,6 +114,16 @@ config THUNDERX2_PMU
+>>  	   The SoC has PMU support in its L3 cache controller (L3C) and
+>>  	   in the DDR4 Memory Controller (DMC).
+>>  
+>> +config PCIE_PMU
+> 
+> This config symbol is too generic for a vendor-specific device.
+OK, We'll use HISI_PCIE_PMU here.
 
 > 
-> If CONFIG_HOTPLUG_PCI_PCIE=n and CONFIG_HOTPLUG_PCI_ACPI=y, I could
-> believe that the situations are similar to the above.
+>> +	tristate "PCIE PERF PMU"
+>> +	depends on ARM64
+>> +	default m
+>> +	help
+>> +	   Provide support for 1630 PCIe performance monitoring unit (PMU)
+>> +	   IEP devices.
+>> +	   Adds the PCIe PMU into perf events system for monitoring latency,
+>> +	   bandwidth etc.
 > 
-> What if CONFIG_HOTPLUG_PCI_PCIE=n and CONFIG_HOTPLUG_PCI_ACPI=n?  Then
-> I assume there's nothing to unbind the driver, so pcie_do_recovery()
-> will call the driver .mmio_enabled() and other recovery callbacks on a
-> device that hasn't been initialized?
-
-probably in .slot_reset() callback device config will be restored and it
-will make the device functional again.
-
-Also since in above case hotplug is not supported, topology change will
-not be supported.
-
+>> +static int hisi_pcie_pmu_irq_register(struct pci_dev *pdev,
+>> +				      struct hisi_pcie_pmu *pcie_pmu)
+>> +{
+>> +	int irq, ret;
+>> +
+>> +	irq = pci_irq_vector(pdev, HISI_PCIE_EVENT_IRQ_VECTOR);
+>> +	ret = request_irq(irq, hisi_pcie_pmu_irq, IRQF_SHARED,
+>> +			  pcie_pmu->dev_name, pcie_pmu);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	pcie_pmu->irq = irq;
+>> +	return ret;
+> 
+>   return 0;
+> 
+>> +}
+> 
+>> +static int hisi_pcie_init_pmu(struct pci_dev *pdev,
+>> +			      struct hisi_pcie_pmu *pcie_pmu)
+>> +{
+>> +	char *name;
+>> +	int ret;
+>> +
+>> +	hisi_get_pcie_pmu(pdev, pcie_pmu);
+>> +
+>> +	ret = cpuhp_state_add_instance(CPUHP_AP_PERF_ARM_HISI_PCIE_PMU_ONLINE,
+>> +				       &pcie_pmu->node);
+>> +	if (ret) {
+>> +		pci_err(pdev, "Error %d registering hotplug;\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	/*
+>> +	 * domain_id is 0x00 means continuous domain, we use bdf num to
+>> +	 * select IEP. Otherwise, use domain_id + bdf.
+> 
+> I don't see what this comment applies to.  Nothing in this function
+> uses "domain_id".  In fact, pcie_pmu->domain_id is set but never used
+> anywhere.
+> 
+OK ,will delete pcie_pmu->domain_id.
+>> +	 */
+>> +	name = devm_kasprintf(&pdev->dev, GFP_KERNEL,
+>> +			      "hisi_pcie_%x_%x_%x", pcie_pmu->bus_id,
+>> +			      pcie_pmu->device_id, pcie_pmu->func_id);
+> 
+>> +static int hisi_pcie_pmu_probe(struct pci_dev *pdev,
+>> +			       const struct pci_device_id *id)
+>> +{
+>> +	struct hisi_pcie_pmu *pcie_pmu;
+>> +	int ret;
+>> +
+>> +	pcie_pmu = devm_kzalloc(&pdev->dev, sizeof(*pcie_pmu), GFP_KERNEL);
+>> +	if (!pcie_pmu)
+>> +		return -ENOMEM;
+>> +
+>> +	pci_set_drvdata(pdev, pcie_pmu);
+>> +	ret = hisi_pcie_init_dev(pdev);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	ret = hisi_pcie_init_pmu(pdev, pcie_pmu);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	return ret;
+> 
+> This is the same as:
+> 
+>   return hisi_pcie_init_pmu(pdev, pcie_pmu);
+> 
+>> +}
+> 
+thanks, will change it to  return hisi_pcie_init_pmu(pdev, pcie_pmu);
+> .
 > 
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
