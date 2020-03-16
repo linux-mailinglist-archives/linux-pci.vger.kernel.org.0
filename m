@@ -2,55 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 468901871F6
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Mar 2020 19:11:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 76DD1187222
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Mar 2020 19:20:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732064AbgCPSLB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 Mar 2020 14:11:01 -0400
-Received: from bmailout2.hostsharing.net ([83.223.78.240]:59127 "EHLO
-        bmailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731731AbgCPSLB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Mar 2020 14:11:01 -0400
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        id S1732187AbgCPSUC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 Mar 2020 14:20:02 -0400
+Received: from bmailout1.hostsharing.net ([83.223.95.100]:50981 "EHLO
+        bmailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731967AbgCPSUC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Mar 2020 14:20:02 -0400
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout2.hostsharing.net (Postfix) with ESMTPS id 57A5B2800C7D5;
-        Mon, 16 Mar 2020 19:10:59 +0100 (CET)
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 328D230000CF4;
+        Mon, 16 Mar 2020 19:20:00 +0100 (CET)
 Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 248614058E6; Mon, 16 Mar 2020 19:10:58 +0100 (CET)
-Date:   Mon, 16 Mar 2020 19:10:58 +0100
+        id 06A0A4058E7; Mon, 16 Mar 2020 19:19:59 +0100 (CET)
+Date:   Mon, 16 Mar 2020 19:19:59 +0100
 From:   Lukas Wunner <lukas@wunner.de>
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     "Hoyer, David" <David.Hoyer@netapp.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+To:     "Hoyer, David" <David.Hoyer@netapp.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Keith Busch <kbusch@kernel.org>
 Subject: Re: Kernel hangs when powering up/down drive using sysfs
-Message-ID: <20200316181058.pidouiqrempa6qnq@wunner.de>
+Message-ID: <20200316181959.wpzi4hkoyzpghwpw@wunner.de>
 References: <DM5PR06MB313235E97731D97AB813F65D92FB0@DM5PR06MB3132.namprd06.prod.outlook.com>
- <20200316161543.GB1069861@dhcp-10-100-145-180.wdl.wdc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200316161543.GB1069861@dhcp-10-100-145-180.wdl.wdc.com>
+In-Reply-To: <DM5PR06MB313235E97731D97AB813F65D92FB0@DM5PR06MB3132.namprd06.prod.outlook.com>
 User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 09:15:43AM -0700, Keith Busch wrote:
-> I'm not sure why the hard-irq context is even setting the thread running
-> flag while it can still exit without handling anything. Shouldn't it leave
-> the flag cleared until knows it's actually going to do something?
+On Sat, Mar 14, 2020 at 02:19:44PM +0000, Hoyer, David wrote:
+> --- a/drivers/pci/hotplug/pciehp_hpc.c
+> +++ b/drivers/pci/hotplug/pciehp_hpc.c
+> @@ -637,6 +637,8 @@ static irqreturn_t pciehp_ist(int irq, void *dev_id)
+>         events = atomic_xchg(&ctrl->pending_events, 0);
+>         if (!events) {
+>                 pci_config_pm_runtime_put(pdev);
+> +               ctrl->ist_running = false;
+> +               wake_up(&ctrl->requester);
+>                 return IRQ_NONE;
+>        }
 
-No, ist_running must be set to true before the invocation of
-atomic_xchg(&ctrl->pending_events, 0).
+Thanks David for the report and sorry for the breakage.
 
-There's a time window between the atomic_xchg() and actually
-turning off the slot when pending_events is 0.  Previously we
-only checked in the sysfs functions that pending_events is 0.
-That was insufficient as we risked returning prematurely from
-the sysfs functions.  The point of ist_running is to prevent
-that.
+The above LGTM, please submit it as a proper patch and
+feel free to add my Reviewed-by.  Please add the same
+two lines before the "return ret" a little further up
+in the function.
+
+If it's too cumbersome for you to submit a proper patch
+I can do it for you.
+
+
+> We've instrumented the code and we do see that pciehp_ist() runs
+> twice, once exiting with IRQ_HANDLED and then again with IRQ_NONE.
+> We believe that is due to the timing differences.  Adding debug in
+> here changes the timings enough that the hang goes away, so we are
+> having troubles proving this 100% at the moment.  But just based on
+> code inspection, if pciehp_ist() exits with the IRQ_NONE case, then
+> nothing will ever set ist_running=false until a subsequent hotplug
+> event happens that causes the IRQ_HANDLED case to run.  (We were
+> able to prove that will cause things to "unhang" and progress at
+> that point - if you're hung and you remove a drive, the slot status
+> change will then unstick things.)
+
+The question is, why is pciehp_ist() run once more.  Most likely
+because another event is signaled from the slot.  Try adding a
+printk() at the top of pciehp_ist() which emits ctrl->pending_events
+to understand what's going on.
 
 Thanks,
 
