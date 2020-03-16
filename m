@@ -2,40 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E835B1869EB
+	by mail.lfdr.de (Postfix) with ESMTP id 0A9B61869E9
 	for <lists+linux-pci@lfdr.de>; Mon, 16 Mar 2020 12:20:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730560AbgCPLUQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 Mar 2020 07:20:16 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:59830 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730846AbgCPLUQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Mar 2020 07:20:16 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02GBK0C9072887;
-        Mon, 16 Mar 2020 06:20:00 -0500
+        id S1730803AbgCPLUN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 Mar 2020 07:20:13 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:60612 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730794AbgCPLUN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Mar 2020 07:20:13 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02GBK45I029053;
+        Mon, 16 Mar 2020 06:20:04 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584357600;
-        bh=+kGa8JsM9BJ9yRHWGEHY+vmdaSQ8X1ysT5HEr2Zucps=;
+        s=ti-com-17Q1; t=1584357604;
+        bh=S90JAhlN4faoJ5qHTsybTrVGu0IAkKpAgsGHTgZVwc8=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=Gnvv6PAwJWEeYkaozKylBzOleuZ9BTQUfDUuYXZ/XTrlzQcaQzE20M251m5aeYk8I
-         SRvPL9fhHicFT5EGOkwqzijhlNEWjowt6VNnrqdyBFevfWvtJtnZLmqlMd23YBj3jB
-         s4mkrz59iH+BTU1uwy+1Ejsjf4phhpETseuTDAVY=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02GBK0Ps017246
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 16 Mar 2020 06:20:00 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+        b=JiCAb93nzryjm1AwrWd0qJDMxtsiR9ROMcHU08H2q8mxjLhgaEO1yR81GFoE1WE2m
+         hGSyEPq2coJWWXgS0p8JdLG6bC0FvevXVUwOFLk9+PLJR2cV8uIP5SGXSTZxHrotvh
+         lwUWC82SHQcXU5CTGf7+BdeUbiPQhmL75n12O5IE=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02GBK325001761;
+        Mon, 16 Mar 2020 06:20:04 -0500
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 16
- Mar 2020 06:20:00 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ Mar 2020 06:20:03 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 16 Mar 2020 06:20:00 -0500
+ Frontend Transport; Mon, 16 Mar 2020 06:20:03 -0500
 Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02GBJiU1049775;
-        Mon, 16 Mar 2020 06:19:57 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02GBJiU2049775;
+        Mon, 16 Mar 2020 06:20:00 -0500
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Andrew Murray <amurray@thegoodpenguin.co.uk>,
@@ -45,9 +44,9 @@ CC:     Tom Joseph <tjoseph@cadence.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH v3 4/5] tools: PCI: Add 'd' command line option to support DMA
-Date:   Mon, 16 Mar 2020 16:54:23 +0530
-Message-ID: <20200316112424.25295-5-kishon@ti.com>
+Subject: [PATCH v3 5/5] misc: pci_endpoint_test: Add support to get DMA option from userspace
+Date:   Mon, 16 Mar 2020 16:54:24 +0530
+Message-ID: <20200316112424.25295-6-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200316112424.25295-1-kishon@ti.com>
 References: <20200316112424.25295-1-kishon@ti.com>
@@ -59,112 +58,189 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add a new command line option 'd' to use DMA for data transfers.
-It should be used with read, write or copy commands.
+'pcitest' utility now uses '-d' option to allow the user to test DMA.
+Add support to parse option to use DMA from userspace application.
 
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Tested-by: Alan Mikhak <alan.mikhak@sifive.com>
 ---
- include/uapi/linux/pcitest.h |  7 +++++++
- tools/pci/pcitest.c          | 23 +++++++++++++++++++----
- 2 files changed, 26 insertions(+), 4 deletions(-)
+ drivers/misc/pci_endpoint_test.c | 65 ++++++++++++++++++++++++++++++--
+ 1 file changed, 62 insertions(+), 3 deletions(-)
 
-diff --git a/include/uapi/linux/pcitest.h b/include/uapi/linux/pcitest.h
-index cbf422e56696..8b868761f8b4 100644
---- a/include/uapi/linux/pcitest.h
-+++ b/include/uapi/linux/pcitest.h
-@@ -20,4 +20,11 @@
- #define PCITEST_SET_IRQTYPE	_IOW('P', 0x8, int)
- #define PCITEST_GET_IRQTYPE	_IO('P', 0x9)
+diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+index 5998df1c84e9..8682867ac14a 100644
+--- a/drivers/misc/pci_endpoint_test.c
++++ b/drivers/misc/pci_endpoint_test.c
+@@ -17,6 +17,7 @@
+ #include <linux/mutex.h>
+ #include <linux/random.h>
+ #include <linux/slab.h>
++#include <linux/uaccess.h>
+ #include <linux/pci.h>
+ #include <linux/pci_ids.h>
  
-+#define PCITEST_FLAGS_USE_DMA	0x00000001
-+
-+struct pci_endpoint_test_xfer_param {
-+	unsigned long size;
-+	unsigned char flags;
-+};
-+
- #endif /* __UAPI_LINUX_PCITEST_H */
-diff --git a/tools/pci/pcitest.c b/tools/pci/pcitest.c
-index 32b7c6f9043d..5e3b6368c5e0 100644
---- a/tools/pci/pcitest.c
-+++ b/tools/pci/pcitest.c
-@@ -34,10 +34,12 @@ struct pci_test {
- 	bool		write;
- 	bool		copy;
- 	unsigned long	size;
-+	bool		use_dma;
- };
+@@ -52,6 +53,7 @@
+ #define STATUS_SRC_ADDR_INVALID			BIT(7)
+ #define STATUS_DST_ADDR_INVALID			BIT(8)
  
- static int run_test(struct pci_test *test)
++#define PCI_ENDPOINT_TEST_STATUS		0x8
+ #define PCI_ENDPOINT_TEST_LOWER_SRC_ADDR	0x0c
+ #define PCI_ENDPOINT_TEST_UPPER_SRC_ADDR	0x10
+ 
+@@ -64,6 +66,9 @@
+ #define PCI_ENDPOINT_TEST_IRQ_TYPE		0x24
+ #define PCI_ENDPOINT_TEST_IRQ_NUMBER		0x28
+ 
++#define PCI_ENDPOINT_TEST_FLAGS			0x2c
++#define FLAG_USE_DMA				BIT(0)
++
+ #define PCI_DEVICE_ID_TI_AM654			0xb00c
+ 
+ #define is_am654_pci_dev(pdev)		\
+@@ -315,11 +320,16 @@ static bool pci_endpoint_test_msi_irq(struct pci_endpoint_test *test,
+ 	return false;
+ }
+ 
+-static bool pci_endpoint_test_copy(struct pci_endpoint_test *test, size_t size)
++static bool pci_endpoint_test_copy(struct pci_endpoint_test *test,
++				   unsigned long arg)
  {
 +	struct pci_endpoint_test_xfer_param param;
- 	int ret = -EINVAL;
- 	int fd;
+ 	bool ret = false;
+ 	void *src_addr;
+ 	void *dst_addr;
++	u32 flags = 0;
++	bool use_dma;
++	size_t size;
+ 	dma_addr_t src_phys_addr;
+ 	dma_addr_t dst_phys_addr;
+ 	struct pci_dev *pdev = test->pdev;
+@@ -332,10 +342,22 @@ static bool pci_endpoint_test_copy(struct pci_endpoint_test *test, size_t size)
+ 	size_t alignment = test->alignment;
+ 	u32 src_crc32;
+ 	u32 dst_crc32;
++	int err;
++
++	err = copy_from_user(&param, (void __user *)arg, sizeof(param));
++	if (err) {
++		dev_err(dev, "Failed to get transfer param\n");
++		return false;
++	}
  
-@@ -102,7 +104,10 @@ static int run_test(struct pci_test *test)
- 	}
++	size = param.size;
+ 	if (size > SIZE_MAX - alignment)
+ 		goto err;
  
- 	if (test->write) {
--		ret = ioctl(fd, PCITEST_WRITE, test->size);
-+		param.size = test->size;
-+		if (test->use_dma)
-+			param.flags = PCITEST_FLAGS_USE_DMA;
-+		ret = ioctl(fd, PCITEST_WRITE, &param);
- 		fprintf(stdout, "WRITE (%7ld bytes):\t\t", test->size);
- 		if (ret < 0)
- 			fprintf(stdout, "TEST FAILED\n");
-@@ -111,7 +116,10 @@ static int run_test(struct pci_test *test)
- 	}
++	use_dma = !!(param.flags & PCITEST_FLAGS_USE_DMA);
++	if (use_dma)
++		flags |= FLAG_USE_DMA;
++
+ 	if (irq_type < IRQ_TYPE_LEGACY || irq_type > IRQ_TYPE_MSIX) {
+ 		dev_err(dev, "Invalid IRQ type option\n");
+ 		goto err;
+@@ -406,6 +428,7 @@ static bool pci_endpoint_test_copy(struct pci_endpoint_test *test, size_t size)
+ 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_SIZE,
+ 				 size);
  
- 	if (test->read) {
--		ret = ioctl(fd, PCITEST_READ, test->size);
-+		param.size = test->size;
-+		if (test->use_dma)
-+			param.flags = PCITEST_FLAGS_USE_DMA;
-+		ret = ioctl(fd, PCITEST_READ, &param);
- 		fprintf(stdout, "READ (%7ld bytes):\t\t", test->size);
- 		if (ret < 0)
- 			fprintf(stdout, "TEST FAILED\n");
-@@ -120,7 +128,10 @@ static int run_test(struct pci_test *test)
- 	}
++	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_FLAGS, flags);
+ 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_TYPE, irq_type);
+ 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_NUMBER, 1);
+ 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_COMMAND,
+@@ -434,9 +457,13 @@ static bool pci_endpoint_test_copy(struct pci_endpoint_test *test, size_t size)
+ 	return ret;
+ }
  
- 	if (test->copy) {
--		ret = ioctl(fd, PCITEST_COPY, test->size);
-+		param.size = test->size;
-+		if (test->use_dma)
-+			param.flags = PCITEST_FLAGS_USE_DMA;
-+		ret = ioctl(fd, PCITEST_COPY, &param);
- 		fprintf(stdout, "COPY (%7ld bytes):\t\t", test->size);
- 		if (ret < 0)
- 			fprintf(stdout, "TEST FAILED\n");
-@@ -153,7 +164,7 @@ int main(int argc, char **argv)
- 	/* set default endpoint device */
- 	test->device = "/dev/pci-endpoint-test.0";
+-static bool pci_endpoint_test_write(struct pci_endpoint_test *test, size_t size)
++static bool pci_endpoint_test_write(struct pci_endpoint_test *test,
++				    unsigned long arg)
+ {
++	struct pci_endpoint_test_xfer_param param;
+ 	bool ret = false;
++	u32 flags = 0;
++	bool use_dma;
+ 	u32 reg;
+ 	void *addr;
+ 	dma_addr_t phys_addr;
+@@ -446,11 +473,24 @@ static bool pci_endpoint_test_write(struct pci_endpoint_test *test, size_t size)
+ 	dma_addr_t orig_phys_addr;
+ 	size_t offset;
+ 	size_t alignment = test->alignment;
++	size_t size;
+ 	u32 crc32;
++	int err;
  
--	while ((c = getopt(argc, argv, "D:b:m:x:i:Ilhrwcs:")) != EOF)
-+	while ((c = getopt(argc, argv, "D:b:m:x:i:dIlhrwcs:")) != EOF)
- 	switch (c) {
- 	case 'D':
- 		test->device = optarg;
-@@ -197,6 +208,9 @@ int main(int argc, char **argv)
- 	case 's':
- 		test->size = strtoul(optarg, NULL, 0);
- 		continue;
-+	case 'd':
-+		test->use_dma = true;
-+		continue;
- 	case 'h':
- 	default:
- usage:
-@@ -209,6 +223,7 @@ int main(int argc, char **argv)
- 			"\t-x <msix num>	\tMSI-X test (msix number between 1..2048)\n"
- 			"\t-i <irq type>	\tSet IRQ type (0 - Legacy, 1 - MSI, 2 - MSI-X)\n"
- 			"\t-I			Get current IRQ type configured\n"
-+			"\t-d			Use DMA\n"
- 			"\t-l			Legacy IRQ test\n"
- 			"\t-r			Read buffer test\n"
- 			"\t-w			Write buffer test\n"
++	err = copy_from_user(&param, (void __user *)arg, sizeof(param));
++	if (err != 0) {
++		dev_err(dev, "Failed to get transfer param\n");
++		return false;
++	}
++
++	size = param.size;
+ 	if (size > SIZE_MAX - alignment)
+ 		goto err;
+ 
++	use_dma = !!(param.flags & PCITEST_FLAGS_USE_DMA);
++	if (use_dma)
++		flags |= FLAG_USE_DMA;
++
+ 	if (irq_type < IRQ_TYPE_LEGACY || irq_type > IRQ_TYPE_MSIX) {
+ 		dev_err(dev, "Invalid IRQ type option\n");
+ 		goto err;
+@@ -493,6 +533,7 @@ static bool pci_endpoint_test_write(struct pci_endpoint_test *test, size_t size)
+ 
+ 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_SIZE, size);
+ 
++	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_FLAGS, flags);
+ 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_TYPE, irq_type);
+ 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_NUMBER, 1);
+ 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_COMMAND,
+@@ -514,9 +555,14 @@ static bool pci_endpoint_test_write(struct pci_endpoint_test *test, size_t size)
+ 	return ret;
+ }
+ 
+-static bool pci_endpoint_test_read(struct pci_endpoint_test *test, size_t size)
++static bool pci_endpoint_test_read(struct pci_endpoint_test *test,
++				   unsigned long arg)
+ {
++	struct pci_endpoint_test_xfer_param param;
+ 	bool ret = false;
++	u32 flags = 0;
++	bool use_dma;
++	size_t size;
+ 	void *addr;
+ 	dma_addr_t phys_addr;
+ 	struct pci_dev *pdev = test->pdev;
+@@ -526,10 +572,22 @@ static bool pci_endpoint_test_read(struct pci_endpoint_test *test, size_t size)
+ 	size_t offset;
+ 	size_t alignment = test->alignment;
+ 	u32 crc32;
++	int err;
+ 
++	err = copy_from_user(&param, (void __user *)arg, sizeof(param));
++	if (err) {
++		dev_err(dev, "Failed to get transfer param\n");
++		return false;
++	}
++
++	size = param.size;
+ 	if (size > SIZE_MAX - alignment)
+ 		goto err;
+ 
++	use_dma = !!(param.flags & PCITEST_FLAGS_USE_DMA);
++	if (use_dma)
++		flags |= FLAG_USE_DMA;
++
+ 	if (irq_type < IRQ_TYPE_LEGACY || irq_type > IRQ_TYPE_MSIX) {
+ 		dev_err(dev, "Invalid IRQ type option\n");
+ 		goto err;
+@@ -566,6 +624,7 @@ static bool pci_endpoint_test_read(struct pci_endpoint_test *test, size_t size)
+ 
+ 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_SIZE, size);
+ 
++	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_FLAGS, flags);
+ 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_TYPE, irq_type);
+ 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_NUMBER, 1);
+ 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_COMMAND,
 -- 
 2.17.1
 
