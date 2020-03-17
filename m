@@ -2,760 +2,218 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CC0E187DB3
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Mar 2020 11:03:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D8000187DC7
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Mar 2020 11:05:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725916AbgCQKD4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 Mar 2020 06:03:56 -0400
-Received: from mail-eopbgr1400121.outbound.protection.outlook.com ([40.107.140.121]:48638
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        id S1725933AbgCQKFT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 Mar 2020 06:05:19 -0400
+Received: from mail-eopbgr60042.outbound.protection.outlook.com ([40.107.6.42]:53312
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725730AbgCQKD4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 17 Mar 2020 06:03:56 -0400
+        id S1725916AbgCQKFT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 17 Mar 2020 06:05:19 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=enh9Uo1hsNh0Dd9uGSQS2u/BDwtjawMywEzj9Rtd51B0G2IGeivCmgqUx6sJAHJFr51OpfhANSlDmpO+/zqZKJdjG7WyTpvxWT3uM3MzU66Obc4Px01bUnOPslWuFGv1SAz2NOYY0/q6rD3+eFOkaDlaVeNqk6frStNGC6/Aw5b+HB8l+EeNbVF/8yuKeQw93HYTJzs/SuBGrQTVju04bgBQmTo7LI8LVlKoaDNiZ2aZ52pUFeSfJ4LePDKZPSASuLkiX4Hx07t+Y/ZSc3kJzvGzdeWHuS7woz1K/6S0Xk1afHEzxNChQxvT/gJR6ExfDrtwyJ1PbseeEBB6ieABFQ==
+ b=MBupvSURk+oVB346pPRtaRcrgHgzFbLxT4vRgjGQsqjSXS0/Uv8Dqwe3zDqCW/Zylwgi4hlPynAADKecTac/TE8ogiQJR/FuM1nvnSf3SkoOumFEFjpue3aGhNRWSYiF/n/ekmSUmsq0LxJXSi2lcHXEkQXLCTl6bSz/k65SKPqYDuFTw+D+LV/1egCFO22hwWV0SkQKqqz7SR1U26yIRCxRJqrzxLYYZgySRlR0jRYKBDJHyT2d1hWkNtBmNyYnuwxELOXBmAvikNkLGNC9YeRhfwbDi1b4nqCmH02nPMozGxjD9WW/k0lK40XixVGWoLnVjv6hnxEsYHhcM+0nqA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PbDXhcpICkdUwBW3/eWykbCDZQPX/zNnIZTgm9lsJt8=;
- b=Skj/RoZuRby1a7TMjIiO50EHFnAhzhxeRm4S6XgBGA20fhLvPEw9rSn6eDkspS6k3sZ+Zl3oLPoYKlLyHrGAl/l6dlyjnSk/dRhKLMu8ltBoDN9XmFO3WlDWtVl2gjZV+e8TvvfAzrzZwL82IjDR7kJMCaraha2A/slZq6OvPuQetDrLXXwHN0gyXGVKz755Ax/KqxaooNDxiWFl6Ei+QCmIaVyeLVLeQdprRsNf0sWwGuCatOE+x7tFNC8IdGzP3sKy/55aXFHl3NipW3In4H98l3AE/1hqo445SBpIpns+Y3HQCPmlXDrkOBOz0X7O6E5FE85ASflc1PS9206gVQ==
+ bh=FkOsSbUppGJpqlHbRCW7sfvXio4DtW12vni8K8mjGbM=;
+ b=lIiVGIPyEQHoxHc3iWFaFYn0Iiy+OTPXyqQDZzh0Hbsx22TnEuJfVAP5VtKzhRichwu6iOmBKwLqMiI51+ZovvhSkGZIadL01D9Qqkz8/QqzrdDQ6iXfyrCAovW76n8tnAb0y3S3x6AnodLrRba/NDA9d8SPKf9NonUUY7yZkSBqo83MKToxgjfZKjwZGWzOzzQkwp2G6auGkHK5V9LuQv3/+Gj5fBBccFHIuAK03bTmZJql/fkB4I/lQUBYzWzJR6F4Xqvi0KXisXD8GUKvBg+YnX0ihCddT/l0/0BrkYRP5mL6IidiBPUeWMOQktmrgTfSnjwUVqR1rWQa0lOVNw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PbDXhcpICkdUwBW3/eWykbCDZQPX/zNnIZTgm9lsJt8=;
- b=TBltbVVkBD35gnPUScZquo0wCoxz+dJhTVi6qdbCQeE2Vwe+ssmlc6sLhO39ccEMm4K4TH0cRlo2PHMeP+WluOQL4YWWSgxmqn38w9v9mM6mlI+0pQD/2OPXrm8rNqOgosakOK2r1LOt8k98OkrgXLtRdsSIu8/Auwku7mOWCQ4=
-Received: from OSBPR01MB3590.jpnprd01.prod.outlook.com (20.178.97.80) by
- OSBPR01MB4342.jpnprd01.prod.outlook.com (20.179.180.205) with Microsoft SMTP
+ bh=FkOsSbUppGJpqlHbRCW7sfvXio4DtW12vni8K8mjGbM=;
+ b=WBPfB7lEPNwyv6l6rOaM21hY+ZsZlox6Ek/a4LVX/lfL19lCXQ2zy7dmZlJsK2+8rcR4rzF519MBSCKDpSiJOVRXnPP1SzocvEy/Ed+86LBo0ugb+8H9C3rbTm15xHBvLUafCp75nhWqtZfGAcf59smkriz+unzZnZcmAwA3m4E=
+Received: from DB8PR04MB6747.eurprd04.prod.outlook.com (20.179.250.159) by
+ DB8PR04MB6363.eurprd04.prod.outlook.com (10.255.170.14) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2814.22; Tue, 17 Mar 2020 10:03:32 +0000
-Received: from OSBPR01MB3590.jpnprd01.prod.outlook.com
- ([fe80::490:aa83:2d09:3a0b]) by OSBPR01MB3590.jpnprd01.prod.outlook.com
- ([fe80::490:aa83:2d09:3a0b%5]) with mapi id 15.20.2814.021; Tue, 17 Mar 2020
- 10:03:32 +0000
-From:   Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>
-CC:     Andrew Murray <andrew.murray@arm.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Subject: RE: [PATCH v5 4/7] PCI: endpoint: Add support to handle multiple base
- for mapping outbound memory
-Thread-Topic: [PATCH v5 4/7] PCI: endpoint: Add support to handle multiple
- base for mapping outbound memory
-Thread-Index: AQHV7k2kb/R44+JHL0eAfnMrk84mPKhMisWAgAAFBFA=
-Date:   Tue, 17 Mar 2020 10:03:32 +0000
-Message-ID: <OSBPR01MB359001B994CFC0CB45170AB0AAF60@OSBPR01MB3590.jpnprd01.prod.outlook.com>
-References: <20200228154122.14164-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200228154122.14164-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <TYAPR01MB4544599A72C88666B4F972B7D8F60@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-In-Reply-To: <TYAPR01MB4544599A72C88666B4F972B7D8F60@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-Accept-Language: en-GB, en-US
+ 15.20.2814.21; Tue, 17 Mar 2020 10:05:14 +0000
+Received: from DB8PR04MB6747.eurprd04.prod.outlook.com
+ ([fe80::4528:6120:94a4:ce1e]) by DB8PR04MB6747.eurprd04.prod.outlook.com
+ ([fe80::4528:6120:94a4:ce1e%5]) with mapi id 15.20.2814.016; Tue, 17 Mar 2020
+ 10:05:14 +0000
+From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        Bjorn Helgaas <helgaas@kernel.org>
+CC:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
+Subject: RE: linux-next: Tree for Mar 12 (pci/controller/mobiveil/)
+Thread-Topic: linux-next: Tree for Mar 12 (pci/controller/mobiveil/)
+Thread-Index: AQHV+IDZ0AdozfzAfUCC22i6ufIb7KhFWtOAgAbdJrCAAAhtgIAAU7Sg
+Date:   Tue, 17 Mar 2020 10:05:14 +0000
+Message-ID: <DB8PR04MB6747E855D3349173CE2AE9F684F60@DB8PR04MB6747.eurprd04.prod.outlook.com>
+References: <4c0db5d0-1a61-cb80-2bcb-034f5bcd1597@infradead.org>
+ <20200312193917.GA160316@google.com>
+ <DB8PR04MB6747C1032BF126CFFB5720E084F60@DB8PR04MB6747.eurprd04.prod.outlook.com>
+ <e53be1bc-e84d-433a-e9a7-ea442c93f2cf@infradead.org>
+In-Reply-To: <e53be1bc-e84d-433a-e9a7-ea442c93f2cf@infradead.org>
+Accept-Language: zh-CN, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=prabhakar.mahadev-lad.rj@bp.renesas.com; 
-x-originating-ip: [193.141.220.21]
+ smtp.mailfrom=zhiqiang.hou@nxp.com; 
+x-originating-ip: [92.121.68.129]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: e2daff01-bfb3-4006-1b4c-08d7ca5a7369
-x-ms-traffictypediagnostic: OSBPR01MB4342:|OSBPR01MB4342:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <OSBPR01MB4342E917490688D8985DFD4AAAF60@OSBPR01MB4342.jpnprd01.prod.outlook.com>
+x-ms-office365-filtering-correlation-id: ae121392-3c90-40b7-2b41-08d7ca5ab023
+x-ms-traffictypediagnostic: DB8PR04MB6363:
+x-microsoft-antispam-prvs: <DB8PR04MB6363E70C4C4C347EAC4D92F884F60@DB8PR04MB6363.eurprd04.prod.outlook.com>
 x-ms-oob-tlc-oobclassifiers: OLM:9508;
 x-forefront-prvs: 0345CFD558
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(376002)(366004)(39860400002)(396003)(136003)(199004)(52536014)(30864003)(66446008)(55016002)(9686003)(66946007)(71200400001)(53546011)(2906002)(64756008)(66556008)(66476007)(76116006)(86362001)(6506007)(110136005)(7696005)(316002)(54906003)(966005)(33656002)(186003)(7416002)(478600001)(8936002)(5660300002)(4326008)(8676002)(81166006)(26005)(81156014)(579004);DIR:OUT;SFP:1102;SCL:1;SRVR:OSBPR01MB4342;H:OSBPR01MB3590.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;
-received-spf: None (protection.outlook.com: bp.renesas.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(376002)(39860400002)(346002)(396003)(136003)(199004)(478600001)(71200400001)(2906002)(4326008)(81166006)(81156014)(55016002)(8676002)(8936002)(110136005)(7696005)(316002)(9686003)(54906003)(6506007)(53546011)(33656002)(66446008)(64756008)(66556008)(66476007)(76116006)(186003)(66946007)(86362001)(52536014)(5660300002)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB6363;H:DB8PR04MB6747.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 3SiZlqOpSYrJ91boJV+3GpYfgaVqjSoZAovXMzXyT7GPDa5oNDpJ8i6ut4HnaKF6C+8u2bBX+Hy8hMU71Kytyaj97VPr51kYTeAdLeeTEsusz4oPRSDlLzVWmbmuV7mycZ+bgVe9De0XtpvrlwtGNjxgIAzd6gsnMdD5DIoUyacMTJWn/+fWGIrqVOrPEcdGdVda7UoRaXxiTCcNq14/U4si7ur+bkklm2SkQu38068Qsqer7E8x4aPlwE2IwgccxvEh2CB8EnNXl2wxljHvUhMCm5tItwG+jfhMVSjXRD3GQaRNjlgcMmfLi3pf+6wpDibEPfwbIe7/r6u4u4SNFk3b2xAKs0Djj8TmxUsCst0jwvgbAzUQj57Ic+K/YPuzvo9hHWV4pZ+uvHK8s9KPizuqwWfXHE4wX1+CsQmhWiNa/cOqb9lzNu7Gs0dOL2FwuIufBDzq4OhQOJatrO1+J6WnB5zTxreG9RWECNNGrWzLlcRYydmX6wJMkRolG1u7bT5vJBBLnFSdSaT54PQNAw==
-x-ms-exchange-antispam-messagedata: EU6MI/nwTpRdSm9/50+fM2cOuk6Zy+Kw9NQAsqZ9pNOglNhBzKHRad6bozC0ktTw80yaU3RPDd9pZuB9yoIQWNsdIVsiIa50dhDWksL9ov/gqpcMX4SMKfugIfRDA0I09SYCZFxXQhOkTxV03yc99A==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+x-microsoft-antispam-message-info: ixxfDSlwrUCdnBiSo9QsBieOo5sgzlsLX4WgAeXavrOTUMkYh0X8tgAO7quA/FAdQgMPqCo2H1c11HWq3LDV2xYAOxWJMdNbds0YIHMjoMcMg4/WKLZ7ZemUVHzGr4hKF137DGIFJ0dHfHu4EjNXElGkzqGeiMG2e4CNOfaJvsce06trPBq3EGSUx9n2ZUgEpdOH21RPCgJYIC8K91HHwcrxvXFXRHnDHBk1j0qfHs/Ras0QuJ2kgy6a1Ou0+PJ04lv0YFEYdk1Yi0B8/DKpEWC3bDAwuyKrok5SCC5rCNk4Br3lKIKHc6RcqAC3kKxKbWz+wiPhzSMs6g07eKsvGBpatrsSbQtzhOWzUBYWbUkCEik8IVPpPJS0XqJyIjstsj2qv4CBsVViNPSyihqd0+dT8GI12QvUg7P3oJ3b3JkhxOmKSnq0EaNABGMd9ed6
+x-ms-exchange-antispam-messagedata: lKJS51fmLZ0O6sQJXWREGOhcw65cmzyy1b2Ub3rMPegS37nnHCkG0m9Cj4Lx2jbpFwd6PXIl1Xdf9HuqE3J8Ex0Mu5Cwfm4+dxhMs/Llt4zzObndiOG1cbtIre15SOxo1sITjcBEuvR74RyQ/eJdTw==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e2daff01-bfb3-4006-1b4c-08d7ca5a7369
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Mar 2020 10:03:32.6401
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ae121392-3c90-40b7-2b41-08d7ca5ab023
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Mar 2020 10:05:14.5557
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: uiV0JAT30KjDN8WHlMJiy7isACsI/hySBqz/dcKZX/ReAi8SGIsBTWu3DjmsywO5wmat8VlC1SmnZuClo23+YDPGnmS1HFpwChFkRvzE2aiuZkYc+syxJIPRbAlyYOgv
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSBPR01MB4342
+X-MS-Exchange-CrossTenant-userprincipalname: 9if1ooHOV7Yn9bxoEB/DM9Y6GTgejczwwCVxdL2a9e8d2kzco8xnRFe4eQJuEWb3jveivAKLarGDJGqBCqQGbg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6363
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Yoshihiro-san,
-
-Thank you for the review,
-
-> -----Original Message-----
-> From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Sent: 17 March 2020 08:12
-> To: Lad Prabhakar <prabhakar.csengg@gmail.com>
-> Cc: Andrew Murray <andrew.murray@arm.com>; linux-pci@vger.kernel.org;
-> linux-arm-kernel@lists.infradead.org; linux-renesas-soc@vger.kernel.org;
-> linux-rockchip@lists.infradead.org; linux-kernel@vger.kernel.org;
-> devicetree@vger.kernel.org; Prabhakar Mahadev Lad <prabhakar.mahadev-
-> lad.rj@bp.renesas.com>; Bjorn Helgaas <bhelgaas@google.com>; Rob
-> Herring <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>;
-> Catalin Marinas <catalin.marinas@arm.com>; Will Deacon <will@kernel.org>;
-> Kishon Vijay Abraham I <kishon@ti.com>; Lorenzo Pieralisi
-> <lorenzo.pieralisi@arm.com>; Arnd Bergmann <arnd@arndb.de>; Greg
-> Kroah-Hartman <gregkh@linuxfoundation.org>; Jingoo Han
-> <jingoohan1@gmail.com>; Gustavo Pimentel
-> <gustavo.pimentel@synopsys.com>; Marek Vasut
-> <marek.vasut+renesas@gmail.com>; Shawn Lin <shawn.lin@rock-
-> chips.com>; Heiko Stuebner <heiko@sntech.de>
-> Subject: RE: [PATCH v5 4/7] PCI: endpoint: Add support to handle multiple
-> base for mapping outbound memory
->
-> Hi Prabhakar-san,
->
-> Thank you for the patch!
->
-> > From: Lad Prabhakar, Sent: Saturday, February 29, 2020 12:41 AM
-> >
-> > R-Car PCIe controller has support to map multiple memory regions for
-> > mapping the outbound memory in local system also the controller limits
-> > single allocation for each region (that is, once a chunk is used from
-> > the region it cannot be used to allocate a new one). This features
-> > inspires to add support for handling multiple memory bases in endpoint
-> framework.
-> >
-> > With this patch pci_epc_mem_init() now accepts multiple regions, also
-> > page_size for each memory region is passed during initialization so as
-> > to handle single allocation for each region by setting the page_size
-> > to window_size.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-
-> lad.rj@bp.renesas.com>
-> > ---
-> >  drivers/pci/controller/cadence/pcie-cadence-ep.c |   7 +-
-> >  drivers/pci/controller/dwc/pcie-designware-ep.c  |  29 ++--
-> >  drivers/pci/controller/pcie-rockchip-ep.c        |   7 +-
-> >  drivers/pci/endpoint/pci-epc-mem.c               | 167 +++++++++++++++=
-+-----
-> --
->
-> I could not apply this patch on the latest pci.git / next branch.
-> So, you need to rebase.
->
-Yes it needs rebasing on https://git.kernel.org/pub/scm/linux/kernel/git/lp=
-ieralisi/pci.git/log/?h=3Dpci/endpoint
-
-> >  include/linux/pci-epc.h                          |  39 ++++--
-> >  5 files changed, 169 insertions(+), 80 deletions(-)
-> >
-> > diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> > b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> > index 1c173da..90e32438 100644
-> > --- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> > +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> > @@ -401,6 +401,7 @@ int cdns_pcie_ep_setup(struct cdns_pcie_ep *ep)
-> >  struct device *dev =3D ep->pcie.dev;
-> >  struct platform_device *pdev =3D to_platform_device(dev);
-> >  struct device_node *np =3D dev->of_node;
-> > +struct pci_epc_mem_window mem_window;
-> >  struct cdns_pcie *pcie =3D &ep->pcie;
-> >  struct resource *res;
-> >  struct pci_epc *epc;
-> > @@ -449,8 +450,10 @@ int cdns_pcie_ep_setup(struct cdns_pcie_ep *ep)
-> >  if (of_property_read_u8(np, "max-functions", &epc-
-> >max_functions) < 0)
-> >  epc->max_functions =3D 1;
-> >
-> > -ret =3D pci_epc_mem_init(epc, pcie->mem_res->start,
-> > -       resource_size(pcie->mem_res));
-> > +mem_window.phys_base =3D pcie->mem_res->start;
-> > +mem_window.size =3D resource_size(pcie->mem_res);
-> > +mem_window.page_size =3D PAGE_SIZE;
-> > +ret =3D pci_epc_mem_init(epc, &mem_window, 1);
->
-> I'm not sure my idea is acceptable or not but, I think we can have compat=
-ible
-> API for single window like below.
-> - In this patch, pci_epc_mem_init() and __pci_epc_mem_init() become the
-> same behavior.
->   So, for example, pci_epc_mem_init() is for simple, and
-> __pci_epc_mem_init() is multiple windows.
-> -- In this case, pci_epc_mem_init() should have page_size argument.
-> - The original "mem" in the pci_epc can be the default window instead of
->   PCI_EPC_DEFAULT_WINDOW.
->
-OK
-
-> >  if (ret < 0) {
-> >  dev_err(dev, "failed to initialize the memory space\n");
-> >  goto err_init;
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > index cfeccd7..b150ef3 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > @@ -195,8 +195,7 @@ static void dw_pcie_ep_unmap_addr(struct pci_epc
-> > *epc, u8 func_no,  }
-> >
-> >  static int dw_pcie_ep_map_addr(struct pci_epc *epc, u8 func_no,
-> > -       phys_addr_t addr,
-> > -       u64 pci_addr, size_t size)
-> > +       phys_addr_t addr, u64 pci_addr, size_t size)
-> >  {
-> >  int ret;
-> >  struct dw_pcie_ep *ep =3D epc_get_drvdata(epc); @@ -367,6 +366,7
-> @@
-> > int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
-> >  unsigned int aligned_offset;
-> >  u16 msg_ctrl, msg_data;
-> >  u32 msg_addr_lower, msg_addr_upper, reg;
-> > +int window =3D PCI_EPC_DEFAULT_WINDOW;
-> >  u64 msg_addr;
-> >  bool has_upper;
-> >  int ret;
-> > @@ -390,11 +390,11 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep
-> *ep, u8 func_no,
-> >  reg =3D ep->msi_cap + PCI_MSI_DATA_32;
-> >  msg_data =3D dw_pcie_readw_dbi(pci, reg);
-> >  }
-> > -aligned_offset =3D msg_addr_lower & (epc->mem->page_size - 1);
-> > +aligned_offset =3D msg_addr_lower & (epc->mem[window]-
-> >page_size - 1);
-> >  msg_addr =3D ((u64)msg_addr_upper) << 32 |
-> >  (msg_addr_lower & ~aligned_offset);
-> > -ret =3D dw_pcie_ep_map_addr(epc, func_no, ep->msi_mem_phys,
-> msg_addr,
-> > -  epc->mem->page_size);
-> > +ret =3D dw_pcie_ep_map_addr(epc, func_no, ep->msi_mem_phys,
-> > +  msg_addr, epc->mem[window]-
-> >page_size);
-> >  if (ret)
-> >  return ret;
-> >
-> > @@ -416,6 +416,7 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep
-> *ep, u8 func_no,
-> >  u32 reg, msg_data, vec_ctrl;
-> >  u64 tbl_addr, msg_addr, reg_u64;
-> >  void __iomem *msix_tbl;
-> > +int window =3D PCI_EPC_DEFAULT_WINDOW;
-> >  int ret;
-> >
-> >  reg =3D ep->msix_cap + PCI_MSIX_TABLE; @@ -452,8 +453,8 @@ int
-> > dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
-> >  return -EPERM;
-> >  }
-> >
-> > -ret =3D dw_pcie_ep_map_addr(epc, func_no, ep->msi_mem_phys,
-> msg_addr,
-> > -  epc->mem->page_size);
-> > +ret =3D dw_pcie_ep_map_addr(epc, func_no, ep->msi_mem_phys,
-> > +  msg_addr, epc->mem[window]-
-> >page_size);
-> >  if (ret)
-> >  return ret;
-> >
-> > @@ -466,10 +467,11 @@ int dw_pcie_ep_raise_msix_irq(struct
-> dw_pcie_ep
-> > *ep, u8 func_no,
-> >
-> >  void dw_pcie_ep_exit(struct dw_pcie_ep *ep)  {
-> > +int window =3D PCI_EPC_DEFAULT_WINDOW;
-> >  struct pci_epc *epc =3D ep->epc;
-> >
-> >  pci_epc_mem_free_addr(epc, ep->msi_mem_phys, ep->msi_mem,
-> > -      epc->mem->page_size);
-> > +      epc->mem[window]->page_size);
-> >
-> >  pci_epc_mem_exit(epc);
-> >  }
-> > @@ -502,6 +504,8 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
-> >  unsigned int nbars;
-> >  unsigned int offset;
-> >  struct pci_epc *epc;
-> > +size_t msi_page_size;
-> > +struct pci_epc_mem_window mem_window;
-> >  struct dw_pcie *pci =3D to_dw_pcie_from_ep(ep);
-> >  struct device *dev =3D pci->dev;
-> >  struct device_node *np =3D dev->of_node; @@ -574,15 +578,18 @@
-> int
-> > dw_pcie_ep_init(struct dw_pcie_ep *ep)
-> >  if (ret < 0)
-> >  epc->max_functions =3D 1;
-> >
-> > -ret =3D __pci_epc_mem_init(epc, ep->phys_base, ep->addr_size,
-> > - ep->page_size);
-> > +mem_window.phys_base =3D ep->phys_base;
-> > +mem_window.size =3D ep->addr_size;
-> > +mem_window.page_size =3D ep->page_size;
-> > +ret =3D __pci_epc_mem_init(epc, &mem_window, 1);
-> >  if (ret < 0) {
-> >  dev_err(dev, "Failed to initialize address space\n");
-> >  return ret;
-> >  }
-> >
-> > +msi_page_size =3D epc->mem[PCI_EPC_DEFAULT_WINDOW]-
-> >page_size;
-> >  ep->msi_mem =3D pci_epc_mem_alloc_addr(epc, &ep-
-> >msi_mem_phys,
-> > -     epc->mem->page_size);
-> > +     msi_page_size);
-> >  if (!ep->msi_mem) {
-> >  dev_err(dev, "Failed to reserve memory for MSI/MSI-X\n");
-> >  return -ENOMEM;
-> > diff --git a/drivers/pci/controller/pcie-rockchip-ep.c
-> > b/drivers/pci/controller/pcie-rockchip-ep.c
-> > index d743b0a..5a97390 100644
-> > --- a/drivers/pci/controller/pcie-rockchip-ep.c
-> > +++ b/drivers/pci/controller/pcie-rockchip-ep.c
-> > @@ -562,6 +562,7 @@ static const struct of_device_id
-> > rockchip_pcie_ep_of_match[] =3D {
-> >
-> >  static int rockchip_pcie_ep_probe(struct platform_device *pdev)  {
-> > +struct pci_epc_mem_window mem_window;
-> >  struct device *dev =3D &pdev->dev;
-> >  struct rockchip_pcie_ep *ep;
-> >  struct rockchip_pcie *rockchip;
-> > @@ -614,8 +615,10 @@ static int rockchip_pcie_ep_probe(struct
-> platform_device *pdev)
-> >  /* Only enable function 0 by default */
-> >  rockchip_pcie_write(rockchip, BIT(0), PCIE_CORE_PHY_FUNC_CFG);
-> >
-> > -err =3D pci_epc_mem_init(epc, rockchip->mem_res->start,
-> > -       resource_size(rockchip->mem_res));
-> > +mem_window.phys_base =3D rockchip->mem_res->start;
-> > +mem_window.size =3D resource_size(rockchip->mem_res);
-> > +mem_window.page_size =3D PAGE_SIZE;
-> > +err =3D pci_epc_mem_init(epc, &mem_window, 1);
-> >  if (err < 0) {
-> >  dev_err(dev, "failed to initialize the memory space\n");
-> >  goto err_uninit_port;
-> > diff --git a/drivers/pci/endpoint/pci-epc-mem.c
-> > b/drivers/pci/endpoint/pci-epc-mem.c
-> > index d2b174c..6c21957 100644
-> > --- a/drivers/pci/endpoint/pci-epc-mem.c
-> > +++ b/drivers/pci/endpoint/pci-epc-mem.c
-> > @@ -38,57 +38,76 @@ static int pci_epc_mem_get_order(struct
-> > pci_epc_mem *mem, size_t size)
-> >  /**
-> >   * __pci_epc_mem_init() - initialize the pci_epc_mem structure
-> >   * @epc: the EPC device that invoked pci_epc_mem_init
-> > - * @phys_base: the physical address of the base
-> > - * @size: the size of the address space
-> > - * @page_size: size of each page
-> > + * @windows: pointer to windows supported by the device
-> > + * @num_windows: number of windows device supports
-> >   *
-> >   * Invoke to initialize the pci_epc_mem structure used by the
-> >   * endpoint functions to allocate mapped PCI address.
-> >   */
-> > -int __pci_epc_mem_init(struct pci_epc *epc, phys_addr_t phys_base,
-> size_t size,
-> > -       size_t page_size)
-> > +int __pci_epc_mem_init(struct pci_epc *epc, struct
-> pci_epc_mem_window *windows,
-> > +       int num_windows)
-> >  {
-> > -int ret;
-> > -struct pci_epc_mem *mem;
-> > -unsigned long *bitmap;
-> > +struct pci_epc_mem *mem =3D NULL;
-> > +unsigned long *bitmap =3D NULL;
-> >  unsigned int page_shift;
-> > -int pages;
-> > +size_t page_size;
-> >  int bitmap_size;
-> > -
-> > -if (page_size < PAGE_SIZE)
-> > -page_size =3D PAGE_SIZE;
-> > -
-> > -page_shift =3D ilog2(page_size);
-> > -pages =3D size >> page_shift;
-> > -bitmap_size =3D BITS_TO_LONGS(pages) * sizeof(long);
-> > -
-> > -mem =3D kzalloc(sizeof(*mem), GFP_KERNEL);
-> > -if (!mem) {
-> > -ret =3D -ENOMEM;
-> > -goto err;
-> > -}
-> > -
-> > -bitmap =3D kzalloc(bitmap_size, GFP_KERNEL);
-> > -if (!bitmap) {
-> > -ret =3D -ENOMEM;
-> > -goto err_mem;
-> > +int pages;
-> > +int ret;
-> > +int i;
-> > +
-> > +epc->mem_windows =3D 0;
-> > +
-> > +if (!windows)
-> > +return -EINVAL;
-> > +
-> > +if (num_windows <=3D 0)
-> > +return -EINVAL;
-> > +
-> > +epc->mem =3D kcalloc(num_windows, sizeof(*mem), GFP_KERNEL);
-> > +if (!epc->mem)
-> > +return -EINVAL;
-> > +
-> > +for (i =3D 0; i < num_windows; i++) {
-> > +page_size =3D windows[i].page_size;
-> > +if (page_size < PAGE_SIZE)
-> > +page_size =3D PAGE_SIZE;
-> > +page_shift =3D ilog2(page_size);
-> > +pages =3D windows[i].size >> page_shift;
-> > +bitmap_size =3D BITS_TO_LONGS(pages) * sizeof(long);
-> > +
-> > +mem =3D kzalloc(sizeof(*mem), GFP_KERNEL);
-> > +if (!mem) {
-> > +ret =3D -ENOMEM;
-> > +goto err_mem;
-> > +}
-> > +
-> > +bitmap =3D kzalloc(bitmap_size, GFP_KERNEL);
-> > +if (!bitmap) {
-> > +ret =3D -ENOMEM;
-> > +goto err_mem;
-> > +}
-> > +
-> > +mem->bitmap =3D bitmap;
-> > +mem->window.phys_base =3D windows[i].phys_base;
->
-> I could not understand why the window member is needed.
-> I think original members (just phys_base and size) are enough.
-> Also, this function doesn't store the page_size to mem->window.page_size.
->
-Because,  for example on RZ/Gx platforms, following are the windows on endp=
-oint device
-where the root's address can be mapped, but where as on other platforms atm=
- there
-exists just single window to map. Also on RZ/Gx platforms if a window is al=
-located say of
-size 1K, rest of the window cannot be used for other allocations.
-
-1: 0xfe000000 0 0x80000
-2: 0xfe100000 0 0x100000
-3: 0xfe200000 0 0x200000
-4: 0x30000000 0 0x8000000
-5: 0x38000000 0 0x8000000
-
-Struct pci_epc_mem_window, represents the above windows.
-
-window.page_size is set by endpoint controller drivers as done in this patc=
-h.
-
-> > +mem->page_size =3D page_size;
-> > +mem->pages =3D pages;
-> > +mem->window.size =3D windows[i].size;
-> > +epc->mem[i] =3D mem;
-> >  }
-> > -
-> > -mem->bitmap =3D bitmap;
-> > -mem->phys_base =3D phys_base;
-> > -mem->page_size =3D page_size;
-> > -mem->pages =3D pages;
-> > -mem->size =3D size;
-> > -
-> > -epc->mem =3D mem;
-> > +epc->mem_windows =3D num_windows;
-> >
-> >  return 0;
-> >
-> >  err_mem:
-> > -kfree(mem);
-> > +for (; i >=3D 0; i--) {
-> > +mem =3D epc->mem[i];
-> > +kfree(mem->bitmap);
->
-> If bitmap cannot be allocated, the epc->mem[i] is NULL.
-> So, freeing mem->bitmap anyway is not good.
->
-Agreed shall fix it.
-
-> > +kfree(mem);
-> > +}
-> > +kfree(epc->mem);
-> >
-> > -err:
-> > -return ret;
-> > +return ret;
-> >  }
-> >  EXPORT_SYMBOL_GPL(__pci_epc_mem_init);
-> >
-> > @@ -101,11 +120,21 @@ EXPORT_SYMBOL_GPL(__pci_epc_mem_init);
-> >   */
-> >  void pci_epc_mem_exit(struct pci_epc *epc)  {
-> > -struct pci_epc_mem *mem =3D epc->mem;
-> > +struct pci_epc_mem *mem;
-> > +int i;
-> > +
-> > +if (!epc->mem_windows)
-> > +return;
-> > +
-> > +for (i =3D 0; i <=3D epc->mem_windows; i++) {
-> > +mem =3D epc->mem[i];
-> > +kfree(mem->bitmap);
-> > +kfree(mem);
-> > +}
-> > +kfree(epc->mem);
-> >
-> >  epc->mem =3D NULL;
-> > -kfree(mem->bitmap);
-> > -kfree(mem);
-> > +epc->mem_windows =3D 0;
-> >  }
-> >  EXPORT_SYMBOL_GPL(pci_epc_mem_exit);
-> >
-> > @@ -121,20 +150,30 @@ EXPORT_SYMBOL_GPL(pci_epc_mem_exit);
-> >  void __iomem *pci_epc_mem_alloc_addr(struct pci_epc *epc,
-> >       phys_addr_t *phys_addr, size_t size)  {
-> > -int pageno;
-> > -void __iomem *virt_addr;
-> > -struct pci_epc_mem *mem =3D epc->mem;
-> > -unsigned int page_shift =3D ilog2(mem->page_size);
-> > +void __iomem *virt_addr =3D NULL;
-> > +struct pci_epc_mem *mem;
-> > +unsigned int page_shift;
-> > +int pageno =3D -EINVAL;
-> >  int order;
-> > +int i;
-> >
-> > -size =3D ALIGN(size, mem->page_size);
-> > -order =3D pci_epc_mem_get_order(mem, size);
-> > +for (i =3D 0; i < epc->mem_windows; i++) {
-> > +mem =3D epc->mem[i];
-> > +size =3D ALIGN(size, mem->page_size);
-> > +order =3D pci_epc_mem_get_order(mem, size);
-> > +
-> > +pageno =3D bitmap_find_free_region(mem->bitmap, mem-
-> >pages,
-> > + order);
-> > +if (pageno >=3D 0)
-> > +break;
-> > +}
-> >
-> > -pageno =3D bitmap_find_free_region(mem->bitmap, mem->pages,
-> order);
-> >  if (pageno < 0)
-> >  return NULL;
-> >
-> > -*phys_addr =3D mem->phys_base + ((phys_addr_t)pageno <<
-> page_shift);
-> > +page_shift =3D ilog2(mem->page_size);
-> > +*phys_addr =3D mem->window.phys_base +
-> > +     ((phys_addr_t)pageno << page_shift);
-> >  virt_addr =3D ioremap(*phys_addr, size);
-> >  if (!virt_addr)
-> >  bitmap_release_region(mem->bitmap, pageno, order); @@
-> -143,6
-> > +182,23 @@ void __iomem *pci_epc_mem_alloc_addr(struct pci_epc
-> *epc,
-> > }  EXPORT_SYMBOL_GPL(pci_epc_mem_alloc_addr);
-> >
-> > +struct pci_epc_mem *pci_epc_get_matching_window(struct pci_epc
-> *epc,
-> > +phys_addr_t phys_addr)
-> > +{
-> > +struct pci_epc_mem *mem;
-> > +int i;
-> > +
-> > +for (i =3D 0; i < epc->mem_windows; i++) {
-> > +mem =3D epc->mem[i];
-> > +
-> > +if (phys_addr >=3D mem->window.phys_base &&
-> > +    phys_addr < (mem->window.phys_base + mem-
-> >window.size))
-> > +return mem;
-> > +}
-> > +
-> > +return NULL;
-> > +}
-> > +
-> >  /**
-> >   * pci_epc_mem_free_addr() - free the allocated memory address
-> >   * @epc: the EPC device on which memory was allocated @@ -155,13
-> > +211,20 @@ EXPORT_SYMBOL_GPL(pci_epc_mem_alloc_addr);
-> >  void pci_epc_mem_free_addr(struct pci_epc *epc, phys_addr_t
-> phys_addr,
-> >     void __iomem *virt_addr, size_t size)  {
-> > +struct pci_epc_mem *mem;
-> > +unsigned int page_shift;
-> >  int pageno;
-> > -struct pci_epc_mem *mem =3D epc->mem;
-> > -unsigned int page_shift =3D ilog2(mem->page_size);
-> >  int order;
-> >
-> > +mem =3D pci_epc_get_matching_window(epc, phys_addr);
-> > +if (!mem) {
-> > +pr_err("failed to get matching window\n");
-> > +return;
-> > +}
-> > +
-> > +page_shift =3D ilog2(mem->page_size);
-> >  iounmap(virt_addr);
-> > -pageno =3D (phys_addr - mem->phys_base) >> page_shift;
-> > +pageno =3D (phys_addr - mem->window.phys_base) >> page_shift;
-> >  size =3D ALIGN(size, mem->page_size);
-> >  order =3D pci_epc_mem_get_order(mem, size);
-> >  bitmap_release_region(mem->bitmap, pageno, order); diff --git
-> > a/include/linux/pci-epc.h b/include/linux/pci-epc.h index
-> > 56f1846..dde42e5 100644
-> > --- a/include/linux/pci-epc.h
-> > +++ b/include/linux/pci-epc.h
-> > @@ -64,17 +64,29 @@ struct pci_epc_ops {
-> >  struct module *owner;
-> >  };
-> >
-> > +#define PCI_EPC_DEFAULT_WINDOW         0
-> > +
-> > +/**
-> > + * struct pci_epc_mem_window - address window of the endpoint
-> > +controller
-> > + * @phys_base: physical base address of the PCI address window
-> > + * @size: the size of the PCI address window
-> > + * @page_size: size of each page
-> > + */
-> > +struct pci_epc_mem_window {
-> > +phys_addr_tphys_base;
-> > +size_tsize;
-> > +size_tpage_size;
-> > +};
-> > +
-> >  /**
-> >   * struct pci_epc_mem - address space of the endpoint controller
-> > - * @phys_base: physical base address of the PCI address space
-> > - * @size: the size of the PCI address space
-> > + * @window: address window of the endpoint controller
-> >   * @bitmap: bitmap to manage the PCI address space
-> > - * @pages: number of bits representing the address region
-> >   * @page_size: size of each page
-> > + * @pages: number of bits representing the address region
-> >   */
-> >  struct pci_epc_mem {
-> > -phys_addr_tphys_base;
-> > -size_tsize;
-> > +struct pci_epc_mem_window window;
-> >  unsigned long*bitmap;
-> >  size_tpage_size;
-> >  intpages;
-> > @@ -85,7 +97,8 @@ struct pci_epc_mem {
-> >   * @dev: PCI EPC device
-> >   * @pci_epf: list of endpoint functions present in this EPC device
-> >   * @ops: function pointers for performing endpoint operations
-> > - * @mem: address space of the endpoint controller
->
-> If my idea is acceptable, this should be "default address space ...".
->
-Could you please elaborate more on how you would like the structures to be =
-organized.
-
-> > + * @mem: array of address space of the endpoint controller
->
-> And, this should be difference name.
->
-OK
-
-> > + * @mem_windows: number of windows supported by device
->
-> Perhaps, num_windows?
->
-OK
-
-> >   * @max_functions: max number of functions that can be configured in
-> this EPC
-> >   * @group: configfs group representing the PCI EPC device
-> >   * @lock: spinlock to protect pci_epc ops @@ -94,7 +107,8 @@ struct
-> > pci_epc {
-> >  struct devicedev;
-> >  struct list_headpci_epf;
-> >  const struct pci_epc_ops*ops;
-> > -struct pci_epc_mem*mem;
-> > +struct pci_epc_mem**mem;
-> > +unsigned intmem_windows;
-> >  u8max_functions;
-> >  struct config_group*group;
-> >  /* spinlock to protect against concurrent access of EP controller */
-> > @@ -128,8 +142,8 @@ struct pci_epc_features {
-> >  #define devm_pci_epc_create(dev, ops)    \
-> >  __devm_pci_epc_create((dev), (ops), THIS_MODULE)
-> >
-> > -#define pci_epc_mem_init(epc, phys_addr, size)\
-> > -__pci_epc_mem_init((epc), (phys_addr), (size), PAGE_SIZE)
-> > +#define pci_epc_mem_init(epc, windows, num_windows)\
-> > +__pci_epc_mem_init((epc), windows, num_windows)
->
-> As I mentioned above, pci_epc_mem_init() and __ pci_epc_mem_init() are
-> the same behavior.
->
-> >  static inline void epc_set_drvdata(struct pci_epc *epc, void *data)
-> > { @@ -159,8 +173,7 @@ int pci_epc_set_bar(struct pci_epc *epc, u8
-> > func_no,  void pci_epc_clear_bar(struct pci_epc *epc, u8 func_no,
-> >         struct pci_epf_bar *epf_bar);  int
-> pci_epc_map_addr(struct
-> > pci_epc *epc, u8 func_no,
-> > -     phys_addr_t phys_addr,
-> > -     u64 pci_addr, size_t size);
-> > +     phys_addr_t phys_addr, u64 pci_addr, size_t size);
->
-> Perhaps, this is not needed to change?
->
-Yes my bad.
-
-Cheers,
---Prabhakar
-
-> Best regards,
-> Yoshihiro Shimoda
->
-> >  void pci_epc_unmap_addr(struct pci_epc *epc, u8 func_no,
-> >  phys_addr_t phys_addr);
-> >  int pci_epc_set_msi(struct pci_epc *epc, u8 func_no, u8 interrupts);
-> > @@ -178,8 +191,8 @@ unsigned int pci_epc_get_first_free_bar(const
-> > struct pci_epc_features  struct pci_epc *pci_epc_get(const char
-> > *epc_name);  void pci_epc_put(struct pci_epc *epc);
-> >
-> > -int __pci_epc_mem_init(struct pci_epc *epc, phys_addr_t phys_addr,
-> size_t size,
-> > -       size_t page_size);
-> > +int __pci_epc_mem_init(struct pci_epc *epc, struct
-> pci_epc_mem_window *window,
-> > +       int num_windows);
-> >  void pci_epc_mem_exit(struct pci_epc *epc);  void __iomem
-> > *pci_epc_mem_alloc_addr(struct pci_epc *epc,
-> >       phys_addr_t *phys_addr, size_t size);
-> > --
-> > 2.7.4
-
-
-
-Renesas Electronics Europe GmbH, Geschaeftsfuehrer/President: Carsten Jauch=
-, Sitz der Gesellschaft/Registered office: Duesseldorf, Arcadiastrasse 10, =
-40472 Duesseldorf, Germany, Handelsregister/Commercial Register: Duesseldor=
-f, HRB 3708 USt-IDNr./Tax identification no.: DE 119353406 WEEE-Reg.-Nr./WE=
-EE reg. no.: DE 14978647
+SGkgUmFuZHksDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUmFuZHkg
+RHVubGFwIDxyZHVubGFwQGluZnJhZGVhZC5vcmc+DQo+IFNlbnQ6IDIwMjDlubQz5pyIMTfml6Ug
+MTI6NTkNCj4gVG86IFoucS4gSG91IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT47IEJqb3JuIEhlbGdh
+YXMgPGhlbGdhYXNAa2VybmVsLm9yZz4NCj4gQ2M6IFN0ZXBoZW4gUm90aHdlbGwgPHNmckBjYW5i
+LmF1dWcub3JnLmF1PjsgTGludXggTmV4dCBNYWlsaW5nIExpc3QNCj4gPGxpbnV4LW5leHRAdmdl
+ci5rZXJuZWwub3JnPjsgTGludXggS2VybmVsIE1haWxpbmcgTGlzdA0KPiA8bGludXgta2VybmVs
+QHZnZXIua2VybmVsLm9yZz47IGxpbnV4LXBjaSA8bGludXgtcGNpQHZnZXIua2VybmVsLm9yZz47
+DQo+IEthcnRoaWtleWFuIE1pdHJhbiA8bS5rYXJ0aGlrZXlhbkBtb2JpdmVpbC5jby5pbj4NCj4g
+U3ViamVjdDogUmU6IGxpbnV4LW5leHQ6IFRyZWUgZm9yIE1hciAxMiAocGNpL2NvbnRyb2xsZXIv
+bW9iaXZlaWwvKQ0KPiANCj4gT24gMy8xNi8yMCA5OjMxIFBNLCBaLnEuIEhvdSB3cm90ZToNCj4g
+PiBIaSBSYW5keSBhbmQgQmpvcm4sDQo+ID4NCj4gPj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0t
+LS0NCj4gPj4gRnJvbTogQmpvcm4gSGVsZ2FhcyA8aGVsZ2Fhc0BrZXJuZWwub3JnPg0KPiA+PiBT
+ZW50OiAyMDIw5bm0M+aciDEz5pelIDM6MzkNCj4gPj4gVG86IFoucS4gSG91IDx6aGlxaWFuZy5o
+b3VAbnhwLmNvbT4NCj4gPj4gQ2M6IFJhbmR5IER1bmxhcCA8cmR1bmxhcEBpbmZyYWRlYWQub3Jn
+PjsgU3RlcGhlbiBSb3Rod2VsbA0KPiA+PiA8c2ZyQGNhbmIuYXV1Zy5vcmcuYXU+OyBMaW51eCBO
+ZXh0IE1haWxpbmcgTGlzdA0KPiA+PiA8bGludXgtbmV4dEB2Z2VyLmtlcm5lbC5vcmc+OyBMaW51
+eCBLZXJuZWwgTWFpbGluZyBMaXN0DQo+ID4+IDxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3Jn
+PjsgbGludXgtcGNpDQo+ID4+IDxsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnPjsgS2FydGhpa2V5
+YW4gTWl0cmFuDQo+ID4+IDxtLmthcnRoaWtleWFuQG1vYml2ZWlsLmNvLmluPg0KPiA+PiBTdWJq
+ZWN0OiBSZTogbGludXgtbmV4dDogVHJlZSBmb3IgTWFyIDEyIChwY2kvY29udHJvbGxlci9tb2Jp
+dmVpbC8pDQo+ID4+DQo+ID4+IE9uIFRodSwgTWFyIDEyLCAyMDIwIGF0IDA4OjEzOjUwQU0gLTA3
+MDAsIFJhbmR5IER1bmxhcCB3cm90ZToNCj4gPj4+IE9uIDMvMTIvMjAgMzowNCBBTSwgU3RlcGhl
+biBSb3Rod2VsbCB3cm90ZToNCj4gPj4+PiBIaSBhbGwsDQo+ID4+Pj4NCj4gPj4+PiBDaGFuZ2Vz
+IHNpbmNlIDIwMjAwMzExOg0KPiA+Pj4+DQo+ID4+Pg0KPiA+Pj4gb24gaTM4NjoNCj4gPj4+ICMg
+Q09ORklHX1BDSV9NU0kgaXMgbm90IHNldA0KPiA+Pj4NCj4gPj4+IFdBUk5JTkc6IHVubWV0IGRp
+cmVjdCBkZXBlbmRlbmNpZXMgZGV0ZWN0ZWQgZm9yDQo+IFBDSUVfTU9CSVZFSUxfSE9TVA0KPiA+
+Pj4gICBEZXBlbmRzIG9uIFtuXTogUENJIFs9eV0gJiYgUENJX01TSV9JUlFfRE9NQUlOIFs9bl0N
+Cj4gPj4+ICAgU2VsZWN0ZWQgYnkgW3ldOg0KPiA+Pj4gICAtIFBDSUVfTU9CSVZFSUxfUExBVCBb
+PXldICYmIFBDSSBbPXldICYmIChBUkNIX1pZTlFNUCB8fA0KPiA+PiBDT01QSUxFX1RFU1QgWz15
+XSkgJiYgT0YgWz15XQ0KPiA+Pg0KPiA+PiBUaGFua3MsIFJhbmR5Lg0KPiA+Pg0KPiA+PiBJJ20g
+bm90IHN1cmUgaWYgdGhpcyBpcyBhIG5ldyBwcm9ibGVtIGludHJvZHVjZWQgYnkgc29tZXRoaW5n
+IGluIG15DQo+ID4+ICJuZXh0IiBicmFuY2gsIG9yIGlmIHRoaXMgaXMgYW4gZXhpc3RpbmcgcHJv
+YmxlbSB3ZSBqdXN0IGhhcHBlbmVkIHRvDQo+ID4+IGhpdCB3aXRoIHJhbmRjb25maWcuDQo+ID4+
+DQo+ID4+IEhlcmUgYXJlIHRoZSBjb21taXRzIG9uIHJlbW90ZXMvbG9yZW56by9wY2kvbW9iaXZl
+aWwgYnJhbmNoOg0KPiA+Pg0KPiA+PiAgIGQyOWFkNzBhODEzYiAoIlBDSTogbW9iaXZlaWw6IEFk
+ZCBQQ0llIEdlbjQgUkMgZHJpdmVyIGZvcg0KPiA+PiBMYXllcnNjYXBlDQo+ID4+IFNvQ3MiKQ0K
+PiA+PiAgIDNlZGViNDk1MjViYiAoImR0LWJpbmRpbmdzOiBQQ0k6IEFkZCBOWFAgTGF5ZXJzY2Fw
+ZSBTb0NzIFBDSWUgR2VuNA0KPiA+PiBjb250cm9sbGVyIikNCj4gPj4gICAxMWQyMmNjMzk1Y2Eg
+KCJQQ0k6IG1vYml2ZWlsOiBBZGQgSGVhZGVyIFR5cGUgZmllbGQgY2hlY2siKQ0KPiA+PiAgIDAy
+OWRlYTNjZGM2NyAoIlBDSTogbW9iaXZlaWw6IEFkZCA4LWJpdCBhbmQgMTYtYml0IENTUiByZWdp
+c3Rlcg0KPiA+PiBhY2Nlc3NvcnMiKQ0KPiA+PiAgIDUyY2FlNGM3MDgyZiAoIlBDSTogbW9iaXZl
+aWw6IEFsbG93IG1vYml2ZWlsX2hvc3RfaW5pdCgpIHRvIGJlIHVzZWQNCj4gPj4gdG8gcmUtaW5p
+dCBob3N0IikNCj4gPj4gICBmYzk5YjMzMTFhZjcgKCJQQ0k6IG1vYml2ZWlsOiBBZGQgY2FsbGJh
+Y2sgZnVuY3Rpb24gZm9yIGxpbmsgdXAgY2hlY2siKQ0KPiA+PiAgIGVkNjIwZTk2NTQxZiAoIlBD
+STogbW9iaXZlaWw6IEFkZCBjYWxsYmFjayBmdW5jdGlvbiBmb3IgaW50ZXJydXB0DQo+ID4+IGlu
+aXRpYWxpemF0aW9uIikNCj4gPj4gICAwM2JkYzM4ODQwMTkgKCJQQ0k6IG1vYml2ZWlsOiBNb2R1
+bGFyaXplIHRoZSBNb2JpdmVpbCBQQ0llIEhvc3QNCj4gPj4gQnJpZGdlIElQDQo+ID4+IGRyaXZl
+ciIpDQo+ID4+ICAgMzllM2EwM2VlYTViICgiUENJOiBtb2JpdmVpbDogQ29sbGVjdCB0aGUgaW50
+ZXJydXB0IHJlbGF0ZWQNCj4gPj4gb3BlcmF0aW9ucyBpbnRvIGEgZnVuY3Rpb24iKQ0KPiA+PiAg
+IDJiYTI0ODQyZDZiNCAoIlBDSTogbW9iaXZlaWw6IE1vdmUgdGhlIGhvc3QgaW5pdGlhbGl6YXRp
+b24gaW50byBhDQo+IGZ1bmN0aW9uIikNCj4gPj4gICAxZjQ0MjIxOGQ2NTcgKCJQQ0k6IG1vYml2
+ZWlsOiBJbnRyb2R1Y2UgYSBuZXcgc3RydWN0dXJlDQo+ID4+IG1vYml2ZWlsX3Jvb3RfcG9ydCIp
+DQo+ID4+DQo+ID4+IEkgZHJvcHBlZCB0aGF0IG1vYml2ZWlsIGJyYW5jaCBmb3Igbm93LCBzbyBI
+b3UsIGNhbiB5b3UgcGxlYXNlIGNoZWNrDQo+ID4+IHRoaXMgb3V0IGFuZCByZXNvbHZlIGl0IG9u
+ZSB3YXkgb3IgdGhlIG90aGVyPw0KPiA+DQo+ID4gSSBkb24ndCByZXByb2R1Y2UgdGhpcyBpc3N1
+ZSB3aXRoIGkzODZfZGVmY29uZmlnLCBjYW4geW91IGhlbHAgbWUgdG8NCj4gcmVwcm9kdWNlIGl0
+Pw0KPiANCj4gU3VyZSwgc2VlIGJlbG93Lg0KPiANCj4gDQo+ID4gVGhhbmtzLA0KPiA+IFpoaXFp
+YW5nDQo+ID4NCj4gPj4NCj4gPj4+IC4uL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvbW9iaXZlaWwv
+cGNpZS1tb2JpdmVpbC1ob3N0LmM6Mzc1OjE1OiBlcnJvcjoNCj4gPj4gdmFyaWFibGUg4oCYbW9i
+aXZlaWxfbXNpX2RvbWFpbl9pbmZv4oCZIGhhcyBpbml0aWFsaXplciBidXQgaW5jb21wbGV0ZQ0K
+PiA+PiB0eXBlDQo+ID4+PiAgc3RhdGljIHN0cnVjdCBtc2lfZG9tYWluX2luZm8gbW9iaXZlaWxf
+bXNpX2RvbWFpbl9pbmZvID0gew0KPiA+Pj4gICAgICAgICAgICAgICAgXn5+fn5+fn5+fn5+fn5+
+DQo+ID4+PiAuLi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2ZWlsL3BjaWUtbW9iaXZlaWwt
+aG9zdC5jOjM3NjozOg0KPiA+Pj4gZXJyb3I6IOKAmHN0cnVjdA0KPiA+PiBtc2lfZG9tYWluX2lu
+Zm/igJkgaGFzIG5vIG1lbWJlciBuYW1lZCDigJhmbGFnc+KAmQ0KPiA+Pj4gICAuZmxhZ3MgPSAo
+TVNJX0ZMQUdfVVNFX0RFRl9ET01fT1BTIHwNCj4gPj4gTVNJX0ZMQUdfVVNFX0RFRl9DSElQX09Q
+UyB8DQo+ID4+PiAgICBefn5+fg0KPiA+Pj4gLi4vZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2Jp
+dmVpbC9wY2llLW1vYml2ZWlsLWhvc3QuYzozNzY6MTI6IGVycm9yOg0KPiA+PiDigJhNU0lfRkxB
+R19VU0VfREVGX0RPTV9PUFPigJkgdW5kZWNsYXJlZCBoZXJlIChub3QgaW4gYSBmdW5jdGlvbik7
+DQo+IGRpZA0KPiA+PiB5b3UgbWVhbiDigJhTSU1QTEVfREVWX1BNX09QU+KAmT8NCj4gPj4+ICAg
+LmZsYWdzID0gKE1TSV9GTEFHX1VTRV9ERUZfRE9NX09QUyB8DQo+ID4+IE1TSV9GTEFHX1VTRV9E
+RUZfQ0hJUF9PUFMgfA0KPiA+Pj4gICAgICAgICAgICAgXn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+
+DQo+ID4+PiAgICAgICAgICAgICBTSU1QTEVfREVWX1BNX09QUw0KPiA+Pj4gLi4vZHJpdmVycy9w
+Y2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWlsLWhvc3QuYzozNzY6Mzk6IGVycm9y
+Og0KPiA+PiDigJhNU0lfRkxBR19VU0VfREVGX0NISVBfT1BT4oCZIHVuZGVjbGFyZWQgaGVyZSAo
+bm90IGluIGEgZnVuY3Rpb24pOyBkaWQNCj4gPj4geW91IG1lYW4g4oCYTVNJX0ZMQUdfVVNFX0RF
+Rl9ET01fT1BT4oCZPw0KPiA+Pj4gICAuZmxhZ3MgPSAoTVNJX0ZMQUdfVVNFX0RFRl9ET01fT1BT
+IHwNCj4gPj4gTVNJX0ZMQUdfVVNFX0RFRl9DSElQX09QUyB8DQo+ID4+Pg0KPiA+PiBefn5+fn5+
+fn5+fn5+fn5+fn5+fn5+fn5+DQo+ID4+Pg0KPiA+PiBNU0lfRkxBR19VU0VfREVGX0RPTV9PUFMN
+Cj4gPj4+IC4uL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvbW9iaXZlaWwvcGNpZS1tb2JpdmVpbC1o
+b3N0LmM6Mzc3OjY6IGVycm9yOg0KPiA+PiDigJhNU0lfRkxBR19QQ0lfTVNJWOKAmSB1bmRlY2xh
+cmVkIGhlcmUgKG5vdCBpbiBhIGZ1bmN0aW9uKTsgZGlkIHlvdSBtZWFuDQo+ID4+IOKAmFNTX0ZM
+QUdfQklUU+KAmT8NCj4gPj4+ICAgICAgIE1TSV9GTEFHX1BDSV9NU0lYKSwNCj4gPj4+ICAgICAg
+IF5+fn5+fn5+fn5+fn5+fn5+DQo+ID4+PiAgICAgICBTU19GTEFHX0JJVFMNCj4gPj4+IC4uL2Ry
+aXZlcnMvcGNpL2NvbnRyb2xsZXIvbW9iaXZlaWwvcGNpZS1tb2JpdmVpbC1ob3N0LmM6Mzc2OjEx
+OiB3YXJuaW5nOg0KPiA+PiBleGNlc3MgZWxlbWVudHMgaW4gc3RydWN0IGluaXRpYWxpemVyDQo+
+ID4+PiAgIC5mbGFncyA9IChNU0lfRkxBR19VU0VfREVGX0RPTV9PUFMgfA0KPiA+PiBNU0lfRkxB
+R19VU0VfREVGX0NISVBfT1BTIHwNCj4gPj4+ICAgICAgICAgICAgXg0KPiA+Pj4gLi4vZHJpdmVy
+cy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWlsLWhvc3QuYzozNzY6MTE6DQo+
+ID4+PiBub3RlOiAobmVhcg0KPiA+PiBpbml0aWFsaXphdGlvbiBmb3Ig4oCYbW9iaXZlaWxfbXNp
+X2RvbWFpbl9pbmZv4oCZKQ0KPiA+Pj4gLi4vZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVp
+bC9wY2llLW1vYml2ZWlsLWhvc3QuYzozNzg6MzoNCj4gPj4+IGVycm9yOiDigJhzdHJ1Y3QNCj4g
+Pj4gbXNpX2RvbWFpbl9pbmZv4oCZIGhhcyBubyBtZW1iZXIgbmFtZWQg4oCYY2hpcOKAmQ0KPiA+
+Pj4gICAuY2hpcCA9ICZtb2JpdmVpbF9tc2lfaXJxX2NoaXAsDQo+ID4+PiAgICBefn5+DQo+ID4+
+PiAuLi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2ZWlsL3BjaWUtbW9iaXZlaWwtaG9zdC5j
+OjM3ODoxMDogd2FybmluZzoNCj4gPj4gZXhjZXNzIGVsZW1lbnRzIGluIHN0cnVjdCBpbml0aWFs
+aXplcg0KPiA+Pj4gICAuY2hpcCA9ICZtb2JpdmVpbF9tc2lfaXJxX2NoaXAsDQo+ID4+PiAgICAg
+ICAgICAgXg0KPiA+Pj4gLi4vZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1v
+Yml2ZWlsLWhvc3QuYzozNzg6MTA6DQo+ID4+PiBub3RlOiAobmVhcg0KPiA+PiBpbml0aWFsaXph
+dGlvbiBmb3Ig4oCYbW9iaXZlaWxfbXNpX2RvbWFpbl9pbmZv4oCZKQ0KPiA+Pj4gLi4vZHJpdmVy
+cy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWlsLWhvc3QuYzogSW4gZnVuY3Rp
+b24NCj4gPj4g4oCYbW9iaXZlaWxfYWxsb2NhdGVfbXNpX2RvbWFpbnPigJk6DQo+ID4+PiAuLi9k
+cml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2ZWlsL3BjaWUtbW9iaXZlaWwtaG9zdC5jOjQ2OToy
+MDogZXJyb3I6DQo+ID4+IGltcGxpY2l0IGRlY2xhcmF0aW9uIG9mIGZ1bmN0aW9uIOKAmHBjaV9t
+c2lfY3JlYXRlX2lycV9kb21haW7igJk7IGRpZCB5b3UNCj4gPj4gbWVhbiDigJhwY2lfbXNpX2dl
+dF9kZXZpY2VfZG9tYWlu4oCZPw0KPiA+PiBbLVdlcnJvcj1pbXBsaWNpdC1mdW5jdGlvbi1kZWNs
+YXJhdGlvbl0NCj4gPj4+ICAgbXNpLT5tc2lfZG9tYWluID0gcGNpX21zaV9jcmVhdGVfaXJxX2Rv
+bWFpbihmd25vZGUsDQo+ID4+PiAgICAgICAgICAgICAgICAgICAgIF5+fn5+fn5+fn5+fn5+fn5+
+fn5+fn5+fn4NCj4gPj4+ICAgICAgICAgICAgICAgICAgICAgcGNpX21zaV9nZXRfZGV2aWNlX2Rv
+bWFpbg0KPiA+Pj4gLi4vZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1vYml2
+ZWlsLWhvc3QuYzo0Njk6MTg6IHdhcm5pbmc6DQo+ID4+IGFzc2lnbm1lbnQgbWFrZXMgcG9pbnRl
+ciBmcm9tIGludGVnZXIgd2l0aG91dCBhIGNhc3QNCj4gPj4gWy1XaW50LWNvbnZlcnNpb25dDQo+
+ID4+PiAgIG1zaS0+bXNpX2RvbWFpbiA9IHBjaV9tc2lfY3JlYXRlX2lycV9kb21haW4oZndub2Rl
+LA0KPiA+Pj4gICAgICAgICAgICAgICAgICAgXg0KPiA+Pj4gLi4vZHJpdmVycy9wY2kvY29udHJv
+bGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWlsLWhvc3QuYzogQXQgdG9wIGxldmVsOg0KPiA+Pj4g
+Li4vZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWlsLWhvc3QuYzoz
+NzU6MzE6IGVycm9yOg0KPiA+PiBzdG9yYWdlIHNpemUgb2Yg4oCYbW9iaXZlaWxfbXNpX2RvbWFp
+bl9pbmZv4oCZIGlzbuKAmXQga25vd24NCj4gPj4+ICBzdGF0aWMgc3RydWN0IG1zaV9kb21haW5f
+aW5mbyBtb2JpdmVpbF9tc2lfZG9tYWluX2luZm8gPSB7DQo+ID4+PiAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgXn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+DQo+ID4+Pg0KPiA+Pj4NCj4g
+Pj4+DQo+ID4+PiBGdWxsIHJhbmRjb25maWcgZmlsZSBpcyBhdHRhY2hlZC4NCj4gDQo+IFVzZSB0
+aGUgLmNvbmZpZyBmaWxlIHRoYXQgd2FzIGF0dGFjaGVkIGluIHRoZSByZXBvcnQuDQoNCk9uZSBx
+dWVyeSwgd2hpY2ggZGVmYXVsdCBjb25maWcgeW91IHVzZWQgdG8gZ2VuZXJhdGUgdGhpcyAuY29u
+ZmlnPyBJIGNhbm5vdCBzZWxlY3QNCnRoZSBQQ0lFX01PQklWRUlMX1BMQVQgaW4gJ21lbnVjb25m
+aWcnIHdoZW4gdXNlIHRoZSBpMzg2X2RlZmNvbmZpZy4NCg0KVGhhbmtzLA0KWmhpcWlhbmcNCg0K
+PiANCj4gDQo+IC0tDQo+IH5SYW5keQ0KDQo=
