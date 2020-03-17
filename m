@@ -2,98 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9CB95188D59
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Mar 2020 19:40:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 028681890F6
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Mar 2020 23:03:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726452AbgCQSkn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 Mar 2020 14:40:43 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:41349 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726294AbgCQSkn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Mar 2020 14:40:43 -0400
-Received: by mail-qt1-f195.google.com with SMTP id i26so8631487qtq.8
-        for <linux-pci@vger.kernel.org>; Tue, 17 Mar 2020 11:40:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VHKB5MBsrQc8nrjB6tUnlbV1kL4bZZjV/ANQdFM3zDk=;
-        b=GYgmJC/1qoccDCyGB3v9AgtNVsE4IcW54DliKpkiU/8qcWTDdff956/y0JBhF6CoW+
-         2AF3nNaAMz/neObEUtK5PPJVt6C6RgI8Mamly3muAOZNRXY+QQdadXK48Ee6KpqLHE8+
-         2sRqltqPMbyl/9ocejJDj+1YnNKrMgk9wHeYF4k8oNhl0PT7yNA63RmZF0oQYwdNe+IK
-         br+N+cfXCWnuHi3IfnIquqLO6xf4ZdjNCFFB2q07lTxjelyugkvRGj5+dyLWtOvVZ5hD
-         xdec7OKSTTgRyouKPD5VyOUCJvSrHDwna0Y1VSUzlbHpyFDnaETsTzcMXknVS9MfUmor
-         9n+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VHKB5MBsrQc8nrjB6tUnlbV1kL4bZZjV/ANQdFM3zDk=;
-        b=eEzh24BTOwF8kccFkVh+vFFCOXBnMRZgWW5ENpCHMYaoWdTYdd0FBr+X9BfU633u07
-         bQBbEvlILNUIHLsjgVAStjZCI/WzTFWD8QzVABn1s4a/djSuV4JAw5kzJ7cSgVvfgbw7
-         3Xc8HKLa4XH7eCJXQpxLXMBc3VBPBfvM0PQmE8DzFCFNlQzQJbJ1Ht4ZGUCdzaQUiHB2
-         6erYaPhxML/2P97AYjYSbBT8gfZ7TKFVFCNqNhr/fi13w78+Inmxji244DP5w2aZyosp
-         ly4lpmAS8HRfJYbZSOBHTEQjbfRHdLq2kggxTGjOfiIctTNd+be7aGSpzdsyWuJDSSjR
-         YfJw==
-X-Gm-Message-State: ANhLgQ09TuLJdWrZIHuN6nIqbEI2p5auldXxDlZa1t6yzl9UQY4M8YHD
-        NovI4miYQ9Q7Vl2BP7r5XkMIkQ==
-X-Google-Smtp-Source: ADFU+vugAiZdEw2sEZSIbJEAWeyFz2UbVwFEy00ld5KQjtHya0UyHyqsGI1Bsave1cDjhm+ecny+gg==
-X-Received: by 2002:ac8:7b54:: with SMTP id m20mr566590qtu.92.1584470440664;
-        Tue, 17 Mar 2020 11:40:40 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id 199sm2417617qkm.7.2020.03.17.11.40.40
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 17 Mar 2020 11:40:40 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jEH8p-00016b-OY; Tue, 17 Mar 2020 15:40:39 -0300
-Date:   Tue, 17 Mar 2020 15:40:39 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        kevin.tian@intel.com, Dimitri Sivanich <sivanich@sgi.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pci@vger.kernel.org, robin.murphy@arm.com,
-        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
-        robh+dt@kernel.org, catalin.marinas@arm.com,
-        zhangfei.gao@linaro.org, Andrew Morton <akpm@linux-foundation.org>,
-        will@kernel.org, christian.koenig@amd.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 01/26] mm/mmu_notifiers: pass private data down to
- alloc_notifier()
-Message-ID: <20200317184039.GV20941@ziepe.ca>
-References: <20200224190056.GT31668@ziepe.ca>
- <20200225092439.GB375953@myrica>
- <20200225140814.GW31668@ziepe.ca>
- <20200228143935.GA2156@myrica>
- <20200228144844.GQ31668@ziepe.ca>
- <20200228150427.GF2156@myrica>
- <20200228151339.GS31668@ziepe.ca>
- <20200306095614.GA50020@myrica>
- <20200306130919.GJ31668@ziepe.ca>
- <20200316154659.GA18704@infradead.org>
+        id S1726761AbgCQWDh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 Mar 2020 18:03:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59504 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726476AbgCQWDh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 17 Mar 2020 18:03:37 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BC4B20714;
+        Tue, 17 Mar 2020 22:03:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584482616;
+        bh=NRUE2ckhs8n5Ozlq9QGah87GvPHMhCBA9ESXYy5Zdtg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=1QGfUU91mkGNhqaAE5qkukrE5YGD0RThABDfnFSsg6yyPBnpZ/OoVSS8JJFuWo23r
+         ThYXwUFPgcoopP7DR1QbWF1dlJInVWRqKWlMr64DZHN0CZJTsg5h3FzHB7jeKPHdn0
+         O36i7OCDqShLa3H4tFGVcqvDcEDogrn3BnfyYFBg=
+Date:   Tue, 17 Mar 2020 17:03:34 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Aman Sharma <amanharitsh123@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Mans Rullgard <mans@mansr.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH 4/5] pci: handled return value of platform_get_irq
+ correctly
+Message-ID: <20200317220334.GA230141@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200316154659.GA18704@infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200313215642.GA202015@google.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 08:46:59AM -0700, Christoph Hellwig wrote:
-> On Fri, Mar 06, 2020 at 09:09:19AM -0400, Jason Gunthorpe wrote:
-> > This is why release must do invalidate all - but it doesn't need to do
-> > any more - as no SPTE can be established without a mmget() - and
-> > mmget() is no longer possible past release.
+On Fri, Mar 13, 2020 at 04:56:42PM -0500, Bjorn Helgaas wrote:
+> On Fri, Mar 13, 2020 at 10:05:58PM +0100, Thomas Gleixner wrote:
+> > Bjorn Helgaas <helgaas@kernel.org> writes:
+> > > On Thu, Mar 12, 2020 at 10:53:06AM +0100, Marc Gonzalez wrote:
+> > >> Last time around, my understanding was that, going forward,
+> > >> the best solution was:
+> > >> 
+> > >> 	virq = platform_get_irq(...)
+> > >> 	if (virq <= 0)
+> > >> 		return virq ? : -ENODEV;
+> > >> 
+> > >> i.e. map 0 to -ENODEV, pass other errors as-is, remove the dev_err
+> > >> 
+> > >> @Bjorn/Lorenzo did you have a change of heart?
+> > >
+> > > Yes.  In 10006651 (Oct 20, 2017), I thought:
+> > >
+> > >   irq = platform_get_irq(pdev, 0);
+> > >   if (irq <= 0)
+> > >     return -ENODEV;
+> > >
+> > > was fine.  In 11066455 (Aug 7, 2019), I said I thought I was wrong and
+> > > that:
+> > >
+> > >   platform_get_irq() is a generic interface and we have to be able to
+> > >   interpret return values consistently.  The overwhelming consensus
+> > >   among platform_get_irq() callers is to treat "irq < 0" as an error,
+> > >   and I think we should follow suit.
+> > >   ...
+> > >   I think the best pattern is:
+> > >
+> > >     irq = platform_get_irq(pdev, i);
+> > >     if (irq < 0)
+> > >       return irq;
+> > 
+> > Careful. 0 is not a valid interrupt.
 > 
-> Maybe we should rename the release method to invalidate_all?
+> Should callers of platform_get_irq() check for a 0 return value?
+> About 900 of them do not.
+> 
+> Or should platform_get_irq() return a negative error instead of 0?
+> If 0 is not a valid interrupt, I think it would be easier to use the
+> interface if we made it so platform_get_irq() could never return 0,
+> which I think would also fit the interface documentation better:
+> 
+>  * Return: IRQ number on success, negative error number on failure.
 
-It is a better name. The function it must also fence future access if
-the mirror is not using mmget(), and stop using the pgd/etc pointer if
-the page tables are accessed directly.
+Trying again -- I'm not quite catching your meaning, Thomas.
 
-Jason
+If platform_get_irq*() can return 0, but 0 is not a valid IRQ, I think
+it's sort of complicated to parse that return value.  Drivers that
+require an IRQ would do this:
+
+  irq = platform_get_irq(pdev, i);
+  if (irq < 0)
+    return irq;
+  if (irq == 0)
+    return -EINVAL;         # error since driver requires IRQ
+  return devm_request_irq(dev, irq, ...);
+
+Drivers that can either use an IRQ or do polling would do this:
+
+  irq = platform_get_irq(pdev, i);
+  if (irq <= 0)
+    return setup_polling();
+  return devm_request_irq(dev, irq, ...);
+
+I think those are sort of ungainly, especially the first.  If we made
+it so those functions never returned 0, drivers that need an IRQ could
+do this:
+
+  irq = platform_get_irq(pdev, i);
+  if (irq < 0)
+    return irq;
+  return devm_request_irq(dev, irq, ...);
+
+and drivers that support polling could do this:
+
+  irq = platform_get_irq(pdev, i);
+  if (irq < 0)
+    return setup_polling();
+  return devm_request_irq(dev, irq, ...);
+
+That seems a lot easier to get correct, and it matches what most of
+the callers already do.
