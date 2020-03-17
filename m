@@ -2,106 +2,73 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2905618776C
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Mar 2020 02:25:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F1C231878E6
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Mar 2020 05:57:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733188AbgCQBZR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 Mar 2020 21:25:17 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:55060 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733017AbgCQBZQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 16 Mar 2020 21:25:16 -0400
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1jE0yo-0008I8-Hx; Mon, 16 Mar 2020 19:25:15 -0600
-To:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-References: <20200313183608.2646-1-logang@deltatee.com>
- <87mu8fdck6.fsf@nanos.tec.linutronix.de>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <38781f88-32df-e89a-7d00-fd2fcc097497@deltatee.com>
-Date:   Mon, 16 Mar 2020 19:25:14 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1725928AbgCQE5w (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 Mar 2020 00:57:52 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:35034 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725836AbgCQE5w (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Mar 2020 00:57:52 -0400
+Received: by mail-ed1-f65.google.com with SMTP id a20so24843851edj.2;
+        Mon, 16 Mar 2020 21:57:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=E9Mssj/6IzuQ2UbwiJqBfsEr29/GAc3gWyl0M/hxDuU=;
+        b=HLpm8bkWcK4sc60kVlM/fecLDvKzJy5BHCY1ojSFdZkG0o/kzsxQ3teAaJTf9ytgf3
+         zvR9cCe4CNeGdrzmnk8WBwZcNRVW6FEqEUTmP7zLJTtigNKWWU0R3WAR33jd5vX3aC7k
+         K+j+veA1bQTd/AC5mvYXvgbJOhOmxQVEOUtje/tHz+P3V1XYxjAPgM5G60ByL5+ylL0e
+         cAEVpGw3fnTxHgTsee1dBixEDKTDmsMwJeD8JtJR9vJhwKsZvLWq/iP+2vBE+doNRhs2
+         zC2JTZFAz+f8xe28TwzBcrETYPY05Ahd51nO0MQDx65MuMm20OADk7FI+dTYZ+7okT8O
+         Q8jQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=E9Mssj/6IzuQ2UbwiJqBfsEr29/GAc3gWyl0M/hxDuU=;
+        b=HuASX5mvMxRW7I/pJrDzKRph0OJcekUgkUfnTY+xBNSiGx5/cXnX7Rb8sUXT3hrrnT
+         0Ewr4oHZN+ITCh5YYa9aQ7ZbHxGwBIy4qj1BkSJjqvORhCnuXVNCB+sE7kWH2VnTDok9
+         eHZRJ9yClqZh5SnqgJLT2+Yf0zGLgNGqFxclwaml6r9jK8WVZ7zzSvlj0j/AQg7Ffu3w
+         CAqkjyImNU6kilG4bEBVloGAAsxs2baajSbnJvOLyCwErZf7vtjKlC+3K4/c4L4Xj1jq
+         hUSnPoAbvQ1ETba6o7QiEPvN9WCY26cOidxd4JCYuDXF0y4O2+1ZJ6oO8+G7D9N39e7u
+         vyrg==
+X-Gm-Message-State: ANhLgQ2u063N20ZkYXfSVU5mTiBX8xX5O5zl3QddVrr4pnkd2o9iCymt
+        H6jMVMD7VsZtk82aPUrarSrbuAuC2jhJhb+3I5OAJosi
+X-Google-Smtp-Source: ADFU+vuvrOLJlkhXKEHhDzOZfcFDQo+gE1dCv6CmYHrIRf3LQxPlEZ7gz5GxgLY0K9/rHh5MHvXxJ5zUaAZ55L1wpmM=
+X-Received: by 2002:a50:c05c:: with SMTP id u28mr3308259edd.193.1584421069721;
+ Mon, 16 Mar 2020 21:57:49 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <87mu8fdck6.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: bigeasy@linutronix.de, bhelgaas@google.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, tglx@linutronix.de
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        GREYLIST_ISWHITE,SURBL_BLOCKED,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.2
-Subject: Re: [PATCH] PCI/switchtec: Fix init_completion race condition with
- poll_wait()
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+References: <20200314194745.GB12510@mail.rc.ru>
+In-Reply-To: <20200314194745.GB12510@mail.rc.ru>
+From:   Matt Turner <mattst88@gmail.com>
+Date:   Mon, 16 Mar 2020 21:57:37 -0700
+Message-ID: <CAEdQ38Gz+LXMNDnGvxM6t+6YcdXryLN781x=uTZvJ_huF8Gv6w@mail.gmail.com>
+Subject: Re: [PATCH] alpha: fix nautilus PCI setup
+To:     Ivan Kokshaysky <ink@jurassic.park.msu.ru>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Yinghai Lu <yinghai@kernel.org>, linux-pci@vger.kernel.org,
+        linux-alpha <linux-alpha@vger.kernel.org>,
+        Richard Henderson <rth@twiddle.net>,
+        Jay Estabrook <jay.estabrook@gmail.com>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On 2020-03-16 6:56 p.m., Thomas Gleixner wrote:
-> Logan,
-> 
-> Logan Gunthorpe <logang@deltatee.com> writes:
-> 
->> The call to init_completion() in mrpc_queue_cmd() can theoretically
->> race with the call to poll_wait() in switchtec_dev_poll().
->>
->>   poll()			write()
->>     switchtec_dev_poll()   	  switchtec_dev_write()
->>       poll_wait(&s->comp.wait);      mrpc_queue_cmd()
->> 			               init_completion(&s->comp)
->> 				         init_waitqueue_head(&s->comp.wait)
-> 
-> just a nitpick. As you took the liberty to copy the description of the
-> race, which was btw. disovered by me, verbatim from a changelog written
-> by someone else w/o providing the courtesy of linking to that original
-> analysis, allow me the liberty to add the missing link:
+On Sat, Mar 14, 2020 at 12:47 PM Ivan Kokshaysky
+<ink@jurassic.park.msu.ru> wrote:
 >
-> Link: https://lore.kernel.org/lkml/20200313174701.148376-4-bigeasy@linutronix.de
+> Example (hopefully reasonable) of the new "size_windows" flag usage.
+>
+> Fixes accidental breakage caused by commit f75b99d5a77d (PCI: Enforce
+> bus address limits in resource allocation),
 
-Well, I just copied the call chain. I had no way to know you were the
-one who discovered the bug given the way it was presented to me. And the
-original patch didn't include much in the way of analysis of the bug,
-just "It's Racy".
+Works great. Thanks Ivan!
 
-I didn't deliberately omit the link, it just never occurred to me to add
-it. In retrospect, I should have included it, sorry about that.
-
->> To my knowledge, no one has hit this bug, but we should fix it for
->> correctness.
-> 
-> s/,but we should fix/.Fix/ ?
-
-Yes, that's an improvement.
-
->> Fix this by using reinit_completion() instead of init_completion() in
->> mrpc_queue_cmd().
->>
->> Fixes: 080b47def5e5 ("MicroSemi Switchtec management interface driver")
->> Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
->> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-> 
-> Acked-by: Thomas Gleixner <tglx@linutronix.de>
-
-Thanks.
-
-> @Bjorn: Can you please hold off on this for a few days until we sorted
->         out the remaining issues to avoid potential merge conflicts
->         vs. the completion series?
-
-I'd suggest simply rebasing the completion patch on this patch, or a
-patch like it. Then we'll have the proper bug fix commit and there won't
-be a conflict.
-
-Logan
+Tested-by: Matt Turner <mattst88@gmail.com>
