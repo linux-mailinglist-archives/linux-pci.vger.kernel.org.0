@@ -2,54 +2,44 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DDA9D1887B7
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Mar 2020 15:42:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 738FC1887F7
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Mar 2020 15:45:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726494AbgCQOmD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 Mar 2020 10:42:03 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:60842 "EHLO
+        id S1727073AbgCQOp3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 Mar 2020 10:45:29 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:60888 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726112AbgCQOmD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Mar 2020 10:42:03 -0400
+        with ESMTP id S1726826AbgCQOnp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Mar 2020 10:43:45 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
         :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=14Ep8nPwTW69hdxdwx0Pwg1JDQYGgrnW8Ny5LzdsxBc=; b=HOs+JxpvYBCkgDmwv+5iG+dOi4
-        8EJ8KcjNhyQUxEFHwyqfQ7/MUEcP3PL8bm3jCRRxNA3jnyUK8zGVA6d7u3nbS6X1lIb4qAxgIohmR
-        IpH+02eTW/URyAYOc3lZr/L/EEriXjK1Bgj0Cvtf5xr9CmR/DBT7x/0bayWeT42MWiUCJ8Zuhhw7V
-        mmCYZb2aUys94kBHp9EzpzU3z6fwyMHPt8peCI6C0AGYAvjcw3f0HCooaahiDnSlEEfTw+DKzUMt4
-        DbOfHff0NOlt2wZaRQaI52uQ0XDx4guYB1lHTSewuQ0ORR7hQHeSlmp8xnQN2dOijEfQ+rCJknpOZ
-        LnEhlS4w==;
+        bh=S6NdTWibk79+YugWFTSLV3fGTXeAxQI8N46whgDUO3c=; b=Cni3IHCz/BEbBcs7bSSGQn3Guj
+        3SLR4Fwdl6HMHn2vmXaKFOSKBvatq/MpRvt1QNhS9UXk5/ACO4wAxVd8QR9djzoiAZNT55VjXD6gR
+        NfGS/AAR0rk1iHGWGiZH6hdWuDsZoeU56NdVzk1mH2lM24QqEL+K8nVLsLZKgnB2eUPVZPzK0mUHS
+        qN05y0Zd6LZE8qZseYi6Nr66OBtIWPAQwiMl4nPu/THHbRhqhNoI2L3Sc/PBYQ2+nh1NO7rvkNgEE
+        QJ15s8ln7aDj+EONSM30Y8rlTpUC/D+e88IyRMAIawn8sMMmOT/vESepCT8HjoxDzM38eEFPuv+Bk
+        JubQnSwA==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jEDPv-00069M-9x; Tue, 17 Mar 2020 14:42:03 +0000
-Date:   Tue, 17 Mar 2020 07:42:03 -0700
+        id 1jEDRY-0006FO-0X; Tue, 17 Mar 2020 14:43:44 +0000
+Date:   Tue, 17 Mar 2020 07:43:43 -0700
 From:   Christoph Hellwig <hch@infradead.org>
 To:     sathyanarayanan.kuppuswamy@linux.intel.com
 Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org, ashok.raj@intel.com
-Subject: Re: [PATCH v17 06/12] Documentation: PCI: Remove reset_link
- references
-Message-ID: <20200317144203.GE23471@infradead.org>
+Subject: Re: [PATCH v17 10/12] PCI/DPC: Export DPC error recovery functions
+Message-ID: <20200317144343.GF23471@infradead.org>
 References: <cover.1583286655.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <a46938d227f6a11c010943800450a10aac39b7d3.1583286655.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <ac8816d4d41d0894720660f9b51dbeac0842869d.1583286655.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a46938d227f6a11c010943800450a10aac39b7d3.1583286655.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <ac8816d4d41d0894720660f9b51dbeac0842869d.1583286655.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 06:36:29PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> 
-> After pcie_do_recovery() refactor, instead of reset_link
-> member in struct pcie_port_service_driver, we use reset_cb
-> callback parameter in pcie_do_recovery() function to pass
-> the service driver specific reset_link function. So modify
-> the Documentation to reflect the latest changes.
-
-This should be folded into the patch removing the method.
+Nothing is actually exported here (fortunately!).
