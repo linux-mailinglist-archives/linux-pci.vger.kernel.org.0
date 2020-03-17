@@ -2,61 +2,50 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3562F188316
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Mar 2020 13:09:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 15DAF18877F
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Mar 2020 15:28:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbgCQMJo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 Mar 2020 08:09:44 -0400
-Received: from sonic308-2.consmr.mail.ne1.yahoo.com ([66.163.187.121]:35601
-        "EHLO sonic308-2.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726918AbgCQMJo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Mar 2020 08:09:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1584446983; bh=kcevCRoll2+Bsa3FDERpIV72LVcB1A4YV1b5N2AWYBk=; h=Date:From:Reply-To:Subject:References:From:Subject; b=Y5EVuw/rLgZWRMyXdYT50zJetJc6qxTaFtkDUd61yC67972Pv8BafoOYY5PpfFzHkhB66Bg4rtcMSXoq8A7BL5IIgjK9SJC8mxZMQRlRszKv6bj9MOQPdyR95GfO4fmEMbXi94ih/l1RXHAKAecbkLgb7E2jzk98FO+oKrElObmAlhaNIBdqAwP4X5M/wIs5btVaU9rpX2/LYk0A5ti2YrPZfCG30sXdz3iJZlGWvqkRf/8ofp7KEmaugfrBD9+fheWe5dd8wMA0fEsTW3+x/Z0bOHPIrt9VT3GhnXsUoqgqwXBjD6HuTC7XSQAlw6k4FMj1kCDmySakb8tto9ElPw==
-X-YMail-OSG: G42Kh.gVM1knbTm_ea7wDoC40E6mWcHxSA9L_Bt_wnpBVmL882rMq9bJ2rg9qeQ
- hGJsKP6ixdHr58L4tqUtrrFYe4Ow4blICkwYwQX_Ue4k_yt6aioGE8t4rs2GJ09La4RlaQeUVAP5
- I1B1JU8Bxt1YqGQu8ncZ.Xd6id0PE4.SYHek8aBYxFevAgCoWKBWgIhrsG7iVN_ZshTI_sI1UOl8
- S.HbmHQFVHj7iYn9OiFSZfkbtsmJ80KcIxr.5wpySaW5p09F_pPeb5LdneUAKtwPvavTm1o_9O18
- isTXNqESksVG_I_Zn8QONuM7sPvR.nvbJgUv_0wykTVYMOOAPG1pRXNI5bmFKc2ouhHWS85iNubW
- qzLmd8XGPCS1K.D6Cm.8LNtrbQLw6N_6d2LLN7Mn0kJQuMiUc6bm2zZG8_mUpU6Enw.JqWMPbxn1
- _kx5M8vf8Ujp9B3sbTuXIxYiieWVRHXtf.cudBqDMsrNFMxouW4hvbOZkUaP9tlQbDxSq8BS01mH
- dGH7EPFC071LXSNqiG3msjeprMWww1FIEdtvxguemtkFWwqNBkhi6mynLkUJ3tXL7eos3VVBC5GC
- 2T.gNA2mB3d5JOWMyRf5vKOGieqwKRURZJrYFdXZfLgBIi.ctJPp8PTNZWbVJZPvFLspXzbiYOAM
- _tjWurYsHFh.nj4awKT22f7RY6I2QetZp_gEug.5EG0eF05mw6ALEmZkyGEbYDwAWHIV_HrUkk4Q
- 7x0FYgxRLUV7A7Pf9.j.Qv8eCr3WOfcH6fzugui36LKhqED0SiEJHpkDtre.e9ZMd90ikBoDt9FV
- B8j35JQHGGO5vYLnQXpPleh3MsSF7ELpoT_j_6IWp.wX.yUiwMa4ajOOmQhWItdMC0BPjiLrYMay
- YFE.jtyXFSXWlJHCNNo84.nVn25Ek5Y1AZ9xnRFVUUhqwa0BWgSENaDaql4kxOeQx9L8OdOCmFU6
- FZjaFneQdZDPnY_zzvHSWcM3OAvmc7ZM0iaVkqk.GQrka8Twl1K91Us9UJ0frPlmKBcEMLKCg2t2
- 2OArVmvWH9WkilexAh2vN09fZtIZHEDSNe5mJNyK4gr6CDjUyxCGKWLXYOn4Xr09h0q75kY8B6U_
- BH75yA0JaBM80xTEJU2l8j9lFLEQA6TOIRHuG5weoYFzlsA6AqHUnYpnLdFw8FsRq1Jt4RP0rXfC
- iMpWfmp1bpcFbGJtrrD7.7T2.yzzZmwPeGg4eL5YmF.wfuAAu9L.8uYv_8B3.WCWSQZRc.m_lK_g
- 3sOnlkGM78WG5tUzqKtrD2IGaT1bFCAMoLFQh3vemnklC4pBz7_MMntFoMmjjSpxlS1bTG3a_Kxs
- 6nu1WXFPK4e0mTIR8w1L1eRXn5lg-
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic308.consmr.mail.ne1.yahoo.com with HTTP; Tue, 17 Mar 2020 12:09:43 +0000
-Date:   Tue, 17 Mar 2020 12:07:42 +0000 (UTC)
-From:   Stephen Li <stenn7@gabg.net>
-Reply-To: stephli947701@gmail.com
-Message-ID: <608201144.1808131.1584446862432@mail.yahoo.com>
-Subject: REF
+        id S1726250AbgCQO2i (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 Mar 2020 10:28:38 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:57432 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726248AbgCQO2h (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Mar 2020 10:28:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=QWkBVq6F22sOftkJaM+T/BE5V49T+3WQgdRW7zJx9Ms=; b=P0BDRTxf8KOX4lPiB7yA8iuC7S
+        dahvW1h3BAcJ8DOXN2Y7fPABl4P0qnkxWEhxcJTaoGfpOsvTQKuHWh8H8vZVVgMlsDOpyDoQQ4X20
+        riVC6huDzLd4vWASc+JeNbddpyi7F97AfkvqC9y/dEBohnYz87iF1LK/l4RVaRIpfCB2rpAbroVDW
+        a5HaMfCiCYaG1bCgXcDA1MCmIBAUGXyhXAXwoId2o0EsC+rk3H5cskvgqx3Pqsbd0WwqcD74DJqQ3
+        FVGdPgI2bE8YsS9qJGWPXD9cwDmd/QZs0PWWX6Nv9uZk3Bjamy3/42N0Cso8UEdyQ6Raj8xhYUpUZ
+        Nej28Tig==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jEDCt-00007V-V7; Tue, 17 Mar 2020 14:28:35 +0000
+Date:   Tue, 17 Mar 2020 07:28:35 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Mikel Rychliski <mikel@mikelr.com>
+Cc:     amd-gfx@lists.freedesktop.org, linux-pci@vger.kernel.org,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Matthew Garrett <matthewgarrett@google.com>
+Subject: Re: [PATCH 2/4] PCI: Use ioremap, not phys_to_virt for platform rom
+Message-ID: <20200317142835.GA23471@infradead.org>
+References: <20200303033457.12180-1-mikel@mikelr.com>
+ <20200303033457.12180-3-mikel@mikelr.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-References: <608201144.1808131.1584446862432.ref@mail.yahoo.com>
-X-Mailer: WebService/1.1.15342 YMailNodin Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200303033457.12180-3-mikel@mikelr.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-Greetings,
-I was searching through a local business directory when I found your
-profile. I am Soliciting On-Behalf of my private client who is
-interested in having a serious business investment in your country. If
-you have a valid business, investment or project he can invest
-back to me for more details. Your swift response is highly needed.
-Sincerely
-Stephen Li
-Please response back to me with is my private email below for more details
-stephli947701@gmail.com
+Any reason drivers can't just use pci_map_rom insteadἅ which already
+does the right thing?
