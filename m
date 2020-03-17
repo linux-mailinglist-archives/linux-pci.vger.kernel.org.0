@@ -2,218 +2,347 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D8000187DC7
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Mar 2020 11:05:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 88EA0187DEE
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Mar 2020 11:14:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725933AbgCQKFT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 Mar 2020 06:05:19 -0400
-Received: from mail-eopbgr60042.outbound.protection.outlook.com ([40.107.6.42]:53312
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        id S1725730AbgCQKOt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 Mar 2020 06:14:49 -0400
+Received: from mail-eopbgr1410123.outbound.protection.outlook.com ([40.107.141.123]:20800
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725916AbgCQKFT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 17 Mar 2020 06:05:19 -0400
+        id S1725906AbgCQKOs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 17 Mar 2020 06:14:48 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MBupvSURk+oVB346pPRtaRcrgHgzFbLxT4vRgjGQsqjSXS0/Uv8Dqwe3zDqCW/Zylwgi4hlPynAADKecTac/TE8ogiQJR/FuM1nvnSf3SkoOumFEFjpue3aGhNRWSYiF/n/ekmSUmsq0LxJXSi2lcHXEkQXLCTl6bSz/k65SKPqYDuFTw+D+LV/1egCFO22hwWV0SkQKqqz7SR1U26yIRCxRJqrzxLYYZgySRlR0jRYKBDJHyT2d1hWkNtBmNyYnuwxELOXBmAvikNkLGNC9YeRhfwbDi1b4nqCmH02nPMozGxjD9WW/k0lK40XixVGWoLnVjv6hnxEsYHhcM+0nqA==
+ b=LMny3N0+KVqDHu+pEhVH+k5i/aAlrpB/09j6XbdlGomOcIL8qVqRZeadSjRmrIKA2kHoJCl2YdwHJrpYwzOvqm/sewnAdcxY+ikDNAEhAxsxycvTYbQZ6+PvVFsqqDGhg5xdfPzXq6l0eWCRoyMVBFg4oBq0S7YQaKqh74om5dFf8SGr8fwxeyo82G13FenDjftyV2Bb7KMHT5sppbXScWB8zfoyB/wHJ5qefR7MR39s/UHGUT0TWVek3Jpo5IybrfR8VDw+04EOwIzlpNC2Sqv7qxiDW21RLAEzcDV5KsjZ6lm71YredQXBvMMhF3GKEARlmxu1/N9BAyIydsy1kQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FkOsSbUppGJpqlHbRCW7sfvXio4DtW12vni8K8mjGbM=;
- b=lIiVGIPyEQHoxHc3iWFaFYn0Iiy+OTPXyqQDZzh0Hbsx22TnEuJfVAP5VtKzhRichwu6iOmBKwLqMiI51+ZovvhSkGZIadL01D9Qqkz8/QqzrdDQ6iXfyrCAovW76n8tnAb0y3S3x6AnodLrRba/NDA9d8SPKf9NonUUY7yZkSBqo83MKToxgjfZKjwZGWzOzzQkwp2G6auGkHK5V9LuQv3/+Gj5fBBccFHIuAK03bTmZJql/fkB4I/lQUBYzWzJR6F4Xqvi0KXisXD8GUKvBg+YnX0ihCddT/l0/0BrkYRP5mL6IidiBPUeWMOQktmrgTfSnjwUVqR1rWQa0lOVNw==
+ bh=2XmtuWXdmw92wQOC5V0vBeshHzT80BFMkZUKPPttbE0=;
+ b=Wj1hccD9vbuSsxeuCQ4XLGdUD421JHOuB+aN6ZIw6VtUv5EUO0Xb7BIJOGQSsN12gjbK1+cE7tfduunVP5Tcx51lfkdavUyHGwWgIqvpoHHnHhLW2D+Pqm+UdOL4nBjc7oPLG9IIvFUppFoGvLmaMRFYxwem4gxQZaRiWFvZJ1isoAPNAOtSaVB8Sh0fVCaK5o70eo0/IjlTO7ljxy3/RYrGi7objmXgTbV0q0ii75qtkC+cMHQjdeSVhtabEELiXpOAo0MWCN7DwH3Ap4h8j26D8+rdzo3+8L5MTihlEPIQLWoMLm6P+DknD4GyfdKzw8wrIMOIgZ/cHZQMkd6MTw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
+ header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FkOsSbUppGJpqlHbRCW7sfvXio4DtW12vni8K8mjGbM=;
- b=WBPfB7lEPNwyv6l6rOaM21hY+ZsZlox6Ek/a4LVX/lfL19lCXQ2zy7dmZlJsK2+8rcR4rzF519MBSCKDpSiJOVRXnPP1SzocvEy/Ed+86LBo0ugb+8H9C3rbTm15xHBvLUafCp75nhWqtZfGAcf59smkriz+unzZnZcmAwA3m4E=
-Received: from DB8PR04MB6747.eurprd04.prod.outlook.com (20.179.250.159) by
- DB8PR04MB6363.eurprd04.prod.outlook.com (10.255.170.14) with Microsoft SMTP
+ bh=2XmtuWXdmw92wQOC5V0vBeshHzT80BFMkZUKPPttbE0=;
+ b=l4ZfgNHpcb2YHFLTb79BoA801cIn2dbSg1FsJEWTROxIFT6S0CDVJkg8ZQBvquPJZW86bX1K0kkZl7V6kVj3n50GmA440MgYcbkMwqvz3911Ft7bgW65SnwJzwFhBVmFvukqfy7Mhk7BoSVS+zwJ6ImWfiwEnVhGY3H9SHg84Zw=
+Received: from OSBPR01MB3590.jpnprd01.prod.outlook.com (20.178.97.80) by
+ OSBPR01MB2454.jpnprd01.prod.outlook.com (52.134.253.75) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2814.21; Tue, 17 Mar 2020 10:05:14 +0000
-Received: from DB8PR04MB6747.eurprd04.prod.outlook.com
- ([fe80::4528:6120:94a4:ce1e]) by DB8PR04MB6747.eurprd04.prod.outlook.com
- ([fe80::4528:6120:94a4:ce1e%5]) with mapi id 15.20.2814.016; Tue, 17 Mar 2020
- 10:05:14 +0000
-From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Bjorn Helgaas <helgaas@kernel.org>
-CC:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
-Subject: RE: linux-next: Tree for Mar 12 (pci/controller/mobiveil/)
-Thread-Topic: linux-next: Tree for Mar 12 (pci/controller/mobiveil/)
-Thread-Index: AQHV+IDZ0AdozfzAfUCC22i6ufIb7KhFWtOAgAbdJrCAAAhtgIAAU7Sg
-Date:   Tue, 17 Mar 2020 10:05:14 +0000
-Message-ID: <DB8PR04MB6747E855D3349173CE2AE9F684F60@DB8PR04MB6747.eurprd04.prod.outlook.com>
-References: <4c0db5d0-1a61-cb80-2bcb-034f5bcd1597@infradead.org>
- <20200312193917.GA160316@google.com>
- <DB8PR04MB6747C1032BF126CFFB5720E084F60@DB8PR04MB6747.eurprd04.prod.outlook.com>
- <e53be1bc-e84d-433a-e9a7-ea442c93f2cf@infradead.org>
-In-Reply-To: <e53be1bc-e84d-433a-e9a7-ea442c93f2cf@infradead.org>
-Accept-Language: zh-CN, en-US
+ 15.20.2814.22; Tue, 17 Mar 2020 10:14:40 +0000
+Received: from OSBPR01MB3590.jpnprd01.prod.outlook.com
+ ([fe80::490:aa83:2d09:3a0b]) by OSBPR01MB3590.jpnprd01.prod.outlook.com
+ ([fe80::490:aa83:2d09:3a0b%5]) with mapi id 15.20.2814.021; Tue, 17 Mar 2020
+ 10:14:40 +0000
+From:   Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>
+CC:     Andrew Murray <andrew.murray@arm.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>
+Subject: RE: [PATCH v5 6/7] PCI: rcar: Add support for rcar PCIe controller in
+ endpoint mode
+Thread-Topic: [PATCH v5 6/7] PCI: rcar: Add support for rcar PCIe controller
+ in endpoint mode
+Thread-Index: AQHV7k2o26WkjnS8fk2KjcbLYSuAj6hMqNeAgAABMfA=
+Date:   Tue, 17 Mar 2020 10:14:39 +0000
+Message-ID: <OSBPR01MB3590B241F5BBC991DE6ABED2AAF60@OSBPR01MB3590.jpnprd01.prod.outlook.com>
+References: <20200228154122.14164-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200228154122.14164-7-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <TYAPR01MB4544EAC877ADD0664CB93FF5D8F60@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+In-Reply-To: <TYAPR01MB4544EAC877ADD0664CB93FF5D8F60@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=zhiqiang.hou@nxp.com; 
-x-originating-ip: [92.121.68.129]
+ smtp.mailfrom=prabhakar.mahadev-lad.rj@bp.renesas.com; 
+x-originating-ip: [193.141.220.21]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: ae121392-3c90-40b7-2b41-08d7ca5ab023
-x-ms-traffictypediagnostic: DB8PR04MB6363:
-x-microsoft-antispam-prvs: <DB8PR04MB6363E70C4C4C347EAC4D92F884F60@DB8PR04MB6363.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-office365-filtering-correlation-id: 17704d6a-1d79-4b15-b3e0-08d7ca5c012f
+x-ms-traffictypediagnostic: OSBPR01MB2454:|OSBPR01MB2454:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <OSBPR01MB2454E859201518F88A24A03AAAF60@OSBPR01MB2454.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
 x-forefront-prvs: 0345CFD558
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(376002)(39860400002)(346002)(396003)(136003)(199004)(478600001)(71200400001)(2906002)(4326008)(81166006)(81156014)(55016002)(8676002)(8936002)(110136005)(7696005)(316002)(9686003)(54906003)(6506007)(53546011)(33656002)(66446008)(64756008)(66556008)(66476007)(76116006)(186003)(66946007)(86362001)(52536014)(5660300002)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB6363;H:DB8PR04MB6747.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(396003)(376002)(39860400002)(346002)(366004)(199004)(316002)(110136005)(54906003)(2906002)(76116006)(4326008)(5660300002)(52536014)(33656002)(7416002)(66946007)(66476007)(64756008)(66446008)(8676002)(86362001)(7696005)(26005)(66556008)(186003)(71200400001)(8936002)(53546011)(81156014)(6506007)(478600001)(9686003)(81166006)(55016002);DIR:OUT;SFP:1102;SCL:1;SRVR:OSBPR01MB2454;H:OSBPR01MB3590.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;
+received-spf: None (protection.outlook.com: bp.renesas.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ixxfDSlwrUCdnBiSo9QsBieOo5sgzlsLX4WgAeXavrOTUMkYh0X8tgAO7quA/FAdQgMPqCo2H1c11HWq3LDV2xYAOxWJMdNbds0YIHMjoMcMg4/WKLZ7ZemUVHzGr4hKF137DGIFJ0dHfHu4EjNXElGkzqGeiMG2e4CNOfaJvsce06trPBq3EGSUx9n2ZUgEpdOH21RPCgJYIC8K91HHwcrxvXFXRHnDHBk1j0qfHs/Ras0QuJ2kgy6a1Ou0+PJ04lv0YFEYdk1Yi0B8/DKpEWC3bDAwuyKrok5SCC5rCNk4Br3lKIKHc6RcqAC3kKxKbWz+wiPhzSMs6g07eKsvGBpatrsSbQtzhOWzUBYWbUkCEik8IVPpPJS0XqJyIjstsj2qv4CBsVViNPSyihqd0+dT8GI12QvUg7P3oJ3b3JkhxOmKSnq0EaNABGMd9ed6
-x-ms-exchange-antispam-messagedata: lKJS51fmLZ0O6sQJXWREGOhcw65cmzyy1b2Ub3rMPegS37nnHCkG0m9Cj4Lx2jbpFwd6PXIl1Xdf9HuqE3J8Ex0Mu5Cwfm4+dxhMs/Llt4zzObndiOG1cbtIre15SOxo1sITjcBEuvR74RyQ/eJdTw==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+x-microsoft-antispam-message-info: KvUeP7XuG7nYNxUow8LB5GXbXo9FDhsBKRNQcwwPGK45t3GPvkFyKMFcsn2VPRmxtIeRue2lSo8jxqS96jEOTWeQUCym5/L3E8uNptUAT2RBPkGCJpgiQKuK0qtonbXJ+4gj+57fWhCVL1rk9LqFN985t+wFWdxqPf7gSAVtzMe6PYLFl3f03/+0GYUc3ZVBHl1BkW9p/+7Sp3NtBQnkS5da1HnsichhsEIhFfkT0FVtHc1R3XSWEl/YhlDTB52U3qI4/WnKeeRyrRs5vgTy5xvA9fcJK7eb0bGpO6WapxTfNknb9E5PhmdbPUjxYX8S/jFkgyiU10UNvGx2StQgSqUSWzx8085sFEmhY5gGVEqTnMuoqmcC4BOfjVt/LFL0a2jQBB7V7W2FJFzk0Ay8v4RjkwPEdJGccbCJxCxhosaAEK8RivSJoR3tV47BSLOo
+x-ms-exchange-antispam-messagedata: 3PVgGe28oOVoyc1aWEX4gERuJpyO85sfo4L4uFkvZbwKYCaXIRdrGaYsDE4gnjst6yEa198kgCQW6Ju5mCHal4aoPd0+xTUaU+xaVvKgmvTSmqrbvPpUnNzSAQLTNf3NrCg4h/HGK25QO4ZpXoWWGQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ae121392-3c90-40b7-2b41-08d7ca5ab023
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Mar 2020 10:05:14.5557
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 17704d6a-1d79-4b15-b3e0-08d7ca5c012f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Mar 2020 10:14:39.9771
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 9if1ooHOV7Yn9bxoEB/DM9Y6GTgejczwwCVxdL2a9e8d2kzco8xnRFe4eQJuEWb3jveivAKLarGDJGqBCqQGbg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6363
+X-MS-Exchange-CrossTenant-userprincipalname: j3vx+jtYPdzxrQAricawLILMFkEfQoOp0Fx/854yX8l6DqluH7KaYI83w1bwH9c6/sApaZvGB8RIL8YbsohMnsHxS0r05Yny77jZ7c7SnDRp97qkaGiNAKupYn5S5Vbu
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSBPR01MB2454
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-SGkgUmFuZHksDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUmFuZHkg
-RHVubGFwIDxyZHVubGFwQGluZnJhZGVhZC5vcmc+DQo+IFNlbnQ6IDIwMjDlubQz5pyIMTfml6Ug
-MTI6NTkNCj4gVG86IFoucS4gSG91IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT47IEJqb3JuIEhlbGdh
-YXMgPGhlbGdhYXNAa2VybmVsLm9yZz4NCj4gQ2M6IFN0ZXBoZW4gUm90aHdlbGwgPHNmckBjYW5i
-LmF1dWcub3JnLmF1PjsgTGludXggTmV4dCBNYWlsaW5nIExpc3QNCj4gPGxpbnV4LW5leHRAdmdl
-ci5rZXJuZWwub3JnPjsgTGludXggS2VybmVsIE1haWxpbmcgTGlzdA0KPiA8bGludXgta2VybmVs
-QHZnZXIua2VybmVsLm9yZz47IGxpbnV4LXBjaSA8bGludXgtcGNpQHZnZXIua2VybmVsLm9yZz47
-DQo+IEthcnRoaWtleWFuIE1pdHJhbiA8bS5rYXJ0aGlrZXlhbkBtb2JpdmVpbC5jby5pbj4NCj4g
-U3ViamVjdDogUmU6IGxpbnV4LW5leHQ6IFRyZWUgZm9yIE1hciAxMiAocGNpL2NvbnRyb2xsZXIv
-bW9iaXZlaWwvKQ0KPiANCj4gT24gMy8xNi8yMCA5OjMxIFBNLCBaLnEuIEhvdSB3cm90ZToNCj4g
-PiBIaSBSYW5keSBhbmQgQmpvcm4sDQo+ID4NCj4gPj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0t
-LS0NCj4gPj4gRnJvbTogQmpvcm4gSGVsZ2FhcyA8aGVsZ2Fhc0BrZXJuZWwub3JnPg0KPiA+PiBT
-ZW50OiAyMDIw5bm0M+aciDEz5pelIDM6MzkNCj4gPj4gVG86IFoucS4gSG91IDx6aGlxaWFuZy5o
-b3VAbnhwLmNvbT4NCj4gPj4gQ2M6IFJhbmR5IER1bmxhcCA8cmR1bmxhcEBpbmZyYWRlYWQub3Jn
-PjsgU3RlcGhlbiBSb3Rod2VsbA0KPiA+PiA8c2ZyQGNhbmIuYXV1Zy5vcmcuYXU+OyBMaW51eCBO
-ZXh0IE1haWxpbmcgTGlzdA0KPiA+PiA8bGludXgtbmV4dEB2Z2VyLmtlcm5lbC5vcmc+OyBMaW51
-eCBLZXJuZWwgTWFpbGluZyBMaXN0DQo+ID4+IDxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3Jn
-PjsgbGludXgtcGNpDQo+ID4+IDxsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnPjsgS2FydGhpa2V5
-YW4gTWl0cmFuDQo+ID4+IDxtLmthcnRoaWtleWFuQG1vYml2ZWlsLmNvLmluPg0KPiA+PiBTdWJq
-ZWN0OiBSZTogbGludXgtbmV4dDogVHJlZSBmb3IgTWFyIDEyIChwY2kvY29udHJvbGxlci9tb2Jp
-dmVpbC8pDQo+ID4+DQo+ID4+IE9uIFRodSwgTWFyIDEyLCAyMDIwIGF0IDA4OjEzOjUwQU0gLTA3
-MDAsIFJhbmR5IER1bmxhcCB3cm90ZToNCj4gPj4+IE9uIDMvMTIvMjAgMzowNCBBTSwgU3RlcGhl
-biBSb3Rod2VsbCB3cm90ZToNCj4gPj4+PiBIaSBhbGwsDQo+ID4+Pj4NCj4gPj4+PiBDaGFuZ2Vz
-IHNpbmNlIDIwMjAwMzExOg0KPiA+Pj4+DQo+ID4+Pg0KPiA+Pj4gb24gaTM4NjoNCj4gPj4+ICMg
-Q09ORklHX1BDSV9NU0kgaXMgbm90IHNldA0KPiA+Pj4NCj4gPj4+IFdBUk5JTkc6IHVubWV0IGRp
-cmVjdCBkZXBlbmRlbmNpZXMgZGV0ZWN0ZWQgZm9yDQo+IFBDSUVfTU9CSVZFSUxfSE9TVA0KPiA+
-Pj4gICBEZXBlbmRzIG9uIFtuXTogUENJIFs9eV0gJiYgUENJX01TSV9JUlFfRE9NQUlOIFs9bl0N
-Cj4gPj4+ICAgU2VsZWN0ZWQgYnkgW3ldOg0KPiA+Pj4gICAtIFBDSUVfTU9CSVZFSUxfUExBVCBb
-PXldICYmIFBDSSBbPXldICYmIChBUkNIX1pZTlFNUCB8fA0KPiA+PiBDT01QSUxFX1RFU1QgWz15
-XSkgJiYgT0YgWz15XQ0KPiA+Pg0KPiA+PiBUaGFua3MsIFJhbmR5Lg0KPiA+Pg0KPiA+PiBJJ20g
-bm90IHN1cmUgaWYgdGhpcyBpcyBhIG5ldyBwcm9ibGVtIGludHJvZHVjZWQgYnkgc29tZXRoaW5n
-IGluIG15DQo+ID4+ICJuZXh0IiBicmFuY2gsIG9yIGlmIHRoaXMgaXMgYW4gZXhpc3RpbmcgcHJv
-YmxlbSB3ZSBqdXN0IGhhcHBlbmVkIHRvDQo+ID4+IGhpdCB3aXRoIHJhbmRjb25maWcuDQo+ID4+
-DQo+ID4+IEhlcmUgYXJlIHRoZSBjb21taXRzIG9uIHJlbW90ZXMvbG9yZW56by9wY2kvbW9iaXZl
-aWwgYnJhbmNoOg0KPiA+Pg0KPiA+PiAgIGQyOWFkNzBhODEzYiAoIlBDSTogbW9iaXZlaWw6IEFk
-ZCBQQ0llIEdlbjQgUkMgZHJpdmVyIGZvcg0KPiA+PiBMYXllcnNjYXBlDQo+ID4+IFNvQ3MiKQ0K
-PiA+PiAgIDNlZGViNDk1MjViYiAoImR0LWJpbmRpbmdzOiBQQ0k6IEFkZCBOWFAgTGF5ZXJzY2Fw
-ZSBTb0NzIFBDSWUgR2VuNA0KPiA+PiBjb250cm9sbGVyIikNCj4gPj4gICAxMWQyMmNjMzk1Y2Eg
-KCJQQ0k6IG1vYml2ZWlsOiBBZGQgSGVhZGVyIFR5cGUgZmllbGQgY2hlY2siKQ0KPiA+PiAgIDAy
-OWRlYTNjZGM2NyAoIlBDSTogbW9iaXZlaWw6IEFkZCA4LWJpdCBhbmQgMTYtYml0IENTUiByZWdp
-c3Rlcg0KPiA+PiBhY2Nlc3NvcnMiKQ0KPiA+PiAgIDUyY2FlNGM3MDgyZiAoIlBDSTogbW9iaXZl
-aWw6IEFsbG93IG1vYml2ZWlsX2hvc3RfaW5pdCgpIHRvIGJlIHVzZWQNCj4gPj4gdG8gcmUtaW5p
-dCBob3N0IikNCj4gPj4gICBmYzk5YjMzMTFhZjcgKCJQQ0k6IG1vYml2ZWlsOiBBZGQgY2FsbGJh
-Y2sgZnVuY3Rpb24gZm9yIGxpbmsgdXAgY2hlY2siKQ0KPiA+PiAgIGVkNjIwZTk2NTQxZiAoIlBD
-STogbW9iaXZlaWw6IEFkZCBjYWxsYmFjayBmdW5jdGlvbiBmb3IgaW50ZXJydXB0DQo+ID4+IGlu
-aXRpYWxpemF0aW9uIikNCj4gPj4gICAwM2JkYzM4ODQwMTkgKCJQQ0k6IG1vYml2ZWlsOiBNb2R1
-bGFyaXplIHRoZSBNb2JpdmVpbCBQQ0llIEhvc3QNCj4gPj4gQnJpZGdlIElQDQo+ID4+IGRyaXZl
-ciIpDQo+ID4+ICAgMzllM2EwM2VlYTViICgiUENJOiBtb2JpdmVpbDogQ29sbGVjdCB0aGUgaW50
-ZXJydXB0IHJlbGF0ZWQNCj4gPj4gb3BlcmF0aW9ucyBpbnRvIGEgZnVuY3Rpb24iKQ0KPiA+PiAg
-IDJiYTI0ODQyZDZiNCAoIlBDSTogbW9iaXZlaWw6IE1vdmUgdGhlIGhvc3QgaW5pdGlhbGl6YXRp
-b24gaW50byBhDQo+IGZ1bmN0aW9uIikNCj4gPj4gICAxZjQ0MjIxOGQ2NTcgKCJQQ0k6IG1vYml2
-ZWlsOiBJbnRyb2R1Y2UgYSBuZXcgc3RydWN0dXJlDQo+ID4+IG1vYml2ZWlsX3Jvb3RfcG9ydCIp
-DQo+ID4+DQo+ID4+IEkgZHJvcHBlZCB0aGF0IG1vYml2ZWlsIGJyYW5jaCBmb3Igbm93LCBzbyBI
-b3UsIGNhbiB5b3UgcGxlYXNlIGNoZWNrDQo+ID4+IHRoaXMgb3V0IGFuZCByZXNvbHZlIGl0IG9u
-ZSB3YXkgb3IgdGhlIG90aGVyPw0KPiA+DQo+ID4gSSBkb24ndCByZXByb2R1Y2UgdGhpcyBpc3N1
-ZSB3aXRoIGkzODZfZGVmY29uZmlnLCBjYW4geW91IGhlbHAgbWUgdG8NCj4gcmVwcm9kdWNlIGl0
-Pw0KPiANCj4gU3VyZSwgc2VlIGJlbG93Lg0KPiANCj4gDQo+ID4gVGhhbmtzLA0KPiA+IFpoaXFp
-YW5nDQo+ID4NCj4gPj4NCj4gPj4+IC4uL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvbW9iaXZlaWwv
-cGNpZS1tb2JpdmVpbC1ob3N0LmM6Mzc1OjE1OiBlcnJvcjoNCj4gPj4gdmFyaWFibGUg4oCYbW9i
-aXZlaWxfbXNpX2RvbWFpbl9pbmZv4oCZIGhhcyBpbml0aWFsaXplciBidXQgaW5jb21wbGV0ZQ0K
-PiA+PiB0eXBlDQo+ID4+PiAgc3RhdGljIHN0cnVjdCBtc2lfZG9tYWluX2luZm8gbW9iaXZlaWxf
-bXNpX2RvbWFpbl9pbmZvID0gew0KPiA+Pj4gICAgICAgICAgICAgICAgXn5+fn5+fn5+fn5+fn5+
-DQo+ID4+PiAuLi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2ZWlsL3BjaWUtbW9iaXZlaWwt
-aG9zdC5jOjM3NjozOg0KPiA+Pj4gZXJyb3I6IOKAmHN0cnVjdA0KPiA+PiBtc2lfZG9tYWluX2lu
-Zm/igJkgaGFzIG5vIG1lbWJlciBuYW1lZCDigJhmbGFnc+KAmQ0KPiA+Pj4gICAuZmxhZ3MgPSAo
-TVNJX0ZMQUdfVVNFX0RFRl9ET01fT1BTIHwNCj4gPj4gTVNJX0ZMQUdfVVNFX0RFRl9DSElQX09Q
-UyB8DQo+ID4+PiAgICBefn5+fg0KPiA+Pj4gLi4vZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2Jp
-dmVpbC9wY2llLW1vYml2ZWlsLWhvc3QuYzozNzY6MTI6IGVycm9yOg0KPiA+PiDigJhNU0lfRkxB
-R19VU0VfREVGX0RPTV9PUFPigJkgdW5kZWNsYXJlZCBoZXJlIChub3QgaW4gYSBmdW5jdGlvbik7
-DQo+IGRpZA0KPiA+PiB5b3UgbWVhbiDigJhTSU1QTEVfREVWX1BNX09QU+KAmT8NCj4gPj4+ICAg
-LmZsYWdzID0gKE1TSV9GTEFHX1VTRV9ERUZfRE9NX09QUyB8DQo+ID4+IE1TSV9GTEFHX1VTRV9E
-RUZfQ0hJUF9PUFMgfA0KPiA+Pj4gICAgICAgICAgICAgXn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+
-DQo+ID4+PiAgICAgICAgICAgICBTSU1QTEVfREVWX1BNX09QUw0KPiA+Pj4gLi4vZHJpdmVycy9w
-Y2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWlsLWhvc3QuYzozNzY6Mzk6IGVycm9y
-Og0KPiA+PiDigJhNU0lfRkxBR19VU0VfREVGX0NISVBfT1BT4oCZIHVuZGVjbGFyZWQgaGVyZSAo
-bm90IGluIGEgZnVuY3Rpb24pOyBkaWQNCj4gPj4geW91IG1lYW4g4oCYTVNJX0ZMQUdfVVNFX0RF
-Rl9ET01fT1BT4oCZPw0KPiA+Pj4gICAuZmxhZ3MgPSAoTVNJX0ZMQUdfVVNFX0RFRl9ET01fT1BT
-IHwNCj4gPj4gTVNJX0ZMQUdfVVNFX0RFRl9DSElQX09QUyB8DQo+ID4+Pg0KPiA+PiBefn5+fn5+
-fn5+fn5+fn5+fn5+fn5+fn5+DQo+ID4+Pg0KPiA+PiBNU0lfRkxBR19VU0VfREVGX0RPTV9PUFMN
-Cj4gPj4+IC4uL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvbW9iaXZlaWwvcGNpZS1tb2JpdmVpbC1o
-b3N0LmM6Mzc3OjY6IGVycm9yOg0KPiA+PiDigJhNU0lfRkxBR19QQ0lfTVNJWOKAmSB1bmRlY2xh
-cmVkIGhlcmUgKG5vdCBpbiBhIGZ1bmN0aW9uKTsgZGlkIHlvdSBtZWFuDQo+ID4+IOKAmFNTX0ZM
-QUdfQklUU+KAmT8NCj4gPj4+ICAgICAgIE1TSV9GTEFHX1BDSV9NU0lYKSwNCj4gPj4+ICAgICAg
-IF5+fn5+fn5+fn5+fn5+fn5+DQo+ID4+PiAgICAgICBTU19GTEFHX0JJVFMNCj4gPj4+IC4uL2Ry
-aXZlcnMvcGNpL2NvbnRyb2xsZXIvbW9iaXZlaWwvcGNpZS1tb2JpdmVpbC1ob3N0LmM6Mzc2OjEx
-OiB3YXJuaW5nOg0KPiA+PiBleGNlc3MgZWxlbWVudHMgaW4gc3RydWN0IGluaXRpYWxpemVyDQo+
-ID4+PiAgIC5mbGFncyA9IChNU0lfRkxBR19VU0VfREVGX0RPTV9PUFMgfA0KPiA+PiBNU0lfRkxB
-R19VU0VfREVGX0NISVBfT1BTIHwNCj4gPj4+ICAgICAgICAgICAgXg0KPiA+Pj4gLi4vZHJpdmVy
-cy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWlsLWhvc3QuYzozNzY6MTE6DQo+
-ID4+PiBub3RlOiAobmVhcg0KPiA+PiBpbml0aWFsaXphdGlvbiBmb3Ig4oCYbW9iaXZlaWxfbXNp
-X2RvbWFpbl9pbmZv4oCZKQ0KPiA+Pj4gLi4vZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVp
-bC9wY2llLW1vYml2ZWlsLWhvc3QuYzozNzg6MzoNCj4gPj4+IGVycm9yOiDigJhzdHJ1Y3QNCj4g
-Pj4gbXNpX2RvbWFpbl9pbmZv4oCZIGhhcyBubyBtZW1iZXIgbmFtZWQg4oCYY2hpcOKAmQ0KPiA+
-Pj4gICAuY2hpcCA9ICZtb2JpdmVpbF9tc2lfaXJxX2NoaXAsDQo+ID4+PiAgICBefn5+DQo+ID4+
-PiAuLi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2ZWlsL3BjaWUtbW9iaXZlaWwtaG9zdC5j
-OjM3ODoxMDogd2FybmluZzoNCj4gPj4gZXhjZXNzIGVsZW1lbnRzIGluIHN0cnVjdCBpbml0aWFs
-aXplcg0KPiA+Pj4gICAuY2hpcCA9ICZtb2JpdmVpbF9tc2lfaXJxX2NoaXAsDQo+ID4+PiAgICAg
-ICAgICAgXg0KPiA+Pj4gLi4vZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1v
-Yml2ZWlsLWhvc3QuYzozNzg6MTA6DQo+ID4+PiBub3RlOiAobmVhcg0KPiA+PiBpbml0aWFsaXph
-dGlvbiBmb3Ig4oCYbW9iaXZlaWxfbXNpX2RvbWFpbl9pbmZv4oCZKQ0KPiA+Pj4gLi4vZHJpdmVy
-cy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWlsLWhvc3QuYzogSW4gZnVuY3Rp
-b24NCj4gPj4g4oCYbW9iaXZlaWxfYWxsb2NhdGVfbXNpX2RvbWFpbnPigJk6DQo+ID4+PiAuLi9k
-cml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2ZWlsL3BjaWUtbW9iaXZlaWwtaG9zdC5jOjQ2OToy
-MDogZXJyb3I6DQo+ID4+IGltcGxpY2l0IGRlY2xhcmF0aW9uIG9mIGZ1bmN0aW9uIOKAmHBjaV9t
-c2lfY3JlYXRlX2lycV9kb21haW7igJk7IGRpZCB5b3UNCj4gPj4gbWVhbiDigJhwY2lfbXNpX2dl
-dF9kZXZpY2VfZG9tYWlu4oCZPw0KPiA+PiBbLVdlcnJvcj1pbXBsaWNpdC1mdW5jdGlvbi1kZWNs
-YXJhdGlvbl0NCj4gPj4+ICAgbXNpLT5tc2lfZG9tYWluID0gcGNpX21zaV9jcmVhdGVfaXJxX2Rv
-bWFpbihmd25vZGUsDQo+ID4+PiAgICAgICAgICAgICAgICAgICAgIF5+fn5+fn5+fn5+fn5+fn5+
-fn5+fn5+fn4NCj4gPj4+ICAgICAgICAgICAgICAgICAgICAgcGNpX21zaV9nZXRfZGV2aWNlX2Rv
-bWFpbg0KPiA+Pj4gLi4vZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1vYml2
-ZWlsLWhvc3QuYzo0Njk6MTg6IHdhcm5pbmc6DQo+ID4+IGFzc2lnbm1lbnQgbWFrZXMgcG9pbnRl
-ciBmcm9tIGludGVnZXIgd2l0aG91dCBhIGNhc3QNCj4gPj4gWy1XaW50LWNvbnZlcnNpb25dDQo+
-ID4+PiAgIG1zaS0+bXNpX2RvbWFpbiA9IHBjaV9tc2lfY3JlYXRlX2lycV9kb21haW4oZndub2Rl
-LA0KPiA+Pj4gICAgICAgICAgICAgICAgICAgXg0KPiA+Pj4gLi4vZHJpdmVycy9wY2kvY29udHJv
-bGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWlsLWhvc3QuYzogQXQgdG9wIGxldmVsOg0KPiA+Pj4g
-Li4vZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWlsLWhvc3QuYzoz
-NzU6MzE6IGVycm9yOg0KPiA+PiBzdG9yYWdlIHNpemUgb2Yg4oCYbW9iaXZlaWxfbXNpX2RvbWFp
-bl9pbmZv4oCZIGlzbuKAmXQga25vd24NCj4gPj4+ICBzdGF0aWMgc3RydWN0IG1zaV9kb21haW5f
-aW5mbyBtb2JpdmVpbF9tc2lfZG9tYWluX2luZm8gPSB7DQo+ID4+PiAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgXn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+DQo+ID4+Pg0KPiA+Pj4NCj4g
-Pj4+DQo+ID4+PiBGdWxsIHJhbmRjb25maWcgZmlsZSBpcyBhdHRhY2hlZC4NCj4gDQo+IFVzZSB0
-aGUgLmNvbmZpZyBmaWxlIHRoYXQgd2FzIGF0dGFjaGVkIGluIHRoZSByZXBvcnQuDQoNCk9uZSBx
-dWVyeSwgd2hpY2ggZGVmYXVsdCBjb25maWcgeW91IHVzZWQgdG8gZ2VuZXJhdGUgdGhpcyAuY29u
-ZmlnPyBJIGNhbm5vdCBzZWxlY3QNCnRoZSBQQ0lFX01PQklWRUlMX1BMQVQgaW4gJ21lbnVjb25m
-aWcnIHdoZW4gdXNlIHRoZSBpMzg2X2RlZmNvbmZpZy4NCg0KVGhhbmtzLA0KWmhpcWlhbmcNCg0K
-PiANCj4gDQo+IC0tDQo+IH5SYW5keQ0KDQo=
+Hi Yoshihiro-san,
+
+Thank you for the review,
+
+> -----Original Message-----
+> From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Sent: 17 March 2020 09:59
+> To: Lad Prabhakar <prabhakar.csengg@gmail.com>
+> Cc: Andrew Murray <andrew.murray@arm.com>; linux-pci@vger.kernel.org;
+> linux-arm-kernel@lists.infradead.org; linux-renesas-soc@vger.kernel.org;
+> linux-rockchip@lists.infradead.org; linux-kernel@vger.kernel.org;
+> devicetree@vger.kernel.org; Prabhakar Mahadev Lad <prabhakar.mahadev-
+> lad.rj@bp.renesas.com>; Bjorn Helgaas <bhelgaas@google.com>; Rob
+> Herring <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>;
+> Catalin Marinas <catalin.marinas@arm.com>; Will Deacon <will@kernel.org>;
+> Kishon Vijay Abraham I <kishon@ti.com>; Lorenzo Pieralisi
+> <lorenzo.pieralisi@arm.com>; Arnd Bergmann <arnd@arndb.de>; Greg
+> Kroah-Hartman <gregkh@linuxfoundation.org>; Jingoo Han
+> <jingoohan1@gmail.com>; Gustavo Pimentel
+> <gustavo.pimentel@synopsys.com>; Marek Vasut
+> <marek.vasut+renesas@gmail.com>; Shawn Lin <shawn.lin@rock-
+> chips.com>; Heiko Stuebner <heiko@sntech.de>
+> Subject: RE: [PATCH v5 6/7] PCI: rcar: Add support for rcar PCIe controll=
+er in
+> endpoint mode
+>
+> Hi Prabhakar-san,
+>
+> Thank you for the patch!
+>
+> > From: Lad Prabhakar, Sent: Saturday, February 29, 2020 12:41 AM
+> >
+> > This patch adds support for rcar PCIe controller to work in endpoint mo=
+de.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-
+> lad.rj@bp.renesas.com>
+> > ---
+> >  drivers/pci/controller/Kconfig        |   8 +
+> >  drivers/pci/controller/Makefile       |   1 +
+> >  drivers/pci/controller/pcie-rcar-ep.c | 490
+> ++++++++++++++++++++++++++++++++++
+> >  drivers/pci/controller/pcie-rcar.h    |   4 +
+> >  4 files changed, 503 insertions(+)
+> >  create mode 100644 drivers/pci/controller/pcie-rcar-ep.c
+> >
+> > diff --git a/drivers/pci/controller/Kconfig
+> > b/drivers/pci/controller/Kconfig index 37e0ea7..9bf4b02 100644
+> > --- a/drivers/pci/controller/Kconfig
+> > +++ b/drivers/pci/controller/Kconfig
+> > @@ -62,6 +62,14 @@ config PCIE_RCAR_HOST
+> >    Say Y here if you want PCIe controller support on R-Car SoCs in host
+> >    mode.
+> >
+> > +config PCIE_RCAR_EP
+> > +bool "Renesas R-Car PCIe endpoint controller"
+> > +depends on ARCH_RENESAS || COMPILE_TEST
+> > +depends on PCI_ENDPOINT
+> > +help
+> > +  Say Y here if you want PCIe controller support on R-Car SoCs in
+> > +  endpoint mode.
+> > +
+> >  config PCI_HOST_COMMON
+> >  bool
+> >  select PCI_ECAM
+> > diff --git a/drivers/pci/controller/Makefile
+> > b/drivers/pci/controller/Makefile index b4ada32..067bd33 100644
+> > --- a/drivers/pci/controller/Makefile
+> > +++ b/drivers/pci/controller/Makefile
+> > @@ -8,6 +8,7 @@ obj-$(CONFIG_PCI_AARDVARK) +=3D pci-aardvark.o
+> >  obj-$(CONFIG_PCI_TEGRA) +=3D pci-tegra.o
+> >  obj-$(CONFIG_PCI_RCAR_GEN2) +=3D pci-rcar-gen2.o
+> >  obj-$(CONFIG_PCIE_RCAR_HOST) +=3D pcie-rcar.o pcie-rcar-host.o
+> > +obj-$(CONFIG_PCIE_RCAR_EP) +=3D pcie-rcar.o pcie-rcar-ep.o
+> >  obj-$(CONFIG_PCI_HOST_COMMON) +=3D pci-host-common.o
+> >  obj-$(CONFIG_PCI_HOST_GENERIC) +=3D pci-host-generic.o
+> >  obj-$(CONFIG_PCIE_XILINX) +=3D pcie-xilinx.o diff --git
+> > a/drivers/pci/controller/pcie-rcar-ep.c
+> > b/drivers/pci/controller/pcie-rcar-ep.c
+> > new file mode 100644
+> > index 0000000..db89bbe
+> > --- /dev/null
+> > +++ b/drivers/pci/controller/pcie-rcar-ep.c
+> > @@ -0,0 +1,490 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * PCIe endpoint driver for Renesas R-Car SoCs
+> > + *  Copyright (c) 2020 Renesas Electronics Europe GmbH
+> > + *
+> > + * Author: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > + */
+> > +
+> > +#include <linux/clk.h>
+> > +#include <linux/delay.h>
+> > +#include <linux/of_address.h>
+> > +#include <linux/of_irq.h>
+> > +#include <linux/of_pci.h>
+> > +#include <linux/of_platform.h>
+> > +#include <linux/pci.h>
+> > +#include <linux/pci-epc.h>
+> > +#include <linux/phy/phy.h>
+> > +#include <linux/platform_device.h>
+> > +
+> > +#include "pcie-rcar.h"
+> > +
+> > +/* Structure representing the PCIe interface */ struct rcar_pcie {
+> > +phys_addr_t*ob_addr;
+>
+> I think "ob_mapped_addr" is better.
+>
+OK will rename that.
+
+> > +struct pci_epc_mem_window *ob_window;
+>
+> I think we can get these windows from "array of address space of the
+> endpoint controller" in struct pci_epc. If so, we can remove this member.
+>
+I shall see if this can be dropped.
+
+> > +struct pci_epc*epc;
+>
+> This member can be removed like pcie-cadence-ep.c because this is not use=
+d
+> except saving the epc value from devm_pci_epc_create().
+>
+OK will drop it.
+
+> <snip>
+> > +static int rcar_pcie_ep_start(struct pci_epc *epc) {
+> > +struct rcar_pcie *ep =3D epc_get_drvdata(epc);
+> > +
+> > +rcar_pci_write_reg(ep->base, CFINIT, PCIETCTLR);
+>
+> The following setting is needed before CFINIT like host.
+>
+> rcar_pci_write_reg(pcie->base, MACCTLR_INIT_VAL, MACCTLR);
+>
+I shall add this as part of rcar_pcie_ep_hw_init()
+
+> > +
+> > +return 0;
+> > +}
+> > +
+> > +static void rcar_pcie_ep_stop(struct pci_epc *epc) {
+> > +struct rcar_pcie *ep =3D epc_get_drvdata(epc);
+> > +
+> > +rcar_pci_write_reg(ep->base, 0, PCIETCTLR); }
+> > +
+> > +static const struct pci_epc_features rcar_pcie_epc_features =3D {
+> > +.linkup_notifier =3D false,
+> > +.msi_capable =3D false,
+> > +.msix_capable =3D false,
+> > +/* use 64-bit bars so mark bar1/3/5 as reserved */
+> > +.reserved_bar =3D 1 << BAR_1 | 1 << BAR_3 | 1 << BAR_5,
+> > +.bar_fixed_64bit =3D  (1 << BAR_0) | (1 << BAR_2) | (1 << BAR_4),
+>
+> These parentheses are not needed like .reserved_bar.
+>
+Agreed.
+
+> <snip>
+> > +err =3D pci_epc_mem_init(epc, pcie->ob_window, pcie-
+> >num_ob_windows);
+> > +if (err < 0) {
+> > +dev_err(dev, "failed to initialize the epc memory space\n");
+> > +goto err_pm_put;
+> > +}
+> > +
+> > +rcar_pcie_ep_hw_init(pcie);
+>
+> I'm not sure, but I wonder if we should call this hw init before
+> pci_epc_mem_init().
+>
+Ideally shouldn't matter because in pci_epc_mem_init(), we just tell the fr=
+amework
+our windows properties.  But shall move hw_init() before mem_init().
+
+> <snip>
+> > +builtin_platform_driver(rcar_pcie_ep_driver);
+> > diff --git a/drivers/pci/controller/pcie-rcar.h
+> > b/drivers/pci/controller/pcie-rcar.h
+> > index b529d806..5564ca8 100644
+> > --- a/drivers/pci/controller/pcie-rcar.h
+> > +++ b/drivers/pci/controller/pcie-rcar.h
+> > @@ -17,6 +17,7 @@
+> >  #define PCIECDR0x000020
+> >  #define PCIEMSR0x000028
+> >  #define PCIEINTXR0x000400
+> > +#define  ASTINTX_SHIFTBIT(16)
+>
+> Just "ASTINTX" is better.
+>
+Shall replace it.
+
+> >  #define PCIEPHYSR0x0007f0
+> >  #define  PHYRDYBIT(0)
+> >  #define PCIEMSITXR0x000840
+> > @@ -55,12 +56,15 @@
+> >
+> >  /* Configuration */
+> >  #define PCICONF(x)(0x010000 + ((x) * 0x4))
+> > +#define  INTDIS_SHIFTBIT(10)
+>
+> Same here (we can remove "_SHIFT").
+>
+OK.
+
+Cheers,
+--Prabhakar
+
+> Best regards,
+> Yoshihiro Shimoda
+>
+> >  #define PMCAP(x)(0x010040 + ((x) * 0x4))
+> >  #define EXPCAP(x)(0x010070 + ((x) * 0x4))
+> >  #define VCCAP(x)(0x010100 + ((x) * 0x4))
+> >
+> >  /* link layer */
+> > +#define IDSETR00x011000
+> >  #define IDSETR10x011004
+> > +#define SUBIDSETR0x011024
+> >  #define TLCTLR0x011048
+> >  #define MACSR0x011054
+> >  #define  SPCHGFINBIT(4)
+> > --
+> > 2.7.4
+
+
+
+Renesas Electronics Europe GmbH, Geschaeftsfuehrer/President: Carsten Jauch=
+, Sitz der Gesellschaft/Registered office: Duesseldorf, Arcadiastrasse 10, =
+40472 Duesseldorf, Germany, Handelsregister/Commercial Register: Duesseldor=
+f, HRB 3708 USt-IDNr./Tax identification no.: DE 119353406 WEEE-Reg.-Nr./WE=
+EE reg. no.: DE 14978647
