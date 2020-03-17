@@ -2,102 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 69161188B9A
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Mar 2020 18:07:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9CB95188D59
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Mar 2020 19:40:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726222AbgCQRHB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 Mar 2020 13:07:01 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:43856 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726207AbgCQRHB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Mar 2020 13:07:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=2BoGGEdNQTv247lOoGQWSuvht20oQxr110Feea+TlWs=; b=q/CW7wqCHqnFnpmJV+W5tVWP4e
-        QCWw6HRa29pZio3fs1qQwZn6DwftNjCAEoEpckv8LNzYmwsLLvL7Z10FJuhVCKvuuu20J9yReNFGr
-        be4yOdRpocDxxoA6qxamS0Pk5E+pf841lrJN+vrkzFyseQOxWl5Ch0VD6CJ8B5gTMVj3re1ocF4fT
-        R3qw+ty5i7fofRDHRmqBGJ6GrtH+NLeOeZNn8v0UPQ3zXfEqAvOINV0CuQg+adyZiFuYN5TUWi3yA
-        UlQfJQlMAXu/BjFtbUwesx8L21ixKlHym8Vc6BRHBf1Xnq+T1gTW5FhNUL9aXxEIURAbTtYWmbpz4
-        J3Dhw+eQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jEFg6-00010h-7t; Tue, 17 Mar 2020 17:06:54 +0000
-Date:   Tue, 17 Mar 2020 10:06:54 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     bjorn@helgaas.com
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>
-Subject: Re: [PATCH v17 06/12] Documentation: PCI: Remove reset_link
- references
-Message-ID: <20200317170654.GA23125@infradead.org>
-References: <cover.1583286655.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <a46938d227f6a11c010943800450a10aac39b7d3.1583286655.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <20200317144203.GE23471@infradead.org>
- <ebb79d02-53f5-cc23-0b38-72a351a05097@linux.intel.com>
- <20200317150735.GA653@infradead.org>
- <CABhMZUUn2RJWRTGc7xa1XcV3ozBOV24jjwhf6k08sP7XC1ETkw@mail.gmail.com>
+        id S1726452AbgCQSkn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 Mar 2020 14:40:43 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:41349 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726294AbgCQSkn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Mar 2020 14:40:43 -0400
+Received: by mail-qt1-f195.google.com with SMTP id i26so8631487qtq.8
+        for <linux-pci@vger.kernel.org>; Tue, 17 Mar 2020 11:40:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VHKB5MBsrQc8nrjB6tUnlbV1kL4bZZjV/ANQdFM3zDk=;
+        b=GYgmJC/1qoccDCyGB3v9AgtNVsE4IcW54DliKpkiU/8qcWTDdff956/y0JBhF6CoW+
+         2AF3nNaAMz/neObEUtK5PPJVt6C6RgI8Mamly3muAOZNRXY+QQdadXK48Ee6KpqLHE8+
+         2sRqltqPMbyl/9ocejJDj+1YnNKrMgk9wHeYF4k8oNhl0PT7yNA63RmZF0oQYwdNe+IK
+         br+N+cfXCWnuHi3IfnIquqLO6xf4ZdjNCFFB2q07lTxjelyugkvRGj5+dyLWtOvVZ5hD
+         xdec7OKSTTgRyouKPD5VyOUCJvSrHDwna0Y1VSUzlbHpyFDnaETsTzcMXknVS9MfUmor
+         9n+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VHKB5MBsrQc8nrjB6tUnlbV1kL4bZZjV/ANQdFM3zDk=;
+        b=eEzh24BTOwF8kccFkVh+vFFCOXBnMRZgWW5ENpCHMYaoWdTYdd0FBr+X9BfU633u07
+         bQBbEvlILNUIHLsjgVAStjZCI/WzTFWD8QzVABn1s4a/djSuV4JAw5kzJ7cSgVvfgbw7
+         3Xc8HKLa4XH7eCJXQpxLXMBc3VBPBfvM0PQmE8DzFCFNlQzQJbJ1Ht4ZGUCdzaQUiHB2
+         6erYaPhxML/2P97AYjYSbBT8gfZ7TKFVFCNqNhr/fi13w78+Inmxji244DP5w2aZyosp
+         ly4lpmAS8HRfJYbZSOBHTEQjbfRHdLq2kggxTGjOfiIctTNd+be7aGSpzdsyWuJDSSjR
+         YfJw==
+X-Gm-Message-State: ANhLgQ09TuLJdWrZIHuN6nIqbEI2p5auldXxDlZa1t6yzl9UQY4M8YHD
+        NovI4miYQ9Q7Vl2BP7r5XkMIkQ==
+X-Google-Smtp-Source: ADFU+vugAiZdEw2sEZSIbJEAWeyFz2UbVwFEy00ld5KQjtHya0UyHyqsGI1Bsave1cDjhm+ecny+gg==
+X-Received: by 2002:ac8:7b54:: with SMTP id m20mr566590qtu.92.1584470440664;
+        Tue, 17 Mar 2020 11:40:40 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id 199sm2417617qkm.7.2020.03.17.11.40.40
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 17 Mar 2020 11:40:40 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jEH8p-00016b-OY; Tue, 17 Mar 2020 15:40:39 -0300
+Date:   Tue, 17 Mar 2020 15:40:39 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        kevin.tian@intel.com, Dimitri Sivanich <sivanich@sgi.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pci@vger.kernel.org, robin.murphy@arm.com,
+        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
+        robh+dt@kernel.org, catalin.marinas@arm.com,
+        zhangfei.gao@linaro.org, Andrew Morton <akpm@linux-foundation.org>,
+        will@kernel.org, christian.koenig@amd.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 01/26] mm/mmu_notifiers: pass private data down to
+ alloc_notifier()
+Message-ID: <20200317184039.GV20941@ziepe.ca>
+References: <20200224190056.GT31668@ziepe.ca>
+ <20200225092439.GB375953@myrica>
+ <20200225140814.GW31668@ziepe.ca>
+ <20200228143935.GA2156@myrica>
+ <20200228144844.GQ31668@ziepe.ca>
+ <20200228150427.GF2156@myrica>
+ <20200228151339.GS31668@ziepe.ca>
+ <20200306095614.GA50020@myrica>
+ <20200306130919.GJ31668@ziepe.ca>
+ <20200316154659.GA18704@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CABhMZUUn2RJWRTGc7xa1XcV3ozBOV24jjwhf6k08sP7XC1ETkw@mail.gmail.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200316154659.GA18704@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 11:03:36AM -0500, Bjorn Helgaas wrote:
-> On Tue, Mar 17, 2020 at 10:09 AM Christoph Hellwig <hch@infradead.org> wrote:
-> >
-> > On Tue, Mar 17, 2020 at 08:05:50AM -0700, Kuppuswamy, Sathyanarayanan wrote:
-> > > > > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > > > >
-> > > >
-> > > > This should be folded into the patch removing the method.
-> > > This is also folded in the mentioned patch.
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/?h=review/edr&id=7a18dc6506f108db3dc40f5cd779bc15270c4183
-> >
-> > I can't find that series anywhere on the list.  What did I miss?
+On Mon, Mar 16, 2020 at 08:46:59AM -0700, Christoph Hellwig wrote:
+> On Fri, Mar 06, 2020 at 09:09:19AM -0400, Jason Gunthorpe wrote:
+> > This is why release must do invalidate all - but it doesn't need to do
+> > any more - as no SPTE can be established without a mmget() - and
+> > mmget() is no longer possible past release.
 > 
-> We've still been discussing other issues (access to AER registers,
-> synchronization between EDR and hotplug, etc) in other parts of this
-> thread.  The git branch Sathy pointed to above is my local branch.
-> I'll send it to the list before putting it into -next, but I wanted to
-> make progress on some of these other issues first.
+> Maybe we should rename the release method to invalidate_all?
 
-A few nitpicks:
+It is a better name. The function it must also fence future access if
+the mirror is not using mmget(), and stop using the pgd/etc pointer if
+the page tables are accessed directly.
 
-PCI/ERR: Update error status after reset_link():
-
- - there are two "if (state == pci_channel_io_frozen)"
-   right after each other now, merging them would make the code a little
-   easier to read.
-
-PCI/DPC: Move DPC data into struct pci_dev:
-
- - dpc_rp_extensions probable should be a "bool : 1"
-
-PCI/ERR: Remove service dependency in pcie_do_recovery():
-
- - as mentioned to Kuppuswamy the reset_cb is never NULL, and thus
-   a lot of dead code in reset_link can be removed.  Also reset_link
-   should be merged into pcie_do_recovery.  That would also enable
-   to call the argument reset_link, which might be a bit more
-   descriptive than reset_cb.
-
-PCI/DPC: Cache DPC capabilities in pci_init_capabilities():
-
- - I think the pci_dpc_init could be cleaned up a bit to:
-
-	...
-	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CAP, &cap);
-	if (!(cap & PCI_EXP_DPC_CAP_RP_EXT))
-		return;
-	pdev->dpc_rp_extensions = true;
-	pdev->dpc_rp_log_size = (cap & PCI_EXP_DPC_RP_PIO_LOG_SIZE) >> 8;
-	...
+Jason
