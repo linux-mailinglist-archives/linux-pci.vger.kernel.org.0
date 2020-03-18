@@ -2,23 +2,23 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A96E18A450
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Mar 2020 21:53:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A97618A429
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Mar 2020 21:48:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727216AbgCRUxj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 Mar 2020 16:53:39 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:58457 "EHLO
+        id S1727148AbgCRUrZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 Mar 2020 16:47:25 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:58406 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727175AbgCRUxi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Mar 2020 16:53:38 -0400
+        with ESMTP id S1726631AbgCRUrY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Mar 2020 16:47:24 -0400
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jEfgZ-0006nB-PS; Wed, 18 Mar 2020 21:53:08 +0100
+        id 1jEfaR-0006Fi-0w; Wed, 18 Mar 2020 21:46:47 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 5B0BB101161;
-        Wed, 18 Mar 2020 21:53:05 +0100 (CET)
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 49D23101161;
+        Wed, 18 Mar 2020 21:46:37 +0100 (CET)
 Message-Id: <20200318204408.428468767@linutronix.de>
 User-Agent: quilt/0.65
 Date:   Wed, 18 Mar 2020 21:43:12 +0100
