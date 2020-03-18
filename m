@@ -2,161 +2,115 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 40D5B189351
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Mar 2020 01:50:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 51EB11893B1
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Mar 2020 02:34:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727151AbgCRAud (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 Mar 2020 20:50:33 -0400
-Received: from mail.rc.ru ([151.236.222.147]:50660 "EHLO mail.rc.ru"
+        id S1727113AbgCRBef convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Tue, 17 Mar 2020 21:34:35 -0400
+Received: from yyz.mikelr.com ([170.75.163.43]:57290 "EHLO yyz.mikelr.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726680AbgCRAuc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 17 Mar 2020 20:50:32 -0400
-Received: from mail.rc.ru ([2a01:7e00:e000:1bf::1]:39824)
-        by mail.rc.ru with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ink@jurassic.park.msu.ru>)
-        id 1jEMuk-0002BZ-CP; Wed, 18 Mar 2020 00:50:30 +0000
-Date:   Wed, 18 Mar 2020 00:50:29 +0000
-From:   Ivan Kokshaysky <ink@jurassic.park.msu.ru>
-To:     Matt Turner <mattst88@gmail.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Yinghai Lu <yinghai@kernel.org>, linux-pci@vger.kernel.org,
-        linux-alpha <linux-alpha@vger.kernel.org>,
-        Richard Henderson <rth@twiddle.net>,
-        Jay Estabrook <jay.estabrook@gmail.com>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: [PATCH v2] alpha: fix nautilus PCI setup
-Message-ID: <20200318005029.GA8326@mail.rc.ru>
+        id S1726735AbgCRBef (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 17 Mar 2020 21:34:35 -0400
+Received: from glidewell.localnet (198-84-194-208.cpe.teksavvy.com [198.84.194.208])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by yyz.mikelr.com (Postfix) with ESMTPSA id 12BC73D9E7;
+        Tue, 17 Mar 2020 21:34:34 -0400 (EDT)
+From:   Mikel Rychliski <mikel@mikelr.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     amd-gfx@lists.freedesktop.org, linux-pci@vger.kernel.org,
+        nouveau@lists.freedesktop.org,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        Ben Skeggs <bskeggs@redhat.com>
+Subject: Re: [PATCH RESEND v2 2/2] PCI: Use ioremap(), not phys_to_virt() for platform ROM
+Date:   Tue, 17 Mar 2020 21:34:33 -0400
+Message-ID: <49518530.5kixuQOrMm@glidewell>
+In-Reply-To: <20200317144731.GG23471@infradead.org>
+References: <20200313222258.15659-1-mikel@mikelr.com> <20200313222258.15659-3-mikel@mikelr.com> <20200317144731.GG23471@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Example (hopefully reasonable) of the new "size_windows" flag usage.
+Hi Christoph,
 
-Fixes accidental breakage caused by commit f75b99d5a77d (PCI: Enforce
-bus address limits in resource allocation),
+Thanks for your comments. I'm also replying here to your comments on the 
+previous series.
 
-Signed-off-by: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
----
- arch/alpha/kernel/sys_nautilus.c | 52 ++++++++++++++++------------------------
- 1 file changed, 20 insertions(+), 32 deletions(-)
+On Tuesday, March 17, 2020 10:28:35 AM EDT Christoph Hellwig wrote:
+> Any reason drivers can't just use pci_map_rom insteadἅ which already
+> does the right thing?
 
-diff --git a/arch/alpha/kernel/sys_nautilus.c b/arch/alpha/kernel/sys_nautilus.c
-index cd9a112d67ff..32850e45834b 100644
---- a/arch/alpha/kernel/sys_nautilus.c
-+++ b/arch/alpha/kernel/sys_nautilus.c
-@@ -187,10 +187,6 @@ nautilus_machine_check(unsigned long vector, unsigned long la_ptr)
- 
- extern void pcibios_claim_one_bus(struct pci_bus *);
- 
--static struct resource irongate_io = {
--	.name	= "Irongate PCI IO",
--	.flags	= IORESOURCE_IO,
--};
- static struct resource irongate_mem = {
- 	.name	= "Irongate PCI MEM",
- 	.flags	= IORESOURCE_MEM,
-@@ -208,17 +204,19 @@ nautilus_init_pci(void)
- 	struct pci_controller *hose = hose_head;
- 	struct pci_host_bridge *bridge;
- 	struct pci_bus *bus;
--	struct pci_dev *irongate;
- 	unsigned long bus_align, bus_size, pci_mem;
- 	unsigned long memtop = max_low_pfn << PAGE_SHIFT;
--	int ret;
- 
- 	bridge = pci_alloc_host_bridge(0);
- 	if (!bridge)
- 		return;
- 
-+	/* Use default IO. */
- 	pci_add_resource(&bridge->windows, &ioport_resource);
--	pci_add_resource(&bridge->windows, &iomem_resource);
-+	/* Irongate PCI memory aperture, calculate requred size before
-+	   setting it up. */
-+	pci_add_resource(&bridge->windows, &irongate_mem);
-+
- 	pci_add_resource(&bridge->windows, &busn_resource);
- 	bridge->dev.parent = NULL;
- 	bridge->sysdata = hose;
-@@ -226,59 +224,49 @@ nautilus_init_pci(void)
- 	bridge->ops = alpha_mv.pci_ops;
- 	bridge->swizzle_irq = alpha_mv.pci_swizzle;
- 	bridge->map_irq = alpha_mv.pci_map_irq;
-+	bridge->size_windows = 1;
- 
- 	/* Scan our single hose.  */
--	ret = pci_scan_root_bus_bridge(bridge);
--	if (ret) {
-+	if (pci_scan_root_bus_bridge(bridge)) {
- 		pci_free_host_bridge(bridge);
- 		return;
- 	}
--
- 	bus = hose->bus = bridge->bus;
- 	pcibios_claim_one_bus(bus);
- 
--	irongate = pci_get_domain_bus_and_slot(pci_domain_nr(bus), 0, 0);
--	bus->self = irongate;
--	bus->resource[0] = &irongate_io;
--	bus->resource[1] = &irongate_mem;
--
- 	pci_bus_size_bridges(bus);
- 
--	/* IO port range. */
--	bus->resource[0]->start = 0;
--	bus->resource[0]->end = 0xffff;
--
--	/* Set up PCI memory range - limit is hardwired to 0xffffffff,
--	   base must be at aligned to 16Mb. */
--	bus_align = bus->resource[1]->start;
--	bus_size = bus->resource[1]->end + 1 - bus_align;
-+	/* Now we've got the size and alignment of PCI memory resources
-+	   stored in irongate_mem. Set up the PCI memory range: limit is
-+	   hardwired to 0xffffffff, base must be aligned to 16Mb. */
-+	bus_align = irongate_mem.start;
-+	bus_size = irongate_mem.end + 1 - bus_align;
- 	if (bus_align < 0x1000000UL)
- 		bus_align = 0x1000000UL;
- 
- 	pci_mem = (0x100000000UL - bus_size) & -bus_align;
-+	irongate_mem.start = pci_mem;
-+	irongate_mem.end = 0xffffffffUL;
- 
--	bus->resource[1]->start = pci_mem;
--	bus->resource[1]->end = 0xffffffffUL;
--	if (request_resource(&iomem_resource, bus->resource[1]) < 0)
-+	/* Register our newly calculated PCI memory window in the resource
-+	   tree. */
-+	if (request_resource(&iomem_resource, &irongate_mem) < 0)
- 		printk(KERN_ERR "Failed to request MEM on hose 0\n");
- 
-+	printk(KERN_INFO "Irongate pci_mem %pR\n", &irongate_mem);
-+
- 	if (pci_mem < memtop)
- 		memtop = pci_mem;
- 	if (memtop > alpha_mv.min_mem_address) {
- 		free_reserved_area(__va(alpha_mv.min_mem_address),
- 				   __va(memtop), -1, NULL);
--		printk("nautilus_init_pci: %ldk freed\n",
-+		printk(KERN_INFO "nautilus_init_pci: %ldk freed\n",
- 			(memtop - alpha_mv.min_mem_address) >> 10);
- 	}
--
- 	if ((IRONGATE0->dev_vendor >> 16) > 0x7006)	/* Albacore? */
- 		IRONGATE0->pci_mem = pci_mem;
- 
- 	pci_bus_assign_resources(bus);
--
--	/* pci_common_swizzle() relies on bus->self being NULL
--	   for the root bus, so just clear it. */
--	bus->self = NULL;
- 	pci_bus_add_devices(bus);
- }
- 
+Some machines don't expose the video BIOS in the PCI BAR and instead only make 
+it available via EFI boot services calls. So drivers need to be able to use 
+the ROM provided by EFI calls, but only if they can't find a valid one anywhere 
+else.
+
+At one point, the EFI provided ROM in pdev->rom *was* exposed via 
+pci_map_rom(). However it had to be split out into a separate function so that 
+drivers could have more control over which sources were preferred.
+
+On Tuesday, March 17, 2020 10:29:13 AM EDT Christoph Hellwig wrote:
+> This and the next patch really need to be folded into the previous
+> one to avoid regressions (assuming my other suggestion doesn't work
+> for some reason).
+
+Addressed in v2
+
+On Tuesday, March 17, 2020 10:47:31 AM EDT Christoph Hellwig wrote:
+> What is the value of this helper over just open coding an ioremap
+> of pdev->rom in the callers?
+
+I think the direct access to pdev->rom you suggest makes sense, especially 
+because users of the pci_platform_rom() are exposed to the fact that it just 
+calls ioremap().
+
+I decided against wrapping the iounmap() with a pci_unmap_platform_rom(), but 
+I didn't apply the same consideration to the existing function.
+
+How about something like this (with pci_platform_rom() removed)?
+
+static bool radeon_read_platform_bios(struct radeon_device *rdev)
+{
+	phys_addr_t rom = rdev->pdev->rom;
+	size_t romlen = rdev->pdev->romlen;
+	void __iomem *bios;
+
+	rdev->bios = NULL;
+
+	if (!rom || romlen == 0)
+		return false;
+
+	rdev->bios = kzalloc(romlen, GFP_KERNEL);
+	if (!rdev->bios)
+		return false;
+
+	bios = ioremap(rom, romlen);
+	if (!bios)
+		goto free_bios;
+
+	memcpy_fromio(rdev->bios, bios, romlen);
+	iounmap(bios);
+
+	if (rdev->bios[0] != 0x55 || rdev->bios[1] != 0xaa)
+		goto free_bios;
+
+	return true;
+free_bios:
+	kfree(rdev->bios);
+	return false;
+}
+
+If this is preferred, I'll send an updated series. I'm assuming that the 
+removal of pci_platform_rom() and updating of all the callers should be 
+combined into this patch.
+
+Thanks,
+Mikel
