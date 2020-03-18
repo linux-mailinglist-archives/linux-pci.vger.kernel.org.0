@@ -2,173 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B270189D95
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Mar 2020 15:06:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 526E5189EC8
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Mar 2020 16:05:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbgCROGu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 Mar 2020 10:06:50 -0400
-Received: from mail-bn8nam12on2042.outbound.protection.outlook.com ([40.107.237.42]:6128
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727122AbgCROGu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 18 Mar 2020 10:06:50 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ajLtb1x0MjQe/yxgOv9lmDES3LuJKTT6uxKr6tUf+hDFHhJlSoy7mxRwWl2nnnZQO1dUJREQSLrnJjZOs0aSbZ8d1LlaPEb3aH1CyIhlALWRYduAwoyBhQh9sfSVSfeSv8AHBcDh57l7VSsjdnKC+tVV2p1AfPvELnMksBB9QP71+vYoqBf6hi7C1Z6ICjN87OyIfyOLtFx7oTCGv2M+3+fl+2vAH0PwW/Fp2kXK+vd14/0eN5TQ74J0sYApvMjWc+STD1P1kPHDPehozFnekhmP8hbmmc1qvloXKB2qsGzr2LNCOLWnGhpHTrDRsPR2hpaemfX+Xeg7gE72IdhnUw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uNATl1Pefm9KgGdKQyYqtyFGMBOh8OqU8ALKhKoPDdQ=;
- b=C5aIosRfKBBWlDacLn0UvqMxJCIb0X4g87HCsDsXCCcWonmNs3jeCkv8sU9O3/tcbmfnXoYHwS5bg04S5d6pQeqbDc8B9p5zXNt5QGcwbUeHCnPINS43KgDdWsF/KGSoRtKba5tH/mRxI4kdJfb5bA3kBD+d1QCAImlvMgwOn0UoZ/PEvWY+joUlEYHMezUdR+6t3rFi3keLJ87NGxBdCfjuqSSsV7viRQIL/AXM0yp8OjqdJQEaeO+w2vSO/FbkZedRCMqEmeJ4WRu18nmNzUaMFYGnanktdRJmanNnbQDRTQmLvPM2L0YBjIMbZcX0C6+6iMPoTrggpiKw84FPCA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=netapp.com; dmarc=pass action=none header.from=netapp.com;
- dkim=pass header.d=netapp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=netapp.onmicrosoft.com; s=selector1-netapp-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uNATl1Pefm9KgGdKQyYqtyFGMBOh8OqU8ALKhKoPDdQ=;
- b=iKynpjX2rklhRHtUQwzrrgd8wjzMkreu560Bv8Gkf1KKQp06EpVRbsNuEGHZrQVwTmpXnY7v3j78bA4UstoeaxhnVR/5MJjo/rTOOpN6PBE4ErEUMQem1RrvRklCLOtpdtdvQz+JKEY5JMKDauT87tHbAe+8Og/LJWFyJHeCVeE=
-Received: from DM5PR06MB3132.namprd06.prod.outlook.com (2603:10b6:4:3c::29) by
- DM5PR06MB2716.namprd06.prod.outlook.com (2603:10b6:3:48::13) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2814.22; Wed, 18 Mar 2020 14:06:47 +0000
-Received: from DM5PR06MB3132.namprd06.prod.outlook.com
- ([fe80::f5cb:1d29:98a6:2569]) by DM5PR06MB3132.namprd06.prod.outlook.com
- ([fe80::f5cb:1d29:98a6:2569%7]) with mapi id 15.20.2814.021; Wed, 18 Mar 2020
- 14:06:47 +0000
-From:   "Hoyer, David" <David.Hoyer@netapp.com>
-To:     Lukas Wunner <lukas@wunner.de>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Keith Busch <kbusch@kernel.org>
-Subject: RE: Kernel hangs when powering up/down drive using sysfs
-Thread-Topic: Kernel hangs when powering up/down drive using sysfs
-Thread-Index: AdX6C4g8wtFnF4AzTBuWtW2g0jlmPgBs/g+AAAATa4AAVuDUgAAEwxFg
-Date:   Wed, 18 Mar 2020 14:06:47 +0000
-Message-ID: <DM5PR06MB313267860FFF00AF343B830892F70@DM5PR06MB3132.namprd06.prod.outlook.com>
-References: <DM5PR06MB313235E97731D97AB813F65D92FB0@DM5PR06MB3132.namprd06.prod.outlook.com>
- <20200316181959.wpzi4hkoyzpghwpw@wunner.de>
- <DM5PR06MB31328A7B4E1A95A8C5E5E3E092F90@DM5PR06MB3132.namprd06.prod.outlook.com>
- <20200318114945.uqnexcmltfin3mvc@wunner.de>
-In-Reply-To: <20200318114945.uqnexcmltfin3mvc@wunner.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcZGhveWVyXGFw?=
- =?us-ascii?Q?cGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEy?=
- =?us-ascii?Q?OWUzNWJcbXNnc1xtc2ctYjJlOWE4Y2UtNjkyMS0xMWVhLWIwNzgtOGMxNjQ1?=
- =?us-ascii?Q?MTE0MjYwXGFtZS10ZXN0XGIyZTlhOGQwLTY5MjEtMTFlYS1iMDc4LThjMTY0?=
- =?us-ascii?Q?NTExNDI2MGJvZHkudHh0IiBzej0iMTc2MCIgdD0iMTMyMjkwMTQwMDU1MDA1?=
- =?us-ascii?Q?NDYxIiBoPSJMNU5hOHhrL3pMYmM4dXgwM0RhU0hKVkNJWGs9IiBpZD0iIiBi?=
- =?us-ascii?Q?bD0iMCIgYm89IjEiIGNpPSJjQUFBQUVSSFUxUlNSVUZOQ2dVQUFDUUVBQUFW?=
- =?us-ascii?Q?NlVOMUx2M1ZBVDBqWHNlWTl6d3hQU05leDVqM1BERUdBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBSEFBQUFDMEF3QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?RUFBUUFCQUFBQVdVWFc0QUFBQUFBQUFBQUFBQUFBQUo0QUFBQmhBR1FBWkFC?=
- =?us-ascii?Q?eUFHVUFjd0J6QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFF?=
- =?us-ascii?Q?QUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUdNQVl3QmZBR01BZFFCekFIUUFid0J0?=
- =?us-ascii?Q?QUY4QVlRQnVBSGtBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFBQUNBQUFB?=
- =?us-ascii?Q?QUFDZUFBQUFZd0IxQUhNQWRBQnZBRzBBWHdCd0FHVUFjZ0J6QUc4QWJnQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFE?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBSjRBQUFCakFIVUFj?=
- =?us-ascii?Q?d0IwQUc4QWJRQmZBSEFBYUFCdkFHNEFaUUJ1QUhVQWJRQmlBR1VBY2dBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBR01BZFFCekFIUUFid0J0QUY4QWN3?=
- =?us-ascii?Q?QnpBRzRBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFBQ0FB?=
- =?us-ascii?Q?QUFBQUNlQUFBQVpRQnRBR0VBYVFCc0FGOEFZUUJrQUdRQWNnQmxBSE1BY3dB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUdBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFBPT0iLz48L21l?=
- =?us-ascii?Q?dGE+?=
-x-dg-rorf: true
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=David.Hoyer@netapp.com; 
-x-originating-ip: [216.240.24.5]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 24e69e0a-9930-4907-c369-08d7cb4598f8
-x-ms-traffictypediagnostic: DM5PR06MB2716:
-x-microsoft-antispam-prvs: <DM5PR06MB2716EAE74368095392EB4D7F92F70@DM5PR06MB2716.namprd06.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 03468CBA43
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(376002)(346002)(366004)(396003)(199004)(66946007)(64756008)(33656002)(66446008)(66556008)(54906003)(66476007)(86362001)(71200400001)(5660300002)(6916009)(186003)(52536014)(966005)(7696005)(53546011)(6506007)(4326008)(55016002)(81166006)(9686003)(81156014)(8676002)(8936002)(316002)(76116006)(26005)(2906002)(478600001)(6606295002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR06MB2716;H:DM5PR06MB3132.namprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-received-spf: None (protection.outlook.com: netapp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: aES/0UUMkZXtiHL+b3BuqOBJvwa2cx9qIaCqbW7UahwmR5BO9t3j7negxEOuCBDMh8zHgTyPZ61jMCE0+ZtmbU8IJs9Ra/HGORzyhZx1Z4xy8JQq78x3WjYKmaeoJznISzofjP8eeEQF7HKSHSX1q/BiPxcUGvB8MZJtICSBbIIbzbBQGQ+SYWrc7lIXoZBYe/lrgXNH83doQUklhtdOEEq3hb5cNBlU8gu35lm/j0ma7g87TRXfpudJwS0DBQ9QusoKxvZJJOnICw6hKv58hjcW+q55nhlDxPdRcDBQlYioAcX2zRvOGq5OBHvce1GWH81tbOMkYM2oMJ3nkGWVE66IJbqZScyyS0I7ChzxX4GYqnwIuZRc87YowCxP0yHKsqH4VB+/kFLac0/m6pSLb4CsIdd17hxQ7tKGZPn7C6x/dUKwYlJ+8XaNDJCbPdHKfHuUkDmNa0JMoL8HJxfi5KRnqW7+6ONwWXJGueRrmIq4/5VsbpoNxCRM+UDRq5Gw7GsaQz7kZxgE4/DoVMV9n8TwJa7rsfc6e3ZTG6whaMPz0gOhEvmLxDnphF/pHN1+
-x-ms-exchange-antispam-messagedata: roiVkqsHvIM4F1CtQkait1LHeeRyFkhTpWw1UIWEx/vuVrNLbmt9N03JJOFqvqKoHN3/9QPDYnCcWVOba0Ss7x3YGoPy+o8ZkLQfSzXUDRGnbr+XaVGA4ppO70m+ljLsjIv/NihUNrVazWpJ8fb59g==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1727089AbgCRPEg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 Mar 2020 11:04:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34800 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726979AbgCRPEg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 18 Mar 2020 11:04:36 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4FEB20770;
+        Wed, 18 Mar 2020 15:04:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584543875;
+        bh=H6PswJchhT4zoiIUpYSuLhsYKHr9FQNTUobaJ0t3VDs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=W8viFJTmIa3k7paTT9mQlwLWj5dIMRyBsNqIGdgUsf4Dw/dTqS0GpsSRMEq2fjq7M
+         kgCKazdrsiCuVBHdAzaD1WJ8qvM8MN/iJpSVmparE24Zg3sOvYXHq9LZJ1yjOnxpkc
+         jaJWhbl/8wu/8v55LH8OfPulQ2GPx75k38FrDU7Y=
+Date:   Wed, 18 Mar 2020 10:04:32 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Saheed Bolarinwa <refactormyself@gmail.com>
+Cc:     Bjorn Helgaas <bjorn@helgaas.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        linux-pci@vger.kernel.org
+Subject: Re: Linux Kernel Mentorship Summer 2020
+Message-ID: <20200318150432.GA234686@google.com>
 MIME-Version: 1.0
-X-OriginatorOrg: netapp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 24e69e0a-9930-4907-c369-08d7cb4598f8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Mar 2020 14:06:47.5036
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4b0911a0-929b-4715-944b-c03745165b3a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 0/N8WABceub3CPhs+GoqNTBeDFSdm2Bb0l1HEHsuWREWgmYbeRZDkVcThsK1DN4wSWOFZVCDYoEpOIZXv/4Ouw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR06MB2716
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABGxfO5aN2kJd8YOhbOALw5j7Eq1-rArC_O10RQyFUUhM6YGqw@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Thank you for the information and for submitting the patch.   I will review=
- this so that I can do this better in the future.   I appreciate all the he=
-lp!
+[+cc linux-pci because there are lots of interesting wrinkles in this
+issue -- as background, my idea for this project was to make
+pcie_capability_read_word() return errors  more like
+pci_read_config_word() does.  When a PCI error occurs,
+pci_read_config_word() returns ~0 data, but
+pcie_capability_read_word() return 0 data.]
 
------Original Message-----
-From: Lukas Wunner <lukas@wunner.de>=20
-Sent: Wednesday, March 18, 2020 6:50 AM
-To: Hoyer, David <David.Hoyer@netapp.com>
-Cc: linux-pci@vger.kernel.org; Keith Busch <kbusch@kernel.org>
-Subject: Re: Kernel hangs when powering up/down drive using sysfs
+On Mon, Mar 16, 2020 at 02:03:57PM +0100, Saheed Bolarinwa wrote:
+> I have checked the function the  pcie_capability_read_word() that
+> sets *val = 0  when pci_read_config_word() fails.
+> 
+> I am still trying to get familiar to the code, I just wondering why
+> the result of pci_read_config_word()  is not being returned directly
+> since  *val  is passed into it.
 
-NetApp Security WARNING: This is an external email. Do not click links or o=
-pen attachments unless you recognize the sender and know the content is saf=
-e.
+pci_read_config_word() needs to return two things:
 
+  1) A success/failure indication.  This is either 0 or an error like
+  PCIBIOS_DEVICE_NOT_FOUND, PCIBIOS_BAD_REGISTER_NUMBER, etc.  This is
+  the function return value.
 
+  2) A 16-bit value read from PCI config space.  This is what goes in
+  *val.
 
+pcie_capability_read_word() is similar.  The idea of this project is
+to change part 2, the value in *val.
 
-On Mon, Mar 16, 2020 at 06:25:53PM +0000, Hoyer, David wrote:
-> I am not as familiar with submitting a "proper patch" and ask that you=20
-> do it if you would be so kind.
+The reason is that sometimes the config read fails on PCI.  This can
+happen because the device has been physically removed, it's been
+electrically isolated, or some other PCI error.  When a config read
+fails, the PCI host bridge generally returns ~0 data to satisfy the
+CPU load instruction.
 
-I've just submitted a patch to address this issue.  Does it work for you?
+The PCI core, i.e., pci_read_config_word() can't tell whether ~0 means
+(a) the config read was successful and the register on the PCI card
+happened to contain ~0, or (b) the config read failed because of a PCI
+error.
 
-The term "proper patch" is just kernel slang for a patch which can be appli=
-ed with "git am" by the PCI maintainer, Bjorn Helgaas.
+Only the driver knows whether ~0 is a valid value for a config space
+register, so the driver has to be involved in looking for this error.
 
-Such a patch can be generated with "git format-patch" and sent out with "ms=
-mtp" or "git send-email".
+My idea for this project is to make this checking more uniform between
+pci_read_config_word() and pcie_capability_read_word().
 
-There are some formal requirements which the patch needs to satisfy, they a=
-re listed here:
+For example, pci_read_config_word() sets *val = ~0 when it returns
+PCIBIOS_DEVICE_NOT_FOUND.
 
-https://www.kernel.org/doc/html/latest/process/submitting-patches.html
-https://www.kernel.org/doc/html/latest/process/development-process.html
-https://marc.info/?l=3Dlinux-pci&m=3D150905742808166
+On the other hand, pcie_capability_read_word() sets *val = 0 when it
+returns -EINVAL, PCIBIOS_DEVICE_NOT_FOUND, etc.
 
-Never mind all these details if you do not intend to submit patches yoursel=
-f.  In this case, I introduced this embarrassing mistake, so it's my job to=
- provide a solution if you don't want to.
+> This is what is done inside pci_read_config_word() when
+> pci_bus_read_config_word() is called. I tried to find the definition
+> of  pci_bus_read_config_word() but I couldn't find it.  I am not
+> sure I need it, though.
 
-Thanks for all the debugging work you have done and once again sorry for th=
-e breakage.
+pci_bus_read_config_word() and similar functions are defined by the
+PCI_OP_READ() macro in drivers/pci/access.c.  It's sort of annoying
+because grep/cscope/etc don't find those functions very well.  But
+you're right; they aren't really relevant to this project.
 
-Lukas
+> I am also confused with the last statement of the Project
+> description on the Project List
+> <https://wiki.linuxfoundation.org/lkmp/lkmp_project_list> page. It
+> says, "*This will require changes to some callers of
+> pci_read_config_word() that assume the read returns 0 on error.*" I
+> think the callers pcie_capability_read_word() are supposedly being
+> referred to here.
+
+Yes, that's a typo.  The idea is to change pcie_capability_read_*(),
+so we'd probably need to change some callers to match.
