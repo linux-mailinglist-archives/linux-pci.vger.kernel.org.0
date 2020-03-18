@@ -2,70 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5185D189AD1
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Mar 2020 12:38:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 09F00189B30
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Mar 2020 12:49:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbgCRLiX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 Mar 2020 07:38:23 -0400
-Received: from mail-ot1-f41.google.com ([209.85.210.41]:36222 "EHLO
-        mail-ot1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726855AbgCRLiX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Mar 2020 07:38:23 -0400
-Received: by mail-ot1-f41.google.com with SMTP id 39so9699197otu.3
-        for <linux-pci@vger.kernel.org>; Wed, 18 Mar 2020 04:38:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=eTyhRpsbG0kZyPAzv+dy/wYvyIITKWnTbwXBIUvSGbA=;
-        b=oif1guY36swCU6CoNPFUeyKB4o5nBLKMzDm2eVFyaDdoJH4PfPpT2Va1c3TmAQfBYk
-         iwIeIlHlLLsZ7ETT+LDvhBffsGUH3WzQJ+RrdMwIQSRSiDmetyEv0FBqdZjYS/s5B/q6
-         hPAeEFTiX0ZJTeRGlOcMOhekdvEVBWRsZizjIsTGQrZwNWLcLtNeeslBXjhvbsJ7XjK3
-         dVZZQS03D7w/StpJm2+/aCa0vIdyOc+le1P3gNvDm0Iv2SqSasHkNVjUpkIKxuCADOMJ
-         4f9feGDgKpTARbyZRRB3h5Pb1yHFzIUEezU0eSBQZ7my7HvJci4GBVCByIHh3L7p2mOf
-         d3UQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=eTyhRpsbG0kZyPAzv+dy/wYvyIITKWnTbwXBIUvSGbA=;
-        b=l/7wlp6UVoAKD4LfC4HWk/STafYHHs3W4TQ+9/1pOqanVl/QRB6CmhWxeIDtQU4IC/
-         gB0ZmPNbvxXocjaJ318/O95CcQt5xDuUGaJyGiB2AA8nen9Mok91TtGNpc8ER5v6tMNX
-         X9D1f76fkIsEC0wMqeyQoNxlI3k+mOYpHNdO5G7i9ytpnQFI5RqgXONtz5kqhOe7JupH
-         nq9nxvlXcZcLGXdiSx0cjW4FohfX/06QBEt8eQU0TzFarq3Stk8oHNwnBbsafrJSzQzG
-         PmiIjO4Qp+AFMUwSWY5+I7Og6REfPc16peUD0yUGelGdzNrKgWHYrhALbwg9NmSmKk1p
-         gP5A==
-X-Gm-Message-State: ANhLgQ3MxQ8U44aVMcx7LiWJ42k2hY3zDH817fI/GZ3Lq9s90v8dewwf
-        np3LNhcEw1xf1NPK5E4pukSE6AR9JR1Bv4AC3uy1Vti70wU=
-X-Google-Smtp-Source: ADFU+vt802eDl6yomu15vpnLPvcS8ld8HnLbzt3u15BU1CjiB3NLVoljNzfkWSvSOnr7FkTu64rHz5SfrGHJJw0TNU4=
-X-Received: by 2002:a05:6830:20c9:: with SMTP id z9mr3482440otq.44.1584531502669;
- Wed, 18 Mar 2020 04:38:22 -0700 (PDT)
+        id S1726638AbgCRLts (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 Mar 2020 07:49:48 -0400
+Received: from bmailout3.hostsharing.net ([176.9.242.62]:42331 "EHLO
+        bmailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726586AbgCRLtr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Mar 2020 07:49:47 -0400
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout3.hostsharing.net (Postfix) with ESMTPS id B77F4100DA1A7;
+        Wed, 18 Mar 2020 12:49:45 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 54D2212F3; Wed, 18 Mar 2020 12:49:45 +0100 (CET)
+Date:   Wed, 18 Mar 2020 12:49:45 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     "Hoyer, David" <David.Hoyer@netapp.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Keith Busch <kbusch@kernel.org>
+Subject: Re: Kernel hangs when powering up/down drive using sysfs
+Message-ID: <20200318114945.uqnexcmltfin3mvc@wunner.de>
+References: <DM5PR06MB313235E97731D97AB813F65D92FB0@DM5PR06MB3132.namprd06.prod.outlook.com>
+ <20200316181959.wpzi4hkoyzpghwpw@wunner.de>
+ <DM5PR06MB31328A7B4E1A95A8C5E5E3E092F90@DM5PR06MB3132.namprd06.prod.outlook.com>
 MIME-Version: 1.0
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Wed, 18 Mar 2020 11:37:56 +0000
-Message-ID: <CA+V-a8vOwwCjRnFZ_Cxtvep1nLMXd5AjOyJyispg1A1k_ExbSQ@mail.gmail.com>
-Subject: PCIe EPF
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DM5PR06MB31328A7B4E1A95A8C5E5E3E092F90@DM5PR06MB3132.namprd06.prod.outlook.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Kishon,
+On Mon, Mar 16, 2020 at 06:25:53PM +0000, Hoyer, David wrote:
+> I am not as familiar with submitting a "proper patch" and ask that you
+> do it if you would be so kind.
 
-I rebased my rcar-endpoint patches on endpoint branch, which has
-support for streaming DMA API support, with this  read/write/copy
-tests failed, to make sure nothing hasn't changed on my driver I
-reverted the streaming DMA API patch
-74b9b4da84c71418ceeaaeb78dc790376df92fea "misc: pci_endpoint_test: Use
-streaming DMA APIs for buffer allocation" and tests began to pass
-again.
+I've just submitted a patch to address this issue.  Does it work for you?
 
-If add a GFP_DMA flag for kzalloc (with streaming DMA), the test cases
-for read/write/copy pass as expected.
+The term "proper patch" is just kernel slang for a patch which can be
+applied with "git am" by the PCI maintainer, Bjorn Helgaas.
 
-Could you please through some light why this could be happening.
+Such a patch can be generated with "git format-patch" and sent out
+with "msmtp" or "git send-email".
 
-Cheers,
---Prabhakar Lad
+There are some formal requirements which the patch needs to satisfy,
+they are listed here:
+
+https://www.kernel.org/doc/html/latest/process/submitting-patches.html
+https://www.kernel.org/doc/html/latest/process/development-process.html
+https://marc.info/?l=linux-pci&m=150905742808166
+
+Never mind all these details if you do not intend to submit patches
+yourself.  In this case, I introduced this embarrassing mistake, so
+it's my job to provide a solution if you don't want to.
+
+Thanks for all the debugging work you have done and once again sorry
+for the breakage.
+
+Lukas
