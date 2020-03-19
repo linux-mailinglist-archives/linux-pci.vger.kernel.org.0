@@ -2,130 +2,304 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B50A418AA55
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Mar 2020 02:35:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D08618AA95
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Mar 2020 03:17:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbgCSBfD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 Mar 2020 21:35:03 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:12093 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726596AbgCSBfC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 18 Mar 2020 21:35:02 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 5F4303A32EB79CAF7C94;
-        Thu, 19 Mar 2020 09:34:59 +0800 (CST)
-Received: from [127.0.0.1] (10.65.95.32) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Thu, 19 Mar 2020
- 09:34:50 +0800
-Subject: Re: [PATCH RFC] perf:Add driver for HiSilicon PCIe PMU
-To:     Mark Rutland <mark.rutland@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>
-References: <1584014816-1908-1-git-send-email-liuqi115@huawei.com>
- <49a04327-b58b-3103-f992-97e8838c41df@arm.com>
- <20200313135940.GK42546@lakrids.cambridge.arm.com>
-CC:     <will@kernel.org>, <bhelgaas@google.com>,
-        <linux-pci@vger.kernel.org>, <linuxarm@huawei.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-From:   Qi Liu <liuqi115@huawei.com>
-Message-ID: <8a154c7b-9698-a329-a63a-4d13680d5916@huawei.com>
-Date:   Thu, 19 Mar 2020 09:34:45 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
-MIME-Version: 1.0
-In-Reply-To: <20200313135940.GK42546@lakrids.cambridge.arm.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.65.95.32]
-X-CFilter-Loop: Reflected
+        id S1726879AbgCSCRP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 Mar 2020 22:17:15 -0400
+Received: from yyz.mikelr.com ([170.75.163.43]:57306 "EHLO yyz.mikelr.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726596AbgCSCRO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 18 Mar 2020 22:17:14 -0400
+Received: from glidewell.ykf.mikelr.com (198-84-194-208.cpe.teksavvy.com [198.84.194.208])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client did not present a certificate)
+        by yyz.mikelr.com (Postfix) with ESMTPSA id 582343DAC7;
+        Wed, 18 Mar 2020 22:17:13 -0400 (EDT)
+From:   Mikel Rychliski <mikel@mikelr.com>
+To:     amd-gfx@lists.freedesktop.org, linux-pci@vger.kernel.org,
+        nouveau@lists.freedesktop.org
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Mikel Rychliski <mikel@mikelr.com>
+Subject: [PATCH v3] PCI: Use ioremap(), not phys_to_virt() for platform ROM
+Date:   Wed, 18 Mar 2020 22:16:23 -0400
+Message-Id: <20200319021623.5426-1-mikel@mikelr.com>
+X-Mailer: git-send-email 2.13.7
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Thanks for reviewing this patch, will fix these in v2 patch!
+On some EFI systems, the video BIOS is provided by the EFI firmware.  The
+boot stub code stores the physical address of the ROM image in pdev->rom.
+Currently we attempt to access this pointer using phys_to_virt(), which
+doesn't work with CONFIG_HIGHMEM.
 
-On 2020/3/13 21:59, Mark Rutland wrote:
-> On Fri, Mar 13, 2020 at 01:23:53PM +0000, Robin Murphy wrote:
->> On 2020-03-12 12:06 pm, Qi Liu wrote:
->>> From: Qi liu <liuqi115@huawei.com>
-> 
-> [...]
-> 
->>> +#define HISI_PCIE_EVENT_SHIFT_M			GENMASK(15, 0)
->>> +#define HISI_PCIE_SUBEVENT_SHIFT_M		GENMASK(31, 16)
->>> +#define HISI_PCIE_SUBEVENT_SHIFT_S		16
->>> +#define HISI_PCIE_PORT_SHIFT_M			GENMASK(7, 0)
->>> +#define HISI_PCIE_FUNC_SHIFT_M			GENMASK(15, 8)
->>> +#define HISI_PCIE_FUNC_SHIFT_S			8
->>
->> So "SHIFT_S" means "shift" and "SHIFT_M" actually means "mask"? That's
->> unnecessarily confusing. Furthermore it might be helpful if there was a more
->> obvious distinction between hardware register fields and config fields.
-> 
-> Also, If you use the FIELD_GET() and FIELD_PREP() helpers, you only need
-> to define the mask. See <linux/bitfield.h>.
-> 
->>> +int hisi_pcie_pmu_event_init(struct perf_event *event)
->>> +{
->>> +	struct hisi_pcie_pmu *pcie_pmu = to_pcie_pmu(event->pmu);
->>> +	struct hw_perf_event *hwc = &event->hw;
->>> +	u32 subevent_id, event_id, func_id, port_id;
->>> +
->>> +	if (event->attr.type != event->pmu->type)
->>> +		return -ENOENT;
->>> +
->>> +	/*
->>> +	 * We do not support sampling as the counters are all shared by all
->>> +	 * CPU cores in a CPU die(SCCL). Also we do not support attach to a
->>
->> Do the PCIe counters have anything to do with CPU clusters at all?
->>
->>> +	 * task(per-process mode)
->>> +	 */
->>> +	if (is_sampling_event(event) || event->attach_state & PERF_ATTACH_TASK)
->>> +		return -EOPNOTSUPP;
->>> +
->>> +	/*
->>> +	 * The uncore counters not specific to any CPU, so cannot
->>> +	 * support per-task
->>> +	 */
->>> +	if (event->cpu < 0)
->>> +		return -EINVAL;
->>> +
->>> +	/*
->>> +	 * Validate if the events in group does not exceed the
->>> +	 * available counters in hardware.
->>> +	 */
->>> +	if (!hisi_validate_event_group(event))
->>> +		return -EINVAL;
->>> +
->>> +	event_id = event->attr.config && HISI_PCIE_EVENT_SHIFT_M;
->>
->> Really? Are you sure you've tested this properly?
-> 
-> If you had:
-> 
-> #define HISI_PCI_EVENT_ID	GENMASK(15, 0)
-> #define HISI_PCI_SUBEVENT_ID	GENMASK(31, 16)
-> 
-> ... here you could do:
-> 
-> 	event_id = FIELD_GET(HISI_PCI_EVENT_ID, event->attr.config);
-> 
->>
->>> +	subevent_id = (event->attr.config && HISI_PCIE_SUBEVENT_SHIFT_M)
->>> +		       >> HISI_PCIE_SUBEVENT_SHIFT_S;
-> 
-> ... and:
-> 
-> 	subevent_id = FIELD_GET(HISI_PCI_SUBEVENT_ID, event->attr.config);
-> 
-> ... and so on for other fields.
-> 
-> Thanks,
-> Mark.
-> 
-> .
-> 
+On these systems, attempting to load the radeon module on a x86_32 kernel
+can result in the following:
+
+    BUG: unable to handle page fault for address: 3e8ed03c
+    #PF: supervisor read access in kernel mode
+    #PF: error_code(0x0000) - not-present page
+    *pde = 00000000
+    Oops: 0000 [#1] PREEMPT SMP
+    CPU: 0 PID: 317 Comm: systemd-udevd Not tainted 5.6.0-rc3-next-20200228 #2
+    Hardware name: Apple Computer, Inc. MacPro1,1/Mac-F4208DC8, BIOS     MP11.88Z.005C.B08.0707021221 07/02/07
+    EIP: radeon_get_bios+0x5ed/0xe50 [radeon]
+    Code: 00 00 84 c0 0f 85 12 fd ff ff c7 87 64 01 00 00 00 00 00 00 8b 47 08 8b 55 b0 e8 1e 83 e1 d6 85 c0 74 1a 8b 55 c0 85 d2 74 13 <80> 38 55 75 0e 80 78 01 aa 0f 84 a4 03 00 00 8d 74 26 00 68 dc 06
+    EAX: 3e8ed03c EBX: 00000000 ECX: 3e8ed03c EDX: 00010000
+    ESI: 00040000 EDI: eec04000 EBP: eef3fc60 ESP: eef3fbe0
+    DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010206
+    CR0: 80050033 CR2: 3e8ed03c CR3: 2ec77000 CR4: 000006d0
+    Call Trace:
+     ? register_client+0x34/0xe0
+     ? register_client+0xab/0xe0
+     r520_init+0x26/0x240 [radeon]
+     radeon_device_init+0x533/0xa50 [radeon]
+     radeon_driver_load_kms+0x80/0x220 [radeon]
+     drm_dev_register+0xa7/0x180 [drm]
+     radeon_pci_probe+0x10f/0x1a0 [radeon]
+     pci_device_probe+0xd4/0x140
+     really_probe+0x13d/0x3b0
+     driver_probe_device+0x56/0xd0
+     device_driver_attach+0x49/0x50
+     __driver_attach+0x79/0x130
+     ? device_driver_attach+0x50/0x50
+     bus_for_each_dev+0x5b/0xa0
+     driver_attach+0x19/0x20
+     ? device_driver_attach+0x50/0x50
+     bus_add_driver+0x117/0x1d0
+     ? pci_bus_num_vf+0x20/0x20
+     driver_register+0x66/0xb0
+     ? 0xf80f4000
+     __pci_register_driver+0x3d/0x40
+     radeon_init+0x82/0x1000 [radeon]
+     do_one_initcall+0x42/0x200
+     ? kvfree+0x25/0x30
+     ? __vunmap+0x206/0x230
+     ? kmem_cache_alloc_trace+0x16f/0x220
+     ? do_init_module+0x21/0x220
+     do_init_module+0x50/0x220
+     load_module+0x1f26/0x2200
+     sys_init_module+0x12d/0x160
+     do_fast_syscall_32+0x82/0x250
+     entry_SYSENTER_32+0xa5/0xf8
+
+Fix the issue by updating all drivers which can access a platform
+provided ROM. Instead of calling the helper function pci_platform_rom()
+which uses phys_to_virt(), call ioremap() directly on the pdev->rom.
+
+radeon_read_platform_bios() previously directly accessed an __iomem
+pointer. Avoid this by calling memcpy_fromio() instead of kmemdup().
+
+pci_platform_rom() now has no remaining callers, so remove it.
+
+Signed-off-by: Mikel Rychliski <mikel@mikelr.com>
+---
+
+Tested on a MacPro 1,1 with a Radeon X1900 XT card and 32-bit kernel.
+
+Changes in v3:
+ - Inline pci_platform_rom()
+
+Changes in v2:
+ - Add iounmap() call in nouveau
+ - Update function comment for pci_platform_rom()
+ - Minor changes to commit messages
+
+ drivers/gpu/drm/amd/amdgpu/amdgpu_bios.c           | 31 +++++++++++++---------
+ .../gpu/drm/nouveau/nvkm/subdev/bios/shadowpci.c   | 17 ++++++++++--
+ drivers/gpu/drm/radeon/radeon_bios.c               | 30 +++++++++++++--------
+ drivers/pci/rom.c                                  | 17 ------------
+ include/linux/pci.h                                |  1 -
+ 5 files changed, 52 insertions(+), 44 deletions(-)
+
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_bios.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_bios.c
+index 50dff69a0f6e..b1172d93c99c 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_bios.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_bios.c
+@@ -192,30 +192,35 @@ static bool amdgpu_read_bios_from_rom(struct amdgpu_device *adev)
+ 
+ static bool amdgpu_read_platform_bios(struct amdgpu_device *adev)
+ {
+-	uint8_t __iomem *bios;
+-	size_t size;
++	phys_addr_t rom = adev->pdev->rom;
++	size_t romlen = adev->pdev->romlen;
++	void __iomem *bios;
+ 
+ 	adev->bios = NULL;
+ 
+-	bios = pci_platform_rom(adev->pdev, &size);
+-	if (!bios) {
++	if (!rom || romlen == 0)
+ 		return false;
+-	}
+ 
+-	adev->bios = kzalloc(size, GFP_KERNEL);
+-	if (adev->bios == NULL)
++	adev->bios = kzalloc(romlen, GFP_KERNEL);
++	if (!adev->bios)
+ 		return false;
+ 
+-	memcpy_fromio(adev->bios, bios, size);
++	bios = ioremap(rom, romlen);
++	if (!bios)
++		goto free_bios;
+ 
+-	if (!check_atom_bios(adev->bios, size)) {
+-		kfree(adev->bios);
+-		return false;
+-	}
++	memcpy_fromio(adev->bios, bios, romlen);
++	iounmap(bios);
+ 
+-	adev->bios_size = size;
++	if (!check_atom_bios(adev->bios, romlen))
++		goto free_bios;
++
++	adev->bios_size = romlen;
+ 
+ 	return true;
++free_bios:
++	kfree(adev->bios);
++	return false;
+ }
+ 
+ #ifdef CONFIG_ACPI
+diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/shadowpci.c b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/shadowpci.c
+index 9b91da09dc5f..8d9812a51ef6 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/shadowpci.c
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/shadowpci.c
+@@ -101,9 +101,13 @@ platform_init(struct nvkm_bios *bios, const char *name)
+ 	else
+ 		return ERR_PTR(-ENODEV);
+ 
++	if (!pdev->rom || pdev->romlen == 0)
++		return ERR_PTR(-ENODEV);
++
+ 	if ((priv = kmalloc(sizeof(*priv), GFP_KERNEL))) {
++		priv->size = pdev->romlen;
+ 		if (ret = -ENODEV,
+-		    (priv->rom = pci_platform_rom(pdev, &priv->size)))
++		    (priv->rom = ioremap(pdev->rom, pdev->romlen)))
+ 			return priv;
+ 		kfree(priv);
+ 	}
+@@ -111,11 +115,20 @@ platform_init(struct nvkm_bios *bios, const char *name)
+ 	return ERR_PTR(ret);
+ }
+ 
++static void
++platform_fini(void *data)
++{
++	struct priv *priv = data;
++
++	iounmap(priv->rom);
++	kfree(priv);
++}
++
+ const struct nvbios_source
+ nvbios_platform = {
+ 	.name = "PLATFORM",
+ 	.init = platform_init,
+-	.fini = (void(*)(void *))kfree,
++	.fini = platform_fini,
+ 	.read = pcirom_read,
+ 	.rw = true,
+ };
+diff --git a/drivers/gpu/drm/radeon/radeon_bios.c b/drivers/gpu/drm/radeon/radeon_bios.c
+index c42f73fad3e3..bb29cf02974d 100644
+--- a/drivers/gpu/drm/radeon/radeon_bios.c
++++ b/drivers/gpu/drm/radeon/radeon_bios.c
+@@ -108,25 +108,33 @@ static bool radeon_read_bios(struct radeon_device *rdev)
+ 
+ static bool radeon_read_platform_bios(struct radeon_device *rdev)
+ {
+-	uint8_t __iomem *bios;
+-	size_t size;
++	phys_addr_t rom = rdev->pdev->rom;
++	size_t romlen = rdev->pdev->romlen;
++	void __iomem *bios;
+ 
+ 	rdev->bios = NULL;
+ 
+-	bios = pci_platform_rom(rdev->pdev, &size);
+-	if (!bios) {
++	if (!rom || romlen == 0)
+ 		return false;
+-	}
+ 
+-	if (size == 0 || bios[0] != 0x55 || bios[1] != 0xaa) {
++	rdev->bios = kzalloc(romlen, GFP_KERNEL);
++	if (!rdev->bios)
+ 		return false;
+-	}
+-	rdev->bios = kmemdup(bios, size, GFP_KERNEL);
+-	if (rdev->bios == NULL) {
+-		return false;
+-	}
++
++	bios = ioremap(rom, romlen);
++	if (!bios)
++		goto free_bios;
++
++	memcpy_fromio(rdev->bios, bios, romlen);
++	iounmap(bios);
++
++	if (rdev->bios[0] != 0x55 || rdev->bios[1] != 0xaa)
++		goto free_bios;
+ 
+ 	return true;
++free_bios:
++	kfree(rdev->bios);
++	return false;
+ }
+ 
+ #ifdef CONFIG_ACPI
+diff --git a/drivers/pci/rom.c b/drivers/pci/rom.c
+index 137bf0cee897..8fc9a4e911e3 100644
+--- a/drivers/pci/rom.c
++++ b/drivers/pci/rom.c
+@@ -195,20 +195,3 @@ void pci_unmap_rom(struct pci_dev *pdev, void __iomem *rom)
+ 		pci_disable_rom(pdev);
+ }
+ EXPORT_SYMBOL(pci_unmap_rom);
+-
+-/**
+- * pci_platform_rom - provides a pointer to any ROM image provided by the
+- * platform
+- * @pdev: pointer to pci device struct
+- * @size: pointer to receive size of pci window over ROM
+- */
+-void __iomem *pci_platform_rom(struct pci_dev *pdev, size_t *size)
+-{
+-	if (pdev->rom && pdev->romlen) {
+-		*size = pdev->romlen;
+-		return phys_to_virt((phys_addr_t)pdev->rom);
+-	}
+-
+-	return NULL;
+-}
+-EXPORT_SYMBOL(pci_platform_rom);
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 3840a541a9de..7268dcf1f23e 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1214,7 +1214,6 @@ int pci_enable_rom(struct pci_dev *pdev);
+ void pci_disable_rom(struct pci_dev *pdev);
+ void __iomem __must_check *pci_map_rom(struct pci_dev *pdev, size_t *size);
+ void pci_unmap_rom(struct pci_dev *pdev, void __iomem *rom);
+-void __iomem __must_check *pci_platform_rom(struct pci_dev *pdev, size_t *size);
+ 
+ /* Power management related routines */
+ int pci_save_state(struct pci_dev *dev);
+-- 
+2.13.7
 
