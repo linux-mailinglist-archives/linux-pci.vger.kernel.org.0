@@ -2,136 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BCFF18BF01
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Mar 2020 19:05:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3843418C144
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Mar 2020 21:24:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727383AbgCSSFe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 Mar 2020 14:05:34 -0400
-Received: from foss.arm.com ([217.140.110.172]:39812 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727108AbgCSSFd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 19 Mar 2020 14:05:33 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 49B5730E;
-        Thu, 19 Mar 2020 11:05:33 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 48A013F305;
-        Thu, 19 Mar 2020 11:05:32 -0700 (PDT)
-Date:   Thu, 19 Mar 2020 18:05:30 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>, linux-pci@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: Re: [PATCH] PCI: tegra: Print -EPROBE_DEFER error message at debug
- level
-Message-ID: <20200319180529.GB7433@e121166-lin.cambridge.arm.com>
-References: <20200319131230.3216305-1-thierry.reding@gmail.com>
+        id S1725747AbgCSUY4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 Mar 2020 16:24:56 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:41201 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725817AbgCSUYz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Mar 2020 16:24:55 -0400
+Received: by mail-lj1-f195.google.com with SMTP id o10so4026604ljc.8
+        for <linux-pci@vger.kernel.org>; Thu, 19 Mar 2020 13:24:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uvQkY59qXbqmh2jA/0FCgGEES29MX9NxM3v9QbCaiJg=;
+        b=BZCx6sdMC/lZySAftdRcfeiiSq2uZA9YVpplNcpG2p8J9RhJnbGmiUdzWYXMmfV1pt
+         qRp5YBrSnlyF9mvpiq75rGA2Teb1lRawyJ+HHOPY9yq0q29xhakmwe+xEq4Izg4v9vsZ
+         ilCqAnpC4TIwbvbJyaI81jwVNVrb1D6HsAIrU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uvQkY59qXbqmh2jA/0FCgGEES29MX9NxM3v9QbCaiJg=;
+        b=QdOuHNvafCikzL4alg0EEcSZlF7aueWVM0guTDuGf4yzsrmwEJaHMyyDvy4y77hkWm
+         Hg/EZ9EwrLr5x41sPm4IPjBXORxZs2Wk3I5+f+eh0L2Ih7D5/USKBLUOSS32UPmNfHIu
+         6MusL9VrbGQmMtKkzJmLUd7h2k0v9V68IlYJAJkeOfADbBr1BrKud4JYyaF4zG5x6pTo
+         +9d/qalHf0aeAfOPUnlyX73Vb/o0/h/7afE97BthRFZPzA2hvtkiJb/1o1fOgxQ7RkoX
+         X3P2JGUn8BYFrt16qUaZ+RNXdZaiL5B6EyqEAY1M+r6EIZNi6hlN5BOML2YGLL5he6Y7
+         LQyw==
+X-Gm-Message-State: ANhLgQ0/B4PTjJZpp3H7bqhk2W86qi7gcfa7900Yyi3HceZGv+P/sg8W
+        /NBDj2IN8NQyZ3ER6TGb2lr61XqzYAc=
+X-Google-Smtp-Source: ADFU+vtrlo8gsU3JzLWdj6gRTx7lPYRrvPQ8OBkP72Vtn8msv1FVhSJOwkvjV7tw7yArYwLqhlFm3w==
+X-Received: by 2002:a05:651c:1058:: with SMTP id x24mr3266084ljm.248.1584649490895;
+        Thu, 19 Mar 2020 13:24:50 -0700 (PDT)
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com. [209.85.167.42])
+        by smtp.gmail.com with ESMTPSA id u5sm1607536lfm.74.2020.03.19.13.24.49
+        for <linux-pci@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Mar 2020 13:24:50 -0700 (PDT)
+Received: by mail-lf1-f42.google.com with SMTP id z22so2753112lfd.8
+        for <linux-pci@vger.kernel.org>; Thu, 19 Mar 2020 13:24:49 -0700 (PDT)
+X-Received: by 2002:a19:c748:: with SMTP id x69mr3099253lff.196.1584649489074;
+ Thu, 19 Mar 2020 13:24:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200319131230.3216305-1-thierry.reding@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <806c51fa-992b-33ac-61a9-00a606f82edb@linux.intel.com>
+In-Reply-To: <806c51fa-992b-33ac-61a9-00a606f82edb@linux.intel.com>
+From:   Evan Green <evgreen@chromium.org>
+Date:   Thu, 19 Mar 2020 13:24:12 -0700
+X-Gmail-Original-Message-ID: <CAE=gft4Vx8tD71TXFD++hMLiExBWDNXn7LA6ohkGLwZvG2N6YQ@mail.gmail.com>
+Message-ID: <CAE=gft4Vx8tD71TXFD++hMLiExBWDNXn7LA6ohkGLwZvG2N6YQ@mail.gmail.com>
+Subject: Re: MSI interrupt for xhci still lost on 5.6-rc6 after cpu hotplug
+To:     Mathias Nyman <mathias.nyman@linux.intel.com>
+Cc:     x86@kernel.org, linux-pci <linux-pci@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Ghorai, Sukumar" <sukumar.ghorai@intel.com>,
+        "Amara, Madhusudanarao" <madhusudanarao.amara@intel.com>,
+        "Nandamuri, Srikanth" <srikanth.nandamuri@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 02:12:30PM +0100, Thierry Reding wrote:
-> From: Thierry Reding <treding@nvidia.com>
-> 
-> Probe deferral is an expected error condition that will usually be
-> recovered from. Print such error messages at debug level to make them
-> available for diagnostic purposes when building with debugging enabled
-> and hide them otherwise to not spam the kernel log with them.
-> 
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
-> ---
->  drivers/pci/controller/dwc/pcie-tegra194.c | 42 ++++++++++++++++++----
->  1 file changed, 35 insertions(+), 7 deletions(-)
+On Wed, Mar 18, 2020 at 12:23 PM Mathias Nyman
+<mathias.nyman@linux.intel.com> wrote:
+>
+> Hi
+>
+> I can reproduce the lost MSI interrupt issue on 5.6-rc6 which includes
+> the "Plug non-maskable MSI affinity race" patch.
+>
+> I can see this on a couple platforms, I'm running a script that first generates
+> a lot of usb traffic, and then in a busyloop sets irq affinity and turns off
+> and on cpus:
+>
+> for i in 1 3 5 7; do
+>         echo "1" > /sys/devices/system/cpu/cpu$i/online
+> done
+> echo "A" > "/proc/irq/*/smp_affinity"
+> echo "A" > "/proc/irq/*/smp_affinity"
+> echo "F" > "/proc/irq/*/smp_affinity"
+> for i in 1 3 5 7; do
+>         echo "0" > /sys/devices/system/cpu/cpu$i/online
+> done
+>
+> I added some very simple debugging but I don't really know what to look for.
+> xhci interrupts (122) just stop after a setting msi affinity, it survived many
+> similar msi_set_affinity() calls before this.
+>
+> I'm not that familiar with the inner workings of this, but I'll be happy to
+> help out with adding debugging and testing patches.
 
-Hi Thierry,
+How quickly are you able to reproduce this when you run your script?
+Does reverting Thomas' patch make it repro faster? Can you send the
+output of lspci -vvv for the xhci device?
 
-what tree/branch is it based on ? I assume it may depend on some
-patches queued in one of my branches so please let me know and
-I will apply accordingly.
-
-Thanks,
-Lorenzo
-
-> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-> index 97d3f3db1020..e4870fa6ce9c 100644
-> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
-> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-> @@ -1159,17 +1159,31 @@ static int tegra_pcie_dw_parse_dt(struct tegra_pcie_dw *pcie)
->  	/* Endpoint mode specific DT entries */
->  	pcie->pex_rst_gpiod = devm_gpiod_get(pcie->dev, "reset", GPIOD_IN);
->  	if (IS_ERR(pcie->pex_rst_gpiod)) {
-> -		dev_err(pcie->dev, "Failed to get PERST GPIO: %ld\n",
-> -			PTR_ERR(pcie->pex_rst_gpiod));
-> -		return PTR_ERR(pcie->pex_rst_gpiod);
-> +		int err = PTR_ERR(pcie->pex_rst_gpiod);
-> +		const char *level = KERN_ERR;
-> +
-> +		if (err == -EPROBE_DEFER)
-> +			level = KERN_DEBUG;
-> +
-> +		dev_printk(level, pcie->dev,
-> +			   dev_fmt("Failed to get PERST GPIO: %d\n"),
-> +			   err);
-> +		return err;
->  	}
->  
->  	pcie->pex_refclk_sel_gpiod = devm_gpiod_get(pcie->dev,
->  						    "nvidia,refclk-select",
->  						    GPIOD_OUT_HIGH);
->  	if (IS_ERR(pcie->pex_refclk_sel_gpiod)) {
-> -		dev_info(pcie->dev, "Failed to get REFCLK select GPIOs: %ld\n",
-> -			 PTR_ERR(pcie->pex_refclk_sel_gpiod));
-> +		int err = PTR_ERR(pcie->pex_refclk_sel_gpiod);
-> +		const char *level = KERN_ERR;
-> +
-> +		if (err == -EPROBE_DEFER)
-> +			level = KERN_DEBUG;
-> +
-> +		dev_printk(level, pcie->dev,
-> +			   dev_fmt("Failed to get REFCLK select GPIOs: %d\n"),
-> +			   err);
->  		pcie->pex_refclk_sel_gpiod = NULL;
->  	}
->  
-> @@ -2058,13 +2072,27 @@ static int tegra_pcie_dw_probe(struct platform_device *pdev)
->  
->  	ret = tegra_pcie_dw_parse_dt(pcie);
->  	if (ret < 0) {
-> -		dev_err(dev, "Failed to parse device tree: %d\n", ret);
-> +		const char *level = KERN_ERR;
-> +
-> +		if (ret == -EPROBE_DEFER)
-> +			level = KERN_DEBUG;
-> +
-> +		dev_printk(level, dev,
-> +			   dev_fmt("Failed to parse device tree: %d\n"),
-> +			   ret);
->  		return ret;
->  	}
->  
->  	ret = tegra_pcie_get_slot_regulators(pcie);
->  	if (ret < 0) {
-> -		dev_err(dev, "Failed to get slot regulators: %d\n", ret);
-> +		const char *level = KERN_ERR;
-> +
-> +		if (ret == -EPROBE_DEFER)
-> +			level = KERN_DEBUG;
-> +
-> +		dev_printk(level, dev,
-> +			   dev_fmt("Failed to get slot regulators: %d\n"),
-> +			   ret);
->  		return ret;
->  	}
->  
-> -- 
-> 2.24.1
-> 
+-Evan
