@@ -2,21 +2,20 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2853C18AEC9
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Mar 2020 09:52:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BF13518AEDB
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Mar 2020 10:01:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbgCSIwT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 Mar 2020 04:52:19 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35642 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725601AbgCSIwT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 19 Mar 2020 04:52:19 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 25E85B117;
-        Thu, 19 Mar 2020 08:52:16 +0000 (UTC)
-Date:   Thu, 19 Mar 2020 01:51:09 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
+        id S1725887AbgCSJBF convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Thu, 19 Mar 2020 05:01:05 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:59964 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725767AbgCSJBE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Mar 2020 05:01:04 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1jEr2O-0003WY-CF; Thu, 19 Mar 2020 10:00:24 +0100
+Date:   Thu, 19 Mar 2020 10:00:24 +0100
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -26,7 +25,8 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         Joel Fernandes <joel@joelfernandes.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         Randy Dunlap <rdunlap@infradead.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org,
         Logan Gunthorpe <logang@deltatee.com>,
         Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
         Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
@@ -36,60 +36,65 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
         linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
         Oleg Nesterov <oleg@redhat.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [patch V2 08/15] Documentation: Add lock ordering and nesting
- documentation
-Message-ID: <20200319085109.vrvmpesytul3ek3e@linux-p48b>
+        Davidlohr Bueso <dave@stgolabs.net>
+Subject: Re: [patch V2 07/15] powerpc/ps3: Convert half completion to rcuwait
+Message-ID: <20200319090024.wbrywc77tff3ro7i@linutronix.de>
 References: <20200318204302.693307984@linutronix.de>
- <20200318204408.211530902@linutronix.de>
+ <20200318204408.102694393@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200318204408.211530902@linutronix.de>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200318204408.102694393@linutronix.de>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 18 Mar 2020, Thomas Gleixner wrote:
->+Owner semantics
->+===============
->+
->+Most lock types in the Linux kernel have strict owner semantics, i.e. the
->+context (task) which acquires a lock has to release it.
->+
->+There are two exceptions:
->+
->+  - semaphores
->+  - rwsems
->+
->+semaphores have no strict owner semantics for historical reasons. They are
+On 2020-03-18 21:43:09 [+0100], Thomas Gleixner wrote:
+> --- a/arch/powerpc/platforms/ps3/device-init.c
+> +++ b/arch/powerpc/platforms/ps3/device-init.c
+> @@ -725,12 +728,12 @@ static int ps3_notification_read_write(s
+>  	unsigned long flags;
+>  	int res;
+>  
+> -	init_completion(&dev->done);
+>  	spin_lock_irqsave(&dev->lock, flags);
+>  	res = write ? lv1_storage_write(dev->sbd.dev_id, 0, 0, 1, 0, lpar,
+>  					&dev->tag)
+>  		    : lv1_storage_read(dev->sbd.dev_id, 0, 0, 1, 0, lpar,
+>  				       &dev->tag);
+> +	dev->done = false;
+>  	spin_unlock_irqrestore(&dev->lock, flags);
+>  	if (res) {
+>  		pr_err("%s:%u: %s failed %d\n", __func__, __LINE__, op, res);
+> @@ -738,14 +741,10 @@ static int ps3_notification_read_write(s
+>  	}
+>  	pr_debug("%s:%u: notification %s issued\n", __func__, __LINE__, op);
+>  
+> -	res = wait_event_interruptible(dev->done.wait,
+> -				       dev->done.done || kthread_should_stop());
+> +	rcuwait_wait_event(&dev->wait, dev->done || kthread_should_stop(), TASK_IDLE);
+> +
+…
 
-I would rephrase this to:
+Not sure it matters but this struct `dev' is allocated on stack. Should
+the interrupt fire *before* rcuwait_wait_event() set wait.task to NULL
+then it is of random value on the first invocation of rcuwait_wake_up().
+->
 
-semaphores have no owner semantics for historical reason, and as such
-trylock and release operations can be called from interrupt context. They
-are ...
+diff --git a/arch/powerpc/platforms/ps3/device-init.c b/arch/powerpc/platforms/ps3/device-init.c
+index 197347c3c0b24..e87360a0fb40d 100644
+--- a/arch/powerpc/platforms/ps3/device-init.c
++++ b/arch/powerpc/platforms/ps3/device-init.c
+@@ -809,6 +809,7 @@ static int ps3_probe_thread(void *data)
+ 	}
+ 
+ 	spin_lock_init(&dev.lock);
++	rcuwait_init(&dev.wait);
+ 
+ 	res = request_irq(irq, ps3_notification_interrupt, 0,
+ 			  "ps3_notification", &dev);
 
->+often used for both serialization and waiting purposes. That's generally
->+discouraged and should be replaced by separate serialization and wait
->+mechanisms.
-            ^ , such as mutexes or completions.
 
->+
->+rwsems have grown interfaces which allow non owner release for special
->+purposes. This usage is problematic on PREEMPT_RT because PREEMPT_RT
->+substitutes all locking primitives except semaphores with RT-mutex based
->+implementations to provide priority inheritance for all lock types except
->+the truly spinning ones. Priority inheritance on ownerless locks is
->+obviously impossible.
->+
->+For now the rwsem non-owner release excludes code which utilizes it from
->+being used on PREEMPT_RT enabled kernels. In same cases this can be
->+mitigated by disabling portions of the code, in other cases the complete
->+functionality has to be disabled until a workable solution has been found.
-
-Thanks,
-Davidlohr
+Sebastian
