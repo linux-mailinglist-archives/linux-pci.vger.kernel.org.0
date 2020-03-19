@@ -2,157 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CCFDF18BD68
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Mar 2020 18:04:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B6E318BD88
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Mar 2020 18:07:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727700AbgCSREX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 Mar 2020 13:04:23 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:12239 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726912AbgCSREX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Mar 2020 13:04:23 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e73a5e40000>; Thu, 19 Mar 2020 10:03:32 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 19 Mar 2020 10:04:22 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 19 Mar 2020 10:04:22 -0700
-Received: from [10.25.77.145] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 19 Mar
- 2020 17:04:20 +0000
-Subject: Re: [PATCH] PCI: tegra: Print -EPROBE_DEFER error message at debug
- level
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>
-CC:     Jon Hunter <jonathanh@nvidia.com>, <linux-pci@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>
-References: <20200319131230.3216305-1-thierry.reding@gmail.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <2e763237-fe19-68b3-d584-a3ad28689b87@nvidia.com>
-Date:   Thu, 19 Mar 2020 22:34:01 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1727908AbgCSRHC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 Mar 2020 13:07:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50266 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727252AbgCSRHC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 19 Mar 2020 13:07:02 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71D4C2072D;
+        Thu, 19 Mar 2020 17:07:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584637621;
+        bh=NdR6LVZ2cIsGAen/1ujzdrUs8tOtmmAvYQrgY/mLbXM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=fAsoMHdZ+CYuM4c3hgzSAXhoiZ3xbVbN8s2cz7P9jqZcY1HB2yJCvRtzAv8IouYHO
+         LC3dp3VGJ75UAMS0WzOgKBLBc3qum4Xg8DyXU67qvbSw9FVQNq+jdccLoJUC4cY0Oe
+         POScnOpP9mVL6PMYpSsyL0K3elHJk1q6Tes9R0s8=
+Date:   Thu, 19 Mar 2020 12:06:59 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+Subject: Re: [PATCH v2 2/2] PCI: uniphier: Add UniPhier PCIe endpoint
+ controller support
+Message-ID: <20200319170659.GA158868@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20200319131230.3216305-1-thierry.reding@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1584637412; bh=zdrELNFlowK5Bnf69vjtR/5Mu0YDFJ2bVpzEmz0lv94=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=qZ7MJRNZPlxa8nRRIfchayZxwMnmPRXvvz552jgYZju8RheSZmT3WfBa5RDGrwD1o
-         egnIvjK9eZCUeFm5696SVSXe9xfE4ZxPnSKlJ8wRg+Fu2GAE1C4lLWxIOW8moVlSea
-         ZDQb8E6aYPXFPKUh6ioR4x3T5xk6r3S8vezgSvgHdAkxOYBUuks5HROkffGy2oAfSi
-         BBvUf8gZ/aZ1uKp5Ap3IJdG4uREM7MvMpQIavBEpCxHoWbtk3atka9lPsf7gDRC4Us
-         bK27GFSeNJFviB0AOzFoWwbKeTTVxleyt5ABlaWxrwvZ1EFIjOjwKciKwNT1fy5HqE
-         7xbg0WeEwSizA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1584604449-13461-3-git-send-email-hayashi.kunihiko@socionext.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Thu, Mar 19, 2020 at 04:54:09PM +0900, Kunihiko Hayashi wrote:
+> This introduces specific glue layer for UniPhier platform to support
+> PCIe controller that is based on the DesignWare PCIe core, and
+> this driver supports endpoint mode. This supports for Pro5 SoC only.
 
+Possible alternate text: ("specific glue layer" isn't the usual way to
+describe a driver)
 
-On 3/19/2020 6:42 PM, Thierry Reding wrote:
-> External email: Use caution opening links or attachments
-> 
-> 
-> From: Thierry Reding <treding@nvidia.com>
-> 
-> Probe deferral is an expected error condition that will usually be
-> recovered from. Print such error messages at debug level to make them
-> available for diagnostic purposes when building with debugging enabled
-> and hide them otherwise to not spam the kernel log with them.
-> 
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
-> ---
->   drivers/pci/controller/dwc/pcie-tegra194.c | 42 ++++++++++++++++++----
->   1 file changed, 35 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-> index 97d3f3db1020..e4870fa6ce9c 100644
-> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
-> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-> @@ -1159,17 +1159,31 @@ static int tegra_pcie_dw_parse_dt(struct tegra_pcie_dw *pcie)
->          /* Endpoint mode specific DT entries */
->          pcie->pex_rst_gpiod = devm_gpiod_get(pcie->dev, "reset", GPIOD_IN);
->          if (IS_ERR(pcie->pex_rst_gpiod)) {
-> -               dev_err(pcie->dev, "Failed to get PERST GPIO: %ld\n",
-> -                       PTR_ERR(pcie->pex_rst_gpiod));
-> -               return PTR_ERR(pcie->pex_rst_gpiod);
-> +               int err = PTR_ERR(pcie->pex_rst_gpiod);
-> +               const char *level = KERN_ERR;
-> +
-> +               if (err == -EPROBE_DEFER)
-> +                       level = KERN_DEBUG;
-> +
-> +               dev_printk(level, pcie->dev,
-> +                          dev_fmt("Failed to get PERST GPIO: %d\n"),
-> +                          err);
-> +               return err;
->          }
-> 
->          pcie->pex_refclk_sel_gpiod = devm_gpiod_get(pcie->dev,
->                                                      "nvidia,refclk-select",
->                                                      GPIOD_OUT_HIGH);
->          if (IS_ERR(pcie->pex_refclk_sel_gpiod)) {
-> -               dev_info(pcie->dev, "Failed to get REFCLK select GPIOs: %ld\n",
-> -                        PTR_ERR(pcie->pex_refclk_sel_gpiod));
-> +               int err = PTR_ERR(pcie->pex_refclk_sel_gpiod);
-> +               const char *level = KERN_ERR;
-> +
-> +               if (err == -EPROBE_DEFER)
-> +                       level = KERN_DEBUG;
-> +
-> +               dev_printk(level, pcie->dev,
-> +                          dev_fmt("Failed to get REFCLK select GPIOs: %d\n"),
-> +                          err);
->                  pcie->pex_refclk_sel_gpiod = NULL;
->          }
-> 
-> @@ -2058,13 +2072,27 @@ static int tegra_pcie_dw_probe(struct platform_device *pdev)
-> 
->          ret = tegra_pcie_dw_parse_dt(pcie);
->          if (ret < 0) {
-> -               dev_err(dev, "Failed to parse device tree: %d\n", ret);
-> +               const char *level = KERN_ERR;
-> +
-> +               if (ret == -EPROBE_DEFER)
-> +                       level = KERN_DEBUG;
-> +
-> +               dev_printk(level, dev,
-> +                          dev_fmt("Failed to parse device tree: %d\n"),
-> +                          ret);
->                  return ret;
->          }
-> 
->          ret = tegra_pcie_get_slot_regulators(pcie);
->          if (ret < 0) {
-> -               dev_err(dev, "Failed to get slot regulators: %d\n", ret);
-> +               const char *level = KERN_ERR;
-> +
-> +               if (ret == -EPROBE_DEFER)
-> +                       level = KERN_DEBUG;
-> +
-> +               dev_printk(level, dev,
-> +                          dev_fmt("Failed to get slot regulators: %d\n"),
-> +                          ret);
->                  return ret;
->          }
-> 
-> --
-> 2.24.1
-> 
+  PCI: uniphier: Add Socionext UniPhier Pro5 SoC endpoint controller driver
 
-Reviewed-by: Vidya Sagar <vidyas@nvidia.com>
-Tested-by: Vidya Sagar <vidyas@nvidia.com>
+  Add driver for the Socionext UniPhier Pro5 SoC endpoint controller.
+  This controller is based on the DesignWare PCIe core.
+
+> +/* assertion time of intx in usec */
+
+s/intx/INTx/ to match usage in spec (and in comments below :))
+
+> +#define PCL_INTX_WIDTH_USEC		30
+
+> +struct uniphier_pcie_ep_soc_data {
+> +	bool is_legacy;
+
+I'd prefer "unsigned int is_legacy:1".  See [1].
+
+But AFAICT you actually don't need this at all (yet), since you only
+have a single of_device_id, and it sets "is_legacy = true".  That
+means the *not* legacy code is effectively dead and hasn't been
+tested.
+
+My preference would be to add "is_legacy" and the associated tests
+when you actually *need* them, i.e., when you add support for a
+non-legacy device.
+
+> +static int uniphier_pcie_ep_raise_legacy_irq(struct dw_pcie_ep *ep)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +	struct uniphier_pcie_ep_priv *priv = to_uniphier_pcie(pci);
+> +	u32 val;
+> +
+> +	/* assert INTx */
+> +	val = readl(priv->base + PCL_APP_INTX);
+> +	val |= PCL_APP_INTX_SYS_INT;
+> +	writel(val, priv->base + PCL_APP_INTX);
+> +
+> +	udelay(PCL_INTX_WIDTH_USEC);
+> +
+> +	/* deassert INTx */
+> +	val = readl(priv->base + PCL_APP_INTX);
+
+Why do you need to read PCL_APP_INTX again here?
+
+> +	val &= ~PCL_APP_INTX_SYS_INT;
+> +	writel(val, priv->base + PCL_APP_INTX);
+> +
+> +	return 0;
+> +}
+
+> +	ret = dw_pcie_ep_init(ep);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to initialize endpoint (%d)\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+
+This is equivalent to:
+
+  ret = dw_pcie_ep_init(ep);
+  if (ret)
+    dev_err(dev, "Failed to initialize endpoint (%d)\n", ret);
+
+  return ret;
+
+> +}
+
+[1] https://lore.kernel.org/linux-fsdevel/CA+55aFzKQ6Pj18TB8p4Yr0M4t+S+BsiHH=BJNmn=76-NcjTj-g@mail.gmail.com/
