@@ -2,122 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 04E5618AE80
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Mar 2020 09:42:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F3CA018AEB1
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Mar 2020 09:49:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725767AbgCSIms (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 Mar 2020 04:42:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56754 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725601AbgCSImr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 19 Mar 2020 04:42:47 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9125A20724;
-        Thu, 19 Mar 2020 08:42:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584607367;
-        bh=bc6Fify+38nZAY3Cia1aV1OdCk4gn2q4y8vjHO0jHQs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tziaOs8nF6qC2ZxtPxDt+NdfWpIrzDmvKzsswJgbGZoj8i6PseYVNTHnVQCWhF3l7
-         BlaCfZEzl2+/751CB3Sz2r9W2tBaPF/Ha6955QYPrXbnsfvJrB3QDPo2+ZfG4d0stK
-         TebhEBXc4YrP7M09KzptbT9OYlt0nFKptulOurBg=
-Date:   Thu, 19 Mar 2020 09:42:44 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [patch V2 11/15] completion: Use simple wait queues
-Message-ID: <20200319084244.GC3492783@kroah.com>
-References: <20200318204302.693307984@linutronix.de>
- <20200318204408.521507446@linutronix.de>
+        id S1727095AbgCSIsB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 Mar 2020 04:48:01 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:59784 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727053AbgCSIsB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Mar 2020 04:48:01 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jEqqD-0002xp-G4; Thu, 19 Mar 2020 09:47:49 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id AB625103088; Thu, 19 Mar 2020 09:47:47 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Aman Sharma <amanharitsh123@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Mans Rullgard <mans@mansr.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH 4/5] pci: handled return value of platform_get_irq correctly
+In-Reply-To: <20200318222238.GA247500@google.com>
+References: <20200318222238.GA247500@google.com>
+Date:   Thu, 19 Mar 2020 09:47:47 +0100
+Message-ID: <877dzgennw.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200318204408.521507446@linutronix.de>
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 09:43:13PM +0100, Thomas Gleixner wrote:
-> From: Thomas Gleixner <tglx@linutronix.de>
-> 
-> completion uses a wait_queue_head_t to enqueue waiters.
-> 
-> wait_queue_head_t contains a spinlock_t to protect the list of waiters
-> which excludes it from being used in truly atomic context on a PREEMPT_RT
-> enabled kernel.
-> 
-> The spinlock in the wait queue head cannot be replaced by a raw_spinlock
-> because:
-> 
->   - wait queues can have custom wakeup callbacks, which acquire other
->     spinlock_t locks and have potentially long execution times
-> 
->   - wake_up() walks an unbounded number of list entries during the wake up
->     and may wake an unbounded number of waiters.
-> 
-> For simplicity and performance reasons complete() should be usable on
-> PREEMPT_RT enabled kernels.
-> 
-> completions do not use custom wakeup callbacks and are usually single
-> waiter, except for a few corner cases.
-> 
-> Replace the wait queue in the completion with a simple wait queue (swait),
-> which uses a raw_spinlock_t for protecting the waiter list and therefore is
-> safe to use inside truly atomic regions on PREEMPT_RT.
-> 
-> There is no semantical or functional change:
-> 
->   - completions use the exclusive wait mode which is what swait provides
-> 
->   - complete() wakes one exclusive waiter
-> 
->   - complete_all() wakes all waiters while holding the lock which protects
->     the wait queue against newly incoming waiters. The conversion to swait
->     preserves this behaviour.
-> 
-> complete_all() might cause unbound latencies with a large number of waiters
-> being woken at once, but most complete_all() usage sites are either in
-> testing or initialization code or have only a really small number of
-> concurrent waiters which for now does not cause a latency problem. Keep it
-> simple for now.
-> 
-> The fixup of the warning check in the USB gadget driver is just a straight
-> forward conversion of the lockless waiter check from one waitqueue type to
-> the other.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> ---
-> V2: Split out the orinoco and usb gadget parts and amended change log
-> ---
->  drivers/usb/gadget/function/f_fs.c |    2 +-
->  include/linux/completion.h         |    8 ++++----
->  kernel/sched/completion.c          |   36 +++++++++++++++++++-----------------
->  3 files changed, 24 insertions(+), 22 deletions(-)
+Bjorn Helgaas <helgaas@kernel.org> writes:
+> On Wed, Mar 18, 2020 at 02:42:48PM +0100, Thomas Gleixner wrote:
+>> Bjorn Helgaas <helgaas@kernel.org> writes:
+>> > On Fri, Mar 13, 2020 at 04:56:42PM -0500, Bjorn Helgaas wrote:
+>> >> On Fri, Mar 13, 2020 at 10:05:58PM +0100, Thomas Gleixner wrote:
+>> >> > >   I think the best pattern is:
+>> >> > >
+>> >> > >     irq = platform_get_irq(pdev, i);
+>> >> > >     if (irq < 0)
+>> >> > >       return irq;
+>> >> > 
+>> >> > Careful. 0 is not a valid interrupt.
+>> >> 
+>> >> Should callers of platform_get_irq() check for a 0 return value?
+>> >> About 900 of them do not.
+>> 
+>> I don't know what I was looking at.
+>> 
+>> platform_get_irq() does the right thing already, so checking for irq < 0
+>> is sufficient.
+>> 
+>> Sorry for the confusion!
+>
+> Thanks, I was indeed confused!  Maybe we could reduce future confusion
+> by strengthening the comments slightly, e.g.,
+>
+>   - * Return: IRQ number on success, negative error number on failure.
+>   + * Return: non-zero IRQ number on success, negative error number on failure.
+>
+> I don't want to push my luck, but it's pretty hard to prove that
+> platform_get_irq() never returns 0.  What would you think of something
+> like the following?
 
-For USB portion:
-
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+No objections from my side.
