@@ -2,86 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C283F18C28F
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Mar 2020 22:49:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 862D018C356
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Mar 2020 23:52:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbgCSVth (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 Mar 2020 17:49:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39342 "EHLO mail.kernel.org"
+        id S1727565AbgCSWww (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 Mar 2020 18:52:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726619AbgCSVth (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 19 Mar 2020 17:49:37 -0400
+        id S1726856AbgCSWwv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 19 Mar 2020 18:52:51 -0400
 Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E44B2076F;
-        Thu, 19 Mar 2020 21:49:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A1D3206D7;
+        Thu, 19 Mar 2020 22:52:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584654576;
-        bh=CVs01TGipmPGpf0FCCjonz7WVkscCZD6wIB3CNx0vQI=;
+        s=default; t=1584658370;
+        bh=4iJFtuBMo87wnt6wZpaiJ+4GDnysLlZVMy3uErkY7YI=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=H2ALHgZ04MLBIcS9leloUIRe+vDtmh0wftirNSk5X4hZDlYYjmkn4POOjdsIke53Z
-         1EVLw3k+hisKl3+B5G6AryXSyrb8dGjKFtskO2feKFq3fy4v6NqkCvdKKHc/ItmUys
-         hMc+PkhNlPNnrFllKgtPXkS4IljdtREQORSGZfXg=
-Date:   Thu, 19 Mar 2020 16:49:34 -0500
+        b=nGS71f+Cp6K/f3h8pftZt6yFGhSxOmsB4UdOy/rTqcDXGOdoeG2TB1pompXBz2RPG
+         D4B2TYl48sWzsbD5c6/UvfBsrJVewO3hpPiIX/wn+jvjzwsiiy7HG2zs4TGvg8kWEn
+         YvUAD7vrOWbRRddyrmAPj53DST+AXScperyD2M9c=
+Date:   Thu, 19 Mar 2020 17:52:48 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: Avoid ASMedia XHCI USB PME# from D0 defect
-Message-ID: <20200319214934.GA8156@google.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     bjorn@helgaas.com,
+        "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>
+Subject: Re: [PATCH v17 06/12] Documentation: PCI: Remove reset_link
+ references
+Message-ID: <20200319225248.GA12599@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191219192006.16270-1-kai.heng.feng@canonical.com>
+In-Reply-To: <20200317170654.GA23125@infradead.org>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 03:20:06AM +0800, Kai-Heng Feng wrote:
-> The ASMedia USB XHCI Controller claims to support generating PME# while
-> in D0:
+On Tue, Mar 17, 2020 at 10:06:54AM -0700, Christoph Hellwig wrote:
+> On Tue, Mar 17, 2020 at 11:03:36AM -0500, Bjorn Helgaas wrote:
+> > On Tue, Mar 17, 2020 at 10:09 AM Christoph Hellwig <hch@infradead.org> wrote:
+> > > On Tue, Mar 17, 2020 at 08:05:50AM -0700, Kuppuswamy, Sathyanarayanan wrote:
+> > > > > > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > > > >
+> > > > > This should be folded into the patch removing the method.
+> > > > This is also folded in the mentioned patch.
+> > > > https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/?h=review/edr&id=7a18dc6506f108db3dc40f5cd779bc15270c4183
+> > >
+> > > I can't find that series anywhere on the list.  What did I miss?
+> > 
+> > We've still been discussing other issues (access to AER registers,
+> > synchronization between EDR and hotplug, etc) in other parts of this
+> > thread.  The git branch Sathy pointed to above is my local branch.
+> > I'll send it to the list before putting it into -next, but I wanted to
+> > make progress on some of these other issues first.
 > 
-> 01:00.0 USB controller: ASMedia Technology Inc. Device 2142 (prog-if 30 [XHCI])
->         Subsystem: SUNIX Co., Ltd. Device 312b
->         Capabilities: [78] Power Management version 3
->                 Flags: PMEClk- DSI- D1- D2- AuxCurrent=55mA PME(D0+,D1-,D2-,D3hot-,D3cold-)
->                 Status: D0 NoSoftRst+ PME-Enable+ DSel=0 DScale=0 PME-
+> A few nitpicks:
 > 
-> However PME# only gets asserted when plugging USB 2.0 or USB 1.1
-> devices, but not for USB 3.0 devices.
+> PCI/ERR: Update error status after reset_link():
 > 
-> So remove PCI_PM_CAP_PME_D0 to avoid using PME under D0.
-> 
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=205919
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+>  - there are two "if (state == pci_channel_io_frozen)"
+>    right after each other now, merging them would make the code a little
+>    easier to read.
 
-Applied to pci/misc for v5.7, thanks!
+Merged, thanks.
 
-> ---
->  drivers/pci/quirks.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
+> PCI/DPC: Move DPC data into struct pci_dev:
 > 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 79379b4c9d7a..24c71555dc77 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -5436,3 +5436,14 @@ static void quirk_reset_lenovo_thinkpad_p50_nvgpu(struct pci_dev *pdev)
->  DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, 0x13b1,
->  			      PCI_CLASS_DISPLAY_VGA, 8,
->  			      quirk_reset_lenovo_thinkpad_p50_nvgpu);
-> +
-> +/*
-> + * Device [1b21:2142]
-> + * When in D0, PME# doesn't get asserted when plugging USB 3.0 device.
-> + */
-> +static void pci_fixup_no_d0_pme(struct pci_dev *dev)
-> +{
-> +	pci_info(dev, "PME# does not work under D0, disabling it\n");
-> +	dev->pme_support &= ~(PCI_PM_CAP_PME_D0 >> PCI_PM_CAP_PME_SHIFT);
-> +}
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x2142, pci_fixup_no_d0_pme);
-> -- 
-> 2.17.1
+>  - dpc_rp_extensions probable should be a "bool : 1"
+
+I actually had not seen "bool : 1" used, but you're right, there are
+several.  There aren't any in drivers/pci, though, so I'm inclined to
+stay consistent with "unsigned int : 1" unless there's an advantage,
+and then I'd probably convert all of drivers/pci over.
+
+My rule of thumb has been [1], where Linus suggests "unsigned int
+percpu:1", but maybe that should be updated.
+
+> PCI/ERR: Remove service dependency in pcie_do_recovery():
 > 
+>  - as mentioned to Kuppuswamy the reset_cb is never NULL, and thus
+>    a lot of dead code in reset_link can be removed.
+
+Agreed, thanks, I removed that dead code.
+
+>    Also reset_link should be merged into pcie_do_recovery.  That
+>    would also enable to call the argument reset_link, which might be
+>    a bit more descriptive than reset_cb.
+
+I didn't do this because it sounds like it might be a separate patch.
+But maybe Sathy can do this in the next round?
+
+> PCI/DPC: Cache DPC capabilities in pci_init_capabilities():
+> 
+>  - I think the pci_dpc_init could be cleaned up a bit to:
+> 
+> 	...
+> 	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CAP, &cap);
+> 	if (!(cap & PCI_EXP_DPC_CAP_RP_EXT))
+> 		return;
+> 	pdev->dpc_rp_extensions = true;
+> 	pdev->dpc_rp_log_size = (cap & PCI_EXP_DPC_RP_PIO_LOG_SIZE) >> 8;
+> 	...
+
+Nice, thanks!  I made this change, too.
+
+Thanks a lot for reviewing this!
+
+Bjorn
+
+
+[1] https://lore.kernel.org/linux-arm-kernel/CA+55aFxnePDimkVKVtv3gNmRGcwc8KQ5mHYvUxY8sAQg6yvVYg@mail.gmail.com/
