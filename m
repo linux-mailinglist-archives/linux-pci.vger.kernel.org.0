@@ -2,125 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B6E318BD88
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Mar 2020 18:07:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F76718BDB6
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Mar 2020 18:12:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727908AbgCSRHC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 Mar 2020 13:07:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50266 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727252AbgCSRHC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 19 Mar 2020 13:07:02 -0400
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71D4C2072D;
-        Thu, 19 Mar 2020 17:07:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584637621;
-        bh=NdR6LVZ2cIsGAen/1ujzdrUs8tOtmmAvYQrgY/mLbXM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=fAsoMHdZ+CYuM4c3hgzSAXhoiZ3xbVbN8s2cz7P9jqZcY1HB2yJCvRtzAv8IouYHO
-         LC3dp3VGJ75UAMS0WzOgKBLBc3qum4Xg8DyXU67qvbSw9FVQNq+jdccLoJUC4cY0Oe
-         POScnOpP9mVL6PMYpSsyL0K3elHJk1q6Tes9R0s8=
-Date:   Thu, 19 Mar 2020 12:06:59 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-Subject: Re: [PATCH v2 2/2] PCI: uniphier: Add UniPhier PCIe endpoint
- controller support
-Message-ID: <20200319170659.GA158868@google.com>
+        id S1728180AbgCSRMv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 Mar 2020 13:12:51 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35176 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727235AbgCSRMv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Mar 2020 13:12:51 -0400
+Received: by mail-lj1-f194.google.com with SMTP id u12so3406972ljo.2
+        for <linux-pci@vger.kernel.org>; Thu, 19 Mar 2020 10:12:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mGnzjLPuiF5jh+YmVcnbPs/rygoBzTtr0yQpmvu1C/U=;
+        b=ho5WkQIp7FBmmWnNEs8qarjlXHQ/bMpYIjVlz5diN+cFqHjIA9Cfpaie2yvrq56MzY
+         6TnA04IH3cBRxYREMcsiPUpLCig/QPzuawQ7+ZDABjg2D7iZ5uNSWio6VnyJC48k22lp
+         9sUOw53EsymdqqmachpMBK4cZKv94z+KiqobI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mGnzjLPuiF5jh+YmVcnbPs/rygoBzTtr0yQpmvu1C/U=;
+        b=AUW24Cis8UgyCV8F4M2UN0aPEj1favZoAsKYOfG9HCyuINWf/6OqLbkLw5mfG5SWQj
+         CMelefTRSS27ap1D+hawSXhfmcd3cSp96g8UF9l7jCO+IiGiAKXI5E+/SddWGEWI0gM3
+         Amc54c4c/Jfo6+jrN9f4uLmqCWN7O3rl6z7TOfhVR1fEjcKjxS4UKbndE+1hqYfSexRO
+         KKXCg8YQvvcMMDm3Ij9B9DY4UYNFd7kAMZoG4H9m1GgVAhGVyvfwQhvBOAWcrjTl+2E+
+         ACyw59PoyFCNprblir1Vx7nl8Q66wJfOCLo+2++eQ0aFLfSw7H9UgVUvdfj0x4k/MdpK
+         Vmtw==
+X-Gm-Message-State: ANhLgQ3/POCBXpS1tf5QxKC2GuKTPkcBgHPK3m/fbiP0MIDqA98CUT76
+        MInvOyVdFBUzT6Bpta3wo78XyRoRI+o=
+X-Google-Smtp-Source: ADFU+vtrq+VIFgoP4aMHObrslkdKZXZP/tr30rWoOUB0WCFnPD2Gm5OY1t8Y/UaJ6g5FcFeshYTOgQ==
+X-Received: by 2002:a05:651c:285:: with SMTP id b5mr2634390ljo.165.1584637967879;
+        Thu, 19 Mar 2020 10:12:47 -0700 (PDT)
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com. [209.85.167.45])
+        by smtp.gmail.com with ESMTPSA id x3sm1826177ljc.105.2020.03.19.10.12.46
+        for <linux-pci@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Mar 2020 10:12:46 -0700 (PDT)
+Received: by mail-lf1-f45.google.com with SMTP id z22so2271088lfd.8
+        for <linux-pci@vger.kernel.org>; Thu, 19 Mar 2020 10:12:46 -0700 (PDT)
+X-Received: by 2002:a19:c7:: with SMTP id 190mr2779646lfa.30.1584637965843;
+ Thu, 19 Mar 2020 10:12:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1584604449-13461-3-git-send-email-hayashi.kunihiko@socionext.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20200318204302.693307984@linutronix.de> <20200318204408.521507446@linutronix.de>
+In-Reply-To: <20200318204408.521507446@linutronix.de>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 19 Mar 2020 10:12:29 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wj3bwUD9=y4Wd6=Dh1Xwib+N3nYuKA=hd3-y+0OUeLcOQ@mail.gmail.com>
+Message-ID: <CAHk-=wj3bwUD9=y4Wd6=Dh1Xwib+N3nYuKA=hd3-y+0OUeLcOQ@mail.gmail.com>
+Subject: Re: [patch V2 11/15] completion: Use simple wait queues
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 04:54:09PM +0900, Kunihiko Hayashi wrote:
-> This introduces specific glue layer for UniPhier platform to support
-> PCIe controller that is based on the DesignWare PCIe core, and
-> this driver supports endpoint mode. This supports for Pro5 SoC only.
+On Wed, Mar 18, 2020 at 1:47 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> There is no semantical or functional change:
 
-Possible alternate text: ("specific glue layer" isn't the usual way to
-describe a driver)
+Ack, with just the explanation, I'm no longer objecting to this.
 
-  PCI: uniphier: Add Socionext UniPhier Pro5 SoC endpoint controller driver
+Plus you fixed and cleaned up the odd usb gadget code separately
+(well, most of it).
 
-  Add driver for the Socionext UniPhier Pro5 SoC endpoint controller.
-  This controller is based on the DesignWare PCIe core.
-
-> +/* assertion time of intx in usec */
-
-s/intx/INTx/ to match usage in spec (and in comments below :))
-
-> +#define PCL_INTX_WIDTH_USEC		30
-
-> +struct uniphier_pcie_ep_soc_data {
-> +	bool is_legacy;
-
-I'd prefer "unsigned int is_legacy:1".  See [1].
-
-But AFAICT you actually don't need this at all (yet), since you only
-have a single of_device_id, and it sets "is_legacy = true".  That
-means the *not* legacy code is effectively dead and hasn't been
-tested.
-
-My preference would be to add "is_legacy" and the associated tests
-when you actually *need* them, i.e., when you add support for a
-non-legacy device.
-
-> +static int uniphier_pcie_ep_raise_legacy_irq(struct dw_pcie_ep *ep)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> +	struct uniphier_pcie_ep_priv *priv = to_uniphier_pcie(pci);
-> +	u32 val;
-> +
-> +	/* assert INTx */
-> +	val = readl(priv->base + PCL_APP_INTX);
-> +	val |= PCL_APP_INTX_SYS_INT;
-> +	writel(val, priv->base + PCL_APP_INTX);
-> +
-> +	udelay(PCL_INTX_WIDTH_USEC);
-> +
-> +	/* deassert INTx */
-> +	val = readl(priv->base + PCL_APP_INTX);
-
-Why do you need to read PCL_APP_INTX again here?
-
-> +	val &= ~PCL_APP_INTX_SYS_INT;
-> +	writel(val, priv->base + PCL_APP_INTX);
-> +
-> +	return 0;
-> +}
-
-> +	ret = dw_pcie_ep_init(ep);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to initialize endpoint (%d)\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-
-This is equivalent to:
-
-  ret = dw_pcie_ep_init(ep);
-  if (ret)
-    dev_err(dev, "Failed to initialize endpoint (%d)\n", ret);
-
-  return ret;
-
-> +}
-
-[1] https://lore.kernel.org/linux-fsdevel/CA+55aFzKQ6Pj18TB8p4Yr0M4t+S+BsiHH=BJNmn=76-NcjTj-g@mail.gmail.com/
+              Linus
