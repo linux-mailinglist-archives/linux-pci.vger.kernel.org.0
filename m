@@ -2,222 +2,122 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B735618BDFB
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Mar 2020 18:27:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9536418BE00
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Mar 2020 18:27:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727434AbgCSR1c (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 Mar 2020 13:27:32 -0400
-Received: from mga02.intel.com ([134.134.136.20]:23896 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726934AbgCSR1c (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 19 Mar 2020 13:27:32 -0400
-IronPort-SDR: D46aIisbYFz9mffq7/nxgYRHf169EwCi2dcObXOLESoAYtnLAghfkMmUH3c21XB4G4qhMbOom2
- GWYQ9BKFxO4Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 10:27:31 -0700
-IronPort-SDR: QcJO1o1ADvFku841r19cjExVTOP0nHxLKhCBKkvw1MGbVUsL+qy2Z+IiHu+V1dAd7pYwRrwMaL
- k7osDPOa9KBw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,572,1574150400"; 
-   d="scan'208";a="234245862"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 19 Mar 2020 10:27:29 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jEyx7-0001k7-1r; Fri, 20 Mar 2020 01:27:29 +0800
-Date:   Fri, 20 Mar 2020 01:26:39 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/aspm] BUILD SUCCESS
- 58a3862a10a317a81097ab0c78aecebabb1704f5
-Message-ID: <5e73ab4f.mI91UqNxIcPbmFJZ%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1728559AbgCSR1q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 Mar 2020 13:27:46 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:42460 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727816AbgCSR1p (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Mar 2020 13:27:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584638863;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nLOauL8M9FVaEJHiI8vrCSN5L9Q/vL8MaYK0pNPq4Zs=;
+        b=f0A2itIaGYjzYyDiVupHRuKaqEe5TboOVmn6wBvkMNJcSp6sQ89XvbReu8N3XW2AfGaK11
+        jodW/+M8lpmBR7/efGwqbAN4qNHA7nfRfSwCNLORNVFyrltNqJFA9+jzzqqxzoO2dIE1F6
+        PLVPgWIr4WG0kU4QA+D9XiDOtojN5xI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-250-Ykp0k2vZNi68gU2utY-ppQ-1; Thu, 19 Mar 2020 13:27:40 -0400
+X-MC-Unique: Ykp0k2vZNi68gU2utY-ppQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7DED41857BE0;
+        Thu, 19 Mar 2020 17:27:38 +0000 (UTC)
+Received: from gondolin (ovpn-113-188.ams2.redhat.com [10.36.113.188])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0F5D760BF1;
+        Thu, 19 Mar 2020 17:27:33 +0000 (UTC)
+Date:   Thu, 19 Mar 2020 18:27:30 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dev@dpdk.org, mtosatti@redhat.com,
+        thomas@monjalon.net, bluca@debian.org, jerinjacobk@gmail.com,
+        bruce.richardson@intel.com, kevin.tian@intel.com
+Subject: Re: [PATCH v3 3/7] vfio/pci: Introduce VF token
+Message-ID: <20200319182730.16f4c476.cohuck@redhat.com>
+In-Reply-To: <158396393244.5601.10297430724964025753.stgit@gimli.home>
+References: <158396044753.5601.14804870681174789709.stgit@gimli.home>
+        <158396393244.5601.10297430724964025753.stgit@gimli.home>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/aspm
-branch HEAD: 58a3862a10a317a81097ab0c78aecebabb1704f5  PCI/ASPM: Clear the correct bits when enabling L1 substates
+On Wed, 11 Mar 2020 15:58:52 -0600
+Alex Williamson <alex.williamson@redhat.com> wrote:
 
-elapsed time: 1099m
+> If we enable SR-IOV on a vfio-pci owned PF, the resulting VFs are not
+> fully isolated from the PF.  The PF can always cause a denial of service
+> to the VF, even if by simply resetting itself.  The degree to which a PF
+> can access the data passed through a VF or interfere with its operation
+> is dependent on a given SR-IOV implementation.  Therefore we want to
+> avoid a scenario where an existing vfio-pci based userspace driver might
+> assume the PF driver is trusted, for example assigning a PF to one VM
+> and VF to another with some expectation of isolation.  IOMMU grouping
+> could be a solution to this, but imposes an unnecessarily strong
+> relationship between PF and VF drivers if they need to operate with the
+> same IOMMU context.  Instead we introduce a "VF token", which is
+> essentially just a shared secret between PF and VF drivers, implemented
+> as a UUID.
+> 
+> The VF token can be set by a vfio-pci based PF driver and must be known
+> by the vfio-pci based VF driver in order to gain access to the device.
+> This allows the degree to which this VF token is considered secret to be
+> determined by the applications and environment.  For example a VM might
+> generate a random UUID known only internally to the hypervisor while a
+> userspace networking appliance might use a shared, or even well know,
+> UUID among the application drivers.
+> 
+> To incorporate this VF token, the VFIO_GROUP_GET_DEVICE_FD interface is
+> extended to accept key=value pairs in addition to the device name.  This
+> allows us to most easily deny user access to the device without risk
+> that existing userspace drivers assume region offsets, IRQs, and other
+> device features, leading to more elaborate error paths.  The format of
+> these options are expected to take the form:
+> 
+> "$DEVICE_NAME $OPTION1=$VALUE1 $OPTION2=$VALUE2"
+> 
+> Where the device name is always provided first for compatibility and
+> additional options are specified in a space separated list.  The
+> relation between and requirements for the additional options will be
+> vfio bus driver dependent, however unknown or unused option within this
+> schema should return error.  This allow for future use of unknown
+> options as well as a positive indication to the user that an option is
+> used.
+> 
+> An example VF token option would take this form:
+> 
+> "0000:03:00.0 vf_token=2ab74924-c335-45f4-9b16-8569e5b08258"
+> 
+> When accessing a VF where the PF is making use of vfio-pci, the user
+> MUST provide the current vf_token.  When accessing a PF, the user MUST
+> provide the current vf_token IF there are active VF users or MAY provide
+> a vf_token in order to set the current VF token when no VF users are
+> active.  The former requirement assures VF users that an unassociated
+> driver cannot usurp the PF device.  These semantics also imply that a
+> VF token MUST be set by a PF driver before VF drivers can access their
+> device, the default token is random and mechanisms to read the token are
+> not provided in order to protect the VF token of previous users.  Use of
+> the vf_token option outside of these cases will return an error, as
+> discussed above.
+> 
+> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+> ---
+>  drivers/vfio/pci/vfio_pci.c         |  198 +++++++++++++++++++++++++++++++++++
+>  drivers/vfio/pci/vfio_pci_private.h |    8 +
+>  2 files changed, 205 insertions(+), 1 deletion(-)
 
-configs tested: 163
-configs skipped: 0
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm64                            allyesconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm                              allmodconfig
-arm64                             allnoconfig
-arm                               allnoconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                               defconfig
-sparc                            allyesconfig
-xtensa                          iss_defconfig
-riscv                            allyesconfig
-nds32                             allnoconfig
-sh                                allnoconfig
-i386                             allyesconfig
-i386                              allnoconfig
-i386                             alldefconfig
-i386                                defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                             alldefconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-alpha                               defconfig
-csky                                defconfig
-nds32                               defconfig
-h8300                     edosk2674_defconfig
-h8300                    h8300h-sim_defconfig
-h8300                       h8s-sim_defconfig
-m68k                             allmodconfig
-m68k                       m5475evb_defconfig
-m68k                          multi_defconfig
-m68k                           sun3_defconfig
-arc                                 defconfig
-arc                              allyesconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-parisc                            allnoconfig
-parisc                           allyesconfig
-parisc                generic-32bit_defconfig
-parisc                generic-64bit_defconfig
-x86_64               randconfig-a001-20200318
-x86_64               randconfig-a002-20200318
-x86_64               randconfig-a003-20200318
-i386                 randconfig-a001-20200318
-i386                 randconfig-a002-20200318
-i386                 randconfig-a003-20200318
-riscv                randconfig-a001-20200318
-m68k                 randconfig-a001-20200318
-nds32                randconfig-a001-20200318
-alpha                randconfig-a001-20200318
-parisc               randconfig-a001-20200318
-mips                 randconfig-a001-20200318
-c6x                  randconfig-a001-20200319
-h8300                randconfig-a001-20200319
-microblaze           randconfig-a001-20200319
-nios2                randconfig-a001-20200319
-sparc64              randconfig-a001-20200319
-h8300                randconfig-a001-20200318
-sparc64              randconfig-a001-20200318
-c6x                  randconfig-a001-20200318
-nios2                randconfig-a001-20200318
-microblaze           randconfig-a001-20200318
-csky                 randconfig-a001-20200318
-openrisc             randconfig-a001-20200318
-s390                 randconfig-a001-20200318
-sh                   randconfig-a001-20200318
-xtensa               randconfig-a001-20200318
-x86_64               randconfig-b001-20200318
-x86_64               randconfig-b002-20200318
-x86_64               randconfig-b003-20200318
-i386                 randconfig-b001-20200318
-i386                 randconfig-b002-20200318
-i386                 randconfig-b003-20200318
-x86_64               randconfig-c001-20200319
-i386                 randconfig-c001-20200319
-x86_64               randconfig-c002-20200319
-i386                 randconfig-c003-20200319
-x86_64               randconfig-c003-20200319
-i386                 randconfig-c002-20200319
-x86_64               randconfig-d001-20200318
-x86_64               randconfig-d002-20200318
-x86_64               randconfig-d003-20200318
-i386                 randconfig-d001-20200318
-i386                 randconfig-d002-20200318
-i386                 randconfig-d003-20200318
-x86_64               randconfig-e001-20200318
-x86_64               randconfig-e002-20200318
-x86_64               randconfig-e003-20200318
-i386                 randconfig-e001-20200318
-i386                 randconfig-e002-20200318
-i386                 randconfig-e003-20200318
-x86_64               randconfig-f001-20200318
-x86_64               randconfig-f002-20200318
-x86_64               randconfig-f003-20200318
-i386                 randconfig-f001-20200318
-i386                 randconfig-f002-20200318
-i386                 randconfig-f003-20200318
-x86_64               randconfig-h001-20200318
-x86_64               randconfig-h002-20200318
-x86_64               randconfig-h003-20200318
-i386                 randconfig-h001-20200318
-i386                 randconfig-h002-20200318
-i386                 randconfig-h003-20200318
-arc                  randconfig-a001-20200318
-ia64                 randconfig-a001-20200318
-arm                  randconfig-a001-20200318
-arm64                randconfig-a001-20200318
-sparc                randconfig-a001-20200318
-powerpc              randconfig-a001-20200318
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-s390                       zfcpdump_defconfig
-s390                          debug_defconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                             alldefconfig
-s390                                defconfig
-sh                               allmodconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-um                                  defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
