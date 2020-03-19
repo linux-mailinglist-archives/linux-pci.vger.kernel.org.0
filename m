@@ -2,177 +2,148 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C18CD18B7C0
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Mar 2020 14:35:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B9D8918B79F
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Mar 2020 14:35:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727874AbgCSNfe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 Mar 2020 09:35:34 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:52579 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727525AbgCSNLg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Mar 2020 09:11:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584623495;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=dwfqKsawwlA7QavpNFSxuBUqzZRSHs2EJIIMOQG0ECg=;
-        b=OtlhXdNR3oZrjq9fSNVcUdcpcBu2md4OKqbm0Zvkgp8Hu97JiK52SBNd2VcHb+xoC0cIGQ
-        Go561jsUOYI85yeQuCyu4BSf0VOSkLTbyk6A3fQRZbtZ4h0TGg6KgsjwuY0TOhsVM2jXE7
-        3bYvws4kpfyNGHazjHsr9WXwiV1Nwmc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-472-jZHvhMY7OgWTkqmVKPZukg-1; Thu, 19 Mar 2020 09:11:29 -0400
-X-MC-Unique: jZHvhMY7OgWTkqmVKPZukg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6EAD918B6383;
-        Thu, 19 Mar 2020 13:11:27 +0000 (UTC)
-Received: from x1.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 891275C1D8;
-        Thu, 19 Mar 2020 13:11:26 +0000 (UTC)
-Date:   Thu, 19 Mar 2020 07:11:26 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dev@dpdk.org" <dev@dpdk.org>,
-        "mtosatti@redhat.com" <mtosatti@redhat.com>,
-        "thomas@monjalon.net" <thomas@monjalon.net>,
-        "bluca@debian.org" <bluca@debian.org>,
-        "jerinjacobk@gmail.com" <jerinjacobk@gmail.com>,
-        "Richardson, Bruce" <bruce.richardson@intel.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>
-Subject: Re: [PATCH v3 0/7] vfio/pci: SR-IOV support
-Message-ID: <20200319071126.6f5e1b78@x1.home>
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D7DAFD5@SHSMSX104.ccr.corp.intel.com>
-References: <158396044753.5601.14804870681174789709.stgit@gimli.home>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D7DAFD5@SHSMSX104.ccr.corp.intel.com>
-Organization: Red Hat
+        id S1728976AbgCSNMl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 Mar 2020 09:12:41 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38285 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728956AbgCSNMj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Mar 2020 09:12:39 -0400
+Received: by mail-wr1-f65.google.com with SMTP id s1so2925693wrv.5;
+        Thu, 19 Mar 2020 06:12:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Qge0IJmCZuOR+vC+5Nwap5o8+OSunHMNr9ySqL9oA2g=;
+        b=msxtTDGE4I6QUzvrhuxdwJpsib+p+en0PvEsNalGqxbSOY0H66MVlEAHucfdoX78DW
+         EYT9R/nA3SICZ2SP7oncTtTi9s9eO2RqYsC+HIS1xVHbw04+mWrlFRc4o08xF/aOGauF
+         TBhey34ywpLtYOuFNK179if7Rweq2OfhXPEnExv1YBA+knbT5kZzXkw7LSQNoRUwTM98
+         GTQxhmagQnJYj0wRxIu25fsh5l+eDWD9ykpWsPl96um6lJn2FVtMyeXXrVcFDtVRRhgQ
+         DxytxBU9eQqSeUHKNleshj8+zvkMGq42zK9x879TydhsaHb7nm2P5MifExyjpwJjDT7b
+         iN0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Qge0IJmCZuOR+vC+5Nwap5o8+OSunHMNr9ySqL9oA2g=;
+        b=mHuzKO4fv5bU/U8nm/lKLtj1YKP6eBNH/17igRvCbm8DD0nJFqp2dkTb8SdcuNN9Y6
+         Xfr0TKJhXqT0h9NAwdXgnpSfhaj/g8dd9fyuBegFYG9TjWjLaSttQ3/ifwOPHId0wwmv
+         uB9RwLpp0g5wlw9o8DFusFquYSFfLO1IpW5Tpg1WZHhWTsKQNBdPIPCA/a4lSEsp53LN
+         V2RlimgSCyCdabaOsNyggC8cwHnn5VesoJ+GOlrwvT9FHpkSpVXIGTDp6Gdlu/vgmU4D
+         ahIFdcsm3racyl7hYArgqXfU+o+jpiHUn1m79ID90WwI+uPlm1B2PgsmVWJxkBdqRnCH
+         R1FQ==
+X-Gm-Message-State: ANhLgQ1fHzuUA7EzOcQuxbAlXXv+Il37x25uaTXZaHAV1UajjfcfuQq4
+        TEhrblhA9fGs4qR0f9jxiK842raU
+X-Google-Smtp-Source: ADFU+vv+XcYW8fX3e6mDdU4JDt+hMQnyy2Myx3Iv8I4OyT90umvocqWrIMIO/RWN8VMCNPuHjv/OzQ==
+X-Received: by 2002:a5d:51c4:: with SMTP id n4mr4355983wrv.203.1584623558293;
+        Thu, 19 Mar 2020 06:12:38 -0700 (PDT)
+Received: from localhost (pD9E51CDC.dip0.t-ipconnect.de. [217.229.28.220])
+        by smtp.gmail.com with ESMTPSA id e1sm3541561wrx.90.2020.03.19.06.12.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Mar 2020 06:12:36 -0700 (PDT)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Jon Hunter <jonathanh@nvidia.com>, Vidya Sagar <vidyas@nvidia.com>,
+        linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: [PATCH] PCI: tegra: Print -EPROBE_DEFER error message at debug level
+Date:   Thu, 19 Mar 2020 14:12:30 +0100
+Message-Id: <20200319131230.3216305-1-thierry.reding@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 19 Mar 2020 06:32:25 +0000
-"Tian, Kevin" <kevin.tian@intel.com> wrote:
+From: Thierry Reding <treding@nvidia.com>
 
-> > From: Alex Williamson <alex.williamson@redhat.com>
-> > Sent: Thursday, March 12, 2020 5:58 AM
-> > 
-> > Only minor tweaks since v2, GET and SET on VFIO_DEVICE_FEATURE are
-> > enforced mutually exclusive except with the PROBE option as suggested
-> > by Connie, the modinfo text has been expanded for the opt-in to enable
-> > SR-IOV support in the vfio-pci driver per discussion with Kevin.
-> > 
-> > I have not incorporated runtime warnings attempting to detect misuse
-> > of SR-IOV or imposed a session lifetime of a VF token, both of which
-> > were significant portions of the discussion of the v2 series.  Both of
-> > these also seem to impose a usage model or make assumptions about VF
-> > resource usage or configuration requirements that don't seem necessary
-> > except for the sake of generating a warning or requiring an otherwise
-> > unnecessary and implicit token reinitialization.  If there are new
-> > thoughts around these or other discussion points, please raise them.
-> > 
-> > Series overview (same as provided with v1):
-> > 
-> > The synopsis of this series is that we have an ongoing desire to drive
-> > PCIe SR-IOV PFs from userspace with VFIO.  There's an immediate need
-> > for this with DPDK drivers and potentially interesting future use
-> > cases in virtualization.  We've been reluctant to add this support
-> > previously due to the dependency and trust relationship between the
-> > VF device and PF driver.  Minimally the PF driver can induce a denial
-> > of service to the VF, but depending on the specific implementation,
-> > the PF driver might also be responsible for moving data between VFs
-> > or have direct access to the state of the VF, including data or state
-> > otherwise private to the VF or VF driver.
-> > 
-> > To help resolve these concerns, we introduce a VF token into the VFIO
-> > PCI ABI, which acts as a shared secret key between drivers.  The
-> > userspace PF driver is required to set the VF token to a known value
-> > and userspace VF drivers are required to provide the token to access
-> > the VF device.  If a PF driver is restarted with VF drivers in use, it
-> > must also provide the current token in order to prevent a rogue
-> > untrusted PF driver from replacing a known driver.  The degree to
-> > which this new token is considered secret is left to the userspace
-> > drivers, the kernel intentionally provides no means to retrieve the
-> > current token.
-> > 
-> > Note that the above token is only required for this new model where
-> > both the PF and VF devices are usable through vfio-pci.  Existing
-> > models of VFIO drivers where the PF is used without SR-IOV enabled
-> > or the VF is bound to a userspace driver with an in-kernel, host PF
-> > driver are unaffected.
-> > 
-> > The latter configuration above also highlights a new inverted scenario
-> > that is now possible, a userspace PF driver with in-kernel VF drivers.
-> > I believe this is a scenario that should be allowed, but should not be
-> > enabled by default.  This series includes code to set a default
-> > driver_override for VFs sourced from a vfio-pci user owned PF, such
-> > that the VFs are also bound to vfio-pci.  This model is compatible
-> > with tools like driverctl and allows the system administrator to
-> > decide if other bindings should be enabled.  The VF token interface
-> > above exists only between vfio-pci PF and VF drivers, once a VF is
-> > bound to another driver, the administrator has effectively pronounced
-> > the device as trusted.  The vfio-pci driver will note alternate
-> > binding in dmesg for logging and debugging purposes.
-> > 
-> > Please review, comment, and test.  The example QEMU implementation
-> > provided with the RFC is still current for this version.  Thanks,
-> > 
-> > Alex  
-> 
-> The whole series looks good to me:
-> 	Reviewed-by: Kevin Tian <kevin.tian@intel.com>
+Probe deferral is an expected error condition that will usually be
+recovered from. Print such error messages at debug level to make them
+available for diagnostic purposes when building with debugging enabled
+and hide them otherwise to not spam the kernel log with them.
 
-Thanks!
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+---
+ drivers/pci/controller/dwc/pcie-tegra194.c | 42 ++++++++++++++++++----
+ 1 file changed, 35 insertions(+), 7 deletions(-)
 
-> and confirm one understanding here, since it is not discussed anywhere. For
-> VM live migration with assigned VF device, it is not necessary to migrate the
-> VF token itself and actually we don't allow userspace to retrieve it. Instead,
-> Qemu just follows whatever token requirement on the dest to open the new
-> VF: could be same or different token as/from src, or even no token if PF
-> driver runs in kernel on dest. I suppose either combination could work, correct?
-
-That's correct.  Thanks,
-
-Alex
-
-> > RFC:
-> > https://lore.kernel.org/lkml/158085337582.9445.17682266437583505502.stg
-> > it@gimli.home/
-> > v1:
-> > https://lore.kernel.org/lkml/158145472604.16827.15751375540102298130.st
-> > git@gimli.home/
-> > v2:
-> > https://lore.kernel.org/lkml/158213716959.17090.8399427017403507114.stg
-> > it@gimli.home/
-> > 
-> > ---
-> > 
-> > Alex Williamson (7):
-> >       vfio: Include optional device match in vfio_device_ops callbacks
-> >       vfio/pci: Implement match ops
-> >       vfio/pci: Introduce VF token
-> >       vfio: Introduce VFIO_DEVICE_FEATURE ioctl and first user
-> >       vfio/pci: Add sriov_configure support
-> >       vfio/pci: Remove dev_fmt definition
-> >       vfio/pci: Cleanup .probe() exit paths
-> > 
-> > 
-> >  drivers/vfio/pci/vfio_pci.c         |  390
-> > +++++++++++++++++++++++++++++++++--
-> >  drivers/vfio/pci/vfio_pci_private.h |   10 +
-> >  drivers/vfio/vfio.c                 |   20 +-
-> >  include/linux/vfio.h                |    4
-> >  include/uapi/linux/vfio.h           |   37 +++
-> >  5 files changed, 433 insertions(+), 28 deletions(-)  
-> 
+diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+index 97d3f3db1020..e4870fa6ce9c 100644
+--- a/drivers/pci/controller/dwc/pcie-tegra194.c
++++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+@@ -1159,17 +1159,31 @@ static int tegra_pcie_dw_parse_dt(struct tegra_pcie_dw *pcie)
+ 	/* Endpoint mode specific DT entries */
+ 	pcie->pex_rst_gpiod = devm_gpiod_get(pcie->dev, "reset", GPIOD_IN);
+ 	if (IS_ERR(pcie->pex_rst_gpiod)) {
+-		dev_err(pcie->dev, "Failed to get PERST GPIO: %ld\n",
+-			PTR_ERR(pcie->pex_rst_gpiod));
+-		return PTR_ERR(pcie->pex_rst_gpiod);
++		int err = PTR_ERR(pcie->pex_rst_gpiod);
++		const char *level = KERN_ERR;
++
++		if (err == -EPROBE_DEFER)
++			level = KERN_DEBUG;
++
++		dev_printk(level, pcie->dev,
++			   dev_fmt("Failed to get PERST GPIO: %d\n"),
++			   err);
++		return err;
+ 	}
+ 
+ 	pcie->pex_refclk_sel_gpiod = devm_gpiod_get(pcie->dev,
+ 						    "nvidia,refclk-select",
+ 						    GPIOD_OUT_HIGH);
+ 	if (IS_ERR(pcie->pex_refclk_sel_gpiod)) {
+-		dev_info(pcie->dev, "Failed to get REFCLK select GPIOs: %ld\n",
+-			 PTR_ERR(pcie->pex_refclk_sel_gpiod));
++		int err = PTR_ERR(pcie->pex_refclk_sel_gpiod);
++		const char *level = KERN_ERR;
++
++		if (err == -EPROBE_DEFER)
++			level = KERN_DEBUG;
++
++		dev_printk(level, pcie->dev,
++			   dev_fmt("Failed to get REFCLK select GPIOs: %d\n"),
++			   err);
+ 		pcie->pex_refclk_sel_gpiod = NULL;
+ 	}
+ 
+@@ -2058,13 +2072,27 @@ static int tegra_pcie_dw_probe(struct platform_device *pdev)
+ 
+ 	ret = tegra_pcie_dw_parse_dt(pcie);
+ 	if (ret < 0) {
+-		dev_err(dev, "Failed to parse device tree: %d\n", ret);
++		const char *level = KERN_ERR;
++
++		if (ret == -EPROBE_DEFER)
++			level = KERN_DEBUG;
++
++		dev_printk(level, dev,
++			   dev_fmt("Failed to parse device tree: %d\n"),
++			   ret);
+ 		return ret;
+ 	}
+ 
+ 	ret = tegra_pcie_get_slot_regulators(pcie);
+ 	if (ret < 0) {
+-		dev_err(dev, "Failed to get slot regulators: %d\n", ret);
++		const char *level = KERN_ERR;
++
++		if (ret == -EPROBE_DEFER)
++			level = KERN_DEBUG;
++
++		dev_printk(level, dev,
++			   dev_fmt("Failed to get slot regulators: %d\n"),
++			   ret);
+ 		return ret;
+ 	}
+ 
+-- 
+2.24.1
 
