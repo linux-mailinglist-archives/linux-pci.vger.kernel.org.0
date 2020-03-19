@@ -2,186 +2,249 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6820C18C1F6
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Mar 2020 21:55:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C934B18C25A
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Mar 2020 22:35:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbgCSUzV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 Mar 2020 16:55:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52648 "EHLO mail.kernel.org"
+        id S1726827AbgCSVfP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 Mar 2020 17:35:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725787AbgCSUzV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 19 Mar 2020 16:55:21 -0400
+        id S1725895AbgCSVfP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 19 Mar 2020 17:35:15 -0400
 Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0554520775;
-        Thu, 19 Mar 2020 20:55:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 671AB2076F;
+        Thu, 19 Mar 2020 21:35:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584651320;
-        bh=jtDjDtIzunkpG4Cz0Dpezg7XbfPh6A2lmqdzMYK7ESY=;
+        s=default; t=1584653714;
+        bh=2lNHn4kRt+Z7xc10xfDSVFGeTLx4ykXDxtTBlKddkcs=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=w/50NKQRA8nJ1KRlLpWX9PJD+mHg5XOKJpFJUtz394wy4gczItXAntq58YpHWJnay
-         aAmWgDxJGxMToDHsdX6uALATTyv5+MAIruDOu1Pixnu8iwJSVOV8mi4K4lGETOD7GS
-         cDZ0STyyQb5hVQe9f9DVUNmOZCVQkEuQhM34mmFc=
-Date:   Thu, 19 Mar 2020 15:55:17 -0500
+        b=aAU0Lzpe/C5KZfK8/Ii55DZc8zab4TcDPmxQLV32qu9CRsUNGPgxeCAWcFk5pDbt0
+         1iXpY9cEHttbqHPd7TNXcf8QUOOCdPuoY0ee07NSz5LaMC2Sfrg/etm6j2dSO8aQH8
+         bLRoaPOvFgVe2/mNq5UVYju4nIV+U79eEJeqIaEc=
+Date:   Thu, 19 Mar 2020 16:35:12 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Saheed Bolarinwa <refactormyself@gmail.com>
-Cc:     Bjorn Helgaas <bjorn@helgaas.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        linux-pci@vger.kernel.org
-Subject: Re: Linux Kernel Mentorship Summer 2020
-Message-ID: <20200319205517.GA217429@google.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Aman Sharma <amanharitsh123@gmail.com>
+Cc:     Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Mans Rullgard <mans@mansr.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH 4/5] pci: handled return value of platform_get_irq
+ correctly
+Message-ID: <20200319213512.GA415@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CABGxfO5Mrzx0OKpuzzc+3X2J+s1oHbxzbHpCB_FzopPp+hgw=w@mail.gmail.com>
+In-Reply-To: <877dzgennw.fsf@nanos.tec.linutronix.de>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-1) Your first couple emails were multi-part MIME messages, which do
-not make it to the mailing lists reliably [1].  It looks like maybe
-they were sent via Gmail, which I'm sorry to say is not very convenient
-in this respect.  There should be a "plain text" option in the three
-dots menu next to the trash can in the draft window, which helps a
-little bit.
-
-2) Please use "interleaved" style [2] when responding, so the
-conversation is easier to follow.  Gmail again makes this more of a
-hassle than it should be.
-
-3) The "**val = 0*" below is confusing; I think the surrounding
-asterisks were unhelpfully added by Gmail to indicate italicization.
-If you just use plain text that should help.
-
-On Thu, Mar 19, 2020 at 04:33:34PM +0100, Saheed Bolarinwa wrote:
-> So please just to clarify, I think it will be better to ONLY set **val
-> = 0* when
-> returning -EINVAL
-> In this case, we can just *return pci_read_config_word(),* then there is
-> nothing to reset.
-
-4) I'm not sure we should be returning -EINVAL from
-pcie_capability_read_*().  Those functions can also return errors from
-pci_read_config_*(), which are generally PCIBIOS_SUCCESSFUL (0) or a
-PCIBIOS_* error (a positive integer).  It seems sort of weird to
-return either a negative errno or a positive PCIBIOS* number on error.
-
-Other similar cases, e.g., bonito64_pcibios_read(), return
-PCIBIOS_BAD_REGISTER_NUMBER if the address isn't aligned correctly.
-
-I suggest you do some research and see whether anything would break if
-we made pcie_capability_read_*() return PCIBIOS_BAD_REGISTER_NUMBER in
-that case.  If not, that could be its own preliminary patch.
-
-5) Then there are two other questions.  The first is whether we should
-set *val = 0 before returning -EINVAL/PCIBIOS_BAD_REGISTER_NUMBER.
-This situation is a programming error (the caller should know to use
-the correct alignment).  I looked at other config accessors that
-return PCIBIOS_BAD_REGISTER_NUMBER; some of them set *val = ~0
-(ixp4xx_pci_read_config(), msp_pcibios_read_config_word()), but most
-do not (bonito64_pcibios_read(), loongson_pcibios_read(),
-msc_pcibios_read(), nile4_pcibios_read(), etc).
-
-Again, this will require some research to make sure we don't break
-anything, but I suspect we may be able to leave *val untouched when
-returning error due to unaligned address.  This should be a separate
-patch.
-
-6) The second question is whether pcie_capability_read_*() should set
-*val = 0 before passing on an error from pci_read_config_word().  This
-is the case I originally envisioned for this project, and my thought
-was that it should not set *val = 0, and it should just leave *val as
-whatever pci_read_config_word() set it to.
-
-My reasoning is that callers of pci_read_config_word() really need to
-check for "val == ~0" if they care about detecting errors, and it
-probably should be the same for pcie_capability_read_*().
-
-This also requires research to see how it would affect callers.  Many
-callers check for success and never look at *val if
-pcie_capability_read_*() fails; those are easy.  Some callers consume
-the data (*val) without checking for success -- those are the
-important ones to look at.
-
-I think the first step here is to *identify* those callers and analyze
-whether they need to check for failure and how they should do it.
-
-[1] http://vger.kernel.org/majordomo-info.html
-[2] https://en.wikipedia.org/wiki/Posting_style#Interleaved_style
-
-> On Wed, Mar 18, 2020 at 4:04 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Thu, Mar 19, 2020 at 09:47:47AM +0100, Thomas Gleixner wrote:
+> Bjorn Helgaas <helgaas@kernel.org> writes:
+> > On Wed, Mar 18, 2020 at 02:42:48PM +0100, Thomas Gleixner wrote:
+> >> Bjorn Helgaas <helgaas@kernel.org> writes:
+> >> > On Fri, Mar 13, 2020 at 04:56:42PM -0500, Bjorn Helgaas wrote:
+> >> >> On Fri, Mar 13, 2020 at 10:05:58PM +0100, Thomas Gleixner wrote:
+> >> >> > >   I think the best pattern is:
+> >> >> > >
+> >> >> > >     irq = platform_get_irq(pdev, i);
+> >> >> > >     if (irq < 0)
+> >> >> > >       return irq;
+> >> >> > 
+> >> >> > Careful. 0 is not a valid interrupt.
+> >> >> 
+> >> >> Should callers of platform_get_irq() check for a 0 return value?
+> >> >> About 900 of them do not.
+> >> 
+> >> I don't know what I was looking at.
+> >> 
+> >> platform_get_irq() does the right thing already, so checking for irq < 0
+> >> is sufficient.
+> >> 
+> >> Sorry for the confusion!
+> >
+> > Thanks, I was indeed confused!  Maybe we could reduce future confusion
+> > by strengthening the comments slightly, e.g.,
+> >
+> >   - * Return: IRQ number on success, negative error number on failure.
+> >   + * Return: non-zero IRQ number on success, negative error number on failure.
+> >
+> > I don't want to push my luck, but it's pretty hard to prove that
+> > platform_get_irq() never returns 0.  What would you think of something
+> > like the following?
 > 
-> > [+cc linux-pci because there are lots of interesting wrinkles in this
-> > issue -- as background, my idea for this project was to make
-> > pcie_capability_read_word() return errors  more like
-> > pci_read_config_word() does.  When a PCI error occurs,
-> > pci_read_config_word() returns ~0 data, but
-> > pcie_capability_read_word() return 0 data.]
-> >
-> > On Mon, Mar 16, 2020 at 02:03:57PM +0100, Saheed Bolarinwa wrote:
-> > > I have checked the function the  pcie_capability_read_word() that
-> > > sets *val = 0  when pci_read_config_word() fails.
-> > >
-> > > I am still trying to get familiar to the code, I just wondering why
-> > > the result of pci_read_config_word()  is not being returned directly
-> > > since  *val  is passed into it.
-> >
-> > pci_read_config_word() needs to return two things:
-> >
-> >   1) A success/failure indication.  This is either 0 or an error like
-> >   PCIBIOS_DEVICE_NOT_FOUND, PCIBIOS_BAD_REGISTER_NUMBER, etc.  This is
-> >   the function return value.
-> >
-> >   2) A 16-bit value read from PCI config space.  This is what goes in
-> >   *val.
-> >
-> > pcie_capability_read_word() is similar.  The idea of this project is
-> > to change part 2, the value in *val.
-> >
-> > The reason is that sometimes the config read fails on PCI.  This can
-> > happen because the device has been physically removed, it's been
-> > electrically isolated, or some other PCI error.  When a config read
-> > fails, the PCI host bridge generally returns ~0 data to satisfy the
-> > CPU load instruction.
-> >
-> > The PCI core, i.e., pci_read_config_word() can't tell whether ~0 means
-> > (a) the config read was successful and the register on the PCI card
-> > happened to contain ~0, or (b) the config read failed because of a PCI
-> > error.
-> >
-> > Only the driver knows whether ~0 is a valid value for a config space
-> > register, so the driver has to be involved in looking for this error.
-> >
-> > My idea for this project is to make this checking more uniform between
-> > pci_read_config_word() and pcie_capability_read_word().
-> >
-> > For example, pci_read_config_word() sets *val = ~0 when it returns
-> > PCIBIOS_DEVICE_NOT_FOUND.
-> >
-> > On the other hand, pcie_capability_read_word() sets *val = 0 when it
-> > returns -EINVAL, PCIBIOS_DEVICE_NOT_FOUND, etc.
-> >
-> > > This is what is done inside pci_read_config_word() when
-> > > pci_bus_read_config_word() is called. I tried to find the definition
-> > > of  pci_bus_read_config_word() but I couldn't find it.  I am not
-> > > sure I need it, though.
-> >
-> > pci_bus_read_config_word() and similar functions are defined by the
-> > PCI_OP_READ() macro in drivers/pci/access.c.  It's sort of annoying
-> > because grep/cscope/etc don't find those functions very well.  But
-> > you're right; they aren't really relevant to this project.
-> >
-> > > I am also confused with the last statement of the Project
-> > > description on the Project List
-> > > <https://wiki.linuxfoundation.org/lkmp/lkmp_project_list> page. It
-> > > says, "*This will require changes to some callers of
-> > > pci_read_config_word() that assume the read returns 0 on error.*" I
-> > > think the callers pcie_capability_read_word() are supposedly being
-> > > referred to here.
-> >
-> > Yes, that's a typo.  The idea is to change pcie_capability_read_*(),
-> > so we'd probably need to change some callers to match.
-> >
+> No objections from my side.
+
+OK, thanks!
+
+Aman, my suggestion for you is to include the patch below as the first
+patch in your series.  Then post a v2 of it, making sure to cc:
+everybody who commented on the first version.
+
+Bjorn
+
+
+driver core: platform: Specify that IRQ 0 is invalid
+
+These interfaces return a negative error number or an IRQ:
+
+  platform_get_irq()
+  platform_get_irq_optional()
+  platform_get_irq_byname()
+  platform_get_irq_byname_optional()
+
+The function comments suggest checking for error like this:
+
+  irq = platform_get_irq(...);
+  if (irq < 0)
+    return irq;
+
+which is what most callers (~900 of 1400) do, so it's implicit that IRQ 0
+is invalid.  But some callers check for "irq <= 0", and it's not obvious
+from the source that we never return an IRQ 0.
+
+Make this more explicit by updating the comments to say that an IRQ number
+is always non-zero and adding a WARN() if we ever do return zero.  If we do
+return IRQ 0, it likely indicates a bug in the arch-specific parts of
+platform_get_irq().
+
+Relevant prior discussion at [1,2].
+
+[1] https://lore.kernel.org/lkml/Pine.LNX.4.64.0701250940220.25027@woody.linux-foundation.org/
+[2] https://lore.kernel.org/lkml/Pine.LNX.4.64.0701252029570.25027@woody.linux-foundation.org/
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index 7fa654f1288b..50f3a5da89dc 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -133,23 +133,24 @@ EXPORT_SYMBOL_GPL(devm_platform_ioremap_resource_byname);
+  *		if (irq < 0)
+  *			return irq;
+  *
+- * Return: IRQ number on success, negative error number on failure.
++ * Return: non-zero IRQ number on success, negative error number on failure.
+  */
+ int platform_get_irq_optional(struct platform_device *dev, unsigned int num)
+ {
++	int ret;
+ #ifdef CONFIG_SPARC
+ 	/* sparc does not have irqs represented as IORESOURCE_IRQ resources */
+ 	if (!dev || num >= dev->archdata.num_irqs)
+ 		return -ENXIO;
+-	return dev->archdata.irqs[num];
++	ret = dev->archdata.irqs[num];
++	goto out;
+ #else
+ 	struct resource *r;
+-	int ret;
+ 
+ 	if (IS_ENABLED(CONFIG_OF_IRQ) && dev->dev.of_node) {
+ 		ret = of_irq_get(dev->dev.of_node, num);
+ 		if (ret > 0 || ret == -EPROBE_DEFER)
+-			return ret;
++			goto out;
+ 	}
+ 
+ 	r = platform_get_resource(dev, IORESOURCE_IRQ, num);
+@@ -157,7 +158,7 @@ int platform_get_irq_optional(struct platform_device *dev, unsigned int num)
+ 		if (r && r->flags & IORESOURCE_DISABLED) {
+ 			ret = acpi_irq_get(ACPI_HANDLE(&dev->dev), num, r);
+ 			if (ret)
+-				return ret;
++				goto out;
+ 		}
+ 	}
+ 
+@@ -171,13 +172,17 @@ int platform_get_irq_optional(struct platform_device *dev, unsigned int num)
+ 		struct irq_data *irqd;
+ 
+ 		irqd = irq_get_irq_data(r->start);
+-		if (!irqd)
+-			return -ENXIO;
++		if (!irqd) {
++			ret = -ENXIO;
++			goto out;
++		}
+ 		irqd_set_trigger_type(irqd, r->flags & IORESOURCE_BITS);
+ 	}
+ 
+-	if (r)
+-		return r->start;
++	if (r) {
++		ret = r->start;
++		goto out;
++	}
+ 
+ 	/*
+ 	 * For the index 0 interrupt, allow falling back to GpioInt
+@@ -190,11 +195,14 @@ int platform_get_irq_optional(struct platform_device *dev, unsigned int num)
+ 		ret = acpi_dev_gpio_irq_get(ACPI_COMPANION(&dev->dev), num);
+ 		/* Our callers expect -ENXIO for missing IRQs. */
+ 		if (ret >= 0 || ret == -EPROBE_DEFER)
+-			return ret;
++			goto out;
+ 	}
+ 
+-	return -ENXIO;
++	ret = -ENXIO;
+ #endif
++out:
++	WARN(ret == 0, "0 is an invalid IRQ number\n");
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(platform_get_irq_optional);
+ 
+@@ -212,7 +220,7 @@ EXPORT_SYMBOL_GPL(platform_get_irq_optional);
+  *		if (irq < 0)
+  *			return irq;
+  *
+- * Return: IRQ number on success, negative error number on failure.
++ * Return: non-zero IRQ number on success, negative error number on failure.
+  */
+ int platform_get_irq(struct platform_device *dev, unsigned int num)
+ {
+@@ -284,8 +292,10 @@ static int __platform_get_irq_byname(struct platform_device *dev,
+ 	}
+ 
+ 	r = platform_get_resource_byname(dev, IORESOURCE_IRQ, name);
+-	if (r)
++	if (r) {
++		WARN(r->start == 0, "0 is an invalid IRQ number\n");
+ 		return r->start;
++	}
+ 
+ 	return -ENXIO;
+ }
+@@ -297,7 +307,7 @@ static int __platform_get_irq_byname(struct platform_device *dev,
+  *
+  * Get an IRQ like platform_get_irq(), but then by name rather then by index.
+  *
+- * Return: IRQ number on success, negative error number on failure.
++ * Return: non-zero IRQ number on success, negative error number on failure.
+  */
+ int platform_get_irq_byname(struct platform_device *dev, const char *name)
+ {
+@@ -319,7 +329,7 @@ EXPORT_SYMBOL_GPL(platform_get_irq_byname);
+  * Get an optional IRQ by name like platform_get_irq_byname(). Except that it
+  * does not print an error message if an IRQ can not be obtained.
+  *
+- * Return: IRQ number on success, negative error number on failure.
++ * Return: non-zero IRQ number on success, negative error number on failure.
+  */
+ int platform_get_irq_byname_optional(struct platform_device *dev,
+ 				     const char *name)
