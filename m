@@ -2,132 +2,221 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AB20418C6B5
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Mar 2020 06:15:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 98CAA18C6BC
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Mar 2020 06:18:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726704AbgCTFPg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Mar 2020 01:15:36 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:7305 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgCTFPg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Mar 2020 01:15:36 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e74516a0000>; Thu, 19 Mar 2020 22:15:22 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 19 Mar 2020 22:15:35 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 19 Mar 2020 22:15:35 -0700
-Received: from [10.25.97.155] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 20 Mar
- 2020 05:15:32 +0000
-Subject: Re: [PATCH -next] PCI: dwc: fix compile err for pcie-tagra194
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Qiujun Huang <hqjagain@gmail.com>, <anders.roxell@linaro.org>
-CC:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <amurray@thegoodpenguin.co.uk>, <bhelgaas@google.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1584621380-21152-1-git-send-email-hqjagain@gmail.com>
- <20200319173710.GA7433@e121166-lin.cambridge.arm.com>
-From:   Vidya Sagar <vidyas@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <e16eb1a7-6ada-a8ed-c308-6fc5c9a8b7be@nvidia.com>
-Date:   Fri, 20 Mar 2020 10:45:29 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S1725883AbgCTFSe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Mar 2020 01:18:34 -0400
+Received: from mga07.intel.com ([134.134.136.100]:22695 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725446AbgCTFSe (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 20 Mar 2020 01:18:34 -0400
+IronPort-SDR: 6iJOpj0AVfGJQyGnh9BuwFosWGPq82Ig6zOwrQpGVVXh6QgRvX4DNtYWTJYSBp/gcGpYjMHgGj
+ OMtYteHh4bqA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 22:18:33 -0700
+IronPort-SDR: hRj4JDopZaSGl0WFjCXfSopRtmzllm2zeF9BmlXUb4IPGuOcdnKjZtqYuJlhaAAp15BWezMUZT
+ k2GNHcPRO+Kw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,283,1580803200"; 
+   d="scan'208";a="234402151"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga007.jf.intel.com with ESMTP; 19 Mar 2020 22:18:32 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jFA3D-0000T6-JK; Fri, 20 Mar 2020 13:18:31 +0800
+Date:   Fri, 20 Mar 2020 13:18:02 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:next] BUILD SUCCESS ebcc830b29d78ba033f45a9c278b75db835b19dc
+Message-ID: <5e74520a.BL7X3Z/VSzPRlWpZ%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <20200319173710.GA7433@e121166-lin.cambridge.arm.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1584681322; bh=5cDnCRVr/SQ+yk+RPLat6q5cSmCpBVeJdv46ovb/TLA=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=L3FmoXlOLZBJDmfUoTpBdPgvdunMUXY0nysEiquE9EG4KKGiN6M0FQy4HZr/4+iGq
-         lYU7NsF7sarzjjH0C67tIepd2evlFb0HApy9iGvodOvFmW4iWX7zBWDirNHArKQMmf
-         YBeyJRnf4K8guy3MO3pVIiELn6umNXzspDxubf6sY5jbHO9m+CVOogvqABOMHEifkK
-         blqvFgjOqGqry/0nMgioizgsvjaBXRfUiZjjov1HEvBzlNjkuret1lVSkVo+3SiTwG
-         CGYLQeg/NPi2TPw6/Nqv6p+IwudYEIqEGwulJaFSWkvR3Na/LjdLVLqnRetJcb2h/9
-         8GAJ/F0LVZ6pw==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  next
+branch HEAD: ebcc830b29d78ba033f45a9c278b75db835b19dc  Merge branch 'remotes/lorenzo/pci/vmd'
 
+elapsed time: 483m
 
-On 3/19/2020 11:07 PM, Lorenzo Pieralisi wrote:
-> External email: Use caution opening links or attachments
-> 
-> 
-> On Thu, Mar 19, 2020 at 08:36:20PM +0800, Qiujun Huang wrote:
->> make allmodconfig
->> ERROR: modpost: "dw_pcie_ep_init_notify" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
->> ERROR: modpost: "dw_pcie_ep_init_complete" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
->> ERROR: modpost: "dw_pcie_ep_linkup" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
->> make[2]: *** [__modpost] Error 1
->> make[1]: *** [modules] Error 2
->> make: *** [sub-make] Error 2
->>
->> need to export the symbols.
->>
->> Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
->> ---
->>   drivers/pci/controller/dwc/pcie-designware-ep.c | 3 +++
->>   1 file changed, 3 insertions(+)
-> 
-> I have squashed this in with the original patch.
-> 
-> @Vidya: is this something we missed in the review cycle ? Asking just
-> to make sure it was not me who made a mistake while merging the code.
-My apologies. I wasn't compiling the driver as a module (instead built 
-into the kernel image)
-BTW, I see
-ERROR: modpost: "dw_pcie_ep_init" 
-[drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
-also along with the above three. So I think even dw_pcie_ep_init() needs 
-to be exported.
+configs tested: 163
+configs skipped: 0
 
-Thanks,
-Vidya Sagar
-> 
-> Thanks,
-> Lorenzo
-> 
->> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
->> index 4233c43..60d62ef 100644
->> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
->> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
->> @@ -18,6 +18,7 @@ void dw_pcie_ep_linkup(struct dw_pcie_ep *ep)
->>
->>        pci_epc_linkup(epc);
->>   }
->> +EXPORT_SYMBOL_GPL(dw_pcie_ep_linkup);
->>
->>   void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep)
->>   {
->> @@ -25,6 +26,7 @@ void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep)
->>
->>        pci_epc_init_notify(epc);
->>   }
->> +EXPORT_SYMBOL_GPL(dw_pcie_ep_init_notify);
->>
->>   static void __dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar,
->>                                   int flags)
->> @@ -535,6 +537,7 @@ int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
->>
->>        return 0;
->>   }
->> +EXPORT_SYMBOL_GPL(dw_pcie_ep_init_complete);
->>
->>   int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->>   {
->> --
->> 1.8.3.1
->>
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+arm                         at91_dt_defconfig
+arm                           efm32_defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                        multi_v7_defconfig
+arm                        shmobile_defconfig
+arm                           sunxi_defconfig
+arm64                               defconfig
+sparc                            allyesconfig
+i386                             alldefconfig
+m68k                       m5475evb_defconfig
+m68k                           sun3_defconfig
+sparc64                          allyesconfig
+sh                  sh7785lcr_32bit_defconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+ia64                             alldefconfig
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+ia64                                defconfig
+c6x                              allyesconfig
+c6x                        evmc6678_defconfig
+nios2                         10m50_defconfig
+nios2                         3c120_defconfig
+openrisc                    or1ksim_defconfig
+openrisc                 simple_smp_defconfig
+xtensa                       common_defconfig
+xtensa                          iss_defconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                                defconfig
+alpha                               defconfig
+h8300                       h8s-sim_defconfig
+h8300                     edosk2674_defconfig
+m68k                             allmodconfig
+h8300                    h8300h-sim_defconfig
+m68k                          multi_defconfig
+arc                              allyesconfig
+arc                                 defconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                             allmodconfig
+mips                              allnoconfig
+mips                             allyesconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+parisc                            allnoconfig
+parisc                           allyesconfig
+parisc                generic-32bit_defconfig
+parisc                generic-64bit_defconfig
+x86_64               randconfig-a001-20200319
+x86_64               randconfig-a002-20200319
+x86_64               randconfig-a003-20200319
+i386                 randconfig-a001-20200319
+i386                 randconfig-a002-20200319
+i386                 randconfig-a003-20200319
+alpha                randconfig-a001-20200319
+m68k                 randconfig-a001-20200319
+mips                 randconfig-a001-20200319
+nds32                randconfig-a001-20200319
+parisc               randconfig-a001-20200319
+riscv                randconfig-a001-20200319
+c6x                  randconfig-a001-20200319
+h8300                randconfig-a001-20200319
+microblaze           randconfig-a001-20200319
+nios2                randconfig-a001-20200319
+sparc64              randconfig-a001-20200319
+h8300                randconfig-a001-20200320
+microblaze           randconfig-a001-20200320
+nios2                randconfig-a001-20200320
+c6x                  randconfig-a001-20200320
+sparc64              randconfig-a001-20200320
+csky                 randconfig-a001-20200319
+openrisc             randconfig-a001-20200319
+s390                 randconfig-a001-20200319
+sh                   randconfig-a001-20200319
+xtensa               randconfig-a001-20200319
+x86_64               randconfig-b001-20200319
+x86_64               randconfig-b002-20200319
+x86_64               randconfig-b003-20200319
+i386                 randconfig-b001-20200319
+i386                 randconfig-b002-20200319
+i386                 randconfig-b003-20200319
+x86_64               randconfig-c001-20200319
+x86_64               randconfig-c002-20200319
+x86_64               randconfig-c003-20200319
+i386                 randconfig-c001-20200319
+i386                 randconfig-c002-20200319
+i386                 randconfig-c003-20200319
+x86_64               randconfig-d001-20200319
+x86_64               randconfig-d002-20200319
+x86_64               randconfig-d003-20200319
+i386                 randconfig-d001-20200319
+i386                 randconfig-d002-20200319
+i386                 randconfig-d003-20200319
+x86_64               randconfig-e001-20200319
+x86_64               randconfig-e002-20200319
+x86_64               randconfig-e003-20200319
+i386                 randconfig-e001-20200319
+i386                 randconfig-e002-20200319
+i386                 randconfig-e003-20200319
+x86_64               randconfig-f001-20200320
+x86_64               randconfig-f002-20200320
+x86_64               randconfig-f003-20200320
+i386                 randconfig-f001-20200320
+i386                 randconfig-f002-20200320
+i386                 randconfig-f003-20200320
+x86_64               randconfig-h001-20200319
+x86_64               randconfig-h002-20200319
+x86_64               randconfig-h003-20200319
+i386                 randconfig-h001-20200319
+i386                 randconfig-h002-20200319
+i386                 randconfig-h003-20200319
+arc                  randconfig-a001-20200319
+arm                  randconfig-a001-20200319
+arm64                randconfig-a001-20200319
+ia64                 randconfig-a001-20200319
+powerpc              randconfig-a001-20200319
+sparc                randconfig-a001-20200319
+riscv                             allnoconfig
+riscv                            allyesconfig
+riscv                               defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+s390                             alldefconfig
+s390                             allmodconfig
+s390                              allnoconfig
+s390                             allyesconfig
+s390                          debug_defconfig
+s390                                defconfig
+s390                       zfcpdump_defconfig
+sh                               allmodconfig
+sh                                allnoconfig
+sh                          rsk7269_defconfig
+sh                            titan_defconfig
+sparc                               defconfig
+sparc64                          allmodconfig
+sparc64                           allnoconfig
+sparc64                             defconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+um                                  defconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                               rhel-7.6
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
