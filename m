@@ -2,109 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D2C218CAD4
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Mar 2020 10:53:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FA8C18CAF6
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Mar 2020 10:58:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726527AbgCTJxO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Mar 2020 05:53:14 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:35099 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726767AbgCTJxN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Mar 2020 05:53:13 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jFEKv-00015l-M7; Fri, 20 Mar 2020 10:53:05 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 07D27100375; Fri, 20 Mar 2020 10:52:59 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Mathias Nyman <mathias.nyman@linux.intel.com>, x86@kernel.org
-Cc:     linux-pci <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
+        id S1726602AbgCTJ6u (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Mar 2020 05:58:50 -0400
+Received: from foss.arm.com ([217.140.110.172]:46804 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726527AbgCTJ6u (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 20 Mar 2020 05:58:50 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0106030E;
+        Fri, 20 Mar 2020 02:58:50 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1B7163F305;
+        Fri, 20 Mar 2020 02:58:49 -0700 (PDT)
+Date:   Fri, 20 Mar 2020 09:58:43 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Tom Joseph <tjoseph@cadence.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Evan Green <evgreen@chromium.org>,
-        "Ghorai\, Sukumar" <sukumar.ghorai@intel.com>,
-        "Amara\, Madhusudanarao" <madhusudanarao.amara@intel.com>,
-        "Nandamuri\, Srikanth" <srikanth.nandamuri@intel.com>
-Subject: Re: MSI interrupt for xhci still lost on 5.6-rc6 after cpu hotplug
-In-Reply-To: <806c51fa-992b-33ac-61a9-00a606f82edb@linux.intel.com>
-References: <806c51fa-992b-33ac-61a9-00a606f82edb@linux.intel.com>
-Date:   Fri, 20 Mar 2020 10:52:59 +0100
-Message-ID: <87d0974akk.fsf@nanos.tec.linutronix.de>
+        Rob Herring <robh+dt@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 0/4] dt-bindings: Convert Cadence PCIe RC/EP to DT
+ Schema
+Message-ID: <20200320095843.GA21858@e121166-lin.cambridge.arm.com>
+References: <20200305103017.16706-1-kishon@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200305103017.16706-1-kishon@ti.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Mathias,
+On Thu, Mar 05, 2020 at 04:00:13PM +0530, Kishon Vijay Abraham I wrote:
+> Cadence PCIe IP is used by multiple SoC vendors (e.g. TI). Cadence
+> themselves have a validation platform for validating the PCIe IP which
+> is already in the upstream kernel. Right now the binding only exists for
+> Cadence platform and this will result in adding redundant binding schema
+> for any platform using Cadence PCIe core.
+> 
+> This series:
+> 1) Create cdns-pcie.yaml which includes properties that are applicable
+>    to both host mode and endpoint mode of Cadence PCIe core.
+> 2) Create cdns-pcie-host.yaml to include properties that are specific to
+>    host mode of Cadence PCIe core. cdns-pcie-host.yaml will include
+>    cdns-pcie.yaml.
+> 3) Create cdns-pcie-ep.yaml to include properties that are specific to
+>    endpoint mode of Cadence PCIe core. cdns-pcie-ep.yaml will include
+>    cdns-pcie.yaml.
+> 4) Remove cdns,cdns-pcie-ep.txt and cdns,cdns-pcie-host.txt which had
+>    the binding for Cadence "platform" and add cdns,cdns-pcie-host.yaml
+>    and cdns,cdns-pcie-ep.yaml schema for Cadence Platform. The schema
+>    for Cadence platform then includes schema for Cadence PCIe core.
+> 
+> Changes from v4:
+> *) Deprecate "cdns,max-outbound-regions" only for host mode. For EP mode
+>    this will be a mandatory property.
+> 
+> Changes from v3:
+> *) Add "Reviewed-by: Rob Herring <robh@kernel.org>"
+> *) Fix typo in SPDX header
+> 
+> Changes from v2:
+> *) Created "pci-ep.yaml" for common endpoint controller bindings
+> *) Deprecate "cdns,max-outbound-regions" and "cdns,no-bar-match-nbits"
+>    binding
+> 
+> Changes from v1:
+> *) Fix maximum values of num-lanes and cdns,no-bar-match-nbits
+> *) Fix example DT node for PCIe Endpoint.
+> 
+> Ref: Patches to convert Cadence driver to library
+>      https://lkml.org/lkml/2019/11/11/317
+> 
+> Some of this was initially part of [1], but to accelerate it getting
+> into upstream, sending this as a separate series.
+> 
+> [1] -> http://lore.kernel.org/r/20200106102058.19183-1-kishon@ti.com
+> 
+> Kishon Vijay Abraham I (4):
+>   dt-bindings: PCI: Add PCI Endpoint Controller Schema
+>   dt-bindings: PCI: cadence: Add PCIe RC/EP DT schema for Cadence PCIe
+>   dt-bindings: PCI: Convert PCIe Host/Endpoint in Cadence platform to DT
+>     schema
+>   dt-bindings: PCI: cadence: Deprecate inbound/outbound specific
+>     bindings
+> 
+>  .../bindings/pci/cdns,cdns-pcie-ep.txt        | 27 -------
+>  .../bindings/pci/cdns,cdns-pcie-ep.yaml       | 49 ++++++++++++
+>  .../bindings/pci/cdns,cdns-pcie-host.txt      | 66 ----------------
+>  .../bindings/pci/cdns,cdns-pcie-host.yaml     | 75 +++++++++++++++++++
+>  .../devicetree/bindings/pci/cdns-pcie-ep.yaml | 25 +++++++
+>  .../bindings/pci/cdns-pcie-host.yaml          | 37 +++++++++
+>  .../devicetree/bindings/pci/cdns-pcie.yaml    | 23 ++++++
+>  .../devicetree/bindings/pci/pci-ep.yaml       | 41 ++++++++++
+>  MAINTAINERS                                   |  2 +-
+>  9 files changed, 251 insertions(+), 94 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
+>  create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
+>  create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pci/pci-ep.yaml
 
-Mathias Nyman <mathias.nyman@linux.intel.com> writes:
-> I can reproduce the lost MSI interrupt issue on 5.6-rc6 which includes
-> the "Plug non-maskable MSI affinity race" patch.
->
-> I can see this on a couple platforms, I'm running a script that first generates
-> a lot of usb traffic, and then in a busyloop sets irq affinity and turns off
-> and on cpus:
->
-> for i in 1 3 5 7; do
-> 	echo "1" > /sys/devices/system/cpu/cpu$i/online
-> done
-> echo "A" > "/proc/irq/*/smp_affinity"
-> echo "A" > "/proc/irq/*/smp_affinity"
-> echo "F" > "/proc/irq/*/smp_affinity"
-> for i in 1 3 5 7; do
-> 	echo "0" > /sys/devices/system/cpu/cpu$i/online
-> done
-> trace snippet: 
->       <idle>-0     [001] d.h.   129.676900: xhci_irq: xhci irq
->       <idle>-0     [001] d.h.   129.677507: xhci_irq: xhci irq
->       <idle>-0     [001] d.h.   129.677556: xhci_irq: xhci irq
->       <idle>-0     [001] d.h.   129.677647: xhci_irq: xhci irq
->       <...>-14     [001] d..1   129.679802: msi_set_affinity: direct update msi 122, vector 33 -> 33, apicid: 2 -> 6
-
-Looks like a regular affinity setting in interrupt context, but I can't
-make sense of the time stamps
-
->       <idle>-0     [003] d.h.   129.682639: xhci_irq: xhci irq
->       <idle>-0     [003] d.h.   129.702380: xhci_irq: xhci irq
->       <idle>-0     [003] d.h.   129.702493: xhci_irq: xhci irq
->  migration/3-24    [003] d..1   129.703150: msi_set_affinity: direct update msi 122, vector 33 -> 33, apicid: 6 -> 0
-
-So this is a CPU offline operation and after that irq 122 is silent, right?
-
->  kworker/0:0-5     [000] d.h.   131.328790: msi_set_affinity: direct update msi 121, vector 34 -> 34, apicid: 0 -> 0
->  kworker/0:0-5     [000] d.h.   133.312704: msi_set_affinity: direct update msi 121, vector 34 -> 34, apicid: 0 -> 0
->  kworker/0:0-5     [000] d.h.   135.360786: msi_set_affinity: direct update msi 121, vector 34 -> 34, apicid: 0 -> 0
->       <idle>-0     [000] d.h.   137.344694: msi_set_affinity: direct update msi 121, vector 34 -> 34, apicid: 0 -> 0
->  kworker/0:0-5     [000] d.h.   139.128679: msi_set_affinity: direct update msi 121, vector 34 -> 34, apicid: 0 -> 0
->  kworker/0:0-5     [000] d.h.   141.312686: msi_set_affinity: direct update msi 121, vector 34 -> 34, apicid: 0 -> 0
->  kworker/0:0-5     [000] d.h.   143.360703: msi_set_affinity: direct update msi 121, vector 34 -> 34, apicid: 0 -> 0
->  kworker/0:0-5     [000] d.h.   145.344791: msi_set_affinity: direct update msi 121, vector 34 -> 34, apicid: 0 -> 0
-
-That kworker context looks fishy. Can you please enable stacktraces in
-the tracer so I can see the call chains leading to this? OTOH that's irq
-121 not 122. Anyway moar information is always useful.
-
-And please add the patch below.
+Applied first three patches to pci/dt for v5.7.
 
 Thanks,
-
-        tglx
-
-8<---------------
---- a/arch/x86/kernel/irq.c
-+++ b/arch/x86/kernel/irq.c
-@@ -243,6 +243,7 @@ u64 arch_irq_stat(void)
- 	RCU_LOCKDEP_WARN(!rcu_is_watching(), "IRQ failed to wake up RCU");
- 
- 	desc = __this_cpu_read(vector_irq[vector]);
-+	trace_printk("vector: %u desc %lx\n", vector, (unsigned long) desc);
- 	if (likely(!IS_ERR_OR_NULL(desc))) {
- 		if (IS_ENABLED(CONFIG_X86_32))
- 			handle_irq(desc, regs);
+Lorenzo
