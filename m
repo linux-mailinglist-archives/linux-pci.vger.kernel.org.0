@@ -2,24 +2,23 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2522318C962
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Mar 2020 09:59:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D35318C96D
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Mar 2020 10:02:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbgCTI7e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Mar 2020 04:59:34 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44528 "EHLO mx2.suse.de"
+        id S1726631AbgCTJCO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Mar 2020 05:02:14 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45570 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726232AbgCTI7e (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 20 Mar 2020 04:59:34 -0400
+        id S1726979AbgCTJCO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 20 Mar 2020 05:02:14 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 3474BAF0E;
-        Fri, 20 Mar 2020 08:59:30 +0000 (UTC)
-Date:   Fri, 20 Mar 2020 01:58:26 -0700
+        by mx2.suse.de (Postfix) with ESMTP id 60CA0AECE;
+        Fri, 20 Mar 2020 09:02:12 +0000 (UTC)
+Date:   Fri, 20 Mar 2020 02:01:06 -0700
 From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
@@ -27,7 +26,8 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Joel Fernandes <joel@joelfernandes.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         Randy Dunlap <rdunlap@infradead.org>,
-        Oleg Nesterov <oleg@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
         Logan Gunthorpe <logang@deltatee.com>,
         Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
         Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
@@ -36,34 +36,73 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         linux-usb@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>,
         "David S. Miller" <davem@davemloft.net>,
         linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Oleg Nesterov <oleg@redhat.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [patch V2 06/15] rcuwait: Add @state argument to
- rcuwait_wait_event()
-Message-ID: <20200320085826.qj5om2ztldc6nfv4@linux-p48b>
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [patch V2 11/15] completion: Use simple wait queues
+Message-ID: <20200320090106.6p2lwqvs4jedhvds@linux-p48b>
 References: <20200318204302.693307984@linutronix.de>
- <20200318204408.010461877@linutronix.de>
- <20200320053657.ggvcqsjtdotmrl7p@linux-p48b>
- <20200320084517.2tqbi2iwjlu6je2b@linutronix.de>
+ <20200318204408.521507446@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20200320084517.2tqbi2iwjlu6je2b@linutronix.de>
+In-Reply-To: <20200318204408.521507446@linutronix.de>
 User-Agent: NeoMutt/20180716
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 20 Mar 2020, Sebastian Andrzej Siewior wrote:
+On Wed, 18 Mar 2020, Thomas Gleixner wrote:
 
->I though that v2 has it fixed with the previous commit (acpi: Remove
->header dependency). The kbot just reported that everything is fine.
->Let me look???
+>From: Thomas Gleixner <tglx@linutronix.de>
+>
+>completion uses a wait_queue_head_t to enqueue waiters.
+>
+>wait_queue_head_t contains a spinlock_t to protect the list of waiters
+>which excludes it from being used in truly atomic context on a PREEMPT_RT
+>enabled kernel.
+>
+>The spinlock in the wait queue head cannot be replaced by a raw_spinlock
+>because:
+>
+>  - wait queues can have custom wakeup callbacks, which acquire other
+>    spinlock_t locks and have potentially long execution times
+>
+>  - wake_up() walks an unbounded number of list entries during the wake up
+>    and may wake an unbounded number of waiters.
+>
+>For simplicity and performance reasons complete() should be usable on
+>PREEMPT_RT enabled kernels.
+>
+>completions do not use custom wakeup callbacks and are usually single
+>waiter, except for a few corner cases.
+>
+>Replace the wait queue in the completion with a simple wait queue (swait),
+>which uses a raw_spinlock_t for protecting the waiter list and therefore is
+>safe to use inside truly atomic regions on PREEMPT_RT.
+>
+>There is no semantical or functional change:
+>
+>  - completions use the exclusive wait mode which is what swait provides
+>
+>  - complete() wakes one exclusive waiter
+>
+>  - complete_all() wakes all waiters while holding the lock which protects
+>    the wait queue against newly incoming waiters. The conversion to swait
+>    preserves this behaviour.
+>
+>complete_all() might cause unbound latencies with a large number of waiters
+>being woken at once, but most complete_all() usage sites are either in
+>testing or initialization code or have only a really small number of
+>concurrent waiters which for now does not cause a latency problem. Keep it
+>simple for now.
+>
+>The fixup of the warning check in the USB gadget driver is just a straight
+>forward conversion of the lockless waiter check from one waitqueue type to
+>the other.
+>
+>Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+>Cc: Arnd Bergmann <arnd@arndb.de>
 
-Nah my bad, that build did not have the full series applied :)
-
-Sorry for the noise.
-
-Thanks,
-Davidlohr
+Reviewed-by: Davidlohr Bueso <dbueso@suse.de>
