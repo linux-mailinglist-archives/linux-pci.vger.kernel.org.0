@@ -2,134 +2,133 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3746918D8AF
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Mar 2020 20:46:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EB34518D8B9
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Mar 2020 20:52:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbgCTTqs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Mar 2020 15:46:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37580 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726666AbgCTTqr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 20 Mar 2020 15:46:47 -0400
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3B1520739;
-        Fri, 20 Mar 2020 19:46:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584733607;
-        bh=cWtAUzd2rzDP9wEzmMrW/qhJoPZ5i4sE8aCtwPlju7w=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=X3d+L4Jqyb6dAW7q1cPglXf0FktkzS3wWtwooGY+RoSz3BWL3o5F9Z5AN7Kcgt/Gf
-         3wQIAOtzNyVvErjlICDEncCpzpiwUU+kWLR/M5mZqN/nW0QsHfh2fWqvCnWKj+fc5L
-         r2apIhcVhBidEfiS8bIYAaN7+ImQqdNl2BlHCeuM=
-Date:   Fri, 20 Mar 2020 14:46:45 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Sriram Palanisamy <gpalan@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 12/12] pcie: qcom: Set PCIE MRRS and MPS to 256B
-Message-ID: <20200320194645.GA251282@google.com>
+        id S1726973AbgCTTwc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Mar 2020 15:52:32 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:37003 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726773AbgCTTwa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Mar 2020 15:52:30 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jFNgI-0002w2-14; Fri, 20 Mar 2020 20:51:46 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 626F61039FC; Fri, 20 Mar 2020 20:51:44 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     paulmck@kernel.org
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Oleg Nesterov <oleg@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [patch V2 08/15] Documentation: Add lock ordering and nesting documentation
+In-Reply-To: <20200320160145.GN3199@paulmck-ThinkPad-P72>
+Date:   Fri, 20 Mar 2020 20:51:44 +0100
+Message-ID: <87mu8apzxr.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200320183455.21311-12-ansuelsmth@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 07:34:54PM +0100, Ansuel Smith wrote:
-> From: Sriram Palanisamy <gpalan@codeaurora.org>
-> 
-> Set Max Read Request Size and Max Payload Size to 256 bytes,
-> per chip team recommendation.
+"Paul E. McKenney" <paulmck@kernel.org> writes:
+>
+>  - The soft interrupt related suffix (_bh()) still disables softirq
+>    handlers.  However, unlike non-PREEMPT_RT kernels (which disable
+>    preemption to get this effect), PREEMPT_RT kernels use a per-CPU
+>    lock to exclude softirq handlers.
 
-Is this to avoid a device defect or to optimize performance?
+I've made that:
 
-This should not be done in an individual driver for performance
-reasons because these parameters need to be managed at the system
-level.
+  - The soft interrupt related suffix (_bh()) still disables softirq
+    handlers.
 
-If this is to work around a device defect, we probably need to think
-about a quirk that changes the device capabilities advertised by this
-bridge and then changes to the PCI core code to take that into
-account.
+    Non-PREEMPT_RT kernels disable preemption to get this effect.
 
-> Signed-off-by: Gokul Sriram Palanisamy <gpalan@codeaurora.org>
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 37 ++++++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 03130a3206b4..ad437c6f49a0 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -125,6 +125,14 @@
->  
->  #define PCIE20_LNK_CONTROL2_LINK_STATUS2        0xA0
->  
-> +#define __set(v, a, b)	(((v) << (b)) & GENMASK(a, b))
-> +#define __mask(a, b)	(((1 << ((a) + 1)) - 1) & ~((1 << (b)) - 1))
-> +#define PCIE20_DEV_CAS			0x78
-> +#define PCIE20_MRRS_MASK		__mask(14, 12)
-> +#define PCIE20_MRRS(x)			__set(x, 14, 12)
-> +#define PCIE20_MPS_MASK			__mask(7, 5)
-> +#define PCIE20_MPS(x)			__set(x, 7, 5)
+    PREEMPT_RT kernels use a per-CPU lock for serialization. The lock
+    disables softirq handlers and prevents reentrancy by a preempting
+    task.
+    
+On non-RT this is implicit through preemption disable, but it's non
+obvious for RT as preemption stays enabled.
 
-These should all be the generic PCI_EXP_DEVCTL_READRQ and similar
-#defines, since you use them on values from PCI_EXP_DEVCTL.
+> PREEMPT_RT kernels preserve all other spinlock_t semantics:
+>
+>  - Tasks holding a spinlock_t do not migrate.  Non-PREEMPT_RT kernels
+>    avoid migration by disabling preemption.  PREEMPT_RT kernels instead
+>    disable migration, which ensures that pointers to per-CPU variables
+>    remain valid even if the task is preempted.
+>
+>  - Task state is preserved across spinlock acquisition, ensuring that the
+>    task-state rules apply to all kernel configurations.  In non-PREEMPT_RT
+>    kernels leave task state untouched.  However, PREEMPT_RT must change
+>    task state if the task blocks during acquisition.  Therefore, the
+>    corresponding lock wakeup restores the task state.  Note that regular
+>    (not lock related) wakeups do not restore task state.
 
->  #define DEVICE_TYPE_RC				0x4
->  
->  #define QCOM_PCIE_2_1_0_MAX_SUPPLY	3
-> @@ -1595,6 +1603,35 @@ static int qcom_pcie_probe(struct platform_device *pdev)
->  	return ret;
->  }
->  
-> +static void qcom_pcie_fixup_final(struct pci_dev *pcidev)
-> +{
-> +	int cap, err;
-> +	u16 ctl, reg_val;
-> +
-> +	cap = pci_pcie_cap(pcidev);
-> +	if (!cap)
-> +		return;
-> +
-> +	err = pci_read_config_word(pcidev, cap + PCI_EXP_DEVCTL, &ctl);
-> +
-> +	if (err)
-> +		return;
-> +
-> +	reg_val = ctl;
-> +
-> +	if (((reg_val & PCIE20_MRRS_MASK) >> 12) > 1)
-> +		reg_val = (reg_val & ~(PCIE20_MRRS_MASK)) | PCIE20_MRRS(0x1);
-> +
-> +	if (((ctl & PCIE20_MPS_MASK) >> 5) > 1)
-> +		reg_val = (reg_val & ~(PCIE20_MPS_MASK)) | PCIE20_MPS(0x1);
-> +
-> +	err = pci_write_config_word(pcidev, cap + PCI_EXP_DEVCTL, reg_val);
-> +
-> +	if (err)
-> +		dev_err(&pcidev->dev, "pcie config write failed %d\n", err);
-> +}
-> +DECLARE_PCI_FIXUP_FINAL(PCI_ANY_ID, PCI_ANY_ID, qcom_pcie_fixup_final);
-> +
->  static const struct of_device_id qcom_pcie_match[] = {
->  	{ .compatible = "qcom,pcie-apq8084", .data = &ops_1_0_0 },
->  	{ .compatible = "qcom,pcie-ipq8064", .data = &ops_2_1_0 },
-> -- 
-> 2.25.1
-> 
+   - Task state is preserved across spinlock acquisition, ensuring that the
+     task-state rules apply to all kernel configurations.  Non-PREEMPT_RT
+     kernels leave task state untouched.  However, PREEMPT_RT must change
+     task state if the task blocks during acquisition.  Therefore, it
+     saves the current task state before blocking and the corresponding
+     lock wakeup restores it. A regular not lock related wakeup sets the
+     task state to RUNNING. If this happens while the task is blocked on
+     a spinlock then the saved task state is changed so that correct
+     state is restored on lock wakeup.
+
+Hmm?
+
+> But this code failes on PREEMPT_RT kernels because the memory allocator
+> is fully preemptible and therefore cannot be invoked from truly atomic
+> contexts.  However, it is perfectly fine to invoke the memory allocator
+> while holding a normal non-raw spinlocks because they do not disable
+> preemption::
+>
+>> +  spin_lock(&lock);
+>> +  p = kmalloc(sizeof(*p), GFP_ATOMIC);
+>> +
+>> +Most places which use GFP_ATOMIC allocations are safe on PREEMPT_RT as the
+>> +execution is forced into thread context and the lock substitution is
+>> +ensuring preemptibility.
+>
+> Interestingly enough, most uses of GFP_ATOMIC allocations are
+> actually safe on PREEMPT_RT because the the lock substitution ensures
+> preemptibility.  Only those GFP_ATOMIC allocations that are invoke
+> while holding a raw spinlock or with preemption otherwise disabled need
+> adjustment to work correctly on PREEMPT_RT.
+>
+> [ I am not as confident of the above as I would like to be... ]
+
+I'd leave that whole paragraph out. This documents the rules and from
+the above code examples it's pretty clear what works and what not :)
+
+> And meeting time, will continue later!
+
+Enjoy!
+
+Thanks,
+
+        tglx
