@@ -2,211 +2,133 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 54E5718CB45
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Mar 2020 11:12:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 27B5118CB74
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Mar 2020 11:21:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726602AbgCTKM0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Mar 2020 06:12:26 -0400
-Received: from foss.arm.com ([217.140.110.172]:46940 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726527AbgCTKMZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 20 Mar 2020 06:12:25 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0A57931B;
-        Fri, 20 Mar 2020 03:12:25 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A9D9F3F305;
-        Fri, 20 Mar 2020 03:12:23 -0700 (PDT)
-Date:   Fri, 20 Mar 2020 10:12:17 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     marek.vasut@gmail.com
-Cc:     linux-pci@vger.kernel.org,
-        Kazufumi Ikeda <kaz-ikeda@xc.jp.nec.com>,
-        Gaku Inami <gaku.inami.xw@bp.renesas.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH V3] PCI: rcar: Add the suspend/resume for pcie-rcar driver
-Message-ID: <20200320101217.GA22055@e121166-lin.cambridge.arm.com>
-References: <20200314191232.3122290-1-marek.vasut@gmail.com>
+        id S1727469AbgCTKVI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Mar 2020 06:21:08 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:39652 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727456AbgCTKVH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Mar 2020 06:21:07 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02KAKwg1024302;
+        Fri, 20 Mar 2020 05:20:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584699658;
+        bh=rn+lqi6S8AMGiEUZ5KYnC/dX2IgyH3wA5+iFbZlmJVU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=n7bPyOtSVxozgzY+7p0JqNOfXGcBqQiwqk6ci2qDVI6/XFXgv3CeqE4Y0o37olaNq
+         OairtZe9Udu4OF4G68Nlg5zBSc8i/HA/TjqyxavwUZcIZuNwo4saorLFhzR7k1DROs
+         JOgGkjtTNb68kxYjrv3HOGC3eCOcyJHariOH6oHc=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02KAKwas088376
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 20 Mar 2020 05:20:58 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 20
+ Mar 2020 05:20:58 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 20 Mar 2020 05:20:57 -0500
+Received: from [10.250.133.193] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02KAKsKP008091;
+        Fri, 20 Mar 2020 05:20:55 -0500
+Subject: Re: [PATCH] PCI: endpoint: Fix NULL pointer dereference for
+ ->get_features()
+To:     Sriram Dash <sriram.dash@samsung.com>,
+        "'Shradha Todi'" <shradha.t@samsung.com>
+CC:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <pankaj.dubey@samsung.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <CGME20200311103443epcas5p2e97b8f3a8e52dc6f02eb551e0c97f132@epcas5p2.samsung.com>
+ <20200311102852.5207-1-shradha.t@samsung.com>
+ <000d01d5fdf3$55d43af0$017cb0d0$@samsung.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <a7a6a295-160a-94d6-09f9-63f783c8b28a@ti.com>
+Date:   Fri, 20 Mar 2020 15:50:53 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200314191232.3122290-1-marek.vasut@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <000d01d5fdf3$55d43af0$017cb0d0$@samsung.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Mar 14, 2020 at 08:12:32PM +0100, marek.vasut@gmail.com wrote:
-> From: Kazufumi Ikeda <kaz-ikeda@xc.jp.nec.com>
+Hi Sriram,
+
+On 3/19/2020 7:06 PM, Sriram Dash wrote:
+>> From: Shradha Todi <shradha.t@samsung.com>
+>> Subject: [PATCH] PCI: endpoint: Fix NULL pointer dereference for -
+>>> get_features()
+>>
+>> get_features ops of pci_epc_ops may return NULL, causing NULL pointer
+>> dereference in pci_epf_test_bind function. Let us add a check for
+>> pci_epc_feature pointer in pci_epf_test_bind before we access it to avoid any
+>> such NULL pointer dereference and return -ENOTSUPP in case pci_epc_feature
+>> is not found.
+>>
+>> Reviewed-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+>> Signed-off-by: Sriram Dash <sriram.dash@samsung.com>
+>> Signed-off-by: Shradha Todi <shradha.t@samsung.com>
+>> ---
 > 
-> This adds the suspend/resume supports for pcie-rcar. The resume handler
-> reprograms the hardware based on the software state kept in specific
-> device structures. Also it doesn't need to save any registers.
+> Hi Kishon,
 > 
-> Signed-off-by: Kazufumi Ikeda <kaz-ikeda@xc.jp.nec.com>
-> Signed-off-by: Gaku Inami <gaku.inami.xw@bp.renesas.com>
-> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-> Cc: Phil Edworthy <phil.edworthy@renesas.com>
-> Cc: Simon Horman <horms+renesas@verge.net.au>
-> Cc: Wolfram Sang <wsa@the-dreams.de>
-> Cc: linux-renesas-soc@vger.kernel.org
-> ---
-> V2: - Change return type of rcar_pcie_hw_enable() to void
->     - Drop default: case in switch statement in rcar_pcie_hw_enable()
->     - Sort variables in rcar_pcie_resume()
-> V3: - Update on top of next-20200313
-> ---
->  drivers/pci/controller/pcie-rcar.c | 86 +++++++++++++++++++++++++-----
->  1 file changed, 74 insertions(+), 12 deletions(-)
+> Any update on this?
+
+Don't we access epc_features only after checking if epc_features is not NULL in
+pci_epf_test_bind() function? However we are accessing epc_features in multiple
+other functions all over pci-epf-test.
+
+So the patch itself is correct though the commit log has to be fixed. You
+should also check if all the endpoint controller drivers existing currently
+provides epc_features.
+
+Thanks
+Kishon
 > 
-> diff --git a/drivers/pci/controller/pcie-rcar.c b/drivers/pci/controller/pcie-rcar.c
-> index 759c6542c5c8..f86513638b8a 100644
-> --- a/drivers/pci/controller/pcie-rcar.c
-> +++ b/drivers/pci/controller/pcie-rcar.c
-> @@ -452,6 +452,32 @@ static void rcar_pcie_force_speedup(struct rcar_pcie *pcie)
->  		 (macsr & LINK_SPEED) == LINK_SPEED_5_0GTS ? "5" : "2.5");
->  }
->  
-> +static void rcar_pcie_hw_enable(struct rcar_pcie *pci)
-> +{
-> +	struct resource_entry *win;
-> +	LIST_HEAD(res);
-> +	int i = 0;
-> +
-> +	/* Try setting 5 GT/s link speed */
-> +	rcar_pcie_force_speedup(pci);
-> +
-> +	/* Setup PCI resources */
-> +	resource_list_for_each_entry(win, &pci->resources) {
-> +		struct resource *res = win->res;
-> +
-> +		if (!res->flags)
-> +			continue;
-> +
-> +		switch (resource_type(res)) {
-> +		case IORESOURCE_IO:
-> +		case IORESOURCE_MEM:
-> +			rcar_pcie_setup_window(i, pci, win);
-> +			i++;
-> +			break;
-> +		}
-> +	}
-> +}
-> +
->  static int rcar_pcie_enable(struct rcar_pcie *pcie)
->  {
->  	struct device *dev = pcie->dev;
-> @@ -891,11 +917,25 @@ static void rcar_pcie_unmap_msi(struct rcar_pcie *pcie)
->  	irq_domain_remove(msi->domain);
->  }
->  
-> +static void rcar_pcie_hw_enable_msi(struct rcar_pcie *pcie)
-> +{
-> +	struct rcar_msi *msi = &pcie->msi;
-> +	unsigned long base;
-> +
-> +	/* setup MSI data target */
-> +	base = virt_to_phys((void *)msi->pages);
-> +
-> +	rcar_pci_write_reg(pcie, lower_32_bits(base) | MSIFE, PCIEMSIALR);
-> +	rcar_pci_write_reg(pcie, upper_32_bits(base), PCIEMSIAUR);
-> +
-> +	/* enable all MSI interrupts */
-> +	rcar_pci_write_reg(pcie, 0xffffffff, PCIEMSIIER);
-> +}
-> +
->  static int rcar_pcie_enable_msi(struct rcar_pcie *pcie)
->  {
->  	struct device *dev = pcie->dev;
->  	struct rcar_msi *msi = &pcie->msi;
-> -	phys_addr_t base;
->  	int err, i;
->  
->  	mutex_init(&msi->lock);
-> @@ -934,17 +974,7 @@ static int rcar_pcie_enable_msi(struct rcar_pcie *pcie)
->  
->  	/* setup MSI data target */
->  	msi->pages = __get_free_pages(GFP_KERNEL, 0);
-> -	if (!msi->pages) {
-> -		err = -ENOMEM;
-> -		goto err;
-> -	}
-> -	base = virt_to_phys((void *)msi->pages);
-> -
-> -	rcar_pci_write_reg(pcie, lower_32_bits(base) | MSIFE, PCIEMSIALR);
-> -	rcar_pci_write_reg(pcie, upper_32_bits(base), PCIEMSIAUR);
-> -
-> -	/* enable all MSI interrupts */
-> -	rcar_pci_write_reg(pcie, 0xffffffff, PCIEMSIIER);
-> +	rcar_pcie_hw_enable_msi(pcie);
->  
->  	return 0;
->  
-> @@ -1219,6 +1249,37 @@ static int rcar_pcie_probe(struct platform_device *pdev)
->  	return err;
->  }
->  
-> +static int rcar_pcie_resume(struct device *dev)
-> +{
-> +	struct rcar_pcie *pcie = dev_get_drvdata(dev);
-> +	int (*hw_init_fn)(struct rcar_pcie *);
-> +	unsigned int data;
-> +	int err;
-> +
-> +	err = rcar_pcie_parse_map_dma_ranges(pcie);
-> +	if (err)
-> +		return 0;
-> +
-> +	/* Failure to get a link might just be that no cards are inserted */
-> +	hw_init_fn = of_device_get_match_data(dev);
-
-Hi Marek,
-
-happy to apply it as is, I was wondering if it is work taking this
-look-up out of the resume path, it is not supposed to change anyway,
-you can even save the function pointer at probe.
-
-Again, happy to apply it as-is, just let me know please.
-
-Thanks,
-Lorenzo
-
-> +	err = hw_init_fn(pcie);
-> +	if (err) {
-> +		dev_info(dev, "PCIe link down\n");
-> +		return 0;
-> +	}
-> +
-> +	data = rcar_pci_read_reg(pcie, MACSR);
-> +	dev_info(dev, "PCIe x%d: link up\n", (data >> 20) & 0x3f);
-> +
-> +	/* Enable MSI */
-> +	if (IS_ENABLED(CONFIG_PCI_MSI))
-> +		rcar_pcie_hw_enable_msi(pcie);
-> +
-> +	rcar_pcie_hw_enable(pcie);
-> +
-> +	return 0;
-> +}
-> +
->  static int rcar_pcie_resume_noirq(struct device *dev)
->  {
->  	struct rcar_pcie *pcie = dev_get_drvdata(dev);
-> @@ -1234,6 +1295,7 @@ static int rcar_pcie_resume_noirq(struct device *dev)
->  }
->  
->  static const struct dev_pm_ops rcar_pcie_pm_ops = {
-> +	SET_SYSTEM_SLEEP_PM_OPS(NULL, rcar_pcie_resume)
->  	.resume_noirq = rcar_pcie_resume_noirq,
->  };
->  
-> -- 
-> 2.25.0
+> 
+>>  drivers/pci/endpoint/functions/pci-epf-test.c | 15 +++++++++------
+>>  1 file changed, 9 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c
+>> b/drivers/pci/endpoint/functions/pci-epf-test.c
+>> index c9121b1b9fa9..af4537a487bf 100644
+>> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+>> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+>> @@ -510,14 +510,17 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+>>  		return -EINVAL;
+>>
+>>  	epc_features = pci_epc_get_features(epc, epf->func_no);
+>> -	if (epc_features) {
+>> -		linkup_notifier = epc_features->linkup_notifier;
+>> -		msix_capable = epc_features->msix_capable;
+>> -		msi_capable = epc_features->msi_capable;
+>> -		test_reg_bar = pci_epc_get_first_free_bar(epc_features);
+>> -		pci_epf_configure_bar(epf, epc_features);
+>> +	if (!epc_features) {
+>> +		dev_err(dev, "epc_features not implemented\n");
+>> +		return -ENOTSUPP;
+>>  	}
+>>
+>> +	linkup_notifier = epc_features->linkup_notifier;
+>> +	msix_capable = epc_features->msix_capable;
+>> +	msi_capable = epc_features->msi_capable;
+>> +	test_reg_bar = pci_epc_get_first_free_bar(epc_features);
+>> +	pci_epf_configure_bar(epf, epc_features);
+>> +
+>>  	epf_test->test_reg_bar = test_reg_bar;
+>>  	epf_test->epc_features = epc_features;
+>>
+>> --
+>> 2.17.1
+> 
 > 
