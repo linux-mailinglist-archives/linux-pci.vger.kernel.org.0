@@ -2,22 +2,22 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 82EB618D95B
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Mar 2020 21:31:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4426518D967
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Mar 2020 21:33:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727177AbgCTUa4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Mar 2020 16:30:56 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:37098 "EHLO
+        id S1727141AbgCTUdJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Mar 2020 16:33:09 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:37119 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726789AbgCTUa4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Mar 2020 16:30:56 -0400
+        with ESMTP id S1726829AbgCTUdJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Mar 2020 16:33:09 -0400
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jFOHm-0003TQ-I5; Fri, 20 Mar 2020 21:30:30 +0100
+        id 1jFOJf-0003W5-B3; Fri, 20 Mar 2020 21:32:27 +0100
 Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id E29761039FC; Fri, 20 Mar 2020 21:30:29 +0100 (CET)
+        id A95431039FC; Fri, 20 Mar 2020 21:32:26 +0100 (CET)
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
@@ -26,14 +26,14 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         Mark Gross <mgross@linux.intel.com>,
         Tony Luck <tony.luck@intel.com>,
         "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
         Len Brown <lenb@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
         Paolo Bonzini <pbonzini@redhat.com>,
         Darren Hart <dvhart@infradead.org>,
         Andy Shevchenko <andy@infradead.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
         linux-edac@vger.kernel.org,
         Platform Driver <platform-driver-x86@vger.kernel.org>,
         Jean Delvare <jdelvare@suse.com>,
@@ -52,11 +52,11 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         Herbert Xu <herbert@gondor.apana.org.au>,
         "David S. Miller" <davem@davemloft.net>,
         linux-crypto <linux-crypto@vger.kernel.org>
-Subject: Re: [patch 09/22] cpufreq: Convert to new X86 CPU match macros
-In-Reply-To: <CAHp75VdkvyqOaAsLmz8K2j4bdd0sboPoUpRr6U-zvtkSaQfPRQ@mail.gmail.com>
-References: <20200320131345.635023594@linutronix.de> <20200320131509.564059710@linutronix.de> <CAHp75VdkvyqOaAsLmz8K2j4bdd0sboPoUpRr6U-zvtkSaQfPRQ@mail.gmail.com>
-Date:   Fri, 20 Mar 2020 21:30:29 +0100
-Message-ID: <87eetmpy56.fsf@nanos.tec.linutronix.de>
+Subject: Re: [patch 08/22] ACPI: Convert to new X86 CPU match macros
+In-Reply-To: <CAHp75VcK3tL0YayjF=CSkSkHiOpg2zOV3rdkXQWJmLZ9fmevpg@mail.gmail.com>
+References: <20200320131345.635023594@linutronix.de> <20200320131509.467730627@linutronix.de> <CAHp75VcK3tL0YayjF=CSkSkHiOpg2zOV3rdkXQWJmLZ9fmevpg@mail.gmail.com>
+Date:   Fri, 20 Mar 2020 21:32:26 +0100
+Message-ID: <87bloqpy1x.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Linutronix-Spam-Score: -1.0
@@ -68,29 +68,25 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 Andy Shevchenko <andy.shevchenko@gmail.com> writes:
-> On Fri, Mar 20, 2020 at 3:18 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
->> +       X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL,  6,  9, X86_FEATURE_EST, NULL),
->> +       X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL,  6, 13, X86_FEATURE_EST, NULL),
->> +       X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL, 15,  3, X86_FEATURE_EST, NULL),
->> +       X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL, 15,  4, X86_FEATURE_EST, NULL),
->
->> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL,  6, 0x8, 0),
->> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL,  6, 0xb, 0),
->> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL, 15, 0x2, 0),
->
->> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL,  6, 0x8, 0),
->> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL,  6, 0xb, 0),
->> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL, 15, 0x2, 0),
->
-> Perhaps use names instead of 6 and 15?
 
-Thought about that and did not come up with anyting useful. FAM6 vs. 6
-is not really any better
+> On Fri, Mar 20, 2020 at 3:19 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>>
+>> The new macro set has a consistent namespace and uses C99 initializers
+>> instead of the grufty C89 ones.
+>>
+>> Rename the local macro wrapper to X86_MATCH for consistency. It stays for
+>> readability sake.
+>
+>> +       X86_MATCH_INTEL_FAM6_MODEL(ATOM_SILVERMONT,     NULL),
+>> +       X86_MATCH_INTEL_FAM6_MODEL(ATOM_AIRMONT,        NULL),
+>
+>> -#define ICPU(model)    { X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, }
+>> +#define X86_MATCH(model)       X86_MATCH_INTEL_FAM6_MODEL(model, NULL)
+>
+> Maybe we can do a generic macro to avoid all these ', NULL' repetitions?
 
-> Also, NULL vs. 0?
-
-Both works, but yes I used mostly NULL.
+I opted for having the data argument everywhere to keep the macro maze
+small. And we have enough places where data is actually used.
 
 Thanks,
 
