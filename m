@@ -2,116 +2,145 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ABE1E18DB00
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Mar 2020 23:19:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 05E6918DB39
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Mar 2020 23:36:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727456AbgCTWTe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Mar 2020 18:19:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57596 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727453AbgCTWTd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 20 Mar 2020 18:19:33 -0400
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F273720732;
-        Fri, 20 Mar 2020 22:19:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584742773;
-        bh=csXHNoHEZCJcFFkQwtkt+kVeFZplv3+QRXaIVcYDwQ8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=J+xGqQlCtBvhli5sKpaYIumlmnmPLQMuzUvK+e8vtVT4koVbA0y3k2Xhs3XOvhyjP
-         z7CnJCejD4kGynSVMX8iRp15ep+5F6fRLvEq9gEey/bLfvDb8DdYpL/lVRxR5bvib6
-         dM4eV4c79FU+H+e1gIhkKh7KO+hXghOT8OIuNoJU=
-Date:   Fri, 20 Mar 2020 17:19:31 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Karol Herbst <kherbst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mika Westerberg <mika.westerberg@intel.com>,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v7] pci: prevent putting nvidia GPUs into lower device
- states on certain intel bridges
-Message-ID: <20200320221931.GA23783@google.com>
+        id S1727264AbgCTWgg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Mar 2020 18:36:36 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:37622 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726855AbgCTWgf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Mar 2020 18:36:35 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jFQFI-0005GA-2c; Fri, 20 Mar 2020 23:36:04 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 7EC4C1039FC; Fri, 20 Mar 2020 23:36:03 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     paulmck@kernel.org
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Oleg Nesterov <oleg@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [patch V2 08/15] Documentation: Add lock ordering and nesting documentation
+In-Reply-To: <20200320210243.GT3199@paulmck-ThinkPad-P72>
+References: <20200320160145.GN3199@paulmck-ThinkPad-P72> <87mu8apzxr.fsf@nanos.tec.linutronix.de> <20200320210243.GT3199@paulmck-ThinkPad-P72>
+Date:   Fri, 20 Mar 2020 23:36:03 +0100
+Message-ID: <874kuipsbw.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200310192627.437947-1-kherbst@redhat.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 08:26:27PM +0100, Karol Herbst wrote:
-> Fixes the infamous 'runtime PM' bug many users are facing on Laptops with
-> Nvidia Pascal GPUs by skipping said PCI power state changes on the GPU.
-> 
-> Depending on the used kernel there might be messages like those in demsg:
-> 
-> "nouveau 0000:01:00.0: Refused to change power state, currently in D3"
-> "nouveau 0000:01:00.0: can't change power state from D3cold to D0 (config
-> space inaccessible)"
-> followed by backtraces of kernel crashes or timeouts within nouveau.
-> 
-> It's still unkown why this issue exists, but this is a reliable workaround
-> and solves a very annoying issue for user having to choose between a
-> crashing kernel or higher power consumption of their Laptops.
+"Paul E. McKenney" <paulmck@kernel.org> writes:
+> On Fri, Mar 20, 2020 at 08:51:44PM +0100, Thomas Gleixner wrote:
+>> "Paul E. McKenney" <paulmck@kernel.org> writes:
+>> >
+>> >  - The soft interrupt related suffix (_bh()) still disables softirq
+>> >    handlers.  However, unlike non-PREEMPT_RT kernels (which disable
+>> >    preemption to get this effect), PREEMPT_RT kernels use a per-CPU
+>> >    lock to exclude softirq handlers.
+>> 
+>> I've made that:
+>> 
+>>   - The soft interrupt related suffix (_bh()) still disables softirq
+>>     handlers.
+>> 
+>>     Non-PREEMPT_RT kernels disable preemption to get this effect.
+>> 
+>>     PREEMPT_RT kernels use a per-CPU lock for serialization. The lock
+>>     disables softirq handlers and prevents reentrancy by a preempting
+>>     task.
+>
+> That works!  At the end, I would instead say "prevents reentrancy
+> due to task preemption", but what you have works.
 
-Thanks for the bugzilla link.  The bugzilla mentions lots of mailing
-list discussion.  Can you include links to some of that?
+Yours is better.
 
-IIUC this basically just turns off PCI power management for the GPU.
-Can you do that with something like the following?  I don't know
-anything about DRM, so I don't know where you could save the pm_cap,
-but I'm sure the driver could keep it somewhere.
+>>    - Task state is preserved across spinlock acquisition, ensuring that the
+>>      task-state rules apply to all kernel configurations.  Non-PREEMPT_RT
+>>      kernels leave task state untouched.  However, PREEMPT_RT must change
+>>      task state if the task blocks during acquisition.  Therefore, it
+>>      saves the current task state before blocking and the corresponding
+>>      lock wakeup restores it. A regular not lock related wakeup sets the
+>>      task state to RUNNING. If this happens while the task is blocked on
+>>      a spinlock then the saved task state is changed so that correct
+>>      state is restored on lock wakeup.
+>> 
+>> Hmm?
+>
+> I of course cannot resist editing the last two sentences:
+>
+>    ... Other types of wakeups unconditionally set task state to RUNNING.
+>    If this happens while a task is blocked while acquiring a spinlock,
+>    then the task state is restored to its pre-acquisition value at
+>    lock-wakeup time.
 
+Errm no. That would mean
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouveau/nouveau_drm.c
-index b65ae817eabf..2ad825e8891c 100644
---- a/drivers/gpu/drm/nouveau/nouveau_drm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
-@@ -618,6 +618,23 @@ nouveau_drm_device_fini(struct drm_device *dev)
- 	kfree(drm);
- }
- 
-+static void quirk_broken_nv_runpm(struct drm_device *drm_dev)
-+{
-+	struct pci_dev *pdev = drm_dev->pdev;
-+	struct pci_dev *bridge = pci_upstream_bridge(pdev);
-+
-+	if (!bridge || bridge->vendor != PCI_VENDOR_ID_INTEL)
-+		return;
-+
-+	switch (bridge->device) {
-+	case 0x1901:
-+		STASH->pm_cap = pdev->pm_cap;
-+		pdev->pm_cap = 0;
-+		NV_INFO(drm_dev, "Disabling PCI power management to avoid bug\n");
-+		break;
-+	}
-+}
-+
- static int nouveau_drm_probe(struct pci_dev *pdev,
- 			     const struct pci_device_id *pent)
- {
-@@ -699,6 +716,7 @@ static int nouveau_drm_probe(struct pci_dev *pdev,
- 	if (ret)
- 		goto fail_drm_dev_init;
- 
-+	quirk_broken_nv_runpm(drm_dev);
- 	return 0;
- 
- fail_drm_dev_init:
-@@ -735,6 +753,9 @@ nouveau_drm_remove(struct pci_dev *pdev)
- {
- 	struct drm_device *dev = pci_get_drvdata(pdev);
- 
-+	/* If we disabled PCI power management, restore it */
-+	if (STASH->pm_cap)
-+		pdev->pm_cap = STASH->pm_cap;
- 	nouveau_drm_device_remove(dev);
- 	pci_disable_device(pdev);
- }
+     state = UNINTERRUPTIBLE
+     lock()
+       block()
+         real_state = state
+         state = SLEEPONLOCK
+
+                               non lock wakeup
+                                 state = RUNNING    <--- FAIL #1
+
+                               lock wakeup
+                                 state = real_state <--- FAIL #2
+
+How it works is:
+
+     state = UNINTERRUPTIBLE
+     lock()
+       block()
+         real_state = state
+         state = SLEEPONLOCK
+
+                               non lock wakeup
+                                 real_state = RUNNING
+
+                               lock wakeup
+                                 state = real_state == RUNNING
+
+If there is no 'non lock wakeup' before the lock wakeup:
+
+     state = UNINTERRUPTIBLE
+     lock()
+       block()
+         real_state = state
+         state = SLEEPONLOCK
+
+                               lock wakeup
+                                 state = real_state == UNINTERRUPTIBLE
+
+I agree that what I tried to express is hard to parse, but it's at least
+halfways correct :)
+
+Thanks,
+
+        tglx
