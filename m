@@ -2,81 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CB8C518C6FF
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Mar 2020 06:28:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B13DA18C71A
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Mar 2020 06:38:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726030AbgCTF22 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Mar 2020 01:28:28 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:36060 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgCTF21 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Mar 2020 01:28:27 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02K5SMrC082854;
-        Fri, 20 Mar 2020 00:28:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584682102;
-        bh=zHxYKKWIaosTlCILFLFF5LIC/0opcQMkhcXV4k8W0Vk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=EDOe/aU7w2H0Iiq0xFVtuXZjiuDyhuWgpEeDD5791C9wvzPYgd49Mjt1Sw/kgamww
-         qXyKOUDKryGmaIV/1EOUaId7h816hDoLG6r1Pzh5qFhan639Tf/PAwY7Pac2NiuCsk
-         0fTYtDCxtr3jBKblt1qvlGoZoReCew7i5thvcDQA=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02K5SMHB048636
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 20 Mar 2020 00:28:22 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 20
- Mar 2020 00:28:22 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 20 Mar 2020 00:28:22 -0500
-Received: from [10.250.133.193] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02K5SJu2015007;
-        Fri, 20 Mar 2020 00:28:20 -0500
-Subject: Re: PCIe EPF
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci <linux-pci@vger.kernel.org>
-References: <CA+V-a8vOwwCjRnFZ_Cxtvep1nLMXd5AjOyJyispg1A1k_ExbSQ@mail.gmail.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <e5570897-0566-6cce-9af2-8be23fb0d3ef@ti.com>
-Date:   Fri, 20 Mar 2020 10:58:19 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S1726820AbgCTFiN convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Fri, 20 Mar 2020 01:38:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52332 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726030AbgCTFiN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 20 Mar 2020 01:38:13 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 3EF15AC42;
+        Fri, 20 Mar 2020 05:38:08 +0000 (UTC)
+Date:   Thu, 19 Mar 2020 22:36:57 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [patch V2 06/15] rcuwait: Add @state argument to
+ rcuwait_wait_event()
+Message-ID: <20200320053657.ggvcqsjtdotmrl7p@linux-p48b>
+References: <20200318204302.693307984@linutronix.de>
+ <20200318204408.010461877@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <CA+V-a8vOwwCjRnFZ_Cxtvep1nLMXd5AjOyJyispg1A1k_ExbSQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200318204408.010461877@linutronix.de>
+User-Agent: NeoMutt/20180716
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Prabhakar,
+On Wed, 18 Mar 2020, Thomas Gleixner wrote:
 
-On 3/18/2020 5:07 PM, Lad, Prabhakar wrote:
-> Hi Kishon,
-> 
-> I rebased my rcar-endpoint patches on endpoint branch, which has
-> support for streaming DMA API support, with this  read/write/copy
-> tests failed, to make sure nothing hasn't changed on my driver I
-> reverted the streaming DMA API patch
-> 74b9b4da84c71418ceeaaeb78dc790376df92fea "misc: pci_endpoint_test: Use
-> streaming DMA APIs for buffer allocation" and tests began to pass
-> again.
-> 
-> If add a GFP_DMA flag for kzalloc (with streaming DMA), the test cases
-> for read/write/copy pass as expected.
-> 
-> Could you please through some light why this could be happening.
+>--- a/include/linux/rcuwait.h
+>+++ b/include/linux/rcuwait.h
+>@@ -3,6 +3,7 @@
+> #define _LINUX_RCUWAIT_H_
+>
+> #include <linux/rcupdate.h>
+>+#include <linux/sched/signal.h>
 
-Do you see any differences in the address returned by dma_map_single() like is
-it 32-bit address or 64-bit address?
+So this is causing build to fail for me:
 
-Thanks
-Kishon
+  CC      arch/x86/boot/compressed/cmdline.o
+arch/x86/boot/compressed/cmdline.c:5:20: error: conflicting types for ‘set_fs’
+ static inline void set_fs(unsigned long seg)
+                    ^~~~~~
+In file included from ./include/linux/uaccess.h:11:0,
+                 from ./include/linux/sched/task.h:11,
+                 from ./include/linux/sched/signal.h:9,
+                 from ./include/linux/rcuwait.h:6,
+                 from ./include/linux/percpu-rwsem.h:8,
+                 from ./include/linux/fs.h:34,
+                 from ./include/linux/proc_fs.h:9,
+                 from ./include/acpi/acpi_bus.h:83,
+                 from ./include/linux/acpi.h:32,
+                 from arch/x86/boot/compressed/misc.h:28,
+                 from arch/x86/boot/compressed/cmdline.c:2:
+./arch/x86/include/asm/uaccess.h:29:20: note: previous definition of ‘set_fs’ was here
+ static inline void set_fs(mm_segment_t fs)
+                    ^~~~~~
+make[2]: *** [scripts/Makefile.build:268: arch/x86/boot/compressed/cmdline.o] Error 1
+make[1]: *** [arch/x86/boot/Makefile:113: arch/x86/boot/compressed/vmlinux] Error 2
+make: *** [arch/x86/Makefile:285: bzImage] Error 2
+
+Right now I'm not sure what the proper fix should be.
+
+Thanks,
+Davidlohr
