@@ -2,69 +2,42 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B007A18D221
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Mar 2020 15:59:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9196318D230
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Mar 2020 15:59:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727101AbgCTO6s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Mar 2020 10:58:48 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:38564 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbgCTO6s (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Mar 2020 10:58:48 -0400
-Received: by mail-pj1-f68.google.com with SMTP id m15so2563662pje.3;
-        Fri, 20 Mar 2020 07:58:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=x0CYiHRmjAbhtOwx0x1mf5Pz7QynYzQVMMGgwVVNtoU=;
-        b=eDQwtq1zQtOLd13ST3FOE7Sk2oulpHAzFYSjgwUoCzQ5WXHo9DAhlrJaeQIaykrd+D
-         RplqyKdtZ/hBD2YanBGphKOaQw6ZGvbr0itJPAkcQv55q1L6wgeyumguRo6p+04KrtfS
-         cuICJ881I+mOiFh+XhbFOLVUzh47gmQCawWmusNQ5h3rTXlwTQzV6jyF+TjbqNAuBBh4
-         uOiRkmD2pufS8fD21xLXacQlf3uZ5k7XnWVnqm3MfyCs52uigESXh8xdmxrTEGhKK6nZ
-         tdFZiB/kjTQl6dQHrucJG+0TR0zyhbbEFUdK76SQDWixZFCkUUWBTTTTzYOJdhdCS1D3
-         aweg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=x0CYiHRmjAbhtOwx0x1mf5Pz7QynYzQVMMGgwVVNtoU=;
-        b=reG2UAJbZYVr+fAX61hc6JUMV6nO4l4XWNsn5FvCQomTxzQK589//RJ9gU4N+tcgid
-         ThJgvuo3x4WknXD1T715yHf2CdBHoJ4Ma8PXhzXOZLl0ihOPuSYE/E2rD6H8resTqoHT
-         c+uJw+0wSs6HQlcERZl/3wrweUyua3Dta7HRFJ/xBAErWTKiUoAvcS9orpGCC0vjhlhq
-         IhpivcrYrMk6ZLDYQnW4j63Uo3fQOiniAq/8RDf/SJoZiYrKkx/eu/MiJxRX/YO4b90F
-         p4UWKDTO+ECLOdkgFDHr26jNeGljTkkmOql0uOwaNj6lL20xodI1mi2Z7sUVibabBpPh
-         BtRg==
-X-Gm-Message-State: ANhLgQ3he0nB0LArE0DUb6tHd3Ufcy4WgcQUrMppJ7Cqyyhf+LRzAaYc
-        MmfYINoFUXqllgFBMZbSBZVdxCtdxelc+UPqPrY=
-X-Google-Smtp-Source: ADFU+vteYsnR7L5XY9pl14RxIG6UQ4TH7+FGZCql5w8AqUCpZZGK/AtSNu9A6VkE0ZiE9rOAuclYQjce/FWRjxLrLDc=
-X-Received: by 2002:a17:902:54f:: with SMTP id 73mr8686783plf.255.1584716325841;
- Fri, 20 Mar 2020 07:58:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200320131345.635023594@linutronix.de> <20200320131510.594671507@linutronix.de>
-In-Reply-To: <20200320131510.594671507@linutronix.de>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 20 Mar 2020 16:58:38 +0200
-Message-ID: <CAHp75VdCTCk8OKBWKAapZz27zSvsDm_L6TChhSNpS0U0nS=wCQ@mail.gmail.com>
-Subject: Re: [patch 19/22] ASoC: Intel: Convert to new X86 CPU match macros
+        id S1727355AbgCTO7Q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Mar 2020 10:59:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49012 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725446AbgCTO7P (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 20 Mar 2020 10:59:15 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99F7A2072D;
+        Fri, 20 Mar 2020 14:59:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584716354;
+        bh=Hd3zAvAezuFSVlozOz44ullhVT1eSajSxemMLbZxlBE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ff33wKiw1HbXy93zCGoh1lWvVOk00lgxJdeoknvNzKnVdJSPvefa0ML3LysbJ4nTO
+         6rAp6ASm4qt4uUIq2mtTpgvdRMDHrrSeBb59UaWhHjcJKEKHYeRpe3xmrMj7LtAtPD
+         nmjVJ+xUohzhMq/MhLV3uoj+bRi4FVjkP6UigI8o=
+Date:   Fri, 20 Mar 2020 15:59:06 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
         Mark Gross <mgross@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>, Takashi Iwai <tiwai@suse.com>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Tony Luck <tony.luck@intel.com>,
         Paolo Bonzini <pbonzini@redhat.com>,
         Darren Hart <dvhart@infradead.org>,
         Andy Shevchenko <andy@infradead.org>,
         "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
         Viresh Kumar <viresh.kumar@linaro.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
+        linux-pm@vger.kernel.org,
         Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        linux-edac@vger.kernel.org,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        linux-edac@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         Jean Delvare <jdelvare@suse.com>,
         Guenter Roeck <linux@roeck-us.net>,
         linux-hwmon@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
@@ -74,50 +47,73 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         Jacob Pan <jacob.jun.pan@linux.intel.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-mmc@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
+        alsa-devel@alsa-project.org,
         Herbert Xu <herbert@gondor.apana.org.au>,
         "David S. Miller" <davem@davemloft.net>,
-        linux-crypto <linux-crypto@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-crypto@vger.kernel.org
+Subject: Re: [patch 00/22] x86/treewide: Consolidate CPU match macro maze and
+ get rid of C89 (sic!) initializers
+Message-ID: <20200320145906.GA762057@kroah.com>
+References: <20200320131345.635023594@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200320131345.635023594@linutronix.de>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 3:18 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> The new macro set has a consistent namespace and uses C99 initializers
-> instead of the grufty C89 ones.
->
-> Get rid the of the local macro wrappers for consistency.
+On Fri, Mar 20, 2020 at 02:13:45PM +0100, Thomas Gleixner wrote:
+> The x86 CPU matching based on struct x86_cpu_id:
+> 
+>   - is using an inconsistent macro mess with pointlessly duplicated and
+>     slightly different local macros. Finding the places is an art as there
+>     is no consistent name space at all.
+> 
+>   - is still mostly based on C89 struct initializers which rely on the
+>     ordering of the struct members. That's proliferated forever as every
+>     new driver just copies the mess from some exising one.
+> 
+> A recent offlist conversation about adding more match criteria to the CPU
+> matching logic instead of creating yet another set of horrors, reminded me
+> of a pile of scripts and patches which I hacked on a few years ago when I
+> tried to add something to struct x86_cpu_id.
+> 
+> That stuff was finally not needed and ended up in my ever growing todo list
+> and collected dust and cobwebs, but (un)surprisingly enough most of it
+> still worked out of the box. The copy & paste machinery still works as it
+> did years ago.
+> 
+> There are a few places which needed extra care due to new creative macros,
+> new check combinations etc. and surprisingly ONE open coded proper C99
+> initializer.
+> 
+> It was reasonably simple to make it at least compile and pass a quick
+> binary equivalence check.
+> 
+> The result is a X86_MATCH prefix based set of macros which are reflecting
+> the needs of the usage sites and shorten the base macro which takes all
+> possible parameters (vendor, family, model, feature, data) and uses proper
+> C99 initializers.
+> 
+> So extensions of the match logic are trivial after that.
+> 
+> The patch set is against Linus tree and has trivial conflicts against
+> linux-next.
+> 
+> The diffstat is:
+>  71 files changed, 525 insertions(+), 472 deletions(-)
+> 
+> but the extra lines are pretty much kernel-doc documentation which I added
+> to each of the new macros. The usage sites diffstat is:
+> 
+>  70 files changed, 393 insertions(+), 471 deletions(-)
+> 
+> Thoughts?
 
-> -#define ICPU(model)    { X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, }
-> -
->  #define SOC_INTEL_IS_CPU(soc, type)                            \
->  static inline bool soc_intel_is_##soc(void)                    \
->  {                                                              \
->         static const struct x86_cpu_id soc##_cpu_ids[] = {      \
-> -               ICPU(type),                                     \
-> +               X86_MATCH_INTEL_FAM6_MODEL(type, NULL),         \
->                 {}                                              \
->         };                                                      \
->         const struct x86_cpu_id *id;                            \
-> @@ -32,11 +30,11 @@ static inline bool soc_intel_is_##soc(vo
->         return false;                                           \
->  }
->
+Much nicer looking, thanks for cleaning up this mess:
 
-> +SOC_INTEL_IS_CPU(byt, ATOM_SILVERMONT);
-> +SOC_INTEL_IS_CPU(cht, ATOM_AIRMONT);
-> +SOC_INTEL_IS_CPU(apl, ATOM_GOLDMONT);
-> +SOC_INTEL_IS_CPU(glk, ATOM_GOLDMONT_PLUS);
-> +SOC_INTEL_IS_CPU(cml, KABYLAKE_L);
-
-I'm wondering if driver data can be used in one macro to distinguish
-which CPU we are run on.
-Takashi, what do you think?
-
--- 
-With Best Regards,
-Andy Shevchenko
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
