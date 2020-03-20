@@ -2,133 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 27B5118CB74
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Mar 2020 11:21:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DCC4218CBEF
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Mar 2020 11:45:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727469AbgCTKVI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Mar 2020 06:21:08 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:39652 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727456AbgCTKVH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Mar 2020 06:21:07 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02KAKwg1024302;
-        Fri, 20 Mar 2020 05:20:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584699658;
-        bh=rn+lqi6S8AMGiEUZ5KYnC/dX2IgyH3wA5+iFbZlmJVU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=n7bPyOtSVxozgzY+7p0JqNOfXGcBqQiwqk6ci2qDVI6/XFXgv3CeqE4Y0o37olaNq
-         OairtZe9Udu4OF4G68Nlg5zBSc8i/HA/TjqyxavwUZcIZuNwo4saorLFhzR7k1DROs
-         JOgGkjtTNb68kxYjrv3HOGC3eCOcyJHariOH6oHc=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02KAKwas088376
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 20 Mar 2020 05:20:58 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 20
- Mar 2020 05:20:58 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 20 Mar 2020 05:20:57 -0500
-Received: from [10.250.133.193] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02KAKsKP008091;
-        Fri, 20 Mar 2020 05:20:55 -0500
-Subject: Re: [PATCH] PCI: endpoint: Fix NULL pointer dereference for
- ->get_features()
-To:     Sriram Dash <sriram.dash@samsung.com>,
-        "'Shradha Todi'" <shradha.t@samsung.com>
-CC:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <pankaj.dubey@samsung.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <CGME20200311103443epcas5p2e97b8f3a8e52dc6f02eb551e0c97f132@epcas5p2.samsung.com>
- <20200311102852.5207-1-shradha.t@samsung.com>
- <000d01d5fdf3$55d43af0$017cb0d0$@samsung.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <a7a6a295-160a-94d6-09f9-63f783c8b28a@ti.com>
-Date:   Fri, 20 Mar 2020 15:50:53 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S1727133AbgCTKpG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Mar 2020 06:45:06 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33516 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726791AbgCTKpG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Mar 2020 06:45:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=gpF47OFbSCOaH9j5hP1QeTQDztS/I2yzYL1A8Yg/DCI=; b=m8gRkUViv+3RtA+3AN1Hq8RB2p
+        /nd8koJA7/ftGKlqVgXGyTS1/R5zs5CBqOx+xx+6K9nCiYjvgKGyw0YC0ClboDv10bRHr9uFVti5l
+        EKvrd8vTTtGuSCXjYHyBDIj5z1uJ87Gimm+Jq3l7cxSmAzKhoX5U0dufJsqNv3jrKQNIBSslh2ZBx
+        d6J4/8w72QCJsw2WMsEdzs02t4aMmq5QQ4FsVoSmBkcn0g/+PBYsMy74VM0WnvU6eDHMxJ7NO6YW7
+        oGhprUfFSJmuJzo+np93Zq4slkqAXWnt+jp4L4s7owS9q9n3ZLlPNQHf+KIrDpK7Ir2rNYPzd9bem
+        57qKm1WQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jFF8f-0006yB-F2; Fri, 20 Mar 2020 10:44:29 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 627F2300606;
+        Fri, 20 Mar 2020 11:44:26 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 48697285E2762; Fri, 20 Mar 2020 11:44:26 +0100 (CET)
+Date:   Fri, 20 Mar 2020 11:44:26 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Davidlohr Bueso <dave@stgolabs.net>
+Cc:     tglx@linutronix.de, arnd@arndb.de, balbi@kernel.org,
+        bhelgaas@google.com, bigeasy@linutronix.de, davem@davemloft.net,
+        gregkh@linuxfoundation.org, joel@joelfernandes.org,
+        kurt.schwemmer@microsemi.com, kvalo@codeaurora.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, logang@deltatee.com,
+        mingo@kernel.org, mpe@ellerman.id.au, netdev@vger.kernel.org,
+        oleg@redhat.com, paulmck@kernel.org, rdunlap@infradead.org,
+        rostedt@goodmis.org, torvalds@linux-foundation.org,
+        will@kernel.org, Davidlohr Bueso <dbueso@suse.de>
+Subject: Re: [PATCH 17/15] rcuwait: Inform rcuwait_wake_up() users if a
+ wakeup was attempted
+Message-ID: <20200320104426.GD20696@hirez.programming.kicks-ass.net>
+References: <20200318204302.693307984@linutronix.de>
+ <20200320085527.23861-1-dave@stgolabs.net>
+ <20200320085527.23861-2-dave@stgolabs.net>
 MIME-Version: 1.0
-In-Reply-To: <000d01d5fdf3$55d43af0$017cb0d0$@samsung.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200320085527.23861-2-dave@stgolabs.net>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Sriram,
+On Fri, Mar 20, 2020 at 01:55:25AM -0700, Davidlohr Bueso wrote:
 
-On 3/19/2020 7:06 PM, Sriram Dash wrote:
->> From: Shradha Todi <shradha.t@samsung.com>
->> Subject: [PATCH] PCI: endpoint: Fix NULL pointer dereference for -
->>> get_features()
->>
->> get_features ops of pci_epc_ops may return NULL, causing NULL pointer
->> dereference in pci_epf_test_bind function. Let us add a check for
->> pci_epc_feature pointer in pci_epf_test_bind before we access it to avoid any
->> such NULL pointer dereference and return -ENOTSUPP in case pci_epc_feature
->> is not found.
->>
->> Reviewed-by: Pankaj Dubey <pankaj.dubey@samsung.com>
->> Signed-off-by: Sriram Dash <sriram.dash@samsung.com>
->> Signed-off-by: Shradha Todi <shradha.t@samsung.com>
->> ---
-> 
-> Hi Kishon,
-> 
-> Any update on this?
+> diff --git a/kernel/exit.c b/kernel/exit.c
+> index 6cc6cc485d07..b0bb0a8ec4b1 100644
+> --- a/kernel/exit.c
+> +++ b/kernel/exit.c
+> @@ -234,9 +234,10 @@ void release_task(struct task_struct *p)
+>  		goto repeat;
+>  }
+>  
+> -void rcuwait_wake_up(struct rcuwait *w)
+> +bool rcuwait_wake_up(struct rcuwait *w)
+>  {
+>  	struct task_struct *task;
+> +	bool ret = false;
+>  
+>  	rcu_read_lock();
+>  
+> @@ -254,10 +255,15 @@ void rcuwait_wake_up(struct rcuwait *w)
+>  	smp_mb(); /* (B) */
+>  
+>  	task = rcu_dereference(w->task);
+> -	if (task)
+> +	if (task) {
+>  		wake_up_process(task);
+> +	        ret = true;
 
-Don't we access epc_features only after checking if epc_features is not NULL in
-pci_epf_test_bind() function? However we are accessing epc_features in multiple
-other functions all over pci-epf-test.
+		ret = wake_up_process(task); ?
 
-So the patch itself is correct though the commit log has to be fixed. You
-should also check if all the endpoint controller drivers existing currently
-provides epc_features.
-
-Thanks
-Kishon
-> 
-> 
->>  drivers/pci/endpoint/functions/pci-epf-test.c | 15 +++++++++------
->>  1 file changed, 9 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c
->> b/drivers/pci/endpoint/functions/pci-epf-test.c
->> index c9121b1b9fa9..af4537a487bf 100644
->> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
->> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
->> @@ -510,14 +510,17 @@ static int pci_epf_test_bind(struct pci_epf *epf)
->>  		return -EINVAL;
->>
->>  	epc_features = pci_epc_get_features(epc, epf->func_no);
->> -	if (epc_features) {
->> -		linkup_notifier = epc_features->linkup_notifier;
->> -		msix_capable = epc_features->msix_capable;
->> -		msi_capable = epc_features->msi_capable;
->> -		test_reg_bar = pci_epc_get_first_free_bar(epc_features);
->> -		pci_epf_configure_bar(epf, epc_features);
->> +	if (!epc_features) {
->> +		dev_err(dev, "epc_features not implemented\n");
->> +		return -ENOTSUPP;
->>  	}
->>
->> +	linkup_notifier = epc_features->linkup_notifier;
->> +	msix_capable = epc_features->msix_capable;
->> +	msi_capable = epc_features->msi_capable;
->> +	test_reg_bar = pci_epc_get_first_free_bar(epc_features);
->> +	pci_epf_configure_bar(epf, epc_features);
->> +
->>  	epf_test->test_reg_bar = test_reg_bar;
->>  	epf_test->epc_features = epc_features;
->>
->> --
->> 2.17.1
-> 
-> 
+> +	}
+>  	rcu_read_unlock();
+> +
+> +	return ret;
+>  }
+> +EXPORT_SYMBOL_GPL(rcuwait_wake_up);
