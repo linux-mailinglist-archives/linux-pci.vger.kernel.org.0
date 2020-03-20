@@ -2,22 +2,22 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5987918D906
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Mar 2020 21:25:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 899A018D948
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Mar 2020 21:28:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727178AbgCTUZQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Mar 2020 16:25:16 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:37039 "EHLO
+        id S1727338AbgCTU2Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Mar 2020 16:28:25 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:37077 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726666AbgCTUZQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Mar 2020 16:25:16 -0400
+        with ESMTP id S1726789AbgCTU2Y (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Mar 2020 16:28:24 -0400
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jFOCA-0003F1-0T; Fri, 20 Mar 2020 21:24:42 +0100
+        id 1jFOFL-0003Pp-8l; Fri, 20 Mar 2020 21:27:59 +0100
 Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 7019C1039FC; Fri, 20 Mar 2020 21:24:41 +0100 (CET)
+        id 857A71039FC; Fri, 20 Mar 2020 21:27:58 +0100 (CET)
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
@@ -52,11 +52,11 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         Herbert Xu <herbert@gondor.apana.org.au>,
         "David S. Miller" <davem@davemloft.net>,
         linux-crypto <linux-crypto@vger.kernel.org>
-Subject: Re: [patch 01/22] x86/devicetable: Move x86 specific macro out of generic code
-In-Reply-To: <CAHp75Vca0j0=EB2qdvGgFOq2s_ohHUEzY4OeNrv-oynLBVYh1w@mail.gmail.com>
-References: <20200320131345.635023594@linutronix.de> <20200320131508.736205164@linutronix.de> <CAHp75Vca0j0=EB2qdvGgFOq2s_ohHUEzY4OeNrv-oynLBVYh1w@mail.gmail.com>
-Date:   Fri, 20 Mar 2020 21:24:41 +0100
-Message-ID: <87k13epyeu.fsf@nanos.tec.linutronix.de>
+Subject: Re: [patch 02/22] x86/cpu: Add conistent CPU match macros
+In-Reply-To: <CAHp75VdKavBD=yTR6Mz4iaGKQVP__xCsf-fWdy1MMJJywhDd-Q@mail.gmail.com>
+References: <20200320131345.635023594@linutronix.de> <20200320131508.826011988@linutronix.de> <CAHp75VdKavBD=yTR6Mz4iaGKQVP__xCsf-fWdy1MMJJywhDd-Q@mail.gmail.com>
+Date:   Fri, 20 Mar 2020 21:27:58 +0100
+Message-ID: <87h7yipy9d.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Linutronix-Spam-Score: -1.0
@@ -68,25 +68,33 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 Andy Shevchenko <andy.shevchenko@gmail.com> writes:
-> On Fri, Mar 20, 2020 at 3:17 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->> --- a/arch/x86/include/asm/cpu_device_id.h
->> +++ b/arch/x86/include/asm/cpu_device_id.h
->> @@ -6,10 +6,21 @@
->>   * Declare drivers belonging to specific x86 CPUs
->>   * Similar in spirit to pci_device_id and related PCI functions
->>   */
 >
->> -
+>> Also a add a few model constants for Centaur CPUs and QUARK.
 >
-> Seems you are going to remove below anyway in the next patches, so,
-> why not to do this also there?
->
->>  #include <linux/mod_devicetable.h>
+> I would perhaps made this as a separate change(s).
 
-No it stays, but yes I could do that comment change right here.
+Can do.
+
+>> +#define X86_MATCH_VENDOR_FAM_MODEL_FEATURE(_vendor, _family, _model,   \
+>> +                                          _feature, _data) {           \
+>
+> I would leave it on one line despite the length, but it's up to you.
+>
+>> +       .vendor         = X86_VENDOR_##_vendor,                         \
+>> +       .family         = _family,                                      \
+>> +       .model          = _model,                                       \
+>> +       .feature        = _feature,                                     \
+>
+>> +       .driver_data    = (unsigned long) _data                         \
+>
+> For sake of consistency shouldn't be this kernel_ulong_t ?
+
+I can change that though in kernel space this does not matter.
+
+> Or we are going to get rid of that type?
+
+No.
 
 Thanks,
 
         tglx
-
-
