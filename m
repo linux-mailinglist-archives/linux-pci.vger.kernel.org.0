@@ -2,63 +2,63 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 41C7318D134
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Mar 2020 15:39:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 70E9D18D16F
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Mar 2020 15:47:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727455AbgCTOj0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Mar 2020 10:39:26 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:55402 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726970AbgCTOjZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Mar 2020 10:39:25 -0400
-Received: by mail-pj1-f68.google.com with SMTP id mj6so2548711pjb.5;
-        Fri, 20 Mar 2020 07:39:24 -0700 (PDT)
+        id S1727358AbgCTOrT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Mar 2020 10:47:19 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:45145 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726913AbgCTOrS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Mar 2020 10:47:18 -0400
+Received: by mail-pf1-f193.google.com with SMTP id j10so3317028pfi.12;
+        Fri, 20 Mar 2020 07:47:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=a54IW0oB44nJzFv1TQssWnIGDqT1Lq9rUj5K2IpDqwI=;
-        b=qNBIADHAq6ehPS/ovZWHrsu7MGd/UxDlnzD+zweINjMHVHnMtBB6FOCc8mZ4AK2sn+
-         0jf8BXHyflIAVz+hE0NX3UYbiaCl06w8BZxkazyhDNur8jMHzNsTQkS/jbggtOTtNowT
-         abxarJPlIPxtpGpCYE1GeC+BvrILbtVOFTMLCHOuHtnuAT321KZ6Vp8xTeoVRAuqnnII
-         Jalcy7DC+PP0+sC6IxYTuGSL5qsSGRtQsmKX6oTK8VYKu5/Uc580sGHivzbxojUFrSa0
-         tGef9gFQWBsjqWIyKiY7khPTi39m+Xc80oV4jD0C4fVyEBhyhfePUTBSh/KTrfeWNzWs
-         FoTA==
+        bh=lzqksOZo9oKzssQWd4+TCqMTVJHNfIm+9Q0SEfaLBjU=;
+        b=jvK6zIz+Qr1G8bcWBVBwn3UfzcaK9sRBJks8raIHNoHYfHO2DmiGRVxPhd4Zu5DrCz
+         ssEKRSg6XEUN2Bh1T3t8FxP+2Llw4OryQC/PYqdtuX2VGcpgpXUJOggqoxLEX14U+Ycg
+         LuBarYM6L87ZRlUuDNsMpGMqd9Lb0heHLMtAbs43E7wHfpmR6nmXZQONvOHiQl54CxGC
+         FbYDgx36/VNKIJit0ypjsiN2/VZSsJQdz4/Mwai+3I0nY+qHqo5TS73yp5yHMdK5Qlep
+         kuFS3nbtw7pZAsbQO+unr7n7vI9tW6NkdNc+MtzoBeK6iS8kQ/6WAkOhGDlo0f0qjuhv
+         Qn5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=a54IW0oB44nJzFv1TQssWnIGDqT1Lq9rUj5K2IpDqwI=;
-        b=lGdYQsS1lMTFL2f3HE/C4uGOLhdeyOQyBbf2ng39wLcOX3LJnWU5RbpCq79QzX1yaK
-         FyVWtHLDapbzRC38FCge9lXbKSlnZuAprcoAlyC+Nwx1yNux303YpcfOL4brxHjWXB5k
-         V9TaiyJaG0t+kFB7V9JjvL6y+36Q0l9JhRjlarCl6bSKGvIPUBu07B8j+qOmBYFcPCT/
-         uIs9EB3YVVxNRPhmi65WqKDZJCQ+qRPfBIa2IO9kSK2QLhXY4licGdQ2xxMDBwGGQ5/i
-         H1EMWC6b/po99zYdhQuNXtxY4eTRxG8YmedMsBEh7hXz94sYFiP4b9iHAeZKMkewMKj0
-         eTEQ==
-X-Gm-Message-State: ANhLgQ0QWljoUU8vHe2lFNJ2rioNk8B0ayuxDxM/6voAPljVvgx9NkpL
-        0z+REK/k/x0V2IRmjXeGhEXu+n5SZF+HD/zKvFg=
-X-Google-Smtp-Source: ADFU+vvvaVCkXdplje1O4GxrsGz4U6GUkJ3qUTDhDx4G7N8RLK5zRd1Pc/WBHOoPDY8ll979CQXu9IGQKSDD2UQAADM=
-X-Received: by 2002:a17:90a:fb49:: with SMTP id iq9mr9739946pjb.143.1584715163452;
- Fri, 20 Mar 2020 07:39:23 -0700 (PDT)
+        bh=lzqksOZo9oKzssQWd4+TCqMTVJHNfIm+9Q0SEfaLBjU=;
+        b=U5ck6+lKlgn5sTOS5RWvgpsCNcJXPaHjnWkqQU1h1GU6ZY7YR/YtKJaq/xELTmo7+H
+         aTrxPs/1yuSrMx+tDzdd4BpBR3gkjY9/iEpf+qcWKTrS554suBY+H2NCKz8utLTGa7H+
+         0uqqxV3yLvKEmIw9765/E/KTYlRY+ko/tnoeCg7HOwJQzNrewJg5aCWxc3N9gJznTAEP
+         SGbJqu7clSt3/osBYr+skzxiuqLqRQI3YnZuUoVgdAMBnAd3ekffZCg7nzCppopSmjra
+         PqxlKei2M/AWTkFJ/nOkeQd1rNlT2IgzAtuVcZDfwfAxnIQhBh0RI34faWQI6zJWFx4Q
+         zPuQ==
+X-Gm-Message-State: ANhLgQ0sgjdP5uJfn7kQg/7n9J4P5lEe9bxQQhopwtfSRDfIIepf2szt
+        eBXcz4PkzABVgVx7ZZxseX2hdKXW6jvw0upGOaw=
+X-Google-Smtp-Source: ADFU+vtsQgQOnLRlTrTgGM50EY41vnr51HFNUk9V7349gPUFHWyFKZzvnxnlkchBu6NONcJcSUPuUU7T2einYPojAXw=
+X-Received: by 2002:aa7:9348:: with SMTP id 8mr10286496pfn.36.1584715637228;
+ Fri, 20 Mar 2020 07:47:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200320131345.635023594@linutronix.de> <20200320131508.826011988@linutronix.de>
-In-Reply-To: <20200320131508.826011988@linutronix.de>
+References: <20200320131345.635023594@linutronix.de> <20200320131509.467730627@linutronix.de>
+In-Reply-To: <20200320131509.467730627@linutronix.de>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 20 Mar 2020 16:39:16 +0200
-Message-ID: <CAHp75VdKavBD=yTR6Mz4iaGKQVP__xCsf-fWdy1MMJJywhDd-Q@mail.gmail.com>
-Subject: Re: [patch 02/22] x86/cpu: Add conistent CPU match macros
+Date:   Fri, 20 Mar 2020 16:47:10 +0200
+Message-ID: <CAHp75VcK3tL0YayjF=CSkSkHiOpg2zOV3rdkXQWJmLZ9fmevpg@mail.gmail.com>
+Subject: Re: [patch 08/22] ACPI: Convert to new X86 CPU match macros
 To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
         "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Mark Gross <mgross@linux.intel.com>,
         Tony Luck <tony.luck@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
         "Rafael J. Wysocki" <rjw@rjwysocki.net>,
         Len Brown <lenb@kernel.org>,
         ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
         Viresh Kumar <viresh.kumar@linaro.org>,
         Linux PM <linux-pm@vger.kernel.org>,
         Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
@@ -86,81 +86,21 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 3:18 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+On Fri, Mar 20, 2020 at 3:19 PM Thomas Gleixner <tglx@linutronix.de> wrote:
 >
-> Finding all places which build x86_cpu_id match tables is tedious and the
-> logic is hidden in lots of differently named macro wrappers.
+> The new macro set has a consistent namespace and uses C99 initializers
+> instead of the grufty C89 ones.
 >
-> Most of these initializer macros use plain C89 initializers which rely on
-> the ordering of the struct members. So new members could only be added at
-> the end of the struct, but that's ugly as hell and C99 initializers are
-> really the right thing to use.
->
-> Provide a set of macros which:
->
->   - Have a proper naming scheme, starting with X86_MATCH_
->
->   - Use C99 initializers
->
-> The set of provided macros are all subsets of the base macro
->
->     X86_MATCH_VENDOR_FAM_MODEL_FEATURE()
->
-> which allows to supply all possible selection criteria:
->
->       vendor, family, model, feature
->
-> The other macros shorten this to avoid typing all arguments when they are
-> not needed and would require one of the _ANY constants. They have been
-> created due to the requirements of the existing usage sites.
->
+> Rename the local macro wrapper to X86_MATCH for consistency. It stays for
+> readability sake.
 
-> Also a add a few model constants for Centaur CPUs and QUARK.
+> +       X86_MATCH_INTEL_FAM6_MODEL(ATOM_SILVERMONT,     NULL),
+> +       X86_MATCH_INTEL_FAM6_MODEL(ATOM_AIRMONT,        NULL),
 
-I would perhaps made this as a separate change(s).
+> -#define ICPU(model)    { X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, }
+> +#define X86_MATCH(model)       X86_MATCH_INTEL_FAM6_MODEL(model, NULL)
 
-...
-
-> +#define X86_MATCH_VENDOR_FAM_MODEL_FEATURE(_vendor, _family, _model,   \
-> +                                          _feature, _data) {           \
-
-I would leave it on one line despite the length, but it's up to you.
-
-> +       .vendor         = X86_VENDOR_##_vendor,                         \
-> +       .family         = _family,                                      \
-> +       .model          = _model,                                       \
-> +       .feature        = _feature,                                     \
-
-> +       .driver_data    = (unsigned long) _data                         \
-
-For sake of consistency shouldn't be this kernel_ulong_t ?
-Or we are going to get rid of that type?
-
->  }
-
-...
-
-> +#define X86_MATCH_VENDOR_FAM_FEATURE(vendor, family, feature, data)    \
-
-> +       X86_MATCH_VENDOR_FAM_MODEL_FEATURE(vendor, family,              \
-> +                                          X86_MODEL_ANY, feature, data)
-
-I would leave it on one line despite the length, but it's up to you.
-
-...
-
-> +#define X86_MATCH_VENDOR_FAM_MODEL(vendor, family, model, data)                \
-> +       X86_MATCH_VENDOR_FAM_MODEL_FEATURE(vendor, family, model,       \
-> +                                          X86_FEATURE_ANY, data)
-
-Ditto.
-
-...
-
-> + * X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL, 6, INTEL_FAM6_BROADWELL,
-> + *                                   X86_FEATURE_ANY, NULL);
-
-Perhaps one line?
+Maybe we can do a generic macro to avoid all these ', NULL' repetitions?
 
 -- 
 With Best Regards,
