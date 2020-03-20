@@ -2,156 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7419718D9F7
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Mar 2020 22:02:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 13B0318DA92
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Mar 2020 22:52:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbgCTVCq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Mar 2020 17:02:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56568 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726738AbgCTVCp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 20 Mar 2020 17:02:45 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FA3C20658;
-        Fri, 20 Mar 2020 21:02:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584738164;
-        bh=fLFR8YUhXJwNZZYH7ngeOnxwmZhi+69xDiLb5E3X218=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=BCeAXqXFUuj1hHiVzGhhcgSUUir3NHhdbxKZUoNYcV8LStVDQjfG/eRwyCQXKq8Be
-         IuQ1313Lnf1b5icOH+wFddq7Mb39GH99NqIqxPbuPU2PIooSvheiWkrBcjjmp3yjFc
-         b7TA5EIztlrs4AAazjq0Dl03OXMXgVcpSpgAAgtk=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id C94F935226B5; Fri, 20 Mar 2020 14:02:43 -0700 (PDT)
-Date:   Fri, 20 Mar 2020 14:02:43 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
+        id S1727232AbgCTVw5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Mar 2020 17:52:57 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:46201 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726666AbgCTVw5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Mar 2020 17:52:57 -0400
+Received: by mail-pf1-f196.google.com with SMTP id c19so3965104pfo.13;
+        Fri, 20 Mar 2020 14:52:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=a04BEXBq6T16pF8YgWqXF8qeXZZehjOHDxhsKaZX814=;
+        b=Skn7flJSlYGzwEVidWCfP5Sxs1un6UzXQtQz+bWdWoAKNnRM80PqPvhDZwvv2wJKw6
+         Mj81HfQM/zfiGt9ileOkKRRQWiF7jWjG6JhV+9WIbVnMz/dnDuFUHCHtIbQX4/CY7DkK
+         noOtt/A9DKzcRzAlH+RqcMdMCY2dyTdaWE9AE5cShMSjs4HBzANhTM2+7CpxOlPpNBsU
+         9nhE6/1XKN4/0cmtxXDNEwjoXngQLqF8QiIUQVIm1NRPbQReCnfpG/6XbUusceYyN0mz
+         qR1CBCi2y2i3OXLUvaPOWqAKkvUGIR4nJ+prrBs7mnq20vlj/y21DMR6IS0a4SS96qyg
+         vOYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=a04BEXBq6T16pF8YgWqXF8qeXZZehjOHDxhsKaZX814=;
+        b=osqubrMHaroAdX2xmT5TcDKYfdmAD2rMkehhh4Gjs6SU9CAVegfxsZ/rvJVGVvKVFz
+         Bp/ePrg74/IzI2RMVmLRIumo6AhN55yNnBupg84Yka97VGX+Ju6Qc+hSuJn3CaeNUmZb
+         NWABF2Df3o+Qu6Om8CCwyr7I/1tp0/Qz0grX/AHAFaS6J1+eL72L8PQ+La7TCzwricRJ
+         tRpnhaEkAG71W9VCt9IZr2oN0wnK4hGC7yhIX6UZyu3QTvZtlRVSClNYoH4zp4ZHbaQe
+         rnoAjskCtXhlg5ee4Wc/mya6JnqCmro/bbfv+OzrnQjdbfEoLD0ATwp3+t3z6HLJmvQB
+         VK1Q==
+X-Gm-Message-State: ANhLgQ0PnxycUN+1pg4nT0yArAW59uWKknhE+IZQ1BEByRakKPx41L48
+        mMNWjfI7jzf2fsAQ425fXk55KAHoHQiix6AltUE=
+X-Google-Smtp-Source: ADFU+vsmV5czmNKtoJg0C7AeN7wX4S5Al3MMjqsDaMzJBp9Kh1vmxFKQ2VcZyX/I27EONEdC3cCFyRbcSUnbF2ixLdU=
+X-Received: by 2002:a05:6a00:2b4:: with SMTP id q20mr178775pfs.36.1584741173473;
+ Fri, 20 Mar 2020 14:52:53 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200320131345.635023594@linutronix.de> <20200320131509.564059710@linutronix.de>
+ <CAHp75VdkvyqOaAsLmz8K2j4bdd0sboPoUpRr6U-zvtkSaQfPRQ@mail.gmail.com> <87eetmpy56.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <87eetmpy56.fsf@nanos.tec.linutronix.de>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 20 Mar 2020 23:52:42 +0200
+Message-ID: <CAHp75VfuU98gEriS+GDJqZX4BV-cZT9hPbrDX-roeo63O8UvYQ@mail.gmail.com>
+Subject: Re: [patch 09/22] cpufreq: Convert to new X86 CPU match macros
 To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Felipe Balbi <balbi@kernel.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        linux-edac@vger.kernel.org,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Takashi Iwai <tiwai@suse.com>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [patch V2 08/15] Documentation: Add lock ordering and nesting
- documentation
-Message-ID: <20200320210243.GT3199@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200320160145.GN3199@paulmck-ThinkPad-P72>
- <87mu8apzxr.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87mu8apzxr.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        linux-crypto <linux-crypto@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 08:51:44PM +0100, Thomas Gleixner wrote:
-> "Paul E. McKenney" <paulmck@kernel.org> writes:
+On Fri, Mar 20, 2020 at 10:30 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Andy Shevchenko <andy.shevchenko@gmail.com> writes:
+> > On Fri, Mar 20, 2020 at 3:18 PM Thomas Gleixner <tglx@linutronix.de> wrote:
 > >
-> >  - The soft interrupt related suffix (_bh()) still disables softirq
-> >    handlers.  However, unlike non-PREEMPT_RT kernels (which disable
-> >    preemption to get this effect), PREEMPT_RT kernels use a per-CPU
-> >    lock to exclude softirq handlers.
-> 
-> I've made that:
-> 
->   - The soft interrupt related suffix (_bh()) still disables softirq
->     handlers.
-> 
->     Non-PREEMPT_RT kernels disable preemption to get this effect.
-> 
->     PREEMPT_RT kernels use a per-CPU lock for serialization. The lock
->     disables softirq handlers and prevents reentrancy by a preempting
->     task.
-
-That works!  At the end, I would instead say "prevents reentrancy
-due to task preemption", but what you have works.
-
-> On non-RT this is implicit through preemption disable, but it's non
-> obvious for RT as preemption stays enabled.
-> 
-> > PREEMPT_RT kernels preserve all other spinlock_t semantics:
+> >> +       X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL,  6,  9, X86_FEATURE_EST, NULL),
+> >> +       X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL,  6, 13, X86_FEATURE_EST, NULL),
+> >> +       X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL, 15,  3, X86_FEATURE_EST, NULL),
+> >> +       X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL, 15,  4, X86_FEATURE_EST, NULL),
 > >
-> >  - Tasks holding a spinlock_t do not migrate.  Non-PREEMPT_RT kernels
-> >    avoid migration by disabling preemption.  PREEMPT_RT kernels instead
-> >    disable migration, which ensures that pointers to per-CPU variables
-> >    remain valid even if the task is preempted.
+> >> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL,  6, 0x8, 0),
+> >> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL,  6, 0xb, 0),
+> >> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL, 15, 0x2, 0),
 > >
-> >  - Task state is preserved across spinlock acquisition, ensuring that the
-> >    task-state rules apply to all kernel configurations.  In non-PREEMPT_RT
-> >    kernels leave task state untouched.  However, PREEMPT_RT must change
-> >    task state if the task blocks during acquisition.  Therefore, the
-> >    corresponding lock wakeup restores the task state.  Note that regular
-> >    (not lock related) wakeups do not restore task state.
-> 
->    - Task state is preserved across spinlock acquisition, ensuring that the
->      task-state rules apply to all kernel configurations.  Non-PREEMPT_RT
->      kernels leave task state untouched.  However, PREEMPT_RT must change
->      task state if the task blocks during acquisition.  Therefore, it
->      saves the current task state before blocking and the corresponding
->      lock wakeup restores it. A regular not lock related wakeup sets the
->      task state to RUNNING. If this happens while the task is blocked on
->      a spinlock then the saved task state is changed so that correct
->      state is restored on lock wakeup.
-> 
-> Hmm?
-
-I of course cannot resist editing the last two sentences:
-
-   ... Other types of wakeups unconditionally set task state to RUNNING.
-   If this happens while a task is blocked while acquiring a spinlock,
-   then the task state is restored to its pre-acquisition value at
-   lock-wakeup time.
-
-> > But this code failes on PREEMPT_RT kernels because the memory allocator
-> > is fully preemptible and therefore cannot be invoked from truly atomic
-> > contexts.  However, it is perfectly fine to invoke the memory allocator
-> > while holding a normal non-raw spinlocks because they do not disable
-> > preemption::
+> >> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL,  6, 0x8, 0),
+> >> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL,  6, 0xb, 0),
+> >> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL, 15, 0x2, 0),
 > >
-> >> +  spin_lock(&lock);
-> >> +  p = kmalloc(sizeof(*p), GFP_ATOMIC);
-> >> +
-> >> +Most places which use GFP_ATOMIC allocations are safe on PREEMPT_RT as the
-> >> +execution is forced into thread context and the lock substitution is
-> >> +ensuring preemptibility.
-> >
-> > Interestingly enough, most uses of GFP_ATOMIC allocations are
-> > actually safe on PREEMPT_RT because the the lock substitution ensures
-> > preemptibility.  Only those GFP_ATOMIC allocations that are invoke
-> > while holding a raw spinlock or with preemption otherwise disabled need
-> > adjustment to work correctly on PREEMPT_RT.
-> >
-> > [ I am not as confident of the above as I would like to be... ]
-> 
-> I'd leave that whole paragraph out. This documents the rules and from
-> the above code examples it's pretty clear what works and what not :)
+> > Perhaps use names instead of 6 and 15?
+>
+> Thought about that and did not come up with anyting useful. FAM6 vs. 6
+> is not really any better
 
-Works for me!  ;-)
+Hmm... Do we have family 15 for Intel? Perhaps I missed something...
+Or is it for any family?
 
-> > And meeting time, will continue later!
-> 
-> Enjoy!
-
-Not bad, actually, as meetings go.
-
-							Thanx, Paul
+-- 
+With Best Regards,
+Andy Shevchenko
