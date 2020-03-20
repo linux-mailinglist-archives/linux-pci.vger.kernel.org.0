@@ -2,48 +2,61 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EB34518D8B9
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Mar 2020 20:52:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5987918D906
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Mar 2020 21:25:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726973AbgCTTwc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Mar 2020 15:52:32 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:37003 "EHLO
+        id S1727178AbgCTUZQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Mar 2020 16:25:16 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:37039 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726773AbgCTTwa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Mar 2020 15:52:30 -0400
+        with ESMTP id S1726666AbgCTUZQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Mar 2020 16:25:16 -0400
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jFNgI-0002w2-14; Fri, 20 Mar 2020 20:51:46 +0100
+        id 1jFOCA-0003F1-0T; Fri, 20 Mar 2020 21:24:42 +0100
 Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 626F61039FC; Fri, 20 Mar 2020 20:51:44 +0100 (CET)
+        id 7019C1039FC; Fri, 20 Mar 2020 21:24:41 +0100 (CET)
 From:   Thomas Gleixner <tglx@linutronix.de>
-To:     paulmck@kernel.org
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Felipe Balbi <balbi@kernel.org>,
+        "maintainer\:X86 ARCHITECTURE \(32-BIT AND 64-BIT\)" <x86@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        linux-edac@vger.kernel.org,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Takashi Iwai <tiwai@suse.com>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [patch V2 08/15] Documentation: Add lock ordering and nesting documentation
-In-Reply-To: <20200320160145.GN3199@paulmck-ThinkPad-P72>
-Date:   Fri, 20 Mar 2020 20:51:44 +0100
-Message-ID: <87mu8apzxr.fsf@nanos.tec.linutronix.de>
+        linux-crypto <linux-crypto@vger.kernel.org>
+Subject: Re: [patch 01/22] x86/devicetable: Move x86 specific macro out of generic code
+In-Reply-To: <CAHp75Vca0j0=EB2qdvGgFOq2s_ohHUEzY4OeNrv-oynLBVYh1w@mail.gmail.com>
+References: <20200320131345.635023594@linutronix.de> <20200320131508.736205164@linutronix.de> <CAHp75Vca0j0=EB2qdvGgFOq2s_ohHUEzY4OeNrv-oynLBVYh1w@mail.gmail.com>
+Date:   Fri, 20 Mar 2020 21:24:41 +0100
+Message-ID: <87k13epyeu.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Linutronix-Spam-Score: -1.0
@@ -54,81 +67,26 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-"Paul E. McKenney" <paulmck@kernel.org> writes:
+Andy Shevchenko <andy.shevchenko@gmail.com> writes:
+> On Fri, Mar 20, 2020 at 3:17 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>> --- a/arch/x86/include/asm/cpu_device_id.h
+>> +++ b/arch/x86/include/asm/cpu_device_id.h
+>> @@ -6,10 +6,21 @@
+>>   * Declare drivers belonging to specific x86 CPUs
+>>   * Similar in spirit to pci_device_id and related PCI functions
+>>   */
 >
->  - The soft interrupt related suffix (_bh()) still disables softirq
->    handlers.  However, unlike non-PREEMPT_RT kernels (which disable
->    preemption to get this effect), PREEMPT_RT kernels use a per-CPU
->    lock to exclude softirq handlers.
-
-I've made that:
-
-  - The soft interrupt related suffix (_bh()) still disables softirq
-    handlers.
-
-    Non-PREEMPT_RT kernels disable preemption to get this effect.
-
-    PREEMPT_RT kernels use a per-CPU lock for serialization. The lock
-    disables softirq handlers and prevents reentrancy by a preempting
-    task.
-    
-On non-RT this is implicit through preemption disable, but it's non
-obvious for RT as preemption stays enabled.
-
-> PREEMPT_RT kernels preserve all other spinlock_t semantics:
+>> -
 >
->  - Tasks holding a spinlock_t do not migrate.  Non-PREEMPT_RT kernels
->    avoid migration by disabling preemption.  PREEMPT_RT kernels instead
->    disable migration, which ensures that pointers to per-CPU variables
->    remain valid even if the task is preempted.
+> Seems you are going to remove below anyway in the next patches, so,
+> why not to do this also there?
 >
->  - Task state is preserved across spinlock acquisition, ensuring that the
->    task-state rules apply to all kernel configurations.  In non-PREEMPT_RT
->    kernels leave task state untouched.  However, PREEMPT_RT must change
->    task state if the task blocks during acquisition.  Therefore, the
->    corresponding lock wakeup restores the task state.  Note that regular
->    (not lock related) wakeups do not restore task state.
+>>  #include <linux/mod_devicetable.h>
 
-   - Task state is preserved across spinlock acquisition, ensuring that the
-     task-state rules apply to all kernel configurations.  Non-PREEMPT_RT
-     kernels leave task state untouched.  However, PREEMPT_RT must change
-     task state if the task blocks during acquisition.  Therefore, it
-     saves the current task state before blocking and the corresponding
-     lock wakeup restores it. A regular not lock related wakeup sets the
-     task state to RUNNING. If this happens while the task is blocked on
-     a spinlock then the saved task state is changed so that correct
-     state is restored on lock wakeup.
-
-Hmm?
-
-> But this code failes on PREEMPT_RT kernels because the memory allocator
-> is fully preemptible and therefore cannot be invoked from truly atomic
-> contexts.  However, it is perfectly fine to invoke the memory allocator
-> while holding a normal non-raw spinlocks because they do not disable
-> preemption::
->
->> +  spin_lock(&lock);
->> +  p = kmalloc(sizeof(*p), GFP_ATOMIC);
->> +
->> +Most places which use GFP_ATOMIC allocations are safe on PREEMPT_RT as the
->> +execution is forced into thread context and the lock substitution is
->> +ensuring preemptibility.
->
-> Interestingly enough, most uses of GFP_ATOMIC allocations are
-> actually safe on PREEMPT_RT because the the lock substitution ensures
-> preemptibility.  Only those GFP_ATOMIC allocations that are invoke
-> while holding a raw spinlock or with preemption otherwise disabled need
-> adjustment to work correctly on PREEMPT_RT.
->
-> [ I am not as confident of the above as I would like to be... ]
-
-I'd leave that whole paragraph out. This documents the rules and from
-the above code examples it's pretty clear what works and what not :)
-
-> And meeting time, will continue later!
-
-Enjoy!
+No it stays, but yes I could do that comment change right here.
 
 Thanks,
 
         tglx
+
+
