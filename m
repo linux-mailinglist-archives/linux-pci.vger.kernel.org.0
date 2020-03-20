@@ -2,70 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D69AD18D94F
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Mar 2020 21:29:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 82EB618D95B
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Mar 2020 21:31:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbgCTU3G (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Mar 2020 16:29:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49606 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726789AbgCTU3G (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 20 Mar 2020 16:29:06 -0400
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7CAB2072C;
-        Fri, 20 Mar 2020 20:29:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584736146;
-        bh=CBE4Hpl5hWgtKq0+RxoHiNLqVoA/AcQ+0tzOzUVCEag=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=CXJDRjWdSHh7htiOtO28bb2i50AdEGQorWO8awQ1r89tsJUgDbe065O9MIhaCQ2mi
-         GqM/tIuXVv82Cn8sQM/vtiQo8zEDBtOwZyYV/XMJZpaz6VkdHTYEKG4D/vPNKTiDaN
-         vhPJNwdno569XIpqvuekBl9FBQaivQ+cn2CEs7Mo=
-Date:   Fri, 20 Mar 2020 15:29:04 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-Cc:     linux-pci@vger.kernel.org, davem@davemloft.net,
-        netdev@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>
-Subject: Re: [PATCH net-next 06/11] PCI: Add new PCI_VPD_RO_KEYWORD_SERIALNO
- macro
-Message-ID: <20200320202904.GA261671@google.com>
+        id S1727177AbgCTUa4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Mar 2020 16:30:56 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:37098 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726789AbgCTUa4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Mar 2020 16:30:56 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jFOHm-0003TQ-I5; Fri, 20 Mar 2020 21:30:30 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id E29761039FC; Fri, 20 Mar 2020 21:30:29 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "maintainer\:X86 ARCHITECTURE \(32-BIT AND 64-BIT\)" <x86@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        linux-edac@vger.kernel.org,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Takashi Iwai <tiwai@suse.com>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-crypto <linux-crypto@vger.kernel.org>
+Subject: Re: [patch 09/22] cpufreq: Convert to new X86 CPU match macros
+In-Reply-To: <CAHp75VdkvyqOaAsLmz8K2j4bdd0sboPoUpRr6U-zvtkSaQfPRQ@mail.gmail.com>
+References: <20200320131345.635023594@linutronix.de> <20200320131509.564059710@linutronix.de> <CAHp75VdkvyqOaAsLmz8K2j4bdd0sboPoUpRr6U-zvtkSaQfPRQ@mail.gmail.com>
+Date:   Fri, 20 Mar 2020 21:30:29 +0100
+Message-ID: <87eetmpy56.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1584458204-29285-1-git-send-email-vasundhara-v.volam@broadcom.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 08:46:44PM +0530, Vasundhara Volam wrote:
-> This patch adds a new macro for serial number keyword.
-> 
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-> Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Andy Shevchenko <andy.shevchenko@gmail.com> writes:
+> On Fri, Mar 20, 2020 at 3:18 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+>> +       X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL,  6,  9, X86_FEATURE_EST, NULL),
+>> +       X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL,  6, 13, X86_FEATURE_EST, NULL),
+>> +       X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL, 15,  3, X86_FEATURE_EST, NULL),
+>> +       X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL, 15,  4, X86_FEATURE_EST, NULL),
+>
+>> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL,  6, 0x8, 0),
+>> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL,  6, 0xb, 0),
+>> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL, 15, 0x2, 0),
+>
+>> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL,  6, 0x8, 0),
+>> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL,  6, 0xb, 0),
+>> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL, 15, 0x2, 0),
+>
+> Perhaps use names instead of 6 and 15?
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Thought about that and did not come up with anyting useful. FAM6 vs. 6
+is not really any better
 
-> ---
->  include/linux/pci.h | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index fc54b89..a048fba 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -2184,6 +2184,7 @@ bool pci_acs_path_enabled(struct pci_dev *start,
->  #define PCI_VPD_INFO_FLD_HDR_SIZE	3
->  
->  #define PCI_VPD_RO_KEYWORD_PARTNO	"PN"
-> +#define PCI_VPD_RO_KEYWORD_SERIALNO	"SN"
->  #define PCI_VPD_RO_KEYWORD_MFR_ID	"MN"
->  #define PCI_VPD_RO_KEYWORD_VENDOR0	"V0"
->  #define PCI_VPD_RO_KEYWORD_CHKSUM	"RV"
-> -- 
-> 1.8.3.1
-> 
+> Also, NULL vs. 0?
+
+Both works, but yes I used mostly NULL.
+
+Thanks,
+
+        tglx
