@@ -2,169 +2,121 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E55618DD9F
-	for <lists+linux-pci@lfdr.de>; Sat, 21 Mar 2020 03:29:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 42BEB18DDE8
+	for <lists+linux-pci@lfdr.de>; Sat, 21 Mar 2020 05:55:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbgCUC3c (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Mar 2020 22:29:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55060 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726851AbgCUC3b (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 20 Mar 2020 22:29:31 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2952B2072D;
-        Sat, 21 Mar 2020 02:29:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584757771;
-        bh=cx0T7j4Rw8DmtudaxpEVF5LLRRX3FTiCAV1kPl7Nbgc=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=1kXb4KEWo2dzCCzN7/6klHda+1PJHiAUGD5QuqlYfAOdT7fYlhmYaBMMtTuy/WNZN
-         ECiV3hXYdLV0vb5/erVarifnSX6rfZroo+HOqk7zb9SGh8nx4anjDrE1g+i0bZAwHB
-         pzevk+XrUrbjAD4JQ5Js8pF94X/E75fBizrexOo8=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id E979835226B5; Fri, 20 Mar 2020 19:29:30 -0700 (PDT)
-Date:   Fri, 20 Mar 2020 19:29:30 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        id S1726942AbgCUEzD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 21 Mar 2020 00:55:03 -0400
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:32886 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725440AbgCUEzD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 21 Mar 2020 00:55:03 -0400
+Received: by mail-pf1-f202.google.com with SMTP id o5so6333949pfp.0
+        for <linux-pci@vger.kernel.org>; Fri, 20 Mar 2020 21:55:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=Qappvw96EUepcQDh6rIB1HdJ+KdBA/yaiDSOL4qur/U=;
+        b=vLSzIN02yZjlPwTzcU400/3gSovfu2ga7/eNWJIeBZzTVfaVsG950ptH+WJiESq+Fh
+         nGeqeA3Al1dQKSlP8NBDdCNyOKDTUfiZc/QafzHmTsEZTe+6jNY4tKch/UQFkUxyfUi0
+         u5vPufQvl5T/ITXwHMxxnZryYCvWvqrBeJAKwI3CD0xeuBlZVp4QnXMZxHVrGY6vmOxa
+         MtDeqSzNtyyKcb0HkDkU0NpKk0ZpvifAqnZgdbHDq4hPeLoPY+lC4fEfRzovlFWhhFOj
+         Kjxg4vKKszbmZGs4JPz4kHcu4kPmGNlCnJ55LRwbsL6rPNcTxNVdjjdntzTt4XqjvUs4
+         JxdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=Qappvw96EUepcQDh6rIB1HdJ+KdBA/yaiDSOL4qur/U=;
+        b=Qa5/rea6Gy4GfEFs6ZrqC2KS0DkLY2C/jrj8dt6CZpHK76kZNb01BJoxYu2zS7B1YU
+         4rdPcjlT3CUfXG1F6lSE6IkY+GrIi4JxabP4vPB6PuEvH9m1Uir6eYzlnRYHXjPbh1bI
+         VXeJLHetogeCnhmqLPvCFjcaInKrdtyV0YzQWSGLY4Slv4mJ1IWnObwCQ/aArct423mV
+         qYUoXbUJVcKyh7+OejAU1vIPhZWJwyyOE8pHUV824OBH5AjmR/yQNA/oD9B64vlnYhuV
+         fKg38JibaVTGFFxStowTGGBflI0XdWvRtURPgAcy3Vw4YQllJ228x7GzZZQXzVWXExeL
+         QFeQ==
+X-Gm-Message-State: ANhLgQ0zvzUtA6tzuTkKe1qxX6OdE94MzK5be/I38NuOpVQg0RSxga1g
+        tqoOEtmXm+PiFlZl6avmraoZuDrtPLANVx0=
+X-Google-Smtp-Source: ADFU+vun9pvzN/AClZJ+4rDwIUBdbwrf+xnL/lNVKSDppW/XcQpJXplkwUGkMQ1IHdrPzOcLixdg9C1hrXqN4V8=
+X-Received: by 2002:a17:90b:f0e:: with SMTP id br14mr13526925pjb.21.1584766501664;
+ Fri, 20 Mar 2020 21:55:01 -0700 (PDT)
+Date:   Fri, 20 Mar 2020 21:54:48 -0700
+Message-Id: <20200321045448.15192-1-saravanak@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
+Subject: [PATCH v1] driver core: Add device links from fwnode only for the
+ primary device
+From:   Saravana Kannan <saravanak@google.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Saravana Kannan <saravanak@google.com>,
         Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [patch V2 08/15] Documentation: Add lock ordering and nesting
- documentation
-Message-ID: <20200321022930.GU3199@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200320160145.GN3199@paulmck-ThinkPad-P72>
- <87mu8apzxr.fsf@nanos.tec.linutronix.de>
- <20200320210243.GT3199@paulmck-ThinkPad-P72>
- <874kuipsbw.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <874kuipsbw.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        kernel-team@android.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 11:36:03PM +0100, Thomas Gleixner wrote:
-> "Paul E. McKenney" <paulmck@kernel.org> writes:
-> > On Fri, Mar 20, 2020 at 08:51:44PM +0100, Thomas Gleixner wrote:
-> >> "Paul E. McKenney" <paulmck@kernel.org> writes:
-> >> >
-> >> >  - The soft interrupt related suffix (_bh()) still disables softirq
-> >> >    handlers.  However, unlike non-PREEMPT_RT kernels (which disable
-> >> >    preemption to get this effect), PREEMPT_RT kernels use a per-CPU
-> >> >    lock to exclude softirq handlers.
-> >> 
-> >> I've made that:
-> >> 
-> >>   - The soft interrupt related suffix (_bh()) still disables softirq
-> >>     handlers.
-> >> 
-> >>     Non-PREEMPT_RT kernels disable preemption to get this effect.
-> >> 
-> >>     PREEMPT_RT kernels use a per-CPU lock for serialization. The lock
-> >>     disables softirq handlers and prevents reentrancy by a preempting
-> >>     task.
-> >
-> > That works!  At the end, I would instead say "prevents reentrancy
-> > due to task preemption", but what you have works.
-> 
-> Yours is better.
-> 
-> >>    - Task state is preserved across spinlock acquisition, ensuring that the
-> >>      task-state rules apply to all kernel configurations.  Non-PREEMPT_RT
-> >>      kernels leave task state untouched.  However, PREEMPT_RT must change
-> >>      task state if the task blocks during acquisition.  Therefore, it
-> >>      saves the current task state before blocking and the corresponding
-> >>      lock wakeup restores it. A regular not lock related wakeup sets the
-> >>      task state to RUNNING. If this happens while the task is blocked on
-> >>      a spinlock then the saved task state is changed so that correct
-> >>      state is restored on lock wakeup.
-> >> 
-> >> Hmm?
-> >
-> > I of course cannot resist editing the last two sentences:
-> >
-> >    ... Other types of wakeups unconditionally set task state to RUNNING.
-> >    If this happens while a task is blocked while acquiring a spinlock,
-> >    then the task state is restored to its pre-acquisition value at
-> >    lock-wakeup time.
-> 
-> Errm no. That would mean
-> 
->      state = UNINTERRUPTIBLE
->      lock()
->        block()
->          real_state = state
->          state = SLEEPONLOCK
-> 
->                                non lock wakeup
->                                  state = RUNNING    <--- FAIL #1
-> 
->                                lock wakeup
->                                  state = real_state <--- FAIL #2
-> 
-> How it works is:
-> 
->      state = UNINTERRUPTIBLE
->      lock()
->        block()
->          real_state = state
->          state = SLEEPONLOCK
-> 
->                                non lock wakeup
->                                  real_state = RUNNING
-> 
->                                lock wakeup
->                                  state = real_state == RUNNING
-> 
-> If there is no 'non lock wakeup' before the lock wakeup:
-> 
->      state = UNINTERRUPTIBLE
->      lock()
->        block()
->          real_state = state
->          state = SLEEPONLOCK
-> 
->                                lock wakeup
->                                  state = real_state == UNINTERRUPTIBLE
-> 
-> I agree that what I tried to express is hard to parse, but it's at least
-> halfways correct :)
+Sometimes, more than one (generally two) device can point to the same
+fwnode.  However, only one device is set as the fwnode's device
+(fwnode->dev) and can be looked up from the fwnode.
 
-Apologies!  That is what I get for not looking it up in the source.  :-/
+Typically, only one of these devices actually have a driver and actually
+probe. If we create device links for all these devices, then the
+suppliers' of these devices (with the same fwnode) will never get a
+sync_state() call because one of their consumer devices will never probe
+(because they don't have a driver).
 
-OK, so I am stupid enough not only to get it wrong, but also to try again:
+So, create device links only for the device that is considered as the
+fwnode's device.
 
-   ... Other types of wakeups would normally unconditionally set the
-   task state to RUNNING, but that does not work here because the task
-   must remain blocked until the lock becomes available.  Therefore,
-   when a non-lock wakeup attempts to awaken a task blocked waiting
-   for a spinlock, it instead sets the saved state to RUNNING.  Then,
-   when the lock acquisition completes, the lock wakeup sets the task
-   state to the saved state, in this case setting it to RUNNING.
+One such example of this is the PCI bridge platform_device and the
+corresponding pci_bus device. Both these devices will have the same
+fwnode. It's the platform_device that is registered first and is set as
+the fwnode's device. Also the platform_device is the one that actually
+probes. Without this patch none of the suppliers of a PCI bridge
+platform_device would get a sync_state() callback.
 
-Is that better?
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+---
+ drivers/base/core.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-							Thanx, Paul
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index fc6a60998cd6..5e3cc1651c78 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -2404,6 +2404,7 @@ int device_add(struct device *dev)
+ 	struct class_interface *class_intf;
+ 	int error = -EINVAL, fw_ret;
+ 	struct kobject *glue_dir = NULL;
++	bool is_fwnode_dev = false;
+ 
+ 	dev = get_device(dev);
+ 	if (!dev)
+@@ -2501,8 +2502,10 @@ int device_add(struct device *dev)
+ 
+ 	kobject_uevent(&dev->kobj, KOBJ_ADD);
+ 
+-	if (dev->fwnode && !dev->fwnode->dev)
++	if (dev->fwnode && !dev->fwnode->dev) {
+ 		dev->fwnode->dev = dev;
++		is_fwnode_dev = true;
++	}
+ 
+ 	/*
+ 	 * Check if any of the other devices (consumers) have been waiting for
+@@ -2518,7 +2521,8 @@ int device_add(struct device *dev)
+ 	 */
+ 	device_link_add_missing_supplier_links();
+ 
+-	if (fw_devlink_flags && fwnode_has_op(dev->fwnode, add_links)) {
++	if (fw_devlink_flags && is_fwnode_dev &&
++	    fwnode_has_op(dev->fwnode, add_links)) {
+ 		fw_ret = fwnode_call_int_op(dev->fwnode, add_links, dev);
+ 		if (fw_ret == -ENODEV)
+ 			device_link_wait_for_mandatory_supplier(dev);
+-- 
+2.25.1.696.g5e7596f4ac-goog
+
