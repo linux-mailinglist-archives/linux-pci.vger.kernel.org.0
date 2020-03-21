@@ -2,82 +2,91 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DD29718DF83
-	for <lists+linux-pci@lfdr.de>; Sat, 21 Mar 2020 11:42:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DAF2318DFC0
+	for <lists+linux-pci@lfdr.de>; Sat, 21 Mar 2020 12:22:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728083AbgCUKmP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 21 Mar 2020 06:42:15 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:37993 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726607AbgCUKmP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 21 Mar 2020 06:42:15 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jFbZX-0001a5-00; Sat, 21 Mar 2020 11:41:43 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 5D7DDFFC8D; Sat, 21 Mar 2020 11:41:42 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-pci@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        netdev@vger.kernel.org, Joel Fernandes <joel@joelfernandes.org>,
-        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [patch V2 07/15] powerpc/ps3: Convert half completion to rcuwait
-In-Reply-To: <20200319100459.GA18506@infradead.org>
-References: <20200318204302.693307984@linutronix.de> <20200318204408.102694393@linutronix.de> <20200319100459.GA18506@infradead.org>
-Date:   Sat, 21 Mar 2020 11:41:42 +0100
-Message-ID: <8736a2rnvd.fsf@nanos.tec.linutronix.de>
+        id S1727033AbgCULWG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 21 Mar 2020 07:22:06 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37132 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbgCULWG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 21 Mar 2020 07:22:06 -0400
+Received: by mail-wr1-f67.google.com with SMTP id w10so10546932wrm.4;
+        Sat, 21 Mar 2020 04:22:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wrykALwAZHn2gI4OIvSp4Cr1q7UfqoQL07MxjhgqGhI=;
+        b=iokK+tj+ES8Dz+zcq6RpuEqINz9k7mZVDpnL+mOZkdhMW0Z2/zEhFQJ24GS11Yq7ms
+         M7hSQuZrik3r6nZbAKLKKmmtMAmu1S2tgVHkKDuYxcjA3XdOQwM5OP17Px1MMjqiGfZd
+         zmOrQoxr40OMSS2V2D4KLCFTo64Iu+GVX98to2jItoILC9ZoAizm5TBPkEPxCzZ5UDZv
+         tmjPe5MCaRi8D3EObUeTdX+g8lxJEaM/3+xVO+rdU/CZ4rxtIMsCuBy55YGpMkaBi7os
+         f0kwEiAhnLBbpPHTP9f1fl0BEVJ7x0KAnkD+b3JFtPY+Palrrr6ySVVuJCE2bhtyapgc
+         +M+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wrykALwAZHn2gI4OIvSp4Cr1q7UfqoQL07MxjhgqGhI=;
+        b=LKCDRZtdV4M38ZZ6RNZAU7Z0o7EyopJ8UrgcZmdh+PLKMS6ppONM5Di5NdkBloR8xU
+         bgGJ05j0wM2rxD5J8z3bAZRc+u79TvkBfn7rNwVBDMbPoCSkhTwMP9VRbgXgI769f0te
+         vILAA1IYTZAtmVMNlET9uNiySOdm6JTvq6zFqw9KYLZyNbBOSwLUDE0nFBkTuIf8UwWH
+         cd+6bWisCMPWbxwudxAwfDP5pWKoBb/v5k4efy0MQ4aszzNWSlVNOkAPR2hdhaXku68z
+         3uWBI9njVqcaCZsPJl+10MNHuxStw3+gHWjZBYvF1O1NMaUERdyx9QZgl3+B7nlj5pw8
+         O+Rg==
+X-Gm-Message-State: ANhLgQ0GEUlrBIRqaRvMPBPJSG8t30fgyaddTIu1tLba3XWbV0nhn8gU
+        2FEQgog+QmTes1CWJXwrOcQ=
+X-Google-Smtp-Source: ADFU+vvUdBv4IbyytOzeaYSUEhatmuthQBOlPFK2tmwCRSwKRlZbN1HaAN305D2qc31CAbtmwZ+XPQ==
+X-Received: by 2002:adf:e345:: with SMTP id n5mr17736309wrj.220.1584789724226;
+        Sat, 21 Mar 2020 04:22:04 -0700 (PDT)
+Received: from prasmi.home ([2a00:23c8:2510:d000:a04f:dbc7:8e23:adad])
+        by smtp.gmail.com with ESMTPSA id x24sm11986616wmc.36.2020.03.21.04.22.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Mar 2020 04:22:03 -0700 (PDT)
+From:   Lad Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH] misc: pci_endpoint_test: remove duplicate macro PCI_ENDPOINT_TEST_STATUS
+Date:   Sat, 21 Mar 2020 11:21:39 +0000
+Message-Id: <20200321112139.17184-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Christoph Hellwig <hch@infradead.org> writes:
+PCI_ENDPOINT_TEST_STATUS is already defined in pci_endpoint_test.c along
+with the status bits, so this patch drops duplicate definition.
 
-> On Wed, Mar 18, 2020 at 09:43:09PM +0100, Thomas Gleixner wrote:
->> The PS3 notification interrupt and kthread use a hacked up completion to
->> communicate. Since we're wanting to change the completion implementation and
->> this is abuse anyway, replace it with a simple rcuwait since there is only ever
->> the one waiter.
->> 
->> AFAICT the kthread uses TASK_INTERRUPTIBLE to not increase loadavg, kthreads
->> cannot receive signals by default and this one doesn't look different. Use
->> TASK_IDLE instead.
->
-> I think the right fix here is to jut convert the thing to a threaded
-> interrupt handler and kill off the stupid kthread.
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+---
+ This patch applies on top of pci/endpoint branch [1].
+ 
+ [1] https://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git
 
-That'd be a major surgery.
+ drivers/misc/pci_endpoint_test.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-> But I wonder how alive the whole PS3 support is to start with..
-
-There seem to be a few enthusiast left which have a Other-OS capable PS3
-
-Thanks,
-
-        tglx
+diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+index b536ca4b14ca..a1bb94902b5a 100644
+--- a/drivers/misc/pci_endpoint_test.c
++++ b/drivers/misc/pci_endpoint_test.c
+@@ -53,7 +53,6 @@
+ #define STATUS_SRC_ADDR_INVALID			BIT(7)
+ #define STATUS_DST_ADDR_INVALID			BIT(8)
+ 
+-#define PCI_ENDPOINT_TEST_STATUS		0x8
+ #define PCI_ENDPOINT_TEST_LOWER_SRC_ADDR	0x0c
+ #define PCI_ENDPOINT_TEST_UPPER_SRC_ADDR	0x10
+ 
+-- 
+2.20.1
 
