@@ -2,77 +2,82 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DBAFB18E1BA
-	for <lists+linux-pci@lfdr.de>; Sat, 21 Mar 2020 15:11:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 62AA518E330
+	for <lists+linux-pci@lfdr.de>; Sat, 21 Mar 2020 18:20:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727278AbgCUOLT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 21 Mar 2020 10:11:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54738 "EHLO mail.kernel.org"
+        id S1727262AbgCURUV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 21 Mar 2020 13:20:21 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52394 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726823AbgCUOLT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 21 Mar 2020 10:11:19 -0400
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A7A220842;
-        Sat, 21 Mar 2020 14:11:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584799878;
-        bh=z3bsHcwPw1dy+MZ69yHRllkviwuFf+1W8mJ1Vq6tZx8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=U6uraq1+O/wBDq9BdnirqCkla8fi4hhFooa9u8EOGpG/NUK8KcAg8m6t2KHRzRSTZ
-         U1tt2IsiTDMVS0ltxGzSghSwm0SPd3Ix8AtBnYo+moOc67e2fIk/ICATj9ELG9zqHj
-         KWOd3QQR+qDycpEtfRl0ifl4E+I1zEKfB5l1H1GU=
-Received: by mail-lf1-f53.google.com with SMTP id t21so6707987lfe.9;
-        Sat, 21 Mar 2020 07:11:18 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ2NRbh5XueagTwvvEpfNbQrjY3WjmYWsExYRuD9ZYsKAjI5eANG
-        5wC7rxeybWBIdvZuJtjEJiBY448WImtO3Cpbfzs=
-X-Google-Smtp-Source: ADFU+vt7yzzoIODXTl3pSLaF05QHM7NQajznhAWuFfmnjqd/dl0IS02TuRz56P5ko6Q0w3g4sq26da7i2uTfuhqRlWs=
-X-Received: by 2002:a05:6512:1116:: with SMTP id l22mr8128251lfg.70.1584799876421;
- Sat, 21 Mar 2020 07:11:16 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200318204408.010461877@linutronix.de> <20200320094856.3453859-1-bigeasy@linutronix.de>
- <20200320094856.3453859-3-bigeasy@linutronix.de> <tglx@linutronix.de>
- <CAJF2gTQDvmSdJB3R0By0Q6d9ganVBV1FBm3urL8Jf1fyiEi+1A@mail.gmail.com> <87zhc9rjuz.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <87zhc9rjuz.fsf@nanos.tec.linutronix.de>
-From:   Guo Ren <guoren@kernel.org>
-Date:   Sat, 21 Mar 2020 22:11:05 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTTTFYSwFYZArmJRkVJOKL2pWWgLj9nAQ_EdH2rU3jTdbw@mail.gmail.com>
-Message-ID: <CAJF2gTTTFYSwFYZArmJRkVJOKL2pWWgLj9nAQ_EdH2rU3jTdbw@mail.gmail.com>
-Subject: Re: [PATCH 2/5] csky: Remove mm.h from asm/uaccess.h
+        id S1726961AbgCURUU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 21 Mar 2020 13:20:20 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id C70F9ABD7;
+        Sat, 21 Mar 2020 17:20:14 +0000 (UTC)
+Date:   Sat, 21 Mar 2020 10:19:02 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
 To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>, balbi@kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>, dave@stgolabs.net,
-        David Miller <davem@davemloft.net>, gregkh@linuxfoundation.org,
-        joel@joelfernandes.org, kurt.schwemmer@microsemi.com,
-        kvalo@codeaurora.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        logang@deltatee.com, mingo@kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>, netdev@vger.kernel.org,
-        oleg@redhat.com, paulmck@kernel.org,
+Cc:     LKML <linux-kernel@vger.kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Sebastian Siewior <bigeasy@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        linux-pci@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org,
+        Zhang Rui <rui.zhang@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        linux-pm@vger.kernel.org, Len Brown <lenb@kernel.org>,
+        linux-acpi@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Nick Hu <nickhu@andestech.com>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Guo Ren <guoren@kernel.org>, linux-csky@vger.kernel.org,
+        Brian Cain <bcain@codeaurora.org>,
+        linux-hexagon@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org,
+        Michal Simek <monstr@monstr.eu>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geoff Levand <geoff@infradead.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
         Randy Dunlap <rdunlap@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        torvalds@linux-foundation.org, Will Deacon <will@kernel.org>,
-        linux-csky@vger.kernel.org, kbuild test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Davidlohr Bueso <dbueso@suse.de>
+Subject: Re: [patch V3 00/20] Lock ordering documentation and annotation for
+ lockdep
+Message-ID: <20200321171902.xxlnpikc65wd3b4m@linux-p48b>
+References: <20200321112544.878032781@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200321112544.878032781@linutronix.de>
+User-Agent: NeoMutt/20180716
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Mar 21, 2020 at 8:08 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> Guo Ren <guoren@kernel.org> writes:
->
-> > Tested and Acked by me.
-> >
-> > Queued for next pull request, thx
->
-> Can we please route that with the rcuwait changes to avoid breakage
-> unless you ship it to Linus right away?
+On Sat, 21 Mar 2020, Thomas Gleixner wrote:
 
-Ok, I won't queue it.
+>This is the third and hopefully final version of this work. The second one
+>can be found here:
+
+Would you rather I send in a separate series with the kvm changes, or
+should I just send a v2 with the fixes here again?
+
+Thanks,
+Davidlohr
