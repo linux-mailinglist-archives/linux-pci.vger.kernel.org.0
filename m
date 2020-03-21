@@ -2,101 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AD43C18E346
-	for <lists+linux-pci@lfdr.de>; Sat, 21 Mar 2020 18:23:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E23CD18E379
+	for <lists+linux-pci@lfdr.de>; Sat, 21 Mar 2020 18:46:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727909AbgCURXH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 21 Mar 2020 13:23:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50970 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727548AbgCURXH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 21 Mar 2020 13:23:07 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8AE9120767;
-        Sat, 21 Mar 2020 17:23:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584811386;
-        bh=xECwvu3Zm1NEgzqD5GrnBGLFCYYFmNZsamemFqiM8NY=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=0uZasLyYOOcy2Jn3NQfpB2UAWhjp74rz1TUNHg9BhAjwPgKnZR60zmujqnihmxQ4W
-         7foxJjnQ0xMcW011TdKCXLYocZvyg8MDtNv8kWqj8WW3VxI5OcNV2Y2TQfkKR5STHK
-         tsXIa2UPcdd8dIM4hV5/+BQQoln4Cxe0PVsX+CFA=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 8D6D435226C1; Sat, 21 Mar 2020 10:23:05 -0700 (PDT)
-Date:   Sat, 21 Mar 2020 10:23:05 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
+        id S1727573AbgCURqW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 21 Mar 2020 13:46:22 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:39226 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726961AbgCURqV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 21 Mar 2020 13:46:21 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jFiBn-0007G4-JJ; Sat, 21 Mar 2020 18:45:39 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id E02A21040D4; Sat, 21 Mar 2020 18:45:38 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Davidlohr Bueso <dave@stgolabs.net>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Sebastian Siewior <bigeasy@linutronix.de>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
         Joel Fernandes <joel@joelfernandes.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
         Logan Gunthorpe <logang@deltatee.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Felipe Balbi <balbi@kernel.org>,
+        linux-pci@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>,
+        Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org,
+        Kalle Valo <kvalo@codeaurora.org>,
         "David S. Miller" <davem@davemloft.net>,
         linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org,
+        Zhang Rui <rui.zhang@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        linux-pm@vger.kernel.org, Len Brown <lenb@kernel.org>,
+        linux-acpi@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Nick Hu <nickhu@andestech.com>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Guo Ren <guoren@kernel.org>, linux-csky@vger.kernel.org,
+        Brian Cain <bcain@codeaurora.org>,
+        linux-hexagon@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org,
+        Michal Simek <monstr@monstr.eu>,
         Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [patch V2 08/15] Documentation: Add lock ordering and nesting
- documentation
-Message-ID: <20200321172305.GW3199@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200320160145.GN3199@paulmck-ThinkPad-P72>
- <87mu8apzxr.fsf@nanos.tec.linutronix.de>
- <20200320210243.GT3199@paulmck-ThinkPad-P72>
- <874kuipsbw.fsf@nanos.tec.linutronix.de>
- <20200321022930.GU3199@paulmck-ThinkPad-P72>
- <875zeyrold.fsf@nanos.tec.linutronix.de>
+        Arnd Bergmann <arnd@arndb.de>,
+        Geoff Levand <geoff@infradead.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Davidlohr Bueso <dbueso@suse.de>
+Subject: Re: [patch V3 00/20] Lock ordering documentation and annotation for lockdep
+In-Reply-To: <20200321171902.xxlnpikc65wd3b4m@linux-p48b>
+References: <20200321112544.878032781@linutronix.de> <20200321171902.xxlnpikc65wd3b4m@linux-p48b>
+Date:   Sat, 21 Mar 2020 18:45:38 +0100
+Message-ID: <87mu89r48t.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <875zeyrold.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Mar 21, 2020 at 11:26:06AM +0100, Thomas Gleixner wrote:
-> "Paul E. McKenney" <paulmck@kernel.org> writes:
-> > On Fri, Mar 20, 2020 at 11:36:03PM +0100, Thomas Gleixner wrote:
-> >> I agree that what I tried to express is hard to parse, but it's at least
-> >> halfways correct :)
-> >
-> > Apologies!  That is what I get for not looking it up in the source.  :-/
-> >
-> > OK, so I am stupid enough not only to get it wrong, but also to try again:
-> >
-> >    ... Other types of wakeups would normally unconditionally set the
-> >    task state to RUNNING, but that does not work here because the task
-> >    must remain blocked until the lock becomes available.  Therefore,
-> >    when a non-lock wakeup attempts to awaken a task blocked waiting
-> >    for a spinlock, it instead sets the saved state to RUNNING.  Then,
-> >    when the lock acquisition completes, the lock wakeup sets the task
-> >    state to the saved state, in this case setting it to RUNNING.
-> >
-> > Is that better?
-> 
-> Definitely!
-> 
-> Thanks for all the editorial work!
+Davidlohr Bueso <dave@stgolabs.net> writes:
 
-NP, and glad you like it!
+> On Sat, 21 Mar 2020, Thomas Gleixner wrote:
+>
+>>This is the third and hopefully final version of this work. The second one
+>>can be found here:
+>
+> Would you rather I send in a separate series with the kvm changes, or
+> should I just send a v2 with the fixes here again?
 
-But I felt even more stupid sometime in the middle of the night.  Why on
-earth didn't I work in your nice examples?  :-/
+Send a separate series please. These nested threads are hard to follow.
 
-I will pull them in later.  Time to go hike!!!
+Thanks,
 
-							Thanx, Paul
+        tglx
