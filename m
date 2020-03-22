@@ -2,86 +2,82 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 28EFB18E973
-	for <lists+linux-pci@lfdr.de>; Sun, 22 Mar 2020 15:50:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A3C618EA79
+	for <lists+linux-pci@lfdr.de>; Sun, 22 Mar 2020 17:34:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbgCVOuZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 22 Mar 2020 10:50:25 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:33491 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726623AbgCVOuZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 22 Mar 2020 10:50:25 -0400
-Received: by mail-pf1-f195.google.com with SMTP id j1so3443054pfe.0;
-        Sun, 22 Mar 2020 07:50:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VzpMsaGUucPpP6fSW/cSM6C+7riJcwDU7MFrk8qZK08=;
-        b=A+wyUWCyuSGbBGYrVxL3lfpAMEm9Pw7lyM1JfznsrrtgMW/o6IzzRGitu4S4esNGpi
-         8Ee78r+qIGkf45lpvlDrcRjhgDtARjTA/HFA3m2CHQISObO0vJqixQI6XTNulD+VxxMV
-         Ac7RW9icnj4MN1AJfv6kTVT2sq84yKep5ghOOqZ2SHiCfj68EAKTIu46hbFFhLsNxk77
-         dYvyOjYv8rHyGxlZ0IXpgt6Cz0Mj9A+eFS20jNm7RtLw9EaSHfJikcrDvlymvinrn+00
-         ij8YnbvINbjAQsnoOdKd3n795yaUqPJ2ZdWZEC7tladhIE1FDzVAklYUGTR+Qj/9FrdU
-         WHWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VzpMsaGUucPpP6fSW/cSM6C+7riJcwDU7MFrk8qZK08=;
-        b=sh7tks2Gg3xPmigOsjnD4wInDsbWBIg2VF1z2e9FuAiRbsA4e061GmD6RP5fYeR0AG
-         msxjK5oqIpLx+OWE9iDwUn3qWoUPkMrPEaqGJm5jEpSFXM169gnIwL4Cozl4iFKrdO55
-         gFchvR4zlsezkv33cdnGJax9I8mXHWmrHn1AVbynRoTDIW9P5OnP0sV11RQPskgV2u6+
-         fzwIat+2urd1eIkDaiaShgYt6piVoPQmdYxbamFjFQVVDyJL/hKC+kqRihOAOtey/Z3H
-         SokBnAhJXPgNCn1XRaL6Sj1CxwDbMI0AUztozNAqpFmSLjmI+BPGlHNrG5WZFhQ6TSkE
-         u5+w==
-X-Gm-Message-State: ANhLgQ3ql6kWUYddEcUnCo1YTpYwayF9J/J7qKCVCvbiH49abanN1QP6
-        oYb66S4pBoqOO12rd+eb700=
-X-Google-Smtp-Source: ADFU+vsC3unH8wqa2M/Kjr8Fps9W1SvqISpzPCWWajii9wOO7dTp9OThgGswhR+FbVFnRd+cWKO23w==
-X-Received: by 2002:a62:b613:: with SMTP id j19mr20415336pff.90.1584888623675;
-        Sun, 22 Mar 2020 07:50:23 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id p9sm9666063pgs.50.2020.03.22.07.50.21
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 22 Mar 2020 07:50:22 -0700 (PDT)
-Date:   Sun, 22 Mar 2020 07:50:20 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
-        thierry.reding@gmail.com, jonathanh@nvidia.com,
-        andrew.murray@arm.com, kishon@ti.com,
-        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V5 5/5] PCI: tegra: Add support for PCIe endpoint mode in
- Tegra194
-Message-ID: <20200322145020.GA2040@roeck-us.net>
-References: <20200303181052.16134-1-vidyas@nvidia.com>
- <20200303181052.16134-6-vidyas@nvidia.com>
+        id S1726666AbgCVQe2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 22 Mar 2020 12:34:28 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52958 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726502AbgCVQe2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 22 Mar 2020 12:34:28 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 93574AC24;
+        Sun, 22 Mar 2020 16:34:24 +0000 (UTC)
+Date:   Sun, 22 Mar 2020 09:33:17 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     tglx@linutronix.de, arnd@arndb.de, balbi@kernel.org,
+        bhelgaas@google.com, bigeasy@linutronix.de, davem@davemloft.net,
+        gregkh@linuxfoundation.org, joel@joelfernandes.org,
+        kurt.schwemmer@microsemi.com, kvalo@codeaurora.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, logang@deltatee.com,
+        mingo@kernel.org, mpe@ellerman.id.au, netdev@vger.kernel.org,
+        oleg@redhat.com, paulmck@kernel.org, rdunlap@infradead.org,
+        rostedt@goodmis.org, torvalds@linux-foundation.org,
+        will@kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Davidlohr Bueso <dbueso@suse.de>
+Subject: Re: [PATCH 18/15] kvm: Replace vcpu->swait with rcuwait
+Message-ID: <20200322163317.mh4sygr7xcjptmjp@linux-p48b>
+References: <20200318204302.693307984@linutronix.de>
+ <20200320085527.23861-1-dave@stgolabs.net>
+ <20200320085527.23861-3-dave@stgolabs.net>
+ <20200320125455.GE20696@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20200303181052.16134-6-vidyas@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200320125455.GE20696@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 11:40:52PM +0530, Vidya Sagar wrote:
-> Add support for the endpoint mode of Synopsys DesignWare core based
-> dual mode PCIe controllers present in Tegra194 SoC.
-> 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> Acked-by: Thierry Reding <treding@nvidia.com>
+On Fri, 20 Mar 2020, Peter Zijlstra wrote:
 
-ERROR: modpost: "dw_pcie_ep_init" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
-ERROR: modpost: "dw_pcie_ep_linkup" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
-ERROR: modpost: "dw_pcie_ep_init_notify" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
-ERROR: modpost: "dw_pcie_ep_init_complete" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
+>On Fri, Mar 20, 2020 at 01:55:26AM -0700, Davidlohr Bueso wrote:
+>> -	swait_event_interruptible_exclusive(*wq, ((!vcpu->arch.power_off) &&
+>> -				       (!vcpu->arch.pause)));
+>> +	rcuwait_wait_event(*wait,
+>> +			   (!vcpu->arch.power_off) && (!vcpu->arch.pause),
+>> +			   TASK_INTERRUPTIBLE);
+>
+>> -	for (;;) {
+>> -		prepare_to_swait_exclusive(&vcpu->wq, &wait, TASK_INTERRUPTIBLE);
+>> -
+>> -		if (kvm_vcpu_check_block(vcpu) < 0)
+>> -			break;
+>> -
+>> -		waited = true;
+>> -		schedule();
+>> -	}
+>> -
+>> -	finish_swait(&vcpu->wq, &wait);
+>> +	rcuwait_wait_event(&vcpu->wait,
+>> +			   (block_check = kvm_vcpu_check_block(vcpu)) < 0,
+>> +			   TASK_INTERRUPTIBLE);
+>
+>Are these yet more instances that really want to be TASK_IDLE ?
 
-Either the symbols must be exported, or the driver's Kconfig entry must be
-bool, not tristate.
+Hmm probably as it makes sense for a blocked vcpu not to be contributing to
+the loadavg. So if this is the only reason to use interruptible, then yes we
+ought to change it.
 
-Guenter
+However, I'll make this a separate patch, given this (ab)use isn't as obvious
+as the PS3 case, which is a kthread and therefore signals are masked.
+
+Thanks,
+Davidlohr
