@@ -2,107 +2,163 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5787F18FA06
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Mar 2020 17:38:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B2ED18FB5B
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Mar 2020 18:22:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727494AbgCWQis (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 23 Mar 2020 12:38:48 -0400
-Received: from mga12.intel.com ([192.55.52.136]:30481 "EHLO mga12.intel.com"
+        id S1727724AbgCWRWC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 23 Mar 2020 13:22:02 -0400
+Received: from foss.arm.com ([217.140.110.172]:52460 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727234AbgCWQis (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 23 Mar 2020 12:38:48 -0400
-IronPort-SDR: Rriv0Z8hJsGqsw3IoOkPAtgtiPO6JHB23PHs7p4zPBv+48a/GJlbM73vt8QMk6fMAwnqRW4mjh
- p3JleAiIVMMg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 09:38:46 -0700
-IronPort-SDR: BNtv86v3w8JwvH4wJojnjAtNBR5zND3RBh/ddNAj1/0KWdAuOS7J1X36McxoHrFDWlrsVZa05+
- xW30ri8rHyMA==
-X-IronPort-AV: E=Sophos;i="5.72,297,1580803200"; 
-   d="scan'208";a="269933222"
-Received: from smtp.ostc.intel.com ([10.54.29.231])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 09:38:45 -0700
-Received: from localhost (mtg-dev.jf.intel.com [10.54.74.10])
-        by smtp.ostc.intel.com (Postfix) with ESMTP id E3150636B;
-        Mon, 23 Mar 2020 16:38:43 +0000 (UTC)
-Date:   Mon, 23 Mar 2020 09:38:44 -0700
-From:   mark gross <mgross@linux.intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        linux-edac@vger.kernel.org,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-hwmon@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Takashi Iwai <tiwai@suse.com>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-crypto <linux-crypto@vger.kernel.org>
-Subject: Re: [patch 08/22] ACPI: Convert to new X86 CPU match macros
-Message-ID: <20200323163844.GB123290@mtg-dev.jf.intel.com>
-Reply-To: mgross@linux.intel.com
-References: <20200320131345.635023594@linutronix.de>
- <20200320131509.467730627@linutronix.de>
- <CAHp75VcK3tL0YayjF=CSkSkHiOpg2zOV3rdkXQWJmLZ9fmevpg@mail.gmail.com>
- <87bloqpy1x.fsf@nanos.tec.linutronix.de>
+        id S1727691AbgCWRWB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 23 Mar 2020 13:22:01 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ED1911FB;
+        Mon, 23 Mar 2020 10:22:00 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EBBEC3F7C3;
+        Mon, 23 Mar 2020 10:21:59 -0700 (PDT)
+Date:   Mon, 23 Mar 2020 17:21:49 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>, linux-pci@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: Re: [PATCH] PCI: tegra: Print -EPROBE_DEFER error message at debug
+ level
+Message-ID: <20200323172137.GA17018@e121166-lin.cambridge.arm.com>
+References: <20200319131230.3216305-1-thierry.reding@gmail.com>
+ <20200319180529.GB7433@e121166-lin.cambridge.arm.com>
+ <20200323133456.GG3883508@ulmo>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87bloqpy1x.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <20200323133456.GG3883508@ulmo>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 09:32:26PM +0100, Thomas Gleixner wrote:
-> Andy Shevchenko <andy.shevchenko@gmail.com> writes:
+On Mon, Mar 23, 2020 at 02:34:56PM +0100, Thierry Reding wrote:
+> On Thu, Mar 19, 2020 at 06:05:30PM +0000, Lorenzo Pieralisi wrote:
+> > On Thu, Mar 19, 2020 at 02:12:30PM +0100, Thierry Reding wrote:
+> > > From: Thierry Reding <treding@nvidia.com>
+> > > 
+> > > Probe deferral is an expected error condition that will usually be
+> > > recovered from. Print such error messages at debug level to make them
+> > > available for diagnostic purposes when building with debugging enabled
+> > > and hide them otherwise to not spam the kernel log with them.
+> > > 
+> > > Signed-off-by: Thierry Reding <treding@nvidia.com>
+> > > ---
+> > >  drivers/pci/controller/dwc/pcie-tegra194.c | 42 ++++++++++++++++++----
+> > >  1 file changed, 35 insertions(+), 7 deletions(-)
+> > 
+> > Hi Thierry,
+> > 
+> > what tree/branch is it based on ? I assume it may depend on some
+> > patches queued in one of my branches so please let me know and
+> > I will apply accordingly.
 > 
-> > On Fri, Mar 20, 2020 at 3:19 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> >>
-> >> The new macro set has a consistent namespace and uses C99 initializers
-> >> instead of the grufty C89 ones.
-> >>
-> >> Rename the local macro wrapper to X86_MATCH for consistency. It stays for
-> >> readability sake.
-> >
-> >> +       X86_MATCH_INTEL_FAM6_MODEL(ATOM_SILVERMONT,     NULL),
-> >> +       X86_MATCH_INTEL_FAM6_MODEL(ATOM_AIRMONT,        NULL),
-> >
-> >> -#define ICPU(model)    { X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, }
-> >> +#define X86_MATCH(model)       X86_MATCH_INTEL_FAM6_MODEL(model, NULL)
-> >
-> > Maybe we can do a generic macro to avoid all these ', NULL' repetitions?
+> Hi Lorenzo,
 > 
-> I opted for having the data argument everywhere to keep the macro maze
-> small. And we have enough places where data is actually used.
-+1
+> This should apply on top of commit 5b645b7fade9 ("PCI: tegra: Add
+> support for PCIe endpoint mode in Tegra194") which is currently in
+> linux-next.
+> 
+> Looking at your "pci" tree, that commit seems to be in a branch
+> called pci/endpoint, though the equivalent commit there has a slightly
+> different SHA:
+> 
+>     f4746b0ccef9 ("PCI: tegra: Add support for PCIe endpoint mode in Tegra194")
+> 
+> git range-diff shows that the only difference is that in the patch in
+> linux-next there are a couple of additional exported symbols that are
+> not in your pci/endpoint branch. That shouldn't be relevant, though,
+> since this patch touches another area of the code, so applying this to
+> your pci/endpoint branch should work.
 
---mark
+Applied to pci/endpoint, thanks !
 
-> Thanks,
+Lorenzo
+
+> Thierry
 > 
->         tglx
+> > > diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+> > > index 97d3f3db1020..e4870fa6ce9c 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> > > +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> > > @@ -1159,17 +1159,31 @@ static int tegra_pcie_dw_parse_dt(struct tegra_pcie_dw *pcie)
+> > >  	/* Endpoint mode specific DT entries */
+> > >  	pcie->pex_rst_gpiod = devm_gpiod_get(pcie->dev, "reset", GPIOD_IN);
+> > >  	if (IS_ERR(pcie->pex_rst_gpiod)) {
+> > > -		dev_err(pcie->dev, "Failed to get PERST GPIO: %ld\n",
+> > > -			PTR_ERR(pcie->pex_rst_gpiod));
+> > > -		return PTR_ERR(pcie->pex_rst_gpiod);
+> > > +		int err = PTR_ERR(pcie->pex_rst_gpiod);
+> > > +		const char *level = KERN_ERR;
+> > > +
+> > > +		if (err == -EPROBE_DEFER)
+> > > +			level = KERN_DEBUG;
+> > > +
+> > > +		dev_printk(level, pcie->dev,
+> > > +			   dev_fmt("Failed to get PERST GPIO: %d\n"),
+> > > +			   err);
+> > > +		return err;
+> > >  	}
+> > >  
+> > >  	pcie->pex_refclk_sel_gpiod = devm_gpiod_get(pcie->dev,
+> > >  						    "nvidia,refclk-select",
+> > >  						    GPIOD_OUT_HIGH);
+> > >  	if (IS_ERR(pcie->pex_refclk_sel_gpiod)) {
+> > > -		dev_info(pcie->dev, "Failed to get REFCLK select GPIOs: %ld\n",
+> > > -			 PTR_ERR(pcie->pex_refclk_sel_gpiod));
+> > > +		int err = PTR_ERR(pcie->pex_refclk_sel_gpiod);
+> > > +		const char *level = KERN_ERR;
+> > > +
+> > > +		if (err == -EPROBE_DEFER)
+> > > +			level = KERN_DEBUG;
+> > > +
+> > > +		dev_printk(level, pcie->dev,
+> > > +			   dev_fmt("Failed to get REFCLK select GPIOs: %d\n"),
+> > > +			   err);
+> > >  		pcie->pex_refclk_sel_gpiod = NULL;
+> > >  	}
+> > >  
+> > > @@ -2058,13 +2072,27 @@ static int tegra_pcie_dw_probe(struct platform_device *pdev)
+> > >  
+> > >  	ret = tegra_pcie_dw_parse_dt(pcie);
+> > >  	if (ret < 0) {
+> > > -		dev_err(dev, "Failed to parse device tree: %d\n", ret);
+> > > +		const char *level = KERN_ERR;
+> > > +
+> > > +		if (ret == -EPROBE_DEFER)
+> > > +			level = KERN_DEBUG;
+> > > +
+> > > +		dev_printk(level, dev,
+> > > +			   dev_fmt("Failed to parse device tree: %d\n"),
+> > > +			   ret);
+> > >  		return ret;
+> > >  	}
+> > >  
+> > >  	ret = tegra_pcie_get_slot_regulators(pcie);
+> > >  	if (ret < 0) {
+> > > -		dev_err(dev, "Failed to get slot regulators: %d\n", ret);
+> > > +		const char *level = KERN_ERR;
+> > > +
+> > > +		if (ret == -EPROBE_DEFER)
+> > > +			level = KERN_DEBUG;
+> > > +
+> > > +		dev_printk(level, dev,
+> > > +			   dev_fmt("Failed to get slot regulators: %d\n"),
+> > > +			   ret);
+> > >  		return ret;
+> > >  	}
+> > >  
+> > > -- 
+> > > 2.24.1
+> > > 
+
+
