@@ -2,156 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 60B20190099
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Mar 2020 22:46:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B889319010C
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Mar 2020 23:28:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726618AbgCWVq5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 23 Mar 2020 17:46:57 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:60887 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725897AbgCWVq5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 23 Mar 2020 17:46:57 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585000016; h=Content-Transfer-Encoding: Content-Type:
- MIME-Version: Message-ID: Date: Subject: In-Reply-To: References: Cc:
- To: From: Reply-To: Sender;
- bh=ZNpFv8n1vyNtNLXdZYwI5uo1FnppFNp10NWp9MPwYDo=; b=pV5wXOXNdhL3eVZsNo55Jkdbpsbs42F62/xWygxj9c/eYVWMohS4o+mhwlvJyHV24YPdMjaD
- W16jdED42Kc62TXTAAsR+FdFaDvndEXAjROPVUy+eo1TudXeGAQNEUZhH9VsoRGIpVCU/yYV
- SHklrUiCw9e2cryiSqklyZqDZbg=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI2YzdiNyIsICJsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e792e33.7f2b61a663b0-smtp-out-n02;
- Mon, 23 Mar 2020 21:46:27 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 31ABCC44798; Mon, 23 Mar 2020 21:46:24 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        aws-us-west-2-caf-mail-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=2.0 tests=ALL_TRUSTED,SPF_NONE,
-        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
-Received: from BCAIN (104-54-226-75.lightspeed.austtx.sbcglobal.net [104.54.226.75])
+        id S1727030AbgCWW2G (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 23 Mar 2020 18:28:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46834 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725897AbgCWW2G (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 23 Mar 2020 18:28:06 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: bcain)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0630CC433CB;
-        Mon, 23 Mar 2020 21:46:18 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0630CC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bcain@codeaurora.org
-Reply-To: <bcain@codeaurora.org>
-From:   "Brian Cain" <bcain@codeaurora.org>
-To:     "'Thomas Gleixner'" <tglx@linutronix.de>,
-        "'LKML'" <linux-kernel@vger.kernel.org>
-Cc:     "'Peter Zijlstra'" <peterz@infradead.org>,
-        "'Ingo Molnar'" <mingo@kernel.org>,
-        "'Sebastian Siewior'" <bigeasy@linutronix.de>,
-        "'Linus Torvalds'" <torvalds@linux-foundation.org>,
-        "'Joel Fernandes'" <joel@joelfernandes.org>,
-        "'Oleg Nesterov'" <oleg@redhat.com>,
-        "'Davidlohr Bueso'" <dave@stgolabs.net>,
-        "'kbuild test robot'" <lkp@intel.com>,
-        <linux-hexagon@vger.kernel.org>,
-        "'Logan Gunthorpe'" <logang@deltatee.com>,
-        "'Bjorn Helgaas'" <bhelgaas@google.com>,
-        "'Kurt Schwemmer'" <kurt.schwemmer@microsemi.com>,
-        <linux-pci@vger.kernel.org>,
-        "'Greg Kroah-Hartman'" <gregkh@linuxfoundation.org>,
-        "'Felipe Balbi'" <balbi@kernel.org>, <linux-usb@vger.kernel.org>,
-        "'Kalle Valo'" <kvalo@codeaurora.org>,
-        "'David S. Miller'" <davem@davemloft.net>,
-        <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
-        "'Darren Hart'" <dvhart@infradead.org>,
-        "'Andy Shevchenko'" <andy@infradead.org>,
-        <platform-driver-x86@vger.kernel.org>,
-        "'Zhang Rui'" <rui.zhang@intel.com>,
-        "'Rafael J. Wysocki'" <rafael.j.wysocki@intel.com>,
-        <linux-pm@vger.kernel.org>, "'Len Brown'" <lenb@kernel.org>,
-        <linux-acpi@vger.kernel.org>, "'Nick Hu'" <nickhu@andestech.com>,
-        "'Greentime Hu'" <green.hu@gmail.com>,
-        "'Vincent Chen'" <deanbo422@gmail.com>,
-        "'Guo Ren'" <guoren@kernel.org>, <linux-csky@vger.kernel.org>,
-        "'Tony Luck'" <tony.luck@intel.com>,
-        "'Fenghua Yu'" <fenghua.yu@intel.com>,
-        <linux-ia64@vger.kernel.org>, "'Michal Simek'" <monstr@monstr.eu>,
-        "'Michael Ellerman'" <mpe@ellerman.id.au>,
-        "'Arnd Bergmann'" <arnd@arndb.de>,
-        "'Geoff Levand'" <geoff@infradead.org>,
-        <linuxppc-dev@lists.ozlabs.org>,
-        "'Paul E . McKenney'" <paulmck@kernel.org>,
-        "'Jonathan Corbet'" <corbet@lwn.net>,
-        "'Randy Dunlap'" <rdunlap@infradead.org>,
-        "'Davidlohr Bueso'" <dbueso@suse.de>
-References: <20200321112544.878032781@linutronix.de> <20200321113241.531525286@linutronix.de>
-In-Reply-To: <20200321113241.531525286@linutronix.de>
-Subject: RE: [patch V3 08/20] hexagon: Remove mm.h from asm/uaccess.h
-Date:   Mon, 23 Mar 2020 16:46:17 -0500
-Message-ID: <0cc301d6015c$7e756490$7b602db0$@codeaurora.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id BCD592073E;
+        Mon, 23 Mar 2020 22:28:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585002486;
+        bh=5jbRyzIrpZi5AB3gcfUvLN33piIdLeAYX6GbVsr40TM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=oolZXOmmHqEDJUqAQdCNL7T/WEoOIdpOjepOSCgEqOdPJBdACpQ1sRmYV80Wj/zFH
+         TmeEYwsznJUItzzjd+EDUScIxkTiIvd0DiNna8TDZsidboJmmXDmhSIlDL4OFmftdz
+         +8AUKIkb80r6efHcmI7u6QpDI3VuTgAdf5XVntuo=
+Date:   Mon, 23 Mar 2020 17:28:03 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Saravana Kannan <saravanak@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1] driver core: Add device links from fwnode only for
+ the primary device
+Message-ID: <20200323222803.GA21243@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: en-us
-Thread-Index: AQHqwg4Cse+u7XkWseF638AEhQYwggGRIliZqCCrVyA=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0ju-rOU6TF9HDScXvV9N02wuJT9d3cLkoyEdd1xL6Kfbw@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> -----Original Message-----
-> From: Thomas Gleixner <tglx@linutronix.de>
-...
-> Subject: [patch V3 08/20] hexagon: Remove mm.h from asm/uaccess.h
+On Sat, Mar 21, 2020 at 11:20:07AM +0100, Rafael J. Wysocki wrote:
+> On Sat, Mar 21, 2020 at 5:55 AM Saravana Kannan <saravanak@google.com> wrote:
+> >
+> > Sometimes, more than one (generally two) device can point to the same
+> > fwnode.  However, only one device is set as the fwnode's device
+> > (fwnode->dev) and can be looked up from the fwnode.
+> >
+> > Typically, only one of these devices actually have a driver and actually
+> > probe. If we create device links for all these devices, then the
+> > suppliers' of these devices (with the same fwnode) will never get a
+> > sync_state() call because one of their consumer devices will never probe
+> > (because they don't have a driver).
+> >
+> > So, create device links only for the device that is considered as the
+> > fwnode's device.
+> >
+> > One such example of this is the PCI bridge platform_device and the
+> > corresponding pci_bus device. Both these devices will have the same
+> > fwnode. It's the platform_device that is registered first and is set as
+> > the fwnode's device. Also the platform_device is the one that actually
+> > probes. Without this patch none of the suppliers of a PCI bridge
+> > platform_device would get a sync_state() callback.
 > 
-> From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> 
-> The defconfig compiles without linux/mm.h. With mm.h included the include
-> chain leands to:
-> |   CC      kernel/locking/percpu-rwsem.o
-> | In file included from include/linux/huge_mm.h:8,
-> |                  from include/linux/mm.h:567,
-> |                  from arch/hexagon/include/asm/uaccess.h:,
-> |                  from include/linux/uaccess.h:11,
-> |                  from include/linux/sched/task.h:11,
-> |                  from include/linux/sched/signal.h:9,
-> |                  from include/linux/rcuwait.h:6,
-> |                  from include/linux/percpu-rwsem.h:8,
-> |                  from kernel/locking/percpu-rwsem.c:6:
-> | include/linux/fs.h:1422:29: error: array type has incomplete element type
-> 'struct percpu_rw_semaphore'
-> |  1422 |  struct percpu_rw_semaphore rw_sem[SB_FREEZE_LEVELS];
-> 
-> once rcuwait.h includes linux/sched/signal.h.
-> 
-> Remove the linux/mm.h include.
-> 
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Brian Cain <bcain@codeaurora.org>
-> Cc: linux-hexagon@vger.kernel.org
-> ---
-> V3: New patch
-> ---
->  arch/hexagon/include/asm/uaccess.h | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/arch/hexagon/include/asm/uaccess.h
-> b/arch/hexagon/include/asm/uaccess.h
-> index 00cb38faad0c4..c1019a736ff13 100644
-> --- a/arch/hexagon/include/asm/uaccess.h
-> +++ b/arch/hexagon/include/asm/uaccess.h
-> @@ -10,7 +10,6 @@
->  /*
->   * User space memory access functions
->   */
-> -#include <linux/mm.h>
->  #include <asm/sections.h>
-> 
->  /*
-> --
-> 2.26.0.rc2
-> 
+> For the record, I think that this is a PCI subsystem problem, but I
+> agree with the patch here.
 
-Acked-by: Brian Cain <bcain@codeaurora.org>
+I don't understand the issue here.  Can somebody educate me?  I'm
+guessing this is related to pci_set_bus_of_node(), which does (for
+PCI-to-PCI bridges):
+
+  bus->dev.of_node = of_node_get(bus->self->dev.of_node);
+  bus->dev.fwnode = &bus->dev.of_node->fwnode;
+
+where "bus" points to a struct pci_bus and "bus->self" points to the
+struct pci_dev for the bridge leading to the bus?
+
+Is this related to the fact that we have a struct device for both a
+PCI-to-PCI bridge and for its downstream bus?
+
+Any suggestions for how could we fix this problem in the PCI
+subsystem?
