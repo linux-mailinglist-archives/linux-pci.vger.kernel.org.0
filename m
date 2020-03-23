@@ -2,109 +2,156 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F6C218FF8E
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Mar 2020 21:30:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 60B20190099
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Mar 2020 22:46:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726007AbgCWUaV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 23 Mar 2020 16:30:21 -0400
-Received: from mga06.intel.com ([134.134.136.31]:11811 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725861AbgCWUaV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 23 Mar 2020 16:30:21 -0400
-IronPort-SDR: EIe0z9UU55lvcgLkc0CGIWwsl3BFT+UlJPzz6OW6z94dDrjHMuRMalT/ll43YavhKs9Posl+rA
- vw4to6WlQZtg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 13:30:19 -0700
-IronPort-SDR: u0y+0KfEtG7Cldjsc46myTlWA9tJSlflb5DJQ5D9qwVfBGWGidERbEcpKiJO3JWUQBfHJ9PsqM
- Aa7kUi51Zv9g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,297,1580803200"; 
-   d="scan'208";a="240039032"
-Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.170]) ([10.237.72.170])
-  by orsmga008.jf.intel.com with ESMTP; 23 Mar 2020 13:30:17 -0700
-Subject: Re: MSI interrupt for xhci still lost on 5.6-rc6 after cpu hotplug
-To:     Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org
-Cc:     linux-pci <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Evan Green <evgreen@chromium.org>,
-        "Ghorai, Sukumar" <sukumar.ghorai@intel.com>,
-        "Amara, Madhusudanarao" <madhusudanarao.amara@intel.com>,
-        "Nandamuri, Srikanth" <srikanth.nandamuri@intel.com>
-References: <806c51fa-992b-33ac-61a9-00a606f82edb@linux.intel.com>
- <87d0974akk.fsf@nanos.tec.linutronix.de>
- <b9fbd55a-7f97-088d-2cc2-4e4ea86d9440@linux.intel.com>
- <87r1xjp3gn.fsf@nanos.tec.linutronix.de>
-From:   Mathias Nyman <mathias.nyman@linux.intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mathias.nyman@linux.intel.com; prefer-encrypt=mutual; keydata=
- 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 fiD/
-Message-ID: <f8057cbc-4814-5083-cddd-d4eb1459529f@linux.intel.com>
-Date:   Mon, 23 Mar 2020 22:32:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726618AbgCWVq5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 23 Mar 2020 17:46:57 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:60887 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725897AbgCWVq5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 23 Mar 2020 17:46:57 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585000016; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Message-ID: Date: Subject: In-Reply-To: References: Cc:
+ To: From: Reply-To: Sender;
+ bh=ZNpFv8n1vyNtNLXdZYwI5uo1FnppFNp10NWp9MPwYDo=; b=pV5wXOXNdhL3eVZsNo55Jkdbpsbs42F62/xWygxj9c/eYVWMohS4o+mhwlvJyHV24YPdMjaD
+ W16jdED42Kc62TXTAAsR+FdFaDvndEXAjROPVUy+eo1TudXeGAQNEUZhH9VsoRGIpVCU/yYV
+ SHklrUiCw9e2cryiSqklyZqDZbg=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI2YzdiNyIsICJsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e792e33.7f2b61a663b0-smtp-out-n02;
+ Mon, 23 Mar 2020 21:46:27 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 31ABCC44798; Mon, 23 Mar 2020 21:46:24 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.0 required=2.0 tests=ALL_TRUSTED,SPF_NONE,
+        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+Received: from BCAIN (104-54-226-75.lightspeed.austtx.sbcglobal.net [104.54.226.75])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bcain)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0630CC433CB;
+        Mon, 23 Mar 2020 21:46:18 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0630CC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bcain@codeaurora.org
+Reply-To: <bcain@codeaurora.org>
+From:   "Brian Cain" <bcain@codeaurora.org>
+To:     "'Thomas Gleixner'" <tglx@linutronix.de>,
+        "'LKML'" <linux-kernel@vger.kernel.org>
+Cc:     "'Peter Zijlstra'" <peterz@infradead.org>,
+        "'Ingo Molnar'" <mingo@kernel.org>,
+        "'Sebastian Siewior'" <bigeasy@linutronix.de>,
+        "'Linus Torvalds'" <torvalds@linux-foundation.org>,
+        "'Joel Fernandes'" <joel@joelfernandes.org>,
+        "'Oleg Nesterov'" <oleg@redhat.com>,
+        "'Davidlohr Bueso'" <dave@stgolabs.net>,
+        "'kbuild test robot'" <lkp@intel.com>,
+        <linux-hexagon@vger.kernel.org>,
+        "'Logan Gunthorpe'" <logang@deltatee.com>,
+        "'Bjorn Helgaas'" <bhelgaas@google.com>,
+        "'Kurt Schwemmer'" <kurt.schwemmer@microsemi.com>,
+        <linux-pci@vger.kernel.org>,
+        "'Greg Kroah-Hartman'" <gregkh@linuxfoundation.org>,
+        "'Felipe Balbi'" <balbi@kernel.org>, <linux-usb@vger.kernel.org>,
+        "'Kalle Valo'" <kvalo@codeaurora.org>,
+        "'David S. Miller'" <davem@davemloft.net>,
+        <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
+        "'Darren Hart'" <dvhart@infradead.org>,
+        "'Andy Shevchenko'" <andy@infradead.org>,
+        <platform-driver-x86@vger.kernel.org>,
+        "'Zhang Rui'" <rui.zhang@intel.com>,
+        "'Rafael J. Wysocki'" <rafael.j.wysocki@intel.com>,
+        <linux-pm@vger.kernel.org>, "'Len Brown'" <lenb@kernel.org>,
+        <linux-acpi@vger.kernel.org>, "'Nick Hu'" <nickhu@andestech.com>,
+        "'Greentime Hu'" <green.hu@gmail.com>,
+        "'Vincent Chen'" <deanbo422@gmail.com>,
+        "'Guo Ren'" <guoren@kernel.org>, <linux-csky@vger.kernel.org>,
+        "'Tony Luck'" <tony.luck@intel.com>,
+        "'Fenghua Yu'" <fenghua.yu@intel.com>,
+        <linux-ia64@vger.kernel.org>, "'Michal Simek'" <monstr@monstr.eu>,
+        "'Michael Ellerman'" <mpe@ellerman.id.au>,
+        "'Arnd Bergmann'" <arnd@arndb.de>,
+        "'Geoff Levand'" <geoff@infradead.org>,
+        <linuxppc-dev@lists.ozlabs.org>,
+        "'Paul E . McKenney'" <paulmck@kernel.org>,
+        "'Jonathan Corbet'" <corbet@lwn.net>,
+        "'Randy Dunlap'" <rdunlap@infradead.org>,
+        "'Davidlohr Bueso'" <dbueso@suse.de>
+References: <20200321112544.878032781@linutronix.de> <20200321113241.531525286@linutronix.de>
+In-Reply-To: <20200321113241.531525286@linutronix.de>
+Subject: RE: [patch V3 08/20] hexagon: Remove mm.h from asm/uaccess.h
+Date:   Mon, 23 Mar 2020 16:46:17 -0500
+Message-ID: <0cc301d6015c$7e756490$7b602db0$@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <87r1xjp3gn.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+        charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: en-us
+Thread-Index: AQHqwg4Cse+u7XkWseF638AEhQYwggGRIliZqCCrVyA=
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 23.3.2020 16.10, Thomas Gleixner wrote:
+> -----Original Message-----
+> From: Thomas Gleixner <tglx@linutronix.de>
+...
+> Subject: [patch V3 08/20] hexagon: Remove mm.h from asm/uaccess.h
 > 
-> thanks for providing the data. I think I decoded the issue. Can you
-> please test the patch below?
+> From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> 
+> The defconfig compiles without linux/mm.h. With mm.h included the include
+> chain leands to:
+> |   CC      kernel/locking/percpu-rwsem.o
+> | In file included from include/linux/huge_mm.h:8,
+> |                  from include/linux/mm.h:567,
+> |                  from arch/hexagon/include/asm/uaccess.h:,
+> |                  from include/linux/uaccess.h:11,
+> |                  from include/linux/sched/task.h:11,
+> |                  from include/linux/sched/signal.h:9,
+> |                  from include/linux/rcuwait.h:6,
+> |                  from include/linux/percpu-rwsem.h:8,
+> |                  from kernel/locking/percpu-rwsem.c:6:
+> | include/linux/fs.h:1422:29: error: array type has incomplete element type
+> 'struct percpu_rw_semaphore'
+> |  1422 |  struct percpu_rw_semaphore rw_sem[SB_FREEZE_LEVELS];
+> 
+> once rcuwait.h includes linux/sched/signal.h.
+> 
+> Remove the linux/mm.h include.
+> 
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Brian Cain <bcain@codeaurora.org>
+> Cc: linux-hexagon@vger.kernel.org
+> ---
+> V3: New patch
+> ---
+>  arch/hexagon/include/asm/uaccess.h | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/arch/hexagon/include/asm/uaccess.h
+> b/arch/hexagon/include/asm/uaccess.h
+> index 00cb38faad0c4..c1019a736ff13 100644
+> --- a/arch/hexagon/include/asm/uaccess.h
+> +++ b/arch/hexagon/include/asm/uaccess.h
+> @@ -10,7 +10,6 @@
+>  /*
+>   * User space memory access functions
+>   */
+> -#include <linux/mm.h>
+>  #include <asm/sections.h>
+> 
+>  /*
+> --
+> 2.26.0.rc2
 > 
 
-Unfortunately it didn't help.
-Traces added to xhci_trace2.tgz in the same place
-
-https://drive.google.com/drive/folders/19AFZe32DYk4Kzxi8VYv-OWmNOCyIY6M5?usp=sharing
-
-Thanks
--Mathias
+Acked-by: Brian Cain <bcain@codeaurora.org>
