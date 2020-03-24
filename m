@@ -2,154 +2,231 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 588C819037A
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Mar 2020 02:58:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CF13A190394
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Mar 2020 03:31:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbgCXB6a (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 23 Mar 2020 21:58:30 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:48382 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727102AbgCXB63 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 23 Mar 2020 21:58:29 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02O1wQvI077892;
-        Mon, 23 Mar 2020 20:58:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1585015106;
-        bh=UGNdoO9PrQaL5eUpIkxf+ZPzJ0BOOpjYJn8zqTSFIRw=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=YjTI1lAP9bfZdMgC4hhfPnNkA5sylibZvvF2waWx4dw1RdW0/X72JVtl3dKvOgwqD
-         llQiVeXc9TYhmvSeAGxlow5r+PzazEyyqsjKRIbJjLtTl3NgGSWbIgEbyg1L1Q2ZUT
-         RCdhSvndYtR1pfprY6T2LS7kH9gM9KN12L0rHTpo=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02O1wQjK040750
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 23 Mar 2020 20:58:26 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 23
- Mar 2020 20:58:26 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 23 Mar 2020 20:58:26 -0500
-Received: from [10.250.133.193] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02O1wMHQ120993;
-        Mon, 23 Mar 2020 20:58:23 -0500
-Subject: Re: PCIe EPF
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci <linux-pci@vger.kernel.org>
-References: <CA+V-a8vOwwCjRnFZ_Cxtvep1nLMXd5AjOyJyispg1A1k_ExbSQ@mail.gmail.com>
- <e5570897-0566-6cce-9af2-8be23fb0d3ef@ti.com>
- <CA+V-a8ssdO9R_wHbJM8RinzP5d7YX5KWES20G-TV0XnCx4SUeA@mail.gmail.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <83024641-7bd3-b47f-cd2c-0d831279086d@ti.com>
-Date:   Tue, 24 Mar 2020 07:28:21 +0530
+        id S1727063AbgCXCbl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 23 Mar 2020 22:31:41 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:33656 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726824AbgCXCbl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 23 Mar 2020 22:31:41 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id BCD97A6D8FBA24A1F4F5;
+        Tue, 24 Mar 2020 10:31:36 +0800 (CST)
+Received: from [127.0.0.1] (10.173.220.137) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Tue, 24 Mar 2020
+ 10:31:27 +0800
+Subject: Re: [PATCH] PCI/AER: increments pci bus reference count in aer-inject
+ process
+To:     <bhelgaas@google.com>, <lukas@wunner.de>, <keith.busch@intel.com>,
+        <andy.shevchenko@gmail.com>, <rafael.j.wysocki@intel.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <guohanjun@huawei.com>, <huawei.libin@huawei.com>,
+        <lvying6@huawei.com>
+References: <1578738899-11408-1-git-send-email-wangxiongfeng2@huawei.com>
+From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Message-ID: <7747a43e-00cb-6b84-941b-b73a64f85e0c@huawei.com>
+Date:   Tue, 24 Mar 2020 10:31:27 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <CA+V-a8ssdO9R_wHbJM8RinzP5d7YX5KWES20G-TV0XnCx4SUeA@mail.gmail.com>
+In-Reply-To: <1578738899-11408-1-git-send-email-wangxiongfeng2@huawei.com>
 Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Originating-IP: [10.173.220.137]
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Prabhakar,
+Kindly Ping ...
 
-On 3/22/2020 4:19 AM, Lad, Prabhakar wrote:
-> Hi Kishon,
-> 
-> On Fri, Mar 20, 2020 at 5:28 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>
->> Hi Prabhakar,
->>
->> On 3/18/2020 5:07 PM, Lad, Prabhakar wrote:
->>> Hi Kishon,
->>>
->>> I rebased my rcar-endpoint patches on endpoint branch, which has
->>> support for streaming DMA API support, with this  read/write/copy
->>> tests failed, to make sure nothing hasn't changed on my driver I
->>> reverted the streaming DMA API patch
->>> 74b9b4da84c71418ceeaaeb78dc790376df92fea "misc: pci_endpoint_test: Use
->>> streaming DMA APIs for buffer allocation" and tests began to pass
->>> again.
->>>
->>> If add a GFP_DMA flag for kzalloc (with streaming DMA), the test cases
->>> for read/write/copy pass as expected.
->>>
->>> Could you please through some light why this could be happening.
->>
->> Do you see any differences in the address returned by dma_map_single() like is
->> it 32-bit address or 64-bit address?
->>
-> Both return 32 bit address, debugging further I see that with
-> GFP_KERNEL flag for small buffer
-> sizes the read/write/copy tests pass(upto 4k), so I am suspecting its
-> related to caching probably.
-> Also adding wmb()/rmb() just with GFP_KERNEL flag didn't help. Note I
-> am using PIO transfers.
-> Any thoughts on how we tackle it ?
-> 
-> # With GFP_KERNEL flag
-> root@hihope-rzg2m:~# pcitest -r
-> [   46.210649] pci-endpoint-test 0000:01:00.0: pci_endpoint_test_read
-> kzalloc:ffff0004b4ae0000 dma:7e99d000 align:ffff0004b4ae0000
-> READ ( 102400 bytes):           NOT OKAY
-> root@hihope-rzg2m:~# pcitest -r
-> [   51.880063] pci-endpoint-test 0000:01:00.0: pci_endpoint_test_read
-> kzalloc:ffff0004b4ae0000 dma:7e9c0000 align:ffff0004b4ae0000
-> READ ( 102400 bytes):           OKAY
+Thanks,
+Xiongfeng
 
-Here one of the read test is passing and the other is failing.
-For the 1st case dma:7e99d000, address is aligned to 4K
-For the 2nd case dma:7e9c0000, address is aligned to 256K
+On 2020/1/11 18:34, Xiongfeng Wang wrote:
+> When I test 'aer-inject' with the following procedures:
+> 1. inject a fatal error into a PCI device
+> 2. remove the parent device by sysfs
+> 3. execute command 'rmmod aer-inject'
+> 
+> I came across the following use-after-free.
+> 
+> [  297.581524] ==================================================================
+> [  297.581543] BUG: KASAN: use-after-free in pci_bus_set_ops+0xb4/0xb8
+> [  297.581545] Read of size 8 at addr ffff802edbde80e0 by task rmmod/21839
+> 
+> [  297.581552] CPU: 119 PID: 21839 Comm: rmmod Kdump: loaded Not tainted 4.19.36 #1
+> [  297.581554] Hardware name: Huawei TaiShan 2280 V2/BC82AMDD, BIOS 1.05 09/18/2019
+> [  297.581556] Call trace:
+> [  297.581561]  dump_backtrace+0x0/0x360
+> [  297.581563]  show_stack+0x24/0x30
+> [  297.581569]  dump_stack+0xd8/0x104
+> [  297.581576]  print_address_description+0x68/0x278
+> [  297.581578]  kasan_report+0x204/0x330
+> [  297.581580]  __asan_report_load8_noabort+0x30/0x40
+> [  297.581582]  pci_bus_set_ops+0xb4/0xb8
+> [  297.581591]  aer_inject_exit+0x198/0x334 [aer_inject]
+> [  297.581595]  __arm64_sys_delete_module+0x310/0x490
+> [  297.581601]  el0_svc_common+0xfc/0x278
+> [  297.581603]  el0_svc_handler+0x50/0xc0
+> [  297.581605]  el0_svc+0x8/0xc
+> 
+> [  297.581608] Allocated by task 1:
+> [  297.581611]  kasan_kmalloc+0xe0/0x190
+> [  297.581614]  kmem_cache_alloc_trace+0x104/0x218
+> [  297.581616]  pci_alloc_bus+0x50/0x2e0
+> [  297.581618]  pci_add_new_bus+0xa8/0xe08
+> [  297.581620]  pci_scan_bridge_extend+0x884/0xb28
+> [  297.581623]  pci_scan_child_bus_extend+0x350/0x628
+> [  297.581625]  pci_scan_child_bus+0x24/0x30
+> [  297.581627]  pci_scan_bridge_extend+0x3b8/0xb28
+> [  297.581629]  pci_scan_child_bus_extend+0x350/0x628
+> [  297.581631]  pci_scan_child_bus+0x24/0x30
+> [  297.581635]  acpi_pci_root_create+0x558/0x888
+> [  297.581640]  pci_acpi_scan_root+0x198/0x330
+> [  297.581641]  acpi_pci_root_add+0x7bc/0xbb0
+> [  297.581646]  acpi_bus_attach+0x2f4/0x728
+> [  297.581647]  acpi_bus_attach+0x1b0/0x728
+> [  297.581649]  acpi_bus_attach+0x1b0/0x728
+> [  297.581651]  acpi_bus_scan+0xa0/0x110
+> [  297.581657]  acpi_scan_init+0x20c/0x500
+> [  297.581659]  acpi_init+0x54c/0x5d4
+> [  297.581661]  do_one_initcall+0xbc/0x480
+> [  297.581665]  kernel_init_freeable+0x5fc/0x6ac
+> [  297.581670]  kernel_init+0x18/0x128
+> [  297.581671]  ret_from_fork+0x10/0x18
+> 
+> [  297.581673] Freed by task 19270:
+> [  297.581675]  __kasan_slab_free+0x120/0x228
+> [  297.581677]  kasan_slab_free+0x10/0x18
+> [  297.581678]  kfree+0x80/0x1f8
+> [  297.581680]  release_pcibus_dev+0x54/0x68
+> [  297.581686]  device_release+0xd4/0x1c0
+> [  297.581689]  kobject_put+0x12c/0x400
+> [  297.581691]  device_unregister+0x30/0xc0
+> [  297.581693]  pci_remove_bus+0xe8/0x1c0
+> [  297.581695]  pci_remove_bus_device+0xd0/0x2f0
+> [  297.581697]  pci_stop_and_remove_bus_device_locked+0x2c/0x40
+> [  297.581701]  remove_store+0x1b8/0x1d0
+> [  297.581703]  dev_attr_store+0x60/0x80
+> [  297.581708]  sysfs_kf_write+0x104/0x170
+> [  297.581710]  kernfs_fop_write+0x23c/0x430
+> [  297.581713]  __vfs_write+0xec/0x4e0
+> [  297.581714]  vfs_write+0x12c/0x3d0
+> [  297.581715]  ksys_write+0xd0/0x190
+> [  297.581716]  __arm64_sys_write+0x70/0xa0
+> [  297.581718]  el0_svc_common+0xfc/0x278
+> [  297.581720]  el0_svc_handler+0x50/0xc0
+> [  297.581721]  el0_svc+0x8/0xc
+> 
+> [  297.581724] The buggy address belongs to the object at ffff802edbde8000
+>                 which belongs to the cache kmalloc-2048 of size 2048
+> [  297.581726] The buggy address is located 224 bytes inside of
+>                 2048-byte region [ffff802edbde8000, ffff802edbde8800)
+> [  297.581727] The buggy address belongs to the page:
+> [  297.581730] page:ffff7e00bb6f7a00 count:1 mapcount:0 mapping:ffff8026de810780 index:0x0 compound_mapcount: 0
+> [  297.591520] flags: 0x2ffffe0000008100(slab|head)
+> [  297.596121] raw: 2ffffe0000008100 ffff7e00bb6f5008 ffff7e00bb6ff608 ffff8026de810780
+> [  297.596123] raw: 0000000000000000 00000000000f000f 00000001ffffffff 0000000000000000
+> [  297.596124] page dumped because: kasan: bad access detected
+> 
+> [  297.596126] Memory state around the buggy address:
+> [  297.596128]  ffff802edbde7f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+> [  297.596129]  ffff802edbde8000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> [  297.596131] >ffff802edbde8080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> [  297.596132]                                                        ^
+> [  297.596133]  ffff802edbde8100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> [  297.596135]  ffff802edbde8180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> [  297.596135] ==================================================================
+> 
+> It is because when we unload the module and restore the member 'pci_ops'
+> of 'pci_bus', the 'pci_bus' has been freed. This patch increments the
+> reference count of 'pci_bus' when we modify its member 'pci_ops' and
+> decrements the reference count after we have restored its member.
+> 
+> This patch export pci_bus_get() and pci_bus_put() again and reverts the
+> following two commits.
+> fae6b93b19b4 ("PCI: Unexport pci_bus_get() and pci_bus_put()")
+> ecd29c1a38af ("PCI: Make pci_bus_get(), pci_bus_put() private")
+> 
+> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+> ---
+>  drivers/pci/bus.c             | 2 ++
+>  drivers/pci/pci.h             | 2 --
+>  drivers/pci/pcie/aer_inject.c | 8 ++++++++
+>  include/linux/pci.h           | 2 ++
+>  4 files changed, 12 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
+> index 8e40b3e..495059d 100644
+> --- a/drivers/pci/bus.c
+> +++ b/drivers/pci/bus.c
+> @@ -417,9 +417,11 @@ struct pci_bus *pci_bus_get(struct pci_bus *bus)
+>  		get_device(&bus->dev);
+>  	return bus;
+>  }
+> +EXPORT_SYMBOL(pci_bus_get);
+>  
+>  void pci_bus_put(struct pci_bus *bus)
+>  {
+>  	if (bus)
+>  		put_device(&bus->dev);
+>  }
+> +EXPORT_SYMBOL(pci_bus_put);
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index a0a53bd..cf849b7 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -286,8 +286,6 @@ void __pci_bus_assign_resources(const struct pci_bus *bus,
+>  
+>  void pci_reassigndev_resource_alignment(struct pci_dev *dev);
+>  void pci_disable_bridge_window(struct pci_dev *dev);
+> -struct pci_bus *pci_bus_get(struct pci_bus *bus);
+> -void pci_bus_put(struct pci_bus *bus);
+>  
+>  /* PCIe link information */
+>  #define PCIE_SPEED2STR(speed) \
+> diff --git a/drivers/pci/pcie/aer_inject.c b/drivers/pci/pcie/aer_inject.c
+> index 6988fe7..0b6b3d0 100644
+> --- a/drivers/pci/pcie/aer_inject.c
+> +++ b/drivers/pci/pcie/aer_inject.c
+> @@ -307,6 +307,13 @@ static int pci_bus_set_aer_ops(struct pci_bus *bus)
+>  	spin_lock_irqsave(&inject_lock, flags);
+>  	if (ops == &aer_inj_pci_ops)
+>  		goto out;
+> +	/*
+> +	 * increments the reference count of the pci bus. Otherwise, when we
+> +	 * restore the 'pci_ops' in 'aer_inject_exit', the 'pci_bus' may have
+> +	 * been freed.
+> +	 */
+> +	pci_bus_get(bus);
+> +
+>  	pci_bus_ops_init(bus_ops, bus, ops);
+>  	list_add(&bus_ops->list, &pci_bus_ops_list);
+>  	bus_ops = NULL;
+> @@ -529,6 +536,7 @@ static void __exit aer_inject_exit(void)
+>  
+>  	while ((bus_ops = pci_bus_ops_pop())) {
+>  		pci_bus_set_ops(bus_ops->bus, bus_ops->ops);
+> +		pci_bus_put(bus_ops->bus);
+>  		kfree(bus_ops);
+>  	}
+>  
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index c393dff..adef0da 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -1288,6 +1288,8 @@ int pci_add_ext_cap_save_buffer(struct pci_dev *dev,
+>  void pci_release_selected_regions(struct pci_dev *, int);
+>  
+>  /* drivers/pci/bus.c */
+> +struct pci_bus *pci_bus_get(struct pci_bus *bus);
+> +void pci_bus_put(struct pci_bus *bus);
+>  void pci_add_resource(struct list_head *resources, struct resource *res);
+>  void pci_add_resource_offset(struct list_head *resources, struct resource *res,
+>  			     resource_size_t offset);
+> 
 
-I'm suspecting this could be an alignment issue. Does the outbound ATU of your
-EP has any restrictions? (like the address should be aligned to the size?).
-
-Thanks
-Kishon
-
-> root@hihope-rzg2m:~# pcitest -r
-> [   53.354830] pci-endpoint-test 0000:01:00.0: pci_endpoint_test_read
-> kzalloc:ffff0004b4ae0000 dma:7e9e2000 align:ffff0004b4ae0000
-> READ ( 102400 bytes):           NOT OKAY
-> root@hihope-rzg2m:~# pcitest -r
-> [   55.307236] pci-endpoint-test 0000:01:00.0: pci_endpoint_test_read
-> kzalloc:ffff0004b4ae0000 dma:7ea04000 align:ffff0004b4ae0000
-> READ ( 102400 bytes):           NOT OKAY
-> root@hihope-rzg2m:~# pcitest -r
-> [   57.098626] pci-endpoint-test 0000:01:00.0: pci_endpoint_test_read
-> kzalloc:ffff0004b4ae0000 dma:7ea23000 align:ffff0004b4ae0000
-> READ ( 102400 bytes):           NOT OKAY
-> 
-> # GFP_KERNEL | GFP_DMA
-> 
-> root@hihope-rzg2m:~# pcitest -r -s 1024001
-> [  174.562071] pci-endpoint-test 0000:01:00.0: pci_endpoint_test_read
-> kzalloc:ffff00003b900000 dma:7b900000 align:ffff00003b900000
-> READ (1024001 bytes):           OKAY
-> root@hihope-rzg2m:~# pcitest -r -s 16384
-> [  186.629347] pci-endpoint-test 0000:01:00.0: pci_endpoint_test_read
-> kzalloc:ffff00003b848000 dma:7b848000 align:ffff00003b848000
-> READ (  16384 bytes):           OKAY
-> root@hihope-rzg2m:~# pcitest -r -s 8192
-> [  190.578335] pci-endpoint-test 0000:01:00.0: pci_endpoint_test_read
-> kzalloc:ffff00003b840000 dma:7b840000 align:ffff00003b840000
-> READ (   8192 bytes):           OKAY
-> root@hihope-rzg2m:~# pcitest -r -s 128
-> [  199.428021] pci-endpoint-test 0000:01:00.0: pci_endpoint_test_read
-> kzalloc:ffff00003b800000 dma:7b800000 align:ffff00003b800000
-> READ (    128 bytes):           OKAY
-> root@hihope-rzg2m:~#
-> 
-> Cheers,
-> --Prabhakar
-> 
->> Thanks
->> Kishon
