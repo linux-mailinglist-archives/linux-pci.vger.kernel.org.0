@@ -2,174 +2,416 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 62F281914DD
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Mar 2020 16:42:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0521A1914B4
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Mar 2020 16:38:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728621AbgCXPh2 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Tue, 24 Mar 2020 11:37:28 -0400
-Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:25048 "EHLO
-        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728057AbgCXPh1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 24 Mar 2020 11:37:27 -0400
-Received: from pps.filterd (m0150242.ppops.net [127.0.0.1])
-        by mx0a-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02OFTdaX028506;
-        Tue, 24 Mar 2020 15:37:25 GMT
-Received: from g2t2354.austin.hpe.com (g2t2354.austin.hpe.com [15.233.44.27])
-        by mx0a-002e3701.pphosted.com with ESMTP id 2ywddpfe8j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 24 Mar 2020 15:37:25 +0000
-Received: from G1W8107.americas.hpqcorp.net (g1w8107.austin.hp.com [16.193.72.59])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by g2t2354.austin.hpe.com (Postfix) with ESMTPS id 8BE46B4;
-        Tue, 24 Mar 2020 15:37:24 +0000 (UTC)
-Received: from G9W8453.americas.hpqcorp.net (2002:10d8:a0d3::10d8:a0d3) by
- G1W8107.americas.hpqcorp.net (2002:10c1:483b::10c1:483b) with Microsoft SMTP
- Server (TLS) id 15.0.1367.3; Tue, 24 Mar 2020 15:37:24 +0000
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (15.241.52.12) by
- G9W8453.americas.hpqcorp.net (16.216.160.211) with Microsoft SMTP Server
- (TLS) id 15.0.1367.3 via Frontend Transport; Tue, 24 Mar 2020 15:37:24 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YTFgsD5zFRCLg9USYduptzYT1RWCz/7fbIRtg+Fjun9zD4b3gp5k+M3ue/XH8ID5Z2lRY8z7QxkYgFSQlLwArAZznWI2sj4HCRqHyAGgiLGclCPFT59utGDZZfVQ7qUBSiKVUIVwdGU9c63oH7IS+sE6FAOvKcWSvEAkJFLL0v5aYajgp2M/sNRq6intnUew9Nz0KSy27OpKxEj8PUNHMh7KT1Or2gC6OpJTo5UsQO71G8FC8CPd6Jdi2krnc+7+q4xF+Gq7vU7R8gOG76UoTux6OCHXsk+TdDkKYO0zGAHPT7SZuV0I0w8omh/uu+O1CnpJla8ZkGRf763epvjpFw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=T8rODActuFO6Z+rd0acjgSm8SgovjCpGfOk+o7dA+60=;
- b=XGhGRtV8ejMn5GLp948UeHiNuGNxvonf1L05D+ayKudLVEgFEX3N6uICCYPCLDjV3ZBnvFzqcoqdug6YIbvlJ6oaM+HiDaFbxdhbF9Pjw7tCaW/NM6VG9E8dshc6TlSISjMRIGsFCmr08m9FU4GEoyY9OkZzYSSHYi9fCV2RdTGGV+JA8CwklK3DfUGCzsTlCYVDqo4voFz2+GVOdnsFVGDd/rhxEuGNngpW82vnOYYB5FU5OlRq71Cs8uhsfPKXdaAupVREtgbhDGIMBZ2S6HmU9oWfmhc9nmLrFYeoo7ni5awJX7NpPsckm5tlxjObSVWX2vlUVN1+Q57eLxYehw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hpe.com; dmarc=pass action=none header.from=hpe.com; dkim=pass
- header.d=hpe.com; arc=none
-Received: from CS1PR8401MB0728.NAMPRD84.PROD.OUTLOOK.COM
- (2a01:111:e400:7508::23) by CS1PR8401MB0502.NAMPRD84.PROD.OUTLOOK.COM
- (2a01:111:e400:750b::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.20; Tue, 24 Mar
- 2020 15:37:23 +0000
-Received: from CS1PR8401MB0728.NAMPRD84.PROD.OUTLOOK.COM
- ([fe80::6:bc44:30cb:4e63]) by CS1PR8401MB0728.NAMPRD84.PROD.OUTLOOK.COM
- ([fe80::6:bc44:30cb:4e63%6]) with mapi id 15.20.2835.021; Tue, 24 Mar 2020
- 15:37:23 +0000
-From:   "Haeuptle, Michael" <michael.haeuptle@hpe.com>
-To:     "Hoyer, David" <David.Hoyer@netapp.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-CC:     "michaelhaeuptle@gmail.com" <michaelhaeuptle@gmail.com>
-Subject: RE: Deadlock during PCIe hot remove
-Thread-Topic: Deadlock during PCIe hot remove
-Thread-Index: AdYB6Gv3K0A6oSaTTxyvgTO56UtwywABKdFAAAEZcnAAACX0QA==
-Date:   Tue, 24 Mar 2020 15:37:22 +0000
-Message-ID: <CS1PR8401MB07289568BBE041784FBB326E95F10@CS1PR8401MB0728.NAMPRD84.PROD.OUTLOOK.COM>
-References: <CS1PR8401MB0728FC6FDAB8A35C22BD90EC95F10@CS1PR8401MB0728.NAMPRD84.PROD.OUTLOOK.COM>
- <DM5PR06MB3132D4C5AA587EEC211C9FB892F10@DM5PR06MB3132.namprd06.prod.outlook.com>
-In-Reply-To: <DM5PR06MB3132D4C5AA587EEC211C9FB892F10@DM5PR06MB3132.namprd06.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [75.71.233.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: f5433b4a-0de0-415d-96da-08d7d0093f37
-x-ms-traffictypediagnostic: CS1PR8401MB0502:
-x-microsoft-antispam-prvs: <CS1PR8401MB050253C6C3F414F31A37BD0495F10@CS1PR8401MB0502.NAMPRD84.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 03524FBD26
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(39860400002)(396003)(366004)(376002)(346002)(53546011)(316002)(26005)(66476007)(66946007)(186003)(66446008)(64756008)(66556008)(6506007)(2906002)(110136005)(52536014)(5660300002)(76116006)(7696005)(478600001)(86362001)(4326008)(71200400001)(55016002)(8936002)(9686003)(33656002)(81156014)(81166006)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:CS1PR8401MB0502;H:CS1PR8401MB0728.NAMPRD84.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
-received-spf: None (protection.outlook.com: hpe.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: XuF+MG57rvkIUv2+9CMmrZSWfVSkzULHIXIKwNkLwcYBHrE+Er0ZHOrDN5zzOcsxrnNJtobZaruaIO4dHe35780NjisW12jtKpUaz9vt5ojiwN/rMYuNwydUYKHB7PECUqZl9GubVx0I1v5H6Rt9COL6adplYksCEd8B8tvLCmGdLPZYgnmZCR+faHGAlvdSfB06AjSaAhf9VTNhjZ5EvByU2Y4oinIcJnu9cgIFb+POuLru9RzonaCdC9yvXzqAGz7LmMFi4GlGGCZNHKibZcgfHcp+KZozPKeGtUGk5gJzSnbc/qH0J+SDXY7DSgo5440GOt42Nxa4q112d3MIPmYB13N8zvhVUjoGcL7LXWPtA6i1XLuyLjFRz96oGq6RWQlIFGWDVQC18tQBf0gTH220Fonwxx1E+zlH74QKJmFPGOERtU4K418Ds6uSBH0V
-x-ms-exchange-antispam-messagedata: 9mmKHaZVvXCtnbLoPAq8C0r3zZlUqGaxJKqsmVHhR1r6wjyFDk8tIOeEq8HL8RPMrL3f+6e2rcB7bFwmgnC4TQknVDjaW8pdQ/UJnoUph33JC2f+KLAWf3cLA6ReYNyg+VrTz0FeHKfC8u2a4th59A==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-X-MS-Exchange-CrossTenant-Network-Message-Id: f5433b4a-0de0-415d-96da-08d7d0093f37
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Mar 2020 15:37:22.8066
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 105b2061-b669-4b31-92ac-24d304d195dc
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: gBut6hli1ns4SYJ7E5wrEEY3Md/k5GtIezfPSwBtCv018ee0qMAqqiC0YVYbgpAk/MUXdmxToT9HYeWXKro13F9AXx/i4TDN0cjZWpo1GCc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CS1PR8401MB0502
-X-OriginatorOrg: hpe.com
-Content-Transfer-Encoding: 8BIT
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        id S1728832AbgCXPiI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 24 Mar 2020 11:38:08 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:34352 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728725AbgCXPiG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 24 Mar 2020 11:38:06 -0400
+Received: by mail-oi1-f195.google.com with SMTP id e9so10493871oii.1;
+        Tue, 24 Mar 2020 08:38:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mVRpqVK1+lfhdMcwSYSpOxcGrE5BsZWoVdgxLq7NwVo=;
+        b=KR/EokIrcBVHZPgKOZ/20veY/pBQSkLaxPBZyPU1DlyhbpliGjrd60prXgceFeqeYK
+         T0hXhIIkuegH5EO4ttgi2i5DT5xUbpjCw/DffCN7x+Qs5K20lskM597jgCU1GL1pYL97
+         xOrqt+UYWvqHKutFrFhKdDECRuiGzZqqbL0HNA/D2Z3PcMuXlyFfo7IsjLFlyU+t3y/A
+         z9YNcOgvV/WLG+XIMsWu42KY+UYOm1Tdt/o92o2+NdGRrpEiKbJnq30kgQXeMnYm1mSM
+         CwhL1nVRhBaN2y6oCOSeIeEKwiUNOEkTMtvtSMLBls53H2rGnrajBh7oZRHnFFBDygsP
+         ux/A==
+X-Gm-Message-State: ANhLgQ0p26IXz1T7/R+a+a/Jo/0V9dMJjCz6bQ316b5vmYoV5vPDSW75
+        VvVrKm0Go9Qw9+4YNGhYBFbAa1mGtIzKgIsiL5g=
+X-Google-Smtp-Source: ADFU+vvp9/j3GbKGamOfhE6Xb6YFUaUDqmEVn/rGvTIgieAmx8WoSK+i11U8XKLpE6FK9Q912n5WeM+Bg87sgxoEkhI=
+X-Received: by 2002:a05:6808:8f:: with SMTP id s15mr3970314oic.110.1585064285456;
+ Tue, 24 Mar 2020 08:38:05 -0700 (PDT)
 MIME-Version: 1.0
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-24_05:2020-03-23,2020-03-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
- malwarescore=0 adultscore=0 impostorscore=0 lowpriorityscore=0 bulkscore=0
- mlxlogscore=999 spamscore=0 priorityscore=1501 mlxscore=0 clxscore=1011
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003240085
+References: <20200320131345.635023594@linutronix.de> <20200320131509.564059710@linutronix.de>
+ <87eetheu88.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <87eetheu88.fsf@nanos.tec.linutronix.de>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 24 Mar 2020 16:37:54 +0100
+Message-ID: <CAJZ5v0iPVnnUtPsYi0zi7-48MUoDfF-yUkvQRVhATvjF8iEKDQ@mail.gmail.com>
+Subject: Re: [patch V2 09/22] cpufreq: Convert to new X86 CPU match macros
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "open list:EDAC-CORE" <linux-edac@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Takashi Iwai <tiwai@suse.com>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi David, yes, it does.
+On Tue, Mar 24, 2020 at 2:52 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> The new macro set has a consistent namespace and uses C99 initializers
+> instead of the grufty C89 ones.
+>
+> Get rid the of most local macro wrappers for consistency. The ones which
+> make sense for readability are renamed to X86_MATCH*.
+>
+> In the centrino driver this also removes the two extra duplicates of family
+> 6 model 13 which have no value at all.
+>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> Cc: linux-pm@vger.kernel.org
+> Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> Cc: Len Brown <lenb@kernel.org>
 
--- Michael
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
------Original Message-----
-From: Hoyer, David [mailto:David.Hoyer@netapp.com] 
-Sent: Tuesday, March 24, 2020 9:35 AM
-To: Haeuptle, Michael <michael.haeuptle@hpe.com>; linux-pci@vger.kernel.org
-Cc: michaelhaeuptle@gmail.com
-Subject: RE: Deadlock during PCIe hot remove
-
-You mentioned that you are using the latest pciehp code.   Does this code contain the recently introduced ist_running flag?
-
------Original Message-----
-From: linux-pci-owner@vger.kernel.org <linux-pci-owner@vger.kernel.org> On Behalf Of Haeuptle, Michael
-Sent: Tuesday, March 24, 2020 10:22 AM
-To: linux-pci@vger.kernel.org
-Cc: michaelhaeuptle@gmail.com
-Subject: RE: Deadlock during PCIe hot remove
-
-NetApp Security WARNING: This is an external email. Do not click links or open attachments unless you recognize the sender and know the content is safe.
-
-
-
-
-From: Haeuptle, Michael
-Sent: Tuesday, March 24, 2020 8:46 AM
-To: 'linux-pci@vger.kernel.org' <linux-pci@vger.kernel.org>
-Cc: 'michaelhaeuptle@gmail.com' <michaelhaeuptle@gmail.com>
-Subject: Deadlock during PCIe hot remove
-
-Dear PCI maintainers,
-
-I'm running into a deadlock scenario between the hotplug, pcie and vfio_pci driver when removing multiple devices in parallel.
-This is happening on CentOS8 (4.18) with SPDK (spdk.io). I'm using the latest pciehp code, the rest is all 4.18.
-
-The sequence that leads to the deadlock is as follows:
-
-The pciehp_ist() takes the reset_lock early in its processing. While the pciehp_ist processing is progressing, vfio_pci calls pci_try_reset_function() as part of vfio_pci_release or open. The pci_try_reset_function() takes the device lock.
-
-Eventually, pci_try_reset_function() calls pci_reset_hotplug_slot() which calls pciehp_reset_slot(). The pciehp_reset_slot() tries to take the reset_lock but has to wait since it is already taken by pciehp_ist().
-
-Eventually pciehp_ist calls pcie_stop_device() which calls device_release_driver_internal(). This function also tries to take device_lock causing the dead lock.
-
-Here's the kernel stack trace when the deadlock occurs:
-
-[root@localhost ~]# cat /proc/8594/task/8598/stack [<0>] pciehp_reset_slot+0xa5/0x220 [<0>] pci_reset_hotplug_slot.cold.72+0x20/0x36
-[<0>] pci_dev_reset_slot_function+0x72/0x9b
-[<0>] __pci_reset_function_locked+0x15b/0x190
-[<0>] pci_try_reset_function.cold.77+0x9b/0x108
-[<0>] vfio_pci_disable+0x261/0x280
-[<0>] vfio_pci_release+0xcb/0xf0
-[<0>] vfio_device_fops_release+0x1e/0x40
-[<0>] __fput+0xa5/0x1d0
-[<0>] task_work_run+0x8a/0xb0
-[<0>] exit_to_usermode_loop+0xd3/0xe0
-[<0>] do_syscall_64+0xe1/0x100
-[<0>] entry_SYSCALL_64_after_hwframe+0x65/0xca
-[<0>] 0xffffffffffffffff
-
-I was wondering if there's a quick workaround. I think the pci_try_reset_function would need to take the reset_lock before the device lock but there doesn't seem to be a good way of doing that.
-
-I'm also trying to see if we can delay calling the vfio functions that are initiated by SPDK but I think this inherent race should be addressed.
-
-I'm also happy to submit a defect report if this emailing list is not appropriate.
-
-* Michael
+> ---
+> V2: Add the dropped terminator in the centrino speedstep driver back. (Andy)
+> ---
+>  drivers/cpufreq/acpi-cpufreq.c         |    4 -
+>  drivers/cpufreq/amd_freq_sensitivity.c |    2
+>  drivers/cpufreq/e_powersaver.c         |    2
+>  drivers/cpufreq/elanfreq.c             |    2
+>  drivers/cpufreq/intel_pstate.c         |   71 ++++++++++++++++-----------------
+>  drivers/cpufreq/longhaul.c             |    2
+>  drivers/cpufreq/longrun.c              |    3 -
+>  drivers/cpufreq/p4-clockmod.c          |    2
+>  drivers/cpufreq/powernow-k6.c          |    4 -
+>  drivers/cpufreq/powernow-k7.c          |    2
+>  drivers/cpufreq/powernow-k8.c          |    2
+>  drivers/cpufreq/sc520_freq.c           |    2
+>  drivers/cpufreq/speedstep-centrino.c   |   14 +-----
+>  drivers/cpufreq/speedstep-ich.c        |   10 +---
+>  drivers/cpufreq/speedstep-smi.c        |   10 +---
+>  15 files changed, 59 insertions(+), 73 deletions(-)
+>
+> --- a/drivers/cpufreq/acpi-cpufreq.c
+> +++ b/drivers/cpufreq/acpi-cpufreq.c
+> @@ -991,8 +991,8 @@ late_initcall(acpi_cpufreq_init);
+>  module_exit(acpi_cpufreq_exit);
+>
+>  static const struct x86_cpu_id acpi_cpufreq_ids[] = {
+> -       X86_FEATURE_MATCH(X86_FEATURE_ACPI),
+> -       X86_FEATURE_MATCH(X86_FEATURE_HW_PSTATE),
+> +       X86_MATCH_FEATURE(X86_FEATURE_ACPI, NULL),
+> +       X86_MATCH_FEATURE(X86_FEATURE_HW_PSTATE, NULL),
+>         {}
+>  };
+>  MODULE_DEVICE_TABLE(x86cpu, acpi_cpufreq_ids);
+> --- a/drivers/cpufreq/amd_freq_sensitivity.c
+> +++ b/drivers/cpufreq/amd_freq_sensitivity.c
+> @@ -144,7 +144,7 @@ static void __exit amd_freq_sensitivity_
+>  module_exit(amd_freq_sensitivity_exit);
+>
+>  static const struct x86_cpu_id amd_freq_sensitivity_ids[] = {
+> -       X86_FEATURE_MATCH(X86_FEATURE_PROC_FEEDBACK),
+> +       X86_MATCH_FEATURE(X86_FEATURE_PROC_FEEDBACK, NULL),
+>         {}
+>  };
+>  MODULE_DEVICE_TABLE(x86cpu, amd_freq_sensitivity_ids);
+> --- a/drivers/cpufreq/e_powersaver.c
+> +++ b/drivers/cpufreq/e_powersaver.c
+> @@ -385,7 +385,7 @@ static struct cpufreq_driver eps_driver
+>  /* This driver will work only on Centaur C7 processors with
+>   * Enhanced SpeedStep/PowerSaver registers */
+>  static const struct x86_cpu_id eps_cpu_id[] = {
+> -       { X86_VENDOR_CENTAUR, 6, X86_MODEL_ANY, X86_FEATURE_EST },
+> +       X86_MATCH_VENDOR_FAM_FEATURE(CENTAUR, 6, X86_FEATURE_EST, NULL),
+>         {}
+>  };
+>  MODULE_DEVICE_TABLE(x86cpu, eps_cpu_id);
+> --- a/drivers/cpufreq/elanfreq.c
+> +++ b/drivers/cpufreq/elanfreq.c
+> @@ -198,7 +198,7 @@ static struct cpufreq_driver elanfreq_dr
+>  };
+>
+>  static const struct x86_cpu_id elan_id[] = {
+> -       { X86_VENDOR_AMD, 4, 10, },
+> +       X86_MATCH_VENDOR_FAM_MODEL(AMD, 4, 10, NULL),
+>         {}
+>  };
+>  MODULE_DEVICE_TABLE(x86cpu, elan_id);
+> --- a/drivers/cpufreq/intel_pstate.c
+> +++ b/drivers/cpufreq/intel_pstate.c
+> @@ -1909,51 +1909,51 @@ static const struct pstate_funcs knl_fun
+>         .get_val = core_get_val,
+>  };
+>
+> -#define ICPU(model, policy) \
+> -       { X86_VENDOR_INTEL, 6, model, X86_FEATURE_APERFMPERF,\
+> -                       (unsigned long)&policy }
+> +#define X86_MATCH(model, policy)                                        \
+> +       X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL, 6, INTEL_FAM6_##model, \
+> +                                          X86_FEATURE_APERFMPERF, &policy)
+>
+>  static const struct x86_cpu_id intel_pstate_cpu_ids[] = {
+> -       ICPU(INTEL_FAM6_SANDYBRIDGE,            core_funcs),
+> -       ICPU(INTEL_FAM6_SANDYBRIDGE_X,          core_funcs),
+> -       ICPU(INTEL_FAM6_ATOM_SILVERMONT,        silvermont_funcs),
+> -       ICPU(INTEL_FAM6_IVYBRIDGE,              core_funcs),
+> -       ICPU(INTEL_FAM6_HASWELL,                core_funcs),
+> -       ICPU(INTEL_FAM6_BROADWELL,              core_funcs),
+> -       ICPU(INTEL_FAM6_IVYBRIDGE_X,            core_funcs),
+> -       ICPU(INTEL_FAM6_HASWELL_X,              core_funcs),
+> -       ICPU(INTEL_FAM6_HASWELL_L,              core_funcs),
+> -       ICPU(INTEL_FAM6_HASWELL_G,              core_funcs),
+> -       ICPU(INTEL_FAM6_BROADWELL_G,            core_funcs),
+> -       ICPU(INTEL_FAM6_ATOM_AIRMONT,           airmont_funcs),
+> -       ICPU(INTEL_FAM6_SKYLAKE_L,              core_funcs),
+> -       ICPU(INTEL_FAM6_BROADWELL_X,            core_funcs),
+> -       ICPU(INTEL_FAM6_SKYLAKE,                core_funcs),
+> -       ICPU(INTEL_FAM6_BROADWELL_D,            core_funcs),
+> -       ICPU(INTEL_FAM6_XEON_PHI_KNL,           knl_funcs),
+> -       ICPU(INTEL_FAM6_XEON_PHI_KNM,           knl_funcs),
+> -       ICPU(INTEL_FAM6_ATOM_GOLDMONT,          core_funcs),
+> -       ICPU(INTEL_FAM6_ATOM_GOLDMONT_PLUS,     core_funcs),
+> -       ICPU(INTEL_FAM6_SKYLAKE_X,              core_funcs),
+> +       X86_MATCH(SANDYBRIDGE,          core_funcs),
+> +       X86_MATCH(SANDYBRIDGE_X,        core_funcs),
+> +       X86_MATCH(ATOM_SILVERMONT,      silvermont_funcs),
+> +       X86_MATCH(IVYBRIDGE,            core_funcs),
+> +       X86_MATCH(HASWELL,              core_funcs),
+> +       X86_MATCH(BROADWELL,            core_funcs),
+> +       X86_MATCH(IVYBRIDGE_X,          core_funcs),
+> +       X86_MATCH(HASWELL_X,            core_funcs),
+> +       X86_MATCH(HASWELL_L,            core_funcs),
+> +       X86_MATCH(HASWELL_G,            core_funcs),
+> +       X86_MATCH(BROADWELL_G,          core_funcs),
+> +       X86_MATCH(ATOM_AIRMONT,         airmont_funcs),
+> +       X86_MATCH(SKYLAKE_L,            core_funcs),
+> +       X86_MATCH(BROADWELL_X,          core_funcs),
+> +       X86_MATCH(SKYLAKE,              core_funcs),
+> +       X86_MATCH(BROADWELL_D,          core_funcs),
+> +       X86_MATCH(XEON_PHI_KNL,         knl_funcs),
+> +       X86_MATCH(XEON_PHI_KNM,         knl_funcs),
+> +       X86_MATCH(ATOM_GOLDMONT,        core_funcs),
+> +       X86_MATCH(ATOM_GOLDMONT_PLUS,   core_funcs),
+> +       X86_MATCH(SKYLAKE_X,            core_funcs),
+>         {}
+>  };
+>  MODULE_DEVICE_TABLE(x86cpu, intel_pstate_cpu_ids);
+>
+>  static const struct x86_cpu_id intel_pstate_cpu_oob_ids[] __initconst = {
+> -       ICPU(INTEL_FAM6_BROADWELL_D, core_funcs),
+> -       ICPU(INTEL_FAM6_BROADWELL_X, core_funcs),
+> -       ICPU(INTEL_FAM6_SKYLAKE_X, core_funcs),
+> +       X86_MATCH(BROADWELL_D,          core_funcs),
+> +       X86_MATCH(BROADWELL_X,          core_funcs),
+> +       X86_MATCH(SKYLAKE_X,            core_funcs),
+>         {}
+>  };
+>
+>  static const struct x86_cpu_id intel_pstate_cpu_ee_disable_ids[] = {
+> -       ICPU(INTEL_FAM6_KABYLAKE, core_funcs),
+> +       X86_MATCH(KABYLAKE,             core_funcs),
+>         {}
+>  };
+>
+>  static const struct x86_cpu_id intel_pstate_hwp_boost_ids[] = {
+> -       ICPU(INTEL_FAM6_SKYLAKE_X, core_funcs),
+> -       ICPU(INTEL_FAM6_SKYLAKE, core_funcs),
+> +       X86_MATCH(SKYLAKE_X,            core_funcs),
+> +       X86_MATCH(SKYLAKE,              core_funcs),
+>         {}
+>  };
+>
+> @@ -2726,13 +2726,14 @@ static inline void intel_pstate_request_
+>
+>  #define INTEL_PSTATE_HWP_BROADWELL     0x01
+>
+> -#define ICPU_HWP(model, hwp_mode) \
+> -       { X86_VENDOR_INTEL, 6, model, X86_FEATURE_HWP, hwp_mode }
+> +#define X86_MATCH_HWP(model, hwp_mode)                                 \
+> +       X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL, 6, INTEL_FAM6_##model, \
+> +                                          X86_FEATURE_APERFMPERF, hwp_mode)
+>
+>  static const struct x86_cpu_id hwp_support_ids[] __initconst = {
+> -       ICPU_HWP(INTEL_FAM6_BROADWELL_X, INTEL_PSTATE_HWP_BROADWELL),
+> -       ICPU_HWP(INTEL_FAM6_BROADWELL_D, INTEL_PSTATE_HWP_BROADWELL),
+> -       ICPU_HWP(X86_MODEL_ANY, 0),
+> +       X86_MATCH_HWP(BROADWELL_X,      INTEL_PSTATE_HWP_BROADWELL),
+> +       X86_MATCH_HWP(BROADWELL_D,      INTEL_PSTATE_HWP_BROADWELL),
+> +       X86_MATCH_HWP(ANY,              0),
+>         {}
+>  };
+>
+> --- a/drivers/cpufreq/longhaul.c
+> +++ b/drivers/cpufreq/longhaul.c
+> @@ -910,7 +910,7 @@ static struct cpufreq_driver longhaul_dr
+>  };
+>
+>  static const struct x86_cpu_id longhaul_id[] = {
+> -       { X86_VENDOR_CENTAUR, 6 },
+> +       X86_MATCH_VENDOR_FAM(CENTAUR, 6, NULL),
+>         {}
+>  };
+>  MODULE_DEVICE_TABLE(x86cpu, longhaul_id);
+> --- a/drivers/cpufreq/longrun.c
+> +++ b/drivers/cpufreq/longrun.c
+> @@ -281,8 +281,7 @@ static struct cpufreq_driver longrun_dri
+>  };
+>
+>  static const struct x86_cpu_id longrun_ids[] = {
+> -       { X86_VENDOR_TRANSMETA, X86_FAMILY_ANY, X86_MODEL_ANY,
+> -         X86_FEATURE_LONGRUN },
+> +       X86_MATCH_VENDOR_FEATURE(TRANSMETA, X86_FEATURE_LONGRUN, NULL),
+>         {}
+>  };
+>  MODULE_DEVICE_TABLE(x86cpu, longrun_ids);
+> --- a/drivers/cpufreq/p4-clockmod.c
+> +++ b/drivers/cpufreq/p4-clockmod.c
+> @@ -231,7 +231,7 @@ static struct cpufreq_driver p4clockmod_
+>  };
+>
+>  static const struct x86_cpu_id cpufreq_p4_id[] = {
+> -       { X86_VENDOR_INTEL, X86_FAMILY_ANY, X86_MODEL_ANY, X86_FEATURE_ACC },
+> +       X86_MATCH_VENDOR_FEATURE(INTEL, X86_FEATURE_ACC, NULL),
+>         {}
+>  };
+>
+> --- a/drivers/cpufreq/powernow-k6.c
+> +++ b/drivers/cpufreq/powernow-k6.c
+> @@ -258,8 +258,8 @@ static struct cpufreq_driver powernow_k6
+>  };
+>
+>  static const struct x86_cpu_id powernow_k6_ids[] = {
+> -       { X86_VENDOR_AMD, 5, 12 },
+> -       { X86_VENDOR_AMD, 5, 13 },
+> +       X86_MATCH_VENDOR_FAM_MODEL(AMD, 5, 12, NULL),
+> +       X86_MATCH_VENDOR_FAM_MODEL(AMD, 5, 13, NULL),
+>         {}
+>  };
+>  MODULE_DEVICE_TABLE(x86cpu, powernow_k6_ids);
+> --- a/drivers/cpufreq/powernow-k7.c
+> +++ b/drivers/cpufreq/powernow-k7.c
+> @@ -109,7 +109,7 @@ static int check_fsb(unsigned int fsbspe
+>  }
+>
+>  static const struct x86_cpu_id powernow_k7_cpuids[] = {
+> -       { X86_VENDOR_AMD, 6, },
+> +       X86_MATCH_VENDOR_FAM(AMD, 6, NULL),
+>         {}
+>  };
+>  MODULE_DEVICE_TABLE(x86cpu, powernow_k7_cpuids);
+> --- a/drivers/cpufreq/powernow-k8.c
+> +++ b/drivers/cpufreq/powernow-k8.c
+> @@ -452,7 +452,7 @@ static int core_voltage_post_transition(
+>
+>  static const struct x86_cpu_id powernow_k8_ids[] = {
+>         /* IO based frequency switching */
+> -       { X86_VENDOR_AMD, 0xf },
+> +       X86_MATCH_VENDOR_FAM(AMD, 0xf, NULL),
+>         {}
+>  };
+>  MODULE_DEVICE_TABLE(x86cpu, powernow_k8_ids);
+> --- a/drivers/cpufreq/sc520_freq.c
+> +++ b/drivers/cpufreq/sc520_freq.c
+> @@ -95,7 +95,7 @@ static struct cpufreq_driver sc520_freq_
+>  };
+>
+>  static const struct x86_cpu_id sc520_ids[] = {
+> -       { X86_VENDOR_AMD, 4, 9 },
+> +       X86_MATCH_VENDOR_FAM_MODEL(AMD, 4, 9, NULL),
+>         {}
+>  };
+>  MODULE_DEVICE_TABLE(x86cpu, sc520_ids);
+> --- a/drivers/cpufreq/speedstep-centrino.c
+> +++ b/drivers/cpufreq/speedstep-centrino.c
+> @@ -520,18 +520,12 @@ static struct cpufreq_driver centrino_dr
+>   * or ASCII model IDs.
+>   */
+>  static const struct x86_cpu_id centrino_ids[] = {
+> -       { X86_VENDOR_INTEL, 6, 9, X86_FEATURE_EST },
+> -       { X86_VENDOR_INTEL, 6, 13, X86_FEATURE_EST },
+> -       { X86_VENDOR_INTEL, 6, 13, X86_FEATURE_EST },
+> -       { X86_VENDOR_INTEL, 6, 13, X86_FEATURE_EST },
+> -       { X86_VENDOR_INTEL, 15, 3, X86_FEATURE_EST },
+> -       { X86_VENDOR_INTEL, 15, 4, X86_FEATURE_EST },
+> +       X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL,  6,  9, X86_FEATURE_EST, NULL),
+> +       X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL,  6, 13, X86_FEATURE_EST, NULL),
+> +       X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL, 15,  3, X86_FEATURE_EST, NULL),
+> +       X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL, 15,  4, X86_FEATURE_EST, NULL),
+>         {}
+>  };
+> -#if 0
+> -/* Autoload or not? Do not for now. */
+> -MODULE_DEVICE_TABLE(x86cpu, centrino_ids);
+> -#endif
+>
+>  /**
+>   * centrino_init - initializes the Enhanced SpeedStep CPUFreq driver
+> --- a/drivers/cpufreq/speedstep-ich.c
+> +++ b/drivers/cpufreq/speedstep-ich.c
+> @@ -319,15 +319,11 @@ static struct cpufreq_driver speedstep_d
+>  };
+>
+>  static const struct x86_cpu_id ss_smi_ids[] = {
+> -       { X86_VENDOR_INTEL, 6, 0xb, },
+> -       { X86_VENDOR_INTEL, 6, 0x8, },
+> -       { X86_VENDOR_INTEL, 15, 2 },
+> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL,  6, 0x8, 0),
+> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL,  6, 0xb, 0),
+> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL, 15, 0x2, 0),
+>         {}
+>  };
+> -#if 0
+> -/* Autoload or not? Do not for now. */
+> -MODULE_DEVICE_TABLE(x86cpu, ss_smi_ids);
+> -#endif
+>
+>  /**
+>   * speedstep_init - initializes the SpeedStep CPUFreq driver
+> --- a/drivers/cpufreq/speedstep-smi.c
+> +++ b/drivers/cpufreq/speedstep-smi.c
+> @@ -299,15 +299,11 @@ static struct cpufreq_driver speedstep_d
+>  };
+>
+>  static const struct x86_cpu_id ss_smi_ids[] = {
+> -       { X86_VENDOR_INTEL, 6, 0xb, },
+> -       { X86_VENDOR_INTEL, 6, 0x8, },
+> -       { X86_VENDOR_INTEL, 15, 2 },
+> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL,  6, 0x8, 0),
+> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL,  6, 0xb, 0),
+> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL, 15, 0x2, 0),
+>         {}
+>  };
+> -#if 0
+> -/* Not auto loaded currently */
+> -MODULE_DEVICE_TABLE(x86cpu, ss_smi_ids);
+> -#endif
+>
+>  /**
+>   * speedstep_init - initializes the SpeedStep CPUFreq driver
