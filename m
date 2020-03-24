@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E0B71902E6
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Mar 2020 01:28:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 180741902DE
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Mar 2020 01:28:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727745AbgCXA0i (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 23 Mar 2020 20:26:38 -0400
+        id S1727743AbgCXA01 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 23 Mar 2020 20:26:27 -0400
 Received: from mga14.intel.com ([192.55.52.115]:60461 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727729AbgCXA0Z (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 23 Mar 2020 20:26:25 -0400
-IronPort-SDR: tBJs3oVt9C9mcgKpTHM5q4jkyfy00v9q6DYnegjJRUTP/r4ys4r6HY4/ilDMdHUU2hTR8b7n8n
- x1ekYK2fMStA==
+        id S1727740AbgCXA00 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 23 Mar 2020 20:26:26 -0400
+IronPort-SDR: dA1Z3CEPkwyO3I6lBrS0I5o1I1N9gPKMjiQKcqwMwQvWy+djKw9MKqyc2rA8a7l0bILmQRYdg7
+ HvnhTMpUGXcQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
   by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 17:26:25 -0700
-IronPort-SDR: SP/1jlarBGzBmhn75XRTjEb4S/t+l28ROOFK2KwQ6gPuEY6iRHk7M6tnLK3jqkrBRZ5qqDYR+Q
- GAQvlNKxOgdw==
+IronPort-SDR: buuuFhYsQg9X4PzAfI8WE4B2nWqa5UVmnw/5UlJ4MyzN+QC6SWjIRI7q1WsDENzyTtxGr8n3Bl
+ H11PIKVU3hBQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,298,1580803200"; 
-   d="scan'208";a="419692248"
+   d="scan'208";a="419692251"
 Received: from bhaveshm-mobl.amr.corp.intel.com (HELO localhost.localdomain) ([10.134.88.197])
-  by orsmga005.jf.intel.com with ESMTP; 23 Mar 2020 17:26:24 -0700
+  by orsmga005.jf.intel.com with ESMTP; 23 Mar 2020 17:26:25 -0700
 From:   sathyanarayanan.kuppuswamy@linux.intel.com
 To:     bhelgaas@google.com
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         ashok.raj@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: [PATCH v18 07/11] PCI/DPC: Cache DPC capabilities in pci_init_capabilities()
-Date:   Mon, 23 Mar 2020 17:26:04 -0700
-Message-Id: <5888380657c8b9551675b5dbd48e370e4fd2703d.1585000084.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: [PATCH v18 08/11] PCI/AER: Add pci_aer_raw_clear_status() to unconditionally clear Error Status
+Date:   Mon, 23 Mar 2020 17:26:05 -0700
+Message-Id: <c19ad28f3633cce67448609e89a75635da0da07d.1585000084.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1585000084.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 References: <cover.1585000084.git.sathyanarayanan.kuppuswamy@linux.intel.com>
@@ -41,105 +41,96 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-Since Error Disconnect Recover needs to use DPC error handling routines
-even if the OS doesn't have control of DPC, move the initalization and
-caching of DPC capabilities from the DPC driver to pci_init_capabilities().
+Per the SFI _OSC and DPC Updates ECN [1] implementation note flowchart, the
+OS seems to be expected to clear AER status even if it doesn't have
+ownership of the AER capability.  Unlike the DPC capability, where a DPC
+ECN [2] specifies a window when the OS is allowed to access DPC registers
+even if it doesn't have ownership, there is no clear model for AER.
 
-Link: https://lore.kernel.org/r/6ac4e893e7d1054fe43efed0f89ca02f072c3190.1583286655.git.sathyanarayanan.kuppuswamy@linux.intel.com
+Add pci_aer_raw_clear_status() to clear the AER error status registers
+unconditionally.  This is intended for use only by the EDR path (see [2]).
+
+[1] System Firmware Intermediary (SFI) _OSC and DPC Updates ECN, Feb 24,
+    2020, affecting PCI Firmware Specification, Rev. 3.2
+    https://members.pcisig.com/wg/PCI-SIG/document/14076
+[2] Downstream Port Containment Related Enhancements ECN, Jan 28, 2019,
+    affecting PCI Firmware Specification, Rev. 3.2
+    https://members.pcisig.com/wg/PCI-SIG/document/12888
+[bhelgaas: changelog]
+Link: https://lore.kernel.org/r/29fb514a0d86e9bcc75cec4ea8474cd4db33adbf.1583286655.git.sathyanarayanan.kuppuswamy@linux.intel.com
 Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
  drivers/pci/pci.h      |  2 ++
- drivers/pci/pcie/dpc.c | 33 +++++++++++++++++++++------------
- drivers/pci/probe.c    |  1 +
- 3 files changed, 24 insertions(+), 12 deletions(-)
+ drivers/pci/pcie/aer.c | 22 ++++++++++++++++++----
+ 2 files changed, 20 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index efbe94096050..e48677a0ba42 100644
+index e48677a0ba42..6d09bb22b73d 100644
 --- a/drivers/pci/pci.h
 +++ b/drivers/pci/pci.h
-@@ -448,9 +448,11 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info);
- #ifdef CONFIG_PCIE_DPC
- void pci_save_dpc_state(struct pci_dev *dev);
- void pci_restore_dpc_state(struct pci_dev *dev);
-+void pci_dpc_init(struct pci_dev *pdev);
+@@ -654,12 +654,14 @@ void pci_aer_exit(struct pci_dev *dev);
+ extern const struct attribute_group aer_stats_attr_group;
+ void pci_aer_clear_fatal_status(struct pci_dev *dev);
+ void pci_aer_clear_device_status(struct pci_dev *dev);
++int pci_aer_raw_clear_status(struct pci_dev *dev);
  #else
- static inline void pci_save_dpc_state(struct pci_dev *dev) {}
- static inline void pci_restore_dpc_state(struct pci_dev *dev) {}
-+static inline void pci_dpc_init(struct pci_dev *pdev) {}
+ static inline void pci_no_aer(void) { }
+ static inline void pci_aer_init(struct pci_dev *d) { }
+ static inline void pci_aer_exit(struct pci_dev *d) { }
+ static inline void pci_aer_clear_fatal_status(struct pci_dev *dev) { }
+ static inline void pci_aer_clear_device_status(struct pci_dev *dev) { }
++static inline int pci_aer_raw_clear_status(struct pci_dev *dev) { return -EINVAL; }
  #endif
  
- #ifdef CONFIG_PCI_ATS
-diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-index 0c45133a9a91..5870a0f154fc 100644
---- a/drivers/pci/pcie/dpc.c
-+++ b/drivers/pci/pcie/dpc.c
-@@ -257,6 +257,27 @@ static irqreturn_t dpc_irq(int irq, void *context)
- 	return IRQ_HANDLED;
+ #ifdef CONFIG_ACPI
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index c0540c3761dc..bd9f122165e0 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -420,7 +420,16 @@ void pci_aer_clear_fatal_status(struct pci_dev *dev)
+ 		pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_STATUS, status);
  }
  
-+void pci_dpc_init(struct pci_dev *pdev)
+-int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
++/**
++ * pci_aer_raw_clear_status - Clear AER error registers.
++ * @dev: the PCI device
++ *
++ * Clearing AER error status registers unconditionally, regardless of
++ * whether they're owned by firmware or the OS.
++ *
++ * Returns 0 on success, or negative on failure.
++ */
++int pci_aer_raw_clear_status(struct pci_dev *dev)
+ {
+ 	int pos;
+ 	u32 status;
+@@ -433,9 +442,6 @@ int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
+ 	if (!pos)
+ 		return -EIO;
+ 
+-	if (pcie_aer_get_firmware_first(dev))
+-		return -EIO;
+-
+ 	port_type = pci_pcie_type(dev);
+ 	if (port_type == PCI_EXP_TYPE_ROOT_PORT) {
+ 		pci_read_config_dword(dev, pos + PCI_ERR_ROOT_STATUS, &status);
+@@ -451,6 +457,14 @@ int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
+ 	return 0;
+ }
+ 
++int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
 +{
-+	u16 cap;
++	if (pcie_aer_get_firmware_first(dev))
++		return -EIO;
 +
-+	pdev->dpc_cap = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_DPC);
-+	if (!pdev->dpc_cap)
-+		return;
-+
-+	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CAP, &cap);
-+	if (!(cap & PCI_EXP_DPC_CAP_RP_EXT))
-+		return;
-+
-+	pdev->dpc_rp_extensions = true;
-+	pdev->dpc_rp_log_size = (cap & PCI_EXP_DPC_RP_PIO_LOG_SIZE) >> 8;
-+	if (pdev->dpc_rp_log_size < 4 || pdev->dpc_rp_log_size > 9) {
-+		pci_err(pdev, "RP PIO log size %u is invalid\n",
-+			pdev->dpc_rp_log_size);
-+		pdev->dpc_rp_log_size = 0;
-+	}
++	return pci_aer_raw_clear_status(dev);
 +}
 +
- #define FLAG(x, y) (((x) & (y)) ? '+' : '-')
- static int dpc_probe(struct pcie_device *dev)
+ void pci_save_aer_state(struct pci_dev *dev)
  {
-@@ -268,8 +289,6 @@ static int dpc_probe(struct pcie_device *dev)
- 	if (pcie_aer_get_firmware_first(pdev) && !pcie_ports_dpc_native)
- 		return -ENOTSUPP;
- 
--	pdev->dpc_cap = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_DPC);
--
- 	status = devm_request_threaded_irq(device, dev->irq, dpc_irq,
- 					   dpc_handler, IRQF_SHARED,
- 					   "pcie-dpc", pdev);
-@@ -282,16 +301,6 @@ static int dpc_probe(struct pcie_device *dev)
- 	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CAP, &cap);
- 	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl);
- 
--	pdev->dpc_rp_extensions = (cap & PCI_EXP_DPC_CAP_RP_EXT) ? 1 : 0;
--	if (pdev->dpc_rp_extensions) {
--		pdev->dpc_rp_log_size = (cap & PCI_EXP_DPC_RP_PIO_LOG_SIZE) >> 8;
--		if (pdev->dpc_rp_log_size < 4 || pdev->dpc_rp_log_size > 9) {
--			pci_err(pdev, "RP PIO log size %u is invalid\n",
--				pdev->dpc_rp_log_size);
--			pdev->dpc_rp_log_size = 0;
--		}
--	}
--
- 	ctl = (ctl & 0xfff4) | PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN;
- 	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl);
- 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 512cb4312ddd..c6f91f886818 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -2329,6 +2329,7 @@ static void pci_init_capabilities(struct pci_dev *dev)
- 	pci_enable_acs(dev);		/* Enable ACS P2P upstream forwarding */
- 	pci_ptm_init(dev);		/* Precision Time Measurement */
- 	pci_aer_init(dev);		/* Advanced Error Reporting */
-+	pci_dpc_init(dev);		/* Downstream Port Containment */
- 
- 	pcie_report_downtraining(dev);
- 
+ 	struct pci_cap_saved_state *save_state;
 -- 
 2.17.1
 
