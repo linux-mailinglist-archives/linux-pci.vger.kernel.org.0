@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BB0791902D9
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Mar 2020 01:28:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AC02F1902DB
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Mar 2020 01:28:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727696AbgCXA0Y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 23 Mar 2020 20:26:24 -0400
+        id S1727719AbgCXA0Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 23 Mar 2020 20:26:25 -0400
 Received: from mga14.intel.com ([192.55.52.115]:60461 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727665AbgCXA0X (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 23 Mar 2020 20:26:23 -0400
-IronPort-SDR: x0OdxZkaUAWPFVFsy4f+damPIODMbi9IofkssOjJAu0Co97B6HzrwMRGiyYXzGZ3PIz1fzILAm
- QLlUll1brrgw==
+        id S1727705AbgCXA0Y (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 23 Mar 2020 20:26:24 -0400
+IronPort-SDR: fbZLikA6y2mXn087BqiIPjUr2xq1wC07P5WQBGgn8KYkSe7ya06DFXnxCzcSSnx1bzxXWyVgax
+ 8uDDH25Z4gjA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 17:26:22 -0700
-IronPort-SDR: dqaDozme4VGUcVX95Ak9f/bYtHoJ0HTe2/u+0zEG90GYir5OEA5S0QPD64JCTFYaPfyiCNegCg
- 3iiSeymUJfqg==
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 17:26:24 -0700
+IronPort-SDR: Gf1xyP4qnBd1hZFsZA40HGh+tHQKx+bVIZC+469jSVe9bkMR1hxap+O6Ct2EkoDF0peEKoLOij
+ uBHnq8Jam25A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,298,1580803200"; 
-   d="scan'208";a="419692236"
+   d="scan'208";a="419692240"
 Received: from bhaveshm-mobl.amr.corp.intel.com (HELO localhost.localdomain) ([10.134.88.197])
   by orsmga005.jf.intel.com with ESMTP; 23 Mar 2020 17:26:22 -0700
 From:   sathyanarayanan.kuppuswamy@linux.intel.com
 To:     bhelgaas@google.com
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         ashok.raj@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: [PATCH v18 04/11] PCI/DPC: Move DPC data into struct pci_dev
-Date:   Mon, 23 Mar 2020 17:26:01 -0700
-Message-Id: <98323eaa18080adbe5bb30846862f09f8722d4b3.1585000084.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: [PATCH v18 05/11] PCI/ERR: Remove service dependency in pcie_do_recovery()
+Date:   Mon, 23 Mar 2020 17:26:02 -0700
+Message-Id: <60e02b87b526cdf2930400059d98704bf0a147d1.1585000084.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1585000084.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 References: <cover.1585000084.git.sathyanarayanan.kuppuswamy@linux.intel.com>
@@ -39,299 +39,278 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-We only need 25 bits of data for DPC, so I don't think it's worth the
-complexity of allocating and keeping track of the struct dpc_dev separately
-from the pci_dev.  Move that data into the struct pci_dev.
+Previously we passed the PCIe service type parameter to pcie_do_recovery(),
+where reset_link() looked up the underlying pci_port_service_driver and its
+.reset_link() function pointer. Instead of using this roundabout way, we
+can just pass the driver-specific .reset_link() callback function when
+calling pcie_do_recovery() function.
 
+This allows us to call pcie_do_recovery() from code that is not a PCIe port
+service driver, e.g., Error Disconnect Recover (EDR) support.
+
+Remove pcie_port_find_service() and pcie_port_service_driver.reset_link
+since they are now unused.
+
+Link: https://lore.kernel.org/r/152c530a3ca8780ae85c2325f97f5f35f5d3602f.1583286655.git.sathyanarayanan.kuppuswamy@linux.intel.com
+Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- drivers/pci/pcie/dpc.c | 103 +++++++++++++----------------------------
- include/linux/pci.h    |   5 ++
- 2 files changed, 36 insertions(+), 72 deletions(-)
+ Documentation/PCI/pcieaer-howto.rst | 19 +++-------
+ drivers/pci/pci.h                   |  2 +-
+ drivers/pci/pcie/aer.c              | 12 +++----
+ drivers/pci/pcie/dpc.c              |  3 +-
+ drivers/pci/pcie/err.c              | 54 +++++------------------------
+ drivers/pci/pcie/portdrv.h          |  5 ---
+ drivers/pci/pcie/portdrv_core.c     | 21 -----------
+ 7 files changed, 19 insertions(+), 97 deletions(-)
 
-diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-index 0e356ed0d73f..5c2e9d45a269 100644
---- a/drivers/pci/pcie/dpc.c
-+++ b/drivers/pci/pcie/dpc.c
-@@ -18,13 +18,6 @@
- #include "portdrv.h"
- #include "../pci.h"
+diff --git a/Documentation/PCI/pcieaer-howto.rst b/Documentation/PCI/pcieaer-howto.rst
+index 18bdefaafd1a..afbd8c1c321d 100644
+--- a/Documentation/PCI/pcieaer-howto.rst
++++ b/Documentation/PCI/pcieaer-howto.rst
+@@ -156,12 +156,6 @@ default reset_link function, but different upstream ports might
+ have different specifications to reset pci express link, so all
+ upstream ports should provide their own reset_link functions.
  
--struct dpc_dev {
--	struct pcie_device	*dev;
--	u16			cap_pos;
--	bool			rp_extensions;
--	u8			rp_log_size;
--};
+-In struct pcie_port_service_driver, a new pointer, reset_link, is
+-added.
+-::
 -
- static const char * const rp_pio_error_string[] = {
- 	"Configuration Request received UR Completion",	 /* Bit Position 0  */
- 	"Configuration Request received CA Completion",	 /* Bit Position 1  */
-@@ -47,63 +40,42 @@ static const char * const rp_pio_error_string[] = {
- 	"Memory Request Completion Timeout",		 /* Bit Position 18 */
+-	pci_ers_result_t (*reset_link) (struct pci_dev *dev);
+-
+ Section 3.2.2.2 provides more detailed info on when to call
+ reset_link.
+ 
+@@ -212,15 +206,10 @@ error_detected(dev, pci_channel_io_frozen) to all drivers within
+ a hierarchy in question. Then, performing link reset at upstream is
+ necessary. As different kinds of devices might use different approaches
+ to reset link, AER port service driver is required to provide the
+-function to reset link. Firstly, kernel looks for if the upstream
+-component has an aer driver. If it has, kernel uses the reset_link
+-callback of the aer driver. If the upstream component has no aer driver
+-and the port is downstream port, we will perform a hot reset as the
+-default by setting the Secondary Bus Reset bit of the Bridge Control
+-register associated with the downstream port. As for upstream ports,
+-they should provide their own aer service drivers with reset_link
+-function. If error_detected returns PCI_ERS_RESULT_CAN_RECOVER and
+-reset_link returns PCI_ERS_RESULT_RECOVERED, the error handling goes
++function to reset link via callback parameter of pcie_do_recovery()
++function. If reset_link is not NULL, recovery function will use it
++to reset the link. If error_detected returns PCI_ERS_RESULT_CAN_RECOVER
++and reset_link returns PCI_ERS_RESULT_RECOVERED, the error handling goes
+ to mmio_enabled.
+ 
+ helper functions
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 6394e7746fb5..3e5efb83e9a2 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -548,7 +548,7 @@ static inline int pci_dev_specific_disable_acs_redir(struct pci_dev *dev)
+ 
+ /* PCI error reporting and recovery */
+ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
+-		      u32 service);
++		      pci_ers_result_t (*reset_link)(struct pci_dev *pdev));
+ 
+ bool pcie_wait_for_link(struct pci_dev *pdev, bool active);
+ #ifdef CONFIG_PCIEASPM
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index 4a818b07a1af..c0540c3761dc 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -102,6 +102,7 @@ struct aer_stats {
+ #define ERR_UNCOR_ID(d)			(d >> 16)
+ 
+ static int pcie_aer_disable;
++static pci_ers_result_t aer_root_reset(struct pci_dev *dev);
+ 
+ void pci_no_aer(void)
+ {
+@@ -1053,11 +1054,9 @@ static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
+ 					info->status);
+ 		pci_aer_clear_device_status(dev);
+ 	} else if (info->severity == AER_NONFATAL)
+-		pcie_do_recovery(dev, pci_channel_io_normal,
+-				 PCIE_PORT_SERVICE_AER);
++		pcie_do_recovery(dev, pci_channel_io_normal, aer_root_reset);
+ 	else if (info->severity == AER_FATAL)
+-		pcie_do_recovery(dev, pci_channel_io_frozen,
+-				 PCIE_PORT_SERVICE_AER);
++		pcie_do_recovery(dev, pci_channel_io_frozen, aer_root_reset);
+ 	pci_dev_put(dev);
+ }
+ 
+@@ -1094,10 +1093,10 @@ static void aer_recover_work_func(struct work_struct *work)
+ 		cper_print_aer(pdev, entry.severity, entry.regs);
+ 		if (entry.severity == AER_NONFATAL)
+ 			pcie_do_recovery(pdev, pci_channel_io_normal,
+-					 PCIE_PORT_SERVICE_AER);
++					 aer_root_reset);
+ 		else if (entry.severity == AER_FATAL)
+ 			pcie_do_recovery(pdev, pci_channel_io_frozen,
+-					 PCIE_PORT_SERVICE_AER);
++					 aer_root_reset);
+ 		pci_dev_put(pdev);
+ 	}
+ }
+@@ -1501,7 +1500,6 @@ static struct pcie_port_service_driver aerdriver = {
+ 
+ 	.probe		= aer_probe,
+ 	.remove		= aer_remove,
+-	.reset_link	= aer_root_reset,
  };
  
--static struct dpc_dev *to_dpc_dev(struct pci_dev *dev)
+ /**
+diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+index 5c2e9d45a269..0c45133a9a91 100644
+--- a/drivers/pci/pcie/dpc.c
++++ b/drivers/pci/pcie/dpc.c
+@@ -235,7 +235,7 @@ static irqreturn_t dpc_handler(int irq, void *context)
+ 	}
+ 
+ 	/* We configure DPC so it only triggers on ERR_FATAL */
+-	pcie_do_recovery(pdev, pci_channel_io_frozen, PCIE_PORT_SERVICE_DPC);
++	pcie_do_recovery(pdev, pci_channel_io_frozen, dpc_reset_link);
+ 
+ 	return IRQ_HANDLED;
+ }
+@@ -321,7 +321,6 @@ static struct pcie_port_service_driver dpcdriver = {
+ 	.service	= PCIE_PORT_SERVICE_DPC,
+ 	.probe		= dpc_probe,
+ 	.remove		= dpc_remove,
+-	.reset_link	= dpc_reset_link,
+ };
+ 
+ int __init pcie_dpc_init(void)
+diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+index 6e52591a4722..caeb6f5d9970 100644
+--- a/drivers/pci/pcie/err.c
++++ b/drivers/pci/pcie/err.c
+@@ -146,50 +146,9 @@ static int report_resume(struct pci_dev *dev, void *data)
+ 	return 0;
+ }
+ 
+-/**
+- * default_reset_link - default reset function
+- * @dev: pointer to pci_dev data structure
+- *
+- * Invoked when performing link reset on a Downstream Port or a
+- * Root Port with no aer driver.
+- */
+-static pci_ers_result_t default_reset_link(struct pci_dev *dev)
 -{
--	struct device *device;
+-	int rc;
 -
--	device = pcie_port_find_device(dev, PCIE_PORT_SERVICE_DPC);
--	if (!device)
--		return NULL;
--	return get_service_data(to_pcie_device(device));
+-	rc = pci_bus_error_reset(dev);
+-	pci_printk(KERN_DEBUG, dev, "downstream link has been reset\n");
+-	return rc ? PCI_ERS_RESULT_DISCONNECT : PCI_ERS_RESULT_RECOVERED;
 -}
 -
- void pci_save_dpc_state(struct pci_dev *dev)
- {
--	struct dpc_dev *dpc;
- 	struct pci_cap_saved_state *save_state;
- 	u16 *cap;
- 
- 	if (!pci_is_pcie(dev))
- 		return;
- 
--	dpc = to_dpc_dev(dev);
--	if (!dpc)
--		return;
+-static pci_ers_result_t reset_link(struct pci_dev *dev, u32 service)
+-{
+-	pci_ers_result_t status;
+-	struct pcie_port_service_driver *driver = NULL;
 -
- 	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_DPC);
- 	if (!save_state)
- 		return;
- 
- 	cap = (u16 *)&save_state->cap.data[0];
--	pci_read_config_word(dev, dpc->cap_pos + PCI_EXP_DPC_CTL, cap);
-+	pci_read_config_word(dev, dev->dpc_cap + PCI_EXP_DPC_CTL, cap);
- }
- 
- void pci_restore_dpc_state(struct pci_dev *dev)
- {
--	struct dpc_dev *dpc;
- 	struct pci_cap_saved_state *save_state;
- 	u16 *cap;
- 
- 	if (!pci_is_pcie(dev))
- 		return;
- 
--	dpc = to_dpc_dev(dev);
--	if (!dpc)
--		return;
+-	driver = pcie_port_find_service(dev, service);
+-	if (driver && driver->reset_link) {
+-		status = driver->reset_link(dev);
+-	} else if (pcie_downstream_port(dev)) {
+-		status = default_reset_link(dev);
+-	} else {
+-		pci_printk(KERN_DEBUG, dev, "no link-reset support at upstream device %s\n",
+-			pci_name(dev));
+-		return PCI_ERS_RESULT_DISCONNECT;
+-	}
 -
- 	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_DPC);
- 	if (!save_state)
- 		return;
- 
- 	cap = (u16 *)&save_state->cap.data[0];
--	pci_write_config_word(dev, dpc->cap_pos + PCI_EXP_DPC_CTL, *cap);
-+	pci_write_config_word(dev, dev->dpc_cap + PCI_EXP_DPC_CTL, *cap);
- }
- 
--static int dpc_wait_rp_inactive(struct dpc_dev *dpc)
-+static int dpc_wait_rp_inactive(struct pci_dev *pdev)
- {
- 	unsigned long timeout = jiffies + HZ;
--	struct pci_dev *pdev = dpc->dev->port;
--	u16 cap = dpc->cap_pos, status;
-+	u16 cap = pdev->dpc_cap, status;
- 
- 	pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
- 	while (status & PCI_EXP_DPC_RP_BUSY &&
-@@ -120,15 +92,13 @@ static int dpc_wait_rp_inactive(struct dpc_dev *dpc)
- 
- static pci_ers_result_t dpc_reset_link(struct pci_dev *pdev)
- {
--	struct dpc_dev *dpc;
- 	u16 cap;
- 
- 	/*
- 	 * DPC disables the Link automatically in hardware, so it has
- 	 * already been reset by the time we get here.
- 	 */
--	dpc = to_dpc_dev(pdev);
--	cap = dpc->cap_pos;
-+	cap = pdev->dpc_cap;
- 
- 	/*
- 	 * Wait until the Link is inactive, then clear DPC Trigger Status
-@@ -136,7 +106,7 @@ static pci_ers_result_t dpc_reset_link(struct pci_dev *pdev)
- 	 */
- 	pcie_wait_for_link(pdev, false);
- 
--	if (dpc->rp_extensions && dpc_wait_rp_inactive(dpc))
-+	if (pdev->dpc_rp_extensions && dpc_wait_rp_inactive(pdev))
- 		return PCI_ERS_RESULT_DISCONNECT;
- 
- 	pci_write_config_word(pdev, cap + PCI_EXP_DPC_STATUS,
-@@ -155,10 +125,9 @@ static pci_ers_result_t dpc_reset_link(struct pci_dev *pdev)
- 	return PCI_ERS_RESULT_RECOVERED;
- }
- 
--static void dpc_process_rp_pio_error(struct dpc_dev *dpc)
-+static void dpc_process_rp_pio_error(struct pci_dev *pdev)
- {
--	struct pci_dev *pdev = dpc->dev->port;
--	u16 cap = dpc->cap_pos, dpc_status, first_error;
-+	u16 cap = pdev->dpc_cap, dpc_status, first_error;
- 	u32 status, mask, sev, syserr, exc, dw0, dw1, dw2, dw3, log, prefix;
- 	int i;
- 
-@@ -183,7 +152,7 @@ static void dpc_process_rp_pio_error(struct dpc_dev *dpc)
- 				first_error == i ? " (First)" : "");
- 	}
- 
--	if (dpc->rp_log_size < 4)
-+	if (pdev->dpc_rp_log_size < 4)
- 		goto clear_status;
- 	pci_read_config_dword(pdev, cap + PCI_EXP_DPC_RP_PIO_HEADER_LOG,
- 			      &dw0);
-@@ -196,12 +165,12 @@ static void dpc_process_rp_pio_error(struct dpc_dev *dpc)
- 	pci_err(pdev, "TLP Header: %#010x %#010x %#010x %#010x\n",
- 		dw0, dw1, dw2, dw3);
- 
--	if (dpc->rp_log_size < 5)
-+	if (pdev->dpc_rp_log_size < 5)
- 		goto clear_status;
- 	pci_read_config_dword(pdev, cap + PCI_EXP_DPC_RP_PIO_IMPSPEC_LOG, &log);
- 	pci_err(pdev, "RP PIO ImpSpec Log %#010x\n", log);
- 
--	for (i = 0; i < dpc->rp_log_size - 5; i++) {
-+	for (i = 0; i < pdev->dpc_rp_log_size - 5; i++) {
- 		pci_read_config_dword(pdev,
- 			cap + PCI_EXP_DPC_RP_PIO_TLPPREFIX_LOG, &prefix);
- 		pci_err(pdev, "TLP Prefix Header: dw%d, %#010x\n", i, prefix);
-@@ -234,10 +203,9 @@ static int dpc_get_aer_uncorrect_severity(struct pci_dev *dev,
- 
- static irqreturn_t dpc_handler(int irq, void *context)
- {
-+	struct pci_dev *pdev = context;
-+	u16 cap = pdev->dpc_cap, status, source, reason, ext_reason;
- 	struct aer_err_info info;
--	struct dpc_dev *dpc = context;
--	struct pci_dev *pdev = dpc->dev->port;
--	u16 cap = dpc->cap_pos, status, source, reason, ext_reason;
- 
- 	pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
- 	pci_read_config_word(pdev, cap + PCI_EXP_DPC_SOURCE_ID, &source);
-@@ -256,8 +224,8 @@ static irqreturn_t dpc_handler(int irq, void *context)
- 				     "reserved error");
- 
- 	/* show RP PIO error detail information */
--	if (dpc->rp_extensions && reason == 3 && ext_reason == 0)
--		dpc_process_rp_pio_error(dpc);
-+	if (pdev->dpc_rp_extensions && reason == 3 && ext_reason == 0)
-+		dpc_process_rp_pio_error(pdev);
- 	else if (reason == 0 &&
- 		 dpc_get_aer_uncorrect_severity(pdev, &info) &&
- 		 aer_get_device_error_info(pdev, &info)) {
-@@ -274,9 +242,8 @@ static irqreturn_t dpc_handler(int irq, void *context)
- 
- static irqreturn_t dpc_irq(int irq, void *context)
- {
--	struct dpc_dev *dpc = (struct dpc_dev *)context;
--	struct pci_dev *pdev = dpc->dev->port;
--	u16 cap = dpc->cap_pos, status;
-+	struct pci_dev *pdev = context;
-+	u16 cap = pdev->dpc_cap, status;
- 
- 	pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
- 
-@@ -293,7 +260,6 @@ static irqreturn_t dpc_irq(int irq, void *context)
- #define FLAG(x, y) (((x) & (y)) ? '+' : '-')
- static int dpc_probe(struct pcie_device *dev)
- {
--	struct dpc_dev *dpc;
- 	struct pci_dev *pdev = dev->port;
- 	struct device *device = &dev->device;
- 	int status;
-@@ -302,43 +268,37 @@ static int dpc_probe(struct pcie_device *dev)
- 	if (pcie_aer_get_firmware_first(pdev) && !pcie_ports_dpc_native)
- 		return -ENOTSUPP;
- 
--	dpc = devm_kzalloc(device, sizeof(*dpc), GFP_KERNEL);
--	if (!dpc)
--		return -ENOMEM;
+-	if ((status != PCI_ERS_RESULT_RECOVERED) &&
+-	    (status != PCI_ERS_RESULT_NEED_RESET)) {
+-		pci_printk(KERN_DEBUG, dev, "link reset at upstream device %s failed\n",
+-			pci_name(dev));
+-		return PCI_ERS_RESULT_DISCONNECT;
+-	}
 -
--	dpc->cap_pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_DPC);
--	dpc->dev = dev;
--	set_service_data(dev, dpc);
-+	pdev->dpc_cap = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_DPC);
- 
- 	status = devm_request_threaded_irq(device, dev->irq, dpc_irq,
- 					   dpc_handler, IRQF_SHARED,
--					   "pcie-dpc", dpc);
-+					   "pcie-dpc", pdev);
- 	if (status) {
- 		pci_warn(pdev, "request IRQ%d failed: %d\n", dev->irq,
- 			 status);
- 		return status;
- 	}
- 
--	pci_read_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CAP, &cap);
--	pci_read_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL, &ctl);
-+	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CAP, &cap);
-+	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl);
- 
--	dpc->rp_extensions = (cap & PCI_EXP_DPC_CAP_RP_EXT);
--	if (dpc->rp_extensions) {
--		dpc->rp_log_size = (cap & PCI_EXP_DPC_RP_PIO_LOG_SIZE) >> 8;
--		if (dpc->rp_log_size < 4 || dpc->rp_log_size > 9) {
-+	pdev->dpc_rp_extensions = (cap & PCI_EXP_DPC_CAP_RP_EXT) ? 1 : 0;
-+	if (pdev->dpc_rp_extensions) {
-+		pdev->dpc_rp_log_size = (cap & PCI_EXP_DPC_RP_PIO_LOG_SIZE) >> 8;
-+		if (pdev->dpc_rp_log_size < 4 || pdev->dpc_rp_log_size > 9) {
- 			pci_err(pdev, "RP PIO log size %u is invalid\n",
--				dpc->rp_log_size);
--			dpc->rp_log_size = 0;
-+				pdev->dpc_rp_log_size);
-+			pdev->dpc_rp_log_size = 0;
- 		}
- 	}
- 
- 	ctl = (ctl & 0xfff4) | PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN;
--	pci_write_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL, ctl);
-+	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl);
- 
- 	pci_info(pdev, "error containment capabilities: Int Msg #%d, RPExt%c PoisonedTLP%c SwTrigger%c RP PIO Log %d, DL_ActiveErr%c\n",
- 		 cap & PCI_EXP_DPC_IRQ, FLAG(cap, PCI_EXP_DPC_CAP_RP_EXT),
- 		 FLAG(cap, PCI_EXP_DPC_CAP_POISONED_TLP),
--		 FLAG(cap, PCI_EXP_DPC_CAP_SW_TRIGGER), dpc->rp_log_size,
-+		 FLAG(cap, PCI_EXP_DPC_CAP_SW_TRIGGER), pdev->dpc_rp_log_size,
- 		 FLAG(cap, PCI_EXP_DPC_CAP_DL_ACTIVE));
- 
- 	pci_add_ext_cap_save_buffer(pdev, PCI_EXT_CAP_ID_DPC, sizeof(u16));
-@@ -347,13 +307,12 @@ static int dpc_probe(struct pcie_device *dev)
- 
- static void dpc_remove(struct pcie_device *dev)
+-	return status;
+-}
+-
+-void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
+-		      u32 service)
++void pcie_do_recovery(struct pci_dev *dev,
++		      enum pci_channel_state state,
++		      pci_ers_result_t (*reset_link)(struct pci_dev *pdev))
  {
--	struct dpc_dev *dpc = get_service_data(dev);
- 	struct pci_dev *pdev = dev->port;
- 	u16 ctl;
+ 	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
+ 	struct pci_bus *bus;
+@@ -206,9 +165,12 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
+ 	pci_dbg(dev, "broadcast error_detected message\n");
+ 	if (state == pci_channel_io_frozen) {
+ 		pci_walk_bus(bus, report_frozen_detected, &status);
+-		status = reset_link(dev, service);
+-		if (status == PCI_ERS_RESULT_DISCONNECT)
++		status = reset_link(dev);
++		if ((status != PCI_ERS_RESULT_RECOVERED) &&
++		    (status != PCI_ERS_RESULT_NEED_RESET)) {
++			pci_dbg(dev, "link reset at upstream device failed\n");
+ 			goto failed;
++		}
+ 	} else {
+ 		pci_walk_bus(bus, report_normal_detected, &status);
+ 	}
+diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
+index 1e673619b101..64b5e081cdb2 100644
+--- a/drivers/pci/pcie/portdrv.h
++++ b/drivers/pci/pcie/portdrv.h
+@@ -92,9 +92,6 @@ struct pcie_port_service_driver {
+ 	/* Device driver may resume normal operations */
+ 	void (*error_resume)(struct pci_dev *dev);
  
--	pci_read_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL, &ctl);
-+	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl);
- 	ctl &= ~(PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN);
--	pci_write_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL, ctl);
-+	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl);
+-	/* Link Reset Capability - AER service driver specific */
+-	pci_ers_result_t (*reset_link)(struct pci_dev *dev);
+-
+ 	int port_type;  /* Type of the port this driver can handle */
+ 	u32 service;    /* Port service this device represents */
+ 
+@@ -161,7 +158,5 @@ static inline int pcie_aer_get_firmware_first(struct pci_dev *pci_dev)
  }
- 
- static struct pcie_port_service_driver dpcdriver = {
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 3840a541a9de..a0b7e7a53741 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -444,6 +444,11 @@ struct pci_dev {
- 	const struct attribute_group **msi_irq_groups;
  #endif
- 	struct pci_vpd *vpd;
-+#ifdef CONFIG_PCIE_DPC
-+	u16		dpc_cap;
-+	unsigned int	dpc_rp_extensions:1;
-+	u8		dpc_rp_log_size;
-+#endif
- #ifdef CONFIG_PCI_ATS
- 	union {
- 		struct pci_sriov	*sriov;		/* PF: SR-IOV info */
+ 
+-struct pcie_port_service_driver *pcie_port_find_service(struct pci_dev *dev,
+-							u32 service);
+ struct device *pcie_port_find_device(struct pci_dev *dev, u32 service);
+ #endif /* _PORTDRV_H_ */
+diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+index 5075cb9e850c..50a9522ab07d 100644
+--- a/drivers/pci/pcie/portdrv_core.c
++++ b/drivers/pci/pcie/portdrv_core.c
+@@ -458,27 +458,6 @@ static int find_service_iter(struct device *device, void *data)
+ 	return 0;
+ }
+ 
+-/**
+- * pcie_port_find_service - find the service driver
+- * @dev: PCI Express port the service is associated with
+- * @service: Service to find
+- *
+- * Find PCI Express port service driver associated with given service
+- */
+-struct pcie_port_service_driver *pcie_port_find_service(struct pci_dev *dev,
+-							u32 service)
+-{
+-	struct pcie_port_service_driver *drv;
+-	struct portdrv_service_data pdrvs;
+-
+-	pdrvs.drv = NULL;
+-	pdrvs.service = service;
+-	device_for_each_child(&dev->dev, &pdrvs, find_service_iter);
+-
+-	drv = pdrvs.drv;
+-	return drv;
+-}
+-
+ /**
+  * pcie_port_find_device - find the struct device
+  * @dev: PCI Express port the service is associated with
 -- 
 2.17.1
 
