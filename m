@@ -2,79 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 290451919A7
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Mar 2020 20:04:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4AF711919F0
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Mar 2020 20:32:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbgCXTD4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 24 Mar 2020 15:03:56 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:45910 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727747AbgCXTD4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 24 Mar 2020 15:03:56 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jGoq1-00049g-Cz; Tue, 24 Mar 2020 20:03:45 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 23137100292; Tue, 24 Mar 2020 20:03:44 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Evan Green <evgreen@chromium.org>
-Cc:     Mathias Nyman <mathias.nyman@linux.intel.com>, x86@kernel.org,
-        linux-pci <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Ghorai\, Sukumar" <sukumar.ghorai@intel.com>,
-        "Amara\, Madhusudanarao" <madhusudanarao.amara@intel.com>,
-        "Nandamuri\, Srikanth" <srikanth.nandamuri@intel.com>
-Subject: Re: MSI interrupt for xhci still lost on 5.6-rc6 after cpu hotplug
-In-Reply-To: <CAE=gft6Fbibu17H+OfHZjmvHxboioFj09hAmozebc1TE_EqH5g@mail.gmail.com>
-References: <806c51fa-992b-33ac-61a9-00a606f82edb@linux.intel.com> <87d0974akk.fsf@nanos.tec.linutronix.de> <b9fbd55a-7f97-088d-2cc2-4e4ea86d9440@linux.intel.com> <87r1xjp3gn.fsf@nanos.tec.linutronix.de> <f8057cbc-4814-5083-cddd-d4eb1459529f@linux.intel.com> <878sjqfvmi.fsf@nanos.tec.linutronix.de> <CAE=gft6Fbibu17H+OfHZjmvHxboioFj09hAmozebc1TE_EqH5g@mail.gmail.com>
-Date:   Tue, 24 Mar 2020 20:03:44 +0100
-Message-ID: <87tv2dd17z.fsf@nanos.tec.linutronix.de>
+        id S1727160AbgCXTbt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 24 Mar 2020 15:31:49 -0400
+Received: from mga14.intel.com ([192.55.52.115]:28777 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725934AbgCXTbs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 24 Mar 2020 15:31:48 -0400
+IronPort-SDR: SWAUlNmxPqaC/IYu6LoO96NdmH/12TO+OZ/Hzyjxpe7vdW+ly/YNvt3TJksHPFI6luqoVC4YNb
+ yN7UXgm1Qrqg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 12:31:47 -0700
+IronPort-SDR: 8/VWxHUZ8NY4RmIqej7yewcPHcwLNpP4scEJKK1G8flVXsWoOafuGEnpmA/GWWQR4A85a5Q5RF
+ SBwJJ7+F7kKw==
+X-IronPort-AV: E=Sophos;i="5.72,301,1580803200"; 
+   d="scan'208";a="420008785"
+Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 12:31:46 -0700
+Date:   Tue, 24 Mar 2020 12:31:44 -0700
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        linux-edac@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-pm@vger.kernel.org,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-mmc@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
+        alsa-devel@alsa-project.org,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org
+Subject: Re: [patch 10/22] EDAC: Convert to new X86 CPU match macros
+Message-ID: <20200324193144.GA4104@agluck-desk2.amr.corp.intel.com>
+References: <20200320131345.635023594@linutronix.de>
+ <20200320131509.673579000@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200320131509.673579000@linutronix.de>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Evan Green <evgreen@chromium.org> writes:
-> On Mon, Mar 23, 2020 at 5:24 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->> And of course all of this is so well documented that all of us can
->> clearly figure out what's going on...
->
-> I won't pretend to know what's going on, so I'll preface this by
-> labeling it all as "flailing", but:
->
-> I wonder if there's some way the interrupt can get delayed between
-> XHCI snapping the torn value and it finding its way into the IRR. For
-> instance, if xhci read this value at the start of their interrupt
-> moderation timer period, that would be awful (I hope they don't do
-> this). One test patch would be to carve out 8 vectors reserved for
-> xhci on all cpus. Whenever you change the affinity, the assigned
-> vector is always reserved_base + cpu_number. That lets you exercise
-> the affinity switching code, but in a controlled manner where torn
-> interrupts could be easily seen (ie hey I got an interrupt on cpu 4's
-> vector but I'm cpu 2). I might struggle to write such a change, but in
-> theory it's doable.
+On Fri, Mar 20, 2020 at 02:13:55PM +0100, Thomas Gleixner wrote:
+> The new macro set has a consistent namespace and uses C99 initializers
+> instead of the grufty C89 ones.
+                 ^^^^^^
 
-Well, the point is that we don't see a spurious interrupt on any
-CPU. We added a traceprintk into do_IRQ() and that would immediately
-tell us where the thing goes off into lala land. Which it didn't.
+grufty? Did you mean crufty?
 
-> I was alternately trying to build a theory in my head about the write
-> somehow being posted and getting out of order, but I don't think that
-> can happen.
+Though I suppose grufty may work as well here:
 
-If that happens then the lost XHCI interrupt is the least of your
-worries.
+	gruft. Noun. (uncountable) (dialect) the particles of soil
+	that are spattered up onto grass by the rain.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-Thanks,
+Tested the Broadwell EDAC driver. The other changes look
+good too.
 
-        tglx
-
-
+Acked-by: Tony Luck <tony.luck@intel.com>
