@@ -2,108 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B612191428
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Mar 2020 16:23:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B2A2191489
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Mar 2020 16:38:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbgCXPV6 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Tue, 24 Mar 2020 11:21:58 -0400
-Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:16196 "EHLO
-        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727491AbgCXPV6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 24 Mar 2020 11:21:58 -0400
-Received: from pps.filterd (m0150244.ppops.net [127.0.0.1])
-        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02OFKCvO027434;
-        Tue, 24 Mar 2020 15:21:55 GMT
-Received: from g4t3425.houston.hpe.com (g4t3425.houston.hpe.com [15.241.140.78])
-        by mx0b-002e3701.pphosted.com with ESMTP id 2yyfwy2gw4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 24 Mar 2020 15:21:55 +0000
-Received: from G4W9121.americas.hpqcorp.net (exchangepmrr1.us.hpecorp.net [16.210.21.16])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by g4t3425.houston.hpe.com (Postfix) with ESMTPS id 1482FC2;
-        Tue, 24 Mar 2020 15:21:55 +0000 (UTC)
-Received: from G2W6309.americas.hpqcorp.net (2002:10c5:4033::10c5:4033) by
- G4W9121.americas.hpqcorp.net (2002:10d2:1510::10d2:1510) with Microsoft SMTP
- Server (TLS) id 15.0.1367.3; Tue, 24 Mar 2020 15:21:54 +0000
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (15.241.52.12) by
- G2W6309.americas.hpqcorp.net (16.197.64.51) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3 via Frontend Transport; Tue, 24 Mar 2020 15:21:54 +0000
+        id S1727791AbgCXPfP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 24 Mar 2020 11:35:15 -0400
+Received: from mail-bn7nam10on2047.outbound.protection.outlook.com ([40.107.92.47]:30561
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727216AbgCXPfP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 24 Mar 2020 11:35:15 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PxNlGsR3qKDq5T1wKSsvnx6OKWipmlM+IlyX3fmDFWeZgY/JDgCTZEEBaKtM3qTAcCYp8B8xfokuhuoKIkXg+pVKsbxxXqKW5pW+2d2MNZAO7MZziSLksfLQIq0z387BxRj69BinvgnVbiWnzAw8g/ZneWdBSLqkyv8ApZlkq6amjLnkp1Ag7ZHx+PJbyqVmCkCZgbdyUbiubqmLu5GL2vnrCOsdV2nXf2IOmBFa6PcLxHgGVq59PbN/DnLaP+shH7ufQrTleRosLhh2Rra5Vy4VeyQN23QCnFUkpvEi/ymxVrw+h03kQP8Df37QSi15b1oZ+b5ERBSVxiz+F2rs7Q==
+ b=SsQBVJA+8N65jbmGGGhEjSFmtNoRCnbMcR0uIDwW2Yf5uV/7YKjVf+DNh8agjx+BjFoNivu5w26MqDUXl5Rj1ITEPg5op0O0xO6dsEnRDj7XIcn4TNS/mDfffW5uHwBKBZUjpT+Fap4XE34tA29V1rnbncCNkmMTU25mq03WAg6Jq9SIWgX5JOEcTn4BitnXfI/6qIWsgxSDVStkSZVkfucoMlR+wqN3jabNN6qvqTlIDlvzpHnNnhlDjGlqUphESL+bgV328UbF0plLLqcj4AF6TBULwSzLsN7lus+XrU9mjmmtOReWLXFZjRaK2JxEKsy2khB8m2iazkeGxI23xQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=n8o1KagL3RpAgjPvBwbN8bBI1D3mWVio9GR0Z+eVZ14=;
- b=MVFx3oRLZhO3Fh1Gr3Ym/jle2kRcPnsUOWzkRdLkM4uLG3zrzbPolJ8MxC6bvEdt5z56+IO4dAiP9k13Beq66j5ZYNgD0eAR4oZyBb/iFvD3wCxNuZ6AvPl405+5ECotu1UQhk+ChRmn/67DavrlW5Ai5rF2Bc8FCuPAdLMkX+P0Ill5UeC75jmuOAkmAaSRYnLPBMnrlH8leM12K3pev1aNMHh0H9lispRHxR14IpD2pZOF2hrrh6XhpRePibfWqQiYPmsI1CKXrj3cIemRt4mF1vMUZjoYL+fRZeyhhxkMpAvUV+FBectzTtqY7TEDtmodd9UUeV/4rFJwOgYcwQ==
+ bh=1JsEBY4j00nATxY+fIRCmAJNf2KWa2YqnvuDuqiR+Ks=;
+ b=U1yyjZXkuwSSz4oypjslNVGdPgSvoCSgkxnKkta0y5+EfUDv8LC45O/axFySh9WCTDygILYAyYgPw4yPFhiT3mXQiVA7usZv663NjjYYKucLVN5U3nHlAqbAeP8psVkCk2rTzoeVj2hogYUTFk7V5Bk6rbjm46NeV0M2eE6hZwNQwsb28l/zqgWN0a5dgldDR+NSLpVzhJz7RlcE1C8dY8oLijsCtUmZW1qftBk5wxSK611NavdiYqZvOrkAps1sE6efxr9Dq6CJUtMpWd9en+fEaKd7jWaRR8MurTNRr04OMqySFuevOmtGef1CovW74kEJLpfnKRF8h0DIHXlP4A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hpe.com; dmarc=pass action=none header.from=hpe.com; dkim=pass
- header.d=hpe.com; arc=none
-Received: from CS1PR8401MB0728.NAMPRD84.PROD.OUTLOOK.COM
- (2a01:111:e400:7508::23) by CS1PR8401MB0421.NAMPRD84.PROD.OUTLOOK.COM
- (2a01:111:e400:7508::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.18; Tue, 24 Mar
- 2020 15:21:52 +0000
-Received: from CS1PR8401MB0728.NAMPRD84.PROD.OUTLOOK.COM
- ([fe80::6:bc44:30cb:4e63]) by CS1PR8401MB0728.NAMPRD84.PROD.OUTLOOK.COM
- ([fe80::6:bc44:30cb:4e63%6]) with mapi id 15.20.2835.021; Tue, 24 Mar 2020
- 15:21:52 +0000
-From:   "Haeuptle, Michael" <michael.haeuptle@hpe.com>
-To:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+ smtp.mailfrom=netapp.com; dmarc=pass action=none header.from=netapp.com;
+ dkim=pass header.d=netapp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=netapp.onmicrosoft.com; s=selector1-netapp-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1JsEBY4j00nATxY+fIRCmAJNf2KWa2YqnvuDuqiR+Ks=;
+ b=GtkyZHcjFL0FNhO4UooQNfcMoiKyJNFGsdm61f0eF8GmCiqMqa+XwmURFSsD0Kk5NYuxhn+cD8C3hv0ZmMp4VqGMc0RZRJMugeP+Z6aN8bUBUKY3J9M4RqG7M4gMZyWdZi4ihpP6Mmlgz/WVJcDiNw8+2da9GMPpmQ1Zb/9SreY=
+Received: from DM5PR06MB3132.namprd06.prod.outlook.com (2603:10b6:4:3c::29) by
+ DM5PR06MB2426.namprd06.prod.outlook.com (2603:10b6:3:57::19) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2835.20; Tue, 24 Mar 2020 15:35:12 +0000
+Received: from DM5PR06MB3132.namprd06.prod.outlook.com
+ ([fe80::f5cb:1d29:98a6:2569]) by DM5PR06MB3132.namprd06.prod.outlook.com
+ ([fe80::f5cb:1d29:98a6:2569%7]) with mapi id 15.20.2814.027; Tue, 24 Mar 2020
+ 15:35:12 +0000
+From:   "Hoyer, David" <David.Hoyer@netapp.com>
+To:     "Haeuptle, Michael" <michael.haeuptle@hpe.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
 CC:     "michaelhaeuptle@gmail.com" <michaelhaeuptle@gmail.com>
 Subject: RE: Deadlock during PCIe hot remove
 Thread-Topic: Deadlock during PCIe hot remove
-Thread-Index: AdYB6Gv3K0A6oSaTTxyvgTO56UtwywABKdFA
-Date:   Tue, 24 Mar 2020 15:21:52 +0000
-Message-ID: <CS1PR8401MB0728FC6FDAB8A35C22BD90EC95F10@CS1PR8401MB0728.NAMPRD84.PROD.OUTLOOK.COM>
+Thread-Index: AdYB6Gv3K0A6oSaTTxyvgTO56UtwywABKdFAAAEZcnA=
+Date:   Tue, 24 Mar 2020 15:35:12 +0000
+Message-ID: <DM5PR06MB3132D4C5AA587EEC211C9FB892F10@DM5PR06MB3132.namprd06.prod.outlook.com>
+References: <CS1PR8401MB0728FC6FDAB8A35C22BD90EC95F10@CS1PR8401MB0728.NAMPRD84.PROD.OUTLOOK.COM>
+In-Reply-To: <CS1PR8401MB0728FC6FDAB8A35C22BD90EC95F10@CS1PR8401MB0728.NAMPRD84.PROD.OUTLOOK.COM>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-originating-ip: [75.71.233.68]
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=David.Hoyer@netapp.com; 
+x-originating-ip: [216.240.24.5]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: d3340843-aefe-4144-de72-08d7d00714b0
-x-ms-traffictypediagnostic: CS1PR8401MB0421:
-x-microsoft-antispam-prvs: <CS1PR8401MB0421F586FCC11CC02047573595F10@CS1PR8401MB0421.NAMPRD84.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-ms-office365-filtering-correlation-id: ada783f1-b56f-46f9-3301-08d7d008f19e
+x-ms-traffictypediagnostic: DM5PR06MB2426:
+x-microsoft-antispam-prvs: <DM5PR06MB24262CD287E5A9CC8BC9897592F10@DM5PR06MB2426.namprd06.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
 x-forefront-prvs: 03524FBD26
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(346002)(376002)(396003)(39860400002)(8936002)(81156014)(478600001)(7696005)(2906002)(71200400001)(186003)(53546011)(6506007)(86362001)(26005)(8676002)(4326008)(5660300002)(52536014)(6916009)(55016002)(66446008)(66556008)(66476007)(81166006)(66946007)(9686003)(64756008)(33656002)(316002)(76116006);DIR:OUT;SFP:1102;SCL:1;SRVR:CS1PR8401MB0421;H:CS1PR8401MB0728.NAMPRD84.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
-received-spf: None (protection.outlook.com: hpe.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(396003)(376002)(39860400002)(346002)(76116006)(66446008)(8676002)(66476007)(7696005)(81166006)(296002)(316002)(52536014)(6506007)(5660300002)(2906002)(26005)(81156014)(478600001)(4326008)(53546011)(71200400001)(66946007)(64756008)(66556008)(8936002)(110136005)(86362001)(9686003)(33656002)(55016002)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR06MB2426;H:DM5PR06MB3132.namprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
+received-spf: None (protection.outlook.com: netapp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 9TTJ5CnptxXlmYv5l5pDkIuh44urfnKog63UWJJJg+4gMBn4QSnyvthRRwvnOEp7YC9rLQ1M1lvX/zVOcehV8xqTjcHCUdyE2pbsKQ6mvbS96OrfmV4ZH8kvakbsBzKbITp+H/gpGvWIKRmRHFpth1puXwJhJfFdvR7VFWYFbBmBZrPcvQZEDMtemdAouRL7AOpQU2RCBNFRDe2gBIdlBwHSYeiGZnhi7sh9Gqsg58uKqX+AhQMZhSNMlACLPaqh4jCHQS8mevDBUKz0AJTNGZlMOAXGdP/nDc2M4EZMRQYP9IWyhKmNK1qit5k/EE5Bapi2xSDai2bD9cYJspeq+v0DpKMYHlJuU1d9ZlbYS9Ug/9zCLyqS//Q5v47FUki+m3/fswwuQglt2iRzvUH6Vw1nPp3YyZwzhdIDBn8yHINSntKB+zvp2zfzizNKy7ck
-x-ms-exchange-antispam-messagedata: 7damsQW5EeWqdUgUmNdBm2HVJqXvPDg/Bxcuu9UFbdeejG/PovjMhSyagLgsLUBQOM5wJ7Qp411bh4EnfudAwTYrjRCawT3Tu9OmFHVw36VLBAYX0fbgZNnVQNoyq+eNd2kDnleJWV+Qt3vvObL/yw==
+x-microsoft-antispam-message-info: 5u3CZoY6SJyXwRSSS6c7gkkAnlyCof5gGdZZnsrPifXbaR453jqOixeREA8tX2ln5C99V7S4sBqzciiNgUFD7nTGYfMpMHANFiZrhRvUvRkVm6bCRRv+Rr55AH9BzOJmM4udWD1ISwi9D6epFTBTGfBy1BjPhRHB4mOuRt2VhsgrkeYdcBLWREn34eKbM8BzrQuQXxpBE3aJyUP7VMKMKH7FJ9jIP6Vt1eHHKo5B8EvAS3eoTQ8hRuBYYoKO/QFoXd6qVRI2OvjWyqCUB8dL6Nz0NIdcNBMPmoKQBRi4CbAsk7MYommejQ5bGkp3/W8AdxPLysFbfEyINzwxNTBdGRCqAvp91QjyTQ0wYUmMh4QBW0xM+QEWyxNp/UOuDdaxPPh2Pv0wSIyla04VMAlQhVFFaHO0bblm+FD0Y818dKCquSKjk0EsIll4QgGr/xh0
+x-ms-exchange-antispam-messagedata: D1y3kNM4rPitbLXpbooPCcYyybyF+Yb9TYZ2y0sNycJ9R/hfxy/p3bpD69SGDM5pbRkHDtoUps/Uj0D6uh4Ti3paHwVHk1o3LzqZiIG4G3qV3V+cm0/GWr1Krv8U/yrzV8IB7QZLoUqwU1pxqyJLFA==
 x-ms-exchange-transport-forked: True
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: d3340843-aefe-4144-de72-08d7d00714b0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Mar 2020 15:21:52.5329
+X-OriginatorOrg: netapp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ada783f1-b56f-46f9-3301-08d7d008f19e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Mar 2020 15:35:12.7267
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 105b2061-b669-4b31-92ac-24d304d195dc
+X-MS-Exchange-CrossTenant-id: 4b0911a0-929b-4715-944b-c03745165b3a
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: VNGvJJPyyFnTyFpszG6CLb1d3hA2r14Ffu61JSkvvselm+pI6VpQShyBoOul2fT5uKhwaUzFROqKtqsWDenqHFXW12/+JYcn5+k9u2U8wjQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CS1PR8401MB0421
-X-OriginatorOrg: hpe.com
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-24_05:2020-03-23,2020-03-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
- priorityscore=1501 lowpriorityscore=0 mlxlogscore=999 suspectscore=0
- mlxscore=0 phishscore=0 malwarescore=0 bulkscore=0 impostorscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003240085
+X-MS-Exchange-CrossTenant-userprincipalname: VaEn9mw2pUjC2puvbBsx2WPZjWAyjOdjbeh2lJ3q1NLFP6y8Ek8ZoH80sGPO2Dm5ThRtJM7rThT8YZ9NskHDzQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR06MB2426
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+You mentioned that you are using the latest pciehp code.   Does this code c=
+ontain the recently introduced ist_running flag?
+
+-----Original Message-----
+From: linux-pci-owner@vger.kernel.org <linux-pci-owner@vger.kernel.org> On =
+Behalf Of Haeuptle, Michael
+Sent: Tuesday, March 24, 2020 10:22 AM
+To: linux-pci@vger.kernel.org
+Cc: michaelhaeuptle@gmail.com
+Subject: RE: Deadlock during PCIe hot remove
+
+NetApp Security WARNING: This is an external email. Do not click links or o=
+pen attachments unless you recognize the sender and know the content is saf=
+e.
 
 
-From: Haeuptle, Michael 
+
+
+From: Haeuptle, Michael
 Sent: Tuesday, March 24, 2020 8:46 AM
 To: 'linux-pci@vger.kernel.org' <linux-pci@vger.kernel.org>
 Cc: 'michaelhaeuptle@gmail.com' <michaelhaeuptle@gmail.com>
@@ -111,22 +110,30 @@ Subject: Deadlock during PCIe hot remove
 
 Dear PCI maintainers,
 
-I'm running into a deadlock scenario between the hotplug, pcie and vfio_pci driver when removing multiple devices in parallel.
-This is happening on CentOS8 (4.18) with SPDK (spdk.io). I'm using the latest pciehp code, the rest is all 4.18.
+I'm running into a deadlock scenario between the hotplug, pcie and vfio_pci=
+ driver when removing multiple devices in parallel.
+This is happening on CentOS8 (4.18) with SPDK (spdk.io). I'm using the late=
+st pciehp code, the rest is all 4.18.
 
 The sequence that leads to the deadlock is as follows:
 
-The pciehp_ist() takes the reset_lock early in its processing. While the pciehp_ist processing is progressing, vfio_pci calls pci_try_reset_function() as part of vfio_pci_release or open. The pci_try_reset_function() takes the device lock.
+The pciehp_ist() takes the reset_lock early in its processing. While the pc=
+iehp_ist processing is progressing, vfio_pci calls pci_try_reset_function()=
+ as part of vfio_pci_release or open. The pci_try_reset_function() takes th=
+e device lock.
 
-Eventually, pci_try_reset_function() calls pci_reset_hotplug_slot() which calls pciehp_reset_slot(). The pciehp_reset_slot() tries to take the reset_lock but has to wait since it is already taken by pciehp_ist().
+Eventually, pci_try_reset_function() calls pci_reset_hotplug_slot() which c=
+alls pciehp_reset_slot(). The pciehp_reset_slot() tries to take the reset_l=
+ock but has to wait since it is already taken by pciehp_ist().
 
-Eventually pciehp_ist calls pcie_stop_device() which calls device_release_driver_internal(). This function also tries to take device_lock causing the dead lock.
+Eventually pciehp_ist calls pcie_stop_device() which calls device_release_d=
+river_internal(). This function also tries to take device_lock causing the =
+dead lock.
 
-Here's the kernel stack trace when the deadlock occurs: 
+Here's the kernel stack trace when the deadlock occurs:
 
-[root@localhost ~]# cat /proc/8594/task/8598/stack
-[<0>] pciehp_reset_slot+0xa5/0x220
-[<0>] pci_reset_hotplug_slot.cold.72+0x20/0x36
+[root@localhost ~]# cat /proc/8594/task/8598/stack [<0>] pciehp_reset_slot+=
+0xa5/0x220 [<0>] pci_reset_hotplug_slot.cold.72+0x20/0x36
 [<0>] pci_dev_reset_slot_function+0x72/0x9b
 [<0>] __pci_reset_function_locked+0x15b/0x190
 [<0>] pci_try_reset_function.cold.77+0x9b/0x108
@@ -140,10 +147,14 @@ Here's the kernel stack trace when the deadlock occurs:
 [<0>] entry_SYSCALL_64_after_hwframe+0x65/0xca
 [<0>] 0xffffffffffffffff
 
-I was wondering if there's a quick workaround. I think the pci_try_reset_function would need to take the reset_lock before the device lock but there doesn't seem to be a good way of doing that.
+I was wondering if there's a quick workaround. I think the pci_try_reset_fu=
+nction would need to take the reset_lock before the device lock but there d=
+oesn't seem to be a good way of doing that.
 
-I'm also trying to see if we can delay calling the vfio functions that are initiated by SPDK but I think this inherent race should be addressed.
+I'm also trying to see if we can delay calling the vfio functions that are =
+initiated by SPDK but I think this inherent race should be addressed.
 
-I'm also happy to submit a defect report if this emailing list is not appropriate.
+I'm also happy to submit a defect report if this emailing list is not appro=
+priate.
 
 * Michael
