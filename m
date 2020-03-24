@@ -2,147 +2,156 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 118DB191DA6
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Mar 2020 00:48:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B785191DBE
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Mar 2020 00:49:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbgCXXsx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 24 Mar 2020 19:48:53 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:46474 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726212AbgCXXsw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 24 Mar 2020 19:48:52 -0400
-Received: by mail-il1-f193.google.com with SMTP id e8so198381ilc.13;
-        Tue, 24 Mar 2020 16:48:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PKgozUjj14O/q7Sm3dF4aSRoq0XpT1MQsgLL9CSaZjM=;
-        b=DeWPhXQpyJwtpV6zpVMes5lNf1MkFRym44/YBfzxv15qVQi+jyr1z925UoywmmoWZn
-         BK2hjAVZWA0xhtg1lcHInT0Zj6PFZI2FVOk0bECySiz62MJh9u6tWdpoGUTz/6yec+NG
-         iozgC5ILG9Y8zbh/eU/F1T6Jqkde8IMXxl0QSAjm8T5oD0xIVQ0xkkNTIyiBW3tqUmgm
-         eT+t6PQMqj2ULofVyrSlXrf1IQqsoWHTiZx+Bmjyp79TX/SSsG3edhsk5y+tQpvpMrgy
-         oS5CsHtpyLss0V6gC1ZI1XHfy/IABjtoN2mGcvFayiM05qXhbAJU9mScyxVmL9z+1ruA
-         dDAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PKgozUjj14O/q7Sm3dF4aSRoq0XpT1MQsgLL9CSaZjM=;
-        b=OHsm8WOwAf85LdwdQc/i7iKLEYGYIAEvGH5XEUfEq0GgNmAtx8H1IyHda+xlD+zD76
-         hdQerDMqyPYAQqToMR7ls8z6x5fXJrtXnP8cY98nc+rezPW/V7uPamf3bqP8brAduZwS
-         c5cRHDevVykgZ7Sx+ODXOqoKz0fPGVqe9BZvTozVV/aOdRjs5HFXsS3vU8y1WAsfdiCf
-         5jN1jONb09rJAthbZz+z8C9bgsuAOIK/7FPt+lm9bE83fSviR7CUf4gftCcoIWOQfrxz
-         QB3ytt5hu3z9duQchQMSk3Mh+LfWVgxb+fm28EAURIX6BK18k2C42bKqmk8Xi7CzxjDk
-         hsSA==
-X-Gm-Message-State: ANhLgQ2EvndU0crmzlQS897IeShJ7efPBN83kYZfXr7bkltBhRZZuJ6u
-        TPIXz9BAbgPK5Mhm+D6AOY1O4RhnjvFzXw==
-X-Google-Smtp-Source: ADFU+vsdM3mbTPQBMevcUkjAI+m/Vqp9UZy5xEiHOQ3XRZA7+etAQs3iMb0sTquEGpaZvcKIFHDPrQ==
-X-Received: by 2002:a92:8151:: with SMTP id e78mr936348ild.227.1585093730380;
-        Tue, 24 Mar 2020 16:48:50 -0700 (PDT)
-Received: from localhost.localdomain (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
-        by smtp.gmail.com with ESMTPSA id c12sm6804109ila.31.2020.03.24.16.48.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Mar 2020 16:48:50 -0700 (PDT)
-From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        bhelgaas@google.com
-Cc:     rbilovol@cisco.com, ddutile@redhat.com, bodong@mellanox.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        skhan@linuxfoundation.org, ruslan.bilovol@gmail.com
-Subject: [PATCH] PCI: sysfs: Change bus_rescan and dev_rescan to rescan
-Date:   Tue, 24 Mar 2020 17:48:48 -0600
-Message-Id: <20200324234848.8299-1-skunberg.kelsey@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        id S1727188AbgCXXtt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 24 Mar 2020 19:49:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35472 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727177AbgCXXtr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 24 Mar 2020 19:49:47 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 688B020771;
+        Tue, 24 Mar 2020 23:49:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585093786;
+        bh=vpN9VZ3/XqMMlM29y3ksAh6NJ5OS375WskdTFbdbfKA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=03TcxpuWLlgAm5WWVV0XMINrlghzoU7/EZbpHYbBn90HrEVzboRSYClTlJ6sEOnmv
+         qcE5pEzfkJbrbE9fUuQtMrY/057+dB0eFB7VE3gwOXs5tVrISU1ei3nyvy5mrv3wgV
+         uvDHrPY85jawP5GSNelPoo5GQlCYzBXe5E3kMcyc=
+Date:   Tue, 24 Mar 2020 18:49:44 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     sathyanarayanan.kuppuswamy@linux.intel.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com
+Subject: Re: [PATCH v18 03/11] PCI/DPC: Fix DPC recovery issue in non hotplug
+ case
+Message-ID: <20200324234944.GA73526@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0e6f89cd6b9e4a72293cc90fafe93487d7c2d295.1585000084.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Kelsey Skunberg <kelsey.skunberg@gmail.com>
+On Mon, Mar 23, 2020 at 05:26:00PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> 
+> If hotplug is supported, during DPC event, hotplug
+> driver would remove the affected devices and detach
+> the drivers on DLLSC link down event and will
+> re-enumerate it once the DPC recovery is handled
+> and link comes back online (on DLLSC LINK up event).
+> Hence we don't depend on .mmio_enabled or .slot_reset
+> callbacks in error recovery handler to restore the
+> device.
+> 
+> But if hotplug is not supported/enabled, then we need
+> to let the error recovery handler attempt
+> the recovery of the devices using slot reset.
+> 
+> So if hotplug is not supported, then instead of
+> returning PCI_ERS_RESULT_RECOVERED, return
+> PCI_ERS_RESULT_NEED_RESET.
+> 
+> Also modify the way error recovery handler processes
+> the recovery value.
+> 
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> ---
+>  drivers/pci/pcie/dpc.c | 8 ++++++++
+>  drivers/pci/pcie/err.c | 5 +++--
+>  2 files changed, 11 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+> index e06f42f58d3d..0e356ed0d73f 100644
+> --- a/drivers/pci/pcie/dpc.c
+> +++ b/drivers/pci/pcie/dpc.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/interrupt.h>
+>  #include <linux/init.h>
+>  #include <linux/pci.h>
+> +#include <linux/pci_hotplug.h>
+>  
+>  #include "portdrv.h"
+>  #include "../pci.h"
+> @@ -144,6 +145,13 @@ static pci_ers_result_t dpc_reset_link(struct pci_dev *pdev)
+>  	if (!pcie_wait_for_link(pdev, true))
+>  		return PCI_ERS_RESULT_DISCONNECT;
+>  
+> +	/*
+> +	 * If hotplug is not supported/enabled then let the device
+> +	 * recover using slot reset.
+> +	 */
+> +	if (!hotplug_is_native(pdev))
+> +		return PCI_ERS_RESULT_NEED_RESET;
 
-rename device attribute name arguments 'bus_rescan' and 'dev_rescan' to 'rescan'
-to avoid breaking userspace applications.
+I don't understand why hotplug is relevant here.  This path
+(dpc_reset_link()) is only used for downstream ports that support DPC.
+DPC has already disabled the link, which resets everything below the
+port, regardless of whether the port supports hotplug.
 
-The attribute argument names were changed in the following commits:
-8bdfa145f582 ("PCI: sysfs: Define device attributes with DEVICE_ATTR*()")
-4e2b79436e4f ("PCI: sysfs: Change DEVICE_ATTR() to DEVICE_ATTR_WO()")
+I do see that PCI_ERS_RESULT_NEED_RESET seems to promise a lot more
+than it actually *does*.  The doc (pci-error-recovery.rst) says
+.error_detected() can return PCI_ERS_RESULT_NEED_RESET to *request* a
+slot reset.  But if that happens, pcie_do_recovery() doesn't do a
+reset at all.  It calls the driver's .slot_reset() method, which tells
+the driver "we've reset your device; please re-initialize the
+hardware."
 
-Revert the names used for attributes back to the names used before the above
-patches were applied. This also requires to change DEVICE_ATTR_WO() to
-DEVICE_ATTR() and __ATTR().
+I guess this abuses PCI_ERS_RESULT_NEED_RESET by taking advantage of
+that implementation deficiency in pcie_do_recovery(): we know the
+downstream devices have already been reset via DPC, and returning
+PCI_ERS_RESULT_NEED_RESET means we'll call .slot_reset() to tell the
+driver about that reset.
 
-Note when using DEVICE_ATTR() the attribute is automatically named
-dev_attr_<name>.attr. To avoid duplicated names between attributes, use
-__ATTR() instead of DEVICE_ATTR() to a assign a custom attribute name for
-dev_rescan.
+I can see how this achieves the desired result, but if/when we fix
+pcie_do_recovery() to actually *do* the reset promised by
+PCI_ERS_RESULT_NEED_RESET, we will be doing *two* resets: the first
+via DPC and a second via whatever slot reset mechanism
+pcie_do_recovery() would use.
 
-change bus_rescan_store() to dev_bus_rescan_store() to complete matching the
-names used before the mentioned patches were applied.
+So I guess the real issue (as you allude to in the commit log) is that
+we rely on hotplug to unbind/rebind the driver, and without hotplug we
+need to at least tell the driver the device was reset.
 
-Signed-off-by: Kelsey Skunberg <kelsey.skunberg@gmail.com>
----
- drivers/pci/pci-sysfs.c | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+I'll try to expand the comment here so it reminds me what's going on
+when we have to look at this again :)  Let me know if I'm on the right
+track.
 
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 13f766db0684..667e13d597ff 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -464,7 +464,10 @@ static ssize_t dev_rescan_store(struct device *dev,
- 	}
- 	return count;
- }
--static DEVICE_ATTR_WO(dev_rescan);
-+static struct device_attribute dev_rescan_attr = __ATTR(rescan,
-+							0220, NULL,
-+							dev_rescan_store);
-+
- 
- static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
- 			    const char *buf, size_t count)
-@@ -481,9 +484,9 @@ static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
- static DEVICE_ATTR_IGNORE_LOCKDEP(remove, 0220, NULL,
- 				  remove_store);
- 
--static ssize_t bus_rescan_store(struct device *dev,
--				struct device_attribute *attr,
--				const char *buf, size_t count)
-+static ssize_t dev_bus_rescan_store(struct device *dev,
-+				    struct device_attribute *attr,
-+				    const char *buf, size_t count)
- {
- 	unsigned long val;
- 	struct pci_bus *bus = to_pci_bus(dev);
-@@ -501,7 +504,7 @@ static ssize_t bus_rescan_store(struct device *dev,
- 	}
- 	return count;
- }
--static DEVICE_ATTR_WO(bus_rescan);
-+static DEVICE_ATTR(rescan, 0220, NULL, dev_bus_rescan_store);
- 
- #if defined(CONFIG_PM) && defined(CONFIG_ACPI)
- static ssize_t d3cold_allowed_store(struct device *dev,
-@@ -641,7 +644,7 @@ static struct attribute *pcie_dev_attrs[] = {
- };
- 
- static struct attribute *pcibus_attrs[] = {
--	&dev_attr_bus_rescan.attr,
-+	&dev_attr_rescan.attr,
- 	&dev_attr_cpuaffinity.attr,
- 	&dev_attr_cpulistaffinity.attr,
- 	NULL,
-@@ -1487,7 +1490,7 @@ static umode_t pci_dev_attrs_are_visible(struct kobject *kobj,
- 
- static struct attribute *pci_dev_hp_attrs[] = {
- 	&dev_attr_remove.attr,
--	&dev_attr_dev_rescan.attr,
-+	&dev_rescan_attr.attr,
- 	NULL,
- };
- 
--- 
-2.20.1
-
+>  	return PCI_ERS_RESULT_RECOVERED;
+>  }
+>  
+> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> index 1ac57e9e1e71..6e52591a4722 100644
+> --- a/drivers/pci/pcie/err.c
+> +++ b/drivers/pci/pcie/err.c
+> @@ -178,7 +178,8 @@ static pci_ers_result_t reset_link(struct pci_dev *dev, u32 service)
+>  		return PCI_ERS_RESULT_DISCONNECT;
+>  	}
+>  
+> -	if (status != PCI_ERS_RESULT_RECOVERED) {
+> +	if ((status != PCI_ERS_RESULT_RECOVERED) &&
+> +	    (status != PCI_ERS_RESULT_NEED_RESET)) {
+>  		pci_printk(KERN_DEBUG, dev, "link reset at upstream device %s failed\n",
+>  			pci_name(dev));
+>  		return PCI_ERS_RESULT_DISCONNECT;
+> @@ -206,7 +207,7 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
+>  	if (state == pci_channel_io_frozen) {
+>  		pci_walk_bus(bus, report_frozen_detected, &status);
+>  		status = reset_link(dev, service);
+> -		if (status != PCI_ERS_RESULT_RECOVERED)
+> +		if (status == PCI_ERS_RESULT_DISCONNECT)
+>  			goto failed;
+>  	} else {
+>  		pci_walk_bus(bus, report_normal_detected, &status);
+> -- 
+> 2.17.1
+> 
