@@ -2,59 +2,30 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F8581917AB
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Mar 2020 18:32:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5424519181C
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Mar 2020 18:50:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727630AbgCXRb4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 24 Mar 2020 13:31:56 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:25741 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727296AbgCXRb4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 24 Mar 2020 13:31:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585071115;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=PJHNzYzu8vMBhLyQungT7C1b2BGUh9KVFCtBdVqVQ8A=;
-        b=AKITq8tQjo03kFRbQIXetmVvduN8mg9sjNRQQBSqGsDYlHSXmTmmNEZ4F5+2Eb9RaDQT1p
-        iDcb4KZZedekvdUaKY7Y5iGpLmz+/7Y7UR97MXogyK2n+yXOk1btE/gf3j1KuWT1Wuou4f
-        +Lyxez2D6Xeconu4Q2ZI7rKXaA4dd14=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-402-PN7zb5u2M2mGg5AwzNYIEQ-1; Tue, 24 Mar 2020 13:31:53 -0400
-X-MC-Unique: PN7zb5u2M2mGg5AwzNYIEQ-1
-Received: by mail-qv1-f69.google.com with SMTP id m5so16513496qvy.0
-        for <linux-pci@vger.kernel.org>; Tue, 24 Mar 2020 10:31:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PJHNzYzu8vMBhLyQungT7C1b2BGUh9KVFCtBdVqVQ8A=;
-        b=fDffdJOeRdoBkfe/LbFs8rB/p1qL41gG4sis9a4NhLOL4UjtK6nGoSbMh2lZsUeG98
-         HS2ApNLMODfQEqBuUTo5fCUZDqY/fNO4mE486Ik809iddR9BXUZmSlZ79qo215obOX1e
-         rR1hWsr1vNlfXhE0FI8Yw8HiFFavL00ANxZjKxIpthqX3aDi+fRYwigeDpyN+ajpIXs/
-         /QFiuUs/qC6YCpJpNzD7WX7u9LVzAcXYgcKoOoLKBnMRQWCCOzghSIwAWeDJWcBF4ULh
-         1nqjtOiJsIeR9L7rbkb9V+06dr0mwi9c/ZLO4mtdCZI/mOFp3tzjbzhjX9fH4oIleAYG
-         E7zA==
-X-Gm-Message-State: ANhLgQ26NJfpypJk5sdGQsZhNvFjQILEj5rCQKOap+3cSbLqKmGmw8Iv
-        bc4AzvGmmoiddgqPPRspAt2VvfpiH/xLzXfhHp/qf7iyHW3G7fC9huCdcoPxGjUoEKs6sE4kUDu
-        c0F+qiqbCs1E/iv6Nzz1eXrU7GLfuV1WlEuKV
-X-Received: by 2002:a37:a151:: with SMTP id k78mr15810449qke.62.1585071113023;
-        Tue, 24 Mar 2020 10:31:53 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vsT3+/NsUg5fFEiC7sl/xL5+Je1Wup8Qo3qgB+ijo3E137wcTx+VJFpMve9UNQQtDpuEDBDe/wRAdiHFGyqiS4=
-X-Received: by 2002:a37:a151:: with SMTP id k78mr15810420qke.62.1585071112699;
- Tue, 24 Mar 2020 10:31:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200310192627.437947-1-kherbst@redhat.com> <20200320221931.GA23783@google.com>
- <CACO55tsamLG5WE16U=psJpRWfz=7Fy5K8haGKHnhic1h0WAmqA@mail.gmail.com>
-In-Reply-To: <CACO55tsamLG5WE16U=psJpRWfz=7Fy5K8haGKHnhic1h0WAmqA@mail.gmail.com>
-From:   Karol Herbst <kherbst@redhat.com>
-Date:   Tue, 24 Mar 2020 18:31:08 +0100
-Message-ID: <CACO55ttvb5uC37ORiLuVBidhfSn-+WSReJ+aCfWR3k-fLtPBnA@mail.gmail.com>
-Subject: Re: [PATCH v7] pci: prevent putting nvidia GPUs into lower device
- states on certain intel bridges
-To:     Bjorn Helgaas <helgaas@kernel.org>
+        id S1727779AbgCXRsd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 24 Mar 2020 13:48:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34700 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727697AbgCXRsd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 24 Mar 2020 13:48:33 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53D66206F6;
+        Tue, 24 Mar 2020 17:48:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585072112;
+        bh=uz6dZ8KjquQEnzTFgFMOWuGSPMl35b+hJQ9PsfmtP1o=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=HDmUvDwhN0NNi3buz6ULiO3RwIqxewBzxYY5RXqBT+AlYyb9a6dh3zMpZ54g+YEWo
+         wVE3sFLhij7SVsj5j9WgrwhF2erYI0jtBibNlyz8n+UbXRhAMu+TwgiohNfMhCTU53
+         22lDOD7W+pKCZ6Xx4zD1JhefC6+T+wSLDeWCmNZg=
+Date:   Tue, 24 Mar 2020 12:48:30 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Karol Herbst <kherbst@redhat.com>
 Cc:     LKML <linux-kernel@vger.kernel.org>, Lyude Paul <lyude@redhat.com>,
         "Rafael J . Wysocki" <rjw@rjwysocki.net>,
         Mika Westerberg <mika.westerberg@intel.com>,
@@ -63,14 +34,20 @@ Cc:     LKML <linux-kernel@vger.kernel.org>, Lyude Paul <lyude@redhat.com>,
         dri-devel <dri-devel@lists.freedesktop.org>,
         nouveau <nouveau@lists.freedesktop.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v7] pci: prevent putting nvidia GPUs into lower device
+ states on certain intel bridges
+Message-ID: <20200324174830.GA32194@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACO55tsamLG5WE16U=psJpRWfz=7Fy5K8haGKHnhic1h0WAmqA@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Mar 21, 2020 at 2:02 AM Karol Herbst <kherbst@redhat.com> wrote:
->
+On Sat, Mar 21, 2020 at 02:02:22AM +0100, Karol Herbst wrote:
 > On Fri, Mar 20, 2020 at 11:19 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
 > >
 > > On Tue, Mar 10, 2020 at 08:26:27PM +0100, Karol Herbst wrote:
@@ -95,25 +72,41 @@ On Sat, Mar 21, 2020 at 2:02 AM Karol Herbst <kherbst@redhat.com> wrote:
 > > Can you do that with something like the following?  I don't know
 > > anything about DRM, so I don't know where you could save the pm_cap,
 > > but I'm sure the driver could keep it somewhere.
-> >
->
+> 
 > Sure this would work? From a quick look over the pci code, it looks
-> like a of code would be skipped we really need, like the platform code
-> to turn off the GPU via ACPI. But I could also remember incorrectly on
-> how all of that worked again. I can of course try and see what the
-> effect of this patch would be. And would the parent bus even go into
-> D3hot if it knows one of its children is still at D0? Because that's
-> what the result of that would be as well, no? And I know that if the
-> bus stays in D0, that it has a negative impact on power consumption.
->
+> like a of code would be skipped we really need, like the platform
+> code to turn off the GPU via ACPI. But I could also remember
+> incorrectly on how all of that worked again. I can of course try and
+> see what the effect of this patch would be. 
+
+I'm not in a position to test this myself.  I would expect that if a
+device lacks a PCI power management capability, we could still use
+ACPI power management.  My idea with this patch was to simulate that
+situation by clearing pdev->pm_cap so we treat the GPU as though it
+had no PCI PM capability.
+
+> And would the parent bus even go into D3hot if it knows one of its
+> children is still at D0? Because that's what the result of that
+> would be as well, no? And I know that if the bus stays in D0, that
+> it has a negative impact on power consumption.
+
+I don't understand this part.  Are you saying you want the GPU in D0
+and the upstream component (root port or switch) in D3hot?
+
+I think the rule for the upstream component (the root port or switch
+leading to the GPU) is in PCIe spec 5.0, sec 5.3.2.  Basically it says
+the upstream component cannot be in a lower power state than the GPU,
+i.e.,
+
+  - if the GPU is in D0, the upstream component must be in D0;
+  - if the GPU is in D2, the upstream component can be in D0-D2;
+  - if the GPU is in D3hot, the upstream component can be in D0-D3hot
+
+So I don't understand how we *could* have the GPU in D0 and the
+upstream component in D3hot.
+
 > Anyway, I will try that out, I am just not seeing how that would help.
->
-
-so it seems like that has worked unless I screwed up locally. Will do
-some proper testing and then I think we won't need to go through the
-pci tree anymore as no changes are required there with that.
-
-> >
+> 
 > > diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouveau/nouveau_drm.c
 > > index b65ae817eabf..2ad825e8891c 100644
 > > --- a/drivers/gpu/drm/nouveau/nouveau_drm.c
@@ -161,4 +154,4 @@ pci tree anymore as no changes are required there with that.
 > >         pci_disable_device(pdev);
 > >  }
 > >
-
+> 
