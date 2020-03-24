@@ -2,155 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 27B6819024B
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Mar 2020 00:55:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ECA791902D2
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Mar 2020 01:25:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727241AbgCWXyu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 23 Mar 2020 19:54:50 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44207 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727234AbgCWXyt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 23 Mar 2020 19:54:49 -0400
-Received: by mail-ot1-f68.google.com with SMTP id a49so15364171otc.11
-        for <linux-pci@vger.kernel.org>; Mon, 23 Mar 2020 16:54:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7ivUKPeO9SerTi1Ute2v62GeXvzFfzfq/ifSKn+sYwQ=;
-        b=thfwQNJ+GUelNm8rDcQbImlNSsL38HmovsMWSUD77gnenKIZWO31Vdd6mnUTPPx08e
-         45KGnfFt1/UDa9QTOY+ds3jJ3HIIgojiX2Z9bqR9ZMWiSh3olum+I6sfvYx7l0pFfhJ4
-         0LpBblO07Ug/XoSo1zImEquUsFXik2gMjHlWZF9ffsp+KSgjiNM2SXfbhdel7p2bZwU7
-         kWsuq38NGtewIFW9qOEhGd3ulgVVpqrH3n1ZTb/glzLXRv/+aFuwGISdYDRXALQFDINN
-         8SoUWX5gEJznTIXLAhnTOaD/x9CMSpZ06ZTiwHU3fgxkiAqgSy9wRQX/34/Rnw15bPBd
-         R6Eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7ivUKPeO9SerTi1Ute2v62GeXvzFfzfq/ifSKn+sYwQ=;
-        b=UeVsDQw/6rERQxjAqm1daNkeiyIatSK7Ou3KnFkTfBgzP/YMw+Qal1ILFJb/jWTbSs
-         lm0gp437w04jKbPNrNSYcFtRhaWb8WptpwmzcDQVwXwvv9b1TFSz7c453N1o30VlEfeo
-         enGpPqCYSyWCY+9xg4G4r5mfiV37HdZObX35YUhx02yLElabHEf6TO0fUth2EH/MulMY
-         eJ+V8A68nCoGl/NfVvzcAkGq9RILtV6E0j+TExOrrkDIy0eGR8RensB81BgQBzNaCvrb
-         WNc5saQV6NRyJcDyo4qvnN/Hql5XKuBIi42eMA2YELDdzJlN7hMsZdtcPDWKMnGnDZPH
-         /ZvQ==
-X-Gm-Message-State: ANhLgQ0rPui0eU2t21SaDlGHQ7SAfX+DLqnvssMjvIMmtVYluCL4qsaJ
-        tl95iNbVecgf8/+bGNClhsGKw8hPUAOUnVydm3WXQw==
-X-Google-Smtp-Source: ADFU+vsot8kt5s5rcGN6TXz0OW7n8RiiPx5Zhc+LE3dHDuKUm9vVQOF7PdjFALlTfmRme2UwsrwpkLPQ8+yM7KuiE8I=
-X-Received: by 2002:a05:6830:1ac1:: with SMTP id r1mr15659040otc.139.1585007688284;
- Mon, 23 Mar 2020 16:54:48 -0700 (PDT)
+        id S1727555AbgCXAYX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 23 Mar 2020 20:24:23 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:43080 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727421AbgCXAYW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 23 Mar 2020 20:24:22 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jGXMU-0001KP-Ci; Tue, 24 Mar 2020 01:24:07 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id A4639100292; Tue, 24 Mar 2020 01:24:05 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Mathias Nyman <mathias.nyman@linux.intel.com>, x86@kernel.org
+Cc:     linux-pci <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Evan Green <evgreen@chromium.org>,
+        "Ghorai\, Sukumar" <sukumar.ghorai@intel.com>,
+        "Amara\, Madhusudanarao" <madhusudanarao.amara@intel.com>,
+        "Nandamuri\, Srikanth" <srikanth.nandamuri@intel.com>,
+        x86@kernel.org
+Subject: Re: MSI interrupt for xhci still lost on 5.6-rc6 after cpu hotplug
+In-Reply-To: <f8057cbc-4814-5083-cddd-d4eb1459529f@linux.intel.com>
+References: <806c51fa-992b-33ac-61a9-00a606f82edb@linux.intel.com> <87d0974akk.fsf@nanos.tec.linutronix.de> <b9fbd55a-7f97-088d-2cc2-4e4ea86d9440@linux.intel.com> <87r1xjp3gn.fsf@nanos.tec.linutronix.de> <f8057cbc-4814-5083-cddd-d4eb1459529f@linux.intel.com>
+Date:   Tue, 24 Mar 2020 01:24:05 +0100
+Message-ID: <878sjqfvmi.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <CAJZ5v0ju-rOU6TF9HDScXvV9N02wuJT9d3cLkoyEdd1xL6Kfbw@mail.gmail.com>
- <20200323222803.GA21243@google.com>
-In-Reply-To: <20200323222803.GA21243@google.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Mon, 23 Mar 2020 16:54:12 -0700
-Message-ID: <CAGETcx-kBHuvoJGqtdx=AORjezdOBX7-h+6Zrwpgv7UPn1UuVQ@mail.gmail.com>
-Subject: Re: [PATCH v1] driver core: Add device links from fwnode only for the
- primary device
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 3:28 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+Mathias Nyman <mathias.nyman@linux.intel.com> writes:
+> On 23.3.2020 16.10, Thomas Gleixner wrote:
+>> 
+>> thanks for providing the data. I think I decoded the issue. Can you
+>> please test the patch below?
 >
-> On Sat, Mar 21, 2020 at 11:20:07AM +0100, Rafael J. Wysocki wrote:
-> > On Sat, Mar 21, 2020 at 5:55 AM Saravana Kannan <saravanak@google.com> wrote:
-> > >
-> > > Sometimes, more than one (generally two) device can point to the same
-> > > fwnode.  However, only one device is set as the fwnode's device
-> > > (fwnode->dev) and can be looked up from the fwnode.
-> > >
-> > > Typically, only one of these devices actually have a driver and actually
-> > > probe. If we create device links for all these devices, then the
-> > > suppliers' of these devices (with the same fwnode) will never get a
-> > > sync_state() call because one of their consumer devices will never probe
-> > > (because they don't have a driver).
-> > >
-> > > So, create device links only for the device that is considered as the
-> > > fwnode's device.
-> > >
-> > > One such example of this is the PCI bridge platform_device and the
-> > > corresponding pci_bus device. Both these devices will have the same
-> > > fwnode. It's the platform_device that is registered first and is set as
-> > > the fwnode's device. Also the platform_device is the one that actually
-> > > probes. Without this patch none of the suppliers of a PCI bridge
-> > > platform_device would get a sync_state() callback.
-> >
-> > For the record, I think that this is a PCI subsystem problem, but I
-> > agree with the patch here.
->
-> I don't understand the issue here.  Can somebody educate me?  I'm
-> guessing this is related to pci_set_bus_of_node(), which does (for
-> PCI-to-PCI bridges):
->
->   bus->dev.of_node = of_node_get(bus->self->dev.of_node);
->   bus->dev.fwnode = &bus->dev.of_node->fwnode;
+> Unfortunately it didn't help.
 
-Assuming you intentionally simplified the code here, yes, it's related to that.
+I did not expect that to help, simply because the same issue is caught
+by the loop in fixup_irqs(). What I wanted to make sure is that there is
+not something in between which causes the latter to fail.
 
-> where "bus" points to a struct pci_bus and "bus->self" points to the
-> struct pci_dev for the bridge leading to the bus?
->
-> Is this related to the fact that we have a struct device for both a
-> PCI-to-PCI bridge and for its downstream bus?
+So I stared at the trace data earlier today and looked at the xhci irq
+events. They are following a more or less periodic schedule and the
+forced migration on CPU hotplug hits definitely in the time frame where
+the next interrupt should be raised by the device.
 
-This patch at least isn't talking about how many devices we have.
+1) First off all I do not have to understand why new systems released
+   in 2020 still use non-maskable MSI which is the root cause of all of
+   this trouble especially in Intel systems which are known to have
+   this disastrouos interrupt migration troubles.
 
-The patch is referring to the fact that more than one device has their
-dev.fwnode point to the same fwnode. fwnode is just a generic way to
-point to devicetree nodes (of_node) or ACPI nodes. So the concerns
-raised for fwnode apply to of_node too, but ignore of_node for now
-(I'll get to that part later).
+   Please tell your hardware people to stop this. 
+    
+2) I have no idea why the two step mechanism fails exactly on this
+   system. I tried the same test case on a skylake client and I can
+   clearly see from the traces that the interrupt raised in the device
+   falls exactly into the two step update and causes the IRR to be set
+   which resolves the situation by IPI'ing the new target CPU.
+    
+   I have not found a single instance of IPI recovery in your
+   traces. Instead of that your system stops working in exactly this
+   situation.
 
-dev.fwnode is supposed to point to the firmware node from which the
-device is created or represents. Having more than one struct device
-point to the same fwnode is unusual as it's unlikely one firmware node
-is creating two different devices.. Maybe for MFD (multi function
-devices) it *might* make sense but even then it's questionable.
+   The two step mechanism tries to work around the fact that PCI does
+   not support a 64bit atomic config space update. So we carefully avoid
+   changing more than one 32bit value at a time, i.e. we change first
+   the vector and then the destination ID (part of address_lo).  This
+   ensures that the message is consistent all the time.
 
-In the specific case of the PCI + a device tree based system, the pcie
-root controller/bridge(?) has a platform_device (bridge->dev.parent)
-that points to a fwnode (that corresponds to the DT node from which
-the platform device was created). Somehow (the code path is very
-confusing) the pci_bus->dev.fwnode ends up pointing to the same fwnode
-the platform_device is pointing to.
+   But obviously on your system this does not work as expected. Why? I
+   really can't tell.
 
-The pci_bus is just a run time allocated struct device used to form
-some kind of device hierarchy you are trying to maintain. I think (and
-maybe this is the part Rafael is referring to) the pci_bus is not
-really representing the firmware node and maybe should have fwnode set
-to NULL. And this fwnode issue is made more unusual because this
-device doesn't even probe.
+   Please talk to your hardware folks.
 
-> Any suggestions for how could we fix this problem in the PCI
-> subsystem?
+And of course all of this is so well documented that all of us can
+clearly figure out what's going on...
 
-If you set a device's of_node = something, then you really should be
-setting the device's fwnode to point to the corresponding fwnode for
-that of_node. So the real question is why you need to set
-pci_bus->dev.of_node (instead of leaving it NULL). Sometimes devices
-have their of_node set to some other device's of_node because
-regulator_get()/clk_get/whatever_get() they call look at dev.of_node
-to find the resource. But I don't think that's the case here.
+Thanks,
 
-So, if you can simply skip setting pci_bus of_node, then that's the
-simplest fix. If not, not setting fwnode (while setting of_node) might
-be an acceptable hack to reduce the weirdness (of setting fwnode =
-some other device's fwnode). If not, then the fix would be to unwind
-the need for setting pci_bus's of_node.
+        tglx
 
-Hope that makes some sense.
+    
 
--Saravana
 
--Saravana
+
+
