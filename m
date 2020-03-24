@@ -2,231 +2,201 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CF13A190394
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Mar 2020 03:31:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C332C19057F
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Mar 2020 07:10:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbgCXCbl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 23 Mar 2020 22:31:41 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:33656 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726824AbgCXCbl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 23 Mar 2020 22:31:41 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id BCD97A6D8FBA24A1F4F5;
-        Tue, 24 Mar 2020 10:31:36 +0800 (CST)
-Received: from [127.0.0.1] (10.173.220.137) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Tue, 24 Mar 2020
- 10:31:27 +0800
-Subject: Re: [PATCH] PCI/AER: increments pci bus reference count in aer-inject
- process
-To:     <bhelgaas@google.com>, <lukas@wunner.de>, <keith.busch@intel.com>,
-        <andy.shevchenko@gmail.com>, <rafael.j.wysocki@intel.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <guohanjun@huawei.com>, <huawei.libin@huawei.com>,
-        <lvying6@huawei.com>
-References: <1578738899-11408-1-git-send-email-wangxiongfeng2@huawei.com>
-From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Message-ID: <7747a43e-00cb-6b84-941b-b73a64f85e0c@huawei.com>
-Date:   Tue, 24 Mar 2020 10:31:27 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1725923AbgCXGKq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 24 Mar 2020 02:10:46 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:38016 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725922AbgCXGKq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 24 Mar 2020 02:10:46 -0400
+Received: by mail-qk1-f196.google.com with SMTP id h14so18193028qke.5;
+        Mon, 23 Mar 2020 23:10:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NHyvhEFOA+6ht5C5Md9yO/2NBro540fuAK71xdfGAyw=;
+        b=gcAgnWaUi4IvLI3keqVWWIEPRpN5wENXb/k3U4hQ1wxVUGZjy35Q1DnW7yBDa28gqW
+         4yVwTfMkRDLB4tyiRLTmHmgO9j/tc+0wsEaxDIb8sWervzIdgGakXaUNkZtFKj6bs5N4
+         TOukkcEOGU6PGKai9pZ1/b9kC+veZJvFvfn0YT+qc45rWUQUCb5MvocCJcaYrOkfD5Nz
+         /6PlKtjCTcbNCRWsEWgksBXiXUBNxGRzeb65+wB3O0Q1/4UD8f5MbtpKusDJ0NB/N1Dr
+         Ki6+cXKTgQNxzEnrvURP/dQjRHoo22Ll6y3hMArE/YNtZ/20sp7GASaPwqGsqB2cj7aK
+         L8/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NHyvhEFOA+6ht5C5Md9yO/2NBro540fuAK71xdfGAyw=;
+        b=T0YduisK2P29R4qwrn7GzS+6Gli8AABjK/N9kSXb4qqB7Mkeyfw3BHMhOA1uO+uuI9
+         zpVSbm/5uVfDTEwGHN+RPmCuT2ZAulU1y/XY/6mFggadE6C/pBaXXpwSK2j2B8ZH/E40
+         LxmMwlF1NuffQeMbLQt/U7EjC/M5Yj7AdeRYpIJZUHxuykr4COT7aDOwpub+MmAsxaIa
+         WmnaEOsk6FOGGO5qkRaccTVuOcKDPNHyEVMZ75KiqT7dCJ24NezS64SHZ/3Iw1msituY
+         hgYGcdZWtm/jgad7DRd9EODRYXZY+XlcRA0MWNyeDi6gALD77YIUpoCS9+ZLBOhYQW1E
+         rTXg==
+X-Gm-Message-State: ANhLgQ0Set5UbNpcYxQcGpyPmUd1vJ2mOp+HPOcQ8s/ZtZaqkkLI4MI+
+        jeM4CgmqZNng5teKTl+13Sruwi9sreMkgj2ISg4=
+X-Google-Smtp-Source: ADFU+vsSdNX04/CnwDNqaQSoUMpaW5OmZpb0wl8ctm6k3wTZloWyqMcRPtERngxtZnn6mOwFSIjHuHYtVx9xxQdqjDg=
+X-Received: by 2002:a37:66c9:: with SMTP id a192mr19240643qkc.10.1585030244645;
+ Mon, 23 Mar 2020 23:10:44 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1578738899-11408-1-git-send-email-wangxiongfeng2@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.220.137]
-X-CFilter-Loop: Reflected
+References: <20190813204513.4790-1-skunberg.kelsey@gmail.com>
+ <20190815153352.86143-2-skunberg.kelsey@gmail.com> <CAB=otbSYozS-ZfxB0nCiNnxcbqxwrHOSYxJJtDKa63KzXbXgpw@mail.gmail.com>
+ <20200314112022.GA53794@kroah.com>
+In-Reply-To: <20200314112022.GA53794@kroah.com>
+From:   Kelsey <skunberg.kelsey@gmail.com>
+Date:   Tue, 24 Mar 2020 00:10:33 -0600
+Message-ID: <CAFVqi1T1Fipajca8exrzs6uQAorSZeke80LYy43aCBpT45nFdA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/4] PCI: sysfs: Define device attributes with DEVICE_ATTR*
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org,
+        Ruslan Bilovol <ruslan.bilovol@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Bodong Wang <bodong@mellanox.com>,
+        Don Dutile <ddutile@redhat.com>, rbilovol@cisco.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Kindly Ping ...
+On Sat, Mar 14, 2020 at 5:20 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Sat, Mar 14, 2020 at 12:51:47PM +0200, Ruslan Bilovol wrote:
+> > On Thu, Aug 15, 2019 at 7:01 PM Kelsey Skunberg
+> > <skunberg.kelsey@gmail.com> wrote:
+> > >
+> > > Defining device attributes should be done through the helper
+> > > DEVICE_ATTR_RO(), DEVICE_ATTR_WO(), or similar. Change all instances using
+> > > __ATTR* to now use its equivalent DEVICE_ATTR*.
+> > >
+> > > Example of old:
+> > >
+> > > static struct device_attribute dev_name_##_attr=__ATTR_RO(_name);
+> > >
+> > > Example of new:
+> > >
+> > > static DEVICE_ATTR_RO(_name);
+> > >
+> > > Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
+> > > ---
+> > >  drivers/pci/pci-sysfs.c | 59 +++++++++++++++++++----------------------
+> > >  1 file changed, 27 insertions(+), 32 deletions(-)
+> > >
+> > > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> > > index 965c72104150..8af7944fdccb 100644
+> > > --- a/drivers/pci/pci-sysfs.c
+> > > +++ b/drivers/pci/pci-sysfs.c
+> > > @@ -464,9 +464,7 @@ static ssize_t dev_rescan_store(struct device *dev,
+> > >         }
+> > >         return count;
+> > >  }
+> > > -static struct device_attribute dev_rescan_attr = __ATTR(rescan,
+> > > -                                                       (S_IWUSR|S_IWGRP),
+> > > -                                                       NULL, dev_rescan_store);
+> > > +static DEVICE_ATTR(rescan, (S_IWUSR | S_IWGRP), NULL, dev_rescan_store);
+> > >
+> > >  static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
+> > >                             const char *buf, size_t count)
+> > > @@ -480,9 +478,8 @@ static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
+> > >                 pci_stop_and_remove_bus_device_locked(to_pci_dev(dev));
+> > >         return count;
+> > >  }
+> > > -static struct device_attribute dev_remove_attr = __ATTR_IGNORE_LOCKDEP(remove,
+> > > -                                                       (S_IWUSR|S_IWGRP),
+> > > -                                                       NULL, remove_store);
+> > > +static DEVICE_ATTR_IGNORE_LOCKDEP(remove, (S_IWUSR | S_IWGRP), NULL,
+> > > +                                 remove_store);
+> > >
+> > >  static ssize_t dev_bus_rescan_store(struct device *dev,
+> > >                                     struct device_attribute *attr,
+> > > @@ -504,7 +501,7 @@ static ssize_t dev_bus_rescan_store(struct device *dev,
+> > >         }
+> > >         return count;
+> > >  }
+> > > -static DEVICE_ATTR(rescan, (S_IWUSR|S_IWGRP), NULL, dev_bus_rescan_store);
+> > > +static DEVICE_ATTR(bus_rescan, (S_IWUSR | S_IWGRP), NULL, dev_bus_rescan_store);
+> >
+> > This patch renamed 'rescan' to 'bus_rescan' and broke my userspace application.
+> > There is also mismatch now between real functionality and documentation
+> > Documentation/ABI/testing/sysfs-bus-pci which still contains old "rescan"
+> > descriptions.
+> >
+> > Another patch from this patch series also renamed 'rescan' to 'dev_rescan'
+> >
+> > Here is a comparison between two stable kernels (with and without this
+> > patch series):
+> >
+> > v5.4
+> > # find /sys -name '*rescan'
+> > /sys/devices/pci0000:00/0000:00:01.2/dev_rescan
+> > /sys/devices/pci0000:00/0000:00:01.0/dev_rescan
+> > /sys/devices/pci0000:00/0000:00:04.0/dev_rescan
+> > /sys/devices/pci0000:00/0000:00:00.0/dev_rescan
+> > /sys/devices/pci0000:00/pci_bus/0000:00/bus_rescan
+> > /sys/devices/pci0000:00/0000:00:01.3/dev_rescan
+> > /sys/devices/pci0000:00/0000:00:03.0/dev_rescan
+> > /sys/devices/pci0000:00/0000:00:01.1/dev_rescan
+> > /sys/devices/pci0000:00/0000:00:02.0/dev_rescan
+> > /sys/devices/pci0000:00/0000:00:05.0/dev_rescan
+> > /sys/bus/pci/rescan
+> >
+> > v4.19
+> > # find /sys -name '*rescan'
+> > /sys/devices/pci0000:00/0000:00:01.2/rescan
+> > /sys/devices/pci0000:00/0000:00:01.0/rescan
+> > /sys/devices/pci0000:00/0000:00:04.0/rescan
+> > /sys/devices/pci0000:00/0000:00:00.0/rescan
+> > /sys/devices/pci0000:00/pci_bus/0000:00/rescan
+> > /sys/devices/pci0000:00/0000:00:01.3/rescan
+> > /sys/devices/pci0000:00/0000:00:03.0/rescan
+> > /sys/devices/pci0000:00/0000:00:01.1/rescan
+> > /sys/devices/pci0000:00/0000:00:02.0/rescan
+> > /sys/devices/pci0000:00/0000:00:05.0/rescan
+> > /sys/bus/pci/rescan
+> >
+> > Do we maintain this kind of API as non-changeable?
+>
+> Yeah, that's a bug and should be fixed, sorry for missing that on
+> review.
+>
+> Kelsey, can you fix this up?
+>
+> thanks,
+>
+> greg k-h
 
-Thanks,
-Xiongfeng
+I'd be happy to help get this fixed up.
 
-On 2020/1/11 18:34, Xiongfeng Wang wrote:
-> When I test 'aer-inject' with the following procedures:
-> 1. inject a fatal error into a PCI device
-> 2. remove the parent device by sysfs
-> 3. execute command 'rmmod aer-inject'
-> 
-> I came across the following use-after-free.
-> 
-> [  297.581524] ==================================================================
-> [  297.581543] BUG: KASAN: use-after-free in pci_bus_set_ops+0xb4/0xb8
-> [  297.581545] Read of size 8 at addr ffff802edbde80e0 by task rmmod/21839
-> 
-> [  297.581552] CPU: 119 PID: 21839 Comm: rmmod Kdump: loaded Not tainted 4.19.36 #1
-> [  297.581554] Hardware name: Huawei TaiShan 2280 V2/BC82AMDD, BIOS 1.05 09/18/2019
-> [  297.581556] Call trace:
-> [  297.581561]  dump_backtrace+0x0/0x360
-> [  297.581563]  show_stack+0x24/0x30
-> [  297.581569]  dump_stack+0xd8/0x104
-> [  297.581576]  print_address_description+0x68/0x278
-> [  297.581578]  kasan_report+0x204/0x330
-> [  297.581580]  __asan_report_load8_noabort+0x30/0x40
-> [  297.581582]  pci_bus_set_ops+0xb4/0xb8
-> [  297.581591]  aer_inject_exit+0x198/0x334 [aer_inject]
-> [  297.581595]  __arm64_sys_delete_module+0x310/0x490
-> [  297.581601]  el0_svc_common+0xfc/0x278
-> [  297.581603]  el0_svc_handler+0x50/0xc0
-> [  297.581605]  el0_svc+0x8/0xc
-> 
-> [  297.581608] Allocated by task 1:
-> [  297.581611]  kasan_kmalloc+0xe0/0x190
-> [  297.581614]  kmem_cache_alloc_trace+0x104/0x218
-> [  297.581616]  pci_alloc_bus+0x50/0x2e0
-> [  297.581618]  pci_add_new_bus+0xa8/0xe08
-> [  297.581620]  pci_scan_bridge_extend+0x884/0xb28
-> [  297.581623]  pci_scan_child_bus_extend+0x350/0x628
-> [  297.581625]  pci_scan_child_bus+0x24/0x30
-> [  297.581627]  pci_scan_bridge_extend+0x3b8/0xb28
-> [  297.581629]  pci_scan_child_bus_extend+0x350/0x628
-> [  297.581631]  pci_scan_child_bus+0x24/0x30
-> [  297.581635]  acpi_pci_root_create+0x558/0x888
-> [  297.581640]  pci_acpi_scan_root+0x198/0x330
-> [  297.581641]  acpi_pci_root_add+0x7bc/0xbb0
-> [  297.581646]  acpi_bus_attach+0x2f4/0x728
-> [  297.581647]  acpi_bus_attach+0x1b0/0x728
-> [  297.581649]  acpi_bus_attach+0x1b0/0x728
-> [  297.581651]  acpi_bus_scan+0xa0/0x110
-> [  297.581657]  acpi_scan_init+0x20c/0x500
-> [  297.581659]  acpi_init+0x54c/0x5d4
-> [  297.581661]  do_one_initcall+0xbc/0x480
-> [  297.581665]  kernel_init_freeable+0x5fc/0x6ac
-> [  297.581670]  kernel_init+0x18/0x128
-> [  297.581671]  ret_from_fork+0x10/0x18
-> 
-> [  297.581673] Freed by task 19270:
-> [  297.581675]  __kasan_slab_free+0x120/0x228
-> [  297.581677]  kasan_slab_free+0x10/0x18
-> [  297.581678]  kfree+0x80/0x1f8
-> [  297.581680]  release_pcibus_dev+0x54/0x68
-> [  297.581686]  device_release+0xd4/0x1c0
-> [  297.581689]  kobject_put+0x12c/0x400
-> [  297.581691]  device_unregister+0x30/0xc0
-> [  297.581693]  pci_remove_bus+0xe8/0x1c0
-> [  297.581695]  pci_remove_bus_device+0xd0/0x2f0
-> [  297.581697]  pci_stop_and_remove_bus_device_locked+0x2c/0x40
-> [  297.581701]  remove_store+0x1b8/0x1d0
-> [  297.581703]  dev_attr_store+0x60/0x80
-> [  297.581708]  sysfs_kf_write+0x104/0x170
-> [  297.581710]  kernfs_fop_write+0x23c/0x430
-> [  297.581713]  __vfs_write+0xec/0x4e0
-> [  297.581714]  vfs_write+0x12c/0x3d0
-> [  297.581715]  ksys_write+0xd0/0x190
-> [  297.581716]  __arm64_sys_write+0x70/0xa0
-> [  297.581718]  el0_svc_common+0xfc/0x278
-> [  297.581720]  el0_svc_handler+0x50/0xc0
-> [  297.581721]  el0_svc+0x8/0xc
-> 
-> [  297.581724] The buggy address belongs to the object at ffff802edbde8000
->                 which belongs to the cache kmalloc-2048 of size 2048
-> [  297.581726] The buggy address is located 224 bytes inside of
->                 2048-byte region [ffff802edbde8000, ffff802edbde8800)
-> [  297.581727] The buggy address belongs to the page:
-> [  297.581730] page:ffff7e00bb6f7a00 count:1 mapcount:0 mapping:ffff8026de810780 index:0x0 compound_mapcount: 0
-> [  297.591520] flags: 0x2ffffe0000008100(slab|head)
-> [  297.596121] raw: 2ffffe0000008100 ffff7e00bb6f5008 ffff7e00bb6ff608 ffff8026de810780
-> [  297.596123] raw: 0000000000000000 00000000000f000f 00000001ffffffff 0000000000000000
-> [  297.596124] page dumped because: kasan: bad access detected
-> 
-> [  297.596126] Memory state around the buggy address:
-> [  297.596128]  ffff802edbde7f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> [  297.596129]  ffff802edbde8000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> [  297.596131] >ffff802edbde8080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> [  297.596132]                                                        ^
-> [  297.596133]  ffff802edbde8100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> [  297.596135]  ffff802edbde8180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> [  297.596135] ==================================================================
-> 
-> It is because when we unload the module and restore the member 'pci_ops'
-> of 'pci_bus', the 'pci_bus' has been freed. This patch increments the
-> reference count of 'pci_bus' when we modify its member 'pci_ops' and
-> decrements the reference count after we have restored its member.
-> 
-> This patch export pci_bus_get() and pci_bus_put() again and reverts the
-> following two commits.
-> fae6b93b19b4 ("PCI: Unexport pci_bus_get() and pci_bus_put()")
-> ecd29c1a38af ("PCI: Make pci_bus_get(), pci_bus_put() private")
-> 
-> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
-> ---
->  drivers/pci/bus.c             | 2 ++
->  drivers/pci/pci.h             | 2 --
->  drivers/pci/pcie/aer_inject.c | 8 ++++++++
->  include/linux/pci.h           | 2 ++
->  4 files changed, 12 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-> index 8e40b3e..495059d 100644
-> --- a/drivers/pci/bus.c
-> +++ b/drivers/pci/bus.c
-> @@ -417,9 +417,11 @@ struct pci_bus *pci_bus_get(struct pci_bus *bus)
->  		get_device(&bus->dev);
->  	return bus;
->  }
-> +EXPORT_SYMBOL(pci_bus_get);
->  
->  void pci_bus_put(struct pci_bus *bus)
->  {
->  	if (bus)
->  		put_device(&bus->dev);
->  }
-> +EXPORT_SYMBOL(pci_bus_put);
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index a0a53bd..cf849b7 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -286,8 +286,6 @@ void __pci_bus_assign_resources(const struct pci_bus *bus,
->  
->  void pci_reassigndev_resource_alignment(struct pci_dev *dev);
->  void pci_disable_bridge_window(struct pci_dev *dev);
-> -struct pci_bus *pci_bus_get(struct pci_bus *bus);
-> -void pci_bus_put(struct pci_bus *bus);
->  
->  /* PCIe link information */
->  #define PCIE_SPEED2STR(speed) \
-> diff --git a/drivers/pci/pcie/aer_inject.c b/drivers/pci/pcie/aer_inject.c
-> index 6988fe7..0b6b3d0 100644
-> --- a/drivers/pci/pcie/aer_inject.c
-> +++ b/drivers/pci/pcie/aer_inject.c
-> @@ -307,6 +307,13 @@ static int pci_bus_set_aer_ops(struct pci_bus *bus)
->  	spin_lock_irqsave(&inject_lock, flags);
->  	if (ops == &aer_inj_pci_ops)
->  		goto out;
-> +	/*
-> +	 * increments the reference count of the pci bus. Otherwise, when we
-> +	 * restore the 'pci_ops' in 'aer_inject_exit', the 'pci_bus' may have
-> +	 * been freed.
-> +	 */
-> +	pci_bus_get(bus);
-> +
->  	pci_bus_ops_init(bus_ops, bus, ops);
->  	list_add(&bus_ops->list, &pci_bus_ops_list);
->  	bus_ops = NULL;
-> @@ -529,6 +536,7 @@ static void __exit aer_inject_exit(void)
->  
->  	while ((bus_ops = pci_bus_ops_pop())) {
->  		pci_bus_set_ops(bus_ops->bus, bus_ops->ops);
-> +		pci_bus_put(bus_ops->bus);
->  		kfree(bus_ops);
->  	}
->  
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index c393dff..adef0da 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -1288,6 +1288,8 @@ int pci_add_ext_cap_save_buffer(struct pci_dev *dev,
->  void pci_release_selected_regions(struct pci_dev *, int);
->  
->  /* drivers/pci/bus.c */
-> +struct pci_bus *pci_bus_get(struct pci_bus *bus);
-> +void pci_bus_put(struct pci_bus *bus);
->  void pci_add_resource(struct list_head *resources, struct resource *res);
->  void pci_add_resource_offset(struct list_head *resources, struct resource *res,
->  			     resource_size_t offset);
-> 
+Would it be proper to go back to using DEVICE_ATTR() for 'bus_rescan'
+and 'dev_rescan' in order to change their names back to 'rescan'?
 
+The name changes were done so the correct *_store() would still be
+called. When using DEVICE_ATTR() the *_store() name is passed as the
+last argument, as seen here:
+
+    static DEVICE_ATTR(rescan, (S_IWUSR|S_IWGRP), NULL, dev_bus_rescan_store);
+
+When using the helper, only the name is passed and it assumes default
+<name>_show(), as seen here:
+
+    static DEVICE_ATTR_WO(dev_rescan);   # (This would assume
+dev_rescan_store())
+
+This can be verified in Documentation/filesystems/sysfs.txt.
+
+There is already a rescan attribute using rescan_store(), so changing
+at least one of these to DEVICE_ATTR_WO(rescan) would be conflicting.
+
+I understand it's ideal to stay away from using DEVICE_ATTR() unless
+an unusual mode is needed. Would having a different name vs
+name_store() be another reason to justify using DEVICE_ATTR()?
+
+Thank you Ruslan for pointing this out!
+
+- Kelsey
