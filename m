@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 299A91902DC
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Mar 2020 01:28:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E0B71902E6
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Mar 2020 01:28:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727714AbgCXA0Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 23 Mar 2020 20:26:25 -0400
+        id S1727745AbgCXA0i (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 23 Mar 2020 20:26:38 -0400
 Received: from mga14.intel.com ([192.55.52.115]:60461 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727665AbgCXA0Z (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S1727729AbgCXA0Z (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Mon, 23 Mar 2020 20:26:25 -0400
-IronPort-SDR: FRTHXTBx0vOsgWZgd7Rn4M8xskumLqLuC0eobUxlPCsO5BNKYOfF/5EDh8LhpnIG0hz1wlvt2B
- 3h9oZob8zqPA==
+IronPort-SDR: tBJs3oVt9C9mcgKpTHM5q4jkyfy00v9q6DYnegjJRUTP/r4ys4r6HY4/ilDMdHUU2hTR8b7n8n
+ x1ekYK2fMStA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 17:26:24 -0700
-IronPort-SDR: sbZi9czyx03WYg3IeGU5/NQ11hmz/5BOGAildBczdKFRdboTtJI+Jai8vDROyed1xFfPjWeZjE
- vY6Duqn0ZarQ==
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 17:26:25 -0700
+IronPort-SDR: SP/1jlarBGzBmhn75XRTjEb4S/t+l28ROOFK2KwQ6gPuEY6iRHk7M6tnLK3jqkrBRZ5qqDYR+Q
+ GAQvlNKxOgdw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,298,1580803200"; 
-   d="scan'208";a="419692243"
+   d="scan'208";a="419692248"
 Received: from bhaveshm-mobl.amr.corp.intel.com (HELO localhost.localdomain) ([10.134.88.197])
   by orsmga005.jf.intel.com with ESMTP; 23 Mar 2020 17:26:24 -0700
 From:   sathyanarayanan.kuppuswamy@linux.intel.com
 To:     bhelgaas@google.com
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         ashok.raj@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: [PATCH v18 06/11] PCI/ERR: Return status of pcie_do_recovery()
-Date:   Mon, 23 Mar 2020 17:26:03 -0700
-Message-Id: <eb60ec89448769349c6722954ffbf2de163155b5.1585000084.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: [PATCH v18 07/11] PCI/DPC: Cache DPC capabilities in pci_init_capabilities()
+Date:   Mon, 23 Mar 2020 17:26:04 -0700
+Message-Id: <5888380657c8b9551675b5dbd48e370e4fd2703d.1585000084.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1585000084.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 References: <cover.1585000084.git.sathyanarayanan.kuppuswamy@linux.intel.com>
@@ -41,76 +41,105 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-As per the DPC Enhancements ECN [1], sec 4.5.1, table 4-4, if the OS
-supports Error Disconnect Recover (EDR), it must invalidate the software
-state associated with child devices of the port without attempting to
-access the child device hardware. In addition, if the OS supports DPC, it
-must attempt to recover the child devices if the port implements the DPC
-Capability. If the OS continues operation, the OS must inform the firmware
-of the status of the recovery operation via the _OST method.
+Since Error Disconnect Recover needs to use DPC error handling routines
+even if the OS doesn't have control of DPC, move the initalization and
+caching of DPC capabilities from the DPC driver to pci_init_capabilities().
 
-Return the result of pcie_do_recovery() so we can report it to firmware via
-_OST.
-
-[1] Downstream Port Containment Related Enhancements ECN, Jan 28, 2019,
-    affecting PCI Firmware Specification, Rev. 3.2
-    https://members.pcisig.com/wg/PCI-SIG/document/12888
-Link: https://lore.kernel.org/r/a795fe1f1f42f5aa1d334768d4e719d8c147894e.1583286655.git.sathyanarayanan.kuppuswamy@linux.intel.com
+Link: https://lore.kernel.org/r/6ac4e893e7d1054fe43efed0f89ca02f072c3190.1583286655.git.sathyanarayanan.kuppuswamy@linux.intel.com
 Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- drivers/pci/pci.h      |  5 +++--
- drivers/pci/pcie/err.c | 10 ++++++----
- 2 files changed, 9 insertions(+), 6 deletions(-)
+ drivers/pci/pci.h      |  2 ++
+ drivers/pci/pcie/dpc.c | 33 +++++++++++++++++++++------------
+ drivers/pci/probe.c    |  1 +
+ 3 files changed, 24 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 3e5efb83e9a2..efbe94096050 100644
+index efbe94096050..e48677a0ba42 100644
 --- a/drivers/pci/pci.h
 +++ b/drivers/pci/pci.h
-@@ -547,8 +547,9 @@ static inline int pci_dev_specific_disable_acs_redir(struct pci_dev *dev)
+@@ -448,9 +448,11 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info);
+ #ifdef CONFIG_PCIE_DPC
+ void pci_save_dpc_state(struct pci_dev *dev);
+ void pci_restore_dpc_state(struct pci_dev *dev);
++void pci_dpc_init(struct pci_dev *pdev);
+ #else
+ static inline void pci_save_dpc_state(struct pci_dev *dev) {}
+ static inline void pci_restore_dpc_state(struct pci_dev *dev) {}
++static inline void pci_dpc_init(struct pci_dev *pdev) {}
  #endif
  
- /* PCI error reporting and recovery */
--void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
--		      pci_ers_result_t (*reset_link)(struct pci_dev *pdev));
-+pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
-+			enum pci_channel_state state,
-+			pci_ers_result_t (*reset_link)(struct pci_dev *pdev));
- 
- bool pcie_wait_for_link(struct pci_dev *pdev, bool active);
- #ifdef CONFIG_PCIEASPM
-diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-index caeb6f5d9970..7881de20af29 100644
---- a/drivers/pci/pcie/err.c
-+++ b/drivers/pci/pcie/err.c
-@@ -146,9 +146,9 @@ static int report_resume(struct pci_dev *dev, void *data)
- 	return 0;
+ #ifdef CONFIG_PCI_ATS
+diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+index 0c45133a9a91..5870a0f154fc 100644
+--- a/drivers/pci/pcie/dpc.c
++++ b/drivers/pci/pcie/dpc.c
+@@ -257,6 +257,27 @@ static irqreturn_t dpc_irq(int irq, void *context)
+ 	return IRQ_HANDLED;
  }
  
--void pcie_do_recovery(struct pci_dev *dev,
--		      enum pci_channel_state state,
--		      pci_ers_result_t (*reset_link)(struct pci_dev *pdev))
-+pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
-+			enum pci_channel_state state,
-+			pci_ers_result_t (*reset_link)(struct pci_dev *pdev))
- {
- 	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
- 	struct pci_bus *bus;
-@@ -201,11 +201,13 @@ void pcie_do_recovery(struct pci_dev *dev,
- 	pci_aer_clear_device_status(dev);
- 	pci_cleanup_aer_uncorrect_error_status(dev);
- 	pci_info(dev, "device recovery successful\n");
--	return;
-+	return status;
- 
- failed:
- 	pci_uevent_ers(dev, PCI_ERS_RESULT_DISCONNECT);
- 
- 	/* TODO: Should kernel panic here? */
- 	pci_info(dev, "device recovery failed\n");
++void pci_dpc_init(struct pci_dev *pdev)
++{
++	u16 cap;
 +
-+	return status;
- }
++	pdev->dpc_cap = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_DPC);
++	if (!pdev->dpc_cap)
++		return;
++
++	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CAP, &cap);
++	if (!(cap & PCI_EXP_DPC_CAP_RP_EXT))
++		return;
++
++	pdev->dpc_rp_extensions = true;
++	pdev->dpc_rp_log_size = (cap & PCI_EXP_DPC_RP_PIO_LOG_SIZE) >> 8;
++	if (pdev->dpc_rp_log_size < 4 || pdev->dpc_rp_log_size > 9) {
++		pci_err(pdev, "RP PIO log size %u is invalid\n",
++			pdev->dpc_rp_log_size);
++		pdev->dpc_rp_log_size = 0;
++	}
++}
++
+ #define FLAG(x, y) (((x) & (y)) ? '+' : '-')
+ static int dpc_probe(struct pcie_device *dev)
+ {
+@@ -268,8 +289,6 @@ static int dpc_probe(struct pcie_device *dev)
+ 	if (pcie_aer_get_firmware_first(pdev) && !pcie_ports_dpc_native)
+ 		return -ENOTSUPP;
+ 
+-	pdev->dpc_cap = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_DPC);
+-
+ 	status = devm_request_threaded_irq(device, dev->irq, dpc_irq,
+ 					   dpc_handler, IRQF_SHARED,
+ 					   "pcie-dpc", pdev);
+@@ -282,16 +301,6 @@ static int dpc_probe(struct pcie_device *dev)
+ 	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CAP, &cap);
+ 	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl);
+ 
+-	pdev->dpc_rp_extensions = (cap & PCI_EXP_DPC_CAP_RP_EXT) ? 1 : 0;
+-	if (pdev->dpc_rp_extensions) {
+-		pdev->dpc_rp_log_size = (cap & PCI_EXP_DPC_RP_PIO_LOG_SIZE) >> 8;
+-		if (pdev->dpc_rp_log_size < 4 || pdev->dpc_rp_log_size > 9) {
+-			pci_err(pdev, "RP PIO log size %u is invalid\n",
+-				pdev->dpc_rp_log_size);
+-			pdev->dpc_rp_log_size = 0;
+-		}
+-	}
+-
+ 	ctl = (ctl & 0xfff4) | PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN;
+ 	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl);
+ 
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 512cb4312ddd..c6f91f886818 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -2329,6 +2329,7 @@ static void pci_init_capabilities(struct pci_dev *dev)
+ 	pci_enable_acs(dev);		/* Enable ACS P2P upstream forwarding */
+ 	pci_ptm_init(dev);		/* Precision Time Measurement */
+ 	pci_aer_init(dev);		/* Advanced Error Reporting */
++	pci_dpc_init(dev);		/* Downstream Port Containment */
+ 
+ 	pcie_report_downtraining(dev);
+ 
 -- 
 2.17.1
 
