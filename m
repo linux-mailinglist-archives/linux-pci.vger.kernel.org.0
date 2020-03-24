@@ -2,128 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 90635191992
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Mar 2020 19:58:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 290451919A7
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Mar 2020 20:04:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727948AbgCXS6p (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 24 Mar 2020 14:58:45 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:38154 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727630AbgCXS6p (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 24 Mar 2020 14:58:45 -0400
-Received: from zn.tnic (p200300EC2F0BC80080B0BF5C4664F3C7.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:c800:80b0:bf5c:4664:f3c7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9A7121EC0CDC;
-        Tue, 24 Mar 2020 19:58:42 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1585076322;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=lIsYy50HXEV0jz9brVxw6K/8V+POkTYJ1qZEO3jtQOg=;
-        b=UbGUgZ69w4Pss5KZcP0C5ESSPwJnCZ+xLrK8REFRMm8MOCwnwgNDcPNNugDTJ+7KIwZSFC
-        e/kJWtYxyIsXtyDUQzsUBRadkW8G4F6hrSbBvbtrMmiWK9xxBgpLZNe84h3kMcq6J81FTB
-        cG1Lotv4gFJ5JLaB6VJMHXCySgkcsMI=
-Date:   Tue, 24 Mar 2020 19:58:36 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-pm@vger.kernel.org,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        linux-edac@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-hwmon@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-mmc@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
-        alsa-devel@alsa-project.org,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-crypto@vger.kernel.org
-Subject: [PATCH 23/22] x86/smpboot: Remove the last ICPU() macro
-Message-ID: <20200324185836.GI22931@zn.tnic>
-References: <20200320131345.635023594@linutronix.de>
+        id S1727835AbgCXTD4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 24 Mar 2020 15:03:56 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:45910 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727747AbgCXTD4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 24 Mar 2020 15:03:56 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jGoq1-00049g-Cz; Tue, 24 Mar 2020 20:03:45 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 23137100292; Tue, 24 Mar 2020 20:03:44 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Evan Green <evgreen@chromium.org>
+Cc:     Mathias Nyman <mathias.nyman@linux.intel.com>, x86@kernel.org,
+        linux-pci <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Ghorai\, Sukumar" <sukumar.ghorai@intel.com>,
+        "Amara\, Madhusudanarao" <madhusudanarao.amara@intel.com>,
+        "Nandamuri\, Srikanth" <srikanth.nandamuri@intel.com>
+Subject: Re: MSI interrupt for xhci still lost on 5.6-rc6 after cpu hotplug
+In-Reply-To: <CAE=gft6Fbibu17H+OfHZjmvHxboioFj09hAmozebc1TE_EqH5g@mail.gmail.com>
+References: <806c51fa-992b-33ac-61a9-00a606f82edb@linux.intel.com> <87d0974akk.fsf@nanos.tec.linutronix.de> <b9fbd55a-7f97-088d-2cc2-4e4ea86d9440@linux.intel.com> <87r1xjp3gn.fsf@nanos.tec.linutronix.de> <f8057cbc-4814-5083-cddd-d4eb1459529f@linux.intel.com> <878sjqfvmi.fsf@nanos.tec.linutronix.de> <CAE=gft6Fbibu17H+OfHZjmvHxboioFj09hAmozebc1TE_EqH5g@mail.gmail.com>
+Date:   Tue, 24 Mar 2020 20:03:44 +0100
+Message-ID: <87tv2dd17z.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200320131345.635023594@linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
----
-From: Borislav Petkov <bp@suse.de>
+Evan Green <evgreen@chromium.org> writes:
+> On Mon, Mar 23, 2020 at 5:24 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>> And of course all of this is so well documented that all of us can
+>> clearly figure out what's going on...
+>
+> I won't pretend to know what's going on, so I'll preface this by
+> labeling it all as "flailing", but:
+>
+> I wonder if there's some way the interrupt can get delayed between
+> XHCI snapping the torn value and it finding its way into the IRR. For
+> instance, if xhci read this value at the start of their interrupt
+> moderation timer period, that would be awful (I hope they don't do
+> this). One test patch would be to carve out 8 vectors reserved for
+> xhci on all cpus. Whenever you change the affinity, the assigned
+> vector is always reserved_base + cpu_number. That lets you exercise
+> the affinity switching code, but in a controlled manner where torn
+> interrupts could be easily seen (ie hey I got an interrupt on cpu 4's
+> vector but I'm cpu 2). I might struggle to write such a change, but in
+> theory it's doable.
 
-Now all is using the shiny new macros.
+Well, the point is that we don't see a spurious interrupt on any
+CPU. We added a traceprintk into do_IRQ() and that would immediately
+tell us where the thing goes off into lala land. Which it didn't.
 
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>
----
- arch/x86/kernel/smpboot.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+> I was alternately trying to build a theory in my head about the write
+> somehow being posted and getting out of order, but I don't think that
+> can happen.
 
-diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-index fe3ab9632f3b..3b9bf8c7e29d 100644
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -1849,24 +1849,25 @@ static bool slv_set_max_freq_ratio(u64 *base_freq, u64 *turbo_freq)
- #include <asm/cpu_device_id.h>
- #include <asm/intel-family.h>
- 
--#define ICPU(model) \
--	{X86_VENDOR_INTEL, 6, model, X86_FEATURE_APERFMPERF, 0}
-+#define X86_MATCH(model)					\
-+	X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL, 6,		\
-+		INTEL_FAM6_##model, X86_FEATURE_APERFMPERF, NULL)
- 
- static const struct x86_cpu_id has_knl_turbo_ratio_limits[] = {
--	ICPU(INTEL_FAM6_XEON_PHI_KNL),
--	ICPU(INTEL_FAM6_XEON_PHI_KNM),
-+	X86_MATCH(XEON_PHI_KNL),
-+	X86_MATCH(XEON_PHI_KNM),
- 	{}
- };
- 
- static const struct x86_cpu_id has_skx_turbo_ratio_limits[] = {
--	ICPU(INTEL_FAM6_SKYLAKE_X),
-+	X86_MATCH(SKYLAKE_X),
- 	{}
- };
- 
- static const struct x86_cpu_id has_glm_turbo_ratio_limits[] = {
--	ICPU(INTEL_FAM6_ATOM_GOLDMONT),
--	ICPU(INTEL_FAM6_ATOM_GOLDMONT_D),
--	ICPU(INTEL_FAM6_ATOM_GOLDMONT_PLUS),
-+	X86_MATCH(ATOM_GOLDMONT),
-+	X86_MATCH(ATOM_GOLDMONT_D),
-+	X86_MATCH(ATOM_GOLDMONT_PLUS),
- 	{}
- };
- 
--- 
-2.21.0
+If that happens then the lost XHCI interrupt is the least of your
+worries.
+
+Thanks,
+
+        tglx
 
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
