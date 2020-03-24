@@ -2,241 +2,163 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6CDC119167A
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Mar 2020 17:35:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F8581917AB
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Mar 2020 18:32:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727733AbgCXQcg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 24 Mar 2020 12:32:36 -0400
-Received: from mail-eopbgr760080.outbound.protection.outlook.com ([40.107.76.80]:13606
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727647AbgCXQcf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 24 Mar 2020 12:32:35 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mXhDg5ec7PohudZ5ahxFI8nlaAiOusZSpCrgOsCP4dPYkN8FOoaw3SFbUZyW3XyGRFka166b05f49yN1UFxCdEp7hpvkUd3zSnhFNDMlxWS0Qmar5XudQ6L8wzzfiYVrPhplmbpSRPdxwF/XB6Y8SX/uh7DP9qloLz80z5Ubw55cy/4gfSSV2gkRfAnl9uZmow9r2OldrFZW3IHVobsOiHj3yWn/K7keK0O2H5jHub/x0JHcIQk8c6grUNmCDdS5hyexD48PlLnPY9AWLCrB0WrNmljdJiJxZXM4V/eMWj8tPjrkyM0FymX/MRF/7uLSQeDV2Yk4HYQ4t008BH2fQA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sSt4GCpHH+N7bbpGMh8ELc0FIlpp03wlENzNTYYTAwg=;
- b=mo7cl6MnO0Z9WFHFeMXiRrFfGSgkQcHCLtgVsPwywbFgKaGI/Vs7KTQWcrRWcRQsILDonINjs48xwOYFjqblWKYf2MlR/aWYNoHs1o/CX1jfagDbtDAFzRB+sjHtMxEnBVv3wCmIQP4VP66HlKeCD/CGoiYIpGBKayFh9OhKXEVbvhtD2n9PNsBvKaWmXtmfXmBxJUmMXnsyB1LeR2+JpwwNsbbOWh3os/zGV6P0TPaLcxPZUBLarKHqhCKrRH/engQGcfILyfh8EpsSZTMb/KPyT9yIpgY71hDgJi+XR3OYfjcUWjYtv5YKFlVFfI95bqJaZn5GAPwZP18m0dTNxg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=netapp.com; dmarc=pass action=none header.from=netapp.com;
- dkim=pass header.d=netapp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=netapp.onmicrosoft.com; s=selector1-netapp-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sSt4GCpHH+N7bbpGMh8ELc0FIlpp03wlENzNTYYTAwg=;
- b=vE6cs0/F+xC0wfaNTMWiQBHb+ls/PS3l6USjZxd0ufapSNoi03xVi46shWB8h5mpkCLodgfot0cS9uzjUTJxfkqeeI/Sv8TtrzIIJY3AIPzfQWuT3xY7wdBY31vxscAFMsN0aZ3wUW6J+xMNhGIzjl2trcg1EcPd16hxhHXgIU4=
-Received: from DM5PR06MB3132.namprd06.prod.outlook.com (2603:10b6:4:3c::29) by
- DM5PR06MB3308.namprd06.prod.outlook.com (2603:10b6:4:43::33) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2814.21; Tue, 24 Mar 2020 16:32:32 +0000
-Received: from DM5PR06MB3132.namprd06.prod.outlook.com
- ([fe80::f5cb:1d29:98a6:2569]) by DM5PR06MB3132.namprd06.prod.outlook.com
- ([fe80::f5cb:1d29:98a6:2569%7]) with mapi id 15.20.2814.027; Tue, 24 Mar 2020
- 16:32:32 +0000
-From:   "Hoyer, David" <David.Hoyer@netapp.com>
-To:     "Haeuptle, Michael" <michael.haeuptle@hpe.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-CC:     "michaelhaeuptle@gmail.com" <michaelhaeuptle@gmail.com>
-Subject: RE: Deadlock during PCIe hot remove
-Thread-Topic: Deadlock during PCIe hot remove
-Thread-Index: AdYB6Gv3K0A6oSaTTxyvgTO56UtwywABKdFAAAEZcnAAACX0QAAADQLAAADyYXAAAOxvYA==
-Date:   Tue, 24 Mar 2020 16:32:32 +0000
-Message-ID: <DM5PR06MB3132E32994F39EC7D4F1EE7792F10@DM5PR06MB3132.namprd06.prod.outlook.com>
-References: <CS1PR8401MB0728FC6FDAB8A35C22BD90EC95F10@CS1PR8401MB0728.NAMPRD84.PROD.OUTLOOK.COM>
- <DM5PR06MB3132D4C5AA587EEC211C9FB892F10@DM5PR06MB3132.namprd06.prod.outlook.com>
- <CS1PR8401MB07289568BBE041784FBB326E95F10@CS1PR8401MB0728.NAMPRD84.PROD.OUTLOOK.COM>
- <DM5PR06MB3132687F173C2BACB88136D292F10@DM5PR06MB3132.namprd06.prod.outlook.com>
- <CS1PR8401MB07280E920BC8B0F55088610395F10@CS1PR8401MB0728.NAMPRD84.PROD.OUTLOOK.COM>
-In-Reply-To: <CS1PR8401MB07280E920BC8B0F55088610395F10@CS1PR8401MB0728.NAMPRD84.PROD.OUTLOOK.COM>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=David.Hoyer@netapp.com; 
-x-originating-ip: [216.240.24.5]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2db3f963-6762-455a-5070-08d7d010f405
-x-ms-traffictypediagnostic: DM5PR06MB3308:
-x-microsoft-antispam-prvs: <DM5PR06MB3308B8B16B60681D9C94F95F92F10@DM5PR06MB3308.namprd06.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4125;
-x-forefront-prvs: 03524FBD26
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(39860400002)(396003)(366004)(346002)(76116006)(186003)(110136005)(296002)(71200400001)(26005)(478600001)(8936002)(86362001)(316002)(966005)(81166006)(8676002)(2906002)(81156014)(66556008)(4326008)(66946007)(64756008)(66446008)(66476007)(55016002)(52536014)(7696005)(33656002)(53546011)(5660300002)(6506007)(9686003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR06MB3308;H:DM5PR06MB3132.namprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
-received-spf: None (protection.outlook.com: netapp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: WUpQ/bglv12snXPI87u80Xv+TxL8yzGx63jVkgKLY8CeO2d2hf3Opy3BH5yKX6Gde4hHIblZ4StIHpLYbV/3nul8b+SZXV2x/zPGXaC/pNXS6ljyjloRbNP0sBpqjcnUWhKyUZQrsU7eNKjdyMY5Q2YEukjQHftMzvX/bnUBF9M39CqIXfYyWjxYIg71IaYJlKabbGv7avCdSzQaoYkSZAMn9PpAdn8SDBtdE+QSuU/GgCiWhVcCJx4zLQmp2Udvs+YHk3p5mSyuaZFSgDqn9jENstEfHC5OkQO4fu1Pcoz5DtzAhjDUboWvcR7jdGyoeKPal/QAsJ7YXLBTmyH8eYnSomgTMwvcRIs2GG6f3JmIu4Y55Y9UlQ8jM3dF5epCXN5gBpfDzdlz+xVuzlNmA6ZR0wRDq7gcGizVkpRY/uPlFat3TrVz4FS0V3ilkuEEbKpjUVhlkNO6RNiePBZjbHARWFy0jhXX5WAry8xG3sSHjHk9ueVoulGqc1q6KARAvhXecvWpreLhIez+Qudv/Q==
-x-ms-exchange-antispam-messagedata: FC9G2595FI408DfgJzROGabCMsKPePpeFMR6ifbDf2z3/Vh8WLh6hDYCay99Ddi39W0ujLyB/LQiYqN7o9qK1cUtkdU7CFKvVLW6UQWtXaau+PiA7dLL1GMXKif+fF9JKvG2IyS8UO8ij9wSzoUtQA==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1727630AbgCXRb4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 24 Mar 2020 13:31:56 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:25741 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727296AbgCXRb4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 24 Mar 2020 13:31:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585071115;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=PJHNzYzu8vMBhLyQungT7C1b2BGUh9KVFCtBdVqVQ8A=;
+        b=AKITq8tQjo03kFRbQIXetmVvduN8mg9sjNRQQBSqGsDYlHSXmTmmNEZ4F5+2Eb9RaDQT1p
+        iDcb4KZZedekvdUaKY7Y5iGpLmz+/7Y7UR97MXogyK2n+yXOk1btE/gf3j1KuWT1Wuou4f
+        +Lyxez2D6Xeconu4Q2ZI7rKXaA4dd14=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-402-PN7zb5u2M2mGg5AwzNYIEQ-1; Tue, 24 Mar 2020 13:31:53 -0400
+X-MC-Unique: PN7zb5u2M2mGg5AwzNYIEQ-1
+Received: by mail-qv1-f69.google.com with SMTP id m5so16513496qvy.0
+        for <linux-pci@vger.kernel.org>; Tue, 24 Mar 2020 10:31:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PJHNzYzu8vMBhLyQungT7C1b2BGUh9KVFCtBdVqVQ8A=;
+        b=fDffdJOeRdoBkfe/LbFs8rB/p1qL41gG4sis9a4NhLOL4UjtK6nGoSbMh2lZsUeG98
+         HS2ApNLMODfQEqBuUTo5fCUZDqY/fNO4mE486Ik809iddR9BXUZmSlZ79qo215obOX1e
+         rR1hWsr1vNlfXhE0FI8Yw8HiFFavL00ANxZjKxIpthqX3aDi+fRYwigeDpyN+ajpIXs/
+         /QFiuUs/qC6YCpJpNzD7WX7u9LVzAcXYgcKoOoLKBnMRQWCCOzghSIwAWeDJWcBF4ULh
+         1nqjtOiJsIeR9L7rbkb9V+06dr0mwi9c/ZLO4mtdCZI/mOFp3tzjbzhjX9fH4oIleAYG
+         E7zA==
+X-Gm-Message-State: ANhLgQ26NJfpypJk5sdGQsZhNvFjQILEj5rCQKOap+3cSbLqKmGmw8Iv
+        bc4AzvGmmoiddgqPPRspAt2VvfpiH/xLzXfhHp/qf7iyHW3G7fC9huCdcoPxGjUoEKs6sE4kUDu
+        c0F+qiqbCs1E/iv6Nzz1eXrU7GLfuV1WlEuKV
+X-Received: by 2002:a37:a151:: with SMTP id k78mr15810449qke.62.1585071113023;
+        Tue, 24 Mar 2020 10:31:53 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vsT3+/NsUg5fFEiC7sl/xL5+Je1Wup8Qo3qgB+ijo3E137wcTx+VJFpMve9UNQQtDpuEDBDe/wRAdiHFGyqiS4=
+X-Received: by 2002:a37:a151:: with SMTP id k78mr15810420qke.62.1585071112699;
+ Tue, 24 Mar 2020 10:31:52 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: netapp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2db3f963-6762-455a-5070-08d7d010f405
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Mar 2020 16:32:32.6878
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4b0911a0-929b-4715-944b-c03745165b3a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: BdcJUeF8GV2nUZOGoqBkF3z4G4O4c9FWFezgDB11JYMFmd4sYMdOouz7HzlCM6NgArTydh6OfEMCgwwYG1+OfQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR06MB3308
+References: <20200310192627.437947-1-kherbst@redhat.com> <20200320221931.GA23783@google.com>
+ <CACO55tsamLG5WE16U=psJpRWfz=7Fy5K8haGKHnhic1h0WAmqA@mail.gmail.com>
+In-Reply-To: <CACO55tsamLG5WE16U=psJpRWfz=7Fy5K8haGKHnhic1h0WAmqA@mail.gmail.com>
+From:   Karol Herbst <kherbst@redhat.com>
+Date:   Tue, 24 Mar 2020 18:31:08 +0100
+Message-ID: <CACO55ttvb5uC37ORiLuVBidhfSn-+WSReJ+aCfWR3k-fLtPBnA@mail.gmail.com>
+Subject: Re: [PATCH v7] pci: prevent putting nvidia GPUs into lower device
+ states on certain intel bridges
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Lyude Paul <lyude@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Mika Westerberg <mika.westerberg@intel.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Ok - sounds like it is not the same issue then.  I just was trying to feed =
-you info in case you hit the same problem.
+On Sat, Mar 21, 2020 at 2:02 AM Karol Herbst <kherbst@redhat.com> wrote:
+>
+> On Fri, Mar 20, 2020 at 11:19 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >
+> > On Tue, Mar 10, 2020 at 08:26:27PM +0100, Karol Herbst wrote:
+> > > Fixes the infamous 'runtime PM' bug many users are facing on Laptops with
+> > > Nvidia Pascal GPUs by skipping said PCI power state changes on the GPU.
+> > >
+> > > Depending on the used kernel there might be messages like those in demsg:
+> > >
+> > > "nouveau 0000:01:00.0: Refused to change power state, currently in D3"
+> > > "nouveau 0000:01:00.0: can't change power state from D3cold to D0 (config
+> > > space inaccessible)"
+> > > followed by backtraces of kernel crashes or timeouts within nouveau.
+> > >
+> > > It's still unkown why this issue exists, but this is a reliable workaround
+> > > and solves a very annoying issue for user having to choose between a
+> > > crashing kernel or higher power consumption of their Laptops.
+> >
+> > Thanks for the bugzilla link.  The bugzilla mentions lots of mailing
+> > list discussion.  Can you include links to some of that?
+> >
+> > IIUC this basically just turns off PCI power management for the GPU.
+> > Can you do that with something like the following?  I don't know
+> > anything about DRM, so I don't know where you could save the pm_cap,
+> > but I'm sure the driver could keep it somewhere.
+> >
+>
+> Sure this would work? From a quick look over the pci code, it looks
+> like a of code would be skipped we really need, like the platform code
+> to turn off the GPU via ACPI. But I could also remember incorrectly on
+> how all of that worked again. I can of course try and see what the
+> effect of this patch would be. And would the parent bus even go into
+> D3hot if it knows one of its children is still at D0? Because that's
+> what the result of that would be as well, no? And I know that if the
+> bus stays in D0, that it has a negative impact on power consumption.
+>
+> Anyway, I will try that out, I am just not seeing how that would help.
+>
 
------Original Message-----
-From: Haeuptle, Michael <michael.haeuptle@hpe.com>=20
-Sent: Tuesday, March 24, 2020 11:27 AM
-To: Hoyer, David <David.Hoyer@netapp.com>; linux-pci@vger.kernel.org
-Cc: michaelhaeuptle@gmail.com
-Subject: RE: Deadlock during PCIe hot remove
+so it seems like that has worked unless I screwed up locally. Will do
+some proper testing and then I think we won't need to go through the
+pci tree anymore as no changes are required there with that.
 
-NetApp Security WARNING: This is an external email. Do not click links or o=
-pen attachments unless you recognize the sender and know the content is saf=
-e.
+> >
+> > diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouveau/nouveau_drm.c
+> > index b65ae817eabf..2ad825e8891c 100644
+> > --- a/drivers/gpu/drm/nouveau/nouveau_drm.c
+> > +++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
+> > @@ -618,6 +618,23 @@ nouveau_drm_device_fini(struct drm_device *dev)
+> >         kfree(drm);
+> >  }
+> >
+> > +static void quirk_broken_nv_runpm(struct drm_device *drm_dev)
+> > +{
+> > +       struct pci_dev *pdev = drm_dev->pdev;
+> > +       struct pci_dev *bridge = pci_upstream_bridge(pdev);
+> > +
+> > +       if (!bridge || bridge->vendor != PCI_VENDOR_ID_INTEL)
+> > +               return;
+> > +
+> > +       switch (bridge->device) {
+> > +       case 0x1901:
+> > +               STASH->pm_cap = pdev->pm_cap;
+> > +               pdev->pm_cap = 0;
+> > +               NV_INFO(drm_dev, "Disabling PCI power management to avoid bug\n");
+> > +               break;
+> > +       }
+> > +}
+> > +
+> >  static int nouveau_drm_probe(struct pci_dev *pdev,
+> >                              const struct pci_device_id *pent)
+> >  {
+> > @@ -699,6 +716,7 @@ static int nouveau_drm_probe(struct pci_dev *pdev,
+> >         if (ret)
+> >                 goto fail_drm_dev_init;
+> >
+> > +       quirk_broken_nv_runpm(drm_dev);
+> >         return 0;
+> >
+> >  fail_drm_dev_init:
+> > @@ -735,6 +753,9 @@ nouveau_drm_remove(struct pci_dev *pdev)
+> >  {
+> >         struct drm_device *dev = pci_get_drvdata(pdev);
+> >
+> > +       /* If we disabled PCI power management, restore it */
+> > +       if (STASH->pm_cap)
+> > +               pdev->pm_cap = STASH->pm_cap;
+> >         nouveau_drm_device_remove(dev);
+> >         pci_disable_device(pdev);
+> >  }
+> >
 
-
-
-
-Hi David,
-
-Unfortunately, this patch didn't help. Just to illustrate where the deadloc=
-k is happening in case it wasn't clear:
-
-1) pciehp_hist takes ctrl->reset_lock
-
-2) a user space process calls vfio_pci_release (implicitly via munmap())
-
-3) vfio_pci_release calls pci_try_reset_function
-
-4) pci_try_reset_function takes calls device_lock
-
-5) pci_try_reset_function eventually calls pciehp_reset_slot which waits on=
- ctrl->reset_lock
-
-6) pcihp eventually calls device_release_driver_internal which waits on the=
- device_lock
-
-It's that user space process calling into pci_try_reset_function that leads=
- to the deadlock issue.
-
--- Michael
-
------Original Message-----
-From: Hoyer, David [mailto:David.Hoyer@netapp.com]
-Sent: Tuesday, March 24, 2020 9:39 AM
-To: Haeuptle, Michael <michael.haeuptle@hpe.com>; linux-pci@vger.kernel.org
-Cc: michaelhaeuptle@gmail.com
-Subject: RE: Deadlock during PCIe hot remove
-
-I hit the same problem and have worked with the developers on a patch.   Yo=
-u might give this a try if you are building your own kernel/driver.
-
-https://www.spinics.net/lists/linux-pci/msg92395.html
-
------Original Message-----
-From: Haeuptle, Michael <michael.haeuptle@hpe.com>
-Sent: Tuesday, March 24, 2020 10:37 AM
-To: Hoyer, David <David.Hoyer@netapp.com>; linux-pci@vger.kernel.org
-Cc: michaelhaeuptle@gmail.com
-Subject: RE: Deadlock during PCIe hot remove
-
-NetApp Security WARNING: This is an external email. Do not click links or o=
-pen attachments unless you recognize the sender and know the content is saf=
-e.
-
-
-
-
-Hi David, yes, it does.
-
--- Michael
-
------Original Message-----
-From: Hoyer, David [mailto:David.Hoyer@netapp.com]
-Sent: Tuesday, March 24, 2020 9:35 AM
-To: Haeuptle, Michael <michael.haeuptle@hpe.com>; linux-pci@vger.kernel.org
-Cc: michaelhaeuptle@gmail.com
-Subject: RE: Deadlock during PCIe hot remove
-
-You mentioned that you are using the latest pciehp code.   Does this code c=
-ontain the recently introduced ist_running flag?
-
------Original Message-----
-From: linux-pci-owner@vger.kernel.org <linux-pci-owner@vger.kernel.org> On =
-Behalf Of Haeuptle, Michael
-Sent: Tuesday, March 24, 2020 10:22 AM
-To: linux-pci@vger.kernel.org
-Cc: michaelhaeuptle@gmail.com
-Subject: RE: Deadlock during PCIe hot remove
-
-NetApp Security WARNING: This is an external email. Do not click links or o=
-pen attachments unless you recognize the sender and know the content is saf=
-e.
-
-
-
-
-From: Haeuptle, Michael
-Sent: Tuesday, March 24, 2020 8:46 AM
-To: 'linux-pci@vger.kernel.org' <linux-pci@vger.kernel.org>
-Cc: 'michaelhaeuptle@gmail.com' <michaelhaeuptle@gmail.com>
-Subject: Deadlock during PCIe hot remove
-
-Dear PCI maintainers,
-
-I'm running into a deadlock scenario between the hotplug, pcie and vfio_pci=
- driver when removing multiple devices in parallel.
-This is happening on CentOS8 (4.18) with SPDK (spdk.io). I'm using the late=
-st pciehp code, the rest is all 4.18.
-
-The sequence that leads to the deadlock is as follows:
-
-The pciehp_ist() takes the reset_lock early in its processing. While the pc=
-iehp_ist processing is progressing, vfio_pci calls pci_try_reset_function()=
- as part of vfio_pci_release or open. The pci_try_reset_function() takes th=
-e device lock.
-
-Eventually, pci_try_reset_function() calls pci_reset_hotplug_slot() which c=
-alls pciehp_reset_slot(). The pciehp_reset_slot() tries to take the reset_l=
-ock but has to wait since it is already taken by pciehp_ist().
-
-Eventually pciehp_ist calls pcie_stop_device() which calls device_release_d=
-river_internal(). This function also tries to take device_lock causing the =
-dead lock.
-
-Here's the kernel stack trace when the deadlock occurs:
-
-[root@localhost ~]# cat /proc/8594/task/8598/stack [<0>] pciehp_reset_slot+=
-0xa5/0x220 [<0>] pci_reset_hotplug_slot.cold.72+0x20/0x36
-[<0>] pci_dev_reset_slot_function+0x72/0x9b
-[<0>] __pci_reset_function_locked+0x15b/0x190
-[<0>] pci_try_reset_function.cold.77+0x9b/0x108
-[<0>] vfio_pci_disable+0x261/0x280
-[<0>] vfio_pci_release+0xcb/0xf0
-[<0>] vfio_device_fops_release+0x1e/0x40
-[<0>] __fput+0xa5/0x1d0
-[<0>] task_work_run+0x8a/0xb0
-[<0>] exit_to_usermode_loop+0xd3/0xe0
-[<0>] do_syscall_64+0xe1/0x100
-[<0>] entry_SYSCALL_64_after_hwframe+0x65/0xca
-[<0>] 0xffffffffffffffff
-
-I was wondering if there's a quick workaround. I think the pci_try_reset_fu=
-nction would need to take the reset_lock before the device lock but there d=
-oesn't seem to be a good way of doing that.
-
-I'm also trying to see if we can delay calling the vfio functions that are =
-initiated by SPDK but I think this inherent race should be addressed.
-
-I'm also happy to submit a defect report if this emailing list is not appro=
-priate.
-
-* Michael
