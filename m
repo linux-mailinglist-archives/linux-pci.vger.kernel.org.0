@@ -2,25 +2,25 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 32F05192A82
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Mar 2020 14:55:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BAD09192AD2
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Mar 2020 15:11:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727351AbgCYNzk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Mar 2020 09:55:40 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2598 "EHLO huawei.com"
+        id S1727316AbgCYOLY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Mar 2020 10:11:24 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2599 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727277AbgCYNzj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 25 Mar 2020 09:55:39 -0400
-Received: from LHREML714-CAH.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 35408FB15BE19D46B711;
-        Wed, 25 Mar 2020 13:55:38 +0000 (GMT)
+        id S1727440AbgCYOLY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 25 Mar 2020 10:11:24 -0400
+Received: from lhreml703-cah.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id BF0652F864E1C971B64E;
+        Wed, 25 Mar 2020 14:11:21 +0000 (GMT)
 Received: from lhreml715-chm.china.huawei.com (10.201.108.66) by
- LHREML714-CAH.china.huawei.com (10.201.108.37) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Wed, 25 Mar 2020 13:55:37 +0000
+ lhreml703-cah.china.huawei.com (10.201.108.44) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 25 Mar 2020 14:11:21 +0000
 Received: from [127.0.0.1] (10.47.86.66) by lhreml715-chm.china.huawei.com
  (10.201.108.66) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Wed, 25 Mar
- 2020 13:55:37 +0000
+ 2020 14:11:20 +0000
 To:     <linux-acpi@vger.kernel.org>, <linux-pci@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <rjw@rjwysocki.net>,
         <helgaas@kernel.org>, <lenb@kernel.org>, <bp@alien8.de>,
@@ -32,8 +32,8 @@ CC:     <linuxarm@huawei.com>, <jonathan.cameron@huawei.com>,
 From:   Shiju Jose <shiju.jose@huawei.com>
 Subject: [PATCH v5 2/2] PCI: HIP: Add handling of HiSilicon HIP PCIe
  controller errors
-Message-ID: <24330bd8-afaa-d7ac-594c-f9fda4242400@huawei.com>
-Date:   Wed, 25 Mar 2020 13:55:18 +0000
+Message-ID: <adaa054e-6b14-6959-8e79-4d89fe087d0c@huawei.com>
+Date:   Wed, 25 Mar 2020 14:11:01 +0000
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.6.0
 MIME-Version: 1.0
@@ -48,6 +48,8 @@ Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
+
+From: Yicong Yang <yangyicong@hisilicon.com>
 
 The HiSilicon HIP PCIe controller is capable of handling errors
 on root port and perform port reset separately at each root port.
