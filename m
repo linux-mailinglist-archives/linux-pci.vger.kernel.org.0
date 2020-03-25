@@ -2,137 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B941192E5D
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Mar 2020 17:39:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F82C192E7D
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Mar 2020 17:43:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727547AbgCYQjV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Mar 2020 12:39:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39030 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727464AbgCYQjU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 25 Mar 2020 12:39:20 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6311D2073E;
-        Wed, 25 Mar 2020 16:39:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585154359;
-        bh=A1GPX4wlECfGGG7gTSHHrGt3spoxTdKZ1xy9utwV/BA=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=APOdz2w7EH+7D58vqGoNgP8mOHfbNma8Ty1WIG8jpBICPSinl9OycWqb0OdtxkciV
-         gxpkAVRwhIe+WxIGCYwXBH73yF99ZY9v+QEk7Sp75Ev8c6B1ujrOAxGnV4ZUKw4afx
-         Pt8nI6CO51v4M2JmrHTqBAusgH99DwWPqLUsLFTU=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 325E9352094D; Wed, 25 Mar 2020 09:39:19 -0700 (PDT)
-Date:   Wed, 25 Mar 2020 09:39:19 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Sebastian Siewior <bigeasy@linutronix.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        linux-pci@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        platform-driver-x86@vger.kernel.org,
-        Zhang Rui <rui.zhang@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        linux-pm@vger.kernel.org, Len Brown <lenb@kernel.org>,
-        linux-acpi@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Nick Hu <nickhu@andestech.com>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Guo Ren <guoren@kernel.org>, linux-csky@vger.kernel.org,
-        Brian Cain <bcain@codeaurora.org>,
-        linux-hexagon@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org,
-        Michal Simek <monstr@monstr.eu>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geoff Levand <geoff@infradead.org>,
-        linuxppc-dev@lists.ozlabs.org, Davidlohr Bueso <dbueso@suse.de>
-Subject: Re: Documentation/locking/locktypes: Further clarifications and
- wordsmithing
-Message-ID: <20200325163919.GU19865@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200323025501.GE3199@paulmck-ThinkPad-P72>
- <87r1xhz6qp.fsf@nanos.tec.linutronix.de>
- <20200325002811.GO19865@paulmck-ThinkPad-P72>
- <87wo78y5yy.fsf@nanos.tec.linutronix.de>
- <20200325160212.oavrni7gmzudnczv@linutronix.de>
+        id S1727464AbgCYQnT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Mar 2020 12:43:19 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:12193 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727395AbgCYQnT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 25 Mar 2020 12:43:19 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 9C66C732E45CF1BFCD29;
+        Thu, 26 Mar 2020 00:43:13 +0800 (CST)
+Received: from DESKTOP-6T4S3DQ.china.huawei.com (10.47.86.66) by
+ DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 26 Mar 2020 00:43:04 +0800
+From:   Shiju Jose <shiju.jose@huawei.com>
+To:     <linux-acpi@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <rjw@rjwysocki.net>,
+        <helgaas@kernel.org>, <lenb@kernel.org>, <bp@alien8.de>,
+        <james.morse@arm.com>, <tony.luck@intel.com>,
+        <gregkh@linuxfoundation.org>, <zhangliguang@linux.alibaba.com>,
+        <tglx@linutronix.de>
+CC:     <linuxarm@huawei.com>, <jonathan.cameron@huawei.com>,
+        <tanxiaofei@huawei.com>, <yangyicong@hisilicon.com>,
+        Shiju Jose <shiju.jose@huawei.com>
+Subject: [PATCH v6 0/2] ACPI / APEI: Add support to notify the vendor specific HW errors
+Date:   Wed, 25 Mar 2020 16:42:21 +0000
+Message-ID: <20200325164223.650-1-shiju.jose@huawei.com>
+X-Mailer: git-send-email 2.26.0.windows.1
+In-Reply-To: <Shiju Jose>
+References: <Shiju Jose>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200325160212.oavrni7gmzudnczv@linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.47.86.66]
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 05:02:12PM +0100, Sebastian Siewior wrote:
-> On 2020-03-25 13:27:49 [+0100], Thomas Gleixner wrote:
-> > The documentation of rw_semaphores is wrong as it claims that the non-owner
-> > reader release is not supported by RT. That's just history biased memory
-> > distortion.
-> > 
-> > Split the 'Owner semantics' section up and add separate sections for
-> > semaphore and rw_semaphore to reflect reality.
-> > 
-> > Aside of that the following updates are done:
-> > 
-> >  - Add pseudo code to document the spinlock state preserving mechanism on
-> >    PREEMPT_RT
-> > 
-> >  - Wordsmith the bitspinlock and lock nesting sections
-> > 
-> > Co-developed-by: Paul McKenney <paulmck@kernel.org>
-> > Signed-off-by: Paul McKenney <paulmck@kernel.org>
-> > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Acked-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> 
-> > --- a/Documentation/locking/locktypes.rst
-> > +++ b/Documentation/locking/locktypes.rst
-> …
-> > +rw_semaphore
-> > +============
-> > +
-> > +rw_semaphore is a multiple readers and single writer lock mechanism.
-> > +
-> > +On non-PREEMPT_RT kernels the implementation is fair, thus preventing
-> > +writer starvation.
-> > +
-> > +rw_semaphore complies by default with the strict owner semantics, but there
-> > +exist special-purpose interfaces that allow non-owner release for readers.
-> > +These work independent of the kernel configuration.
-> 
-> This reads funny, could be my English. "This works independent …" maybe?
+Presently the vendor drivers are unable to do the recovery for the
+vendor specific recoverable HW errors, reported to the APEI driver
+in the vendor defined sections, because APEI driver does not support
+reporting the same to the vendor drivers.
 
-The "These" refers to "interfaces", which is plural, so "These" rather
-than "This".  But yes, it is a bit awkward, because you have to skip
-back past "readers", "release", and "non-owner" to find the implied
-subject of that last sentence.
+This patch set
+1. add an interface to the APEI driver to enable the vendor
+drivers to register the event handling functions for the corresponding
+vendor specific HW errors and report the error to the vendor driver.
 
-So how about this instead, making the implied subject explicit?
+2. add driver to handle HiSilicon hip08 PCIe controller's errors
+   which is an example application of the above APEI interface.
 
-rw_semaphore complies by default with the strict owner semantics, but there
-exist special-purpose interfaces that allow non-owner release for readers.
-These interfaces work independent of the kernel configuration.
+Changes:
 
-							Thanx, Paul
+V6:
+1. Fix few changes in the patch subject line suggested by Bjorn Helgaas.
+
+V5:
+1. Fix comments from James Morse.
+1.1 Changed the notification method to use the atomic_notifier_chain.
+1.2 Add the error handled status for the user space.  
+
+V4:
+1. Fix for the smatch warning in the PCIe error driver:
+   warn: should '((((1))) << (9 + i))' be a 64 bit type?
+   if (err->val_bits & BIT(HISI_PCIE_LOCAL_VALID_ERR_MISC + i))
+	^^^ This should be BIT_ULL() because it goes up to 9 + 32.
+
+V3:
+1. Fix the comments from Bjorn Helgaas.
+
+V2:
+1. Changes in the HiSilicon PCIe controller's error handling driver
+   for the comments from Bjorn Helgaas.
+   
+2. Changes in the APEI interface to support reporting the vendor error
+   for module with multiple devices, but use the same section type.
+   In the error handler will use socket id/sub module id etc to distinguish
+   the device.
+
+V1:  
+1. Fix comments from James Morse.
+
+2. add driver to handle HiSilicon hip08 PCIe controller's errors,
+   which is an application of the above interface.
+
+Shiju Jose (1):
+  ACPI / APEI: Add support to notify the vendor specific HW errors
+
+Yicong Yang (1):
+  PCI: hip: Add handling of HiSilicon HIP PCIe controller errors
+
+ drivers/acpi/apei/ghes.c                 |  35 ++-
+ drivers/pci/controller/Kconfig           |   8 +
+ drivers/pci/controller/Makefile          |   1 +
+ drivers/pci/controller/pcie-hisi-error.c | 357 +++++++++++++++++++++++
+ drivers/ras/ras.c                        |   5 +-
+ include/acpi/ghes.h                      |  28 ++
+ include/linux/ras.h                      |   6 +-
+ include/ras/ras_event.h                  |   7 +-
+ 8 files changed, 440 insertions(+), 7 deletions(-)
+ create mode 100644 drivers/pci/controller/pcie-hisi-error.c
+
+-- 
+2.17.1
+
+
