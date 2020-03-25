@@ -2,107 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A8006192C3C
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Mar 2020 16:23:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 91ED3192D70
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Mar 2020 16:52:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727560AbgCYPX4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Mar 2020 11:23:56 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:45444 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726838AbgCYPX4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Mar 2020 11:23:56 -0400
-Received: by mail-qt1-f193.google.com with SMTP id t17so2427577qtn.12;
-        Wed, 25 Mar 2020 08:23:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=q0JYEoigZWM1yeX7JgpaphNd8KXCrioPAqCpQizqggg=;
-        b=autKwVYxtzoLq5oAA+Cci6u6EukRb+k57IlORCbtMZ0TIBF8bAkJ2aWzN09JD3jY4B
-         uX9DgK8r+QQPBwITxqt2ZZQoKHUHqBCpkMmvWkA1z0abhtfF8M67nOJz4OuilrmgUScU
-         BzGSp7by7/dT7FPbNXuVD9bCLxLI/X4tWQDdx1TCa5Z0iUHvBXBOgZUyNJdDnq+EUYZ6
-         gElffKRGxJ2Y26EvL0manWdox2JU8feN/5NnARGCVJluMpYTXuK+jvm7QE3ttRoDbm+J
-         RuEvKykfq0Cxxwjg/NKtL50Jtz4PHGJwcH3R8oaV0cyVZGnSagzyIaZks55v3jJK1X3K
-         QIvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=q0JYEoigZWM1yeX7JgpaphNd8KXCrioPAqCpQizqggg=;
-        b=riy6ytZgkFx8wPL4RbpF3EVlJBzmZf+i9lZ8NkL75qDd/vrgGx8wLIw88TzwCQl/Qv
-         FGyUPIuI8LyiClx1WYPdTKnCVwU0IxD3zGvc2EKYhg13U1mxtyD/fhOb3jpCpGnSevrv
-         2KyNtV16n7hxcFM/R8q7JGXqLMb1/f0Qwo7kOTfyAKwR8xME9XUaGuzZYw3GDE4yMMYB
-         WQHA//A8LQGByT3B92QN/4S5LujQQdyzYXV93YLCFMUZRAVXf9phL8UJj+V1Q+eTxALu
-         UKG2Gvu4TT0pAwm/sIDZS+FhT04Rjm7FKDcNF2gEcrILZVHKqrFdA9qNfsfx44InJ84L
-         /wuQ==
-X-Gm-Message-State: ANhLgQ3b5+lX0+ncVrL63fFD3SnIdadBNHfOmOqoRBDV5xGbxVuej/br
-        1hPgdq7uS5jLC7E8tgA1kDkg+WbZFocjTbBL8yY=
-X-Google-Smtp-Source: ADFU+vtX1EZKWaDVmE6LIswsBe1CfdqTF6SPmg7IMajB6dCadIJAq80gEr8/yesNu0odN314yF5sUBfDtGnycyv+wqU=
-X-Received: by 2002:ac8:38cc:: with SMTP id g12mr3541264qtc.186.1585149833875;
- Wed, 25 Mar 2020 08:23:53 -0700 (PDT)
+        id S1727953AbgCYPwL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Mar 2020 11:52:11 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:49040 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727848AbgCYPwK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Mar 2020 11:52:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=G5IqHi85lKRyOGN1ba+XW+BgTmyu4gcHkmkrDclUbYk=; b=qXr6yoXABFiiDc+aEhIek/J1gD
+        HjMSEHyvb8dbqZYv+Xr5CKG0JHdRg7FfX+TOyopbQ8wcU1TCpwyM9xKq+r0nceUtyAsqUVKikL2a/
+        1tl1Q4i1H+NIC8CilxkP1XYSrXt+gwIMe8ocWGDv0Xl6o7xNULNmN6m09Wi/jN5DzsxsRGFCqBHxa
+        imX5TqnFM68XU5lFMbCmkO8OJ5wIWaAw8obVXClXqUkQg3GVC1eMWtpCxMRauZg/lNo9Y6VDtCRy8
+        gPqQhIFSiausVxoxpq+/TqiS6Lts56XDqT2fM7rOwNNcxsa0e7Q95Vd6w4GayuDqMTmYmf7oSmc4N
+        EExKXaaQ==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jH8K9-0006qW-J4; Wed, 25 Mar 2020 15:52:09 +0000
+Subject: Re: mmotm 2020-03-23-21-29 uploaded
+ (pci/controller/dwc/pcie-tegra194.c)
+To:     Vidya Sagar <vidyas@nvidia.com>,
+        Bjorn Helgaas <helgaas@kernel.org>, lorenzo.pieralisi@arm.com
+Cc:     akpm@linux-foundation.org, broonie@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
+        linux-pci <linux-pci@vger.kernel.org>
+References: <20200324161851.GA2300@google.com>
+ <eb101f02-c893-e16e-0f3f-151aac223205@nvidia.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <20f349f0-872a-08fa-1a4e-53712b31e547@infradead.org>
+Date:   Wed, 25 Mar 2020 08:52:08 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200324234848.8299-1-skunberg.kelsey@gmail.com> <20200325071608.GA2978943@kroah.com>
-In-Reply-To: <20200325071608.GA2978943@kroah.com>
-From:   Kelsey <skunberg.kelsey@gmail.com>
-Date:   Wed, 25 Mar 2020 09:23:42 -0600
-Message-ID: <CAFVqi1R7gHCAMSKw5SSns0jq0++60vyoao6w_g_proC6dYD2_Q@mail.gmail.com>
-Subject: Re: [Linux-kernel-mentees] [PATCH] PCI: sysfs: Change bus_rescan and
- dev_rescan to rescan
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        rbilovol@cisco.com, Don Dutile <ddutile@redhat.com>,
-        Ruslan Bilovol <ruslan.bilovol@gmail.com>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Bodong Wang <bodong@mellanox.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <eb101f02-c893-e16e-0f3f-151aac223205@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 1:16 AM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Tue, Mar 24, 2020 at 05:48:48PM -0600, Kelsey Skunberg wrote:
-> > From: Kelsey Skunberg <kelsey.skunberg@gmail.com>
-> >
-> > rename device attribute name arguments 'bus_rescan' and 'dev_rescan' to 'rescan'
-> > to avoid breaking userspace applications.
-> >
-> > The attribute argument names were changed in the following commits:
-> > 8bdfa145f582 ("PCI: sysfs: Define device attributes with DEVICE_ATTR*()")
-> > 4e2b79436e4f ("PCI: sysfs: Change DEVICE_ATTR() to DEVICE_ATTR_WO()")
-> >
-> > Revert the names used for attributes back to the names used before the above
-> > patches were applied. This also requires to change DEVICE_ATTR_WO() to
-> > DEVICE_ATTR() and __ATTR().
-> >
-> > Note when using DEVICE_ATTR() the attribute is automatically named
-> > dev_attr_<name>.attr. To avoid duplicated names between attributes, use
-> > __ATTR() instead of DEVICE_ATTR() to a assign a custom attribute name for
-> > dev_rescan.
-> >
-> > change bus_rescan_store() to dev_bus_rescan_store() to complete matching the
-> > names used before the mentioned patches were applied.
-> >
-> > Signed-off-by: Kelsey Skunberg <kelsey.skunberg@gmail.com>
->
-> You should add:
-> Fixes: 8bdfa145f582 ("PCI: sysfs: Define device attributes with DEVICE_ATTR*()")
-> Fixes: 4e2b79436e4f ("PCI: sysfs: Change DEVICE_ATTR() to DEVICE_ATTR_WO()")
->
-> to this too, and a
->         Cc: stable <stable@vger.kernel.org>
-> to the signed-off-by: area so that it gets properly backported.
->
-> Other than that minor thing, looks good to me, thanks for fixing it so
-> quickly:
->
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+On 3/25/20 8:13 AM, Vidya Sagar wrote:
+> 
+> 
+> On 3/24/2020 9:48 PM, Bjorn Helgaas wrote:
+>> External email: Use caution opening links or attachments
+>>
+>>
+>> On Tue, Mar 24, 2020 at 08:16:34AM -0700, Randy Dunlap wrote:
+>>> On 3/23/20 9:30 PM, akpm@linux-foundation.org wrote:
+>>>> The mm-of-the-moment snapshot 2020-03-23-21-29 has been uploaded to
+>>>>
+>>>>     http://www.ozlabs.org/~akpm/mmotm/
+>>>>
+>>>> mmotm-readme.txt says
+>>>>
+>>>> README for mm-of-the-moment:
+>>>>
+>>>> http://www.ozlabs.org/~akpm/mmotm/
+>>>>
+>>>> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+>>>> more than once a week.
+>>>>
+>>>> You will need quilt to apply these patches to the latest Linus release (5.x
+>>>> or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
+>>>> http://ozlabs.org/~akpm/mmotm/series
+>>>
+>>>
+>>> on x86_64:
+>>>
+>>> ../drivers/pci/controller/dwc/pcie-tegra194.c: In function ‘tegra_pcie_dw_parse_dt’:
+>>> ../drivers/pci/controller/dwc/pcie-tegra194.c:1160:24: error: implicit declaration of function ‘devm_gpiod_get’; did you mean ‘devm_phy_get’? [-Werror=implicit-function-declaration]
+>>>    pcie->pex_rst_gpiod = devm_gpiod_get(pcie->dev, "reset", GPIOD_IN);
+>>>                          ^~~~~~~~~~~~~~
+>>>                          devm_phy_get
+>>
+>> Thanks a lot for the report!
+>>
+>> This was found on mmotm, but I updated my -next branch with Lorenzo's
+>> latest pci/endpoint branch (current head 775d9e68f470) and reproduced
+>> this build failure with the .config you attached.
+>>
+>> I dropped that branch from my -next branch for now and pushed it.
+> I found that one header file inclusion is missing.
+> The following patch fixes it.
+> Also, I wanted to know how can I catch this locally? i.e. How can I generate the config file attached by Randy locally so that I can get the source ready without these kind of issues?
+> 
+> Bjorn/Lorenzo, would you be able to apply below change in your trees or do I need to send a patch for this?
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+> index 97d3f3db1020..eeeca18892c6 100644
+> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/debugfs.h>
+>  #include <linux/delay.h>
+>  #include <linux/gpio.h>
+> +#include <linux/gpio/consumer.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/iopoll.h>
+>  #include <linux/kernel.h>
 
-Done! I appreciate the review and help, Greg. :)
+Yes, that works/fixes the problem.  Thanks.
 
-link to v2:
-https://lore.kernel.org/r/20200325151708.32612-1-skunberg.kelsey@gmail.com
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
 
-- Kelsey
+-- 
+~Randy
+
