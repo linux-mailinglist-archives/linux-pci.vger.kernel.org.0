@@ -2,184 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 56F3E1921B2
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Mar 2020 08:17:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DC231921EC
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Mar 2020 08:51:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725832AbgCYHRG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Mar 2020 03:17:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58262 "EHLO mail.kernel.org"
+        id S1726264AbgCYHvR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Mar 2020 03:51:17 -0400
+Received: from mga07.intel.com ([134.134.136.100]:12994 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726017AbgCYHRG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 25 Mar 2020 03:17:06 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77303206F6;
-        Wed, 25 Mar 2020 07:17:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585120625;
-        bh=EXBxL+l16lcKgIJFP14hYin8T/lF/hDqYzlqJZUhW0I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZUPtUUzSUZC2q+c4d+F4bADrziUIxc+bqUp93wTg5ygluXXyZBLn1H+oLe+KeBlRt
-         7mFPvzaui/E6OM95DIf2toXKZljUlWdhcLh7Yt369ThOftYLGgtThdBmjWJqXAbvUo
-         nvNLgYMGaqlAFoPIb6CpBWO1s060zk01BCeuyxKs=
-Date:   Wed, 25 Mar 2020 08:17:02 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Kelsey <skunberg.kelsey@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Ruslan Bilovol <ruslan.bilovol@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Bodong Wang <bodong@mellanox.com>,
-        Don Dutile <ddutile@redhat.com>, rbilovol@cisco.com
-Subject: Re: [PATCH v3 1/4] PCI: sysfs: Define device attributes with
- DEVICE_ATTR*
-Message-ID: <20200325071702.GB2978943@kroah.com>
-References: <20190813204513.4790-1-skunberg.kelsey@gmail.com>
- <20190815153352.86143-2-skunberg.kelsey@gmail.com>
- <CAB=otbSYozS-ZfxB0nCiNnxcbqxwrHOSYxJJtDKa63KzXbXgpw@mail.gmail.com>
- <20200314112022.GA53794@kroah.com>
- <CAFVqi1T1Fipajca8exrzs6uQAorSZeke80LYy43aCBpT45nFdA@mail.gmail.com>
- <20200324062422.GA1977781@kroah.com>
- <CAFVqi1Sqnn6L9xLQ0=BZp6D=aYz74tRMP0WYEXXVsz2cYXaoHA@mail.gmail.com>
+        id S1725832AbgCYHvR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 25 Mar 2020 03:51:17 -0400
+IronPort-SDR: E1Jz/oJzTtW6YHc/WTG3zsNThiE7rf0yCRPVhmn7mPkRYUeaTyRQVlcHVvUzG/seP6PvfXYM/j
+ F1ciKCs9ulnw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2020 00:51:15 -0700
+IronPort-SDR: G7wxsgTkr9vkVTq86VoZiIsFMwRyn2djwraZZSJ87AUyU3GKX2805IK+Rv8hRb++qD9s2NF9th
+ YWKEyahXeNUQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,303,1580803200"; 
+   d="scan'208";a="238457638"
+Received: from shao2-debian.sh.intel.com (HELO [10.239.13.3]) ([10.239.13.3])
+  by fmsmga007.fm.intel.com with ESMTP; 25 Mar 2020 00:51:05 -0700
+Subject: Re: [cpufreq] 06c4d00466: will-it-scale.per_process_ops -53.4%
+ regression
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        linux-edac@vger.kernel.org,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Takashi Iwai <tiwai@suse.com>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-crypto <linux-crypto@vger.kernel.org>, lkp@lists.01.org
+References: <20200320131509.564059710@linutronix.de>
+ <20200324060124.GC11705@shao2-debian>
+ <CAHp75VeeKZLeZ8E3Py7LECN54SPFHaRgkxrMzBYQWXM8x+4JhA@mail.gmail.com>
+From:   Rong Chen <rong.a.chen@intel.com>
+Message-ID: <43a4189a-7153-18e8-4657-4a4400002c05@intel.com>
+Date:   Wed, 25 Mar 2020 15:50:44 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFVqi1Sqnn6L9xLQ0=BZp6D=aYz74tRMP0WYEXXVsz2cYXaoHA@mail.gmail.com>
+In-Reply-To: <CAHp75VeeKZLeZ8E3Py7LECN54SPFHaRgkxrMzBYQWXM8x+4JhA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 05:53:59PM -0600, Kelsey wrote:
-> On Tue, Mar 24, 2020 at 12:24 AM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Tue, Mar 24, 2020 at 12:10:33AM -0600, Kelsey wrote:
-> > > On Sat, Mar 14, 2020 at 5:20 AM Greg Kroah-Hartman
-> > > <gregkh@linuxfoundation.org> wrote:
-> > > >
-> > > > On Sat, Mar 14, 2020 at 12:51:47PM +0200, Ruslan Bilovol wrote:
-> > > > > On Thu, Aug 15, 2019 at 7:01 PM Kelsey Skunberg
-> > > > > <skunberg.kelsey@gmail.com> wrote:
-> > > > > >
-> > > > > > Defining device attributes should be done through the helper
-> > > > > > DEVICE_ATTR_RO(), DEVICE_ATTR_WO(), or similar. Change all instances using
-> > > > > > __ATTR* to now use its equivalent DEVICE_ATTR*.
-> > > > > >
-> > > > > > Example of old:
-> > > > > >
-> > > > > > static struct device_attribute dev_name_##_attr=__ATTR_RO(_name);
-> > > > > >
-> > > > > > Example of new:
-> > > > > >
-> > > > > > static DEVICE_ATTR_RO(_name);
-> > > > > >
-> > > > > > Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
-> > > > > > ---
-> > > > > >  drivers/pci/pci-sysfs.c | 59 +++++++++++++++++++----------------------
-> > > > > >  1 file changed, 27 insertions(+), 32 deletions(-)
-> > > > > >
-> > > > > > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> > > > > > index 965c72104150..8af7944fdccb 100644
-> > > > > > --- a/drivers/pci/pci-sysfs.c
-> > > > > > +++ b/drivers/pci/pci-sysfs.c
-> > > > > > @@ -464,9 +464,7 @@ static ssize_t dev_rescan_store(struct device *dev,
-> > > > > >         }
-> > > > > >         return count;
-> > > > > >  }
-> > > > > > -static struct device_attribute dev_rescan_attr = __ATTR(rescan,
-> > > > > > -                                                       (S_IWUSR|S_IWGRP),
-> > > > > > -                                                       NULL, dev_rescan_store);
-> > > > > > +static DEVICE_ATTR(rescan, (S_IWUSR | S_IWGRP), NULL, dev_rescan_store);
-> > > > > >
-> > > > > >  static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
-> > > > > >                             const char *buf, size_t count)
-> > > > > > @@ -480,9 +478,8 @@ static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
-> > > > > >                 pci_stop_and_remove_bus_device_locked(to_pci_dev(dev));
-> > > > > >         return count;
-> > > > > >  }
-> > > > > > -static struct device_attribute dev_remove_attr = __ATTR_IGNORE_LOCKDEP(remove,
-> > > > > > -                                                       (S_IWUSR|S_IWGRP),
-> > > > > > -                                                       NULL, remove_store);
-> > > > > > +static DEVICE_ATTR_IGNORE_LOCKDEP(remove, (S_IWUSR | S_IWGRP), NULL,
-> > > > > > +                                 remove_store);
-> > > > > >
-> > > > > >  static ssize_t dev_bus_rescan_store(struct device *dev,
-> > > > > >                                     struct device_attribute *attr,
-> > > > > > @@ -504,7 +501,7 @@ static ssize_t dev_bus_rescan_store(struct device *dev,
-> > > > > >         }
-> > > > > >         return count;
-> > > > > >  }
-> > > > > > -static DEVICE_ATTR(rescan, (S_IWUSR|S_IWGRP), NULL, dev_bus_rescan_store);
-> > > > > > +static DEVICE_ATTR(bus_rescan, (S_IWUSR | S_IWGRP), NULL, dev_bus_rescan_store);
-> > > > >
-> > > > > This patch renamed 'rescan' to 'bus_rescan' and broke my userspace application.
-> > > > > There is also mismatch now between real functionality and documentation
-> > > > > Documentation/ABI/testing/sysfs-bus-pci which still contains old "rescan"
-> > > > > descriptions.
-> > > > >
-> > > > > Another patch from this patch series also renamed 'rescan' to 'dev_rescan'
-> > > > >
-> > > > > Here is a comparison between two stable kernels (with and without this
-> > > > > patch series):
-> > > > >
-> > > > > v5.4
-> > > > > # find /sys -name '*rescan'
-> > > > > /sys/devices/pci0000:00/0000:00:01.2/dev_rescan
-> > > > > /sys/devices/pci0000:00/0000:00:01.0/dev_rescan
-> > > > > /sys/devices/pci0000:00/0000:00:04.0/dev_rescan
-> > > > > /sys/devices/pci0000:00/0000:00:00.0/dev_rescan
-> > > > > /sys/devices/pci0000:00/pci_bus/0000:00/bus_rescan
-> > > > > /sys/devices/pci0000:00/0000:00:01.3/dev_rescan
-> > > > > /sys/devices/pci0000:00/0000:00:03.0/dev_rescan
-> > > > > /sys/devices/pci0000:00/0000:00:01.1/dev_rescan
-> > > > > /sys/devices/pci0000:00/0000:00:02.0/dev_rescan
-> > > > > /sys/devices/pci0000:00/0000:00:05.0/dev_rescan
-> > > > > /sys/bus/pci/rescan
-> > > > >
-> > > > > v4.19
-> > > > > # find /sys -name '*rescan'
-> > > > > /sys/devices/pci0000:00/0000:00:01.2/rescan
-> > > > > /sys/devices/pci0000:00/0000:00:01.0/rescan
-> > > > > /sys/devices/pci0000:00/0000:00:04.0/rescan
-> > > > > /sys/devices/pci0000:00/0000:00:00.0/rescan
-> > > > > /sys/devices/pci0000:00/pci_bus/0000:00/rescan
-> > > > > /sys/devices/pci0000:00/0000:00:01.3/rescan
-> > > > > /sys/devices/pci0000:00/0000:00:03.0/rescan
-> > > > > /sys/devices/pci0000:00/0000:00:01.1/rescan
-> > > > > /sys/devices/pci0000:00/0000:00:02.0/rescan
-> > > > > /sys/devices/pci0000:00/0000:00:05.0/rescan
-> > > > > /sys/bus/pci/rescan
-> > > > >
-> > > > > Do we maintain this kind of API as non-changeable?
-> > > >
-> > > > Yeah, that's a bug and should be fixed, sorry for missing that on
-> > > > review.
-> > > >
-> > > > Kelsey, can you fix this up?
-> > > >
-> > > > thanks,
-> > > >
-> > > > greg k-h
-> > >
-> > > I'd be happy to help get this fixed up.
-> > >
-> > > Would it be proper to go back to using DEVICE_ATTR() for 'bus_rescan'
-> > > and 'dev_rescan' in order to change their names back to 'rescan'?
-> >
-> > Yes.
-> >
-> > thanks,
-> >
-> > greg k-h
-> 
-> 
-> Ack. Sent a patch out. Will stay posted in case any updates need to be made.
-> 
-> commit 4cb9e42d3226 ("PCI: sysfs: Change bus_rescan and dev_rescan to rescan")
 
-That's your local commit, not the commit in Linus's tree :)
 
-greg k-h
+On 3/24/20 6:24 PM, Andy Shevchenko wrote:
+> On Tue, Mar 24, 2020 at 8:02 AM kernel test robot <rong.a.chen@intel.com> wrote:
+>> Greeting,
+>>
+>> FYI, we noticed a -53.4% regression of will-it-scale.per_process_ops due to commit:
+>> commit: 06c4d00466eb374841bc84c39af19b3161ff6917 ("[patch 09/22] cpufreq: Convert to new X86 CPU match macros")
+>> url: https://github.com/0day-ci/linux/commits/Thomas-Gleixner/x86-devicetable-Move-x86-specific-macro-out-of-generic-code/20200321-031729
+>> base: https://git.kernel.org/cgit/linux/kernel/git/rafael/linux-pm.git linux-next
+>>
+>> in testcase: will-it-scale
+>> on test machine: 4 threads Intel(R) Core(TM) i3-3220 CPU @ 3.30GHz with 8G memory
+>> with following parameters:
+>
+> drivers/cpufreq/speedstep-centrino.c change missed the terminator,
+> perhaps it's a culprit, because I don't believe removing dups and
+> reordering lines may affect this.
+> Can you restore terminator there and re-test?
+>
+
+I have retested with the change, but it has no effect on the performance.
+
+Best Regards,
+Rong Chen
