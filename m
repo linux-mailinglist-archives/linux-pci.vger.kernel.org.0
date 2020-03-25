@@ -2,137 +2,208 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6AA4D192BFC
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Mar 2020 16:13:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DC1BE192C02
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Mar 2020 16:15:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727731AbgCYPNj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Mar 2020 11:13:39 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:15838 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727319AbgCYPNj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Mar 2020 11:13:39 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e7b74f50001>; Wed, 25 Mar 2020 08:12:53 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 25 Mar 2020 08:13:38 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 25 Mar 2020 08:13:38 -0700
-Received: from [10.25.72.148] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 25 Mar
- 2020 15:13:35 +0000
-Subject: Re: mmotm 2020-03-23-21-29 uploaded
- (pci/controller/dwc/pcie-tegra194.c)
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        <lorenzo.pieralisi@arm.com>
-CC:     <akpm@linux-foundation.org>, <broonie@kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mm@kvack.org>, <linux-next@vger.kernel.org>,
-        <mhocko@suse.cz>, <mm-commits@vger.kernel.org>,
-        <sfr@canb.auug.org.au>, linux-pci <linux-pci@vger.kernel.org>
-References: <20200324161851.GA2300@google.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <eb101f02-c893-e16e-0f3f-151aac223205@nvidia.com>
-Date:   Wed, 25 Mar 2020 20:43:32 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S1727402AbgCYPPb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Mar 2020 11:15:31 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:38371 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727123AbgCYPPb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Mar 2020 11:15:31 -0400
+Received: by mail-qk1-f195.google.com with SMTP id h14so2901750qke.5;
+        Wed, 25 Mar 2020 08:15:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jZXSt/VrIZOV3oVnNKDvW8RIpCUfTNMiDOfSBRU0VB8=;
+        b=TUUuszWOWR6k65Zd0oivopeWcUF500AHJzVV/Sg/CpVv17RUNlIFHVn4+EWYExw7ty
+         yMWJ+T2Eb13M8tbgnO1WKSWhSIbFWyVKJoSJFRcLTlRhf4gqMAnEqqmHSw0ugi6tGra2
+         t51Z+y/0Lik3mf/08yI055P9RJxkWa2/lthUuipGLrsoEHpLsH1DmMJfuHLmu8QrbkDg
+         AEzWKxSKD+0RY4j3b7B/w6jBk1hRbiDInW2f/lIWUQ7xm0qS2lRKVB6MYgJ+WsbQvYLE
+         AX4yEiAtHPdhAaVHeYCCyoPPq61xeqbQkk/H92vINT6vG88BUODo1cOFIMKAhA3HdVWM
+         7Vbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jZXSt/VrIZOV3oVnNKDvW8RIpCUfTNMiDOfSBRU0VB8=;
+        b=BFBXmEnjmkbhi/1KTvwcFZFrZT9KUyiIwDVyEdiVjFOc/86H+CV4R6EdTEFB6pwNK5
+         Ql/XqUfk65IMyLXGR87uf8MMSlrzKqRDzjS4F7as/7bdm8MLtyVvQGplKYYhUZqdDxmv
+         ZFpkCaLPP5n+mS+TE6+Po3H4rJ555AY+QnuBIIMHelsg0Ol5KFNM4CMzDiJ9PTyzMS1q
+         c13VzV64XMLIwhoX4UyRv5yI52TxLZWhvRIP8umkBGKe0EeqX+nJJGA0U1sTr5vJCNL5
+         zyo8iX30+hujfGiGEThiaH3a9P4afMTCDTNH7CkiZqEL0qPf8fiu4Qo4n76e7z87TiNg
+         8+7Q==
+X-Gm-Message-State: ANhLgQ30Sv8cdSLhZVcL/Yq+AuJnLuw6MSOWwD1nYZzwNEjRMmd6hQPK
+        xzQhLPkfZmv673dLjJAOi/EUWZ0WyKVEr8++tg8=
+X-Google-Smtp-Source: ADFU+vuJ7cSsW/s0dJZEJ+X32pL4tMEYdYJsFWLyBOG7k1gGNBggZT56570m3UBaDVEQQV25CNBhzuPkaa5pD09x55A=
+X-Received: by 2002:a37:66c9:: with SMTP id a192mr3397481qkc.10.1585149328778;
+ Wed, 25 Mar 2020 08:15:28 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200324161851.GA2300@google.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1585149173; bh=FZyl6tl5d7IEm26Ng+7VPnCh/JccA87CapxQqKQR9tc=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=fXyrjsGyuSQ1tWKq9YQIqmt3R467Bj3K8rop3N18qliTqERdmmEOnNPiZBglPolG2
-         VFNLTI3mKMoAKLF2Bx/dXoELB+hPV4guoy0pNa5O6HnJcWp2ngixLC9iKryoLBl2uy
-         48Ql3FZHcNcbj3Qc8hD/tNnVNlZw1rCGuOEYOItXISRWle7+DPSeEP2iQuHJwMkuVU
-         ywvOeQY306cgHCqnUoh+UvcuwY8GPs88vyGMxL+EmSxm/+Dzs2Q+xVmyUBM2PAQYed
-         CEtljRX1vRmytGIV4ulziisdkzVXXFYMphmpsWY1oTPJe+lMnW08SrcIIlwjC9HIBO
-         EknC0nM8GyVpA==
+References: <20190813204513.4790-1-skunberg.kelsey@gmail.com>
+ <20190815153352.86143-2-skunberg.kelsey@gmail.com> <CAB=otbSYozS-ZfxB0nCiNnxcbqxwrHOSYxJJtDKa63KzXbXgpw@mail.gmail.com>
+ <20200314112022.GA53794@kroah.com> <CAFVqi1T1Fipajca8exrzs6uQAorSZeke80LYy43aCBpT45nFdA@mail.gmail.com>
+ <20200324062422.GA1977781@kroah.com> <CAFVqi1Sqnn6L9xLQ0=BZp6D=aYz74tRMP0WYEXXVsz2cYXaoHA@mail.gmail.com>
+ <20200325071702.GB2978943@kroah.com>
+In-Reply-To: <20200325071702.GB2978943@kroah.com>
+From:   Kelsey <skunberg.kelsey@gmail.com>
+Date:   Wed, 25 Mar 2020 09:15:17 -0600
+Message-ID: <CAFVqi1SpeYzixp3vLGGzkOaibF3kmV-u3oF02QoKHjfZ2vEPtg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/4] PCI: sysfs: Define device attributes with DEVICE_ATTR*
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Ruslan Bilovol <ruslan.bilovol@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Bodong Wang <bodong@mellanox.com>,
+        Don Dutile <ddutile@redhat.com>, rbilovol@cisco.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Wed, Mar 25, 2020 at 1:17 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Tue, Mar 24, 2020 at 05:53:59PM -0600, Kelsey wrote:
+> > On Tue, Mar 24, 2020 at 12:24 AM Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > On Tue, Mar 24, 2020 at 12:10:33AM -0600, Kelsey wrote:
+> > > > On Sat, Mar 14, 2020 at 5:20 AM Greg Kroah-Hartman
+> > > > <gregkh@linuxfoundation.org> wrote:
+> > > > >
+> > > > > On Sat, Mar 14, 2020 at 12:51:47PM +0200, Ruslan Bilovol wrote:
+> > > > > > On Thu, Aug 15, 2019 at 7:01 PM Kelsey Skunberg
+> > > > > > <skunberg.kelsey@gmail.com> wrote:
+> > > > > > >
+> > > > > > > Defining device attributes should be done through the helper
+> > > > > > > DEVICE_ATTR_RO(), DEVICE_ATTR_WO(), or similar. Change all instances using
+> > > > > > > __ATTR* to now use its equivalent DEVICE_ATTR*.
+> > > > > > >
+> > > > > > > Example of old:
+> > > > > > >
+> > > > > > > static struct device_attribute dev_name_##_attr=__ATTR_RO(_name);
+> > > > > > >
+> > > > > > > Example of new:
+> > > > > > >
+> > > > > > > static DEVICE_ATTR_RO(_name);
+> > > > > > >
+> > > > > > > Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
+> > > > > > > ---
+> > > > > > >  drivers/pci/pci-sysfs.c | 59 +++++++++++++++++++----------------------
+> > > > > > >  1 file changed, 27 insertions(+), 32 deletions(-)
+> > > > > > >
+> > > > > > > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> > > > > > > index 965c72104150..8af7944fdccb 100644
+> > > > > > > --- a/drivers/pci/pci-sysfs.c
+> > > > > > > +++ b/drivers/pci/pci-sysfs.c
+> > > > > > > @@ -464,9 +464,7 @@ static ssize_t dev_rescan_store(struct device *dev,
+> > > > > > >         }
+> > > > > > >         return count;
+> > > > > > >  }
+> > > > > > > -static struct device_attribute dev_rescan_attr = __ATTR(rescan,
+> > > > > > > -                                                       (S_IWUSR|S_IWGRP),
+> > > > > > > -                                                       NULL, dev_rescan_store);
+> > > > > > > +static DEVICE_ATTR(rescan, (S_IWUSR | S_IWGRP), NULL, dev_rescan_store);
+> > > > > > >
+> > > > > > >  static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
+> > > > > > >                             const char *buf, size_t count)
+> > > > > > > @@ -480,9 +478,8 @@ static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
+> > > > > > >                 pci_stop_and_remove_bus_device_locked(to_pci_dev(dev));
+> > > > > > >         return count;
+> > > > > > >  }
+> > > > > > > -static struct device_attribute dev_remove_attr = __ATTR_IGNORE_LOCKDEP(remove,
+> > > > > > > -                                                       (S_IWUSR|S_IWGRP),
+> > > > > > > -                                                       NULL, remove_store);
+> > > > > > > +static DEVICE_ATTR_IGNORE_LOCKDEP(remove, (S_IWUSR | S_IWGRP), NULL,
+> > > > > > > +                                 remove_store);
+> > > > > > >
+> > > > > > >  static ssize_t dev_bus_rescan_store(struct device *dev,
+> > > > > > >                                     struct device_attribute *attr,
+> > > > > > > @@ -504,7 +501,7 @@ static ssize_t dev_bus_rescan_store(struct device *dev,
+> > > > > > >         }
+> > > > > > >         return count;
+> > > > > > >  }
+> > > > > > > -static DEVICE_ATTR(rescan, (S_IWUSR|S_IWGRP), NULL, dev_bus_rescan_store);
+> > > > > > > +static DEVICE_ATTR(bus_rescan, (S_IWUSR | S_IWGRP), NULL, dev_bus_rescan_store);
+> > > > > >
+> > > > > > This patch renamed 'rescan' to 'bus_rescan' and broke my userspace application.
+> > > > > > There is also mismatch now between real functionality and documentation
+> > > > > > Documentation/ABI/testing/sysfs-bus-pci which still contains old "rescan"
+> > > > > > descriptions.
+> > > > > >
+> > > > > > Another patch from this patch series also renamed 'rescan' to 'dev_rescan'
+> > > > > >
+> > > > > > Here is a comparison between two stable kernels (with and without this
+> > > > > > patch series):
+> > > > > >
+> > > > > > v5.4
+> > > > > > # find /sys -name '*rescan'
+> > > > > > /sys/devices/pci0000:00/0000:00:01.2/dev_rescan
+> > > > > > /sys/devices/pci0000:00/0000:00:01.0/dev_rescan
+> > > > > > /sys/devices/pci0000:00/0000:00:04.0/dev_rescan
+> > > > > > /sys/devices/pci0000:00/0000:00:00.0/dev_rescan
+> > > > > > /sys/devices/pci0000:00/pci_bus/0000:00/bus_rescan
+> > > > > > /sys/devices/pci0000:00/0000:00:01.3/dev_rescan
+> > > > > > /sys/devices/pci0000:00/0000:00:03.0/dev_rescan
+> > > > > > /sys/devices/pci0000:00/0000:00:01.1/dev_rescan
+> > > > > > /sys/devices/pci0000:00/0000:00:02.0/dev_rescan
+> > > > > > /sys/devices/pci0000:00/0000:00:05.0/dev_rescan
+> > > > > > /sys/bus/pci/rescan
+> > > > > >
+> > > > > > v4.19
+> > > > > > # find /sys -name '*rescan'
+> > > > > > /sys/devices/pci0000:00/0000:00:01.2/rescan
+> > > > > > /sys/devices/pci0000:00/0000:00:01.0/rescan
+> > > > > > /sys/devices/pci0000:00/0000:00:04.0/rescan
+> > > > > > /sys/devices/pci0000:00/0000:00:00.0/rescan
+> > > > > > /sys/devices/pci0000:00/pci_bus/0000:00/rescan
+> > > > > > /sys/devices/pci0000:00/0000:00:01.3/rescan
+> > > > > > /sys/devices/pci0000:00/0000:00:03.0/rescan
+> > > > > > /sys/devices/pci0000:00/0000:00:01.1/rescan
+> > > > > > /sys/devices/pci0000:00/0000:00:02.0/rescan
+> > > > > > /sys/devices/pci0000:00/0000:00:05.0/rescan
+> > > > > > /sys/bus/pci/rescan
+> > > > > >
+> > > > > > Do we maintain this kind of API as non-changeable?
+> > > > >
+> > > > > Yeah, that's a bug and should be fixed, sorry for missing that on
+> > > > > review.
+> > > > >
+> > > > > Kelsey, can you fix this up?
+> > > > >
+> > > > > thanks,
+> > > > >
+> > > > > greg k-h
+> > > >
+> > > > I'd be happy to help get this fixed up.
+> > > >
+> > > > Would it be proper to go back to using DEVICE_ATTR() for 'bus_rescan'
+> > > > and 'dev_rescan' in order to change their names back to 'rescan'?
+> > >
+> > > Yes.
+> > >
+> > > thanks,
+> > >
+> > > greg k-h
+> >
+> >
+> > Ack. Sent a patch out. Will stay posted in case any updates need to be made.
+> >
+> > commit 4cb9e42d3226 ("PCI: sysfs: Change bus_rescan and dev_rescan to rescan")
+>
+> That's your local commit, not the commit in Linus's tree :)
+>
+> greg k-h
 
+hah, whoops! Wanted to reference the patch name and didn't think that
+through. Maybe would have been better to reference a link to the patch
+anyways. :)
 
-On 3/24/2020 9:48 PM, Bjorn Helgaas wrote:
-> External email: Use caution opening links or attachments
->=20
->=20
-> On Tue, Mar 24, 2020 at 08:16:34AM -0700, Randy Dunlap wrote:
->> On 3/23/20 9:30 PM, akpm@linux-foundation.org wrote:
->>> The mm-of-the-moment snapshot 2020-03-23-21-29 has been uploaded to
->>>
->>>     http://www.ozlabs.org/~akpm/mmotm/
->>>
->>> mmotm-readme.txt says
->>>
->>> README for mm-of-the-moment:
->>>
->>> http://www.ozlabs.org/~akpm/mmotm/
->>>
->>> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
->>> more than once a week.
->>>
->>> You will need quilt to apply these patches to the latest Linus release =
-(5.x
->>> or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated=
- in
->>> http://ozlabs.org/~akpm/mmotm/series
->>
->>
->> on x86_64:
->>
->> ../drivers/pci/controller/dwc/pcie-tegra194.c: In function =E2=80=98tegr=
-a_pcie_dw_parse_dt=E2=80=99:
->> ../drivers/pci/controller/dwc/pcie-tegra194.c:1160:24: error: implicit d=
-eclaration of function =E2=80=98devm_gpiod_get=E2=80=99; did you mean =E2=
-=80=98devm_phy_get=E2=80=99? [-Werror=3Dimplicit-function-declaration]
->>    pcie->pex_rst_gpiod =3D devm_gpiod_get(pcie->dev, "reset", GPIOD_IN);
->>                          ^~~~~~~~~~~~~~
->>                          devm_phy_get
->=20
-> Thanks a lot for the report!
->=20
-> This was found on mmotm, but I updated my -next branch with Lorenzo's
-> latest pci/endpoint branch (current head 775d9e68f470) and reproduced
-> this build failure with the .config you attached.
->=20
-> I dropped that branch from my -next branch for now and pushed it.
-I found that one header file inclusion is missing.
-The following patch fixes it.
-Also, I wanted to know how can I catch this locally? i.e. How can I=20
-generate the config file attached by Randy locally so that I can get the=20
-source ready without these kind of issues?
+https://lore.kernel.org/r/20200324234848.8299-1-skunberg.kelsey@gmail.com
 
-Bjorn/Lorenzo, would you be able to apply below change in your trees or=20
-do I need to send a patch for this?
-
-diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c=20
-b/drivers/pci/controller/dwc/pcie-tegra194.c
-index 97d3f3db1020..eeeca18892c6 100644
---- a/drivers/pci/controller/dwc/pcie-tegra194.c
-+++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-@@ -11,6 +11,7 @@
-  #include <linux/debugfs.h>
-  #include <linux/delay.h>
-  #include <linux/gpio.h>
-+#include <linux/gpio/consumer.h>
-  #include <linux/interrupt.h>
-  #include <linux/iopoll.h>
-  #include <linux/kernel.h>
-
-
->=20
-> Bjorn
->=20
+- Kelsey
