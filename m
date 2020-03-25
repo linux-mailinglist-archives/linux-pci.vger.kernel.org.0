@@ -2,158 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EDB6D192ED0
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Mar 2020 17:58:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 490CF192EDA
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Mar 2020 18:02:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727705AbgCYQ63 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Mar 2020 12:58:29 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:47796 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726102AbgCYQ63 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Mar 2020 12:58:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=nzNtddxyHToIfzwzcRpU+rkJvFePaVcVMvDxhJ0zIm8=; b=Ny0TO9lEhbmvUL2PtdSbl/e3Gm
-        dLHrOkD5v8ewIwjLPXGarl7V5+K4iXFzHb2IblMXtRLy0e1xYPfEYd/TNMgeQMms4qdMS3GnsSBzh
-        MG4FkMj0CmZIJdF594Ere7tUatW2cpHFY1FN56RNDDvW3fQmt0gVnStPqemN2Xr9H/2N8GLHIr5Wg
-        jCmOaOYFpQoZFzr/LNFj0CHFygyAwaMnjmIJLMM/2ZdRTd590pAvjPj/dIFmu4oG/94o0FTc9L0qs
-        q8JUj6IqIVy73yedpWdJ2Myuil5rim24S7yVdJXA5SxDwBhAKySclpEAQs+h4mmF+uJG1N1o3ZfNM
-        CTBQSfOQ==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jH9M9-0002V3-KT; Wed, 25 Mar 2020 16:58:17 +0000
-Subject: [PATCH v2] Documentation/locking/locktypes: minor copy editor fixes
-To:     Thomas Gleixner <tglx@linutronix.de>, paulmck@kernel.org
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sebastian Siewior <bigeasy@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        linux-pci@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        platform-driver-x86@vger.kernel.org,
-        Zhang Rui <rui.zhang@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        linux-pm@vger.kernel.org, Len Brown <lenb@kernel.org>,
-        linux-acpi@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Nick Hu <nickhu@andestech.com>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Guo Ren <guoren@kernel.org>, linux-csky@vger.kernel.org,
-        Brian Cain <bcain@codeaurora.org>,
-        linux-hexagon@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org,
-        Michal Simek <monstr@monstr.eu>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geoff Levand <geoff@infradead.org>,
-        linuxppc-dev@lists.ozlabs.org, Davidlohr Bueso <dbueso@suse.de>
-References: <20200323025501.GE3199@paulmck-ThinkPad-P72>
- <87r1xhz6qp.fsf@nanos.tec.linutronix.de>
- <20200325002811.GO19865@paulmck-ThinkPad-P72>
- <87wo78y5yy.fsf@nanos.tec.linutronix.de>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <ac615f36-0b44-408d-aeab-d76e4241add4@infradead.org>
-Date:   Wed, 25 Mar 2020 09:58:14 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S1727439AbgCYRCB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Mar 2020 13:02:01 -0400
+Received: from foss.arm.com ([217.140.110.172]:51002 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726820AbgCYRCB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 25 Mar 2020 13:02:01 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6AEE21FB;
+        Wed, 25 Mar 2020 10:02:00 -0700 (PDT)
+Received: from red-moon.cambridge.arm.com (unknown [10.57.20.165])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9E8223F52E;
+        Wed, 25 Mar 2020 10:01:58 -0700 (PDT)
+Date:   Wed, 25 Mar 2020 17:01:43 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        akpm@linux-foundation.org, broonie@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
+        linux-pci <linux-pci@vger.kernel.org>
+Subject: Re: mmotm 2020-03-23-21-29 uploaded
+ (pci/controller/dwc/pcie-tegra194.c)
+Message-ID: <20200325170122.GA29504@red-moon.cambridge.arm.com>
+References: <20200324161851.GA2300@google.com>
+ <eb101f02-c893-e16e-0f3f-151aac223205@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <87wo78y5yy.fsf@nanos.tec.linutronix.de>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <eb101f02-c893-e16e-0f3f-151aac223205@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+On Wed, Mar 25, 2020 at 08:43:32PM +0530, Vidya Sagar wrote:
+> 
+> 
+> On 3/24/2020 9:48 PM, Bjorn Helgaas wrote:
+> > External email: Use caution opening links or attachments
+> > 
+> > 
+> > On Tue, Mar 24, 2020 at 08:16:34AM -0700, Randy Dunlap wrote:
+> > > On 3/23/20 9:30 PM, akpm@linux-foundation.org wrote:
+> > > > The mm-of-the-moment snapshot 2020-03-23-21-29 has been uploaded to
+> > > > 
+> > > >     http://www.ozlabs.org/~akpm/mmotm/
+> > > > 
+> > > > mmotm-readme.txt says
+> > > > 
+> > > > README for mm-of-the-moment:
+> > > > 
+> > > > http://www.ozlabs.org/~akpm/mmotm/
+> > > > 
+> > > > This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+> > > > more than once a week.
+> > > > 
+> > > > You will need quilt to apply these patches to the latest Linus release (5.x
+> > > > or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
+> > > > http://ozlabs.org/~akpm/mmotm/series
+> > > 
+> > > 
+> > > on x86_64:
+> > > 
+> > > ../drivers/pci/controller/dwc/pcie-tegra194.c: In function ‘tegra_pcie_dw_parse_dt’:
+> > > ../drivers/pci/controller/dwc/pcie-tegra194.c:1160:24: error: implicit declaration of function ‘devm_gpiod_get’; did you mean ‘devm_phy_get’? [-Werror=implicit-function-declaration]
+> > >    pcie->pex_rst_gpiod = devm_gpiod_get(pcie->dev, "reset", GPIOD_IN);
+> > >                          ^~~~~~~~~~~~~~
+> > >                          devm_phy_get
+> > 
+> > Thanks a lot for the report!
+> > 
+> > This was found on mmotm, but I updated my -next branch with Lorenzo's
+> > latest pci/endpoint branch (current head 775d9e68f470) and reproduced
+> > this build failure with the .config you attached.
+> > 
+> > I dropped that branch from my -next branch for now and pushed it.
+> I found that one header file inclusion is missing.
+> The following patch fixes it.
+> Also, I wanted to know how can I catch this locally? i.e. How can I
+> generate the config file attached by Randy locally so that I can get the
+> source ready without these kind of issues?
+> 
+> Bjorn/Lorenzo, would you be able to apply below change in your trees or
+> do I need to send a patch for this?
 
-Minor editorial fixes:
-- add some hyphens in multi-word adjectives
-- add some periods for consistency
-- add "'" for possessive CPU's
-- capitalize IRQ when it's an acronym and not part of a function name
+Squashed in and re-pushed out pci/endpoint, it should have fixed this
+issue.
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Paul McKenney <paulmck@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Sebastian Siewior <bigeasy@linutronix.de>
-Cc: Joel Fernandes <joel@joelfernandes.org>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
----
- Documentation/locking/locktypes.rst |   16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+Thanks,
+Lorenzo
 
---- linux-next-20200325.orig/Documentation/locking/locktypes.rst
-+++ linux-next-20200325/Documentation/locking/locktypes.rst
-@@ -84,7 +84,7 @@ rtmutex
- 
- RT-mutexes are mutexes with support for priority inheritance (PI).
- 
--PI has limitations on non PREEMPT_RT enabled kernels due to preemption and
-+PI has limitations on non-PREEMPT_RT-enabled kernels due to preemption and
- interrupt disabled sections.
- 
- PI clearly cannot preempt preemption-disabled or interrupt-disabled
-@@ -150,7 +150,7 @@ kernel configuration including PREEMPT_R
- 
- raw_spinlock_t is a strict spinning lock implementation in all kernels,
- including PREEMPT_RT kernels.  Use raw_spinlock_t only in real critical
--core code, low level interrupt handling and places where disabling
-+core code, low-level interrupt handling and places where disabling
- preemption or interrupts is required, for example, to safely access
- hardware state.  raw_spinlock_t can sometimes also be used when the
- critical section is tiny, thus avoiding RT-mutex overhead.
-@@ -160,20 +160,20 @@ spinlock_t
- 
- The semantics of spinlock_t change with the state of PREEMPT_RT.
- 
--On a non PREEMPT_RT enabled kernel spinlock_t is mapped to raw_spinlock_t
-+On a non-PREEMPT_RT-enabled kernel spinlock_t is mapped to raw_spinlock_t
- and has exactly the same semantics.
- 
- spinlock_t and PREEMPT_RT
- -------------------------
- 
--On a PREEMPT_RT enabled kernel spinlock_t is mapped to a separate
-+On a PREEMPT_RT-enabled kernel spinlock_t is mapped to a separate
- implementation based on rt_mutex which changes the semantics:
- 
-- - Preemption is not disabled
-+ - Preemption is not disabled.
- 
-  - The hard interrupt related suffixes for spin_lock / spin_unlock
--   operations (_irq, _irqsave / _irqrestore) do not affect the CPUs
--   interrupt disabled state
-+   operations (_irq, _irqsave / _irqrestore) do not affect the CPU's
-+   interrupt disabled state.
- 
-  - The soft interrupt related suffix (_bh()) still disables softirq
-    handlers.
-@@ -279,7 +279,7 @@ fully preemptible context.  Instead, use
- spin_lock_irqsave() and their unlock counterparts.  In cases where the
- interrupt disabling and locking must remain separate, PREEMPT_RT offers a
- local_lock mechanism.  Acquiring the local_lock pins the task to a CPU,
--allowing things like per-CPU irq-disabled locks to be acquired.  However,
-+allowing things like per-CPU IRQ-disabled locks to be acquired.  However,
- this approach should be used only where absolutely necessary.
- 
- 
-
+> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c
+> b/drivers/pci/controller/dwc/pcie-tegra194.c
+> index 97d3f3db1020..eeeca18892c6 100644
+> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/debugfs.h>
+>  #include <linux/delay.h>
+>  #include <linux/gpio.h>
+> +#include <linux/gpio/consumer.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/iopoll.h>
+>  #include <linux/kernel.h>
+> 
+> 
+> > 
+> > Bjorn
+> > 
