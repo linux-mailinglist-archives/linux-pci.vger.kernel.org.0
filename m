@@ -2,166 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DF293192E52
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Mar 2020 17:38:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B941192E5D
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Mar 2020 17:39:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727027AbgCYQi0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Mar 2020 12:38:26 -0400
-Received: from aer-iport-2.cisco.com ([173.38.203.52]:39205 "EHLO
-        aer-iport-2.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727275AbgCYQi0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Mar 2020 12:38:26 -0400
-X-Greylist: delayed 429 seconds by postgrey-1.27 at vger.kernel.org; Wed, 25 Mar 2020 12:38:24 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=cisco.com; i=@cisco.com; l=3706; q=dns/txt; s=iport;
-  t=1585154305; x=1586363905;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=XODqsNkzk78qQBBhDHsB4Un4cvki1BxKm7wKbk22n68=;
-  b=JAbr8OsV6a3zLgK9aBr+d6zHSeHq+Xu40ocCmSIkjRbRKM+UexwD74ob
-   IVWsJHmDEGki1wB7rpRxUzo1D2AGmiw5etbqVi5SflRxXBbnvi7V8q71Z
-   Wq0UoIlCC2e37LI9Rc2l3mCo1InaXP55i9zRSMHx0Azvf3UExUIZP3hyu
-   Q=;
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A0ANAAAgh3te/xbLJq1mGgEBAQEBAQE?=
- =?us-ascii?q?BAQMBAQEBEQEBAQICAQEBAYFpAwEBAQELAYF8gW0gEiqEGYkCh2sIJYlsj2C?=
- =?us-ascii?q?BewoBAQEMAQEvBAEBhEQCgkw2Bw4CAwEBCwEBBQEBAQIBBQRthWKFYwEBAQE?=
- =?us-ascii?q?CASMVQRALFQMCAiYCAiE2BgEMBgIBAYMigkwDDiCtN3WBMoVLgmsNYoE+gQ4?=
- =?us-ascii?q?qAYxIgUE/gREnDIJhPoIbhUGCXgSNWIk3cZgRRIJGkkuENwYdjyeMNy2OZIt?=
- =?us-ascii?q?HkC0CBAsCFYFZAjCBWDMaCBsVgydQGA2OKReBBAEIjRo/AzCPJwEB?=
-X-IronPort-AV: E=Sophos;i="5.72,304,1580774400"; 
-   d="scan'208";a="24752855"
-Received: from aer-iport-nat.cisco.com (HELO aer-core-2.cisco.com) ([173.38.203.22])
-  by aer-iport-2.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 25 Mar 2020 16:31:14 +0000
-Received: from [10.63.114.242] ([10.63.114.242])
-        (authenticated bits=0)
-        by aer-core-2.cisco.com (8.15.2/8.15.2) with ESMTPSA id 02PGVCim026801
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Wed, 25 Mar 2020 16:31:13 GMT
-Subject: Re: [PATCH v2] PCI: sysfs: Change bus_rescan and dev_rescan to rescan
-To:     Kelsey Skunberg <skunberg.kelsey@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Cc:     ddutile@redhat.com, bodong@mellanox.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        skhan@linuxfoundation.org, ruslan.bilovol@gmail.com,
-        bhelgaas@google.com, Kelsey Skunberg <kelsey.skunberg@gmail.com>,
-        stable <stable@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <20200325151708.32612-1-skunberg.kelsey@gmail.com>
-From:   Ruslan Bilovol <rbilovol@cisco.com>
-Message-ID: <bf3ffd93-5dac-0c38-9029-9e58bfb187a5@cisco.com>
-Date:   Wed, 25 Mar 2020 18:31:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1727547AbgCYQjV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Mar 2020 12:39:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39030 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727464AbgCYQjU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 25 Mar 2020 12:39:20 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6311D2073E;
+        Wed, 25 Mar 2020 16:39:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585154359;
+        bh=A1GPX4wlECfGGG7gTSHHrGt3spoxTdKZ1xy9utwV/BA=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=APOdz2w7EH+7D58vqGoNgP8mOHfbNma8Ty1WIG8jpBICPSinl9OycWqb0OdtxkciV
+         gxpkAVRwhIe+WxIGCYwXBH73yF99ZY9v+QEk7Sp75Ev8c6B1ujrOAxGnV4ZUKw4afx
+         Pt8nI6CO51v4M2JmrHTqBAusgH99DwWPqLUsLFTU=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 325E9352094D; Wed, 25 Mar 2020 09:39:19 -0700 (PDT)
+Date:   Wed, 25 Mar 2020 09:39:19 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Sebastian Siewior <bigeasy@linutronix.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        linux-pci@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org,
+        Zhang Rui <rui.zhang@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        linux-pm@vger.kernel.org, Len Brown <lenb@kernel.org>,
+        linux-acpi@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Nick Hu <nickhu@andestech.com>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Guo Ren <guoren@kernel.org>, linux-csky@vger.kernel.org,
+        Brian Cain <bcain@codeaurora.org>,
+        linux-hexagon@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org,
+        Michal Simek <monstr@monstr.eu>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geoff Levand <geoff@infradead.org>,
+        linuxppc-dev@lists.ozlabs.org, Davidlohr Bueso <dbueso@suse.de>
+Subject: Re: Documentation/locking/locktypes: Further clarifications and
+ wordsmithing
+Message-ID: <20200325163919.GU19865@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200323025501.GE3199@paulmck-ThinkPad-P72>
+ <87r1xhz6qp.fsf@nanos.tec.linutronix.de>
+ <20200325002811.GO19865@paulmck-ThinkPad-P72>
+ <87wo78y5yy.fsf@nanos.tec.linutronix.de>
+ <20200325160212.oavrni7gmzudnczv@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200325151708.32612-1-skunberg.kelsey@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-User: rbilovol
-X-Outbound-SMTP-Client: 10.63.114.242, [10.63.114.242]
-X-Outbound-Node: aer-core-2.cisco.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200325160212.oavrni7gmzudnczv@linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 3/25/20 5:17 PM, Kelsey Skunberg wrote:
-> From: Kelsey Skunberg <kelsey.skunberg@gmail.com>
+On Wed, Mar 25, 2020 at 05:02:12PM +0100, Sebastian Siewior wrote:
+> On 2020-03-25 13:27:49 [+0100], Thomas Gleixner wrote:
+> > The documentation of rw_semaphores is wrong as it claims that the non-owner
+> > reader release is not supported by RT. That's just history biased memory
+> > distortion.
+> > 
+> > Split the 'Owner semantics' section up and add separate sections for
+> > semaphore and rw_semaphore to reflect reality.
+> > 
+> > Aside of that the following updates are done:
+> > 
+> >  - Add pseudo code to document the spinlock state preserving mechanism on
+> >    PREEMPT_RT
+> > 
+> >  - Wordsmith the bitspinlock and lock nesting sections
+> > 
+> > Co-developed-by: Paul McKenney <paulmck@kernel.org>
+> > Signed-off-by: Paul McKenney <paulmck@kernel.org>
+> > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Acked-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 > 
-> rename device attribute name arguments 'bus_rescan' and 'dev_rescan' to 'rescan'
-> to avoid breaking userspace applications.
+> > --- a/Documentation/locking/locktypes.rst
+> > +++ b/Documentation/locking/locktypes.rst
+> …
+> > +rw_semaphore
+> > +============
+> > +
+> > +rw_semaphore is a multiple readers and single writer lock mechanism.
+> > +
+> > +On non-PREEMPT_RT kernels the implementation is fair, thus preventing
+> > +writer starvation.
+> > +
+> > +rw_semaphore complies by default with the strict owner semantics, but there
+> > +exist special-purpose interfaces that allow non-owner release for readers.
+> > +These work independent of the kernel configuration.
 > 
-> The attribute argument names were changed in the following commits:
-> 8bdfa145f582 ("PCI: sysfs: Define device attributes with DEVICE_ATTR*()")
-> 4e2b79436e4f ("PCI: sysfs: Change DEVICE_ATTR() to DEVICE_ATTR_WO()")
-> 
-> Revert the names used for attributes back to the names used before the above
-> patches were applied. This also requires to change DEVICE_ATTR_WO() to
-> DEVICE_ATTR() and __ATTR().
-> 
-> Note when using DEVICE_ATTR() the attribute is automatically named
-> dev_attr_<name>.attr. To avoid duplicated names between attributes, use
-> __ATTR() instead of DEVICE_ATTR() to a assign a custom attribute name for
-> dev_rescan.
-> 
-> change bus_rescan_store() to dev_bus_rescan_store() to complete matching the
-> names used before the mentioned patches were applied.
-> 
-> Fixes: 8bdfa145f582 ("PCI: sysfs: Define device attributes with DEVICE_ATTR*()")
-> Fixes: 4e2b79436e4f ("PCI: sysfs: Change DEVICE_ATTR() to DEVICE_ATTR_WO()")
+> This reads funny, could be my English. "This works independent …" maybe?
 
-Thanks Kelsey for the quick fix.
+The "These" refers to "interfaces", which is plural, so "These" rather
+than "This".  But yes, it is a bit awkward, because you have to skip
+back past "readers", "release", and "non-owner" to find the implied
+subject of that last sentence.
 
-Tested-by: Ruslan Bilovol <rbilovol@cisco.com>
+So how about this instead, making the implied subject explicit?
 
-> 
-> Cc: stable <stable@vger.kernel.org>
-> Signed-off-by: Kelsey Skunberg <kelsey.skunberg@gmail.com>
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
-> 
-> v2 updates:
-> 	commit log updated to include 'Fixes: *' and Cc: stable to aid commit
-> 	being backported properly.
-> 
->   drivers/pci/pci-sysfs.c | 17 ++++++++++-------
->   1 file changed, 10 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> index 13f766db0684..667e13d597ff 100644
-> --- a/drivers/pci/pci-sysfs.c
-> +++ b/drivers/pci/pci-sysfs.c
-> @@ -464,7 +464,10 @@ static ssize_t dev_rescan_store(struct device *dev,
->   	}
->   	return count;
->   }
-> -static DEVICE_ATTR_WO(dev_rescan);
-> +static struct device_attribute dev_rescan_attr = __ATTR(rescan,
-> +							0220, NULL,
-> +							dev_rescan_store);
-> +
->   
->   static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
->   			    const char *buf, size_t count)
-> @@ -481,9 +484,9 @@ static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
->   static DEVICE_ATTR_IGNORE_LOCKDEP(remove, 0220, NULL,
->   				  remove_store);
->   
-> -static ssize_t bus_rescan_store(struct device *dev,
-> -				struct device_attribute *attr,
-> -				const char *buf, size_t count)
-> +static ssize_t dev_bus_rescan_store(struct device *dev,
-> +				    struct device_attribute *attr,
-> +				    const char *buf, size_t count)
->   {
->   	unsigned long val;
->   	struct pci_bus *bus = to_pci_bus(dev);
-> @@ -501,7 +504,7 @@ static ssize_t bus_rescan_store(struct device *dev,
->   	}
->   	return count;
->   }
-> -static DEVICE_ATTR_WO(bus_rescan);
-> +static DEVICE_ATTR(rescan, 0220, NULL, dev_bus_rescan_store);
->   
->   #if defined(CONFIG_PM) && defined(CONFIG_ACPI)
->   static ssize_t d3cold_allowed_store(struct device *dev,
-> @@ -641,7 +644,7 @@ static struct attribute *pcie_dev_attrs[] = {
->   };
->   
->   static struct attribute *pcibus_attrs[] = {
-> -	&dev_attr_bus_rescan.attr,
-> +	&dev_attr_rescan.attr,
->   	&dev_attr_cpuaffinity.attr,
->   	&dev_attr_cpulistaffinity.attr,
->   	NULL,
-> @@ -1487,7 +1490,7 @@ static umode_t pci_dev_attrs_are_visible(struct kobject *kobj,
->   
->   static struct attribute *pci_dev_hp_attrs[] = {
->   	&dev_attr_remove.attr,
-> -	&dev_attr_dev_rescan.attr,
-> +	&dev_rescan_attr.attr,
->   	NULL,
->   };
->   
-> 
+rw_semaphore complies by default with the strict owner semantics, but there
+exist special-purpose interfaces that allow non-owner release for readers.
+These interfaces work independent of the kernel configuration.
+
+							Thanx, Paul
