@@ -2,110 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E26B5192DAD
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Mar 2020 17:02:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C1B2192E30
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Mar 2020 17:27:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727962AbgCYQCs convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Wed, 25 Mar 2020 12:02:48 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:48461 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727768AbgCYQCs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Mar 2020 12:02:48 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1jH8Ts-0005AG-4C; Wed, 25 Mar 2020 17:02:12 +0100
-Date:   Wed, 25 Mar 2020 17:02:12 +0100
-From:   Sebastian Siewior <bigeasy@linutronix.de>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     paulmck@kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        linux-pci@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        platform-driver-x86@vger.kernel.org,
-        Zhang Rui <rui.zhang@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        linux-pm@vger.kernel.org, Len Brown <lenb@kernel.org>,
-        linux-acpi@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Nick Hu <nickhu@andestech.com>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Guo Ren <guoren@kernel.org>, linux-csky@vger.kernel.org,
-        Brian Cain <bcain@codeaurora.org>,
-        linux-hexagon@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org,
-        Michal Simek <monstr@monstr.eu>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geoff Levand <geoff@infradead.org>,
-        linuxppc-dev@lists.ozlabs.org, Davidlohr Bueso <dbueso@suse.de>
-Subject: Re: Documentation/locking/locktypes: Further clarifications and
- wordsmithing
-Message-ID: <20200325160212.oavrni7gmzudnczv@linutronix.de>
-References: <20200323025501.GE3199@paulmck-ThinkPad-P72>
- <87r1xhz6qp.fsf@nanos.tec.linutronix.de>
- <20200325002811.GO19865@paulmck-ThinkPad-P72>
- <87wo78y5yy.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+        id S1728076AbgCYQ1S convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Wed, 25 Mar 2020 12:27:18 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2605 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727386AbgCYQ1S (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 25 Mar 2020 12:27:18 -0400
+Received: from lhreml702-cah.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 7C7B644093CAB3F291D8;
+        Wed, 25 Mar 2020 16:27:16 +0000 (GMT)
+Received: from lhreml715-chm.china.huawei.com (10.201.108.66) by
+ lhreml702-cah.china.huawei.com (10.201.108.43) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 25 Mar 2020 16:27:16 +0000
+Received: from lhreml715-chm.china.huawei.com (10.201.108.66) by
+ lhreml715-chm.china.huawei.com (10.201.108.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 25 Mar 2020 16:27:16 +0000
+Received: from lhreml715-chm.china.huawei.com ([10.201.108.66]) by
+ lhreml715-chm.china.huawei.com ([10.201.108.66]) with mapi id 15.01.1713.004;
+ Wed, 25 Mar 2020 16:27:16 +0000
+From:   Shiju Jose <shiju.jose@huawei.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "lenb@kernel.org" <lenb@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "zhangliguang@linux.alibaba.com" <zhangliguang@linux.alibaba.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        Linuxarm <linuxarm@huawei.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        tanxiaofei <tanxiaofei@huawei.com>,
+        yangyicong <yangyicong@huawei.com>
+Subject: RE: [PATCH v5 0/2] ACPI: APEI: Add support to notify the vendor
+ specific HW errors
+Thread-Topic: [PATCH v5 0/2] ACPI: APEI: Add support to notify the vendor
+ specific HW errors
+Thread-Index: AQHWArk9LTp1thyJ80ifFE8yZh20/KhZdCmQ
+Date:   Wed, 25 Mar 2020 16:27:15 +0000
+Message-ID: <84a30116698a49cda1e8b580ee35ce1f@huawei.com>
+References: <8aa40a48-39c9-ba6b-ea70-bcb60907a733@huawei.com>
+ <20200325152220.GA261586@google.com>
+In-Reply-To: <20200325152220.GA261586@google.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.47.86.66]
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 8BIT
-In-Reply-To: <87wo78y5yy.fsf@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2020-03-25 13:27:49 [+0100], Thomas Gleixner wrote:
-> The documentation of rw_semaphores is wrong as it claims that the non-owner
-> reader release is not supported by RT. That's just history biased memory
-> distortion.
-> 
-> Split the 'Owner semantics' section up and add separate sections for
-> semaphore and rw_semaphore to reflect reality.
-> 
-> Aside of that the following updates are done:
-> 
->  - Add pseudo code to document the spinlock state preserving mechanism on
->    PREEMPT_RT
-> 
->  - Wordsmith the bitspinlock and lock nesting sections
-> 
-> Co-developed-by: Paul McKenney <paulmck@kernel.org>
-> Signed-off-by: Paul McKenney <paulmck@kernel.org>
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Hi Bjorn,
 
-> --- a/Documentation/locking/locktypes.rst
-> +++ b/Documentation/locking/locktypes.rst
-…
-> +rw_semaphore
-> +============
-> +
-> +rw_semaphore is a multiple readers and single writer lock mechanism.
-> +
-> +On non-PREEMPT_RT kernels the implementation is fair, thus preventing
-> +writer starvation.
-> +
-> +rw_semaphore complies by default with the strict owner semantics, but there
-> +exist special-purpose interfaces that allow non-owner release for readers.
-> +These work independent of the kernel configuration.
+>-----Original Message-----
+>From: Bjorn Helgaas [mailto:helgaas@kernel.org]
+>Sent: 25 March 2020 15:22
+>To: Shiju Jose <shiju.jose@huawei.com>
+>Cc: linux-acpi@vger.kernel.org; linux-pci@vger.kernel.org; linux-
+>kernel@vger.kernel.org; rjw@rjwysocki.net; lenb@kernel.org; bp@alien8.de;
+>james.morse@arm.com; tony.luck@intel.com; gregkh@linuxfoundation.org;
+>zhangliguang@linux.alibaba.com; tglx@linutronix.de; Linuxarm
+><linuxarm@huawei.com>; Jonathan Cameron
+><jonathan.cameron@huawei.com>; tanxiaofei <tanxiaofei@huawei.com>;
+>yangyicong <yangyicong@huawei.com>
+>Subject: Re: [PATCH v5 0/2] ACPI: APEI: Add support to notify the vendor
+>specific HW errors
+>
+>1) If you can post things as a series, i.e., with patch 1/2 and patch
+>2/2 being responses to the 0/2 cover letter, that makes things easier.
+>It looks like you did this for the previous postings.
+I will send the patches as series after fixing the issues in the patch subject lines. 
 
-This reads funny, could be my English. "This works independent …" maybe?
+>
+>2) When applying these, "git am" complained (but they did apply
+>cleanly):
+>
+>  warning: Patch sent with format=flowed; space at the end of lines might be
+>lost.
+>  Applying: APEI: Add support to notify the vendor specific HW errors
+>  warning: Patch sent with format=flowed; space at the end of lines might be
+>lost.
+>  Applying: PCI: HIP: Add handling of HiSilicon HIP PCIe controller errors
+>
+>3) drivers/pci/controller/pcie-hisi-error.c should be next to
+>drivers/pci/controller/dwc/pcie-hisi.c, shouldn't it?
+Our hip PCIe controller doesn't use DWC ip.
 
-Sebastian
+>
+>4) Your subject lines don't match the convention.  "git log --oneline
+>drivers/acpi/apei" says:
+>
+>  011077d8fbfe ("APEI: Add support to notify the vendor specific HW errors")
+>  cea79e7e2f24 ("apei/ghes: Do not delay GHES polling")
+>  933ca4e323de ("acpi: Use pr_warn instead of pr_warning")
+>  6abc7622271d ("ACPI / APEI: Release resources if gen_pool_add() fails")
+>  bb100b64763c ("ACPI / APEI: Get rid of NULL_UUID_LE constant")
+>  371b86897d01 ("ACPI / APEI: Remove needless __ghes_check_estatus()
+>calls")
+>
+>and "git log --oneline --follow drivers/pci/controller/dwc/pcie-hisi*"
+>says:
+>
+>  6e0832fa432e ("PCI: Collect all native drivers under drivers/pci/controller/")
+>  8cfab3cf63cf ("PCI: Add SPDX GPL-2.0 to replace GPL v2 boilerplate")
+>  5a4751680189 ("PCI: hisi: Constify dw_pcie_host_ops structure")
+>  b379d385bbaa ("PCI: hisi: Remove unused variable driver")
+>  a5f40e8098fe ("PCI: Don't allow unbinding host controllers that aren't
+>prepared")
+>  e313a447e735 ("PCI: hisi: Update PCI config space remap function")
+>  b9c1153f7a9c ("PCI: hisi: Fix DT binding (hisi-pcie-almost-ecam)")
+>
+>So your subject lines should be:
+>
+>  ACPI / APEI: ...
+Sure. I will fix this.
+
+>  PCI: hisi: ...
+Can we use PCI: hip because this driver is for the HIP hardware devices. 
+
+[...]
+>> --
+>> 2.17.1
+
+Thanks,
+Shiju
