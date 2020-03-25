@@ -2,159 +2,152 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B77D9192C16
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Mar 2020 16:18:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F66B192C35
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Mar 2020 16:22:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727600AbgCYPS4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Mar 2020 11:18:56 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:35817 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727538AbgCYPS4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Mar 2020 11:18:56 -0400
-Received: by mail-io1-f67.google.com with SMTP id h8so2607549iob.2;
-        Wed, 25 Mar 2020 08:18:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PwggEMzU8RT5gVextfFr6ZJ6Cb6aIGerS+OjEWSFzGM=;
-        b=YkpVvk3cpUbmjXv2VeeH2Ikrh7SX9x5/EHloC3St2zeSPBRHUqXv50iLZfQkXRg5tK
-         ZZkMUu7dL5a3Pu7U3dA2uAI7kfGNCv8nu5CX85tiKXmh4eU0LGq7ccnIWio+DY3BTHf5
-         4bsQ9iCjmPM5BTtS5z9o7331oaMl+Y3nFAH/hBOI65DTAptyvuoX/m6r/rGHlOII8ZG/
-         oOD4ScOEf2HKK7lH0Mt6P/gAUSSeYEas9rqTfE0FzP8A2n2Nob9l4gNBG5h9P3pzCbPS
-         aZSkidmSKAYAlEj5tzPNYBoccl5zYgKX4+ZzHPqW3jwdF5vU6RvcoTb3IIIZoVY/5c/x
-         qMfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PwggEMzU8RT5gVextfFr6ZJ6Cb6aIGerS+OjEWSFzGM=;
-        b=PY5r7EyGpAB4ghKrE3f4ilZ9cI6KOq34WkOZnyzDSCr0f4ikLu7wkG/a6zWBBAESy4
-         Qxk/POYPZUKF/kWJwbGzcbKuvz7+eA0lECCgtABJzmzIMDqNp40MamxVKO0wsYJ+BejT
-         AykM/lyvpknJqb2mItqXwKjkFPjYAwg+nbg8HtaQKauXjhZBpjDY+lJSu7wpx6d+oN2f
-         G4DuE8C+Io38L985IFJcHa5u0bcDYIFMbRuIwwDfRPyx67PZLNWhl97H1vYJoZ0WYYOD
-         zPPrwT5C4ZxS3zGFQ/d3ffoB4FIvC0cH316CaSafVYDmj6dNlsH5SEqlCejZs/fwlTfO
-         YyZA==
-X-Gm-Message-State: ANhLgQ3PuhiWUVGHmuFkqRsOnSNZ0yzIshTqZ7FfLk+bWakE6RV2dp3E
-        aBSf6f5GdAiaJ7kXcqhZU+rmNoipn69CkA==
-X-Google-Smtp-Source: ADFU+vuVIMdR6DiEq04mOyja+XcS0ozqbhcLQiUa4XHsN5xHWYdfm9KfOs0VanJglVKI+l/wSGA/5w==
-X-Received: by 2002:a5d:89d1:: with SMTP id a17mr2846961iot.11.1585149535139;
-        Wed, 25 Mar 2020 08:18:55 -0700 (PDT)
-Received: from localhost.localdomain (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
-        by smtp.gmail.com with ESMTPSA id p68sm7544047ilb.80.2020.03.25.08.18.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2020 08:18:54 -0700 (PDT)
-From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Cc:     rbilovol@cisco.com, ddutile@redhat.com, bodong@mellanox.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        skhan@linuxfoundation.org, ruslan.bilovol@gmail.com,
-        bhelgaas@google.com, Kelsey Skunberg <kelsey.skunberg@gmail.com>,
-        stable <stable@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH v2] PCI: sysfs: Change bus_rescan and dev_rescan to rescan
-Date:   Wed, 25 Mar 2020 09:17:08 -0600
-Message-Id: <20200325151708.32612-1-skunberg.kelsey@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        id S1727784AbgCYPWZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Mar 2020 11:22:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34710 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727488AbgCYPWX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 25 Mar 2020 11:22:23 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1BB520775;
+        Wed, 25 Mar 2020 15:22:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585149743;
+        bh=6gntTE+Xau1wJ0Nv7DlZZSKZ1qwXpTkhd+ax6/ytv08=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=p7dsjeHuTmKWXuC2OStQuIYcRGrP9jUztSyIKJl1rzoDo32b6zLL9PZDhBDU2hdXs
+         SPoM3mVlEOXssPzC3TV3FOTctk7XLIxW7pwnY7Gg1+AmqfTVfXNzMVw8tL61QUrrNf
+         Sf00JWp4kAjeX6VV6G2hW40sFnDjw3pS7yPUiT8w=
+Date:   Wed, 25 Mar 2020 10:22:20 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Shiju Jose <shiju.jose@huawei.com>
+Cc:     linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, rjw@rjwysocki.net, lenb@kernel.org,
+        bp@alien8.de, james.morse@arm.com, tony.luck@intel.com,
+        gregkh@linuxfoundation.org, zhangliguang@linux.alibaba.com,
+        tglx@linutronix.de, linuxarm@huawei.com,
+        jonathan.cameron@huawei.com, tanxiaofei@huawei.com,
+        yangyicong@hisilicon.com
+Subject: Re: [PATCH v5 0/2] ACPI: APEI: Add support to notify the vendor
+ specific HW errors
+Message-ID: <20200325152220.GA261586@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8aa40a48-39c9-ba6b-ea70-bcb60907a733@huawei.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Kelsey Skunberg <kelsey.skunberg@gmail.com>
+1) If you can post things as a series, i.e., with patch 1/2 and patch
+2/2 being responses to the 0/2 cover letter, that makes things easier.
+It looks like you did this for the previous postings.
 
-rename device attribute name arguments 'bus_rescan' and 'dev_rescan' to 'rescan'
-to avoid breaking userspace applications.
+2) When applying these, "git am" complained (but they did apply
+cleanly):
 
-The attribute argument names were changed in the following commits:
-8bdfa145f582 ("PCI: sysfs: Define device attributes with DEVICE_ATTR*()")
-4e2b79436e4f ("PCI: sysfs: Change DEVICE_ATTR() to DEVICE_ATTR_WO()")
+  warning: Patch sent with format=flowed; space at the end of lines might be lost.
+  Applying: APEI: Add support to notify the vendor specific HW errors
+  warning: Patch sent with format=flowed; space at the end of lines might be lost.
+  Applying: PCI: HIP: Add handling of HiSilicon HIP PCIe controller errors
 
-Revert the names used for attributes back to the names used before the above
-patches were applied. This also requires to change DEVICE_ATTR_WO() to
-DEVICE_ATTR() and __ATTR().
+3) drivers/pci/controller/pcie-hisi-error.c should be next to
+drivers/pci/controller/dwc/pcie-hisi.c, shouldn't it?
 
-Note when using DEVICE_ATTR() the attribute is automatically named
-dev_attr_<name>.attr. To avoid duplicated names between attributes, use
-__ATTR() instead of DEVICE_ATTR() to a assign a custom attribute name for
-dev_rescan.
+4) Your subject lines don't match the convention.  "git log --oneline
+drivers/acpi/apei" says:
 
-change bus_rescan_store() to dev_bus_rescan_store() to complete matching the
-names used before the mentioned patches were applied.
+  011077d8fbfe ("APEI: Add support to notify the vendor specific HW errors")
+  cea79e7e2f24 ("apei/ghes: Do not delay GHES polling")
+  933ca4e323de ("acpi: Use pr_warn instead of pr_warning")
+  6abc7622271d ("ACPI / APEI: Release resources if gen_pool_add() fails")
+  bb100b64763c ("ACPI / APEI: Get rid of NULL_UUID_LE constant")
+  371b86897d01 ("ACPI / APEI: Remove needless __ghes_check_estatus() calls")
 
-Fixes: 8bdfa145f582 ("PCI: sysfs: Define device attributes with DEVICE_ATTR*()")
-Fixes: 4e2b79436e4f ("PCI: sysfs: Change DEVICE_ATTR() to DEVICE_ATTR_WO()")
+and "git log --oneline --follow drivers/pci/controller/dwc/pcie-hisi*"
+says:
 
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Kelsey Skunberg <kelsey.skunberg@gmail.com>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
+  6e0832fa432e ("PCI: Collect all native drivers under drivers/pci/controller/")
+  8cfab3cf63cf ("PCI: Add SPDX GPL-2.0 to replace GPL v2 boilerplate")
+  5a4751680189 ("PCI: hisi: Constify dw_pcie_host_ops structure")
+  b379d385bbaa ("PCI: hisi: Remove unused variable driver")
+  a5f40e8098fe ("PCI: Don't allow unbinding host controllers that aren't prepared")
+  e313a447e735 ("PCI: hisi: Update PCI config space remap function")
+  b9c1153f7a9c ("PCI: hisi: Fix DT binding (hisi-pcie-almost-ecam)")
 
-v2 updates: 
-	commit log updated to include 'Fixes: *' and Cc: stable to aid commit
-	being backported properly.
+So your subject lines should be:
 
- drivers/pci/pci-sysfs.c | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+  ACPI / APEI: ...
+  PCI: hisi: ...
 
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 13f766db0684..667e13d597ff 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -464,7 +464,10 @@ static ssize_t dev_rescan_store(struct device *dev,
- 	}
- 	return count;
- }
--static DEVICE_ATTR_WO(dev_rescan);
-+static struct device_attribute dev_rescan_attr = __ATTR(rescan,
-+							0220, NULL,
-+							dev_rescan_store);
-+
- 
- static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
- 			    const char *buf, size_t count)
-@@ -481,9 +484,9 @@ static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
- static DEVICE_ATTR_IGNORE_LOCKDEP(remove, 0220, NULL,
- 				  remove_store);
- 
--static ssize_t bus_rescan_store(struct device *dev,
--				struct device_attribute *attr,
--				const char *buf, size_t count)
-+static ssize_t dev_bus_rescan_store(struct device *dev,
-+				    struct device_attribute *attr,
-+				    const char *buf, size_t count)
- {
- 	unsigned long val;
- 	struct pci_bus *bus = to_pci_bus(dev);
-@@ -501,7 +504,7 @@ static ssize_t bus_rescan_store(struct device *dev,
- 	}
- 	return count;
- }
--static DEVICE_ATTR_WO(bus_rescan);
-+static DEVICE_ATTR(rescan, 0220, NULL, dev_bus_rescan_store);
- 
- #if defined(CONFIG_PM) && defined(CONFIG_ACPI)
- static ssize_t d3cold_allowed_store(struct device *dev,
-@@ -641,7 +644,7 @@ static struct attribute *pcie_dev_attrs[] = {
- };
- 
- static struct attribute *pcibus_attrs[] = {
--	&dev_attr_bus_rescan.attr,
-+	&dev_attr_rescan.attr,
- 	&dev_attr_cpuaffinity.attr,
- 	&dev_attr_cpulistaffinity.attr,
- 	NULL,
-@@ -1487,7 +1490,7 @@ static umode_t pci_dev_attrs_are_visible(struct kobject *kobj,
- 
- static struct attribute *pci_dev_hp_attrs[] = {
- 	&dev_attr_remove.attr,
--	&dev_attr_dev_rescan.attr,
-+	&dev_rescan_attr.attr,
- 	NULL,
- };
- 
--- 
-2.20.1
-
+On Wed, Mar 25, 2020 at 01:55:03PM +0000, Shiju Jose wrote:
+> Presently the vendor drivers are unable to do the recovery for the
+> vendor specific recoverable HW errors, reported to the APEI driver
+> in the vendor defined sections, because APEI driver does not support
+> reporting the same to the vendor drivers.
+> 
+> This patch set
+> 1. add an interface to the APEI driver to enable the vendor
+> drivers to register the event handling functions for the corresponding
+> vendor specific HW errors and report the error to the vendor driver.
+> 
+> 2. add driver to handle HiSilicon hip08 PCIe controller's errors
+>    which is an example application of the above APEI interface.
+> 
+> Changes:
+> 
+> V5:
+> 1. Fix comments from James Morse.
+> 1.1 Changed the notification method to use the atomic_notifier_chain.
+> 1.2 Add the error handled status for the user space.
+> 
+> V4:
+> 1. Fix for the smatch warning in the PCIe error driver:
+>    warn: should '((((1))) << (9 + i))' be a 64 bit type?
+>    if (err->val_bits & BIT(HISI_PCIE_LOCAL_VALID_ERR_MISC + i))
+> 	^^^ This should be BIT_ULL() because it goes up to 9 + 32.
+> 
+> V3:
+> 1. Fix the comments from Bjorn Helgaas.
+> 
+> V2:
+> 1. Changes in the HiSilicon PCIe controller's error handling driver
+>    for the comments from Bjorn Helgaas.
+> 
+> 2. Changes in the APEI interface to support reporting the vendor error
+>    for module with multiple devices, but use the same section type.
+>    In the error handler will use socket id/sub module id etc to distinguish
+>    the device.
+> 
+> V1:
+> 1. Fix comments from James Morse.
+> 
+> 2. add driver to handle HiSilicon hip08 PCIe controller's errors,
+>    which is an application of the above interface.
+> 
+> Shiju Jose (1):
+>   APEI: Add support to notify the vendor specific HW errors
+> 
+> Yicong Yang (1):
+>   PCI: HIP: Add handling of HiSilicon HIP PCIe controller errors
+> 
+>  drivers/acpi/apei/ghes.c                 |  35 ++-
+>  drivers/pci/controller/Kconfig           |   8 +
+>  drivers/pci/controller/Makefile          |   1 +
+>  drivers/pci/controller/pcie-hisi-error.c | 357 +++++++++++++++++++++++
+>  drivers/ras/ras.c                        |   5 +-
+>  include/acpi/ghes.h                      |  28 ++
+>  include/linux/ras.h                      |   6 +-
+>  include/ras/ras_event.h                  |   7 +-
+>  8 files changed, 440 insertions(+), 7 deletions(-)
+>  create mode 100644 drivers/pci/controller/pcie-hisi-error.c
+> 
+> -- 
+> 2.17.1
