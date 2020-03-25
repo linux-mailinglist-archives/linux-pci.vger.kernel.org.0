@@ -2,139 +2,166 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C1B2192E30
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Mar 2020 17:27:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DF293192E52
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Mar 2020 17:38:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728076AbgCYQ1S convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Wed, 25 Mar 2020 12:27:18 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2605 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727386AbgCYQ1S (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 25 Mar 2020 12:27:18 -0400
-Received: from lhreml702-cah.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 7C7B644093CAB3F291D8;
-        Wed, 25 Mar 2020 16:27:16 +0000 (GMT)
-Received: from lhreml715-chm.china.huawei.com (10.201.108.66) by
- lhreml702-cah.china.huawei.com (10.201.108.43) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Wed, 25 Mar 2020 16:27:16 +0000
-Received: from lhreml715-chm.china.huawei.com (10.201.108.66) by
- lhreml715-chm.china.huawei.com (10.201.108.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 25 Mar 2020 16:27:16 +0000
-Received: from lhreml715-chm.china.huawei.com ([10.201.108.66]) by
- lhreml715-chm.china.huawei.com ([10.201.108.66]) with mapi id 15.01.1713.004;
- Wed, 25 Mar 2020 16:27:16 +0000
-From:   Shiju Jose <shiju.jose@huawei.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "lenb@kernel.org" <lenb@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "zhangliguang@linux.alibaba.com" <zhangliguang@linux.alibaba.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        Linuxarm <linuxarm@huawei.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        tanxiaofei <tanxiaofei@huawei.com>,
-        yangyicong <yangyicong@huawei.com>
-Subject: RE: [PATCH v5 0/2] ACPI: APEI: Add support to notify the vendor
- specific HW errors
-Thread-Topic: [PATCH v5 0/2] ACPI: APEI: Add support to notify the vendor
- specific HW errors
-Thread-Index: AQHWArk9LTp1thyJ80ifFE8yZh20/KhZdCmQ
-Date:   Wed, 25 Mar 2020 16:27:15 +0000
-Message-ID: <84a30116698a49cda1e8b580ee35ce1f@huawei.com>
-References: <8aa40a48-39c9-ba6b-ea70-bcb60907a733@huawei.com>
- <20200325152220.GA261586@google.com>
-In-Reply-To: <20200325152220.GA261586@google.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.47.86.66]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S1727027AbgCYQi0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Mar 2020 12:38:26 -0400
+Received: from aer-iport-2.cisco.com ([173.38.203.52]:39205 "EHLO
+        aer-iport-2.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727275AbgCYQi0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Mar 2020 12:38:26 -0400
+X-Greylist: delayed 429 seconds by postgrey-1.27 at vger.kernel.org; Wed, 25 Mar 2020 12:38:24 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=cisco.com; i=@cisco.com; l=3706; q=dns/txt; s=iport;
+  t=1585154305; x=1586363905;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=XODqsNkzk78qQBBhDHsB4Un4cvki1BxKm7wKbk22n68=;
+  b=JAbr8OsV6a3zLgK9aBr+d6zHSeHq+Xu40ocCmSIkjRbRKM+UexwD74ob
+   IVWsJHmDEGki1wB7rpRxUzo1D2AGmiw5etbqVi5SflRxXBbnvi7V8q71Z
+   Wq0UoIlCC2e37LI9Rc2l3mCo1InaXP55i9zRSMHx0Azvf3UExUIZP3hyu
+   Q=;
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A0ANAAAgh3te/xbLJq1mGgEBAQEBAQE?=
+ =?us-ascii?q?BAQMBAQEBEQEBAQICAQEBAYFpAwEBAQELAYF8gW0gEiqEGYkCh2sIJYlsj2C?=
+ =?us-ascii?q?BewoBAQEMAQEvBAEBhEQCgkw2Bw4CAwEBCwEBBQEBAQIBBQRthWKFYwEBAQE?=
+ =?us-ascii?q?CASMVQRALFQMCAiYCAiE2BgEMBgIBAYMigkwDDiCtN3WBMoVLgmsNYoE+gQ4?=
+ =?us-ascii?q?qAYxIgUE/gREnDIJhPoIbhUGCXgSNWIk3cZgRRIJGkkuENwYdjyeMNy2OZIt?=
+ =?us-ascii?q?HkC0CBAsCFYFZAjCBWDMaCBsVgydQGA2OKReBBAEIjRo/AzCPJwEB?=
+X-IronPort-AV: E=Sophos;i="5.72,304,1580774400"; 
+   d="scan'208";a="24752855"
+Received: from aer-iport-nat.cisco.com (HELO aer-core-2.cisco.com) ([173.38.203.22])
+  by aer-iport-2.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 25 Mar 2020 16:31:14 +0000
+Received: from [10.63.114.242] ([10.63.114.242])
+        (authenticated bits=0)
+        by aer-core-2.cisco.com (8.15.2/8.15.2) with ESMTPSA id 02PGVCim026801
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Wed, 25 Mar 2020 16:31:13 GMT
+Subject: Re: [PATCH v2] PCI: sysfs: Change bus_rescan and dev_rescan to rescan
+To:     Kelsey Skunberg <skunberg.kelsey@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Cc:     ddutile@redhat.com, bodong@mellanox.com,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org, ruslan.bilovol@gmail.com,
+        bhelgaas@google.com, Kelsey Skunberg <kelsey.skunberg@gmail.com>,
+        stable <stable@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20200325151708.32612-1-skunberg.kelsey@gmail.com>
+From:   Ruslan Bilovol <rbilovol@cisco.com>
+Message-ID: <bf3ffd93-5dac-0c38-9029-9e58bfb187a5@cisco.com>
+Date:   Wed, 25 Mar 2020 18:31:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200325151708.32612-1-skunberg.kelsey@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-User: rbilovol
+X-Outbound-SMTP-Client: 10.63.114.242, [10.63.114.242]
+X-Outbound-Node: aer-core-2.cisco.com
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
+On 3/25/20 5:17 PM, Kelsey Skunberg wrote:
+> From: Kelsey Skunberg <kelsey.skunberg@gmail.com>
+> 
+> rename device attribute name arguments 'bus_rescan' and 'dev_rescan' to 'rescan'
+> to avoid breaking userspace applications.
+> 
+> The attribute argument names were changed in the following commits:
+> 8bdfa145f582 ("PCI: sysfs: Define device attributes with DEVICE_ATTR*()")
+> 4e2b79436e4f ("PCI: sysfs: Change DEVICE_ATTR() to DEVICE_ATTR_WO()")
+> 
+> Revert the names used for attributes back to the names used before the above
+> patches were applied. This also requires to change DEVICE_ATTR_WO() to
+> DEVICE_ATTR() and __ATTR().
+> 
+> Note when using DEVICE_ATTR() the attribute is automatically named
+> dev_attr_<name>.attr. To avoid duplicated names between attributes, use
+> __ATTR() instead of DEVICE_ATTR() to a assign a custom attribute name for
+> dev_rescan.
+> 
+> change bus_rescan_store() to dev_bus_rescan_store() to complete matching the
+> names used before the mentioned patches were applied.
+> 
+> Fixes: 8bdfa145f582 ("PCI: sysfs: Define device attributes with DEVICE_ATTR*()")
+> Fixes: 4e2b79436e4f ("PCI: sysfs: Change DEVICE_ATTR() to DEVICE_ATTR_WO()")
 
->-----Original Message-----
->From: Bjorn Helgaas [mailto:helgaas@kernel.org]
->Sent: 25 March 2020 15:22
->To: Shiju Jose <shiju.jose@huawei.com>
->Cc: linux-acpi@vger.kernel.org; linux-pci@vger.kernel.org; linux-
->kernel@vger.kernel.org; rjw@rjwysocki.net; lenb@kernel.org; bp@alien8.de;
->james.morse@arm.com; tony.luck@intel.com; gregkh@linuxfoundation.org;
->zhangliguang@linux.alibaba.com; tglx@linutronix.de; Linuxarm
-><linuxarm@huawei.com>; Jonathan Cameron
-><jonathan.cameron@huawei.com>; tanxiaofei <tanxiaofei@huawei.com>;
->yangyicong <yangyicong@huawei.com>
->Subject: Re: [PATCH v5 0/2] ACPI: APEI: Add support to notify the vendor
->specific HW errors
->
->1) If you can post things as a series, i.e., with patch 1/2 and patch
->2/2 being responses to the 0/2 cover letter, that makes things easier.
->It looks like you did this for the previous postings.
-I will send the patches as series after fixing the issues in the patch subject lines. 
+Thanks Kelsey for the quick fix.
 
->
->2) When applying these, "git am" complained (but they did apply
->cleanly):
->
->  warning: Patch sent with format=flowed; space at the end of lines might be
->lost.
->  Applying: APEI: Add support to notify the vendor specific HW errors
->  warning: Patch sent with format=flowed; space at the end of lines might be
->lost.
->  Applying: PCI: HIP: Add handling of HiSilicon HIP PCIe controller errors
->
->3) drivers/pci/controller/pcie-hisi-error.c should be next to
->drivers/pci/controller/dwc/pcie-hisi.c, shouldn't it?
-Our hip PCIe controller doesn't use DWC ip.
+Tested-by: Ruslan Bilovol <rbilovol@cisco.com>
 
->
->4) Your subject lines don't match the convention.  "git log --oneline
->drivers/acpi/apei" says:
->
->  011077d8fbfe ("APEI: Add support to notify the vendor specific HW errors")
->  cea79e7e2f24 ("apei/ghes: Do not delay GHES polling")
->  933ca4e323de ("acpi: Use pr_warn instead of pr_warning")
->  6abc7622271d ("ACPI / APEI: Release resources if gen_pool_add() fails")
->  bb100b64763c ("ACPI / APEI: Get rid of NULL_UUID_LE constant")
->  371b86897d01 ("ACPI / APEI: Remove needless __ghes_check_estatus()
->calls")
->
->and "git log --oneline --follow drivers/pci/controller/dwc/pcie-hisi*"
->says:
->
->  6e0832fa432e ("PCI: Collect all native drivers under drivers/pci/controller/")
->  8cfab3cf63cf ("PCI: Add SPDX GPL-2.0 to replace GPL v2 boilerplate")
->  5a4751680189 ("PCI: hisi: Constify dw_pcie_host_ops structure")
->  b379d385bbaa ("PCI: hisi: Remove unused variable driver")
->  a5f40e8098fe ("PCI: Don't allow unbinding host controllers that aren't
->prepared")
->  e313a447e735 ("PCI: hisi: Update PCI config space remap function")
->  b9c1153f7a9c ("PCI: hisi: Fix DT binding (hisi-pcie-almost-ecam)")
->
->So your subject lines should be:
->
->  ACPI / APEI: ...
-Sure. I will fix this.
-
->  PCI: hisi: ...
-Can we use PCI: hip because this driver is for the HIP hardware devices. 
-
-[...]
->> --
->> 2.17.1
-
-Thanks,
-Shiju
+> 
+> Cc: stable <stable@vger.kernel.org>
+> Signed-off-by: Kelsey Skunberg <kelsey.skunberg@gmail.com>
+> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+> 
+> v2 updates:
+> 	commit log updated to include 'Fixes: *' and Cc: stable to aid commit
+> 	being backported properly.
+> 
+>   drivers/pci/pci-sysfs.c | 17 ++++++++++-------
+>   1 file changed, 10 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index 13f766db0684..667e13d597ff 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -464,7 +464,10 @@ static ssize_t dev_rescan_store(struct device *dev,
+>   	}
+>   	return count;
+>   }
+> -static DEVICE_ATTR_WO(dev_rescan);
+> +static struct device_attribute dev_rescan_attr = __ATTR(rescan,
+> +							0220, NULL,
+> +							dev_rescan_store);
+> +
+>   
+>   static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
+>   			    const char *buf, size_t count)
+> @@ -481,9 +484,9 @@ static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
+>   static DEVICE_ATTR_IGNORE_LOCKDEP(remove, 0220, NULL,
+>   				  remove_store);
+>   
+> -static ssize_t bus_rescan_store(struct device *dev,
+> -				struct device_attribute *attr,
+> -				const char *buf, size_t count)
+> +static ssize_t dev_bus_rescan_store(struct device *dev,
+> +				    struct device_attribute *attr,
+> +				    const char *buf, size_t count)
+>   {
+>   	unsigned long val;
+>   	struct pci_bus *bus = to_pci_bus(dev);
+> @@ -501,7 +504,7 @@ static ssize_t bus_rescan_store(struct device *dev,
+>   	}
+>   	return count;
+>   }
+> -static DEVICE_ATTR_WO(bus_rescan);
+> +static DEVICE_ATTR(rescan, 0220, NULL, dev_bus_rescan_store);
+>   
+>   #if defined(CONFIG_PM) && defined(CONFIG_ACPI)
+>   static ssize_t d3cold_allowed_store(struct device *dev,
+> @@ -641,7 +644,7 @@ static struct attribute *pcie_dev_attrs[] = {
+>   };
+>   
+>   static struct attribute *pcibus_attrs[] = {
+> -	&dev_attr_bus_rescan.attr,
+> +	&dev_attr_rescan.attr,
+>   	&dev_attr_cpuaffinity.attr,
+>   	&dev_attr_cpulistaffinity.attr,
+>   	NULL,
+> @@ -1487,7 +1490,7 @@ static umode_t pci_dev_attrs_are_visible(struct kobject *kobj,
+>   
+>   static struct attribute *pci_dev_hp_attrs[] = {
+>   	&dev_attr_remove.attr,
+> -	&dev_attr_dev_rescan.attr,
+> +	&dev_rescan_attr.attr,
+>   	NULL,
+>   };
+>   
+> 
