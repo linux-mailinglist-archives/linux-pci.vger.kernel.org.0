@@ -2,119 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 91ED3192D70
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Mar 2020 16:52:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E26B5192DAD
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Mar 2020 17:02:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727953AbgCYPwL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Mar 2020 11:52:11 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:49040 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727848AbgCYPwK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Mar 2020 11:52:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=G5IqHi85lKRyOGN1ba+XW+BgTmyu4gcHkmkrDclUbYk=; b=qXr6yoXABFiiDc+aEhIek/J1gD
-        HjMSEHyvb8dbqZYv+Xr5CKG0JHdRg7FfX+TOyopbQ8wcU1TCpwyM9xKq+r0nceUtyAsqUVKikL2a/
-        1tl1Q4i1H+NIC8CilxkP1XYSrXt+gwIMe8ocWGDv0Xl6o7xNULNmN6m09Wi/jN5DzsxsRGFCqBHxa
-        imX5TqnFM68XU5lFMbCmkO8OJ5wIWaAw8obVXClXqUkQg3GVC1eMWtpCxMRauZg/lNo9Y6VDtCRy8
-        gPqQhIFSiausVxoxpq+/TqiS6Lts56XDqT2fM7rOwNNcxsa0e7Q95Vd6w4GayuDqMTmYmf7oSmc4N
-        EExKXaaQ==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jH8K9-0006qW-J4; Wed, 25 Mar 2020 15:52:09 +0000
-Subject: Re: mmotm 2020-03-23-21-29 uploaded
- (pci/controller/dwc/pcie-tegra194.c)
-To:     Vidya Sagar <vidyas@nvidia.com>,
-        Bjorn Helgaas <helgaas@kernel.org>, lorenzo.pieralisi@arm.com
-Cc:     akpm@linux-foundation.org, broonie@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
-        linux-pci <linux-pci@vger.kernel.org>
-References: <20200324161851.GA2300@google.com>
- <eb101f02-c893-e16e-0f3f-151aac223205@nvidia.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <20f349f0-872a-08fa-1a4e-53712b31e547@infradead.org>
-Date:   Wed, 25 Mar 2020 08:52:08 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S1727962AbgCYQCs convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Wed, 25 Mar 2020 12:02:48 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:48461 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727768AbgCYQCs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Mar 2020 12:02:48 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1jH8Ts-0005AG-4C; Wed, 25 Mar 2020 17:02:12 +0100
+Date:   Wed, 25 Mar 2020 17:02:12 +0100
+From:   Sebastian Siewior <bigeasy@linutronix.de>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     paulmck@kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        linux-pci@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org,
+        Zhang Rui <rui.zhang@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        linux-pm@vger.kernel.org, Len Brown <lenb@kernel.org>,
+        linux-acpi@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Nick Hu <nickhu@andestech.com>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Guo Ren <guoren@kernel.org>, linux-csky@vger.kernel.org,
+        Brian Cain <bcain@codeaurora.org>,
+        linux-hexagon@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org,
+        Michal Simek <monstr@monstr.eu>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geoff Levand <geoff@infradead.org>,
+        linuxppc-dev@lists.ozlabs.org, Davidlohr Bueso <dbueso@suse.de>
+Subject: Re: Documentation/locking/locktypes: Further clarifications and
+ wordsmithing
+Message-ID: <20200325160212.oavrni7gmzudnczv@linutronix.de>
+References: <20200323025501.GE3199@paulmck-ThinkPad-P72>
+ <87r1xhz6qp.fsf@nanos.tec.linutronix.de>
+ <20200325002811.GO19865@paulmck-ThinkPad-P72>
+ <87wo78y5yy.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <eb101f02-c893-e16e-0f3f-151aac223205@nvidia.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <87wo78y5yy.fsf@nanos.tec.linutronix.de>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 3/25/20 8:13 AM, Vidya Sagar wrote:
+On 2020-03-25 13:27:49 [+0100], Thomas Gleixner wrote:
+> The documentation of rw_semaphores is wrong as it claims that the non-owner
+> reader release is not supported by RT. That's just history biased memory
+> distortion.
 > 
+> Split the 'Owner semantics' section up and add separate sections for
+> semaphore and rw_semaphore to reflect reality.
 > 
-> On 3/24/2020 9:48 PM, Bjorn Helgaas wrote:
->> External email: Use caution opening links or attachments
->>
->>
->> On Tue, Mar 24, 2020 at 08:16:34AM -0700, Randy Dunlap wrote:
->>> On 3/23/20 9:30 PM, akpm@linux-foundation.org wrote:
->>>> The mm-of-the-moment snapshot 2020-03-23-21-29 has been uploaded to
->>>>
->>>>     http://www.ozlabs.org/~akpm/mmotm/
->>>>
->>>> mmotm-readme.txt says
->>>>
->>>> README for mm-of-the-moment:
->>>>
->>>> http://www.ozlabs.org/~akpm/mmotm/
->>>>
->>>> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
->>>> more than once a week.
->>>>
->>>> You will need quilt to apply these patches to the latest Linus release (5.x
->>>> or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
->>>> http://ozlabs.org/~akpm/mmotm/series
->>>
->>>
->>> on x86_64:
->>>
->>> ../drivers/pci/controller/dwc/pcie-tegra194.c: In function ‘tegra_pcie_dw_parse_dt’:
->>> ../drivers/pci/controller/dwc/pcie-tegra194.c:1160:24: error: implicit declaration of function ‘devm_gpiod_get’; did you mean ‘devm_phy_get’? [-Werror=implicit-function-declaration]
->>>    pcie->pex_rst_gpiod = devm_gpiod_get(pcie->dev, "reset", GPIOD_IN);
->>>                          ^~~~~~~~~~~~~~
->>>                          devm_phy_get
->>
->> Thanks a lot for the report!
->>
->> This was found on mmotm, but I updated my -next branch with Lorenzo's
->> latest pci/endpoint branch (current head 775d9e68f470) and reproduced
->> this build failure with the .config you attached.
->>
->> I dropped that branch from my -next branch for now and pushed it.
-> I found that one header file inclusion is missing.
-> The following patch fixes it.
-> Also, I wanted to know how can I catch this locally? i.e. How can I generate the config file attached by Randy locally so that I can get the source ready without these kind of issues?
+> Aside of that the following updates are done:
 > 
-> Bjorn/Lorenzo, would you be able to apply below change in your trees or do I need to send a patch for this?
+>  - Add pseudo code to document the spinlock state preserving mechanism on
+>    PREEMPT_RT
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-> index 97d3f3db1020..eeeca18892c6 100644
-> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
-> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-> @@ -11,6 +11,7 @@
->  #include <linux/debugfs.h>
->  #include <linux/delay.h>
->  #include <linux/gpio.h>
-> +#include <linux/gpio/consumer.h>
->  #include <linux/interrupt.h>
->  #include <linux/iopoll.h>
->  #include <linux/kernel.h>
+>  - Wordsmith the bitspinlock and lock nesting sections
+> 
+> Co-developed-by: Paul McKenney <paulmck@kernel.org>
+> Signed-off-by: Paul McKenney <paulmck@kernel.org>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-Yes, that works/fixes the problem.  Thanks.
+> --- a/Documentation/locking/locktypes.rst
+> +++ b/Documentation/locking/locktypes.rst
+…
+> +rw_semaphore
+> +============
+> +
+> +rw_semaphore is a multiple readers and single writer lock mechanism.
+> +
+> +On non-PREEMPT_RT kernels the implementation is fair, thus preventing
+> +writer starvation.
+> +
+> +rw_semaphore complies by default with the strict owner semantics, but there
+> +exist special-purpose interfaces that allow non-owner release for readers.
+> +These work independent of the kernel configuration.
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
+This reads funny, could be my English. "This works independent …" maybe?
 
--- 
-~Randy
-
+Sebastian
