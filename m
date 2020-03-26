@@ -2,180 +2,196 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D7584193603
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Mar 2020 03:40:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1596F19377C
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Mar 2020 06:21:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727690AbgCZCkk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Mar 2020 22:40:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59496 "EHLO mail.kernel.org"
+        id S1725819AbgCZFVp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 26 Mar 2020 01:21:45 -0400
+Received: from mga09.intel.com ([134.134.136.24]:62240 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727560AbgCZCkj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 25 Mar 2020 22:40:39 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F23B020714;
-        Thu, 26 Mar 2020 02:40:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585190438;
-        bh=B/0A+EakHUoxJZZH8Zsz0E0Jrwx9AZ5KMhmmm4tWgAU=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=hlvpwsdFfUlivcRX+rgOky3Qzz9W6+h3DS6rDIiFCMTcOVT/UZK7XAVPOw5xlfZmc
-         U4gWvMk+HY610Ebp67p0IXeEOlLqhqArE8W38Bn1Pstxz2UMd+wQaxLwVqwPtOGuCa
-         LHixNahpVcBZT1S+4QWNrSt9INUA9VsBP8hxz+k8=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id C134335226B0; Wed, 25 Mar 2020 19:40:37 -0700 (PDT)
-Date:   Wed, 25 Mar 2020 19:40:37 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sebastian Siewior <bigeasy@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        linux-pci@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        platform-driver-x86@vger.kernel.org,
-        Zhang Rui <rui.zhang@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        linux-pm@vger.kernel.org, Len Brown <lenb@kernel.org>,
-        linux-acpi@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Nick Hu <nickhu@andestech.com>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Guo Ren <guoren@kernel.org>, linux-csky@vger.kernel.org,
-        Brian Cain <bcain@codeaurora.org>,
-        linux-hexagon@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org,
-        Michal Simek <monstr@monstr.eu>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geoff Levand <geoff@infradead.org>,
-        linuxppc-dev@lists.ozlabs.org, Davidlohr Bueso <dbueso@suse.de>
-Subject: Re: [PATCH v2] Documentation/locking/locktypes: minor copy editor
- fixes
-Message-ID: <20200326024037.GJ19865@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200323025501.GE3199@paulmck-ThinkPad-P72>
- <87r1xhz6qp.fsf@nanos.tec.linutronix.de>
- <20200325002811.GO19865@paulmck-ThinkPad-P72>
- <87wo78y5yy.fsf@nanos.tec.linutronix.de>
- <ac615f36-0b44-408d-aeab-d76e4241add4@infradead.org>
+        id S1725775AbgCZFVo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 26 Mar 2020 01:21:44 -0400
+IronPort-SDR: Rh9AxbSDdBhpn9IhPZRkzIfq3Div/ylSeaYKoAWFh5CRLF+GrUwYYnEdwS/IOwXAigwxnUDSCT
+ RSIeC9m+4wjw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2020 22:21:43 -0700
+IronPort-SDR: W3fOyogqBtV8Hqt6hMzO3HCpv3pVxvXQKh+IqqrtD9ZwVxMeoiZafITXt1P+f3iFuYOB5/Ksf1
+ Xcs1ITC2fk2w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,307,1580803200"; 
+   d="scan'208";a="448506975"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga006.fm.intel.com with ESMTP; 25 Mar 2020 22:21:41 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jHKxZ-000147-Ae; Thu, 26 Mar 2020 13:21:41 +0800
+Date:   Thu, 26 Mar 2020 13:21:01 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:next] BUILD SUCCESS 4d19a08cd20485fae2ea9fef176373d3860d2f86
+Message-ID: <5e7c3bbd.cxf2pEfy50LV8qSY%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ac615f36-0b44-408d-aeab-d76e4241add4@infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 09:58:14AM -0700, Randy Dunlap wrote:
-> From: Randy Dunlap <rdunlap@infradead.org>
-> 
-> Minor editorial fixes:
-> - add some hyphens in multi-word adjectives
-> - add some periods for consistency
-> - add "'" for possessive CPU's
-> - capitalize IRQ when it's an acronym and not part of a function name
-> 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Paul McKenney <paulmck@kernel.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Sebastian Siewior <bigeasy@linutronix.de>
-> Cc: Joel Fernandes <joel@joelfernandes.org>
-> Cc: Ingo Molnar <mingo@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  next
+branch HEAD: 4d19a08cd20485fae2ea9fef176373d3860d2f86  Merge branch 'remotes/lorenzo/pci/vmd'
 
-Some nits below, but with or without those suggested changes:
+elapsed time: 482m
 
-Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
+configs tested: 138
+configs skipped: 0
 
-> ---
->  Documentation/locking/locktypes.rst |   16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
-> 
-> --- linux-next-20200325.orig/Documentation/locking/locktypes.rst
-> +++ linux-next-20200325/Documentation/locking/locktypes.rst
-> @@ -84,7 +84,7 @@ rtmutex
->  
->  RT-mutexes are mutexes with support for priority inheritance (PI).
->  
-> -PI has limitations on non PREEMPT_RT enabled kernels due to preemption and
-> +PI has limitations on non-PREEMPT_RT-enabled kernels due to preemption and
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Or just drop the " enabled".
+arm64                            allyesconfig
+arm                              allyesconfig
+arm64                             allnoconfig
+arm                               allnoconfig
+arm                           efm32_defconfig
+arm                         at91_dt_defconfig
+arm                        shmobile_defconfig
+arm64                               defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                           sunxi_defconfig
+arm                        multi_v7_defconfig
+sparc                            allyesconfig
+xtensa                       common_defconfig
+m68k                             allmodconfig
+i386                              allnoconfig
+i386                             alldefconfig
+i386                             allyesconfig
+i386                                defconfig
+ia64                             alldefconfig
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+ia64                                defconfig
+arm64                            allmodconfig
+arm                              allmodconfig
+c6x                              allyesconfig
+c6x                        evmc6678_defconfig
+nios2                         10m50_defconfig
+nios2                         3c120_defconfig
+openrisc                    or1ksim_defconfig
+openrisc                 simple_smp_defconfig
+xtensa                          iss_defconfig
+alpha                               defconfig
+csky                                defconfig
+nds32                             allnoconfig
+nds32                               defconfig
+h8300                     edosk2674_defconfig
+h8300                    h8300h-sim_defconfig
+h8300                       h8s-sim_defconfig
+m68k                       m5475evb_defconfig
+m68k                          multi_defconfig
+m68k                           sun3_defconfig
+arc                                 defconfig
+arc                              allyesconfig
+powerpc                             defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+mips                             allyesconfig
+mips                         64r6el_defconfig
+mips                              allnoconfig
+mips                           32r2_defconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                generic-64bit_defconfig
+parisc                generic-32bit_defconfig
+parisc                           allyesconfig
+mips                 randconfig-a001-20200325
+nds32                randconfig-a001-20200325
+m68k                 randconfig-a001-20200325
+parisc               randconfig-a001-20200325
+alpha                randconfig-a001-20200325
+riscv                randconfig-a001-20200325
+c6x                  randconfig-a001-20200325
+h8300                randconfig-a001-20200325
+microblaze           randconfig-a001-20200325
+nios2                randconfig-a001-20200325
+sparc64              randconfig-a001-20200325
+csky                 randconfig-a001-20200325
+openrisc             randconfig-a001-20200325
+s390                 randconfig-a001-20200325
+sh                   randconfig-a001-20200325
+xtensa               randconfig-a001-20200325
+csky                 randconfig-a001-20200326
+openrisc             randconfig-a001-20200326
+s390                 randconfig-a001-20200326
+xtensa               randconfig-a001-20200326
+x86_64               randconfig-e001-20200325
+x86_64               randconfig-e002-20200325
+x86_64               randconfig-e003-20200325
+i386                 randconfig-e001-20200325
+i386                 randconfig-e002-20200325
+i386                 randconfig-e003-20200325
+x86_64               randconfig-f001-20200325
+x86_64               randconfig-f002-20200325
+x86_64               randconfig-f003-20200325
+i386                 randconfig-f001-20200325
+i386                 randconfig-f002-20200325
+i386                 randconfig-f003-20200325
+x86_64               randconfig-h002-20200326
+x86_64               randconfig-h003-20200326
+i386                 randconfig-h003-20200326
+i386                 randconfig-h001-20200326
+x86_64               randconfig-h001-20200326
+i386                 randconfig-h002-20200326
+arm                  randconfig-a001-20200325
+arm64                randconfig-a001-20200325
+ia64                 randconfig-a001-20200325
+sparc                randconfig-a001-20200325
+arc                  randconfig-a001-20200325
+powerpc              randconfig-a001-20200325
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+s390                       zfcpdump_defconfig
+s390                          debug_defconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                             alldefconfig
+s390                                defconfig
+sh                          rsk7269_defconfig
+sh                               allmodconfig
+sh                            titan_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                                allnoconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                                  defconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
 
->  interrupt disabled sections.
->  
->  PI clearly cannot preempt preemption-disabled or interrupt-disabled
-> @@ -150,7 +150,7 @@ kernel configuration including PREEMPT_R
->  
->  raw_spinlock_t is a strict spinning lock implementation in all kernels,
->  including PREEMPT_RT kernels.  Use raw_spinlock_t only in real critical
-> -core code, low level interrupt handling and places where disabling
-> +core code, low-level interrupt handling and places where disabling
->  preemption or interrupts is required, for example, to safely access
->  hardware state.  raw_spinlock_t can sometimes also be used when the
->  critical section is tiny, thus avoiding RT-mutex overhead.
-> @@ -160,20 +160,20 @@ spinlock_t
->  
->  The semantics of spinlock_t change with the state of PREEMPT_RT.
->  
-> -On a non PREEMPT_RT enabled kernel spinlock_t is mapped to raw_spinlock_t
-> +On a non-PREEMPT_RT-enabled kernel spinlock_t is mapped to raw_spinlock_t
-
-Ditto.
-
->  and has exactly the same semantics.
->  
->  spinlock_t and PREEMPT_RT
->  -------------------------
->  
-> -On a PREEMPT_RT enabled kernel spinlock_t is mapped to a separate
-> +On a PREEMPT_RT-enabled kernel spinlock_t is mapped to a separate
-
-And here as well.
-
->  implementation based on rt_mutex which changes the semantics:
->  
-> - - Preemption is not disabled
-> + - Preemption is not disabled.
->  
->   - The hard interrupt related suffixes for spin_lock / spin_unlock
-> -   operations (_irq, _irqsave / _irqrestore) do not affect the CPUs
-> -   interrupt disabled state
-> +   operations (_irq, _irqsave / _irqrestore) do not affect the CPU's
-> +   interrupt disabled state.
->  
->   - The soft interrupt related suffix (_bh()) still disables softirq
->     handlers.
-> @@ -279,7 +279,7 @@ fully preemptible context.  Instead, use
->  spin_lock_irqsave() and their unlock counterparts.  In cases where the
->  interrupt disabling and locking must remain separate, PREEMPT_RT offers a
->  local_lock mechanism.  Acquiring the local_lock pins the task to a CPU,
-> -allowing things like per-CPU irq-disabled locks to be acquired.  However,
-> +allowing things like per-CPU IRQ-disabled locks to be acquired.  However,
-
-Quite a bit of text in the kernel uses "irq", lower case.  Another
-option is to spell out "interrupt".
-
->  this approach should be used only where absolutely necessary.
->  
->  
-> 
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
