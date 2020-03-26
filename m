@@ -2,206 +2,180 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 91DF21933F8
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Mar 2020 23:57:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D7584193603
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Mar 2020 03:40:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727701AbgCYW4j (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Mar 2020 18:56:39 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35403 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727697AbgCYW4i (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Mar 2020 18:56:38 -0400
-Received: by mail-wr1-f65.google.com with SMTP id d5so5637833wrn.2;
-        Wed, 25 Mar 2020 15:56:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Jlb744j2w7u2ywLc5KHbzcT2pUNmcNIuqeG5ekKAtx8=;
-        b=AUly8PIvhWjtE2l0wV1QPLQnt657O6G0eElEYwR02WnCThOwx95zp18LyfEZOsOBh5
-         JGo0zWWlsBD84citXhbo+2ipbNO/LrDdIjPLU2AZpw3kDT5H/091F6Hj0ALozou5el0n
-         YHQUGXejMOwBUF2CDjxdJjcBZZuVfqVDXWKmRxydxqWEjEgl4T+s6n93HwYeOrS5wxS4
-         X6HtICpO+L4Z6rpo2j9abIZY8AzrKWvIdCPHx+ffYZeOj7zUBjutlDBKIcmJFdlz9PAS
-         BdbKziJHRsUsQyuViypIiSwkDEPTU4AQVL1uT8QHTHDI7A6skA39+4SJFCKCTpVv8Ssa
-         wJQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Jlb744j2w7u2ywLc5KHbzcT2pUNmcNIuqeG5ekKAtx8=;
-        b=IeT4LpEreitfOvGIUUpmAoVTB7JWvRayLENPnnqUkM6k8BKlnJ/Z3Fvoag75KwyrIy
-         5TW/lwlPM9IsGmx2Bgb6zAacdO1OTzdihNTQ8LMxMlLe12z8cf0mRZGmspi+x0WoCV8T
-         Ma5pLWCiyEFG/0iwvIZ9glTax5/AcxqzRS4tUQC1h5JCgLzobuZej2yOMv68h9RVc/vr
-         zloyOsCsqxHu0ZRH3VFwwZF/zCsAFxBrseGbQbCx2LHdheavlXpOWTk+4VMBhJWaLOxz
-         KQcTZItNftw1PG1X3KXGfhO0UJwE1v7YL6R5QBaljd77/+89Z9wgaQyCfjykfE2QQUbo
-         HOYA==
-X-Gm-Message-State: ANhLgQ2x8Y2EabR9aBvhmwURuHPz7QSc8+8rJO6YqgjEauCAhfNvGeTW
-        Rb9qMInwJiKlXMMqasTApFzdiOJTMBEeNfyw
-X-Google-Smtp-Source: ADFU+vvCKKWp/Le9zvNpGN2UiufUZrzdbC2FjPNBMmtlK8XAAmFG+9xOImKkR5d8jjHzOiFnlW9cMA==
-X-Received: by 2002:a5d:6082:: with SMTP id w2mr5862380wrt.300.1585176996120;
-        Wed, 25 Mar 2020 15:56:36 -0700 (PDT)
-Received: from andrea.corp.microsoft.com ([86.61.236.197])
-        by smtp.gmail.com with ESMTPSA id q72sm790278wme.31.2020.03.25.15.56.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2020 15:56:35 -0700 (PDT)
-From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
-        Michael Kelley <mikelley@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: [RFC PATCH 07/11] PCI: hv: Prepare hv_compose_msi_msg() for the VMBus-channel-interrupt-to-vCPU reassignment functionality
-Date:   Wed, 25 Mar 2020 23:55:01 +0100
-Message-Id: <20200325225505.23998-8-parri.andrea@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200325225505.23998-1-parri.andrea@gmail.com>
-References: <20200325225505.23998-1-parri.andrea@gmail.com>
+        id S1727690AbgCZCkk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Mar 2020 22:40:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59496 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727560AbgCZCkj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 25 Mar 2020 22:40:39 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F23B020714;
+        Thu, 26 Mar 2020 02:40:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585190438;
+        bh=B/0A+EakHUoxJZZH8Zsz0E0Jrwx9AZ5KMhmmm4tWgAU=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=hlvpwsdFfUlivcRX+rgOky3Qzz9W6+h3DS6rDIiFCMTcOVT/UZK7XAVPOw5xlfZmc
+         U4gWvMk+HY610Ebp67p0IXeEOlLqhqArE8W38Bn1Pstxz2UMd+wQaxLwVqwPtOGuCa
+         LHixNahpVcBZT1S+4QWNrSt9INUA9VsBP8hxz+k8=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id C134335226B0; Wed, 25 Mar 2020 19:40:37 -0700 (PDT)
+Date:   Wed, 25 Mar 2020 19:40:37 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Sebastian Siewior <bigeasy@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        linux-pci@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org,
+        Zhang Rui <rui.zhang@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        linux-pm@vger.kernel.org, Len Brown <lenb@kernel.org>,
+        linux-acpi@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Nick Hu <nickhu@andestech.com>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Guo Ren <guoren@kernel.org>, linux-csky@vger.kernel.org,
+        Brian Cain <bcain@codeaurora.org>,
+        linux-hexagon@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org,
+        Michal Simek <monstr@monstr.eu>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geoff Levand <geoff@infradead.org>,
+        linuxppc-dev@lists.ozlabs.org, Davidlohr Bueso <dbueso@suse.de>
+Subject: Re: [PATCH v2] Documentation/locking/locktypes: minor copy editor
+ fixes
+Message-ID: <20200326024037.GJ19865@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200323025501.GE3199@paulmck-ThinkPad-P72>
+ <87r1xhz6qp.fsf@nanos.tec.linutronix.de>
+ <20200325002811.GO19865@paulmck-ThinkPad-P72>
+ <87wo78y5yy.fsf@nanos.tec.linutronix.de>
+ <ac615f36-0b44-408d-aeab-d76e4241add4@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ac615f36-0b44-408d-aeab-d76e4241add4@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The current implementation of hv_compose_msi_msg() is incompatible with
-the new functionality that allows changing the vCPU a VMBus channel will
-interrupt: if this function always calls hv_pci_onchannelcallback() in
-the polling loop, the interrupt going to a different CPU could cause
-hv_pci_onchannelcallback() to be running simultaneously in a tasklet,
-which will break.  The current code also has a problem in that it is not
-synchronized with vmbus_reset_channel_cb(): hv_compose_msi_msg() could
-be accessing the ring buffer via the call of hv_pci_onchannelcallback()
-well after the time that vmbus_reset_channel_cb() has finished.
+On Wed, Mar 25, 2020 at 09:58:14AM -0700, Randy Dunlap wrote:
+> From: Randy Dunlap <rdunlap@infradead.org>
+> 
+> Minor editorial fixes:
+> - add some hyphens in multi-word adjectives
+> - add some periods for consistency
+> - add "'" for possessive CPU's
+> - capitalize IRQ when it's an acronym and not part of a function name
+> 
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Paul McKenney <paulmck@kernel.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Sebastian Siewior <bigeasy@linutronix.de>
+> Cc: Joel Fernandes <joel@joelfernandes.org>
+> Cc: Ingo Molnar <mingo@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
 
-Fix these issues as follows.  Disable the channel tasklet before
-entering the polling loop in hv_compose_msi_msg() and re-enable it when
-done.  This will prevent hv_pci_onchannelcallback() from running in a
-tasklet on a different CPU.  Moreover, poll by always calling
-hv_pci_onchannelcallback(), but check the channel callback function for
-NULL and invoke the callback within a sched_lock critical section.  This
-will prevent hv_compose_msi_msg() from accessing the ring buffer after
-vmbus_reset_channel_cb() has acquired the sched_lock spinlock.
+Some nits below, but with or without those suggested changes:
 
-Suggested-by: Michael Kelley <mikelley@microsoft.com>
-Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Andrew Murray <amurray@thegoodpenguin.co.uk>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: <linux-pci@vger.kernel.org>
----
- drivers/pci/controller/pci-hyperv.c | 44 ++++++++++++++++++-----------
- 1 file changed, 28 insertions(+), 16 deletions(-)
+Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
 
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 9977abff92fc5..e6020480a28b1 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -1350,11 +1350,11 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- {
- 	struct irq_cfg *cfg = irqd_cfg(data);
- 	struct hv_pcibus_device *hbus;
-+	struct vmbus_channel *channel;
- 	struct hv_pci_dev *hpdev;
- 	struct pci_bus *pbus;
- 	struct pci_dev *pdev;
- 	struct cpumask *dest;
--	unsigned long flags;
- 	struct compose_comp_ctxt comp;
- 	struct tran_int_desc *int_desc;
- 	struct {
-@@ -1372,6 +1372,7 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 	dest = irq_data_get_effective_affinity_mask(data);
- 	pbus = pdev->bus;
- 	hbus = container_of(pbus->sysdata, struct hv_pcibus_device, sysdata);
-+	channel = hbus->hdev->channel;
- 	hpdev = get_pcichild_wslot(hbus, devfn_to_wslot(pdev->devfn));
- 	if (!hpdev)
- 		goto return_null_message;
-@@ -1428,43 +1429,52 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 		goto free_int_desc;
- 	}
- 
-+	/*
-+	 * Prevents hv_pci_onchannelcallback() from running concurrently
-+	 * in the tasklet.
-+	 */
-+	tasklet_disable(&channel->callback_event);
-+
- 	/*
- 	 * Since this function is called with IRQ locks held, can't
- 	 * do normal wait for completion; instead poll.
- 	 */
- 	while (!try_wait_for_completion(&comp.comp_pkt.host_event)) {
-+		unsigned long flags;
-+
- 		/* 0xFFFF means an invalid PCI VENDOR ID. */
- 		if (hv_pcifront_get_vendor_id(hpdev) == 0xFFFF) {
- 			dev_err_once(&hbus->hdev->device,
- 				     "the device has gone\n");
--			goto free_int_desc;
-+			goto enable_tasklet;
- 		}
- 
- 		/*
--		 * When the higher level interrupt code calls us with
--		 * interrupt disabled, we must poll the channel by calling
--		 * the channel callback directly when channel->target_cpu is
--		 * the current CPU. When the higher level interrupt code
--		 * calls us with interrupt enabled, let's add the
--		 * local_irq_save()/restore() to avoid race:
--		 * hv_pci_onchannelcallback() can also run in tasklet.
-+		 * Make sure that the ring buffer data structure doesn't get
-+		 * freed while we dereference the ring buffer pointer.  Test
-+		 * for the channel's onchannel_callback being NULL within a
-+		 * sched_lock critical section.  See also the inline comments
-+		 * in vmbus_reset_channel_cb().
- 		 */
--		local_irq_save(flags);
--
--		if (hbus->hdev->channel->target_cpu == smp_processor_id())
--			hv_pci_onchannelcallback(hbus);
--
--		local_irq_restore(flags);
-+		spin_lock_irqsave(&channel->sched_lock, flags);
-+		if (unlikely(channel->onchannel_callback == NULL)) {
-+			spin_unlock_irqrestore(&channel->sched_lock, flags);
-+			goto enable_tasklet;
-+		}
-+		hv_pci_onchannelcallback(hbus);
-+		spin_unlock_irqrestore(&channel->sched_lock, flags);
- 
- 		if (hpdev->state == hv_pcichild_ejecting) {
- 			dev_err_once(&hbus->hdev->device,
- 				     "the device is being ejected\n");
--			goto free_int_desc;
-+			goto enable_tasklet;
- 		}
- 
- 		udelay(100);
- 	}
- 
-+	tasklet_enable(&channel->callback_event);
-+
- 	if (comp.comp_pkt.completion_status < 0) {
- 		dev_err(&hbus->hdev->device,
- 			"Request for interrupt failed: 0x%x",
-@@ -1488,6 +1498,8 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 	put_pcichild(hpdev);
- 	return;
- 
-+enable_tasklet:
-+	tasklet_enable(&channel->callback_event);
- free_int_desc:
- 	kfree(int_desc);
- drop_reference:
--- 
-2.24.0
+> ---
+>  Documentation/locking/locktypes.rst |   16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+> 
+> --- linux-next-20200325.orig/Documentation/locking/locktypes.rst
+> +++ linux-next-20200325/Documentation/locking/locktypes.rst
+> @@ -84,7 +84,7 @@ rtmutex
+>  
+>  RT-mutexes are mutexes with support for priority inheritance (PI).
+>  
+> -PI has limitations on non PREEMPT_RT enabled kernels due to preemption and
+> +PI has limitations on non-PREEMPT_RT-enabled kernels due to preemption and
 
+Or just drop the " enabled".
+
+>  interrupt disabled sections.
+>  
+>  PI clearly cannot preempt preemption-disabled or interrupt-disabled
+> @@ -150,7 +150,7 @@ kernel configuration including PREEMPT_R
+>  
+>  raw_spinlock_t is a strict spinning lock implementation in all kernels,
+>  including PREEMPT_RT kernels.  Use raw_spinlock_t only in real critical
+> -core code, low level interrupt handling and places where disabling
+> +core code, low-level interrupt handling and places where disabling
+>  preemption or interrupts is required, for example, to safely access
+>  hardware state.  raw_spinlock_t can sometimes also be used when the
+>  critical section is tiny, thus avoiding RT-mutex overhead.
+> @@ -160,20 +160,20 @@ spinlock_t
+>  
+>  The semantics of spinlock_t change with the state of PREEMPT_RT.
+>  
+> -On a non PREEMPT_RT enabled kernel spinlock_t is mapped to raw_spinlock_t
+> +On a non-PREEMPT_RT-enabled kernel spinlock_t is mapped to raw_spinlock_t
+
+Ditto.
+
+>  and has exactly the same semantics.
+>  
+>  spinlock_t and PREEMPT_RT
+>  -------------------------
+>  
+> -On a PREEMPT_RT enabled kernel spinlock_t is mapped to a separate
+> +On a PREEMPT_RT-enabled kernel spinlock_t is mapped to a separate
+
+And here as well.
+
+>  implementation based on rt_mutex which changes the semantics:
+>  
+> - - Preemption is not disabled
+> + - Preemption is not disabled.
+>  
+>   - The hard interrupt related suffixes for spin_lock / spin_unlock
+> -   operations (_irq, _irqsave / _irqrestore) do not affect the CPUs
+> -   interrupt disabled state
+> +   operations (_irq, _irqsave / _irqrestore) do not affect the CPU's
+> +   interrupt disabled state.
+>  
+>   - The soft interrupt related suffix (_bh()) still disables softirq
+>     handlers.
+> @@ -279,7 +279,7 @@ fully preemptible context.  Instead, use
+>  spin_lock_irqsave() and their unlock counterparts.  In cases where the
+>  interrupt disabling and locking must remain separate, PREEMPT_RT offers a
+>  local_lock mechanism.  Acquiring the local_lock pins the task to a CPU,
+> -allowing things like per-CPU irq-disabled locks to be acquired.  However,
+> +allowing things like per-CPU IRQ-disabled locks to be acquired.  However,
+
+Quite a bit of text in the kernel uses "irq", lower case.  Another
+option is to spell out "interrupt".
+
+>  this approach should be used only where absolutely necessary.
+>  
+>  
+> 
