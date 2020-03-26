@@ -2,101 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AE460193942
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Mar 2020 08:08:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C9A5193AFC
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Mar 2020 09:34:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727688AbgCZHIN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 26 Mar 2020 03:08:13 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:55583 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727815AbgCZHIM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 26 Mar 2020 03:08:12 -0400
-Received: by mail-wm1-f66.google.com with SMTP id z5so5296547wml.5
-        for <linux-pci@vger.kernel.org>; Thu, 26 Mar 2020 00:08:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=usE/ys/z8ZrEvebTD5q/zOIViwN/Qr3bNxaYZNYeDg8=;
-        b=Giw12tZAymXDFbxQpbLEzz6w7r0O1eeZFHByJRUEwF4s3fssUnmfVK37HovY8MSG8g
-         aB0CYd0nDge3IebAXKcKCn8DL9FO01QrQqv4ZQkSxBXz+3/jUAxHH7CjlMq4PusOsrRa
-         AIAUX+paTRcoYbFPrM7u3LFEUrqEoZNo+GqDI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=usE/ys/z8ZrEvebTD5q/zOIViwN/Qr3bNxaYZNYeDg8=;
-        b=TrClFuNndGwGxaYkRSjOTeW5KbU2WfYhD87qMjnuqF9HUq3eYyAyBPYYw4FPGEiKEt
-         JJu1ldYph2hGFAFmJnYUau6PCfnWsPYoC+76S22TOhs92tAX6sdRyXg/FCYOcJ1+U6mg
-         BYwRSox0tS7ZgGEGpb9O8UNFx+mOrzMc9yiPrjbL5GDjd4Q80JgHneUBkFXyW8yNHTGF
-         D4nsIrg0mrmO3jbBdgHrEQmmeAxzSV3PmwdKLpexdg4ZVGenZIFtSD2GEjEZ8xc5DtsZ
-         FzfoAc+oGyxrBYcs9Hr+F93LmzQx7gNOVyr+D+HtlbT+m2P1gBq7ZSz+GGOgKNnT45Mq
-         rMkQ==
-X-Gm-Message-State: ANhLgQ3TxCyQ2Rfr6ZBiAOkWNctIRXW9DQJ+nYaBI74rDUDaqYpfZjWK
-        ozJBJZKOtzWXIRFX90CFc7If2A==
-X-Google-Smtp-Source: ADFU+vtzb9hNfI+ksv6e+V0DXN1iXSfAh7FZDOiwNKmj5UxnWCz/9VDiia75rLzG0tKw11MssM2Gsw==
-X-Received: by 2002:a1c:8090:: with SMTP id b138mr1644314wmd.55.1585206491567;
-        Thu, 26 Mar 2020 00:08:11 -0700 (PDT)
-Received: from mannams-OptiPlex-7010.dhcp.broadcom.net ([192.19.234.250])
-        by smtp.gmail.com with ESMTPSA id u8sm2129446wrn.69.2020.03.26.00.08.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 26 Mar 2020 00:08:10 -0700 (PDT)
-From:   Srinath Mannam <srinath.mannam@broadcom.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Andrew Murray <andrew.murray@arm.com>
-Cc:     bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: [PATCH 3/3] PCI: iproc: Display PCIe Link information
-Date:   Thu, 26 Mar 2020 12:37:27 +0530
-Message-Id: <1585206447-1363-4-git-send-email-srinath.mannam@broadcom.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1585206447-1363-1-git-send-email-srinath.mannam@broadcom.com>
-References: <1585206447-1363-1-git-send-email-srinath.mannam@broadcom.com>
+        id S1727883AbgCZIeW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 26 Mar 2020 04:34:22 -0400
+Received: from mga04.intel.com ([192.55.52.120]:44735 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727866AbgCZIeV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 26 Mar 2020 04:34:21 -0400
+IronPort-SDR: RVr/sKGyhxIMdz6HpIaaMhZpfgGs268wiRdrLx+0F/vTNiomitmxvpQm9rcyLdfPmw+VnHiadS
+ Pn7Gy77wADBw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2020 01:34:21 -0700
+IronPort-SDR: nly9xD30xpsmGWYFWXpCQfSK56dqJFIPOST3nuhEheHKExNfIQ5XgPc3HXfYowGvGJpdixXyaW
+ B8k9bFVtCr9w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,307,1580803200"; 
+   d="scan'208";a="446919804"
+Received: from shao2-debian.sh.intel.com (HELO localhost) ([10.239.13.3])
+  by fmsmga005.fm.intel.com with ESMTP; 26 Mar 2020 01:34:13 -0700
+Date:   Thu, 26 Mar 2020 16:33:55 +0800
+From:   kernel test robot <rong.a.chen@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        linux-edac@vger.kernel.org,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Takashi Iwai <tiwai@suse.com>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-crypto <linux-crypto@vger.kernel.org>, lkp@lists.01.org
+Subject: Re: [cpufreq] 06c4d00466: will-it-scale.per_process_ops -53.4%
+ regression
+Message-ID: <20200326083355.GO11705@shao2-debian>
+References: <20200320131509.564059710@linutronix.de>
+ <20200324060124.GC11705@shao2-debian>
+ <CAHp75VeeKZLeZ8E3Py7LECN54SPFHaRgkxrMzBYQWXM8x+4JhA@mail.gmail.com>
+ <43a4189a-7153-18e8-4657-4a4400002c05@intel.com>
+ <87zhc4ybbt.fsf@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <87zhc4ybbt.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add more comprehensive information to show PCIe link speed and link
-width to the console.
+On Wed, Mar 25, 2020 at 11:32:06AM +0100, Thomas Gleixner wrote:
+> Rong Chen <rong.a.chen@intel.com> writes:
+> > On 3/24/20 6:24 PM, Andy Shevchenko wrote:
+> >> On Tue, Mar 24, 2020 at 8:02 AM kernel test robot <rong.a.chen@intel.com> wrote:
+> >>> Greeting,
+> >>>
+> >>> FYI, we noticed a -53.4% regression of will-it-scale.per_process_ops due to commit:
+> >>> commit: 06c4d00466eb374841bc84c39af19b3161ff6917 ("[patch 09/22] cpufreq: Convert to new X86 CPU match macros")
+> >>> url: https://github.com/0day-ci/linux/commits/Thomas-Gleixner/x86-devicetable-Move-x86-specific-macro-out-of-generic-code/20200321-031729
+> >>> base: https://git.kernel.org/cgit/linux/kernel/git/rafael/linux-pm.git linux-next
+> >>>
+> >>> in testcase: will-it-scale
+> >>> on test machine: 4 threads Intel(R) Core(TM) i3-3220 CPU @ 3.30GHz with 8G memory
+> >>> with following parameters:
+> >>
+> >> drivers/cpufreq/speedstep-centrino.c change missed the terminator,
+> >> perhaps it's a culprit, because I don't believe removing dups and
+> >> reordering lines may affect this.
+> >> Can you restore terminator there and re-test?
+> >>
+> >
+> > I have retested with the change, but it has no effect on the performance.
+> 
+> Bah. The binary equivalence testing detected this, but I obvioulsy
+> missed it. Delta fix below.
+> 
+> Thanks,
+> 
+>         tglx
+> 
+> 8<--------------
+> --- a/drivers/cpufreq/intel_pstate.c
+> +++ b/drivers/cpufreq/intel_pstate.c
+> @@ -2727,7 +2727,7 @@ static inline void intel_pstate_request_
+>  
+>  #define X86_MATCH_HWP(model, hwp_mode)					\
+>  	X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL, 6, INTEL_FAM6_##model, \
+> -					   X86_FEATURE_APERFMPERF, hwp_mode)
+> +					   X86_FEATURE_HWP, hwp_mode)
+>  
+>  static const struct x86_cpu_id hwp_support_ids[] __initconst = {
+>  	X86_MATCH_HWP(BROADWELL_X,	INTEL_PSTATE_HWP_BROADWELL),
 
-Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
----
- drivers/pci/controller/pcie-iproc.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+Hi Thomas,
 
-diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
-index e7f0d58..ed41357 100644
---- a/drivers/pci/controller/pcie-iproc.c
-+++ b/drivers/pci/controller/pcie-iproc.c
-@@ -823,6 +823,8 @@ static int iproc_pcie_check_link(struct iproc_pcie *pcie)
- #define PCI_TARGET_LINK_SPEED_MASK	0xf
- #define PCI_TARGET_LINK_SPEED_GEN2	0x2
- #define PCI_TARGET_LINK_SPEED_GEN1	0x1
-+#define PCI_TARGET_LINK_WIDTH_MASK	0x3f
-+#define PCI_TARGET_LINK_WIDTH_OFFSET	0x4
- 		iproc_pci_raw_config_read32(pcie, 0,
- 					    IPROC_PCI_EXP_CAP + PCI_EXP_LNKCTL2,
- 					    4, &link_ctrl);
-@@ -843,7 +845,14 @@ static int iproc_pcie_check_link(struct iproc_pcie *pcie)
- 		}
- 	}
- 
--	dev_info(dev, "link: %s\n", link_is_active ? "UP" : "DOWN");
-+	if (link_is_active) {
-+		dev_info(dev, "link UP @ Speed Gen-%d and width-x%d\n",
-+			 link_status & PCI_TARGET_LINK_SPEED_MASK,
-+			 (link_status >> PCI_TARGET_LINK_WIDTH_OFFSET) &
-+			 PCI_TARGET_LINK_WIDTH_MASK);
-+	} else {
-+		dev_info(dev, "link DOWN\n");
-+	}
- 
- 	return link_is_active ? 0 : -ENODEV;
- }
--- 
-2.7.4
+The patch can fix the regression:
 
+commit: 
+  06c4d00466 ("cpufreq: Convert to new X86 CPU match macros")
+  d369f9be1a ("the fix patch")
+
+06c4d00466eb3748  d369f9be1ad1e22da4e8f03557  testcase/testparams/testbox
+----------------  --------------------------  ---------------------------
+         %stddev      change         %stddev
+             \          |                \  
+     93200             114%     199599        will-it-scale/performance-process-16-read2-ucode=0x21/lkp-ivb-d02
+     93200             114%     199599        GEO-MEAN will-it-scale.per_process_ops
+
+Best Regards,
+Rong Chen
