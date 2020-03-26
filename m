@@ -2,81 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 875A8194347
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Mar 2020 16:33:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 91AB7194361
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Mar 2020 16:40:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728472AbgCZPdV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 26 Mar 2020 11:33:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45226 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726296AbgCZPdV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 26 Mar 2020 11:33:21 -0400
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85D6B20714;
-        Thu, 26 Mar 2020 15:33:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585236800;
-        bh=rL2Y2Gw09fCtL1rPs0/4tgTFjsRoiwOhxSOS+UbuO0g=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=tc/r24/4d4omGY37S1degx6anfIEBJljci+J+TuGPiIMwuYGmuO2+3C/UmF2nOkVD
-         aTp5kG59TgMDMJ0FslHmA2/odVQzD3TJbhiIN/IECjRmXtivUcw5J4YFGCtSLq7H9D
-         TRXkG4wvgU8L8KF9BUScx8g3rVReuXqjxKw52aXs=
-Date:   Thu, 26 Mar 2020 10:33:18 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Srinath Mannam <srinath.mannam@broadcom.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        id S1728367AbgCZPkh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 26 Mar 2020 11:40:37 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:43884 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727495AbgCZPkh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 26 Mar 2020 11:40:37 -0400
+Received: by mail-ed1-f66.google.com with SMTP id bd14so7304661edb.10
+        for <linux-pci@vger.kernel.org>; Thu, 26 Mar 2020 08:40:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2VQc7P8VY+5XsYW/q9fSaKw3tAVjuhPWecyw2BKtLuE=;
+        b=J3jrCa0tFr4pwLXuXWbuCGiOBBZpWlVmlwn1FsYpqmHmJE3e83vXUWsqu4NQ4nX0MT
+         t2NPbVEay6HMFtgrvQXYGz5cgSR+ZS6BfeiJA8mQO1TMiCrfU8rFfwq03L5XeH8a8a/V
+         Xzc4GCiOCh7S6cmmyTQ97kHpFqVlo5FgHwHn4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2VQc7P8VY+5XsYW/q9fSaKw3tAVjuhPWecyw2BKtLuE=;
+        b=WyvHSMrPOIDEib+wO2+2tN7bRoCZEo8jg2PY/opUjHs0Fnj/SUSJ3mS4ItIHNaANSC
+         FFXrRJW7XS8DWztYDdIOB7I484rwpvfUGOPXCLwHcZRJgmzb/c7lo/fdywkyhcMwwQTr
+         DDbTCvcMqr5f4lJ+3C8kNOGn75UGnoflTf5G3hcdOWZCc2RiLJiU7XLxRvlBJDpS++P4
+         QUPbjU4bGvZ/rCh7Vf/dBq5tvNPHayIfkrAkBzkVbThLX8KhMfIHen4hAm36Idbklq0Q
+         7bVrb7pRTZSQnR/eA4/1ZmJLr0Nfm8Hed8D6ys5pyaJz9qKDksq6Ylbs4HsitxnbKemN
+         /nRA==
+X-Gm-Message-State: ANhLgQ07v7FEa1fbzrL9wbBfvBr6UfZnwPhyVtXubVHdpJ9A4bZFZ2NN
+        /05ka7S39YmwDXUcYUPBSSV6Caz23WvmhLsWkI4zVQ==
+X-Google-Smtp-Source: ADFU+vsJp1fQnpYw9Capue287rBN86xbyCVnw5heNA1CFBWynQnZYV9F3U+M+h6o+gbtj6xxJpvFgkswkFldUAadwGo=
+X-Received: by 2002:a17:906:d18e:: with SMTP id c14mr8569496ejz.120.1585237235110;
+ Thu, 26 Mar 2020 08:40:35 -0700 (PDT)
+MIME-Version: 1.0
+References: <1585206447-1363-3-git-send-email-srinath.mannam@broadcom.com> <20200326153318.GA11697@google.com>
+In-Reply-To: <20200326153318.GA11697@google.com>
+From:   Roman Bacik <roman.bacik@broadcom.com>
+Date:   Thu, 26 Mar 2020 08:38:30 -0700
+Message-ID: <CAGQAs7xFY2Xp5fWBMFtzLDpP4zMFUNsddYXQk7QC0OS3oozXtw@mail.gmail.com>
+Subject: Re: [PATCH 2/3] PCI: iproc: fix invalidating PAXB address mapping
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Srinath Mannam <srinath.mannam@broadcom.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Florian Fainelli <f.fainelli@gmail.com>,
         Ray Jui <rjui@broadcom.com>,
         Andrew Murray <andrew.murray@arm.com>,
         bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Roman Bacik <roman.bacik@broadcom.com>
-Subject: Re: [PATCH 2/3] PCI: iproc: fix invalidating PAXB address mapping
-Message-ID: <20200326153318.GA11697@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1585206447-1363-3-git-send-email-srinath.mannam@broadcom.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 12:37:26PM +0530, Srinath Mannam wrote:
-> From: Roman Bacik <roman.bacik@broadcom.com>
-> 
-> Second stage bootloader prior to Linux boot may use all inbound windows
-> including IARR1/IMAP1. We need to ensure all previous configuration of
-> inbound windows are invalidated during the initialization stage of the
-> Linux iProc PCIe driver. Add fix to invalidate IARR1/IMAP1 because it was
-> missed in previous patch.
-> 
-> Fixes: 9415743e4c8a ("PCI: iproc: Invalidate PAXB address mapping")
-> Signed-off-by: Roman Bacik <roman.bacik@broadcom.com>
-> ---
->  drivers/pci/controller/pcie-iproc.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
-> index 6972ca4..e7f0d58 100644
-> --- a/drivers/pci/controller/pcie-iproc.c
-> +++ b/drivers/pci/controller/pcie-iproc.c
-> @@ -351,6 +351,8 @@ static const u16 iproc_pcie_reg_paxb_v2[IPROC_PCIE_MAX_NUM_REG] = {
->  	[IPROC_PCIE_OMAP3]		= 0xdf8,
->  	[IPROC_PCIE_IARR0]		= 0xd00,
->  	[IPROC_PCIE_IMAP0]		= 0xc00,
-> +	[IPROC_PCIE_IARR1]		= 0xd08,
-> +	[IPROC_PCIE_IMAP1]		= 0xd70,
+On Thu, Mar 26, 2020 at 8:33 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Thu, Mar 26, 2020 at 12:37:26PM +0530, Srinath Mannam wrote:
+> > From: Roman Bacik <roman.bacik@broadcom.com>
+> >
+> > Second stage bootloader prior to Linux boot may use all inbound windows
+> > including IARR1/IMAP1. We need to ensure all previous configuration of
+> > inbound windows are invalidated during the initialization stage of the
+> > Linux iProc PCIe driver. Add fix to invalidate IARR1/IMAP1 because it was
+> > missed in previous patch.
+> >
+> > Fixes: 9415743e4c8a ("PCI: iproc: Invalidate PAXB address mapping")
+> > Signed-off-by: Roman Bacik <roman.bacik@broadcom.com>
+> > ---
+> >  drivers/pci/controller/pcie-iproc.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
+> > index 6972ca4..e7f0d58 100644
+> > --- a/drivers/pci/controller/pcie-iproc.c
+> > +++ b/drivers/pci/controller/pcie-iproc.c
+> > @@ -351,6 +351,8 @@ static const u16 iproc_pcie_reg_paxb_v2[IPROC_PCIE_MAX_NUM_REG] = {
+> >       [IPROC_PCIE_OMAP3]              = 0xdf8,
+> >       [IPROC_PCIE_IARR0]              = 0xd00,
+> >       [IPROC_PCIE_IMAP0]              = 0xc00,
+> > +     [IPROC_PCIE_IARR1]              = 0xd08,
+> > +     [IPROC_PCIE_IMAP1]              = 0xd70,
+>
+> And paxb_v2_ib_map[] has a comment saying "IARR1/IMAP1 (currently
+> unused)".  Is that comment now wrong?
+>
 
-And paxb_v2_ib_map[] has a comment saying "IARR1/IMAP1 (currently
-unused)".  Is that comment now wrong?
+The comment is still correct, IARR1/IMAP1 is unused in Linux. But it
+may need to be invalidated in case it was modified by bootloaders.
 
->  	[IPROC_PCIE_IARR2]		= 0xd10,
->  	[IPROC_PCIE_IMAP2]		= 0xcc0,
->  	[IPROC_PCIE_IARR3]		= 0xe00,
-> -- 
-> 2.7.4
-> 
+> >       [IPROC_PCIE_IARR2]              = 0xd10,
+> >       [IPROC_PCIE_IMAP2]              = 0xcc0,
+> >       [IPROC_PCIE_IARR3]              = 0xe00,
+> > --
+> > 2.7.4
+> >
