@@ -2,101 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2EC29195E65
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Mar 2020 20:15:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 357C5196048
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Mar 2020 22:16:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727322AbgC0TO6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 27 Mar 2020 15:14:58 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:56792 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726738AbgC0TO6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Mar 2020 15:14:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=wi9sMkFTjgwfQzFt05plG4rnAYvM3lDU42pKvwyq4Dk=; b=ARU9xHbF+qAAz2eVBrwRTExEhX
-        jwbbaXg4N6bxYjwT1WFJStJwWCN9ZHaVD3NmDI1LZV1T0tf4AIdqj5K2taxObMmf+eMC0i5CbjuQu
-        cvF7lxBZu5bLZ+0AdIzFsdJG1EATpc/ptIx2pCL2bB+g/yJEKAss2RthpcAMSl290YviOrnbOvJlX
-        ikCrnWobf8fDzpkViu46vqNLHYHj5LdPU4VdWSuQTRIwjeJYR5Vvgah5hoQLR7Vo5XfSfN1jnONov
-        0vwoM1oP/OGhYcNpgo1xpE+4HqhYQCyvKV32Q/9MINxoqL2BVCx+yMkvLrwb/lioD1mQXbZAvA7f/
-        wH3hOZwQ==;
-Received: from [2602:306:37b0:7840:b51a:dd8c:5d76:65e]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jHuRN-0006Pi-D5; Fri, 27 Mar 2020 19:14:49 +0000
-Subject: Re: [patch V3 12/20] powerpc/ps3: Convert half completion to rcuwait
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sebastian Siewior <bigeasy@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        linux-pci@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        platform-driver-x86@vger.kernel.org,
-        Zhang Rui <rui.zhang@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        linux-pm@vger.kernel.org, Len Brown <lenb@kernel.org>,
-        linux-acpi@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Nick Hu <nickhu@andestech.com>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Guo Ren <guoren@kernel.org>, linux-csky@vger.kernel.org,
-        Brian Cain <bcain@codeaurora.org>,
-        linux-hexagon@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org,
-        Michal Simek <monstr@monstr.eu>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Davidlohr Bueso <dbueso@suse.de>
-References: <20200321112544.878032781@linutronix.de>
- <20200321113241.930037873@linutronix.de>
-From:   Geoff Levand <geoff@infradead.org>
-Message-ID: <f3210d53-dfb1-6bbc-cc82-832105fcfaa2@infradead.org>
-Date:   Fri, 27 Mar 2020 12:14:43 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200321113241.930037873@linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1727505AbgC0VQT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 27 Mar 2020 17:16:19 -0400
+Received: from mga17.intel.com ([192.55.52.151]:7152 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727495AbgC0VQT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 27 Mar 2020 17:16:19 -0400
+IronPort-SDR: g+lgqZGcwJ6k9p0wm5HVYOdx96f4e41rmUbciPgegZmRw78Z/h16vbxxW/1OGU7Gw7ZvytOpq6
+ U/R4TaSEL73g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2020 14:16:19 -0700
+IronPort-SDR: rV7hqmr13pWJuQkiYhYbSJXKKHrwVG0cAM+xP1wWQgv8sVrOS6I1VcXCqR+FEJ6aezxiHIIFZq
+ bKkm1znzny2w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,313,1580803200"; 
+   d="scan'208";a="282971379"
+Received: from otc-nc-03.jf.intel.com ([10.54.39.25])
+  by fmsmga002.fm.intel.com with ESMTP; 27 Mar 2020 14:16:18 -0700
+From:   Ashok Raj <ashok.raj@intel.com>
+To:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Ashok Raj <ashok.raj@intel.com>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: [PATCH] pci: Fixes MaxPayloadSize (MPS) programming for RCiEP devices.
+Date:   Fri, 27 Mar 2020 14:16:15 -0700
+Message-Id: <1585343775-4019-1-git-send-email-ashok.raj@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+Root Complex Integrated devices (RCiEP) do not have a Root Port before the
+device. pci_configure_mps() should simply stick the max value for MaxPayload
+size in Device Control, and for MaxReadReq. Unless pcie=pcie_bus-peer2peer
+is used in kernel commandline PCIE_BUS_PEER2PEER.
 
-On 3/21/20 4:25 AM, Thomas Gleixner wrote:
-> From: Thomas Gleixner <tglx@linutronix.de>
-> 
-> The PS3 notification interrupt and kthread use a hacked up completion to
-> communicate. Since we're wanting to change the completion implementation and
-> this is abuse anyway, replace it with a simple rcuwait since there is only ever
-> the one waiter.
-> 
-> AFAICT the kthread uses TASK_INTERRUPTIBLE to not increase loadavg, kthreads
-> cannot receive signals by default and this one doesn't look different. Use
-> TASK_IDLE instead.
+When MPS is configured lower, it could result in reduced performance.
 
-I tested the patch set applied against v5.6-rc7 on the PS3 and it worked
-as expected.
+Fixes: 9dae3a97297f ("PCI: Move MPS configuration check to pci_configure_device()")
+Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+Tested-by: Dave Jiang <dave.jiang@intel.com>
+To: Bjorn Helgaas <bhelgaas@google.com>
+To: linux-pci@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org
+Cc: Ashok Raj <ashok.raj@intel.com>
+---
+ drivers/pci/probe.c | 23 ++++++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
 
-Tested by: Geoff Levand <geoff@infradead.org>
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index eeff8a07..a738b1c 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1895,13 +1895,34 @@ static void pci_configure_mps(struct pci_dev *dev)
+ 	struct pci_dev *bridge = pci_upstream_bridge(dev);
+ 	int mps, mpss, p_mps, rc;
+ 
+-	if (!pci_is_pcie(dev) || !bridge || !pci_is_pcie(bridge))
++	if (!pci_is_pcie(dev))
+ 		return;
+ 
+ 	/* MPS and MRRS fields are of type 'RsvdP' for VFs, short-circuit out */
+ 	if (dev->is_virtfn)
+ 		return;
+ 
++	/*
++	 * If this is a Root Complex Integrated Endpoint
++	 * Simply program the max value from DEVCAP. No additional
++	 * Lookup is necessary
++	 */
++	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END) {
++		if (pcie_bus_config == PCIE_BUS_PEER2PEER)
++			mps = 128;
++		else
++			mps = 128 << dev->pcie_mpss;
++		rc = pcie_set_mps(dev, mps);
++		if (rc) {
++			pci_warn(dev, "can't set Max Payload Size to %d; if necessary, use \"pci=pcie_bus_safe\" and report a bug\n",
++			 mps);
++			return;
++		}
++	}
++
++	if (!bridge || !pci_is_pcie(bridge))
++		return;
++
+ 	mps = pcie_get_mps(dev);
+ 	p_mps = pcie_get_mps(bridge);
+ 
+-- 
+2.7.4
 
