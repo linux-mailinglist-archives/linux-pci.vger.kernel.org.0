@@ -2,28 +2,28 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B9A0119698E
-	for <lists+linux-pci@lfdr.de>; Sat, 28 Mar 2020 22:43:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6060D19699D
+	for <lists+linux-pci@lfdr.de>; Sat, 28 Mar 2020 22:51:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbgC1Vny (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 28 Mar 2020 17:43:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58350 "EHLO mail.kernel.org"
+        id S1727641AbgC1Vv0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 28 Mar 2020 17:51:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726604AbgC1Vny (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 28 Mar 2020 17:43:54 -0400
+        id S1727484AbgC1Vv0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 28 Mar 2020 17:51:26 -0400
 Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF6AA20714;
-        Sat, 28 Mar 2020 21:43:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0621B20732;
+        Sat, 28 Mar 2020 21:51:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585431833;
-        bh=QaY36iHTP79UXqax0r/o+p3Tdr+Do9OjGBasmRH9CJQ=;
+        s=default; t=1585432285;
+        bh=8h5MsYYWkNcSL4OubFDXcc0F978HmedvepZsUALWoEU=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=LOC7m60ErlmVKIHpqS6IGVg09QIRI+KWlV23XfdE/LDM/AVIzeMQQEtkewcu0w8+K
-         9LbrEFqgaK9RJHLEAoVlr/EpRSf4KY5Rjxnij0DxcLrSlubxckNVqB0QJZr6TXuO1v
-         Lji//GS8YpneAyl9c7FkuaEVu7wHHSbnrQSF9QBw=
-Date:   Sat, 28 Mar 2020 16:43:51 -0500
+        b=cRDvGcQ5sKmFI1wvckXef/UmsLyDz683poYpZdmP44iYJhkeapeO/gIAQdLb0AGO1
+         EybQIC+BUEGOaP2uTO8s72JhRXDklLPLrUnvx2zNt0VB2JUrXe3cxXGZNnA9M4YlFR
+         ew3bvM0qnp6FBoddWJ91MN1Wm1BqKELJ+X3m8nig=
+Date:   Sat, 28 Mar 2020 16:51:23 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Jon Derrick <jonathan.derrick@intel.com>
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -35,159 +35,110 @@ Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         Keith Busch <kbusch@kernel.org>,
         Alexandru Gagniuc <mr.nuke.me@gmail.com>,
         Christoph Hellwig <hch@lst.de>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>
-Subject: Re: [RFC 2/9] PCI: pci-bridge-emul: Eliminate reserved member
-Message-ID: <20200328214351.GA129854@google.com>
+        Stuart Hayes <stuart.w.hayes@gmail.com>,
+        Lukas Wunner <lukas@wunner.de>
+Subject: Re: [RFC 0/9] PCIe Hotplug Slot Emulation driver
+Message-ID: <20200328215123.GA130140@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1581120007-5280-3-git-send-email-jonathan.derrick@intel.com>
+In-Reply-To: <1581120007-5280-1-git-send-email-jonathan.derrick@intel.com>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Thomas, Russell]
+[+cc Stuart, Lukas]
 
-On Fri, Feb 07, 2020 at 05:00:00PM -0700, Jon Derrick wrote:
-> Assume any bit not in the Read-Only, Read-Write, or Write-1-to-Clear
-> behavior masks is a Reserved bit and should return 0 on reads.
-
-This also seems like it makes sense on its own, especially if you can
-include a spec citation.
-
-> Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
-> ---
->  drivers/pci/pci-bridge-emul.c | 28 +++++++++++-----------------
->  1 file changed, 11 insertions(+), 17 deletions(-)
+On Fri, Feb 07, 2020 at 04:59:58PM -0700, Jon Derrick wrote:
+> This set adds an emulation driver for PCIe Hotplug. There may be platforms with
+> specific configurations that can support hotplug but don't provide the logical
+> slot hotplug hardware. For instance, the platform may use an
+> electrically-tolerant interposer between the slot and the device.
 > 
-> diff --git a/drivers/pci/pci-bridge-emul.c b/drivers/pci/pci-bridge-emul.c
-> index d065c2a..e0567ca 100644
-> --- a/drivers/pci/pci-bridge-emul.c
-> +++ b/drivers/pci/pci-bridge-emul.c
-> @@ -24,6 +24,15 @@
->  #define PCI_CAP_PCIE_START	PCI_BRIDGE_CONF_END
->  #define PCI_CAP_PCIE_END	(PCI_CAP_PCIE_START + PCI_EXP_SLTSTA2 + 2)
->  
-> +/**
-> + * struct pci_bridge_reg_behavior - register bits behaviors
-> + * @ro:		Read-Only bits
-> + * @rw:		Read-Write bits
-> + * @w1c:	Write-1-to-Clear bits
-> + *
-> + * Reads and Writes will be filtered by specified behavior. All other bits not
-> + * declared are assumed 'Reserved' and will return 0 on reads.
-> + */
->  struct pci_bridge_reg_behavior {
->  	/* Read-only bits */
->  	u32 ro;
-> @@ -33,9 +42,6 @@ struct pci_bridge_reg_behavior {
->  
->  	/* Write-1-to-clear bits */
->  	u32 w1c;
-> -
-> -	/* Reserved bits (hardwired to 0) */
-> -	u32 rsvd;
->  };
->  
->  static const struct pci_bridge_reg_behavior pci_regs_behavior[] = {
-> @@ -49,7 +55,6 @@ struct pci_bridge_reg_behavior {
->  			PCI_COMMAND_FAST_BACK) |
->  		       (PCI_STATUS_CAP_LIST | PCI_STATUS_66MHZ |
->  			PCI_STATUS_FAST_BACK | PCI_STATUS_DEVSEL_MASK) << 16),
-> -		.rsvd = GENMASK(15, 10) | ((BIT(6) | GENMASK(3, 0)) << 16),
->  		.w1c = (PCI_STATUS_PARITY |
->  			PCI_STATUS_SIG_TARGET_ABORT |
->  			PCI_STATUS_REC_TARGET_ABORT |
-> @@ -106,8 +111,6 @@ struct pci_bridge_reg_behavior {
->  			PCI_STATUS_REC_MASTER_ABORT |
->  			PCI_STATUS_SIG_SYSTEM_ERROR |
->  			PCI_STATUS_DETECTED_PARITY) << 16,
-> -
-> -		.rsvd = ((BIT(6) | GENMASK(4, 0)) << 16),
->  	},
->  
->  	[PCI_MEMORY_BASE / 4] = {
-> @@ -140,12 +143,10 @@ struct pci_bridge_reg_behavior {
->  
->  	[PCI_CAPABILITY_LIST / 4] = {
->  		.ro = GENMASK(7, 0),
-> -		.rsvd = GENMASK(31, 8),
->  	},
->  
->  	[PCI_ROM_ADDRESS1 / 4] = {
->  		.rw = GENMASK(31, 11) | BIT(0),
-> -		.rsvd = GENMASK(10, 1),
->  	},
->  
->  	/*
-> @@ -168,8 +169,6 @@ struct pci_bridge_reg_behavior {
->  		.ro = (GENMASK(15, 8) | ((PCI_BRIDGE_CTL_FAST_BACK) << 16)),
->  
->  		.w1c = BIT(10) << 16,
-> -
-> -		.rsvd = (GENMASK(15, 12) | BIT(4)) << 16,
->  	},
->  };
->  
-> @@ -196,13 +195,11 @@ struct pci_bridge_reg_behavior {
->  		 */
->  		.w1c = (BIT(6) | GENMASK(3, 0)) << 16,
->  		.ro = GENMASK(5, 4) << 16,
-> -		.rsvd = GENMASK(15, 7) << 16,
->  	},
->  
->  	[PCI_EXP_LNKCAP / 4] = {
->  		/* All bits are RO, except bit 23 which is reserved */
->  		.ro = lower_32_bits(~BIT(23)),
-> -		.rsvd = BIT(23),
->  	},
->  
->  	[PCI_EXP_LNKCTL / 4] = {
-> @@ -216,7 +213,6 @@ struct pci_bridge_reg_behavior {
->  		.rw = GENMASK(15, 14) | GENMASK(11, 3) | GENMASK(1, 0),
->  		.ro = GENMASK(13, 0) << 16,
->  		.w1c = GENMASK(15, 14) << 16,
-> -		.rsvd = GENMASK(13, 12) | BIT(2),
->  	},
->  
->  	[PCI_EXP_SLTCAP / 4] = {
-> @@ -234,7 +230,6 @@ struct pci_bridge_reg_behavior {
->  		.rw = GENMASK(14, 0),
->  		.w1c = (BIT(8) | GENMASK(4, 0)) << 16,
->  		.ro = GENMASK(7, 5) << 16,
-> -		.rsvd = BIT(15) | (GENMASK(15, 9) << 16),
->  	},
->  
->  	[PCI_EXP_RTCTL / 4] = {
-> @@ -246,7 +241,6 @@ struct pci_bridge_reg_behavior {
->  		 */
->  		.rw = GENMASK(4, 0),
->  		.ro = BIT(0) << 16,
-> -		.rsvd = GENMASK(15, 5) | (GENMASK(15, 1) << 16),
->  	},
->  
->  	[PCI_EXP_RTSTA / 4] = {
-> @@ -256,7 +250,6 @@ struct pci_bridge_reg_behavior {
->  		 */
->  		.ro = BIT(17) | GENMASK(15, 0),
->  		.w1c = BIT(16),
-> -		.rsvd = GENMASK(31, 18),
->  	},
->  };
->  
-> @@ -364,7 +357,8 @@ int pci_bridge_emul_conf_read(struct pci_bridge_emul *bridge, int where,
->  	 * Make sure we never return any reserved bit with a value
->  	 * different from 0.
->  	 */
-> -	*value &= ~behavior[reg / 4].rsvd;
-> +	*value &= behavior[reg / 4].ro | behavior[reg / 4].rw |
-> +		  behavior[reg / 4].w1c;
->  
->  	if (size == 1)
->  		*value = (*value >> (8 * (where & 3))) & 0xff;
+> This driver utilizes the pci-bridge-emul architecture to manage register reads
+> and writes. The underlying functionality of the hotplug emulation driver uses
+> the Data Link Layer Link Active Reporting mechanism in a polling loop, but can
+> tolerate other event sources such as AER or DPC.
+> 
+> When enabled and a slot is managed by the driver, all port services are managed
+> by the kernel. This is done to ensure that firmware hotplug and error
+> architecture does not (correctly) halt/machine check the system when hotplug is
+> performed on a non-hotplug slot.
+> 
+> The driver offers two active mode: Auto and Force.
+> auto: The driver will bind to non-hotplug slots
+> force: The driver will bind to all slots and overrides the slot's services
+> 
+> There are three kernel params:
+> pciehp.pciehp_emul_mode={off, auto, force}
+> pciehp.pciehp_emul_time=<msecs polling time> (def 1000, min 100, max 60000)
+> pciehp.pciehp_emul_ports=<PCI [S]BDF/ID format string>
+> 
+> The pciehp_emul_ports kernel parameter takes a semi-colon tokenized string
+> representing PCI [S]BDFs and IDs. The pciehp_emul_mode will then be applied to
+> only those slots, leaving other slots unmanaged by pciehp_emul.
+> 
+> The string follows the pci_dev_str_match() format:
+> 
+>   [<domain>:]<bus>:<device>.<func>[/<device>.<func>]*
+>   pci:<vendor>:<device>[:<subvendor>:<subdevice>]
+> 
+> When using the path format, the path for the device can be obtained
+> using 'lspci -t' and further specified using the upstream bridge and the
+> downstream port's device-function to be more robust against bus
+> renumbering.
+> 
+> When using the vendor-device format, a value of '0' in any field acts as
+> a wildcard for that field, matching all values.
+> 
+> The driver is enabled with CONFIG_HOTPLUG_PCI_PCIE_EMUL=y.
+> 
+> The driver should be considered 'use at own risk' unless the platform/hardware
+> vendor recommends this mode.
+
+There's a lot of good work in here, and I don't claim to understand
+the use case and all the benefits.
+
+But it seems like quite a lot of additional code and complexity in an
+area that's already pretty subtle, so I'm not yet convinced that it's
+all worthwhile.
+
+It seems like this would rely on Data Link Layer Link Active
+Reporting.  Is that something we could add to pciehp as a generic
+feature without making a separate driver for it?  I haven't looked at
+this for a while, but I would assume that if we find out that a link
+went down, pciehp could/should be smart enough to notice that even if
+it didn't come via the usual pciehp Slot Status path.
+
+> Jon Derrick (9):
+>   PCI: pci-bridge-emul: Update PCIe register behaviors
+>   PCI: pci-bridge-emul: Eliminate reserved member
+>   PCI: pci-bridge-emul: Provide a helper to set behavior
+>   PCI: pciehp: Indirect slot register operations
+>   PCI: Add pcie_port_slot_emulated stub
+>   PCI: pciehp: Expose the poll loop to other drivers
+>   PCI: Move pci_dev_str_match to search.c
+>   PCI: pciehp: Add hotplug slot emulation driver
+>   PCI: pciehp: Wire up pcie_port_emulate_slot and pciehp_emul
+> 
+>  drivers/pci/hotplug/Makefile      |   4 +
+>  drivers/pci/hotplug/pciehp.h      |  28 +++
+>  drivers/pci/hotplug/pciehp_emul.c | 378 ++++++++++++++++++++++++++++++++++++++
+>  drivers/pci/hotplug/pciehp_hpc.c  | 136 ++++++++++----
+>  drivers/pci/pci-acpi.c            |   3 +
+>  drivers/pci/pci-bridge-emul.c     |  95 +++++-----
+>  drivers/pci/pci-bridge-emul.h     |  10 +
+>  drivers/pci/pci.c                 | 163 ----------------
+>  drivers/pci/pcie/Kconfig          |  14 ++
+>  drivers/pci/pcie/portdrv_core.c   |  14 +-
+>  drivers/pci/probe.c               |   2 +-
+>  drivers/pci/search.c              | 162 ++++++++++++++++
+>  include/linux/pci.h               |   8 +
+>  13 files changed, 775 insertions(+), 242 deletions(-)
+>  create mode 100644 drivers/pci/hotplug/pciehp_emul.c
+> 
 > -- 
 > 1.8.3.1
 > 
