@@ -2,138 +2,178 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C2C7196961
-	for <lists+linux-pci@lfdr.de>; Sat, 28 Mar 2020 22:12:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ADCEF19697D
+	for <lists+linux-pci@lfdr.de>; Sat, 28 Mar 2020 22:27:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727176AbgC1VMu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 28 Mar 2020 17:12:50 -0400
-Received: from mga17.intel.com ([192.55.52.151]:40684 "EHLO mga17.intel.com"
+        id S1727151AbgC1V12 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 28 Mar 2020 17:27:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726604AbgC1VMu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 28 Mar 2020 17:12:50 -0400
-IronPort-SDR: 3P5UnqVVEyL9KYglzbEAIzoDnd40K/kFGXH1ex5xVKAkRbqQdF0x5BsdQDW8EmWBLr5Wn7A/vg
- IaCm06uX+BYw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2020 14:12:49 -0700
-IronPort-SDR: bnbXWG8s6q28X0226IZOO75NStnuUdLcMstgbqpglkjnuEl8RbOf218/ZUpviyZkyXa8oAvsLi
- qKeK6K+FjpJw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,317,1580803200"; 
-   d="scan'208";a="447816206"
-Received: from ssafrin-mobl.ger.corp.intel.com (HELO [10.255.229.125]) ([10.255.229.125])
-  by fmsmga005.fm.intel.com with ESMTP; 28 Mar 2020 14:12:48 -0700
-Subject: Re: [PATCH v18 05/11] PCI/ERR: Remove service dependency in
- pcie_do_recovery()
-To:     bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com
-References: <cover.1585000084.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <60e02b87b526cdf2930400059d98704bf0a147d1.1585000084.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <bcc1910b-90fe-25b5-3cee-8f9d7e83e45e@linux.intel.com>
-Date:   Sat, 28 Mar 2020 14:12:48 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1726604AbgC1V11 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 28 Mar 2020 17:27:27 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1889206F2;
+        Sat, 28 Mar 2020 21:27:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585430847;
+        bh=DyJvNGh61Two94QYigr+Bg5rkzIrG4wL94jZ7ZimsXg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=dyshV2fwh428iMAm6gphwTlZ/Y/hQRTOaAl4dbe0qaUbiYMIF9sXLlcJ9SKgJy+UP
+         E6Dp0ob8iVG+deLC5EbjJy4E8lADg84f9Notaqhh9zTObKBbhVEXSdBVF9bYZ3/2bj
+         xjlIARqo3dbqIhx+RzWDs2eyGjgBLKChmBUhPn1o=
+Date:   Sat, 28 Mar 2020 16:27:25 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     Stuart Hayes <stuart.w.hayes@gmail.com>,
+        Austin Bolen <austin_bolen@dell.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, narendra_k@dell.com,
+        Enzo Matsumiya <ematsumiya@suse.com>
+Subject: Re: [PATCH v4] PCI: pciehp: Fix MSI interrupt race
+Message-ID: <20200328212725.GA127426@google.com>
 MIME-Version: 1.0
-In-Reply-To: <60e02b87b526cdf2930400059d98704bf0a147d1.1585000084.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <78b4ced5072bfe6e369d20e8b47c279b8c7af12e.1582121613.git.lukas@wunner.de>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
-
-On 3/23/20 5:26 PM, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+On Wed, Feb 19, 2020 at 03:31:13PM +0100, Lukas Wunner wrote:
+> From: Stuart Hayes <stuart.w.hayes@gmail.com>
 > 
+> Without this commit, a PCIe hotplug port can stop generating interrupts
+> on hotplug events, so device adds and removals will not be seen:
+> 
+> The pciehp interrupt handler pciehp_isr() reads the Slot Status register
+> and then writes back to it to clear the bits that caused the interrupt.
+> If a different interrupt event bit gets set between the read and the
+> write, pciehp_isr() returns without having cleared all of the interrupt
+> event bits.  If this happens when the MSI isn't masked (which by default
+> it isn't in handle_edge_irq(), and which it will never be when MSI
+> per-vector masking is not supported), we won't get any more hotplug
+> interrupts from that device.
+> 
+> That is expected behavior, according to the PCIe Base Spec r5.0, section
+> 6.7.3.4, "Software Notification of Hot-Plug Events".
+> 
+> Because the Presence Detect Changed and Data Link Layer State Changed
+> event bits can both get set at nearly the same time when a device is
+> added or removed, this is more likely to happen than it might seem.
+> The issue was found (and can be reproduced rather easily) by connecting
+> and disconnecting an NVMe storage device on at least one system model
+> where the NVMe devices were being connected to an AMD PCIe port (PCI
+> device 0x1022/0x1483).
+> 
+> Fix the issue by modifying pciehp_isr() to loop back and re-read the
+> Slot Status register immediately after writing to it, until it sees that
+> all of the event status bits have been cleared.
+> 
+> Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
+> [lukas: drop loop count limitation, write "events" instead of "status",
+> don't loop back in INTx and poll modes, tweak code comment & commit msg]
+> Signed-off-by: Lukas Wunner <lukas@wunner.de>
 
-> +void pcie_do_recovery(struct pci_dev *dev,
-> +		      enum pci_channel_state state,
-> +		      pci_ers_result_t (*reset_link)(struct pci_dev *pdev))
->   {
->   	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
->   	struct pci_bus *bus;
-> @@ -206,9 +165,12 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
->   	pci_dbg(dev, "broadcast error_detected message\n");
->   	if (state == pci_channel_io_frozen) {
->   		pci_walk_bus(bus, report_frozen_detected, &status);
-> -		status = reset_link(dev, service);
-> -		if 		if (reset_link)
-			status = reset_link(dev);(status == PCI_ERS_RESULT_DISCONNECT
-> +		status = reset_link(dev);
-Above line needs to be replaced as below. Since there is a
-possibility reset_link can NULL (eventhough currently its
-not true).
-		if (reset_link)
-			status = reset_link(dev);
-Shall I submit another version to add above fix on top of
-our pci/edr branch ?
-> +		if ((status != PCI_ERS_RESULT_RECOVERED) &&
-> +		    (status != PCI_ERS_RESULT_NEED_RESET)) {
-> +			pci_dbg(dev, "link reset at upstream device failed\n");
->   			goto failed;
-> +		}
->   	} else {
->   		pci_walk_bus(bus, report_normal_detected, &status);
->   	}
-> diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
-> index 1e673619b101..64b5e081cdb2 100644
-> --- a/drivers/pci/pcie/portdrv.h
-> +++ b/drivers/pci/pcie/portdrv.h
-> @@ -92,9 +92,6 @@ struct pcie_port_service_driver {
->   	/* Device driver may resume normal operations */
->   	void (*error_resume)(struct pci_dev *dev);
->   
-> -	/* Link Reset Capability - AER service driver specific */
-> -	pci_ers_result_t (*reset_link)(struct pci_dev *dev);
-> -
->   	int port_type;  /* Type of the port this driver can handle */
->   	u32 service;    /* Port service this device represents */
->   
-> @@ -161,7 +158,5 @@ static inline int pcie_aer_get_firmware_first(struct pci_dev *pci_dev)
->   }
->   #endif
->   
-> -struct pcie_port_service_driver *pcie_port_find_service(struct pci_dev *dev,
-> -							u32 service);
->   struct device *pcie_port_find_device(struct pci_dev *dev, u32 service);
->   #endif /* _PORTDRV_H_ */
-> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
-> index 5075cb9e850c..50a9522ab07d 100644
-> --- a/drivers/pci/pcie/portdrv_core.c
-> +++ b/drivers/pci/pcie/portdrv_core.c
-> @@ -458,27 +458,6 @@ static int find_service_iter(struct device *device, void *data)
->   	return 0;
->   }
->   
-> -/**
-> - * pcie_port_find_service - find the service driver
-> - * @dev: PCI Express port the service is associated with
-> - * @service: Service to find
-> - *
-> - * Find PCI Express port service driver associated with given service
-> - */
-> -struct pcie_port_service_driver *pcie_port_find_service(struct pci_dev *dev,
-> -							u32 service)
-> -{
-> -	struct pcie_port_service_driver *drv;
-> -	struct portdrv_service_data pdrvs;
-> -
-> -	pdrvs.drv = NULL;
-> -	pdrvs.service = service;
-> -	device_for_each_child(&dev->dev, &pdrvs, find_service_iter);
-> -
-> -	drv = pdrvs.drv;
-> -	return drv;
-> -}
-> -
->   /**
->    * pcie_port_find_device - find the struct device
->    * @dev: PCI Express port the service is associated with
+Applied to pci/hotplug for v5.7, thanks!
+
+> ---
+> v4 (lukas):
+>   * drop "MAX_ISR_STATUS_READS" loop count limitation
+>   * drop unnecessary braces around PCI_EXP_SLTSTA_* flags
+>   * write "events" instead of "status" variable to Slot Status register
+>     to avoid unnecessary loop iterations if the same bit gets set
+>     repeatedly
+>   * don't loop back in INTx and poll modes
+>   * shorten and tweak code comment & commit message
+> 
+> v3:
+>   * removed pvm_capable flag (from v2) since MSI may not be masked
+>     regardless of whether per-vector masking is supported
+>   * tweaked comments
+> 
+> v2:
+>   * fixed ctrl_warn() call
+>   * improved comments
+>   * added pvm_capable flag and changed pciehp_isr() to loop back only when
+>     pvm_capable flag not set (suggested by Lukas Wunner)
+> 
+>  drivers/pci/hotplug/pciehp_hpc.c | 26 ++++++++++++++++++++------
+>  1 file changed, 20 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+> index 8a2cb1764386..f64d10df9eb5 100644
+> --- a/drivers/pci/hotplug/pciehp_hpc.c
+> +++ b/drivers/pci/hotplug/pciehp_hpc.c
+> @@ -527,7 +527,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
+>  	struct controller *ctrl = (struct controller *)dev_id;
+>  	struct pci_dev *pdev = ctrl_dev(ctrl);
+>  	struct device *parent = pdev->dev.parent;
+> -	u16 status, events;
+> +	u16 status, events = 0;
+>  
+>  	/*
+>  	 * Interrupts only occur in D3hot or shallower and only if enabled
+> @@ -552,6 +552,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
+>  		}
+>  	}
+>  
+> +read_status:
+>  	pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &status);
+>  	if (status == (u16) ~0) {
+>  		ctrl_info(ctrl, "%s: no response from device\n", __func__);
+> @@ -564,24 +565,37 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
+>  	 * Slot Status contains plain status bits as well as event
+>  	 * notification bits; right now we only want the event bits.
+>  	 */
+> -	events = status & (PCI_EXP_SLTSTA_ABP | PCI_EXP_SLTSTA_PFD |
+> -			   PCI_EXP_SLTSTA_PDC | PCI_EXP_SLTSTA_CC |
+> -			   PCI_EXP_SLTSTA_DLLSC);
+> +	status &= PCI_EXP_SLTSTA_ABP | PCI_EXP_SLTSTA_PFD |
+> +		  PCI_EXP_SLTSTA_PDC | PCI_EXP_SLTSTA_CC |
+> +		  PCI_EXP_SLTSTA_DLLSC;
+>  
+>  	/*
+>  	 * If we've already reported a power fault, don't report it again
+>  	 * until we've done something to handle it.
+>  	 */
+>  	if (ctrl->power_fault_detected)
+> -		events &= ~PCI_EXP_SLTSTA_PFD;
+> +		status &= ~PCI_EXP_SLTSTA_PFD;
+>  
+> +	events |= status;
+>  	if (!events) {
+>  		if (parent)
+>  			pm_runtime_put(parent);
+>  		return IRQ_NONE;
+>  	}
+>  
+> -	pcie_capability_write_word(pdev, PCI_EXP_SLTSTA, events);
+> +	if (status) {
+> +		pcie_capability_write_word(pdev, PCI_EXP_SLTSTA, events);
+> +
+> +		/*
+> +		 * In MSI mode, all event bits must be zero before the port
+> +		 * will send a new interrupt (PCIe Base Spec r5.0 sec 6.7.3.4).
+> +		 * So re-read the Slot Status register in case a bit was set
+> +		 * between read and write.
+> +		 */
+> +		if (pci_dev_msi_enabled(pdev) && !pciehp_poll_mode)
+> +			goto read_status;
+> +	}
+> +
+>  	ctrl_dbg(ctrl, "pending interrupts %#06x from Slot Status\n", events);
+>  	if (parent)
+>  		pm_runtime_put(parent);
+> -- 
+> 2.24.0
 > 
