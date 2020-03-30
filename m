@@ -2,113 +2,250 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E585E197B57
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Mar 2020 13:55:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 06E1C197B67
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Mar 2020 13:59:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729961AbgC3Lzi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Mar 2020 07:55:38 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2616 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729941AbgC3Lzi (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 30 Mar 2020 07:55:38 -0400
-Received: from lhreml712-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 884F3AD7BE6865FE7E10;
-        Mon, 30 Mar 2020 12:55:36 +0100 (IST)
-Received: from lhreml715-chm.china.huawei.com (10.201.108.66) by
- lhreml712-chm.china.huawei.com (10.201.108.63) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 30 Mar 2020 12:55:36 +0100
-Received: from lhreml715-chm.china.huawei.com ([10.201.108.66]) by
- lhreml715-chm.china.huawei.com ([10.201.108.66]) with mapi id 15.01.1713.004;
- Mon, 30 Mar 2020 12:55:36 +0100
-From:   Shiju Jose <shiju.jose@huawei.com>
-To:     Borislav Petkov <bp@alien8.de>
-CC:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "zhangliguang@linux.alibaba.com" <zhangliguang@linux.alibaba.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        Linuxarm <linuxarm@huawei.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        tanxiaofei <tanxiaofei@huawei.com>,
-        yangyicong <yangyicong@huawei.com>
-Subject: RE: [PATCH v6 1/2] ACPI / APEI: Add support to notify the vendor
- specific HW errors
-Thread-Topic: [PATCH v6 1/2] ACPI / APEI: Add support to notify the vendor
- specific HW errors
-Thread-Index: AQHWAsR+4nldebv71E6VKNN8PAfzw6hcw70AgAQRUuCAABIOgIAAEy5w
-Date:   Mon, 30 Mar 2020 11:55:35 +0000
-Message-ID: <ee79588ee82445dcb76f1fe6c1082fb8@huawei.com>
-References: <ShijuJose> <20200325164223.650-1-shiju.jose@huawei.com>
- <20200325164223.650-2-shiju.jose@huawei.com> <20200327182214.GD8015@zn.tnic>
- <b180618fb6cb477ea7185979c11c5868@huawei.com>
- <20200330103353.GC16242@zn.tnic>
-In-Reply-To: <20200330103353.GC16242@zn.tnic>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.47.25.189]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1730049AbgC3L7k (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Mar 2020 07:59:40 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:44064 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730034AbgC3L7j (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Mar 2020 07:59:39 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02UBxZcK010530;
+        Mon, 30 Mar 2020 06:59:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1585569575;
+        bh=ZbojwuAnX6tvBd/zJw/S97n8zdKOqkWL9NCo0/hfvD4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=pNe+WPkunvBGsJVPlbA3ZYlz0G3KZIGKvkOT+euljDVxS68Z02AkGVlzHJT1lHHax
+         yLcGBLlNW36T+bnAfdzFIh2ZShlaqJeQ//i9Dd62QljItsdlNLejvLhauvhUJNz8Uz
+         TFtzRF1OnTDXIy3MTom17kLQeuA6kK6UYC515+Oo=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02UBxY0Z095711;
+        Mon, 30 Mar 2020 06:59:35 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 30
+ Mar 2020 06:59:34 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 30 Mar 2020 06:59:34 -0500
+Received: from [10.250.133.232] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02UBxWaP020781;
+        Mon, 30 Mar 2020 06:59:33 -0500
+Subject: Re: PCIe EPF
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     linux-pci <linux-pci@vger.kernel.org>
+References: <CA+V-a8vOwwCjRnFZ_Cxtvep1nLMXd5AjOyJyispg1A1k_ExbSQ@mail.gmail.com>
+ <e5570897-0566-6cce-9af2-8be23fb0d3ef@ti.com>
+ <CA+V-a8ssdO9R_wHbJM8RinzP5d7YX5KWES20G-TV0XnCx4SUeA@mail.gmail.com>
+ <83024641-7bd3-b47f-cd2c-0d831279086d@ti.com>
+ <CA+V-a8sBC5+v+BsVSjkfLvYzddPs2jj1roFaDO4Tz4q9CWnGSg@mail.gmail.com>
+ <CA+V-a8t15gotL1v-PRO1fGjL0WKTO2fOa69qZ5rctYn08XY=BA@mail.gmail.com>
+ <CA+V-a8sNcdC8SO6pXGUH3TkM7B6dX-xxcqtZjRZ_496qyG1h+Q@mail.gmail.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <60deaab7-fe56-0f30-a8bd-fbeea9224b11@ti.com>
+Date:   Mon, 30 Mar 2020 17:29:31 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+In-Reply-To: <CA+V-a8sNcdC8SO6pXGUH3TkM7B6dX-xxcqtZjRZ_496qyG1h+Q@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-SGkgQm9yaXMsDQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IEJvcmlzbGF2
-IFBldGtvdiBbbWFpbHRvOmJwQGFsaWVuOC5kZV0NCj5TZW50OiAzMCBNYXJjaCAyMDIwIDExOjM0
-DQo+VG86IFNoaWp1IEpvc2UgPHNoaWp1Lmpvc2VAaHVhd2VpLmNvbT4NCj5DYzogbGludXgtYWNw
-aUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0KPmtl
-cm5lbEB2Z2VyLmtlcm5lbC5vcmc7IHJqd0Byand5c29ja2kubmV0OyBoZWxnYWFzQGtlcm5lbC5v
-cmc7DQo+bGVuYkBrZXJuZWwub3JnOyBqYW1lcy5tb3JzZUBhcm0uY29tOyB0b255Lmx1Y2tAaW50
-ZWwuY29tOw0KPmdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnOyB6aGFuZ2xpZ3VhbmdAbGludXgu
-YWxpYmFiYS5jb207DQo+dGdseEBsaW51dHJvbml4LmRlOyBMaW51eGFybSA8bGludXhhcm1AaHVh
-d2VpLmNvbT47IEpvbmF0aGFuIENhbWVyb24NCj48am9uYXRoYW4uY2FtZXJvbkBodWF3ZWkuY29t
-PjsgdGFueGlhb2ZlaSA8dGFueGlhb2ZlaUBodWF3ZWkuY29tPjsNCj55YW5neWljb25nIDx5YW5n
-eWljb25nQGh1YXdlaS5jb20+DQo+U3ViamVjdDogUmU6IFtQQVRDSCB2NiAxLzJdIEFDUEkgLyBB
-UEVJOiBBZGQgc3VwcG9ydCB0byBub3RpZnkgdGhlIHZlbmRvcg0KPnNwZWNpZmljIEhXIGVycm9y
-cw0KPg0KPk9uIE1vbiwgTWFyIDMwLCAyMDIwIGF0IDEwOjE0OjIwQU0gKzAwMDAsIFNoaWp1IEpv
-c2Ugd3JvdGU6DQo+PiBUaGlzIGZpZWxkIGFkZGVkIGJhc2VkIG9uIHRoZSBpbnB1dCBmcm9tIEph
-bWVzIE1vcnNlIG9uIHY0IHBhdGNoIHRvDQo+PiBlbmFibGUgdGhlIHVzZXIgc3BhY2UgYXBwbGlj
-YXRpb24ocmFzZGFlbW9uKSBkbyB0aGUgZGVjb2RpbmcgYW5kDQo+PiBsb2dnaW5nIG9mIHRoZSBh
-bnkgZXh0cmEgZXJyb3IgaW5mb3JtYXRpb24gc2hhcmVkIGJ5IHRoZSBjb3JyZXNwb25kaW5nDQo+
-PiBrZXJuZWwgZHJpdmVyIHRvIHRoZSB1c2VyIHNwYWNlLg0KPg0KPkhvdyBpcyB5b3VyIGVycm9y
-IHJlcG9ydGluZyBzdXBwb3NlZCB0byB3b3JrPw0KPg0KPllvdXIgZHJpdmVyIGlzIHByaW50aW5n
-IGVycm9yIGluZm9ybWF0aW9uIGluIGRtZXNnIGFuZCwgYXQgdGhlIHNhbWUgdGltZSwgeW91DQo+
-d2FudCB0byByZXBvcnQgZXJyb3JzIHdpdGggdGhlIHJhc2RhZW1vbi4NCj4NCj5DdXJyZW50bHks
-IHRoZSBrZXJuZWwgZG9lcyBub3QgcmVwb3J0IGFueSBlcnJvciBpbmZvIGlmIHRoZXJlJ3MgYSB1
-c2VyIGFnZW50IGxpa2UNCj5yYXNkYWVtb24gcmVnaXN0ZXJlZCBzbyB5b3UgbmVlZCB0byB0aGlu
-ayBhYm91dCB3aGF0IGV4YWN0bHkgeW91J3JlIHRyeWluZw0KPnRvIGFjaGlldmUgaGVyZSB3cnQg
-dG8gZXJyb3IgaGFuZGxpbmcuIFBvcnQgcmVzZXR0aW5nLCBwcmludGluZyBlcnJvciBpbmZvLCBl
-dGMuDQo+QWx3YXlzIGFzayB5b3Vyc2VsZiwgd2hhdCBjYW4gdGhlIHVzZXIgZG8gd2l0aCB0aGUg
-aW5mb3JtYXRpb24geW91J3JlDQo+cHJpbnRpbmcuIEFuZCBzbyBvbi4uLg0KVGhlIGVycm9yX2hh
-bmRsZWQgZmllbGQgYWRkZWQgb24gdGhlIGdlbmVyaWMgYmFzaXMgZm9yIHRoZSBub24tc3RhbmRh
-cmQgZXJyb3JzLg0KcmFzZGFlbW9uIHN1cHBvcnRzIGFkZGluZyBkZWNvZGluZyBvZiB0aGUgdmVu
-ZG9yLXNwZWNpZmljIGVycm9yIGRhdGEsIHByaW50aW5nIGFuZCANCnN0b3JpbmcgdGhlIGRlY29k
-ZWQgdmVuZG9yIGVycm9yIGluZm9ybWF0aW9uIHRvIHRoZSBzcWwgZGF0YWJhc2UuIA0KVGhlIGlk
-ZWEgd2FzIHRoZSAgZXJyb3IgaGFuZGxlZCBmaWVsZCAgd2lsbCBoZWxwIHRoZSBkZWNvZGluZyBw
-YXJ0IG9mIHRoZSByYXNkYWVtb24gdG8gZG8gdGhlDQphcHByb3ByaWF0ZSBzdGVwcyBmb3IgbG9n
-Z2luZyB0aGUgdmVuZG9yIGVycm9yIGluZm9ybWF0aW9uIGRlcGVuZGluZyBvbiB3aGV0aGVyIGEg
-Y29ycmVzcG9uZGluZyBrZXJuZWwgZHJpdmVyDQpoYXMgaGFuZGxlZCB0aGUgZXJyb3Igb3Igbm90
-LiAgDQpIb3dldmVyIEkgdGhpbmsgdGhlIHNhbWUgY2FuIGJlIGFjaGlldmVkIGJ5IGFkZGluZyBh
-biBlcnJvciBoYW5kbGluZyBzdGF0dXMgZmllbGQgdG8gdGhlIHZlbmRvci1zcGVjaWZpYyBkYXRh
-LCB3aGljaA0KdGhlIGtlcm5lbCAgZHJpdmVyIHdpbGwgc2V0IGFmdGVyIGhhbmRsaW5nIHRoZSBl
-cnJvciBhbmQgY29ycmVzcG9uZGluZyB2ZW5kb3Itc3BlY2lmaWMgY29kZSBpbiB0aGUgcmFzZGFl
-bW9uIHdpbGwgdXNlIGl0IA0Kd2hpbGUgbG9nZ2luZyB0aGUgdmVuZG9yIGVycm9yIGRhdGEuDQo+
-DQo+PiBDYW4geW91IHBsZWFzZSBjb25maXJtIHlvdSB3YW50IGFsbCB0aGUgZXhpc3Rpbmcgc3Rh
-bmRhcmQNCj4+IGVycm9ycyhtZW1vcnksIEFSTSwgUENJRSkgaW4gdGhlIGdoZXNfZG9fcHJvYyAo
-KSB0byBiZSByZXBvcnRlZA0KPj4gdGhyb3VnaCB0aGUgYmxvY2tpbmcgbm90aWZpZXI/DQo+DQo+
-WWVzLCBJIHdvdWxkIHZlcnkgbXVjaCBwcmVmZXIgdG8gaGF2ZSBhIGdlbmVyaWMgc29sdXRpb24g
-aW5zdGVhZCBvZiB2ZW5kb3ItDQo+c3BlY2lmaWMgc3R1ZmYgbGVmdCBhbmQgcmlnaHQuDQpTdXJl
-Lg0KDQo+DQo+VGh4Lg0KPg0KPi0tDQo+UmVnYXJkcy9HcnVzcywNCj4gICAgQm9yaXMuDQo+DQo+
-aHR0cHM6Ly9wZW9wbGUua2VybmVsLm9yZy90Z2x4L25vdGVzLWFib3V0LW5ldGlxdWV0dGUNCg0K
-VGhhbmtzLA0KU2hpanUNCg==
+Hi Prabhakar,
+
+On 3/29/2020 7:34 PM, Lad, Prabhakar wrote:
+> Hi Kishon,
+> 
+> On Sat, Mar 28, 2020 at 6:44 PM Lad, Prabhakar
+> <prabhakar.csengg@gmail.com> wrote:
+>>
+>> Hi Kishon,
+>>
+>> On Tue, Mar 24, 2020 at 2:41 PM Lad, Prabhakar
+>> <prabhakar.csengg@gmail.com> wrote:
+>>>
+>>> Hi Kishon,
+>>>
+>>> On Tue, Mar 24, 2020 at 1:58 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>>>>
+>>>> Hi Prabhakar,
+>>>>
+>>>> On 3/22/2020 4:19 AM, Lad, Prabhakar wrote:
+>>>>> Hi Kishon,
+>>>>>
+>>>>> On Fri, Mar 20, 2020 at 5:28 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>>>>>>
+>>>>>> Hi Prabhakar,
+>>>>>>
+>>>>>> On 3/18/2020 5:07 PM, Lad, Prabhakar wrote:
+>>>>>>> Hi Kishon,
+>>>>>>>
+>>>>>>> I rebased my rcar-endpoint patches on endpoint branch, which has
+>>>>>>> support for streaming DMA API support, with this  read/write/copy
+>>>>>>> tests failed, to make sure nothing hasn't changed on my driver I
+>>>>>>> reverted the streaming DMA API patch
+>>>>>>> 74b9b4da84c71418ceeaaeb78dc790376df92fea "misc: pci_endpoint_test: Use
+>>>>>>> streaming DMA APIs for buffer allocation" and tests began to pass
+>>>>>>> again.
+>>>>>>>
+>>>>>>> If add a GFP_DMA flag for kzalloc (with streaming DMA), the test cases
+>>>>>>> for read/write/copy pass as expected.
+>>>>>>>
+>>>>>>> Could you please through some light why this could be happening.
+>>>>>>
+>>>>>> Do you see any differences in the address returned by dma_map_single() like is
+>>>>>> it 32-bit address or 64-bit address?
+>>>>>>
+>>>>> Both return 32 bit address, debugging further I see that with
+>>>>> GFP_KERNEL flag for small buffer
+>>>>> sizes the read/write/copy tests pass(upto 4k), so I am suspecting its
+>>>>> related to caching probably.
+>>>>> Also adding wmb()/rmb() just with GFP_KERNEL flag didn't help. Note I
+>>>>> am using PIO transfers.
+>>>>> Any thoughts on how we tackle it ?
+>>>>>
+>>>>> # With GFP_KERNEL flag
+>>>>> root@hihope-rzg2m:~# pcitest -r
+>>>>> [   46.210649] pci-endpoint-test 0000:01:00.0: pci_endpoint_test_read
+>>>>> kzalloc:ffff0004b4ae0000 dma:7e99d000 align:ffff0004b4ae0000
+>>>>> READ ( 102400 bytes):           NOT OKAY
+>>>>> root@hihope-rzg2m:~# pcitest -r
+>>>>> [   51.880063] pci-endpoint-test 0000:01:00.0: pci_endpoint_test_read
+>>>>> kzalloc:ffff0004b4ae0000 dma:7e9c0000 align:ffff0004b4ae0000
+>>>>> READ ( 102400 bytes):           OKAY
+>>>>
+>>>> Here one of the read test is passing and the other is failing.
+>>>> For the 1st case dma:7e99d000, address is aligned to 4K
+>>>> For the 2nd case dma:7e9c0000, address is aligned to 256K
+>>>>
+>>>> I'm suspecting this could be an alignment issue. Does the outbound ATU of your
+>>>> EP has any restrictions? (like the address should be aligned to the size?).
+>>>>
+>>> There isn't any  restriction for outbound ATU on ep,  Although I tried
+>>> alignment from
+>>> SZ_1 - SZ_256K and each failed at several points.
+>>>
+>>> With GFP_KERNEL | GFP_DMA, as in my previous dump here the address too
+>>> is not aligned to 256 but still read passes.
+>>> root@hihope-rzg2m:~# pcitest -r -s 16384
+>>>  [  186.629347] pci-endpoint-test 0000:01:00.0: pci_endpoint_test_read
+>>> kzalloc:ffff00003b848000 dma:7b848000 align:ffff00003b848000
+>>> READ (  16384 bytes):           OKAY
+>>>
+>>> And I have verified with GFP_KERNEL | GFP_DMA on my platform
+>>> everything works as expected,
+>>>
+>>> So how about a patch for pci_endpoint_test.c, where flags are passed
+>>> as  part of driver_data and it defaults to just GFP_KERNEL ?
+>>>
+>> Any thoughts on the above ? I intended to get the endpoint driver for v5.7.
+>>
+> Correct me if I am wrong here, streaming DMA API should be used with
+> dma (-d) option so that root device
+> makes sure the data is synced when data is transferred whereas
+> previously with dma_alloc_coherent()
+> we didn't have to care about cache issues. Also for a non-dma (-d)
+> option we don't have a handle to dma
+> in rootpport device so that we can call a sync operation. I say this
+> because on my platform  with streaming
+> DMA api it works for small size buffers but it doesn't work with large
+> size buffers.
+
+Streaming DMA API and DMA support in endpoint can be treated independently.
+dma_alloc_coherent() will give you coherent memory, so you don't have to flush
+or invalidate. This memory is usually limited in a platform.
+The other option was to use streaming DMA APIs which doesn't give coherent
+memory but SW has to take care of flush and invalidate.
+
+> 
+> Could you please confirm with streaming DMA api without DMA (-d)
+> option for large buffers read/write/copy
+> still passes for you.
+
+root@j7-evm:~# ./pcitest -r
+READ ( 102400 bytes):           OKAY
+root@j7-evm:~# ./pcitest -r -s 1024000
+READ (1024000 bytes):           OKAY
+root@j7-evm:~# ./pcitest -w -s 1024000
+WRITE (1024000 bytes):          OKAY
+root@j7-evm:~# ./pcitest -c -s 1024000
+COPY (1024000 bytes):           OKAY
+root@j7-evm:~# ./pcitest -c -s 10240000
+COPY (10240000 bytes):          OKAY
+root@j7-evm:~# ./pcitest -r -s 10240000
+READ (10240000 bytes):          OKAY
+root@j7-evm:~# ./pcitest -w -s 10240000
+WRITE (10240000 bytes):         OKAY
+> 
+> Although I am not sure why adding GFP_KERNEL | GFP_DMA flag for
+> kzalloc  on my platform fixes everything.
+
+Which host do you use? If this is only a host side limitation, you could try
+using a different host.
+
+Thanks
+Kishon
+
+> 
+> Cheers,
+> --Prabhakar
+> 
+> 
+>> Cheers,
+>> --Prabhakar
+>>
+>>> Cheers,
+>>> --Prabhakar
+>>>
+>>>> Thanks
+>>>> Kishon
+>>>>
+>>>>> root@hihope-rzg2m:~# pcitest -r
+>>>>> [   53.354830] pci-endpoint-test 0000:01:00.0: pci_endpoint_test_read
+>>>>> kzalloc:ffff0004b4ae0000 dma:7e9e2000 align:ffff0004b4ae0000
+>>>>> READ ( 102400 bytes):           NOT OKAY
+>>>>> root@hihope-rzg2m:~# pcitest -r
+>>>>> [   55.307236] pci-endpoint-test 0000:01:00.0: pci_endpoint_test_read
+>>>>> kzalloc:ffff0004b4ae0000 dma:7ea04000 align:ffff0004b4ae0000
+>>>>> READ ( 102400 bytes):           NOT OKAY
+>>>>> root@hihope-rzg2m:~# pcitest -r
+>>>>> [   57.098626] pci-endpoint-test 0000:01:00.0: pci_endpoint_test_read
+>>>>> kzalloc:ffff0004b4ae0000 dma:7ea23000 align:ffff0004b4ae0000
+>>>>> READ ( 102400 bytes):           NOT OKAY
+>>>>>
+>>>>> # GFP_KERNEL | GFP_DMA
+>>>>>
+>>>>> root@hihope-rzg2m:~# pcitest -r -s 1024001
+>>>>> [  174.562071] pci-endpoint-test 0000:01:00.0: pci_endpoint_test_read
+>>>>> kzalloc:ffff00003b900000 dma:7b900000 align:ffff00003b900000
+>>>>> READ (1024001 bytes):           OKAY
+>>>>> root@hihope-rzg2m:~# pcitest -r -s 16384
+>>>>> [  186.629347] pci-endpoint-test 0000:01:00.0: pci_endpoint_test_read
+>>>>> kzalloc:ffff00003b848000 dma:7b848000 align:ffff00003b848000
+>>>>> READ (  16384 bytes):           OKAY
+>>>>> root@hihope-rzg2m:~# pcitest -r -s 8192
+>>>>> [  190.578335] pci-endpoint-test 0000:01:00.0: pci_endpoint_test_read
+>>>>> kzalloc:ffff00003b840000 dma:7b840000 align:ffff00003b840000
+>>>>> READ (   8192 bytes):           OKAY
+>>>>> root@hihope-rzg2m:~# pcitest -r -s 128
+>>>>> [  199.428021] pci-endpoint-test 0000:01:00.0: pci_endpoint_test_read
+>>>>> kzalloc:ffff00003b800000 dma:7b800000 align:ffff00003b800000
+>>>>> READ (    128 bytes):           OKAY
+>>>>> root@hihope-rzg2m:~#
+>>>>>
+>>>>> Cheers,
+>>>>> --Prabhakar
+>>>>>
+>>>>>> Thanks
+>>>>>> Kishon
