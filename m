@@ -2,93 +2,67 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 709A9197957
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Mar 2020 12:34:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D14ED1979E9
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Mar 2020 12:53:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729012AbgC3KeD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Mar 2020 06:34:03 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:60750 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728656AbgC3KeD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 30 Mar 2020 06:34:03 -0400
-Received: from zn.tnic (p200300EC2F06760078F8067BD6E9D19D.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:7600:78f8:67b:d6e9:d19d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A60CA1EC0CB7;
-        Mon, 30 Mar 2020 12:34:00 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1585564440;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=n+yHtTiDVvF6Kro2y++xFDXvA1AQyQV5TZDwHc2h0u4=;
-        b=EzKrSctOyBi0y7pUhYWczf7ulg59FKG2JQzt1n94OsNviMQb7jpgyWGTHByA1jIlC/YADk
-        wTw+cdZlv9UidunvMI3ri8mGKfeou/EvoxMTKPbjaYDGEmeeoO1YxqTjAj3RXTuAQEMg3l
-        ZvO49p+Q0krnpiH+Iolz72gOiuhPps8=
-Date:   Mon, 30 Mar 2020 12:33:53 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Shiju Jose <shiju.jose@huawei.com>
-Cc:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "zhangliguang@linux.alibaba.com" <zhangliguang@linux.alibaba.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        Linuxarm <linuxarm@huawei.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        tanxiaofei <tanxiaofei@huawei.com>,
-        yangyicong <yangyicong@huawei.com>
-Subject: Re: [PATCH v6 1/2] ACPI / APEI: Add support to notify the vendor
- specific HW errors
-Message-ID: <20200330103353.GC16242@zn.tnic>
-References: <ShijuJose>
- <20200325164223.650-1-shiju.jose@huawei.com>
- <20200325164223.650-2-shiju.jose@huawei.com>
- <20200327182214.GD8015@zn.tnic>
- <b180618fb6cb477ea7185979c11c5868@huawei.com>
+        id S1729558AbgC3KxA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Mar 2020 06:53:00 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:33050 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729579AbgC3Kwo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Mar 2020 06:52:44 -0400
+Received: by mail-vs1-f66.google.com with SMTP id y138so10691172vsy.0
+        for <linux-pci@vger.kernel.org>; Mon, 30 Mar 2020 03:52:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=82B0OONv9gwbZlPp43NzThDz2fRV+KRFwafOQ16joDw=;
+        b=I2bZK+Edwp7f1bl38ZDsYZ8gkHoLOp7N+SgwKjOSdbsqnWhmYlKKFyWTTwwdBuA4Vg
+         rwBHnP7ed1EksF/Uo6wi0daOtai1jA53B5b9RrMCwInP8fTj6xlf+N87Jxy7Sxa+QbUF
+         l2GP0Lv6JzwuZiPJAzgKXNfvaR6mAHzPBfBvakflfZ8B4h5bL4zPFQy+qXgn4TFvbTXz
+         A1ohkR077EumDiarvC1dhS/fXXyUHKbnnxfkdMVlwSlZiAQJvL50ZQklv05R+GT0yrBC
+         3q/4vjuGZ1FGpK3Ogg0O4Ce18OqauZECfFoMpKCzkd0qt9LKtlmIkWUwZqPjuntycFFN
+         I7DQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=82B0OONv9gwbZlPp43NzThDz2fRV+KRFwafOQ16joDw=;
+        b=b6QJLai1sFO/3Q5m4JYt/7ZL4/8qCp3bvIyeiDcmP7JqRDvFIWeLq8Ws73z8UMLBU3
+         uBRjaaJ1e/sxuIzO2PnvU9BeZS/iodXnuP9FkMxI+laJjDDtyxPtEQU+Y6+mo8fyb1LY
+         Ni2PCPBZdvHwATHX6fSXWc3KOuFuxQBK/eV5C4+U3l5c/zQdR2PFTC2e2DUTFrNKO2FU
+         SAJp3odKYfz2Q8IY9WldwkwQd5xqc97KbNBTlv/FLtItuB9w6dUzmwIUH3BBYdZg1re2
+         bLophqfNAoO80va/13ejvcoZlEqCExpCG27eR/bMZK/+WrhSzlPgNzFaCXdP0SkKG5gd
+         mZMA==
+X-Gm-Message-State: AGi0PubsjskfimgCiryW7kN6sO/bkJSxCTFvur7yX7yrOAYATD0JeVTj
+        Zz77kx45B/wcqnKd7aoKTDvZ2jLFFjvuhVhLg08=
+X-Google-Smtp-Source: APiQypIWKERkhJyfw3nllppwlKx4Kg5tACX7YV91IKVmdYpKGJw8tan3l05zjbxOy64C+jzvYjD6e0YtF987t4KsIjw=
+X-Received: by 2002:a67:e24c:: with SMTP id w12mr8442912vse.153.1585565563772;
+ Mon, 30 Mar 2020 03:52:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <b180618fb6cb477ea7185979c11c5868@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Received: by 2002:a67:c005:0:0:0:0:0 with HTTP; Mon, 30 Mar 2020 03:52:43
+ -0700 (PDT)
+Reply-To: maryalice00.12@postribe.com
+From:   Maryalice Williams <maryalicewilliams730@gmail.com>
+Date:   Mon, 30 Mar 2020 08:52:43 -0200
+Message-ID: <CAKwdjsr+YKgJk7z-UHX7Zo55cx5RUN3-bw03sWcArP4vbM2B5g@mail.gmail.com>
+Subject: Reply For More Details.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 10:14:20AM +0000, Shiju Jose wrote:
-> This field added based on the input from James Morse on v4 patch to
-> enable the user space application(rasdaemon) do the decoding and
-> logging of the any extra error information shared by the corresponding
-> kernel driver to the user space.
-
-How is your error reporting supposed to work?
-
-Your driver is printing error information in dmesg and, at the same
-time, you want to report errors with the rasdaemon.
-
-Currently, the kernel does not report any error info if there's a user
-agent like rasdaemon registered so you need to think about what exactly
-you're trying to achieve here wrt to error handling. Port resetting,
-printing error info, etc. Always ask yourself, what can the user do with
-the information you're printing. And so on...
-
-> Can you please confirm you want all the existing standard
-> errors(memory, ARM, PCIE) in the ghes_do_proc () to be reported
-> through the blocking notifier?
-
-Yes, I would very much prefer to have a generic solution instead of
-vendor-specific stuff left and right.
-
-Thx.
-
 -- 
-Regards/Gruss,
-    Boris.
+My dear,
 
-https://people.kernel.org/tglx/notes-about-netiquette
+I am Mrs Maryalice Williams, I want to send you donation of two
+million seven hundred thousand Dollars ($2.7M) for volunteer projects
+in your country due to my ill health that could not permit me. Kindly
+reply for more details, and also send me the following details, as per
+below, your full Name ..........,  Address...........,
+Age...............,  Occupation ...............
+
+Remain blessed,
+Mrs. Maryalice Williams.
