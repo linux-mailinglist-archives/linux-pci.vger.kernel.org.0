@@ -2,79 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C342A198015
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Mar 2020 17:45:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FB8E198025
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Mar 2020 17:49:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729221AbgC3PpP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Mar 2020 11:45:15 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:40370 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727973AbgC3PpP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Mar 2020 11:45:15 -0400
-Received: by mail-il1-f194.google.com with SMTP id j9so16282937ilr.7;
-        Mon, 30 Mar 2020 08:45:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9R8G5T/VKCO+aqrslpT5o8M241aUmf+x9/X8tSG6fnY=;
-        b=Gb7J8ROSxrWWVLBFmfwIrnOph6TlTtPlU3/ljOAXC6Px2g7v5zZaqPrdWuCdocz8RP
-         ES1SmQ7QleChoFCl1CPseR1DAI+bG2ccRtvFLIcyCDsdg8e6S80XBD3P0n2JWobdKaW0
-         S21J0dXEXryNaAOGDvmLTNq/dLzJABv+IjUQjbwFbghCxnDgqs0OY802MZXwpOR4+jDv
-         iw6uiRRSlE/EwZTnlsGj0+ECn+kBtjX8fuz1jpya+xnCINvTBpIYFQex977tLpNAldtN
-         dIsHat0gGrNkuU/vz1qrMjlPMhcxGxZNWRT7XrYKP2/Tf8dCPUR7mVzWJTl40iUYukIG
-         X1cg==
-X-Gm-Message-State: ANhLgQ1uNi/wepOqPZejN/CEvpr4tXxwfF/mzStGj1BMHr1VdPjTeq/E
-        KrKTYl/lEwBbmCfJWiNEfQ==
-X-Google-Smtp-Source: ADFU+vshXHqdgHy17vaPaT+/cbnSnbdv+mzm7sW3yyhSBYLwQf9VifgKgDNngQteQjbyeb9qGzngYA==
-X-Received: by 2002:a92:ce51:: with SMTP id a17mr12277809ilr.263.1585583114341;
-        Mon, 30 Mar 2020 08:45:14 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id w88sm4961029ila.24.2020.03.30.08.45.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 08:45:13 -0700 (PDT)
-Received: (nullmailer pid 28997 invoked by uid 1000);
-        Mon, 30 Mar 2020 15:45:12 -0000
-Date:   Mon, 30 Mar 2020 09:45:12 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/5] dt-bindings: Document Loongson PCI Host Controller
-Message-ID: <20200330154512.GA27624@bogus>
-References: <20200330114239.1112759-1-jiaxun.yang@flygoat.com>
- <20200330114239.1112759-4-jiaxun.yang@flygoat.com>
+        id S1728458AbgC3Ptb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Mar 2020 11:49:31 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17840 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728594AbgC3Ptb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Mar 2020 11:49:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585583265;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=Date:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:To:CC:From:Message-ID;
+        bh=fKY1wcYZ+Cm3/0t0E+sucQoBEZCO55f18FQxrRV8tbU=;
+        b=Ft6YaDQksZwXu9aWisZaNWPg1STNzyBBqVK6U82BAG/PpOniQXG1fupGENDI66jg
+        9KPkxqwfRHK/qcPngRUpyAVy0uN4KW+ftQ848pOkFSee3p2GORUtcXvdVrRjG3ATG2C
+        kGMde+FJBhfqMB9TxLu9yhO0y9txS8/uSecWr5pY=
+Received: from [10.233.233.252] (183.156.33.130 [183.156.33.130]) by mx.zoho.com.cn
+        with SMTPS id 1585583262424928.8644851457047; Mon, 30 Mar 2020 23:47:42 +0800 (CST)
+Date:   Mon, 30 Mar 2020 23:47:32 +0800
+User-Agent: K-9 Mail for Android
+In-Reply-To: <68446094-263d-d0d9-df00-bc1e81c1dffe@cogentembedded.com>
+References: <20200330114239.1112759-1-jiaxun.yang@flygoat.com> <20200330114239.1112759-5-jiaxun.yang@flygoat.com> <68446094-263d-d0d9-df00-bc1e81c1dffe@cogentembedded.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200330114239.1112759-4-jiaxun.yang@flygoat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 4/5] MIPS: DTS: Loongson64: Add PCI Controller Node
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        linux-mips@vger.kernel.org
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Paul Burton <paulburton@kernel.org>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+Message-ID: <90CFB680-D6DA-45E5-9E19-08F577672BA8@flygoat.com>
+X-ZohoCNMailClient: External
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 30 Mar 2020 19:42:28 +0800, Jiaxun Yang wrote:
-> 
-> PCI host controller found on Loongson PCHs and SoCs.
-> 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> ---
->  .../devicetree/bindings/pci/loongson.yaml     | 52 +++++++++++++++++++
->  1 file changed, 52 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/loongson.yaml
-> 
 
-My bot found errors running 'make dt_binding_check' on your patch:
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/loongson.example.dt.yaml: pci@1a000000: ranges: [[33554432, 0, 1073741824, 1073741824, 0, 1073741824]] is too short
+=E4=BA=8E 2020=E5=B9=B43=E6=9C=8830=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=881=
+1:37:21, Sergei Shtylyov <sergei=2Eshtylyov@cogentembedded=2Ecom> =E5=86=99=
+=E5=88=B0:
+>Hello!
+>
+>On 03/30/2020 02:42 PM, Jiaxun Yang wrote:
+>
+>> Add PCI Host controller node for Loongson64 with RS780E PCH dts=2E
+>> Note that PCI interrupts are probed via legacy way, as different
+>> machine have different interrupt arrangement, we can't cover all
+>> of them in dt=2E
+>>=20
+>> Signed-off-by: Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom>
+>> ---
+>>  arch/mips/boot/dts/loongson/rs780e-pch=2Edtsi | 17 ++++++++++++++++-
+>>  1 file changed, 16 insertions(+), 1 deletion(-)
+>>=20
+>> diff --git a/arch/mips/boot/dts/loongson/rs780e-pch=2Edtsi
+>b/arch/mips/boot/dts/loongson/rs780e-pch=2Edtsi
+>> index 45c54d555fa4=2E=2Ef09599a4b9d7 100644
+>> --- a/arch/mips/boot/dts/loongson/rs780e-pch=2Edtsi
+>> +++ b/arch/mips/boot/dts/loongson/rs780e-pch=2Edtsi
+>> @@ -5,10 +5,25 @@ bus@10000000 {
+>>  		compatible =3D "simple-bus";
+>>  		#address-cells =3D <2>;
+>>  		#size-cells =3D <2>;
+>> -		ranges =3D <0 0x10000000 0 0x10000000 0 0x10000000
+>> +		ranges =3D <0 0x00000000 0 0x00000000 0 0x00010000 /* ioports */
+>> +				0 0x10000000 0 0x10000000 0 0x10000000
+>>  				0 0x40000000 0 0x40000000 0 0x40000000
+>>  				0xfd 0xfe000000 0xfd 0xfe000000  0 0x2000000 /* PCI Config Space
+>*/>;
+>> =20
+>> +		pci@1a000000 {
+>> +			compatible =3D "loongson,rs780e-pci";
+>> +			device_type =3D "pci";
+>> +			#address-cells =3D <3>;
+>> +			#size-cells =3D <2>;
+>> +			#interrupt-cells =3D <0x1>;
+>
+>   No need for 0x=2E
+>
+>> +
+>> +			reg =3D <0 0x1a000000 0 0x02000000>;
+>> +
+>> +			ranges =3D <0x01000000 0x0 0x00004000 0x0 0x00004000  0x0
+>0x00004000>,
+>> +				<0x02000000 0x0 0x40000000 0x0 0x40000000  0x0 0x40000000>;
+>
+>   No need for 0x before 0 here either=2E And why double spaces?
+=20
+Thanks=2E Will fix in next version=2E
 
-See https://patchwork.ozlabs.org/patch/1263901
+The space was intent to split address and size but it seems unnecessary=2E
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
+>
+>> +
+>> +		};
+>> +
+>>  		isa {
+>>  			compatible =3D "isa";
+>>  			#address-cells =3D <2>;
+>>=20
+>
+>MBR, Sergei
 
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
+--=20
+Jiaxun Yang
