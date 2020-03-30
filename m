@@ -2,28 +2,33 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 08A7319789F
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Mar 2020 12:14:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 709A9197957
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Mar 2020 12:34:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728257AbgC3KOr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Mar 2020 06:14:47 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2614 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728609AbgC3KOr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 30 Mar 2020 06:14:47 -0400
-Received: from lhreml719-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 28A9B339EBD1807085E7;
-        Mon, 30 Mar 2020 11:14:45 +0100 (IST)
-Received: from lhreml715-chm.china.huawei.com (10.201.108.66) by
- lhreml719-chm.china.huawei.com (10.201.108.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 30 Mar 2020 11:14:20 +0100
-Received: from lhreml715-chm.china.huawei.com ([10.201.108.66]) by
- lhreml715-chm.china.huawei.com ([10.201.108.66]) with mapi id 15.01.1713.004;
- Mon, 30 Mar 2020 11:14:20 +0100
-From:   Shiju Jose <shiju.jose@huawei.com>
-To:     Borislav Petkov <bp@alien8.de>
-CC:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        id S1729012AbgC3KeD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Mar 2020 06:34:03 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:60750 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728656AbgC3KeD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 30 Mar 2020 06:34:03 -0400
+Received: from zn.tnic (p200300EC2F06760078F8067BD6E9D19D.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:7600:78f8:67b:d6e9:d19d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A60CA1EC0CB7;
+        Mon, 30 Mar 2020 12:34:00 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1585564440;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=n+yHtTiDVvF6Kro2y++xFDXvA1AQyQV5TZDwHc2h0u4=;
+        b=EzKrSctOyBi0y7pUhYWczf7ulg59FKG2JQzt1n94OsNviMQb7jpgyWGTHByA1jIlC/YADk
+        wTw+cdZlv9UidunvMI3ri8mGKfeou/EvoxMTKPbjaYDGEmeeoO1YxqTjAj3RXTuAQEMg3l
+        ZvO49p+Q0krnpiH+Iolz72gOiuhPps8=
+Date:   Mon, 30 Mar 2020 12:33:53 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Shiju Jose <shiju.jose@huawei.com>
+Cc:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
@@ -38,126 +43,52 @@ CC:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
         Jonathan Cameron <jonathan.cameron@huawei.com>,
         tanxiaofei <tanxiaofei@huawei.com>,
         yangyicong <yangyicong@huawei.com>
-Subject: RE: [PATCH v6 1/2] ACPI / APEI: Add support to notify the vendor
+Subject: Re: [PATCH v6 1/2] ACPI / APEI: Add support to notify the vendor
  specific HW errors
-Thread-Topic: [PATCH v6 1/2] ACPI / APEI: Add support to notify the vendor
- specific HW errors
-Thread-Index: AQHWAsR+4nldebv71E6VKNN8PAfzw6hcw70AgAQRUuA=
-Date:   Mon, 30 Mar 2020 10:14:20 +0000
-Message-ID: <b180618fb6cb477ea7185979c11c5868@huawei.com>
-References: <ShijuJose> <20200325164223.650-1-shiju.jose@huawei.com>
- <20200325164223.650-2-shiju.jose@huawei.com> <20200327182214.GD8015@zn.tnic>
-In-Reply-To: <20200327182214.GD8015@zn.tnic>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.47.25.189]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Message-ID: <20200330103353.GC16242@zn.tnic>
+References: <ShijuJose>
+ <20200325164223.650-1-shiju.jose@huawei.com>
+ <20200325164223.650-2-shiju.jose@huawei.com>
+ <20200327182214.GD8015@zn.tnic>
+ <b180618fb6cb477ea7185979c11c5868@huawei.com>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <b180618fb6cb477ea7185979c11c5868@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-SGkgQm9yaXNsYXYsDQoNClRoYW5rcyBmb3IgcmV2aWV3aW5nIHRoZSBwYXRjaGVzLg0KDQo+LS0t
-LS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj5Gcm9tOiBsaW51eC1hY3BpLW93bmVyQHZnZXIua2Vy
-bmVsLm9yZyBbbWFpbHRvOmxpbnV4LWFjcGktDQo+b3duZXJAdmdlci5rZXJuZWwub3JnXSBPbiBC
-ZWhhbGYgT2YgQm9yaXNsYXYgUGV0a292DQo+U2VudDogMjcgTWFyY2ggMjAyMCAxODoyMg0KPlRv
-OiBTaGlqdSBKb3NlIDxzaGlqdS5qb3NlQGh1YXdlaS5jb20+DQo+Q2M6IGxpbnV4LWFjcGlAdmdl
-ci5rZXJuZWwub3JnOyBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj5rZXJuZWxA
-dmdlci5rZXJuZWwub3JnOyByandAcmp3eXNvY2tpLm5ldDsgaGVsZ2Fhc0BrZXJuZWwub3JnOw0K
-PmxlbmJAa2VybmVsLm9yZzsgamFtZXMubW9yc2VAYXJtLmNvbTsgdG9ueS5sdWNrQGludGVsLmNv
-bTsNCj5ncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZzsgemhhbmdsaWd1YW5nQGxpbnV4LmFsaWJh
-YmEuY29tOw0KPnRnbHhAbGludXRyb25peC5kZTsgTGludXhhcm0gPGxpbnV4YXJtQGh1YXdlaS5j
-b20+OyBKb25hdGhhbiBDYW1lcm9uDQo+PGpvbmF0aGFuLmNhbWVyb25AaHVhd2VpLmNvbT47IHRh
-bnhpYW9mZWkgPHRhbnhpYW9mZWlAaHVhd2VpLmNvbT47DQo+eWFuZ3lpY29uZyA8eWFuZ3lpY29u
-Z0BodWF3ZWkuY29tPg0KPlN1YmplY3Q6IFJlOiBbUEFUQ0ggdjYgMS8yXSBBQ1BJIC8gQVBFSTog
-QWRkIHN1cHBvcnQgdG8gbm90aWZ5IHRoZSB2ZW5kb3INCj5zcGVjaWZpYyBIVyBlcnJvcnMNCj4N
-Cj5PbiBXZWQsIE1hciAyNSwgMjAyMCBhdCAwNDo0MjoyMlBNICswMDAwLCBTaGlqdSBKb3NlIHdy
-b3RlOg0KPj4gUHJlc2VudGx5IEFQRUkgZG9lcyBub3Qgc3VwcG9ydCByZXBvcnRpbmcgdGhlIHZl
-bmRvciBzcGVjaWZpYyBIVw0KPj4gZXJyb3JzLCByZWNlaXZlZCBpbiB0aGUgdmVuZG9yIGRlZmlu
-ZWQgdGFibGUgZW50cmllcywgdG8gdGhlIHZlbmRvcg0KPj4gZHJpdmVycyBmb3IgYW55IHJlY292
-ZXJ5Lg0KPj4NCj4+IFRoaXMgcGF0Y2ggYWRkcyB0aGUgc3VwcG9ydCB0byByZWdpc3RlciBhbmQg
-dW5yZWdpc3RlciB0aGUNCj4NCj5Bdm9pZCBoYXZpbmcgIlRoaXMgcGF0Y2giIG9yICJUaGlzIGNv
-bW1pdCIgaW4gdGhlIGNvbW1pdCBtZXNzYWdlLiBJdCBpcw0KPnRhdXRvbG9naWNhbGx5IHVzZWxl
-c3MuDQo+DQpTdXJlLg0KDQo+QWxzbywgZG8NCj4NCj4kIGdpdCBncmVwICdUaGlzIHBhdGNoJyBE
-b2N1bWVudGF0aW9uL3Byb2Nlc3MNCj4NCj5mb3IgbW9yZSBkZXRhaWxzLg0KU3VyZS4NCg0KPg0K
-Pj4gZXJyb3IgaGFuZGxpbmcgZnVuY3Rpb24gZm9yIHRoZSB2ZW5kb3Igc3BlY2lmaWMgSFcgZXJy
-b3JzIGFuZCBub3RpZnkNCj4+IHRoZSByZWdpc3RlcmVkIGtlcm5lbCBkcml2ZXIuDQo+Pg0KPj4g
-U2lnbmVkLW9mZi1ieTogU2hpanUgSm9zZSA8c2hpanUuam9zZUBodWF3ZWkuY29tPg0KPj4gLS0t
-DQo+PiAgZHJpdmVycy9hY3BpL2FwZWkvZ2hlcy5jIHwgMzUgKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKy0NCj4+ICBkcml2ZXJzL3Jhcy9yYXMuYyAgICAgICAgfCAgNSArKystLQ0K
-Pj4gIGluY2x1ZGUvYWNwaS9naGVzLmggICAgICB8IDI4ICsrKysrKysrKysrKysrKysrKysrKysr
-KysrKysNCj4+ICBpbmNsdWRlL2xpbnV4L3Jhcy5oICAgICAgfCAgNiArKysrLS0NCj4+ICBpbmNs
-dWRlL3Jhcy9yYXNfZXZlbnQuaCAgfCAgNyArKysrKy0tDQo+PiAgNSBmaWxlcyBjaGFuZ2VkLCA3
-NCBpbnNlcnRpb25zKCspLCA3IGRlbGV0aW9ucygtKQ0KPj4NCj4+IGRpZmYgLS1naXQgYS9kcml2
-ZXJzL2FjcGkvYXBlaS9naGVzLmMgYi9kcml2ZXJzL2FjcGkvYXBlaS9naGVzLmMgaW5kZXgNCj4+
-IDI0Yzk2NDJlOGZjNy4uZDgzZjBiMWFhZDBkIDEwMDY0NA0KPj4gLS0tIGEvZHJpdmVycy9hY3Bp
-L2FwZWkvZ2hlcy5jDQo+PiArKysgYi9kcml2ZXJzL2FjcGkvYXBlaS9naGVzLmMNCj4+IEBAIC00
-OTAsNiArNDkwLDMyIEBAIHN0YXRpYyB2b2lkIGdoZXNfaGFuZGxlX2FlcihzdHJ1Y3QNCj4+IGFj
-cGlfaGVzdF9nZW5lcmljX2RhdGEgKmdkYXRhKSAgI2VuZGlmICB9DQo+Pg0KPj4gK3N0YXRpYyBB
-VE9NSUNfTk9USUZJRVJfSEVBRChnaGVzX2V2ZW50X25vdGlmeV9saXN0KTsNCj4+ICsNCj4+ICsv
-KioNCj4+ICsgKiBnaGVzX3JlZ2lzdGVyX2V2ZW50X25vdGlmaWVyIC0gcmVnaXN0ZXIgYW4gZXZl
-bnQgbm90aWZpZXINCj4+ICsgKiBmb3IgdGhlIG5vbi1mYXRhbCBIVyBlcnJvcnMuDQo+PiArICog
-QG5iOiBwb2ludGVyIHRvIHRoZSBub3RpZmllcl9ibG9jayBzdHJ1Y3R1cmUgb2YgdGhlIGV2ZW50
-IGhhbmRsZXIuDQo+PiArICoNCj4+ICsgKiByZXR1cm4gMCA6IFNVQ0NFU1MsIG5vbi16ZXJvIDog
-RkFJTCAgKi8gaW50DQo+PiArZ2hlc19yZWdpc3Rlcl9ldmVudF9ub3RpZmllcihzdHJ1Y3Qgbm90
-aWZpZXJfYmxvY2sgKm5iKSB7DQo+PiArCXJldHVybiBhdG9taWNfbm90aWZpZXJfY2hhaW5fcmVn
-aXN0ZXIoJmdoZXNfZXZlbnRfbm90aWZ5X2xpc3QsIG5iKTsNCj4+ICt9IEVYUE9SVF9TWU1CT0xf
-R1BMKGdoZXNfcmVnaXN0ZXJfZXZlbnRfbm90aWZpZXIpOw0KPj4gKw0KPj4gKy8qKg0KPj4gKyAq
-IGdoZXNfdW5yZWdpc3Rlcl9ldmVudF9ub3RpZmllciAtIHVucmVnaXN0ZXIgdGhlIHByZXZpb3Vz
-bHkNCj4+ICsgKiByZWdpc3RlcmVkIGV2ZW50IG5vdGlmaWVyLg0KPj4gKyAqIEBuYjogcG9pbnRl
-ciB0byB0aGUgbm90aWZpZXJfYmxvY2sgc3RydWN0dXJlIG9mIHRoZSBldmVudCBoYW5kbGVyLg0K
-Pj4gKyAqLw0KPj4gK3ZvaWQgZ2hlc191bnJlZ2lzdGVyX2V2ZW50X25vdGlmaWVyKHN0cnVjdCBu
-b3RpZmllcl9ibG9jayAqbmIpDQo+PiArew0KPj4gKwlhdG9taWNfbm90aWZpZXJfY2hhaW5fdW5y
-ZWdpc3RlcigmZ2hlc19ldmVudF9ub3RpZnlfbGlzdCwgbmIpOw0KPj4gK30NCj4+ICtFWFBPUlRf
-U1lNQk9MX0dQTChnaGVzX3VucmVnaXN0ZXJfZXZlbnRfbm90aWZpZXIpOw0KPj4gKw0KPj4gIHN0
-YXRpYyB2b2lkIGdoZXNfZG9fcHJvYyhzdHJ1Y3QgZ2hlcyAqZ2hlcywNCj4+ICAJCQkgY29uc3Qg
-c3RydWN0IGFjcGlfaGVzdF9nZW5lcmljX3N0YXR1cyAqZXN0YXR1cykNCj4+ICB7DQo+PiBAQCAt
-NTI2LDEwICs1NTIsMTcgQEAgc3RhdGljIHZvaWQgZ2hlc19kb19wcm9jKHN0cnVjdCBnaGVzICpn
-aGVzLA0KPj4gIAkJCWxvZ19hcm1faHdfZXJyb3IoZXJyKTsNCj4+ICAJCX0gZWxzZSB7DQo+PiAg
-CQkJdm9pZCAqZXJyID0gYWNwaV9oZXN0X2dldF9wYXlsb2FkKGdkYXRhKTsNCj4+ICsJCQl1OCBl
-cnJvcl9oYW5kbGVkID0gZmFsc2U7DQo+PiArCQkJaW50IHJldDsNCj4+ICsNCj4+ICsJCQlyZXQg
-PQ0KPmF0b21pY19ub3RpZmllcl9jYWxsX2NoYWluKCZnaGVzX2V2ZW50X25vdGlmeV9saXN0LCAw
-LCBnZGF0YSk7DQo+DQo+V2VsbCwgdGhpcyBpcyBhIG5vdGlmaWVyIHdpdGggc3RhbmRhcmQgbmFt
-ZSBmb3IgYSBub24tc3RhbmRhcmQgZXZlbnQuDQo+Tm90IG9wdGltYWwuDQpPay4NCg0KPg0KPldo
-eSBkb2VzIG9ubHkgdGhpcyBldmVudCBuZWVkIGEgbm90aWZpZXI/IEJlY2F1c2UgeW91ciBkcml2
-ZXIgaXMNCj5pbnRlcmVzdGVkIGluIG9ubHkgdGhvc2UgZXZlbnRzPw0KVGhlIGVycm9yIGV2ZW50
-cyBmb3IgdGhlIFBDSWUgY29udHJvbGxlciBjYW4gYmUgcmVwb3J0ZWQgdG8gdGhlIGtlcm5lbCBp
-biB0aGUgdmVuZG9yIGRlZmluZWQgZm9ybWF0DQpbYXMgcGVyIHRoZSJOLjIuMyBOb24tc3RhbmRh
-cmQgU2VjdGlvbiBCb2R5IiBvZiB0aGUgVUVGSSBzcGVjXS4gDQpUaHVzIHRoZXNlIGV2ZW50cyBy
-ZXF1aXJlIGEgbm90aWZpZXIgZnJvbSBBUEVJIHRvIHRoZSBjb3JyZXNwb25kaW5nIGtlcm5lbCBk
-cml2ZXIuIA0KDQo+DQo+PiArCQkJaWYgKHJldCAmIE5PVElGWV9PSykNCj4+ICsJCQkJZXJyb3Jf
-aGFuZGxlZCA9IHRydWU7DQo+Pg0KPj4gIAkJCWxvZ19ub25fc3RhbmRhcmRfZXZlbnQoc2VjX3R5
-cGUsIGZydV9pZCwgZnJ1X3RleHQsDQo+PiAgCQkJCQkgICAgICAgc2VjX3NldiwgZXJyLA0KPj4g
-LQkJCQkJICAgICAgIGdkYXRhLT5lcnJvcl9kYXRhX2xlbmd0aCk7DQo+PiArCQkJCQkgICAgICAg
-Z2RhdGEtPmVycm9yX2RhdGFfbGVuZ3RoLA0KPj4gKwkJCQkJICAgICAgIGVycm9yX2hhbmRsZWQp
-Ow0KPg0KPldoYXQncyB0aGF0IGVycm9yX2hhbmRsZWQgdGhpbmcgZm9yPyBUaGF0J3MganVzdCBz
-aWxseS4NClRoaXMgZmllbGQgYWRkZWQgYmFzZWQgb24gdGhlIGlucHV0IGZyb20gSmFtZXMgTW9y
-c2Ugb24gdjQgcGF0Y2ggdG8gZW5hYmxlIHRoZSB1c2VyIHNwYWNlIGFwcGxpY2F0aW9uKHJhc2Rh
-ZW1vbikNCmRvIHRoZSBkZWNvZGluZyBhbmQgbG9nZ2luZyBvZiB0aGUgYW55IGV4dHJhIGVycm9y
-IGluZm9ybWF0aW9uIHNoYXJlZCBieSB0aGUgY29ycmVzcG9uZGluZyAga2VybmVsIGRyaXZlciB0
-byB0aGUgdXNlciBzcGFjZS4NCg0KPg0KPllvdXIgbm90aWZpZXIgcmV0dXJucyBOT1RJRllfU1RP
-UCB3aGVuIGl0IGhhcyBxdWV1ZWQgdGhlIGVycm9yLiBJZiB5b3UNCj5kb24ndCB3YW50IHRvIGxv
-ZyBpdCwganVzdCB0ZXN0ID09IE5PVElGWV9TVE9QIGFuZCBkbyBub3QgbG9nIGl0IHRoZW4uDQpz
-dXJlLg0KICAgDQo+DQo+VGhlbiB5b3VyIG5vdGlmaWVyIGNhbGxiYWNrIGlzIHF1ZXVpbmcgdGhl
-IGVycm9yIGludG8gYSBrZmlmbyBmb3INCj53aGF0ZXZlciByZWFzb24gYW5kIHRoZW4gc2NoZWR1
-bGluZyBhIHdvcmtxdWV1ZSB0byBoYW5kbGUgaXQgaW4gdXNlcg0KPmNvbnRleHQuLi4NCj4NCj5T
-byBJJ20gdGhpbmtpbmcgdGhhdCBpdCB3b3VsZCBiZSBiZXR0ZXIgaWYgeW91Og0KPg0KPiogbWFr
-ZSB0aGF0IGtmaWZvIGdlbmVyaWMgYW5kIHBhcnQgb2YgZ2hlcy5jIGFuZCBxdWV1ZSBhbGwgdHlw
-ZXMgb2YNCj5lcnJvciByZWNvcmRzIGludG8gaXQgaW4gZ2hlc19kb19wcm9jKCkgLSBub3QganVz
-dCB0aGUgbm9uLXN0YW5kYXJkDQo+b25lcy4NCj4NCj4qIHRoZW4sIHdoZW4geW91J3JlIGRvbmUg
-cXVldWluZywgeW91IGtpY2sgYSB3b3JrcXVldWUuDQo+DQo+KiB0aGF0IHdvcmtxdWV1ZSBydW5z
-IGEgbm9ybWFsLCBibG9ja2luZyBub3RpZmllciB0byB3aGljaCBkcml2ZXJzDQo+cmVnaXN0ZXIu
-DQpTdXJlLiBJIHdpbGwgdGVzdCB0aGlzIG1ldGhvZCBhbmQgdXBkYXRlLg0KQ2FuIHlvdSBwbGVh
-c2UgY29uZmlybSB5b3Ugd2FudCBhbGwgdGhlIGV4aXN0aW5nIHN0YW5kYXJkIGVycm9ycyhtZW1v
-cnksIEFSTSwgUENJRSkgaW4gdGhlIGdoZXNfZG9fcHJvYyAoKQ0KdG8gYmUgcmVwb3J0ZWQgdGhy
-b3VnaCB0aGUgYmxvY2tpbmcgbm90aWZpZXI/DQoNCj4NCj5Zb3VyIGRyaXZlciBjYW4gcmVnaXN0
-ZXIgdG8gdGhhdCBub3RpZmllciB0b28gYW5kIGRvIHRoZSBub3JtYWwgaGFuZGxpbmcNCj50aGVu
-IGFuZCBub3QgaGF2ZSB0aGlzIGFkLWhvYywgc2VtaS1nZW5lcmljLCBzZW1pLXZlbmRvci1zcGVj
-aWZpYyB0aGluZy4NCj4NCj5UaHguDQo+DQo+LS0NCj5SZWdhcmRzL0dydXNzLA0KPiAgICBCb3Jp
-cy4NCj4NCj5odHRwczovL3Blb3BsZS5rZXJuZWwub3JnL3RnbHgvbm90ZXMtYWJvdXQtbmV0aXF1
-ZXR0ZQ0KDQpUaGFua3MsDQpTaGlqdQ0K
+On Mon, Mar 30, 2020 at 10:14:20AM +0000, Shiju Jose wrote:
+> This field added based on the input from James Morse on v4 patch to
+> enable the user space application(rasdaemon) do the decoding and
+> logging of the any extra error information shared by the corresponding
+> kernel driver to the user space.
+
+How is your error reporting supposed to work?
+
+Your driver is printing error information in dmesg and, at the same
+time, you want to report errors with the rasdaemon.
+
+Currently, the kernel does not report any error info if there's a user
+agent like rasdaemon registered so you need to think about what exactly
+you're trying to achieve here wrt to error handling. Port resetting,
+printing error info, etc. Always ask yourself, what can the user do with
+the information you're printing. And so on...
+
+> Can you please confirm you want all the existing standard
+> errors(memory, ARM, PCIE) in the ghes_do_proc () to be reported
+> through the blocking notifier?
+
+Yes, I would very much prefer to have a generic solution instead of
+vendor-specific stuff left and right.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
