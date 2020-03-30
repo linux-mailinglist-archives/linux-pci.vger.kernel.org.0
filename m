@@ -2,38 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D0CE197F7C
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Mar 2020 17:22:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EAF2D197F90
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Mar 2020 17:25:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728993AbgC3PWt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Mar 2020 11:22:49 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:33908 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726497AbgC3PWs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Mar 2020 11:22:48 -0400
-Received: by mail-ot1-f65.google.com with SMTP id m2so3701725otr.1;
-        Mon, 30 Mar 2020 08:22:47 -0700 (PDT)
+        id S1728990AbgC3PZy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Mar 2020 11:25:54 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:33306 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728124AbgC3PZy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Mar 2020 11:25:54 -0400
+Received: by mail-oi1-f195.google.com with SMTP id m14so16043178oic.0;
+        Mon, 30 Mar 2020 08:25:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=HqNd7gh17TwPP6RWtpEKZaR3/Ix4r1pH+KcjfgOweaw=;
-        b=CMfGIRC03vAjyVaO2WYuOqNPlV21V4ljsTkkDLH/kNx1X54YzKfLRBtvsrlu0ZygR+
-         mfSj1YmfjGXtfJZUW2kJzv59G3lhLhZK7qbmfWQuTmhmi8w1Ga2fQeliHxPhmkrGrsIM
-         eRaqj71ropzLdjlmj0Zd8LR0Qhj1+nDzlOZBArb7WoXndN6VuyosyfMg42wNCTQba8Zg
-         2ffE8t8VPMIv71DarebKlL2WY/HnB0MX8yrTW/np+1TPa6GcBE9nDdDQYgF8kEfPEK5F
-         ls1f0O/M4h4uwt/3udGAy5rllPmV9R3oG3N3WRLOplzYbncDH0EWU00S0owCLxblroZN
-         bbHw==
-X-Gm-Message-State: ANhLgQ2AUHFbim4nyr3R9hZX3K8GjIqVyp3jRIrRuEGN+8vTIrY4swwb
-        JAh3z3hCt8Jt8Ww4Nt4GzchnLUdAewNS0DrNV2EQnpJy
-X-Google-Smtp-Source: ADFU+vsY6JOgNzmhAn6lYvN4qADyMwex1zKXkfLicvmWRynFT0kQH5YlwbCEUU7Rb/k6oirVeWSbO9AA7zsvLMsHWhc=
-X-Received: by 2002:a9d:750a:: with SMTP id r10mr4602319otk.118.1585581766952;
- Mon, 30 Mar 2020 08:22:46 -0700 (PDT)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=kyCcTnDl3sCR2YamC47wuHL3QQ9WaTAgZrp8oHlCizY=;
+        b=NvIhXSETJMANyHUDhQi/Htujji7/VvxN2tBWR7Fvg5bWwFXzjvXGS5q75wvHhhANRE
+         mcyf2cfWZqtqRSOVotMuM5s9QljMlBzjHOn3Ul2Ko2IfrDbU/tJEtqCzI1n1aB1/dw1W
+         wfao1VYn090aOgX8f1n1QdAIqcy/JRIYgojzhdbFnvuCESLV2SDi25mKSGAItjmpFlWu
+         eqzzH8n7C7dIExp8ZrkuXUSoJpOEVAIfKzFBMwCF86KlG2vCwiMVf9igh300JTlCEdM5
+         SOrwy77xqa5edcO0e8DnNUk7i8S/WUDXFC2+kRfHmeB2wmhKb0q+zQ2UCdTQ5WaG1Fvo
+         Jsyw==
+X-Gm-Message-State: ANhLgQ3GH50EfCm2pXRCZGuDValkaVL7tvd/9ZKeWJhC4uP3IActCgVq
+        n8tqH7/WbOkayJtE32FF4QLIlwgeDKNWMoMZnhdRlKYr
+X-Google-Smtp-Source: ADFU+vsS11wLNhl4djuB8zgKBwnZ9aIm2kF2XsfE1jsoudvMLkT4xs7rEAqYulPqdkt+mZPnoVVoDhDvTg+p+TsD5k8=
+X-Received: by 2002:aca:f07:: with SMTP id 7mr7678700oip.68.1585581952782;
+ Mon, 30 Mar 2020 08:25:52 -0700 (PDT)
 MIME-Version: 1.0
 From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 30 Mar 2020 17:22:35 +0200
-Message-ID: <CAJZ5v0h3bK0kRz=LW5wwuYA-bH+JA0hJrkPiKvYaTrZZSP_zUg@mail.gmail.com>
-Subject: [GIT PULL] Power management updates for v5.7-rc1
-To:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+Date:   Mon, 30 Mar 2020 17:25:41 +0200
+Message-ID: <CAJZ5v0ja_cmfL2Rwj-k-__B2QjH8kY-t2pM1Tg+yP0A=6kMYSg@mail.gmail.com>
+Subject: [GIT PULL] ACPI updates for v5.7-rc1
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Linux PM <linux-pm@vger.kernel.org>,
         "the arch/x86 maintainers" <x86@kernel.org>,
@@ -43,6 +44,8 @@ Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
+
+[Resending because of the messed-up subject, sorry.]
 
 Hi Linus,
 
