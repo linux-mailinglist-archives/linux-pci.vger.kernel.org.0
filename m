@@ -2,139 +2,159 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BBA801981AC
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Mar 2020 18:51:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF9521981D4
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Mar 2020 19:04:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728428AbgC3Qv4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Mar 2020 12:51:56 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:40159 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbgC3Qv4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Mar 2020 12:51:56 -0400
-Received: by mail-pg1-f194.google.com with SMTP id t24so8924931pgj.7
-        for <linux-pci@vger.kernel.org>; Mon, 30 Mar 2020 09:51:55 -0700 (PDT)
+        id S1728075AbgC3REn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Mar 2020 13:04:43 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:33359 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728376AbgC3REn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Mar 2020 13:04:43 -0400
+Received: by mail-wm1-f65.google.com with SMTP id z14so80042wmf.0
+        for <linux-pci@vger.kernel.org>; Mon, 30 Mar 2020 10:04:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aLV+OA7NswcSpcRp5zK3H2qQIrq9TzUdJBNcxTbI9Bc=;
-        b=EK8sREFUiPPj/IUg6JFCXxympmdVEARveyIvP/6dKC5N4LiA1CxRUWIE0IKm6fnLFd
-         ZiLDpoywQEbgxz6MG8NWT4rKV4s+AmUn6R4leL1PSL0OT2Bongpy5OrvmFVJAGNeWZDS
-         0MpN9eXaST+Xu1w53V7E1P/DlAgn7sosXPpuFRhbv+OQDKn5vtNvD3CzOGw78KGAVwR3
-         PLs62nvS1vgN4V4fef6+N4PPeAHI/YOdB2p4rW+WhJoMQDUIm3Ihs5/0zJYuYjcXLm1n
-         xHF8GG3AFeB4hOQmExup91gtXJhPCjyYzxayUfm+dvfCSFwWVpRWutBlvAlOIBdVwVL6
-         Ys+A==
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=qqStv1Lo1qg4gRg7lDrcQqRCTc9QZc+NG4mrfiQbFjE=;
+        b=Uh4bVVfaNPgqBDf14A/tNlnFlIMgcAjfpCWcb+Uzrx//iiYZNWzYxkVZtoxnnBGNE7
+         JUng1z3YWhf3Ee4gCS+2rK3YV4eaABGB5nQVH/R8tVtdVZInAAMkT1GD+hjo00JOuZqN
+         FvOAi1z1lfK4wW+rdBnYnyco/ZYm94ggobg0Q=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aLV+OA7NswcSpcRp5zK3H2qQIrq9TzUdJBNcxTbI9Bc=;
-        b=rxAq32k6mjhR2v+LFuoCWv5AEJ4tAHPdCxkp4VkNN4Ruyp2LIFAQ2GYSHjF2sVyCDM
-         9oHM0H1y+4XQx3nGzmImrSzjaui5VLajxBJEGZOp47ecMo/6GHrqF3gHwUVaEKot44xV
-         H/dSXs/NxO02IPmZ/ouatEgc4tu5T8i94ip4YcmIPMdXB0wKcfMh52snUYXhWZu6qz3e
-         ECXJ7YQ19SBDq6/yJHYvbOWd9a8aIulRiWzpjIB8H4IU88UpoiD0FtBoCpcKzOA9WJDy
-         W3IeDBauwDr3WUySBzU4ftAjd73F3lYwiZO7LB41T1iL8Fi2MLOIzwLEn3UdWCasyigY
-         muxQ==
-X-Gm-Message-State: ANhLgQ18CBUorH1H1a99GhQefJxJ89ec0+Ax592vbB3ZHCGukxfmVC2C
-        t5XzPjDoUy4YYlBJqKtnCJfv8AkPKMob1QFhE9lOonakzLQ=
-X-Google-Smtp-Source: ADFU+vsVZrEc7hYIw/PzJOX6cO6WWwxOUKGWlSIoUiL5OHi5b078O4q48dYfbd0GgTt7jIXHl8BcT4zBSdnSzvJl60k=
-X-Received: by 2002:a05:6a00:42:: with SMTP id i2mr13628743pfk.108.1585587114191;
- Mon, 30 Mar 2020 09:51:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <202003290223.P0IbgBYa%lkp@intel.com> <20200328182304.GA70832@google.com>
-In-Reply-To: <20200328182304.GA70832@google.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 30 Mar 2020 09:51:43 -0700
-Message-ID: <CAKwvOdkBYH1MFncDPnPG_squJmVYKDD82szCr6WFnQHOjGkE+g@mail.gmail.com>
-Subject: Re: [pci:pci/edr 4/10] drivers/pci/pcie/err.c:168:28: error: use of
- undeclared identifier 'service'
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qqStv1Lo1qg4gRg7lDrcQqRCTc9QZc+NG4mrfiQbFjE=;
+        b=kST9aFlBFbkzWjL5eFQNYIhLY2DkWznymGA0RRyUCzWkJfAw1ns49WA2fW6vYcNsS4
+         m8FZOMEX8QZa4jQwYv4ieS6ZR1PenIvGr4AWVGQjg7Vkyi+2qEy+gw0eOO9368PwL1Xj
+         AgfxjMh5+JuF322TrP290gA2vGhLcfcuJi2bJVSeyLWlRc10XUBp/hKePD8PEhJY6YFE
+         FjpQoQB245oc3d8vvF/BSwrgck2aHDnuwRroNcMkE9ipBwwRf1taEAps9LM0NiBo70Wy
+         dQeQNJtt91qsztFGmf9dmB2udyE1xjMcoKLqdaS5L6lxr89h6Vs4zZOex4GuV2e3JTx0
+         PT9g==
+X-Gm-Message-State: ANhLgQ0D5VDgQFY/w9QC7ho+Veea1Nh8UG/Tmk1B65Qtx4h7YP8xeWEW
+        h/DOLRFagzrp+y49ys/KQ/EteQ==
+X-Google-Smtp-Source: ADFU+vvo+5kRarlX8ncgn7tFCSQDq8v2Ad0Bb+4DKkjHRYgiSGCpdbHJ7aZZkfTIo2aaSImThdshhg==
+X-Received: by 2002:a05:600c:2202:: with SMTP id z2mr263068wml.64.1585587881418;
+        Mon, 30 Mar 2020 10:04:41 -0700 (PDT)
+Received: from [10.230.26.36] ([192.19.224.250])
+        by smtp.gmail.com with ESMTPSA id t126sm192175wmb.27.2020.03.30.10.04.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Mar 2020 10:04:40 -0700 (PDT)
+Subject: Re: [PATCH 1/3] PCI: iproc: fix out of bound array access
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     kbuild test robot <lkp@intel.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        kbuild-all@lists.01.org,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Cc:     Srinath Mannam <srinath.mannam@broadcom.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Bharat Gooty <bharat.gooty@broadcom.com>
+References: <20200326204807.GA87784@google.com>
+From:   Ray Jui <ray.jui@broadcom.com>
+Message-ID: <0fec2db0-fb56-615d-eed4-d702d1bc37fb@broadcom.com>
+Date:   Mon, 30 Mar 2020 10:04:35 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <20200326204807.GA87784@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Mar 28, 2020 at 11:23 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Sun, Mar 29, 2020 at 02:09:30AM +0800, kbuild test robot wrote:
-> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/edr
-> > head:   3a4c9f97543f0dbf580dd3646164e829ba08e600
-> > commit: d9dbf5828770b236fcae3cc866d844fe360174d0 [4/10] PCI/ERR: Remove service dependency in pcie_do_recovery()
-> > config: x86_64-defconfig (attached as .config)
-> > compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project 0fca766458da04bbc6d33b3f9ecd57e615c556c1)
-> > reproduce:
-> >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-> >         chmod +x ~/bin/make.cross
-> >         git checkout d9dbf5828770b236fcae3cc866d844fe360174d0
-> >         # save the attached .config to linux build tree
-> >         COMPILER=clang make.cross ARCH=x86_64
-> >
-> > If you fix the issue, kindly add following tag
-> > Reported-by: kbuild test robot <lkp@intel.com>
-> >
-> > All errors (new ones prefixed by >>):
-> >
-> > >> drivers/pci/pcie/err.c:168:28: error: use of undeclared identifier 'service'
-> >                    status = reset_link(dev, service);
->
-> My merge error, sorry.  This is on a test branch (pci/edr), not in my
-> -next branch yet.
-
-FWIW: https://github.com/intel/lkp-tests/wiki/LKP-FAQ#is-there-a-way-not-to-trigger-kbuild-tests-on-a-specific-branch
-
->
-> >                                             ^
-> >    1 error generated.
-> >
-> > vim +/service +168 drivers/pci/pcie/err.c
-> >
-> > 2e28bc84cf6eec Oza Pawandeep              2018-05-17  148
-> > d9dbf5828770b2 Kuppuswamy Sathyanarayanan 2020-03-23  149  void pcie_do_recovery(struct pci_dev *dev,
-> > d9dbf5828770b2 Kuppuswamy Sathyanarayanan 2020-03-23  150                   enum pci_channel_state state,
-> > d9dbf5828770b2 Kuppuswamy Sathyanarayanan 2020-03-23  151                   pci_ers_result_t (*reset_link)(struct pci_dev *pdev))
-> > 2e28bc84cf6eec Oza Pawandeep              2018-05-17  152  {
-> > 542aeb9c8f930e Keith Busch                2018-09-20  153     pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
-> > 542aeb9c8f930e Keith Busch                2018-09-20  154     struct pci_bus *bus;
-> > 2e28bc84cf6eec Oza Pawandeep              2018-05-17  155
-> > bfcb79fca19d26 Keith Busch                2018-09-20  156     /*
-> > bfcb79fca19d26 Keith Busch                2018-09-20  157      * Error recovery runs on all subordinates of the first downstream port.
-> > bfcb79fca19d26 Keith Busch                2018-09-20  158      * If the downstream port detected the error, it is cleared at the end.
-> > bfcb79fca19d26 Keith Busch                2018-09-20  159      */
-> > bfcb79fca19d26 Keith Busch                2018-09-20  160     if (!(pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
-> > bfcb79fca19d26 Keith Busch                2018-09-20  161           pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM))
-> > bfcb79fca19d26 Keith Busch                2018-09-20  162             dev = dev->bus->self;
-> > 542aeb9c8f930e Keith Busch                2018-09-20  163     bus = dev->subordinate;
-> > bfcb79fca19d26 Keith Busch                2018-09-20  164
-> > 542aeb9c8f930e Keith Busch                2018-09-20  165     pci_dbg(dev, "broadcast error_detected message\n");
-> > b5dfbeacf74865 Kuppuswamy Sathyanarayanan 2020-03-27  166     if (state == pci_channel_io_frozen) {
-> > 542aeb9c8f930e Keith Busch                2018-09-20  167             pci_walk_bus(bus, report_frozen_detected, &status);
-> > 6d2c89441571ea Kuppuswamy Sathyanarayanan 2020-03-23 @168             status = reset_link(dev, service);
-> >
-> > :::::: The code at line 168 was first introduced by commit
-> > :::::: 6d2c89441571ea534d6240f7724f518936c44f8d PCI/ERR: Update error status after reset_link()
-> >
-> > :::::: TO: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > :::::: CC: Bjorn Helgaas <bhelgaas@google.com>
-> >
-> > ---
-> > 0-DAY CI Kernel Test Service, Intel Corporation
-> > https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
->
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200328182304.GA70832%40google.com.
 
 
+On 3/26/2020 1:48 PM, Bjorn Helgaas wrote:
+> On Thu, Mar 26, 2020 at 01:27:36PM -0700, Ray Jui wrote:
+>> On 3/26/2020 12:48 PM, Bjorn Helgaas wrote:
+>>> ...
+>>> It's outside the scope of this patch, but I'm not really a fan of the
+>>> pcie->reg_offsets[] scheme this driver uses to deal with these
+>>> differences.  There usually seems to be *something* that keeps the
+>>> driver from referencing registers that don't exist, but it doesn't
+>>> seem like the mechanism is very consistent or robust:
+>>>
+>>>   - IPROC_PCIE_LINK_STATUS is implemented by PAXB but not PAXC.
+>>>     iproc_pcie_check_link() avoids using it if "ep_is_internal", which
+>>>     is set for PAXC and PAXC_V2.  Not an obvious connection.
+>>>
+>>>   - IPROC_PCIE_CLK_CTRL is implemented for PAXB and PAXC_V1, but not
+>>>     PAXC_V2.  iproc_pcie_perst_ctrl() avoids using it ep_is_internal",
+>>>     so it *doesn't* use it for PAXC_V1, which does implement it.
+>>>     Maybe a bug, maybe intentional; I can't tell.
+>>>
+>>>   - IPROC_PCIE_INTX_EN is only implemented by PAXB (not PAXC), but
+>>>     AFAICT, we always call iproc_pcie_enable() and rely on
+>>>     iproc_pcie_write_reg() silently drop the write to it on PAXC.
+>>>
+>>>   - IPROC_PCIE_OARR0 is implemented by PAXB and PAXB_V2 and used by
+>>>     iproc_pcie_map_ranges(), which is called if "need_ob_cfg", which
+>>>     is set if there's a "brcm,pcie-ob" DT property.  No clear
+>>>     connection to PAXB.
+>>>
+>>> I think it would be more readable if we used a single variant
+>>> identifier consistently, e.g., the "pcie->type" already used in
+>>> iproc_pcie_msi_steer(), or maybe a set of variant-specific function
+>>> pointers as pcie-qcom.c does.
+>>
+>> It is not possible to use a single variant identifier consistently,
+>> i.e., 'pcie->type'. Many of these features are controller revision
+>> specific, and certain revisions of the controllers may all have a
+>> certain feature, while other revisions of the controllers do not. In
+>> addition, there are overlap in features across different controllers.
+>>
+>> IMO, it makes sense to have feature specific flags or booleans, and have
+>> those features enabled or disabled based on 'pcie->type', which is what
+>> the current driver does, but like you pointed out, what the driver
+>> failed is to do this consistently.
+> 
+> There are several drivers that have the same problem of dealing with
+> different revisions of hardware.  It would be nice to do it in a
+> consistent style, whatever that is.
+> 
 
--- 
+Sure, agree with you that it should be handled in a consistent way
+within this driver, and the current driver is not handling this
+consistently.
+
+>> The IPROC_PCIE_INTX_EN example you pointed out is a good example. I
+>> agree with you that we shouldn't rely on iproc_pcie_write_reg to
+>> silently drop the operation for PAXC. We should add code to make it
+>> explictly obvious that legacy interrupt is not supported in all PAXC
+>> controllers.
+>>
+>> pcie->pcie->reg_offsets[] scheme was not intended to be used to silently
+>> drop register access that are activated based on features. It's a
+>> mistake that should be fixed if some code in the driver is done that
+>> way, as you pointed out.
+> 
+> That's actually why I dug into this a bit -- the
+> iproc_pcie_reg_is_invalid() case is really a design-time error, so it
+> seemed like there should be a WARN() there instead of silently
+> returning 0 or ignoring a write.
+> 
+
+I think 'iproc_pcie_reg_is_invalid' is a fall back protection. We should
+aim to prevent this from happening in the first place using whatever
+means we determined appropriate, and do that consistently. In addition,
+I also agree with you that there should be a WARN instead of silently
+returning zero (for reads) and dropping the writes.
+
+We'll be looking into improving this as you suggested when we have a
+chance. In the mean time, I think both of us agree this is out of the
+scope of the issue that this patch is trying to fix, which is actually a
+pretty critical issue that can cause potential corruption of memory and
+the fix should be picked up ASAP (and for older LTS kernels too).
+
 Thanks,
-~Nick Desaulniers
+
+Ray
+
+> Bjorn
+> 
