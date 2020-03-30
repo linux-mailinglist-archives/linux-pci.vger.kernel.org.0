@@ -2,159 +2,157 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EF9521981D4
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Mar 2020 19:04:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 53863198299
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Mar 2020 19:43:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728075AbgC3REn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Mar 2020 13:04:43 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:33359 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728376AbgC3REn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Mar 2020 13:04:43 -0400
-Received: by mail-wm1-f65.google.com with SMTP id z14so80042wmf.0
-        for <linux-pci@vger.kernel.org>; Mon, 30 Mar 2020 10:04:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qqStv1Lo1qg4gRg7lDrcQqRCTc9QZc+NG4mrfiQbFjE=;
-        b=Uh4bVVfaNPgqBDf14A/tNlnFlIMgcAjfpCWcb+Uzrx//iiYZNWzYxkVZtoxnnBGNE7
-         JUng1z3YWhf3Ee4gCS+2rK3YV4eaABGB5nQVH/R8tVtdVZInAAMkT1GD+hjo00JOuZqN
-         FvOAi1z1lfK4wW+rdBnYnyco/ZYm94ggobg0Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qqStv1Lo1qg4gRg7lDrcQqRCTc9QZc+NG4mrfiQbFjE=;
-        b=kST9aFlBFbkzWjL5eFQNYIhLY2DkWznymGA0RRyUCzWkJfAw1ns49WA2fW6vYcNsS4
-         m8FZOMEX8QZa4jQwYv4ieS6ZR1PenIvGr4AWVGQjg7Vkyi+2qEy+gw0eOO9368PwL1Xj
-         AgfxjMh5+JuF322TrP290gA2vGhLcfcuJi2bJVSeyLWlRc10XUBp/hKePD8PEhJY6YFE
-         FjpQoQB245oc3d8vvF/BSwrgck2aHDnuwRroNcMkE9ipBwwRf1taEAps9LM0NiBo70Wy
-         dQeQNJtt91qsztFGmf9dmB2udyE1xjMcoKLqdaS5L6lxr89h6Vs4zZOex4GuV2e3JTx0
-         PT9g==
-X-Gm-Message-State: ANhLgQ0D5VDgQFY/w9QC7ho+Veea1Nh8UG/Tmk1B65Qtx4h7YP8xeWEW
-        h/DOLRFagzrp+y49ys/KQ/EteQ==
-X-Google-Smtp-Source: ADFU+vvo+5kRarlX8ncgn7tFCSQDq8v2Ad0Bb+4DKkjHRYgiSGCpdbHJ7aZZkfTIo2aaSImThdshhg==
-X-Received: by 2002:a05:600c:2202:: with SMTP id z2mr263068wml.64.1585587881418;
-        Mon, 30 Mar 2020 10:04:41 -0700 (PDT)
-Received: from [10.230.26.36] ([192.19.224.250])
-        by smtp.gmail.com with ESMTPSA id t126sm192175wmb.27.2020.03.30.10.04.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Mar 2020 10:04:40 -0700 (PDT)
-Subject: Re: [PATCH 1/3] PCI: iproc: fix out of bound array access
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Srinath Mannam <srinath.mannam@broadcom.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Bharat Gooty <bharat.gooty@broadcom.com>
-References: <20200326204807.GA87784@google.com>
-From:   Ray Jui <ray.jui@broadcom.com>
-Message-ID: <0fec2db0-fb56-615d-eed4-d702d1bc37fb@broadcom.com>
-Date:   Mon, 30 Mar 2020 10:04:35 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200326204807.GA87784@google.com>
-Content-Type: text/plain; charset=utf-8
+        id S1729788AbgC3Rnf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Mar 2020 13:43:35 -0400
+Received: from mga11.intel.com ([192.55.52.93]:18691 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729745AbgC3Rnf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 30 Mar 2020 13:43:35 -0400
+IronPort-SDR: /vq0J0kB7b4w7J9Jxix9fE3nrVZmFHftDKB1WocGG4SoFKptexS15X1y3/ej7xN6VAZCXET1My
+ bvANHvX9NTOA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 10:43:34 -0700
+IronPort-SDR: 4RZcY+r0+C3+5ioP6gK0NBEnrC5IjE59Rw9SeILHpeYhjUAn2p44DmF3VvkOnR8ulXPAQIiXbW
+ MmXEfDRUvnVQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,325,1580803200"; 
+   d="scan'208";a="251962823"
+Received: from orsmsx108.amr.corp.intel.com ([10.22.240.6])
+  by orsmga006.jf.intel.com with ESMTP; 30 Mar 2020 10:43:34 -0700
+Received: from orsmsx101.amr.corp.intel.com ([169.254.8.225]) by
+ ORSMSX108.amr.corp.intel.com ([169.254.2.172]) with mapi id 14.03.0439.000;
+ Mon, 30 Mar 2020 10:43:33 -0700
+From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
+To:     "helgaas@kernel.org" <helgaas@kernel.org>
+CC:     "mr.nuke.me@gmail.com" <mr.nuke.me@gmail.com>,
+        "hch@lst.de" <hch@lst.de>,
+        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        "Baldysiak, Pawel" <pawel.baldysiak@intel.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "lukas@wunner.de" <lukas@wunner.de>,
+        "okaya@kernel.org" <okaya@kernel.org>,
+        "kbusch@kernel.org" <kbusch@kernel.org>,
+        "stuart.w.hayes@gmail.com" <stuart.w.hayes@gmail.com>
+Subject: Re: [RFC 0/9] PCIe Hotplug Slot Emulation driver
+Thread-Topic: [RFC 0/9] PCIe Hotplug Slot Emulation driver
+Thread-Index: AQHV3hK/y2Hxis+abEWPqwm+8JRaDqhfTz6AgALfXAA=
+Date:   Mon, 30 Mar 2020 17:43:33 +0000
+Message-ID: <97b916ad6ad03f39ccdf5b62fe7d7b9e10190708.camel@intel.com>
+References: <20200328215123.GA130140@google.com>
+In-Reply-To: <20200328215123.GA130140@google.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.255.5.137]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <99FD02322469594EB2CFB5DC21D65D70@intel.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On 3/26/2020 1:48 PM, Bjorn Helgaas wrote:
-> On Thu, Mar 26, 2020 at 01:27:36PM -0700, Ray Jui wrote:
->> On 3/26/2020 12:48 PM, Bjorn Helgaas wrote:
->>> ...
->>> It's outside the scope of this patch, but I'm not really a fan of the
->>> pcie->reg_offsets[] scheme this driver uses to deal with these
->>> differences.  There usually seems to be *something* that keeps the
->>> driver from referencing registers that don't exist, but it doesn't
->>> seem like the mechanism is very consistent or robust:
->>>
->>>   - IPROC_PCIE_LINK_STATUS is implemented by PAXB but not PAXC.
->>>     iproc_pcie_check_link() avoids using it if "ep_is_internal", which
->>>     is set for PAXC and PAXC_V2.  Not an obvious connection.
->>>
->>>   - IPROC_PCIE_CLK_CTRL is implemented for PAXB and PAXC_V1, but not
->>>     PAXC_V2.  iproc_pcie_perst_ctrl() avoids using it ep_is_internal",
->>>     so it *doesn't* use it for PAXC_V1, which does implement it.
->>>     Maybe a bug, maybe intentional; I can't tell.
->>>
->>>   - IPROC_PCIE_INTX_EN is only implemented by PAXB (not PAXC), but
->>>     AFAICT, we always call iproc_pcie_enable() and rely on
->>>     iproc_pcie_write_reg() silently drop the write to it on PAXC.
->>>
->>>   - IPROC_PCIE_OARR0 is implemented by PAXB and PAXB_V2 and used by
->>>     iproc_pcie_map_ranges(), which is called if "need_ob_cfg", which
->>>     is set if there's a "brcm,pcie-ob" DT property.  No clear
->>>     connection to PAXB.
->>>
->>> I think it would be more readable if we used a single variant
->>> identifier consistently, e.g., the "pcie->type" already used in
->>> iproc_pcie_msi_steer(), or maybe a set of variant-specific function
->>> pointers as pcie-qcom.c does.
->>
->> It is not possible to use a single variant identifier consistently,
->> i.e., 'pcie->type'. Many of these features are controller revision
->> specific, and certain revisions of the controllers may all have a
->> certain feature, while other revisions of the controllers do not. In
->> addition, there are overlap in features across different controllers.
->>
->> IMO, it makes sense to have feature specific flags or booleans, and have
->> those features enabled or disabled based on 'pcie->type', which is what
->> the current driver does, but like you pointed out, what the driver
->> failed is to do this consistently.
-> 
-> There are several drivers that have the same problem of dealing with
-> different revisions of hardware.  It would be nice to do it in a
-> consistent style, whatever that is.
-> 
-
-Sure, agree with you that it should be handled in a consistent way
-within this driver, and the current driver is not handling this
-consistently.
-
->> The IPROC_PCIE_INTX_EN example you pointed out is a good example. I
->> agree with you that we shouldn't rely on iproc_pcie_write_reg to
->> silently drop the operation for PAXC. We should add code to make it
->> explictly obvious that legacy interrupt is not supported in all PAXC
->> controllers.
->>
->> pcie->pcie->reg_offsets[] scheme was not intended to be used to silently
->> drop register access that are activated based on features. It's a
->> mistake that should be fixed if some code in the driver is done that
->> way, as you pointed out.
-> 
-> That's actually why I dug into this a bit -- the
-> iproc_pcie_reg_is_invalid() case is really a design-time error, so it
-> seemed like there should be a WARN() there instead of silently
-> returning 0 or ignoring a write.
-> 
-
-I think 'iproc_pcie_reg_is_invalid' is a fall back protection. We should
-aim to prevent this from happening in the first place using whatever
-means we determined appropriate, and do that consistently. In addition,
-I also agree with you that there should be a WARN instead of silently
-returning zero (for reads) and dropping the writes.
-
-We'll be looking into improving this as you suggested when we have a
-chance. In the mean time, I think both of us agree this is out of the
-scope of the issue that this patch is trying to fix, which is actually a
-pretty critical issue that can cause potential corruption of memory and
-the fix should be picked up ASAP (and for older LTS kernels too).
-
-Thanks,
-
-Ray
-
-> Bjorn
-> 
+SGkgQmpvcm4sDQoNCk9uIFNhdCwgMjAyMC0wMy0yOCBhdCAxNjo1MSAtMDUwMCwgQmpvcm4gSGVs
+Z2FhcyB3cm90ZToNCj4gWytjYyBTdHVhcnQsIEx1a2FzXQ0KPiANCj4gT24gRnJpLCBGZWIgMDcs
+IDIwMjAgYXQgMDQ6NTk6NThQTSAtMDcwMCwgSm9uIERlcnJpY2sgd3JvdGU6DQo+ID4gVGhpcyBz
+ZXQgYWRkcyBhbiBlbXVsYXRpb24gZHJpdmVyIGZvciBQQ0llIEhvdHBsdWcuIFRoZXJlIG1heSBi
+ZSBwbGF0Zm9ybXMgd2l0aA0KPiA+IHNwZWNpZmljIGNvbmZpZ3VyYXRpb25zIHRoYXQgY2FuIHN1
+cHBvcnQgaG90cGx1ZyBidXQgZG9uJ3QgcHJvdmlkZSB0aGUgbG9naWNhbA0KPiA+IHNsb3QgaG90
+cGx1ZyBoYXJkd2FyZS4gRm9yIGluc3RhbmNlLCB0aGUgcGxhdGZvcm0gbWF5IHVzZSBhbg0KPiA+
+IGVsZWN0cmljYWxseS10b2xlcmFudCBpbnRlcnBvc2VyIGJldHdlZW4gdGhlIHNsb3QgYW5kIHRo
+ZSBkZXZpY2UuDQo+ID4gDQo+ID4gVGhpcyBkcml2ZXIgdXRpbGl6ZXMgdGhlIHBjaS1icmlkZ2Ut
+ZW11bCBhcmNoaXRlY3R1cmUgdG8gbWFuYWdlIHJlZ2lzdGVyIHJlYWRzDQo+ID4gYW5kIHdyaXRl
+cy4gVGhlIHVuZGVybHlpbmcgZnVuY3Rpb25hbGl0eSBvZiB0aGUgaG90cGx1ZyBlbXVsYXRpb24g
+ZHJpdmVyIHVzZXMNCj4gPiB0aGUgRGF0YSBMaW5rIExheWVyIExpbmsgQWN0aXZlIFJlcG9ydGlu
+ZyBtZWNoYW5pc20gaW4gYSBwb2xsaW5nIGxvb3AsIGJ1dCBjYW4NCj4gPiB0b2xlcmF0ZSBvdGhl
+ciBldmVudCBzb3VyY2VzIHN1Y2ggYXMgQUVSIG9yIERQQy4NCj4gPiANCj4gPiBXaGVuIGVuYWJs
+ZWQgYW5kIGEgc2xvdCBpcyBtYW5hZ2VkIGJ5IHRoZSBkcml2ZXIsIGFsbCBwb3J0IHNlcnZpY2Vz
+IGFyZSBtYW5hZ2VkDQo+ID4gYnkgdGhlIGtlcm5lbC4gVGhpcyBpcyBkb25lIHRvIGVuc3VyZSB0
+aGF0IGZpcm13YXJlIGhvdHBsdWcgYW5kIGVycm9yDQo+ID4gYXJjaGl0ZWN0dXJlIGRvZXMgbm90
+IChjb3JyZWN0bHkpIGhhbHQvbWFjaGluZSBjaGVjayB0aGUgc3lzdGVtIHdoZW4gaG90cGx1ZyBp
+cw0KPiA+IHBlcmZvcm1lZCBvbiBhIG5vbi1ob3RwbHVnIHNsb3QuDQo+ID4gDQo+ID4gVGhlIGRy
+aXZlciBvZmZlcnMgdHdvIGFjdGl2ZSBtb2RlOiBBdXRvIGFuZCBGb3JjZS4NCj4gPiBhdXRvOiBU
+aGUgZHJpdmVyIHdpbGwgYmluZCB0byBub24taG90cGx1ZyBzbG90cw0KPiA+IGZvcmNlOiBUaGUg
+ZHJpdmVyIHdpbGwgYmluZCB0byBhbGwgc2xvdHMgYW5kIG92ZXJyaWRlcyB0aGUgc2xvdCdzIHNl
+cnZpY2VzDQo+ID4gDQo+ID4gVGhlcmUgYXJlIHRocmVlIGtlcm5lbCBwYXJhbXM6DQo+ID4gcGNp
+ZWhwLnBjaWVocF9lbXVsX21vZGU9e29mZiwgYXV0bywgZm9yY2V9DQo+ID4gcGNpZWhwLnBjaWVo
+cF9lbXVsX3RpbWU9PG1zZWNzIHBvbGxpbmcgdGltZT4gKGRlZiAxMDAwLCBtaW4gMTAwLCBtYXgg
+NjAwMDApDQo+ID4gcGNpZWhwLnBjaWVocF9lbXVsX3BvcnRzPTxQQ0kgW1NdQkRGL0lEIGZvcm1h
+dCBzdHJpbmc+DQo+ID4gDQo+ID4gVGhlIHBjaWVocF9lbXVsX3BvcnRzIGtlcm5lbCBwYXJhbWV0
+ZXIgdGFrZXMgYSBzZW1pLWNvbG9uIHRva2VuaXplZCBzdHJpbmcNCj4gPiByZXByZXNlbnRpbmcg
+UENJIFtTXUJERnMgYW5kIElEcy4gVGhlIHBjaWVocF9lbXVsX21vZGUgd2lsbCB0aGVuIGJlIGFw
+cGxpZWQgdG8NCj4gPiBvbmx5IHRob3NlIHNsb3RzLCBsZWF2aW5nIG90aGVyIHNsb3RzIHVubWFu
+YWdlZCBieSBwY2llaHBfZW11bC4NCj4gPiANCj4gPiBUaGUgc3RyaW5nIGZvbGxvd3MgdGhlIHBj
+aV9kZXZfc3RyX21hdGNoKCkgZm9ybWF0Og0KPiA+IA0KPiA+ICAgWzxkb21haW4+Ol08YnVzPjo8
+ZGV2aWNlPi48ZnVuYz5bLzxkZXZpY2U+LjxmdW5jPl0qDQo+ID4gICBwY2k6PHZlbmRvcj46PGRl
+dmljZT5bOjxzdWJ2ZW5kb3I+OjxzdWJkZXZpY2U+XQ0KPiA+IA0KPiA+IFdoZW4gdXNpbmcgdGhl
+IHBhdGggZm9ybWF0LCB0aGUgcGF0aCBmb3IgdGhlIGRldmljZSBjYW4gYmUgb2J0YWluZWQNCj4g
+PiB1c2luZyAnbHNwY2kgLXQnIGFuZCBmdXJ0aGVyIHNwZWNpZmllZCB1c2luZyB0aGUgdXBzdHJl
+YW0gYnJpZGdlIGFuZCB0aGUNCj4gPiBkb3duc3RyZWFtIHBvcnQncyBkZXZpY2UtZnVuY3Rpb24g
+dG8gYmUgbW9yZSByb2J1c3QgYWdhaW5zdCBidXMNCj4gPiByZW51bWJlcmluZy4NCj4gPiANCj4g
+PiBXaGVuIHVzaW5nIHRoZSB2ZW5kb3ItZGV2aWNlIGZvcm1hdCwgYSB2YWx1ZSBvZiAnMCcgaW4g
+YW55IGZpZWxkIGFjdHMgYXMNCj4gPiBhIHdpbGRjYXJkIGZvciB0aGF0IGZpZWxkLCBtYXRjaGlu
+ZyBhbGwgdmFsdWVzLg0KPiA+IA0KPiA+IFRoZSBkcml2ZXIgaXMgZW5hYmxlZCB3aXRoIENPTkZJ
+R19IT1RQTFVHX1BDSV9QQ0lFX0VNVUw9eS4NCj4gPiANCj4gPiBUaGUgZHJpdmVyIHNob3VsZCBi
+ZSBjb25zaWRlcmVkICd1c2UgYXQgb3duIHJpc2snIHVubGVzcyB0aGUgcGxhdGZvcm0vaGFyZHdh
+cmUNCj4gPiB2ZW5kb3IgcmVjb21tZW5kcyB0aGlzIG1vZGUuDQo+IA0KPiBUaGVyZSdzIGEgbG90
+IG9mIGdvb2Qgd29yayBpbiBoZXJlLCBhbmQgSSBkb24ndCBjbGFpbSB0byB1bmRlcnN0YW5kDQo+
+IHRoZSB1c2UgY2FzZSBhbmQgYWxsIHRoZSBiZW5lZml0cy4NCkkndmUgcmVjZWl2ZWQgbW9yZSBp
+bmZvIHRoYXQgdGhlIGN1c3RvbWVyIHVzZSBjYXNlIGlzIGFuIEFJQyB0aGF0DQpicmVha3Mgb3V0
+IDEtNCBNLjIgY2FyZHMgd2hpY2ggaGF2ZSBiZWVuIG1hZGUgaG90cGx1ZyB0b2xlcmFudC4NCg0K
+DQo+IA0KPiBCdXQgaXQgc2VlbXMgbGlrZSBxdWl0ZSBhIGxvdCBvZiBhZGRpdGlvbmFsIGNvZGUg
+YW5kIGNvbXBsZXhpdHkgaW4gYW4NCj4gYXJlYSB0aGF0J3MgYWxyZWFkeSBwcmV0dHkgc3VidGxl
+LCBzbyBJJ20gbm90IHlldCBjb252aW5jZWQgdGhhdCBpdCdzDQo+IGFsbCB3b3J0aHdoaWxlLg0K
+PiANCj4gSXQgc2VlbXMgbGlrZSB0aGlzIHdvdWxkIHJlbHkgb24gRGF0YSBMaW5rIExheWVyIExp
+bmsgQWN0aXZlDQo+IFJlcG9ydGluZy4gIElzIHRoYXQgc29tZXRoaW5nIHdlIGNvdWxkIGFkZCB0
+byBwY2llaHAgYXMgYSBnZW5lcmljDQo+IGZlYXR1cmUgd2l0aG91dCBtYWtpbmcgYSBzZXBhcmF0
+ZSBkcml2ZXIgZm9yIGl0PyAgSSBoYXZlbid0IGxvb2tlZCBhdA0KPiB0aGlzIGZvciBhIHdoaWxl
+LCBidXQgSSB3b3VsZCBhc3N1bWUgdGhhdCBpZiB3ZSBmaW5kIG91dCB0aGF0IGEgbGluaw0KPiB3
+ZW50IGRvd24sIHBjaWVocCBjb3VsZC9zaG91bGQgYmUgc21hcnQgZW5vdWdoIHRvIG5vdGljZSB0
+aGF0IGV2ZW4gaWYNCj4gaXQgZGlkbid0IGNvbWUgdmlhIHRoZSB1c3VhbCBwY2llaHAgU2xvdCBT
+dGF0dXMgcGF0aC4NCkkgaGFkIGEgcGxhbiB0byBkbyBWMiBieSBpbnRlcmNlcHRpbmcgYnVzX29w
+cyByYXRoZXIgdGhhbiBpbmRpcmVjdGluZw0Kc2xvdF9vcHMgaW4gcGNpZWhwLiBUaGF0IHNob3Vs
+ZCB0b3VjaCAvYSBsb3QvIGxlc3MgY29kZS4NCg0KVGhlIHByb2JsZW0gSSBzYXcgd2l0aCBhZGRp
+bmcgRExMTEEgYXMgYSBwcmltYXJ5IHNpZ25hbCBpbiBwY2llaHAgaXMNCnRoYXQgbW9zdCBvZiB0
+aGUgcGNpZWhwIGJvaWxlcnBsYXRlIHJlbGllcyBvbiB2YWxpZCBTbG90IHJlZ2lzdGVyDQpsb2dp
+Yy4gSSBkb24ndCBrbm93IGhvdyByZWxpYWJsZSBwY2llaHAgd2lsbCBiZSBpZiB0aGVyZSdzIG5v
+IGJhY2tpbmcNCnNsb3QgcmVnaXN0ZXIgbG9naWMsIGVtdWxhdGVkIG9yIHJlYWwuIENvbnNpZGVy
+IGhvdyBtYW55IHNsb3QNCmNhcGFiaWxpdHkgcmVhZHMgYXJlIGluIGhwYy4NCg0KSSBjb3VsZCBh
+ZGQgYSBub24tc2xvdCBmbGFnIGNoZWNrIHRvIGVhY2ggb2YgdGhvc2UgY2FsbGVycywgYnV0IGl0
+DQptaWdodCBiZSB3b3JzZSB0aGFuIHRoZSBlbXVsYXRpb24gYWx0ZXJuYXRpdmUuDQoNCldoYXQg
+ZG8geW91IHRoaW5rPw0KDQpUaGFua3MNCg0KPiANCj4gPiBKb24gRGVycmljayAoOSk6DQo+ID4g
+ICBQQ0k6IHBjaS1icmlkZ2UtZW11bDogVXBkYXRlIFBDSWUgcmVnaXN0ZXIgYmVoYXZpb3JzDQo+
+ID4gICBQQ0k6IHBjaS1icmlkZ2UtZW11bDogRWxpbWluYXRlIHJlc2VydmVkIG1lbWJlcg0KPiA+
+ICAgUENJOiBwY2ktYnJpZGdlLWVtdWw6IFByb3ZpZGUgYSBoZWxwZXIgdG8gc2V0IGJlaGF2aW9y
+DQo+ID4gICBQQ0k6IHBjaWVocDogSW5kaXJlY3Qgc2xvdCByZWdpc3RlciBvcGVyYXRpb25zDQo+
+ID4gICBQQ0k6IEFkZCBwY2llX3BvcnRfc2xvdF9lbXVsYXRlZCBzdHViDQo+ID4gICBQQ0k6IHBj
+aWVocDogRXhwb3NlIHRoZSBwb2xsIGxvb3AgdG8gb3RoZXIgZHJpdmVycw0KPiA+ICAgUENJOiBN
+b3ZlIHBjaV9kZXZfc3RyX21hdGNoIHRvIHNlYXJjaC5jDQo+ID4gICBQQ0k6IHBjaWVocDogQWRk
+IGhvdHBsdWcgc2xvdCBlbXVsYXRpb24gZHJpdmVyDQo+ID4gICBQQ0k6IHBjaWVocDogV2lyZSB1
+cCBwY2llX3BvcnRfZW11bGF0ZV9zbG90IGFuZCBwY2llaHBfZW11bA0KPiA+IA0KPiA+ICBkcml2
+ZXJzL3BjaS9ob3RwbHVnL01ha2VmaWxlICAgICAgfCAgIDQgKw0KPiA+ICBkcml2ZXJzL3BjaS9o
+b3RwbHVnL3BjaWVocC5oICAgICAgfCAgMjggKysrDQo+ID4gIGRyaXZlcnMvcGNpL2hvdHBsdWcv
+cGNpZWhwX2VtdWwuYyB8IDM3OCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+Kw0KPiA+ICBkcml2ZXJzL3BjaS9ob3RwbHVnL3BjaWVocF9ocGMuYyAgfCAxMzYgKysrKysrKysr
+Ky0tLS0NCj4gPiAgZHJpdmVycy9wY2kvcGNpLWFjcGkuYyAgICAgICAgICAgIHwgICAzICsNCj4g
+PiAgZHJpdmVycy9wY2kvcGNpLWJyaWRnZS1lbXVsLmMgICAgIHwgIDk1ICsrKysrLS0tLS0NCj4g
+PiAgZHJpdmVycy9wY2kvcGNpLWJyaWRnZS1lbXVsLmggICAgIHwgIDEwICsNCj4gPiAgZHJpdmVy
+cy9wY2kvcGNpLmMgICAgICAgICAgICAgICAgIHwgMTYzIC0tLS0tLS0tLS0tLS0tLS0NCj4gPiAg
+ZHJpdmVycy9wY2kvcGNpZS9LY29uZmlnICAgICAgICAgIHwgIDE0ICsrDQo+ID4gIGRyaXZlcnMv
+cGNpL3BjaWUvcG9ydGRydl9jb3JlLmMgICB8ICAxNCArLQ0KPiA+ICBkcml2ZXJzL3BjaS9wcm9i
+ZS5jICAgICAgICAgICAgICAgfCAgIDIgKy0NCj4gPiAgZHJpdmVycy9wY2kvc2VhcmNoLmMgICAg
+ICAgICAgICAgIHwgMTYyICsrKysrKysrKysrKysrKysNCj4gPiAgaW5jbHVkZS9saW51eC9wY2ku
+aCAgICAgICAgICAgICAgIHwgICA4ICsNCj4gPiAgMTMgZmlsZXMgY2hhbmdlZCwgNzc1IGluc2Vy
+dGlvbnMoKyksIDI0MiBkZWxldGlvbnMoLSkNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZl
+cnMvcGNpL2hvdHBsdWcvcGNpZWhwX2VtdWwuYw0KPiA+IA0KPiA+IC0tIA0KPiA+IDEuOC4zLjEN
+Cj4gPiANCg==
