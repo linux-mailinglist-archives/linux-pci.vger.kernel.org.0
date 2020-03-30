@@ -2,168 +2,145 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BF2A1984D7
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Mar 2020 21:49:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C6555198620
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Mar 2020 23:12:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727942AbgC3TtW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Mar 2020 15:49:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41122 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727936AbgC3TtW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 30 Mar 2020 15:49:22 -0400
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83B3320771;
-        Mon, 30 Mar 2020 19:49:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585597761;
-        bh=qtmjNmCqVumWAr5MCk+RbBzlG+Q045NpFUoEc3hNlz8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=ZyDYYtTrr15nUKxlLh6rN33ijOvQLL+jJ7O71P+/HoQDCDXYNtea2Wi6p0vtVCYN0
-         C1y3l+Ox8HNcJ9N99XzP4ZWJlripD9hJqvzLkYciQpyRUdpdbxbrCvYcCNaWzntzdM
-         +I2Y0Tl1X7+PovodAdWTEC9xfzxebZheXx/cZ5VU=
-Date:   Mon, 30 Mar 2020 14:49:17 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     =?iso-8859-1?Q?Lu=EDs?= Mendes <luis.p.mendes@gmail.com>
-Cc:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: Problem with PCIe enumeration of Google/Coral TPU Edge module on
- Linux
-Message-ID: <20200330194917.GA72191@google.com>
+        id S1728405AbgC3VMT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Mar 2020 17:12:19 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:59781 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728317AbgC3VMT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Mar 2020 17:12:19 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jJ1hb-0005xs-Tn; Mon, 30 Mar 2020 23:12:12 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 08337101175; Mon, 30 Mar 2020 23:12:11 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        linux-omap@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH v4] PCI: dwc: pci-dra7xx: Fix MSI IRQ handling
+In-Reply-To: <20200330162928.GA55054@google.com>
+References: <20200330162928.GA55054@google.com>
+Date:   Mon, 30 Mar 2020 23:12:10 +0200
+Message-ID: <87zhbxv979.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEzXK1pFFEw+FdAyC6=yxkk5cXMJkVxxkxMiHrB6sH7pwGMkFQ@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Mar 29, 2020 at 11:11:28PM +0100, Luís Mendes wrote:
-> Hi Nicholas, Bjorn,
-> 
-> I was able to make the apex driver work on a X86_64 system with the
-> Coral Edge TPU PCIe device.
-> So, now the PCI enumeration problem is now clearly an ARM and ARM64
-> platform issue. What are the recommended steps for debugging this? I
-> hava a JTAG interface and openOCD supported configuration for it.
+Bjorn,
 
-Thanks for the work of testing on X86_64.  I don't have any magic
-ideas other than instrumenting the code and slogging through the
-output.  Can you try the patch below and collect the dmesg?  This will
-probably take a few iterations.
+Bjorn Helgaas <helgaas@kernel.org> writes:
+> On Fri, Mar 27, 2020 at 03:24:34PM +0530, Vignesh Raghavendra wrote:
+>> Due an issue with PCIe wrapper around DWC PCIe IP on dra7xx, driver
+>> needs to ensure that there are no pending MSI IRQ vector set (i.e
+>> PCIE_MSI_INTR0_STATUS reads 0 at least once) before exiting IRQ handler.
+>> Else, the dra7xx PCIe wrapper will not register new MSI IRQs even though
+>> PCIE_MSI_INTR0_STATUS shows IRQs are pending.
+>
+> I'm not an IRQ guy (real IRQ guys CC'd), but I'm wondering if this is
+> really a symptom of a problem in the generic DWC IRQ handling, not a
+> problem in dra7xx itself.
+>
+> I thought it was sort of standard behavior that a device would not
+> send a new MSI unless there was a transition from "no status bits set"
+> to "at least one status bit set".  I'm looking at this text from the
+> PCIe r5.0 spec, sec 6.7.3.4:
+
+That's for the device side. But this is the host side and that consists
+of two components:
+
+     1) The actual PCIe host controller (DWC)
+
+     2) Some hardware wrapper around #1 to glue the host controller IP
+        into the TI SoC.
+
+#1 contains a MSI message receiver unit. PCIE_MSI_INTR0_STATUS is part
+that.
+
+If there is a MSI message sent to the host then the bit which is
+corresponding to the sent message (vector) is set in the status
+register. If a bit is set in the status register then the host
+controller raises an interrupt at its output.
+
+Here, if I deciphered the above changelog correctly, comes the wrapper
+glue #2 into play, which seems to be involved in forwarding the host
+controller interrupt to the CPU's interrupt controller (GIC) and that
+forwarding mechanism seems to have some issue.
+
+The changelog is unspecific enough, so I can't explain for sure how the
+wrapper hardware confuses itself.
+
+My assumption is that after the host controller raised an interrupt at
+the input of the wrapper logic the wrapper logic requires a transition
+back to quiescent state before it can raise another interrupt in the
+GIC. And that seems to require that all bits of PCIE_MSI_INTR0_STATUS
+are cleared.
+
+If my interpretation is correct, then the DWC side is not at fault and
+it's soleley the TI specific hardware glue which makes this thing
+misbehave.
+
+Of course I might be completely wrong, but the TI folks should be able
+to tell.
+
+OTOH, what I do not understand in the patch is the reimplementation of
+the interrupt chip. All functions are copies, except for the actual
+register writes.
+
+The drax version uses dw_pcie_writel_dbi() which invokes
+dw_pcie_write_dbi() and that function does:
+
+void dw_pcie_write_dbi(struct dw_pcie *pci, u32 reg, size_t size, u32 val)
+{
+	int ret;
+
+	if (pci->ops->write_dbi) {
+		pci->ops->write_dbi(pci, pci->dbi_base, reg, size, val);
+		return;
+	}
+
+	ret = dw_pcie_write(pci->dbi_base + reg, size, val);
+	if (ret)
+		dev_err(pci->dev, "Write DBI address failed\n");
+}
+
+The dwc version uses dw_pcie_wr_own_conf() which does:
+
+static int dw_pcie_wr_own_conf(struct pcie_port *pp, int where, int size,
+			       u32 val)
+{
+	struct dw_pcie *pci;
+
+	if (pp->ops->wr_own_conf)
+		return pp->ops->wr_own_conf(pp, where, size, val);
+
+	pci = to_dw_pcie_from_pp(pp);
+	return dw_pcie_write(pci->dbi_base + where, size, val);
+}
+
+As dra7xx does neither implement pp->ops->wr_own_conf() nor
+pci->ops->write_dbi. Ergo the interrupt chip is just a copy with some
+obfuscation.
+
+I might be missing some detail, but asided of the actual interrupt
+service routine, this looks like a massive copy and paste orgy.
+
+Thanks,
+
+        tglx
 
 
-diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-index 8e40b3e6da77..2cdb705752de 100644
---- a/drivers/pci/bus.c
-+++ b/drivers/pci/bus.c
-@@ -166,6 +166,7 @@ static int pci_bus_alloc_from_region(struct pci_bus *bus, struct resource *res,
- 	resource_size_t max;
- 
- 	type_mask |= IORESOURCE_TYPE_BITS;
-+	pci_info(bus, "%s: %pR type_mask %#lx\n", __func__, res, type_mask);
- 
- 	pci_bus_for_each_resource(bus, r, i) {
- 		resource_size_t min_used = min;
-@@ -173,6 +174,9 @@ static int pci_bus_alloc_from_region(struct pci_bus *bus, struct resource *res,
- 		if (!r)
- 			continue;
- 
-+		pci_info(bus, "%s: from %pR res %#lx r %#lx\n", __func__,
-+			r, res->flags, r->flags);
-+
- 		/* type_mask must match */
- 		if ((res->flags ^ r->flags) & type_mask)
- 			continue;
-@@ -203,6 +207,7 @@ static int pci_bus_alloc_from_region(struct pci_bus *bus, struct resource *res,
- 		if (ret == 0)
- 			return 0;
- 	}
-+	pci_info(bus, "%s: failed\n", __func__);
- 	return -ENOMEM;
- }
- 
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index f2461bf9243d..649aa90b8b29 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -280,8 +280,10 @@ static void assign_requested_resources_sorted(struct list_head *head,
- 	list_for_each_entry(dev_res, head, list) {
- 		res = dev_res->res;
- 		idx = res - &dev_res->dev->resource[0];
-+		pci_info(dev_res->dev, "%s BAR%d %pR\n", __func__, idx, res);
- 		if (resource_size(res) &&
- 		    pci_assign_resource(dev_res->dev, idx)) {
-+			pci_info(dev_res->dev, "%s (failed)\n", __func__);
- 			if (fail_head) {
- 				/*
- 				 * If the failed resource is a ROM BAR and
-@@ -996,6 +998,12 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
- 	resource_size_t children_add_align = 0;
- 	resource_size_t add_align = 0;
- 
-+	pci_info(bus, "%s: mask %#lx type %#lx %#lx %#lx min %#llx add %#llx b_res %pR parent %pR\n",
-+		__func__, mask, type, type2, type3,
-+		(unsigned long long) min_size,
-+		(unsigned long long) add_size,
-+		b_res, b_res ? b_res->parent : NULL);
-+
- 	if (!b_res)
- 		return -ENOSPC;
- 
-@@ -1199,6 +1207,8 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
- 	struct resource *b_res;
- 	int ret;
- 
-+	pci_info(bus, "%s\n", __func__);
-+
- 	list_for_each_entry(dev, &bus->devices, bus_list) {
- 		struct pci_bus *b = dev->subordinate;
- 		if (!b)
-@@ -1311,6 +1321,7 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
- 
- void pci_bus_size_bridges(struct pci_bus *bus)
- {
-+	pci_info(bus, "%s\n", __func__);
- 	__pci_bus_size_bridges(bus, NULL);
- }
- EXPORT_SYMBOL(pci_bus_size_bridges);
-@@ -1394,6 +1405,7 @@ void __pci_bus_assign_resources(const struct pci_bus *bus,
- 
- void pci_bus_assign_resources(const struct pci_bus *bus)
- {
-+	pci_info(bus, "%s\n", __func__);
- 	__pci_bus_assign_resources(bus, NULL, NULL);
- }
- EXPORT_SYMBOL(pci_bus_assign_resources);
-@@ -1408,6 +1420,7 @@ static void pci_claim_device_resources(struct pci_dev *dev)
- 		if (!r->flags || r->parent)
- 			continue;
- 
-+		pci_info(dev, "%s BAR%d %pR\n", __func__, i, r);
- 		pci_claim_resource(dev, i);
- 	}
- }
-@@ -1422,6 +1435,7 @@ static void pci_claim_bridge_resources(struct pci_dev *dev)
- 		if (!r->flags || r->parent)
- 			continue;
- 
-+		pci_info(dev, "%s BAR%d %pR\n", __func__, i, r);
- 		pci_claim_bridge_resource(dev, i);
- 	}
- }
-@@ -1460,6 +1474,7 @@ static void pci_bus_allocate_resources(struct pci_bus *b)
- 
- void pci_bus_claim_resources(struct pci_bus *b)
- {
-+	pci_info(bus, "%s\n", __func__);
- 	pci_bus_allocate_resources(b);
- 	pci_bus_allocate_dev_resources(b);
- }
