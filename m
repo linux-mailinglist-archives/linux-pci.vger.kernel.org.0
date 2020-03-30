@@ -2,51 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C4056197FC1
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Mar 2020 17:37:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E1D0A197FEB
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Mar 2020 17:40:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729089AbgC3Ph1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Mar 2020 11:37:27 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:36747 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728997AbgC3Ph1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Mar 2020 11:37:27 -0400
-Received: by mail-lf1-f68.google.com with SMTP id u15so5472451lfi.3
-        for <linux-pci@vger.kernel.org>; Mon, 30 Mar 2020 08:37:25 -0700 (PDT)
+        id S1729588AbgC3Pkt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Mar 2020 11:40:49 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:41608 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729486AbgC3Pkt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Mar 2020 11:40:49 -0400
+Received: by mail-lj1-f195.google.com with SMTP id n17so18595481lji.8
+        for <linux-pci@vger.kernel.org>; Mon, 30 Mar 2020 08:40:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:organization:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=7n3YZ9nrtrOOLXOcT8nncmyYyXz4uqz98on2S5Nc7P8=;
-        b=01eIbogv2JLufuwCILlbzumO6l4tm31Ysgk7fk42vDAxQ8S2Jzsv8Wmv4QoNc7JGoW
-         ouw5WNKmvQfSWsT0guoBS+abSnxPIUBaZq+93d3O8EtcYlHlgllZAJbG54iZ/nD5jBFn
-         OIoiFNWZu5IjFAx5DgOVhaacynAAMj+OfbkrpP/mTBee7Fz1zQVz2hquYPqLxN6BYiFw
-         kD5CEjp7KqELCqjwfe87awk3DYkzx8qV8BaYb3Z9bNrKGkVdDWSacv6Rj7ZVgaRQGRSP
-         7DwLX8kVEeiHuYvpEBIeBYkQPyLojrINApEH61LvdBgEHDiZhRApfDDwkvEg7ohY3dws
-         thEg==
+        bh=t2iNbIaFPnk3agPmyy1f+f0q6P2ipfzolZ/zq3qtBgg=;
+        b=wLYxigK6ce75qGpQVnSi/ehLo4z7OsT1hrSFmQzM5G2J7uvGu8lIijCbRWbEojrbXq
+         kqmsl+5VMg6AXIZjRN/Zdw66ryv0oO/cemWlBBimpcfoFvl703Se39hxEFb2XtmF48KS
+         y4QiSGp0Moa2q1ldW5fva5xkY2ilW7Zi7cD4s3cPf6G7Q0BYv572i6RWHGPzdoNM/HLb
+         cxehI6Tck5i7Vh/RFw9KTJi52Quo3qF2byF1X0hemUbBodnLuTs5B/Rx/0gmUS2hy0nl
+         epTT123yy/3/NEVe/42SULBYmqNzqJGjValYNv6PUu7nkCq40WLQaYxU0cQHsWuUfp3x
+         gb4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:organization
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=7n3YZ9nrtrOOLXOcT8nncmyYyXz4uqz98on2S5Nc7P8=;
-        b=Zn/6FyxU9ptROijj0XbInvfZzRzNdy75TIHSmhdHlFe362Z4M74uUmWSBBUb+AHUgr
-         OCJYtJxcYS9p+e/T0Wie19N3UmD9DgjFbUiKiI0Wq4Y8QNo+eIiGwQ+N9HKc+k48PmUI
-         zKDMxBWWHF/NkLERWEcn3tHATNWl6roW7tDdZvyDi03r5cTCK8c0i3k0dH+BL645wdCO
-         OstiGlQENHrJNohSLCnGH4Vx4AoqbY4Ga84AuLMK8m5cE5T7bzm6109/0en+T7l239A3
-         4vwmDwElMuL3qPPyBdWxnZ+fMknihp0EMt0rM5Z8IXKBg6RUKDRqWuKLp9/OApSzLOmZ
-         Ckfg==
-X-Gm-Message-State: AGi0Pua/CDx/mDmC0Kk21Y8imz374opshkDE2/RxQFl8iwa8s+mb9KR6
-        qIVp37HBRiQE/Te1eJqhoqsP/g==
-X-Google-Smtp-Source: APiQypLCq5vVr1YrIW3e4xrFpb9STHZkBueQeFK1AR43Hf0SWSWV1m1Evg2KTFYl5nebk26zdn6zwQ==
-X-Received: by 2002:ac2:48b3:: with SMTP id u19mr8289783lfg.84.1585582645078;
-        Mon, 30 Mar 2020 08:37:25 -0700 (PDT)
+        bh=t2iNbIaFPnk3agPmyy1f+f0q6P2ipfzolZ/zq3qtBgg=;
+        b=Ug6/u0uPMrXwkjHAXU14gjQAF9C2OuXTmJc63A68eXm8E8Y1SSdB46coNVY1dl8gHx
+         c7SOwQ13j4B+RENDIgzzUtrFjLcypXH7z2uI/s5xx7AdrpJ+s6T5QtJ9kNuZ3MbPjv38
+         UFCMJxJjZvGCHAF6hOVeFjm7jcafIniLf2SBLv6dgkh/pGZCGyz7Cu/R/HtF8vOIzyiK
+         HaBe0tO67yCdApM1gbqX35Jso5ewzZ/cZ87ugv0NSE/Rt10pjkoSboV3QzD26pdrz/Bs
+         eVSY5+C4yYogCMPuC0SQpV6ZOAWoc7+Dagpjuyo4AG6LPTZgqtsgzMNLSTkhWFB9JaP9
+         501w==
+X-Gm-Message-State: AGi0PuYt1kVjHq2Mp9OZF1U7FLmDO511Fi7MypnB/H9B63yrf/EQf0z6
+        BGyKqb7s1z8u9Y9BSfFeh3WUlw==
+X-Google-Smtp-Source: APiQypJPHFDKHQw+TrwwyYGZNcQlOi1smRsTSQfYnqQixygLyK2V5znQplnhieo8RtEMVHG6wruZOQ==
+X-Received: by 2002:a2e:7805:: with SMTP id t5mr7779439ljc.144.1585582846749;
+        Mon, 30 Mar 2020 08:40:46 -0700 (PDT)
 Received: from wasted.cogentembedded.com ([2a00:1fa0:654:d00e:d4e2:9dcc:b9fb:a661])
-        by smtp.gmail.com with ESMTPSA id i2sm7910219lfg.23.2020.03.30.08.37.22
+        by smtp.gmail.com with ESMTPSA id r2sm4384825lfn.35.2020.03.30.08.40.44
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 30 Mar 2020 08:37:23 -0700 (PDT)
-Subject: Re: [PATCH 4/5] MIPS: DTS: Loongson64: Add PCI Controller Node
+        Mon, 30 Mar 2020 08:40:45 -0700 (PDT)
+Subject: Re: [PATCH 3/5] dt-bindings: Document Loongson PCI Host Controller
 To:     Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-mips@vger.kernel.org
 Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -57,15 +57,15 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Paul Burton <paulburton@kernel.org>, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20200330114239.1112759-1-jiaxun.yang@flygoat.com>
- <20200330114239.1112759-5-jiaxun.yang@flygoat.com>
+ <20200330114239.1112759-4-jiaxun.yang@flygoat.com>
 From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 Organization: Cogent Embedded
-Message-ID: <68446094-263d-d0d9-df00-bc1e81c1dffe@cogentembedded.com>
-Date:   Mon, 30 Mar 2020 18:37:21 +0300
+Message-ID: <8ef09434-45bd-3704-6ff6-7469ebe55a4f@cogentembedded.com>
+Date:   Mon, 30 Mar 2020 18:40:43 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
  Thunderbird/52.2.1
 MIME-Version: 1.0
-In-Reply-To: <20200330114239.1112759-5-jiaxun.yang@flygoat.com>
+In-Reply-To: <20200330114239.1112759-4-jiaxun.yang@flygoat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-MW
 Content-Transfer-Encoding: 7bit
@@ -74,57 +74,76 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello!
-
 On 03/30/2020 02:42 PM, Jiaxun Yang wrote:
 
-> Add PCI Host controller node for Loongson64 with RS780E PCH dts.
-> Note that PCI interrupts are probed via legacy way, as different
-> machine have different interrupt arrangement, we can't cover all
-> of them in dt.
+> PCI host controller found on Loongson PCHs and SoCs.
 > 
 > Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 > ---
->  arch/mips/boot/dts/loongson/rs780e-pch.dtsi | 17 ++++++++++++++++-
->  1 file changed, 16 insertions(+), 1 deletion(-)
+>  .../devicetree/bindings/pci/loongson.yaml     | 52 +++++++++++++++++++
+>  1 file changed, 52 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/loongson.yaml
 > 
-> diff --git a/arch/mips/boot/dts/loongson/rs780e-pch.dtsi b/arch/mips/boot/dts/loongson/rs780e-pch.dtsi
-> index 45c54d555fa4..f09599a4b9d7 100644
-> --- a/arch/mips/boot/dts/loongson/rs780e-pch.dtsi
-> +++ b/arch/mips/boot/dts/loongson/rs780e-pch.dtsi
-> @@ -5,10 +5,25 @@ bus@10000000 {
->  		compatible = "simple-bus";
->  		#address-cells = <2>;
->  		#size-cells = <2>;
-> -		ranges = <0 0x10000000 0 0x10000000 0 0x10000000
-> +		ranges = <0 0x00000000 0 0x00000000 0 0x00010000 /* ioports */
-> +				0 0x10000000 0 0x10000000 0 0x10000000
->  				0 0x40000000 0 0x40000000 0 0x40000000
->  				0xfd 0xfe000000 0xfd 0xfe000000  0 0x2000000 /* PCI Config Space */>;
->  
-> +		pci@1a000000 {
-> +			compatible = "loongson,rs780e-pci";
-> +			device_type = "pci";
-> +			#address-cells = <3>;
-> +			#size-cells = <2>;
-> +			#interrupt-cells = <0x1>;
+> diff --git a/Documentation/devicetree/bindings/pci/loongson.yaml b/Documentation/devicetree/bindings/pci/loongson.yaml
+> new file mode 100644
+> index 000000000000..623847980189
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/loongson.yaml
+> @@ -0,0 +1,52 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/loongson.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Loongson PCI Host Controller
+> +
+> +maintainers:
+> +  - Jiaxun Yang <jiaxun.yang@flygoat.com>
+> +
+> +description: |+
+> +  PCI host controller found on Loongson PCHs and SoCs.
+> +
+> +allOf:
+> +  - $ref: /schemas/pci/pci-bus.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - const: loongson,rs780e-pci
+> +      - const: loongson,ls7a-pci
+> +      - const: loongson,ls2k-pci
+> +
+> +  reg:
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      - description: CFG0 standard config space register
+> +      - description: CFG1 extend config space register
 
-   No need for 0x.
+   Extended?
 
 > +
-> +			reg = <0 0x1a000000 0 0x02000000>;
+> +  ranges:
+> +    maxItems: 3
 > +
-> +			ranges = <0x01000000 0x0 0x00004000 0x0 0x00004000  0x0 0x00004000>,
-> +				<0x02000000 0x0 0x40000000 0x0 0x40000000  0x0 0x40000000>;
-
-   No need for 0x before 0 here either. And why double spaces?
-
 > +
-> +		};
+> +required:
+> +  - compatible
+> +  - reg
+> +  - ranges
 > +
->  		isa {
->  			compatible = "isa";
->  			#address-cells = <2>;
-> 
+> +examples:
+> +  - |
+> +    pci@1a000000 {
+> +      compatible = "loongson,rs780e-pci";
+> +      device_type = "pci";
+> +      #address-cells = <3>;
+> +      #size-cells = <2>;
+> +
+> +      reg = <0x1a000000 0x2000000>;
+> +      ranges = <0x02000000 0 0x40000000 0x40000000 0 0x40000000>;
+> +    };
+> +...
 
 MBR, Sergei
