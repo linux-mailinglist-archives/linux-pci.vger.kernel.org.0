@@ -2,102 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A2DD8198011
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Mar 2020 17:44:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C342A198015
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Mar 2020 17:45:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729605AbgC3Poe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Mar 2020 11:44:34 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2618 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727973AbgC3Poe (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 30 Mar 2020 11:44:34 -0400
-Received: from lhreml712-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id E142A8F24654BDC4DE4B;
-        Mon, 30 Mar 2020 16:44:29 +0100 (IST)
-Received: from lhreml715-chm.china.huawei.com (10.201.108.66) by
- lhreml712-chm.china.huawei.com (10.201.108.63) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 30 Mar 2020 16:44:29 +0100
-Received: from lhreml715-chm.china.huawei.com ([10.201.108.66]) by
- lhreml715-chm.china.huawei.com ([10.201.108.66]) with mapi id 15.01.1713.004;
- Mon, 30 Mar 2020 16:44:29 +0100
-From:   Shiju Jose <shiju.jose@huawei.com>
-To:     Borislav Petkov <bp@alien8.de>
-CC:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "zhangliguang@linux.alibaba.com" <zhangliguang@linux.alibaba.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        Linuxarm <linuxarm@huawei.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        tanxiaofei <tanxiaofei@huawei.com>,
-        yangyicong <yangyicong@huawei.com>
-Subject: RE: [PATCH v6 1/2] ACPI / APEI: Add support to notify the vendor
- specific HW errors
-Thread-Topic: [PATCH v6 1/2] ACPI / APEI: Add support to notify the vendor
- specific HW errors
-Thread-Index: AQHWAsR+4nldebv71E6VKNN8PAfzw6hcw70AgAQRUuCAABIOgIAAEy5wgAAhnICAACCLgA==
-Date:   Mon, 30 Mar 2020 15:44:29 +0000
-Message-ID: <613133075a174454a88312448b9b333c@huawei.com>
-References: <ShijuJose> <20200325164223.650-1-shiju.jose@huawei.com>
- <20200325164223.650-2-shiju.jose@huawei.com> <20200327182214.GD8015@zn.tnic>
- <b180618fb6cb477ea7185979c11c5868@huawei.com>
- <20200330103353.GC16242@zn.tnic>
- <ee79588ee82445dcb76f1fe6c1082fb8@huawei.com>
- <20200330134249.GF16242@zn.tnic>
-In-Reply-To: <20200330134249.GF16242@zn.tnic>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.47.25.189]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1729221AbgC3PpP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Mar 2020 11:45:15 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:40370 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727973AbgC3PpP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Mar 2020 11:45:15 -0400
+Received: by mail-il1-f194.google.com with SMTP id j9so16282937ilr.7;
+        Mon, 30 Mar 2020 08:45:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9R8G5T/VKCO+aqrslpT5o8M241aUmf+x9/X8tSG6fnY=;
+        b=Gb7J8ROSxrWWVLBFmfwIrnOph6TlTtPlU3/ljOAXC6Px2g7v5zZaqPrdWuCdocz8RP
+         ES1SmQ7QleChoFCl1CPseR1DAI+bG2ccRtvFLIcyCDsdg8e6S80XBD3P0n2JWobdKaW0
+         S21J0dXEXryNaAOGDvmLTNq/dLzJABv+IjUQjbwFbghCxnDgqs0OY802MZXwpOR4+jDv
+         iw6uiRRSlE/EwZTnlsGj0+ECn+kBtjX8fuz1jpya+xnCINvTBpIYFQex977tLpNAldtN
+         dIsHat0gGrNkuU/vz1qrMjlPMhcxGxZNWRT7XrYKP2/Tf8dCPUR7mVzWJTl40iUYukIG
+         X1cg==
+X-Gm-Message-State: ANhLgQ1uNi/wepOqPZejN/CEvpr4tXxwfF/mzStGj1BMHr1VdPjTeq/E
+        KrKTYl/lEwBbmCfJWiNEfQ==
+X-Google-Smtp-Source: ADFU+vshXHqdgHy17vaPaT+/cbnSnbdv+mzm7sW3yyhSBYLwQf9VifgKgDNngQteQjbyeb9qGzngYA==
+X-Received: by 2002:a92:ce51:: with SMTP id a17mr12277809ilr.263.1585583114341;
+        Mon, 30 Mar 2020 08:45:14 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id w88sm4961029ila.24.2020.03.30.08.45.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 08:45:13 -0700 (PDT)
+Received: (nullmailer pid 28997 invoked by uid 1000);
+        Mon, 30 Mar 2020 15:45:12 -0000
+Date:   Mon, 30 Mar 2020 09:45:12 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/5] dt-bindings: Document Loongson PCI Host Controller
+Message-ID: <20200330154512.GA27624@bogus>
+References: <20200330114239.1112759-1-jiaxun.yang@flygoat.com>
+ <20200330114239.1112759-4-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200330114239.1112759-4-jiaxun.yang@flygoat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-SGkgQm9yaXMsDQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IEJvcmlzbGF2
-IFBldGtvdiBbbWFpbHRvOmJwQGFsaWVuOC5kZV0NCj5TZW50OiAzMCBNYXJjaCAyMDIwIDE0OjQz
-DQo+VG86IFNoaWp1IEpvc2UgPHNoaWp1Lmpvc2VAaHVhd2VpLmNvbT4NCj5DYzogbGludXgtYWNw
-aUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0KPmtl
-cm5lbEB2Z2VyLmtlcm5lbC5vcmc7IHJqd0Byand5c29ja2kubmV0OyBoZWxnYWFzQGtlcm5lbC5v
-cmc7DQo+bGVuYkBrZXJuZWwub3JnOyBqYW1lcy5tb3JzZUBhcm0uY29tOyB0b255Lmx1Y2tAaW50
-ZWwuY29tOw0KPmdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnOyB6aGFuZ2xpZ3VhbmdAbGludXgu
-YWxpYmFiYS5jb207DQo+dGdseEBsaW51dHJvbml4LmRlOyBMaW51eGFybSA8bGludXhhcm1AaHVh
-d2VpLmNvbT47IEpvbmF0aGFuIENhbWVyb24NCj48am9uYXRoYW4uY2FtZXJvbkBodWF3ZWkuY29t
-PjsgdGFueGlhb2ZlaSA8dGFueGlhb2ZlaUBodWF3ZWkuY29tPjsNCj55YW5neWljb25nIDx5YW5n
-eWljb25nQGh1YXdlaS5jb20+DQo+U3ViamVjdDogUmU6IFtQQVRDSCB2NiAxLzJdIEFDUEkgLyBB
-UEVJOiBBZGQgc3VwcG9ydCB0byBub3RpZnkgdGhlIHZlbmRvcg0KPnNwZWNpZmljIEhXIGVycm9y
-cw0KPg0KPk9uIE1vbiwgTWFyIDMwLCAyMDIwIGF0IDExOjU1OjM1QU0gKzAwMDAsIFNoaWp1IEpv
-c2Ugd3JvdGU6DQo+PiBUaGUgaWRlYSB3YXMgdGhlIGVycm9yIGhhbmRsZWQgZmllbGQgd2lsbCBo
-ZWxwIHRoZSBkZWNvZGluZyBwYXJ0IG9mDQo+PiB0aGUgcmFzZGFlbW9uIHRvIGRvIHRoZSBhcHBy
-b3ByaWF0ZSBzdGVwcyBmb3IgbG9nZ2luZyB0aGUgdmVuZG9yIGVycm9yDQo+PiBpbmZvcm1hdGlv
-biBkZXBlbmRpbmcgb24gd2hldGhlciBhIGNvcnJlc3BvbmRpbmcga2VybmVsIGRyaXZlciBoYXMN
-Cj4+IGhhbmRsZWQgdGhlIGVycm9yIG9yIG5vdC4NCj4NCj5XaGF0J3MgdGhlIGRpZmZlcmVuY2Ug
-Zm9yIHJhc2RhZW1vbiB3aGV0aGVyIHRoZSBlcnJvciBoYXMgYmVlbiBoYW5kbGVkIG9yDQo+bm90
-Pw0KRm9sbG93aW5nIGFyZSBzb21lIG9mIHRoZSBleGFtcGxlcyBvZiB0aGUgdXNhZ2Ugb2YgZXJy
-b3IgaGFuZGxlZCBzdGF0dXMNCmluIHRoZSB2ZW5kb3Igc3BlY2lmaWMgY29kZSBvZiB0aGUgcmFz
-ZGFlbW9uLA0KMS4gcmFzZGFlbW9uIG5lZWQgbm90IHRvIHByaW50IHRoZSB2ZW5kb3IgZXJyb3Ig
-ZGF0YSByZXBvcnRlZCBieSB0aGUgZmlybXdhcmUgaWYgdGhlIA0KICAgIGtlcm5lbCBkcml2ZXIg
-YWxyZWFkeSBwcmludCB0aG9zZSBpbmZvcm1hdGlvbi4gSW4gdGhpcyBjYXNlIHJhc2RhZW1vbiB3
-aWxsIG9ubHkgbmVlZCB0byBzdG9yZQ0KICAgIHRoZSBkZWNvZGVkIHZlbmRvciBlcnJvciBkYXRh
-IHRvIHRoZSBTUUwgZGF0YWJhc2UuICANCjIuIElmIHRoZSB2ZW5kb3Iga2VybmVsIGRyaXZlciB3
-YW50IHRvIHJlcG9ydCBleHRyYSBlcnJvciBpbmZvcm1hdGlvbiB0aHJvdWdoDQogICAgdGhlIHZl
-bmRvciBzcGVjaWZpYyBkYXRhICh0aG91Z2ggcHJlc2VudGx5IHdlIGRvIG5vdCBoYXZlIGFueSBz
-dWNoIHVzZSBjYXNlKSBmb3IgdGhlIHJhc2RhbW9uIHRvIGxvZy4gDQogICAgSSB0aGluayB0aGUg
-ZXJyb3IgaGFuZGxlZCBzdGF0dXMgdXNlZnVsIHRvIGluZGljYXRlIHRoYXQgdGhlIGtlcm5lbCBk
-cml2ZXIgaGFzIGZpbGxlZCB0aGUgZXh0cmEgaW5mb3JtYXRpb24gYW5kDQogICAgcmFzZGFlbW9u
-IHRvIGRlY29kZSBhbmQgbG9nIHRoZW0gYWZ0ZXIgZXh0cmEgZGF0YSBzcGVjaWZpYyB2YWxpZGl0
-eSBjaGVjay4NCiAgICAgIA0KPg0KPi0tDQo+UmVnYXJkcy9HcnVzcywNCj4gICAgQm9yaXMuDQo+
-DQo+aHR0cHM6Ly9wZW9wbGUua2VybmVsLm9yZy90Z2x4L25vdGVzLWFib3V0LW5ldGlxdWV0dGUN
-Cg0KVGhhbmtzLA0KU2hpanUNCg==
+On Mon, 30 Mar 2020 19:42:28 +0800, Jiaxun Yang wrote:
+> 
+> PCI host controller found on Loongson PCHs and SoCs.
+> 
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> ---
+>  .../devicetree/bindings/pci/loongson.yaml     | 52 +++++++++++++++++++
+>  1 file changed, 52 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/loongson.yaml
+> 
+
+My bot found errors running 'make dt_binding_check' on your patch:
+
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/loongson.example.dt.yaml: pci@1a000000: ranges: [[33554432, 0, 1073741824, 1073741824, 0, 1073741824]] is too short
+
+See https://patchwork.ozlabs.org/patch/1263901
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
