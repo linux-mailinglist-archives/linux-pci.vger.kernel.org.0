@@ -2,131 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E7523198E33
-	for <lists+linux-pci@lfdr.de>; Tue, 31 Mar 2020 10:23:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E2C91991D3
+	for <lists+linux-pci@lfdr.de>; Tue, 31 Mar 2020 11:21:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729624AbgCaIXe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 31 Mar 2020 04:23:34 -0400
-Received: from foss.arm.com ([217.140.110.172]:47290 "EHLO foss.arm.com"
+        id S1730548AbgCaJVg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 31 Mar 2020 05:21:36 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:50816 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726528AbgCaIXe (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 31 Mar 2020 04:23:34 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6A4D530E;
-        Tue, 31 Mar 2020 01:23:33 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2C58F3F71E;
-        Tue, 31 Mar 2020 01:23:31 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 09:23:25 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     bjorn@helgaas.com
-Cc:     Vidya Sagar <vidyas@nvidia.com>,
-        Bjorn Helgaas <helgaas@kernel.org>, robh+dt@kernel.org,
-        thierry.reding@gmail.com, jonathanh@nvidia.com,
-        Andrew Murray <andrew.murray@arm.com>, kishon@ti.com,
-        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        ARM <linux-arm-kernel@lists.infradead.org>, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V5 5/5] PCI: tegra: Add support for PCIe endpoint mode in
- Tegra194
-Message-ID: <20200331082325.GA32028@e121166-lin.cambridge.arm.com>
-References: <20200330214721.GA128269@google.com>
- <bba72560-85cc-b59b-b0e8-bfc7c7408736@nvidia.com>
- <CABhMZUXub++CLTJ_E88Jwar5RvVfL+3aWOHqZf5XSVeyS8X=wA@mail.gmail.com>
+        id S1731473AbgCaJJg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:09:36 -0400
+Received: from zn.tnic (p200300EC2F0C09003D11AEAD23413CBD.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:900:3d11:aead:2341:3cbd])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 65EE11EC0CBD;
+        Tue, 31 Mar 2020 11:09:34 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1585645774;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=IAjq8vkgmuwy5aDCdanAPTga8JYTa70hGlJvTK2iieo=;
+        b=mJDZC8MHDaOJXLbCV9bY6OQtS+NMQtl8VJzFy9IxXRsNRFMmcDI1hXEW3sx9fvxViwZqQ+
+        zaRUoDDBCBBARpOWZbSW+AgNfMQqetampHH+3rfhgtHcGFWgTYHep2T2a9mrqIZgRdtN0o
+        EPV1nJxi4h/xiUcIxBrPv7zKPSEclJw=
+Date:   Tue, 31 Mar 2020 11:09:29 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Shiju Jose <shiju.jose@huawei.com>
+Cc:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "zhangliguang@linux.alibaba.com" <zhangliguang@linux.alibaba.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        Linuxarm <linuxarm@huawei.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        tanxiaofei <tanxiaofei@huawei.com>,
+        yangyicong <yangyicong@huawei.com>
+Subject: Re: [PATCH v6 1/2] ACPI / APEI: Add support to notify the vendor
+ specific HW errors
+Message-ID: <20200331090929.GB29131@zn.tnic>
+References: <ShijuJose>
+ <20200325164223.650-1-shiju.jose@huawei.com>
+ <20200325164223.650-2-shiju.jose@huawei.com>
+ <20200327182214.GD8015@zn.tnic>
+ <b180618fb6cb477ea7185979c11c5868@huawei.com>
+ <20200330103353.GC16242@zn.tnic>
+ <ee79588ee82445dcb76f1fe6c1082fb8@huawei.com>
+ <20200330134249.GF16242@zn.tnic>
+ <613133075a174454a88312448b9b333c@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CABhMZUXub++CLTJ_E88Jwar5RvVfL+3aWOHqZf5XSVeyS8X=wA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <613133075a174454a88312448b9b333c@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 10:00:57PM -0500, Bjorn Helgaas wrote:
-> On Mon, Mar 30, 2020 at 9:55 PM Vidya Sagar <vidyas@nvidia.com> wrote:
-> >
-> >
-> >
-> > On 3/31/2020 3:17 AM, Bjorn Helgaas wrote:
-> > > External email: Use caution opening links or attachments
-> > >
-> > >
-> > > On Tue, Mar 03, 2020 at 11:40:52PM +0530, Vidya Sagar wrote:
-> > >> Add support for the endpoint mode of Synopsys DesignWare core based
-> > >> dual mode PCIe controllers present in Tegra194 SoC.
-> > >>
-> > >> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> > >> Acked-by: Thierry Reding <treding@nvidia.com>
-> > >> ---
-> > >> V5:
-> > >> * Added Acked-by: Thierry Reding <treding@nvidia.com>
-> > >> * Removed unwanted header file inclusion
-> > >>
-> > >> V4:
-> > >> * Addressed Lorenzo's review comments
-> > >> * Started using threaded irqs instead of kthreads
-> > >>
-> > >> V3:
-> > >> * Addressed Thierry's review comments
-> > >>
-> > >> V2:
-> > >> * Addressed Bjorn's review comments
-> > >> * Made changes as part of addressing review comments for other patches
-> > >>
-> > >>   drivers/pci/controller/dwc/Kconfig         |  30 +-
-> > >>   drivers/pci/controller/dwc/pcie-tegra194.c | 679 ++++++++++++++++++++-
-> > >>   2 files changed, 691 insertions(+), 18 deletions(-)
-> > >>
-> > >> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> > >> index 0830dfcfa43a..169cde58dd92 100644
-> > >> --- a/drivers/pci/controller/dwc/Kconfig
-> > >> +++ b/drivers/pci/controller/dwc/Kconfig
-> > >> @@ -248,14 +248,38 @@ config PCI_MESON
-> > >>          implement the driver.
-> > >>
-> > >>   config PCIE_TEGRA194
-> > >> -     tristate "NVIDIA Tegra194 (and later) PCIe controller"
-> > >> +     tristate
-> > >> +
-> > >> +config PCIE_TEGRA194_HOST
-> > >> +     tristate "NVIDIA Tegra194 (and later) PCIe controller - Host Mode"
-> > >>        depends on ARCH_TEGRA_194_SOC || COMPILE_TEST
-> > >>        depends on PCI_MSI_IRQ_DOMAIN
-> > >>        select PCIE_DW_HOST
-> > >>        select PHY_TEGRA194_P2U
-> > >> +     select PCIE_TEGRA194
-> > >> +     default y
-> > >
-> > > Sorry I missed this before, but why is this "default y"?  From
-> > > Documentation/kbuild/kconfig-language.rst:
-> > >
-> > >    The default value deliberately defaults to 'n' in order to avoid
-> > >    bloating the build. With few exceptions, new config options should
-> > >    not change this. The intent is for "make oldconfig" to add as little
-> > >    as possible to the config from release to release.
-> > >
-> > > I do see that several other things in other drivers/pci/ Kconfig files
-> > > are also "default y", and we should probably change some of them.  But
-> > > I don't want to add even more unless there's a good reason.
-> > >
-> > > I'm not looking for more reactions like these:
-> > >
-> > > https://lore.kernel.org/r/CAHk-=wiZ24JuVehJ5sEC0UG1Gk2nvB363wO02RRsR1oEht6R9Q@mail.gmail.com
-> > > https://lore.kernel.org/r/CA+55aFzPpuHU1Nqd595SEQS=F+kXMzPs0Rba9FUgTodGxmXsgg@mail.gmail.com
-> > >
-> > > Can you please update this patch to either remove the "default y" or
-> > > add the rationale for keeping it?
-> > I'm fine with removing 'default y' line.
-> > Should I send a patch only with this change?
-> 
-> I think it's probably just as easy for Lorenzo to delete that line on
-> his branch.  If not, I'll cherry-pick the patches on that branch and
-> do it locally.
+On Mon, Mar 30, 2020 at 03:44:29PM +0000, Shiju Jose wrote:
+> 1. rasdaemon need not to print the vendor error data reported by the firmware if the 
+>     kernel driver already print those information. In this case rasdaemon will only need to store
+>     the decoded vendor error data to the SQL database.
 
-Done, pushed out. It is a guideline that it is worth keeping in mind
-while I review the code, sorry for missing it.
+Well, there's a problem with this:
 
-Lorenzo
+rasdaemon printing != kernel driver printing
+
+Because printing in dmesg would need people to go grep dmesg.
+
+Printing through rasdaemon or any userspace agent, OTOH, is a lot more
+flexible wrt analyzing and collecting those error records. Especially
+if you are a data center admin and you want to collect all your error
+records: grepping dmesg simply doesn't scale versus all the rasdaemon
+agents reporting to a centrallized location.
+
+> 2. If the vendor kernel driver want to report extra error information through
+>     the vendor specific data (though presently we do not have any such use case) for the rasdamon to log. 
+>     I think the error handled status useful to indicate that the kernel driver has filled the extra information and
+>     rasdaemon to decode and log them after extra data specific validity check.
+
+The kernel driver can report that extra information without the kernel
+saying that the error was handled.
+
+So I still see no sense for the kernel to tell userspace explicitly that
+it handled the error. There might be a valid reason, though, of which I
+cannot think of right now.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
