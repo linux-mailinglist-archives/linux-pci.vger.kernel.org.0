@@ -2,113 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 61772199D9D
-	for <lists+linux-pci@lfdr.de>; Tue, 31 Mar 2020 20:02:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E5937199FD1
+	for <lists+linux-pci@lfdr.de>; Tue, 31 Mar 2020 22:12:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726209AbgCaSCp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 31 Mar 2020 14:02:45 -0400
-Received: from mga06.intel.com ([134.134.136.31]:16127 "EHLO mga06.intel.com"
+        id S1727837AbgCaUM3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 31 Mar 2020 16:12:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726199AbgCaSCo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 31 Mar 2020 14:02:44 -0400
-IronPort-SDR: j2NZ3SlPxn625hqJet8G8+Vs3jyT3gZveo1kbHBzeVr1Sq3iAHkMkzORzP03etou3Uum/AALkx
- TLEV/skRKVDw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2020 11:02:44 -0700
-IronPort-SDR: Xmx1u/O6AfpkZBrQjD1Mw4wxecKCMtKYwvOUKO7DlkvZwglVp87aDyPldtXFWEkyA6bcaalHGx
- HGz90nJ1R8Yg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,328,1580803200"; 
-   d="scan'208";a="240205398"
-Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.251.20.204]) ([10.251.20.204])
-  by fmsmga007.fm.intel.com with ESMTP; 31 Mar 2020 11:02:42 -0700
-Subject: Re: [PATCH 3/6] pci: add PCI quirk cmdmem fixup for Intel DSA device
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     vkoul@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, gregkh@linuxfoundation.org,
-        arnd@arndb.de, linux-kernel@vger.kernel.org, x86@kernel.org,
-        dmaengine@vger.kernel.org, dan.j.williams@intel.com,
-        ashok.raj@intel.com, fenghua.yu@intel.com,
-        linux-pci@vger.kernel.org, tony.luck@intel.com, jing.lin@intel.com,
-        sanjay.k.kumar@intel.com
-References: <20200331155906.GA191980@google.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <03073d25-9351-5bc7-e971-8e21b82f122f@intel.com>
-Date:   Tue, 31 Mar 2020 11:02:41 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S1727937AbgCaUM3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 31 Mar 2020 16:12:29 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51F43206EB;
+        Tue, 31 Mar 2020 20:12:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585685548;
+        bh=7/omDWAID+5hcfz/WYWgmxUkv9xqXa5HemPJhM6NYEk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=wP/hrfALbj0aKSLxvoh+umRqrfvSP7x6pVgVmI50E6tJyUMAeUU37qGcgya1LB6Ru
+         T368mYhIQrlsqN5WtwBmigCm9rtmgcpfr3ohnRobzzQVy9tIlgBWJjVOeTicX3gAqE
+         YtDfNtCgydegOJdLZ9KMGaZPu0ZSFXdMqtbCh7BM=
+Date:   Tue, 31 Mar 2020 15:12:25 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Alan Mikhak <alan.mikhak@sifive.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lorenzo.pieralisi@arm.com, amurray@thegoodpenguin.co.uk,
+        kishon@ti.com, paul.walmsley@sifive.com
+Subject: Re: [PATCH] PCI: Warn about MEM resource size being too big
+Message-ID: <20200331201225.GA19649@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20200331155906.GA191980@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1585613987-8453-1-git-send-email-alan.mikhak@sifive.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+$ git log --oneline drivers/pci/controller/dwc/pcie-designware-host.c
+7fe71aa84b43 ("PCI: dwc: Use pci_parse_request_of_pci_ranges()")
+1137e61dcb99 ("PCI: dwc: Fix find_next_bit() usage")
+0b24134f7888 ("PCI: dwc: Add validation that PCIe core is set to correct mode")
+3924bc2fd1b6 ("PCI: dwc: Group DBI registers writes requiring unlocking")
+ca98329d3b58 ("PCI: dwc: Export APIs to support .remove() implementation")
+9d071cade30a ("PCI: dwc: Add API support to de-initialize host")
+fe23274f72f4 ("PCI: dwc: Save root bus for driver remove hooks")
 
-On 3/31/2020 8:59 AM, Bjorn Helgaas wrote:
-> Take a look and make yours match (applies to other patches in the
-> series as well):
->
->    $ git log --oneline drivers/pci/quirks.c
->    299bd044a6f3 ("PCI: Add ACS quirk for Zhaoxin Root/Downstream Ports")
->    0325837c51cb ("PCI: Add ACS quirk for Zhaoxin multi-function devices")
->    2880325bda8d ("PCI: Avoid ASMedia XHCI USB PME# from D0 defect")
->    b88bf6c3b6ff ("PCI: Add boot interrupt quirk mechanism for Xeon chipsets")
->    5e89cd303e3a ("PCI: Mark AMD Navi14 GPU rev 0xc5 ATS as broken")
->    7b90dfc4873b ("PCI: Add DMA alias quirk for PLX PEX NTB")
->    09298542cd89 ("PCI: Add nr_devfns parameter to pci_add_dma_alias()")
->
-> There's no need to mention "PCI" twice.  Also no need for both "quirk"
-> and "fixup".  This is all in the interest of putting more information
-> in the small space of the subject line.
-Ok I'll fix up.
->
-> On Mon, Mar 30, 2020 at 02:27:06PM -0700, Dave Jiang wrote:
->> Since there is no standard way that defines a PCI device that receives
->> descriptors or commands with synchronous write operations, add quirk to set
->> cmdmem for the Intel accelerator device that supports it.
->>
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->> ---
->>   drivers/pci/quirks.c |   11 +++++++++++
->>   1 file changed, 11 insertions(+)
->>
->> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
->> index 29f473ebf20f..ba0572b9b9c8 100644
->> --- a/drivers/pci/quirks.c
->> +++ b/drivers/pci/quirks.c
->> @@ -5461,3 +5461,14 @@ static void quirk_reset_lenovo_thinkpad_p50_nvgpu(struct pci_dev *pdev)
->>   DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, 0x13b1,
->>   			      PCI_CLASS_DISPLAY_VGA, 8,
->>   			      quirk_reset_lenovo_thinkpad_p50_nvgpu);
->> +
->> +/*
->> + * Until the PCI Sig defines a standard capaiblity check that indicates a
->> + * device has cmdmem with synchronous write capability, we'll add a quirk
->> + * for device that supports it.
-> s/PCI Sig/PCI-SIG/
-> s/capaiblity/capability/
->
-> It's not clear why this would need to be in drivers/pci/quirks.c as
-> opposed to being in the driver itself.
+Please make yours match.  Please mention something about the 32-bit
+limit instead of just "being too big".
 
-That would make the driver to set the PCI device struct cap bit instead 
-of this being set on discovery right? And if the driver isn't loaded, 
-then the cap wouldn't be set. In the future if user space wants to 
-discover this information that may be an issue.
+Wrap the commit log to 75 columns to be consistent with the rest of
+the history.
 
+On Mon, Mar 30, 2020 at 05:19:47PM -0700, Alan Mikhak wrote:
+> Output a warning for MEM resource size with
+> non-zero upper 32-bits.
+> 
+> ATU programming functions limit the size of
+> the translated region to 4GB by using a u32 size
+> parameter. Function dw_pcie_prog_outbound_atu()
+> does not program the upper 32-bit ATU limit
+> register. This may result in undefined behavior
+> for resource sizes with non-zero upper 32-bits.
+> 
+> For example, a 128GB address space starting at
+> physical CPU address of 0x2000000000 with size of
+> 0x2000000000 needs the following values programmed
+> into the lower and upper 32-bit limit registers:
+>  0x3fffffff in the upper 32-bit limit register
+>  0xffffffff in the lower 32-bit limit register
+> 
+> Currently, only the lower 32-bit limit register is
+> programmed with a value of 0xffffffff but the upper
+> 32-bit limit register is not being programmed.
+> As a result, the upper 32-bit limit register remains
+> at its default value after reset of 0x0. This would
+> be a problem for a 128GB PCIe space because in
+> effect its size gets reduced to 4GB.
+> 
+> ATU programming functions can be changed to
+> specify a u64 size parameter for the translated
+> region. Along with this change, the internal
+> calculation of the limit address, the address of
+> the last byte in the translated region, needs to
+> change such that both the lower 32-bit and upper
+> 32-bit limit registers can be programmed correctly.
+> 
+> Changing the ATU programming functions is high
+> impact. Without change, this issue can go
+> unnoticed. A warning may prompt the user to
+> look into possible issues.
 
+So this is basically a warning, and we could actually *fix* the
+problem with more effort?  I vote for the fix.
 
->
->> + */
->> +static void device_cmdmem_fixup(struct pci_dev *pdev)
->> +{
->> +	pdev->cmdmem = 1;
->> +}
->> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0b25, device_cmdmem_fixup);
->>
+> This limitation also means that multiple ATUs
+> would need to be used to map larger regions.
+> 
+> Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-designware-host.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index 395feb8ca051..37a8c71ef89a 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -325,6 +325,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>  	struct pci_bus *child;
+>  	struct pci_host_bridge *bridge;
+>  	struct resource *cfg_res;
+> +	resource_size_t mem_size;
+>  	u32 hdr_type;
+>  	int ret;
+>  
+> @@ -362,7 +363,10 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>  		case IORESOURCE_MEM:
+>  			pp->mem = win->res;
+>  			pp->mem->name = "MEM";
+> -			pp->mem_size = resource_size(pp->mem);
+> +			mem_size = resource_size(pp->mem);
+> +			if (upper_32_bits(mem_size))
+> +				dev_warn(dev, "MEM resource size too big\n");
+> +			pp->mem_size = mem_size;
+>  			pp->mem_bus_addr = pp->mem->start - win->offset;
+>  			break;
+>  		case 0:
+> -- 
+> 2.7.4
+> 
