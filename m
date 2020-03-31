@@ -2,132 +2,148 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DF0871988C7
-	for <lists+linux-pci@lfdr.de>; Tue, 31 Mar 2020 02:20:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DDE9198A36
+	for <lists+linux-pci@lfdr.de>; Tue, 31 Mar 2020 04:55:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729142AbgCaAUB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Mar 2020 20:20:01 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:43720 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729060AbgCaAUB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Mar 2020 20:20:01 -0400
-Received: by mail-pf1-f193.google.com with SMTP id f206so9437764pfa.10
-        for <linux-pci@vger.kernel.org>; Mon, 30 Mar 2020 17:20:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=nzstlQpIyRmo1VDCg2iWQAJyN95Yb00537nPa+CVJCU=;
-        b=gZ3J4CaoSvY0pAx9b12IkXUUsAj4hJOGdGwXK8xSBf8TwdxNAPx507FelCRgohNBfV
-         MDgEkp7PqXQvMYb4xLetmuFxv9WQNA0GjJcwPVGSPu55Q8IxDDnJwHjrqi9Lxfr5QYPN
-         fqE04SBjbvkY08Ubf5skIBgDMSJR0LbARqBG2WtX2jaYjaefAtvlOjdGzLfR6/UTCubF
-         +lt0dOpBsCY2vKley4ZnzbXOTUkp2KFAv/cvqk9ddutU+vc6EJnEbORiQyXTjdwW9T1T
-         kCI13kPKbrOxGbnh69mn0bSSQMcTzvPXj1SPvq6yk+J4bM9eeKHKNYYsu4xTJonoRFI5
-         FFYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=nzstlQpIyRmo1VDCg2iWQAJyN95Yb00537nPa+CVJCU=;
-        b=oF86afeALCcYhKtEmlVe227gvAjPnoLif2Bm8ro7AUlHoxJdZDFtwxUbAjemlo1G0Q
-         /7TikmT/8bNte2ivefeUOK4w8rntKGsp98eJlgUPjwXnQrrcjnRYV6cwP5OOqMRylRef
-         VtAlfbweWu6U2C+RPAH/awIRLZpx9+W55jQA4AyTqXG4DyzObhzn6tD7P/cNzxGpz0kx
-         RwaXqk86tOr8h2GH1pev4AoXbH5EZYloVJ7XO3nuCiiMFpJrvfydQbTYV45Q1EYIl40Y
-         N8K5xige52bhH1CiMy3ahn7PJXQowi6TmiGTk/nRl+5seoPtm/CM5AfHnPZWTp9cBir0
-         h02Q==
-X-Gm-Message-State: ANhLgQ3+kcqUtI24/ZHfsblUy6B/sw1Nb9bqSmqAjR2J4Viuh64iy5c5
-        zMgGMbplhzbyS9FvYnVcG3ERdcNshtE=
-X-Google-Smtp-Source: ADFU+vs2WgX1p7+yezebAWm866yMzqxV0S8XOHv2B+LmfMjIZfh0mO41rhIPlCTm0DQn9h0F6RABGg==
-X-Received: by 2002:a05:6a00:c8:: with SMTP id e8mr14715763pfj.131.1585614000257;
-        Mon, 30 Mar 2020 17:20:00 -0700 (PDT)
-Received: from nuc7.sifive.com (c-24-5-48-146.hsd1.ca.comcast.net. [24.5.48.146])
-        by smtp.gmail.com with ESMTPSA id w127sm11069176pfb.70.2020.03.30.17.19.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 30 Mar 2020 17:19:59 -0700 (PDT)
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-X-Google-Original-From: Alan Mikhak < alan.mikhak@sifive.com >
-To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lorenzo.pieralisi@arm.com, amurray@thegoodpenguin.co.uk,
-        bhelgaas@google.com, kishon@ti.com, paul.walmsley@sifive.com
-Cc:     Alan Mikhak <alan.mikhak@sifive.com>
-Subject: [PATCH] PCI: Warn about MEM resource size being too big
-Date:   Mon, 30 Mar 2020 17:19:47 -0700
-Message-Id: <1585613987-8453-1-git-send-email-alan.mikhak@sifive.com>
-X-Mailer: git-send-email 2.7.4
+        id S1729358AbgCaCzR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Mar 2020 22:55:17 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:16129 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727464AbgCaCzR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Mar 2020 22:55:17 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e82b1070000>; Mon, 30 Mar 2020 19:55:03 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 30 Mar 2020 19:55:16 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 30 Mar 2020 19:55:16 -0700
+Received: from [10.25.76.105] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 31 Mar
+ 2020 02:55:11 +0000
+Subject: Re: [PATCH V5 5/5] PCI: tegra: Add support for PCIe endpoint mode in
+ Tegra194
+To:     Bjorn Helgaas <helgaas@kernel.org>, <lorenzo.pieralisi@arm.com>
+CC:     <robh+dt@kernel.org>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <andrew.murray@arm.com>, <kishon@ti.com>,
+        <gustavo.pimentel@synopsys.com>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20200330214721.GA128269@google.com>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <bba72560-85cc-b59b-b0e8-bfc7c7408736@nvidia.com>
+Date:   Tue, 31 Mar 2020 08:25:08 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <20200330214721.GA128269@google.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1585623303; bh=3ahKFXsLD6s6zihW7Lrcb4QHzaeo3c4wt/u7RD8Off8=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=AXkyKXnb8indhkbOroXPMP4WQtUfPJRj34vliLWkwdB295fSHutztOclP4xtwlFIL
+         VUwgXUoRhEpOTHDQsvwIfChY17yF7+xfu8J1u63hVIJm2GbtQITCYFmBe2ZGUWb0pB
+         uOZ7HACkHdbHrenA5JBlytWRzMzlt91oq0+ShC6KAe2xnEHPtuNC/35wA8L07ywvh3
+         uk+cm/n538EUcnSvTJREeblguG7+R12wAaSP/JNEDESPrhRK/YVS3RoKL4bKhDJOCL
+         pKE18gpS5YJF5KgA7axDuGGih/TEkk3yquDARTo0LqkXG66ISy2QNblc91BhLEHEWj
+         cvMTmJrwHnl/g==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Output a warning for MEM resource size with
-non-zero upper 32-bits.
 
-ATU programming functions limit the size of
-the translated region to 4GB by using a u32 size
-parameter. Function dw_pcie_prog_outbound_atu()
-does not program the upper 32-bit ATU limit
-register. This may result in undefined behavior
-for resource sizes with non-zero upper 32-bits.
 
-For example, a 128GB address space starting at
-physical CPU address of 0x2000000000 with size of
-0x2000000000 needs the following values programmed
-into the lower and upper 32-bit limit registers:
- 0x3fffffff in the upper 32-bit limit register
- 0xffffffff in the lower 32-bit limit register
+On 3/31/2020 3:17 AM, Bjorn Helgaas wrote:
+> External email: Use caution opening links or attachments
+> 
+> 
+> On Tue, Mar 03, 2020 at 11:40:52PM +0530, Vidya Sagar wrote:
+>> Add support for the endpoint mode of Synopsys DesignWare core based
+>> dual mode PCIe controllers present in Tegra194 SoC.
+>>
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> Acked-by: Thierry Reding <treding@nvidia.com>
+>> ---
+>> V5:
+>> * Added Acked-by: Thierry Reding <treding@nvidia.com>
+>> * Removed unwanted header file inclusion
+>>
+>> V4:
+>> * Addressed Lorenzo's review comments
+>> * Started using threaded irqs instead of kthreads
+>>
+>> V3:
+>> * Addressed Thierry's review comments
+>>
+>> V2:
+>> * Addressed Bjorn's review comments
+>> * Made changes as part of addressing review comments for other patches
+>>
+>>   drivers/pci/controller/dwc/Kconfig         |  30 +-
+>>   drivers/pci/controller/dwc/pcie-tegra194.c | 679 ++++++++++++++++++++-
+>>   2 files changed, 691 insertions(+), 18 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+>> index 0830dfcfa43a..169cde58dd92 100644
+>> --- a/drivers/pci/controller/dwc/Kconfig
+>> +++ b/drivers/pci/controller/dwc/Kconfig
+>> @@ -248,14 +248,38 @@ config PCI_MESON
+>>          implement the driver.
+>>
+>>   config PCIE_TEGRA194
+>> -     tristate "NVIDIA Tegra194 (and later) PCIe controller"
+>> +     tristate
+>> +
+>> +config PCIE_TEGRA194_HOST
+>> +     tristate "NVIDIA Tegra194 (and later) PCIe controller - Host Mode"
+>>        depends on ARCH_TEGRA_194_SOC || COMPILE_TEST
+>>        depends on PCI_MSI_IRQ_DOMAIN
+>>        select PCIE_DW_HOST
+>>        select PHY_TEGRA194_P2U
+>> +     select PCIE_TEGRA194
+>> +     default y
+> 
+> Sorry I missed this before, but why is this "default y"?  From
+> Documentation/kbuild/kconfig-language.rst:
+> 
+>    The default value deliberately defaults to 'n' in order to avoid
+>    bloating the build. With few exceptions, new config options should
+>    not change this. The intent is for "make oldconfig" to add as little
+>    as possible to the config from release to release.
+> 
+> I do see that several other things in other drivers/pci/ Kconfig files
+> are also "default y", and we should probably change some of them.  But
+> I don't want to add even more unless there's a good reason.
+> 
+> I'm not looking for more reactions like these:
+> 
+> https://lore.kernel.org/r/CAHk-=wiZ24JuVehJ5sEC0UG1Gk2nvB363wO02RRsR1oEht6R9Q@mail.gmail.com
+> https://lore.kernel.org/r/CA+55aFzPpuHU1Nqd595SEQS=F+kXMzPs0Rba9FUgTodGxmXsgg@mail.gmail.com
+> 
+> Can you please update this patch to either remove the "default y" or
+> add the rationale for keeping it?
+I'm fine with removing 'default y' line.
+Should I send a patch only with this change?
 
-Currently, only the lower 32-bit limit register is
-programmed with a value of 0xffffffff but the upper
-32-bit limit register is not being programmed.
-As a result, the upper 32-bit limit register remains
-at its default value after reset of 0x0. This would
-be a problem for a 128GB PCIe space because in
-effect its size gets reduced to 4GB.
-
-ATU programming functions can be changed to
-specify a u64 size parameter for the translated
-region. Along with this change, the internal
-calculation of the limit address, the address of
-the last byte in the translated region, needs to
-change such that both the lower 32-bit and upper
-32-bit limit registers can be programmed correctly.
-
-Changing the ATU programming functions is high
-impact. Without change, this issue can go
-unnoticed. A warning may prompt the user to
-look into possible issues.
-
-This limitation also means that multiple ATUs
-would need to be used to map larger regions.
-
-Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
----
- drivers/pci/controller/dwc/pcie-designware-host.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index 395feb8ca051..37a8c71ef89a 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -325,6 +325,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 	struct pci_bus *child;
- 	struct pci_host_bridge *bridge;
- 	struct resource *cfg_res;
-+	resource_size_t mem_size;
- 	u32 hdr_type;
- 	int ret;
- 
-@@ -362,7 +363,10 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 		case IORESOURCE_MEM:
- 			pp->mem = win->res;
- 			pp->mem->name = "MEM";
--			pp->mem_size = resource_size(pp->mem);
-+			mem_size = resource_size(pp->mem);
-+			if (upper_32_bits(mem_size))
-+				dev_warn(dev, "MEM resource size too big\n");
-+			pp->mem_size = mem_size;
- 			pp->mem_bus_addr = pp->mem->start - win->offset;
- 			break;
- 		case 0:
--- 
-2.7.4
-
+Thanks,
+Vidya Sagar
+> 
+>> +     help
+>> +       Enables support for the PCIe controller in the NVIDIA Tegra194 SoC to
+>> +       work in host mode. There are two instances of PCIe controllers in
+>> +       Tegra194. This controller can work either as EP or RC. In order to
+>> +       enable host-specific features PCIE_TEGRA194_HOST must be selected and
+>> +       in order to enable device-specific features PCIE_TEGRA194_EP must be
+>> +       selected. This uses the DesignWare core.
