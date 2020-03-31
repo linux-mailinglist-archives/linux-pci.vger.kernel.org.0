@@ -2,95 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 158B1199CF3
-	for <lists+linux-pci@lfdr.de>; Tue, 31 Mar 2020 19:33:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B9E8199D0B
+	for <lists+linux-pci@lfdr.de>; Tue, 31 Mar 2020 19:38:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726156AbgCaRdx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 31 Mar 2020 13:33:53 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:47072 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbgCaRdx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 31 Mar 2020 13:33:53 -0400
-Received: by mail-io1-f65.google.com with SMTP id i3so13463177ioo.13;
-        Tue, 31 Mar 2020 10:33:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1kD178IJWLF7OrXvGCPAuwYTFKdbiIs5uu5/dy92+bw=;
-        b=KOn0F2+S7x8D2vARZeltg5HDUNyM2vS63C7Yce53FrPEzQq0KWRUq72Wde3GcvrRpe
-         cmBYkev12oZb8iyuAOge2bQIw+nQHQXZ2XQjUr5bSlTS+n98e3kZVRDqbChGKpzGY6iD
-         xoTl6F2yFPh4wx2yyGn5Mu8C/Hp7pAu2vYBV0xd8K2O8Utk5EFux4sqUvkwLBqRd//JO
-         +JN1boPkU1EMkotUg5tOxfYnPyC14MfYx5v7MtFuiP3jPOWNA2Sm/KAwbd99tC2omD31
-         0Adaensf6trexpOmQuCpe/19POgDzISvJE42HOyiSs7RSWojPwp0WOyWkM+f3m1poB2X
-         xPTA==
-X-Gm-Message-State: ANhLgQ1C9mgXAglculW9dIkK96Dksmz2Y6yRwZzylYjLNuOKCdpyEXFV
-        XLQRswIvCW6JCbkPNzapNg==
-X-Google-Smtp-Source: ADFU+vveQiIwjf4EHvPqSOhmyd+ZXcJTf30ZEWVFUmCOi01Fq+DbZTOdBdosmijz/0SQTw4Ka76TcQ==
-X-Received: by 2002:a6b:c9d2:: with SMTP id z201mr16653446iof.169.1585676030822;
-        Tue, 31 Mar 2020 10:33:50 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id y1sm5127603ioq.47.2020.03.31.10.33.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 10:33:50 -0700 (PDT)
-Received: (nullmailer pid 29165 invoked by uid 1000);
-        Tue, 31 Mar 2020 17:33:48 -0000
-Date:   Tue, 31 Mar 2020 11:33:48 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 11/12] devicetree: bindings: pci: add force_gen1 for
- qcom,pcie
-Message-ID: <20200331173348.GA28253@bogus>
-References: <20200320183455.21311-1-ansuelsmth@gmail.com>
- <20200320183455.21311-11-ansuelsmth@gmail.com>
+        id S1726164AbgCaRif (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 31 Mar 2020 13:38:35 -0400
+Received: from mga14.intel.com ([192.55.52.115]:29500 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725958AbgCaRif (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 31 Mar 2020 13:38:35 -0400
+IronPort-SDR: 7TFlakVTUL17VraFxIcpmdwQ4TklKa+3aiJz2MFnJt13hcNbOpVXMugtCS+rqjceN++0OoC9QC
+ HeqpMITL6d8A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2020 10:38:35 -0700
+IronPort-SDR: +80pqEqpZGnfcTG8qMjLqnQAe9s7PRwtT7bSfbMMZblRCRcgZ+2Vosn2js7RaCaBytTEQTG/iT
+ sOl13PoC2gfg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,328,1580803200"; 
+   d="scan'208";a="240199847"
+Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.251.20.204]) ([10.251.20.204])
+  by fmsmga007.fm.intel.com with ESMTP; 31 Mar 2020 10:38:32 -0700
+Subject: Re: [PATCH 2/6] device/pci: add cmdmem cap to pci_dev
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     vkoul@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, bhelgaas@google.com, arnd@arndb.de,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        dmaengine@vger.kernel.org, dan.j.williams@intel.com,
+        ashok.raj@intel.com, fenghua.yu@intel.com,
+        linux-pci@vger.kernel.org, tony.luck@intel.com, jing.lin@intel.com,
+        sanjay.k.kumar@intel.com
+References: <158560290392.6059.16921214463585182874.stgit@djiang5-desk3.ch.intel.com>
+ <158560362090.6059.1762280705382158736.stgit@djiang5-desk3.ch.intel.com>
+ <20200331100406.GB1204199@kroah.com>
+ <00d8e780-105e-f552-daf0-9854f2e99a91@intel.com>
+ <20200331172459.GA1841577@kroah.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+Message-ID: <2fb7ca3e-504a-19d7-2e7b-b34ecc481ffc@intel.com>
+Date:   Tue, 31 Mar 2020 10:38:31 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200320183455.21311-11-ansuelsmth@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200331172459.GA1841577@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 07:34:53PM +0100, Ansuel Smith wrote:
-> Document force_gen1 optional definition to limit pcie
-> line to GEN1 speed
-> 
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> ---
->  Documentation/devicetree/bindings/pci/qcom,pcie.txt | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> index 8c1d014f37b0..766876465c42 100644
-> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> @@ -260,6 +260,11 @@
->  	Definition: If not defined is 0. In ipq806x is set to 7. In newer
->  				revision (v2.0) the offset is zero.
->  
-> +- force_gen1:
-> +	Usage: optional
-> +	Value type: <u32>
-> +	Definition: Set 1 to force the pcie line to GEN1
-> +
 
-I believe we have a standard property 'link-speed' for this purpose.
+On 3/31/2020 10:24 AM, Greg KH wrote:
+> On Tue, Mar 31, 2020 at 10:07:07AM -0700, Dave Jiang wrote:
+>> On 3/31/2020 3:04 AM, Greg KH wrote:
+>>> On Mon, Mar 30, 2020 at 02:27:00PM -0700, Dave Jiang wrote:
+>>>> Since the current accelerator devices do not have standard PCIe capability
+>>>> enumeration for accepting ENQCMDS yet, for now an attribute of pdev->cmdmem has
+>>>> been added to struct pci_dev.  Currently a PCI quirk must be used for the
+>>>> devices that have such cap until the PCI cap is standardized. Add a helper
+>>>> function to provide the check if a device supports the cmdmem capability.
+>>>>
+>>>> Such capability is expected to be added to PCIe device cap enumeration in
+>>>> the future.
+>>>>
+>>>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>>>> ---
+>>>>    drivers/base/core.c    |   13 +++++++++++++
+>>>>    include/linux/device.h |    2 ++
+>>>>    include/linux/pci.h    |    1 +
+>>>>    3 files changed, 16 insertions(+)
+>>>>
+>>>> diff --git a/drivers/base/core.c b/drivers/base/core.c
+>>>> index dbb0f9130f42..cd9f5b040ed4 100644
+>>>> --- a/drivers/base/core.c
+>>>> +++ b/drivers/base/core.c
+>>>> @@ -27,6 +27,7 @@
+>>>>    #include <linux/netdevice.h>
+>>>>    #include <linux/sched/signal.h>
+>>>>    #include <linux/sysfs.h>
+>>>> +#include <linux/pci.h>
+>>>>    #include "base.h"
+>>>>    #include "power/power.h"
+>>>> @@ -3790,3 +3791,15 @@ int device_match_any(struct device *dev, const void *unused)
+>>>>    	return 1;
+>>>>    }
+>>>>    EXPORT_SYMBOL_GPL(device_match_any);
+>>>> +
+>>>> +bool device_supports_cmdmem(struct device *dev)
+>>>> +{
+>>>> +	struct pci_dev *pdev;
+>>>> +
+>>>> +	if (!dev_is_pci(dev))
+>>>> +		return false;
+>>>> +
+>>>> +	pdev = to_pci_dev(dev);
+>>>> +	return pdev->cmdmem;
+>>>> +}
+>>>> +EXPORT_SYMBOL_GPL(device_supports_cmdmem);
+>>> Why would a pci-specific function like this be ok to have in the driver
+>>> core?  Please keep it in the pci core code instead.
+>> The original thought was to introduce a new arch level memory mapping
+>> semantic.
+> Please do not.  Also, that's not what you are doing here from what I can
+> tell.
+>
+>> If you feel this should be PCI exclusive, should we make the ioremap
+>> routines for this memory type pci specific as well?
+> Why wouldn't it be?  Is this needed anywhere else?
 
->  * Example for ipq/apq8064
->  	pcie@1b500000 {
->  		compatible = "qcom,pcie-apq8064", "qcom,pcie-ipq8064", "snps,dw-pcie";
-> -- 
-> 2.25.1
-> 
+Ok I'll make this pci specific.
+
+
+>
+> thanks,
+>
+> greg k-h
