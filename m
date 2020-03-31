@@ -2,90 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B325199AFD
-	for <lists+linux-pci@lfdr.de>; Tue, 31 Mar 2020 18:09:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E1BF4199B77
+	for <lists+linux-pci@lfdr.de>; Tue, 31 Mar 2020 18:28:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731071AbgCaQJT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 31 Mar 2020 12:09:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58952 "EHLO mail.kernel.org"
+        id S1730648AbgCaQ2Y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 31 Mar 2020 12:28:24 -0400
+Received: from mga04.intel.com ([192.55.52.120]:53503 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730149AbgCaQJS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 31 Mar 2020 12:09:18 -0400
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DA96206CC;
-        Tue, 31 Mar 2020 16:09:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585670958;
-        bh=g+2oQeN73eEpy7w1yZdo/plA5ttpFIkMcxGJMp+J8EI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=XnVGAD3lzsW/4E34B1uA2eyIxvIa7GOt8B0+kyEBgjwDT22t1cnHQuB5Vs1zOl+ud
-         qTJq+rNCXthCe6JvZQWLss5ZQpIHi8Z5SFEE0glMC1UllBOaJsNvHwys5kXf2qOdGX
-         K5SAnY1zIZpQsP6p2nvqEpFRdELJHLRoIzo1ASQw=
-Date:   Tue, 31 Mar 2020 11:09:14 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Vignesh Raghavendra <vigneshr@ti.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        linux-omap@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH v4] PCI: dwc: pci-dra7xx: Fix MSI IRQ handling
-Message-ID: <20200331160914.GA195472@google.com>
+        id S1726194AbgCaQ2Y (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 31 Mar 2020 12:28:24 -0400
+IronPort-SDR: 3ve4jLUO/SK+KdTsF6Cw5HSJ7YzMGvIDQwEiVBpc8+iltN3vMgBvOGKnIJ1hS1nty2MZuAL1/q
+ XtV7aW82criw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2020 09:28:23 -0700
+IronPort-SDR: zm6TknQZyBWflmCfSeBedo7z97XVXGTJGNsuMJc+rUJW+x40JANgNkImoK8bBUhI4qS/rRvp4G
+ vfOFf/o4dCug==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,328,1580803200"; 
+   d="scan'208";a="237760489"
+Received: from agvardha-mobl.amr.corp.intel.com (HELO [10.254.114.72]) ([10.254.114.72])
+  by orsmga007.jf.intel.com with ESMTP; 31 Mar 2020 09:28:22 -0700
+Subject: Re: [PATCH v18 00/11] Add Error Disconnect Recover (EDR) support
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com
+References: <20200331152805.GA188783@google.com>
+From:   "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Message-ID: <f1ee3d04-97f5-9249-dbaa-0f08198ca19d@linux.intel.com>
+Date:   Tue, 31 Mar 2020 09:28:22 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87zhbxv979.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20200331152805.GA188783@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 11:12:10PM +0200, Thomas Gleixner wrote:
-> Bjorn Helgaas <helgaas@kernel.org> writes:
-> > On Fri, Mar 27, 2020 at 03:24:34PM +0530, Vignesh Raghavendra wrote:
-> >> Due an issue with PCIe wrapper around DWC PCIe IP on dra7xx, driver
-> >> needs to ensure that there are no pending MSI IRQ vector set (i.e
-> >> PCIE_MSI_INTR0_STATUS reads 0 at least once) before exiting IRQ handler.
-> >> Else, the dra7xx PCIe wrapper will not register new MSI IRQs even though
-> >> PCIE_MSI_INTR0_STATUS shows IRQs are pending.
-> >
-> > I'm not an IRQ guy (real IRQ guys CC'd), but I'm wondering if this is
-> > really a symptom of a problem in the generic DWC IRQ handling, not a
-> > problem in dra7xx itself.
-> >
-> > I thought it was sort of standard behavior that a device would not
-> > send a new MSI unless there was a transition from "no status bits set"
-> > to "at least one status bit set".  I'm looking at this text from the
-> > PCIe r5.0 spec, sec 6.7.3.4:
-> 
-> That's for the device side. But this is the host side and that consists
-> of two components:
-> 
->      1) The actual PCIe host controller (DWC)
-> 
->      2) Some hardware wrapper around #1 to glue the host controller IP
->         into the TI SoC.
-> 
-> #1 contains a MSI message receiver unit. PCIE_MSI_INTR0_STATUS is part
-> that.
-> 
-> If there is a MSI message sent to the host then the bit which is
-> corresponding to the sent message (vector) is set in the status
-> register. If a bit is set in the status register then the host
-> controller raises an interrupt at its output.
-> 
-> Here, if I deciphered the above changelog correctly, comes the wrapper
-> glue #2 into play, which seems to be involved in forwarding the host
-> controller interrupt to the CPU's interrupt controller (GIC) and that
-> forwarding mechanism seems to have some issue.
+Hi Bjorn,
 
-Sorry for muddying the waters, and thanks for clarifying it, Thomas.
-
-This patch is on its way to v5.7, and I guess we'll worry about
-whether the interrupt chip reimplementation is overkill later.
-
-Bjorn
+On 3/31/20 8:28 AM, Bjorn Helgaas wrote:
+> Applied to pci/edr for v5.7, except these two:
+Great. Thanks.
+> 
+>      PCI: move {pciehp,shpchp}_is_native() definitions to pci.c
+>      PCI/DPC: Fix DPC recovery issue in non hotplug case
