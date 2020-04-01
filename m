@@ -2,260 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3088919B538
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Apr 2020 20:16:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 482B719B6F3
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Apr 2020 22:29:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732331AbgDASQh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Apr 2020 14:16:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46262 "EHLO mail.kernel.org"
+        id S1732385AbgDAU3l (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Apr 2020 16:29:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727723AbgDASQh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 1 Apr 2020 14:16:37 -0400
+        id S1732337AbgDAU3l (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 1 Apr 2020 16:29:41 -0400
 Received: from localhost (mobile-166-170-223-166.mycingular.net [166.170.223.166])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E671E2063A;
-        Wed,  1 Apr 2020 18:16:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F423206E9;
+        Wed,  1 Apr 2020 20:29:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585764996;
-        bh=k2BgNXhsf/3H4tF9ZBGujMXMf1TCaLXmIhvjhPFF4+w=;
+        s=default; t=1585772980;
+        bh=OlC+pjNqOImVx3sNog54550MPbIAXh6MRIXiUyGaRI8=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Xcr2DO6OshRZMyC6kvUFfL4+w9Zn39vGzXot1ad5HMxiO+SEVXT/Lmw/en8s1AVqC
-         mPh40+i04WaWDDhTiUY1GSkbSWBmUClMuqUbuV8YnXmip0ZEwmZU6n8r9Mp6qhnhf9
-         cYOWjW/hXIpw/7JZtTE+ArrnMLNvhfGxph6KHCd0=
-Date:   Wed, 1 Apr 2020 13:16:32 -0500
+        b=jxNBn1LV5GLPEow67NIpgB2aB7VhkDJXcRVTRY2eH1Lukq7C++VqWPaYwkY86IVZ0
+         U3K5b2fRz9s4Bzr+kORlkX7aEwfQ6bvIU1B7jHl4dxRcdiQmZZaAHkhM+VUSD5Ihgs
+         6nMEE0IHmek+AnjoQFG3KSUCaY1FppPihxG5JrG8=
+Date:   Wed, 1 Apr 2020 15:29:37 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     =?iso-8859-1?Q?Lu=EDs?= Mendes <luis.p.mendes@gmail.com>
-Cc:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: Problem with PCIe enumeration of Google/Coral TPU Edge module on
- Linux
-Message-ID: <20200401181632.GA96762@google.com>
+To:     Alan Mikhak <alan.mikhak@sifive.com>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        lorenzo.pieralisi@arm.com, amurray@thegoodpenguin.co.uk,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>
+Subject: Re: [PATCH] PCI: Warn about MEM resource size being too big
+Message-ID: <20200401202937.GA130497@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEzXK1q1ufa1GoL_ZXdqothu_Dub4SAV1KZ_JFcpuF-p0f2Z4w@mail.gmail.com>
+In-Reply-To: <CABEDWGzfTDtmq==j-GcK3YYbdPX4-Ms=PDuDEiQusV78bUGvDA@mail.gmail.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 10:28:51PM +0100, Luís Mendes wrote:
-> I've removed all other PCIe devices to make the analysis easier.
-> The dmesg with the traces can be found at:
-> https://paste.ubuntu.com/p/W3m2VQCYqg/
+On Tue, Mar 31, 2020 at 01:36:04PM -0700, Alan Mikhak wrote:
+> On Tue, Mar 31, 2020 at 1:12 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Mon, Mar 30, 2020 at 05:19:47PM -0700, Alan Mikhak wrote:
+> > > Output a warning for MEM resource size with
+> > > non-zero upper 32-bits.
+> > >
+> > > ATU programming functions limit the size of
+> > > the translated region to 4GB by using a u32 size
+> > > parameter. Function dw_pcie_prog_outbound_atu()
+> > > does not program the upper 32-bit ATU limit
+> > > register. This may result in undefined behavior
+> > > for resource sizes with non-zero upper 32-bits.
+> > >
+> > > For example, a 128GB address space starting at
+> > > physical CPU address of 0x2000000000 with size of
+> > > 0x2000000000 needs the following values programmed
+> > > into the lower and upper 32-bit limit registers:
+> > >  0x3fffffff in the upper 32-bit limit register
+> > >  0xffffffff in the lower 32-bit limit register
+> > >
+> > > Currently, only the lower 32-bit limit register is
+> > > programmed with a value of 0xffffffff but the upper
+> > > 32-bit limit register is not being programmed.
+> > > As a result, the upper 32-bit limit register remains
+> > > at its default value after reset of 0x0. This would
+> > > be a problem for a 128GB PCIe space because in
+> > > effect its size gets reduced to 4GB.
+> > >
+> > > ATU programming functions can be changed to
+> > > specify a u64 size parameter for the translated
+> > > region. Along with this change, the internal
+> > > calculation of the limit address, the address of
+> > > the last byte in the translated region, needs to
+> > > change such that both the lower 32-bit and upper
+> > > 32-bit limit registers can be programmed correctly.
+> > >
+> > > Changing the ATU programming functions is high
+> > > impact. Without change, this issue can go
+> > > unnoticed. A warning may prompt the user to
+> > > look into possible issues.
+> >
+> > So this is basically a warning, and we could actually *fix* the
+> > problem with more effort?  I vote for the fix.
 > 
-> Didn't find anything new related to BAR0 or BAR2, in the dmesg,
-> though. Anyway I'm no expert in this, maybe it can give you some
-> useful information, still.
+> The fix would impact all PCIe drivers that depend on dwc.
 
-It looks like we assigned the right amount of space to the bridge, but
-for some reason didn't assign it to the device *below* the bridge.
+Is that another way of saying "the fix would *fix* all the drivers
+that depend on dwc"?
 
-I added a few more messages in this patch.  Can you remove the first
-one and replace it with this?  This is still based on v5.6-rc1.
+> I would have no way of validating such a fix without
+> breaking it for everyone let alone the bandwidth it needs.
+> All drivers that depend on dwc seem to be currently happy
+> with the u32 size limit. I suggest we add the warning but
+> keep this issue in mind for a solution that allows existing
+> PCe drivers to phase into the fix on their own individual
+> schedules, if they need to.
 
+Obviously it would *nice* to test all the drivers that depend on dwc,
+but if you're fixing a problem, you verify the fix on your system, and
+the relevant people review it, I don't think exhaustive testing is a
+hard requirement, and I certainly wouldn't expect you to do it.
 
-diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-index 8e40b3e6da77..2cdb705752de 100644
---- a/drivers/pci/bus.c
-+++ b/drivers/pci/bus.c
-@@ -166,6 +166,7 @@ static int pci_bus_alloc_from_region(struct pci_bus *bus, struct resource *res,
- 	resource_size_t max;
- 
- 	type_mask |= IORESOURCE_TYPE_BITS;
-+	pci_info(bus, "%s: %pR type_mask %#lx\n", __func__, res, type_mask);
- 
- 	pci_bus_for_each_resource(bus, r, i) {
- 		resource_size_t min_used = min;
-@@ -173,6 +174,9 @@ static int pci_bus_alloc_from_region(struct pci_bus *bus, struct resource *res,
- 		if (!r)
- 			continue;
- 
-+		pci_info(bus, "%s: from %pR res %#lx r %#lx\n", __func__,
-+			r, res->flags, r->flags);
-+
- 		/* type_mask must match */
- 		if ((res->flags ^ r->flags) & type_mask)
- 			continue;
-@@ -203,6 +207,7 @@ static int pci_bus_alloc_from_region(struct pci_bus *bus, struct resource *res,
- 		if (ret == 0)
- 			return 0;
- 	}
-+	pci_info(bus, "%s: failed\n", __func__);
- 	return -ENOMEM;
- }
- 
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index f2461bf9243d..b42f1bcab25f 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -177,6 +177,7 @@ static void __dev_sort_resources(struct pci_dev *dev, struct list_head *head)
- {
- 	u16 class = dev->class >> 8;
- 
-+	pci_info(dev, "%s\n", __func__);
- 	/* Don't touch classless devices or host bridges or IOAPICs */
- 	if (class == PCI_CLASS_NOT_DEFINED || class == PCI_CLASS_BRIDGE_HOST)
- 		return;
-@@ -280,8 +281,10 @@ static void assign_requested_resources_sorted(struct list_head *head,
- 	list_for_each_entry(dev_res, head, list) {
- 		res = dev_res->res;
- 		idx = res - &dev_res->dev->resource[0];
-+		pci_info(dev_res->dev, "%s: BAR%d %pR\n", __func__, idx, res);
- 		if (resource_size(res) &&
- 		    pci_assign_resource(dev_res->dev, idx)) {
-+			pci_info(dev_res->dev, "%s: failed\n", __func__);
- 			if (fail_head) {
- 				/*
- 				 * If the failed resource is a ROM BAR and
-@@ -372,6 +375,7 @@ static void __assign_resources_sorted(struct list_head *head,
- 	unsigned long fail_type;
- 	resource_size_t add_align, align;
- 
-+	pr_info("%s\n", __func__);
- 	/* Check if optional add_size is there */
- 	if (!realloc_head || list_empty(realloc_head))
- 		goto requested_and_reassign;
-@@ -386,6 +390,7 @@ static void __assign_resources_sorted(struct list_head *head,
- 
- 	/* Update res in head list with add_size in realloc_head list */
- 	list_for_each_entry_safe(dev_res, tmp_res, head, list) {
-+		pci_info(dev_res->dev, "%s: %pR\n", __func__, dev_res->res);
- 		dev_res->res->end += get_res_add_size(realloc_head,
- 							dev_res->res);
- 
-@@ -436,6 +441,7 @@ static void __assign_resources_sorted(struct list_head *head,
- 			remove_from_list(realloc_head, dev_res->res);
- 		free_list(&save_head);
- 		free_list(head);
-+		pr_info("%s: success\n", __func__);
- 		return;
- 	}
- 
-@@ -483,6 +489,7 @@ static void pdev_assign_resources_sorted(struct pci_dev *dev,
- {
- 	LIST_HEAD(head);
- 
-+	pci_info(dev, "%s\n", __func__);
- 	__dev_sort_resources(dev, &head);
- 	__assign_resources_sorted(&head, add_head, fail_head);
- 
-@@ -495,6 +502,7 @@ static void pbus_assign_resources_sorted(const struct pci_bus *bus,
- 	struct pci_dev *dev;
- 	LIST_HEAD(head);
- 
-+	pci_info(bus, "%s\n", __func__);
- 	list_for_each_entry(dev, &bus->devices, bus_list)
- 		__dev_sort_resources(dev, &head);
- 
-@@ -996,6 +1004,12 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
- 	resource_size_t children_add_align = 0;
- 	resource_size_t add_align = 0;
- 
-+	pci_info(bus, "%s: mask %#04lx type %#04lx %#04lx %#04lx min %#llx add %#llx b_res %pR parent %pR\n",
-+		__func__, mask, type, type2, type3,
-+		(unsigned long long) min_size,
-+		(unsigned long long) add_size,
-+		b_res, b_res ? b_res->parent : NULL);
-+
- 	if (!b_res)
- 		return -ENOSPC;
- 
-@@ -1089,6 +1103,7 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
- 			   (unsigned long long) (size1 - size0),
- 			   (unsigned long long) add_align);
- 	}
-+	pci_info(bus->self, "%s: %pR\n", __func__, b_res);
- 	return 0;
- }
- 
-@@ -1199,6 +1214,8 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
- 	struct resource *b_res;
- 	int ret;
- 
-+	pci_info(bus, "%s\n", __func__);
-+
- 	list_for_each_entry(dev, &bus->devices, bus_list) {
- 		struct pci_bus *b = dev->subordinate;
- 		if (!b)
-@@ -1311,6 +1328,7 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
- 
- void pci_bus_size_bridges(struct pci_bus *bus)
- {
-+	pci_info(bus, "%s\n", __func__);
- 	__pci_bus_size_bridges(bus, NULL);
- }
- EXPORT_SYMBOL(pci_bus_size_bridges);
-@@ -1340,6 +1358,7 @@ static void pdev_assign_fixed_resources(struct pci_dev *dev)
- {
- 	int i;
- 
-+	pci_info(dev, "%s\n", __func__);
- 	for (i = 0; i <  PCI_NUM_RESOURCES; i++) {
- 		struct pci_bus *b;
- 		struct resource *r = &dev->resource[i];
-@@ -1363,9 +1382,11 @@ void __pci_bus_assign_resources(const struct pci_bus *bus,
- 	struct pci_bus *b;
- 	struct pci_dev *dev;
- 
-+	pci_info(bus, "%s\n", __func__);
- 	pbus_assign_resources_sorted(bus, realloc_head, fail_head);
- 
- 	list_for_each_entry(dev, &bus->devices, bus_list) {
-+		pci_info(dev, "%s\n", __func__);
- 		pdev_assign_fixed_resources(dev);
- 
- 		b = dev->subordinate;
-@@ -1394,6 +1415,7 @@ void __pci_bus_assign_resources(const struct pci_bus *bus,
- 
- void pci_bus_assign_resources(const struct pci_bus *bus)
- {
-+	pci_info(bus, "%s\n", __func__);
- 	__pci_bus_assign_resources(bus, NULL, NULL);
- }
- EXPORT_SYMBOL(pci_bus_assign_resources);
-@@ -1408,6 +1430,7 @@ static void pci_claim_device_resources(struct pci_dev *dev)
- 		if (!r->flags || r->parent)
- 			continue;
- 
-+		pci_info(dev, "%s: BAR%d %pR\n", __func__, i, r);
- 		pci_claim_resource(dev, i);
- 	}
- }
-@@ -1422,6 +1445,7 @@ static void pci_claim_bridge_resources(struct pci_dev *dev)
- 		if (!r->flags || r->parent)
- 			continue;
- 
-+		pci_info(dev, "%s: BAR%d %pR\n", __func__, i, r);
- 		pci_claim_bridge_resource(dev, i);
- 	}
- }
-@@ -1432,6 +1456,7 @@ static void pci_bus_allocate_dev_resources(struct pci_bus *b)
- 	struct pci_bus *child;
- 
- 	list_for_each_entry(dev, &b->devices, bus_list) {
-+		pci_info(dev, "%s\n", __func__);
- 		pci_claim_device_resources(dev);
- 
- 		child = dev->subordinate;
-@@ -1460,6 +1485,7 @@ static void pci_bus_allocate_resources(struct pci_bus *b)
- 
- void pci_bus_claim_resources(struct pci_bus *b)
- {
-+	pci_info(bus, "%s\n", __func__);
- 	pci_bus_allocate_resources(b);
- 	pci_bus_allocate_dev_resources(b);
- }
-@@ -1471,6 +1497,7 @@ static void __pci_bridge_assign_resources(const struct pci_dev *bridge,
- {
- 	struct pci_bus *b;
- 
-+	pci_info(dev, "%s\n", __func__);
- 	pdev_assign_resources_sorted((struct pci_dev *)bridge,
- 					 add_head, fail_head);
- 
+If we want to live with a 32-bit limit, I think we should change the
+relevant interfaces to use u32 so there's not a way to venture into
+this region of undefined behavior.  I don't think "warning + undefined
+behavior" is a very maintainable situation.
+
+> > > This limitation also means that multiple ATUs
+> > > would need to be used to map larger regions.
+> > >
+> > > Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
+> > > ---
+> > >  drivers/pci/controller/dwc/pcie-designware-host.c | 6 +++++-
+> > >  1 file changed, 5 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > index 395feb8ca051..37a8c71ef89a 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > @@ -325,6 +325,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
+> > >       struct pci_bus *child;
+> > >       struct pci_host_bridge *bridge;
+> > >       struct resource *cfg_res;
+> > > +     resource_size_t mem_size;
+> > >       u32 hdr_type;
+> > >       int ret;
+> > >
+> > > @@ -362,7 +363,10 @@ int dw_pcie_host_init(struct pcie_port *pp)
+> > >               case IORESOURCE_MEM:
+> > >                       pp->mem = win->res;
+> > >                       pp->mem->name = "MEM";
+> > > -                     pp->mem_size = resource_size(pp->mem);
+> > > +                     mem_size = resource_size(pp->mem);
+> > > +                     if (upper_32_bits(mem_size))
+> > > +                             dev_warn(dev, "MEM resource size too big\n");
+> > > +                     pp->mem_size = mem_size;
+> > >                       pp->mem_bus_addr = pp->mem->start - win->offset;
+> > >                       break;
+> > >               case 0:
+> > > --
+> > > 2.7.4
+> > >
