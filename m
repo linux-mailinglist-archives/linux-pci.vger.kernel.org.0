@@ -2,197 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5296619B762
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Apr 2020 23:01:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4120619B77F
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Apr 2020 23:20:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732637AbgDAVBx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Apr 2020 17:01:53 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:43170 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732428AbgDAVBw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Apr 2020 17:01:52 -0400
-Received: by mail-lj1-f196.google.com with SMTP id g27so941852ljn.10
-        for <linux-pci@vger.kernel.org>; Wed, 01 Apr 2020 14:01:48 -0700 (PDT)
+        id S1732527AbgDAVU5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Apr 2020 17:20:57 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:39380 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732357AbgDAVU4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Apr 2020 17:20:56 -0400
+Received: by mail-ed1-f65.google.com with SMTP id a43so1634916edf.6
+        for <linux-pci@vger.kernel.org>; Wed, 01 Apr 2020 14:20:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kZZLw38OvfX0LdWZiTiDgV/9bUny0StnlwiaNs/2Ufc=;
-        b=aly7ulvt+vfPUTikm4mltTkCbIZstebjkVao345asWRzgWwNr8HXzV9jvOV7qGfvlv
-         UShoBmXhYLIDKE25KPNXRT3UYhD9ms32o+X2UsiGs7IVWDcUlmAveM5vTn3hox+wRzrj
-         +6g3z+A2EulG+uY85yfZmgAuVmP8aMoXv7Av3iExS/HEjdAxDOu8N03VSkGIV2DsrPPN
-         /aPw2Y6KLq1biHJFmaxinaPrVzFEBYkVcvRsTSg6B1skCt92JIZrn8HBKG3aj40G1f+g
-         XMRw/JUp5To7tjRdK/WcREvMxKWN5WVPrYT53f+O6xhXut+ZBK8KmQCrycPFZ4Da0X+Q
-         FAzQ==
+         :cc:content-transfer-encoding;
+        bh=wnw5fFLbqWzlpaQZHImF3FnVGu737bktCzqconzta6w=;
+        b=c53sjDwvpErU/GgLRheBHjRrw51/g3qlJCIAs5fs8ibF6hPR7Fn0MJR1ANKaBiqjGc
+         WJrlFNiHf1idSVeF+n229YEzjbsfhim2RjXrcAq7mQcFeu9/0eUCJHMs2GAbyhugdI1a
+         o2BWSVM/1jWl0+QqfU7oxAr4EhpN2UWMMgTQUYfLNuN2//a8RRrXx8ljzV/W9DcUJQsh
+         b65xSfSJU4+DQrUYcBu4YF9PTpSfgEwyYpTKPRnWM7iocscZ+I6H+LGY23Ld1KC+bzC0
+         TZc+sXh2JO8jbVJ8orbAeFuAHa7sim1ojrFoRU7zTgxk/1FhgcTTgBf2nnKYKzEqm24d
+         58Qw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kZZLw38OvfX0LdWZiTiDgV/9bUny0StnlwiaNs/2Ufc=;
-        b=dehfZG2g7cadTSvekZjKkcEw3jl9PlEV9oHmz2wKV55UBNsSM4/uDADYsy5X5JeZIx
-         x6rVqGPjxTa49FHgB2eVYFx8y2ZY4bRwO4y1LulJvbiIqugE0J8FAIzF/x37wzSWJ/zw
-         g059NYmaJMLjpNFmX8ms4lgEuFAsA8txJWhPN1i8m/pY1Kx1kAMXYRebrCOj5KywkBed
-         sZG8hUMpcg23nZdAfeJqtGXEW1phwGLvkhH7Ad54i9aSZ3PssZjB3mLhoM+YWv5H2QiW
-         z2vnaTvQ8Dji1yO8xGKwOFul3yD3HBpq20UfR6cBGbk6zP6Q14v49kXNBY1S7dkQQpZn
-         uZog==
-X-Gm-Message-State: AGi0PuZU03h6peJAoRz88GSu72pZvc1ZFr2GengivrLHr0qlEKnpIG1U
-        +EB3CYFf9/O82wvLkI3PYTZNl+4UNc8oyn7BqOUkQg==
-X-Google-Smtp-Source: APiQypLuReragKbcrqSe+rqgG3qRRihsgQSHTzTSOLa5Yu/J0N6qri7PBN+y0fmZ3DegD+ZCs5PqSYhGIcO4IBpg4dI=
-X-Received: by 2002:a2e:8410:: with SMTP id z16mr75114ljg.197.1585774907722;
- Wed, 01 Apr 2020 14:01:47 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=wnw5fFLbqWzlpaQZHImF3FnVGu737bktCzqconzta6w=;
+        b=iromy8yN4HYoYlskPJInx1siDU81D3pA1bOmguTf/FIgO4t0tNKAoJfUh4gyfaJcVI
+         WHHDMljzLyrr19au8FB1FFgFRaFsFJ3sMGkn5HFc6DsuSDLvd+bB1rumeSmyPmjPBmTT
+         KdMoDyxd0f7ihs5gOG7aL8v0v3pHM5kSshwL8aitW6MEXSM8/zA3JyHb/FSgSQO5Hy87
+         O5AkHSxM1hDSo5B2T6xs8xGmVHZK9bZDV8rPkFJk+etk5hQU4bpEw4ty/h1sReuxuglE
+         Y0/nmK/+gKypfRiaUYxmLguYDb5f7fRtPJ9Qo1kgWIWQ3UpU1o2Tlop3KGEQEo+xmNeC
+         7r+A==
+X-Gm-Message-State: ANhLgQ2aH6nCXD15huX65r2/sLVDMnE5SOJdIB+FF7E7JKyW2H+EgED2
+        PpszPsDEr4UeGhK0KSBs5kZJmHiVoB6Kb8e4FeE=
+X-Google-Smtp-Source: ADFU+vu/MeSdRXnS1a8YuEO7O1wLYOG9kjWEEAu18sz5pHcfLnxD4Uhhpda3UXdu+p/zxU5bH+Xx1O3BXGYAI5THqac=
+X-Received: by 2002:a50:9f85:: with SMTP id c5mr22207299edf.55.1585776053854;
+ Wed, 01 Apr 2020 14:20:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <CABEDWGzfTDtmq==j-GcK3YYbdPX4-Ms=PDuDEiQusV78bUGvDA@mail.gmail.com>
- <20200401202937.GA130497@google.com>
-In-Reply-To: <20200401202937.GA130497@google.com>
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-Date:   Wed, 1 Apr 2020 14:01:36 -0700
-Message-ID: <CABEDWGxTifrvYVF7B2geN7K4Uhor-JcHK95L60T_xQar4XTqBQ@mail.gmail.com>
-Subject: Re: [PATCH] PCI: Warn about MEM resource size being too big
+References: <CAEzXK1q1ufa1GoL_ZXdqothu_Dub4SAV1KZ_JFcpuF-p0f2Z4w@mail.gmail.com>
+ <20200401181632.GA96762@google.com>
+In-Reply-To: <20200401181632.GA96762@google.com>
+From:   =?UTF-8?B?THXDrXMgTWVuZGVz?= <luis.p.mendes@gmail.com>
+Date:   Wed, 1 Apr 2020 22:20:42 +0100
+Message-ID: <CAEzXK1pZufvY9VcXnjrrDMmiMoURtTaL1+8jGWL7k+yyGhKyDw@mail.gmail.com>
+Subject: Re: Problem with PCIe enumeration of Google/Coral TPU Edge module on Linux
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        lorenzo.pieralisi@arm.com, amurray@thegoodpenguin.co.uk,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
+Cc:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Apr 1, 2020 at 1:29 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+Hi Bjorn,
+
+Here is the dmesg output with the new kernel patch:
+https://paste.ubuntu.com/p/7cv7ZcyrnG/
+
+Lu=C3=ADs
+
+On Wed, Apr 1, 2020 at 7:16 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
 >
-> On Tue, Mar 31, 2020 at 01:36:04PM -0700, Alan Mikhak wrote:
-> > On Tue, Mar 31, 2020 at 1:12 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > On Mon, Mar 30, 2020 at 05:19:47PM -0700, Alan Mikhak wrote:
-> > > > Output a warning for MEM resource size with
-> > > > non-zero upper 32-bits.
-> > > >
-> > > > ATU programming functions limit the size of
-> > > > the translated region to 4GB by using a u32 size
-> > > > parameter. Function dw_pcie_prog_outbound_atu()
-> > > > does not program the upper 32-bit ATU limit
-> > > > register. This may result in undefined behavior
-> > > > for resource sizes with non-zero upper 32-bits.
-> > > >
-> > > > For example, a 128GB address space starting at
-> > > > physical CPU address of 0x2000000000 with size of
-> > > > 0x2000000000 needs the following values programmed
-> > > > into the lower and upper 32-bit limit registers:
-> > > >  0x3fffffff in the upper 32-bit limit register
-> > > >  0xffffffff in the lower 32-bit limit register
-> > > >
-> > > > Currently, only the lower 32-bit limit register is
-> > > > programmed with a value of 0xffffffff but the upper
-> > > > 32-bit limit register is not being programmed.
-> > > > As a result, the upper 32-bit limit register remains
-> > > > at its default value after reset of 0x0. This would
-> > > > be a problem for a 128GB PCIe space because in
-> > > > effect its size gets reduced to 4GB.
-> > > >
-> > > > ATU programming functions can be changed to
-> > > > specify a u64 size parameter for the translated
-> > > > region. Along with this change, the internal
-> > > > calculation of the limit address, the address of
-> > > > the last byte in the translated region, needs to
-> > > > change such that both the lower 32-bit and upper
-> > > > 32-bit limit registers can be programmed correctly.
-> > > >
-> > > > Changing the ATU programming functions is high
-> > > > impact. Without change, this issue can go
-> > > > unnoticed. A warning may prompt the user to
-> > > > look into possible issues.
-> > >
-> > > So this is basically a warning, and we could actually *fix* the
-> > > problem with more effort?  I vote for the fix.
+> On Tue, Mar 31, 2020 at 10:28:51PM +0100, Lu=C3=ADs Mendes wrote:
+> > I've removed all other PCIe devices to make the analysis easier.
+> > The dmesg with the traces can be found at:
+> > https://paste.ubuntu.com/p/W3m2VQCYqg/
 > >
-> > The fix would impact all PCIe drivers that depend on dwc.
+> > Didn't find anything new related to BAR0 or BAR2, in the dmesg,
+> > though. Anyway I'm no expert in this, maybe it can give you some
+> > useful information, still.
 >
-> Is that another way of saying "the fix would *fix* all the drivers
-> that depend on dwc"?
-
-Thanks Bjorn for your comments.
-
-Not at all. I'm not suggesting that. I'm just stating the dilemma.
-
-One option is, as you may be alluding, the *fix* would include
-modification to all drivers that depend on dwc to at least not break
-the build.. Whoever embarks on such a *fix* would have to take
-that on before submitting the patch.
-
-Another option is to produce an alternate ATU programming
-API for the Linux PCI sub-system to support u64 size. That
-way individual driver owners can choose if and when to migrate
-their drivers to the new API on their own timeline. Such an
-alternative API can also be generic to support not only
-Designware PCIe controllers but others.
-
+> It looks like we assigned the right amount of space to the bridge, but
+> for some reason didn't assign it to the device *below* the bridge.
 >
-> > I would have no way of validating such a fix without
-> > breaking it for everyone let alone the bandwidth it needs.
-> > All drivers that depend on dwc seem to be currently happy
-> > with the u32 size limit. I suggest we add the warning but
-> > keep this issue in mind for a solution that allows existing
-> > PCe drivers to phase into the fix on their own individual
-> > schedules, if they need to.
+> I added a few more messages in this patch.  Can you remove the first
+> one and replace it with this?  This is still based on v5.6-rc1.
 >
-> Obviously it would *nice* to test all the drivers that depend on dwc,
-> but if you're fixing a problem, you verify the fix on your system, and
-> the relevant people review it, I don't think exhaustive testing is a
-> hard requirement, and I certainly wouldn't expect you to do it.
-
-That is a relief for whoever commits to take this on.
-
 >
-> If we want to live with a 32-bit limit, I think we should change the
-> relevant interfaces to use u32 so there's not a way to venture into
-> this region of undefined behavior.  I don't think "warning + undefined
-> behavior" is a very maintainable situation.
-
-I cannot live with the 32-bit limit. I need a 64-bit solution. I had
-to implement a solution that suits my needs. I have worked
-out some of the issue. It is generic enough for my use with PCIe
-controllers from more than one vendor. But, it requires pulling a
-lot of code from Designware layer into a separate framework
-which I believe can become common for Linux PCI subsystem.
-If it gets in, others who need 64-bit can migrate over to it without
-being migrated involuntarily.
-
->
-> > > > This limitation also means that multiple ATUs
-> > > > would need to be used to map larger regions.
-> > > >
-> > > > Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
-> > > > ---
-> > > >  drivers/pci/controller/dwc/pcie-designware-host.c | 6 +++++-
-> > > >  1 file changed, 5 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > > index 395feb8ca051..37a8c71ef89a 100644
-> > > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > > @@ -325,6 +325,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
-> > > >       struct pci_bus *child;
-> > > >       struct pci_host_bridge *bridge;
-> > > >       struct resource *cfg_res;
-> > > > +     resource_size_t mem_size;
-> > > >       u32 hdr_type;
-> > > >       int ret;
-> > > >
-> > > > @@ -362,7 +363,10 @@ int dw_pcie_host_init(struct pcie_port *pp)
-> > > >               case IORESOURCE_MEM:
-> > > >                       pp->mem = win->res;
-> > > >                       pp->mem->name = "MEM";
-> > > > -                     pp->mem_size = resource_size(pp->mem);
-> > > > +                     mem_size = resource_size(pp->mem);
-> > > > +                     if (upper_32_bits(mem_size))
-> > > > +                             dev_warn(dev, "MEM resource size too big\n");
-> > > > +                     pp->mem_size = mem_size;
-> > > >                       pp->mem_bus_addr = pp->mem->start - win->offset;
-> > > >                       break;
-> > > >               case 0:
-> > > > --
-> > > > 2.7.4
-> > > >
+> diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
+> index 8e40b3e6da77..2cdb705752de 100644
+> --- a/drivers/pci/bus.c
+> +++ b/drivers/pci/bus.c
+...
