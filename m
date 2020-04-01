@@ -2,81 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A271919AC9D
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Apr 2020 15:21:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 30EE319ADA9
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Apr 2020 16:18:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732561AbgDANV0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Apr 2020 09:21:26 -0400
-Received: from ns.mm-sol.com ([37.157.136.199]:34561 "EHLO extserv.mm-sol.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732557AbgDANV0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 1 Apr 2020 09:21:26 -0400
-Received: from [192.168.1.3] (212-5-158-187.ip.btc-net.bg [212.5.158.187])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by extserv.mm-sol.com (Postfix) with ESMTPSA id E352ECFAB;
-        Wed,  1 Apr 2020 16:21:23 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
-        t=1585747284; bh=jQLOaV/9gNCw8k6Dt09Ffv5U8fBSYoigBETbYtsrfGg=;
-        h=Subject:To:Cc:From:Date:From;
-        b=hOQ+FwI48FvfF4wgRCrjSPX9HRQope4b+LmxDEKYjeqnGLh8jbjR0tx1EX+E5ptKp
-         0ytSgtjowjMUO6eybbWh+YvQnCL+0oAo+NdYwfBY8qw3iNMidnhC1bbXhw65uBYczK
-         A1vmXZOtyKyq+P5MwGPWp0+WazbYk2SEBkcd9IusLpfeYHjOxhHERPuYl0L6NFI5lU
-         I7mdYarbwmXm2EEzzlaiTxsDvPt/yDv7p4UPMjTJzyxbIGJ7jVdPvocgrHXI9N8MO5
-         V3Mdd3SPEVWwVooVP7+RFnGIR41vehx8QXe3q4+OgF/7T/7ScF93OPUEBbGLzE91eB
-         mYz1QcKewFzjA==
-Subject: Re: [PATCH 09/12] pcie: qcom: Programming the PCIE iATU for IPQ806x
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Sham Muthayyan <smuthayy@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        id S1732967AbgDAOSn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Apr 2020 10:18:43 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:44636 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732823AbgDAOSn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Apr 2020 10:18:43 -0400
+Received: by mail-io1-f65.google.com with SMTP id r25so13994801ioc.11;
+        Wed, 01 Apr 2020 07:18:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DrAUNTNOb+nS86WKDNkg7IGqQKQheDQgfBvXH6+K3YY=;
+        b=fMaQLhc7vjvK44eFNORxvMeUmaOzz07bDvKu3KQ2p3SPqgsQti4Kd9AtivNa1cUvqh
+         0lAosbw397LNb/McU5xV1Hd1netW7/AXVXemnXoDyUOsGgrtI9WqYOQEmu9P+KsmRU/H
+         g6pccF3S8PD9nCh/U5UQIN6foq6dlDEl8ojuvS3tpHe0NXO1BdZgfhdcyqP91Tie5QIw
+         oJLIY5c8FZ+1Q+6Pw5plKtUbCBo2P46PeaXdu4EMqKfxnTYFy+KSuuFRNX+O6PVLi4ZN
+         /ISyaajD0Cg6bXhbXNa0czm9zs+ad1TCPxeySEHQuigsrQlRNyXbMWkWLJagz7NuCxZ6
+         ybeg==
+X-Gm-Message-State: ANhLgQ0TkLdO+iyH8SQbhKEb8p97JIHqkCW3Y+M1SurNR9JUPRrWTOiX
+        4khwcGX7B/dZsYBOQRpB2RF0c2Y=
+X-Google-Smtp-Source: ADFU+vtTwR3SB801fBjpsX0NGxMyX9AE4SJJQgaUk8UNcP2AQfCZmaqz6P0qia4Kb4WvYiBEVO7O0g==
+X-Received: by 2002:a6b:db01:: with SMTP id t1mr20172381ioc.150.1585750722085;
+        Wed, 01 Apr 2020 07:18:42 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id x10sm742190ili.88.2020.04.01.07.18.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Apr 2020 07:18:41 -0700 (PDT)
+Received: (nullmailer pid 24537 invoked by uid 1000);
+        Wed, 01 Apr 2020 14:18:38 -0000
+Date:   Wed, 1 Apr 2020 08:18:38 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200320183455.21311-1-ansuelsmth@gmail.com>
- <20200320183455.21311-9-ansuelsmth@gmail.com>
-From:   Stanimir Varbanov <svarbanov@mm-sol.com>
-Message-ID: <3890fd67-53a3-aa73-af52-4b79c5881dca@mm-sol.com>
-Date:   Wed, 1 Apr 2020 16:21:21 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+Subject: Re: [PATCH v2 3/5] dt-bindings: Document Loongson PCI Host Controller
+Message-ID: <20200401141838.GA7686@bogus>
+References: <20200401030658.1174045-1-jiaxun.yang@flygoat.com>
+ <20200401030658.1174045-4-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200320183455.21311-9-ansuelsmth@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200401030658.1174045-4-jiaxun.yang@flygoat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Ansuel,
-
-On 3/20/20 8:34 PM, Ansuel Smith wrote:
-> From: Sham Muthayyan <smuthayy@codeaurora.org>
+On Wed,  1 Apr 2020 11:06:47 +0800, Jiaxun Yang wrote:
 > 
-> Resolved PCIE EP detection errors caused due to missing iATU programming.
-
-NACK, the iATU programing is not belonging here. Did you check what
-pcie-designware-*.c is doing with iATU?
-
-If you want to support endpoint mode in pcie-qcom driver you have to see
-how the other drivers is doing that.
-
+> PCI host controller found on Loongson PCHs and SoCs.
 > 
-> Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 > ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 78 ++++++++++++++++++++++++++
->  1 file changed, 78 insertions(+)
+>  .../devicetree/bindings/pci/loongson.yaml     | 57 +++++++++++++++++++
+>  1 file changed, 57 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/loongson.yaml
 > 
 
+My bot found errors running 'make dt_binding_check' on your patch:
 
--- 
-regards,
-Stan
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/loongson.example.dt.yaml: pcie@40000000: ranges: [[33554432, 0, 1073741824, 0, 1073741824, 0, 1073741824]] is too short
+
+See https://patchwork.ozlabs.org/patch/1265000
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
