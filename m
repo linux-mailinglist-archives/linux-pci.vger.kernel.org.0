@@ -2,200 +2,57 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 69A9519A486
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Apr 2020 07:13:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4764119A619
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Apr 2020 09:19:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727727AbgDAFNK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Apr 2020 01:13:10 -0400
-Received: from mga02.intel.com ([134.134.136.20]:53569 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726811AbgDAFNK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 1 Apr 2020 01:13:10 -0400
-IronPort-SDR: BWQFi+BUyUOSRdkG180hrd55gGnO+6nZBQmePyZYYxhDM6Kp1PKUHvevB3IcPst+XV78sZ1peU
- Pe+KXxpUwWew==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2020 22:13:09 -0700
-IronPort-SDR: 6DX7uPXUd5Fxs5UnAUjxDU4PlOX8T7BoBTmtTZ50vdYblHXb26yq8SmHdD4o98Wxom44lv0QQt
- QtsVKoQOspjw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,330,1580803200"; 
-   d="scan'208";a="284260384"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga002.fm.intel.com with ESMTP; 31 Mar 2020 22:13:08 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jJVgZ-000IGS-MZ; Wed, 01 Apr 2020 13:13:07 +0800
-Date:   Wed, 01 Apr 2020 13:12:40 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:next] BUILD SUCCESS 505d60df262305d1318a8a30cd67752d18462c17
-Message-ID: <5e8422c8.h6K++MHFNrutyl6r%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1731993AbgDAHTK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Apr 2020 03:19:10 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:51338 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731680AbgDAHTK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Apr 2020 03:19:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=DM+6RxETreG8jB5Z0zci89++MHvAKVEobq5nZmICl/c=; b=gORYbjMus4htMoDTAC8/xZT6YR
+        BspCS44KNO4g1DsJ01wK5gSuMijhW/RmGsOmyf1cciiATdaVBh1w3SP9Dosj/doF8A25BZ9oX64jO
+        3HZ7M+0n6bOIn6tSSyr+kQfNFZhgiUZtNfYwcrrOlgELf166+yAacQdpBiQCqPAsKrrloqyCS3ca6
+        XPF+G9ajmocQ1s+5aL2Rn0J9CPxZQl5EG984gcjpKa06M6euPkElzWkONAuarPlRt18e/AmK8VOF+
+        K7p4l+WDG4meHvbYgFsEYqTx0WV5kSFB54CjJRnJl8M9ZS8oqtOxhusCFYTGJepEQdS0Sh7Skko3B
+        VSrrXOjw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jJXeF-0002WY-Tr; Wed, 01 Apr 2020 07:18:51 +0000
+Date:   Wed, 1 Apr 2020 00:18:51 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Dave Jiang <dave.jiang@intel.com>
+Cc:     vkoul@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, bhelgaas@google.com,
+        gregkh@linuxfoundation.org, arnd@arndb.de,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        dmaengine@vger.kernel.org, dan.j.williams@intel.com,
+        ashok.raj@intel.com, fenghua.yu@intel.com,
+        linux-pci@vger.kernel.org, tony.luck@intel.com, jing.lin@intel.com,
+        sanjay.k.kumar@intel.com
+Subject: Re: [PATCH 3/6] pci: add PCI quirk cmdmem fixup for Intel DSA device
+Message-ID: <20200401071851.GA31076@infradead.org>
+References: <158560290392.6059.16921214463585182874.stgit@djiang5-desk3.ch.intel.com>
+ <158560362665.6059.11999047251277108233.stgit@djiang5-desk3.ch.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <158560362665.6059.11999047251277108233.stgit@djiang5-desk3.ch.intel.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  next
-branch HEAD: 505d60df262305d1318a8a30cd67752d18462c17  Merge branch 'remotes/lorenzo/pci/vmd'
+On Mon, Mar 30, 2020 at 02:27:06PM -0700, Dave Jiang wrote:
+> Since there is no standard way that defines a PCI device that receives
+> descriptors or commands with synchronous write operations, add quirk to set
+> cmdmem for the Intel accelerator device that supports it.
 
-elapsed time: 825m
-
-configs tested: 142
-configs skipped: 0
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm64                            allyesconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm                               allnoconfig
-arm                           efm32_defconfig
-arm                         at91_dt_defconfig
-arm                        shmobile_defconfig
-arm64                               defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                           sunxi_defconfig
-arm                        multi_v7_defconfig
-sparc                            allyesconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                             alldefconfig
-arm                              allmodconfig
-nios2                         3c120_defconfig
-nios2                         10m50_defconfig
-c6x                        evmc6678_defconfig
-xtensa                          iss_defconfig
-c6x                              allyesconfig
-xtensa                       common_defconfig
-openrisc                 simple_smp_defconfig
-openrisc                    or1ksim_defconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                                defconfig
-alpha                               defconfig
-h8300                       h8s-sim_defconfig
-h8300                     edosk2674_defconfig
-m68k                       m5475evb_defconfig
-m68k                             allmodconfig
-h8300                    h8300h-sim_defconfig
-m68k                           sun3_defconfig
-m68k                          multi_defconfig
-arc                                 defconfig
-arc                              allyesconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                           32r2_defconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                generic-64bit_defconfig
-parisc                generic-32bit_defconfig
-parisc                           allyesconfig
-x86_64               randconfig-a003-20200331
-x86_64               randconfig-a002-20200331
-i386                 randconfig-a001-20200331
-i386                 randconfig-a002-20200331
-i386                 randconfig-a003-20200331
-x86_64               randconfig-a001-20200331
-microblaze           randconfig-a001-20200331
-h8300                randconfig-a001-20200331
-nios2                randconfig-a001-20200331
-c6x                  randconfig-a001-20200331
-sparc64              randconfig-a001-20200331
-csky                 randconfig-a001-20200331
-s390                 randconfig-a001-20200331
-xtensa               randconfig-a001-20200331
-openrisc             randconfig-a001-20200331
-sh                   randconfig-a001-20200331
-x86_64               randconfig-b003-20200331
-i386                 randconfig-b003-20200331
-i386                 randconfig-b002-20200331
-i386                 randconfig-b001-20200331
-x86_64               randconfig-b002-20200331
-x86_64               randconfig-b001-20200331
-i386                 randconfig-d003-20200331
-i386                 randconfig-d001-20200331
-i386                 randconfig-d002-20200331
-x86_64               randconfig-d001-20200331
-x86_64               randconfig-d002-20200331
-x86_64               randconfig-e001-20200331
-i386                 randconfig-e002-20200331
-x86_64               randconfig-e003-20200331
-i386                 randconfig-e003-20200331
-x86_64               randconfig-e002-20200331
-i386                 randconfig-e001-20200331
-i386                 randconfig-f001-20200401
-i386                 randconfig-f003-20200401
-x86_64               randconfig-f003-20200401
-x86_64               randconfig-f001-20200401
-i386                 randconfig-f002-20200401
-x86_64               randconfig-f002-20200401
-x86_64               randconfig-g002-20200331
-x86_64               randconfig-g003-20200331
-i386                 randconfig-g001-20200331
-i386                 randconfig-g002-20200331
-x86_64               randconfig-g001-20200331
-i386                 randconfig-g003-20200331
-x86_64               randconfig-h003-20200331
-x86_64               randconfig-h002-20200331
-x86_64               randconfig-h001-20200331
-i386                 randconfig-h003-20200331
-i386                 randconfig-h002-20200331
-i386                 randconfig-h001-20200331
-sparc                randconfig-a001-20200331
-arm64                randconfig-a001-20200331
-powerpc              randconfig-a001-20200331
-ia64                 randconfig-a001-20200331
-arc                  randconfig-a001-20200331
-arm                  randconfig-a001-20200331
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-s390                       zfcpdump_defconfig
-s390                          debug_defconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                             alldefconfig
-s390                                defconfig
-sh                          rsk7269_defconfig
-sh                               allmodconfig
-sh                            titan_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                                allnoconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-i386                             alldefconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-um                                  defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Why do we need a quirk for this?  Even assuming a flag is needed in
+struct pci_dev (and I don't really understand why that is needed to
+start with), it could be set in ->probe.
