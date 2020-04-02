@@ -2,83 +2,124 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C71F419CA4E
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Apr 2020 21:40:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A75219CA49
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Apr 2020 21:40:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388822AbgDBTkN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Apr 2020 15:40:13 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:2154 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732625AbgDBTkM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Apr 2020 15:40:12 -0400
-X-IronPort-AV: E=Sophos;i="5.72,336,1580742000"; 
-   d="scan'208";a="43555725"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 03 Apr 2020 04:40:10 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 251FD40C4F75;
-        Fri,  3 Apr 2020 04:40:03 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-pci@vger.kernel.org
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Simon Horman <horms@verge.net.au>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        linux-rockchip@lists.infradead.org,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v6 11/11] MAINTAINERS: Add file patterns for rcar PCI device tree bindings
-Date:   Thu,  2 Apr 2020 20:38:39 +0100
-Message-Id: <1585856319-4380-12-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1585856319-4380-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <1585856319-4380-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        id S2389726AbgDBTkK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Apr 2020 15:40:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50240 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732625AbgDBTkJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 2 Apr 2020 15:40:09 -0400
+Received: from localhost (mobile-166-170-223-166.mycingular.net [166.170.223.166])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E83F0206F8;
+        Thu,  2 Apr 2020 19:40:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585856408;
+        bh=pverSPU32ehzvi/6uILs11ZGZuyU/iubPLzeloiCKC0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=s8H6rbB+0cPjjF5RR95Zz0MFmgQ/FSphxeIxljYSsXH5VvAYsqo0yX2qnPYhqXbui
+         JwdQvYu/tBhNTZYcqXPlyY1s4LxRkbNqjq4SM+omvnmst0p29AD9e3zm1pmDacaTK5
+         A14Caex2L5sCS6AcEIbHuuLcn2lVDwteMVY0adsc=
+Date:   Thu, 2 Apr 2020 14:40:05 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     linux-kernel@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com, linux-usb@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org,
+        tim.gover@raspberrypi.org, linux-pci@vger.kernel.org,
+        wahrenst@gmx.net, sergei.shtylyov@cogentembedded.com
+Subject: Re: [PATCH v6 2/4] firmware: raspberrypi: Introduce vl805 init
+ routine
+Message-ID: <20200402194005.GA35725@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <88456b80396331814fca9c929c2129861aaa35bd.camel@suse.de>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add file pattern entry for rcar PCI devicetree binding, so that when
-people run ./scripts/get_maintainer.pl the rcar PCI maintainers could also
-be listed.
+On Thu, Apr 02, 2020 at 01:32:35PM +0200, Nicolas Saenz Julienne wrote:
+> On Wed, 2020-04-01 at 15:37 -0500, Bjorn Helgaas wrote:
+> > On Tue, Mar 24, 2020 at 07:28:10PM +0100, Nicolas Saenz Julienne wrote:
+> > > On the Raspberry Pi 4, after a PCI reset, VL805's firmware may
+> > > either be loaded directly from an EEPROM or, if not present, by
+> > > the SoC's VideCore. The function informs VideCore that VL805 was
+> > > just reset, or requests for a probe defer.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+Is VL805 the XHCI USB device?  A hint here would help non-RPi experts
+know how this fits into the topology.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3f0f2ee2af32..87df2d31a54b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12933,6 +12933,7 @@ L:	linux-pci@vger.kernel.org
- L:	linux-renesas-soc@vger.kernel.org
- S:	Maintained
- F:	drivers/pci/controller/*rcar*
-+F:	Documentation/devicetree/bindings/pci/*rcar*
- 
- PCI DRIVER FOR SAMSUNG EXYNOS
- M:	Jingoo Han <jingoohan1@gmail.com>
--- 
-2.20.1
+> > > Based on Tim Gover's downstream implementation.
+> >
+> > Maybe a URL?
+> 
+> I was under the impression that adding links in the commit log that
+> are likely to be short-lived was frowned upon. That said I could've
+> added it into the cover letter. For reference here it is:
+> 
+> https://github.com/raspberrypi/linux/commit/9935b4c7e360b4494b4cb6e3ce797238a1ab78bd
+
+I think your impression is correct.  If this was posted to a mailing
+list archived on lore.kernel.org, a link to the cover letter would be
+ideal.
+
+> To pass messages down the mailbox, you call rpi_firmware_property(),
+> which takes care of contention, formating and DMA issues, before
+> passing it into the actual mailbox interface and beyond.
+
+OK.  The "rpi_firmware_property" name doesn't give much of a hint that
+it is sending messages.  It sounds like it might be a lookup function.
+But that's an existing thing, not something you're changing here.
+
+> > > + */
+> > > +int rpi_firmware_init_vl805(struct pci_dev *pdev)
+> > > +{
+> > > +	struct device_node *fw_np;
+> > > +	struct rpi_firmware *fw;
+> > > +	u32 dev_addr;
+> > > +	int ret;
+> > > +
+> > > +	fw_np = of_find_compatible_node(NULL, NULL,
+> > > +					"raspberrypi,bcm2835-firmware");
+> > > +	if (!fw_np)
+> > > +		return 0;
+> > > +
+> > > +	fw = rpi_firmware_get(fw_np);
+> > > +	of_node_put(fw_np);
+> > > +	if (!fw)
+> > > +		return -EPROBE_DEFER;
+> > > +
+> > > +	dev_addr = pdev->bus->number << 20 | PCI_SLOT(pdev->devfn) << 15 |
+> > > +		   PCI_FUNC(pdev->devfn) << 12;
+> > > +
+> > > +	ret = rpi_firmware_property(fw, RPI_FIRMWARE_NOTIFY_XHCI_RESET,
+> > > +				    &dev_addr, sizeof(dev_addr));
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	dev_dbg(&pdev->dev, "loaded Raspberry Pi's VL805 firmware\n");
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(rpi_firmware_init_vl805);
+> > > +
+> > >  static const struct of_device_id rpi_firmware_of_match[] = {
+> > >  	{ .compatible = "raspberrypi,bcm2835-firmware", },
+> > >  	{},
+> 
+> [...]
+> 
+> Regards,
+> Nicolas
+> 
+
 
