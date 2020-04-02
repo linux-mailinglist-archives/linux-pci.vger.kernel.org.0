@@ -2,161 +2,207 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9027119C400
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Apr 2020 16:27:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 03D3919C441
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Apr 2020 16:32:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729123AbgDBO12 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Apr 2020 10:27:28 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46222 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726368AbgDBO12 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 2 Apr 2020 10:27:28 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 81969AC44;
-        Thu,  2 Apr 2020 14:27:25 +0000 (UTC)
-Message-ID: <47c543e2144d5247743548b00d1931e9fc217f43.camel@suse.de>
-Subject: Re: [PATCH v6 3/4] PCI: brcmstb: Wait for Raspberry Pi's firmware
- when present
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org,
-        tim.gover@raspberrypi.org, linux-pci@vger.kernel.org,
-        wahrenst@gmx.net, sergei.shtylyov@cogentembedded.com
-Date:   Thu, 02 Apr 2020 16:27:23 +0200
-In-Reply-To: <20200401204149.GA131584@google.com>
-References: <20200401204149.GA131584@google.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-UbnwTZ/sE1EQtQ8St3GX"
-User-Agent: Evolution 3.34.2 
+        id S1727734AbgDBOcI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Apr 2020 10:32:08 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:32704 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729123AbgDBOcH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Apr 2020 10:32:07 -0400
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200402143205epoutp021eb16f8f449150517ecd0845d97d22e4~CBzD8wx-j1172511725epoutp02b
+        for <linux-pci@vger.kernel.org>; Thu,  2 Apr 2020 14:32:05 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200402143205epoutp021eb16f8f449150517ecd0845d97d22e4~CBzD8wx-j1172511725epoutp02b
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1585837925;
+        bh=+cp0ZuvDiMSHbLAAGznAy1k68BRkSTs9vA/p1jV7bWs=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=XIlks3IzXuzbNm4n0McXiVU47DHLS02AOlEtsK6IU4KfCQk5A085JeOEqivZj2Gef
+         MkqJRGmVoPwdXil0FrZMWejrtvobheWf9nGFUSJg1yBtpmn0g2swdwV+CJpkOBabqE
+         36TRoF7ZYqQAWokLRzhHDkR3xM/NB8EzwZHLZYd8=
+Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
+        epcas5p4.samsung.com (KnoxPortal) with ESMTP id
+        20200402143205epcas5p42ad7ecb1cc395090db001bf5edbb1e32~CBzDZAkpa0817008170epcas5p4N;
+        Thu,  2 Apr 2020 14:32:05 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        68.B0.04778.567F58E5; Thu,  2 Apr 2020 23:32:05 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200402143204epcas5p1e21200ba2ce531ebbf252bdb9cac8859~CBzDDKKKS3029130291epcas5p1f;
+        Thu,  2 Apr 2020 14:32:04 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200402143204epsmtrp26e40fc99a2ee446997c4d669f85f8156~CBzDCb0NG1118111181epsmtrp2y;
+        Thu,  2 Apr 2020 14:32:04 +0000 (GMT)
+X-AuditID: b6c32a4a-33bff700000012aa-24-5e85f7652418
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        7A.6E.04024.467F58E5; Thu,  2 Apr 2020 23:32:04 +0900 (KST)
+Received: from sriramdash03 (unknown [107.108.234.13]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200402143201epsmtip2750872a05723a927883093773b2ea40f~CBzAW-SK62373323733epsmtip2Y;
+        Thu,  2 Apr 2020 14:32:01 +0000 (GMT)
+From:   "Sriram Dash" <sriram.dash@samsung.com>
+To:     "'Kishon Vijay Abraham I'" <kishon@ti.com>,
+        "'Shradha Todi'" <shradha.t@samsung.com>
+Cc:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <pankaj.dubey@samsung.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+In-Reply-To: <a7a6a295-160a-94d6-09f9-63f783c8b28a@ti.com>
+Subject: RE: [PATCH] PCI: endpoint: Fix NULL pointer dereference for
+ ->get_features()
+Date:   Thu, 2 Apr 2020 20:01:59 +0530
+Message-ID: <000001d608fb$7ab39010$701ab030$@samsung.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQIRa+BXjMtyeVOz/ELce4dgT57WJwIqUA0mAt3aYLECuy3/8qexBBmw
+Content-Language: en-in
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrFKsWRmVeSWpSXmKPExsWy7bCmum7q99Y4g3vzWSyWNGVYXHjaw2Zx
+        edccNouz846zWbz5/YLdYtHWL+wWvYdrHdg91sxbw+ixYFOpR9+WVYwex29sZ/L4vEkugDWK
+        yyYlNSezLLVI3y6BK6Np6lXWgnOyFVd37WVvYFwl0cXIwSEhYCLx7qBzFyMXh5DAbkaJTX8O
+        sEA4nxglul+9ZYdwvjFKtH1ZwtTFyAnWcfbYIajEXkaJ7Q1HoJzXjBInGn6zg1SxCehKnL3R
+        xAZiiwhESfTMbmcGKWIWmMwocWP5L7AiTgEriTULlrKA2MIC4RIr5t9kBLFZBFQkTs7rAWvm
+        FbCUeLvyNDOELShxcuYTsHpmAW2JZQtfM0OcpCDx8+kyVohlbhI/Xl9mhqgRlzj6swdssYTA
+        czaJ3rXXoBpcJFY8+sYIYQtLvDq+hR3ClpL4/G4vG4SdLXG57zlUfYnEjFcLWSBse4kDV+aw
+        gEKPWUBTYv0ufYhdfBK9v58wQQKVV6KjTQiiWlXi1e3NUNOlJQ6sPQ0NRQ+JrxMuME1gVJyF
+        5LNZSD6bheSDWQjLFjCyrGKUTC0ozk1PLTYtMMpLLdcrTswtLs1L10vOz93ECE5BWl47GJed
+        8znEKMDBqMTDG3G4NU6INbGsuDL3EKMEB7OSCK/jDKAQb0piZVVqUX58UWlOavEhRmkOFiVx
+        3kmsV2OEBNITS1KzU1MLUotgskwcnFINjCtmZJ/4+V9h+YuYnrubNovun+TXIZ1j+TTaWeHa
+        V4+f10VOxIZePH+P9/tcyZM3Zz+cPu1zwNqGqPbSUDuW6cfaNX6zmb4SVV+459+kOV//Gf4K
+        jz/U4bEh/zZnr/50Pd+DZqJR2jW2zY1fZBZc8XlpOeXSiW/cW7teVOx1sJv1wfbrRNNHCzmV
+        WIozEg21mIuKEwEtnARyPQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupjkeLIzCtJLcpLzFFi42LZdlhJXjfle2ucwZypmhZLmjIsLjztYbO4
+        vGsOm8XZecfZLN78fsFusWjrF3aL3sO1Duwea+atYfRYsKnUo2/LKkaP4ze2M3l83iQXwBrF
+        ZZOSmpNZllqkb5fAlTFl/wq2guWyFT1fTzI3MDZKdDFyckgImEicPXaIvYuRi0NIYDejxNnV
+        29m6GDmAEtISP+/qQtQIS6z89xyq5iWjxP41p5lAEmwCuhJnbzSxgdgiAlESk/f3sIIUMQtM
+        Z5Ro2zIbquM5o8T6ZSfBqjgFrCTWLFjKAmILC4RKfGybygpiswioSJyc1wNWwytgKfF25Wlm
+        CFtQ4uTMJ2D1zALaEk9vPoWzly18zQxxnoLEz6fLWCGucJP48foyM0SNuMTRnz3MExiFZyEZ
+        NQvJqFlIRs1C0rKAkWUVo2RqQXFuem6xYYFhXmq5XnFibnFpXrpecn7uJkZwLGlp7mC8vCT+
+        EKMAB6MSDy/DwdY4IdbEsuLK3EOMEhzMSiK8jjOAQrwpiZVVqUX58UWlOanFhxilOViUxHmf
+        5h2LFBJITyxJzU5NLUgtgskycXBKNTAys/ndsVpiNdfC/+iX+LKAya4HSlYtSrfxnSL4UOf4
+        8TqNO745R38eFrRju77k1rpNmiwPymS49u19+PHAlF+leZcMLHf8eWdakPiZNVxHuaKN0/mP
+        8jcPDb/HzqaWTq63FnmIx+y5kXzqt5xc1aILPhF2DzUOzn25dqmcO6uv9XS/GUzZwd+VWIoz
+        Eg21mIuKEwEFlho/oQIAAA==
+X-CMS-MailID: 20200402143204epcas5p1e21200ba2ce531ebbf252bdb9cac8859
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200311103443epcas5p2e97b8f3a8e52dc6f02eb551e0c97f132
+References: <CGME20200311103443epcas5p2e97b8f3a8e52dc6f02eb551e0c97f132@epcas5p2.samsung.com>
+        <20200311102852.5207-1-shradha.t@samsung.com>
+        <000d01d5fdf3$55d43af0$017cb0d0$@samsung.com>
+        <a7a6a295-160a-94d6-09f9-63f783c8b28a@ti.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
---=-UbnwTZ/sE1EQtQ8St3GX
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Hi Bjorn,
-
-On Wed, 2020-04-01 at 15:41 -0500, Bjorn Helgaas wrote:
-> On Tue, Mar 24, 2020 at 07:28:11PM +0100, Nicolas Saenz Julienne wrote:
-> > xHCI's PCI fixup, run at the end of pcie-brcmstb's probe, depends on
+> From: Kishon Vijay Abraham I <kishon=40ti.com>
+> Subject: Re: =5BPATCH=5D PCI: endpoint: Fix NULL pointer dereference for =
+-
+> >get_features()
 >=20
-> Is there a function name for this fixup that you can mention?
-
-Yes, rpi_firmware_init_vl805(), I'll update the description.
-
-> > RPi4's VideoCore firmware interface to be up and running. It's possible
-> > for both initializations to race, so make sure it's available prior to
-> > starting.
+> Hi Sriram,
 >=20
-> I guess "both initializations" means brcm_pcie_probe() and something
-> else?  It'd be nice to include that function name here, too.
-
-Noted, I'll be more explicit on the next version of the series. More in dep=
-th
-explanation below.
-
-> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-> > ---
-> >  drivers/pci/controller/pcie-brcmstb.c | 15 +++++++++++++++
-> >  1 file changed, 15 insertions(+)
-> >=20
-> > diff --git a/drivers/pci/controller/pcie-brcmstb.c
-> > b/drivers/pci/controller/pcie-brcmstb.c
-> > index 3a10e678c7f4..a3d3070a5832 100644
-> > --- a/drivers/pci/controller/pcie-brcmstb.c
-> > +++ b/drivers/pci/controller/pcie-brcmstb.c
-> > @@ -28,6 +28,8 @@
-> >  #include <linux/string.h>
-> >  #include <linux/types.h>
-> > =20
-> > +#include <soc/bcm2835/raspberrypi-firmware.h>
-> > +
-> >  #include "../pci.h"
-> > =20
-> >  /* BRCM_PCIE_CAP_REGS - Offset for the mandatory capability config reg=
-s */
-> > @@ -917,11 +919,24 @@ static int brcm_pcie_probe(struct platform_device
-> > *pdev)
-> >  {
-> >  	struct device_node *np =3D pdev->dev.of_node, *msi_np;
-> >  	struct pci_host_bridge *bridge;
-> > +	struct device_node *fw_np;
-> >  	struct brcm_pcie *pcie;
-> >  	struct pci_bus *child;
-> >  	struct resource *res;
-> >  	int ret;
-> > =20
-> > +	/*
-> > +	 * We have to wait for the Raspberry Pi's firmware interface to be up
-> > +	 * as some PCI fixups depend on it.
+> On 3/19/2020 7:06 PM, Sriram Dash wrote:
+> >> From: Shradha Todi <shradha.t=40samsung.com>
+> >> Subject: =5BPATCH=5D PCI: endpoint: Fix NULL pointer dereference for -
+> >>> get_features()
+> >>
+> >> get_features ops of pci_epc_ops may return NULL, causing NULL pointer
+> >> dereference in pci_epf_test_bind function. Let us add a check for
+> >> pci_epc_feature pointer in pci_epf_test_bind before we access it to
+> >> avoid any such NULL pointer dereference and return -ENOTSUPP in case
+> >> pci_epc_feature is not found.
+> >>
+> >> Reviewed-by: Pankaj Dubey <pankaj.dubey=40samsung.com>
+> >> Signed-off-by: Sriram Dash <sriram.dash=40samsung.com>
+> >> Signed-off-by: Shradha Todi <shradha.t=40samsung.com>
+> >> ---
+> >
+> > Hi Kishon,
+> >
+> > Any update on this?
 >=20
-> It'd be nice to know the nature of this dependency between the
-> firmware interface and the fixups.  This may be useful for future
-> maintenance.  E.g., if PCI config access doesn't work until the
-> firmware interface is up, that would affect almost everything.  But
-> you say "some PCI fixups", so I suppose the actual dependency is
-> probably something else.
+> Don't we access epc_features only after checking if epc_features is not N=
+ULL in
+> pci_epf_test_bind() function? However we are accessing epc_features in
+> multiple other functions all over pci-epf-test.
 
-Sorry it wasn't clear enough, I'll redo this comment. Also note that the PC=
-Ie
-bus and the XHCI chip are hardwired, so that's the only device that'll ever=
- be
-available on the bus.
+We access the epc_feature after checking the NULL condition in the bind fun=
+ction.
+However, we do not stop if the epc_feature is NULL and proceed for allocati=
+on in the
+pci_epf_test_alloc_space function, for example. During this allocation, we =
+do not check
+for NULL condition for epc_feature and hence, if any controller driver is n=
+ot providing
+the epc features, it will panic accessing epc_features.
 
-VIA805's XHCI firmware has to be loaded trough RPi's firmware mailbox in
-between the PCIe bus probe and the subsequent USB probe. Note that a PCI re=
-set
-clears the firmware. The only mechanism available in between the two operat=
-ions
-are PCI Fixups. These are limited in their own way, as I can't return
--EPROBE_DEFER if the firmware interface isn't available yet. Hence the need=
- for
-an explicit dependency between pcie-brcmstb and raspberrypi's firmware mail=
-box
-device.
+>=20
+> So the patch itself is correct though the commit log has to be fixed. You=
+ should
+> also check if all the endpoint controller drivers existing currently prov=
+ides
+> epc_features.
 
-Your concern here showcases this series' limitations. From a high level
-perspective it's not clear to me who should be responsible for downloading =
-the
-firmware. And I get the feeling I'm abusing PCI fixups. I haven't found any
-smart way to deal with this three way dependency of platform/non-platform
-devices. I even looked into adding -EPROBE_DEFER support to fixups, but I f=
-ear
-that would entail moving them into the core device definition.
+At the moment, there is no issue for existing controller drivers as I can s=
+ee almost
+all drivers are providing epc_features. But, this is not a mandatory featur=
+e and some
+controller drivers may not have epc_features implemented, may be in the nea=
+r future.
+But because we are dealing with the configfs, the application need not both=
+er about
+the driver details underneath.
 
-Regards,
-Nicolas
+IMO, the code should be fixed regardless and should not cause panic in any =
+case.
 
-
---=-UbnwTZ/sE1EQtQ8St3GX
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl6F9ksACgkQlfZmHno8
-x/7wXQf9GeRwGPIeI/wbeH0RFkXsyiFyaYxhvRtWla25hLtNxPLBoPWmR9sR5YP3
-8ZM10ZELD5DqgwBhBeWqJk43ZzNYnJACp97N2fe7wZBVXFx9fCtlG1VmcqG02CiT
-JkIgFDeAAq5tjbgWfKEBtTiLXch+C66Ja+7H7XOAm0RhEdVDqhrCI9lZecoHYWev
-0TarGDoABp25KqujbYb/TXFzg4LPMEA39tNdvt8slPf28Z5En4IdPUpogXQ6+fA6
-WbbY64G1WCnBQBlnB/XFRX+cuVRcwX+FImDSzSowaEZHeuMyC1qXQcmMHkym59KP
-0cMQjaZhNNzZpO26RCF2+eJSzDzS5Q==
-=jbBy
------END PGP SIGNATURE-----
-
---=-UbnwTZ/sE1EQtQ8St3GX--
+>=20
+> Thanks
+> Kishon
+> >
+> >
+> >>  drivers/pci/endpoint/functions/pci-epf-test.c =7C 15 +++++++++------
+> >>  1 file changed, 9 insertions(+), 6 deletions(-)
+> >>
+> >> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c
+> >> b/drivers/pci/endpoint/functions/pci-epf-test.c
+> >> index c9121b1b9fa9..af4537a487bf 100644
+> >> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> >> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> >> =40=40 -510,14 +510,17 =40=40 static int pci_epf_test_bind(struct pci_=
+epf *epf)
+> >>  		return -EINVAL;
+> >>
+> >>  	epc_features =3D pci_epc_get_features(epc, epf->func_no);
+> >> -	if (epc_features) =7B
+> >> -		linkup_notifier =3D epc_features->linkup_notifier;
+> >> -		msix_capable =3D epc_features->msix_capable;
+> >> -		msi_capable =3D epc_features->msi_capable;
+> >> -		test_reg_bar =3D pci_epc_get_first_free_bar(epc_features);
+> >> -		pci_epf_configure_bar(epf, epc_features);
+> >> +	if (=21epc_features) =7B
+> >> +		dev_err(dev, =22epc_features not implemented=5Cn=22);
+> >> +		return -ENOTSUPP;
+> >>  	=7D
+> >>
+> >> +	linkup_notifier =3D epc_features->linkup_notifier;
+> >> +	msix_capable =3D epc_features->msix_capable;
+> >> +	msi_capable =3D epc_features->msi_capable;
+> >> +	test_reg_bar =3D pci_epc_get_first_free_bar(epc_features);
+> >> +	pci_epf_configure_bar(epf, epc_features);
+> >> +
+> >>  	epf_test->test_reg_bar =3D test_reg_bar;
+> >>  	epf_test->epc_features =3D epc_features;
+> >>
+> >> --
+> >> 2.17.1
+> >
+> >
 
