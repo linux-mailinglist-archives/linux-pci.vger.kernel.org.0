@@ -2,51 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B42C19C0E0
+	by mail.lfdr.de (Postfix) with ESMTP id 31E6019C0DF
 	for <lists+linux-pci@lfdr.de>; Thu,  2 Apr 2020 14:12:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388253AbgDBMMF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S2388262AbgDBMMF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Thu, 2 Apr 2020 08:12:05 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:33303 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388239AbgDBMMD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Apr 2020 08:12:03 -0400
-Received: by mail-ed1-f68.google.com with SMTP id z65so3841414ede.0;
-        Thu, 02 Apr 2020 05:12:01 -0700 (PDT)
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:33995 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387937AbgDBMMF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Apr 2020 08:12:05 -0400
+Received: by mail-ed1-f67.google.com with SMTP id o1so3841884edv.1;
+        Thu, 02 Apr 2020 05:12:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=0dGTHqx3bG6gs03S9XoD7W3tW7je5nP9W1EztY8BydA=;
-        b=ilkvR70Sx0A+pxHqWws9O1/N3VKSPMn8ZoXhFFp/mng5/RYun7AYZHAQyZRGZM88YG
-         G0gdJ3TWV8zMxooeAkQmExPp+anICrT7GDAV7EscDKlxteBAuHGQiWTq8ICicQnhEr6f
-         7Pyqd30ahoZYiZJxsMrlKm8FtOGnn1+ZsWlkkepJzbdIvE3TgevlQf4DbS3Cwuu0etyw
-         iFVUARt+Xsvt/gWB4ooItHtjTweQvrNwFsofidUwhna8bdjiOFDbptVItpWxxwSqM7Rb
-         KZLJ5yMiC1beqWsapbSVnIvqMLPlm0g+FyfO5pIUd6DilO6HdHM5JQmhFmXQ2FVgOe4L
-         Wzog==
+        bh=KsFq7yQU1rlzNMJrGzP0f6VuMClLu/ToR/AF+zEb8qI=;
+        b=DbAA1ASmX06fN4fhcKuLmpG395IJaD5OzO2OkAiIl3DUn6qMG8A4hu6nPEdiRCy7qS
+         LUAx5RFECtsHPfmAvq/jS+h69W4IoCvCC39zMgpLoonFBTN9bkgKuV046V8nKC5a3pp1
+         GbpFsy/t/M/WH9bVudqmABrVTR3ubeyKcGUC81SUv9egWRY4uAe9km7lOzqbw9M9FkeB
+         tv0Ejc/l0+FeXM5Tf1OaLrcBIUNWxN2+GTojdYe+/yfD+uWbkr/370kF9IgxgbIw+Dob
+         gofwLkhJV9J8fxs72AqfRyaHTut5OimKD6Gumrr+d+on8LtR1JrT5I65/iuHfxKu1NTm
+         I19g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=0dGTHqx3bG6gs03S9XoD7W3tW7je5nP9W1EztY8BydA=;
-        b=lW0zFj93OrTJRYWMEXypSR3++ktYZXdoV+B0y3OjNB2Yq0AyJPrynWJUGup9C47hpq
-         tSb8sQwgLWTGmGYxaDIphPFRwI7yrVSpbo6fs2ThKt8qreZQxvwajRH5S7JPdPMHfifT
-         qa57Ld5xlnLDhXN/LZ206qq3mX27KINJ6I1PFifi/Mg2tyy5df76id7QveF+7oO6ZfSx
-         yMhMvQbZKjRO6X0ArudEM+hcvttA8LkSaHo2GyMWPypw2NL8pB5gkDAzeamFJStmfhAV
-         yrp2OXbzdORL5Ct3r8MnEMr5Zwc/1Waq/onu7ej+bBXiOXAIPASUmK6VCzM1Ve3eH32O
-         ISiQ==
-X-Gm-Message-State: AGi0PuaJ9bxqUsPswAjOby6VS2kcUXlltsoak9NY5Pdfg+lbblPH217t
-        LtLfNMNjhkiiEaXwQ6A0iQ0=
-X-Google-Smtp-Source: APiQypKYxjtcBBgBHnW12cQvcF13VWJDWgS7QE+pl2tfSyIFd+Kdh7NemNhQs3sSx010992j+hGdXw==
-X-Received: by 2002:a17:906:640f:: with SMTP id d15mr2959847ejm.191.1585829520480;
-        Thu, 02 Apr 2020 05:12:00 -0700 (PDT)
+        bh=KsFq7yQU1rlzNMJrGzP0f6VuMClLu/ToR/AF+zEb8qI=;
+        b=aHPB3/uWoLz31tJTNgiXAowuPspiS1FmkwnG3b4rhGlMsdrPvmq852k4wXPu5iNYE3
+         eMT/UBOhqB1Di4ndm5mSvd8fLYXYsfZ5I3UtI4qEIfZCaJu0KDPkej7p1BgBewmNr3IB
+         Ngl01m4a5bnGiKPiDyLDxm7sowu6mwJ7KOhGqZ5+yD1CmVIVisIL6fiEs6lqaFUuGmha
+         mmPrGZDREyFzIv4xbWUOdepRVXbR8Wmc0nlxnu9JNYFg/sFhL/PuzcJ6qedUjGO6PJ53
+         SgR7E2RfP9N3UpRIU8eb/J5RFsowKxhe4rCN/LlUrsjKUDT0IjKeSNXIROAGkkzcfZJx
+         mR0g==
+X-Gm-Message-State: AGi0PuaI7GGoMY3eaLt1weaJDuARSTUYoOGItkFZIwkv2DW/AkGWgumq
+        +DSo5BpzQh9Ss7/xabGn4j2EeSgMZxUyCTz7
+X-Google-Smtp-Source: APiQypIvBMbr8/OcVfmbOg/N7gt60xcGNaW9v5EquvvNuFHwtAY2cx8E5B83GtZqK9UIvLjtxRP+eA==
+X-Received: by 2002:aa7:d91a:: with SMTP id a26mr2622190edr.236.1585829522548;
+        Thu, 02 Apr 2020 05:12:02 -0700 (PDT)
 Received: from Ansuel-XPS.localdomain (host250-251-dynamic.250-95-r.retail.telecomitalia.it. [95.250.251.250])
-        by smtp.googlemail.com with ESMTPSA id w20sm1083611ejv.40.2020.04.02.05.11.58
+        by smtp.googlemail.com with ESMTPSA id w20sm1083611ejv.40.2020.04.02.05.12.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Apr 2020 05:11:59 -0700 (PDT)
+        Thu, 02 Apr 2020 05:12:02 -0700 (PDT)
 From:   Ansuel Smith <ansuelsmth@gmail.com>
 To:     Andy Gross <agross@kernel.org>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>, Rob Herring <robh@kernel.org>,
+Cc:     Abhishek Sahu <absahu@codeaurora.org>,
+        Ansuel Smith <ansuelsmth@gmail.com>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -57,9 +58,9 @@ Cc:     Ansuel Smith <ansuelsmth@gmail.com>, Rob Herring <robh@kernel.org>,
         Philipp Zabel <p.zabel@pengutronix.de>,
         linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 02/10] devicetree: bindings: pci: add missing clks to qcom,pcie
-Date:   Thu,  2 Apr 2020 14:11:39 +0200
-Message-Id: <20200402121148.1767-3-ansuelsmth@gmail.com>
+Subject: [PATCH v2 03/10] PCIe: qcom: change duplicate PCI reset to phy reset
+Date:   Thu,  2 Apr 2020 14:11:40 +0200
+Message-Id: <20200402121148.1767-4-ansuelsmth@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200402121148.1767-1-ansuelsmth@gmail.com>
 References: <20200402121148.1767-1-ansuelsmth@gmail.com>
@@ -70,40 +71,30 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Document missing clks used in ipq806x soc.
+From: Abhishek Sahu <absahu@codeaurora.org>
 
+The deinit issues reset_control_assert for pci twice and does not contain
+phy reset.
+
+Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
 Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-Acked-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/pci/qcom,pcie.txt | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/pci/controller/dwc/pcie-qcom.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-index 981b4de12807..becdbdc0fffa 100644
---- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-@@ -90,6 +90,8 @@
- 	Definition: Should contain the following entries
- 			- "core"	Clocks the pcie hw block
- 			- "phy"		Clocks the pcie PHY block
-+			- "aux" 	Clocks the pcie AUX block
-+			- "ref" 	Clocks the pcie ref block
- - clock-names:
- 	Usage: required for apq8084/ipq4019
- 	Value type: <stringlist>
-@@ -277,8 +279,10 @@
- 				<0 0 0 4 &intc 0 39 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
- 		clocks = <&gcc PCIE_A_CLK>,
- 			 <&gcc PCIE_H_CLK>,
--			 <&gcc PCIE_PHY_CLK>;
--		clock-names = "core", "iface", "phy";
-+			 <&gcc PCIE_PHY_CLK>,
-+			 <&gcc PCIE_AUX_CLK>,
-+			 <&gcc PCIE_ALT_REF_CLK>;
-+		clock-names = "core", "iface", "phy", "aux", "ref";
- 		resets = <&gcc PCIE_ACLK_RESET>,
- 			 <&gcc PCIE_HCLK_RESET>,
- 			 <&gcc PCIE_POR_RESET>,
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index f958c535de6e..1fcc7fed8443 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -284,7 +284,7 @@ static void qcom_pcie_deinit_2_1_0(struct qcom_pcie *pcie)
+ 	reset_control_assert(res->axi_reset);
+ 	reset_control_assert(res->ahb_reset);
+ 	reset_control_assert(res->por_reset);
+-	reset_control_assert(res->pci_reset);
++	reset_control_assert(res->phy_reset);
+ 	clk_disable_unprepare(res->iface_clk);
+ 	clk_disable_unprepare(res->core_clk);
+ 	clk_disable_unprepare(res->phy_clk);
 -- 
 2.25.1
 
