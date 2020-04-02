@@ -2,207 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C83C519C039
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Apr 2020 13:32:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BB93819C0A4
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Apr 2020 14:01:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388118AbgDBLcl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Apr 2020 07:32:41 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53158 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388001AbgDBLck (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 2 Apr 2020 07:32:40 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id B6E05ACAE;
-        Thu,  2 Apr 2020 11:32:37 +0000 (UTC)
-Message-ID: <88456b80396331814fca9c929c2129861aaa35bd.camel@suse.de>
-Subject: Re: [PATCH v6 2/4] firmware: raspberrypi: Introduce vl805 init
- routine
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com, linux-usb@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org,
-        tim.gover@raspberrypi.org, linux-pci@vger.kernel.org,
-        wahrenst@gmx.net, sergei.shtylyov@cogentembedded.com
-Date:   Thu, 02 Apr 2020 13:32:35 +0200
-In-Reply-To: <20200401203717.GA131226@google.com>
-References: <20200401203717.GA131226@google.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-FiRA9H8TcBeXjrnKFyig"
-User-Agent: Evolution 3.34.2 
+        id S2387990AbgDBMBy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Apr 2020 08:01:54 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:35028 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387985AbgDBMBy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Apr 2020 08:01:54 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 032C1opR030916;
+        Thu, 2 Apr 2020 07:01:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1585828910;
+        bh=1e22BO+4f4fw4nP/CxqdEm797bCO43XXz7zI8qKK1fc=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=UbkVzdKB/0aLNeaOnnfq79EsrwgCjrKbW5jjtzhTWg012Kc89C+co4VwBt3m/RqVJ
+         aUw60LodF9fVjz6NP43B4pWWRQwxvxhBvolm7U4CZGZf7MJLi2qLGVxZGbVcaARrR6
+         Rh5o34tUx9aw7yHG1HZI60UJlUo1JbbNWbW+Pu04=
+Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 032C1n08055479
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 2 Apr 2020 07:01:49 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 2 Apr
+ 2020 07:01:34 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 2 Apr 2020 07:01:34 -0500
+Received: from [10.250.133.232] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 032C1XCU099944;
+        Thu, 2 Apr 2020 07:01:33 -0500
+Subject: Re: pci-usb/pci-sata broken with LPAE config after "reduce use of
+ block bounce buffers"
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Christoph Hellwig <hch@lst.de>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+References: <f76af743-dcb5-f59d-b315-f2332a9dc906@ti.com>
+ <20200203142155.GA16388@lst.de> <a5eb4f73-418a-6780-354f-175d08395e71@ti.com>
+ <20200205074719.GA22701@lst.de> <4a8bf1d3-6f8e-d13e-eae0-4db54f5cab8c@ti.com>
+ <20200205084844.GA23831@lst.de> <88d50d13-65c7-7ca3-59c6-56f7d66c3816@ti.com>
+ <20200205091959.GA24413@lst.de> <9be3bed4-3804-1b3e-a91a-ed52407524ce@ti.com>
+ <20200205160542.GA30981@lst.de> <20200217142333.GA28421@lst.de>
+ <a7d920ab-b681-45bc-677b-3db76e96cf7c@ti.com>
+Message-ID: <c832540a-802a-e361-758d-67f387ae37a5@ti.com>
+Date:   Thu, 2 Apr 2020 17:31:32 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
+In-Reply-To: <a7d920ab-b681-45bc-677b-3db76e96cf7c@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi Christoph,
 
---=-FiRA9H8TcBeXjrnKFyig
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On 2/18/2020 5:45 PM, Kishon Vijay Abraham I wrote:
+> Christoph,
+> 
+> On 17/02/20 7:53 pm, Christoph Hellwig wrote:
+>> On Wed, Feb 05, 2020 at 05:05:42PM +0100, Christoph Hellwig wrote:
+>>> On Wed, Feb 05, 2020 at 03:03:13PM +0530, Kishon Vijay Abraham I wrote:
+>>>> Yes, I see the mismatch after reverting the above patches.
+>>>
+>>> In which case the data mismatch is very likely due to a different root
+>>> cause.
+>>
+>> Did you manage to dig into this a little more?
+> 
+> I'll probably get to this later half of this week. Will update you then.
+> 
 
-Hi Bjorn,
-thanks for taking time with this.
+Sorry for the delay in getting back to this. But I guess I have root caused the
+issue now.
 
-On Wed, 2020-04-01 at 15:37 -0500, Bjorn Helgaas wrote:
-> On Tue, Mar 24, 2020 at 07:28:10PM +0100, Nicolas Saenz Julienne wrote:
-> > On the Raspberry Pi 4, after a PCI reset, VL805's firmware may either b=
-e
-> > loaded directly from an EEPROM or, if not present, by the SoC's
-> > VideCore. The function informs VideCore that VL805 was just reset, or
-> > requests for a probe defer.
->=20
-> Cover letter mentions both "VideCore" and "VideoCore".  I dunno which
-> is correct, but between the commit log and the comment, this patch
-> mentions "VideCore" four times.
+The issue was because NVMe is requesting a sector size (4096KB) which is more
+than what is supported by SWIOTLB default (256KB). NVMe driver actually has a
+mechanism to select the correct sector size
 
-Ouch, sorry, it's VideoCore. I have an auto complete thing, wrote it once w=
-rong
-and polluted the whole patch.
+ dev->ctrl.max_hw_sectors = min_t(u32,
+                NVME_MAX_KB_SZ << 1, dma_max_mapping_size(dev->dev) >> 9);
+However dma_max_mapping_size() here misbehaves and gives 4G. Ideally it should
+have given 256KB -> the max supported by SWIOTLB
 
-> > Based on Tim Gover's downstream implementation.
->=20
-> Maybe a URL?
+Tracing through the dma_max_mapping_size(), dma_direct_max_mapping_size() was
+giving incorrect value
 
-I was under the impression that adding links in the commit log that are lik=
-ely
-to be short-lived was frowned upon. That said I could've added it into the
-cover letter. For reference here it is:
+size_t dma_direct_max_mapping_size(struct device *dev)
+{
+        /* If SWIOTLB is active, use its maximum mapping size */
+        if (is_swiotlb_active() &&
+            (dma_addressing_limited(dev) || swiotlb_force == SWIOTLB_FORCE))
+                return swiotlb_max_mapping_size(dev);
+        return SIZE_MAX;
+}
+In the above function swiotlb_max_mapping_size(dev) gives 256KB however
+dma_addressing_limited(dev) always returns false. So 256KB is never returned to
+the NVMe driver.
 
-https://github.com/raspberrypi/linux/commit/9935b4c7e360b4494b4cb6e3ce79723=
-8a1ab78bd
+Tracing dma_addressing_limited(dev), found a bug in
+dma_direct_get_required_mask(). When it passes the physical address to
+phys_to_dma_direct(), the upper 32 bit is lost and dma_addressing_limited(dev)
+thinks the entire address is accessible by the device.
 
-> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-> >=20
-> > ---
-> > Changes since v4:
-> >  - Inline function definition when RASPBERRYPI_FIRMWARE is not defined
-> >=20
-> > Changes since v1:
-> >  - Move include into .c file and add forward declaration to .h
-> >=20
-> >  drivers/firmware/raspberrypi.c             | 38 ++++++++++++++++++++++
-> >  include/soc/bcm2835/raspberrypi-firmware.h |  7 ++++
-> >  2 files changed, 45 insertions(+)
-> >=20
-> > diff --git a/drivers/firmware/raspberrypi.c b/drivers/firmware/raspberr=
-ypi.c
-> > index da26a584dca0..cbb495aff6a0 100644
-> > --- a/drivers/firmware/raspberrypi.c
-> > +++ b/drivers/firmware/raspberrypi.c
-> > @@ -12,6 +12,7 @@
-> >  #include <linux/of_platform.h>
-> >  #include <linux/platform_device.h>
-> >  #include <linux/slab.h>
-> > +#include <linux/pci.h>
-> >  #include <soc/bcm2835/raspberrypi-firmware.h>
-> > =20
-> >  #define MBOX_MSG(chan, data28)		(((data28) & ~0xf) | ((chan) &
-> > 0xf))
-> > @@ -286,6 +287,43 @@ struct rpi_firmware *rpi_firmware_get(struct
-> > device_node *firmware_node)
-> >  }
-> >  EXPORT_SYMBOL_GPL(rpi_firmware_get);
-> > =20
-> > +/*
-> > + * On the Raspberry Pi 4, after a PCI reset, VL805's firmware may eith=
-er be
-> > + * loaded directly from an EEPROM or, if not present, by the SoC's
-> > VideCore.
-> > + * Inform VideCore that VL805 was just reset, or defer xhci's probe if=
- not
-> > yet
-> > + * joinable trough the mailbox interface.
->=20
-> s/trough/through/
+A patch that type casts the argument of phys_to_dma_direct() like below fixes
+the issue.
 
-Noted.
+diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+index 32ec69cdba54..0081410334c8 100644
+--- a/kernel/dma/direct.c
++++ b/kernel/dma/direct.c
+@@ -51,7 +51,9 @@ static inline struct page *dma_direct_to_page(struct device
+*dev, u64 dma_direct_get_required_mask(struct device *dev)
+ {
+-       u64 max_dma = phys_to_dma_direct(dev, (max_pfn - 1) << PAGE_SHIFT);
++       u64 max_dma =
++               phys_to_dma_direct(dev,
++                                  (phys_addr_t)(max_pfn - 1) << PAGE_SHIFT);
+        return (1ULL << (fls64(max_dma) - 1)) * 2 - 1;
+ }
 
-> I don't see anything in this patch that looks like a mailbox
-> interface, but maybe that's just because I don't know anything about
-> Raspberry Pi.
+If this looks okay to you, I can post a patch for it.
 
-There are two layers to this. The bcm2835-mailbox interface, that is generi=
-c to
-all SoC users and the Raspberry Pi firmware driver, which interacts with RP=
-i's
-custom VideoCore firmware trough the bcm2835-mailbox, and provides a light
-level of abstraction. It's like that to keep a clear separation between wha=
-t's
-a SoC feature an what is RPi specific.
-
-So with a call to rpi_firmware_get() you're supposed to get a handle to the
-shared RPi firmware structure. As long as it's ready. To pass messages down=
- the
-mailbox, you call rpi_firmware_property(), which takes care of contention,
-formating and DMA issues, before passing it into the actual mailbox interfa=
-ce
-and beyond.
-
-> > + */
-> > +int rpi_firmware_init_vl805(struct pci_dev *pdev)
-> > +{
-> > +	struct device_node *fw_np;
-> > +	struct rpi_firmware *fw;
-> > +	u32 dev_addr;
-> > +	int ret;
-> > +
-> > +	fw_np =3D of_find_compatible_node(NULL, NULL,
-> > +					"raspberrypi,bcm2835-firmware");
-> > +	if (!fw_np)
-> > +		return 0;
-> > +
-> > +	fw =3D rpi_firmware_get(fw_np);
-> > +	of_node_put(fw_np);
-> > +	if (!fw)
-> > +		return -EPROBE_DEFER;
-> > +
-> > +	dev_addr =3D pdev->bus->number << 20 | PCI_SLOT(pdev->devfn) << 15 |
-> > +		   PCI_FUNC(pdev->devfn) << 12;
-> > +
-> > +	ret =3D rpi_firmware_property(fw, RPI_FIRMWARE_NOTIFY_XHCI_RESET,
-> > +				    &dev_addr, sizeof(dev_addr));
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	dev_dbg(&pdev->dev, "loaded Raspberry Pi's VL805 firmware\n");
-> > +
-> > +	return 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(rpi_firmware_init_vl805);
-> > +
-> >  static const struct of_device_id rpi_firmware_of_match[] =3D {
-> >  	{ .compatible =3D "raspberrypi,bcm2835-firmware", },
-> >  	{},
-
-[...]
-
-Regards,
-Nicolas
-
-
---=-FiRA9H8TcBeXjrnKFyig
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl6FzVMACgkQlfZmHno8
-x/6XXgf+LwwO8z0fa4clCjzpoTcA+JvZSQdOPRvtwOifxzSqLxye96mRQZKIKZAD
-Y8jnve5qm42rBHx7oWm1ERhsvIq0jrgViMu7+FsYtK5IdCVz59zNbfoqIfSBquWv
-oG1iffrTx6BkAi6UJa/EAI9o+8p8XcT9YzFKqVycmaD+MqLuxsKKbMo9UiwWKDpx
-4onv+6FxitSiDehOGo+g2XksOoAbC6+I6kciwSMxUBki4YnESF64iiTlGZN46/CV
-kkRV/X2gu1AhOpV9X3xS2oHck9dG+219ehexdMnDjPuAqC3wfjSFNM4JXFmVWUfW
-VvzTdB+AhCxVAadYNjeui2F9s8ULfA==
-=E/7W
------END PGP SIGNATURE-----
-
---=-FiRA9H8TcBeXjrnKFyig--
-
+Thanks
+Kishon
