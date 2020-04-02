@@ -2,135 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BB93819C0A4
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Apr 2020 14:01:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4402F19C0E4
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Apr 2020 14:12:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387990AbgDBMBy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Apr 2020 08:01:54 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:35028 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387985AbgDBMBy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Apr 2020 08:01:54 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 032C1opR030916;
-        Thu, 2 Apr 2020 07:01:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1585828910;
-        bh=1e22BO+4f4fw4nP/CxqdEm797bCO43XXz7zI8qKK1fc=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=UbkVzdKB/0aLNeaOnnfq79EsrwgCjrKbW5jjtzhTWg012Kc89C+co4VwBt3m/RqVJ
-         aUw60LodF9fVjz6NP43B4pWWRQwxvxhBvolm7U4CZGZf7MJLi2qLGVxZGbVcaARrR6
-         Rh5o34tUx9aw7yHG1HZI60UJlUo1JbbNWbW+Pu04=
-Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 032C1n08055479
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 2 Apr 2020 07:01:49 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 2 Apr
- 2020 07:01:34 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 2 Apr 2020 07:01:34 -0500
-Received: from [10.250.133.232] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 032C1XCU099944;
-        Thu, 2 Apr 2020 07:01:33 -0500
-Subject: Re: pci-usb/pci-sata broken with LPAE config after "reduce use of
- block bounce buffers"
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Christoph Hellwig <hch@lst.de>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-References: <f76af743-dcb5-f59d-b315-f2332a9dc906@ti.com>
- <20200203142155.GA16388@lst.de> <a5eb4f73-418a-6780-354f-175d08395e71@ti.com>
- <20200205074719.GA22701@lst.de> <4a8bf1d3-6f8e-d13e-eae0-4db54f5cab8c@ti.com>
- <20200205084844.GA23831@lst.de> <88d50d13-65c7-7ca3-59c6-56f7d66c3816@ti.com>
- <20200205091959.GA24413@lst.de> <9be3bed4-3804-1b3e-a91a-ed52407524ce@ti.com>
- <20200205160542.GA30981@lst.de> <20200217142333.GA28421@lst.de>
- <a7d920ab-b681-45bc-677b-3db76e96cf7c@ti.com>
-Message-ID: <c832540a-802a-e361-758d-67f387ae37a5@ti.com>
-Date:   Thu, 2 Apr 2020 17:31:32 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S2388029AbgDBMMA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Apr 2020 08:12:00 -0400
+Received: from mail-ed1-f43.google.com ([209.85.208.43]:35444 "EHLO
+        mail-ed1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387730AbgDBML7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Apr 2020 08:11:59 -0400
+Received: by mail-ed1-f43.google.com with SMTP id a20so3822155edj.2;
+        Thu, 02 Apr 2020 05:11:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dQNKCc7PUxqRbfY956FD6h+k4Y66wdaQrbWQY54QQ5w=;
+        b=agymgViUtAI2emTrH34p5ZHRX2vFxpJYQZfO6Ph/EpAkAH2SKbGh9Gwowg/y5F2xF9
+         GN9bUassTsCq6TmOom09VHTeAwUjAGfKm8kyfj8L5nGKieUt7e9AmBZ0/ZTmGkrOLi9N
+         pr+6N6O7GHNu8M8Iu1GZGh3K0wLBtSPqGXELUNzjNXnj/DFNRaqkfc9QZto9nWu40mDz
+         GZ2nhih6haNInv37Cq8PqojOPRewbPgnPnex1rzGDwVqgC31gSH+X7GQNx0ioCcTTAet
+         GS4NOrCtJ2TuSOIXnr3rZMN64006zcLHMZ2xA+KOGNbosVbW8GmBGh6odMjJ9ZwM4eB9
+         iEMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dQNKCc7PUxqRbfY956FD6h+k4Y66wdaQrbWQY54QQ5w=;
+        b=uiNfsFjatiixPhFU0JiUfPN3qh4EEOsQFy65bQKQQdKqKJTRsc7k5vG5hD9PWN++3E
+         eP0JG5c3CZiTQZVBBntxnDsTrLIF23QOUyky4OHYZpKjlrgEGVudgLkzoBbG2OIU7Sh7
+         yJiyTGtajFNSctrnCGx7vYD6gEcwB8cWE5XJms5I6VV+fINAUGZkUKPSU0Wa0pnuSZAM
+         WmGXtRdCSCNmCyHxR/D0kj4UoBgJjOZ/YI02RrVK59lnqsNxWUszEX7YxpBROKap5kYB
+         fD7he1MwTMriJosnDIPIE5IDdTO6sYbwg0eYXtC6Fru+HM3//FsgVuYTJxasjmCPLL9y
+         ryCw==
+X-Gm-Message-State: AGi0PuaOkBUGyZxKcu0ShUmcHM9vYgY/iNp2bDBoBH4EX21szL48GJcG
+        UlNqZVNxkFko96pdKiYMr5w=
+X-Google-Smtp-Source: APiQypLPNlmjZYpYHEbYalA5cdj8vdbm+4lcqgc+IcUsx4IEdOq3RzlqeMTeSu9WJGrGxVExBWuiNQ==
+X-Received: by 2002:a50:da49:: with SMTP id a9mr2429759edk.388.1585829515709;
+        Thu, 02 Apr 2020 05:11:55 -0700 (PDT)
+Received: from Ansuel-XPS.localdomain (host250-251-dynamic.250-95-r.retail.telecomitalia.it. [95.250.251.250])
+        by smtp.googlemail.com with ESMTPSA id w20sm1083611ejv.40.2020.04.02.05.11.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Apr 2020 05:11:54 -0700 (PDT)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+To:     Andy Gross <agross@kernel.org>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 00/10] Multiple fixes in PCIe qcom driver
+Date:   Thu,  2 Apr 2020 14:11:37 +0200
+Message-Id: <20200402121148.1767-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <a7d920ab-b681-45bc-677b-3db76e96cf7c@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Christoph,
+This contains multiple fix for PCIe qcom driver.
+Some optional reset and clocks were missing.
+Fix a problem with no PARF programming that cause kernel lock on load.
+Add support to force gen 1 speed if needed. (due to hardware limitation)
+Add ipq8064 rev 2 support that use a different tx termination offset.
 
-On 2/18/2020 5:45 PM, Kishon Vijay Abraham I wrote:
-> Christoph,
-> 
-> On 17/02/20 7:53 pm, Christoph Hellwig wrote:
->> On Wed, Feb 05, 2020 at 05:05:42PM +0100, Christoph Hellwig wrote:
->>> On Wed, Feb 05, 2020 at 03:03:13PM +0530, Kishon Vijay Abraham I wrote:
->>>> Yes, I see the mismatch after reverting the above patches.
->>>
->>> In which case the data mismatch is very likely due to a different root
->>> cause.
->>
->> Did you manage to dig into this a little more?
-> 
-> I'll probably get to this later half of this week. Will update you then.
-> 
+v2:
+* Drop iATU programming (already done in pcie init)
+* Use max-link-speed instead of force-gen1 custom definition
+* Drop MRRS to 256B (Can't find a realy reason why this was suggested)
+* Introduce a new variant for different revision of ipq8064
 
-Sorry for the delay in getting back to this. But I guess I have root caused the
-issue now.
+Abhishek Sahu (1):
+  PCIe: qcom: change duplicate PCI reset to phy reset
 
-The issue was because NVMe is requesting a sector size (4096KB) which is more
-than what is supported by SWIOTLB default (256KB). NVMe driver actually has a
-mechanism to select the correct sector size
+Ansuel Smith (7):
+  PCIe: qcom: add missing ipq806x clocks in PCIe driver
+  devicetree: bindings: pci: add missing clks to qcom,pcie
+  PCIe: qcom: Fixed pcie_phy_clk branch issue
+  PCIe: qcom: add missing reset for ipq806x
+  devicetree: bindings: pci: add ext reset to qcom,pcie
+  PCIe: qcom: fix init problem with missing PARF programming
+  devicetree: bindings: pci: add ipq8064 rev 2 variant to qcom,pcie
 
- dev->ctrl.max_hw_sectors = min_t(u32,
-                NVME_MAX_KB_SZ << 1, dma_max_mapping_size(dev->dev) >> 9);
-However dma_max_mapping_size() here misbehaves and gives 4G. Ideally it should
-have given 256KB -> the max supported by SWIOTLB
+Sham Muthayyan (2):
+  PCIe: qcom: add ipq8064 rev2 variant and set tx term offset
+  PCIe: qcom: add Force GEN1 support
 
-Tracing through the dma_max_mapping_size(), dma_direct_max_mapping_size() was
-giving incorrect value
+ .../devicetree/bindings/pci/qcom,pcie.txt     |  56 +++++++-
+ drivers/pci/controller/dwc/pcie-qcom.c        | 134 +++++++++++++++---
+ 2 files changed, 167 insertions(+), 23 deletions(-)
 
-size_t dma_direct_max_mapping_size(struct device *dev)
-{
-        /* If SWIOTLB is active, use its maximum mapping size */
-        if (is_swiotlb_active() &&
-            (dma_addressing_limited(dev) || swiotlb_force == SWIOTLB_FORCE))
-                return swiotlb_max_mapping_size(dev);
-        return SIZE_MAX;
-}
-In the above function swiotlb_max_mapping_size(dev) gives 256KB however
-dma_addressing_limited(dev) always returns false. So 256KB is never returned to
-the NVMe driver.
+-- 
+2.25.1
 
-Tracing dma_addressing_limited(dev), found a bug in
-dma_direct_get_required_mask(). When it passes the physical address to
-phys_to_dma_direct(), the upper 32 bit is lost and dma_addressing_limited(dev)
-thinks the entire address is accessible by the device.
-
-A patch that type casts the argument of phys_to_dma_direct() like below fixes
-the issue.
-
-diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-index 32ec69cdba54..0081410334c8 100644
---- a/kernel/dma/direct.c
-+++ b/kernel/dma/direct.c
-@@ -51,7 +51,9 @@ static inline struct page *dma_direct_to_page(struct device
-*dev, u64 dma_direct_get_required_mask(struct device *dev)
- {
--       u64 max_dma = phys_to_dma_direct(dev, (max_pfn - 1) << PAGE_SHIFT);
-+       u64 max_dma =
-+               phys_to_dma_direct(dev,
-+                                  (phys_addr_t)(max_pfn - 1) << PAGE_SHIFT);
-        return (1ULL << (fls64(max_dma) - 1)) * 2 - 1;
- }
-
-If this looks okay to you, I can post a patch for it.
-
-Thanks
-Kishon
