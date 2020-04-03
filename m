@@ -2,51 +2,45 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F08F019D220
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Apr 2020 10:28:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 66E3A19D225
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Apr 2020 10:28:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390148AbgDCI2I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 3 Apr 2020 04:28:08 -0400
-Received: from mail-eopbgr1410092.outbound.protection.outlook.com ([40.107.141.92]:5216
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389015AbgDCI2H (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 3 Apr 2020 04:28:07 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hXBvs5vDsLfYe7Y+vFTcptziEE5YbKLdTU7l3xUEIY5TDkUVgUvkQOFwRRB0wOOo+adnWV5iVKpfleSOpU22RTq6klJqSsMFiaUD+GGWB3p+rlARrWDSm1RSUdRzbbWXo/gXKdQnoa5hjmhBH56yLRePN2m9uV3/Y+p4NJkSJcTa/jQjFiVNpT4To6Jw+PnwTbUm1WeQQBB+3mkA9bN4G5ORMANl0nO3ZUChqG7QZE9/j1Q69AdAicMo0VEk68eY3ZzIeTz9mfzlBZODtjn58hWOrjy4AE3fEtoSkvjFVzLCa2+FCtEgIco5mC+wCOOidNVOhD5JwL9m7QLJ5k557g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=L+kqWT7sY2OORnmbgt5Cxr5xhozwMaZLXa8dE6EXMtc=;
- b=NrenoDN6/OGKR+Xy/qA1QGLTtNqIqKXVw/EY1TYFLTg6tCzvRJcmvBBlt6uXzCZOp7xZJ2XLEOPMUyY1d8x8LthfP3M0FfpL4/4XWBAxlrHZhCJm8XZwuVEexczffpomgVHxAVdsXaRvq9DwyzVGWcvZo6SpxzaQuf5qOzQ3HxrRghcL4jIC2QGRK4ZLLZGKRNsL12Js8Ik50FeSMRH9BYvMVnaht6CS/zEYdIThbx1aVH0lRiZBV2OhfSzryg9n+FHyHWJ+24oTXvN5vWn2+TkL0rBm14nICsUh0JPj2xEY7PuUgIaVKGXlA3jWDIurj7yKhttCc9Q+xJ1dCh+3uQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=L+kqWT7sY2OORnmbgt5Cxr5xhozwMaZLXa8dE6EXMtc=;
- b=pLB+r/kD0vkBKwGZJjaTYSKTVDrV7rv+Al2BOhsgE2Y+o2nvjVkR6nPM04eYECklwMLxrKMbFriNwOlp3WIXJ9BbBkouUt/5m8HENslXlQ6r3hGlRB1DJ6k5aexrzp//CO1Wc/jqfBEG+RddybT8n/5yCDYn4Zji66iep+N7M4A=
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
- TYAPR01MB2816.jpnprd01.prod.outlook.com (20.177.102.150) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2856.20; Fri, 3 Apr 2020 08:28:04 +0000
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::ed7f:1268:55a9:fc06]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::ed7f:1268:55a9:fc06%4]) with mapi id 15.20.2878.017; Fri, 3 Apr 2020
- 08:28:04 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        id S2390520AbgDCI20 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 3 Apr 2020 04:28:26 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:33035 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389015AbgDCI20 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Apr 2020 04:28:26 -0400
+Received: by mail-oi1-f193.google.com with SMTP id m14so5455032oic.0;
+        Fri, 03 Apr 2020 01:28:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Jd71ZkzudxX5g2IyvVUOYdKyHi8OFqEjn6IvsJ3wV7k=;
+        b=FptaELtUqZtw2PU+tc3+NF2788XDhVfr2VIIe/2V4QAciH24UopAEvzEfFTk/eMdr0
+         KK/bH8IlvDlRvFlCFXPsGiRlA/hSkE2w5OtvxkMdZHMNIERNp89MWsiIAJA2VmdcXoe0
+         ltumbPd00FeL8SIWehhKXlPqxNa8Xa/nGbJBnbEqx15TEWLKO5PbN/Ah1PvmwVIpuDW/
+         qpyf1Az7WlIF/EcBQWWZlhK6KZ7Rv8PVaR9Mru0mJZDROQwD4npZKPiNSCghc4nsZSbU
+         WAFKIioIP8XG8tZQUQ37UB3Ue+j4/8lXhRQK+ITWCjXfzdhRUMh4YNwkg4ogzTorSu0b
+         gRXQ==
+X-Gm-Message-State: AGi0PubH7hqbi2eLKTJiwBMHgXhLZ2t5EbB/p+TopymSgWJx8ZrALXP3
+        lelfEc20rHbEF5+UXWZS5KqygYsQa28o31HrWi8=
+X-Google-Smtp-Source: APiQypIS6fpMGxM4Q7dZQ7e1YsUy6vcUkIWwvKfW8MQ2oAPzqQO4S5tcl4AqLxJx41ERvItQuVYYFJJlh5Wv+BynmHU=
+X-Received: by 2002:aca:cdd1:: with SMTP id d200mr2041353oig.153.1585902505654;
+ Fri, 03 Apr 2020 01:28:25 -0700 (PDT)
+MIME-Version: 1.0
+References: <1585856319-4380-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1585856319-4380-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <TYAPR01MB454403D69A74036B74CC8220D8C70@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+In-Reply-To: <TYAPR01MB454403D69A74036B74CC8220D8C70@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 3 Apr 2020 10:28:13 +0200
+Message-ID: <CAMuHMdVWn=U82k5RJnBaRUgRHh3bRfdncOupmX67-u-nbwsG9w@mail.gmail.com>
+Subject: Re: [PATCH v6 02/11] arm64: defconfig: enable CONFIG_PCIE_RCAR_HOST
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-CC:     Catalin Marinas <catalin.marinas@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Andrew Murray <andrew.murray@arm.com>,
@@ -67,103 +61,72 @@ CC:     Catalin Marinas <catalin.marinas@arm.com>,
         "linux-rockchip@lists.infradead.org" 
         <linux-rockchip@lists.infradead.org>,
         Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: RE: [PATCH v6 07/11] dt-bindings: PCI: rcar: Add bindings for R-Car
- PCIe endpoint controller
-Thread-Topic: [PATCH v6 07/11] dt-bindings: PCI: rcar: Add bindings for R-Car
- PCIe endpoint controller
-Thread-Index: AQHWCSZ3yJsyf9f5C02jBKuKwy/M6ahnD+3A
-Date:   Fri, 3 Apr 2020 08:28:04 +0000
-Message-ID: <TYAPR01MB4544E4658654491BECD7561AD8C70@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-References: <1585856319-4380-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1585856319-4380-8-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1585856319-4380-8-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
-x-originating-ip: [124.210.22.195]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: d8a580e0-2783-4a0f-e89b-08d7d7a8ee1d
-x-ms-traffictypediagnostic: TYAPR01MB2816:|TYAPR01MB2816:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <TYAPR01MB2816320A1C33F13A2B36485BD8C70@TYAPR01MB2816.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2331;
-x-forefront-prvs: 0362BF9FDB
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(376002)(396003)(366004)(346002)(39860400002)(136003)(54906003)(52536014)(478600001)(107886003)(110136005)(186003)(55016002)(86362001)(26005)(4326008)(316002)(55236004)(6506007)(71200400001)(7696005)(966005)(76116006)(8676002)(9686003)(66476007)(81166006)(33656002)(64756008)(66556008)(81156014)(5660300002)(2906002)(8936002)(7416002)(66946007)(66446008)(921003)(1121003);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 1Z6QBiZDsHWmDDshjZOuSKXVv7RF4J6oSFOB1gLhajn8N97RQ0oWmwK7xpFQsmm9d4ZVl6loKoHdlSzU2bxdy+WLygne7jyP9FWGyCM0/4VD9SsIflnCvcI1UAYkfZbPmdZRSd/ZArORTl36FmWo/fcJVBFuwBhyLSvJcIcwZ1UadpHXemcMQxUXVtHClRonHGF60HbEt6IEbPdgXqHEz+Qig/cATiS9YWB+WNX0let+AqMLQ/ltNtIZs5sU2IedfJpKCLI/QBaP8ian77Rub+aHrfzuLUJtK+fH6PQtgmTYWr2Cx28Swc7I6veipU8lDQ/dtSTPPo5ZMT345jr+d6HUrYp3uQMdPvqiRTgyJIOVw708cPVcQz/jqmbLGJBiS15UV7ukQHaIGyCVa/nnBg/lYW/eKWWK/FmfC5iioHoSz7ikWbmbyXmukowv7bqkgSWMWKgaXwZ68yaLuhJhBDx6CDO7zbtkBOhXoHMhOdFhGUIRxlGP+G9S7UBDrZKU3cNKX/hguZHFI182GFvBBctLcx02+zgFiLYJXosuLYWMUq/fg4CHejp8rgOJe58DS3Ymeqfy8doWoCVzIBa7VA==
-x-ms-exchange-antispam-messagedata: /3BZFq29NVF8wFDQneYsxSdTsMUkO5owxNWWXjsD0PR/bjoFqg60BWton0a1nqVXqsHGPLF59qQaRzhYmkoEIlzojWvrZiE6JTnezg30dAfAoK1awFu2kapuL1MfJcQh6UtQokATL5BR1OsJkzH3PA==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d8a580e0-2783-4a0f-e89b-08d7d7a8ee1d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Apr 2020 08:28:04.2581
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Kqbwr3ti0PXE2ujCGrEVh9SpLDUdlpykgCnFq0R3O0yA0Sx0AaHGmEDwFH0tx1Z+udMZnLKx9v7jZ3nK1n+G02VcGixSF+sb7Z9Olq4lVxmUZMDAK5Hw/hPefNES342j
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB2816
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Prabhakar-san,
+Hi Shimoda-san,
 
-Thank you for your patch!
+On Fri, Apr 3, 2020 at 10:03 AM Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+> > From: Lad Prabhakar, Sent: Friday, April 3, 2020 4:39 AM
+> >
+> > config option PCIE_RCAR internally selects PCIE_RCAR_HOST which builds the
+> > same driver. So this patch renames CONFIG_PCIE_RCAR to
+> > CONFIG_PCIE_RCAR_HOST so that PCIE_RCAR can be safely dropped from Kconfig
+> > file.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Thank you for the patch!
+>
+> Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+>
+> But, I'm thinking this patch (and patch 03/11) should be separated
+> from this patch series for arm64 subsystem to ease maintenance.
+> My scenario is:
+>  1) patch series 1: R-Car PCIe endpoint support.
+>  -- This means: patch 1, 4 - 9, 11
+>
+>  2) After the patch series 1 is merged, submit this patch 2/11 to arm subsystem
+>    and submit the patch 10/11 to misc subsystem.
+>
+>  3) At last, submit patch 3/11 after the patch 2/11 is merged.
+>
+> Geert-san, what do you think?
 
-> From: Lad Prabhakar, Sent: Friday, April 3, 2020 4:39 AM
-<snip>
-> diff --git a/Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
-> b/Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
-> new file mode 100644
-> index 000000000000..07cd5a7325d0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
-> @@ -0,0 +1,76 @@
-> +# SPDX-License-Identifier: GPL-2.0
+Thanks, I agree with your summary.
 
-I'm sorry I should have mentioned in the previous review.
-This is better like the following.
+I can take patch 2/11 through renesas-devel.
+Probably it's best if I submit it to arm-soc as a fix for v5.8, after
+the driver part
+has been merged into v5.8-rc1, so 3/11 can be submitted for v5.9.
 
-# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+BTW, I'm wondering about "[PATCH v6 05/11] PCI: rcar: Fix calculating
+mask for PCIEPAMR register". Can the issue fixed by this patch happen with
+the current driver in host mode, or is that limited to ep mode?
+In case of the former, please submit it to the PCI maintainer as a separate
+fix.
 
-https://patchwork.kernel.org/patch/11459267/#23246825
+Thanks!
 
-<snip>
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/r8a774c0-cpg-mssr.h>
-> +    #include <dt-bindings/power/r8a774c0-sysc.h>
-> +
-> +     pcie0_ep: pcie-ep@fe000000 {
-> +            compatible =3D "renesas,r8a774c0-pcie-ep",
-> +                         "renesas,rcar-gen3-pcie-ep";
-> +            reg =3D <0 0xfe000000 0 0x80000>,
-> +                  <0x0 0xfe100000 0 0x100000>,
-> +                  <0x0 0xfe200000 0 0x200000>,
-> +                  <0x0 0x30000000 0 0x8000000>,
-> +                  <0x0 0x38000000 0 0x8000000>;
+Gr{oetje,eeting}s,
 
-Examples are built with #{address,size}-cells =3D <1>, so
+                        Geert
 
-            reg =3D <0xfe000000 0x80000>,
-                  <0xfe100000 0x100000>,
-                  <0xfe200000 0x200000>,
-                  <0x30000000 0x8000000>,
-                  <0x38000000 0x8000000>;
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-https://patchwork.kernel.org/patch/11459267/#23246825
-
-Best regards,
-Yoshihiro Shimoda
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
