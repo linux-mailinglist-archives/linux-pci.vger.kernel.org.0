@@ -2,199 +2,192 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9301219CFDF
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Apr 2020 07:42:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B6DB519D180
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Apr 2020 09:52:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730759AbgDCFmg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 3 Apr 2020 01:42:36 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:39150 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730025AbgDCFmg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Apr 2020 01:42:36 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0335gHSZ092029;
-        Fri, 3 Apr 2020 00:42:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1585892537;
-        bh=PsXDTOOzoT7ydugMXsKdAa+n/Q+otIwW27YnyqGnikw=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=ozAcod74AYc2bG8/fzGyWns1nQzKsgAeXeReuahYeXiGKd0afaaI0hIYibx8nDDuP
-         4vockyOcE3wnlFdXnVNmiAwyphfw7vnxwc9+LtXKXmEwtf81EhYWtwgnseihDCPqiG
-         M/jcwTQn0ADmxH3BRfonTzScHQAZVWtGq5m8eaSw=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0335gHAT043949
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 3 Apr 2020 00:42:17 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 3 Apr
- 2020 00:42:17 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 3 Apr 2020 00:42:17 -0500
-Received: from [10.250.133.232] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0335gEfU090615;
-        Fri, 3 Apr 2020 00:42:14 -0500
-Subject: Re: [PATCH 1/3] dt-bindings: PCI: cadence: Deprecate inbound/outbound
- specific bindings
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     Tom Joseph <tjoseph@cadence.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        id S2389688AbgDCHwh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 3 Apr 2020 03:52:37 -0400
+Received: from mail-eopbgr1410128.outbound.protection.outlook.com ([40.107.141.128]:25728
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387655AbgDCHwg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 3 Apr 2020 03:52:36 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iPRIrJJM6DxIZWlrxX25J6inykH3kNU1OqnkZswOovcXKjUbzh88VLHzsBlYEM1z4E0Jdsz1uNIgkrDovJXGMi/ztGUQl40lP9RNAEvoslGn0VH8Lm5IzI+d9RKOTYrDmYLK7GdaaprXM+VBrFTfkUn/IhCOK+9Z1YeNEuRbKSQt1rYBLWb4NSFc8XBZIAOq518gW5Uk0tWoLAMKGBFErDkL87OOUAQq3Gk9qR8qL2tPiRK6DCXRcndvAlsCuzUgOZfPQvqo3wYkYuaowXGrNZGKaWm82urMFLzJn6UT6USzFNPmMm4nkAl7LABlfLHe6kdYh4aZyrCvS3bRidgbkA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=J0p2YS2jzhjkQFt0D189Yj1uzwU6BrprkwNoIo/IMRQ=;
+ b=LqOXBhxSCjJS5SgRDYh6jdJmQgu+cbdGyZYXjnB4yzYZARJqfVeO0j5LTU1vU8Anyed4F6Hp/2s85lBWlev83AP77J+wWOX+Y1Rni4jiaXlExr9lSFTnO9LaZGAtqFevfQb4QSQK+Sya9xNSzbYzmXRc0QbwlDh2/VwicQ8A3MtS1jTSKIkYP9+5dW+YTc2F/7ezqMtdrCwYbL5H/25IEMWhhQMCqE/m4c5Mxz8jf+nT+mf1KitfKXZj7BpRwu6JwZY2b0z8FZyvE9+4FMWwPOXwZSVLA9WCjJr7Uo722m+x3EP/kfAEjySb0oETf46+a6kRzIYpEuklfdst4rF8wg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=J0p2YS2jzhjkQFt0D189Yj1uzwU6BrprkwNoIo/IMRQ=;
+ b=YNSyhomkhNDNGy6WwrQv/xgQO4HXcSuMQws2WG8pAVE6i1pPhCI22LZMOKgPqjuX9evOj6gqSqAhxt+IrExBdXuksWaQCxFxG9qfHS3AvUjyU1sABIKzNHKEsiHreOe95Lco8C6KQcYgSuqeGvhoIomjX9mjF6rr95b8231wFZE=
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
+ TYAPR01MB2831.jpnprd01.prod.outlook.com (20.177.105.17) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2878.16; Fri, 3 Apr 2020 07:52:30 +0000
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::ed7f:1268:55a9:fc06]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::ed7f:1268:55a9:fc06%4]) with mapi id 15.20.2878.017; Fri, 3 Apr 2020
+ 07:52:30 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200327104727.4708-1-kishon@ti.com>
- <20200327104727.4708-2-kishon@ti.com> <20200330160142.GA6259@bogus>
- <2a18a228-9248-24a8-c9cd-a041c62aa381@ti.com> <20200331164529.GA32149@bogus>
- <2985575e-e079-2a8d-bf3e-b7efb7291fc3@ti.com>
-Message-ID: <f335a8be-d292-8e74-0657-d37e7ae55fdc@ti.com>
-Date:   Fri, 3 Apr 2020 11:12:13 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+CC:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Murray <andrew.murray@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Simon Horman <horms@verge.net.au>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: RE: [PATCH v6 01/11] PCI: rcar: Rename pcie-rcar.c to
+ pcie-rcar-host.c
+Thread-Topic: [PATCH v6 01/11] PCI: rcar: Rename pcie-rcar.c to
+ pcie-rcar-host.c
+Thread-Index: AQHWCSZbXsVurzSitUKuta8LtwfZKahnBwTg
+Date:   Fri, 3 Apr 2020 07:52:29 +0000
+Message-ID: <TYAPR01MB4544C0756D781BB6545423E3D8C70@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+References: <1585856319-4380-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1585856319-4380-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1585856319-4380-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
+x-originating-ip: [124.210.22.195]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: a8c5ebf7-f909-45ba-fdc8-08d7d7a3f603
+x-ms-traffictypediagnostic: TYAPR01MB2831:|TYAPR01MB2831:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <TYAPR01MB2831E7DE898E43584BAC8BC0D8C70@TYAPR01MB2831.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:546;
+x-forefront-prvs: 0362BF9FDB
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(366004)(376002)(396003)(136003)(39860400002)(346002)(66946007)(66556008)(33656002)(6506007)(55236004)(76116006)(66446008)(64756008)(66476007)(26005)(9686003)(86362001)(2906002)(55016002)(316002)(81156014)(4326008)(478600001)(107886003)(7416002)(5660300002)(71200400001)(81166006)(52536014)(7696005)(110136005)(54906003)(8936002)(186003)(8676002)(921003)(1121003);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: FlZ5e1W1Jwwgk49Rb23U/0VpPtLkeYYl0KWEmoEpk9ybnZbu9iefQuRWDvQvPfNLbvJCLnW3HnPZ3M9Jg2/XaNDoltlQvqeL/K0wn8nlF795mkA2Hk9x8f884EfWPo+i+Vr6Twa+iKwnH7Ct1+OS8GB70aQhMIKN9epgJx6hRwE0pH6iajZ/ykvGO3az93AcnHu1+5LGuYh5hPY9q9sONpCIHdhqCTlu5j9YI0K/u3IcF9707Ha+9ZpgRO/s0yMk8HFmbpeE0l6YEKaACEnlZbi3i91jk1FUm2fXh4tzk/HAw7uT2tGkC1Q+HsKZ77Zbn29hOt+a/VKlNuBkLEwHhFvg+ut8R8GpxkcYrgsw99iSOctLlKuWcUoqm8PMiFfZJ6OSaTxhkTzFroF4M/FXG4YfbrdSjsNdeHORtMncmkGpR5VO0P1FIZ9b1kDqpq4qbo7PXF2gui63LQ/XObH8WjqX+ui92ELHo+KNevmbTyq6qCdUJaWedvJddfYMlQD/
+x-ms-exchange-antispam-messagedata: Tzqtdux/9zhTLulNPXfem+wGmP7LUwT0uW3Y88WAQh+tLZ8SMzZib8/54MBQjWt6uOfl46oJxieUHfFv6H+3kqHHyo5JN4Q/koDF5Pu/yyr7ClVxeCLBnX1heZWE+XHkbEQU8GS7Rv1wezFrb3vZrw==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <2985575e-e079-2a8d-bf3e-b7efb7291fc3@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a8c5ebf7-f909-45ba-fdc8-08d7d7a3f603
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Apr 2020 07:52:30.0643
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yK2ovDTL3eAh1QKVQz46ROnMd4OaToFC4Mtx7LUEav6Vz102LRr02wL0n0p/MtEsSE8axKXdoYKH6CoGdRUv6AL/DTlHdrHCGRzyGFL4WzZkABPgS0cVo2XmP+PaN9eM
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB2831
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Rob,
+Hi Prabhakar-san,
 
-On 4/1/2020 8:38 AM, Kishon Vijay Abraham I wrote:
-> Hi Rob,
-> 
-> On 3/31/2020 10:15 PM, Rob Herring wrote:
->> On Tue, Mar 31, 2020 at 09:08:12AM +0530, Kishon Vijay Abraham I wrote:
->>> Hi Rob,
->>>
->>> On 3/30/2020 9:31 PM, Rob Herring wrote:
->>>> On Fri, Mar 27, 2020 at 04:17:25PM +0530, Kishon Vijay Abraham I wrote:
->>>>> Deprecate cdns,max-outbound-regions and cdns,no-bar-match-nbits for
->>>>> host mode as both these could be derived from "ranges" and "dma-ranges"
->>>>> property. "cdns,max-outbound-regions" property would still be required
->>>>> for EP mode.
->>>>>
->>>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->>>>> ---
->>>>>  .../bindings/pci/cdns,cdns-pcie-ep.yaml       |  2 +-
->>>>>  .../bindings/pci/cdns,cdns-pcie-host.yaml     |  3 +--
->>>>>  .../devicetree/bindings/pci/cdns-pcie-ep.yaml | 25 +++++++++++++++++++
->>>>>  .../bindings/pci/cdns-pcie-host.yaml          | 10 ++++++++
->>>>>  .../devicetree/bindings/pci/cdns-pcie.yaml    |  8 ------
->>>>>  5 files changed, 37 insertions(+), 11 deletions(-)
->>>>>  create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
->>>>> index 2996f8d4777c..50ce5d79d2c7 100644
->>>>> --- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
->>>>> +++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
->>>>> @@ -10,7 +10,7 @@ maintainers:
->>>>>    - Tom Joseph <tjoseph@cadence.com>
->>>>>  
->>>>>  allOf:
->>>>> -  - $ref: "cdns-pcie.yaml#"
->>>>> +  - $ref: "cdns-pcie-ep.yaml#"
->>>>>    - $ref: "pci-ep.yaml#"
->>>>>  
->>>>>  properties:
->>>>> diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
->>>>> index cabbe46ff578..84a8f095d031 100644
->>>>> --- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
->>>>> +++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
->>>>> @@ -45,8 +45,6 @@ examples:
->>>>>              #size-cells = <2>;
->>>>>              bus-range = <0x0 0xff>;
->>>>>              linux,pci-domain = <0>;
->>>>> -            cdns,max-outbound-regions = <16>;
->>>>> -            cdns,no-bar-match-nbits = <32>;
->>>>>              vendor-id = <0x17cd>;
->>>>>              device-id = <0x0200>;
->>>>>  
->>>>> @@ -57,6 +55,7 @@ examples:
->>>>>  
->>>>>              ranges = <0x02000000 0x0 0x42000000  0x0 0x42000000  0x0 0x1000000>,
->>>>>                       <0x01000000 0x0 0x43000000  0x0 0x43000000  0x0 0x0010000>;
->>>>> +            dma-ranges = <0x02000000 0x0 0x0 0x0 0x0 0x1 0x00000000>;
->>>>>  
->>>>>              #interrupt-cells = <0x1>;
->>>>>  
->>>>> diff --git a/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
->>>>> new file mode 100644
->>>>> index 000000000000..6150a7a7bdbf
->>>>> --- /dev/null
->>>>> +++ b/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
->>>>> @@ -0,0 +1,25 @@
->>>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>>>> +%YAML 1.2
->>>>> +---
->>>>> +$id: "http://devicetree.org/schemas/pci/cdns-pcie-ep.yaml#"
->>>>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->>>>> +
->>>>> +title: Cadence PCIe Device
->>>>> +
->>>>> +maintainers:
->>>>> +  - Tom Joseph <tjoseph@cadence.com>
->>>>> +
->>>>> +allOf:
->>>>> +  - $ref: "cdns-pcie.yaml#"
->>>>> +
->>>>> +properties:
->>>>> +  cdns,max-outbound-regions:
->>>>> +    description: maximum number of outbound regions
->>>>> +    allOf:
->>>>> +      - $ref: /schemas/types.yaml#/definitions/uint32
->>>>> +    minimum: 1
->>>>> +    maximum: 32
->>>>> +    default: 32
->>>>
->>>> I have a feeling that as the PCI endpoint binding evolves this won't be 
->>>> necessary. I can see a common need to define the number of BARs for an 
->>>> endpoint and then this will again just be error checking.
->>>
->>> For every buffer given by the host, we have to create a new outbound
->>> translation. If there are no outbound regions, we have to report the error to
->>> the endpoint function driver. At-least for reporting the error, we'd need to
->>> have this binding no?
->>
->> But isn't the endpoint defined to have some number of BARs? The PCI host 
->> doesn't decide that.
-> 
-> cdns,max-outbound-regions defined here doesn't configure the BARs. BARs provide
-> an interface for the host to access the endpoints memory. IOW for BARs we
-> configure the inbound address translation unit.
-> 
-> cdns,max-outbound-regions is used while configuring the outbound address
-> translation unit. Outbound regions are used while the endpoint access host
-> memory and in that path endpoint BARs doesn't come.
->>
->>>>
->>>> What's the result if you write to a non-existent region in register 
->>>> CDNS_PCIE_AT_OB_REGION_PCI_ADDR0/1? If the register is non-existent and 
->>>> doesn't abort, you could detect this instead.
->>>
->>> I'm not sure if we should ever try to write to a non-existent register though
->>> the behavior could be different in different platforms. IMHO maximum number of
->>> outbound regions is a HW property and is best described in device tree.
->>
->> AIUI, PCI defines non-existent (config space) registers to return all 
->> 1s. Not sure if this register is in PCI config space or the host SoC bus 
->> (e.g. AXI). It seems PCI bridges get done both ways from what I've seen.
-> 
-> All of that is correct for the Host or RC. However here
-> cdns,max-outbound-regions is an endpoint specific property (defined only in
-> cdns-pcie-ep.yaml) and is useful while configuring OB address translation unit
-> for the endpoint to access host memory.
+> From: Lad Prabhakar, Sent: Friday, April 3, 2020 4:38 AM
+>=20
+> This commit renames pcie-rcar.c to pcie-rcar-host.c in preparation for
+> adding support for endpoint mode. CONFIG_PCIE_RCAR is kept so that arm64
+> defconfig change can be a separate patch.
+>=20
+> With this patch both config options PCIE_RCAR and PCIE_RCAR_HOST will be
+> available but PCIE_RCAR internally selects PCIE_RCAR_HOST so that bisect
+> builds wont be affected.
+>=20
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Do you still have concerns regarding this? If you don't have any further
-comments on this, can you give your Acked-by please?
+Thank you for the patch!
 
-Thanks
-Kishon
+Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+
+Best regards,
+Yoshihiro Shimoda
+
+> ---
+>  drivers/pci/controller/Kconfig                         | 10 ++++++++++
+>  drivers/pci/controller/Makefile                        |  2 +-
+>  .../pci/controller/{pcie-rcar.c =3D> pcie-rcar-host.c}   |  0
+>  3 files changed, 11 insertions(+), 1 deletion(-)
+>  rename drivers/pci/controller/{pcie-rcar.c =3D> pcie-rcar-host.c} (100%)
+>=20
+> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kcon=
+fig
+> index af0f0bc11917..cfdc898450d0 100644
+> --- a/drivers/pci/controller/Kconfig
+> +++ b/drivers/pci/controller/Kconfig
+> @@ -58,8 +58,18 @@ config PCIE_RCAR
+>  	bool "Renesas R-Car PCIe controller"
+>  	depends on ARCH_RENESAS || COMPILE_TEST
+>  	depends on PCI_MSI_IRQ_DOMAIN
+> +	select PCIE_RCAR_HOST
+>  	help
+>  	  Say Y here if you want PCIe controller support on R-Car SoCs.
+> +	  This option will be removed after arm64 defconfig is updated.
+> +
+> +config PCIE_RCAR_HOST
+> +	bool "Renesas R-Car PCIe host controller"
+> +	depends on ARCH_RENESAS || COMPILE_TEST
+> +	depends on PCI_MSI_IRQ_DOMAIN
+> +	help
+> +	  Say Y here if you want PCIe controller support on R-Car SoCs in host
+> +	  mode.
+>=20
+>  config PCI_HOST_COMMON
+>  	bool
+> diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Mak=
+efile
+> index 158c59771824..9dbccb5b24e1 100644
+> --- a/drivers/pci/controller/Makefile
+> +++ b/drivers/pci/controller/Makefile
+> @@ -7,7 +7,7 @@ obj-$(CONFIG_PCI_MVEBU) +=3D pci-mvebu.o
+>  obj-$(CONFIG_PCI_AARDVARK) +=3D pci-aardvark.o
+>  obj-$(CONFIG_PCI_TEGRA) +=3D pci-tegra.o
+>  obj-$(CONFIG_PCI_RCAR_GEN2) +=3D pci-rcar-gen2.o
+> -obj-$(CONFIG_PCIE_RCAR) +=3D pcie-rcar.o
+> +obj-$(CONFIG_PCIE_RCAR_HOST) +=3D pcie-rcar-host.o
+>  obj-$(CONFIG_PCI_HOST_COMMON) +=3D pci-host-common.o
+>  obj-$(CONFIG_PCI_HOST_GENERIC) +=3D pci-host-generic.o
+>  obj-$(CONFIG_PCIE_XILINX) +=3D pcie-xilinx.o
+> diff --git a/drivers/pci/controller/pcie-rcar.c b/drivers/pci/controller/=
+pcie-rcar-host.c
+> similarity index 100%
+> rename from drivers/pci/controller/pcie-rcar.c
+> rename to drivers/pci/controller/pcie-rcar-host.c
+> --
+> 2.20.1
+
