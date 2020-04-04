@@ -2,65 +2,63 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 985C419E77B
-	for <lists+linux-pci@lfdr.de>; Sat,  4 Apr 2020 22:10:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F172119E781
+	for <lists+linux-pci@lfdr.de>; Sat,  4 Apr 2020 22:11:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726314AbgDDUKC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 4 Apr 2020 16:10:02 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:38166 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726278AbgDDUKC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 4 Apr 2020 16:10:02 -0400
-Received: by mail-pf1-f194.google.com with SMTP id c21so5448518pfo.5;
-        Sat, 04 Apr 2020 13:09:59 -0700 (PDT)
+        id S1726365AbgDDULx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 4 Apr 2020 16:11:53 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:37320 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726314AbgDDULx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 4 Apr 2020 16:11:53 -0400
+Received: by mail-pj1-f66.google.com with SMTP id k3so4641066pjj.2;
+        Sat, 04 Apr 2020 13:11:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=iO+ngN86VFXx54+srkKFZzGqdoZULXS+GdNkT3PonxI=;
-        b=FVvg1HtDBM/7tDegAZQAn2Y5rUZk/jMiu5p4ekstLNIxQhfSG5Sv9hW8t3yeq8ytpe
-         dUSi9JRCuOtFc8zkOHCIqK4BpzEvQ3cwwpvxjJhNOAhqk9gB5mhyhH0N6UAnsnpnKUii
-         PafCh1SIhham0yPIcVgjm+ukXUp8sUfE4n51mNo9ddB8R/K5ski7D2T+yJTx9vGWy/m6
-         fLmD/uNq1RzlA6Xuap9UumKPLJ7dXx4AahReImBjDoSiDN/c6stxgBdokzKn36oAVloA
-         NNgOgpi2TfPs9l7HvYeO3pJ0rh4RoflJb2/CbEhUABasGvx7pERJPJiMVryfEjeF7If6
-         2FDw==
+        bh=CiHuSxy6TYyMqTCTqqaBnkJeq8xH6yg9BwMDkFX2p+Y=;
+        b=MkOgHRjbzq3sWvGood87Pabd2J8uLBaCHawPczA+x6GxIcRvtwsXzoe50IwRDtvz/b
+         y8jFAmXw3DbxwN9/MBuWNQN77QpjQgkDESF74fNBQibRnBnNQTnEbIjYsOYG4f1lHkU8
+         7xNXWZ2OsWNE3iErCiVh7yER12Q/xLIuMOLzqKlNatVvutOWHhrpqSU+1OyZGQpthg2W
+         nev7oY96o8O1owkNJNDW3vlB1pmu61YBSOGuTPCe33hxJDCzMxlDGbZEcX9guwfSZgmh
+         ox3dE8iNQSzS8v1I9R4HiuIdfZSVpVesOJXnxDlb6tr64bfPj15Ao7m2TytSx6iJ1nhP
+         uLQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=iO+ngN86VFXx54+srkKFZzGqdoZULXS+GdNkT3PonxI=;
-        b=T7YZsosWDDkx2BqbQpoOdFEuaQ2BLIImmrTWVKbGKu4jTkY6G4gL+afFSrZyBfOFFJ
-         ORGpQQdjMZVLwEbBn2X3OOkRI5u8Z2DcU6wTXzxFDyqhLZpS7f0+Kslbu63qHeRnlhmH
-         Sidl/m2vrFZCahh9C0N06H2K6vq0rgSBbRsOU5IQ7BYnyoMA+2yChQ7Ad7pSP4T34tix
-         T7JCgtBi1RWggDilGLhk9haKOmYBVD9CE+61ygLu9A8m5GSy7ktSD8dQ3/zUJBu5c2mb
-         aZqUdEfISkw7iTAd12t0rl6ah/0q5CiSY/HhsA5gptESCqtS67mJ2kH39yt0E4TUv4eL
-         Ow2g==
-X-Gm-Message-State: AGi0PuZgFgu2cZBEAS2LkPNkrgY480SUp0NLA/yrrnwRvgTfXAwBFrv/
-        P4ywOkB+WJeUCOH0dhsgwoo=
-X-Google-Smtp-Source: APiQypKayJb8b63Pn0nC4PVqoPfNggo+/qdegfaffA4HaBvrVg7K3Azt0e3jqkujs/D5hY0aicrJ9A==
-X-Received: by 2002:a63:8c53:: with SMTP id q19mr14697410pgn.222.1586030999123;
-        Sat, 04 Apr 2020 13:09:59 -0700 (PDT)
+        bh=CiHuSxy6TYyMqTCTqqaBnkJeq8xH6yg9BwMDkFX2p+Y=;
+        b=dl5GofJwo6k9f+ZYprx7KJgV8Y7PSGlzDUvCkzB81ABlvNUDUAgg2CGwuDUoEGxb6t
+         p5f1Zl9SImXoH3A45FcUHsdEuWWzzUz7BYyq9P8zAcAHMJ6ybXHV5R8Li8PE4Ik/OW1X
+         Cso2Y26RgDtP64VYu+a6iVfG7xpLr/jyeeCyUJx139FpwvjTfvL4jWuQttcWla2312kh
+         nwf6M1dNi+V/iKhDM7sxlwcGeUpSyWk5zMMF8XD4hs+NMjCfyml2diksvWbTODvbwb8a
+         b/6lS2/KwCpaqgO1sJ0tADyK1FtVVu4IWwTopAGDJMLfn1hBFfbDcHeoUULxq9uJ7tHr
+         ET7g==
+X-Gm-Message-State: AGi0PuZbJj6aqhNfguhU5/9kqcDFtCeIAOQhEQWlz4IOYTSFvxsA9HF8
+        gr51PZhjAJaioOWXIdmyyow=
+X-Google-Smtp-Source: APiQypLp39F60pYPOAnffZ/vrCwQJWVFL3ZdV2RDm1pCKqHZhqwuFCbQctjVQdx1E2HuR1Odf6STQg==
+X-Received: by 2002:a17:902:9308:: with SMTP id bc8mr13988982plb.278.1586031111374;
+        Sat, 04 Apr 2020 13:11:51 -0700 (PDT)
 Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id 144sm8294488pfx.184.2020.04.04.13.09.56
+        by smtp.gmail.com with ESMTPSA id o15sm8378871pjp.41.2020.04.04.13.11.49
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 04 Apr 2020 13:09:57 -0700 (PDT)
-Subject: Re: [PATCH v6 3/4] PCI: brcmstb: Wait for Raspberry Pi's firmware
- when present
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Bjorn Helgaas <helgaas@kernel.org>
+        Sat, 04 Apr 2020 13:11:50 -0700 (PDT)
+Subject: Re: [PATCH v6 1/4] soc: bcm2835: Sync xHCI reset firmware property
+ with downstream
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 Cc:     linux-kernel@vger.kernel.org,
         Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com, linux-usb@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org,
         tim.gover@raspberrypi.org, linux-pci@vger.kernel.org,
-        wahrenst@gmx.net, sergei.shtylyov@cogentembedded.com,
-        Rob Herring <robh+dt@kernel.org>
-References: <20200402193820.GA32107@google.com>
- <6b81402dd7ab6431f69dba301ce07822cb8dd753.camel@suse.de>
+        wahrenst@gmx.net, sergei.shtylyov@cogentembedded.com
+References: <20200402180151.GA50169@google.com>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Autocrypt: addr=f.fainelli@gmail.com; keydata=
  mQGiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
@@ -116,12 +114,12 @@ Autocrypt: addr=f.fainelli@gmail.com; keydata=
  caxTGgc5zzQHeX67eMzrGomG3ZnIxmd1sAbgvJUDaD2GrYlulfwGWwWyTNbWRvMighVdPkSF
  6XFgQaosWxkV0OELLy2N485YrTr2Uq64VKyxpncLh50e2RnyAJ9Za0Dx0yyp44iD1OvHtkEI
  M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <dee8d364-e08d-61ae-d242-c347d1b73272@gmail.com>
-Date:   Sat, 4 Apr 2020 13:09:56 -0700
+Message-ID: <06f91fef-f953-7cb7-5e24-05e734de8dbf@gmail.com>
+Date:   Sat, 4 Apr 2020 13:11:49 -0700
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Firefox/68.0 Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <6b81402dd7ab6431f69dba301ce07822cb8dd753.camel@suse.de>
+In-Reply-To: <20200402180151.GA50169@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -132,72 +130,23 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 
 
-On 4/4/2020 12:20 PM, Nicolas Saenz Julienne wrote:
-> On Thu, 2020-04-02 at 14:38 -0500, Bjorn Helgaas wrote:
->> [+cc Rob for DT platform device dependency question]
->>
->> On Thu, Apr 02, 2020 at 04:27:23PM +0200, Nicolas Saenz Julienne wrote:
+On 4/2/2020 11:01 AM, Bjorn Helgaas wrote:
+> On Tue, Mar 24, 2020 at 07:28:09PM +0100, Nicolas Saenz Julienne wrote:
+>> The property is needed in order to trigger VL805's firmware load. Note
+>> that there is a gap between the property introduced and the previous
+>> one. This is also the case downstream.
 > 
-> [...]
-> 
->>> Sorry it wasn't clear enough, I'll redo this comment. Also note that
->>> the PCIe bus and the XHCI chip are hardwired, so that's the only
->>> device that'll ever be available on the bus.
->>>
->>> VIA805's XHCI firmware has to be loaded trough RPi's firmware
->>> mailbox in between the PCIe bus probe and the subsequent USB probe.
->>> Note that a PCI reset clears the firmware. The only mechanism
->>> available in between the two operations are PCI Fixups. These are
->>> limited in their own way, as I can't return -EPROBE_DEFER if the
->>> firmware interface isn't available yet. Hence the need for an
->>> explicit dependency between pcie-brcmstb and raspberrypi's firmware
->>> mailbox device.
->>>
->>> Your concern here showcases this series' limitations. From a high
->>> level perspective it's not clear to me who should be responsible for
->>> downloading the firmware. 
->>
->> I think it's fairly common for drivers to download firmware to their
->> devices.  I guess there's not really any need to download the firmware
->> until a driver wants to use the device, right?
->>
->>> And I get the feeling I'm abusing PCI fixups. I haven't found any
->>> smart way to deal with this three way dependency of
->>> platform/non-platform devices.
->>
->> So IIUC, the three-way dependency involves:
->>
->>   1) brcm_pcie_probe(), which initialize the PCI host controller
->>   platform device, enumerates PCI devices, and makes them available
->>   for driver binding,
-> 
-> Yes, and also resets the PCI bus, which will clear VL805's firmware (the XHCI
-> chip).
-> 
->>   2) the firmware mailbox initialization (maybe
->>   rpi_firmware_probe()?),
->>
->>   3) quirk_usb_early_handoff(), which downloads firmware to the VL805
->>   PCI USB adapter via rpi_firmware_init_vl805(), which uses the
->>   firmware mailbox?
-> 
-> And yes, that's the general idea.
-> 
->> Is there some way to express a dependency between
->> "raspberrypi,bcm2835-firmware" (the platform device claimed by
->> rpi_firmware_probe() and "brcm,bcm2711-pcie"?  If we could ensure that
->> rpi_firmware_probe() runs before brcm_pcie_probe(), would that solve
->> part of this?
-> 
-> That's ultimately what this patch tries to achieve. If there was a way to
-> offload it to DT it would be way nicer.
+> I don't know what "downstream" means, so I don't know what we're
+> syncing *with*.  If there's another branch or project we need to
+> coordinate with, is there a name or URL that would help facilitate
+> that?  If not, I'm not sure what value that sentence adds.
 
-Have you looked whether device links between producer/consumer could
-help here? AFAICT there is not usually a way to express an ordering
-dependency other than by referencing symbols from a different module,
-which falls apart when everything gets built into the kernel obviously
-and then you are at the mercy of the linking order and initicall levels.
+Downstream here means the Raspberry Pi maintained kernel whose tree can
+be found here:
 
-https://www.kernel.org/doc/html/v4.13/driver-api/device_link.html
+https://github.com/raspberrypi/linux/
+
+Changes appear there first, and people like Nicolas and Stefan try to
+get them upstream from that tree into Linus' tree.
 -- 
 Florian
