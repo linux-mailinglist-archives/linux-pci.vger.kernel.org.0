@@ -2,206 +2,144 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A2EA19EEDA
-	for <lists+linux-pci@lfdr.de>; Mon,  6 Apr 2020 02:17:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE84B19F192
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Apr 2020 10:27:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727991AbgDFARA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 5 Apr 2020 20:17:00 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:37147 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728041AbgDFAQ7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 5 Apr 2020 20:16:59 -0400
-Received: by mail-wm1-f68.google.com with SMTP id j19so13981187wmi.2;
-        Sun, 05 Apr 2020 17:16:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Jlb744j2w7u2ywLc5KHbzcT2pUNmcNIuqeG5ekKAtx8=;
-        b=RsR4m4y3pwEfhSOgVOHUOyEoyvX3CC2BMTXMrsGrlahdfTHNwZCT6ZYI8gaQSX4iyQ
-         ezv60CIQgOnDJ1y4gslY2RnsAZWFvSs4D4i8AZwnUsg10Td+jMaRNt/IomF8T/ecIPrt
-         9s7bKJdHW1aSMy/hOK++ClMM2UC3UNIyP3RuCKwkcstFP2en/qpcua7Q5rT8LGrc8XqH
-         BOwa3iAbEo6qzneau4kHr/4vD/frTLkMvMBoxkiGm4o1hWW8szCm/5wOdfcM5eTcVWD3
-         58mUw4kKU0eVihWp442e3MXpaasE19CeAH0S/j0nme27HUrB1ctCBn3yyGhDc6fNM7+t
-         Tk1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Jlb744j2w7u2ywLc5KHbzcT2pUNmcNIuqeG5ekKAtx8=;
-        b=btZJ+YnleA6Bw/FjrL9HhL+Sxdd7YTbFkRzoD0UW3O5PqziiKQZ4MbfUwvaYOy1RR1
-         HVkNrg4IJqhxvbHcoHCmvOapmMsYvsz0GbW+vZeQR/dbYO9Wl/frYatMdDMtZyPk3f4p
-         fujRNh8o6XT/nwynf6cTgNSVkaU/TDjeCKjRES4Ojp02BqaDvPBxufyvS53lhCSn8lCm
-         xolj2BL3uO7GU4RdbHwx05HOXAcRyNpKNFi7IBfBr/sn/SIFbdJTJKKzxnNIFVoCygwe
-         ZyNg4yKDzV7zqMt2mPGwqZ6vwftNoLXQpJ510gEWfCN0C+ht6Eso+UcVoceoHjGqYv8T
-         DiTg==
-X-Gm-Message-State: AGi0PuZhAo5nizfFqR8v7+mgdrzI1fyiEWgQ6B2NMsIzc9s75RDHEIWE
-        DrZnbBQNljY7JnSXLMWywvzCMfmAWrKOCA==
-X-Google-Smtp-Source: APiQypJDbNA+VkYAoBu9YBRVmVeTaCTmdxe3t5deA4xr6mKCLqYiH6GoFaonheb+Z+bdHLcLFAsfmA==
-X-Received: by 2002:a05:600c:214b:: with SMTP id v11mr19986131wml.104.1586132217210;
-        Sun, 05 Apr 2020 17:16:57 -0700 (PDT)
-Received: from andrea.corp.microsoft.com ([86.61.236.197])
-        by smtp.gmail.com with ESMTPSA id j9sm817432wrn.59.2020.04.05.17.16.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Apr 2020 17:16:56 -0700 (PDT)
-From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
-        Michael Kelley <mikelley@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        id S1726621AbgDFI1g (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 6 Apr 2020 04:27:36 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:33203 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726514AbgDFI1g (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Apr 2020 04:27:36 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 273DE5800E5;
+        Mon,  6 Apr 2020 04:27:35 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Mon, 06 Apr 2020 04:27:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=f9JBRr+XhbC+CvGSQhNRe2L/ERw
+        IGY84ZpI4+IQemfM=; b=pIMXjGrj8l2gSjLhTowqJmg7cVKQfqQQNt7JH5RcSJm
+        525J+EbU3EjWe1RfHZKli13PSS+kuMRl5UmgyAJRLT04uiEAyCW992YS77jZJQlv
+        +rKHmvMMkkGM323eZBDxE0i4KejgnvxwFTbtvOvn8eYeBx6Vt9roYtaYeFxuwwGR
+        ntELBKF5gXG5ZFAPe9Xmh5NpT3VEX5qWzW4gHRUctnBFfq6EsvA7IzvLvKi5f6ft
+        Th/J7u+AO8wvG7KJbt8VE2/IU7GPJ0KWU5ObV7oy6HqN6N4l/T2JuV5SjXCOZqVI
+        I3aarBglXwIs3TCwi1S8a+0o+57zuOqHlrI8z++kiTw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=f9JBRr
+        +XhbC+CvGSQhNRe2L/ERwIGY84ZpI4+IQemfM=; b=Fyyi3KV32nrPIy5vKGKxZS
+        IPq6wIkkMSPOYi3wHBbzrFi4xMfDJAt/HL21FD4ZqqqX6Kp3SA+KCmXewcLFFhni
+        wzcg+bdztWsQlxbLIa85taJokNN+PvZ2+Yv+aQZi202x7Krrdysg1/2TkwGR1Qxy
+        dBF8NCoTdTClJP7bRojjClayTFD2NfEw+0NwRD6Xc4x4jWej7NLBkyVsBdq2GGL3
+        bLa4oLsOB5xpPkLlRybtCT5Q8TyFf2Ul+UbWSnrtg+o3+YeRgxPs0bMdt8juNDJJ
+        DoUsKIC7NTC+1wQxL+qrq8gqgzCkUjvr/ikPXG5io3scq/dpdfq8NT0xNpN1I7Mw
+        ==
+X-ME-Sender: <xms:9ueKXgHAd-e8n3CVwVMaAsGp9RwZEzFn6T02Txh1Tcs6FfzeXmoyCg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudefgddthecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucffohhmrghinh
+    epghhithhhuhgsrdgtohhmpdgrrhhmsghirghnrdgtohhmnecukfhppeeltddrkeelrdei
+    kedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
+    epmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:9ueKXjTHNe2AxKtGcT-xwXSuJYwf7qgEPNS-ODthj-q8CV2sROePSw>
+    <xmx:9ueKXgez-eoeh12lrwjYhPKHWA_mlW6Bc9RvN24HMxqMYGVEJ_WtXQ>
+    <xmx:9ueKXokawD1_rDrtS5Bt-hUvRn2gDnrKqpoU4Qjg4wlFb56TEBgIqQ>
+    <xmx:9-eKXoLhLrHQKi8juWiUQl6jMggIZQ8QIY1ToWq_i4HFyzgrZ2cd2g>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id E8DB8328005D;
+        Mon,  6 Apr 2020 04:27:33 -0400 (EDT)
+Date:   Mon, 6 Apr 2020 10:27:32 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Icenowy Zheng <icenowy@aosc.io>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: [PATCH 07/11] PCI: hv: Prepare hv_compose_msi_msg() for the VMBus-channel-interrupt-to-vCPU reassignment functionality
-Date:   Mon,  6 Apr 2020 02:15:10 +0200
-Message-Id: <20200406001514.19876-8-parri.andrea@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200406001514.19876-1-parri.andrea@gmail.com>
-References: <20200406001514.19876-1-parri.andrea@gmail.com>
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Subject: Re: [RFC PATCH] PCI: dwc: add support for Allwinner SoCs' PCIe
+ controller
+Message-ID: <20200406082732.nt5d7puwn65j4nvl@gilmour.lan>
+References: <20200402160549.296203-1-icenowy@aosc.io>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="bxu46sevqgfhv5v4"
+Content-Disposition: inline
+In-Reply-To: <20200402160549.296203-1-icenowy@aosc.io>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The current implementation of hv_compose_msi_msg() is incompatible with
-the new functionality that allows changing the vCPU a VMBus channel will
-interrupt: if this function always calls hv_pci_onchannelcallback() in
-the polling loop, the interrupt going to a different CPU could cause
-hv_pci_onchannelcallback() to be running simultaneously in a tasklet,
-which will break.  The current code also has a problem in that it is not
-synchronized with vmbus_reset_channel_cb(): hv_compose_msi_msg() could
-be accessing the ring buffer via the call of hv_pci_onchannelcallback()
-well after the time that vmbus_reset_channel_cb() has finished.
 
-Fix these issues as follows.  Disable the channel tasklet before
-entering the polling loop in hv_compose_msi_msg() and re-enable it when
-done.  This will prevent hv_pci_onchannelcallback() from running in a
-tasklet on a different CPU.  Moreover, poll by always calling
-hv_pci_onchannelcallback(), but check the channel callback function for
-NULL and invoke the callback within a sched_lock critical section.  This
-will prevent hv_compose_msi_msg() from accessing the ring buffer after
-vmbus_reset_channel_cb() has acquired the sched_lock spinlock.
+--bxu46sevqgfhv5v4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Suggested-by: Michael Kelley <mikelley@microsoft.com>
-Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Andrew Murray <amurray@thegoodpenguin.co.uk>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: <linux-pci@vger.kernel.org>
----
- drivers/pci/controller/pci-hyperv.c | 44 ++++++++++++++++++-----------
- 1 file changed, 28 insertions(+), 16 deletions(-)
+Hi,
 
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 9977abff92fc5..e6020480a28b1 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -1350,11 +1350,11 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- {
- 	struct irq_cfg *cfg = irqd_cfg(data);
- 	struct hv_pcibus_device *hbus;
-+	struct vmbus_channel *channel;
- 	struct hv_pci_dev *hpdev;
- 	struct pci_bus *pbus;
- 	struct pci_dev *pdev;
- 	struct cpumask *dest;
--	unsigned long flags;
- 	struct compose_comp_ctxt comp;
- 	struct tran_int_desc *int_desc;
- 	struct {
-@@ -1372,6 +1372,7 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 	dest = irq_data_get_effective_affinity_mask(data);
- 	pbus = pdev->bus;
- 	hbus = container_of(pbus->sysdata, struct hv_pcibus_device, sysdata);
-+	channel = hbus->hdev->channel;
- 	hpdev = get_pcichild_wslot(hbus, devfn_to_wslot(pdev->devfn));
- 	if (!hpdev)
- 		goto return_null_message;
-@@ -1428,43 +1429,52 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 		goto free_int_desc;
- 	}
- 
-+	/*
-+	 * Prevents hv_pci_onchannelcallback() from running concurrently
-+	 * in the tasklet.
-+	 */
-+	tasklet_disable(&channel->callback_event);
-+
- 	/*
- 	 * Since this function is called with IRQ locks held, can't
- 	 * do normal wait for completion; instead poll.
- 	 */
- 	while (!try_wait_for_completion(&comp.comp_pkt.host_event)) {
-+		unsigned long flags;
-+
- 		/* 0xFFFF means an invalid PCI VENDOR ID. */
- 		if (hv_pcifront_get_vendor_id(hpdev) == 0xFFFF) {
- 			dev_err_once(&hbus->hdev->device,
- 				     "the device has gone\n");
--			goto free_int_desc;
-+			goto enable_tasklet;
- 		}
- 
- 		/*
--		 * When the higher level interrupt code calls us with
--		 * interrupt disabled, we must poll the channel by calling
--		 * the channel callback directly when channel->target_cpu is
--		 * the current CPU. When the higher level interrupt code
--		 * calls us with interrupt enabled, let's add the
--		 * local_irq_save()/restore() to avoid race:
--		 * hv_pci_onchannelcallback() can also run in tasklet.
-+		 * Make sure that the ring buffer data structure doesn't get
-+		 * freed while we dereference the ring buffer pointer.  Test
-+		 * for the channel's onchannel_callback being NULL within a
-+		 * sched_lock critical section.  See also the inline comments
-+		 * in vmbus_reset_channel_cb().
- 		 */
--		local_irq_save(flags);
--
--		if (hbus->hdev->channel->target_cpu == smp_processor_id())
--			hv_pci_onchannelcallback(hbus);
--
--		local_irq_restore(flags);
-+		spin_lock_irqsave(&channel->sched_lock, flags);
-+		if (unlikely(channel->onchannel_callback == NULL)) {
-+			spin_unlock_irqrestore(&channel->sched_lock, flags);
-+			goto enable_tasklet;
-+		}
-+		hv_pci_onchannelcallback(hbus);
-+		spin_unlock_irqrestore(&channel->sched_lock, flags);
- 
- 		if (hpdev->state == hv_pcichild_ejecting) {
- 			dev_err_once(&hbus->hdev->device,
- 				     "the device is being ejected\n");
--			goto free_int_desc;
-+			goto enable_tasklet;
- 		}
- 
- 		udelay(100);
- 	}
- 
-+	tasklet_enable(&channel->callback_event);
-+
- 	if (comp.comp_pkt.completion_status < 0) {
- 		dev_err(&hbus->hdev->device,
- 			"Request for interrupt failed: 0x%x",
-@@ -1488,6 +1498,8 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 	put_pcichild(hpdev);
- 	return;
- 
-+enable_tasklet:
-+	tasklet_enable(&channel->callback_event);
- free_int_desc:
- 	kfree(int_desc);
- drop_reference:
--- 
-2.24.0
+On Fri, Apr 03, 2020 at 12:05:49AM +0800, Icenowy Zheng wrote:
+> The Allwinner H6 SoC uses DesignWare's PCIe controller to provide a PCIe
+> host.
+>
+> However, on Allwinner H6, the PCIe host has bad MMIO, which needs to be
+> workarounded. A workaround with the EL2 hypervisor functionality of ARM
+> Cortex cores is now available, which wraps MMIO operations.
+>
+> This patch is going to add a driver for the DWC PCIe controller
+> available in Allwinner SoCs, either the H6 one when wrapped by the
+> hypervisor (so that the driver can consider it as an ordinary PCIe
+> controller) or further not buggy ones.
+>
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> ---
+> There's no device tree binding patch available, because I still have
+> questions on the device tree compatible string. I want to use it to
+> describe that this driver doesn't support the "native Allwinner H6 PCIe
+> controller", but a wrapped version with my hypervisor.
+>
+> I think supporting a "para-physical" device is some new thing, so this
+> patch is RFC.
+>
+> My hypervisor is at [1], and some basic usage documentation is at [2].
+>
+> [1] https://github.com/Icenowy/aw-el2-barebone
+> [2] https://forum.armbian.com/topic/13529-a-try-on-utilizing-h6-pcie-with-virtualization/
 
+I'm a bit concerned to throw yet another mandatory, difficult to
+update, component in the already quite long boot chain.
+
+Getting fixes deployed in ATF or U-Boot is already pretty long, having
+another component in there will just make it worse, and it's another
+hard to debug component that we throw into the mix.
+
+And this prevents any use of virtualisation on the platform.
+
+I haven't found an explanation on what that hypervisor is doing
+exactly, but from a look at it it seems that it will trap all the
+accesses to the PCIe memory region to emulate a regular space on top
+of the restricted one we have?
+
+If so, can't we do that from the kernel directly by using a memory
+region that always fault with a fault handler like Framebuffer's
+deferred_io is doing (drivers/video/fbdev/core/fb_defio.c) ?
+
+Maxime
+
+--bxu46sevqgfhv5v4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXorn9AAKCRDj7w1vZxhR
+xdV6AP4y+CTh2KPAJf/qouRZrEmCvj19E23Xp9w67VLU9qZHBQD7BVzW6hD0E0oG
+LnBT9kYGbeef7keRU4XuDbLzxH3hzQc=
+=0eCj
+-----END PGP SIGNATURE-----
+
+--bxu46sevqgfhv5v4--
