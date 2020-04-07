@@ -2,126 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 53F311A050C
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Apr 2020 04:55:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 78D321A0663
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Apr 2020 07:15:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726329AbgDGCzP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 6 Apr 2020 22:55:15 -0400
-Received: from mail-mw2nam12on2064.outbound.protection.outlook.com ([40.107.244.64]:29280
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726312AbgDGCzO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 6 Apr 2020 22:55:14 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=X+5x04r8B12gD0mebZ1n37v4ZrrcgNRFiYNLfWOCYC7DcJfQBsL59qIk2TLBkLz/9DsF2P6UFQsaryl8tcPtlyzPxsB/jAos7yni/nsihL6YZvIG+8zu/A8pSPphK4gs0mEp/dxDKd9+6Vl5w/rfEno7bWZ/p6XOb7AfCjfSZ2PTi01orZmRIIg2rLr8WuRXa52nnJ9HGQ5NnIGrOBew+7v8cjlWIAGOQZu9HlSp9TCj3CcQ2W+t/ft3kjLjDAVT2T6UaOAaqNz39Oyq3tyV5HJKlq4L+GtnyB8ccCy6a9FCN/mYJ9h1Yj7Wf5eWvNfhmFO8Il7RdWDSF6tBw9X3hA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kM2REpJjfBbyXJqpsrI7nz3yFKjXjkY4iquX+AtzLJI=;
- b=hQQIN33ZxclQIl3h46OsXPPOrscsik09db4NV7m0+UUOJ2RM+/5wLiqzMe5op5vZlwHcBrB/UDdaDdNjz3MXlytFl1vObigsPm5pbfv2LpW2MOUdZf1ZiKo4XETbDsJAjwrIdzRpl0qYjpCgi4ulmtUZAcs16DpWay51zlBwmUSIP0Yy2xusTtCZoifxwAKrKyCYubuldZc1ulIRo1tiPcjP3NiEeqs/dAyQ1e23+NkTPPGVDSZStXxn2WKZeKnVTguYEhN5qui7cU6HPitz+1SiyQdipTq1h8INdJKFkIWfefmFvvd2+uBeXwZdjx2AfgdmOVcigY06GJWFFHShMQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        id S1727079AbgDGFPQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Apr 2020 01:15:16 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:36239 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727070AbgDGFPQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Apr 2020 01:15:16 -0400
+Received: by mail-vs1-f68.google.com with SMTP id 184so1431100vsu.3
+        for <linux-pci@vger.kernel.org>; Mon, 06 Apr 2020 22:15:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kM2REpJjfBbyXJqpsrI7nz3yFKjXjkY4iquX+AtzLJI=;
- b=HG9UM24DRQNIeydb6gRRiMVUz0+7Vgs9W8eSjQpmf32mZCBqRzYo0ePo9Z8nFlxy4do3o0fxE0lYE2owOZJp8wizSAcCnCsU3CSxq4+lmN8awMYbIK4Egi/uXjT/HKn2W+r5eu2umSXNOYdr9dKhH1OtlkaBqBcCE5R0Ibchn7U=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Ray.Huang@amd.com; 
-Received: from MN2PR12MB3309.namprd12.prod.outlook.com (2603:10b6:208:106::29)
- by MN2PR12MB3728.namprd12.prod.outlook.com (2603:10b6:208:167::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.15; Tue, 7 Apr
- 2020 02:55:10 +0000
-Received: from MN2PR12MB3309.namprd12.prod.outlook.com
- ([fe80::6417:7247:12ed:1d7b]) by MN2PR12MB3309.namprd12.prod.outlook.com
- ([fe80::6417:7247:12ed:1d7b%5]) with mapi id 15.20.2878.018; Tue, 7 Apr 2020
- 02:55:10 +0000
-Date:   Tue, 7 Apr 2020 10:55:02 +0800
-From:   Huang Rui <ray.huang@amd.com>
-To:     Alex Deucher <alexdeucher@gmail.com>
-Cc:     amd-gfx@lists.freedesktop.org, linux-pci@vger.kernel.org,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
-Subject: Re: [PATCH] PCI/P2PDMA: Add additional AMD ZEN root ports to the
- whitelist
-Message-ID: <20200407025500.GA26341@jenkins-Celadon-RN>
-References: <20200406194201.846411-1-alexander.deucher@amd.com>
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200406194201.846411-1-alexander.deucher@amd.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: HK2PR03CA0048.apcprd03.prod.outlook.com
- (2603:1096:202:17::18) To MN2PR12MB3309.namprd12.prod.outlook.com
- (2603:10b6:208:106::29)
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=38NlpNEbzNFWb7RFQtfvRASB+B576yw7dNc7pozf3pc=;
+        b=MfHDvIBIt69xqysjTBYVVNc0kV20i2uh+5pM5bA0kgqzaY38Y8DWEj01Pvo2lprKBQ
+         GeMPmsDw8mI8JPS3USlc7fo909SxPcbTvuuO8fmlDj3Epr1eVDtR360WKQPQyhZWRFR1
+         e2AVs/X8xmnpyFeBVbEpWkW/7xUX6BkoKcBNjhVPYru9i1s3MQXqsGzojyz2OPT8Gzuk
+         eAsRgBBtJfCcoxVL23nq2mmza5GNfLtG1Vewilonxc/7to20Va10m3hSWyxvaqvjeUuq
+         +R1bw/nay987q2JQWtF8qmoAYape5iyXc2fGu9oueeJmEOdg+02io2ZWkJnJglNvfVbH
+         fVHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=38NlpNEbzNFWb7RFQtfvRASB+B576yw7dNc7pozf3pc=;
+        b=N9xUfh7PbhNSzZjZZXaGCdq3h+IwGMMEJEinQKiKzCHeynXj2c8fIsP3PoNgh1uGTG
+         jZnEvWb/zP6+rxh0ncyLZHWyjFFeV1HzrvJ3D5n8e4yvTWnui/RdFRTX2mdG+kJ1Uu+l
+         mCxqI0+7ZW88Cp3X/M11p3Nnfqq5mtgxR1EW9jl/YR/sYqAdWuZcn2aWugCkqdPJ/GEu
+         9/6rQ/DmeibRvSb8QiAftHSaQcOPZDmn9YPU3tukFV5JDqOBhHuvlgF7ML+DNwulyfY/
+         x9m+W71sDfsKlFO+XIdRyFkvcQZO5tKZ50rUUx3fK+yyMm387I79mvtHUIJDwfs3AzoP
+         TXOQ==
+X-Gm-Message-State: AGi0PuZ+FDcSmpXlAifcDts8RF7/W1ExpYNxeyuXbKZsKYu7r9dkpa/b
+        ebcygUesxNy8TbDL4pxa+8UxRGnSyqBdQVxYAxM8iMVvvZk=
+X-Google-Smtp-Source: APiQypL+ArhsKP1HCJpJZSuqqOKzmqGe03VSBcvbyU5XLwMdkDIdNu0ELlIqojTyqMNnJA6AEodSyvd4rSFXD4DVz/E=
+X-Received: by 2002:a67:fa85:: with SMTP id f5mr495699vsq.65.1586236514277;
+ Mon, 06 Apr 2020 22:15:14 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from jenkins-Celadon-RN (180.167.199.189) by HK2PR03CA0048.apcprd03.prod.outlook.com (2603:1096:202:17::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.6 via Frontend Transport; Tue, 7 Apr 2020 02:55:08 +0000
-X-Originating-IP: [180.167.199.189]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: be27a9b3-1026-4348-0fac-08d7da9f1632
-X-MS-TrafficTypeDiagnostic: MN2PR12MB3728:|MN2PR12MB3728:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MN2PR12MB37286E44B4F68FC9239EF722ECC30@MN2PR12MB3728.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4502;
-X-Forefront-PRVS: 036614DD9C
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB3309.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(39850400004)(396003)(366004)(346002)(136003)(316002)(54906003)(66556008)(66946007)(26005)(86362001)(966005)(45080400002)(6666004)(5660300002)(66476007)(4326008)(478600001)(33716001)(6496006)(16526019)(81156014)(9686003)(1076003)(8676002)(55016002)(8936002)(81166006)(33656002)(6916009)(52116002)(956004)(2906002)(186003);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: RygfC63motf5mrdQ0FAXdknHOwxrHkzb3NAQDQPNs2qD/jd0/n4IsyVuCZwLqWg/QFw51n0yRoKXCohQqPpL4htV7t0yUd6CeUsNuHRO8e8yTHng4weAXJgPcAwWHtWyTIL0EBjvvOvlX+ziKokYtPWYzKcvVXbWYQt+bpJ2zIvvJ8I3EeGdqZDGyib6rQVkUZGJiLwGOWydxvBKbV/Y0MVwZEIq3WxICtaWK9gEucow4MA39wOu9R8S0nsKrcGwBLxFEu+arDycHtb0WZ/Q0PxY73DAx5u4Myb3zeNI6kxTy3KEeIG79R6Dhe0Nhdcv62yGqS5fwOcTVmZqhhcEq6z/dwmxlk40CglkrZB4InTSi3k6FGbqJWF9fDCgZ/SVVCaOXgeG7H0YDrAitBvJuXkqe63wzdjcwB4uxDnlAAJhMhqXFkop8j4Ld0GmDSzcz6RwKGiyoQWooe3pUgNOw5suvTPFXKgEsfokw0C5CZM=
-X-MS-Exchange-AntiSpam-MessageData: 4dY+4whsSmsofuMvszk4NqIC49yFe+sRdB5I5nzU0GeSZmDDrQe+qpovKH98VbyuzMBWI30eike9v/xN0pICwuan53OvCRXplCmCI2n0L3AN2IDDo8t/MPpMR+Bvn7MYAVY6tDfbeW6dTTQZvJsr7Q==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: be27a9b3-1026-4348-0fac-08d7da9f1632
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2020 02:55:10.5977
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: HH8lEDBTOsV3/sSoD117GM6rqSlqdfJRVPgAkvatfqc0DRf8DwzMN5Ow9zXoI7e9spFFjgZRfDZBoCHA4GJk3Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3728
+Received: by 2002:ab0:254a:0:0:0:0:0 with HTTP; Mon, 6 Apr 2020 22:15:12 -0700 (PDT)
+From:   SANDRA DEWI <sdewisandra@gmail.com>
+Date:   Tue, 7 Apr 2020 05:15:12 +0000
+Message-ID: <CALe9-EdG2aBp2yBY=t79ZuBObzzfY6nuVfAsra6+wc2BAYMhcg@mail.gmail.com>
+Subject: whether this is your correct email address or not
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Apr 06, 2020 at 03:42:01PM -0400, Alex Deucher wrote:
-> According to the hw architect, pre-ZEN parts support
-> p2p writes and ZEN parts support both p2p reads and writes.
-> 
-> Add entries for Zen parts Raven (0x15d0) and Renoir (0x1630).
-> 
-> Cc: Christian König <christian.koenig@amd.com>
-> Acked-by: Christian König <christian.koenig@amd.com>
-> Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Dear ,Pastor
 
-Acked-by: Huang Rui <ray.huang@amd.com>
 
-> ---
->  drivers/pci/p2pdma.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-> index 9a8a38384121..91a4c987399d 100644
-> --- a/drivers/pci/p2pdma.c
-> +++ b/drivers/pci/p2pdma.c
-> @@ -282,6 +282,8 @@ static const struct pci_p2pdma_whitelist_entry {
->  } pci_p2pdma_whitelist[] = {
->  	/* AMD ZEN */
->  	{PCI_VENDOR_ID_AMD,	0x1450,	0},
-> +	{PCI_VENDOR_ID_AMD,	0x15d0,	0},
-> +	{PCI_VENDOR_ID_AMD,	0x1630,	0},
->  
->  	/* Intel Xeon E5/Core i7 */
->  	{PCI_VENDOR_ID_INTEL,	0x3c00, REQ_SAME_HOST_BRIDGE},
-> -- 
-> 2.25.1
-> 
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flists.freedesktop.org%2Fmailman%2Flistinfo%2Famd-gfx&amp;data=02%7C01%7Cray.huang%40amd.com%7C9ed9b4e22b2744af197e08d7da629a76%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637217989343230053&amp;sdata=peIQSu9dCwpMRzKyCkU%2BgGFLzDlwcvpmdDyGKzeSFQ4%3D&amp;reserved=0
+
+I have a client who is an oil business man and he made a fixed deposit
+of $26 million USD in my bank, where I am the director of the branch,
+My client died with his entire family in Jordanian
+
+50% of the fund will be for the church  for the work of God,the
+balance 50% we share it in the ratio of 50/50. Meaning 50% to you and
+50% for me
+
+intervention in the Syrian Civil War 2014 leaving behind no next of
+kin. I Propose to present you as next of kin to claim the funds, if
+interested reply me for full details and how we are to
+
+
+
+proceed to close this deal.
+
+
+
+
+Mrs. Sandra Dewi
+
+
+
+Email  mrsdewi@gmx.com
