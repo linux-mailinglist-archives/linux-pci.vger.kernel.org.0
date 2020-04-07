@@ -2,103 +2,224 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D3C071A0D4E
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Apr 2020 14:05:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 730E21A0DAB
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Apr 2020 14:32:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728548AbgDGMFR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Apr 2020 08:05:17 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:34407 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728557AbgDGMFP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Apr 2020 08:05:15 -0400
-Received: by mail-ed1-f67.google.com with SMTP id o1so3769635edv.1
-        for <linux-pci@vger.kernel.org>; Tue, 07 Apr 2020 05:05:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:sender:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=t0TLC5mt6zw20J38nO6UV1Kz+5E95WBtIXeRkoxQ4a0=;
-        b=r9+wddViVvdqJX8nJHxmkHun6czJ1ikOViiDg5WrV9zsEG8g+/XsCs/Xm8ycJNr5Ml
-         2fuWB1NlLbfc9KUcuyehV5oBNlxoII4bQqlns7ggarruibdn9M7NPubgv2NwI4ghw4q6
-         1iP0OzwDLrwtuIjynAkDMR9V+F7VNbc5SOL1Zz9Q6G98wa8K8FFZQeUID3JSQdRWWQFi
-         ldW15EVw+VNiQ1Az7KgCIbVzPidhk/uK0SGlgeBOEFOC/dv6W9D9D9Vhs5YPaMbwGqPv
-         2jmm/lwv/01mhBrCJ7AZ83I7wgIQbzz7WwjiopAUrGbFPrMes7SZVSzxNBGnUxmtd/Xg
-         gYKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:sender:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=t0TLC5mt6zw20J38nO6UV1Kz+5E95WBtIXeRkoxQ4a0=;
-        b=fePFoTlQ3I3CGd8pnn0XqbGCOdoVAtpiljx+OVWTolJignk6P5iwbmTTfSkYvSALDz
-         /ulH4GRz4JjoFLziUKrbDHsJtf+w9L7D7x+IgHxauVt08JWLc2MOEw15IjLHHkKp+MWz
-         Kjdv57Hh/iWd8dvAfIROrsPlv8ra65eJsJygZngXEmavBZQqu1QwuIn6C+Zu+KlTNITq
-         Rj5AfqoAw+RJofZHzj3cXGWlW8HK999/vidR8uOvrXnGUqKX2CEMTk9HgGDybfUBRpeB
-         xXO/quXrJn1lJtRFO0q0UP6d/nRJKN/49lfcN7D6fZdQzJ7mAFMkz4IfLR7AnN6dbGZb
-         QcrQ==
-X-Gm-Message-State: AGi0PuYlnV1RBQr5YfzzbZz0b/quqOifGCE7qdy4y20nsLpVZujpqKqo
-        ZZ8SaiJclPtTiM0//Yd/j+XdOd9CQ3HipsTCPps=
-X-Google-Smtp-Source: APiQypLxWgxTObCMscWGDo5tJRLAw8Gjysi7VxpivmqA8Dbqp6klUnK+qCv8lcGGWvbj42MQ6KHkhLML+FeceTIY/Oc=
-X-Received: by 2002:a17:907:447c:: with SMTP id oo20mr1758131ejb.282.1586261112260;
- Tue, 07 Apr 2020 05:05:12 -0700 (PDT)
+        id S1728555AbgDGMcK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Apr 2020 08:32:10 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:12622 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728304AbgDGMcK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 7 Apr 2020 08:32:10 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id DFB84E4DF46DF1857336;
+        Tue,  7 Apr 2020 20:32:00 +0800 (CST)
+Received: from localhost.localdomain (10.67.165.24) by
+ DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 7 Apr 2020 20:31:53 +0800
+From:   Yicong Yang <yangyicong@hisilicon.com>
+To:     <helgaas@kernel.org>, <linux-pci@vger.kernel.org>,
+        <mika.westerberg@linux.intel.com>, <kvalo@codeaurora.org>
+CC:     <linuxarm@huawei.com>, <yangyicong@hisilicon.com>
+Subject: [RFC PATCH] PCI: Use pci_pcie_find_root_port() to get root port
+Date:   Tue, 7 Apr 2020 20:31:57 +0800
+Message-ID: <1586262717-23566-1-git-send-email-yangyicong@hisilicon.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
-Reply-To: mrsanna.h.bruun119@gmail.com
-Received: by 2002:a17:906:2cd4:0:0:0:0 with HTTP; Tue, 7 Apr 2020 05:05:11
- -0700 (PDT)
-From:   "Mrs. Anna H. Bruun" <mrsanna.h.bruun119@gmail.com>
-Date:   Tue, 7 Apr 2020 05:05:11 -0700
-X-Google-Sender-Auth: A6h9rJGyrFCkCAMHowGD9fjWh1Q
-Message-ID: <CAMrr=JgtYk+AYEFNjXo8P18gjsxJDQG7ApfUuRfymRmMT5utiw@mail.gmail.com>
-Subject: My Greetings
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Originating-IP: [10.67.165.24]
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-My Dear
+Previously we use pcie_find_root_port() to get root port from a pcie
+device, use pci_find_pcie_root_port() to get root port from a pci
+device, which increase the complexity.
 
-My Name is Mrs. Anna H. Bruun, from Norway. I know that this message
-will be a surprise to you. Firstly, I am married to Mr. Patrick Bruun,
-A gold merchant who owns a small gold Mine in Burkina Faso; He died of
-Cardiovascular Disease in mid-March 2011. During his life time he
-deposited the sum of =E2=82=AC 8.5 Million Euro) Eight million, Five hundre=
-d
-thousand Euros in a bank in Ouagadougou the capital city of Burkina
-Faso. The deposited money was from the sale of the shares, death
-benefits payment and entitlements of my deceased husband by his
-company.
+Unify the two functions and use pci_pcie_find_root_port() to get root
+port from both pci device and pcie device. Then there is no need to
+distinguish the type of the device.
 
-I am sending this message to you praying that it will reach you in
-good health, since I am not in good health condition in which I sleep
-every night without knowing if I may be alive to see the next day. I
-am suffering from long time cancer and presently i am partially
-suffering from a stroke illness which has become almost impossible for
-me to move around. I am married to my late husband for over 4 years
-before he died and is unfortunately that we don't have a child, my
-doctor confided in me that i have less chance to live. Having known my
-health condition, I decided to contact you to claim the fund since I
-don't have any relation I grew up from the orphanage home,
+Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+---
+ drivers/net/wireless/intel/iwlwifi/pcie/trans.c |  2 +-
+ drivers/pci/pci-acpi.c                          |  4 ++--
+ drivers/pci/pci.c                               | 24 ------------------------
+ drivers/pci/pcie/aer_inject.c                   |  2 +-
+ drivers/pci/probe.c                             |  2 +-
+ drivers/pci/quirks.c                            |  2 +-
+ drivers/thunderbolt/switch.c                    |  4 ++--
+ include/linux/pci.h                             | 14 +++++++-------
+ 8 files changed, 15 insertions(+), 39 deletions(-)
 
-I have decided to donate what I have to you for the support of helping
-Motherless babies/Less privileged/Widows' because I am dying and
-diagnosed of cancer for about 2 years ago. I have been touched by God
-Almighty to donate from what I have inherited from my late husband to
-you for good work of God Almighty. I have asked Almighty God to
-forgive me and believe he has, because He is a Merciful God I will be
-going in for an operation surgery soon
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
+index 38d8fe2..556cb8c 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
+@@ -158,7 +158,7 @@ void iwl_trans_pcie_dump_regs(struct iwl_trans *trans)
 
-This is the reason i need your services to stand as my next of kin or
-an executor to claim the funds for charity purposes. If this money
-remains unclaimed after my death, the bank executives or the
-government will take the money as unclaimed fund and maybe use it for
-selfish and worthless ventures, I need a very honest person who can
-claim this money and use it for Charity works, for orphanages, widows
-and also build schools for less privilege that will be named after my
-late husband and my name; I need your urgent answer to know if you
-will be able to execute this project, and I will give you more
-Information on how the fund will be transferred to your bank account.
+ 	/* Print root port AER registers */
+ 	pos = 0;
+-	pdev = pcie_find_root_port(pdev);
++	pdev = pci_pcie_find_root_port(pdev);
+ 	if (pdev)
+ 		pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_ERR);
+ 	if (pos) {
+diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+index 0c02d50..9316533 100644
+--- a/drivers/pci/pci-acpi.c
++++ b/drivers/pci/pci-acpi.c
+@@ -246,7 +246,7 @@ static acpi_status decode_type1_hpx_record(union acpi_object *record,
 
-Thanks
-Mrs. Anna H.
+ static bool pcie_root_rcb_set(struct pci_dev *dev)
+ {
+-	struct pci_dev *rp = pcie_find_root_port(dev);
++	struct pci_dev *rp = pci_pcie_find_root_port(dev);
+ 	u16 lnkctl;
+
+ 	if (!rp)
+@@ -948,7 +948,7 @@ static bool acpi_pci_bridge_d3(struct pci_dev *dev)
+ 	 * Look for a special _DSD property for the root port and if it
+ 	 * is set we know the hierarchy behind it supports D3 just fine.
+ 	 */
+-	root = pci_find_pcie_root_port(dev);
++	root = pci_pcie_find_root_port(dev);
+ 	if (!root)
+ 		return false;
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index d828ca8..fc5e7b6 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -695,30 +695,6 @@ struct resource *pci_find_resource(struct pci_dev *dev, struct resource *res)
+ EXPORT_SYMBOL(pci_find_resource);
+
+ /**
+- * pci_find_pcie_root_port - return PCIe Root Port
+- * @dev: PCI device to query
+- *
+- * Traverse up the parent chain and return the PCIe Root Port PCI Device
+- * for a given PCI Device.
+- */
+-struct pci_dev *pci_find_pcie_root_port(struct pci_dev *dev)
+-{
+-	struct pci_dev *bridge, *highest_pcie_bridge = dev;
+-
+-	bridge = pci_upstream_bridge(dev);
+-	while (bridge && pci_is_pcie(bridge)) {
+-		highest_pcie_bridge = bridge;
+-		bridge = pci_upstream_bridge(bridge);
+-	}
+-
+-	if (pci_pcie_type(highest_pcie_bridge) != PCI_EXP_TYPE_ROOT_PORT)
+-		return NULL;
+-
+-	return highest_pcie_bridge;
+-}
+-EXPORT_SYMBOL(pci_find_pcie_root_port);
+-
+-/**
+  * pci_wait_for_pending - wait for @mask bit(s) to clear in status word @pos
+  * @dev: the PCI device to operate on
+  * @pos: config space offset of status word
+diff --git a/drivers/pci/pcie/aer_inject.c b/drivers/pci/pcie/aer_inject.c
+index 6988fe7..c3bfc1b5 100644
+--- a/drivers/pci/pcie/aer_inject.c
++++ b/drivers/pci/pcie/aer_inject.c
+@@ -332,7 +332,7 @@ static int aer_inject(struct aer_error_inj *einj)
+ 	dev = pci_get_domain_bus_and_slot(einj->domain, einj->bus, devfn);
+ 	if (!dev)
+ 		return -ENODEV;
+-	rpdev = pcie_find_root_port(dev);
++	rpdev = pci_pcie_find_root_port(dev);
+ 	if (!rpdev) {
+ 		pci_err(dev, "Root port not found\n");
+ 		ret = -ENODEV;
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 512cb43..50f7733 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -2015,7 +2015,7 @@ static void pci_configure_relaxed_ordering(struct pci_dev *dev)
+ 	 * For now, we only deal with Relaxed Ordering issues with Root
+ 	 * Ports. Peer-to-Peer DMA is another can of worms.
+ 	 */
+-	root = pci_find_pcie_root_port(dev);
++	root = pci_pcie_find_root_port(dev);
+ 	if (!root)
+ 		return;
+
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 29f473e..ac62675 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -4253,7 +4253,7 @@ DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_AMD, 0x1a02, PCI_CLASS_NOT_DEFINED,
+  */
+ static void quirk_disable_root_port_attributes(struct pci_dev *pdev)
+ {
+-	struct pci_dev *root_port = pci_find_pcie_root_port(pdev);
++	struct pci_dev *root_port = pci_pcie_find_root_port(pdev);
+
+ 	if (!root_port) {
+ 		pci_warn(pdev, "PCIe Completion erratum may cause device errors\n");
+diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
+index a2ce990..90844c1 100644
+--- a/drivers/thunderbolt/switch.c
++++ b/drivers/thunderbolt/switch.c
+@@ -263,7 +263,7 @@ static void nvm_authenticate_start_dma_port(struct tb_switch *sw)
+ 	 * itself. To be on the safe side keep the root port in D0 during
+ 	 * the whole upgrade process.
+ 	 */
+-	root_port = pci_find_pcie_root_port(sw->tb->nhi->pdev);
++	root_port = pci_pcie_find_root_port(sw->tb->nhi->pdev);
+ 	if (root_port)
+ 		pm_runtime_get_noresume(&root_port->dev);
+ }
+@@ -272,7 +272,7 @@ static void nvm_authenticate_complete_dma_port(struct tb_switch *sw)
+ {
+ 	struct pci_dev *root_port;
+
+-	root_port = pci_find_pcie_root_port(sw->tb->nhi->pdev);
++	root_port = pci_pcie_find_root_port(sw->tb->nhi->pdev);
+ 	if (root_port)
+ 		pm_runtime_put(&root_port->dev);
+ }
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 3840a54..b341ca30 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1011,7 +1011,6 @@ void pci_bus_add_device(struct pci_dev *dev);
+ void pci_read_bridge_bases(struct pci_bus *child);
+ struct resource *pci_find_parent_resource(const struct pci_dev *dev,
+ 					  struct resource *res);
+-struct pci_dev *pci_find_pcie_root_port(struct pci_dev *dev);
+ u8 pci_swizzle_interrupt_pin(const struct pci_dev *dev, u8 pin);
+ int pci_get_interrupt_pin(struct pci_dev *dev, struct pci_dev **bridge);
+ u8 pci_common_swizzle(struct pci_dev *dev, u8 *pinp);
+@@ -2124,15 +2123,16 @@ static inline int pci_pcie_type(const struct pci_dev *dev)
+ 	return (pcie_caps_reg(dev) & PCI_EXP_FLAGS_TYPE) >> 4;
+ }
+
+-static inline struct pci_dev *pcie_find_root_port(struct pci_dev *dev)
++/**
++ * pci_pcie_find_root_port - Get the PCIe root port device
++ * @dev: PCI device
++ */
++static inline struct pci_dev *pci_pcie_find_root_port(struct pci_dev *dev)
+ {
+-	while (1) {
+-		if (!pci_is_pcie(dev))
+-			break;
++	dev = pci_physfn(dev);
++	while (dev) {
+ 		if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT)
+ 			return dev;
+-		if (!dev->bus->self)
+-			break;
+ 		dev = dev->bus->self;
+ 	}
+ 	return NULL;
+--
+2.8.1
+
