@@ -2,55 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 46C7C1A2224
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Apr 2020 14:36:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 12C381A2227
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Apr 2020 14:38:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728772AbgDHMgS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Apr 2020 08:36:18 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40086 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726769AbgDHMgR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Apr 2020 08:36:17 -0400
-Received: by mail-wm1-f67.google.com with SMTP id a81so5244149wmf.5;
-        Wed, 08 Apr 2020 05:36:14 -0700 (PDT)
+        id S1727950AbgDHMi2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Apr 2020 08:38:28 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51063 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726977AbgDHMi1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Apr 2020 08:38:27 -0400
+Received: by mail-wm1-f66.google.com with SMTP id x25so4973593wmc.0;
+        Wed, 08 Apr 2020 05:38:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:references:in-reply-to:subject:date:message-id
          :mime-version:content-transfer-encoding:thread-index
          :content-language;
-        bh=K2/ZZgf9mAgGPg5RQdW8XmMc7QHT56dxiERZrqmIlXI=;
-        b=c3UoiulBTTw+EjdO3+3DsSxh6EgM+Zl5/tcYheVTBff7vQ5oijQhkXiQoFPMAL0ZD0
-         Jwj4LxgHPk1fj5MDZsmoiZrO1VyFGhxCAwBZGvvwLCi1TL9xXGTLK+jg8GPPA/ISLGNp
-         lTap1nwZWT39ht5/EZXZiPC/Exl0QWRf9cyebrLUkE6cdxxifkVH4pqdtS7mZJvCQJ/7
-         qLXuf07xoVuihlHtFWk95bvUH7BO//5XWVqGW3bYthcwNLJpTA0r0VNCfRF+yl/ghQdV
-         UVUm1/IMnwjDzkoeD+4sEbgQTFoETj5vPAJZvMxdB5lashjLsRRpJ9fPVHPD1cK2VZPd
-         Fr+Q==
+        bh=7WVwy+SP+eZ7W/A++0vMqnUIR9Agu3yjwjMz6EovfMY=;
+        b=JbuD071ifrKUYqa4oD+asFtTeSa7v9MY45CwueqXXHNRH3KhN5lQ8Onp5T665XIQjj
+         dvR2uuyrdh4WvEUlNnnmDpj+vOJV9CgFLY0vaoEYWIZQtFrWWfVNZdWLazQR8yo/ePZ2
+         tOLg4bbB0nSbeqgHwS2wAXx5ZpSz+InwRjcqrUeDdIwmyzsS06CMiKcHMNUDM/EufEFl
+         iydiywBS1wVjqE+ecW2MgMz5nijIo+UOA9V9+X4EoMiD8u1qE0Wo1u3m7tofjIWp3ZVu
+         9QAEye7wh/80MJFN56KgRsCPWzTk6brhcqvHLjR25swvPX6kaAn4+x4rBo2wdHHatmUF
+         7dTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
          :message-id:mime-version:content-transfer-encoding:thread-index
          :content-language;
-        bh=K2/ZZgf9mAgGPg5RQdW8XmMc7QHT56dxiERZrqmIlXI=;
-        b=GJjAoai89y5GRfmQtzqP53OLhadrvaGC9xv5s6/xeGf2eJhoxzv4Ah0OcPyH6sVh2V
-         esRzjZaINMFE4LLj9g3dIY/meWA8Unee2FWPtVQwjAjBKDTAmcP3dFb03xppukHFXiQ6
-         3wVKodKWRigWebxkYNVY+u0V4oBYuEo4IWpLTe+ovdcxGnD+YXTzn/tAPcmkUTdj90+D
-         CEIdX3vZCUJZ+tL+/FSEgYlPZHn1/RxpjOZca+Q5nenx3gOBLF8e+j30thA2UkFitd8B
-         s65VELA5jYbhHkFO3s9AEdcYGlnWx8Y1LTGySfpfl4g9qllAdaVRf6prSVeRKYxFpsDC
-         cxhQ==
-X-Gm-Message-State: AGi0PuZrKA5mHSoSSx407E/2n75j0nj+mXOHjprhY+UPBD5OaFaYD71T
-        iudGTFWUiP9YOIzYB8yWvAA=
-X-Google-Smtp-Source: APiQypJMIIuYnj3h812I/IE1fZG6gNF1wH2/EMIRqA12hvsLUvIqW6iJgzdmub9BCk4J9S8rI9MfXw==
-X-Received: by 2002:a05:600c:2f90:: with SMTP id t16mr4692378wmn.66.1586349373751;
-        Wed, 08 Apr 2020 05:36:13 -0700 (PDT)
+        bh=7WVwy+SP+eZ7W/A++0vMqnUIR9Agu3yjwjMz6EovfMY=;
+        b=QRJ/28tman2olPPu1nCjOk1oOsiiTHmQjREONYMvdvxDdI/xD/04M+2NVNXaB3a41z
+         G4FRtvQpZxjdQCTg6IQ5CbTz8bSbZku1sBHNmtoF8ChrLCbVmXM84RyGY/v5YAN+kY17
+         F7HPBfbEsH2DGz1zfaT8m6MOtaLim0bGSAc099SjNNwi1s9fwLSJMC4I+HVm9DZOVF/8
+         lOEE8YhyVnftOzyS0KhJj9NWWXk0FCRnDhVR0MuRgPA1IKZYTrqaAC6Mr4u75W+rjVxH
+         GmPddSdYHV+x3dZZeVoQ9Fm7EyyT72WMEZ4ab97S/nfWAT2K5ktSvXMysQn2jBEVyiai
+         KQhg==
+X-Gm-Message-State: AGi0PuZwcUV7drh7Lx7zJCcIEwGuPZ6SWRhKuLcKSW4uQzhvkHFIBRcU
+        MznaEIjgMJD0WIn99xCpqj8=
+X-Google-Smtp-Source: APiQypLk1OSAe8sQxynwPyLUwCr+hQf8DZOMyYWR5Kg8u966nzjURUJs7DUm/o8qnsBF4vC9gi5YqA==
+X-Received: by 2002:a1c:80d3:: with SMTP id b202mr4474826wmd.8.1586349505289;
+        Wed, 08 Apr 2020 05:38:25 -0700 (PDT)
 Received: from AnsuelXPS (host117-205-dynamic.180-80-r.retail.telecomitalia.it. [80.180.205.117])
-        by smtp.gmail.com with ESMTPSA id p22sm6638259wmc.42.2020.04.08.05.36.12
+        by smtp.gmail.com with ESMTPSA id k185sm6952872wmb.7.2020.04.08.05.38.23
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 08 Apr 2020 05:36:13 -0700 (PDT)
+        Wed, 08 Apr 2020 05:38:24 -0700 (PDT)
 From:   <ansuelsmth@gmail.com>
 To:     "'Stanimir Varbanov'" <svarbanov@mm-sol.com>,
         "'Andy Gross'" <agross@kernel.org>
-Cc:     "'Sham Muthayyan'" <smuthayy@codeaurora.org>,
-        "'Bjorn Andersson'" <bjorn.andersson@linaro.org>,
+Cc:     "'Bjorn Andersson'" <bjorn.andersson@linaro.org>,
         "'Bjorn Helgaas'" <bhelgaas@google.com>,
         "'Rob Herring'" <robh+dt@kernel.org>,
         "'Mark Rutland'" <mark.rutland@arm.com>,
@@ -59,149 +58,172 @@ Cc:     "'Sham Muthayyan'" <smuthayy@codeaurora.org>,
         "'Philipp Zabel'" <p.zabel@pengutronix.de>,
         <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200402121148.1767-1-ansuelsmth@gmail.com> <20200402121148.1767-2-ansuelsmth@gmail.com> <b09627a8-d928-cf5d-c765-406959138a29@mm-sol.com>
-In-Reply-To: <b09627a8-d928-cf5d-c765-406959138a29@mm-sol.com>
-Subject: R: [PATCH v2 01/10] PCIe: qcom: add missing ipq806x clocks in PCIe driver
-Date:   Wed, 8 Apr 2020 14:36:10 +0200
-Message-ID: <053d01d60da2$49e0ca60$dda25f20$@gmail.com>
+References: <20200402121148.1767-1-ansuelsmth@gmail.com> <20200402121148.1767-8-ansuelsmth@gmail.com> <fea9cfd1-2bc7-0141-444e-9c781877ad02@mm-sol.com>
+In-Reply-To: <fea9cfd1-2bc7-0141-444e-9c781877ad02@mm-sol.com>
+Subject: R: [PATCH v2 07/10] PCIe: qcom: fix init problem with missing PARF programming
+Date:   Wed, 8 Apr 2020 14:38:21 +0200
+Message-ID: <053e01d60da2$984f1170$c8ed3450$@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain;
         charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQLxewcL6EghaIoibfUjxKO3XpeZ4wIE8vndAX3+x+GmHDaucA==
+Thread-Index: AQLxewcL6EghaIoibfUjxKO3XpeZ4wIq3QoPAak0GR+mGa3/MA==
 Content-Language: it
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> PCIe driver
+> PARF programming
 > 
-> Ansuel,
+> Hi Ansuel,
 > 
+> Please fix the patch subject for all patches in the series per Bjorn H.
+> request.
+> 
+> PCI: qcom: Fix init problem with missing PARF programming
+> 
+> Also the patch subject is misleading to me. Actually you change few phy
+> parameters: Tx De-Emphasis, Tx Swing and Rx equalization. On the other
+> side I guess those parameters are board specific and I'm not sure how
+> this change will reflect on apq8064 boards.
+> 
+
+I also think that this would brake apq8064, on ipq8064 this is needed or 
+the system doesn't boot. 
+Should I move this to the dts and set this params only if they are present
+in dts or also here check for compatible and set accordingly? 
+
 > On 4/2/20 3:11 PM, Ansuel Smith wrote:
-> > Aux and Ref clk are missing in pcie qcom driver.
-> > Add support in the driver to fix pcie inizialization in ipq806x.
+> > PARF programming was missing and this cause initilizzation problem on
+> > some ipq806x based device (Netgear R7800 for example). This cause a
+> > total lock of the system on kernel load.
 > >
 > > Fixes: 82a82383 PCI: qcom: Add Qualcomm PCIe controller driver
-> 
-> this should be:
-> 
-> Fixes: 82a823833f4e PCI: qcom: Add Qualcomm PCIe controller driver
-> 
-> and add:
-> 
-> Cc: stable@vger.kernel.org # v4.5+
-> 
-> But, I wonder, as apq8064 shares the same ops_2_1_0 how it worked until
-> now. Something more I cannot find such clocks for apq8064, which means
-> that this patch will break it.
-> 
-> One option is to use those new clocks only for ipq806x.
-> 
-
-How to add this new clocks only for ipq806x? Check the compatible and add
-them accordingly? 
-
-> > Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
 > > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
 > > ---
-> >  drivers/pci/controller/dwc/pcie-qcom.c | 38
-> ++++++++++++++++++++++----
-> >  1 file changed, 33 insertions(+), 5 deletions(-)
+> >  drivers/pci/controller/dwc/pcie-qcom.c | 48 +++++++++++++++++++++--
+> ---
+> >  1 file changed, 39 insertions(+), 9 deletions(-)
 > >
 > > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c
 > b/drivers/pci/controller/dwc/pcie-qcom.c
-> > index 5ea527a6bd9f..f958c535de6e 100644
+> > index 211a1aa7d0f1..77b1ab7e23a3 100644
 > > --- a/drivers/pci/controller/dwc/pcie-qcom.c
 > > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > @@ -88,6 +88,8 @@ struct qcom_pcie_resources_2_1_0 {
-> >  	struct clk *iface_clk;
-> >  	struct clk *core_clk;
-> >  	struct clk *phy_clk;
-> > +	struct clk *aux_clk;
-> > +	struct clk *ref_clk;
-> >  	struct reset_control *pci_reset;
-> >  	struct reset_control *axi_reset;
-> >  	struct reset_control *ahb_reset;
-> > @@ -246,6 +248,14 @@ static int
-> qcom_pcie_get_resources_2_1_0(struct qcom_pcie *pcie)
-> >  	if (IS_ERR(res->phy_clk))
-> >  		return PTR_ERR(res->phy_clk);
+> > @@ -46,6 +46,9 @@
 > >
-> > +	res->aux_clk = devm_clk_get(dev, "aux");
-> > +	if (IS_ERR(res->aux_clk))
-> > +		return PTR_ERR(res->aux_clk);
+> >  #define PCIE20_PARF_PHY_CTRL			0x40
+> >  #define PCIE20_PARF_PHY_REFCLK			0x4C
+> > +#define REF_SSP_EN				BIT(16)
+> > +#define REF_USE_PAD				BIT(12)
+> 
+> Could you rename this to:
+> 
+> PHY_REFCLK_SSP_EN
+> PHY_REFCLK_USE_PAD
+> 
 > > +
-> > +	res->ref_clk = devm_clk_get(dev, "ref");
-> > +	if (IS_ERR(res->ref_clk))
-> > +		return PTR_ERR(res->ref_clk);
-> > +
-> >  	res->pci_reset = devm_reset_control_get_exclusive(dev, "pci");
-> >  	if (IS_ERR(res->pci_reset))
-> >  		return PTR_ERR(res->pci_reset);
-> > @@ -278,6 +288,8 @@ static void qcom_pcie_deinit_2_1_0(struct
-> qcom_pcie *pcie)
-> >  	clk_disable_unprepare(res->iface_clk);
-> >  	clk_disable_unprepare(res->core_clk);
-> >  	clk_disable_unprepare(res->phy_clk);
-> > +	clk_disable_unprepare(res->aux_clk);
-> > +	clk_disable_unprepare(res->ref_clk);
-> >  	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
-> >  }
+> >  #define PCIE20_PARF_DBI_BASE_ADDR		0x168
+> >  #define PCIE20_PARF_SLV_ADDR_SPACE_SIZE		0x16C
+> >  #define PCIE20_PARF_MHI_CLOCK_RESET_CTRL	0x174
+> > @@ -77,6 +80,18 @@
+> >  #define DBI_RO_WR_EN				1
 > >
-> > @@ -307,16 +319,28 @@ static int qcom_pcie_init_2_1_0(struct
+> >  #define PERST_DELAY_US				1000
+> > +/* PARF registers */
+> > +#define PCIE20_PARF_PCS_DEEMPH			0x34
+> > +#define PCS_DEEMPH_TX_DEEMPH_GEN1(x)		(x << 16)
+> > +#define PCS_DEEMPH_TX_DEEMPH_GEN2_3_5DB(x)	(x << 8)
+> > +#define PCS_DEEMPH_TX_DEEMPH_GEN2_6DB(x)	(x << 0)
+> > +
+> > +#define PCIE20_PARF_PCS_SWING			0x38
+> > +#define PCS_SWING_TX_SWING_FULL(x)		(x << 8)
+> > +#define PCS_SWING_TX_SWING_LOW(x)		(x << 0)
+> > +
+> > +#define PCIE20_PARF_CONFIG_BITS		0x50
+> > +#define PHY_RX0_EQ(x)				(x << 24)
+> >
+> >  #define PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE	0x358
+> >  #define SLV_ADDR_SPACE_SZ			0x10000000
+> > @@ -184,6 +199,16 @@ struct qcom_pcie {
+> >
+> >  #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
+> >
+> > +static inline void qcom_clear_and_set_dword(void __iomem *addr,
+> 
+> drop 'inline' the compiler is smart enough to decide.
+> 
+> > +				 u32 clear_mask, u32 set_mask)
+> > +{
+> > +	u32 val = readl(addr);
+> > +
+> > +	val &= ~clear_mask;
+> > +	val |= set_mask;
+> > +	writel(val, addr);
+> > +}
+> > +
+> 
+> If you add such function you should introduce it in a separate patch and
+> use it in the whole driver where it is applicable. After that we can see
+> what is the benefit of it.
+> 
+> >  static void qcom_ep_reset_assert(struct qcom_pcie *pcie)
+> >  {
+> >  	gpiod_set_value_cansleep(pcie->reset, 1);
+> > @@ -304,7 +329,6 @@ static int qcom_pcie_init_2_1_0(struct
 > qcom_pcie *pcie)
-> >  		goto err_assert_ahb;
+> >  	struct qcom_pcie_resources_2_1_0 *res = &pcie->res.v2_1_0;
+> >  	struct dw_pcie *pci = pcie->pci;
+> >  	struct device *dev = pci->dev;
+> > -	u32 val;
+> >  	int ret;
+> >
+> >  	ret = regulator_bulk_enable(ARRAY_SIZE(res->supplies), res-
+> >supplies);
+> > @@ -355,15 +379,21 @@ static int qcom_pcie_init_2_1_0(struct
+> qcom_pcie *pcie)
+> >  		goto err_deassert_ahb;
 > >  	}
 > >
-> > +	ret = clk_prepare_enable(res->core_clk);
-> > +	if (ret) {
-> > +		dev_err(dev, "cannot prepare/enable core clock\n");
-> > +		goto err_clk_core;
-> > +	}
+> > -	/* enable PCIe clocks and resets */
+> > -	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
+> > -	val &= ~BIT(0);
+> > -	writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
+> > +	qcom_clear_and_set_dword(pcie->parf + PCIE20_PARF_PHY_CTRL,
+> BIT(0), 0);
+> 
+> please keep the comment.
+> 
 > > +
-> >  	ret = clk_prepare_enable(res->phy_clk);
+> > +	/* PARF programming */
+> 
+> pointless comment, please drop it.
+> 
+> > +	writel(PCS_DEEMPH_TX_DEEMPH_GEN1(0x18) |
+> > +	       PCS_DEEMPH_TX_DEEMPH_GEN2_3_5DB(0x18) |
+> > +	       PCS_DEEMPH_TX_DEEMPH_GEN2_6DB(0x22),
+> > +	       pcie->parf + PCIE20_PARF_PCS_DEEMPH);
+> > +	writel(PCS_SWING_TX_SWING_FULL(0x78) |
+> > +	       PCS_SWING_TX_SWING_LOW(0x78),
+> > +	       pcie->parf + PCIE20_PARF_PCS_SWING);
+> > +	writel(PHY_RX0_EQ(0x4), pcie->parf + PCIE20_PARF_CONFIG_BITS);
+> >
+> > -	/* enable external reference clock */
+> > -	val = readl(pcie->parf + PCIE20_PARF_PHY_REFCLK);
+> > -	val |= BIT(16);
+> > -	writel(val, pcie->parf + PCIE20_PARF_PHY_REFCLK);
+> > +	/* enable reference clock */
+> 
+> Why you dropped 'external' ?
+> 
+> > +	qcom_clear_and_set_dword(pcie->parf +
+> PCIE20_PARF_PHY_REFCLK,
+> > +		      REF_USE_PAD, REF_SSP_EN);
+> >
+> >  	ret = reset_control_deassert(res->phy_reset);
 > >  	if (ret) {
-> >  		dev_err(dev, "cannot prepare/enable phy clock\n");
-> >  		goto err_clk_phy;
-> >  	}
-> >
-> > -	ret = clk_prepare_enable(res->core_clk);
-> > +	ret = clk_prepare_enable(res->aux_clk);
-> >  	if (ret) {
-> > -		dev_err(dev, "cannot prepare/enable core clock\n");
-> > -		goto err_clk_core;
-> > +		dev_err(dev, "cannot prepare/enable aux clock\n");
-> > +		goto err_clk_aux;
-> > +	}
-> > +
-> > +	ret = clk_prepare_enable(res->ref_clk);
-> > +	if (ret) {
-> > +		dev_err(dev, "cannot prepare/enable ref clock\n");
-> > +		goto err_clk_ref;
-> >  	}
-> >
-> >  	ret = reset_control_deassert(res->ahb_reset);
-> > @@ -372,10 +396,14 @@ static int qcom_pcie_init_2_1_0(struct
-> qcom_pcie *pcie)
-> >  	return 0;
-> >
-> >  err_deassert_ahb:
-> > -	clk_disable_unprepare(res->core_clk);
-> > -err_clk_core:
-> > +	clk_disable_unprepare(res->ref_clk);
-> > +err_clk_ref:
-> > +	clk_disable_unprepare(res->aux_clk);
-> > +err_clk_aux:
-> >  	clk_disable_unprepare(res->phy_clk);
-> >  err_clk_phy:
-> > +	clk_disable_unprepare(res->core_clk);
-> > +err_clk_core:
-> >  	clk_disable_unprepare(res->iface_clk);
-> >  err_assert_ahb:
-> >  	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
 > >
 > 
 > --
