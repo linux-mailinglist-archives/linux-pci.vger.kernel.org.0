@@ -2,28 +2,28 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4314D1A2C95
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Apr 2020 01:51:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E0E41A2C99
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Apr 2020 01:53:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726549AbgDHXvg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Apr 2020 19:51:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43314 "EHLO mail.kernel.org"
+        id S1726521AbgDHXx0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Apr 2020 19:53:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726523AbgDHXvf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 8 Apr 2020 19:51:35 -0400
+        id S1726510AbgDHXx0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 8 Apr 2020 19:53:26 -0400
 Received: from localhost (mobile-166-175-188-68.mycingular.net [166.175.188.68])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 050E02082F;
-        Wed,  8 Apr 2020 23:51:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18DB12084D;
+        Wed,  8 Apr 2020 23:53:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586389895;
-        bh=ohD59jkDFB/7GbrNwOr+RvtEO78AppOEta0uYKkJaOk=;
+        s=default; t=1586390006;
+        bh=7zViGsXDSmvWLZedluQ728hyvtvtBvOJlVvSpmYzI4U=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=i243TA3iZ14gJyfzqpJx5lW6qxa0I0TWRjoCNJ1pTyAMoKpRNGO9XGXe4feq2IHKZ
-         /N0BFAPMBXb2oHHt5BczVvgIHnz9by1j5vnTFnMQHgRR+xhuiQqEnffDgEQ9BBv+iT
-         0IpSHFoe/PMaOm3RmcfLSyKA8M4gx9tSc9h2n7QQ=
-Date:   Wed, 8 Apr 2020 18:51:33 -0500
+        b=kR1mYAhYYGarx3rHMJcWGOWjTLiVhOXOrxfrjoRGT4/N6DXdR2o8jai7AuQOCw/th
+         fE4n3O77v2CZTPeTyA3RZ65uJLSmqKOPqKrZ6DJwDxQtckCcKn9cCDoDsNG/GdNSwo
+         tUKRRoOhPOTdwctGauWVqv2NvNRqLUvF75O/Ftr8=
+Date:   Wed, 8 Apr 2020 18:53:24 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
@@ -44,61 +44,44 @@ Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
         Chris Paterson <Chris.Paterson2@renesas.com>,
         linux-rockchip@lists.infradead.org,
         Lad Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH v7 6/8] PCI: rcar: Add support for R-Car PCIe controller
- in endpoint mode
-Message-ID: <20200408235133.GA151858@google.com>
+Subject: Re: [PATCH v7 7/8] PCI: Add Renesas R8A774C0 device ID
+Message-ID: <20200408235324.GA153524@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1586360280-10956-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1586360280-10956-8-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Maybe:
+On Wed, Apr 08, 2020 at 04:37:59PM +0100, Lad Prabhakar wrote:
+> Add R8A774C0 device ID so that this can be used by
+> pci_endpoint_test driver.
+> 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> ---
+>  include/linux/pci_ids.h | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 1dfc4e1dcb94..9e957c18abeb 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -2460,6 +2460,7 @@
+>  #define PCI_DEVICE_ID_RENESAS_SH7763	0x0004
+>  #define PCI_DEVICE_ID_RENESAS_SH7785	0x0007
+>  #define PCI_DEVICE_ID_RENESAS_SH7786	0x0010
+> +#define PCI_DEVICE_ID_RENESAS_R8A774C0	0x002d
 
-  PCI: rcar: Add endpoint mode support
+We don't add device IDs here anymore unless they're used in more than
+one place (see the comment at the top of the file).  This series
+doesn't use it at all, so please move this patch to the series that
+adds multiple uses of this ID.
 
-so the important "endpoint mode" part is early and doesn't get chopped
-off or wrapped.  We already know it's PCIe and rcar-related.
-
-On Wed, Apr 08, 2020 at 04:37:58PM +0100, Lad Prabhakar wrote:
-> This patch adds support for R-Car PCIe controller to work in endpoint mode.
-
-s/This patch adds/Add/
-
-> +static int rcar_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no,
-> +				struct pci_epf_bar *epf_bar)
-> +{
-> +	int flags = epf_bar->flags | LAR_ENABLE | LAM_64BIT;
-> +	struct rcar_pcie_endpoint *ep = epc_get_drvdata(epc);
-> +	u64 size = 1ULL << fls64(epf_bar->size - 1);
-> +	dma_addr_t cpu_addr = epf_bar->phys_addr;
-> +	enum pci_barno bar = epf_bar->barno;
-> +	struct rcar_pcie *pcie = &ep->pcie;
-> +	u32 mask;
-> +	int idx;
-> +	int err;
-> +
-> +	idx = find_first_zero_bit(ep->ib_window_map, ep->num_ib_windows);
-> +	if (idx >= ep->num_ib_windows) {
-> +		dev_err(pcie->dev, "no free inbound window\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	if ((flags & PCI_BASE_ADDRESS_SPACE) == PCI_BASE_ADDRESS_SPACE_IO)
-> +		flags |= IO_SPACE;
-> +
-> +	ep->bar_to_atu[bar] = idx;
-> +	/* use 64 bit bars */
-
-s/64 bit bars/64-bit BARs/
-
-> +static const struct pci_epc_features rcar_pcie_epc_features = {
-> +	.linkup_notifier = false,
-> +	.msi_capable = true,
-> +	.msix_capable = false,
-> +	/* use 64-bit bars so mark bar1/3/5 as reserved */
-
-s/bar/BAR/g
+>  #define PCI_VENDOR_ID_SOLARFLARE	0x1924
+>  #define PCI_DEVICE_ID_SOLARFLARE_SFC4000A_0	0x0703
+> -- 
+> 2.20.1
+> 
