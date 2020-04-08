@@ -2,203 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DD521A2794
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Apr 2020 18:56:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AA9921A2808
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Apr 2020 19:36:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729382AbgDHQ40 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Apr 2020 12:56:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47100 "EHLO mail.kernel.org"
+        id S1727226AbgDHRg7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Apr 2020 13:36:59 -0400
+Received: from mga14.intel.com ([192.55.52.115]:33692 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728627AbgDHQ40 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 8 Apr 2020 12:56:26 -0400
-Received: from localhost (mobile-166-175-188-68.mycingular.net [166.175.188.68])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA88720730;
-        Wed,  8 Apr 2020 16:56:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586364985;
-        bh=cYSv/EpZb34Rup15LJtbAPdZbXaBMQeOyoA9bvbCAXY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Zh6eryBh+bC0Hn3jNol2qk1N6i3WJaK1WJxVHfmvNYY8UfVtBFDx9DaK/1mVPB0wI
-         gbs+HgcUliFL0/B+WJTda29DKMMrn/h2yH42yGeRnm6yqqyj9qr88qdP54p5Y++/cc
-         5Bw1mbWNZyLK2rkdYc+eT6i7YRMm02t5aviwlLSE=
-Date:   Wed, 8 Apr 2020 11:56:23 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Sean V Kelley <sean.v.kelley@linux.intel.com>
-Cc:     mj@ucw.cz, linux-pci@vger.kernel.org
-Subject: Re: [RFC Patch 1/1] lspci: Add basic decode support for Compute
- eXpress Link
-Message-ID: <20200408165623.GA80917@google.com>
+        id S1726687AbgDHRg6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 8 Apr 2020 13:36:58 -0400
+IronPort-SDR: dYfYU+zrhZv41wXbm1NCdk9COFPk5hVXwVKs8z3IMmCem/mBMde5y4XzFzsuBSsU0ljOET8/Ys
+ FqxDvqkEtpzA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2020 10:36:58 -0700
+IronPort-SDR: NrrouB/3PB08gRYM+dGi9DxzVTlqMa7roUndG1syB/WoX0KjUXf99ShbXLs3jrINH95WkS4cOt
+ rUGIQDGgRwIg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,359,1580803200"; 
+   d="scan'208";a="275519550"
+Received: from orsmsx104.amr.corp.intel.com ([10.22.225.131])
+  by fmsmga004.fm.intel.com with ESMTP; 08 Apr 2020 10:36:57 -0700
+Received: from orsmsx151.amr.corp.intel.com (10.22.226.38) by
+ ORSMSX104.amr.corp.intel.com (10.22.225.131) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 8 Apr 2020 10:36:56 -0700
+Received: from orsmsx101.amr.corp.intel.com ([169.254.8.225]) by
+ ORSMSX151.amr.corp.intel.com ([169.254.7.134]) with mapi id 14.03.0439.000;
+ Wed, 8 Apr 2020 10:36:56 -0700
+From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
+To:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
+CC:     "Kalakota, SushmaX" <sushmax.kalakota@intel.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "helgaas@kernel.org" <helgaas@kernel.org>
+Subject: Re: [PATCH] PCI: vmd: Filter resource type bits from shadow register
+Thread-Topic: [PATCH] PCI: vmd: Filter resource type bits from shadow
+ register
+Thread-Index: AQHV/umGQ06Mrizjq0+0sw5eTPqC8ahwEBwA
+Date:   Wed, 8 Apr 2020 17:36:55 +0000
+Message-ID: <1f3bc6cb57988f052cb94c325fb0af84bd76b980.camel@intel.com>
+References: <1584730690-57253-1-git-send-email-jonathan.derrick@intel.com>
+In-Reply-To: <1584730690-57253-1-git-send-email-jonathan.derrick@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.255.0.45]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <CA24D78AE5660B41A7354A07757C6AE9@intel.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200408000959.230780-2-sean.v.kelley@linux.intel.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 05:09:59PM -0700, Sean V Kelley wrote:
-> Compute eXpress Link[1] is a new CPU interconnected created with
-> workload accelerators in mind. The interconnect relies on PCIe Electrial
-> and Physical interconnect for communication.
-
-s/interconnected/interconnect/
-s/Electrial/Electrical/
-
-> Moreover, CXL bus hierarchy appear, to the OS, as an ACPI-described PCIe
-> Root Bridge with Integrated Endpoint.
-
-s/Moreover,/The/
-s/appear,/appears/
-s/the OS,/the OS/
-
-Actually, I don't think this paragraph is really relevant.  At least
-at the level of lspci, it doesn't matter whether the host bridge is
-described via ACPI, DT, or something else.  And I don't think it
-matters whether this is an Integrated Endpoint or otherwise.  All
-lspci cares about is that we can read config space for the device.
-
-> This patch introduces basic support for lspci decode for DVSEC CXL
-> extended capability.
-> 
-> [1] https://www.computeexpresslink.org/
-> 
-> Signed-off-by: Sean V Kelley <sean.v.kelley@linux.intel.com>
-> ---
->  lib/header.h        | 25 +++++++++++++++++++++++++
->  ls-ecaps.c          | 29 ++++++++++++++++++++++++++++-
->  tests/cap-cxl-dvsec |  8 ++++++++
->  3 files changed, 61 insertions(+), 1 deletion(-)
->  create mode 100644 tests/cap-cxl-dvsec
-> 
-> diff --git a/lib/header.h b/lib/header.h
-> index bfdcc80..421612d 100644
-> --- a/lib/header.h
-> +++ b/lib/header.h
-> @@ -1042,6 +1042,27 @@
->  #define PCI_EVNDR_HEADER	4	/* Vendor-Specific Header */
->  #define PCI_EVNDR_REGISTERS	8	/* Vendor-Specific Registers */
->  
-> +/* PCIe CXL Vendor-Specific Capabilities, Control, Status */
-
-s/Vendor-Specific/Designated Vendor-Specific/
-
-> +#define PCI_EVNDR_CXL_ID	0
-
-Unused in this patch.  Is this the DVSEC Vendor ID as described in
-PCIe r5.0, sec 7.9.6.2?  Is 0 really the ID assigned for CXL?
-
-> +#define PCI_CXL_CAP		0x0a
-> +#define  PCI_CXL_CAP_CACHE	0x0001
-> +#define  PCI_CXL_CAP_IO		0x0002
-> +#define  PCI_CXL_CAP_MEM	0x0004
-> +#define  PCI_CXL_CAP_MEM_HWINIT	0x0008
-> +#define  PCI_CXL_CAP_HDM_CNT(x)	(((x) & (3 << 4)) >> 4)
-> +#define  PCI_CXL_CAP_VIRAL	0x4000
-> +#define PCI_CXL_CTRL		0x0c
-> +#define  PCI_CXL_CTRL_CACHE	0x0001
-> +#define  PCI_CXL_CTRL_IO	0x0002
-> +#define  PCI_CXL_CTRL_MEM	0x0004
-> +#define  PCI_CXL_CTRL_CACHE_SF_COV(x)	(((x) & (0x1f << 3)) >> 3)
-> +#define  PCI_CXL_CTRL_CACHE_SF_GRAN(x)	(((x) & (0x7 << 8)) >> 8)
-> +#define  PCI_CXL_CTRL_CACHE_CLN	0x0800
-> +#define  PCI_CXL_CTRL_VIRAL	0x4000
-> +#define PCI_CXL_STATUS		0x0e
-> +#define  PCI_CXL_STATUS_VIRAL	0x4000
-> +
->  /* Access Control Services */
->  #define PCI_ACS_CAP		0x04	/* ACS Capability Register */
->  #define PCI_ACS_CAP_VALID	0x0001	/* ACS Source Validation */
-> @@ -1348,6 +1369,10 @@
->  #define PCI_CLASS_SIGNAL_SYNCHRONIZER	0x1110
->  #define PCI_CLASS_SIGNAL_OTHER		0x1180
->  
-> +#define PCI_CLASS_CXL			0x14
-> +#define PCI_CLASS_CXL_RCIEP		0x1400
-> +#define PCI_CLASS_CXL_OTHER		0x1480
-> +
->  #define PCI_CLASS_OTHERS		0xff
->  
->  /* Several ID's we need in the library */
-> diff --git a/ls-ecaps.c b/ls-ecaps.c
-> index 0021734..8c09517 100644
-> --- a/ls-ecaps.c
-> +++ b/ls-ecaps.c
-> @@ -207,6 +207,33 @@ cap_aer(struct device *d, int where, int type)
->      }
->  }
->  
-> +static void
-> +cap_cxl(struct device *d, int where)
-> +{
-> +  u16 l;
-> +
-> +  printf("PCIe DVSEC for CXL Device\n");
-> +  if (verbose < 2)
-> +    return;
-> +
-> +  if (!config_fetch(d, where + PCI_CXL_CAP, 12))
-> +    return;
-> +
-> +  l = get_conf_word(d, where + PCI_CXL_CAP);
-> +  printf("\t\tCXLCap:\tCache%c IO%c Mem%c Mem HW Init%c HDMCount %d Viral%c\n",
-> +    FLAG(l, PCI_CXL_CAP_CACHE), FLAG(l, PCI_CXL_CAP_IO), FLAG(l, PCI_CXL_CAP_MEM),
-> +    FLAG(l, PCI_CXL_CAP_MEM_HWINIT), PCI_CXL_CAP_HDM_CNT(l), FLAG(l, PCI_CXL_CAP_VIRAL));
-> +
-> +  l = get_conf_word(d, where + PCI_CXL_CTRL);
-> +  printf("\t\tCXLCtl:\tCache%c IO%c Mem%c Cache SF Cov %d Cache SF Gran %d Cache Clean%c Viral%c\n",
-> +    FLAG(l, PCI_CXL_CTRL_CACHE), FLAG(l, PCI_CXL_CTRL_IO), FLAG(l, PCI_CXL_CTRL_MEM),
-> +    PCI_CXL_CTRL_CACHE_SF_COV(l), PCI_CXL_CTRL_CACHE_SF_GRAN(l), FLAG(l, PCI_CXL_CTRL_CACHE_CLN),
-> +    FLAG(l, PCI_CXL_CTRL_VIRAL));
-> +
-> +  l = get_conf_word(d, where + PCI_CXL_STATUS);
-> +  printf("\t\tCXLSta:\tViral%c\n", FLAG(l, PCI_CXL_STATUS_VIRAL));
-> +}
-> +
->  static void cap_dpc(struct device *d, int where)
->  {
->    u16 l;
-> @@ -924,7 +951,7 @@ show_ext_caps(struct device *d, int type)
->  	    printf("Readiness Time Reporting <?>\n");
->  	    break;
->  	  case PCI_EXT_CAP_ID_DVSEC:
-> -	    printf("Designated Vendor-Specific <?>\n");
-> +	    cap_cxl(d, where);
-
-This assumes that *every* DVSEC capability is a CXL Designated
-Vendor-Specific capability.  I think this needs to check for the
-correct DVSEC Vendor ID and do cap_cxl() if it matches and the
-previous behavior otherwise.
-
-Based on the spec, I would expect to see a check for both the DVSEC
-Vendor ID and the DVSEC ID before decoding the registers.
-
-Actually, it would be nice if the generic "I don't know what this is"
-code would at least print the DVSEC Vendor ID and the DVSEC ID.
-Ideally this would be a separate preparatory patch.
-
->  	    break;
->  	  case PCI_EXT_CAP_ID_VF_REBAR:
->  	    printf("VF Resizable BAR <?>\n");
-> diff --git a/tests/cap-cxl-dvsec b/tests/cap-cxl-dvsec
-> new file mode 100644
-> index 0000000..14e1022
-> --- /dev/null
-> +++ b/tests/cap-cxl-dvsec
-> @@ -0,0 +1,8 @@
-> +Simple diff of lspci -vvxxxx
-> +
-> +<       Capabilities: [e00 v1] Designated Vendor-Specific <?>
-> +---
-> +>       Capabilities: [e00 v1] PCIe DVSEC for CXL Device
-> +>               CXLCap: Cache+ IO+ Mem+ Mem HW Init+ HDMCount 1 Viral-
-> +>               CXLCtl: Cache- IO+ Mem- Cache SF Cov 0 Cache SF Gran 0 Cache Clean- Viral-
-> +>               CXLSta: Viral-
-
-I think this should be complete "lspci -vvxxxx" or "lspci -xxxx"
-output.  If there's secret stuff in there you don't want to expose
-yet, I don't personally object to editing the hexdump to zero it out.
-But the point is that people should be able to run "lspci -F" on this
-file to decode it.
+QW55dGhpbmcgd3Jvbmcgd2l0aCB0aGlzLCBMb3JlbnpvPw0KDQpUaGFua3MNCg0KT24gRnJpLCAy
+MDIwLTAzLTIwIGF0IDEyOjU4IC0wNjAwLCBKb24gRGVycmljayB3cm90ZToNCj4gVmVyc2lvbnMg
+b2YgVk1EIHdpdGggdGhlIEhvc3QgUGh5c2ljYWwgQWRkcmVzcyBzaGFkb3cgcmVnaXN0ZXIgdXNl
+IHRoaXMNCj4gcmVnaXN0ZXIgdG8gY2FsY3VsYXRlIHRoZSBidXMgYWRkcmVzcyBvZmZzZXQgbmVl
+ZGVkIHRvIGRvIGd1ZXN0DQo+IHBhc3N0aHJvdWdoIG9mIHRoZSBkb21haW4uIFRoaXMgcmVnaXN0
+ZXIgc2hhZG93cyB0aGUgSG9zdCBQaHlzaWNhbA0KPiBBZGRyZXNzIHJlZ2lzdGVycyBkaXJlY3Rs
+eSwgaW5jbHVkaW5nIHRoZSByZXNvdXJjZSB0eXBlIGJpdHMuIEFmdGVyDQo+IGNhbGN1bGF0aW5n
+IHRoZSBvZmZzZXQsIHRoZSBleHRyYSBiaXRzIGxlYWQgdG8gdGhlIFZNRCByZXNvdXJjZXMgYmVp
+bmcNCj4gb3Zlci1wcm92aXNpb25lZCBhdCB0aGUgZnJvbnQgYW5kIHVuZGVyLXByb3Zpc2lvbmVk
+IGF0IHRoZSBiYWNrLg0KPiANCj4gRXhhbXBsZToNCj4gcGNpIDEwMDAwOjgwOjAyLjA6IHJlZyAw
+eDEwOiBbbWVtIDB4ZjgwMWZmZmMtMHhmODAzZmZmYiA2NGJpdF0NCj4gDQo+IEV4cGVjdGVkOg0K
+PiBwY2kgMTAwMDA6ODA6MDIuMDogcmVnIDB4MTA6IFttZW0gMHhmODAyMDAwMC0weGY4MDNmZmZm
+IDY0Yml0XQ0KPiANCj4gSWYgb3RoZXIgZGV2aWNlcyBhcmUgbWFwcGVkIGluIHRoZSBvdmVyLXBy
+b3Zpc2lvbmVkIGZyb250LCBpdCBjb3VsZCBsZWFkDQo+IHRvIHJlc291cmNlIGNvbmZsaWN0IGlz
+c3VlcyB3aXRoIFZNRCBvciB0aG9zZSBkZXZpY2VzLg0KPiANCj4gRml4ZXM6IGExYTMwMTcwMTM4
+YzkgKCJQQ0k6IHZtZDogRml4IHNoYWRvdyBvZmZzZXRzIHRvIHJlZmxlY3Qgc3BlYyBjaGFuZ2Vz
+IikNCj4gQ2M6IHN0YWJsZUB2Z2VyLmtlcm5lbC5vcmcgIyB2NC4xOSsNCj4gU2lnbmVkLW9mZi1i
+eTogSm9uIERlcnJpY2sgPGpvbmF0aGFuLmRlcnJpY2tAaW50ZWwuY29tPg0KPiAtLS0NCj4gIGRy
+aXZlcnMvcGNpL2NvbnRyb2xsZXIvdm1kLmMgfCA2ICsrKystLQ0KPiAgMSBmaWxlIGNoYW5nZWQs
+IDQgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2
+ZXJzL3BjaS9jb250cm9sbGVyL3ZtZC5jIGIvZHJpdmVycy9wY2kvY29udHJvbGxlci92bWQuYw0K
+PiBpbmRleCBkYWM5MWQ2Li5lMzg2ZDRlIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3BjaS9jb250
+cm9sbGVyL3ZtZC5jDQo+ICsrKyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvdm1kLmMNCj4gQEAg
+LTQ0NSw5ICs0NDUsMTEgQEAgc3RhdGljIGludCB2bWRfZW5hYmxlX2RvbWFpbihzdHJ1Y3Qgdm1k
+X2RldiAqdm1kLCB1bnNpZ25lZCBsb25nIGZlYXR1cmVzKQ0KPiAgCQkJaWYgKCFtZW1iYXIyKQ0K
+PiAgCQkJCXJldHVybiAtRU5PTUVNOw0KPiAgCQkJb2Zmc2V0WzBdID0gdm1kLT5kZXYtPnJlc291
+cmNlW1ZNRF9NRU1CQVIxXS5zdGFydCAtDQo+IC0JCQkJCXJlYWRxKG1lbWJhcjIgKyBNQjJfU0hB
+RE9XX09GRlNFVCk7DQo+ICsJCQkJCShyZWFkcShtZW1iYXIyICsgTUIyX1NIQURPV19PRkZTRVQp
+ICYNCj4gKwkJCQkJIFBDSV9CQVNFX0FERFJFU1NfTUVNX01BU0spOw0KPiAgCQkJb2Zmc2V0WzFd
+ID0gdm1kLT5kZXYtPnJlc291cmNlW1ZNRF9NRU1CQVIyXS5zdGFydCAtDQo+IC0JCQkJCXJlYWRx
+KG1lbWJhcjIgKyBNQjJfU0hBRE9XX09GRlNFVCArIDgpOw0KPiArCQkJCQkocmVhZHEobWVtYmFy
+MiArIE1CMl9TSEFET1dfT0ZGU0VUICsgOCkgJg0KPiArCQkJCQkgUENJX0JBU0VfQUREUkVTU19N
+RU1fTUFTSyk7DQo+ICAJCQlwY2lfaW91bm1hcCh2bWQtPmRldiwgbWVtYmFyMik7DQo+ICAJCX0N
+Cj4gIAl9DQo=
