@@ -2,147 +2,209 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B65101A1E7A
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Apr 2020 12:03:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 46C7C1A2224
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Apr 2020 14:36:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbgDHKDW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Apr 2020 06:03:22 -0400
-Received: from foss.arm.com ([217.140.110.172]:36458 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725932AbgDHKDW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 8 Apr 2020 06:03:22 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B8FF131B;
-        Wed,  8 Apr 2020 03:03:21 -0700 (PDT)
-Received: from [192.168.0.14] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 681F43F73D;
-        Wed,  8 Apr 2020 03:03:19 -0700 (PDT)
-Subject: Re: [PATCH v6 1/2] ACPI / APEI: Add support to notify the vendor
- specific HW errors
-To:     Borislav Petkov <bp@alien8.de>, Shiju Jose <shiju.jose@huawei.com>
-Cc:     linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rjw@rjwysocki.net,
-        helgaas@kernel.org, lenb@kernel.org, tony.luck@intel.com,
-        gregkh@linuxfoundation.org, zhangliguang@linux.alibaba.com,
-        tglx@linutronix.de, linuxarm@huawei.com,
-        jonathan.cameron@huawei.com, tanxiaofei@huawei.com,
-        yangyicong@hisilicon.com
-References: <ShijuJose> <20200325164223.650-1-shiju.jose@huawei.com>
- <20200325164223.650-2-shiju.jose@huawei.com> <20200327182214.GD8015@zn.tnic>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <c73bb18b-02ef-6c35-f4cf-1738c17a96e5@arm.com>
-Date:   Wed, 8 Apr 2020 11:03:13 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1728772AbgDHMgS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Apr 2020 08:36:18 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40086 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726769AbgDHMgR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Apr 2020 08:36:17 -0400
+Received: by mail-wm1-f67.google.com with SMTP id a81so5244149wmf.5;
+        Wed, 08 Apr 2020 05:36:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:references:in-reply-to:subject:date:message-id
+         :mime-version:content-transfer-encoding:thread-index
+         :content-language;
+        bh=K2/ZZgf9mAgGPg5RQdW8XmMc7QHT56dxiERZrqmIlXI=;
+        b=c3UoiulBTTw+EjdO3+3DsSxh6EgM+Zl5/tcYheVTBff7vQ5oijQhkXiQoFPMAL0ZD0
+         Jwj4LxgHPk1fj5MDZsmoiZrO1VyFGhxCAwBZGvvwLCi1TL9xXGTLK+jg8GPPA/ISLGNp
+         lTap1nwZWT39ht5/EZXZiPC/Exl0QWRf9cyebrLUkE6cdxxifkVH4pqdtS7mZJvCQJ/7
+         qLXuf07xoVuihlHtFWk95bvUH7BO//5XWVqGW3bYthcwNLJpTA0r0VNCfRF+yl/ghQdV
+         UVUm1/IMnwjDzkoeD+4sEbgQTFoETj5vPAJZvMxdB5lashjLsRRpJ9fPVHPD1cK2VZPd
+         Fr+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
+         :message-id:mime-version:content-transfer-encoding:thread-index
+         :content-language;
+        bh=K2/ZZgf9mAgGPg5RQdW8XmMc7QHT56dxiERZrqmIlXI=;
+        b=GJjAoai89y5GRfmQtzqP53OLhadrvaGC9xv5s6/xeGf2eJhoxzv4Ah0OcPyH6sVh2V
+         esRzjZaINMFE4LLj9g3dIY/meWA8Unee2FWPtVQwjAjBKDTAmcP3dFb03xppukHFXiQ6
+         3wVKodKWRigWebxkYNVY+u0V4oBYuEo4IWpLTe+ovdcxGnD+YXTzn/tAPcmkUTdj90+D
+         CEIdX3vZCUJZ+tL+/FSEgYlPZHn1/RxpjOZca+Q5nenx3gOBLF8e+j30thA2UkFitd8B
+         s65VELA5jYbhHkFO3s9AEdcYGlnWx8Y1LTGySfpfl4g9qllAdaVRf6prSVeRKYxFpsDC
+         cxhQ==
+X-Gm-Message-State: AGi0PuZrKA5mHSoSSx407E/2n75j0nj+mXOHjprhY+UPBD5OaFaYD71T
+        iudGTFWUiP9YOIzYB8yWvAA=
+X-Google-Smtp-Source: APiQypJMIIuYnj3h812I/IE1fZG6gNF1wH2/EMIRqA12hvsLUvIqW6iJgzdmub9BCk4J9S8rI9MfXw==
+X-Received: by 2002:a05:600c:2f90:: with SMTP id t16mr4692378wmn.66.1586349373751;
+        Wed, 08 Apr 2020 05:36:13 -0700 (PDT)
+Received: from AnsuelXPS (host117-205-dynamic.180-80-r.retail.telecomitalia.it. [80.180.205.117])
+        by smtp.gmail.com with ESMTPSA id p22sm6638259wmc.42.2020.04.08.05.36.12
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 08 Apr 2020 05:36:13 -0700 (PDT)
+From:   <ansuelsmth@gmail.com>
+To:     "'Stanimir Varbanov'" <svarbanov@mm-sol.com>,
+        "'Andy Gross'" <agross@kernel.org>
+Cc:     "'Sham Muthayyan'" <smuthayy@codeaurora.org>,
+        "'Bjorn Andersson'" <bjorn.andersson@linaro.org>,
+        "'Bjorn Helgaas'" <bhelgaas@google.com>,
+        "'Rob Herring'" <robh+dt@kernel.org>,
+        "'Mark Rutland'" <mark.rutland@arm.com>,
+        "'Lorenzo Pieralisi'" <lorenzo.pieralisi@arm.com>,
+        "'Andrew Murray'" <amurray@thegoodpenguin.co.uk>,
+        "'Philipp Zabel'" <p.zabel@pengutronix.de>,
+        <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200402121148.1767-1-ansuelsmth@gmail.com> <20200402121148.1767-2-ansuelsmth@gmail.com> <b09627a8-d928-cf5d-c765-406959138a29@mm-sol.com>
+In-Reply-To: <b09627a8-d928-cf5d-c765-406959138a29@mm-sol.com>
+Subject: R: [PATCH v2 01/10] PCIe: qcom: add missing ipq806x clocks in PCIe driver
+Date:   Wed, 8 Apr 2020 14:36:10 +0200
+Message-ID: <053d01d60da2$49e0ca60$dda25f20$@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200327182214.GD8015@zn.tnic>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+Content-Type: text/plain;
+        charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQLxewcL6EghaIoibfUjxKO3XpeZ4wIE8vndAX3+x+GmHDaucA==
+Content-Language: it
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Boris, Shiju,
-
-Sorry for not spotting this reply earlier: Its in-reply to v1, so gets buried.
-
-On 27/03/2020 18:22, Borislav Petkov wrote:
-> On Wed, Mar 25, 2020 at 04:42:22PM +0000, Shiju Jose wrote:
->> Presently APEI does not support reporting the vendor specific
->> HW errors, received in the vendor defined table entries, to the
->> vendor drivers for any recovery.
->>
->> This patch adds the support to register and unregister the
+> PCIe driver
 > 
-> Avoid having "This patch" or "This commit" in the commit message. It is
-> tautologically useless.
+> Ansuel,
 > 
-> Also, do
+> On 4/2/20 3:11 PM, Ansuel Smith wrote:
+> > Aux and Ref clk are missing in pcie qcom driver.
+> > Add support in the driver to fix pcie inizialization in ipq806x.
+> >
+> > Fixes: 82a82383 PCI: qcom: Add Qualcomm PCIe controller driver
 > 
-> $ git grep 'This patch' Documentation/process
+> this should be:
 > 
-> for more details.
+> Fixes: 82a823833f4e PCI: qcom: Add Qualcomm PCIe controller driver
 > 
->> error handling function for the vendor specific HW errors and
->> notify the registered kernel driver.
-
->> @@ -526,10 +552,17 @@ static void ghes_do_proc(struct ghes *ghes,
->>  			log_arm_hw_error(err);
->>  		} else {
->>  			void *err = acpi_hest_get_payload(gdata);
->> +			u8 error_handled = false;
->> +			int ret;
->> +
->> +			ret = atomic_notifier_call_chain(&ghes_event_notify_list, 0, gdata);
+> and add:
 > 
-> Well, this is a notifier with standard name for a non-standard event.
-> Not optimal.
+> Cc: stable@vger.kernel.org # v4.5+
 > 
-> Why does only this event need a notifier? Because your driver is
-> interested in only those events?
-
-Its the 'else' catch-all for stuff drivers/acpi/apei  doesn't know to handle.
-
-In this case its because its a vendor specific GUID that only the vendor driver knows how
-to parse.
-
-
->> +			if (ret & NOTIFY_OK)
->> +				error_handled = true;
->>  
->>  			log_non_standard_event(sec_type, fru_id, fru_text,
->>  					       sec_sev, err,
->> -					       gdata->error_data_length);
->> +					       gdata->error_data_length,
->> +					       error_handled);
+> But, I wonder, as apq8064 shares the same ops_2_1_0 how it worked until
+> now. Something more I cannot find such clocks for apq8064, which means
+> that this patch will break it.
 > 
-> What's that error_handled thing for? That's just silly.
+> One option is to use those new clocks only for ipq806x.
 > 
-> Your notifier returns NOTIFY_STOP when it has queued the error. If you
-> don't want to log it, just test == NOTIFY_STOP and do not log it then.
 
-My thinking for this being needed was so user-space consumers of those tracepoints keep
-working. Otherwise you upgrade, get this feature, and your user-space counters stop working.
+How to add this new clocks only for ipq806x? Check the compatible and add
+them accordingly? 
 
-You'd need to know this error source was now managed by an in-kernel driver, which may
-report the errors somewhere else...
-
-
-> Then your notifier callback is queuing the error into a kfifo for
-> whatever reason and then scheduling a workqueue to handle it in user
-> context...
+> > Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
+> > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> > ---
+> >  drivers/pci/controller/dwc/pcie-qcom.c | 38
+> ++++++++++++++++++++++----
+> >  1 file changed, 33 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c
+> b/drivers/pci/controller/dwc/pcie-qcom.c
+> > index 5ea527a6bd9f..f958c535de6e 100644
+> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> > @@ -88,6 +88,8 @@ struct qcom_pcie_resources_2_1_0 {
+> >  	struct clk *iface_clk;
+> >  	struct clk *core_clk;
+> >  	struct clk *phy_clk;
+> > +	struct clk *aux_clk;
+> > +	struct clk *ref_clk;
+> >  	struct reset_control *pci_reset;
+> >  	struct reset_control *axi_reset;
+> >  	struct reset_control *ahb_reset;
+> > @@ -246,6 +248,14 @@ static int
+> qcom_pcie_get_resources_2_1_0(struct qcom_pcie *pcie)
+> >  	if (IS_ERR(res->phy_clk))
+> >  		return PTR_ERR(res->phy_clk);
+> >
+> > +	res->aux_clk = devm_clk_get(dev, "aux");
+> > +	if (IS_ERR(res->aux_clk))
+> > +		return PTR_ERR(res->aux_clk);
+> > +
+> > +	res->ref_clk = devm_clk_get(dev, "ref");
+> > +	if (IS_ERR(res->ref_clk))
+> > +		return PTR_ERR(res->ref_clk);
+> > +
+> >  	res->pci_reset = devm_reset_control_get_exclusive(dev, "pci");
+> >  	if (IS_ERR(res->pci_reset))
+> >  		return PTR_ERR(res->pci_reset);
+> > @@ -278,6 +288,8 @@ static void qcom_pcie_deinit_2_1_0(struct
+> qcom_pcie *pcie)
+> >  	clk_disable_unprepare(res->iface_clk);
+> >  	clk_disable_unprepare(res->core_clk);
+> >  	clk_disable_unprepare(res->phy_clk);
+> > +	clk_disable_unprepare(res->aux_clk);
+> > +	clk_disable_unprepare(res->ref_clk);
+> >  	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
+> >  }
+> >
+> > @@ -307,16 +319,28 @@ static int qcom_pcie_init_2_1_0(struct
+> qcom_pcie *pcie)
+> >  		goto err_assert_ahb;
+> >  	}
+> >
+> > +	ret = clk_prepare_enable(res->core_clk);
+> > +	if (ret) {
+> > +		dev_err(dev, "cannot prepare/enable core clock\n");
+> > +		goto err_clk_core;
+> > +	}
+> > +
+> >  	ret = clk_prepare_enable(res->phy_clk);
+> >  	if (ret) {
+> >  		dev_err(dev, "cannot prepare/enable phy clock\n");
+> >  		goto err_clk_phy;
+> >  	}
+> >
+> > -	ret = clk_prepare_enable(res->core_clk);
+> > +	ret = clk_prepare_enable(res->aux_clk);
+> >  	if (ret) {
+> > -		dev_err(dev, "cannot prepare/enable core clock\n");
+> > -		goto err_clk_core;
+> > +		dev_err(dev, "cannot prepare/enable aux clock\n");
+> > +		goto err_clk_aux;
+> > +	}
+> > +
+> > +	ret = clk_prepare_enable(res->ref_clk);
+> > +	if (ret) {
+> > +		dev_err(dev, "cannot prepare/enable ref clock\n");
+> > +		goto err_clk_ref;
+> >  	}
+> >
+> >  	ret = reset_control_deassert(res->ahb_reset);
+> > @@ -372,10 +396,14 @@ static int qcom_pcie_init_2_1_0(struct
+> qcom_pcie *pcie)
+> >  	return 0;
+> >
+> >  err_deassert_ahb:
+> > -	clk_disable_unprepare(res->core_clk);
+> > -err_clk_core:
+> > +	clk_disable_unprepare(res->ref_clk);
+> > +err_clk_ref:
+> > +	clk_disable_unprepare(res->aux_clk);
+> > +err_clk_aux:
+> >  	clk_disable_unprepare(res->phy_clk);
+> >  err_clk_phy:
+> > +	clk_disable_unprepare(res->core_clk);
+> > +err_clk_core:
+> >  	clk_disable_unprepare(res->iface_clk);
+> >  err_assert_ahb:
+> >  	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
+> >
 > 
-> So I'm thinking that it would be better if you:
-> 
-> * make that kfifo generic and part of ghes.c and queue all types of
-> error records into it in ghes_do_proc() - not just the non-standard
-> ones.
+> --
+> regards,
+> Stan
 
-Move the drop to process context into ghes.c? This should result in less code.
-
-I asked for this hooking to only be for the 'catch all' don't-know case so that we don't
-get drivers trying to hook and handle memory errors. (if we ever wanted that, it should be
-from part of memory_failure() so it catches all the ways of reporting memory-failure)
-32bit arm has prior in this area.
-
-
-> * then, when you're done queuing, you kick a workqueue.
-> 
-> * that workqueue runs a normal, blocking notifier to which drivers
-> register.
-> 
-> Your driver can register to that notifier too and do the normal handling
-> then and not have this ad-hoc, semi-generic, semi-vendor-specific thing.
-
-As long as we don't walk a list of things that might handle a memory-error, and have some
-random driver try and NOTIFY_STOP it....
-
-aer_recover_queue() would be replaced by this. memory_failure_queue() has one additional
-caller in drivers/ras/cec.c.
-
-
-Thanks,
-
-James
