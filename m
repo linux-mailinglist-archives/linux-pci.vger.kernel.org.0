@@ -2,161 +2,203 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2FABD1A2635
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Apr 2020 17:48:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8DD521A2794
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Apr 2020 18:56:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729755AbgDHPsa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Apr 2020 11:48:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49154 "EHLO mail.kernel.org"
+        id S1729382AbgDHQ40 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Apr 2020 12:56:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729610AbgDHPqc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 8 Apr 2020 11:46:32 -0400
-Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
+        id S1728627AbgDHQ40 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 8 Apr 2020 12:56:26 -0400
+Received: from localhost (mobile-166-175-188-68.mycingular.net [166.175.188.68])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 287B2208E4;
-        Wed,  8 Apr 2020 15:46:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA88720730;
+        Wed,  8 Apr 2020 16:56:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586360791;
-        bh=0BnJSftuUBqhmdRzeJYG8vzypho0PIEfncwKqSh7oyw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PKiM+jpAg0rfkPVMQD/SLSmOLvA9Wsnz9ks1eZ4z+AXG2O+K7CIlJ5QdBYqMi7CCp
-         1KyWgo0VsHeGjr4BGJlQVsucpyTFCwwMXDLxF3fyMpjPBP+/bkXsEY/PTayFNfYP0O
-         tf/hwhToXdlROophvtQ5Rax6VKOjKqaW+ZT4WMm4=
-Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
-        (envelope-from <mchehab@kernel.org>)
-        id 1jMCuL-000cAq-By; Wed, 08 Apr 2020 17:46:29 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: [PATCH 08/35] docs: pci: boot-interrupts.rst: improve html output
-Date:   Wed,  8 Apr 2020 17:46:00 +0200
-Message-Id: <3b65ca1a96ea90073f086ce912fe1f91b072df84.1586359676.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <cover.1586359676.git.mchehab+huawei@kernel.org>
-References: <cover.1586359676.git.mchehab+huawei@kernel.org>
+        s=default; t=1586364985;
+        bh=cYSv/EpZb34Rup15LJtbAPdZbXaBMQeOyoA9bvbCAXY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Zh6eryBh+bC0Hn3jNol2qk1N6i3WJaK1WJxVHfmvNYY8UfVtBFDx9DaK/1mVPB0wI
+         gbs+HgcUliFL0/B+WJTda29DKMMrn/h2yH42yGeRnm6yqqyj9qr88qdP54p5Y++/cc
+         5Bw1mbWNZyLK2rkdYc+eT6i7YRMm02t5aviwlLSE=
+Date:   Wed, 8 Apr 2020 11:56:23 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Sean V Kelley <sean.v.kelley@linux.intel.com>
+Cc:     mj@ucw.cz, linux-pci@vger.kernel.org
+Subject: Re: [RFC Patch 1/1] lspci: Add basic decode support for Compute
+ eXpress Link
+Message-ID: <20200408165623.GA80917@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200408000959.230780-2-sean.v.kelley@linux.intel.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-There are some warnings with this file:
+On Tue, Apr 07, 2020 at 05:09:59PM -0700, Sean V Kelley wrote:
+> Compute eXpress Link[1] is a new CPU interconnected created with
+> workload accelerators in mind. The interconnect relies on PCIe Electrial
+> and Physical interconnect for communication.
 
-    /Documentation/PCI/boot-interrupts.rst:42: WARNING: Unexpected indentation.
-    /Documentation/PCI/boot-interrupts.rst:52: WARNING: Block quote ends without a blank line; unexpected unindent.
-    /Documentation/PCI/boot-interrupts.rst:92: WARNING: Unexpected indentation.
-    /Documentation/PCI/boot-interrupts.rst:98: WARNING: Unexpected indentation.
-    /Documentation/PCI/boot-interrupts.rst:136: WARNING: Unexpected indentation.
+s/interconnected/interconnect/
+s/Electrial/Electrical/
 
-It turns that this file conversion to ReST could be improved,
-in order to remove the warnings and provide a better output.
+> Moreover, CXL bus hierarchy appear, to the OS, as an ACPI-described PCIe
+> Root Bridge with Integrated Endpoint.
 
-So, fix the warnings by adjusting blank lines, add a table and
-some list markups. Also, mark endnodes as such.
+s/Moreover,/The/
+s/appear,/appears/
+s/the OS,/the OS/
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- Documentation/PCI/boot-interrupts.rst | 34 +++++++++++++++------------
- 1 file changed, 19 insertions(+), 15 deletions(-)
+Actually, I don't think this paragraph is really relevant.  At least
+at the level of lspci, it doesn't matter whether the host bridge is
+described via ACPI, DT, or something else.  And I don't think it
+matters whether this is an Integrated Endpoint or otherwise.  All
+lspci cares about is that we can read config space for the device.
 
-diff --git a/Documentation/PCI/boot-interrupts.rst b/Documentation/PCI/boot-interrupts.rst
-index d078ef3eb192..2ec70121bfca 100644
---- a/Documentation/PCI/boot-interrupts.rst
-+++ b/Documentation/PCI/boot-interrupts.rst
-@@ -32,12 +32,13 @@ interrupt goes unhandled over time, they are tracked by the Linux kernel as
- Spurious Interrupts. The IRQ will be disabled by the Linux kernel after it
- reaches a specific count with the error "nobody cared". This disabled IRQ
- now prevents valid usage by an existing interrupt which may happen to share
--the IRQ line.
-+the IRQ line::
- 
-   irq 19: nobody cared (try booting with the "irqpoll" option)
-   CPU: 0 PID: 2988 Comm: irq/34-nipalk Tainted: 4.14.87-rt49-02410-g4a640ec-dirty #1
-   Hardware name: National Instruments NI PXIe-8880/NI PXIe-8880, BIOS 2.1.5f1 01/09/2020
-   Call Trace:
-+
-   <IRQ>
-    ? dump_stack+0x46/0x5e
-    ? __report_bad_irq+0x2e/0xb0
-@@ -85,15 +86,18 @@ Mitigations
- The mitigations take the form of PCI quirks. The preference has been to
- first identify and make use of a means to disable the routing to the PCH.
- In such a case a quirk to disable boot interrupt generation can be
--added.[1]
-+added. [1]_
- 
--  Intel® 6300ESB I/O Controller Hub
-+Intel® 6300ESB I/O Controller Hub
-   Alternate Base Address Register:
-    BIE: Boot Interrupt Enable
--	  0 = Boot interrupt is enabled.
--	  1 = Boot interrupt is disabled.
- 
--  Intel® Sandy Bridge through Sky Lake based Xeon servers:
-+	  ==  ===========================
-+	  0   Boot interrupt is enabled.
-+	  1   Boot interrupt is disabled.
-+	  ==  ===========================
-+
-+Intel® Sandy Bridge through Sky Lake based Xeon servers:
-   Coherent Interface Protocol Interrupt Control
-    dis_intx_route2pch/dis_intx_route2ich/dis_intx_route2dmi2:
- 	  When this bit is set. Local INTx messages received from the
-@@ -109,12 +113,12 @@ line by default.  Therefore, on chipsets where this INTx routing cannot be
- disabled, the Linux kernel will reroute the valid interrupt to its legacy
- interrupt. This redirection of the handler will prevent the occurrence of
- the spurious interrupt detection which would ordinarily disable the IRQ
--line due to excessive unhandled counts.[2]
-+line due to excessive unhandled counts. [2]_
- 
- The config option X86_REROUTE_FOR_BROKEN_BOOT_IRQS exists to enable (or
- disable) the redirection of the interrupt handler to the PCH interrupt
- line. The option can be overridden by either pci=ioapicreroute or
--pci=noioapicreroute.[3]
-+pci=noioapicreroute. [3]_
- 
- 
- More Documentation
-@@ -127,19 +131,19 @@ into the evolution of its handling with chipsets.
- Example of disabling of the boot interrupt
- ------------------------------------------
- 
--Intel® 6300ESB I/O Controller Hub (Document # 300641-004US)
-+      - Intel® 6300ESB I/O Controller Hub (Document # 300641-004US)
- 	5.7.3 Boot Interrupt
- 	https://www.intel.com/content/dam/doc/datasheet/6300esb-io-controller-hub-datasheet.pdf
- 
--Intel® Xeon® Processor E5-1600/2400/2600/4600 v3 Product Families
--Datasheet - Volume 2: Registers (Document # 330784-003)
-+      - Intel® Xeon® Processor E5-1600/2400/2600/4600 v3 Product Families
-+	Datasheet - Volume 2: Registers (Document # 330784-003)
- 	6.6.41 cipintrc Coherent Interface Protocol Interrupt Control
- 	https://www.intel.com/content/dam/www/public/us/en/documents/datasheets/xeon-e5-v3-datasheet-vol-2.pdf
- 
- Example of handler rerouting
- ----------------------------
- 
--Intel® 6700PXH 64-bit PCI Hub (Document # 302628)
-+      - Intel® 6700PXH 64-bit PCI Hub (Document # 302628)
- 	2.15.2 PCI Express Legacy INTx Support and Boot Interrupt
- 	https://www.intel.com/content/dam/doc/datasheet/6700pxh-64-bit-pci-hub-datasheet.pdf
- 
-@@ -150,6 +154,6 @@ Cheers,
-     Sean V Kelley
-     sean.v.kelley@linux.intel.com
- 
--[1] https://lore.kernel.org/r/12131949181903-git-send-email-sassmann@suse.de/
--[2] https://lore.kernel.org/r/12131949182094-git-send-email-sassmann@suse.de/
--[3] https://lore.kernel.org/r/487C8EA7.6020205@suse.de/
-+.. [1] https://lore.kernel.org/r/12131949181903-git-send-email-sassmann@suse.de/
-+.. [2] https://lore.kernel.org/r/12131949182094-git-send-email-sassmann@suse.de/
-+.. [3] https://lore.kernel.org/r/487C8EA7.6020205@suse.de/
--- 
-2.25.2
+> This patch introduces basic support for lspci decode for DVSEC CXL
+> extended capability.
+> 
+> [1] https://www.computeexpresslink.org/
+> 
+> Signed-off-by: Sean V Kelley <sean.v.kelley@linux.intel.com>
+> ---
+>  lib/header.h        | 25 +++++++++++++++++++++++++
+>  ls-ecaps.c          | 29 ++++++++++++++++++++++++++++-
+>  tests/cap-cxl-dvsec |  8 ++++++++
+>  3 files changed, 61 insertions(+), 1 deletion(-)
+>  create mode 100644 tests/cap-cxl-dvsec
+> 
+> diff --git a/lib/header.h b/lib/header.h
+> index bfdcc80..421612d 100644
+> --- a/lib/header.h
+> +++ b/lib/header.h
+> @@ -1042,6 +1042,27 @@
+>  #define PCI_EVNDR_HEADER	4	/* Vendor-Specific Header */
+>  #define PCI_EVNDR_REGISTERS	8	/* Vendor-Specific Registers */
+>  
+> +/* PCIe CXL Vendor-Specific Capabilities, Control, Status */
 
+s/Vendor-Specific/Designated Vendor-Specific/
+
+> +#define PCI_EVNDR_CXL_ID	0
+
+Unused in this patch.  Is this the DVSEC Vendor ID as described in
+PCIe r5.0, sec 7.9.6.2?  Is 0 really the ID assigned for CXL?
+
+> +#define PCI_CXL_CAP		0x0a
+> +#define  PCI_CXL_CAP_CACHE	0x0001
+> +#define  PCI_CXL_CAP_IO		0x0002
+> +#define  PCI_CXL_CAP_MEM	0x0004
+> +#define  PCI_CXL_CAP_MEM_HWINIT	0x0008
+> +#define  PCI_CXL_CAP_HDM_CNT(x)	(((x) & (3 << 4)) >> 4)
+> +#define  PCI_CXL_CAP_VIRAL	0x4000
+> +#define PCI_CXL_CTRL		0x0c
+> +#define  PCI_CXL_CTRL_CACHE	0x0001
+> +#define  PCI_CXL_CTRL_IO	0x0002
+> +#define  PCI_CXL_CTRL_MEM	0x0004
+> +#define  PCI_CXL_CTRL_CACHE_SF_COV(x)	(((x) & (0x1f << 3)) >> 3)
+> +#define  PCI_CXL_CTRL_CACHE_SF_GRAN(x)	(((x) & (0x7 << 8)) >> 8)
+> +#define  PCI_CXL_CTRL_CACHE_CLN	0x0800
+> +#define  PCI_CXL_CTRL_VIRAL	0x4000
+> +#define PCI_CXL_STATUS		0x0e
+> +#define  PCI_CXL_STATUS_VIRAL	0x4000
+> +
+>  /* Access Control Services */
+>  #define PCI_ACS_CAP		0x04	/* ACS Capability Register */
+>  #define PCI_ACS_CAP_VALID	0x0001	/* ACS Source Validation */
+> @@ -1348,6 +1369,10 @@
+>  #define PCI_CLASS_SIGNAL_SYNCHRONIZER	0x1110
+>  #define PCI_CLASS_SIGNAL_OTHER		0x1180
+>  
+> +#define PCI_CLASS_CXL			0x14
+> +#define PCI_CLASS_CXL_RCIEP		0x1400
+> +#define PCI_CLASS_CXL_OTHER		0x1480
+> +
+>  #define PCI_CLASS_OTHERS		0xff
+>  
+>  /* Several ID's we need in the library */
+> diff --git a/ls-ecaps.c b/ls-ecaps.c
+> index 0021734..8c09517 100644
+> --- a/ls-ecaps.c
+> +++ b/ls-ecaps.c
+> @@ -207,6 +207,33 @@ cap_aer(struct device *d, int where, int type)
+>      }
+>  }
+>  
+> +static void
+> +cap_cxl(struct device *d, int where)
+> +{
+> +  u16 l;
+> +
+> +  printf("PCIe DVSEC for CXL Device\n");
+> +  if (verbose < 2)
+> +    return;
+> +
+> +  if (!config_fetch(d, where + PCI_CXL_CAP, 12))
+> +    return;
+> +
+> +  l = get_conf_word(d, where + PCI_CXL_CAP);
+> +  printf("\t\tCXLCap:\tCache%c IO%c Mem%c Mem HW Init%c HDMCount %d Viral%c\n",
+> +    FLAG(l, PCI_CXL_CAP_CACHE), FLAG(l, PCI_CXL_CAP_IO), FLAG(l, PCI_CXL_CAP_MEM),
+> +    FLAG(l, PCI_CXL_CAP_MEM_HWINIT), PCI_CXL_CAP_HDM_CNT(l), FLAG(l, PCI_CXL_CAP_VIRAL));
+> +
+> +  l = get_conf_word(d, where + PCI_CXL_CTRL);
+> +  printf("\t\tCXLCtl:\tCache%c IO%c Mem%c Cache SF Cov %d Cache SF Gran %d Cache Clean%c Viral%c\n",
+> +    FLAG(l, PCI_CXL_CTRL_CACHE), FLAG(l, PCI_CXL_CTRL_IO), FLAG(l, PCI_CXL_CTRL_MEM),
+> +    PCI_CXL_CTRL_CACHE_SF_COV(l), PCI_CXL_CTRL_CACHE_SF_GRAN(l), FLAG(l, PCI_CXL_CTRL_CACHE_CLN),
+> +    FLAG(l, PCI_CXL_CTRL_VIRAL));
+> +
+> +  l = get_conf_word(d, where + PCI_CXL_STATUS);
+> +  printf("\t\tCXLSta:\tViral%c\n", FLAG(l, PCI_CXL_STATUS_VIRAL));
+> +}
+> +
+>  static void cap_dpc(struct device *d, int where)
+>  {
+>    u16 l;
+> @@ -924,7 +951,7 @@ show_ext_caps(struct device *d, int type)
+>  	    printf("Readiness Time Reporting <?>\n");
+>  	    break;
+>  	  case PCI_EXT_CAP_ID_DVSEC:
+> -	    printf("Designated Vendor-Specific <?>\n");
+> +	    cap_cxl(d, where);
+
+This assumes that *every* DVSEC capability is a CXL Designated
+Vendor-Specific capability.  I think this needs to check for the
+correct DVSEC Vendor ID and do cap_cxl() if it matches and the
+previous behavior otherwise.
+
+Based on the spec, I would expect to see a check for both the DVSEC
+Vendor ID and the DVSEC ID before decoding the registers.
+
+Actually, it would be nice if the generic "I don't know what this is"
+code would at least print the DVSEC Vendor ID and the DVSEC ID.
+Ideally this would be a separate preparatory patch.
+
+>  	    break;
+>  	  case PCI_EXT_CAP_ID_VF_REBAR:
+>  	    printf("VF Resizable BAR <?>\n");
+> diff --git a/tests/cap-cxl-dvsec b/tests/cap-cxl-dvsec
+> new file mode 100644
+> index 0000000..14e1022
+> --- /dev/null
+> +++ b/tests/cap-cxl-dvsec
+> @@ -0,0 +1,8 @@
+> +Simple diff of lspci -vvxxxx
+> +
+> +<       Capabilities: [e00 v1] Designated Vendor-Specific <?>
+> +---
+> +>       Capabilities: [e00 v1] PCIe DVSEC for CXL Device
+> +>               CXLCap: Cache+ IO+ Mem+ Mem HW Init+ HDMCount 1 Viral-
+> +>               CXLCtl: Cache- IO+ Mem- Cache SF Cov 0 Cache SF Gran 0 Cache Clean- Viral-
+> +>               CXLSta: Viral-
+
+I think this should be complete "lspci -vvxxxx" or "lspci -xxxx"
+output.  If there's secret stuff in there you don't want to expose
+yet, I don't personally object to editing the hexdump to zero it out.
+But the point is that people should be able to run "lspci -F" on this
+file to decode it.
