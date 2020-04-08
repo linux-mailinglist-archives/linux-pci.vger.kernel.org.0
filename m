@@ -2,319 +2,250 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BF8121A2A1A
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Apr 2020 22:12:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F1671A2ADD
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Apr 2020 23:12:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729682AbgDHUMM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Apr 2020 16:12:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42818 "EHLO mail.kernel.org"
+        id S1728839AbgDHVMs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Apr 2020 17:12:48 -0400
+Received: from mga04.intel.com ([192.55.52.120]:25434 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728853AbgDHUMM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 8 Apr 2020 16:12:12 -0400
-Received: from localhost (mobile-166-175-188-68.mycingular.net [166.175.188.68])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B95B20769;
-        Wed,  8 Apr 2020 20:12:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586376730;
-        bh=Iu4tJmDV2dA1G+45ZE6SxeomiWSkjozP0crwox3TOZU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=hK4HTGAPaGazAfCzLNTaUJ5mHe6+Q1OQUHIDD6CNECA9a9/JAqgh0ip1itFzGX3ea
-         vZmMEycjRnd1U+aF/xKug6Ap4fSWlDiylKg/rEiBJn17uXmu/gvGRlw4Y4YV2nuYxT
-         u0Dp4SP2/DHmA/kE74UEzqiEJqqr1IRx6tdddCLQ=
-Date:   Wed, 8 Apr 2020 15:12:08 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, Mario.Limonciello@dell.com,
-        Anthony Wong <anthony.wong@canonical.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sakari Ailus <sakari.ailus@iki.fi>, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v2 10/10] PCI / ACPI: Whitelist D3 for more PCIe hotplug
- ports
-Message-ID: <20200408201208.GA87230@google.com>
+        id S1727798AbgDHVMr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 8 Apr 2020 17:12:47 -0400
+IronPort-SDR: DMBAMDHMTz0HjSjDB9gLRPY9F86v3gcGT6+VVy1xEiEvTxF4Oa6yWNOKKDJF81T2+v7tRP6JM6
+ P0hToP5GIOfg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2020 14:12:47 -0700
+IronPort-SDR: KAt/GSK6k9fxd/BKXg41bC8TIX3CS3DM8ItUX2D6gyJVmB3DNNOKDTZXN4EvEfq/vKCD4cOS7X
+ Q8htPoAOtZcQ==
+X-IronPort-AV: E=Sophos;i="5.72,359,1580803200"; 
+   d="scan'208";a="297339800"
+Received: from rwthomp1-mobl1.amr.corp.intel.com (HELO [10.212.84.222]) ([10.212.84.222])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2020 14:12:46 -0700
+From:   "Sean V Kelley" <sean.v.kelley@linux.intel.com>
+To:     "Bjorn Helgaas" <helgaas@kernel.org>
+Cc:     mj@ucw.cz, linux-pci@vger.kernel.org
+Subject: Re: [RFC Patch 1/1] lspci: Add basic decode support for Compute
+ eXpress Link
+Date:   Wed, 08 Apr 2020 14:12:45 -0700
+X-Mailer: MailMate (1.13.1r5671)
+Message-ID: <1766804A-54D2-4977-975A-9E9F29EFC155@linux.intel.com>
+In-Reply-To: <20200408165623.GA80917@google.com>
+References: <20200408165623.GA80917@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200408060409.GJ2567@lahna.fi.intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 09:04:09AM +0300, Mika Westerberg wrote:
-> On Tue, Apr 07, 2020 at 06:54:23PM -0500, Bjorn Helgaas wrote:
-> > On Thu, Sep 13, 2018 at 05:33:22PM +0300, Mika Westerberg wrote:
-> > > In order to have better power management for Thunderbolt PCIe chains,
-> > > Windows enables power management for native PCIe hotplug ports if there
-> > > is following ACPI _DSD attached to the root port:
-> > > 
-> > >   Name (_DSD, Package () {
-> > >       ToUUID ("6211e2c0-58a3-4af3-90e1-927a4e0c55a4"),
-> > >       Package () {
-> > >           Package () {"HotPlugSupportInD3", 1}
-> > >       }
-> > >   })
-> > > 
-> > > This is also documented in:
-> > > 
-> > >   https://docs.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports#identifying-pcie-root-ports-supporting-hot-plug-in-d3
-> > 
-> > This doc basically says that if the platform supplies this _DSD, the
-> > root port is "capable of handling hot plug events while in D3 state".
-> > 
-> > What does that mean?  That statement is not really actionable.  I
-> > *assume* it's telling us about some specific hardware or firmware
-> > functionality, like maybe we'll get a notification for hotplug events
-> > when the device is in D3?  D3hot?  D3cold?  What is the notification?
-> > Is it immediate or when the device comes back to D0?  How do we
-> > control and field the notification?
-> 
-> I think it simply gives the OS a hint that it can put PCIe hotplug
-> capable port into D3 and expect it to wake up when device is detected.
+Bjorn,
 
-I'd really like more specific details than this.  PCI power management
-is explicitly controlled by software, so I don't know what it means
-for a bridge to "wake up when device is detected."
+Thanks for taking time to review.  My comments below:
 
-Normally Linux would get some kind of notification like a PME, then
-execute an ACPI method and/or write PCI_PM_CTRL to put the device back
-in D0.
+On 8 Apr 2020, at 9:56, Bjorn Helgaas wrote:
 
-Are we talking about D3hot or D3cold?
+> On Tue, Apr 07, 2020 at 05:09:59PM -0700, Sean V Kelley wrote:
+>> Compute eXpress Link[1] is a new CPU interconnected created with
+>> workload accelerators in mind. The interconnect relies on PCIe 
+>> Electrial
+>> and Physical interconnect for communication.
+>
+> s/interconnected/interconnect/
+> s/Electrial/Electrical/
+>
+>> Moreover, CXL bus hierarchy appear, to the OS, as an ACPI-described 
+>> PCIe
+>> Root Bridge with Integrated Endpoint.
+>
+> s/Moreover,/The/
+> s/appear,/appears/
+> s/the OS,/the OS/
+>
+> Actually, I don't think this paragraph is really relevant.  At least
+> at the level of lspci, it doesn't matter whether the host bridge is
+> described via ACPI, DT, or something else.  And I don't think it
+> matters whether this is an Integrated Endpoint or otherwise.  All
+> lspci cares about is that we can read config space for the device.
 
-The PCI PM capability already has a way to advertise that it can
-generate PME from D3cold.  How is this different from that?
+Will do.
 
-Is this _DSD something that *could* be advertised via PCI config
-space, i.e., is it completely determined by the Root Port?  Or is it
-something that requires ACPI support, so it cannot be done directly by
-the hardware device?
+>
+>> This patch introduces basic support for lspci decode for DVSEC CXL
+>> extended capability.
+>>
+>> [1] https://www.computeexpresslink.org/
+>>
+>> Signed-off-by: Sean V Kelley <sean.v.kelley@linux.intel.com>
+>> ---
+>>  lib/header.h        | 25 +++++++++++++++++++++++++
+>>  ls-ecaps.c          | 29 ++++++++++++++++++++++++++++-
+>>  tests/cap-cxl-dvsec |  8 ++++++++
+>>  3 files changed, 61 insertions(+), 1 deletion(-)
+>>  create mode 100644 tests/cap-cxl-dvsec
+>>
+>> diff --git a/lib/header.h b/lib/header.h
+>> index bfdcc80..421612d 100644
+>> --- a/lib/header.h
+>> +++ b/lib/header.h
+>> @@ -1042,6 +1042,27 @@
+>>  #define PCI_EVNDR_HEADER	4	/* Vendor-Specific Header */
+>>  #define PCI_EVNDR_REGISTERS	8	/* Vendor-Specific Registers */
+>>
+>> +/* PCIe CXL Vendor-Specific Capabilities, Control, Status */
+>
+> s/Vendor-Specific/Designated Vendor-Specific/
+>
 
-These are all things we need to know in order to make power management
-reliable.
+Will do.
 
-> > > Do the same in Linux by introducing new firmware PM callback (->bridge_d3())
-> > > and then implement it for ACPI based systems so that the above property is
-> > > checked.
-> > > 
-> > > There is one catch, though. The initial pci_dev->bridge_d3 is set before
-> > > the root port has ACPI companion bound (the device is not added to the
-> > > PCI bus either) so we need to look up the ACPI companion manually in
-> > > that case in acpi_pci_bridge_d3().
-> > > 
-> > > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > > Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > ---
-> > >  drivers/acpi/property.c |  3 +++
-> > >  drivers/pci/pci-acpi.c  | 41 +++++++++++++++++++++++++++++++++++++++++
-> > >  drivers/pci/pci.c       |  9 +++++++++
-> > >  drivers/pci/pci.h       |  3 +++
-> > >  4 files changed, 56 insertions(+)
-> > > 
-> > > diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
-> > > index 90ba9371bae6..8c7c4583b52d 100644
-> > > --- a/drivers/acpi/property.c
-> > > +++ b/drivers/acpi/property.c
-> > > @@ -28,6 +28,9 @@ static const guid_t prp_guids[] = {
-> > >  	/* ACPI _DSD device properties GUID: daffd814-6eba-4d8c-8a91-bc9bbf4aa301 */
-> > >  	GUID_INIT(0xdaffd814, 0x6eba, 0x4d8c,
-> > >  		  0x8a, 0x91, 0xbc, 0x9b, 0xbf, 0x4a, 0xa3, 0x01),
-> > > +	/* Hotplug in D3 GUID: 6211e2c0-58a3-4af3-90e1-927a4e0c55a4 */
-> > > +	GUID_INIT(0x6211e2c0, 0x58a3, 0x4af3,
-> > > +		  0x90, 0xe1, 0x92, 0x7a, 0x4e, 0x0c, 0x55, 0xa4),
-> > >  };
-> > >  
-> > >  static const guid_t ads_guid =
-> > > diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> > > index f8436d1c4d45..c8d0549580f4 100644
-> > > --- a/drivers/pci/pci-acpi.c
-> > > +++ b/drivers/pci/pci-acpi.c
-> > > @@ -519,6 +519,46 @@ static pci_power_t acpi_pci_choose_state(struct pci_dev *pdev)
-> > >  	return PCI_POWER_ERROR;
-> > >  }
-> > >  
-> > > +static struct acpi_device *acpi_pci_find_companion(struct device *dev);
-> > > +
-> > > +static bool acpi_pci_bridge_d3(struct pci_dev *dev)
-> > > +{
-> > > +	const struct fwnode_handle *fwnode;
-> > > +	struct acpi_device *adev;
-> > > +	struct pci_dev *root;
-> > > +	u8 val;
-> > > +
-> > > +	if (!dev->is_hotplug_bridge)
-> > > +		return false;
-> > > +
-> > > +	/*
-> > > +	 * Look for a special _DSD property for the root port and if it
-> > > +	 * is set we know the hierarchy behind it supports D3 just fine.
-> > > +	 */
-> > > +	root = pci_find_pcie_root_port(dev);
-> > > +	if (!root)
-> > > +		return false;
-> > > +
-> > > +	adev = ACPI_COMPANION(&root->dev);
-> > > +	if (root == dev) {
-> > > +		/*
-> > > +		 * It is possible that the ACPI companion is not yet bound
-> > > +		 * for the root port so look it up manually here.
-> > > +		 */
-> > > +		if (!adev && !pci_dev_is_added(root))
-> > > +			adev = acpi_pci_find_companion(&root->dev);
-> > > +	}
-> > > +
-> > > +	if (!adev)
-> > > +		return false;
-> > > +
-> > > +	fwnode = acpi_fwnode_handle(adev);
-> > > +	if (fwnode_property_read_u8(fwnode, "HotPlugSupportInD3", &val))
-> > > +		return false;
-> > > +
-> > > +	return val == 1;
-> > > +}
-> > > +
-> > >  static bool acpi_pci_power_manageable(struct pci_dev *dev)
-> > >  {
-> > >  	struct acpi_device *adev = ACPI_COMPANION(&dev->dev);
-> > > @@ -635,6 +675,7 @@ static bool acpi_pci_need_resume(struct pci_dev *dev)
-> > >  }
-> > >  
-> > >  static const struct pci_platform_pm_ops acpi_pci_platform_pm = {
-> > > +	.bridge_d3 = acpi_pci_bridge_d3,
-> > >  	.is_manageable = acpi_pci_power_manageable,
-> > >  	.set_state = acpi_pci_set_power_state,
-> > >  	.get_state = acpi_pci_get_power_state,
-> > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > > index 1af6f1887986..b1b3052f15dc 100644
-> > > --- a/drivers/pci/pci.c
-> > > +++ b/drivers/pci/pci.c
-> > > @@ -791,6 +791,11 @@ static inline bool platform_pci_need_resume(struct pci_dev *dev)
-> > >  	return pci_platform_pm ? pci_platform_pm->need_resume(dev) : false;
-> > >  }
-> > >  
-> > > +static inline bool platform_pci_bridge_d3(struct pci_dev *dev)
-> > > +{
-> > > +	return pci_platform_pm ? pci_platform_pm->bridge_d3(dev) : false;
-> > 
-> > This patch added a .bridge_d3() implementation for ACPI but not for
-> > MID.  What prevents us from calling platform_pci_bridge_d3() on a MID
-> > platform and trying to call through a NULL pointer?
-> > 
-> > Shouldn't we do something like the patch attached below?
-> 
-> IIRC MID devices in general don't have PCIe ports (so we never enable PM
-> for them). Is this a real problem that crashes peoples kernels on MID
-> systems? Then yes I think the patch makes sense to have.
-> 
-> I also remember testing some other stuff on one MID system (Edison)
-> quite recently and did not see any issues.
+>> +#define PCI_EVNDR_CXL_ID	0
+>
+> Unused in this patch.  Is this the DVSEC Vendor ID as described in
+> PCIe r5.0, sec 7.9.6.2?  Is 0 really the ID assigned for CXL?
 
-I have not seen reports of crashes, but I do think this is a real
-problem.  The problem is that the code as-is relies on assumptions
-("MID does not have PCI and never will") that are implicit and
-impossible to verify, which is a maintenance problem.
+It is as described in the PCIe Spec.  The DVSEC ID is set to 0x0 here to 
+advertise that this is a Flex Bus feature capability structure. It’s 
+assigned in table 58 “PCI Express DVSEC Register Settings for Flex Bus 
+Device” of the CXL 1.1 spec.
 
-> > > +}
-> > > +
-> > >  /**
-> > >   * pci_raw_set_power_state - Use PCI PM registers to set the power state of
-> > >   *                           given PCI device
-> > > @@ -2514,6 +2519,10 @@ bool pci_bridge_d3_possible(struct pci_dev *bridge)
-> > >  		if (bridge->is_thunderbolt)
-> > >  			return true;
-> > >  
-> > > +		/* Platform might know better if the bridge supports D3 */
-> > > +		if (platform_pci_bridge_d3(bridge))
-> > > +			return true;
-> > 
-> > *All* devices trivially support D3.  Obviously we're trying to learn
-> > something else here.  What is it?
-> 
-> D3 has been problematic with hotplug bridges which is the reason we have
-> not put them in D3 until recently (and still don't do that for ACPI
-> hotplug bridges).
-> 
-> BTW, this patch was merged over a year ago so I'm not sure why you comment
-> it now. Or you want me to add incremental changes to it?
+>
+>> +#define PCI_CXL_CAP		0x0a
+>> +#define  PCI_CXL_CAP_CACHE	0x0001
+>> +#define  PCI_CXL_CAP_IO		0x0002
+>> +#define  PCI_CXL_CAP_MEM	0x0004
+>> +#define  PCI_CXL_CAP_MEM_HWINIT	0x0008
+>> +#define  PCI_CXL_CAP_HDM_CNT(x)	(((x) & (3 << 4)) >> 4)
+>> +#define  PCI_CXL_CAP_VIRAL	0x4000
+>> +#define PCI_CXL_CTRL		0x0c
+>> +#define  PCI_CXL_CTRL_CACHE	0x0001
+>> +#define  PCI_CXL_CTRL_IO	0x0002
+>> +#define  PCI_CXL_CTRL_MEM	0x0004
+>> +#define  PCI_CXL_CTRL_CACHE_SF_COV(x)	(((x) & (0x1f << 3)) >> 3)
+>> +#define  PCI_CXL_CTRL_CACHE_SF_GRAN(x)	(((x) & (0x7 << 8)) >> 8)
+>> +#define  PCI_CXL_CTRL_CACHE_CLN	0x0800
+>> +#define  PCI_CXL_CTRL_VIRAL	0x4000
+>> +#define PCI_CXL_STATUS		0x0e
+>> +#define  PCI_CXL_STATUS_VIRAL	0x4000
+>> +
+>>  /* Access Control Services */
+>>  #define PCI_ACS_CAP		0x04	/* ACS Capability Register */
+>>  #define PCI_ACS_CAP_VALID	0x0001	/* ACS Source Validation */
+>> @@ -1348,6 +1369,10 @@
+>>  #define PCI_CLASS_SIGNAL_SYNCHRONIZER	0x1110
+>>  #define PCI_CLASS_SIGNAL_OTHER		0x1180
+>>
+>> +#define PCI_CLASS_CXL			0x14
+>> +#define PCI_CLASS_CXL_RCIEP		0x1400
+>> +#define PCI_CLASS_CXL_OTHER		0x1480
+>> +
+>>  #define PCI_CLASS_OTHERS		0xff
+>>
+>>  /* Several ID's we need in the library */
+>> diff --git a/ls-ecaps.c b/ls-ecaps.c
+>> index 0021734..8c09517 100644
+>> --- a/ls-ecaps.c
+>> +++ b/ls-ecaps.c
+>> @@ -207,6 +207,33 @@ cap_aer(struct device *d, int where, int type)
+>>      }
+>>  }
+>>
+>> +static void
+>> +cap_cxl(struct device *d, int where)
+>> +{
+>> +  u16 l;
+>> +
+>> +  printf("PCIe DVSEC for CXL Device\n");
+>> +  if (verbose < 2)
+>> +    return;
+>> +
+>> +  if (!config_fetch(d, where + PCI_CXL_CAP, 12))
+>> +    return;
+>> +
+>> +  l = get_conf_word(d, where + PCI_CXL_CAP);
+>> +  printf("\t\tCXLCap:\tCache%c IO%c Mem%c Mem HW Init%c HDMCount %d 
+>> Viral%c\n",
+>> +    FLAG(l, PCI_CXL_CAP_CACHE), FLAG(l, PCI_CXL_CAP_IO), FLAG(l, 
+>> PCI_CXL_CAP_MEM),
+>> +    FLAG(l, PCI_CXL_CAP_MEM_HWINIT), PCI_CXL_CAP_HDM_CNT(l), FLAG(l, 
+>> PCI_CXL_CAP_VIRAL));
+>> +
+>> +  l = get_conf_word(d, where + PCI_CXL_CTRL);
+>> +  printf("\t\tCXLCtl:\tCache%c IO%c Mem%c Cache SF Cov %d Cache SF 
+>> Gran %d Cache Clean%c Viral%c\n",
+>> +    FLAG(l, PCI_CXL_CTRL_CACHE), FLAG(l, PCI_CXL_CTRL_IO), FLAG(l, 
+>> PCI_CXL_CTRL_MEM),
+>> +    PCI_CXL_CTRL_CACHE_SF_COV(l), PCI_CXL_CTRL_CACHE_SF_GRAN(l), 
+>> FLAG(l, PCI_CXL_CTRL_CACHE_CLN),
+>> +    FLAG(l, PCI_CXL_CTRL_VIRAL));
+>> +
+>> +  l = get_conf_word(d, where + PCI_CXL_STATUS);
+>> +  printf("\t\tCXLSta:\tViral%c\n", FLAG(l, PCI_CXL_STATUS_VIRAL));
+>> +}
+>> +
+>>  static void cap_dpc(struct device *d, int where)
+>>  {
+>>    u16 l;
+>> @@ -924,7 +951,7 @@ show_ext_caps(struct device *d, int type)
+>>  	    printf("Readiness Time Reporting <?>\n");
+>>  	    break;
+>>  	  case PCI_EXT_CAP_ID_DVSEC:
+>> -	    printf("Designated Vendor-Specific <?>\n");
+>> +	    cap_cxl(d, where);
+>
+> This assumes that *every* DVSEC capability is a CXL Designated
+> Vendor-Specific capability.  I think this needs to check for the
+> correct DVSEC Vendor ID and do cap_cxl() if it matches and the
+> previous behavior otherwise.
 
-I was reviewing [1], which updates pci_find_pcie_root_port(), which is
-used by acpi_pci_bridge_d3().  I noticed a potential NULL pointer
-dereference, which was a distraction.
+Yes, that’s what I’m looking for on feedback as CXL is one possible 
+use of DVSEC.
 
-Unless you object, I'll merge something like the patch below to
-prevent that distraction for others.
+>
+> Based on the spec, I would expect to see a check for both the DVSEC
+> Vendor ID and the DVSEC ID before decoding the registers.
 
-[1] https://lore.kernel.org/r/1586262717-23566-1-git-send-email-yangyicong@hisilicon.com
+Right, agreed.
 
-> > >  		/*
-> > >  		 * Hotplug ports handled natively by the OS were not validated
-> > >  		 * by vendors for runtime D3 at least until 2018 because there
-> > > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> > > index 6e0d1528d471..66fd5c1bf71b 100644
-> > > --- a/drivers/pci/pci.h
-> > > +++ b/drivers/pci/pci.h
-> > > @@ -39,6 +39,8 @@ int pci_bridge_secondary_bus_reset(struct pci_dev *dev);
-> > >  /**
-> > >   * struct pci_platform_pm_ops - Firmware PM callbacks
-> > >   *
-> > > + * @bridge_d3: Does the bridge allow entering into D3
-> > > + *
-> > >   * @is_manageable: returns 'true' if given device is power manageable by the
-> > >   *		   platform firmware
-> > >   *
-> > > @@ -60,6 +62,7 @@ int pci_bridge_secondary_bus_reset(struct pci_dev *dev);
-> > >   * these callbacks are mandatory.
-> > >   */
-> > >  struct pci_platform_pm_ops {
-> > > +	bool (*bridge_d3)(struct pci_dev *dev);
-> > >  	bool (*is_manageable)(struct pci_dev *dev);
-> > >  	int (*set_state)(struct pci_dev *dev, pci_power_t state);
-> > >  	pci_power_t (*get_state)(struct pci_dev *dev);
-> > > -- 
-> > 
-> > 
-> > diff --git a/drivers/pci/pci-mid.c b/drivers/pci/pci-mid.c
-> > index aafd58da3a89..0bacd45b30d6 100644
-> > --- a/drivers/pci/pci-mid.c
-> > +++ b/drivers/pci/pci-mid.c
-> > @@ -16,6 +16,11 @@
-> >  
-> >  #include "pci.h"
-> >  
-> > +static bool mid_pci_bridge_d3(struct pci_dev *dev)
-> > +{
-> > +	return false;
-> > +}
-> > +
-> >  static bool mid_pci_power_manageable(struct pci_dev *dev)
-> >  {
-> >  	return true;
-> > @@ -47,6 +52,7 @@ static bool mid_pci_need_resume(struct pci_dev *dev)
-> >  }
-> >  
-> >  static const struct pci_platform_pm_ops mid_pci_platform_pm = {
-> > +	.bridge_d3	= mid_pci_bridge_d3,
-> >  	.is_manageable	= mid_pci_power_manageable,
-> >  	.set_state	= mid_pci_set_power_state,
-> >  	.get_state	= mid_pci_get_power_state,
-> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > index 595fcf59843f..fa837e88ea07 100644
-> > --- a/drivers/pci/pci.c
-> > +++ b/drivers/pci/pci.c
-> > @@ -820,8 +820,9 @@ static const struct pci_platform_pm_ops *pci_platform_pm;
-> >  
-> >  int pci_set_platform_pm(const struct pci_platform_pm_ops *ops)
-> >  {
-> > -	if (!ops->is_manageable || !ops->set_state  || !ops->get_state ||
-> > -	    !ops->choose_state  || !ops->set_wakeup || !ops->need_resume)
-> > +	if (!ops->bridge_d3 || !ops->is_manageable || !ops->set_state  ||
-> > +	    !ops->get_state || !ops->choose_state  || !ops->set_wakeup ||
-> > +	    !ops->need_resume)
-> >  		return -EINVAL;
-> >  	pci_platform_pm = ops;
-> >  	return 0;
+>
+> Actually, it would be nice if the generic "I don't know what this is"
+> code would at least print the DVSEC Vendor ID and the DVSEC ID.
+> Ideally this would be a separate preparatory patch.
+
+Will do.
+
+>
+>>  	    break;
+>>  	  case PCI_EXT_CAP_ID_VF_REBAR:
+>>  	    printf("VF Resizable BAR <?>\n");
+>> diff --git a/tests/cap-cxl-dvsec b/tests/cap-cxl-dvsec
+>> new file mode 100644
+>> index 0000000..14e1022
+>> --- /dev/null
+>> +++ b/tests/cap-cxl-dvsec
+>> @@ -0,0 +1,8 @@
+>> +Simple diff of lspci -vvxxxx
+>> +
+>> +<       Capabilities: [e00 v1] Designated Vendor-Specific <?>
+>> +---
+>> +>       Capabilities: [e00 v1] PCIe DVSEC for CXL Device
+>> +>               CXLCap: Cache+ IO+ Mem+ Mem HW Init+ HDMCount 1 
+>> Viral-
+>> +>               CXLCtl: Cache- IO+ Mem- Cache SF Cov 0 Cache SF Gran 
+>> 0 Cache Clean- Viral-
+>> +>               CXLSta: Viral-
+>
+> I think this should be complete "lspci -vvxxxx" or "lspci -xxxx"
+> output.  If there's secret stuff in there you don't want to expose
+> yet, I don't personally object to editing the hexdump to zero it out.
+> But the point is that people should be able to run "lspci -F" on this
+> file to decode it.
+
+Understood. I’m running this in simulation right now.  I will see what 
+I can do.
+
+Best regards,
+
+Sean
