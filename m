@@ -2,60 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D641D1A3249
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Apr 2020 12:13:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D4AE1A3257
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Apr 2020 12:15:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725970AbgDIKNM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Apr 2020 06:13:12 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:40861 "EHLO
+        id S1726536AbgDIKPG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Apr 2020 06:15:06 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:43693 "EHLO
         mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgDIKNM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Apr 2020 06:13:12 -0400
-Received: by mail-ot1-f67.google.com with SMTP id q2so7152727otk.7;
-        Thu, 09 Apr 2020 03:13:11 -0700 (PDT)
+        with ESMTP id S1725783AbgDIKPG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Apr 2020 06:15:06 -0400
+Received: by mail-ot1-f67.google.com with SMTP id n25so7286341otr.10;
+        Thu, 09 Apr 2020 03:15:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=5gCZP4VOAtxv93Dwz8G9N+IxG+FH0dYZBABiIJGbG7E=;
-        b=pmVUwiuIMo0kmUMLq83grnGCpTZklP8SCBR+TQ0joTcBm9AdV7SNA755dETA8L+Pdt
-         DzxF9SQnuqzRpS6Zuba4psevWLsUbUlJNwtBafNnKqn/Aotbj94l0LlSi4GT3g5DlVhB
-         OKWju+K39+glkV6ifSt70XgUC7ZnddEWJhetY0iRyBxZ3y35yYzI60Ampi0S8ft6AaS1
-         hqg/S/6o/4BjWjNsCF5Nrdho4hifNBodl4bRcFM8TQ6IiP3xsaBnSlFbsp1Nqp/GEFnf
-         rKL+Xf7yLQV5ibq9Nv9zNwFAbzgSRGFTHpae+q2CtJf1JczXReXdtTl5M2Q33wblHM7o
-         zMog==
+        bh=/NSZZSKSu5WJt1RNoef9dBjCn8fIK10WqZ6WGC2+h/M=;
+        b=iQL+Gq3QA9xSB0G77RYT1DZl9zxaKwiQKV7PF57j5DmP4f7Z+K389I+vbjLtPG0pyw
+         TsgkfIqwbahrRJXW8+QzFOO4x6LTG5trpY7ZUktLi8S7PL9Ekma4X2V2Cx+W6nUc/hBP
+         o8WvUlKV5Pm80i7lOPwWp7H6C8ljw9sMS24M3L83ZVjo8e/XavF7iDhLPZJuU6P8JADJ
+         ROC17jM7JvA/1li4pUqoH2bNUu+g3zK4qs0i8GBIPfm6oJBciuxGe5xjvSUfcOJB1XQF
+         ZnBjsViCtVXvHYEeBNexwrm34bN3C5mE/kI0lc084QX8A9v2+w7IAa67TUTcdks1+NHE
+         UKFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=5gCZP4VOAtxv93Dwz8G9N+IxG+FH0dYZBABiIJGbG7E=;
-        b=WA8cRMX/bHOTcw0WV20DjcxvEemXbyuEIrB/8eCDw5DnJ+1lj61S+LeIOxS8nw20zF
-         A7WlLGvkL8iG10umc+rT28qDqb5+yLZ3qMhRrElSGb+OCj2JgUfqJUwOWxEfQc33gGje
-         +kyCi8EO4mmDu90yprkyy5fAkyVprXqT1MWEGKPfsumY6JvooCQQXJyeSHV0SQkFM585
-         Otjx1OzgzL1DPhStO1eDGa5vBft9frtRwn5MpAv8mSC4pi5TIeJokXkcW97PgGIVNmAP
-         Q67FoC0XUqpB7kck2ZsXoqJk8zYqegoIxHGbzcxo2kR2w1NfcAeCJcUuXrheMn3dOu2C
-         IPLA==
-X-Gm-Message-State: AGi0PubyGT1UhCRT/TpHmy+q6aGVQJQVBRBBkWtiZwcEEAvjpSfTkgLW
-        iwTUgdyUieWZy9RM3chT+j+tWTvZcqO3IwCXfYg=
-X-Google-Smtp-Source: APiQypLhsQeYzwoUhGLE9gEJNuYaBxMBYdOrDBfS/DVmEFxN0Im6t1IiIy0qzEuA2Wmozs97BahlPiYaYmuzaWQ47b8=
-X-Received: by 2002:a9d:798e:: with SMTP id h14mr6693794otm.88.1586427191253;
- Thu, 09 Apr 2020 03:13:11 -0700 (PDT)
+        bh=/NSZZSKSu5WJt1RNoef9dBjCn8fIK10WqZ6WGC2+h/M=;
+        b=pw90wKgMwoIxtYdUcUHsBgOAwcvDYSe4Wr6vnRAAhDL6zesqJpmqf+/+g9xBUR5qwt
+         97ot9VL4Djn4C//HuMPV/+CJrThTwyaFJDTSbSWEfHptCSN6UZmI+crPPLoN00ZWQE2b
+         OTSI8Lf/ge3dKJsXk+3UL9YgIQjpkpOaN7AxF5+f2i8uAgPN+wdBkd6Br8FPrDX9Wrjv
+         JamGcXzHyB8uaw+Mu/9woybBzxAUO30G8e0m1wW1CiNBfFQTiM5D18YapWKB/e4PUD8p
+         flGhkGSX0LgINmYRh7lTChuJjN/mW9zr1f2EN6WQr8f3yiaKIsJ8odDxMb4Dvh/C6foY
+         tQng==
+X-Gm-Message-State: AGi0PuYt0N/PZ1sbSRhXPL2m1XLUcDJwvgPfijtuhR2AQhMtWkkDYYdi
+        obZ0487HEJnrCQNzxWt+BTi2C+PQEH0xzGlzXHE=
+X-Google-Smtp-Source: APiQypJZ7ipa4bMCkW9mI2xrPpPXDZ+7ffNf67WIS2NRxz3lWs1SiJCULWWWchWx+Is+aY4H+ame5VIgN7uLwHuVtno=
+X-Received: by 2002:a9d:895:: with SMTP id 21mr8780254otf.365.1586427305866;
+ Thu, 09 Apr 2020 03:15:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <1586360280-10956-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200408234622.GA150772@google.com>
-In-Reply-To: <20200408234622.GA150772@google.com>
+References: <1586360280-10956-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200408235133.GA151858@google.com>
+In-Reply-To: <20200408235133.GA151858@google.com>
 From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 9 Apr 2020 11:12:45 +0100
-Message-ID: <CA+V-a8te28Ji5HYV-QAmd28x-ACshCkVmUUkMYu1KSt0RRdJgQ@mail.gmail.com>
-Subject: Re: [PATCH v7 4/8] PCI: endpoint: Add support to handle multiple base
- for mapping outbound memory
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>
+Date:   Thu, 9 Apr 2020 11:14:39 +0100
+Message-ID: <CA+V-a8taA-CYNC2vLoPPm9WHZwTOFoHe-c2zus_n5=qr4x32WQ@mail.gmail.com>
+Subject: Re: [PATCH v7 6/8] PCI: rcar: Add support for R-Car PCIe controller
+ in endpoint mode
+To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
         Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Marek Vasut <marek.vasut+renesas@gmail.com>,
         Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Jingoo Han <jingoohan1@gmail.com>,
@@ -80,49 +80,61 @@ Hi Bjorn,
 
 Thank you for the review.
 
-On Thu, Apr 9, 2020 at 12:46 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Thu, Apr 9, 2020 at 12:51 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
 >
-> On Wed, Apr 08, 2020 at 04:37:56PM +0100, Lad Prabhakar wrote:
-> > R-Car PCIe controller has support to map multiple memory regions for
-> > mapping the outbound memory in local system also the controller limits
-> > single allocation for each region (that is, once a chunk is used from the
-> > region it cannot be used to allocate a new one). This features inspires to
-> > add support for handling multiple memory bases in endpoint framework.
-> >
-> > With this patch pci_epc_mem_init() initializes address space for endpoint
-> > controller which support single window and whereas __pci_epc_mem_init()
-> > now accepts pointer to multiple windows supported by endpoint controller.
+> Maybe:
 >
-> Adding a double underscore prefix usually indicates an internal
-> function that skips some checking.
+>   PCI: rcar: Add endpoint mode support
 >
-> It doesn't seem like quite the right thing for this external interface
-> that adds functionality.  Maybe the name could include something like
-> "multi"?
+> so the important "endpoint mode" part is early and doesn't get chopped
+> off or wrapped.  We already know it's PCIe and rcar-related.
 >
-Agreed. how about pci_epc_mem_multi_init() ?
+Agreed will change it.
 
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> On Wed, Apr 08, 2020 at 04:37:58PM +0100, Lad Prabhakar wrote:
+> > This patch adds support for R-Car PCIe controller to work in endpoint mode.
 >
-> This needs an ack from Kishon, of course.
+> s/This patch adds/Add/
 >
-Yes waiting for Kishon to review it.
+OK
 
-> This patch seems like it does several things that could possibly be
-> split into separate patches?
+> > +static int rcar_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no,
+> > +                             struct pci_epf_bar *epf_bar)
+> > +{
+> > +     int flags = epf_bar->flags | LAR_ENABLE | LAM_64BIT;
+> > +     struct rcar_pcie_endpoint *ep = epc_get_drvdata(epc);
+> > +     u64 size = 1ULL << fls64(epf_bar->size - 1);
+> > +     dma_addr_t cpu_addr = epf_bar->phys_addr;
+> > +     enum pci_barno bar = epf_bar->barno;
+> > +     struct rcar_pcie *pcie = &ep->pcie;
+> > +     u32 mask;
+> > +     int idx;
+> > +     int err;
+> > +
+> > +     idx = find_first_zero_bit(ep->ib_window_map, ep->num_ib_windows);
+> > +     if (idx >= ep->num_ib_windows) {
+> > +             dev_err(pcie->dev, "no free inbound window\n");
+> > +             return -EINVAL;
+> > +     }
+> > +
+> > +     if ((flags & PCI_BASE_ADDRESS_SPACE) == PCI_BASE_ADDRESS_SPACE_IO)
+> > +             flags |= IO_SPACE;
+> > +
+> > +     ep->bar_to_atu[bar] = idx;
+> > +     /* use 64 bit bars */
 >
->   - Change pci_epc_mem_init() interface to add page_size argument (the
->     only one that touches cadence & rockchip; it would be nice if this
->     were a tiny patch)
+> s/64 bit bars/64-bit BARs/
 >
-Can be done.
+OK shall replace it.
 
->   - Add struct pci_epc_mem_window
+> > +static const struct pci_epc_features rcar_pcie_epc_features = {
+> > +     .linkup_notifier = false,
+> > +     .msi_capable = true,
+> > +     .msix_capable = false,
+> > +     /* use 64-bit bars so mark bar1/3/5 as reserved */
 >
->   - Add a pci_epc_multi_mem_init() or similar, implement
->     pci_epc_mem_init() in terms of it (as you already do)
->
-The above two needs to be single patch. Is that OK with you ?
+> s/bar/BAR/g
+OK shall replace it.
 
 Cheers,
 --Prabhakar
