@@ -2,100 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 991481A3DB2
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Apr 2020 03:22:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B7BC71A3DBE
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Apr 2020 03:28:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbgDJBWM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Apr 2020 21:22:12 -0400
-Received: from mga11.intel.com ([192.55.52.93]:51193 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725987AbgDJBWL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 9 Apr 2020 21:22:11 -0400
-IronPort-SDR: SIMuZz087n8xZwQkX8++C7I5oZoA/OA+K4Qc2YWztWuIh8PNPBALUEHTVhlBj4QfxWXARr49Oz
- eli/pgPnBShg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2020 18:22:12 -0700
-IronPort-SDR: U0LlOhp033dDpJPPRIzdr1qICn5m5DgXMkvF6UN2/gm+pVchKp5Q1VZM1s1x4NEjzo2NQHo0+X
- tFeKb4LUNZng==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,364,1580803200"; 
-   d="scan'208";a="244462326"
-Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.254.208.184]) ([10.254.208.184])
-  by fmsmga008.fm.intel.com with ESMTP; 09 Apr 2020 18:22:10 -0700
-Cc:     baolu.lu@linux.intel.com, Bjorn Helgaas <helgaas@kernel.org>,
-        linux-pci@vger.kernel.org, Daniel Drake <drake@endlessm.com>,
-        linux@endlessm.com
-Subject: Re: [PATCH 1/1] iommu/vt-d: use DMA domain for real DMA devices and
- subdevices
-To:     Jon Derrick <jonathan.derrick@intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org
-References: <20200409191736.6233-1-jonathan.derrick@intel.com>
- <20200409191736.6233-2-jonathan.derrick@intel.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <09c98569-ed22-8886-3372-f5752334f8af@linux.intel.com>
-Date:   Fri, 10 Apr 2020 09:22:08 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S1726620AbgDJB2I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Apr 2020 21:28:08 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:46538 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726082AbgDJB2I (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 9 Apr 2020 21:28:08 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 60A6353E6333066C1421;
+        Fri, 10 Apr 2020 09:28:05 +0800 (CST)
+Received: from [10.65.58.147] (10.65.58.147) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Fri, 10 Apr 2020
+ 09:28:01 +0800
+Subject: Re: [PATCH] Replace -EINVAL with PCIBIOS_BAD_REGISTER_NUMBER
+To:     Bolarinwa Olayemi Saheed <refactormyself@gmail.com>,
+        <helgaas@kernel.org>
+References: <20200409161609.2034-1-refactormyself@gmail.com>
+CC:     <bjorn@helgaas.com>, <skhan@linuxfoundation.org>,
+        <linux-pci@vger.kernel.org>
+From:   Yicong Yang <yangyicong@hisilicon.com>
+Message-ID: <31a43a1a-d271-7652-db62-1a7c55cd135b@hisilicon.com>
+Date:   Fri, 10 Apr 2020 09:28:07 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-In-Reply-To: <20200409191736.6233-2-jonathan.derrick@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+In-Reply-To: <20200409161609.2034-1-refactormyself@gmail.com>
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.65.58.147]
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+Hi Bolarinwa,
 
-On 2020/4/10 3:17, Jon Derrick wrote:
-> The PCI devices handled by intel-iommu may have a DMA requester on another bus,
-> such as VMD subdevices needing to use the VMD endpoint.
-> 
-> The real DMA device is now used for the DMA mapping, but one case was missed
-> earlier: if the VMD device (and hence subdevices too) are under
-> IOMMU_DOMAIN_IDENTITY, mappings do not work.
-> 
-> Codepaths like intel_map_page() handle the IOMMU_DOMAIN_DMA case by creating an
-> iommu DMA mapping, and fall back on dma_direct_map_page() for the
-> IOMMU_DOMAIN_IDENTITY case. However, handling of the IDENTITY case is broken
-> when intel_page_page() handles a subdevice.
-> 
-> We observe that at iommu attach time, dmar_insert_one_dev_info() for the
-> subdevices will never set dev->archdata.iommu. This is because that function
+I notice some drivers use these functions and if there is an error, pass the error code
+directly to the userspace. As it's our private error code, is it appropriate to pass or
+should we call pcibios_err_to_errno()(include/linux/pci.h, line 672) to do the conversion?
 
-Do you mind telling why not setting this?
+Regards,
+Yicong
 
-> uses find_domain() to check if there is already an IOMMU for the device, and
-> find_domain() then defers to the real DMA device which does have one. Thus
-> dmar_insert_one_dev_info() returns without assigning dev->archdata.iommu.
-> 
-> Then, later:
-> 
-> 1. intel_map_page() checks if an IOMMU mapping is needed by calling
->     iommu_need_mapping() on the subdevice. identity_mapping() returns
->     false because dev->archdata.iommu is NULL, so this function
->     returns false indicating that mapping is needed.
-> 2. __intel_map_single() is called to create the mapping.
-> 3. __intel_map_single() calls find_domain(). This function now returns
->     the IDENTITY domain corresponding to the real DMA device.
-> 4. __intel_map_single() calls domain_get_iommu() on this "real" domain.
->     A failure is hit and the entire operation is aborted, because this
->     codepath is not intended to handle IDENTITY mappings:
->         if (WARN_ON(domain->domain.type != IOMMU_DOMAIN_DMA))
->                     return NULL;
 
-This is caused by the fragile private domain implementation. We are in
-process of removing it by enhancing the iommu subsystem with per-group
-default domain.
+On 2020/4/10 0:16, Bolarinwa Olayemi Saheed wrote:
+> Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
+> Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
+> ---
+>  drivers/pci/access.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+> index 79c4a2ef269a..451f2b8b2b3c 100644
+> --- a/drivers/pci/access.c
+> +++ b/drivers/pci/access.c
+> @@ -409,7 +409,7 @@ int pcie_capability_read_word(struct pci_dev *dev, int pos, u16 *val)
+>  
+>  	*val = 0;
+>  	if (pos & 1)
+> -		return -EINVAL;
+> +		return PCIBIOS_BAD_REGISTER_NUMBER;
+>  
+>  	if (pcie_capability_reg_implemented(dev, pos)) {
+>  		ret = pci_read_config_word(dev, pci_pcie_cap(dev) + pos, val);
+> @@ -444,7 +444,7 @@ int pcie_capability_read_dword(struct pci_dev *dev, int pos, u32 *val)
+>  
+>  	*val = 0;
+>  	if (pos & 3)
+> -		return -EINVAL;
+> +		return PCIBIOS_BAD_REGISTER_NUMBER;
+>  
+>  	if (pcie_capability_reg_implemented(dev, pos)) {
+>  		ret = pci_read_config_dword(dev, pci_pcie_cap(dev) + pos, val);
 
-https://www.spinics.net/lists/iommu/msg42976.html
-
-So ultimately VMD subdevices should have their own per-device iommu data
-and support per-device dma ops.
-
-Best regards,
-baolu
