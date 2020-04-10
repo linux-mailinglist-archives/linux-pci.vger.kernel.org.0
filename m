@@ -1,58 +1,95 @@
 Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 68A5C1B169D
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Apr 2020 22:04:10 +0200 (CEST)
+Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
+	by mail.lfdr.de (Postfix) with ESMTP id 1502F1A4100
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Apr 2020 06:15:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726413AbgDTUEI convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Mon, 20 Apr 2020 16:04:08 -0400
-Received: from unallocated-static.datacentres.rogers.com ([72.142.144.38]:61958
-        "EHLO smartermail2" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726444AbgDTUEI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Apr 2020 16:04:08 -0400
-X-Greylist: delayed 13629 seconds by postgrey-1.27 at vger.kernel.org; Mon, 20 Apr 2020 16:04:08 EDT
-Received: from coris.com (UnknownHost [103.207.36.17]) by smartermail2 with SMTP;
-   Thu, 9 Apr 2020 23:32:20 -0400
-Reply-To: kentpace@sina.com
-From:   Kent Pace <kentpace@coris.com>
-To:     linux-pci@vger.kernel.org
-Subject: Urgent!!!!! Please read
-Date:   09 Apr 2020 20:32:17 -0700
-Message-ID: <20200409203216.5A619750B77B4AC1@coris.com>
+        id S1726659AbgDJDrX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Apr 2020 23:47:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58068 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727368AbgDJDrX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:47:23 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCD0520936;
+        Fri, 10 Apr 2020 03:47:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586490442;
+        bh=RNwFNWBjhyFKt/046IiLuAMSumi5DABqIaiGdEpHIl4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=l/L5goQQX/7W1ELNxj+ODJsOWNjSLVcPjFxI4ogFTXx0pDaIfgmkx+tLOW34VkhMZ
+         LArrk9Fr52OZsfNyVgi9lzpydo6afIZ7CZfWs6s4jg3C2Fz0bZvut7hIpiknRkzbwv
+         d1bmPko5qtJebJd+LIEcnQWuXY7jOJoHPCeiYmgI=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 39/68] PCI/switchtec: Fix init_completion race condition with poll_wait()
+Date:   Thu,  9 Apr 2020 23:46:04 -0400
+Message-Id: <20200410034634.7731-39-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200410034634.7731-1-sashal@kernel.org>
+References: <20200410034634.7731-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Dear Friend,
+From: Logan Gunthorpe <logang@deltatee.com>
 
+[ Upstream commit efbdc769601f4d50018bf7ca50fc9f7c67392ece ]
 
-There is something very important I need to discuss with you.  I 
-am writing  this letter in tears and fear. In tears because I 
-will soon depart and in fear because I don't really know if you 
-will do this faithfully.
+The call to init_completion() in mrpc_queue_cmd() can theoretically
+race with the call to poll_wait() in switchtec_dev_poll().
 
+  poll()			write()
+    switchtec_dev_poll()   	  switchtec_dev_write()
+      poll_wait(&s->comp.wait);      mrpc_queue_cmd()
+			               init_completion(&s->comp)
+				         init_waitqueue_head(&s->comp.wait)
 
-I am COVID-19  patient and the doctor has already confirmed I may 
-not last for the next 7 days.
+To my knowledge, no one has hit this bug.
 
-I have substantial amount of money deposited in a security vault 
-around your country. It is in trunk boxes and once  I receive 
-your response and see your readiness to claim the money 
-immediately, I will forward the needed documents and the contact 
-of the security vault where the consignment is deposited,
-I am not asking you to give me anything but I want you to help 
-people that has been infected with this deadly virus with 60% of 
-the money and 40% should be for you and your family.
+Fix this by using reinit_completion() instead of init_completion() in
+mrpc_queue_cmd().
 
-I will disclose exact amount in the boxes as soon as I 
-receive your response.
+Fixes: 080b47def5e5 ("MicroSemi Switchtec management interface driver")
 
+Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Link: https://lkml.kernel.org/r/20200313183608.2646-1-logang@deltatee.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pci/switch/switchtec.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Regards
+diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
+index a823b4b8ef8a9..81dc7ac013817 100644
+--- a/drivers/pci/switch/switchtec.c
++++ b/drivers/pci/switch/switchtec.c
+@@ -175,7 +175,7 @@ static int mrpc_queue_cmd(struct switchtec_user *stuser)
+ 	kref_get(&stuser->kref);
+ 	stuser->read_len = sizeof(stuser->data);
+ 	stuser_set_state(stuser, MRPC_QUEUED);
+-	init_completion(&stuser->comp);
++	reinit_completion(&stuser->comp);
+ 	list_add_tail(&stuser->list, &stdev->mrpc_queue);
+ 
+ 	mrpc_cmd_submit(stdev);
+-- 
+2.20.1
 
