@@ -2,127 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D19A81A3D40
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Apr 2020 02:13:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A3BB1A3D76
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Apr 2020 02:47:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbgDJAMy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Apr 2020 20:12:54 -0400
-Received: from mail-eopbgr1400132.outbound.protection.outlook.com ([40.107.140.132]:56192
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726327AbgDJAMy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 9 Apr 2020 20:12:54 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lyPeTa2pgapM49Eq8Dro0JQ/LIRuKVHbUOtykT2HY+/EHyqh5uxyXIjCPzLG3ZNIHp50/zf3DST8M3GD63HejkVpudlDkFI2BtzXeDOVgVXbX5OvIAD03DFeFTbYU8LWWoN3Ils0OUMJONdkPyRGVDBQr+rgGo8FHuZpWi+7hiT8PTUXidhEI+L7aZUzDinSv5niHktOtfy0BDvgYAjaWKzJpY1yDoTweS9bMwEko0tnxWh1iM4UCwLWoZpuMBXHMsJUKnBjKPQNOPRMNQP7DlKNADmmCKMIgNAdJR1QM1oD76dD1Lr5O4Tyh+xsSmR/R1mIJyldzg11Gbh4OWkVRw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zJMS4nAd3SiJk7CDzJfRcf2i1k2/+5drd5ueJ9cxo9I=;
- b=awNvRB2m2kgr1aDC+4nXovcCF/N6JSKu1QreNg2GZDGaHpyyvMVm6NQvgSLXfh6VUcEOdWcMCbpkmRdC/1QhaPYGD7UgTdP6+OTXmeZ//N7THgFsnxNQKgvTwJc8xl8ZQaYuJNg+KeUFJbvNKNIt8FqCcJnUl9TRYXQEAMSiFVcHTtVzLGQI1GMO3tBeJWgs40yzq2+TyWY36v7KrMpdn8KsIFysE9sBBglUZQelVgakU8Lr21c2C1ndm7qKrbHcb21/RSwhWS0fwzJx30GNcOJGukulhSkGoogoyck0wo4Ahoj/cwFYpvdHIqXLeQ6eIbJk/T/iqXY/tf0XvyLMVg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
+        id S1727125AbgDJArt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Apr 2020 20:47:49 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:38795 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726859AbgDJArt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Apr 2020 20:47:49 -0400
+Received: by mail-ed1-f66.google.com with SMTP id e5so556966edq.5;
+        Thu, 09 Apr 2020 17:47:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zJMS4nAd3SiJk7CDzJfRcf2i1k2/+5drd5ueJ9cxo9I=;
- b=Im4t3OeUhSs6Z2iPzzL6ApfcYdCQs70Ml/efk4VXKtUkRSfVMpIk/1GMtaVAfrY32cw/J2m76DP3cUISVDRAGZ348WoTUIzA0gO1jbLTikk7W27uaIX+xNAAjmaqBiCrf/YBC+liA8ZafYtu/z8qnBRyRIePTTG+gDf6VvyzyIw=
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
- TYAPR01MB2559.jpnprd01.prod.outlook.com (20.177.105.83) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2900.15; Fri, 10 Apr 2020 00:12:39 +0000
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::ed7f:1268:55a9:fc06]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::ed7f:1268:55a9:fc06%4]) with mapi id 15.20.2900.015; Fri, 10 Apr 2020
- 00:12:39 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-CC:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AaXKqqNhWwXTEhyoNjhEC/wZ5IBgda9BijmlHrsyAzs=;
+        b=rlX6YEU9uaIFZ8ZG6zqSY97HPpxFwjg8LybI2X+embhgop3KgGzATQRsGQwNSfDQ7a
+         VZu9Eh8ZQtzQ+O7iooYPpAsdzCgUvQ9uqz83rrrhC7DOGgejll1BoyqsB4/ttHFCmGgP
+         8fUyKOkmEzER5DlcJpUfau8Hh4gBy46CktuIR1nSXmI4s4zC3oXHHPKZU30Q1XO63rVk
+         YrgfBJPbZwdYhuu4G4qCtXV7gmoStSKSemfQCt2kM4ks1UzMJI04G7CeVAjV0uguRA9Z
+         DVrZZoZRM8RTidVfCzcc0m1ypTJNYBrLdVaMrsHffulpw1xNU0U2CCxRpaECGy/KbGXS
+         3ZeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AaXKqqNhWwXTEhyoNjhEC/wZ5IBgda9BijmlHrsyAzs=;
+        b=DkQsQQQsiEt+12/erGS7CQ+Niv3xTTHcXJrI7of1mHlpQgjBNL9nQvR8soCjGA46B1
+         cCaw4tAUnGNCKO00/VyVUf0HekALPvxGN97y/E96kdyNXV9qx7NfTOw64JJUHJRNd0xt
+         jnwOi9qWI5AkeyzaHxClpNGiWUoYZ/bgiR17qqYYZcJK36wEFsZ+alje9+vJgfQIX1ze
+         6LJK5mL1OfxfLr5V/DZhV1VEMHiyYFcfz9N12/q4OUoDULrYANGx3B+H36r/vUxNGE3x
+         Rt0/vECGx+kzc/hkc3yJtKvpxIO1qHBe+y1LWPwNYweX1hfGFZsNc0xWj3KMyh5Y8yJ8
+         4hdg==
+X-Gm-Message-State: AGi0Pub5bg8EKDKGeQl7EQmDuDcckzTwcxEb4Qdyh+qQV7vooNzmmv65
+        mgAPLLEYmv9N8jQMcoMfvj4Uhcd6UVPa2CF9
+X-Google-Smtp-Source: APiQypIDgPP5SYnSGNGLtJlzJvRK3ujDA4LiVyVvMnB5ny2rpXt+EMRELOoEoRsm95Z4o7IVoL/mEA==
+X-Received: by 2002:aa7:c893:: with SMTP id p19mr2597008eds.19.1586479666469;
+        Thu, 09 Apr 2020 17:47:46 -0700 (PDT)
+Received: from Ansuel-XPS.localdomain (host117-205-dynamic.180-80-r.retail.telecomitalia.it. [80.180.205.117])
+        by smtp.googlemail.com with ESMTPSA id z16sm30523edm.52.2020.04.09.17.47.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Apr 2020 17:47:45 -0700 (PDT)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+To:     devicetree@vger.kernel.org
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Richard Zhu <hongxing.zhu@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
-Subject: RE: [PATCH v7 7/8] PCI: Add Renesas R8A774C0 device ID
-Thread-Topic: [PATCH v7 7/8] PCI: Add Renesas R8A774C0 device ID
-Thread-Index: AQHWDbvP66ahBIzixkep7RDyHrjTa6hwiR4AgAAICQCAAOwwQA==
-Date:   Fri, 10 Apr 2020 00:12:38 +0000
-Message-ID: <TYAPR01MB4544313471DD93D131E82EF5D8DE0@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-References: <1586360280-10956-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1586360280-10956-8-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <e3f5fa77-f78e-edbf-9efc-53b5ea620460@cogentembedded.com>
- <CA+V-a8s1E_kq_GENBTw3zGxKSPFnVKNY-ta9+c8W8nV4JFyEEw@mail.gmail.com>
-In-Reply-To: <CA+V-a8s1E_kq_GENBTw3zGxKSPFnVKNY-ta9+c8W8nV4JFyEEw@mail.gmail.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
-x-originating-ip: [124.210.22.195]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: b7930e37-21f2-4db9-f51c-08d7dce3e157
-x-ms-traffictypediagnostic: TYAPR01MB2559:|TYAPR01MB2559:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <TYAPR01MB2559DCE47DACF5B447986E99D8DE0@TYAPR01MB2559.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0369E8196C
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(136003)(39860400002)(366004)(376002)(346002)(396003)(8676002)(71200400001)(54906003)(316002)(110136005)(478600001)(81166007)(33656002)(7416002)(2906002)(4744005)(76116006)(66446008)(186003)(26005)(55236004)(66476007)(52536014)(66946007)(55016002)(6506007)(66556008)(5660300002)(8936002)(7696005)(86362001)(9686003)(4326008)(64756008)(81156014);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 7bVv7ATNQrwzzsutT6PHd8Ocsq8cT58KLlfceEF7FQtxshIJdJlbpnuE/VF47cm5Ths/U4XIWFggwmDDr0yJZLWwcuwGyZOWbcGmh/+foyZaehH07Md8THldB7ORJMWQPPdADJyeFsDLBCvETcHjP54i7kaea+Da42IHPEMZiWGAhXkumoZ+H5cdMrc9C2HCT2374EGFcpiwaMUEv9QUaGpWpfB2X3fjsjJATXCUzUGst0H3SSTi9nZx2QCdiz2A2tp9GvcOQUJWVvcfNSdm/iAE/T8Ui/qUJV4P0SH8LD+bn8XFljNE2pKaqulNnFJT4Hi1Qi+hEyjRGQytHjpb6euFFFQXgDDsXd86TFCSJJnkerOayMBukkt0HjXQvGkRw6vRaFk0PBKZ7w3D9zV+/qgx0YmLlIGJyHzbsti1UJ0RvOTVowlKnfr+MA2OzZVz
-x-ms-exchange-antispam-messagedata: Y20TwZ9Ft+zMWl7pnsCLL8gkvC79CCwOqHdbHMX+gDN8/reG+/hBlYvGUM3AH6hRGKu/3dRQgUR/ed+8+QFwo3jNRSw8yHA++rmpR9rO2EIKUUrIzF4D6QmsQ+I2xJDdvkRVncxG5lKIdvVay64QyA==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/4] Move tx-deempth and tx swing to pci.txt
+Date:   Fri, 10 Apr 2020 02:47:34 +0200
+Message-Id: <20200410004738.19668-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b7930e37-21f2-4db9-f51c-08d7dce3e157
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Apr 2020 00:12:39.0540
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: f87/bCPE86htyXT3bVCRnx2IlQtb8bYWEYF7B4Py1L/E68j0UI/u7BNQ3z+GTZmImKIBMefPMmmThFzmyMqJi6Au16nwkVNVrHZ49intYn7HNuo8Ia7dH91Kswp7AXgU
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB2559
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-SGkgUHJhYmhha2FyLCBTZXJnZWksIEJqb3JuLA0KDQo+IEZyb206IExhZCwgUHJhYmhha2FyLCBT
-ZW50OiBUaHVyc2RheSwgQXByaWwgOSwgMjAyMCA3OjA1IFBNDQo8c25pcD4gDQo+ID4gPiBkaWZm
-IC0tZ2l0IGEvaW5jbHVkZS9saW51eC9wY2lfaWRzLmggYi9pbmNsdWRlL2xpbnV4L3BjaV9pZHMu
-aA0KPiA+ID4gaW5kZXggMWRmYzRlMWRjYjk0Li45ZTk1N2MxOGFiZWIgMTAwNjQ0DQo+ID4gPiAt
-LS0gYS9pbmNsdWRlL2xpbnV4L3BjaV9pZHMuaA0KPiA+ID4gKysrIGIvaW5jbHVkZS9saW51eC9w
-Y2lfaWRzLmgNCj4gPiA+IEBAIC0yNDYwLDYgKzI0NjAsNyBAQA0KPiA+ID4gICAjZGVmaW5lIFBD
-SV9ERVZJQ0VfSURfUkVORVNBU19TSDc3NjMgICAgICAgIDB4MDAwNA0KPiA+ID4gICAjZGVmaW5l
-IFBDSV9ERVZJQ0VfSURfUkVORVNBU19TSDc3ODUgICAgICAgIDB4MDAwNw0KPiA+ID4gICAjZGVm
-aW5lIFBDSV9ERVZJQ0VfSURfUkVORVNBU19TSDc3ODYgICAgICAgIDB4MDAxMA0KPiA+ID4gKyNk
-ZWZpbmUgUENJX0RFVklDRV9JRF9SRU5FU0FTX1I4QTc3NEMwICAgICAgIDB4MDAyZA0KPiA+DQo+
-ID4gICAgIFdlIGRvbid0IGFkZCB0aGUgZGV2aWNlIElEcyBpbiB0aGlzIGZpbGUsIHVubGVzcyB1
-c2VkIGluIHNldmVyYWwgcGxhY2VzLg0KPiA+IElzIGl0Pw0KPiA+DQo+IE15IGJhZCBJIHNob3Vs
-ZCBoYXZlIGNoZWNrZWQgaXQgYmVmb3JlIG1ha2luZyB0aGlzIGNoYW5nZSBhY3R1YWxseSBpdA0K
-PiB3YXMgc3VnZ2VzdGVkIGluIG15IHByZXZpb3VzIHZlcnNpb24gb2YgdGhlIHNlcmllcyBidXQg
-YW55d2F5IGF0bSB0aGlzDQo+IHdhcyBwbGFubmVkIHRvIGJlICB1c2VkIG9ubHkgaW4gcGNpX2Vu
-ZHBvaW50X3Rlc3QgZHJpdmVyLCBzbyBpbiB0aGF0DQo+IGNhc2UgSWxsIGRyb3AgdGhpcyBwYXRj
-aC4NCg0KSSdtIHZlcnkgc29ycnksIHRoaXMgaXMgbXkgZmF1bHQuIEkgc3VnZ2VzdGVkIHRoaXMg
-YnV0IEkgZGlkbid0IGNoZWNrDQp0aGlzIHBjaV9pZHMuaCdzIHJ1bGUuLi4NCg0KQmVzdCByZWdh
-cmRzLA0KWW9zaGloaXJvIFNoaW1vZGENCg0K
+In pushing some fixes to pcie qcom driver, one of the patch had to make
+some fixes to tx deempth and tx swing. It was suggested to propose this
+to the generic pci.txt as they are actually standard parameter than can
+be tuned per board. I also notice these property are already used in
+imx6 driver so this would also help to generalize it.
+
+Ansuel Smith (4):
+  devicetree: bindings: pci: document tx-deempth tx swing and rx-eq
+    property
+  drivers: pci: dwc: pci-imx6: update binding to generic name
+  arm: dts: imx6: update pci binding to generic name
+  devicetree: bindings: pci: fsl,imx6q-pcie: rename tx deemph and swing
+
+ .../devicetree/bindings/pci/fsl,imx6q-pcie.txt | 12 ++++++------
+ Documentation/devicetree/bindings/pci/pci.txt  | 18 ++++++++++++++++++
+ arch/arm/boot/dts/imx6q-ba16.dtsi              |  4 ++--
+ arch/arm/boot/dts/imx6qdl-var-dart.dtsi        |  4 ++--
+ arch/arm/boot/dts/imx7d.dtsi                   |  2 +-
+ drivers/pci/controller/dwc/pci-imx6.c          | 12 ++++++------
+ 6 files changed, 35 insertions(+), 17 deletions(-)
+
+-- 
+2.25.1
+
