@@ -2,294 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E62651A3D17
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Apr 2020 01:49:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D19A81A3D40
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Apr 2020 02:13:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbgDIXtf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Apr 2020 19:49:35 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:35438 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726726AbgDIXtf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Apr 2020 19:49:35 -0400
-Received: by mail-io1-f68.google.com with SMTP id w20so227059iob.2;
-        Thu, 09 Apr 2020 16:49:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=fsFz03cVlyUKvUVnGieh3oxHpNilVECqAGJgEoC0c7M=;
-        b=PolnOrYFBaaDITFG4zBKiw/HE5y8zPUxNIHHDV3rDxpT9TFsAwpLFatlqPFSZAWF0s
-         MpcSz78jOpWFqVkv45s541vDG9aEyViOcrErn3SjTldoQavR8Bkp+TRbOakN/zdjfMHr
-         t0WrZ8tt7nP8P5didB80eOsDEZVdxULZFRyqVh3fV02U+62Q2C89xK5vTtl73Y+tg0FX
-         LwM+IloJQTFLmaNPZtTleatCe2BmtUGn5BVzMga8TI0zpxzaK5g5yndH8jL4mbqqaJ1X
-         xJkITkLmBjfRmu3lClY+AjKqRqOTuOukDbSSrQZdvW/EEK1J2h+8zHH6ECXfIGcx2p6+
-         qpWA==
-X-Gm-Message-State: AGi0PuZzWHjCGL1YNfJil/PkWvrU0nhLMP8sBTSLVbRuX30+mYgJx1U5
-        WjcK0KsRJ0Is1N+RMcEKCQ==
-X-Google-Smtp-Source: APiQypLqrY1IbsEwkeqc1fPB7uBxtzjUwc62zIg6o0IpJEI79OSAmxl+HVZGBtZ2DF2+YhPeGl8i+w==
-X-Received: by 2002:a02:9a0d:: with SMTP id b13mr2129894jal.60.1586476174014;
-        Thu, 09 Apr 2020 16:49:34 -0700 (PDT)
-Received: from xps15.herring.priv ([64.188.179.248])
-        by smtp.googlemail.com with ESMTPSA id w7sm93416ior.51.2020.04.09.16.49.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Apr 2020 16:49:33 -0700 (PDT)
-From:   Rob Herring <robh@kernel.org>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
+        id S1727026AbgDJAMy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Apr 2020 20:12:54 -0400
+Received: from mail-eopbgr1400132.outbound.protection.outlook.com ([40.107.140.132]:56192
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726327AbgDJAMy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 9 Apr 2020 20:12:54 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lyPeTa2pgapM49Eq8Dro0JQ/LIRuKVHbUOtykT2HY+/EHyqh5uxyXIjCPzLG3ZNIHp50/zf3DST8M3GD63HejkVpudlDkFI2BtzXeDOVgVXbX5OvIAD03DFeFTbYU8LWWoN3Ils0OUMJONdkPyRGVDBQr+rgGo8FHuZpWi+7hiT8PTUXidhEI+L7aZUzDinSv5niHktOtfy0BDvgYAjaWKzJpY1yDoTweS9bMwEko0tnxWh1iM4UCwLWoZpuMBXHMsJUKnBjKPQNOPRMNQP7DlKNADmmCKMIgNAdJR1QM1oD76dD1Lr5O4Tyh+xsSmR/R1mIJyldzg11Gbh4OWkVRw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zJMS4nAd3SiJk7CDzJfRcf2i1k2/+5drd5ueJ9cxo9I=;
+ b=awNvRB2m2kgr1aDC+4nXovcCF/N6JSKu1QreNg2GZDGaHpyyvMVm6NQvgSLXfh6VUcEOdWcMCbpkmRdC/1QhaPYGD7UgTdP6+OTXmeZ//N7THgFsnxNQKgvTwJc8xl8ZQaYuJNg+KeUFJbvNKNIt8FqCcJnUl9TRYXQEAMSiFVcHTtVzLGQI1GMO3tBeJWgs40yzq2+TyWY36v7KrMpdn8KsIFysE9sBBglUZQelVgakU8Lr21c2C1ndm7qKrbHcb21/RSwhWS0fwzJx30GNcOJGukulhSkGoogoyck0wo4Ahoj/cwFYpvdHIqXLeQ6eIbJk/T/iqXY/tf0XvyLMVg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zJMS4nAd3SiJk7CDzJfRcf2i1k2/+5drd5ueJ9cxo9I=;
+ b=Im4t3OeUhSs6Z2iPzzL6ApfcYdCQs70Ml/efk4VXKtUkRSfVMpIk/1GMtaVAfrY32cw/J2m76DP3cUISVDRAGZ348WoTUIzA0gO1jbLTikk7W27uaIX+xNAAjmaqBiCrf/YBC+liA8ZafYtu/z8qnBRyRIePTTG+gDf6VvyzyIw=
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
+ TYAPR01MB2559.jpnprd01.prod.outlook.com (20.177.105.83) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2900.15; Fri, 10 Apr 2020 00:12:39 +0000
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::ed7f:1268:55a9:fc06]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::ed7f:1268:55a9:fc06%4]) with mapi id 15.20.2900.015; Fri, 10 Apr 2020
+ 00:12:39 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+CC:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mans Rullgard <mans@mansr.com>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Robert Richter <rrichter@marvell.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        Toan Le <toan@os.amperecomputing.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Jonathan Chocron <jonnyc@amazon.com>,
-        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH 3/3] PCI: host-generic: Eliminate pci_host_common_probe wrappers
-Date:   Thu,  9 Apr 2020 17:49:23 -0600
-Message-Id: <20200409234923.21598-4-robh@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200409234923.21598-1-robh@kernel.org>
-References: <20200409234923.21598-1-robh@kernel.org>
+        Rob Herring <robh+dt@kernel.org>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        LAK <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
+Subject: RE: [PATCH v7 7/8] PCI: Add Renesas R8A774C0 device ID
+Thread-Topic: [PATCH v7 7/8] PCI: Add Renesas R8A774C0 device ID
+Thread-Index: AQHWDbvP66ahBIzixkep7RDyHrjTa6hwiR4AgAAICQCAAOwwQA==
+Date:   Fri, 10 Apr 2020 00:12:38 +0000
+Message-ID: <TYAPR01MB4544313471DD93D131E82EF5D8DE0@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+References: <1586360280-10956-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1586360280-10956-8-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <e3f5fa77-f78e-edbf-9efc-53b5ea620460@cogentembedded.com>
+ <CA+V-a8s1E_kq_GENBTw3zGxKSPFnVKNY-ta9+c8W8nV4JFyEEw@mail.gmail.com>
+In-Reply-To: <CA+V-a8s1E_kq_GENBTw3zGxKSPFnVKNY-ta9+c8W8nV4JFyEEw@mail.gmail.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
+x-originating-ip: [124.210.22.195]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: b7930e37-21f2-4db9-f51c-08d7dce3e157
+x-ms-traffictypediagnostic: TYAPR01MB2559:|TYAPR01MB2559:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <TYAPR01MB2559DCE47DACF5B447986E99D8DE0@TYAPR01MB2559.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0369E8196C
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(136003)(39860400002)(366004)(376002)(346002)(396003)(8676002)(71200400001)(54906003)(316002)(110136005)(478600001)(81166007)(33656002)(7416002)(2906002)(4744005)(76116006)(66446008)(186003)(26005)(55236004)(66476007)(52536014)(66946007)(55016002)(6506007)(66556008)(5660300002)(8936002)(7696005)(86362001)(9686003)(4326008)(64756008)(81156014);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 7bVv7ATNQrwzzsutT6PHd8Ocsq8cT58KLlfceEF7FQtxshIJdJlbpnuE/VF47cm5Ths/U4XIWFggwmDDr0yJZLWwcuwGyZOWbcGmh/+foyZaehH07Md8THldB7ORJMWQPPdADJyeFsDLBCvETcHjP54i7kaea+Da42IHPEMZiWGAhXkumoZ+H5cdMrc9C2HCT2374EGFcpiwaMUEv9QUaGpWpfB2X3fjsjJATXCUzUGst0H3SSTi9nZx2QCdiz2A2tp9GvcOQUJWVvcfNSdm/iAE/T8Ui/qUJV4P0SH8LD+bn8XFljNE2pKaqulNnFJT4Hi1Qi+hEyjRGQytHjpb6euFFFQXgDDsXd86TFCSJJnkerOayMBukkt0HjXQvGkRw6vRaFk0PBKZ7w3D9zV+/qgx0YmLlIGJyHzbsti1UJ0RvOTVowlKnfr+MA2OzZVz
+x-ms-exchange-antispam-messagedata: Y20TwZ9Ft+zMWl7pnsCLL8gkvC79CCwOqHdbHMX+gDN8/reG+/hBlYvGUM3AH6hRGKu/3dRQgUR/ed+8+QFwo3jNRSw8yHA++rmpR9rO2EIKUUrIzF4D6QmsQ+I2xJDdvkRVncxG5lKIdvVay64QyA==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b7930e37-21f2-4db9-f51c-08d7dce3e157
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Apr 2020 00:12:39.0540
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: f87/bCPE86htyXT3bVCRnx2IlQtb8bYWEYF7B4Py1L/E68j0UI/u7BNQ3z+GTZmImKIBMefPMmmThFzmyMqJi6Au16nwkVNVrHZ49intYn7HNuo8Ia7dH91Kswp7AXgU
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB2559
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Most ECAM host drivers are just different pci_ecam_ops which can be DT
-match table data. That's already the case in some cases, but let's
-do that for all the ECAM drivers. Then we can use
-of_device_get_match_data() in pci_host_common_probe() and eliminate the
-probe wrapper functions and use pci_host_common_probe() directly for
-probe.
-
-Cc: Zhou Wang <wangzhou1@hisilicon.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Andrew Murray <amurray@thegoodpenguin.co.uk>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Robert Richter <rrichter@marvell.com>
-Cc: Marc Gonzalez <marc.w.gonzalez@free.fr>
-Cc: Mans Rullgard <mans@mansr.com>
-Cc: linux-pci@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- drivers/pci/controller/dwc/pcie-hisi.c    | 11 +----------
- drivers/pci/controller/pci-host-common.c  |  9 +++++++--
- drivers/pci/controller/pci-host-generic.c | 15 +--------------
- drivers/pci/controller/pci-thunder-ecam.c | 12 +++++-------
- drivers/pci/controller/pci-thunder-pem.c  | 12 +++++-------
- drivers/pci/controller/pcie-tango.c       |  7 +++++--
- include/linux/pci-ecam.h                  |  3 +--
- 7 files changed, 25 insertions(+), 44 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-hisi.c b/drivers/pci/controller/dwc/pcie-hisi.c
-index 90017045334d..0ba50fb473b1 100644
---- a/drivers/pci/controller/dwc/pcie-hisi.c
-+++ b/drivers/pci/controller/dwc/pcie-hisi.c
-@@ -332,15 +332,6 @@ static struct platform_driver hisi_pcie_driver = {
- };
- builtin_platform_driver(hisi_pcie_driver);
- 
--static int hisi_pcie_almost_ecam_probe(struct platform_device *pdev)
--{
--	struct device *dev = &pdev->dev;
--	struct pci_ecam_ops *ops;
--
--	ops = (struct pci_ecam_ops *)of_device_get_match_data(dev);
--	return pci_host_common_probe(pdev, ops);
--}
--
- static int hisi_pcie_platform_init(struct pci_config_window *cfg)
- {
- 	struct device *dev = cfg->parent;
-@@ -385,7 +376,7 @@ static const struct of_device_id hisi_pcie_almost_ecam_of_match[] = {
- };
- 
- static struct platform_driver hisi_pcie_almost_ecam_driver = {
--	.probe  = hisi_pcie_almost_ecam_probe,
-+	.probe  = pci_host_common_probe,
- 	.driver = {
- 		   .name = "hisi-pcie-almost-ecam",
- 		   .of_match_table = hisi_pcie_almost_ecam_of_match,
-diff --git a/drivers/pci/controller/pci-host-common.c b/drivers/pci/controller/pci-host-common.c
-index 6d15bc12e726..953de57f6c57 100644
---- a/drivers/pci/controller/pci-host-common.c
-+++ b/drivers/pci/controller/pci-host-common.c
-@@ -10,6 +10,7 @@
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/of_address.h>
-+#include <linux/of_device.h>
- #include <linux/of_pci.h>
- #include <linux/pci-ecam.h>
- #include <linux/platform_device.h>
-@@ -55,15 +56,19 @@ static struct pci_config_window *gen_pci_init(struct device *dev,
- 	return ERR_PTR(err);
- }
- 
--int pci_host_common_probe(struct platform_device *pdev,
--			  const struct pci_ecam_ops *ops)
-+int pci_host_common_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct pci_host_bridge *bridge;
- 	struct pci_config_window *cfg;
- 	struct list_head resources;
-+	const struct pci_ecam_ops *ops;
- 	int ret;
- 
-+	ops = of_device_get_match_data(&pdev->dev);
-+	if (!ops)
-+		return -ENODEV;
-+
- 	bridge = devm_pci_alloc_host_bridge(dev, 0);
- 	if (!bridge)
- 		return -ENOMEM;
-diff --git a/drivers/pci/controller/pci-host-generic.c b/drivers/pci/controller/pci-host-generic.c
-index fd8cff61de14..b51977abfdf1 100644
---- a/drivers/pci/controller/pci-host-generic.c
-+++ b/drivers/pci/controller/pci-host-generic.c
-@@ -11,8 +11,6 @@
- #include <linux/kernel.h>
- #include <linux/init.h>
- #include <linux/module.h>
--#include <linux/of_address.h>
--#include <linux/of_pci.h>
- #include <linux/pci-ecam.h>
- #include <linux/platform_device.h>
- 
-@@ -79,23 +77,12 @@ static const struct of_device_id gen_pci_of_match[] = {
- };
- MODULE_DEVICE_TABLE(of, gen_pci_of_match);
- 
--static int gen_pci_probe(struct platform_device *pdev)
--{
--	const struct of_device_id *of_id;
--	struct pci_ecam_ops *ops;
--
--	of_id = of_match_node(gen_pci_of_match, pdev->dev.of_node);
--	ops = (struct pci_ecam_ops *)of_id->data;
--
--	return pci_host_common_probe(pdev, ops);
--}
--
- static struct platform_driver gen_pci_driver = {
- 	.driver = {
- 		.name = "pci-host-generic",
- 		.of_match_table = gen_pci_of_match,
- 	},
--	.probe = gen_pci_probe,
-+	.probe = pci_host_common_probe,
- 	.remove = pci_host_common_remove,
- };
- module_platform_driver(gen_pci_driver);
-diff --git a/drivers/pci/controller/pci-thunder-ecam.c b/drivers/pci/controller/pci-thunder-ecam.c
-index c3fdd3e6b21c..7e8835fee5f7 100644
---- a/drivers/pci/controller/pci-thunder-ecam.c
-+++ b/drivers/pci/controller/pci-thunder-ecam.c
-@@ -357,22 +357,20 @@ const struct pci_ecam_ops pci_thunder_ecam_ops = {
- #ifdef CONFIG_PCI_HOST_THUNDER_ECAM
- 
- static const struct of_device_id thunder_ecam_of_match[] = {
--	{ .compatible = "cavium,pci-host-thunder-ecam" },
-+	{
-+		.compatible = "cavium,pci-host-thunder-ecam",
-+		.data = &pci_thunder_ecam_ops,
-+	},
- 	{ },
- };
- 
--static int thunder_ecam_probe(struct platform_device *pdev)
--{
--	return pci_host_common_probe(pdev, &pci_thunder_ecam_ops);
--}
--
- static struct platform_driver thunder_ecam_driver = {
- 	.driver = {
- 		.name = KBUILD_MODNAME,
- 		.of_match_table = thunder_ecam_of_match,
- 		.suppress_bind_attrs = true,
- 	},
--	.probe = thunder_ecam_probe,
-+	.probe = pci_host_common_probe,
- };
- builtin_platform_driver(thunder_ecam_driver);
- 
-diff --git a/drivers/pci/controller/pci-thunder-pem.c b/drivers/pci/controller/pci-thunder-pem.c
-index 2e792707ceab..3f847969143e 100644
---- a/drivers/pci/controller/pci-thunder-pem.c
-+++ b/drivers/pci/controller/pci-thunder-pem.c
-@@ -451,22 +451,20 @@ static const struct pci_ecam_ops pci_thunder_pem_ops = {
- };
- 
- static const struct of_device_id thunder_pem_of_match[] = {
--	{ .compatible = "cavium,pci-host-thunder-pem" },
-+	{
-+		.compatible = "cavium,pci-host-thunder-pem",
-+		.data = &pci_thunder_pem_ops,
-+	},
- 	{ },
- };
- 
--static int thunder_pem_probe(struct platform_device *pdev)
--{
--	return pci_host_common_probe(pdev, &pci_thunder_pem_ops);
--}
--
- static struct platform_driver thunder_pem_driver = {
- 	.driver = {
- 		.name = KBUILD_MODNAME,
- 		.of_match_table = thunder_pem_of_match,
- 		.suppress_bind_attrs = true,
- 	},
--	.probe = thunder_pem_probe,
-+	.probe = pci_host_common_probe,
- };
- builtin_platform_driver(thunder_pem_driver);
- 
-diff --git a/drivers/pci/controller/pcie-tango.c b/drivers/pci/controller/pcie-tango.c
-index 3b2b10906fdd..c56c5539da6b 100644
---- a/drivers/pci/controller/pcie-tango.c
-+++ b/drivers/pci/controller/pcie-tango.c
-@@ -295,11 +295,14 @@ static int tango_pcie_probe(struct platform_device *pdev)
- 	spin_lock_init(&pcie->used_msi_lock);
- 	irq_set_chained_handler_and_data(virq, tango_msi_isr, pcie);
- 
--	return pci_host_common_probe(pdev, &smp8759_ecam_ops);
-+	return pci_host_common_probe(pdev);
- }
- 
- static const struct of_device_id tango_pcie_ids[] = {
--	{ .compatible = "sigma,smp8759-pcie" },
-+	{
-+		.compatible = "sigma,smp8759-pcie",
-+		.data = &smp8759_ecam_ops,
-+ 	},
- 	{ },
- };
- 
-diff --git a/include/linux/pci-ecam.h b/include/linux/pci-ecam.h
-index fd0edb8b8a00..1af5cb02ef7f 100644
---- a/include/linux/pci-ecam.h
-+++ b/include/linux/pci-ecam.h
-@@ -61,8 +61,7 @@ extern const struct pci_ecam_ops al_pcie_ops;	/* Amazon Annapurna Labs PCIe */
- 
- #if IS_ENABLED(CONFIG_PCI_HOST_COMMON)
- /* for DT-based PCI controllers that support ECAM */
--int pci_host_common_probe(struct platform_device *pdev,
--			  const struct pci_ecam_ops *ops);
-+int pci_host_common_probe(struct platform_device *pdev);
- int pci_host_common_remove(struct platform_device *pdev);
- #endif
- #endif
--- 
-2.20.1
-
+SGkgUHJhYmhha2FyLCBTZXJnZWksIEJqb3JuLA0KDQo+IEZyb206IExhZCwgUHJhYmhha2FyLCBT
+ZW50OiBUaHVyc2RheSwgQXByaWwgOSwgMjAyMCA3OjA1IFBNDQo8c25pcD4gDQo+ID4gPiBkaWZm
+IC0tZ2l0IGEvaW5jbHVkZS9saW51eC9wY2lfaWRzLmggYi9pbmNsdWRlL2xpbnV4L3BjaV9pZHMu
+aA0KPiA+ID4gaW5kZXggMWRmYzRlMWRjYjk0Li45ZTk1N2MxOGFiZWIgMTAwNjQ0DQo+ID4gPiAt
+LS0gYS9pbmNsdWRlL2xpbnV4L3BjaV9pZHMuaA0KPiA+ID4gKysrIGIvaW5jbHVkZS9saW51eC9w
+Y2lfaWRzLmgNCj4gPiA+IEBAIC0yNDYwLDYgKzI0NjAsNyBAQA0KPiA+ID4gICAjZGVmaW5lIFBD
+SV9ERVZJQ0VfSURfUkVORVNBU19TSDc3NjMgICAgICAgIDB4MDAwNA0KPiA+ID4gICAjZGVmaW5l
+IFBDSV9ERVZJQ0VfSURfUkVORVNBU19TSDc3ODUgICAgICAgIDB4MDAwNw0KPiA+ID4gICAjZGVm
+aW5lIFBDSV9ERVZJQ0VfSURfUkVORVNBU19TSDc3ODYgICAgICAgIDB4MDAxMA0KPiA+ID4gKyNk
+ZWZpbmUgUENJX0RFVklDRV9JRF9SRU5FU0FTX1I4QTc3NEMwICAgICAgIDB4MDAyZA0KPiA+DQo+
+ID4gICAgIFdlIGRvbid0IGFkZCB0aGUgZGV2aWNlIElEcyBpbiB0aGlzIGZpbGUsIHVubGVzcyB1
+c2VkIGluIHNldmVyYWwgcGxhY2VzLg0KPiA+IElzIGl0Pw0KPiA+DQo+IE15IGJhZCBJIHNob3Vs
+ZCBoYXZlIGNoZWNrZWQgaXQgYmVmb3JlIG1ha2luZyB0aGlzIGNoYW5nZSBhY3R1YWxseSBpdA0K
+PiB3YXMgc3VnZ2VzdGVkIGluIG15IHByZXZpb3VzIHZlcnNpb24gb2YgdGhlIHNlcmllcyBidXQg
+YW55d2F5IGF0bSB0aGlzDQo+IHdhcyBwbGFubmVkIHRvIGJlICB1c2VkIG9ubHkgaW4gcGNpX2Vu
+ZHBvaW50X3Rlc3QgZHJpdmVyLCBzbyBpbiB0aGF0DQo+IGNhc2UgSWxsIGRyb3AgdGhpcyBwYXRj
+aC4NCg0KSSdtIHZlcnkgc29ycnksIHRoaXMgaXMgbXkgZmF1bHQuIEkgc3VnZ2VzdGVkIHRoaXMg
+YnV0IEkgZGlkbid0IGNoZWNrDQp0aGlzIHBjaV9pZHMuaCdzIHJ1bGUuLi4NCg0KQmVzdCByZWdh
+cmRzLA0KWW9zaGloaXJvIFNoaW1vZGENCg0K
