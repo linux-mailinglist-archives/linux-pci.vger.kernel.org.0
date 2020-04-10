@@ -2,140 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 967381A4AA4
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Apr 2020 21:39:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E6671A4AC9
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Apr 2020 21:45:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbgDJTiD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Apr 2020 15:38:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52560 "EHLO mail.kernel.org"
+        id S1726626AbgDJTpt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Apr 2020 15:45:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54504 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726203AbgDJTiD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 10 Apr 2020 15:38:03 -0400
+        id S1726142AbgDJTpt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 10 Apr 2020 15:45:49 -0400
 Received: from localhost (mobile-166-170-220-109.mycingular.net [166.170.220.109])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB1CC20732;
-        Fri, 10 Apr 2020 19:38:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B18E720801;
+        Fri, 10 Apr 2020 19:45:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586547482;
-        bh=76FW6bsyi+GvI3cA1295vPvYzfcdLfIdfR/uMK0cqIM=;
+        s=default; t=1586547949;
+        bh=c9U8OrXPzk6frqhLN2HldS4XFESUo13MLKIaOOx0aJk=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=f5aqyeY5H8P+Dg0VtR5VXhNEaIBxx4R/gGzchOa7w+V/JIMrsYuYNV7aLVSvrZntH
-         WWv3dp0kGmlDxfECQgMchX8GExkaXAsoMWQhr1nrjc+24qlq2ngw+8X5Yw7mD9qxHN
-         rCJAnLyi2B0qmE9qQBazZ/B4H3+CIp6g7so4MwFk=
-Date:   Fri, 10 Apr 2020 14:38:00 -0500
+        b=oKeHSPEtbSVJZMuOzAFicZXHe70ZNxXjWWd+pgHYft6o+6ixfKi7WzlNUJNyq/AZU
+         xl4Qqa98YTjfELxi0UUbol11KixUPBpbmi+Ueg0VviCuESZJ9H+rHaTZFRl9SFwCUm
+         ZhD7/CkXxcQKvF0N1TjYzg5kfQWPTqQSHtdLrJxM=
+Date:   Fri, 10 Apr 2020 14:45:47 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans De Goede <hdegoede@redhat.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        DRI-devel <dri-devel@lists.freedesktop.org>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        intel-wired-lan@lists.osuosl.org
-Subject: Re: [PATCH 5/7] PM: sleep: core: Rename DPM_FLAG_NEVER_SKIP
-Message-ID: <20200410193800.GA5202@google.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH] ACPI/PCI: pci_link: use extended_irq union member when
+ setting ext-irq shareable
+Message-ID: <20200410194547.GA7293@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5092680.jloV5Ae5OO@kreacher>
+In-Reply-To: <20200410131442.22842-1-hdegoede@redhat.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Apr 10, 2020 at 05:56:13PM +0200, Rafael J. Wysocki wrote:
-> From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+On Fri, Apr 10, 2020 at 03:14:42PM +0200, Hans de Goede wrote:
+> The case ACPI_RESOURCE_TYPE_EXTENDED_IRQ inside acpi_pci_link_set()
+> is correctly using resource->res.data.extended_irq.foo for most settings,
+> but for the sharable setting it sofar has accidentally been using
+> resource->res.data.irq.shareable instead of
+> resource->res.data.extended_irq.shareable.
 > 
-> Rename DPM_FLAG_NEVER_SKIP to DPM_FLAG_NO_DIRECT_COMPLETE which
-> matches its purpose more closely.
-> 
-> No functional impact.
-> 
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Note that the old code happens to also work because the sharable field
+> offset is the same for both the acpi_resource_irq and
+> acpi_resource_extended_irq structs.
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com> # for PCI parts
+s/sharable/shareable/ several times above
+s/sofar/so far/
+
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
 > ---
->  Documentation/driver-api/pm/devices.rst    |  6 +++---
->  Documentation/power/pci.rst                | 10 +++++-----
->  drivers/base/power/main.c                  |  2 +-
->  drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c    |  2 +-
->  drivers/gpu/drm/i915/intel_runtime_pm.c    |  2 +-
->  drivers/gpu/drm/radeon/radeon_kms.c        |  2 +-
->  drivers/misc/mei/pci-me.c                  |  2 +-
->  drivers/misc/mei/pci-txe.c                 |  2 +-
->  drivers/net/ethernet/intel/e1000e/netdev.c |  2 +-
->  drivers/net/ethernet/intel/igb/igb_main.c  |  2 +-
->  drivers/net/ethernet/intel/igc/igc_main.c  |  2 +-
->  drivers/pci/pcie/portdrv_pci.c             |  2 +-
->  include/linux/pm.h                         |  6 +++---
->  13 files changed, 21 insertions(+), 21 deletions(-)
+>  drivers/acpi/pci_link.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/Documentation/driver-api/pm/devices.rst b/Documentation/driver-api/pm/devices.rst
-> index f66c7b9126ea..4ace0eba4506 100644
-> --- a/Documentation/driver-api/pm/devices.rst
-> +++ b/Documentation/driver-api/pm/devices.rst
-> @@ -361,9 +361,9 @@ the phases are: ``prepare``, ``suspend``, ``suspend_late``, ``suspend_noirq``.
->  	runtime PM disabled.
+> diff --git a/drivers/acpi/pci_link.c b/drivers/acpi/pci_link.c
+> index 00a6da2121be..ed3d2182cf2c 100644
+> --- a/drivers/acpi/pci_link.c
+> +++ b/drivers/acpi/pci_link.c
+> @@ -322,10 +322,10 @@ static int acpi_pci_link_set(struct acpi_pci_link *link, int irq)
+>  		resource->res.data.extended_irq.polarity =
+>  		    link->irq.polarity;
+>  		if (link->irq.triggering == ACPI_EDGE_SENSITIVE)
+> -			resource->res.data.irq.shareable =
+> +			resource->res.data.extended_irq.shareable =
+>  			    ACPI_EXCLUSIVE;
+>  		else
+> -			resource->res.data.irq.shareable = ACPI_SHARED;
+> +			resource->res.data.extended_irq.shareable = ACPI_SHARED;
 
-Minor question about a preceding paragraph that ends:
+Ouch, looks like that copy/paste error has been there since the
+beginning of git.  Nice catch!
 
-  In that case, the ``->complete`` callback will be invoked directly
-  after the ``->prepare`` callback and is entirely responsible for
-  putting the device into a consistent state as appropriate.
-
-What does" a consistent state as appropriate" mean?  I know this is
-generic documentation at a high level, so maybe there's no good
-explanation for "consistent state," but I don't know what to imagine
-there.
-
-And what does "as appropriate" mean?  Would it change the meaning to
-drop those two words, or are there situations where it's not
-appropriate to put the device into a consistent state?  Or maybe it's
-just that the type of device determines what the consistent state is?
-
->  	This feature also can be controlled by device drivers by using the
-> -	``DPM_FLAG_NEVER_SKIP`` and ``DPM_FLAG_SMART_PREPARE`` driver power
-> -	management flags.  [Typically, they are set at the time the driver is
-> -	probed against the device in question by passing them to the
-> +	``DPM_FLAG_NO_DIRECT_COMPLETE`` and ``DPM_FLAG_SMART_PREPARE`` driver
-> +	power management flags.  [Typically, they are set at the time the driver
-> +	is probed against the device in question by passing them to the
->  	:c:func:`dev_pm_set_driver_flags` helper function.]  If the first of
->  	these flags is set, the PM core will not apply the direct-complete
->  	procedure described above to the given device and, consequenty, to any
-
-s/consequenty/consequently/
-
-Drive-by comment: I looked for a definition of "direct-complete".  The
-closest I found is a couple paragraphs above this, where it says "Note
-that this direct-complete procedure ...," but that leaves me to try to
-reconstruct the definition from the preceding text.
-
-AFAICT, going to freeze, standby, or memory sleep includes these
-callbacks:
-
-  ->prepare
-  ->suspend
-  ->suspend_late
-  ->suspend_noirq
-  ->complete         (not mentioned in the list of phases)
-
-And "direct-complete" means we skip the suspend, suspend_late,
-and suspend_noirq callbacks so we only use these:
-
-  ->prepare
-  ->complete
-
-And apparently we skip those callbacks for device X if ->prepare() for
-X and all its descendents returns a positive value AND they are all
-runtime-suspended, except if a driver for X or a descendent sets
-DPM_FLAG_NO_DIRECT_COMPLETE.
-
-Bjorn
+>  		resource->res.data.extended_irq.interrupt_count = 1;
+>  		resource->res.data.extended_irq.interrupts[0] = irq;
+>  		/* ignore resource_source, it's optional */
+> -- 
+> 2.26.0
+> 
