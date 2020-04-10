@@ -2,86 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B15141A46A1
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Apr 2020 15:14:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E45581A481B
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Apr 2020 18:01:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726009AbgDJNOw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Apr 2020 09:14:52 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20237 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725930AbgDJNOv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Apr 2020 09:14:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586524491;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=UgrYcoVu9FKjPVruinahWgmUMbCGqdc7Uj5CG/o/3e0=;
-        b=BE9EH8I0b69cJWf6b5ek2piRbFy/Ap0GHI3HZY5x6NlU2+d91kU+Ugv+qQyL7Lm+HagYbS
-        C3o74ylcZrk8oL0ZswTgktlfFIcKktH4DLfkUX14f5GJhU2+6WtshHIOS1DeUB6lePbcx8
-        2FW6R21rZ68uYCsOgSO7hVTOd8pivK4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-271-XHtnpSRtO6i9i5L_NmSftw-1; Fri, 10 Apr 2020 09:14:47 -0400
-X-MC-Unique: XHtnpSRtO6i9i5L_NmSftw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8709D8017F3;
-        Fri, 10 Apr 2020 13:14:46 +0000 (UTC)
-Received: from x1.localdomain.com (ovpn-112-81.ams2.redhat.com [10.36.112.81])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2DB5210027A9;
-        Fri, 10 Apr 2020 13:14:43 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH] ACPI/PCI: pci_link: use extended_irq union member when setting ext-irq shareable
-Date:   Fri, 10 Apr 2020 15:14:42 +0200
-Message-Id: <20200410131442.22842-1-hdegoede@redhat.com>
+        id S1726626AbgDJQAv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Apr 2020 12:00:51 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:57670 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726725AbgDJQAv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Apr 2020 12:00:51 -0400
+Received: from 185.80.35.16 (185.80.35.16) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
+ id 08258914799ae752; Fri, 10 Apr 2020 18:00:49 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux PM <linux-pm@vger.kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>
+Cc:     Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans De Goede <hdegoede@redhat.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 0/7] PM: sleep: core: Rearrange the handling of driver power management flags
+Date:   Fri, 10 Apr 2020 17:46:27 +0200
+Message-ID: <1888197.j9z7NJ8yPn@kreacher>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The case ACPI_RESOURCE_TYPE_EXTENDED_IRQ inside acpi_pci_link_set()
-is correctly using resource->res.data.extended_irq.foo for most settings,
-but for the sharable setting it sofar has accidentally been using
-resource->res.data.irq.shareable instead of
-resource->res.data.extended_irq.shareable.
+Hi Alan,
 
-Note that the old code happens to also work because the sharable field
-offset is the same for both the acpi_resource_irq and
-acpi_resource_extended_irq structs.
+Following our recent discussion regarding the DPM_FLAG_* family of flags [1],
+I have decided to follow some of your recommendations and make changes to the
+core code handling those flags.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/acpi/pci_link.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+The purpose of this is basically to make the code more consistent internally,
+easier to follow and better documented.
 
-diff --git a/drivers/acpi/pci_link.c b/drivers/acpi/pci_link.c
-index 00a6da2121be..ed3d2182cf2c 100644
---- a/drivers/acpi/pci_link.c
-+++ b/drivers/acpi/pci_link.c
-@@ -322,10 +322,10 @@ static int acpi_pci_link_set(struct acpi_pci_link *=
-link, int irq)
- 		resource->res.data.extended_irq.polarity =3D
- 		    link->irq.polarity;
- 		if (link->irq.triggering =3D=3D ACPI_EDGE_SENSITIVE)
--			resource->res.data.irq.shareable =3D
-+			resource->res.data.extended_irq.shareable =3D
- 			    ACPI_EXCLUSIVE;
- 		else
--			resource->res.data.irq.shareable =3D ACPI_SHARED;
-+			resource->res.data.extended_irq.shareable =3D ACPI_SHARED;
- 		resource->res.data.extended_irq.interrupt_count =3D 1;
- 		resource->res.data.extended_irq.interrupts[0] =3D irq;
- 		/* ignore resource_source, it's optional */
---=20
-2.26.0
+First of all, patch [1/7] changes the PM core to skip driver-level "late"
+and "noirq" suspend callbacks for devices with SMART_SUSPEND set if they are
+still runtime-suspended during the "late" system-wide suspend phase (without
+the patch it does that only if subsystem-level late/noirq/early suspend/resume
+callbacks are not present for the device, which is demonstrably inconsistent)
+and updates the resume part of the code accordingly (it doesn't need to check
+whether or not the subsystem-level callbacks are present any more).
+
+The next patch, [2/7], is purely cosmetic and its only purpose is to reduce
+the LOC number and move related pieces of code closer to each other.
+
+Patch [3/7] changes the PM core so that it doesn't skip any subsystem-level
+callbacks during system-wide resume (without the patch they may be skipped in
+the "early resume" and "resume" phases due to LEAVE_SUSPENDED being set which
+may be problematic) and to always run the driver's ->resume callback if the
+corresponding subsystem-level callback is not present (without the patch it
+may be skipped if LEAVE_SUSPENDED is set) to let it reverse the changes made
+by the driver's ->suspend callback (which always runs too) if need be.
+
+Patches [4-6/7] rename one function in the PM core and two driver PM flags to
+make their names better reflect their purpose.
+
+Finally, patch [7/7] updates the documentation of the driver PM flags to
+reflect the new code flows.
+
+This patch series have been available in the git branch at
+
+ git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+ pm-sleep-core
+
+for easier web and git access.
+
+Cheers!
+
+
+[1] https://lore.kernel.org/linux-pm/Pine.LNX.4.44L0.2003251631360.1724-100000@netrider.rowland.org/
+
+
 
