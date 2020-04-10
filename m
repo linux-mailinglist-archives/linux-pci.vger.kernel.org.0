@@ -2,27 +2,27 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8FDD81A41A9
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Apr 2020 06:16:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 86FF41A4096
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Apr 2020 05:57:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728271AbgDJD67 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Apr 2020 23:58:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60204 "EHLO mail.kernel.org"
+        id S1728588AbgDJDtg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Apr 2020 23:49:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728230AbgDJDsf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:48:35 -0400
+        id S1728578AbgDJDtf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:49:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 884FD214D8;
-        Fri, 10 Apr 2020 03:48:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5948520B1F;
+        Fri, 10 Apr 2020 03:49:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490515;
-        bh=6tEfhxHQDVSqkJDQqa2VuTVPtNeSt/QR1WgPANJ7ZMk=;
+        s=default; t=1586490575;
+        bh=qmbLUSU/w7JaoSjE/dGj7Mwn2TrAusEL8vM6d4qoZQ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CUn6PDpA3p2cup7XU4BCOO6SKh95uQ86c3E6GCoTXA6KbD4ZofocicFTMdxYV4fuh
-         H2Rv0KZW6l60R4T50+IAz1rTNvvpuBzVvR3r4AVWk0BDwq88Xo+G6/e2gGYnFKI4Ne
-         xHEQztC31svdazSmypthEuRT2l6RmZJg/3bTnOBY=
+        b=I8WzbQTdH3RTM74kmjAR47YJFM1rZwil1zrDTfkahO8OLlaTyn0bhpKlL1HCTNcRN
+         sJPaxOKKZ+H6ywNp6Pwqj8jsY4rk1YA/QVgWhaRPYKgHz3J8yQRi6GIHwJIA9lygU8
+         2Iv96dxQ/1DfBgARAe42Jf++lU8Xa9J3xUs1ee3o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Logan Gunthorpe <logang@deltatee.com>,
@@ -31,12 +31,12 @@ Cc:     Logan Gunthorpe <logang@deltatee.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 29/56] PCI/switchtec: Fix init_completion race condition with poll_wait()
-Date:   Thu,  9 Apr 2020 23:47:33 -0400
-Message-Id: <20200410034800.8381-29-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 21/46] PCI/switchtec: Fix init_completion race condition with poll_wait()
+Date:   Thu,  9 Apr 2020 23:48:44 -0400
+Message-Id: <20200410034909.8922-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200410034800.8381-1-sashal@kernel.org>
-References: <20200410034800.8381-1-sashal@kernel.org>
+In-Reply-To: <20200410034909.8922-1-sashal@kernel.org>
+References: <20200410034909.8922-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -78,7 +78,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
-index 9c3ad09d30222..fb4602d44eb10 100644
+index cc43c855452f7..2c9c3061894b2 100644
 --- a/drivers/pci/switch/switchtec.c
 +++ b/drivers/pci/switch/switchtec.c
 @@ -175,7 +175,7 @@ static int mrpc_queue_cmd(struct switchtec_user *stuser)
