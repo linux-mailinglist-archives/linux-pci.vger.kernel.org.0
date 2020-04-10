@@ -2,88 +2,140 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 26B471A4AA1
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Apr 2020 21:39:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 967381A4AA4
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Apr 2020 21:39:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbgDJTiC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Apr 2020 15:38:02 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44923 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726741AbgDJTiC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Apr 2020 15:38:02 -0400
-Received: by mail-wr1-f67.google.com with SMTP id c15so3371692wro.11
-        for <linux-pci@vger.kernel.org>; Fri, 10 Apr 2020 12:37:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=rAbC8xJySPaHafi+vPb6FusBwDap8yUWP9nVyVhE2Qs=;
-        b=cFna/Smlk5/5S9QjKWJudvbJx/O9HhtT5XLS5nXjHXbG7xcYgcwvLu28ZCrqFtGn3v
-         5UWYdbQNaxE3rHuPgy2QYAyqstPilZSy291siVBxawIivFczFpcvNAj+JSNSreGzb3jQ
-         2vla7cjaKAJve/H3zqcAjzXaiMfmmSWp1B02HBTqtiR56ujvWU3v8cAX3i8fmIC6NMjC
-         owJdxUFCqtSJ0smx+I5+qxr5L6vOs/damzo6OHo/DV19ZaymBvehNe9S28sNftp8XU0y
-         A0MdHMqNjmw+sRweujyEx3qu/YooDME6m3zdewVnL/PBGW1xf8r3lhEzbOkNBZuSW0MR
-         uoPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=rAbC8xJySPaHafi+vPb6FusBwDap8yUWP9nVyVhE2Qs=;
-        b=FdD7fgSRhHNrawbRSesAr26RlxRI6n6LLTZmqvISAMIzsmClx1zwYtg0DHqQ3p/kzl
-         Izoge4KwViixux4cnfe9OqcdGjkVXx/MKupfutSAjsHRm1SnWeeNKb/Yrxfa2B+oAnQP
-         ZtjZ72F/9NFhC5xAlaoWht43jWSZRtLMM+2skjb6Fc225kOWUuEsfsNnGVY5n1uv8dG7
-         mcrmXUHkBiPNtIqlyFuZYeMiPhOMoM1q7i+d9qOWajfq8NTCdRiJSBZ8uKFEjEgX5JKt
-         z2uVhpUUHf1fz4QkNk8fDfn7kSjtPRYRw9jUKNSna3fzxWHUwPGp9UwKqKk4FLC65CRx
-         Lepg==
-X-Gm-Message-State: AGi0PuYablN16ZJ/Q2+z44+kA8N01sGUNngT52OQFK0kBjCUT2lHrfdj
-        VxnGGOuc+M9bv18JL56w0Qo=
-X-Google-Smtp-Source: APiQypIoap0t3cPlWY6YXOqnoarNEsMg1lUa0doESGnf/pTmRw1NXAurQcfGAn+5fH+kKfrl45TLEg==
-X-Received: by 2002:adf:f7c6:: with SMTP id a6mr6002872wrq.193.1586547478953;
-        Fri, 10 Apr 2020 12:37:58 -0700 (PDT)
-Received: from localhost.localdomain (51B6D8A0.dsl.pool.telekom.hu. [81.182.216.160])
-        by smtp.gmail.com with ESMTPSA id w12sm3352609wrl.18.2020.04.10.12.37.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Apr 2020 12:37:58 -0700 (PDT)
-From:   Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
-To:     helgaas@kernel.org
-Cc:     Bolarinwa Olayemi Saheed <refactormyself@gmail.com>,
-        bjorn@helgaas.com, skhan@linuxfoundation.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH v3] Replace -EINVAL with a positive error number
-Date:   Fri, 10 Apr 2020 21:37:46 +0200
-Message-Id: <20200410193746.1815-1-refactormyself@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        id S1726760AbgDJTiD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Apr 2020 15:38:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52560 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726203AbgDJTiD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 10 Apr 2020 15:38:03 -0400
+Received: from localhost (mobile-166-170-220-109.mycingular.net [166.170.220.109])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB1CC20732;
+        Fri, 10 Apr 2020 19:38:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586547482;
+        bh=76FW6bsyi+GvI3cA1295vPvYzfcdLfIdfR/uMK0cqIM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=f5aqyeY5H8P+Dg0VtR5VXhNEaIBxx4R/gGzchOa7w+V/JIMrsYuYNV7aLVSvrZntH
+         WWv3dp0kGmlDxfECQgMchX8GExkaXAsoMWQhr1nrjc+24qlq2ngw+8X5Yw7mD9qxHN
+         rCJAnLyi2B0qmE9qQBazZ/B4H3+CIp6g7so4MwFk=
+Date:   Fri, 10 Apr 2020 14:38:00 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans De Goede <hdegoede@redhat.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        DRI-devel <dri-devel@lists.freedesktop.org>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        intel-wired-lan@lists.osuosl.org
+Subject: Re: [PATCH 5/7] PM: sleep: core: Rename DPM_FLAG_NEVER_SKIP
+Message-ID: <20200410193800.GA5202@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5092680.jloV5Ae5OO@kreacher>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
-Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
----
- drivers/pci/access.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On Fri, Apr 10, 2020 at 05:56:13PM +0200, Rafael J. Wysocki wrote:
+> From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+> 
+> Rename DPM_FLAG_NEVER_SKIP to DPM_FLAG_NO_DIRECT_COMPLETE which
+> matches its purpose more closely.
+> 
+> No functional impact.
+> 
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-diff --git a/drivers/pci/access.c b/drivers/pci/access.c
-index 79c4a2ef269a..d5460eb92c12 100644
---- a/drivers/pci/access.c
-+++ b/drivers/pci/access.c
-@@ -409,7 +409,7 @@ int pcie_capability_read_word(struct pci_dev *dev, int pos, u16 *val)
- 
- 	*val = 0;
- 	if (pos & 1)
--		return -EINVAL;
-+		return pcibios_err_to_errno(PCIBIOS_BAD_REGISTER_NUMBER);
- 
- 	if (pcie_capability_reg_implemented(dev, pos)) {
- 		ret = pci_read_config_word(dev, pci_pcie_cap(dev) + pos, val);
-@@ -444,7 +444,7 @@ int pcie_capability_read_dword(struct pci_dev *dev, int pos, u32 *val)
- 
- 	*val = 0;
- 	if (pos & 3)
--		return -EINVAL;
-+		return pcibios_err_to_errno(PCIBIOS_BAD_REGISTER_NUMBER);
- 
- 	if (pcie_capability_reg_implemented(dev, pos)) {
- 		ret = pci_read_config_dword(dev, pci_pcie_cap(dev) + pos, val);
--- 
-2.17.1
+Acked-by: Bjorn Helgaas <bhelgaas@google.com> # for PCI parts
 
+> ---
+>  Documentation/driver-api/pm/devices.rst    |  6 +++---
+>  Documentation/power/pci.rst                | 10 +++++-----
+>  drivers/base/power/main.c                  |  2 +-
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c    |  2 +-
+>  drivers/gpu/drm/i915/intel_runtime_pm.c    |  2 +-
+>  drivers/gpu/drm/radeon/radeon_kms.c        |  2 +-
+>  drivers/misc/mei/pci-me.c                  |  2 +-
+>  drivers/misc/mei/pci-txe.c                 |  2 +-
+>  drivers/net/ethernet/intel/e1000e/netdev.c |  2 +-
+>  drivers/net/ethernet/intel/igb/igb_main.c  |  2 +-
+>  drivers/net/ethernet/intel/igc/igc_main.c  |  2 +-
+>  drivers/pci/pcie/portdrv_pci.c             |  2 +-
+>  include/linux/pm.h                         |  6 +++---
+>  13 files changed, 21 insertions(+), 21 deletions(-)
+> 
+> diff --git a/Documentation/driver-api/pm/devices.rst b/Documentation/driver-api/pm/devices.rst
+> index f66c7b9126ea..4ace0eba4506 100644
+> --- a/Documentation/driver-api/pm/devices.rst
+> +++ b/Documentation/driver-api/pm/devices.rst
+> @@ -361,9 +361,9 @@ the phases are: ``prepare``, ``suspend``, ``suspend_late``, ``suspend_noirq``.
+>  	runtime PM disabled.
+
+Minor question about a preceding paragraph that ends:
+
+  In that case, the ``->complete`` callback will be invoked directly
+  after the ``->prepare`` callback and is entirely responsible for
+  putting the device into a consistent state as appropriate.
+
+What does" a consistent state as appropriate" mean?  I know this is
+generic documentation at a high level, so maybe there's no good
+explanation for "consistent state," but I don't know what to imagine
+there.
+
+And what does "as appropriate" mean?  Would it change the meaning to
+drop those two words, or are there situations where it's not
+appropriate to put the device into a consistent state?  Or maybe it's
+just that the type of device determines what the consistent state is?
+
+>  	This feature also can be controlled by device drivers by using the
+> -	``DPM_FLAG_NEVER_SKIP`` and ``DPM_FLAG_SMART_PREPARE`` driver power
+> -	management flags.  [Typically, they are set at the time the driver is
+> -	probed against the device in question by passing them to the
+> +	``DPM_FLAG_NO_DIRECT_COMPLETE`` and ``DPM_FLAG_SMART_PREPARE`` driver
+> +	power management flags.  [Typically, they are set at the time the driver
+> +	is probed against the device in question by passing them to the
+>  	:c:func:`dev_pm_set_driver_flags` helper function.]  If the first of
+>  	these flags is set, the PM core will not apply the direct-complete
+>  	procedure described above to the given device and, consequenty, to any
+
+s/consequenty/consequently/
+
+Drive-by comment: I looked for a definition of "direct-complete".  The
+closest I found is a couple paragraphs above this, where it says "Note
+that this direct-complete procedure ...," but that leaves me to try to
+reconstruct the definition from the preceding text.
+
+AFAICT, going to freeze, standby, or memory sleep includes these
+callbacks:
+
+  ->prepare
+  ->suspend
+  ->suspend_late
+  ->suspend_noirq
+  ->complete         (not mentioned in the list of phases)
+
+And "direct-complete" means we skip the suspend, suspend_late,
+and suspend_noirq callbacks so we only use these:
+
+  ->prepare
+  ->complete
+
+And apparently we skip those callbacks for device X if ->prepare() for
+X and all its descendents returns a positive value AND they are all
+runtime-suspended, except if a driver for X or a descendent sets
+DPM_FLAG_NO_DIRECT_COMPLETE.
+
+Bjorn
