@@ -2,141 +2,91 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 24D9E1A4D63
-	for <lists+linux-pci@lfdr.de>; Sat, 11 Apr 2020 04:09:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 73FE41A4D79
+	for <lists+linux-pci@lfdr.de>; Sat, 11 Apr 2020 04:21:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbgDKCJb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Apr 2020 22:09:31 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:41142 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726666AbgDKCJb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 10 Apr 2020 22:09:31 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 4C315CF969FBCBA833C1;
-        Sat, 11 Apr 2020 10:09:27 +0800 (CST)
-Received: from [10.65.58.147] (10.65.58.147) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Sat, 11 Apr 2020
- 10:09:25 +0800
-Subject: Re: [PATCH] Replace -EINVAL with PCIBIOS_BAD_REGISTER_NUMBER
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bolarinwa Olayemi Saheed <refactormyself@gmail.com>,
-        <bjorn@helgaas.com>
-References: <20200410202252.GA11837@google.com>
-CC:     <skhan@linuxfoundation.org>, <linux-pci@vger.kernel.org>
-From:   Yicong Yang <yangyicong@hisilicon.com>
-Message-ID: <ec072da8-3dcb-2606-40ee-39e745311292@hisilicon.com>
-Date:   Sat, 11 Apr 2020 10:10:16 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        id S1726683AbgDKCVr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Apr 2020 22:21:47 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:36946 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726648AbgDKCVr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Apr 2020 22:21:47 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03B2LeCO087819;
+        Fri, 10 Apr 2020 21:21:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1586571700;
+        bh=nIXY7QAeXSv8f9XHkzJPsSyBosxDw+h4kY/edLG+RLk=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=zFfH/Ijy0vVIAU66wul/eHxMcqaa/j2W/sKnCWZm+5r+SIGuyCTiY4sH49KIi3dWk
+         qt+DIl0ua2SFyX1x5Cx4dtzaP2ieps9q+P2+73Af07bjwmhK1udIK1bGoL1VY+mH+W
+         kuBCMOyw6Oj4CFZ0ht9vXVWQMj9FVLXDEPaewKpM=
+Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03B2LegC083286
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 10 Apr 2020 21:21:40 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 10
+ Apr 2020 21:21:39 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 10 Apr 2020 21:21:40 -0500
+Received: from [10.250.133.142] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03B2LVFq000372;
+        Fri, 10 Apr 2020 21:21:33 -0500
+Subject: Re: [PATCH 1/3] dt-bindings: PCI: cadence: Deprecate inbound/outbound
+ specific bindings
+To:     Rob Herring <robh@kernel.org>
+CC:     Tom Joseph <tjoseph@cadence.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200327104727.4708-1-kishon@ti.com>
+ <20200327104727.4708-2-kishon@ti.com> <20200410163817.GA24330@bogus>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <86f6679d-1a5d-16fe-fe1a-f7ae8f46617a@ti.com>
+Date:   Sat, 11 Apr 2020 07:51:31 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200410202252.GA11837@google.com>
-Content-Type: text/plain; charset="windows-1252"
+In-Reply-To: <20200410163817.GA24330@bogus>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.65.58.147]
-X-CFilter-Loop: Reflected
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn and Saheed,
-
-Callers use return value(most callers even don't check) of
-pcie_capability_{read,write}_*() I found lists below. some
-may directly print them to dmesg, others return the error
-codes to its caller. I think we should do the conversion in
-both condition.
-
-- pcie_speeds() in drivers/infiniband/hw/hfi1/pcie.c, line 306
-- amd_ntb_get_link_status() in drivers/ntb/hw/amd/ntb_hw_amd.c, line 216, line 233
-
-the probably change may look like:
-
-    ret = pcie_capability_{read, write}_*();
-    if (ret)
-        return pcibios_err_to_errno(ret);
-
-However, pci_{read, write}_config*() also have such problem, as they are also
-used widely outside pci driver and these drivers don't do the conversion. for example
-in arch/x86/platform/intel/iosf_mbi.c, iosf_mbi_pci_read_mdr() at line 39:
-
-    result = pci_read_config_dword();
-    if (result < 0)
-        goto fail_read;
-
-Seems it'll nevet get a failure result. Perhaps another patch is needed to solve these issues.
-
-AS PCIBIOS_* error code canbe *equivalent* to generic error code, why can't we
-directly use the generic ones? Considering of compatibility, maybe possible
-change will be like:
-
-    - #define PCIBIOS_FUNC_NOT_SUPPORTED 0X81
-    + #define PCIBIOS_FUNC_NOT_SUPPORTED -ENOENT
-    ......
-
-and pcibios_err_to_errno() is not neccessary any more.
-
-I don't know why we didn't use generic error code and define positive private errors.
-Please tell me if there is any background.
-
-Regards,
-Yicong
 
 
-On 2020/4/11 4:22, Bjorn Helgaas wrote:
-> On Fri, Apr 10, 2020 at 09:28:07AM +0800, Yicong Yang wrote:
->> Hi Bolarinwa,
+On 4/10/2020 10:08 PM, Rob Herring wrote:
+> On Fri, 27 Mar 2020 16:17:25 +0530, Kishon Vijay Abraham I wrote:
+>> Deprecate cdns,max-outbound-regions and cdns,no-bar-match-nbits for
+>> host mode as both these could be derived from "ranges" and "dma-ranges"
+>> property. "cdns,max-outbound-regions" property would still be required
+>> for EP mode.
 >>
->> I notice some drivers use these functions and if there is an error,
->> pass the error code directly to the userspace. As it's our private
->> error code, is it appropriate to pass or should we call
->> pcibios_err_to_errno()(include/linux/pci.h, line 672) to do the
->> conversion?
-> The whole point of this is to make the return values of the
-> pcie_capability_{read,write,etc}*() functions work the same as
-> the pci_{read,write}_config*() functions.
->
-> The latter return PCIBIOS_* error codes, so the former should as well.
->
-> When we do this, we do need to audit every caller of the
-> pcie_capability_{read,write}*() functions to make sure we don't break
-> them.  If some callers pass the error code directly to userspace, they
-> may need some change.
->
-> Yicong, can you point to the ones you noticed so Saheed can check them
-> out?
->
-> Bjorn
->
->> On 2020/4/10 0:16, Bolarinwa Olayemi Saheed wrote:
->>> Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
->>> Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
->>> ---
->>>  drivers/pci/access.c | 4 ++--
->>>  1 file changed, 2 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
->>> index 79c4a2ef269a..451f2b8b2b3c 100644
->>> --- a/drivers/pci/access.c
->>> +++ b/drivers/pci/access.c
->>> @@ -409,7 +409,7 @@ int pcie_capability_read_word(struct pci_dev *dev, int pos, u16 *val)
->>>  
->>>  	*val = 0;
->>>  	if (pos & 1)
->>> -		return -EINVAL;
->>> +		return PCIBIOS_BAD_REGISTER_NUMBER;
->>>  
->>>  	if (pcie_capability_reg_implemented(dev, pos)) {
->>>  		ret = pci_read_config_word(dev, pci_pcie_cap(dev) + pos, val);
->>> @@ -444,7 +444,7 @@ int pcie_capability_read_dword(struct pci_dev *dev, int pos, u32 *val)
->>>  
->>>  	*val = 0;
->>>  	if (pos & 3)
->>> -		return -EINVAL;
->>> +		return PCIBIOS_BAD_REGISTER_NUMBER;
->>>  
->>>  	if (pcie_capability_reg_implemented(dev, pos)) {
->>>  		ret = pci_read_config_dword(dev, pci_pcie_cap(dev) + pos, val);
-> .
->
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>  .../bindings/pci/cdns,cdns-pcie-ep.yaml       |  2 +-
+>>  .../bindings/pci/cdns,cdns-pcie-host.yaml     |  3 +--
+>>  .../devicetree/bindings/pci/cdns-pcie-ep.yaml | 25 +++++++++++++++++++
+>>  .../bindings/pci/cdns-pcie-host.yaml          | 10 ++++++++
+>>  .../devicetree/bindings/pci/cdns-pcie.yaml    |  8 ------
+>>  5 files changed, 37 insertions(+), 11 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
+>>
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
+Thank you Rob!
+
+Regards
+Kishon
