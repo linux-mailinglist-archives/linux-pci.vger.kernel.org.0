@@ -2,91 +2,115 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 73FE41A4D79
-	for <lists+linux-pci@lfdr.de>; Sat, 11 Apr 2020 04:21:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B2C831A5325
+	for <lists+linux-pci@lfdr.de>; Sat, 11 Apr 2020 19:28:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbgDKCVr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Apr 2020 22:21:47 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:36946 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726648AbgDKCVr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Apr 2020 22:21:47 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03B2LeCO087819;
-        Fri, 10 Apr 2020 21:21:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1586571700;
-        bh=nIXY7QAeXSv8f9XHkzJPsSyBosxDw+h4kY/edLG+RLk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=zFfH/Ijy0vVIAU66wul/eHxMcqaa/j2W/sKnCWZm+5r+SIGuyCTiY4sH49KIi3dWk
-         qt+DIl0ua2SFyX1x5Cx4dtzaP2ieps9q+P2+73Af07bjwmhK1udIK1bGoL1VY+mH+W
-         kuBCMOyw6Oj4CFZ0ht9vXVWQMj9FVLXDEPaewKpM=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03B2LegC083286
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 10 Apr 2020 21:21:40 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 10
- Apr 2020 21:21:39 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 10 Apr 2020 21:21:40 -0500
-Received: from [10.250.133.142] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03B2LVFq000372;
-        Fri, 10 Apr 2020 21:21:33 -0500
-Subject: Re: [PATCH 1/3] dt-bindings: PCI: cadence: Deprecate inbound/outbound
- specific bindings
-To:     Rob Herring <robh@kernel.org>
-CC:     Tom Joseph <tjoseph@cadence.com>,
+        id S1726155AbgDKR2Q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 11 Apr 2020 13:28:16 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35621 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726129AbgDKR2P (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 11 Apr 2020 13:28:15 -0400
+Received: by mail-wm1-f67.google.com with SMTP id r26so5790477wmh.0;
+        Sat, 11 Apr 2020 10:28:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=c+8X1vIVLRV5LUWN9h/LUA7Hybfh7nZjXZqWThPNSJ4=;
+        b=MXSvsu0+/ALU1ueAVvC/LhEaJqD5DalB/kFVPE8HmhE/p4orlxNbTwoFpsp9yR1osi
+         KNR1CLf5TBJwHE9UUvTVpmvryZbTDJ9lKBTQsajeRzKNQkgTsXVA7NzTd/Vejc+896qQ
+         aZEIl2w4/+LcfhJCXuY7XHTcQcZbGpLPZ0xLPV142FxgzNFwz4XyxGT8T80+xpjLi6Cl
+         axtVqlZTYxJJC3MPS/VqubD4niVAAFBakCbL7jZjpYOl6rgIHUsBizPhcl8sn4hgO8uR
+         1sVQMu46eVbZOldL/VxE4zun8ulBZrgg8Nh4whREpVafWY8sR1cblL01BLS8ts9ZiOR9
+         HmRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=c+8X1vIVLRV5LUWN9h/LUA7Hybfh7nZjXZqWThPNSJ4=;
+        b=P7QXkKE1wDwsqb8EdBp8cxJG6ResfbO+K2vtirFIJDYsiRm9GVuatGIGDR8lYR8YMn
+         2S3Ri2H/cTx6Uy8q7j16DmqEjIxEidy8gpxmDlMZEgNNbK/31dJta5iJVBnRSTPbMtwi
+         +3kjYNTQ8RRPEC4HOwVA9E8htjzaJJYhlBwsoWwcIOlUxVgkMB1wQ6VaM1Tl86NvHV/W
+         jPEho5iocg6tUMtW623vzn+1cA+27ZgiGIDnJ3CBfzgMSBUtUo8cvi67ua/45/Uc4ak0
+         dm2elnnO5xoUFuWqn+rL0qw8AdL/hxgCn8NkJseawDDkfVw6OH8zXM5js7Rmp8sfl13s
+         X4RQ==
+X-Gm-Message-State: AGi0PuatMXWFanAMODdN3CuP00a0rM5ZQr8BloEM8OPTDKlxZK/Jezxl
+        qAsac4eaD429Xr/Mg/j900gb8PaN
+X-Google-Smtp-Source: APiQypLEnPgmwf+KZxltRpfshvuG996TQC9RSfUs4U8VuOZAj7T+DSa4Mxw1szI6qcp2CXojbzKxSA==
+X-Received: by 2002:a1c:b356:: with SMTP id c83mr11257579wmf.10.1586626092761;
+        Sat, 11 Apr 2020 10:28:12 -0700 (PDT)
+Received: from [192.168.1.4] (ip-86-49-35-8.net.upcbroadband.cz. [86.49.35.8])
+        by smtp.gmail.com with ESMTPSA id s9sm10081534wmc.2.2020.04.11.10.28.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 11 Apr 2020 10:28:11 -0700 (PDT)
+Subject: Re: [RFC PATCH] PCI: rcar: Fix incorrect programming of OB windows
+To:     Andrew Murray <amurray@thegoodpenguin.co.uk>
+Cc:     Andrew Murray <andrew.murray@arm.com>,
+        Simon Horman <horms@verge.net.au>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200327104727.4708-1-kishon@ti.com>
- <20200327104727.4708-2-kishon@ti.com> <20200410163817.GA24330@bogus>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <86f6679d-1a5d-16fe-fe1a-f7ae8f46617a@ti.com>
-Date:   Sat, 11 Apr 2020 07:51:31 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Bjorn Helgaas <helgaas@kernel.org>
+References: <20191004132941.6660-1-andrew.murray@arm.com>
+ <20191216120607.GV24359@e119886-lin.cambridge.arm.com>
+ <0e6e7353-c92b-d819-771b-f9b58684a3d4@gmail.com>
+ <20200208184147.GC19388@big-machine>
+From:   Marek Vasut <marek.vasut@gmail.com>
+Message-ID: <f6472d4b-83fa-abdf-cbf7-205ab55f1e66@gmail.com>
+Date:   Sat, 11 Apr 2020 19:27:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200410163817.GA24330@bogus>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200208184147.GC19388@big-machine>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On 4/10/2020 10:08 PM, Rob Herring wrote:
-> On Fri, 27 Mar 2020 16:17:25 +0530, Kishon Vijay Abraham I wrote:
->> Deprecate cdns,max-outbound-regions and cdns,no-bar-match-nbits for
->> host mode as both these could be derived from "ranges" and "dma-ranges"
->> property. "cdns,max-outbound-regions" property would still be required
->> for EP mode.
+On 2/8/20 7:41 PM, Andrew Murray wrote:
+> On Sat, Feb 08, 2020 at 10:46:25AM +0100, Marek Vasut wrote:
+>> On 12/16/19 1:06 PM, Andrew Murray wrote:
+>>> On Fri, Oct 04, 2019 at 02:29:41PM +0100, Andrew Murray wrote:
+>>>> The outbound windows (PCIEPAUR(x), PCIEPALR(x)) describe a mapping between
+>>>> a CPU address (which is determined by the window number 'x') and a
+>>>> programmed PCI address - Thus allowing the controller to translate CPU
+>>>> accesses into PCI accesses.
+>>>>
+>>>> However the existing code incorrectly writes the CPU address - lets fix
+>>>> this by writing the PCI address instead.
+>>>>
+>>>> For memory transactions, existing DT users describe a 1:1 identity mapping
+>>>> and thus this change should have no effect. However the same isn't true for
+>>>> I/O.
+>>>>
+>>>> Fixes: c25da4778803 ("PCI: rcar: Add Renesas R-Car PCIe driver")
+>>>> Signed-off-by: Andrew Murray <andrew.murray@arm.com>
+>>>>
+>>>> ---
+>>>> This hasn't been tested, so keen for someone to give it a try.
+>>>>
+>>>> Also keen for someone to confirm my understanding that the RCar windows
+>>>> expect PCI addresses and that res->start refers to CPU addresses. If this
+>>>> is correct then it's possible the I/O doesn't work correctly.
+>>>
+>>> Marek/Yoshihiro - any feedback on this?
 >>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>  .../bindings/pci/cdns,cdns-pcie-ep.yaml       |  2 +-
->>  .../bindings/pci/cdns,cdns-pcie-host.yaml     |  3 +--
->>  .../devicetree/bindings/pci/cdns-pcie-ep.yaml | 25 +++++++++++++++++++
->>  .../bindings/pci/cdns-pcie-host.yaml          | 10 ++++++++
->>  .../devicetree/bindings/pci/cdns-pcie.yaml    |  8 ------
->>  5 files changed, 37 insertions(+), 11 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
+>> It does indeed look correct,
+>> Reviewed-by: Marek Vasut <marek.vasut+renesas@gmail.com>
 >>
+>> # On R8A77951 Salvator-XS with Intel 8086:f1a5 600P SSD
+>> # On R8A77965 Salvator-XS with Intel 8086:10d3 82574L NIC
+>> Tested-by: Marek Vasut <marek.vasut+renesas@gmail.com>
 > 
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> Thanks for testing - much appreciated!
+> 
+> Andrew Murray
 
-Thank you Rob!
-
-Regards
-Kishon
+Can this be applied then ?
