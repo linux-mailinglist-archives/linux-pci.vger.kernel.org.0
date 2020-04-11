@@ -2,27 +2,27 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 90B2B1A5529
-	for <lists+linux-pci@lfdr.de>; Sun, 12 Apr 2020 01:09:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 734C41A57DF
+	for <lists+linux-pci@lfdr.de>; Sun, 12 Apr 2020 01:26:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729286AbgDKXJg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 11 Apr 2020 19:09:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47400 "EHLO mail.kernel.org"
+        id S1727961AbgDKXZ4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 11 Apr 2020 19:25:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729276AbgDKXJf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:09:35 -0400
+        id S1730045AbgDKXL6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:11:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F41D6216FD;
-        Sat, 11 Apr 2020 23:09:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8351C2173E;
+        Sat, 11 Apr 2020 23:11:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646575;
-        bh=QBecWT10Dqsz7Rx4C+yjn7Qrk9Syifw08hMzeIoP64o=;
+        s=default; t=1586646718;
+        bh=9AgB5xU8/OmGvwSeCAS7bDIEocxLDpLkEL0FnpXfADc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N1e/mt3+pXxSOGC1U7h2sOFxfkBDYCeNUIueNXd2u7YPSIowhTL6V97BhZNyPKzLi
-         Wi8vgzeB9jOaLnGrG6oEOZYWtUu1U2XZ17SNzrWeU8GP/WDk9OA7VZa9dIlJx1hB0m
-         iv9gDxQgBT0/zr94mtO/wnA43Gb+6CmJthVfxWyw=
+        b=R+F9mD/qczaZGiS1T5/esUPAS0+EewNPwc9mJxY9dvLwr4Wgd5c+HTGIp3jJVp/QJ
+         fMZ47FmwDl0TUOwGDICVps4WGJUdsf7QQ7SVdBgSXdtSXNfD4x/6FvQnkzOVDdPXev
+         2f40oxhthB+CTQYkL/N7CZNLXS0lTs+LcC+WUslE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Mikel Rychliski <mikel@mikelr.com>,
@@ -31,12 +31,12 @@ Cc:     Mikel Rychliski <mikel@mikelr.com>,
         Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
         linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 121/121] PCI: Use ioremap(), not phys_to_virt() for platform ROM
-Date:   Sat, 11 Apr 2020 19:07:06 -0400
-Message-Id: <20200411230706.23855-121-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 108/108] PCI: Use ioremap(), not phys_to_virt() for platform ROM
+Date:   Sat, 11 Apr 2020 19:09:43 -0400
+Message-Id: <20200411230943.24951-108-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200411230706.23855-1-sashal@kernel.org>
-References: <20200411230706.23855-1-sashal@kernel.org>
+In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
+References: <20200411230943.24951-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -270,10 +270,10 @@ index 137bf0cee897c..8fc9a4e911e3a 100644
 -}
 -EXPORT_SYMBOL(pci_platform_rom);
 diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 930fab2930736..73d97d12c9b11 100644
+index f39f22f9ee474..e92bd9b32f369 100644
 --- a/include/linux/pci.h
 +++ b/include/linux/pci.h
-@@ -1213,7 +1213,6 @@ int pci_enable_rom(struct pci_dev *pdev);
+@@ -1216,7 +1216,6 @@ int pci_enable_rom(struct pci_dev *pdev);
  void pci_disable_rom(struct pci_dev *pdev);
  void __iomem __must_check *pci_map_rom(struct pci_dev *pdev, size_t *size);
  void pci_unmap_rom(struct pci_dev *pdev, void __iomem *rom);
