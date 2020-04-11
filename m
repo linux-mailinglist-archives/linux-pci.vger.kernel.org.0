@@ -2,115 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B2C831A5325
-	for <lists+linux-pci@lfdr.de>; Sat, 11 Apr 2020 19:28:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D67DF1A5A42
+	for <lists+linux-pci@lfdr.de>; Sun, 12 Apr 2020 01:43:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726155AbgDKR2Q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 11 Apr 2020 13:28:16 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:35621 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726129AbgDKR2P (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 11 Apr 2020 13:28:15 -0400
-Received: by mail-wm1-f67.google.com with SMTP id r26so5790477wmh.0;
-        Sat, 11 Apr 2020 10:28:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=c+8X1vIVLRV5LUWN9h/LUA7Hybfh7nZjXZqWThPNSJ4=;
-        b=MXSvsu0+/ALU1ueAVvC/LhEaJqD5DalB/kFVPE8HmhE/p4orlxNbTwoFpsp9yR1osi
-         KNR1CLf5TBJwHE9UUvTVpmvryZbTDJ9lKBTQsajeRzKNQkgTsXVA7NzTd/Vejc+896qQ
-         aZEIl2w4/+LcfhJCXuY7XHTcQcZbGpLPZ0xLPV142FxgzNFwz4XyxGT8T80+xpjLi6Cl
-         axtVqlZTYxJJC3MPS/VqubD4niVAAFBakCbL7jZjpYOl6rgIHUsBizPhcl8sn4hgO8uR
-         1sVQMu46eVbZOldL/VxE4zun8ulBZrgg8Nh4whREpVafWY8sR1cblL01BLS8ts9ZiOR9
-         HmRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=c+8X1vIVLRV5LUWN9h/LUA7Hybfh7nZjXZqWThPNSJ4=;
-        b=P7QXkKE1wDwsqb8EdBp8cxJG6ResfbO+K2vtirFIJDYsiRm9GVuatGIGDR8lYR8YMn
-         2S3Ri2H/cTx6Uy8q7j16DmqEjIxEidy8gpxmDlMZEgNNbK/31dJta5iJVBnRSTPbMtwi
-         +3kjYNTQ8RRPEC4HOwVA9E8htjzaJJYhlBwsoWwcIOlUxVgkMB1wQ6VaM1Tl86NvHV/W
-         jPEho5iocg6tUMtW623vzn+1cA+27ZgiGIDnJ3CBfzgMSBUtUo8cvi67ua/45/Uc4ak0
-         dm2elnnO5xoUFuWqn+rL0qw8AdL/hxgCn8NkJseawDDkfVw6OH8zXM5js7Rmp8sfl13s
-         X4RQ==
-X-Gm-Message-State: AGi0PuatMXWFanAMODdN3CuP00a0rM5ZQr8BloEM8OPTDKlxZK/Jezxl
-        qAsac4eaD429Xr/Mg/j900gb8PaN
-X-Google-Smtp-Source: APiQypLEnPgmwf+KZxltRpfshvuG996TQC9RSfUs4U8VuOZAj7T+DSa4Mxw1szI6qcp2CXojbzKxSA==
-X-Received: by 2002:a1c:b356:: with SMTP id c83mr11257579wmf.10.1586626092761;
-        Sat, 11 Apr 2020 10:28:12 -0700 (PDT)
-Received: from [192.168.1.4] (ip-86-49-35-8.net.upcbroadband.cz. [86.49.35.8])
-        by smtp.gmail.com with ESMTPSA id s9sm10081534wmc.2.2020.04.11.10.28.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 11 Apr 2020 10:28:11 -0700 (PDT)
-Subject: Re: [RFC PATCH] PCI: rcar: Fix incorrect programming of OB windows
-To:     Andrew Murray <amurray@thegoodpenguin.co.uk>
-Cc:     Andrew Murray <andrew.murray@arm.com>,
-        Simon Horman <horms@verge.net.au>,
+        id S1728467AbgDKXGi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 11 Apr 2020 19:06:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42118 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728462AbgDKXGh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:06:37 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03AF2214D8;
+        Sat, 11 Apr 2020 23:06:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586646397;
+        bh=OpFbVyvYnIHYbXaql1M7ib78tJ4gNMyNDUmLjzivcGo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=vWVlA58lktUHHnOy583PmAaQnEb/Ed7OHvfRQCSpdu76E0f2Kb4FodWiLUoG6UJRx
+         oOPydRZmUa6gpjDA7eAPGqo1OJzeRkuFULmhoRLLk5rP2s/oNjPeZ1c8YlIYm2154V
+         K7w0BKpQKIbp/R8FF+PRXOepvLg7qNnVj+IN83Uc=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Dexuan Cui <decui@microsoft.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Bjorn Helgaas <helgaas@kernel.org>
-References: <20191004132941.6660-1-andrew.murray@arm.com>
- <20191216120607.GV24359@e119886-lin.cambridge.arm.com>
- <0e6e7353-c92b-d819-771b-f9b58684a3d4@gmail.com>
- <20200208184147.GC19388@big-machine>
-From:   Marek Vasut <marek.vasut@gmail.com>
-Message-ID: <f6472d4b-83fa-abdf-cbf7-205ab55f1e66@gmail.com>
-Date:   Sat, 11 Apr 2020 19:27:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Michael Kelley <mikelley@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 135/149] PCI: hv: Add missing kfree(hbus) in hv_pci_probe()'s error handling path
+Date:   Sat, 11 Apr 2020 19:03:32 -0400
+Message-Id: <20200411230347.22371-135-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
+References: <20200411230347.22371-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200208184147.GC19388@big-machine>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2/8/20 7:41 PM, Andrew Murray wrote:
-> On Sat, Feb 08, 2020 at 10:46:25AM +0100, Marek Vasut wrote:
->> On 12/16/19 1:06 PM, Andrew Murray wrote:
->>> On Fri, Oct 04, 2019 at 02:29:41PM +0100, Andrew Murray wrote:
->>>> The outbound windows (PCIEPAUR(x), PCIEPALR(x)) describe a mapping between
->>>> a CPU address (which is determined by the window number 'x') and a
->>>> programmed PCI address - Thus allowing the controller to translate CPU
->>>> accesses into PCI accesses.
->>>>
->>>> However the existing code incorrectly writes the CPU address - lets fix
->>>> this by writing the PCI address instead.
->>>>
->>>> For memory transactions, existing DT users describe a 1:1 identity mapping
->>>> and thus this change should have no effect. However the same isn't true for
->>>> I/O.
->>>>
->>>> Fixes: c25da4778803 ("PCI: rcar: Add Renesas R-Car PCIe driver")
->>>> Signed-off-by: Andrew Murray <andrew.murray@arm.com>
->>>>
->>>> ---
->>>> This hasn't been tested, so keen for someone to give it a try.
->>>>
->>>> Also keen for someone to confirm my understanding that the RCar windows
->>>> expect PCI addresses and that res->start refers to CPU addresses. If this
->>>> is correct then it's possible the I/O doesn't work correctly.
->>>
->>> Marek/Yoshihiro - any feedback on this?
->>
->> It does indeed look correct,
->> Reviewed-by: Marek Vasut <marek.vasut+renesas@gmail.com>
->>
->> # On R8A77951 Salvator-XS with Intel 8086:f1a5 600P SSD
->> # On R8A77965 Salvator-XS with Intel 8086:10d3 82574L NIC
->> Tested-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-> 
-> Thanks for testing - much appreciated!
-> 
-> Andrew Murray
+From: Dexuan Cui <decui@microsoft.com>
 
-Can this be applied then ?
+[ Upstream commit 42c3d41832ef4fcf60aaa6f748de01ad99572adf ]
+
+Now that we use kzalloc() to allocate the hbus buffer, we must call
+kfree() in the error path as well to prevent memory leakage.
+
+Fixes: 877b911a5ba0 ("PCI: hv: Avoid a kmemleak false positive caused by the hbus buffer")
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pci/controller/pci-hyperv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index 9977abff92fc5..6b3cee4324047 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -3058,7 +3058,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+ free_dom:
+ 	hv_put_dom_num(hbus->sysdata.domain);
+ free_bus:
+-	free_page((unsigned long)hbus);
++	kfree(hbus);
+ 	return ret;
+ }
+ 
+-- 
+2.20.1
+
