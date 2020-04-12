@@ -2,285 +2,124 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5139B1A573D
-	for <lists+linux-pci@lfdr.de>; Sun, 12 Apr 2020 01:22:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 35BAC1A5C64
+	for <lists+linux-pci@lfdr.de>; Sun, 12 Apr 2020 05:50:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730417AbgDKXNZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 11 Apr 2020 19:13:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54502 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730413AbgDKXNY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:13:24 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FC6B20757;
-        Sat, 11 Apr 2020 23:13:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646804;
-        bh=VN1tik0rdM6XxLfL2lSm6cGNyAaPvCAp/XAjCQ4mijk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h+5wiaO0OTpNWNtUz7GLnv274Xk9Jz06UUs4iVlun9geuvOTFBhd3IzJz7mxftmc1
-         Fcr7OzqNSSoC1eE18nPEPOTNwDnpzXr0cBkCZgh9PWhdo8Zf5OlBwXY4esljdXBlWK
-         gsPhH8q8xD9l/UO1YMXPbgTYYCg8CDZN7hjxIuxI=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mikel Rychliski <mikel@mikelr.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 66/66] PCI: Use ioremap(), not phys_to_virt() for platform ROM
-Date:   Sat, 11 Apr 2020 19:12:03 -0400
-Message-Id: <20200411231203.25933-66-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200411231203.25933-1-sashal@kernel.org>
-References: <20200411231203.25933-1-sashal@kernel.org>
+        id S1726565AbgDLDuV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 11 Apr 2020 23:50:21 -0400
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:40008 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726155AbgDLDuV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 11 Apr 2020 23:50:21 -0400
+Received: by mail-qv1-f66.google.com with SMTP id k9so2892732qvw.7
+        for <linux-pci@vger.kernel.org>; Sat, 11 Apr 2020 20:50:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zhoRhZDp08/Quy9bCcHgtDQxeTieG6fo0BmAZCUWVT0=;
+        b=wLCfbz64y+8kPiY0+va7itbGbEkr9OiPxqNpPlyD19X7zcskbzPg+3TG4gR26frwtI
+         Ty3K7iiNK/as921hvyJeGC7dDDXKgS+V7UsP34ZFPt1LqkpWmtTCc/3GPOWZtVaPET7m
+         rXU2n3JmL/VisI/TYM6QT+xrNb+7kpzAlIEQ7rsXyogDxbsh0PmdsoUtLJ8hkdJ13Uqz
+         2Uxl+dDBnVwOaPvEHayPxS5+nF7CWu33rz4QWdA9kbGSc31KE37TYvpa9CTbYXYL/e1Z
+         kdCQwfvvOQPRTjI62pwH+lK9FiCQ9YrS/pXmLuh9XY41pWNZiGu50EEAYk5o2lEnTGWE
+         uG9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zhoRhZDp08/Quy9bCcHgtDQxeTieG6fo0BmAZCUWVT0=;
+        b=VQzrq9ohA2S2N7+lf4/udxHMX7KUeoOJdg6tvsL7W837lR1o0Qn0QbCU5DNvVCfPD5
+         kjy29Cy3W8/QwpLr8U2mLYOMGvEcY2nKBxlUxLHo7/C/CySjNgUOhj5yIQ8wOey6oqSq
+         A7sIBQQfXXH41Wedpv/kEG4UGOpVLc9icEywJfbuYpuB5greZQEluGeXW0wyiefqFuDj
+         QGsulrGqKcyiss1PBc7FC+dOEPqHZZY6W2PudH41F/2J6qz5w/ZsiEEblAkeDtRGGH4R
+         Z1my/eS9NnOEjeNumNj30aqu7UsJpCirinIQ5rvSsgWpV0AS7GjAydJOE/sQAjYhbtPU
+         BcFw==
+X-Gm-Message-State: AGi0PuY1ws+O2LyrCOw/tmjyiR7v4khzigHBo3DqGVL0P/O7nqkDG0he
+        74aQV7waiGuX0p8aVmbbjPixR/6/FaTgMtqgdJJNrQ==
+X-Google-Smtp-Source: APiQypIPtGp+Rk2/ThEt56ejQs/3C9hKMliJgxzSeMLEWQqrnotFIgltyl8Zm3S3qvJdGxZ/XTZeHCqFOn4SYHNPH+Q=
+X-Received: by 2002:a05:6214:1781:: with SMTP id ct1mr11957162qvb.87.1586663420608;
+ Sat, 11 Apr 2020 20:50:20 -0700 (PDT)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20200409191736.6233-1-jonathan.derrick@intel.com> <20200409191736.6233-2-jonathan.derrick@intel.com>
+In-Reply-To: <20200409191736.6233-2-jonathan.derrick@intel.com>
+From:   Daniel Drake <drake@endlessm.com>
+Date:   Sun, 12 Apr 2020 11:50:09 +0800
+Message-ID: <CAD8Lp442LO1Sq5xpKOaRUKLsEyGbou4TiHQrDdnMbCOV-TG0+g@mail.gmail.com>
+Subject: Re: [PATCH 1/1] iommu/vt-d: use DMA domain for real DMA devices and subdevices
+To:     Jon Derrick <jonathan.derrick@intel.com>
+Cc:     Joerg Roedel <joro@8bytes.org>, iommu@lists.linux-foundation.org,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Linux Upstreaming Team <linux@endlessm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Mikel Rychliski <mikel@mikelr.com>
+Hi Jon,
 
-[ Upstream commit 72e0ef0e5f067fd991f702f0b2635d911d0cf208 ]
+Thanks for picking this up. Apologies for my absence here - I wasn't
+able to work on this recently, but I'm back again now.
 
-On some EFI systems, the video BIOS is provided by the EFI firmware.  The
-boot stub code stores the physical address of the ROM image in pdev->rom.
-Currently we attempt to access this pointer using phys_to_virt(), which
-doesn't work with CONFIG_HIGHMEM.
+On Fri, Apr 10, 2020 at 3:32 AM Jon Derrick <jonathan.derrick@intel.com> wrote:
+> This becomes problematic if the real DMA device and the subdevices have
+> different addressing capabilities and some require translation. Instead we can
+> put the real DMA dev and any subdevices on the DMA domain. This change assigns
+> subdevices to the DMA domain, and moves the real DMA device to the DMA domain
+> if necessary.
 
-On these systems, attempting to load the radeon module on a x86_32 kernel
-can result in the following:
+Have you tested this with the real DMA device in identity mode?
+It is not quite working for me. (Again, I'm not using VMD here, but
+have looked closely and believe we're working under the same
+constraints)
 
-  BUG: unable to handle page fault for address: 3e8ed03c
-  #PF: supervisor read access in kernel mode
-  #PF: error_code(0x0000) - not-present page
-  *pde = 00000000
-  Oops: 0000 [#1] PREEMPT SMP
-  CPU: 0 PID: 317 Comm: systemd-udevd Not tainted 5.6.0-rc3-next-20200228 #2
-  Hardware name: Apple Computer, Inc. MacPro1,1/Mac-F4208DC8, BIOS     MP11.88Z.005C.B08.0707021221 07/02/07
-  EIP: radeon_get_bios+0x5ed/0xe50 [radeon]
-  Code: 00 00 84 c0 0f 85 12 fd ff ff c7 87 64 01 00 00 00 00 00 00 8b 47 08 8b 55 b0 e8 1e 83 e1 d6 85 c0 74 1a 8b 55 c0 85 d2 74 13 <80> 38 55 75 0e 80 78 01 aa 0f 84 a4 03 00 00 8d 74 26 00 68 dc 06
-  EAX: 3e8ed03c EBX: 00000000 ECX: 3e8ed03c EDX: 00010000
-  ESI: 00040000 EDI: eec04000 EBP: eef3fc60 ESP: eef3fbe0
-  DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010206
-  CR0: 80050033 CR2: 3e8ed03c CR3: 2ec77000 CR4: 000006d0
-  Call Trace:
-   r520_init+0x26/0x240 [radeon]
-   radeon_device_init+0x533/0xa50 [radeon]
-   radeon_driver_load_kms+0x80/0x220 [radeon]
-   drm_dev_register+0xa7/0x180 [drm]
-   radeon_pci_probe+0x10f/0x1a0 [radeon]
-   pci_device_probe+0xd4/0x140
+First, the real DMA device gets added to the group:
+ pci 0000:00:17.0: Adding to iommu group 9
+(it's in IDENTITY mode here)
 
-Fix the issue by updating all drivers which can access a platform provided
-ROM. Instead of calling the helper function pci_platform_rom() which uses
-phys_to_virt(), call ioremap() directly on the pdev->rom.
+Then later, the first subdevice comes along, and these are the results:
+ pci 10000:00:00.0: [8086:02d7] type 00 class 0x010601
+ pci 10000:00:00.0: reg 0x10: [mem 0xae1a0000-0xae1a7fff]
+ pci 10000:00:00.0: reg 0x14: [mem 0xae1a8000-0xae1a80ff]
+ pci 10000:00:00.0: reg 0x18: [io  0x3090-0x3097]
+ pci 10000:00:00.0: reg 0x1c: [io  0x3080-0x3083]
+ pci 10000:00:00.0: reg 0x20: [io  0x3060-0x307f]
+ pci 10000:00:00.0: reg 0x24: [mem 0xae100000-0xae103fff]
+ pci 10000:00:00.0: PME# supported from D3hot
+ pci 10000:00:00.0: Adding to iommu group 9
+ pci 10000:00:00.0: DMAR: Failed to get a private domain.
 
-radeon_read_platform_bios() previously directly accessed an __iomem
-pointer. Avoid this by calling memcpy_fromio() instead of kmemdup().
+That final message is added by your patch and indicates that it's not working.
 
-pci_platform_rom() now has no remaining callers, so remove it.
+This is because the subdevice got added to the iommu group before the
+code you added tried to change to the DMA domain.
 
-Link: https://lore.kernel.org/r/20200319021623.5426-1-mikel@mikelr.com
-Signed-off-by: Mikel Rychliski <mikel@mikelr.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_bios.c      | 31 +++++++++++--------
- .../drm/nouveau/nvkm/subdev/bios/shadowpci.c  | 17 ++++++++--
- drivers/gpu/drm/radeon/radeon_bios.c          | 30 +++++++++++-------
- drivers/pci/rom.c                             | 17 ----------
- include/linux/pci.h                           |  1 -
- 5 files changed, 52 insertions(+), 44 deletions(-)
+It first gets added to the group through this call path:
+    intel_iommu_add_device
+-> iommu_group_get_for_dev
+-> iommu_group_add_device
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_bios.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_bios.c
-index a5df80d50d447..6cf3dd5edffda 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_bios.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_bios.c
-@@ -191,30 +191,35 @@ static bool amdgpu_read_bios_from_rom(struct amdgpu_device *adev)
- 
- static bool amdgpu_read_platform_bios(struct amdgpu_device *adev)
- {
--	uint8_t __iomem *bios;
--	size_t size;
-+	phys_addr_t rom = adev->pdev->rom;
-+	size_t romlen = adev->pdev->romlen;
-+	void __iomem *bios;
- 
- 	adev->bios = NULL;
- 
--	bios = pci_platform_rom(adev->pdev, &size);
--	if (!bios) {
-+	if (!rom || romlen == 0)
- 		return false;
--	}
- 
--	adev->bios = kzalloc(size, GFP_KERNEL);
--	if (adev->bios == NULL)
-+	adev->bios = kzalloc(romlen, GFP_KERNEL);
-+	if (!adev->bios)
- 		return false;
- 
--	memcpy_fromio(adev->bios, bios, size);
-+	bios = ioremap(rom, romlen);
-+	if (!bios)
-+		goto free_bios;
- 
--	if (!check_atom_bios(adev->bios, size)) {
--		kfree(adev->bios);
--		return false;
--	}
-+	memcpy_fromio(adev->bios, bios, romlen);
-+	iounmap(bios);
- 
--	adev->bios_size = size;
-+	if (!check_atom_bios(adev->bios, romlen))
-+		goto free_bios;
-+
-+	adev->bios_size = romlen;
- 
- 	return true;
-+free_bios:
-+	kfree(adev->bios);
-+	return false;
- }
- 
- #ifdef CONFIG_ACPI
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/shadowpci.c b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/shadowpci.c
-index 9b91da09dc5f8..8d9812a51ef63 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/shadowpci.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/shadowpci.c
-@@ -101,9 +101,13 @@ platform_init(struct nvkm_bios *bios, const char *name)
- 	else
- 		return ERR_PTR(-ENODEV);
- 
-+	if (!pdev->rom || pdev->romlen == 0)
-+		return ERR_PTR(-ENODEV);
-+
- 	if ((priv = kmalloc(sizeof(*priv), GFP_KERNEL))) {
-+		priv->size = pdev->romlen;
- 		if (ret = -ENODEV,
--		    (priv->rom = pci_platform_rom(pdev, &priv->size)))
-+		    (priv->rom = ioremap(pdev->rom, pdev->romlen)))
- 			return priv;
- 		kfree(priv);
- 	}
-@@ -111,11 +115,20 @@ platform_init(struct nvkm_bios *bios, const char *name)
- 	return ERR_PTR(ret);
- }
- 
-+static void
-+platform_fini(void *data)
-+{
-+	struct priv *priv = data;
-+
-+	iounmap(priv->rom);
-+	kfree(priv);
-+}
-+
- const struct nvbios_source
- nvbios_platform = {
- 	.name = "PLATFORM",
- 	.init = platform_init,
--	.fini = (void(*)(void *))kfree,
-+	.fini = platform_fini,
- 	.read = pcirom_read,
- 	.rw = true,
- };
-diff --git a/drivers/gpu/drm/radeon/radeon_bios.c b/drivers/gpu/drm/radeon/radeon_bios.c
-index 04c0ed41374f1..dd0528cf98183 100644
---- a/drivers/gpu/drm/radeon/radeon_bios.c
-+++ b/drivers/gpu/drm/radeon/radeon_bios.c
-@@ -104,25 +104,33 @@ static bool radeon_read_bios(struct radeon_device *rdev)
- 
- static bool radeon_read_platform_bios(struct radeon_device *rdev)
- {
--	uint8_t __iomem *bios;
--	size_t size;
-+	phys_addr_t rom = rdev->pdev->rom;
-+	size_t romlen = rdev->pdev->romlen;
-+	void __iomem *bios;
- 
- 	rdev->bios = NULL;
- 
--	bios = pci_platform_rom(rdev->pdev, &size);
--	if (!bios) {
-+	if (!rom || romlen == 0)
- 		return false;
--	}
- 
--	if (size == 0 || bios[0] != 0x55 || bios[1] != 0xaa) {
-+	rdev->bios = kzalloc(romlen, GFP_KERNEL);
-+	if (!rdev->bios)
- 		return false;
--	}
--	rdev->bios = kmemdup(bios, size, GFP_KERNEL);
--	if (rdev->bios == NULL) {
--		return false;
--	}
-+
-+	bios = ioremap(rom, romlen);
-+	if (!bios)
-+		goto free_bios;
-+
-+	memcpy_fromio(rdev->bios, bios, romlen);
-+	iounmap(bios);
-+
-+	if (rdev->bios[0] != 0x55 || rdev->bios[1] != 0xaa)
-+		goto free_bios;
- 
- 	return true;
-+free_bios:
-+	kfree(rdev->bios);
-+	return false;
- }
- 
- #ifdef CONFIG_ACPI
-diff --git a/drivers/pci/rom.c b/drivers/pci/rom.c
-index 137bf0cee897c..8fc9a4e911e3a 100644
---- a/drivers/pci/rom.c
-+++ b/drivers/pci/rom.c
-@@ -195,20 +195,3 @@ void pci_unmap_rom(struct pci_dev *pdev, void __iomem *rom)
- 		pci_disable_rom(pdev);
- }
- EXPORT_SYMBOL(pci_unmap_rom);
--
--/**
-- * pci_platform_rom - provides a pointer to any ROM image provided by the
-- * platform
-- * @pdev: pointer to pci device struct
-- * @size: pointer to receive size of pci window over ROM
-- */
--void __iomem *pci_platform_rom(struct pci_dev *pdev, size_t *size)
--{
--	if (pdev->rom && pdev->romlen) {
--		*size = pdev->romlen;
--		return phys_to_virt((phys_addr_t)pdev->rom);
--	}
--
--	return NULL;
--}
--EXPORT_SYMBOL(pci_platform_rom);
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index b1f297f4b7b0b..993051f60a009 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -1141,7 +1141,6 @@ int pci_enable_rom(struct pci_dev *pdev);
- void pci_disable_rom(struct pci_dev *pdev);
- void __iomem __must_check *pci_map_rom(struct pci_dev *pdev, size_t *size);
- void pci_unmap_rom(struct pci_dev *pdev, void __iomem *rom);
--void __iomem __must_check *pci_platform_rom(struct pci_dev *pdev, size_t *size);
- 
- /* Power management related routines */
- int pci_save_state(struct pci_dev *dev);
--- 
-2.20.1
+Then, continuing within intel_iommu_add_device we get to the code you
+added, which tries to move the real DMA dev to DMA mode instead. It
+calls:
 
+   intel_iommu_request_dma_domain_for_dev
+-> iommu_request_dma_domain_for_dev
+-> request_default_domain_for_dev
+
+Which fails here:
+    /* Don't change mappings of existing devices */
+    ret = -EBUSY;
+    if (iommu_group_device_count(group) != 1)
+        goto out;
+
+because we already have 2 devices in the group (the real DMA dev, plus
+the subdevice we're in the process of handling now).
+
+Next I'll look into the iommu group rework that Baolu mentioned.
+
+Thanks,
+Daniel
