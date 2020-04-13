@@ -2,107 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (unknown [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 951E51A6199
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Apr 2020 04:49:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D2F3B1A62AA
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Apr 2020 07:42:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728248AbgDMCtA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 12 Apr 2020 22:49:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:43778 "EHLO
+        id S1729069AbgDMFmb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Apr 2020 01:42:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:42860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727511AbgDMCtA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 12 Apr 2020 22:49:00 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1072C0A3BE0
-        for <linux-pci@vger.kernel.org>; Sun, 12 Apr 2020 19:49:00 -0700 (PDT)
-IronPort-SDR: nAu/EyUraFV4PSDm4jOYcxEbkREylvp6he89Mvhj0aF3onawNbaFeVdNwtU/6PcQUKmXXc/lPp
- AgPoQTOx/pZg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2020 19:49:00 -0700
-IronPort-SDR: 8h2kJz9H2xByAm0Ehh0zIvn6ATdAcGQpeq1tHagj9rbqQVoUMOGf47be9xS1Z5eyn7z+wHJA8X
- d3LLcRluFVVw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,377,1580803200"; 
-   d="scan'208";a="362961161"
-Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.254.211.54]) ([10.254.211.54])
-  by fmsmga001.fm.intel.com with ESMTP; 12 Apr 2020 19:48:55 -0700
-Cc:     baolu.lu@linux.intel.com, Jon Derrick <jonathan.derrick@intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Upstreaming Team <linux@endlessm.com>
-Subject: Re: [PATCH 1/1] iommu/vt-d: use DMA domain for real DMA devices and
- subdevices
-To:     Daniel Drake <drake@endlessm.com>
-References: <20200409191736.6233-1-jonathan.derrick@intel.com>
- <20200409191736.6233-2-jonathan.derrick@intel.com>
- <09c98569-ed22-8886-3372-f5752334f8af@linux.intel.com>
- <CAD8Lp45dJ3-t6qqctiP1a=c44PEWZ-L04yv0r0=1Nrvwfouz1w@mail.gmail.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <32cc4809-7029-bc5e-5a74-abbe43596e8d@linux.intel.com>
-Date:   Mon, 13 Apr 2020 10:48:55 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        with ESMTP id S1728358AbgDMFma (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Apr 2020 01:42:30 -0400
+Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69DB6C008679;
+        Sun, 12 Apr 2020 22:42:30 -0700 (PDT)
+Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
+        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 426DE20CF8;
+        Mon, 13 Apr 2020 05:34:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
+        t=1586756049; bh=KZzC8hDq/L5Ksu7mwvgHXdRRg3Pi1Gnhas1jIt28u50=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=P6bbNlDMWmSNeWxbTzqMAXSopRk5GTcT3hOk9EVI+P06pr2cQKJPJXaRNmAH1Cjr5
+         Tul/Y9bSZiZKuQk/Ecxj3mXfrGlw8KEXRRQSYFXCiDOT7g1HnDGRZJRlm2NnQfr3VD
+         v18Hr00bAcBGUtniaBxUttIrJp3YJ7n/UuwMy7kmZPtuGyD0v0NUWUmYc048QJ386l
+         xcuS+gS52dRLW/XkBJj2Km6jdBkTIko+4+PTZ/akTepf+Y3zO9dxylZLSaM89rMkpj
+         ih1/j7eteO0kf2zZ3Rnof/VFZnq1zHKOqIs6vFGUZdwMYCgCEvZoAW44AAaxjyd7Ft
+         MlSNG/TLRgGYA==
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     linux-mips@vger.kernel.org
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Paul Burton <paulburton@kernel.org>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 1/5] PCI: OF: Don't remap iospace on unsupported platform
+Date:   Mon, 13 Apr 2020 13:32:09 +0800
+Message-Id: <20200413053222.3976680-1-jiaxun.yang@flygoat.com>
+X-Mailer: git-send-email 2.26.0.rc2
+In-Reply-To: <20200330114239.1112759-1-jiaxun.yang@flygoat.com>
+References: <20200330114239.1112759-1-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
-In-Reply-To: <CAD8Lp45dJ3-t6qqctiP1a=c44PEWZ-L04yv0r0=1Nrvwfouz1w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Daniel,
+There are some platforms doesn't support iospace remapping
+like MIPS. However, our PCI code will try to remap iospace
+unconditionally and reject io resources on these platforms.
 
-On 2020/4/13 10:25, Daniel Drake wrote:
-> On Fri, Apr 10, 2020 at 9:22 AM Lu Baolu <baolu.lu@linux.intel.com> wrote:
->> This is caused by the fragile private domain implementation. We are in
->> process of removing it by enhancing the iommu subsystem with per-group
->> default domain.
->>
->> https://www.spinics.net/lists/iommu/msg42976.html
->>
->> So ultimately VMD subdevices should have their own per-device iommu data
->> and support per-device dma ops.
-> 
-> Interesting. There's also this patchset you posted:
-> [PATCH 00/19] [PULL REQUEST] iommu/vt-d: patches for v5.7
-> https://lists.linuxfoundation.org/pipermail/iommu/2020-April/042967.html
-> (to be pushed out to 5.8)
+So we should remove iospace remapping check and use a range
+check instead on these platforms.
 
-Both are trying to solve a same problem.
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+---
+ drivers/pci/of.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-I have sync'ed with Joerg. This patch set will be replaced with Joerg's
-proposal due to a race concern between domain switching and driver
-binding. I will rebase all vt-d patches in this set on top of Joerg's
-change.
+diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+index 81ceeaa6f1d5..36e8761b66c6 100644
+--- a/drivers/pci/of.c
++++ b/drivers/pci/of.c
+@@ -547,12 +547,21 @@ int pci_parse_request_of_pci_ranges(struct device *dev,
+ 
+ 		switch (resource_type(res)) {
+ 		case IORESOURCE_IO:
++#if defined(PCI_IOBASE) && defined(CONFIG_MMU)
+ 			err = devm_pci_remap_iospace(dev, res, iobase);
+ 			if (err) {
+ 				dev_warn(dev, "error %d: failed to map resource %pR\n",
+ 					 err, res);
+ 				resource_list_destroy_entry(win);
+ 			}
++#else
++			/* Simply check if IO is inside the range */
++			if (res->end > IO_SPACE_LIMIT) {
++				dev_warn(dev, "resource %pR out of the IO range\n",
++					res);
++				resource_list_destroy_entry(win);
++			}
++#endif
+ 			break;
+ 		case IORESOURCE_MEM:
+ 			res_valid |= !(res->flags & IORESOURCE_PREFETCH);
+-- 
+2.26.0.rc2
 
-Best regards,
-baolu
-
-> 
-> In there you have:
->> iommu/vt-d: Don't force 32bit devices to uses DMA domain
-> which seems to clash with the approach being explored in this thread.
-> 
-> And:
->> iommu/vt-d: Apply per-device dma_ops
-> This effectively solves the trip point that caused me to open these
-> discussions, where intel_map_page() -> iommu_need_mapping() would
-> incorrectly determine that a intel-iommu DMA mapping was needed for a
-> PCI subdevice running in identity mode. After this patch, a PCI
-> subdevice in identity mode uses the default system dma_ops and
-> completely avoids intel-iommu.
-> 
-> So that solves the issues I was looking at. Jon, you might want to
-> check if the problems you see are likewise solved for you by these
-> patches.
-> 
-> I didn't try Joerg's iommu group rework yet as it conflicts with those
-> patches above.
-> 
-> Daniel
-> 
