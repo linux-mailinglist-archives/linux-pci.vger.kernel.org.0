@@ -2,110 +2,134 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BBE131A65E2
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Apr 2020 13:50:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A09D51A66C0
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Apr 2020 15:08:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727966AbgDMLuM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Apr 2020 07:50:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43812 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729154AbgDMLt6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Apr 2020 07:49:58 -0400
-X-Greylist: delayed 508 seconds by postgrey-1.27 at vger.kernel.org; Mon, 13 Apr 2020 07:49:58 EDT
-Received: from mail-il1-x12f.google.com (mail-il1-x12f.google.com [IPv6:2607:f8b0:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52B41C03BC80
-        for <linux-pci@vger.kernel.org>; Mon, 13 Apr 2020 04:41:30 -0700 (PDT)
-Received: by mail-il1-x12f.google.com with SMTP id f82so4801523ilh.8
-        for <linux-pci@vger.kernel.org>; Mon, 13 Apr 2020 04:41:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=qlKWExEze9qCqlwbpw1q4+d2Zjr4ETGVa64TcX+dTlk=;
-        b=prjS9vX1/lBHBQnmn8S5eSRPyVAkL53RoKQzE5AAHbxvNYI4a2v2cjTji7kXTppOEc
-         z/YC5TVvRJiGk2ecDbuxQbDezIHvoL12TwU8A8MoLDqkPTvq0EUKN12xVXuoac5P5vPG
-         CDxQUahEZp79myUg0SW4XqnobzWbEdaMDOCEcwJOYEkU2vBAFQtTx1QiAdzIaX9heUrh
-         wXqF9HmIVWbzu+LjtyhWb9YxG3jDJu9H0/2YRuWHtIWQg0GYyRRf+7+N2+T4/5hNzYkA
-         0Td5bmAVNGOZBhXtNLv8DRN8PKs1LisEF6odwJbW1cWSeUhqmMnZAT2UKZl4iJ1E/PV6
-         qofQ==
+        id S1728494AbgDMNIr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Apr 2020 09:08:47 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:48738 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727855AbgDMNIq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Apr 2020 09:08:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586783325;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=s9m5bEJM55+CCEjTc3mQmvoxvmzLMIrk5m1SdUE6h/k=;
+        b=MnQMaJK6r2zJotLsf6zKzRQoltuyneIEB0QV6PCeAXaZJVVv2M8XOKbhJvRIpl+x871lB3
+        KaGthnnXS1HVWiDaUpM2HXskgvPC+wi0L3oKbovrsKPJkwF+37i4OxOx2rOvEWbm6MBi9B
+        l25diGuJAIETiTR56EQDZWIcgkQf3gw=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-169-FvGzow3ANGGBOjd8gi109w-1; Mon, 13 Apr 2020 09:08:44 -0400
+X-MC-Unique: FvGzow3ANGGBOjd8gi109w-1
+Received: by mail-wm1-f70.google.com with SMTP id f128so1011451wmf.8
+        for <linux-pci@vger.kernel.org>; Mon, 13 Apr 2020 06:08:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=qlKWExEze9qCqlwbpw1q4+d2Zjr4ETGVa64TcX+dTlk=;
-        b=MiHYK6Vj3JUP0PhI2D2xswVmiDdO2XTKJxrLEz8qs2lFqHxdNUtUD9S0GBJzYH640V
-         5sVsWZsyx4StyjHuyzQNBPHCsPqaXEi/xsGCWjrc8A2ESgcHrJyfSu3XOaojTWKUfiJE
-         fHvQ8inAB3L9maWdnOSb5RZl9tuYDGl7durT4zNkgNfoMKjEUltP8zxp6aNVzj3RARvB
-         NnRHDSx+CyiRMZQ8oOOOFKyPeSa9aOEGvCssU71v2OkStP+N8oPhZhyknoQ7SZRRx7BN
-         p4VlpjXgmof33b638NNsO/WZIs6Spkh0jdjZlrRMgRBrczrVSXGaf0paoW3vdGPpRfdd
-         KgFw==
-X-Gm-Message-State: AGi0PuYe9rdDWt+bGo5eUbFIC8INt/xCy0Iip6KUb8x/C6BfhLMvOdcC
-        d+H8/jqbU4WzfjuFfI4JEmtYr/NqMHNlwsesWg==
-X-Google-Smtp-Source: APiQypL8TqJIeu3sv8q1i+SGhGHI+g2m6cjavfj0dEc+5JPmC3aVP4wfZgyktqWXbHy6/UF7VoKUuS2YyJ3E1gwa7Hs=
-X-Received: by 2002:a92:cccb:: with SMTP id u11mr9656514ilq.8.1586778089638;
- Mon, 13 Apr 2020 04:41:29 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=s9m5bEJM55+CCEjTc3mQmvoxvmzLMIrk5m1SdUE6h/k=;
+        b=EaBIgHYgIxHYHeb9qLzH0YVkl8q5JX963cLWUVP0hKlAcaQ2bZSy9dZVncy+rZD/4b
+         rBic8bZtWSYweWFE/1A1tbCOL6TkI0siCjJxaxdiq4vc8TLjptWzwIaQOxAhzkr+duFn
+         //AUaGwZ2EHwTDSyHafIDLVzJgl/LsavALMxRlO5ZVtRCkcxKuunVrMgv7iYKkiTC5NY
+         UgflA13C7H9SJOkzEw1vYdQaWgZMftK/fioxvm1DiPJDlEznSGoKKcgBrS7lJ7TcVMVX
+         +6fMnmYz5PsNJVTKYtabQ4TdTIqc+uTCzY0NmCeXUTceubv1wBN3m2DlyiY0UMq2lGf7
+         SJdw==
+X-Gm-Message-State: AGi0PuZ5xwgXsirqFQicXXaN7dWR4lTLgQFbNoqu6QcBks2kNB+9liB5
+        OyhPG7mO99w5IH94qt7bgu1xhwT3XBzaJNvZLnfxshInkIsuEQJ/2FkZzSjxrEWSe0/DOTrMwsN
+        //xJloTFaxfVlAFEQobjr
+X-Received: by 2002:a5d:522c:: with SMTP id i12mr1051157wra.215.1586783322945;
+        Mon, 13 Apr 2020 06:08:42 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKJSH7viqtLUiSYWLMN2+J0c6+yVIDg8r4gEnWrO7CZ/ceQ5+EZ5b1PZUTdcQFfUQRJNgizuQ==
+X-Received: by 2002:a5d:522c:: with SMTP id i12mr1051139wra.215.1586783322746;
+        Mon, 13 Apr 2020 06:08:42 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
+        by smtp.gmail.com with ESMTPSA id e1sm3845350wrc.12.2020.04.13.06.08.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Apr 2020 06:08:41 -0700 (PDT)
+Subject: Re: [PATCH] ACPI/PCI: pci_link: use extended_irq union member when
+ setting ext-irq shareable
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org
+References: <20200410194547.GA7293@google.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <abaa91fa-12a4-e273-c983-7d1153dab9a2@redhat.com>
+Date:   Mon, 13 Apr 2020 15:08:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Received: by 2002:a02:5e49:0:0:0:0:0 with HTTP; Mon, 13 Apr 2020 04:41:28
- -0700 (PDT)
-Reply-To: mgbenin903@gmail.com
-From:   Barrister Robert Richter UN-Attorney at Law Court-Benin 
-        <info.zennitbankplcnigerian@gmail.com>
-Date:   Mon, 13 Apr 2020 13:41:28 +0200
-Message-ID: <CABHzvrngm=rA5Ct9h+JGdbyDfHJmnfntceDPoyJToo8PZn+YZg@mail.gmail.com>
-Subject: I have already sent you first payment US$5000.00 this morning through
- MONEY Gram service.it is available to pick up in address now.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200410194547.GA7293@google.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-ATTN DEAR BENEFICIARY.
+Hi,
 
-GOOD NEWS.
+On 4/10/20 9:45 PM, Bjorn Helgaas wrote:
+> On Fri, Apr 10, 2020 at 03:14:42PM +0200, Hans de Goede wrote:
+>> The case ACPI_RESOURCE_TYPE_EXTENDED_IRQ inside acpi_pci_link_set()
+>> is correctly using resource->res.data.extended_irq.foo for most settings,
+>> but for the sharable setting it sofar has accidentally been using
+>> resource->res.data.irq.shareable instead of
+>> resource->res.data.extended_irq.shareable.
+>>
+>> Note that the old code happens to also work because the sharable field
+>> offset is the same for both the acpi_resource_irq and
+>> acpi_resource_extended_irq structs.
+> 
+> s/sharable/shareable/ several times above
+> s/sofar/so far/
+> 
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> 
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-I have already sent you first payment US$5000.00 this morning through
-MONEY Gram service.it is available to pick up in address now.
+Thanks, I'll send out a v2 with the spelling issues in the commit-msg fixed.
 
-So we advise you to Contact This Money Gram office to pick up your
-transfer $US5000.00 today.
+Regards,
+
+Hans
 
 
-Note that your compensation payment funds is total amount $US2.800,000
-Million Dollars.We have instructed the Money Gram Agent,Mr. James
-Gadner to keep sending the transfer to you daily, but the maximum
-amount you will be receiving everyday is US$5000.00. Contact Agent now
-to pick up your first payment $US5000.00 immediately.
 
-Contact Person, Mr. James Gadner, Dir. Money Gram Benin.
-Email: mgbenin903@gmail.com
-Telephone Numbers: +229 62819378/ +229 98477762
+> 
+>> ---
+>>   drivers/acpi/pci_link.c | 4 ++--
+>>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/acpi/pci_link.c b/drivers/acpi/pci_link.c
+>> index 00a6da2121be..ed3d2182cf2c 100644
+>> --- a/drivers/acpi/pci_link.c
+>> +++ b/drivers/acpi/pci_link.c
+>> @@ -322,10 +322,10 @@ static int acpi_pci_link_set(struct acpi_pci_link *link, int irq)
+>>   		resource->res.data.extended_irq.polarity =
+>>   		    link->irq.polarity;
+>>   		if (link->irq.triggering == ACPI_EDGE_SENSITIVE)
+>> -			resource->res.data.irq.shareable =
+>> +			resource->res.data.extended_irq.shareable =
+>>   			    ACPI_EXCLUSIVE;
+>>   		else
+>> -			resource->res.data.irq.shareable = ACPI_SHARED;
+>> +			resource->res.data.extended_irq.shareable = ACPI_SHARED;
+> 
+> Ouch, looks like that copy/paste error has been there since the
+> beginning of git.  Nice catch!
+> 
+>>   		resource->res.data.extended_irq.interrupt_count = 1;
+>>   		resource->res.data.extended_irq.interrupts[0] = irq;
+>>   		/* ignore resource_source, it's optional */
+>> -- 
+>> 2.26.0
+>>
+> 
 
-HERE IS YOUR PAYMENT DETAILS FOR THE FIRST =C2=A3US5000.00 SENT TODAY.
-
-Track View Website link:
-https://secure.moneygram.com/track
-Sender=E2=80=99s First name: David
-Sender=E2=80=99s Last Name: Joiner
-Money Transfer Control Number (MTCN) (REFERENCE)# 26046856
-
-Contact the Mmoney Gram Urgent and reconfirm your address to the
-office before, they will allow you to pick up the transfer today.
-
-HERE IS WHAT REQUIRED OF YOU.
-
-YOUR FULL NAME---------
-ADDRESS--------------
-COUNTRY-----------------------------
-TELEPHONE NUMBERS-----------------
-
-Note, I paid the transfer fee for you, but only you are required to
-send to the office is $75 only,Been Your Payment File activation fee,
-Send once you contact the office,before you can able to pick up your
-transfer today.
-
-Let me know once you pick up first payment today.
-
-Barrister Robert Richter UN-Attorney at Law Court-Benin
