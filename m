@@ -2,34 +2,34 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EBB391A68F6
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Apr 2020 17:35:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6414F1A68F5
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Apr 2020 17:35:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728797AbgDMPfj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Apr 2020 11:35:39 -0400
-Received: from mga03.intel.com ([134.134.136.65]:64941 "EHLO mga03.intel.com"
+        id S1730504AbgDMPfe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Apr 2020 11:35:34 -0400
+Received: from mga03.intel.com ([134.134.136.65]:64936 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728808AbgDMPfi (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 13 Apr 2020 11:35:38 -0400
-IronPort-SDR: ROgvgSpM7+UHvLa8uYd4LbzJzUCHXKaM+Ag3WI3fjI8veMs9U758lv/8TNF/nyzsUD4KG6EHQQ
- bNRoyX8TOX0g==
+        id S1728797AbgDMPfd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 13 Apr 2020 11:35:33 -0400
+IronPort-SDR: vXcuMi8+pUGLo2xhGVTEf7dg1BdSBRQRevDxv0hi64cwjomtNEd9oASRrQZRX3QbfzVSOH8pTB
+ L14kO2FfFvOg==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2020 08:35:29 -0700
-IronPort-SDR: Kos9f4HmiJYVCU+mQWuxdE+CIn7I3VWlQH3BF2Me1ZJ1ceMCDacc5ig8WidYYI6r5A1iW4rskG
- ny/aTGSXTYDg==
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2020 08:35:32 -0700
+IronPort-SDR: AGHlKx1Fmu3b1LkwLdA6Ooy7qHNG0q6uh6oN/jvmcdf1GfnWYENqdU6fLA4IyxbuCiRTX0QNyp
+ w2Plz1g8RLpw==
 X-IronPort-AV: E=Sophos;i="5.72,378,1580803200"; 
-   d="scan'208";a="256209892"
+   d="scan'208";a="256209909"
 Received: from erickaal-mobl.amr.corp.intel.com (HELO arch-ashland-svkelley.intel.com) ([10.135.57.115])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2020 08:35:28 -0700
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2020 08:35:31 -0700
 From:   Sean V Kelley <sean.v.kelley@linux.intel.com>
 To:     mj@ucw.cz, bhelgaas@google.com
 Cc:     linux-pci@vger.kernel.org,
         Sean V Kelley <sean.v.kelley@linux.intel.com>
-Subject: [PATCH v4 1/2] pciutils: Decode available DVSEC details
-Date:   Mon, 13 Apr 2020 08:35:25 -0700
-Message-Id: <20200413153526.805776-2-sean.v.kelley@linux.intel.com>
+Subject: [PATCH v4 2/2] pciutils: Decode Compute eXpress Link DVSEC
+Date:   Mon, 13 Apr 2020 08:35:26 -0700
+Message-Id: <20200413153526.805776-3-sean.v.kelley@linux.intel.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200413153526.805776-1-sean.v.kelley@linux.intel.com>
 References: <20200413153526.805776-1-sean.v.kelley@linux.intel.com>
@@ -40,84 +40,132 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Instead of current generic 'unknown' output for DVSEC, decode details on
-Vendor ID, Rev, etc.
+Compute eXpress Link[1] is a new CPU interconnect created with
+workload accelerators in mind. The interconnect relies on PCIe
+electrical and physical interconnect for communication via a Flex Bus
+port which allows designs to choose between providing PCIe or CXL.
 
-Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
+This patch introduces basic support for lspci decode of CXL and
+builds upon the existing Designated Vendor-Specific support in
+lspci through identification of a Flex Bus capable Vendor ID.
+
+[1] https://www.computeexpresslink.org/
+
 Signed-off-by: Sean V Kelley <sean.v.kelley@linux.intel.com>
 ---
- lib/header.h    |   4 +
- ls-ecaps.c      |  25 +++-
- tests/cap-dvsec | 340 ++++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 368 insertions(+), 1 deletion(-)
- create mode 100644 tests/cap-dvsec
+ lib/header.h        |  20 +++
+ ls-ecaps.c          |  50 ++++++-
+ tests/cap-dvsec-cxl | 340 ++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 409 insertions(+), 1 deletion(-)
+ create mode 100644 tests/cap-dvsec-cxl
 
 diff --git a/lib/header.h b/lib/header.h
-index bfdcc80..daeddeb 100644
+index daeddeb..30b4eba 100644
 --- a/lib/header.h
 +++ b/lib/header.h
-@@ -1042,6 +1042,10 @@
- #define PCI_EVNDR_HEADER	4	/* Vendor-Specific Header */
- #define PCI_EVNDR_REGISTERS	8	/* Vendor-Specific Registers */
- 
-+/* PCIe Designated Vendor-Specific Capability */
-+#define PCI_DVSEC_HEADER1	4	/* Designated Vendor-Specific Header 1 */
-+#define PCI_DVSEC_HEADER2	8	/* Designated Vendor-Specific Header 2 */
+@@ -1045,6 +1045,26 @@
+ /* PCIe Designated Vendor-Specific Capability */
+ #define PCI_DVSEC_HEADER1	4	/* Designated Vendor-Specific Header 1 */
+ #define PCI_DVSEC_HEADER2	8	/* Designated Vendor-Specific Header 2 */
++#define PCI_DVSEC_FLEXBUS_ID	0	/* Flex Bus feature capability ID */
 +
++/* PCIe CXL Designated Vendor-Specific Capabilities, Control, Status */
++#define PCI_CXL_CAP		0x0a
++#define  PCI_CXL_CAP_CACHE	0x0001
++#define  PCI_CXL_CAP_IO		0x0002
++#define  PCI_CXL_CAP_MEM	0x0004
++#define  PCI_CXL_CAP_MEM_HWINIT	0x0008
++#define  PCI_CXL_CAP_HDM_CNT(x)	(((x) & (3 << 4)) >> 4)
++#define  PCI_CXL_CAP_VIRAL	0x4000
++#define PCI_CXL_CTRL		0x0c
++#define  PCI_CXL_CTRL_CACHE	0x0001
++#define  PCI_CXL_CTRL_IO	0x0002
++#define  PCI_CXL_CTRL_MEM	0x0004
++#define  PCI_CXL_CTRL_CACHE_SF_COV(x)	(((x) & (0x1f << 3)) >> 3)
++#define  PCI_CXL_CTRL_CACHE_SF_GRAN(x)	(((x) & (0x7 << 8)) >> 8)
++#define  PCI_CXL_CTRL_CACHE_CLN	0x0800
++#define  PCI_CXL_CTRL_VIRAL	0x4000
++#define PCI_CXL_STATUS		0x0e
++#define  PCI_CXL_STATUS_VIRAL	0x4000
+ 
  /* Access Control Services */
  #define PCI_ACS_CAP		0x04	/* ACS Capability Register */
- #define PCI_ACS_CAP_VALID	0x0001	/* ACS Source Validation */
 diff --git a/ls-ecaps.c b/ls-ecaps.c
-index 0021734..b82d37e 100644
+index b82d37e..57f649c 100644
 --- a/ls-ecaps.c
 +++ b/ls-ecaps.c
-@@ -634,6 +634,29 @@ cap_rclink(struct device *d, int where)
+@@ -634,6 +634,51 @@ cap_rclink(struct device *d, int where)
      }
  }
  
 +static void
-+cap_dvsec(struct device *d, int where)
++cap_cxl(struct device *d, int where)
++{
++  u16 l;
++
++  printf("CXL Designated Vendor-Specific:\n");
++  if (verbose < 2)
++    return;
++
++  if (!config_fetch(d, where + PCI_CXL_CAP, 12))
++    return;
++
++  l = get_conf_word(d, where + PCI_CXL_CAP);
++  printf("\t\tCXLCap:\tCache%c IO%c Mem%c Mem HW Init%c HDMCount %d Viral%c\n",
++    FLAG(l, PCI_CXL_CAP_CACHE), FLAG(l, PCI_CXL_CAP_IO), FLAG(l, PCI_CXL_CAP_MEM),
++    FLAG(l, PCI_CXL_CAP_MEM_HWINIT), PCI_CXL_CAP_HDM_CNT(l), FLAG(l, PCI_CXL_CAP_VIRAL));
++
++  l = get_conf_word(d, where + PCI_CXL_CTRL);
++  printf("\t\tCXLCtl:\tCache%c IO%c Mem%c Cache SF Cov %d Cache SF Gran %d Cache Clean%c Viral%c\n",
++    FLAG(l, PCI_CXL_CTRL_CACHE), FLAG(l, PCI_CXL_CTRL_IO), FLAG(l, PCI_CXL_CTRL_MEM),
++    PCI_CXL_CTRL_CACHE_SF_COV(l), PCI_CXL_CTRL_CACHE_SF_GRAN(l), FLAG(l, PCI_CXL_CTRL_CACHE_CLN),
++    FLAG(l, PCI_CXL_CTRL_VIRAL));
++
++  l = get_conf_word(d, where + PCI_CXL_STATUS);
++  printf("\t\tCXLSta:\tViral%c\n", FLAG(l, PCI_CXL_STATUS_VIRAL));
++}
++
++static int
++is_flexbus_cap(struct device *d, int where)
 +{
 +  u32 hdr;
++  u16 w;
 +
-+  printf("Designated Vendor-Specific:\n");
 +  if (!config_fetch(d, where + PCI_DVSEC_HEADER1, 8))
-+    {
-+      printf("<unreadable>\n");
-+      return;
-+    }
++    return 0;
 +
-+  hdr = get_conf_long(d, where + PCI_DVSEC_HEADER1);
-+  printf("\t\tDVSEC Vendor ID=%04x Rev=%d Len=%03x <?>\n",
-+    BITS(hdr, 0, 16),
-+    BITS(hdr, 16, 4),
-+    BITS(hdr, 20, 12));
-+
++  /* Check for Designated Vendor-Specific Flex Bus Capable ID */
 +  hdr = get_conf_long(d, where + PCI_DVSEC_HEADER2);
-+  printf("\t\tDVSEC ID=%04x <?>\n",
-+    BITS(hdr, 0, 16));
++  w = BITS(hdr, 0, 16);
++  if (w == PCI_DVSEC_FLEXBUS_ID)
++    return 1;
++
++  return 0;
 +}
 +
  static void
- cap_evendor(struct device *d, int where)
+ cap_dvsec(struct device *d, int where)
  {
-@@ -924,7 +947,7 @@ show_ext_caps(struct device *d, int type)
+@@ -947,7 +992,10 @@ show_ext_caps(struct device *d, int type)
  	    printf("Readiness Time Reporting <?>\n");
  	    break;
  	  case PCI_EXT_CAP_ID_DVSEC:
--	    printf("Designated Vendor-Specific <?>\n");
-+	    cap_dvsec(d, where);
+-	    cap_dvsec(d, where);
++	    if (is_flexbus_cap(d, where))
++	      cap_cxl(d, where);
++	    else
++	      cap_dvsec(d, where);
  	    break;
  	  case PCI_EXT_CAP_ID_VF_REBAR:
  	    printf("VF Resizable BAR <?>\n");
-diff --git a/tests/cap-dvsec b/tests/cap-dvsec
+diff --git a/tests/cap-dvsec-cxl b/tests/cap-dvsec-cxl
 new file mode 100644
-index 0000000..3b3558c
+index 0000000..e5d2745
 --- /dev/null
-+++ b/tests/cap-dvsec
++++ b/tests/cap-dvsec-cxl
 @@ -0,0 +1,340 @@
-+4e:00.0 Unassigned class [ff00]: Intel Corporation Device 0d93
-+        Control: I/O- Mem- BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
++6b:00.0 Unassigned class [ff00]: Intel Corporation Device 0d93
++        Control: I/O- Mem- BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr+ Stepping- SERR+ FastB2B- DisINTx-
 +        Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
 +        Interrupt: pin A routed to IRQ 255
 +        NUMA node: 0
@@ -127,7 +175,7 @@ index 0000000..3b3558c
 +        Capabilities: [40] Express (v2) Root Complex Integrated Endpoint, MSI 00
 +                DevCap: MaxPayload 256 bytes, PhantFunc 0
 +                        ExtTag+ RBE+ FLReset+
-+                DevCtl: CorrErr- NonFatalErr- FatalErr- UnsupReq-
++                DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
 +                        RlxdOrd+ ExtTag+ PhantFunc- AuxPwr- NoSnoop- FLReset-
 +                        MaxPayload 128 bytes, MaxReadReq 512 bytes
 +                DevSta: CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr- TransPend-
@@ -146,11 +194,11 @@ index 0000000..3b3558c
 +                Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
 +        Capabilities: [100 v1] Advanced Error Reporting
 +                UESta:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-+                UEMsk:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-+                UESvrt: DLP+ SDES- TLP- FCP+ CmpltTO- CmpltAbrt- UnxCmplt- RxOF+ MalfTLP+ ECRC- UnsupReq- ACSViol-
++                UEMsk:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq+ ACSViol-
++                UESvrt: DLP+ SDES- TLP+ FCP+ CmpltTO- CmpltAbrt- UnxCmplt- RxOF+ MalfTLP+ ECRC- UnsupReq- ACSViol-
 +                CESta:  RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr-
 +                CEMsk:  RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr+
-+                AERCap: First Error Pointer: 00, ECRCGenCap+ ECRCGenEn- ECRCChkCap+ ECRCChkEn-
++                AERCap: First Error Pointer: 00, ECRCGenCap+ ECRCGenEn+ ECRCChkCap+ ECRCChkEn+
 +                        MultHdrRecCap+ MultHdrRecEn- TLPPfxPres- HdrLogCap-
 +                HeaderLog: 00000000 00000000 00000000 00000000
 +        Capabilities: [200 v1] Multi-Function Virtual Channel <?>
@@ -195,16 +243,16 @@ index 0000000..3b3558c
 +                PTMControl: Enabled:- RootSelected:-
 +                PTMEffectiveGranularity: Unknown
 +        Capabilities: [d00 v1] Vendor Specific Information: ID=0040 Rev=1 Len=04c <?>
-+        Capabilities: [e00 v1] Designated Vendor Specific Extended Capability:
-+                DVSEC Vendor ID=8086 Rev=0 Len=038 <?>
-+                DVSEC ID=0000 <?>
++        Capabilities: [e00 v1] CXL Designated Vendor-Specific:
++                CXLCap: Cache+ IO+ Mem+ Mem HW Init+ HDMCount 1 Viral-
++                CXLCtl: Cache+ IO+ Mem- Cache SF Cov 0 Cache SF Gran 0 Cache Clean- Viral-
++                CXLSta: Viral-
 +        Capabilities: [e38 v1] Device Serial Number 12-34-56-78-90-00-00-00
-+00: 86 80 93 0d 00 00 10 00 00 00 00 ff 00 00 80 00
++00: 86 80 93 0d 40 01 10 00 00 00 00 ff 00 00 80 00
 +10: 00 00 10 b3 00 00 00 00 01 a4 00 00 00 00 00 00
 +20: 08 00 00 b1 00 00 00 00 00 00 00 00 00 00 00 00
 +30: 00 00 00 00 40 00 00 00 00 00 00 00 ff 01 00 00
-+40: 10 80 92 00 e1 8f 00 10 10 21 00 00 00 00 00 00
-+50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++40: 10 80 92 00 e1 8f 00 10 1f 21 00 00 00 00 00 00
 +50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 +60: 00 00 00 00 9f 0b 78 00 00 00 00 00 00 00 00 00
 +70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
@@ -216,8 +264,8 @@ index 0000000..3b3558c
 +d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 +e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 +f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+100: 01 00 01 20 00 00 00 00 00 00 00 00 10 20 06 00
-+110: 00 00 00 00 00 20 00 00 a0 02 00 00 00 00 00 00
++100: 01 00 01 20 00 00 00 00 00 00 10 00 10 30 46 00
++110: 00 00 00 00 00 20 00 00 e0 03 00 00 00 00 00 00
 +120: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 +130: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 +140: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
@@ -424,7 +472,7 @@ index 0000000..3b3558c
 +dd0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 +de0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 +df0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+e00: 23 00 81 e3 86 80 80 03 00 00 1f 00 02 00 00 00
++e00: 23 00 81 e3 86 80 80 03 00 00 1f 00 03 00 00 00
 +e10: 00 00 00 00 00 00 00 00 00 00 00 00 03 01 00 08
 +e20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 +e30: 00 00 00 00 00 00 00 00 03 00 01 00 00 00 00 90
