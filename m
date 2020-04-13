@@ -2,95 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BF81F1A64C1
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Apr 2020 11:39:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BBE131A65E2
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Apr 2020 13:50:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728434AbgDMJjw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Apr 2020 05:39:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35710 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728417AbgDMJjr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Apr 2020 05:39:47 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 959E7C00860A
-        for <linux-pci@vger.kernel.org>; Mon, 13 Apr 2020 02:31:45 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id k28so6046676lfe.10
-        for <linux-pci@vger.kernel.org>; Mon, 13 Apr 2020 02:31:45 -0700 (PDT)
+        id S1727966AbgDMLuM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Apr 2020 07:50:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43812 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729154AbgDMLt6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Apr 2020 07:49:58 -0400
+X-Greylist: delayed 508 seconds by postgrey-1.27 at vger.kernel.org; Mon, 13 Apr 2020 07:49:58 EDT
+Received: from mail-il1-x12f.google.com (mail-il1-x12f.google.com [IPv6:2607:f8b0:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52B41C03BC80
+        for <linux-pci@vger.kernel.org>; Mon, 13 Apr 2020 04:41:30 -0700 (PDT)
+Received: by mail-il1-x12f.google.com with SMTP id f82so4801523ilh.8
+        for <linux-pci@vger.kernel.org>; Mon, 13 Apr 2020 04:41:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=22ry+294zZcqaoEVkMcWEawZi6DDugMuA4lCNKrgbiM=;
-        b=BWhN9CNUIFwnRIEzUe/BwAX9gwW7YYJZCyOYxczVx74YIU7V0mC7z2OcM35UyP4e1p
-         4oOxRRQucYbYOo8AiCmMAGW2yCJUIihy25350/EbU/I375sSwG7o78dsiV8hysjDDbOa
-         DCnUiVrCWoS2EZjk23MnwjFyE6krOT3x7Sgxkcs7aHT2ffdKiX8lkj0vMnmWerfoO+2i
-         7zWqbpEpLBQKObzkG36N8VsFPvN5FgXPc9jylTJvXndqQyp2RHqSXY8Jmqsv+lNrTK9M
-         QWJIsmnIw6LotVNSi1iGc+NY6cZD7jfb5lTAXo0ikhgxxY6x18NMuTetmUhmdg4P5gRK
-         IQkw==
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=qlKWExEze9qCqlwbpw1q4+d2Zjr4ETGVa64TcX+dTlk=;
+        b=prjS9vX1/lBHBQnmn8S5eSRPyVAkL53RoKQzE5AAHbxvNYI4a2v2cjTji7kXTppOEc
+         z/YC5TVvRJiGk2ecDbuxQbDezIHvoL12TwU8A8MoLDqkPTvq0EUKN12xVXuoac5P5vPG
+         CDxQUahEZp79myUg0SW4XqnobzWbEdaMDOCEcwJOYEkU2vBAFQtTx1QiAdzIaX9heUrh
+         wXqF9HmIVWbzu+LjtyhWb9YxG3jDJu9H0/2YRuWHtIWQg0GYyRRf+7+N2+T4/5hNzYkA
+         0Td5bmAVNGOZBhXtNLv8DRN8PKs1LisEF6odwJbW1cWSeUhqmMnZAT2UKZl4iJ1E/PV6
+         qofQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=22ry+294zZcqaoEVkMcWEawZi6DDugMuA4lCNKrgbiM=;
-        b=XXjQ0Zzu0bxRdZCC3eub0MQM20fBQ+MVsbtfgdKKOgp0eT+57nUhPBz8MzKF6ExuJx
-         vRfMv54uVH6vpbNveVryPKMKt94qLlQHB0SQsz1kulH11MN6tEQ34vQxxf7kL4QrCW8V
-         DyZ8Q/ld9nQB5JXp5en7ViWXexh719jn+vSN8u+tKDY/1r2pMA2lLcgJP1V9cYIvArLI
-         QOlqKrD4zNoK2KeHIimhN4YBO7P2Khv+xIKM0/0obf3Yk4los1LJopyiuCWfZB1+LFby
-         re7+qXbKE9WbXSVSIPR8JJHV59Z/JReZ+fc5nPvb3ahbzRlkhQTbE4lR7rx8U3CsN7ra
-         R5iw==
-X-Gm-Message-State: AGi0Puadg3Y70jg3MvSoRMcWWnB/q8z3/YajoeJ95N8lfPhUxNhHMglk
-        bRImGOicf3ItWpFaEvi4ajzctQ==
-X-Google-Smtp-Source: APiQypLU2XLKZjsSZmZYU4dGrsmyNyLhGMWhvQXMiwFm5FV0dumbDAT+1S0NQ6VdA0RQSuVQGrkBvQ==
-X-Received: by 2002:ac2:4554:: with SMTP id j20mr10171876lfm.91.1586770304122;
-        Mon, 13 Apr 2020 02:31:44 -0700 (PDT)
-Received: from ?IPv6:2a00:1fa0:449a:6c6f:9d43:1ad8:e18f:9ec1? ([2a00:1fa0:449a:6c6f:9d43:1ad8:e18f:9ec1])
-        by smtp.gmail.com with ESMTPSA id u1sm6665830ljo.65.2020.04.13.02.31.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Apr 2020 02:31:43 -0700 (PDT)
-Subject: Re: [PATCH v3 1/5] PCI: OF: Don't remap iospace on unsupported
- platform
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-mips@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Paul Burton <paulburton@kernel.org>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200330114239.1112759-1-jiaxun.yang@flygoat.com>
- <20200413053222.3976680-1-jiaxun.yang@flygoat.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <10ef1a19-c2e5-60fc-b3c8-64547017f758@cogentembedded.com>
-Date:   Mon, 13 Apr 2020 12:31:38 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=qlKWExEze9qCqlwbpw1q4+d2Zjr4ETGVa64TcX+dTlk=;
+        b=MiHYK6Vj3JUP0PhI2D2xswVmiDdO2XTKJxrLEz8qs2lFqHxdNUtUD9S0GBJzYH640V
+         5sVsWZsyx4StyjHuyzQNBPHCsPqaXEi/xsGCWjrc8A2ESgcHrJyfSu3XOaojTWKUfiJE
+         fHvQ8inAB3L9maWdnOSb5RZl9tuYDGl7durT4zNkgNfoMKjEUltP8zxp6aNVzj3RARvB
+         NnRHDSx+CyiRMZQ8oOOOFKyPeSa9aOEGvCssU71v2OkStP+N8oPhZhyknoQ7SZRRx7BN
+         p4VlpjXgmof33b638NNsO/WZIs6Spkh0jdjZlrRMgRBrczrVSXGaf0paoW3vdGPpRfdd
+         KgFw==
+X-Gm-Message-State: AGi0PuYe9rdDWt+bGo5eUbFIC8INt/xCy0Iip6KUb8x/C6BfhLMvOdcC
+        d+H8/jqbU4WzfjuFfI4JEmtYr/NqMHNlwsesWg==
+X-Google-Smtp-Source: APiQypL8TqJIeu3sv8q1i+SGhGHI+g2m6cjavfj0dEc+5JPmC3aVP4wfZgyktqWXbHy6/UF7VoKUuS2YyJ3E1gwa7Hs=
+X-Received: by 2002:a92:cccb:: with SMTP id u11mr9656514ilq.8.1586778089638;
+ Mon, 13 Apr 2020 04:41:29 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200413053222.3976680-1-jiaxun.yang@flygoat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Received: by 2002:a02:5e49:0:0:0:0:0 with HTTP; Mon, 13 Apr 2020 04:41:28
+ -0700 (PDT)
+Reply-To: mgbenin903@gmail.com
+From:   Barrister Robert Richter UN-Attorney at Law Court-Benin 
+        <info.zennitbankplcnigerian@gmail.com>
+Date:   Mon, 13 Apr 2020 13:41:28 +0200
+Message-ID: <CABHzvrngm=rA5Ct9h+JGdbyDfHJmnfntceDPoyJToo8PZn+YZg@mail.gmail.com>
+Subject: I have already sent you first payment US$5000.00 this morning through
+ MONEY Gram service.it is available to pick up in address now.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello!
+ATTN DEAR BENEFICIARY.
 
-On 13.04.2020 8:32, Jiaxun Yang wrote:
+GOOD NEWS.
 
-> There are some platforms doesn't support iospace remapping
+I have already sent you first payment US$5000.00 this morning through
+MONEY Gram service.it is available to pick up in address now.
 
-    That don't support.
+So we advise you to Contact This Money Gram office to pick up your
+transfer $US5000.00 today.
 
-> like MIPS. However, our PCI code will try to remap iospace
-> unconditionally and reject io resources on these platforms.
-> 
-> So we should remove iospace remapping check and use a range
-> check instead on these platforms.
-> 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-[...]
 
-MBR, Sergei
+Note that your compensation payment funds is total amount $US2.800,000
+Million Dollars.We have instructed the Money Gram Agent,Mr. James
+Gadner to keep sending the transfer to you daily, but the maximum
+amount you will be receiving everyday is US$5000.00. Contact Agent now
+to pick up your first payment $US5000.00 immediately.
+
+Contact Person, Mr. James Gadner, Dir. Money Gram Benin.
+Email: mgbenin903@gmail.com
+Telephone Numbers: +229 62819378/ +229 98477762
+
+HERE IS YOUR PAYMENT DETAILS FOR THE FIRST =C2=A3US5000.00 SENT TODAY.
+
+Track View Website link:
+https://secure.moneygram.com/track
+Sender=E2=80=99s First name: David
+Sender=E2=80=99s Last Name: Joiner
+Money Transfer Control Number (MTCN) (REFERENCE)# 26046856
+
+Contact the Mmoney Gram Urgent and reconfirm your address to the
+office before, they will allow you to pick up the transfer today.
+
+HERE IS WHAT REQUIRED OF YOU.
+
+YOUR FULL NAME---------
+ADDRESS--------------
+COUNTRY-----------------------------
+TELEPHONE NUMBERS-----------------
+
+Note, I paid the transfer fee for you, but only you are required to
+send to the office is $75 only,Been Your Payment File activation fee,
+Send once you contact the office,before you can able to pick up your
+transfer today.
+
+Let me know once you pick up first payment today.
+
+Barrister Robert Richter UN-Attorney at Law Court-Benin
