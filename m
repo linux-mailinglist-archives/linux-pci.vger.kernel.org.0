@@ -2,132 +2,142 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C3431A66C6
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Apr 2020 15:11:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 111FB1A66DD
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Apr 2020 15:22:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729766AbgDMNL1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Apr 2020 09:11:27 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29427 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728502AbgDMNLZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Apr 2020 09:11:25 -0400
+        id S1729791AbgDMNWe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Apr 2020 09:22:34 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:40201 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728135AbgDMNWd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Apr 2020 09:22:33 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586783483;
+        s=mimecast20190719; t=1586784151;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=AIzOt50qCMDrR8+x22GmkfIIGJdcpsoV6Dog0U8l+cg=;
-        b=YBG8XVcf9V32gNtkfmAUKUoOxRWIsq7MLTov0YyqeHsYj74y2tivzMhtSnph3fBvqSUgmV
-        +76PeD8/2e7heijsHKZBnJSxFNXg08Xe3DrbBd1iABLNNLupzNL6CEqrQ48fjVHSEDrefm
-        Y6boOsci9GUzDiXjdke1Un2YfRGfB6E=
+        bh=0PdiEszlmuGkdCTdCPanAdeTLpgTEN2jG8uLZ7FuSm8=;
+        b=OB9G5zwfUkrvKw7QetefY+RBGBumvO8A6zeDVZtb3WBnTflokyncUDVpsOqIrGhy1EGtZ1
+        bj4yMygNJUZ4I4LynPccS8Ii9woMXQyn/6D+9uYYr0bLNaA3bnKneSh0CR6q91dxV8Hqwn
+        57USOHu1bf5Zuf/mxY2uZOe2NixZjL0=
 Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
  [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-278-2GjNE-3cOUaNOgzf3yODvA-1; Mon, 13 Apr 2020 09:11:22 -0400
-X-MC-Unique: 2GjNE-3cOUaNOgzf3yODvA-1
-Received: by mail-wr1-f70.google.com with SMTP id v14so6676431wrq.13
-        for <linux-pci@vger.kernel.org>; Mon, 13 Apr 2020 06:11:22 -0700 (PDT)
+ us-mta-128-EeILSOpNPEmIzLlGjanCHg-1; Mon, 13 Apr 2020 09:22:30 -0400
+X-MC-Unique: EeILSOpNPEmIzLlGjanCHg-1
+Received: by mail-wr1-f70.google.com with SMTP id 11so359884wrc.3
+        for <linux-pci@vger.kernel.org>; Mon, 13 Apr 2020 06:22:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=AIzOt50qCMDrR8+x22GmkfIIGJdcpsoV6Dog0U8l+cg=;
-        b=DQ3ppQ7UGsiVp3XZA8/aOjxq57vV+rWG5P0ugMzmyZA8vlZfSai8DAZSn4rm/BUCCw
-         CeuyXsZE5dzCnF8sKDHnMcxDzte9BqlGGP9XKNcYYTb1kFb3m1G+e0ucEXBp9c1zsWCX
-         yDGLWmiAhqvEiIHjr8h9GJqwsYqWPRiyb5wBicIpuq6p7qCxy0JS1+uUdyafxpcw9s+a
-         1DyJLLkTC8UGfJxEtzBcXfxqLepJR/fTzLDi9d/HRqyuKIkIAPIWvetKkEHKTgorY4cT
-         G5t49BNwSwAFw173CPniGMSqRbKpnFhBHBVyRU0NRO4+J3CAI7IjtshovUfk78I2cN5B
-         ZTHQ==
-X-Gm-Message-State: AGi0PuZ0R0VzvHhqInK5HxPjMaff6SK7aLYuKehaZqV1R4hYPEimADph
-        SGxAcVVmHMvUUsU1I7anO9fQk5JjdTZF6m4DLmv5AwpvJP/oo70sPyU0vFikzskndqpIK2xXFWs
-        3hbUBspsR3YLAiPtSSlvB
-X-Received: by 2002:adf:fe87:: with SMTP id l7mr3901104wrr.360.1586783480843;
-        Mon, 13 Apr 2020 06:11:20 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLDoBHFkpJzoFrPwJ5is0GUD63dGqZWo2iX5EtpuugfLax6aJbmVddQwhVda5XX4QcR/KQIQw==
-X-Received: by 2002:adf:fe87:: with SMTP id l7mr3901084wrr.360.1586783480597;
-        Mon, 13 Apr 2020 06:11:20 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id s18sm5721389wrv.2.2020.04.13.06.11.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Apr 2020 06:11:19 -0700 (PDT)
-Subject: Re: [PATCH 0/7] PM: sleep: core: Rearrange the handling of driver
- power management flags
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>
-Cc:     Linux ACPI <linux-acpi@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-References: <1888197.j9z7NJ8yPn@kreacher>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <ccb3913e-1ebf-7f4d-b699-cfd2506d2d69@redhat.com>
-Date:   Mon, 13 Apr 2020 15:11:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=0PdiEszlmuGkdCTdCPanAdeTLpgTEN2jG8uLZ7FuSm8=;
+        b=SBwq6+9ecO9pxRMNzR4U8uEWV2Rm7uC/esVPkZaXSKXmUaUe+Jp+OrwrwaJ8sOWKoJ
+         ecFiKiU8EzEpayRiALhzQ7x93VJuBgGLwMF2tSdA1qN0DeE69NF/9/vUO4MVwF+q9E8e
+         75K0P6oUGU2g1VwpZ5zaQRWVxo4JtVwUzBb6PXSl0PA0PqWYCGFfr+HyU26y+lsbgKPh
+         QYEFef/C+vFXG7NXQFzkbZS5UFw4P8ZOxdw9CvABP1KYJuRvlf/BDdY6ovBtQMghISwd
+         C1zyL4MI9Sf61h2+ZfOKnxA87sQl93Ou6hIva2M5/eoZcXnuKyZnjDRfzowdJlxSgM+V
+         7Fyw==
+X-Gm-Message-State: AGi0PuaWCJt5MmvpRI4nASQsBxSqB4s8sQE7lFWISrBlXh1H9g7Uwdwp
+        gUNcoSCsWNC+rsRzhOP6z6gstEOo8fTRdCWRaeKG4GyZnFTwdAawzFbqHxPVcz0A0eCs1pBVpI1
+        zB02OOv0GpgSbc7ZPEqDe
+X-Received: by 2002:adf:f343:: with SMTP id e3mr10209303wrp.51.1586784149266;
+        Mon, 13 Apr 2020 06:22:29 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJEAGSwrzL3vQ67rkOtqT1/sfEwf7eMuRq2HTHdDqkOFbKnqIPy+fW8j5vivRuXTGBlXzeIlQ==
+X-Received: by 2002:adf:f343:: with SMTP id e3mr10209287wrp.51.1586784149081;
+        Mon, 13 Apr 2020 06:22:29 -0700 (PDT)
+Received: from redhat.com ([185.107.45.41])
+        by smtp.gmail.com with ESMTPSA id b82sm15672990wme.25.2020.04.13.06.22.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Apr 2020 06:22:28 -0700 (PDT)
+Date:   Mon, 13 Apr 2020 09:22:25 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     iommu@lists.linux-foundation.org,
+        virtualization@lists.linux-foundation.org,
+        linux-pci@vger.kernel.org, joro@8bytes.org, bhelgaas@google.com,
+        jasowang@redhat.com, kevin.tian@intel.com,
+        sebastien.boeuf@intel.com, eric.auger@redhat.com,
+        jacob.jun.pan@intel.com, robin.murphy@arm.com
+Subject: Re: [PATCH v2 1/3] iommu/virtio: Add topology description to
+ virtio-iommu config space
+Message-ID: <20200413091355-mutt-send-email-mst@kernel.org>
+References: <20200228172537.377327-1-jean-philippe@linaro.org>
+ <20200228172537.377327-2-jean-philippe@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <1888197.j9z7NJ8yPn@kreacher>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200228172537.377327-2-jean-philippe@linaro.org>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+On Fri, Feb 28, 2020 at 06:25:36PM +0100, Jean-Philippe Brucker wrote:
+> diff --git a/include/uapi/linux/virtio_iommu.h b/include/uapi/linux/virtio_iommu.h
+> index 237e36a280cb..ec57d215086a 100644
+> --- a/include/uapi/linux/virtio_iommu.h
+> +++ b/include/uapi/linux/virtio_iommu.h
+> @@ -16,6 +16,7 @@
+>  #define VIRTIO_IOMMU_F_BYPASS			3
+>  #define VIRTIO_IOMMU_F_PROBE			4
+>  #define VIRTIO_IOMMU_F_MMIO			5
+> +#define VIRTIO_IOMMU_F_TOPOLOGY			6
+>  
+>  struct virtio_iommu_range_64 {
+>  	__le64					start;
+> @@ -27,6 +28,12 @@ struct virtio_iommu_range_32 {
+>  	__le32					end;
+>  };
+>  
+> +struct virtio_iommu_topo_config {
+> +	__le32					offset;
 
-On 4/10/20 5:46 PM, Rafael J. Wysocki wrote:
-> Hi Alan,
-> 
-> Following our recent discussion regarding the DPM_FLAG_* family of flags [1],
-> I have decided to follow some of your recommendations and make changes to the
-> core code handling those flags.
-> 
-> The purpose of this is basically to make the code more consistent internally,
-> easier to follow and better documented.
-> 
-> First of all, patch [1/7] changes the PM core to skip driver-level "late"
-> and "noirq" suspend callbacks for devices with SMART_SUSPEND set if they are
-> still runtime-suspended during the "late" system-wide suspend phase (without
-> the patch it does that only if subsystem-level late/noirq/early suspend/resume
-> callbacks are not present for the device, which is demonstrably inconsistent)
-> and updates the resume part of the code accordingly (it doesn't need to check
-> whether or not the subsystem-level callbacks are present any more).
-> 
-> The next patch, [2/7], is purely cosmetic and its only purpose is to reduce
-> the LOC number and move related pieces of code closer to each other.
-> 
-> Patch [3/7] changes the PM core so that it doesn't skip any subsystem-level
-> callbacks during system-wide resume (without the patch they may be skipped in
-> the "early resume" and "resume" phases due to LEAVE_SUSPENDED being set which
-> may be problematic) and to always run the driver's ->resume callback if the
-> corresponding subsystem-level callback is not present (without the patch it
-> may be skipped if LEAVE_SUSPENDED is set) to let it reverse the changes made
-> by the driver's ->suspend callback (which always runs too) if need be.
-> 
-> Patches [4-6/7] rename one function in the PM core and two driver PM flags to
-> make their names better reflect their purpose.
-> 
-> Finally, patch [7/7] updates the documentation of the driver PM flags to
-> reflect the new code flows.
-> 
-> This patch series have been available in the git branch at
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
->   pm-sleep-core
-> 
-> for easier web and git access.
+Any restrictions on offset? E.g. alignment?
 
-The series looks sane to me at a first look. I've added it to my local
-tree for testing on all the pesky Bay and Cherry Trail devices I have
-and which always cause trouble in this area.
+> +	__le32					num_items;
+> +	__le32					item_length;
+> +};
+> +
+>  struct virtio_iommu_config {
+>  	/* Supported page sizes */
+>  	__le64					page_size_mask;
+> @@ -36,6 +43,25 @@ struct virtio_iommu_config {
+>  	struct virtio_iommu_range_32		domain_range;
+>  	/* Probe buffer size */
+>  	__le32					probe_size;
+> +	struct virtio_iommu_topo_config		topo_config;
+> +};
+> +
+> +#define VIRTIO_IOMMU_TOPO_PCI_RANGE		0x1
+> +#define VIRTIO_IOMMU_TOPO_ENDPOINT		0x2
+> +
+> +struct virtio_iommu_topo_pci_range {
+> +	__le16					type;
+> +	__le16					hierarchy;
+> +	__le16					requester_start;
+> +	__le16					requester_end;
+> +	__le32					endpoint_start;
+> +};
+> +
+> +struct virtio_iommu_topo_endpoint {
+> +	__le16					type;
+> +	__le16					reserved;
+> +	__le32					endpoint;
+> +	__le64					address;
+>  };
+>  
+>  /* Request types */
 
-Regards,
+As any UAPI change, this needs to be copied to virtio TC.
 
-Hans
+I believe an old version of QEMU patches was published there
+but I don't think it was the latest one you tested against.
+
+Description should preferably be added to spec too.
+
+In partucular please add comments (in this header, too)
+documenting the new fields, values and structures.
+
+> -- 
+> 2.25.0
 
