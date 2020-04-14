@@ -2,161 +2,146 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 59A7E1A8634
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Apr 2020 18:59:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD3AB1A8693
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Apr 2020 19:04:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391897AbgDNQzW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Apr 2020 12:55:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55256 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407501AbgDNQtI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 14 Apr 2020 12:49:08 -0400
-Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBDDF21734;
-        Tue, 14 Apr 2020 16:49:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586882942;
-        bh=0BnJSftuUBqhmdRzeJYG8vzypho0PIEfncwKqSh7oyw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f90DO2kKSJSFPfSJklC/NQUf50ZmxxG5CyWXyV40uYwiEn0YMyRLl3o0vgrCiWFgS
-         s0XIojPWf3zjpO+DoRZ9QEJ7RWqhVR5FHGFZoteImH6fw3ZUqzRO8y6MxyoaAFsTtO
-         P/5UFvfKKfwgpGOm8bkqdhChlf5tsLWzI9Gv2ETE=
-Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
-        (envelope-from <mchehab@kernel.org>)
-        id 1jOOk8-0068ly-W6; Tue, 14 Apr 2020 18:49:01 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: [PATCH v2 14/33] docs: pci: boot-interrupts.rst: improve html output
-Date:   Tue, 14 Apr 2020 18:48:40 +0200
-Message-Id: <a6a9eb16eede10731bcce69a600ab12d92e6ba47.1586881715.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <cover.1586881715.git.mchehab+huawei@kernel.org>
-References: <cover.1586881715.git.mchehab+huawei@kernel.org>
+        id S2391187AbgDNREX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Apr 2020 13:04:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34524 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729745AbgDNRET (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Apr 2020 13:04:19 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8D53C061A0C
+        for <linux-pci@vger.kernel.org>; Tue, 14 Apr 2020 10:04:18 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id e26so13823666wmk.5
+        for <linux-pci@vger.kernel.org>; Tue, 14 Apr 2020 10:04:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fDR92FG/W9XzyoEKCk0ZF8N6Phe9WGPiX+0dpA5beXc=;
+        b=NEj+O1VPlDE3+b9GRhqJpb7imwatVrbEHRPijSau+X9Vbg+US5qIqjILEeTsiMZyzd
+         Jbi8pl9C2UJZk5wt+F2ohcMMgOlmn6vRXNL+oLg3PX1OQyFq5Vi7QeyaSHWpCnKH9wwW
+         BQcMuKVX1Kxci3T4tlG5aUlteOmxPqpT3W6wO26dWN/t7wdHaxqmgBUfDWUgwMMU2ufA
+         pOJXldxAAh12JJAT7GYE/YQAYLgMhCdkm9Y3ZNUlaySCcDtsLm5njdvcwhqHN+ekOPfb
+         7Kguikc/vkv7QzJrcpWobUk53WblaNZeBLUQoi01vtQvlCASM3Ery/NF+KrJ8hZbl8nn
+         tsaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fDR92FG/W9XzyoEKCk0ZF8N6Phe9WGPiX+0dpA5beXc=;
+        b=jjFiDSSU310o7ajjFevx1ZyGPD7W4vstU1K3tJAdMIX15m0WBW7M2aNb07Xbw3S+fz
+         hpcvdigjC73Gvv9ma/Gl7pZd0F7pC0/YIKFSSVe2mbyo8wo3RE7uTXHsdVugysfAnhaX
+         piyw2gG3QCQx/gTGIY+ItRYbSXeywlnIpDuDUnwDlSWqm+4ofRPpbkitl8y22NIl+1BL
+         CFoR5EDH68AdjPuPn8a5vhkDQNao2ZdGGCgw9/4POaRmd6B/LBMSYCH4Gu2HFkD2JLrO
+         EjmBFr0GABa87AqhZju2jhCkx/fxjscy8FdGJzw4cb9wQe/Z1wCbvGCuM5TrYSTnI1Y7
+         3cLg==
+X-Gm-Message-State: AGi0PuZI6R+7z8zsMqC7aWoYTVog1hjn6Su0IiKnluVzBaljLe8tGEEb
+        3HJdbs/udKrBwGqrFUvC2L+xdQ==
+X-Google-Smtp-Source: APiQypIdArRSrPXSdknP2IMK7ppxpSO4QpwtmnnSeA+CSALQDIlf3m4G7fjFu80JrmrhRYEK5Otokw==
+X-Received: by 2002:a1c:4e16:: with SMTP id g22mr723817wmh.157.1586883857511;
+        Tue, 14 Apr 2020 10:04:17 -0700 (PDT)
+Received: from localhost.localdomain ([2001:171b:226b:54a0:116c:c27a:3e7f:5eaf])
+        by smtp.gmail.com with ESMTPSA id x18sm19549147wrs.11.2020.04.14.10.04.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 10:04:16 -0700 (PDT)
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org
+Cc:     joro@8bytes.org, catalin.marinas@arm.com, will@kernel.org,
+        robin.murphy@arm.com, kevin.tian@intel.com,
+        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
+        jacob.jun.pan@linux.intel.com, christian.koenig@amd.com,
+        zhangfei.gao@linaro.org, jgg@ziepe.ca, xuzaibo@huawei.com,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>
+Subject: [PATCH v5 00/25] iommu: Shared Virtual Addressing and SMMUv3 support
+Date:   Tue, 14 Apr 2020 19:02:28 +0200
+Message-Id: <20200414170252.714402-1-jean-philippe@linaro.org>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-There are some warnings with this file:
+Shared Virtual Addressing (SVA) allows to share process page tables with
+devices using the IOMMU. Add a generic implementation of the IOMMU SVA
+API, and add support in the Arm SMMUv3 driver.
 
-    /Documentation/PCI/boot-interrupts.rst:42: WARNING: Unexpected indentation.
-    /Documentation/PCI/boot-interrupts.rst:52: WARNING: Block quote ends without a blank line; unexpected unindent.
-    /Documentation/PCI/boot-interrupts.rst:92: WARNING: Unexpected indentation.
-    /Documentation/PCI/boot-interrupts.rst:98: WARNING: Unexpected indentation.
-    /Documentation/PCI/boot-interrupts.rst:136: WARNING: Unexpected indentation.
+Since v4 [1] I changed the PASID lifetime. It isn't released when the
+corresponding process address space dies, but when the device driver calls
+unbind. This alleviates the mmput() path as we don't need to ensure that
+the device driver stops DMA there anymore. For more details see my
+proposal from last week [2], which is a requirement for this series. As a
+result patch 1 has separate clear() and detach() operations, and patch 17
+has a new context descriptor state. 
 
-It turns that this file conversion to ReST could be improved,
-in order to remove the warnings and provide a better output.
+Other changes are a simplification of the locking in patch 1 and overall
+cleanups following review comments.
 
-So, fix the warnings by adjusting blank lines, add a table and
-some list markups. Also, mark endnodes as such.
+[1] [PATCH v4 00/26] iommu: Shared Virtual Addressing and SMMUv3 support
+    https://lore.kernel.org/linux-iommu/20200224182401.353359-1-jean-philippe@linaro.org/
+[2] [PATCH 0/2] iommu: Remove iommu_sva_ops::mm_exit()
+    https://lore.kernel.org/linux-iommu/20200408140427.212807-1-jean-philippe@linaro.org/
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- Documentation/PCI/boot-interrupts.rst | 34 +++++++++++++++------------
- 1 file changed, 19 insertions(+), 15 deletions(-)
+Jean-Philippe Brucker (25):
+  mm/mmu_notifiers: pass private data down to alloc_notifier()
+  iommu/sva: Manage process address spaces
+  iommu: Add a page fault handler
+  iommu/sva: Search mm by PASID
+  iommu/iopf: Handle mm faults
+  iommu/sva: Register page fault handler
+  arm64: mm: Add asid_gen_match() helper
+  arm64: mm: Pin down ASIDs for sharing mm with devices
+  iommu/io-pgtable-arm: Move some definitions to a header
+  iommu/arm-smmu-v3: Manage ASIDs with xarray
+  arm64: cpufeature: Export symbol read_sanitised_ftr_reg()
+  iommu/arm-smmu-v3: Share process page tables
+  iommu/arm-smmu-v3: Seize private ASID
+  iommu/arm-smmu-v3: Add support for VHE
+  iommu/arm-smmu-v3: Enable broadcast TLB maintenance
+  iommu/arm-smmu-v3: Add SVA feature checking
+  iommu/arm-smmu-v3: Implement mm operations
+  iommu/arm-smmu-v3: Hook up ATC invalidation to mm ops
+  iommu/arm-smmu-v3: Add support for Hardware Translation Table Update
+  iommu/arm-smmu-v3: Maintain a SID->device structure
+  dt-bindings: document stall property for IOMMU masters
+  iommu/arm-smmu-v3: Add stall support for platform devices
+  PCI/ATS: Add PRI stubs
+  PCI/ATS: Export PRI functions
+  iommu/arm-smmu-v3: Add support for PRI
 
-diff --git a/Documentation/PCI/boot-interrupts.rst b/Documentation/PCI/boot-interrupts.rst
-index d078ef3eb192..2ec70121bfca 100644
---- a/Documentation/PCI/boot-interrupts.rst
-+++ b/Documentation/PCI/boot-interrupts.rst
-@@ -32,12 +32,13 @@ interrupt goes unhandled over time, they are tracked by the Linux kernel as
- Spurious Interrupts. The IRQ will be disabled by the Linux kernel after it
- reaches a specific count with the error "nobody cared". This disabled IRQ
- now prevents valid usage by an existing interrupt which may happen to share
--the IRQ line.
-+the IRQ line::
- 
-   irq 19: nobody cared (try booting with the "irqpoll" option)
-   CPU: 0 PID: 2988 Comm: irq/34-nipalk Tainted: 4.14.87-rt49-02410-g4a640ec-dirty #1
-   Hardware name: National Instruments NI PXIe-8880/NI PXIe-8880, BIOS 2.1.5f1 01/09/2020
-   Call Trace:
-+
-   <IRQ>
-    ? dump_stack+0x46/0x5e
-    ? __report_bad_irq+0x2e/0xb0
-@@ -85,15 +86,18 @@ Mitigations
- The mitigations take the form of PCI quirks. The preference has been to
- first identify and make use of a means to disable the routing to the PCH.
- In such a case a quirk to disable boot interrupt generation can be
--added.[1]
-+added. [1]_
- 
--  Intel® 6300ESB I/O Controller Hub
-+Intel® 6300ESB I/O Controller Hub
-   Alternate Base Address Register:
-    BIE: Boot Interrupt Enable
--	  0 = Boot interrupt is enabled.
--	  1 = Boot interrupt is disabled.
- 
--  Intel® Sandy Bridge through Sky Lake based Xeon servers:
-+	  ==  ===========================
-+	  0   Boot interrupt is enabled.
-+	  1   Boot interrupt is disabled.
-+	  ==  ===========================
-+
-+Intel® Sandy Bridge through Sky Lake based Xeon servers:
-   Coherent Interface Protocol Interrupt Control
-    dis_intx_route2pch/dis_intx_route2ich/dis_intx_route2dmi2:
- 	  When this bit is set. Local INTx messages received from the
-@@ -109,12 +113,12 @@ line by default.  Therefore, on chipsets where this INTx routing cannot be
- disabled, the Linux kernel will reroute the valid interrupt to its legacy
- interrupt. This redirection of the handler will prevent the occurrence of
- the spurious interrupt detection which would ordinarily disable the IRQ
--line due to excessive unhandled counts.[2]
-+line due to excessive unhandled counts. [2]_
- 
- The config option X86_REROUTE_FOR_BROKEN_BOOT_IRQS exists to enable (or
- disable) the redirection of the interrupt handler to the PCH interrupt
- line. The option can be overridden by either pci=ioapicreroute or
--pci=noioapicreroute.[3]
-+pci=noioapicreroute. [3]_
- 
- 
- More Documentation
-@@ -127,19 +131,19 @@ into the evolution of its handling with chipsets.
- Example of disabling of the boot interrupt
- ------------------------------------------
- 
--Intel® 6300ESB I/O Controller Hub (Document # 300641-004US)
-+      - Intel® 6300ESB I/O Controller Hub (Document # 300641-004US)
- 	5.7.3 Boot Interrupt
- 	https://www.intel.com/content/dam/doc/datasheet/6300esb-io-controller-hub-datasheet.pdf
- 
--Intel® Xeon® Processor E5-1600/2400/2600/4600 v3 Product Families
--Datasheet - Volume 2: Registers (Document # 330784-003)
-+      - Intel® Xeon® Processor E5-1600/2400/2600/4600 v3 Product Families
-+	Datasheet - Volume 2: Registers (Document # 330784-003)
- 	6.6.41 cipintrc Coherent Interface Protocol Interrupt Control
- 	https://www.intel.com/content/dam/www/public/us/en/documents/datasheets/xeon-e5-v3-datasheet-vol-2.pdf
- 
- Example of handler rerouting
- ----------------------------
- 
--Intel® 6700PXH 64-bit PCI Hub (Document # 302628)
-+      - Intel® 6700PXH 64-bit PCI Hub (Document # 302628)
- 	2.15.2 PCI Express Legacy INTx Support and Boot Interrupt
- 	https://www.intel.com/content/dam/doc/datasheet/6700pxh-64-bit-pci-hub-datasheet.pdf
- 
-@@ -150,6 +154,6 @@ Cheers,
-     Sean V Kelley
-     sean.v.kelley@linux.intel.com
- 
--[1] https://lore.kernel.org/r/12131949181903-git-send-email-sassmann@suse.de/
--[2] https://lore.kernel.org/r/12131949182094-git-send-email-sassmann@suse.de/
--[3] https://lore.kernel.org/r/487C8EA7.6020205@suse.de/
-+.. [1] https://lore.kernel.org/r/12131949181903-git-send-email-sassmann@suse.de/
-+.. [2] https://lore.kernel.org/r/12131949182094-git-send-email-sassmann@suse.de/
-+.. [3] https://lore.kernel.org/r/487C8EA7.6020205@suse.de/
+ drivers/iommu/Kconfig                         |   13 +
+ drivers/iommu/Makefile                        |    2 +
+ .../devicetree/bindings/iommu/iommu.txt       |   18 +
+ arch/arm64/include/asm/mmu.h                  |    1 +
+ arch/arm64/include/asm/mmu_context.h          |   11 +-
+ drivers/iommu/io-pgtable-arm.h                |   30 +
+ drivers/iommu/iommu-sva.h                     |   78 +
+ include/linux/iommu.h                         |   75 +
+ include/linux/mmu_notifier.h                  |   11 +-
+ include/linux/pci-ats.h                       |    8 +
+ arch/arm64/kernel/cpufeature.c                |    1 +
+ arch/arm64/mm/context.c                       |  103 +-
+ drivers/iommu/arm-smmu-v3.c                   | 1398 +++++++++++++++--
+ drivers/iommu/io-pgfault.c                    |  525 +++++++
+ drivers/iommu/io-pgtable-arm.c                |   27 +-
+ drivers/iommu/iommu-sva.c                     |  557 +++++++
+ drivers/iommu/iommu.c                         |    1 +
+ drivers/iommu/of_iommu.c                      |    5 +-
+ drivers/misc/sgi-gru/grutlbpurge.c            |    5 +-
+ drivers/pci/ats.c                             |    4 +
+ mm/mmu_notifier.c                             |    6 +-
+ 21 files changed, 2716 insertions(+), 163 deletions(-)
+ create mode 100644 drivers/iommu/io-pgtable-arm.h
+ create mode 100644 drivers/iommu/iommu-sva.h
+ create mode 100644 drivers/iommu/io-pgfault.c
+ create mode 100644 drivers/iommu/iommu-sva.c
+
 -- 
-2.25.2
+2.26.0
 
