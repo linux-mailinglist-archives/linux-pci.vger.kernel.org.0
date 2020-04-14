@@ -2,100 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CD5E21A7AC5
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Apr 2020 14:28:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AFC7F1A7B4D
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Apr 2020 14:52:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2501948AbgDNM2P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Apr 2020 08:28:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:54386 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2501933AbgDNM2K (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 14 Apr 2020 08:28:10 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 11BD91FB;
-        Tue, 14 Apr 2020 05:28:10 -0700 (PDT)
-Received: from [10.57.33.145] (unknown [10.57.33.145])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AA6673F6C4;
-        Tue, 14 Apr 2020 05:28:07 -0700 (PDT)
-Subject: Re: [BUG] PCI: rockchip: rk3399: pcie switch support
-To:     Soeren Moch <smoch@web.de>, Shawn Lin <shawn.lin@rock-chips.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        linux-rockchip@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <4d03dd8c-14f9-d1ef-6fd2-095423be3dd3@web.de>
- <3e9d2c53-4f0d-0c97-fbfa-6d799e223747@arm.com>
- <b088ad0e-bab1-0cff-dc43-eb5709555902@web.de>
- <1f180d4b-9e5d-c829-555b-c9750940361e@web.de>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <d02e0b72-5fb3-dd47-468c-08b86db07a9a@arm.com>
-Date:   Tue, 14 Apr 2020 13:28:05 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S2502266AbgDNMwB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Apr 2020 08:52:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51364 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730138AbgDNMv6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Apr 2020 08:51:58 -0400
+Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E707BC061A0C;
+        Tue, 14 Apr 2020 05:51:57 -0700 (PDT)
+Received: by mail-wr1-x42c.google.com with SMTP id a25so14205889wrd.0;
+        Tue, 14 Apr 2020 05:51:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:references:in-reply-to:subject:date:message-id
+         :mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=INaiMxSFr4KNjl3DpxnWtwrHIDn60Dm1USBtEnWrWrc=;
+        b=PDJLx9zi1OI+5VbYzQkd02uKzO1waQSh/zV5F3EvUj4R0lf428LvqkmNSdRd79LqxN
+         yh0X6/0sK/jTdSuQbifotYjj3rhQz2aq1vtnVuNxbaP2fDl+wljpd1k8kfAXvU7ERGJf
+         eMSnKtacrGcdgQJGOgFdKNPHZJlFU2gPZl9tcACIWKiMEhmBR66bSDNNeFXm+22SYGuo
+         lfUmhXZ1J1d9b1G3YyWws1cHO5kNdsjF2swkcOotXYdE4xJtx2vRJxWdnK0yyKplYpSZ
+         rt5eDjHEGFa+OX6BnSQ4Oo6BYIR2W/WrYq8wVh1dPt5OvweJz78ZBjx6r6xAJJKS8pw9
+         +xbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
+         :message-id:mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=INaiMxSFr4KNjl3DpxnWtwrHIDn60Dm1USBtEnWrWrc=;
+        b=JgCIC4SH1yPLo8Kr4d9mA4L8/dYxrRta1YvyAZdqxJ1NHCqZstRYdZrcQ8v5pL1i20
+         Qt/L09bOqfOL7GR1OXB2QIwEVbrVWBbV7b5MxZIMwm+ohCzLFBr1c3RVBle0OVScoIRu
+         2FQOGQG8K2xVaEwnaFo14+g2yXV49AvLj46p/2Dr+qcDOLU9AeRYvlOcy1ZIlITrVOWh
+         zqUmtlgH8c/w3RWP2p5BMyeUZ1NyMmdGZ1bJKzztR11d2Eow3/piMJcUcwJbJ9VZ4/EZ
+         TvlEHirREcEkNvWEXWhVfg3qdmpjcgR8ItQRj6ebNpprm6/9OL4B0yxm4/YOtBFN/Nui
+         XQNw==
+X-Gm-Message-State: AGi0Pubsg6D/2l386UQwilhO6PB4/qdFUezd84tUdKm5ywzvr5NAayje
+        ewJdXIjyZKGhA+BPkgdtsng=
+X-Google-Smtp-Source: APiQypLreekvmOTIyJjoRiEofhwIQiv4aipsIMKjDOyMD8hF5sTi0Hn3DIqB4xhgEstTN6UiwtD3pQ==
+X-Received: by 2002:adf:e90e:: with SMTP id f14mr24068876wrm.106.1586868716187;
+        Tue, 14 Apr 2020 05:51:56 -0700 (PDT)
+Received: from AnsuelXPS (host93-255-dynamic.47-79-r.retail.telecomitalia.it. [79.47.255.93])
+        by smtp.gmail.com with ESMTPSA id p10sm18476895wrm.6.2020.04.14.05.51.54
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 Apr 2020 05:51:55 -0700 (PDT)
+From:   <ansuelsmth@gmail.com>
+To:     "'Florian Fainelli'" <f.fainelli@gmail.com>,
+        <devicetree@vger.kernel.org>
+Cc:     "'Mark Rutland'" <mark.rutland@arm.com>,
+        "'Lorenzo Pieralisi'" <lorenzo.pieralisi@arm.com>,
+        "'Richard Zhu'" <hongxing.zhu@nxp.com>,
+        "'Fabio Estevam'" <festevam@gmail.com>,
+        "'Sascha Hauer'" <s.hauer@pengutronix.de>,
+        <linux-kernel@vger.kernel.org>,
+        "'Rob Herring'" <robh+dt@kernel.org>,
+        "'NXP Linux Team'" <linux-imx@nxp.com>,
+        "'Pengutronix Kernel Team'" <kernel@pengutronix.de>,
+        <linux-pci@vger.kernel.org>,
+        "'Bjorn Helgaas'" <bhelgaas@google.com>,
+        "'Andrew Murray'" <amurray@thegoodpenguin.co.uk>,
+        "'Shawn Guo'" <shawnguo@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        "'Lucas Stach'" <l.stach@pengutronix.de>
+References: <20200410004738.19668-1-ansuelsmth@gmail.com> <20200410004738.19668-2-ansuelsmth@gmail.com> <26080c25-cda5-cd3f-a906-a09a79cb1922@gmail.com>
+In-Reply-To: <26080c25-cda5-cd3f-a906-a09a79cb1922@gmail.com>
+Subject: R: [PATCH 1/4] devicetree: bindings: pci: document tx-deempth tx swing and rx-eq property
+Date:   Tue, 14 Apr 2020 14:51:51 +0200
+Message-ID: <01ea01d6125b$79590790$6c0b16b0$@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1f180d4b-9e5d-c829-555b-c9750940361e@web.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+Content-Type: text/plain;
+        charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: it
+Thread-Index: AQJxOzeYiZkD8UITQ1/aTwnouqE5vALuml4iApJiW/inFjd00A==
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2020-04-14 12:35 pm, Soeren Moch wrote:
-> On 06.04.20 19:12, Soeren Moch wrote:
->> On 06.04.20 14:52, Robin Murphy wrote:
->>> On 2020-04-04 7:41 pm, Soeren Moch wrote:
->>>> I want to use a PCIe switch on a RK3399 based RockPro64 V2.1 board.
->>>> "Normal" PCIe cards work (mostly) just fine on this board. The PCIe
->>>> switches (I tried Pericom and ASMedia based switches) also work fine on
->>>> other boards. The RK3399 PCIe controller with pcie_rockchip_host driver
->>>> also recognises the switch, but fails to initialize the buses behind the
->>>> bridge properly, see syslog from linux-5.6.0.
->>>>
->>>> Any ideas what I do wrong, or any suggestions what I can test here?
->>> See the thread here:
->>>
->>> https://lore.kernel.org/linux-pci/CAMdYzYoTwjKz4EN8PtD5pZfu3+SX+68JL+dfvmCrSnLL=K6Few@mail.gmail.com/
->>>
->> Thanks Robin!
->>
->> I also found out in the meantime that device enumeration fails in this
->> fatal way when probing non-existent devices. So if I hack my complete
->> bus topology into rockchip_pcie_valid_device, then all existing devices
->> come up properly. Of course this is not how PCIe should work.
->>> The conclusion there seems to be that the RK3399 root complex just
->>> doesn't handle certain types of response in a sensible manner, and
->>> there's not much that can reasonably be done to change that.
->> Hm, at least there is the promising suggestion to take over the SError
->> handler, maybe in ATF, as workaround.
-> Unfortunately it seems to be not that easy. Only when PCIe device
-> probing runs on one of the Cortex-A72 cores of rk3399 we see the SError.
-> When probing runs on one of the A53 cores, we get a synchronous external
-> abort instead.
+> On 4/9/2020 5:47 PM, Ansuel Smith wrote:
+> > Document tx-deempth, tx swing and rx-eq property property used on
+> some
+> > device (qcom ipq806x or imx6q) to tune and fix init error of the pci
+> > bridge.
 > 
-> Is this expected to see different error types on big.LITTLE systems? Or
-> is this another special property of the rk3399 pcie controller?
+> Those properties are not specific to the host bridge per-se, but to the
+> PCIe PHY, therefore, one would expect to find those properties within
+> the PCIe PHY node if it exists. Given you want this binding to be
+> generic, this is an important thing to correct here.
+> --
+> Florian
 
-As far as I'm aware, the CPU microarchitecture is indeed one of the 
-factors in whether it takes a given external abort synchronously or 
-asynchronously, so yes, I'd say that probably is expected. I wouldn't 
-necessarily even rely on a single microarchitecture only behaving one 
-way, since in principle it's possible that surrounding instructions 
-might affect whether the core still has enough context left to take the 
-exception synchronously or not at the point the abort does come back.
+So where should I put these? If I understand this properly I should move 
+this to the PHY directory but no PCIe PHY node exist for both imx6q 
+and ipq806x. How I should proceed? 
+It would be better to just drop this and add qcom specific binding to the
+driver? 
 
-In general external aborts are a "should never happen" kind of thing, so 
-they're not necessarily expected to be recoverable (I think the RAS 
-extensions might add a more robustness in terms of reporting, but aren't 
-relevant here either way).
-
-At this point I'm starting to wonder whether it might be possible to do 
-something similar to the Arm N1SDP workaround using the Cortex-M0, 
-albeit with the complication that probing would realistically have to be 
-explicitly invoked from the Linux driver due to clocks and external 
-regulators... :/
-
-Robin.
