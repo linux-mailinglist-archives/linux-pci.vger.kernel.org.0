@@ -2,104 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AFC7F1A7B4D
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Apr 2020 14:52:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 714CE1A7EDE
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Apr 2020 15:52:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502266AbgDNMwB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Apr 2020 08:52:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51364 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730138AbgDNMv6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Apr 2020 08:51:58 -0400
-Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E707BC061A0C;
-        Tue, 14 Apr 2020 05:51:57 -0700 (PDT)
-Received: by mail-wr1-x42c.google.com with SMTP id a25so14205889wrd.0;
-        Tue, 14 Apr 2020 05:51:57 -0700 (PDT)
+        id S2388224AbgDNNwD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Apr 2020 09:52:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60728 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388218AbgDNNv4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Apr 2020 09:51:56 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C103BC061A0C;
+        Tue, 14 Apr 2020 06:51:55 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id x4so13060686wmj.1;
+        Tue, 14 Apr 2020 06:51:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:references:in-reply-to:subject:date:message-id
-         :mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=INaiMxSFr4KNjl3DpxnWtwrHIDn60Dm1USBtEnWrWrc=;
-        b=PDJLx9zi1OI+5VbYzQkd02uKzO1waQSh/zV5F3EvUj4R0lf428LvqkmNSdRd79LqxN
-         yh0X6/0sK/jTdSuQbifotYjj3rhQz2aq1vtnVuNxbaP2fDl+wljpd1k8kfAXvU7ERGJf
-         eMSnKtacrGcdgQJGOgFdKNPHZJlFU2gPZl9tcACIWKiMEhmBR66bSDNNeFXm+22SYGuo
-         lfUmhXZ1J1d9b1G3YyWws1cHO5kNdsjF2swkcOotXYdE4xJtx2vRJxWdnK0yyKplYpSZ
-         rt5eDjHEGFa+OX6BnSQ4Oo6BYIR2W/WrYq8wVh1dPt5OvweJz78ZBjx6r6xAJJKS8pw9
-         +xbg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=FOGDiV0hbJz1HxbN2jXqtj/ZF+6uRGkUpCQ+mfwEdqc=;
+        b=rj28FQbuYbXsaqyH1cjVScKGQOVPVLPOqL4vBsWa38E7JDhF/em/0U/N8ugTyZmbB8
+         5u3ziNCGseii9Fd6o5GaB0iKq3ryfySrsY0soGUPAi4dSE5vDxp9FwA1vKl6vfph4HkP
+         L5JX9Y7Vif/7Ku2NuyK2jtKRwH3sQagbP9LSNEjPkbWldE0cfQmROCBOdzl40wqeJeAa
+         3j28uixlqgnT2M3fyB6+uL0f3VVuVFdgvpwrAz/ExM8ffHJO3gpZWHAB7URI7o7A6Qlo
+         eeQlzxDaE7Mu+ZiN0WSfPSBuVfL5SkzvL1HLH63DrBJhq7vrdEKNVA1u4GMUlRdVdMCO
+         l7cw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
-         :message-id:mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=INaiMxSFr4KNjl3DpxnWtwrHIDn60Dm1USBtEnWrWrc=;
-        b=JgCIC4SH1yPLo8Kr4d9mA4L8/dYxrRta1YvyAZdqxJ1NHCqZstRYdZrcQ8v5pL1i20
-         Qt/L09bOqfOL7GR1OXB2QIwEVbrVWBbV7b5MxZIMwm+ohCzLFBr1c3RVBle0OVScoIRu
-         2FQOGQG8K2xVaEwnaFo14+g2yXV49AvLj46p/2Dr+qcDOLU9AeRYvlOcy1ZIlITrVOWh
-         zqUmtlgH8c/w3RWP2p5BMyeUZ1NyMmdGZ1bJKzztR11d2Eow3/piMJcUcwJbJ9VZ4/EZ
-         TvlEHirREcEkNvWEXWhVfg3qdmpjcgR8ItQRj6ebNpprm6/9OL4B0yxm4/YOtBFN/Nui
-         XQNw==
-X-Gm-Message-State: AGi0Pubsg6D/2l386UQwilhO6PB4/qdFUezd84tUdKm5ywzvr5NAayje
-        ewJdXIjyZKGhA+BPkgdtsng=
-X-Google-Smtp-Source: APiQypLreekvmOTIyJjoRiEofhwIQiv4aipsIMKjDOyMD8hF5sTi0Hn3DIqB4xhgEstTN6UiwtD3pQ==
-X-Received: by 2002:adf:e90e:: with SMTP id f14mr24068876wrm.106.1586868716187;
-        Tue, 14 Apr 2020 05:51:56 -0700 (PDT)
-Received: from AnsuelXPS (host93-255-dynamic.47-79-r.retail.telecomitalia.it. [79.47.255.93])
-        by smtp.gmail.com with ESMTPSA id p10sm18476895wrm.6.2020.04.14.05.51.54
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 Apr 2020 05:51:55 -0700 (PDT)
-From:   <ansuelsmth@gmail.com>
-To:     "'Florian Fainelli'" <f.fainelli@gmail.com>,
-        <devicetree@vger.kernel.org>
-Cc:     "'Mark Rutland'" <mark.rutland@arm.com>,
-        "'Lorenzo Pieralisi'" <lorenzo.pieralisi@arm.com>,
-        "'Richard Zhu'" <hongxing.zhu@nxp.com>,
-        "'Fabio Estevam'" <festevam@gmail.com>,
-        "'Sascha Hauer'" <s.hauer@pengutronix.de>,
-        <linux-kernel@vger.kernel.org>,
-        "'Rob Herring'" <robh+dt@kernel.org>,
-        "'NXP Linux Team'" <linux-imx@nxp.com>,
-        "'Pengutronix Kernel Team'" <kernel@pengutronix.de>,
-        <linux-pci@vger.kernel.org>,
-        "'Bjorn Helgaas'" <bhelgaas@google.com>,
-        "'Andrew Murray'" <amurray@thegoodpenguin.co.uk>,
-        "'Shawn Guo'" <shawnguo@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        "'Lucas Stach'" <l.stach@pengutronix.de>
-References: <20200410004738.19668-1-ansuelsmth@gmail.com> <20200410004738.19668-2-ansuelsmth@gmail.com> <26080c25-cda5-cd3f-a906-a09a79cb1922@gmail.com>
-In-Reply-To: <26080c25-cda5-cd3f-a906-a09a79cb1922@gmail.com>
-Subject: R: [PATCH 1/4] devicetree: bindings: pci: document tx-deempth tx swing and rx-eq property
-Date:   Tue, 14 Apr 2020 14:51:51 +0200
-Message-ID: <01ea01d6125b$79590790$6c0b16b0$@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FOGDiV0hbJz1HxbN2jXqtj/ZF+6uRGkUpCQ+mfwEdqc=;
+        b=AJcBX9furE0LrA8XdX6mz4xt8wxpLGzEP5If8ub23pUsxVXQYNbtkQ+s8KfefTWzsR
+         Om4SnWcTtD9wfjSHIGHPAZmd/DsdCDmn98hudMfaMeC1LPgvZSkhajkEVEQav1Q1CAPD
+         PiNPSYQ/J3+NFnYf2fhW7uXjU8EsWMRN2G39VJsJwC7WBObwEn6ffjJ9nx65YYXgUh/M
+         sAYFCU6baBcc679OfDMgflC500ZCa49XiOt5bOfujj5PsbqWeGLhyPWEGqLn2AAUCi/1
+         4jrGHekrmhvCgIo0ZIfAnbEowbOl3K7hYjgrHkTvtVHpHNUzg6LZbLYb3c9agJJZybXW
+         1OIg==
+X-Gm-Message-State: AGi0PuZRrP8UtEBQZx/tpBe4g6XRjkrVeM1aRi9vqy77E3w5DsrF2YyP
+        WF+CD2sWELqQd0l+fQgzwWo=
+X-Google-Smtp-Source: APiQypLsLZfv2no2RHT1VR4cnHQ8aQ/o1kXW3w8nzIS3t33Jr2bsL3TmOpsURd+K8rYZ/rRKXIOufw==
+X-Received: by 2002:a1c:c345:: with SMTP id t66mr25259325wmf.189.1586872314481;
+        Tue, 14 Apr 2020 06:51:54 -0700 (PDT)
+Received: from localhost (pD9E51D62.dip0.t-ipconnect.de. [217.229.29.98])
+        by smtp.gmail.com with ESMTPSA id k23sm18681735wmi.46.2020.04.14.06.51.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 06:51:53 -0700 (PDT)
+Date:   Tue, 14 Apr 2020 15:51:52 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: tegra: Fix reporting GPIO error value
+Message-ID: <20200414135152.GA3593749@ulmo>
+References: <20200414102512.27506-1-pali@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: it
-Thread-Index: AQJxOzeYiZkD8UITQ1/aTwnouqE5vALuml4iApJiW/inFjd00A==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="J2SCkAp4GZ/dPZZf"
+Content-Disposition: inline
+In-Reply-To: <20200414102512.27506-1-pali@kernel.org>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> On 4/9/2020 5:47 PM, Ansuel Smith wrote:
-> > Document tx-deempth, tx swing and rx-eq property property used on
-> some
-> > device (qcom ipq806x or imx6q) to tune and fix init error of the pci
-> > bridge.
-> 
-> Those properties are not specific to the host bridge per-se, but to the
-> PCIe PHY, therefore, one would expect to find those properties within
-> the PCIe PHY node if it exists. Given you want this binding to be
-> generic, this is an important thing to correct here.
-> --
-> Florian
 
-So where should I put these? If I understand this properly I should move 
-this to the PHY directory but no PCIe PHY node exist for both imx6q 
-and ipq806x. How I should proceed? 
-It would be better to just drop this and add qcom specific binding to the
-driver? 
+--J2SCkAp4GZ/dPZZf
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Apr 14, 2020 at 12:25:12PM +0200, Pali Roh=C3=A1r wrote:
+> Error code is stored in rp->reset_gpio and not in err variable.
+>=20
+> Signed-off-by: Pali Roh=C3=A1r <pali@kernel.org>
+> ---
+>  drivers/pci/controller/pci-tegra.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+
+With or without Micha=C5=82's suggestion:
+
+Acked-by: Thierry Reding <treding@nvidia.com>
+
+--J2SCkAp4GZ/dPZZf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6Vv/YACgkQ3SOs138+
+s6Eamw//c9rjXOHWJcTFLrcwMcrxead/8lDekjEgx85muyvjFplQbZzzOSEImmss
+z9vAjmlyGOGOl0mWBqDGl9OHnLxBHjlSYFT2DlZY92dBgfsa0qY9oEAJ2eFaNRnP
+iyRDns4lq14wcRNlVqeA7/LgOjcyYhFMWx4fR5kMqECPxDF9BteS7A8Mbxp+oKl1
+Zg6e8cBfJ92XzRTX1uR2aHmTZTqIC26xxd0qe40/+8dHTtada4TCrX+C5Cyn1gCF
+6pNWvVAWqqcOZqI9tGR5i/7SiMceUxAGcxBLD/owQEKLaIVCQgRmoeKJUo3TJcVk
+UlOjB990t1qVtOQLym7gP9T2wOS01kzwoWy9/EvsLO5WALYrmzhLVJ//qH9ph0Xi
+FyD5BszkDoaG4O+NG1vq9uDoL4k+cOPhyxleJ/Y1QJ04xdsq4fUPcT5YRWkYJukX
+c/SslMaiPeqstf63FNzHmbZuViKcmpFXj+JbRXrdpH8sXVwrchd1PBVXlc0x3o95
+ieD1fQTUU+tYYE0lV5Z8qxLeAZiSYjBa9BOOnRGuULAwbJFigGjs6tkyu0AY54kM
+id2LnQNrL2PdYRO3pwY9Juaqn/ryAE1U2KEoRKSVWQO8/3PgNAzYW7e3IApkEe+I
+6dPJnoqnuebk5fgsoIx3OP6hx5QbcivpaAAdUpHagUEXKdYSgZk=
+=JwZT
+-----END PGP SIGNATURE-----
+
+--J2SCkAp4GZ/dPZZf--
