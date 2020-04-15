@@ -2,88 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F4681A99F0
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Apr 2020 12:07:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BB5DE1A9BF6
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Apr 2020 13:18:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2896170AbgDOKHo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Apr 2020 06:07:44 -0400
-Received: from mga02.intel.com ([134.134.136.20]:26938 "EHLO mga02.intel.com"
+        id S2896851AbgDOLSB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Apr 2020 07:18:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896168AbgDOKHm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 15 Apr 2020 06:07:42 -0400
-IronPort-SDR: ygNsGP78gNK4RB0HRw8sUDmSvzMEJKY0vwPEdzRcxA/3CTJzToExOkAJ+SnFADnGHC0lgMouee
- y/tHgHX9Nu2Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 03:07:42 -0700
-IronPort-SDR: EebCVhxBJNMGFCCIJUcJimG8dbFy8SUtdHsZNe9cSASoYoSg7Qs3kyDlU5J/tctuXl4/esOHUE
- NHVUWyDjuO5g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,386,1580803200"; 
-   d="scan'208";a="253481850"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga003.jf.intel.com with ESMTP; 15 Apr 2020 03:07:39 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1jOexK-000kMO-2q; Wed, 15 Apr 2020 13:07:42 +0300
-Date:   Wed, 15 Apr 2020 13:07:42 +0300
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Jason Yan <yanaijie@huawei.com>
-Cc:     lorenzo.pieralisi@arm.com, amurray@thegoodpenguin.co.uk,
-        bhelgaas@google.com, p.zabel@pengutronix.de,
-        gustavo.pimentel@synopsys.com, eswara.kota@linux.intel.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Hulk Robot <hulkci@huawei.com>
-Subject: Re: [PATCH] PCI: dwc: intel: make intel_pcie_cpu_addr() static
-Message-ID: <20200415100742.GR34613@smile.fi.intel.com>
-References: <20200415084953.6533-1-yanaijie@huawei.com>
+        id S2896766AbgDOLRj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:17:39 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 487BB2074F;
+        Wed, 15 Apr 2020 11:17:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586949459;
+        bh=q259KxH2q7pbnJdEn1Xf2TZf8jBmlCkBNfRyEI2QXTM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=liaeeLXbvho627HRyhpbE6uPk7cy6JLb+l1ATY8xSiWqR3MpTDoRbkFzck83ds1U6
+         8VOFumLNGtVr2//XZ+crpQImqeN8TTEEZkWtg+vZF39fGL7BZgXwxEtssBzBiaDNKR
+         7I21Nzck1MyCBCxr44CrkHtWfp4bQgE5Y6Efsyhg=
+Received: by pali.im (Postfix)
+        id 0D7C4589; Wed, 15 Apr 2020 13:17:37 +0200 (CEST)
+Date:   Wed, 15 Apr 2020 13:17:36 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: tegra: Fix reporting GPIO error value
+Message-ID: <20200415111736.czeh7a3iqmmasow6@pali>
+References: <20200414102512.27506-1-pali@kernel.org>
+ <20200414113104.GA27984@qmqm.qmqm.pl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200415084953.6533-1-yanaijie@huawei.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200414113104.GA27984@qmqm.qmqm.pl>
+User-Agent: NeoMutt/20180716
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 04:49:53PM +0800, Jason Yan wrote:
-> Fix the following sparse warning:
+On Tuesday 14 April 2020 13:31:04 Michał Mirosław wrote:
+> On Tue, Apr 14, 2020 at 12:25:12PM +0200, Pali Rohár wrote:
+> > Error code is stored in rp->reset_gpio and not in err variable.
+> > 
+> > Signed-off-by: Pali Rohár <pali@kernel.org>
+> > ---
+> >  drivers/pci/controller/pci-tegra.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+> > index 0e03cef72840..378d5a8773c7 100644
+> > --- a/drivers/pci/controller/pci-tegra.c
+> > +++ b/drivers/pci/controller/pci-tegra.c
+> > @@ -2314,8 +2314,8 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
+> >  			if (PTR_ERR(rp->reset_gpio) == -ENOENT) {
+> >  				rp->reset_gpio = NULL;
+> >  			} else {
+> > -				dev_err(dev, "failed to get reset GPIO: %d\n",
+> > -					err);
+> > +				dev_err(dev, "failed to get reset GPIO: %ld\n",
+> > +					PTR_ERR(rp->reset_gpio));
+> >  				return PTR_ERR(rp->reset_gpio);
+> >  			}
+> >  		}
 > 
-> drivers/pci/controller/dwc/pcie-intel-gw.c:456:5: warning: symbol
-> 'intel_pcie_cpu_addr' was not declared. Should it be static?
+> You can use %pe directly on the pointer for added benefit of translation
+> of the error to a name.
 
-Please, learn how to use get_maintainers.pl to avoid spamming people.
-Hint:
-	scripts/get_maintainer.pl --git --git-min-percent=67
-would give advantage, though it still requires a common sense to be applied.
+Well, I do not know what is the current preferred style of error
+messages. On lot of places I see just numeric error numbers.
 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
-> ---
->  drivers/pci/controller/dwc/pcie-intel-gw.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-intel-gw.c b/drivers/pci/controller/dwc/pcie-intel-gw.c
-> index fc2a12212dec..2d8dbb318087 100644
-> --- a/drivers/pci/controller/dwc/pcie-intel-gw.c
-> +++ b/drivers/pci/controller/dwc/pcie-intel-gw.c
-> @@ -453,7 +453,7 @@ static int intel_pcie_msi_init(struct pcie_port *pp)
->  	return 0;
->  }
->  
-> -u64 intel_pcie_cpu_addr(struct dw_pcie *pcie, u64 cpu_addr)
-> +static u64 intel_pcie_cpu_addr(struct dw_pcie *pcie, u64 cpu_addr)
->  {
->  	return cpu_addr + BUS_IATU_OFFSET;
->  }
-> -- 
-> 2.21.1
-> 
+I did not wanted to change behavior of driver, I just fixed code to
+report correct error value.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+I do not have this hardware, so I cannot test this change. I just
+spotted this problem when I was looking at other PCI controller drivers
+how they issue PERST# signal to endpoint cards.
