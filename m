@@ -2,84 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 59F8C1A997A
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Apr 2020 11:51:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F4681A99F0
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Apr 2020 12:07:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895961AbgDOJvG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Apr 2020 05:51:06 -0400
-Received: from sauhun.de ([88.99.104.3]:50644 "EHLO pokefinder.org"
+        id S2896170AbgDOKHo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Apr 2020 06:07:44 -0400
+Received: from mga02.intel.com ([134.134.136.20]:26938 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2895955AbgDOJvE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 15 Apr 2020 05:51:04 -0400
-Received: from localhost (p54B33507.dip0.t-ipconnect.de [84.179.53.7])
-        by pokefinder.org (Postfix) with ESMTPSA id EAF5A2C1F58;
-        Wed, 15 Apr 2020 11:51:01 +0200 (CEST)
-Date:   Wed, 15 Apr 2020 11:51:01 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans De Goede <hdegoede@redhat.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>
-Subject: Re: [PATCH 6/7] PM: sleep: core: Rename DPM_FLAG_LEAVE_SUSPENDED
-Message-ID: <20200415095101.GF1141@ninjato>
-References: <1888197.j9z7NJ8yPn@kreacher>
- <11863688.3RhLv4JJn2@kreacher>
+        id S2896168AbgDOKHm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 15 Apr 2020 06:07:42 -0400
+IronPort-SDR: ygNsGP78gNK4RB0HRw8sUDmSvzMEJKY0vwPEdzRcxA/3CTJzToExOkAJ+SnFADnGHC0lgMouee
+ y/tHgHX9Nu2Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 03:07:42 -0700
+IronPort-SDR: EebCVhxBJNMGFCCIJUcJimG8dbFy8SUtdHsZNe9cSASoYoSg7Qs3kyDlU5J/tctuXl4/esOHUE
+ NHVUWyDjuO5g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,386,1580803200"; 
+   d="scan'208";a="253481850"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003.jf.intel.com with ESMTP; 15 Apr 2020 03:07:39 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1jOexK-000kMO-2q; Wed, 15 Apr 2020 13:07:42 +0300
+Date:   Wed, 15 Apr 2020 13:07:42 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Jason Yan <yanaijie@huawei.com>
+Cc:     lorenzo.pieralisi@arm.com, amurray@thegoodpenguin.co.uk,
+        bhelgaas@google.com, p.zabel@pengutronix.de,
+        gustavo.pimentel@synopsys.com, eswara.kota@linux.intel.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Hulk Robot <hulkci@huawei.com>
+Subject: Re: [PATCH] PCI: dwc: intel: make intel_pcie_cpu_addr() static
+Message-ID: <20200415100742.GR34613@smile.fi.intel.com>
+References: <20200415084953.6533-1-yanaijie@huawei.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="2FkSFaIQeDFoAt0B"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <11863688.3RhLv4JJn2@kreacher>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200415084953.6533-1-yanaijie@huawei.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Wed, Apr 15, 2020 at 04:49:53PM +0800, Jason Yan wrote:
+> Fix the following sparse warning:
+> 
+> drivers/pci/controller/dwc/pcie-intel-gw.c:456:5: warning: symbol
+> 'intel_pcie_cpu_addr' was not declared. Should it be static?
 
---2FkSFaIQeDFoAt0B
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Please, learn how to use get_maintainers.pl to avoid spamming people.
+Hint:
+	scripts/get_maintainer.pl --git --git-min-percent=67
+would give advantage, though it still requires a common sense to be applied.
 
-On Fri, Apr 10, 2020 at 05:57:49PM +0200, Rafael J. Wysocki wrote:
-> From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
->=20
-> Rename DPM_FLAG_LEAVE_SUSPENDED to DPM_FLAG_MAY_SKIP_RESUME which
-> matches its purpose more closely.
->=20
-> No functional impact.
->=20
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-intel-gw.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-intel-gw.c b/drivers/pci/controller/dwc/pcie-intel-gw.c
+> index fc2a12212dec..2d8dbb318087 100644
+> --- a/drivers/pci/controller/dwc/pcie-intel-gw.c
+> +++ b/drivers/pci/controller/dwc/pcie-intel-gw.c
+> @@ -453,7 +453,7 @@ static int intel_pcie_msi_init(struct pcie_port *pp)
+>  	return 0;
+>  }
+>  
+> -u64 intel_pcie_cpu_addr(struct dw_pcie *pcie, u64 cpu_addr)
+> +static u64 intel_pcie_cpu_addr(struct dw_pcie *pcie, u64 cpu_addr)
+>  {
+>  	return cpu_addr + BUS_IATU_OFFSET;
+>  }
+> -- 
+> 2.21.1
+> 
 
-Acked-by: Wolfram Sang <wsa@the-dreams.de> # for I2C
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
---2FkSFaIQeDFoAt0B
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6W2QUACgkQFA3kzBSg
-KbYLYA//dnjtvhFJWFAsMwE9BkNYmyzOvIsFhJy350O1uwA1j96UNz+9wzWPjHFa
-rUERnUkp16CWA7Na2XRCXTyyk22YwRxqg7pUixYLbCEItXS23jsPl/llXrmK2fjA
-Nmm6XQZfR8jtJYFJKTemE90E0TNgSKMJ6G/Rlinxxlv6bQFSS5fSeScf/gW+R4q5
-wfP+kWWiBxu0sA06TzeHln0CJIk3X+yd7HdkrwrdzUU7np6Zs1nxJ+Fp2BTZ+4VL
-RDOMKkKAcrAxNIW1W7qhWVKx3AOy1BJZXyCvIFTYjmbiSCeGH2E5PbyIreiyhVhp
-E37t3zlYXu2oCkirgF8qYurtUvZnvji7sYJzqDkrY0i5YUOXgLQG/J31kyZ88Fui
-72rWWIPnD6QUZtjo+KvyUtfbk9NhbWTo+/vKVqDo9lJPgwtpMmsmnhKyVPCgOlH8
-IDKZa8bDsYn6yjjzCFh1lW0Pa+H2a++mu56K7nKHXw0XlApez2jYw7i4stFPUi4T
-HVoTmKVSIJj95JUvkBiliO9b8WOf0xuPgjTvAgkb5Z3vBy3rhVOFu/d3TECeXr1E
-oXuBs5c7T2TCh8fNn5HYkFwtY69V3/MjG+tiHAl1a02lxxJ6cZUm8/1X0i0LaiW5
-4HX5suaNxl96rgvGaAZF51jYiZITdUGuWirGA3rpBQRTrnujlJI=
-=03Jn
------END PGP SIGNATURE-----
-
---2FkSFaIQeDFoAt0B--
