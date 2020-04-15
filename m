@@ -2,227 +2,65 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DC9031A90BF
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Apr 2020 04:07:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C45741A944A
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Apr 2020 09:31:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392844AbgDOCH5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Apr 2020 22:07:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36698 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392841AbgDOCH4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Apr 2020 22:07:56 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A734C061A0C
-        for <linux-pci@vger.kernel.org>; Tue, 14 Apr 2020 19:07:55 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id g2so686125plo.3
-        for <linux-pci@vger.kernel.org>; Tue, 14 Apr 2020 19:07:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=u2+cGS1cRmAclSEhKu1ZjnWLakz4YOOfQzuWAv57OAM=;
-        b=XCsJXqiLpCpNyksP4j7p6/CF+p6B1Z/TWHZg7DYLvgKLnFfZq6jrVa0Ro2XOLyq05O
-         Mr2GOMBFAVcJ8mb9nIaT/cRwsrBdMOmCPZiD4j4d4XM0LBomAJuXe9CBFklYjV6y6OqR
-         fi9MYbiUUFCczPMZtvUkoM0WNzpjX6SaWp5aI43UP3oJEz8Dd7gmaO/EW1ki3BqssLRt
-         xhfQWS0+otSmtaf3zBU9higbiMsGbWY5+ZnKVPzaMJ4MisDEr0FJCZGddqcnNcXvjz4v
-         8K+WD/WTG+iCjEUSYbmflqi4H2UTd1n0MUtnG5iOpJ95qIE4wnAyDWCwCv4sqth7tgwY
-         pvbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=u2+cGS1cRmAclSEhKu1ZjnWLakz4YOOfQzuWAv57OAM=;
-        b=tH8qM07UvhlNPqP3ShOKHdNb+WgLJF0ToPbfaKbNrqLoA2uMRSR64vsNnq0ONAhkpL
-         16rZ2iFRSInlWs/Dm1tWJH79Tc3bi2GCd93OiBxv9go7Ylc0EcT671dWGd+mS7PklYPa
-         nB5LZmeeZzzFWibST69Sp5dzttuFw1Owf0KG7pIrGe4JNlr5iogvxKlumYvvGmjWfdwR
-         ibIIC2CP4RJZzhIqKy4m9AjkeN6TounrW6mWP9buCIzH4K27TJ5NBa7SYD0w6qQN6E8Y
-         V69WEDfT8JLuALmZk096tOQxtshv8bTLqrMSTJJpD1OAx3bxLNgyQnEgl7mNg4fmv7Kw
-         zCuA==
-X-Gm-Message-State: AGi0PuZDjj2bICw051FR7SkTdlgXTMXMr8RtAS34ZyIVpeFVS/iBe3QR
-        wzjgoe+zVExtV/N8hFy/G7wRIQ==
-X-Google-Smtp-Source: APiQypLwDxz25fW2RMa28aKt7qbLdqWW2OpYsgjIwGZ1SibtL9mtqYRYEgVoOjKKUJ2gK5kWcRBTRg==
-X-Received: by 2002:a17:902:a503:: with SMTP id s3mr2821309plq.303.1586916474702;
-        Tue, 14 Apr 2020 19:07:54 -0700 (PDT)
-Received: from nuc7.sifive.com (c-24-5-48-146.hsd1.ca.comcast.net. [24.5.48.146])
-        by smtp.gmail.com with ESMTPSA id v67sm8362776pfb.83.2020.04.14.19.07.53
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 Apr 2020 19:07:53 -0700 (PDT)
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-X-Google-Original-From: Alan Mikhak < alan.mikhak@sifive.com >
-To:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, gustavo.pimentel@synopsys.com,
-        dan.j.williams@intel.com, vkoul@kernel.org, kishon@ti.com,
-        paul.walmsley@sifive.com
-Cc:     Alan Mikhak <alan.mikhak@sifive.com>
-Subject: [PATCH RFC] dmaengine: dw-edma: Decouple dw-edma-core.c from struct pci_dev
-Date:   Tue, 14 Apr 2020 19:07:44 -0700
-Message-Id: <1586916464-27727-1-git-send-email-alan.mikhak@sifive.com>
-X-Mailer: git-send-email 2.7.4
+        id S2404579AbgDOHbN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Apr 2020 03:31:13 -0400
+Received: from mga07.intel.com ([134.134.136.100]:34449 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2408042AbgDOHaL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 15 Apr 2020 03:30:11 -0400
+IronPort-SDR: /oKs/UbPK4325ELVukbPySSTekBJIGBNwwS6jlU6SuGF+McYZ3EGcV8x6bUuNk+c2HO0sbnMac
+ Qiw2CS06dYBg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 00:29:10 -0700
+IronPort-SDR: KVCB7M5H4JsEemWSm75DimYacBXeYdJneS1W8cr8ilfn/1KzPxmQkypfkqaDCgcAJqrv8ZXYoK
+ /TVsASPy9NOA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,386,1580803200"; 
+   d="scan'208";a="363600609"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 15 Apr 2020 00:29:07 -0700
+Received: by lahna (sSMTP sendmail emulation); Wed, 15 Apr 2020 10:29:06 +0300
+Date:   Wed, 15 Apr 2020 10:29:06 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH] PCI/PM: Call .bridge_d3() hook only if non-NULL
+Message-ID: <20200415072906.GS2586@lahna.fi.intel.com>
+References: <20200415000635.144283-1-helgaas@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415000635.144283-1-helgaas@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Alan Mikhak <alan.mikhak@sifive.com>
+On Tue, Apr 14, 2020 at 07:06:35PM -0500, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> 26ad34d510a8 ("PCI / ACPI: Whitelist D3 for more PCIe hotplug ports") added
+> the struct pci_platform_pm_ops.bridge_d3() function pointer and
+> platform_pci_bridge_d3() to use it.
+> 
+> The .bridge_d3() op is implemented by acpi_pci_platform_pm, but not by
+> mid_pci_platform_pm.  We don't expect platform_pci_bridge_d3() to be called
+> on Intel MID platforms, but nothing in the code itself would prevent that.
+> 
+> Check the .bridge_d3() pointer for NULL before calling it.
+> 
+> Fixes: 26ad34d510a8 ("PCI / ACPI: Whitelist D3 for more PCIe hotplug ports")
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-While reviewing the Synopsys Designware eDMA PCIe driver, I came across
-the following field of struct dw_edma in dw-edma-core.h:
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-const struct dw_edma_core_ops	*ops;
-
-I was unable to find a definition for struct dw_edma_core_ops. It was
-surprising that the kernel would build without failure even though the
-dw-edma driver was enabled with what seems to be an undefined struct.
-
-The reason I was reviewing the dw-edma driver was to see if I could
-integrate it with pcitest to initiate dma operations from endpoint side.
-
-As I understand from reviewing the dw-edma code, it is designed to run
-on the host side of PCIe link to initiate DMA operations remotely using
-eDMA channels of PCIe controller on the endpoint side. I am not sure if
-my understanding is correct. I infer this from seeing that dw-edma uses
-struct pci_dev and accesses hardware registers of dma channels across the
-bus using BAR0 and BAR2.
-
-I was exploring what would need to change in dw-edma to integrate it with
-pci-epf-test to initiate dma operations locally from the endpoint side.
-One barrier I see is dw_edma_probe() and other functions in dw-edma-core.c
-depend on struct pci_dev. Hence, instead of posting a patch to remove the
-undefined and unused ops field, I would like to define the struct and use
-it to decouple dw-edma-core.c from struct pci_dev.
-
-To my surprise, the kernel still builds without error even after defining
-struct dw_edma_core_ops in dw-edma-core.h and using it as in this patch.
-
-I would appreciate any comments on my observations about the 'ops' field,
-decoupling dw-edma-core.c from struct pci_dev, and how best to use
-dw-edma with pcitest.
-
-Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
----
- drivers/dma/dw-edma/dw-edma-core.c | 17 ++++++++++-------
- drivers/dma/dw-edma/dw-edma-core.h |  4 ++++
- drivers/dma/dw-edma/dw-edma-pcie.c | 10 ++++++++++
- 3 files changed, 24 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-index ff392c01bad1..9417a5feabbf 100644
---- a/drivers/dma/dw-edma/dw-edma-core.c
-+++ b/drivers/dma/dw-edma/dw-edma-core.c
-@@ -14,7 +14,7 @@
- #include <linux/err.h>
- #include <linux/interrupt.h>
- #include <linux/dma/edma.h>
--#include <linux/pci.h>
-+#include <linux/dma-mapping.h>
- 
- #include "dw-edma-core.h"
- #include "dw-edma-v0-core.h"
-@@ -781,7 +781,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
- 
- 	if (dw->nr_irqs == 1) {
- 		/* Common IRQ shared among all channels */
--		err = request_irq(pci_irq_vector(to_pci_dev(dev), 0),
-+		err = request_irq(dw->ops->irq_vector(dev, 0),
- 				  dw_edma_interrupt_common,
- 				  IRQF_SHARED, dw->name, &dw->irq[0]);
- 		if (err) {
-@@ -789,7 +789,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
- 			return err;
- 		}
- 
--		get_cached_msi_msg(pci_irq_vector(to_pci_dev(dev), 0),
-+		get_cached_msi_msg(dw->ops->irq_vector(dev, 0),
- 				   &dw->irq[0].msi);
- 	} else {
- 		/* Distribute IRQs equally among all channels */
-@@ -804,7 +804,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
- 		dw_edma_add_irq_mask(&rd_mask, *rd_alloc, dw->rd_ch_cnt);
- 
- 		for (i = 0; i < (*wr_alloc + *rd_alloc); i++) {
--			err = request_irq(pci_irq_vector(to_pci_dev(dev), i),
-+			err = request_irq(dw->ops->irq_vector(dev, i),
- 					  i < *wr_alloc ?
- 						dw_edma_interrupt_write :
- 						dw_edma_interrupt_read,
-@@ -815,7 +815,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
- 				return err;
- 			}
- 
--			get_cached_msi_msg(pci_irq_vector(to_pci_dev(dev), i),
-+			get_cached_msi_msg(dw->ops->irq_vector(dev, i),
- 					   &dw->irq[i].msi);
- 		}
- 
-@@ -833,6 +833,9 @@ int dw_edma_probe(struct dw_edma_chip *chip)
- 	u32 rd_alloc = 0;
- 	int i, err;
- 
-+	if (!dw->ops || !dw->ops->irq_vector)
-+		return -EINVAL;
-+
- 	raw_spin_lock_init(&dw->lock);
- 
- 	/* Find out how many write channels are supported by hardware */
-@@ -884,7 +887,7 @@ int dw_edma_probe(struct dw_edma_chip *chip)
- 
- err_irq_free:
- 	for (i = (dw->nr_irqs - 1); i >= 0; i--)
--		free_irq(pci_irq_vector(to_pci_dev(dev), i), &dw->irq[i]);
-+		free_irq(dw->ops->irq_vector(dev, i), &dw->irq[i]);
- 
- 	dw->nr_irqs = 0;
- 
-@@ -904,7 +907,7 @@ int dw_edma_remove(struct dw_edma_chip *chip)
- 
- 	/* Free irqs */
- 	for (i = (dw->nr_irqs - 1); i >= 0; i--)
--		free_irq(pci_irq_vector(to_pci_dev(dev), i), &dw->irq[i]);
-+		free_irq(dw->ops->irq_vector(dev, i), &dw->irq[i]);
- 
- 	/* Power management */
- 	pm_runtime_disable(dev);
-diff --git a/drivers/dma/dw-edma/dw-edma-core.h b/drivers/dma/dw-edma/dw-edma-core.h
-index 4e5f9f6e901b..31fc50d31792 100644
---- a/drivers/dma/dw-edma/dw-edma-core.h
-+++ b/drivers/dma/dw-edma/dw-edma-core.h
-@@ -103,6 +103,10 @@ struct dw_edma_irq {
- 	struct dw_edma			*dw;
- };
- 
-+struct dw_edma_core_ops {
-+	int	(*irq_vector)(struct device *dev, unsigned int nr);
-+};
-+
- struct dw_edma {
- 	char				name[20];
- 
-diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
-index dc85f55e1bb8..1eafc602e17e 100644
---- a/drivers/dma/dw-edma/dw-edma-pcie.c
-+++ b/drivers/dma/dw-edma/dw-edma-pcie.c
-@@ -54,6 +54,15 @@ static const struct dw_edma_pcie_data snps_edda_data = {
- 	.irqs				= 1,
- };
- 
-+static int dw_edma_pcie_irq_vector(struct device *dev, unsigned int nr)
-+{
-+	return pci_irq_vector(to_pci_dev(dev), nr);
-+}
-+
-+static const struct dw_edma_core_ops dw_edma_pcie_core_ops = {
-+	.irq_vector = dw_edma_pcie_irq_vector,
-+};
-+
- static int dw_edma_pcie_probe(struct pci_dev *pdev,
- 			      const struct pci_device_id *pid)
- {
-@@ -151,6 +160,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
- 	dw->version = pdata->version;
- 	dw->mode = pdata->mode;
- 	dw->nr_irqs = nr_irqs;
-+	dw->ops = &dw_edma_pcie_core_ops;
- 
- 	/* Debug info */
- 	pci_dbg(pdev, "Version:\t%u\n", dw->version);
--- 
-2.7.4
-
+Thanks!
