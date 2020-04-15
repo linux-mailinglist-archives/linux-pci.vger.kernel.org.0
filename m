@@ -2,29 +2,29 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D35A11AACBC
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Apr 2020 18:05:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B3C41AACBD
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Apr 2020 18:05:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1415140AbgDOQBZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Apr 2020 12:01:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52110 "EHLO mail.kernel.org"
+        id S1415148AbgDOQBc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Apr 2020 12:01:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1414829AbgDOQBV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 15 Apr 2020 12:01:21 -0400
+        id S1415142AbgDOQB0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 15 Apr 2020 12:01:26 -0400
 Received: from pali.im (pali.im [31.31.79.79])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5CB42076A;
-        Wed, 15 Apr 2020 16:01:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECE3D208FE;
+        Wed, 15 Apr 2020 16:01:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586966480;
-        bh=J8J9WMwWS0+Nqarse/8WxRYuf4GlYENWHZo2OGXUjKY=;
+        s=default; t=1586966486;
+        bh=Whr+LkPvddPEdlzax+7iuEmKEeTaxYdFoa0JhjAYMp0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pSWOREUiD0QyAT3wncvo6YXKZ7r2a12iyRZ9ucG1zxrvP1MBWnntz83T4y1ezzUBP
-         m6h48V3XO19PG0nrXOXZNM0sho3LqIXvEk4T5g5X7O3LuFcMxIrtBQnqfK9au5fOUY
-         bPUx8zTegC6K8zfTGs1UurAC4imBhSZEJMSaaeEA=
+        b=I+6fg/CJTctkQzt5X9MhH3chom+dZFcBbS3wXE82ZJD9pbWepWuch9jt7R1BpISBE
+         2f0wyE+t78HFjA2s5qxZAyXjFiyaLADrDwiy7r2vPTIFfIMrmrG+cj2fWNrXw+qXuo
+         xEw9Ez+PiABBxv8f10yKG5VcEFDyL0isUG/kp4cQ=
 Received: by pali.im (Postfix)
-        id 2C50C58E; Wed, 15 Apr 2020 18:01:19 +0200 (CEST)
+        id 4FA4958E; Wed, 15 Apr 2020 18:01:24 +0200 (CEST)
 From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
 To:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
         Gregory Clement <gregory.clement@bootlin.com>,
@@ -40,9 +40,9 @@ To:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
         Xogium <contact@xogium.me>
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-pci@vger.kernel.org
-Subject: [PATCH 1/8] PCI: aardvark: Set controller speed from Device Tree max-link-speed
-Date:   Wed, 15 Apr 2020 18:00:47 +0200
-Message-Id: <20200415160054.951-2-pali@kernel.org>
+Subject: [PATCH 2/8] dts: espressobin: Define max-link-speed for pcie0
+Date:   Wed, 15 Apr 2020 18:00:48 +0200
+Message-Id: <20200415160054.951-3-pali@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415160054.951-1-pali@kernel.org>
 References: <20200415160054.951-1-pali@kernel.org>
@@ -54,71 +54,30 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-bindings/pci/pci.txt defines standard DT property max-link-speed for
-specifying PCI gen of link. Read this property from Device Tree via
-of_pci_get_max_link_speed() function and use it for configuring aardvark
-PCI controller gen speed. Before this change aardvark PCI gen speed was
-configured always to hardcoded value gen2. When Device Tree does not
-specify max-link-speed property use by default gen3 value, maximum which
-aardvark PCI controller supports.
+Previously aardvark PCI controller set speed to gen2. Now it reads speed
+from Device Tree and as default use maximal possible speed which is gen3.
+
+Because Espressobin has advertised only PCI Express 2.0 capability and
+previous value was gen2, define max-link-speed to 2, so there would not be
+any configuration change.
 
 Signed-off-by: Pali Rohár <pali@kernel.org>
 ---
- drivers/pci/controller/pci-aardvark.c | 32 ++++++++++++++++++++++-----
- 1 file changed, 27 insertions(+), 5 deletions(-)
+ arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index 2a20b649f40c..ad4f0fa57624 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -253,8 +253,30 @@ static void advk_pcie_wait_for_retrain(struct advk_pcie *pcie)
- 	}
- }
+diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi
+index 42e992f9c8a5..6705618162d5 100644
+--- a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi
+@@ -47,6 +47,7 @@
+ 	phys = <&comphy1 0>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pcie_reset_pins &pcie_clkreq_pins>;
++	max-link-speed = <2>;
+ };
  
-+static void advk_pcie_setup_link_speed(struct advk_pcie *pcie, int link_speed)
-+{
-+	u32 reg;
-+
-+	dev_info(&pcie->pdev->dev, "setup link speed to %d\n", link_speed);
-+
-+	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
-+	reg &= ~PCIE_GEN_SEL_MSK;
-+
-+	if (link_speed == 3)
-+		reg |= SPEED_GEN_3;
-+	else if (link_speed == 2)
-+		reg |= SPEED_GEN_2;
-+	else
-+		reg |= SPEED_GEN_1;
-+
-+	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
-+}
-+
- static void advk_pcie_setup_hw(struct advk_pcie *pcie)
- {
-+	struct device *dev = &pcie->pdev->dev;
-+	struct device_node *node = dev->of_node;
-+	int max_link_speed;
- 	u32 reg;
- 
- 	/* Set to Direct mode */
-@@ -288,11 +310,11 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
- 		PCIE_CORE_CTRL2_TD_ENABLE;
- 	advk_writel(pcie, reg, PCIE_CORE_CTRL2_REG);
- 
--	/* Set GEN2 */
--	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
--	reg &= ~PCIE_GEN_SEL_MSK;
--	reg |= SPEED_GEN_2;
--	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
-+	/* Set max link speed */
-+	max_link_speed = of_pci_get_max_link_speed(node);
-+	if (max_link_speed <= 0 || max_link_speed > 3)
-+		max_link_speed = 3;
-+	advk_pcie_setup_link_speed(pcie, max_link_speed);
- 
- 	/* Set lane X1 */
- 	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
+ /* J6 */
 -- 
 2.20.1
 
