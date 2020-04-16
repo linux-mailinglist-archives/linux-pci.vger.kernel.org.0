@@ -2,96 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 641BA1ABC4E
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Apr 2020 11:11:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3AF121ABBC5
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Apr 2020 10:55:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2501892AbgDPIix (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Apr 2020 04:38:53 -0400
-Received: from mga05.intel.com ([192.55.52.43]:19219 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441259AbgDPIdB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 16 Apr 2020 04:33:01 -0400
-IronPort-SDR: T6Mq+Cg1WQ++Mc8nKgZej+aFTm+mi4Fvflmwmn99W/JqcSd8nD5zFaeAXM35dSZVD0vrDaY8/V
- cYOqDEJxK/ww==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 01:32:48 -0700
-IronPort-SDR: 8SzTQP3YALXk+8p8y9o1VafGNYp63FeG/sGSnV0eRCx1/eZAkfF9QO89GjTW8ceruoNZuZ/n0z
- Ste/t7TShjVQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,390,1580803200"; 
-   d="scan'208";a="427754672"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga005.jf.intel.com with ESMTP; 16 Apr 2020 01:32:46 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 9608E17F; Thu, 16 Apr 2020 11:32:45 +0300 (EEST)
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-pci@vger.kernel.org
-Subject: [PATCH] PCI: Do not use pcie_get_speed_cap() to determine when to start waiting
-Date:   Thu, 16 Apr 2020 11:32:45 +0300
-Message-Id: <20200416083245.73957-1-mika.westerberg@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
+        id S2502988AbgDPIys (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Apr 2020 04:54:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41204 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2502984AbgDPIyR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Apr 2020 04:54:17 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEE39C061A41
+        for <linux-pci@vger.kernel.org>; Thu, 16 Apr 2020 01:54:12 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id h9so3847554wrc.8
+        for <linux-pci@vger.kernel.org>; Thu, 16 Apr 2020 01:54:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ZEfcdbyCoFlwcBaVZ+sf0k9hPs9ies0vbK3IcfLzskw=;
+        b=LLp5LveCwz1C/4FgavId+LAMO+lPQeQAh5i6g/dwBkd5KRmxdDAOZ9/FDSM6LaE2DO
+         Td6D1PD2vfJMUfU418BKIvqN2n542k0/GOSD1zFfk3KEg6YVnVpiYcQElgtfTWfhW1Hc
+         pyRHcoAoIzLIeqmthE1eiaqNblTBPZh2QK//NuiYOH4m49CJlMjlge+Af8W0dLnPXfDM
+         TI6i6FGWr2uL3dkWfiES2q+uTGrtmI8VH2eWwpnuQoWS1aDfIKdtLlIrcAMs/dkatob5
+         C2RU6qFiWHenxSdOpD61IuhKr0PagtaYgwqeoLijcAccCZ9r8LhwudjqfQNZwoQRmc4d
+         jdrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ZEfcdbyCoFlwcBaVZ+sf0k9hPs9ies0vbK3IcfLzskw=;
+        b=iilUXP24Dd+q6d68vx5/lRlHeqWFz2BEAIzKEa3ZrZS2Mi2a7nVSVfQMNYITIYhNU5
+         h4xcRTLPP8r9qMMrd2PJCb+CmuXtNfTtd8nEe7ThWzAhkJSfIH6AtEKqE/aYq/r6hqzj
+         5TKEk1gKPa7tbMmTJKo9lLP0SJigVKEY7lnMC/WrdPKcY/qZg301cKViPlto96utZzij
+         fn8wA12LQEBefwkK3OcKoBzFjGiLnkFeqrnvMEatksjDt+UdV3gbRVXdTcDZtTp50ZiD
+         gNeXTPALtDtC3KIM4lB7YeozOEzp6ROxDE5iAe9D/8PFW/0ZwBlzYOz8KPtK3jDrZYLP
+         4gPQ==
+X-Gm-Message-State: AGi0PuYPjKj7pzYVk7HKbVrr/QVIwGKxfsHnpIu8Wj7z8nIA3nakW8Wc
+        jGi8qZxNQwtMW/RLV5f1PmYpmQ==
+X-Google-Smtp-Source: APiQypL1oyr16FXQx+dkfWQBU6EhMLZhnOgOJbCMSB0gnYSQVADLx4g3CAzdUNtaCRw76OTkBu7LoA==
+X-Received: by 2002:a5d:6305:: with SMTP id i5mr34790010wru.203.1587027251542;
+        Thu, 16 Apr 2020 01:54:11 -0700 (PDT)
+Received: from myrica ([2001:171b:226b:54a0:116c:c27a:3e7f:5eaf])
+        by smtp.gmail.com with ESMTPSA id u7sm3027041wmg.41.2020.04.16.01.54.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Apr 2020 01:54:11 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 10:54:02 +0200
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, joro@8bytes.org, catalin.marinas@arm.com,
+        will@kernel.org, robin.murphy@arm.com, kevin.tian@intel.com,
+        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
+        jacob.jun.pan@linux.intel.com, christian.koenig@amd.com,
+        zhangfei.gao@linaro.org, jgg@ziepe.ca, xuzaibo@huawei.com
+Subject: Re: [PATCH v5 02/25] iommu/sva: Manage process address spaces
+Message-ID: <20200416085402.GB1286150@myrica>
+References: <20200414170252.714402-1-jean-philippe@linaro.org>
+ <20200414170252.714402-3-jean-philippe@linaro.org>
+ <20200416072852.GA32000@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200416072852.GA32000@infradead.org>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Kai-Heng Feng reported that it takes long time (>1s) to resume
-Thunderbolt connected PCIe devices from both runtime suspend and system
-sleep (s2idle).
+On Thu, Apr 16, 2020 at 12:28:52AM -0700, Christoph Hellwig wrote:
+> > +	rcu_read_lock();
+> > +	hlist_for_each_entry_rcu(bond, &io_mm->devices, mm_node)
+> > +		io_mm->ops->invalidate(bond->sva.dev, io_mm->pasid, io_mm->ctx,
+> > +				       start, end - start);
+> > +	rcu_read_unlock();
+> > +}
+> 
+> What is the reason that the devices don't register their own notifiers?
+> This kinds of multiplexing is always rather messy, and you do it for
+> all the methods.
 
-These PCIe downstream ports the second link capability (PCI_EXP_LNKCAP2)
-announces support for speeds > 5 GT/s but it is then capped by the
-second link control (PCI_EXP_LNKCTL2) register to 2.5 GT/s. This
-possiblity was not considered in pci_bridge_wait_for_secondary_bus() so
-it ended up waiting for 1100 ms as these ports do not support active
-link layer reporting either.
+This sends TLB and ATC invalidations through the IOMMU, it doesn't go
+through device drivers
 
-PCIe spec 5.0 section 6.6.1 mandates that we must wait minimum of 100 ms
-before sending configuration request to the device below, if the port
-does not support speeds > 5 GT/s, and if it does we first need to wait
-for the data link layer to become active before waiting for that 100 ms.
-
-PCIe spec 5.0 section 7.5.3.6 further says that all downstream ports
-that support speeds > 5 GT/s must support active link layer reporting so
-instead of looking for the speed we can check for the active link layer
-reporting capability and determine how to wait based on that (as they go
-hand in hand).
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206837
-Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
----
- drivers/pci/pci.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 595fcf59843f..d9d9ff5b968e 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -4822,7 +4822,13 @@ void pci_bridge_wait_for_secondary_bus(struct pci_dev *dev)
- 	if (!pcie_downstream_port(dev))
- 		return;
- 
--	if (pcie_get_speed_cap(dev) <= PCIE_SPEED_5_0GT) {
-+	/*
-+	 * Since PCIe spec mandates that all downstream ports that support
-+	 * speeds greater than 5 GT/s must support data link layer active
-+	 * reporting so we use that here to determine when the delay should
-+	 * be issued.
-+	 */
-+	if (!dev->link_active_reporting) {
- 		pci_dbg(dev, "waiting %d ms for downstream link\n", delay);
- 		msleep(delay);
- 	} else {
--- 
-2.25.1
-
+Thanks,
+Jean
