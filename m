@@ -2,100 +2,231 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 823221AB8E6
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Apr 2020 08:59:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 82B981AB95D
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Apr 2020 09:07:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437843AbgDPG7I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Apr 2020 02:59:08 -0400
-Received: from smtprelay0251.hostedemail.com ([216.40.44.251]:48270 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2436919AbgDPG7C (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Apr 2020 02:59:02 -0400
-X-Greylist: delayed 408 seconds by postgrey-1.27 at vger.kernel.org; Thu, 16 Apr 2020 02:58:58 EDT
-Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
-        by smtpgrave01.hostedemail.com (Postfix) with ESMTP id B423118019B0E;
-        Thu, 16 Apr 2020 06:52:58 +0000 (UTC)
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 0A616100E7B43;
-        Thu, 16 Apr 2020 06:51:59 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Spam-Summary: 2,0,0,,d41d8cd98f00b204,joe@perches.com,,RULES_HIT:41:355:379:599:973:982:988:989:1260:1277:1311:1313:1314:1345:1359:1437:1515:1516:1518:1534:1539:1593:1594:1711:1730:1747:1777:1792:2393:2559:2562:2828:2911:3138:3139:3140:3141:3142:3352:3622:3865:3866:3867:3868:3870:3871:3872:3874:4321:4425:5007:6742:6743:7903:10004:10400:10903:11232:11658:11914:12297:12346:12740:12760:12895:13069:13311:13357:13439:14096:14097:14659:14721:21080:21433:21627:21740:30054:30070:30091,0,RBL:none,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:,MSBL:0,DNSBL:none,Custom_rules:0:0:0,LFtime:1,LUA_SUMMARY:none
-X-HE-Tag: wheel34_84bb3b9f86d3c
-X-Filterd-Recvd-Size: 3344
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf07.hostedemail.com (Postfix) with ESMTPA;
-        Thu, 16 Apr 2020 06:51:52 +0000 (UTC)
-Message-ID: <d93f90bbcc99967ed5ba458ba99d7e73de12e3b2.camel@perches.com>
-Subject: Re: [PATCH 2/2] dt-bindings: Remove cases of 'allOf' containing a
- '$ref'
-From:   Joe Perches <joe@perches.com>
-To:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>, Vinod Koul <vkoul@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Heiko Stuebner <heiko@sntech.de>, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-i2c@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org
-Date:   Wed, 15 Apr 2020 23:49:40 -0700
-In-Reply-To: <20200416005549.9683-2-robh@kernel.org>
-References: <20200416005549.9683-1-robh@kernel.org>
-         <20200416005549.9683-2-robh@kernel.org>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        id S2437802AbgDPHHf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Apr 2020 03:07:35 -0400
+Received: from mail-eopbgr690085.outbound.protection.outlook.com ([40.107.69.85]:36738
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2437060AbgDPHHb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 16 Apr 2020 03:07:31 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VAvnOSPSYufAjmWaDG4gAY3jPqiBYqWCTbJ+UfXQbNLfONC70D8XbJvcMCDvT7nP5uczodQiSm3HNmQXdch6U2+S6eCurBq9t7EPaN648+oNpJeRnYdAblpPpd6UCX+wGfZJskiW7pdn/jCYWgOUfj7OvRxJMq8PmEimiXr32WKbyl65JOGn6ug1x9uK11sguVKDL+ipCUiXqUciRnJp0OoBrgVv8J+HG3wg9CUT+YnggoKm7UYWYLggxoLWiEzF3juGox8/9gn0abjH1zZ8AcScwzgpJqxUM5aXf92ls4OKVmE0/x4PX3W+jyyBn8txxm4gw8krllmu1gDoi2w/lA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tUo0ZYDq98bbd+iohMd3wjR06hNlEcEX0ldPjYCFilI=;
+ b=ZzCpYkyWzUwboPucdN6QbYjd+WEfKmOo38kumG6RUz7Fjnz3saBtAJUne+FPQTa0ndQAyvm+2qvRx5Rimn0/IJg3wDsjzHHHjqF8+IBUhCpfGVCaXfpoCur7AhYDA8bXajRL/SzAXVjm1tLp4ekhcuq0FkBfzDHoeqlOWumMzsvooJn1aydjhDy0D37SNaoHBj5GPmkLIFr6To2pOUw5SZzxE+wkRqxQd81yHeiuUmHSaR/8Et11S7zUN4yAn3KPGlxvNmY/Niq2NeS4/SG3cNPKAWZO6yRt51k7Dnp1CxyZVXEa2sDCy2XPPv3rNdFj0iqyAczsVF6qoZr3nnXw3A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
+ dkim=pass header.d=xilinx.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tUo0ZYDq98bbd+iohMd3wjR06hNlEcEX0ldPjYCFilI=;
+ b=dakHpQs7lLqBcXvPznEDwW8hwL9rctrzNzyJgbF+YJN3ctEGsJ+/j5Qj9f8JRrxN2hT9ARZ/K39ZwI4Br/tK57Qi2o7a3WKKfxvbbqtVmT8u39jgC+r16ZpiBfUMNlvLN5Phi0VONRdq3W/e+MH4QokV9YVtxlOGT1voPEUKGX4=
+Received: from BYAPR02MB5559.namprd02.prod.outlook.com (2603:10b6:a03:a1::18)
+ by BYAPR02MB4680.namprd02.prod.outlook.com (2603:10b6:a03:50::27) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.28; Thu, 16 Apr
+ 2020 07:07:29 +0000
+Received: from BYAPR02MB5559.namprd02.prod.outlook.com
+ ([fe80::a1bc:4672:d6ab:d98b]) by BYAPR02MB5559.namprd02.prod.outlook.com
+ ([fe80::a1bc:4672:d6ab:d98b%6]) with mapi id 15.20.2900.028; Thu, 16 Apr 2020
+ 07:07:28 +0000
+From:   Bharat Kumar Gogada <bharatku@xilinx.com>
+To:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "maz@kernel.org" <maz@kernel.org>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        Ravikiran Gummaluri <rgummal@xilinx.com>
+Subject: RE: [PATCH v5 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port driver
+Thread-Topic: [PATCH v5 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port driver
+Thread-Index: AQHV14gyqXPkldKNt0SLTelX37u03Kgr8Z6AgAAlV5CABIIlAIAaXfLggBZHSCCAGo2JUA==
+Date:   Thu, 16 Apr 2020 07:07:28 +0000
+Message-ID: <BYAPR02MB5559496A131BB88E98D9C3C3A5D80@BYAPR02MB5559.namprd02.prod.outlook.com>
+References: <1580400771-12382-1-git-send-email-bharat.kumar.gogada@xilinx.com>
+ <1580400771-12382-3-git-send-email-bharat.kumar.gogada@xilinx.com>
+ <20200225114013.GB6913@e121166-lin.cambridge.arm.com>
+ <MN2PR02MB63365B50058B35AA37341BC9A5ED0@MN2PR02MB6336.namprd02.prod.outlook.com>
+ <20200228104442.GA2874@e121166-lin.cambridge.arm.com>
+ <MN2PR02MB633672DD246A5351DA2D0CEAA5F90@MN2PR02MB6336.namprd02.prod.outlook.com>
+ <BYAPR02MB5559D6EBD0393D820276B883A5CB0@BYAPR02MB5559.namprd02.prod.outlook.com>
+In-Reply-To: <BYAPR02MB5559D6EBD0393D820276B883A5CB0@BYAPR02MB5559.namprd02.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=bharatku@xilinx.com; 
+x-originating-ip: [149.199.50.130]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 2900b86f-0abd-4130-ac08-08d7e1d4d325
+x-ms-traffictypediagnostic: BYAPR02MB4680:|BYAPR02MB4680:
+x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR02MB4680578E8182D962ADF3636FA5D80@BYAPR02MB4680.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0375972289
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR02MB5559.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(396003)(136003)(366004)(39860400002)(346002)(9686003)(55016002)(66446008)(8936002)(66556008)(26005)(66946007)(66476007)(5660300002)(186003)(81156014)(76116006)(110136005)(33656002)(64756008)(7696005)(478600001)(316002)(86362001)(52536014)(71200400001)(8676002)(4326008)(6506007)(107886003)(54906003)(2906002);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: zjfTfAa+JftwLatmkC8i15EmAPiO6tYdykfTx5bhMbwZUhahdOCt7LKyxLvMaOSAQn7sLER6Xpvm6Ml31gvyLZix7/COsjJ+/2Du19pxB2eLqMvJujjd0wConSkUXkPOvQsvm8VuLNaVHJc8KgyWksjPxnSsJjid75kA2TavR6KvZG9eQ1ejYe/yinMbSH7ZkcYxpRFmqQsxl+GlTDIZ8aPCMKxJCw8fntXXkRX9vSKtq+TSvymzo6ZV9Z3qYg8sbvh1vgoGK83YW+0OUQWhd1P0JPiiZ5Yzu/s+mfklJ7Of0pMjQ03Ls0bIgm3fBEm5i+MT6mJWJG3cZedK/nWktlVf4qVLI7oBWD5I/+HKM1wHZnn5go/rt9hqge2OCvCznnyoBUeQjHB0r63nVvl6HmcbtRxtgv+EfNF+laFTkECt0sJR1QR4rabsdSkVzV64
+x-ms-exchange-antispam-messagedata: 5d1qLQ88xUMClPCWVVLXEnPH696g4PpYNneKePARt8w8kUtkqXhvqSDa+UxNJ2sDSX3WgsPQXgqa6QeswCeKDF6Bhf1Fd3fme80QC+jav4IsKrsqHEjTh7nDobVoyb6CRkCYS+I1qXtGNdk718xkKw==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2900b86f-0abd-4130-ac08-08d7e1d4d325
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Apr 2020 07:07:28.5943
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: /TeY3tKHm0+ZswQXM03qb/K/LEra7a4rXbq63Hdl68euOo6kGJZHtG02gbgZMSeUC8DT24BkfiVNNUHloZN9xQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB4680
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 2020-04-15 at 19:55 -0500, Rob Herring wrote:
-> json-schema versions draft7 and earlier have a weird behavior in that
-> any keywords combined with a '$ref' are ignored (silently). The correct
-> form was to put a '$ref' under an 'allOf'. This behavior is now changed
-> in the 2019-09 json-schema spec and '$ref' can be mixed with other
-> keywords. The json-schema library doesn't yet support this, but the
-> tooling now does a fixup for this and either way works.
-> 
-> This has been a constant source of review comments, so let's change this
-> treewide so everyone copies the simpler syntax.
+> Subject: RE: [PATCH v5 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port dri=
+ver
+>=20
+> > Subject: RE: [PATCH v5 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port
+> > driver
+> >
+> > > Subject: Re: [PATCH v5 2/2] PCI: xilinx-cpm: Add Versal CPM Root
+> > > Port driver
+> > >
+> > > [+MarcZ, FHI]
+> > >
+> > > On Tue, Feb 25, 2020 at 02:39:56PM +0000, Bharat Kumar Gogada wrote:
+> > >
+> > > [...]
+> > >
+> > > > > > +/* ECAM definitions */
+> > > > > > +#define ECAM_BUS_NUM_SHIFT		20
+> > > > > > +#define ECAM_DEV_NUM_SHIFT		12
+> > > > >
+> > > > > You don't need these ECAM_* defines, you can use
+> pci_generic_ecam_ops.
+> > > > Does this need separate ranges region for ECAM space ?
+> > > > We have ECAM and controller space in same region.
+> > >
+> > > You can create an ECAM window with pci_ecam_create where *cfgres
+> > > represent the ECAM area, I don't get what you mean by "same region".
+> > >
+> > > Do you mean "contiguous" ? Or something else ?
+> > >
+> > > > > > +
+> > > > > > +/**
+> > > > > > + * struct xilinx_cpm_pcie_port - PCIe port information
+> > > > > > + * @reg_base: Bridge Register Base
+> > > > > > + * @cpm_base: CPM System Level Control and Status
+> > > > > > +Register(SLCR) Base
+> > > > > > + * @irq: Interrupt number
+> > > > > > + * @root_busno: Root Bus number
+> > > > > > + * @dev: Device pointer
+> > > > > > + * @leg_domain: Legacy IRQ domain pointer
+> > > > > > + * @irq_misc: Legacy and error interrupt number  */ struct
+> > > > > > +xilinx_cpm_pcie_port {
+> > > > > > +	void __iomem *reg_base;
+> > > > > > +	void __iomem *cpm_base;
+> > > > > > +	u32 irq;
+> > > > > > +	u8 root_busno;
+> > > > > > +	struct device *dev;
+> > > > > > +	struct irq_domain *leg_domain;
+> > > > > > +	int irq_misc;
+> > > > > > +};
+> > > > > > +
+> > > > > > +static inline u32 pcie_read(struct xilinx_cpm_pcie_port
+> > > > > > +*port,
+> > > > > > +u32
+> > > > > > +reg) {
+> > > > > > +	return readl(port->reg_base + reg); }
+> > > > > > +
+> > > > > > +static inline void pcie_write(struct xilinx_cpm_pcie_port *por=
+t,
+> > > > > > +			      u32 val, u32 reg)
+> > > > > > +{
+> > > > > > +	writel(val, port->reg_base + reg); }
+> > > > > > +
+> > > > > > +static inline bool cpm_pcie_link_up(struct
+> > > > > > +xilinx_cpm_pcie_port
+> > > > > > +*port) {
+> > > > > > +	return (pcie_read(port, XILINX_CPM_PCIE_REG_PSCR) &
+> > > > > > +		XILINX_CPM_PCIE_REG_PSCR_LNKUP) ? 1 : 0;
+> > > > >
+> > > > > 	u32 val =3D pcie_read(port, XILINX_CPM_PCIE_REG_PSCR);
+> > > > >
+> > > > > 	return val & XILINX_CPM_PCIE_REG_PSCR_LNKUP;
+> > > > >
+> > > > > And this function call is not that informative anyway - it is
+> > > > > used just to print a log whose usefulness is questionable.
+> > > > We need this logging information customers are using this info in
+> > > > case of link down failure.
+> > >
+> > > Out of curiosity, to do what ?
+> > >
+> > > [...]
+> > >
+> > > > > > +/**
+> > > > > > + * xilinx_cpm_pcie_intx_map - Set the handler for the INTx
+> > > > > > +and mark IRQ as valid
+> > > > > > + * @domain: IRQ domain
+> > > > > > + * @irq: Virtual IRQ number
+> > > > > > + * @hwirq: HW interrupt number
+> > > > > > + *
+> > > > > > + * Return: Always returns 0.
+> > > > > > + */
+> > > > > > +static int xilinx_cpm_pcie_intx_map(struct irq_domain *domain,
+> > > > > > +				    unsigned int irq, irq_hw_number_t
+> > hwirq) {
+> > > > > > +	irq_set_chip_and_handler(irq, &dummy_irq_chip,
+> > > > > > +handle_simple_irq);
+> > > > >
+> > > > > INTX are level IRQs, the flow handler must be handle_level_irq.
+> > > > Accepted will change.
+> > > > >
+> > > > > > +	irq_set_chip_data(irq, domain->host_data);
+> > > > > > +	irq_set_status_flags(irq, IRQ_LEVEL);
+> > > > >
+> > > > > The way INTX are handled in this patch is wrong. You must set-up
+> > > > > a chained IRQ with the appropriate flow handler, current code
+> > > > > uses an IRQ action and that's an IRQ layer violation and it goes
+> > > > > without saying that it
+> > > is almost certainly broken.
+> > > > In our controller we use same irq line for controller errors and
+> > > > legacy errors.  we have two cases here where error interrupts are
+> > > > self-consumed by controller, and legacy interrupts are flow handled=
+.
+> > > > Its not INTX handling alone for this IRQ line .  So chained IRQ
+> > > > can be used for self consumed interrupts too ?
+> > >
+> > > No. In this specific case both solutions are not satisfying, we need
+> > > to give it some thought, I will talk to Marc (CC'ed) to find the
+> > > best option here going forward.
+> > >
+> > Hi Marc,
+> >
+> > Can you please provide yours inputs for this case.
+> >
+> Hi Marc,
+>=20
+> Can you please provide required inputs on this.
+>=20
+HI Lorenzo,
 
-This is a large change.
+Since Marc hasn't responded, do you have any inputs on this ?
+Shall I proceed with other comments of yours ?
 
-Was this done manually or by some script?
-If it was done manually, how likely is it there are defects
-in the conversion?
-
-
+Regards,
+Bharat
