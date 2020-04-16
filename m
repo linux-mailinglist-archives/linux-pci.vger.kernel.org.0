@@ -2,185 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 975CF1AB432
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Apr 2020 01:27:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B7501AB4D6
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Apr 2020 02:38:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389276AbgDOX0q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Apr 2020 19:26:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37684 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389258AbgDOX0n (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Apr 2020 19:26:43 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42089C061A0F
-        for <linux-pci@vger.kernel.org>; Wed, 15 Apr 2020 16:26:43 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id w145so4138370lff.3
-        for <linux-pci@vger.kernel.org>; Wed, 15 Apr 2020 16:26:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=L1IlX2IpSQEMdDjEJKh5CMpEL+4kcWoPfApz2jdxM08=;
-        b=Er0LS+1q+NZt2g0tIsdiUQ0aIqzQIX/d5/FQVosexWpAB2ylC02jbt5wiQStKD20Nt
-         WlSa0W7tvpOL75ueuetXJprO1qcmES76gksNQSurpvagjbP2NHp3W5sVL2qB+nr8hOn6
-         0+wLxHxtkoYcFvB4NkKiPqxWZ1omKz27UtCLOH1RDwNZCrwkQN8KpY3s9U/IBk8M+D7S
-         bcGAcyzswBqYfxArH3Pp0AppQK4Z0ocT7vqGEpd+/m+8KDoTaXFdy+/V9sSDjznXrP7f
-         sIRojXk/AhQ36ij8wJZLT7brr6d3m6HkJijaqBmnUACRKYJ2HLHopiQ/HcE3wdu0YfPD
-         yxew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=L1IlX2IpSQEMdDjEJKh5CMpEL+4kcWoPfApz2jdxM08=;
-        b=rRAYKODusXiz/1m2VZ97Yn+KqUECyZ+uCQIO6rbYpk1RW9jjHSpaBTNIWlg2XUdcp3
-         RAICwmoBuQvcjahIaooyGQMF223PvG9YF8QtfyuCHx+ZtfyBfvx+NzcxlJX+rzn9jJkx
-         SVYxX/xvKWRT8esK9nW3tNO/9v/AnUhw0P2tNbKx9b83nFgegZCz1erwiqDr3TSErgk2
-         A/yxE5LtdZGrLQB6kgnqApVYVtJt4JKXeQ5V9PR0AzN9Ia4yEVBAYQRehXG95/o5+Qj+
-         GJvHEw8Vrp5KSQo+aTuvc7CAI2qCqpGuIZNq+LfRyIDBy8r7J0JEVxVS4bFdfvRptxWg
-         L84Q==
-X-Gm-Message-State: AGi0PubjA+AhRFGJiljQQTD3LG2Owz3uEZPhWzvznL09YhN/ppe6fz30
-        9beC2rUESVjvU7TiQ7QCZAVkr9nUg2Nup5TMqy1mcA==
-X-Google-Smtp-Source: APiQypKaR4aNmabWaJXpkSEHfUib4Yuak4mqveufOwk320FKg6kY6n/SP8qHWQ52HwXA+qkOZ4P0De+awzrTbAnhEmw=
-X-Received: by 2002:a19:dc05:: with SMTP id t5mr4319328lfg.73.1586993201362;
- Wed, 15 Apr 2020 16:26:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <1586916464-27727-1-git-send-email-alan.mikhak@sifive.com>
- <DM5PR12MB1276CB8FA4457D4CDCE3137EDADB0@DM5PR12MB1276.namprd12.prod.outlook.com>
- <CABEDWGwYmO52g6cqvQdWb6HXWEHaMA1rcf96aUqv0f32tJZT-g@mail.gmail.com>
- <DM5PR12MB1276E09460BD4DB7E70EAF91DADB0@DM5PR12MB1276.namprd12.prod.outlook.com>
- <CABEDWGw0OyQNppLpDaNgMedfB0Ci=kZVKm+h4T-LJoZYmbSgqA@mail.gmail.com>
- <DM5PR12MB127673CFDCA38A47E6F6F4DBDADB0@DM5PR12MB1276.namprd12.prod.outlook.com>
- <CABEDWGyUfq4c65K+btmKBcGLv59h6PFVUkSD_52kOw9R0Rtynw@mail.gmail.com>
-In-Reply-To: <CABEDWGyUfq4c65K+btmKBcGLv59h6PFVUkSD_52kOw9R0Rtynw@mail.gmail.com>
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-Date:   Wed, 15 Apr 2020 16:26:30 -0700
-Message-ID: <CABEDWGz1KLGmQBWU_kcKF7zxjnP02x=0vbXghsZMKNWeExF+rA@mail.gmail.com>
-Subject: Re: [PATCH RFC] dmaengine: dw-edma: Decouple dw-edma-core.c from
- struct pci_dev
-To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Cc:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "kishon@ti.com" <kishon@ti.com>,
-        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>
-Content-Type: text/plain; charset="UTF-8"
+        id S2404528AbgDPAiy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Apr 2020 20:38:54 -0400
+Received: from mga03.intel.com ([134.134.136.65]:10260 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404525AbgDPAiw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 15 Apr 2020 20:38:52 -0400
+IronPort-SDR: SMN6ii3VJthkv+rvmlhj0yKh62pECxbGpUTrH89JrrYeFXXgT17fJIaTX+8cAg7GS+X9tkSvbB
+ EYL8zYSm1F8g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 17:38:45 -0700
+IronPort-SDR: Cyz5Q3fyBgotQFCvSDOCnrYU5L4EDVw0RbDMjDHiPPpXUbTpXyCe4MQI67zQTdLVtqxHCEHYTL
+ 8yL3qsiwj3iA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,388,1580803200"; 
+   d="scan'208";a="245833729"
+Received: from rrnash-mobl1.amr.corp.intel.com (HELO localhost.localdomain) ([10.255.230.113])
+  by fmsmga008.fm.intel.com with ESMTP; 15 Apr 2020 17:38:44 -0700
+From:   sathyanarayanan.kuppuswamy@linux.intel.com
+To:     bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: [PATCH v1 1/1] PCI/EDR: Change ACPI event message log level
+Date:   Wed, 15 Apr 2020 17:38:32 -0700
+Message-Id: <01afb4e01efbe455de0c445bef6cf3ffc59340d2.1586996350.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 2:23 PM Alan Mikhak <alan.mikhak@sifive.com> wrote:
->
-> On Wed, Apr 15, 2020 at 1:58 PM Gustavo Pimentel
-> <Gustavo.Pimentel@synopsys.com> wrote:
-> >
-> > Hi Alan,
-> >
-> > > > > At the moment, pci-epf-test grabs the first available dma channel on the
-> > > > > endpoint side and uses it for either read, write, or copy operation. it is not
-> > > > > possible at the moment to specify which dma channel to use on the pcitest
-> > > > > command line. This may be possible by modifying the command line option
-> > > > > -D to also specify the name of one or more dma channels.
-> > > >
-> > > > I'm assuming that behavior is due to your code, right? I'm not seen that
-> > > > behavior on the Kernel tree.
-> > > > Check my previous suggestion, it should be something similar to what is
-> > > > been done while you select the MSI/MSI-X interrupt to trigger.
-> > >
-> > > I believe this behavior exists in the kernel tree because the call to
-> > > dma_request_chan_by_mask() always specifies channel zero. The user
-> > > of pcitest has no way of specifying which one of the available dma channels
-> > > to use.
-> >
-> > I think we were discussing different things. I was referring to the
-> > pci-epf-test code, that I wasn't being able to find any instruction to
-> > call the DMA driver which had the described behavior.
-> >
-> > I think you can do it by doing this:
-> >
-> > Pseudo code:
-> >
-> > #define EDMA_TEST_CHANNEL_NAME                  "dma%uchan%u"
-> >
-> > static bool dw_edma_test_filter(struct dma_chan *chan, void *filter)
-> > {
-> >         if (strcmp(dev_name(chan->device->dev), EDMA_TEST_DEVICE_NAME) ||
-> > strcmp(dma_chan_name(chan), filter))
-> >                 return false;
-> >
-> >         return true;
-> > }
-> >
-> > static void dw_edma_test_thread_create(int id, int channel)
-> > {
-> >         struct dma_chan *chan;
-> >         dma_cap_mask_t mask;
-> >         char filter[20];
-> >
-> >         dma_cap_zero(mask);
-> >         dma_cap_set(DMA_SLAVE, mask);
-> >         dma_cap_set(DMA_CYCLIC, mask);
-> >
-> >         snprintf(filter, sizeof(filter), EDMA_TEST_CHANNEL_NAME, id,
-> > channel);
-> >         chan = dma_request_channel(mask, dw_edma_test_filter, filter);
-> >
-> >         [..]
-> > }
->
-> Thanks Gustavo, This pseudo code is very useful. Now I know how to do
-> that part of the change.
->
-> What I have further in mind is to enable the pcitest user to specify some
-> arbitrary string with -D option to select one or more of the dma channels
-> that are available on the endpoint side. Since the user executes pcitest
-> from host-side command prompt and pci-epf-test executes in kernel on the
-> endpoint side, the messaging between userspace pcitest and kernel-space
-> pci_endpoint_test as well as the messaging across the bus between
-> pci_endpoint_test and pci-epf-test needs to be expanded to pass the user
-> string from the host to the endpoint. Upon receiving each read, write, or
-> copy message, pci-epf-test could then try to acquire the specified dma
-> channel and execute the user command or fail it if no such channel is
-> available at that moment.
->
-> >
-> > > I believe this behavior exists in the kernel tree because the call to
-> > > dma_request_chan_by_mask() happens during the execution of
-> > > pci_epf_test_bind() and the call to dma_release_channel() happens
-> > > during the execution of pci_epf_test_unbind(). As long as pci-epf-test
-> > > is bound, I cannot use another program such as dmatest from the
-> > > endpoint-side command prompt to exercise the same channel.
-> >
-> > Ok, I understood it now. Right, you can't use the dmatest here, even
-> > because, as far as I know, it is only MEM TO MEM operations and we need
-> > DEVICE_TO_MEM and vice-versa.
-> >
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-On the platforms that I have this in mind for, I may not only have embedded
-dma channels inside the PCIe controller but also platform dma channels. Either
-type of dma channel can be used by pcitest whereas dmatest can only use
-the type that can do MEM to MEM as you said. Either of these types can
-be used to transfer data to or from the PCIe bus. I need to use both kinds
-with pcitest to make sure the PCIe subsystem is ok.
+Currently we have pci_info() message in the beginning of
+edr_handle_event() function, which will be printing
+notification details every-time firmware sends ACPI SYSTEM
+level events. This will pollute the dmesg logs for systems
+that has lot for ACPI system level notifications. So change
+the log-level to pci_dbg, and add a new info log for EDR
+events.
 
-> > >
-> > > What I was suggesting is perhaps pci-epf-test can be modified to
-> > > acquire and release the channel on each call to pci_epf_test_read(),
-> > > ...write(), or ...copy() when the pcitest user specifies -D option.
-> >
-> > Right, you are on the right track.
-> > Perhaps you could take a look at patch [1] that I have done some time ago
-> > for testing the eDMA, I think you have all the tools/guideline there to
-> > do this adaption.
-> > Another thing,
-> >
-> > [1] https://patchwork.kernel.org/patch/10760521/
->
-> Thanks for the guidance and reference code patch [1]. I will definitely
-> take a close look at [1].
->
-> >
-> >
-> >
+Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+---
+ drivers/pci/pcie/edr.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pci/pcie/edr.c b/drivers/pci/pcie/edr.c
+index 594622a6cb16..e346c82559fa 100644
+--- a/drivers/pci/pcie/edr.c
++++ b/drivers/pci/pcie/edr.c
+@@ -148,11 +148,13 @@ static void edr_handle_event(acpi_handle handle, u32 event, void *data)
+ 	pci_ers_result_t estate = PCI_ERS_RESULT_DISCONNECT;
+ 	u16 status;
+ 
+-	pci_info(pdev, "ACPI event %#x received\n", event);
++	pci_dbg(pdev, "ACPI event %#x received\n", event);
+ 
+ 	if (event != ACPI_NOTIFY_DISCONNECT_RECOVER)
+ 		return;
+ 
++	pci_info(pdev, "EDR event received\n");
++
+ 	/* Locate the port which issued EDR event */
+ 	edev = acpi_dpc_port_get(pdev);
+ 	if (!edev) {
+-- 
+2.17.1
+
