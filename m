@@ -2,77 +2,161 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EB36E1AC0D5
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Apr 2020 14:13:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 54AA51AC1B2
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Apr 2020 14:46:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2635068AbgDPMNk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Apr 2020 08:13:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44192 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2635002AbgDPMNi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Apr 2020 08:13:38 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CAB8C061A0C;
-        Thu, 16 Apr 2020 05:13:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=hp6+eCj2O2nxWa/wGv8G7WCsIo0VMT1PsA9CYyFBw9A=; b=uPEh7nQY1JKkhF8C0Y4y2Gmad+
-        0Lh9YxbB3n3bpZKSCTfe6apdDsHEJQ8+1fnAfMJYOQ7Ql+RYgwCiCPEay95+4hAhiUPJevlzeX1fJ
-        juawpIUiGFu5mfa45bPWKqLkW/n9s5rroA3MynnjLIq7Qat6n1jaBQx75J3NNZelUA4YrqkUuGVcz
-        H4Y2Zaeu42mCsHRkgGXpP+lVm6OKcx1KkTmiiHaNW3oV6yz92qPAmnFt+DrohrYDUCVX35t3XPvgO
-        I1F0/d5RJPxCiBLE4f1cc1WmYObAzPqAFWgla4SAq3SvBWHFY87AaCOmi+Lt3b0XoTejUhCJEzA40
-        t2381FKw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jP3Oe-0002ua-05; Thu, 16 Apr 2020 12:13:32 +0000
-Date:   Thu, 16 Apr 2020 05:13:31 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, joro@8bytes.org, catalin.marinas@arm.com,
-        will@kernel.org, robin.murphy@arm.com, kevin.tian@intel.com,
-        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
-        jacob.jun.pan@linux.intel.com, christian.koenig@amd.com,
-        zhangfei.gao@linaro.org, jgg@ziepe.ca, xuzaibo@huawei.com
-Subject: Re: [PATCH v5 02/25] iommu/sva: Manage process address spaces
-Message-ID: <20200416121331.GA18661@infradead.org>
-References: <20200414170252.714402-1-jean-philippe@linaro.org>
- <20200414170252.714402-3-jean-philippe@linaro.org>
- <20200416072852.GA32000@infradead.org>
- <20200416085402.GB1286150@myrica>
+        id S2636126AbgDPMoY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Apr 2020 08:44:24 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:33886 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2636077AbgDPMoR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Apr 2020 08:44:17 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 924AA80487;
+        Thu, 16 Apr 2020 14:44:00 +0200 (CEST)
+Date:   Thu, 16 Apr 2020 14:43:59 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-i2c@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: Clean-up schema indentation formatting
+Message-ID: <20200416124359.GB5785@ravnborg.org>
+References: <20200416005549.9683-1-robh@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200416085402.GB1286150@myrica>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200416005549.9683-1-robh@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
+        a=xJWM5Xtqm7-vkBAKM1YA:9 a=bxeknKLoBf6BnO7k:21 a=StjP_oZuoJ7ca4eH:21
+        a=CjuIK1q_8ugA:10
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 10:54:02AM +0200, Jean-Philippe Brucker wrote:
-> On Thu, Apr 16, 2020 at 12:28:52AM -0700, Christoph Hellwig wrote:
-> > > +	rcu_read_lock();
-> > > +	hlist_for_each_entry_rcu(bond, &io_mm->devices, mm_node)
-> > > +		io_mm->ops->invalidate(bond->sva.dev, io_mm->pasid, io_mm->ctx,
-> > > +				       start, end - start);
-> > > +	rcu_read_unlock();
-> > > +}
-> > 
-> > What is the reason that the devices don't register their own notifiers?
-> > This kinds of multiplexing is always rather messy, and you do it for
-> > all the methods.
+Hi Rob.
+
+On Wed, Apr 15, 2020 at 07:55:48PM -0500, Rob Herring wrote:
+> Fix various inconsistencies in schema indentation. Most of these are
+> list indentation which should be 2 spaces more than the start of the
+> enclosing keyword. This doesn't matter functionally, but affects running
+> scripts which do transforms on the schema files.
+
+Are there any plans to improve the tooling so we get warnigns for this?
+Otherwise I am afraid we will see a lot of patches that gets this wrong.
+
+As a follow-up patch it would be good if example-schema.yaml
+could gain some comments about the correct indentions.
+
+Some comments in the following.
+
+> diff --git a/Documentation/devicetree/bindings/arm/altera.yaml b/Documentation/devicetree/bindings/arm/altera.yaml
+> index 49e0362ddc11..b388c5aa7984 100644
+> --- a/Documentation/devicetree/bindings/arm/altera.yaml
+> +++ b/Documentation/devicetree/bindings/arm/altera.yaml
+> @@ -13,8 +13,8 @@ properties:
+>    compatible:
+>      items:
+>        - enum:
+> -        - altr,socfpga-cyclone5
+> -        - altr,socfpga-arria5
+> -        - altr,socfpga-arria10
+> +          - altr,socfpga-cyclone5
+> +          - altr,socfpga-arria5
+> +          - altr,socfpga-arria10
+>        - const: altr,socfpga
+
+So here "- enum" do not need the extra indent.
+Is it because this is not a list?
+
+>  ...
+> diff --git a/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.yaml b/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.yaml
+> index 66213bd95e6e..6cc74523ebfd 100644
+> --- a/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.yaml
+> +++ b/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.yaml
+> @@ -25,7 +25,7 @@ select:
 > 
-> This sends TLB and ATC invalidations through the IOMMU, it doesn't go
-> through device drivers
+>  properties:
+>    compatible:
+> -   items:
+> +    items:
+>        - const: amlogic,meson-gx-ao-secure
+>        - const: syscon
 
-I don't think we mean the same thing, probably because of my rather
-imprecise use of the word device.
+This is something I had expected the tooling to notice.
+I had expected the two "- const" to be indented with 4 spaces, not two.
+So there is something I do not understand.
 
-What I mean is that the mmu_notifier should not be embedded into the
-io_mm structure (whch btw, seems to have a way to generic name, just
-like all other io_* prefixed names), but instead into the
-iommu_bond structure.  That avoid the whole multiplexing layer.
+
+> diff --git a/Documentation/devicetree/bindings/arm/nxp/lpc32xx.yaml b/Documentation/devicetree/bindings/arm/nxp/lpc32xx.yaml
+> index 07f39d3eee7e..f7f024910e71 100644
+> --- a/Documentation/devicetree/bindings/arm/nxp/lpc32xx.yaml
+> +++ b/Documentation/devicetree/bindings/arm/nxp/lpc32xx.yaml
+> @@ -17,9 +17,8 @@ properties:
+>            - nxp,lpc3230
+>            - nxp,lpc3240
+>        - items:
+> -        - enum:
+> -            - ea,ea3250
+> -            - phytec,phy3250
+> -        - const: nxp,lpc3250
+> -
+> +          - enum:
+> +              - ea,ea3250
+> +              - phytec,phy3250
+> +          - const: nxp,lpc3250
+>  ...
+
+And here "- enum" receive extra indent.
+
+I trust you know what you are doing - but I do not get it.
+
+Some pointers or examples for the correct indention would be great.
+I cannot review this patch as long as I do not know the rules.
+
+My request to update example-schema.yaml was one way to teach me.
+(Some people will say that is difficult/impossible to teach me,
+but thats another story:-) ).
+
+	Sam
