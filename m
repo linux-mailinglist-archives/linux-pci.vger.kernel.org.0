@@ -2,231 +2,198 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 82B981AB95D
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Apr 2020 09:07:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C05841AB9AD
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Apr 2020 09:21:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437802AbgDPHHf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Apr 2020 03:07:35 -0400
-Received: from mail-eopbgr690085.outbound.protection.outlook.com ([40.107.69.85]:36738
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2437060AbgDPHHb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 16 Apr 2020 03:07:31 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VAvnOSPSYufAjmWaDG4gAY3jPqiBYqWCTbJ+UfXQbNLfONC70D8XbJvcMCDvT7nP5uczodQiSm3HNmQXdch6U2+S6eCurBq9t7EPaN648+oNpJeRnYdAblpPpd6UCX+wGfZJskiW7pdn/jCYWgOUfj7OvRxJMq8PmEimiXr32WKbyl65JOGn6ug1x9uK11sguVKDL+ipCUiXqUciRnJp0OoBrgVv8J+HG3wg9CUT+YnggoKm7UYWYLggxoLWiEzF3juGox8/9gn0abjH1zZ8AcScwzgpJqxUM5aXf92ls4OKVmE0/x4PX3W+jyyBn8txxm4gw8krllmu1gDoi2w/lA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tUo0ZYDq98bbd+iohMd3wjR06hNlEcEX0ldPjYCFilI=;
- b=ZzCpYkyWzUwboPucdN6QbYjd+WEfKmOo38kumG6RUz7Fjnz3saBtAJUne+FPQTa0ndQAyvm+2qvRx5Rimn0/IJg3wDsjzHHHjqF8+IBUhCpfGVCaXfpoCur7AhYDA8bXajRL/SzAXVjm1tLp4ekhcuq0FkBfzDHoeqlOWumMzsvooJn1aydjhDy0D37SNaoHBj5GPmkLIFr6To2pOUw5SZzxE+wkRqxQd81yHeiuUmHSaR/8Et11S7zUN4yAn3KPGlxvNmY/Niq2NeS4/SG3cNPKAWZO6yRt51k7Dnp1CxyZVXEa2sDCy2XPPv3rNdFj0iqyAczsVF6qoZr3nnXw3A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
+        id S2439130AbgDPHTs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Apr 2020 03:19:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54448 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2438815AbgDPHTV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Apr 2020 03:19:21 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2395FC0610D6
+        for <linux-pci@vger.kernel.org>; Thu, 16 Apr 2020 00:19:20 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id k1so3569003wrx.4
+        for <linux-pci@vger.kernel.org>; Thu, 16 Apr 2020 00:19:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tUo0ZYDq98bbd+iohMd3wjR06hNlEcEX0ldPjYCFilI=;
- b=dakHpQs7lLqBcXvPznEDwW8hwL9rctrzNzyJgbF+YJN3ctEGsJ+/j5Qj9f8JRrxN2hT9ARZ/K39ZwI4Br/tK57Qi2o7a3WKKfxvbbqtVmT8u39jgC+r16ZpiBfUMNlvLN5Phi0VONRdq3W/e+MH4QokV9YVtxlOGT1voPEUKGX4=
-Received: from BYAPR02MB5559.namprd02.prod.outlook.com (2603:10b6:a03:a1::18)
- by BYAPR02MB4680.namprd02.prod.outlook.com (2603:10b6:a03:50::27) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.28; Thu, 16 Apr
- 2020 07:07:29 +0000
-Received: from BYAPR02MB5559.namprd02.prod.outlook.com
- ([fe80::a1bc:4672:d6ab:d98b]) by BYAPR02MB5559.namprd02.prod.outlook.com
- ([fe80::a1bc:4672:d6ab:d98b%6]) with mapi id 15.20.2900.028; Thu, 16 Apr 2020
- 07:07:28 +0000
-From:   Bharat Kumar Gogada <bharatku@xilinx.com>
-To:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "maz@kernel.org" <maz@kernel.org>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        Ravikiran Gummaluri <rgummal@xilinx.com>
-Subject: RE: [PATCH v5 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port driver
-Thread-Topic: [PATCH v5 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port driver
-Thread-Index: AQHV14gyqXPkldKNt0SLTelX37u03Kgr8Z6AgAAlV5CABIIlAIAaXfLggBZHSCCAGo2JUA==
-Date:   Thu, 16 Apr 2020 07:07:28 +0000
-Message-ID: <BYAPR02MB5559496A131BB88E98D9C3C3A5D80@BYAPR02MB5559.namprd02.prod.outlook.com>
-References: <1580400771-12382-1-git-send-email-bharat.kumar.gogada@xilinx.com>
- <1580400771-12382-3-git-send-email-bharat.kumar.gogada@xilinx.com>
- <20200225114013.GB6913@e121166-lin.cambridge.arm.com>
- <MN2PR02MB63365B50058B35AA37341BC9A5ED0@MN2PR02MB6336.namprd02.prod.outlook.com>
- <20200228104442.GA2874@e121166-lin.cambridge.arm.com>
- <MN2PR02MB633672DD246A5351DA2D0CEAA5F90@MN2PR02MB6336.namprd02.prod.outlook.com>
- <BYAPR02MB5559D6EBD0393D820276B883A5CB0@BYAPR02MB5559.namprd02.prod.outlook.com>
-In-Reply-To: <BYAPR02MB5559D6EBD0393D820276B883A5CB0@BYAPR02MB5559.namprd02.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=bharatku@xilinx.com; 
-x-originating-ip: [149.199.50.130]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 2900b86f-0abd-4130-ac08-08d7e1d4d325
-x-ms-traffictypediagnostic: BYAPR02MB4680:|BYAPR02MB4680:
-x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR02MB4680578E8182D962ADF3636FA5D80@BYAPR02MB4680.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0375972289
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR02MB5559.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(396003)(136003)(366004)(39860400002)(346002)(9686003)(55016002)(66446008)(8936002)(66556008)(26005)(66946007)(66476007)(5660300002)(186003)(81156014)(76116006)(110136005)(33656002)(64756008)(7696005)(478600001)(316002)(86362001)(52536014)(71200400001)(8676002)(4326008)(6506007)(107886003)(54906003)(2906002);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: zjfTfAa+JftwLatmkC8i15EmAPiO6tYdykfTx5bhMbwZUhahdOCt7LKyxLvMaOSAQn7sLER6Xpvm6Ml31gvyLZix7/COsjJ+/2Du19pxB2eLqMvJujjd0wConSkUXkPOvQsvm8VuLNaVHJc8KgyWksjPxnSsJjid75kA2TavR6KvZG9eQ1ejYe/yinMbSH7ZkcYxpRFmqQsxl+GlTDIZ8aPCMKxJCw8fntXXkRX9vSKtq+TSvymzo6ZV9Z3qYg8sbvh1vgoGK83YW+0OUQWhd1P0JPiiZ5Yzu/s+mfklJ7Of0pMjQ03Ls0bIgm3fBEm5i+MT6mJWJG3cZedK/nWktlVf4qVLI7oBWD5I/+HKM1wHZnn5go/rt9hqge2OCvCznnyoBUeQjHB0r63nVvl6HmcbtRxtgv+EfNF+laFTkECt0sJR1QR4rabsdSkVzV64
-x-ms-exchange-antispam-messagedata: 5d1qLQ88xUMClPCWVVLXEnPH696g4PpYNneKePARt8w8kUtkqXhvqSDa+UxNJ2sDSX3WgsPQXgqa6QeswCeKDF6Bhf1Fd3fme80QC+jav4IsKrsqHEjTh7nDobVoyb6CRkCYS+I1qXtGNdk718xkKw==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=3AEaWn5XeJ7hcX74F4NzwZbogUqZr77xLF5d73BlBfw=;
+        b=x+7x1SRD1y/LTZJxHdO7NBoPBhyXEErUVgwIai9Txb2aqME7MbBYVN8PkA7MmFMlG/
+         +PTNeDQuJeOieuyql513BpDrE+TR0fX/mGtYOkCA4N6z7VRTvWgnydlKHHjdN1pHbDi6
+         FcrLT7q9Xm6W6XF2DKy+sVxRvrx2e8zXuCLbQfQ8d2nPd/iJ34SsziQVe8hgIZhAVDz1
+         X39oeCEgZoTyWJybNtbP4u4Ik4a22WiM6sS1Gf+7ektT/jxfmy4EaiaU+raISKCA976c
+         DL5uziLMISTg53DG/aGMYXA9DS9lwHatzi8LUvPjSHKrnZk+uf82Nr0GKjoaC8YAX62l
+         Ovyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=3AEaWn5XeJ7hcX74F4NzwZbogUqZr77xLF5d73BlBfw=;
+        b=BpJ/T6tVKi34djQvj+n5ih6Vpjyul4WcKABXapCEtdYj+AR15sk7fBZvOAgLbYnsFR
+         dY1KfrJXKOP38ES/q+deSeMaN2W2g9QERTT265qSWN69TjOiMO8Ytt9If51Tme/Gopt+
+         Yn4QEFhzgOjYt2VQnqBHu1+2WvSCpMqZaJ69vUnWUiMNRljibJaQy/UIkYTEQ76npjVl
+         CtRu4vExcieOfXQe5vXLblLyTjkAJ4hXdTZEmJkoWvFQsoLwE9sJAYZgr/KdQ3O91D6t
+         hB5WH9axda/PMhVTwBOanI+HqCrLxyJogzDMtQAfMPg+fvbYOpXZkrqAanEpBhl7HovS
+         RzRQ==
+X-Gm-Message-State: AGi0Puabt2Bz34/f/jCCrSXINdDKjLCCGt20tC0bb6qIvGTtcDq/kEpR
+        TIGf3oEkZ6ysUOvOUSStot8uqw==
+X-Google-Smtp-Source: APiQypLCNVZBL4RMlNf7UZFX5oU2xDT6SF7MjxuD7BsWZie9pUbnFA9tcL+f+7W6lePE+UdiJ1fBjg==
+X-Received: by 2002:adf:e4cc:: with SMTP id v12mr8967305wrm.106.1587021558557;
+        Thu, 16 Apr 2020 00:19:18 -0700 (PDT)
+Received: from dell ([95.149.164.124])
+        by smtp.gmail.com with ESMTPSA id p16sm19943946wro.21.2020.04.16.00.19.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Apr 2020 00:19:17 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 08:20:18 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>, Vinod Koul <vkoul@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-i2c@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: Clean-up schema indentation formatting
+Message-ID: <20200416072018.GS2167633@dell>
+References: <20200416005549.9683-1-robh@kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2900b86f-0abd-4130-ac08-08d7e1d4d325
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Apr 2020 07:07:28.5943
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: /TeY3tKHm0+ZswQXM03qb/K/LEra7a4rXbq63Hdl68euOo6kGJZHtG02gbgZMSeUC8DT24BkfiVNNUHloZN9xQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB4680
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200416005549.9683-1-robh@kernel.org>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> Subject: RE: [PATCH v5 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port dri=
-ver
->=20
-> > Subject: RE: [PATCH v5 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port
-> > driver
-> >
-> > > Subject: Re: [PATCH v5 2/2] PCI: xilinx-cpm: Add Versal CPM Root
-> > > Port driver
-> > >
-> > > [+MarcZ, FHI]
-> > >
-> > > On Tue, Feb 25, 2020 at 02:39:56PM +0000, Bharat Kumar Gogada wrote:
-> > >
-> > > [...]
-> > >
-> > > > > > +/* ECAM definitions */
-> > > > > > +#define ECAM_BUS_NUM_SHIFT		20
-> > > > > > +#define ECAM_DEV_NUM_SHIFT		12
-> > > > >
-> > > > > You don't need these ECAM_* defines, you can use
-> pci_generic_ecam_ops.
-> > > > Does this need separate ranges region for ECAM space ?
-> > > > We have ECAM and controller space in same region.
-> > >
-> > > You can create an ECAM window with pci_ecam_create where *cfgres
-> > > represent the ECAM area, I don't get what you mean by "same region".
-> > >
-> > > Do you mean "contiguous" ? Or something else ?
-> > >
-> > > > > > +
-> > > > > > +/**
-> > > > > > + * struct xilinx_cpm_pcie_port - PCIe port information
-> > > > > > + * @reg_base: Bridge Register Base
-> > > > > > + * @cpm_base: CPM System Level Control and Status
-> > > > > > +Register(SLCR) Base
-> > > > > > + * @irq: Interrupt number
-> > > > > > + * @root_busno: Root Bus number
-> > > > > > + * @dev: Device pointer
-> > > > > > + * @leg_domain: Legacy IRQ domain pointer
-> > > > > > + * @irq_misc: Legacy and error interrupt number  */ struct
-> > > > > > +xilinx_cpm_pcie_port {
-> > > > > > +	void __iomem *reg_base;
-> > > > > > +	void __iomem *cpm_base;
-> > > > > > +	u32 irq;
-> > > > > > +	u8 root_busno;
-> > > > > > +	struct device *dev;
-> > > > > > +	struct irq_domain *leg_domain;
-> > > > > > +	int irq_misc;
-> > > > > > +};
-> > > > > > +
-> > > > > > +static inline u32 pcie_read(struct xilinx_cpm_pcie_port
-> > > > > > +*port,
-> > > > > > +u32
-> > > > > > +reg) {
-> > > > > > +	return readl(port->reg_base + reg); }
-> > > > > > +
-> > > > > > +static inline void pcie_write(struct xilinx_cpm_pcie_port *por=
-t,
-> > > > > > +			      u32 val, u32 reg)
-> > > > > > +{
-> > > > > > +	writel(val, port->reg_base + reg); }
-> > > > > > +
-> > > > > > +static inline bool cpm_pcie_link_up(struct
-> > > > > > +xilinx_cpm_pcie_port
-> > > > > > +*port) {
-> > > > > > +	return (pcie_read(port, XILINX_CPM_PCIE_REG_PSCR) &
-> > > > > > +		XILINX_CPM_PCIE_REG_PSCR_LNKUP) ? 1 : 0;
-> > > > >
-> > > > > 	u32 val =3D pcie_read(port, XILINX_CPM_PCIE_REG_PSCR);
-> > > > >
-> > > > > 	return val & XILINX_CPM_PCIE_REG_PSCR_LNKUP;
-> > > > >
-> > > > > And this function call is not that informative anyway - it is
-> > > > > used just to print a log whose usefulness is questionable.
-> > > > We need this logging information customers are using this info in
-> > > > case of link down failure.
-> > >
-> > > Out of curiosity, to do what ?
-> > >
-> > > [...]
-> > >
-> > > > > > +/**
-> > > > > > + * xilinx_cpm_pcie_intx_map - Set the handler for the INTx
-> > > > > > +and mark IRQ as valid
-> > > > > > + * @domain: IRQ domain
-> > > > > > + * @irq: Virtual IRQ number
-> > > > > > + * @hwirq: HW interrupt number
-> > > > > > + *
-> > > > > > + * Return: Always returns 0.
-> > > > > > + */
-> > > > > > +static int xilinx_cpm_pcie_intx_map(struct irq_domain *domain,
-> > > > > > +				    unsigned int irq, irq_hw_number_t
-> > hwirq) {
-> > > > > > +	irq_set_chip_and_handler(irq, &dummy_irq_chip,
-> > > > > > +handle_simple_irq);
-> > > > >
-> > > > > INTX are level IRQs, the flow handler must be handle_level_irq.
-> > > > Accepted will change.
-> > > > >
-> > > > > > +	irq_set_chip_data(irq, domain->host_data);
-> > > > > > +	irq_set_status_flags(irq, IRQ_LEVEL);
-> > > > >
-> > > > > The way INTX are handled in this patch is wrong. You must set-up
-> > > > > a chained IRQ with the appropriate flow handler, current code
-> > > > > uses an IRQ action and that's an IRQ layer violation and it goes
-> > > > > without saying that it
-> > > is almost certainly broken.
-> > > > In our controller we use same irq line for controller errors and
-> > > > legacy errors.  we have two cases here where error interrupts are
-> > > > self-consumed by controller, and legacy interrupts are flow handled=
-.
-> > > > Its not INTX handling alone for this IRQ line .  So chained IRQ
-> > > > can be used for self consumed interrupts too ?
-> > >
-> > > No. In this specific case both solutions are not satisfying, we need
-> > > to give it some thought, I will talk to Marc (CC'ed) to find the
-> > > best option here going forward.
-> > >
-> > Hi Marc,
-> >
-> > Can you please provide yours inputs for this case.
-> >
-> Hi Marc,
->=20
-> Can you please provide required inputs on this.
->=20
-HI Lorenzo,
+On Wed, 15 Apr 2020, Rob Herring wrote:
 
-Since Marc hasn't responded, do you have any inputs on this ?
-Shall I proceed with other comments of yours ?
+> Fix various inconsistencies in schema indentation. Most of these are
+> list indentation which should be 2 spaces more than the start of the
+> enclosing keyword. This doesn't matter functionally, but affects running
+> scripts which do transforms on the schema files.
+> 
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../devicetree/bindings/arm/altera.yaml       |  6 +-
+>  .../amlogic/amlogic,meson-gx-ao-secure.yaml   |  2 +-
+>  .../devicetree/bindings/arm/bitmain.yaml      |  2 +-
+>  .../devicetree/bindings/arm/nxp/lpc32xx.yaml  |  9 ++-
+>  .../bindings/arm/socionext/uniphier.yaml      | 26 ++++----
+>  .../bindings/arm/stm32/st,mlahb.yaml          |  2 +-
+>  .../bindings/arm/stm32/st,stm32-syscon.yaml   |  6 +-
+>  .../bindings/ata/faraday,ftide010.yaml        |  4 +-
+>  .../bindings/bus/allwinner,sun8i-a23-rsb.yaml |  4 +-
+>  .../clock/allwinner,sun4i-a10-gates-clk.yaml  |  8 +--
+>  .../devicetree/bindings/clock/fsl,plldig.yaml | 17 +++--
+>  .../devicetree/bindings/clock/qcom,mmcc.yaml  | 16 ++---
+>  .../bindings/connector/usb-connector.yaml     |  6 +-
+>  .../crypto/allwinner,sun4i-a10-crypto.yaml    | 14 ++--
+>  .../bindings/crypto/allwinner,sun8i-ce.yaml   | 16 ++---
+>  .../bindings/crypto/amlogic,gxl-crypto.yaml   |  2 +-
+>  .../display/allwinner,sun4i-a10-hdmi.yaml     | 40 ++++++------
+>  .../display/allwinner,sun4i-a10-tcon.yaml     | 58 ++++++++---------
+>  .../display/allwinner,sun6i-a31-mipi-dsi.yaml | 28 ++++----
+>  .../display/allwinner,sun8i-a83t-dw-hdmi.yaml | 10 +--
+>  .../bindings/display/bridge/lvds-codec.yaml   | 18 +++---
+>  .../display/panel/sony,acx424akp.yaml         |  2 +-
+>  .../display/panel/xinpeng,xpp055c272.yaml     |  4 +-
+>  .../bindings/display/renesas,cmm.yaml         | 16 ++---
+>  .../devicetree/bindings/dma/ti/k3-udma.yaml   |  8 +--
+>  .../bindings/gpio/brcm,xgs-iproc-gpio.yaml    |  2 +-
+>  .../bindings/gpu/arm,mali-midgard.yaml        | 18 +++---
+>  .../devicetree/bindings/gpu/vivante,gc.yaml   |  2 +-
+>  .../devicetree/bindings/i2c/i2c-rk3x.yaml     | 10 +--
+>  .../bindings/iio/adc/adi,ad7124.yaml          |  4 +-
+>  .../bindings/iio/adc/lltc,ltc2496.yaml        |  6 +-
+>  .../input/allwinner,sun4i-a10-lradc-keys.yaml |  4 +-
+>  .../bindings/input/touchscreen/goodix.yaml    |  2 +-
+>  .../bindings/interconnect/qcom,msm8916.yaml   |  4 +-
+>  .../bindings/interconnect/qcom,msm8974.yaml   |  4 +-
+>  .../bindings/interconnect/qcom,qcs404.yaml    |  4 +-
+>  .../allwinner,sun7i-a20-sc-nmi.yaml           | 12 ++--
+>  .../intel,ixp4xx-interrupt.yaml               |  8 +--
+>  .../interrupt-controller/st,stm32-exti.yaml   | 12 ++--
+>  .../bindings/iommu/samsung,sysmmu.yaml        | 10 +--
+>  .../bindings/mailbox/st,stm32-ipcc.yaml       |  2 +-
+>  .../media/allwinner,sun4i-a10-csi.yaml        | 28 ++++----
+>  .../bindings/media/amlogic,gx-vdec.yaml       | 14 ++--
+>  .../bindings/media/renesas,ceu.yaml           | 28 ++++----
+>  .../bindings/media/renesas,vin.yaml           |  8 +--
+>  .../devicetree/bindings/media/ti,vpe.yaml     |  2 +-
+>  .../memory-controllers/fsl/imx8m-ddrc.yaml    |  6 +-
 
-Regards,
-Bharat
+>  .../bindings/mfd/st,stm32-lptimer.yaml        |  4 +-
+>  .../bindings/mfd/st,stm32-timers.yaml         |  4 +-
+>  .../devicetree/bindings/mfd/syscon.yaml       | 12 ++--
+
+Acked-by: Lee Jones <lee.jones@linaro.org>
+
+>  .../devicetree/bindings/mmc/cdns,sdhci.yaml   |  2 +-
+>  .../bindings/mmc/rockchip-dw-mshc.yaml        | 16 ++---
+>  .../bindings/mmc/socionext,uniphier-sd.yaml   | 14 ++--
+>  .../devicetree/bindings/mtd/denali,nand.yaml  |  4 +-
+>  .../net/allwinner,sun8i-a83t-emac.yaml        |  4 +-
+>  .../bindings/net/can/bosch,m_can.yaml         | 52 +++++++--------
+>  .../bindings/net/renesas,ether.yaml           |  4 +-
+>  .../bindings/net/ti,cpsw-switch.yaml          | 12 ++--
+>  .../bindings/net/ti,davinci-mdio.yaml         | 27 ++++----
+>  .../bindings/phy/intel,lgm-emmc-phy.yaml      |  2 +-
+>  .../devicetree/bindings/pwm/pwm-samsung.yaml  | 16 ++---
+>  .../bindings/remoteproc/st,stm32-rproc.yaml   |  2 +-
+>  .../reset/brcm,bcm7216-pcie-sata-rescal.yaml  |  4 +-
+>  .../devicetree/bindings/rtc/st,stm32-rtc.yaml | 38 +++++------
+>  .../bindings/serial/amlogic,meson-uart.yaml   | 16 ++---
+>  .../devicetree/bindings/serial/rs485.yaml     | 17 ++---
+>  .../bindings/soc/amlogic/amlogic,canvas.yaml  | 10 +--
+>  .../bindings/sound/renesas,fsi.yaml           | 16 ++---
+>  .../bindings/spi/qcom,spi-qcom-qspi.yaml      | 10 +--
+>  .../devicetree/bindings/spi/renesas,hspi.yaml |  4 +-
+>  .../devicetree/bindings/spi/spi-pl022.yaml    |  2 +-
+>  .../bindings/spi/st,stm32-qspi.yaml           |  4 +-
+>  .../allwinner,sun4i-a10-system-control.yaml   | 64 +++++++++----------
+>  .../bindings/thermal/amlogic,thermal.yaml     | 10 +--
+>  .../bindings/timer/arm,arch_timer.yaml        |  4 +-
+>  .../bindings/timer/arm,arch_timer_mmio.yaml   |  4 +-
+>  .../devicetree/bindings/usb/dwc2.yaml         |  8 +--
+>  77 files changed, 450 insertions(+), 450 deletions(-)
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
