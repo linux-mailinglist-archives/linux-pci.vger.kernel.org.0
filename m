@@ -2,90 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F14A31AC639
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Apr 2020 16:37:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B1B01AC686
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Apr 2020 16:41:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732480AbgDPOgE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Apr 2020 10:36:04 -0400
-Received: from mga01.intel.com ([192.55.52.88]:61312 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731215AbgDPOgC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:36:02 -0400
-IronPort-SDR: F6uq4FAKuH64T8xFxBkGy35jLi2MkDDLQows8yfvbuG38P7sefj3thhygYsfQKMl/8p3sdLt0p
- FQHrr2NG4vTA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 07:36:01 -0700
-IronPort-SDR: SROi9I5Y4DMuAAwFHH+FCbgLmbU9xuG4npbsAjItBf2ngT4l9phTfNGbTKf6WKvkRkFUzG/d6R
- E7eD6MtKVPvg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,391,1580803200"; 
-   d="scan'208";a="277128372"
-Received: from orsmsx105.amr.corp.intel.com ([10.22.225.132])
-  by orsmga008.jf.intel.com with ESMTP; 16 Apr 2020 07:36:00 -0700
-Received: from orsmsx159.amr.corp.intel.com (10.22.240.24) by
- ORSMSX105.amr.corp.intel.com (10.22.225.132) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 16 Apr 2020 07:36:00 -0700
-Received: from orsmsx101.amr.corp.intel.com ([169.254.8.204]) by
- ORSMSX159.amr.corp.intel.com ([169.254.11.47]) with mapi id 14.03.0439.000;
- Thu, 16 Apr 2020 07:36:00 -0700
-From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
-To:     "hch@infradead.org" <hch@infradead.org>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>,
-        "rmk+kernel@armlinux.org.uk" <rmk+kernel@armlinux.org.uk>
-Subject: Re: [PATCH 3/5] PCI: pci-bridge-emul: Convert to GENMASK and BIT
-Thread-Topic: [PATCH 3/5] PCI: pci-bridge-emul: Convert to GENMASK and BIT
-Thread-Index: AQHWEp2a4ZwOLz33HU2mmQddOoKGFKh70c4AgAB2/YA=
-Date:   Thu, 16 Apr 2020 14:35:59 +0000
-Message-ID: <47e4b64208ec1f8400a420db434cbbd8322cbbd8.camel@intel.com>
-References: <20200414203005.5166-1-jonathan.derrick@intel.com>
-         <20200414203005.5166-4-jonathan.derrick@intel.com>
-         <20200416073004.GB32000@infradead.org>
-In-Reply-To: <20200416073004.GB32000@infradead.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.255.0.232]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <8A50CC0FF1D3E24B8C7D26B3F13617F2@intel.com>
-Content-Transfer-Encoding: base64
+        id S2394442AbgDPOlI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Apr 2020 10:41:08 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:7707 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392865AbgDPOk6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Apr 2020 10:40:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1587048059; x=1618584059;
+  h=date:from:to:subject:message-id:mime-version;
+  bh=V5smWBbOOXuVbvgelgTYa696GvPO7TMp629r0FYTLdU=;
+  b=YFr2GvIWdSDBX5CheXqM42AcJgvrrfFftXXlvztfzD6/ETLqpBdSfjPC
+   9NplNJD4Cfcpq20rYUF9I7dU7bDiD/wwLOHe17mtp4AeAuu7BkfW4AMxp
+   GYe5VU/gcwTfoRQhPDWvPpAMDx11aIpAfSuyDj6bEhJVkCICVSQbuUt1Y
+   2vn2+B3dN3ZM4OWfNu/A6jJnBMRnATHxcG0yTJbpmNqTtDWIGz7fHdS1L
+   K892C2eYdCOXL8XAL0Jpep3uJPckGNY0ngZiOP/V4yUxBJcjNfCB3H0TY
+   z872B9+0HYipYg6oDwQgm59H45WZZ0Ny9hlcPK48V9mk6xb2SPLzRDI+o
+   A==;
+IronPort-SDR: bmF9yVi2W5auEceSbVx69ARGf+iFWCLuKPN2bqiwqwXx+VlAR6897ZJDo9J4t1eIw4QHW1hqzZ
+ LGGxndz7cJuGfgFiLSBbwuOuy+uyXd2obnWH/vCtBuEDjEmyPZ/s5yQQKRFQV6ksCZxg7yEm7a
+ sULWR7B4r5zfmw00j/8wsjIUncpu8YbUXjabC6h4mVQ5wEhzJ2fb0aifeRAFryGRPJgINIni9Y
+ 51nUvV5KSgjDARSBhhRK/ZDgU//dhf4FQdi06c6PZx6tejSQsFIVMW7HCplshVTtb+k2+vqCrF
+ 5QQ=
+X-IronPort-AV: E=Sophos;i="5.72,391,1580799600"; 
+   d="scan'208";a="72749731"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 16 Apr 2020 07:40:58 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 16 Apr 2020 07:41:02 -0700
+Received: from IRE-LT-SPARE06.mchp-main.com (10.10.115.15) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 16 Apr 2020 07:40:55 -0700
+Date:   Thu, 16 Apr 2020 15:40:53 +0100
+From:   Daire McNamara <daire.mcnamara@microchip.com>
+To:     <lorenzo.pieralisi@arm.com>, <amurray@thegoodpenguin.co.uk>,
+        <bhelgaas@google.com>, <linux-pci@vger.kernel.org>
+Subject: [PATCH v7 0/1] PCI: microchip: Add host driver for Microchip PCIe
+ controller
+Message-ID: <20200416144053.GA2740@IRE-LT-SPARE06.mchp-main.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTA0LTE2IGF0IDAwOjMwIC0wNzAwLCBDaHJpc3RvcGggSGVsbHdpZyB3cm90
-ZToNCj4gT24gVHVlLCBBcHIgMTQsIDIwMjAgYXQgMDQ6MzA6MDNQTSAtMDQwMCwgSm9uIERlcnJp
-Y2sgd3JvdGU6DQo+ID4gSW4gb3JkZXIgdG8gbWFrZSBwY2ktYnJpZGdlLWVtdWwgZWFzaWVyIHRv
-IGtlZXAgdXAtdG8tZGF0ZSB3aXRoIG5ldyBQQ0llDQo+ID4gZmVhdHVyZXMsIGNvbnZlcnQgYWxs
-IG5hbWVkIHJlZ2lzdGVyIGJpdHMgdG8gR0VOTUFTSyBhbmQgQklUIHBhaXJzLiBUaGlzDQo+ID4g
-cGF0Y2ggZG9lc24ndCBhbHRlciBhbnkgb2YgdGhlIFBDSSBjb25maWd1cmF0aW9uIHNwYWNlIGFz
-IHRoZXNlIGJpdHMgYXJlDQo+ID4gZnVsbHkgZGVmaW5lZC4NCj4gPiANCj4gPiBTaWduZWQtb2Zm
-LWJ5OiBKb24gRGVycmljayA8am9uYXRoYW4uZGVycmlja0BpbnRlbC5jb20+DQo+ID4gLS0tDQo+
-ID4gIGRyaXZlcnMvcGNpL3BjaS1icmlkZ2UtZW11bC5jIHwgMTcgKysrKysrLS0tLS0tLS0tLS0N
-Cj4gPiAgMSBmaWxlIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKSwgMTEgZGVsZXRpb25zKC0pDQo+
-ID4gDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL3BjaS1icmlkZ2UtZW11bC5jIGIvZHJp
-dmVycy9wY2kvcGNpLWJyaWRnZS1lbXVsLmMNCj4gPiBpbmRleCBjMDBjMzBmZmIxOTguLmJiY2Nj
-YWRjYTg1ZSAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3BjaS9wY2ktYnJpZGdlLWVtdWwuYw0K
-PiA+ICsrKyBiL2RyaXZlcnMvcGNpL3BjaS1icmlkZ2UtZW11bC5jDQo+ID4gQEAgLTIyMSwxMSAr
-MjIxLDggQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBwY2lfYnJpZGdlX3JlZ19iZWhhdmlvciBwY2ll
-X2NhcF9yZWdzX2JlaGF2aW9yW10gPSB7DQo+ID4gIAkJICogYXMgcmVzZXJ2ZWQgYml0cy4NCj4g
-PiAgCQkgKi8NCj4gPiAgCQkucncgPSBHRU5NQVNLKDEyLCAwKSwNCj4gPiAtCQkudzFjID0gKFBD
-SV9FWFBfU0xUU1RBX0FCUCB8IFBDSV9FWFBfU0xUU1RBX1BGRCB8DQo+ID4gLQkJCVBDSV9FWFBf
-U0xUU1RBX01STFNDIHwgUENJX0VYUF9TTFRTVEFfUERDIHwNCj4gPiAtCQkJUENJX0VYUF9TTFRT
-VEFfQ0MgfCBQQ0lfRVhQX1NMVFNUQV9ETExTQykgPDwgMTYsDQo+ID4gLQkJLnJvID0gKFBDSV9F
-WFBfU0xUU1RBX01STFNTIHwgUENJX0VYUF9TTFRTVEFfUERTIHwNCj4gPiAtCQkgICAgICAgUENJ
-X0VYUF9TTFRTVEFfRUlTKSA8PCAxNiwNCj4gPiArCQkudzFjID0gKEJJVCg4KSB8IEdFTk1BU0so
-NCwgMCkpIDw8IDE2LA0KPiA+ICsJCS5ybyA9IEdFTk1BU0soNywgNSkgPDwgMTYsDQo+IA0KPiBG
-WUksIEkgZmluZCB0aGUgcHJldmlvdXMgdmVyc2lvbiBhIGxvdCBtb3JlIHJlYWRhYmxlLiAgT3Ig
-cmF0aGVyIEkgZmluZA0KPiBpdCByZWFkYWJsZSB3aGlsZSB0aGUgbmV3IG9uZSBsb29rcyBsaWtl
-IGludGVudGlvbmFsbHkgb2JzZnVjYXRlZA0KPiBnYXJiYWdlIHRvIG1lLg0KDQpXZWxsIEkgZ3Vl
-c3MgdGhhdCdzIGVudGlyZWx5IHN1YmplY3RpdmUuIEJ1dCBJIGRvIHRoaW5rIGlmIGFsbCB0aGUN
-CmV4aXN0aW5nIEJJVCBhbmQgR0VOTUFTSyB3ZXJlIGNvbnZlcnRlZCB0byBuYW1lZCByZWdpc3Rl
-cnMgaW5zdGVhZCwgaXQNCndvdWxkIGJlIGEgbG90IGVhc2llciB0byBvdmVybG9vayBtaXN0YWtl
-cy4NCg==
+This v7 patch adds support for the Microchip PCIe PolarFire PCIe
+controller when configured in host (Root Complex) mode.
+
+Updates since v6:
+* Refactored to use common eCAM driver
+* Updated to CONFIG_PCIE_MICROCHIP_HOST etc
+* Formatting improvements
+* Removed code for selection between bridge 0 and 1
+
+Updates since v5:
+* Fixed Kconfig typo noted by Randy Dunlap
+* Updated with comments from Bjorn Helgaas
+
+Updates since v4:
+* Fix compile issues.
+
+Updates since v3:
+* Update all references to Microsemi to Microchip
+* Separate MSI functionality from legacy PCIe interrupt handling functionality
+
+Updates since v2:
+* Split out DT bindings and Vendor ID updates into their own patch
+  from PCIe driver.
+* Updated Change Log
+
+Updates since v1:
+* Incorporate feedback from Bjorn Helgaas
+
+Daire McNamara (1):
+  PCI: microchip: Add host driver for Microchip PCIe controller
+
+ .../bindings/pci/microchip-pcie.txt           |  64 ++
+ drivers/pci/controller/Kconfig                |   9 +
+ drivers/pci/controller/Makefile               |   1 +
+ drivers/pci/controller/pcie-microchip-host.c  | 702 ++++++++++++++++++
+ 4 files changed, 776 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/microchip-pcie.txt
+ create mode 100644 drivers/pci/controller/pcie-microchip-host.c
+
+
+base-commit: c0cc271173b2e1c2d8d0ceaef14e4dfa79eefc0d
+--
+2.17.1
+
