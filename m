@@ -2,98 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 158101AD124
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Apr 2020 22:33:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B44B1AD33B
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Apr 2020 01:35:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729455AbgDPUcy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Apr 2020 16:32:54 -0400
-Received: from mga01.intel.com ([192.55.52.88]:25215 "EHLO mga01.intel.com"
+        id S1727855AbgDPXfF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Apr 2020 19:35:05 -0400
+Received: from mail.dsns.gov.ua ([194.0.148.99]:37970 "EHLO mail.dsns.gov.ua"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728696AbgDPUcy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 16 Apr 2020 16:32:54 -0400
-IronPort-SDR: n9OrY2WUz0OYd2M5VpoxGVJ5iElygHIsla2nK0HO09G+QyiLL85hDyFdmdq+Vlx9/p7oWecrw3
- mpvsPdz+x5gg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 13:32:53 -0700
-IronPort-SDR: bQIx91LfQ/1cGTGt3CJ21Sg11de1UFLBO5hn51HyVttmh5OEivccc2C2hrfY1U+dHUm/vrErK2
- 0GijO9uT9QOQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,392,1580803200"; 
-   d="scan'208";a="242776228"
-Received: from msaddawx-mobl1.amr.corp.intel.com (HELO [10.254.107.229]) ([10.254.107.229])
-  by orsmga007.jf.intel.com with ESMTP; 16 Apr 2020 13:32:52 -0700
-Subject: Re: [PATCH] PCI/DPC: Allow Non-ACPI Native ports to use DPC
-To:     Jon Derrick <jonathan.derrick@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Russell Currey <ruscur@russell.cc>,
-        Sam Bobroff <sbobroff@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Olof Johansson <olof@lixom.net>,
-        Keith Busch <keith.busch@intel.com>,
-        Frederick Lawler <fred@fredlawl.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1587067157-2291-1-git-send-email-jonathan.derrick@intel.com>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <4c2bf639-5510-fb17-2f02-73e7016d8f70@linux.intel.com>
-Date:   Thu, 16 Apr 2020 13:32:51 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1725770AbgDPXfD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 16 Apr 2020 19:35:03 -0400
+X-Greylist: delayed 9287 seconds by postgrey-1.27 at vger.kernel.org; Thu, 16 Apr 2020 19:34:56 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by mail.dsns.gov.ua (Postfix) with ESMTP id 6223A1EC85AF;
+        Thu, 16 Apr 2020 23:35:36 +0300 (EEST)
+Received: from mail.dsns.gov.ua ([127.0.0.1])
+        by localhost (mail.dsns.gov.ua [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id ekdCUR6pZ0Aa; Thu, 16 Apr 2020 23:35:36 +0300 (EEST)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.dsns.gov.ua (Postfix) with ESMTP id 67C3E1EC85F9;
+        Thu, 16 Apr 2020 23:35:26 +0300 (EEST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.dsns.gov.ua 67C3E1EC85F9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dsns.gov.ua;
+        s=1E60DAC0-2607-11E9-81E6-7A77C2B36653; t=1587069326;
+        bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
+        h=Date:From:Message-ID:MIME-Version;
+        b=BFrHb0sdI6ttGZUrYrU3NgniYtd1aDAhnXXb2vKIb2B9styAswbm0NbzZRAHiMp0y
+         hUE3veWMbUD+qTP/VmiRFig+sJh7tgrjRSipmI8jEPDH4mLyVFQtPdyPojLkpu/SlT
+         y/CjSPHdIqozfsh/zyWU9aeO41yKuuO77HTVyT/eVGDUtLYGTijz0IeETvwB1Yur4I
+         5RegLOWC96rliENvAjVU5IoM4JfcadYa95Q959RRtGyCSnevHOMfGycVhDjkxX/p7G
+         0gUYzq9GdO73hW8YI3AV2m5dSWB1tPfsxP4FJUwoBTp88jIZZeY7uAiDenSeAUtBdj
+         PKl/BScyij7GQ==
+X-Virus-Scanned: amavisd-new at dsns.gov.ua
+Received: from mail.dsns.gov.ua ([127.0.0.1])
+        by localhost (mail.dsns.gov.ua [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id U4DcK3mdlYyf; Thu, 16 Apr 2020 23:35:26 +0300 (EEST)
+Received: from mail.dsns.gov.ua (localhost [127.0.0.1])
+        by mail.dsns.gov.ua (Postfix) with ESMTP id 9BAF81EC8118;
+        Thu, 16 Apr 2020 23:35:15 +0300 (EEST)
+Date:   Thu, 16 Apr 2020 23:35:15 +0300 (EEST)
+From:   Saleem Netanyahu <duchenko@dsns.gov.ua>
+Reply-To: Saleem Netanyahu <saleemnetu@gmail.com>
+Message-ID: <1255292802.718114.1587069315574.JavaMail.zimbra@dsns.gov.ua>
+Subject: Hey, how are u, can we talk?
 MIME-Version: 1.0
-In-Reply-To: <1587067157-2291-1-git-send-email-jonathan.derrick@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [45.82.223.36, 172.69.54.54]
+X-Mailer: Zimbra 8.8.15_GA_3918 (zclient/8.8.15_GA_3918)
+Thread-Index: oV9MZN6+Sh4gFPdsGziQ2IngcJhATw==
+Thread-Topic: Hey, how are u, can we talk?
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
-
-On 4/16/20 12:59 PM, Jon Derrick wrote:
-> Some platforms have a mix of ports whose capabilities can be negotiated
-> by _OSC, and some ports which are not described by ACPI and instead
-> managed by Native drivers. The existing Firmware-First HEST model can
-> incorrectly tag these Native, Non-ACPI ports as Firmware-First capable
-> ports by advertising the HEST Global flag and specifying the type and
-> class (aer_hest_parse).
-> 
-> This ultimately can lead to bad situations if the BIOS or port firmware
-> leaves DPC preconfigured and the Linux DPC driver is unable to bind to
-> the port to handle DPC events.
-> 
-> This patch adds the check for Native DPC in the port's host bridge in
-> order to allow DPC services to bind to the port.
-> 
-> Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
-> ---
->   drivers/pci/pcie/dpc.c | 4 +++-
->   1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-> index 7621704..a1e355d 100644
-> --- a/drivers/pci/pcie/dpc.c
-> +++ b/drivers/pci/pcie/dpc.c
-> @@ -281,10 +281,12 @@ static int dpc_probe(struct pcie_device *dev)
->   {
->   	struct pci_dev *pdev = dev->port;
->   	struct device *device = &dev->device;
-> +	struct pci_host_bridge *host = pci_find_host_bridge(pdev->bus);
->   	int status;
->   	u16 ctl, cap;
->   
-> -	if (pcie_aer_get_firmware_first(pdev) && !pcie_ports_dpc_native)
-> +	if (pcie_aer_get_firmware_first(pdev) && !pcie_ports_dpc_native &&
-For other PCIe services, this check is added in 
-get_port_device_capability().
-Why not add it there for DPC as well ?
-> +	    !host->native_dpc)
->   		return -ENOTSUPP;
->   
->   	status = devm_request_threaded_irq(device, dev->irq, dpc_irq,
-> 
