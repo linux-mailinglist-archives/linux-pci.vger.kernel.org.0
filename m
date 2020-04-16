@@ -2,161 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 54AA51AC1B2
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Apr 2020 14:46:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F14A31AC639
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Apr 2020 16:37:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2636126AbgDPMoY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Apr 2020 08:44:24 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:33886 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2636077AbgDPMoR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Apr 2020 08:44:17 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 924AA80487;
-        Thu, 16 Apr 2020 14:44:00 +0200 (CEST)
-Date:   Thu, 16 Apr 2020 14:43:59 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Heiko Stuebner <heiko@sntech.de>, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-i2c@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: Clean-up schema indentation formatting
-Message-ID: <20200416124359.GB5785@ravnborg.org>
-References: <20200416005549.9683-1-robh@kernel.org>
+        id S1732480AbgDPOgE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Apr 2020 10:36:04 -0400
+Received: from mga01.intel.com ([192.55.52.88]:61312 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731215AbgDPOgC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:36:02 -0400
+IronPort-SDR: F6uq4FAKuH64T8xFxBkGy35jLi2MkDDLQows8yfvbuG38P7sefj3thhygYsfQKMl/8p3sdLt0p
+ FQHrr2NG4vTA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 07:36:01 -0700
+IronPort-SDR: SROi9I5Y4DMuAAwFHH+FCbgLmbU9xuG4npbsAjItBf2ngT4l9phTfNGbTKf6WKvkRkFUzG/d6R
+ E7eD6MtKVPvg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,391,1580803200"; 
+   d="scan'208";a="277128372"
+Received: from orsmsx105.amr.corp.intel.com ([10.22.225.132])
+  by orsmga008.jf.intel.com with ESMTP; 16 Apr 2020 07:36:00 -0700
+Received: from orsmsx159.amr.corp.intel.com (10.22.240.24) by
+ ORSMSX105.amr.corp.intel.com (10.22.225.132) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 16 Apr 2020 07:36:00 -0700
+Received: from orsmsx101.amr.corp.intel.com ([169.254.8.204]) by
+ ORSMSX159.amr.corp.intel.com ([169.254.11.47]) with mapi id 14.03.0439.000;
+ Thu, 16 Apr 2020 07:36:00 -0700
+From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
+To:     "hch@infradead.org" <hch@infradead.org>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>,
+        "rmk+kernel@armlinux.org.uk" <rmk+kernel@armlinux.org.uk>
+Subject: Re: [PATCH 3/5] PCI: pci-bridge-emul: Convert to GENMASK and BIT
+Thread-Topic: [PATCH 3/5] PCI: pci-bridge-emul: Convert to GENMASK and BIT
+Thread-Index: AQHWEp2a4ZwOLz33HU2mmQddOoKGFKh70c4AgAB2/YA=
+Date:   Thu, 16 Apr 2020 14:35:59 +0000
+Message-ID: <47e4b64208ec1f8400a420db434cbbd8322cbbd8.camel@intel.com>
+References: <20200414203005.5166-1-jonathan.derrick@intel.com>
+         <20200414203005.5166-4-jonathan.derrick@intel.com>
+         <20200416073004.GB32000@infradead.org>
+In-Reply-To: <20200416073004.GB32000@infradead.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.255.0.232]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <8A50CC0FF1D3E24B8C7D26B3F13617F2@intel.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200416005549.9683-1-robh@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
-        a=xJWM5Xtqm7-vkBAKM1YA:9 a=bxeknKLoBf6BnO7k:21 a=StjP_oZuoJ7ca4eH:21
-        a=CjuIK1q_8ugA:10
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Rob.
-
-On Wed, Apr 15, 2020 at 07:55:48PM -0500, Rob Herring wrote:
-> Fix various inconsistencies in schema indentation. Most of these are
-> list indentation which should be 2 spaces more than the start of the
-> enclosing keyword. This doesn't matter functionally, but affects running
-> scripts which do transforms on the schema files.
-
-Are there any plans to improve the tooling so we get warnigns for this?
-Otherwise I am afraid we will see a lot of patches that gets this wrong.
-
-As a follow-up patch it would be good if example-schema.yaml
-could gain some comments about the correct indentions.
-
-Some comments in the following.
-
-> diff --git a/Documentation/devicetree/bindings/arm/altera.yaml b/Documentation/devicetree/bindings/arm/altera.yaml
-> index 49e0362ddc11..b388c5aa7984 100644
-> --- a/Documentation/devicetree/bindings/arm/altera.yaml
-> +++ b/Documentation/devicetree/bindings/arm/altera.yaml
-> @@ -13,8 +13,8 @@ properties:
->    compatible:
->      items:
->        - enum:
-> -        - altr,socfpga-cyclone5
-> -        - altr,socfpga-arria5
-> -        - altr,socfpga-arria10
-> +          - altr,socfpga-cyclone5
-> +          - altr,socfpga-arria5
-> +          - altr,socfpga-arria10
->        - const: altr,socfpga
-
-So here "- enum" do not need the extra indent.
-Is it because this is not a list?
-
->  ...
-> diff --git a/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.yaml b/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.yaml
-> index 66213bd95e6e..6cc74523ebfd 100644
-> --- a/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.yaml
-> +++ b/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.yaml
-> @@ -25,7 +25,7 @@ select:
-> 
->  properties:
->    compatible:
-> -   items:
-> +    items:
->        - const: amlogic,meson-gx-ao-secure
->        - const: syscon
-
-This is something I had expected the tooling to notice.
-I had expected the two "- const" to be indented with 4 spaces, not two.
-So there is something I do not understand.
-
-
-> diff --git a/Documentation/devicetree/bindings/arm/nxp/lpc32xx.yaml b/Documentation/devicetree/bindings/arm/nxp/lpc32xx.yaml
-> index 07f39d3eee7e..f7f024910e71 100644
-> --- a/Documentation/devicetree/bindings/arm/nxp/lpc32xx.yaml
-> +++ b/Documentation/devicetree/bindings/arm/nxp/lpc32xx.yaml
-> @@ -17,9 +17,8 @@ properties:
->            - nxp,lpc3230
->            - nxp,lpc3240
->        - items:
-> -        - enum:
-> -            - ea,ea3250
-> -            - phytec,phy3250
-> -        - const: nxp,lpc3250
-> -
-> +          - enum:
-> +              - ea,ea3250
-> +              - phytec,phy3250
-> +          - const: nxp,lpc3250
->  ...
-
-And here "- enum" receive extra indent.
-
-I trust you know what you are doing - but I do not get it.
-
-Some pointers or examples for the correct indention would be great.
-I cannot review this patch as long as I do not know the rules.
-
-My request to update example-schema.yaml was one way to teach me.
-(Some people will say that is difficult/impossible to teach me,
-but thats another story:-) ).
-
-	Sam
+T24gVGh1LCAyMDIwLTA0LTE2IGF0IDAwOjMwIC0wNzAwLCBDaHJpc3RvcGggSGVsbHdpZyB3cm90
+ZToNCj4gT24gVHVlLCBBcHIgMTQsIDIwMjAgYXQgMDQ6MzA6MDNQTSAtMDQwMCwgSm9uIERlcnJp
+Y2sgd3JvdGU6DQo+ID4gSW4gb3JkZXIgdG8gbWFrZSBwY2ktYnJpZGdlLWVtdWwgZWFzaWVyIHRv
+IGtlZXAgdXAtdG8tZGF0ZSB3aXRoIG5ldyBQQ0llDQo+ID4gZmVhdHVyZXMsIGNvbnZlcnQgYWxs
+IG5hbWVkIHJlZ2lzdGVyIGJpdHMgdG8gR0VOTUFTSyBhbmQgQklUIHBhaXJzLiBUaGlzDQo+ID4g
+cGF0Y2ggZG9lc24ndCBhbHRlciBhbnkgb2YgdGhlIFBDSSBjb25maWd1cmF0aW9uIHNwYWNlIGFz
+IHRoZXNlIGJpdHMgYXJlDQo+ID4gZnVsbHkgZGVmaW5lZC4NCj4gPiANCj4gPiBTaWduZWQtb2Zm
+LWJ5OiBKb24gRGVycmljayA8am9uYXRoYW4uZGVycmlja0BpbnRlbC5jb20+DQo+ID4gLS0tDQo+
+ID4gIGRyaXZlcnMvcGNpL3BjaS1icmlkZ2UtZW11bC5jIHwgMTcgKysrKysrLS0tLS0tLS0tLS0N
+Cj4gPiAgMSBmaWxlIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKSwgMTEgZGVsZXRpb25zKC0pDQo+
+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL3BjaS1icmlkZ2UtZW11bC5jIGIvZHJp
+dmVycy9wY2kvcGNpLWJyaWRnZS1lbXVsLmMNCj4gPiBpbmRleCBjMDBjMzBmZmIxOTguLmJiY2Nj
+YWRjYTg1ZSAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3BjaS9wY2ktYnJpZGdlLWVtdWwuYw0K
+PiA+ICsrKyBiL2RyaXZlcnMvcGNpL3BjaS1icmlkZ2UtZW11bC5jDQo+ID4gQEAgLTIyMSwxMSAr
+MjIxLDggQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBwY2lfYnJpZGdlX3JlZ19iZWhhdmlvciBwY2ll
+X2NhcF9yZWdzX2JlaGF2aW9yW10gPSB7DQo+ID4gIAkJICogYXMgcmVzZXJ2ZWQgYml0cy4NCj4g
+PiAgCQkgKi8NCj4gPiAgCQkucncgPSBHRU5NQVNLKDEyLCAwKSwNCj4gPiAtCQkudzFjID0gKFBD
+SV9FWFBfU0xUU1RBX0FCUCB8IFBDSV9FWFBfU0xUU1RBX1BGRCB8DQo+ID4gLQkJCVBDSV9FWFBf
+U0xUU1RBX01STFNDIHwgUENJX0VYUF9TTFRTVEFfUERDIHwNCj4gPiAtCQkJUENJX0VYUF9TTFRT
+VEFfQ0MgfCBQQ0lfRVhQX1NMVFNUQV9ETExTQykgPDwgMTYsDQo+ID4gLQkJLnJvID0gKFBDSV9F
+WFBfU0xUU1RBX01STFNTIHwgUENJX0VYUF9TTFRTVEFfUERTIHwNCj4gPiAtCQkgICAgICAgUENJ
+X0VYUF9TTFRTVEFfRUlTKSA8PCAxNiwNCj4gPiArCQkudzFjID0gKEJJVCg4KSB8IEdFTk1BU0so
+NCwgMCkpIDw8IDE2LA0KPiA+ICsJCS5ybyA9IEdFTk1BU0soNywgNSkgPDwgMTYsDQo+IA0KPiBG
+WUksIEkgZmluZCB0aGUgcHJldmlvdXMgdmVyc2lvbiBhIGxvdCBtb3JlIHJlYWRhYmxlLiAgT3Ig
+cmF0aGVyIEkgZmluZA0KPiBpdCByZWFkYWJsZSB3aGlsZSB0aGUgbmV3IG9uZSBsb29rcyBsaWtl
+IGludGVudGlvbmFsbHkgb2JzZnVjYXRlZA0KPiBnYXJiYWdlIHRvIG1lLg0KDQpXZWxsIEkgZ3Vl
+c3MgdGhhdCdzIGVudGlyZWx5IHN1YmplY3RpdmUuIEJ1dCBJIGRvIHRoaW5rIGlmIGFsbCB0aGUN
+CmV4aXN0aW5nIEJJVCBhbmQgR0VOTUFTSyB3ZXJlIGNvbnZlcnRlZCB0byBuYW1lZCByZWdpc3Rl
+cnMgaW5zdGVhZCwgaXQNCndvdWxkIGJlIGEgbG90IGVhc2llciB0byBvdmVybG9vayBtaXN0YWtl
+cy4NCg==
