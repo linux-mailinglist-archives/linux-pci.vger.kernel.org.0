@@ -2,93 +2,91 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A265F1ADDE6
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Apr 2020 15:02:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E1F061ADEF1
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Apr 2020 16:04:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730590AbgDQM7I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Apr 2020 08:59:08 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:50244 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730197AbgDQM7B (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Apr 2020 08:59:01 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03HCwmpq058908;
-        Fri, 17 Apr 2020 07:58:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1587128328;
-        bh=XEnIZQkUv4Kd7Zo0Z+5AP4ETlrgXrS8JsXBaFTrE4rI=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=O9JXgEAYXl7n1Z0oGy4K/O7egPVj9g7ra5tM3t5ZyoCVsOl/v12Cs2jlK1ozKxFmS
-         hx+DCWQzk4qQV6TNnROJFWxhUwmIAXWyTaFII1bgAfZ3Cd/qTvAj82sJsmfSoKUwET
-         Sh7ToDU/P91GDksdfg9k9lW1cHNWQd9bESn4kL/8=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03HCwmbY062200
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 17 Apr 2020 07:58:48 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 17
- Apr 2020 07:58:48 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 17 Apr 2020 07:58:48 -0500
-Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03HCvsDJ031089;
-        Fri, 17 Apr 2020 07:58:45 -0500
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Tom Joseph <tjoseph@cadence.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>
-CC:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 14/14] MAINTAINERS: Add Kishon Vijay Abraham I for TI J721E SoC PCIe
-Date:   Fri, 17 Apr 2020 18:27:53 +0530
-Message-ID: <20200417125753.13021-15-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200417125753.13021-1-kishon@ti.com>
-References: <20200417125753.13021-1-kishon@ti.com>
+        id S1730662AbgDQOEQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Apr 2020 10:04:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59506 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730563AbgDQOEQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Apr 2020 10:04:16 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C5F2C061A0C
+        for <linux-pci@vger.kernel.org>; Fri, 17 Apr 2020 07:04:16 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id b18so2237478ilf.2
+        for <linux-pci@vger.kernel.org>; Fri, 17 Apr 2020 07:04:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=s4PtYCRRGMjCHyUoR/ZC/d46oKq8RduBjto5rW6+7ao=;
+        b=aMOSDDGw4jRUBWTYPDPLybYUIdgXhyMsB6U3tCOoQkdRcGW0bZdc3PfzG26H4ufX8/
+         biSquO+yL5Jk75LKGTNdz9HFnkRvKB2tIX6ZL5srXR3cJaOYeDblGFRdUSlA9QU5WS8e
+         6JR85+BP1eyV9WWIvU7chq8E4fIJZSb9vgVlfRIikZw3UkkH1ck0OxMOU+gpybFQeJ4E
+         FgOzw21jvPWSRrK6jiC1/5qdXrSqRPKN15sXCbHOirSQAdAAvnIdsrG65An0Soslfq/b
+         kNOQLkMdh+QCZwZSG5RHdPHZkXG+/YYFShRMwbWCtbtXCXcWdBQiHAXSJx4hx/MV9G80
+         LWYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=s4PtYCRRGMjCHyUoR/ZC/d46oKq8RduBjto5rW6+7ao=;
+        b=L4lEqA/55JWF1ikYVGe+by9rz3TgFYqSq607jO4y+SuS9UefVsPNB2yJMOYy3Q+EwF
+         SUI+55T2rloY16h4dMbX6wreOaYT5rKPRQMWr9RY+Fs5ddvm67e1UWkL7DBRp+rq517E
+         xE2ccba+uENh21S4V5f2q1Gq0j9s+GbFHSxlFLRjfhkI+PTcQ40cy8J4O9jmpDxW5Tac
+         RmsUgBP04w4TSU6uUVpRwUIkqVn/pWE3SInhJc8GdwtmIN5VaAY/iMRm0j5uMb3BwxA/
+         QNePWx6S4QIrrKLqd858pvcq2jw9EKToLRIDKgUJqo/VG4nZJsE+pEpNW2bcuEteBKxw
+         1/6Q==
+X-Gm-Message-State: AGi0PuaT27JK+/kLh+E6jkeGSXP5znAc8ffq14BmM4btNkuj6p0JWAbf
+        mqO1Wbp8NLkrBPaIwMElfV09ghdoWuVuJ9WxyTk=
+X-Google-Smtp-Source: APiQypKMep5b3CfGNz96ChZdXyrA/PH4HyqxxVUUz38S5QLVqoUXaolJnn9BjpGM84wOsLlndV4kBwqgqzRR8EuWaIo=
+X-Received: by 2002:a05:6e02:dc3:: with SMTP id l3mr2973276ilj.149.1587132255465;
+ Fri, 17 Apr 2020 07:04:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200416165725.206741-1-maxg@mellanox.com> <20200416165725.206741-2-maxg@mellanox.com>
+ <20200417070238.GC18880@lst.de> <7255b11a-4ea0-3bac-2cc3-7fff0b56c9ac@mellanox.com>
+In-Reply-To: <7255b11a-4ea0-3bac-2cc3-7fff0b56c9ac@mellanox.com>
+From:   "Oliver O'Halloran" <oohall@gmail.com>
+Date:   Sat, 18 Apr 2020 00:04:04 +1000
+Message-ID: <CAOSf1CHdepTVZUE0=H0P3vLTY820wyiLGuKM_qOjv9kguS3Zww@mail.gmail.com>
+Subject: Re: [PATCH 2/2] powerpc/powernv: Enable and setup PCI P2P
+To:     Max Gurtovoy <maxg@mellanox.com>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-pci@vger.kernel.org,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Carol L Soto <clsoto@us.ibm.com>, idanw@mellanox.com,
+        aneela@mellanox.com, shlomin@mellanox.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add Kishon Vijay Abraham I as MAINTAINER for TI J721E SoC PCIe.
+On Fri, Apr 17, 2020 at 9:17 PM Max Gurtovoy <maxg@mellanox.com> wrote:
+>
+> > The enable and disable path shares almost no code, why not split it into
+> > two functions?
+>
+> how about also changing the defines OPAL_PCI_P2P_* to an enum ?
+>
+> /* PCI p2p operation descriptors */
+> enum opal_pci_p2p {
+>
+>          OPAL_PCI_P2P_DISABLE    = 0,
+>
+>          OPAL_PCI_P2P_ENABLE     = (1 << 0),
+>          OPAL_PCI_P2P_LOAD       = (1 << 1),
+>          OPAL_PCI_P2P_STORE      = (1 << 2),
+> };
+>
+> Fred ?
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- MAINTAINERS | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+I'd rather you didn't. We try to keep the definitions in opal-api.h
+the same as the skiboot's opal-api.h since the skiboot version is
+canonical.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 6851ef7cf1bd..ffcd023d1cba 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12968,13 +12968,15 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/pci/designware-pcie.txt
- F:	drivers/pci/controller/dwc/*designware*
- 
--PCI DRIVER FOR TI DRA7XX
-+PCI DRIVER FOR TI DRA7XX/J721E
- M:	Kishon Vijay Abraham I <kishon@ti.com>
- L:	linux-omap@vger.kernel.org
- L:	linux-pci@vger.kernel.org
-+L:	linux-arm-kernel@lists.infradead.org
- S:	Supported
- F:	Documentation/devicetree/bindings/pci/ti-pci.txt
- F:	drivers/pci/controller/dwc/pci-dra7xx.c
-+F:	drivers/pci/controller/cadence/pci-j721e.c
- 
- PCI DRIVER FOR TI KEYSTONE
- M:	Murali Karicheri <m-karicheri2@ti.com>
--- 
-2.17.1
+Also, generally patches to anything PowerNV related go through the
+powerpc tree rather than the pci tree even if they're PCI related. Can
+you make sure you have linuxppc-dev CCed when you post v2.
 
+Oliver
