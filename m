@@ -2,107 +2,71 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D6D441ADC6A
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Apr 2020 13:43:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B6F8C1ADC7D
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Apr 2020 13:54:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730498AbgDQLns (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Apr 2020 07:43:48 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:41248 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730267AbgDQLnr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Apr 2020 07:43:47 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03HBhc3J117988;
-        Fri, 17 Apr 2020 06:43:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1587123818;
-        bh=uIHdkFGjC9VWJ1dYkQdiB11X9Q9MgdISnGvSAMPmGOk=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=UQPIvFrIGRIgPv38LmUwM8V77wmp2WwDQbHN9JZuruf1RVfbVejgbm7xxQ3fzFABs
-         JoFIc7otCdR+Ko/AQkxJuulz/ZSoikmToRAh5NTZUaGK/di2EFSXq+7zxIWBeknNiB
-         dKxHhk+FrxtWvQD+aSPT4OgSlMxHUefwodhOLi2s=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03HBhcVh004871
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 17 Apr 2020 06:43:38 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 17
- Apr 2020 06:43:38 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 17 Apr 2020 06:43:38 -0500
-Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03HBhN9r088610;
-        Fri, 17 Apr 2020 06:43:35 -0500
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Tom Joseph <tjoseph@cadence.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>
-CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 4/4] PCI: cadence: Fix to read 32-bit Vendor ID/Device ID property from DT
-Date:   Fri, 17 Apr 2020 17:13:22 +0530
-Message-ID: <20200417114322.31111-5-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200417114322.31111-1-kishon@ti.com>
-References: <20200417114322.31111-1-kishon@ti.com>
+        id S1730475AbgDQLuh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Apr 2020 07:50:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51838 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730440AbgDQLuh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 17 Apr 2020 07:50:37 -0400
+Received: from localhost (unknown [223.235.195.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A8DD20780;
+        Fri, 17 Apr 2020 11:50:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587124237;
+        bh=5UjYdrgjeQ5u3UswjbSXqSXZJqYPM0oJyCxvVK55xTM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IrvhpsIh0160xPKGxTyu0dbOsDSt22PdPYnjbMVfrDP50BskHk4nULTsmMBXVXuIS
+         CwBG76Bh6NpKaoMlzzM2y7uk+J4ZQryUGRg2t/ydNomFiUiyEBkyrST89YmSV6Qw+q
+         QsJdmFunpU5WJInoNEANvFVJe96UbiTz2nMS6sBs=
+Date:   Fri, 17 Apr 2020 17:20:30 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Alan Mikhak <alan.mikhak@sifive.com>
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, gustavo.pimentel@synopsys.com,
+        dan.j.williams@intel.com, kishon@ti.com, paul.walmsley@sifive.com
+Subject: Re: [PATCH v2] dmaengine: dw-edma: Decouple dw-edma-core.c from
+ struct pci_dev
+Message-ID: <20200417115030.GM72691@vkoul-mobl>
+References: <1586971629-30196-1-git-send-email-alan.mikhak@sifive.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1586971629-30196-1-git-send-email-alan.mikhak@sifive.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The PCI Bus Binding specification (IEEE Std 1275-1994 Revision 2.1 [1])
-defines both Vendor ID and Device ID to be 32-bits. Fix
-pcie-cadence-host.c driver to read 32-bit Vendor ID and Device ID
-properties from device tree.
+On 15-04-20, 10:27, Alan Mikhak wrote:
+> From: Alan Mikhak <alan.mikhak@sifive.com>
+> 
+> Decouple dw-edma-core.c from struct pci_dev as a step toward integration
+> of dw-edma with pci-epf-test so the latter can initiate dma operations
+> locally from the endpoint side. A barrier to such integration is the
+> dependency of dw_edma_probe() and other functions in dw-edma-core.c on
+> struct pci_dev.
+> 
+> The Synopsys DesignWare dw-edma driver was designed to run on host side
+> of PCIe link to initiate DMA operations remotely using eDMA channels of
+> PCIe controller on the endpoint side. This can be inferred from seeing
+> that dw-edma uses struct pci_dev and accesses hardware registers of dma
+> channels across the bus using BAR0 and BAR2.
+> 
+> The ops field of struct dw_edma in dw-edma-core.h is currenty undefined:
+> 
+> const struct dw_edma_core_ops   *ops;
+> 
+> However, the kernel builds without failure even when dw-edma driver is
+> enabled. Instead of removing the currently undefined and usued ops field,
+> define struct dw_edma_core_ops and use the ops field to decouple
+> dw-edma-core.c from struct pci_dev.
 
-[1] -> https://www.devicetree.org/open-firmware/bindings/pci/pci2_1.pdf
+Applied, thanks
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- drivers/pci/controller/cadence/pcie-cadence-host.c | 4 ++--
- drivers/pci/controller/cadence/pcie-cadence.h      | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-index 8f72967f298f..31e67c9c88cf 100644
---- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-+++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-@@ -229,10 +229,10 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
- 	}
- 
- 	rc->vendor_id = 0xffff;
--	of_property_read_u16(np, "vendor-id", &rc->vendor_id);
-+	of_property_read_u32(np, "vendor-id", &rc->vendor_id);
- 
- 	rc->device_id = 0xffff;
--	of_property_read_u16(np, "device-id", &rc->device_id);
-+	of_property_read_u32(np, "device-id", &rc->device_id);
- 
- 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "reg");
- 	pcie->reg_base = devm_ioremap_resource(dev, res);
-diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-index 6bd89a21bb1c..df14ad002fe9 100644
---- a/drivers/pci/controller/cadence/pcie-cadence.h
-+++ b/drivers/pci/controller/cadence/pcie-cadence.h
-@@ -262,8 +262,8 @@ struct cdns_pcie_rc {
- 	struct resource		*bus_range;
- 	void __iomem		*cfg_base;
- 	u32			no_bar_nbits;
--	u16			vendor_id;
--	u16			device_id;
-+	u32			vendor_id;
-+	u32			device_id;
- };
- 
- /**
 -- 
-2.17.1
-
+~Vinod
