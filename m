@@ -2,107 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 151851AEC11
-	for <lists+linux-pci@lfdr.de>; Sat, 18 Apr 2020 13:21:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED3C11AEC57
+	for <lists+linux-pci@lfdr.de>; Sat, 18 Apr 2020 14:13:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725879AbgDRLV3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 18 Apr 2020 07:21:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49954 "EHLO mail.kernel.org"
+        id S1725873AbgDRMNW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 18 Apr 2020 08:13:22 -0400
+Received: from 8bytes.org ([81.169.241.247]:36294 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725857AbgDRLV2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 18 Apr 2020 07:21:28 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 911CA21D79;
-        Sat, 18 Apr 2020 11:21:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587208887;
-        bh=77wH0JlbUKInqkEkZYANjIIPct4Xemzg7GiHD8oFtqY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=NLB/ZicyUDIxey2fxqxQOXODT77sVJZQcqZKsU8IZeZMavmwzJxuF6Q9Yy9RgjJ2W
-         ArPRj/TRmUCFc3SkqTl999PoABRpxWrTNHqIug/WXL/ELyPnO8AW7C/RZIAQy2IQyk
-         ClGR2JVfFExTmtT9iTR5TJRakT0dLuyPppHumC+U=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jPlXJ-004Pmh-IF; Sat, 18 Apr 2020 12:21:25 +0100
-Date:   Sat, 18 Apr 2020 12:21:23 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Alan Mikhak <alan.mikhak@sifive.com>
-Cc:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-pci@vger.kernel.org, tglx@linutronix.de,
-        gustavo.pimentel@synopsys.com, kishon@ti.com,
-        paul.walmsley@sifive.com
-Subject: Re: [PATCH] genirq/msi: Check null pointer before copying struct
- msi_msg
-Message-ID: <20200418122123.10157ddd@why>
-In-Reply-To: <1587149322-28104-1-git-send-email-alan.mikhak@sifive.com>
-References: <1587149322-28104-1-git-send-email-alan.mikhak@sifive.com>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1725862AbgDRMNW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 18 Apr 2020 08:13:22 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 171EA342; Sat, 18 Apr 2020 14:13:21 +0200 (CEST)
+Date:   Sat, 18 Apr 2020 14:13:19 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     Daniel Drake <drake@endlessm.com>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        iommu@lists.linux-foundation.org,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux Upstreaming Team <linux@endlessm.com>
+Subject: Re: [PATCH 1/1] iommu/vt-d: use DMA domain for real DMA devices and
+ subdevices
+Message-ID: <20200418121319.GB6113@8bytes.org>
+References: <20200409191736.6233-1-jonathan.derrick@intel.com>
+ <20200409191736.6233-2-jonathan.derrick@intel.com>
+ <09c98569-ed22-8886-3372-f5752334f8af@linux.intel.com>
+ <CAD8Lp45dJ3-t6qqctiP1a=c44PEWZ-L04yv0r0=1Nrvwfouz1w@mail.gmail.com>
+ <32cc4809-7029-bc5e-5a74-abbe43596e8d@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: alan.mikhak@sifive.com, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, linux-pci@vger.kernel.org, tglx@linutronix.de, gustavo.pimentel@synopsys.com, kishon@ti.com, paul.walmsley@sifive.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <32cc4809-7029-bc5e-5a74-abbe43596e8d@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 17 Apr 2020 11:48:42 -0700
-Alan Mikhak <alan.mikhak@sifive.com> wrote:
+On Mon, Apr 13, 2020 at 10:48:55AM +0800, Lu Baolu wrote:
+> I have sync'ed with Joerg. This patch set will be replaced with Joerg's
+> proposal due to a race concern between domain switching and driver
+> binding. I will rebase all vt-d patches in this set on top of Joerg's
+> change.
 
-Hi Alan,
+Okay, but is this patch relevant for v5.7? The other changes we are
+working on will not land before v5.8.
 
-> From: Alan Mikhak <alan.mikhak@sifive.com>
-> 
-> Modify __get_cached_msi_msg() to check both pointers for null before
-> copying the contents from the struct msi_msg pointer to the pointer
-> provided by caller.
-> 
-> Without this sanity check, __get_cached_msi_msg() crashes when invoked by
-> dw_edma_irq_request() in drivers/dma/dw-edma/dw-edma-core.c running on a
-> Linux-based PCIe endpoint device. MSI interrupt are not received by PCIe
-> endpoint devices. As a result, irq_get_msi_desc() returns null since there
-> are no cached struct msi_msg entry on the endpoint side.
-> 
-> Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
-> ---
->  kernel/irq/msi.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
-> index eb95f6106a1e..f39d42ef0d50 100644
-> --- a/kernel/irq/msi.c
-> +++ b/kernel/irq/msi.c
-> @@ -58,7 +58,8 @@ void free_msi_entry(struct msi_desc *entry)
->  
->  void __get_cached_msi_msg(struct msi_desc *entry, struct msi_msg *msg)
->  {
-> -	*msg = entry->msg;
-> +	if (entry && msg)
-> +		*msg = entry->msg;
->  }
->  
->  void get_cached_msi_msg(unsigned int irq, struct msi_msg *msg)
+Regards,
 
-I'm not convinced by this. If you know that, by construction, these
-interrupts are not associated with an underlying MSI, why calling
-get_cached_msi_msg() the first place?
-
-There seem to be some assumptions in the DW EDMA driver that the
-signaling would be MSI based, so maybe someone from Synopsys (Gustavo?)
-could clarify that. From my own perspective, running on an endpoint
-device means that it is *generating* interrupts, and I'm not sure what
-the MSIs represent here.
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+	Joerg
