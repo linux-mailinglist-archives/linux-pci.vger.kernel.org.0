@@ -2,191 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C0C841AEE82
-	for <lists+linux-pci@lfdr.de>; Sat, 18 Apr 2020 16:17:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A4701AEE2A
+	for <lists+linux-pci@lfdr.de>; Sat, 18 Apr 2020 16:12:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbgDRONA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 18 Apr 2020 10:13:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37562 "EHLO mail.kernel.org"
+        id S1727963AbgDROLH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 18 Apr 2020 10:11:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726701AbgDROJw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:09:52 -0400
+        id S1727921AbgDROKj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:10:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 090F722264;
-        Sat, 18 Apr 2020 14:09:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 692FF22253;
+        Sat, 18 Apr 2020 14:10:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587218991;
-        bh=+J1rnpev1mWG2DjbDUlUXV/sV3CYW4t3iOt9gosTfsA=;
+        s=default; t=1587219039;
+        bh=WYwADE8W9KPmvHMc3c5wIpArVFGP+Hhg+m2Vbn8klTk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wv2GtNodjhZm3Fwe99Saj4vESyde3uAKIE7+DxAd70KViU97O6AD/3IW21ZhzPfXo
-         ns4Hltrnv+6aPg19gpjKMlILg3uI9KLWS3ZtjQ2jozcMIHNOf0q1tpeOeEyR+VL+/o
-         zpQM7vN8C/tuUIq3y1qZLSNs8RbCAki/yQzGss0k=
+        b=gs6g1+4VOiJQRNaBquvxYsDP9FI61vS+YZSuRnuCvgKuySinke+AGB3QDzTd6dr1K
+         q8UBPJ++zPffCeG1kZnqMRoyytth5h0h04cnbRLOPpBeXBtxV2hRNkE9QM1/wk6Y0I
+         FnCgLAXervzziEboou/TCOl3qhaSCvXkwpc5twZU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Karol Herbst <kherbst@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lyude Paul <lyude@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mika Westerberg <mika.westerberg@intel.com>,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.5 32/75] drm/nouveau: workaround runpm fail by disabling PCI power management on certain intel bridges
-Date:   Sat, 18 Apr 2020 10:08:27 -0400
-Message-Id: <20200418140910.8280-32-sashal@kernel.org>
+Cc:     Frederic Barrat <fbarrat@linux.ibm.com>,
+        Alastair D'Silva <alastair@d-silva.org>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 72/75] pci/hotplug/pnv-php: Remove erroneous warning
+Date:   Sat, 18 Apr 2020 10:09:07 -0400
+Message-Id: <20200418140910.8280-72-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418140910.8280-1-sashal@kernel.org>
 References: <20200418140910.8280-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Karol Herbst <kherbst@redhat.com>
+From: Frederic Barrat <fbarrat@linux.ibm.com>
 
-[ Upstream commit 434fdb51513bf3057ac144d152e6f2f2b509e857 ]
+[ Upstream commit 658ab186dd22060408d94f5c5a6d02d809baba44 ]
 
-Fixes the infamous 'runtime PM' bug many users are facing on Laptops with
-Nvidia Pascal GPUs by skipping said PCI power state changes on the GPU.
+On powernv, when removing a device through hotplug, the following
+warning is logged:
 
-Depending on the used kernel there might be messages like those in demsg:
+     Invalid refcount <.> on <...>
 
-"nouveau 0000:01:00.0: Refused to change power state, currently in D3"
-"nouveau 0000:01:00.0: can't change power state from D3cold to D0 (config
-space inaccessible)"
-followed by backtraces of kernel crashes or timeouts within nouveau.
+It may be incorrect, the refcount may be set to a higher value than 1
+and be valid. of_detach_node() can drop more than one reference. As it
+doesn't seem trivial to assert the correct value, let's remove the
+warning.
 
-It's still unkown why this issue exists, but this is a reliable workaround
-and solves a very annoying issue for user having to choose between a
-crashing kernel or higher power consumption of their Laptops.
-
-Signed-off-by: Karol Herbst <kherbst@redhat.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Lyude Paul <lyude@redhat.com>
-Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-Cc: Mika Westerberg <mika.westerberg@intel.com>
-Cc: linux-pci@vger.kernel.org
-Cc: linux-pm@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org
-Cc: nouveau@lists.freedesktop.org
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=205623
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Reviewed-by: Alastair D'Silva <alastair@d-silva.org>
+Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
+Signed-off-by: Frederic Barrat <fbarrat@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191121134918.7155-7-fbarrat@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nouveau_drm.c | 63 +++++++++++++++++++++++++++
- drivers/gpu/drm/nouveau/nouveau_drv.h |  2 +
- 2 files changed, 65 insertions(+)
+ drivers/pci/hotplug/pnv_php.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouveau/nouveau_drm.c
-index 2cd83849600f3..b1beed40e746a 100644
---- a/drivers/gpu/drm/nouveau/nouveau_drm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
-@@ -618,6 +618,64 @@ nouveau_drm_device_fini(struct drm_device *dev)
- 	kfree(drm);
- }
- 
-+/*
-+ * On some Intel PCIe bridge controllers doing a
-+ * D0 -> D3hot -> D3cold -> D0 sequence causes Nvidia GPUs to not reappear.
-+ * Skipping the intermediate D3hot step seems to make it work again. This is
-+ * probably caused by not meeting the expectation the involved AML code has
-+ * when the GPU is put into D3hot state before invoking it.
-+ *
-+ * This leads to various manifestations of this issue:
-+ *  - AML code execution to power on the GPU hits an infinite loop (as the
-+ *    code waits on device memory to change).
-+ *  - kernel crashes, as all PCI reads return -1, which most code isn't able
-+ *    to handle well enough.
-+ *
-+ * In all cases dmesg will contain at least one line like this:
-+ * 'nouveau 0000:01:00.0: Refused to change power state, currently in D3'
-+ * followed by a lot of nouveau timeouts.
-+ *
-+ * In the \_SB.PCI0.PEG0.PG00._OFF code deeper down writes bit 0x80 to the not
-+ * documented PCI config space register 0x248 of the Intel PCIe bridge
-+ * controller (0x1901) in order to change the state of the PCIe link between
-+ * the PCIe port and the GPU. There are alternative code paths using other
-+ * registers, which seem to work fine (executed pre Windows 8):
-+ *  - 0xbc bit 0x20 (publicly available documentation claims 'reserved')
-+ *  - 0xb0 bit 0x10 (link disable)
-+ * Changing the conditions inside the firmware by poking into the relevant
-+ * addresses does resolve the issue, but it seemed to be ACPI private memory
-+ * and not any device accessible memory at all, so there is no portable way of
-+ * changing the conditions.
-+ * On a XPS 9560 that means bits [0,3] on \CPEX need to be cleared.
-+ *
-+ * The only systems where this behavior can be seen are hybrid graphics laptops
-+ * with a secondary Nvidia Maxwell, Pascal or Turing GPU. It's unclear whether
-+ * this issue only occurs in combination with listed Intel PCIe bridge
-+ * controllers and the mentioned GPUs or other devices as well.
-+ *
-+ * documentation on the PCIe bridge controller can be found in the
-+ * "7th Generation Intel® Processor Families for H Platforms Datasheet Volume 2"
-+ * Section "12 PCI Express* Controller (x16) Registers"
-+ */
-+
-+static void quirk_broken_nv_runpm(struct pci_dev *pdev)
-+{
-+	struct drm_device *dev = pci_get_drvdata(pdev);
-+	struct nouveau_drm *drm = nouveau_drm(dev);
-+	struct pci_dev *bridge = pci_upstream_bridge(pdev);
-+
-+	if (!bridge || bridge->vendor != PCI_VENDOR_ID_INTEL)
-+		return;
-+
-+	switch (bridge->device) {
-+	case 0x1901:
-+		drm->old_pm_cap = pdev->pm_cap;
-+		pdev->pm_cap = 0;
-+		NV_INFO(drm, "Disabling PCI power management to avoid bug\n");
-+		break;
-+	}
-+}
-+
- static int nouveau_drm_probe(struct pci_dev *pdev,
- 			     const struct pci_device_id *pent)
+diff --git a/drivers/pci/hotplug/pnv_php.c b/drivers/pci/hotplug/pnv_php.c
+index d7b2b47bc33eb..6037983c6e46b 100644
+--- a/drivers/pci/hotplug/pnv_php.c
++++ b/drivers/pci/hotplug/pnv_php.c
+@@ -151,17 +151,11 @@ static void pnv_php_rmv_pdns(struct device_node *dn)
+ static void pnv_php_detach_device_nodes(struct device_node *parent)
  {
-@@ -699,6 +757,7 @@ static int nouveau_drm_probe(struct pci_dev *pdev,
- 	if (ret)
- 		goto fail_drm_dev_init;
+ 	struct device_node *dn;
+-	int refcount;
  
-+	quirk_broken_nv_runpm(pdev);
- 	return 0;
+ 	for_each_child_of_node(parent, dn) {
+ 		pnv_php_detach_device_nodes(dn);
  
- fail_drm_dev_init:
-@@ -736,7 +795,11 @@ static void
- nouveau_drm_remove(struct pci_dev *pdev)
- {
- 	struct drm_device *dev = pci_get_drvdata(pdev);
-+	struct nouveau_drm *drm = nouveau_drm(dev);
- 
-+	/* revert our workaround */
-+	if (drm->old_pm_cap)
-+		pdev->pm_cap = drm->old_pm_cap;
- 	nouveau_drm_device_remove(dev);
+ 		of_node_put(dn);
+-		refcount = kref_read(&dn->kobj.kref);
+-		if (refcount != 1)
+-			pr_warn("Invalid refcount %d on <%pOF>\n",
+-				refcount, dn);
+-
+ 		of_detach_node(dn);
+ 	}
  }
- 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_drv.h b/drivers/gpu/drm/nouveau/nouveau_drv.h
-index 70f34cacc552c..8104e3806499d 100644
---- a/drivers/gpu/drm/nouveau/nouveau_drv.h
-+++ b/drivers/gpu/drm/nouveau/nouveau_drv.h
-@@ -138,6 +138,8 @@ struct nouveau_drm {
- 
- 	struct list_head clients;
- 
-+	u8 old_pm_cap;
-+
- 	struct {
- 		struct agp_bridge_data *bridge;
- 		u32 base;
 -- 
 2.20.1
 
