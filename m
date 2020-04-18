@@ -2,27 +2,27 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 195271AED72
-	for <lists+linux-pci@lfdr.de>; Sat, 18 Apr 2020 15:52:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C0C841AEE82
+	for <lists+linux-pci@lfdr.de>; Sat, 18 Apr 2020 16:17:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbgDRNv7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 18 Apr 2020 09:51:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55690 "EHLO mail.kernel.org"
+        id S1726823AbgDRONA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 18 Apr 2020 10:13:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726668AbgDRNs7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 18 Apr 2020 09:48:59 -0400
+        id S1726701AbgDROJw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:09:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACB9A2054F;
-        Sat, 18 Apr 2020 13:48:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 090F722264;
+        Sat, 18 Apr 2020 14:09:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587217739;
-        bh=uzrTWlHs53ZPHHMtK8nctjkf4SsWJpLaX73oQPd1U6o=;
+        s=default; t=1587218991;
+        bh=+J1rnpev1mWG2DjbDUlUXV/sV3CYW4t3iOt9gosTfsA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y4Ok04IdqQ0hlRDG5OHcpxTkvEg/pI/warQbgYdvoVDyI/mZDggTlpu8+32clArnE
-         JR3CZZ9xbTr7XZ+I07qf1d+WR8OEVkby4qPz1e0n5nFgh1XQBMrO07rwpHjZaDXBrF
-         VKkro/z5TFSkNMMeXBJL4tiPbKcfFEoPvMDaRPVI=
+        b=Wv2GtNodjhZm3Fwe99Saj4vESyde3uAKIE7+DxAd70KViU97O6AD/3IW21ZhzPfXo
+         ns4Hltrnv+6aPg19gpjKMlILg3uI9KLWS3ZtjQ2jozcMIHNOf0q1tpeOeEyR+VL+/o
+         zpQM7vN8C/tuUIq3y1qZLSNs8RbCAki/yQzGss0k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Karol Herbst <kherbst@redhat.com>,
@@ -34,12 +34,12 @@ Cc:     Karol Herbst <kherbst@redhat.com>,
         dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
         Ben Skeggs <bskeggs@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.6 34/73] drm/nouveau: workaround runpm fail by disabling PCI power management on certain intel bridges
-Date:   Sat, 18 Apr 2020 09:47:36 -0400
-Message-Id: <20200418134815.6519-34-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 32/75] drm/nouveau: workaround runpm fail by disabling PCI power management on certain intel bridges
+Date:   Sat, 18 Apr 2020 10:08:27 -0400
+Message-Id: <20200418140910.8280-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200418134815.6519-1-sashal@kernel.org>
-References: <20200418134815.6519-1-sashal@kernel.org>
+In-Reply-To: <20200418140910.8280-1-sashal@kernel.org>
+References: <20200418140910.8280-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -86,7 +86,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  2 files changed, 65 insertions(+)
 
 diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouveau/nouveau_drm.c
-index b65ae817eabf5..2d4c899e1f8b9 100644
+index 2cd83849600f3..b1beed40e746a 100644
 --- a/drivers/gpu/drm/nouveau/nouveau_drm.c
 +++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
 @@ -618,6 +618,64 @@ nouveau_drm_device_fini(struct drm_device *dev)
@@ -162,7 +162,7 @@ index b65ae817eabf5..2d4c899e1f8b9 100644
  	return 0;
  
  fail_drm_dev_init:
-@@ -734,7 +793,11 @@ static void
+@@ -736,7 +795,11 @@ static void
  nouveau_drm_remove(struct pci_dev *pdev)
  {
  	struct drm_device *dev = pci_get_drvdata(pdev);
@@ -172,13 +172,13 @@ index b65ae817eabf5..2d4c899e1f8b9 100644
 +	if (drm->old_pm_cap)
 +		pdev->pm_cap = drm->old_pm_cap;
  	nouveau_drm_device_remove(dev);
- 	pci_disable_device(pdev);
  }
+ 
 diff --git a/drivers/gpu/drm/nouveau/nouveau_drv.h b/drivers/gpu/drm/nouveau/nouveau_drv.h
-index c2c332fbde979..2a6519737800c 100644
+index 70f34cacc552c..8104e3806499d 100644
 --- a/drivers/gpu/drm/nouveau/nouveau_drv.h
 +++ b/drivers/gpu/drm/nouveau/nouveau_drv.h
-@@ -140,6 +140,8 @@ struct nouveau_drm {
+@@ -138,6 +138,8 @@ struct nouveau_drm {
  
  	struct list_head clients;
  
