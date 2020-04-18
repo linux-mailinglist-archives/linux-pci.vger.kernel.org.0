@@ -2,38 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C5E001AF0CB
-	for <lists+linux-pci@lfdr.de>; Sat, 18 Apr 2020 16:53:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BB9101AF05C
+	for <lists+linux-pci@lfdr.de>; Sat, 18 Apr 2020 16:52:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728286AbgDROmP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 18 Apr 2020 10:42:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52168 "EHLO mail.kernel.org"
+        id S1728326AbgDROmY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 18 Apr 2020 10:42:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728284AbgDROmP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:42:15 -0400
+        id S1726138AbgDROmX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:42:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8885621D79;
-        Sat, 18 Apr 2020 14:42:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD07822244;
+        Sat, 18 Apr 2020 14:42:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587220934;
-        bh=WYwADE8W9KPmvHMc3c5wIpArVFGP+Hhg+m2Vbn8klTk=;
+        s=default; t=1587220943;
+        bh=WX1/QuMUGZ2GW9YqqvK+3LWz4dq/ZTBuEJW0NWccCrk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KlWxOd6Cj3oVEvsfE5qEUkJNFFRODhBE1iMrcG3PRcTuGNLrfwl+Lt1wvNYNYsmgk
-         Sw29nRjyfWo7lwniMzHEZW/N3/tiol0OfB1mp5lgHXSldawIZ0EHc4WjKf8SKZpWD+
-         aAbxuOTaHTRR+9vfkDo2QZu1Q0fPA4BIhr1rEfOU=
+        b=YuDNnt4msdgWu5hNhKjvv4WB7cgFUADfdpx4oJBaSeuxGQpgPHsyFO7BrR4XdXaQl
+         gcaGAVFxVoPhQmjQ8LMkNXkO6l17yMiIqvqOtqu6VFHmI1D1kjIV3IC3ZvALh9CSGY
+         V7nXF6SWOsm+iPXTfLRsJxdAT3Wiz+dnh5zfy76I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Frederic Barrat <fbarrat@linux.ibm.com>,
-        Alastair D'Silva <alastair@d-silva.org>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 70/78] pci/hotplug/pnv-php: Remove erroneous warning
-Date:   Sat, 18 Apr 2020 10:40:39 -0400
-Message-Id: <20200418144047.9013-70-sashal@kernel.org>
+Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 77/78] PCI/ASPM: Allow re-enabling Clock PM
+Date:   Sat, 18 Apr 2020 10:40:46 -0400
+Message-Id: <20200418144047.9013-77-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200418144047.9013-1-sashal@kernel.org>
 References: <20200418144047.9013-1-sashal@kernel.org>
@@ -46,52 +43,72 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Frederic Barrat <fbarrat@linux.ibm.com>
+From: Heiner Kallweit <hkallweit1@gmail.com>
 
-[ Upstream commit 658ab186dd22060408d94f5c5a6d02d809baba44 ]
+[ Upstream commit 35efea32b26f9aacc99bf07e0d2cdfba2028b099 ]
 
-On powernv, when removing a device through hotplug, the following
-warning is logged:
+Previously Clock PM could not be re-enabled after being disabled by
+pci_disable_link_state() because clkpm_capable was reset.  Change this by
+adding a clkpm_disable field similar to aspm_disable.
 
-     Invalid refcount <.> on <...>
-
-It may be incorrect, the refcount may be set to a higher value than 1
-and be valid. of_detach_node() can drop more than one reference. As it
-doesn't seem trivial to assert the correct value, let's remove the
-warning.
-
-Reviewed-by: Alastair D'Silva <alastair@d-silva.org>
-Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
-Signed-off-by: Frederic Barrat <fbarrat@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191121134918.7155-7-fbarrat@linux.ibm.com
+Link: https://lore.kernel.org/r/4e8a66db-7d53-4a66-c26c-f0037ffaa705@gmail.com
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/hotplug/pnv_php.c | 6 ------
- 1 file changed, 6 deletions(-)
+ drivers/pci/pcie/aspm.c | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/pci/hotplug/pnv_php.c b/drivers/pci/hotplug/pnv_php.c
-index d7b2b47bc33eb..6037983c6e46b 100644
---- a/drivers/pci/hotplug/pnv_php.c
-+++ b/drivers/pci/hotplug/pnv_php.c
-@@ -151,17 +151,11 @@ static void pnv_php_rmv_pdns(struct device_node *dn)
- static void pnv_php_detach_device_nodes(struct device_node *parent)
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index 652ef23bba35a..ccf3a69bd97ff 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -64,6 +64,7 @@ struct pcie_link_state {
+ 	u32 clkpm_capable:1;		/* Clock PM capable? */
+ 	u32 clkpm_enabled:1;		/* Current Clock PM state */
+ 	u32 clkpm_default:1;		/* Default Clock PM state by BIOS */
++	u32 clkpm_disable:1;		/* Clock PM disabled */
+ 
+ 	/* Exit latencies */
+ 	struct aspm_latency latency_up;	/* Upstream direction exit latency */
+@@ -161,8 +162,11 @@ static void pcie_set_clkpm_nocheck(struct pcie_link_state *link, int enable)
+ 
+ static void pcie_set_clkpm(struct pcie_link_state *link, int enable)
  {
- 	struct device_node *dn;
--	int refcount;
- 
- 	for_each_child_of_node(parent, dn) {
- 		pnv_php_detach_device_nodes(dn);
- 
- 		of_node_put(dn);
--		refcount = kref_read(&dn->kobj.kref);
--		if (refcount != 1)
--			pr_warn("Invalid refcount %d on <%pOF>\n",
--				refcount, dn);
--
- 		of_detach_node(dn);
+-	/* Don't enable Clock PM if the link is not Clock PM capable */
+-	if (!link->clkpm_capable)
++	/*
++	 * Don't enable Clock PM if the link is not Clock PM capable
++	 * or Clock PM is disabled
++	 */
++	if (!link->clkpm_capable || link->clkpm_disable)
+ 		enable = 0;
+ 	/* Need nothing if the specified equals to current state */
+ 	if (link->clkpm_enabled == enable)
+@@ -192,7 +196,8 @@ static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
  	}
+ 	link->clkpm_enabled = enabled;
+ 	link->clkpm_default = enabled;
+-	link->clkpm_capable = (blacklist) ? 0 : capable;
++	link->clkpm_capable = capable;
++	link->clkpm_disable = blacklist ? 1 : 0;
  }
+ 
+ static bool pcie_retrain_link(struct pcie_link_state *link)
+@@ -1097,10 +1102,9 @@ static int __pci_disable_link_state(struct pci_dev *pdev, int state, bool sem)
+ 		link->aspm_disable |= ASPM_STATE_L1;
+ 	pcie_config_aspm_link(link, policy_to_aspm_state(link));
+ 
+-	if (state & PCIE_LINK_STATE_CLKPM) {
+-		link->clkpm_capable = 0;
+-		pcie_set_clkpm(link, 0);
+-	}
++	if (state & PCIE_LINK_STATE_CLKPM)
++		link->clkpm_disable = 1;
++	pcie_set_clkpm(link, policy_to_clkpm_state(link));
+ 	mutex_unlock(&aspm_lock);
+ 	if (sem)
+ 		up_read(&pci_bus_sem);
 -- 
 2.20.1
 
