@@ -2,109 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3267C1AEAF1
-	for <lists+linux-pci@lfdr.de>; Sat, 18 Apr 2020 10:35:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 151851AEC11
+	for <lists+linux-pci@lfdr.de>; Sat, 18 Apr 2020 13:21:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725891AbgDRIfv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 18 Apr 2020 04:35:51 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:2116 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725856AbgDRIfu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 18 Apr 2020 04:35:50 -0400
-Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.55])
-        by Forcepoint Email with ESMTP id 5DEE12D4E3CD8E2115F8;
-        Sat, 18 Apr 2020 16:35:48 +0800 (CST)
-Received: from dggeme758-chm.china.huawei.com (10.3.19.104) by
- DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
- id 14.3.487.0; Sat, 18 Apr 2020 16:35:48 +0800
-Received: from [127.0.0.1] (10.40.49.11) by dggeme758-chm.china.huawei.com
- (10.3.19.104) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Sat, 18
- Apr 2020 16:35:47 +0800
-Subject: Re: [PATCH v5 2/2] pciutils: Decode Compute eXpress Link DVSEC
-To:     Sean V Kelley <sean.v.kelley@linux.intel.com>, <mj@ucw.cz>,
-        <bhelgaas@google.com>
-CC:     <linux-pci@vger.kernel.org>, huangdaode <huangdaode@hisilicon.com>
-References: <20200415004751.2103963-1-sean.v.kelley@linux.intel.com>
- <20200415004751.2103963-3-sean.v.kelley@linux.intel.com>
-From:   Jay Fang <f.fangjian@huawei.com>
-Message-ID: <54a9a3f3-aa30-aa2f-1660-15c70ea7dc54@huawei.com>
-Date:   Sat, 18 Apr 2020 16:36:31 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S1725879AbgDRLV3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 18 Apr 2020 07:21:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49954 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725857AbgDRLV2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 18 Apr 2020 07:21:28 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 911CA21D79;
+        Sat, 18 Apr 2020 11:21:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587208887;
+        bh=77wH0JlbUKInqkEkZYANjIIPct4Xemzg7GiHD8oFtqY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=NLB/ZicyUDIxey2fxqxQOXODT77sVJZQcqZKsU8IZeZMavmwzJxuF6Q9Yy9RgjJ2W
+         ArPRj/TRmUCFc3SkqTl999PoABRpxWrTNHqIug/WXL/ELyPnO8AW7C/RZIAQy2IQyk
+         ClGR2JVfFExTmtT9iTR5TJRakT0dLuyPppHumC+U=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jPlXJ-004Pmh-IF; Sat, 18 Apr 2020 12:21:25 +0100
+Date:   Sat, 18 Apr 2020 12:21:23 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Alan Mikhak <alan.mikhak@sifive.com>
+Cc:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-pci@vger.kernel.org, tglx@linutronix.de,
+        gustavo.pimentel@synopsys.com, kishon@ti.com,
+        paul.walmsley@sifive.com
+Subject: Re: [PATCH] genirq/msi: Check null pointer before copying struct
+ msi_msg
+Message-ID: <20200418122123.10157ddd@why>
+In-Reply-To: <1587149322-28104-1-git-send-email-alan.mikhak@sifive.com>
+References: <1587149322-28104-1-git-send-email-alan.mikhak@sifive.com>
+Organization: Approximate
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200415004751.2103963-3-sean.v.kelley@linux.intel.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.40.49.11]
-X-ClientProxiedBy: dggeme711-chm.china.huawei.com (10.1.199.107) To
- dggeme758-chm.china.huawei.com (10.3.19.104)
-X-CFilter-Loop: Reflected
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: alan.mikhak@sifive.com, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, linux-pci@vger.kernel.org, tglx@linutronix.de, gustavo.pimentel@synopsys.com, kishon@ti.com, paul.walmsley@sifive.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2020/4/15 8:47, Sean V Kelley wrote:
+On Fri, 17 Apr 2020 11:48:42 -0700
+Alan Mikhak <alan.mikhak@sifive.com> wrote:
 
+Hi Alan,
+
+> From: Alan Mikhak <alan.mikhak@sifive.com>
 > 
-> [1] https://www.computeexpresslink.org/
+> Modify __get_cached_msi_msg() to check both pointers for null before
+> copying the contents from the struct msi_msg pointer to the pointer
+> provided by caller.
 > 
-> Signed-off-by: Sean V Kelley <sean.v.kelley@linux.intel.com>
+> Without this sanity check, __get_cached_msi_msg() crashes when invoked by
+> dw_edma_irq_request() in drivers/dma/dw-edma/dw-edma-core.c running on a
+> Linux-based PCIe endpoint device. MSI interrupt are not received by PCIe
+> endpoint devices. As a result, irq_get_msi_desc() returns null since there
+> are no cached struct msi_msg entry on the endpoint side.
+> 
+> Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
 > ---
->  lib/header.h        |  20 +++
-
-> +
-> +static int
-> +is_cxl_cap(struct device *d, int where)
-> +{
-> +  u32 hdr;
-> +  u16 w;
-> +
-> +  if (!config_fetch(d, where + PCI_DVSEC_HEADER1, 8))
-> +    return 0;
-> +
-> +  /* Check for supported Vendor */
-> +  hdr = get_conf_long(d, where + PCI_DVSEC_HEADER1);
-> +  w = BITS(hdr, 0, 16);
-> +  if (w != PCI_VENDOR_ID_INTEL)
-I don't think here checking is quite right. Does only Intel support CXL?
-Other Vendors should also be considered.
-
-Thanks
-> +    return 0;
-> +
-> +  /* Check for Designated Vendor-Specific ID */
-> +  hdr = get_conf_long(d, where + PCI_DVSEC_HEADER2);
-> +  w = BITS(hdr, 0, 16);
-> +  if (w == PCI_DVSEC_ID)
-> +    return 1;
-> +
-> +  return 0;
-> +}
-> +
->  static void
->  cap_dvsec(struct device *d, int where)
+>  kernel/irq/msi.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
+> index eb95f6106a1e..f39d42ef0d50 100644
+> --- a/kernel/irq/msi.c
+> +++ b/kernel/irq/msi.c
+> @@ -58,7 +58,8 @@ void free_msi_entry(struct msi_desc *entry)
+>  
+>  void __get_cached_msi_msg(struct msi_desc *entry, struct msi_msg *msg)
 >  {
-> @@ -947,7 +998,10 @@ show_ext_caps(struct device *d, int type)
->  	    printf("Readiness Time Reporting <?>\n");
->  	    break;
->  	  case PCI_EXT_CAP_ID_DVSEC:
-> -	    cap_dvsec(d, where);
-> +	    if (is_cxl_cap(d, where))
-> +	      cap_cxl(d, where);
-> +	    else
-> +	      cap_dvsec(d, where);
->  	    break;
->  	  case PCI_EXT_CAP_ID_VF_REBAR:
->  	    printf("VF Resizable BAR <?>\n");
-> diff --git a/tests/cap-dvsec-cxl b/tests/cap-dvsec-cxl
-> new file mode 100644
-> index 0000000..e5d2745
-> --- /dev/null
-> +++ b/tests/cap-dvsec-cxl
-> @@ -0,0 +1,340 @@
-> +6b:00.0 Unassigned class [ff00]: Intel Corporation Device 0d93
-> +        Control: I/O- Mem- BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr+ Stepping- SERR+ FastB2B- DisINTx-
+> -	*msg = entry->msg;
+> +	if (entry && msg)
+> +		*msg = entry->msg;
+>  }
+>  
+>  void get_cached_msi_msg(unsigned int irq, struct msi_msg *msg)
 
+I'm not convinced by this. If you know that, by construction, these
+interrupts are not associated with an underlying MSI, why calling
+get_cached_msi_msg() the first place?
+
+There seem to be some assumptions in the DW EDMA driver that the
+signaling would be MSI based, so maybe someone from Synopsys (Gustavo?)
+could clarify that. From my own perspective, running on an endpoint
+device means that it is *generating* interrupts, and I'm not sure what
+the MSIs represent here.
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
