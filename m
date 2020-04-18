@@ -2,77 +2,65 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D91C31AF44C
-	for <lists+linux-pci@lfdr.de>; Sat, 18 Apr 2020 21:39:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 88AA21AF44F
+	for <lists+linux-pci@lfdr.de>; Sat, 18 Apr 2020 21:41:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727966AbgDRTjZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 18 Apr 2020 15:39:25 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:52425 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727927AbgDRTjZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 18 Apr 2020 15:39:25 -0400
-Received: from 185.80.35.16 (185.80.35.16) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
- id 4b7184154c6e0ddc; Sat, 18 Apr 2020 21:39:23 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Len Brown <lenb@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2] ACPI/PCI: pci_link: use extended_irq union member when setting ext-irq shareable
-Date:   Sat, 18 Apr 2020 21:39:23 +0200
-Message-ID: <5152885.VTvHoEJcxH@kreacher>
-In-Reply-To: <20200413130949.302829-1-hdegoede@redhat.com>
-References: <20200413130949.302829-1-hdegoede@redhat.com>
+        id S1728167AbgDRTld (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 18 Apr 2020 15:41:33 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:52271 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1728143AbgDRTld (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 18 Apr 2020 15:41:33 -0400
+Received: (qmail 8750 invoked by uid 500); 18 Apr 2020 15:41:32 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 18 Apr 2020 15:41:32 -0400
+Date:   Sat, 18 Apr 2020 15:41:32 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@netrider.rowland.org
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans De Goede <hdegoede@redhat.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v2 0/9] PM: sleep: core: Rearrange the handling of driver
+ power management flags
+In-Reply-To: <CAJZ5v0hAyLv2+xE_eMgmra5kccDLGY941inJbKZyWPStKXk2nQ@mail.gmail.com>
+Message-ID: <Pine.LNX.4.44L0.2004181540230.8036-100000@netrider.rowland.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Monday, April 13, 2020 3:09:49 PM CEST Hans de Goede wrote:
-> The case ACPI_RESOURCE_TYPE_EXTENDED_IRQ inside acpi_pci_link_set()
-> is correctly using resource->res.data.extended_irq.foo for most settings,
-> but for the shareable setting it so far has accidentally been using
-> resource->res.data.irq.shareable instead of
-> resource->res.data.extended_irq.shareable.
-> 
-> Note that the old code happens to also work because the shareable field
-> offset is the same for both the acpi_resource_irq and
-> acpi_resource_extended_irq structs.
-> 
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
-> Changes in v2:
-> - Fix some spelling errors in the commit message pointed out by Bjorn
-> - Add Bjorn's Acked-by
-> ---
->  drivers/acpi/pci_link.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/acpi/pci_link.c b/drivers/acpi/pci_link.c
-> index 00a6da2121be..ed3d2182cf2c 100644
-> --- a/drivers/acpi/pci_link.c
-> +++ b/drivers/acpi/pci_link.c
-> @@ -322,10 +322,10 @@ static int acpi_pci_link_set(struct acpi_pci_link *link, int irq)
->  		resource->res.data.extended_irq.polarity =
->  		    link->irq.polarity;
->  		if (link->irq.triggering == ACPI_EDGE_SENSITIVE)
-> -			resource->res.data.irq.shareable =
-> +			resource->res.data.extended_irq.shareable =
->  			    ACPI_EXCLUSIVE;
->  		else
-> -			resource->res.data.irq.shareable = ACPI_SHARED;
-> +			resource->res.data.extended_irq.shareable = ACPI_SHARED;
->  		resource->res.data.extended_irq.interrupt_count = 1;
->  		resource->res.data.extended_irq.interrupts[0] = irq;
->  		/* ignore resource_source, it's optional */
-> 
+On Sat, 18 Apr 2020, Rafael J. Wysocki wrote:
 
-Applied as 5.7-rc material, thanks!
+> On Sat, Apr 18, 2020 at 8:00 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+> >
+> > On Sat, 18 Apr 2020, Rafael J. Wysocki wrote:
+> >
+> > > Hi,
+> > >
+> > > This is an update including some fixes and extra patches based on the
+> > > continuation of the discussion [1].
+> >
+> > I haven't checked the updates in detail yet.  However, it seems that
+> > dev_pm_skip_suspend() and dev_pm_skip_resume() should be EXPORTed,
+> > since they are intended to be used by subsystems, which may be in
+> > modules.
+> 
+> OK, so what about an extra patch to export them?
+> 
+> Currently there are no modular users of these functions.
 
+Ah, all right.  So when/if I want to use them, I will submit such a 
+patch.
 
-
+Alan Stern
 
