@@ -2,84 +2,113 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 94A981B13B1
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Apr 2020 19:57:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E87901B1422
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Apr 2020 20:15:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725784AbgDTR5h (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 20 Apr 2020 13:57:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34548 "EHLO mail.kernel.org"
+        id S1726021AbgDTSPW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 20 Apr 2020 14:15:22 -0400
+Received: from mga11.intel.com ([192.55.52.93]:24125 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726013AbgDTR5h (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 20 Apr 2020 13:57:37 -0400
-Received: from localhost (mobile-166-175-186-98.mycingular.net [166.175.186.98])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E8E520B1F;
-        Mon, 20 Apr 2020 17:57:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587405456;
-        bh=1QfeIdYAdaoPYZPVIY/AQvVUA98AZnRFonLWpP+zWZ8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=isVsuct1teVVrXGWhe+smoFYkCAXLHWLHhmKq/KoBg4bf+k2drAK+0l5uReYejijn
-         nvYkJdhR17R072goe6KIZH1F/jL2+a6tlZnk3piC/Xbq8JCFRwn09DWzJeQi2lyN9E
-         UotslwHOshcxVcY+mmLz9luaeplq+d51jUDdJKOo=
-Date:   Mon, 20 Apr 2020 12:57:34 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ani Sinha <ani@anisinha.ca>
-Cc:     linux-kernel@vger.kernel.org, ani@anirban.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Frederick Lawler <fred@fredlawl.com>,
-        Denis Efremov <efremov@linux.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: pciehp: remove unused EMI() macro
-Message-ID: <20200420175734.GA53587@google.com>
+        id S1725891AbgDTSPW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 20 Apr 2020 14:15:22 -0400
+IronPort-SDR: veVE+vdBnwufb+p6R7TQvMejQbVC4DT6CRqiNEU/FduGh0PJ5xok/dzYFop3/nu9ARfOcx2z74
+ HDZoR7wXw62w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2020 11:15:21 -0700
+IronPort-SDR: 8fT09weErfTNfN3mfjnYSebk8Nn+HR58tGa0lnQIUlEHvLqz6923WibZ88j62ipIrGurCIktai
+ 4d4uQqkvArDA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,407,1580803200"; 
+   d="scan'208";a="246960869"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by fmsmga008.fm.intel.com with ESMTP; 20 Apr 2020 11:15:21 -0700
+Date:   Mon, 20 Apr 2020 11:14:37 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, joro@8bytes.org, catalin.marinas@arm.com,
+        will@kernel.org, robin.murphy@arm.com, kevin.tian@intel.com,
+        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
+        christian.koenig@amd.com, zhangfei.gao@linaro.org,
+        xuzaibo@huawei.com, "Raj, Ashok" <ashok.raj@intel.com>
+Subject: Re: [PATCH v5 02/25] iommu/sva: Manage process address spaces
+Message-ID: <20200420181437.GA229170@romley-ivt3.sc.intel.com>
+References: <20200414170252.714402-1-jean-philippe@linaro.org>
+ <20200414170252.714402-3-jean-philippe@linaro.org>
+ <20200416072852.GA32000@infradead.org>
+ <20200416085402.GB1286150@myrica>
+ <20200416121331.GA18661@infradead.org>
+ <20200420074213.GA3180232@myrica>
+ <20200420135727.GO26002@ziepe.ca>
+ <20200420104850.60531cb6@jacob-builder>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1587387114-38475-1-git-send-email-ani@anisinha.ca>
+In-Reply-To: <20200420104850.60531cb6@jacob-builder>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Ani,
-
-On Mon, Apr 20, 2020 at 06:21:41PM +0530, Ani Sinha wrote:
-> EMI() macro seems to be unused. So removing it. Thanks
-> Mika Westerberg <mika.westerberg@linux.intel.com> for
-> pointing it out.
+On Mon, Apr 20, 2020 at 10:48:50AM -0700, Jacob Pan wrote:
+> On Mon, 20 Apr 2020 10:57:27 -0300
+> Jason Gunthorpe <jgg@ziepe.ca> wrote:
 > 
-> Signed-off-by: Ani Sinha <ani@anisinha.ca>
-> ---
->  drivers/pci/hotplug/pciehp.h | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
-> index 5747967..4fd200d 100644
-> --- a/drivers/pci/hotplug/pciehp.h
-> +++ b/drivers/pci/hotplug/pciehp.h
-> @@ -148,7 +148,6 @@ struct controller {
->  #define MRL_SENS(ctrl)		((ctrl)->slot_cap & PCI_EXP_SLTCAP_MRLSP)
->  #define ATTN_LED(ctrl)		((ctrl)->slot_cap & PCI_EXP_SLTCAP_AIP)
->  #define PWR_LED(ctrl)		((ctrl)->slot_cap & PCI_EXP_SLTCAP_PIP)
-> -#define EMI(ctrl)		((ctrl)->slot_cap & PCI_EXP_SLTCAP_EIP)
+> > On Mon, Apr 20, 2020 at 09:42:13AM +0200, Jean-Philippe Brucker wrote:
+> > > On Thu, Apr 16, 2020 at 05:13:31AM -0700, Christoph Hellwig wrote:  
+> > > > On Thu, Apr 16, 2020 at 10:54:02AM +0200, Jean-Philippe Brucker
+> > > > wrote:  
+> > > > > On Thu, Apr 16, 2020 at 12:28:52AM -0700, Christoph Hellwig
+> > > > > wrote:  
+> > > > > > > +	rcu_read_lock();
+> > > > > > > +	hlist_for_each_entry_rcu(bond, &io_mm->devices,
+> > > > > > > mm_node)
+> > > > > > > +		io_mm->ops->invalidate(bond->sva.dev,
+> > > > > > > io_mm->pasid, io_mm->ctx,
+> > > > > > > +				       start, end - start);
+> > > > > > > +	rcu_read_unlock();
+> > > > > > > +}  
+> > > > > > 
+> > > > > > What is the reason that the devices don't register their own
+> > > > > > notifiers? This kinds of multiplexing is always rather messy,
+> > > > > > and you do it for all the methods.  
+> > > > > 
+> > > > > This sends TLB and ATC invalidations through the IOMMU, it
+> > > > > doesn't go through device drivers  
+> > > > 
+> > > > I don't think we mean the same thing, probably because of my
+> > > > rather imprecise use of the word device.
+> > > > 
+> > > > What I mean is that the mmu_notifier should not be embedded into
+> > > > the io_mm structure (whch btw, seems to have a way to generic
+> > > > name, just like all other io_* prefixed names), but instead into
+> > > > the iommu_bond structure.  That avoid the whole multiplexing
+> > > > layer.  
+> > > 
+> > > Right, I can see the appeal. I still like having a single mmu
+> > > notifier per mm because it ensures we allocate a single PASID per
+> > > mm (as required by x86). I suppose one alternative is to maintain a
+> > > hashtable of mm->pasid, to avoid iterating over all bonds during
+> > > allocation.  
+> > 
+> > I've been getting rid of hash tables like this.. Adding it to the
+> > mm_struct does seem reasonable, I think PASID is a pretty broad
+> > concept now.
+> > 
+> Agreed, perhaps Fenghua can consider that in his patchset. It would
+> help align life cycles as well.
+> https://lkml.org/lkml/2020/3/30/910>
 
-Thanks for the patch!  Can you squash it together with the HP_SUPR_RM
-removal (and also check for any other unused ones at the same time)?
-For trivial things like this, I'd rather merge one patch that removes
-several unused things at once instead of several patches.
+Seems we depend on each other: my patch defines pasid in mm_struct.
+I can free PASID in your detach() function.
 
-I like the subject of this one ("Removed unused ..."), but please
-capitalize it as you did for the HP_SUPR_RM one so it matches previous
-history.
+Thanks.
 
-Bjorn
-
->  #define NO_CMD_CMPL(ctrl)	((ctrl)->slot_cap & PCI_EXP_SLTCAP_NCCS)
->  #define PSN(ctrl)		(((ctrl)->slot_cap & PCI_EXP_SLTCAP_PSN) >> 19)
->  
-> -- 
-> 2.7.4
-> 
+-Fenghua
