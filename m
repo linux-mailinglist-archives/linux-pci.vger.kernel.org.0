@@ -2,65 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4BA901B03E6
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Apr 2020 10:10:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 18D9B1B0431
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Apr 2020 10:19:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725815AbgDTIKj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 20 Apr 2020 04:10:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47274 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725773AbgDTIKj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Apr 2020 04:10:39 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88D3AC061A0C;
-        Mon, 20 Apr 2020 01:10:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=C1JU5+id39RVYYiwVLrKINx5vf4t7nToazXLCIKWefE=; b=kaM0tk5W81sI2+qX4Q+fhFqknM
-        bURUCNk0t2z/tH3hUWbh5Ya9slhk5rLszSWU71wkyFyy7q2Tqtylx0B1qa4oBZPhzl1Pzd0n9iYI8
-        U7EmgJ8u5DWdLj8f4XGdJLn1gEer0ExVNct3iwrHWd6KEFcS/i5dzVd1+giEP2fKM0YZ5nI94pJGU
-        bLc0GipQGkEljB04yFayRugJ2xmfUknk0m5ohkt5kM/71a59PYsDPRLMCziNvX2mPRoqrCALoAuOB
-        x+Diqoon7jrr1Snwm2VWR5aH9n2Hpqx5jH6fbbjyms2QLla8aBMh0zsJvsuQdVSIVR0dIm7P9QRvO
-        X5rQmNQQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jQRVi-0007EB-H6; Mon, 20 Apr 2020 08:10:34 +0000
-Date:   Mon, 20 Apr 2020 01:10:34 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, joro@8bytes.org, catalin.marinas@arm.com,
-        will@kernel.org, robin.murphy@arm.com, kevin.tian@intel.com,
-        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
-        jacob.jun.pan@linux.intel.com, christian.koenig@amd.com,
-        zhangfei.gao@linaro.org, jgg@ziepe.ca, xuzaibo@huawei.com
-Subject: Re: [PATCH v5 02/25] iommu/sva: Manage process address spaces
-Message-ID: <20200420081034.GA17305@infradead.org>
-References: <20200414170252.714402-1-jean-philippe@linaro.org>
- <20200414170252.714402-3-jean-philippe@linaro.org>
- <20200416072852.GA32000@infradead.org>
- <20200416085402.GB1286150@myrica>
- <20200416121331.GA18661@infradead.org>
- <20200420074213.GA3180232@myrica>
+        id S1726099AbgDTITQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 20 Apr 2020 04:19:16 -0400
+Received: from hermes.aosc.io ([199.195.250.187]:48932 "EHLO hermes.aosc.io"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725773AbgDTITQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 20 Apr 2020 04:19:16 -0400
+Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
+        by hermes.aosc.io (Postfix) with ESMTPSA id BCD734F569;
+        Mon, 20 Apr 2020 08:19:07 +0000 (UTC)
+Message-ID: <13564b9a57f734524357a26665c48211e436e305.camel@aosc.io>
+Subject: Re: [RFC PATCH] PCI: dwc: add support for Allwinner SoCs' PCIe
+ controller
+From:   Icenowy Zheng <icenowy@aosc.io>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Date:   Mon, 20 Apr 2020 16:18:58 +0800
+In-Reply-To: <20200406082732.nt5d7puwn65j4nvl@gilmour.lan>
+References: <20200402160549.296203-1-icenowy@aosc.io>
+         <20200406082732.nt5d7puwn65j4nvl@gilmour.lan>
+Content-Type: text/plain; charset="UTF-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200420074213.GA3180232@myrica>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aosc.io; s=dkim;
+        t=1587370752;
+        h=from:subject:date:message-id:to:cc:mime-version:content-type:content-transfer-encoding:in-reply-to:references;
+        bh=pvH6iSsYcrlSeIVQKlxTDceU5G6X0/BLxZ6SjrM8hqs=;
+        b=jWJHu3CfoBStlnD7HAMF8CReqSqLOEfzgiTCkOcL0L3EaFstbOzaX6XfzDESmGnFOaWKMx
+        MFVRRdsirVgRlt+3h6O6GWmgG+K2n16Ow54t3v7gEK3myO/5F/386kvhaIiJdakasAxr8I
+        1ZA+7o372FXcMxh8rqGr0ZSU7sTaK84=
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 09:42:13AM +0200, Jean-Philippe Brucker wrote:
-> Right, I can see the appeal. I still like having a single mmu notifier per
-> mm because it ensures we allocate a single PASID per mm (as required by
-> x86). I suppose one alternative is to maintain a hashtable of mm->pasid,
-> to avoid iterating over all bonds during allocation.
+在 2020-04-06星期一的 10:27 +0200，Maxime Ripard写道：
+> Hi,
+> 
+> On Fri, Apr 03, 2020 at 12:05:49AM +0800, Icenowy Zheng wrote:
+> > The Allwinner H6 SoC uses DesignWare's PCIe controller to provide a
+> > PCIe
+> > host.
+> > 
+> > However, on Allwinner H6, the PCIe host has bad MMIO, which needs
+> > to be
+> > workarounded. A workaround with the EL2 hypervisor functionality of
+> > ARM
+> > Cortex cores is now available, which wraps MMIO operations.
+> > 
+> > This patch is going to add a driver for the DWC PCIe controller
+> > available in Allwinner SoCs, either the H6 one when wrapped by the
+> > hypervisor (so that the driver can consider it as an ordinary PCIe
+> > controller) or further not buggy ones.
+> > 
+> > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> > ---
+> > There's no device tree binding patch available, because I still
+> > have
+> > questions on the device tree compatible string. I want to use it to
+> > describe that this driver doesn't support the "native Allwinner H6
+> > PCIe
+> > controller", but a wrapped version with my hypervisor.
+> > 
+> > I think supporting a "para-physical" device is some new thing, so
+> > this
+> > patch is RFC.
+> > 
+> > My hypervisor is at [1], and some basic usage documentation is at
+> > [2].
+> > 
+> > [1] https://github.com/Icenowy/aw-el2-barebone
+> > [2] 
+> > https://forum.armbian.com/topic/13529-a-try-on-utilizing-h6-pcie-with-virtualization/
+> 
+> I'm a bit concerned to throw yet another mandatory, difficult to
+> update, component in the already quite long boot chain.
+> 
+> Getting fixes deployed in ATF or U-Boot is already pretty long,
+> having
+> another component in there will just make it worse, and it's another
+> hard to debug component that we throw into the mix.
+> 
+> And this prevents any use of virtualisation on the platform.
+> 
+> I haven't found an explanation on what that hypervisor is doing
+> exactly, but from a look at it it seems that it will trap all the
+> accesses to the PCIe memory region to emulate a regular space on top
+> of the restricted one we have?
+> 
+> If so, can't we do that from the kernel directly by using a memory
+> region that always fault with a fault handler like Framebuffer's
+> deferred_io is doing (drivers/video/fbdev/core/fb_defio.c) ?
 
-Given that the PASID is a pretty generic and important concept can
-we just add it directly to the mm_struct and allocate it lazily once
-we first need it?
+I don't know well about the memory management of the kernel. However,
+for PCIe memory space, the kernel allows simple ioremap() on it. So
+wrapping it shouldn't be so easy.
+
+And I think the maintainer of pcie-tango suffers from a even more
+simple issue -- PCI config space and MMIO space are muxed. They failed
+to wrap MMIO I/O, and make a warning and taint the kernel. pcie-tango
+is mentioned in my previous discussion on H6 PCIe, see [1].
+
+[1] https://www.spinics.net/lists/linux-pci/msg70064.html
+
+> 
+> Maxime
+
