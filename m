@@ -2,30 +2,48 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 368AD1B01D9
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Apr 2020 08:52:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C92351B02B3
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Apr 2020 09:18:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725896AbgDTGwb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 20 Apr 2020 02:52:31 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60172 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725815AbgDTGwa (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 20 Apr 2020 02:52:30 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 72608AB76;
-        Mon, 20 Apr 2020 06:52:28 +0000 (UTC)
-From:   Jiri Slaby <jslaby@suse.cz>
-To:     jingoohan1@gmail.com
-Cc:     gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
-        amurray@thegoodpenguin.co.uk, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jiri Slaby <jslaby@suse.cz>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH] PCI: dwc: clean up computing of msix_tbl
-Date:   Mon, 20 Apr 2020 08:52:27 +0200
-Message-Id: <20200420065227.4920-1-jslaby@suse.cz>
-X-Mailer: git-send-email 2.26.1
+        id S1726048AbgDTHSF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 20 Apr 2020 03:18:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39056 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725865AbgDTHSF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Apr 2020 03:18:05 -0400
+X-Greylist: delayed 331 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 20 Apr 2020 00:18:05 PDT
+Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05712C061A0C;
+        Mon, 20 Apr 2020 00:18:05 -0700 (PDT)
+Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
+        by vultr.net.flygoat.com (Postfix) with ESMTPSA id B7A1520C7E;
+        Mon, 20 Apr 2020 07:12:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
+        t=1587366752; bh=1ni7V2KVE9MknDP4f9hczijTI6TI6s7uclRiTdIqcpU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=kxQ9fcFfuGwyQAlL0SBOY9EXY/jwSt5K3Wl2FGyOzlhWgzQgv3bu+3KwtQNmIW8Wt
+         ditpsAPeT7OK5Y5atMvUwt0kqqd56FuPrusBF5WgyrjckNZQD8zIa4o6Yfgkd6CZOH
+         3ekMfJ54qS3zJ9f1iW/dQu0rbQB6yve4Z+36QAoiqgq0ly8464rSM6zEs/j5P0FQhz
+         bO/h0hh59EJ9osGFreFpiu6bZRzQlhd7UoEqSJMe2sJ2N88uRLyMb3wtQKxowNOvg0
+         sop/ecLF0Rp/yfYbz+qUJHZd9jV2BD2ZE/PazJ7W55TVXdG29+qWEF4AYLgN5qEEcs
+         dwwZOokLkRQ8w==
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     linux-mips@vger.kernel.org
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Paul Burton <paulburton@kernel.org>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 1/5] PCI: OF: Don't remap iospace on unsupported platform
+Date:   Mon, 20 Apr 2020 15:12:07 +0800
+Message-Id: <20200420071220.155357-1-jiaxun.yang@flygoat.com>
+X-Mailer: git-send-email 2.26.0.rc2
+In-Reply-To: <20200330114239.1112759-1-jiaxun.yang@flygoat.com>
+References: <20200330114239.1112759-1-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
@@ -33,44 +51,46 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Commit 6f5e193bfb55 ("PCI: dwc: Fix dw_pcie_ep_raise_msix_irq() to get
-correct MSI-X table address") overcomplicated the computation of the
-msix_tbl address. Simplify it as it's simply the addr + offset. Provided
-addr is (void *) already.
+There are some platforms don't support iospace remapping
+like MIPS. However, our PCI code will try to remap iospace
+unconditionally and reject io resources on these platforms.
 
-objdump -d shows no difference after this patch.
+So we should remove iospace remapping check and use a range
+check instead on these platforms.
 
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+--
+v4: Fix a typo in commit message.
 ---
- drivers/pci/controller/dwc/pcie-designware-ep.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ drivers/pci/of.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index 1cdcbd102ce8..c815d36905b6 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -433,7 +433,6 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
- 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
- 	struct pci_epf_msix_tbl *msix_tbl;
- 	struct pci_epc *epc = ep->epc;
--	struct pci_epf_bar *epf_bar;
- 	u32 reg, msg_data, vec_ctrl;
- 	unsigned int aligned_offset;
- 	u32 tbl_offset;
-@@ -446,10 +445,7 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
- 	bir = (tbl_offset & PCI_MSIX_TABLE_BIR);
- 	tbl_offset &= PCI_MSIX_TABLE_OFFSET;
+diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+index 81ceeaa6f1d5..36e8761b66c6 100644
+--- a/drivers/pci/of.c
++++ b/drivers/pci/of.c
+@@ -547,12 +547,21 @@ int pci_parse_request_of_pci_ranges(struct device *dev,
  
--	epf_bar = ep->epf_bar[bir];
--	msix_tbl = epf_bar->addr;
--	msix_tbl = (struct pci_epf_msix_tbl *)((char *)msix_tbl + tbl_offset);
--
-+	msix_tbl = ep->epf_bar[bir]->addr + tbl_offset;
- 	msg_addr = msix_tbl[(interrupt_num - 1)].msg_addr;
- 	msg_data = msix_tbl[(interrupt_num - 1)].msg_data;
- 	vec_ctrl = msix_tbl[(interrupt_num - 1)].vector_ctrl;
+ 		switch (resource_type(res)) {
+ 		case IORESOURCE_IO:
++#if defined(PCI_IOBASE) && defined(CONFIG_MMU)
+ 			err = devm_pci_remap_iospace(dev, res, iobase);
+ 			if (err) {
+ 				dev_warn(dev, "error %d: failed to map resource %pR\n",
+ 					 err, res);
+ 				resource_list_destroy_entry(win);
+ 			}
++#else
++			/* Simply check if IO is inside the range */
++			if (res->end > IO_SPACE_LIMIT) {
++				dev_warn(dev, "resource %pR out of the IO range\n",
++					res);
++				resource_list_destroy_entry(win);
++			}
++#endif
+ 			break;
+ 		case IORESOURCE_MEM:
+ 			res_valid |= !(res->flags & IORESOURCE_PREFETCH);
 -- 
-2.26.1
+2.26.0.rc2
 
