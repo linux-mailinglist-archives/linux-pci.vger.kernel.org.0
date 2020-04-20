@@ -2,126 +2,129 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 752291B1169
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Apr 2020 18:21:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 394CA1B120D
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Apr 2020 18:43:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbgDTQVb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 20 Apr 2020 12:21:31 -0400
-Received: from mga05.intel.com ([192.55.52.43]:26061 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726214AbgDTQVb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 20 Apr 2020 12:21:31 -0400
-IronPort-SDR: 0IwIZIwVjZ9AruLN6AZF7Ayjo8aWWjBFLueYmUy1eosDr6if/nXnY2H3svvjbCFghYmEUpjCsW
- UFSkJEg90wrQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2020 09:21:30 -0700
-IronPort-SDR: eEuXPPryH4haI2HkciXsuluEGhJ1gMr1imRc8Bz1Mw1K1fL3blheYADLQW24LGngYuArDxWdK9
- 8YZ1Jg6jdqXQ==
-X-IronPort-AV: E=Sophos;i="5.72,407,1580803200"; 
-   d="scan'208";a="254987101"
-Received: from labenne1-mobl.amr.corp.intel.com (HELO [10.135.61.52]) ([10.135.61.52])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2020 09:21:29 -0700
-From:   "Sean V Kelley" <sean.v.kelley@linux.intel.com>
-To:     "Jay Fang" <f.fangjian@huawei.com>
-Cc:     mj@ucw.cz, bhelgaas@google.com, linux-pci@vger.kernel.org,
-        huangdaode <huangdaode@hisilicon.com>
-Subject: Re: [PATCH v5 2/2] pciutils: Decode Compute eXpress Link DVSEC
-Date:   Mon, 20 Apr 2020 09:21:27 -0700
-X-Mailer: MailMate (1.13.1r5671)
-Message-ID: <B647B03B-9476-4D31-9662-4D68E7204459@linux.intel.com>
-In-Reply-To: <54a9a3f3-aa30-aa2f-1660-15c70ea7dc54@huawei.com>
-References: <20200415004751.2103963-1-sean.v.kelley@linux.intel.com>
- <20200415004751.2103963-3-sean.v.kelley@linux.intel.com>
- <54a9a3f3-aa30-aa2f-1660-15c70ea7dc54@huawei.com>
+        id S1726717AbgDTQnK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 20 Apr 2020 12:43:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42314 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726693AbgDTQnI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Apr 2020 12:43:08 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ED4CC061A0C;
+        Mon, 20 Apr 2020 09:43:08 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id x25so280061wmc.0;
+        Mon, 20 Apr 2020 09:43:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IHuj1FiuJPknu8Z7Uq/JeXw8aSg2xFkcoVYT3QRT6dA=;
+        b=TzeKBoiR2hu1L+OGuVzAMrvuOnCDM+J1nsGD1QbB9tkwdgx5rUc3jCkTzkFKQpJZ+g
+         jx96zAcsJH7FSzAMjcpWTgiixmPWJj0xuWXML6IW4oVt5Npm6F2D8UyjZyfgnUKcGU/k
+         Ye+bmwRUMi6cBC1Jpn93V5znfun/KPJFuOi1qLjh4g9rRAQWp4o4mZYTnxBkkMhi63gU
+         V7L+RQlj4buS+IXOZ/xi5chAd/gFJkADDOm8HVDAcIG6pEUCkXciuRiNL3f81ss3nwjq
+         uQQg7uRc8wXqOP1IqZ+W8kYP25Bty+uiykVyhv6XfOg0vWk4GK+wnM0wcP7boPe8Y8sS
+         dTLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IHuj1FiuJPknu8Z7Uq/JeXw8aSg2xFkcoVYT3QRT6dA=;
+        b=YcZCjbicKhCKe1SzKhwIcD9gZI/8J/QS/LQk4lcoLCwcSjlg9p0O/m5t80TGXT4lcn
+         wFh0VyY+SsMR6uXCPrN8QXYbEY6fFVxEY2+btKzt+ft0v4jQUljopKGOV6n85FRs89U4
+         DrjNPXoL7izbuheb/tW9ZBrrMTLQ1btIJ/MiAZ2gKtlrachezXQjW1Gtn66/hEpIQybL
+         9ctDGvygIAju/Yd9fx+cakfzPUGzKTc/yOhjKjbMfxF6YxTbdqPc08+0a3cOYoSoRKLE
+         i/drXsQpQhJHOhzZWXinld37vEHc/1pa/HYv3QR+UAproGfZq4eGqBh6cIYY87fW7nHk
+         lsmg==
+X-Gm-Message-State: AGi0PuYqEn+eRXnjHmfYwoSYQUy0ZK+SX7Vpbgu/XErfwPhXok1ZAmWe
+        N87IAyxXhJOQCMJxw6TgfSo=
+X-Google-Smtp-Source: APiQypLsj3XpHj4CyxtmOjlqdZs3DB8oJEEo2ghhT6QywH/SywA9LShfe1OCbQ3t6MmEGWRd+WIiVw==
+X-Received: by 2002:a1c:41d7:: with SMTP id o206mr194590wma.89.1587400987185;
+        Mon, 20 Apr 2020 09:43:07 -0700 (PDT)
+Received: from arrakis.kwizart.net (lfbn-nic-1-185-211.w2-15.abo.wanadoo.fr. [2.15.34.211])
+        by smtp.gmail.com with ESMTPSA id l4sm47922wrv.60.2020.04.20.09.43.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 09:43:06 -0700 (PDT)
+From:   Nicolas Chauvet <kwizart@gmail.com>
+To:     Manikanta Maddireddy <mmaddireddy@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
+        Nicolas Chauvet <kwizart@gmail.com>
+Subject: [RFC] PCI: tegra: Revert raw_violation_fixup for tegra124
+Date:   Mon, 20 Apr 2020 18:43:04 +0200
+Message-Id: <20200420164304.28810-1-kwizart@gmail.com>
+X-Mailer: git-send-email 2.25.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Jay,
+As reported in https://bugzilla.kernel.org/206217 , raw_violation_fixup
+is causing more harm than good in some common use-cases.
 
-Thank you for reviewing.  My comments below:
-
-On 18 Apr 2020, at 1:36, Jay Fang wrote:
-
-> On 2020/4/15 8:47, Sean V Kelley wrote:
->
->>
->> [1] https://www.computeexpresslink.org/
->>
->> Signed-off-by: Sean V Kelley <sean.v.kelley@linux.intel.com>
->> ---
->>  lib/header.h        |  20 +++
->
->> +
->> +static int
->> +is_cxl_cap(struct device *d, int where)
->> +{
->> +  u32 hdr;
->> +  u16 w;
->> +
->> +  if (!config_fetch(d, where + PCI_DVSEC_HEADER1, 8))
->> +    return 0;
->> +
->> +  /* Check for supported Vendor */
->> +  hdr = get_conf_long(d, where + PCI_DVSEC_HEADER1);
->> +  w = BITS(hdr, 0, 16);
->> +  if (w != PCI_VENDOR_ID_INTEL)
-> I don't think here checking is quite right. Does only Intel support 
-> CXL?
-> Other Vendors should also be considered.
-
-In the absence of currently available hardware, I was attempting to 
-limit false positive noise.  I’m happy to avoid the check on the 
-vendor if there were to exist a definitive supported list.  Bjorn 
-suggested that I check for vendor ID with DVSEC ID for now.  As hardware 
-enters the market, I can surely revise this with an update when the CXL 
-group publishes a list.
-
-Best regards,
-
-Sean
+This patch as RFC is a partial revert of the 191cd6fb5 commit:
+ "PCI: tegra: Add SW fixup for RAW violations" 
+that was first introduced in 5.3 kernel.
+This fix the following regression since then.
 
 
->
-> Thanks
->> +    return 0;
->> +
->> +  /* Check for Designated Vendor-Specific ID */
->> +  hdr = get_conf_long(d, where + PCI_DVSEC_HEADER2);
->> +  w = BITS(hdr, 0, 16);
->> +  if (w == PCI_DVSEC_ID)
->> +    return 1;
->> +
->> +  return 0;
->> +}
->> +
->>  static void
->>  cap_dvsec(struct device *d, int where)
->>  {
->> @@ -947,7 +998,10 @@ show_ext_caps(struct device *d, int type)
->>  	    printf("Readiness Time Reporting <?>\n");
->>  	    break;
->>  	  case PCI_EXT_CAP_ID_DVSEC:
->> -	    cap_dvsec(d, where);
->> +	    if (is_cxl_cap(d, where))
->> +	      cap_cxl(d, where);
->> +	    else
->> +	      cap_dvsec(d, where);
->>  	    break;
->>  	  case PCI_EXT_CAP_ID_VF_REBAR:
->>  	    printf("VF Resizable BAR <?>\n");
->> diff --git a/tests/cap-dvsec-cxl b/tests/cap-dvsec-cxl
->> new file mode 100644
->> index 0000000..e5d2745
->> --- /dev/null
->> +++ b/tests/cap-dvsec-cxl
->> @@ -0,0 +1,340 @@
->> +6b:00.0 Unassigned class [ff00]: Intel Corporation Device 0d93
->> +        Control: I/O- Mem- BusMaster- SpecCycle- MemWINV- VGASnoop- 
->> ParErr+ Stepping- SERR+ FastB2B- DisINTx-
+When using both the network NIC and I/O on MMC this can lead to the
+following message on jetson-tk1:
+
+ NETDEV WATCHDOG: enp1s0 (r8169): transmit queue 0 timed out
+
+and
+
+ pcieport 0000:00:02.0: AER: Uncorrected (Non-Fatal) error received: 0000:01:00.0
+ r8169 0000:01:00.0: AER: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Requester ID)
+ r8169 0000:01:00.0: AER:   device [10ec:8168] error status/mask=00004000/00400000
+ r8169 0000:01:00.0: AER:    [14] CmpltTO                (First)
+ r8169 0000:01:00.0: AER: can't recover (no error_detected callback)
+ pcieport 0000:00:02.0: AER: device recovery failed
+
+
+After that, the ethernet NIC isn't functional anymore even after reloading
+the module.
+After a reboot, this is reproducible by copying a large file over the
+ethernet NIC to the MMC.
+For some reasons this cannot be reproduced when the same file is copied
+to a tmpfs.
+
+
+This patch is RFC because it requires more understanding from Nvidia.
+ - Is the fixup (available in l4t downstrem) still needed for upstream ?
+ - Is there a need to update the fixup values for upstream ?
+ - If the fixup is reverted, does the hw bug can still be seen with
+   upstream ?
+
+Others can also provides more understanding:
+ - Conditions to reproduce the bug (or not)...
+
+
+Signed-off-by: Nicolas Chauvet <kwizart@gmail.com>
+---
+ drivers/pci/controller/pci-tegra.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index 3e64ba6a36a8..4027e074094a 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -2470,7 +2470,7 @@ static const struct tegra_pcie_soc tegra124_pcie = {
+ 	.program_uphy = true,
+ 	.update_clamp_threshold = true,
+ 	.program_deskew_time = false,
+-	.raw_violation_fixup = true,
++	.raw_violation_fixup = false,
+ 	.update_fc_timer = false,
+ 	.has_cache_bars = false,
+ 	.ectl.enable = false,
+-- 
+2.25.2
+
