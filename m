@@ -2,129 +2,172 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 394CA1B120D
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Apr 2020 18:43:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1BB3C1B133F
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Apr 2020 19:38:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbgDTQnK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 20 Apr 2020 12:43:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42314 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726693AbgDTQnI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Apr 2020 12:43:08 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ED4CC061A0C;
-        Mon, 20 Apr 2020 09:43:08 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id x25so280061wmc.0;
-        Mon, 20 Apr 2020 09:43:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=IHuj1FiuJPknu8Z7Uq/JeXw8aSg2xFkcoVYT3QRT6dA=;
-        b=TzeKBoiR2hu1L+OGuVzAMrvuOnCDM+J1nsGD1QbB9tkwdgx5rUc3jCkTzkFKQpJZ+g
-         jx96zAcsJH7FSzAMjcpWTgiixmPWJj0xuWXML6IW4oVt5Npm6F2D8UyjZyfgnUKcGU/k
-         Ye+bmwRUMi6cBC1Jpn93V5znfun/KPJFuOi1qLjh4g9rRAQWp4o4mZYTnxBkkMhi63gU
-         V7L+RQlj4buS+IXOZ/xi5chAd/gFJkADDOm8HVDAcIG6pEUCkXciuRiNL3f81ss3nwjq
-         uQQg7uRc8wXqOP1IqZ+W8kYP25Bty+uiykVyhv6XfOg0vWk4GK+wnM0wcP7boPe8Y8sS
-         dTLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=IHuj1FiuJPknu8Z7Uq/JeXw8aSg2xFkcoVYT3QRT6dA=;
-        b=YcZCjbicKhCKe1SzKhwIcD9gZI/8J/QS/LQk4lcoLCwcSjlg9p0O/m5t80TGXT4lcn
-         wFh0VyY+SsMR6uXCPrN8QXYbEY6fFVxEY2+btKzt+ft0v4jQUljopKGOV6n85FRs89U4
-         DrjNPXoL7izbuheb/tW9ZBrrMTLQ1btIJ/MiAZ2gKtlrachezXQjW1Gtn66/hEpIQybL
-         9ctDGvygIAju/Yd9fx+cakfzPUGzKTc/yOhjKjbMfxF6YxTbdqPc08+0a3cOYoSoRKLE
-         i/drXsQpQhJHOhzZWXinld37vEHc/1pa/HYv3QR+UAproGfZq4eGqBh6cIYY87fW7nHk
-         lsmg==
-X-Gm-Message-State: AGi0PuYqEn+eRXnjHmfYwoSYQUy0ZK+SX7Vpbgu/XErfwPhXok1ZAmWe
-        N87IAyxXhJOQCMJxw6TgfSo=
-X-Google-Smtp-Source: APiQypLsj3XpHj4CyxtmOjlqdZs3DB8oJEEo2ghhT6QywH/SywA9LShfe1OCbQ3t6MmEGWRd+WIiVw==
-X-Received: by 2002:a1c:41d7:: with SMTP id o206mr194590wma.89.1587400987185;
-        Mon, 20 Apr 2020 09:43:07 -0700 (PDT)
-Received: from arrakis.kwizart.net (lfbn-nic-1-185-211.w2-15.abo.wanadoo.fr. [2.15.34.211])
-        by smtp.gmail.com with ESMTPSA id l4sm47922wrv.60.2020.04.20.09.43.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 09:43:06 -0700 (PDT)
-From:   Nicolas Chauvet <kwizart@gmail.com>
-To:     Manikanta Maddireddy <mmaddireddy@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
-        Nicolas Chauvet <kwizart@gmail.com>
-Subject: [RFC] PCI: tegra: Revert raw_violation_fixup for tegra124
-Date:   Mon, 20 Apr 2020 18:43:04 +0200
-Message-Id: <20200420164304.28810-1-kwizart@gmail.com>
-X-Mailer: git-send-email 2.25.2
+        id S1726013AbgDTRiN convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Mon, 20 Apr 2020 13:38:13 -0400
+Received: from mga02.intel.com ([134.134.136.20]:2056 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725784AbgDTRiN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 20 Apr 2020 13:38:13 -0400
+IronPort-SDR: 4O9S3bB399/mvlbO/khglyDaiARhq27kGO43jKytPh9kJKXs2/kyVtFQ/JGDZ+as4jFRJTE2Ck
+ cjysrQKmW1Rw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2020 10:38:12 -0700
+IronPort-SDR: jXFMh9f+85u+2xYc9LWBLO1qTCipRpzuYVQpwJK5C1scNWIv66sCzwn7tksxx7xdWh5fiebynf
+ FmNQdC49Ojug==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,407,1580803200"; 
+   d="scan'208";a="429210397"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga005.jf.intel.com with ESMTP; 20 Apr 2020 10:38:12 -0700
+Date:   Mon, 20 Apr 2020 10:44:10 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Felix Kuehling <felix.kuehling@amd.com>
+Cc:     Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, joro@8bytes.org, catalin.marinas@arm.com,
+        will@kernel.org, robin.murphy@arm.com, kevin.tian@intel.com,
+        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
+        zhangfei.gao@linaro.org, jgg@ziepe.ca, xuzaibo@huawei.com,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v5 02/25] iommu/sva: Manage process address spaces
+Message-ID: <20200420104410.3d1622e7@jacob-builder>
+In-Reply-To: <65709b48-526b-ff43-760c-0fe0317d5e9c@amd.com>
+References: <20200414170252.714402-1-jean-philippe@linaro.org>
+        <20200414170252.714402-3-jean-philippe@linaro.org>
+        <20200416072852.GA32000@infradead.org>
+        <20200416085402.GB1286150@myrica>
+        <20200416121331.GA18661@infradead.org>
+        <20200420074213.GA3180232@myrica>
+        <20200420081034.GA17305@infradead.org>
+        <6b195512-fa73-9a49-03d8-1ed92e86f607@amd.com>
+        <20200420115504.GA20664@infradead.org>
+        <966e190e-ca9f-4c64-af05-43b0f0d8d012@amd.com>
+        <65709b48-526b-ff43-760c-0fe0317d5e9c@amd.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-As reported in https://bugzilla.kernel.org/206217 , raw_violation_fixup
-is causing more harm than good in some common use-cases.
+On Mon, 20 Apr 2020 11:00:28 -0400
+Felix Kuehling <felix.kuehling@amd.com> wrote:
 
-This patch as RFC is a partial revert of the 191cd6fb5 commit:
- "PCI: tegra: Add SW fixup for RAW violations" 
-that was first introduced in 5.3 kernel.
-This fix the following regression since then.
+> Am 2020-04-20 um 8:40 a.m. schrieb Christian König:
+> > Am 20.04.20 um 13:55 schrieb Christoph Hellwig:  
+> >> On Mon, Apr 20, 2020 at 01:44:56PM +0200, Christian König wrote:  
+> >>> Am 20.04.20 um 10:10 schrieb Christoph Hellwig:  
+> >>>> On Mon, Apr 20, 2020 at 09:42:13AM +0200, Jean-Philippe Brucker
+> >>>> wrote:  
+> >>>>> Right, I can see the appeal. I still like having a single mmu
+> >>>>> notifier per
+> >>>>> mm because it ensures we allocate a single PASID per mm (as
+> >>>>> required by
+> >>>>> x86). I suppose one alternative is to maintain a hashtable of
+> >>>>> mm->pasid,
+> >>>>> to avoid iterating over all bonds during allocation.  
+> >>>> Given that the PASID is a pretty generic and important concept
+> >>>> can we just add it directly to the mm_struct and allocate it
+> >>>> lazily once we first need it?  
+> >>> Well the problem is that the PASID might as well be device
+> >>> specific. E.g.
+> >>> some devices use 16bit PASIDs, some 15bit, some other only 12bit.
+> >>>
+> >>> So what could (at least in theory) happen is that you need to
+> >>> allocate different PASIDs for the same process because different
+> >>> devices need one.  
+> >> This directly contradicts the statement from Jean-Philippe above
+> >> that x86 requires a single PASID per mm_struct.  If we may need
+> >> different PASIDs for different devices and can actually support
+> >> this just allocating one per [device, mm_struct] would make most
+> >> sense of me, as it doesn't couple otherwise disjoint state.  
+> >
+> > Well I'm not an expert on this topic. Felix can probably tell you a
+> > bit more about that.
+> >
+> > Maybe it is sufficient to keep the allocated PASIDs as small as
+> > possible and return an appropriate error if a device can't deal with
+> > the allocated number.
+> >
+> > If a device can only deal with 12bit PASIDs and more than 2^12 try
+> > to use it there isn't much else we can do than returning an error
+> > anyway.  
+> 
+> I'm probably missing some context. But let me try giving a useful
+> reply.
+> 
+> The hardware allows you to have different PASIDs for each device
+> referring to the same address space. But I think it's OK for software
+> to choose not to do that. If Linux wants to manage one PASID
+> namespace for all devices, that's a reasonable choice IMO.
+> 
+On VT-d, system wide PASID namespace is required. Here is a section of
+the documentation I am working on.
 
+Namespaces
+====================================================
+IOASIDs are limited system resources that default to 20 bits in
+size. Since each device has its own table, theoretically the namespace
+can be per device also. However, VT-d also supports shared workqueue
+and ENQCMD[1] where one IOASID could be used to submit work on
+multiple devices. This requires IOASID to be system-wide on Intel VT-d
+platforms. This is also the reason why guest must use emulated virtual
+command interface to allocate IOASID from the host.
 
-When using both the network NIC and I/O on MMC this can lead to the
-following message on jetson-tk1:
+On VT-d, storage of IOASID table is at per device while the
+granularity of assignment is per IOASID. Even though, each guest
+IOASID must have a backing host IOASID, guest IOASID can be different
+than its host IOASID. The namespace of guest IOASID is controlled by
+VMM, which decideds whether identity mapping of G-H IOASIDs is necessary.
 
- NETDEV WATCHDOG: enp1s0 (r8169): transmit queue 0 timed out
+1.
+https://software.intel.com/sites/default/files/managed/c5/15/architecture-instruction-set-extensions-programming-reference.pdf
 
-and
+For the per mm_struct PASID question by Christian, we are proposing
+that in x86 context and a lazy free.
 
- pcieport 0000:00:02.0: AER: Uncorrected (Non-Fatal) error received: 0000:01:00.0
- r8169 0000:01:00.0: AER: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Requester ID)
- r8169 0000:01:00.0: AER:   device [10ec:8168] error status/mask=00004000/00400000
- r8169 0000:01:00.0: AER:    [14] CmpltTO                (First)
- r8169 0000:01:00.0: AER: can't recover (no error_detected callback)
- pcieport 0000:00:02.0: AER: device recovery failed
+https://lkml.org/lkml/2020/3/30/910
 
+> Different devices have different limits for the size of PASID they can
+> support. For example AMD GPUs support 16-bits but the IOMMU supports
+> less. So on APUs we use small PASIDs for contexts that want to use
+> IOMMUv2 to access memory, but bigger PASIDs for contexts that do not.
+> 
+> I choose the word "context" deliberately, because the amdgpu driver
+> uses PASIDs even when we're not using IOMMUv2, and we're using them to
+> identify GPU virtual address spaces. There can be more than one per
+> process. In practice you can have two, one for graphics (not SVM,
+> doesn't use IOMMUv2) and one for KFD compute (SVM, can use IOMMUv2 on
+> APUs).
+> 
+> Because the IOMMUv2 supports only smaller PASIDs, we want to avoid
+> exhausting that space with PASID allocations that don't use the
+> IOMMUv2. So our PASID allocation function has a "size" parameter, and
+> we try to allocated a PASID as big as possible in order to leave more
+> precious smaller PASIDs for contexts that need them.
+> 
+> The bottom line is, when you allocate a PASID for a context, you want
+> to know how small it needs to be for all the devices that want to use
+> it. If you make it too big, some device will not be able to use it.
+> If you make it too small, you waste precious PASIDs that could be
+> used for other contexts that need them.
+> 
+So for AMD, system-wide PASID allocation works with the
+restriction/optimization above?
 
-After that, the ethernet NIC isn't functional anymore even after reloading
-the module.
-After a reboot, this is reproducible by copying a large file over the
-ethernet NIC to the MMC.
-For some reasons this cannot be reproduced when the same file is copied
-to a tmpfs.
+> Regards,
+>   Felix
+> 
 
-
-This patch is RFC because it requires more understanding from Nvidia.
- - Is the fixup (available in l4t downstrem) still needed for upstream ?
- - Is there a need to update the fixup values for upstream ?
- - If the fixup is reverted, does the hw bug can still be seen with
-   upstream ?
-
-Others can also provides more understanding:
- - Conditions to reproduce the bug (or not)...
-
-
-Signed-off-by: Nicolas Chauvet <kwizart@gmail.com>
----
- drivers/pci/controller/pci-tegra.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 3e64ba6a36a8..4027e074094a 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -2470,7 +2470,7 @@ static const struct tegra_pcie_soc tegra124_pcie = {
- 	.program_uphy = true,
- 	.update_clamp_threshold = true,
- 	.program_deskew_time = false,
--	.raw_violation_fixup = true,
-+	.raw_violation_fixup = false,
- 	.update_fc_timer = false,
- 	.has_cache_bars = false,
- 	.ectl.enable = false,
--- 
-2.25.2
-
+[Jacob Pan]
