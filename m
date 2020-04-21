@@ -2,133 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3DF271B2481
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Apr 2020 13:03:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A7B5F1B24C4
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Apr 2020 13:17:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728584AbgDULDp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 21 Apr 2020 07:03:45 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36398 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726018AbgDULDp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Apr 2020 07:03:45 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03LB3EwZ187360
-        for <linux-pci@vger.kernel.org>; Tue, 21 Apr 2020 07:03:43 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30gmuabua2-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-pci@vger.kernel.org>; Tue, 21 Apr 2020 07:03:42 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-pci@vger.kernel.org> from <fbarrat@linux.ibm.com>;
-        Tue, 21 Apr 2020 12:03:32 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 21 Apr 2020 12:03:30 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03LB3YU923134340
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 Apr 2020 11:03:35 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E179BA405C;
-        Tue, 21 Apr 2020 11:03:34 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 91E2FA4064;
-        Tue, 21 Apr 2020 11:03:34 +0000 (GMT)
-Received: from pic2.home (unknown [9.145.42.232])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 21 Apr 2020 11:03:34 +0000 (GMT)
-Subject: Re: [PATCH AUTOSEL 5.4 70/78] pci/hotplug/pnv-php: Remove erroneous
- warning
-To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Cc:     "Alastair D'Silva" <alastair@d-silva.org>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org
-References: <20200418144047.9013-1-sashal@kernel.org>
- <20200418144047.9013-70-sashal@kernel.org>
-From:   Frederic Barrat <fbarrat@linux.ibm.com>
-Date:   Tue, 21 Apr 2020 13:03:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1728651AbgDULRG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 Apr 2020 07:17:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47020 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728610AbgDULRF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Apr 2020 07:17:05 -0400
+Received: from mail.nic.cz (mail.nic.cz [IPv6:2001:1488:800:400::400])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F20EC061A0F
+        for <linux-pci@vger.kernel.org>; Tue, 21 Apr 2020 04:17:05 -0700 (PDT)
+Received: from dellmb.labs.office.nic.cz (unknown [IPv6:2001:1488:fffe:6:cac7:3539:7f1f:463])
+        by mail.nic.cz (Postfix) with ESMTP id 5552914088B;
+        Tue, 21 Apr 2020 13:17:02 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
+        t=1587467822; bh=TAG7UGkroiUF+Iz9YmZwmer/vqlVCFSQ5u8kjGzBoUk=;
+        h=From:To:Date;
+        b=vmfkY1fqlmElzrg7ikOLC0g5FxlNs/8d2B8Kchwl5bDRRp3h2npC6j0yb67ckjNwo
+         6xnG1HvVVIQB3yrX8EjLAE8QjN9Czx+L3XeDTUbcO+xzmtmmJ/8+1ci0pFk9ltcwT5
+         0xRJOTkOAaqXttvb/QUmbnXZhcTj7v4CRYzlerEE=
+From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
+To:     linux-pci@vger.kernel.org
+Cc:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Remi Pommarel <repk@triplefau.lt>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Xogium <contact@xogium.me>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
+Subject: [PATCH v2 0/9] PCI: aardvark: Fix support for Turris MOX and Compex wifi cards
+Date:   Tue, 21 Apr 2020 13:16:52 +0200
+Message-Id: <20200421111701.17088-1-marek.behun@nic.cz>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <20200418144047.9013-70-sashal@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20042111-0028-0000-0000-000003FC425A
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20042111-0029-0000-0000-000024C20597
-Message-Id: <3f547720-ec27-7a12-d80e-79cd46477daf@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-21_04:2020-04-20,2020-04-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
- spamscore=0 phishscore=0 adultscore=0 suspectscore=0 priorityscore=1501
- lowpriorityscore=0 bulkscore=0 mlxlogscore=999 clxscore=1031
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004210088
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on mail.nic.cz
+X-Spam-Status: No, score=0.00
+X-Spamd-Bar: /
+X-Virus-Scanned: clamav-milter 0.101.4 at mail
+X-Virus-Status: Clean
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hello,
 
+this is the second version of the patch series for Armada 3720 PCIe
+controller (aardvark). It's main purpose is to fix some bugs regarding
+buggy ath10k cards, but we also found out some suspicious stuff about
+the driver and the SOC itself, which we try to address.
 
-Le 18/04/2020 à 16:40, Sasha Levin a écrit :
-> From: Frederic Barrat <fbarrat@linux.ibm.com>
-> 
-> [ Upstream commit 658ab186dd22060408d94f5c5a6d02d809baba44 ]
+Changes since v1:
+- commit titles and messages were reviewed and some of them were rewritten
+- patches 1 and 5 from v1 which touch PCIe speed configuration were
+  reworked into one patch
+- patch 2 from v1 was removed, it is not needed anymore
+- patch 7 from v1 now touches the device tree of armada-3720-db
+- a patch was added that tries to enable PCIe PHY via generic-phy API
+  (if a phandle to the PHY is found in the device tree)
+- a patch describing the new PCIe node DT properties was added
+- a patch was added that moves the PHY phandle from board device trees
+  to armada-37xx.dtsi
 
+Marek and Pali
 
-This doesn't need to be backported to stable.
+Marek Behún (5):
+  PCI: aardvark: improve link training
+  PCI: aardvark: add PHY support
+  dt-bindings: PCI: aardvark: describe new properties
+  arm64: dts: marvell: armada-37xx: set pcie_reset_pin to gpio function
+  arm64: dts: marvell: armada-37xx: move PCIe comphy handle property
 
-   Fred
+Pali Rohár (4):
+  PCI: aardvark: train link immediately after enabling training
+  PCI: aardvark: don't write to read-only register
+  PCI: aardvark: issue PERST via GPIO
+  PCI: aardvark: add FIXME comment for PCIE_CORE_CMD_STATUS_REG access
 
+ .../devicetree/bindings/pci/aardvark-pci.txt  |   4 +
+ .../arm64/boot/dts/marvell/armada-3720-db.dts |   3 +
+ .../dts/marvell/armada-3720-espressobin.dtsi  |   2 +-
+ .../dts/marvell/armada-3720-turris-mox.dts    |   5 -
+ arch/arm64/boot/dts/marvell/armada-37xx.dtsi  |   3 +-
+ drivers/pci/controller/pci-aardvark.c         | 219 +++++++++++++++---
+ 6 files changed, 203 insertions(+), 33 deletions(-)
 
-> On powernv, when removing a device through hotplug, the following
-> warning is logged:
-> 
->       Invalid refcount <.> on <...>
-> 
-> It may be incorrect, the refcount may be set to a higher value than 1
-> and be valid. of_detach_node() can drop more than one reference. As it
-> doesn't seem trivial to assert the correct value, let's remove the
-> warning.
-> 
-> Reviewed-by: Alastair D'Silva <alastair@d-silva.org>
-> Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
-> Signed-off-by: Frederic Barrat <fbarrat@linux.ibm.com>
-> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-> Link: https://lore.kernel.org/r/20191121134918.7155-7-fbarrat@linux.ibm.com
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->   drivers/pci/hotplug/pnv_php.c | 6 ------
->   1 file changed, 6 deletions(-)
-> 
-> diff --git a/drivers/pci/hotplug/pnv_php.c b/drivers/pci/hotplug/pnv_php.c
-> index d7b2b47bc33eb..6037983c6e46b 100644
-> --- a/drivers/pci/hotplug/pnv_php.c
-> +++ b/drivers/pci/hotplug/pnv_php.c
-> @@ -151,17 +151,11 @@ static void pnv_php_rmv_pdns(struct device_node *dn)
->   static void pnv_php_detach_device_nodes(struct device_node *parent)
->   {
->   	struct device_node *dn;
-> -	int refcount;
->   
->   	for_each_child_of_node(parent, dn) {
->   		pnv_php_detach_device_nodes(dn);
->   
->   		of_node_put(dn);
-> -		refcount = kref_read(&dn->kobj.kref);
-> -		if (refcount != 1)
-> -			pr_warn("Invalid refcount %d on <%pOF>\n",
-> -				refcount, dn);
-> -
->   		of_detach_node(dn);
->   	}
->   }
-> 
+-- 
+2.24.1
 
