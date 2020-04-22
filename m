@@ -2,250 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C91D1B4ECE
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Apr 2020 23:08:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6214A1B4EF9
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Apr 2020 23:14:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726109AbgDVVIa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Apr 2020 17:08:30 -0400
-Received: from mga03.intel.com ([134.134.136.65]:61138 "EHLO mga03.intel.com"
+        id S1726183AbgDVVOi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Apr 2020 17:14:38 -0400
+Received: from mga04.intel.com ([192.55.52.120]:52565 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726068AbgDVVIa (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 22 Apr 2020 17:08:30 -0400
-IronPort-SDR: Pm+rPTluK0FYnEsimrB/Y+GKOl2NpS82a818G+ncQJK1PwAIv+SM0LPhp9ObLlARLv6EEGkTJp
- ivJ2lR3NQHyQ==
+        id S1726090AbgDVVOi (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 22 Apr 2020 17:14:38 -0400
+IronPort-SDR: tR+PDkjBU/ier9SbbhN4ntD/CyWhcZBTUXplhOn4uWSNn0KtF1rrX/qqK+gg35cRxSb2YPJVMR
+ vybaviIeEr5A==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 14:08:29 -0700
-IronPort-SDR: Ql8gjccgQx4EibkTTP+5ephPyUCu7w5Aoeamr8ssHPR2wevNX66BoG1Xxi0k3pWSLbVLPyAJoS
- DDBp1HUlPEmA==
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 14:14:37 -0700
+IronPort-SDR: 8vCw1V311yc1l9jGv5DHjLy8mjDMw8yJKPOo/IUX+/10QcFObB1zlI1It2yH/GrtMrLkWUtZui
+ fmoNWkImtY8w==
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,304,1583222400"; 
-   d="scan'208";a="280164059"
-Received: from ajakowsk-mobl1.amr.corp.intel.com (HELO localhost.localdomain) ([10.251.238.252])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 14:08:28 -0700
-Subject: Re: [PATCH for QEMU] hw/vfio: Add VMD Passthrough Quirk
-To:     Jon Derrick <jonathan.derrick@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>, qemu-devel@nongnu.org
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-References: <20200422171305.10923-1-jonathan.derrick@intel.com>
-From:   Andrzej Jakowski <andrzej.jakowski@intel.com>
-Message-ID: <513cfa85-2b93-68b9-4422-aafbcba92e23@intel.com>
-Date:   Wed, 22 Apr 2020 14:08:26 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+   d="scan'208";a="274020861"
+Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.25])
+  by orsmga002.jf.intel.com with ESMTP; 22 Apr 2020 14:14:36 -0700
+Date:   Wed, 22 Apr 2020 14:14:36 -0700
+From:   "Raj, Ashok" <ashok.raj@intel.com>
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "megha.dey@linux.intel.com" <megha.dey@linux.intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Lin, Jing" <jing.lin@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
+ support for the idxd driver.
+Message-ID: <20200422211436.GA103345@otc-nc-03>
+References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
+ <20200421235442.GO11945@mellanox.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D86EE26@SHSMSX104.ccr.corp.intel.com>
+ <20200422115017.GQ11945@mellanox.com>
 MIME-Version: 1.0
-In-Reply-To: <20200422171305.10923-1-jonathan.derrick@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200422115017.GQ11945@mellanox.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 4/22/20 10:13 AM, Jon Derrick wrote:
-> The VMD endpoint provides a real PCIe domain to the guest, including
-> bridges and endpoints. The IOMMU performs Host Physical Address to Guest
-> Physical Address translation when assigning downstream endpoint BARs and
-> when translating MMIO addresses.
->
-> This translation is not desired when assigning bridge windows. When MMIO
-> goes to an endpoint after being translated to HPA, the bridge will
-> reject the HPA transaction because the bridge window has been programmed
-> with translated GPAs.
->
-> VMD device 28C0 natively supports passthrough by providing the Host
-> Physical Address in shadow registers accessible to the guest for bridge
-> window assignment. The shadow registers are valid if bit 1 is set in VMD
-> VMLOCK config register 0x70.
->
-> This quirk emulates the VMLOCK and HPA shadow registers for all VMD
-> device ids which don't natively offer this feature. The Linux VMD driver
-> is updated to match the QEMU subsystem id to enable this feature.
->
-> Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
-> ---
->  hw/vfio/pci-quirks.c | 119 +++++++++++++++++++++++++++++++++++++++++++
->  hw/vfio/pci.c        |   7 +++
->  hw/vfio/pci.h        |   2 +
->  hw/vfio/trace-events |   4 ++
->  4 files changed, 132 insertions(+)
->
-> diff --git a/hw/vfio/pci-quirks.c b/hw/vfio/pci-quirks.c
-> index 2d348f8237..2fd27cc8f6 100644
-> --- a/hw/vfio/pci-quirks.c
-> +++ b/hw/vfio/pci-quirks.c
-> @@ -1709,3 +1709,122 @@ free_exit:
->  
->      return ret;
->  }
-> +
-> +/*
-> + * The VMD endpoint provides a real PCIe domain to the guest. The IOMMU
-> + * performs Host Physical Address to Guest Physical Address translation when
-> + * assigning downstream endpoint BARs and when translating MMIO addresses.
-> + * However this translation is not desired when assigning bridge windows. When
-> + * MMIO goes to an endpoint after being translated to HPA, the bridge rejects
-> + * the transaction because the window has been programmed with translated GPAs.
-> + *
-> + * VMD uses the Host Physical Address in order to correctly program the bridge
-> + * windows in its PCIe domain. VMD device 28C0 has HPA shadow registers located
-> + * at offset 0x2000 in MEMBAR2 (BAR 4). The shadow registers are valid if bit 1
-> + * is set in the VMD VMLOCK config register 0x70.
-> + *
-> + * This quirk emulates the VMLOCK and HPA shadow registers for all VMD device
-> + * ids which don't natively offer this feature. The subsystem vendor/device
-> + * id is set to the QEMU subsystem vendor/device id, where the driver matches
-> + * the id to enable this feature.
-> + */
-> +typedef struct VFIOVMDQuirk {
-> +    VFIOPCIDevice *vdev;
-> +    uint64_t membar_phys[2];
-> +} VFIOVMDQuirk;
-> +
-> +static uint64_t vfio_vmd_quirk_read(void *opaque, hwaddr addr, unsigned size)
-> +{
-> +    VFIOVMDQuirk *data = opaque;
-> +    uint64_t val = 0;
-> +
-> +    memcpy(&val, (void *)data->membar_phys + addr, size);
-> +    return val;
-> +}
-> +
-> +static const MemoryRegionOps vfio_vmd_quirk = {
-> +    .read = vfio_vmd_quirk_read,
-> +    .endianness = DEVICE_LITTLE_ENDIAN,
-> +};
-> +
-> +#define VMD_VMLOCK  0x70
-> +#define VMD_SHADOW  0x2000
-> +#define VMD_MEMBAR2 4
-> +
-> +static int vfio_vmd_emulate_shadow_registers(VFIOPCIDevice *vdev)
-> +{
-> +    VFIOQuirk *quirk;
-> +    VFIOVMDQuirk *data;
-> +    PCIDevice *pdev = &vdev->pdev;
-> +    int ret;
-> +
-> +    data = g_malloc0(sizeof(*data));
-> +    ret = pread(vdev->vbasedev.fd, data->membar_phys, 16,
-> +                vdev->config_offset + PCI_BASE_ADDRESS_2);
-> +    if (ret != 16) {
-> +        error_report("VMD %s cannot read MEMBARs (%d)",
-> +                     vdev->vbasedev.name, ret);
-> +        g_free(data);
-> +        return -EFAULT;
-> +    }
-> +
-> +    quirk = vfio_quirk_alloc(1);
-> +    quirk->data = data;
-> +    data->vdev = vdev;
-> +
-> +    /* Emulate Shadow Registers */
-> +    memory_region_init_io(quirk->mem, OBJECT(vdev), &vfio_vmd_quirk, data,
-> +                          "vfio-vmd-quirk", sizeof(data->membar_phys));
-> +    memory_region_add_subregion_overlap(vdev->bars[VMD_MEMBAR2].region.mem,
-> +                                        VMD_SHADOW, quirk->mem, 1);
-> +    memory_region_set_readonly(quirk->mem, true);
-> +    memory_region_set_enabled(quirk->mem, true);
-> +
-> +    QLIST_INSERT_HEAD(&vdev->bars[VMD_MEMBAR2].quirks, quirk, next);
-> +
-> +    trace_vfio_pci_vmd_quirk_shadow_regs(vdev->vbasedev.name,
-> +                                         data->membar_phys[0],
-> +                                         data->membar_phys[1]);
-> +
-> +    /* Advertise Shadow Register support */
-> +    pci_byte_test_and_set_mask(pdev->config + VMD_VMLOCK, 0x2);
-> +    pci_set_byte(pdev->wmask + VMD_VMLOCK, 0);
-> +    pci_set_byte(vdev->emulated_config_bits + VMD_VMLOCK, 0x2);
-> +
-> +    trace_vfio_pci_vmd_quirk_vmlock(vdev->vbasedev.name,
-> +                                    pci_get_byte(pdev->config + VMD_VMLOCK));
-> +
-> +    /* Drivers can match the subsystem vendor/device id */
-> +    pci_set_word(pdev->config + PCI_SUBSYSTEM_VENDOR_ID,
-> +                 PCI_SUBVENDOR_ID_REDHAT_QUMRANET);
-> +    pci_set_word(vdev->emulated_config_bits + PCI_SUBSYSTEM_VENDOR_ID, ~0);
-> +
-> +    pci_set_word(pdev->config + PCI_SUBSYSTEM_ID, PCI_SUBDEVICE_ID_QEMU);
-> +    pci_set_word(vdev->emulated_config_bits + PCI_SUBSYSTEM_ID, ~0);
-> +
-> +    trace_vfio_pci_vmd_quirk_subsystem(vdev->vbasedev.name,
-> +                           vdev->sub_vendor_id, vdev->sub_device_id,
-> +                           pci_get_word(pdev->config + PCI_SUBSYSTEM_VENDOR_ID),
-> +                           pci_get_word(pdev->config + PCI_SUBSYSTEM_ID));
-> +
-> +    return 0;
-> +}
-> +
-> +int vfio_pci_vmd_init(VFIOPCIDevice *vdev)
-> +{
-> +    int ret = 0;
-> +
-> +    switch (vdev->device_id) {
-> +    case 0x28C0: /* Native passthrough support */
-> +        break;
-> +    /* Emulates Native passthrough support */
-> +    case 0x201D:
-> +    case 0x467F:
-> +    case 0x4C3D:
-> +    case 0x9A0B:
-> +        ret = vfio_vmd_emulate_shadow_registers(vdev);
-> +        break;
-> +    }
-> +
-> +    return ret;
-> +}
-> diff --git a/hw/vfio/pci.c b/hw/vfio/pci.c
-> index 5e75a95129..85425a1a6f 100644
-> --- a/hw/vfio/pci.c
-> +++ b/hw/vfio/pci.c
-> @@ -3024,6 +3024,13 @@ static void vfio_realize(PCIDevice *pdev, Error **errp)
->          }
->      }
->  
-> +    if (vdev->vendor_id == PCI_VENDOR_ID_INTEL) {
-> +        ret = vfio_pci_vmd_init(vdev);
-> +        if (ret) {
-> +            error_report("Failed to setup VMD");
-> +        }
-> +    }
-> +
->      vfio_register_err_notifier(vdev);
->      vfio_register_req_notifier(vdev);
->      vfio_setup_resetfn_quirk(vdev);
-> diff --git a/hw/vfio/pci.h b/hw/vfio/pci.h
-> index 0da7a20a7e..e8632d806b 100644
-> --- a/hw/vfio/pci.h
-> +++ b/hw/vfio/pci.h
-> @@ -217,6 +217,8 @@ int vfio_pci_igd_opregion_init(VFIOPCIDevice *vdev,
->  int vfio_pci_nvidia_v100_ram_init(VFIOPCIDevice *vdev, Error **errp);
->  int vfio_pci_nvlink2_init(VFIOPCIDevice *vdev, Error **errp);
->  
-> +int vfio_pci_vmd_init(VFIOPCIDevice *vdev);
-> +
->  void vfio_display_reset(VFIOPCIDevice *vdev);
->  int vfio_display_probe(VFIOPCIDevice *vdev, Error **errp);
->  void vfio_display_finalize(VFIOPCIDevice *vdev);
-> diff --git a/hw/vfio/trace-events b/hw/vfio/trace-events
-> index b1ef55a33f..aabbd2693a 100644
-> --- a/hw/vfio/trace-events
-> +++ b/hw/vfio/trace-events
-> @@ -90,6 +90,10 @@ vfio_pci_nvidia_gpu_setup_quirk(const char *name, uint64_t tgt, uint64_t size) "
->  vfio_pci_nvlink2_setup_quirk_ssatgt(const char *name, uint64_t tgt, uint64_t size) "%s tgt=0x%"PRIx64" size=0x%"PRIx64
->  vfio_pci_nvlink2_setup_quirk_lnkspd(const char *name, uint32_t link_speed) "%s link_speed=0x%x"
->  
-> +vfio_pci_vmd_quirk_shadow_regs(const char *name, uint64_t mb1, uint64_t mb2) "%s membar1_phys=0x%"PRIx64" membar2_phys=0x%"PRIx64"
-> +vfio_pci_vmd_quirk_vmlock(const char *name, uint8_t vmlock) "%s vmlock=0x%x"
-> +vfio_pci_vmd_quirk_subsystem(const char *name, uint16_t old_svid, uint16_t old_sdid, uint16_t new_svid, uint16_t new_sdid) "%s subsystem id 0x%04x:0x%04x -> 0x%04x:0x%04x"
-> +
->  # common.c
->  vfio_region_write(const char *name, int index, uint64_t addr, uint64_t data, unsigned size) " (%s:region%d+0x%"PRIx64", 0x%"PRIx64 ", %d)"
->  vfio_region_read(char *name, int index, uint64_t addr, unsigned size, uint64_t data) " (%s:region%d+0x%"PRIx64", %d) = 0x%"PRIx64
+Hi Jason
 
-Reviewed-by: Andrzej Jakowski <andrzej.jakowski@linux.intel.com>
+> > > 
+> > > I'm feeling really skeptical that adding all this PCI config space and
+> > > MMIO BAR emulation to the kernel just to cram this into a VFIO
+> > > interface is a good idea, that kind of stuff is much safer in
+> > > userspace.
+> > > 
+> > > Particularly since vfio is not really needed once a driver is using
+> > > the PASID stuff. We already have general code for drivers to use to
+> > > attach a PASID to a mm_struct - and using vfio while disabling all the
+> > > DMA/iommu config really seems like an abuse.
+> > 
+> > Well, this series is for virtualizing idxd device to VMs, instead of
+> > supporting SVA for bare metal processes. idxd implements a
+> > hardware-assisted mediated device technique called Intel Scalable
+> > I/O Virtualization,
+> 
+> I'm familiar with the intel naming scheme.
+> 
+> > which allows each Assignable Device Interface (ADI, e.g. a work
+> > queue) tagged with an unique PASID to ensure fine-grained DMA
+> > isolation when those ADIs are assigned to different VMs. For this
+> > purpose idxd utilizes the VFIO mdev framework and IOMMU aux-domain
+> > extension. Bare metal SVA will be enabled for idxd later by using
+> > the general SVA code that you mentioned.  Both paths will co-exist
+> > in the end so there is no such case of disabling DMA/iommu config.
+>  
+> Again, if you will have a normal SVA interface, there is no need for a
+> VFIO version, just use normal SVA for both.
+> 
+> PCI emulation should try to be in userspace, not the kernel, for
+> security.
+
+Not sure we completely understand your proposal. Mediated devices
+are software constructed and they have protected resources like
+interrupts and stuff and VFIO already provids abstractions to export
+to user space.
+
+Native SVA is simply passing the process CR3 handle to IOMMU so
+IOMMU knows how to walk process page tables, kernel handles things
+like page-faults, doing device tlb invalidations and such.
+
+That by itself doesn't translate to what a guest typically does
+with a VDEV. There are other control paths that need to be serviced
+from the kernel code via VFIO. For speed path operations like
+ringing doorbells and such they are directly managed from guest.
+
+How do you propose to use the existing SVA api's  to also provide 
+full device emulation as opposed to using an existing infrastructure 
+that's already in place?
+
+Perhaps Alex can ease Jason's concerns?
+
+Cheers,
+Ashok
 
