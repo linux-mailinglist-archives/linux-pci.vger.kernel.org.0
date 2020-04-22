@@ -2,158 +2,67 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CCCEC1B342D
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Apr 2020 02:53:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 64CFA1B3438
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Apr 2020 02:55:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726039AbgDVAxc convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Tue, 21 Apr 2020 20:53:32 -0400
-Received: from mga09.intel.com ([134.134.136.24]:52603 "EHLO mga09.intel.com"
+        id S1726039AbgDVAzZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 Apr 2020 20:55:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726012AbgDVAxc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 21 Apr 2020 20:53:32 -0400
-IronPort-SDR: EKI54qKrr30rVClxbdzn2R6r6SktghpvXfjaDFOE9vu9esEhZapSN3QL0xXG8eqRxBldXJhm/N
- OrtgV69SIJiQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2020 17:53:31 -0700
-IronPort-SDR: 6BvZNWKAkfEmtMuPX9NJM/DT2T0OL58dZHnYXUjIma0xZO8x1qj0CkCR3Q2GnadwpmmFhzZvUf
- sQJMrcy45FuQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,412,1580803200"; 
-   d="scan'208";a="334451596"
-Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
-  by orsmga001.jf.intel.com with ESMTP; 21 Apr 2020 17:53:30 -0700
-Received: from fmsmsx608.amr.corp.intel.com (10.18.126.88) by
- FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 21 Apr 2020 17:53:30 -0700
-Received: from fmsmsx608.amr.corp.intel.com (10.18.126.88) by
- fmsmsx608.amr.corp.intel.com (10.18.126.88) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 21 Apr 2020 17:53:30 -0700
-Received: from shsmsx105.ccr.corp.intel.com (10.239.4.158) by
- fmsmsx608.amr.corp.intel.com (10.18.126.88) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Tue, 21 Apr 2020 17:53:29 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
- SHSMSX105.ccr.corp.intel.com ([169.254.11.213]) with mapi id 14.03.0439.000;
- Wed, 22 Apr 2020 08:53:26 +0800
-From:   "Tian, Kevin" <kevin.tian@intel.com>
-To:     Jason Gunthorpe <jgg@mellanox.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>
-CC:     "vkoul@kernel.org" <vkoul@kernel.org>,
-        "megha.dey@linux.intel.com" <megha.dey@linux.intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: RE: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
- support for the idxd driver.
-Thread-Topic: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
- support for the idxd driver.
-Thread-Index: AQHWGDVStT24LxQ110qc/YDRWdRX86iDuewAgACI/wA=
-Date:   Wed, 22 Apr 2020 00:53:25 +0000
-Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D86EE26@SHSMSX104.ccr.corp.intel.com>
-References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
- <20200421235442.GO11945@mellanox.com>
-In-Reply-To: <20200421235442.GO11945@mellanox.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S1726012AbgDVAzZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 21 Apr 2020 20:55:25 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04B0C2071E;
+        Wed, 22 Apr 2020 00:55:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587516925;
+        bh=1tGsEv5ZFp9bX2M6Kx0sfhTv+0ZAGMG4B0V9Zh/NRjQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iIZ/ySE32plEgTzSYEoFVxtu2f+Ees6F8/H9+vpBCrjILSB53HY7a8zDlU8Gy28XU
+         jGiV89vqnJFzcW0fhZ9EGuSjUKvNuvecXtgtyjDYvuFctHpqyN6JQqTBVoTUds1Ln7
+         wDuYMMNFP5kbg/+flHoTivANtUtqEQz1ewVHUmFU=
+Date:   Tue, 21 Apr 2020 20:55:23 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Karol Herbst <kherbst@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lyude Paul <lyude@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Mika Westerberg <mika.westerberg@intel.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Ben Skeggs <bskeggs@redhat.com>
+Subject: Re: [PATCH AUTOSEL 5.6 084/129] drm/nouveau: workaround runpm fail
+ by disabling PCI power management on certain intel bridges
+Message-ID: <20200422005523.GV1809@sasha-vm>
+References: <20200415113445.11881-1-sashal@kernel.org>
+ <20200415113445.11881-84-sashal@kernel.org>
+ <CACO55ttpvfoyt1p_5Y-Q1=+5NruF5kMoug85jE9y+jG+FW=HGw@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CACO55ttpvfoyt1p_5Y-Q1=+5NruF5kMoug85jE9y+jG+FW=HGw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> From: Jason Gunthorpe
-> Sent: Wednesday, April 22, 2020 7:55 AM
-> 
-> On Tue, Apr 21, 2020 at 04:33:46PM -0700, Dave Jiang wrote:
-> > The actual code is independent of the stage 2 driver code submission that
-> adds
-> > support for SVM, ENQCMD(S), PASID, and shared workqueues. This code
-> series will
-> > support dedicated workqueue on a guest with no vIOMMU.
-> >
-> > A new device type "mdev" is introduced for the idxd driver. This allows the
-> wq
-> > to be dedicated to the usage of a VFIO mediated device (mdev). Once the
-> work
-> > queue (wq) is enabled, an uuid generated by the user can be added to the
-> wq
-> > through the uuid sysfs attribute for the wq.  After the association, a mdev
-> can
-> > be created using this UUID. The mdev driver code will associate the uuid
-> and
-> > setup the mdev on the driver side. When the create operation is successful,
-> the
-> > uuid can be passed to qemu. When the guest boots up, it should discover a
-> DSA
-> > device when doing PCI discovery.
-> 
-> I'm feeling really skeptical that adding all this PCI config space and
-> MMIO BAR emulation to the kernel just to cram this into a VFIO
-> interface is a good idea, that kind of stuff is much safer in
-> userspace.
-> 
-> Particularly since vfio is not really needed once a driver is using
-> the PASID stuff. We already have general code for drivers to use to
-> attach a PASID to a mm_struct - and using vfio while disabling all the
-> DMA/iommu config really seems like an abuse.
+On Wed, Apr 15, 2020 at 06:11:10PM +0200, Karol Herbst wrote:
+>in addition to that 028a12f5aa829 "drm/nouveau/gr/gp107,gp108:
+>implement workaround for HW hanging during init" should probably get
+>picked as well as it's fixing some runtime pm related issue on a
+>handful of additional GPUs. I have a laptop myself which requires both
+>of those patches.
+>
+>Applies to 5.5 and 5..4 as well.
 
-Well, this series is for virtualizing idxd device to VMs, instead of supporting
-SVA for bare metal processes. idxd implements a hardware-assisted 
-mediated device technique called Intel Scalable I/O Virtualization, which
-allows each Assignable Device Interface (ADI, e.g. a work queue) tagged 
-with an unique PASID to ensure fine-grained DMA isolation when those 
-ADIs are assigned to different VMs. For this purpose idxd utilizes the VFIO 
-mdev framework and IOMMU aux-domain extension. Bare metal SVA will
-be enabled for idxd later by using the general SVA code that you mentioned.
-Both paths will co-exist in the end so there is no such case of disabling
-DMA/iommu config.
+I've grabbed it for 5.6 and 5.4 (5.5 is EOL), thanks!
 
-Thanks
-Kevin
-
-> 
-> A /dev/idxd char dev that mmaps a bar page and links it to a PASID
-> seems a lot simpler and saner kernel wise.
-> 
-> > The mdev utilizes Interrupt Message Store or IMS[3] instead of MSIX for
-> > interrupts for the guest. This preserves MSIX for host usages and also
-> allows a
-> > significantly larger number of interrupt vectors for guest usage.
-> 
-> I never did get a reply to my earlier remarks on the IMS patches.
-> 
-> The concept of a device specific addr/data table format for MSI is not
-> Intel specific. This should be general code. We have a device that can
-> use this kind of kernel capability today.
-> 
-> Jason
+-- 
+Thanks,
+Sasha
