@@ -2,28 +2,28 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BE4A1B4BC6
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Apr 2020 19:28:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 63F3A1B4BC7
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Apr 2020 19:28:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726082AbgDVR2U (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Apr 2020 13:28:20 -0400
+        id S1726154AbgDVR2V (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Apr 2020 13:28:21 -0400
 Received: from mga11.intel.com ([192.55.52.93]:62138 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726060AbgDVR2U (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 22 Apr 2020 13:28:20 -0400
-IronPort-SDR: L/BRKOQcJGRl+YzEj3bfljeVrC3nIwhVbRJuGaLB8C/1ISvx/LOc6UZ5gUqITAFDJVqxIEBsvp
- yyiPVCHDbsKA==
+        id S1726060AbgDVR2V (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 22 Apr 2020 13:28:21 -0400
+IronPort-SDR: ufjgFpL1A8OVAQrAua13tkXA4PnVS1Kdb6zwTiu4F58IUJ8dQUT2sq0Yr/7ClUrMIM/K1hJ7XE
+ 5PKQK09cgzbg==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
   by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 10:28:18 -0700
-IronPort-SDR: HxdrDDUmCxodUNlCPZE1se1ZGE6slvBsrzZL0UvifA4nUA8lKBkKc7fz5sYeIhg0653ocxP4FY
- fXu9PD0aT3fw==
+IronPort-SDR: GIoBfjkDeD7w2hdiabPdW2SOdEki+l8ydPDm/m266t8HN5f/JoVFcTG/1OWHUbyg+4vRY8ADXc
+ LmqU3ff6uroA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,304,1583222400"; 
-   d="scan'208";a="429999410"
+   d="scan'208";a="429999418"
 Received: from unknown (HELO localhost.lm.intel.com) ([10.232.116.40])
-  by orsmga005.jf.intel.com with ESMTP; 22 Apr 2020 10:28:17 -0700
+  by orsmga005.jf.intel.com with ESMTP; 22 Apr 2020 10:28:18 -0700
 From:   Jon Derrick <jonathan.derrick@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>, qemu-devel@nongnu.org
 Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -31,215 +31,62 @@ Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         virtualization@lists.linux-foundation.org,
         Andrzej Jakowski <andrzej.jakowski@intel.com>,
         Jon Derrick <jonathan.derrick@intel.com>
-Subject: [PATCH for QEMU] hw/vfio: Add VMD Passthrough Quirk
-Date:   Wed, 22 Apr 2020 13:13:04 -0400
-Message-Id: <20200422171305.10923-1-jonathan.derrick@intel.com>
+Subject: [PATCH 1/1] pci: vmd: Use Shadow MEMBAR registers for QEMU/KVM guests
+Date:   Wed, 22 Apr 2020 13:13:05 -0400
+Message-Id: <20200422171305.10923-2-jonathan.derrick@intel.com>
 X-Mailer: git-send-email 2.18.1
+In-Reply-To: <20200422171305.10923-1-jonathan.derrick@intel.com>
+References: <20200422171305.10923-1-jonathan.derrick@intel.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The VMD endpoint provides a real PCIe domain to the guest, including
-bridges and endpoints. The IOMMU performs Host Physical Address to Guest
-Physical Address translation when assigning downstream endpoint BARs and
-when translating MMIO addresses.
+VMD device 28C0 provides native guest passthrough of the VMD endpoint
+through the use of shadow registers that provide Host Physical Addresses
+to correctly assign bridge windows. A quirk has been added to QEMU's
+VFIO quirks to emulate the shadow registers for VMD devices which don't
+support this mode natively in hardware.
 
-This translation is not desired when assigning bridge windows. When MMIO
-goes to an endpoint after being translated to HPA, the bridge will
-reject the HPA transaction because the bridge window has been programmed
-with translated GPAs.
-
-VMD device 28C0 natively supports passthrough by providing the Host
-Physical Address in shadow registers accessible to the guest for bridge
-window assignment. The shadow registers are valid if bit 1 is set in VMD
-VMLOCK config register 0x70.
-
-This quirk emulates the VMLOCK and HPA shadow registers for all VMD
-device ids which don't natively offer this feature. The Linux VMD driver
-is updated to match the QEMU subsystem id to enable this feature.
+The VFIO quirk assigns the VMD a subsystem vendor/device ID using the
+standard QEMU vendor/device, which are typically only used for emulation
+and not VFIO. There are no plans for an emulated VMD controller, but if
+one is developed in the future, support for this mode can be added by
+emulating the VMD VMLOCK and Shadow MEMBAR registers
 
 Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
 ---
- hw/vfio/pci-quirks.c | 119 +++++++++++++++++++++++++++++++++++++++++++
- hw/vfio/pci.c        |   7 +++
- hw/vfio/pci.h        |   2 +
- hw/vfio/trace-events |   4 ++
- 4 files changed, 132 insertions(+)
+ drivers/pci/controller/vmd.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/hw/vfio/pci-quirks.c b/hw/vfio/pci-quirks.c
-index 2d348f8237..2fd27cc8f6 100644
---- a/hw/vfio/pci-quirks.c
-+++ b/hw/vfio/pci-quirks.c
-@@ -1709,3 +1709,122 @@ free_exit:
+diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+index dac91d60701d..764404b45ebb 100644
+--- a/drivers/pci/controller/vmd.c
++++ b/drivers/pci/controller/vmd.c
+@@ -598,6 +598,7 @@ static irqreturn_t vmd_irq(int irq, void *data)
+ static int vmd_probe(struct pci_dev *dev, const struct pci_device_id *id)
+ {
+ 	struct vmd_dev *vmd;
++	unsigned long features = id->driver_data;
+ 	int i, err;
  
-     return ret;
- }
-+
-+/*
-+ * The VMD endpoint provides a real PCIe domain to the guest. The IOMMU
-+ * performs Host Physical Address to Guest Physical Address translation when
-+ * assigning downstream endpoint BARs and when translating MMIO addresses.
-+ * However this translation is not desired when assigning bridge windows. When
-+ * MMIO goes to an endpoint after being translated to HPA, the bridge rejects
-+ * the transaction because the window has been programmed with translated GPAs.
-+ *
-+ * VMD uses the Host Physical Address in order to correctly program the bridge
-+ * windows in its PCIe domain. VMD device 28C0 has HPA shadow registers located
-+ * at offset 0x2000 in MEMBAR2 (BAR 4). The shadow registers are valid if bit 1
-+ * is set in the VMD VMLOCK config register 0x70.
-+ *
-+ * This quirk emulates the VMLOCK and HPA shadow registers for all VMD device
-+ * ids which don't natively offer this feature. The subsystem vendor/device
-+ * id is set to the QEMU subsystem vendor/device id, where the driver matches
-+ * the id to enable this feature.
-+ */
-+typedef struct VFIOVMDQuirk {
-+    VFIOPCIDevice *vdev;
-+    uint64_t membar_phys[2];
-+} VFIOVMDQuirk;
-+
-+static uint64_t vfio_vmd_quirk_read(void *opaque, hwaddr addr, unsigned size)
-+{
-+    VFIOVMDQuirk *data = opaque;
-+    uint64_t val = 0;
-+
-+    memcpy(&val, (void *)data->membar_phys + addr, size);
-+    return val;
-+}
-+
-+static const MemoryRegionOps vfio_vmd_quirk = {
-+    .read = vfio_vmd_quirk_read,
-+    .endianness = DEVICE_LITTLE_ENDIAN,
-+};
-+
-+#define VMD_VMLOCK  0x70
-+#define VMD_SHADOW  0x2000
-+#define VMD_MEMBAR2 4
-+
-+static int vfio_vmd_emulate_shadow_registers(VFIOPCIDevice *vdev)
-+{
-+    VFIOQuirk *quirk;
-+    VFIOVMDQuirk *data;
-+    PCIDevice *pdev = &vdev->pdev;
-+    int ret;
-+
-+    data = g_malloc0(sizeof(*data));
-+    ret = pread(vdev->vbasedev.fd, data->membar_phys, 16,
-+                vdev->config_offset + PCI_BASE_ADDRESS_2);
-+    if (ret != 16) {
-+        error_report("VMD %s cannot read MEMBARs (%d)",
-+                     vdev->vbasedev.name, ret);
-+        g_free(data);
-+        return -EFAULT;
-+    }
-+
-+    quirk = vfio_quirk_alloc(1);
-+    quirk->data = data;
-+    data->vdev = vdev;
-+
-+    /* Emulate Shadow Registers */
-+    memory_region_init_io(quirk->mem, OBJECT(vdev), &vfio_vmd_quirk, data,
-+                          "vfio-vmd-quirk", sizeof(data->membar_phys));
-+    memory_region_add_subregion_overlap(vdev->bars[VMD_MEMBAR2].region.mem,
-+                                        VMD_SHADOW, quirk->mem, 1);
-+    memory_region_set_readonly(quirk->mem, true);
-+    memory_region_set_enabled(quirk->mem, true);
-+
-+    QLIST_INSERT_HEAD(&vdev->bars[VMD_MEMBAR2].quirks, quirk, next);
-+
-+    trace_vfio_pci_vmd_quirk_shadow_regs(vdev->vbasedev.name,
-+                                         data->membar_phys[0],
-+                                         data->membar_phys[1]);
-+
-+    /* Advertise Shadow Register support */
-+    pci_byte_test_and_set_mask(pdev->config + VMD_VMLOCK, 0x2);
-+    pci_set_byte(pdev->wmask + VMD_VMLOCK, 0);
-+    pci_set_byte(vdev->emulated_config_bits + VMD_VMLOCK, 0x2);
-+
-+    trace_vfio_pci_vmd_quirk_vmlock(vdev->vbasedev.name,
-+                                    pci_get_byte(pdev->config + VMD_VMLOCK));
-+
-+    /* Drivers can match the subsystem vendor/device id */
-+    pci_set_word(pdev->config + PCI_SUBSYSTEM_VENDOR_ID,
-+                 PCI_SUBVENDOR_ID_REDHAT_QUMRANET);
-+    pci_set_word(vdev->emulated_config_bits + PCI_SUBSYSTEM_VENDOR_ID, ~0);
-+
-+    pci_set_word(pdev->config + PCI_SUBSYSTEM_ID, PCI_SUBDEVICE_ID_QEMU);
-+    pci_set_word(vdev->emulated_config_bits + PCI_SUBSYSTEM_ID, ~0);
-+
-+    trace_vfio_pci_vmd_quirk_subsystem(vdev->vbasedev.name,
-+                           vdev->sub_vendor_id, vdev->sub_device_id,
-+                           pci_get_word(pdev->config + PCI_SUBSYSTEM_VENDOR_ID),
-+                           pci_get_word(pdev->config + PCI_SUBSYSTEM_ID));
-+
-+    return 0;
-+}
-+
-+int vfio_pci_vmd_init(VFIOPCIDevice *vdev)
-+{
-+    int ret = 0;
-+
-+    switch (vdev->device_id) {
-+    case 0x28C0: /* Native passthrough support */
-+        break;
-+    /* Emulates Native passthrough support */
-+    case 0x201D:
-+    case 0x467F:
-+    case 0x4C3D:
-+    case 0x9A0B:
-+        ret = vfio_vmd_emulate_shadow_registers(vdev);
-+        break;
-+    }
-+
-+    return ret;
-+}
-diff --git a/hw/vfio/pci.c b/hw/vfio/pci.c
-index 5e75a95129..85425a1a6f 100644
---- a/hw/vfio/pci.c
-+++ b/hw/vfio/pci.c
-@@ -3024,6 +3024,13 @@ static void vfio_realize(PCIDevice *pdev, Error **errp)
-         }
-     }
+ 	if (resource_size(&dev->resource[VMD_CFGBAR]) < (1 << 20))
+@@ -648,9 +649,14 @@ static int vmd_probe(struct pci_dev *dev, const struct pci_device_id *id)
+ 			return err;
+ 	}
  
-+    if (vdev->vendor_id == PCI_VENDOR_ID_INTEL) {
-+        ret = vfio_pci_vmd_init(vdev);
-+        if (ret) {
-+            error_report("Failed to setup VMD");
-+        }
-+    }
++	/* VFIO-quirked VMD controllers emulate the Shadow MEMBAR feature */
++	if (dev->subsystem_vendor == PCI_SUBVENDOR_ID_REDHAT_QUMRANET &&
++	    dev->subsystem_device == PCI_SUBDEVICE_ID_QEMU)
++		features |= VMD_FEAT_HAS_MEMBAR_SHADOW;
 +
-     vfio_register_err_notifier(vdev);
-     vfio_register_req_notifier(vdev);
-     vfio_setup_resetfn_quirk(vdev);
-diff --git a/hw/vfio/pci.h b/hw/vfio/pci.h
-index 0da7a20a7e..e8632d806b 100644
---- a/hw/vfio/pci.h
-+++ b/hw/vfio/pci.h
-@@ -217,6 +217,8 @@ int vfio_pci_igd_opregion_init(VFIOPCIDevice *vdev,
- int vfio_pci_nvidia_v100_ram_init(VFIOPCIDevice *vdev, Error **errp);
- int vfio_pci_nvlink2_init(VFIOPCIDevice *vdev, Error **errp);
+ 	spin_lock_init(&vmd->cfg_lock);
+ 	pci_set_drvdata(dev, vmd);
+-	err = vmd_enable_domain(vmd, (unsigned long) id->driver_data);
++	err = vmd_enable_domain(vmd, features);
+ 	if (err)
+ 		return err;
  
-+int vfio_pci_vmd_init(VFIOPCIDevice *vdev);
-+
- void vfio_display_reset(VFIOPCIDevice *vdev);
- int vfio_display_probe(VFIOPCIDevice *vdev, Error **errp);
- void vfio_display_finalize(VFIOPCIDevice *vdev);
-diff --git a/hw/vfio/trace-events b/hw/vfio/trace-events
-index b1ef55a33f..aabbd2693a 100644
---- a/hw/vfio/trace-events
-+++ b/hw/vfio/trace-events
-@@ -90,6 +90,10 @@ vfio_pci_nvidia_gpu_setup_quirk(const char *name, uint64_t tgt, uint64_t size) "
- vfio_pci_nvlink2_setup_quirk_ssatgt(const char *name, uint64_t tgt, uint64_t size) "%s tgt=0x%"PRIx64" size=0x%"PRIx64
- vfio_pci_nvlink2_setup_quirk_lnkspd(const char *name, uint32_t link_speed) "%s link_speed=0x%x"
- 
-+vfio_pci_vmd_quirk_shadow_regs(const char *name, uint64_t mb1, uint64_t mb2) "%s membar1_phys=0x%"PRIx64" membar2_phys=0x%"PRIx64"
-+vfio_pci_vmd_quirk_vmlock(const char *name, uint8_t vmlock) "%s vmlock=0x%x"
-+vfio_pci_vmd_quirk_subsystem(const char *name, uint16_t old_svid, uint16_t old_sdid, uint16_t new_svid, uint16_t new_sdid) "%s subsystem id 0x%04x:0x%04x -> 0x%04x:0x%04x"
-+
- # common.c
- vfio_region_write(const char *name, int index, uint64_t addr, uint64_t data, unsigned size) " (%s:region%d+0x%"PRIx64", 0x%"PRIx64 ", %d)"
- vfio_region_read(char *name, int index, uint64_t addr, unsigned size, uint64_t data) " (%s:region%d+0x%"PRIx64", %d) = 0x%"PRIx64
 -- 
 2.18.1
 
