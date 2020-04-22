@@ -2,64 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 000071B48E6
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Apr 2020 17:39:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F3771B4943
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Apr 2020 17:57:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726066AbgDVPjI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Apr 2020 11:39:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50978 "EHLO mail.kernel.org"
+        id S1726552AbgDVP53 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Apr 2020 11:57:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725980AbgDVPjH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 22 Apr 2020 11:39:07 -0400
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726057AbgDVP52 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 22 Apr 2020 11:57:28 -0400
+Received: from localhost (mobile-166-175-189-88.mycingular.net [166.175.189.88])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B5392082E
-        for <linux-pci@vger.kernel.org>; Wed, 22 Apr 2020 15:39:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D0AD20767;
+        Wed, 22 Apr 2020 15:57:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587569947;
-        bh=3GC7V64HWd35zrN5I+hb82L1DOfOt7nzVf5YgoW+ZJE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ODqD1gMHaY4IC+fT1vSrxC+/PtnVN7BtUtt7ul/ErmZTElX64/BzxB+zg1xRxPoeX
-         Brsq06UtcIR3GRxfgCD5vzJjPudfX2BWIpgWsrduQnw+u11TIwOsEdFFAf9deKJRWr
-         ZIH3odpz4b+AN/PZqRPnYJlOAY32f0SSO6L1J9ok=
-Received: by mail-qt1-f169.google.com with SMTP id c23so1451496qtp.11
-        for <linux-pci@vger.kernel.org>; Wed, 22 Apr 2020 08:39:07 -0700 (PDT)
-X-Gm-Message-State: AGi0PuY0q1byWsVLfG1Atrla4e2VeziTVCWSRRe67qvIw1wMCoFNysyO
-        6/jrU7Jmrzb8FW0IwIac+wWirl0xmc43OvNQxQ==
-X-Google-Smtp-Source: APiQypKqvPl47gP96oQs/vhcARvjaTT97BhkwH+KfLYGBBpwDlQDr6dNn+yIfX9w1NV0ZtihjOslKaUvWRMzDL92NJ4=
-X-Received: by 2002:ac8:7cba:: with SMTP id z26mr27280829qtv.143.1587569946382;
- Wed, 22 Apr 2020 08:39:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200422150336.10528-1-lorenzo.pieralisi@arm.com>
-In-Reply-To: <20200422150336.10528-1-lorenzo.pieralisi@arm.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 22 Apr 2020 10:38:54 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+dPVad=0kB3u0an2znbXr1RdjhkSLG3miOA55Y+XK+-w@mail.gmail.com>
-Message-ID: <CAL_Jsq+dPVad=0kB3u0an2znbXr1RdjhkSLG3miOA55Y+XK+-w@mail.gmail.com>
+        s=default; t=1587571048;
+        bh=NyNpK/86NyGs08RdSy78MItgrXja6gNlU9ieF7+7oUI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=uDhv4LmAX3Oh8fvGuoUc+Q24H3zx8jwxLOwR97K7PV1839R6pigReGVeH+SoYglKy
+         8Ov6XEwKrLSuJHFmB4I1oaNrJhTY0jeJ/Y4OOptHL9jHEgyKnRGvKsvd9lpRyjh/AM
+         yuZYPK+nVPVPMQ3VvLpVvUh/SP8qapFociAa2DaU=
+Date:   Wed, 22 Apr 2020 10:57:26 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     linux-pci@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>
 Subject: Re: [PATCH] MAINTAINERS: Add Rob Herring and remove Andy Murray as
  PCI reviewers
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <20200422155726.GA222395@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200422150336.10528-1-lorenzo.pieralisi@arm.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 10:03 AM Lorenzo Pieralisi
-<lorenzo.pieralisi@arm.com> wrote:
->
+On Wed, Apr 22, 2020 at 04:03:36PM +0100, Lorenzo Pieralisi wrote:
 > Andy Murray decided to step down as PCI controller reviewer and
 > Rob Herring is willing to help review PCI controller patches.
->
+> 
 > Update the respective MAINTAINERS entries to reflect this change.
->
+> 
 > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 > Cc: Bjorn Helgaas <bhelgaas@google.com>
 > Cc: Rob Herring <robh@kernel.org>
 > Cc: Andrew Murray <amurray@thegoodpenguin.co.uk>
 
-Acked-by: Rob Herring <robh@kernel.org>
+Applied to for-linus for v5.7, thanks.  Thanks for all your help,
+Andrew, and thanks for your willingness to help out, Rob.
+
+> ---
+>  MAINTAINERS | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index e64e5db31497..4fd752f5ca61 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -13038,7 +13038,7 @@ F:	drivers/pci/controller/pci-xgene-msi.c
+>  
+>  PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS
+>  M:	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> -R:	Andrew Murray <amurray@thegoodpenguin.co.uk>
+> +R:	Rob Herring <robh@kernel.org>
+>  L:	linux-pci@vger.kernel.org
+>  S:	Supported
+>  Q:	http://patchwork.ozlabs.org/project/linux-pci/list/
+> -- 
+> 2.26.1
+> 
