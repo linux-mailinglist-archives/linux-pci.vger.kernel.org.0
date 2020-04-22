@@ -2,106 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C60301B4D5F
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Apr 2020 21:30:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B75951B4DCE
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Apr 2020 21:58:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726050AbgDVTaB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Apr 2020 15:30:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35968 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725935AbgDVTaA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Apr 2020 15:30:00 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CF30C03C1A9;
-        Wed, 22 Apr 2020 12:29:59 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id a2so2883646oia.11;
-        Wed, 22 Apr 2020 12:29:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=hGficyrZ4sebWDfX+hwwWhlXqmUAh4bJFNFxwgCc5Eo=;
-        b=D8o49ScrY7NLNMFAFIwnzcxywXle16BkKRYYFPamPiL1A5Y28OsEGTb1XDc4fn2N4r
-         vqOcSW2MJ7SWMkvFuSOK9szCbpGI7LhpBDstOPRwaobjEJqsQLEFOE+ZTT0wkM8d5ACE
-         vZPIVfKRgSA14d1Wgw3kG2Tf5bJxy74HDc71maU+4PPw9vk1UsaCKnKHXNSwolW7DTCm
-         TFHwT4fJF26184kwM0BejI7th1rPnipq4i8M8J13vPEFnvufCbLshWVm4yn16XHGCzmn
-         rw00DobnF94u6tP041vKYm4UpI9cFctKTp4hGV2h3RxTpSPEQedzCf1S9O7goT3EJb3R
-         vrqw==
+        id S1726002AbgDVT60 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Apr 2020 15:58:26 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:56099 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725961AbgDVT6Z (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Apr 2020 15:58:25 -0400
+Received: by mail-wm1-f68.google.com with SMTP id e26so3865992wmk.5;
+        Wed, 22 Apr 2020 12:58:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hGficyrZ4sebWDfX+hwwWhlXqmUAh4bJFNFxwgCc5Eo=;
-        b=QPh8SpeizrgmzzphBgczqMnVbqTMZr9UipWzqlufegI0qvpn+04T0oBda7mLNa/tsK
-         i5FaB10tD0OvQNCsU+1Qw05KkK/lqi0tPgTxhXpBVTIH1twmFAu4/znXX/Qbgx/kjgJ4
-         wedS93ZeGdZvf28LRu/uIOl1nvlsbACsuQbn7Rx+p37qHwDYQHzRN/g2jeQqnwqktI+U
-         DWXH3cHgkBCaB2LiMwHARGGcsf2nn2AmIp/VitJtGAZNszLVDapUCSWQQlT/UUvebE8s
-         W1+hbwM+tBHgZoFB6/vIWbq+YgQwFe8cBoXZOvD5rpzf8Y0y8NC7FFJAROMD8tvVCBNR
-         y1yw==
-X-Gm-Message-State: AGi0PuZ056C3KbtK8DgljIOpGFCJInAEwQXabvpeMyPl7apSflJpvjaE
-        XHuQs7eAEz/gkX9DL9oT9w==
-X-Google-Smtp-Source: APiQypID6N0FltxN8PtBLSw2l+eD9zcQ9ni2qkgCcvwCIAMCk3D8FqLC4TRtP5Vc6aFhC2FhsbS+8w==
-X-Received: by 2002:a05:6808:3d4:: with SMTP id o20mr390469oie.47.1587583798838;
-        Wed, 22 Apr 2020 12:29:58 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id c81sm35623oib.35.2020.04.22.12.29.58
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=orSoP8CVp+BTvk77nTO3bh1BFXcHR89DeR85JOv6qR4=;
+        b=HG6hOP27SdCW233BPADQRHCYdvN/ehnURoovIFxe279mn//vGxl07X59ndyCCJnN2h
+         f11rkiL0/9eEe25RbtD94fB33IOCBDptC86mNcSsc9zEHPaS+26AlrHqgQQEPAVi1aaB
+         EIIpNIZczf9b+2tS2dzVnpseSnww+/+etmelvKrdaxcx5wM5kABbeuOphkS5/pP3eqmc
+         KmzK7Av9MJ9UGbSp+l62BJn62zNTulX9h7eVp4qmpSZ3RD42jeRoRbx570LroGv41kfu
+         eG814N3kUC0CRXMwcJDnnhG3HCfDpYk7CSdlAuOK7NVHWvQn8r//9JWspZuGb4sd68ch
+         9VIQ==
+X-Gm-Message-State: AGi0PuaaFUWqgMylp/0x3hhLZRJQeJcZVJclLeBgU3nXk1jQPnJ26lz4
+        xxi3ZLkHGIbZFltBC4WwpIrLmWpEEI8=
+X-Google-Smtp-Source: APiQypKXW+YBdVGKiF7M7cphAcClN7/OcR+JzG9JNQBF+KzYUkOXhg+iusfzbOxYCGbyh5ohfBD/jg==
+X-Received: by 2002:a1c:9852:: with SMTP id a79mr130312wme.27.1587585501946;
+        Wed, 22 Apr 2020 12:58:21 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id m1sm314017wro.64.2020.04.22.12.58.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2020 12:29:58 -0700 (PDT)
-From:   Rob Herring <robherring2@gmail.com>
-X-Google-Original-From: Rob Herring <rob@rob-hp-laptop.gmail.com>
-Received: (nullmailer pid 22790 invoked by uid 1000);
-        Wed, 22 Apr 2020 19:29:57 -0000
-Date:   Wed, 22 Apr 2020 14:29:57 -0500
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Wed, 22 Apr 2020 12:58:21 -0700 (PDT)
+From:   Wei Liu <wei.liu@kernel.org>
+To:     linux-pci@vger.kernel.org
+Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Wei Liu <wei.liu@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        linux-omap@vger.kernel.org
-Subject: Re: [PATCH 1/4] PCI: dra7xx: Don't select CONFIG_PCI_DRA7XX_HOST by
- default
-Message-ID: <20200422192957.6lwr3aig4a3dcynr@rob-hp-laptop>
-References: <20200415001244.144623-1-helgaas@kernel.org>
- <20200415001244.144623-2-helgaas@kernel.org>
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>
+Subject: [PATCH] PCI: export and use pci_msi_get_hwirq in pci-hyperv.c
+Date:   Wed, 22 Apr 2020 19:58:15 +0000
+Message-Id: <20200422195818.35489-1-wei.liu@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200415001244.144623-2-helgaas@kernel.org>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 07:12:41PM -0500, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> Drivers should not be selected by default because that bloats the kernel
-> for people who don't need them.
-> 
-> Remove the "default y" for CONFIG_PCI_DRA7XX_HOST.
-> 
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Kishon Vijay Abraham I <kishon@ti.com>
-> Cc: linux-omap@vger.kernel.org
-> ---
->  drivers/pci/controller/dwc/Kconfig | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> index 03dcaf65d159..ea335ee7ca8e 100644
-> --- a/drivers/pci/controller/dwc/Kconfig
-> +++ b/drivers/pci/controller/dwc/Kconfig
-> @@ -26,7 +26,6 @@ config PCI_DRA7XX_HOST
->  	depends on OF && HAS_IOMEM && TI_PIPE3
->  	select PCIE_DW_HOST
->  	select PCI_DRA7XX
-> -	default y
+There is a functionally identical function in pci-hyperv.c. Drop it and
+use pci_msi_get_hwirq instead.
 
-Perhaps 'default y if SOC_DRA7XX'?
+This requires exporting pci_msi_get_hwirq and declaring it in msi.h.
 
->  	help
->  	  Enables support for the PCIe controller in the DRA7xx SoC to work in
->  	  host mode. There are two instances of PCIe controller in DRA7xx.
-> -- 
-> 2.26.0.110.g2183baf09c-goog
-> 
+No functional change intended.
+
+Signed-off-by: Wei Liu <wei.liu@kernel.org>
+---
+ arch/x86/include/asm/msi.h          | 4 ++++
+ arch/x86/kernel/apic/msi.c          | 5 +++--
+ drivers/pci/controller/pci-hyperv.c | 8 +-------
+ 3 files changed, 8 insertions(+), 9 deletions(-)
+
+diff --git a/arch/x86/include/asm/msi.h b/arch/x86/include/asm/msi.h
+index 25ddd0916bb2..353b80122b2e 100644
+--- a/arch/x86/include/asm/msi.h
++++ b/arch/x86/include/asm/msi.h
+@@ -11,4 +11,8 @@ int pci_msi_prepare(struct irq_domain *domain, struct device *dev, int nvec,
+ 
+ void pci_msi_set_desc(msi_alloc_info_t *arg, struct msi_desc *desc);
+ 
++struct msi_domain_info;
++irq_hw_number_t pci_msi_get_hwirq(struct msi_domain_info *info,
++				  msi_alloc_info_t *arg);
++
+ #endif /* _ASM_X86_MSI_H */
+diff --git a/arch/x86/kernel/apic/msi.c b/arch/x86/kernel/apic/msi.c
+index 159bd0cb8548..56dcdd912564 100644
+--- a/arch/x86/kernel/apic/msi.c
++++ b/arch/x86/kernel/apic/msi.c
+@@ -204,11 +204,12 @@ void native_teardown_msi_irq(unsigned int irq)
+ 	irq_domain_free_irqs(irq, 1);
+ }
+ 
+-static irq_hw_number_t pci_msi_get_hwirq(struct msi_domain_info *info,
+-					 msi_alloc_info_t *arg)
++irq_hw_number_t pci_msi_get_hwirq(struct msi_domain_info *info,
++				  msi_alloc_info_t *arg)
+ {
+ 	return arg->msi_hwirq;
+ }
++EXPORT_SYMBOL_GPL(pci_msi_get_hwirq);
+ 
+ int pci_msi_prepare(struct irq_domain *domain, struct device *dev, int nvec,
+ 		    msi_alloc_info_t *arg)
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index e6020480a28b..2b4a6452095f 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -1520,14 +1520,8 @@ static struct irq_chip hv_msi_irq_chip = {
+ 	.irq_unmask		= hv_irq_unmask,
+ };
+ 
+-static irq_hw_number_t hv_msi_domain_ops_get_hwirq(struct msi_domain_info *info,
+-						   msi_alloc_info_t *arg)
+-{
+-	return arg->msi_hwirq;
+-}
+-
+ static struct msi_domain_ops hv_msi_ops = {
+-	.get_hwirq	= hv_msi_domain_ops_get_hwirq,
++	.get_hwirq	= pci_msi_get_hwirq,
+ 	.msi_prepare	= pci_msi_prepare,
+ 	.set_desc	= pci_msi_set_desc,
+ 	.msi_free	= hv_msi_free,
+-- 
+2.20.1
+
