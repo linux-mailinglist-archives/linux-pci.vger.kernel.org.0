@@ -2,112 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BCAB31B4FA0
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Apr 2020 23:54:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A9D51B4FFE
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Apr 2020 00:18:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726021AbgDVVyt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Apr 2020 17:54:49 -0400
-Received: from sender4-of-o53.zoho.com ([136.143.188.53]:21387 "EHLO
-        sender4-of-o53.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726006AbgDVVyt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Apr 2020 17:54:49 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1587591577; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=YTUDF4fq4Z+GVBN63wQJ/o3916r3LF/Ei7Du0NJxdcgFErAiUfq2Fl+PSO/mSabeSEpZPWZQ1rJHmZpHEqx5QJycICil+PBAV3EFfAHxD9LBr4KCqQVpFwdySQt2v++boZRYvBZ8y71q+UcWEvhLF9r8IWMCarWls1eGr67TIAM=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1587591577; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:Reply-To:Subject:To; 
-        bh=ldU30gAwP7Nn7IR+SkmxbTkzRNrG5AXnWYTf04bZJsA=; 
-        b=a8rgL9Z7LGeZgu8/TI1XTtDi2lkQ7iXgRv8da/m6aAFijQyf0zKo7yBlhlYL1vPTYdfVCVbkMVe879J3OGI0qVEluadCunTPfpypjuUc+AmhBduhrnX1cnWWejiuGqAYWDPpbzHSQRBD6PYQBfMX40ANMsWI31gmX66K/wx+nI8=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        spf=pass  smtp.mailfrom=no-reply@patchew.org;
-        dmarc=pass header.from=<no-reply@patchew.org> header.from=<no-reply@patchew.org>
-Received: from [172.17.0.3] (23.253.156.214 [23.253.156.214]) by mx.zohomail.com
-        with SMTPS id 1587591576646810.3686831507958; Wed, 22 Apr 2020 14:39:36 -0700 (PDT)
-In-Reply-To: <20200422171305.10923-1-jonathan.derrick@intel.com>
+        id S1725854AbgDVWR7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Apr 2020 18:17:59 -0400
+Received: from mga03.intel.com ([134.134.136.65]:64695 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725839AbgDVWR6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 22 Apr 2020 18:17:58 -0400
+IronPort-SDR: /j94CWv1mVZyaUG5rxsfxuD9S/lZ14CRcT0+7OLku89IQGy9iKd9hL4vzOnvsQA42RtQzljivi
+ lwhDukktWVkA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 15:17:58 -0700
+IronPort-SDR: p1Ujg028c0lEOtoOttEuV1B4Ci6ZYBuIeJr51EE8NcHpOqSLEvo26mU61JJyGMSAfakGOKq/1R
+ UiNBPa6rxSQA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,304,1583222400"; 
+   d="scan'208";a="255788029"
+Received: from orsmsx101.amr.corp.intel.com ([10.22.225.128])
+  by orsmga003.jf.intel.com with ESMTP; 22 Apr 2020 15:17:58 -0700
+Received: from orsmsx122.amr.corp.intel.com (10.22.225.227) by
+ ORSMSX101.amr.corp.intel.com (10.22.225.128) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 22 Apr 2020 15:17:57 -0700
+Received: from orsmsx101.amr.corp.intel.com ([169.254.8.204]) by
+ ORSMSX122.amr.corp.intel.com ([169.254.11.34]) with mapi id 14.03.0439.000;
+ Wed, 22 Apr 2020 15:17:57 -0700
+From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
+To:     "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "Jakowski, Andrzej" <andrzej.jakowski@intel.com>
 Subject: Re: [PATCH for QEMU] hw/vfio: Add VMD Passthrough Quirk
-Reply-To: <qemu-devel@nongnu.org>
-Message-ID: <158759157524.3922.10142073039172739954@39012742ff91>
-MIME-Version: 1.0
+Thread-Topic: [PATCH for QEMU] hw/vfio: Add VMD Passthrough Quirk
+Thread-Index: AQHWGMtyZw4X1Uq3s0+HhumXVtYMzKiGH9SAgAALrAA=
+Date:   Wed, 22 Apr 2020 22:17:56 +0000
+Message-ID: <48e2ef3f6f843d533e4f3cdb83da9be5184768e6.camel@intel.com>
+References: <158759136841.3922.4821101148440128786@39012742ff91>
+In-Reply-To: <158759136841.3922.4821101148440128786@39012742ff91>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.255.7.252]
 Content-Type: text/plain; charset="utf-8"
+Content-ID: <EC102D38D2895946AC9731BC742461CF@intel.com>
 Content-Transfer-Encoding: base64
-From:   no-reply@patchew.org
-To:     jonathan.derrick@intel.com
-Cc:     helgaas@kernel.org, qemu-devel@nongnu.org,
-        linux-pci@vger.kernel.org, lorenzo.pieralisi@arm.com,
-        andrzej.jakowski@intel.com, jonathan.derrick@intel.com,
-        virtualization@lists.linux-foundation.org
-Date:   Wed, 22 Apr 2020 14:39:36 -0700 (PDT)
-X-ZohoMailClient: External
+MIME-Version: 1.0
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-UGF0Y2hldyBVUkw6IGh0dHBzOi8vcGF0Y2hldy5vcmcvUUVNVS8yMDIwMDQyMjE3MTMwNS4xMDky
-My0xLWpvbmF0aGFuLmRlcnJpY2tAaW50ZWwuY29tLwoKCgpIaSwKClRoaXMgc2VyaWVzIGZhaWxl
-ZCB0aGUgZG9ja2VyLXF1aWNrQGNlbnRvczcgYnVpbGQgdGVzdC4gUGxlYXNlIGZpbmQgdGhlIHRl
-c3RpbmcgY29tbWFuZHMgYW5kCnRoZWlyIG91dHB1dCBiZWxvdy4gSWYgeW91IGhhdmUgRG9ja2Vy
-IGluc3RhbGxlZCwgeW91IGNhbiBwcm9iYWJseSByZXByb2R1Y2UgaXQKbG9jYWxseS4KCj09PSBU
-RVNUIFNDUklQVCBCRUdJTiA9PT0KIyEvYmluL2Jhc2gKbWFrZSBkb2NrZXItaW1hZ2UtY2VudG9z
-NyBWPTEgTkVUV09SSz0xCnRpbWUgbWFrZSBkb2NrZXItdGVzdC1xdWlja0BjZW50b3M3IFNIT1df
-RU5WPTEgSj0xNCBORVRXT1JLPTEKPT09IFRFU1QgU0NSSVBUIEVORCA9PT0KCiAgQ0MgICAgICBz
-dHVicy91dWlkLm8KSW4gZmlsZSBpbmNsdWRlZCBmcm9tIGh3L3ZmaW8vdHJhY2UuYzo1OjA6Cmh3
-L3ZmaW8vdHJhY2UuaDogSW4gZnVuY3Rpb24gJ19ub2NoZWNrX190cmFjZV92ZmlvX3BjaV92bWRf
-cXVpcmtfc2hhZG93X3JlZ3MnOgpody92ZmlvL3RyYWNlLmg6MjM0ODo5OiBlcnJvcjogc3RyYXkg
-J1wnIGluIHByb2dyYW0KICAgICAgICAgcWVtdV9sb2coIiVkQCV6dS4lMDZ6dTp2ZmlvX3BjaV92
-bWRfcXVpcmtfc2hhZG93X3JlZ3MgIiAiJXMgbWVtYmFyMV9waHlzPTB4JSJQUkl4NjQiIG1lbWJh
-cjJfcGh5cz0weCUiUFJJeDY0IiAiXG4iLAogICAgICAgICBeCmh3L3ZmaW8vdHJhY2UuaDoyMzQ4
-OjEyMTogZXJyb3I6IGV4cGVjdGVkICcpJyBiZWZvcmUgJ24nCiAgICAgICAgIHFlbXVfbG9nKCIl
-ZEAlenUuJTA2enU6dmZpb19wY2lfdm1kX3F1aXJrX3NoYWRvd19yZWdzICIgIiVzIG1lbWJhcjFf
-cGh5cz0weCUiUFJJeDY0IiBtZW1iYXIyX3BoeXM9MHglIlBSSXg2NCIgIlxuIiwKICAgICAgICAg
+T24gV2VkLCAyMDIwLTA0LTIyIGF0IDE0OjM2IC0wNzAwLCBuby1yZXBseUBwYXRjaGV3Lm9yZyB3
+cm90ZToNCj4gUGF0Y2hldyBVUkw6IGh0dHBzOi8vcGF0Y2hldy5vcmcvUUVNVS8yMDIwMDQyMjE3
+MTMwNS4xMDkyMy0xLWpvbmF0aGFuLmRlcnJpY2tAaW50ZWwuY29tLw0KPiANCj4gDQo+IA0KPiBI
+aSwNCj4gDQo+IFRoaXMgc2VyaWVzIGZhaWxlZCB0aGUgYXNhbiBidWlsZCB0ZXN0LiBQbGVhc2Ug
+ZmluZCB0aGUgdGVzdGluZyBjb21tYW5kcyBhbmQNCj4gdGhlaXIgb3V0cHV0IGJlbG93LiBJZiB5
+b3UgaGF2ZSBEb2NrZXIgaW5zdGFsbGVkLCB5b3UgY2FuIHByb2JhYmx5IHJlcHJvZHVjZSBpdA0K
+PiBsb2NhbGx5Lg0KPiANCj4gPT09IFRFU1QgU0NSSVBUIEJFR0lOID09PQ0KPiAjIS9iaW4vYmFz
+aA0KPiBleHBvcnQgQVJDSD14ODZfNjQNCj4gbWFrZSBkb2NrZXItaW1hZ2UtZmVkb3JhIFY9MSBO
+RVRXT1JLPTENCj4gdGltZSBtYWtlIGRvY2tlci10ZXN0LWRlYnVnQGZlZG9yYSBUQVJHRVRfTElT
+VD14ODZfNjQtc29mdG1tdSBKPTE0IE5FVFdPUks9MQ0KPiA9PT0gVEVTVCBTQ1JJUFQgRU5EID09
+PQ0KPiANCj4gICBDQyAgICAgIHFlbXUtaW8tY21kcy5vDQo+ICAgQ0MgICAgICByZXBsaWNhdGlv
+bi5vDQo+IEluIGZpbGUgaW5jbHVkZWQgZnJvbSBody92ZmlvL3RyYWNlLmM6NToNCj4gL3RtcC9x
+ZW11LXRlc3QvYnVpbGQvaHcvdmZpby90cmFjZS5oOjIzNDg6MTIwOiBlcnJvcjogZXhwZWN0ZWQg
+JyknDQo+ICAgICAgICAgcWVtdV9sb2coIiVkQCV6dS4lMDZ6dTp2ZmlvX3BjaV92bWRfcXVpcmtf
+c2hhZG93X3JlZ3MgIiAiJXMgbWVtYmFyMV9waHlzPTB4JSJQUkl4NjQiIG1lbWJhcjJfcGh5cz0w
+eCUiUFJJeDY0IiAiXG4iLA0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
 ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF4K
-aHcvdmZpby90cmFjZS5oOjIzNDg6MTIyOiBlcnJvcjogbWlzc2luZyB0ZXJtaW5hdGluZyAiIGNo
-YXJhY3RlciBbLVdlcnJvcl0KICAgICAgICAgcWVtdV9sb2coIiVkQCV6dS4lMDZ6dTp2ZmlvX3Bj
-aV92bWRfcXVpcmtfc2hhZG93X3JlZ3MgIiAiJXMgbWVtYmFyMV9waHlzPTB4JSJQUkl4NjQiIG1l
-bWJhcjJfcGh5cz0weCUiUFJJeDY0IiAiXG4iLAogICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF4KaHcvdmZpby90cmFjZS5oOjIz
-NDg6MTIxOiBlcnJvcjogbWlzc2luZyB0ZXJtaW5hdGluZyAiIGNoYXJhY3RlcgogICAgICAgICBx
-ZW11X2xvZygiJWRAJXp1LiUwNnp1OnZmaW9fcGNpX3ZtZF9xdWlya19zaGFkb3dfcmVncyAiICIl
-cyBtZW1iYXIxX3BoeXM9MHglIlBSSXg2NCIgbWVtYmFyMl9waHlzPTB4JSJQUkl4NjQiICJcbiIs
-CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICBeCmh3L3ZmaW8vdHJhY2UuaDoyMzUxOjE4OiBlcnJvcjogZm9ybWF0ICclZCcgZXhw
-ZWN0cyBhIG1hdGNoaW5nICdpbnQnIGFyZ3VtZW50IFstV2Vycm9yPWZvcm1hdD1dCiAgICAgICAg
-ICAgICAgICAgICwgbmFtZSwgbWIxLCBtYjIpOwogICAgICAgICAgICAgICAgICBeCmh3L3ZmaW8v
-dHJhY2UuaDoyMzUxOjE4OiBlcnJvcjogZm9ybWF0ICclenUnIGV4cGVjdHMgYSBtYXRjaGluZyAn
-c2l6ZV90JyBhcmd1bWVudCBbLVdlcnJvcj1mb3JtYXQ9XQpody92ZmlvL3RyYWNlLmg6MjM1MTox
-ODogZXJyb3I6IGZvcm1hdCAnJXp1JyBleHBlY3RzIGEgbWF0Y2hpbmcgJ3NpemVfdCcgYXJndW1l
-bnQgWy1XZXJyb3I9Zm9ybWF0PV0KaHcvdmZpby90cmFjZS5oOjIzNTE6MTg6IGVycm9yOiBmb3Jt
-YXQgJyVzJyBleHBlY3RzIGEgbWF0Y2hpbmcgJ2NoYXIgKicgYXJndW1lbnQgWy1XZXJyb3I9Zm9y
-bWF0PV0KaHcvdmZpby90cmFjZS5oOjIzNTE6MTg6IGVycm9yOiBmb3JtYXQgJyVseCcgZXhwZWN0
-cyBhIG1hdGNoaW5nICdsb25nIHVuc2lnbmVkIGludCcgYXJndW1lbnQgWy1XZXJyb3I9Zm9ybWF0
-PV0KaHcvdmZpby90cmFjZS5oOjIzNTE6MTg6IGVycm9yOiBmb3JtYXQgJyVseCcgZXhwZWN0cyBh
-IG1hdGNoaW5nICdsb25nIHVuc2lnbmVkIGludCcgYXJndW1lbnQgWy1XZXJyb3I9Zm9ybWF0PV0K
-ICBDQyAgICAgIHN0dWJzL3ZtLXN0b3AubwpjYzE6IGFsbCB3YXJuaW5ncyBiZWluZyB0cmVhdGVk
-IGFzIGVycm9ycwogIENDICAgICAgc3R1YnMvdm1zdGF0ZS5vCm1ha2U6ICoqKiBbaHcvdmZpby90
-cmFjZS5vXSBFcnJvciAxCm1ha2U6ICoqKiBXYWl0aW5nIGZvciB1bmZpbmlzaGVkIGpvYnMuLi4u
-CiAgQ0MgICAgICBzdHVicy9mZC1yZWdpc3Rlci5vClRyYWNlYmFjayAobW9zdCByZWNlbnQgY2Fs
-bCBsYXN0KToKLS0tCiAgICByYWlzZSBDYWxsZWRQcm9jZXNzRXJyb3IocmV0Y29kZSwgY21kKQpz
-dWJwcm9jZXNzLkNhbGxlZFByb2Nlc3NFcnJvcjogQ29tbWFuZCAnWydzdWRvJywgJy1uJywgJ2Rv
-Y2tlcicsICdydW4nLCAnLS1sYWJlbCcsICdjb20ucWVtdS5pbnN0YW5jZS51dWlkPWRiNTM0ZmQz
-ZWI3MTQ5OWJiMGRjNTIxNjg0Y2Y1Y2I2JywgJy11JywgJzEwMDMnLCAnLS1zZWN1cml0eS1vcHQn
-LCAnc2VjY29tcD11bmNvbmZpbmVkJywgJy0tcm0nLCAnLWUnLCAnVEFSR0VUX0xJU1Q9JywgJy1l
-JywgJ0VYVFJBX0NPTkZJR1VSRV9PUFRTPScsICctZScsICdWPScsICctZScsICdKPTE0JywgJy1l
-JywgJ0RFQlVHPScsICctZScsICdTSE9XX0VOVj0xJywgJy1lJywgJ0NDQUNIRV9ESVI9L3Zhci90
-bXAvY2NhY2hlJywgJy12JywgJy9ob21lL3BhdGNoZXcyLy5jYWNoZS9xZW11LWRvY2tlci1jY2Fj
-aGU6L3Zhci90bXAvY2NhY2hlOnonLCAnLXYnLCAnL3Zhci90bXAvcGF0Y2hldy10ZXN0ZXItdG1w
-LXVjZV9nZDdxL3NyYy9kb2NrZXItc3JjLjIwMjAtMDQtMjItMTcuMzcuMTguMTQ1NDg6L3Zhci90
-bXAvcWVtdTp6LHJvJywgJ3FlbXU6Y2VudG9zNycsICcvdmFyL3RtcC9xZW11L3J1bicsICd0ZXN0
-LXF1aWNrJ10nIHJldHVybmVkIG5vbi16ZXJvIGV4aXQgc3RhdHVzIDIuCmZpbHRlcj0tLWZpbHRl
-cj1sYWJlbD1jb20ucWVtdS5pbnN0YW5jZS51dWlkPWRiNTM0ZmQzZWI3MTQ5OWJiMGRjNTIxNjg0
-Y2Y1Y2I2Cm1ha2VbMV06ICoqKiBbZG9ja2VyLXJ1bl0gRXJyb3IgMQptYWtlWzFdOiBMZWF2aW5n
-IGRpcmVjdG9yeSBgL3Zhci90bXAvcGF0Y2hldy10ZXN0ZXItdG1wLXVjZV9nZDdxL3NyYycKbWFr
-ZTogKioqIFtkb2NrZXItcnVuLXRlc3QtcXVpY2tAY2VudG9zN10gRXJyb3IgMgoKcmVhbCAgICAy
-bTE3LjE0MnMKdXNlciAgICAwbTguMjEwcwoKClRoZSBmdWxsIGxvZyBpcyBhdmFpbGFibGUgYXQK
-aHR0cDovL3BhdGNoZXcub3JnL2xvZ3MvMjAyMDA0MjIxNzEzMDUuMTA5MjMtMS1qb25hdGhhbi5k
-ZXJyaWNrQGludGVsLmNvbS90ZXN0aW5nLmRvY2tlci1xdWlja0BjZW50b3M3Lz90eXBlPW1lc3Nh
-Z2UuCi0tLQpFbWFpbCBnZW5lcmF0ZWQgYXV0b21hdGljYWxseSBieSBQYXRjaGV3IFtodHRwczov
-L3BhdGNoZXcub3JnL10uClBsZWFzZSBzZW5kIHlvdXIgZmVlZGJhY2sgdG8gcGF0Y2hldy1kZXZl
-bEByZWRoYXQuY29t
+ICAgICAgICAgICAgICAgICAgICAgICAgIF4NCj4gDQoNCkl0J3MgdGhlIGV4dHJhICIgYXQgdGhl
+IGVuZCwgd2hpY2ggd2lsbCBiZSBmaXhlZCBpbiB2Mg0KVGhhbmtzIGZvciB0aGUgc2FuaXR5IGNo
+ZWNrDQoNCg==
