@@ -2,121 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E94DF1B4F54
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Apr 2020 23:26:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CBAF01B4F56
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Apr 2020 23:26:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbgDVVY2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Apr 2020 17:24:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53754 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726381AbgDVVYY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Apr 2020 17:24:24 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31C75C03C1AC
-        for <linux-pci@vger.kernel.org>; Wed, 22 Apr 2020 14:24:24 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id w2so2702229edx.4
-        for <linux-pci@vger.kernel.org>; Wed, 22 Apr 2020 14:24:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yRWrSisQQpY8wbjXn0iTmjToXXRth4qPvwTQ6Ad/CXE=;
-        b=hRjZLZSP41fQmWqXoFu0uMVGr5+fbRGYYJ7JqVPFOLUI80SYtPgeBODoIP+jTzQE0A
-         LvwfljRzDnz0pqQ8XV/j4e65bWWxGRzcX9aqxFcYUyvsohgV9Mseeh1CoXzpmmoMqLm2
-         PZkr5FTjKeb2qsVvQ5ZZJ9tk212oX/dPiVnZid1lZ8QYGUa485x/l8p+YzNSfl0cfUCF
-         UeksZGJll/cGu9FFxsvnhBJGh9020ED/FIg5bq4nehIIxxUZrzvqFOc4x6/cDEaKq2uo
-         +eh7FmdGU69lMG24JYdqoMzep30dL/8nqK0gRu/ucI4iEQH2ICs8GXLYOaI5YdWaMtKV
-         G0Hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yRWrSisQQpY8wbjXn0iTmjToXXRth4qPvwTQ6Ad/CXE=;
-        b=ZRKEgEVR4kw4l0vE3RcLbsSmuVD0nVznlv9qNASFMYIfdfT/YXL0S8IbQsodxI5WnB
-         z690UT1jlov7zMOZ+Ek00HW6l5HzaZQ/0A0DiPNbq81e9rMDN/0gpWtnne75Z0h7hkQ7
-         pnCzWBU9V/pNfVXI7fppqkE0uvLjvZpr19eZCw5IsHTKNsSPZxYKW8+gPKEyjY9wMui6
-         5Zz6HIHM7IDVXoJsSHo1FqZ/9+sWdbJbc8VnNukQcwY3YfOT41mdFQv29UNejp2CqSTQ
-         7A0vVAxqPraozciEXzNddPzeII/Ibm3fXxrEjwVNxY7XRNhAeTPnzbyLKJ2y37pT3FkQ
-         RnXw==
-X-Gm-Message-State: AGi0PuYVt7WzAD61HNYae7SF7QiHnrg6U3jLHxrEDLufQWh7178QkXcu
-        6uj7eYaLaIwSg/9xPWL+Qdpn3sXB17JkY34d1dc9TQ==
-X-Google-Smtp-Source: APiQypLVYeI+Z6fHZ231GXhNbP4EWDKpwlzMUtpHq46K+PNczHL9Qp9bLLshWMcSOuHvG1MKEBrYyZ6kugSSMSxZ3ko=
-X-Received: by 2002:a50:ee86:: with SMTP id f6mr498361edr.123.1587590662775;
- Wed, 22 Apr 2020 14:24:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
- <20200421235442.GO11945@mellanox.com>
-In-Reply-To: <20200421235442.GO11945@mellanox.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 22 Apr 2020 14:24:11 -0700
-Message-ID: <CAPcyv4gMYz1wCYjfnujyGXP0jGehpb+dEYV7hJoAAsDsj9+afQ@mail.gmail.com>
-Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
- support for the idxd driver.
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Dave Jiang <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>,
-        Megha Dey <megha.dey@linux.intel.com>, maz@kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob jun Pan <jacob.jun.pan@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>, Yi L Liu <yi.l.liu@intel.com>,
-        baolu.lu@intel.com, "Tian, Kevin" <kevin.tian@intel.com>,
-        Sanjay K Kumar <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>, Jing Lin <jing.lin@intel.com>,
-        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
-        dmaengine@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        X86 ML <x86@kernel.org>, linux-pci@vger.kernel.org,
-        KVM list <kvm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        id S1726381AbgDVVZH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Apr 2020 17:25:07 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48768 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726066AbgDVVZH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 22 Apr 2020 17:25:07 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id E5BF4AE8C;
+        Wed, 22 Apr 2020 21:25:04 +0000 (UTC)
+Date:   Wed, 22 Apr 2020 23:25:04 +0200
+Message-ID: <s5h8sinxlfz.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>,
+        alsa-devel@alsa-project.org, Roy Spliet <nouveau@spliet.org>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org
+Subject: Re: Unrecoverable AER error when resuming from RAM (hda regression in 5.7-rc2)
+In-Reply-To: <20200422205028.GA223132@google.com>
+References: <1587494585.7pihgq0z3i.none@localhost>
+        <20200422205028.GA223132@google.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 4:55 PM Jason Gunthorpe <jgg@mellanox.com> wrote:
->
-> On Tue, Apr 21, 2020 at 04:33:46PM -0700, Dave Jiang wrote:
-> > The actual code is independent of the stage 2 driver code submission that adds
-> > support for SVM, ENQCMD(S), PASID, and shared workqueues. This code series will
-> > support dedicated workqueue on a guest with no vIOMMU.
-> >
-> > A new device type "mdev" is introduced for the idxd driver. This allows the wq
-> > to be dedicated to the usage of a VFIO mediated device (mdev). Once the work
-> > queue (wq) is enabled, an uuid generated by the user can be added to the wq
-> > through the uuid sysfs attribute for the wq.  After the association, a mdev can
-> > be created using this UUID. The mdev driver code will associate the uuid and
-> > setup the mdev on the driver side. When the create operation is successful, the
-> > uuid can be passed to qemu. When the guest boots up, it should discover a DSA
-> > device when doing PCI discovery.
->
-> I'm feeling really skeptical that adding all this PCI config space and
-> MMIO BAR emulation to the kernel just to cram this into a VFIO
-> interface is a good idea, that kind of stuff is much safer in
-> userspace.
->
-> Particularly since vfio is not really needed once a driver is using
-> the PASID stuff. We already have general code for drivers to use to
-> attach a PASID to a mm_struct - and using vfio while disabling all the
-> DMA/iommu config really seems like an abuse.
->
-> A /dev/idxd char dev that mmaps a bar page and links it to a PASID
-> seems a lot simpler and saner kernel wise.
->
-> > The mdev utilizes Interrupt Message Store or IMS[3] instead of MSIX for
-> > interrupts for the guest. This preserves MSIX for host usages and also allows a
-> > significantly larger number of interrupt vectors for guest usage.
->
-> I never did get a reply to my earlier remarks on the IMS patches.
->
-> The concept of a device specific addr/data table format for MSI is not
-> Intel specific. This should be general code. We have a device that can
-> use this kind of kernel capability today.
+On Wed, 22 Apr 2020 22:50:28 +0200,
+Bjorn Helgaas wrote:
+> 
+> [+cc Rafael, linux-pm]
+> 
+> On Tue, Apr 21, 2020 at 03:08:44PM -0400, Alex Xu (Hello71) wrote:
+> > With 5.7-rc2, after resuming from suspend to RAM, I get:
+> > 
+> > [   55.679382] pcieport 0000:00:03.1: AER: Multiple Uncorrected (Non-Fatal) error received: 0000:00:00.0
+> > [   55.679405] pcieport 0000:00:03.1: AER: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Requester ID)
+> > [   55.679410] pcieport 0000:00:03.1: AER:   device [1022:1453] error status/mask=00100000/04400000
+> > [   55.679414] pcieport 0000:00:03.1: AER:    [20] UnsupReq               (First)
+> > [   55.679417] pcieport 0000:00:03.1: AER:   TLP Header: 40000004 0a0000ff fffc0e80 00000000
+> > [   55.679423] amdgpu 0000:0a:00.0: AER: can't recover (no error_detected callback)
+> > [   55.679425] snd_hda_intel 0000:0a:00.1: AER: can't recover (no error_detected callback)
+> > [   55.679455] pcieport 0000:00:03.1: AER: device recovery failed
+> 
+> I'm not at all confident in my decoding skills, but I *think* the TLP
+> header decodes to:
+> 
+>   Fmt           010b         3 DW header with data (32-bit address)
+>   Type          00000b       MWr
+>   Length        0x4          4 DW = 16 bytes
+>   Requester ID  0x0a00       0a:00.0
+>   Byte enables  0xff
+>   Address       0xfffc0e80
+> 
+> which would mean the 0a:00.0 GPU did a 16-byte write to 0xfffc0e80,
+> and the 00:03.1 Root Port reported that as an Unsupported Request.
+> I don't know why that would be unless the address is invalid.
+> 
+> Maybe that's supposed to be an MSI address?  Maybe a complete dmesg or
+> /proc/iomem would have a clue?
+> 
+> I feel like this UR issue could be a PCI core issue or maybe some sort
+> of misuse of PCI power management, but I can't seem to get traction on
+> it.
+> 
+> > Then the display freezes and the system basically falls apart (can't 
+> > even sudo reboot -f, need to use magic sysrq).
+> > 
+> > I bisected this to "ALSA: hda: Skip controller resume if not needed". 
+> > Setting snd_hda_intel.power_save=0 resolves the issue.
+> 
+> FWIW, the complete citation is c4c8dd6ef807 ("ALSA: hda: Skip
+> controller resume if not needed"),
+> https://git.kernel.org/linus/c4c8dd6ef807, which first appeared in
+> v5.7-rc2.
 
-This has been my concern reviewing the implementation. IMS needs more
-than one in-tree user to validate degrees of freedom in the api. I had
-been missing a second "in-tree user" to validate the scope of the
-flexibility that was needed.
+Yes, and I posted the fix patch right now:
+  https://lore.kernel.org/r/20200422203744.26299-1-tiwai@suse.de
+
+The possible cause was the tricky resume code that both HD-audio
+controller (the parent PCI device) and the codec devices used.
+
+At least the patch above seems working for the reporter's machine.
+Now we need a bit more testing before merging, but it looks promising,
+so far.
+
+
+thanks,
+
+Takashi
