@@ -2,58 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BCA961B5086
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Apr 2020 00:50:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 930271B509F
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Apr 2020 01:04:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725968AbgDVWuU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Apr 2020 18:50:20 -0400
-Received: from mga09.intel.com ([134.134.136.24]:59297 "EHLO mga09.intel.com"
+        id S1726056AbgDVXEY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Apr 2020 19:04:24 -0400
+Received: from mga07.intel.com ([134.134.136.100]:7109 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725846AbgDVWuU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 22 Apr 2020 18:50:20 -0400
-IronPort-SDR: w2TekEPaGgH6ZQLQlfwVylgdaj8X6dwjZPWsl8Hv4O8McGptNdWVnBZIYrh02BTzVl9w89bl8+
- bFhA8ZakmMRw==
+        id S1726008AbgDVXEY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 22 Apr 2020 19:04:24 -0400
+IronPort-SDR: 3uHv/mNBS2PuxZxmApi10iGniE4BDbo7a1FVY6YBZxfcuULMNbvrESa4GCrBdBmTmCrSKD8lnI
+ LSbwpX6W44QQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 15:50:19 -0700
-IronPort-SDR: AQJuUtKle/RXyk8OeabhgcPSN8iqD+WQkZDNbNj4VjAxRWLpaxrc9UF/e5AuG4sQTEgZBWoWbs
- SBDNZPZOJnDg==
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 16:04:23 -0700
+IronPort-SDR: 49PSRAP6HZ2kkUOmviJXbjwvhozsbej9LWy1KbXoOSWlD9Itl37uJJ9lcmtRvzpTqNciu0IzD/
+ O+hF9jv9BXmA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,304,1583222400"; 
-   d="scan'208";a="259231225"
-Received: from crschrol-desk22.amr.corp.intel.com (HELO [10.254.73.197]) ([10.254.73.197])
-  by orsmga006.jf.intel.com with ESMTP; 22 Apr 2020 15:50:18 -0700
-Subject: Re: [PATCH v2 2/2] PCI/DPC: Allow Native DPC Host Bridges to use DPC
-To:     Jon Derrick <jonathan.derrick@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, Keith Busch <kbusch@kernel.org>,
-        Russell Currey <ruscur@russell.cc>,
-        Sam Bobroff <sbobroff@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Frederick Lawler <fred@fredlawl.com>,
-        Rajat Jain <rajatja@google.com>,
-        "Patel, Mayurkumar" <mayurkumar.patel@intel.com>,
-        Olof Johansson <olof@lixom.net>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <1587418630-13562-1-git-send-email-jonathan.derrick@intel.com>
- <1587418630-13562-3-git-send-email-jonathan.derrick@intel.com>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <0058b993-0663-7fed-ed31-cb0adf845a39@linux.intel.com>
-Date:   Wed, 22 Apr 2020 15:50:17 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+   d="scan'208";a="247589890"
+Received: from meghadey-mobl1.amr.corp.intel.com (HELO [10.254.185.101]) ([10.254.185.101])
+  by fmsmga008.fm.intel.com with ESMTP; 22 Apr 2020 16:04:20 -0700
+Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
+ support for the idxd driver.
+To:     Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Jiang <dave.jiang@intel.com>
+Cc:     vkoul@kernel.org, maz@kernel.org, bhelgaas@google.com,
+        rafael@kernel.org, gregkh@linuxfoundation.org, tglx@linutronix.de,
+        hpa@zytor.com, alex.williamson@redhat.com, jacob.jun.pan@intel.com,
+        ashok.raj@intel.com, yi.l.liu@intel.com, baolu.lu@intel.com,
+        kevin.tian@intel.com, sanjay.k.kumar@intel.com,
+        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
+        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
+References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
+ <20200421235442.GO11945@mellanox.com>
+From:   "Dey, Megha" <megha.dey@linux.intel.com>
+Message-ID: <d6b3c133-ac19-21af-b7a7-b9e7166b8166@linux.intel.com>
+Date:   Wed, 22 Apr 2020 16:04:20 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <1587418630-13562-3-git-send-email-jonathan.derrick@intel.com>
+In-Reply-To: <20200421235442.GO11945@mellanox.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
@@ -61,61 +56,69 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 
 
-On 4/20/20 2:37 PM, Jon Derrick wrote:
-> The existing portdrv model prevents DPC services without either OS
-> control (_OSC) granted to AER services, a Host Bridge requesting Native
-> AER, or using one of the 'pcie_ports=' parameters of 'native' or
-> 'dpc-native'.
+On 4/21/2020 4:54 PM, Jason Gunthorpe wrote:
+> On Tue, Apr 21, 2020 at 04:33:46PM -0700, Dave Jiang wrote:
+>> The actual code is independent of the stage 2 driver code submission that adds
+>> support for SVM, ENQCMD(S), PASID, and shared workqueues. This code series will
+>> support dedicated workqueue on a guest with no vIOMMU.
+>>    
+>> A new device type "mdev" is introduced for the idxd driver. This allows the wq
+>> to be dedicated to the usage of a VFIO mediated device (mdev). Once the work
+>> queue (wq) is enabled, an uuid generated by the user can be added to the wq
+>> through the uuid sysfs attribute for the wq.  After the association, a mdev can
+>> be created using this UUID. The mdev driver code will associate the uuid and
+>> setup the mdev on the driver side. When the create operation is successful, the
+>> uuid can be passed to qemu. When the guest boots up, it should discover a DSA
+>> device when doing PCI discovery.
 > 
-> The DPC port service driver itself will also fail to probe if the kernel
-> assumes the port is using Firmware-First AER. It's a reasonable
-> expectation that a port using Firmware-First AER will also be using
-> Firmware-First DPC, however if a Host Bridge requests Native DPC, the
-> DPC driver should allow it and not fail to bind due to AER capability
-> settings.
+> I'm feeling really skeptical that adding all this PCI config space and
+> MMIO BAR emulation to the kernel just to cram this into a VFIO
+> interface is a good idea, that kind of stuff is much safer in
+> userspace.
 > 
-> Host Bridges which request Native DPC port services will also likely
-> request Native AER, however it shouldn't be a requirement. This patch
-> allows ports on those Host Bridges to have DPC port services.
+> Particularly since vfio is not really needed once a driver is using
+> the PASID stuff. We already have general code for drivers to use to
+> attach a PASID to a mm_struct - and using vfio while disabling all the
+> DMA/iommu config really seems like an abuse.
 > 
-> This will avoid the unlikely situation where the port is Firmware-First
-> AER and Native DPC, and a BIOS or switch firmware preconfiguration of
-> the DPC trigger could result in unhandled DPC events.
+> A /dev/idxd char dev that mmaps a bar page and links it to a PASID
+> seems a lot simpler and saner kernel wise.
 > 
-> Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
-> ---
->   drivers/pci/pcie/dpc.c          | 3 ++-
->   drivers/pci/pcie/portdrv_core.c | 3 ++-
->   2 files changed, 4 insertions(+), 2 deletions(-)
+>> The mdev utilizes Interrupt Message Store or IMS[3] instead of MSIX for
+>> interrupts for the guest. This preserves MSIX for host usages and also allows a
+>> significantly larger number of interrupt vectors for guest usage.
 > 
-> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-> index 7621704..3f3106f 100644
-> --- a/drivers/pci/pcie/dpc.c
-> +++ b/drivers/pci/pcie/dpc.c
-> @@ -284,7 +284,8 @@ static int dpc_probe(struct pcie_device *dev)
->   	int status;
->   	u16 ctl, cap;
->   
-> -	if (pcie_aer_get_firmware_first(pdev) && !pcie_ports_dpc_native)
-> +	if (pcie_aer_get_firmware_first(pdev) && !pcie_ports_dpc_native &&
-> +	    !pci_find_host_bridge(pdev->bus)->native_dpc)
-Why do it in probe as well ? if host->native_dpc is not set then the
-device DPC probe it self won't happen right ?
->   		return -ENOTSUPP;
->   
->   	status = devm_request_threaded_irq(device, dev->irq, dpc_irq,
-> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
-> index 50a9522..f2139a1 100644
-> --- a/drivers/pci/pcie/portdrv_core.c
-> +++ b/drivers/pci/pcie/portdrv_core.c
-> @@ -256,7 +256,8 @@ static int get_port_device_capability(struct pci_dev *dev)
->   	 */
->   	if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC) &&
->   	    pci_aer_available() &&
-> -	    (pcie_ports_dpc_native || (services & PCIE_PORT_SERVICE_AER)))
-> +	    (pcie_ports_dpc_native || host->native_dpc ||
-> +	     (services & PCIE_PORT_SERVICE_AER)))
->   		services |= PCIE_PORT_SERVICE_DPC;
->   
->   	if (pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
+> I never did get a reply to my earlier remarks on the IMS patches.
+> 
+> The concept of a device specific addr/data table format for MSI is not
+> Intel specific. This should be general code. We have a device that can
+> use this kind of kernel capability today.
+> 
+
+<resending to the mailing list, I had incorrect email options set>
+
+Hi Jason,
+
+I am sorry if I did not address your comments earlier.
+
+The present IMS code is quite generic, most of the code is in the 
+drivers/ folder. We basically introduce 2 APIS: allocate and free IMS 
+interrupts and a IMS IRQ domain to allocate these interrupts from. These 
+APIs are architecture agnostic.
+
+We also introduce a new IMS IRQ domain which is architecture specific. 
+This is because IMS generates interrupts only in the remappable format, 
+hence interrupt remapping should be enabled for IMS. Currently, the 
+interrupt remapping code is only available for Intel and AMD and I don’t 
+see anything for ARM.
+
+If a new architecture would want to use IMS, they must simply introduce 
+a new IMS IRQ domain. I am not sure if there is any other way around 
+this. If you have any ideas, please let me know.
+
+Also, could you give more details on the device that could use IMS? Do 
+you have some driver code already? We could then see if and how the 
+current IMS code could be made more generic.
+
+> Jason
 > 
