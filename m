@@ -2,123 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 930271B509F
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Apr 2020 01:04:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE3511B50D1
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Apr 2020 01:21:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726056AbgDVXEY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Apr 2020 19:04:24 -0400
-Received: from mga07.intel.com ([134.134.136.100]:7109 "EHLO mga07.intel.com"
+        id S1726046AbgDVXVa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Apr 2020 19:21:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726008AbgDVXEY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 22 Apr 2020 19:04:24 -0400
-IronPort-SDR: 3uHv/mNBS2PuxZxmApi10iGniE4BDbo7a1FVY6YBZxfcuULMNbvrESa4GCrBdBmTmCrSKD8lnI
- LSbwpX6W44QQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 16:04:23 -0700
-IronPort-SDR: 49PSRAP6HZ2kkUOmviJXbjwvhozsbej9LWy1KbXoOSWlD9Itl37uJJ9lcmtRvzpTqNciu0IzD/
- O+hF9jv9BXmA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,304,1583222400"; 
-   d="scan'208";a="247589890"
-Received: from meghadey-mobl1.amr.corp.intel.com (HELO [10.254.185.101]) ([10.254.185.101])
-  by fmsmga008.fm.intel.com with ESMTP; 22 Apr 2020 16:04:20 -0700
-Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
- support for the idxd driver.
-To:     Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>
-Cc:     vkoul@kernel.org, maz@kernel.org, bhelgaas@google.com,
-        rafael@kernel.org, gregkh@linuxfoundation.org, tglx@linutronix.de,
-        hpa@zytor.com, alex.williamson@redhat.com, jacob.jun.pan@intel.com,
-        ashok.raj@intel.com, yi.l.liu@intel.com, baolu.lu@intel.com,
-        kevin.tian@intel.com, sanjay.k.kumar@intel.com,
-        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
-        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
-References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
- <20200421235442.GO11945@mellanox.com>
-From:   "Dey, Megha" <megha.dey@linux.intel.com>
-Message-ID: <d6b3c133-ac19-21af-b7a7-b9e7166b8166@linux.intel.com>
-Date:   Wed, 22 Apr 2020 16:04:20 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1725968AbgDVXVa (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 22 Apr 2020 19:21:30 -0400
+Received: from localhost (mobile-166-175-187-227.mycingular.net [166.175.187.227])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 529712076C;
+        Wed, 22 Apr 2020 23:21:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587597689;
+        bh=eQWN3pP46KHM49RJh6DB+rLU7u/InpAf2XNNJk3Uh0A=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ZlR+o4j/dIfsKlG85ZyM/YXf5IjN3j5mL315OQtJva0g0unK7gSvSEvf93zO6/i9D
+         RXsaegX5CNyrsxE8zkl9PnrDZXu5bGH8raTLZ40pfFSDEBdGUpy9GmQDya+o6RsQrc
+         KS9fX0bRBoDa5BlL1cBbNhSkocIzs8LGohDtrQaQ=
+Date:   Wed, 22 Apr 2020 18:21:27 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>,
+        alsa-devel@alsa-project.org, Roy Spliet <nouveau@spliet.org>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org
+Subject: Re: Unrecoverable AER error when resuming from RAM (hda regression
+ in 5.7-rc2)
+Message-ID: <20200422232127.GA24666@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20200421235442.GO11945@mellanox.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <s5h8sinxlfz.wl-tiwai@suse.de>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On 4/21/2020 4:54 PM, Jason Gunthorpe wrote:
-> On Tue, Apr 21, 2020 at 04:33:46PM -0700, Dave Jiang wrote:
->> The actual code is independent of the stage 2 driver code submission that adds
->> support for SVM, ENQCMD(S), PASID, and shared workqueues. This code series will
->> support dedicated workqueue on a guest with no vIOMMU.
->>    
->> A new device type "mdev" is introduced for the idxd driver. This allows the wq
->> to be dedicated to the usage of a VFIO mediated device (mdev). Once the work
->> queue (wq) is enabled, an uuid generated by the user can be added to the wq
->> through the uuid sysfs attribute for the wq.  After the association, a mdev can
->> be created using this UUID. The mdev driver code will associate the uuid and
->> setup the mdev on the driver side. When the create operation is successful, the
->> uuid can be passed to qemu. When the guest boots up, it should discover a DSA
->> device when doing PCI discovery.
+On Wed, Apr 22, 2020 at 11:25:04PM +0200, Takashi Iwai wrote:
+> On Wed, 22 Apr 2020 22:50:28 +0200,
+> Bjorn Helgaas wrote:
+> > ...
+> > I feel like this UR issue could be a PCI core issue or maybe some sort
+> > of misuse of PCI power management, but I can't seem to get traction on
+> > it.
+> > 
+> > > Then the display freezes and the system basically falls apart (can't 
+> > > even sudo reboot -f, need to use magic sysrq).
+> > > 
+> > > I bisected this to "ALSA: hda: Skip controller resume if not needed". 
+> > > Setting snd_hda_intel.power_save=0 resolves the issue.
+> > 
+> > FWIW, the complete citation is c4c8dd6ef807 ("ALSA: hda: Skip
+> > controller resume if not needed"),
+> > https://git.kernel.org/linus/c4c8dd6ef807, which first appeared in
+> > v5.7-rc2.
 > 
-> I'm feeling really skeptical that adding all this PCI config space and
-> MMIO BAR emulation to the kernel just to cram this into a VFIO
-> interface is a good idea, that kind of stuff is much safer in
-> userspace.
+> Yes, and I posted the fix patch right now:
+>   https://lore.kernel.org/r/20200422203744.26299-1-tiwai@suse.de
 > 
-> Particularly since vfio is not really needed once a driver is using
-> the PASID stuff. We already have general code for drivers to use to
-> attach a PASID to a mm_struct - and using vfio while disabling all the
-> DMA/iommu config really seems like an abuse.
+> The possible cause was the tricky resume code that both HD-audio
+> controller (the parent PCI device) and the codec devices used.
 > 
-> A /dev/idxd char dev that mmaps a bar page and links it to a PASID
-> seems a lot simpler and saner kernel wise.
-> 
->> The mdev utilizes Interrupt Message Store or IMS[3] instead of MSIX for
->> interrupts for the guest. This preserves MSIX for host usages and also allows a
->> significantly larger number of interrupt vectors for guest usage.
-> 
-> I never did get a reply to my earlier remarks on the IMS patches.
-> 
-> The concept of a device specific addr/data table format for MSI is not
-> Intel specific. This should be general code. We have a device that can
-> use this kind of kernel capability today.
-> 
+> At least the patch above seems working for the reporter's machine.
+> Now we need a bit more testing before merging, but it looks promising,
+> so far.
 
-<resending to the mailing list, I had incorrect email options set>
+Great, I'm glad you figured something out because I sure wasn't
+getting anywhere!
 
-Hi Jason,
+Maybe this is a tangent, but I can't figure out what
+snd_power_change_state() is doing.  It *looks* like it's supposed to
+change the PCI power state, but I gave up trying to figure out where
+it actually touches the device.
 
-I am sorry if I did not address your comments earlier.
+It seems like sound has more magic in power management than other
+device types, which makes me wonder if we're not providing the right
+interfaces or something.
 
-The present IMS code is quite generic, most of the code is in the 
-drivers/ folder. We basically introduce 2 APIS: allocate and free IMS 
-interrupts and a IMS IRQ domain to allocate these interrupts from. These 
-APIs are architecture agnostic.
-
-We also introduce a new IMS IRQ domain which is architecture specific. 
-This is because IMS generates interrupts only in the remappable format, 
-hence interrupt remapping should be enabled for IMS. Currently, the 
-interrupt remapping code is only available for Intel and AMD and I don’t 
-see anything for ARM.
-
-If a new architecture would want to use IMS, they must simply introduce 
-a new IMS IRQ domain. I am not sure if there is any other way around 
-this. If you have any ideas, please let me know.
-
-Also, could you give more details on the device that could use IMS? Do 
-you have some driver code already? We could then see if and how the 
-current IMS code could be made more generic.
-
-> Jason
-> 
+Bjorn
