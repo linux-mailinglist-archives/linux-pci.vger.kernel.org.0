@@ -2,180 +2,115 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1928B1B613E
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Apr 2020 18:47:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AA4411B618E
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Apr 2020 19:07:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729764AbgDWQrW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 23 Apr 2020 12:47:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37208 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729509AbgDWQrW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Apr 2020 12:47:22 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE462C09B041
-        for <linux-pci@vger.kernel.org>; Thu, 23 Apr 2020 09:47:21 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id 198so5313578lfo.7
-        for <linux-pci@vger.kernel.org>; Thu, 23 Apr 2020 09:47:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tRcc4dh6p+YiX6AX0x9LFumoCa/KOTeSvRHxboIV+LM=;
-        b=j7pfI9HRuHbfl6xDZAoT1l4rmuUPF/dN6vFtceByAi7aVXx7F1IhQrRueEZwe2jLz1
-         LPlirCZaXLDgzEX7pBzBcH8BRbSUtwv0Fr/Xr7mNnYMI5n+kQPaevi4KoW9j2YpIE//B
-         4gbwSpLKTsk8a6DjpzFLCRYnmZfFffJuXd7sHUWBrzm2DdCAF+LnMir8CtAVeZNUPhEU
-         o5wYq8dSbv5PpSnJvBS+3XV8BSWMUTvt8MM/+jOXHe9XtwOMnpE3dECt2rI/zXksJFfP
-         1kIeQP0cTexZxF2UhgelMN3dbj6HEeRfpwsJgbRgWYigveFkQHwaL2ZSdpLI9edvCOU1
-         jdbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tRcc4dh6p+YiX6AX0x9LFumoCa/KOTeSvRHxboIV+LM=;
-        b=CGfSXhL4keQIqI45SOBxlJBoZ9LQfxFjUUfumhjnkortO4w3SW5jIUgtm6eSciLv2f
-         uEtg3uGF/BlLOrpmXOCfa7na0jqipfqWKZruhtUIbr+JlCx0HLAzTSnNjFyphNV0FgGL
-         CQEFwobN7MSQav9YDl/fJpX9o3Dph4dc1qDbu3mhrk1L67NAOqzB4CceCCTY3ntf0wdv
-         I4O0PaTO3Shyw/ZwHEfEmwdm4A0yJXmNauwUlEqK1390xqzq9bfjXvI1oaxr9clokR8j
-         qcph6x4XCQXEttxoLdjf3ly3p1xCucZp8YADKXTni2ezML7Ovg+T8dG+IFQV+1kOXO25
-         F2Hg==
-X-Gm-Message-State: AGi0PubXE41++V2LyUJoQnwt70mbLrBQr78ADAilKqjnmSYuD87DsWSu
-        vYGQO05HyWxvUYhxdFRO005qQCxHitI9afRLdJKwBg==
-X-Google-Smtp-Source: APiQypKp4PYv8DT/PLr79QV23nUX9UW1aERR5j0Oo8O7FXjU4ESHU6c7LwMtVWsMkh3FTpEclvzAGKWNG5gZgbFgNds=
-X-Received: by 2002:ac2:4853:: with SMTP id 19mr2882072lfy.171.1587660440070;
- Thu, 23 Apr 2020 09:47:20 -0700 (PDT)
+        id S1729842AbgDWRHV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 Apr 2020 13:07:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48938 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729840AbgDWRHV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 23 Apr 2020 13:07:21 -0400
+Received: from localhost (mobile-166-175-187-210.mycingular.net [166.175.187.210])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E0BB2076C;
+        Thu, 23 Apr 2020 17:07:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587661640;
+        bh=yw9wJXzgI852NvRxPmOyJyXU9gysczH5+gd8R6BRqdg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=jRBGlpIAOMr0aJEhtE9qf9xmylLTnD1+54cwHWFclX7d4jCcl2dYjP2Ky/QQ44gSB
+         cw+8hXorBVHvZRIKuHFLtZExR5YTTmPk8/qfasQtq4F55wkr9CzeWvU9INQJntPHzP
+         74k2wAD7i4pxKssLvx8nwPa1cqjoK93h+egLbs1w=
+Date:   Thu, 23 Apr 2020 12:07:18 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans De Goede <hdegoede@redhat.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v2 0/9] PM: sleep: core: Rearrange the handling of driver
+ power management flags
+Message-ID: <20200423170718.GA190576@google.com>
 MIME-Version: 1.0
-References: <1587607101-31914-1-git-send-email-alan.mikhak@sifive.com> <DM5PR12MB1276642553DDD5AF85B65E01DAD30@DM5PR12MB1276.namprd12.prod.outlook.com>
-In-Reply-To: <DM5PR12MB1276642553DDD5AF85B65E01DAD30@DM5PR12MB1276.namprd12.prod.outlook.com>
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-Date:   Thu, 23 Apr 2020 09:47:08 -0700
-Message-ID: <CABEDWGw4CYgQ9uiaig+C9UifSz24W7oOiVva+G0zbBXitcMtPg@mail.gmail.com>
-Subject: Re: [PATCH v2][next] dmaengine: dw-edma: Check MSI descriptor before copying
-To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Cc:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "kishon@ti.com" <kishon@ti.com>, "maz@kernel.org" <maz@kernel.org>,
-        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5673945.BT02kTCndr@kreacher>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 2:28 AM Gustavo Pimentel
-<Gustavo.Pimentel@synopsys.com> wrote:
->
-> On Thu, Apr 23, 2020 at 2:58:21, Alan Mikhak <alan.mikhak@sifive.com>
-> wrote:
->
-> > From: Alan Mikhak <alan.mikhak@sifive.com>
-> >
-> > Modify dw_edma_irq_request() to check if a struct msi_desc entry exists
-> > before copying the contents of its struct msi_msg pointer.
-> >
-> > Without this sanity check, __get_cached_msi_msg() crashes when invoked by
-> > dw_edma_irq_request() running on a Linux-based PCIe endpoint device. MSI
-> > interrupt are not received by PCIe endpoint devices. If irq_get_msi_desc()
-> > returns null, then there is no cached struct msi_msg to be copied.
-> >
-> > This patch depends on the following patch:
-> > [PATCH v2] dmaengine: dw-edma: Decouple dw-edma-core.c from struct pci_dev
-> > https://urldefense.com/v3/__https://patchwork.kernel.org/patch/11491757/__;!!A4F2R9G_pg!L_vf_Tml7Ca4sWVvZp5crRCp7YsMj6B93G9cMAO8Dj3w9I0MArjwuwNKtDz9rr0RlpXiqPg$
-> >
-> > Rebased on linux-next which has above patch applied.
-> >
-> > Fixes: Build error with config x86_64-randconfig-f003-20200422
-> > Fixes: Build error with config s390-allmodconfig
-> > Reported-by: kbuild test robot <lkp@intel.com>
-> > Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
-> > ---
-> >  drivers/dma/dw-edma/dw-edma-core.c | 17 ++++++++++-------
-> >  1 file changed, 10 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-> > index db401eb11322..306ab50462be 100644
-> > --- a/drivers/dma/dw-edma/dw-edma-core.c
-> > +++ b/drivers/dma/dw-edma/dw-edma-core.c
-> > @@ -13,6 +13,7 @@
-> >  #include <linux/dmaengine.h>
-> >  #include <linux/err.h>
-> >  #include <linux/interrupt.h>
-> > +#include <linux/irq.h>
-> >  #include <linux/dma/edma.h>
-> >  #include <linux/dma-mapping.h>
-> >
-> > @@ -773,6 +774,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
-> >       u32 rd_mask = 1;
-> >       int i, err = 0;
-> >       u32 ch_cnt;
-> > +     int irq;
-> >
-> >       ch_cnt = dw->wr_ch_cnt + dw->rd_ch_cnt;
-> >
-> > @@ -781,16 +783,16 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
-> >
-> >       if (dw->nr_irqs == 1) {
-> >               /* Common IRQ shared among all channels */
-> > -             err = request_irq(dw->ops->irq_vector(dev, 0),
-> > -                               dw_edma_interrupt_common,
-> > +             irq = dw->ops->irq_vector(dev, 0);
-> > +             err = request_irq(irq, dw_edma_interrupt_common,
-> >                                 IRQF_SHARED, dw->name, &dw->irq[0]);
-> >               if (err) {
-> >                       dw->nr_irqs = 0;
-> >                       return err;
-> >               }
-> >
-> > -             get_cached_msi_msg(dw->ops->irq_vector(dev, 0),
-> > -                                &dw->irq[0].msi);
-> > +             if (irq_get_msi_desc(irq))
-> > +                     get_cached_msi_msg(irq, &dw->irq[0].msi);
-> >       } else {
-> >               /* Distribute IRQs equally among all channels */
-> >               int tmp = dw->nr_irqs;
-> > @@ -804,7 +806,8 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
-> >               dw_edma_add_irq_mask(&rd_mask, *rd_alloc, dw->rd_ch_cnt);
-> >
-> >               for (i = 0; i < (*wr_alloc + *rd_alloc); i++) {
-> > -                     err = request_irq(dw->ops->irq_vector(dev, i),
-> > +                     irq = dw->ops->irq_vector(dev, i);
-> > +                     err = request_irq(irq,
-> >                                         i < *wr_alloc ?
-> >                                               dw_edma_interrupt_write :
-> >                                               dw_edma_interrupt_read,
-> > @@ -815,8 +818,8 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
-> >                               return err;
-> >                       }
-> >
-> > -                     get_cached_msi_msg(dw->ops->irq_vector(dev, i),
-> > -                                        &dw->irq[i].msi);
-> > +                     if (irq_get_msi_desc(irq))
-> > +                             get_cached_msi_msg(irq, &dw->irq[i].msi);
-> >               }
-> >
-> >               dw->nr_irqs = i;
-> > --
-> > 2.7.4
->
->
-> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+On Sat, Apr 18, 2020 at 06:23:08PM +0200, Rafael J. Wysocki wrote:
+> Hi,
+> 
+> This is an update including some fixes and extra patches based on the
+> continuation of the discussion [1].
+> 
+> On Friday, April 10, 2020 5:46:27 PM CEST Rafael J. Wysocki wrote:
+> > Hi Alan,
+> > 
+> > Following our recent discussion regarding the DPM_FLAG_* family of flags [1],
+> > I have decided to follow some of your recommendations and make changes to the
+> > core code handling those flags.
+> > 
+> > The purpose of this is basically to make the code more consistent internally,
+> > easier to follow and better documented.
+> > 
+> > First of all, patch [1/7] changes the PM core to skip driver-level "late"
+> > and "noirq" suspend callbacks for devices with SMART_SUSPEND set if they are
+> > still runtime-suspended during the "late" system-wide suspend phase (without
+> > the patch it does that only if subsystem-level late/noirq/early suspend/resume
+> > callbacks are not present for the device, which is demonstrably inconsistent)
+> > and updates the resume part of the code accordingly (it doesn't need to check
+> > whether or not the subsystem-level callbacks are present any more).
+> > 
+> > The next patch, [2/7], is purely cosmetic and its only purpose is to reduce
+> > the LOC number and move related pieces of code closer to each other.
+> 
+> The first two patches have not changed.
+> 
+> > Patch [3/7] changes the PM core so that it doesn't skip any subsystem-level
+> > callbacks during system-wide resume (without the patch they may be skipped in
+> > the "early resume" and "resume" phases due to LEAVE_SUSPENDED being set which
+> > may be problematic) and to always run the driver's ->resume callback if the
+> > corresponding subsystem-level callback is not present (without the patch it
+> > may be skipped if LEAVE_SUSPENDED is set) to let it reverse the changes made
+> > by the driver's ->suspend callback (which always runs too) if need be.
+> 
+> The difference between this one and patch [3/9] in the v2 is the fixed
+> definition of dev_pm_may_skip_resume(), renamed to dev_pm_skip_resume() by
+> one of the next patches.
+> 
+> Patch [4/9] changes the handling of the power.may_skip_resume flag to set it
+> to 'true' by default and updates the subsystems aware of it to clear it when
+> they don't want devices to stay in suspend.
+> 
+> > Patches [4-6/7] rename one function in the PM core and two driver PM flags to
+> > make their names better reflect their purpose.
+> 
+> These are patches [5/9] and [7-8/9] in the v2 and patch [6/9] renames
+> dev_pm_smart_suspend_and_suspended() to dev_pm_skip_suspend().
+> 
+> > Finally, patch [7/7] updates the documentation of the driver PM flags to
+> > reflect the new code flows.
+> 
+> This patch [9/9] now and it has been updated to reflect the new code changes.
+> 
+> The pm-sleep-core branch:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+>   pm-sleep-core
+> 
+> contains the v2 now.
 
-Thanks Gustavo for the Ack.
+For the drivers/pci parts:
 
-FYI, I first considered adding an ops function to decouple dw-edma-core.c
-from struct msi_msg. However, in a separate use case that I have in mind,
-dw-edma would run on a host system having Synopsys DesignWare PCI eDMA
-hardware on the host-side. In this use case, the host system eDMA engines
-may be used in conjunction with an endpoint device also having the same
-eDMA hardware. In this use case, dw-edma running on the host would need
-to call get_cached_msi_msg() just in case the host has an msi_msg cached
-from the endpoint device. As a result, I opted to not add a new ops
-function.
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-Regards,
-Alan
-
->
->
