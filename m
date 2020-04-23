@@ -2,297 +2,301 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B1AFB1B5827
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Apr 2020 11:28:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 293881B5ACC
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Apr 2020 13:55:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725863AbgDWJ2m (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 23 Apr 2020 05:28:42 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:48342 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725854AbgDWJ2l (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Apr 2020 05:28:41 -0400
-Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 550EA40143;
-        Thu, 23 Apr 2020 09:28:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1587634121; bh=8pSn0Oq9GDrYjqPFHFZ3jpoKGUVVs/0l2zkgqntgrkg=;
-        h=From:To:Subject:Date:References:In-Reply-To:From;
-        b=IPxlYL3GKAxM4BQykuXh6LF4Ii5UkHbSjYsC7Id2TJnilssS2XmX3/8sc2t1LHdvj
-         pmnF7lqB9+NJi/0ergxNtL8FSyF7Jg0YAmgDkMHYdrKVrNnFkA2x5U2bn/5SHR6RRC
-         dimXw9mM4WVghXHsvGpwKsQaceQtItg3lG36yIZUXEOQBwmVAqzMIkn+07adIv1H3y
-         RQr5ZBHLXVa6C431XPTGs/3Ou1fPcrvJqu6pyUak+X166VhIzslW5/KjEWV9RPvtLi
-         xH9I5ttXXEeoy/sEYRWle5x3bmqYPfet3gVobneiH16MaiGw/4YOCWQYf2riueJCSx
-         Hm67sunB+evaQ==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id EC3ECA006B;
-        Thu, 23 Apr 2020 09:28:40 +0000 (UTC)
-Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 23 Apr 2020 02:28:30 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (10.202.3.67) by
- mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
- 14.3.487.0; Thu, 23 Apr 2020 02:28:30 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=i3WiitZ6zczFMunoqTIVSvWgdY7sMNh0T70XClZgHxtEp0H59I0tHC+yDmHaTcy9Wq/dTCGTv/1tOo+9jH4nz3om61u51eSQJ5KFPAT+p81DdfeGxArzeW/HHpT6wCjLnoZ9Qhm6gFO7MJGw4GIURG5iYeNIZcqV7qp5JgHId6rFDVK3eGt7j0qgZH1WuPvlokTEr6hNNyus6ME2NDXc3F9uRIGT7L8BiiunLKD7MBYPMfb1CN/UwENX8mwSO7glfSIZyziuNJyivmBmGeSGjN8rHP70xVMXv6rtoC1H/uoRKObnctCMfqQnYPxGqcYLEN6AKVxdH+ZZnZy1vaWCtA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=O/AsBqsWYswlLeJShCprAPXe80bPLSwrBDj/ewTY110=;
- b=JJ3t8ADYByhGX8F1ap3tacDcxIY0HVbgPcPgeyqAv9ekXAuvfeC5Bq93v41xU8N5YpqAzNql81xfOxn3W/0bIfB61rUpfIM9Z66+Sr8W+nocPAvgXcrnssIVnLr5rMxW3qNaPQBwD5/B5MB6hRyDVSlU/ZZocv2oULunZULG1/nCJakJzpA5dmiKhjooGb+vtNQ4VUeHA+t4O82GkGG2oaSzBjTqD2ZhWwH4UL7AcI6xad0UXZ6n5K32I9yIVAySrRVnpkrvhdSGICHfnp3Nrm5lG7eQ8bLrLinK6MxOtOJHTv/EMgMTQD6VGwcHCPYfSr/aXVDr5b/H41bNz5qw5w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=O/AsBqsWYswlLeJShCprAPXe80bPLSwrBDj/ewTY110=;
- b=bHxxNcToKGqfIK0QbZ8wZIXG1csKp1DX8jGp0umETjj2QUyukhWebJWxlMxKpEDYaqga+wce2obwtwEt+fR0vjj1lAHkxauMnpWvTbXsMWDgqUjYIjkXmbEtAkE0LngJpdye2HCKt99I6Hp254kXQiWR43AL7SddefoyNF0mNcs=
-Received: from DM5PR12MB1276.namprd12.prod.outlook.com (2603:10b6:3:79::18) by
- DM5PR12MB1612.namprd12.prod.outlook.com (2603:10b6:4:a::11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2937.13; Thu, 23 Apr 2020 09:28:28 +0000
-Received: from DM5PR12MB1276.namprd12.prod.outlook.com
- ([fe80::2062:f350:1cd1:1023]) by DM5PR12MB1276.namprd12.prod.outlook.com
- ([fe80::2062:f350:1cd1:1023%12]) with mapi id 15.20.2921.030; Thu, 23 Apr
- 2020 09:28:28 +0000
-From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-To:     Alan Mikhak <alan.mikhak@sifive.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "kishon@ti.com" <kishon@ti.com>, "maz@kernel.org" <maz@kernel.org>,
-        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>
-Subject: RE: [PATCH v2][next] dmaengine: dw-edma: Check MSI descriptor before
- copying
-Thread-Topic: [PATCH v2][next] dmaengine: dw-edma: Check MSI descriptor before
- copying
-Thread-Index: AQHWGRLFZJySbqPiH0S3r+K2E1djb6iGcOIA
-Date:   Thu, 23 Apr 2020 09:28:28 +0000
-Message-ID: <DM5PR12MB1276642553DDD5AF85B65E01DAD30@DM5PR12MB1276.namprd12.prod.outlook.com>
-References: <1587607101-31914-1-git-send-email-alan.mikhak@sifive.com>
-In-Reply-To: <1587607101-31914-1-git-send-email-alan.mikhak@sifive.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcZ3VzdGF2b1xh?=
- =?us-ascii?Q?cHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJh?=
- =?us-ascii?Q?MjllMzViXG1zZ3NcbXNnLWM4MzdiMWFhLTg1NDQtMTFlYS05OGE3LWY4OTRj?=
- =?us-ascii?Q?MjczODA0MlxhbWUtdGVzdFxjODM3YjFhYy04NTQ0LTExZWEtOThhNy1mODk0?=
- =?us-ascii?Q?YzI3MzgwNDJib2R5LnR4dCIgc3o9IjM1OTEiIHQ9IjEzMjMyMTA3NzA2MTc3?=
- =?us-ascii?Q?NDQyMiIgaD0ibllpdURRSGNDbWkwL0ExLzd3c2FxMjNydCtnPSIgaWQ9IiIg?=
- =?us-ascii?Q?Ymw9IjAiIGJvPSIxIiBjaT0iY0FBQUFFUkhVMVJTUlVGTkNnVUFBQlFKQUFC?=
- =?us-ascii?Q?V2JKQ0tVUm5XQVl1b1hMeGhYSldSaTZoY3ZHRmNsWkVPQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUhBQUFBQ2tDQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUVBQVFBQkFBQUFFbU1la3dBQUFBQUFBQUFBQUFBQUFKNEFBQUJtQUdrQWJn?=
- =?us-ascii?Q?QmhBRzRBWXdCbEFGOEFjQUJzQUdFQWJnQnVBR2tBYmdCbkFGOEFkd0JoQUhR?=
- =?us-ascii?Q?QVpRQnlBRzBBWVFCeUFHc0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?RUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFHWUFid0IxQUc0QVpBQnlBSGtBWHdC?=
- =?us-ascii?Q?d0FHRUFjZ0IwQUc0QVpRQnlBSE1BWHdCbkFHWUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFBQUFDQUFB?=
- =?us-ascii?Q?QUFBQ2VBQUFBWmdCdkFIVUFiZ0JrQUhJQWVRQmZBSEFBWVFCeUFIUUFiZ0Js?=
- =?us-ascii?Q?QUhJQWN3QmZBSE1BWVFCdEFITUFkUUJ1QUdjQVh3QmpBRzhBYmdCbUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFBQm1BRzhB?=
- =?us-ascii?Q?ZFFCdUFHUUFjZ0I1QUY4QWNBQmhBSElBZEFCdUFHVUFjZ0J6QUY4QWN3QmhB?=
- =?us-ascii?Q?RzBBY3dCMUFHNEFad0JmQUhJQVpRQnpBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUdZQWJ3QjFBRzRBWkFCeUFIa0FY?=
- =?us-ascii?Q?d0J3QUdFQWNnQjBBRzRBWlFCeUFITUFYd0J6QUcwQWFRQmpBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFBQUNB?=
- =?us-ascii?Q?QUFBQUFDZUFBQUFaZ0J2QUhVQWJnQmtBSElBZVFCZkFIQUFZUUJ5QUhRQWJn?=
- =?us-ascii?Q?QmxBSElBY3dCZkFITUFkQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBSjRBQUFCbUFH?=
- =?us-ascii?Q?OEFkUUJ1QUdRQWNnQjVBRjhBY0FCaEFISUFkQUJ1QUdVQWNnQnpBRjhBZEFC?=
- =?us-ascii?Q?ekFHMEFZd0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBR1lBYndCMUFHNEFaQUJ5QUhr?=
- =?us-ascii?Q?QVh3QndBR0VBY2dCMEFHNEFaUUJ5QUhNQVh3QjFBRzBBWXdBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFB?=
- =?us-ascii?Q?Q0FBQUFBQUNlQUFBQVp3QjBBSE1BWHdCd0FISUFid0JrQUhVQVl3QjBBRjhB?=
- =?us-ascii?Q?ZEFCeUFHRUFhUUJ1QUdrQWJnQm5BQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFKNEFBQUJ6?=
- =?us-ascii?Q?QUdFQWJBQmxBSE1BWHdCaEFHTUFZd0J2QUhVQWJnQjBBRjhBY0FCc0FHRUFi?=
- =?us-ascii?Q?Z0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBRUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFITUFZUUJzQUdVQWN3QmZB?=
- =?us-ascii?Q?SEVBZFFCdkFIUUFaUUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFB?=
- =?us-ascii?Q?QUFDQUFBQUFBQ2VBQUFBY3dCdUFIQUFjd0JmQUd3QWFRQmpBR1VBYmdCekFH?=
- =?us-ascii?Q?VUFYd0IwQUdVQWNnQnRBRjhBTVFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFB?=
- =?us-ascii?Q?QnpBRzRBY0FCekFGOEFiQUJwQUdNQVpRQnVBSE1BWlFCZkFIUUFaUUJ5QUcw?=
- =?us-ascii?Q?QVh3QnpBSFFBZFFCa0FHVUFiZ0IwQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUhZQVp3QmZBR3NBWlFC?=
- =?us-ascii?Q?NUFIY0Fid0J5QUdRQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFB?=
- =?us-ascii?Q?QUFBQUNBQUFBQUFBPSIvPjwvbWV0YT4=3D?=
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=gustavo@synopsys.com; 
-x-originating-ip: [198.182.37.200]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3403df88-a781-44d9-0095-08d7e768ae98
-x-ms-traffictypediagnostic: DM5PR12MB1612:
-x-microsoft-antispam-prvs: <DM5PR12MB1612B29DECDA8D4DB9A8C11BDAD30@DM5PR12MB1612.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 03827AF76E
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1276.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(346002)(396003)(376002)(39860400002)(366004)(186003)(26005)(7696005)(316002)(8676002)(81156014)(6506007)(2906002)(55016002)(110136005)(53546011)(33656002)(9686003)(66476007)(71200400001)(52536014)(66556008)(478600001)(966005)(76116006)(66446008)(64756008)(8936002)(5660300002)(86362001)(66946007);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: WurKFP+ZOHbGRJ3ApUc6UUxPhP7xzrlXo0YGw+TZC0RETzH/DxhTp1XbmsLelB740mLSjgxdDjOA+57XmSGwOThydjTtKQDAx3bPhscdD+n+rdtyWZK3PKEfhoijiDUneMshktdSJFwpH05S2hkT8WhI720hN899Up+EeI2ELNGailAB5uDbIisHF4Bje/YUhwwl8C8xUBvd5gbPvUV1QjvAdsXA5q3bGlOIQijEIhXeC+nWPXxqN46EP4PsgpyMZW1m1HF/gwqCJ7SD2Rk+AALIYmI34AFfuyobQxFXwsawjSGi8rowptHptDkwoXSFISkLNphnK6vBtB1XAiMkEExmwV88UB/whYDtW2y5HhBQ3K5Fj2lzTrKRFxz+1ZZRGT33bAYT2iQuIrWFbqo+/NynAecKrGUgbmTc/aGZK1J+2LYqbMZ/faYhtmAAZWzMJZvf1IRqRietQ67F8gYoboUQkw+oA0g3Yqa4RcOIpJOVTVNydsFHR8zWW4aeGfXH70CgMq+C6dzBELjjmdYwRQ==
-x-ms-exchange-antispam-messagedata: nueUM3aMZFzg+WSZTvhKh6AQkkt9nq5gjBS7oJ+6aQ07Kx1Dk+BeWGvyL6zPwygTsoU1wTN0trX2lQFUHudtHBxgqj2HCLoZjKy9cjyYJqdu3WIEPoNEJ1K30ZRFlVNYRrvJnJ0tfJaPK1B37vHcZw==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1728178AbgDWLy7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 Apr 2020 07:54:59 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2842 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727081AbgDWLy6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 23 Apr 2020 07:54:58 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 26987EB5EBEF06FDEC79;
+        Thu, 23 Apr 2020 19:54:56 +0800 (CST)
+Received: from [10.65.58.147] (10.65.58.147) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Thu, 23 Apr 2020
+ 19:54:55 +0800
+Subject: Re: [PATCH RFC] pci: Make return value of pcie_capability_read*()
+ consistent
+To:     Bolarinwa Olayemi Saheed <refactormyself@gmail.com>,
+        <helgaas@kernel.org>
+References: <20200419065113.15259-1-refactormyself@gmail.com>
+CC:     <bjorn@helgaas.com>, <skhan@linuxfoundation.org>,
+        <linux-pci@vger.kernel.org>
+From:   Yicong Yang <yangyicong@hisilicon.com>
+Message-ID: <80f70efc-0ff6-a53f-9a86-d52e053e6a69@hisilicon.com>
+Date:   Thu, 23 Apr 2020 19:55:17 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3403df88-a781-44d9-0095-08d7e768ae98
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Apr 2020 09:28:28.6952
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: CejrEqwIW4y9f70Scb4kp6JPTT9b/fRNBsu+h+anQwEcKYZQvO+a7yKDuQEgFoj4BrAsvirOQZeX9NYTUeTfGg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1612
-X-OriginatorOrg: synopsys.com
+In-Reply-To: <20200419065113.15259-1-refactormyself@gmail.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.65.58.147]
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 2:58:21, Alan Mikhak <alan.mikhak@sifive.com>=20
-wrote:
+Hi Bolarinwa,
 
-> From: Alan Mikhak <alan.mikhak@sifive.com>
->=20
-> Modify dw_edma_irq_request() to check if a struct msi_desc entry exists
-> before copying the contents of its struct msi_msg pointer.
->=20
-> Without this sanity check, __get_cached_msi_msg() crashes when invoked by
-> dw_edma_irq_request() running on a Linux-based PCIe endpoint device. MSI
-> interrupt are not received by PCIe endpoint devices. If irq_get_msi_desc(=
-)
-> returns null, then there is no cached struct msi_msg to be copied.
->=20
-> This patch depends on the following patch:
-> [PATCH v2] dmaengine: dw-edma: Decouple dw-edma-core.c from struct pci_de=
-v
-> https://urldefense.com/v3/__https://patchwork.kernel.org/patch/11491757/_=
-_;!!A4F2R9G_pg!L_vf_Tml7Ca4sWVvZp5crRCp7YsMj6B93G9cMAO8Dj3w9I0MArjwuwNKtDz9=
-rr0RlpXiqPg$=20
->=20
-> Rebased on linux-next which has above patch applied.
->=20
-> Fixes: Build error with config x86_64-randconfig-f003-20200422
-> Fixes: Build error with config s390-allmodconfig
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
+Please +cc me in the following patches,  and find some minor comments below.
+
+On 2020/4/19 14:51, Bolarinwa Olayemi Saheed wrote:
+> pcie_capability_read*() could return 0, -EINVAL, or any of the
+> PCIBIOS_* error codes (which are positive).
+> This is behaviour is now changed to return only PCIBIOS_* error
+> codes on error.
+> This is consistent with pci_read_config_*(). Callers can now have
+> a consitent way for checking which error has occured.
+>
+> An audit of the callers of this function was made and no case was found
+> where there is need for a change within the caller function or their 
+> dependencies down the heirarchy.
+> Out of all caller functions discovered only 8 functions either persist the
+> return value of pcie_capability_read*() or directly pass on the return 
+> value.
+>
+> 1.) "./drivers/infiniband/hw/hfi1/pcie.c" :
+> => pcie_speeds() line-306
+>
+> 	if (ret) {
+> 		dd_dev_err(dd, "Unable to read from PCI config\n");
+> 		return ret;
+> 	}
+>
+> remarks: The variable "ret" is the captured return value.
+>          This function passes on the return value. The return value was
+> 	 store only by hfi1_init_dd() line-15076 in 
+>          ./drivers/infiniband/hw/hfi1/chip.c and it behave the same on all
+> 	 errors. So this patch will not require a change in this function.
+>
+> => update_lbus_info() line-276
+>
+> 	if (ret) {
+> 		dd_dev_err(dd, "Unable to read from PCI config\n");
+> 		return;
+> 	}
+>
+> remarks: see below
+> => save_pci_variables() line-415, 420, 425
+>
+> 	if (ret)
+> 		goto error;
+>
+> remarks: see below
+>
+> => tune_pcie_caps() line-471
+>
+> 	if ((!ret) && !(ectl & PCI_EXP_DEVCTL_EXT_TAG)) {
+> 		dd_dev_info(dd, "Enabling PCIe extended tags\n");
+> 		ectl |= PCI_EXP_DEVCTL_EXT_TAG;
+> 		ret = pcie_capability_write_word(dd->pcidev,
+> 						 PCI_EXP_DEVCTL, ectl);
+> 		if (ret)
+> 		     dd_dev_info(dd, "Unable to write to PCI config\n");
+> 	}
+>
+> remarks: see below
+>
+> => do_pcie_gen3_transition() line-1247, 1274
+>
+> 	if (ret) {
+> 		dd_dev_err(dd, "Unable to read from PCI config\n");
+> 		return_error = 1;
+> 		goto done;
+> 	}
+>
+> remarks: The variable "ret" is the captured return value.
+>          These functions' behaviour is the same on all errors, so they are
+> 	 not be affected by this patch.
+>
+> 2.) "./drivers/net/wireless/realtek/rtw88/pci.c":
+> => rtw_pci_link_cfg*() line-1221
+>
+> 	if (ret) {
+> 		rtw_err(rtwdev, "failed to read PCI cap, ret=%d\n", ret);
+> 		return;
+> 	}
+>
+> remark: The variable "ret" is the captured return value.
+>         This function returns on all errors, so it will not be affected
+> 	by this patch.
+>
+> 3.) "./drivers/pci/hotplug/pciehp_hpc.c":
+> => pciehp_check_link_active() line-219
+>
+> 	if (ret == PCIBIOS_DEVICE_NOT_FOUND || lnk_status == (u16)~0)
+> 		return -ENODEV;
+>
+> remark: see below
+>
+> =>pciehp_card_present() line-404
+>
+> 	{Same code as above}
+>
+> remark: The variable "ret" is the captured return value.
+>         This 2 functions will not be affected by this patch since they are
+> 	only testing for *DEVICE_NOT_FOUND error.
+>
+> 4.) "./drivers/pci/pcie/bw_notification.c":
+> =>pcie_link_bandwidth_notification_supported() line-26
+>
+> 	return (ret == PCIBIOS_SUCCESSFUL) 
+> 			&& (lnk_cap & PCI_EXP_LNKCAP_LBNC);
+>
+> remark: see below
+>
+> =>pcie_bw_notification_irq() line-56
+>
+> 	if (ret != PCIBIOS_SUCCESSFUL || !events)
+> 		return IRQ_NONE;
+>
+> remark: The variable "ret" is the captured return value.
+>         In these 2 functions returning PCIBIOS_BAD_REGISTER_NUMBER instead
+> 	of -EINVAL as done in this patch will not affect the behaviour.
+>
+> 5.) "./drivers/pci/probe.c":
+> => pci_configure_extended_tags() line-1951
+>
+> 	if (ret)
+> 		return 0;
+>
+> remark: The variable "ret" is the captured return value.
+>         This function will not be affected by this patch since it retuns 0
+> 	on ALL error codes.
+>
+> 6.) "./drivers/pci/pci-sysfs.c":
+> => current_link_speed_show() line-180
+>
+> 	if (err)
+> 		return -EINVAL;
+>
+> remark: see below
+>
+> =>current_link_width_show() line-215
+>
+>         {same code as in the above function}
+>
+> remark: The variable "err" is the captured return value.
+>         This 2 functions will not be affected directly by this patch since
+> 	it retuns -EINVAL on ALL error codes. However, depending on the 
+> 	intent, after this patch, this may now be to too generic. This is 
+> 	because it will then be possible to use the returned PCIBIOS_* 
+> 	error code to identify the error.
+>
+> 7.) "./drivers/dma/ioat/init.c":
+> =>ioat3_dma_probe() line-1193
+>
+> 	if (err)
+> 		return err;
+>
+> remark: The variable "ret" is the captured return value.
+>         This function passes on the return value. Only ioat_pci_probe()
+> 	line-1392 in the same file persists the return value and it's
+> 	behaviour is the same on all errors. So this patch will not change
+> 	the behaviour of these functions.
+>
+> 8.) "./drivers/pci/access.c":
+> =>pcie_capability_clear_and_set_word() line-493
+>
+> 	if (!ret) {
+> 		val &= ~clear;
+> 		val |= set;
+> 		ret = pcie_capability_write_word(dev, pos, val);
+> 	}
+>
+> 	return ret;
+>
+> =>pcie_capability_clear_and_set_dword() line-508
+>
+>     {same as above function}
+>
+> remark: The variable "ret" is the captured return value.
+>      This 2 functions will not be affected directly. But after this patch
+>      they will now be returning PCIBIOS_BAD_REGISTER_NUMBER instead of 
+>      -EINVAL. No case was found where the return value of any of both 
+>      functions were persisted. But their return values are passed on
+>      directly by:
+> 	- pcie_capability_set_{word|dword}() and 
+> 	  pcie_capability_clear_{word|dword}() in ./include/linux/pci.h
+>           lines(1100-1136): these pass on the recieved return values 
+> 	  directly to:
+>           - pcie_capability_clear_dword() is not referenced anywhere
+>           - pcie_capability_set_dword() is referenced but it's return 
+> 	    values are not cached
+>           - pcie_capability_{set, clear}_word() : return value passed on 
+> 	    by pci_enable_pcie_error_reporting() in drivers/pci/pcie/aer.c
+> 	    lines-(350,362) these are used by other drivers to log errors,
+>             in all examined cases all errors are treated the same.
+> 	  - pcie_capability_clear_word() : return value passed on by 
+> 	    pci_disable_pcie_error_reporting() in /drivers/pci/pcie/aer.c 
+> 	    lines-362 which treats all errors are treated the same.
+>
+> 	- pcie_set_readrq() line-5662 and pcie_set_mps() line-5703 in 
+> 	  ./drivers/pci/pci.c : both functions pass on the return value of
+> 	  pcie_capability_clear_and_set_word() but also return -EINVAL in
+> 	  cases of some other errors. Currently these errors will not be 
+> 	  differentiated, this patch will help differentiate errors in 
+> 	  this kind of situation. The function will not be affected but
+> 	  rather it will be enhanced in correctness.
+>
+>         - pqi_set_pcie_completion_timeout() line-7423 in 
+> 	  ./drivers/scsi/smartpqi/smartpqi_init.c : This function will not
+>           be affected. Although, it passes on the return value, all error 
+>           values are handled the same way by the only reference found at 
+>           line-7473 in the same file.
+>
+>           
+>  
+> Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
+> Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
 > ---
->  drivers/dma/dw-edma/dw-edma-core.c | 17 ++++++++++-------
->  1 file changed, 10 insertions(+), 7 deletions(-)
->=20
-> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-=
-edma-core.c
-> index db401eb11322..306ab50462be 100644
-> --- a/drivers/dma/dw-edma/dw-edma-core.c
-> +++ b/drivers/dma/dw-edma/dw-edma-core.c
-> @@ -13,6 +13,7 @@
->  #include <linux/dmaengine.h>
->  #include <linux/err.h>
->  #include <linux/interrupt.h>
-> +#include <linux/irq.h>
->  #include <linux/dma/edma.h>
->  #include <linux/dma-mapping.h>
-> =20
-> @@ -773,6 +774,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *c=
-hip,
->  	u32 rd_mask =3D 1;
->  	int i, err =3D 0;
->  	u32 ch_cnt;
-> +	int irq;
-> =20
->  	ch_cnt =3D dw->wr_ch_cnt + dw->rd_ch_cnt;
-> =20
-> @@ -781,16 +783,16 @@ static int dw_edma_irq_request(struct dw_edma_chip =
-*chip,
-> =20
->  	if (dw->nr_irqs =3D=3D 1) {
->  		/* Common IRQ shared among all channels */
-> -		err =3D request_irq(dw->ops->irq_vector(dev, 0),
-> -				  dw_edma_interrupt_common,
-> +		irq =3D dw->ops->irq_vector(dev, 0);
-> +		err =3D request_irq(irq, dw_edma_interrupt_common,
->  				  IRQF_SHARED, dw->name, &dw->irq[0]);
->  		if (err) {
->  			dw->nr_irqs =3D 0;
->  			return err;
->  		}
-> =20
-> -		get_cached_msi_msg(dw->ops->irq_vector(dev, 0),
-> -				   &dw->irq[0].msi);
-> +		if (irq_get_msi_desc(irq))
-> +			get_cached_msi_msg(irq, &dw->irq[0].msi);
->  	} else {
->  		/* Distribute IRQs equally among all channels */
->  		int tmp =3D dw->nr_irqs;
-> @@ -804,7 +806,8 @@ static int dw_edma_irq_request(struct dw_edma_chip *c=
-hip,
->  		dw_edma_add_irq_mask(&rd_mask, *rd_alloc, dw->rd_ch_cnt);
-> =20
->  		for (i =3D 0; i < (*wr_alloc + *rd_alloc); i++) {
-> -			err =3D request_irq(dw->ops->irq_vector(dev, i),
-> +			irq =3D dw->ops->irq_vector(dev, i);
-> +			err =3D request_irq(irq,
->  					  i < *wr_alloc ?
->  						dw_edma_interrupt_write :
->  						dw_edma_interrupt_read,
-> @@ -815,8 +818,8 @@ static int dw_edma_irq_request(struct dw_edma_chip *c=
-hip,
->  				return err;
->  			}
-> =20
-> -			get_cached_msi_msg(dw->ops->irq_vector(dev, i),
-> -					   &dw->irq[i].msi);
-> +			if (irq_get_msi_desc(irq))
-> +				get_cached_msi_msg(irq, &dw->irq[i].msi);
->  		}
-> =20
->  		dw->nr_irqs =3D i;
-> --=20
-> 2.7.4
+> Changed in version 4:
+>  - make patch independent of earlier versions
+>  - add commit log
+>  - add justificaation and report on audit of affected functions
+>
+> NOTE:
+>  Please let me know if I have missed some possible callers
+>  I am not sure if pcie_capability_write*() needs this kind of fix
+>
+>  drivers/pci/access.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+> index 79c4a2ef269a..451f2b8b2b3c 100644
+> --- a/drivers/pci/access.c
+> +++ b/drivers/pci/access.c
+> @@ -409,7 +409,7 @@ int pcie_capability_read_word(struct pci_dev *dev, int pos, u16 *val)
+
+Maybe provide some comments for the function, to notify the outside users to do the error code
+conversion.
+
+BTW, pci_{read, write}_config_*() may also have the issues that export the private err code
+outside. You may want to solve these in a series along with this patch.
+
+Regards,
+Yicong
 
 
-Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-
+>  
+>  	*val = 0;
+>  	if (pos & 1)
+> -		return -EINVAL;
+> +		return PCIBIOS_BAD_REGISTER_NUMBER;
+>  
+>  	if (pcie_capability_reg_implemented(dev, pos)) {
+>  		ret = pci_read_config_word(dev, pci_pcie_cap(dev) + pos, val);
+> @@ -444,7 +444,7 @@ int pcie_capability_read_dword(struct pci_dev *dev, int pos, u32 *val)
+>  
+>  	*val = 0;
+>  	if (pos & 3)
+> -		return -EINVAL;
+> +		return PCIBIOS_BAD_REGISTER_NUMBER;
+>  
+>  	if (pcie_capability_reg_implemented(dev, pos)) {
+>  		ret = pci_read_config_dword(dev, pci_pcie_cap(dev) + pos, val);
 
