@@ -2,72 +2,62 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9EC531B549B
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Apr 2020 08:14:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 550F31B549E
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Apr 2020 08:16:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725867AbgDWGO0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 23 Apr 2020 02:14:26 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:56314 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725562AbgDWGO0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 23 Apr 2020 02:14:26 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 45E3BCF9CDD682DBC164;
-        Thu, 23 Apr 2020 14:14:24 +0800 (CST)
-Received: from [127.0.0.1] (10.63.139.185) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Thu, 23 Apr 2020
- 14:14:18 +0800
-Subject: Re: [PATCH -next v2] PCI: dwc: Make hisi_pcie_platform_ops static
-To:     Zou Wei <zou_wei@huawei.com>, <lorenzo.pieralisi@arm.com>,
-        <amurray@thegoodpenguin.co.uk>, <bhelgaas@google.com>
-References: <1587611883-26960-1-git-send-email-zou_wei@huawei.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-From:   Zhou Wang <wangzhou1@hisilicon.com>
-Message-ID: <5EA13239.5070908@hisilicon.com>
-Date:   Thu, 23 Apr 2020 14:14:17 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
- Thunderbird/38.5.1
+        id S1726496AbgDWGQm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 Apr 2020 02:16:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51726 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725562AbgDWGQm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Apr 2020 02:16:42 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8B34C03C1AB
+        for <linux-pci@vger.kernel.org>; Wed, 22 Apr 2020 23:16:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=rq+QTShohzY4Rd55RAkLg7KPowx3+3Zby0B4moCrCAY=; b=qEL7jXjdh2GSG0KAjb7y96qB1K
+        wOBucwe//4VQGGg/7GXhV+gQ6CMAXoGlzwYLQ62tBi3VaGqsCf0uO3KP8q2HpxcJutrlexg0JBK4B
+        sWtpnDwYuhphJSvyXGABzlVszINTd0bDteg8nSbUPAMnmlEjIYcRoqu9VN7ct/xM5vSDXaTsSkgMP
+        cmg9nPEYHl9tuQuRSoyX6004eLFn+GnUuBIZanO/vhOzVCxE8K5jZkh/qgGUziwuYilR0/AALIqE7
+        xlwzMQ78eqpC/siuM6wPXjkqZGqyh4YR6dDmEda21cwqxKHByclDa9fPB/sFU8QW60Z9EgDkHzOjU
+        b12plF5Q==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jRV9z-00067g-MX; Thu, 23 Apr 2020 06:16:31 +0000
+Date:   Wed, 22 Apr 2020 23:16:31 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Jon Derrick <jonathan.derrick@intel.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, qemu-devel@nongnu.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Andrzej Jakowski <andrzej.jakowski@intel.com>
+Subject: Re: [PATCH 0/1] KVM support for VMD devices
+Message-ID: <20200423061631.GA12688@infradead.org>
+References: <20200422171444.10992-1-jonathan.derrick@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <1587611883-26960-1-git-send-email-zou_wei@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.63.139.185]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200422171444.10992-1-jonathan.derrick@intel.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2020/4/23 11:18, Zou Wei wrote:
-> Fix the following sparse warning:
+On Wed, Apr 22, 2020 at 01:14:44PM -0400, Jon Derrick wrote:
+> The two patches (Linux & QEMU) add support for passthrough VMD devices
+> in QEMU/KVM. VMD device 28C0 already supports passthrough natively by
+> providing the Host Physical Address in a shadow register to the guest
+> for correct bridge programming.
 > 
-> drivers/pci/controller/dwc/pcie-hisi.c:365:21: warning:
-> symbol 'hisi_pcie_platform_ops' was not declared. Should it be static?
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Zou Wei <zou_wei@huawei.com>
+> The QEMU patch emulates the 28C0 mode by creating a shadow register and
+> advertising its support by using QEMU's subsystem vendor/id.
+> The Linux patch matches the QEMU subsystem vendor/id to use the shadow
+> register.
 
-Reviewed-by: Zhou Wang <wangzhou1@hisilicon.com>
-
-Thanks,
-Zhou
-
-> ---
->  drivers/pci/controller/dwc/pcie-hisi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-hisi.c b/drivers/pci/controller/dwc/pcie-hisi.c
-> index 6d9e1b2..11f5ff7 100644
-> --- a/drivers/pci/controller/dwc/pcie-hisi.c
-> +++ b/drivers/pci/controller/dwc/pcie-hisi.c
-> @@ -362,7 +362,7 @@ static int hisi_pcie_platform_init(struct pci_config_window *cfg)
->  	return 0;
->  }
->  
-> -struct pci_ecam_ops hisi_pcie_platform_ops = {
-> +static struct pci_ecam_ops hisi_pcie_platform_ops = {
->  	.bus_shift    = 20,
->  	.init         =  hisi_pcie_platform_init,
->  	.pci_ops      = {
-> 
-
+Please pick a different PCI ID for Qemu vs real hardware so that we
+can properly quirk them if they end up behaving differently due to
+hardware or software bugs.
