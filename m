@@ -2,79 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 497221B62B7
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Apr 2020 19:52:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 450B51B62DC
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Apr 2020 20:02:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730046AbgDWRvu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 23 Apr 2020 13:51:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41270 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730044AbgDWRvu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 23 Apr 2020 13:51:50 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2DEC20857;
-        Thu, 23 Apr 2020 17:51:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587664309;
-        bh=6KM0KB+PvUFUfgNi+7pN69jYngCtJEP/2cKxibGIIQ8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ToIL4StQfSDIZdYcoP6vMjyZKg+IvkIWYtsEBottzYfxNmRPvfEaXvap9lk7+H38o
-         qzD4HDiVbD/f6VSMFmZDYcoxto92jIcnN/dz0pTmr6oba7HARzamYdOLruIk7FVwBb
-         Oc6seR9Enis2mySZuYot+71RYA6jgcO4u2MtOVF8=
-Received: by pali.im (Postfix)
-        id D2CD376C; Thu, 23 Apr 2020 19:51:47 +0200 (CEST)
-Date:   Thu, 23 Apr 2020 19:51:47 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
-        linux-pci@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/9] PCI: aardvark: don't write to read-only register
-Message-ID: <20200423175147.vrl75tu2mpk5iju7@pali>
-References: <20200421111701.17088-3-marek.behun@nic.cz>
- <20200423172713.GA191930@google.com>
+        id S1729991AbgDWSCA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 Apr 2020 14:02:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48906 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729924AbgDWSCA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Apr 2020 14:02:00 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1301C09B043
+        for <linux-pci@vger.kernel.org>; Thu, 23 Apr 2020 11:01:59 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id k13so7910453wrw.7
+        for <linux-pci@vger.kernel.org>; Thu, 23 Apr 2020 11:01:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=anisinha-ca.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4vFvQJ+X9x2fkOsaxQlxkegYOOkfdjHsu+VNUmji7qM=;
+        b=vkzbFlKNxWQfoNjGjP0cN0x+tAOzVkVduiUCVecHWhVGJQZl0dbe5CO367tCplapfV
+         2kDEkUunHthWlNCDEH5rLiC2cmHULSn3na8remXr6R9gQWZT2A+S+4Rw6HE1+q2/dVI1
+         uajUo7ezsZ5ZGHtNDHPxFyhKGJ3vpVRgxRX59H3B1G8ZqB6XgymkQaTcth4blxSISb7N
+         1DMmqHEfhZT2k6b9DqCS0CF0tvSICTxhv4+Qy/bWUT+6r7y22TtyVTnW//tsn5CTXhzj
+         s8arD2itkmSubXpIclsmY6MVoVNJ3KyrmJnG8C9nTxPhQEpc8Ka1gWZi6I+6iuRIDl2S
+         19GA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4vFvQJ+X9x2fkOsaxQlxkegYOOkfdjHsu+VNUmji7qM=;
+        b=lvyiNFNktkS0BYzY4wqN4GRJdRcmYYxpIboZr4QiVKmvDoRjVpnzxbI87OJ19x287D
+         YA8ME1qNve2alNvtzLtsggozuQ7ZxfvotSYBgwZZIW2z/MPx1SOrfTQwvFjlmjskmVcz
+         dZI57Q4tOBhOo2jZLc1lh4UDblWvw91gxbzqF+jzQz4PaqfjWpBv1Hbj6gDmmcEEukMN
+         rS2vIez+mujAxUh+lVXIu/jjT2wtcNCnrxPC0n6DRwRYJ089sL0LX6nppyj+mSoXTOSw
+         eZiycqHW+AJ4fmctbIlNx0uax3AeemZNZ/fUqwZQ6I7mPx8Q+qRHIUzppvabKAlHGCLQ
+         1S7A==
+X-Gm-Message-State: AGi0PuY8QwWPq++jTzGsY0JSEcR9v4vreQhsk1iQKWq+9nxKYnq5n57I
+        x4NkrX/tYrJMX9isJNZ0vXVs3036jZieHQSUt4Mhbg==
+X-Google-Smtp-Source: APiQypLNbBxoio8j8JZsOio5k0hMyf+7ii06W4qPM4R6vyYszHDENG8QcRNoFv0EP8lb/W8NSXVxoN7S8fkxpy7nVuc=
+X-Received: by 2002:a5d:660d:: with SMTP id n13mr6029719wru.369.1587664918339;
+ Thu, 23 Apr 2020 11:01:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200423172713.GA191930@google.com>
-User-Agent: NeoMutt/20180716
+References: <1587387114-38475-1-git-send-email-ani@anisinha.ca> <20200420175734.GA53587@google.com>
+In-Reply-To: <20200420175734.GA53587@google.com>
+From:   Ani Sinha <ani@anisinha.ca>
+Date:   Thu, 23 Apr 2020 23:31:47 +0530
+Message-ID: <CAARzgwzjqgqJY4+MdHCYEKOKxxVbt_d3C-fMwKtjSSFOnw+PqQ@mail.gmail.com>
+Subject: Re: [PATCH] PCI: pciehp: remove unused EMI() macro
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Ani Sinha <ani@anirban.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Frederick Lawler <fred@fredlawl.com>,
+        Denis Efremov <efremov@linux.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello Bjorn!
+On Mon, Apr 20, 2020 at 11:27 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> Hi Ani,
+>
+> On Mon, Apr 20, 2020 at 06:21:41PM +0530, Ani Sinha wrote:
+> > EMI() macro seems to be unused. So removing it. Thanks
+> > Mika Westerberg <mika.westerberg@linux.intel.com> for
+> > pointing it out.
+> >
+> > Signed-off-by: Ani Sinha <ani@anisinha.ca>
+> > ---
+> >  drivers/pci/hotplug/pciehp.h | 1 -
+> >  1 file changed, 1 deletion(-)
+> >
+> > diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
+> > index 5747967..4fd200d 100644
+> > --- a/drivers/pci/hotplug/pciehp.h
+> > +++ b/drivers/pci/hotplug/pciehp.h
+> > @@ -148,7 +148,6 @@ struct controller {
+> >  #define MRL_SENS(ctrl)               ((ctrl)->slot_cap & PCI_EXP_SLTCAP_MRLSP)
+> >  #define ATTN_LED(ctrl)               ((ctrl)->slot_cap & PCI_EXP_SLTCAP_AIP)
+> >  #define PWR_LED(ctrl)                ((ctrl)->slot_cap & PCI_EXP_SLTCAP_PIP)
+> > -#define EMI(ctrl)            ((ctrl)->slot_cap & PCI_EXP_SLTCAP_EIP)
+>
+> Thanks for the patch!  Can you squash it together with the HP_SUPR_RM
+> removal (and also check for any other unused ones at the same time)?
+> For trivial things like this, I'd rather merge one patch that removes
+> several unused things at once instead of several patches.
+>
+> I like the subject of this one ("Removed unused ..."), but please
+> capitalize it as you did for the HP_SUPR_RM one so it matches previous
+> history.
 
-On Thursday 23 April 2020 12:27:13 Bjorn Helgaas wrote:
-> In the next round, please capitalize the first word of the subjects of
-> the whole series to match:
+I have sent an updated patch few days back.
 
-Thank you for the review, I will fix subjects of all patches it in V3.
-
->   $ git log --oneline drivers/pci/controller/pci-aardvark.c
->   4e5be6f81be7 ("PCI: aardvark: Use pci_parse_request_of_pci_ranges()")
->   e078723f9ccc ("PCI: aardvark: Fix big endian support")
->   7fbcb5da811b ("PCI: aardvark: Don't rely on jiffies while holding spinlock")
->   c0f05a6ab525 ("PCI: aardvark: Fix PCI_EXP_RTCTL register configuration")
->   f4c7d053d7f7 ("PCI: aardvark: Wait for endpoint to be ready before training link")
->   364b3f1ff8f0 ("PCI: aardvark: Use LTSSM state to build link training flag")
-> 
-> The important thing for the subject of this patch is not the "don't
-> write to read-only register" part; it's true that there's no point in
-> writing to read-only registers, but removing that write would not fix
-> any bugs.
-> 
-> The important thing is that we shouldn't blindly enable ASPM L0s, so
-> that's what the subject should mention.
-
-Ok understood, I will fix it in V3.
+ani
