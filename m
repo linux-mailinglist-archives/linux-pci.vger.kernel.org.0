@@ -2,91 +2,258 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BBF941B6396
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Apr 2020 20:27:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 325C61B63E2
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Apr 2020 20:39:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730323AbgDWS0z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 23 Apr 2020 14:26:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52818 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730308AbgDWS0y (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Apr 2020 14:26:54 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07F11C02549B
-        for <linux-pci@vger.kernel.org>; Thu, 23 Apr 2020 11:26:52 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id y25so3381393pfn.5
-        for <linux-pci@vger.kernel.org>; Thu, 23 Apr 2020 11:26:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=DHzQtr3OkXyFWXbvXEU307GvVJtF7cl8Gt7nfdQPyE8=;
-        b=g40sBMuaO0eKdotmx6qgQBl63DKBmrekz5bvyEQHA4wVZtcqrxc+aFVgh/QD84O9VQ
-         7GeGJGwCstc5CQBYUut5JFB/SR9hiHRBoNucBdQ5+M/xcZE7LYnQNVriX94nlJDQQ53M
-         WWNnGuPMmJMtuCxOc6M3BOG48McWyi9pwkfv1qCbwmDhh95byI3UmcGK9ZJ59xQm/kqA
-         giNgZwxUHu+XTIAoqn/uu1orK63Ur+6hMBQW2TB101zb0oJ5HpVThkCq6id/TjpQtg27
-         HPMb1DcYsj7bM6wQaeV1UkPK6mgUhECRFNV10F5zDhvx1RXP4ikb8uuEIGMKOSNWVb51
-         vLew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=DHzQtr3OkXyFWXbvXEU307GvVJtF7cl8Gt7nfdQPyE8=;
-        b=c4OpRZehx0Nue7W/LqydGUBW97HuZth7IKEbfaoTai3j7Jnj17jO6xnGv1FhqiSMsu
-         /DgzYUxaa4gyhtLRDOyDswRq45K68zXIFY8J+W5BlFz2wEB5F1ZprSaD0YngPN/NAtaT
-         p6powSoK8NA9+9+YaiwhVy1ZXFgdgSg/R+Td2TDMxyBHVo6py7iEq2SMgEiu/YiDwbTo
-         nR5+OnBQe/am4LfUg5utIBaJAchao3BLvwtd2B8fxmMjiVSwUP0Ev4VbAEhfwYMVcLik
-         kY83wWmQ8pLk7lQy05i3QJ4i8UQdQk315zQU26BVRKc3dGNsZlT5PqcYN1tew/qRQi1F
-         6HEA==
-X-Gm-Message-State: AGi0Pub3VL/8DPPxXJeMpuJjSNVVe3gzHZkTPSmKLUIqAkCZC33M5l0+
-        1LhytVgQsxuMAcZbOu3ZVEM8exrOCEoc3i8e/8w4LoE=
-X-Google-Smtp-Source: APiQypKZ88CB7WlyCjo0k9+cU4PX0VcggKkKtzSKgRJHkcPGizF0yZXAjzEMBgo6XH4xzBXv0KAOMjPM9p1sgpp6/70=
-X-Received: by 2002:a5e:9416:: with SMTP id q22mr2547966ioj.93.1587666410194;
- Thu, 23 Apr 2020 11:26:50 -0700 (PDT)
+        id S1730178AbgDWSjR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 Apr 2020 14:39:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60526 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730160AbgDWSjQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 23 Apr 2020 14:39:16 -0400
+Received: from localhost (mobile-166-175-187-210.mycingular.net [166.175.187.210])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE0C820767;
+        Thu, 23 Apr 2020 18:39:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587667156;
+        bh=cuYjB9ls/RJYVkMRBYEGViFdRykOE2Fb7FnWf8ljgoE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=XGurc8Wa+9MqLMySmpB6MUm/Jutc9I6mo78jHQWD4v32iQ1cpzWeHasxQ84P0vwcu
+         AE7qsxKaD2ALGZvLa80zdMrcqqTXWLWTZPoqfiqFd+KQtOeIQJ+1OhuNLbWayNdMEz
+         bd+oEsJwJUsp+f4EMTxWBQdYwisZDXGZZXwme1FM=
+Date:   Thu, 23 Apr 2020 13:39:14 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
+Cc:     linux-pci@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Remi Pommarel <repk@triplefau.lt>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Xogium <contact@xogium.me>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 3/9] PCI: aardvark: improve link training
+Message-ID: <20200423183914.GA201745@google.com>
 MIME-Version: 1.0
-Received: by 2002:a02:c845:0:0:0:0:0 with HTTP; Thu, 23 Apr 2020 11:26:49
- -0700 (PDT)
-Reply-To: boa.benin107@yahoo.com
-From:   "Mrs. Angella Michelle" <info.zennitbankplcnigerian@gmail.com>
-Date:   Thu, 23 Apr 2020 20:26:49 +0200
-Message-ID: <CABHzvr=N78snvtMHePMOa+RLFdcZEjXLPkuhkojt4VoZGNzBsQ@mail.gmail.com>
-Subject: Contact Bank of Africa-Benin to receive your payment funds transfer
- amount of $12.800.000,00 Million USD,approved this morning by IMF.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200421111701.17088-4-marek.behun@nic.cz>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Attn Dear.
-Contact Bank of Africa-Benin to receive your payment funds transfer amount =
-of
-$12.800.000,00 Million USD,approved this morning by IMF.
-Happy to inform you, we have finally deposited your payment funds
-$12.8 million us dollars with the Paying Bank of Africa-Benin
-to transfer the payment amount of $12.800,000,00 Million Us Dollars to you
-Contact the bank immediately you receive this email now.
-Director Bank of Africa-Benin: Dr. Festus Obiara
-Email id:  boa.benin107@yahoo.com
-Tel/mobile, (229) 62819378
-BOA-BENIN | GROUPE BANK OF AFRICA, boa-benin
-Avenue Jean-Paul II - 08 BP 0879 - Cotonou - B=C3=A9nin
-Phone:(229) 62819378.
-2020 GROUPE BANK OF AFRICA
-Be advised to re-confirm your bank details to this bank as listed.
-Your account Holder's name----------------
-Bank Name----------------------------------------------------------
-Bank address----------------------------------------------
-Account Numbers---------------------------------------
-Rounting-----------------------------------------------------------------
-Your direct Phone Numbers----------------------------------------------
-Note,I have paid the deposit and insurance fees for you
-But the only money you are to send to this bank is $150.00 us dollars
-Been for the wire transfer fees of your funds
-Contact Him now to receive your transfer deposited this morning
-I wait for your reply upon confirmation
-Mrs. Angella Michelle
-Editor, Zenith Bank- Companies Benin
-mrsa9389@gmail.com
+[+cc Rob]
+
+On Tue, Apr 21, 2020 at 01:16:55PM +0200, Marek Behún wrote:
+> Currently the aardvark driver trains link in PCIe gen2 mode. This may
+> cause some buggy gen 1 cards (such as Compex WLE900VX) to be unstable or
+> even not detected. Moreover when ASPM code tries to retrain link second
+> time, these cards may stop responding and link goes down. If gen1 is
+> used this does not happen.
+
+Does this patch make the retrain done by ASPM reliable?  If aardvark
+can't work reliably at gen2, you may need to just restrict it to gen1.
+
+> Unconditionally forcing gen1 is not a good solution since it may have
+> performance impact on gen2 cards.
+> 
+> To overcome this, read 'max-link-speed' property (as defined in PCI
+> device tree bindings) and use this as max gen mode. Then iteratively try
+> link training at this mode or lower until successful. After successful
+> link training choose final controlled gen based on Negotiated Link Speed
+> from Link Status register, which should match card speed.
+> 
+> Signed-off-by: Pali Rohár <pali@kernel.org>
+> Signed-off-by: Marek Behún <marek.behun@nic.cz>
+> ---
+>  drivers/pci/controller/pci-aardvark.c | 111 ++++++++++++++++++++------
+>  1 file changed, 86 insertions(+), 25 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> index 551d98174613..606bae1e7a88 100644
+> --- a/drivers/pci/controller/pci-aardvark.c
+> +++ b/drivers/pci/controller/pci-aardvark.c
+> @@ -40,6 +40,7 @@
+>  #define PCIE_CORE_LINK_CTRL_STAT_REG				0xd0
+>  #define     PCIE_CORE_LINK_L0S_ENTRY				BIT(0)
+>  #define     PCIE_CORE_LINK_TRAINING				BIT(5)
+> +#define     PCIE_CORE_LINK_SPEED_SHIFT				16
+>  #define     PCIE_CORE_LINK_WIDTH_SHIFT				20
+>  #define PCIE_CORE_ERR_CAPCTL_REG				0x118
+>  #define     PCIE_CORE_ERR_CAPCTL_ECRC_CHK_TX			BIT(5)
+> @@ -201,6 +202,7 @@ struct advk_pcie {
+>  	struct mutex msi_used_lock;
+>  	u16 msi_msg;
+>  	int root_bus_nr;
+> +	int link_gen;
+>  	struct pci_bridge_emul bridge;
+>  };
+>  
+> @@ -225,20 +227,16 @@ static int advk_pcie_link_up(struct advk_pcie *pcie)
+>  
+>  static int advk_pcie_wait_for_link(struct advk_pcie *pcie)
+>  {
+> -	struct device *dev = &pcie->pdev->dev;
+>  	int retries;
+>  
+>  	/* check if the link is up or not */
+>  	for (retries = 0; retries < LINK_WAIT_MAX_RETRIES; retries++) {
+> -		if (advk_pcie_link_up(pcie)) {
+> -			dev_info(dev, "link up\n");
+> +		if (advk_pcie_link_up(pcie))
+>  			return 0;
+> -		}
+>  
+>  		usleep_range(LINK_WAIT_USLEEP_MIN, LINK_WAIT_USLEEP_MAX);
+>  	}
+>  
+> -	dev_err(dev, "link never came up\n");
+>  	return -ETIMEDOUT;
+>  }
+>  
+> @@ -253,6 +251,84 @@ static void advk_pcie_wait_for_retrain(struct advk_pcie *pcie)
+>  	}
+>  }
+>  
+> +static int advk_pcie_train_at_gen(struct advk_pcie *pcie, int gen)
+> +{
+> +	int ret, neg_gen;
+> +	u32 reg;
+> +
+> +	/* Setup link speed */
+> +	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
+> +	reg &= ~PCIE_GEN_SEL_MSK;
+> +	if (gen == 2)
+> +		reg |= SPEED_GEN_2;
+> +	else
+> +		reg |= SPEED_GEN_1;
+> +	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
+> +
+> +	/*
+> +	 * Enable link training. This is not needed in every call to this
+> +	 * function, just once suffices, but it does not break anything either.
+> +	 */
+> +	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
+> +	reg |= LINK_TRAINING_EN;
+> +	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
+> +
+> +	/*
+> +	 * Start link training immediately after enabling it. This solves
+> +	 * problems for some buggy cards.
+> +	 */
+> +	reg = advk_readl(pcie, PCIE_CORE_LINK_CTRL_STAT_REG);
+> +	reg |= PCIE_CORE_LINK_TRAINING;
+> +	advk_writel(pcie, reg, PCIE_CORE_LINK_CTRL_STAT_REG);
+> +
+> +	ret = advk_pcie_wait_for_link(pcie);
+> +	if (ret)
+> +		return ret;
+> +
+> +	reg = advk_readl(pcie, PCIE_CORE_LINK_CTRL_STAT_REG);
+> +	neg_gen = (reg >> PCIE_CORE_LINK_SPEED_SHIFT) & 0xf;
+> +
+> +	return neg_gen;
+> +}
+> +
+> +static void advk_pcie_train_link(struct advk_pcie *pcie)
+> +{
+> +	struct device *dev = &pcie->pdev->dev;
+> +	int neg_gen = -1, gen;
+> +
+> +	/*
+> +	 * Try link training at link gen specified by device tree property
+> +	 * 'max-link-speed' (defaults to 2, since this controller does not
+> +	 * support higher gen). If this fails, iteratively train at lower gen.
+> +	 */
+> +	for (gen = pcie->link_gen; gen > 0; --gen) {
+> +		neg_gen = advk_pcie_train_at_gen(pcie, gen);
+> +		if (neg_gen > 0)
+> +			break;
+> +	}
+> +
+> +	if (neg_gen < 0)
+> +		goto err;
+> +
+> +	/*
+> +	 * After successful training if negotiated gen is lower than requested,
+> +	 * train again on negotiated gen. This solves some stability issues for
+> +	 * some buggy gen1 cards.
+> +	 */
+> +	if (neg_gen < gen) {
+> +		gen = neg_gen;
+> +		neg_gen = advk_pcie_train_at_gen(pcie, gen);
+> +	}
+> +
+> +	if (neg_gen == gen) {
+> +		dev_info(dev, "link up at gen %i\n", gen);
+> +		return;
+> +	}
+> +
+> +err:
+> +	dev_err(dev, "link never came up\n");
+> +}
+> +
+>  static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+>  {
+>  	u32 reg;
+> @@ -288,12 +364,6 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+>  		PCIE_CORE_CTRL2_TD_ENABLE;
+>  	advk_writel(pcie, reg, PCIE_CORE_CTRL2_REG);
+>  
+> -	/* Set GEN2 */
+> -	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
+> -	reg &= ~PCIE_GEN_SEL_MSK;
+> -	reg |= SPEED_GEN_2;
+> -	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
+> -
+>  	/* Set lane X1 */
+>  	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
+>  	reg &= ~LANE_CNT_MSK;
+> @@ -341,20 +411,7 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+>  	 */
+>  	msleep(PCI_PM_D3COLD_WAIT);
+>  
+> -	/* Enable link training */
+> -	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
+> -	reg |= LINK_TRAINING_EN;
+> -	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
+> -
+> -	/*
+> -	 * Start link training immediately after enabling it. This solves
+> -	 * problems for some buggy cards.
+> -	 */
+> -	reg = advk_readl(pcie, PCIE_CORE_LINK_CTRL_STAT_REG);
+> -	reg |= PCIE_CORE_LINK_TRAINING;
+> -	advk_writel(pcie, reg, PCIE_CORE_LINK_CTRL_STAT_REG);
+> -
+> -	advk_pcie_wait_for_link(pcie);
+> +	advk_pcie_train_link(pcie);
+>  
+>  	reg = advk_readl(pcie, PCIE_CORE_CMD_STATUS_REG);
+>  	reg |= PCIE_CORE_CMD_MEM_ACCESS_EN |
+> @@ -988,6 +1045,10 @@ static int advk_pcie_probe(struct platform_device *pdev)
+>  	}
+>  	pcie->root_bus_nr = bus->start;
+>  
+> +	pcie->link_gen = of_pci_get_max_link_speed(dev->of_node);
+> +	if (pcie->link_gen < 1 || pcie->link_gen > 2)
+
+This is a DT error, isn't it?  Maybe should warn about it and mention
+how you're dealing with it?
+
+> +		pcie->link_gen = 2;
+> +
+>  	advk_pcie_setup_hw(pcie);
+>  
+>  	advk_sw_pci_bridge_init(pcie);
+> -- 
+> 2.24.1
+> 
