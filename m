@@ -2,109 +2,164 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B21A31B6339
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Apr 2020 20:22:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8195D1B633C
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Apr 2020 20:23:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730087AbgDWSWl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 23 Apr 2020 14:22:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52146 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729995AbgDWSWl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Apr 2020 14:22:41 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4EE0C09B042
-        for <linux-pci@vger.kernel.org>; Thu, 23 Apr 2020 11:22:40 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id u6so7234503ljl.6
-        for <linux-pci@vger.kernel.org>; Thu, 23 Apr 2020 11:22:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LscwPz73Lt0pgGTl+o/FebA5dRZodM4/3xJx4XGRFWs=;
-        b=ZgjkI/0hqXjrYL+1zMORXDCbPO/cbFMR+PA+1RlleHhrFArqqZqVDrF2naxr2O/nZ8
-         8DcrKKqA2CocQV8SGpC3aPyDpPzeFJT3QtO/W+6TFqOD/cqopRZBQi+Y/GW8PBeaNBp0
-         IcU9neWFV5iGS7i3ZNxhsiHXnEpr7As01GU3A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LscwPz73Lt0pgGTl+o/FebA5dRZodM4/3xJx4XGRFWs=;
-        b=Zhj+a7zGL4Y/LfRYlLYqK5xyeXz71Y/RUc1lECbmdhJwLvyHQ0IMNej9+MoPCVH40x
-         UKuIeErf8gZZJUd7oiug+rA2N1Sis4uw8lY2HAUFdrjzaOXhKVYA+f3zA27FGvSuWMbg
-         FffkrIuB17mc9s6dLNig+Erg5ZJvMaOw8AcP/s6uqGuRKi4YfblPUsy6cBcet5qyIelS
-         zRCP6gBUJ2ubHEqlwx82XLW20wMMG/ntxJkqk56VvK8rFQWCezWHKFToGBS4ppr/y8jZ
-         /LBtvM0klq7VgknzAg6hO2HDjKhF34eO0h+2/LQ/ouvclidqt0UteCP8ujIJRr3c2wwi
-         yS+w==
-X-Gm-Message-State: AGi0Pub9LZt+9QhafwXG9EFv/9+Te3Zd94mDj8zOp4HfaloH8cw7xL31
-        9b91c4NzOs86hR/WfQIsPSaVtLnWfeQ=
-X-Google-Smtp-Source: APiQypKnAAQYGhGrFz48zeOopYojBHMvUwrLy4v9y4dF1FMDGz6HjI3JlOJ4RRgkmQM0yXGhU63DLw==
-X-Received: by 2002:a2e:b4c2:: with SMTP id r2mr3229313ljm.143.1587666157475;
-        Thu, 23 Apr 2020 11:22:37 -0700 (PDT)
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com. [209.85.167.52])
-        by smtp.gmail.com with ESMTPSA id z13sm2449808ljn.77.2020.04.23.11.22.36
-        for <linux-pci@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Apr 2020 11:22:36 -0700 (PDT)
-Received: by mail-lf1-f52.google.com with SMTP id r17so5561000lff.2
-        for <linux-pci@vger.kernel.org>; Thu, 23 Apr 2020 11:22:36 -0700 (PDT)
-X-Received: by 2002:a19:9109:: with SMTP id t9mr3320601lfd.10.1587666155908;
- Thu, 23 Apr 2020 11:22:35 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200423173955.GA193359@google.com>
-In-Reply-To: <20200423173955.GA193359@google.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 23 Apr 2020 11:22:20 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wj7f3HJxmhP_SKQoFwuSx-OQgvp41pbgJN7TtspQj=RUA@mail.gmail.com>
-Message-ID: <CAHk-=wj7f3HJxmhP_SKQoFwuSx-OQgvp41pbgJN7TtspQj=RUA@mail.gmail.com>
-Subject: Re: [GIT PULL] PCI fixes for v5.7
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        id S1730201AbgDWSXY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 Apr 2020 14:23:24 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:43095 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730074AbgDWSXY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Apr 2020 14:23:24 -0400
+X-IronPort-AV: E=Sophos;i="5.73,307,1583161200"; 
+   d="scan'208";a="45545132"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 24 Apr 2020 03:23:22 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 70DB240C7B9A;
+        Fri, 24 Apr 2020 03:23:17 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        =?UTF-8?B?THXDrXMgTWVuZGVz?= <luis.p.mendes@gmail.com>,
-        Todd Poynor <toddpoynor@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tom Joseph <tjoseph@cadence.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v9 0/8] Add endpoint driver for R-Car PCIe controller
+Date:   Thu, 23 Apr 2020 19:22:31 +0100
+Message-Id: <1587666159-6035-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 10:40 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
->   - Workaround Apex TPU class code issue that prevents resource
->     assignment (Bjorn Helgaas)
+Hi All,
 
-Hmm.
+This patch series adds support for endpoint driver for R-Car PCIe controller on
+R-Car/RZ-G2x SoC's, this also extends the epf framework to handle multiple windows
+supported by the controller for mapping PCI address locally.
 
-I have no objections to that patch, but I do wonder if it might not be
-better to try to actually assign the resource at enable_resource time?
+Note:
+The cadence/rockchip/designware endpoint drivers are build tested only.
 
-Put another way: if I read the situation correctly, what happened is
-that the hardware is broken and doesn't have the proper class code,
-and so the resource is not initially assigned at all. But then the
-driver matches on the device ID, and tries to use the device, and then
-we get into trouble at pci_enable_resources().
+Changes for v9 (Re-spun this series as there were minimal changes requested):
+* Rebased patches on top of v5.7.rc1
+* Replaced mdelay(1) with usleep_range(1000, 1001) in rcar_pcie_ep_assert_intx()
+* Added a check for max_functions read from DT to restrict with
+  RCAR_EPC_MAX_FUNCTIONS
+* Replaced MSICAP0_MMENUM with MSICAP0_MMESE
+* Retry ioremap for other windows on failure in pci_epc_mem_alloc_addr()
+* Fixed looping for number windows in pci_epc_mem_exit()
+* Set maximum to 1 for max-functions in DT binding (I have restored the acks
+  from  Rob and Shimoda-san)
+* Sorted the entry in MAINTAINERS
 
-But is there any reason we don't just at least try to do
-pci_assign_resource() at that point? Yeah, because we didn't do it at
-bus scanning, maybe there's no room for it, but that's what we do for
-the PCI ROM resources (which I think we also don't claim by default)
-when drivers ask to map them.
+Changes for v8:
+* Dropped adding R8A774C0 (0x002d) pci-id in pci_ids.h
+* Fixed typo in commit message for patch 2/8
+* Reworded commit message for patch 5/8 as suggested by Bjorn
+* Split up patch to add pci_epc_mem_init() interface to add page_size argument
+  as suggested by Bjorn.
 
-The pci/rom.c code does
+Changes for v7:
+* Fixed review comments pointed by Shimoda-san
+  1] Made DT bindings dual licensed, added Shimoda-san as maintainer and fixed
+     the example as its built with #{address,size}-cells = <1>. I have still
+     restored the Ack from Rob and Shimoda-san with these changes.
+  2] Split up the patches so that they can be picked up by respective subsystem
+     patches 1/4-9/11 are now part of this series.
+  3] Dropped altering a comment in pci-epc.h
+  4] Used a local variable align_size in pci_epc_mem_alloc_addr() so that size
+     variable doesn't get overwritten in the loop.
+  5] Replaced i-=1 with i--
+  6] Replaced rcar with R-Car in patch subject and description.
+  7] Set MACCTLR in init() callback
 
-        /* assign the ROM an address if it doesn't have one */
-        if (res->parent == NULL && pci_assign_resource(pdev, PCI_ROM_RESOURCE))
-                return NULL;
+Changes for v6:
+1] Rebased patches on endpoint branch of https://git.kernel.org/pub/
+   scm/linux/kernel/git/lpieralisi/pci.git/
+2] Fixed review comments from Shimoda-san
+   a] Made sure defconfig changes were in separate patch
+   b] Created rcar_pcie_host/rcar_pcie_ep structures
+   c] Added pci-id for R8A774C0
+   d] Added entry in MAINTAINERS for dt-binding
+   e] Dropped unnecessary braces
+3] Added support for msi.
 
-could we perhaps do the same in enable_resource?
+Changes for v5:
+1] Rebased patches on next branch of https://git.kernel.org/pub/scm/
+   linux/kernel/git/helgaas/pci.git
+2] Fixed review comments reported by Kishon while fetching the matching
+   window in function pci_epc_get_matching_window()
+3] Fixed review comments reported by Bjorn
+   a] Split patch up first patch so that its easier to review and incremental
+   b] Fixed typos
+4] Included Reviewed tag from Rob for the dt-binding patch
+5] Fixed issue reported by Nathan for assigning variable to itself
 
-Your patch is obviously much better for an -rc kernel, so this is more
-of a longer-term "wouldn't it be less fragile to ..." query.
+Changes for v4:
+1] Fixed dtb_check error reported by Rob
+2] Fixed review comments reported by Kishon
+   a] Dropped pci_epc_find_best_fit_window()
+   b] Fixed initializing mem ptr in __pci_epc_mem_init()
+   c] Dropped map_size from pci_epc_mem_window structure
 
-Alternatively, maybe we should do resource assignment even for
-PCI_CLASS_NOT_DEFINED?
+Changes for v3:
+1] Fixed review comments from Bjorn and Kishon.
+3] Converted to DT schema
 
-                     Linus
+Changes for v2:
+1] Fixed review comments from Biju for dt-bindings to include an example
+   for a tested platform.
+2] Fixed review comments from Kishon to extend the features of outbound
+   regions in epf framework.
+3] Added support to parse outbound-ranges in OF.
+
+Lad Prabhakar (8):
+  PCI: rcar: Rename pcie-rcar.c to pcie-rcar-host.c
+  PCI: rcar: Move shareable code to a common file
+  PCI: rcar: Fix calculating mask for PCIEPAMR register
+  PCI: endpoint: Pass page size as argument to pci_epc_mem_init()
+  PCI: endpoint: Add support to handle multiple base for mapping
+    outbound memory
+  dt-bindings: PCI: rcar: Add bindings for R-Car PCIe endpoint
+    controller
+  PCI: rcar: Add endpoint mode support
+  MAINTAINERS: Add file patterns for rcar PCI device tree bindings
+
+ .../devicetree/bindings/pci/rcar-pci-ep.yaml  |   77 ++
+ MAINTAINERS                                   |    1 +
+ drivers/pci/controller/Kconfig                |   18 +
+ drivers/pci/controller/Makefile               |    3 +-
+ .../pci/controller/cadence/pcie-cadence-ep.c  |    2 +-
+ .../pci/controller/dwc/pcie-designware-ep.c   |   16 +-
+ drivers/pci/controller/pcie-rcar-ep.c         |  557 ++++++++
+ drivers/pci/controller/pcie-rcar-host.c       | 1065 +++++++++++++++
+ drivers/pci/controller/pcie-rcar.c            | 1206 +----------------
+ drivers/pci/controller/pcie-rcar.h            |  140 ++
+ drivers/pci/controller/pcie-rockchip-ep.c     |    2 +-
+ drivers/pci/endpoint/pci-epc-mem.c            |  204 ++-
+ include/linux/pci-epc.h                       |   38 +-
+ 13 files changed, 2078 insertions(+), 1251 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
+ create mode 100644 drivers/pci/controller/pcie-rcar-ep.c
+ create mode 100644 drivers/pci/controller/pcie-rcar-host.c
+ create mode 100644 drivers/pci/controller/pcie-rcar.h
+
+-- 
+2.17.1
+
