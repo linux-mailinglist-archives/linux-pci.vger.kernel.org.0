@@ -2,78 +2,180 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 935FB1B5EF0
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Apr 2020 17:18:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1928B1B613E
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Apr 2020 18:47:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728990AbgDWPSL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 23 Apr 2020 11:18:11 -0400
-Received: from mga05.intel.com ([192.55.52.43]:23924 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726380AbgDWPSL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 23 Apr 2020 11:18:11 -0400
-IronPort-SDR: EaWMP4Lb7CLqY2fN8cBa5aZvNr6vnw/Z1zJQpmPQ3UX8IEJkPCYa/ymnwTkrBTCzUmdll40tgX
- nifebXUqh2CA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2020 08:18:11 -0700
-IronPort-SDR: zYEizug2f5pEgxBz0iBF5IN2GkdmOTUfaVcntlAZ2uiPCMykRTIFm63MPB9b9M9RfzEfWF0+6J
- NErz0qlayTWQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,307,1583222400"; 
-   d="scan'208";a="430357474"
-Received: from orsmsx101.amr.corp.intel.com ([10.22.225.128])
-  by orsmga005.jf.intel.com with ESMTP; 23 Apr 2020 08:18:10 -0700
-Received: from orsmsx111.amr.corp.intel.com (10.22.240.12) by
- ORSMSX101.amr.corp.intel.com (10.22.225.128) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 23 Apr 2020 08:18:10 -0700
-Received: from orsmsx101.amr.corp.intel.com ([169.254.8.204]) by
- ORSMSX111.amr.corp.intel.com ([169.254.12.140]) with mapi id 14.03.0439.000;
- Thu, 23 Apr 2020 08:18:10 -0700
-From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
-To:     "hch@infradead.org" <hch@infradead.org>
-CC:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
-        "Jakowski, Andrzej" <andrzej.jakowski@intel.com>
-Subject: Re: [PATCH 0/1] KVM support for VMD devices
-Thread-Topic: [PATCH 0/1] KVM support for VMD devices
-Thread-Index: AQHWGMupFPgnPdV8d0yMVvPmd3oXgKiGsTeAgACXUwA=
-Date:   Thu, 23 Apr 2020 15:18:10 +0000
-Message-ID: <f58982d0d37f86c8cf4d8769d42bea284e0c2825.camel@intel.com>
-References: <20200422171444.10992-1-jonathan.derrick@intel.com>
-         <20200423061631.GA12688@infradead.org>
-In-Reply-To: <20200423061631.GA12688@infradead.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.255.1.180]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <2693A69249AB774DABEBE1A7DBFD60BC@intel.com>
-Content-Transfer-Encoding: base64
+        id S1729764AbgDWQrW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 Apr 2020 12:47:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37208 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729509AbgDWQrW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Apr 2020 12:47:22 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE462C09B041
+        for <linux-pci@vger.kernel.org>; Thu, 23 Apr 2020 09:47:21 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id 198so5313578lfo.7
+        for <linux-pci@vger.kernel.org>; Thu, 23 Apr 2020 09:47:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tRcc4dh6p+YiX6AX0x9LFumoCa/KOTeSvRHxboIV+LM=;
+        b=j7pfI9HRuHbfl6xDZAoT1l4rmuUPF/dN6vFtceByAi7aVXx7F1IhQrRueEZwe2jLz1
+         LPlirCZaXLDgzEX7pBzBcH8BRbSUtwv0Fr/Xr7mNnYMI5n+kQPaevi4KoW9j2YpIE//B
+         4gbwSpLKTsk8a6DjpzFLCRYnmZfFffJuXd7sHUWBrzm2DdCAF+LnMir8CtAVeZNUPhEU
+         o5wYq8dSbv5PpSnJvBS+3XV8BSWMUTvt8MM/+jOXHe9XtwOMnpE3dECt2rI/zXksJFfP
+         1kIeQP0cTexZxF2UhgelMN3dbj6HEeRfpwsJgbRgWYigveFkQHwaL2ZSdpLI9edvCOU1
+         jdbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tRcc4dh6p+YiX6AX0x9LFumoCa/KOTeSvRHxboIV+LM=;
+        b=CGfSXhL4keQIqI45SOBxlJBoZ9LQfxFjUUfumhjnkortO4w3SW5jIUgtm6eSciLv2f
+         uEtg3uGF/BlLOrpmXOCfa7na0jqipfqWKZruhtUIbr+JlCx0HLAzTSnNjFyphNV0FgGL
+         CQEFwobN7MSQav9YDl/fJpX9o3Dph4dc1qDbu3mhrk1L67NAOqzB4CceCCTY3ntf0wdv
+         I4O0PaTO3Shyw/ZwHEfEmwdm4A0yJXmNauwUlEqK1390xqzq9bfjXvI1oaxr9clokR8j
+         qcph6x4XCQXEttxoLdjf3ly3p1xCucZp8YADKXTni2ezML7Ovg+T8dG+IFQV+1kOXO25
+         F2Hg==
+X-Gm-Message-State: AGi0PubXE41++V2LyUJoQnwt70mbLrBQr78ADAilKqjnmSYuD87DsWSu
+        vYGQO05HyWxvUYhxdFRO005qQCxHitI9afRLdJKwBg==
+X-Google-Smtp-Source: APiQypKp4PYv8DT/PLr79QV23nUX9UW1aERR5j0Oo8O7FXjU4ESHU6c7LwMtVWsMkh3FTpEclvzAGKWNG5gZgbFgNds=
+X-Received: by 2002:ac2:4853:: with SMTP id 19mr2882072lfy.171.1587660440070;
+ Thu, 23 Apr 2020 09:47:20 -0700 (PDT)
 MIME-Version: 1.0
+References: <1587607101-31914-1-git-send-email-alan.mikhak@sifive.com> <DM5PR12MB1276642553DDD5AF85B65E01DAD30@DM5PR12MB1276.namprd12.prod.outlook.com>
+In-Reply-To: <DM5PR12MB1276642553DDD5AF85B65E01DAD30@DM5PR12MB1276.namprd12.prod.outlook.com>
+From:   Alan Mikhak <alan.mikhak@sifive.com>
+Date:   Thu, 23 Apr 2020 09:47:08 -0700
+Message-ID: <CABEDWGw4CYgQ9uiaig+C9UifSz24W7oOiVva+G0zbBXitcMtPg@mail.gmail.com>
+Subject: Re: [PATCH v2][next] dmaengine: dw-edma: Check MSI descriptor before copying
+To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+Cc:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "kishon@ti.com" <kishon@ti.com>, "maz@kernel.org" <maz@kernel.org>,
+        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA0LTIyIGF0IDIzOjE2IC0wNzAwLCBDaHJpc3RvcGggSGVsbHdpZyB3cm90
-ZToNCj4gT24gV2VkLCBBcHIgMjIsIDIwMjAgYXQgMDE6MTQ6NDRQTSAtMDQwMCwgSm9uIERlcnJp
-Y2sgd3JvdGU6DQo+ID4gVGhlIHR3byBwYXRjaGVzIChMaW51eCAmIFFFTVUpIGFkZCBzdXBwb3J0
-IGZvciBwYXNzdGhyb3VnaCBWTUQgZGV2aWNlcw0KPiA+IGluIFFFTVUvS1ZNLiBWTUQgZGV2aWNl
-IDI4QzAgYWxyZWFkeSBzdXBwb3J0cyBwYXNzdGhyb3VnaCBuYXRpdmVseSBieQ0KPiA+IHByb3Zp
-ZGluZyB0aGUgSG9zdCBQaHlzaWNhbCBBZGRyZXNzIGluIGEgc2hhZG93IHJlZ2lzdGVyIHRvIHRo
-ZSBndWVzdA0KPiA+IGZvciBjb3JyZWN0IGJyaWRnZSBwcm9ncmFtbWluZy4NCj4gPiANCj4gPiBU
-aGUgUUVNVSBwYXRjaCBlbXVsYXRlcyB0aGUgMjhDMCBtb2RlIGJ5IGNyZWF0aW5nIGEgc2hhZG93
-IHJlZ2lzdGVyIGFuZA0KPiA+IGFkdmVydGlzaW5nIGl0cyBzdXBwb3J0IGJ5IHVzaW5nIFFFTVUn
-cyBzdWJzeXN0ZW0gdmVuZG9yL2lkLg0KPiA+IFRoZSBMaW51eCBwYXRjaCBtYXRjaGVzIHRoZSBR
-RU1VIHN1YnN5c3RlbSB2ZW5kb3IvaWQgdG8gdXNlIHRoZSBzaGFkb3cNCj4gPiByZWdpc3Rlci4N
-Cj4gDQo+IFBsZWFzZSBwaWNrIGEgZGlmZmVyZW50IFBDSSBJRCBmb3IgUWVtdSB2cyByZWFsIGhh
-cmR3YXJlIHNvIHRoYXQgd2UNCj4gY2FuIHByb3Blcmx5IHF1aXJrIHRoZW0gaWYgdGhleSBlbmQg
-dXAgYmVoYXZpbmcgZGlmZmVyZW50bHkgZHVlIHRvDQo+IGhhcmR3YXJlIG9yIHNvZnR3YXJlIGJ1
-Z3MuDQoNClN1cmUuIFdpbGwgbG9vayBpbnRvIHRoYXQuDQpUaGFua3MgQ2hyaXN0b3BoDQoNCkpv
-bg0K
+On Thu, Apr 23, 2020 at 2:28 AM Gustavo Pimentel
+<Gustavo.Pimentel@synopsys.com> wrote:
+>
+> On Thu, Apr 23, 2020 at 2:58:21, Alan Mikhak <alan.mikhak@sifive.com>
+> wrote:
+>
+> > From: Alan Mikhak <alan.mikhak@sifive.com>
+> >
+> > Modify dw_edma_irq_request() to check if a struct msi_desc entry exists
+> > before copying the contents of its struct msi_msg pointer.
+> >
+> > Without this sanity check, __get_cached_msi_msg() crashes when invoked by
+> > dw_edma_irq_request() running on a Linux-based PCIe endpoint device. MSI
+> > interrupt are not received by PCIe endpoint devices. If irq_get_msi_desc()
+> > returns null, then there is no cached struct msi_msg to be copied.
+> >
+> > This patch depends on the following patch:
+> > [PATCH v2] dmaengine: dw-edma: Decouple dw-edma-core.c from struct pci_dev
+> > https://urldefense.com/v3/__https://patchwork.kernel.org/patch/11491757/__;!!A4F2R9G_pg!L_vf_Tml7Ca4sWVvZp5crRCp7YsMj6B93G9cMAO8Dj3w9I0MArjwuwNKtDz9rr0RlpXiqPg$
+> >
+> > Rebased on linux-next which has above patch applied.
+> >
+> > Fixes: Build error with config x86_64-randconfig-f003-20200422
+> > Fixes: Build error with config s390-allmodconfig
+> > Reported-by: kbuild test robot <lkp@intel.com>
+> > Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
+> > ---
+> >  drivers/dma/dw-edma/dw-edma-core.c | 17 ++++++++++-------
+> >  1 file changed, 10 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+> > index db401eb11322..306ab50462be 100644
+> > --- a/drivers/dma/dw-edma/dw-edma-core.c
+> > +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> > @@ -13,6 +13,7 @@
+> >  #include <linux/dmaengine.h>
+> >  #include <linux/err.h>
+> >  #include <linux/interrupt.h>
+> > +#include <linux/irq.h>
+> >  #include <linux/dma/edma.h>
+> >  #include <linux/dma-mapping.h>
+> >
+> > @@ -773,6 +774,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
+> >       u32 rd_mask = 1;
+> >       int i, err = 0;
+> >       u32 ch_cnt;
+> > +     int irq;
+> >
+> >       ch_cnt = dw->wr_ch_cnt + dw->rd_ch_cnt;
+> >
+> > @@ -781,16 +783,16 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
+> >
+> >       if (dw->nr_irqs == 1) {
+> >               /* Common IRQ shared among all channels */
+> > -             err = request_irq(dw->ops->irq_vector(dev, 0),
+> > -                               dw_edma_interrupt_common,
+> > +             irq = dw->ops->irq_vector(dev, 0);
+> > +             err = request_irq(irq, dw_edma_interrupt_common,
+> >                                 IRQF_SHARED, dw->name, &dw->irq[0]);
+> >               if (err) {
+> >                       dw->nr_irqs = 0;
+> >                       return err;
+> >               }
+> >
+> > -             get_cached_msi_msg(dw->ops->irq_vector(dev, 0),
+> > -                                &dw->irq[0].msi);
+> > +             if (irq_get_msi_desc(irq))
+> > +                     get_cached_msi_msg(irq, &dw->irq[0].msi);
+> >       } else {
+> >               /* Distribute IRQs equally among all channels */
+> >               int tmp = dw->nr_irqs;
+> > @@ -804,7 +806,8 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
+> >               dw_edma_add_irq_mask(&rd_mask, *rd_alloc, dw->rd_ch_cnt);
+> >
+> >               for (i = 0; i < (*wr_alloc + *rd_alloc); i++) {
+> > -                     err = request_irq(dw->ops->irq_vector(dev, i),
+> > +                     irq = dw->ops->irq_vector(dev, i);
+> > +                     err = request_irq(irq,
+> >                                         i < *wr_alloc ?
+> >                                               dw_edma_interrupt_write :
+> >                                               dw_edma_interrupt_read,
+> > @@ -815,8 +818,8 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
+> >                               return err;
+> >                       }
+> >
+> > -                     get_cached_msi_msg(dw->ops->irq_vector(dev, i),
+> > -                                        &dw->irq[i].msi);
+> > +                     if (irq_get_msi_desc(irq))
+> > +                             get_cached_msi_msg(irq, &dw->irq[i].msi);
+> >               }
+> >
+> >               dw->nr_irqs = i;
+> > --
+> > 2.7.4
+>
+>
+> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+
+Thanks Gustavo for the Ack.
+
+FYI, I first considered adding an ops function to decouple dw-edma-core.c
+from struct msi_msg. However, in a separate use case that I have in mind,
+dw-edma would run on a host system having Synopsys DesignWare PCI eDMA
+hardware on the host-side. In this use case, the host system eDMA engines
+may be used in conjunction with an endpoint device also having the same
+eDMA hardware. In this use case, dw-edma running on the host would need
+to call get_cached_msi_msg() just in case the host has an msi_msg cached
+from the endpoint device. As a result, I opted to not add a new ops
+function.
+
+Regards,
+Alan
+
+>
+>
