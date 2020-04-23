@@ -2,156 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DB1E91B64B5
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Apr 2020 21:45:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 49C231B64BC
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Apr 2020 21:48:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726402AbgDWTo6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 23 Apr 2020 15:44:58 -0400
-Received: from mail-eopbgr30079.outbound.protection.outlook.com ([40.107.3.79]:15757
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726060AbgDWTo5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 23 Apr 2020 15:44:57 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=i4ZM3i5j0KTs/SJnr4NyHuFwqnSnSwbXN/kvvSlA+fRNXZGMcqbUHKRsipEy+gOVu8Uy2nJttVUzQ3aqp11pOctkQkTyciMZXxUcV3xpwqfhqXIKZ5Vofsn5GuV/2p4SrOLbBVTHxA7X67NVFlaTvl+xnhmueakvOgvaUydD3LyVPgn261CNfBF3AjaqjJeEQN7uCRXvDfVXratKci5q8yFmYXianqQhlc2UeVHCRgeDONGbYsHK5RxownqqbCjWP3b9D1BvnxuVLE6dPUvqjsrOUpY/gAHrKoEESnQ93i2S+MWQGBswz6ht9RYcBdrvIfrdlr5SxAMqC4IXE3bXeA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bb8MHrPnz7ro9tAT91kKIX0+HAVCqvHVd2q5BdVU1YE=;
- b=iQqZsMD/atGmb8tInsrMrSm5coVpVKUMvDN2T6oVZlU3gGjbAcuj0iZTQOGlOMuL5Imd6TZIwjrbd0McO3pxJ8Qh5ZvFb0GifFvI7jpprMzVcBruTf6zK3Plo7/SsBbHl88dxFL992n+AytoH2jfPaC+rM5CukLwTw/FET8uDwkf1T5JFiHiGiXUKImTr7xnhWlwpJ20eLV18bjgonZELzdJorKCDyLiMl+YnumCrA+F99LO4OeORCjlsnkOJXNUlIEyb+HUkS/FX+YMldp2cTknFopfUvdbRivLXPZOcw/0T1Uw8sN3bYMjR4+64ee4oJ4buLOqkcMlySJvuRIPYg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bb8MHrPnz7ro9tAT91kKIX0+HAVCqvHVd2q5BdVU1YE=;
- b=fUl7Rnsc2J1seniLStP9/05Fkqu2/C1sHIJGUFiYD6funX5a72lyt9s8slTlhtbL4hESJD9C1ulMKmZYpeaz0CTY3oL1uq6dxOYN4TMEtkzR+HUcfeej11BeC/9U/4k3c4wny8dfF1opEmeLIwMZJWjMgoGFd7R7ptaGHD6BRO8=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
- by VI1PR05MB6864.eurprd05.prod.outlook.com (2603:10a6:800:18d::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Thu, 23 Apr
- 2020 19:44:51 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::a47b:e3cd:7d6d:5d4e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::a47b:e3cd:7d6d:5d4e%6]) with mapi id 15.20.2921.030; Thu, 23 Apr 2020
- 19:44:51 +0000
-Date:   Thu, 23 Apr 2020 16:44:47 -0300
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     "Dey, Megha" <megha.dey@linux.intel.com>
-Cc:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
-        maz@kernel.org, bhelgaas@google.com, rafael@kernel.org,
-        gregkh@linuxfoundation.org, tglx@linutronix.de, hpa@zytor.com,
-        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
-        ashok.raj@intel.com, yi.l.liu@intel.com, baolu.lu@intel.com,
-        kevin.tian@intel.com, sanjay.k.kumar@intel.com,
-        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
-        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
- support for the idxd driver.
-Message-ID: <20200423194447.GF13640@mellanox.com>
-References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
- <20200421235442.GO11945@mellanox.com>
- <d6b3c133-ac19-21af-b7a7-b9e7166b8166@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d6b3c133-ac19-21af-b7a7-b9e7166b8166@linux.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: BL0PR02CA0006.namprd02.prod.outlook.com
- (2603:10b6:207:3c::19) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
+        id S1726116AbgDWTsN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 Apr 2020 15:48:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37418 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726068AbgDWTsN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Apr 2020 15:48:13 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6B7EC09B042
+        for <linux-pci@vger.kernel.org>; Thu, 23 Apr 2020 12:48:12 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id x25so7865752wmc.0
+        for <linux-pci@vger.kernel.org>; Thu, 23 Apr 2020 12:48:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=5ncK8mUbyQRJAXUcfcK2gNTh5SvopNuWEHUfvAJCpqQ=;
+        b=bLpFWA4UYiAXFPphnI/drIN1GwdP+PEY+aec498WCbdFB9Ne3A4nBaX9MlF7nbRoOD
+         NQWeJBbTwPuUetdriRD5FVQxoydlmXUSogrxI2olZl1r1hNdmhYzBJMUbQhZRrl0AqhZ
+         pBlB6OBNnfnYhmhnMRVYqdtfKcuw0FAtdXD+vu6jJKz95f4fjmNVnCGnZPa7m6qDVSan
+         XYi+IkCgG05zXC5RxIim/hLhYu+S36nvMKzzQt6GwAtP1XeC8I2Jzz3h2oSPEBTbHuFH
+         In58Q0h7zIYXJhcwh3on5KFxsp5y9f9uLy/hj07KPFeVIVO27UZ7tuckosfWzIIdA6qn
+         lH7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=5ncK8mUbyQRJAXUcfcK2gNTh5SvopNuWEHUfvAJCpqQ=;
+        b=PDqgxvzMzNQKPXhEmg31rTmRum0tPBZbk7HtuPNBFJlWq0yeJVuXEDBqZSLzYxe4Hf
+         tkLSJwKnJeEAUYeA9/Bqmu3u1qrPRBXcHaDB1GPT1hk9FNtowYga/65YTLEDtjTag9cQ
+         70QCPrBrBBIvBQApV1l7BY/B+ys45cqaeP8uSLaNzkZEItx1UtjD3HjzPJIwD70g02Cn
+         2EU0LZWKiAjso/b9ESqHig6bWvAJzH8nUXbzos4iabZBmOkoeYsmy+OKWhJEg47mK9sE
+         ksIgt9q//B92k0q+o77Jy3Y6VdgY/pWQdfWLmUhb1fzQJdJzEhuFR5ZVS0Dk2y+AzdkT
+         A0bw==
+X-Gm-Message-State: AGi0PuaNffuOEMnqouTV/nZ+jFEtt0f86/d/eHYxCEewMgM1hAlR/fYM
+        /UM1QriE/c0iFtaIl20cAjgP+OOzkF1qV2Azv25teg==
+X-Google-Smtp-Source: APiQypIo30/rnrgZYuT/Tf+RXaR19Cm3vwGRTbmj5gfurnmQ8Zg2HvKWZPcYoToYWwl3qtHjzG59O7ZaPt9TgQN0bok=
+X-Received: by 2002:adf:f844:: with SMTP id d4mr6608940wrq.362.1587671291493;
+ Thu, 23 Apr 2020 12:48:11 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (142.68.57.212) by BL0PR02CA0006.namprd02.prod.outlook.com (2603:10b6:207:3c::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend Transport; Thu, 23 Apr 2020 19:44:51 +0000
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1jRhmB-0007Nj-QB; Thu, 23 Apr 2020 16:44:47 -0300
-X-Originating-IP: [142.68.57.212]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: b638f078-0179-4ff9-ef58-08d7e7bec9ce
-X-MS-TrafficTypeDiagnostic: VI1PR05MB6864:|VI1PR05MB6864:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR05MB6864D7E39C188F62907AEB33CFD30@VI1PR05MB6864.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 03827AF76E
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(39860400002)(346002)(376002)(366004)(9746002)(9786002)(86362001)(6916009)(33656002)(966005)(5660300002)(8936002)(81156014)(7416002)(478600001)(316002)(26005)(52116002)(36756003)(2906002)(2616005)(186003)(66556008)(4326008)(8676002)(66946007)(66476007)(1076003)(24400500001);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: zIov0yGLtszge3FwMpb0PHRZoBOp3ez5Rldeh1h28cuczRS9yjwO4eFUfGuj2uM9I1zsnpszknCRfJgkKtwHnsgWbA3luJXNimG6FLe/w1aTiojdZjRBjjEG4AfAOHGcwFSICR3pxGyQdeo0g0l3lzCFeqR25J4aOZDgUgKuvOAYZ8YfjKM8WziVjaAdFbfBx29p150BKv8a9HCKn9X1fNNVoZT3+zJHaOq7dLgFjF5V0FwIXsj8Jh810m4wjqVPZkMySqw8Bpz0A0MdTQAIWdlDj4Lm87lqlmbpzN7Jobgs7u7DmGWYDMo8WTwegYBcgYunG4k4E4g2wqjZOw1aEPzzMNB8U0sglqNdWqa/ufh9zV3wuGMvNEoNPNx9evwooytwDIiLsOs6lkVDwUKePh5hXAQbiGwHMMZOnBpkqMwcGWrbaORTAp947HQA9pafY30JOM6BGUMx58DWxp84YOkuN57d02oVS9Ny9XwVna1PBz6RtNuw94jOWvTtTIp9amtSPPWt6BlnyNM5sTCHYNsHIq6yxk/e+3Xqe4AQofaPY0wgIghRxs1ImNtlAZ/u25M9SS84lvM05mm8vcDuDg==
-X-MS-Exchange-AntiSpam-MessageData: Piq+HwZAKA6FSqiGfzzJJyvYm9L1rVHl6LrJvhiPRpk80xEKsvuxYYwOQgFY/l6SwPACb3x6p13J6CXHMIix1MFXfl4k8mR8kAfJqCrllWd0LRmA7HaQNAFitYOdxi2161bTi4UosgIB5jnRhB52RQ==
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b638f078-0179-4ff9-ef58-08d7e7bec9ce
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2020 19:44:51.3188
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0gdmxLUVTleRKVey1pBiR3kMhazutDo4wERH66kOZclaOoWyxoIduT5HLXv5UUkjQg+9AMq3aB+9JBvNH8HhRg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6864
+References: <20200406194201.846411-1-alexander.deucher@amd.com>
+In-Reply-To: <20200406194201.846411-1-alexander.deucher@amd.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Thu, 23 Apr 2020 15:48:00 -0400
+Message-ID: <CADnq5_PHrTJK7+p6CuiDxt=LVF636DukpHk5FxjK4ASZFPPG+g@mail.gmail.com>
+Subject: Re: [PATCH] PCI/P2PDMA: Add additional AMD ZEN root ports to the whitelist
+To:     amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> > > The mdev utilizes Interrupt Message Store or IMS[3] instead of MSIX for
-> > > interrupts for the guest. This preserves MSIX for host usages and also allows a
-> > > significantly larger number of interrupt vectors for guest usage.
-> > 
-> > I never did get a reply to my earlier remarks on the IMS patches.
-> > 
-> > The concept of a device specific addr/data table format for MSI is not
-> > Intel specific. This should be general code. We have a device that can
-> > use this kind of kernel capability today.
-> 
-> I am sorry if I did not address your comments earlier.
++ Bjorn
 
-It appears noboy from Intel bothered to answer anyone else on that RFC
-thread:
+Can chance I can get this picked up for -next?
 
-https://lore.kernel.org/lkml/1568338328-22458-1-git-send-email-megha.dey@linux.intel.com/
+Thanks,
 
-However, it seems kind of moot as I see now that this verion of IMS
-bears almost no resemblance to the original RFC.
+Alex
 
-That said, the similiarity to platform-msi was striking, does this new
-version harmonize with that?
-
-> The present IMS code is quite generic, most of the code is in the drivers/
-> folder. We basically introduce 2 APIS: allocate and free IMS interrupts and
-> a IMS IRQ domain to allocate these interrupts from. These APIs are
-> architecture agnostic.
+On Mon, Apr 6, 2020 at 3:42 PM Alex Deucher <alexdeucher@gmail.com> wrote:
 >
-> We also introduce a new IMS IRQ domain which is architecture specific. This
-> is because IMS generates interrupts only in the remappable format, hence
-> interrupt remapping should be enabled for IMS. Currently, the interrupt
-> remapping code is only available for Intel and AMD and I don’t see anything
-> for ARM.
-
-I don't understand these remarks though - IMS is simply the mapping of
-a MemWr addr/data pair to a Linux IRQ number? Why does this intersect
-with remapping?
-
-AFAIK, any platform that supports MSI today should have the inherent
-HW capability to support IMS.
-
-> Also, could you give more details on the device that could use IMS? Do you
-> have some driver code already? We could then see if and how the current IMS
-> code could be made more generic.
-
-We have several devices of interest, our NICs have very flexible PCI,
-so it is no problem to take the MemWR addr/data from someplace other
-than the MSI tables.
-
-For this we want to have some way to allocate Linux IRQs dynamically
-and get a addr/data pair to trigger them.
-
-Our NIC devices are also linked to our ARM SOC family, so I'd expect
-our ARM's to also be able to provide these APIs as the platform.
-
-Jason
+> According to the hw architect, pre-ZEN parts support
+> p2p writes and ZEN parts support both p2p reads and writes.
+>
+> Add entries for Zen parts Raven (0x15d0) and Renoir (0x1630).
+>
+> Cc: Christian K=C3=B6nig <christian.koenig@amd.com>
+> Acked-by: Christian K=C3=B6nig <christian.koenig@amd.com>
+> Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+> ---
+>  drivers/pci/p2pdma.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+> index 9a8a38384121..91a4c987399d 100644
+> --- a/drivers/pci/p2pdma.c
+> +++ b/drivers/pci/p2pdma.c
+> @@ -282,6 +282,8 @@ static const struct pci_p2pdma_whitelist_entry {
+>  } pci_p2pdma_whitelist[] =3D {
+>         /* AMD ZEN */
+>         {PCI_VENDOR_ID_AMD,     0x1450, 0},
+> +       {PCI_VENDOR_ID_AMD,     0x15d0, 0},
+> +       {PCI_VENDOR_ID_AMD,     0x1630, 0},
+>
+>         /* Intel Xeon E5/Core i7 */
+>         {PCI_VENDOR_ID_INTEL,   0x3c00, REQ_SAME_HOST_BRIDGE},
+> --
+> 2.25.1
+>
