@@ -2,115 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AA4411B618E
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Apr 2020 19:07:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 806DB1B61EC
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Apr 2020 19:27:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729842AbgDWRHV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 23 Apr 2020 13:07:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48938 "EHLO mail.kernel.org"
+        id S1729886AbgDWR1Q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 Apr 2020 13:27:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729840AbgDWRHV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 23 Apr 2020 13:07:21 -0400
+        id S1729802AbgDWR1Q (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 23 Apr 2020 13:27:16 -0400
 Received: from localhost (mobile-166-175-187-210.mycingular.net [166.175.187.210])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E0BB2076C;
-        Thu, 23 Apr 2020 17:07:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 120FF20728;
+        Thu, 23 Apr 2020 17:27:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587661640;
-        bh=yw9wJXzgI852NvRxPmOyJyXU9gysczH5+gd8R6BRqdg=;
+        s=default; t=1587662835;
+        bh=Zr4Xg0JSL8LYcT3TgDBD7nueXSkitr9yJVip2R/DjXU=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=jRBGlpIAOMr0aJEhtE9qf9xmylLTnD1+54cwHWFclX7d4jCcl2dYjP2Ky/QQ44gSB
-         cw+8hXorBVHvZRIKuHFLtZExR5YTTmPk8/qfasQtq4F55wkr9CzeWvU9INQJntPHzP
-         74k2wAD7i4pxKssLvx8nwPa1cqjoK93h+egLbs1w=
-Date:   Thu, 23 Apr 2020 12:07:18 -0500
+        b=SuIMUfM3ZWtpPzBqDa4p6mJrPH0ogxVSDVTXxFPL36bL0hGWkhrmN1JIdtt8LuVnp
+         cnzVPWpAi/FPdmFErJpvCOaYMP65fY8U3qmRicT+z1BhKyOK9mwJP/KDjixaUXK8mX
+         BDn4b4skolFLJ6pOy/g3yueSxRkHKCxFS8xFfqd0=
+Date:   Thu, 23 Apr 2020 12:27:13 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans De Goede <hdegoede@redhat.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v2 0/9] PM: sleep: core: Rearrange the handling of driver
- power management flags
-Message-ID: <20200423170718.GA190576@google.com>
+To:     Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
+Cc:     linux-pci@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Remi Pommarel <repk@triplefau.lt>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Xogium <contact@xogium.me>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/9] PCI: aardvark: don't write to read-only register
+Message-ID: <20200423172713.GA191930@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <5673945.BT02kTCndr@kreacher>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200421111701.17088-3-marek.behun@nic.cz>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Apr 18, 2020 at 06:23:08PM +0200, Rafael J. Wysocki wrote:
-> Hi,
-> 
-> This is an update including some fixes and extra patches based on the
-> continuation of the discussion [1].
-> 
-> On Friday, April 10, 2020 5:46:27 PM CEST Rafael J. Wysocki wrote:
-> > Hi Alan,
-> > 
-> > Following our recent discussion regarding the DPM_FLAG_* family of flags [1],
-> > I have decided to follow some of your recommendations and make changes to the
-> > core code handling those flags.
-> > 
-> > The purpose of this is basically to make the code more consistent internally,
-> > easier to follow and better documented.
-> > 
-> > First of all, patch [1/7] changes the PM core to skip driver-level "late"
-> > and "noirq" suspend callbacks for devices with SMART_SUSPEND set if they are
-> > still runtime-suspended during the "late" system-wide suspend phase (without
-> > the patch it does that only if subsystem-level late/noirq/early suspend/resume
-> > callbacks are not present for the device, which is demonstrably inconsistent)
-> > and updates the resume part of the code accordingly (it doesn't need to check
-> > whether or not the subsystem-level callbacks are present any more).
-> > 
-> > The next patch, [2/7], is purely cosmetic and its only purpose is to reduce
-> > the LOC number and move related pieces of code closer to each other.
-> 
-> The first two patches have not changed.
-> 
-> > Patch [3/7] changes the PM core so that it doesn't skip any subsystem-level
-> > callbacks during system-wide resume (without the patch they may be skipped in
-> > the "early resume" and "resume" phases due to LEAVE_SUSPENDED being set which
-> > may be problematic) and to always run the driver's ->resume callback if the
-> > corresponding subsystem-level callback is not present (without the patch it
-> > may be skipped if LEAVE_SUSPENDED is set) to let it reverse the changes made
-> > by the driver's ->suspend callback (which always runs too) if need be.
-> 
-> The difference between this one and patch [3/9] in the v2 is the fixed
-> definition of dev_pm_may_skip_resume(), renamed to dev_pm_skip_resume() by
-> one of the next patches.
-> 
-> Patch [4/9] changes the handling of the power.may_skip_resume flag to set it
-> to 'true' by default and updates the subsystems aware of it to clear it when
-> they don't want devices to stay in suspend.
-> 
-> > Patches [4-6/7] rename one function in the PM core and two driver PM flags to
-> > make their names better reflect their purpose.
-> 
-> These are patches [5/9] and [7-8/9] in the v2 and patch [6/9] renames
-> dev_pm_smart_suspend_and_suspended() to dev_pm_skip_suspend().
-> 
-> > Finally, patch [7/7] updates the documentation of the driver PM flags to
-> > reflect the new code flows.
-> 
-> This patch [9/9] now and it has been updated to reflect the new code changes.
-> 
-> The pm-sleep-core branch:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
->   pm-sleep-core
-> 
-> contains the v2 now.
+[+cc Rob]
 
-For the drivers/pci parts:
+In the next round, please capitalize the first word of the subjects of
+the whole series to match:
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+  $ git log --oneline drivers/pci/controller/pci-aardvark.c
+  4e5be6f81be7 ("PCI: aardvark: Use pci_parse_request_of_pci_ranges()")
+  e078723f9ccc ("PCI: aardvark: Fix big endian support")
+  7fbcb5da811b ("PCI: aardvark: Don't rely on jiffies while holding spinlock")
+  c0f05a6ab525 ("PCI: aardvark: Fix PCI_EXP_RTCTL register configuration")
+  f4c7d053d7f7 ("PCI: aardvark: Wait for endpoint to be ready before training link")
+  364b3f1ff8f0 ("PCI: aardvark: Use LTSSM state to build link training flag")
 
+The important thing for the subject of this patch is not the "don't
+write to read-only register" part; it's true that there's no point in
+writing to read-only registers, but removing that write would not fix
+any bugs.
+
+The important thing is that we shouldn't blindly enable ASPM L0s, so
+that's what the subject should mention.
+
+On Tue, Apr 21, 2020 at 01:16:54PM +0200, Marek Behún wrote:
+> From: Pali Rohár <pali@kernel.org>
+> 
+> Trying to change Link Status register does not have any effect as this
+> is a read-only register. Trying to overwrite bits for Negotiated Link
+> Width does not make sense.
+> 
+> In future proper change of link width can be done via Lane Count Select
+> bits in PCIe Control 0 register.
+> 
+> Trying to unconditionally enable ASPM L0s via ASPM Control bits in Link
+> Control register is wrong. There should be at least some detection if
+> endpoint supports L0s as isn't mandatory.
+> 
+> Moreover ASPM Control bits in Link Control register are controlled by
+> pcie/aspm.c code which sets it according to system ASPM settings,
+> immediately after aardvark driver probes. So setting these bits by
+> aardvark driver has no long running effect.
+> 
+> Remove code which touches ASPM L0s bits from this driver and let
+> kernel's ASPM implementation to set ASPM state properly.
+> 
+> Some users are reporting issues that this code is problematic for some
+> Intel wifi cards and removing it fixes them, see e.g.:
+> https://bugzilla.kernel.org/show_bug.cgi?id=196339
+> 
+> If problems with Intel wifi cards occur even after this commit, then
+> pcie/aspm.c code could be modified / hooked to not enable ASPM L0s state
+> for affected problematic cards.
+> 
+> Signed-off-by: Pali Rohár <pali@kernel.org>
+> ---
+>  drivers/pci/controller/pci-aardvark.c | 4 ----
+>  1 file changed, 4 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> index b59198a102d0..551d98174613 100644
+> --- a/drivers/pci/controller/pci-aardvark.c
+> +++ b/drivers/pci/controller/pci-aardvark.c
+> @@ -356,10 +356,6 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+>  
+>  	advk_pcie_wait_for_link(pcie);
+>  
+> -	reg = PCIE_CORE_LINK_L0S_ENTRY |
+> -		(1 << PCIE_CORE_LINK_WIDTH_SHIFT);
+> -	advk_writel(pcie, reg, PCIE_CORE_LINK_CTRL_STAT_REG);
+> -
+>  	reg = advk_readl(pcie, PCIE_CORE_CMD_STATUS_REG);
+>  	reg |= PCIE_CORE_CMD_MEM_ACCESS_EN |
+>  		PCIE_CORE_CMD_IO_ACCESS_EN |
+> -- 
+> 2.24.1
+> 
