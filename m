@@ -2,39 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A6091B6DB3
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Apr 2020 08:01:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 67B711B6DB9
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Apr 2020 08:01:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726186AbgDXGA7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 24 Apr 2020 02:00:59 -0400
-Received: from mail-eopbgr1400092.outbound.protection.outlook.com ([40.107.140.92]:39415
+        id S1726304AbgDXGBw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 24 Apr 2020 02:01:52 -0400
+Received: from mail-eopbgr1400123.outbound.protection.outlook.com ([40.107.140.123]:26761
         "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725823AbgDXGA6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 24 Apr 2020 02:00:58 -0400
+        id S1725823AbgDXGBw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 24 Apr 2020 02:01:52 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GFTKpU1BRWNLVMmmQ9aiCvZmfWDYRMwWkZh98b1luvc6KkGzgz/g/JBRu44dkBhighYs+ZhS7GvsGBUmWY0dsxZBwTtcdV+RUir/RRXSl0+rMFunhJ0s9b2FXWMXAP8WniY5B+LkfOETQR9YlSiddnMc9fgXka85/WG0/2CdDoEnNHF9TaTiX9fVytOjXUzguDizpzLUh7gX/3Pn8RUx8tr2nCbASyK3mxAnSBKXQdxXa/4ZRy/DEqNrY0ktluU9tOxNF4aglvMpbmsKqCrDlo7mxECQm3I6vwgwlBMWA0NOnK3LcvIj4XfcU5OB/ClSbbEQKF49YP5tuWp4msvvqg==
+ b=nQAMrMY7pD0cbMYCYfgEVYhfdVP3UMTLIM6+N8+uTebG6jB/ws/uKzxfd/ck9gCPHZp1aKBooh31EHBNyDrLmMUt+J5j5X8a2Vp8CDcrPJBbnrUz6RThaiKXCLcJxGiNse72+S/PIklJq3fe2xbsV+sgyX9pza2NCjkj1itXeqIRoLzWiyrNaCRo5O094Vsse3BuUSXO+/k9pD03WpRGlsEf+946A3LX+MVYn2C28roaKCdi44eeCCeTypYu/U3iNUB05XpZc2PDY6bvSnU9VBI67uJRbpLPCEyU1HjWuhxoXxkBPAqtOVgbLAXSq+B0VFFgcNIRPaXyNEt/p2VRJg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jZg39AJatJLwtPxVAUA77MuS1qqgEt2v4MLZVSwWCkE=;
- b=VfNiG4tEVkM3pHGWRrmTaDAL9kg7+U68uZ1xzmWckQC4pS1w0BDBA0T++tiYhZTkfEF9TseS8MNr0hmLjUUqyYBXIYakS3UoLndps+caMHpi9ZB6pDJrj7SalMOBCgzwYAd/riX/RctKmPGd9qTkZZC3zYtj0V3r7rbuZ0x30rKJkvtTwGT4350enS+5eQYPgn32W8I/0M7DJauwydYJ7+6GSqS7+jeEk0HXJPbhKKslxeJ86fG63N3EB6+E3AW52r2NUTvgjfB6KvazmF+rXjID4/287TWcdLz5SPW7spMvxdkTPYEq60/vqNYyy9mEBgFRxWYKVahjrV9bbMeF5Q==
+ bh=/PwUgbZMCrXhG3RhfopGwqpGYI59vTsBDdCmPrwJmhg=;
+ b=bysXUmagBaCzgMbGZY9HJ7bQd9u7hNZFL1mg063JzYnIBpPMcp4PWlD4BJF/96Wh7eGkAEkeiVyBSVnDCU1VrQwu05VryYmY+W78OjFf4xYcAsQDstn/ew0+/rHayr8WXGbssqrzPaQRnT7m7/wqMZcaXOKp2oXNdAd2NCor/4NS/8agvja/hFTi2+u6+qPkrouYfVP2p5/+rEHxTuQG/HBDa0FElDi4+Q7/qB2Bs2OWu4/u+oJCpwbxCsmbuCftuKXrMScDajxa0qAE2DTaFkWtesejpGvrcGM9HYt6Rbrfwu1fPN0vOeaAZEbcFI+yXOFBMo3d9UTNEQJvMJCjVg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
  dkim=pass header.d=renesas.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jZg39AJatJLwtPxVAUA77MuS1qqgEt2v4MLZVSwWCkE=;
- b=ovmSZHXjb+jHPr5oRmw+MF6OBG38Z7b3JBUVy2GaylCO332h5dXDIEi2QS48/QCybRRYIE34F69/7j8yjdEFAbJD7bVzFtZ3EStryUcA5TgDlzfLHgHxmNsfIUfxLY672mmZJEDps3v//5DRnJKLysfvW5rxyHkqmYk7gSI4tWI=
+ bh=/PwUgbZMCrXhG3RhfopGwqpGYI59vTsBDdCmPrwJmhg=;
+ b=G9sbWt7F9s0IxZURGs/QYdeJYzKNSQ7fMNpo7ZvGazmBmTg5RocuT9mUja1cbNkWzp4dFx6ggZFY/hk9s07fRRn6NiTAwvHgOIhRQPsLIz9XfbRoeyg/f1GRfw5A8Prv2Yl+vHwV0ahzkvC0t611ltNS9BJ09i7HJyzQn+pREfE=
 Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
- TYAPR01MB5340.jpnprd01.prod.outlook.com (20.180.231.207) with Microsoft SMTP
+ TYAPR01MB3343.jpnprd01.prod.outlook.com (20.178.136.84) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2921.27; Fri, 24 Apr 2020 06:00:55 +0000
+ 15.20.2937.13; Fri, 24 Apr 2020 06:01:48 +0000
 Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
  ([fe80::ed7f:1268:55a9:fc06]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
  ([fe80::ed7f:1268:55a9:fc06%4]) with mapi id 15.20.2937.020; Fri, 24 Apr 2020
- 06:00:55 +0000
+ 06:01:48 +0000
 From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 To:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
         Kishon Vijay Abraham I <kishon@ti.com>,
@@ -60,16 +60,14 @@ CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
         <linux-arm-kernel@lists.infradead.org>,
         Lad Prabhakar <prabhakar.csengg@gmail.com>,
         Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: RE: [PATCH v9 5/8] PCI: endpoint: Add support to handle multiple base
- for mapping outbound memory
-Thread-Topic: [PATCH v9 5/8] PCI: endpoint: Add support to handle multiple
- base for mapping outbound memory
-Thread-Index: AQHWGZzF+cKabKHIWkeGz+yNhrFZUKiHx8vQ
-Date:   Fri, 24 Apr 2020 06:00:54 +0000
-Message-ID: <TYAPR01MB4544DCE7E61C83F0D4EC6C3AD8D00@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+Subject: RE: [PATCH v9 7/8] PCI: rcar: Add endpoint mode support
+Thread-Topic: [PATCH v9 7/8] PCI: rcar: Add endpoint mode support
+Thread-Index: AQHWGZzLICAcEkFDPkCpmtDZc1hYrqiHyDlA
+Date:   Fri, 24 Apr 2020 06:01:48 +0000
+Message-ID: <TYAPR01MB454466465C5E89E57262E911D8D00@TYAPR01MB4544.jpnprd01.prod.outlook.com>
 References: <1587666159-6035-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1587666159-6035-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1587666159-6035-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1587666159-6035-8-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1587666159-6035-8-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Accept-Language: ja-JP, en-US
 Content-Language: ja-JP
 X-MS-Has-Attach: 
@@ -79,31 +77,31 @@ authentication-results: spf=none (sender IP is )
 x-originating-ip: [124.210.22.195]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 435d2937-ad98-4854-f66f-08d7e814d9fb
-x-ms-traffictypediagnostic: TYAPR01MB5340:|TYAPR01MB5340:
+x-ms-office365-filtering-correlation-id: e9ba4607-e44c-4936-4950-08d7e814fa19
+x-ms-traffictypediagnostic: TYAPR01MB3343:|TYAPR01MB3343:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <TYAPR01MB5340DE138B6B5ACA20E6F2DED8D00@TYAPR01MB5340.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-microsoft-antispam-prvs: <TYAPR01MB334373454D6C192C1D8B9147D8D00@TYAPR01MB3343.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2733;
 x-forefront-prvs: 03838E948C
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(136003)(39860400002)(366004)(346002)(376002)(396003)(66446008)(7696005)(7416002)(71200400001)(26005)(316002)(8936002)(4744005)(478600001)(6506007)(52536014)(2906002)(81156014)(186003)(8676002)(55236004)(9686003)(5660300002)(4326008)(55016002)(110136005)(33656002)(54906003)(66946007)(76116006)(66556008)(64756008)(107886003)(86362001)(66476007)(921003);DIR:OUT;SFP:1102;
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(39860400002)(376002)(346002)(366004)(316002)(52536014)(2906002)(110136005)(4326008)(66946007)(7696005)(107886003)(6506007)(558084003)(64756008)(55236004)(55016002)(66476007)(54906003)(86362001)(66446008)(8676002)(66556008)(76116006)(186003)(5660300002)(71200400001)(8936002)(478600001)(9686003)(33656002)(81156014)(7416002)(26005)(921003);DIR:OUT;SFP:1102;
 received-spf: None (protection.outlook.com: renesas.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: scKlVwxNmZz8gmL/XNFYG9f+k3/DSvlQuvIM/lLvTnhpiHDWRjm+up3uU9V6uG2jEqwtNBSSe//LLJIHnzab0N0/x0i/qfosTg81GOxXvyaGcDRwu+HeUoy1rlhitPXLprhW2IOqdscr3PZUiO78/yCtPNiKyuThBn+Ryd8O79yFW8GCS2ta8pYzC9ZYovHHsfJ5vyE6EU90bCrg79eTTkglcciiCo5BrFFF2WTUn5y9c3GohOVbenURAUaPgv/wKT/iQiiMPbMmDVh31QH/d7r2sipg2FveWCOBjRED4IoJq1VG/HWmRCcVALAYKZJh1HE0P1w6tLd9HEPzTFtDDTKSQl+TyLP4Y+5pJ+muS88vyukwSv3YeDKIfRYBzjduMS5jwGEO2TiIxxrSJ9HXR90ciHv3O2ENa6aTb1kAl4UyQn4/KSs9mndu0H8kTTv3mPVGSZ47JzvD0qbwFDgV0Qv0MQeMHrDOM8yUsaDKZBw=
-x-ms-exchange-antispam-messagedata: KKHXrCBdgsGDevSr/AlEJ8cPmLsR0VZoQud8SZsGbkvL4IWEpwukplUA7LQc8NMsKgXEAVEuuEtiQ11fHOLyMi4cptANaJ5n+A6Cy+lrgeu/+e2ihJY49IfZoSjNdwOk+m74gFDzxJ3CfXOAaOdbag==
+x-microsoft-antispam-message-info: Tzm5O3LpoTFqX6FtFBn5yp7uaZSsjXHctRnKq8XqNG4LFb2HzgTQlMQhaceX3I6CTqliPCI127EFH3JH0RkPBwECVcid+8j9+lKmdd+aLyGex3MLs2inZT+yHsaFUX9yjh1RokyctcBEZXa2LrKPNvNV08YuOcMgIbmi51fs5opI4Iotn/QFkyaC8Y8JsZOCwAPFyi+9FbswMALJtuWhUgw4nIS90Y8HStJqdniHVHfNYaqJTD+4j6aG3d1WjlaevLixcIAssgsflfUtPZZcugCYo23Xmk9JSr3Kp3ijd+8tSVOXttyoPI9k6rc0m6+HJua8FTO0UKdDozHMXSIc7y4gjLcS/rUL1VqFw2iWFISnWkvIinDy4BMhT8ryRkIpHSliWvobN1WK9FsxnT1Ik0VQVnGodXx1FlVDGMtDZaIS8P32BFK3PM0dxXHaDWwWa1kleyV1IQKdM9uwUuRnHG0pup7LP6iYVLN2X6WKc6k=
+x-ms-exchange-antispam-messagedata: TkuTStUg3ow9pN49psf6P5/Id5N/yBu5wzoV1L9F0ax4UcN6XUmzQOk9vrYFS81GIjRvjVccBE7hfgAuuCrFfdST8SgBzjGwHb6kOz28oECmRklPjYk+6Tfa1k9Rm0HfsXeULE+4Y/XU+5XzXvpSpQ==
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 435d2937-ad98-4854-f66f-08d7e814d9fb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Apr 2020 06:00:54.8673
+X-MS-Exchange-CrossTenant-Network-Message-Id: e9ba4607-e44c-4936-4950-08d7e814fa19
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Apr 2020 06:01:48.7606
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tzqqeabqdOQ4k++kSWt6Z7f82tDMuExTyc/SHplOzi/YDfT/NAsQvqH2/zsj0CmB2gDSSEqUA79OGNPOSG1jrua2mWdPNqahCdUHpw1LGXV4H7XnSQrrjvAxSDO3Ehvn
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB5340
+X-MS-Exchange-CrossTenant-userprincipalname: 6nFDgI0faCvv+lSXfWICEwCHlgUrthS6focMqySsjEDxZhtlKqW7dyfUWrL2L62Jmdg8bDbi0R4KLB6noo/I+4eaCgCQNmIdQLHitmMMiGHpC4vfT573KDHCsnks0vcS
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB3343
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
@@ -113,16 +111,7 @@ Hi Prabhakar-san,
 
 > From: Lad Prabhakar, Sent: Friday, April 24, 2020 3:23 AM
 >=20
-> R-Car PCIe controller has support to map multiple memory regions for
-> mapping the outbound memory in local system also the controller limits
-> single allocation for each region (that is, once a chunk is used from the
-> region it cannot be used to allocate a new one). This features inspires t=
-o
-> add support for handling multiple memory bases in endpoint framework.
->=20
-> With this patch pci_epc_mem_init() initializes address space for endpoint
-> controller which support single window and pci_epc_multi_mem_init()
-> initializes multiple windows supported by endpoint controller.
+> Add support for R-Car PCIe controller to work in endpoint mode.
 >=20
 > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
