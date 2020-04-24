@@ -2,684 +2,201 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C38B31B7392
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Apr 2020 14:04:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 48C011B75AF
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Apr 2020 14:44:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726707AbgDXMEi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 24 Apr 2020 08:04:38 -0400
-Received: from mail-eopbgr770071.outbound.protection.outlook.com ([40.107.77.71]:15588
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        id S1726798AbgDXMo4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 24 Apr 2020 08:44:56 -0400
+Received: from mail-eopbgr20043.outbound.protection.outlook.com ([40.107.2.43]:2574
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726699AbgDXMEh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:04:37 -0400
+        id S1726707AbgDXMoz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 24 Apr 2020 08:44:55 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Oa1U21yHVtJMl9KxnhGzQfIKLb7gs84iGTthpxzvJxCWyGHZdtXAJM73BI2SG1rG4YlQ3CqOjkQn42CKtJ9/zkxnAaBhTmZ0aoooUvo+TozYSnkty5cR/x5bE+yevzv/M1XpcmGY609SqzwS/OhxpF/5G5wNeXMfJn4rNiIqsUHNiPjk9ym55GZzfn0fys6pVZuaYbkjYqZv492kWxHP7/ssnmy/S6mgOSwu6lee1FOx1QLMmDZp/5tQT+Csz42EcTSl2zj9wGAkosIvBBF8vLEd8VCMDz0LF0L61fosIo7hFGSK2xbHleHGalMvRDALd/qdmXpxLntn7jEgGm3gwA==
+ b=TyKHVWpNwDf7aKw1aTARt+0UiIj82MjxvGZ2mmcNvLL6zSRoopc0qAQ5pNehxlz0xxod7sD/KNEqs+jWx9MkIVAnffWE2NhTl+G2cMUhNVzJo4uOQBCluGmk5lsyVnLqJPyXeoWgXffS074gVPay05h37nwgeXfWZxcdinZYdzjJmwkU77cwoq6nhpT1ti//zCtzHPxMwBt3GvOCNDU+XDOhZ5EHFS57s6hKYekPMHxhbpa2hd0z0DMRlkt9XOO+sBX/ldIUWhjHQF7M3TqAsmj28N5LKfiavbToTeDAbPNSx2yntctdtIgXlYqpMwRTcpfBVMG4ezm7NdPEpXo/4Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sDWW7EbbmaqaOLDEG4XqVroODD8KYByUf/3rrDvI2EU=;
- b=WMxjD/JDIcXQlxsuLx7gLVJDoi1mxT7sidchTpUMjmrCCQY4VzcVii/zHlFFv1QJ+1dBvBbIhZGslO6gp+7/UxxF80Q4wTVAQ+/72Xa/rPeRtFEWZ91/oNBpgWfC5U/AIlNsgV8DoQRBnoSWyUuPcpQdkHnKEbrxRjR9CFffRdO4Fv9k9N2QwDpHFFEFyORRWwdVFhgVJ7udNKjfsUrw+yEXaPJTehZFSSM/uZ1I7ia79rfl/sVcP1izMgT/tEBnXZ4HhurF4nbVLutUptQDZAFrSZs0fY/tam6lghGxZRGxN63Tws3UYYoIOoRWQNnCYUS/OUWx/xTLVsilGZTRDQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=google.com smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ bh=zrPxanKHgEs0gd8UnfrnzpT+mw339JcYaNUdemhbQFc=;
+ b=OKMgLvSkIhjJa2fq5E+Sm3za1T5t0bO0lxAVYfZ8VOEkTCowbaL0TREW7o/5NzfMFyq4/vF5trAeeMoCffSCVmeRmU24BvSP3y1C2Q12sOfE+uUc1x9EGuQ4oj9CtxEhb/RsY+81rJAqiQ72+eS08DoqfunvDc6aABS4CHx2dt7vC3fvmpRsyvVIP1V6m5qhnt2gW1AsshP4u985PcKYQI7W7Vxk9GQG5UfyYwh0jELw2TywbtCZejFh99lNofwNfNvsyHRdfIj8TuM1/0Y8WDg9gSbK9u5E1GBIYQfLdjU0riUfG6iufE1dRwpUHruw5mWxAa5zemiRvDPmHpi5hQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sDWW7EbbmaqaOLDEG4XqVroODD8KYByUf/3rrDvI2EU=;
- b=Tob+vGJ+EaAwrBEJEUIMiGDGg4l+9cgpPxVypPV4zzyM7ISbHP8B6zzWChXhtVjH0hPLjKZHFSrTzc0goXUUB8NRgWYnoxKNuTwD07FfAXagWUghRUdqoFo5EDm01U2rwtkuQGKWcE5jqd3dHqWBiXQ8XHiJn8Eh1/PFDHDcL3M=
-Received: from CY4PR15CA0013.namprd15.prod.outlook.com (2603:10b6:910:14::23)
- by BN6PR02MB2289.namprd02.prod.outlook.com (2603:10b6:404:36::7) with
+ bh=zrPxanKHgEs0gd8UnfrnzpT+mw339JcYaNUdemhbQFc=;
+ b=XUFD5rWbc2Zo+XXDta2fq4w57Dt/IragLss/yjQJB5o4kwn34yuDpQ45j+TOCtrrFBEga1AG6TO/MX8co+OCV062pVNhh4HERUg92jeduRO0DC41NIsr2KN9RcVJFllHoBKkCVfWc3NxEBGPAJA+cbkFUQ/9B+o8IwJyrQwOgm8=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
+ by VI1PR05MB6797.eurprd05.prod.outlook.com (2603:10a6:800:132::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.29; Fri, 24 Apr
- 2020 12:04:31 +0000
-Received: from CY1NAM02FT064.eop-nam02.prod.protection.outlook.com
- (2603:10b6:910:14:cafe::c2) by CY4PR15CA0013.outlook.office365.com
- (2603:10b6:910:14::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend
- Transport; Fri, 24 Apr 2020 12:04:31 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; google.com; dkim=none (message not signed)
- header.d=none;google.com; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT064.mail.protection.outlook.com (10.152.74.64) with Microsoft SMTP
- Server id 15.20.2937.19 via Frontend Transport; Fri, 24 Apr 2020 12:04:30
- +0000
-Received: from [149.199.38.66] (port=51085 helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
-        (envelope-from <bharat.kumar.gogada@xilinx.com>)
-        id 1jRx3A-0004Sx-Jl; Fri, 24 Apr 2020 05:03:20 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <bharat.kumar.gogada@xilinx.com>)
-        id 1jRx4I-000119-FQ; Fri, 24 Apr 2020 05:04:30 -0700
-Received: from xsj-pvapsmtp01 (smtp-fallback.xilinx.com [149.199.38.66] (may be forged))
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 03OC4NcV027922;
-        Fri, 24 Apr 2020 05:04:23 -0700
-Received: from [10.140.9.2] (helo=xhdbharatku40.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <bharat.kumar.gogada@xilinx.com>)
-        id 1jRx4A-0000yh-OP; Fri, 24 Apr 2020 05:04:23 -0700
-From:   Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, rgummal@xilinx.com,
-        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Subject: [PATCH v6 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port driver
-Date:   Fri, 24 Apr 2020 17:34:04 +0530
-Message-Id: <1587729844-20798-3-git-send-email-bharat.kumar.gogada@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1587729844-20798-1-git-send-email-bharat.kumar.gogada@xilinx.com>
-References: <1587729844-20798-1-git-send-email-bharat.kumar.gogada@xilinx.com>
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(346002)(396003)(39860400002)(136003)(46966005)(478600001)(36756003)(336012)(4326008)(186003)(26005)(2906002)(82740400003)(426003)(2616005)(356005)(30864003)(81166007)(70206006)(81156014)(8936002)(70586007)(7696005)(8676002)(47076004)(9786002)(5660300002)(6666004)(82310400002)(107886003)(316002)(42866002);DIR:OUT;SFP:1101;
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.22; Fri, 24 Apr
+ 2020 12:44:50 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::a47b:e3cd:7d6d:5d4e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::a47b:e3cd:7d6d:5d4e%6]) with mapi id 15.20.2921.030; Fri, 24 Apr 2020
+ 12:44:50 +0000
+Date:   Fri, 24 Apr 2020 09:44:44 -0300
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     "Tian, Kevin" <kevin.tian@intel.com>
+Cc:     "Raj, Ashok" <ashok.raj@intel.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "megha.dey@linux.intel.com" <megha.dey@linux.intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Lin, Jing" <jing.lin@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
+ support for the idxd driver.
+Message-ID: <20200424124444.GJ13640@mellanox.com>
+References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
+ <20200421235442.GO11945@mellanox.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D86EE26@SHSMSX104.ccr.corp.intel.com>
+ <20200422115017.GQ11945@mellanox.com>
+ <20200422211436.GA103345@otc-nc-03>
+ <20200423191217.GD13640@mellanox.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D8960F9@SHSMSX104.ccr.corp.intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D8960F9@SHSMSX104.ccr.corp.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: MN2PR20CA0052.namprd20.prod.outlook.com
+ (2603:10b6:208:235::21) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
 MIME-Version: 1.0
-Content-Type: text/plain
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (142.68.57.212) by MN2PR20CA0052.namprd20.prod.outlook.com (2603:10b6:208:235::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend Transport; Fri, 24 Apr 2020 12:44:50 +0000
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1jRxhE-0005Kp-2k; Fri, 24 Apr 2020 09:44:44 -0300
+X-Originating-IP: [142.68.57.212]
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 0209f28e-658b-48b5-bcb5-08d7e847a528
-X-MS-TrafficTypeDiagnostic: BN6PR02MB2289:
-X-LD-Processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
-X-Microsoft-Antispam-PRVS: <BN6PR02MB22896F687EF3ACFC2E6A6C17A5D00@BN6PR02MB2289.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:299;
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: fff99b36-1cf9-4f46-a332-08d7e84d477a
+X-MS-TrafficTypeDiagnostic: VI1PR05MB6797:|VI1PR05MB6797:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR05MB679783ACB1EE171F75E6376DCFD00@VI1PR05MB6797.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
 X-Forefront-PRVS: 03838E948C
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(376002)(39860400002)(346002)(366004)(186003)(2616005)(4326008)(8936002)(81156014)(86362001)(52116002)(478600001)(36756003)(2906002)(8676002)(9786002)(9746002)(1076003)(33656002)(66946007)(7416002)(26005)(5660300002)(66476007)(66556008)(6916009)(54906003)(316002)(24400500001);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: xGthFZDl/eM2nr/Q1x/OZ52eZ7yV0ru8DHgZ8nhdMW8ywUWkXGbOKcSdWnxF7UmKBrxTC8971VfOsEzW2Xv+xfTvkuR0bmcHTD5vEvGhIbZ6j4NglV8fKaXmgUJBmoQwxCo3lCx35Unm2WduXNhSeO025cAL4dbONK3npVqomusAZgqnhP6ReprpBNUNgynE7dunSAge9LKTTcE9Pjar6TCZ+jqQPTIEeV8FzzY9xo8cR/PiHdiKaLwpJcWq4ex5+Wyur841HBHpM06Lw0pa0wMWf/idClx9W+V44tLMN7FeL9mzt8Zoc+IwjxC3l3ZdMhxtx8iSpqq6ta8tEw22O4V2Gy6J34lahpawdErdyT+jF+6wlLdaKHxW9a0gU+eNTpPha0GTZrodOqsRPw09mCZcRz3mFwVrIzndJpcg3YEzUIqM20t/GgyJhMNqanG0UE9Pkj6hQzah62jtj+7M44EL9jVyVk63eU4MVJdkiOFJI36+WF4/dgEJ3HYXxt6X1Bjz5PUOfV2ghiZiY0qcfoJstKpbwSmpz05JXtXrDk8=
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2020 12:04:30.7367
+X-Microsoft-Antispam-Message-Info: e/nZanFyLvJKltp0WBLOUgHxSiESZWqPrApWCCVhw7iMsZIKVUtztTbg1VzVWEwa9IzRY0qPW2GigisZagGuCVBN/KJGzZOQd1+lwJv6DzuiyWbJW0p1UfKZ8R9bib6dgZ4OHpHjgrdtMsl+WwLKw8Jz/bln4IszFOA9Bje0Rnnxn4e3r9mBQIwDi/WaPF0786O2M2yZca1Eeq4VNupdZnRdZCsMkSzymSMujbM9aiuVXqk2HouaEsja2UFOh0KmXxVBrvt9hJmiCtWF084+VIFg/665ZQUvWxjUAUH9oFaFnwWMAxh2K+/ZGt3vjVvR+2KtKzbnOY5g/MSZl1RScz5YNCRlrFfLgO6dbLYBPYC37A1mksDorg8T8TOiNauIxZf+BkoPSLrZDtfOeO0lSmi6A1PNg+8SnLnPxv9n61RU4gPEkAlqruBiDnUuLoImkEpTcYRuzK//UfM49rJcU4DloDHGko9ltcTeYI7//hZqGIlmSqtkOE7e6Nh+Yopz
+X-MS-Exchange-AntiSpam-MessageData: L8axWz3xKruAZkiJZ0EZPhP3D7PWoF9mD9qJOwpzjG/4/upLHi+Qdm1Ejh4PUx3GcENrwLpxHP0gRTWliR+LIJCQu/dJVBGNam+okjEprPmEaC6ZjLWGyvB1C+9heETnEhHd0CahoBdyq4qJt8bdxA==
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fff99b36-1cf9-4f46-a332-08d7e84d477a
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2020 12:44:50.8358
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0209f28e-658b-48b5-bcb5-08d7e847a528
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR02MB2289
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: RhJV0ZQzSnDsPjk9fEjTh/RFccRPLJsfM4FT2ofsAcvAuuHQTyk+u/NulWl//NAP2bcjacffrHvKqwmI1+Iucw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6797
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-- Add support for Versal CPM as Root Port.
-- The Versal ACAP devices include CCIX-PCIe Module (CPM). The integrated
-  block for CPM along with the integrated bridge can function
-  as PCIe Root Port.
-- Bridge error and legacy interrupts in Versal CPM are handled using
-  Versal CPM specific MISC interrupt line.
+On Fri, Apr 24, 2020 at 03:27:41AM +0000, Tian, Kevin wrote:
 
-Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
----
- drivers/pci/controller/Kconfig           |   9 +
- drivers/pci/controller/Makefile          |   1 +
- drivers/pci/controller/pcie-xilinx-cpm.c | 521 +++++++++++++++++++++++++++++++
- 3 files changed, 531 insertions(+)
- create mode 100644 drivers/pci/controller/pcie-xilinx-cpm.c
+> > > That by itself doesn't translate to what a guest typically does
+> > > with a VDEV. There are other control paths that need to be serviced
+> > > from the kernel code via VFIO. For speed path operations like
+> > > ringing doorbells and such they are directly managed from guest.
+> > 
+> > You don't need vfio to mmap BAR pages to userspace. The unique thing
+> > that vfio gives is it provides a way to program the classic non-PASID
+> > iommu, which you are not using here.
+> 
+> That unique thing is indeed used here. Please note sharing CPU virtual 
+> address space with device (what SVA API is invented for) is not the
+> purpose of this series. We still rely on classic non-PASID iommu programming, 
+> i.e. mapping/unmapping IOVA->HPA per iommu_domain. Although 
+> we do use PASID to tag ADI, the PASID is contained within iommu_domain 
+> and invisible to VFIO. From userspace p.o.v, this is a device passthrough
+> usage instead of PASID-based address space binding.
 
-diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-index 20bf00f..ca0ae24 100644
---- a/drivers/pci/controller/Kconfig
-+++ b/drivers/pci/controller/Kconfig
-@@ -81,6 +81,15 @@ config PCIE_XILINX
- 	  Say 'Y' here if you want kernel to support the Xilinx AXI PCIe
- 	  Host Bridge driver.
- 
-+config PCIE_XILINX_CPM
-+	bool "Xilinx Versal CPM host bridge support"
-+	depends on ARCH_ZYNQMP || COMPILE_TEST
-+	select PCI_HOST_COMMON
-+	help
-+	  Say 'Y' here if you want kernel support for the
-+	  Xilinx Versal CPM host bridge. The driver supports
-+	  MSI/MSI-X interrupts using GICv3 ITS feature.
-+
- config PCI_XGENE
- 	bool "X-Gene PCIe controller"
- 	depends on ARM64 || COMPILE_TEST
-diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
-index 01b2502..78dabda 100644
---- a/drivers/pci/controller/Makefile
-+++ b/drivers/pci/controller/Makefile
-@@ -12,6 +12,7 @@ obj-$(CONFIG_PCI_HOST_COMMON) += pci-host-common.o
- obj-$(CONFIG_PCI_HOST_GENERIC) += pci-host-generic.o
- obj-$(CONFIG_PCIE_XILINX) += pcie-xilinx.o
- obj-$(CONFIG_PCIE_XILINX_NWL) += pcie-xilinx-nwl.o
-+obj-$(CONFIG_PCIE_XILINX_CPM) += pcie-xilinx-cpm.o
- obj-$(CONFIG_PCI_V3_SEMI) += pci-v3-semi.o
- obj-$(CONFIG_PCI_XGENE_MSI) += pci-xgene-msi.o
- obj-$(CONFIG_PCI_VERSATILE) += pci-versatile.o
-diff --git a/drivers/pci/controller/pcie-xilinx-cpm.c b/drivers/pci/controller/pcie-xilinx-cpm.c
-new file mode 100644
-index 0000000..30ddec5
---- /dev/null
-+++ b/drivers/pci/controller/pcie-xilinx-cpm.c
-@@ -0,0 +1,521 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * PCIe host controller driver for Xilinx Versal CPM DMA Bridge
-+ *
-+ * (C) Copyright 2019 - 2020, Xilinx, Inc.
-+ */
-+
-+#include <linux/interrupt.h>
-+#include <linux/irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of_address.h>
-+#include <linux/of_pci.h>
-+#include <linux/of_platform.h>
-+#include <linux/of_irq.h>
-+#include <linux/pci.h>
-+#include <linux/platform_device.h>
-+#include <linux/pci-ecam.h>
-+
-+#include "../pci.h"
-+
-+/* Register definitions */
-+#define XILINX_CPM_PCIE_REG_IDR		0x00000E10
-+#define XILINX_CPM_PCIE_REG_IMR		0x00000E14
-+#define XILINX_CPM_PCIE_REG_PSCR	0x00000E1C
-+#define XILINX_CPM_PCIE_REG_RPSC	0x00000E20
-+#define XILINX_CPM_PCIE_REG_RPEFR	0x00000E2C
-+#define XILINX_CPM_PCIE_REG_IDRN	0x00000E38
-+#define XILINX_CPM_PCIE_REG_IDRN_MASK	0x00000E3C
-+#define XILINX_CPM_PCIE_MISC_IR_STATUS	0x00000340
-+#define XILINX_CPM_PCIE_MISC_IR_ENABLE	0x00000348
-+#define XILINX_CPM_PCIE_MISC_IR_LOCAL	BIT(1)
-+
-+/* Interrupt registers definitions */
-+#define XILINX_CPM_PCIE_INTR_LINK_DOWN		BIT(0)
-+#define XILINX_CPM_PCIE_INTR_HOT_RESET		BIT(3)
-+#define XILINX_CPM_PCIE_INTR_CFG_TIMEOUT	BIT(8)
-+#define XILINX_CPM_PCIE_INTR_CORRECTABLE	BIT(9)
-+#define XILINX_CPM_PCIE_INTR_NONFATAL		BIT(10)
-+#define XILINX_CPM_PCIE_INTR_FATAL		BIT(11)
-+#define XILINX_CPM_PCIE_INTR_INTX		BIT(16)
-+#define XILINX_CPM_PCIE_INTR_MSI		BIT(17)
-+#define XILINX_CPM_PCIE_INTR_SLV_UNSUPP		BIT(20)
-+#define XILINX_CPM_PCIE_INTR_SLV_UNEXP		BIT(21)
-+#define XILINX_CPM_PCIE_INTR_SLV_COMPL		BIT(22)
-+#define XILINX_CPM_PCIE_INTR_SLV_ERRP		BIT(23)
-+#define XILINX_CPM_PCIE_INTR_SLV_CMPABT		BIT(24)
-+#define XILINX_CPM_PCIE_INTR_SLV_ILLBUR		BIT(25)
-+#define XILINX_CPM_PCIE_INTR_MST_DECERR		BIT(26)
-+#define XILINX_CPM_PCIE_INTR_MST_SLVERR		BIT(27)
-+#define XILINX_CPM_PCIE_IMR_ALL_MASK		0x1FF39FF9
-+#define XILINX_CPM_PCIE_IDR_ALL_MASK		0xFFFFFFFF
-+#define XILINX_CPM_PCIE_IDRN_MASK		GENMASK(19, 16)
-+#define XILINX_CPM_PCIE_INTR_CFG_PCIE_TIMEOUT	BIT(4)
-+#define XILINX_CPM_PCIE_INTR_CFG_ERR_POISON	BIT(12)
-+#define XILINX_CPM_PCIE_INTR_PME_TO_ACK_RCVD	BIT(15)
-+#define XILINX_CPM_PCIE_INTR_PM_PME_RCVD	BIT(17)
-+#define XILINX_CPM_PCIE_INTR_SLV_PCIE_TIMEOUT	BIT(28)
-+#define XILINX_CPM_PCIE_IDRN_SHIFT		16
-+
-+/* Root Port Error FIFO Read Register definitions */
-+#define XILINX_CPM_PCIE_RPEFR_ERR_VALID		BIT(18)
-+#define XILINX_CPM_PCIE_RPEFR_REQ_ID		GENMASK(15, 0)
-+#define XILINX_CPM_PCIE_RPEFR_ALL_MASK		0xFFFFFFFF
-+
-+/* Root Port Status/control Register definitions */
-+#define XILINX_CPM_PCIE_REG_RPSC_BEN		BIT(0)
-+
-+/* Phy Status/Control Register definitions */
-+#define XILINX_CPM_PCIE_REG_PSCR_LNKUP		BIT(11)
-+
-+/**
-+ * struct xilinx_cpm_pcie_port - PCIe port information
-+ * @reg_base: Bridge Register Base
-+ * @cpm_base: CPM System Level Control and Status Register(SLCR) Base
-+ * @irq: Interrupt number
-+ * @root_busno: Root Bus number
-+ * @dev: Device pointer
-+ * @leg_domain: Legacy IRQ domain pointer
-+ * @irq_misc: Legacy and error interrupt number
-+ * @leg_mask_lock: lock for legacy interrupts
-+ */
-+struct xilinx_cpm_pcie_port {
-+	void __iomem *reg_base;
-+	void __iomem *cpm_base;
-+	u32 irq;
-+	u8 root_busno;
-+	struct device *dev;
-+	struct irq_domain *leg_domain;
-+	struct pci_config_window *cfg;
-+	int irq_misc;
-+	raw_spinlock_t leg_mask_lock;
-+};
-+
-+static inline u32 pcie_read(struct xilinx_cpm_pcie_port *port, u32 reg)
-+{
-+	return readl(port->reg_base + reg);
-+}
-+
-+static inline void pcie_write(struct xilinx_cpm_pcie_port *port,
-+			      u32 val, u32 reg)
-+{
-+	writel(val, port->reg_base + reg);
-+}
-+
-+static inline bool cpm_pcie_link_up(struct xilinx_cpm_pcie_port *port)
-+{
-+	return (pcie_read(port, XILINX_CPM_PCIE_REG_PSCR) &
-+		XILINX_CPM_PCIE_REG_PSCR_LNKUP) ? 1 : 0;
-+}
-+
-+/**
-+ * xilinx_cpm_pcie_clear_err_interrupts - Clear Error Interrupts
-+ * @port: PCIe port information
-+ */
-+static void cpm_pcie_clear_err_interrupts(struct xilinx_cpm_pcie_port *port)
-+{
-+	unsigned long val = pcie_read(port, XILINX_CPM_PCIE_REG_RPEFR);
-+
-+	if (val & XILINX_CPM_PCIE_RPEFR_ERR_VALID) {
-+		dev_dbg(port->dev, "Requester ID %lu\n",
-+			val & XILINX_CPM_PCIE_RPEFR_REQ_ID);
-+		pcie_write(port, XILINX_CPM_PCIE_RPEFR_ALL_MASK,
-+			   XILINX_CPM_PCIE_REG_RPEFR);
-+	}
-+}
-+
-+static void xilinx_cpm_mask_leg_irq(struct irq_data *data)
-+{
-+	struct irq_desc *desc = irq_to_desc(data->irq);
-+	struct xilinx_cpm_pcie_port *port;
-+	unsigned long flags;
-+	u32 mask;
-+	u32 val;
-+
-+	port = irq_desc_get_chip_data(desc);
-+	mask = (1 << data->hwirq) << XILINX_CPM_PCIE_IDRN_SHIFT;
-+	raw_spin_lock_irqsave(&port->leg_mask_lock, flags);
-+	val = pcie_read(port, XILINX_CPM_PCIE_REG_IDRN_MASK);
-+	pcie_write(port, (val & (~mask)), XILINX_CPM_PCIE_REG_IDRN_MASK);
-+	raw_spin_unlock_irqrestore(&port->leg_mask_lock, flags);
-+}
-+
-+static void xilinx_cpm_unmask_leg_irq(struct irq_data *data)
-+{
-+	struct irq_desc *desc = irq_to_desc(data->irq);
-+	struct xilinx_cpm_pcie_port *port;
-+	unsigned long flags;
-+	u32 mask;
-+	u32 val;
-+
-+	port = irq_desc_get_chip_data(desc);
-+	mask = (1 << data->hwirq) << XILINX_CPM_PCIE_IDRN_SHIFT;
-+	raw_spin_lock_irqsave(&port->leg_mask_lock, flags);
-+	val = pcie_read(port, XILINX_CPM_PCIE_REG_IDRN_MASK);
-+	pcie_write(port, (val | mask), XILINX_CPM_PCIE_REG_IDRN_MASK);
-+	raw_spin_unlock_irqrestore(&port->leg_mask_lock, flags);
-+}
-+
-+static struct irq_chip xilinx_cpm_leg_irq_chip = {
-+	.name = "xilinx_cpm_pcie:legacy",
-+	.irq_enable = xilinx_cpm_unmask_leg_irq,
-+	.irq_disable = xilinx_cpm_mask_leg_irq,
-+	.irq_mask = xilinx_cpm_mask_leg_irq,
-+	.irq_unmask = xilinx_cpm_unmask_leg_irq,
-+};
-+
-+/**
-+ * xilinx_cpm_pcie_intx_map - Set the handler for the INTx and mark IRQ as valid
-+ * @domain: IRQ domain
-+ * @irq: Virtual IRQ number
-+ * @hwirq: HW interrupt number
-+ *
-+ * Return: Always returns 0.
-+ */
-+static int xilinx_cpm_pcie_intx_map(struct irq_domain *domain,
-+				    unsigned int irq, irq_hw_number_t hwirq)
-+{
-+	irq_set_chip_and_handler(irq, &xilinx_cpm_leg_irq_chip,
-+				 handle_level_irq);
-+	irq_set_chip_data(irq, domain->host_data);
-+	irq_set_status_flags(irq, IRQ_LEVEL);
-+
-+	return 0;
-+}
-+
-+/* INTx IRQ Domain operations */
-+static const struct irq_domain_ops intx_domain_ops = {
-+	.map = xilinx_cpm_pcie_intx_map,
-+};
-+
-+/**
-+ * xilinx_cpm_pcie_intr_handler - Interrupt Service Handler
-+ * @irq: IRQ number
-+ * @data: PCIe port information
-+ *
-+ * Return: IRQ_HANDLED on success and IRQ_NONE on failure
-+ */
-+static irqreturn_t xilinx_cpm_pcie_intr_handler(int irq, void *data)
-+{
-+	struct xilinx_cpm_pcie_port *port = data;
-+	struct device *dev = port->dev;
-+	u32 val, mask, status, bit;
-+	unsigned long intr_val;
-+
-+	/* Read interrupt decode and mask registers */
-+	val = pcie_read(port, XILINX_CPM_PCIE_REG_IDR);
-+	mask = pcie_read(port, XILINX_CPM_PCIE_REG_IMR);
-+
-+	status = val & mask;
-+	if (!status)
-+		return IRQ_NONE;
-+
-+	if (status & XILINX_CPM_PCIE_INTR_LINK_DOWN)
-+		dev_warn(dev, "Link Down\n");
-+
-+	if (status & XILINX_CPM_PCIE_INTR_HOT_RESET)
-+		dev_info(dev, "Hot reset\n");
-+
-+	if (status & XILINX_CPM_PCIE_INTR_CFG_TIMEOUT)
-+		dev_warn(dev, "ECAM access timeout\n");
-+
-+	if (status & XILINX_CPM_PCIE_INTR_CORRECTABLE) {
-+		dev_warn(dev, "Correctable error message\n");
-+		cpm_pcie_clear_err_interrupts(port);
-+	}
-+
-+	if (status & XILINX_CPM_PCIE_INTR_NONFATAL) {
-+		dev_warn(dev, "Non fatal error message\n");
-+		cpm_pcie_clear_err_interrupts(port);
-+	}
-+
-+	if (status & XILINX_CPM_PCIE_INTR_FATAL) {
-+		dev_warn(dev, "Fatal error message\n");
-+		cpm_pcie_clear_err_interrupts(port);
-+	}
-+
-+	if (status & XILINX_CPM_PCIE_INTR_INTX) {
-+		/* Handle INTx Interrupt */
-+		intr_val = pcie_read(port, XILINX_CPM_PCIE_REG_IDRN);
-+		intr_val = intr_val >> XILINX_CPM_PCIE_IDRN_SHIFT;
-+
-+		for_each_set_bit(bit, &intr_val, PCI_NUM_INTX)
-+			generic_handle_irq(irq_find_mapping(port->leg_domain,
-+							    bit));
-+	}
-+
-+	if (status & XILINX_CPM_PCIE_INTR_SLV_UNSUPP)
-+		dev_warn(dev, "Slave unsupported request\n");
-+
-+	if (status & XILINX_CPM_PCIE_INTR_SLV_UNEXP)
-+		dev_warn(dev, "Slave unexpected completion\n");
-+
-+	if (status & XILINX_CPM_PCIE_INTR_SLV_COMPL)
-+		dev_warn(dev, "Slave completion timeout\n");
-+
-+	if (status & XILINX_CPM_PCIE_INTR_SLV_ERRP)
-+		dev_warn(dev, "Slave Error Poison\n");
-+
-+	if (status & XILINX_CPM_PCIE_INTR_SLV_CMPABT)
-+		dev_warn(dev, "Slave Completer Abort\n");
-+
-+	if (status & XILINX_CPM_PCIE_INTR_SLV_ILLBUR)
-+		dev_warn(dev, "Slave Illegal Burst\n");
-+
-+	if (status & XILINX_CPM_PCIE_INTR_MST_DECERR)
-+		dev_warn(dev, "Master decode error\n");
-+
-+	if (status & XILINX_CPM_PCIE_INTR_MST_SLVERR)
-+		dev_warn(dev, "Master slave error\n");
-+
-+	if (status & XILINX_CPM_PCIE_INTR_CFG_PCIE_TIMEOUT)
-+		dev_warn(dev, "PCIe ECAM access timeout\n");
-+
-+	if (status & XILINX_CPM_PCIE_INTR_CFG_ERR_POISON)
-+		dev_warn(dev, "ECAM poisoned completion received\n");
-+
-+	if (status & XILINX_CPM_PCIE_INTR_PME_TO_ACK_RCVD)
-+		dev_warn(dev, "PME_TO_ACK message received\n");
-+
-+	if (status & XILINX_CPM_PCIE_INTR_PM_PME_RCVD)
-+		dev_warn(dev, "PM_PME message received\n");
-+
-+	if (status & XILINX_CPM_PCIE_INTR_SLV_PCIE_TIMEOUT)
-+		dev_warn(dev, "PCIe completion timeout received\n");
-+
-+	/* Clear the Interrupt Decode register */
-+	pcie_write(port, status, XILINX_CPM_PCIE_REG_IDR);
-+
-+	/*
-+	 * XILINX_CPM_PCIE_MISC_IR_STATUS register is mapped to
-+	 * CPM SLCR block.
-+	 */
-+	val = readl(port->cpm_base + XILINX_CPM_PCIE_MISC_IR_STATUS);
-+	if (val)
-+		writel(val, port->cpm_base + XILINX_CPM_PCIE_MISC_IR_STATUS);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+/**
-+ * xilinx_cpm_pcie_init_irq_domain - Initialize IRQ domain
-+ * @port: PCIe port information
-+ *
-+ * Return: '0' on success and error value on failure
-+ */
-+static int xilinx_cpm_pcie_init_irq_domain(struct xilinx_cpm_pcie_port *port)
-+{
-+	struct device *dev = port->dev;
-+	struct device_node *node = dev->of_node;
-+	struct device_node *pcie_intc_node;
-+
-+	/* Setup INTx */
-+	pcie_intc_node = of_get_next_child(node, NULL);
-+	if (!pcie_intc_node) {
-+		dev_err(dev, "No PCIe Intc node found\n");
-+		return -EINVAL;
-+	}
-+
-+	port->leg_domain = irq_domain_add_linear(pcie_intc_node, PCI_NUM_INTX,
-+						 &intx_domain_ops,
-+						 port);
-+	of_node_put(pcie_intc_node);
-+	if (!port->leg_domain) {
-+		dev_err(dev, "Failed to get a INTx IRQ domain\n");
-+		return -ENOMEM;
-+	}
-+
-+	raw_spin_lock_init(&port->leg_mask_lock);
-+	return 0;
-+}
-+
-+/**
-+ * xilinx_cpm_pcie_init_port - Initialize hardware
-+ * @port: PCIe port information
-+ */
-+static void xilinx_cpm_pcie_init_port(struct xilinx_cpm_pcie_port *port)
-+{
-+	if (cpm_pcie_link_up(port))
-+		dev_info(port->dev, "PCIe Link is UP\n");
-+	else
-+		dev_info(port->dev, "PCIe Link is DOWN\n");
-+
-+	/* Disable all interrupts */
-+	pcie_write(port, ~XILINX_CPM_PCIE_IDR_ALL_MASK,
-+		   XILINX_CPM_PCIE_REG_IMR);
-+
-+	/* Clear pending interrupts */
-+	pcie_write(port, pcie_read(port, XILINX_CPM_PCIE_REG_IDR) &
-+		   XILINX_CPM_PCIE_IMR_ALL_MASK,
-+		   XILINX_CPM_PCIE_REG_IDR);
-+
-+	/* Enable all interrupts */
-+	pcie_write(port, XILINX_CPM_PCIE_IMR_ALL_MASK,
-+		   XILINX_CPM_PCIE_REG_IMR);
-+	pcie_write(port, XILINX_CPM_PCIE_IDRN_MASK,
-+		   XILINX_CPM_PCIE_REG_IDRN_MASK);
-+
-+	/*
-+	 * XILINX_CPM_PCIE_MISC_IR_ENABLE register is mapped to
-+	 * CPM SLCR block.
-+	 */
-+	writel(XILINX_CPM_PCIE_MISC_IR_LOCAL,
-+	       port->cpm_base + XILINX_CPM_PCIE_MISC_IR_ENABLE);
-+	/* Enable the Bridge enable bit */
-+	pcie_write(port, pcie_read(port, XILINX_CPM_PCIE_REG_RPSC) |
-+		   XILINX_CPM_PCIE_REG_RPSC_BEN,
-+		   XILINX_CPM_PCIE_REG_RPSC);
-+}
-+
-+static int xilinx_cpm_request_misc_irq(struct xilinx_cpm_pcie_port *port)
-+{
-+	struct device *dev = port->dev;
-+	struct platform_device *pdev = to_platform_device(dev);
-+	int err;
-+
-+	port->irq_misc = platform_get_irq_byname(pdev, "misc");
-+	if (port->irq_misc <= 0) {
-+		dev_err(dev, "Unable to find misc IRQ line\n");
-+		return port->irq_misc;
-+	}
-+	err = devm_request_irq(dev, port->irq_misc,
-+			       xilinx_cpm_pcie_intr_handler,
-+			       IRQF_SHARED | IRQF_NO_THREAD,
-+			       "xilinx-pcie", port);
-+	if (err) {
-+		dev_err(dev, "unable to request misc IRQ line %d\n",
-+			port->irq_misc);
-+		return err;
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * xilinx_cpm_pcie_parse_dt - Parse Device tree
-+ * @port: PCIe port information
-+ * @bus_range: Bus resource
-+ *
-+ * Return: '0' on success and error value on failure
-+ */
-+static int xilinx_cpm_pcie_parse_dt(struct xilinx_cpm_pcie_port *port,
-+				    struct resource *bus_range)
-+{
-+	struct device *dev = port->dev;
-+	struct platform_device *pdev = to_platform_device(dev);
-+	struct resource *res;
-+	int err;
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "cfg");
-+	if (res) {
-+		port->cfg = pci_ecam_create(dev, res, bus_range,
-+					    &pci_generic_ecam_ops);
-+		if (IS_ERR(port->cfg))
-+			return PTR_ERR(port->cfg);
-+	} else {
-+		return -ENXIO;
-+	}
-+	port->reg_base = port->cfg->win;
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-+					   "cpm_slcr");
-+	if (res) {
-+		port->cpm_base = devm_ioremap_resource(dev, res);
-+		if (IS_ERR(port->cpm_base))
-+			return PTR_ERR(port->cpm_base);
-+	} else {
-+		return -ENXIO;
-+	}
-+
-+	err = xilinx_cpm_request_misc_irq(port);
-+	if (err)
-+		return err;
-+
-+	return 0;
-+}
-+
-+/**
-+ * xilinx_cpm_pcie_probe - Probe function
-+ * @pdev: Platform device pointer
-+ *
-+ * Return: '0' on success and error value on failure
-+ */
-+static int xilinx_cpm_pcie_probe(struct platform_device *pdev)
-+{
-+	struct xilinx_cpm_pcie_port *port;
-+	struct device *dev = &pdev->dev;
-+	struct pci_bus *bus;
-+	struct pci_bus *child;
-+	struct pci_host_bridge *bridge;
-+	struct resource *bus_range;
-+	int err;
-+
-+	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*port));
-+	if (!bridge)
-+		return -ENODEV;
-+
-+	port = pci_host_bridge_priv(bridge);
-+
-+	port->dev = dev;
-+
-+	err = pci_parse_request_of_pci_ranges(dev, &bridge->windows,
-+					      &bridge->dma_ranges, &bus_range);
-+	if (err) {
-+		dev_err(dev, "Getting bridge resources failed\n");
-+		return err;
-+	}
-+
-+	err = xilinx_cpm_pcie_parse_dt(port, bus_range);
-+	if (err) {
-+		dev_err(dev, "Parsing DT failed\n");
-+		return err;
-+	}
-+
-+	xilinx_cpm_pcie_init_port(port);
-+
-+	err = xilinx_cpm_pcie_init_irq_domain(port);
-+	if (err) {
-+		dev_err(dev, "Failed creating IRQ Domain\n");
-+		return err;
-+	}
-+
-+	bridge->dev.parent = dev;
-+	bridge->sysdata = port->cfg;
-+	bridge->busnr = port->root_busno;
-+	bridge->ops = &pci_generic_ecam_ops.pci_ops;
-+	bridge->map_irq = of_irq_parse_and_map_pci;
-+	bridge->swizzle_irq = pci_common_swizzle;
-+
-+	err = pci_scan_root_bus_bridge(bridge);
-+	if (err) {
-+		irq_domain_remove(port->leg_domain);
-+		devm_free_irq(dev, port->irq_misc, port);
-+		return err;
-+	}
-+
-+	bus = bridge->bus;
-+
-+	pci_assign_unassigned_bus_resources(bus);
-+	list_for_each_entry(child, &bus->children, node)
-+		pcie_bus_configure_settings(child);
-+	pci_bus_add_devices(bus);
-+	return 0;
-+}
-+
-+static const struct of_device_id xilinx_cpm_pcie_of_match[] = {
-+	{ .compatible = "xlnx,versal-cpm-host-1.00", },
-+	{}
-+};
-+
-+static struct platform_driver xilinx_cpm_pcie_driver = {
-+	.driver = {
-+		.name = "xilinx-cpm-pcie",
-+		.of_match_table = xilinx_cpm_pcie_of_match,
-+		.suppress_bind_attrs = true,
-+	},
-+	.probe = xilinx_cpm_pcie_probe,
-+};
-+
-+builtin_platform_driver(xilinx_cpm_pcie_driver);
--- 
-2.7.4
+So you have PASID support but don't use it? Why? PASID is much better
+than classic VFIO iommu, it doesn't require page pinning...
 
+> > > How do you propose to use the existing SVA api's  to also provide
+> > > full device emulation as opposed to using an existing infrastructure
+> > > that's already in place?
+> > 
+> > You'd provide the 'full device emulation' in userspace (eg qemu),
+> > along side all the other device emulation. Device emulation does not
+> > belong in the kernel without a very good reason.
+> 
+> The problem is that we are not doing full device emulation. It's based
+> on mediated passthrough. Some emulation logic requires close
+> engagement with kernel device driver, e.g. resource allocation, WQ
+> configuration, fault report, etc., while the detail interface is very vendor/
+> device specific (just like between PF and VF).
+
+Which sounds like the fairly classic case of device emulation to me.
+
+> idxd is just the first device that supports Scalable IOV. We have a
+> lot more coming later, in different types. Then putting such
+> emulation in user space means that Qemu needs to support all those
+> vendor specific interfaces for every new device which supports
+
+It would be very sad to see an endless amount of device emulation code
+crammed into the kernel. Userspace is where device emulation is
+supposed to live. For security
+
+qemu is the right place to put this stuff.
+
+> > > Perhaps Alex can ease Jason's concerns?
+> > 
+> > Last we talked Alex also had doubts on what mdev should be used
+> > for. It is a feature that seems to lack boundaries, and I'll note that
+> > when the discussion came up for VDPA, they eventually choose not to
+> > use VFIO.
+> > 
+> 
+> Is there a link to Alex's doubt? I'm not sure why vDPA didn't go 
+> for VFIO, but imho it is a different story.
+
+No, not at all. VDPA HW today is using what Intel has been calling
+ADI. But qemu already had the device emulation part in userspace, (all
+of the virtio emulation parts are in userspace) so they didn't try to
+put it in the kernel.
+
+This is the pattern. User space is supposed to do the emulation parts,
+the kernel provides the raw elements to manage queues/etc - and it is
+not done through mdev.
+
+> efficient for all vDPA type devices. However Scalable IOV is
+> similar to SR-IOV, only for resource partitioning. It doesn't change
+> the device programming interface, which could be in any vendor
+> specific form. Here VFIO mdev is good for providing an unified 
+> interface for managing resource multiplexing of all such devices.
+
+SIOV doesn't have a HW config space, and for some reason in these
+patches there is BAR emulation too. So, no, it is not like SR-IOV at
+all.
+
+This is more like classic device emulation, presumably with some fast
+path for the data plane. ie just like VDPA :)
+
+Jason
