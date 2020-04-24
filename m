@@ -2,84 +2,72 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D679D1B8278
-	for <lists+linux-pci@lfdr.de>; Sat, 25 Apr 2020 01:36:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB1361B83D9
+	for <lists+linux-pci@lfdr.de>; Sat, 25 Apr 2020 07:46:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725932AbgDXXgl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 24 Apr 2020 19:36:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46732 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725874AbgDXXgl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 24 Apr 2020 19:36:41 -0400
-Received: from localhost (mobile-166-175-187-210.mycingular.net [166.175.187.210])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58994221F6;
-        Fri, 24 Apr 2020 23:36:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587771400;
-        bh=GahPYb5c20kvompQ2WK3WeCxh8bcOl0V6Hz+kuMMs9g=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=aqUBPJWqvjY2FOGu2DMxYlhFiTZVjS/DBIvVPh2jxsSIImJBsL9z2ZraVYnUr88SE
-         gp4mutSkGBRFcEQOhmOIXupbiTyHnAJPVfVMMuRoCwDm6McmRL611eE4Y5o0etxVh7
-         QByIlspt0Yr7us9nkJxU6glsgDdW1GFpIfh3S0H0=
-Date:   Fri, 24 Apr 2020 18:36:38 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     sathyanarayanan.kuppuswamy@linux.intel.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com
-Subject: Re: [PATCH v1 1/1] PCI/EDR: Change ACPI event message log level
-Message-ID: <20200424233638.GA220955@google.com>
+        id S1726035AbgDYFqt convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Sat, 25 Apr 2020 01:46:49 -0400
+Received: from [116.62.10.213] ([116.62.10.213]:52338 "EHLO mail.qdztrk.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S1725837AbgDYFqt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 25 Apr 2020 01:46:49 -0400
+X-Greylist: delayed 19080 seconds by postgrey-1.27 at vger.kernel.org; Sat, 25 Apr 2020 01:46:48 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by mail.qdztrk.com (Postfix) with ESMTP id E1B55242530
+        for <linux-pci@vger.kernel.org>; Sat, 25 Apr 2020 08:21:33 +0800 (CST)
+Received: from mail.qdztrk.com ([127.0.0.1])
+        by localhost (mail.qdztrk.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id i2di5LQYhOi2 for <linux-pci@vger.kernel.org>;
+        Sat, 25 Apr 2020 08:21:33 +0800 (CST)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.qdztrk.com (Postfix) with ESMTP id B33A61EA8F0
+        for <linux-pci@vger.kernel.org>; Sat, 25 Apr 2020 08:03:32 +0800 (CST)
+X-Virus-Scanned: amavisd-new at mail.qdztrk.com
+Received: from mail.qdztrk.com ([127.0.0.1])
+        by localhost (mail.qdztrk.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id jGmeLKCuGv9v for <linux-pci@vger.kernel.org>;
+        Sat, 25 Apr 2020 08:03:32 +0800 (CST)
+Received: from coris.com (unknown [103.207.36.17])
+        by mail.qdztrk.com (Postfix) with ESMTP id 488DE12A3C4
+        for <linux-pci@vger.kernel.org>; Sat, 25 Apr 2020 07:46:13 +0800 (CST)
+Reply-To: kentpace@sina.com
+From:   Kent Pace <kentpace@coris.com>
+To:     linux-pci@vger.kernel.org
+Subject: URGENT!! PLEASE READ
+Date:   24 Apr 2020 16:46:09 -0700
+Message-ID: <20200424164609.122FE442D9C58968@coris.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <01afb4e01efbe455de0c445bef6cf3ffc59340d2.1586996350.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 05:38:32PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> 
-> Currently we have pci_info() message in the beginning of
-> edr_handle_event() function, which will be printing
-> notification details every-time firmware sends ACPI SYSTEM
-> level events. This will pollute the dmesg logs for systems
-> that has lot for ACPI system level notifications. So change
-> the log-level to pci_dbg, and add a new info log for EDR
-> events.
-> 
-> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Dear Friend,
 
-I dropped the pci_dbg() of all events, since there's a way to get
-those logs from ACPI already (see acpi_ev_queue_notify_request(); I
-didn't say it was *easy* :)) and applied this to pci/error for v5.8,
-thanks!
 
-> ---
->  drivers/pci/pcie/edr.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/pcie/edr.c b/drivers/pci/pcie/edr.c
-> index 594622a6cb16..e346c82559fa 100644
-> --- a/drivers/pci/pcie/edr.c
-> +++ b/drivers/pci/pcie/edr.c
-> @@ -148,11 +148,13 @@ static void edr_handle_event(acpi_handle handle, u32 event, void *data)
->  	pci_ers_result_t estate = PCI_ERS_RESULT_DISCONNECT;
->  	u16 status;
->  
-> -	pci_info(pdev, "ACPI event %#x received\n", event);
-> +	pci_dbg(pdev, "ACPI event %#x received\n", event);
->  
->  	if (event != ACPI_NOTIFY_DISCONNECT_RECOVER)
->  		return;
->  
-> +	pci_info(pdev, "EDR event received\n");
-> +
->  	/* Locate the port which issued EDR event */
->  	edev = acpi_dpc_port_get(pdev);
->  	if (!edev) {
-> -- 
-> 2.17.1
-> 
+There is something very important I need to discuss with you.  I 
+am writing  this letter in tears and fear. In tears because I 
+will soon depart and in fear because I don't really know if you 
+will do this faithfully.
+
+I am COVID-19  patient and the doctor has already confirmed I may 
+not last for the next 7 days.
+
+I have substantial amount of money deposited in a security vault 
+around your country. It is in trunk boxes and once  I receive 
+your response and see your readiness to claim the money 
+immediately, I will forward the needed documents and the contact 
+of the security vault where the consignment is deposited,
+I am not asking you to give me anything but I want you to help 
+people that has been infected with this deadly virus with 60% of 
+the money and 40% should be for you and your family.
+
+I will disclose exact amount in the boxes as soon as I 
+receive your response.
+
+
+Regards.
+
