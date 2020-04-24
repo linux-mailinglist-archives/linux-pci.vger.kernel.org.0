@@ -2,81 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D57531B75E7
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Apr 2020 14:49:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 03F5D1B767D
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Apr 2020 15:10:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbgDXMt3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 24 Apr 2020 08:49:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46556 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726942AbgDXMt3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:49:29 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B131B20706;
-        Fri, 24 Apr 2020 12:49:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587732568;
-        bh=KbMOh2+xLToUZiSuhnqLjF99ff4jmDpTcPDqL5XAnjI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=l2ujUcenHeKM7fdjlRbAmu/cIVMOmP4PED6KACAQ+NT/YKfZ6W5qsq7Tm6WOQ+jJk
-         TqF5Bjk+nlPWRVkFJ8ZI9WYlq6vE07WZs1GyoNgO28Y4XnGspdWvKsUx3pPr5+zGh/
-         Dm8AMalfbDGOl4nVRaVfogPR+103agPyA5PcVCqI=
-Received: by pali.im (Postfix)
-        id E167982E; Fri, 24 Apr 2020 14:49:25 +0200 (CEST)
-Date:   Fri, 24 Apr 2020 14:49:25 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
-        linux-pci@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        id S1727801AbgDXNJn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 24 Apr 2020 09:09:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58116 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726301AbgDXNJm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 24 Apr 2020 09:09:42 -0400
+Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 224E0C09B045;
+        Fri, 24 Apr 2020 06:09:31 -0700 (PDT)
+Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
+        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 08FCA2049A;
+        Fri, 24 Apr 2020 13:09:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
+        t=1587733769; bh=nmJMIaO9S4iz7eSCHHpszDqwZBHuXACl/U+N3ZMJpSM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=trOyHbnse5dgxLHn9kABZV9a9LO81J4vxLLDtRdA89ZFfgoG8TQVphgg5ZqYJSluD
+         74ilSTzZ8au6ZtOjtpAtvjnCc76AAZqzZdNTS/Ggw7dpqSQzpqOeD624S9UYE2Ix0o
+         gU6Kse6fHaZvszqshVSONVSBN0iqRemmRCp//bQEhhlYCXJDzUMLGjcO9HjP7WL1ek
+         9+sVCllF8YouWHdDz+Y0L0nDw+Pfkrpi843/bT8WqN82KmS2t6NLklSf+9Vi2vo8TF
+         WffUA+iyHGLOqvE+uPvSuNxSxXdG6YvpmD+7bZ8ya1BYTtSFoXM4LwIHYK0WUWoCIM
+         m53qtW9X/T2AA==
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     linux-pci@vger.kernel.org
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 3/9] PCI: aardvark: improve link training
-Message-ID: <20200424124925.iv5h76dnezw4jpni@pali>
-References: <20200421111701.17088-4-marek.behun@nic.cz>
- <20200423183914.GA201745@google.com>
- <20200423185627.dm2id6k7da7uvwen@pali>
+        Paul Burton <paulburton@kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org
+Subject: [PATCH v5 0/6] Loongson PCI Generic Driver
+Date:   Fri, 24 Apr 2020 21:08:31 +0800
+Message-Id: <20200424130847.328584-1-jiaxun.yang@flygoat.com>
+X-Mailer: git-send-email 2.26.0.rc2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200423185627.dm2id6k7da7uvwen@pali>
-User-Agent: NeoMutt/20180716
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thursday 23 April 2020 20:56:27 Pali Rohár wrote:
-> On Thursday 23 April 2020 13:39:14 Bjorn Helgaas wrote:
-> > [+cc Rob]
-> > 
-> > On Tue, Apr 21, 2020 at 01:16:55PM +0200, Marek Behún wrote:
-> > > Currently the aardvark driver trains link in PCIe gen2 mode. This may
-> > > cause some buggy gen 1 cards (such as Compex WLE900VX) to be unstable or
-> > > even not detected. Moreover when ASPM code tries to retrain link second
-> > > time, these cards may stop responding and link goes down. If gen1 is
-> > > used this does not happen.
-> > 
-> > Does this patch make the retrain done by ASPM reliable?
-> 
-> Yes, after this patch all my tested cards work fine. I tried to enable
-> ASPM for tested cards and there were no problem with link training
-> issued by ASPM kernel code.
-> 
-> So this patch makes link retrain done by ASPM kernel code reliable.
+Hi,
+This series converts Loongson PCI into a generic PCI controller
+driver and adds support for LS2K SoC and LS7A PCH's PCI support.
 
-It works fine also for WLE200NX card. ASPM kernel code decides that for
-this card ASPM needs to be disabled. In dmesg output I see:
+Is it possible to let patch 1~4 go through PCI tree and patch
+5~6 go through MIPS tree?
 
-[    3.229229] pci 0000:01:00.0: disabling ASPM on pre-1.1 PCIe device. You can enable it with 'pcie_aspm=force'
+Thanks.
 
-Kernel disables ASPM, retrains link and card is working fine.
+Jiaxun Yang (6):
+  PCI: OF: Don't remap iospace on unsupported platform
+  PCI: Don't disable decoding when mmio_always_on is set
+  PCI: Add Loongson PCI Controller support
+  dt-bindings: Document Loongson PCI Host Controller
+  MIPS: DTS: Loongson64: Add PCI Controller Node
+  MIPS: Loongson64: Switch to generic PCI driver
+
+ .../devicetree/bindings/pci/loongson.yaml     |  62 +++++
+ arch/mips/Kconfig                             |   1 +
+ arch/mips/boot/dts/loongson/rs780e-pch.dtsi   |  17 +-
+ arch/mips/loongson64/Makefile                 |   2 +-
+ arch/mips/loongson64/vbios_quirk.c            |  29 ++
+ arch/mips/pci/Makefile                        |   1 -
+ arch/mips/pci/fixup-loongson3.c               |  71 -----
+ arch/mips/pci/ops-loongson3.c                 | 116 --------
+ drivers/pci/controller/Kconfig                |   9 +
+ drivers/pci/controller/Makefile               |   1 +
+ drivers/pci/controller/pci-loongson.c         | 257 ++++++++++++++++++
+ drivers/pci/of.c                              |   9 +
+ drivers/pci/probe.c                           |   2 +-
+ 13 files changed, 386 insertions(+), 191 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/loongson.yaml
+ create mode 100644 arch/mips/loongson64/vbios_quirk.c
+ delete mode 100644 arch/mips/pci/fixup-loongson3.c
+ delete mode 100644 arch/mips/pci/ops-loongson3.c
+ create mode 100644 drivers/pci/controller/pci-loongson.c
+
+-- 
+2.26.0.rc2
+
