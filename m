@@ -2,116 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E5DFC1B8273
-	for <lists+linux-pci@lfdr.de>; Sat, 25 Apr 2020 01:30:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D679D1B8278
+	for <lists+linux-pci@lfdr.de>; Sat, 25 Apr 2020 01:36:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725946AbgDXXaT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 24 Apr 2020 19:30:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40964 "EHLO mail.kernel.org"
+        id S1725932AbgDXXgl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 24 Apr 2020 19:36:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725874AbgDXXaT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 24 Apr 2020 19:30:19 -0400
+        id S1725874AbgDXXgl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 24 Apr 2020 19:36:41 -0400
 Received: from localhost (mobile-166-175-187-210.mycingular.net [166.175.187.210])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F13E82076C;
-        Fri, 24 Apr 2020 23:30:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58994221F6;
+        Fri, 24 Apr 2020 23:36:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587771018;
-        bh=3wEKGv5ox3xBJSPG5UvCryAAs2g1WF/iqr0nCo6RjAs=;
+        s=default; t=1587771400;
+        bh=GahPYb5c20kvompQ2WK3WeCxh8bcOl0V6Hz+kuMMs9g=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=ijJZnogwLtbiiPpXNEYBOe46Q77VEphxeEa+EJNqdaJPgJ8+BwQ8ZUhiqwd9BU4KT
-         KU7/Y+V732uEGy42LTEWPaEBkKN/eJ39B7ogi+HLr6ORH5cq/6bu4aIv+SwiM9PWXu
-         Sr3/76LZE+ZGEy1/I8uLeC/f9wYYT5wKsYGe4f2I=
-Date:   Fri, 24 Apr 2020 18:30:16 -0500
+        b=aqUBPJWqvjY2FOGu2DMxYlhFiTZVjS/DBIvVPh2jxsSIImJBsL9z2ZraVYnUr88SE
+         gp4mutSkGBRFcEQOhmOIXupbiTyHnAJPVfVMMuRoCwDm6McmRL611eE4Y5o0etxVh7
+         QByIlspt0Yr7us9nkJxU6glsgDdW1GFpIfh3S0H0=
+Date:   Fri, 24 Apr 2020 18:36:38 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jon Derrick <jonathan.derrick@intel.com>
-Cc:     linux-pci@vger.kernel.org, Keith Busch <kbusch@kernel.org>,
-        Russell Currey <ruscur@russell.cc>,
-        Sam Bobroff <sbobroff@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Frederick Lawler <fred@fredlawl.com>,
-        Rajat Jain <rajatja@google.com>,
-        "Patel, Mayurkumar" <mayurkumar.patel@intel.com>,
-        Olof Johansson <olof@lixom.net>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] PCI/AER: Allow Native AER Host Bridges to use AER
-Message-ID: <20200424233016.GA218665@google.com>
+To:     sathyanarayanan.kuppuswamy@linux.intel.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com
+Subject: Re: [PATCH v1 1/1] PCI/EDR: Change ACPI event message log level
+Message-ID: <20200424233638.GA220955@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1587418630-13562-2-git-send-email-jonathan.derrick@intel.com>
+In-Reply-To: <01afb4e01efbe455de0c445bef6cf3ffc59340d2.1586996350.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Jon,
-
-I'm glad you raised this because I think the way we handle
-FIRMWARE_FIRST is really screwed up.
-
-On Mon, Apr 20, 2020 at 03:37:09PM -0600, Jon Derrick wrote:
-> Some platforms have a mix of ports whose capabilities can be negotiated
-> by _OSC, and some ports which are not described by ACPI and instead
-> managed by Native drivers. The existing Firmware-First HEST model can
-> incorrectly tag these Native, Non-ACPI ports as Firmware-First managed
-> ports by advertising the HEST Global Flag and matching the type and
-> class of the port (aer_hest_parse).
+On Wed, Apr 15, 2020 at 05:38:32PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 > 
-> If the port requests Native AER through the Host Bridge's capability
-> settings, the AER driver should honor those settings and allow the port
-> to bind. This patch changes the definition of Firmware-First to exclude
-> ports whose Host Bridges request Native AER.
+> Currently we have pci_info() message in the beginning of
+> edr_handle_event() function, which will be printing
+> notification details every-time firmware sends ACPI SYSTEM
+> level events. This will pollute the dmesg logs for systems
+> that has lot for ACPI system level notifications. So change
+> the log-level to pci_dbg, and add a new info log for EDR
+> events.
 > 
-> Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+
+I dropped the pci_dbg() of all events, since there's a way to get
+those logs from ACPI already (see acpi_ev_queue_notify_request(); I
+didn't say it was *easy* :)) and applied this to pci/error for v5.8,
+thanks!
+
 > ---
->  drivers/pci/pcie/aer.c | 3 +++
->  1 file changed, 3 insertions(+)
+>  drivers/pci/pcie/edr.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index f4274d3..30fbd1f 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -314,6 +314,9 @@ int pcie_aer_get_firmware_first(struct pci_dev *dev)
->  	if (pcie_ports_native)
->  		return 0;
+> diff --git a/drivers/pci/pcie/edr.c b/drivers/pci/pcie/edr.c
+> index 594622a6cb16..e346c82559fa 100644
+> --- a/drivers/pci/pcie/edr.c
+> +++ b/drivers/pci/pcie/edr.c
+> @@ -148,11 +148,13 @@ static void edr_handle_event(acpi_handle handle, u32 event, void *data)
+>  	pci_ers_result_t estate = PCI_ERS_RESULT_DISCONNECT;
+>  	u16 status;
 >  
-> +	if (pci_find_host_bridge(dev->bus)->native_aer)
-> +		return 0;
-
-I hope we don't have to complicate pcie_aer_get_firmware_first() by
-adding this "native_aer" check here.  I'm not sure what we actually
-*should* do based on FIRMWARE_FIRST, but I don't think the current
-uses really make sense.
-
-I think Linux makes too many assumptions based on the FIRMWARE_FIRST
-bit.  The ACPI spec really only says (ACPI v6.3, sec 18.3.2.4):
-
-  If set, FIRMWARE_FIRST indicates to the OSPM that system firmware
-  will handle errors from this source first.
-
-  If FIRMWARE_FIRST is set in the flags field, the Enabled field [of
-  the HEST AER structure] is ignored by the OSPM.
-
-I do not see anything there about who owns the AER Capability, but
-Linux assumes that if FIRMWARE_FIRST is set, firmware must own the AER
-Capability.  I think that's reading too much into the spec.
-
-We already have _OSC, which *does* explicitly talk about who owns the
-AER Capability, and I think we should rely on that.  If firmware
-doesn't want the OS to touch the AER Capability, it should decline to
-give ownership to the OS via _OSC.
-
->  	if (!dev->__aer_firmware_first_valid)
->  		aer_set_firmware_first(dev);
->  	return dev->__aer_firmware_first;
+> -	pci_info(pdev, "ACPI event %#x received\n", event);
+> +	pci_dbg(pdev, "ACPI event %#x received\n", event);
+>  
+>  	if (event != ACPI_NOTIFY_DISCONNECT_RECOVER)
+>  		return;
+>  
+> +	pci_info(pdev, "EDR event received\n");
+> +
+>  	/* Locate the port which issued EDR event */
+>  	edev = acpi_dpc_port_get(pdev);
+>  	if (!edev) {
 > -- 
-> 1.8.3.1
+> 2.17.1
 > 
