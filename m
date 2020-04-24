@@ -2,30 +2,27 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A85481B7683
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Apr 2020 15:10:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 083CC1B7686
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Apr 2020 15:10:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727843AbgDXNJy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 24 Apr 2020 09:09:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58142 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727841AbgDXNJx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 24 Apr 2020 09:09:53 -0400
-Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 679C8C09B046;
-        Fri, 24 Apr 2020 06:09:42 -0700 (PDT)
+        id S1727920AbgDXNKI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 24 Apr 2020 09:10:08 -0400
+Received: from vultr.net.flygoat.com ([149.28.68.211]:59560 "EHLO
+        vultr.net.flygoat.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726699AbgDXNKH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 24 Apr 2020 09:10:07 -0400
 Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
-        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 0E5F92049B;
-        Fri, 24 Apr 2020 13:09:39 +0000 (UTC)
+        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 89E0B2049C;
+        Fri, 24 Apr 2020 13:09:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
-        t=1587733782; bh=VqVf1ASdzF0mph1JscNNTGrBSOytUtYK/LkjCoO+ue4=;
+        t=1587733794; bh=NE5sCt6ssdL9diqa/uHtsH6X8dScz66rvMdDwvKjb94=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g7hS1uuSINiqM5LIQhtaB9TGW1dbjFaqU6B2raa61CeHBRx0dV1iEWn5zndLPy1cd
-         D4lFsNgbovY041pMwKh9GRqII/nB4lpmDsUm+YmxMcW4Lhtsz/d2hsgr1do/s8fmCi
-         mB9Bh/8kNpYkL677XCbu+8EeJsVgcFYjc7dcQXnbaJKzox2cMSFMX6a5gLkSx0nYn+
-         4qqaQumRgS6Y3lIT8fQJ/zOLC4fY+g0wNQaAgm5lVwb7NrAbXuFdnDnYzwuyaUAcH3
-         lzuFbDuvT7Sh8uqEz9P9Cjs90DPkC5/PXfye32SXA8I7PLuqTHE9Ox9irnLMgPUwIk
-         JjheGpcrsStsQ==
+        b=CQdNKTrq4hjEUOjpAq+0bEdnMwI1+HBwBGmevMxwByx2FC/iK9/SrbXpOgdTPmQ+j
+         wwsp6tGx+i0ALTtwb8pidNshvb+4iGxVghtPBKFviUxhtikbqUIskPCflMcWhEfLNB
+         IxlOr4Ix2GO6UW/nVAyCoYusaCIAVztUyQiHBs0d7Z63QXv6IvGPUmrGbSGj8ps/V9
+         iVQ0y5IpC6CX7M4kywqE8j2lUWm0QnX6DoHmGR7NUD702Vo2KOM3RYdv5bDQQU5jx8
+         oyyjCcAQGtPGzd2nxVGl/QNcEUBMfV8Nm6zRwWuUynrsZzXtaIXCJwGzJ6b2cD0w8K
+         OAJCyA0d10zOg==
 From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
 To:     linux-pci@vger.kernel.org
 Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
@@ -38,9 +35,9 @@ Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
         Paul Burton <paulburton@kernel.org>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-mips@vger.kernel.org
-Subject: [PATCH v5 1/6] PCI: OF: Don't remap iospace on unsupported platform
-Date:   Fri, 24 Apr 2020 21:08:32 +0800
-Message-Id: <20200424130847.328584-2-jiaxun.yang@flygoat.com>
+Subject: [PATCH v5 2/6] PCI: Don't disable decoding when mmio_always_on is set
+Date:   Fri, 24 Apr 2020 21:08:33 +0800
+Message-Id: <20200424130847.328584-3-jiaxun.yang@flygoat.com>
 X-Mailer: git-send-email 2.26.0.rc2
 In-Reply-To: <20200424130847.328584-1-jiaxun.yang@flygoat.com>
 References: <20200424130847.328584-1-jiaxun.yang@flygoat.com>
@@ -51,47 +48,30 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-There are some platforms that don't support I/O space remapping
-like MIPS. However, our PCI code will try to remap iospace
-unconditionally and reject io resources on these platforms.
+Don't disable MEM/IO decoing when a device have both non_compliant_bars
+and mmio_always_on.
 
-So we should remove I/O space remapping check and use a range
-check instead on these platforms.
+That would allow us quirk devices with junk in BARs but can't disable
+their decoding.
 
 Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
---
-v4: Fix a typo in commit message.
-v5: Commit message massage
 ---
- drivers/pci/of.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/pci/probe.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-index 81ceeaa6f1d5..36e8761b66c6 100644
---- a/drivers/pci/of.c
-+++ b/drivers/pci/of.c
-@@ -547,12 +547,21 @@ int pci_parse_request_of_pci_ranges(struct device *dev,
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 77b8a145c39b..d9c2c3301a8a 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1822,7 +1822,7 @@ int pci_setup_device(struct pci_dev *dev)
+ 	/* Device class may be changed after fixup */
+ 	class = dev->class >> 8;
  
- 		switch (resource_type(res)) {
- 		case IORESOURCE_IO:
-+#if defined(PCI_IOBASE) && defined(CONFIG_MMU)
- 			err = devm_pci_remap_iospace(dev, res, iobase);
- 			if (err) {
- 				dev_warn(dev, "error %d: failed to map resource %pR\n",
- 					 err, res);
- 				resource_list_destroy_entry(win);
- 			}
-+#else
-+			/* Simply check if IO is inside the range */
-+			if (res->end > IO_SPACE_LIMIT) {
-+				dev_warn(dev, "resource %pR out of the I/O range\n",
-+					res);
-+				resource_list_destroy_entry(win);
-+			}
-+#endif
- 			break;
- 		case IORESOURCE_MEM:
- 			res_valid |= !(res->flags & IORESOURCE_PREFETCH);
+-	if (dev->non_compliant_bars) {
++	if (dev->non_compliant_bars && !dev->mmio_always_on) {
+ 		pci_read_config_word(dev, PCI_COMMAND, &cmd);
+ 		if (cmd & (PCI_COMMAND_IO | PCI_COMMAND_MEMORY)) {
+ 			pci_info(dev, "device has non-compliant BARs; disabling IO/MEM decoding\n");
 -- 
 2.26.0.rc2
 
