@@ -2,110 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C0161B70C6
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Apr 2020 11:25:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 40C401B7370
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Apr 2020 13:50:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726347AbgDXJZt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 24 Apr 2020 05:25:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54608 "EHLO mail.kernel.org"
+        id S1726717AbgDXLup (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 24 Apr 2020 07:50:45 -0400
+Received: from foss.arm.com ([217.140.110.172]:60652 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726298AbgDXJZt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 24 Apr 2020 05:25:49 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B200D20724;
-        Fri, 24 Apr 2020 09:25:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587720348;
-        bh=t7xTZ9J4en/MjkiMHZhzp48oDSHJbtjCC8DX8NgHS6k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=X4YgCg8G/j90ojHlYaCmhVdLvy25pkyqmH/enHwEAuRNnICzXcXsRWhSuZAlrrfZB
-         u3VEuVXG3U2gImJ6i671jlC7l+AiWade3PHeqQozSDdgkkrTBZU3DQhCbAswCSW0b/
-         EWifhAaDjPP22grjvC7Q0MuGBtNbC87MtW1O9ZlY=
-Received: by pali.im (Postfix)
-        id 5B27C82E; Fri, 24 Apr 2020 11:25:46 +0200 (CEST)
-Date:   Fri, 24 Apr 2020 11:25:46 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>,
-        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>
-Subject: Re: [PATCH v2 4/9] PCI: aardvark: issue PERST via GPIO
-Message-ID: <20200424092546.25p3hdtkehohe3xw@pali>
-References: <20200421111701.17088-1-marek.behun@nic.cz>
- <20200421111701.17088-5-marek.behun@nic.cz>
+        id S1726247AbgDXLuo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 24 Apr 2020 07:50:44 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ED6121FB;
+        Fri, 24 Apr 2020 04:50:43 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2C22C3F6CF;
+        Fri, 24 Apr 2020 04:50:43 -0700 (PDT)
+Date:   Fri, 24 Apr 2020 12:50:37 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Andrew Murray <amurray@thegoodpenguin.co.uk>
+Cc:     Simon Horman <horms@verge.net.au>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: [RFC PATCH] PCI: rcar: Fix incorrect programming of OB windows
+Message-ID: <20200424115037.GA7197@e121166-lin.cambridge.arm.com>
+References: <20191004132941.6660-1-andrew.murray@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200421111701.17088-5-marek.behun@nic.cz>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191004132941.6660-1-andrew.murray@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tuesday 21 April 2020 13:16:56 Marek Behún wrote:
-> From: Pali Rohár <pali@kernel.org>
+On Fri, Oct 04, 2019 at 02:29:41PM +0100, Andrew Murray wrote:
+> The outbound windows (PCIEPAUR(x), PCIEPALR(x)) describe a mapping between
+> a CPU address (which is determined by the window number 'x') and a
+> programmed PCI address - Thus allowing the controller to translate CPU
+> accesses into PCI accesses.
 > 
-> Add support for issuing PERST via GPIO specified in 'reset-gpios'
-> property (as described in PCI device tree bindings).
+> However the existing code incorrectly writes the CPU address - lets fix
+> this by writing the PCI address instead.
 > 
-> Some buggy cards (e.g. Compex WLE900VX or WLE1216) are not detected
-> after reboot when PERST is not issued during driver initialization.
+> For memory transactions, existing DT users describe a 1:1 identity mapping
+> and thus this change should have no effect. However the same isn't true for
+> I/O.
 > 
-> Tested on Turris MOX.
+> Fixes: c25da4778803 ("PCI: rcar: Add Renesas R-Car PCIe driver")
+> Signed-off-by: Andrew Murray <andrew.murray@arm.com>
 > 
-> Signed-off-by: Pali Rohár <pali@kernel.org>
 > ---
->  drivers/pci/controller/pci-aardvark.c | 32 +++++++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
+> This hasn't been tested, so keen for someone to give it a try.
 > 
-> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> index 606bae1e7a88..e2d18094d8ca 100644
-> --- a/drivers/pci/controller/pci-aardvark.c
-> +++ b/drivers/pci/controller/pci-aardvark.c
-...
-> +static void advk_pcie_issue_perst(struct advk_pcie *pcie)
-> +{
-> +	if (!pcie->reset_gpio)
-> +		return;
-> +
-> +	dev_info(&pcie->pdev->dev, "issuing PERST via reset GPIO for 1ms\n");
-> +	gpiod_set_value_cansleep(pcie->reset_gpio, 1);
-> +	usleep_range(1000, 2000);
-> +	gpiod_set_value_cansleep(pcie->reset_gpio, 0);
-> +}
+> Also keen for someone to confirm my understanding that the RCar windows
+> expect PCI addresses and that res->start refers to CPU addresses. If this
+> is correct then it's possible the I/O doesn't work correctly.
+> ---
+>  drivers/pci/controller/pcie-rcar.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
 
-After more testing we will have to increase this timeout to 10ms as some
-Compex cards are sometimes not detected with current 1ms timeout. I will
-do it in V3 patch series.
+Applied to pci/rcar, thanks !
 
+Lorenzo
 
-Bjorn, do you know if there is a defined timeout in PCIE specification
-how long should be card in PERST?
-
-I looked into others pci kernel drivers and basically every driver is
-using its own timeout.
-
-pcie-kirin.c --> usleep_range(20000, 25000);
-pcie-qcom.c --> usleep_range(1000, 1000 + 500); msleep(100);
-pci-mvebu.c --> udelay(100);
-pci-tegra.c --> usleep_range(1000, 2000);
-pcie-iproc.c --> udelay(250);
-pcie-mediatek.c --> no delay
-pci-imx6.c --> msleep(100);
-
-But I guess that this timeout should not depend on driver or pci
-controller, but rather on connected card or on some recommended value if
-defined by PCIE specification.
+> diff --git a/drivers/pci/controller/pcie-rcar.c b/drivers/pci/controller/pcie-rcar.c
+> index f6a669a9af41..b28d726b4aba 100644
+> --- a/drivers/pci/controller/pcie-rcar.c
+> +++ b/drivers/pci/controller/pcie-rcar.c
+> @@ -332,11 +332,12 @@ static struct pci_ops rcar_pcie_ops = {
+>  };
+>  
+>  static void rcar_pcie_setup_window(int win, struct rcar_pcie *pcie,
+> -				   struct resource *res)
+> +				   struct resource_entry *window)
+>  {
+>  	/* Setup PCIe address space mappings for each resource */
+>  	resource_size_t size;
+>  	resource_size_t res_start;
+> +	struct resource *res = window->res;
+>  	u32 mask;
+>  
+>  	rcar_pci_write_reg(pcie, 0x00000000, PCIEPTCTLR(win));
+> @@ -350,9 +351,9 @@ static void rcar_pcie_setup_window(int win, struct rcar_pcie *pcie,
+>  	rcar_pci_write_reg(pcie, mask << 7, PCIEPAMR(win));
+>  
+>  	if (res->flags & IORESOURCE_IO)
+> -		res_start = pci_pio_to_address(res->start);
+> +		res_start = pci_pio_to_address(res->start) - window->offset;
+>  	else
+> -		res_start = res->start;
+> +		res_start = res->start - window->offset;
+>  
+>  	rcar_pci_write_reg(pcie, upper_32_bits(res_start), PCIEPAUR(win));
+>  	rcar_pci_write_reg(pcie, lower_32_bits(res_start) & ~0x7F,
+> @@ -381,7 +382,7 @@ static int rcar_pcie_setup(struct list_head *resource, struct rcar_pcie *pci)
+>  		switch (resource_type(res)) {
+>  		case IORESOURCE_IO:
+>  		case IORESOURCE_MEM:
+> -			rcar_pcie_setup_window(i, pci, res);
+> +			rcar_pcie_setup_window(i, pci, win);
+>  			i++;
+>  			break;
+>  		case IORESOURCE_BUS:
+> -- 
+> 2.21.0
+> 
