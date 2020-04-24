@@ -2,43 +2,42 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 14BE51B7C1C
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Apr 2020 18:48:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB1A71B7C4D
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Apr 2020 19:01:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728773AbgDXQrm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 24 Apr 2020 12:47:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48440 "EHLO mail.kernel.org"
+        id S1727063AbgDXRBI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 24 Apr 2020 13:01:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728768AbgDXQrl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 24 Apr 2020 12:47:41 -0400
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+        id S1727022AbgDXRBI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 24 Apr 2020 13:01:08 -0400
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D8AF20774
-        for <linux-pci@vger.kernel.org>; Fri, 24 Apr 2020 16:47:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 929A92071E
+        for <linux-pci@vger.kernel.org>; Fri, 24 Apr 2020 17:01:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587746860;
-        bh=F7xpWJUS7/PWBwjpZDGhCnknOg2K2k7Up6A0+CV/QLg=;
+        s=default; t=1587747666;
+        bh=STMgLMla4fK5o3HI/mkE8CRivPMAFeHSFd+gHEdauhU=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=EL6fA14GUZcVszmLXjNm0tn+s2qXax0GmyyBHVe6IlNfSbD8twRi3LmzCX3zfYSgu
-         r5xts2piU7xJ2ePxhyerXyQw+5+CtOZyCILSII7811Rg7+qfmPRaNmPx1qkqLe0/Io
-         HMnTo42hPlfgW+v127DUUyswfZ+qHhUbua9SoVKo=
-Received: by mail-yb1-f177.google.com with SMTP id a9so5360575ybc.8
-        for <linux-pci@vger.kernel.org>; Fri, 24 Apr 2020 09:47:40 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYH+e6MiaUX54pMIJGGsAjcKJpqILg/oE6DgneJLri65a29spZ/
-        onWL8XoPgiRTKXjAFmt3dMaTkX7otFtB7Ju4Kw==
-X-Google-Smtp-Source: APiQypKE6+AI1rbdJpGbIqnqive1g/JtypI+skvGkMQCBzTCNpauNK27u5yjV88gyOraA+dg5qdlD4rDPPhjfBTOejs=
-X-Received: by 2002:a25:b74c:: with SMTP id e12mr17755054ybm.472.1587746859265;
- Fri, 24 Apr 2020 09:47:39 -0700 (PDT)
+        b=dKkeQSZ9n5AgBSx1bFArf8HrVEWaO76qKknuuKWjuby97X60/TBhgbaaJUllwCAxw
+         bVxQq24ft1NqQRnjXRrP+o7aRQBt56A4ZISAl/qQR7IOmYBrhlyMs3sX7hGG3f8+WA
+         3tSdEIDLnmsuVxyN0YxvlX3lUNWDknP6KqsrtPEM=
+Received: by mail-yb1-f171.google.com with SMTP id p7so3245024ybo.12
+        for <linux-pci@vger.kernel.org>; Fri, 24 Apr 2020 10:01:06 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZH9aX41ptWASuA4+nYvy1m1/uCFu1VcJOgss+fiVF5R6PyOA8Q
+        HUKCl3PDqMCkzJ5kpX65npg+HRqDWNHyVtLLgg==
+X-Google-Smtp-Source: APiQypJwQIkvXqLSELp1sOEpgpq18RyGBTuFo5Ya4ELLMhnRbYQqeT2lcFQaeMdCeSRAWo/gc/Nmn9r/5dDZGo34KMs=
+X-Received: by 2002:a25:6150:: with SMTP id v77mr17444573ybb.414.1587747665835;
+ Fri, 24 Apr 2020 10:01:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200424153858.29744-1-pali@kernel.org> <20200424153858.29744-4-pali@kernel.org>
-In-Reply-To: <20200424153858.29744-4-pali@kernel.org>
+References: <20200424153858.29744-1-pali@kernel.org> <20200424153858.29744-5-pali@kernel.org>
+In-Reply-To: <20200424153858.29744-5-pali@kernel.org>
 From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 24 Apr 2020 11:47:26 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqK6c0y4THRkBgmRtePKjqaV66ROEogRQNhcPP8yWWvbuA@mail.gmail.com>
-Message-ID: <CAL_JsqK6c0y4THRkBgmRtePKjqaV66ROEogRQNhcPP8yWWvbuA@mail.gmail.com>
-Subject: Re: [PATCH v3 03/12] PCI: of: Return -ENOENT if max-link-speed
- property is not found
+Date:   Fri, 24 Apr 2020 12:00:54 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLTXGE4SAmbzkPJ-omusMiSoBwgF0j8HhAq7F+9w7g1wg@mail.gmail.com>
+Message-ID: <CAL_JsqLTXGE4SAmbzkPJ-omusMiSoBwgF0j8HhAq7F+9w7g1wg@mail.gmail.com>
+Subject: Re: [PATCH v3 04/12] PCI: aardvark: Improve link training
 To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
 Cc:     PCI <linux-pci@vger.kernel.org>,
         Jason Cooper <jason@lakedaemon.net>,
@@ -62,100 +61,219 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 On Fri, Apr 24, 2020 at 10:39 AM Pali Roh=C3=A1r <pali@kernel.org> wrote:
 >
-> OF API function of_property_read_u32() returns -EINVAL if property is
-> not found. Therefore this also happens with of_pci_get_max_link_speed(),
-> which also returns -EINVAL if the 'max-link-speed' property has invalid
-> value.
+> From: Marek Beh=C3=BAn <marek.behun@nic.cz>
 >
-> Change the behaviour of of_pci_get_max_link_speed() to return -ENOENT
-> in case when the property does not exist and -EINVAL if it has invalid
-> value.
+> Currently the aardvark driver trains link in PCIe gen2 mode. This may
+> cause some buggy gen1 cards (such as Compex WLE900VX) to be unstable or
+> even not detected. Moreover when ASPM code tries to retrain link second
+> time, these cards may stop responding and link goes down. If gen1 is
+> used this does not happen.
 >
-> Also interpret zero max-link-speed value of this property as invalid,
-> as the device tree bindings documentation specifies.
+> Unconditionally forcing gen1 is not a good solution since it may have
+> performance impact on gen2 cards.
 >
-> Update pcie-tegra194 code to handle errors from this function like other
-> drivers - they do not distinguish between no value and invalid value.
+> To overcome this, read 'max-link-speed' property (as defined in PCI
+> device tree bindings) and use this as max gen mode. Then iteratively try
+> link training at this mode or lower until successful. After successful
+> link training choose final controller gen based on Negotiated Link Speed
+> from Link Status register, which should match card speed.
 >
 > Signed-off-by: Pali Roh=C3=A1r <pali@kernel.org>
+> Signed-off-by: Marek Beh=C3=BAn <marek.behun@nic.cz>
 > ---
->  drivers/pci/controller/dwc/pcie-tegra194.c |  6 +++---
->  drivers/pci/of.c                           | 15 +++++++++++----
->  2 files changed, 14 insertions(+), 7 deletions(-)
+>  drivers/pci/controller/pci-aardvark.c | 113 ++++++++++++++++++++------
+>  1 file changed, 88 insertions(+), 25 deletions(-)
 >
-> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/con=
-troller/dwc/pcie-tegra194.c
-> index ae30a2fd3716..027bb41809f9 100644
-> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
-> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-> @@ -296,7 +296,7 @@ struct tegra_pcie_dw {
->         u8 init_link_width;
->         u32 msi_ctrl_int;
->         u32 num_lanes;
-> -       u32 max_speed;
-> +       int max_speed;
->         u32 cid;
->         u32 cfg_link_cap_l1sub;
->         u32 pcie_cap_base;
-> @@ -911,7 +911,7 @@ static void tegra_pcie_prepare_host(struct pcie_port =
-*pp)
->         dw_pcie_writel_dbi(pci, PORT_LOGIC_AMBA_ERROR_RESPONSE_DEFAULT, v=
-al);
+> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controll=
+er/pci-aardvark.c
+> index 74b90940a9d4..a6c4d4d52631 100644
+> --- a/drivers/pci/controller/pci-aardvark.c
+> +++ b/drivers/pci/controller/pci-aardvark.c
+> @@ -40,6 +40,7 @@
+>  #define PCIE_CORE_LINK_CTRL_STAT_REG                           0xd0
+>  #define     PCIE_CORE_LINK_L0S_ENTRY                           BIT(0)
+>  #define     PCIE_CORE_LINK_TRAINING                            BIT(5)
+> +#define     PCIE_CORE_LINK_SPEED_SHIFT                         16
+>  #define     PCIE_CORE_LINK_WIDTH_SHIFT                         20
+>  #define PCIE_CORE_ERR_CAPCTL_REG                               0x118
+>  #define     PCIE_CORE_ERR_CAPCTL_ECRC_CHK_TX                   BIT(5)
+> @@ -201,6 +202,7 @@ struct advk_pcie {
+>         struct mutex msi_used_lock;
+>         u16 msi_msg;
+>         int root_bus_nr;
+> +       int link_gen;
+>         struct pci_bridge_emul bridge;
+>  };
 >
->         /* Configure Max Speed from DT */
-> -       if (pcie->max_speed && pcie->max_speed !=3D -EINVAL) {
-> +       if (pcie->max_speed > 0) {
->                 val =3D dw_pcie_readl_dbi(pci, pcie->pcie_cap_base +
->                                         PCI_EXP_LNKCAP);
->                 val &=3D ~PCI_EXP_LNKCAP_SLS;
-> @@ -1830,7 +1830,7 @@ static void pex_ep_event_pex_rst_deassert(struct te=
-gra_pcie_dw *pcie)
->         dw_pcie_writel_dbi(pci, PORT_LOGIC_GEN2_CTRL, val);
+> @@ -225,20 +227,16 @@ static int advk_pcie_link_up(struct advk_pcie *pcie=
+)
 >
->         /* Configure Max Speed from DT */
-> -       if (pcie->max_speed && pcie->max_speed !=3D -EINVAL) {
-> +       if (pcie->max_speed > 0) {
->                 val =3D dw_pcie_readl_dbi(pci, pcie->pcie_cap_base +
->                                         PCI_EXP_LNKCAP);
->                 val &=3D ~PCI_EXP_LNKCAP_SLS;
-> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-> index 81ceeaa6f1d5..19bf652256d8 100644
-> --- a/drivers/pci/of.c
-> +++ b/drivers/pci/of.c
-> @@ -584,15 +584,22 @@ EXPORT_SYMBOL_GPL(pci_parse_request_of_pci_ranges);
->   *
->   * @node: device tree node with the max link speed information
->   *
-> - * Returns the associated max link speed from DT, or a negative value if=
- the
-> - * required property is not found or is invalid.
-> + * Returns the associated max link speed from DT, -ENOENT if the require=
-d
-> + * property is not found or -EINVAL if the required property is invalid.
->   */
->  int of_pci_get_max_link_speed(struct device_node *node)
+>  static int advk_pcie_wait_for_link(struct advk_pcie *pcie)
 >  {
->         u32 max_link_speed;
-> +       int ret;
+> -       struct device *dev =3D &pcie->pdev->dev;
+>         int retries;
+>
+>         /* check if the link is up or not */
+>         for (retries =3D 0; retries < LINK_WAIT_MAX_RETRIES; retries++) {
+> -               if (advk_pcie_link_up(pcie)) {
+> -                       dev_info(dev, "link up\n");
+> +               if (advk_pcie_link_up(pcie))
+>                         return 0;
+> -               }
+>
+>                 usleep_range(LINK_WAIT_USLEEP_MIN, LINK_WAIT_USLEEP_MAX);
+>         }
+>
+> -       dev_err(dev, "link never came up\n");
+>         return -ETIMEDOUT;
+>  }
+>
+> @@ -253,6 +251,85 @@ static void advk_pcie_wait_for_retrain(struct advk_p=
+cie *pcie)
+>         }
+>  }
+>
+> +static int advk_pcie_train_at_gen(struct advk_pcie *pcie, int gen)
+> +{
+> +       int ret, neg_gen;
+> +       u32 reg;
 > +
-> +       /* of_property_read_u32 returns -EINVAL if property does not exis=
-t */
-> +       ret =3D of_property_read_u32(node, "max-link-speed", &max_link_sp=
-eed);
-> +       if (ret =3D=3D -EINVAL)
-> +               return -ENOENT;
+> +       /* Setup link speed */
+> +       reg =3D advk_readl(pcie, PCIE_CORE_CTRL0_REG);
+> +       reg &=3D ~PCIE_GEN_SEL_MSK;
+> +       if (gen =3D=3D 3)
+> +               reg |=3D SPEED_GEN_3;
+> +       else if (gen =3D=3D 2)
+> +               reg |=3D SPEED_GEN_2;
+> +       else
+> +               reg |=3D SPEED_GEN_1;
+> +       advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
+> +
+> +       /*
+> +        * Enable link training. This is not needed in every call to this
+> +        * function, just once suffices, but it does not break anything e=
+ither.
+> +        */
+> +       reg =3D advk_readl(pcie, PCIE_CORE_CTRL0_REG);
+> +       reg |=3D LINK_TRAINING_EN;
+> +       advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
+> +
+> +       /*
+> +        * Start link training immediately after enabling it.
+> +        * This solves problems for some buggy cards.
+> +        */
+> +       reg =3D advk_readl(pcie, PCIE_CORE_LINK_CTRL_STAT_REG);
+> +       reg |=3D PCIE_CORE_LINK_TRAINING;
+> +       advk_writel(pcie, reg, PCIE_CORE_LINK_CTRL_STAT_REG);
+> +
+> +       ret =3D advk_pcie_wait_for_link(pcie);
+> +       if (ret)
+> +               return ret;
+> +
+> +       reg =3D advk_readl(pcie, PCIE_CORE_LINK_CTRL_STAT_REG);
+> +       neg_gen =3D (reg >> PCIE_CORE_LINK_SPEED_SHIFT) & 0xf;
+> +
+> +       return neg_gen;
+> +}
+> +
+> +static void advk_pcie_train_link(struct advk_pcie *pcie)
+> +{
+> +       struct device *dev =3D &pcie->pdev->dev;
+> +       int neg_gen =3D -1, gen;
+> +
+> +       /*
+> +        * Try link training at link gen specified by device tree propert=
+y
+> +        * 'max-link-speed'. If this fails, iteratively train at lower ge=
+n.
+> +        */
+> +       for (gen =3D pcie->link_gen; gen > 0; --gen) {
+> +               neg_gen =3D advk_pcie_train_at_gen(pcie, gen);
+> +               if (neg_gen > 0)
+> +                       break;
+> +       }
+> +
+> +       if (neg_gen < 0)
+> +               goto err;
+> +
+> +       /*
+> +        * After successful training if negotiated gen is lower than requ=
+ested,
+> +        * train again on negotiated gen. This solves some stability issu=
+es for
+> +        * some buggy gen1 cards.
+> +        */
+> +       if (neg_gen < gen) {
+> +               gen =3D neg_gen;
+> +               neg_gen =3D advk_pcie_train_at_gen(pcie, gen);
+> +       }
+> +
+> +       if (neg_gen =3D=3D gen) {
+> +               dev_info(dev, "link up at gen %i\n", gen);
+> +               return;
+> +       }
+> +
+> +err:
+> +       dev_err(dev, "link never came up\n");
+> +}
+> +
+>  static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+>  {
+>         u32 reg;
+> @@ -288,12 +365,6 @@ static void advk_pcie_setup_hw(struct advk_pcie *pci=
+e)
+>                 PCIE_CORE_CTRL2_TD_ENABLE;
+>         advk_writel(pcie, reg, PCIE_CORE_CTRL2_REG);
+>
+> -       /* Set GEN2 */
+> -       reg =3D advk_readl(pcie, PCIE_CORE_CTRL0_REG);
+> -       reg &=3D ~PCIE_GEN_SEL_MSK;
+> -       reg |=3D SPEED_GEN_2;
+> -       advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
+> -
+>         /* Set lane X1 */
+>         reg =3D advk_readl(pcie, PCIE_CORE_CTRL0_REG);
+>         reg &=3D ~LANE_CNT_MSK;
+> @@ -341,20 +412,7 @@ static void advk_pcie_setup_hw(struct advk_pcie *pci=
+e)
+>          */
+>         msleep(PCI_PM_D3COLD_WAIT);
+>
+> -       /* Enable link training */
+> -       reg =3D advk_readl(pcie, PCIE_CORE_CTRL0_REG);
+> -       reg |=3D LINK_TRAINING_EN;
+> -       advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
+> -
+> -       /*
+> -        * Start link training immediately after enabling it.
+> -        * This solves problems for some buggy cards.
+> -        */
+> -       reg =3D advk_readl(pcie, PCIE_CORE_LINK_CTRL_STAT_REG);
+> -       reg |=3D PCIE_CORE_LINK_TRAINING;
+> -       advk_writel(pcie, reg, PCIE_CORE_LINK_CTRL_STAT_REG);
+> -
+> -       advk_pcie_wait_for_link(pcie);
+> +       advk_pcie_train_link(pcie);
+>
+>         reg =3D advk_readl(pcie, PCIE_CORE_CMD_STATUS_REG);
+>         reg |=3D PCIE_CORE_CMD_MEM_ACCESS_EN |
+> @@ -988,6 +1046,11 @@ static int advk_pcie_probe(struct platform_device *=
+pdev)
+>         }
+>         pcie->root_bus_nr =3D bus->start;
+>
+> +       ret =3D of_pci_get_max_link_speed(dev->of_node);
+> +       if (ret < 0)
+> +               return ret;
 
-Generally, it's considered bad to change return values (though I guess
-this was happening. In hindsight, not present probably should have
-been -ENOENT. But it shouldn't really matter. The kernel should treat
-malformed as not present. It's not the kernel's job to validate the DT
-(the schema should and does now).
+Why just give up simply on DT error? Just start at gen 3 since you now
+retry at lower speeds.
 
-Plus you are adding capability to distinguish not present and out of
-bounds, but I don't see you using that?
-
-If there's any error with max-link-speed, then just use the max speed
-for the block which should be implied by the compatible string if
-there's more than one.
-
-Rob
+> +       pcie->link_gen =3D (ret > 3) ? 3 : ret;
+> +
+>         advk_pcie_setup_hw(pcie);
+>
+>         advk_sw_pci_bridge_init(pcie);
+> --
+> 2.20.1
+>
