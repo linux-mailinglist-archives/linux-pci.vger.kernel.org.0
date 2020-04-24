@@ -2,141 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7ADB21B704D
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Apr 2020 11:11:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C0161B70C6
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Apr 2020 11:25:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726582AbgDXJLV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 24 Apr 2020 05:11:21 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2851 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726523AbgDXJLV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 24 Apr 2020 05:11:21 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 383DAF85E61B18CF6E1D;
-        Fri, 24 Apr 2020 17:11:19 +0800 (CST)
-Received: from [10.65.58.147] (10.65.58.147) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Fri, 24 Apr 2020
- 17:11:16 +0800
-Subject: Re: [PATCH RFC] pci: Make return value of pcie_capability_read*()
- consistent
-To:     Saheed Bolarinwa <refactormyself@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-References: <20200423223819.GA248903@google.com>
- <83f65f3f-6586-3986-4c5e-011735758c7e@gmail.com>
-CC:     <bjorn@helgaas.com>, <skhan@linuxfoundation.org>,
-        <linux-pci@vger.kernel.org>
-From:   Yicong Yang <yangyicong@hisilicon.com>
-Message-ID: <d80f8d9e-0676-5661-6031-39fe4460b66c@hisilicon.com>
-Date:   Fri, 24 Apr 2020 17:11:44 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        id S1726347AbgDXJZt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 24 Apr 2020 05:25:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54608 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726298AbgDXJZt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 24 Apr 2020 05:25:49 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B200D20724;
+        Fri, 24 Apr 2020 09:25:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587720348;
+        bh=t7xTZ9J4en/MjkiMHZhzp48oDSHJbtjCC8DX8NgHS6k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=X4YgCg8G/j90ojHlYaCmhVdLvy25pkyqmH/enHwEAuRNnICzXcXsRWhSuZAlrrfZB
+         u3VEuVXG3U2gImJ6i671jlC7l+AiWade3PHeqQozSDdgkkrTBZU3DQhCbAswCSW0b/
+         EWifhAaDjPP22grjvC7Q0MuGBtNbC87MtW1O9ZlY=
+Received: by pali.im (Postfix)
+        id 5B27C82E; Fri, 24 Apr 2020 11:25:46 +0200 (CEST)
+Date:   Fri, 24 Apr 2020 11:25:46 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Remi Pommarel <repk@triplefau.lt>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Xogium <contact@xogium.me>,
+        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>
+Subject: Re: [PATCH v2 4/9] PCI: aardvark: issue PERST via GPIO
+Message-ID: <20200424092546.25p3hdtkehohe3xw@pali>
+References: <20200421111701.17088-1-marek.behun@nic.cz>
+ <20200421111701.17088-5-marek.behun@nic.cz>
 MIME-Version: 1.0
-In-Reply-To: <83f65f3f-6586-3986-4c5e-011735758c7e@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.65.58.147]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200421111701.17088-5-marek.behun@nic.cz>
+User-Agent: NeoMutt/20180716
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2020/4/24 14:02, Saheed Bolarinwa wrote:
->
-> On 4/24/20 12:38 AM, Bjorn Helgaas wrote:
->> On Thu, Apr 23, 2020 at 07:55:17PM +0800, Yicong Yang wrote:
->>> On 2020/4/19 14:51, Bolarinwa Olayemi Saheed wrote:
->>>> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
->>>> index 79c4a2ef269a..451f2b8b2b3c 100644
->>>> --- a/drivers/pci/access.c
->>>> +++ b/drivers/pci/access.c
->>>> @@ -409,7 +409,7 @@ int pcie_capability_read_word(struct pci_dev *dev, int pos, u16 *val)
->>> Maybe provide some comments for the function, to notify the outside
->>> users to do the error code conversion.
->> A short function comment about the set of possible return values
->> wouldn't hurt.  We don't have those for pci_read_config_word() and
->> friends, and there are several pcie_capability_*() functions.  I don't
->> think it's worth repeating the comment for every function, so maybe we
->> could just extend the existing comment at pcie_capability_read_word().
->
-> Is enough to adjust the comment on pcie_capability_read_word() to this:
->
->    /*
->      * Note that these accessor functions are only for the "PCI Express
->      * Capability" (see PCIe spec r3.0, sec 7.8).  They do not apply to the
->      * other "PCI Express Extended Capabilities" (AER, VC, ACS, MFVC, etc.)
->      *
->      * On error, this function returns a PCIBIOS_* error code,
->      * you may want to use pcibios_err_to_errno()(include/linux/pci.h)
->      * to convert to a non-PCI code
->      */
+On Tuesday 21 April 2020 13:16:56 Marek Behún wrote:
+> From: Pali Rohár <pali@kernel.org>
+> 
+> Add support for issuing PERST via GPIO specified in 'reset-gpios'
+> property (as described in PCI device tree bindings).
+> 
+> Some buggy cards (e.g. Compex WLE900VX or WLE1216) are not detected
+> after reboot when PERST is not issued during driver initialization.
+> 
+> Tested on Turris MOX.
+> 
+> Signed-off-by: Pali Rohár <pali@kernel.org>
+> ---
+>  drivers/pci/controller/pci-aardvark.c | 32 +++++++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> index 606bae1e7a88..e2d18094d8ca 100644
+> --- a/drivers/pci/controller/pci-aardvark.c
+> +++ b/drivers/pci/controller/pci-aardvark.c
+...
+> +static void advk_pcie_issue_perst(struct advk_pcie *pcie)
+> +{
+> +	if (!pcie->reset_gpio)
+> +		return;
+> +
+> +	dev_info(&pcie->pdev->dev, "issuing PERST via reset GPIO for 1ms\n");
+> +	gpiod_set_value_cansleep(pcie->reset_gpio, 1);
+> +	usleep_range(1000, 2000);
+> +	gpiod_set_value_cansleep(pcie->reset_gpio, 0);
+> +}
 
-okay. Or we can provide kernel-doc as you wish.
+After more testing we will have to increase this timeout to 10ms as some
+Compex cards are sometimes not detected with current 1ms timeout. I will
+do it in V3 patch series.
 
->
->>> BTW, pci_{read, write}_config_*() may also have the issues that
->>> export the private err code outside. You may want to solve these in
->>> a series along with this patch.
->> If you see a specific issue, please point it out.
 
-arch/x86/platform/intel/iosf_mbi.c, iosf_mbi_pci_read_mdr():
-        result = pci_read_config_dword(mbi_pdev, MBI_MDR_OFFSET, mdr);
-        if (result < 0)
-            goto fail_read;
-        return 0;
-    fail_read:
-        dev_err(&mbi_pdev->dev, "PCI config access failed with %d\n", result);
-        return result;
+Bjorn, do you know if there is a defined timeout in PCIE specification
+how long should be card in PERST?
 
-Not sure if there is much in the kernel.
+I looked into others pci kernel drivers and basically every driver is
+using its own timeout.
 
->>
->> I looked at pci_read_config_word(), and it can return
->> PCIBIOS_DEVICE_NOT_FOUND, PCIBIOS_BAD_REGISTER_NUMBER, or the return
->> value from bus->ops->read().
->>
->> I looked at all the users of PCIBIOS_*.  There's really no interesting
->> use of any of them except by pcibios_err_to_errno() and
->> xen_pcibios_err_to_errno(), so I'm not sure it's even worth keeping
->> them.
+pcie-kirin.c --> usleep_range(20000, 25000);
+pcie-qcom.c --> usleep_range(1000, 1000 + 500); msleep(100);
+pci-mvebu.c --> udelay(100);
+pci-tegra.c --> usleep_range(1000, 2000);
+pcie-iproc.c --> udelay(250);
+pcie-mediatek.c --> no delay
+pci-imx6.c --> msleep(100);
 
-maybe we can mark them as deprecated. I can send a RFC one to do so.
-
->>
->> But I think it's probably more work to excise all of them than it is
->> to simply make pci_read_config_word() and pcie_capability_read_word()
->> return the same set of error values.  So I think we should do this
->> first.
->>
-
-okay.
-
->>>>       *val = 0;
->>>>       if (pos & 1)
->>>> -        return -EINVAL;
->>>> +        return PCIBIOS_BAD_REGISTER_NUMBER;
->>>>         if (pcie_capability_reg_implemented(dev, pos)) {
->>>>           ret = pci_read_config_word(dev, pci_pcie_cap(dev) + pos, val);
->>>> @@ -444,7 +444,7 @@ int pcie_capability_read_dword(struct pci_dev *dev, int pos, u32 *val)
->>>>         *val = 0;
->>>>       if (pos & 3)
->>>> -        return -EINVAL;
->>>> +        return PCIBIOS_BAD_REGISTER_NUMBER;
->>>>         if (pcie_capability_reg_implemented(dev, pos)) {
->>>>           ret = pci_read_config_dword(dev, pci_pcie_cap(dev) + pos, val);
->
-> Also, can I just send this as a single patch while we conclude on pcie_capability_write*() ?
-
-Sure. As Bjorn suggested.
-
-Regards.
-Yicong
-
->
-> Thank you.
->
-> - Saheed
->
-> .
->
-
+But I guess that this timeout should not depend on driver or pci
+controller, but rather on connected card or on some recommended value if
+defined by PCIE specification.
