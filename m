@@ -2,168 +2,230 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 32AA11B896E
-	for <lists+linux-pci@lfdr.de>; Sat, 25 Apr 2020 22:46:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD4061B8987
+	for <lists+linux-pci@lfdr.de>; Sat, 25 Apr 2020 23:14:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726201AbgDYUqr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 25 Apr 2020 16:46:47 -0400
-Received: from mga04.intel.com ([192.55.52.120]:43867 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726190AbgDYUqr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 25 Apr 2020 16:46:47 -0400
-IronPort-SDR: aRIYVEQYw30kTZiy14keus3BzH1djfiKMn7uGb6LM/cpKQjIoOgSP9+FJ4+aGoilHGQnwRebNT
- 0zBNiSuG65zg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2020 13:46:47 -0700
-IronPort-SDR: 1FPnQL6/es4xgUoHTgrFqVT3I3AXYsUema1U78zXK/KuI+id6H2Hs205LGwyxPHVCesUibvwi3
- cNu2FF2ILnlg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,317,1583222400"; 
-   d="scan'208";a="281228044"
-Received: from jamesp6x-mobl.amr.corp.intel.com (HELO [10.254.108.128]) ([10.254.108.128])
-  by fmsmga004.fm.intel.com with ESMTP; 25 Apr 2020 13:46:46 -0700
-Subject: Re: [PATCH v2 2/2] PCI/DPC: Allow Native DPC Host Bridges to use DPC
-To:     "Derrick, Jonathan" <jonathan.derrick@intel.com>,
-        "helgaas@kernel.org" <helgaas@kernel.org>
-Cc:     "rajatja@google.com" <rajatja@google.com>,
-        "kbusch@kernel.org" <kbusch@kernel.org>,
-        "ruscur@russell.cc" <ruscur@russell.cc>,
-        "fred@fredlawl.com" <fred@fredlawl.com>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "sbobroff@linux.ibm.com" <sbobroff@linux.ibm.com>,
-        "olof@lixom.net" <olof@lixom.net>,
-        "oohall@gmail.com" <oohall@gmail.com>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "Patel, Mayurkumar" <mayurkumar.patel@intel.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-References: <1587418630-13562-1-git-send-email-jonathan.derrick@intel.com>
- <1587418630-13562-3-git-send-email-jonathan.derrick@intel.com>
- <0058b993-0663-7fed-ed31-cb0adf845a39@linux.intel.com>
- <ea21d9475b0af277c7288504ff2cd32b3f91e4ba.camel@intel.com>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <7e574cc1-a24b-5c4b-7d4f-3fda3f395390@linux.intel.com>
-Date:   Sat, 25 Apr 2020 13:46:45 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1726239AbgDYVOK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 25 Apr 2020 17:14:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46822 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726232AbgDYVOJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 25 Apr 2020 17:14:09 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BDF7C09B04D;
+        Sat, 25 Apr 2020 14:14:09 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jSS7N-0004FG-8Z; Sat, 25 Apr 2020 23:13:45 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 8643610071F; Sat, 25 Apr 2020 23:13:44 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
+        megha.dey@linux.intel.com, maz@kernel.org, bhelgaas@google.com,
+        rafael@kernel.org, gregkh@linuxfoundation.org, hpa@zytor.com,
+        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
+        ashok.raj@intel.com, jgg@mellanox.com, yi.l.liu@intel.com,
+        baolu.lu@intel.com, kevin.tian@intel.com, sanjay.k.kumar@intel.com,
+        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
+        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH RFC 02/15] drivers/base: Introduce a new platform-msi list
+In-Reply-To: <158751203902.36773.2662739280103265908.stgit@djiang5-desk3.ch.intel.com>
+References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com> <158751203902.36773.2662739280103265908.stgit@djiang5-desk3.ch.intel.com>
+Date:   Sat, 25 Apr 2020 23:13:44 +0200
+Message-ID: <87v9lntgjb.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <ea21d9475b0af277c7288504ff2cd32b3f91e4ba.camel@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Dave Jiang <dave.jiang@intel.com> writes:
 
+> From: Megha Dey <megha.dey@linux.intel.com>
+>
+> This is a preparatory patch to introduce Interrupt Message Store (IMS).
+>
+> The struct device has a linked list ('msi_list') of the MSI (msi/msi-x,
+> platform-msi) descriptors of that device. This list holds only 1 type
+> of descriptor since it is not possible for a device to support more
+> than one of these descriptors concurrently.
+>
+> However, with the introduction of IMS, a device can support IMS as well
+> as MSI-X at the same time. Instead of sharing this list between IMS (a
+> type of platform-msi) and MSI-X descriptors, introduce a new linked list,
+> platform_msi_list, which will hold all the platform-msi descriptors.
+>
+> Thus, msi_list will point to the MSI/MSIX descriptors of a device, while
+> platform_msi_list will point to the platform-msi descriptors of a
+> device.
 
-On 4/23/20 8:11 AM, Derrick, Jonathan wrote:
-> Hi Sathyanarayanan,
-> 
-> On Wed, 2020-04-22 at 15:50 -0700, Kuppuswamy, Sathyanarayanan wrote:
->>
->> On 4/20/20 2:37 PM, Jon Derrick wrote:
->>> The existing portdrv model prevents DPC services without either OS
->>> control (_OSC) granted to AER services, a Host Bridge requesting Native
->>> AER, or using one of the 'pcie_ports=' parameters of 'native' or
->>> 'dpc-native'.
->>>
->>> The DPC port service driver itself will also fail to probe if the kernel
->>> assumes the port is using Firmware-First AER. It's a reasonable
->>> expectation that a port using Firmware-First AER will also be using
->>> Firmware-First DPC, however if a Host Bridge requests Native DPC, the
->>> DPC driver should allow it and not fail to bind due to AER capability
->>> settings.
->>>
->>> Host Bridges which request Native DPC port services will also likely
->>> request Native AER, however it shouldn't be a requirement. This patch
->>> allows ports on those Host Bridges to have DPC port services.
->>>
->>> This will avoid the unlikely situation where the port is Firmware-First
->>> AER and Native DPC, and a BIOS or switch firmware preconfiguration of
->>> the DPC trigger could result in unhandled DPC events.
->>>
->>> Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
->>> ---
->>>    drivers/pci/pcie/dpc.c          | 3 ++-
->>>    drivers/pci/pcie/portdrv_core.c | 3 ++-
->>>    2 files changed, 4 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
->>> index 7621704..3f3106f 100644
->>> --- a/drivers/pci/pcie/dpc.c
->>> +++ b/drivers/pci/pcie/dpc.c
->>> @@ -284,7 +284,8 @@ static int dpc_probe(struct pcie_device *dev)
->>>    	int status;
->>>    	u16 ctl, cap;
->>>    
->>> -	if (pcie_aer_get_firmware_first(pdev) && !pcie_ports_dpc_native)
->>> +	if (pcie_aer_get_firmware_first(pdev) && !pcie_ports_dpc_native &&
->>> +	    !pci_find_host_bridge(pdev->bus)->native_dpc)
->> Why do it in probe as well ? if host->native_dpc is not set then the
->> device DPC probe it self won't happen right ?
-> 
-> Portdrv only enables the interrupt and allows the probe to occur.
+Will point?
 
-Please check the following snippet of code (from portdrv_core.c).
+You're failing to explain that this actually converts the existing
+platform code over to this new list. This also lacks an explanation why
+this is not a functional change.
 
-IIUC, pcie_device_init() will not be called if PCIE_PORT_SERVICE_DPC is
-not set in capabilities. Your change in portdrv_core.c already
-selectively enables the PCIE_PORT_SERVICE_DPC service based on
-native_dpc value.
+> Signed-off-by: Megha Dey <megha.dey@linux.intel.com>
 
-So IMO, adding native_dpc check in dpc_probe() is redundant.
+Lacks an SOB from you.... 
 
-int pcie_port_device_register(struct pci_dev *dev)
-	/* Allocate child services if any */
-	status = -ENODEV;
-	nr_service = 0;
-	for (i = 0; i < PCIE_PORT_DEVICE_MAXSERVICES; i++) {
-		int service = 1 << i;
-		if (!(capabilities & service))
-			continue;
-		if (!pcie_device_init(dev, service, irqs[i]))
-			nr_service++;
-	}
+> diff --git a/drivers/base/core.c b/drivers/base/core.c
+> index 139cdf7e7327..5a0116d1a8d0 100644
+> --- a/drivers/base/core.c
+> +++ b/drivers/base/core.c
+> @@ -1984,6 +1984,7 @@ void device_initialize(struct device *dev)
+>  	set_dev_node(dev, -1);
+>  #ifdef CONFIG_GENERIC_MSI_IRQ
+>  	INIT_LIST_HEAD(&dev->msi_list);
+> +	INIT_LIST_HEAD(&dev->platform_msi_list);
 
-> 
-> The probe itself will still fail if there's a mixed-mode _OSC
-> negotiated AER & DPC, due to pcie_aer_get_firmware_first returning 1
-> for AER and no check for DPC.
-> 
-> I don't know if such a platform will exist, but the kernel is already
-> wired for 'dpc-native' so it makes sense to extend it for this..
-> 
-> This transform might be more readable:
-> 	if (pcie_aer_get_firmware_first(pdev) &&
-> 	    !(pcie_ports_dpc_native || hb->native_dpc))
-> 
-> 
-> 
->>>    		return -ENOTSUPP;
->>>    
->>>    	status = devm_request_threaded_irq(device, dev->irq, dpc_irq,
->>> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
->>> index 50a9522..f2139a1 100644
->>> --- a/drivers/pci/pcie/portdrv_core.c
->>> +++ b/drivers/pci/pcie/portdrv_core.c
->>> @@ -256,7 +256,8 @@ static int get_port_device_capability(struct pci_dev *dev)
->>>    	 */
->>>    	if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC) &&
->>>    	    pci_aer_available() &&
->>> -	    (pcie_ports_dpc_native || (services & PCIE_PORT_SERVICE_AER)))
->>> +	    (pcie_ports_dpc_native || host->native_dpc ||
->>> +	     (services & PCIE_PORT_SERVICE_AER)))
->>>    		services |= PCIE_PORT_SERVICE_DPC;
->>>    
->>>    	if (pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
->>>
+> --- a/drivers/base/platform-msi.c
+> +++ b/drivers/base/platform-msi.c
+> @@ -110,7 +110,8 @@ static void platform_msi_free_descs(struct device *dev, int base, int nvec)
+>  {
+>  	struct msi_desc *desc, *tmp;
+>  
+> -	list_for_each_entry_safe(desc, tmp, dev_to_msi_list(dev), list) {
+> +	list_for_each_entry_safe(desc, tmp, dev_to_platform_msi_list(dev),
+> +				 list) {
+>  		if (desc->platform.msi_index >= base &&
+>  		    desc->platform.msi_index < (base + nvec)) {
+>  			list_del(&desc->list);
+>  	datap = kzalloc(sizeof(*datap), GFP_KERNEL);
+> @@ -255,6 +256,8 @@ int platform_msi_domain_alloc_irqs(struct device *dev, unsigned int nvec,
+>  	struct platform_msi_priv_data *priv_data;
+>  	int err;
+>  
+> +	dev->platform_msi_type = GEN_PLAT_MSI;
+
+What the heck is GEN_PLAT_MSI? Can you please use
+
+   1) A proper name space starting with PLATFORM_MSI_ or such
+
+   2) A proper suffix which is self explaining.
+
+instead of coming up with nonsensical garbage which even lacks any
+explanation at the place where it is defined.
+
+> diff --git a/include/linux/device.h b/include/linux/device.h
+> index ac8e37cd716a..cbcecb14584e 100644
+> --- a/include/linux/device.h
+> +++ b/include/linux/device.h
+> @@ -567,6 +567,8 @@ struct device {
+>  #endif
+>  #ifdef CONFIG_GENERIC_MSI_IRQ
+>  	struct list_head	msi_list;
+> +	struct list_head	platform_msi_list;
+> +	unsigned int		platform_msi_type;
+
+You use an enum for the types so why are you not using an enum for the
+struct member which stores it?
+
+>  
+> +/**
+> + * list_entry_select - get the correct struct for this entry based on condition
+> + * @condition:	the condition to choose a particular &struct list head pointer
+> + * @ptr_a:      the &struct list_head pointer if @condition is not met.
+> + * @ptr_b:      the &struct list_head pointer if @condition is met.
+> + * @type:       the type of the struct this is embedded in.
+> + * @member:     the name of the list_head within the struct.
+> + */
+> +#define list_entry_select(condition, ptr_a, ptr_b, type, member)\
+> +	(condition) ? list_entry(ptr_a, type, member) :		\
+> +		      list_entry(ptr_b, type, member)
+
+This is related to $Subject in which way? It's not a entirely new
+process rule that infrastructure changes which touch a completely
+different subsystem have to be separate and explained and justified on
+their own.
+
+>  
+> +enum platform_msi_type {
+> +	NOT_PLAT_MSI = 0,
+
+NOT_PLAT_MSI? Not used anywhere and of course equally self explaining as
+the other one.
+
+> +	GEN_PLAT_MSI = 1,
+> +};
+> +
+>  /* Helpers to hide struct msi_desc implementation details */
+>  #define msi_desc_to_dev(desc)		((desc)->dev)
+>  #define dev_to_msi_list(dev)		(&(dev)->msi_list)
+> @@ -140,6 +145,22 @@ struct msi_desc {
+>  #define for_each_msi_entry_safe(desc, tmp, dev)	\
+>  	list_for_each_entry_safe((desc), (tmp), dev_to_msi_list((dev)), list)
+>  
+> +#define dev_to_platform_msi_list(dev)	(&(dev)->platform_msi_list)
+> +#define first_platform_msi_entry(dev)		\
+> +	list_first_entry(dev_to_platform_msi_list((dev)), struct msi_desc, list)
+> +#define for_each_platform_msi_entry(desc, dev)	\
+> +	list_for_each_entry((desc), dev_to_platform_msi_list((dev)), list)
+> +#define for_each_platform_msi_entry_safe(desc, tmp, dev)	\
+> +	list_for_each_entry_safe((desc), (tmp), dev_to_platform_msi_list((dev)), list)
+
+New lines to seperate macros are bad for readability, right? 
+
+> +#define first_msi_entry_common(dev)	\
+> +	list_first_entry_select((dev)->platform_msi_type, dev_to_platform_msi_list((dev)),	\
+> +				dev_to_msi_list((dev)), struct msi_desc, list)
+> +
+> +#define for_each_msi_entry_common(desc, dev)	\
+> +	list_for_each_entry_select((dev)->platform_msi_type, desc, dev_to_platform_msi_list((dev)), \
+> +				   dev_to_msi_list((dev)), list)	\
+> +
+>  #ifdef CONFIG_IRQ_MSI_IOMMU
+>  static inline const void *msi_desc_get_iommu_cookie(struct msi_desc *desc)
+>  {
+> diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
+> index eb95f6106a1e..bc5f9e32387f 100644
+> --- a/kernel/irq/msi.c
+> +++ b/kernel/irq/msi.c
+> @@ -320,7 +320,7 @@ int msi_domain_populate_irqs(struct irq_domain *domain, struct device *dev,
+>  	struct msi_desc *desc;
+>  	int ret = 0;
+>  
+> -	for_each_msi_entry(desc, dev) {
+> +	for_each_msi_entry_common(desc, dev) {
+
+This is absolutely unreadable. What's common here? You hide the decision
+which list to iterate behind a misnomed macro. 
+
+And looking at the implementation:
+
+> +#define for_each_msi_entry_common(desc, dev)	\
+> +	list_for_each_entry_select((dev)->platform_msi_type, desc, dev_to_platform_msi_list((dev)), \
+> +				   dev_to_msi_list((dev)), list)	\
+
+So you implicitely make the decision based on:
+
+   (dev)->platform_msi_type != 0
+
+What? How is that ever supposed to work? The changelog says:
+
+> However, with the introduction of IMS, a device can support IMS as well
+> as MSI-X at the same time. Instead of sharing this list between IMS (a
+> type of platform-msi) and MSI-X descriptors, introduce a new linked list,
+> platform_msi_list, which will hold all the platform-msi descriptors.
+
+So you are not serious about storing the decision in the device struct
+and then calling into common code?
+
+That's insane at best. There is absolutely ZERO explanation how this is
+supposed to work and why this could even be remotely correct and safe.
+
+Ever heard of the existance of function arguments?
+
+Sorry, this is just voodoo programming and not going anywhere.
+
+Thanks,
+
+        tglx
