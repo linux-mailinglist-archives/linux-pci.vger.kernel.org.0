@@ -2,78 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 701781B84EF
-	for <lists+linux-pci@lfdr.de>; Sat, 25 Apr 2020 10:55:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 18BDD1B8824
+	for <lists+linux-pci@lfdr.de>; Sat, 25 Apr 2020 19:32:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726128AbgDYIze (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 25 Apr 2020 04:55:34 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39901 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725837AbgDYIzd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 25 Apr 2020 04:55:33 -0400
-Received: by mail-ot1-f66.google.com with SMTP id m13so16860922otf.6;
-        Sat, 25 Apr 2020 01:55:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fUNW+YKfBgF2cMYUf1i6dEQvTH/58EF1lzSQEW40U3k=;
-        b=Djwi/xu+B1tUwewBH9MplPbDjGN3W5mnFcBM8jitCCD4uIQl4t255pyBOSBDwPYbo6
-         ySP91oAe7a8DcfjJz0bRlfq6GIx4W3WZguKQbuSYKBW49Hfjrppws6QF9dLq68jNw3LM
-         /CqDjYuO5A9m0Me5B9lps4sxVxMqT9M8N9J/z3w2PcVSyqdb2hkp6owRqP/23u+JnIhJ
-         qlKRn0FgSsV3ZztZGQsSNqdYDIeWD/ctLf28LEIDqlw3HGDTjQFku3EO7eSonKWucekt
-         a2XVC95wedllY+QTY7/f5tAD6dMSygD1xE1IEk4JWkVXPFQPffymnJtPR3o+fceGHMRE
-         WLjA==
-X-Gm-Message-State: AGi0PuZMaGgKHBD63us/ENLpGDBhYO48MCW0Bi9VCjZ79Q5BmeJaMEjv
-        mW/GVUY5NZmdiDtWUD+6IHk6Vd3+bexL2pNPN5k=
-X-Google-Smtp-Source: APiQypJW5O56mWteY8Y0vMM8aMxAGMjECnsP5wKPZkmXBXqkKVaISEG8Z+bkk71DRSaQBqd6D1kBf0TvUnpAMUX91+o=
-X-Received: by 2002:a9d:7990:: with SMTP id h16mr5250454otm.145.1587804932826;
- Sat, 25 Apr 2020 01:55:32 -0700 (PDT)
+        id S1726192AbgDYRcU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 25 Apr 2020 13:32:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58828 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726145AbgDYRcT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 25 Apr 2020 13:32:19 -0400
+Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8D5520700
+        for <linux-pci@vger.kernel.org>; Sat, 25 Apr 2020 17:32:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587835938;
+        bh=hKHBikUtoTZbHtGWJ2dlN3FgRiN+h4oQ6i4mSlSd7t8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=pIOa2rEAXhrmz1UuYn/QOUZ8bajTu1tKuleOHtx3DnVZYx3BfmEj83QRAUo4otPww
+         G3EMOcXxSR1jUSp163kwr5d0ljLpDEo4keg1sGGyCVcZ2Ln7l0fbiIWsSDXFdup71F
+         36LPBaR5/DImHPPQTHhaf2kMoXVq+LYm1lMAB+tg=
+Received: by mail-il1-f173.google.com with SMTP id w6so12608205ilg.1
+        for <linux-pci@vger.kernel.org>; Sat, 25 Apr 2020 10:32:18 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYD+r1kuykcNOY73jU1EEpoop326YBimE0E6hwzOeK3vdDIEYmV
+        8nRJWmTqE0KmB99zSl1luWYVFBZc7kngbU1Evto=
+X-Google-Smtp-Source: APiQypKaLGBUjpBi0ap40fcDP4TexwTLBWf7jnip1384fvtgP22TZiuw2cHihrnlwhfzuugkF7sL/ueTfUNX/6X0+Ac=
+X-Received: by 2002:a92:aa0f:: with SMTP id j15mr14267056ili.211.1587835938197;
+ Sat, 25 Apr 2020 10:32:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200314191232.3122290-1-marek.vasut@gmail.com> <20200424195724.GA187563@google.com>
-In-Reply-To: <20200424195724.GA187563@google.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Sat, 25 Apr 2020 10:55:21 +0200
-Message-ID: <CAMuHMdVGkM_-5q+pSOtQ5nBPGzMeOpRTJUqekYnvjiPMFepqLw@mail.gmail.com>
-Subject: Re: [PATCH V3] PCI: rcar: Add the suspend/resume for pcie-rcar driver
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Marek Vasut <marek.vasut@gmail.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Kazufumi Ikeda <kaz-ikeda@xc.jp.nec.com>,
-        Gaku Inami <gaku.inami.xw@bp.renesas.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Vaibhav Gupta <vaibhavgupta40@gmail.com>
+References: <20200421162256.26887-1-ardb@kernel.org> <2fb2b8c1-89be-1e59-c82c-b63e3afa62d5@amd.com>
+ <CAMj1kXE0wFtyD7YGxXzKWAx+BT6x9CYreaFyEeFfeYJFeQbo_g@mail.gmail.com>
+In-Reply-To: <CAMj1kXE0wFtyD7YGxXzKWAx+BT6x9CYreaFyEeFfeYJFeQbo_g@mail.gmail.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Sat, 25 Apr 2020 19:32:07 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXH3WVMehgbMwUEjBSYudAM7PtWAcAYcWspyq4eZJzBwTQ@mail.gmail.com>
+Message-ID: <CAMj1kXH3WVMehgbMwUEjBSYudAM7PtWAcAYcWspyq4eZJzBwTQ@mail.gmail.com>
+Subject: Re: [PATCH] PCI: allow pci_resize_resource() to be used on devices on
+ the root bus
+To:     =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, jon@solid-run.com, wasim.khan@nxp.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
-
-On Fri, Apr 24, 2020 at 9:57 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> [+cc Vaibhav]
+On Tue, 21 Apr 2020 at 19:07, Ard Biesheuvel <ardb@kernel.org> wrote:
 >
-> Alternate less redundant subject:
+> On Tue, 21 Apr 2020 at 18:43, Christian K=C3=B6nig <christian.koenig@amd.=
+com> wrote:
+> >
+> > Am 21.04.20 um 18:22 schrieb Ard Biesheuvel:
+> > > When resizing a BAR, pci_reassign_bridge_resources() is invoked to
+> > > bring the bridge windows of parent bridges in line with the new BAR
+> > > assignment.
+> > >
+> > > This assumes that the device whose BAR is being resized lives on a
+> > > subordinate bus, but this is not necessarily the case. A device may
+> > > live on the root bus, in which case dev->bus->self is NULL, and
+> > > passing a NULL pci_dev pointer to pci_reassign_bridge_resources()
+> > > will cause it to crash.
+> > >
+> > > So let's make the call to pci_reassign_bridge_resources() conditional
+> > > on whether dev->bus->self is non-NULL in the first place.
+> > >
+> > > Fixes: 8bb705e3e79d84e7 ("PCI: Add pci_resize_resource() for resizing=
+ BARs")
+> > > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> >
+> > Sounds like it makes sense, patch is
+> > Reviewed-by: Christian K=C3=B6nig <christian.koenig@amd.com>.
 >
->   PCI: rcar: Add suspend/resume support
+> Thanks Christian.
+>
+> >
+> > May I ask where you found that condition?
+> >
+>
+> In this particular case, it was on an ARM board with funky PCIe IP
+> that does not expose a root port in its bus hierarchy.
+>
+> But in the general case, PCIe endpoints can be integrated into the
+> root complex, in which case they appear on the root bus, and there is
+> no reason such endpoints shouldn't be allowed to have resizable BARs.
 
-Note that there's both pcie-rcar.c (this driver, for R-Car Gen2 and Gen3
-PCIe) and pci-rcar-gen2.c (for R-Car Gen2 PCI).
-People tend to use the prefix "PCI: rcar: " for both :-(
+Actually, looking at this more carefully, I think
+pci_reassign_bridge_resources() needs to do /something/ to ensure that
+the resources are reshuffled if needed when the resized BAR overlaps
+with another one.
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Bjorn, did you have any thoughts on this? I could make
+pci_reassign_bridge_resources() take a pci_bus, and handle the root
+bus as a special case. Alternatively, pci_resize_resource() could make
+the distinction, but it will probably need to duplicate some of the
+reassignment that goes on in pci_reassign_bridge_resources() as well.
