@@ -2,227 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 744B01B8F23
-	for <lists+linux-pci@lfdr.de>; Sun, 26 Apr 2020 12:51:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D9EF1B8E99
+	for <lists+linux-pci@lfdr.de>; Sun, 26 Apr 2020 11:58:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726128AbgDZKvU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 26 Apr 2020 06:51:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59734 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726125AbgDZKvU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 26 Apr 2020 06:51:20 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C316BC061A0C
-        for <linux-pci@vger.kernel.org>; Sun, 26 Apr 2020 03:51:19 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id x17so16244012wrt.5
-        for <linux-pci@vger.kernel.org>; Sun, 26 Apr 2020 03:51:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=R0pU3luVXl4howr3W2t9DubPkMZpdZBK7T5ALJY+iSM=;
-        b=ikMJC5n787RSS2bZe4VhFQgDB/6oWpsDovApGl8kcSHcxDSVFU+GBA1AqMSRk0C/89
-         5lL3kRns+YgC9BkNYQ6Yp3bmrdx9P2W5S/DaCPFjsu+iCgskNeoH7OYv3SKPGfOvwrXZ
-         dL1ZAyFT2Z2mllUDKUc+L5delHrEKe0GSL6hfqM2N6zNxKkQjwt4aCgulLlIxhC5PGcX
-         MP8Utrw+JTOcCTQGb55jxkrduUz4k5eVcURqlQHSRcbUq6gifJJK85+u1v8Yc6EIGaro
-         bWpHURcMn96j1qFczYHLG7INM08YTW/IRFjs179MYfI2BtYwcxN5ldHHz2itTbsQ5Mfs
-         6WtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=R0pU3luVXl4howr3W2t9DubPkMZpdZBK7T5ALJY+iSM=;
-        b=gDrXd//uL9TcKiF6Qher0dU/4aUCONuCCDXSE+5gwKksNxf/AZFB+k9H88s9RNVv19
-         +OpDNzuVlx/eOWIqmRm1aAHvePWeyT+77imXF8J9rhxzqUnlVn9GIMpZ8MOww1aoU9cz
-         oVsEjafiZuzBUodMptjF9WaO6XdPD6jj1y4WhVh4etHB5mwRYeR/VxXZm6W0DDCzoa5W
-         vJ/G45mV6BmxNUOSQMyohmIvio+RbW5mJtRmVRhB6/LYls+Yl2znVL4knQMQqJqBf/Hb
-         H1lVFECqH/xEZIy6ULoTDsOxHXIFRWqVE/HcrFHnFqq1PHcEsaLMvp6JCgCg/A4OJuTA
-         tFAw==
-X-Gm-Message-State: AGi0PuZtR8Ac1UE9BU/nXO2abS6tVPI9GoDa8BPRThOiGZdfqWnnQgK0
-        FeY2L8RXHbSagxDGvUL1CDZDqEYvH7s1Fw==
-X-Google-Smtp-Source: APiQypJgCuGXqxOHqhUSFbRoMsLnsk2tuEZEz5kJgtkaRnc5EjifruhptfI9+2Cex0YdbdTTagTDbQ==
-X-Received: by 2002:adf:9d8d:: with SMTP id p13mr21178286wre.17.1587898278030;
-        Sun, 26 Apr 2020 03:51:18 -0700 (PDT)
-Received: from net.saheed (563BD1A4.dsl.pool.telekom.hu. [86.59.209.164])
-        by smtp.gmail.com with ESMTPSA id 185sm12804761wmc.32.2020.04.26.03.51.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 26 Apr 2020 03:51:17 -0700 (PDT)
-Subject: Re: [PATCH v4] pci: Make return value of pcie_capability_read*()
- consistent
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     bjorn@helgaas.com, yangyicong@hisilicon.com,
-        skhan@linuxfoundation.org, linux-pci@vger.kernel.org
-References: <20200424223044.GA211293@google.com>
-From:   Saheed Bolarinwa <refactormyself@gmail.com>
-Message-ID: <c9811866-8fea-9398-9337-45818136fe84@gmail.com>
-Date:   Sun, 26 Apr 2020 11:51:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S1726117AbgDZJ6W (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 26 Apr 2020 05:58:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44362 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726112AbgDZJ6V (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 26 Apr 2020 05:58:21 -0400
+Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE4372070A
+        for <linux-pci@vger.kernel.org>; Sun, 26 Apr 2020 09:58:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587895101;
+        bh=rUyV4pt/g7F908RwLX3i+yj94w0SwCRhmQzqbjnowsE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=URgvqn9wvCkb4AyrS66j2B7y+1mEEZI46Z4e4BNYRBrbtpMQ1SyHQ6djaIHIiNWyl
+         PUbaV7dn/kfu5VDav/Q4j/p+1c7HZztgnT7V91CMmHBoGywp1jplCeeKXxQcu2mhwS
+         o5CkJDMDXEPJyw9AsT2KWK7YLf1epd9KkyoPNnW8=
+Received: by mail-il1-f171.google.com with SMTP id t12so13894881ile.9
+        for <linux-pci@vger.kernel.org>; Sun, 26 Apr 2020 02:58:20 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZ+HgESzWsB0Bbpb/QRd3S9Jhhp22S2Ovb0CNop/vIvUGENc43J
+        pLo59Vop4OOQ33LmseK8QhNJv27t9+2kl+Dm2Aw=
+X-Google-Smtp-Source: APiQypImW/86phTT65AtNNbN7D+xPcJ8otnB/480lX2o8t2xp1nK4/DpLdFUVU5yfvP0eMjbzc1oHX7/zeaduvpgQ0c=
+X-Received: by 2002:a92:3c55:: with SMTP id j82mr17036757ila.258.1587895100290;
+ Sun, 26 Apr 2020 02:58:20 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200424223044.GA211293@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20200421162256.26887-1-ardb@kernel.org> <2fb2b8c1-89be-1e59-c82c-b63e3afa62d5@amd.com>
+ <CAMj1kXE0wFtyD7YGxXzKWAx+BT6x9CYreaFyEeFfeYJFeQbo_g@mail.gmail.com>
+ <CAMj1kXH3WVMehgbMwUEjBSYudAM7PtWAcAYcWspyq4eZJzBwTQ@mail.gmail.com> <d06a3062-ce45-fdd2-6f22-c56e2e2f8f4b@amd.com>
+In-Reply-To: <d06a3062-ce45-fdd2-6f22-c56e2e2f8f4b@amd.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Sun, 26 Apr 2020 11:58:09 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXG04ehc6WxR=YSzjrV33O07h6hcWocUAfnfdGpDG13w6g@mail.gmail.com>
+Message-ID: <CAMj1kXG04ehc6WxR=YSzjrV33O07h6hcWocUAfnfdGpDG13w6g@mail.gmail.com>
+Subject: Re: [PATCH] PCI: allow pci_resize_resource() to be used on devices on
+ the root bus
+To:     =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        jon@solid-run.com, wasim.khan@nxp.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello Bjorn,
-
-On 4/25/20 12:30 AM, Bjorn Helgaas wrote:
-> Hi Saheed,
+On Sun, 26 Apr 2020 at 11:08, Christian K=C3=B6nig <christian.koenig@amd.co=
+m> wrote:
 >
-> On Fri, Apr 24, 2020 at 04:27:11PM +0200, Bolarinwa Olayemi Saheed wrote:
->> pcie_capability_read*() could return 0, -EINVAL, or any of the
->> PCIBIOS_* error codes (which are positive).
->> This is behaviour is now changed to return only PCIBIOS_* error
->> codes on error.
->> This is consistent with pci_read_config_*(). Callers can now have
->> a consistent way for checking which error has occurred.
->>
->> An audit of the callers of this function was made and no case was found
->> where there is need for a change within the caller function or their
->> dependencies down the heirarchy.
->> Out of all caller functions discovered only 8 functions either persist the
->> return value of pcie_capability_read*() or directly pass on the return
->> value.
->>
->> 1.) "./drivers/infiniband/hw/hfi1/pcie.c" :
->> => pcie_speeds() line-306
->>
->> 	if (ret) {
->> 		dd_dev_err(dd, "Unable to read from PCI config\n");
->> 		return ret;
->> 	}
->>
->> remarks: The variable "ret" is the captured return value.
->>           This function passes on the return value. The return value was
->> 	 store only by hfi1_init_dd() line-15076 in
->>           ./drivers/infiniband/hw/hfi1/chip.c and it behave the same on all
->> 	 errors. So this patch will not require a change in this function.
-> Thanks for the analysis, but I don't think it's quite complete.
-> Here's the call chain I see:
+> Am 25.04.20 um 19:32 schrieb Ard Biesheuvel:
+> > On Tue, 21 Apr 2020 at 19:07, Ard Biesheuvel <ardb@kernel.org> wrote:
+> >> On Tue, 21 Apr 2020 at 18:43, Christian K=C3=B6nig <christian.koenig@a=
+md.com> wrote:
+> >>> Am 21.04.20 um 18:22 schrieb Ard Biesheuvel:
+> >>>> When resizing a BAR, pci_reassign_bridge_resources() is invoked to
+> >>>> bring the bridge windows of parent bridges in line with the new BAR
+> >>>> assignment.
+> >>>>
+> >>>> This assumes that the device whose BAR is being resized lives on a
+> >>>> subordinate bus, but this is not necessarily the case. A device may
+> >>>> live on the root bus, in which case dev->bus->self is NULL, and
+> >>>> passing a NULL pci_dev pointer to pci_reassign_bridge_resources()
+> >>>> will cause it to crash.
+> >>>>
+> >>>> So let's make the call to pci_reassign_bridge_resources() conditiona=
+l
+> >>>> on whether dev->bus->self is non-NULL in the first place.
+> >>>>
+> >>>> Fixes: 8bb705e3e79d84e7 ("PCI: Add pci_resize_resource() for resizin=
+g BARs")
+> >>>> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> >>> Sounds like it makes sense, patch is
+> >>> Reviewed-by: Christian K=C3=B6nig <christian.koenig@amd.com>.
+> >> Thanks Christian.
+> >>
+> >>> May I ask where you found that condition?
+> >>>
+> >> In this particular case, it was on an ARM board with funky PCIe IP
+> >> that does not expose a root port in its bus hierarchy.
+> >>
+> >> But in the general case, PCIe endpoints can be integrated into the
+> >> root complex, in which case they appear on the root bus, and there is
+> >> no reason such endpoints shouldn't be allowed to have resizable BARs.
+> > Actually, looking at this more carefully, I think
+> > pci_reassign_bridge_resources() needs to do /something/ to ensure that
+> > the resources are reshuffled if needed when the resized BAR overlaps
+> > with another one.
 >
->    local_pci_probe
->      pci_drv->probe(..)
->        init_one                        # hfi1_pci_driver.probe method
->          hfi1_init_dd
->            pcie_speeds
->              pcie_capability_read_dword
-
-Thank you for pointing out the call chain. After checking it, I noticed 
-that the
-
-error is handled within the chain in two places without being passed on.
-
-1. init_one() in ./drivers/infiniband/hw/hfil1/init.c
-
-      ret = hfi1_init_dd(dd);
-             if (ret)
-                     goto clean_bail; /* error already printed */
-
-    ...
-    clean_bail:
-             hfi1_pcie_cleanup(pdev);  /*EXITS*/
-
-2. hfi1_init_dd() in ./drivers/infiniband/hw/hfil1/chip.c
-
-         ret = pcie_speeds(dd);
-         if (ret)
-                 goto bail_cleanup;
-
-         ...
-
-         bail_cleanup:
-                  hfi1_pcie_ddcleanup(dd);  /*EXITS*/
-
-> If pcie_capability_read_dword() returns any non-zero value, that value
-> propagates all the way up and is eventually returned by init_one().
-> init_one() id called by local_pci_probe(), which interprets:
+> The resized BAR never overlaps with an existing one since to resize a
+> BAR it needs to be deallocated and disabled. This is done as a
+> precaution to avoid potential incorrect routing and decode of memory acce=
+ss.
 >
->    < 0 as failure
->      0 as success, and
->    > 0 as "success but warn"
+> The call to pci_reassign_bridge_resources() is only there to change the
+> resources of the upstream bridge to the device which is resized and not
+> to adjust the resources of the device itself.
 >
-> So previously an error from pcie_capability_read_dword() could cause
-> either failure or "success but warn" for the probe method, and after
-> this patch those errors will always cause "success but warn".
->
-> The current behavior is definitely a bug: if
-> pci_bus_read_config_word() returns PCIBIOS_BAD_REGISTER_NUMBER, that
-> causes pcie_capability_read_dword() to also return
-> PCIBIOS_BAD_REGISTER_NUMBER, which will lead to the probe succeeding
-> with a warning, when it should fail.
->
-> I think the fix is to make pcie_speeds() call pcibios_err_to_errno():
->
->    ret = pcie_capability_read_dword(...);
->    if (ret) {
->      dd_dev_err(...);
->      return pcibios_err_to_errno(ret);
->    }
 
-I agree that this fix is needed, so that PCIBIOS_* error code are not 
-passed on but replaced
-
-with one consistent with non-PCI error codes.
-
-> That could be its own separate preparatory patch before this
-> adjustment to pcie_capability_read_dword().
->
-> I didn't look at the other cases below, so I don't know whether they
-> are similar hidden problems.
-
-I will check again, please I will like to clarify if it will be to fine 
-to just implement the conversion
-
-(as suggested for pcie_speeds) in all found references, which passes on 
-the error code.
-
->
->> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
->> index 79c4a2ef269a..f0baab635b66 100644
->> --- a/drivers/pci/access.c
->> +++ b/drivers/pci/access.c
->> @@ -402,6 +402,10 @@ static bool pcie_capability_reg_implemented(struct pci_dev *dev, int pos)
->>    * Note that these accessor functions are only for the "PCI Express
->>    * Capability" (see PCIe spec r3.0, sec 7.8).  They do not apply to the
->>    * other "PCI Express Extended Capabilities" (AER, VC, ACS, MFVC, etc.)
->> + *
->> + * On error, this function returns a PCIBIOS_* error code,
->> + * you may want to use pcibios_err_to_errno()(include/linux/pci.h)
->> + * to convert to a non-PCI code.
->>    */
->>   int pcie_capability_read_word(struct pci_dev *dev, int pos, u16 *val)
->>   {
->> @@ -409,7 +413,7 @@ int pcie_capability_read_word(struct pci_dev *dev, int pos, u16 *val)
->>   
->>   	*val = 0;
->>   	if (pos & 1)
->> -		return -EINVAL;
->> +		return PCIBIOS_BAD_REGISTER_NUMBER;
->>   
->>   	if (pcie_capability_reg_implemented(dev, pos)) {
->>   		ret = pci_read_config_word(dev, pci_pcie_cap(dev) + pos, val);
->> @@ -444,7 +448,7 @@ int pcie_capability_read_dword(struct pci_dev *dev, int pos, u32 *val)
->>   
->>   	*val = 0;
->>   	if (pos & 3)
->> -		return -EINVAL;
->> +		return PCIBIOS_BAD_REGISTER_NUMBER;
->>   
->>   	if (pcie_capability_reg_implemented(dev, pos)) {
->>   		ret = pci_read_config_dword(dev, pci_pcie_cap(dev) + pos, val);
-> We need to make similar changes to pcie_capability_write_word() and
-> pcie_capability_write_dword(), of course.  I think it makes sense to
-> do them all in the same patch, since it's logically the same change
-> and all these functions should be consistent with each other.
-
-I will include them in.
-
-Thank you.
-
-- Saheed
-
+So does that mean that BAR resizing is only possible if no other BARs,
+either on the same device or on other ones, need to be moved?
