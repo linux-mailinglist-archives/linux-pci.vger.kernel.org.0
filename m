@@ -2,166 +2,287 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D1D551B89C0
-	for <lists+linux-pci@lfdr.de>; Sun, 26 Apr 2020 00:14:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A89D11B8A7A
+	for <lists+linux-pci@lfdr.de>; Sun, 26 Apr 2020 02:55:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726285AbgDYWOQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 25 Apr 2020 18:14:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56062 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726220AbgDYWOQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 25 Apr 2020 18:14:16 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1CDAC09B04F;
-        Sat, 25 Apr 2020 15:14:15 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jST3e-0004cM-Tb; Sun, 26 Apr 2020 00:13:59 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 611E9100605; Sun, 26 Apr 2020 00:13:58 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
-        megha.dey@linux.intel.com, maz@kernel.org, bhelgaas@google.com,
-        rafael@kernel.org, gregkh@linuxfoundation.org, hpa@zytor.com,
-        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
-        ashok.raj@intel.com, jgg@mellanox.com, yi.l.liu@intel.com,
-        baolu.lu@intel.com, kevin.tian@intel.com, sanjay.k.kumar@intel.com,
-        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
-        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH RFC 06/15] ims-msi: Enable IMS interrupts
-In-Reply-To: <158751206394.36773.12409950149228811741.stgit@djiang5-desk3.ch.intel.com>
-References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com> <158751206394.36773.12409950149228811741.stgit@djiang5-desk3.ch.intel.com>
-Date:   Sun, 26 Apr 2020 00:13:58 +0200
-Message-ID: <87imhntdqx.fsf@nanos.tec.linutronix.de>
+        id S1726108AbgDZAz4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 25 Apr 2020 20:55:56 -0400
+Received: from mga11.intel.com ([192.55.52.93]:21544 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726101AbgDZAz4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 25 Apr 2020 20:55:56 -0400
+IronPort-SDR: gw/zXgM8UE7C5w4PFlVtOuCPIv6Lc7fnIencYAKDwO1FGXrtGjBMraIQJdRBzEOkvqVe4rO/Zo
+ zexe6KtPqKKA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2020 17:55:55 -0700
+IronPort-SDR: FZEAAkI9pN+yy7aPf4Gs+kFZBFl1SBkOK7TeogD2VV3AazTe//jzZA4TvamDvTTYTJHRMZZgA4
+ ADpPrgqyx9Rw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,318,1583222400"; 
+   d="scan'208";a="403807063"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 25 Apr 2020 17:55:54 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jSVaL-000GHi-OS; Sun, 26 Apr 2020 08:55:53 +0800
+Date:   Sun, 26 Apr 2020 08:55:02 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:pci/hotplug] BUILD SUCCESS
+ adc9fbcd7d04a711b765e8f7f5c2e07cbbac0f20
+Message-ID: <5ea4dbe6.TSdHBGxouo994ht7%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Dave Jiang <dave.jiang@intel.com> writes:
->  
-> +struct irq_domain *dev_get_ims_domain(struct device *dev)
-> +{
-> +	struct irq_alloc_info info;
-> +
-> +	if (dev_is_mdev(dev))
-> +		dev = mdev_to_parent(dev);
-> +
-> +	init_irq_alloc_info(&info, NULL);
-> +	info.type = X86_IRQ_ALLOC_TYPE_IMS;
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/hotplug
+branch HEAD: adc9fbcd7d04a711b765e8f7f5c2e07cbbac0f20  PCI: Use of_node_name_eq() for node name comparisons
 
-So all IMS capabale devices run on X86? I thought these things are PCIe
-cards which can be plugged into any platform which supports PCIe.
+elapsed time: 1402m
 
-> +	info.dev = dev;
-> +
-> +	return irq_remapping_get_irq_domain(&info);
-> +}
-> +
->  static struct msi_domain_ops dev_ims_domain_ops = {
->  	.get_hwirq	= dev_ims_get_hwirq,
->  	.msi_prepare	= dev_ims_prepare,
-> diff --git a/drivers/base/platform-msi.c b/drivers/base/platform-msi.c
-> index 6d8840db4a85..204ce8041c17 100644
-> --- a/drivers/base/platform-msi.c
-> +++ b/drivers/base/platform-msi.c
-> @@ -118,6 +118,8 @@ static void platform_msi_free_descs(struct device *dev, int base, int nvec,
->  			kfree(platform_msi_group);
->  		}
->  	}
-> +
-> +	dev->platform_msi_type = 0;
+configs tested: 228
+configs skipped: 0
 
-I can clearly see the advantage of using '0' over 'NOT_PLAT_MSI'
-here. '0' is definitely more intuitive.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
->  }
->  
->  static int platform_msi_alloc_descs_with_irq(struct device *dev, int virq,
-> @@ -205,18 +207,22 @@ platform_msi_alloc_priv_data(struct device *dev, unsigned int nvec,
->  	 * accordingly (which would impact the max number of MSI
->  	 * capable devices).
->  	 */
-> -	if (!dev->msi_domain || !platform_ops->write_msg || !nvec ||
-> -	    nvec > MAX_DEV_MSIS)
-> +	if (!platform_ops->write_msg || !nvec || nvec > MAX_DEV_MSIS)
->  		return ERR_PTR(-EINVAL);
-> -	if (dev->msi_domain->bus_token != DOMAIN_BUS_PLATFORM_MSI) {
-> -		dev_err(dev, "Incompatible msi_domain, giving up\n");
-> -		return ERR_PTR(-EINVAL);
-> -	}
-> +	if (dev->platform_msi_type == GEN_PLAT_MSI) {
-> +		if (!dev->msi_domain)
-> +			return ERR_PTR(-EINVAL);
-> +
-> +		if (dev->msi_domain->bus_token != DOMAIN_BUS_PLATFORM_MSI) {
-> +			dev_err(dev, "Incompatible msi_domain, giving up\n");
-> +			return ERR_PTR(-EINVAL);
-> +		}
->  
-> -	/* Already had a helping of MSI? Greed... */
-> -	if (!list_empty(platform_msi_current_group_entry_list(dev)))
-> -		return ERR_PTR(-EBUSY);
-> +		/* Already had a helping of MSI? Greed... */
-> +		if (!list_empty(platform_msi_current_group_entry_list(dev)))
-> +			return ERR_PTR(-EBUSY);
-> +	}
->  
->  	datap = kzalloc(sizeof(*datap), GFP_KERNEL);
->  	if (!datap)
-> @@ -254,6 +260,7 @@ static void platform_msi_free_priv_data(struct platform_msi_priv_data *data)
->  int platform_msi_domain_alloc_irqs(struct device *dev, unsigned int nvec,
->  				   const struct platform_msi_ops *platform_ops)
->  {
-> +	dev->platform_msi_type = GEN_PLAT_MSI;
->  	return platform_msi_domain_alloc_irqs_group(dev, nvec, platform_ops,
->  									NULL);
->  }
-> @@ -265,12 +272,18 @@ int platform_msi_domain_alloc_irqs_group(struct device *dev, unsigned int nvec,
->  {
->  	struct platform_msi_group_entry *platform_msi_group;
->  	struct platform_msi_priv_data *priv_data;
-> +	struct irq_domain *domain;
->  	int err;
->  
-> -	dev->platform_msi_type = GEN_PLAT_MSI;
+arm64                            allyesconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm                              allmodconfig
+arm64                             allnoconfig
+arm                               allnoconfig
+arm                           efm32_defconfig
+arm                         at91_dt_defconfig
+arm                        shmobile_defconfig
+arm64                               defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                           sunxi_defconfig
+arm                        multi_v7_defconfig
+sparc                            allyesconfig
+ia64                                defconfig
+s390                             alldefconfig
+mips                              allnoconfig
+um                           x86_64_defconfig
+riscv                             allnoconfig
+mips                          ath79_defconfig
+openrisc                    or1ksim_defconfig
+i386                              allnoconfig
+i386                             alldefconfig
+i386                                defconfig
+i386                              debian-10.3
+i386                             allyesconfig
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                        generic_defconfig
+ia64                          tiger_defconfig
+ia64                         bigsur_defconfig
+ia64                             allyesconfig
+ia64                             alldefconfig
+nios2                         3c120_defconfig
+nios2                         10m50_defconfig
+c6x                        evmc6678_defconfig
+xtensa                          iss_defconfig
+c6x                              allyesconfig
+xtensa                       common_defconfig
+openrisc                 simple_smp_defconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                                defconfig
+alpha                               defconfig
+h8300                       h8s-sim_defconfig
+h8300                     edosk2674_defconfig
+m68k                       m5475evb_defconfig
+m68k                             allmodconfig
+h8300                    h8300h-sim_defconfig
+m68k                           sun3_defconfig
+m68k                          multi_defconfig
+arc                                 defconfig
+arc                              allyesconfig
+powerpc                             defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+mips                            ar7_defconfig
+mips                             allyesconfig
+mips                         64r6el_defconfig
+mips                           32r2_defconfig
+mips                             allmodconfig
+mips                malta_kvm_guest_defconfig
+mips                         tb0287_defconfig
+mips                       capcella_defconfig
+mips                           ip32_defconfig
+mips                  decstation_64_defconfig
+mips                      loongson3_defconfig
+mips                        bcm63xx_defconfig
+parisc                            allnoconfig
+parisc                generic-64bit_defconfig
+parisc                generic-32bit_defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+parisc               randconfig-a001-20200424
+alpha                randconfig-a001-20200424
+m68k                 randconfig-a001-20200424
+riscv                randconfig-a001-20200424
+nds32                randconfig-a001-20200424
+parisc               randconfig-a001-20200426
+mips                 randconfig-a001-20200426
+alpha                randconfig-a001-20200426
+m68k                 randconfig-a001-20200426
+nds32                randconfig-a001-20200426
+nios2                randconfig-a001-20200424
+c6x                  randconfig-a001-20200424
+h8300                randconfig-a001-20200424
+sparc64              randconfig-a001-20200424
+microblaze           randconfig-a001-20200424
+sh                   randconfig-a001-20200424
+csky                 randconfig-a001-20200424
+s390                 randconfig-a001-20200424
+xtensa               randconfig-a001-20200424
+openrisc             randconfig-a001-20200424
+i386                 randconfig-b002-20200426
+x86_64               randconfig-b001-20200426
+i386                 randconfig-b001-20200426
+i386                 randconfig-b003-20200426
+x86_64               randconfig-b003-20200426
+i386                 randconfig-b002-20200425
+x86_64               randconfig-b001-20200425
+i386                 randconfig-b001-20200425
+i386                 randconfig-b003-20200425
+x86_64               randconfig-b002-20200425
+x86_64               randconfig-b003-20200425
+i386                 randconfig-c002-20200425
+i386                 randconfig-c001-20200425
+x86_64               randconfig-c002-20200425
+x86_64               randconfig-c001-20200425
+i386                 randconfig-c003-20200425
+x86_64               randconfig-c003-20200425
+i386                 randconfig-c002-20200424
+i386                 randconfig-c001-20200424
+x86_64               randconfig-c001-20200424
+i386                 randconfig-c003-20200424
+x86_64               randconfig-c003-20200424
+x86_64               randconfig-d001-20200424
+i386                 randconfig-d002-20200424
+i386                 randconfig-d001-20200424
+x86_64               randconfig-d003-20200424
+i386                 randconfig-d003-20200424
+x86_64               randconfig-d002-20200426
+i386                 randconfig-d002-20200426
+i386                 randconfig-d001-20200426
+i386                 randconfig-d003-20200426
+i386                 randconfig-e003-20200425
+x86_64               randconfig-e002-20200425
+x86_64               randconfig-e003-20200425
+i386                 randconfig-e002-20200425
+i386                 randconfig-e001-20200425
+x86_64               randconfig-e001-20200425
+i386                 randconfig-e003-20200426
+x86_64               randconfig-e003-20200426
+i386                 randconfig-e002-20200426
+i386                 randconfig-e001-20200426
+x86_64               randconfig-e001-20200426
+i386                 randconfig-f002-20200425
+i386                 randconfig-f003-20200425
+x86_64               randconfig-f003-20200425
+i386                 randconfig-f001-20200425
+x86_64               randconfig-f001-20200425
+x86_64               randconfig-f002-20200424
+i386                 randconfig-f002-20200424
+i386                 randconfig-f003-20200424
+x86_64               randconfig-f003-20200424
+i386                 randconfig-f001-20200424
+x86_64               randconfig-f001-20200424
+x86_64               randconfig-f002-20200426
+i386                 randconfig-f002-20200426
+x86_64               randconfig-f003-20200426
+i386                 randconfig-f003-20200426
+i386                 randconfig-f001-20200426
+x86_64               randconfig-f001-20200426
+i386                 randconfig-g003-20200424
+i386                 randconfig-g001-20200424
+x86_64               randconfig-g001-20200424
+x86_64               randconfig-g002-20200424
+i386                 randconfig-g002-20200424
+x86_64               randconfig-g003-20200424
+i386                 randconfig-g003-20200426
+i386                 randconfig-g001-20200426
+x86_64               randconfig-g001-20200426
+x86_64               randconfig-g002-20200426
+i386                 randconfig-g002-20200426
+x86_64               randconfig-g003-20200426
+i386                 randconfig-h003-20200426
+x86_64               randconfig-h001-20200426
+x86_64               randconfig-h003-20200426
+x86_64               randconfig-h002-20200426
+i386                 randconfig-h001-20200426
+i386                 randconfig-h002-20200426
+i386                 randconfig-h003-20200425
+x86_64               randconfig-h001-20200425
+x86_64               randconfig-h003-20200425
+i386                 randconfig-h002-20200425
+i386                 randconfig-h001-20200425
+i386                 randconfig-h003-20200424
+x86_64               randconfig-h001-20200424
+x86_64               randconfig-h003-20200424
+x86_64               randconfig-h002-20200424
+i386                 randconfig-h001-20200424
+i386                 randconfig-h002-20200424
+x86_64               randconfig-a001-20200424
+i386                 randconfig-a003-20200424
+x86_64               randconfig-a003-20200424
+i386                 randconfig-a002-20200424
+i386                 randconfig-a001-20200424
+x86_64               randconfig-a002-20200424
+sparc                randconfig-a001-20200425
+ia64                 randconfig-a001-20200425
+powerpc              randconfig-a001-20200425
+arm                  randconfig-a001-20200425
+arc                  randconfig-a001-20200425
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+s390                       zfcpdump_defconfig
+s390                          debug_defconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sh                          rsk7269_defconfig
+sh                               allmodconfig
+sh                            titan_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                                allnoconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                             i386_defconfig
+um                                  defconfig
+x86_64                                   rhel
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                         rhel-7.2-clear
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-7.6
 
-Groan. If you move the type assignment to the caller then do so in a
-separate patch. These all in one combo changes are simply not reviewable
-without getting nuts.
-
-> -	if (group_id)
-> +	if (!dev->platform_msi_type) {
-
-That's really consistent. If the caller does not store a type upfront
-then it becomes IMS automagically. Can you pretty please stop to think
-that this IMS stuff is the center of the universe? To be clear, it's
-just another variant of half thought out hardware design fail as all the
-other stuff we already have to support.
-
-Abusing dev->platform_msi_type to decide about the nature of the call
-and then decide that anything which does not set it upfront is IMS is
-really future proof.
-
->  		*group_id = ++dev->group_id;
-> +		dev->platform_msi_type = IMS;
-
-Oh a new type name 'IMS'. Well suited into the naming scheme. 
-
-> +		domain = dev_get_ims_domain(dev);
-
-No. This is completely inconsistent again and a blatant violation of
-layering.
-
-Thanks,
-
-        tglx
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
