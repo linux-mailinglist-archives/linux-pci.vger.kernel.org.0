@@ -2,168 +2,158 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 879251B8AC1
-	for <lists+linux-pci@lfdr.de>; Sun, 26 Apr 2020 03:26:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1728E1B8C84
+	for <lists+linux-pci@lfdr.de>; Sun, 26 Apr 2020 07:19:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726216AbgDZB0q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 25 Apr 2020 21:26:46 -0400
-Received: from mga17.intel.com ([192.55.52.151]:22633 "EHLO mga17.intel.com"
+        id S1726140AbgDZFTF convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Sun, 26 Apr 2020 01:19:05 -0400
+Received: from mga01.intel.com ([192.55.52.88]:51368 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726070AbgDZB0p (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 25 Apr 2020 21:26:45 -0400
-IronPort-SDR: WKKmN57nvasKV8xp+ZfvzYR0kmZdOGCdaLR7Sl6Xn78mwPQnV06VnV51Boed3pQzDBGYoPUXoL
- sHsJ8T1P/oQA==
+        id S1725765AbgDZFTE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 26 Apr 2020 01:19:04 -0400
+IronPort-SDR: hStMhTZAkqFLa55C01+YYoGLp99FdLDXZ8kddbY0rv/j5Xk+ZJx62WhereHrmJgXp7WCdWB0so
+ /sQYssz8qgPQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2020 18:26:45 -0700
-IronPort-SDR: AZStnLPyzz3YlcpelT85rxe5/zZzLqViO16YtTTQlm5pp34mXvqYDFOpdHwmOAZ7V+uS8xKpBx
- u64OtWA9EJcw==
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2020 22:19:04 -0700
+IronPort-SDR: 7oUFACyYMaI58TCLvNzIfWtr9icVHR6F93W0fNWs0ro27ExULtxG2c/75WZ1yLrb25XmRP1XIf
+ nGedbiD9SlZw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,318,1583222400"; 
-   d="scan'208";a="292024806"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga002.fm.intel.com with ESMTP; 25 Apr 2020 18:26:44 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jSW4B-000A74-Dr; Sun, 26 Apr 2020 09:26:43 +0800
-Date:   Sun, 26 Apr 2020 09:25:07 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/pm] BUILD SUCCESS
- c3aaf086701d05a82c8156ee8620af41e5a7d6fe
-Message-ID: <5ea4e2f3.Pkj/xtCkib4TlVnX%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+   d="scan'208";a="256851019"
+Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
+  by orsmga003.jf.intel.com with ESMTP; 25 Apr 2020 22:19:03 -0700
+Received: from fmsmsx119.amr.corp.intel.com (10.18.124.207) by
+ fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sat, 25 Apr 2020 22:19:03 -0700
+Received: from shsmsx151.ccr.corp.intel.com (10.239.6.50) by
+ FMSMSX119.amr.corp.intel.com (10.18.124.207) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sat, 25 Apr 2020 22:19:03 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
+ SHSMSX151.ccr.corp.intel.com ([169.254.3.22]) with mapi id 14.03.0439.000;
+ Sun, 26 Apr 2020 13:18:58 +0800
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     Jason Gunthorpe <jgg@mellanox.com>
+CC:     "Raj, Ashok" <ashok.raj@intel.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "megha.dey@linux.intel.com" <megha.dey@linux.intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Lin, Jing" <jing.lin@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: RE: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
+ support for the idxd driver.
+Thread-Topic: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
+ support for the idxd driver.
+Thread-Index: AQHWGDVStT24LxQ110qc/YDRWdRX86iDuewAgACI/wCAAD7wgIAAnasAgAFwKICAAOPOMIAAQj8AgACkdbD//7b+gIACl9WQ
+Date:   Sun, 26 Apr 2020 05:18:59 +0000
+Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D8C5486@SHSMSX104.ccr.corp.intel.com>
+References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
+ <20200421235442.GO11945@mellanox.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D86EE26@SHSMSX104.ccr.corp.intel.com>
+ <20200422115017.GQ11945@mellanox.com> <20200422211436.GA103345@otc-nc-03>
+ <20200423191217.GD13640@mellanox.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D8960F9@SHSMSX104.ccr.corp.intel.com>
+ <20200424124444.GJ13640@mellanox.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D8A808B@SHSMSX104.ccr.corp.intel.com>
+ <20200424181203.GU13640@mellanox.com>
+In-Reply-To: <20200424181203.GU13640@mellanox.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/pm
-branch HEAD: c3aaf086701d05a82c8156ee8620af41e5a7d6fe  PCI/PM: Call .bridge_d3() hook only if non-NULL
+> From: Jason Gunthorpe <jgg@mellanox.com>
+> Sent: Saturday, April 25, 2020 2:12 AM
+> 
+> > > > idxd is just the first device that supports Scalable IOV. We have a
+> > > > lot more coming later, in different types. Then putting such
+> > > > emulation in user space means that Qemu needs to support all those
+> > > > vendor specific interfaces for every new device which supports
+> > >
+> > > It would be very sad to see an endless amount of device emulation code
+> > > crammed into the kernel. Userspace is where device emulation is
+> > > supposed to live. For security
+> >
+> > I think providing an unified abstraction to userspace is also important,
+> > which is what VFIO provides today. The merit of using one set of VFIO
+> > API to manage all kinds of mediated devices and VF devices is a major
+> > gain. Instead, inventing a new vDPA-like interface for every Scalable-IOV
+> > or equivalent device is just overkill and doesn't scale. Also the actual
+> > emulation code in idxd driver is actually small, if putting aside the PCI
+> > config space part for which I already explained most logic could be shared
+> > between mdev device drivers.
+> 
+> If it was just config space you might have an argument, VFIO already
+> does some config space mangling, but emulating BAR space is out of
+> scope of VFIO, IMHO.
 
-elapsed time: 1788m
+out of scope of vfio-pci, but in scope of vfio-mdev. btw I feel that most
+of your objections are actually related to the general idea of vfio-mdev.
+Scalable IOV just uses PASID to harden DMA isolation in mediated
+pass-through usage which vfio-mdev enables. Then are you just opposing
+the whole vfio-mdev? If not, I'm curious about the criteria in your mind 
+about when using vfio-mdev is good...
 
-configs tested: 109
-configs skipped: 0
+> 
+> I also think it is disingenuous to pretend this is similar to
+> SR-IOV. SR-IOV is self contained and the BAR does not require
+> emulation. What you have here sounds like it is just an ordinary
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+technically Scalable IOV is definitely different from SR-IOV. It's 
+simpler in hardware. And we're not emulating SR-IOV. The point
+is just in usage-wise we want to present a consistent user 
+experience just like passing through a PCI endpoint (PF or VF) device
+through vfio eco-system, including various userspace VMMs (Qemu,
+firecracker, rust-vmm, etc.), middleware (Libvirt), and higher level 
+management stacks. 
 
-arm64                            allyesconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm                              allmodconfig
-arm64                             allnoconfig
-arm                               allnoconfig
-arm                           efm32_defconfig
-arm                         at91_dt_defconfig
-arm                        shmobile_defconfig
-arm64                               defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                           sunxi_defconfig
-arm                        multi_v7_defconfig
-i386                             allyesconfig
-i386                             alldefconfig
-i386                                defconfig
-i386                              debian-10.3
-i386                              allnoconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                        generic_defconfig
-ia64                          tiger_defconfig
-ia64                         bigsur_defconfig
-ia64                             allyesconfig
-ia64                             alldefconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                                defconfig
-alpha                               defconfig
-xtensa                          iss_defconfig
-xtensa                       common_defconfig
-openrisc                 simple_smp_defconfig
-h8300                       h8s-sim_defconfig
-h8300                     edosk2674_defconfig
-m68k                       m5475evb_defconfig
-m68k                             allmodconfig
-h8300                    h8300h-sim_defconfig
-m68k                           sun3_defconfig
-m68k                          multi_defconfig
-arc                                 defconfig
-arc                              allyesconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-nios2                         3c120_defconfig
-nios2                         10m50_defconfig
-c6x                        evmc6678_defconfig
-c6x                              allyesconfig
-openrisc                    or1ksim_defconfig
-mips                malta_kvm_guest_defconfig
-mips                         tb0287_defconfig
-mips                       capcella_defconfig
-mips                           ip32_defconfig
-mips                  decstation_64_defconfig
-mips                      loongson3_defconfig
-mips                          ath79_defconfig
-mips                        bcm63xx_defconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-mips                            ar7_defconfig
-mips                             allyesconfig
-mips                         64r6el_defconfig
-mips                              allnoconfig
-mips                           32r2_defconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                generic-64bit_defconfig
-parisc                generic-32bit_defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-s390                       zfcpdump_defconfig
-s390                          debug_defconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                             alldefconfig
-s390                                defconfig
-sh                          rsk7269_defconfig
-sh                               allmodconfig
-sh                            titan_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                                allnoconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-um                                  defconfig
-x86_64                                   rhel
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                         rhel-7.2-clear
-x86_64                    rhel-7.6-kselftests
-x86_64                               rhel-7.6
+> multi-queue device with the ability to PASID tag queues for IOMMU
+> handling. This is absolutely not SRIOV - it is much closer to VDPA,
+> which isn't using mdev.
+> 
+> Further, I disagree with your assessment that this doesn't scale. You
+> already said you plan a normal user interface for idxd, so instead of
+> having a single sane user interface (ala VDPA) idxd now needs *two*. If
+> this is the general pattern of things to come, it is a bad path.
+> 
+> The only thing we get out of this is someone doesn't have to write a
+> idxd emulation driver in qemu, instead they have to write it in the
+> kernel. I don't see how that is a win for the ecosystem.
+> 
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+No. The clear win is on leveraging classic VFIO iommu and its eco-system
+as explained above.
+
+Thanks
+Kevin
