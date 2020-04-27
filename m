@@ -2,166 +2,165 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C7C8C1BA7AC
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Apr 2020 17:15:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 997931BA835
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Apr 2020 17:41:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728267AbgD0PPj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Apr 2020 11:15:39 -0400
-Received: from mga18.intel.com ([134.134.136.126]:48776 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728168AbgD0PPi (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 27 Apr 2020 11:15:38 -0400
-IronPort-SDR: 7KOH2Wwf4jhCsJor0l80EShxNabuokweeWn3hL39+yczGUItUpHCWI2bywKPJ1z/y1mZa7Asxz
- rwyDTyLm4BRA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 08:15:37 -0700
-IronPort-SDR: zZYgPQLIGuqPb367g+MrrtH/5nJbhuWhverW/aZT9RKMh+fo+qH3LEggYNetESR/4lSyRJM4+H
- 6nV0jI1S2CDQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,324,1583222400"; 
-   d="scan'208";a="431810513"
-Received: from orsmsx105.amr.corp.intel.com ([10.22.225.132])
-  by orsmga005.jf.intel.com with ESMTP; 27 Apr 2020 08:15:37 -0700
-Received: from orsmsx115.amr.corp.intel.com (10.22.240.11) by
- ORSMSX105.amr.corp.intel.com (10.22.225.132) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 27 Apr 2020 08:15:37 -0700
-Received: from orsmsx101.amr.corp.intel.com ([169.254.8.204]) by
- ORSMSX115.amr.corp.intel.com ([169.254.4.83]) with mapi id 14.03.0439.000;
- Mon, 27 Apr 2020 08:15:37 -0700
-From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
-To:     "sathyanarayanan.kuppuswamy@linux.intel.com" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        "helgaas@kernel.org" <helgaas@kernel.org>
-CC:     "rajatja@google.com" <rajatja@google.com>,
-        "fred@fredlawl.com" <fred@fredlawl.com>,
-        "ruscur@russell.cc" <ruscur@russell.cc>,
-        "kbusch@kernel.org" <kbusch@kernel.org>,
-        "oohall@gmail.com" <oohall@gmail.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        id S1727949AbgD0Plv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Apr 2020 11:41:51 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32550 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727771AbgD0Plv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Apr 2020 11:41:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588002109;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=tJRLLv8agzDERmbgL8/S6trBj8aDl75vAd6aQQKyE3Q=;
+        b=DgrzTzZPAkjOB+bivcRSWQA2pvAIllLZonqRtHT8LQXG/tBMLTnB1KL36jrpAxffX0TFKc
+        3m1Vju15aWPnpY645GM1i2YuBhlwdXs564dLDZ5X2uO4F8AqahHRwWuaJftLxBvsuWjaED
+        Q9RUDHfSDPdh4UDHZB4wQsisYTlnYM8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-32-dPon0T0jP8e_3iYOFCzrPw-1; Mon, 27 Apr 2020 11:41:45 -0400
+X-MC-Unique: dPon0T0jP8e_3iYOFCzrPw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 776E145F;
+        Mon, 27 Apr 2020 15:41:42 +0000 (UTC)
+Received: from w520.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3F6766062E;
+        Mon, 27 Apr 2020 15:41:38 +0000 (UTC)
+Date:   Mon, 27 Apr 2020 09:41:37 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "megha.dey@linux.intel.com" <megha.dey@linux.intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Lin, Jing" <jing.lin@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "sbobroff@linux.ibm.com" <sbobroff@linux.ibm.com>,
-        "olof@lixom.net" <olof@lixom.net>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "x86@kernel.org" <x86@kernel.org>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "Patel, Mayurkumar" <mayurkumar.patel@intel.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>
-Subject: Re: [PATCH v2 2/2] PCI/DPC: Allow Native DPC Host Bridges to use DPC
-Thread-Topic: [PATCH v2 2/2] PCI/DPC: Allow Native DPC Host Bridges to use
- DPC
-Thread-Index: AQHWF186KnXLsMWtVkCGO69asmmcQaiGN2OAgAESEwCAA4JngIACyCOA
-Date:   Mon, 27 Apr 2020 15:15:36 +0000
-Message-ID: <6344a9afcc585504c5dfbc00174280613683064d.camel@intel.com>
-References: <1587418630-13562-1-git-send-email-jonathan.derrick@intel.com>
-         <1587418630-13562-3-git-send-email-jonathan.derrick@intel.com>
-         <0058b993-0663-7fed-ed31-cb0adf845a39@linux.intel.com>
-         <ea21d9475b0af277c7288504ff2cd32b3f91e4ba.camel@intel.com>
-         <7e574cc1-a24b-5c4b-7d4f-3fda3f395390@linux.intel.com>
-In-Reply-To: <7e574cc1-a24b-5c4b-7d4f-3fda3f395390@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.255.3.119]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <DA95B75948026E40ACB35C2843122F18@intel.com>
-Content-Transfer-Encoding: base64
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
+ support for the idxd driver.
+Message-ID: <20200427094137.4801bfb6@w520.home>
+In-Reply-To: <20200427142553.GH13640@mellanox.com>
+References: <20200424124444.GJ13640@mellanox.com>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D8A808B@SHSMSX104.ccr.corp.intel.com>
+        <20200424181203.GU13640@mellanox.com>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D8C5486@SHSMSX104.ccr.corp.intel.com>
+        <20200426191357.GB13640@mellanox.com>
+        <20200426214355.29e19d33@x1.home>
+        <20200427115818.GE13640@mellanox.com>
+        <20200427071939.06aa300e@x1.home>
+        <20200427132218.GG13640@mellanox.com>
+        <20200427081841.18c4a994@x1.home>
+        <20200427142553.GH13640@mellanox.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-SGkgU2F0aHlhbmFyYXlhbmFuLA0KDQpPbiBTYXQsIDIwMjAtMDQtMjUgYXQgMTM6NDYgLTA3MDAs
-IEt1cHB1c3dhbXksIFNhdGh5YW5hcmF5YW5hbiB3cm90ZToNCj4gDQo+IE9uIDQvMjMvMjAgODox
-MSBBTSwgRGVycmljaywgSm9uYXRoYW4gd3JvdGU6DQo+ID4gSGkgU2F0aHlhbmFyYXlhbmFuLA0K
-PiA+IA0KPiA+IE9uIFdlZCwgMjAyMC0wNC0yMiBhdCAxNTo1MCAtMDcwMCwgS3VwcHVzd2FteSwg
-U2F0aHlhbmFyYXlhbmFuIHdyb3RlOg0KPiA+ID4gT24gNC8yMC8yMCAyOjM3IFBNLCBKb24gRGVy
-cmljayB3cm90ZToNCj4gPiA+ID4gVGhlIGV4aXN0aW5nIHBvcnRkcnYgbW9kZWwgcHJldmVudHMg
-RFBDIHNlcnZpY2VzIHdpdGhvdXQgZWl0aGVyIE9TDQo+ID4gPiA+IGNvbnRyb2wgKF9PU0MpIGdy
-YW50ZWQgdG8gQUVSIHNlcnZpY2VzLCBhIEhvc3QgQnJpZGdlIHJlcXVlc3RpbmcgTmF0aXZlDQo+
-ID4gPiA+IEFFUiwgb3IgdXNpbmcgb25lIG9mIHRoZSAncGNpZV9wb3J0cz0nIHBhcmFtZXRlcnMg
-b2YgJ25hdGl2ZScgb3INCj4gPiA+ID4gJ2RwYy1uYXRpdmUnLg0KPiA+ID4gPiANCj4gPiA+ID4g
-VGhlIERQQyBwb3J0IHNlcnZpY2UgZHJpdmVyIGl0c2VsZiB3aWxsIGFsc28gZmFpbCB0byBwcm9i
-ZSBpZiB0aGUga2VybmVsDQo+ID4gPiA+IGFzc3VtZXMgdGhlIHBvcnQgaXMgdXNpbmcgRmlybXdh
-cmUtRmlyc3QgQUVSLiBJdCdzIGEgcmVhc29uYWJsZQ0KPiA+ID4gPiBleHBlY3RhdGlvbiB0aGF0
-IGEgcG9ydCB1c2luZyBGaXJtd2FyZS1GaXJzdCBBRVIgd2lsbCBhbHNvIGJlIHVzaW5nDQo+ID4g
-PiA+IEZpcm13YXJlLUZpcnN0IERQQywgaG93ZXZlciBpZiBhIEhvc3QgQnJpZGdlIHJlcXVlc3Rz
-IE5hdGl2ZSBEUEMsIHRoZQ0KPiA+ID4gPiBEUEMgZHJpdmVyIHNob3VsZCBhbGxvdyBpdCBhbmQg
-bm90IGZhaWwgdG8gYmluZCBkdWUgdG8gQUVSIGNhcGFiaWxpdHkNCj4gPiA+ID4gc2V0dGluZ3Mu
-DQo+ID4gPiA+IA0KPiA+ID4gPiBIb3N0IEJyaWRnZXMgd2hpY2ggcmVxdWVzdCBOYXRpdmUgRFBD
-IHBvcnQgc2VydmljZXMgd2lsbCBhbHNvIGxpa2VseQ0KPiA+ID4gPiByZXF1ZXN0IE5hdGl2ZSBB
-RVIsIGhvd2V2ZXIgaXQgc2hvdWxkbid0IGJlIGEgcmVxdWlyZW1lbnQuIFRoaXMgcGF0Y2gNCj4g
-PiA+ID4gYWxsb3dzIHBvcnRzIG9uIHRob3NlIEhvc3QgQnJpZGdlcyB0byBoYXZlIERQQyBwb3J0
-IHNlcnZpY2VzLg0KPiA+ID4gPiANCj4gPiA+ID4gVGhpcyB3aWxsIGF2b2lkIHRoZSB1bmxpa2Vs
-eSBzaXR1YXRpb24gd2hlcmUgdGhlIHBvcnQgaXMgRmlybXdhcmUtRmlyc3QNCj4gPiA+ID4gQUVS
-IGFuZCBOYXRpdmUgRFBDLCBhbmQgYSBCSU9TIG9yIHN3aXRjaCBmaXJtd2FyZSBwcmVjb25maWd1
-cmF0aW9uIG9mDQo+ID4gPiA+IHRoZSBEUEMgdHJpZ2dlciBjb3VsZCByZXN1bHQgaW4gdW5oYW5k
-bGVkIERQQyBldmVudHMuDQo+ID4gPiA+IA0KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBKb24gRGVy
-cmljayA8am9uYXRoYW4uZGVycmlja0BpbnRlbC5jb20+DQo+ID4gPiA+IC0tLQ0KPiA+ID4gPiAg
-ICBkcml2ZXJzL3BjaS9wY2llL2RwYy5jICAgICAgICAgIHwgMyArKy0NCj4gPiA+ID4gICAgZHJp
-dmVycy9wY2kvcGNpZS9wb3J0ZHJ2X2NvcmUuYyB8IDMgKystDQo+ID4gPiA+ICAgIDIgZmlsZXMg
-Y2hhbmdlZCwgNCBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KPiA+ID4gPiANCj4gPiA+
-ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL3BjaWUvZHBjLmMgYi9kcml2ZXJzL3BjaS9wY2ll
-L2RwYy5jDQo+ID4gPiA+IGluZGV4IDc2MjE3MDQuLjNmMzEwNmYgMTAwNjQ0DQo+ID4gPiA+IC0t
-LSBhL2RyaXZlcnMvcGNpL3BjaWUvZHBjLmMNCj4gPiA+ID4gKysrIGIvZHJpdmVycy9wY2kvcGNp
-ZS9kcGMuYw0KPiA+ID4gPiBAQCAtMjg0LDcgKzI4NCw4IEBAIHN0YXRpYyBpbnQgZHBjX3Byb2Jl
-KHN0cnVjdCBwY2llX2RldmljZSAqZGV2KQ0KPiA+ID4gPiAgICAJaW50IHN0YXR1czsNCj4gPiA+
-ID4gICAgCXUxNiBjdGwsIGNhcDsNCj4gPiA+ID4gICAgDQo+ID4gPiA+IC0JaWYgKHBjaWVfYWVy
-X2dldF9maXJtd2FyZV9maXJzdChwZGV2KSAmJiAhcGNpZV9wb3J0c19kcGNfbmF0aXZlKQ0KPiA+
-ID4gPiArCWlmIChwY2llX2Flcl9nZXRfZmlybXdhcmVfZmlyc3QocGRldikgJiYgIXBjaWVfcG9y
-dHNfZHBjX25hdGl2ZSAmJg0KPiA+ID4gPiArCSAgICAhcGNpX2ZpbmRfaG9zdF9icmlkZ2UocGRl
-di0+YnVzKS0+bmF0aXZlX2RwYykNCj4gPiA+IFdoeSBkbyBpdCBpbiBwcm9iZSBhcyB3ZWxsID8g
-aWYgaG9zdC0+bmF0aXZlX2RwYyBpcyBub3Qgc2V0IHRoZW4gdGhlDQo+ID4gPiBkZXZpY2UgRFBD
-IHByb2JlIGl0IHNlbGYgd29uJ3QgaGFwcGVuIHJpZ2h0ID8NCj4gPiANCj4gPiBQb3J0ZHJ2IG9u
-bHkgZW5hYmxlcyB0aGUgaW50ZXJydXB0IGFuZCBhbGxvd3MgdGhlIHByb2JlIHRvIG9jY3VyLg0K
-PiANCj4gUGxlYXNlIGNoZWNrIHRoZSBmb2xsb3dpbmcgc25pcHBldCBvZiBjb2RlIChmcm9tIHBv
-cnRkcnZfY29yZS5jKS4NCj4gDQo+IElJVUMsIHBjaWVfZGV2aWNlX2luaXQoKSB3aWxsIG5vdCBi
-ZSBjYWxsZWQgaWYgUENJRV9QT1JUX1NFUlZJQ0VfRFBDIGlzDQo+IG5vdCBzZXQgaW4gY2FwYWJp
-bGl0aWVzLiBZb3VyIGNoYW5nZSBpbiBwb3J0ZHJ2X2NvcmUuYyBhbHJlYWR5DQo+IHNlbGVjdGl2
-ZWx5IGVuYWJsZXMgdGhlIFBDSUVfUE9SVF9TRVJWSUNFX0RQQyBzZXJ2aWNlIGJhc2VkIG9uDQo+
-IG5hdGl2ZV9kcGMgdmFsdWUuDQo+IA0KVGhhdCdzIHJpZ2h0LiBTbyBwY2llX2RldmljZV9pbml0
-IHJlZ2lzdGVycyB0aGUgcG9ydCBzZXJ2aWNlIGRyaXZlcg0KYWxsb3dpbmcgdGhlIHNlcnZpY2Vz
-IGVudW1lcmF0aW9uIHRvIG9jY3VyLg0KDQo+IFNvIElNTywgYWRkaW5nIG5hdGl2ZV9kcGMgY2hl
-Y2sgaW4gZHBjX3Byb2JlKCkgaXMgcmVkdW5kYW50Lg0KPiANCj4gaW50IHBjaWVfcG9ydF9kZXZp
-Y2VfcmVnaXN0ZXIoc3RydWN0IHBjaV9kZXYgKmRldikNCj4gCS8qIEFsbG9jYXRlIGNoaWxkIHNl
-cnZpY2VzIGlmIGFueSAqLw0KPiAJc3RhdHVzID0gLUVOT0RFVjsNCj4gCW5yX3NlcnZpY2UgPSAw
-Ow0KPiAJZm9yIChpID0gMDsgaSA8IFBDSUVfUE9SVF9ERVZJQ0VfTUFYU0VSVklDRVM7IGkrKykg
-ew0KPiAJCWludCBzZXJ2aWNlID0gMSA8PCBpOw0KPiAJCWlmICghKGNhcGFiaWxpdGllcyAmIHNl
-cnZpY2UpKQ0KPiAJCQljb250aW51ZTsNCj4gCQlpZiAoIXBjaWVfZGV2aWNlX2luaXQoZGV2LCBz
-ZXJ2aWNlLCBpcnFzW2ldKSkNCj4gCQkJbnJfc2VydmljZSsrOw0KPiAJfQ0KPiANClRoaXMgaXMg
-dGhlIHRyaWNreSBwYXJ0DQpUaGVyZSdzIHN0aWxsIGEgY2hlY2sgaW4gZHBjX3Byb2JlIGZvciBB
-RVIgRkZTIG9yIHBjaWVfcG9ydHM9ZHBjLQ0KbmF0aXZlOg0KDQppZiAocGNpZV9hZXJfZ2V0X2Zp
-cm13YXJlX2ZpcnN0KHBkZXYpICYmICFwY2llX3BvcnRzX2RwY19uYXRpdmUpDQoJcmV0dXJuIC1F
-Tk9UU1VQUDsNCg0KT25lIG9wdGlvbiBpcyB0byBtb3ZlIHRoYXQgdG8gZ2V0X3BvcnRfZGV2aWNl
-X2NhcGFiaWxpdHkgYW5kIHJlbW92ZSB0aGUNCmRwY19wcm9iZSBjaGVjaw0KDQo+ID4gVGhlIHBy
-b2JlIGl0c2VsZiB3aWxsIHN0aWxsIGZhaWwgaWYgdGhlcmUncyBhIG1peGVkLW1vZGUgX09TQw0K
-PiA+IG5lZ290aWF0ZWQgQUVSICYgRFBDLCBkdWUgdG8gcGNpZV9hZXJfZ2V0X2Zpcm13YXJlX2Zp
-cnN0IHJldHVybmluZyAxDQo+ID4gZm9yIEFFUiBhbmQgbm8gY2hlY2sgZm9yIERQQy4NCj4gPiAN
-Cj4gPiBJIGRvbid0IGtub3cgaWYgc3VjaCBhIHBsYXRmb3JtIHdpbGwgZXhpc3QsIGJ1dCB0aGUg
-a2VybmVsIGlzIGFscmVhZHkNCj4gPiB3aXJlZCBmb3IgJ2RwYy1uYXRpdmUnIHNvIGl0IG1ha2Vz
-IHNlbnNlIHRvIGV4dGVuZCBpdCBmb3IgdGhpcy4uDQo+ID4gDQo+ID4gVGhpcyB0cmFuc2Zvcm0g
-bWlnaHQgYmUgbW9yZSByZWFkYWJsZToNCj4gPiAJaWYgKHBjaWVfYWVyX2dldF9maXJtd2FyZV9m
-aXJzdChwZGV2KSAmJg0KPiA+IAkgICAgIShwY2llX3BvcnRzX2RwY19uYXRpdmUgfHwgaGItPm5h
-dGl2ZV9kcGMpKQ0KPiA+IA0KPiA+IA0KPiA+IA0KPiA+ID4gPiAgICAJCXJldHVybiAtRU5PVFNV
-UFA7DQo+ID4gPiA+ICAgIA0KPiA+ID4gPiAgICAJc3RhdHVzID0gZGV2bV9yZXF1ZXN0X3RocmVh
-ZGVkX2lycShkZXZpY2UsIGRldi0+aXJxLCBkcGNfaXJxLA0KPiA+ID4gPiBkaWZmIC0tZ2l0IGEv
-ZHJpdmVycy9wY2kvcGNpZS9wb3J0ZHJ2X2NvcmUuYyBiL2RyaXZlcnMvcGNpL3BjaWUvcG9ydGRy
-dl9jb3JlLmMNCj4gPiA+ID4gaW5kZXggNTBhOTUyMi4uZjIxMzlhMSAxMDA2NDQNCj4gPiA+ID4g
-LS0tIGEvZHJpdmVycy9wY2kvcGNpZS9wb3J0ZHJ2X2NvcmUuYw0KPiA+ID4gPiArKysgYi9kcml2
-ZXJzL3BjaS9wY2llL3BvcnRkcnZfY29yZS5jDQo+ID4gPiA+IEBAIC0yNTYsNyArMjU2LDggQEAg
-c3RhdGljIGludCBnZXRfcG9ydF9kZXZpY2VfY2FwYWJpbGl0eShzdHJ1Y3QgcGNpX2RldiAqZGV2
-KQ0KPiA+ID4gPiAgICAJICovDQo+ID4gPiA+ICAgIAlpZiAocGNpX2ZpbmRfZXh0X2NhcGFiaWxp
-dHkoZGV2LCBQQ0lfRVhUX0NBUF9JRF9EUEMpICYmDQo+ID4gPiA+ICAgIAkgICAgcGNpX2Flcl9h
-dmFpbGFibGUoKSAmJg0KPiA+ID4gPiAtCSAgICAocGNpZV9wb3J0c19kcGNfbmF0aXZlIHx8IChz
-ZXJ2aWNlcyAmIFBDSUVfUE9SVF9TRVJWSUNFX0FFUikpKQ0KPiA+ID4gPiArCSAgICAocGNpZV9w
-b3J0c19kcGNfbmF0aXZlIHx8IGhvc3QtPm5hdGl2ZV9kcGMgfHwNCj4gPiA+ID4gKwkgICAgIChz
-ZXJ2aWNlcyAmIFBDSUVfUE9SVF9TRVJWSUNFX0FFUikpKQ0KPiA+ID4gPiAgICAJCXNlcnZpY2Vz
-IHw9IFBDSUVfUE9SVF9TRVJWSUNFX0RQQzsNCj4gPiA+ID4gICAgDQo+ID4gPiA+ICAgIAlpZiAo
-cGNpX3BjaWVfdHlwZShkZXYpID09IFBDSV9FWFBfVFlQRV9ET1dOU1RSRUFNIHx8DQo+ID4gPiA+
-IA0K
+On Mon, 27 Apr 2020 11:25:53 -0300
+Jason Gunthorpe <jgg@mellanox.com> wrote:
+
+> On Mon, Apr 27, 2020 at 08:18:41AM -0600, Alex Williamson wrote:
+> > On Mon, 27 Apr 2020 10:22:18 -0300
+> > Jason Gunthorpe <jgg@mellanox.com> wrote:
+> >   
+> > > On Mon, Apr 27, 2020 at 07:19:39AM -0600, Alex Williamson wrote:
+> > >   
+> > > > > It is not trivial masking. It is a 2000 line patch doing comprehensive
+> > > > > emulation.    
+> > > > 
+> > > > Not sure what you're referring to, I see about 30 lines of code in
+> > > > vdcm_vidxd_cfg_write() that specifically handle writes to the 4 BARs in
+> > > > config space and maybe a couple hundred lines of code in total handling
+> > > > config space emulation.  Thanks,    
+> > > 
+> > > Look around vidxd_do_command()
+> > > 
+> > > If I understand this flow properly..  
+> > 
+> > I've only glanced at it, but that's called in response to a write to
+> > MMIO space on the device, so it's implementing a device specific
+> > register.  
+> 
+> It is doing emulation of the secure BAR. The entire 1000 lines of
+> vidxd_* functions appear to be focused on this task.
+
+Ok, we/I need a terminology clarification, a BAR is a register in
+config space for determining the size, type, and setting the location
+of a I/O or memory region of a device.  I've been asserting that the
+emulation of the BAR itself is trivial, but are you actually focused on
+emulation of the region described by the BAR?  This is what mdev is
+for, mediating access to a device and filling in gaps such that we can
+use re-use the vfio device APIs.
+
+> > Are you asking that PCI config space be done in userspace
+> > or any sort of device emulation?    
+> 
+> I'm concerned about doing full emulation of registers on a MMIO BAR
+> that trigger complex actions in response to MMIO read/write.
+
+Maybe what you're recalling me say about mdev is that its Achilles
+heel is that we rely on mediation provider (ie. vendor driver) for
+security, we don't necessarily have an piece of known, common hardware
+like an IOMMU to protect us when things go wrong.  That's true, but
+don't we also trust drivers in the host kernel to correctly manage and
+validate their own interactions with hardware, including the APIs
+provided through other user interfaces.  Is the assertion then that
+device specific, register level API is too difficult to emulate?
+
+> Simple masking and simple config space stuff doesn't seem so
+> problematic.
+> 
+> > The assumption with mdev is that we need emulation in the host
+> > kernel because we need a trusted entity to mediate device access and
+> > interact with privileged portion of the device control.  Thanks,  
+> 
+> Sure, but there are all kinds of different levels to this - mdev
+> should not be some open ended device emulation framework, IMHO.
+> 
+> ie other devices need only a small amount of kernel side help and
+> don't need complex MMIO BAR emulation.
+> 
+> Would you be happy if someone proposed an e1000 NIC emulator using
+> mdev? Why not move every part of qemu's PCI device emulation into the
+> kernel?
+
+Well, in order to mediate a device, we certainly expect there to be a
+physical device.  I also expect that there's some performance or at
+least compatibility advantage to using the device API directly rather
+than masquerading everything behind something like virtio.  So no, I
+wouldn't expect someone to create a fully emulated device in mdev, but
+also I do expect some degree of device emulation in an mdev driver to
+fill the gaps in non-performance path that hardware chose to defer to
+software.  Thanks,
+
+Alex
+
