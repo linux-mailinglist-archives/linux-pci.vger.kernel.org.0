@@ -2,34 +2,34 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F3C11BAC7C
+	by mail.lfdr.de (Postfix) with ESMTP id AE5561BAC7E
 	for <lists+linux-pci@lfdr.de>; Mon, 27 Apr 2020 20:24:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726249AbgD0SY1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S1726362AbgD0SY1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Mon, 27 Apr 2020 14:24:27 -0400
-Received: from mta-02.yadro.com ([89.207.88.252]:53238 "EHLO mta-01.yadro.com"
+Received: from mta-02.yadro.com ([89.207.88.252]:53048 "EHLO mta-01.yadro.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726362AbgD0SY0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 27 Apr 2020 14:24:26 -0400
+        id S1726226AbgD0SY1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 27 Apr 2020 14:24:27 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id AA2594C866;
-        Mon, 27 Apr 2020 18:24:23 +0000 (UTC)
+        by mta-01.yadro.com (Postfix) with ESMTP id 7B3884C867;
+        Mon, 27 Apr 2020 18:24:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
         content-type:content-type:content-transfer-encoding:mime-version
         :references:in-reply-to:x-mailer:message-id:date:date:subject
         :subject:from:from:received:received:received; s=mta-01; t=
-        1588011862; x=1589826263; bh=XCerxuP4kI3gs46RMMe56g/f4erT/fS2u3T
-        lS2n0Bww=; b=P2chGHTLWR7ORtD4MI31GahOJfZ5rnHPL4BWFLMnvAFT8n/TgPG
-        oQfYNZkq7EJGExxHLgZ2IzfJAr2N0I5m8K3AE42w/NuGHaRTOmDAxxcaKaGU6fIO
-        4eJkUCGo6IKZRl91+R+X0o70we9byr0IJ4XEfXbFt2lB22jMOn5d4BI8=
+        1588011863; x=1589826264; bh=bLYazg1sv1Yf5L9nAqAHsxzIv0PFIhlEuNP
+        aBze48OU=; b=XmaCNS0N+i5pu4xyHVVw7plGrbwNf8QCFjJWGI0X3FODFxo2Czz
+        4ItzA0UVSKUB5KOG6vNL5dLIejm8YO+rWpTxxTC6iAMY7MmEow6lZFg0WRBSlMT3
+        z7HlQe0mv/5y1IiAQtR34Ic2yXdnMrtA/AkS+UfyjJPSGjpPEgQpwr7A=
 X-Virus-Scanned: amavisd-new at yadro.com
 Received: from mta-01.yadro.com ([127.0.0.1])
         by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id q20rnpg5tt8e; Mon, 27 Apr 2020 21:24:22 +0300 (MSK)
+        with ESMTP id yNVOxIz5Eabc; Mon, 27 Apr 2020 21:24:23 +0300 (MSK)
 Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id 6CF994C849;
+        by mta-01.yadro.com (Postfix) with ESMTPS id 9B31D4C84A;
         Mon, 27 Apr 2020 21:24:12 +0300 (MSK)
 Received: from NB-148.yadro.com (172.17.15.136) by T-EXCH-02.corp.yadro.com
  (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
@@ -44,9 +44,9 @@ CC:     Bjorn Helgaas <helgaas@kernel.org>, Lukas Wunner <lukas@wunner.de>,
         David Laight <David.Laight@ACULAB.COM>,
         Rajat Jain <rajatja@google.com>, <linux@yadro.com>,
         Sergei Miroshnichenko <s.miroshnichenko@yadro.com>
-Subject: [PATCH v8 17/24] PCI: hotplug: Configure MPS after manual bus rescan
-Date:   Mon, 27 Apr 2020 21:23:51 +0300
-Message-ID: <20200427182358.2067702-18-s.miroshnichenko@yadro.com>
+Subject: [PATCH v8 18/24] PCI: hotplug: Don't disable the released bridge windows immediately
+Date:   Mon, 27 Apr 2020 21:23:52 +0300
+Message-ID: <20200427182358.2067702-19-s.miroshnichenko@yadro.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200427182358.2067702-1-s.miroshnichenko@yadro.com>
 References: <20200427182358.2067702-1-s.miroshnichenko@yadro.com>
@@ -61,39 +61,40 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Assure that MPS settings are set up for bridges which are discovered during
-manually triggered rescan via sysfs. This sequence of bridge init (using
-pci_rescan_bus()) later will be used for pciehp hot-add events when BAR
-movement is enabled.
+On a hotplug event with enabled BAR movement, calculating new BAR layout
+and bridge windows takes some time. During this procedure, the structures
+representing these windows are released - marked for recalculation.
+
+When the new bridge window values are ready, they are written to the bridge
+registers via pci_setup_bridges().
+
+Currently, bridge's registers are updated immediately after releasing a
+window to disable it. But if a driver doesn't yet support movable BARs, it
+doesn't stop MEM transactions during the hotplug, so disabled bridge
+windows will break them.
+
+Let the bridge windows remain operating after releasing, as they will be
+updated to the new values in the end of a hotplug event.
 
 Signed-off-by: Sergei Miroshnichenko <s.miroshnichenko@yadro.com>
 ---
- drivers/pci/probe.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/pci/setup-bus.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 765b2883755a..d01d93c6bfa2 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -3554,7 +3554,7 @@ static void pci_reassign_root_bus_resources(struct pci_bus *root)
- unsigned int pci_rescan_bus(struct pci_bus *bus)
- {
- 	unsigned int max;
--	struct pci_bus *root = bus;
-+	struct pci_bus *root = bus, *child;
- 
- 	while (!pci_is_root_bus(root))
- 		root = root->parent;
-@@ -3575,6 +3575,9 @@ unsigned int pci_rescan_bus(struct pci_bus *bus)
- 		pci_assign_unassigned_bus_resources(bus);
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index 4cadfa1f9519..3081f2d2a48a 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -1635,7 +1635,8 @@ static void pci_bridge_release_resources(struct pci_bus *bus,
+ 		/* Avoiding touch the one without PREF */
+ 		if (type & IORESOURCE_PREFETCH)
+ 			type = IORESOURCE_PREFETCH;
+-		__pci_setup_bridge(bus, type);
++		if (!pci_can_move_bars)
++			__pci_setup_bridge(bus, type);
+ 		/* For next child res under same bridge */
+ 		r->flags = old_flags;
  	}
- 
-+	list_for_each_entry(child, &root->children, node)
-+		pcie_bus_configure_settings(child);
-+
- 	pci_bus_add_devices(bus);
- 
- 	return max;
 -- 
 2.24.1
 
