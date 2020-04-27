@@ -2,106 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C30331B97B1
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Apr 2020 08:46:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E11F1B9837
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Apr 2020 09:19:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbgD0Gqh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Apr 2020 02:46:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46530 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726349AbgD0Gqh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Apr 2020 02:46:37 -0400
-Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D4CAC061A0F;
-        Sun, 26 Apr 2020 23:46:37 -0700 (PDT)
-Received: from flygoat-x1e (unknown [IPv6:240e:390:491:f2b0::d68])
-        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 491202049F;
-        Mon, 27 Apr 2020 06:46:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
-        t=1587969996; bh=87cY8c65SZbqmYxYzk6T3jS7ROhx/jS7jol+umwWuSU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ipmZLB70pSVEu9CTWQUAPnv8VwbpFKilRfFvtvs2qQqppq+N6gnGsLm272ScTwsAT
-         pQOSD3mKgw1ZTRqT7P7EKI1Lgm7jEDUPAYpZJRW3emSSkbETQupWpVcLckr+fRsdS1
-         WIGijRv/PVDI/Uqt82jPlUetvVCk4jW4a4UF2H0v3dU8a5drnVxoPFYx0eGXc3vO49
-         INyafcEamxMEuTGOXCwS5H2uRvboiBRjuOte/zrPwWWini+IkfBdXRgdHFNucyPbTZ
-         CLUVS2jO7mdz1TeqKEsmLmAEFGammRDOnWMziS23ni9A8OKCcnY42fU+nJ1LJA2Yrj
-         eBUmFNS0uCXIg==
-Date:   Mon, 27 Apr 2020 14:46:18 +0800
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     Huacai Chen <chenhc@lemote.com>
-Cc:     "open list:MIPS" <linux-mips@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Paul Burton <paulburton@kernel.org>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 2/5] PCI: Add Loongson PCI Controller support
-Message-ID: <20200427144618.1e7a642a@flygoat-x1e>
-In-Reply-To: <CAAhV-H6JpHUJ_aQ0zSzMquSQBkA5Roo6bOUqhLys_AZhbp1UmA@mail.gmail.com>
-References: <20200427060551.1372591-1-jiaxun.yang@flygoat.com>
-        <20200427060551.1372591-3-jiaxun.yang@flygoat.com>
-        <CAAhV-H6JpHUJ_aQ0zSzMquSQBkA5Roo6bOUqhLys_AZhbp1UmA@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726434AbgD0HTX convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Mon, 27 Apr 2020 03:19:23 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:44314 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726349AbgD0HTX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Apr 2020 03:19:23 -0400
+Received: by mail-ot1-f67.google.com with SMTP id j4so24550699otr.11;
+        Mon, 27 Apr 2020 00:19:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=tYh90QCx3bEamRC7LtyHw5B+SMhTg1Z1mR2i+dogp/4=;
+        b=AIYdtJ/mX3jEhvIeqqrtREXqmOCtCk7yfgfb8y2S7/r1wkvOyHLt0qkO7vC7HzENND
+         NoE4GvipEpAm6iEOsNVXfCIRL/F0xEvZ4g9xgxGHmbeuUn+xAeUEZs0FXbeHo2zAfq7I
+         Wzg45yTicITat9nzpchJQadip0YClrErn0fWynsBTuqkDW4h/0YHfErn6xlqqm3ruuQv
+         1fv15Z3qspB1UyqWz90oCzP20LmeEsVJWKyfyzv/z7k0Mq1oWjFGKAlvG4s03TZNzkKD
+         +xoxcyC7JCm0TYOnoG6QQv1Ao4eUBjHex4pXKXYc2k+2dbIrsTi8naFpfMZWsUpZ5MSF
+         Lvdg==
+X-Gm-Message-State: AGi0PuZ8o5YAAwqno9k2uoHHJ4RHvHNm5KNJjwOR57fqVq4T0uF2Yzyj
+        wBq517fcxMjbk/2V7WfgrxE6OgnfkurBVYYmKxDcWQ==
+X-Google-Smtp-Source: APiQypJ5AWLI8Kj6Y0BLeuT0kUr1iCEItGAU5GPtqxZCAXqTxYWmJig8j69WicUC4g/GhXK/3R6xLfKOxyvbMe+wGEg=
+X-Received: by 2002:a9d:7d85:: with SMTP id j5mr16329107otn.107.1587971962698;
+ Mon, 27 Apr 2020 00:19:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200426123115.55995-1-marek.vasut@gmail.com>
+In-Reply-To: <20200426123115.55995-1-marek.vasut@gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 27 Apr 2020 09:19:11 +0200
+Message-ID: <CAMuHMdXC58F8X0aMgyCZJ1L5d9L9hSJRLrO1mmeX2KZUXUac0Q@mail.gmail.com>
+Subject: Re: [PATCH] PCI: pcie-rcar: Mark rcar_pcie_resume() with __maybe_unused
+To:     Marek Vasut <marek.vasut@gmail.com>
+Cc:     linux-pci <linux-pci@vger.kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 27 Apr 2020 14:29:34 +0800
-Huacai Chen <chenhc@lemote.com> wrote:
+On Sun, Apr 26, 2020 at 2:31 PM <marek.vasut@gmail.com> wrote:
+> From: Marek Vasut <marek.vasut+renesas@gmail.com>
+>
+> If CONFIG_PM_SLEEP is not set, SET_SYSTEM_SLEEP_PM_OPS() is expanded to
+> empty macro and there is no reference to rcar_pcie_resume(), hence the
+> following warning is generated:
+>
+> drivers/pci/controller/pcie-rcar.c:1253:12: warning: ‘rcar_pcie_resume’ defined but not used [-Wunused-function]
+>  1253 | static int rcar_pcie_resume(struct device *dev)
+>       |            ^~~~~~~~~~~~~~~~
+>
+> Fix this by marking this function as __maybe_unused , just like in
+> commit 226e6b866d74 ("gpio: pch: Convert to dev_pm_ops")
+>
+> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+> Reported-by: Bjorn Helgaas <bhelgaas@google.com>
 
-> Hi, Jiaxun,
-> 
-> On Mon, Apr 27, 2020 at 2:06 PM Jiaxun Yang <jiaxun.yang@flygoat.com>
-> wrote:
-> >
-> > This controller can be found on Loongson-2K SoC, Loongson-3
-> > systems with RS780E/LS7A PCH.
-> >
-> > The RS780E part of code was previously located at
-> > arch/mips/pci/ops-loongson3.c and now it can use generic PCI
-> > driver implementation.
-> >
-> > Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> >
-> > --
-> > v2:
-> >         - Clean up according to rob's suggestions
-> >         - Claim that it can't work as a module
-> > v3:
-> >         - Fix a typo
-> > v4:
-> >         - More clean-ups: Drop flag check, use devfn
-> > ---
-> >  drivers/pci/controller/Kconfig        |  10 +
-> >  drivers/pci/controller/Makefile       |   1 +
-> >  drivers/pci/controller/pci-loongson.c | 251
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[...]
+Gr{oetje,eeting}s,
 
-> > +static const struct of_device_id loongson_pci_of_match[] = {
-> > +       { .compatible = "loongson,rs780e-pci",
-> > +               .data = (void *)(FLAG_CFG0), },
-> > +       { .compatible = "loongson,ls2k-pci",
-> > +               .data = (void *)(FLAG_CFG0 | FLAG_CFG1 |
-> > FLAG_DEV_FIX), },
-> > +       { .compatible = "loongson,ls7a-pci",
-> > +               .data = (void *)(FLAG_CFG0 | FLAG_CFG1 |
-> > FLAG_DEV_FIX), },  
-> I suggest to use alpha-betical order here: ls2k, ls7a and rs780 at
-> last.
+                        Geert
 
-Thanks for pointing out this minor issue.
-I put rs780e at first at it appears to be the first system using this
-driver.
-If there is no more review suggestion I'll send out next revision very
-soon. 
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-[...]
-
---
-Jiaxun Yang
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
