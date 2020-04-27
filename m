@@ -2,106 +2,82 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4EF941BAAE4
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Apr 2020 19:14:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CEC7B1BAB81
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Apr 2020 19:41:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726262AbgD0ROj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Apr 2020 13:14:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60102 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726250AbgD0ROi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Apr 2020 13:14:38 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CBD0C0610D5;
-        Mon, 27 Apr 2020 10:14:38 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id x25so482213wmc.0;
-        Mon, 27 Apr 2020 10:14:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=iUbGEjNpgGtO2vWiDgXwqS6XKUZo7L9U0uKkXPD20wc=;
-        b=MAGlHvud2x5nuYmv3mRLbCOhvrVzmKE9Hc6UYu3wwmr3QDvPoDMurQQGVmEMdHzvmm
-         tr9zwVqA+fTXEiQhJp/we9wTK2pLQJKZSFP+OjdtJq210KmnVf9k1y9wO2X96ZJBzZrv
-         qv3XKC1zBCPPVI8OZkCvKVD88Vji4tyYc/rbddw4U/ex87hMpwSZ2pzmWzlFyl2X2bCa
-         n8MZlFVtjP9CUMK2l4108Di4TRYYkq/QskwaIsHeQ57ahEUon3hFSfpHlexSOaVVbk2l
-         A1Ztnfv0DImEVfkLDPtLjkFFLDdfSm9/9DQpsZ32el+Nfm+3Wc7o4T8Hhw4MJ4U/KVPZ
-         okXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=iUbGEjNpgGtO2vWiDgXwqS6XKUZo7L9U0uKkXPD20wc=;
-        b=U39HSYJ9KwQ+Q3yELaEjOOS/YGcUbESv5Kv/iJbELFRzCOKS8WALNxFUpOU7Hd1XE4
-         NbcRGGG8L+seLnSSIkGG/+LzABMSZnYtSYWjcLz6DBzNWdRPGIaVWF8wX3IVM4bhSHlZ
-         pp8FcR4aN1mPT94IG0bE5iA+ZKjhRzJuE6M1da7fEVIPZXgzMiuTi7pdBB/8RqXsWSdm
-         oon8Q2ri7xGCu6TVxDHlNN4gO6AMNwknHQI63rDH8b0Q+VroHPEYUsNtM1UU+UTizj8z
-         vuqgHpb14fsdq/QWsIlNmP8SNl/l0p3qRHh9+uAS04siLxxUJ/dQ9rd4VP8W6BkE9iOY
-         BBzQ==
-X-Gm-Message-State: AGi0Pub5DRoRno5kqZT2d8ROupknXCSdEaVOHipr4h1SYYR11yf1Dp7T
-        sNvWIX1aGWbo8rliqgpahttU1IDE
-X-Google-Smtp-Source: APiQypKViGrk5fcwpFqZMo4PT9BLhQSxhVkQdWaM1Mhbac1DdUEEjDZxAwXpWfDi8p4pjc6g/AjxjA==
-X-Received: by 2002:a1c:3c87:: with SMTP id j129mr463186wma.157.1588007676862;
-        Mon, 27 Apr 2020 10:14:36 -0700 (PDT)
-Received: from [192.168.1.4] (ip-86-49-35-8.net.upcbroadband.cz. [86.49.35.8])
-        by smtp.gmail.com with ESMTPSA id a20sm22975233wra.26.2020.04.27.10.14.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Apr 2020 10:14:35 -0700 (PDT)
-Subject: Re: [PATCH] PCI: pcie-rcar: Mark rcar_pcie_resume() with
- __maybe_unused
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org,
+        id S1726295AbgD0Rll (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Apr 2020 13:41:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50860 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726260AbgD0Rlk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 27 Apr 2020 13:41:40 -0400
+Received: from localhost (mobile-166-175-187-210.mycingular.net [166.175.187.210])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0931B20775;
+        Mon, 27 Apr 2020 17:41:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588009300;
+        bh=4+FdGDK3qcemswCFDQJ5mLkfrtJ2whwh+PcMpzPVew4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=sBSXhyCjUGWmK++mfBvXr0kaSLxdlfr3oeRmvokzZ6lFXclYQyrNdvWgkUaxJcLjZ
+         roYxZ6f4/fHsbu2cjQBPQpCwbR8qTD+06NOnMFQOOSH/GO/WUlTmGgzJANn9arbWMD
+         /ZqYd6YoPtZKptl5pVBNBnm8MfidEqFjLFdYmCRI=
+Date:   Mon, 27 Apr 2020 12:41:38 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Marek Vasut <marek.vasut@gmail.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Kazufumi Ikeda <kaz-ikeda@xc.jp.nec.com>,
+        Gaku Inami <gaku.inami.xw@bp.renesas.com>,
         Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
         Wolfram Sang <wsa@the-dreams.de>,
-        linux-renesas-soc@vger.kernel.org
-References: <20200427164452.GA207715@google.com>
-From:   Marek Vasut <marek.vasut@gmail.com>
-Message-ID: <491cbbce-eb43-8efe-565d-7f701c51b63d@gmail.com>
-Date:   Mon, 27 Apr 2020 19:14:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH V3] PCI: rcar: Add the suspend/resume for pcie-rcar driver
+Message-ID: <20200427174138.GA207841@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20200427164452.GA207715@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdVGkM_-5q+pSOtQ5nBPGzMeOpRTJUqekYnvjiPMFepqLw@mail.gmail.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 4/27/20 6:44 PM, Bjorn Helgaas wrote:
-> On Sun, Apr 26, 2020 at 02:31:15PM +0200, marek.vasut@gmail.com wrote:
->> From: Marek Vasut <marek.vasut+renesas@gmail.com>
->>
->> If CONFIG_PM_SLEEP is not set, SET_SYSTEM_SLEEP_PM_OPS() is expanded to
->> empty macro and there is no reference to rcar_pcie_resume(), hence the
->> following warning is generated:
->>
->> drivers/pci/controller/pcie-rcar.c:1253:12: warning: ‘rcar_pcie_resume’ defined but not used [-Wunused-function]
->>  1253 | static int rcar_pcie_resume(struct device *dev)
->>       |            ^~~~~~~~~~~~~~~~
->>
->> Fix this by marking this function as __maybe_unused , just like in
->> commit 226e6b866d74 ("gpio: pch: Convert to dev_pm_ops")
->>
->> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
->> Reported-by: Bjorn Helgaas <bhelgaas@google.com>
->> Cc: Bjorn Helgaas <bhelgaas@google.com>
->> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
->> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
->> Cc: Wolfram Sang <wsa@the-dreams.de>
->> Cc: linux-renesas-soc@vger.kernel.org
->> ---
->> NOTE: Based on git://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git
->>       branch pci/rcar
->> NOTE: The driver tag is now 'pcie-rcar' to distinguish it from pci-rcar-gen2.c
-> 
-> I hope Lorenzo will squash this into the original commit.  I don't
-> think it adds anything useful to keep it as a separate commit.
+[+cc Lorenzo]
 
-Fine by me, that's also why I added these notes, so it's obvious it's
-based off the same branch where the previous patch is already.
+On Sat, Apr 25, 2020 at 10:55:21AM +0200, Geert Uytterhoeven wrote:
+> On Fri, Apr 24, 2020 at 9:57 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > [+cc Vaibhav]
+> >
+> > Alternate less redundant subject:
+> >
+> >   PCI: rcar: Add suspend/resume support
+> 
+> Note that there's both pcie-rcar.c (this driver, for R-Car Gen2 and Gen3
+> PCIe) and pci-rcar-gen2.c (for R-Car Gen2 PCI).
+> People tend to use the prefix "PCI: rcar: " for both :-(
+
+Yeah, that's pretty broken, thanks for pointing this out!
+
+For most drivers we use a chipset name ("keystone", "imx6", "tegra",
+etc) as the changlog tag.  That's nice because it gives space for
+multiple drivers from the same vendor, but I don't know anything
+similarly specific for the R-Car drivers.
+
+pci-rcar-gen2.c seems to be for some sort of internal Conventional PCI
+bus?  The "gen2" is confusing because "Gen 2" is more commonly used
+for PCIe than for Conventional PCI.
+
+I would propose keeping "rcar" for the PCIe driver and using
+"rcar-pci" for the Conventional PCI one, but the Conventional PCI one
+(pci-rcar-gen2.c) seems pretty inactive.  The most recent commits are
+from 2018, and they're trivial cleanups.  So I'm doubtful that anybody
+will remember when the next change comes in.
+
+Bjorn
