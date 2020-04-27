@@ -2,72 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 861361B9839
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Apr 2020 09:19:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E57801B98DB
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Apr 2020 09:43:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726589AbgD0HT4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Apr 2020 03:19:56 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:38524 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726460AbgD0HT4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Apr 2020 03:19:56 -0400
-Received: by mail-ot1-f65.google.com with SMTP id g19so24510303otk.5;
-        Mon, 27 Apr 2020 00:19:55 -0700 (PDT)
+        id S1726786AbgD0Hmr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Apr 2020 03:42:47 -0400
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:40407 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726766AbgD0Hmp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Apr 2020 03:42:45 -0400
+Received: by mail-yb1-f193.google.com with SMTP id f13so8976267ybk.7;
+        Mon, 27 Apr 2020 00:42:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=MLOsCXY5CJYqvVWVe6aOT0DVdT2ij4VE8Z+SPJO/YZg=;
-        b=qHzTIG3CMpMmk7uqCdXz9aoLO4cQfXLWo02wjALzk7DaNtv9bjKsABWfd90hSpmrpk
-         jOI2l/0UgRXKivpXyXTFUgWzLdOaNPSPT9SCdP2bUTCGrcoDugW/aK4AnfGHxpqGjc5l
-         ne8jBZj3FtkG226CK6xloWkSuiIl81NGdDV/1I9NFGOoIggf64LfZr3UeKmGXGD/rmun
-         jqZGfRWpxUWZIvyyXfkwgaBoAdMb+kqHLlvdcgP/sP9+j19QFZeC4F7TkEXKvxfohDC2
-         hyPvJFT5/o+knGgjGCWs3qrcFx/oBJzrdXjBUHi5dEwcBXb5nn1wNQA9IUsA7OFAVu4L
-         LYyQ==
-X-Gm-Message-State: AGi0Pub/yJxVULfaf05UNC+Qs/YOUdhhhoB2Vg018fSFSWncwXsDOoMG
-        usXh2Qk1DJn6AUbABBFz4MuSpddLHitHZbPiN7w=
-X-Google-Smtp-Source: APiQypLUWaxFh0/MS1q8NoWLnzWkpWyzj00AqJlpeCTuWSk5j2TuRqmUrMkxg/hB2+VV8abA6c3BE5pk/d4HbgDqaWE=
-X-Received: by 2002:a9d:7990:: with SMTP id h16mr11320789otm.145.1587971995512;
- Mon, 27 Apr 2020 00:19:55 -0700 (PDT)
+        bh=7HDE8ph93EI2vOePc5ywVTgnLdaOVxztdKRCyPN5Qdw=;
+        b=IOJzamf8OgTB7SIpo/NaEc7tMItPB90nfPDnCKPs1EodhWcDBKChSF+miIlCAy/MZv
+         fJ3d+JrfeSxOm0td6knQTV5XFOGn0pqC/OxFawNfnosRM4b8HW1Wn4Q+snyPW+q/yJZd
+         rfBtOMvrbe0CfFB8ifB4D7fCmhaPhcadwdQhefhWcDvszF3zHA+KDI8Aql22PcmTN5G7
+         EgWn0wtrcjwX6pE79D6w3UdX4rV8A36TRLJ7r4L1yjYjT8NSamw0G8cWDQVZcOMJd4AR
+         Q2rUIhPLM0MtoRUN/B6efN3DUO/tnTVWUyVcSWtEcOWFw5uzHvNLZ0Qgj6bifpotmyaC
+         U+Tg==
+X-Gm-Message-State: AGi0PuY4Re6h2fUPpEe8bx1Oci1eQ7yq6g8HrrxAqtYKuE7sz84h7l8f
+        /OnCFxAJlW8zHWDk06HlxIfziOV52yg/A6eoz9/GmBvU
+X-Google-Smtp-Source: APiQypIs6NvYWnWH/ktGUdZ2rE2Z5KmJb3YhfiR/lt5cCzkoxxCqS3BQi8X2Ml1ldVHBef942mt8n8y7vFl2hwtoB3Q=
+X-Received: by 2002:a25:c646:: with SMTP id k67mr11247591ybf.309.1587973363986;
+ Mon, 27 Apr 2020 00:42:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200426123148.56051-1-marek.vasut@gmail.com>
-In-Reply-To: <20200426123148.56051-1-marek.vasut@gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 27 Apr 2020 09:19:43 +0200
-Message-ID: <CAMuHMdX-TAe-mrJAb+1E4BhMZe_xeSk5ySpbgqHJ0R+=HXemtA@mail.gmail.com>
-Subject: Re: [PATCH] PCI: pcie-rcar: Cache PHY init function pointer
-To:     Marek Vasut <marek.vasut@gmail.com>
-Cc:     linux-pci <linux-pci@vger.kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
+References: <20200427060551.1372591-1-jiaxun.yang@flygoat.com> <20200427060551.1372591-2-jiaxun.yang@flygoat.com>
+In-Reply-To: <20200427060551.1372591-2-jiaxun.yang@flygoat.com>
+From:   =?UTF-8?Q?Philippe_Mathieu=2DDaud=C3=A9?= <f4bug@amsat.org>
+Date:   Mon, 27 Apr 2020 09:42:32 +0200
+Message-ID: <CAAdtpL59=bpmEUgY56=xHS3w5ddtdVGjKnnW7i++a5sTzPs+3Q@mail.gmail.com>
+Subject: Re: [PATCH v6 1/5] PCI: Don't disable decoding when mmio_always_on is set
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+        Paul Burton <paulburton@kernel.org>, linux-pci@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Apr 26, 2020 at 2:31 PM <marek.vasut@gmail.com> wrote:
-> From: Marek Vasut <marek.vasut+renesas@gmail.com>
+On Mon, Apr 27, 2020 at 8:08 AM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
 >
-> The PHY initialization function pointer does not change during the
-> lifetime of the driver instance, it is therefore sufficient to get
-> the pointer in .probe(), cache it in driver private data, and just
-> call the function through the cached pointer in .resume().
+> Don't disable MEM/IO decoing when a device have both non_compliant_bars
+
+Typo "decoing" -> "decoding"
+
+> and mmio_always_on.
 >
-> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> That would allow us quirk devices with junk in BARs but can't disable
+> their decoding.
+>
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> ---
+>  drivers/pci/probe.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 77b8a145c39b..d9c2c3301a8a 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -1822,7 +1822,7 @@ int pci_setup_device(struct pci_dev *dev)
+>         /* Device class may be changed after fixup */
+>         class = dev->class >> 8;
+>
+> -       if (dev->non_compliant_bars) {
+> +       if (dev->non_compliant_bars && !dev->mmio_always_on) {
+>                 pci_read_config_word(dev, PCI_COMMAND, &cmd);
+>                 if (cmd & (PCI_COMMAND_IO | PCI_COMMAND_MEMORY)) {
+>                         pci_info(dev, "device has non-compliant BARs; disabling IO/MEM decoding\n");
+> --
+> 2.26.0.rc2
+>
