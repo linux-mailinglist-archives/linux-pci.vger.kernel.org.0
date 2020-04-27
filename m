@@ -2,86 +2,87 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DC771BA0F8
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Apr 2020 12:21:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F17E21BA1F0
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Apr 2020 13:07:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726504AbgD0KVO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Apr 2020 06:21:14 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34865 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726507AbgD0KVI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Apr 2020 06:21:08 -0400
-Received: by mail-wr1-f68.google.com with SMTP id x18so19850266wrq.2;
-        Mon, 27 Apr 2020 03:21:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+7bVFLWrQIX8JTal4r0/ZmJRvVDeqQomfNKtoU2FS3E=;
-        b=YrOZ5zWfKd0CqAbguZCn6y5ydA+zHJLYxasCh2WrTaN6p8FMRM4tF1XAhAwEKjKQPY
-         1EgIbCl+bXYRH5zPkiANzNypaEuziI2qyMdvHNRc7Mv5RHnK2j9JmatnGuBq024h7WQS
-         BzqBduNksbl5stgXNCuBF+wyC+uOu0vNvZKoMuP0Jy/V+jtkLeTsfudnAzw2Y+PunBOF
-         nYnkGkPzwDMDrYrwMcs8ii37VpXCpH2ZUvJ3m0azAaKngd3bj0VbzbPtWsEfoWDhTBLA
-         cJL7DxdEQRD44Se0nBZaSJk9JiGovgzwmzXEr08djo7Qgr458foAbT3ETRBM3IH/ZvSe
-         UK/Q==
-X-Gm-Message-State: AGi0PuZUytQDm6ACPnZDzzaTmpeYwUwisbf6vTlvMMzRmjhjpIS+4ZZX
-        DfnXC8Vd4SPJMUMsL+Zc/mFOLRZP
-X-Google-Smtp-Source: APiQypKFmkXpGVvRzHZGFEZVOY9BybBoS1EtcBDc2CSoMzoH9YHRDKgDok7WTYAp0c8U/f9qn30bcQ==
-X-Received: by 2002:adf:fd46:: with SMTP id h6mr27795565wrs.90.1587982865429;
-        Mon, 27 Apr 2020 03:21:05 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id b82sm15832648wmh.1.2020.04.27.03.21.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2020 03:21:04 -0700 (PDT)
-Date:   Mon, 27 Apr 2020 10:21:02 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Wei Hu <weh@microsoft.com>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, lorenzo.pieralisi@arm.com, robh@kernel.org,
-        bhelgaas@google.com, linux-hyperv@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        decui@microsoft.com, mikelley@microsoft.com
-Subject: Re: [PATCH] PCI: pci-hyperv: Retry PCI bus D0 entry when the first
- attempt failed with invalid device state 0xC0000184.
-Message-ID: <20200427102102.lar6d4w3rqz3d3j4@liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net>
-References: <20200426132430.1756-1-weh@microsoft.com>
+        id S1726721AbgD0LHj convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Mon, 27 Apr 2020 07:07:39 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:53233 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726485AbgD0LHi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Apr 2020 07:07:38 -0400
+Received: from mail-lj1-f176.google.com ([209.85.208.176]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MFL8J-1jR2ae1iy9-00FkXe; Mon, 27 Apr 2020 13:07:37 +0200
+Received: by mail-lj1-f176.google.com with SMTP id u6so17077661ljl.6;
+        Mon, 27 Apr 2020 04:07:37 -0700 (PDT)
+X-Gm-Message-State: AGi0PuapPICmTv287KFlG+YM5PTCZdyNoXH5kaCf3ni8yuAQfM7JN6s2
+        4SkQn6SQN1YbP0PSM+CRaBlw8+GwRs1weiGiF2Q=
+X-Google-Smtp-Source: APiQypLEwej04i8uRQkN6Os5zVhqOy0KYDZKX7ZU73wocL/7Eot2m5MXEJljClTt8r5GBUfCRD/dvpvefJ0BiIfXQKE=
+X-Received: by 2002:a05:651c:1104:: with SMTP id d4mr13802729ljo.128.1587985656882;
+ Mon, 27 Apr 2020 04:07:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200426132430.1756-1-weh@microsoft.com>
-User-Agent: NeoMutt/20180716
+References: <1587864346-3144-1-git-send-email-rui_feng@realsil.com.cn>
+ <20200427061426.GA11270@infradead.org> <2A308283684ECD4B896628E09AF5361E028BCA26@RS-MBS01.realsil.com.cn>
+In-Reply-To: <2A308283684ECD4B896628E09AF5361E028BCA26@RS-MBS01.realsil.com.cn>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 27 Apr 2020 13:07:20 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a0EY=FOu5j5DG1BzMEoy_6nEy129kniWCjMYDEdO1o_Jw@mail.gmail.com>
+Message-ID: <CAK8P3a0EY=FOu5j5DG1BzMEoy_6nEy129kniWCjMYDEdO1o_Jw@mail.gmail.com>
+Subject: Re: [PATCH] mmc: rtsx: Add SD Express mode support for RTS5261
+To:     =?UTF-8?B?5Yav6ZSQ?= <rui_feng@realsil.com.cn>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Provags-ID: V03:K1:/bHdil9bGL23Dk1uJFy9rOfFlosRrSRbDsxECtLF6FKH7Xn0lgJ
+ AOi2O2l1kEDRsPcfoJ2ebvzqax9d3tsrSjBwxlNvdYIRjXdefDce+lmzWR+Ymg6e9qTceSr
+ 1dPOX1XCsCUuOdLHgUqOGTrgwND7pozADZJECXWECaNbYEYr5Y0de+lGgnkPWGGOw582tcI
+ c+FAqayrgwvDHxdjvn6ig==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:t28ZbJbSjVI=:wr2fiLP5medmHY0bYSM1N8
+ khfesN3HZcJjv1NbpcmYBCRZg9F6ZBa8s4BPS3LwERrVkV+ZXznQfvr0KVN3XHDdqv3WVV329
+ T4tbI5x9GiYWCKfLVmA+mYf8EoMjq/ChIbIo9Yjm6ADrVpde6fQw3yd426qduvS4IMOOfbPze
+ ICvfwPzgAwqmyNzkn6ppPQyGuxPHnJ9TDwiNSEwtFiBGYnrnX7hFKme61Vsfz/uNE009wh7OA
+ 5OpIU/oU8BclkesmE3aKx9zhkn411/2UoD+pCrwIFFPkoENfPMFUibyQTHn303Xgzxxey+VDM
+ g9xilZao1To+YauOC14h170jCzT5vTMZKNqAGhazH4hSt+ViaFeT473UgL0ASEMFVIE0oemqv
+ 7luM1syhXa6PQoh+HUyFr39AlenCLuhY5IUckKffgkkRO5rr2A+c/fD3YVIcUL+G4vkBWnPx/
+ iY6+7wrhcNPM/bZ/x8GiavUr7U9236dYmka+m1ahysV+5i+efyYtWTzDu16vDUN4OYuRCA8G2
+ Op87fWdTHLyqccRZjb1HpexSb3GRmmaLg7mw7516XpE/+4yFfrmTis6SA7ba9gdw6AYkE7DE+
+ 8+K118lPNVFQnIGxhBg4QbEVcK6H9H6Z0LS9Qc9HQDyCKJzo8Kr84KEqkzu2s/LGgW8hxH70N
+ 0fdwqG0683XCotiITJzCVpgL/devADv26A3L27h7PxxT0AFFl+sSd5jjtIt916L345ObC+8Tu
+ /DVnkSj6oHiZMxM6dVzcx7UN2Up+tlTWsWJQRViC981yslWoEHuFgeSNvQpnalRH3s3+BUIj4
+ WUtJn0byEUw0KS9LIx1g9MZ9A2OS05eSPKp3PZE9EGjfJx1wWU=
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Apr 26, 2020 at 09:24:30PM +0800, Wei Hu wrote:
-> In the case of kdump, the PCI device was not cleanly shut down
-> before the kdump kernel starts. This causes the initial
-> attempt of entering D0 state in the kdump kernel to fail with
-> invalid device state 0xC0000184 returned from Hyper-V host.
-> When this happens, explicitly call PCI bus exit and retry to
-> enter the D0 state.
-> 
-> Also fix the PCI probe failure path to release the PCI device
-> resource properly.
-> 
-> Signed-off-by: Wei Hu <weh@microsoft.com>
-> ---
->  drivers/pci/controller/pci-hyperv.c | 34 ++++++++++++++++++++++++++++-
->  1 file changed, 33 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index e15022ff63e3..eb4781fa058d 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -2736,6 +2736,10 @@ static void hv_free_config_window(struct hv_pcibus_device *hbus)
->  	vmbus_free_mmio(hbus->mem_config->start, PCI_CONFIG_MMIO_LENGTH);
->  }
->  
-> +#define STATUS_INVALID_DEVICE_STATE		0xC0000184
-> +
+On Mon, Apr 27, 2020 at 11:41 AM 冯锐 <rui_feng@realsil.com.cn> wrote:
+>
+>
+> > On Sun, Apr 26, 2020 at 09:25:46AM +0800, rui_feng@realsil.com.cn wrote:
+> > > From: Rui Feng <rui_feng@realsil.com.cn>
+> > >
+> > > RTS5261 support legacy SD mode and SD Express mode.
+> > > In SD7.x, SD association introduce SD Express as a new mode.
+> > > SD Express mode is distinguished by CMD8.
+> > > Therefore, CMD8 has new bit for SD Express.
+> > > SD Express is based on PCIe/NVMe.
+> > > RTS5261 uses CMD8 to switch to SD Express mode.
+> >
+> > So how does this bit work?  They way I imagined SD Express to work is that
+> > the actual SD Card just shows up as a real PCIe device, similar to say
+> > Thunderbolt.
+>
+> New SD Express card has dual mode. One is SD mode and another is PCIe mode.
+> In PCIe mode, it act as a PCIe device and use PCIe protocol not Thunderbolt protocol.
 
-Can you please move this along side STATUS_REVISION_MISMATCH?
+I think what Christoph was asking about is why you need to issue any commands at
+all in SD mode when you want to use PCIe mode instead. What happens if you load
+the NVMe driver before loading the rts5261 driver?
 
-Wei.
+       Arnd
