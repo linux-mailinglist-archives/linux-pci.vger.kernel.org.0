@@ -2,169 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CCA51B9593
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Apr 2020 05:44:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E8B61B96EF
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Apr 2020 08:06:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726431AbgD0DoM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 26 Apr 2020 23:44:12 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:39483 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726469AbgD0DoL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 26 Apr 2020 23:44:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587959049;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=DBEUXWUXNpw/sxGPzp5z9UjnZg0452gbfsNvSnWcap8=;
-        b=HmIgmO/klJs2YWFdZW9KCIvQzUmDR4IaaliUi0eOTFGjMkMWbtXyXvzLHQxUbwbMHv2Fcv
-        JAe0cP2lx+nnQ91jRov3s0U7uGaiOPWRGP3XLmM3MjK6jXS97XiT8afu3MbRS32Y6q7E2L
-        B5xeiOyrDBQsjO2nOPE9VSi5OvnwOjg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-287-pbMyTdOTPh20o3V3rN2nZQ-1; Sun, 26 Apr 2020 23:44:05 -0400
-X-MC-Unique: pbMyTdOTPh20o3V3rN2nZQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DFA021800F97;
-        Mon, 27 Apr 2020 03:44:01 +0000 (UTC)
-Received: from x1.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B68B319C58;
-        Mon, 27 Apr 2020 03:43:55 +0000 (UTC)
-Date:   Sun, 26 Apr 2020 21:43:55 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "megha.dey@linux.intel.com" <megha.dey@linux.intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
- support for the idxd driver.
-Message-ID: <20200426214355.29e19d33@x1.home>
-In-Reply-To: <20200426191357.GB13640@mellanox.com>
-References: <20200421235442.GO11945@mellanox.com>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D86EE26@SHSMSX104.ccr.corp.intel.com>
-        <20200422115017.GQ11945@mellanox.com>
-        <20200422211436.GA103345@otc-nc-03>
-        <20200423191217.GD13640@mellanox.com>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D8960F9@SHSMSX104.ccr.corp.intel.com>
-        <20200424124444.GJ13640@mellanox.com>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D8A808B@SHSMSX104.ccr.corp.intel.com>
-        <20200424181203.GU13640@mellanox.com>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D8C5486@SHSMSX104.ccr.corp.intel.com>
-        <20200426191357.GB13640@mellanox.com>
-Organization: Red Hat
+        id S1726273AbgD0GGE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Apr 2020 02:06:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40278 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726221AbgD0GGE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Apr 2020 02:06:04 -0400
+Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 266CBC061A0F;
+        Sun, 26 Apr 2020 23:06:04 -0700 (PDT)
+Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
+        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 3DEEC20CF2;
+        Mon, 27 Apr 2020 06:06:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
+        t=1587967563; bh=QAo1cw4WCgJFDVWUxM13VAcvn+SmYxagV5M4P3ljeig=;
+        h=From:To:Cc:Subject:Date:From;
+        b=OKelKojNCASZ2oq0SZiu0mHP7rZzWiA7Y5/50p+fmagXxuCSJScOXac5kLs5YD8CT
+         BkeBdTjGGBhTAiSzynpJmr1Ra+y6DCqE6fieItbq2CJYB/daMGvEg65lZnA3SHJn2z
+         AtnM5pv87sn4OafBTsvOT7rOiq8yHuVzyL9lvXQrAn/0PbiBDi5YZx+XB43Skb3z2J
+         BSx4EAdmifdXb86QLuHEG3LeQfhQQH6NA4s39Z7ufiNUpdx1xjuBbz8uyxslxfnsy6
+         rQ91TT4Zimvge8oJ22M2df3ZoiX2/P6YZdlpt8TUlH4yjgnpp4hpp3qvfx886lkmsx
+         KUirX4FGAWnVA==
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     linux-mips@vger.kernel.org
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Paul Burton <paulburton@kernel.org>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v6 0/5] Loongson PCI Generic Driver 
+Date:   Mon, 27 Apr 2020 14:05:37 +0800
+Message-Id: <20200427060551.1372591-1-jiaxun.yang@flygoat.com>
+X-Mailer: git-send-email 2.26.0.rc2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, 26 Apr 2020 16:13:57 -0300
-Jason Gunthorpe <jgg@mellanox.com> wrote:
+Hi,
 
-> On Sun, Apr 26, 2020 at 05:18:59AM +0000, Tian, Kevin wrote:
-> 
-> > > > I think providing an unified abstraction to userspace is also important,
-> > > > which is what VFIO provides today. The merit of using one set of VFIO
-> > > > API to manage all kinds of mediated devices and VF devices is a major
-> > > > gain. Instead, inventing a new vDPA-like interface for every Scalable-IOV
-> > > > or equivalent device is just overkill and doesn't scale. Also the actual
-> > > > emulation code in idxd driver is actually small, if putting aside the PCI
-> > > > config space part for which I already explained most logic could be shared
-> > > > between mdev device drivers.  
-> > > 
-> > > If it was just config space you might have an argument, VFIO already
-> > > does some config space mangling, but emulating BAR space is out of
-> > > scope of VFIO, IMHO.  
-> > 
-> > out of scope of vfio-pci, but in scope of vfio-mdev. btw I feel that most
-> > of your objections are actually related to the general idea of
-> > vfio-mdev.  
-> 
-> There have been several abusive proposals of vfio-mdev, everything
-> from a way to create device drivers to this kind of generic emulation
-> framework.
-> 
-> > Scalable IOV just uses PASID to harden DMA isolation in mediated
-> > pass-through usage which vfio-mdev enables. Then are you just opposing
-> > the whole vfio-mdev? If not, I'm curious about the criteria in your mind 
-> > about when using vfio-mdev is good...  
-> 
-> It is appropriate when non-PCI standard techniques are needed to do
-> raw device assignment, just like VFIO.
-> 
-> Basically if vfio-pci is already doing it then it seems reasonable
-> that vfio-mdev should do the same. This mission creep where vfio-mdev
-> gains functionality far beyond VFIO is the problem.
+This series converts Loongson PCI into a generic PCI controller
+driver and adds support for LS2K SoC and LS7A PCH's PCI support.
 
-Ehm, vfio-pci emulates BARs too.  We also emulate FLR, power
-management, DisINTx, and VPD.  FLR, PM, and VPD all have device
-specific quirks in the host kernel, and I've generally taken the stance
-that would should take advantage of those quirks, not duplicate them in
-userspace and not invent new access mechanisms/ioctls for each of them.
-Emulating DisINTx is convenient since we must have a mechanism to mask
-INTx, whether it's at the device or the APIC, so we can pretend the
-hardware supports it.  BAR emulation is really too trivial to argue
-about, the BARs mean nothing to the physical device mapping, they're
-simply scratch registers that we mask out the alignment bits on read.
-vfio-pci is a mix of things that we decide are too complicated or
-irrelevant to emulate in the kernel and things that take advantage of
-shared quirks or are just too darn easy to worry about.  BARs fall into
-that latter category, any sort of mapping into VM address spaces is
-necessarily done in userspace, but scratch registers that are masked on
-read, *shrug*, vfio-pci does that.  Thanks,
+Is it possible to let patch 1~3 go through PCI tree and patch
+4~5 go through MIPS tree?
 
-Alex
- 
-> > technically Scalable IOV is definitely different from SR-IOV. It's 
-> > simpler in hardware. And we're not emulating SR-IOV. The point
-> > is just in usage-wise we want to present a consistent user 
-> > experience just like passing through a PCI endpoint (PF or VF) device
-> > through vfio eco-system, including various userspace VMMs (Qemu,
-> > firecracker, rust-vmm, etc.), middleware (Libvirt), and higher level 
-> > management stacks.   
-> 
-> Yes, I understand your desire, but at the same time we have not been
-> doing device emulation in the kernel. You should at least be
-> forthwright about that major change in the cover letters/etc.
->  
-> > > The only thing we get out of this is someone doesn't have to write a
-> > > idxd emulation driver in qemu, instead they have to write it in the
-> > > kernel. I don't see how that is a win for the ecosystem.  
-> > 
-> > No. The clear win is on leveraging classic VFIO iommu and its eco-system
-> > as explained above.  
-> 
-> vdpa had no problem implementing iommu support without VFIO. This was
-> their original argument too, it turned out to be erroneous.
-> 
-> Jason
-> 
+Thanks.
+
+v6: Drop first the patch of previous versions. Driver code clean-ups
+according to rob's suggestion.
+
+It looks like I had a wrong impression on generic IO port handeling
+and now the issue has been fixed, I implemented PCI_IOBASE for MIPS[1].
+Now the address is uniform here.
+
+[1]: https://patchwork.kernel.org/cover/11510499/
+
+Jiaxun Yang (5):
+  PCI: Don't disable decoding when mmio_always_on is set
+  PCI: Add Loongson PCI Controller support
+  dt-bindings: Document Loongson PCI Host Controller
+  MIPS: DTS: Loongson64: Add PCI Controller Node
+  MIPS: Loongson64: Switch to generic PCI driver
+
+ .../devicetree/bindings/pci/loongson.yaml     |  62 +++++
+ arch/mips/Kconfig                             |   1 +
+ arch/mips/boot/dts/loongson/rs780e-pch.dtsi   |  12 +
+ arch/mips/loongson64/Makefile                 |   2 +-
+ arch/mips/loongson64/vbios_quirk.c            |  29 ++
+ arch/mips/pci/Makefile                        |   1 -
+ arch/mips/pci/fixup-loongson3.c               |  71 -----
+ arch/mips/pci/ops-loongson3.c                 | 116 --------
+ drivers/pci/controller/Kconfig                |  10 +
+ drivers/pci/controller/Makefile               |   1 +
+ drivers/pci/controller/pci-loongson.c         | 251 ++++++++++++++++++
+ drivers/pci/probe.c                           |   2 +-
+ 12 files changed, 368 insertions(+), 190 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/loongson.yaml
+ create mode 100644 arch/mips/loongson64/vbios_quirk.c
+ delete mode 100644 arch/mips/pci/fixup-loongson3.c
+ delete mode 100644 arch/mips/pci/ops-loongson3.c
+ create mode 100644 drivers/pci/controller/pci-loongson.c
+
+-- 
+2.26.0.rc2
 
