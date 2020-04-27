@@ -2,34 +2,34 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ACE921BAC73
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Apr 2020 20:24:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 70C3A1BAC72
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Apr 2020 20:24:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbgD0SYW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Apr 2020 14:24:22 -0400
-Received: from mta-02.yadro.com ([89.207.88.252]:53026 "EHLO mta-01.yadro.com"
+        id S1726475AbgD0SYV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Apr 2020 14:24:21 -0400
+Received: from mta-02.yadro.com ([89.207.88.252]:53048 "EHLO mta-01.yadro.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726333AbgD0SYW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 27 Apr 2020 14:24:22 -0400
+        id S1726283AbgD0SYV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 27 Apr 2020 14:24:21 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 7A5684C858;
+        by mta-01.yadro.com (Postfix) with ESMTP id C6CD04C859;
         Mon, 27 Apr 2020 18:24:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
         content-type:content-type:content-transfer-encoding:mime-version
         :references:in-reply-to:x-mailer:message-id:date:date:subject
         :subject:from:from:received:received:received; s=mta-01; t=
-        1588011855; x=1589826256; bh=e8+l1MvQUEJLu312asRTfpPgIBMQxwK5dUl
-        /IC0tTAw=; b=J+mpFJU6SPzEjAndkF1iPypkorTHJuZog6E+KjHMV2UnmzF2UYk
-        zWNT3CvtklETxOdvsjHmIOnFTDak+1/2DvwZfFtHRUjL9DCkA/c/Ft5/kB0T2uIb
-        vdwr7z8hahufGqtrfue9BEvSlokfqfh04pGq024qRMu0fJFP56+MnkEY=
+        1588011856; x=1589826257; bh=JZFEuRZ4Olei8kVKOpa2v13cbjpCm2nfCBn
+        EgOI0pW8=; b=crgcQN/zsW5haUkaV9r/j7tRvZGM2vKUnWSBNBApf81/A5szMWX
+        lGpGKEORbxNCd9LBuka23EQ2wnucDnHqgI2c2kHB4NZS8PwXVYGrLIzwZicqbwAi
+        OgW0ZvTIaAzN+cZl8g5RnT1Kc9B4T2sEZlzF3sG55Sz0Sre8Z5ccSsR8=
 X-Virus-Scanned: amavisd-new at yadro.com
 Received: from mta-01.yadro.com ([127.0.0.1])
         by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id snfvhifay7gW; Mon, 27 Apr 2020 21:24:15 +0300 (MSK)
+        with ESMTP id 4NQ11Dg6VM46; Mon, 27 Apr 2020 21:24:16 +0300 (MSK)
 Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id B03DE4C83F;
+        by mta-01.yadro.com (Postfix) with ESMTPS id B5DA24C840;
         Mon, 27 Apr 2020 21:24:11 +0300 (MSK)
 Received: from NB-148.yadro.com (172.17.15.136) by T-EXCH-02.corp.yadro.com
  (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
@@ -44,9 +44,9 @@ CC:     Bjorn Helgaas <helgaas@kernel.org>, Lukas Wunner <lukas@wunner.de>,
         David Laight <David.Laight@ACULAB.COM>,
         Rajat Jain <rajatja@google.com>, <linux@yadro.com>,
         Sergei Miroshnichenko <s.miroshnichenko@yadro.com>
-Subject: [PATCH v8 07/24] PCI: hotplug: Don't allow hot-added devices to steal resources
-Date:   Mon, 27 Apr 2020 21:23:41 +0300
-Message-ID: <20200427182358.2067702-8-s.miroshnichenko@yadro.com>
+Subject: [PATCH v8 08/24] PCI: Reassign BARs if BIOS/bootloader had assigned not all of them
+Date:   Mon, 27 Apr 2020 21:23:42 +0300
+Message-ID: <20200427182358.2067702-9-s.miroshnichenko@yadro.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200427182358.2067702-1-s.miroshnichenko@yadro.com>
 References: <20200427182358.2067702-1-s.miroshnichenko@yadro.com>
@@ -61,347 +61,95 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-When movable BARs are enabled, the PCI subsystem at first releases all the
-bridge windows and then attempts to assign resources both to previously
-working devices and to the newly hot-added ones, with the same priority.
+Some BIOSes don't allocate all requested BARs, leaving some (for example,
+SR_IOV) unassigned, without gaps for bridge windows to extend.
 
-If a hot-added device gets its BARs first, this may lead to lack of space
-for already working devices, which is unacceptable. If that happens, mark
-one of the new devices with the newly introduced flag PCI_DEV_DISABLED_BARS
-(if it is not yet marked) and retry the BAR recalculation.
+If that happens, let the kernel use its own methods of BAR allocating on an
+early init stage, when drivers aren't yet bound to their devices, and it is
+safe to shuffle BARs that are not yet used.
 
-The worst case would be no BARs for hot-added devices, while all the rest
-just continue working.
+Not every BAR can be safely moved: some framebuffer drivers (efifb) don't
+act as a PCI driver (like nouveau), taking BAR locations indirectly - via
+ACPI for example. Until every such driver is aware of movable BARs, mark
+every VGA BAR as fixed. Perhaps this is also useful for splash screens, so
+they don't flicker.
 
-The algorithm is simple and it doesn't retry different subsets of hot-added
-devices in case of a failure, e.g. if there are no space to allocate BARs
-for both hot-added devices A and B, but is enough for just A, the A will be
-marked with PCI_DEV_DISABLED_BARS first, then (after the next failure) - B.
-As a result, A will not get BARs while it could. This issue is only
-relevant when hot-adding two and more devices simultaneously.
-
-Add a new res_mask bitmask to the struct pci_dev for storing the indices of
-assigned BARs.
-
-When preparing to the next rescan, all PCI_DEV_DISABLED_BARS marks are
-unset, so the kernel can retry to assign them.
-
-Before a rescan, some working devices may have assigned only part of their
-BARs - for example, if BIOS didn't allocate them. With this patch, the
-kernel assigns BARs in three steps:
-  - first try every BAR, even those that weren't assigned before;
-  - if that fails, retry without those failed BARs;
-  - if that fails, retry without one of hotplugged devices.
+If this reassignment fails, fall back to the BAR layout proposed by BIOS,
+working around the fact that they are marked with IORESOURCE_UNSET during
+init, so the new flag pci_init_done was introduced.
 
 Signed-off-by: Sergei Miroshnichenko <s.miroshnichenko@yadro.com>
 ---
- drivers/pci/pci.h       |   3 +
- drivers/pci/probe.c     | 177 +++++++++++++++++++++++++++++++++++++++-
- drivers/pci/setup-bus.c |   6 +-
- drivers/pci/setup-res.c |   2 +
- include/linux/pci.h     |   1 +
- 5 files changed, 186 insertions(+), 3 deletions(-)
+ drivers/pci/pci.h       | 2 ++
+ drivers/pci/probe.c     | 8 +++++++-
+ drivers/pci/setup-bus.c | 7 +++++++
+ 3 files changed, 16 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index c7d3c022bf35..7483a5716317 100644
+index 7483a5716317..2ef72741e8e5 100644
 --- a/drivers/pci/pci.h
 +++ b/drivers/pci/pci.h
-@@ -294,6 +294,8 @@ struct pci_bus *pci_bus_get(struct pci_bus *bus);
- void pci_bus_put(struct pci_bus *bus);
+@@ -297,6 +297,8 @@ bool pci_dev_bar_fixed(struct pci_dev *dev, struct resource *res);
+ bool pci_dev_bar_enabled(const struct pci_dev *dev, int idx);
+ bool pci_bus_check_bars_assigned(struct pci_bus *bus, bool complete_set);
  
- bool pci_dev_bar_fixed(struct pci_dev *dev, struct resource *res);
-+bool pci_dev_bar_enabled(const struct pci_dev *dev, int idx);
-+bool pci_bus_check_bars_assigned(struct pci_bus *bus, bool complete_set);
- 
++extern bool pci_init_done;
++
  /* PCIe link information from Link Capabilities 2 */
  #define PCIE_LNKCAP2_SLS2SPEED(lnkcap2) \
-@@ -412,6 +414,7 @@ static inline bool pci_dev_is_disconnected(const struct pci_dev *dev)
- 
- /* pci_dev priv_flags */
- #define PCI_DEV_ADDED 0
-+#define PCI_DEV_DISABLED_BARS 1
- 
- static inline void pci_dev_assign_added(struct pci_dev *dev, bool added)
- {
+ 	((lnkcap2) & PCI_EXP_LNKCAP2_SLS_32_0GB ? PCIE_SPEED_32_0GT : \
 diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 5baad5325b16..5ca6e5887326 100644
+index 5ca6e5887326..0c681bb767cc 100644
 --- a/drivers/pci/probe.c
 +++ b/drivers/pci/probe.c
-@@ -35,6 +35,13 @@ static struct resource busn_resource = {
- LIST_HEAD(pci_root_buses);
- EXPORT_SYMBOL(pci_root_buses);
+@@ -41,6 +41,7 @@ EXPORT_SYMBOL(pci_root_buses);
+  * were assigned before the rescan.
+  */
+ static bool pci_try_failed_bars = true;
++bool pci_init_done;
  
-+/*
-+ * This flag is used during pci_rescan_bus(), protected by pci_rescan_remove_lock:
-+ * it indicates which BARs should be reassigned: every one, or only those which
-+ * were assigned before the rescan.
-+ */
-+static bool pci_try_failed_bars = true;
-+
  static LIST_HEAD(pci_domain_busn_res_list);
  
- struct pci_domain_busn_res {
-@@ -43,6 +50,41 @@ struct pci_domain_busn_res {
- 	int domain_nr;
- };
+@@ -3240,6 +3241,11 @@ bool pci_dev_bar_fixed(struct pci_dev *dev, struct resource *res)
+ 	if (region.start == 0xa0000)
+ 		return true;
  
-+static void pci_dev_disable_bars(struct pci_dev *dev)
-+{
-+	assign_bit(PCI_DEV_DISABLED_BARS, &dev->priv_flags, true);
-+}
-+
-+static void pci_dev_enable_bars(struct pci_dev *dev)
-+{
-+	assign_bit(PCI_DEV_DISABLED_BARS, &dev->priv_flags, false);
-+}
-+
-+static bool pci_dev_bars_enabled(const struct pci_dev *dev)
-+{
-+	if (pci_try_failed_bars)
++	if (res->start &&
++	    !(res->flags & IORESOURCE_IO) &&
++	    (dev->class >> 8) == PCI_CLASS_DISPLAY_VGA)
 +		return true;
 +
-+	return !(test_bit(PCI_DEV_DISABLED_BARS, &dev->priv_flags));
-+}
-+
-+bool pci_dev_bar_enabled(const struct pci_dev *dev, int idx)
-+{
-+	if (idx >= PCI_BRIDGE_RESOURCES)
-+		return true;
-+
-+	if (pci_try_failed_bars)
-+		return true;
-+
-+	if (test_bit(PCI_DEV_DISABLED_BARS, &dev->priv_flags))
-+		return false;
-+
-+	if (!pci_dev_is_added(dev))
-+		return true;
-+
-+	return dev->res_mask & (1 << idx);
-+}
-+
- static struct resource *get_pci_domain_busn_res(int domain_nr)
- {
- 	struct pci_domain_busn_res *r;
-@@ -3204,6 +3246,24 @@ bool pci_dev_bar_fixed(struct pci_dev *dev, struct resource *res)
- 	return true;
- }
+ 	if (!dev->driver && !res->child)
+ 		return false;
  
-+static unsigned int pci_dev_count_res_mask(struct pci_dev *dev)
-+{
-+	unsigned int res_mask = 0;
-+	int i;
-+
-+	for (i = 0; i < PCI_BRIDGE_RESOURCES; i++) {
-+		struct resource *r = &dev->resource[i];
-+
-+		if (!r->flags || !r->parent ||
-+		    (r->flags & IORESOURCE_UNSET))
-+			continue;
-+
-+		res_mask |= (1 << i);
-+	}
-+
-+	return res_mask;
-+}
-+
- static void pci_bus_rescan_prepare(struct pci_bus *bus)
- {
- 	struct pci_dev *dev;
-@@ -3216,6 +3276,9 @@ static void pci_bus_rescan_prepare(struct pci_bus *bus)
- 	list_for_each_entry(dev, &bus->devices, bus_list) {
- 		struct pci_bus *child = dev->subordinate;
+@@ -3255,7 +3261,7 @@ static unsigned int pci_dev_count_res_mask(struct pci_dev *dev)
+ 		struct resource *r = &dev->resource[i];
  
-+		dev->res_mask = pci_dev_count_res_mask(dev);
-+		pci_dev_enable_bars(dev);
-+
- 		if (child)
- 			pci_bus_rescan_prepare(child);
+ 		if (!r->flags || !r->parent ||
+-		    (r->flags & IORESOURCE_UNSET))
++		    (pci_init_done && (r->flags & IORESOURCE_UNSET)))
+ 			continue;
  
-@@ -3269,6 +3332,118 @@ static void pci_setup_bridges(struct pci_bus *bus)
- 		pci_setup_bridge(bus);
- }
- 
-+static struct pci_dev *pci_find_next_new_device(struct pci_bus *bus)
-+{
-+	struct pci_dev *dev;
-+
-+	if (!bus)
-+		return NULL;
-+
-+	list_for_each_entry(dev, &bus->devices, bus_list) {
-+		struct pci_bus *child_bus = dev->subordinate;
-+
-+		if (child_bus) {
-+			struct pci_dev *next_new_dev;
-+
-+			next_new_dev = pci_find_next_new_device(child_bus);
-+			if (next_new_dev)
-+				return next_new_dev;
-+		}
-+
-+		if (!pci_dev_is_added(dev) && pci_dev_bars_enabled(dev))
-+			return dev;
-+	}
-+
-+	return NULL;
-+}
-+
-+/**
-+ * pci_bus_check_bars_assigned - check BARs under the bridge
-+ * @bus: Parent PCI bus
-+ * @complete_set: check every BAR, otherwise only those assigned before
-+ *
-+ * Returns true if every BAR is assigned.
-+ */
-+bool pci_bus_check_bars_assigned(struct pci_bus *bus, bool complete_set)
-+{
-+	struct pci_dev *dev;
-+	bool good = true;
-+
-+	if (!bus)
-+		return false;
-+
-+	list_for_each_entry(dev, &bus->devices, bus_list) {
-+		struct pci_bus *child = dev->subordinate;
-+
-+		if (complete_set) {
-+			int i;
-+
-+			for (i = 0; i < PCI_BRIDGE_RESOURCES; ++i) {
-+				struct resource *r = &dev->resource[i];
-+
-+				if (!(r->flags & IORESOURCE_UNSET))
-+					continue;
-+
-+				pci_warn(dev, "BAR %d: requested but not assigned: %pR\n",
-+					 i, r);
-+				good = false;
-+			}
-+		} else {
-+			unsigned int res_mask;
-+
-+			if (!pci_dev_bars_enabled(dev))
-+				continue;
-+
-+			res_mask = pci_dev_count_res_mask(dev);
-+
-+			if (dev->res_mask & ~res_mask) {
-+				pci_err(dev, "Non-re-enabled resources found: 0x%x -> 0x%x\n",
-+					dev->res_mask, res_mask);
-+				good = false;
-+			}
-+		}
-+
-+		if (child && !pci_bus_check_bars_assigned(child, complete_set))
-+			good = false;
-+	}
-+
-+	return good;
-+}
-+
-+static void pci_reassign_root_bus_resources(struct pci_bus *root)
-+{
-+	do {
-+		struct pci_dev *next_new_dev;
-+
-+		pci_assign_unassigned_root_bus_resources(root);
-+
-+		if (pci_bus_check_bars_assigned(root, pci_try_failed_bars))
-+			break;
-+
-+		if (pci_try_failed_bars) {
-+			dev_warn(&root->dev, "failed to assign all BARs, retry without those failed before\n");
-+
-+			pci_bus_release_root_bridge_resources(root);
-+			pci_try_failed_bars = false;
-+			continue;
-+		}
-+
-+		next_new_dev = pci_find_next_new_device(root);
-+		if (!next_new_dev) {
-+			dev_err(&root->dev, "failed to reassign BARs even after ignoring all the hot-added devices, reload the kernel with pci=no_movable_bars\n");
-+			break;
-+		}
-+
-+		dev_warn(&root->dev, "failed to reassign BARs, disable the next hot-added device %s and retry\n",
-+			 dev_name(&next_new_dev->dev));
-+
-+		pci_dev_disable_bars(next_new_dev);
-+		pci_bus_release_root_bridge_resources(root);
-+	} while (true);
-+
-+	pci_try_failed_bars = true;
-+}
-+
- /**
-  * pci_rescan_bus - Scan a PCI bus for devices
-  * @bus: PCI bus to scan
-@@ -3292,7 +3467,7 @@ unsigned int pci_rescan_bus(struct pci_bus *bus)
- 		max = pci_scan_child_bus(root);
- 
- 		pci_bus_release_root_bridge_resources(root);
--		pci_assign_unassigned_root_bus_resources(root);
-+		pci_reassign_root_bus_resources(root);
- 
- 		pci_setup_bridges(root);
- 		pci_bus_rescan_done(root);
+ 		res_mask |= (1 << i);
 diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index 00bdbc0ea817..3bde8fdb9aa0 100644
+index 3bde8fdb9aa0..d265db4c746d 100644
 --- a/drivers/pci/setup-bus.c
 +++ b/drivers/pci/setup-bus.c
-@@ -139,7 +139,7 @@ static void pdev_sort_resources(struct pci_dev *dev, struct list_head *head)
- 		if (r->flags & IORESOURCE_PCI_FIXED)
- 			continue;
+@@ -1909,7 +1909,14 @@ void __init pci_assign_unassigned_resources(void)
+ 		/* Make sure the root bridge has a companion ACPI device */
+ 		if (ACPI_HANDLE(root_bus->bridge))
+ 			acpi_ioapic_add(ACPI_HANDLE(root_bus->bridge));
++
++		if (pci_can_move_bars && !pci_bus_check_bars_assigned(root_bus, true)) {
++			dev_err(&root_bus->dev, "Not all requested BARs are assigned, triggering a rescan with movable BARs");
++			pci_rescan_bus(root_bus);
++		}
+ 	}
++
++	pci_init_done = true;
+ }
  
--		if (!(r->flags) || r->parent)
-+		if (!(r->flags) || r->parent || !pci_dev_bar_enabled(dev, i))
- 			continue;
- 
- 		r_align = pci_resource_alignment(dev, r);
-@@ -897,7 +897,8 @@ static void pbus_size_io(struct pci_bus *bus, resource_size_t min_size,
- 			struct resource *r = &dev->resource[i];
- 			unsigned long r_size;
- 
--			if (r->parent || !(r->flags & IORESOURCE_IO))
-+			if (r->parent || !(r->flags & IORESOURCE_IO) ||
-+			    !pci_dev_bar_enabled(dev, i))
- 				continue;
- 			r_size = resource_size(r);
- 
-@@ -1017,6 +1018,7 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
- 			resource_size_t r_size;
- 
- 			if (r->parent || (r->flags & IORESOURCE_PCI_FIXED) ||
-+			    !pci_dev_bar_enabled(dev, i) ||
- 			    ((r->flags & mask) != type &&
- 			     (r->flags & mask) != type2 &&
- 			     (r->flags & mask) != type3))
-diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
-index d8ca40a97693..51bc69d60791 100644
---- a/drivers/pci/setup-res.c
-+++ b/drivers/pci/setup-res.c
-@@ -472,6 +472,8 @@ int pci_enable_resources(struct pci_dev *dev, int mask)
- 		if ((i == PCI_ROM_RESOURCE) &&
- 				(!(r->flags & IORESOURCE_ROM_ENABLE)))
- 			continue;
-+		if (!pci_dev_bar_enabled(dev, i))
-+			continue;
- 
- 		if (r->flags & IORESOURCE_UNSET) {
- 			pci_err(dev, "can't enable device: BAR %d %pR not assigned\n",
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index adfc8dfdc87b..6a0a919a3cdb 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -382,6 +382,7 @@ struct pci_dev {
- 	 */
- 	unsigned int	irq;
- 	struct resource resource[DEVICE_COUNT_RESOURCE]; /* I/O and memory regions + expansion ROMs */
-+	unsigned int	res_mask;		/* Bitmask of assigned resources */
- 
- 	bool		match_driver;		/* Skip attaching driver */
- 
+ static void adjust_bridge_window(struct pci_dev *bridge, struct resource *res,
 -- 
 2.24.1
 
