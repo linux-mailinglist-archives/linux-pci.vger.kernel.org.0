@@ -2,200 +2,155 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 147581BB169
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Apr 2020 00:14:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A50B1BB1B3
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Apr 2020 00:51:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726194AbgD0WOp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Apr 2020 18:14:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54086 "EHLO mail.kernel.org"
+        id S1726233AbgD0Wvf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Apr 2020 18:51:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725998AbgD0WOp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 27 Apr 2020 18:14:45 -0400
+        id S1726224AbgD0Wvf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 27 Apr 2020 18:51:35 -0400
 Received: from localhost (mobile-166-175-187-210.mycingular.net [166.175.187.210])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0FA92074F;
-        Mon, 27 Apr 2020 22:14:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5260020661;
+        Mon, 27 Apr 2020 22:51:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588025684;
-        bh=rwZyRkD1TSoz7ebCbiTMlMTBmGgzCf7CPs5QQBwDQ50=;
+        s=default; t=1588027894;
+        bh=whRFNUD4BZPg0hJwHb5jAU8zt3B+MFfDdFnuCfCh21Y=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=nm6CuiAd2H2773Qx0+ywYuFu0fKPEBl08Oli133tgjd6GzwvSbPQ7REExtqlaIDM9
-         kz5v1Wd4nGdFdrNEkCrvNZHKkaCXMts5ejHnBttPTKpePfMzYFYNgsOrzP9tCNSNyO
-         1sdVv1SuzIF9vV191NK5s8+wauUDwAAEJpzsChQI=
-Date:   Mon, 27 Apr 2020 17:14:41 -0500
+        b=jbJ+hBWbFaPZLAZpJBho1x6SwnoZZdRmb11ZCOfY2HQAirKqK3Ud5K3Tc2P/CEHxq
+         YfIhwWgwPQzTeUCIK4Wz08oScj7EyiAqznu4rK0Hp9AVonP8uSBxI/HxMtjBtLKEKg
+         /QFWHJDSaVjtDIOGeZy74eppVI0aTWQr0pZCSHyU=
+Date:   Mon, 27 Apr 2020 17:51:32 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Derrick, Jonathan" <jonathan.derrick@intel.com>
-Cc:     "rajatja@google.com" <rajatja@google.com>,
-        "fred@fredlawl.com" <fred@fredlawl.com>,
-        "ruscur@russell.cc" <ruscur@russell.cc>,
-        "kbusch@kernel.org" <kbusch@kernel.org>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "olof@lixom.net" <olof@lixom.net>,
-        "sbobroff@linux.ibm.com" <sbobroff@linux.ibm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "oohall@gmail.com" <oohall@gmail.com>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "Patel, Mayurkumar" <mayurkumar.patel@intel.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "sathyanarayanan.kuppuswamy@linux.intel.com" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: Re: [PATCH v2 1/2] PCI/AER: Allow Native AER Host Bridges to use AER
-Message-ID: <20200427221441.GA7516@google.com>
+To:     Wei Hu <weh@microsoft.com>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, lorenzo.pieralisi@arm.com, robh@kernel.org,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, decui@microsoft.com,
+        mikelley@microsoft.com
+Subject: Re: [PATCH] PCI: pci-hyperv: Retry PCI bus D0 entry when the first
+ attempt failed with invalid device state 0xC0000184.
+Message-ID: <20200427225132.GA9339@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ac3d3b2d3f0e678b792281a1debf5762f1d52b1f.camel@intel.com>
+In-Reply-To: <20200426132430.1756-1-weh@microsoft.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 04:11:07PM +0000, Derrick, Jonathan wrote:
-> On Fri, 2020-04-24 at 18:30 -0500, Bjorn Helgaas wrote:
-> > I'm glad you raised this because I think the way we handle
-> > FIRMWARE_FIRST is really screwed up.
-> > 
-> > On Mon, Apr 20, 2020 at 03:37:09PM -0600, Jon Derrick wrote:
-> > > Some platforms have a mix of ports whose capabilities can be negotiated
-> > > by _OSC, and some ports which are not described by ACPI and instead
-> > > managed by Native drivers. The existing Firmware-First HEST model can
-> > > incorrectly tag these Native, Non-ACPI ports as Firmware-First managed
-> > > ports by advertising the HEST Global Flag and matching the type and
-> > > class of the port (aer_hest_parse).
-> > > 
-> > > If the port requests Native AER through the Host Bridge's capability
-> > > settings, the AER driver should honor those settings and allow the port
-> > > to bind. This patch changes the definition of Firmware-First to exclude
-> > > ports whose Host Bridges request Native AER.
-> > > 
-> > > Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
-> > > ---
-> > >  drivers/pci/pcie/aer.c | 3 +++
-> > >  1 file changed, 3 insertions(+)
-> > > 
-> > > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> > > index f4274d3..30fbd1f 100644
-> > > --- a/drivers/pci/pcie/aer.c
-> > > +++ b/drivers/pci/pcie/aer.c
-> > > @@ -314,6 +314,9 @@ int pcie_aer_get_firmware_first(struct pci_dev *dev)
-> > >  	if (pcie_ports_native)
-> > >  		return 0;
-> > >  
-> > > +	if (pci_find_host_bridge(dev->bus)->native_aer)
-> > > +		return 0;
-> > 
-> > I hope we don't have to complicate pcie_aer_get_firmware_first() by
-> > adding this "native_aer" check here.  I'm not sure what we actually
-> > *should* do based on FIRMWARE_FIRST, but I don't think the current
-> > uses really make sense.
-> > 
-> > I think Linux makes too many assumptions based on the FIRMWARE_FIRST
-> > bit.  The ACPI spec really only says (ACPI v6.3, sec 18.3.2.4):
-> > 
-> >   If set, FIRMWARE_FIRST indicates to the OSPM that system firmware
-> >   will handle errors from this source first.
-> > 
-> >   If FIRMWARE_FIRST is set in the flags field, the Enabled field [of
-> >   the HEST AER structure] is ignored by the OSPM.
-> > 
-> > I do not see anything there about who owns the AER Capability, but
-> > Linux assumes that if FIRMWARE_FIRST is set, firmware must own the AER
-> > Capability.  I think that's reading too much into the spec.
-> > 
-> > We already have _OSC, which *does* explicitly talk about who owns the
-> > AER Capability, and I think we should rely on that.  If firmware
-> > doesn't want the OS to touch the AER Capability, it should decline to
-> > give ownership to the OS via _OSC.
-> > 
-> > >  	if (!dev->__aer_firmware_first_valid)
-> > >  		aer_set_firmware_first(dev);
-> > >  	return dev->__aer_firmware_first;
-> 
-> Just a little bit of reading and my interpretation, as it seems like
-> some of this is just layers upon layers of possibly conflicting yet
-> intentionally vague descriptions.
-> 
-> _OSC seems to describe that OSPM can handle AER (6.2.11.3):
-> PCI Express Advanced Error Reporting (AER) control
->    The OS sets this bit to 1 to request control over PCI Express AER.
->    If the OS successfully receives control of this feature, it must
->    handle error reporting through the AER Capability as described in
->    the PCI Express Base Specification.
-> 
-> 
-> For AER and DPC the ACPI root port enumeration will properly set
-> native_aer/dpc based on _OSC:
-> 
-> struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
-> ...
-> 	if (!(root->osc_control_set & OSC_PCI_EXPRESS_AER_CONTROL))
-> 		host_bridge->native_aer = 0;
-> 	if (!(root->osc_control_set & OSC_PCI_EXPRESS_PME_CONTROL))
-> 		host_bridge->native_pme = 0;
-> 	if (!(root->osc_control_set & OSC_PCI_EXPRESS_LTR_CONTROL))
-> 		host_bridge->native_ltr = 0;
-> 	if (!(root->osc_control_set & OSC_PCI_EXPRESS_DPC_CONTROL))
-> 		host_bridge->native_dpc = 0;
-> 
-> As DPC was defined in an ECN [1], I would imagine AER will need to
-> cover DPC for legacy platforms prior to the ECN.
-> 
-> 
-> 
-> The complication is that HEST also seems to describe how ports (and
-> other devices) are managed either individually or globally:
-> 
-> Table 18-387  PCI Express Root Port AER Structure
-> ...
-> Flags:
->    [0] - FIRMWARE_FIRST: If set, this bit indicates to the OSPM that
->    system firmware will handle errors from this source
->    [1] - GLOBAL: If set, indicates that the settings contained in this
->    structure apply globally to all PCI Express Devices. All other bits
->    must be set to zero
-> 
-> 
-> The _OSC definition seems to contradict/negate the above FIRMWARE_FIRST
-> definition that says only firmware will handle errors. It's a bit
-> different than the IA_32 MCE definition which allows for a GHES_ASSIST
-> condition, which would cause Firmware 'First', however does allow the
-> error to be received by OSPM AER via GHES:
-> 
-> Table 18-385  IA-32 Architecture Corrected Machine Check Structure
->    [0] - FIRMWARE_FIRST: If set, this bit indicates that system
->    firmware will handle errors from this source first.
->    [2] - GHES_ASSIST: If set, this bit indicates that although OSPM is
->    responsible for directly handling the error (as expected when
->    FIRMWARE_FIRST is not set), system firmware reports additional
->    information in the context of an interrupt generated by the error.
->    The additional information is reported in a Generic Hardware Error
->    Source structure with a matching Related Source Id.
-> 
-> 
-> I think Linux needs to make an assumption that devices either
-> enumerated in HEST or enumerated globally by HEST should be managed by
-> FFS. However it seems that Linux should also be correlating that with
-> _OSC as _OSC seems to directly contradict and possibly supercede the
-> HEST expectation.
+Please pay attention to the changelog history and make yours match:
 
-That's basically what Linux been doing -- we've been assuming that if
-_OSC declines to grant us control, *or* if FFS is set somewhere, we
-shouldn't touch the AER capability.  But this leads to lots of weird
-corner cases, and I really doubt that firmware and Linux are
-interpreting all these the same way.
+  $ git log --oneline drivers/pci/controller/pci-hyperv.c
+  1cf106d93245 ("PCI: hv: Introduce hv_msi_entry")
+  61bfd920abbf ("PCI: hv: Move retarget related structures into tlfs header")
+  b00f80fcfaa0 ("PCI: hv: Move hypercall related definitions into tlfs header")
+  067fb6c97e7e ("PCI: hv: Replace zero-length array with flexible-array member")
+  999dd956d838 ("PCI: hv: Add support for protocol 1.3 and support PCI_BUS_RELATIONS2")
+  f9ad0f361cf3 ("PCI: hv: Decouple the func definition in hv_dr_state from VSP message")
+  42c3d41832ef ("PCI: hv: Add missing kfree(hbus) in hv_pci_probe()'s error handling path")
+  e658a4fea8ef ("PCI: hv: Remove unnecessary type casting from kzalloc")
 
-What breaks if we change Linux to *only* use _OSC to determine
-ownership of the AER capability?  My argument is that firmware doesn't
-want the OS to touch the AER capability registers, it should decline
-to give the OS control of the AER capability via _OSC.
+No period at end of subject.
 
-If _OSC grants control to the OS in a case where firmware doesn't want
-the OS to have control, I'd say that's just a firmware defect that
-should be worked around with some sort of quirk.
+On Sun, Apr 26, 2020 at 09:24:30PM +0800, Wei Hu wrote:
+> In the case of kdump, the PCI device was not cleanly shut down
+> before the kdump kernel starts. This causes the initial
+> attempt of entering D0 state in the kdump kernel to fail with
+> invalid device state 0xC0000184 returned from Hyper-V host.
+> When this happens, explicitly call PCI bus exit and retry to
+> enter the D0 state.
+> 
+> Also fix the PCI probe failure path to release the PCI device
+> resource properly.
 
-> [1] https://members.pcisig.com/wg/PCI-SIG/document/12888
+This sounds like two separate fixes that should be in separate
+patches?
+
+> Signed-off-by: Wei Hu <weh@microsoft.com>
+> ---
+>  drivers/pci/controller/pci-hyperv.c | 34 ++++++++++++++++++++++++++++-
+>  1 file changed, 33 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index e15022ff63e3..eb4781fa058d 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -2736,6 +2736,10 @@ static void hv_free_config_window(struct hv_pcibus_device *hbus)
+>  	vmbus_free_mmio(hbus->mem_config->start, PCI_CONFIG_MMIO_LENGTH);
+>  }
+>  
+> +#define STATUS_INVALID_DEVICE_STATE		0xC0000184
+> +
+> +static int hv_pci_bus_exit(struct hv_device *hdev, bool hibernating);
+> +
+>  /**
+>   * hv_pci_enter_d0() - Bring the "bus" into the D0 power state
+>   * @hdev:	VMBus's tracking struct for this root PCI bus
+> @@ -2748,8 +2752,10 @@ static int hv_pci_enter_d0(struct hv_device *hdev)
+>  	struct pci_bus_d0_entry *d0_entry;
+>  	struct hv_pci_compl comp_pkt;
+>  	struct pci_packet *pkt;
+> +	bool retry = true;
+>  	int ret;
+>  
+> +enter_d0_retry:
+>  	/*
+>  	 * Tell the host that the bus is ready to use, and moved into the
+>  	 * powered-on state.  This includes telling the host which region
+> @@ -2780,6 +2786,30 @@ static int hv_pci_enter_d0(struct hv_device *hdev)
+>  		dev_err(&hdev->device,
+>  			"PCI Pass-through VSP failed D0 Entry with status %x\n",
+>  			comp_pkt.completion_status);
+> +
+> +		/*
+> +		 * In certain case (Kdump) the pci device of interest was
+> +		 * not cleanly shut down and resource is still held on host
+> +		 * side, the host could return STATUS_INVALID_DEVICE_STATE.
+> +		 * We need to explicitly request host to release the resource
+> +		 * and try to enter D0 again.
+> +		 */
+> +		if (comp_pkt.completion_status == STATUS_INVALID_DEVICE_STATE &&
+> +		    retry) {
+> +			ret = hv_pci_bus_exit(hdev, true);
+> +
+> +			retry = false;
+> +
+> +			if (ret == 0) {
+> +				kfree(pkt);
+> +				goto enter_d0_retry;
+> +			} else {
+> +				dev_err(&hdev->device,
+> +					"PCI bus D0 exit failed with ret %d\n",
+> +					ret);
+> +			}
+> +		}
+> +
+>  		ret = -EPROTO;
+>  		goto exit;
+>  	}
+> @@ -3136,7 +3166,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+>  
+>  	ret = hv_pci_allocate_bridge_windows(hbus);
+>  	if (ret)
+> -		goto free_irq_domain;
+> +		goto exit_d0;
+>  
+>  	ret = hv_send_resources_allocated(hdev);
+>  	if (ret)
+> @@ -3154,6 +3184,8 @@ static int hv_pci_probe(struct hv_device *hdev,
+>  
+>  free_windows:
+>  	hv_pci_free_bridge_windows(hbus);
+> +exit_d0:
+> +	(void) hv_pci_bus_exit(hdev, true);
+>  free_irq_domain:
+>  	irq_domain_remove(hbus->irq_domain);
+>  free_fwnode:
+> -- 
+> 2.20.1
+> 
