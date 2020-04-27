@@ -2,62 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 85B9E1BA02E
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Apr 2020 11:41:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DC771BA0F8
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Apr 2020 12:21:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726504AbgD0Jl0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Apr 2020 05:41:26 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:40789 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726349AbgD0Jl0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Apr 2020 05:41:26 -0400
-Authenticated-By: 
-X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 03R9enxgF016452, This message is accepted by code: ctaloc0852
-Received: from RS-CAS01.realsil.com.cn (rsfs1.realsil.com.cn[172.29.17.2])
-        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 03R9enxgF016452
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Mon, 27 Apr 2020 17:40:49 +0800
-Received: from RS-MBS01.realsil.com.cn ([::1]) by RS-CAS01.realsil.com.cn
- ([::1]) with mapi id 14.03.0439.000; Mon, 27 Apr 2020 17:40:48 +0800
-From:   =?gb2312?B?t+vI8Q==?= <rui_feng@realsil.com.cn>
-To:     Christoph Hellwig <hch@infradead.org>
-CC:     "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: =?gb2312?B?tPC4tDogW1BBVENIXSBtbWM6IHJ0c3g6IEFkZCBTRCBFeHByZXNzIG1vZGUg?= =?gb2312?Q?support_for_RTS5261?=
-Thread-Topic: [PATCH] mmc: rtsx: Add SD Express mode support for RTS5261
-Thread-Index: AQHWG2mdb2Wi+0TUh0G7QGay1iuqfqiL+UQAgAC/B7A=
-Date:   Mon, 27 Apr 2020 09:40:48 +0000
-Message-ID: <2A308283684ECD4B896628E09AF5361E028BCA26@RS-MBS01.realsil.com.cn>
-References: <1587864346-3144-1-git-send-email-rui_feng@realsil.com.cn>
- <20200427061426.GA11270@infradead.org>
-In-Reply-To: <20200427061426.GA11270@infradead.org>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.29.40.150]
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        id S1726504AbgD0KVO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Apr 2020 06:21:14 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34865 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726507AbgD0KVI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Apr 2020 06:21:08 -0400
+Received: by mail-wr1-f68.google.com with SMTP id x18so19850266wrq.2;
+        Mon, 27 Apr 2020 03:21:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+7bVFLWrQIX8JTal4r0/ZmJRvVDeqQomfNKtoU2FS3E=;
+        b=YrOZ5zWfKd0CqAbguZCn6y5ydA+zHJLYxasCh2WrTaN6p8FMRM4tF1XAhAwEKjKQPY
+         1EgIbCl+bXYRH5zPkiANzNypaEuziI2qyMdvHNRc7Mv5RHnK2j9JmatnGuBq024h7WQS
+         BzqBduNksbl5stgXNCuBF+wyC+uOu0vNvZKoMuP0Jy/V+jtkLeTsfudnAzw2Y+PunBOF
+         nYnkGkPzwDMDrYrwMcs8ii37VpXCpH2ZUvJ3m0azAaKngd3bj0VbzbPtWsEfoWDhTBLA
+         cJL7DxdEQRD44Se0nBZaSJk9JiGovgzwmzXEr08djo7Qgr458foAbT3ETRBM3IH/ZvSe
+         UK/Q==
+X-Gm-Message-State: AGi0PuZUytQDm6ACPnZDzzaTmpeYwUwisbf6vTlvMMzRmjhjpIS+4ZZX
+        DfnXC8Vd4SPJMUMsL+Zc/mFOLRZP
+X-Google-Smtp-Source: APiQypKFmkXpGVvRzHZGFEZVOY9BybBoS1EtcBDc2CSoMzoH9YHRDKgDok7WTYAp0c8U/f9qn30bcQ==
+X-Received: by 2002:adf:fd46:: with SMTP id h6mr27795565wrs.90.1587982865429;
+        Mon, 27 Apr 2020 03:21:05 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id b82sm15832648wmh.1.2020.04.27.03.21.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Apr 2020 03:21:04 -0700 (PDT)
+Date:   Mon, 27 Apr 2020 10:21:02 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Wei Hu <weh@microsoft.com>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, lorenzo.pieralisi@arm.com, robh@kernel.org,
+        bhelgaas@google.com, linux-hyperv@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        decui@microsoft.com, mikelley@microsoft.com
+Subject: Re: [PATCH] PCI: pci-hyperv: Retry PCI bus D0 entry when the first
+ attempt failed with invalid device state 0xC0000184.
+Message-ID: <20200427102102.lar6d4w3rqz3d3j4@liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net>
+References: <20200426132430.1756-1-weh@microsoft.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200426132430.1756-1-weh@microsoft.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-DQo+IE9uIFN1biwgQXByIDI2LCAyMDIwIGF0IDA5OjI1OjQ2QU0gKzA4MDAsIHJ1aV9mZW5nQHJl
-YWxzaWwuY29tLmNuIHdyb3RlOg0KPiA+IEZyb206IFJ1aSBGZW5nIDxydWlfZmVuZ0ByZWFsc2ls
-LmNvbS5jbj4NCj4gPg0KPiA+IFJUUzUyNjEgc3VwcG9ydCBsZWdhY3kgU0QgbW9kZSBhbmQgU0Qg
-RXhwcmVzcyBtb2RlLg0KPiA+IEluIFNENy54LCBTRCBhc3NvY2lhdGlvbiBpbnRyb2R1Y2UgU0Qg
-RXhwcmVzcyBhcyBhIG5ldyBtb2RlLg0KPiA+IFNEIEV4cHJlc3MgbW9kZSBpcyBkaXN0aW5ndWlz
-aGVkIGJ5IENNRDguDQo+ID4gVGhlcmVmb3JlLCBDTUQ4IGhhcyBuZXcgYml0IGZvciBTRCBFeHBy
-ZXNzLg0KPiA+IFNEIEV4cHJlc3MgaXMgYmFzZWQgb24gUENJZS9OVk1lLg0KPiA+IFJUUzUyNjEg
-dXNlcyBDTUQ4IHRvIHN3aXRjaCB0byBTRCBFeHByZXNzIG1vZGUuDQo+IA0KPiBTbyBob3cgZG9l
-cyB0aGlzIGJpdCB3b3JrPyAgVGhleSB3YXkgSSBpbWFnaW5lZCBTRCBFeHByZXNzIHRvIHdvcmsg
-aXMgdGhhdA0KPiB0aGUgYWN0dWFsIFNEIENhcmQganVzdCBzaG93cyB1cCBhcyBhIHJlYWwgUENJ
-ZSBkZXZpY2UsIHNpbWlsYXIgdG8gc2F5DQo+IFRodW5kZXJib2x0Lg0KDQpOZXcgU0QgRXhwcmVz
-cyBjYXJkIGhhcyBkdWFsIG1vZGUuIE9uZSBpcyBTRCBtb2RlIGFuZCBhbm90aGVyIGlzIFBDSWUg
-bW9kZS4NCkluIFBDSWUgbW9kZSwgaXQgYWN0IGFzIGEgUENJZSBkZXZpY2UgYW5kIHVzZSBQQ0ll
-IHByb3RvY29sIG5vdCBUaHVuZGVyYm9sdCBwcm90b2NvbC4NCg==
+On Sun, Apr 26, 2020 at 09:24:30PM +0800, Wei Hu wrote:
+> In the case of kdump, the PCI device was not cleanly shut down
+> before the kdump kernel starts. This causes the initial
+> attempt of entering D0 state in the kdump kernel to fail with
+> invalid device state 0xC0000184 returned from Hyper-V host.
+> When this happens, explicitly call PCI bus exit and retry to
+> enter the D0 state.
+> 
+> Also fix the PCI probe failure path to release the PCI device
+> resource properly.
+> 
+> Signed-off-by: Wei Hu <weh@microsoft.com>
+> ---
+>  drivers/pci/controller/pci-hyperv.c | 34 ++++++++++++++++++++++++++++-
+>  1 file changed, 33 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index e15022ff63e3..eb4781fa058d 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -2736,6 +2736,10 @@ static void hv_free_config_window(struct hv_pcibus_device *hbus)
+>  	vmbus_free_mmio(hbus->mem_config->start, PCI_CONFIG_MMIO_LENGTH);
+>  }
+>  
+> +#define STATUS_INVALID_DEVICE_STATE		0xC0000184
+> +
+
+Can you please move this along side STATUS_REVISION_MISMATCH?
+
+Wei.
