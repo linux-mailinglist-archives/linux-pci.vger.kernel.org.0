@@ -2,156 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 72B671B94F5
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Apr 2020 03:30:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D3C081B955D
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Apr 2020 05:22:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726316AbgD0Bav (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 26 Apr 2020 21:30:51 -0400
-Received: from mail-eopbgr1320101.outbound.protection.outlook.com ([40.107.132.101]:52549
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        id S1726341AbgD0DWZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 26 Apr 2020 23:22:25 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:2492 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726186AbgD0Bav (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 26 Apr 2020 21:30:51 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MRIEYz2Zl/8TCxzix8ph9kUhQ1Ok6YHM8z+JT4PD0/NL1PPUrQbw79HqzWwgj5oLFVpjJUNQjNjyzQwnCjUqkpMvWOYSrm8AqHvGnDlg6OWb2RobQGt1azY8dpKCnGmQqHEZMTmjQ91b35/MopdBz0qHWh4ZOjTNmpzEogaCBK5HA5vr8rYiAomqF/5yYecbjZF7pQrTjhgkk28gbTSBYRIK3HA8V6fnSJQVzkE6OMa4P+GXHxlxzJZrJXSRZlHlk/BfwwWHa9o+GjXLfVrux7XUU+RYhrAN+r9jLZ9NPz/UZcLa7PKRXY06wW+EVxUTd1WP03L+l3zFblAryHD2Cg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9KlVgls7mQBl21xmNcaiSFxN+Q8k0FQscSo25zoAPig=;
- b=BPcQ4cBf5VLyZzyqyF+glP04VAo+ruDrpczu6BSAnyhco7V3JH/K4beXLU07BUBGymQQ6UdFnlm6TapI8eVVtgdeXNjQyIeumspIzy26j5ZEdPvIioRBUlHj1MVlYhGaCngHRS1jrGLSyvOV27jNDh8R8yYnSt2zGaRijx+wbR4I6ksKgJba9A9Qy9yvNPiZgov/Txvq3I4CRblBv5Y4eKyh8PlpFH6lN16Me4XBtEjJL2L+Q1JUeBLaGFFKUpyWiBRiDKtkcEtFFFbPDqYWrGm/qXbsQyKwQJuUNPHCYc6RDa/vKWT5NjJRbBEZPtG8+pb2hL2l8nFYqzmGu90IeA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9KlVgls7mQBl21xmNcaiSFxN+Q8k0FQscSo25zoAPig=;
- b=W87/CutOMMZVxiK0azgfAvkV/zXFiEjlhmCzQPYHy61qwINJc1YIw5BbXfDcJIFHHMoWM+GYntREPP4xlZpDppJN4JtFJ6dRf5Hh8eGfeMuq6jF70d8IdUT7Hw2nK03L9K5YkRY3vT/xYzfSj6/QLfrMBX9qMuZ1xQ0RozHoDI0=
-Received: from HK0P153MB0273.APCP153.PROD.OUTLOOK.COM (2603:1096:203:b2::12)
- by HK0P153MB0162.APCP153.PROD.OUTLOOK.COM (2603:1096:203:1a::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.3; Mon, 27 Apr
- 2020 01:30:46 +0000
-Received: from HK0P153MB0273.APCP153.PROD.OUTLOOK.COM
- ([fe80::2d07:e045:9d5b:898a]) by HK0P153MB0273.APCP153.PROD.OUTLOOK.COM
- ([fe80::2d07:e045:9d5b:898a%2]) with mapi id 15.20.2979.003; Mon, 27 Apr 2020
- 01:30:46 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Wei Hu <weh@microsoft.com>, KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: RE: [PATCH] PCI: pci-hyperv: Retry PCI bus D0 entry when the first
- attempt failed with invalid device state 0xC0000184.
-Thread-Topic: [PATCH] PCI: pci-hyperv: Retry PCI bus D0 entry when the first
- attempt failed with invalid device state 0xC0000184.
-Thread-Index: AdYcMgJHryrU7gmlQyiwFGNu7UeS/g==
-Date:   Mon, 27 Apr 2020 01:30:45 +0000
-Message-ID: <HK0P153MB02735AD2E3CD36271AED1527BFAF0@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-04-27T01:30:43.7737160Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=a0228ed3-54f4-4c22-8c18-610ea6f4dab3;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2601:600:a280:7f70:39c4:9d02:a54c:22b3]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: cf3af2a9-edb4-4c40-c9b1-08d7ea4a9c0c
-x-ms-traffictypediagnostic: HK0P153MB0162:|HK0P153MB0162:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <HK0P153MB016224E66A58D127AC2E5EC4BFAF0@HK0P153MB0162.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0386B406AA
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: EZlsibC9LO2ralGz9iT+segVZTDsisyQWAfN5gk/1zAAnCnMNl3hZu2v5uLPqwVCiifZueArrKRzyLoLe5Fs4+c/Hk3H0s9SJ8VzOxeOLKAFfu3Crd7NBHFBU7Lkpji/Szh+RyPkS3l+p2gX5kPOxF045f/oUR0IMJ7Rw7nXCVCVUb20xIXAJeeeD0CXWuu1mRQxZXyMJ90xx9Ao84Byc/KevtrFHogZeg9XRDuzSZlBN6cXvL4O+Zfuh/f5FmOLULsEFURaRsRws2bJc7ASlgdfIHy8ub8fhbVbXJdNEpmtXS5y1Y8s2mq1ikRKOwFhZt3xEZ0suQ9TRoIHbBLuYJ/1SzVhXelnWMuGNzxhl0knnnhWpZaAbHZgewSq3d7QViidaoi4/46oCvkkeU5pKEmcv9/pdQnAuSUbirtxK7Hb+2GuF0ykxSuOruGTy89Mc4awyg51AKxwC+nZ6yt/BTtqryrySe1L6DNUV4EPHBk=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HK0P153MB0273.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(376002)(346002)(39860400002)(136003)(396003)(186003)(6636002)(10290500003)(71200400001)(55016002)(8990500004)(5660300002)(9686003)(110136005)(478600001)(8676002)(86362001)(66556008)(82960400001)(82950400001)(66446008)(64756008)(66476007)(52536014)(76116006)(66946007)(6506007)(53546011)(7696005)(8936002)(316002)(2906002)(33656002)(921003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: prPHT2t2+BkDiy2YHLv02YYMp4zzdQWR5GuVVSILiDaMiiWy3Zqlim+09x1i0VORSQ6R4mn4f1CH38UoNJGsZndfm7Zx09CrtNp59ZaEiRSE0Y19O/Nq5aTZvGKKFz4VItbDf2a0BCX6kGp/kjjydSzHK2K0JYIG43q8o5GuKBUJGoEytDIP3AKR8JgQYajmDWfzscEtsZVBvR2yhWkeXLS2YEY/l/CJWEItNyGiisX+vNCnMVAUjH4vdt9mJbfPchVwBO+KUlSuECF8IbHuHgJUfR6fO0rG4yreg3T+XRHJg/xz6FjyXkr0NF/weOOGUHVJ1WRgctCBStDMmt64gBW0la251clWPJA2XTzp/TnLGiXjB98zyW9DUFnl0JFwsFP94gCizWqGsQIKlxRFeHTYhrYTFM219NjA+UPmz9tpm9722zthPAMmGkBJf5E7L39zeR8QZmuypSnJvXKXrIg9xxqPWoxYh5IxW1zyCSQHqI+68WwBgAS91bkSXszxLzzAdrKwZ55mayh4ZOyG7FoXfiT+n+3RTLsVM9bV+uWa61dlJLjWSiWNic3iPikwRdqN62uIOXQCIVIvazmY0TIodWfIcTjkdJ15KNKYJfmvmVFud4iqwG+N89EFuhiDfePwUFHScxmc2rnA46a+hKLHMynz7XwNZvLZD1oFO3mz/WfsPMkcka5mQJ/phIL2UlwRb3FI54lJ3KzGSiQfr/BFsMEwIIPYEA7FRnYuMtx9nCn+5ZKYpDGNMLZZfY7V8PXypRFXjLv5QeVk8yuCRgvEFGIBpQjwYbvZuBykArjep5ZZyrSChT76Dgrlb9oMrk8VVesMABhPce6NEvRqmzdVfRtLjZ5fO6dtI3IB3Xs=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1726340AbgD0DWZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 26 Apr 2020 23:22:25 -0400
+Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.55])
+        by Forcepoint Email with ESMTP id 61F824F59A8333890CA5;
+        Mon, 27 Apr 2020 11:22:18 +0800 (CST)
+Received: from dggeme758-chm.china.huawei.com (10.3.19.104) by
+ DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
+ id 14.3.487.0; Mon, 27 Apr 2020 11:22:12 +0800
+Received: from [127.0.0.1] (10.40.49.11) by dggeme758-chm.china.huawei.com
+ (10.3.19.104) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1913.5; Mon, 27
+ Apr 2020 11:22:11 +0800
+Subject: Re: [PATCH v5 2/2] pciutils: Decode Compute eXpress Link DVSEC
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Sean V Kelley <sean.v.kelley@linux.intel.com>
+CC:     <mj@ucw.cz>, <linux-pci@vger.kernel.org>,
+        huangdaode <huangdaode@hisilicon.com>
+References: <20200420174747.GA48539@google.com>
+From:   Jay Fang <f.fangjian@huawei.com>
+Message-ID: <6bb98f80-2c8d-cfd5-7ebf-c1365485c9c8@huawei.com>
+Date:   Mon, 27 Apr 2020 11:22:28 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cf3af2a9-edb4-4c40-c9b1-08d7ea4a9c0c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Apr 2020 01:30:45.7900
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Ep3dBlGTurfSEsM661W97VI4MwAMy0JDlmYipSvenPfiGd/Jj7E+QRIR+aFGN3vxiMXuOelnISPDMnS7es8fnw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0162
+In-Reply-To: <20200420174747.GA48539@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.40.49.11]
+X-ClientProxiedBy: dggeme719-chm.china.huawei.com (10.1.199.115) To
+ dggeme758-chm.china.huawei.com (10.3.19.104)
+X-CFilter-Loop: Reflected
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> From: Wei Hu <weh@microsoft.com>
-> Sent: Sunday, April 26, 2020 6:25 AM
-> Subject: [PATCH] PCI: pci-hyperv: Retry PCI bus D0 entry when the first a=
-ttempt
-> failed with invalid device state 0xC0000184.
+Got it.
+Bjorn, thanks.
 
-The title looks too long. :-)
-Ideally it should be shorter than 75 chars. I suggest the part=20
-"with invalid device state 0xC0000184. " should be removed.
+Jay
 
-> +#define STATUS_INVALID_DEVICE_STATE		0xC0000184
-> +
-> +static int hv_pci_bus_exit(struct hv_device *hdev, bool hibernating);
+On 2020/4/21 1:47, Bjorn Helgaas wrote:
+> Hi Jay, thanks for taking a look at this!
+> 
+> On Mon, Apr 20, 2020 at 09:21:27AM -0700, Sean V Kelley wrote:
+>> On 18 Apr 2020, at 1:36, Jay Fang wrote:
+>>> On 2020/4/15 8:47, Sean V Kelley wrote:
+>>>>
+>>>> [1] https://www.computeexpresslink.org/
+>>>>
+>>>> Signed-off-by: Sean V Kelley <sean.v.kelley@linux.intel.com>
+>>>> ---
+>>>>  lib/header.h        |  20 +++
+>>>
+>>>> +
+>>>> +static int
+>>>> +is_cxl_cap(struct device *d, int where)
+>>>> +{
+>>>> +  u32 hdr;
+>>>> +  u16 w;
+>>>> +
+>>>> +  if (!config_fetch(d, where + PCI_DVSEC_HEADER1, 8))
+>>>> +    return 0;
+>>>> +
+>>>> +  /* Check for supported Vendor */
+>>>> +  hdr = get_conf_long(d, where + PCI_DVSEC_HEADER1);
+>>>> +  w = BITS(hdr, 0, 16);
+>>>> +  if (w != PCI_VENDOR_ID_INTEL)
+>>>
+>>> I don't think here checking is quite right. Does only Intel support CXL?
+>>> Other Vendors should also be considered.
+>>
+>> In the absence of currently available hardware, I was attempting to limit
+>> false positive noise.  I’m happy to avoid the check on the vendor if there
+>> were to exist a definitive supported list.  Bjorn suggested that I check for
+>> vendor ID with DVSEC ID for now.  As hardware enters the market, I can
+>> surely revise this with an update when the CXL group publishes a list.
+> 
+> The Vendor ID check cannot be avoided.  Vendor IDs are allocated by
+> the PCI-SIG, but the DVSEC ID is vendor-defined so there cannot be a
+> global "CXL capability" DVSEC ID.
+> 
+> CXL *could* work through the PCI-SIG and define a new CXL Extended
+> Capability that could make this generic.  But apparently they've
+> chosen to use the DVSEC mechanism instead.
+> 
+>>>> +  /* Check for Designated Vendor-Specific ID */
+>>>> +  hdr = get_conf_long(d, where + PCI_DVSEC_HEADER2);
+>>>> +  w = BITS(hdr, 0, 16);
+>>>> +  if (w == PCI_DVSEC_ID)
+> 
+> However, this is slightly wrong.  The name "PCI_DVSEC_ID" implies that
+> there can only be one DVSEC ID and it is vendor-independent, but
+> neither is true.
+> 
+> This value is allocated by Intel, so we must check for the Intel
+> Vendor ID first.  And Intel may define several DVSEC capabilities for
+> different purposes, so the name should also mention CXL.
+> 
+> So this should be "PCI_DVSEC_INTEL_CXL" or something similar.
+> 
+> But that doesn't mean other vendors need to define their own DVSEC
+> IDs for CXL.  The spec (PCIe r5.0, sec 7.9.6) says:
+> 
+>   [The DVSEC Capability] allows PCI Express component vendors to use
+>   the Extended Capability mechanism to expose vendor-specific
+>   registers that can be present in components by a variety of
+>   vendors.
+> 
+> Any vendor that implements this CXL DVSEC the same way Intel does can
+> tag it with PCI_VENDOR_ID_INTEL and PCI_DVSEC_INTEL_CXL.
+> 
+> Note that there are two types of vendor-specific capabilities:
+> 
+>   1) Vendor-Specific Extended Capability (VSEC).  The structure and
+>   definition are defined by the *Function* Vendor ID (from offset 0 in
+>   config space) and the VSEC ID in the capability.
+> 
+>   2) Designated Vendor-Specific Extended Capability (DVSEC).  The
+>   structure and definition are defined by the *DVSEC* Vendor ID (from
+>   the DVSEC capability, *not* the vendor of the Function) and the
+>   DVSEC ID in the capability.
+> 
+> This CXL capability is the latter, of course.
+> 
+> Bjorn
+> 
+> .
+> 
 
-Should we change the name of the parameter 'hibernating'?
-
->  /**
->   * hv_pci_enter_d0() - Bring the "bus" into the D0 power state
->   * @hdev:	VMBus's tracking struct for this root PCI bus
-> @@ -2748,8 +2752,10 @@ static int hv_pci_enter_d0(struct hv_device *hdev)
->  	struct pci_bus_d0_entry *d0_entry;
->  	struct hv_pci_compl comp_pkt;
->  	struct pci_packet *pkt;
-> +	bool retry =3D true;
->  	int ret;
->=20
-> +enter_d0_retry:
->  	/*
->  	 * Tell the host that the bus is ready to use, and moved into the
->  	 * powered-on state.  This includes telling the host which region
-> @@ -2780,6 +2786,30 @@ static int hv_pci_enter_d0(struct hv_device *hdev)
->  		dev_err(&hdev->device,
->  			"PCI Pass-through VSP failed D0 Entry with status %x\n",
->  			comp_pkt.completion_status);
-> +
-> +		/*
-> +		 * In certain case (Kdump) the pci device of interest was
-> +		 * not cleanly shut down and resource is still held on host
-> +		 * side, the host could return STATUS_INVALID_DEVICE_STATE.
-> +		 * We need to explicitly request host to release the resource
-> +		 * and try to enter D0 again.
-> +		 */
-> +		if (comp_pkt.completion_status =3D=3D STATUS_INVALID_DEVICE_STATE
-> &&
-> +		    retry) {
-
-Maybe it's better to just retry for any error in comp_pkt.completion_status=
-?
-Just in case the host returns a slightly different error code in future.
-
-Thanks,
--- Dexuan
