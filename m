@@ -2,111 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BF27D1BAED8
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Apr 2020 22:09:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 402FB1BB0A6
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Apr 2020 23:38:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbgD0UJF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Apr 2020 16:09:05 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:36745 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726364AbgD0UJF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Apr 2020 16:09:05 -0400
-Received: by mail-ot1-f65.google.com with SMTP id b13so28569999oti.3;
-        Mon, 27 Apr 2020 13:09:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LjHXiaCtnGqcs25RoRhH4VXqlbZs8N2rlpvkrTKQk2w=;
-        b=WW0KiFfBpZJNKlwF5LOauJyvUDtYZnp/6fPVwmWG1me//1k7PYKezk5PqlR0IM1qVr
-         JfBV2/z8V+xyeHXxrABirWFj9h/UVPPHPN68DDgmUpG+9PtQXoj9ixaTaDji79/ACHdn
-         T910qHPI5VhO43G3SRYCSMcMQeJsXVHuin8RFdvk0cORlb3CJjcDmej9q5Si9xASboFV
-         Q9ViSdvBfLp42rzIuxIHYLDCno1IkrjYntuGfNfzaYukJKTlkoKAUWRw5N1nq7LGrSCP
-         CTjMQpwxYVJMwfgsGe4/Uj4X0Vym8eCPaM1POcoazWoYJUPM5d8brcKpwzyS1AobHB2l
-         BOLw==
-X-Gm-Message-State: AGi0PuY4T1jvZOj2EfRibkVd+fTnp4bqQp3L2tGUjgnJHN7MAUZlKNch
-        N5ygTZ8laj43zXsTbxNK3ydikakuuqte8S1HbtE=
-X-Google-Smtp-Source: APiQypJo9QxmBf1wyiMhCpee+yBovlv4e8Z6HWC3FcFsNHseTkXZubqgFZ+npGh/pD192LlwekjF7QEtte+5bdAuLYw=
-X-Received: by 2002:a9d:7990:: with SMTP id h16mr13612825otm.145.1588018144361;
- Mon, 27 Apr 2020 13:09:04 -0700 (PDT)
+        id S1726333AbgD0ViR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Apr 2020 17:38:17 -0400
+Received: from mga11.intel.com ([192.55.52.93]:11912 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726259AbgD0ViQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 27 Apr 2020 17:38:16 -0400
+IronPort-SDR: OAepLcrguzYCcYcVhGebqoQbMw8YphuPIaYu/iYk8PSaGGuGi6AlfDf9vc9KIqLhRyr/wJr7/E
+ tVHJa4iz2EYw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 14:38:15 -0700
+IronPort-SDR: J55vk0pF84yPFVCrwNKWw1dK8bo24IMKbKbK1b3HqZGfkKQPO1BJnm1Y5aNiAd8ecyVBJ7x1jp
+ JlaHbUzZhN+g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,325,1583222400"; 
+   d="scan'208";a="246286715"
+Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.213.181.12]) ([10.213.181.12])
+  by orsmga007.jf.intel.com with ESMTP; 27 Apr 2020 14:38:13 -0700
+Subject: Re: [PATCH RFC 01/15] drivers/base: Introduce platform_msi_ops
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     vkoul@kernel.org, megha.dey@linux.intel.com, maz@kernel.org,
+        bhelgaas@google.com, rafael@kernel.org, tglx@linutronix.de,
+        hpa@zytor.com, alex.williamson@redhat.com, jacob.jun.pan@intel.com,
+        ashok.raj@intel.com, jgg@mellanox.com, yi.l.liu@intel.com,
+        baolu.lu@intel.com, kevin.tian@intel.com, sanjay.k.kumar@intel.com,
+        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
+        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
+References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
+ <158751203294.36773.11436842117908325764.stgit@djiang5-desk3.ch.intel.com>
+ <20200426070118.GA2083720@kroah.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+Message-ID: <4223511b-8dc0-33d1-6af1-831d8bf40b3d@intel.com>
+Date:   Mon, 27 Apr 2020 14:38:12 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <CAMuHMdVGkM_-5q+pSOtQ5nBPGzMeOpRTJUqekYnvjiPMFepqLw@mail.gmail.com>
- <20200427174138.GA207841@google.com>
-In-Reply-To: <20200427174138.GA207841@google.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 27 Apr 2020 22:08:52 +0200
-Message-ID: <CAMuHMdXbpynd6N2-GF+j3ie3HG0CohebpPOaj=oiZhF_Pt9gAg@mail.gmail.com>
-Subject: Re: [PATCH V3] PCI: rcar: Add the suspend/resume for pcie-rcar driver
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Marek Vasut <marek.vasut@gmail.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Kazufumi Ikeda <kaz-ikeda@xc.jp.nec.com>,
-        Gaku Inami <gaku.inami.xw@bp.renesas.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200426070118.GA2083720@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
 
-On Mon, Apr 27, 2020 at 7:41 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> On Sat, Apr 25, 2020 at 10:55:21AM +0200, Geert Uytterhoeven wrote:
-> > On Fri, Apr 24, 2020 at 9:57 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > [+cc Vaibhav]
-> > >
-> > > Alternate less redundant subject:
-> > >
-> > >   PCI: rcar: Add suspend/resume support
-> >
-> > Note that there's both pcie-rcar.c (this driver, for R-Car Gen2 and Gen3
-> > PCIe) and pci-rcar-gen2.c (for R-Car Gen2 PCI).
-> > People tend to use the prefix "PCI: rcar: " for both :-(
->
-> Yeah, that's pretty broken, thanks for pointing this out!
->
-> For most drivers we use a chipset name ("keystone", "imx6", "tegra",
-> etc) as the changlog tag.  That's nice because it gives space for
-> multiple drivers from the same vendor, but I don't know anything
-> similarly specific for the R-Car drivers.
->
-> pci-rcar-gen2.c seems to be for some sort of internal Conventional PCI
 
-AFAIUI it's some internal PCI glue to the *HCI USB controller.
+On 4/26/2020 12:01 AM, Greg KH wrote:
+> On Tue, Apr 21, 2020 at 04:33:53PM -0700, Dave Jiang wrote:
+>> From: Megha Dey <megha.dey@linux.intel.com>
+>>
+>> This is a preparatory patch to introduce Interrupt Message Store (IMS).
+>>
+>> Until now, platform-msi.c provided a generic way to handle non-PCI MSI
+>> interrupts. Platform-msi uses its parent chip's mask/unmask routines
+>> and only provides a way to write the message in the generating device.
+>>
+>> Newly creeping non-PCI complaint MSI-like interrupts (Intel's IMS for
+>> instance) might need to provide a device specific mask and unmask callback
+>> as well, apart from the write function.
+>>
+>> Hence, introduce a new structure platform_msi_ops, which would provide
+>> device specific write function as well as other device specific callbacks
+>> (mask/unmask).
+>>
+>> Signed-off-by: Megha Dey <megha.dey@linux.intel.com>
+> 
+> As this is not following the Intel-specific rules for sending me new
+> code, I am just deleting it all from my inbox.
 
-> bus?  The "gen2" is confusing because "Gen 2" is more commonly used
-> for PCIe than for Conventional PCI.
+That is my fault. As the aggregator of the patches, I should've signed 
+off Megha's patches.
 
-The "Gen2" applies to "R-Car", not to "PCI".
-
-> I would propose keeping "rcar" for the PCIe driver and using
-> "rcar-pci" for the Conventional PCI one, but the Conventional PCI one
-
-(/me resists against bike-shedding)
-
-> (pci-rcar-gen2.c) seems pretty inactive.  The most recent commits are
-> from 2018, and they're trivial cleanups.  So I'm doubtful that anybody
-> will remember when the next change comes in.
-
-I guess pci-rcar-gen2.c is simpler and more mature ;-)
-R-Car Gen2 SoCs have both (internal) PCI and PCIe, so the two drivers
-can be used together on the same hardware.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> 
+> Please follow the rules you all have been given, they are specific and
+> there for a reason.  And in looking at this code, those rules are not
+> going away any time soon.
+> 
+> greg k-h
+> 
