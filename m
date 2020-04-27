@@ -2,133 +2,200 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E6F71BB0D3
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Apr 2020 23:56:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 147581BB169
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Apr 2020 00:14:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726244AbgD0V44 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Apr 2020 17:56:56 -0400
-Received: from mail-eopbgr140043.outbound.protection.outlook.com ([40.107.14.43]:64514
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726204AbgD0V4z (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 27 Apr 2020 17:56:55 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gj+k0fubJhstaz77U9If1Wv1DP9fSzxxtccDrffNLD33jX2b/x227vcWzKrtp5gYThkD1wUo827xNv00RsW58TIAiUaEY6mc8QHNyH/UwVKT4vrLcj58zA9UXlBnwBylS2xVLONc3Rkw88LxOrs/PXYajszwfK8f3s+poYsG8X+E3/enu3WtnnDBLi7ZcqwmDtF6YKo8pSWMg1h8B+n1rkakPVTSnLmUU3L8wOOYjL1gzc0QhV/v24v5yPeVCL6xqhCMo/xK/GQgyvqPlbM3QoMbxo63g+pcIrBNDHhHdsbS+FYx+UV78ZxwXw9T5oLVt//ZRiXtjprTV8V40ZUJNg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zcnCmuEq8aZhzVNCCtMLAgc2n0RCv7GXGhRtXIrDMmw=;
- b=KIPDqd77jCwk/mFxo6Lf/mRw/nfRjZdCP8TYxXtyN1/ok2XCrRzkPArzV4q9nfIkxM9pGrCe/i5xXhH2Z6REHqaCXH5ls2WracLy3SC0pj51EJkYtNljad7jGGg9hsGJHCI8UFsPFzTrvvcy/MXKeYnskLQdp06itnMLwlSMPWA+M6LVJWocFFUrs2vGBgbcSeQWi/96Y6U8XRhG3aj6U6FhvXtysB+lEhqA6gsdItc+j6N6NgSRjiMR5ZViRBgYrY/n1AuBAZc2qhNV5NOVfA4xbWHQNm0RflNwVkxAgZbmOsH/+CHCbAV3fpkvynOGgs1nk/ONhnbr57dO+vTEPQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zcnCmuEq8aZhzVNCCtMLAgc2n0RCv7GXGhRtXIrDMmw=;
- b=qIbFevpERsNH4RZ4NaD/ecuA6/v7pYQGb2i7Kx8FbJKHeFZsyMKLF7kpgSyOsBFjPOqp1PzeYkwhhC+Tu6YyXqDbnoxtLehT6Js4gWREQj0hDF1IDJhnlvePROLOsAeFaZxV/qV8KPzSfsXpTfF2eUhe3bISq+lFcrkP+kaat1U=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
- by VI1PR05MB4399.eurprd05.prod.outlook.com (2603:10a6:803:42::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.22; Mon, 27 Apr
- 2020 21:56:51 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::a47b:e3cd:7d6d:5d4e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::a47b:e3cd:7d6d:5d4e%6]) with mapi id 15.20.2937.020; Mon, 27 Apr 2020
- 21:56:51 +0000
-Date:   Mon, 27 Apr 2020 18:56:47 -0300
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "megha.dey@linux.intel.com" <megha.dey@linux.intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        id S1726194AbgD0WOp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Apr 2020 18:14:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54086 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725998AbgD0WOp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 27 Apr 2020 18:14:45 -0400
+Received: from localhost (mobile-166-175-187-210.mycingular.net [166.175.187.210])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0FA92074F;
+        Mon, 27 Apr 2020 22:14:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588025684;
+        bh=rwZyRkD1TSoz7ebCbiTMlMTBmGgzCf7CPs5QQBwDQ50=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=nm6CuiAd2H2773Qx0+ywYuFu0fKPEBl08Oli133tgjd6GzwvSbPQ7REExtqlaIDM9
+         kz5v1Wd4nGdFdrNEkCrvNZHKkaCXMts5ejHnBttPTKpePfMzYFYNgsOrzP9tCNSNyO
+         1sdVv1SuzIF9vV191NK5s8+wauUDwAAEJpzsChQI=
+Date:   Mon, 27 Apr 2020 17:14:41 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Derrick, Jonathan" <jonathan.derrick@intel.com>
+Cc:     "rajatja@google.com" <rajatja@google.com>,
+        "fred@fredlawl.com" <fred@fredlawl.com>,
+        "ruscur@russell.cc" <ruscur@russell.cc>,
+        "kbusch@kernel.org" <kbusch@kernel.org>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "olof@lixom.net" <olof@lixom.net>,
+        "sbobroff@linux.ibm.com" <sbobroff@linux.ibm.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
+        "oohall@gmail.com" <oohall@gmail.com>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
- support for the idxd driver.
-Message-ID: <20200427215647.GJ13640@mellanox.com>
-References: <20200426191357.GB13640@mellanox.com>
- <20200426214355.29e19d33@x1.home>
- <20200427115818.GE13640@mellanox.com>
- <20200427071939.06aa300e@x1.home>
- <20200427132218.GG13640@mellanox.com>
- <20200427081841.18c4a994@x1.home>
- <20200427142553.GH13640@mellanox.com>
- <20200427094137.4801bfb6@w520.home>
- <20200427161625.GI13640@mellanox.com>
- <e2cbba8b-e204-42bc-44cd-ebdb6be211e3@intel.com>
+        "Patel, Mayurkumar" <mayurkumar.patel@intel.com>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "sathyanarayanan.kuppuswamy@linux.intel.com" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: Re: [PATCH v2 1/2] PCI/AER: Allow Native AER Host Bridges to use AER
+Message-ID: <20200427221441.GA7516@google.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e2cbba8b-e204-42bc-44cd-ebdb6be211e3@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: BL0PR02CA0121.namprd02.prod.outlook.com
- (2603:10b6:208:35::26) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (142.68.57.212) by BL0PR02CA0121.namprd02.prod.outlook.com (2603:10b6:208:35::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend Transport; Mon, 27 Apr 2020 21:56:51 +0000
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1jTBk7-0007lf-Vy; Mon, 27 Apr 2020 18:56:47 -0300
-X-Originating-IP: [142.68.57.212]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 5e899449-4b63-4798-0bc9-08d7eaf5e42f
-X-MS-TrafficTypeDiagnostic: VI1PR05MB4399:|VI1PR05MB4399:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR05MB43991448B63195E8CB9B0ACACFAF0@VI1PR05MB4399.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
-X-Forefront-PRVS: 0386B406AA
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(366004)(39860400002)(376002)(346002)(1076003)(6916009)(2616005)(8676002)(5660300002)(478600001)(36756003)(86362001)(26005)(9746002)(7416002)(81156014)(33656002)(8936002)(316002)(186003)(4744005)(52116002)(66556008)(66946007)(9786002)(66476007)(4326008)(2906002)(54906003)(24400500001);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: XzBr0K52EwP6yfOti/GLN66RYiZwvM6y2r7OLpRrxqbEFIcPmSWd/fvsHjVJw06BL7HvgNmafAfw3w+pNpWzeIqt+Sk82UBQX/3HRXX9TgQQrjPUfhRZzZ1D3eWofWgObIcJsIearqtqiINe3Vi1H3gtSvwkvLc06kwkly1P55GBieQB40+NKoRviwX0BZ1tRd9mMWQ5TFUIK+E2rp6bFgkSHvQnhE0K3QJHj5LzUs8+7NZn4pvRHv6a3BwM6qLhgtoYgGU1KxXZXjftqOOWWsY1hJHXclKgsq2E7RL9iQcsngLnZhhddjpywQkat+cs7QIdCkXwDghhxUUzXfxcmD+COHxhQT/fQ8U3WG25zIU4YI9lMIlYP93xkoB52vUs5dv5nTjQTz3pRqXb6Wssp9BsQKoSkvo4zkYH37yM4zpSI06V2xcEp9DJX1vp30J/khodJoB4X1Va66G/+d+zQMRp8Mbq5BXMHN6tMJYIlKI507va7qn0GGG0l2m0W6DX
-X-MS-Exchange-AntiSpam-MessageData: HzkY/UJ4xQrPqNSS9PqTyAILONQM9/60paQtb8ySlCniFMX4lcXcrlfZTtCUAZDk3nJQ4BZmTNPGI7uA0iu1Xeuqp845hIb8MkGY6TTwt/NTno8N6TyJdDOYIHfrFn0RbOka2hctZwlUkIC+RuEPpoCNFgHjSl9Y3Xk78JDNnpqlILB93w5BRElGGpRQuKn8D5+HJucjTgGmklkggB4I3yiJnz7VHXR/fOV4reCkNrLTlqPbC4zjN7uaZnyb1vmopBfCIXVlCbWsa9m8jU1E/2filmF4euzoeIexbE7D5kRo4E/Ti2r2dUk3hx0tjIajfhGlEdBPUxbVoXZeObbI72S0ocsFsyld1OhG294vKiF+Y9oWyxkhq6Vu4hLkkvH37bGJyr1EsUacM/v8bYWqWG/e3601OkgGH048aDT+s6qJWaJY3RBVMWqPnKx1GfpVoXsIHS/nfmGduwFCrMkJ+r7qYDyD7cw7UgiocJ/UolO4S3BSt2elJioT1jxlmhGxJQ9fjl7aZC/wjq7DLsi6oqd/wlZkbeHBCz6RG/xhMvfTY4z4VNbwmMN/OpMm1YubltiAxuHSj5KwSRvXDRaz3nDFoZ4p92UtnQsXlbVwkQ1yKB41vThNQHnJHgCQAxjRU78+9CaAeopPnjbtVqRRFVzWNZ0EIZF6VrbeUIbON6I2zlgEr7bu4FDfD5xO27ZTgJNRMRFgpr4BKGqxF6YZMDjLF7dDgLTuJaN0hQv3l57Ws1gK6xrWk5guippYD5xNGLS9ydb8YaMS5lRfkabqBXesi2CWIHGXT92VHb30I+4=
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5e899449-4b63-4798-0bc9-08d7eaf5e42f
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Apr 2020 21:56:51.7486
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: CKRnfwW4fbq065noJO3E9a5fvCj/cgw2uH5dzRWBTQC9CON3ruoUGzIoPqDB9J6hiI1oD+F09woxVRGM+XGzoA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4399
+In-Reply-To: <ac3d3b2d3f0e678b792281a1debf5762f1d52b1f.camel@intel.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 09:25:58AM -0700, Dave Jiang wrote:
-> > Also to avoid duplication, ie idxd proposes to have a char dev with a
-> > normal kernel driver interface and then an in-kernel emulated MMIO BAR
-> > version of that same capability for VFIO consumption.
+On Mon, Apr 27, 2020 at 04:11:07PM +0000, Derrick, Jonathan wrote:
+> On Fri, 2020-04-24 at 18:30 -0500, Bjorn Helgaas wrote:
+> > I'm glad you raised this because I think the way we handle
+> > FIRMWARE_FIRST is really screwed up.
+> > 
+> > On Mon, Apr 20, 2020 at 03:37:09PM -0600, Jon Derrick wrote:
+> > > Some platforms have a mix of ports whose capabilities can be negotiated
+> > > by _OSC, and some ports which are not described by ACPI and instead
+> > > managed by Native drivers. The existing Firmware-First HEST model can
+> > > incorrectly tag these Native, Non-ACPI ports as Firmware-First managed
+> > > ports by advertising the HEST Global Flag and matching the type and
+> > > class of the port (aer_hest_parse).
+> > > 
+> > > If the port requests Native AER through the Host Bridge's capability
+> > > settings, the AER driver should honor those settings and allow the port
+> > > to bind. This patch changes the definition of Firmware-First to exclude
+> > > ports whose Host Bridges request Native AER.
+> > > 
+> > > Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
+> > > ---
+> > >  drivers/pci/pcie/aer.c | 3 +++
+> > >  1 file changed, 3 insertions(+)
+> > > 
+> > > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> > > index f4274d3..30fbd1f 100644
+> > > --- a/drivers/pci/pcie/aer.c
+> > > +++ b/drivers/pci/pcie/aer.c
+> > > @@ -314,6 +314,9 @@ int pcie_aer_get_firmware_first(struct pci_dev *dev)
+> > >  	if (pcie_ports_native)
+> > >  		return 0;
+> > >  
+> > > +	if (pci_find_host_bridge(dev->bus)->native_aer)
+> > > +		return 0;
+> > 
+> > I hope we don't have to complicate pcie_aer_get_firmware_first() by
+> > adding this "native_aer" check here.  I'm not sure what we actually
+> > *should* do based on FIRMWARE_FIRST, but I don't think the current
+> > uses really make sense.
+> > 
+> > I think Linux makes too many assumptions based on the FIRMWARE_FIRST
+> > bit.  The ACPI spec really only says (ACPI v6.3, sec 18.3.2.4):
+> > 
+> >   If set, FIRMWARE_FIRST indicates to the OSPM that system firmware
+> >   will handle errors from this source first.
+> > 
+> >   If FIRMWARE_FIRST is set in the flags field, the Enabled field [of
+> >   the HEST AER structure] is ignored by the OSPM.
+> > 
+> > I do not see anything there about who owns the AER Capability, but
+> > Linux assumes that if FIRMWARE_FIRST is set, firmware must own the AER
+> > Capability.  I think that's reading too much into the spec.
+> > 
+> > We already have _OSC, which *does* explicitly talk about who owns the
+> > AER Capability, and I think we should rely on that.  If firmware
+> > doesn't want the OS to touch the AER Capability, it should decline to
+> > give ownership to the OS via _OSC.
+> > 
+> > >  	if (!dev->__aer_firmware_first_valid)
+> > >  		aer_set_firmware_first(dev);
+> > >  	return dev->__aer_firmware_first;
 > 
-> The char dev interface serves user apps on host (which we will deprecate and
-> move to the UACCE framework in near future). 
+> Just a little bit of reading and my interpretation, as it seems like
+> some of this is just layers upon layers of possibly conflicting yet
+> intentionally vague descriptions.
+> 
+> _OSC seems to describe that OSPM can handle AER (6.2.11.3):
+> PCI Express Advanced Error Reporting (AER) control
+>    The OS sets this bit to 1 to request control over PCI Express AER.
+>    If the OS successfully receives control of this feature, it must
+>    handle error reporting through the AER Capability as described in
+>    the PCI Express Base Specification.
+> 
+> 
+> For AER and DPC the ACPI root port enumeration will properly set
+> native_aer/dpc based on _OSC:
+> 
+> struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
+> ...
+> 	if (!(root->osc_control_set & OSC_PCI_EXPRESS_AER_CONTROL))
+> 		host_bridge->native_aer = 0;
+> 	if (!(root->osc_control_set & OSC_PCI_EXPRESS_PME_CONTROL))
+> 		host_bridge->native_pme = 0;
+> 	if (!(root->osc_control_set & OSC_PCI_EXPRESS_LTR_CONTROL))
+> 		host_bridge->native_ltr = 0;
+> 	if (!(root->osc_control_set & OSC_PCI_EXPRESS_DPC_CONTROL))
+> 		host_bridge->native_dpc = 0;
+> 
+> As DPC was defined in an ECN [1], I would imagine AER will need to
+> cover DPC for legacy platforms prior to the ECN.
+> 
+> 
+> 
+> The complication is that HEST also seems to describe how ports (and
+> other devices) are managed either individually or globally:
+> 
+> Table 18-387  PCI Express Root Port AER Structure
+> ...
+> Flags:
+>    [0] - FIRMWARE_FIRST: If set, this bit indicates to the OSPM that
+>    system firmware will handle errors from this source
+>    [1] - GLOBAL: If set, indicates that the settings contained in this
+>    structure apply globally to all PCI Express Devices. All other bits
+>    must be set to zero
+> 
+> 
+> The _OSC definition seems to contradict/negate the above FIRMWARE_FIRST
+> definition that says only firmware will handle errors. It's a bit
+> different than the IA_32 MCE definition which allows for a GHES_ASSIST
+> condition, which would cause Firmware 'First', however does allow the
+> error to be received by OSPM AER via GHES:
+> 
+> Table 18-385  IA-32 Architecture Corrected Machine Check Structure
+>    [0] - FIRMWARE_FIRST: If set, this bit indicates that system
+>    firmware will handle errors from this source first.
+>    [2] - GHES_ASSIST: If set, this bit indicates that although OSPM is
+>    responsible for directly handling the error (as expected when
+>    FIRMWARE_FIRST is not set), system firmware reports additional
+>    information in the context of an interrupt generated by the error.
+>    The additional information is reported in a Generic Hardware Error
+>    Source structure with a matching Related Source Id.
+> 
+> 
+> I think Linux needs to make an assumption that devices either
+> enumerated in HEST or enumerated globally by HEST should be managed by
+> FFS. However it seems that Linux should also be correlating that with
+> _OSC as _OSC seems to directly contradict and possibly supercede the
+> HEST expectation.
 
-The point is the char dev or UACCE framework should provide enough
-capability to implement the emulation in user space.
+That's basically what Linux been doing -- we've been assuming that if
+_OSC declines to grant us control, *or* if FFS is set somewhere, we
+shouldn't touch the AER capability.  But this leads to lots of weird
+corner cases, and I really doubt that firmware and Linux are
+interpreting all these the same way.
 
-Jason
+What breaks if we change Linux to *only* use _OSC to determine
+ownership of the AER capability?  My argument is that firmware doesn't
+want the OS to touch the AER capability registers, it should decline
+to give the OS control of the AER capability via _OSC.
+
+If _OSC grants control to the OS in a case where firmware doesn't want
+the OS to have control, I'd say that's just a firmware defect that
+should be worked around with some sort of quirk.
+
+> [1] https://members.pcisig.com/wg/PCI-SIG/document/12888
