@@ -2,141 +2,169 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D3C081B955D
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Apr 2020 05:22:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CCA51B9593
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Apr 2020 05:44:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726341AbgD0DWZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 26 Apr 2020 23:22:25 -0400
-Received: from szxga03-in.huawei.com ([45.249.212.189]:2492 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726340AbgD0DWZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 26 Apr 2020 23:22:25 -0400
-Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.55])
-        by Forcepoint Email with ESMTP id 61F824F59A8333890CA5;
-        Mon, 27 Apr 2020 11:22:18 +0800 (CST)
-Received: from dggeme758-chm.china.huawei.com (10.3.19.104) by
- DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
- id 14.3.487.0; Mon, 27 Apr 2020 11:22:12 +0800
-Received: from [127.0.0.1] (10.40.49.11) by dggeme758-chm.china.huawei.com
- (10.3.19.104) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1913.5; Mon, 27
- Apr 2020 11:22:11 +0800
-Subject: Re: [PATCH v5 2/2] pciutils: Decode Compute eXpress Link DVSEC
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Sean V Kelley <sean.v.kelley@linux.intel.com>
-CC:     <mj@ucw.cz>, <linux-pci@vger.kernel.org>,
-        huangdaode <huangdaode@hisilicon.com>
-References: <20200420174747.GA48539@google.com>
-From:   Jay Fang <f.fangjian@huawei.com>
-Message-ID: <6bb98f80-2c8d-cfd5-7ebf-c1365485c9c8@huawei.com>
-Date:   Mon, 27 Apr 2020 11:22:28 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S1726431AbgD0DoM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 26 Apr 2020 23:44:12 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:39483 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726469AbgD0DoL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 26 Apr 2020 23:44:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587959049;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=DBEUXWUXNpw/sxGPzp5z9UjnZg0452gbfsNvSnWcap8=;
+        b=HmIgmO/klJs2YWFdZW9KCIvQzUmDR4IaaliUi0eOTFGjMkMWbtXyXvzLHQxUbwbMHv2Fcv
+        JAe0cP2lx+nnQ91jRov3s0U7uGaiOPWRGP3XLmM3MjK6jXS97XiT8afu3MbRS32Y6q7E2L
+        B5xeiOyrDBQsjO2nOPE9VSi5OvnwOjg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-287-pbMyTdOTPh20o3V3rN2nZQ-1; Sun, 26 Apr 2020 23:44:05 -0400
+X-MC-Unique: pbMyTdOTPh20o3V3rN2nZQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DFA021800F97;
+        Mon, 27 Apr 2020 03:44:01 +0000 (UTC)
+Received: from x1.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B68B319C58;
+        Mon, 27 Apr 2020 03:43:55 +0000 (UTC)
+Date:   Sun, 26 Apr 2020 21:43:55 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "megha.dey@linux.intel.com" <megha.dey@linux.intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Lin, Jing" <jing.lin@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
+ support for the idxd driver.
+Message-ID: <20200426214355.29e19d33@x1.home>
+In-Reply-To: <20200426191357.GB13640@mellanox.com>
+References: <20200421235442.GO11945@mellanox.com>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D86EE26@SHSMSX104.ccr.corp.intel.com>
+        <20200422115017.GQ11945@mellanox.com>
+        <20200422211436.GA103345@otc-nc-03>
+        <20200423191217.GD13640@mellanox.com>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D8960F9@SHSMSX104.ccr.corp.intel.com>
+        <20200424124444.GJ13640@mellanox.com>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D8A808B@SHSMSX104.ccr.corp.intel.com>
+        <20200424181203.GU13640@mellanox.com>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D8C5486@SHSMSX104.ccr.corp.intel.com>
+        <20200426191357.GB13640@mellanox.com>
+Organization: Red Hat
 MIME-Version: 1.0
-In-Reply-To: <20200420174747.GA48539@google.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.40.49.11]
-X-ClientProxiedBy: dggeme719-chm.china.huawei.com (10.1.199.115) To
- dggeme758-chm.china.huawei.com (10.3.19.104)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Got it.
-Bjorn, thanks.
+On Sun, 26 Apr 2020 16:13:57 -0300
+Jason Gunthorpe <jgg@mellanox.com> wrote:
 
-Jay
+> On Sun, Apr 26, 2020 at 05:18:59AM +0000, Tian, Kevin wrote:
+> 
+> > > > I think providing an unified abstraction to userspace is also important,
+> > > > which is what VFIO provides today. The merit of using one set of VFIO
+> > > > API to manage all kinds of mediated devices and VF devices is a major
+> > > > gain. Instead, inventing a new vDPA-like interface for every Scalable-IOV
+> > > > or equivalent device is just overkill and doesn't scale. Also the actual
+> > > > emulation code in idxd driver is actually small, if putting aside the PCI
+> > > > config space part for which I already explained most logic could be shared
+> > > > between mdev device drivers.  
+> > > 
+> > > If it was just config space you might have an argument, VFIO already
+> > > does some config space mangling, but emulating BAR space is out of
+> > > scope of VFIO, IMHO.  
+> > 
+> > out of scope of vfio-pci, but in scope of vfio-mdev. btw I feel that most
+> > of your objections are actually related to the general idea of
+> > vfio-mdev.  
+> 
+> There have been several abusive proposals of vfio-mdev, everything
+> from a way to create device drivers to this kind of generic emulation
+> framework.
+> 
+> > Scalable IOV just uses PASID to harden DMA isolation in mediated
+> > pass-through usage which vfio-mdev enables. Then are you just opposing
+> > the whole vfio-mdev? If not, I'm curious about the criteria in your mind 
+> > about when using vfio-mdev is good...  
+> 
+> It is appropriate when non-PCI standard techniques are needed to do
+> raw device assignment, just like VFIO.
+> 
+> Basically if vfio-pci is already doing it then it seems reasonable
+> that vfio-mdev should do the same. This mission creep where vfio-mdev
+> gains functionality far beyond VFIO is the problem.
 
-On 2020/4/21 1:47, Bjorn Helgaas wrote:
-> Hi Jay, thanks for taking a look at this!
+Ehm, vfio-pci emulates BARs too.  We also emulate FLR, power
+management, DisINTx, and VPD.  FLR, PM, and VPD all have device
+specific quirks in the host kernel, and I've generally taken the stance
+that would should take advantage of those quirks, not duplicate them in
+userspace and not invent new access mechanisms/ioctls for each of them.
+Emulating DisINTx is convenient since we must have a mechanism to mask
+INTx, whether it's at the device or the APIC, so we can pretend the
+hardware supports it.  BAR emulation is really too trivial to argue
+about, the BARs mean nothing to the physical device mapping, they're
+simply scratch registers that we mask out the alignment bits on read.
+vfio-pci is a mix of things that we decide are too complicated or
+irrelevant to emulate in the kernel and things that take advantage of
+shared quirks or are just too darn easy to worry about.  BARs fall into
+that latter category, any sort of mapping into VM address spaces is
+necessarily done in userspace, but scratch registers that are masked on
+read, *shrug*, vfio-pci does that.  Thanks,
+
+Alex
+ 
+> > technically Scalable IOV is definitely different from SR-IOV. It's 
+> > simpler in hardware. And we're not emulating SR-IOV. The point
+> > is just in usage-wise we want to present a consistent user 
+> > experience just like passing through a PCI endpoint (PF or VF) device
+> > through vfio eco-system, including various userspace VMMs (Qemu,
+> > firecracker, rust-vmm, etc.), middleware (Libvirt), and higher level 
+> > management stacks.   
 > 
-> On Mon, Apr 20, 2020 at 09:21:27AM -0700, Sean V Kelley wrote:
->> On 18 Apr 2020, at 1:36, Jay Fang wrote:
->>> On 2020/4/15 8:47, Sean V Kelley wrote:
->>>>
->>>> [1] https://www.computeexpresslink.org/
->>>>
->>>> Signed-off-by: Sean V Kelley <sean.v.kelley@linux.intel.com>
->>>> ---
->>>>  lib/header.h        |  20 +++
->>>
->>>> +
->>>> +static int
->>>> +is_cxl_cap(struct device *d, int where)
->>>> +{
->>>> +  u32 hdr;
->>>> +  u16 w;
->>>> +
->>>> +  if (!config_fetch(d, where + PCI_DVSEC_HEADER1, 8))
->>>> +    return 0;
->>>> +
->>>> +  /* Check for supported Vendor */
->>>> +  hdr = get_conf_long(d, where + PCI_DVSEC_HEADER1);
->>>> +  w = BITS(hdr, 0, 16);
->>>> +  if (w != PCI_VENDOR_ID_INTEL)
->>>
->>> I don't think here checking is quite right. Does only Intel support CXL?
->>> Other Vendors should also be considered.
->>
->> In the absence of currently available hardware, I was attempting to limit
->> false positive noise.  I’m happy to avoid the check on the vendor if there
->> were to exist a definitive supported list.  Bjorn suggested that I check for
->> vendor ID with DVSEC ID for now.  As hardware enters the market, I can
->> surely revise this with an update when the CXL group publishes a list.
+> Yes, I understand your desire, but at the same time we have not been
+> doing device emulation in the kernel. You should at least be
+> forthwright about that major change in the cover letters/etc.
+>  
+> > > The only thing we get out of this is someone doesn't have to write a
+> > > idxd emulation driver in qemu, instead they have to write it in the
+> > > kernel. I don't see how that is a win for the ecosystem.  
+> > 
+> > No. The clear win is on leveraging classic VFIO iommu and its eco-system
+> > as explained above.  
 > 
-> The Vendor ID check cannot be avoided.  Vendor IDs are allocated by
-> the PCI-SIG, but the DVSEC ID is vendor-defined so there cannot be a
-> global "CXL capability" DVSEC ID.
+> vdpa had no problem implementing iommu support without VFIO. This was
+> their original argument too, it turned out to be erroneous.
 > 
-> CXL *could* work through the PCI-SIG and define a new CXL Extended
-> Capability that could make this generic.  But apparently they've
-> chosen to use the DVSEC mechanism instead.
-> 
->>>> +  /* Check for Designated Vendor-Specific ID */
->>>> +  hdr = get_conf_long(d, where + PCI_DVSEC_HEADER2);
->>>> +  w = BITS(hdr, 0, 16);
->>>> +  if (w == PCI_DVSEC_ID)
-> 
-> However, this is slightly wrong.  The name "PCI_DVSEC_ID" implies that
-> there can only be one DVSEC ID and it is vendor-independent, but
-> neither is true.
-> 
-> This value is allocated by Intel, so we must check for the Intel
-> Vendor ID first.  And Intel may define several DVSEC capabilities for
-> different purposes, so the name should also mention CXL.
-> 
-> So this should be "PCI_DVSEC_INTEL_CXL" or something similar.
-> 
-> But that doesn't mean other vendors need to define their own DVSEC
-> IDs for CXL.  The spec (PCIe r5.0, sec 7.9.6) says:
-> 
->   [The DVSEC Capability] allows PCI Express component vendors to use
->   the Extended Capability mechanism to expose vendor-specific
->   registers that can be present in components by a variety of
->   vendors.
-> 
-> Any vendor that implements this CXL DVSEC the same way Intel does can
-> tag it with PCI_VENDOR_ID_INTEL and PCI_DVSEC_INTEL_CXL.
-> 
-> Note that there are two types of vendor-specific capabilities:
-> 
->   1) Vendor-Specific Extended Capability (VSEC).  The structure and
->   definition are defined by the *Function* Vendor ID (from offset 0 in
->   config space) and the VSEC ID in the capability.
-> 
->   2) Designated Vendor-Specific Extended Capability (DVSEC).  The
->   structure and definition are defined by the *DVSEC* Vendor ID (from
->   the DVSEC capability, *not* the vendor of the Function) and the
->   DVSEC ID in the capability.
-> 
-> This CXL capability is the latter, of course.
-> 
-> Bjorn
-> 
-> .
+> Jason
 > 
 
