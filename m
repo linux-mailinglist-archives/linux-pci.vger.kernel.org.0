@@ -2,30 +2,27 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E8B61B96EF
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Apr 2020 08:06:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4729D1B96F1
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Apr 2020 08:06:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726273AbgD0GGE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Apr 2020 02:06:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40278 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726221AbgD0GGE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Apr 2020 02:06:04 -0400
-Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 266CBC061A0F;
-        Sun, 26 Apr 2020 23:06:04 -0700 (PDT)
+        id S1726512AbgD0GGQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Apr 2020 02:06:16 -0400
+Received: from vultr.net.flygoat.com ([149.28.68.211]:60110 "EHLO
+        vultr.net.flygoat.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726221AbgD0GGP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Apr 2020 02:06:15 -0400
 Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
-        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 3DEEC20CF2;
-        Mon, 27 Apr 2020 06:06:01 +0000 (UTC)
+        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 7D17320CF4;
+        Mon, 27 Apr 2020 06:06:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
-        t=1587967563; bh=QAo1cw4WCgJFDVWUxM13VAcvn+SmYxagV5M4P3ljeig=;
-        h=From:To:Cc:Subject:Date:From;
-        b=OKelKojNCASZ2oq0SZiu0mHP7rZzWiA7Y5/50p+fmagXxuCSJScOXac5kLs5YD8CT
-         BkeBdTjGGBhTAiSzynpJmr1Ra+y6DCqE6fieItbq2CJYB/daMGvEg65lZnA3SHJn2z
-         AtnM5pv87sn4OafBTsvOT7rOiq8yHuVzyL9lvXQrAn/0PbiBDi5YZx+XB43Skb3z2J
-         BSx4EAdmifdXb86QLuHEG3LeQfhQQH6NA4s39Z7ufiNUpdx1xjuBbz8uyxslxfnsy6
-         rQ91TT4Zimvge8oJ22M2df3ZoiX2/P6YZdlpt8TUlH4yjgnpp4hpp3qvfx886lkmsx
-         KUirX4FGAWnVA==
+        t=1587967574; bh=NE5sCt6ssdL9diqa/uHtsH6X8dScz66rvMdDwvKjb94=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=GH9RTTnjT/o2eJFEMiy55OMLVbHnBAORssZ+EwGSmFuDvo39o95+Xj36jaNyquAHR
+         +pWlRkIWo2KR2pI2AJjYqXByWV84UvRqd9mkNw8ZqbOZdyhc3P4RSyxVoixVWWO/b7
+         vgXaDdEXQigrs8ueWeBchOd6NZmlM0SAZePvVmrqmJZRTvQlhMHvD+g0rzvBj1rsSQ
+         cQNRFiD8mGpg928rW7RUdtin0ZTBs7Ku3eltiACFOP4kMxhxiqH0yP2d5WO72y8coa
+         jwIObL/ubGQ63+wACFqu/lg1fKOsxU/j+W3LGbMaVRvfaktJoXIZj5GNxnzUIEf3Ww
+         QSrzVhsKvUi8Q==
 From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
 To:     linux-mips@vger.kernel.org
 Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
@@ -36,10 +33,12 @@ Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Paul Burton <paulburton@kernel.org>, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 0/5] Loongson PCI Generic Driver 
-Date:   Mon, 27 Apr 2020 14:05:37 +0800
-Message-Id: <20200427060551.1372591-1-jiaxun.yang@flygoat.com>
+Subject: [PATCH v6 1/5] PCI: Don't disable decoding when mmio_always_on is set
+Date:   Mon, 27 Apr 2020 14:05:38 +0800
+Message-Id: <20200427060551.1372591-2-jiaxun.yang@flygoat.com>
 X-Mailer: git-send-email 2.26.0.rc2
+In-Reply-To: <20200427060551.1372591-1-jiaxun.yang@flygoat.com>
+References: <20200427060551.1372591-1-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
@@ -47,51 +46,30 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+Don't disable MEM/IO decoing when a device have both non_compliant_bars
+and mmio_always_on.
 
-This series converts Loongson PCI into a generic PCI controller
-driver and adds support for LS2K SoC and LS7A PCH's PCI support.
+That would allow us quirk devices with junk in BARs but can't disable
+their decoding.
 
-Is it possible to let patch 1~3 go through PCI tree and patch
-4~5 go through MIPS tree?
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+---
+ drivers/pci/probe.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks.
-
-v6: Drop first the patch of previous versions. Driver code clean-ups
-according to rob's suggestion.
-
-It looks like I had a wrong impression on generic IO port handeling
-and now the issue has been fixed, I implemented PCI_IOBASE for MIPS[1].
-Now the address is uniform here.
-
-[1]: https://patchwork.kernel.org/cover/11510499/
-
-Jiaxun Yang (5):
-  PCI: Don't disable decoding when mmio_always_on is set
-  PCI: Add Loongson PCI Controller support
-  dt-bindings: Document Loongson PCI Host Controller
-  MIPS: DTS: Loongson64: Add PCI Controller Node
-  MIPS: Loongson64: Switch to generic PCI driver
-
- .../devicetree/bindings/pci/loongson.yaml     |  62 +++++
- arch/mips/Kconfig                             |   1 +
- arch/mips/boot/dts/loongson/rs780e-pch.dtsi   |  12 +
- arch/mips/loongson64/Makefile                 |   2 +-
- arch/mips/loongson64/vbios_quirk.c            |  29 ++
- arch/mips/pci/Makefile                        |   1 -
- arch/mips/pci/fixup-loongson3.c               |  71 -----
- arch/mips/pci/ops-loongson3.c                 | 116 --------
- drivers/pci/controller/Kconfig                |  10 +
- drivers/pci/controller/Makefile               |   1 +
- drivers/pci/controller/pci-loongson.c         | 251 ++++++++++++++++++
- drivers/pci/probe.c                           |   2 +-
- 12 files changed, 368 insertions(+), 190 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pci/loongson.yaml
- create mode 100644 arch/mips/loongson64/vbios_quirk.c
- delete mode 100644 arch/mips/pci/fixup-loongson3.c
- delete mode 100644 arch/mips/pci/ops-loongson3.c
- create mode 100644 drivers/pci/controller/pci-loongson.c
-
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 77b8a145c39b..d9c2c3301a8a 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1822,7 +1822,7 @@ int pci_setup_device(struct pci_dev *dev)
+ 	/* Device class may be changed after fixup */
+ 	class = dev->class >> 8;
+ 
+-	if (dev->non_compliant_bars) {
++	if (dev->non_compliant_bars && !dev->mmio_always_on) {
+ 		pci_read_config_word(dev, PCI_COMMAND, &cmd);
+ 		if (cmd & (PCI_COMMAND_IO | PCI_COMMAND_MEMORY)) {
+ 			pci_info(dev, "device has non-compliant BARs; disabling IO/MEM decoding\n");
 -- 
 2.26.0.rc2
 
