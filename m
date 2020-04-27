@@ -2,34 +2,34 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E15EE1BAC80
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Apr 2020 20:24:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A0661BAC81
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Apr 2020 20:24:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726454AbgD0SY2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Apr 2020 14:24:28 -0400
-Received: from mta-02.yadro.com ([89.207.88.252]:53026 "EHLO mta-01.yadro.com"
+        id S1726266AbgD0SY3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Apr 2020 14:24:29 -0400
+Received: from mta-02.yadro.com ([89.207.88.252]:53212 "EHLO mta-01.yadro.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726266AbgD0SY2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S1726493AbgD0SY2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Mon, 27 Apr 2020 14:24:28 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 993784C86B;
-        Mon, 27 Apr 2020 18:24:25 +0000 (UTC)
+        by mta-01.yadro.com (Postfix) with ESMTP id 0526E4C86D;
+        Mon, 27 Apr 2020 18:24:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
         content-type:content-type:content-transfer-encoding:mime-version
         :references:in-reply-to:x-mailer:message-id:date:date:subject
         :subject:from:from:received:received:received; s=mta-01; t=
-        1588011864; x=1589826265; bh=zMr30wP67VsbDrjVeq0RF/XuXwdXQQ63IPU
-        finfy9rY=; b=jKzXHW2DAKUiIrxQtUQWwhCIJxei3tHcimu/JCEyVs7Y0Ehc+gR
-        /C+vObLL/1urMahDKkkN307xKvwqLiEzrV8evsZDRvJ4SRGt0EAfLPU5zQ7Fqh51
-        W3Hc2rlHCKuszgkW7O7pr+YZ+mi+2I+n8Ux7qCqi153+SC6E4LjXxmy8=
+        1588011864; x=1589826265; bh=5IHf3xl9gAL92pKdSkCWQbDijv7JzrB8B9X
+        +bgoyIjc=; b=ELBQvR/uLxt9mqD+3JVde9JXLitW0JlOuCf7s7ovVU+9LPyieHT
+        OuHRg0xSnhNHQ/9LhxIFp7a6sphZUwwdkxmqCxLb5AZKOv6OFCdYwChsexUNmL4h
+        9j8Z5ngKKZ65KAkD/2favvUUK7+scm7/913p0i43ZAqo41HdJesJ4nE0=
 X-Virus-Scanned: amavisd-new at yadro.com
 Received: from mta-01.yadro.com ([127.0.0.1])
         by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id OND_HZJOtFXm; Mon, 27 Apr 2020 21:24:24 +0300 (MSK)
+        with ESMTP id 5hJ24E6CGdJu; Mon, 27 Apr 2020 21:24:24 +0300 (MSK)
 Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id 1D6FB4C84C;
+        by mta-01.yadro.com (Postfix) with ESMTPS id 52BC64C84E;
         Mon, 27 Apr 2020 21:24:13 +0300 (MSK)
 Received: from NB-148.yadro.com (172.17.15.136) by T-EXCH-02.corp.yadro.com
  (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
@@ -44,9 +44,9 @@ CC:     Bjorn Helgaas <helgaas@kernel.org>, Lukas Wunner <lukas@wunner.de>,
         David Laight <David.Laight@ACULAB.COM>,
         Rajat Jain <rajatja@google.com>, <linux@yadro.com>,
         Sergei Miroshnichenko <s.miroshnichenko@yadro.com>
-Subject: [PATCH v8 20/24] PCI: Don't claim fixed BARs
-Date:   Mon, 27 Apr 2020 21:23:54 +0300
-Message-ID: <20200427182358.2067702-21-s.miroshnichenko@yadro.com>
+Subject: [PATCH v8 21/24] PCI: hotplug: Don't reserve bus space when enabled movable BARs
+Date:   Mon, 27 Apr 2020 21:23:55 +0300
+Message-ID: <20200427182358.2067702-22-s.miroshnichenko@yadro.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200427182358.2067702-1-s.miroshnichenko@yadro.com>
 References: <20200427182358.2067702-1-s.miroshnichenko@yadro.com>
@@ -61,35 +61,33 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Fixed BAR always has an address, but its parent bridge window can be not
-yet calculated (during boot) or temporarily released for re-calculation
-(during PCI rescan) when pci_claim_resource() is called.
+A hot-added bridge with many hotplug-capable ports may request reserving
+more IO space than the machine has. This could be overridden with the
+"hpiosize=" kernel argument though.
 
-Apart from that, fixed BARs now have separate guaranteed mechanism of
-assigning comparing to usual BARs, so claiming them is not needed.
-
-Return immediately from pci_claim_resource() to prevent misleading "can't
-claim BAR ... no compatible bridge window" error messages
+But when BARs are movable, no need to reserve space anymore: new BARs are
+allocated not from reserved gaps, but via rearranging the existing BARs.
+Requesting a precise amount of space for bridge windows increases the
+chances of adding the new bridge successfully.
 
 Signed-off-by: Sergei Miroshnichenko <s.miroshnichenko@yadro.com>
 ---
- drivers/pci/setup-res.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/pci/setup-bus.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
-index a1e61e74ce00..98051edd7eef 100644
---- a/drivers/pci/setup-res.c
-+++ b/drivers/pci/setup-res.c
-@@ -138,6 +138,9 @@ int pci_claim_resource(struct pci_dev *dev, int resource)
- 		return -EINVAL;
- 	}
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index 3081f2d2a48a..e37976551a05 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -1302,7 +1302,7 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
  
-+	if (pci_dev_bar_fixed(dev, res))
-+		return 0;
-+
- 	/*
- 	 * If we have a shadow copy in RAM, the PCI device doesn't respond
- 	 * to the shadow range, so we don't need to claim it, and upstream
+ 	case PCI_HEADER_TYPE_BRIDGE:
+ 		pci_bridge_check_ranges(bus);
+-		if (bus->self->is_hotplug_bridge) {
++		if (bus->self->is_hotplug_bridge && !pci_can_move_bars) {
+ 			additional_io_size  = pci_hotplug_io_size;
+ 			additional_mmio_size = pci_hotplug_mmio_size;
+ 			additional_mmio_pref_size = pci_hotplug_mmio_pref_size;
 -- 
 2.24.1
 
