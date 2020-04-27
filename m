@@ -2,86 +2,164 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E57801B98DB
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Apr 2020 09:43:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E6DA1B9F3D
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Apr 2020 11:00:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbgD0Hmr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Apr 2020 03:42:47 -0400
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:40407 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726766AbgD0Hmp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Apr 2020 03:42:45 -0400
-Received: by mail-yb1-f193.google.com with SMTP id f13so8976267ybk.7;
-        Mon, 27 Apr 2020 00:42:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7HDE8ph93EI2vOePc5ywVTgnLdaOVxztdKRCyPN5Qdw=;
-        b=IOJzamf8OgTB7SIpo/NaEc7tMItPB90nfPDnCKPs1EodhWcDBKChSF+miIlCAy/MZv
-         fJ3d+JrfeSxOm0td6knQTV5XFOGn0pqC/OxFawNfnosRM4b8HW1Wn4Q+snyPW+q/yJZd
-         rfBtOMvrbe0CfFB8ifB4D7fCmhaPhcadwdQhefhWcDvszF3zHA+KDI8Aql22PcmTN5G7
-         EgWn0wtrcjwX6pE79D6w3UdX4rV8A36TRLJ7r4L1yjYjT8NSamw0G8cWDQVZcOMJd4AR
-         Q2rUIhPLM0MtoRUN/B6efN3DUO/tnTVWUyVcSWtEcOWFw5uzHvNLZ0Qgj6bifpotmyaC
-         U+Tg==
-X-Gm-Message-State: AGi0PuY4Re6h2fUPpEe8bx1Oci1eQ7yq6g8HrrxAqtYKuE7sz84h7l8f
-        /OnCFxAJlW8zHWDk06HlxIfziOV52yg/A6eoz9/GmBvU
-X-Google-Smtp-Source: APiQypIs6NvYWnWH/ktGUdZ2rE2Z5KmJb3YhfiR/lt5cCzkoxxCqS3BQi8X2Ml1ldVHBef942mt8n8y7vFl2hwtoB3Q=
-X-Received: by 2002:a25:c646:: with SMTP id k67mr11247591ybf.309.1587973363986;
- Mon, 27 Apr 2020 00:42:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200427060551.1372591-1-jiaxun.yang@flygoat.com> <20200427060551.1372591-2-jiaxun.yang@flygoat.com>
-In-Reply-To: <20200427060551.1372591-2-jiaxun.yang@flygoat.com>
-From:   =?UTF-8?Q?Philippe_Mathieu=2DDaud=C3=A9?= <f4bug@amsat.org>
-Date:   Mon, 27 Apr 2020 09:42:32 +0200
-Message-ID: <CAAdtpL59=bpmEUgY56=xHS3w5ddtdVGjKnnW7i++a5sTzPs+3Q@mail.gmail.com>
-Subject: Re: [PATCH v6 1/5] PCI: Don't disable decoding when mmio_always_on is set
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
+        id S1726003AbgD0JAg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Apr 2020 05:00:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46950 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726349AbgD0JAf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 27 Apr 2020 05:00:35 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1F0E2075E;
+        Mon, 27 Apr 2020 09:00:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587978035;
+        bh=zyM4zGvb5RSvRUhEhbKBMlMEr4R2rrAtwq4DgwN4jpc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XONsZ/+gKweBcneBVJdlzlDtlZ8CURC1FTGKrDaR7w0uZ/0GImwm4IZDEWldLfaij
+         BP/dxyk6F9iN0ugYcCkHIKX8TkUcVIfFgIRbKI1T6rARoRZa5v5NcTun7OKtIOaAYm
+         C+i2kGg+hL9dssFcHH3Kp3GPsoISIRP1n+R6bPGg=
+Received: by pali.im (Postfix)
+        id BEEB18A8; Mon, 27 Apr 2020 11:00:32 +0200 (CEST)
+Date:   Mon, 27 Apr 2020 11:00:32 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     PCI <linux-pci@vger.kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Paul Burton <paulburton@kernel.org>, linux-pci@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Remi Pommarel <repk@triplefau.lt>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Xogium <contact@xogium.me>,
+        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v3 03/12] PCI: of: Return -ENOENT if max-link-speed
+ property is not found
+Message-ID: <20200427090032.yb5d6hhosofua46x@pali>
+References: <20200424153858.29744-1-pali@kernel.org>
+ <20200424153858.29744-4-pali@kernel.org>
+ <CAL_JsqK6c0y4THRkBgmRtePKjqaV66ROEogRQNhcPP8yWWvbuA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL_JsqK6c0y4THRkBgmRtePKjqaV66ROEogRQNhcPP8yWWvbuA@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 8:08 AM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
->
-> Don't disable MEM/IO decoing when a device have both non_compliant_bars
+On Friday 24 April 2020 11:47:26 Rob Herring wrote:
+> On Fri, Apr 24, 2020 at 10:39 AM Pali Rohár <pali@kernel.org> wrote:
+> >
+> > OF API function of_property_read_u32() returns -EINVAL if property is
+> > not found. Therefore this also happens with of_pci_get_max_link_speed(),
+> > which also returns -EINVAL if the 'max-link-speed' property has invalid
+> > value.
+> >
+> > Change the behaviour of of_pci_get_max_link_speed() to return -ENOENT
+> > in case when the property does not exist and -EINVAL if it has invalid
+> > value.
+> >
+> > Also interpret zero max-link-speed value of this property as invalid,
+> > as the device tree bindings documentation specifies.
+> >
+> > Update pcie-tegra194 code to handle errors from this function like other
+> > drivers - they do not distinguish between no value and invalid value.
+> >
+> > Signed-off-by: Pali Rohár <pali@kernel.org>
+> > ---
+> >  drivers/pci/controller/dwc/pcie-tegra194.c |  6 +++---
+> >  drivers/pci/of.c                           | 15 +++++++++++----
+> >  2 files changed, 14 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+> > index ae30a2fd3716..027bb41809f9 100644
+> > --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> > +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> > @@ -296,7 +296,7 @@ struct tegra_pcie_dw {
+> >         u8 init_link_width;
+> >         u32 msi_ctrl_int;
+> >         u32 num_lanes;
+> > -       u32 max_speed;
+> > +       int max_speed;
+> >         u32 cid;
+> >         u32 cfg_link_cap_l1sub;
+> >         u32 pcie_cap_base;
+> > @@ -911,7 +911,7 @@ static void tegra_pcie_prepare_host(struct pcie_port *pp)
+> >         dw_pcie_writel_dbi(pci, PORT_LOGIC_AMBA_ERROR_RESPONSE_DEFAULT, val);
+> >
+> >         /* Configure Max Speed from DT */
+> > -       if (pcie->max_speed && pcie->max_speed != -EINVAL) {
+> > +       if (pcie->max_speed > 0) {
+> >                 val = dw_pcie_readl_dbi(pci, pcie->pcie_cap_base +
+> >                                         PCI_EXP_LNKCAP);
+> >                 val &= ~PCI_EXP_LNKCAP_SLS;
+> > @@ -1830,7 +1830,7 @@ static void pex_ep_event_pex_rst_deassert(struct tegra_pcie_dw *pcie)
+> >         dw_pcie_writel_dbi(pci, PORT_LOGIC_GEN2_CTRL, val);
+> >
+> >         /* Configure Max Speed from DT */
+> > -       if (pcie->max_speed && pcie->max_speed != -EINVAL) {
+> > +       if (pcie->max_speed > 0) {
+> >                 val = dw_pcie_readl_dbi(pci, pcie->pcie_cap_base +
+> >                                         PCI_EXP_LNKCAP);
+> >                 val &= ~PCI_EXP_LNKCAP_SLS;
+> > diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> > index 81ceeaa6f1d5..19bf652256d8 100644
+> > --- a/drivers/pci/of.c
+> > +++ b/drivers/pci/of.c
+> > @@ -584,15 +584,22 @@ EXPORT_SYMBOL_GPL(pci_parse_request_of_pci_ranges);
+> >   *
+> >   * @node: device tree node with the max link speed information
+> >   *
+> > - * Returns the associated max link speed from DT, or a negative value if the
+> > - * required property is not found or is invalid.
+> > + * Returns the associated max link speed from DT, -ENOENT if the required
+> > + * property is not found or -EINVAL if the required property is invalid.
+> >   */
+> >  int of_pci_get_max_link_speed(struct device_node *node)
+> >  {
+> >         u32 max_link_speed;
+> > +       int ret;
+> > +
+> > +       /* of_property_read_u32 returns -EINVAL if property does not exist */
+> > +       ret = of_property_read_u32(node, "max-link-speed", &max_link_speed);
+> > +       if (ret == -EINVAL)
+> > +               return -ENOENT;
+> 
+> Generally, it's considered bad to change return values (though I guess
+> this was happening. In hindsight, not present probably should have
+> been -ENOENT. But it shouldn't really matter. The kernel should treat
+> malformed as not present. It's not the kernel's job to validate the DT
+> (the schema should and does now).
 
-Typo "decoing" -> "decoding"
+Bjorn in review of V1 patch wrote that aardavark driver should at least
+warn on DT error.
 
-> and mmio_always_on.
->
-> That would allow us quirk devices with junk in BARs but can't disable
-> their decoding.
->
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> ---
->  drivers/pci/probe.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 77b8a145c39b..d9c2c3301a8a 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -1822,7 +1822,7 @@ int pci_setup_device(struct pci_dev *dev)
->         /* Device class may be changed after fixup */
->         class = dev->class >> 8;
->
-> -       if (dev->non_compliant_bars) {
-> +       if (dev->non_compliant_bars && !dev->mmio_always_on) {
->                 pci_read_config_word(dev, PCI_COMMAND, &cmd);
->                 if (cmd & (PCI_COMMAND_IO | PCI_COMMAND_MEMORY)) {
->                         pci_info(dev, "device has non-compliant BARs; disabling IO/MEM decoding\n");
-> --
-> 2.26.0.rc2
->
+And because max-link-speed is optional property, it is perfectly valid
+when it is absent.
+
+So without ability to distinguish between "property is not present in
+DT" and "property is malformed" it is not possible to properly detect
+this DT error.
+
+> Plus you are adding capability to distinguish not present and out of
+> bounds, but I don't see you using that?
+
+It should have been used in next aardvark patch, but I forgot to include
+needed code. My mistake.
+
+> If there's any error with max-link-speed, then just use the max speed
+> for the block which should be implied by the compatible string if
+> there's more than one.
+> 
+> Rob
