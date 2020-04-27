@@ -2,179 +2,249 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AB4A31B9391
-	for <lists+linux-pci@lfdr.de>; Sun, 26 Apr 2020 21:14:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F10D1B94B8
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Apr 2020 02:16:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726176AbgDZTOI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 26 Apr 2020 15:14:08 -0400
-Received: from mail-eopbgr150075.outbound.protection.outlook.com ([40.107.15.75]:42876
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        id S1726327AbgD0AP4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 26 Apr 2020 20:15:56 -0400
+Received: from mail-dm6nam10on2090.outbound.protection.outlook.com ([40.107.93.90]:29857
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726004AbgDZTOH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 26 Apr 2020 15:14:07 -0400
+        id S1726227AbgD0APz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 26 Apr 2020 20:15:55 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bvNTXUW8RhZO6otErh/OJvle/ggGYe8/TbvscsKS550RajHMYAPOuj5pv7VveCvkbVNvokjnS/shvYNeE+FaJX0sFmnh0LjOsnhnfEStJswGmrDAM2hSYK7omc+Li+5LWdwqDCXwA2sQ7+uuOrcwY2+bH4m3lX/R/u3XJ1IT7IzaRNQ7UD11ET/U2QQHNBB6pT0eInj7zh+Xd0Yk6Oiuh16A8FzGTYPYmaE7xzhYb9Ug8iYAI8rlZx/PCUyURjPN/bIGsA5r24yI+/7GghCJlMZtBYHa4xtaPhIXQm9R3eyxLfT1Ny9e1SzMIwndZ3NiypS0Jj7Vud1O9TzsPRG1vg==
+ b=ehOWcqboWa6MVStqHk35nWzgsKfNG8hDdxYBHbPnhLk7KJSJEE3gJOpicubJpULdvX8a9DfQAoV2sk9ZbwEvNNGqt/c87517b/cDVNkrpgvD1F9c3HWRnXRJayeF7qnOMeFWihb9wVB/hEz78eEeXmZTDJuCZcq7XYWhjBWFQOt9iAde7LFVhByOPLSJP126yoFUP2VspimTsUaX9tJzS7lCymODRdERwIwNWANSRlxeOuZ/HqW4wLO4UuXfdTNduwedeEpR+eKINiO/R58lIgCZ8er7B7qrhL71dQXl/64VXYtBDqdxWHikffsbdvmYevbLDl/1Q9ZeEDlxpfTVuA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=v7aMWA/2IKOuG/BONC+zv4bpwD1IQzpSJPXKVALm8Gs=;
- b=Szsy6bincNSq+jvAXP96Epz/cxI22qBbuWl7GunybUV5w2xOOZtJLi6tL6vyciIYWLS6QaYtol/tapA93YxG0s1kX30a4XWGGeTQGfn2GFau7jtYuPnfWspBqAnRMFSPA6bzCA91+b2VQHly1XdAocmZZ497kwx9OtpaNb5c75RVgk/HpRb4RMnch9k67TradnV9NrCj85BK2htcG7VbKAW9nJdtAwhjlNp1xFx2PR1mKZbZJ7XPp+GQjY+OncoXjDOsBfyKzwk2Tn+7lXJCDKKKTZ8AZnQ0tzdmQijVChg8+MRn92wA3yBnPwo3W8oZ07NYYRjgP3IeTTM8mFE+VQ==
+ bh=JiI9co0T3xNrgk5SJ5G0mGS8v6XQSOXGV06LfBaeTzo=;
+ b=QQ68OsSdBbfA4D/RR/ImyYpZsskTaETt2cSG+r3aOXeJEjS56O9C0GdLNVDiVFi1T3k/I1VMBc/moGgWjLa7otq1mBfX3S3uJvjLUaR4TX88KxEu3Q/GXG3QAbyvpjkWjnMQgmgGf9lsp0WtO3YzMoPfxv4WKI43i5RTlMmckSjED8OO4ShDZnck4ImRrCjfI3K5FHiCEsJbvLARUObp+c9LaIT+U1qDmZhlChCmav4gVDhtVnBrMrVqtmwKFZ++sD1rAkeVPxjKtavcr7d30JkkeQnCHtd+0UOUNPq6HsQZ6dkAW0fvZFvAdb9GryjMD+QAnMXorvAJZjAQqBe25A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=v7aMWA/2IKOuG/BONC+zv4bpwD1IQzpSJPXKVALm8Gs=;
- b=ilfr2gGDFMihl9aI8ZTJUVMfMqx/kDJeO8uk6jus1Mk/2jc7Q5Phu8t+cqwyzn/qglfrotSMgtlQbDD774/eqyIIBNEUl8hoT4UbrEFtGkuA5SWmRlKDr7F9xbFwMVmnc0xQS2ZSvFoklCxam7tKK0UB/vpyjxRllUwuEFBfq3Y=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
- by VI1PR05MB6141.eurprd05.prod.outlook.com (2603:10a6:803:e1::15) with
+ bh=JiI9co0T3xNrgk5SJ5G0mGS8v6XQSOXGV06LfBaeTzo=;
+ b=NUIIihgaGZJeqc0m/TLrxrcUUp8if8BTjgFY/K1q72RoMlh81V6PXJXoSq0rlJgPgYYywyfdRZ5txXiQbcWBeonv60BmuZF83VhD59qrCPHxnr7AAErYpXuYqeclRkYsftu1Wwiq33txb0ukOg0rTCaf4Wk4uatpxfywr9jBNn0=
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
+ by MW2PR2101MB1067.namprd21.prod.outlook.com (2603:10b6:302:a::20) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.22; Sun, 26 Apr
- 2020 19:14:02 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::a47b:e3cd:7d6d:5d4e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::a47b:e3cd:7d6d:5d4e%6]) with mapi id 15.20.2937.020; Sun, 26 Apr 2020
- 19:14:02 +0000
-Date:   Sun, 26 Apr 2020 16:13:57 -0300
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     "Raj, Ashok" <ashok.raj@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "megha.dey@linux.intel.com" <megha.dey@linux.intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.2; Mon, 27 Apr
+ 2020 00:15:51 +0000
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::71ee:121:71bd:6156]) by MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::71ee:121:71bd:6156%8]) with mapi id 15.20.2958.001; Mon, 27 Apr 2020
+ 00:15:50 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Wei Hu <weh@microsoft.com>, KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "robh@kernel.org" <robh@kernel.org>,
         "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
- support for the idxd driver.
-Message-ID: <20200426191357.GB13640@mellanox.com>
-References: <20200421235442.GO11945@mellanox.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D86EE26@SHSMSX104.ccr.corp.intel.com>
- <20200422115017.GQ11945@mellanox.com>
- <20200422211436.GA103345@otc-nc-03>
- <20200423191217.GD13640@mellanox.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D8960F9@SHSMSX104.ccr.corp.intel.com>
- <20200424124444.GJ13640@mellanox.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D8A808B@SHSMSX104.ccr.corp.intel.com>
- <20200424181203.GU13640@mellanox.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D8C5486@SHSMSX104.ccr.corp.intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D8C5486@SHSMSX104.ccr.corp.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: MN2PR22CA0017.namprd22.prod.outlook.com
- (2603:10b6:208:238::22) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (142.68.57.212) by MN2PR22CA0017.namprd22.prod.outlook.com (2603:10b6:208:238::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend Transport; Sun, 26 Apr 2020 19:14:01 +0000
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1jSmiz-0003q9-BO; Sun, 26 Apr 2020 16:13:57 -0300
-X-Originating-IP: [142.68.57.212]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 201e7c3c-f320-45bb-c0b8-08d7ea15fa47
-X-MS-TrafficTypeDiagnostic: VI1PR05MB6141:|VI1PR05MB6141:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR05MB6141E71228B8C038D0FA3DC9CFAE0@VI1PR05MB6141.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 03853D523D
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(39860400002)(346002)(376002)(366004)(86362001)(2616005)(52116002)(9786002)(36756003)(26005)(8936002)(9746002)(2906002)(4326008)(1076003)(8676002)(33656002)(478600001)(316002)(7416002)(54906003)(66476007)(6916009)(66946007)(186003)(5660300002)(66556008)(81156014)(24400500001);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: mellanox.com does not designate
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dexuan Cui <decui@microsoft.com>
+Subject: RE: [PATCH] PCI: pci-hyperv: Retry PCI bus D0 entry when the first
+ attempt failed with invalid device state 0xC0000184.
+Thread-Topic: [PATCH] PCI: pci-hyperv: Retry PCI bus D0 entry when the first
+ attempt failed with invalid device state 0xC0000184.
+Thread-Index: AQHWG84m7LFBk05zpkqgxdg/cn42SqiMEvJQ
+Date:   Mon, 27 Apr 2020 00:15:50 +0000
+Message-ID: <MW2PR2101MB10523247FBE97CDA56E7F5A8D7AF0@MW2PR2101MB1052.namprd21.prod.outlook.com>
+References: <20200426132430.1756-1-weh@microsoft.com>
+In-Reply-To: <20200426132430.1756-1-weh@microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-04-27T00:15:48.8414318Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=3bb357e5-0b89-436f-ac44-3d0a980ed24f;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: acc07509-c920-42d1-69aa-08d7ea40249a
+x-ms-traffictypediagnostic: MW2PR2101MB1067:|MW2PR2101MB1067:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MW2PR2101MB10679BBA1148ADCD549F3514D7AF0@MW2PR2101MB1067.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0386B406AA
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(376002)(346002)(396003)(39860400002)(136003)(82950400001)(8676002)(2906002)(66946007)(81156014)(76116006)(33656002)(316002)(9686003)(8936002)(186003)(52536014)(6506007)(64756008)(26005)(478600001)(82960400001)(5660300002)(66446008)(71200400001)(110136005)(66476007)(7696005)(86362001)(55016002)(10290500003)(8990500004)(6636002)(66556008)(921003);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ruzwbEPQD/S9UZdghk3MUN8TAggXfWyNm2GcJfFRDW4NjNfVGO4HiVCPC9ROqfDhHlIL4IT4kkpDfxMDDDtVvAwuywuaHI9UrI8N/QCqwN/xdcSyQvqZP2MEot+yLJqIoZsnrZycNvlA++n29buNdnoSQ8kJL9YV7MMqbP4BgxN86h1GRrmsLB7O7VUf44dg80Miy60l6V8EzsAU01mywBNcPEw+cqdmW9qA+y3KCIzxUTR98WxVccRKISGaY7O77GB7s0xsEadZ+nVsRwYq3QIPIavoPT+Dk42tQ+PjTTto5aAHXbIrlgLUsPPne0DnDpcS8mrFmJ+K/bRJpDYQ1rwDuBZuzjGxCW1WCXgnMz1TZDM+KPMtOPdg17iBMTJ+WSA/1pAynA5OXul3XI1NNJHy6h0Bo4TgEfFouEPqem6YD1nKsUWozz8vH94Ye6yKMz6zyLUc7hCH0t5YnSWp68O7VNa4iDKB69xkOdBBqeDJajVORwwJoeuQkLr12F0v
-X-MS-Exchange-AntiSpam-MessageData: aup8lU0XXU6cNtYtZ81Yn28UXGwwagcRxr894lxlONPCpv4nUho52VOn1HRdld6omuMkhxvKxMhawPgI4WCxPD8FLvkE9ha1bBfGpLXbenK4Mfsb2wnrkRwrnLfOBEgsvUKVDOcTE4dvdROa8nTjuPhql9V3iwazv4SNa15VAhankhwv1xCqTPlGT8oSjxQ/eoyWX2ICdkXToq/cIhJmLYRsczaHtM/03WyWu1/9CLSMBhGvOeQ01yjwS2MtofeygTkdEX6JrPCRZMK+Nw0Vf7y0HJ8V+RDmSWR5Ta3hrGfhuiAVQZVlD3ND61CUCwRKpTATtKfnh1m+AXts8Lr0s1/cQwlI4Z2s0hFaNdrDuuMMIL3VnvUhzEOKHGfOL+7FWBKVYkkcgTfmsuIdTbsqrZ9cJQaioWW69OQ8I9+vfcQPythZo/uLJK5RZYgu9MSU+EWSp6nSHifYXdWntxig7WwxdTZ35o1Eqo/rhK6pJaGiCdHS7CUON0F9+J/juFsT01i0SEJtw4FDQAH5sgKLCrJaXRxSk8W3vuzPjQJwnGV96wzGh+w965cE8AhLDvVcJMiK7jtOQxVVb39UjcAauKxRvC8syqrsFmvBL10WOogBl7Q5ObIJpjINR4XdMXkbtEPBSvTaZs8YCdoKegc+RQJ97DqMhPSdOd2wA48IGsT6kpGh11BObXJO9+uG4UwvCAPbH8pvGAnlnDQhVbTXHWyXzDV2ruJdC4LD/b1llyMFUbJLoyLQCGPfvdt8VNfocWh0ointnW5XZVhA1sD3nQTaZPb83T1keoB3GaBIgoc=
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 201e7c3c-f320-45bb-c0b8-08d7ea15fa47
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Apr 2020 19:14:01.8039
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Fh50B/ePqTDDsfVgjlujF00YYFOqv17vJ/ablRvQW3D9NOzbydutXT6X1ibVX/6+sVNV2tMd5sQaq1DHjz7Si6Mbl5xrHBnQOdlgwOE7UUArEjPUbOsjrkg8LUjgi2m7bfcV5Qp6qFYfrwhuxy4xb/xDmyt9t1ZLs7OCZsV45PazzrwLiXhEiSkl+tDfalfP9bOXZ43SyW4ZGXBtmcS1RyZ9iNd702ansJCfRcRo4OOt4lJgh7uE2yT6JQeMjKbEpdjmnRAB6EJUQ+c+mVfPPuwccQ/WnlqfY0m1yv5+rY8RlapXnzry+36dEiNPdxtKqmhqRlQQJUGmNIKbF49yCynYp0vWuWd8FS4J4lYKe7LCPjB311b2ZjXdMpcwQUDp3LeRkldHdj/0q8hVUYSOB3up1qDbUc++hqSllaHVPgNEe9qgDMw4obsd1QLEv85ZhtpRaWPvcsBEdusDxGGO+jpIXyUnmFiFdYZMYN00FB8=
+x-ms-exchange-antispam-messagedata: kMTu20cigae8h73f3Iygw1Qim4JyE+d1JbA0yI+j5aqW56Y/A8bbteXWKfEBZSm2aohcKlyvYrIGg5BnCZg/BgkZWmgLJ5ug1Nb58lGciqkWGQXiSuPUTbY38/4W1cQY3cHC4CksBNX/HX8jO5L57ecWtB/+ZU0lUzkiOf71TcTsHmcTQWfVicfIvElW61qSgjdGCSY79ktxIhm86r3xJR7tEg+aenXXcXQ111y54qRyst65Nj3jb2pbD1wT2jT7MNokReVM9MwXFbO7gjDq0hkmRkEEwV03nwM07Z34UUbfsre+8yTKqC+c4tiSNaA+7+6umVYyRRzCtbN+AP0H9e/4z3SIB3AwIssrE3coGeFuHM7tWJO0TYL+AzQLP5nxr9JyCbCbnU2OD6pjl+CWbC4Njg1hIwIyAppHBp9gV1JSNGfL0aPhLDm3v/EQAR/K1brJb0PmzsaQ7mQxS6sSjQF6sToGKNGUu3t8R4CF1a5DL9dMILB+e62sCpMSBnDBsfLdjGy6hAWZPnnN3/JGUvr7rnc9BuhFUPX72FDDVqPVCJ37DM3xw3JSNNqQZWTP2IGEgFv5YXfZ7iLPGjzUbunhaqPalgzwRrBr9AQgowvIFo5MrXNJEg7EEkWxZrcfhERc9w4zuV0nLvJmyywvhMtVo6s72G7Mz/BCQBWU/s0Xe3WmXFdqNTe5C8iPF64Zgqy6jJNRj9kHjm11J3bz68gPl9UKLhOQfOs4JgTqUDhZbAJOthS+AidOjC3hFdvGoP67KCy5aat/uqAaClXWKmk/kwkhPU/nPS299yIEBpM=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: acc07509-c920-42d1-69aa-08d7ea40249a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Apr 2020 00:15:50.7591
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: uFDU1WY2UAU3Gn1zsh27cyrB7QtNs0xddueXY5GHRgm0nFKaO7XbSxef60ZFCVeQXd+hjiiuo9EejDJtWyv/GQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6141
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 1Ivdpi90vCwBl8lveFF0JoD2lzuBhhBkjEIT99RYbWHHAsA0enNvrWtiFtgiDgFZirA1yq5bzO2l0xu74f7DbmGWZ66c38ihHEBt6KXR/JU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB1067
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Apr 26, 2020 at 05:18:59AM +0000, Tian, Kevin wrote:
+From: Wei Hu <weh@microsoft.com> Sent: Sunday, April 26, 2020 6:25 AM
+>=20
+> In the case of kdump, the PCI device was not cleanly shut down
+> before the kdump kernel starts. This causes the initial
+> attempt of entering D0 state in the kdump kernel to fail with
+> invalid device state 0xC0000184 returned from Hyper-V host.
+> When this happens, explicitly call PCI bus exit and retry to
+> enter the D0 state.
+>=20
+> Also fix the PCI probe failure path to release the PCI device
+> resource properly.
+>=20
+> Signed-off-by: Wei Hu <weh@microsoft.com>
+> ---
+>  drivers/pci/controller/pci-hyperv.c | 34 ++++++++++++++++++++++++++++-
+>  1 file changed, 33 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller=
+/pci-hyperv.c
+> index e15022ff63e3..eb4781fa058d 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -2736,6 +2736,10 @@ static void hv_free_config_window(struct hv_pcibus=
+_device
+> *hbus)
+>  	vmbus_free_mmio(hbus->mem_config->start, PCI_CONFIG_MMIO_LENGTH);
+>  }
+>=20
+> +#define STATUS_INVALID_DEVICE_STATE		0xC0000184
+> +
+> +static int hv_pci_bus_exit(struct hv_device *hdev, bool hibernating);
+> +
+>  /**
+>   * hv_pci_enter_d0() - Bring the "bus" into the D0 power state
+>   * @hdev:	VMBus's tracking struct for this root PCI bus
+> @@ -2748,8 +2752,10 @@ static int hv_pci_enter_d0(struct hv_device *hdev)
+>  	struct pci_bus_d0_entry *d0_entry;
+>  	struct hv_pci_compl comp_pkt;
+>  	struct pci_packet *pkt;
+> +	bool retry =3D true;
+>  	int ret;
+>=20
+> +enter_d0_retry:
+>  	/*
+>  	 * Tell the host that the bus is ready to use, and moved into the
+>  	 * powered-on state.  This includes telling the host which region
+> @@ -2780,6 +2786,30 @@ static int hv_pci_enter_d0(struct hv_device *hdev)
+>  		dev_err(&hdev->device,
+>  			"PCI Pass-through VSP failed D0 Entry with status %x\n",
+>  			comp_pkt.completion_status);
 
-> > > I think providing an unified abstraction to userspace is also important,
-> > > which is what VFIO provides today. The merit of using one set of VFIO
-> > > API to manage all kinds of mediated devices and VF devices is a major
-> > > gain. Instead, inventing a new vDPA-like interface for every Scalable-IOV
-> > > or equivalent device is just overkill and doesn't scale. Also the actual
-> > > emulation code in idxd driver is actually small, if putting aside the PCI
-> > > config space part for which I already explained most logic could be shared
-> > > between mdev device drivers.
-> > 
-> > If it was just config space you might have an argument, VFIO already
-> > does some config space mangling, but emulating BAR space is out of
-> > scope of VFIO, IMHO.
-> 
-> out of scope of vfio-pci, but in scope of vfio-mdev. btw I feel that most
-> of your objections are actually related to the general idea of
-> vfio-mdev.
+The above error message will be output even if a retry is attempted.
+And if the retry succeeds, there's no further message, which could leave an
+incorrect impression for someone looking at the boot logs.  If the error me=
+ssage
+is output, there should be a follow-up message indicating the retry succeed=
+ed.=20
+Or don't output the above message at all -- output only a message that says
+"doing a retry".  This could be accomplished by doing a separate test for
+STATUS_INVALID_DEVICE_STATE that is not nested under checking the
+completion_status for 0.  Here's a structure that also has the benefit of
+reducing the indentation levels:
 
-There have been several abusive proposals of vfio-mdev, everything
-from a way to create device drivers to this kind of generic emulation
-framework.
+	if ((comp_pkt.completion_status =3D=3D STATUS_INVALID_DEVICE_STATE) && ret=
+ry) {
+		retry =3D false;
+		dev_err(&hdev->device, "Retrying D0 Entry\n");
+		ret =3D hv_pci_bus_exit(hdev, true);
+		if (ret =3D=3D 0) {
+			kfree(pkt);
+			goto enter_do_retry;
+		}
+		dev_err(&hdev->device, "Retrying D0 Entry failed with %d\n", ret);
+	}=20
 
-> Scalable IOV just uses PASID to harden DMA isolation in mediated
-> pass-through usage which vfio-mdev enables. Then are you just opposing
-> the whole vfio-mdev? If not, I'm curious about the criteria in your mind 
-> about when using vfio-mdev is good...
+	if (comp_pkt.completion_status < 0) {
+		dev_err(&hdev->device,
+			 "PCI Pass-through VSP failed D0 Entry with status %x\n",
+			 comp_pkt.completion_status);
+		ret =3D -EPROTO;
+		goto exit;
+	}
 
-It is appropriate when non-PCI standard techniques are needed to do
-raw device assignment, just like VFIO.
+> +
+> +		/*
+> +		 * In certain case (Kdump) the pci device of interest was
+> +		 * not cleanly shut down and resource is still held on host
+> +		 * side, the host could return STATUS_INVALID_DEVICE_STATE.
+> +		 * We need to explicitly request host to release the resource
+> +		 * and try to enter D0 again.
+> +		 */
+> +		if (comp_pkt.completion_status =3D=3D STATUS_INVALID_DEVICE_STATE &&
+> +		    retry) {
+> +			ret =3D hv_pci_bus_exit(hdev, true);
+> +
+> +			retry =3D false;
+> +
+> +			if (ret =3D=3D 0) {
+> +				kfree(pkt);
+> +				goto enter_d0_retry;
+> +			} else {
+> +				dev_err(&hdev->device,
+> +					"PCI bus D0 exit failed with ret %d\n",
+> +					ret);
+> +			}
+> +		}
+> +
+>  		ret =3D -EPROTO;
+>  		goto exit;
+>  	}
+> @@ -3136,7 +3166,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+>=20
+>  	ret =3D hv_pci_allocate_bridge_windows(hbus);
+>  	if (ret)
+> -		goto free_irq_domain;
+> +		goto exit_d0;
+>=20
+>  	ret =3D hv_send_resources_allocated(hdev);
+>  	if (ret)
 
-Basically if vfio-pci is already doing it then it seems reasonable
-that vfio-mdev should do the same. This mission creep where vfio-mdev
-gains functionality far beyond VFIO is the problem.
+The above is good.  But there's another error case that isn't handled
+correctly.  If create_root_hv_pci_bus() fails, hv_send_resources_released()
+should be called.
 
-> technically Scalable IOV is definitely different from SR-IOV. It's 
-> simpler in hardware. And we're not emulating SR-IOV. The point
-> is just in usage-wise we want to present a consistent user 
-> experience just like passing through a PCI endpoint (PF or VF) device
-> through vfio eco-system, including various userspace VMMs (Qemu,
-> firecracker, rust-vmm, etc.), middleware (Libvirt), and higher level 
-> management stacks. 
+Fixing these two error cases should probably go in a separate patch:  One
+patch for the retry problem in kdump, and a separate patch for these error
+cases.
 
-Yes, I understand your desire, but at the same time we have not been
-doing device emulation in the kernel. You should at least be
-forthwright about that major change in the cover letters/etc.
- 
-> > The only thing we get out of this is someone doesn't have to write a
-> > idxd emulation driver in qemu, instead they have to write it in the
-> > kernel. I don't see how that is a win for the ecosystem.
-> 
-> No. The clear win is on leveraging classic VFIO iommu and its eco-system
-> as explained above.
+Michael
 
-vdpa had no problem implementing iommu support without VFIO. This was
-their original argument too, it turned out to be erroneous.
 
-Jason
+> @@ -3154,6 +3184,8 @@ static int hv_pci_probe(struct hv_device *hdev,
+>=20
+>  free_windows:
+>  	hv_pci_free_bridge_windows(hbus);
+> +exit_d0:
+> +	(void) hv_pci_bus_exit(hdev, true);
+>  free_irq_domain:
+>  	irq_domain_remove(hbus->irq_domain);
+>  free_fwnode:
+> --
+> 2.20.1
+
