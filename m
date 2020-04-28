@@ -2,133 +2,172 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 20D2F1BB8E4
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Apr 2020 10:33:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B5CF1BBCB3
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Apr 2020 13:43:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726641AbgD1Idh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Apr 2020 04:33:37 -0400
-Received: from mail-oo1-f67.google.com ([209.85.161.67]:40546 "EHLO
-        mail-oo1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726803AbgD1Idh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Apr 2020 04:33:37 -0400
-Received: by mail-oo1-f67.google.com with SMTP id r1so4498838oog.7;
-        Tue, 28 Apr 2020 01:33:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qz7w+rAEifl7nDRQdRl3Sv+cAgyuV33lDCQmc/oPEkQ=;
-        b=HD8O4U+kjJioEey2SdKZsF7FFfgtVFfail4u5tiYbICK/U5XOpE7LECzm3tRVg4nBA
-         sMd+8Rz9zq95yPEE1Ebtf22YbVnD7wT1r8L3TGShywuDTY34n2Px4/x2Jn1aYEjZy/uA
-         etyt6qvGjTIhZm7YMd54LS2WFP67LGdBuZ2SVIGhCWJ1m9ey/tlrA6AkEtRp3Sy0f5wk
-         dcOPaRzE4INw4aOafzBpL63EyShhtHuSlISKpYsPhD30VfsRXdgM3s112ibsZNodlDZR
-         YalzR/07PlG1FwdWjG/lfNkR/zHS0gXzFtPqsH3UzjKAHSczhXgI3zqim6sGRPpCJqYt
-         XMsg==
-X-Gm-Message-State: AGi0PubcF+DEnXy7U6POkoDOxh7t+l/igxgxOaRHQLcdIBXwP8CO9nIP
-        SweR27+yjfVIeVdEQnjSOQD9nKuWcXrwqUfNsdM=
-X-Google-Smtp-Source: APiQypL2Olwk2mLZNQDcCMvhJnqOqIDDHOlZWS91nni3WwNRu7rqOg0OOONaMbuyU8jc1z/SaMSMxhpspKSJComcvxk=
-X-Received: by 2002:a4a:d44a:: with SMTP id p10mr16164090oos.11.1588062816252;
- Tue, 28 Apr 2020 01:33:36 -0700 (PDT)
+        id S1726450AbgD1Lns (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Apr 2020 07:43:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45770 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726426AbgD1Lns (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 28 Apr 2020 07:43:48 -0400
+Received: from localhost (mobile-166-175-187-210.mycingular.net [166.175.187.210])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BED7206A1;
+        Tue, 28 Apr 2020 11:43:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588074227;
+        bh=C3RrHaH4L5nHvpS6TTlCiuxHkFrUFi0ST3B70exKPaE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=gJ+OP2dO0LshnikekgssZbBwArnQEgbbqlUxCdMNVB55zlcXhXNYciLXtyEBDsGph
+         A3evgVJOW7hGuSR0cSl7gFBoy2CVXveGRfZ4xa+1IhZJCS5MZfEEdMSA7tX55tB71e
+         exN+R7klP52nSf0PpCt/SJsQ15jEm7KsGuEHHyFc=
+Date:   Tue, 28 Apr 2020 06:43:45 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Yicong Yang <yangyicong@hisilicon.com>
+Cc:     Saheed Bolarinwa <refactormyself@gmail.com>, bjorn@helgaas.com,
+        skhan@linuxfoundation.org, linux-pci@vger.kernel.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-mips@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] pci: Make return value of pcie_capability_read*()
+ consistent
+Message-ID: <20200428114345.GA123615@google.com>
 MIME-Version: 1.0
-References: <CAMuHMdVGkM_-5q+pSOtQ5nBPGzMeOpRTJUqekYnvjiPMFepqLw@mail.gmail.com>
- <20200427174138.GA207841@google.com> <CAMuHMdXbpynd6N2-GF+j3ie3HG0CohebpPOaj=oiZhF_Pt9gAg@mail.gmail.com>
- <20200428082617.GA12459@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20200428082617.GA12459@e121166-lin.cambridge.arm.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 28 Apr 2020 10:33:24 +0200
-Message-ID: <CAMuHMdUAuCM55CwMEeycCjyMy0i=USUyQFyPKDsQgHiR-cRcJA@mail.gmail.com>
-Subject: Re: [PATCH V3] PCI: rcar: Add the suspend/resume for pcie-rcar driver
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Kazufumi Ikeda <kaz-ikeda@xc.jp.nec.com>,
-        Gaku Inami <gaku.inami.xw@bp.renesas.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Vaibhav Gupta <vaibhavgupta40@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4cc16e59-d346-5523-5072-eebe77d06a08@hisilicon.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Lorenzo,
-
-On Tue, Apr 28, 2020 at 10:26 AM Lorenzo Pieralisi
-<lorenzo.pieralisi@arm.com> wrote:
-> On Mon, Apr 27, 2020 at 10:08:52PM +0200, Geert Uytterhoeven wrote:
-> > On Mon, Apr 27, 2020 at 7:41 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > On Sat, Apr 25, 2020 at 10:55:21AM +0200, Geert Uytterhoeven wrote:
-> > > > On Fri, Apr 24, 2020 at 9:57 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > > [+cc Vaibhav]
-> > > > >
-> > > > > Alternate less redundant subject:
-> > > > >
-> > > > >   PCI: rcar: Add suspend/resume support
-> > > >
-> > > > Note that there's both pcie-rcar.c (this driver, for R-Car Gen2 and Gen3
-> > > > PCIe) and pci-rcar-gen2.c (for R-Car Gen2 PCI).
-> > > > People tend to use the prefix "PCI: rcar: " for both :-(
-> > >
-> > > Yeah, that's pretty broken, thanks for pointing this out!
-> > >
-> > > For most drivers we use a chipset name ("keystone", "imx6", "tegra",
-> > > etc) as the changlog tag.  That's nice because it gives space for
-> > > multiple drivers from the same vendor, but I don't know anything
-> > > similarly specific for the R-Car drivers.
-> > >
-> > > pci-rcar-gen2.c seems to be for some sort of internal Conventional PCI
+On Tue, Apr 28, 2020 at 10:19:08AM +0800, Yicong Yang wrote:
+> On 2020/4/28 2:13, Bjorn Helgaas wrote:
 > >
-> > AFAIUI it's some internal PCI glue to the *HCI USB controller.
+> > I'm starting to think we're approaching this backwards.  I searched
+> > for PCIBIOS_FUNC_NOT_SUPPORTED, PCIBIOS_BAD_VENDOR_ID, and the other
+> > error values.  Almost every use is a *return* in a config accessor.
+> > There are very, very few *tests* for these values.
+> 
+> If we have certain reasons to reserve PCI_BIOS* error to identify
+> PCI errors in PCI drivers, maybe redefine the PCI_BIOS* to generic
+> error codes can solve the issues, and no need to call
+> pcibios_err_to_errno() to do the conversion.  Few changes may be
+> made to current codes. One possible patch may look like below.
+> Otherwise, maybe convert all PCI_BIOS* errors to generic error codes
+> is a better idea.
+> 
+> Not sure it's the best way or not. Just FYI.
+
+That's a brilliant idea!  We should still look carefully at all the
+callers of the config accessors, but this would avoid changing all the
+arch accessors, so the patch would be dramatically smaller.
+
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 83ce1cd..843987c 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -675,14 +675,18 @@ static inline bool pci_dev_msi_enabled(struct pci_dev *pci_dev) { return false;
+>  
+>  /* Error values that may be returned by PCI functions */
+>  #define PCIBIOS_SUCCESSFUL		0x00
+> -#define PCIBIOS_FUNC_NOT_SUPPORTED	0x81
+> -#define PCIBIOS_BAD_VENDOR_ID		0x83
+> -#define PCIBIOS_DEVICE_NOT_FOUND	0x86
+> -#define PCIBIOS_BAD_REGISTER_NUMBER	0x87
+> -#define PCIBIOS_SET_FAILED		0x88
+> -#define PCIBIOS_BUFFER_TOO_SMALL	0x89
+> -
+> -/* Translate above to generic errno for passing back through non-PCI code */
+> +#define PCIBIOS_FUNC_NOT_SUPPORTED	-ENOENT
+> +#define PCIBIOS_BAD_VENDOR_ID		-ENOTTY
+> +#define PCIBIOS_DEVICE_NOT_FOUND	-ENODEV
+> +#define PCIBIOS_BAD_REGISTER_NUMBER	-EFAULT
+> +#define PCIBIOS_SET_FAILED		-EIO
+> +#define PCIBIOS_BUFFER_TOO_SMALL	-ENOSPC
+> +
+> +/**
+> + * Translate above to generic errno for passing back through non-PCI code
+> + *
+> + * Deprecated. Use the PCIBIOS_* directly without a translation.
+> + */
+>  static inline int pcibios_err_to_errno(int err)
+>  {
+>  	if (err <= PCIBIOS_SUCCESSFUL)
+> @@ -690,17 +694,12 @@ static inline int pcibios_err_to_errno(int err)
+>  
+>  	switch (err) {
+>  	case PCIBIOS_FUNC_NOT_SUPPORTED:
+> -		return -ENOENT;
+>  	case PCIBIOS_BAD_VENDOR_ID:
+> -		return -ENOTTY;
+>  	case PCIBIOS_DEVICE_NOT_FOUND:
+> -		return -ENODEV;
+>  	case PCIBIOS_BAD_REGISTER_NUMBER:
+> -		return -EFAULT;
+>  	case PCIBIOS_SET_FAILED:
+> -		return -EIO;
+>  	case PCIBIOS_BUFFER_TOO_SMALL:
+> -		return -ENOSPC;
+> +		return err;
+>  	}
+>  
+>  	return -ERANGE;
+> 
+> > For example, the only tests for PCIBIOS_FUNC_NOT_SUPPORTED are in
+> > xen_pcibios_err_to_errno() and pcibios_err_to_errno(), i.e., we're
+> > just converting that value to -ENOENT or the Xen-specific thing.
 > >
-> > > bus?  The "gen2" is confusing because "Gen 2" is more commonly used
-> > > for PCIe than for Conventional PCI.
+> > So I think the best approach might be to remove the PCIBIOS_* error
+> > values completely and replace them with the corresponding values from
+> > pcibios_err_to_errno().  For example, a part of the patch would look
+> > like this:
 > >
-> > The "Gen2" applies to "R-Car", not to "PCI".
->
-> Wicked :) !
-
-pcie-rcar.c supports R-Car Gen1, Gen2, and Gen3.
-
-> > > I would propose keeping "rcar" for the PCIe driver and using
-> > > "rcar-pci" for the Conventional PCI one, but the Conventional PCI one
+> > diff --git a/arch/mips/pci/ops-emma2rh.c b/arch/mips/pci/ops-emma2rh.c
+> > index 65f47344536c..d4d9c902c147 100644
+> > --- a/arch/mips/pci/ops-emma2rh.c
+> > +++ b/arch/mips/pci/ops-emma2rh.c
+> > @@ -100,7 +100,7 @@ static int pci_config_read(struct pci_bus *bus, unsigned int devfn, int where,
+> >  		break;
+> >  	default:
+> >  		emma2rh_out32(EMMA2RH_PCI_IWIN0_CTR, backup_win0);
+> > -		return PCIBIOS_FUNC_NOT_SUPPORTED;
+> > +		return -ENOENT;
+> >  	}
+> >  
+> >  	emma2rh_out32(EMMA2RH_PCI_IWIN0_CTR, backup_win0);
+> > @@ -149,7 +149,7 @@ static int pci_config_write(struct pci_bus *bus, unsigned int devfn, int where,
+> >  		break;
+> >  	default:
+> >  		emma2rh_out32(EMMA2RH_PCI_IWIN0_CTR, backup_win0);
+> > -		return PCIBIOS_FUNC_NOT_SUPPORTED;
+> > +		return -ENOENT;
+> >  	}
+> >  	*(volatile u32 *)(base + (PCI_FUNC(devfn) << 8) +
+> >  			  (where & 0xfffffffc)) = data;
+> > diff --git a/include/linux/pci.h b/include/linux/pci.h
+> > index 83ce1cdf5676..f95637a8d391 100644
+> > --- a/include/linux/pci.h
+> > +++ b/include/linux/pci.h
+> > @@ -675,7 +675,6 @@ static inline bool pci_dev_msi_enabled(struct pci_dev *pci_dev) { return false;
+> >  
+> >  /* Error values that may be returned by PCI functions */
+> >  #define PCIBIOS_SUCCESSFUL		0x00
+> > -#define PCIBIOS_FUNC_NOT_SUPPORTED	0x81
+> >  #define PCIBIOS_BAD_VENDOR_ID		0x83
+> >  #define PCIBIOS_DEVICE_NOT_FOUND	0x86
+> >  #define PCIBIOS_BAD_REGISTER_NUMBER	0x87
+> > @@ -689,8 +688,6 @@ static inline int pcibios_err_to_errno(int err)
+> >  		return err; /* Assume already errno */
+> >  
+> >  	switch (err) {
+> > -	case PCIBIOS_FUNC_NOT_SUPPORTED:
+> > -		return -ENOENT;
+> >  	case PCIBIOS_BAD_VENDOR_ID:
+> >  		return -ENOTTY;
+> >  	case PCIBIOS_DEVICE_NOT_FOUND:
+> > .
 > >
-> > (/me resists against bike-shedding)
->
-> I'd agree with Bjorn - I don't know, internal vs external seems
-> artificial. Certainly gen2 is misleading, it does not take much
-> to improve it.
-
-We have lots of drivers in other subsystems with "rcar-gen2" or
-"rcar-gen3" as part of their names.
-
-> > > (pci-rcar-gen2.c) seems pretty inactive.  The most recent commits are
-> > > from 2018, and they're trivial cleanups.  So I'm doubtful that anybody
-> > > will remember when the next change comes in.
-> >
-> > I guess pci-rcar-gen2.c is simpler and more mature ;-)
-> > R-Car Gen2 SoCs have both (internal) PCI and PCIe, so the two drivers
-> > can be used together on the same hardware.
->
-> I'd remove gen2 to start with, you are better placed to know the
-> internals to come up with something significant.
-
-So we're back at "PCI: rcar: ...", for both ;-)
-
-I'd say the main difference between the two drivers is PCI vs. PCIe.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> 
