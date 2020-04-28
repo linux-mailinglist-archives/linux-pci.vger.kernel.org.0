@@ -2,78 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 655601BBF93
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Apr 2020 15:31:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B7E951BC0BC
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Apr 2020 16:10:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgD1NbX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Apr 2020 09:31:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60678 "EHLO mail.kernel.org"
+        id S1727843AbgD1OKR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Apr 2020 10:10:17 -0400
+Received: from mga06.intel.com ([134.134.136.31]:3285 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726860AbgD1NbX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 28 Apr 2020 09:31:23 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56C90206D6;
-        Tue, 28 Apr 2020 13:31:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588080682;
-        bh=4IjMN/3nSMM2CXswAlECOTw3UvL1UdbgXql3tahnnIs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=U8hgL19C4C/65u6AvzzNc2gAU07onDsuhSvKBUnFsyc8jis0wBbvVyvRZ3Gu3K8/W
-         BjEzYoj6UAgRg9E3imbQQgq8J3IKqFg2S92i/njMoITh1GZPTlNl14wjK1DI4rpXZj
-         DXfkv3RdTn+ULjbdewpr8eBIPOeNtkA7tUneGiHo=
-Date:   Tue, 28 Apr 2020 14:31:17 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mans Rullgard <mans@mansr.com>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Robert Richter <rrichter@marvell.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        Toan Le <toan@os.amperecomputing.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Jonathan Chocron <jonnyc@amazon.com>,
-        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH 2/3] PCI: host-generic: Support building as modules
-Message-ID: <20200428133116.GG6791@willie-the-truck>
-References: <20200409234923.21598-1-robh@kernel.org>
- <20200409234923.21598-3-robh@kernel.org>
+        id S1727837AbgD1OKR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 28 Apr 2020 10:10:17 -0400
+IronPort-SDR: ZcHSO9sHC6SOOiltka4d4wNib/U5kpjWgqotIDRlEbkAlwiUNxzO0/13ZsHgXlWoBUt6mKRcvL
+ jFDrNYj0pjjw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 07:10:00 -0700
+IronPort-SDR: Mm9J+5XFNoyA68jB0F0HKKpD1YU7fQMOY9LqQIoJEGkYRAY5YaN7vXK//ElU6ngpEs2/VLIDk9
+ vVCiz+6MyA+g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,328,1583222400"; 
+   d="scan'208";a="247720032"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga007.fm.intel.com with ESMTP; 28 Apr 2020 07:09:59 -0700
+Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.7.201.137])
+        by linux.intel.com (Postfix) with ESMTP id 0B6675802C8;
+        Tue, 28 Apr 2020 07:10:00 -0700 (PDT)
+Message-ID: <de052d30cc881ac67f9410b50b0760ee5bf9a623.camel@linux.intel.com>
+Subject: Re: [PATCH 0/2] Add support for StorageD3Enable _DSD property
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     rjw@rjwysocki.net, lenb@kernel.org, bhelgaas@google.com,
+        kbusch@kernel.org, axboe@fb.com, sagi@grimberg.me,
+        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Tue, 28 Apr 2020 07:09:59 -0700
+In-Reply-To: <20200428051312.GB17146@lst.de>
+References: <20200428003214.3764-1-david.e.box@linux.intel.com>
+         <20200428051312.GB17146@lst.de>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200409234923.21598-3-robh@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 09, 2020 at 05:49:22PM -0600, Rob Herring wrote:
-> Enable building host-generic and its host-common dependency as a
-> module.
+On Tue, 2020-04-28 at 07:13 +0200, Christoph Hellwig wrote:
+> On Mon, Apr 27, 2020 at 05:32:12PM -0700, David E. Box wrote:
+> > NVMe storage power management during suspend-to-idle, particularly
+> > on
+> > laptops, has been inconsistent with some devices working with D3
+> > while
+> > others must rely on NVMe APST in order for power savings to be
+> > realized.
+> > Currently the default is to use APST unless quirked to do
+> > otherwise.
+> > However newer platforms, like Intel Comet Lake systems, may require
+> > NVMe
+> > drives to use D3 in order for the PCIe ports to be properly power
+> > managed.
+> > To make it easier for drivers to choose, these platforms may supply
+> > a
+> > special "StorageD3Enable" _DSD property under the root port that
+> > the device
+> > is attached to. If supplied, the driver must use D3 in order for
+> > the
+> > platform to realize the deepest power savings in suspend-to-idle.
+> >     
+> > The first patch adds the new _DSD GUID and fowards the property
+> > through the
+> > pci/acpi layer to the pci device.
+> > 
+> > The second patch adds support for the property to the nvme driver.
 > 
-> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: Andrew Murray <amurray@thegoodpenguin.co.uk>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: linux-pci@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  drivers/pci/controller/Kconfig            | 4 ++--
->  drivers/pci/controller/pci-host-common.c  | 5 +++++
->  drivers/pci/controller/pci-host-generic.c | 7 +++++--
->  drivers/pci/ecam.c                        | 4 ++++
->  drivers/pci/setup-bus.c                   | 1 +
->  include/linux/pci-ecam.h                  | 2 +-
->  6 files changed, 18 insertions(+), 5 deletions(-)
+> I'm not sure who came up with the idea to put this into ACPI, but it
+> belongs into NVMe.  Please talk to the NVMe technical working group
+> instead of trying to overrules them in an unrelated group that
+> doesn't
+> apply to all of PCIe.
 
-Acked-by: Will Deacon <will@kernel.org>
+Agreed that this is not ideal since it does not apply to all of PCIe.
+But as the property already exists on shipping systems, we need to be
+able to read it in the NVMe driver and the patch is consitent with the
+way properties under PCI ports are read.
 
-Will
+David
+
