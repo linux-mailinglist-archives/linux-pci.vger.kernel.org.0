@@ -2,81 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 670761BC39A
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Apr 2020 17:27:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 701FC1BC3D6
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Apr 2020 17:36:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728131AbgD1P1x (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Apr 2020 11:27:53 -0400
-Received: from mga18.intel.com ([134.134.136.126]:64740 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728147AbgD1P1x (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 28 Apr 2020 11:27:53 -0400
-IronPort-SDR: 9k1KmL5It0WMjCTJopVCfWUgFlm47pMqB6RZxA8al4pkM4pxnFUSZmduJLmozlBPLGGWa+Bt/t
- i06yC9brxIvA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 08:27:51 -0700
-IronPort-SDR: UNnU/pmBRK2OkJ3qAl3VQ1s9gW2e4JpF7lPfFAiI7yqU9sbKROyoly5hqXVOgWqX5u3I4vC1Fw
- PsaBRrDB9MQg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,328,1583222400"; 
-   d="scan'208";a="282179569"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga004.fm.intel.com with ESMTP; 28 Apr 2020 08:27:50 -0700
-Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.7.201.137])
-        by linux.intel.com (Postfix) with ESMTP id 38EE4580CC1;
-        Tue, 28 Apr 2020 08:27:50 -0700 (PDT)
-Message-ID: <de2d78556fcb10f97364201256ac8f342a58eb75.camel@linux.intel.com>
-Subject: Re: [PATCH 0/2] Add support for StorageD3Enable _DSD property
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     rjw@rjwysocki.net, lenb@kernel.org, bhelgaas@google.com,
-        kbusch@kernel.org, axboe@fb.com, sagi@grimberg.me,
-        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-Date:   Tue, 28 Apr 2020 08:27:50 -0700
-In-Reply-To: <20200428142247.GB5439@lst.de>
-References: <20200428003214.3764-1-david.e.box@linux.intel.com>
-         <20200428051312.GB17146@lst.de>
-         <de052d30cc881ac67f9410b50b0760ee5bf9a623.camel@linux.intel.com>
-         <20200428142247.GB5439@lst.de>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+        id S1728235AbgD1Pgs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Apr 2020 11:36:48 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:39890 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728212AbgD1Pgs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Apr 2020 11:36:48 -0400
+Received: by mail-wr1-f67.google.com with SMTP id b11so25162409wrs.6;
+        Tue, 28 Apr 2020 08:36:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gDQQvbPT3Kzf63XvecjBNGYEsk2bb2xd9NhLfULiqJg=;
+        b=SUMpmmDX5YCXEq7htWjwhumb3JYP70c6FIYvFkaULiBW+zwMFV05VyLdwMKQyGx4Qh
+         LdeizPZwOo1SoiBClsWPVNwAVARqkL1IgTcVYXQEmo2SgAN29qz4BCaLuJCgVCEZJqEc
+         Uv97FgTi0AOC3XBbGmkCnj/6bQy6ekdCUVH1rP1MvX0ETXghToDKnmgPc3Fdphh0Onbj
+         H8Jebl4cqwhPaeccxoV9UMz07BKQjtjmMs6HDKWUNwnk+sN01Bs3CvgUbkKbAhT2JMyh
+         OjG8sD3PuQbS4b/5eaxa4NiPKrDQJrAcYU91QT9g/XIU1tl+9eH5q5YSdI46DAQ7Z1R5
+         uBTA==
+X-Gm-Message-State: AGi0Pub0+T/iNjuMlANL5fdhTAo3UBI2ejSQ1hrrG3bZPmRYl86lgJYF
+        wdL3+C13HpaIzjnEBSnI2anbPJlV
+X-Google-Smtp-Source: APiQypIOusuwAcr33CB5Ldy0/gal7sLr8hHFrxFgnuMNsSelBzKOp9T5ByiX4HEIJfDkRsL82eG/gw==
+X-Received: by 2002:adf:84c2:: with SMTP id 60mr33197060wrg.65.1588088204974;
+        Tue, 28 Apr 2020 08:36:44 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id w12sm25355384wrk.56.2020.04.28.08.36.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Apr 2020 08:36:43 -0700 (PDT)
+From:   Wei Liu <wei.liu@kernel.org>
+To:     linux-pci@vger.kernel.org,
+        Xen Development List <xen-devel@lists.xenproject.org>
+Cc:     linux-kernel@vger.kernel.org, Juergen Gross <jgross@suse.com>,
+        boris.ostrovsky@oracle.com, konrad.wilk@oracle.com, x86@kernel.org,
+        sstabellini@kernel.org, Michael Kelley <mikelley@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>
+Subject: [PATCH] x86/xen: drop an unused parameter gsi_override
+Date:   Tue, 28 Apr 2020 15:36:40 +0000
+Message-Id: <20200428153640.76476-1-wei.liu@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 2020-04-28 at 16:22 +0200, Christoph Hellwig wrote:
-> On Tue, Apr 28, 2020 at 07:09:59AM -0700, David E. Box wrote:
-> > > I'm not sure who came up with the idea to put this into ACPI, but
-> > > it
-> > > belongs into NVMe.  Please talk to the NVMe technical working
-> > > group
-> > > instead of trying to overrules them in an unrelated group that
-> > > doesn't
-> > > apply to all of PCIe.
-> > 
-> > Agreed that this is not ideal since it does not apply to all of
-> > PCIe.
-> > But as the property already exists on shipping systems, we need to
-> > be
-> > able to read it in the NVMe driver and the patch is consitent with
-> > the
-> > way properties under PCI ports are read.
-> 
-> The point is that it is not the BIOSes job do decide how Linux does
-> power management.  For example D3 has really horrible entry and exit
-> latencies in many cases, and will lead to higher power usage.
+All callers within the same file pass in -1 (no override).
 
-The platform can know which pm policies will save the most power. But
-since the solution doesn't apply to all PCIe devices (despite BIOS
-specifying it that way) I'll withdraw this patch. Thanks.
+Signed-off-by: Wei Liu <wei.liu@kernel.org>
+---
+ arch/x86/pci/xen.c | 16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
 
-David
+diff --git a/arch/x86/pci/xen.c b/arch/x86/pci/xen.c
+index 91220cc25854..e3f1ca316068 100644
+--- a/arch/x86/pci/xen.c
++++ b/arch/x86/pci/xen.c
+@@ -60,8 +60,7 @@ static int xen_pcifront_enable_irq(struct pci_dev *dev)
+ }
+ 
+ #ifdef CONFIG_ACPI
+-static int xen_register_pirq(u32 gsi, int gsi_override, int triggering,
+-			     bool set_pirq)
++static int xen_register_pirq(u32 gsi, int triggering, bool set_pirq)
+ {
+ 	int rc, pirq = -1, irq = -1;
+ 	struct physdev_map_pirq map_irq;
+@@ -94,9 +93,6 @@ static int xen_register_pirq(u32 gsi, int gsi_override, int triggering,
+ 		name = "ioapic-level";
+ 	}
+ 
+-	if (gsi_override >= 0)
+-		gsi = gsi_override;
+-
+ 	irq = xen_bind_pirq_gsi_to_irq(gsi, map_irq.pirq, shareable, name);
+ 	if (irq < 0)
+ 		goto out;
+@@ -112,12 +108,12 @@ static int acpi_register_gsi_xen_hvm(struct device *dev, u32 gsi,
+ 	if (!xen_hvm_domain())
+ 		return -1;
+ 
+-	return xen_register_pirq(gsi, -1 /* no GSI override */, trigger,
++	return xen_register_pirq(gsi, trigger,
+ 				 false /* no mapping of GSI to PIRQ */);
+ }
+ 
+ #ifdef CONFIG_XEN_DOM0
+-static int xen_register_gsi(u32 gsi, int gsi_override, int triggering, int polarity)
++static int xen_register_gsi(u32 gsi, int triggering, int polarity)
+ {
+ 	int rc, irq;
+ 	struct physdev_setup_gsi setup_gsi;
+@@ -128,7 +124,7 @@ static int xen_register_gsi(u32 gsi, int gsi_override, int triggering, int polar
+ 	printk(KERN_DEBUG "xen: registering gsi %u triggering %d polarity %d\n",
+ 			gsi, triggering, polarity);
+ 
+-	irq = xen_register_pirq(gsi, gsi_override, triggering, true);
++	irq = xen_register_pirq(gsi, triggering, true);
+ 
+ 	setup_gsi.gsi = gsi;
+ 	setup_gsi.triggering = (triggering == ACPI_EDGE_SENSITIVE ? 0 : 1);
+@@ -148,7 +144,7 @@ static int xen_register_gsi(u32 gsi, int gsi_override, int triggering, int polar
+ static int acpi_register_gsi_xen(struct device *dev, u32 gsi,
+ 				 int trigger, int polarity)
+ {
+-	return xen_register_gsi(gsi, -1 /* no GSI override */, trigger, polarity);
++	return xen_register_gsi(gsi, trigger, polarity);
+ }
+ #endif
+ #endif
+@@ -491,7 +487,7 @@ int __init pci_xen_initial_domain(void)
+ 		if (acpi_get_override_irq(irq, &trigger, &polarity) == -1)
+ 			continue;
+ 
+-		xen_register_pirq(irq, -1 /* no GSI override */,
++		xen_register_pirq(irq,
+ 			trigger ? ACPI_LEVEL_SENSITIVE : ACPI_EDGE_SENSITIVE,
+ 			true /* Map GSI to PIRQ */);
+ 	}
+-- 
+2.20.1
 
