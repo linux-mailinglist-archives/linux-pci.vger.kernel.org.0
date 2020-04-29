@@ -2,125 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 153541BE37B
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Apr 2020 18:11:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5AA0A1BE426
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Apr 2020 18:42:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbgD2QLO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Apr 2020 12:11:14 -0400
-Received: from mga05.intel.com ([192.55.52.43]:55638 "EHLO mga05.intel.com"
+        id S1726519AbgD2Qmi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Apr 2020 12:42:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726580AbgD2QLO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 29 Apr 2020 12:11:14 -0400
-IronPort-SDR: YUm3PqD1sz9z329ebCkWLr8Sx5Wqt/gEXJjdfSjVAOqcNIUJnm5YgFuUBdNPrdzYgB908uDrzB
- rLkjAluXueSw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 09:11:13 -0700
-IronPort-SDR: lx2KkyTZPhRl1sD40I4Y7gLUcq7I5rdu5EFyb/8mWtnfuMy8EnenzMatqwkSikUnQqCqGtHMR3
- hmFSOvd9wCxQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,332,1583222400"; 
-   d="scan'208";a="249494877"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga008.fm.intel.com with ESMTP; 29 Apr 2020 09:11:13 -0700
-Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.7.201.137])
-        by linux.intel.com (Postfix) with ESMTP id 52DD8580613;
-        Wed, 29 Apr 2020 09:11:13 -0700 (PDT)
-Message-ID: <537edbfaa088a655eb22e7eba05075aa61d941be.camel@linux.intel.com>
-Subject: Re: [PATCH 0/2] Add support for StorageD3Enable _DSD property
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     "Williams, Dan J" <dan.j.williams@intel.com>,
-        "hch@lst.de" <hch@lst.de>
-Cc:     "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "sagi@grimberg.me" <sagi@grimberg.me>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "axboe@fb.com" <axboe@fb.com>,
-        "kbusch@kernel.org" <kbusch@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>
-Date:   Wed, 29 Apr 2020 09:11:13 -0700
-In-Reply-To: <296064bbcf702744bf603932c9d849307db2e5b7.camel@intel.com>
-References: <20200428003214.3764-1-david.e.box@linux.intel.com>
-         <20200428051312.GB17146@lst.de>
-         <de052d30cc881ac67f9410b50b0760ee5bf9a623.camel@linux.intel.com>
-         <20200428142247.GB5439@lst.de>
-         <de2d78556fcb10f97364201256ac8f342a58eb75.camel@linux.intel.com>
-         <296064bbcf702744bf603932c9d849307db2e5b7.camel@intel.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+        id S1726493AbgD2Qmi (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 29 Apr 2020 12:42:38 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56B6020787;
+        Wed, 29 Apr 2020 16:42:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588178557;
+        bh=vH8eIR3MMlTacZK4WfkYpv1el05yTxrI9SEhKlzGIcg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=aV5IKpRSmbzOy/KapP8clDwAjF1XQgvhlAAKcGpyPC3fA71gVOlb1VJEFJUyWeh5R
+         b8Q2FzDd80vPcdKaLjRdVqQEl3atumGCJaFIhAFsbNFW1Fz0nhWOEWLApaaE/SvBfl
+         OZn2BehNgeP9BLcn27Z3FwzmO5d9zEizNcZLDDyU=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jTpn9-007lrk-7s; Wed, 29 Apr 2020 17:42:35 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     linux-pci@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Yue Wang <yue.wang@Amlogic.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kevin Hilman <khilman@baylibre.com>
+Subject: [PATCH] PCI: amlogic: meson: Don't use FAST_LINK_MODE to set up link
+Date:   Wed, 29 Apr 2020 17:42:30 +0100
+Message-Id: <20200429164230.309922-1-maz@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: linux-pci@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, yue.wang@Amlogic.com, lorenzo.pieralisi@arm.com, robh@kernel.org, bhelgaas@google.com, khilman@baylibre.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 2020-04-29 at 05:20 +0000, Williams, Dan J wrote:
-> On Tue, 2020-04-28 at 08:27 -0700, David E. Box wrote:
-> > On Tue, 2020-04-28 at 16:22 +0200, Christoph Hellwig wrote:
-> > > On Tue, Apr 28, 2020 at 07:09:59AM -0700, David E. Box wrote:
-> > > > > I'm not sure who came up with the idea to put this into ACPI,
-> > > > > but
-> > > > > it
-> > > > > belongs into NVMe.  Please talk to the NVMe technical working
-> > > > > group
-> > > > > instead of trying to overrules them in an unrelated group
-> > > > > that
-> > > > > doesn't
-> > > > > apply to all of PCIe.
-> > > > 
-> > > > Agreed that this is not ideal since it does not apply to all of
-> > > > PCIe.
-> > > > But as the property already exists on shipping systems, we need
-> > > > to
-> > > > be
-> > > > able to read it in the NVMe driver and the patch is consitent
-> > > > with
-> > > > the
-> > > > way properties under PCI ports are read.
-> > > 
-> > > The point is that it is not the BIOSes job do decide how Linux
-> > > does
-> > > power management.  For example D3 has really horrible entry and
-> > > exit
-> > > latencies in many cases, and will lead to higher power usage.
-> > 
-> > The platform can know which pm policies will save the most power.
-> > But
-> > since the solution doesn't apply to all PCIe devices (despite BIOS
-> > specifying it that way) I'll withdraw this patch. Thanks.
-> 
-> Wait, why withdraw? In this case the platform is unfortunately
-> preventing the standard driver from making a proper determination. So
-> while I agree that it's not the BIOSes job, when the platform
-> actively
-> prevents proper operation due to some ill conceived non-standard
-> platform property what is Linux left to do on these systems?
-> 
-> The *patch* is not trying to overrule NVME, and the best I can say is
-> that the Intel Linux team was not in the loop when this was being
-> decided between the platform BIOS implemenation
-> and  whomever  thought
-> they could just publish random ACPI properties that impacted NVME
-> operation [1].
-> 
-> So now David is trying to get these platform unbroken because they
-> are
-> already shipping with this b0rkage.
+My vim3l board stubbornly refuses to play ball with a bog
+standard PCIe switch (ASM1184e), spitting all kind of errors
+ranging from link never coming up to crazy things like downstream
+ports falling off the face of the planet.
 
-Not drop completely. This patch copied the code used to read _DSD
-properties under PCI root ports. But I agree that such properties
-should apply to all devices on those ports and unfortuntely that's not
-the case here. BIOS got it wrong. My thought in dropping this patch is
-to rewrite it to read the property directly from the nvme driver. Not
-the way it's typically done either but it would avoid a global change
-in the pci core while allowing us to deal with the firmware we have.
+Upon investigating how the PCIe RC is configured, I found the
+following nugget: the Sysnopsys DWC PCIe Reference Manual, in the
+section dedicated to the PLCR register, describes bit 7 (FAST_LINK_MODE)
+as:
 
-David
+"Sets all internal timers to fast mode for simulation purposes."
+
+I completely understand the need for setting this bit from a simulation
+perspective, but what I have on my desk is actual silicon, which
+expects timers to have a nominal value (and I expect this is the
+case for most people).
+
+Making sure the FAST_LINK_MODE bit is cleared when configuring the RC
+solves this problem.
+
+Fixes: 9c0ef6d34fdb ("PCI: amlogic: Add the Amlogic Meson PCIe controller driver")
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+---
+ drivers/pci/controller/dwc/pci-meson.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
+index 3715dceca1bf..ca59ba9e0ecd 100644
+--- a/drivers/pci/controller/dwc/pci-meson.c
++++ b/drivers/pci/controller/dwc/pci-meson.c
+@@ -289,11 +289,11 @@ static void meson_pcie_init_dw(struct meson_pcie *mp)
+ 	meson_cfg_writel(mp, val, PCIE_CFG0);
+ 
+ 	val = meson_elb_readl(mp, PCIE_PORT_LINK_CTRL_OFF);
+-	val &= ~LINK_CAPABLE_MASK;
++	val &= ~(LINK_CAPABLE_MASK | FAST_LINK_MODE);
+ 	meson_elb_writel(mp, val, PCIE_PORT_LINK_CTRL_OFF);
+ 
+ 	val = meson_elb_readl(mp, PCIE_PORT_LINK_CTRL_OFF);
+-	val |= LINK_CAPABLE_X1 | FAST_LINK_MODE;
++	val |= LINK_CAPABLE_X1;
+ 	meson_elb_writel(mp, val, PCIE_PORT_LINK_CTRL_OFF);
+ 
+ 	val = meson_elb_readl(mp, PCIE_GEN2_CTRL_OFF);
+-- 
+2.26.2
 
