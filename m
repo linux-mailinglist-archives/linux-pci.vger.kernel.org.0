@@ -2,123 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 210E41BE440
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Apr 2020 18:48:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D92F61BE4EC
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Apr 2020 19:10:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbgD2Qrz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Apr 2020 12:47:55 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58314 "EHLO mx2.suse.de"
+        id S1726814AbgD2RKf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Apr 2020 13:10:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727049AbgD2Qry (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 29 Apr 2020 12:47:54 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 4B358AD80;
-        Wed, 29 Apr 2020 16:47:52 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     f.fainelli@gmail.com, gregkh@linuxfoundation.org,
-        helgaas@kernel.org, linux-kernel@vger.kernel.org,
-        Mathias Nyman <mathias.nyman@intel.com>
-Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org, wahrenst@gmx.net,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: [PATCH v7 4/4] USB: pci-quirks: Add Raspberry Pi 4 quirk
-Date:   Wed, 29 Apr 2020 18:47:34 +0200
-Message-Id: <20200429164734.21506-5-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200429164734.21506-1-nsaenzjulienne@suse.de>
-References: <20200429164734.21506-1-nsaenzjulienne@suse.de>
+        id S1726530AbgD2RKf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 29 Apr 2020 13:10:35 -0400
+Received: from localhost (mobile-166-175-184-168.mycingular.net [166.175.184.168])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 825DE2083B;
+        Wed, 29 Apr 2020 17:10:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588180234;
+        bh=2xgcMioH3CWsTJf+X/wvX2WrB+R7RzkvMl/X2y3wgaA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=i3/Vf9ubdb8TMxpehNHGGBNTu5jT80uie8MpBKJJKGqwjGAJpOpRtM9HlGRX9MgKJ
+         +yChP6v6VYC73cG+BVGxSHvKVtE2WKj+CUZW9uFv9HVf4bfs9/+cEdFkyPMHFwek76
+         WwgRcx8JRM3FGXCoAreRGtA3anRIhgQZXjgnneCs=
+Date:   Wed, 29 Apr 2020 12:10:32 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Austin.Bolen@dell.com
+Cc:     sathyanarayanan.kuppuswamy@linux.intel.com,
+        Mario.Limonciello@dell.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ashok.raj@intel.com,
+        jonathan.derrick@intel.com, mr.nuke.me@gmail.com, rjw@rjwysocki.net
+Subject: Re: [PATCH v1 1/1] PCI/AER: Use _OSC negotiation to determine AER
+ ownership
+Message-ID: <20200429171032.GA30596@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a3535fbc69604425b1e8f008348950ab@AUSX13MPC107.AMER.DELL.COM>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On the Raspberry Pi 4, after a PCI reset, VL805's firmware may either be
-loaded directly from an EEPROM or, if not present, by the SoC's
-VideoCore. Inform VideoCore that VL805 was just reset.
+On Wed, Apr 29, 2020 at 03:24:41PM +0000, Austin.Bolen@dell.com wrote:
+> On 4/28/2020 3:37 PM, Bjorn Helgaas wrote:
+> > [EXTERNAL EMAIL] 
+> >
+> > [+to Mario, Austin, Rafael; Dell folks, I suspect this commit will
+> > break Dell servers but I'd like your opinion]
+> >
+> > <snip>
+> Thanks Bjorn, for the heads up. I checked with our server BIOS team and
+> they say that only checking _OSC for AER should work on our servers.  We
+> always configure_OSC and the HEST FIRMWARE_FIRST flag to retain firmware
+> control of AER so either could be checked.
+> 
+> > I *really* want the patch because the current mix of using both _OSC
+> > and FIRMWARE_FIRST to determine AER capability ownership is a mess and
+> > getting worse, but I'm more and more doubtful.
+> >
+> > My contention is that if firmware doesn't want the OS to use the AER
+> > capability it should simply decline to grant control via _OSC.
+>
+> I agree per spec that _OSC should be used and this was confirmed by the
+> ACPI working group. Alex had submitted a patch for us [2] to switch to
+> using _OSC to determine AER ownership following the decision in the ACPI
+> working group.
 
-Also, as this creates a dependency between USB_PCI and VideoCore's
-firmware interface, and since USB_PCI can't be set as a module neither
-this can. Reflect that on the firmware interface Kconfg.
+Perfect, thank you!  I had forgotten that Alex posted that.  We should
+add credit to him and a link to that discussion.  Thanks again!
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
----
+> [2] https://lkml.org/lkml/2018/11/16/202
+> 
+> > But things like 0584396157ad ("PCI: PCIe AER: honor ACPI HEST FIRMWARE
+> > FIRST mode") [1] suggest that some machines grant AER control to the
+> > OS via _OSC, but still expect the OS to leave AER alone for certain
+> > devices.
+>
+> AFAIK, no Dell server, including the 11G servers mentioned in that
+> patch, have granted control of AER via _OSC and set HEST FIRMWARE_FIRST
+> for some devices. I don't think this model is even support by the
+> ACPI/PCIe standards.  Yes, you can set the bits that way, but there is
+> no text I've found that says how the OS/firmware should behave in that
+> scenario. In order to be interoperable, I think someone would need to
+> standardized how the OS/firmware would could co-ordinate in such a model.
 
-Changes since v5:
- - Fix Kconfig issue with allmodconfig
+I agree and I want to get Linux out of the current muddle where we
+try to make sense out of it.
 
-Changes since v4:
- - Do not split up error message
-
-Changes since v3:
- - Add more complete error message
-
-Changes since v1:
- - Make RASPBERRYPI_FIRMWARE dependent on this quirk to make sure it
-   gets compiled when needed.
-
- drivers/firmware/Kconfig      |  3 ++-
- drivers/usb/host/pci-quirks.c | 16 ++++++++++++++++
- 2 files changed, 18 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
-index 8007d4aa76dc..b42140cff8ac 100644
---- a/drivers/firmware/Kconfig
-+++ b/drivers/firmware/Kconfig
-@@ -178,8 +178,9 @@ config ISCSI_IBFT
- 	  Otherwise, say N.
- 
- config RASPBERRYPI_FIRMWARE
--	tristate "Raspberry Pi Firmware Driver"
-+	bool "Raspberry Pi Firmware Driver"
- 	depends on BCM2835_MBOX
-+	default USB_PCI
- 	help
- 	  This option enables support for communicating with the firmware on the
- 	  Raspberry Pi.
-diff --git a/drivers/usb/host/pci-quirks.c b/drivers/usb/host/pci-quirks.c
-index beb2efa71341..0dc34668bb2a 100644
---- a/drivers/usb/host/pci-quirks.c
-+++ b/drivers/usb/host/pci-quirks.c
-@@ -16,6 +16,9 @@
- #include <linux/export.h>
- #include <linux/acpi.h>
- #include <linux/dmi.h>
-+
-+#include <soc/bcm2835/raspberrypi-firmware.h>
-+
- #include "pci-quirks.h"
- #include "xhci-ext-caps.h"
- 
-@@ -1243,11 +1246,24 @@ static void quirk_usb_handoff_xhci(struct pci_dev *pdev)
- 
- static void quirk_usb_early_handoff(struct pci_dev *pdev)
- {
-+	int ret;
-+
- 	/* Skip Netlogic mips SoC's internal PCI USB controller.
- 	 * This device does not need/support EHCI/OHCI handoff
- 	 */
- 	if (pdev->vendor == 0x184e)	/* vendor Netlogic */
- 		return;
-+
-+	if (pdev->vendor == PCI_VENDOR_ID_VIA && pdev->device == 0x3483) {
-+		ret = rpi_firmware_init_vl805(pdev);
-+		if (ret) {
-+			/* Firmware might be outdated, or something failed */
-+			dev_warn(&pdev->dev,
-+				 "Failed to load VL805's firmware: %d. Will continue to attempt to work, but bad things might happen. You should fix this...\n",
-+				 ret);
-+		}
-+	}
-+
- 	if (pdev->class != PCI_CLASS_SERIAL_USB_UHCI &&
- 			pdev->class != PCI_CLASS_SERIAL_USB_OHCI &&
- 			pdev->class != PCI_CLASS_SERIAL_USB_EHCI &&
--- 
-2.26.2
-
+> > I think the FIRMWARE_FIRST language in the ACPI spec is really too
+> > vague to tell the OS not to use the AER Capability, but it seems like
+> > that's what commits like [1] rely on.
+> >
+> > The current _OSC definition (PCI Firmware r3.2) applies only to
+> > PNP0A03/PNP0A08 devices, but it's conceivable that it could be
+> > extended to other devices if we need per-device AER Capability
+> > ownership.
+> >
+> > [1] https://git.kernel.org/linus/0584396157ad
+<snip>
