@@ -2,140 +2,184 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6BF411C0208
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Apr 2020 18:18:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE6321C04DF
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Apr 2020 20:33:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728188AbgD3QSk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Apr 2020 12:18:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58748 "EHLO mail.kernel.org"
+        id S1726384AbgD3Sda (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Apr 2020 14:33:30 -0400
+Received: from mga05.intel.com ([192.55.52.43]:31224 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728113AbgD3QSj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 30 Apr 2020 12:18:39 -0400
-Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE5A524957;
-        Thu, 30 Apr 2020 16:18:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588263518;
-        bh=QZoCtLS8vGxFXMe1dFt6/xBiiVGEl5Zx8nnYO8f1efI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H9OoOMPfLKL9ccdYmXdsNHV03NyOb/pVa+IhySo5mw0s7lDdxSnRk/HRvbEm8rO/x
-         tIpy4Iwcc/yAbwYL1iClCtqH3ONVtL4KfqkdV+EHkAHFe0/jLYgfZ25Ptg7oAx30er
-         dqKLIELwO1+0JYcsmvuBtft53HKwxBCuhQJaMOko=
-Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
-        (envelope-from <mchehab@kernel.org>)
-        id 1jUBtU-00AxhX-6L; Thu, 30 Apr 2020 18:18:36 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: [PATCH v4 12/19] docs: pci: endpoint/function/binding/pci-test.txt convert to ReST
-Date:   Thu, 30 Apr 2020 18:18:26 +0200
-Message-Id: <fa73d1a7fb6c4691899a110a732216bcdac75f2b.1588263270.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <cover.1588263270.git.mchehab+huawei@kernel.org>
-References: <cover.1588263270.git.mchehab+huawei@kernel.org>
+        id S1726318AbgD3Sda (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 30 Apr 2020 14:33:30 -0400
+IronPort-SDR: QYeQDpDxDQ0xiIxh+VpYeWRTaw44rMHjkmjzrX7xdWZX3oSlOeS15aqIKKesVzjnBNErrioA8G
+ dpv8514pWfXw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2020 11:33:29 -0700
+IronPort-SDR: J48xY2cKJPAK1NVryygQbF/nagAXDIYz1I6SC3AHIW5UHcqfCG66Luu3iM/N/zRymWaoSl5F24
+ 9Hf1OxKC5PKg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,336,1583222400"; 
+   d="scan'208";a="433056299"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga005.jf.intel.com with ESMTP; 30 Apr 2020 11:33:28 -0700
+Date:   Thu, 30 Apr 2020 11:39:31 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, joro@8bytes.org, catalin.marinas@arm.com,
+        will@kernel.org, robin.murphy@arm.com, kevin.tian@intel.com,
+        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
+        christian.koenig@amd.com, felix.kuehling@amd.com,
+        zhangfei.gao@linaro.org, jgg@ziepe.ca, xuzaibo@huawei.com,
+        fenghua.yu@intel.com, hch@infradead.org,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v6 02/25] iommu/ioasid: Add ioasid references
+Message-ID: <20200430113931.0fbf7a37@jacob-builder>
+In-Reply-To: <20200430143424.2787566-3-jean-philippe@linaro.org>
+References: <20200430143424.2787566-1-jean-philippe@linaro.org>
+        <20200430143424.2787566-3-jean-philippe@linaro.org>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Convert this file to ReST by adding a proper title to it and
-use the right markups for a table.
+On Thu, 30 Apr 2020 16:34:01 +0200
+Jean-Philippe Brucker <jean-philippe@linaro.org> wrote:
 
-While here, add a SPDX header.
+> Let IOASID users take references to existing ioasids with
+> ioasid_get(). ioasid_free() drops a reference and only frees the
+> ioasid when its reference number is zero. It returns whether the
+> ioasid was freed.
+> 
+Looks good to me, I was planning to do the same for VT-d use. Just a
+couple of points for potential extension. I can rebase on top of this.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- .../endpoint/function/binding/pci-test.rst    | 26 +++++++++++++++++++
- .../endpoint/function/binding/pci-test.txt    | 19 --------------
- Documentation/PCI/endpoint/index.rst          |  2 ++
- .../misc-devices/pci-endpoint-test.rst        |  2 +-
- 4 files changed, 29 insertions(+), 20 deletions(-)
- create mode 100644 Documentation/PCI/endpoint/function/binding/pci-test.rst
- delete mode 100644 Documentation/PCI/endpoint/function/binding/pci-test.txt
 
-diff --git a/Documentation/PCI/endpoint/function/binding/pci-test.rst b/Documentation/PCI/endpoint/function/binding/pci-test.rst
-new file mode 100644
-index 000000000000..57ee866fb165
---- /dev/null
-+++ b/Documentation/PCI/endpoint/function/binding/pci-test.rst
-@@ -0,0 +1,26 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+==========================
-+PCI Test Endpoint Function
-+==========================
-+
-+name: Should be "pci_epf_test" to bind to the pci_epf_test driver.
-+
-+Configurable Fields:
-+
-+================   ===========================================================
-+vendorid	   should be 0x104c
-+deviceid	   should be 0xb500 for DRA74x and 0xb501 for DRA72x
-+revid		   don't care
-+progif_code	   don't care
-+subclass_code	   don't care
-+baseclass_code	   should be 0xff
-+cache_line_size	   don't care
-+subsys_vendor_id   don't care
-+subsys_id	   don't care
-+interrupt_pin	   Should be 1 - INTA, 2 - INTB, 3 - INTC, 4 -INTD
-+msi_interrupts	   Should be 1 to 32 depending on the number of MSI interrupts
-+		   to test
-+msix_interrupts	   Should be 1 to 2048 depending on the number of MSI-X
-+		   interrupts to test
-+================   ===========================================================
-diff --git a/Documentation/PCI/endpoint/function/binding/pci-test.txt b/Documentation/PCI/endpoint/function/binding/pci-test.txt
-deleted file mode 100644
-index cd76ba47394b..000000000000
---- a/Documentation/PCI/endpoint/function/binding/pci-test.txt
-+++ /dev/null
-@@ -1,19 +0,0 @@
--PCI TEST ENDPOINT FUNCTION
--
--name: Should be "pci_epf_test" to bind to the pci_epf_test driver.
--
--Configurable Fields:
--vendorid	 : should be 0x104c
--deviceid	 : should be 0xb500 for DRA74x and 0xb501 for DRA72x
--revid		 : don't care
--progif_code	 : don't care
--subclass_code	 : don't care
--baseclass_code	 : should be 0xff
--cache_line_size	 : don't care
--subsys_vendor_id : don't care
--subsys_id	 : don't care
--interrupt_pin	 : Should be 1 - INTA, 2 - INTB, 3 - INTC, 4 -INTD
--msi_interrupts	 : Should be 1 to 32 depending on the number of MSI interrupts
--		   to test
--msix_interrupts	 : Should be 1 to 2048 depending on the number of MSI-X
--		   interrupts to test
-diff --git a/Documentation/PCI/endpoint/index.rst b/Documentation/PCI/endpoint/index.rst
-index d114ea74b444..4ca7439fbfc9 100644
---- a/Documentation/PCI/endpoint/index.rst
-+++ b/Documentation/PCI/endpoint/index.rst
-@@ -11,3 +11,5 @@ PCI Endpoint Framework
-    pci-endpoint-cfs
-    pci-test-function
-    pci-test-howto
-+
-+   function/binding/pci-test
-diff --git a/Documentation/misc-devices/pci-endpoint-test.rst b/Documentation/misc-devices/pci-endpoint-test.rst
-index 26e5d9ba146b..4cf3f4433be7 100644
---- a/Documentation/misc-devices/pci-endpoint-test.rst
-+++ b/Documentation/misc-devices/pci-endpoint-test.rst
-@@ -53,4 +53,4 @@ ioctl
- 	      Perform read tests. The size of the buffer should be passed
- 	      as argument.
- 
--.. [1] Documentation/PCI/endpoint/function/binding/pci-test.txt
-+.. [1] Documentation/PCI/endpoint/function/binding/pci-test.rst
--- 
-2.25.4
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> ---
+>  include/linux/ioasid.h | 10 ++++++++--
+>  drivers/iommu/ioasid.c | 30 +++++++++++++++++++++++++++++-
+>  2 files changed, 37 insertions(+), 3 deletions(-)
+> 
+> diff --git a/include/linux/ioasid.h b/include/linux/ioasid.h
+> index 6f000d7a0ddcd..609ba6f15b9e3 100644
+> --- a/include/linux/ioasid.h
+> +++ b/include/linux/ioasid.h
+> @@ -34,7 +34,8 @@ struct ioasid_allocator_ops {
+>  #if IS_ENABLED(CONFIG_IOASID)
+>  ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t
+> max, void *private);
+> -void ioasid_free(ioasid_t ioasid);
+> +void ioasid_get(ioasid_t ioasid);
+> +bool ioasid_free(ioasid_t ioasid);
+>  void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
+>  		  bool (*getter)(void *));
+>  int ioasid_register_allocator(struct ioasid_allocator_ops
+> *allocator); @@ -48,10 +49,15 @@ static inline ioasid_t
+> ioasid_alloc(struct ioasid_set *set, ioasid_t min, return
+> INVALID_IOASID; }
+>  
+> -static inline void ioasid_free(ioasid_t ioasid)
+> +static inline void ioasid_get(ioasid_t ioasid)
+>  {
+>  }
+>  
+> +static inline bool ioasid_free(ioasid_t ioasid)
+> +{
+> +	return false;
+> +}
+> +
+>  static inline void *ioasid_find(struct ioasid_set *set, ioasid_t
+> ioasid, bool (*getter)(void *))
+>  {
+> diff --git a/drivers/iommu/ioasid.c b/drivers/iommu/ioasid.c
+> index 0f8dd377aada3..46511ac53e0c8 100644
+> --- a/drivers/iommu/ioasid.c
+> +++ b/drivers/iommu/ioasid.c
+> @@ -15,6 +15,7 @@ struct ioasid_data {
+>  	struct ioasid_set *set;
+>  	void *private;
+>  	struct rcu_head rcu;
+> +	refcount_t refs;
+>  };
+>  
+>  /*
+> @@ -314,6 +315,7 @@ ioasid_t ioasid_alloc(struct ioasid_set *set,
+> ioasid_t min, ioasid_t max, 
+>  	data->set = set;
+>  	data->private = private;
+> +	refcount_set(&data->refs, 1);
+>  
+>  	/*
+>  	 * Custom allocator needs allocator data to perform platform
+> specific @@ -345,12 +347,33 @@ ioasid_t ioasid_alloc(struct
+> ioasid_set *set, ioasid_t min, ioasid_t max, }
+>  EXPORT_SYMBOL_GPL(ioasid_alloc);
+>  
+> +/**
+> + * ioasid_get - obtain a reference to the IOASID
+> + */
+> +void ioasid_get(ioasid_t ioasid)
+why void? what if the ioasid is not valid.
 
+> +{
+> +	struct ioasid_data *ioasid_data;
+> +
+> +	spin_lock(&ioasid_allocator_lock);
+> +	ioasid_data = xa_load(&active_allocator->xa, ioasid);
+> +	if (ioasid_data)
+> +		refcount_inc(&ioasid_data->refs);
+> +	spin_unlock(&ioasid_allocator_lock);
+> +}
+> +EXPORT_SYMBOL_GPL(ioasid_get);
+> +
+>  /**
+>   * ioasid_free - Free an IOASID
+>   * @ioasid: the ID to remove
+> + *
+> + * Put a reference to the IOASID, free it when the number of
+> references drops to
+> + * zero.
+> + *
+> + * Return: %true if the IOASID was freed, %false otherwise.
+>   */
+> -void ioasid_free(ioasid_t ioasid)
+> +bool ioasid_free(ioasid_t ioasid)
+>  {
+> +	bool free = false;
+>  	struct ioasid_data *ioasid_data;
+>  
+>  	spin_lock(&ioasid_allocator_lock);
+> @@ -360,6 +383,10 @@ void ioasid_free(ioasid_t ioasid)
+>  		goto exit_unlock;
+>  	}
+>  
+> +	free = refcount_dec_and_test(&ioasid_data->refs);
+> +	if (!free)
+> +		goto exit_unlock;
+> +
+Just FYI, we may need to add states for the IOASID, i.g. mark the IOASID
+inactive after free. And prohibit ioasid_get() after freed. For VT-d,
+this is useful when KVM queries the IOASID.
+
+>  	active_allocator->ops->free(ioasid,
+> active_allocator->ops->pdata); /* Custom allocator needs additional
+> steps to free the xa element */ if (active_allocator->flags &
+> IOASID_ALLOCATOR_CUSTOM) { @@ -369,6 +396,7 @@ void
+> ioasid_free(ioasid_t ioasid) 
+>  exit_unlock:
+>  	spin_unlock(&ioasid_allocator_lock);
+> +	return free;
+>  }
+>  EXPORT_SYMBOL_GPL(ioasid_free);
+>  
+
+[Jacob Pan]
