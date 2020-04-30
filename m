@@ -2,51 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2AC1D1BFEB1
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Apr 2020 16:40:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CFDF1BFEB6
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Apr 2020 16:40:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728236AbgD3Okf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Apr 2020 10:40:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34288 "EHLO
+        id S1727774AbgD3Okg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Apr 2020 10:40:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728199AbgD3Oke (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Apr 2020 10:40:34 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53ED9C035495
-        for <linux-pci@vger.kernel.org>; Thu, 30 Apr 2020 07:40:34 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id g12so2206956wmh.3
-        for <linux-pci@vger.kernel.org>; Thu, 30 Apr 2020 07:40:34 -0700 (PDT)
+        by vger.kernel.org with ESMTP id S1728238AbgD3Okf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Apr 2020 10:40:35 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B4F8C035495
+        for <linux-pci@vger.kernel.org>; Thu, 30 Apr 2020 07:40:35 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id i10so7209743wrv.10
+        for <linux-pci@vger.kernel.org>; Thu, 30 Apr 2020 07:40:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ulHx7TItF7RKrAr9OLFM2TAYktCujNY4Q1KC5Wi9Kvs=;
-        b=gfyrsM/IQafYUcT4eaNXYK7NPZJdY8Ut6cYPYLGFYEb14CfaD7rJrcKZml2LyTtlyE
-         hfYCDO5L3G/wvbupqT7sr+9lyB3JfAqD9ZjKNcjKChh+PCpHENWbnWaO+NtR5s/Izrjl
-         M68QjcHeilcomoKCfnNJoV0m6g7w3USGNc4f829BTmBvUmeY+PpPpMTMpwEXPs96538J
-         m9ZbMRPUY1l4ODiSP8FreWnH+BKSWSEbcPW95oMWg4pPK7hTPCOLG8bleFrL2hjYZl25
-         bavOpR/Qjw8+jhP0FyaLoSXjQeNbuR3gCWwK1hu/JAc2JPImI3NdDjVmO0Qpo/eGVbsS
-         ZRqA==
+        bh=o9p0tsqlSzCrf847KmF0Jc5zS+3Cbp+9M5kBgXSmkSE=;
+        b=ZtUI8P3RpElTPIGqdjH/DV6kjTjOH19h5pOFvhRkzVcRtbRxANMGCNmy6mhXm5QQob
+         OAhvfcqzCO4qj+VH+3ysNL7KNAEivMcothmkRFtJj26/pev8uYCWvgXekOicKRMagS1W
+         W+elb+sxcVGzzPTKfRGNIW5lhmiZZnix+/pmV8fPycbQz3sP6DA1j9EvDQ1sDMarlbol
+         /5TO6+SDIJCjNVxavwHJvZQ0QehJWYHZx2Rvsuw1NCCFTxvOlkTIAG+f6VywAiiep6Hg
+         WLZ6+ly0VB0ezaDfEm+W7Po6Q/NUtBxDHkkiWjBcX7fAwEQzMLIBra55cOZHtCAoI3JY
+         fgJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ulHx7TItF7RKrAr9OLFM2TAYktCujNY4Q1KC5Wi9Kvs=;
-        b=gGLbRn5v5p44laImJsLAW/qgOhxEQUUIBaes5j2oORlEg4yAmzPcLYJUWe72yQjLMz
-         V/SFy57qfAcP9nFOGLL4lGXaXY1s7oWXM5qfeHtGG/d1DEQXTiOGA7ogdozjj0Wldhrl
-         5K87L2SM1lRR9JBhOWfVF8gdWlIfuystNU+Ssf/fukSq3IAQhOIx16iFO5o00mrcr5eZ
-         kDY5CeoHrAliI/81/7+NqdvB3ObjLGDbMkdMg3Vo0Agf5XnfFVn/yS2M9A/KYKYCii91
-         ZTEpYFNx2XHGk3kZkHnSPWZK5d4JXvWFC11zRuyLLNEPdEnegV85gutY58yPMVseLZjf
-         bycw==
-X-Gm-Message-State: AGi0PubD7KJecaryorG+tHbjpljsJrAsOAibFdn/2Jsw/Tvd4sIA8kZA
-        oOsNRLrjxoSdWE++7QMq3f23fw==
-X-Google-Smtp-Source: APiQypJ46AjhsgwjU6+8jK682sr3bY29vZdr/rRH0411nTgNbJxhobRamLvm4JHXPcjf5QkjmKyktw==
-X-Received: by 2002:a7b:c0c5:: with SMTP id s5mr3308375wmh.134.1588257632747;
-        Thu, 30 Apr 2020 07:40:32 -0700 (PDT)
+        bh=o9p0tsqlSzCrf847KmF0Jc5zS+3Cbp+9M5kBgXSmkSE=;
+        b=WBw95NkRxU6xQboyGWlkutxDyJfGq90hEjYKRSrzbt9Z2Pim0w9R1JMvjadHzVftYi
+         R8lK7QEjX5G6pPHOBZyrYC2s8pGbQZUNlcC/pu+/DQ2uKLw4Gnlh7ifobw3boeuZgolo
+         C/oTTrCAvMn1uFFLX59xYdAsLK/gEtLc0OPuZACJSquthVWwCn0yr/O5vIxMBVxzyJkZ
+         1p89JvPoh3DLhW6RQCtAndVt1QfDxThisYwkNlFaxGofY8x3U/5DMAD9TIcfJAHvSt5/
+         s0eSi+Tgaop7QQgjv/WngkjdKbc6TS4Ixk9dseopRWcvm+4hlUwt6wdOTxb1700LHbR2
+         V2mw==
+X-Gm-Message-State: AGi0PuaEnUHTqi/WQKIUEiV9lKie9Re+lGAWbkJJm8B9HB7Z8FBFtmPc
+        tX6mrzf97rT23NwpOJgl/4mfag==
+X-Google-Smtp-Source: APiQypKsBcylUV5b7TA1Fm8amCYZw0VtaGJPx0H1kxtTCy7ARSEDLbGOkB5H2wJXISq/PY7iJO7CVg==
+X-Received: by 2002:a5d:6acc:: with SMTP id u12mr4610113wrw.198.1588257633890;
+        Thu, 30 Apr 2020 07:40:33 -0700 (PDT)
 Received: from localhost.localdomain ([2001:171b:226e:c200:c43b:ef78:d083:b355])
-        by smtp.gmail.com with ESMTPSA id n2sm4153286wrt.33.2020.04.30.07.40.31
+        by smtp.gmail.com with ESMTPSA id n2sm4153286wrt.33.2020.04.30.07.40.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 07:40:32 -0700 (PDT)
+        Thu, 30 Apr 2020 07:40:33 -0700 (PDT)
 From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
 To:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
@@ -58,9 +58,9 @@ Cc:     joro@8bytes.org, catalin.marinas@arm.com, will@kernel.org,
         felix.kuehling@amd.com, zhangfei.gao@linaro.org, jgg@ziepe.ca,
         xuzaibo@huawei.com, fenghua.yu@intel.com, hch@infradead.org,
         Jean-Philippe Brucker <jean-philippe@linaro.org>
-Subject: [PATCH v6 12/25] iommu/arm-smmu-v3: Seize private ASID
-Date:   Thu, 30 Apr 2020 16:34:11 +0200
-Message-Id: <20200430143424.2787566-13-jean-philippe@linaro.org>
+Subject: [PATCH v6 13/25] iommu/arm-smmu-v3: Add support for VHE
+Date:   Thu, 30 Apr 2020 16:34:12 +0200
+Message-Id: <20200430143424.2787566-14-jean-philippe@linaro.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200430143424.2787566-1-jean-philippe@linaro.org>
 References: <20200430143424.2787566-1-jean-philippe@linaro.org>
@@ -71,184 +71,137 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The SMMU has a single ASID space, the union of shared and private ASID
-sets. This means that the SMMU driver competes with the arch allocator
-for ASIDs. Shared ASIDs are those of Linux processes, allocated by the
-arch, and contribute in broadcast TLB maintenance. Private ASIDs are
-allocated by the SMMU driver and used for "classic" map/unmap DMA. They
-require command-queue TLB invalidations.
+ARMv8.1 extensions added Virtualization Host Extensions (VHE), which allow
+to run a host kernel at EL2. When using normal DMA, Device and CPU address
+spaces are dissociated, and do not need to implement the same
+capabilities, so VHE hasn't been used in the SMMU until now.
 
-When we pin down an mm_context and get an ASID that is already in use by
-the SMMU, it belongs to a private context. We used to simply abort the
-bind, but this is unfair to users that would be unable to bind a few
-seemingly random processes. Try to allocate a new private ASID for the
-context, and make the old ASID shared.
+With shared address spaces however, ASIDs are shared between MMU and SMMU,
+and broadcast TLB invalidations issued by a CPU are taken into account by
+the SMMU. TLB entries on both sides need to have identical exception level
+in order to be cleared with a single invalidation.
 
-Introduce a new lock to prevent races when rewriting context
-descriptors. Unfortunately it has to be a spinlock since we take it
-while holding the asid lock, which will be held in non-sleepable context
-(freeing ASIDs from an RCU callback).
+When the CPU is using VHE, enable VHE in the SMMU for all STEs. Normal DMA
+mappings will need to use TLBI_EL2 commands instead of TLBI_NH, but
+shouldn't be otherwise affected by this change.
 
 Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 ---
- drivers/iommu/arm-smmu-v3.c | 83 +++++++++++++++++++++++++++++--------
- 1 file changed, 66 insertions(+), 17 deletions(-)
+ drivers/iommu/arm-smmu-v3.c | 31 ++++++++++++++++++++++++++-----
+ 1 file changed, 26 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index fb3116045df0f..aad49d565c592 100644
+index aad49d565c592..3a70d032d4e71 100644
 --- a/drivers/iommu/arm-smmu-v3.c
 +++ b/drivers/iommu/arm-smmu-v3.c
-@@ -730,6 +730,7 @@ struct arm_smmu_option_prop {
- };
+@@ -13,6 +13,7 @@
+ #include <linux/acpi_iort.h>
+ #include <linux/bitfield.h>
+ #include <linux/bitops.h>
++#include <linux/cpufeature.h>
+ #include <linux/crash_dump.h>
+ #include <linux/delay.h>
+ #include <linux/dma-iommu.h>
+@@ -480,6 +481,8 @@ struct arm_smmu_cmdq_ent {
+ 		#define CMDQ_OP_TLBI_NH_ASID	0x11
+ 		#define CMDQ_OP_TLBI_NH_VA	0x12
+ 		#define CMDQ_OP_TLBI_EL2_ALL	0x20
++		#define CMDQ_OP_TLBI_EL2_ASID	0x21
++		#define CMDQ_OP_TLBI_EL2_VA	0x22
+ 		#define CMDQ_OP_TLBI_S12_VMALL	0x28
+ 		#define CMDQ_OP_TLBI_S2_IPA	0x2a
+ 		#define CMDQ_OP_TLBI_NSNH_ALL	0x30
+@@ -651,6 +654,7 @@ struct arm_smmu_device {
+ #define ARM_SMMU_FEAT_STALL_FORCE	(1 << 13)
+ #define ARM_SMMU_FEAT_VAX		(1 << 14)
+ #define ARM_SMMU_FEAT_RANGE_INV		(1 << 15)
++#define ARM_SMMU_FEAT_E2H		(1 << 16)
+ 	u32				features;
  
- static DEFINE_XARRAY_ALLOC1(asid_xa);
-+static DEFINE_SPINLOCK(contexts_lock);
- 
- static struct arm_smmu_option_prop arm_smmu_options[] = {
- 	{ ARM_SMMU_OPT_SKIP_PREFETCH, "hisilicon,broken-prefetch-cmd" },
-@@ -1534,6 +1535,17 @@ static int arm_smmu_cmdq_batch_submit(struct arm_smmu_device *smmu,
- }
- 
- /* Context descriptor manipulation functions */
-+static void arm_smmu_tlb_inv_asid(struct arm_smmu_device *smmu, u16 asid)
-+{
-+	struct arm_smmu_cmdq_ent cmd = {
-+		.opcode = CMDQ_OP_TLBI_NH_ASID,
-+		.tlbi.asid = asid,
-+	};
-+
-+	arm_smmu_cmdq_issue_cmd(smmu, &cmd);
-+	arm_smmu_cmdq_issue_sync(smmu);
-+}
-+
- static void arm_smmu_sync_cd(struct arm_smmu_domain *smmu_domain,
- 			     int ssid, bool leaf)
+ #define ARM_SMMU_OPT_SKIP_PREFETCH	(1 << 0)
+@@ -924,6 +928,8 @@ static int arm_smmu_cmdq_build_cmd(u64 *cmd, struct arm_smmu_cmdq_ent *ent)
+ 		cmd[0] |= FIELD_PREP(CMDQ_TLBI_0_NUM, ent->tlbi.num);
+ 		cmd[0] |= FIELD_PREP(CMDQ_TLBI_0_SCALE, ent->tlbi.scale);
+ 		cmd[0] |= FIELD_PREP(CMDQ_TLBI_0_VMID, ent->tlbi.vmid);
++		/* Fallthrough */
++	case CMDQ_OP_TLBI_EL2_VA:
+ 		cmd[0] |= FIELD_PREP(CMDQ_TLBI_0_ASID, ent->tlbi.asid);
+ 		cmd[1] |= FIELD_PREP(CMDQ_TLBI_1_LEAF, ent->tlbi.leaf);
+ 		cmd[1] |= FIELD_PREP(CMDQ_TLBI_1_TTL, ent->tlbi.ttl);
+@@ -945,6 +951,9 @@ static int arm_smmu_cmdq_build_cmd(u64 *cmd, struct arm_smmu_cmdq_ent *ent)
+ 	case CMDQ_OP_TLBI_S12_VMALL:
+ 		cmd[0] |= FIELD_PREP(CMDQ_TLBI_0_VMID, ent->tlbi.vmid);
+ 		break;
++	case CMDQ_OP_TLBI_EL2_ASID:
++		cmd[0] |= FIELD_PREP(CMDQ_TLBI_0_ASID, ent->tlbi.asid);
++		break;
+ 	case CMDQ_OP_ATC_INV:
+ 		cmd[0] |= FIELD_PREP(CMDQ_0_SSV, ent->substream_valid);
+ 		cmd[0] |= FIELD_PREP(CMDQ_ATC_0_GLOBAL, ent->atc.global);
+@@ -1538,7 +1547,8 @@ static int arm_smmu_cmdq_batch_submit(struct arm_smmu_device *smmu,
+ static void arm_smmu_tlb_inv_asid(struct arm_smmu_device *smmu, u16 asid)
  {
-@@ -1568,7 +1580,7 @@ static int arm_smmu_alloc_cd_leaf_table(struct arm_smmu_device *smmu,
- 	size_t size = CTXDESC_L2_ENTRIES * (CTXDESC_CD_DWORDS << 3);
+ 	struct arm_smmu_cmdq_ent cmd = {
+-		.opcode = CMDQ_OP_TLBI_NH_ASID,
++		.opcode	= smmu->features & ARM_SMMU_FEAT_E2H ?
++			CMDQ_OP_TLBI_EL2_ASID : CMDQ_OP_TLBI_NH_ASID,
+ 		.tlbi.asid = asid,
+ 	};
  
- 	l1_desc->l2ptr = dmam_alloc_coherent(smmu->dev, size,
--					     &l1_desc->l2ptr_dma, GFP_KERNEL);
-+					     &l1_desc->l2ptr_dma, GFP_ATOMIC);
- 	if (!l1_desc->l2ptr) {
- 		dev_warn(smmu->dev,
- 			 "failed to allocate context descriptor table\n");
-@@ -1614,8 +1626,8 @@ static __le64 *arm_smmu_get_cd_ptr(struct arm_smmu_domain *smmu_domain,
- 	return l1_desc->l2ptr + idx * CTXDESC_CD_DWORDS;
- }
- 
--static int arm_smmu_write_ctx_desc(struct arm_smmu_domain *smmu_domain,
--				   int ssid, struct arm_smmu_ctx_desc *cd)
-+static int __arm_smmu_write_ctx_desc(struct arm_smmu_domain *smmu_domain,
-+				     int ssid, struct arm_smmu_ctx_desc *cd)
- {
- 	/*
- 	 * This function handles the following cases:
-@@ -1691,6 +1703,17 @@ static int arm_smmu_write_ctx_desc(struct arm_smmu_domain *smmu_domain,
- 	return 0;
- }
- 
-+static int arm_smmu_write_ctx_desc(struct arm_smmu_domain *smmu_domain,
-+				   int ssid, struct arm_smmu_ctx_desc *cd)
-+{
-+	int ret;
-+
-+	spin_lock(&contexts_lock);
-+	ret = __arm_smmu_write_ctx_desc(smmu_domain, ssid, cd);
-+	spin_unlock(&contexts_lock);
-+	return ret;
-+}
-+
- static int arm_smmu_alloc_cd_tables(struct arm_smmu_domain *smmu_domain)
- {
- 	int ret;
-@@ -1794,9 +1817,18 @@ static bool arm_smmu_free_asid(struct arm_smmu_ctx_desc *cd)
- 	return free;
- }
- 
-+/*
-+ * Try to reserve this ASID in the SMMU. If it is in use, try to steal it from
-+ * the private entry. Careful here, we may be modifying the context tables of
-+ * another SMMU!
-+ */
- static struct arm_smmu_ctx_desc *arm_smmu_share_asid(u16 asid)
- {
-+	int ret;
-+	u32 new_asid;
- 	struct arm_smmu_ctx_desc *cd;
-+	struct arm_smmu_device *smmu;
-+	struct arm_smmu_domain *smmu_domain;
- 
- 	cd = xa_load(&asid_xa, asid);
- 	if (!cd)
-@@ -1808,11 +1840,31 @@ static struct arm_smmu_ctx_desc *arm_smmu_share_asid(u16 asid)
- 		return cd;
+@@ -2088,13 +2098,16 @@ static void arm_smmu_write_strtab_ent(struct arm_smmu_master *master, u32 sid,
  	}
  
-+	smmu_domain = container_of(cd, struct arm_smmu_domain, s1_cfg.cd);
-+	smmu = smmu_domain->smmu;
+ 	if (s1_cfg) {
++		int strw = smmu->features & ARM_SMMU_FEAT_E2H ?
++			STRTAB_STE_1_STRW_EL2 : STRTAB_STE_1_STRW_NSEL1;
 +
-+	/*
-+	 * Race with unmap: TLB invalidations will start targeting the new ASID,
-+	 * which isn't assigned yet. We'll do an invalidate-all on the old ASID
-+	 * later, so it doesn't matter.
-+	 */
-+	ret = __xa_alloc(&asid_xa, &new_asid, cd,
-+			 XA_LIMIT(1, 1 << smmu->asid_bits), GFP_ATOMIC);
-+	if (ret)
-+		return ERR_PTR(-ENOSPC);
-+	cd->asid = new_asid;
-+
- 	/*
--	 * Ouch, ASID is already in use for a private cd.
--	 * TODO: seize it.
-+	 * Update ASID and invalidate CD in all associated masters. There will
-+	 * be some overlap between use of both ASIDs, until we invalidate the
-+	 * TLB.
- 	 */
--	return ERR_PTR(-EEXIST);
-+	arm_smmu_write_ctx_desc(smmu_domain, 0, cd);
-+
-+	/* Invalidate TLB entries previously associated with that context */
-+	arm_smmu_tlb_inv_asid(smmu, asid);
-+
-+	return NULL;
- }
+ 		BUG_ON(ste_live);
+ 		dst[1] = cpu_to_le64(
+ 			 FIELD_PREP(STRTAB_STE_1_S1DSS, STRTAB_STE_1_S1DSS_SSID0) |
+ 			 FIELD_PREP(STRTAB_STE_1_S1CIR, STRTAB_STE_1_S1C_CACHE_WBRA) |
+ 			 FIELD_PREP(STRTAB_STE_1_S1COR, STRTAB_STE_1_S1C_CACHE_WBRA) |
+ 			 FIELD_PREP(STRTAB_STE_1_S1CSH, ARM_SMMU_SH_ISH) |
+-			 FIELD_PREP(STRTAB_STE_1_STRW, STRTAB_STE_1_STRW_NSEL1));
++			 FIELD_PREP(STRTAB_STE_1_STRW, strw));
  
- __maybe_unused
-@@ -2402,15 +2454,6 @@ static void arm_smmu_tlb_inv_context(void *cookie)
- 	struct arm_smmu_device *smmu = smmu_domain->smmu;
- 	struct arm_smmu_cmdq_ent cmd;
+ 		if (smmu->features & ARM_SMMU_FEAT_STALLS &&
+ 		   !(smmu->features & ARM_SMMU_FEAT_STALL_FORCE))
+@@ -2490,7 +2503,8 @@ static void arm_smmu_tlb_inv_range(unsigned long iova, size_t size,
+ 		return;
  
--	if (smmu_domain->stage == ARM_SMMU_DOMAIN_S1) {
--		cmd.opcode	= CMDQ_OP_TLBI_NH_ASID;
--		cmd.tlbi.asid	= smmu_domain->s1_cfg.cd.asid;
--		cmd.tlbi.vmid	= 0;
--	} else {
--		cmd.opcode	= CMDQ_OP_TLBI_S12_VMALL;
--		cmd.tlbi.vmid	= smmu_domain->s2_cfg.vmid;
--	}
--
- 	/*
- 	 * NOTE: when io-pgtable is in non-strict mode, we may get here with
- 	 * PTEs previously cleared by unmaps on the current CPU not yet visible
-@@ -2418,8 +2461,14 @@ static void arm_smmu_tlb_inv_context(void *cookie)
- 	 * insertion to guarantee those are observed before the TLBI. Do be
- 	 * careful, 007.
- 	 */
--	arm_smmu_cmdq_issue_cmd(smmu, &cmd);
--	arm_smmu_cmdq_issue_sync(smmu);
-+	if (smmu_domain->stage == ARM_SMMU_DOMAIN_S1) {
-+		arm_smmu_tlb_inv_asid(smmu, smmu_domain->s1_cfg.cd.asid);
-+	} else {
-+		cmd.opcode	= CMDQ_OP_TLBI_S12_VMALL;
-+		cmd.tlbi.vmid	= smmu_domain->s2_cfg.vmid;
-+		arm_smmu_cmdq_issue_cmd(smmu, &cmd);
-+		arm_smmu_cmdq_issue_sync(smmu);
+ 	if (smmu_domain->stage == ARM_SMMU_DOMAIN_S1) {
+-		cmd.opcode	= CMDQ_OP_TLBI_NH_VA;
++		cmd.opcode	= smmu->features & ARM_SMMU_FEAT_E2H ?
++				  CMDQ_OP_TLBI_EL2_VA : CMDQ_OP_TLBI_NH_VA;
+ 		cmd.tlbi.asid	= smmu_domain->s1_cfg.cd.asid;
+ 	} else {
+ 		cmd.opcode	= CMDQ_OP_TLBI_S2_IPA;
+@@ -3795,7 +3809,11 @@ static int arm_smmu_device_reset(struct arm_smmu_device *smmu, bool bypass)
+ 	writel_relaxed(reg, smmu->base + ARM_SMMU_CR1);
+ 
+ 	/* CR2 (random crap) */
+-	reg = CR2_PTM | CR2_RECINVSID | CR2_E2H;
++	reg = CR2_PTM | CR2_RECINVSID;
++
++	if (smmu->features & ARM_SMMU_FEAT_E2H)
++		reg |= CR2_E2H;
++
+ 	writel_relaxed(reg, smmu->base + ARM_SMMU_CR2);
+ 
+ 	/* Stream table */
+@@ -3953,8 +3971,11 @@ static int arm_smmu_device_hw_probe(struct arm_smmu_device *smmu)
+ 	if (reg & IDR0_MSI)
+ 		smmu->features |= ARM_SMMU_FEAT_MSI;
+ 
+-	if (reg & IDR0_HYP)
++	if (reg & IDR0_HYP) {
+ 		smmu->features |= ARM_SMMU_FEAT_HYP;
++		if (cpus_have_cap(ARM64_HAS_VIRT_HOST_EXTN))
++			smmu->features |= ARM_SMMU_FEAT_E2H;
 +	}
- 	arm_smmu_atc_inv_domain(smmu_domain, 0, 0, 0);
- }
  
+ 	/*
+ 	 * The coherency feature as set by FW is used in preference to the ID
 -- 
 2.26.2
 
