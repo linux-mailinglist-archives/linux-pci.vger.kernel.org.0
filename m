@@ -2,77 +2,136 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C03DB1C0865
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Apr 2020 22:42:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2EF951C08AD
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Apr 2020 23:00:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbgD3Umk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Apr 2020 16:42:40 -0400
-Received: from mga07.intel.com ([134.134.136.100]:37583 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726781AbgD3Umk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 30 Apr 2020 16:42:40 -0400
-IronPort-SDR: jc3f9hQSxmtWTGFYGabgq8aogU3kmbIwgonV+5kAicTwQ+zA0LIdt7xs37MziU3kMsprGiQs1B
- uVCG7vQ0Ok8A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2020 13:42:39 -0700
-IronPort-SDR: M6oqOMPzyFoVqddYs7RXgFErbffJCDivKopljAfdVamHixYraY4H4gkBAqaneuwRMIgM/plR4C
- XjTmGyPtMWrw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,337,1583222400"; 
-   d="scan'208";a="433100232"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga005.jf.intel.com with ESMTP; 30 Apr 2020 13:42:39 -0700
-Date:   Thu, 30 Apr 2020 13:48:42 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, joro@8bytes.org, catalin.marinas@arm.com,
-        will@kernel.org, robin.murphy@arm.com, kevin.tian@intel.com,
-        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
-        christian.koenig@amd.com, felix.kuehling@amd.com,
-        zhangfei.gao@linaro.org, jgg@ziepe.ca, xuzaibo@huawei.com,
-        fenghua.yu@intel.com, hch@infradead.org,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v6 02/25] iommu/ioasid: Add ioasid references
-Message-ID: <20200430134842.74e596b8@jacob-builder>
-In-Reply-To: <20200430113931.0fbf7a37@jacob-builder>
-References: <20200430143424.2787566-1-jean-philippe@linaro.org>
-        <20200430143424.2787566-3-jean-philippe@linaro.org>
-        <20200430113931.0fbf7a37@jacob-builder>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        id S1726381AbgD3VAv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Apr 2020 17:00:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37926 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726333AbgD3VAu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Apr 2020 17:00:50 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E686C035494
+        for <linux-pci@vger.kernel.org>; Thu, 30 Apr 2020 14:00:50 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id e16so3852233wra.7
+        for <linux-pci@vger.kernel.org>; Thu, 30 Apr 2020 14:00:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tUATwzpZxjtae1A7cwapMNJ5haJlC5HtdIYeEo2bhyI=;
+        b=HdcxtBBTqr/xUzKOPsewGq+KhFdgf5wvseNGI2ZEIOXDWE46bkbjUocRTAcZ2uNLHp
+         nForatMzsdPs8+L0IrFQikDJm2msJs+d9Tzz4+5/fMT652hPt+HIxLSJ02HdCHigVrN/
+         9SAhr5CAesG8XtrGURdnaEgujEBNdBceBnfew=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tUATwzpZxjtae1A7cwapMNJ5haJlC5HtdIYeEo2bhyI=;
+        b=HJc12hbsRDVsbNnRrqMx/g2PHwCo0mXItVCADJgNh3zNr/KuvaVv4Djl6PS12/IecL
+         it/Ny8QOgByZw+l5mIHAiUPC2S7ECkQ8cWr6fQpniUCdZcGFxqB2DJ8/4gsfv+ywIop4
+         oRyk3Z0gf6zuHAr9PgT8aCnVDRjC6GWMNskZx4XqI1HsM7w5CO5RZHdKRvtLFN8ODJqO
+         j3ONFXlCBdkNk8fQXOKCCgdVH9A5cBqvma8+FuJTPD70lIdVPfi7gLbssnJasqVN6sj7
+         xtVyZLPa5/pBbcLFsFa715gwoIt/MT+n6m1WAZf6cgX+aECkKd1zIbfoH2aNKe6yUMx2
+         QRMA==
+X-Gm-Message-State: AGi0PuaSW9v+7sXXJJ0sjihQg/jhTHzZV1/ndOWAsBbQmbPxvIqibxz8
+        CS+NCmMOVsvAFD2GJfwNktSBZsx0dgivQXvyjqUUTw==
+X-Google-Smtp-Source: APiQypKv2reBsz0zsRnGDK76QZ4WHS1pIYRkKF7BUdppHJAInOIMuK9/LUue0hxUkkq3QrQxmOz7Y/HtoRhuAgd7rtY=
+X-Received: by 2002:adf:f1c5:: with SMTP id z5mr504368wro.100.1588280448870;
+ Thu, 30 Apr 2020 14:00:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200430185522.4116-3-james.quinlan@broadcom.com> <20200430203252.GA62266@bjorn-Precision-5520>
+In-Reply-To: <20200430203252.GA62266@bjorn-Precision-5520>
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+Date:   Thu, 30 Apr 2020 17:00:36 -0400
+Message-ID: <CA+-6iNwnMjAYZzYedBqooeJAbot_5A=9C8iFNMc=vdpnzmzVrw@mail.gmail.com>
+Subject: Re: [PATCH 3/5] PCI: brcmstb: enable CRS
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 30 Apr 2020 11:39:31 -0700
-Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
+On Thu, Apr 30, 2020 at 4:32 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Thu, Apr 30, 2020 at 02:55:20PM -0400, Jim Quinlan wrote:
+> > From: Jim Quinlan <jquinlan@broadcom.com>
+> >
+> > Configuration Retry Request Status is off by default on this
+> > PCIe controller.  Turn it on.
+>
+> Are you talking about CRS itself, i.e., the ability of a Root Port to
+> deal with Completions with Configuration Retry Request Status?  That
+> really shouldn't be switchable in the hardware since it's a required
+> feature for all PCIe devices.
+>
+> Or are you talking about CRS Software Visibility, which is controlled
+> by a bit in the PCIe Root Control register?  That *should* be managed
+> by the PCI core in pci_enable_crs().  Does that generic method of
+> controlling it not work for this device?
+>
+My mistake; the commit will be dropped.
 
-> > -void ioasid_free(ioasid_t ioasid)
-> > +bool ioasid_free(ioasid_t ioasid)
-> >  {
-Sorry I missed this in the last reply.
-
-I think free needs to be unconditional since there is not a good way to
-fail it.
-
-Also can we have more symmetric APIs, seems we don't have ioasid_put()
-in this patchset.
-How about?
-ioasid_alloc()
-ioasid_free(); //drop reference, mark inactive, but not reclaimed if
-		refcount is not zero.
-ioasid_get() // returns err if the ioasid is marked inactive by
-		ioasid_free()
-ioasid_put();// drop reference, reclaim if refcount is 0.
-
-It is similar to get/put/alloc/free pids.
-
-
+Thanks,
+Jim
+> It looks like maybe the latter, since the generic:
+>
+>   #define  PCI_EXP_RTCTL_CRSSVE   0x0010
+>
+> matches your new PCIE_RC_CFG_PCIE_ROOT_CAP_CONTROL_RC_CRS_EN_MASK.
+>
+> If pci_enable_crs() doesn't work on this device, it sounds like a
+> hardware defect that we need to work around, but I'm not sure that
+> just enabling it unconditionally here is the right thing.
+>
+> > Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
+> > ---
+> >  drivers/pci/controller/pcie-brcmstb.c | 9 +++++++++
+> >  1 file changed, 9 insertions(+)
+> >
+> > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+> > index 5b0dec5971b8..2bc913c0262c 100644
+> > --- a/drivers/pci/controller/pcie-brcmstb.c
+> > +++ b/drivers/pci/controller/pcie-brcmstb.c
+> > @@ -34,6 +34,9 @@
+> >  #define BRCM_PCIE_CAP_REGS                           0x00ac
+> >
+> >  /* Broadcom STB PCIe Register Offsets */
+> > +#define PCIE_RC_CFG_PCIE_ROOT_CAP_CONTROL                    0x00c8
+> > +#define  PCIE_RC_CFG_PCIE_ROOT_CAP_CONTROL_RC_CRS_EN_MASK    0x10
+> > +
+> >  #define PCIE_RC_CFG_VENDOR_VENDOR_SPECIFIC_REG1                              0x0188
+> >  #define  PCIE_RC_CFG_VENDOR_VENDOR_SPECIFIC_REG1_ENDIAN_MODE_BAR2_MASK       0xc
+> >  #define  PCIE_RC_CFG_VENDOR_SPCIFIC_REG1_LITTLE_ENDIAN                       0x0
+> > @@ -827,6 +830,12 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+> >                pci_speed_string(pcie_link_speed[cls]), nlw,
+> >                ssc_good ? "(SSC)" : "(!SSC)");
+> >
+> > +     /* Enable configuration request retry (CRS) */
+> > +     tmp = readl(base + PCIE_RC_CFG_PCIE_ROOT_CAP_CONTROL);
+> > +     u32p_replace_bits(&tmp, 1,
+> > +                       PCIE_RC_CFG_PCIE_ROOT_CAP_CONTROL_RC_CRS_EN_MASK);
+> > +     writel(tmp, base + PCIE_RC_CFG_PCIE_ROOT_CAP_CONTROL);
+> > +
+> >       /* PCIe->SCB endian mode for BAR */
+> >       tmp = readl(base + PCIE_RC_CFG_VENDOR_VENDOR_SPECIFIC_REG1);
+> >       u32p_replace_bits(&tmp, PCIE_RC_CFG_VENDOR_SPCIFIC_REG1_LITTLE_ENDIAN,
+> > --
+> > 2.17.1
+> >
