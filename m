@@ -2,119 +2,202 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 28B2D1C084C
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Apr 2020 22:40:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C65C51C0857
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Apr 2020 22:41:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbgD3UkV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Apr 2020 16:40:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51592 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726338AbgD3UkU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 30 Apr 2020 16:40:20 -0400
-Received: from localhost (mobile-166-175-184-168.mycingular.net [166.175.184.168])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BFEF206C0;
-        Thu, 30 Apr 2020 20:40:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588279219;
-        bh=5Snw5Ucaj8rYXrTv7rmk42pJX+ytZh64Y19B+5t8ZUU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=QQEcW57aBZptdf4jpOft/n3IKmo0zDugFzHwKTWq/Y2GcQ7r1C23c5kd2fISfvG+M
-         HkGzyX5fzulrTCYiTUXYSwvpM/24r4Sq7SBY9lt0Atc1ZQSDUtNVdk1hQnUJbwkYPK
-         ND3uH56xSkxeZT0Bch/NYTzZtMkCULqOh0dOlS4I=
-Date:   Thu, 30 Apr 2020 15:40:17 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jim Quinlan <james.quinlan@broadcom.com>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 5/5] PCI: brcmstb: disable L0s component of ASPM by
- default
-Message-ID: <20200430204017.GA62947@bjorn-Precision-5520>
+        id S1726784AbgD3Uln convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Thu, 30 Apr 2020 16:41:43 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:60299 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727995AbgD3Ulm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Apr 2020 16:41:42 -0400
+Received: from 1.general.jvosburgh.us.vpn ([10.172.68.206] helo=famine.localdomain)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <jay.vosburgh@canonical.com>)
+        id 1jUG03-0005x7-DF; Thu, 30 Apr 2020 20:41:39 +0000
+Received: by famine.localdomain (Postfix, from userid 1000)
+        id B0CD8630E4; Thu, 30 Apr 2020 13:41:37 -0700 (PDT)
+Received: from famine (localhost [127.0.0.1])
+        by famine.localdomain (Postfix) with ESMTP id A612DAC1DB;
+        Thu, 30 Apr 2020 13:41:37 -0700 (PDT)
+From:   Jay Vosburgh <jay.vosburgh@canonical.com>
+To:     "Kuppuswamy\, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH] PCI/ERR: Resolve regression in pcie_do_recovery
+In-reply-to: <d72b2b0c-6842-3d76-5b13-2fbb3d25d73f@linux.intel.com>
+References: <12115.1588207324@famine> <18897ceb-2263-1101-ae43-918a66794e14@linux.intel.com> <d72b2b0c-6842-3d76-5b13-2fbb3d25d73f@linux.intel.com>
+Comments: In-reply-to "Kuppuswamy, Sathyanarayanan" <sathyanarayanan.kuppuswamy@linux.intel.com>
+   message dated "Thu, 30 Apr 2020 12:35:37 -0700."
+X-Mailer: MH-E 8.6+git; nmh 1.6; GNU Emacs 27.0.50
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200430185522.4116-5-james.quinlan@broadcom.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Date:   Thu, 30 Apr 2020 13:41:37 -0700
+Message-ID: <14682.1588279297@famine>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 02:55:22PM -0400, Jim Quinlan wrote:
-> From: Jim Quinlan <jquinlan@broadcom.com>
-> 
-> Some informal internal experiments has shown that the BrcmSTB ASPM L0s
-> savings may introduce an undesirable noise signal on some customers'
-> boards.  In addition, L0s was found lacking in realized power savings,
-> especially relative to the L1 ASPM component.  This is BrcmSTB's
-> experience and may not hold for others.  At any rate, we disable L0s
-> savings by default unless the DT node has the 'brcm,aspm-en-l0s'
-> property.
+"Kuppuswamy, Sathyanarayanan" wrote:
 
-I assume this works by writing the PCIe Link Capabilities register,
-which is read-only via the config space path used by the generic ASPM
-code, so that code thinks the device doesn't support L0s at all.
+>Hi Jay,
+>
+>On 4/29/20 6:15 PM, Kuppuswamy, Sathyanarayanan wrote:
+>>
+>>
+>> On 4/29/20 5:42 PM, Jay Vosburgh wrote:
+>>>     Commit 6d2c89441571 ("PCI/ERR: Update error status after
+>>> reset_link()"), introduced a regression, as pcie_do_recovery will
+>>> discard the status result from report_frozen_detected.  This can cause a
+>>> failure to recover if _NEED_RESET is returned by report_frozen_detected
+>>> and report_slot_reset is not invoked.
+>>>
+>>>     Such an event can be induced for testing purposes by reducing
+>>> the Max_Payload_Size of a PCIe bridge to less than that of a device
+>>> downstream from the bridge, and then initating I/O through the device,
+>>> resulting in oversize transactions.  In the presence of DPC, this
+>>> results in a containment event and attempted reset and recovery via
+>>> pcie_do_recovery.  After 6d2c89441571 report_slot_reset is not invoked,
+>>> and the device does not recover.
+>>
+>> I think this issue is related to the issue discussed in following
+>> thread (DPC non-hotplug support).
+>>
+>> https://lkml.org/lkml/2020/3/28/328
+>>
+>> If my assumption is correct, you are dealing with devices which are
+>> not hotplug capable. If the devices are hotplug capable then you don't
+>> need to proceed to report_slot_reset(), since hotplug handler will
+>> remove/re-enumerate the devices correctly.
 
-Documentation/devicetree/bindings/pci/rockchip-pcie-host.txt includes
-an "aspm-no-l0s" property.  It'd be nice if this could use the same
-property.
+	Correct, this particular device (a network card) is in a
+non-hotplug slot.
 
-> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
-> ---
->  drivers/pci/controller/pcie-brcmstb.c | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> index 2bc913c0262c..bc1d514b19e4 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -44,6 +44,9 @@
->  #define PCIE_RC_CFG_PRIV1_ID_VAL3			0x043c
->  #define  PCIE_RC_CFG_PRIV1_ID_VAL3_CLASS_CODE_MASK	0xffffff
->  
-> +#define PCIE_RC_CFG_PRIV1_LINK_CAPABILITY			0x04dc
-> +#define  PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK	0xc00
-> +
->  #define PCIE_RC_DL_MDIO_ADDR				0x1100
->  #define PCIE_RC_DL_MDIO_WR_DATA				0x1104
->  #define PCIE_RC_DL_MDIO_RD_DATA				0x1108
-> @@ -696,7 +699,7 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
->  	int num_out_wins = 0;
->  	u16 nlw, cls, lnksta;
->  	int i, ret;
-> -	u32 tmp;
-> +	u32 tmp, aspm_support;
->  
->  	/* Reset the bridge */
->  	brcm_pcie_bridge_sw_init_set(pcie, 1);
-> @@ -806,6 +809,15 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
->  		num_out_wins++;
->  	}
->  
-> +	/* Only support ASPM L1 unless L0s is explicitly desired */
-> +	aspm_support = PCIE_LINK_STATE_L1;
-> +	if (of_property_read_bool(pcie->np, "brcm,aspm-en-l0s"))
-> +		aspm_support |= PCIE_LINK_STATE_L0S;
-> +	tmp = readl(base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
-> +	u32p_replace_bits(&tmp, aspm_support,
-> +		PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK);
-> +	writel(tmp, base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
-> +
->  	/*
->  	 * For config space accesses on the RC, show the right class for
->  	 * a PCIe-PCIe bridge (the default setting is to be EP mode).
-> -- 
-> 2.17.1
-> 
+>Can you check whether following fix works for you?
+
+	Yes, it does.
+
+	I fixed up the whitespace and made a minor change to add braces
+in what look like the correct places around the "if (reset_link)" block;
+the patch I tested with is below.  I'll also install this on another
+machine with hotplug capable slots to test there as well.
+
+diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+index 14bb8f54723e..db80e1ecb2dc 100644
+--- a/drivers/pci/pcie/err.c
++++ b/drivers/pci/pcie/err.c
+@@ -165,13 +165,24 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+ 	pci_dbg(dev, "broadcast error_detected message\n");
+ 	if (state == pci_channel_io_frozen) {
+ 		pci_walk_bus(bus, report_frozen_detected, &status);
+-		status = reset_link(dev);
+-		if (status != PCI_ERS_RESULT_RECOVERED) {
++		status = PCI_ERS_RESULT_NEED_RESET;
++	} else {
++		pci_walk_bus(bus, report_normal_detected, &status);
++	}
++
++	if (status == PCI_ERS_RESULT_NEED_RESET) {
++		if (reset_link) {
++			if (reset_link(dev) != PCI_ERS_RESULT_RECOVERED)
++				status = PCI_ERS_RESULT_DISCONNECT;
++		} else {
++			if (pci_bus_error_reset(dev))
++				status = PCI_ERS_RESULT_DISCONNECT;
++		}
++
++		if (status == PCI_ERS_RESULT_DISCONNECT) {
+ 			pci_warn(dev, "link reset failed\n");
+ 			goto failed;
+ 		}
+-	} else {
+-		pci_walk_bus(bus, report_normal_detected, &status);
+ 	}
+ 
+ 	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
+
+
+	-J
+
+>This includes support for bus_reset in recovery function itself.
+>
+>index 14bb8f54723e..c9eaab68ab7a 100644
+>--- a/drivers/pci/pcie/err.c
+>+++ b/drivers/pci/pcie/err.c
+>@@ -165,13 +165,23 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>        pci_dbg(dev, "broadcast error_detected message\n");
+>        if (state == pci_channel_io_frozen) {
+>        if (state == pci_channel_io_frozen) {
+>                pci_walk_bus(bus, report_frozen_detected, &status);
+>-               status = reset_link(dev);
+>-               if (status != PCI_ERS_RESULT_RECOVERED) {
+>+               status = PCI_ERS_RESULT_NEED_RESET;
+>+       } else {
+>+               pci_walk_bus(bus, report_normal_detected, &status);
+>+       }
+>+
+>+       if (status == PCI_ERS_RESULT_NEED_RESET) {
+>+               if (reset_link)
+>+                       if (reset_link(dev) != PCI_ERS_RESULT_RECOVERED)
+>+                               status = PCI_ERS_RESULT_DISCONNECT;
+>+               else
+>+                       if (pci_bus_error_reset(dev))
+>+                               status = PCI_ERS_RESULT_DISCONNECT;
+>+
+>+               if (status == PCI_ERS_RESULT_DISCONNECT) {
+>                        pci_warn(dev, "link reset failed\n");
+>                        goto failed;
+>                }
+>-       } else {
+>-               pci_walk_bus(bus, report_normal_detected, &status);
+>        }
+>
+>        if (status == PCI_ERS_RESULT_CAN_RECOVER) {
+>
+>
+>>
+>>>
+>>>     Inspection shows a similar path is plausible for a return of
+>>> _CAN_RECOVER and the invocation of report_mmio_enabled.
+>>>
+>>>     Resolve this by preserving the result of report_frozen_detected if
+>>> reset_link does not return _DISCONNECT.
+>>>
+>>> Fixes: 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
+>>> Signed-off-by: Jay Vosburgh <jay.vosburgh@canonical.com>
+>>>
+>>> ---
+>>>   drivers/pci/pcie/err.c | 11 +++++++++--
+>>>   1 file changed, 9 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+>>> index 14bb8f54723e..e4274562f3a0 100644
+>>> --- a/drivers/pci/pcie/err.c
+>>> +++ b/drivers/pci/pcie/err.c
+>>> @@ -164,10 +164,17 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev
+>>> *dev,
+>>>       pci_dbg(dev, "broadcast error_detected message\n");
+>>>       if (state == pci_channel_io_frozen) {
+>>> +        pci_ers_result_t status2;
+>>> +
+>>>           pci_walk_bus(bus, report_frozen_detected, &status);
+>>> -        status = reset_link(dev);
+>>> -        if (status != PCI_ERS_RESULT_RECOVERED) {
+>>> +        /* preserve status from report_frozen_detected to
+>>> +         * insure report_mmio_enabled or report_slot_reset are
+>>> +         * invoked even if reset_link returns _RECOVERED.
+>>> +         */
+>>> +        status2 = reset_link(dev);
+>>> +        if (status2 != PCI_ERS_RESULT_RECOVERED) {
+>>>               pci_warn(dev, "link reset failed\n");
+>>> +            status = status2;
+>>>               goto failed;
+>>>           }
+>>>       } else {
+>>>
+
+---
+	-Jay Vosburgh, jay.vosburgh@canonical.com
