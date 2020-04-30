@@ -2,110 +2,148 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 18A0A1C0580
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Apr 2020 21:01:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5ABC41C0592
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Apr 2020 21:05:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726576AbgD3TA4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Apr 2020 15:00:56 -0400
-Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:56082 "EHLO
-        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726394AbgD3TAx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Apr 2020 15:00:53 -0400
-Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
-        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 2CEAF30C0DD;
-        Thu, 30 Apr 2020 11:55:37 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 2CEAF30C0DD
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-        s=dkimrelay; t=1588272937;
-        bh=ylIXocpd50xPvJDeooynJqHkCEpEjQNa8MnFbymEkrw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ILWUrCGny0s+V5Z0R/lKy9Lb9sn7PQRO5a1jKab/t/4PFprIjldWJCmGU27wcZsil
-         Uxah+DtW3KpEVB3bo704Hx5gHImRDtGtLr0P1s6OdmjrJ4PPrrtccd/hwYD1Hh/F9p
-         /m3FlF/N03GONkKPr/UU+mulNUwdw7f2t/BTLYKQ=
-Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
-        by mail-irv-17.broadcom.com (Postfix) with ESMTP id C626B140069;
-        Thu, 30 Apr 2020 11:55:43 -0700 (PDT)
-From:   Jim Quinlan <james.quinlan@broadcom.com>
-To:     james.quinlan@broadcom.com
-Cc:     Jim Quinlan <james.quinlan@broadcom.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        id S1726285AbgD3TFo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Apr 2020 15:05:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47968 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbgD3TFn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Apr 2020 15:05:43 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30C1CC035494;
+        Thu, 30 Apr 2020 12:05:42 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id gr25so5572166ejb.10;
+        Thu, 30 Apr 2020 12:05:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ld/gdFjARhfLusTYI0vPBQKLY9H7gZVupXIIJMrOkwQ=;
+        b=BiRjcdwH4zief+jxDHQ2jApHvKDIWl0KBaPAKmkOGLn0JzhlSYo+vSnxf9+Hgfv/I6
+         ygdQXt/A/so69mzh3KDYILrTR6SbGWlHma/fryMMqdRHB3oqKvXiDpJ6G8BpodNF/jSO
+         Uj45+I3PYgE4k+yv7F1ZLCE3kY93UWUwgVlZIVr7MyPd3gANg1BJi8sSGaQn+swQqnSy
+         qodh109HIfxmU0cgNvB3YdkKraW+3nH560bXaxdHfoMH+1pmtq7xS7JhVF3j6ZjVY7UZ
+         Xbva5pb09lzdv7lShIYqD3gcJs2rIKdi30WNNYeXYYvCHMYK2tXOZsPttNpeqFRqWxbu
+         DuhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=ld/gdFjARhfLusTYI0vPBQKLY9H7gZVupXIIJMrOkwQ=;
+        b=VV6K5NjD5bHymE8T0epzSjpabqonbXT8qotnHrlepO1X/mKfR6NBWuCyY9sDbIbVb9
+         kO674THSqsE+/HGvAce33ZWwMZiDtrLY8xNQ2OfANr1jC6hU4st4R92ba6SwvdtPhMKg
+         VtZTCd0//GJWrhe9hfQLZ+klM2dQ/28mkAl5VAban3y5tloRGlC9tS0B9LsKDtDMfe5A
+         4sQ0aBQ3PseEBP1qaq4riaxZNOxMgsstOWDCjvJnqXDH/pQwYzzJ/znuETiFOuaGwxu9
+         szjl8SN8hdK3B+MPdT+lwxZh5CN4kFaSLYYJ6l+WY3Rw6XtKML/0cIbboQb5fIUltvEG
+         JWgg==
+X-Gm-Message-State: AGi0Pub2YbSBd+78N9vvIfZIHeEtzu2uvcH9jLFDGgxofaPweM+vYfbQ
+        4rJiffmizSVRZG4nNMMwPyNkJiT8
+X-Google-Smtp-Source: APiQypJZRhd5JGOza3T5v++/2CxAGEGJ9ncthDR01Yyrf1OfNvRB4S5x9kAchHmqe74urxXLG4nutg==
+X-Received: by 2002:a17:906:16ca:: with SMTP id t10mr4311236ejd.122.1588273540466;
+        Thu, 30 Apr 2020 12:05:40 -0700 (PDT)
+Received: from [10.67.49.116] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id n26sm45949edo.36.2020.04.30.12.05.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Apr 2020 12:05:39 -0700 (PDT)
+Subject: Re: [PATCH 1/5] PCI: brcmstb: don't clk_put() a managed clock
+To:     Jim Quinlan <james.quinlan@broadcom.com>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM BCM7XXX ARM
-        ARCHITECTURE),
-        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-pci@vger.kernel.org (open list:PCI NATIVE HOST BRIDGE AND
-        ENDPOINT DRIVERS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 5/5] PCI: brcmstb: disable L0s component of ASPM by default
-Date:   Thu, 30 Apr 2020 14:55:22 -0400
-Message-Id: <20200430185522.4116-5-james.quinlan@broadcom.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200430185522.4116-1-james.quinlan@broadcom.com>
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
 References: <20200430185522.4116-1-james.quinlan@broadcom.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
+Message-ID: <3d9783f8-0d66-d496-c8ca-cb7ab8edc85e@gmail.com>
+Date:   Thu, 30 Apr 2020 12:05:35 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200430185522.4116-1-james.quinlan@broadcom.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Jim Quinlan <jquinlan@broadcom.com>
+On 4/30/20 11:55 AM, Jim Quinlan wrote:
+> From: Jim Quinlan <jquinlan@broadcom.com>
+> 
+> clk_put() was being invoked on a clock obtained by
+> devm_clk_get_optional().
+> 
+> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
 
-Some informal internal experiments has shown that the BrcmSTB ASPM L0s
-savings may introduce an undesirable noise signal on some customers'
-boards.  In addition, L0s was found lacking in realized power savings,
-especially relative to the L1 ASPM component.  This is BrcmSTB's
-experience and may not hold for others.  At any rate, we disable L0s
-savings by default unless the DT node has the 'brcm,aspm-en-l0s'
-property.
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 
-Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
----
- drivers/pci/controller/pcie-brcmstb.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index 2bc913c0262c..bc1d514b19e4 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -44,6 +44,9 @@
- #define PCIE_RC_CFG_PRIV1_ID_VAL3			0x043c
- #define  PCIE_RC_CFG_PRIV1_ID_VAL3_CLASS_CODE_MASK	0xffffff
- 
-+#define PCIE_RC_CFG_PRIV1_LINK_CAPABILITY			0x04dc
-+#define  PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK	0xc00
-+
- #define PCIE_RC_DL_MDIO_ADDR				0x1100
- #define PCIE_RC_DL_MDIO_WR_DATA				0x1104
- #define PCIE_RC_DL_MDIO_RD_DATA				0x1108
-@@ -696,7 +699,7 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
- 	int num_out_wins = 0;
- 	u16 nlw, cls, lnksta;
- 	int i, ret;
--	u32 tmp;
-+	u32 tmp, aspm_support;
- 
- 	/* Reset the bridge */
- 	brcm_pcie_bridge_sw_init_set(pcie, 1);
-@@ -806,6 +809,15 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
- 		num_out_wins++;
- 	}
- 
-+	/* Only support ASPM L1 unless L0s is explicitly desired */
-+	aspm_support = PCIE_LINK_STATE_L1;
-+	if (of_property_read_bool(pcie->np, "brcm,aspm-en-l0s"))
-+		aspm_support |= PCIE_LINK_STATE_L0S;
-+	tmp = readl(base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
-+	u32p_replace_bits(&tmp, aspm_support,
-+		PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK);
-+	writel(tmp, base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
-+
- 	/*
- 	 * For config space accesses on the RC, show the right class for
- 	 * a PCIe-PCIe bridge (the default setting is to be EP mode).
+Fixes: c0452137034b ("PCI: brcmstb: Add Broadcom STB PCIe host
+controller driver")
 -- 
-2.17.1
-
+Florian
