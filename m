@@ -2,58 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5ABC41C0592
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Apr 2020 21:05:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E5A891C05AB
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Apr 2020 21:07:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726285AbgD3TFo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Apr 2020 15:05:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47968 "EHLO
+        id S1726355AbgD3THo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Apr 2020 15:07:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbgD3TFn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Apr 2020 15:05:43 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30C1CC035494;
-        Thu, 30 Apr 2020 12:05:42 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id gr25so5572166ejb.10;
-        Thu, 30 Apr 2020 12:05:42 -0700 (PDT)
+        with ESMTP id S1726272AbgD3THo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Apr 2020 15:07:44 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76769C035494;
+        Thu, 30 Apr 2020 12:07:43 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id k8so5610300ejv.3;
+        Thu, 30 Apr 2020 12:07:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ld/gdFjARhfLusTYI0vPBQKLY9H7gZVupXIIJMrOkwQ=;
-        b=BiRjcdwH4zief+jxDHQ2jApHvKDIWl0KBaPAKmkOGLn0JzhlSYo+vSnxf9+Hgfv/I6
-         ygdQXt/A/so69mzh3KDYILrTR6SbGWlHma/fryMMqdRHB3oqKvXiDpJ6G8BpodNF/jSO
-         Uj45+I3PYgE4k+yv7F1ZLCE3kY93UWUwgVlZIVr7MyPd3gANg1BJi8sSGaQn+swQqnSy
-         qodh109HIfxmU0cgNvB3YdkKraW+3nH560bXaxdHfoMH+1pmtq7xS7JhVF3j6ZjVY7UZ
-         Xbva5pb09lzdv7lShIYqD3gcJs2rIKdi30WNNYeXYYvCHMYK2tXOZsPttNpeqFRqWxbu
-         DuhA==
+        bh=2I9WSRYJXQAn4kQfh/qmcd3zQeXfMItE/lNnVqUCZLw=;
+        b=K0HsiBNEuI+Euy7M1MJcpUOunSvbgAK8XdykmIozN4ERQNtbiy3bt79vmlR0lUHnZY
+         ejhnp+Ay9TC/1RNk0/aMyoa6QwmxbHeTqgCB1h1snRsL5gkRmMXYIsbGbV9HjKUtQJ0E
+         RgDB3eNRRTPXWqNaHUYuXv4DGxtrNq+q6k+WDStgwa71n5xYgjy4MQ7+vp+JFDU9uZ1L
+         mlDtCSvr3Gw4fG3h9MOdApMVLl/pcn/Nb14uJzDwwrtgdB3mCIsCeBKDATjTbKKAmgqx
+         30vVM3XgqlFjZRGd7ydF3jEjSFji/jhgdPjzj2NEqTkSA0AJqLwC1Kuq1W3RBqZzOZkg
+         0iiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=ld/gdFjARhfLusTYI0vPBQKLY9H7gZVupXIIJMrOkwQ=;
-        b=VV6K5NjD5bHymE8T0epzSjpabqonbXT8qotnHrlepO1X/mKfR6NBWuCyY9sDbIbVb9
-         kO674THSqsE+/HGvAce33ZWwMZiDtrLY8xNQ2OfANr1jC6hU4st4R92ba6SwvdtPhMKg
-         VtZTCd0//GJWrhe9hfQLZ+klM2dQ/28mkAl5VAban3y5tloRGlC9tS0B9LsKDtDMfe5A
-         4sQ0aBQ3PseEBP1qaq4riaxZNOxMgsstOWDCjvJnqXDH/pQwYzzJ/znuETiFOuaGwxu9
-         szjl8SN8hdK3B+MPdT+lwxZh5CN4kFaSLYYJ6l+WY3Rw6XtKML/0cIbboQb5fIUltvEG
-         JWgg==
-X-Gm-Message-State: AGi0Pub2YbSBd+78N9vvIfZIHeEtzu2uvcH9jLFDGgxofaPweM+vYfbQ
-        4rJiffmizSVRZG4nNMMwPyNkJiT8
-X-Google-Smtp-Source: APiQypJZRhd5JGOza3T5v++/2CxAGEGJ9ncthDR01Yyrf1OfNvRB4S5x9kAchHmqe74urxXLG4nutg==
-X-Received: by 2002:a17:906:16ca:: with SMTP id t10mr4311236ejd.122.1588273540466;
-        Thu, 30 Apr 2020 12:05:40 -0700 (PDT)
+        bh=2I9WSRYJXQAn4kQfh/qmcd3zQeXfMItE/lNnVqUCZLw=;
+        b=hzKzDJK3dwUbTZY0y6m2Dg59yECLCkxinUtVh/nDUkfqEFSPL7w+yebQBdxZiULfxD
+         +sM7GSO9fjYHvQJexUtz7H3RGz1fy+O48ZDfZ/98KiRUCA4Q1SEeQdE2DE4Nb1eRLHbz
+         1LQQgpcUCc5y9pHcqzUb0qolyq/oODHuhk+nM197CI+nyEMLDUgkrEz2V5zrs4a0RjFL
+         MAs264va/7V2yqcYaGWHDd/a0XsIJpwCuFJcxtum2JW4po0XrDTMl9pklLstunSaFf+u
+         dvsgz9B1CgIiVEj6BxG8IU4StY8CXax3FmymlC/o0oMtgE8boBxdUZ3WbEjkkNRHU6PB
+         X+TQ==
+X-Gm-Message-State: AGi0Pub6plpLzIII7zqJ7fBQdc2qTXB0yT+o7sJyY7qfg7F0UAcEuGyq
+        5NEoyUZmerMkOLjAy7eghmz/o7Od
+X-Google-Smtp-Source: APiQypItcrWVBSouAyBL+uF9yO/h41dfWcpOFxTVYDNHCOMGXnTskQOlY4VDL7mvJXJIBYuFs02ylQ==
+X-Received: by 2002:a17:906:7717:: with SMTP id q23mr4240012ejm.38.1588273661869;
+        Thu, 30 Apr 2020 12:07:41 -0700 (PDT)
 Received: from [10.67.49.116] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id n26sm45949edo.36.2020.04.30.12.05.37
+        by smtp.googlemail.com with ESMTPSA id gh8sm69965ejb.32.2020.04.30.12.07.38
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Apr 2020 12:05:39 -0700 (PDT)
-Subject: Re: [PATCH 1/5] PCI: brcmstb: don't clk_put() a managed clock
+        Thu, 30 Apr 2020 12:07:41 -0700 (PDT)
+Subject: Re: [PATCH 2/5] PCI: brcmstb: fix window register offset from 4 to 8
 To:     Jim Quinlan <james.quinlan@broadcom.com>
 Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
         <bcm-kernel-feedback-list@broadcom.com>,
         "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
@@ -64,6 +65,7 @@ Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         <linux-pci@vger.kernel.org>,
         open list <linux-kernel@vger.kernel.org>
 References: <20200430185522.4116-1-james.quinlan@broadcom.com>
+ <20200430185522.4116-2-james.quinlan@broadcom.com>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  xsDiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
@@ -119,12 +121,12 @@ Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  HvsHIcv4lxCWkFXkwsuWqzEKK6kxVpRDoEQPDj+Oy/ZJ5fYuMbkdHrlegwoQ64LrqdmiVVPC
  TwQYEQIADwIbDAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2Do+FAJ956xSz2XpDHql+Wg/2qv3b
  G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <3d9783f8-0d66-d496-c8ca-cb7ab8edc85e@gmail.com>
-Date:   Thu, 30 Apr 2020 12:05:35 -0700
+Message-ID: <4a0459c8-fd61-7ac1-9624-b201c800700d@gmail.com>
+Date:   Thu, 30 Apr 2020 12:07:37 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200430185522.4116-1-james.quinlan@broadcom.com>
+In-Reply-To: <20200430185522.4116-2-james.quinlan@broadcom.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -136,14 +138,15 @@ X-Mailing-List: linux-pci@vger.kernel.org
 On 4/30/20 11:55 AM, Jim Quinlan wrote:
 > From: Jim Quinlan <jquinlan@broadcom.com>
 > 
-> clk_put() was being invoked on a clock obtained by
-> devm_clk_get_optional().
+> The oubound memory window registers were being referenced
+> with an incorrect offset.  This probably wasn't noticed
+> previously as there was likely only one such outbound window.
 > 
 > Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
 
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-
 Fixes: c0452137034b ("PCI: brcmstb: Add Broadcom STB PCIe host
 controller driver")
+
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
 Florian
