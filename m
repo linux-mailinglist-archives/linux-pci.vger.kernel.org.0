@@ -2,90 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D14CF1C0868
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Apr 2020 22:43:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C03DB1C0865
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Apr 2020 22:42:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726781AbgD3UnD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Apr 2020 16:43:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53144 "EHLO mail.kernel.org"
+        id S1726937AbgD3Umk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Apr 2020 16:42:40 -0400
+Received: from mga07.intel.com ([134.134.136.100]:37583 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726698AbgD3UnC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 30 Apr 2020 16:43:02 -0400
-Received: from localhost (mobile-166-175-184-168.mycingular.net [166.175.184.168])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5150206C0;
-        Thu, 30 Apr 2020 20:43:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588279382;
-        bh=u75tJYVYqVgwKuxyvKak/ZmBpHgmj5uCJfAwjytROXk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Lo/oqZaXh7vcHQFfdXlnjaGTon80H4R9d/gJ3gIDroMAlE999ZPhFGt2CAgEd0l/+
-         RhvqHzdgIGpb0FfKhafe0UqCs5Chv22vRnKMSnwtUjSdupAg1L8EyzHVSOJJt44VJt
-         KJI7OV0aIbDtt8gAcJ0q0cgaWxNy4RlP1imVGnYU=
-Date:   Thu, 30 Apr 2020 15:43:00 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jim Quinlan <james.quinlan@broadcom.com>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/5] PCI: brcmstb: fix window register offset from 4 to 8
-Message-ID: <20200430204300.GA63206@bjorn-Precision-5520>
+        id S1726781AbgD3Umk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 30 Apr 2020 16:42:40 -0400
+IronPort-SDR: jc3f9hQSxmtWTGFYGabgq8aogU3kmbIwgonV+5kAicTwQ+zA0LIdt7xs37MziU3kMsprGiQs1B
+ uVCG7vQ0Ok8A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2020 13:42:39 -0700
+IronPort-SDR: M6oqOMPzyFoVqddYs7RXgFErbffJCDivKopljAfdVamHixYraY4H4gkBAqaneuwRMIgM/plR4C
+ XjTmGyPtMWrw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,337,1583222400"; 
+   d="scan'208";a="433100232"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga005.jf.intel.com with ESMTP; 30 Apr 2020 13:42:39 -0700
+Date:   Thu, 30 Apr 2020 13:48:42 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, joro@8bytes.org, catalin.marinas@arm.com,
+        will@kernel.org, robin.murphy@arm.com, kevin.tian@intel.com,
+        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
+        christian.koenig@amd.com, felix.kuehling@amd.com,
+        zhangfei.gao@linaro.org, jgg@ziepe.ca, xuzaibo@huawei.com,
+        fenghua.yu@intel.com, hch@infradead.org,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v6 02/25] iommu/ioasid: Add ioasid references
+Message-ID: <20200430134842.74e596b8@jacob-builder>
+In-Reply-To: <20200430113931.0fbf7a37@jacob-builder>
+References: <20200430143424.2787566-1-jean-philippe@linaro.org>
+        <20200430143424.2787566-3-jean-philippe@linaro.org>
+        <20200430113931.0fbf7a37@jacob-builder>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200430185522.4116-2-james.quinlan@broadcom.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 02:55:19PM -0400, Jim Quinlan wrote:
-> From: Jim Quinlan <jquinlan@broadcom.com>
-> 
-> The oubound memory window registers were being referenced
-> with an incorrect offset.  This probably wasn't noticed
-> previously as there was likely only one such outbound window.
+On Thu, 30 Apr 2020 11:39:31 -0700
+Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
 
-If you repost these for any other reason:
+> > -void ioasid_free(ioasid_t ioasid)
+> > +bool ioasid_free(ioasid_t ioasid)
+> >  {
+Sorry I missed this in the last reply.
 
-Capitalize the first word of all the subject lines to match history.
-s/oubound/outbound/
+I think free needs to be unconditional since there is not a good way to
+fail it.
 
-> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
-> ---
->  drivers/pci/controller/pcie-brcmstb.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> index 454917ee9241..5b0dec5971b8 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -54,11 +54,11 @@
->  
->  #define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_LO		0x400c
->  #define PCIE_MEM_WIN0_LO(win)	\
-> -		PCIE_MISC_CPU_2_PCIE_MEM_WIN0_LO + ((win) * 4)
-> +		PCIE_MISC_CPU_2_PCIE_MEM_WIN0_LO + ((win) * 8)
->  
->  #define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_HI		0x4010
->  #define PCIE_MEM_WIN0_HI(win)	\
-> -		PCIE_MISC_CPU_2_PCIE_MEM_WIN0_HI + ((win) * 4)
-> +		PCIE_MISC_CPU_2_PCIE_MEM_WIN0_HI + ((win) * 8)
->  
->  #define PCIE_MISC_RC_BAR1_CONFIG_LO			0x402c
->  #define  PCIE_MISC_RC_BAR1_CONFIG_LO_SIZE_MASK		0x1f
-> -- 
-> 2.17.1
-> 
+Also can we have more symmetric APIs, seems we don't have ioasid_put()
+in this patchset.
+How about?
+ioasid_alloc()
+ioasid_free(); //drop reference, mark inactive, but not reclaimed if
+		refcount is not zero.
+ioasid_get() // returns err if the ioasid is marked inactive by
+		ioasid_free()
+ioasid_put();// drop reference, reclaim if refcount is 0.
+
+It is similar to get/put/alloc/free pids.
+
+
