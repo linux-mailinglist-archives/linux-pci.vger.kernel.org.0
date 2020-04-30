@@ -2,28 +2,28 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 881BB1C07F7
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Apr 2020 22:32:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 28B2D1C084C
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Apr 2020 22:40:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727079AbgD3Ucz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Apr 2020 16:32:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49052 "EHLO mail.kernel.org"
+        id S1726548AbgD3UkV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Apr 2020 16:40:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726626AbgD3Ucz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 30 Apr 2020 16:32:55 -0400
+        id S1726338AbgD3UkU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 30 Apr 2020 16:40:20 -0400
 Received: from localhost (mobile-166-175-184-168.mycingular.net [166.175.184.168])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 630C020731;
-        Thu, 30 Apr 2020 20:32:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BFEF206C0;
+        Thu, 30 Apr 2020 20:40:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588278774;
-        bh=zzOnZ2B7AsiXDdVWneijt0yscUPJzfIVROepioX7gdA=;
+        s=default; t=1588279219;
+        bh=5Snw5Ucaj8rYXrTv7rmk42pJX+ytZh64Y19B+5t8ZUU=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=zd5B1ASeI/cKNjmR9Kf5s0atSdNzjmUWfNULcGEiUguAUlByj0/PuGPATMJIx9jHv
-         WCAH+L+iFs5BnjP2mGyb5l94EBqey4Zj0mSzBEZGBt1rtwBurlaMNpQ4opqZkzjKPx
-         C3AKyYptt/ieWhnd4glH2ZPvpWjAI2QT7vwx6c+w=
-Date:   Thu, 30 Apr 2020 15:32:52 -0500
+        b=QQEcW57aBZptdf4jpOft/n3IKmo0zDugFzHwKTWq/Y2GcQ7r1C23c5kd2fISfvG+M
+         HkGzyX5fzulrTCYiTUXYSwvpM/24r4Sq7SBY9lt0Atc1ZQSDUtNVdk1hQnUJbwkYPK
+         ND3uH56xSkxeZT0Bch/NYTzZtMkCULqOh0dOlS4I=
+Date:   Thu, 30 Apr 2020 15:40:17 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Jim Quinlan <james.quinlan@broadcom.com>
 Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
@@ -40,75 +40,81 @@ Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
         <linux-pci@vger.kernel.org>,
         open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/5] PCI: brcmstb: enable CRS
-Message-ID: <20200430203252.GA62266@bjorn-Precision-5520>
+Subject: Re: [PATCH 5/5] PCI: brcmstb: disable L0s component of ASPM by
+ default
+Message-ID: <20200430204017.GA62947@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200430185522.4116-3-james.quinlan@broadcom.com>
+In-Reply-To: <20200430185522.4116-5-james.quinlan@broadcom.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 02:55:20PM -0400, Jim Quinlan wrote:
+On Thu, Apr 30, 2020 at 02:55:22PM -0400, Jim Quinlan wrote:
 > From: Jim Quinlan <jquinlan@broadcom.com>
 > 
-> Configuration Retry Request Status is off by default on this
-> PCIe controller.  Turn it on.
+> Some informal internal experiments has shown that the BrcmSTB ASPM L0s
+> savings may introduce an undesirable noise signal on some customers'
+> boards.  In addition, L0s was found lacking in realized power savings,
+> especially relative to the L1 ASPM component.  This is BrcmSTB's
+> experience and may not hold for others.  At any rate, we disable L0s
+> savings by default unless the DT node has the 'brcm,aspm-en-l0s'
+> property.
 
-Are you talking about CRS itself, i.e., the ability of a Root Port to
-deal with Completions with Configuration Retry Request Status?  That
-really shouldn't be switchable in the hardware since it's a required
-feature for all PCIe devices.
+I assume this works by writing the PCIe Link Capabilities register,
+which is read-only via the config space path used by the generic ASPM
+code, so that code thinks the device doesn't support L0s at all.
 
-Or are you talking about CRS Software Visibility, which is controlled
-by a bit in the PCIe Root Control register?  That *should* be managed
-by the PCI core in pci_enable_crs().  Does that generic method of
-controlling it not work for this device?
-
-It looks like maybe the latter, since the generic:
-
-  #define  PCI_EXP_RTCTL_CRSSVE   0x0010
-
-matches your new PCIE_RC_CFG_PCIE_ROOT_CAP_CONTROL_RC_CRS_EN_MASK.
-
-If pci_enable_crs() doesn't work on this device, it sounds like a
-hardware defect that we need to work around, but I'm not sure that
-just enabling it unconditionally here is the right thing.
+Documentation/devicetree/bindings/pci/rockchip-pcie-host.txt includes
+an "aspm-no-l0s" property.  It'd be nice if this could use the same
+property.
 
 > Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
 > ---
->  drivers/pci/controller/pcie-brcmstb.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
+>  drivers/pci/controller/pcie-brcmstb.c | 14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
 > 
 > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> index 5b0dec5971b8..2bc913c0262c 100644
+> index 2bc913c0262c..bc1d514b19e4 100644
 > --- a/drivers/pci/controller/pcie-brcmstb.c
 > +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -34,6 +34,9 @@
->  #define BRCM_PCIE_CAP_REGS				0x00ac
+> @@ -44,6 +44,9 @@
+>  #define PCIE_RC_CFG_PRIV1_ID_VAL3			0x043c
+>  #define  PCIE_RC_CFG_PRIV1_ID_VAL3_CLASS_CODE_MASK	0xffffff
 >  
->  /* Broadcom STB PCIe Register Offsets */
-> +#define PCIE_RC_CFG_PCIE_ROOT_CAP_CONTROL			0x00c8
-> +#define  PCIE_RC_CFG_PCIE_ROOT_CAP_CONTROL_RC_CRS_EN_MASK	0x10
+> +#define PCIE_RC_CFG_PRIV1_LINK_CAPABILITY			0x04dc
+> +#define  PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK	0xc00
 > +
->  #define PCIE_RC_CFG_VENDOR_VENDOR_SPECIFIC_REG1				0x0188
->  #define  PCIE_RC_CFG_VENDOR_VENDOR_SPECIFIC_REG1_ENDIAN_MODE_BAR2_MASK	0xc
->  #define  PCIE_RC_CFG_VENDOR_SPCIFIC_REG1_LITTLE_ENDIAN			0x0
-> @@ -827,6 +830,12 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
->  		 pci_speed_string(pcie_link_speed[cls]), nlw,
->  		 ssc_good ? "(SSC)" : "(!SSC)");
+>  #define PCIE_RC_DL_MDIO_ADDR				0x1100
+>  #define PCIE_RC_DL_MDIO_WR_DATA				0x1104
+>  #define PCIE_RC_DL_MDIO_RD_DATA				0x1108
+> @@ -696,7 +699,7 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+>  	int num_out_wins = 0;
+>  	u16 nlw, cls, lnksta;
+>  	int i, ret;
+> -	u32 tmp;
+> +	u32 tmp, aspm_support;
 >  
-> +	/* Enable configuration request retry (CRS) */
-> +	tmp = readl(base + PCIE_RC_CFG_PCIE_ROOT_CAP_CONTROL);
-> +	u32p_replace_bits(&tmp, 1,
-> +			  PCIE_RC_CFG_PCIE_ROOT_CAP_CONTROL_RC_CRS_EN_MASK);
-> +	writel(tmp, base + PCIE_RC_CFG_PCIE_ROOT_CAP_CONTROL);
+>  	/* Reset the bridge */
+>  	brcm_pcie_bridge_sw_init_set(pcie, 1);
+> @@ -806,6 +809,15 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+>  		num_out_wins++;
+>  	}
+>  
+> +	/* Only support ASPM L1 unless L0s is explicitly desired */
+> +	aspm_support = PCIE_LINK_STATE_L1;
+> +	if (of_property_read_bool(pcie->np, "brcm,aspm-en-l0s"))
+> +		aspm_support |= PCIE_LINK_STATE_L0S;
+> +	tmp = readl(base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
+> +	u32p_replace_bits(&tmp, aspm_support,
+> +		PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK);
+> +	writel(tmp, base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
 > +
->  	/* PCIe->SCB endian mode for BAR */
->  	tmp = readl(base + PCIE_RC_CFG_VENDOR_VENDOR_SPECIFIC_REG1);
->  	u32p_replace_bits(&tmp, PCIE_RC_CFG_VENDOR_SPCIFIC_REG1_LITTLE_ENDIAN,
+>  	/*
+>  	 * For config space accesses on the RC, show the right class for
+>  	 * a PCIe-PCIe bridge (the default setting is to be EP mode).
 > -- 
 > 2.17.1
 > 
