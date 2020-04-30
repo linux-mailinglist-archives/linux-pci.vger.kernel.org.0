@@ -2,70 +2,70 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0BC111C0611
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Apr 2020 21:20:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3257C1C0617
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Apr 2020 21:21:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbgD3TU2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Apr 2020 15:20:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50296 "EHLO
+        id S1726862AbgD3TVO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Apr 2020 15:21:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726451AbgD3TU2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Apr 2020 15:20:28 -0400
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3024C035494;
-        Thu, 30 Apr 2020 12:20:27 -0700 (PDT)
-Received: by mail-ed1-x532.google.com with SMTP id t12so5479320edw.3;
-        Thu, 30 Apr 2020 12:20:27 -0700 (PDT)
+        with ESMTP id S1726366AbgD3TVN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Apr 2020 15:21:13 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E070FC035494;
+        Thu, 30 Apr 2020 12:21:12 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id rh22so5603143ejb.12;
+        Thu, 30 Apr 2020 12:21:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qEJ0fzumLjx2+ZvNa/h23SSuI5vWiVend7CFtewZLYM=;
-        b=VDjJ5WY2Cev/DwLKRCnL2cmRHdDPWLnmUPQapQyR4Gf35njPmoq3dDvyluR84p4nuC
-         bCKD0I4bxxA/K6LHjzEWqA6sHA0M+SLWUn8GF/1y9tkJdoj0WS5zG/xhCcfz+TmGjeG5
-         XPG+BnZBvrh0MsF8sqqUWVJSnn/o29ldtxNPK01DHlBSCmGPzKJ5h+/CK3S3bH3j65Jv
-         KQjCMEvRiDZL1/CG0zDAl3MVy50bma2Tqd7yZY7eSg7RF5y6zH+w+iOHgctJiBQv63F8
-         CdajZq/ukO2ErIdju9l4kqR7Ps8SHinVIFwPl7UIJceeAxetJQN9tn83AjK4Spd6zqIq
-         85YQ==
+        bh=YF+037NDXaAeCOCsqqWl6KyRRdw5bJrzbLZUS7ulUkU=;
+        b=lSAQNzSZfOy4PsR61T3vENHV82PWB2IZqOMGCDSVwqV9nIt3cj/T/YNIbWclM/Aj1G
+         i5Tr3houBdyzueCGuIiQgtzr8Snpo9Vo3/t1P00zTKgWKxW1IYzEfpxEiUZ98Q4K6+W/
+         E1X0ZyHyK9GRs0K83hlXAbQ1JNxLk/Cy5PosSMpTjq+UsjI09w4ljEcT7xksdVUt1mQA
+         FvGbUrGWytZNcneHNo89N/AuqQmftIQbBl7ihZNdZDeQHkWJz0tC2Z9m7SI7Hx5KSTlM
+         SN+627CzVagmBVMGw0l6vKaVnNV98VqA/VcSxWj7FuJoabX8UAL26ggOElO4Bjc+5Htb
+         hJtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=qEJ0fzumLjx2+ZvNa/h23SSuI5vWiVend7CFtewZLYM=;
-        b=bL6MOkNpt0BFgT0PQfLX52FobxkziSzCjWMVp+aD4wRRv27ZgiRT8QcN5RH59E1xwL
-         gcWaR/HWNQH0P59C0/vlTHuXlxpKS1Lcfn8KL3zPKM/zlHmHVMkLL75wc5ow5SI+zWnO
-         BszqyxHm00jcl3EDrmk6ExBAKRTERxVGgB+4LTVZX+LSnM5CQ9U49fCY1oMlyrt31owd
-         deE5+yaRL7Oeic5iFKJzpd8vRd3/wVYDwbXAM/U9KniQ+Hdyg7go8jSfePe33uWP4XYI
-         GqazmT8qr58b62Ge+Z34q7qArUdsg2owMdZxfwM/8UC8vUmM7dPipeJVIcPE3XosThf8
-         ETzg==
-X-Gm-Message-State: AGi0PuYSoq3GIQEOo/kY+Dzl98XMQIkvluKj5QySCSURyK1Ix9nKdNmR
-        Ym6FZ3ehUUJGDtHn+mMY0VoGQoEp
-X-Google-Smtp-Source: APiQypIgnXDINlTMIjV63AQjqDtdZlOpvJePobm6VdwnlztSLUg78Oez4fXuloX8P7GTA53kH16mHg==
-X-Received: by 2002:a05:6402:8c1:: with SMTP id d1mr532565edz.236.1588274426176;
-        Thu, 30 Apr 2020 12:20:26 -0700 (PDT)
+        bh=YF+037NDXaAeCOCsqqWl6KyRRdw5bJrzbLZUS7ulUkU=;
+        b=VzBrJrKn3Q75OAc3OfKk/9CFMXTPvFsEHl9lesIzAQS4bgKXJeN29q7/FEei9X1TRw
+         Id7op6ML6TuCwMyGwaYqkSmtbb5rc4A+mSGR8C/35lgMwl0C6vLuNCLP0RAxJfmhd30Q
+         dx3su5Y1qpOO2c8O9eEyqcttCRmHtxONvORSOO8ucuuBKCbImWDjB8LvQRBXCgNOSQk+
+         M4jipztvRn7vD7pePVUY1zvoLO3PDLHl82cnlEUMpirXfhH3z/Hm0q7kvE85h7fftTyT
+         10az/bTNg0OZaFW7f6ttuPks7lgBnpLY+u3jn5I/LEY1lSfQlGUEMmOiHHPqEw/AsOEg
+         s0sg==
+X-Gm-Message-State: AGi0PubUpGz8tOh4gItrteNMY7/g/DHqsYRzbVuc/TclaCx9D+z5Ss3Z
+        zEjgZF9fy07QNiLCE58qazJcdMB5
+X-Google-Smtp-Source: APiQypKGtZZyIVg+kusXHu4UutBHr1i9zDmmWCF5FvF4UN7GB5FSkHSbFaPDIfjBYdkTGPW20Nr7ww==
+X-Received: by 2002:a17:907:20a2:: with SMTP id pw2mr4373513ejb.252.1588274471223;
+        Thu, 30 Apr 2020 12:21:11 -0700 (PDT)
 Received: from [10.67.49.116] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id y13sm47774edq.48.2020.04.30.12.20.23
+        by smtp.googlemail.com with ESMTPSA id i16sm70822ejy.64.2020.04.30.12.21.08
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Apr 2020 12:20:25 -0700 (PDT)
-Subject: Re: [PATCH 4/5] dt-bindings: PCI: brcmstb: New prop
- 'brcm,aspm-en-l0s'
+        Thu, 30 Apr 2020 12:21:10 -0700 (PDT)
+Subject: Re: [PATCH 5/5] PCI: brcmstb: disable L0s component of ASPM by
+ default
 To:     Jim Quinlan <james.quinlan@broadcom.com>
-Cc:     "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
         "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
         <linux-rpi-kernel@lists.infradead.org>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>,
         open list <linux-kernel@vger.kernel.org>
 References: <20200430185522.4116-1-james.quinlan@broadcom.com>
- <20200430185522.4116-4-james.quinlan@broadcom.com>
+ <20200430185522.4116-5-james.quinlan@broadcom.com>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  xsDiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
@@ -121,12 +121,12 @@ Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  HvsHIcv4lxCWkFXkwsuWqzEKK6kxVpRDoEQPDj+Oy/ZJ5fYuMbkdHrlegwoQ64LrqdmiVVPC
  TwQYEQIADwIbDAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2Do+FAJ956xSz2XpDHql+Wg/2qv3b
  G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <11de208b-8da8-5080-061e-5b38a3349bf2@gmail.com>
-Date:   Thu, 30 Apr 2020 12:20:21 -0700
+Message-ID: <76b5ed9c-c67b-d565-d0c0-6f2e645657ed@gmail.com>
+Date:   Thu, 30 Apr 2020 12:21:06 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200430185522.4116-4-james.quinlan@broadcom.com>
+In-Reply-To: <20200430185522.4116-5-james.quinlan@broadcom.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -138,8 +138,13 @@ X-Mailing-List: linux-pci@vger.kernel.org
 On 4/30/20 11:55 AM, Jim Quinlan wrote:
 > From: Jim Quinlan <jquinlan@broadcom.com>
 > 
-> For various reasons, the L0s component of ASPM is intentionally
-> disabled.  Specifying the 'brcm,aspm-en-l0s' property enables it.
+> Some informal internal experiments has shown that the BrcmSTB ASPM L0s
+> savings may introduce an undesirable noise signal on some customers'
+> boards.  In addition, L0s was found lacking in realized power savings,
+> especially relative to the L1 ASPM component.  This is BrcmSTB's
+> experience and may not hold for others.  At any rate, we disable L0s
+> savings by default unless the DT node has the 'brcm,aspm-en-l0s'
+> property.
 > 
 > Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
 
