@@ -2,32 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CF7FE1BF908
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Apr 2020 15:15:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0DF061BFE8B
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Apr 2020 16:40:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbgD3NP2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Apr 2020 09:15:28 -0400
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:34519 "EHLO
-        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726520AbgD3NP2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Apr 2020 09:15:28 -0400
-Received: from Internal Mail-Server by MTLPINE1 (envelope-from maxg@mellanox.com)
-        with ESMTPS (AES256-SHA encrypted); 30 Apr 2020 16:15:21 +0300
-Received: from mtr-vdi-031.wap.labs.mlnx. (mtr-vdi-031.wap.labs.mlnx [10.209.102.136])
-        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 03UDFKRW027016;
-        Thu, 30 Apr 2020 16:15:20 +0300
-From:   Max Gurtovoy <maxg@mellanox.com>
-To:     hch@lst.de, linux-pci@vger.kernel.org, oohall@gmail.com,
-        linuxppc-dev@lists.ozlabs.org
-Cc:     israelr@mellanox.com, idanw@mellanox.com, vladimirk@mellanox.com,
-        shlomin@mellanox.com, fbarrat@linux.ibm.com, clsoto@us.ibm.com,
-        aneela@mellanox.com, Max Gurtovoy <maxg@mellanox.com>
-Subject: [PATCH 2/2 v2] powerpc/powernv: Enable and setup PCI P2P
-Date:   Thu, 30 Apr 2020 16:15:20 +0300
-Message-Id: <20200430131520.51211-2-maxg@mellanox.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20200430131520.51211-1-maxg@mellanox.com>
-References: <20200430131520.51211-1-maxg@mellanox.com>
+        id S1727788AbgD3OkR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Apr 2020 10:40:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34194 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727773AbgD3OkR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Apr 2020 10:40:17 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1436C035494
+        for <linux-pci@vger.kernel.org>; Thu, 30 Apr 2020 07:40:16 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id v8so7648576wma.0
+        for <linux-pci@vger.kernel.org>; Thu, 30 Apr 2020 07:40:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YYiLFVngM44g0Fy16RMemZHwiB7tGW2h6urXa5JNeA4=;
+        b=ZUmjnGJdMThCLpgu6Fn1QVEDSUT+cukEkGuOgFSAHraBV5UE619qvE7lxXPXau+0K9
+         ZSHcJOrhjdN8cdq50v47XtlJcbrqef2j4U5/gGNSYSQpruy3HxooSXHs6zM0a7FPLyrf
+         N1aYxP7FmR+YZG+U5qEkc7Ou5kN0muT/Fyj74HePtg+qHnxZ/OCxIli3Yg9YjITjQFh/
+         9H6GKkTWgkWazMIGgQe+XWGtK1TcSG6alWleOABobFRAn+J2t7Zmt/cdYdpkh/pEJmMD
+         jBY9RCioflr2sxajJ38Um+7P1crKRDbyOCc3eBs00MuEh0TbHUtzAb/LNYTvyI9xBJZf
+         9UNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YYiLFVngM44g0Fy16RMemZHwiB7tGW2h6urXa5JNeA4=;
+        b=smeAj04ouqAjlOAxbIlBIc4XMjqL7Jkuj0hvqSSLUisMSztPXdeKo5VuKzdr2zFAop
+         nge9A6MFZ/751SS58iI9p2r6EDqZndOk7m07/ZP8weYTf/1tpOBHZEsurSTki3HvyDyq
+         nvSOMPNSPzggT5LVT7f5lO7pXEl8CTyKzXtBeosG9iG6UGMCHIBwRj/2i1OCyZ/8grSt
+         o9bARQQscXfkPjIN5bqewzYLQqI5VzVgYQl7L0EVlqMz3hKYn9qo4T0XKxacuZOwgcAy
+         8KgSvfkpnQco3SSWzxYo7jwwB6HZzDdmjmlDkot6tPuqnOTT1GaZnVK1yOmo6bM9VvJi
+         Nysg==
+X-Gm-Message-State: AGi0PuYOfIy46ZaJwm/E4bDapdqNvcmgKVy+2vyF/VmSeiDiN/y+zlFH
+        VNasaAOpFnuKqY6k09RpOxhlZA==
+X-Google-Smtp-Source: APiQypIMxbfi2gR+oRZoSzUml7oOF8uYXg/WO7r1FPuma7Uj6M8X8kh92jUG0IVhIXNkP7USztJjJQ==
+X-Received: by 2002:a7b:cfc9:: with SMTP id f9mr3419281wmm.61.1588257614425;
+        Thu, 30 Apr 2020 07:40:14 -0700 (PDT)
+Received: from localhost.localdomain ([2001:171b:226e:c200:c43b:ef78:d083:b355])
+        by smtp.gmail.com with ESMTPSA id n2sm4153286wrt.33.2020.04.30.07.40.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Apr 2020 07:40:12 -0700 (PDT)
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org
+Cc:     joro@8bytes.org, catalin.marinas@arm.com, will@kernel.org,
+        robin.murphy@arm.com, kevin.tian@intel.com,
+        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
+        jacob.jun.pan@linux.intel.com, christian.koenig@amd.com,
+        felix.kuehling@amd.com, zhangfei.gao@linaro.org, jgg@ziepe.ca,
+        xuzaibo@huawei.com, fenghua.yu@intel.com, hch@infradead.org,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>
+Subject: [PATCH v6 00/25] iommu: Shared Virtual Addressing for SMMUv3
+Date:   Thu, 30 Apr 2020 16:33:59 +0200
+Message-Id: <20200430143424.2787566-1-jean-philippe@linaro.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
@@ -35,306 +69,98 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Implement the generic dma_map_resource callback on the PCI controller
-for powernv. This will enable PCI P2P on POWER9 architecture. It will
-allow catching a cross-PHB mmio mapping, which needs to be setup in
-hardware by calling opal. Both the initiator and target PHBs need to be
-configured, so we look for which PHB owns the mmio address being mapped.
+Shared Virtual Addressing (SVA) allows to share process page tables with
+devices using the IOMMU, PASIDs and I/O page faults. Add SVA support to
+the Arm SMMUv3 driver.
 
-Signed-off-by: Frederic Barrat <fbarrat@linux.ibm.com>
-[maxg: added CONFIG_PCI_P2PDMA wrappers]
-Signed-off-by: Max Gurtovoy <maxg@mellanox.com>
----
+Since v5 [1]:
 
-changes from v1:
- - remove CONFIG_PCI_P2PDMA around opal_pci_set_p2p decleration
- - divide pnv_pci_ioda_set_p2p to pnv_pci_ioda_enable_p2p/pnv_pci_ioda_disable_p2p
- - added pnv_pci_dma_dir_to_opal_p2p static helper
+* Added patches 1-3. Patch 1 adds a PASID field to mm_struct as
+  discussed in [1] and [2]. This is also needed for Intel ENQCMD. Patch
+  2 adds refcounts to IOASID and patch 3 adds a couple of helpers to
+  allocate the PASID.
 
----
- arch/powerpc/include/asm/opal.h            |   3 +-
- arch/powerpc/platforms/powernv/opal-call.c |   1 +
- arch/powerpc/platforms/powernv/pci-ioda.c  | 212 +++++++++++++++++++++++++++--
- arch/powerpc/platforms/powernv/pci.h       |   9 ++
- 4 files changed, 213 insertions(+), 12 deletions(-)
+* Dropped most of iommu-sva.c. After getting rid of io_mm following
+  review of v5, there wasn't enough generic code left to justify the
+  indirect branch overhead of io_mm_ops in the MMU notifiers. I ended up
+  with more glue than useful code, and couldn't find an easy way to deal
+  with domains in the SMMU driver (we keep PASID tables per domain,
+  while x86 keeps them per device). The direct approach in patch 17 is
+  nicer and a little easier to read. The SMMU driver only gained 160
+  lines, while iommu-sva lost 470 lines.
 
-diff --git a/arch/powerpc/include/asm/opal.h b/arch/powerpc/include/asm/opal.h
-index 9986ac3..362f54b 100644
---- a/arch/powerpc/include/asm/opal.h
-+++ b/arch/powerpc/include/asm/opal.h
-@@ -284,7 +284,8 @@ int64_t opal_xive_set_queue_state(uint64_t vp, uint32_t prio,
- 				  uint32_t qtoggle,
- 				  uint32_t qindex);
- int64_t opal_xive_get_vp_state(uint64_t vp, __be64 *out_w01);
--
-+int64_t opal_pci_set_p2p(uint64_t phb_init, uint64_t phb_target,
-+			 uint64_t desc, uint16_t pe_number);
- int64_t opal_imc_counters_init(uint32_t type, uint64_t address,
- 							uint64_t cpu_pir);
- int64_t opal_imc_counters_start(uint32_t type, uint64_t cpu_pir);
-diff --git a/arch/powerpc/platforms/powernv/opal-call.c b/arch/powerpc/platforms/powernv/opal-call.c
-index 5cd0f52..442d5445c 100644
---- a/arch/powerpc/platforms/powernv/opal-call.c
-+++ b/arch/powerpc/platforms/powernv/opal-call.c
-@@ -273,6 +273,7 @@ int64_t name(int64_t a0, int64_t a1, int64_t a2, int64_t a3,	\
- OPAL_CALL(opal_imc_counters_init,		OPAL_IMC_COUNTERS_INIT);
- OPAL_CALL(opal_imc_counters_start,		OPAL_IMC_COUNTERS_START);
- OPAL_CALL(opal_imc_counters_stop,		OPAL_IMC_COUNTERS_STOP);
-+OPAL_CALL(opal_pci_set_p2p,			OPAL_PCI_SET_P2P);
- OPAL_CALL(opal_get_powercap,			OPAL_GET_POWERCAP);
- OPAL_CALL(opal_set_powercap,			OPAL_SET_POWERCAP);
- OPAL_CALL(opal_get_power_shift_ratio,		OPAL_GET_POWER_SHIFT_RATIO);
-diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-index 57d3a6a..9ecc576 100644
---- a/arch/powerpc/platforms/powernv/pci-ioda.c
-+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-@@ -3706,18 +3706,208 @@ static void pnv_pci_ioda_dma_bus_setup(struct pci_bus *bus)
- 	}
- }
- 
-+#ifdef CONFIG_PCI_P2PDMA
-+static DEFINE_MUTEX(p2p_mutex);
-+
-+static bool pnv_pci_controller_owns_addr(struct pci_controller *hose,
-+					 phys_addr_t addr, size_t size)
-+{
-+	int i;
-+
-+	/*
-+	 * It seems safe to assume the full range is under the same PHB, so we
-+	 * can ignore the size.
-+	 */
-+	for (i = 0; i < ARRAY_SIZE(hose->mem_resources); i++) {
-+		struct resource *res = &hose->mem_resources[i];
-+
-+		if (res->flags && addr >= res->start && addr < res->end)
-+			return true;
-+	}
-+	return false;
-+}
-+
-+/*
-+ * find the phb owning a mmio address if not owned locally
-+ */
-+static struct pnv_phb *pnv_pci_find_owning_phb(struct pci_dev *pdev,
-+					       phys_addr_t addr, size_t size)
-+{
-+	struct pci_controller *hose;
-+
-+	/* fast path */
-+	if (pnv_pci_controller_owns_addr(pdev->bus->sysdata, addr, size))
-+		return NULL;
-+
-+	list_for_each_entry(hose, &hose_list, list_node) {
-+		struct pnv_phb *phb = hose->private_data;
-+
-+		if (phb->type != PNV_PHB_NPU_NVLINK &&
-+		    phb->type != PNV_PHB_NPU_OCAPI) {
-+			if (pnv_pci_controller_owns_addr(hose, addr, size))
-+				return phb;
-+		}
-+	}
-+	return NULL;
-+}
-+
-+static u64 pnv_pci_dma_dir_to_opal_p2p(enum dma_data_direction dir)
-+{
-+	if (dir == DMA_TO_DEVICE)
-+		return OPAL_PCI_P2P_STORE;
-+	else if (dir == DMA_FROM_DEVICE)
-+		return OPAL_PCI_P2P_LOAD;
-+	else if (dir == DMA_BIDIRECTIONAL)
-+		return OPAL_PCI_P2P_LOAD | OPAL_PCI_P2P_STORE;
-+	else
-+		return 0;
-+}
-+
-+static int pnv_pci_ioda_enable_p2p(struct pci_dev *initiator,
-+				   struct pnv_phb *phb_target,
-+				   enum dma_data_direction dir)
-+{
-+	struct pci_controller *hose;
-+	struct pnv_phb *phb_init;
-+	struct pnv_ioda_pe *pe_init;
-+	u64 desc;
-+	int rc;
-+
-+	if (!opal_check_token(OPAL_PCI_SET_P2P))
-+		return -ENXIO;
-+
-+	hose = pci_bus_to_host(initiator->bus);
-+	phb_init = hose->private_data;
-+
-+	pe_init = pnv_ioda_get_pe(initiator);
-+	if (!pe_init)
-+		return -ENODEV;
-+
-+	if (!pe_init->tce_bypass_enabled)
-+		return -EINVAL;
-+
-+	/*
-+	 * Configuring the initiator's PHB requires to adjust its TVE#1
-+	 * setting. Since the same device can be an initiator several times for
-+	 * different target devices, we need to keep a reference count to know
-+	 * when we can restore the default bypass setting on its TVE#1 when
-+	 * disabling. Opal is not tracking PE states, so we add a reference
-+	 * count on the PE in linux.
-+	 *
-+	 * For the target, the configuration is per PHB, so we keep a
-+	 * target reference count on the PHB.
-+	 */
-+	mutex_lock(&p2p_mutex);
-+
-+	desc = OPAL_PCI_P2P_ENABLE | pnv_pci_dma_dir_to_opal_p2p(dir);
-+	/* always go to opal to validate the configuration */
-+	rc = opal_pci_set_p2p(phb_init->opal_id, phb_target->opal_id, desc,
-+			      pe_init->pe_number);
-+	if (rc != OPAL_SUCCESS) {
-+		rc = -EIO;
-+		goto out;
-+	}
-+
-+	pe_init->p2p_initiator_count++;
-+	phb_target->p2p_target_count++;
-+
-+
-+	rc = 0;
-+out:
-+	mutex_unlock(&p2p_mutex);
-+	return rc;
-+}
-+
-+static int pnv_pci_dma_map_resource(struct pci_dev *pdev,
-+				    phys_addr_t phys_addr, size_t size,
-+				    enum dma_data_direction dir)
-+{
-+	struct pnv_phb *target_phb;
-+
-+	target_phb = pnv_pci_find_owning_phb(pdev, phys_addr, size);
-+	if (!target_phb)
-+		return 0;
-+
-+	return pnv_pci_ioda_enable_p2p(pdev, target_phb, dir);
-+}
-+
-+static int pnv_pci_ioda_disable_p2p(struct pci_dev *initiator,
-+		struct pnv_phb *phb_target)
-+{
-+	struct pci_controller *hose;
-+	struct pnv_phb *phb_init;
-+	struct pnv_ioda_pe *pe_init;
-+	int rc;
-+
-+	if (!opal_check_token(OPAL_PCI_SET_P2P))
-+		return -ENXIO;
-+
-+	hose = pci_bus_to_host(initiator->bus);
-+	phb_init = hose->private_data;
-+
-+	pe_init = pnv_ioda_get_pe(initiator);
-+	if (!pe_init)
-+		return -ENODEV;
-+
-+	mutex_lock(&p2p_mutex);
-+
-+	if (!pe_init->p2p_initiator_count || !phb_target->p2p_target_count) {
-+		rc = -EINVAL;
-+		goto out;
-+	}
-+
-+	if (--pe_init->p2p_initiator_count == 0)
-+		pnv_pci_ioda2_set_bypass(pe_init, true);
-+
-+	if (--phb_target->p2p_target_count == 0) {
-+		rc = opal_pci_set_p2p(phb_init->opal_id, phb_target->opal_id,
-+				      0, pe_init->pe_number);
-+		if (rc != OPAL_SUCCESS) {
-+			rc = -EIO;
-+			goto out;
-+		}
-+	}
-+
-+	rc = 0;
-+out:
-+	mutex_unlock(&p2p_mutex);
-+	return rc;
-+}
-+
-+static void pnv_pci_dma_unmap_resource(struct pci_dev *pdev,
-+				       dma_addr_t addr, size_t size,
-+				       enum dma_data_direction dir)
-+{
-+	struct pnv_phb *target_phb;
-+	int rc;
-+
-+	target_phb = pnv_pci_find_owning_phb(pdev, addr, size);
-+	if (!target_phb)
-+		return;
-+
-+	rc = pnv_pci_ioda_disable_p2p(pdev, target_phb);
-+	if (rc)
-+		dev_err(&pdev->dev, "Failed to undo PCI peer-to-peer setup for address %llx: %d\n",
-+			addr, rc);
-+}
-+#endif
-+
- static const struct pci_controller_ops pnv_pci_ioda_controller_ops = {
--	.dma_dev_setup		= pnv_pci_ioda_dma_dev_setup,
--	.dma_bus_setup		= pnv_pci_ioda_dma_bus_setup,
--	.iommu_bypass_supported	= pnv_pci_ioda_iommu_bypass_supported,
--	.setup_msi_irqs		= pnv_setup_msi_irqs,
--	.teardown_msi_irqs	= pnv_teardown_msi_irqs,
--	.enable_device_hook	= pnv_pci_enable_device_hook,
--	.release_device		= pnv_pci_release_device,
--	.window_alignment	= pnv_pci_window_alignment,
--	.setup_bridge		= pnv_pci_setup_bridge,
--	.reset_secondary_bus	= pnv_pci_reset_secondary_bus,
--	.shutdown		= pnv_pci_ioda_shutdown,
-+	.dma_dev_setup			= pnv_pci_ioda_dma_dev_setup,
-+	.dma_bus_setup			= pnv_pci_ioda_dma_bus_setup,
-+	.iommu_bypass_supported		= pnv_pci_ioda_iommu_bypass_supported,
-+	.setup_msi_irqs			= pnv_setup_msi_irqs,
-+	.teardown_msi_irqs		= pnv_teardown_msi_irqs,
-+	.enable_device_hook		= pnv_pci_enable_device_hook,
-+	.release_device			= pnv_pci_release_device,
-+	.window_alignment		= pnv_pci_window_alignment,
-+	.setup_bridge			= pnv_pci_setup_bridge,
-+	.reset_secondary_bus		= pnv_pci_reset_secondary_bus,
-+	.shutdown			= pnv_pci_ioda_shutdown,
-+#ifdef CONFIG_PCI_P2PDMA
-+	.dma_direct_map_resource	= pnv_pci_dma_map_resource,
-+	.dma_direct_unmap_resource	= pnv_pci_dma_unmap_resource,
-+#endif
- };
- 
- static const struct pci_controller_ops pnv_npu_ioda_controller_ops = {
-diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
-index d3bbdea..5f85d9c 100644
---- a/arch/powerpc/platforms/powernv/pci.h
-+++ b/arch/powerpc/platforms/powernv/pci.h
-@@ -79,6 +79,10 @@ struct pnv_ioda_pe {
- 	struct pnv_ioda_pe	*master;
- 	struct list_head	slaves;
- 
-+#ifdef CONFIG_PCI_P2PDMA
-+	/* PCI peer-to-peer*/
-+	int			p2p_initiator_count;
-+#endif
- 	/* Link in list of PE#s */
- 	struct list_head	list;
- };
-@@ -168,6 +172,11 @@ struct pnv_phb {
- 	/* PHB and hub diagnostics */
- 	unsigned int		diag_data_size;
- 	u8			*diag_data;
-+
-+#ifdef CONFIG_PCI_P2PDMA
-+	/* PCI peer-to-peer*/
-+	int			p2p_target_count;
-+#endif
- };
- 
- extern struct pci_ops pnv_pci_ops;
+  As a result I dropped the MMU notifier patch.
+
+  Jacob, one upside of this rework is that we now free ioasids in
+  blocking context, which might help with your addition of notifiers to
+  ioasid.c
+
+* Simplified io-pgfault a bit, since flush() isn't called from mm exit
+  path anymore.
+
+* Fixed a bug in patch 17 (don't clear the stall bit when stall is
+  forced).
+
+You can find the latest version on https://jpbrucker.net/git/linux
+branch sva/current, and sva/zip-devel for the Hisilicon zip accelerator.
+
+[1] https://lore.kernel.org/linux-iommu/20200414170252.714402-1-jean-philippe@linaro.org/
+[2] https://lore.kernel.org/linux-iommu/1585596788-193989-6-git-send-email-fenghua.yu@intel.com/
+
+Jean-Philippe Brucker (25):
+  mm: Add a PASID field to mm_struct
+  iommu/ioasid: Add ioasid references
+  iommu/sva: Add PASID helpers
+  iommu: Add a page fault handler
+  iommu/iopf: Handle mm faults
+  arm64: mm: Add asid_gen_match() helper
+  arm64: mm: Pin down ASIDs for sharing mm with devices
+  iommu/io-pgtable-arm: Move some definitions to a header
+  iommu/arm-smmu-v3: Manage ASIDs with xarray
+  arm64: cpufeature: Export symbol read_sanitised_ftr_reg()
+  iommu/arm-smmu-v3: Share process page tables
+  iommu/arm-smmu-v3: Seize private ASID
+  iommu/arm-smmu-v3: Add support for VHE
+  iommu/arm-smmu-v3: Enable broadcast TLB maintenance
+  iommu/arm-smmu-v3: Add SVA feature checking
+  iommu/arm-smmu-v3: Add SVA device feature
+  iommu/arm-smmu-v3: Implement iommu_sva_bind/unbind()
+  iommu/arm-smmu-v3: Hook up ATC invalidation to mm ops
+  iommu/arm-smmu-v3: Add support for Hardware Translation Table Update
+  iommu/arm-smmu-v3: Maintain a SID->device structure
+  dt-bindings: document stall property for IOMMU masters
+  iommu/arm-smmu-v3: Add stall support for platform devices
+  PCI/ATS: Add PRI stubs
+  PCI/ATS: Export PRI functions
+  iommu/arm-smmu-v3: Add support for PRI
+
+ drivers/iommu/Kconfig                         |   11 +
+ drivers/iommu/Makefile                        |    2 +
+ .../devicetree/bindings/iommu/iommu.txt       |   18 +
+ arch/arm64/include/asm/mmu.h                  |    1 +
+ arch/arm64/include/asm/mmu_context.h          |   11 +-
+ drivers/iommu/io-pgtable-arm.h                |   30 +
+ drivers/iommu/iommu-sva.h                     |   15 +
+ include/linux/ioasid.h                        |   10 +-
+ include/linux/iommu.h                         |   53 +
+ include/linux/mm_types.h                      |    4 +
+ include/linux/pci-ats.h                       |    8 +
+ arch/arm64/kernel/cpufeature.c                |    1 +
+ arch/arm64/mm/context.c                       |  103 +-
+ drivers/iommu/arm-smmu-v3.c                   | 1554 +++++++++++++++--
+ drivers/iommu/io-pgfault.c                    |  458 +++++
+ drivers/iommu/io-pgtable-arm.c                |   27 +-
+ drivers/iommu/ioasid.c                        |   30 +-
+ drivers/iommu/iommu-sva.c                     |   85 +
+ drivers/iommu/of_iommu.c                      |    5 +-
+ drivers/pci/ats.c                             |    4 +
+ MAINTAINERS                                   |    3 +-
+ 21 files changed, 2275 insertions(+), 158 deletions(-)
+ create mode 100644 drivers/iommu/io-pgtable-arm.h
+ create mode 100644 drivers/iommu/iommu-sva.h
+ create mode 100644 drivers/iommu/io-pgfault.c
+ create mode 100644 drivers/iommu/iommu-sva.c
+
 -- 
-1.8.3.1
+2.26.2
 
