@@ -2,184 +2,133 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CE6321C04DF
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Apr 2020 20:33:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 740871C0575
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Apr 2020 20:59:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726384AbgD3Sda (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Apr 2020 14:33:30 -0400
-Received: from mga05.intel.com ([192.55.52.43]:31224 "EHLO mga05.intel.com"
+        id S1726545AbgD3S7k (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Apr 2020 14:59:40 -0400
+Received: from mga12.intel.com ([192.55.52.136]:41232 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726318AbgD3Sda (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 30 Apr 2020 14:33:30 -0400
-IronPort-SDR: QYeQDpDxDQ0xiIxh+VpYeWRTaw44rMHjkmjzrX7xdWZX3oSlOeS15aqIKKesVzjnBNErrioA8G
- dpv8514pWfXw==
+        id S1726415AbgD3S7j (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 30 Apr 2020 14:59:39 -0400
+IronPort-SDR: iK43XeTadTuU2G1WX+2mVIxrfOq1IYLXCYsz8ShB72Y3MLc3R1UwXaOYj/DNqzUXvrY/z8L656
+ QlYdWleMrmdg==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2020 11:33:29 -0700
-IronPort-SDR: J48xY2cKJPAK1NVryygQbF/nagAXDIYz1I6SC3AHIW5UHcqfCG66Luu3iM/N/zRymWaoSl5F24
- 9Hf1OxKC5PKg==
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2020 11:59:38 -0700
+IronPort-SDR: Ed+FWXPB3/MF2qsCgTd4joebR2FBMhxVdTEyzI/OAOvXfeDcNp7KT2BZTm4cXqjJfPT7ZdCKVg
+ OutbuaWtcmcw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,336,1583222400"; 
-   d="scan'208";a="433056299"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga005.jf.intel.com with ESMTP; 30 Apr 2020 11:33:28 -0700
-Date:   Thu, 30 Apr 2020 11:39:31 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, joro@8bytes.org, catalin.marinas@arm.com,
-        will@kernel.org, robin.murphy@arm.com, kevin.tian@intel.com,
-        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
-        christian.koenig@amd.com, felix.kuehling@amd.com,
-        zhangfei.gao@linaro.org, jgg@ziepe.ca, xuzaibo@huawei.com,
-        fenghua.yu@intel.com, hch@infradead.org,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v6 02/25] iommu/ioasid: Add ioasid references
-Message-ID: <20200430113931.0fbf7a37@jacob-builder>
-In-Reply-To: <20200430143424.2787566-3-jean-philippe@linaro.org>
-References: <20200430143424.2787566-1-jean-philippe@linaro.org>
-        <20200430143424.2787566-3-jean-philippe@linaro.org>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+   d="scan'208";a="303360005"
+Received: from unknown (HELO nsgsw-wilsonpoint.lm.intel.com) ([10.232.116.102])
+  by FMSMGA003.fm.intel.com with ESMTP; 30 Apr 2020 11:59:37 -0700
+From:   Jon Derrick <jonathan.derrick@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     <linux-pci@vger.kernel.org>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Russell Currey <ruscur@russell.cc>,
+        Sam Bobroff <sbobroff@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Frederick Lawler <fred@fredlawl.com>,
+        Rajat Jain <rajatja@google.com>,
+        "Patel, Mayurkumar" <mayurkumar.patel@intel.com>,
+        Olof Johansson <olof@lixom.net>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/2] PCI/ERR: Allow Native AER/DPC using _OSC
+Date:   Thu, 30 Apr 2020 12:46:07 -0600
+Message-Id: <1588272369-2145-1-git-send-email-jonathan.derrick@intel.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 30 Apr 2020 16:34:01 +0200
-Jean-Philippe Brucker <jean-philippe@linaro.org> wrote:
+Hi Bjorn & Kuppuswamy,
 
-> Let IOASID users take references to existing ioasids with
-> ioasid_get(). ioasid_free() drops a reference and only frees the
-> ioasid when its reference number is zero. It returns whether the
-> ioasid was freed.
-> 
-Looks good to me, I was planning to do the same for VT-d use. Just a
-couple of points for potential extension. I can rebase on top of this.
+I see a problem in the DPC ECN [1] to _OSC in that it doesn't give us a way to
+determine if firmware supports _OSC DPC negotation, and therefore how to handle
+DPC.
+
+Here is the wording of the ECN that implies that Firmware without _OSC DPC
+negotiation support should have the OSPM rely on _OSC AER negotiation when
+determining DPC control:
+
+  PCIe Base Specification suggests that Downstream Port Containment may be
+  controlled either by the Firmware or the Operating System. It also suggests
+  that the Firmware retain ownership of Downstream Port Containment if it also
+  owns AER. When the Firmware owns Downstream Port Containment, it is expected
+  to use the new "Error Disconnect Recover" notification to alert OSPM of a
+  Downstream Port Containment event.
+
+In legacy platforms, as bits in _OSC are reserved prior to implementation, ACPI
+Root Bus enumeration will mark these Host Bridges as without Native DPC
+support, even though the specification implies it's expected that AER _OSC
+negotiation determines DPC control for these platforms. There seems to be a
+need for a way to determine if the DPC control bit in _OSC is supported and
+fallback on AER otherwise.
 
 
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> ---
->  include/linux/ioasid.h | 10 ++++++++--
->  drivers/iommu/ioasid.c | 30 +++++++++++++++++++++++++++++-
->  2 files changed, 37 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/linux/ioasid.h b/include/linux/ioasid.h
-> index 6f000d7a0ddcd..609ba6f15b9e3 100644
-> --- a/include/linux/ioasid.h
-> +++ b/include/linux/ioasid.h
-> @@ -34,7 +34,8 @@ struct ioasid_allocator_ops {
->  #if IS_ENABLED(CONFIG_IOASID)
->  ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t
-> max, void *private);
-> -void ioasid_free(ioasid_t ioasid);
-> +void ioasid_get(ioasid_t ioasid);
-> +bool ioasid_free(ioasid_t ioasid);
->  void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
->  		  bool (*getter)(void *));
->  int ioasid_register_allocator(struct ioasid_allocator_ops
-> *allocator); @@ -48,10 +49,15 @@ static inline ioasid_t
-> ioasid_alloc(struct ioasid_set *set, ioasid_t min, return
-> INVALID_IOASID; }
->  
-> -static inline void ioasid_free(ioasid_t ioasid)
-> +static inline void ioasid_get(ioasid_t ioasid)
->  {
->  }
->  
-> +static inline bool ioasid_free(ioasid_t ioasid)
-> +{
-> +	return false;
-> +}
-> +
->  static inline void *ioasid_find(struct ioasid_set *set, ioasid_t
-> ioasid, bool (*getter)(void *))
->  {
-> diff --git a/drivers/iommu/ioasid.c b/drivers/iommu/ioasid.c
-> index 0f8dd377aada3..46511ac53e0c8 100644
-> --- a/drivers/iommu/ioasid.c
-> +++ b/drivers/iommu/ioasid.c
-> @@ -15,6 +15,7 @@ struct ioasid_data {
->  	struct ioasid_set *set;
->  	void *private;
->  	struct rcu_head rcu;
-> +	refcount_t refs;
->  };
->  
->  /*
-> @@ -314,6 +315,7 @@ ioasid_t ioasid_alloc(struct ioasid_set *set,
-> ioasid_t min, ioasid_t max, 
->  	data->set = set;
->  	data->private = private;
-> +	refcount_set(&data->refs, 1);
->  
->  	/*
->  	 * Custom allocator needs allocator data to perform platform
-> specific @@ -345,12 +347,33 @@ ioasid_t ioasid_alloc(struct
-> ioasid_set *set, ioasid_t min, ioasid_t max, }
->  EXPORT_SYMBOL_GPL(ioasid_alloc);
->  
-> +/**
-> + * ioasid_get - obtain a reference to the IOASID
-> + */
-> +void ioasid_get(ioasid_t ioasid)
-why void? what if the ioasid is not valid.
+Currently portdrv assumes DPC control if the port has Native AER services:
 
-> +{
-> +	struct ioasid_data *ioasid_data;
-> +
-> +	spin_lock(&ioasid_allocator_lock);
-> +	ioasid_data = xa_load(&active_allocator->xa, ioasid);
-> +	if (ioasid_data)
-> +		refcount_inc(&ioasid_data->refs);
-> +	spin_unlock(&ioasid_allocator_lock);
-> +}
-> +EXPORT_SYMBOL_GPL(ioasid_get);
-> +
->  /**
->   * ioasid_free - Free an IOASID
->   * @ioasid: the ID to remove
-> + *
-> + * Put a reference to the IOASID, free it when the number of
-> references drops to
-> + * zero.
-> + *
-> + * Return: %true if the IOASID was freed, %false otherwise.
->   */
-> -void ioasid_free(ioasid_t ioasid)
-> +bool ioasid_free(ioasid_t ioasid)
->  {
-> +	bool free = false;
->  	struct ioasid_data *ioasid_data;
->  
->  	spin_lock(&ioasid_allocator_lock);
-> @@ -360,6 +383,10 @@ void ioasid_free(ioasid_t ioasid)
->  		goto exit_unlock;
->  	}
->  
-> +	free = refcount_dec_and_test(&ioasid_data->refs);
-> +	if (!free)
-> +		goto exit_unlock;
-> +
-Just FYI, we may need to add states for the IOASID, i.g. mark the IOASID
-inactive after free. And prohibit ioasid_get() after freed. For VT-d,
-this is useful when KVM queries the IOASID.
+static int get_port_device_capability(struct pci_dev *dev)
+...
+	if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC) &&
+	    pci_aer_available() &&
+	    (pcie_ports_dpc_native || (services & PCIE_PORT_SERVICE_AER)))
+		services |= PCIE_PORT_SERVICE_DPC;
 
->  	active_allocator->ops->free(ioasid,
-> active_allocator->ops->pdata); /* Custom allocator needs additional
-> steps to free the xa element */ if (active_allocator->flags &
-> IOASID_ALLOCATOR_CUSTOM) { @@ -369,6 +396,7 @@ void
-> ioasid_free(ioasid_t ioasid) 
->  exit_unlock:
->  	spin_unlock(&ioasid_allocator_lock);
-> +	return free;
->  }
->  EXPORT_SYMBOL_GPL(ioasid_free);
->  
+Newer firmware may not grant OSPM DPC control, if for instance, it expects to
+use Error Disconnect Recovery. However it looks like ACPI will use DPC services
+via the EDR driver, without binding the full DPC port service driver.
 
-[Jacob Pan]
+
+If we change portdrv to probe based on host->native_dpc and not AER, then we
+break instances with legacy firmware where OSPM will clear host->native_dpc
+solely due to _OSC bits being reserved:
+
+struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
+...
+	if (!(root->osc_control_set & OSC_PCI_EXPRESS_DPC_CONTROL))
+		host_bridge->native_dpc = 0;
+
+
+
+So my assumption instead is that host->native_dpc can be 0 and expect Native
+DPC services if AER is used. In other words, if and only if DPC probe is
+invoked from portdrv, then it needs to rely on the AER dependency. Otherwise it
+should be assumed that ACPI set up DPC via EDR. This covers legacy firmware.
+
+However it seems like that could be trouble with newer firmware that might give
+OSPM control of AER but not DPC, and would result in both Native DPC and EDR
+being in effect.
+
+
+Anyways here are two patches that give control of AER and DPC on the results of
+_OSC. They don't mess with the HEST parser as I expect those to be removed at
+some point. I need these for VMD support which doesn't even rely on _OSC, but I
+suspect this won't be the last effort as we detangle Firmware First.
+
+[1] https://members.pcisig.com/wg/PCI-SIG/document/12888
+
+
+Jon Derrick (2):
+  PCI/AER: Use _OSC to determine Firmware First before HEST
+  PCI/DPC: Use _OSC to determine DPC support
+
+ drivers/pci/pcie/aer.c          | 3 +++
+ drivers/pci/pcie/dpc.c          | 3 ---
+ drivers/pci/pcie/portdrv_core.c | 3 ++-
+ 3 files changed, 5 insertions(+), 4 deletions(-)
+
+-- 
+1.8.3.1
+
