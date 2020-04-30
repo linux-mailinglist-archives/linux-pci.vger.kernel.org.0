@@ -2,204 +2,220 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C1751BF33A
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Apr 2020 10:45:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 779FA1BF5E0
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Apr 2020 12:51:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbgD3Ins (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Apr 2020 04:43:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34850 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726780AbgD3Inr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Apr 2020 04:43:47 -0400
-Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B24BEC035494;
-        Thu, 30 Apr 2020 01:43:47 -0700 (PDT)
-Received: by mail-oo1-xc44.google.com with SMTP id e18so1100052oot.9;
-        Thu, 30 Apr 2020 01:43:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RJfi8YEQRUQ7Nx9/zDtTwBKV3TKprwuNVW7KwyjiUoc=;
-        b=e7I7Q+7VKNBFCc1ou225/A0eOoID6/aWYUAFnRX/+iDZKw7DSHwIPwW1x5AgKniBbb
-         jjiRPiLT0bfCFJCEIeXzYQaLiByhMHFrojdlukrxCxJHfJvRxD2JLRwY0Kw4GcWzKgpv
-         KyJIdFjDrHQsaWD3gm7ISrflX9rpalM8JsR1CWNzYHpTtOI+KW0+JOQR8C+opcFQXjF6
-         S/c6OobDxj2DTU96pUr/bL0pQIjEijtQXxGdF8RHIG5kuPZ4fALdJeOBf6CUQYRwB8+l
-         wjZc0cjh7D9rXMdwkVPY5DweLztFSz83g67f1JnSombDq/ads5UK12j7sNeq5Hwuqqsr
-         8JFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RJfi8YEQRUQ7Nx9/zDtTwBKV3TKprwuNVW7KwyjiUoc=;
-        b=NuS8gXY6Li3+V9zsGtYMZSi0op4nTQ3hhTh3r5PBBGB4EtnQdrM3zmJpZwRGgtWmgP
-         7a/F/kxZthf//VK22wKK9N16gDDHIQPi5pckcuERksfL52liYnBTbvQP3FOYcL+nsnI/
-         4j7A3QMyJtOf7AcOIiyHhZ/da2bzjzCXKnRYCc9osLxsphTdzq/1oCj3O7uCr1161wUl
-         ZAeJDOyjFwvZZ2LavCLHOI8MfD503/hsaeVJbU3yc4XgQ+GnISlojgAWGgOoOm/JB/Gp
-         Ama9YJg43e/HB54dRwS+KUtH3PfVPDk7y3+DJaqelRt9MZREMMONI1Qgpc9cvOmdZs3Z
-         g+Zw==
-X-Gm-Message-State: AGi0PuYJDnujA47fVGTS/G9mR8GRcoY4kybaRf1h+rl5u+gXiUk0HsMa
-        C7LeYLKxRuYagRr+vT3GhHIUher0iStZtTp5XEk=
-X-Google-Smtp-Source: APiQypLSZyNqZBc6As1bQvkl0M72z9Bu+wI/WiD4xkyor99UzGV3HeSXzgXCRuS0Ua8uSVnQTYGN2BiezF0okRKwwuY=
-X-Received: by 2002:a4a:a209:: with SMTP id m9mr1879725ool.62.1588236226990;
- Thu, 30 Apr 2020 01:43:46 -0700 (PDT)
+        id S1726427AbgD3Kvx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Apr 2020 06:51:53 -0400
+Received: from mga04.intel.com ([192.55.52.120]:61730 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725280AbgD3Kvw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 30 Apr 2020 06:51:52 -0400
+IronPort-SDR: 2P934G0rj5w5DFOlHZnTaCUkaA1au8jM6MsJcDxClh1dy7IO3re4R3ISiwWInSi1JqhcgOya7i
+ seRlX71KIA/w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2020 03:51:51 -0700
+IronPort-SDR: C9Ze5ewZdJtZGCr3PdYlqQsS7svHG4/2e5fdMYdu1sCp8yrNNf+86T0mSDRWbhJ7LPVkIvAQ2A
+ R0spFoyfE+bg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,334,1583222400"; 
+   d="scan'208";a="276478254"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga002.jf.intel.com with ESMTP; 30 Apr 2020 03:51:50 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jU6nF-0000gx-Iw; Thu, 30 Apr 2020 18:51:49 +0800
+Date:   Thu, 30 Apr 2020 18:51:23 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:pci/error] BUILD SUCCESS
+ a5bf8719af08670467ad96954c9b1052a826cd9a
+Message-ID: <5eaaadab.1FkvD8cc3H0EsZY/%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <1587666159-6035-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1587666159-6035-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 30 Apr 2020 09:43:20 +0100
-Message-ID: <CA+V-a8u1rEF1DMAVkZ1=-d_MjLa_49X2Nny_VaEN0Y398GOJhw@mail.gmail.com>
-Subject: Re: [PATCH v9 0/8] Add endpoint driver for R-Car PCIe controller
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Kishon,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/error
+branch HEAD: a5bf8719af08670467ad96954c9b1052a826cd9a  PCI/AER: Use only _OSC to determine AER ownership
 
-On Thu, Apr 23, 2020 at 7:23 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
->
-> Hi All,
->
-> This patch series adds support for endpoint driver for R-Car PCIe controller on
-> R-Car/RZ-G2x SoC's, this also extends the epf framework to handle multiple windows
-> supported by the controller for mapping PCI address locally.
->
-> Note:
-> The cadence/rockchip/designware endpoint drivers are build tested only.
->
-> Changes for v9 (Re-spun this series as there were minimal changes requested):
-> * Rebased patches on top of v5.7.rc1
-> * Replaced mdelay(1) with usleep_range(1000, 1001) in rcar_pcie_ep_assert_intx()
-> * Added a check for max_functions read from DT to restrict with
->   RCAR_EPC_MAX_FUNCTIONS
-> * Replaced MSICAP0_MMENUM with MSICAP0_MMESE
-> * Retry ioremap for other windows on failure in pci_epc_mem_alloc_addr()
-> * Fixed looping for number windows in pci_epc_mem_exit()
-> * Set maximum to 1 for max-functions in DT binding (I have restored the acks
->   from  Rob and Shimoda-san)
-> * Sorted the entry in MAINTAINERS
->
-> Changes for v8:
-> * Dropped adding R8A774C0 (0x002d) pci-id in pci_ids.h
-> * Fixed typo in commit message for patch 2/8
-> * Reworded commit message for patch 5/8 as suggested by Bjorn
-> * Split up patch to add pci_epc_mem_init() interface to add page_size argument
->   as suggested by Bjorn.
->
-> Changes for v7:
-> * Fixed review comments pointed by Shimoda-san
->   1] Made DT bindings dual licensed, added Shimoda-san as maintainer and fixed
->      the example as its built with #{address,size}-cells = <1>. I have still
->      restored the Ack from Rob and Shimoda-san with these changes.
->   2] Split up the patches so that they can be picked up by respective subsystem
->      patches 1/4-9/11 are now part of this series.
->   3] Dropped altering a comment in pci-epc.h
->   4] Used a local variable align_size in pci_epc_mem_alloc_addr() so that size
->      variable doesn't get overwritten in the loop.
->   5] Replaced i-=1 with i--
->   6] Replaced rcar with R-Car in patch subject and description.
->   7] Set MACCTLR in init() callback
->
-> Changes for v6:
-> 1] Rebased patches on endpoint branch of https://git.kernel.org/pub/
->    scm/linux/kernel/git/lpieralisi/pci.git/
-> 2] Fixed review comments from Shimoda-san
->    a] Made sure defconfig changes were in separate patch
->    b] Created rcar_pcie_host/rcar_pcie_ep structures
->    c] Added pci-id for R8A774C0
->    d] Added entry in MAINTAINERS for dt-binding
->    e] Dropped unnecessary braces
-> 3] Added support for msi.
->
-> Changes for v5:
-> 1] Rebased patches on next branch of https://git.kernel.org/pub/scm/
->    linux/kernel/git/helgaas/pci.git
-> 2] Fixed review comments reported by Kishon while fetching the matching
->    window in function pci_epc_get_matching_window()
-> 3] Fixed review comments reported by Bjorn
->    a] Split patch up first patch so that its easier to review and incremental
->    b] Fixed typos
-> 4] Included Reviewed tag from Rob for the dt-binding patch
-> 5] Fixed issue reported by Nathan for assigning variable to itself
->
-> Changes for v4:
-> 1] Fixed dtb_check error reported by Rob
-> 2] Fixed review comments reported by Kishon
->    a] Dropped pci_epc_find_best_fit_window()
->    b] Fixed initializing mem ptr in __pci_epc_mem_init()
->    c] Dropped map_size from pci_epc_mem_window structure
->
-> Changes for v3:
-> 1] Fixed review comments from Bjorn and Kishon.
-> 3] Converted to DT schema
->
-> Changes for v2:
-> 1] Fixed review comments from Biju for dt-bindings to include an example
->    for a tested platform.
-> 2] Fixed review comments from Kishon to extend the features of outbound
->    regions in epf framework.
-> 3] Added support to parse outbound-ranges in OF.
->
-> Lad Prabhakar (8):
->   PCI: rcar: Rename pcie-rcar.c to pcie-rcar-host.c
->   PCI: rcar: Move shareable code to a common file
->   PCI: rcar: Fix calculating mask for PCIEPAMR register
->   PCI: endpoint: Pass page size as argument to pci_epc_mem_init()
->   PCI: endpoint: Add support to handle multiple base for mapping
->     outbound memory
-Could you please do the needy for the above two patches, so that this
-can be picked up by Lorenzo.
+elapsed time: 728m
 
-Cheers,
---Prabhakar
+configs tested: 161
+configs skipped: 0
 
->   dt-bindings: PCI: rcar: Add bindings for R-Car PCIe endpoint
->     controller
->   PCI: rcar: Add endpoint mode support
->   MAINTAINERS: Add file patterns for rcar PCI device tree bindings
->
->  .../devicetree/bindings/pci/rcar-pci-ep.yaml  |   77 ++
->  MAINTAINERS                                   |    1 +
->  drivers/pci/controller/Kconfig                |   18 +
->  drivers/pci/controller/Makefile               |    3 +-
->  .../pci/controller/cadence/pcie-cadence-ep.c  |    2 +-
->  .../pci/controller/dwc/pcie-designware-ep.c   |   16 +-
->  drivers/pci/controller/pcie-rcar-ep.c         |  557 ++++++++
->  drivers/pci/controller/pcie-rcar-host.c       | 1065 +++++++++++++++
->  drivers/pci/controller/pcie-rcar.c            | 1206 +----------------
->  drivers/pci/controller/pcie-rcar.h            |  140 ++
->  drivers/pci/controller/pcie-rockchip-ep.c     |    2 +-
->  drivers/pci/endpoint/pci-epc-mem.c            |  204 ++-
->  include/linux/pci-epc.h                       |   38 +-
->  13 files changed, 2078 insertions(+), 1251 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
->  create mode 100644 drivers/pci/controller/pcie-rcar-ep.c
->  create mode 100644 drivers/pci/controller/pcie-rcar-host.c
->  create mode 100644 drivers/pci/controller/pcie-rcar.h
->
-> --
-> 2.17.1
->
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm64                            allyesconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm                              allmodconfig
+arm64                             allnoconfig
+arm                               allnoconfig
+arm                           efm32_defconfig
+arm                         at91_dt_defconfig
+arm                        shmobile_defconfig
+arm64                               defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                           sunxi_defconfig
+arm                        multi_v7_defconfig
+sparc                            allyesconfig
+i386                                defconfig
+riscv                    nommu_virt_defconfig
+sh                  sh7785lcr_32bit_defconfig
+i386                             alldefconfig
+riscv                               defconfig
+ia64                             allmodconfig
+mips                       capcella_defconfig
+xtensa                       common_defconfig
+powerpc                             defconfig
+ia64                                defconfig
+arc                                 defconfig
+mips                             allyesconfig
+parisc                generic-64bit_defconfig
+ia64                          tiger_defconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                              debian-10.3
+ia64                              allnoconfig
+ia64                        generic_defconfig
+ia64                         bigsur_defconfig
+ia64                             allyesconfig
+ia64                             alldefconfig
+m68k                       m5475evb_defconfig
+m68k                             allmodconfig
+m68k                       bvme6000_defconfig
+m68k                           sun3_defconfig
+m68k                          multi_defconfig
+nios2                         3c120_defconfig
+nios2                         10m50_defconfig
+c6x                        evmc6678_defconfig
+c6x                              allyesconfig
+openrisc                 simple_smp_defconfig
+openrisc                    or1ksim_defconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                                defconfig
+alpha                               defconfig
+h8300                       h8s-sim_defconfig
+h8300                     edosk2674_defconfig
+xtensa                          iss_defconfig
+h8300                    h8300h-sim_defconfig
+arc                              allyesconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+mips                            ar7_defconfig
+mips                         64r6el_defconfig
+mips                              allnoconfig
+mips                           32r2_defconfig
+mips                             allmodconfig
+mips                malta_kvm_guest_defconfig
+mips                         tb0287_defconfig
+mips                           ip32_defconfig
+mips                  decstation_64_defconfig
+mips                      loongson3_defconfig
+mips                          ath79_defconfig
+mips                        bcm63xx_defconfig
+parisc                            allnoconfig
+parisc                generic-32bit_defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                      chrp32_defconfig
+powerpc                       holly_defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+powerpc                           allnoconfig
+powerpc                  mpc866_ads_defconfig
+powerpc                    amigaone_defconfig
+powerpc                    adder875_defconfig
+powerpc                     ep8248e_defconfig
+powerpc                          g5_defconfig
+powerpc                     mpc512x_defconfig
+parisc               randconfig-a001-20200430
+mips                 randconfig-a001-20200430
+m68k                 randconfig-a001-20200430
+riscv                randconfig-a001-20200430
+alpha                randconfig-a001-20200430
+nds32                randconfig-a001-20200430
+microblaze           randconfig-a001-20200430
+nios2                randconfig-a001-20200430
+h8300                randconfig-a001-20200430
+c6x                  randconfig-a001-20200430
+sparc64              randconfig-a001-20200430
+nios2                randconfig-a001-20200429
+h8300                randconfig-a001-20200429
+c6x                  randconfig-a001-20200429
+sparc64              randconfig-a001-20200429
+microblaze           randconfig-a001-20200429
+s390                 randconfig-a001-20200430
+xtensa               randconfig-a001-20200430
+csky                 randconfig-a001-20200430
+openrisc             randconfig-a001-20200430
+sh                   randconfig-a001-20200430
+sh                   randconfig-a001-20200429
+csky                 randconfig-a001-20200429
+s390                 randconfig-a001-20200429
+xtensa               randconfig-a001-20200429
+openrisc             randconfig-a001-20200429
+i386                 randconfig-b001-20200430
+i386                 randconfig-b002-20200430
+x86_64               randconfig-b001-20200430
+i386                 randconfig-b003-20200430
+x86_64               randconfig-b002-20200430
+x86_64               randconfig-b003-20200430
+x86_64               randconfig-e002-20200430
+i386                 randconfig-e003-20200430
+x86_64               randconfig-e003-20200430
+i386                 randconfig-e002-20200430
+x86_64               randconfig-e001-20200430
+i386                 randconfig-e001-20200430
+i386                 randconfig-h002-20200430
+i386                 randconfig-h003-20200430
+x86_64               randconfig-h001-20200430
+x86_64               randconfig-h003-20200430
+i386                 randconfig-h001-20200430
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+s390                       zfcpdump_defconfig
+s390                          debug_defconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                             alldefconfig
+s390                                defconfig
+sh                          rsk7269_defconfig
+sh                               allmodconfig
+sh                            titan_defconfig
+sh                                allnoconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+um                                  defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
