@@ -2,155 +2,113 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CF2901C0693
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Apr 2020 21:35:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 881BB1C07F7
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Apr 2020 22:32:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbgD3Tfj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Apr 2020 15:35:39 -0400
-Received: from mga05.intel.com ([192.55.52.43]:35594 "EHLO mga05.intel.com"
+        id S1727079AbgD3Ucz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Apr 2020 16:32:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726366AbgD3Tfi (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 30 Apr 2020 15:35:38 -0400
-IronPort-SDR: p7L2+YjXDnEUv31dKqyg5XPYYu15DXRi0DkTS1mm6gCay/GmPqlIg6X+nzXG/G/TFtUKIxdr4c
- aGMr2+6fK6sw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2020 12:35:38 -0700
-IronPort-SDR: hcn3O9GutZeM8fmQeR3busHSjqWFMb2j3W4kxzR9bDk20bg7zfCMtT7yBlAafeCUdqYHJjpd0b
- Ssaa9eNzwGUg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,336,1583222400"; 
-   d="scan'208";a="303368264"
-Received: from stallamr-mobl1.amr.corp.intel.com (HELO [10.254.73.127]) ([10.254.73.127])
-  by FMSMGA003.fm.intel.com with ESMTP; 30 Apr 2020 12:35:37 -0700
-Subject: Re: [PATCH] PCI/ERR: Resolve regression in pcie_do_recovery
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-To:     Jay Vosburgh <jay.vosburgh@canonical.com>,
-        linux-pci@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>
-References: <12115.1588207324@famine>
- <18897ceb-2263-1101-ae43-918a66794e14@linux.intel.com>
-Message-ID: <d72b2b0c-6842-3d76-5b13-2fbb3d25d73f@linux.intel.com>
-Date:   Thu, 30 Apr 2020 12:35:37 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1726626AbgD3Ucz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 30 Apr 2020 16:32:55 -0400
+Received: from localhost (mobile-166-175-184-168.mycingular.net [166.175.184.168])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 630C020731;
+        Thu, 30 Apr 2020 20:32:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588278774;
+        bh=zzOnZ2B7AsiXDdVWneijt0yscUPJzfIVROepioX7gdA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=zd5B1ASeI/cKNjmR9Kf5s0atSdNzjmUWfNULcGEiUguAUlByj0/PuGPATMJIx9jHv
+         WCAH+L+iFs5BnjP2mGyb5l94EBqey4Zj0mSzBEZGBt1rtwBurlaMNpQ4opqZkzjKPx
+         C3AKyYptt/ieWhnd4glH2ZPvpWjAI2QT7vwx6c+w=
+Date:   Thu, 30 Apr 2020 15:32:52 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jim Quinlan <james.quinlan@broadcom.com>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/5] PCI: brcmstb: enable CRS
+Message-ID: <20200430203252.GA62266@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <18897ceb-2263-1101-ae43-918a66794e14@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200430185522.4116-3-james.quinlan@broadcom.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Jay,
-
-On 4/29/20 6:15 PM, Kuppuswamy, Sathyanarayanan wrote:
+On Thu, Apr 30, 2020 at 02:55:20PM -0400, Jim Quinlan wrote:
+> From: Jim Quinlan <jquinlan@broadcom.com>
 > 
+> Configuration Retry Request Status is off by default on this
+> PCIe controller.  Turn it on.
+
+Are you talking about CRS itself, i.e., the ability of a Root Port to
+deal with Completions with Configuration Retry Request Status?  That
+really shouldn't be switchable in the hardware since it's a required
+feature for all PCIe devices.
+
+Or are you talking about CRS Software Visibility, which is controlled
+by a bit in the PCIe Root Control register?  That *should* be managed
+by the PCI core in pci_enable_crs().  Does that generic method of
+controlling it not work for this device?
+
+It looks like maybe the latter, since the generic:
+
+  #define  PCI_EXP_RTCTL_CRSSVE   0x0010
+
+matches your new PCIE_RC_CFG_PCIE_ROOT_CAP_CONTROL_RC_CRS_EN_MASK.
+
+If pci_enable_crs() doesn't work on this device, it sounds like a
+hardware defect that we need to work around, but I'm not sure that
+just enabling it unconditionally here is the right thing.
+
+> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
+> ---
+>  drivers/pci/controller/pcie-brcmstb.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 > 
-> On 4/29/20 5:42 PM, Jay Vosburgh wrote:
->>     Commit 6d2c89441571 ("PCI/ERR: Update error status after
->> reset_link()"), introduced a regression, as pcie_do_recovery will
->> discard the status result from report_frozen_detected.  This can cause a
->> failure to recover if _NEED_RESET is returned by report_frozen_detected
->> and report_slot_reset is not invoked.
->>
->>     Such an event can be induced for testing purposes by reducing
->> the Max_Payload_Size of a PCIe bridge to less than that of a device
->> downstream from the bridge, and then initating I/O through the device,
->> resulting in oversize transactions.  In the presence of DPC, this
->> results in a containment event and attempted reset and recovery via
->> pcie_do_recovery.  After 6d2c89441571 report_slot_reset is not invoked,
->> and the device does not recover.
+> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+> index 5b0dec5971b8..2bc913c0262c 100644
+> --- a/drivers/pci/controller/pcie-brcmstb.c
+> +++ b/drivers/pci/controller/pcie-brcmstb.c
+> @@ -34,6 +34,9 @@
+>  #define BRCM_PCIE_CAP_REGS				0x00ac
+>  
+>  /* Broadcom STB PCIe Register Offsets */
+> +#define PCIE_RC_CFG_PCIE_ROOT_CAP_CONTROL			0x00c8
+> +#define  PCIE_RC_CFG_PCIE_ROOT_CAP_CONTROL_RC_CRS_EN_MASK	0x10
+> +
+>  #define PCIE_RC_CFG_VENDOR_VENDOR_SPECIFIC_REG1				0x0188
+>  #define  PCIE_RC_CFG_VENDOR_VENDOR_SPECIFIC_REG1_ENDIAN_MODE_BAR2_MASK	0xc
+>  #define  PCIE_RC_CFG_VENDOR_SPCIFIC_REG1_LITTLE_ENDIAN			0x0
+> @@ -827,6 +830,12 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+>  		 pci_speed_string(pcie_link_speed[cls]), nlw,
+>  		 ssc_good ? "(SSC)" : "(!SSC)");
+>  
+> +	/* Enable configuration request retry (CRS) */
+> +	tmp = readl(base + PCIE_RC_CFG_PCIE_ROOT_CAP_CONTROL);
+> +	u32p_replace_bits(&tmp, 1,
+> +			  PCIE_RC_CFG_PCIE_ROOT_CAP_CONTROL_RC_CRS_EN_MASK);
+> +	writel(tmp, base + PCIE_RC_CFG_PCIE_ROOT_CAP_CONTROL);
+> +
+>  	/* PCIe->SCB endian mode for BAR */
+>  	tmp = readl(base + PCIE_RC_CFG_VENDOR_VENDOR_SPECIFIC_REG1);
+>  	u32p_replace_bits(&tmp, PCIE_RC_CFG_VENDOR_SPCIFIC_REG1_LITTLE_ENDIAN,
+> -- 
+> 2.17.1
 > 
-> I think this issue is related to the issue discussed in following
-> thread (DPC non-hotplug support).
-> 
-> https://lkml.org/lkml/2020/3/28/328
-> 
-> If my assumption is correct, you are dealing with devices which are
-> not hotplug capable. If the devices are hotplug capable then you don't
-> need to proceed to report_slot_reset(), since hotplug handler will
-> remove/re-enumerate the devices correctly.
-
-Can you check whether following fix works for you?
-
-This includes support for bus_reset in recovery function itself.
-
-index 14bb8f54723e..c9eaab68ab7a 100644
---- a/drivers/pci/pcie/err.c
-+++ b/drivers/pci/pcie/err.c
-@@ -165,13 +165,23 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
-         pci_dbg(dev, "broadcast error_detected message\n");
-         if (state == pci_channel_io_frozen) {
-         if (state == pci_channel_io_frozen) {
-                 pci_walk_bus(bus, report_frozen_detected, &status);
--               status = reset_link(dev);
--               if (status != PCI_ERS_RESULT_RECOVERED) {
-+               status = PCI_ERS_RESULT_NEED_RESET;
-+       } else {
-+               pci_walk_bus(bus, report_normal_detected, &status);
-+       }
-+
-+       if (status == PCI_ERS_RESULT_NEED_RESET) {
-+               if (reset_link)
-+                       if (reset_link(dev) != PCI_ERS_RESULT_RECOVERED)
-+                               status = PCI_ERS_RESULT_DISCONNECT;
-+               else
-+                       if (pci_bus_error_reset(dev))
-+                               status = PCI_ERS_RESULT_DISCONNECT;
-+
-+               if (status == PCI_ERS_RESULT_DISCONNECT) {
-                         pci_warn(dev, "link reset failed\n");
-                         goto failed;
-                 }
--       } else {
--               pci_walk_bus(bus, report_normal_detected, &status);
-         }
-
-         if (status == PCI_ERS_RESULT_CAN_RECOVER) {
-
-
-> 
->>
->>     Inspection shows a similar path is plausible for a return of
->> _CAN_RECOVER and the invocation of report_mmio_enabled.
->>
->>     Resolve this by preserving the result of report_frozen_detected if
->> reset_link does not return _DISCONNECT.
->>
->> Fixes: 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
->> Signed-off-by: Jay Vosburgh <jay.vosburgh@canonical.com>
->>
->> ---
->>   drivers/pci/pcie/err.c | 11 +++++++++--
->>   1 file changed, 9 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
->> index 14bb8f54723e..e4274562f3a0 100644
->> --- a/drivers/pci/pcie/err.c
->> +++ b/drivers/pci/pcie/err.c
->> @@ -164,10 +164,17 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev 
->> *dev,
->>       pci_dbg(dev, "broadcast error_detected message\n");
->>       if (state == pci_channel_io_frozen) {
->> +        pci_ers_result_t status2;
->> +
->>           pci_walk_bus(bus, report_frozen_detected, &status);
->> -        status = reset_link(dev);
->> -        if (status != PCI_ERS_RESULT_RECOVERED) {
->> +        /* preserve status from report_frozen_detected to
->> +         * insure report_mmio_enabled or report_slot_reset are
->> +         * invoked even if reset_link returns _RECOVERED.
->> +         */
->> +        status2 = reset_link(dev);
->> +        if (status2 != PCI_ERS_RESULT_RECOVERED) {
->>               pci_warn(dev, "link reset failed\n");
->> +            status = status2;
->>               goto failed;
->>           }
->>       } else {
->>
