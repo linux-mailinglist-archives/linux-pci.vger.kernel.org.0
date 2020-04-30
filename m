@@ -2,120 +2,155 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 692861C0662
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Apr 2020 21:29:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF2901C0693
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Apr 2020 21:35:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726478AbgD3T3t (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Apr 2020 15:29:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51754 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726415AbgD3T3t (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Apr 2020 15:29:49 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8965C035494;
-        Thu, 30 Apr 2020 12:29:48 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id t9so1233344pjw.0;
-        Thu, 30 Apr 2020 12:29:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=S56vvjgUJgJIcs0iI3orpY7ejPb7V1V+KfOnIEgpemg=;
-        b=oAOyVMbSFrTgrrXodp1aN7KVZh+59xE1YaGOAh56d1EC+I4gcm1UjNeI3p6/8+hOgz
-         2i5s2bjByfGsW01ml/aHEdaRd6QMQb65ef4L1x3R+8Z0+tV6gA1tugOZkpG4hujd3F2r
-         Uac4rrNRFI6dI2LsjxLXJEMUySVo8PN254L95aFVxbCN9Dg4IM81ws7Jkn7yhtZ4blTc
-         fi8d6VgtOrxaL/fcC9qDPkwCkGFlncx/GTj6uDsN+gnU7fMsaJgz6t1xYsdW6feHEfUw
-         ZWLFaCIYqIAtoUjGxBFLhY/4JIXbnLgCfZ9r7ZERjmZzVE7k+vVchNrCAoQRgXS/3200
-         iBBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=S56vvjgUJgJIcs0iI3orpY7ejPb7V1V+KfOnIEgpemg=;
-        b=LcZbhikXDV0hR4MnNepW6Mp/pKdmHfnsNpS1145Jdez5IS3Dj4SJYJ0xmXtbX04GOT
-         /bMmL4G2xtCqdk+/s7LSbNHCQJWJFhcq7i6HQnjpdIK2qDBXTAh08r9HexVU6oLYssrg
-         3VPWkO63qm02qWh4rIMCslJEjoS4+rLSBkfn2EY0jqxnEYAAeWWQXwTcClRmvny8rT3C
-         AhORxarfsB5iC3Cw5Ie3OvwrhJfTMiNjKutiulouHw/SvXOLyLq6TKigbl8vC0+bgcG7
-         qnXcOnqi5ruvGpMbtSmsrqIYJvKP5Du2Dv2zpRMwqL0Zw8sNULhpVhuuh0a8BNZh+9dw
-         wLSw==
-X-Gm-Message-State: AGi0PuZp9kup1fDlyTanCYU78Ep8PfjAo77Hb/MikJvmGon5XlGm47i6
-        tLiarpY87Fob3ybPIiqRTg==
-X-Google-Smtp-Source: APiQypJ7Vu9QFxwaGegbDs+zHeszCr6lN9AOoLWTdbcpuof9RCZcoh1RtagVlKoWgPy1jwwJ8NQDRg==
-X-Received: by 2002:a17:902:261:: with SMTP id 88mr537590plc.308.1588274988360;
-        Thu, 30 Apr 2020 12:29:48 -0700 (PDT)
-Received: from localhost.localdomain ([2402:3a80:d32:dd79:dd81:b49d:fd6a:d165])
-        by smtp.gmail.com with ESMTPSA id e4sm461038pge.45.2020.04.30.12.29.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 12:29:47 -0700 (PDT)
-From:   madhuparnabhowmik10@gmail.com
-To:     mingo@redhat.com, pbonzini@redhat.com, bp@alien8.de
-Cc:     x86@kernel.org, bhelgaas@google.com,
-        sean.j.christopherson@intel.com, cai@lca.pw, paulmck@kernel.org,
-        joel@joelfernandes.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        frextrite@gmail.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-pci@vger.kernel.org,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Subject: [PATCH] x86: Fix RCU list usage to avoid false positive warnings
-Date:   Fri,  1 May 2020 00:59:32 +0530
-Message-Id: <20200430192932.13371-1-madhuparnabhowmik10@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        id S1726635AbgD3Tfj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Apr 2020 15:35:39 -0400
+Received: from mga05.intel.com ([192.55.52.43]:35594 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726366AbgD3Tfi (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 30 Apr 2020 15:35:38 -0400
+IronPort-SDR: p7L2+YjXDnEUv31dKqyg5XPYYu15DXRi0DkTS1mm6gCay/GmPqlIg6X+nzXG/G/TFtUKIxdr4c
+ aGMr2+6fK6sw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2020 12:35:38 -0700
+IronPort-SDR: hcn3O9GutZeM8fmQeR3busHSjqWFMb2j3W4kxzR9bDk20bg7zfCMtT7yBlAafeCUdqYHJjpd0b
+ Ssaa9eNzwGUg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,336,1583222400"; 
+   d="scan'208";a="303368264"
+Received: from stallamr-mobl1.amr.corp.intel.com (HELO [10.254.73.127]) ([10.254.73.127])
+  by FMSMGA003.fm.intel.com with ESMTP; 30 Apr 2020 12:35:37 -0700
+Subject: Re: [PATCH] PCI/ERR: Resolve regression in pcie_do_recovery
+From:   "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+To:     Jay Vosburgh <jay.vosburgh@canonical.com>,
+        linux-pci@vger.kernel.org
+Cc:     Bjorn Helgaas <bhelgaas@google.com>
+References: <12115.1588207324@famine>
+ <18897ceb-2263-1101-ae43-918a66794e14@linux.intel.com>
+Message-ID: <d72b2b0c-6842-3d76-5b13-2fbb3d25d73f@linux.intel.com>
+Date:   Thu, 30 Apr 2020 12:35:37 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <18897ceb-2263-1101-ae43-918a66794e14@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Hi Jay,
 
-Use list_for_each_entry() instead of list_for_each_entry_rcu() whenever
-spinlock or mutex is always held.
-Otherwise, pass cond to list_for_each_entry_rcu().
+On 4/29/20 6:15 PM, Kuppuswamy, Sathyanarayanan wrote:
+> 
+> 
+> On 4/29/20 5:42 PM, Jay Vosburgh wrote:
+>>     Commit 6d2c89441571 ("PCI/ERR: Update error status after
+>> reset_link()"), introduced a regression, as pcie_do_recovery will
+>> discard the status result from report_frozen_detected.  This can cause a
+>> failure to recover if _NEED_RESET is returned by report_frozen_detected
+>> and report_slot_reset is not invoked.
+>>
+>>     Such an event can be induced for testing purposes by reducing
+>> the Max_Payload_Size of a PCIe bridge to less than that of a device
+>> downstream from the bridge, and then initating I/O through the device,
+>> resulting in oversize transactions.  In the presence of DPC, this
+>> results in a containment event and attempted reset and recovery via
+>> pcie_do_recovery.  After 6d2c89441571 report_slot_reset is not invoked,
+>> and the device does not recover.
+> 
+> I think this issue is related to the issue discussed in following
+> thread (DPC non-hotplug support).
+> 
+> https://lkml.org/lkml/2020/3/28/328
+> 
+> If my assumption is correct, you are dealing with devices which are
+> not hotplug capable. If the devices are hotplug capable then you don't
+> need to proceed to report_slot_reset(), since hotplug handler will
+> remove/re-enumerate the devices correctly.
 
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
----
- arch/x86/kernel/nmi.c          | 2 +-
- arch/x86/kvm/irq_comm.c        | 3 ++-
- arch/x86/pci/mmconfig-shared.c | 2 +-
- 3 files changed, 4 insertions(+), 3 deletions(-)
+Can you check whether following fix works for you?
 
-diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
-index 6407ea21fa1b..999dc6c134d2 100644
---- a/arch/x86/kernel/nmi.c
-+++ b/arch/x86/kernel/nmi.c
-@@ -195,7 +195,7 @@ void unregister_nmi_handler(unsigned int type, const char *name)
- 
- 	raw_spin_lock_irqsave(&desc->lock, flags);
- 
--	list_for_each_entry_rcu(n, &desc->head, list) {
-+	list_for_each_entry(n, &desc->head, list) {
- 		/*
- 		 * the name passed in to describe the nmi handler
- 		 * is used as the lookup key
-diff --git a/arch/x86/kvm/irq_comm.c b/arch/x86/kvm/irq_comm.c
-index c47d2acec529..5b88a648e079 100644
---- a/arch/x86/kvm/irq_comm.c
-+++ b/arch/x86/kvm/irq_comm.c
-@@ -258,7 +258,8 @@ void kvm_fire_mask_notifiers(struct kvm *kvm, unsigned irqchip, unsigned pin,
- 	idx = srcu_read_lock(&kvm->irq_srcu);
- 	gsi = kvm_irq_map_chip_pin(kvm, irqchip, pin);
- 	if (gsi != -1)
--		hlist_for_each_entry_rcu(kimn, &kvm->arch.mask_notifier_list, link)
-+		hlist_for_each_entry_rcu(kimn, &kvm->arch.mask_notifier_list, link,
-+					srcu_read_lock_held(&kvm->irq_srcu))
- 			if (kimn->irq == gsi)
- 				kimn->func(kimn, mask);
- 	srcu_read_unlock(&kvm->irq_srcu, idx);
-diff --git a/arch/x86/pci/mmconfig-shared.c b/arch/x86/pci/mmconfig-shared.c
-index 6fa42e9c4e6f..a096942690bd 100644
---- a/arch/x86/pci/mmconfig-shared.c
-+++ b/arch/x86/pci/mmconfig-shared.c
-@@ -797,7 +797,7 @@ int pci_mmconfig_delete(u16 seg, u8 start, u8 end)
- 	struct pci_mmcfg_region *cfg;
- 
- 	mutex_lock(&pci_mmcfg_lock);
--	list_for_each_entry_rcu(cfg, &pci_mmcfg_list, list)
-+	list_for_each_entry(cfg, &pci_mmcfg_list, list)
- 		if (cfg->segment == seg && cfg->start_bus == start &&
- 		    cfg->end_bus == end) {
- 			list_del_rcu(&cfg->list);
--- 
-2.17.1
+This includes support for bus_reset in recovery function itself.
 
+index 14bb8f54723e..c9eaab68ab7a 100644
+--- a/drivers/pci/pcie/err.c
++++ b/drivers/pci/pcie/err.c
+@@ -165,13 +165,23 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+         pci_dbg(dev, "broadcast error_detected message\n");
+         if (state == pci_channel_io_frozen) {
+         if (state == pci_channel_io_frozen) {
+                 pci_walk_bus(bus, report_frozen_detected, &status);
+-               status = reset_link(dev);
+-               if (status != PCI_ERS_RESULT_RECOVERED) {
++               status = PCI_ERS_RESULT_NEED_RESET;
++       } else {
++               pci_walk_bus(bus, report_normal_detected, &status);
++       }
++
++       if (status == PCI_ERS_RESULT_NEED_RESET) {
++               if (reset_link)
++                       if (reset_link(dev) != PCI_ERS_RESULT_RECOVERED)
++                               status = PCI_ERS_RESULT_DISCONNECT;
++               else
++                       if (pci_bus_error_reset(dev))
++                               status = PCI_ERS_RESULT_DISCONNECT;
++
++               if (status == PCI_ERS_RESULT_DISCONNECT) {
+                         pci_warn(dev, "link reset failed\n");
+                         goto failed;
+                 }
+-       } else {
+-               pci_walk_bus(bus, report_normal_detected, &status);
+         }
+
+         if (status == PCI_ERS_RESULT_CAN_RECOVER) {
+
+
+> 
+>>
+>>     Inspection shows a similar path is plausible for a return of
+>> _CAN_RECOVER and the invocation of report_mmio_enabled.
+>>
+>>     Resolve this by preserving the result of report_frozen_detected if
+>> reset_link does not return _DISCONNECT.
+>>
+>> Fixes: 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
+>> Signed-off-by: Jay Vosburgh <jay.vosburgh@canonical.com>
+>>
+>> ---
+>>   drivers/pci/pcie/err.c | 11 +++++++++--
+>>   1 file changed, 9 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+>> index 14bb8f54723e..e4274562f3a0 100644
+>> --- a/drivers/pci/pcie/err.c
+>> +++ b/drivers/pci/pcie/err.c
+>> @@ -164,10 +164,17 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev 
+>> *dev,
+>>       pci_dbg(dev, "broadcast error_detected message\n");
+>>       if (state == pci_channel_io_frozen) {
+>> +        pci_ers_result_t status2;
+>> +
+>>           pci_walk_bus(bus, report_frozen_detected, &status);
+>> -        status = reset_link(dev);
+>> -        if (status != PCI_ERS_RESULT_RECOVERED) {
+>> +        /* preserve status from report_frozen_detected to
+>> +         * insure report_mmio_enabled or report_slot_reset are
+>> +         * invoked even if reset_link returns _RECOVERED.
+>> +         */
+>> +        status2 = reset_link(dev);
+>> +        if (status2 != PCI_ERS_RESULT_RECOVERED) {
+>>               pci_warn(dev, "link reset failed\n");
+>> +            status = status2;
+>>               goto failed;
+>>           }
+>>       } else {
+>>
