@@ -2,58 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C1B8C1C12AA
-	for <lists+linux-pci@lfdr.de>; Fri,  1 May 2020 15:13:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 20A461C1785
+	for <lists+linux-pci@lfdr.de>; Fri,  1 May 2020 16:18:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728737AbgEANND (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 1 May 2020 09:13:03 -0400
-Received: from verein.lst.de ([213.95.11.211]:46194 "EHLO verein.lst.de"
+        id S1729062AbgEAOQe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 1 May 2020 10:16:34 -0400
+Received: from foss.arm.com ([217.140.110.172]:41486 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728720AbgEANND (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 1 May 2020 09:13:03 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id E2AC168BFE; Fri,  1 May 2020 15:12:59 +0200 (CEST)
-Date:   Fri, 1 May 2020 15:12:59 +0200
-From:   "hch@lst.de" <hch@lst.de>
-To:     "David E. Box" <david.e.box@linux.intel.com>
-Cc:     "Williams, Dan J" <dan.j.williams@intel.com>,
-        "hch@lst.de" <hch@lst.de>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "sagi@grimberg.me" <sagi@grimberg.me>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "axboe@fb.com" <axboe@fb.com>,
-        "kbusch@kernel.org" <kbusch@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>
-Subject: Re: [PATCH 0/2] Add support for StorageD3Enable _DSD property
-Message-ID: <20200501131259.GB6600@lst.de>
-References: <20200428003214.3764-1-david.e.box@linux.intel.com> <20200428051312.GB17146@lst.de> <de052d30cc881ac67f9410b50b0760ee5bf9a623.camel@linux.intel.com> <20200428142247.GB5439@lst.de> <de2d78556fcb10f97364201256ac8f342a58eb75.camel@linux.intel.com> <296064bbcf702744bf603932c9d849307db2e5b7.camel@intel.com> <537edbfaa088a655eb22e7eba05075aa61d941be.camel@linux.intel.com>
+        id S1728887AbgEAOQe (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 1 May 2020 10:16:34 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7B78F1FB;
+        Fri,  1 May 2020 07:16:33 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7FB343F68F;
+        Fri,  1 May 2020 07:16:31 -0700 (PDT)
+Date:   Fri, 1 May 2020 15:16:26 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mans Rullgard <mans@mansr.com>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Robert Richter <rrichter@marvell.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Toan Le <toan@os.amperecomputing.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Jonathan Chocron <jonnyc@amazon.com>,
+        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH 0/3] PCI: Modularize host-generic
+Message-ID: <20200501141626.GA7398@e121166-lin.cambridge.arm.com>
+References: <20200409234923.21598-1-robh@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <537edbfaa088a655eb22e7eba05075aa61d941be.camel@linux.intel.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20200409234923.21598-1-robh@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 09:11:13AM -0700, David E. Box wrote:
-> Not drop completely. This patch copied the code used to read _DSD
-> properties under PCI root ports. But I agree that such properties
-> should apply to all devices on those ports and unfortuntely that's not
-> the case here. BIOS got it wrong. My thought in dropping this patch is
-> to rewrite it to read the property directly from the nvme driver. Not
-> the way it's typically done either but it would avoid a global change
-> in the pci core while allowing us to deal with the firmware we have.
+On Thu, Apr 09, 2020 at 05:49:20PM -0600, Rob Herring wrote:
+> This is part of a larger effort to modularize ARCH_VEXPRESS. In
+> particular, the Arm FVP platforms use the host-generic driver. This
+> conversion was straight-forward. I didn't convert the other ECAM drivers
+> using host-common to modules, but am happy to do so if there's a strong
+> desire to do so.
+> 
+> In the process, I noticed that 'const' was being dropped from the match
+> table .data pointer, so the first patch constifies struct pci_ecam_ops.
+> I started trying to constify pci_ops too, but that became a never ending
+> treewide rabbit hole. So I ended up with a cast when we assign pci_ops
+> from pci_ecam_ops.
+> 
+> Rob
 
-I'd be happy to heave less of this crap in nvme actually.  But I'm really
-pissed this shit got out in the wild.  It wasn't clear from the mail
-that this is something already out there because the idiots coming up
-with it just went ahead with it.  Please just update the commit logs
-and implementation to clearly mark it as a workaround for buggys
-systems, which just happen to at least be nice enough to tell us that
-they are buggy as f^$k.
+Hi Bjorn,
+
+if you don't have any objections I'd need your ACK to take this
+series.
+
+Thanks,
+Lorenzo
+
+> Rob Herring (3):
+>   PCI: Constify struct pci_ecam_ops
+>   PCI: host-generic: Support building as modules
+>   PCI: host-generic: Eliminate pci_host_common_probe wrappers
+> 
+>  arch/arm64/kernel/pci.c                   |  4 ++--
+>  drivers/acpi/pci_mcfg.c                   |  8 +++----
+>  drivers/pci/controller/Kconfig            |  4 ++--
+>  drivers/pci/controller/dwc/pcie-al.c      |  2 +-
+>  drivers/pci/controller/dwc/pcie-hisi.c    | 19 +++++------------
+>  drivers/pci/controller/pci-host-common.c  | 18 ++++++++++++----
+>  drivers/pci/controller/pci-host-generic.c | 26 +++++++----------------
+>  drivers/pci/controller/pci-thunder-ecam.c | 14 ++++++------
+>  drivers/pci/controller/pci-thunder-pem.c  | 16 ++++++--------
+>  drivers/pci/controller/pci-xgene.c        |  4 ++--
+>  drivers/pci/controller/pcie-tango.c       |  9 +++++---
+>  drivers/pci/ecam.c                        | 10 ++++++---
+>  drivers/pci/setup-bus.c                   |  1 +
+>  include/linux/pci-acpi.h                  |  2 +-
+>  include/linux/pci-ecam.h                  | 25 +++++++++++-----------
+>  15 files changed, 78 insertions(+), 84 deletions(-)
+> 
+> --
+> 2.20.1
