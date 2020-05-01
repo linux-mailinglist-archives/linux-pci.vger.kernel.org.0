@@ -2,86 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 001831C1191
-	for <lists+linux-pci@lfdr.de>; Fri,  1 May 2020 13:39:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C7A8E1C11F1
+	for <lists+linux-pci@lfdr.de>; Fri,  1 May 2020 14:16:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728585AbgEALjj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 1 May 2020 07:39:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35666 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728575AbgEALjj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 1 May 2020 07:39:39 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A30D02076D;
-        Fri,  1 May 2020 11:39:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588333178;
-        bh=2e8HQlqKY0ln/Bf3eROeuh/4JunwMh0ssZWgRH2Ccfo=;
-        h=From:To:Cc:Subject:Date:From;
-        b=OKj8y496eDRVopiV7SKBDmGNA5OUyyZ2/GE1BIkOLL5By5g9VQTOIzstTx2oZu2zK
-         1cWnOozb8pszDgxVh2RQ9rAUh1QpqvqL2tu/8R1ltms+mpa86mRPF2Qyv9nVzxt7sq
-         ifAuT6sTdQKSUpASNWxJQF3vT+UR1/mx2Due+RCc=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jUU12-008K8u-Ug; Fri, 01 May 2020 12:39:37 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH] PCI: dwc: Fix inner MSI IRQ domain registration
-Date:   Fri,  1 May 2020 12:39:21 +0100
-Message-Id: <20200501113921.366597-1-maz@kernel.org>
-X-Mailer: git-send-email 2.26.2
+        id S1728694AbgEAMP7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 1 May 2020 08:15:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38908 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728485AbgEAMP7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 May 2020 08:15:59 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A6F7C061A0C;
+        Fri,  1 May 2020 05:15:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=zSa9108em557MfF5cmmgHqVRvKFdEUJbROm2shmlztY=; b=jOInxxVrnrDiy9mxQpINfGYznI
+        oKnrkX0pjC/ar8W6dnfZ2AtZp1BFiHtfRitE8rL3exBB2y1h8KTRLPQ/uANDrAwHgBHA8vqicquEV
+        6zVPrRtSFmHRH+SSwCmNKy2wNZ6di27mGN5iKlxCI9s2LGQYJVmAe/9qZyH59xKBOLQMrVeUEuvPT
+        2hrIzIuWJHImLQ0MgAXy2JjNZUoJ7H1D/BGg2Bb1eYzGN1h0noSfBxWz217c+O6uM3ykbl9sZerlS
+        aQB8pnoPhkrcPfBVhAzrhmobkwqvrkHDU74ar1mGSqtlWYVzy7fKglH3UsAIq7q22z/3fTMFrmIoH
+        g9y75kYA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jUUa8-0005TY-RH; Fri, 01 May 2020 12:15:52 +0000
+Date:   Fri, 1 May 2020 05:15:52 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, fenghua.yu@intel.com, kevin.tian@intel.com,
+        jgg@ziepe.ca, catalin.marinas@arm.com, robin.murphy@arm.com,
+        hch@infradead.org, zhangfei.gao@linaro.org, felix.kuehling@amd.com,
+        will@kernel.org, christian.koenig@amd.com
+Subject: Re: [PATCH v6 17/25] iommu/arm-smmu-v3: Implement
+ iommu_sva_bind/unbind()
+Message-ID: <20200501121552.GA6012@infradead.org>
+References: <20200430143424.2787566-1-jean-philippe@linaro.org>
+ <20200430143424.2787566-18-jean-philippe@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com, robh@kernel.org, bhelgaas@google.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200430143424.2787566-18-jean-philippe@linaro.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On a system that uses the internal DWC MSI widget, I get this
-warning from debugfs when CONFIG_GENERIC_IRQ_DEBUGFS is selected:
+> @@ -432,6 +432,7 @@ config ARM_SMMU_V3
+>  	tristate "ARM Ltd. System MMU Version 3 (SMMUv3) Support"
+>  	depends on ARM64
+>  	select IOMMU_API
+> +	select IOMMU_SVA
+>  	select IOMMU_IO_PGTABLE_LPAE
+>  	select GENERIC_MSI_IRQ_DOMAIN
 
-  debugfs: File ':soc:pcie@fc000000' in directory 'domains' already present!
+Doesn't this need to select MMU_NOTIFIER now?
 
-This is due to the fact that the DWC MSI code tries to register two
-IRQ domains for the same firmware node, without telling the low
-level code how to distinguish them (by setting a bus token). This
-further confuses debugfs which tries to create corresponding
-files for each domain.
+> +	struct mmu_notifier_ops		mn_ops;
 
-Fix it by tagging the inner domain as DOMAIN_BUS_NEXUS, which is
-the closest thing we have as to "generic MSI".
+Note: not a pointer.
 
-Signed-off-by: Marc Zyngier <maz@kernel.org>
----
- drivers/pci/controller/dwc/pcie-designware-host.c | 2 ++
- 1 file changed, 2 insertions(+)
+> +	/* If bind() was already called for this (dev, mm) pair, reuse it. */
+> +	list_for_each_entry(bond, &master->bonds, list) {
+> +		if (bond->mm == mm) {
+> +			refcount_inc(&bond->refs);
+> +			return &bond->sva;
+> +		}
+> +	}
+> +
+> +	mn = mmu_notifier_get(&smmu_domain->mn_ops, mm);
+> +	if (IS_ERR(mn))
+> +		return ERR_CAST(mn);
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index 395feb8ca051..3c43311bb95c 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -264,6 +264,8 @@ int dw_pcie_allocate_domains(struct pcie_port *pp)
- 		return -ENOMEM;
- 	}
- 
-+	irq_domain_update_bus_token(pp->irq_domain, DOMAIN_BUS_NEXUS);
-+
- 	pp->msi_domain = pci_msi_create_irq_domain(fwnode,
- 						   &dw_pcie_msi_domain_info,
- 						   pp->irq_domain);
--- 
-2.26.2
+Which seems to be to avoid mmu_notifier_get reusing notifiers registered
+by other arm_smmu_master instance right?
+
+Either you could just use plain old mmu_notifier_register to avoid
+the reuse.  Or we could enhance the mmu_notifier_get to pass a private
+oaque instance ID pointer, which is checked in addition to the ops,
+and you could probably kill off the bonds list and lookup.
 
