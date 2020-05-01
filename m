@@ -2,101 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4ECD81C184A
-	for <lists+linux-pci@lfdr.de>; Fri,  1 May 2020 16:47:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 37A041C1862
+	for <lists+linux-pci@lfdr.de>; Fri,  1 May 2020 16:47:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729309AbgEAOqI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 1 May 2020 10:46:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53628 "EHLO mail.kernel.org"
+        id S1730160AbgEAOq6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 1 May 2020 10:46:58 -0400
+Received: from foss.arm.com ([217.140.110.172]:41952 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729434AbgEAOqH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 1 May 2020 10:46:07 -0400
-Received: from localhost (mobile-166-175-184-168.mycingular.net [166.175.184.168])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1019020857;
-        Fri,  1 May 2020 14:46:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588344366;
-        bh=v2w4/6U0YomoqMu9R0xWF2AIpjpBELByx2/SoReXrgM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=cKaEafwIZEj3qeHZPBR4aUAeYkFReJVPxAiqe+ALOPwcbbuT1UfNmMqGPBgbOzAJB
-         1es+t74JKbObhCqW7OIK1+M8u3q5pXmozFcYVTWNghyYoYCPThIjsaBWa/Wv9FxtnE
-         gAuhmuGwhokE2MD/OBT7K9+NSH2EY6ogt8ttjAKc=
-Date:   Fri, 1 May 2020 09:46:04 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Will Deacon <will@kernel.org>,
+        id S1729175AbgEAOqt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 1 May 2020 10:46:49 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C94F31FB;
+        Fri,  1 May 2020 07:46:48 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 895353F68F;
+        Fri,  1 May 2020 07:46:47 -0700 (PDT)
+Date:   Fri, 1 May 2020 15:46:45 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Tom Joseph <tjoseph@cadence.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mans Rullgard <mans@mansr.com>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Robert Richter <rrichter@marvell.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        Toan Le <toan@os.amperecomputing.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Jonathan Chocron <jonnyc@amazon.com>,
-        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH 0/3] PCI: Modularize host-generic
-Message-ID: <20200501144604.GA108647@bjorn-Precision-5520>
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robin.murphy@arm.com
+Subject: Re: [PATCH v2 2/4] PCI: cadence: Use "dma-ranges" instead of
+ "cdns,no-bar-match-nbits" property
+Message-ID: <20200501144645.GB7398@e121166-lin.cambridge.arm.com>
+References: <20200417114322.31111-1-kishon@ti.com>
+ <20200417114322.31111-3-kishon@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200501141626.GA7398@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20200417114322.31111-3-kishon@ti.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, May 01, 2020 at 03:16:26PM +0100, Lorenzo Pieralisi wrote:
-> On Thu, Apr 09, 2020 at 05:49:20PM -0600, Rob Herring wrote:
-> > This is part of a larger effort to modularize ARCH_VEXPRESS. In
-> > particular, the Arm FVP platforms use the host-generic driver. This
-> > conversion was straight-forward. I didn't convert the other ECAM drivers
-> > using host-common to modules, but am happy to do so if there's a strong
-> > desire to do so.
-> > 
-> > In the process, I noticed that 'const' was being dropped from the match
-> > table .data pointer, so the first patch constifies struct pci_ecam_ops.
-> > I started trying to constify pci_ops too, but that became a never ending
-> > treewide rabbit hole. So I ended up with a cast when we assign pci_ops
-> > from pci_ecam_ops.
-> > 
-> > Rob
+[+Robin - to check on dma-ranges intepretation]
+
+I would need RobH and Robin to review this.
+
+Also, An ACK from Tom is required - for the whole series.
+
+On Fri, Apr 17, 2020 at 05:13:20PM +0530, Kishon Vijay Abraham I wrote:
+> Cadence PCIe core driver (host mode) uses "cdns,no-bar-match-nbits"
+> property to configure the number of bits passed through from PCIe
+> address to internal address in Inbound Address Translation register.
 > 
-> Hi Bjorn,
+> However standard PCI dt-binding already defines "dma-ranges" to
+> describe the address range accessible by PCIe controller. Parse
+> "dma-ranges" property to configure the number of bits passed
+> through from PCIe address to internal address in Inbound Address
+> Translation register.
 > 
-> if you don't have any objections I'd need your ACK to take this
-> series.
-
-Oh, sorry, I didn't notice:
-
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-
-> > Rob Herring (3):
-> >   PCI: Constify struct pci_ecam_ops
-> >   PCI: host-generic: Support building as modules
-> >   PCI: host-generic: Eliminate pci_host_common_probe wrappers
-> > 
-> >  arch/arm64/kernel/pci.c                   |  4 ++--
-> >  drivers/acpi/pci_mcfg.c                   |  8 +++----
-> >  drivers/pci/controller/Kconfig            |  4 ++--
-> >  drivers/pci/controller/dwc/pcie-al.c      |  2 +-
-> >  drivers/pci/controller/dwc/pcie-hisi.c    | 19 +++++------------
-> >  drivers/pci/controller/pci-host-common.c  | 18 ++++++++++++----
-> >  drivers/pci/controller/pci-host-generic.c | 26 +++++++----------------
-> >  drivers/pci/controller/pci-thunder-ecam.c | 14 ++++++------
-> >  drivers/pci/controller/pci-thunder-pem.c  | 16 ++++++--------
-> >  drivers/pci/controller/pci-xgene.c        |  4 ++--
-> >  drivers/pci/controller/pcie-tango.c       |  9 +++++---
-> >  drivers/pci/ecam.c                        | 10 ++++++---
-> >  drivers/pci/setup-bus.c                   |  1 +
-> >  include/linux/pci-acpi.h                  |  2 +-
-> >  include/linux/pci-ecam.h                  | 25 +++++++++++-----------
-> >  15 files changed, 78 insertions(+), 84 deletions(-)
-> > 
-> > --
-> > 2.20.1
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  drivers/pci/controller/cadence/pcie-cadence-host.c | 13 +++++++++++--
+>  1 file changed, 11 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> index 9b1c3966414b..60f912a657b9 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> @@ -206,8 +206,10 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>  	struct device *dev = rc->pcie.dev;
+>  	struct platform_device *pdev = to_platform_device(dev);
+>  	struct device_node *np = dev->of_node;
+> +	struct of_pci_range_parser parser;
+>  	struct pci_host_bridge *bridge;
+>  	struct list_head resources;
+> +	struct of_pci_range range;
+>  	struct cdns_pcie *pcie;
+>  	struct resource *res;
+>  	int ret;
+> @@ -222,8 +224,15 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>  	rc->max_regions = 32;
+>  	of_property_read_u32(np, "cdns,max-outbound-regions", &rc->max_regions);
+>  
+> -	rc->no_bar_nbits = 32;
+> -	of_property_read_u32(np, "cdns,no-bar-match-nbits", &rc->no_bar_nbits);
+> +	if (!of_pci_dma_range_parser_init(&parser, np))
+> +		if (of_pci_range_parser_one(&parser, &range))
+> +			rc->no_bar_nbits = ilog2(range.size);
+> +
+> +	if (!rc->no_bar_nbits) {
+> +		rc->no_bar_nbits = 32;
+> +		of_property_read_u32(np, "cdns,no-bar-match-nbits",
+> +				     &rc->no_bar_nbits);
+> +	}
+>  
+>  	rc->vendor_id = 0xffff;
+>  	of_property_read_u16(np, "vendor-id", &rc->vendor_id);
+> -- 
+> 2.17.1
+> 
