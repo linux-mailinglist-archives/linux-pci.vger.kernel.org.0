@@ -2,142 +2,87 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 93CAD1C20AF
-	for <lists+linux-pci@lfdr.de>; Sat,  2 May 2020 00:32:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6EF4C1C20CE
+	for <lists+linux-pci@lfdr.de>; Sat,  2 May 2020 00:40:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727029AbgEAWci (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 1 May 2020 18:32:38 -0400
-Received: from mga06.intel.com ([134.134.136.31]:10101 "EHLO mga06.intel.com"
+        id S1726396AbgEAWk4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 1 May 2020 18:40:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726973AbgEAWci (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 1 May 2020 18:32:38 -0400
-IronPort-SDR: 6XhZMxwOSrHnnVV+pXaZzoh111Ac1a3Fbrxa02BKsw9ff8RikcZJyGGMryLo0Yg+Zby1PzciCn
- 37BotaS1XHew==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2020 15:32:36 -0700
-IronPort-SDR: h0HDG6WOzMAx9Acn3e9Yz1/5hX+L6Tr04sNiBrKkZCQp2bg2OM3da5SAXcNd1kQG999b8gqGSy
- xxtLW+ogCo9w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,341,1583222400"; 
-   d="scan'208";a="248657143"
-Received: from meghadey-mobl1.amr.corp.intel.com (HELO [10.251.135.85]) ([10.251.135.85])
-  by fmsmga007.fm.intel.com with ESMTP; 01 May 2020 15:32:35 -0700
-Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
- support for the idxd driver.
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
-        maz@kernel.org, bhelgaas@google.com, rafael@kernel.org,
-        gregkh@linuxfoundation.org, tglx@linutronix.de, hpa@zytor.com,
-        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
-        ashok.raj@intel.com, yi.l.liu@intel.com, baolu.lu@intel.com,
-        kevin.tian@intel.com, sanjay.k.kumar@intel.com,
-        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
-        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
-References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
- <20200421235442.GO11945@mellanox.com>
- <d6b3c133-ac19-21af-b7a7-b9e7166b8166@linux.intel.com>
- <20200423194447.GF13640@mellanox.com>
-From:   "Dey, Megha" <megha.dey@linux.intel.com>
-Message-ID: <30dadd7a-bac2-d658-c2e4-77592de6118d@linux.intel.com>
-Date:   Fri, 1 May 2020 15:32:35 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1726381AbgEAWk4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 1 May 2020 18:40:56 -0400
+Received: from localhost (mobile-166-175-184-168.mycingular.net [166.175.184.168])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8043E2166E;
+        Fri,  1 May 2020 22:40:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588372855;
+        bh=C3gIAfy2H6olDp3Ybz9ADNUO6ANydRnBsN+/20doKhQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=u9XJTBGVmhCwLmqudV29B50QPNqOL5QACEhkHQa8sffuEHhAvbAdZBWKAxtun4VGZ
+         0EkMMbs1nFSsjv418I3Ijetuu/U2lDDu+ro9n+cRxZHH2atdq2rOinfO26Yw3tn5SK
+         fwwG6jnj2lsUCQFojI+tIUFdEuqt3Xl/QDBq1dgM=
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        Aman Sharma <amanharitsh123@gmail.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH v2 0/2] PCI: Check for platform_get_irq() failure consistently
+Date:   Fri,  1 May 2020 17:40:40 -0500
+Message-Id: <20200501224042.141366-1-helgaas@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200423194447.GF13640@mellanox.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+From: Bjorn Helgaas <bhelgaas@google.com>
+
+All callers of platform_get_irq() and related functions interpret a
+negative return value as an error.  A few also interpret zero as an error.
+
+platform_get_irq() should return either a negative error number or a valid
+non-zero IRQ, so there's no need to check for zero.
+
+This series:
+
+  - Extends the platform_get_irq() function comment to say it returns a
+    non-zero IRQ number or a negative error number.
+
+  - Adds a WARN() if platform_get_irq() ever *does* return zero (this would
+    be a bug in the underlying arch code, and most callers are not prepared
+    for this).
+
+  - Updates drivers/pci/ to check consistently using "irq < 0".
+
+This is based on Aman's series [1].  I propose to merge this via the PCI
+tree, given acks from Greg and Thomas.
+
+[1] https://lore.kernel.org/r/cover.1583952275.git.amanharitsh123@gmail.com
+
+Aman Sharma (1):
+  PCI: Check for platform_get_irq() failure consistently
+
+Bjorn Helgaas (1):
+  driver core: platform: Clarify that IRQ 0 is invalid
+
+ drivers/base/platform.c                       | 40 ++++++++++++-------
+ drivers/pci/controller/dwc/pci-imx6.c         |  4 +-
+ drivers/pci/controller/dwc/pcie-tegra194.c    |  4 +-
+ .../controller/mobiveil/pcie-mobiveil-host.c  |  4 +-
+ drivers/pci/controller/pci-aardvark.c         |  3 ++
+ drivers/pci/controller/pci-v3-semi.c          |  4 +-
+ drivers/pci/controller/pcie-mediatek.c        |  3 ++
+ drivers/pci/controller/pcie-tango.c           |  4 +-
+ 8 files changed, 41 insertions(+), 25 deletions(-)
 
 
-On 4/23/2020 12:44 PM, Jason Gunthorpe wrote:
->>>> The mdev utilizes Interrupt Message Store or IMS[3] instead of MSIX for
->>>> interrupts for the guest. This preserves MSIX for host usages and also allows a
->>>> significantly larger number of interrupt vectors for guest usage.
->>>
->>> I never did get a reply to my earlier remarks on the IMS patches.
->>>
->>> The concept of a device specific addr/data table format for MSI is not
->>> Intel specific. This should be general code. We have a device that can
->>> use this kind of kernel capability today.
->>
->> I am sorry if I did not address your comments earlier.
-> 
-> It appears noboy from Intel bothered to answer anyone else on that RFC
-> thread:
-> 
-> https://lore.kernel.org/lkml/1568338328-22458-1-git-send-email-megha.dey@linux.intel.com/
-> 
-> However, it seems kind of moot as I see now that this verion of IMS
-> bears almost no resemblance to the original RFC.
+base-commit: 8f3d9f354286745c751374f5f1fcafee6b3f3136
+-- 
+2.25.1
 
-hmm yeah, we changed most of the code after getting a lot of feedback 
-from you and folks at plumbers. But yes, I should have replied to all 
-the feedback, lesson learnt :)
-
-> 
-> That said, the similiarity to platform-msi was striking, does this new
-> version harmonize with that?
-
-yes!
-> 
->> The present IMS code is quite generic, most of the code is in the drivers/
->> folder. We basically introduce 2 APIS: allocate and free IMS interrupts and
->> a IMS IRQ domain to allocate these interrupts from. These APIs are
->> architecture agnostic.
->>
->> We also introduce a new IMS IRQ domain which is architecture specific. This
->> is because IMS generates interrupts only in the remappable format, hence
->> interrupt remapping should be enabled for IMS. Currently, the interrupt
->> remapping code is only available for Intel and AMD and I don’t see anything
->> for ARM.
-> 
-> I don't understand these remarks though - IMS is simply the mapping of
-> a MemWr addr/data pair to a Linux IRQ number? Why does this intersect
-> with remapping?
-> 
-
- From your comments so far, I think your requirement is a subset of what 
-IMS is trying to do.
-
-What you want:
-have a dynamic means of allocating platform-msi interrupts
-
-On top of this IMS has a requirement that all of the interrupts should 
-be remapped.
-
-So we can have tiered code: generic dynamic platform-msi infrastructure
-and add the IMS specific bits (Intel specific) on top of this.
-
-The generic code will have no reference to IMS.
-
-> AFAIK, any platform that supports MSI today should have the inherent
-> HW capability to support IMS.
-> 
->> Also, could you give more details on the device that could use IMS? Do you
->> have some driver code already? We could then see if and how the current IMS
->> code could be made more generic.
-> 
-> We have several devices of interest, our NICs have very flexible PCI,
-> so it is no problem to take the MemWR addr/data from someplace other
-> than the MSI tables.
-> 
-> For this we want to have some way to allocate Linux IRQs dynamically
-> and get a addr/data pair to trigger them.
-> 
-> Our NIC devices are also linked to our ARM SOC family, so I'd expect
-> our ARM's to also be able to provide these APIs as the platform.
-
-cool, so I will hope that you can test out the generic APIs from the ARM 
-side!
-> 
-> Jason
-> 
