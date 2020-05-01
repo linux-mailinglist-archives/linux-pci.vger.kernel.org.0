@@ -2,147 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 734A31C1D55
-	for <lists+linux-pci@lfdr.de>; Fri,  1 May 2020 20:43:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AA1381C1EBF
+	for <lists+linux-pci@lfdr.de>; Fri,  1 May 2020 22:43:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729767AbgEASn3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 1 May 2020 14:43:29 -0400
-Received: from mga03.intel.com ([134.134.136.65]:24774 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729721AbgEASn3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 1 May 2020 14:43:29 -0400
-IronPort-SDR: Rui4BvMPHjAlEIl991ZCRoIDvL7v4G0XK6rPsU9o26SdNiuCEZHyovsRnzV91d5zkpkn2UT4Sd
- 2iJ8in3RU9fw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2020 11:43:27 -0700
-IronPort-SDR: Oe5DDEpUeSvJd3uJjKa707ZNYN2SDsVYGArwxpk53mO8THLmqANSgHgRvUNuK/SNsanomk6c4J
- Hw26hF4vrnrg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,340,1583222400"; 
-   d="scan'208";a="258688327"
-Received: from araj-mobl1.jf.intel.com ([10.255.228.118])
-  by orsmga003.jf.intel.com with ESMTP; 01 May 2020 11:43:27 -0700
-Date:   Fri, 1 May 2020 11:43:26 -0700
-From:   "Raj, Ashok" <ashok.raj@linux.intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Evan Green <evgreen@chromium.org>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>, x86@kernel.org,
-        linux-pci <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
+        id S1726307AbgEAUmK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 1 May 2020 16:42:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34096 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbgEAUmK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 May 2020 16:42:10 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D924AC061A0C;
+        Fri,  1 May 2020 13:42:09 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id h4so972744wmb.4;
+        Fri, 01 May 2020 13:42:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=PQ7M29FKDRXrS5WyabdRDK8yQBctozgCq2gxMgqjNhw=;
+        b=Oa/CIuVNGXc4I4qB1x0r+CbWkUBG8vSqAuBTMbSP9iU4EpmULrI4InbSp1bxqgQwBY
+         P3om+WZbPKkCm31ybUVPmmka/mtkYy8iuR7SoPi8/XQCIoq6+CJobuwCuTSr3QIboxiJ
+         bV1DzdHCaaCwmPnqZr6qBuJ6wUFoAAM9d8vwRIQKZaYSpBqs+vTzpXoLW58eOJdk7Yg2
+         Hs1jpT1ccth54rxvWKfPvc76/M0HcBZOXo6x8c4CAIIih130szXD7k3ew45kFwfCs2b7
+         /Ki7WVZS57m2oAm8N1MbCBQ3TtlEbyweLPO2wd2dNU83P1oCTUAJ0TTaZFW71Q2d4EvK
+         jthA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=PQ7M29FKDRXrS5WyabdRDK8yQBctozgCq2gxMgqjNhw=;
+        b=cjDJa0OcMfjlSS7cajQ5QOjtDvfnQWslQBgHhUSQtF++FDlhMIrzqvQ1lDf5+Z/row
+         0ApCThkYqz3TkmlF44TKMrEbDQVIesPDYgmy5oB1ieGnvxANkS2IVnFq7vqLoMLZ9jsf
+         7IdbePawhHhQOLaJ1HzBaDtWVKbnlqK1rprU0P5/CoDmqxB2UCnYj0WKS72bKaW23jX4
+         ktV4ETqKLz7Xt18RBW8x5bR0EdQG2FHI5CLBVCvcfUVYarQiZjfouVSvsCGQceb+Q4S5
+         +dKIoCZD3euuk1Og1pDc8UKVL347TdSJ+vIGf4XF7UTJyQHY2X2kk/X2b2SLtmTCY0Qz
+         XcVA==
+X-Gm-Message-State: AGi0PubAubO5dPXVmv/zk42GQDmvear5LqLS////2AWhMmF0WNd4ZkZI
+        ci7/xce2SK+aA0Qe0qZ8/vtEGA9b
+X-Google-Smtp-Source: APiQypKf00e9p2RvGXodLF2vQTADXDVns2QFEA94mMJpftJibjwPJqHYr/yF77SGsUWcrVHawQ5Q/w==
+X-Received: by 2002:a7b:c759:: with SMTP id w25mr1424069wmk.68.1588365728152;
+        Fri, 01 May 2020 13:42:08 -0700 (PDT)
+Received: from [192.168.1.4] (ip-86-49-35-8.net.upcbroadband.cz. [86.49.35.8])
+        by smtp.gmail.com with ESMTPSA id s14sm1018920wmh.18.2020.05.01.13.42.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 May 2020 13:42:07 -0700 (PDT)
+Subject: Re: [PATCH] PCI: pcie-rcar: Cache PHY init function pointer
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     linux-pci@vger.kernel.org,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        "Ghorai, Sukumar" <sukumar.ghorai@intel.com>,
-        "Amara, Madhusudanarao" <madhusudanarao.amara@intel.com>,
-        "Nandamuri, Srikanth" <srikanth.nandamuri@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: MSI interrupt for xhci still lost on 5.6-rc6 after cpu hotplug
-Message-ID: <20200501184326.GA17961@araj-mobl1.jf.intel.com>
-References: <806c51fa-992b-33ac-61a9-00a606f82edb@linux.intel.com>
- <87d0974akk.fsf@nanos.tec.linutronix.de>
- <b9fbd55a-7f97-088d-2cc2-4e4ea86d9440@linux.intel.com>
- <87r1xjp3gn.fsf@nanos.tec.linutronix.de>
- <f8057cbc-4814-5083-cddd-d4eb1459529f@linux.intel.com>
- <878sjqfvmi.fsf@nanos.tec.linutronix.de>
- <CAE=gft6Fbibu17H+OfHZjmvHxboioFj09hAmozebc1TE_EqH5g@mail.gmail.com>
- <87tv2dd17z.fsf@nanos.tec.linutronix.de>
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        linux-renesas-soc@vger.kernel.org
+References: <20200426123148.56051-1-marek.vasut@gmail.com>
+ <20200428083231.GC12459@e121166-lin.cambridge.arm.com>
+From:   Marek Vasut <marek.vasut@gmail.com>
+Message-ID: <717765f1-b5be-a436-20d6-d0a95f58cbdc@gmail.com>
+Date:   Fri, 1 May 2020 22:42:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87tv2dd17z.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+In-Reply-To: <20200428083231.GC12459@e121166-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Thomas
-
-Just started looking into it to get some idea about what could be
-going on. I had some questions, that would be helpful to clarify.
-
-On Tue, Mar 24, 2020 at 08:03:44PM +0100, Thomas Gleixner wrote:
-> Evan Green <evgreen@chromium.org> writes:
-> > On Mon, Mar 23, 2020 at 5:24 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> >> And of course all of this is so well documented that all of us can
-> >> clearly figure out what's going on...
-> >
-> > I won't pretend to know what's going on, so I'll preface this by
-> > labeling it all as "flailing", but:
-> >
-> > I wonder if there's some way the interrupt can get delayed between
-> > XHCI snapping the torn value and it finding its way into the IRR. For
-> > instance, if xhci read this value at the start of their interrupt
-> > moderation timer period, that would be awful (I hope they don't do
-> > this). One test patch would be to carve out 8 vectors reserved for
-> > xhci on all cpus. Whenever you change the affinity, the assigned
-> > vector is always reserved_base + cpu_number. That lets you exercise
-> > the affinity switching code, but in a controlled manner where torn
-> > interrupts could be easily seen (ie hey I got an interrupt on cpu 4's
-> > vector but I'm cpu 2). I might struggle to write such a change, but in
-> > theory it's doable.
+On 4/28/20 10:32 AM, Lorenzo Pieralisi wrote:
+> On Sun, Apr 26, 2020 at 02:31:47PM +0200, marek.vasut@gmail.com wrote:
+>> From: Marek Vasut <marek.vasut+renesas@gmail.com>
+>>
+>> The PHY initialization function pointer does not change during the
+>> lifetime of the driver instance, it is therefore sufficient to get
+>> the pointer in .probe(), cache it in driver private data, and just
+>> call the function through the cached pointer in .resume().
+>>
+>> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+>> Cc: Bjorn Helgaas <bhelgaas@google.com>
+>> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+>> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+>> Cc: Wolfram Sang <wsa@the-dreams.de>
+>> Cc: linux-renesas-soc@vger.kernel.org
+>> ---
+>> NOTE: Based on git://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git
+>>       branch pci/rcar
+>> NOTE: The driver tag is now 'pcie-rcar' to distinguish it from pci-rcar-gen2.c
+>> ---
+>>  drivers/pci/controller/pcie-rcar.c | 10 ++++------
+>>  1 file changed, 4 insertions(+), 6 deletions(-)
 > 
-> Well, the point is that we don't see a spurious interrupt on any
-> CPU. We added a traceprintk into do_IRQ() and that would immediately
-> tell us where the thing goes off into lala land. Which it didn't.
+> Squashed in https://patchwork.kernel.org/patch/11438665
 
-Now that we don't have the torn write issue. We did an experiment 
-with legacy MSI, and no interrupt remap support. One of the thought
-process was, since we don't have a way to ensure that previous MSI writes
-are globally observed, a read from the device should flush any
-outstanidng writes correct? (according to PCI, not sure if we can
-depend on this.. or chipsets would take their own sweet time to push to CPU)
+Thanks
 
-I'm not certain if such a read happens today? So to make it simple tried
-to force a retrigger. In the following case of direct update,
-even though the vector isn't changing a MSI write to the previous 
-destination could have been sent to the previous CPU right? 
+> Do you want me to rename the $SUBJECT (and the branch name while at it)
+> in the patches in my pci/rcar branch ("PCI: pcie-rcar: ...") to start
+> the commit subject tag renaming from this cycle (and in the interim you
+> send a rename for the drivers files ?)
 
-arch/x86/kernel/apic/msi.c: msi_set_affinity()
-
-	/*
-         * Direct update is possible when:
-         * - The MSI is maskable (remapped MSI does not use this code path)).
-         *   The quirk bit is not set in this case.
-         * - The new vector is the same as the old vector
-         * - The old vector is MANAGED_IRQ_SHUTDOWN_VECTOR (interrupt starts up)
-         * - The new destination CPU is the same as the old destination CPU
-         */
-        if (!irqd_msi_nomask_quirk(irqd) ||
-            cfg->vector == old_cfg.vector ||
-            old_cfg.vector == MANAGED_IRQ_SHUTDOWN_VECTOR ||
-            cfg->dest_apicid == old_cfg.dest_apicid) {
-                irq_msi_update_msg(irqd, cfg);
-	-->>> force a retrigger
-
-It appears that without a gaurantee of flusing MSI writes from the device
-the check for lapic_vector_set_in_irr(vector) is still racy. 
-
-With adding the forced retrigger in both places, the test didn't reveal any
-lost interrupt cases.
-
-Now the second question with Interrupt Remapping Support:
-
-
-intel_ir_set_affinity->intel_ir_reconfigure_irte()-> modify_irte()
-
-The flush of Interrupt Entry Cache (IEC) should ensure, if any interrupts
-were in flight, they made it to the previous CPU, and any new interrupts
-must be delivered to the new CPU.
-
-Question is do we need a check similar to the legacy MSI handling
-
-	if (lapic_vector_set_in_irr())
-	    handle interrupt? 
-
-Is there a reason we don't check if the interrupt delivered to previous
-CPU in intel_ir_set_affinity()? Or is the send_cleanup_vector() sends
-an IPI to perform the cleanup?  
-
-It appears that maybe send_cleanup_vector() sends IPI to the old cpu
-and that somehow ensures the device interrupt handler actually getting
-called? I lost my track somewhere down there :)
-
-
-Cheers,
-Ashok
+I don't really have a particular preference either way. I can keep
+marking the drivers with pcie-rcar and pci-rcar tags if that helps
+discern them.
