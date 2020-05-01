@@ -2,135 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 62C251C18E0
-	for <lists+linux-pci@lfdr.de>; Fri,  1 May 2020 17:02:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 64D9D1C191F
+	for <lists+linux-pci@lfdr.de>; Fri,  1 May 2020 17:11:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728938AbgEAPCH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 1 May 2020 11:02:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34618 "EHLO mail.kernel.org"
+        id S1729204AbgEAPLg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 1 May 2020 11:11:36 -0400
+Received: from foss.arm.com ([217.140.110.172]:42356 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728933AbgEAPCH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 1 May 2020 11:02:07 -0400
-Received: from localhost (mobile-166-175-184-168.mycingular.net [166.175.184.168])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D15FF2137B;
-        Fri,  1 May 2020 15:02:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588345326;
-        bh=sLNsgBhDFkipYaV5v04vF4v+XXtyMcWu3BrBwAnjJDc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=a7DGgB7PsWk9EkjO5KG38cAprEstQ8RBYXbAvnRTfmdyNfONQIrvgdKI9ArmBi3FS
-         eI0cWVT8/YW6hDIle4KhEaqRithz3WtMyfrXRLno7WYwOr8yg0dHzBRBoqElNVUC6d
-         146KW5wNRSspc/UkQu4xsg90sR4AZiboUMQl+eQM=
-Date:   Fri, 1 May 2020 10:02:04 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Austin.Bolen@dell.com
-Cc:     sathyanarayanan.kuppuswamy@linux.intel.com, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, Mario.Limonciello@dell.com,
-        jonathan.derrick@intel.com, mr.nuke.me@gmail.com,
-        rjw@rjwysocki.net, kbusch@kernel.org, okaya@kernel.org,
-        tbaicar@codeaurora.org
-Subject: Re: [PATCH v1 1/1] PCI/AER: Use _OSC negotiation to determine AER
- ownership
-Message-ID: <20200501150204.GA109407@bjorn-Precision-5520>
+        id S1728896AbgEAPLf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 1 May 2020 11:11:35 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC72130E;
+        Fri,  1 May 2020 08:11:34 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 917573F68F;
+        Fri,  1 May 2020 08:11:33 -0700 (PDT)
+Date:   Fri, 1 May 2020 16:11:31 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Tom Joseph <tjoseph@cadence.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/4] PCI: cadence: Fix to read 32-bit Vendor ID/Device
+ ID property from DT
+Message-ID: <20200501151131.GC7398@e121166-lin.cambridge.arm.com>
+References: <20200417114322.31111-1-kishon@ti.com>
+ <20200417114322.31111-5-kishon@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <42c53d43bc094889b33c1ac8c2b99d33@AUSX13MPC107.AMER.DELL.COM>
+In-Reply-To: <20200417114322.31111-5-kishon@ti.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, May 01, 2020 at 02:40:23PM +0000, Austin.Bolen@dell.com wrote:
-> On 4/30/2020 6:02 PM, Bjorn Helgaas wrote:
-> > [Austin, help us understand the FIRMWARE_FIRST bit! :)]
-> >
-> > On Thu, Apr 30, 2020 at 05:40:22PM -0500, Bjorn Helgaas wrote:
-> >> On Sun, Apr 26, 2020 at 11:30:06AM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> >>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> >>>
-> >>> Currently PCIe AER driver uses HEST FIRMWARE_FIRST bit to
-> >>> determine the PCIe AER Capability ownership between OS and
-> >>> firmware. This support is added based on following spec
-> >>> reference.
-> >>>
-> >>> Per ACPI spec r6.3, table 18-387, 18-388, 18-389, HEST table
-> >>> flags field BIT-0 and BIT-1 can be used to expose the
-> >>> ownership of error source between firmware and OSPM.
-> >>>
-> >>> Bit [0] - FIRMWARE_FIRST: If set, indicates that system
-> >>>           firmware will handle errors from this source
-> >>>           first.
-> >>> Bit [1] – GLOBAL: If set, indicates that the settings
-> >>>           contained in this structure apply globally to all
-> >>>           PCI Express Bridges.
-> >>>
-> >>> Although above spec reference states that setting
-> >>> FIRMWARE_FIRST bit means firmware will handle the error source
-> >>> first, it does not explicitly state anything about AER
-> >>> ownership. So using HEST to determine AER ownership is
-> >>> incorrect.
-> >>>
-> >>> Also, as per following specification references, _OSC can be
-> >>> used to negotiate the AER ownership between firmware and OS.
-> >>> Details are,
-> >>>
-> >>> Per ACPI spec r6.3, sec 6.2.11.3, table titled “Interpretation
-> >>> of _OSC Control Field” and as per PCI firmware specification r3.2,
-> >>> sec 4.5.1, table 4-5, OS can set bit 3 of _OSC control field
-> >>> to request control over PCI Express AER. If the OS successfully
-> >>> receives control of this feature, it must handle error reporting
-> >>> through the AER Capability as described in the PCI Express Base
-> >>> Specification.
-> >>>
-> >>> Since above spec references clearly states _OSC can be used to
-> >>> determine AER ownership, don't depend on HEST FIRMWARE_FIRST bit.
-> >> I pulled out the _OSC part of this to a separate patch.  What's left
-> >> is below, and is essentially equivalent to Alex's patch:
-> >>
-> >>   https://lore.kernel.org/r/20190326172343.28946-3-mr.nuke.me@gmail.com/
-> >>
-> >> I like what this does, but what I don't like is the fact that we now
-> >> have this thing called pcie_aer_get_firmware_first() that is not
-> >> connected with the ACPI FIRMWARE_FIRST bit at all.
-> >
-> > Austin, if we remove this, we'll have no PCIe-related code that looks
-> > at the HEST FIRMWARE_FIRST bit at all.  Presumably it's there for some
-> > reason, but I'm not sure what the reason is.
-> >
-> > Alex's mail [1] has a nice table of _OSC AER/HEST FFS bits that looks
-> > useful, but the only actionable thing I can see is that in the (1,1)
-> > case, OSPM should do some initialization with masks/enables.
-> >
-> > But I have no clue what that means or how to connect that with the
-> > spec.  What are the masks/enables?  Is that something connected with
-> > ERST?
-> >
-> > [1] https://lore.kernel.org/r/20190326172343.28946-1-mr.nuke.me@gmail.com/
+On Fri, Apr 17, 2020 at 05:13:22PM +0530, Kishon Vijay Abraham I wrote:
+> The PCI Bus Binding specification (IEEE Std 1275-1994 Revision 2.1 [1])
+> defines both Vendor ID and Device ID to be 32-bits. Fix
+> pcie-cadence-host.c driver to read 32-bit Vendor ID and Device ID
+> properties from device tree.
 > 
-> The only values that make sense to me are (1, 0) for full native OS
-> init/handling of AER and (0, 1) for the firmware first model where
-> firmware does the init and handles errors first then passes control to
-> the OS. For these cases the FIRMWARE_FIRST flag in HEST is redundant and
-> not needed.
+> [1] -> https://www.devicetree.org/open-firmware/bindings/pci/pci2_1.pdf
 > 
-> We did discuss the (1, 1) case in the ACPI working group and there were
-> a potential use case (which Alex documented in the link you provided)
-> but there is nothing specified in the standard about how that model
-> would actually work AFAICT. And no x86 system has the hardware support
-> needed for what was proposed that I'm aware of (not sure about other
-> architectures).
-> 
-> So unless and until someone documents how the firmware and OS are
-> supposed to behave in the (1, 1) or (0, 0) scenario and expresses a need
-> for those models, I would not bother adding support for them.  Just my 2
-> cents.
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  drivers/pci/controller/cadence/pcie-cadence-host.c | 4 ++--
+>  drivers/pci/controller/cadence/pcie-cadence.h      | 4 ++--
+>  2 files changed, 4 insertions(+), 4 deletions(-)
 
-Perfect, I think we should ignore the FIRMWARE_FIRST bit in the HEST
-PCIe entries for now.  Thanks a lot for your help with this!
+I don't see how you would use a 32-bit value for a 16-bit register so
+certainly the struct cdns_pcie_rc fields size is questionable anyway.
 
-Bjorn
+I *assume* you are referring to 4.1.2.1 and the property list
+encoded as "encode-int".
+
+I would like to get RobH's opinion on this - I don't know myself
+whether the PCI OF bindings you added are still relevant and how
+they should be interpreted.
+
+Thanks
+Lorenzo
+
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> index 8f72967f298f..31e67c9c88cf 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> @@ -229,10 +229,10 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>  	}
+>  
+>  	rc->vendor_id = 0xffff;
+> -	of_property_read_u16(np, "vendor-id", &rc->vendor_id);
+> +	of_property_read_u32(np, "vendor-id", &rc->vendor_id);
+>  
+>  	rc->device_id = 0xffff;
+> -	of_property_read_u16(np, "device-id", &rc->device_id);
+> +	of_property_read_u32(np, "device-id", &rc->device_id);
+>  
+>  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "reg");
+>  	pcie->reg_base = devm_ioremap_resource(dev, res);
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+> index 6bd89a21bb1c..df14ad002fe9 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence.h
+> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
+> @@ -262,8 +262,8 @@ struct cdns_pcie_rc {
+>  	struct resource		*bus_range;
+>  	void __iomem		*cfg_base;
+>  	u32			no_bar_nbits;
+> -	u16			vendor_id;
+> -	u16			device_id;
+> +	u32			vendor_id;
+> +	u32			device_id;
+>  };
+>  
+>  /**
+> -- 
+> 2.17.1
+> 
