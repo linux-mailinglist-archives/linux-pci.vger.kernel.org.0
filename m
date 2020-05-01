@@ -2,141 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2FB7D1C1B44
-	for <lists+linux-pci@lfdr.de>; Fri,  1 May 2020 19:10:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 982481C1B71
+	for <lists+linux-pci@lfdr.de>; Fri,  1 May 2020 19:16:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729391AbgEARKN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 1 May 2020 13:10:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51860 "EHLO mail.kernel.org"
+        id S1729291AbgEARQx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 1 May 2020 13:16:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728495AbgEARKN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 1 May 2020 13:10:13 -0400
+        id S1729246AbgEARQw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 1 May 2020 13:16:52 -0400
 Received: from localhost (mobile-166-175-184-168.mycingular.net [166.175.184.168])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1C6C2137B;
-        Fri,  1 May 2020 17:10:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 852552137B;
+        Fri,  1 May 2020 17:16:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588353013;
-        bh=AZtGupY3KVT174f6mc/9Z29DqA2plgz5WC6ENyZ6TPE=;
+        s=default; t=1588353411;
+        bh=O3zHkG0xK7vnhchvk9LwPWiRO6iM2S6Twy28fLvh81w=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=PBt0yxaZV/zHBhSkjLZbx2e68r1SeWS0rIaOCYIyY1T/juir9wkfAEotoNf0Pv7UG
-         YFlTN1FA2MgY60VvWQWC71/qkgHXC1qnlNlFjaZyxujhRhRp++Suc5WqQQlYztBHIl
-         HT1CeSIrQedVZhkaX1SyQLwHwRRv+9ec8VC8Vo1c=
-Date:   Fri, 1 May 2020 12:10:11 -0500
+        b=ooJMbUXwRSn08VpK+bFeKUUTOGpcnXCZn935/9HH/jPOYsPDZDUTgaUvNJE1drWjJ
+         McE+bPtrWP0t4EvfnpiZrRMffZ8mkvajeaAy/pIJW63HH95tAegyTRVMywFD/KrtvQ
+         RCHGyxvdCSukM66+sSGnbMRT0eRR8glacInJnRAI=
+Date:   Fri, 1 May 2020 12:16:49 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 12/19] docs: pci:
- endpoint/function/binding/pci-test.txt convert to ReST
-Message-ID: <20200501171011.GA116051@bjorn-Precision-5520>
+To:     Jon Derrick <jonathan.derrick@intel.com>
+Cc:     linux-pci@vger.kernel.org, Russell Currey <ruscur@russell.cc>,
+        Sam Bobroff <sbobroff@linux.ibm.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Frederick Lawler <fred@fredlawl.com>,
+        Rajat Jain <rajatja@google.com>,
+        "Patel, Mayurkumar" <mayurkumar.patel@intel.com>,
+        Olof Johansson <olof@lixom.net>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/2] PCI/ERR: Allow Native AER/DPC using _OSC
+Message-ID: <20200501171649.GA116404@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <fa73d1a7fb6c4691899a110a732216bcdac75f2b.1588263270.git.mchehab+huawei@kernel.org>
+In-Reply-To: <1588272369-2145-1-git-send-email-jonathan.derrick@intel.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 06:18:26PM +0200, Mauro Carvalho Chehab wrote:
-> Convert this file to ReST by adding a proper title to it and
-> use the right markups for a table.
+On Thu, Apr 30, 2020 at 12:46:07PM -0600, Jon Derrick wrote:
+> Hi Bjorn & Kuppuswamy,
 > 
-> While here, add a SPDX header.
+> I see a problem in the DPC ECN [1] to _OSC in that it doesn't give us a way to
+> determine if firmware supports _OSC DPC negotation, and therefore how to handle
+> DPC.
 > 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> Here is the wording of the ECN that implies that Firmware without _OSC DPC
+> negotiation support should have the OSPM rely on _OSC AER negotiation when
+> determining DPC control:
+> 
+>   PCIe Base Specification suggests that Downstream Port Containment may be
+>   controlled either by the Firmware or the Operating System. It also suggests
+>   that the Firmware retain ownership of Downstream Port Containment if it also
+>   owns AER. When the Firmware owns Downstream Port Containment, it is expected
+>   to use the new "Error Disconnect Recover" notification to alert OSPM of a
+>   Downstream Port Containment event.
+> 
+> In legacy platforms, as bits in _OSC are reserved prior to implementation, ACPI
+> Root Bus enumeration will mark these Host Bridges as without Native DPC
+> support, even though the specification implies it's expected that AER _OSC
+> negotiation determines DPC control for these platforms. There seems to be a
+> need for a way to determine if the DPC control bit in _OSC is supported and
+> fallback on AER otherwise.
+> 
+> 
+> Currently portdrv assumes DPC control if the port has Native AER services:
+> 
+> static int get_port_device_capability(struct pci_dev *dev)
+> ...
+> 	if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC) &&
+> 	    pci_aer_available() &&
+> 	    (pcie_ports_dpc_native || (services & PCIE_PORT_SERVICE_AER)))
+> 		services |= PCIE_PORT_SERVICE_DPC;
+> 
+> Newer firmware may not grant OSPM DPC control, if for instance, it expects to
+> use Error Disconnect Recovery. However it looks like ACPI will use DPC services
+> via the EDR driver, without binding the full DPC port service driver.
+> 
+> 
+> If we change portdrv to probe based on host->native_dpc and not AER, then we
+> break instances with legacy firmware where OSPM will clear host->native_dpc
+> solely due to _OSC bits being reserved:
+> 
+> struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
+> ...
+> 	if (!(root->osc_control_set & OSC_PCI_EXPRESS_DPC_CONTROL))
+> 		host_bridge->native_dpc = 0;
+> 
+> 
+> 
+> So my assumption instead is that host->native_dpc can be 0 and expect Native
+> DPC services if AER is used. In other words, if and only if DPC probe is
+> invoked from portdrv, then it needs to rely on the AER dependency. Otherwise it
+> should be assumed that ACPI set up DPC via EDR. This covers legacy firmware.
+> 
+> However it seems like that could be trouble with newer firmware that might give
+> OSPM control of AER but not DPC, and would result in both Native DPC and EDR
+> being in effect.
+> 
+> 
+> Anyways here are two patches that give control of AER and DPC on the results of
+> _OSC. They don't mess with the HEST parser as I expect those to be removed at
+> some point. I need these for VMD support which doesn't even rely on _OSC, but I
+> suspect this won't be the last effort as we detangle Firmware First.
+> 
+> [1] https://members.pcisig.com/wg/PCI-SIG/document/12888
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Hi Jon, I think we need to sort out the _OSC/FIRMWARE_FIRST patches
+from Alex and Sathy first, then see what needs to be done on top of
+those, so I'm going to push these off for a few days and they'll
+probably need a refresh.
 
-> ---
->  .../endpoint/function/binding/pci-test.rst    | 26 +++++++++++++++++++
->  .../endpoint/function/binding/pci-test.txt    | 19 --------------
->  Documentation/PCI/endpoint/index.rst          |  2 ++
->  .../misc-devices/pci-endpoint-test.rst        |  2 +-
->  4 files changed, 29 insertions(+), 20 deletions(-)
->  create mode 100644 Documentation/PCI/endpoint/function/binding/pci-test.rst
->  delete mode 100644 Documentation/PCI/endpoint/function/binding/pci-test.txt
-> 
-> diff --git a/Documentation/PCI/endpoint/function/binding/pci-test.rst b/Documentation/PCI/endpoint/function/binding/pci-test.rst
-> new file mode 100644
-> index 000000000000..57ee866fb165
-> --- /dev/null
-> +++ b/Documentation/PCI/endpoint/function/binding/pci-test.rst
-> @@ -0,0 +1,26 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +==========================
-> +PCI Test Endpoint Function
-> +==========================
-> +
-> +name: Should be "pci_epf_test" to bind to the pci_epf_test driver.
-> +
-> +Configurable Fields:
-> +
-> +================   ===========================================================
-> +vendorid	   should be 0x104c
-> +deviceid	   should be 0xb500 for DRA74x and 0xb501 for DRA72x
-> +revid		   don't care
-> +progif_code	   don't care
-> +subclass_code	   don't care
-> +baseclass_code	   should be 0xff
-> +cache_line_size	   don't care
-> +subsys_vendor_id   don't care
-> +subsys_id	   don't care
-> +interrupt_pin	   Should be 1 - INTA, 2 - INTB, 3 - INTC, 4 -INTD
-> +msi_interrupts	   Should be 1 to 32 depending on the number of MSI interrupts
-> +		   to test
-> +msix_interrupts	   Should be 1 to 2048 depending on the number of MSI-X
-> +		   interrupts to test
-> +================   ===========================================================
-> diff --git a/Documentation/PCI/endpoint/function/binding/pci-test.txt b/Documentation/PCI/endpoint/function/binding/pci-test.txt
-> deleted file mode 100644
-> index cd76ba47394b..000000000000
-> --- a/Documentation/PCI/endpoint/function/binding/pci-test.txt
-> +++ /dev/null
-> @@ -1,19 +0,0 @@
-> -PCI TEST ENDPOINT FUNCTION
-> -
-> -name: Should be "pci_epf_test" to bind to the pci_epf_test driver.
-> -
-> -Configurable Fields:
-> -vendorid	 : should be 0x104c
-> -deviceid	 : should be 0xb500 for DRA74x and 0xb501 for DRA72x
-> -revid		 : don't care
-> -progif_code	 : don't care
-> -subclass_code	 : don't care
-> -baseclass_code	 : should be 0xff
-> -cache_line_size	 : don't care
-> -subsys_vendor_id : don't care
-> -subsys_id	 : don't care
-> -interrupt_pin	 : Should be 1 - INTA, 2 - INTB, 3 - INTC, 4 -INTD
-> -msi_interrupts	 : Should be 1 to 32 depending on the number of MSI interrupts
-> -		   to test
-> -msix_interrupts	 : Should be 1 to 2048 depending on the number of MSI-X
-> -		   interrupts to test
-> diff --git a/Documentation/PCI/endpoint/index.rst b/Documentation/PCI/endpoint/index.rst
-> index d114ea74b444..4ca7439fbfc9 100644
-> --- a/Documentation/PCI/endpoint/index.rst
-> +++ b/Documentation/PCI/endpoint/index.rst
-> @@ -11,3 +11,5 @@ PCI Endpoint Framework
->     pci-endpoint-cfs
->     pci-test-function
->     pci-test-howto
-> +
-> +   function/binding/pci-test
-> diff --git a/Documentation/misc-devices/pci-endpoint-test.rst b/Documentation/misc-devices/pci-endpoint-test.rst
-> index 26e5d9ba146b..4cf3f4433be7 100644
-> --- a/Documentation/misc-devices/pci-endpoint-test.rst
-> +++ b/Documentation/misc-devices/pci-endpoint-test.rst
-> @@ -53,4 +53,4 @@ ioctl
->  	      Perform read tests. The size of the buffer should be passed
->  	      as argument.
->  
-> -.. [1] Documentation/PCI/endpoint/function/binding/pci-test.txt
-> +.. [1] Documentation/PCI/endpoint/function/binding/pci-test.rst
-> -- 
-> 2.25.4
-> 
+Bjorn
