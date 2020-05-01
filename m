@@ -2,161 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0447A1C1BD7
-	for <lists+linux-pci@lfdr.de>; Fri,  1 May 2020 19:35:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 734A31C1D55
+	for <lists+linux-pci@lfdr.de>; Fri,  1 May 2020 20:43:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730403AbgEARfT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 1 May 2020 13:35:19 -0400
-Received: from mga03.intel.com ([134.134.136.65]:20842 "EHLO mga03.intel.com"
+        id S1729767AbgEASn3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 1 May 2020 14:43:29 -0400
+Received: from mga03.intel.com ([134.134.136.65]:24774 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728951AbgEARfS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 1 May 2020 13:35:18 -0400
-IronPort-SDR: oIzdwUzGy7bnF5tidPTQBSPtt6h/iWK94XHk5CHIRH2ETPQ5UUADFbvG451Q+7oyWUnKKILi6Q
- L6dDfB/q946g==
+        id S1729721AbgEASn3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 1 May 2020 14:43:29 -0400
+IronPort-SDR: Rui4BvMPHjAlEIl991ZCRoIDvL7v4G0XK6rPsU9o26SdNiuCEZHyovsRnzV91d5zkpkn2UT4Sd
+ 2iJ8in3RU9fw==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2020 10:35:17 -0700
-IronPort-SDR: AIo90WlFzgatGYhRQjugzGu1JYYFSXF3xirZSA3pjejZkeFouqM6dL/ljOCuUplGpy7q2E7SWY
- F555HQp1C06A==
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2020 11:43:27 -0700
+IronPort-SDR: Oe5DDEpUeSvJd3uJjKa707ZNYN2SDsVYGArwxpk53mO8THLmqANSgHgRvUNuK/SNsanomk6c4J
+ Hw26hF4vrnrg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,340,1583222400"; 
-   d="scan'208";a="258670568"
-Received: from orsmsx106.amr.corp.intel.com ([10.22.225.133])
-  by orsmga003.jf.intel.com with ESMTP; 01 May 2020 10:35:17 -0700
-Received: from orsmsx158.amr.corp.intel.com (10.22.240.20) by
- ORSMSX106.amr.corp.intel.com (10.22.225.133) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 1 May 2020 10:35:17 -0700
-Received: from orsmsx101.amr.corp.intel.com ([169.254.8.204]) by
- ORSMSX158.amr.corp.intel.com ([169.254.10.56]) with mapi id 14.03.0439.000;
- Fri, 1 May 2020 10:35:17 -0700
-From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
-To:     "helgaas@kernel.org" <helgaas@kernel.org>
-CC:     "Patel, Mayurkumar" <mayurkumar.patel@intel.com>,
-        "rajatja@google.com" <rajatja@google.com>,
-        "fred@fredlawl.com" <fred@fredlawl.com>,
-        "ruscur@russell.cc" <ruscur@russell.cc>,
-        "oohall@gmail.com" <oohall@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "sbobroff@linux.ibm.com" <sbobroff@linux.ibm.com>,
-        "olof@lixom.net" <olof@lixom.net>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "sathyanarayanan.kuppuswamy@linux.intel.com" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: Re: [PATCH v3 0/2] PCI/ERR: Allow Native AER/DPC using _OSC
-Thread-Topic: [PATCH v3 0/2] PCI/ERR: Allow Native AER/DPC using _OSC
-Thread-Index: AQHWHyGBlj2gvaBx5UuW2XC3HoapYaiT766AgAAFJ4A=
-Date:   Fri, 1 May 2020 17:35:16 +0000
-Message-ID: <518c3348c4b4a8b5fed6a42ad190771f7f9645f3.camel@intel.com>
-References: <20200501171649.GA116404@bjorn-Precision-5520>
-In-Reply-To: <20200501171649.GA116404@bjorn-Precision-5520>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.255.3.184]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <7FDE8DA749E49548A442399530838EF6@intel.com>
-Content-Transfer-Encoding: base64
+   d="scan'208";a="258688327"
+Received: from araj-mobl1.jf.intel.com ([10.255.228.118])
+  by orsmga003.jf.intel.com with ESMTP; 01 May 2020 11:43:27 -0700
+Date:   Fri, 1 May 2020 11:43:26 -0700
+From:   "Raj, Ashok" <ashok.raj@linux.intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Evan Green <evgreen@chromium.org>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>, x86@kernel.org,
+        linux-pci <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Ghorai, Sukumar" <sukumar.ghorai@intel.com>,
+        "Amara, Madhusudanarao" <madhusudanarao.amara@intel.com>,
+        "Nandamuri, Srikanth" <srikanth.nandamuri@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>
+Subject: Re: MSI interrupt for xhci still lost on 5.6-rc6 after cpu hotplug
+Message-ID: <20200501184326.GA17961@araj-mobl1.jf.intel.com>
+References: <806c51fa-992b-33ac-61a9-00a606f82edb@linux.intel.com>
+ <87d0974akk.fsf@nanos.tec.linutronix.de>
+ <b9fbd55a-7f97-088d-2cc2-4e4ea86d9440@linux.intel.com>
+ <87r1xjp3gn.fsf@nanos.tec.linutronix.de>
+ <f8057cbc-4814-5083-cddd-d4eb1459529f@linux.intel.com>
+ <878sjqfvmi.fsf@nanos.tec.linutronix.de>
+ <CAE=gft6Fbibu17H+OfHZjmvHxboioFj09hAmozebc1TE_EqH5g@mail.gmail.com>
+ <87tv2dd17z.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87tv2dd17z.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.9.1 (2017-09-22)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTA1LTAxIGF0IDEyOjE2IC0wNTAwLCBCam9ybiBIZWxnYWFzIHdyb3RlOg0K
-PiBPbiBUaHUsIEFwciAzMCwgMjAyMCBhdCAxMjo0NjowN1BNIC0wNjAwLCBKb24gRGVycmljayB3
-cm90ZToNCj4gPiBIaSBCam9ybiAmIEt1cHB1c3dhbXksDQo+ID4gDQo+ID4gSSBzZWUgYSBwcm9i
-bGVtIGluIHRoZSBEUEMgRUNOIFsxXSB0byBfT1NDIGluIHRoYXQgaXQgZG9lc24ndCBnaXZlIHVz
-IGEgd2F5IHRvDQo+ID4gZGV0ZXJtaW5lIGlmIGZpcm13YXJlIHN1cHBvcnRzIF9PU0MgRFBDIG5l
-Z290YXRpb24sIGFuZCB0aGVyZWZvcmUgaG93IHRvIGhhbmRsZQ0KPiA+IERQQy4NCj4gPiANCj4g
-PiBIZXJlIGlzIHRoZSB3b3JkaW5nIG9mIHRoZSBFQ04gdGhhdCBpbXBsaWVzIHRoYXQgRmlybXdh
-cmUgd2l0aG91dCBfT1NDIERQQw0KPiA+IG5lZ290aWF0aW9uIHN1cHBvcnQgc2hvdWxkIGhhdmUg
-dGhlIE9TUE0gcmVseSBvbiBfT1NDIEFFUiBuZWdvdGlhdGlvbiB3aGVuDQo+ID4gZGV0ZXJtaW5p
-bmcgRFBDIGNvbnRyb2w6DQo+ID4gDQo+ID4gICBQQ0llIEJhc2UgU3BlY2lmaWNhdGlvbiBzdWdn
-ZXN0cyB0aGF0IERvd25zdHJlYW0gUG9ydCBDb250YWlubWVudCBtYXkgYmUNCj4gPiAgIGNvbnRy
-b2xsZWQgZWl0aGVyIGJ5IHRoZSBGaXJtd2FyZSBvciB0aGUgT3BlcmF0aW5nIFN5c3RlbS4gSXQg
-YWxzbyBzdWdnZXN0cw0KPiA+ICAgdGhhdCB0aGUgRmlybXdhcmUgcmV0YWluIG93bmVyc2hpcCBv
-ZiBEb3duc3RyZWFtIFBvcnQgQ29udGFpbm1lbnQgaWYgaXQgYWxzbw0KPiA+ICAgb3ducyBBRVIu
-IFdoZW4gdGhlIEZpcm13YXJlIG93bnMgRG93bnN0cmVhbSBQb3J0IENvbnRhaW5tZW50LCBpdCBp
-cyBleHBlY3RlZA0KPiA+ICAgdG8gdXNlIHRoZSBuZXcgIkVycm9yIERpc2Nvbm5lY3QgUmVjb3Zl
-ciIgbm90aWZpY2F0aW9uIHRvIGFsZXJ0IE9TUE0gb2YgYQ0KPiA+ICAgRG93bnN0cmVhbSBQb3J0
-IENvbnRhaW5tZW50IGV2ZW50Lg0KPiA+IA0KPiA+IEluIGxlZ2FjeSBwbGF0Zm9ybXMsIGFzIGJp
-dHMgaW4gX09TQyBhcmUgcmVzZXJ2ZWQgcHJpb3IgdG8gaW1wbGVtZW50YXRpb24sIEFDUEkNCj4g
-PiBSb290IEJ1cyBlbnVtZXJhdGlvbiB3aWxsIG1hcmsgdGhlc2UgSG9zdCBCcmlkZ2VzIGFzIHdp
-dGhvdXQgTmF0aXZlIERQQw0KPiA+IHN1cHBvcnQsIGV2ZW4gdGhvdWdoIHRoZSBzcGVjaWZpY2F0
-aW9uIGltcGxpZXMgaXQncyBleHBlY3RlZCB0aGF0IEFFUiBfT1NDDQo+ID4gbmVnb3RpYXRpb24g
-ZGV0ZXJtaW5lcyBEUEMgY29udHJvbCBmb3IgdGhlc2UgcGxhdGZvcm1zLiBUaGVyZSBzZWVtcyB0
-byBiZSBhDQo+ID4gbmVlZCBmb3IgYSB3YXkgdG8gZGV0ZXJtaW5lIGlmIHRoZSBEUEMgY29udHJv
-bCBiaXQgaW4gX09TQyBpcyBzdXBwb3J0ZWQgYW5kDQo+ID4gZmFsbGJhY2sgb24gQUVSIG90aGVy
-d2lzZS4NCj4gPiANCj4gPiANCj4gPiBDdXJyZW50bHkgcG9ydGRydiBhc3N1bWVzIERQQyBjb250
-cm9sIGlmIHRoZSBwb3J0IGhhcyBOYXRpdmUgQUVSIHNlcnZpY2VzOg0KPiA+IA0KPiA+IHN0YXRp
-YyBpbnQgZ2V0X3BvcnRfZGV2aWNlX2NhcGFiaWxpdHkoc3RydWN0IHBjaV9kZXYgKmRldikNCj4g
-PiAuLi4NCj4gPiAJaWYgKHBjaV9maW5kX2V4dF9jYXBhYmlsaXR5KGRldiwgUENJX0VYVF9DQVBf
-SURfRFBDKSAmJg0KPiA+IAkgICAgcGNpX2Flcl9hdmFpbGFibGUoKSAmJg0KPiA+IAkgICAgKHBj
-aWVfcG9ydHNfZHBjX25hdGl2ZSB8fCAoc2VydmljZXMgJiBQQ0lFX1BPUlRfU0VSVklDRV9BRVIp
-KSkNCj4gPiAJCXNlcnZpY2VzIHw9IFBDSUVfUE9SVF9TRVJWSUNFX0RQQzsNCj4gPiANCj4gPiBO
-ZXdlciBmaXJtd2FyZSBtYXkgbm90IGdyYW50IE9TUE0gRFBDIGNvbnRyb2wsIGlmIGZvciBpbnN0
-YW5jZSwgaXQgZXhwZWN0cyB0bw0KPiA+IHVzZSBFcnJvciBEaXNjb25uZWN0IFJlY292ZXJ5LiBI
-b3dldmVyIGl0IGxvb2tzIGxpa2UgQUNQSSB3aWxsIHVzZSBEUEMgc2VydmljZXMNCj4gPiB2aWEg
-dGhlIEVEUiBkcml2ZXIsIHdpdGhvdXQgYmluZGluZyB0aGUgZnVsbCBEUEMgcG9ydCBzZXJ2aWNl
-IGRyaXZlci4NCj4gPiANCj4gPiANCj4gPiBJZiB3ZSBjaGFuZ2UgcG9ydGRydiB0byBwcm9iZSBi
-YXNlZCBvbiBob3N0LT5uYXRpdmVfZHBjIGFuZCBub3QgQUVSLCB0aGVuIHdlDQo+ID4gYnJlYWsg
-aW5zdGFuY2VzIHdpdGggbGVnYWN5IGZpcm13YXJlIHdoZXJlIE9TUE0gd2lsbCBjbGVhciBob3N0
-LT5uYXRpdmVfZHBjDQo+ID4gc29sZWx5IGR1ZSB0byBfT1NDIGJpdHMgYmVpbmcgcmVzZXJ2ZWQ6
-DQo+ID4gDQo+ID4gc3RydWN0IHBjaV9idXMgKmFjcGlfcGNpX3Jvb3RfY3JlYXRlKHN0cnVjdCBh
-Y3BpX3BjaV9yb290ICpyb290LA0KPiA+IC4uLg0KPiA+IAlpZiAoIShyb290LT5vc2NfY29udHJv
-bF9zZXQgJiBPU0NfUENJX0VYUFJFU1NfRFBDX0NPTlRST0wpKQ0KPiA+IAkJaG9zdF9icmlkZ2Ut
-Pm5hdGl2ZV9kcGMgPSAwOw0KPiA+IA0KPiA+IA0KPiA+IA0KPiA+IFNvIG15IGFzc3VtcHRpb24g
-aW5zdGVhZCBpcyB0aGF0IGhvc3QtPm5hdGl2ZV9kcGMgY2FuIGJlIDAgYW5kIGV4cGVjdCBOYXRp
-dmUNCj4gPiBEUEMgc2VydmljZXMgaWYgQUVSIGlzIHVzZWQuIEluIG90aGVyIHdvcmRzLCBpZiBh
-bmQgb25seSBpZiBEUEMgcHJvYmUgaXMNCj4gPiBpbnZva2VkIGZyb20gcG9ydGRydiwgdGhlbiBp
-dCBuZWVkcyB0byByZWx5IG9uIHRoZSBBRVIgZGVwZW5kZW5jeS4gT3RoZXJ3aXNlIGl0DQo+ID4g
-c2hvdWxkIGJlIGFzc3VtZWQgdGhhdCBBQ1BJIHNldCB1cCBEUEMgdmlhIEVEUi4gVGhpcyBjb3Zl
-cnMgbGVnYWN5IGZpcm13YXJlLg0KPiA+IA0KPiA+IEhvd2V2ZXIgaXQgc2VlbXMgbGlrZSB0aGF0
-IGNvdWxkIGJlIHRyb3VibGUgd2l0aCBuZXdlciBmaXJtd2FyZSB0aGF0IG1pZ2h0IGdpdmUNCj4g
-PiBPU1BNIGNvbnRyb2wgb2YgQUVSIGJ1dCBub3QgRFBDLCBhbmQgd291bGQgcmVzdWx0IGluIGJv
-dGggTmF0aXZlIERQQyBhbmQgRURSDQo+ID4gYmVpbmcgaW4gZWZmZWN0Lg0KPiA+IA0KPiA+IA0K
-PiA+IEFueXdheXMgaGVyZSBhcmUgdHdvIHBhdGNoZXMgdGhhdCBnaXZlIGNvbnRyb2wgb2YgQUVS
-IGFuZCBEUEMgb24gdGhlIHJlc3VsdHMgb2YNCj4gPiBfT1NDLiBUaGV5IGRvbid0IG1lc3Mgd2l0
-aCB0aGUgSEVTVCBwYXJzZXIgYXMgSSBleHBlY3QgdGhvc2UgdG8gYmUgcmVtb3ZlZCBhdA0KPiA+
-IHNvbWUgcG9pbnQuIEkgbmVlZCB0aGVzZSBmb3IgVk1EIHN1cHBvcnQgd2hpY2ggZG9lc24ndCBl
-dmVuIHJlbHkgb24gX09TQywgYnV0IEkNCj4gPiBzdXNwZWN0IHRoaXMgd29uJ3QgYmUgdGhlIGxh
-c3QgZWZmb3J0IGFzIHdlIGRldGFuZ2xlIEZpcm13YXJlIEZpcnN0Lg0KPiA+IA0KPiA+IFsxXSBo
-dHRwczovL21lbWJlcnMucGNpc2lnLmNvbS93Zy9QQ0ktU0lHL2RvY3VtZW50LzEyODg4DQo+IA0K
-PiBIaSBKb24sIEkgdGhpbmsgd2UgbmVlZCB0byBzb3J0IG91dCB0aGUgX09TQy9GSVJNV0FSRV9G
-SVJTVCBwYXRjaGVzDQo+IGZyb20gQWxleCBhbmQgU2F0aHkgZmlyc3QsIHRoZW4gc2VlIHdoYXQg
-bmVlZHMgdG8gYmUgZG9uZSBvbiB0b3Agb2YNCj4gdGhvc2UsIHNvIEknbSBnb2luZyB0byBwdXNo
-IHRoZXNlIG9mZiBmb3IgYSBmZXcgZGF5cyBhbmQgdGhleSdsbA0KPiBwcm9iYWJseSBuZWVkIGEg
-cmVmcmVzaC4NCj4gDQo+IEJqb3JuDQoNCg0KQWdyZWVkLCBubyBuZWVkIHRvIG1lcmdlIG5vdy4g
-SnVzdCB3YW50ZWQgdG8gYnJpbmcgdXAgdGhlIERQQw0KYW1iaWd1aXR5LCB3aGljaCBJIHRoaW5r
-IHdhcyBmaXJzdCBhZGRyZXNzZWQgYnkgZHBjLW5hdGl2ZToNCg0KY29tbWl0IDM1YTBiMjM3OGMx
-OTlkNGYyNmU0NThiMmNhMzhlYTU2YWFmMmQ5YjgNCkF1dGhvcjogT2xvZiBKb2hhbnNzb24gPG9s
-b2ZAbGl4b20ubmV0Pg0KRGF0ZTogICBXZWQgT2N0IDIzIDEyOjIyOjA1IDIwMTkgLTA3MDANCg0K
-ICAgIFBDSS9EUEM6IEFkZCAicGNpZV9wb3J0cz1kcGMtbmF0aXZlIiB0byBhbGxvdyBEUEMgd2l0
-aG91dCBBRVIgY29udHJvbA0KICAgIA0KICAgIFByaW9yIHRvIGVlZDg1ZmY0YzBkYTcgKCJQQ0kv
-RFBDOiBFbmFibGUgRFBDIG9ubHkgaWYgQUVSIGlzIGF2YWlsYWJsZSIpLA0KICAgIExpbnV4IGhh
-bmRsZWQgRFBDIGV2ZW50cyByZWdhcmRsZXNzIG9mIHdoZXRoZXIgZmlybXdhcmUgaGFkIGdyYW50
-ZWQgaXQNCiAgICBvd25lcnNoaXAgb2YgQUVSIG9yIERQQywgZS5nLiwgdmlhIF9PU0MuDQogICAg
-DQogICAgUENJZSByNS4wLCBzZWMgNi4yLjEwLCByZWNvbW1lbmRzIHRoYXQgdGhlIE9TIGxpbmsg
-Y29udHJvbCBvZiBEUEMgdG8NCiAgICBjb250cm9sIG9mIEFFUiwgc28gYWZ0ZXIgZWVkODVmZjRj
-MGRhNywgTGludXggaGFuZGxlcyBEUEMgZXZlbnRzIG9ubHkgaWYgaXQNCiAgICBoYXMgY29udHJv
-bCBvZiBBRVIuDQogICAgDQogICAgT24gcGxhdGZvcm1zIHRoYXQgZG8gbm90IGdyYW50IE9TIGNv
-bnRyb2wgb2YgQUVSIHZpYSBfT1NDLCBMaW51eCBEUEMNCiAgICBoYW5kbGluZyB3b3JrZWQgYmVm
-b3JlIGVlZDg1ZmY0YzBkYTcgYnV0IG5vdCBhZnRlci4NCiAgICANCiAgICBUbyBtYWtlIExpbnV4
-IERQQyBoYW5kbGluZyB3b3JrIG9uIHRob3NlIHBsYXRmb3JtcyB0aGUgc2FtZSB3YXkgdGhleSBk
-aWQNCiAgICBiZWZvcmUsIGFkZCBhICJwY2llX3BvcnRzPWRwYy1uYXRpdmUiIGtlcm5lbCBwYXJh
-bWV0ZXIgdGhhdCBtYWtlcyBMaW51eA0KICAgIGhhbmRsZSBEUEMgZXZlbnRzIHJlZ2FyZGxlc3Mg
-b2Ygd2hldGhlciBpdCBoYXMgY29udHJvbCBvZiBBRVIuDQogICAgDQogICAgW2JoZWxnYWFzOiBj
-b21taXQgbG9nLCBtb3ZlIHBjaWVfcG9ydHNfZHBjX25hdGl2ZSB0byBkcml2ZXJzL3BjaS9dDQog
-ICAgTGluazogaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvci8yMDE5MTAyMzE5MjIwNS45NzAyNC0x
-LW9sb2ZAbGl4b20ubmV0DQogICAgU2lnbmVkLW9mZi1ieTogT2xvZiBKb2hhbnNzb24gPG9sb2ZA
-bGl4b20ubmV0Pg0KICAgIFNpZ25lZC1vZmYtYnk6IEJqb3JuIEhlbGdhYXMgPGJoZWxnYWFzQGdv
-b2dsZS5jb20+DQoNCg0KVGhhbmtzLA0KSm9uDQo=
+Hi Thomas
+
+Just started looking into it to get some idea about what could be
+going on. I had some questions, that would be helpful to clarify.
+
+On Tue, Mar 24, 2020 at 08:03:44PM +0100, Thomas Gleixner wrote:
+> Evan Green <evgreen@chromium.org> writes:
+> > On Mon, Mar 23, 2020 at 5:24 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >> And of course all of this is so well documented that all of us can
+> >> clearly figure out what's going on...
+> >
+> > I won't pretend to know what's going on, so I'll preface this by
+> > labeling it all as "flailing", but:
+> >
+> > I wonder if there's some way the interrupt can get delayed between
+> > XHCI snapping the torn value and it finding its way into the IRR. For
+> > instance, if xhci read this value at the start of their interrupt
+> > moderation timer period, that would be awful (I hope they don't do
+> > this). One test patch would be to carve out 8 vectors reserved for
+> > xhci on all cpus. Whenever you change the affinity, the assigned
+> > vector is always reserved_base + cpu_number. That lets you exercise
+> > the affinity switching code, but in a controlled manner where torn
+> > interrupts could be easily seen (ie hey I got an interrupt on cpu 4's
+> > vector but I'm cpu 2). I might struggle to write such a change, but in
+> > theory it's doable.
+> 
+> Well, the point is that we don't see a spurious interrupt on any
+> CPU. We added a traceprintk into do_IRQ() and that would immediately
+> tell us where the thing goes off into lala land. Which it didn't.
+
+Now that we don't have the torn write issue. We did an experiment 
+with legacy MSI, and no interrupt remap support. One of the thought
+process was, since we don't have a way to ensure that previous MSI writes
+are globally observed, a read from the device should flush any
+outstanidng writes correct? (according to PCI, not sure if we can
+depend on this.. or chipsets would take their own sweet time to push to CPU)
+
+I'm not certain if such a read happens today? So to make it simple tried
+to force a retrigger. In the following case of direct update,
+even though the vector isn't changing a MSI write to the previous 
+destination could have been sent to the previous CPU right? 
+
+arch/x86/kernel/apic/msi.c: msi_set_affinity()
+
+	/*
+         * Direct update is possible when:
+         * - The MSI is maskable (remapped MSI does not use this code path)).
+         *   The quirk bit is not set in this case.
+         * - The new vector is the same as the old vector
+         * - The old vector is MANAGED_IRQ_SHUTDOWN_VECTOR (interrupt starts up)
+         * - The new destination CPU is the same as the old destination CPU
+         */
+        if (!irqd_msi_nomask_quirk(irqd) ||
+            cfg->vector == old_cfg.vector ||
+            old_cfg.vector == MANAGED_IRQ_SHUTDOWN_VECTOR ||
+            cfg->dest_apicid == old_cfg.dest_apicid) {
+                irq_msi_update_msg(irqd, cfg);
+	-->>> force a retrigger
+
+It appears that without a gaurantee of flusing MSI writes from the device
+the check for lapic_vector_set_in_irr(vector) is still racy. 
+
+With adding the forced retrigger in both places, the test didn't reveal any
+lost interrupt cases.
+
+Now the second question with Interrupt Remapping Support:
+
+
+intel_ir_set_affinity->intel_ir_reconfigure_irte()-> modify_irte()
+
+The flush of Interrupt Entry Cache (IEC) should ensure, if any interrupts
+were in flight, they made it to the previous CPU, and any new interrupts
+must be delivered to the new CPU.
+
+Question is do we need a check similar to the legacy MSI handling
+
+	if (lapic_vector_set_in_irr())
+	    handle interrupt? 
+
+Is there a reason we don't check if the interrupt delivered to previous
+CPU in intel_ir_set_affinity()? Or is the send_cleanup_vector() sends
+an IPI to perform the cleanup?  
+
+It appears that maybe send_cleanup_vector() sends IPI to the old cpu
+and that somehow ensures the device interrupt handler actually getting
+called? I lost my track somewhere down there :)
+
+
+Cheers,
+Ashok
