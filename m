@@ -2,91 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1AF021C1A04
-	for <lists+linux-pci@lfdr.de>; Fri,  1 May 2020 17:48:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 64B141C1A1C
+	for <lists+linux-pci@lfdr.de>; Fri,  1 May 2020 17:54:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729731AbgEAPsQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 1 May 2020 11:48:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55918 "EHLO mail.kernel.org"
+        id S1729037AbgEAPyV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 1 May 2020 11:54:21 -0400
+Received: from foss.arm.com ([217.140.110.172]:43100 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728495AbgEAPsQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 1 May 2020 11:48:16 -0400
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F4E52137B;
-        Fri,  1 May 2020 15:48:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588348095;
-        bh=sBnS1EAfBQE4efMp26hhUr4f8wzrVS3x6YefMaqZz78=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=DOPwEHGEjZEqnMfaWUQKHWkEMEd+Tmn4mT/4fCOCQuSLDpdqM5LvI/prO07lQVkNY
-         9djefE/1vYJ58NdJdo9JImILf5z5Eu9mrGb48pPQtkIdIBgtEO3yfRBTLD3QcMvqCj
-         PoC7eZ1+mBwZI7qhAbq6/geugvC9ZrxiCaHFzlyM=
-Received: by mail-ot1-f46.google.com with SMTP id e20so2836675otk.12;
-        Fri, 01 May 2020 08:48:15 -0700 (PDT)
-X-Gm-Message-State: AGi0Pua3/uYObqY7xaHAPZCufel+aPB+M5Do3JoFjocssHbXGnroP0Uh
-        CfdEASWcBNtXGOjl9PyLAGb+lbsdP1gDokcs7Q==
-X-Google-Smtp-Source: APiQypLSuc1ficUgLIosueT06J05P8GWHscTEPVhw4ZK+6CAG+77HGOr9d8WOB+9XJU4M5RRsaeSpyrJ9RGJ98tkcT8=
-X-Received: by 2002:a9d:1441:: with SMTP id h59mr4125612oth.192.1588348094755;
- Fri, 01 May 2020 08:48:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200501142831.35174-1-james.quinlan@broadcom.com> <20200501142831.35174-4-james.quinlan@broadcom.com>
-In-Reply-To: <20200501142831.35174-4-james.quinlan@broadcom.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 1 May 2020 10:48:02 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKjRYXbtDVRnR6POfKtLBHULn=VGHSe2KFj1PTWSbA57g@mail.gmail.com>
-Message-ID: <CAL_JsqKjRYXbtDVRnR6POfKtLBHULn=VGHSe2KFj1PTWSbA57g@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] dt-bindings: PCI: brcmstb: New prop 'aspm-no-l0s'
-To:     Jim Quinlan <james.quinlan@broadcom.com>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
+        id S1728495AbgEAPyV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 1 May 2020 11:54:21 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ECF6630E;
+        Fri,  1 May 2020 08:54:20 -0700 (PDT)
+Received: from [10.57.39.240] (unknown [10.57.39.240])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 778A63F68F;
+        Fri,  1 May 2020 08:54:19 -0700 (PDT)
+Subject: Re: [PATCH v2 2/4] PCI: cadence: Use "dma-ranges" instead of
+ "cdns,no-bar-match-nbits" property
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Tom Joseph <tjoseph@cadence.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Rob Herring <robh+dt@kernel.org>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200417114322.31111-1-kishon@ti.com>
+ <20200417114322.31111-3-kishon@ti.com>
+ <20200501144645.GB7398@e121166-lin.cambridge.arm.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <dc581c5b-11de-f4b3-e928-208b9293e391@arm.com>
+Date:   Fri, 1 May 2020 16:54:17 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200501144645.GB7398@e121166-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, May 1, 2020 at 9:29 AM Jim Quinlan <james.quinlan@broadcom.com> wrote:
->
-> From: Jim Quinlan <jquinlan@broadcom.com>
->
-> For various reasons, one may want to disable the ASPM L0s
-> capability.
->
-> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
-> ---
->  Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> index 77d3e81a437b..084e4cf68b95 100644
-> --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> @@ -56,6 +56,10 @@ properties:
->      description: Indicates usage of spread-spectrum clocking.
->      type: boolean
->
-> +  aspm-no-l0s:
-> +    description: Disables ASPM L0s capability.
-> +    type: boolean
+On 2020-05-01 3:46 pm, Lorenzo Pieralisi wrote:
+> [+Robin - to check on dma-ranges intepretation]
+> 
+> I would need RobH and Robin to review this.
+> 
+> Also, An ACK from Tom is required - for the whole series.
+> 
+> On Fri, Apr 17, 2020 at 05:13:20PM +0530, Kishon Vijay Abraham I wrote:
+>> Cadence PCIe core driver (host mode) uses "cdns,no-bar-match-nbits"
+>> property to configure the number of bits passed through from PCIe
+>> address to internal address in Inbound Address Translation register.
+>>
+>> However standard PCI dt-binding already defines "dma-ranges" to
+>> describe the address range accessible by PCIe controller. Parse
+>> "dma-ranges" property to configure the number of bits passed
+>> through from PCIe address to internal address in Inbound Address
+>> Translation register.
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>   drivers/pci/controller/cadence/pcie-cadence-host.c | 13 +++++++++++--
+>>   1 file changed, 11 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> index 9b1c3966414b..60f912a657b9 100644
+>> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> @@ -206,8 +206,10 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>>   	struct device *dev = rc->pcie.dev;
+>>   	struct platform_device *pdev = to_platform_device(dev);
+>>   	struct device_node *np = dev->of_node;
+>> +	struct of_pci_range_parser parser;
+>>   	struct pci_host_bridge *bridge;
+>>   	struct list_head resources;
+>> +	struct of_pci_range range;
+>>   	struct cdns_pcie *pcie;
+>>   	struct resource *res;
+>>   	int ret;
+>> @@ -222,8 +224,15 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>>   	rc->max_regions = 32;
+>>   	of_property_read_u32(np, "cdns,max-outbound-regions", &rc->max_regions);
+>>   
+>> -	rc->no_bar_nbits = 32;
+>> -	of_property_read_u32(np, "cdns,no-bar-match-nbits", &rc->no_bar_nbits);
+>> +	if (!of_pci_dma_range_parser_init(&parser, np))
+>> +		if (of_pci_range_parser_one(&parser, &range))
+>> +			rc->no_bar_nbits = ilog2(range.size);
 
-Copied from rockchip-pcie-host.txt? Let's make this a standard
-property. It should be documented here[1].
+You probably want "range.pci_addr + range.size" here just in case the 
+bottom of the window is ever non-zero. Is there definitely only ever a 
+single inbound window to consider?
 
-Then this doc just needs 'aspm-no-l0s: true' to indicate you are using it.
+I believe that pci_parse_request_of_pci_ranges() could do the actual 
+parsing for you, but I suppose plumbing that in plus processing the 
+resulting dma_ranges resource probably ends up a bit messier than the 
+concise open-coding here.
 
-Rob
+Robin.
 
-[1] https://github.com/devicetree-org/dt-schema/blob/master/schemas/pci/pci-bus.yaml
+>> +
+>> +	if (!rc->no_bar_nbits) {
+>> +		rc->no_bar_nbits = 32;
+>> +		of_property_read_u32(np, "cdns,no-bar-match-nbits",
+>> +				     &rc->no_bar_nbits);
+>> +	}
+>>   
+>>   	rc->vendor_id = 0xffff;
+>>   	of_property_read_u16(np, "vendor-id", &rc->vendor_id);
+>> -- 
+>> 2.17.1
+>>
