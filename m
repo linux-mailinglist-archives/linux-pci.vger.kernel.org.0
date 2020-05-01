@@ -2,127 +2,87 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 982481C1B71
-	for <lists+linux-pci@lfdr.de>; Fri,  1 May 2020 19:16:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B02AC1C1BB0
+	for <lists+linux-pci@lfdr.de>; Fri,  1 May 2020 19:30:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729291AbgEARQx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 1 May 2020 13:16:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53628 "EHLO mail.kernel.org"
+        id S1729372AbgEARaK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 1 May 2020 13:30:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729246AbgEARQw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 1 May 2020 13:16:52 -0400
+        id S1728933AbgEARaK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 1 May 2020 13:30:10 -0400
 Received: from localhost (mobile-166-175-184-168.mycingular.net [166.175.184.168])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 852552137B;
-        Fri,  1 May 2020 17:16:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71DE4208D6;
+        Fri,  1 May 2020 17:30:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588353411;
-        bh=O3zHkG0xK7vnhchvk9LwPWiRO6iM2S6Twy28fLvh81w=;
+        s=default; t=1588354209;
+        bh=VAvajmE7+I8hb9c+/89VRkTtTxfrHcVSwWdqiUGJonU=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=ooJMbUXwRSn08VpK+bFeKUUTOGpcnXCZn935/9HH/jPOYsPDZDUTgaUvNJE1drWjJ
-         McE+bPtrWP0t4EvfnpiZrRMffZ8mkvajeaAy/pIJW63HH95tAegyTRVMywFD/KrtvQ
-         RCHGyxvdCSukM66+sSGnbMRT0eRR8glacInJnRAI=
-Date:   Fri, 1 May 2020 12:16:49 -0500
+        b=qC1WjjWYbOxnynz2nVNvSlfFOJYxsyYwB5Z9WkPQ+54FRes/owmjqGxdTAYdFkLmm
+         xo8EywIMalxpSslREjZByCYxfxer6meYf4QiTQgKUHu78Es/HZ2xrS3YCwX0VZrpLb
+         9Pr03YowoTAb/byrLnfgr8DyyKulhpbEtAp4CARo=
+Date:   Fri, 1 May 2020 12:30:07 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jon Derrick <jonathan.derrick@intel.com>
-Cc:     linux-pci@vger.kernel.org, Russell Currey <ruscur@russell.cc>,
-        Sam Bobroff <sbobroff@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Frederick Lawler <fred@fredlawl.com>,
-        Rajat Jain <rajatja@google.com>,
-        "Patel, Mayurkumar" <mayurkumar.patel@intel.com>,
-        Olof Johansson <olof@lixom.net>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] PCI/ERR: Allow Native AER/DPC using _OSC
-Message-ID: <20200501171649.GA116404@bjorn-Precision-5520>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-pci@vger.kernel.org, christian.koenig@amd.com,
+        bhelgaas@google.com, jon@solid-run.com, wasim.khan@nxp.com
+Subject: Re: [PATCH] PCI: allow pci_resize_resource() to be used on devices
+ on the root bus
+Message-ID: <20200501173007.GA117976@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1588272369-2145-1-git-send-email-jonathan.derrick@intel.com>
+In-Reply-To: <20200421162256.26887-1-ardb@kernel.org>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 12:46:07PM -0600, Jon Derrick wrote:
-> Hi Bjorn & Kuppuswamy,
+On Tue, Apr 21, 2020 at 06:22:56PM +0200, Ard Biesheuvel wrote:
+> When resizing a BAR, pci_reassign_bridge_resources() is invoked to
+> bring the bridge windows of parent bridges in line with the new BAR
+> assignment.
 > 
-> I see a problem in the DPC ECN [1] to _OSC in that it doesn't give us a way to
-> determine if firmware supports _OSC DPC negotation, and therefore how to handle
-> DPC.
+> This assumes that the device whose BAR is being resized lives on a
+> subordinate bus, but this is not necessarily the case. A device may
+> live on the root bus, in which case dev->bus->self is NULL, and
+> passing a NULL pci_dev pointer to pci_reassign_bridge_resources()
+> will cause it to crash.
 > 
-> Here is the wording of the ECN that implies that Firmware without _OSC DPC
-> negotiation support should have the OSPM rely on _OSC AER negotiation when
-> determining DPC control:
+> So let's make the call to pci_reassign_bridge_resources() conditional
+> on whether dev->bus->self is non-NULL in the first place.
 > 
->   PCIe Base Specification suggests that Downstream Port Containment may be
->   controlled either by the Firmware or the Operating System. It also suggests
->   that the Firmware retain ownership of Downstream Port Containment if it also
->   owns AER. When the Firmware owns Downstream Port Containment, it is expected
->   to use the new "Error Disconnect Recover" notification to alert OSPM of a
->   Downstream Port Containment event.
-> 
-> In legacy platforms, as bits in _OSC are reserved prior to implementation, ACPI
-> Root Bus enumeration will mark these Host Bridges as without Native DPC
-> support, even though the specification implies it's expected that AER _OSC
-> negotiation determines DPC control for these platforms. There seems to be a
-> need for a way to determine if the DPC control bit in _OSC is supported and
-> fallback on AER otherwise.
-> 
-> 
-> Currently portdrv assumes DPC control if the port has Native AER services:
-> 
-> static int get_port_device_capability(struct pci_dev *dev)
-> ...
-> 	if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC) &&
-> 	    pci_aer_available() &&
-> 	    (pcie_ports_dpc_native || (services & PCIE_PORT_SERVICE_AER)))
-> 		services |= PCIE_PORT_SERVICE_DPC;
-> 
-> Newer firmware may not grant OSPM DPC control, if for instance, it expects to
-> use Error Disconnect Recovery. However it looks like ACPI will use DPC services
-> via the EDR driver, without binding the full DPC port service driver.
-> 
-> 
-> If we change portdrv to probe based on host->native_dpc and not AER, then we
-> break instances with legacy firmware where OSPM will clear host->native_dpc
-> solely due to _OSC bits being reserved:
-> 
-> struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
-> ...
-> 	if (!(root->osc_control_set & OSC_PCI_EXPRESS_DPC_CONTROL))
-> 		host_bridge->native_dpc = 0;
-> 
-> 
-> 
-> So my assumption instead is that host->native_dpc can be 0 and expect Native
-> DPC services if AER is used. In other words, if and only if DPC probe is
-> invoked from portdrv, then it needs to rely on the AER dependency. Otherwise it
-> should be assumed that ACPI set up DPC via EDR. This covers legacy firmware.
-> 
-> However it seems like that could be trouble with newer firmware that might give
-> OSPM control of AER but not DPC, and would result in both Native DPC and EDR
-> being in effect.
-> 
-> 
-> Anyways here are two patches that give control of AER and DPC on the results of
-> _OSC. They don't mess with the HEST parser as I expect those to be removed at
-> some point. I need these for VMD support which doesn't even rely on _OSC, but I
-> suspect this won't be the last effort as we detangle Firmware First.
-> 
-> [1] https://members.pcisig.com/wg/PCI-SIG/document/12888
+> Fixes: 8bb705e3e79d84e7 ("PCI: Add pci_resize_resource() for resizing BARs")
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 
-Hi Jon, I think we need to sort out the _OSC/FIRMWARE_FIRST patches
-from Alex and Sathy first, then see what needs to be done on top of
-those, so I'm going to push these off for a few days and they'll
-probably need a refresh.
+Applied with Christian's reviewed-by to pci/resource for v5.8, thanks!
 
-Bjorn
+> ---
+>  drivers/pci/setup-res.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
+> index d8ca40a97693..d21fa04fa44d 100644
+> --- a/drivers/pci/setup-res.c
+> +++ b/drivers/pci/setup-res.c
+> @@ -439,10 +439,11 @@ int pci_resize_resource(struct pci_dev *dev, int resno, int size)
+>  	res->end = res->start + pci_rebar_size_to_bytes(size) - 1;
+>  
+>  	/* Check if the new config works by trying to assign everything. */
+> -	ret = pci_reassign_bridge_resources(dev->bus->self, res->flags);
+> -	if (ret)
+> -		goto error_resize;
+> -
+> +	if (dev->bus->self) {
+> +		ret = pci_reassign_bridge_resources(dev->bus->self, res->flags);
+> +		if (ret)
+> +			goto error_resize;
+> +	}
+>  	return 0;
+>  
+>  error_resize:
+> -- 
+> 2.17.1
+> 
