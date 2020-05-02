@@ -2,277 +2,262 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B2FC1C21F1
-	for <lists+linux-pci@lfdr.de>; Sat,  2 May 2020 02:29:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 451121C223D
+	for <lists+linux-pci@lfdr.de>; Sat,  2 May 2020 04:12:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726486AbgEBA3Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 1 May 2020 20:29:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41456 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726437AbgEBA3Y (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 May 2020 20:29:24 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5C67C061A0E
-        for <linux-pci@vger.kernel.org>; Fri,  1 May 2020 17:29:24 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id t7so4222549plr.0
-        for <linux-pci@vger.kernel.org>; Fri, 01 May 2020 17:29:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=0gEckujgYO5yEgZCIWnLgeYgKfcc2TLCCkDUoH39Yyk=;
-        b=Iw9jkJxwdpW8o7T3GhJeC2RS98jno3xBpIyuVU3DTq5SZ4c2+A+pUpk+CdFvgjObZY
-         igMkXyRu4Qg9jR3GpjcBJ+btxk93gBsLxwR6GQ0KkyYlvYFNY48hgrf5Pkmf7WHCrMp7
-         hLTXbnh/4wm/MjRlXsVBydzkswSdPZeSlkVP+j/aOZiUbRIWItaSk+/At8gd/ecWTd8x
-         A3WuqYXYT9hsFTQ8nn7nI3vs1beW2NWk3w0nwTic98VhHK8Wz4I7hrav1Pi0gqvIYbHd
-         IZagS9+Pd3+kEOi5WaevvGjnm6pJLgxR12NjKSfKnPwEefTtc3fLObiX4aDbCN6Pop73
-         H13A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=0gEckujgYO5yEgZCIWnLgeYgKfcc2TLCCkDUoH39Yyk=;
-        b=DSlkJ8ZaAw6VNWTMvUx/qvtFPxoOgVFD7pqdjQaqs1B0qVFgdcctfVN0iJFElK/XyD
-         i/XugajabBOmqXZMETkhSejUdyygPpH4Kh3tPM+2UoFTuzi+4b8DgTTSL63BmrfAQwRP
-         7R/cr1XtByh7Og3pwHfE69KlsUMnWyvPvskY/CvoR5sCAeKim6ppy/T+gYrJIldo7KfM
-         rxlcOGDHhUzoCHZ71xitlLMOpY6bVa30EO+p8DL0WwcTr35taSCEIAR7xQy5Nboago5t
-         cQ6TBXfi38G7frG+val3QOAaCX8/OVLnPwoczsO4jMNe1pfgh42rhJEUEq3J/xAExDPB
-         +EFA==
-X-Gm-Message-State: AGi0PuZND0aCh/DQelNeQ+HRgpvLvhKvgWsQ+0Vzza5GTapqqb7O/sCK
-        FOsmJVw1jjYdktKthzwK3oe+f1CjESk=
-X-Google-Smtp-Source: APiQypLOLqV0XKekjW6KMWr52IZeMs+tDmi2j90i1b0ur90p7W77rGfVXzy357A55biEWRxB+URsEQ==
-X-Received: by 2002:a17:902:8b82:: with SMTP id ay2mr6829624plb.153.1588379363760;
-        Fri, 01 May 2020 17:29:23 -0700 (PDT)
-Received: from nuc7.sifive.com (c-24-5-48-146.hsd1.ca.comcast.net. [24.5.48.146])
-        by smtp.gmail.com with ESMTPSA id u188sm3143644pfu.33.2020.05.01.17.29.22
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 01 May 2020 17:29:23 -0700 (PDT)
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-X-Google-Original-From: Alan Mikhak < alan.mikhak@sifive.com >
-To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kishon@ti.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com,
-        efremov@linux.com, b.zolnierkie@samsung.com, vidyas@nvidia.com,
-        paul.walmsley@sifive.com
-Cc:     Alan Mikhak <alan.mikhak@sifive.com>
-Subject: [PATCH] PCI: endpoint: functions/pci-epf-test: Support slave DMA transfer
-Date:   Fri,  1 May 2020 17:29:12 -0700
-Message-Id: <1588379352-22550-1-git-send-email-alan.mikhak@sifive.com>
-X-Mailer: git-send-email 2.7.4
+        id S1726437AbgEBCMv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 1 May 2020 22:12:51 -0400
+Received: from mga07.intel.com ([134.134.136.100]:60377 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726387AbgEBCMu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 1 May 2020 22:12:50 -0400
+IronPort-SDR: 2VcihkfL9zjfY1KdFwR1+ipqqXHi2KUm8+yYTFRsX1oiGSrM7y+xl+IqHp9QfKH6vE21SmRDly
+ 9jYvFA0ZgnKw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2020 19:12:49 -0700
+IronPort-SDR: meqrAorF/8aTjyP4I1tRMLKByEip9wjsQQBxdrGEgak2UG/iF/96ccBWT2o1GBRZ5Jlr9RhkhF
+ 6V/3lE8YZuzg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,342,1583222400"; 
+   d="scan'208";a="405909900"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 01 May 2020 19:12:48 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jUhe4-000GXr-A0; Sat, 02 May 2020 10:12:48 +0800
+Date:   Sat, 02 May 2020 10:12:13 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:pci/resource] BUILD SUCCESS
+ d09ddd8190fbdc07696bf34b548ae15aa1816714
+Message-ID: <5eacd6fd.75NlCWMw3QtIo7Yr%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Alan Mikhak <alan.mikhak@sifive.com>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/resource
+branch HEAD: d09ddd8190fbdc07696bf34b548ae15aa1816714  PCI: Allow pci_resize_resource() for devices on root bus
 
-Modify pci_epf_test_data_transfer() to also support slave DMA transfers.
-Adds a direction parameter so caller can specify one of the supported DMA
-transfer directions: DMA_MEM_TO_MEM, DMA_MEM_TO_DEV, and DMA_DEV_TO_MEM.
-For DMA_MEM_TO_MEM, the function calls dmaengine_prep_dma_memcpy() as it
-did before. For DMA_MEM_TO_DEV or DMA_DEV_TO_MEM direction, the function
-calls dmaengine_slave_config() to configure the slave channel before it
-calls dmaengine_prep_slave_single().
+elapsed time: 520m
 
-Modify existing callers to specify DMA_MEM_TO_MEM since that is the only
-possible option so far. Rename the phys_addr local variable in some of the
-callers for more readability. Tighten some of the timing function calls to
-avoid counting error print time in case of error.
+configs tested: 203
+configs skipped: 0
 
-Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm64                            allyesconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm                              allmodconfig
+arm64                             allnoconfig
+arm                               allnoconfig
+arm                           efm32_defconfig
+arm                         at91_dt_defconfig
+arm                        shmobile_defconfig
+arm64                               defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                           sunxi_defconfig
+arm                        multi_v7_defconfig
+sparc                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+sparc64                             defconfig
+riscv                             allnoconfig
+c6x                              allyesconfig
+um                             i386_defconfig
+powerpc                       holly_defconfig
+i386                             alldefconfig
+powerpc                             defconfig
+ia64                                defconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                        generic_defconfig
+ia64                          tiger_defconfig
+ia64                         bigsur_defconfig
+ia64                             allyesconfig
+ia64                             alldefconfig
+m68k                       m5475evb_defconfig
+m68k                             allmodconfig
+m68k                       bvme6000_defconfig
+m68k                           sun3_defconfig
+m68k                          multi_defconfig
+nios2                         3c120_defconfig
+nios2                         10m50_defconfig
+c6x                        evmc6678_defconfig
+openrisc                 simple_smp_defconfig
+openrisc                    or1ksim_defconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                                defconfig
+alpha                               defconfig
+h8300                       h8s-sim_defconfig
+h8300                     edosk2674_defconfig
+xtensa                          iss_defconfig
+h8300                    h8300h-sim_defconfig
+xtensa                       common_defconfig
+arc                              allyesconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+mips                            ar7_defconfig
+mips                             allyesconfig
+mips                         64r6el_defconfig
+mips                              allnoconfig
+mips                           32r2_defconfig
+mips                             allmodconfig
+mips                malta_kvm_guest_defconfig
+mips                         tb0287_defconfig
+mips                       capcella_defconfig
+mips                           ip32_defconfig
+mips                  decstation_64_defconfig
+mips                      loongson3_defconfig
+mips                          ath79_defconfig
+mips                        bcm63xx_defconfig
+parisc                            allnoconfig
+parisc                generic-64bit_defconfig
+parisc                generic-32bit_defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                      chrp32_defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+powerpc                           allnoconfig
+powerpc                  mpc866_ads_defconfig
+powerpc                    amigaone_defconfig
+powerpc                    adder875_defconfig
+powerpc                     ep8248e_defconfig
+powerpc                          g5_defconfig
+powerpc                     mpc512x_defconfig
+m68k                 randconfig-a001-20200502
+mips                 randconfig-a001-20200502
+nds32                randconfig-a001-20200502
+alpha                randconfig-a001-20200502
+parisc               randconfig-a001-20200502
+riscv                randconfig-a001-20200502
+microblaze           randconfig-a001-20200430
+nios2                randconfig-a001-20200430
+h8300                randconfig-a001-20200430
+c6x                  randconfig-a001-20200430
+sparc64              randconfig-a001-20200430
+h8300                randconfig-a001-20200502
+nios2                randconfig-a001-20200502
+microblaze           randconfig-a001-20200502
+c6x                  randconfig-a001-20200502
+sparc64              randconfig-a001-20200502
+s390                 randconfig-a001-20200430
+xtensa               randconfig-a001-20200430
+csky                 randconfig-a001-20200430
+openrisc             randconfig-a001-20200430
+sh                   randconfig-a001-20200430
+s390                 randconfig-a001-20200501
+xtensa               randconfig-a001-20200501
+sh                   randconfig-a001-20200501
+openrisc             randconfig-a001-20200501
+csky                 randconfig-a001-20200501
+i386                 randconfig-b003-20200501
+x86_64               randconfig-b002-20200501
+i386                 randconfig-b001-20200501
+x86_64               randconfig-b003-20200501
+x86_64               randconfig-b001-20200501
+i386                 randconfig-b002-20200501
+x86_64               randconfig-c001-20200430
+i386                 randconfig-c001-20200430
+i386                 randconfig-c002-20200430
+x86_64               randconfig-c002-20200430
+x86_64               randconfig-c003-20200430
+i386                 randconfig-c003-20200430
+i386                 randconfig-d003-20200502
+i386                 randconfig-d001-20200502
+x86_64               randconfig-d002-20200502
+i386                 randconfig-d002-20200502
+x86_64               randconfig-d002-20200430
+x86_64               randconfig-d001-20200430
+i386                 randconfig-d001-20200430
+i386                 randconfig-d003-20200430
+i386                 randconfig-d002-20200430
+x86_64               randconfig-d003-20200430
+x86_64               randconfig-e003-20200502
+i386                 randconfig-e003-20200502
+x86_64               randconfig-e001-20200502
+i386                 randconfig-e002-20200502
+i386                 randconfig-e001-20200502
+x86_64               randconfig-e002-20200430
+i386                 randconfig-e003-20200430
+x86_64               randconfig-e003-20200430
+i386                 randconfig-e002-20200430
+x86_64               randconfig-e001-20200430
+i386                 randconfig-e001-20200430
+i386                 randconfig-f003-20200501
+x86_64               randconfig-f001-20200501
+x86_64               randconfig-f003-20200501
+i386                 randconfig-f001-20200501
+i386                 randconfig-f002-20200501
+x86_64               randconfig-a003-20200502
+x86_64               randconfig-a001-20200502
+x86_64               randconfig-a002-20200502
+i386                 randconfig-a002-20200502
+i386                 randconfig-a003-20200502
+i386                 randconfig-a001-20200502
+i386                 randconfig-h001-20200501
+i386                 randconfig-h002-20200501
+i386                 randconfig-h003-20200501
+x86_64               randconfig-h001-20200501
+x86_64               randconfig-h003-20200501
+ia64                 randconfig-a001-20200501
+arc                  randconfig-a001-20200501
+powerpc              randconfig-a001-20200501
+arm                  randconfig-a001-20200501
+sparc                randconfig-a001-20200501
+sparc                randconfig-a001-20200430
+arc                  randconfig-a001-20200430
+ia64                 randconfig-a001-20200430
+powerpc              randconfig-a001-20200430
+arm                  randconfig-a001-20200430
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+s390                       zfcpdump_defconfig
+s390                          debug_defconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                             alldefconfig
+s390                                defconfig
+sh                          rsk7269_defconfig
+sh                            titan_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                                allnoconfig
+sparc                               defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                           x86_64_defconfig
+um                                  defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
+
 ---
- drivers/pci/endpoint/functions/pci-epf-test.c | 67 ++++++++++++++++++---------
- 1 file changed, 44 insertions(+), 23 deletions(-)
-
-diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-index 60330f3e3751..1d026682febb 100644
---- a/drivers/pci/endpoint/functions/pci-epf-test.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-@@ -104,25 +104,41 @@ static void pci_epf_test_dma_callback(void *param)
-  * The function returns '0' on success and negative value on failure.
-  */
- static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
--				      dma_addr_t dma_dst, dma_addr_t dma_src,
--				      size_t len)
-+				      dma_addr_t dma_dst,
-+				      dma_addr_t dma_src,
-+				      size_t len,
-+				      enum dma_transfer_direction dir)
- {
- 	enum dma_ctrl_flags flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
- 	struct dma_chan *chan = epf_test->dma_chan;
- 	struct pci_epf *epf = epf_test->epf;
-+	struct dma_slave_config sconf;
- 	struct dma_async_tx_descriptor *tx;
- 	struct device *dev = &epf->dev;
- 	dma_cookie_t cookie;
-+	dma_addr_t buf;
- 	int ret;
- 
- 	if (IS_ERR_OR_NULL(chan)) {
--		dev_err(dev, "Invalid DMA memcpy channel\n");
-+		dev_err(dev, "Invalid DMA channel\n");
- 		return -EINVAL;
- 	}
- 
--	tx = dmaengine_prep_dma_memcpy(chan, dma_dst, dma_src, len, flags);
-+	if (dir == DMA_MEM_TO_MEM) {
-+		tx = dmaengine_prep_dma_memcpy(chan, dma_dst, dma_src,
-+					       len, flags);
-+	} else {
-+		memset(&sconf, 0, sizeof(sconf));
-+		sconf.direction = dir;
-+		sconf.dst_addr = dma_dst;
-+		sconf.src_addr = dma_src;
-+		dmaengine_slave_config(chan, &sconf);
-+
-+		buf = (dir == DMA_MEM_TO_DEV) ? dma_dst : dma_src;
-+		tx = dmaengine_prep_slave_single(chan, buf, len, dir, flags);
-+	}
- 	if (!tx) {
--		dev_err(dev, "Failed to prepare DMA memcpy\n");
-+		dev_err(dev, "Failed to prepare DMA transfer\n");
- 		return -EIO;
- 	}
- 
-@@ -268,7 +284,6 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test)
- 		goto err_dst_addr;
- 	}
- 
--	ktime_get_ts64(&start);
- 	use_dma = !!(reg->flags & FLAG_USE_DMA);
- 	if (use_dma) {
- 		if (!epf_test->dma_supported) {
-@@ -277,14 +292,18 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test)
- 			goto err_map_addr;
- 		}
- 
-+		ktime_get_ts64(&start);
- 		ret = pci_epf_test_data_transfer(epf_test, dst_phys_addr,
--						 src_phys_addr, reg->size);
-+						 src_phys_addr, reg->size,
-+						 DMA_MEM_TO_MEM);
-+		ktime_get_ts64(&end);
- 		if (ret)
- 			dev_err(dev, "Data transfer failed\n");
- 	} else {
-+		ktime_get_ts64(&start);
- 		memcpy(dst_addr, src_addr, reg->size);
-+		ktime_get_ts64(&end);
- 	}
--	ktime_get_ts64(&end);
- 	pci_epf_test_print_rate("COPY", reg->size, &start, &end, use_dma);
- 
- err_map_addr:
-@@ -310,7 +329,7 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
- 	void *buf;
- 	u32 crc32;
- 	bool use_dma;
--	phys_addr_t phys_addr;
-+	phys_addr_t src_phys_addr;
- 	phys_addr_t dst_phys_addr;
- 	struct timespec64 start, end;
- 	struct pci_epf *epf = epf_test->epf;
-@@ -319,8 +338,9 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
- 	struct device *dma_dev = epf->epc->dev.parent;
- 	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
- 	struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
-+	enum dma_transfer_direction dir = DMA_MEM_TO_MEM;
- 
--	src_addr = pci_epc_mem_alloc_addr(epc, &phys_addr, reg->size);
-+	src_addr = pci_epc_mem_alloc_addr(epc, &src_phys_addr, reg->size);
- 	if (!src_addr) {
- 		dev_err(dev, "Failed to allocate address\n");
- 		reg->status = STATUS_SRC_ADDR_INVALID;
-@@ -328,7 +348,7 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
- 		goto err;
- 	}
- 
--	ret = pci_epc_map_addr(epc, epf->func_no, phys_addr, reg->src_addr,
-+	ret = pci_epc_map_addr(epc, epf->func_no, src_phys_addr, reg->src_addr,
- 			       reg->size);
- 	if (ret) {
- 		dev_err(dev, "Failed to map address\n");
-@@ -360,10 +380,10 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
- 
- 		ktime_get_ts64(&start);
- 		ret = pci_epf_test_data_transfer(epf_test, dst_phys_addr,
--						 phys_addr, reg->size);
-+						 src_phys_addr, reg->size, dir);
-+		ktime_get_ts64(&end);
- 		if (ret)
- 			dev_err(dev, "Data transfer failed\n");
--		ktime_get_ts64(&end);
- 
- 		dma_unmap_single(dma_dev, dst_phys_addr, reg->size,
- 				 DMA_FROM_DEVICE);
-@@ -383,10 +403,10 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
- 	kfree(buf);
- 
- err_map_addr:
--	pci_epc_unmap_addr(epc, epf->func_no, phys_addr);
-+	pci_epc_unmap_addr(epc, epf->func_no, src_phys_addr);
- 
- err_addr:
--	pci_epc_mem_free_addr(epc, phys_addr, src_addr, reg->size);
-+	pci_epc_mem_free_addr(epc, src_phys_addr, src_addr, reg->size);
- 
- err:
- 	return ret;
-@@ -398,7 +418,7 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
- 	void __iomem *dst_addr;
- 	void *buf;
- 	bool use_dma;
--	phys_addr_t phys_addr;
-+	phys_addr_t dst_phys_addr;
- 	phys_addr_t src_phys_addr;
- 	struct timespec64 start, end;
- 	struct pci_epf *epf = epf_test->epf;
-@@ -407,8 +427,9 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
- 	struct device *dma_dev = epf->epc->dev.parent;
- 	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
- 	struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
-+	enum dma_transfer_direction dir = DMA_MEM_TO_MEM;
- 
--	dst_addr = pci_epc_mem_alloc_addr(epc, &phys_addr, reg->size);
-+	dst_addr = pci_epc_mem_alloc_addr(epc, &dst_phys_addr, reg->size);
- 	if (!dst_addr) {
- 		dev_err(dev, "Failed to allocate address\n");
- 		reg->status = STATUS_DST_ADDR_INVALID;
-@@ -416,7 +437,7 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
- 		goto err;
- 	}
- 
--	ret = pci_epc_map_addr(epc, epf->func_no, phys_addr, reg->dst_addr,
-+	ret = pci_epc_map_addr(epc, epf->func_no, dst_phys_addr, reg->dst_addr,
- 			       reg->size);
- 	if (ret) {
- 		dev_err(dev, "Failed to map address\n");
-@@ -450,11 +471,11 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
- 		}
- 
- 		ktime_get_ts64(&start);
--		ret = pci_epf_test_data_transfer(epf_test, phys_addr,
--						 src_phys_addr, reg->size);
-+		ret = pci_epf_test_data_transfer(epf_test, dst_phys_addr,
-+						 src_phys_addr,	reg->size, dir);
-+		ktime_get_ts64(&end);
- 		if (ret)
- 			dev_err(dev, "Data transfer failed\n");
--		ktime_get_ts64(&end);
- 
- 		dma_unmap_single(dma_dev, src_phys_addr, reg->size,
- 				 DMA_TO_DEVICE);
-@@ -476,10 +497,10 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
- 	kfree(buf);
- 
- err_map_addr:
--	pci_epc_unmap_addr(epc, epf->func_no, phys_addr);
-+	pci_epc_unmap_addr(epc, epf->func_no, dst_phys_addr);
- 
- err_addr:
--	pci_epc_mem_free_addr(epc, phys_addr, dst_addr, reg->size);
-+	pci_epc_mem_free_addr(epc, dst_phys_addr, dst_addr, reg->size);
- 
- err:
- 	return ret;
--- 
-2.7.4
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
