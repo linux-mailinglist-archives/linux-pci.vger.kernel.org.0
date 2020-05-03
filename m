@@ -2,243 +2,342 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BDB261C243E
-	for <lists+linux-pci@lfdr.de>; Sat,  2 May 2020 11:05:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E0AE1C2A2F
+	for <lists+linux-pci@lfdr.de>; Sun,  3 May 2020 07:49:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726574AbgEBJFe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 2 May 2020 05:05:34 -0400
-Received: from mout.gmx.net ([212.227.17.22]:42917 "EHLO mout.gmx.net"
+        id S1726884AbgECFtP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 3 May 2020 01:49:15 -0400
+Received: from mga12.intel.com ([192.55.52.136]:25059 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726488AbgEBJFd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 2 May 2020 05:05:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1588410317;
-        bh=q9VJyCnFY+/O21OZN8bVN/A8qThXFaSA5sJxzEm7oeI=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=aOeUD+aQCk+gcQCM0GFQzBa2oFcpCZ53QkQTN8ymUeAZs7Ta8AA9ipfjC3JgdZ1m6
-         pD1HN+VirGZ0LJu3LZBWBuFho1Du5QaZKH6qmnbBq8u3vpBEfSFn2uZdyT30LQvbkz
-         hTCyiifr4mojlhBisLlV1YyN9bmidcbuYbiBPatI=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.1.164] ([37.4.249.134]) by mail.gmx.com (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N63VY-1j6lrZ1K6y-016NEe; Sat, 02
- May 2020 11:05:17 +0200
-Subject: Re: [PATCH v7 2/4] firmware: raspberrypi: Introduce vl805 init
- routine
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        f.fainelli@gmail.com, gregkh@linuxfoundation.org,
-        helgaas@kernel.org, linux-kernel@vger.kernel.org,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com
-Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org
-References: <20200429164734.21506-1-nsaenzjulienne@suse.de>
- <20200429164734.21506-3-nsaenzjulienne@suse.de>
-From:   Stefan Wahren <wahrenst@gmx.net>
-Message-ID: <5fce05ca-5d7e-f4cc-be34-0764fbe4edff@gmx.net>
-Date:   Sat, 2 May 2020 11:05:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        id S1726762AbgECFtO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 3 May 2020 01:49:14 -0400
+IronPort-SDR: +SkLfn8PIhiu18YWSo6bWT1puRGjMx+GW8nSlDMOF7LVtv4naObjIc3c/EKeNzSaPTerhWW31y
+ gCeheGt/QIyg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2020 22:49:06 -0700
+IronPort-SDR: 09Ev28KlQk1t03MgZyCk+L2yH6mbjMDbQsjrQYKpYhcQU1YlJ+eXBT8FdHJ1zVQenSkbLLiTQk
+ WJp8wgsqaW6w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,346,1583222400"; 
+   d="scan'208";a="250351384"
+Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.255.29.41]) ([10.255.29.41])
+  by fmsmga008.fm.intel.com with ESMTP; 02 May 2020 22:49:01 -0700
+Cc:     baolu.lu@linux.intel.com, joro@8bytes.org, catalin.marinas@arm.com,
+        will@kernel.org, robin.murphy@arm.com, kevin.tian@intel.com,
+        Jonathan.Cameron@huawei.com, jacob.jun.pan@linux.intel.com,
+        christian.koenig@amd.com, felix.kuehling@amd.com,
+        zhangfei.gao@linaro.org, jgg@ziepe.ca, xuzaibo@huawei.com,
+        fenghua.yu@intel.com, hch@infradead.org
+Subject: Re: [PATCH v6 04/25] iommu: Add a page fault handler
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org
+References: <20200430143424.2787566-1-jean-philippe@linaro.org>
+ <20200430143424.2787566-5-jean-philippe@linaro.org>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <9a8ec004-0a9c-d772-8e7a-f839002a40b5@linux.intel.com>
+Date:   Sun, 3 May 2020 13:49:01 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200429164734.21506-3-nsaenzjulienne@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200430143424.2787566-5-jean-philippe@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-X-Provags-ID: V03:K1:QA/aSLOy+cPlvO18nEM/MicqwS747XxEXAG4GyaaHnDfSZ4Tmtk
- PVcVoCLuH1g/fLaI+QAorJKQs+/yGXo+BeCehPvf79n+ALJv+1n29kftcUmC+bOBBRFLf4i
- k02zj8VEOarH08P1FI3V2bmFG/JFF5fmLFDaU8+/SbVGitbryg1gRaOHJMtECq7XfKPBArS
- gUzl/xGwaNB1He1/zQu7Q==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:b27J4oTjFnA=:k0TtacXgZeH36zxXHNZPGs
- TleOnzvFCN3iCKhE2i8sdtvI0FiBx7Ia22XXttoaCtWN/1Gkahl9vsihmfNcUB45kGutY+pwR
- U8m3n7Npx8ETCstRraHr452FmRE/cTA544O4lFbOLwRh9uq0dxn0ODXcuQamYaBFiuoOGm8M7
- 0z0qNoYZ0rJXI5Oe4IxV/MBZprac9xoBUg8NZP7vyBvnLv9LI/nSciaKBkrkUS4df5rlAN/M1
- Enxo4EcMht9ADR+IIRiRkd+HXy0wSv/PHgIkligGrZ9GGUn+hnl2zDUJpnqE1sM6fvI5X/dH5
- Xy+O8bzZ1S2MsT4zPZSWxuUNBBjVVLFJqdQKKgiwpBTA5qClEIle6M0vo3L+zjzdbTK6QJZBb
- Ya9YMU0R+Rp0GTkzvBEIiBXjOGcyENNjZGWnBYsgKpFS14W73bwH18mpEYBA4XwJZybxjfZJz
- fnC84yulfUOs+Ra/MUxFRmqikbRaAeLu89bYbQ1UmJZwf/jMgHsJCzxmcncaPilUgPPWbLwCO
- 4fhVZRilboJG5bfI7DxWmB35Oex2rWunLO44NBv5XUyeYkYp6lxhZofN8Toitkc5kIuxhRUY1
- RLkFRmIn1PKTWDpWrLIvrFomus7meNiOimZDH6cBFUaX8lRHBTmO6Ulkaev81vwkLoAkN7Juh
- 0APXUwRoRLhutGvBLqpib7CBi3/MvJ1MFV+9cUlnPJo6LDCzfDhCdu9t5tPcdpFateIPQd0Py
- HiFNQUbT5dZLsxPwjDF8E0V89mIKapPo+/5fxylHUmdWC3Y0xprurkLDmeANxnJZeCIPAHai2
- +1WDW0nB2Xi3HqSsnhuY49d6uooNq26ESuvXq4pnvdQv/PYyjfPNlQziar6aimF7+QnLcUVkb
- O/R+FVKHDeNWrsOUwhKWaFaIalEFpPi3U83jq0hPkFlge7klg+jT3KeFkymVz/YCTxonFJ1dY
- PjBg16uj7KyjNtnE0V15kkCWeG35yvJ9KlnpOgXzdadmLCobmE5OB1kYQXqFu+1Y5xVaIlOPQ
- oBGYe9QKDjxi+4THEGbXS3RU2tor7kF9mSBSilaf2eu51RXOWFpbqfvvgMDXKmaaoi/GGo1Xj
- 7auD/5AJsg9J5jNSAi/Yw4IOJrvry4rUcTcRRTcRIBO2Frjddgf+URmRbujAyONrjQhIJm6Qb
- vY1CWwCCVlmK2lzp/GgQehtfdcjN8dV5M9yIY4IESn177MuWft5ImhNkg0UPeTde5cFkiT/b5
- 4/a1ovijJfdmtRj8l
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Nicolas,
+Hi Jean,
 
-Am 29.04.20 um 18:47 schrieb Nicolas Saenz Julienne:
-> The Raspberry Pi 4 gets its USB functionality from VL805, a PCIe chip
-> that implements xHCI. After a PCI reset, VL805's firmware may either be
-> loaded directly from an EEPROM or, if not present, by the SoC's
-> co-processor, VideoCore. RPi4's VideoCore OS contains both the non publi=
-c
-> firmware load logic and the VL805 firmware blob. The function this patch
-> introduces triggers the aforementioned process.
->
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
->
+On 2020/4/30 22:34, Jean-Philippe Brucker wrote:
+> Some systems allow devices to handle I/O Page Faults in the core mm. For
+> example systems implementing the PCIe PRI extension or Arm SMMU stall
+> model. Infrastructure for reporting these recoverable page faults was
+> added to the IOMMU core by commit 0c830e6b3282 ("iommu: Introduce device
+> fault report API"). Add a page fault handler for host SVA.
+> 
+> IOMMU driver can now instantiate several fault workqueues and link them
+> to IOPF-capable devices. Drivers can choose between a single global
+> workqueue, one per IOMMU device, one per low-level fault queue, one per
+> domain, etc.
+> 
+> When it receives a fault event, supposedly in an IRQ handler, the IOMMU
+> driver reports the fault using iommu_report_device_fault(), which calls
+> the registered handler. The page fault handler then calls the mm fault
+> handler, and reports either success or failure with iommu_page_response().
+> When the handler succeeded, the IOMMU retries the access.
+> 
+> The iopf_param pointer could be embedded into iommu_fault_param. But
+> putting iopf_param into the iommu_param structure allows us not to care
+> about ordering between calls to iopf_queue_add_device() and
+> iommu_register_device_fault_handler().
+> 
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 > ---
->
-> Change since v6:
-> - Add test to avoid loading the firmware when not needed
-> - Since we have it around, print VL805's firmware version, it'll make
-> debugging easier in the future
-> - Correct typos
-> - Add a clearer view of HW topology in patch description
->
-> Changes since v4:
-> - Inline function definition when RASPBERRYPI_FIRMWARE is not defined
->
-> Changes since v1:
-> - Move include into .c file and add forward declaration to .h
->
->  drivers/firmware/raspberrypi.c             | 52 ++++++++++++++++++++++
->  include/soc/bcm2835/raspberrypi-firmware.h |  7 +++
->  2 files changed, 59 insertions(+)
->
-> diff --git a/drivers/firmware/raspberrypi.c b/drivers/firmware/raspberry=
-pi.c
-> index da26a584dca0..230c05e53403 100644
-> --- a/drivers/firmware/raspberrypi.c
-> +++ b/drivers/firmware/raspberrypi.c
-> @@ -12,6 +12,8 @@
->  #include <linux/of_platform.h>
->  #include <linux/platform_device.h>
->  #include <linux/slab.h>
-> +#include <linux/pci.h>
-> +#include <linux/delay.h>
->  #include <soc/bcm2835/raspberrypi-firmware.h>
->
->  #define MBOX_MSG(chan, data28)		(((data28) & ~0xf) | ((chan) & 0xf))
-> @@ -19,6 +21,8 @@
->  #define MBOX_DATA28(msg)		((msg) & ~0xf)
->  #define MBOX_CHAN_PROPERTY		8
->
-> +#define VL805_PCI_CONFIG_VERSION_OFFSET		0x50
+> v5->v6: Simplify flush. As we're not flushing in the mm exit path
+>    anymore, we can mandate that IOMMU drivers flush their low-level queue
+>    themselves before calling iopf_queue_flush_dev(). No need to register
+>    a flush callback anymore.
+> ---
+>   drivers/iommu/Kconfig      |   3 +
+>   drivers/iommu/Makefile     |   1 +
+>   include/linux/iommu.h      |  51 +++++
+>   drivers/iommu/io-pgfault.c | 383 +++++++++++++++++++++++++++++++++++++
+>   4 files changed, 438 insertions(+)
+>   create mode 100644 drivers/iommu/io-pgfault.c
+> 
+
+[...]
+
 > +
->  static struct platform_device *rpi_hwmon;
->  static struct platform_device *rpi_clk;
->
-> @@ -286,6 +290,54 @@ struct rpi_firmware *rpi_firmware_get(struct device=
-_node *firmware_node)
->  }
->  EXPORT_SYMBOL_GPL(rpi_firmware_get);
->
-> +/*
-> + * The Raspberry Pi 4 gets its USB functionality from VL805, a PCIe chi=
-p that
-> + * implements xHCI. After a PCI reset, VL805's firmware may either be l=
-oaded
-> + * directly from an EEPROM or, if not present, by the SoC's co-processo=
-r,
-> + * VideoCore. RPi4's VideoCore OS contains both the non public firmware=
- load
-> + * logic and the VL805 firmware blob. This function triggers the aforem=
-entioned
-> + * process.
-> + */
-> +int rpi_firmware_init_vl805(struct pci_dev *pdev)
+> +static void iopf_handle_group(struct work_struct *work)
 > +{
-> +	struct device_node *fw_np;
-> +	struct rpi_firmware *fw;
-> +	u32 dev_addr, version;
-> +	int ret =3D 0;
+> +	struct iopf_group *group;
+> +	struct iopf_fault *iopf, *next;
+> +	enum iommu_page_response_code status = IOMMU_PAGE_RESP_SUCCESS;
 > +
-> +	fw_np =3D of_find_compatible_node(NULL, NULL,
-> +					"raspberrypi,bcm2835-firmware");
-> +	if (!fw_np)
-> +		return 0;
+> +	group = container_of(work, struct iopf_group, work);
 > +
-> +	fw =3D rpi_firmware_get(fw_np);
-> +	of_node_put(fw_np);
-> +	if (!fw)
+> +	list_for_each_entry_safe(iopf, next, &group->faults, head) {
+> +		/*
+> +		 * For the moment, errors are sticky: don't handle subsequent
+> +		 * faults in the group if there is an error.
+> +		 */
+> +		if (status == IOMMU_PAGE_RESP_SUCCESS)
+> +			status = iopf_handle_single(iopf);
+> +
+> +		if (!(iopf->fault.prm.flags &
+> +		      IOMMU_FAULT_PAGE_REQUEST_LAST_PAGE))
+> +			kfree(iopf);
+
+The iopf is freed,but not removed from the list. This will cause wild
+pointer in code.
+
+> +	}
+> +
+> +	iopf_complete_group(group->dev, &group->last_fault, status);
+> +	kfree(group);
+> +}
+> +
+
+[...]
+
+> +/**
+> + * iopf_queue_flush_dev - Ensure that all queued faults have been processed
+> + * @dev: the endpoint whose faults need to be flushed.
+> + * @pasid: the PASID affected by this flush
+> + *
+> + * The IOMMU driver calls this before releasing a PASID, to ensure that all
+> + * pending faults for this PASID have been handled, and won't hit the address
+> + * space of the next process that uses this PASID. The driver must make sure
+> + * that no new fault is added to the queue. In particular it must flush its
+> + * low-level queue before calling this function.
+> + *
+> + * Return: 0 on success and <0 on error.
+> + */
+> +int iopf_queue_flush_dev(struct device *dev, int pasid)
+> +{
+> +	int ret = 0;
+> +	struct iopf_device_param *iopf_param;
+> +	struct dev_iommu *param = dev->iommu;
+> +
+> +	if (!param)
 > +		return -ENODEV;
 > +
-> +	/* Make sure we don't trigger a firmware load unnecesarely *
-s/unnecesarely/unnecessarily/
-> +	pci_read_config_dword(pdev, VL805_PCI_CONFIG_VERSION_OFFSET, &version)=
-;
-pci_read_config_dword() can fail, we might want to store the return value?
-> +	if (version)
-> +		goto exit;
+> +	mutex_lock(&param->lock);
+> +	iopf_param = param->iopf_param;
+> +	if (iopf_param)
+> +		flush_workqueue(iopf_param->queue->wq);
+
+There may be other pasid iopf in the workqueue. Flush all tasks in
+the workqueue will hurt other pasids. I might lose any context.
+
+> +	else
+> +		ret = -ENODEV;
+> +	mutex_unlock(&param->lock);
 > +
-> +	dev_addr =3D pdev->bus->number << 20 | PCI_SLOT(pdev->devfn) << 15 |
-> +		   PCI_FUNC(pdev->devfn) << 12;
-> +
-> +	ret =3D rpi_firmware_property(fw, RPI_FIRMWARE_NOTIFY_XHCI_RESET,
-> +				    &dev_addr, sizeof(dev_addr));
-> +	/* Wait for vl805 to startup */
-> +	udelay(200);
-
-I know, it makes it harder to read but do we really want to wait
-unnecessarily if rpi_firmware_property failed?
-
-Btw i assume we are in non-atomic context, so maybe it's worth to use
-usleep_range() here?
-
-> +
-> +exit:
-> +	if (!version)
-> +		pci_read_config_dword(pdev, VL805_PCI_CONFIG_VERSION_OFFSET,
-> +				      &version);
-> +	pci_info(pdev, "VL805 firmware version %08x\n", version);
-
-In case pci_read_config_dword() fails the return code would be more helpfu=
-l.
-
-Best regards
-
 > +	return ret;
-> +
 > +}
-> +EXPORT_SYMBOL_GPL(rpi_firmware_init_vl805);
+> +EXPORT_SYMBOL_GPL(iopf_queue_flush_dev);
 > +
->  static const struct of_device_id rpi_firmware_of_match[] =3D {
->  	{ .compatible =3D "raspberrypi,bcm2835-firmware", },
->  	{},
-> diff --git a/include/soc/bcm2835/raspberrypi-firmware.h b/include/soc/bc=
-m2835/raspberrypi-firmware.h
-> index cc9cdbc66403..3025aca3c358 100644
-> --- a/include/soc/bcm2835/raspberrypi-firmware.h
-> +++ b/include/soc/bcm2835/raspberrypi-firmware.h
-> @@ -10,6 +10,7 @@
->  #include <linux/of_device.h>
->
->  struct rpi_firmware;
-> +struct pci_dev;
->
->  enum rpi_firmware_property_status {
->  	RPI_FIRMWARE_STATUS_REQUEST =3D 0,
-> @@ -141,6 +142,7 @@ int rpi_firmware_property(struct rpi_firmware *fw,
->  int rpi_firmware_property_list(struct rpi_firmware *fw,
->  			       void *data, size_t tag_size);
->  struct rpi_firmware *rpi_firmware_get(struct device_node *firmware_node=
-);
-> +int rpi_firmware_init_vl805(struct pci_dev *pdev);
->  #else
->  static inline int rpi_firmware_property(struct rpi_firmware *fw, u32 ta=
-g,
->  					void *data, size_t len)
-> @@ -158,6 +160,11 @@ static inline struct rpi_firmware *rpi_firmware_get=
-(struct device_node *firmware
->  {
->  	return NULL;
->  }
-> +
-> +static inline int rpi_firmware_init_vl805(struct pci_dev *pdev)
+> +/**
+> + * iopf_queue_discard_partial - Remove all pending partial fault
+> + * @queue: the queue whose partial faults need to be discarded
+> + *
+> + * When the hardware queue overflows, last page faults in a group may have been
+> + * lost and the IOMMU driver calls this to discard all partial faults. The
+> + * driver shouldn't be adding new faults to this queue concurrently.
+> + *
+> + * Return: 0 on success and <0 on error.
+> + */
+> +int iopf_queue_discard_partial(struct iopf_queue *queue)
 > +{
+> +	struct iopf_fault *iopf, *next;
+> +	struct iopf_device_param *iopf_param;
+> +
+> +	if (!queue)
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&queue->lock);
+> +	list_for_each_entry(iopf_param, &queue->devices, queue_list) {
+> +		list_for_each_entry_safe(iopf, next, &iopf_param->partial, head)
+> +			kfree(iopf);
+
+iopf is freed but not removed from the list.
+
+> +	}
+> +	mutex_unlock(&queue->lock);
 > +	return 0;
 > +}
->  #endif
->
->  #endif /* __SOC_RASPBERRY_FIRMWARE_H__ */
+> +EXPORT_SYMBOL_GPL(iopf_queue_discard_partial);
+> +
+> +/**
+> + * iopf_queue_add_device - Add producer to the fault queue
+> + * @queue: IOPF queue
+> + * @dev: device to add
+> + *
+> + * Return: 0 on success and <0 on error.
+> + */
+> +int iopf_queue_add_device(struct iopf_queue *queue, struct device *dev)
+> +{
+> +	int ret = -EBUSY;
+> +	struct iopf_device_param *iopf_param;
+> +	struct dev_iommu *param = dev->iommu;
+> +
+> +	if (!param)
+> +		return -ENODEV;
+> +
+> +	iopf_param = kzalloc(sizeof(*iopf_param), GFP_KERNEL);
+> +	if (!iopf_param)
+> +		return -ENOMEM;
+> +
+> +	INIT_LIST_HEAD(&iopf_param->partial);
+> +	iopf_param->queue = queue;
+> +	iopf_param->dev = dev;
+> +
+> +	mutex_lock(&queue->lock);
+> +	mutex_lock(&param->lock);
+> +	if (!param->iopf_param) {
+> +		list_add(&iopf_param->queue_list, &queue->devices);
+> +		param->iopf_param = iopf_param;
+> +		ret = 0;
+> +	}
+> +	mutex_unlock(&param->lock);
+> +	mutex_unlock(&queue->lock);
+> +
+> +	if (ret)
+> +		kfree(iopf_param);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(iopf_queue_add_device);
+> +
+> +/**
+> + * iopf_queue_remove_device - Remove producer from fault queue
+> + * @queue: IOPF queue
+> + * @dev: device to remove
+> + *
+> + * Caller makes sure that no more faults are reported for this device.
+> + *
+> + * Return: 0 on success and <0 on error.
+> + */
+> +int iopf_queue_remove_device(struct iopf_queue *queue, struct device *dev)
+> +{
+> +	int ret = 0;
+> +	struct iopf_fault *iopf, *next;
+> +	struct iopf_device_param *iopf_param;
+> +	struct dev_iommu *param = dev->iommu;
+> +
+> +	if (!param || !queue)
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&queue->lock);
+> +	mutex_lock(&param->lock);
+> +	iopf_param = param->iopf_param;
+> +	if (iopf_param && iopf_param->queue == queue) {
+> +		list_del(&iopf_param->queue_list);
+> +		param->iopf_param = NULL;
+> +	} else {
+> +		ret = -EINVAL;
+> +	}
+> +	mutex_unlock(&param->lock);
+> +	mutex_unlock(&queue->lock);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Just in case some faults are still stuck */
+> +	list_for_each_entry_safe(iopf, next, &iopf_param->partial, head)
+> +		kfree(iopf);
+
+The same here.
+
+> +
+> +	kfree(iopf_param);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(iopf_queue_remove_device);
+> +
+> +/**
+> + * iopf_queue_alloc - Allocate and initialize a fault queue
+> + * @name: a unique string identifying the queue (for workqueue)
+> + *
+> + * Return: the queue on success and NULL on error.
+> + */
+> +struct iopf_queue *iopf_queue_alloc(const char *name)
+> +{
+> +	struct iopf_queue *queue;
+> +
+> +	queue = kzalloc(sizeof(*queue), GFP_KERNEL);
+> +	if (!queue)
+> +		return NULL;
+> +
+> +	/*
+> +	 * The WQ is unordered because the low-level handler enqueues faults by
+> +	 * group. PRI requests within a group have to be ordered, but once
+> +	 * that's dealt with, the high-level function can handle groups out of
+> +	 * order.
+> +	 */
+> +	queue->wq = alloc_workqueue("iopf_queue/%s", WQ_UNBOUND, 0, name);
+> +	if (!queue->wq) {
+> +		kfree(queue);
+> +		return NULL;
+> +	}
+> +
+> +	INIT_LIST_HEAD(&queue->devices);
+> +	mutex_init(&queue->lock);
+> +
+> +	return queue;
+> +}
+> +EXPORT_SYMBOL_GPL(iopf_queue_alloc);
+> +
+> +/**
+> + * iopf_queue_free - Free IOPF queue
+> + * @queue: queue to free
+> + *
+> + * Counterpart to iopf_queue_alloc(). The driver must not be queuing faults or
+> + * adding/removing devices on this queue anymore.
+> + */
+> +void iopf_queue_free(struct iopf_queue *queue)
+> +{
+> +	struct iopf_device_param *iopf_param, *next;
+> +
+> +	if (!queue)
+> +		return;
+> +
+> +	list_for_each_entry_safe(iopf_param, next, &queue->devices, queue_list)
+> +		iopf_queue_remove_device(queue, iopf_param->dev);
+> +
+> +	destroy_workqueue(queue->wq);
+> +	kfree(queue);
+> +}
+> +EXPORT_SYMBOL_GPL(iopf_queue_free);
+> 
+
+Best regards,
+baolu
