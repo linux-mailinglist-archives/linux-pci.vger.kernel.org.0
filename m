@@ -2,123 +2,143 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2112C1C2FD8
-	for <lists+linux-pci@lfdr.de>; Sun,  3 May 2020 23:50:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A2BD01C2FF3
+	for <lists+linux-pci@lfdr.de>; Mon,  4 May 2020 00:21:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729154AbgECVuI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 3 May 2020 17:50:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38402 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729117AbgECVuI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 3 May 2020 17:50:08 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDB3DC061A0E;
-        Sun,  3 May 2020 14:50:07 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id g16so8532064qtp.11;
-        Sun, 03 May 2020 14:50:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=ZjIiTEMLVmqUP3ggI1JgtbaT6DgcJGqyDxuUhi2YtY8=;
-        b=j/WHvpRTAz1WPwghbg/Qc4uDbPUSTQFCGx3WgjTeZRVB743Lf6Q1kCeAO+/8+NNGhv
-         8I4QPRjJ7E1mgH0y9Hi0jUIZd9gRLgVZtlriDqGMpdVq8fnlibbAbpddEAhddZDZiHD4
-         hrRVW8ShPaDuIgFZDodCNpdhixMMst5MGQyZ0BFi8d4DKveaB2V3rZbqHDbANz+zTRYO
-         wjAkLPSuCRvzl0v4Jgh3w4O1XlYkGV+detNScv2eJLeHaIXpatVpZODyV/D6LGGUEF5R
-         uJZjp8PRKe66YEt6OH7E0HrGud1MascD1LKpBATxZOVBuBbr3xpeXgNia7DXU3qVCGSk
-         b7MQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ZjIiTEMLVmqUP3ggI1JgtbaT6DgcJGqyDxuUhi2YtY8=;
-        b=uKQRYFADAXvBhRUo83y+XJnr5w1RWZOpJ5Zr69HCOCuLZkBi99xZ3t4l1FWjkvY+iv
-         0On7RJtyy7a30Jxcmj0DwSzNmAhy5E2Mz1QkMrNFsN4lv6whSCfKnH/pznp3uBWGVgB9
-         IyXlmU0T7uouBC4tZ/L0dK9gGZukaBJfBwWmZRoYfnXn1y7qVlYWC8vKMJXoVLaIEUV3
-         YYXKC98gj5XFAIjkDTdyGtFoFFZRn5KrfN6il/ez23slN7EAhx67ct+h+JcGB4Popcul
-         wFoM8ITItkcDBlFl2X8n2NWWMm28cWqqelb54/0wv0eLPcutGXkPZQqtMzxnn3dUOolH
-         Ps2g==
-X-Gm-Message-State: AGi0PuZ/sWbrJkjSEI2rjkzU0ffTWOL9O2YXf/86ndxM1IWJBTT7fZhD
-        WhStIZcr6PFU+/zpUXg6Ipc=
-X-Google-Smtp-Source: APiQypLt2VHAWV3x/1O/uRAHvUr+OWt5u2AOhi5eAIwbM57jQqP+2CMjJbZHa48m+Js5g9aaneBqcg==
-X-Received: by 2002:ac8:568b:: with SMTP id h11mr14370061qta.197.1588542606908;
-        Sun, 03 May 2020 14:50:06 -0700 (PDT)
-Received: from brycew-desktop.hsd1.ma.comcast.net ([2601:182:cf00:7ca0:d9dc:38ce:3821:f715])
-        by smtp.gmail.com with ESMTPSA id c6sm8177194qka.58.2020.05.03.14.50.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 May 2020 14:50:06 -0700 (PDT)
-From:   Bryce Willey <bryce.steven.willey@gmail.com>
-To:     corbet@lwn.net
-Cc:     linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
-        Bryce Willey <Bryce.Steven.Willey@gmail.com>
-Subject: [PATCH] Documentation: PCI: gave unique labels to sections
-Date:   Sun,  3 May 2020 17:49:26 -0400
-Message-Id: <20200503214926.23748-1-bryce.steven.willey@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        id S1729172AbgECWV5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 3 May 2020 18:21:57 -0400
+Received: from mail-eopbgr130089.outbound.protection.outlook.com ([40.107.13.89]:59879
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729151AbgECWV4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 3 May 2020 18:21:56 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BoP9kH235Ss4iS81vpH4Pqtl+VayyLFSjbJRd4SnrYrqUE9lSpAInSd+bQSSfrkbeYyp8AeOSEE+8kq84WnqQJwlbTQtdXV9tF7b6Yh6vI/VJ1JO8X8QAuQCusu+7/fa9qrU/xR27L51sHngSwIjEWFbadl6+/29qC+CRzubM1Ihzcj/pE9INdnfMnd84GME76lSceSbJiOo7cZUxM3Q48pRpB5jxAV8Ty8gfBpxwX2FLecmbln2/iaCKax4Z2oIq/LeVmSl+BUcNU/lnU6uM0JBukpmjg3XAOW1IHazd/JjxLzdJkG17IeIa7dmzok8yLPmbs7K7dQEkYxZ0c/Okg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7vIk2+lmBmmYTY32YXfy0lICjta5/9zOoRysPnAsThg=;
+ b=Vvj5ORHgEFbFitRHUljHcDolKASlDyZHbX6mvaYVDqEHcoSkavIDyFvv8/U0ELfTGrMXo3PcWmiF0OBzUMJ18I/7xXbbXodpwXolhrLNjw/NHKM64VCIGesN6zFjRLvENeUdrBQJ5NUESIoaUlNIUdKOYuKPqWvOYbxRhjoWmGecDb6gUHGTyPv/FxC+0fwfHDsUZb4xFC1uthZvWCVGUXc0u+PkGK/TjRb0upKvkuK9zVU6lQNQJrDRc/a8U1b0M7t71ue1EeDqAJN39JbgTU5ne/l+PO1UofXt7izulhekQB8VGQTOdR1NlXshM4atbHcpgQHkIlEWwFz2ZmxJsw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7vIk2+lmBmmYTY32YXfy0lICjta5/9zOoRysPnAsThg=;
+ b=BrdRd3I+qWE2d+p1Ics5/Mpkq5tUyf97OYdme5qzOvzUYgmaol7riIK33eyfGLMC1UqCg7V2/txAN9uvYJjf0ELBCuJR00266GIGnrqfFa4R9yltisZ0DybF++ZuvhLTI425kT88C5ZoxM2FBMkUwltb9Q47WGCOr82ARiB52qY=
+Authentication-Results: linux.intel.com; dkim=none (message not signed)
+ header.d=none;linux.intel.com; dmarc=none action=none
+ header.from=mellanox.com;
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
+ by VI1PR05MB4157.eurprd05.prod.outlook.com (2603:10a6:803:4d::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.29; Sun, 3 May
+ 2020 22:21:51 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::a47b:e3cd:7d6d:5d4e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::a47b:e3cd:7d6d:5d4e%6]) with mapi id 15.20.2958.029; Sun, 3 May 2020
+ 22:21:51 +0000
+Date:   Sun, 3 May 2020 19:21:46 -0300
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     "Dey, Megha" <megha.dey@linux.intel.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Vinod Koul <vkoul@kernel.org>, maz@kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jacob jun Pan <jacob.jun.pan@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>, Yi L Liu <yi.l.liu@intel.com>,
+        Baolu Lu <baolu.lu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Sanjay K Kumar <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>, Jing Lin <jing.lin@intel.com>,
+        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
+        dmaengine@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        X86 ML <x86@kernel.org>, linux-pci@vger.kernel.org,
+        KVM list <kvm@vger.kernel.org>
+Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
+ support for the idxd driver.
+Message-ID: <20200503222146.GD19158@mellanox.com>
+References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
+ <20200421235442.GO11945@mellanox.com>
+ <CAPcyv4gMYz1wCYjfnujyGXP0jGehpb+dEYV7hJoAAsDsj9+afQ@mail.gmail.com>
+ <CAPcyv4hGX5jCzag8oQVUZ6Eq9GvZYLN_6kmBAgQMbrBbNzJ0yg@mail.gmail.com>
+ <20200423194941.GG13640@mellanox.com>
+ <c50c2eda-88aa-00bc-7cd6-37cc26052cd5@linux.intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c50c2eda-88aa-00bc-7cd6-37cc26052cd5@linux.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: MN2PR01CA0036.prod.exchangelabs.com (2603:10b6:208:10c::49)
+ To VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (142.68.57.212) by MN2PR01CA0036.prod.exchangelabs.com (2603:10b6:208:10c::49) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.19 via Frontend Transport; Sun, 3 May 2020 22:21:50 +0000
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1jVMza-0002Q1-Pv; Sun, 03 May 2020 19:21:46 -0300
+X-Originating-IP: [142.68.57.212]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: e43b0aa9-136e-4282-aaca-08d7efb06049
+X-MS-TrafficTypeDiagnostic: VI1PR05MB4157:|VI1PR05MB4157:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR05MB4157A0A84D4B6C96AD0904D0CFA90@VI1PR05MB4157.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
+X-Forefront-PRVS: 0392679D18
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: umyV3I9EstpaKb7Fq0XkT132tGKYMErZGjMT9FubnGcXUFxBNjiM+A+s6/uUrUq2lRVCL9kodv8QtmwXqt1eSWgDkJ4g0ldnPLB44Ye4oYQJaKreGHE1ZrZIqUs3WE1IhG16I4mb6yLlXKZ/cvryf3E4HI/xIcYA4haLDf5dNS3w/07oyaOwR07ksQnx3RHPN+PNCXdDILNyExvTl7SBcOnQtsmW4SWbWgs/4RqsSJUkNokedNkjftHniuR2zgbjRYBIFUstJcGwrTq0C/p/QgxI+8MKN6bqSxwxOvRPd/tfXnF1zvW/2r4xYGGAtylg7hY4CCJEaRZ8Vpkzo+F+w1rNz7zo6T/eOw3/UNYokIDTRUm7DUxYMu0yMti3OHVd8b5GIwyXff1l79mMoWwdXclPVBpdgJHGARR+FhA296/mplCP2SwtSa8RvGcI8k7a8GxbGSCW7Nd4ODFSEQTTc2/juO81mX1X30a4VaTDHQwFMrEqVnrS8c9q6mOJbUrD
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(376002)(346002)(396003)(39860400002)(366004)(33656002)(54906003)(2906002)(9746002)(9786002)(1076003)(478600001)(52116002)(5660300002)(36756003)(186003)(6916009)(316002)(4326008)(26005)(2616005)(86362001)(8676002)(66946007)(53546011)(7416002)(8936002)(66476007)(66556008)(24400500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: BLWz3YQRTEFVN8y+4DAx9EuLXa2y381FRevHe1Gew254VvXw+Qas3UzG6wOKKQOPkb4Y/EJNDFGy545LunLZVEMeXAFbilZAPAgxmhyIk9+h/Np4llJa5S04kkHtunontcsDGYojvFGbDyG937iesQEFGJbNqeoTlKwjlyMZvTFYL8+zZiPBaZuS3cSw/1IlrsOWFdl+V7HJWPhaLlUGc6Sx3YljEdrn6nyqNeC6Kx5DGYERgsb/7Y3OglypxlQD5ZCFd1AoenROMLbg97OMv82u3ux3iAYDIBquF2ZNVOzryljWyEB5iMKdBWrBlpZRzqLRC6HKnP/TpQE0NIzmrYvBkoKi36CQ7HwYuccXaNT0p+69IQDkOBrINmCKG9sx03HRfs1De9ZaxFyNyvFfRkVJZMtrPhNyYKYvtk+AWgHV6P35frIluTm/0mivHB0HCptKuamKB05fHjqaR/f7MNUaSsF0b/iYLnoKwHGMnS5YEyQCEdPcXXZPUgdDkvBl3u8SL+00wybHGlCXo7OFohgitvnD6VjKgcTTGe4hjAW47F5a6tUHxJdSiPr2vxpwHvLs4VkFbfFtPPVXhFBYv1Vd+u3FKqOKoLr8SqqH6Yu2VJVET/UVCsWu1PLrgsFNWpiMdySA2ZrG8MeyqrpVloRryIVfkj/OOjIXh9wUVzb9sCJDChO8ZegeEV+uFPt+ZnHxNw+B0TSmxbKOAWIjkUImO8zym7QYOtDZiCRl3gvb2OdS1a/AWxWujEwkDvBfTtrju3IFhP26OAFlBUOUxdpeJFqNKzWmilQirPqbCJU=
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e43b0aa9-136e-4282-aaca-08d7efb06049
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 May 2020 22:21:50.8425
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zqYnDMusTxOxRvFBqjFgt9lWcC+L/9K6rColQbTQNWKdABp3SqStiKxvqhkC5iUp27coHeSN1GTSoB23kdWGVw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4157
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Bryce Willey <Bryce.Steven.Willey@gmail.com>
+On Fri, May 01, 2020 at 03:31:14PM -0700, Dey, Megha wrote:
+> Hi Jason,
+> 
+> On 4/23/2020 12:49 PM, Jason Gunthorpe wrote:
+> > On Thu, Apr 23, 2020 at 12:17:50PM -0700, Dan Williams wrote:
+> > 
+> > > Per Megha's follow-up can you send the details about that other device
+> > > and help clear a path for a device-specific MSI addr/data table
+> > > format. Ever since HMM I've been sensitive, perhaps overly-sensitive,
+> > > to claims about future upstream users. The fact that you have an
+> > > additional use case is golden for pushing this into a common area and
+> > > validating the scope of the proposed API.
+> > 
+> > I think I said it at plumbers, but yes, we are interested in this, and
+> > would like dynamic MSI-like interrupts available to the driver (what
+> > Intel calls IMS)
+> > 
+> 
+> So basically you are looking for a way to dynamically allocate the
+> platform-msi interrupts, correct?
 
-Made subsection label more specific to avoid sphinx warnings
+The basic high level interface here seems fine, which is bascially a
+way for a driver to grab a bunch of platform-msi interrupts for its
+own use
+ 
+> Since I don't have access to any of the platform-msi devices, it is hard for
+> me to test this code for other drivers expect idxd for now.
+> Once I submit the next round of patches, after addressing all the comments,
+> would it be possible for you to test this code for any of your devices?
 
-Exact warning:
- Documentation/PCI/endpoint/pci-endpoint.rst:208: WARNING: duplicate label
-pci/endpoint/pci-endpoint:other apis, other instance in Documentation/PCI/endpoint/pci-endpoint.rst
+Possibly, need to find time
 
-Signed-off-by: Bryce Willey <Bryce.Steven.Willey@gmail.com>
----
- Documentation/PCI/endpoint/pci-endpoint.rst | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/Documentation/PCI/endpoint/pci-endpoint.rst b/Documentation/PCI/endpoint/pci-endpoint.rst
-index 0e2311b5617b..7536be445db8 100644
---- a/Documentation/PCI/endpoint/pci-endpoint.rst
-+++ b/Documentation/PCI/endpoint/pci-endpoint.rst
-@@ -78,8 +78,8 @@ by the PCI controller driver.
-    Cleanup the pci_epc_mem structure allocated during pci_epc_mem_init().
- 
- 
--APIs for the PCI Endpoint Function Driver
--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+EPC APIs for the PCI Endpoint Function Driver
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- 
- This section lists the APIs that the PCI Endpoint core provides to be used
- by the PCI endpoint function driver.
-@@ -117,8 +117,8 @@ by the PCI endpoint function driver.
-    The PCI endpoint function driver should use pci_epc_mem_free_addr() to
-    free the memory space allocated using pci_epc_mem_alloc_addr().
- 
--Other APIs
--~~~~~~~~~~
-+Other EPC APIs
-+~~~~~~~~~~~~~~
- 
- There are other APIs provided by the EPC library. These are used for binding
- the EPF device with EPC device. pci-ep-cfs.c can be used as reference for
-@@ -160,8 +160,8 @@ PCI Endpoint Function(EPF) Library
- The EPF library provides APIs to be used by the function driver and the EPC
- library to provide endpoint mode functionality.
- 
--APIs for the PCI Endpoint Function Driver
--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+EPF APIs for the PCI Endpoint Function Driver
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- 
- This section lists the APIs that the PCI Endpoint core provides to be used
- by the PCI endpoint function driver.
-@@ -204,8 +204,8 @@ by the PCI endpoint controller library.
-    The PCI endpoint controller library invokes pci_epf_linkup() when the
-    EPC device has established the connection to the host.
- 
--Other APIs
--~~~~~~~~~~
-+Other EPF APIs
-+~~~~~~~~~~~~~~
- 
- There are other APIs provided by the EPF library. These are used to notify
- the function driver when the EPF device is bound to the EPC device.
--- 
-2.17.1
-
+Jason
