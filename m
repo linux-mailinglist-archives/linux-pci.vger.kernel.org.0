@@ -2,110 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BD821C3D4A
-	for <lists+linux-pci@lfdr.de>; Mon,  4 May 2020 16:39:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B72AA1C3D3B
+	for <lists+linux-pci@lfdr.de>; Mon,  4 May 2020 16:37:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728452AbgEDOjo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 4 May 2020 10:39:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53720 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728187AbgEDOjn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 May 2020 10:39:43 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 970D1C061A0E
-        for <linux-pci@vger.kernel.org>; Mon,  4 May 2020 07:39:43 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id r26so9407970wmh.0
-        for <linux-pci@vger.kernel.org>; Mon, 04 May 2020 07:39:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=w4t0U+D/kp+A2G6So+DAelHTG97Zr7f3qIlp9fzkip4=;
-        b=VT6A3yuhts/Sup1Aaf3TlojcaThJY4hOWcMYKaz7xPgexle4/kuynbkV7mgcUoEEbw
-         Gn/CW2sYLNgTZA45X9XgPW8JrJWgoeIRF3BPeDrgJPKkGIcPRKop0Gyla7rJZz4Ol5w0
-         2lpW0x79AXvLKOlbwqjWSR7H42s53C2/AzDy/RZEYO8aimi5hqvmtvnptqLq1VKbO7a3
-         hJy0881ArJOTDVsdeKrk0ixZzwswHqdRYytNWMCWIzu3HYx7Dg6+cxeyEeodVUIodnze
-         KcHOc3sN/muaK/jcXS+hiuhM9+aCpMI9of01BChv2AdZ+UxLwm0J0i0JNuUhT5jFaKLt
-         cvug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=w4t0U+D/kp+A2G6So+DAelHTG97Zr7f3qIlp9fzkip4=;
-        b=Dg3I6pz2ZCe4uTSCuMQhkBR7n4KInPLwGAECevi0oHdJukwVk0v6+Mzo/Z98W3sQVr
-         c6i4o4j7iQPgLP+ZAizuaIM2PVmlk9Ek4TmD8/KxfsPSuy0HPgw5FHYfwU7BeIiwgzNg
-         IYjVOKW2E4Ph/wSAJgz/X1e7xoNASqyM0YDn48Z0WQUOcT7KgiXox5tMq7hT66p1TgZ4
-         Kvhq08dX+l8K3e7Ki/ZeekRCPwvhmKkt09Ce5DC8WsQrpi167Ur7+cHhAPiqLY6HN2Tp
-         Ex+WblJIQYtAGOjojWHBIk5vNCBbDjQ3ykSLjS2T9NH9SAFjZopWWPu7SBPBqHZRJndg
-         dvVQ==
-X-Gm-Message-State: AGi0PubC1u0Zp6gQgMdGaqGHUhPYfX0R2CBep8DogqB1OfFpiD+c53JP
-        m1mhWXFSUgCwaVP76aBTqD8OdQ==
-X-Google-Smtp-Source: APiQypI2F7wsUGonQC0TZFKc5uxhIN4f0OL+bxJR0Xwpj7YciVqjrvdRQtQdeeCKgcaZ8I7mLJ+60A==
-X-Received: by 2002:a1c:1d92:: with SMTP id d140mr14822175wmd.67.1588603182395;
-        Mon, 04 May 2020 07:39:42 -0700 (PDT)
-Received: from myrica ([2001:171b:226e:c200:c43b:ef78:d083:b355])
-        by smtp.gmail.com with ESMTPSA id p190sm14130168wmp.38.2020.05.04.07.39.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 07:39:41 -0700 (PDT)
-Date:   Mon, 4 May 2020 16:39:32 +0200
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+        id S1728990AbgEDOhS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 4 May 2020 10:37:18 -0400
+Received: from foss.arm.com ([217.140.110.172]:46302 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728486AbgEDOhS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 4 May 2020 10:37:18 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9D6461FB;
+        Mon,  4 May 2020 07:37:17 -0700 (PDT)
+Received: from [10.37.12.17] (unknown [10.37.12.17])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 543783F305;
+        Mon,  4 May 2020 07:37:04 -0700 (PDT)
+Subject: Re: [PATCH v6 11/25] iommu/arm-smmu-v3: Share process page tables
+To:     jean-philippe@linaro.org
 Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
         linux-mm@kvack.org, joro@8bytes.org, catalin.marinas@arm.com,
         will@kernel.org, robin.murphy@arm.com, kevin.tian@intel.com,
         baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
-        christian.koenig@amd.com, felix.kuehling@amd.com,
-        zhangfei.gao@linaro.org, jgg@ziepe.ca, xuzaibo@huawei.com,
-        fenghua.yu@intel.com, hch@infradead.org
-Subject: Re: [PATCH v6 02/25] iommu/ioasid: Add ioasid references
-Message-ID: <20200504143932.GC170104@myrica>
+        jacob.jun.pan@linux.intel.com, christian.koenig@amd.com,
+        felix.kuehling@amd.com, zhangfei.gao@linaro.org, jgg@ziepe.ca,
+        xuzaibo@huawei.com, fenghua.yu@intel.com, hch@infradead.org
 References: <20200430143424.2787566-1-jean-philippe@linaro.org>
- <20200430143424.2787566-3-jean-philippe@linaro.org>
- <20200430113931.0fbf7a37@jacob-builder>
- <20200430134842.74e596b8@jacob-builder>
+ <20200430143424.2787566-12-jean-philippe@linaro.org>
+ <580a915f-f8bf-3b3e-c77d-6d0c2ea4bd02@arm.com>
+ <20200504141137.GA170104@myrica>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <82f54362-34f1-2378-49c2-2d87e065e385@arm.com>
+Date:   Mon, 4 May 2020 15:42:04 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200430134842.74e596b8@jacob-builder>
+In-Reply-To: <20200504141137.GA170104@myrica>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 01:48:42PM -0700, Jacob Pan wrote:
-> On Thu, 30 Apr 2020 11:39:31 -0700
-> Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
+On 05/04/2020 03:11 PM, Jean-Philippe Brucker wrote:
+> On Thu, Apr 30, 2020 at 04:39:53PM +0100, Suzuki K Poulose wrote:
+>> On 04/30/2020 03:34 PM, Jean-Philippe Brucker wrote:
+>>> With Shared Virtual Addressing (SVA), we need to mirror CPU TTBR, TCR,
+>>> MAIR and ASIDs in SMMU contexts. Each SMMU has a single ASID space split
+>>> into two sets, shared and private. Shared ASIDs correspond to those
+>>> obtained from the arch ASID allocator, and private ASIDs are used for
+>>> "classic" map/unmap DMA.
+>>>
+>>> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+>>> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+>>> ---
+>>
+>>> +
+>>> +	tcr = FIELD_PREP(CTXDESC_CD_0_TCR_T0SZ, 64ULL - VA_BITS) |
+>>> +	      FIELD_PREP(CTXDESC_CD_0_TCR_IRGN0, ARM_LPAE_TCR_RGN_WBWA) |
+>>> +	      FIELD_PREP(CTXDESC_CD_0_TCR_ORGN0, ARM_LPAE_TCR_RGN_WBWA) |
+>>> +	      FIELD_PREP(CTXDESC_CD_0_TCR_SH0, ARM_LPAE_TCR_SH_IS) |
+>>> +	      CTXDESC_CD_0_TCR_EPD1 | CTXDESC_CD_0_AA64;
+>>> +
+>>> +	switch (PAGE_SIZE) {
+>>> +	case SZ_4K:
+>>> +		tcr |= FIELD_PREP(CTXDESC_CD_0_TCR_TG0, ARM_LPAE_TCR_TG0_4K);
+>>> +		break;
+>>> +	case SZ_16K:
+>>> +		tcr |= FIELD_PREP(CTXDESC_CD_0_TCR_TG0, ARM_LPAE_TCR_TG0_16K);
+>>> +		break;
+>>> +	case SZ_64K:
+>>> +		tcr |= FIELD_PREP(CTXDESC_CD_0_TCR_TG0, ARM_LPAE_TCR_TG0_64K);
+>>> +		break;
+>>> +	default:
+>>> +		WARN_ON(1);
+>>> +		ret = -EINVAL;
+>>> +		goto err_free_asid;
+>>> +	}
+>>> +
+>>> +	reg = read_sanitised_ftr_reg(SYS_ID_AA64MMFR0_EL1);
+>>> +	par = cpuid_feature_extract_unsigned_field(reg, ID_AA64MMFR0_PARANGE_SHIFT);
+>>> +	tcr |= FIELD_PREP(CTXDESC_CD_0_TCR_IPS, par);
+>>> +
+>>> +	cd->ttbr = virt_to_phys(mm->pgd);
+>>
+>> Does the TTBR follow the same layout as TTBR_ELx for 52bit IPA ? i.e,
+>> TTBR[5:2] = BADDR[51:48] ? Are you covered for that ?
 > 
-> > > -void ioasid_free(ioasid_t ioasid)
-> > > +bool ioasid_free(ioasid_t ioasid)
-> > >  {
-> Sorry I missed this in the last reply.
-> 
-> I think free needs to be unconditional since there is not a good way to
-> fail it.
-> 
-> Also can we have more symmetric APIs, seems we don't have ioasid_put()
-> in this patchset.
+> Good point, I don't remember checking this. The SMMU TTBR doesn't have the
+> same layout as the CPU's, and we don't need to swizzle the bits. For the
+> lower bits, the alignment requirements on the pgd are identical to the
+> MMU.
 
-Yes I was thinking of renaming ioasid_free() to ioasid_put() but got lazy. 
+Ok, if that is the case:
 
-> How about?
-> ioasid_alloc()
-> ioasid_free(); //drop reference, mark inactive, but not reclaimed if
-> 		refcount is not zero.
-> ioasid_get() // returns err if the ioasid is marked inactive by
-> 		ioasid_free()
-
-How does the caller know that the ioasid is in active/inactive state, and
-not freed/reallocated?
-
-> ioasid_put();// drop reference, reclaim if refcount is 0.
-
-I'll add ioasid_put() for now. I'd like to avoid introducing the inactive
-state in this patch, so shall I change the calls in the Intel driver to
-ioasid_put(), and not introduce a new ioasid_free() for the moment?
-
-Thanks,
-Jean
-
+Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
