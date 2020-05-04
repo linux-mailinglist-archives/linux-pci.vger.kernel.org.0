@@ -2,408 +2,213 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CA4411C4A81
-	for <lists+linux-pci@lfdr.de>; Tue,  5 May 2020 01:43:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B3A61C4A88
+	for <lists+linux-pci@lfdr.de>; Tue,  5 May 2020 01:46:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728347AbgEDXnd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 4 May 2020 19:43:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36832 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726911AbgEDXnc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 4 May 2020 19:43:32 -0400
-Received: from localhost (mobile-166-175-184-168.mycingular.net [166.175.184.168])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41369206A4;
-        Mon,  4 May 2020 23:43:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588635811;
-        bh=IIO/VEz6xCydUxsIfH4s10Jq/d4K4Rnc0dQtg+qzOIU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=WKsE5c8j+HGSRl7lyI22/rjYXHGCprNBD5dZkiftJFzEkppUHwmbybyindIS/T+OR
-         Y8Is1tWPJ3Mk6FwErMqTPj88/UaK6c6fSBnubxb+dwDbZ6u9fY3yAPgZSXfX/jD8mI
-         bx7OxCOaGx8IygtfDpcY6txvyLwurKMylCvAfOOI=
-Date:   Mon, 4 May 2020 18:43:29 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Paul Burton <paulburton@kernel.org>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 2/5] PCI: Add Loongson PCI Controller support
-Message-ID: <20200504234329.GA300770@bjorn-Precision-5520>
+        id S1728192AbgEDXqC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 4 May 2020 19:46:02 -0400
+Received: from mail-eopbgr680095.outbound.protection.outlook.com ([40.107.68.95]:43233
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726911AbgEDXqC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 4 May 2020 19:46:02 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TJhaJNCG+pqCwQ6zvOHeVbHSRLZetyqyhudrpeSXDoGonDPbDO8/jata5mVEC/rQ0ly8Kj4N9+upiqqSym50XWTwFAm7wYtO0/VOr4h8QU5CB6dQgfxAF1u2+0uLOC8cnnn63E15f1MvFIasOINmvCdqURv17sqVfV0XmzmEEJPmVIZmrWB04ti+KH0F6sMHWE+F+MZep7i9+VeRLGOfIeqJqHN7jyTBJ6e0ql6juSU1Jb8BSHXIPUKInEmHDsjZoCqf7wz9jcHMRMeoAVB0G4PhtVFC7aUxgPA1Hc6YbBV4qu09f1WgEOSJOiTHAI117TNwNRU4xaXLh2/tldDJIw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TQmK+ef+1X94VfsZ+h9BKEa7gGhq1O26F3E+VApMdPc=;
+ b=GtWVEmSzScG1N+PwbMF6unRumJ3MrGb5YmNQhq5bf04L5i6YbxREusPj0oDztgxPxpuEae/ivZ8bJFTSys3w7BzGnbqUoJPMI+1/rrM97dsNN9S/JVrggXegBwQL4godgSjBZPKKN2rjKRXL4bEEm/BQLTSJ37kT0WqXapAtznC5gCSnM2z4acCkWkU7mRQDR6U9tMGlpYWnIlTpZcFeusn/YGEcGNd9acOb823fTncqvGsClAd9ALFJHLUfzopQL8e+BNC+YVhhy78pGMyeJ29xEk+q67VlDoNegr7Vf9ZgmMsoybBOpYU4Wj7QAPZ4Vu9ACwb3qjmjk4EhJ/oLuA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TQmK+ef+1X94VfsZ+h9BKEa7gGhq1O26F3E+VApMdPc=;
+ b=habj8ApkhrVzLUg0JzNWicQYBMurDHzZN84OWTtSClPbpQTGozh5RpKt1ZWVrkMOR0vdMt1Xjx30WLoA37X8wqF1BfLgZIBqioa0D44kn6y7z/4rKvC1dsuh58QZNA+USUjcpVw7CQOLt9byyEopYdV63E8vA8CZJYifQ7bQmDY=
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
+ by MW2PR2101MB1004.namprd21.prod.outlook.com (2603:10b6:302:4::29) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.3; Mon, 4 May
+ 2020 23:45:58 +0000
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::5a3:a5e0:1e3c:e950]) by MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::5a3:a5e0:1e3c:e950%5]) with mapi id 15.20.3000.007; Mon, 4 May 2020
+ 23:45:58 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Wei Hu <weh@microsoft.com>, KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dexuan Cui <decui@microsoft.com>
+Subject: RE: [PATCH v2 2/2] PCI: hv: Retry PCI bus D0 entry when the first
+ attempt failed with invalid device state
+Thread-Topic: [PATCH v2 2/2] PCI: hv: Retry PCI bus D0 entry when the first
+ attempt failed with invalid device state
+Thread-Index: AQHWH3qvuWQEJfJorUimFOkwHbGJ56iYnRHw
+Date:   Mon, 4 May 2020 23:45:58 +0000
+Message-ID: <MW2PR2101MB1052F3C838E8E49823FCF47DD7A60@MW2PR2101MB1052.namprd21.prod.outlook.com>
+References: <20200501053728.24740-1-weh@microsoft.com>
+In-Reply-To: <20200501053728.24740-1-weh@microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-05-04T23:45:56.4959192Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=4603fe58-4f86-489c-a9e2-57748da1ea0d;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: microsoft.com; dkim=none (message not signed)
+ header.d=none;microsoft.com; dmarc=none action=none
+ header.from=microsoft.com;
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 0d28e944-7909-4bd3-edf2-08d7f0854b8b
+x-ms-traffictypediagnostic: MW2PR2101MB1004:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MW2PR2101MB100479E44AF677DE2627C8FCD7A60@MW2PR2101MB1004.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 03932714EB
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: QQ5by2qwt3mXv9Z6CGikyAIy/ZQzOWaqYZzUSqS5j3jcCFrItgyEx14OAXkdcWub6ZOBWD2vhgwdgcOtz63XOWRuaREVy4UpjPELKNLWWdvuWJNAm20vaT5N0dWvj60fLT2HbHklRFTALkfg1L+wqSI/4ZVIc4tRDjEBQKY21y4x/dFSClx1SAbXj20JnfSI5+0yVcwAMHJuVZ81JqCtQ9Xm9249w7bg4psswWDPMzVTOeZAe/W5joVVAe7jqStqPADyQ5zvOrMfy/2juUPN4gyWO9+yw1NOO1dAOgBUN7Nm4xc+FQV9XMg8hy5cCX38frOnCfJ62ei5ZzN3cptZfxwIeNlgKEpaSaAO7sBAA6aItHSgUVFQYx7Supc2/0bgss+iD2sM1kaQhH+uFE49+xdReOV8cMlzMtq4DQiVXekRjGjWesgCVhzescCGxrs//UgO+ABKGL2KMzvRITpkGFYxSlGdNvJ27r+7woOdqHuGVAoFs6fmm9j9ZAjbvSjwsMSLg/nL3LI8R0R9DcJW2N+Y5X8Lh3WvJe6jexqj3BM=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(366004)(136003)(396003)(376002)(39860400002)(33430700001)(76116006)(7696005)(66946007)(478600001)(6636002)(2906002)(66446008)(66556008)(66476007)(82960400001)(64756008)(33656002)(82950400001)(316002)(8990500004)(110136005)(52536014)(71200400001)(10290500003)(5660300002)(86362001)(8936002)(8676002)(55016002)(9686003)(26005)(186003)(6506007)(33440700001)(921003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: zzR91oMwzCH1wDvP9cKxyBffT+PmoGd10ErD7szmWoRNvMuciYycbDFv8rw6P+upptNu8ZWbJvGV1ReQN2q5dETpJyP0SifysgQUn+FUSVTdsPfQsQD6MGUb8zHZUesBdLex2M65ELoNL3FgiCqfNnxNTz35ws89KKNxDO+INQf1biL6512Lh9czCaR/lGF2Y67DgNPjU08uprKGOj+9ksNe36LChz6Jy/x99QeYTbGB7VwucHbDYGq9zbxxR18U68dd3CvJ89sewW/eyl3lcbK9jYB55A0ZuMsBGscI7v0vR6loxrL444IElzC0NF4SZXFWjBBgOec0YT5KiaER6C3GLeggUVBjhmcULEbbMXqEyB2Jum4aDHv6Op7Te57oRa/J8lnb6TSw6dUpuXXrJlvv4n9m2FzADRsWvQcDxHbAO6hieM9mdRERGznGFraE4+roZfCancWOy7YFx62J05P9S88MRH/ilxd9ypfTSGAnIGxIf4SoHRme946whGkpMOt7S+wWj7JRckN9gXjj8uhRECrd0x4giWz8erk368fJak+00/jABYyGqX2QMeSxU9Ji15yGJzWhiGY59Szk+J0cBKrGbMog4P4KlhcN+CmUI2Zw5/fiYqaN78tgAHSwkqxiKco3IwGOxwxGJvnx5pv8c1e1sZ3hqkTKldKuTzpLu4PY916D6IRYs0EfQzKYqFAAGBFdJTK7rBgXL5ZCvMP5fbeEf52IhOHxO4EK0Gi8yQk+6KHJFoVF8E68BSPDnLI/n0J/engyY8sNumK98sxI4eTvm+koN3rvfHHrgc8=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200428011429.1852081-3-jiaxun.yang@flygoat.com>
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0d28e944-7909-4bd3-edf2-08d7f0854b8b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 May 2020 23:45:58.2384
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: mgyVfh82+134RN+iAL6ARo+4H6+MIAHDls85dZseab0pzOVJxPFAtZHjAA8F23h106O9sheMtSEA2cfDvKgdQmVw0sfVVDfbUfJtNC5YuXk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB1004
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 09:14:17AM +0800, Jiaxun Yang wrote:
-> This controller can be found on Loongson-2K SoC, Loongson-3
-> systems with RS780E/LS7A PCH.
-> 
-> The RS780E part of code was previously located at
-> arch/mips/pci/ops-loongson3.c and now it can use generic PCI
-> driver implementation.
-> 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> 
-> --
-> v2:
-> 	- Clean up according to rob's suggestions
-> 	- Claim that it can't work as a module
-> v3:
-> 	- Fix a typo
-> v4:
-> 	- More clean-ups: Drop flag check, use devfn
-> v7:
-> 	- Fix ordering according to huacai's suggestion
+From: Wei Hu <weh@microsoft.com> Sent: Thursday, April 30, 2020 10:37 PM
+>=20
+> In the case of kdump, the PCI device was not cleanly shut down
+> before the kdump kernel starts. This causes the initial
+> attempt of entering D0 state in the kdump kernel to fail with
+> invalid device state returned from Hyper-V host.
+> When this happens, explicitly call PCI bus exit and retry to
+> enter the D0 state.
+>=20
+> Signed-off-by: Wei Hu <weh@microsoft.com>
 > ---
->  drivers/pci/controller/Kconfig        |  10 +
->  drivers/pci/controller/Makefile       |   1 +
->  drivers/pci/controller/pci-loongson.c | 251 ++++++++++++++++++++++++++
->  3 files changed, 262 insertions(+)
->  create mode 100644 drivers/pci/controller/pci-loongson.c
-> 
-> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> index 91bfdb784829..ae36edb1d7db 100644
-> --- a/drivers/pci/controller/Kconfig
-> +++ b/drivers/pci/controller/Kconfig
-> @@ -258,6 +258,16 @@ config PCI_HYPERV_INTERFACE
->  	  The Hyper-V PCI Interface is a helper driver allows other drivers to
->  	  have a common interface with the Hyper-V PCI frontend driver.
->  
-> +config PCI_LOONGSON
-> +	bool "LOONGSON PCI Controller"
-> +	depends on MACH_LOONGSON64 || COMPILE_TEST
-> +	depends on OF
-> +	depends on PCI_QUIRKS
-> +	default MACH_LOONGSON64
-> +	help
-> +	  Say Y here if you want to enable PCI controller support on
-> +	  Loongson systems.
+>    v2: Incorporate review comments from Michael Kelley, Dexuan Cui and
+>    Bjorn Helgaas
+>=20
+>  drivers/pci/controller/pci-hyperv.c | 40 +++++++++++++++++++++++++++--
+>  1 file changed, 38 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller=
+/pci-hyperv.c
+> index e6fac0187722..92092a47d3af 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -2739,6 +2739,8 @@ static void hv_free_config_window(struct hv_pcibus_=
+device
+> *hbus)
+>  	vmbus_free_mmio(hbus->mem_config->start, PCI_CONFIG_MMIO_LENGTH);
+>  }
+>=20
+> +static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs);
 > +
->  source "drivers/pci/controller/dwc/Kconfig"
->  source "drivers/pci/controller/mobiveil/Kconfig"
->  source "drivers/pci/controller/cadence/Kconfig"
-> diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
-> index 158c59771824..fbac4b0190a0 100644
-> --- a/drivers/pci/controller/Makefile
-> +++ b/drivers/pci/controller/Makefile
-> @@ -28,6 +28,7 @@ obj-$(CONFIG_PCIE_MEDIATEK) += pcie-mediatek.o
->  obj-$(CONFIG_PCIE_TANGO_SMP8759) += pcie-tango.o
->  obj-$(CONFIG_VMD) += vmd.o
->  obj-$(CONFIG_PCIE_BRCMSTB) += pcie-brcmstb.o
-> +obj-$(CONFIG_PCI_LOONGSON) += pci-loongson.o
-
-This is apparently a PCIe controller, not a Conventional PCI
-controller, since you reference PCIe-specific things like MRRS below.
-
-If that's the case, I'd name it pcie-loongson.c.
-
->  # pcie-hisi.o quirks are needed even without CONFIG_PCIE_DW
->  obj-y				+= dwc/
->  obj-y				+= mobiveil/
-> diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
-> new file mode 100644
-> index 000000000000..db1ebf42faf3
-> --- /dev/null
-> +++ b/drivers/pci/controller/pci-loongson.c
-> @@ -0,0 +1,251 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Loongson PCI Host Controller Driver
-> + *
-> + * Copyright (C) 2020 Jiaxun Yang <jiaxun.yang@flygoat.com>
-> + */
-> +
-> +#include <linux/of_device.h>
-> +#include <linux/of_pci.h>
-> +#include <linux/pci.h>
-> +#include <linux/pci_ids.h>
-> +
-> +#include "../pci.h"
-> +
-> +/* Device IDs */
-> +#define DEV_PCIE_PORT_0	0x7a09
-> +#define DEV_PCIE_PORT_1	0x7a19
-> +#define DEV_PCIE_PORT_2	0x7a29
-> +
-> +#define DEV_LS2K_APB	0x7a02
-> +#define DEV_LS7A_CONF	0x7a10
-> +#define DEV_LS7A_LPC	0x7a0c
-> +
-> +#define FLAG_CFG0	BIT(0)
-> +#define FLAG_CFG1	BIT(1)
-> +#define FLAG_DEV_FIX	BIT(2)
-> +
-> +struct loongson_pci {
-> +	void __iomem *cfg0_base;
-> +	void __iomem *cfg1_base;
-> +	struct platform_device *pdev;
-> +	u32 flags;
-> +};
-> +
-> +/* Fixup wrong class code in PCIe bridges */
-> +static void bridge_class_quirk(struct pci_dev *dev)
-> +{
-> +	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
-> +}
-> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
-> +			DEV_PCIE_PORT_0, bridge_class_quirk);
-> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
-> +			DEV_PCIE_PORT_1, bridge_class_quirk);
-> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
-> +			DEV_PCIE_PORT_2, bridge_class_quirk);
-> +
-> +static void system_bus_quirk(struct pci_dev *pdev)
-> +{
-> +	u16 tmp;
-> +
-> +	pdev->mmio_always_on = 1;
-> +	pdev->non_compliant_bars = 1;
-> +	/* Enable MEM & IO Decoding */
-> +	pci_read_config_word(pdev, PCI_STATUS, &tmp);
-> +	tmp |= PCI_COMMAND_IO | PCI_COMMAND_MEMORY;
-> +	pci_write_config_word(pdev, PCI_STATUS, tmp);
-
-This needs some sort of explanation.  Is the non_compliant_bars part
-an erratum?
-
-And why can't we disable MEM/IO decoding?
-
-You're also writing PCI_COMMAND_* bits to the PCI_STATUS register,
-which is clearly broken.
-
-Since we need an update for at least the PCI_STATUS part, there's
-a little minor bike-shedding below.
-
-> +}
-> +
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> +			DEV_LS2K_APB, system_bus_quirk);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> +			DEV_LS7A_CONF, system_bus_quirk);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> +			DEV_LS7A_LPC, system_bus_quirk);
-> +
-> +static void loongson_mrrs_quirk(struct pci_dev *dev)
-> +{
-> +	struct pci_bus *bus = dev->bus;
-> +	struct pci_dev *bridge;
-> +	static const struct pci_device_id bridge_devids[] = {
-> +		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_0) },
-> +		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_1) },
-> +		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_2) },
-> +		{ 0, },
-> +	};
-> +
-> +
-> +	/* look for the matching bridge */
-> +	while (!pci_is_root_bus(bus)) {
-> +		bridge = bus->self;
-> +		bus = bus->parent;
-> +		/*
-> +		 * Some Loongson PCIE ports has a h/w limitation of
-> +		 * 256 bytes maximum read request size. It can't handle
-> +		 * anything higher than this. So force this limit on
-> +		 * any devices attached under these ports.
-
-s/PCIE/PCIe/
-s/ports has/ports have/
-s/It can't/They can't/
-s/anything higher/anything larger/
-
-> +		 */
-> +		if (pci_match_id(bridge_devids, bridge)) {
-> +			if (pcie_get_readrq(dev) > 256) {
-> +				dev_info(&dev->dev, "limiting MRRS to 256\n");
-
-pci_info(dev, ...)
-
-> +				pcie_set_readrq(dev, 256);
-> +			}
-> +			break;
-> +		}
-> +	}
-> +}
-> +DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, loongson_mrrs_quirk);
-> +
-> +static void __iomem *cfg1_map(struct loongson_pci *priv, int bus,
-> +				unsigned int devfn, int where)
-> +{
-> +	unsigned long addroff = 0x0;
-> +
-> +	if (bus != 0)
-> +		addroff |= BIT(28); /* Type 1 Access */
-> +	addroff |= (where & 0xff) | ((where & 0xf00) << 16);
-> +	addroff |= (bus << 16) | (devfn << 8);
-> +	return priv->cfg1_base + addroff;
-> +}
-> +
-> +static void __iomem *cfg0_map(struct loongson_pci *priv, int bus,
-> +				unsigned int devfn, int where)
-> +{
-> +	unsigned long addroff = 0x0;
-> +
-> +	if (bus != 0)
-> +		addroff |= BIT(24); /* Type 1 Access */
-> +	addroff |= (bus << 16) | (devfn << 8) | where;
-> +	return priv->cfg0_base + addroff;
-> +}
-> +
-> +void __iomem *pci_loongson_map_bus(struct pci_bus *bus, unsigned int devfn,
-> +			       int where)
-> +{
-> +	unsigned char busnum = bus->number;
-> +	struct pci_host_bridge *bridge = pci_find_host_bridge(bus);
-> +	struct loongson_pci *priv =  pci_host_bridge_priv(bridge);
-> +
+>  /**
+>   * hv_pci_enter_d0() - Bring the "bus" into the D0 power state
+>   * @hdev:	VMBus's tracking struct for this root PCI bus
+> @@ -2751,8 +2753,10 @@ static int hv_pci_enter_d0(struct hv_device *hdev)
+>  	struct pci_bus_d0_entry *d0_entry;
+>  	struct hv_pci_compl comp_pkt;
+>  	struct pci_packet *pkt;
+> +	bool retry =3D true;
+>  	int ret;
+>=20
+> +enter_d0_retry:
+>  	/*
+>  	 * Tell the host that the bus is ready to use, and moved into the
+>  	 * powered-on state.  This includes telling the host which region
+> @@ -2779,6 +2783,38 @@ static int hv_pci_enter_d0(struct hv_device *hdev)
+>  	if (ret)
+>  		goto exit;
+>=20
 > +	/*
-> +	 * Do not read more than one device on the bus other than
-> +	 * the host bridge.
+> +	 * In certain case (Kdump) the pci device of interest was
+> +	 * not cleanly shut down and resource is still held on host
+> +	 * side, the host could return invalid device status.
+> +	 * We need to explicitly request host to release the resource
+> +	 * and try to enter D0 again.
 > +	 */
-> +	if (bus->primary != 0 && PCI_SLOT(devfn) > 0 &&
-> +		priv->flags & FLAG_DEV_FIX)
-
-IIUC, FLAG_DEV_FIX is a workaround for a hardware issue, so this would
-be easier to read as:
-
-  if (priv->flags & FLAG_DEV_FIX && bus->primary != 0 ...
-
-> +		return NULL;
+> +	if (comp_pkt.completion_status < 0 && retry) {
+> +		retry =3D false;
 > +
-> +	/* CFG0 can only access standard space */
-> +	if (where < PCI_CFG_SPACE_SIZE && priv->cfg0_base)
-> +		return cfg0_map(priv, busnum, devfn, where);
+> +		dev_err(&hdev->device, "Retrying D0 Entry\n");
 > +
-> +	/* CFG1 can access extended space */
-> +	if (where < PCI_CFG_SPACE_EXP_SIZE && priv->cfg1_base)
-> +		return cfg1_map(priv, busnum, devfn, where);
+> +		/*
+> +		 * Hv_pci_bus_exit() calls hv_send_resource_released()
+> +		 * to free up resources of its child devices.
+> +		 * In the kdump kernel we need to set the
+> +		 * wslot_res_allocated to 255 so it scans all child
+> +		 * devices to release resources allocated in the
+> +		 * normal kernel before panic happened.
+> +		 */
+> +		hbus->wslot_res_allocated =3D 255;
 > +
-> +	return NULL;
-> +}
+> +		ret =3D hv_pci_bus_exit(hdev, true);
 > +
-> +static int loongson_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
-> +{
-> +	int irq;
-> +	u8 val;
-> +
-> +	irq = of_irq_parse_and_map_pci(dev, slot, pin);
-> +	if (irq > 0)
-> +		return irq;
-> +
-> +	/* Care i8259 legacy systems */
-> +	pci_read_config_byte(dev, PCI_INTERRUPT_LINE, &val);
-> +	/* i8259 only have 15 IRQs */
-> +	if (val > 15)
-> +		return 0;
-> +
-> +	return val;
-> +}
-> +
-> +/* H/w only accept 32-bit PCI operations */
-
-I'm sure you're aware that the spec actually requires 8- and 16-bit
-operations, at least for config writes.  You probably see a few of the
-warnings from pci_generic_config_write32()?  Just FYI for any future
-hardware designs.
-
-> +static struct pci_ops loongson_pci_ops = {
-> +	.map_bus = pci_loongson_map_bus,
-> +	.read	= pci_generic_config_read32,
-> +	.write	= pci_generic_config_write32,
-> +};
-> +
-> +static const struct of_device_id loongson_pci_of_match[] = {
-> +	{ .compatible = "loongson,ls2k-pci",
-> +		.data = (void *)(FLAG_CFG0 | FLAG_CFG1 | FLAG_DEV_FIX), },
-> +	{ .compatible = "loongson,ls7a-pci",
-> +		.data = (void *)(FLAG_CFG0 | FLAG_CFG1 | FLAG_DEV_FIX), },
-> +	{ .compatible = "loongson,rs780e-pci",
-> +		.data = (void *)(FLAG_CFG0), },
-> +	{}
-> +};
-> +
-> +static int loongson_pci_probe(struct platform_device *pdev)
-> +{
-> +	struct loongson_pci *priv;
-> +	struct device *dev = &pdev->dev;
-> +	struct device_node *node = dev->of_node;
-> +	struct pci_host_bridge *bridge;
-> +	struct resource *regs;
-> +	int err;
-> +
-> +	if (!node)
-> +		return -ENODEV;
-> +
-> +	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*priv));
-> +	if (!bridge)
-> +		return -ENODEV;
-> +
-> +	priv = pci_host_bridge_priv(bridge);
-> +	priv->pdev = pdev;
-> +	priv->flags = (unsigned long)of_device_get_match_data(dev);
-> +
-> +	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (!regs) {
-> +		dev_err(dev, "missing mem resources for cfg0\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	priv->cfg0_base = devm_pci_remap_cfg_resource(dev, regs);
-> +	if (IS_ERR(priv->cfg0_base))
-> +		return PTR_ERR(priv->cfg0_base);
-> +
-> +	/* CFG1 is optional */
-> +	if (priv->flags & FLAG_CFG1) {
-> +		regs = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> +		if (!regs)
-> +			dev_info(dev, "missing mem resource for cfg1\n");
-> +		else {
-> +			priv->cfg1_base = devm_pci_remap_cfg_resource(dev, regs);
-> +			if (IS_ERR(priv->cfg1_base))
-> +				priv->cfg1_base = NULL;
+> +		if (ret =3D=3D 0) {
+> +			kfree(pkt);
+> +			goto enter_d0_retry;
 > +		}
+> +		dev_err(&hdev->device,
+> +			"Retrying D0 failed with ret %d\n", ret);
 > +	}
 > +
-> +	err = pci_parse_request_of_pci_ranges(dev, &bridge->windows,
-> +						&bridge->dma_ranges, NULL);
-> +	if (err) {
-> +		dev_err(dev, "Failed to get bridge resources\n");
+>  	if (comp_pkt.completion_status < 0) {
+>  		dev_err(&hdev->device,
+>  			"PCI Pass-through VSP failed D0 Entry with status %x\n",
+> @@ -3185,7 +3221,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+>  	return ret;
+>  }
+>=20
+> -static int hv_pci_bus_exit(struct hv_device *hdev, bool hibernating)
+> +static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
+>  {
+>  	struct hv_pcibus_device *hbus =3D hv_get_drvdata(hdev);
+>  	struct {
+> @@ -3203,7 +3239,7 @@ static int hv_pci_bus_exit(struct hv_device *hdev, =
+bool
+> hibernating)
+>  	if (hdev->channel->rescind)
+>  		return 0;
+>=20
+> -	if (!hibernating) {
+> +	if (!keep_devs) {
+>  		/* Delete any children which might still exist. */
+>  		dr =3D kzalloc(sizeof(*dr), GFP_KERNEL);
+>  		if (dr && hv_pci_start_relations_work(hbus, dr))
+> --
+> 2.20.1
 
-Some of your messages are capitalized (maybe just this one) and others
-are lower-case.
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 
-> +		return err;
-> +	}
-> +
-> +	bridge->dev.parent = dev;
-> +	bridge->sysdata = priv;
-> +	bridge->ops = &loongson_pci_ops;
-> +	bridge->map_irq = loongson_map_irq;
-> +
-> +	err = pci_host_probe(bridge);
-> +	if (err)
-> +		return err;
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver loongson_pci_driver = {
-> +	.driver = {
-> +		.name = "loongson-pci",
-> +		.of_match_table = loongson_pci_of_match,
-> +	},
-> +	.probe = loongson_pci_probe,
-> +};
-> +builtin_platform_driver(loongson_pci_driver);
-> -- 
-> 2.26.0.rc2
-> 
