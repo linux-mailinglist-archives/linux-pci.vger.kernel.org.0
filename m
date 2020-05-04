@@ -2,138 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 06CBF1C4069
-	for <lists+linux-pci@lfdr.de>; Mon,  4 May 2020 18:47:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6EFF11C448D
+	for <lists+linux-pci@lfdr.de>; Mon,  4 May 2020 20:08:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729525AbgEDQry (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 4 May 2020 12:47:54 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:57932 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729676AbgEDQrv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 May 2020 12:47:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588610869;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mqG4NiZOzEfqHtOMWsB/ZvHqz1Pp83h0dHQmV0QkakI=;
-        b=cG+UA/KM9mADLQjjWVRa4d5lWpD+HIvfWnijwc8Up29PDcLNQHhALtKSitOtYyMNRxwU+9
-        N8qxVKn6aYkuWqBPJyCruraDL5sB5qc8DOUbvDrKwBlxc5UWTjMSwyk3e+oU7Co7Z4yMoR
-        jGTcbQmXIJge65qO7j7uN3xkpIL2L/c=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-300-7elpugktNtqJ6BUu02-Mag-1; Mon, 04 May 2020 12:47:47 -0400
-X-MC-Unique: 7elpugktNtqJ6BUu02-Mag-1
-Received: by mail-wr1-f72.google.com with SMTP id f2so347wrm.9
-        for <linux-pci@vger.kernel.org>; Mon, 04 May 2020 09:47:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=mqG4NiZOzEfqHtOMWsB/ZvHqz1Pp83h0dHQmV0QkakI=;
-        b=NihOu+N/IITspQY7uY6mWbDrurL2zdv8TG2Sri0QRYQgYfwAnX3+szKMIjMlo46C0h
-         k+L2U7VC8RaaZqgATrMP5uoPJCZIgJ/rEJ1lPE8bInXM5HeB9EF/SNWTqnDWnqpff8JB
-         3USv/bpzbAqc9slQLTeVVpcFKRTKcrkNHiXPW+upQeDQKffc4KgAoObnZF7K9qjvQyal
-         IdT1tMJOw45GVhgG26kbv2w4y1bVPWR/BZPTeq3sbQNVqFEOI5OB5Xj9a/HdyjeAxmyc
-         KdegvSuJ2iOjIhp2+fwjv7GOIJ8/S/ynOUtUfJvCDv9AH7ji9DqS/3l4QTTzYZdE0fIe
-         454A==
-X-Gm-Message-State: AGi0PubIJtXwL60MHFZn3ugXwZTV1fAq/qDT+CQQ7dxhLn7a+c30ApWJ
-        JUhcZoJqryUuFOKgNF4511tLmOuPKM9SDWye8cRT1ipfFrGntVr4N0WSNGmeMAe2g51bpeYst3y
-        r0hrnuzmofD8H6pCaRiTo
-X-Received: by 2002:a1c:1d92:: with SMTP id d140mr15413156wmd.67.1588610865738;
-        Mon, 04 May 2020 09:47:45 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLDRC0oKvIrSTpQybtrO+sKCnZxuLzQYC4jjIPDre77gM0GB81TEH4UGwNEonZVOzx3VaVo3w==
-X-Received: by 2002:a1c:1d92:: with SMTP id d140mr15413134wmd.67.1588610865542;
-        Mon, 04 May 2020 09:47:45 -0700 (PDT)
-Received: from [192.168.178.58] ([151.20.132.175])
-        by smtp.gmail.com with ESMTPSA id a9sm40312wmm.38.2020.05.04.09.47.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 May 2020 09:47:45 -0700 (PDT)
-Subject: Re: [PATCH] x86: Fix RCU list usage to avoid false positive warnings
-To:     madhuparnabhowmik10@gmail.com, mingo@redhat.com, bp@alien8.de
-Cc:     x86@kernel.org, bhelgaas@google.com,
-        sean.j.christopherson@intel.com, cai@lca.pw, paulmck@kernel.org,
-        joel@joelfernandes.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        frextrite@gmail.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20200430192932.13371-1-madhuparnabhowmik10@gmail.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <6c992b7f-c6c7-44a6-fa5a-c3512646de05@redhat.com>
-Date:   Mon, 4 May 2020 18:47:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S1731368AbgEDSIZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 4 May 2020 14:08:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39846 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730356AbgEDSIY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 4 May 2020 14:08:24 -0400
+Received: from localhost (mobile-166-175-184-168.mycingular.net [166.175.184.168])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DAB732078C;
+        Mon,  4 May 2020 18:08:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588615704;
+        bh=3kE93KOqN86Y89UIWlogoqpE00pDfbHOWdaJi8fWZKE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=nMuIlsiFaHEVz6n29r8yQ6uL9CyGvPj2t2j6luK2GBvYs7juilzEGWsz9/eW7WvSh
+         FLdRo5SkA9Csz+yzbhj4a09nDXLcOPqQY9NF9jxFiSUxEpcn55joPRCweg7/UQhKIi
+         +8BPpmW7AH9zWd1azT8tNUrw+sXCAb5g0V5z0vPc=
+Date:   Mon, 4 May 2020 13:08:22 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Aman Sharma <amanharitsh123@gmail.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v2 1/2] driver core: platform: Clarify that IRQ 0 is
+ invalid
+Message-ID: <20200504180822.GA282766@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <20200430192932.13371-1-madhuparnabhowmik10@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200502061537.GA2527384@kroah.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 30/04/20 21:29, madhuparnabhowmik10@gmail.com wrote:
-> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+On Sat, May 02, 2020 at 08:15:37AM +0200, Greg Kroah-Hartman wrote:
+> On Fri, May 01, 2020 at 05:40:41PM -0500, Bjorn Helgaas wrote:
+> > From: Bjorn Helgaas <bhelgaas@google.com>
+> > 
+> > These interfaces return a negative error number or an IRQ:
+> > 
+> >   platform_get_irq()
+> >   platform_get_irq_optional()
+> >   platform_get_irq_byname()
+> >   platform_get_irq_byname_optional()
+> > 
+> > The function comments suggest checking for error like this:
+> > 
+> >   irq = platform_get_irq(...);
+> >   if (irq < 0)
+> >     return irq;
+> > 
+> > which is what most callers (~900 of 1400) do, so it's implicit that IRQ 0
+> > is invalid.  But some callers check for "irq <= 0", and it's not obvious
+> > from the source that we never return an IRQ 0.
+> > 
+> > Make this more explicit by updating the comments to say that an IRQ number
+> > is always non-zero and adding a WARN() if we ever do return zero.  If we do
+> > return IRQ 0, it likely indicates a bug in the arch-specific parts of
+> > platform_get_irq().
 > 
-> Use list_for_each_entry() instead of list_for_each_entry_rcu() whenever
-> spinlock or mutex is always held.
-> Otherwise, pass cond to list_for_each_entry_rcu().
+> I worry about adding WARN() as there are systems that do panic_on_warn()
+> and syzbot trips over this as well.  I don't think that for this issue
+> it would be a problem, but what really is this warning about that
+> someone could do anything with?
 > 
-> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-> ---
->  arch/x86/kernel/nmi.c          | 2 +-
->  arch/x86/kvm/irq_comm.c        | 3 ++-
->  arch/x86/pci/mmconfig-shared.c | 2 +-
->  3 files changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
-> index 6407ea21fa1b..999dc6c134d2 100644
-> --- a/arch/x86/kernel/nmi.c
-> +++ b/arch/x86/kernel/nmi.c
-> @@ -195,7 +195,7 @@ void unregister_nmi_handler(unsigned int type, const char *name)
->  
->  	raw_spin_lock_irqsave(&desc->lock, flags);
->  
-> -	list_for_each_entry_rcu(n, &desc->head, list) {
-> +	list_for_each_entry(n, &desc->head, list) {
->  		/*
->  		 * the name passed in to describe the nmi handler
->  		 * is used as the lookup key
-> diff --git a/arch/x86/kvm/irq_comm.c b/arch/x86/kvm/irq_comm.c
-> index c47d2acec529..5b88a648e079 100644
-> --- a/arch/x86/kvm/irq_comm.c
-> +++ b/arch/x86/kvm/irq_comm.c
-> @@ -258,7 +258,8 @@ void kvm_fire_mask_notifiers(struct kvm *kvm, unsigned irqchip, unsigned pin,
->  	idx = srcu_read_lock(&kvm->irq_srcu);
->  	gsi = kvm_irq_map_chip_pin(kvm, irqchip, pin);
->  	if (gsi != -1)
-> -		hlist_for_each_entry_rcu(kimn, &kvm->arch.mask_notifier_list, link)
-> +		hlist_for_each_entry_rcu(kimn, &kvm->arch.mask_notifier_list, link,
-> +					srcu_read_lock_held(&kvm->irq_srcu))
->  			if (kimn->irq == gsi)
->  				kimn->func(kimn, mask);
->  	srcu_read_unlock(&kvm->irq_srcu, idx);
-> diff --git a/arch/x86/pci/mmconfig-shared.c b/arch/x86/pci/mmconfig-shared.c
-> index 6fa42e9c4e6f..a096942690bd 100644
-> --- a/arch/x86/pci/mmconfig-shared.c
-> +++ b/arch/x86/pci/mmconfig-shared.c
-> @@ -797,7 +797,7 @@ int pci_mmconfig_delete(u16 seg, u8 start, u8 end)
->  	struct pci_mmcfg_region *cfg;
->  
->  	mutex_lock(&pci_mmcfg_lock);
-> -	list_for_each_entry_rcu(cfg, &pci_mmcfg_list, list)
-> +	list_for_each_entry(cfg, &pci_mmcfg_list, list)
->  		if (cfg->segment == seg && cfg->start_bus == start &&
->  		    cfg->end_bus == end) {
->  			list_del_rcu(&cfg->list);
-> 
+> Other than that minor thing, this looks good to me, thanks for finally
+> clearing this up.
 
-For KVM parts, if the x86 maintainers want to apply the whole patch,
+What I'm concerned about is an arch that returns 0.  Most drivers
+don't check for 0 so they'll just try to use it, and things will fail
+in some obscure way.  My assumption is that if there really is no IRQ,
+we should return -ENOENT or similar instead of 0.
 
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+I could be convinced that it's not worth warning about at all, or we
+could do something like the following:
 
-Paolo
-
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index 084cf1d23d3f..4afa5875e14d 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -220,7 +220,11 @@ int platform_get_irq_optional(struct platform_device *dev, unsigned int num)
+ 	ret = -ENXIO;
+ #endif
+ out:
+-	WARN(ret == 0, "0 is an invalid IRQ number\n");
++	/* Returning zero here is likely a bug in the arch IRQ code */
++	if (ret == 0) {
++		pr_warn("0 is an invalid IRQ number\n");
++		dump_stack();
++	}
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(platform_get_irq_optional);
+@@ -312,7 +316,11 @@ static int __platform_get_irq_byname(struct platform_device *dev,
+ 
+ 	r = platform_get_resource_byname(dev, IORESOURCE_IRQ, name);
+ 	if (r) {
+-		WARN(r->start == 0, "0 is an invalid IRQ number\n");
++		/* Returning zero here is likely a bug in the arch IRQ code */
++		if (r->start == 0) {
++			pr_warn("0 is an invalid IRQ number\n");
++			dump_stack();
++		}
+ 		return r->start;
+ 	}
+ 
