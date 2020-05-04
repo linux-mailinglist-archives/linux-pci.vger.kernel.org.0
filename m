@@ -2,133 +2,138 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B8801C4058
-	for <lists+linux-pci@lfdr.de>; Mon,  4 May 2020 18:44:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 06CBF1C4069
+	for <lists+linux-pci@lfdr.de>; Mon,  4 May 2020 18:47:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729634AbgEDQoE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 4 May 2020 12:44:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44948 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729598AbgEDQoD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 May 2020 12:44:03 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5ED4BC061A0F
-        for <linux-pci@vger.kernel.org>; Mon,  4 May 2020 09:44:03 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id e16so16670668wra.7
-        for <linux-pci@vger.kernel.org>; Mon, 04 May 2020 09:44:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=nKcmHJjl9tIFKl3vh2WZWbQ1a6qf0OFNOmjvKAG+T5w=;
-        b=GVujRTu9LfTtfSzWvR/blDgA6L4wRuxbhYL/JkbyHQuSK8LBG1AbIRX7hrdeiN0O7Z
-         8Baza83dK07XMfbk20Q4GjHiYd4X4taXQr82nh40jV8dNTlKcvoKIZtYRHESbkJA0Mei
-         m0JLe0wL6lKWe3B00KhI1No1bnfAYcK4FWXAj0PDFUuXEgS3N/NCSXdao12JT6mYvX7R
-         wWA8cKGRE8zdnC3olLE8Amc6l6swWxcCLhl/UAEav9UYx2rkCZQF3jq3haIKHqp/B/Tc
-         bv20hTPber8xWSwz5soOC6sjFXModYLMxNromwl4JxU9GswTWo613kfBFwjSkE/8acrI
-         lxjw==
+        id S1729525AbgEDQry (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 4 May 2020 12:47:54 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:57932 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729676AbgEDQrv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 May 2020 12:47:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588610869;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=mqG4NiZOzEfqHtOMWsB/ZvHqz1Pp83h0dHQmV0QkakI=;
+        b=cG+UA/KM9mADLQjjWVRa4d5lWpD+HIvfWnijwc8Up29PDcLNQHhALtKSitOtYyMNRxwU+9
+        N8qxVKn6aYkuWqBPJyCruraDL5sB5qc8DOUbvDrKwBlxc5UWTjMSwyk3e+oU7Co7Z4yMoR
+        jGTcbQmXIJge65qO7j7uN3xkpIL2L/c=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-300-7elpugktNtqJ6BUu02-Mag-1; Mon, 04 May 2020 12:47:47 -0400
+X-MC-Unique: 7elpugktNtqJ6BUu02-Mag-1
+Received: by mail-wr1-f72.google.com with SMTP id f2so347wrm.9
+        for <linux-pci@vger.kernel.org>; Mon, 04 May 2020 09:47:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=nKcmHJjl9tIFKl3vh2WZWbQ1a6qf0OFNOmjvKAG+T5w=;
-        b=FGUSa9QHxaEUODejHprldVLVLlXLKPBKG7VKe6k6BPMtC7XPuT0xycgF1IonamUpWz
-         0Wsu+KDRAy+WDMCJMKm+npu8xiqN1FYPvRunk3BmEGcWqsGCH4on/VxAWb8mIwhiHFN4
-         vBJJf/FYblqxelhO+wOnkFUkV+lqPCVHqFym6p2BlVEnXDmuM/TkcgyKxdbdCq6/6zKf
-         OIs+ZNsqX8JuhcTlb3mW7htwkBNpt3xLGAj3S0nUTwEkQgIppxR70O4ax/4U1N/lM84Z
-         1Wp2QSuWwQVwPQzGS8YA8Ntae8pVimAum0jEd61kRNXI2srFEfPgfaDhJGVEjWC6BpEE
-         a0KA==
-X-Gm-Message-State: AGi0PuZ8rrfR3S+C/lux8/Dw2Ex1rQr8vNJjIwubXbozZ3A6WkLkayc+
-        tbPx+2KksjxJ0RJ9eaoON4HbVnThTCQ=
-X-Google-Smtp-Source: APiQypIoWxNfvYjKhhuxv6cQDK75SO+JQ8441jozvjondQeZtyDNRGUJBpfXr2gHhMn+rcM5zZPzpw==
-X-Received: by 2002:a5d:4e0a:: with SMTP id p10mr12708701wrt.215.1588610642110;
-        Mon, 04 May 2020 09:44:02 -0700 (PDT)
-Received: from myrica ([2001:171b:226e:c200:c43b:ef78:d083:b355])
-        by smtp.gmail.com with ESMTPSA id n12sm7101170wrj.95.2020.05.04.09.44.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 09:44:01 -0700 (PDT)
-Date:   Mon, 4 May 2020 18:43:51 +0200
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, joro@8bytes.org, catalin.marinas@arm.com,
-        will@kernel.org, robin.murphy@arm.com, kevin.tian@intel.com,
-        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
-        christian.koenig@amd.com, felix.kuehling@amd.com,
-        zhangfei.gao@linaro.org, jgg@ziepe.ca, xuzaibo@huawei.com,
-        fenghua.yu@intel.com, hch@infradead.org
-Subject: Re: [PATCH v6 17/25] iommu/arm-smmu-v3: Implement
- iommu_sva_bind/unbind()
-Message-ID: <20200504164351.GJ170104@myrica>
-References: <20200430143424.2787566-1-jean-philippe@linaro.org>
- <20200430143424.2787566-18-jean-philippe@linaro.org>
- <20200430141617.6ad4be4c@jacob-builder>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=mqG4NiZOzEfqHtOMWsB/ZvHqz1Pp83h0dHQmV0QkakI=;
+        b=NihOu+N/IITspQY7uY6mWbDrurL2zdv8TG2Sri0QRYQgYfwAnX3+szKMIjMlo46C0h
+         k+L2U7VC8RaaZqgATrMP5uoPJCZIgJ/rEJ1lPE8bInXM5HeB9EF/SNWTqnDWnqpff8JB
+         3USv/bpzbAqc9slQLTeVVpcFKRTKcrkNHiXPW+upQeDQKffc4KgAoObnZF7K9qjvQyal
+         IdT1tMJOw45GVhgG26kbv2w4y1bVPWR/BZPTeq3sbQNVqFEOI5OB5Xj9a/HdyjeAxmyc
+         KdegvSuJ2iOjIhp2+fwjv7GOIJ8/S/ynOUtUfJvCDv9AH7ji9DqS/3l4QTTzYZdE0fIe
+         454A==
+X-Gm-Message-State: AGi0PubIJtXwL60MHFZn3ugXwZTV1fAq/qDT+CQQ7dxhLn7a+c30ApWJ
+        JUhcZoJqryUuFOKgNF4511tLmOuPKM9SDWye8cRT1ipfFrGntVr4N0WSNGmeMAe2g51bpeYst3y
+        r0hrnuzmofD8H6pCaRiTo
+X-Received: by 2002:a1c:1d92:: with SMTP id d140mr15413156wmd.67.1588610865738;
+        Mon, 04 May 2020 09:47:45 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLDRC0oKvIrSTpQybtrO+sKCnZxuLzQYC4jjIPDre77gM0GB81TEH4UGwNEonZVOzx3VaVo3w==
+X-Received: by 2002:a1c:1d92:: with SMTP id d140mr15413134wmd.67.1588610865542;
+        Mon, 04 May 2020 09:47:45 -0700 (PDT)
+Received: from [192.168.178.58] ([151.20.132.175])
+        by smtp.gmail.com with ESMTPSA id a9sm40312wmm.38.2020.05.04.09.47.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 May 2020 09:47:45 -0700 (PDT)
+Subject: Re: [PATCH] x86: Fix RCU list usage to avoid false positive warnings
+To:     madhuparnabhowmik10@gmail.com, mingo@redhat.com, bp@alien8.de
+Cc:     x86@kernel.org, bhelgaas@google.com,
+        sean.j.christopherson@intel.com, cai@lca.pw, paulmck@kernel.org,
+        joel@joelfernandes.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        frextrite@gmail.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20200430192932.13371-1-madhuparnabhowmik10@gmail.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <6c992b7f-c6c7-44a6-fa5a-c3512646de05@redhat.com>
+Date:   Mon, 4 May 2020 18:47:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200430141617.6ad4be4c@jacob-builder>
+In-Reply-To: <20200430192932.13371-1-madhuparnabhowmik10@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 02:16:17PM -0700, Jacob Pan wrote:
-> > +static void arm_smmu_mm_invalidate_range(struct mmu_notifier *mn,
-> > +					 struct mm_struct *mm,
-> > +					 unsigned long start,
-> > unsigned long end) +{
-> > +	/* TODO: invalidate ATS */
-> > +}
-> > +
-> > +static void arm_smmu_mm_release(struct mmu_notifier *mn, struct
-> > mm_struct *mm) +{
-> > +	struct arm_smmu_mmu_notifier *smmu_mn = mn_to_smmu(mn);
-> > +	struct arm_smmu_domain *smmu_domain;
-> > +
-> > +	mutex_lock(&arm_smmu_sva_lock);
-> > +	if (smmu_mn->cleared) {
-> > +		mutex_unlock(&arm_smmu_sva_lock);
-> > +		return;
-> > +	}
-> > +
-> > +	smmu_domain = smmu_mn->domain;
-> > +
-> > +	/*
-> > +	 * DMA may still be running. Keep the cd valid but disable
-> > +	 * translation, so that new events will still result in
-> > stall.
-> > +	 */
-> Does "disable translation" also disable translated requests?
-
-No it doesn't disable translated requests, it only prevents the SMMU from
-accessing the pgd.
-
-> I guess
-> release is called after tlb invalidate range, so assuming no more
-> devTLB left to generate translated request?
-
-I'm counting on the invalidate below (here a TODO, implemented in next
-patch) to drop all devTLB entries. After that invalidate, the device:
-* issues a Translation Request, returns with R=W=0 because we disabled
-  translation (and it isn't present in the SMMU TLB).
-* issues a Page Request, returns with InvalidRequest because
-  mmget_not_zero() fails.
-
+On 30/04/20 21:29, madhuparnabhowmik10@gmail.com wrote:
+> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 > 
-> > +	arm_smmu_write_ctx_desc(smmu_domain, mm->pasid, &invalid_cd);
-> > +
-> > +	arm_smmu_tlb_inv_asid(smmu_domain->smmu, smmu_mn->cd->asid);
-> > +	/* TODO: invalidate ATS */
-> > +
-> If mm release is called after tlb invalidate range, is it still
-> necessary to invalidate again?
+> Use list_for_each_entry() instead of list_for_each_entry_rcu() whenever
+> spinlock or mutex is always held.
+> Otherwise, pass cond to list_for_each_entry_rcu().
+> 
+> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> ---
+>  arch/x86/kernel/nmi.c          | 2 +-
+>  arch/x86/kvm/irq_comm.c        | 3 ++-
+>  arch/x86/pci/mmconfig-shared.c | 2 +-
+>  3 files changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
+> index 6407ea21fa1b..999dc6c134d2 100644
+> --- a/arch/x86/kernel/nmi.c
+> +++ b/arch/x86/kernel/nmi.c
+> @@ -195,7 +195,7 @@ void unregister_nmi_handler(unsigned int type, const char *name)
+>  
+>  	raw_spin_lock_irqsave(&desc->lock, flags);
+>  
+> -	list_for_each_entry_rcu(n, &desc->head, list) {
+> +	list_for_each_entry(n, &desc->head, list) {
+>  		/*
+>  		 * the name passed in to describe the nmi handler
+>  		 * is used as the lookup key
+> diff --git a/arch/x86/kvm/irq_comm.c b/arch/x86/kvm/irq_comm.c
+> index c47d2acec529..5b88a648e079 100644
+> --- a/arch/x86/kvm/irq_comm.c
+> +++ b/arch/x86/kvm/irq_comm.c
+> @@ -258,7 +258,8 @@ void kvm_fire_mask_notifiers(struct kvm *kvm, unsigned irqchip, unsigned pin,
+>  	idx = srcu_read_lock(&kvm->irq_srcu);
+>  	gsi = kvm_irq_map_chip_pin(kvm, irqchip, pin);
+>  	if (gsi != -1)
+> -		hlist_for_each_entry_rcu(kimn, &kvm->arch.mask_notifier_list, link)
+> +		hlist_for_each_entry_rcu(kimn, &kvm->arch.mask_notifier_list, link,
+> +					srcu_read_lock_held(&kvm->irq_srcu))
+>  			if (kimn->irq == gsi)
+>  				kimn->func(kimn, mask);
+>  	srcu_read_unlock(&kvm->irq_srcu, idx);
+> diff --git a/arch/x86/pci/mmconfig-shared.c b/arch/x86/pci/mmconfig-shared.c
+> index 6fa42e9c4e6f..a096942690bd 100644
+> --- a/arch/x86/pci/mmconfig-shared.c
+> +++ b/arch/x86/pci/mmconfig-shared.c
+> @@ -797,7 +797,7 @@ int pci_mmconfig_delete(u16 seg, u8 start, u8 end)
+>  	struct pci_mmcfg_region *cfg;
+>  
+>  	mutex_lock(&pci_mmcfg_lock);
+> -	list_for_each_entry_rcu(cfg, &pci_mmcfg_list, list)
+> +	list_for_each_entry(cfg, &pci_mmcfg_list, list)
+>  		if (cfg->segment == seg && cfg->start_bus == start &&
+>  		    cfg->end_bus == end) {
+>  			list_del_rcu(&cfg->list);
+> 
 
-No, provided all mappings from the address space are unmapped and
-invalidated. I'll double check, but in my tests invalidate range didn't
-seem to be called for all mappings on mm exit, so I believe we do need
-this.
+For KVM parts, if the x86 maintainers want to apply the whole patch,
 
-Thanks,
-Jean
+Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+
+Paolo
 
