@@ -2,93 +2,143 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 087B91C3CE4
-	for <lists+linux-pci@lfdr.de>; Mon,  4 May 2020 16:24:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 634481C3CED
+	for <lists+linux-pci@lfdr.de>; Mon,  4 May 2020 16:26:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728434AbgEDOYm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 4 May 2020 10:24:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51392 "EHLO
+        id S1728786AbgEDO0F (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 4 May 2020 10:26:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728165AbgEDOYl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 May 2020 10:24:41 -0400
+        with ESMTP id S1726922AbgEDO0F (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 May 2020 10:26:05 -0400
 Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ED18C061A0E;
-        Mon,  4 May 2020 07:24:41 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id x18so21202866wrq.2;
-        Mon, 04 May 2020 07:24:41 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69145C061A10
+        for <linux-pci@vger.kernel.org>; Mon,  4 May 2020 07:26:03 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id i10so21161636wrv.10
+        for <linux-pci@vger.kernel.org>; Mon, 04 May 2020 07:26:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oDFjMogrrxgfBvAbW5sQ85zZf2koPdX/flvpXuarsJs=;
-        b=C2+pDEOsEWMWEhK5jJihq+nZJsN3eyEZTYqrjm8F+NX2U4UWxWT4bq3TAe4s6ccpAF
-         +4sas0ALldd+rEORJx5lpswwArDb/7j7znthws10FOtWqFllviOYtjS1sgR01+uhjhSg
-         UTcE7cHgEzLdbISPHhOxFiqWLpJzCQ1DRIUt4NlbeOv0R8e703LNhYb26kTHr9YaAaOc
-         proIbDywAmUaxtjcMFXJUCVdUFnCQGQjanr6hd0+FW3YkN2pevahT++dZrNrh8UlKt8/
-         Zpd1vSYA8JKyL8SjQQTI8NGfT8GjDltQ3FbhARNC21VzGwv16zunILQ502YxBkFLEGBu
-         UDDw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=F/z0V3mcBGUp+syXehq8FDmPP6eWJmRKpReZL7dY1ho=;
+        b=z1iuPCF+taVGKa11c2yjWNjOpHuDo1RB1E7mbiG1WoVCEMCNh5P8g+itjpP3FUb4gs
+         mCE66WIAwk3XxYtzkPIlMa2cgsSYqPT/sHmkzg7ZxXM+z96IIV31FcsFHFSq4qIafaMB
+         24lM1ATRxsNNtieYoZwGa57aXFJ3ATXi47XR5U3U8SyqHQfieuZVpCa6NuqP10uVhaer
+         GlXWtziftzxxoED82b0x2bP5555Q3FS+QQfHvURtC/EZAjTaNVZME8nZQsu/VQSLGBQV
+         3URfU7Lb1juS31WTwwRasil1iZl8t0N/SPOSiqBJE6kdXsxH3add7ofJV2qxRW9qCi7T
+         V46g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oDFjMogrrxgfBvAbW5sQ85zZf2koPdX/flvpXuarsJs=;
-        b=Nir0GMfrJIeiAyZORzcdT4w5naelchNhLE3ZP0kZ7S0wpdJi7qIfyctUepSUa9G2c9
-         qAOQrWFGMQE8lqtzridN3V8D7QGgNwxccFDAD38ei3USh0bY8E00OtHvtsZu25MjHbIZ
-         DG8JwRC4+FrCDOHL98fnvc7dQNvsaV86D9CzzSlwmTb2rM1Rj1Vim8CPM+66ONpcEpNQ
-         X77lyEtcuH/zqt0o32PhdGypapvG1wWmXjsSNjEuN1jS8zax/LbD7XQ/XSyBE5WF2Ubu
-         Ni4kz3AD3s+CZQkW/3bx77+Ulj68W6coAP9pTjQVsEW392I6tboC1J/EI6l9iozqyA+B
-         CeLw==
-X-Gm-Message-State: AGi0PuYyZStDWoyajiDshGDpuN+3TvHOXT1y+HDjQ9QJBY1fIEHSafSO
-        d8GmtXfUBTcmWCZ0C9kldLTNMQAG83T5coQvce9rZ2BWepM=
-X-Google-Smtp-Source: APiQypLGjILvGQo1LHKs+cUl/os48PmLVkMiBpNAewY+5+4GJJUXgPIlfOPn4hI9IzydhWXXgPlj9fp5HqE+FI7JLCY=
-X-Received: by 2002:adf:ed82:: with SMTP id c2mr8123328wro.255.1588602280048;
- Mon, 04 May 2020 07:24:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200430143424.2787566-1-jean-philippe@linaro.org> <20200430143424.2787566-20-jean-philippe@linaro.org>
-In-Reply-To: <20200430143424.2787566-20-jean-philippe@linaro.org>
-From:   Prabhakar Kushwaha <prabhakar.pkin@gmail.com>
-Date:   Mon, 4 May 2020 19:54:03 +0530
-Message-ID: <CAJ2QiJLUxiJRnxQmO3O_48ZcTtNwziCWT6i2SJdAruDi+KGEFw@mail.gmail.com>
-Subject: Re: [PATCH v6 19/25] iommu/arm-smmu-v3: Add support for Hardware
- Translation Table Update
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=F/z0V3mcBGUp+syXehq8FDmPP6eWJmRKpReZL7dY1ho=;
+        b=bMsvf5s3AF8HkhtoEV/g8STm6tsKgp1JQhhSRuGDQrGhZ1BdEcj8ZBSHemlJssvJmB
+         4QQqtICYLu6ZNLOprAwzZA2Gxh6IUVGkl2FQsQHaMs+Dxk+x9tZamWin0IWalJ1mm4Cq
+         9LU93mY72/BZso/epOOkzGhAWa2RdDOh7xcOrGLGp/yF6yCvirg5OMS7QuawxlfTmbV3
+         J9SVLGF8EPu3bIC6IYCTOJw3qVy1U/EczPPdIh1bYqBj4Q31SAM8MlUB25Udt/dWWfQ1
+         uSfqUgeXPqxg01hDRou8GwmrYaF5yhbyTXUNUHdMWBlqsuge6bcjCxZJgVZOMXfz38O/
+         S8Bw==
+X-Gm-Message-State: AGi0PuZDF0Ua9TidaSpuwQkwoaP5mcYaElUVy8OiJaUDcjxWzcuuaqNY
+        mZMFp7YdX9gIww8QFqUh4TjHkA==
+X-Google-Smtp-Source: APiQypJvR/uVsrLrYsoae/U5bNYqj69oeGktdTlceIG72vmnH3x2R6717uW94oIHTrpwNOfPUuH1bw==
+X-Received: by 2002:adf:e745:: with SMTP id c5mr9977426wrn.263.1588602361937;
+        Mon, 04 May 2020 07:26:01 -0700 (PDT)
+Received: from myrica ([2001:171b:226e:c200:c43b:ef78:d083:b355])
+        by smtp.gmail.com with ESMTPSA id a205sm14484714wmh.29.2020.05.04.07.25.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 07:26:01 -0700 (PDT)
+Date:   Mon, 4 May 2020 16:25:48 +0200
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
 Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-pci@vger.kernel.org, linux-mm@kvack.org, joro@8bytes.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>, kevin.tian@intel.com,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, joro@8bytes.org, catalin.marinas@arm.com,
+        will@kernel.org, robin.murphy@arm.com, kevin.tian@intel.com,
         baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
-        jacob.jun.pan@linux.intel.com, christian.koenig@amd.com,
-        felix.kuehling@amd.com, zhangfei.gao@linaro.org, jgg@ziepe.ca,
-        xuzaibo@huawei.com, fenghua.yu@intel.com, hch@infradead.org,
-        Ganapatrao Prabhakerrao Kulkarni <gkulkarni@marvell.com>,
-        tanmay@marvell.com
-Content-Type: text/plain; charset="UTF-8"
+        christian.koenig@amd.com, felix.kuehling@amd.com,
+        zhangfei.gao@linaro.org, jgg@ziepe.ca, xuzaibo@huawei.com,
+        fenghua.yu@intel.com, hch@infradead.org
+Subject: Re: [PATCH v6 02/25] iommu/ioasid: Add ioasid references
+Message-ID: <20200504142548.GB170104@myrica>
+References: <20200430143424.2787566-1-jean-philippe@linaro.org>
+ <20200430143424.2787566-3-jean-philippe@linaro.org>
+ <20200430113931.0fbf7a37@jacob-builder>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200430113931.0fbf7a37@jacob-builder>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Dear Jean,
+On Thu, Apr 30, 2020 at 11:39:31AM -0700, Jacob Pan wrote:
+> > +/**
+> > + * ioasid_get - obtain a reference to the IOASID
+> > + */
+> > +void ioasid_get(ioasid_t ioasid)
+> why void? what if the ioasid is not valid.
 
-On Thu, Apr 30, 2020 at 8:11 PM Jean-Philippe Brucker
-<jean-philippe@linaro.org> wrote:
->
-> If the SMMU supports it and the kernel was built with HTTU support, enable
+My intended use was for the caller to get an additional reference when
+they're already holding one. So this should always succeed and I'd prefer
+a WARN_ON if the ioasid isn't valid rather than returning an error. But if
+you intend to add a state to ioasids between dropping refcount and free,
+then a return value makes sense.
 
-is there any framework/config for HTTU which must be enabled to use this patch?
+Thanks,
+Jean
 
-
-> We can enable HTTU even if CPUs don't support it, because the kernel
-> always checks for HW dirty bit and updates the PTE flags atomically.
->
-I believe, this statement is valid in context of this patch-set only.
-
-One cannot use code snipped to test HTTU because exiting
-io-pgtable-arm.c driver doesn't have framework to leverage HTTU
-benfits. It by-default sets AF=1 and does not set DBM.
-
-Thanks
-
---pk
+> 
+> > +{
+> > +	struct ioasid_data *ioasid_data;
+> > +
+> > +	spin_lock(&ioasid_allocator_lock);
+> > +	ioasid_data = xa_load(&active_allocator->xa, ioasid);
+> > +	if (ioasid_data)
+> > +		refcount_inc(&ioasid_data->refs);
+> > +	spin_unlock(&ioasid_allocator_lock);
+> > +}
+> > +EXPORT_SYMBOL_GPL(ioasid_get);
+> > +
+> >  /**
+> >   * ioasid_free - Free an IOASID
+> >   * @ioasid: the ID to remove
+> > + *
+> > + * Put a reference to the IOASID, free it when the number of
+> > references drops to
+> > + * zero.
+> > + *
+> > + * Return: %true if the IOASID was freed, %false otherwise.
+> >   */
+> > -void ioasid_free(ioasid_t ioasid)
+> > +bool ioasid_free(ioasid_t ioasid)
+> >  {
+> > +	bool free = false;
+> >  	struct ioasid_data *ioasid_data;
+> >  
+> >  	spin_lock(&ioasid_allocator_lock);
+> > @@ -360,6 +383,10 @@ void ioasid_free(ioasid_t ioasid)
+> >  		goto exit_unlock;
+> >  	}
+> >  
+> > +	free = refcount_dec_and_test(&ioasid_data->refs);
+> > +	if (!free)
+> > +		goto exit_unlock;
+> > +
+> Just FYI, we may need to add states for the IOASID, i.g. mark the IOASID
+> inactive after free. And prohibit ioasid_get() after freed. For VT-d,
+> this is useful when KVM queries the IOASID.
+> 
+> >  	active_allocator->ops->free(ioasid,
+> > active_allocator->ops->pdata); /* Custom allocator needs additional
+> > steps to free the xa element */ if (active_allocator->flags &
+> > IOASID_ALLOCATOR_CUSTOM) { @@ -369,6 +396,7 @@ void
+> > ioasid_free(ioasid_t ioasid) 
+> >  exit_unlock:
+> >  	spin_unlock(&ioasid_allocator_lock);
+> > +	return free;
+> >  }
+> >  EXPORT_SYMBOL_GPL(ioasid_free);
+> >  
+> 
+> [Jacob Pan]
