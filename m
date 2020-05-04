@@ -2,135 +2,124 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E854D1C3744
-	for <lists+linux-pci@lfdr.de>; Mon,  4 May 2020 12:54:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A81BB1C3805
+	for <lists+linux-pci@lfdr.de>; Mon,  4 May 2020 13:25:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728029AbgEDKyg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 4 May 2020 06:54:36 -0400
-Received: from foss.arm.com ([217.140.110.172]:41690 "EHLO foss.arm.com"
+        id S1726756AbgEDLZq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 4 May 2020 07:25:46 -0400
+Received: from foss.arm.com ([217.140.110.172]:42270 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726756AbgEDKy2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 4 May 2020 06:54:28 -0400
+        id S1726445AbgEDLZq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 4 May 2020 07:25:46 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 651541FB;
-        Mon,  4 May 2020 03:54:27 -0700 (PDT)
-Received: from [10.57.39.240] (unknown [10.57.39.240])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0209B3F71F;
-        Mon,  4 May 2020 03:54:25 -0700 (PDT)
-Subject: Re: [PATCH v2 2/4] PCI: cadence: Use "dma-ranges" instead of
- "cdns,no-bar-match-nbits" property
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 623631FB;
+        Mon,  4 May 2020 04:25:45 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 433BC3F71F;
+        Mon,  4 May 2020 04:25:44 -0700 (PDT)
+Date:   Mon, 4 May 2020 12:25:35 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
 Cc:     Tom Joseph <tjoseph@cadence.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh+dt@kernel.org>,
         Andrew Murray <amurray@thegoodpenguin.co.uk>,
         linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/4] PCI: cadence: Fix to read 32-bit Vendor ID/Device
+ ID property from DT
+Message-ID: <20200504112535.GA27662@e121166-lin.cambridge.arm.com>
 References: <20200417114322.31111-1-kishon@ti.com>
- <20200417114322.31111-3-kishon@ti.com>
- <20200501144645.GB7398@e121166-lin.cambridge.arm.com>
- <dc581c5b-11de-f4b3-e928-208b9293e391@arm.com>
- <2472c182-834c-d2c1-175e-4d73898aef35@ti.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <4f333ceb-2809-c4ae-4ae3-33a83c612cd3@arm.com>
-Date:   Mon, 4 May 2020 11:54:24 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ <20200417114322.31111-5-kishon@ti.com>
+ <20200501151131.GC7398@e121166-lin.cambridge.arm.com>
+ <47cc8236-4bec-244d-4ab3-cda8eb37d4bf@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <2472c182-834c-d2c1-175e-4d73898aef35@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <47cc8236-4bec-244d-4ab3-cda8eb37d4bf@ti.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2020-05-04 9:44 am, Kishon Vijay Abraham I wrote:
-> Hi Robin,
+On Mon, May 04, 2020 at 02:22:30PM +0530, Kishon Vijay Abraham I wrote:
+> Hi Lorenzo,
 > 
-> On 5/1/2020 9:24 PM, Robin Murphy wrote:
->> On 2020-05-01 3:46 pm, Lorenzo Pieralisi wrote:
->>> [+Robin - to check on dma-ranges intepretation]
->>>
->>> I would need RobH and Robin to review this.
->>>
->>> Also, An ACK from Tom is required - for the whole series.
->>>
->>> On Fri, Apr 17, 2020 at 05:13:20PM +0530, Kishon Vijay Abraham I wrote:
->>>> Cadence PCIe core driver (host mode) uses "cdns,no-bar-match-nbits"
->>>> property to configure the number of bits passed through from PCIe
->>>> address to internal address in Inbound Address Translation register.
->>>>
->>>> However standard PCI dt-binding already defines "dma-ranges" to
->>>> describe the address range accessible by PCIe controller. Parse
->>>> "dma-ranges" property to configure the number of bits passed
->>>> through from PCIe address to internal address in Inbound Address
->>>> Translation register.
->>>>
->>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->>>> ---
->>>>    drivers/pci/controller/cadence/pcie-cadence-host.c | 13 +++++++++++--
->>>>    1 file changed, 11 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c
->>>> b/drivers/pci/controller/cadence/pcie-cadence-host.c
->>>> index 9b1c3966414b..60f912a657b9 100644
->>>> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
->>>> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
->>>> @@ -206,8 +206,10 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->>>>        struct device *dev = rc->pcie.dev;
->>>>        struct platform_device *pdev = to_platform_device(dev);
->>>>        struct device_node *np = dev->of_node;
->>>> +    struct of_pci_range_parser parser;
->>>>        struct pci_host_bridge *bridge;
->>>>        struct list_head resources;
->>>> +    struct of_pci_range range;
->>>>        struct cdns_pcie *pcie;
->>>>        struct resource *res;
->>>>        int ret;
->>>> @@ -222,8 +224,15 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->>>>        rc->max_regions = 32;
->>>>        of_property_read_u32(np, "cdns,max-outbound-regions", &rc->max_regions);
->>>>    -    rc->no_bar_nbits = 32;
->>>> -    of_property_read_u32(np, "cdns,no-bar-match-nbits", &rc->no_bar_nbits);
->>>> +    if (!of_pci_dma_range_parser_init(&parser, np))
->>>> +        if (of_pci_range_parser_one(&parser, &range))
->>>> +            rc->no_bar_nbits = ilog2(range.size);
->>
->> You probably want "range.pci_addr + range.size" here just in case the bottom of
->> the window is ever non-zero. Is there definitely only ever a single inbound
->> window to consider?
+> On 5/1/2020 8:41 PM, Lorenzo Pieralisi wrote:
+> > On Fri, Apr 17, 2020 at 05:13:22PM +0530, Kishon Vijay Abraham I wrote:
+> >> The PCI Bus Binding specification (IEEE Std 1275-1994 Revision 2.1 [1])
+> >> defines both Vendor ID and Device ID to be 32-bits. Fix
+> >> pcie-cadence-host.c driver to read 32-bit Vendor ID and Device ID
+> >> properties from device tree.
+> >>
+> >> [1] -> https://www.devicetree.org/open-firmware/bindings/pci/pci2_1.pdf
+> >>
+> >> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> >> ---
+> >>  drivers/pci/controller/cadence/pcie-cadence-host.c | 4 ++--
+> >>  drivers/pci/controller/cadence/pcie-cadence.h      | 4 ++--
+> >>  2 files changed, 4 insertions(+), 4 deletions(-)
+> > 
+> > I don't see how you would use a 32-bit value for a 16-bit register so
+> > certainly the struct cdns_pcie_rc fields size is questionable anyway.
+> > 
+> > I *assume* you are referring to 4.1.2.1 and the property list
+> > encoded as "encode-int".
+> > 
+> > I would like to get RobH's opinion on this - I don't know myself
+> > whether the PCI OF bindings you added are still relevant and how
+> > they should be interpreted.
 > 
-> Cadence IP has 3 inbound address translation registers, however we use only 1
-> inbound address translation register to map the entire 32 bit or 64 bit address
-> region.
-
-OK, if anything that further strengthens the argument for deprecating a 
-single "number of bits" property in favour of ranges that accurately 
-describe the window(s). However it also suggests that other users in 
-future might have some expectation that specifying "dma-ranges" with up 
-to 3 entries should work to allow a more restrictive inbound 
-configuration. Thus it would be desirable to make the code a little more 
-robust here - even if we don't support multiple windows straight off, it 
-would still be better to implement it in a way that can be cleanly 
-extended later, and at least say something if more ranges are specified 
-rather than just silently ignoring them.
-
->> I believe that pci_parse_request_of_pci_ranges() could do the actual parsing
->> for you, but I suppose plumbing that in plus processing the resulting
->> dma_ranges resource probably ends up a bit messier than the concise open-coding
->> here.
+> This change was made due to RobH's comment below [1]
 > 
-> right, pci_parse_request_of_pci_ranges() parses "ranges" property and is used
-> for outbound configuration, whereas here we parse "dma-ranges" property and is
-> used for inbound configuration.
+> [1] ->
+> https://lore.kernel.org/r/CAL_JsqLYScxGySy8xaN-UB6URfw8K_jSiuSXwVoTU9-RdJecww@mail.gmail.com/
 
-If you give it a valid third argument it *also* parses "dma-ranges" into 
-a list of inbound regions. This is already used by various other drivers 
-for equivalent inbound window setup, which is what I was hinting at 
-before, but given the extensibility argument above I'm now going to 
-actively suggest following that pattern for consistency.
+Thanks for the pointer - that's what I needed to proceed with this
+patch.
 
-Robin.
+Lorenzo
+
+> Thanks
+> Kishon
+> 
+> > 
+> > Thanks
+> > Lorenzo
+> > 
+> >> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> >> index 8f72967f298f..31e67c9c88cf 100644
+> >> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+> >> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> >> @@ -229,10 +229,10 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+> >>  	}
+> >>  
+> >>  	rc->vendor_id = 0xffff;
+> >> -	of_property_read_u16(np, "vendor-id", &rc->vendor_id);
+> >> +	of_property_read_u32(np, "vendor-id", &rc->vendor_id);
+> >>  
+> >>  	rc->device_id = 0xffff;
+> >> -	of_property_read_u16(np, "device-id", &rc->device_id);
+> >> +	of_property_read_u32(np, "device-id", &rc->device_id);
+> >>  
+> >>  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "reg");
+> >>  	pcie->reg_base = devm_ioremap_resource(dev, res);
+> >> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+> >> index 6bd89a21bb1c..df14ad002fe9 100644
+> >> --- a/drivers/pci/controller/cadence/pcie-cadence.h
+> >> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
+> >> @@ -262,8 +262,8 @@ struct cdns_pcie_rc {
+> >>  	struct resource		*bus_range;
+> >>  	void __iomem		*cfg_base;
+> >>  	u32			no_bar_nbits;
+> >> -	u16			vendor_id;
+> >> -	u16			device_id;
+> >> +	u32			vendor_id;
+> >> +	u32			device_id;
+> >>  };
+> >>  
+> >>  /**
+> >> -- 
+> >> 2.17.1
+> >>
