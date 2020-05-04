@@ -2,147 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A6BFC1C3F02
-	for <lists+linux-pci@lfdr.de>; Mon,  4 May 2020 17:52:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 79A0D1C3F5F
+	for <lists+linux-pci@lfdr.de>; Mon,  4 May 2020 18:06:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728967AbgEDPwu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 4 May 2020 11:52:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41276 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728873AbgEDPwu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 4 May 2020 11:52:50 -0400
-Received: from localhost (mobile-166-175-184-168.mycingular.net [166.175.184.168])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 343E320705;
-        Mon,  4 May 2020 15:52:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588607569;
-        bh=AGDxw0MW8aAebw6WlhG9CfOILh00EtjOKxqc25DpNow=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=R300NHO1dDSUAthZKMfjGmN7n4jKSBZCh/GQhoQYgQsQYkwEck8KsCP0v8JQ4mlJ8
-         ixgHfgpSlETQ2IOHghiYKvfJ1VrKK1dG9uj0xsSzAVNKICd3k5hsBUrSdAkNZEeM8V
-         YhkpKQdoHwIz8XGmeV0MchZPmGHsToBCmIjLm6zI=
-Date:   Mon, 4 May 2020 10:52:47 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 08/12] PCI: aardvark: Replace custom macros by
- standard linux/pci_regs.h macros
-Message-ID: <20200504155247.GA271721@bjorn-Precision-5520>
+        id S1728251AbgEDQGw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 4 May 2020 12:06:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39032 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726578AbgEDQGv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 May 2020 12:06:51 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BB0EC061A0F
+        for <linux-pci@vger.kernel.org>; Mon,  4 May 2020 09:06:51 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id z6so96611wml.2
+        for <linux-pci@vger.kernel.org>; Mon, 04 May 2020 09:06:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=bp4AZOmEDFlGnUKxwTpEGrX9Ywb+/ercU9RXG60YpkA=;
+        b=Dw8xcNvj2qmOKxxn59CPRrnhgYrQ5x4sBPM8qK0pmcxzWd1aH/YyCVxlXW3TIWT8Fw
+         tx++cxMdi9+OTPqOJQ0MUb+cNtf6m3SYTI32z98924olcf+4nnXYi+IsldgCldMoIM07
+         4h4F+MxzAqq6y91AHErfmlevgojJiWj+WryxD4tS6DchG+1L3m2rsTys97s7V6H+LEdC
+         LCsZJU4jP6ekqf6cSccjS9Se5DU1Jiz5dlTN66yFFKaWMHEZyAdh3cs63tmpeqdXo7uR
+         T2cb+IBgx5aIR71N/OxSIdsY99sFfZqoNjBPUH6CNGyQrSLxrlGkp1kmGkSQF8YKLWZh
+         DMTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=bp4AZOmEDFlGnUKxwTpEGrX9Ywb+/ercU9RXG60YpkA=;
+        b=PX/gL1T3dU7hj215gQGofGgZSxmgPQtqgP/c4rtX3Vx6E1VRiB0x4ve4NIqCfva4wP
+         0qDw9CN7hjDtyZVcgR6T7LECusGUVSnq/InFzPaLfn0Vb+8KWMO4wzmvRCLgfHZn1kDs
+         JiOK92eBGsFsfad4TpdiCL4fla24TPjW9I5jEjXB0nSM91YsAB9uQpX7642mH1uJ/TY3
+         TfvBvzP44gEFiG6s2MW0FfzUlsiaQ+iey8hfbVo8G8bvJlz/28+sqVzO3bLUMz84NKrY
+         9s99WM2IstRZ/nwENQrCLBhzUuwtKlIkMxLecjvFlMFNZzLMIo5Dzsfl5kXRWyR5ISKn
+         fO1Q==
+X-Gm-Message-State: AGi0PubaRj7ZzOn74fNHIlr29wOcV4qLlaIrdCej3YcTX5ptSd0W1WLK
+        jX5uL17EtJi/NC5bfDTmNFPw5g==
+X-Google-Smtp-Source: APiQypKPyLr9D3x5aJJfh1E5/6u+cb8JP6Qo0I2a/ao2kDBpvQii1AZTwUzgtbi+yEe+qplCF2lrWg==
+X-Received: by 2002:a1c:3182:: with SMTP id x124mr16738870wmx.54.1588608410123;
+        Mon, 04 May 2020 09:06:50 -0700 (PDT)
+Received: from myrica ([2001:171b:226e:c200:c43b:ef78:d083:b355])
+        by smtp.gmail.com with ESMTPSA id b66sm15224708wmh.12.2020.05.04.09.06.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 09:06:48 -0700 (PDT)
+Date:   Mon, 4 May 2020 18:06:39 +0200
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, fenghua.yu@intel.com, kevin.tian@intel.com,
+        jgg@ziepe.ca, catalin.marinas@arm.com, robin.murphy@arm.com,
+        zhangfei.gao@linaro.org, felix.kuehling@amd.com, will@kernel.org,
+        christian.koenig@amd.com
+Subject: Re: [PATCH v6 17/25] iommu/arm-smmu-v3: Implement
+ iommu_sva_bind/unbind()
+Message-ID: <20200504160639.GD170104@myrica>
+References: <20200430143424.2787566-1-jean-philippe@linaro.org>
+ <20200430143424.2787566-18-jean-philippe@linaro.org>
+ <20200501121552.GA6012@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200430080625.26070-9-pali@kernel.org>
+In-Reply-To: <20200501121552.GA6012@infradead.org>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 10:06:21AM +0200, Pali Rohár wrote:
-> PCI-E capability macros are already defined in linux/pci_regs.h.
-> Remove their reimplementation in pcie-aardvark.
-
-s/PCI-E/PCIe/
-
-I mentioned this last time, but I guess you missed it.
-
-> Signed-off-by: Pali Rohár <pali@kernel.org>
-> ---
->  drivers/pci/controller/pci-aardvark.c | 41 ++++++++++++---------------
->  1 file changed, 18 insertions(+), 23 deletions(-)
+On Fri, May 01, 2020 at 05:15:52AM -0700, Christoph Hellwig wrote:
+> > @@ -432,6 +432,7 @@ config ARM_SMMU_V3
+> >  	tristate "ARM Ltd. System MMU Version 3 (SMMUv3) Support"
+> >  	depends on ARM64
+> >  	select IOMMU_API
+> > +	select IOMMU_SVA
+> >  	select IOMMU_IO_PGTABLE_LPAE
+> >  	select GENERIC_MSI_IRQ_DOMAIN
 > 
-> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> index 053ae6c19a3d..c53ae2511a9c 100644
-> --- a/drivers/pci/controller/pci-aardvark.c
-> +++ b/drivers/pci/controller/pci-aardvark.c
-> @@ -34,17 +34,6 @@
->  #define     PCIE_CORE_CMD_MEM_IO_REQ_EN				BIT(2)
->  #define PCIE_CORE_DEV_REV_REG					0x8
->  #define PCIE_CORE_PCIEXP_CAP					0xc0
-> -#define PCIE_CORE_DEV_CTRL_STATS_REG				0xc8
-> -#define     PCIE_CORE_DEV_CTRL_STATS_RELAX_ORDER_DISABLE	(0 << 4)
-> -#define     PCIE_CORE_DEV_CTRL_STATS_MAX_PAYLOAD_SZ_SHIFT	5
-> -#define     PCIE_CORE_DEV_CTRL_STATS_SNOOP_DISABLE		(0 << 11)
-> -#define     PCIE_CORE_DEV_CTRL_STATS_MAX_RD_REQ_SIZE_SHIFT	12
-> -#define     PCIE_CORE_DEV_CTRL_STATS_MAX_RD_REQ_SZ		0x2
-> -#define PCIE_CORE_LINK_CTRL_STAT_REG				0xd0
-> -#define     PCIE_CORE_LINK_L0S_ENTRY				BIT(0)
-> -#define     PCIE_CORE_LINK_TRAINING				BIT(5)
-> -#define     PCIE_CORE_LINK_SPEED_SHIFT				16
-> -#define     PCIE_CORE_LINK_WIDTH_SHIFT				20
->  #define PCIE_CORE_ERR_CAPCTL_REG				0x118
->  #define     PCIE_CORE_ERR_CAPCTL_ECRC_CHK_TX			BIT(5)
->  #define     PCIE_CORE_ERR_CAPCTL_ECRC_CHK_TX_EN			BIT(6)
-> @@ -223,6 +212,11 @@ static inline u32 advk_readl(struct advk_pcie *pcie, u64 reg)
->  	return readl(pcie->base + reg);
->  }
->  
-> +static inline u16 advk_read16(struct advk_pcie *pcie, u64 reg)
-> +{
-> +	return advk_readl(pcie, (reg & ~0x3)) >> ((reg & 0x3) * 8);
-> +}
-> +
->  static int advk_pcie_link_up(struct advk_pcie *pcie)
->  {
->  	u32 val, ltssm_state;
-> @@ -286,16 +280,16 @@ static int advk_pcie_train_at_gen(struct advk_pcie *pcie, int gen)
->  	 * Start link training immediately after enabling it.
->  	 * This solves problems for some buggy cards.
->  	 */
-> -	reg = advk_readl(pcie, PCIE_CORE_LINK_CTRL_STAT_REG);
-> -	reg |= PCIE_CORE_LINK_TRAINING;
-> -	advk_writel(pcie, reg, PCIE_CORE_LINK_CTRL_STAT_REG);
-> +	reg = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + PCI_EXP_LNKCTL);
-> +	reg |= PCI_EXP_LNKCTL_RL;
-> +	advk_writel(pcie, reg, PCIE_CORE_PCIEXP_CAP + PCI_EXP_LNKCTL);
->  
->  	ret = advk_pcie_wait_for_link(pcie);
->  	if (ret)
->  		return ret;
->  
-> -	reg = advk_readl(pcie, PCIE_CORE_LINK_CTRL_STAT_REG);
-> -	neg_gen = (reg >> PCIE_CORE_LINK_SPEED_SHIFT) & 0xf;
-> +	reg = advk_read16(pcie, PCIE_CORE_PCIEXP_CAP + PCI_EXP_LNKSTA);
-> +	neg_gen = reg & PCI_EXP_LNKSTA_CLS;
->  
->  	return neg_gen;
->  }
-> @@ -385,13 +379,14 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
->  		PCIE_CORE_ERR_CAPCTL_ECRC_CHCK_RCV;
->  	advk_writel(pcie, reg, PCIE_CORE_ERR_CAPCTL_REG);
->  
-> -	/* Set PCIe Device Control and Status 1 PF0 register */
-> -	reg = PCIE_CORE_DEV_CTRL_STATS_RELAX_ORDER_DISABLE |
-> -		(7 << PCIE_CORE_DEV_CTRL_STATS_MAX_PAYLOAD_SZ_SHIFT) |
-> -		PCIE_CORE_DEV_CTRL_STATS_SNOOP_DISABLE |
-> -		(PCIE_CORE_DEV_CTRL_STATS_MAX_RD_REQ_SZ <<
-> -		 PCIE_CORE_DEV_CTRL_STATS_MAX_RD_REQ_SIZE_SHIFT);
-> -	advk_writel(pcie, reg, PCIE_CORE_DEV_CTRL_STATS_REG);
-> +	/* Set PCIe Device Control register */
-> +	reg = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + PCI_EXP_DEVCTL);
-> +	reg &= ~PCI_EXP_DEVCTL_RELAX_EN;
-> +	reg &= ~PCI_EXP_DEVCTL_NOSNOOP_EN;
-> +	reg &= ~PCI_EXP_DEVCTL_READRQ;
-> +	reg |= PCI_EXP_DEVCTL_PAYLOAD; /* Set max payload size */
-> +	reg |= PCI_EXP_DEVCTL_READRQ_512B;
-> +	advk_writel(pcie, reg, PCIE_CORE_PCIEXP_CAP + PCI_EXP_DEVCTL);
->  
->  	/* Program PCIe Control 2 to disable strict ordering */
->  	reg = PCIE_CORE_CTRL2_RESERVED |
-> -- 
-> 2.20.1
+> Doesn't this need to select MMU_NOTIFIER now?
+
+Yes, will fix
+
+> > +	struct mmu_notifier_ops		mn_ops;
 > 
+> Note: not a pointer.
+> 
+> > +	/* If bind() was already called for this (dev, mm) pair, reuse it. */
+> > +	list_for_each_entry(bond, &master->bonds, list) {
+> > +		if (bond->mm == mm) {
+> > +			refcount_inc(&bond->refs);
+> > +			return &bond->sva;
+> > +		}
+> > +	}
+> > +
+> > +	mn = mmu_notifier_get(&smmu_domain->mn_ops, mm);
+> > +	if (IS_ERR(mn))
+> > +		return ERR_CAST(mn);
+> 
+> Which seems to be to avoid mmu_notifier_get reusing notifiers registered
+> by other arm_smmu_master instance right?
+
+Yes, although I'm registering a single mmu notifier per (domain, mm) pair,
+not (master, mm), because the SMMU driver keeps one set of PASID tables
+per IOMMU domain.
+
+> Either you could just use plain old mmu_notifier_register to avoid
+> the reuse.  Or we could enhance the mmu_notifier_get to pass a private
+> oaque instance ID pointer, which is checked in addition to the ops,
+> and you could probably kill off the bonds list and lookup.
+
+Going back to mmu_notifier_register() seems better for now. I don't want
+to change the core APIs just for this driver, because it's likely to
+change again when more hardware starts appearing and we optimize it.
+
+Thanks,
+Jean
+
