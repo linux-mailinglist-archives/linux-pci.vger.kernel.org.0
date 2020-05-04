@@ -2,108 +2,133 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ABF661C4004
-	for <lists+linux-pci@lfdr.de>; Mon,  4 May 2020 18:36:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B8801C4058
+	for <lists+linux-pci@lfdr.de>; Mon,  4 May 2020 18:44:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729697AbgEDQgG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 4 May 2020 12:36:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43666 "EHLO
+        id S1729634AbgEDQoE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 4 May 2020 12:44:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729612AbgEDQgG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 May 2020 12:36:06 -0400
+        with ESMTP id S1729598AbgEDQoD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 May 2020 12:44:03 -0400
 Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1128C061A0F
-        for <linux-pci@vger.kernel.org>; Mon,  4 May 2020 09:36:05 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id d15so21759323wrx.3
-        for <linux-pci@vger.kernel.org>; Mon, 04 May 2020 09:36:05 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5ED4BC061A0F
+        for <linux-pci@vger.kernel.org>; Mon,  4 May 2020 09:44:03 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id e16so16670668wra.7
+        for <linux-pci@vger.kernel.org>; Mon, 04 May 2020 09:44:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=Kl5xt2RTiHls+O1+Q0mo8BGBZHrI/nlz87XckVdCL1g=;
-        b=ie+B2GQn0xE9JMPS6WF8xSO2Nb3Bq/Z6k2tntw6DutFeL6B9N4DPWVklfbNH4FnjaN
-         t/FdSJpizjKhO8r7qWYTVIfj5tsh0Pyre46+FgQl/czQpS77eCKBAx7l0fXzqe5oMoJN
-         srD+3dXDSZ1b8gDIeuMqWa8VuGSbuKmcgrBbHkW2D7hnwsTKJTes6Tw8OLdAyIdx9DsB
-         hoEzpcXksJ2R6iwRnxlq1Hy4FZn4zTesCpGIx+6colQIPrKfNOCzGL8j1llscgSmy5B/
-         5cauF3xMhaLP0b+LA+EjuCFSF43vHxSqLu21aoJ22r7LNEmYy0ZayKBxq3kGlHDl94a6
-         bpsg==
+        bh=nKcmHJjl9tIFKl3vh2WZWbQ1a6qf0OFNOmjvKAG+T5w=;
+        b=GVujRTu9LfTtfSzWvR/blDgA6L4wRuxbhYL/JkbyHQuSK8LBG1AbIRX7hrdeiN0O7Z
+         8Baza83dK07XMfbk20Q4GjHiYd4X4taXQr82nh40jV8dNTlKcvoKIZtYRHESbkJA0Mei
+         m0JLe0wL6lKWe3B00KhI1No1bnfAYcK4FWXAj0PDFUuXEgS3N/NCSXdao12JT6mYvX7R
+         wWA8cKGRE8zdnC3olLE8Amc6l6swWxcCLhl/UAEav9UYx2rkCZQF3jq3haIKHqp/B/Tc
+         bv20hTPber8xWSwz5soOC6sjFXModYLMxNromwl4JxU9GswTWo613kfBFwjSkE/8acrI
+         lxjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=Kl5xt2RTiHls+O1+Q0mo8BGBZHrI/nlz87XckVdCL1g=;
-        b=H1/gPSeGtU6iQEHKc7RvinGMFBaK+YPtChX2l11PllUdGkrIWbqfa5+j7xtl+R0lRU
-         1TsGh+iJKqbj7h1qorVdO6QgOzdl8NuB1kZ/Ah3LduuHs6hr43iimOU0flCVSmRHudWZ
-         /AuVCL5RE2rGuvmcJi5PBefoPyMqUYhSY+cpkHlkY3zdPAaCqOeZJMaNoa2160wrvR2d
-         S+urQqMd2hjq75eoxolb34Op5dn4VPSKwu57Iw7KcvFGM31LT1HSNFn8ARpFnP/ErDN8
-         FwmjUczmNT9rEn2BD4IdrjLuo8gZQCG1CquKQiD0UW/anDCakb1Wp+m/KNx5lXMUlBKQ
-         1n8w==
-X-Gm-Message-State: AGi0PuaXrjn4L0Zgbwwq1lZd7BfFxH8fyam3pndH1XBNabEA2Eb/G1n1
-        h3xtp8GdEVp/7AAqCaUF6uNniQ==
-X-Google-Smtp-Source: APiQypLd6vuo0MczRTSEBPfkSN84zUGhA14hWPmpa6tAN+ckf2g+Pmwwtmh//IwEutIpZVdWAHOW4g==
-X-Received: by 2002:a05:6000:10c4:: with SMTP id b4mr20516301wrx.203.1588610164479;
-        Mon, 04 May 2020 09:36:04 -0700 (PDT)
+        bh=nKcmHJjl9tIFKl3vh2WZWbQ1a6qf0OFNOmjvKAG+T5w=;
+        b=FGUSa9QHxaEUODejHprldVLVLlXLKPBKG7VKe6k6BPMtC7XPuT0xycgF1IonamUpWz
+         0Wsu+KDRAy+WDMCJMKm+npu8xiqN1FYPvRunk3BmEGcWqsGCH4on/VxAWb8mIwhiHFN4
+         vBJJf/FYblqxelhO+wOnkFUkV+lqPCVHqFym6p2BlVEnXDmuM/TkcgyKxdbdCq6/6zKf
+         OIs+ZNsqX8JuhcTlb3mW7htwkBNpt3xLGAj3S0nUTwEkQgIppxR70O4ax/4U1N/lM84Z
+         1Wp2QSuWwQVwPQzGS8YA8Ntae8pVimAum0jEd61kRNXI2srFEfPgfaDhJGVEjWC6BpEE
+         a0KA==
+X-Gm-Message-State: AGi0PuZ8rrfR3S+C/lux8/Dw2Ex1rQr8vNJjIwubXbozZ3A6WkLkayc+
+        tbPx+2KksjxJ0RJ9eaoON4HbVnThTCQ=
+X-Google-Smtp-Source: APiQypIoWxNfvYjKhhuxv6cQDK75SO+JQ8441jozvjondQeZtyDNRGUJBpfXr2gHhMn+rcM5zZPzpw==
+X-Received: by 2002:a5d:4e0a:: with SMTP id p10mr12708701wrt.215.1588610642110;
+        Mon, 04 May 2020 09:44:02 -0700 (PDT)
 Received: from myrica ([2001:171b:226e:c200:c43b:ef78:d083:b355])
-        by smtp.gmail.com with ESMTPSA id z1sm13717417wmf.15.2020.05.04.09.36.03
+        by smtp.gmail.com with ESMTPSA id n12sm7101170wrj.95.2020.05.04.09.44.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 09:36:03 -0700 (PDT)
-Date:   Mon, 4 May 2020 18:35:53 +0200
+        Mon, 04 May 2020 09:44:01 -0700 (PDT)
+Date:   Mon, 4 May 2020 18:43:51 +0200
 From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Prabhakar Kushwaha <prabhakar.pkin@gmail.com>
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
 Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-pci@vger.kernel.org, linux-mm@kvack.org, joro@8bytes.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>, kevin.tian@intel.com,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, joro@8bytes.org, catalin.marinas@arm.com,
+        will@kernel.org, robin.murphy@arm.com, kevin.tian@intel.com,
         baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
-        jacob.jun.pan@linux.intel.com, christian.koenig@amd.com,
-        felix.kuehling@amd.com, zhangfei.gao@linaro.org, jgg@ziepe.ca,
-        xuzaibo@huawei.com, fenghua.yu@intel.com, hch@infradead.org,
-        Ganapatrao Prabhakerrao Kulkarni <gkulkarni@marvell.com>,
-        tanmay@marvell.com
-Subject: Re: [PATCH v6 19/25] iommu/arm-smmu-v3: Add support for Hardware
- Translation Table Update
-Message-ID: <20200504163553.GI170104@myrica>
+        christian.koenig@amd.com, felix.kuehling@amd.com,
+        zhangfei.gao@linaro.org, jgg@ziepe.ca, xuzaibo@huawei.com,
+        fenghua.yu@intel.com, hch@infradead.org
+Subject: Re: [PATCH v6 17/25] iommu/arm-smmu-v3: Implement
+ iommu_sva_bind/unbind()
+Message-ID: <20200504164351.GJ170104@myrica>
 References: <20200430143424.2787566-1-jean-philippe@linaro.org>
- <20200430143424.2787566-20-jean-philippe@linaro.org>
- <CAJ2QiJLUxiJRnxQmO3O_48ZcTtNwziCWT6i2SJdAruDi+KGEFw@mail.gmail.com>
+ <20200430143424.2787566-18-jean-philippe@linaro.org>
+ <20200430141617.6ad4be4c@jacob-builder>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJ2QiJLUxiJRnxQmO3O_48ZcTtNwziCWT6i2SJdAruDi+KGEFw@mail.gmail.com>
+In-Reply-To: <20200430141617.6ad4be4c@jacob-builder>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+On Thu, Apr 30, 2020 at 02:16:17PM -0700, Jacob Pan wrote:
+> > +static void arm_smmu_mm_invalidate_range(struct mmu_notifier *mn,
+> > +					 struct mm_struct *mm,
+> > +					 unsigned long start,
+> > unsigned long end) +{
+> > +	/* TODO: invalidate ATS */
+> > +}
+> > +
+> > +static void arm_smmu_mm_release(struct mmu_notifier *mn, struct
+> > mm_struct *mm) +{
+> > +	struct arm_smmu_mmu_notifier *smmu_mn = mn_to_smmu(mn);
+> > +	struct arm_smmu_domain *smmu_domain;
+> > +
+> > +	mutex_lock(&arm_smmu_sva_lock);
+> > +	if (smmu_mn->cleared) {
+> > +		mutex_unlock(&arm_smmu_sva_lock);
+> > +		return;
+> > +	}
+> > +
+> > +	smmu_domain = smmu_mn->domain;
+> > +
+> > +	/*
+> > +	 * DMA may still be running. Keep the cd valid but disable
+> > +	 * translation, so that new events will still result in
+> > stall.
+> > +	 */
+> Does "disable translation" also disable translated requests?
 
-On Mon, May 04, 2020 at 07:54:03PM +0530, Prabhakar Kushwaha wrote:
-> Dear Jean,
-> 
-> On Thu, Apr 30, 2020 at 8:11 PM Jean-Philippe Brucker
-> <jean-philippe@linaro.org> wrote:
-> >
-> > If the SMMU supports it and the kernel was built with HTTU support, enable
-> 
-> is there any framework/config for HTTU which must be enabled to use this patch?
-> 
-> 
-> > We can enable HTTU even if CPUs don't support it, because the kernel
-> > always checks for HW dirty bit and updates the PTE flags atomically.
-> >
-> I believe, this statement is valid in context of this patch-set only.
-> 
-> One cannot use code snipped to test HTTU because exiting
-> io-pgtable-arm.c driver doesn't have framework to leverage HTTU
-> benfits. It by-default sets AF=1 and does not set DBM.
+No it doesn't disable translated requests, it only prevents the SMMU from
+accessing the pgd.
 
-Right, this patch only sets the hardware access and dirty flags for SVA
-(page tables shared with the CPU through iommu_bind*()), it doesn't enable
-anything for iommu_map/unmap(). Although I remember discussing it for VM
-migration, I don't know of any effort to use hardware access/dirty bits
-outside of SVA.
+> I guess
+> release is called after tlb invalidate range, so assuming no more
+> devTLB left to generate translated request?
+
+I'm counting on the invalidate below (here a TODO, implemented in next
+patch) to drop all devTLB entries. After that invalidate, the device:
+* issues a Translation Request, returns with R=W=0 because we disabled
+  translation (and it isn't present in the SMMU TLB).
+* issues a Page Request, returns with InvalidRequest because
+  mmget_not_zero() fails.
+
+> 
+> > +	arm_smmu_write_ctx_desc(smmu_domain, mm->pasid, &invalid_cd);
+> > +
+> > +	arm_smmu_tlb_inv_asid(smmu_domain->smmu, smmu_mn->cd->asid);
+> > +	/* TODO: invalidate ATS */
+> > +
+> If mm release is called after tlb invalidate range, is it still
+> necessary to invalidate again?
+
+No, provided all mappings from the address space are unmapped and
+invalidated. I'll double check, but in my tests invalidate range didn't
+seem to be called for all mappings on mm exit, so I believe we do need
+this.
 
 Thanks,
 Jean
+
