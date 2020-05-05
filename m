@@ -2,92 +2,91 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 749B61C5DCC
-	for <lists+linux-pci@lfdr.de>; Tue,  5 May 2020 18:45:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EBF141C5EF6
+	for <lists+linux-pci@lfdr.de>; Tue,  5 May 2020 19:36:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729885AbgEEQpI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 May 2020 12:45:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52744 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729541AbgEEQpI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 5 May 2020 12:45:08 -0400
-Received: from localhost (mobile-166-175-56-67.mycingular.net [166.175.56.67])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C76F20746;
-        Tue,  5 May 2020 16:45:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588697107;
-        bh=+igWX9Bk88XIswSYeGW+x3/UppcDxT+gwnYJcjP87oI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=CxSj5RjExHqxxc0TCveV6jZ7RQSSjX7RtyLcDJ5NPHustCiFZQBf4UlspwmGhhCJf
-         sA3nCM8rLp9VgtzgKshaUcLQ/8u52sRFttc3gPZdG/jGCfDS3JwI1vz/hvAiQISqUH
-         6kYTu4ppBsTa7zg9ywttrrU4if1yFfooIZLueN3E=
-Date:   Tue, 5 May 2020 11:45:06 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        id S1729697AbgEERgk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 May 2020 13:36:40 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:35293 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729663AbgEERgk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 May 2020 13:36:40 -0400
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1jW1Sk-0000yL-9Y; Tue, 05 May 2020 17:34:35 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     bhelgaas@google.com
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 2/3] ACPI / hotplug / PCI: Use the new
- acpi_evaluate_reg() helper
-Message-ID: <20200505164506.GA365569@bjorn-Precision-5520>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200505132128.19476-3-hdegoede@redhat.com>
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Yicong Yang <yangyicong@hisilicon.com>,
+        Krzysztof Wilczynski <kw@linux.com>,
+        linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v3] PCI/ASPM: Enable ASPM for bridge-to-bridge link
+Date:   Wed,  6 May 2020 01:34:21 +0800
+Message-Id: <20200505173423.26968-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200505122801.12903-1-kai.heng.feng@canonical.com>
+References: <20200505122801.12903-1-kai.heng.feng@canonical.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, May 05, 2020 at 03:21:27PM +0200, Hans de Goede wrote:
-> Use the new acpi_evaluate_reg() helper in the acpiphp_glue.c code.
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+The TI PCIe-to-PCI bridge prevents the Intel SoC from entering power
+state deeper than PC3 due to disabled ASPM, consumes lots of unnecessary
+power. On Windows ASPM L1 is enabled on the device and its upstream
+bridge, so it can make the Intel SoC reach PC8 or PC10 to save lots of
+power.
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+In short, ASPM always gets disabled on bridge-to-bridge link.
 
-OK by me if this is merged with the first.
+The special case was part of first ASPM introduction patch, commit
+7d715a6c1ae5 ("PCI: add PCI Express ASPM support"). However, it didn't
+explain why ASPM needs to be disabled in special bridge-to-bridge case.
 
-> ---
->  drivers/pci/hotplug/acpiphp_glue.c | 17 ++++-------------
->  1 file changed, 4 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/pci/hotplug/acpiphp_glue.c b/drivers/pci/hotplug/acpiphp_glue.c
-> index b3869951c0eb..fd77eb1d460c 100644
-> --- a/drivers/pci/hotplug/acpiphp_glue.c
-> +++ b/drivers/pci/hotplug/acpiphp_glue.c
-> @@ -385,20 +385,11 @@ static unsigned char acpiphp_max_busnr(struct pci_bus *bus)
->  static void acpiphp_set_acpi_region(struct acpiphp_slot *slot)
->  {
->  	struct acpiphp_func *func;
-> -	union acpi_object params[2];
-> -	struct acpi_object_list arg_list;
->  
-> -	list_for_each_entry(func, &slot->funcs, sibling) {
-> -		arg_list.count = 2;
-> -		arg_list.pointer = params;
-> -		params[0].type = ACPI_TYPE_INTEGER;
-> -		params[0].integer.value = ACPI_ADR_SPACE_PCI_CONFIG;
-> -		params[1].type = ACPI_TYPE_INTEGER;
-> -		params[1].integer.value = 1;
-> -		/* _REG is optional, we don't care about if there is failure */
-> -		acpi_evaluate_object(func_to_handle(func), "_REG", &arg_list,
-> -				     NULL);
-> -	}
-> +	list_for_each_entry(func, &slot->funcs, sibling)
-> +		acpi_evaluate_reg(func_to_handle(func),
-> +				  ACPI_ADR_SPACE_PCI_CONFIG,
-> +				  ACPI_REG_CONNECT);
->  }
->  
->  static void check_hotplug_bridge(struct acpiphp_slot *slot, struct pci_dev *dev)
-> -- 
-> 2.26.0
-> 
+Let's remove the the special case, as PCIe spec already envisioned ASPM
+on bridge-to-bridge link.
+
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207571
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+v3:
+ - Remove the special case completely.
+
+v2: 
+ - Enable ASPM on root complex <-> bridge <-> bridge, instead of using
+   quirk.
+ drivers/pci/pcie/aspm.c | 10 ----------
+ 1 file changed, 10 deletions(-)
+
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index 2378ed692534..b17e5ffd31b1 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -628,16 +628,6 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+ 
+ 	/* Setup initial capable state. Will be updated later */
+ 	link->aspm_capable = link->aspm_support;
+-	/*
+-	 * If the downstream component has pci bridge function, don't
+-	 * do ASPM for now.
+-	 */
+-	list_for_each_entry(child, &linkbus->devices, bus_list) {
+-		if (pci_pcie_type(child) == PCI_EXP_TYPE_PCI_BRIDGE) {
+-			link->aspm_disable = ASPM_STATE_ALL;
+-			break;
+-		}
+-	}
+ 
+ 	/* Get and check endpoint acceptable latencies */
+ 	list_for_each_entry(child, &linkbus->devices, bus_list) {
+-- 
+2.17.1
+
