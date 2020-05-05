@@ -2,81 +2,124 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D2E541C4C69
-	for <lists+linux-pci@lfdr.de>; Tue,  5 May 2020 04:53:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BDDA81C4D5C
+	for <lists+linux-pci@lfdr.de>; Tue,  5 May 2020 06:42:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbgEECx3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 4 May 2020 22:53:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55462 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726641AbgEECx3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 May 2020 22:53:29 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BEC7C061A0F;
-        Mon,  4 May 2020 19:53:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=Y3ucUufDJXa4wGxZg++Bu9qVc2KiHeUm+zqaAO3Vyx8=; b=D4b6t3k/hBqIq0aHYoLQW/IHZn
-        lJedJwQm8V3skgopLearo0zFBCCpHnks3h066Pwh5hjn5UASwA3T2gEqtAD3R63Z1/TWmyLEaISzj
-        49h3GYbOwz4PGBpG2MFjttNUXF7aTI1fFOh9Kh5GF4+9JouTVAWHNp6JxBfgiAH2E/CwO1kv6QcOM
-        MyDCm8S5m78jx1oNS5um1MdlR2MtcPoNc6EUdVbn+KWVYVgCHLCTAQBkQCQLxib3WgBzt+U5abWQd
-        QlAQS6XZxWLG/NvAPVK7rPvLwuJ3opgWvEYBgmzJs780HXYcQJ5m0pdK3koTT5J62iSCm86dsfmQE
-        Dot1vIOQ==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jVni4-0007Qf-Vs; Tue, 05 May 2020 02:53:29 +0000
-Subject: Re: [PATCH 2/3] mfd: Intel Platform Monitoring Technology support
-To:     "David E. Box" <david.e.box@linux.intel.com>, bhelgaas@google.com,
-        andy@infradead.org, alexander.h.duyck@intel.com
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>
-References: <20200505013206.11223-1-david.e.box@linux.intel.com>
- <20200505023149.11630-1-david.e.box@linux.intel.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <531eb6c8-7403-5380-af40-dca229467e6e@infradead.org>
-Date:   Mon, 4 May 2020 19:53:27 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200505023149.11630-1-david.e.box@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1725915AbgEEEmZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 May 2020 00:42:25 -0400
+Received: from mga03.intel.com ([134.134.136.65]:20182 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725298AbgEEEmY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 5 May 2020 00:42:24 -0400
+IronPort-SDR: xrZag7p/uiI/+yVU9WzKkXlJls6Zp3xOJieVjI4g75MxcUHJCfTHkNE0vqhWV1O4kT42PqE7QY
+ QjARgYE3LqjQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 21:42:24 -0700
+IronPort-SDR: 2vIZbgyyOTKoUofCWTRr5FoIBJMndkLa8KAwbvQPrJky7jEpaWFyNCw9V4ILMLpIlc09XkNhVE
+ kNVSTqXkB9xQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,354,1583222400"; 
+   d="scan'208";a="369299546"
+Received: from otc-nc-03.jf.intel.com ([10.54.39.25])
+  by fmsmga001.fm.intel.com with ESMTP; 04 May 2020 21:42:23 -0700
+From:   Ashok Raj <ashok.raj@intel.com>
+To:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Ashok Raj <ashok.raj@intel.com>, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Darrel Goeddel <DGoeddel@forcepoint.com>,
+        Mark Scott <mscott@forcepoint.com>,
+        Romil Sharma <rsharma@forcepoint.com>
+Subject: [PATCH] iommu: Relax ACS requirement for RCiEP devices.
+Date:   Mon,  4 May 2020 21:42:16 -0700
+Message-Id: <1588653736-10835-1-git-send-email-ashok.raj@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 5/4/20 7:31 PM, David E. Box wrote:
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index 0a59249198d3..c673031acdf1 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -632,6 +632,16 @@ config MFD_INTEL_MSIC
->  	  Passage) chip. This chip embeds audio, battery, GPIO, etc.
->  	  devices used in Intel Medfield platforms.
->  
-> +config MFD_INTEL_PMT
-> +	tristate "Intel Platform Monitoring Technology support"
-> +	depends on PCI
-> +	select MFD_CORE
-> +	help
-> +	  The Intel Platform Monitoring Technology (PMT) is an interface that
-> +	  provides access to hardware monitor registers. This driver supports
-> +	  Telemetry, Watcher, and Crashlog PTM capabilities/devices for
+PCIe Spec recommends we can relax ACS requirement for RCIEP devices.
 
-What is PTM?
+PCIe 5.0 Specification.
+6.12 Access Control Services (ACS)
+Implementation of ACS in RCiEPs is permitted but not required. It is
+explicitly permitted that, within a single Root Complex, some RCiEPs
+implement ACS and some do not. It is strongly recommended that Root Complex
+implementations ensure that all accesses originating from RCiEPs
+(PFs and VFs) without ACS capability are first subjected to processing by
+the Translation Agent (TA) in the Root Complex before further decoding and
+processing. The details of such Root Complex handling are outside the scope
+of this specification.
 
+Since Linux didn't give special treatment to allow this exception, certain
+RCiEP MFD devices are getting grouped in a single iommu group. This
+doesn't permit a single device to be assigned to a guest for instance.
 
-> +	  platforms starting from Tiger Lake.
-> +
->  config MFD_IPAQ_MICRO
->  	bool "Atmel Micro ASIC (iPAQ h3100/h3600/h3700) Support"
->  	depends on SA1100_H3100 || SA1100_H3600
+In one vendor system: Device 14.x were grouped in a single IOMMU group.
 
+/sys/kernel/iommu_groups/5/devices/0000:00:14.0
+/sys/kernel/iommu_groups/5/devices/0000:00:14.2
+/sys/kernel/iommu_groups/5/devices/0000:00:14.3
 
+After the patch:
+/sys/kernel/iommu_groups/5/devices/0000:00:14.0
+/sys/kernel/iommu_groups/5/devices/0000:00:14.2
+/sys/kernel/iommu_groups/6/devices/0000:00:14.3 <<< new group
+
+14.0 and 14.2 are integrated devices, but legacy end points.
+Whereas 14.3 was a PCIe compliant RCiEP.
+
+00:14.3 Network controller: Intel Corporation Device 9df0 (rev 30)
+Capabilities: [40] Express (v2) Root Complex Integrated Endpoint, MSI 00
+
+This permits assigning this device to a guest VM.
+
+Fixes: f096c061f552 ("iommu: Rework iommu_group_get_for_pci_dev()")
+Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+To: Joerg Roedel <joro@8bytes.org>
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-kernel@vger.kernel.org
+Cc: iommu@lists.linux-foundation.org
+Cc: Lu Baolu <baolu.lu@linux.intel.com>
+Cc: Alex Williamson <alex.williamson@redhat.com>
+Cc: Darrel Goeddel <DGoeddel@forcepoint.com>
+Cc: Mark Scott <mscott@forcepoint.com>,
+Cc: Romil Sharma <rsharma@forcepoint.com>
+Cc: Ashok Raj <ashok.raj@intel.com>
+---
+ drivers/iommu/iommu.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index 2b471419e26c..5744bd65f3e2 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -1187,7 +1187,20 @@ static struct iommu_group *get_pci_function_alias_group(struct pci_dev *pdev,
+ 	struct pci_dev *tmp = NULL;
+ 	struct iommu_group *group;
+ 
+-	if (!pdev->multifunction || pci_acs_enabled(pdev, REQ_ACS_FLAGS))
++	/*
++	 * PCI Spec 5.0, Section 6.12 Access Control Service
++	 * Implementation of ACS in RCiEPs is permitted but not required.
++	 * It is explicitly permitted that, within a single Root
++	 * Complex, some RCiEPs implement ACS and some do not. It is
++	 * strongly recommended that Root Complex implementations ensure
++	 * that all accesses originating from RCiEPs (PFs and VFs) without
++	 * ACS capability are first subjected to processing by the Translation
++	 * Agent (TA) in the Root Complex before further decoding and
++	 * processing.
++	 */
++	if (!pdev->multifunction ||
++	    (pci_pcie_type(pdev) == PCI_EXP_TYPE_RC_END) ||
++	     pci_acs_enabled(pdev, REQ_ACS_FLAGS))
+ 		return NULL;
+ 
+ 	for_each_pci_dev(tmp) {
 -- 
-~Randy
+2.7.4
 
