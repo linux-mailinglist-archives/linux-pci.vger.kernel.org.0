@@ -2,79 +2,87 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4354D1C54CB
-	for <lists+linux-pci@lfdr.de>; Tue,  5 May 2020 13:53:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D3411C556B
+	for <lists+linux-pci@lfdr.de>; Tue,  5 May 2020 14:28:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbgEELxR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 May 2020 07:53:17 -0400
-Received: from foss.arm.com ([217.140.110.172]:38182 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725766AbgEELxQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 5 May 2020 07:53:16 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4E61A30E;
-        Tue,  5 May 2020 04:53:16 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4EE683F68F;
-        Tue,  5 May 2020 04:53:15 -0700 (PDT)
-Date:   Tue, 5 May 2020 12:53:13 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH] PCI: dwc: Fix inner MSI IRQ domain registration
-Message-ID: <20200505115313.GF12543@e121166-lin.cambridge.arm.com>
-References: <20200501113921.366597-1-maz@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200501113921.366597-1-maz@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        id S1728627AbgEEM2T (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 May 2020 08:28:19 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:50795 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727090AbgEEM2T (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 May 2020 08:28:19 -0400
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1jVwgB-0006Vr-46; Tue, 05 May 2020 12:28:07 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     bhelgaas@google.com
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Krzysztof Wilczynski <kw@linux.com>,
+        linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2] PCI/ASPM: Enable ASPM for root complex <-> bridge <-> bridge case
+Date:   Tue,  5 May 2020 20:27:59 +0800
+Message-Id: <20200505122801.12903-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200504070259.6034-1-kai.heng.feng@canonical.com>
+References: <20200504070259.6034-1-kai.heng.feng@canonical.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, May 01, 2020 at 12:39:21PM +0100, Marc Zyngier wrote:
-> On a system that uses the internal DWC MSI widget, I get this
-> warning from debugfs when CONFIG_GENERIC_IRQ_DEBUGFS is selected:
-> 
->   debugfs: File ':soc:pcie@fc000000' in directory 'domains' already present!
-> 
-> This is due to the fact that the DWC MSI code tries to register two
-> IRQ domains for the same firmware node, without telling the low
-> level code how to distinguish them (by setting a bus token). This
-> further confuses debugfs which tries to create corresponding
-> files for each domain.
-> 
-> Fix it by tagging the inner domain as DOMAIN_BUS_NEXUS, which is
-> the closest thing we have as to "generic MSI".
-> 
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> ---
->  drivers/pci/controller/dwc/pcie-designware-host.c | 2 ++
->  1 file changed, 2 insertions(+)
+The TI PCIe-to-PCI bridge prevents the Intel SoC from entering power
+state deeper than PC3 due to disabled ASPM, consumes lots of unnecessary
+power. On Windows ASPM L1 is enabled on the device and its upstream
+bridge, so it can make the Intel SoC reach PC8 or PC10 to save lots of
+power.
 
-Applied to pci/dwc, thanks !
+Currently, ASPM is disabled if downstream has bridge function. It was
+introduced by commit 7d715a6c1ae5 ("PCI: add PCI Express ASPM support").
+The commit introduced PCIe ASPM support, but didn't explain why ASPM
+needs to be in that case.
 
-Lorenzo
+So relax the condition a bit to let bridge which connects to root
+complex enables ASPM, instead of removing it completely, to avoid
+regression.
 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index 395feb8ca051..3c43311bb95c 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -264,6 +264,8 @@ int dw_pcie_allocate_domains(struct pcie_port *pp)
->  		return -ENOMEM;
->  	}
->  
-> +	irq_domain_update_bus_token(pp->irq_domain, DOMAIN_BUS_NEXUS);
-> +
->  	pp->msi_domain = pci_msi_create_irq_domain(fwnode,
->  						   &dw_pcie_msi_domain_info,
->  						   pp->irq_domain);
-> -- 
-> 2.26.2
-> 
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207571
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ drivers/pci/pcie/aspm.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index 2378ed692534..af5e22d78101 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -629,13 +629,15 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+ 	/* Setup initial capable state. Will be updated later */
+ 	link->aspm_capable = link->aspm_support;
+ 	/*
+-	 * If the downstream component has pci bridge function, don't
+-	 * do ASPM for now.
++	 * If upstream bridge isn't connected to root complex and the
++	 * downstream component has pci bridge function, don't do ASPM for now.
+ 	 */
+-	list_for_each_entry(child, &linkbus->devices, bus_list) {
+-		if (pci_pcie_type(child) == PCI_EXP_TYPE_PCI_BRIDGE) {
+-			link->aspm_disable = ASPM_STATE_ALL;
+-			break;
++	if (parent->bus->parent) {
++		list_for_each_entry(child, &linkbus->devices, bus_list) {
++			if (pci_pcie_type(child) == PCI_EXP_TYPE_PCI_BRIDGE) {
++				link->aspm_disable = ASPM_STATE_ALL;
++				break;
++			}
+ 		}
+ 	}
+ 
+-- 
+2.17.1
+
