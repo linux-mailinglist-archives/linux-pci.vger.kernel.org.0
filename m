@@ -2,137 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 842161C56F5
-	for <lists+linux-pci@lfdr.de>; Tue,  5 May 2020 15:31:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DBC101C5711
+	for <lists+linux-pci@lfdr.de>; Tue,  5 May 2020 15:35:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728918AbgEENbi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 May 2020 09:31:38 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50260 "EHLO mx2.suse.de"
+        id S1728608AbgEENf6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 May 2020 09:35:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728912AbgEENbi (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 5 May 2020 09:31:38 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 06B06AC7B;
-        Tue,  5 May 2020 13:31:37 +0000 (UTC)
-Message-ID: <71f91033780ee9d95da2be44884d4d47efb03b5f.camel@suse.de>
-Subject: Re: [PATCH v2 4/4] PCI: brcmstb: Disable L0s component of ASPM if
- requested
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Jim Quinlan <james.quinlan@broadcom.com>
-Cc:     "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Rob Herring <robh@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
+        id S1728954AbgEENf6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 5 May 2020 09:35:58 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4E62206A5;
+        Tue,  5 May 2020 13:35:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588685758;
+        bh=27eegcfN4OCPFz8Eg3QszwZbxwkuazdL8Z4GFlVGgsc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vqtExeeaUnSviGJmZkNmbJ6Gn/s2RKKtdHtQdFsbPTHdXw+HyZ9OVK5RAdxltmRQG
+         jVJjsOGMfvCI/WGbVQ5zHdvfKgTgaX2fnfB2z5y9vZhl75mVcFbfArkyRk0aowa72w
+         jhu7JDiZmh5qT097JYnQM5NPjFPBnbFY2zULRZrc=
+Date:   Tue, 5 May 2020 15:35:55 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Aman Sharma <amanharitsh123@gmail.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bjorn Helgaas <bhelgaas@google.com>
-Date:   Tue, 05 May 2020 15:31:32 +0200
-In-Reply-To: <20200501142831.35174-5-james.quinlan@broadcom.com>
-References: <20200501142831.35174-1-james.quinlan@broadcom.com>
-         <20200501142831.35174-5-james.quinlan@broadcom.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-/WMc+4hb6CwtaW97uLCZ"
-User-Agent: Evolution 3.36.2 
+Subject: Re: [PATCH v2 1/2] driver core: platform: Clarify that IRQ 0 is
+ invalid
+Message-ID: <20200505133555.GA529259@kroah.com>
+References: <20200504190721.GA2810934@kroah.com>
+ <20200504222659.GA296947@bjorn-Precision-5520>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200504222659.GA296947@bjorn-Precision-5520>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Mon, May 04, 2020 at 05:26:59PM -0500, Bjorn Helgaas wrote:
+> On Mon, May 04, 2020 at 09:07:21PM +0200, Greg Kroah-Hartman wrote:
+> > On Mon, May 04, 2020 at 01:08:22PM -0500, Bjorn Helgaas wrote:
+> > > On Sat, May 02, 2020 at 08:15:37AM +0200, Greg Kroah-Hartman wrote:
+> > > > On Fri, May 01, 2020 at 05:40:41PM -0500, Bjorn Helgaas wrote:
+> > > > > From: Bjorn Helgaas <bhelgaas@google.com>
+> > > > > 
+> > > > > These interfaces return a negative error number or an IRQ:
+> > > > > 
+> > > > >   platform_get_irq()
+> > > > >   platform_get_irq_optional()
+> > > > >   platform_get_irq_byname()
+> > > > >   platform_get_irq_byname_optional()
+> > > > > 
+> > > > > The function comments suggest checking for error like this:
+> > > > > 
+> > > > >   irq = platform_get_irq(...);
+> > > > >   if (irq < 0)
+> > > > >     return irq;
+> > > > > 
+> > > > > which is what most callers (~900 of 1400) do, so it's implicit
+> > > > > that IRQ 0 is invalid.  But some callers check for "irq <= 0",
+> > > > > and it's not obvious from the source that we never return an
+> > > > > IRQ 0.
+> > > > > 
+> > > > > Make this more explicit by updating the comments to say that
+> > > > > an IRQ number is always non-zero and adding a WARN() if we
+> > > > > ever do return zero.  If we do return IRQ 0, it likely
+> > > > > indicates a bug in the arch-specific parts of
+> > > > > platform_get_irq().
+> > > > 
+> > > > I worry about adding WARN() as there are systems that do
+> > > > panic_on_warn() and syzbot trips over this as well.  I don't
+> > > > think that for this issue it would be a problem, but what really
+> > > > is this warning about that someone could do anything with?
+> > > > 
+> > > > Other than that minor thing, this looks good to me, thanks for
+> > > > finally clearing this up.
+> > > 
+> > > What I'm concerned about is an arch that returns 0.  Most drivers
+> > > don't check for 0 so they'll just try to use it, and things will
+> > > fail in some obscure way.  My assumption is that if there really
+> > > is no IRQ, we should return -ENOENT or similar instead of 0.
+> > > 
+> > > I could be convinced that it's not worth warning about at all, or
+> > > we could do something like the following:
+> > > 
+> > > diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> > > index 084cf1d23d3f..4afa5875e14d 100644
+> > > --- a/drivers/base/platform.c
+> > > +++ b/drivers/base/platform.c
+> > > @@ -220,7 +220,11 @@ int platform_get_irq_optional(struct platform_device *dev, unsigned int num)
+> > >  	ret = -ENXIO;
+> > >  #endif
+> > >  out:
+> > > -	WARN(ret == 0, "0 is an invalid IRQ number\n");
+> > > +	/* Returning zero here is likely a bug in the arch IRQ code */
+> > > +	if (ret == 0) {
+> > > +		pr_warn("0 is an invalid IRQ number\n");
+> > > +		dump_stack();
+> > > +	}
+> > >  	return ret;
+> > >  }
+> > > ...
+> 
+> > I like that, but you said this is something that the platform people
+> > should only see when bringing up a new system, so maybe the WARN() is
+> > fine.  It's not user-triggerable, so your original is ok.
+> 
+> Is that an ack?  Thomas, any thoughts?
 
---=-/WMc+4hb6CwtaW97uLCZ
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Sorry, yes:
 
-On Fri, 2020-05-01 at 10:28 -0400, Jim Quinlan wrote:
-> From: Jim Quinlan <jquinlan@broadcom.com>
->=20
-> Some informal internal experiments has shown that the BrcmSTB ASPM L0s
-> savings may introduce an undesirable noise signal on some customers'
-> boards.  In addition, L0s was found lacking in realized power savings,
-> especially relative to the L1 ASPM component.  This is BrcmSTB's
-> experience and may not hold for others.  At any rate, if the
-> 'aspm-no-l0s' property is present L0s will be disabled.
->=20
-> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
-> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-
-Modulo the new generic dt property:
-
-Acked-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-
-Regards,
-Nicolas
-
-> ---
->  drivers/pci/controller/pcie-brcmstb.c | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c
-> b/drivers/pci/controller/pcie-brcmstb.c
-> index 5b0dec5971b8..73020b4ff090 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -41,6 +41,9 @@
->  #define PCIE_RC_CFG_PRIV1_ID_VAL3			0x043c
->  #define  PCIE_RC_CFG_PRIV1_ID_VAL3_CLASS_CODE_MASK	0xffffff
-> =20
-> +#define PCIE_RC_CFG_PRIV1_LINK_CAPABILITY			0x04dc
-> +#define  PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK	0xc00
-> +
->  #define PCIE_RC_DL_MDIO_ADDR				0x1100
->  #define PCIE_RC_DL_MDIO_WR_DATA				0x1104
->  #define PCIE_RC_DL_MDIO_RD_DATA				0x1108
-> @@ -693,7 +696,7 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
->  	int num_out_wins =3D 0;
->  	u16 nlw, cls, lnksta;
->  	int i, ret;
-> -	u32 tmp;
-> +	u32 tmp, aspm_support;
-> =20
->  	/* Reset the bridge */
->  	brcm_pcie_bridge_sw_init_set(pcie, 1);
-> @@ -803,6 +806,15 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
->  		num_out_wins++;
->  	}
-> =20
-> +	/* Don't advertise L0s capability if 'aspm-no-l0s' */
-> +	aspm_support =3D PCIE_LINK_STATE_L1;
-> +	if (!of_property_read_bool(pcie->np, "aspm-no-l0s"))
-> +		aspm_support |=3D PCIE_LINK_STATE_L0S;
-> +	tmp =3D readl(base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
-> +	u32p_replace_bits(&tmp, aspm_support,
-> +		PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK);
-> +	writel(tmp, base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
-> +
->  	/*
->  	 * For config space accesses on the RC, show the right class for
->  	 * a PCIe-PCIe bridge (the default setting is to be EP mode).
-
-
---=-/WMc+4hb6CwtaW97uLCZ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl6xarQACgkQlfZmHno8
-x/5F2Af+NaU0XhF5SOoN9k/cqs0QD3cUh2gPJSrKgygCuqC79eeu2CIH9k3OmXSK
-2ArwxrQvKZS8cw8icZPETD6PuD5Z0bWmeUbl7dbTZwReORzCUeFGGjbFJUCw6mLv
-gzxQ1QTT60/rf2BeVu520PJeCB/KAnsiqwNo63UJhGYsdExXwGLyQqmgldCCfktl
-9i8QE/4C4Ne3A1QXj0aowFHD9pCI54bYj3UeDFo2Z7C0Hb2vMAt+KDkGiR40dDF2
-FBaM1gII/IUVqt12qLngl2aYjCWa8VQro6Hz53IM/Bkf1QVUbjYNq3GsIXph4sLQ
-81jE683L/9ZlfI95hcoWXr8aaqGdsQ==
-=aXbi
------END PGP SIGNATURE-----
-
---=-/WMc+4hb6CwtaW97uLCZ--
-
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
