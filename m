@@ -2,79 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DB9E91C5A23
-	for <lists+linux-pci@lfdr.de>; Tue,  5 May 2020 16:55:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 548061C5A2A
+	for <lists+linux-pci@lfdr.de>; Tue,  5 May 2020 16:56:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729199AbgEEOzO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 May 2020 10:55:14 -0400
-Received: from mga14.intel.com ([192.55.52.115]:15926 "EHLO mga14.intel.com"
+        id S1729610AbgEEO4H (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 May 2020 10:56:07 -0400
+Received: from mga17.intel.com ([192.55.52.151]:9028 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729065AbgEEOzN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 5 May 2020 10:55:13 -0400
-IronPort-SDR: q0OzYQ6AhGRdU+7qih6XKW0VWGDu7GmjffiH+RicukiofPQlB286SXeAS/I0eWHWfanzxL7tP4
- LoWytvZVPYUg==
+        id S1729454AbgEEO4H (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 5 May 2020 10:56:07 -0400
+IronPort-SDR: aGndGSR8Xo6swItycAIjm5ani4eTHGNIR3UmOgB+j1v9lz/vK1r5hhKMJvbdg5+vd81n0NyIlb
+ mB/l7XODtCLQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2020 07:55:11 -0700
-IronPort-SDR: cdkoVR4zO3IfN7UEXcWHPg+dN81PKHeHv/O8xvNLRn9HPZrU/M65dJuUs6rdXm5Byi6XFHk+/i
- hbjclvgPEujQ==
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2020 07:56:06 -0700
+IronPort-SDR: 3Dvi1ejqJAT0ii4H3bhyjVLjuLdN2tBgeX+c/L56IS1TSdvC0/Ceit4FGYGFx4NJGifMt8HDih
+ CO6rC90DOOqg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,355,1583222400"; 
-   d="scan'208";a="434513771"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga005.jf.intel.com with ESMTP; 05 May 2020 07:55:11 -0700
-Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.7.201.137])
-        by linux.intel.com (Postfix) with ESMTP id 2185758048A;
-        Tue,  5 May 2020 07:55:11 -0700 (PDT)
-Message-ID: <43976043c0689c985f97dc782d40f2c330a02b7a.camel@linux.intel.com>
-Subject: Re: [PATCH 2/3] mfd: Intel Platform Monitoring Technology support
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Randy Dunlap <rdunlap@infradead.org>, bhelgaas@google.com,
-        andy@infradead.org, alexander.h.duyck@intel.com
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Date:   Tue, 05 May 2020 07:55:11 -0700
-In-Reply-To: <531eb6c8-7403-5380-af40-dca229467e6e@infradead.org>
-References: <20200505013206.11223-1-david.e.box@linux.intel.com>
-         <20200505023149.11630-1-david.e.box@linux.intel.com>
-         <531eb6c8-7403-5380-af40-dca229467e6e@infradead.org>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+   d="scan'208";a="250919303"
+Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.25])
+  by fmsmga008.fm.intel.com with ESMTP; 05 May 2020 07:56:06 -0700
+Date:   Tue, 5 May 2020 07:56:06 -0700
+From:   "Raj, Ashok" <ashok.raj@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Darrel Goeddel <DGoeddel@forcepoint.com>,
+        Mark Scott <mscott@forcepoint.com>,
+        Romil Sharma <rsharma@forcepoint.com>,
+        Joerg Roedel <joro@8bytes.org>, Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [PATCH] iommu: Relax ACS requirement for RCiEP devices.
+Message-ID: <20200505145605.GA13690@otc-nc-03>
+References: <1588653736-10835-1-git-send-email-ashok.raj@intel.com>
+ <20200504231936.2bc07fe3@x1.home>
+ <20200505061107.GA22974@araj-mobl1.jf.intel.com>
+ <20200505080514.01153835@x1.home>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200505080514.01153835@x1.home>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 2020-05-04 at 19:53 -0700, Randy Dunlap wrote:
-> On 5/4/20 7:31 PM, David E. Box wrote:
-> > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> > index 0a59249198d3..c673031acdf1 100644
-> > --- a/drivers/mfd/Kconfig
-> > +++ b/drivers/mfd/Kconfig
-> > @@ -632,6 +632,16 @@ config MFD_INTEL_MSIC
-> >  	  Passage) chip. This chip embeds audio, battery, GPIO, etc.
-> >  	  devices used in Intel Medfield platforms.
-> >  
-> > +config MFD_INTEL_PMT
-> > +	tristate "Intel Platform Monitoring Technology support"
-> > +	depends on PCI
-> > +	select MFD_CORE
-> > +	help
-> > +	  The Intel Platform Monitoring Technology (PMT) is an
-> > interface that
-> > +	  provides access to hardware monitor registers. This driver
-> > supports
-> > +	  Telemetry, Watcher, and Crashlog PTM capabilities/devices for
+On Tue, May 05, 2020 at 08:05:14AM -0600, Alex Williamson wrote:
+> On Mon, 4 May 2020 23:11:07 -0700
+> "Raj, Ashok" <ashok.raj@intel.com> wrote:
 > 
-> What is PTM?
+> > Hi Alex
+> > 
+> > + Joerg, accidently missed in the Cc.
+> > 
+> > On Mon, May 04, 2020 at 11:19:36PM -0600, Alex Williamson wrote:
+> > > On Mon,  4 May 2020 21:42:16 -0700
+> > > Ashok Raj <ashok.raj@intel.com> wrote:
+> > >   
+> > > > PCIe Spec recommends we can relax ACS requirement for RCIEP devices.
+> > > > 
+> > > > PCIe 5.0 Specification.
+> > > > 6.12 Access Control Services (ACS)
+> > > > Implementation of ACS in RCiEPs is permitted but not required. It is
+> > > > explicitly permitted that, within a single Root Complex, some RCiEPs
+> > > > implement ACS and some do not. It is strongly recommended that Root Complex
+> > > > implementations ensure that all accesses originating from RCiEPs
+> > > > (PFs and VFs) without ACS capability are first subjected to processing by
+> > > > the Translation Agent (TA) in the Root Complex before further decoding and
+> > > > processing. The details of such Root Complex handling are outside the scope
+> > > > of this specification.
+> > > > 
+> > > 
+> > > Is the language here really strong enough to make this change?  ACS is
+> > > an optional feature, so being permitted but not required is rather
+> > > meaningless.  The spec is also specifically avoiding the words "must"
+> > > or "shall" and even when emphasized with "strongly", we still only have
+> > > a recommendation that may or may not be honored.  This seems like a
+> > > weak basis for assuming that RCiEPs universally honor this
+> > > recommendation.  Thanks,
+> > >   
+> > 
+> > We are speaking about PCIe spec, where people write it about 5 years ahead
+> > and every vendor tries to massage their product behavior with vague
+> > words like this..  :)
+> > 
+> > But honestly for any any RCiEP, or even integrated endpoints, there 
+> > is no way to send them except up north. These aren't behind a RP.
+> 
+> But they are multi-function devices and the spec doesn't define routing
+> within multifunction packages.  A single function RCiEP will already be
+> assumed isolated within its own group.
 
-s/PTM/PMT
+That's right. The other two devices only have legacy PCI headers. So 
+they can't claim to be RCiEP's but just integrated endpoints. The legacy
+devices don't even have a PCIe header.
 
-I have the fortune of working on another project involving PCI
-Precision Time Management.
+I honestly don't know why these are groped as MFD's in the first place.
 
+>  
+> > I did check with couple folks who are part of the SIG, and seem to agree
+> > that ACS treatment for RCiEP's doesn't mean much. 
+> > 
+> > I understand the language isn't strong, but it doesn't seem like ACS should
+> > be a strong requirement for RCiEP's and reasonable to relax.
+> > 
+> > What are your thoughts? 
+> 
+> I think hardware vendors have ACS at their disposal to clarify when
+> isolation is provided, otherwise vendors can submit quirks, but I don't
+> see that the "strongly recommended" phrasing is sufficient to assume
+> isolation between multifunction RCiEPs.  Thanks,
+
+You point is that integrated MFD endpoints, without ACS, there is no 
+gaurantee to SW that they are isolated.
+
+As far as a quirk, do you think:
+	- a cmdline optput for integrated endpoints, and RCiEP's suffice?
+	  along with a compile time default that is strict enforcement
+	- typical vid/did type exception list?
+
+A more generic way to ask for exception would be scalable until we can stop
+those type of integrated devices. Or we need to maintain these device lists
+for eternity. 
+
+Cheers,
+Ashok
