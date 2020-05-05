@@ -2,71 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C92FA1C5398
-	for <lists+linux-pci@lfdr.de>; Tue,  5 May 2020 12:47:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C1741C53BA
+	for <lists+linux-pci@lfdr.de>; Tue,  5 May 2020 12:54:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728689AbgEEKr5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 May 2020 06:47:57 -0400
-Received: from foss.arm.com ([217.140.110.172]:36954 "EHLO foss.arm.com"
+        id S1728638AbgEEKye (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 May 2020 06:54:34 -0400
+Received: from foss.arm.com ([217.140.110.172]:37068 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728497AbgEEKr5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 5 May 2020 06:47:57 -0400
+        id S1728180AbgEEKye (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 5 May 2020 06:54:34 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A32F430E;
-        Tue,  5 May 2020 03:47:56 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2470430E;
+        Tue,  5 May 2020 03:54:33 -0700 (PDT)
 Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 51F4C3F305;
-        Tue,  5 May 2020 03:47:55 -0700 (PDT)
-Date:   Tue, 5 May 2020 11:47:49 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E221B3F305;
+        Tue,  5 May 2020 03:54:31 -0700 (PDT)
+Date:   Tue, 5 May 2020 11:54:29 +0100
 From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Jason Yan <yanaijie@huawei.com>
-Cc:     amurray@thegoodpenguin.co.uk, bhelgaas@google.com,
-        p.zabel@pengutronix.de, gustavo.pimentel@synopsys.com,
-        andriy.shevchenko@intel.com, eswara.kota@linux.intel.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Hulk Robot <hulkci@huawei.com>
-Subject: Re: [PATCH] PCI: dwc: intel: make intel_pcie_cpu_addr() static
-Message-ID: <20200505104749.GA13446@e121166-lin.cambridge.arm.com>
-References: <20200415084953.6533-1-yanaijie@huawei.com>
+To:     Wei Yongjun <weiyongjun1@huawei.com>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        linux-omap@vger.kernel.org, linux-pci@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH -next  v2] PCI: dwc: pci-dra7xx: use
+ devm_platform_ioremap_resource_byname()
+Message-ID: <20200505105429.GB13446@e121166-lin.cambridge.arm.com>
+References: <20200427111044.162618-1-weiyongjun1@huawei.com>
+ <20200429015027.134485-1-weiyongjun1@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200415084953.6533-1-yanaijie@huawei.com>
+In-Reply-To: <20200429015027.134485-1-weiyongjun1@huawei.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 04:49:53PM +0800, Jason Yan wrote:
-> Fix the following sparse warning:
+On Wed, Apr 29, 2020 at 01:50:27AM +0000, Wei Yongjun wrote:
+> platform_get_resource() may fail and return NULL, so we should better
+> check it's return value to avoid a NULL pointer dereference a bit later
+> in the code. Fix it to use devm_platform_ioremap_resource_byname()
+> instead of calling platform_get_resource_byname() and devm_ioremap().
 > 
-> drivers/pci/controller/dwc/pcie-intel-gw.c:456:5: warning: symbol
-> 'intel_pcie_cpu_addr' was not declared. Should it be static?
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
 > ---
->  drivers/pci/controller/dwc/pcie-intel-gw.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> v1 -> v2: use devm_platform_ioremap_resource_byname, suggest by Vignesh
+> ---
+>  drivers/pci/controller/dwc/pci-dra7xx.c | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
 
 Applied to pci/dwc, thanks.
 
 Lorenzo
 
-> diff --git a/drivers/pci/controller/dwc/pcie-intel-gw.c b/drivers/pci/controller/dwc/pcie-intel-gw.c
-> index fc2a12212dec..2d8dbb318087 100644
-> --- a/drivers/pci/controller/dwc/pcie-intel-gw.c
-> +++ b/drivers/pci/controller/dwc/pcie-intel-gw.c
-> @@ -453,7 +453,7 @@ static int intel_pcie_msi_init(struct pcie_port *pp)
->  	return 0;
->  }
+> diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
+> index 3b0e58f2de58..6184ebc9392d 100644
+> --- a/drivers/pci/controller/dwc/pci-dra7xx.c
+> +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
+> @@ -840,7 +840,6 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
+>  	struct phy **phy;
+>  	struct device_link **link;
+>  	void __iomem *base;
+> -	struct resource *res;
+>  	struct dw_pcie *pci;
+>  	struct dra7xx_pcie *dra7xx;
+>  	struct device *dev = &pdev->dev;
+> @@ -877,10 +876,9 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
+>  		return irq;
+>  	}
 >  
-> -u64 intel_pcie_cpu_addr(struct dw_pcie *pcie, u64 cpu_addr)
-> +static u64 intel_pcie_cpu_addr(struct dw_pcie *pcie, u64 cpu_addr)
->  {
->  	return cpu_addr + BUS_IATU_OFFSET;
->  }
-> -- 
-> 2.21.1
+> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ti_conf");
+> -	base = devm_ioremap(dev, res->start, resource_size(res));
+> -	if (!base)
+> -		return -ENOMEM;
+> +	base = devm_platform_ioremap_resource_byname(pdev, "ti_conf");
+> +	if (IS_ERR(base))
+> +		return PTR_ERR(base);
+>  
+>  	phy_count = of_property_count_strings(np, "phy-names");
+>  	if (phy_count < 0) {
+> 
+> 
 > 
