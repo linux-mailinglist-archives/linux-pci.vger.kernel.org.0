@@ -2,120 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DBC101C5711
-	for <lists+linux-pci@lfdr.de>; Tue,  5 May 2020 15:35:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 170591C5726
+	for <lists+linux-pci@lfdr.de>; Tue,  5 May 2020 15:38:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728608AbgEENf6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 May 2020 09:35:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52568 "EHLO mail.kernel.org"
+        id S1728912AbgEENiP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 May 2020 09:38:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728954AbgEENf6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 5 May 2020 09:35:58 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1728608AbgEENiP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 5 May 2020 09:38:15 -0400
+Received: from localhost (mobile-166-175-56-67.mycingular.net [166.175.56.67])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4E62206A5;
-        Tue,  5 May 2020 13:35:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E655A206A5;
+        Tue,  5 May 2020 13:38:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588685758;
-        bh=27eegcfN4OCPFz8Eg3QszwZbxwkuazdL8Z4GFlVGgsc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vqtExeeaUnSviGJmZkNmbJ6Gn/s2RKKtdHtQdFsbPTHdXw+HyZ9OVK5RAdxltmRQG
-         jVJjsOGMfvCI/WGbVQ5zHdvfKgTgaX2fnfB2z5y9vZhl75mVcFbfArkyRk0aowa72w
-         jhu7JDiZmh5qT097JYnQM5NPjFPBnbFY2zULRZrc=
-Date:   Tue, 5 May 2020 15:35:55 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Aman Sharma <amanharitsh123@gmail.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v2 1/2] driver core: platform: Clarify that IRQ 0 is
- invalid
-Message-ID: <20200505133555.GA529259@kroah.com>
-References: <20200504190721.GA2810934@kroah.com>
- <20200504222659.GA296947@bjorn-Precision-5520>
+        s=default; t=1588685894;
+        bh=qB4MmpYPSXsyc2JhZZVOek3rhd8rGZO3tZNAIqqMSJA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Le6NhDtclW5LGRJrRy7Qzv/jlEVt//5Dt3C71PuKpWfSMbRV9LrZB36geFAsHfb+N
+         26468VXZRb09dlxfiirF2B0OustZ4G9G8RkkmxEZHLhcwia3btfOL+6F0oiqDN5+ro
+         MN8hqwRGpRS+Q1BY1O+t8UwBYP0AY08Ma6jLgNOE=
+Date:   Tue, 5 May 2020 08:38:12 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     bhelgaas@google.com, Heiner Kallweit <hkallweit1@gmail.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Krzysztof Wilczynski <kw@linux.com>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] PCI/ASPM: Enable ASPM for root complex <-> bridge <->
+ bridge case
+Message-ID: <20200505133812.GA353121@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200504222659.GA296947@bjorn-Precision-5520>
+In-Reply-To: <20200505122801.12903-1-kai.heng.feng@canonical.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 04, 2020 at 05:26:59PM -0500, Bjorn Helgaas wrote:
-> On Mon, May 04, 2020 at 09:07:21PM +0200, Greg Kroah-Hartman wrote:
-> > On Mon, May 04, 2020 at 01:08:22PM -0500, Bjorn Helgaas wrote:
-> > > On Sat, May 02, 2020 at 08:15:37AM +0200, Greg Kroah-Hartman wrote:
-> > > > On Fri, May 01, 2020 at 05:40:41PM -0500, Bjorn Helgaas wrote:
-> > > > > From: Bjorn Helgaas <bhelgaas@google.com>
-> > > > > 
-> > > > > These interfaces return a negative error number or an IRQ:
-> > > > > 
-> > > > >   platform_get_irq()
-> > > > >   platform_get_irq_optional()
-> > > > >   platform_get_irq_byname()
-> > > > >   platform_get_irq_byname_optional()
-> > > > > 
-> > > > > The function comments suggest checking for error like this:
-> > > > > 
-> > > > >   irq = platform_get_irq(...);
-> > > > >   if (irq < 0)
-> > > > >     return irq;
-> > > > > 
-> > > > > which is what most callers (~900 of 1400) do, so it's implicit
-> > > > > that IRQ 0 is invalid.  But some callers check for "irq <= 0",
-> > > > > and it's not obvious from the source that we never return an
-> > > > > IRQ 0.
-> > > > > 
-> > > > > Make this more explicit by updating the comments to say that
-> > > > > an IRQ number is always non-zero and adding a WARN() if we
-> > > > > ever do return zero.  If we do return IRQ 0, it likely
-> > > > > indicates a bug in the arch-specific parts of
-> > > > > platform_get_irq().
-> > > > 
-> > > > I worry about adding WARN() as there are systems that do
-> > > > panic_on_warn() and syzbot trips over this as well.  I don't
-> > > > think that for this issue it would be a problem, but what really
-> > > > is this warning about that someone could do anything with?
-> > > > 
-> > > > Other than that minor thing, this looks good to me, thanks for
-> > > > finally clearing this up.
-> > > 
-> > > What I'm concerned about is an arch that returns 0.  Most drivers
-> > > don't check for 0 so they'll just try to use it, and things will
-> > > fail in some obscure way.  My assumption is that if there really
-> > > is no IRQ, we should return -ENOENT or similar instead of 0.
-> > > 
-> > > I could be convinced that it's not worth warning about at all, or
-> > > we could do something like the following:
-> > > 
-> > > diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-> > > index 084cf1d23d3f..4afa5875e14d 100644
-> > > --- a/drivers/base/platform.c
-> > > +++ b/drivers/base/platform.c
-> > > @@ -220,7 +220,11 @@ int platform_get_irq_optional(struct platform_device *dev, unsigned int num)
-> > >  	ret = -ENXIO;
-> > >  #endif
-> > >  out:
-> > > -	WARN(ret == 0, "0 is an invalid IRQ number\n");
-> > > +	/* Returning zero here is likely a bug in the arch IRQ code */
-> > > +	if (ret == 0) {
-> > > +		pr_warn("0 is an invalid IRQ number\n");
-> > > +		dump_stack();
-> > > +	}
-> > >  	return ret;
-> > >  }
-> > > ...
-> 
-> > I like that, but you said this is something that the platform people
-> > should only see when bringing up a new system, so maybe the WARN() is
-> > fine.  It's not user-triggerable, so your original is ok.
-> 
-> Is that an ack?  Thomas, any thoughts?
+On Tue, May 05, 2020 at 08:27:59PM +0800, Kai-Heng Feng wrote:
+> The TI PCIe-to-PCI bridge prevents the Intel SoC from entering power
+> state deeper than PC3 due to disabled ASPM, consumes lots of unnecessary
+> power. On Windows ASPM L1 is enabled on the device and its upstream
+> bridge, so it can make the Intel SoC reach PC8 or PC10 to save lots of
+> power.
 
-Sorry, yes:
+The above is a benefit, but leading off with it suggests that this
+change is specifically for that config, which it isn't.
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Currently, ASPM is disabled if downstream has bridge function. It was
+> introduced by commit 7d715a6c1ae5 ("PCI: add PCI Express ASPM support").
+> The commit introduced PCIe ASPM support, but didn't explain why ASPM
+> needs to be in that case.
+
+s/needs to be in that case/needs to be disabled in that case/ ?
+
+> So relax the condition a bit to let bridge which connects to root
+> complex enables ASPM, instead of removing it completely, to avoid
+> regression.
+
+If this is a regression, that means it used to work correctly.  So are
+you saying 7d715a6c1ae5^ works correctly?  That seems doubtful since
+7d715a6c1ae5 appeared in v2.6.26 and added ASPM support in the first
+place.
+
+> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207571
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> ---
+>  drivers/pci/pcie/aspm.c | 14 ++++++++------
+>  1 file changed, 8 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> index 2378ed692534..af5e22d78101 100644
+> --- a/drivers/pci/pcie/aspm.c
+> +++ b/drivers/pci/pcie/aspm.c
+> @@ -629,13 +629,15 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+>  	/* Setup initial capable state. Will be updated later */
+>  	link->aspm_capable = link->aspm_support;
+>  	/*
+> -	 * If the downstream component has pci bridge function, don't
+> -	 * do ASPM for now.
+
+I agree, that comment is missing the essential information about *why*
+we don't do ASPM.
+
+> +	 * If upstream bridge isn't connected to root complex and the
+> +	 * downstream component has pci bridge function, don't do ASPM for now.
+
+But this comment just perpetuates it and makes the special case even
+more special.  I think we should either remove that special case
+completely or figure out what the real issue is.
+
+I know we weren't always very good about computing the acceptable
+latencies (and we still don't handle LTR correctly, though that's an
+L1 Substates issue that wouldn't have applied in the 7d715a6c1ae5
+timeframe).
+
+>  	 */
+> -	list_for_each_entry(child, &linkbus->devices, bus_list) {
+> -		if (pci_pcie_type(child) == PCI_EXP_TYPE_PCI_BRIDGE) {
+> -			link->aspm_disable = ASPM_STATE_ALL;
+> -			break;
+> +	if (parent->bus->parent) {
+> +		list_for_each_entry(child, &linkbus->devices, bus_list) {
+> +			if (pci_pcie_type(child) == PCI_EXP_TYPE_PCI_BRIDGE) {
+> +				link->aspm_disable = ASPM_STATE_ALL;
+> +				break;
+> +			}
+>  		}
+>  	}
+>  
+> -- 
+> 2.17.1
+> 
