@@ -2,142 +2,166 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A2F41C5ACC
-	for <lists+linux-pci@lfdr.de>; Tue,  5 May 2020 17:15:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A7DA1C5B78
+	for <lists+linux-pci@lfdr.de>; Tue,  5 May 2020 17:34:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729933AbgEEPPh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 May 2020 11:15:37 -0400
-Received: from mga11.intel.com ([192.55.52.93]:20960 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729814AbgEEPPh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 5 May 2020 11:15:37 -0400
-IronPort-SDR: qYfgMSE1ZOVyoy0vb9MX3/8oxUuDmt9+Lqe4dvN4oo1bwS3hFQ3EWWnEQ/LKhSA/ia+DRzbhAL
- b3+xeIVOXRJA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2020 08:15:36 -0700
-IronPort-SDR: 3cdTnJXA/w29RQMHFcA9W1TjXC+gEg+UH2QP0tqMbsAzyThNWuyYvhdFx9gf9U2iUU4btjFfQa
- tZdKZDsRcLfw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,355,1583222400"; 
-   d="scan'208";a="461425889"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga006.fm.intel.com with ESMTP; 05 May 2020 08:15:36 -0700
-Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.7.201.137])
-        by linux.intel.com (Postfix) with ESMTP id 0FE8058048A;
-        Tue,  5 May 2020 08:15:36 -0700 (PDT)
-Message-ID: <fb99d5d1fc400134ed152ebd6ecd068fe6343437.camel@linux.intel.com>
-Subject: Re: [PATCH 2/3] mfd: Intel Platform Monitoring Technology support
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        alexander.h.duyck@intel.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Date:   Tue, 05 May 2020 08:15:35 -0700
-In-Reply-To: <CAHp75VcX=W3RGZpDVMDot+yfXH-N=gE=Ny7wSTdk33u8MUPjsg@mail.gmail.com>
-References: <20200505013206.11223-1-david.e.box@linux.intel.com>
-         <20200505023149.11630-1-david.e.box@linux.intel.com>
-         <CAHp75VcX=W3RGZpDVMDot+yfXH-N=gE=Ny7wSTdk33u8MUPjsg@mail.gmail.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+        id S1729250AbgEEPeZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 May 2020 11:34:25 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:49774 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729672AbgEEPeY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 May 2020 11:34:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588692862;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=tnbFEV0yzg7DHxDmKfIXizOuP0I8+/dIqAQu+mCixHM=;
+        b=FZp2OOJnm0ssQ7DqTTwYNLEaXiYPtaqx1NrkGSdLi/NxRLeQ9xpwen3lTpBuAFuPUEEgeC
+        k+QU5W2bDB5fbvBRBHGWqHbvSVjfrBA9czNFJ9Ieb7saC78PWn2rue9PNd+lTQEDlaYkUq
+        mDMyMrLPtpx+hGH4QzbLWPDxtZmaSjQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-204-q6FCn2JzMkCHeL88OvURcA-1; Tue, 05 May 2020 11:34:18 -0400
+X-MC-Unique: q6FCn2JzMkCHeL88OvURcA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7EE9D107ACCA;
+        Tue,  5 May 2020 15:34:16 +0000 (UTC)
+Received: from x1.home (ovpn-113-95.phx2.redhat.com [10.3.113.95])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6FA006061C;
+        Tue,  5 May 2020 15:34:15 +0000 (UTC)
+Date:   Tue, 5 May 2020 09:34:14 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     "Raj, Ashok" <ashok.raj@intel.com>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Darrel Goeddel <DGoeddel@forcepoint.com>,
+        Mark Scott <mscott@forcepoint.com>,
+        Romil Sharma <rsharma@forcepoint.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: Re: [PATCH] iommu: Relax ACS requirement for RCiEP devices.
+Message-ID: <20200505093414.6bae52e0@x1.home>
+In-Reply-To: <20200505145605.GA13690@otc-nc-03>
+References: <1588653736-10835-1-git-send-email-ashok.raj@intel.com>
+        <20200504231936.2bc07fe3@x1.home>
+        <20200505061107.GA22974@araj-mobl1.jf.intel.com>
+        <20200505080514.01153835@x1.home>
+        <20200505145605.GA13690@otc-nc-03>
+Organization: Red Hat
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 2020-05-05 at 12:02 +0300, Andy Shevchenko wrote:
-> On Tue, May 5, 2020 at 5:32 AM David E. Box <
-> david.e.box@linux.intel.com> wrote:
-> > Intel Platform Monitoring Technology (PMT) is an architecture for
-> > enumerating and accessing hardware monitoring facilities. PMT
-> > supports
-> > multiple types of monitoring capabilities. Capabilities are
-> > discovered
-> > using PCIe DVSEC with the Intel VID. Each capability is discovered
-> > as a
-> > separate DVSEC instance in a device's config space. This driver
-> > uses MFD to
-> > manage the creation of platform devices for each type so that they
-> > may be
-> > controlled by their own drivers (to be introduced).  Support is
-> > included
-> > for the 3 current capability types, Telemetry, Watcher, and
-> > Crashlog. The
-> > features are available on new Intel platforms starting from Tiger
-> > Lake for
-> > which support is added. Tiger Lake however will not support Watcher
-> > and
-> > Crashlog even though the capabilities appear on the device. So add
-> > a quirk
-> > facility and use it to disable them.
-> 
-> ...
-> 
-> >  include/linux/intel-dvsec.h |  44 +++++++++
-> 
-> I guess it's no go for a such header, since we may end up with tons
-> of
-> a such. Perhaps simple pcie-dvsec.h ?
+On Tue, 5 May 2020 07:56:06 -0700
+"Raj, Ashok" <ashok.raj@intel.com> wrote:
 
-Too general. Nothing in here applies to all PCIE DVSEC capabilities.
-The file describes only the vendor defined space in a DVSEC region.
-
-> 
-> ...
-> 
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -8783,6 +8783,11 @@ S:       Maintained
-> >  F:     arch/x86/include/asm/intel_telemetry.h
-> >  F:     drivers/platform/x86/intel_telemetry*
+> On Tue, May 05, 2020 at 08:05:14AM -0600, Alex Williamson wrote:
+> > On Mon, 4 May 2020 23:11:07 -0700
+> > "Raj, Ashok" <ashok.raj@intel.com> wrote:
+> >   
+> > > Hi Alex
+> > > 
+> > > + Joerg, accidently missed in the Cc.
+> > > 
+> > > On Mon, May 04, 2020 at 11:19:36PM -0600, Alex Williamson wrote:  
+> > > > On Mon,  4 May 2020 21:42:16 -0700
+> > > > Ashok Raj <ashok.raj@intel.com> wrote:
+> > > >     
+> > > > > PCIe Spec recommends we can relax ACS requirement for RCIEP devices.
+> > > > > 
+> > > > > PCIe 5.0 Specification.
+> > > > > 6.12 Access Control Services (ACS)
+> > > > > Implementation of ACS in RCiEPs is permitted but not required. It is
+> > > > > explicitly permitted that, within a single Root Complex, some RCiEPs
+> > > > > implement ACS and some do not. It is strongly recommended that Root Complex
+> > > > > implementations ensure that all accesses originating from RCiEPs
+> > > > > (PFs and VFs) without ACS capability are first subjected to processing by
+> > > > > the Translation Agent (TA) in the Root Complex before further decoding and
+> > > > > processing. The details of such Root Complex handling are outside the scope
+> > > > > of this specification.
+> > > > >   
+> > > > 
+> > > > Is the language here really strong enough to make this change?  ACS is
+> > > > an optional feature, so being permitted but not required is rather
+> > > > meaningless.  The spec is also specifically avoiding the words "must"
+> > > > or "shall" and even when emphasized with "strongly", we still only have
+> > > > a recommendation that may or may not be honored.  This seems like a
+> > > > weak basis for assuming that RCiEPs universally honor this
+> > > > recommendation.  Thanks,
+> > > >     
+> > > 
+> > > We are speaking about PCIe spec, where people write it about 5 years ahead
+> > > and every vendor tries to massage their product behavior with vague
+> > > words like this..  :)
+> > > 
+> > > But honestly for any any RCiEP, or even integrated endpoints, there 
+> > > is no way to send them except up north. These aren't behind a RP.  
 > > 
-> > +INTEL PMT DRIVER
-> > +M:     "David E. Box" <david.e.box@linux.intel.com>
-> > +S:     Maintained
-> > +F:     drivers/mfd/intel_pmt.c
+> > But they are multi-function devices and the spec doesn't define routing
+> > within multifunction packages.  A single function RCiEP will already be
+> > assumed isolated within its own group.  
 > 
-> I believe you forgot to run parse-maintainers.pl --order
-> --input=MAINTAINERS --output=MAINTAINERS
+> That's right. The other two devices only have legacy PCI headers. So 
+> they can't claim to be RCiEP's but just integrated endpoints. The legacy
+> devices don't even have a PCIe header.
 > 
-> ...
+> I honestly don't know why these are groped as MFD's in the first place.
 > 
-> > +       info = devm_kmemdup(&pdev->dev, (void *)id->driver_data,
-> > sizeof(*info),
-> > +                           GFP_KERNEL);
-> > +
+> >    
+> > > I did check with couple folks who are part of the SIG, and seem to agree
+> > > that ACS treatment for RCiEP's doesn't mean much. 
+> > > 
+> > > I understand the language isn't strong, but it doesn't seem like ACS should
+> > > be a strong requirement for RCiEP's and reasonable to relax.
+> > > 
+> > > What are your thoughts?   
+> > 
+> > I think hardware vendors have ACS at their disposal to clarify when
+> > isolation is provided, otherwise vendors can submit quirks, but I don't
+> > see that the "strongly recommended" phrasing is sufficient to assume
+> > isolation between multifunction RCiEPs.  Thanks,  
 > 
-> Extra blank line.
+> You point is that integrated MFD endpoints, without ACS, there is no 
+> gaurantee to SW that they are isolated.
 > 
-> > +       if (!info)
-> > +               return -ENOMEM;
-> > +
-> > +       while ((pos = pci_find_next_ext_capability(pdev, pos,
-> > PCI_EXT_CAP_ID_DVSEC))) {
-> > +               pci_read_config_word(pdev, pos + PCI_DVSEC_HEADER1,
-> > &vid);
-> > +               if (vid != PCI_VENDOR_ID_INTEL)
-> > +                       continue;
+> As far as a quirk, do you think:
+> 	- a cmdline optput for integrated endpoints, and RCiEP's suffice?
+> 	  along with a compile time default that is strict enforcement
+> 	- typical vid/did type exception list?
 > 
-> Perhaps a candidate for for_each_vendor_cap() macro in pcie-dvsec.h.
-> Or how is it done for the rest of capabilities?
-> 
-> > +       }
-> 
-> ...
-> 
-> > +static const struct pci_device_id pmt_pci_ids[] = {
-> > +       /* TGL */
-> > +       { PCI_VDEVICE(INTEL, 0x9a0d), (kernel_ulong_t)&tgl_info },
-> 
-> PCI_DEVICE_DATA()?
+> A more generic way to ask for exception would be scalable until we can stop
+> those type of integrated devices. Or we need to maintain these device lists
+> for eternity. 
 
-Ack on the rest of the changes.
+I don't think the language in the spec is anything sufficient to handle
+RCiEP uniquely.  We've previously rejected kernel command line opt-outs
+for ACS, and the extent to which those patches still float around the
+user community and are blindly used to separate IOMMU groups are a
+testament to the failure of this approach.  Users do not have a basis
+for enabling this sort of opt-out.  The benefit is obvious in the IOMMU
+grouping, but the risk is entirely unknown.  A kconfig option is even
+worse as that means if you consume a downstream kernel, the downstream
+maintainers might have decided universally that isolation is less
+important than functionality.
+
+I think the only solution is that the hardware vendors need to step up
+to indicate where devices are isolated.  The hardware can do this
+itself by implementing ACS, otherwise we need quirks.  I think we've
+also generally been reluctant to accept quirks that provide a blanket
+opt-out for a vendor because doing so is akin to trying to predict the
+future (determining the behavior of all current and previous hardware
+is generally a sufficiently impossible task already).  Perhaps if a
+vendor has a published internal policy regarding RCiEP isolation and is
+willing to stand by a quirk, there might be room to negotiate.  Thanks,
+
+Alex
 
