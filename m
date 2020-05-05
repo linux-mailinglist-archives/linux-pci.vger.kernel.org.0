@@ -2,79 +2,159 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C3D161C5A48
-	for <lists+linux-pci@lfdr.de>; Tue,  5 May 2020 17:00:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 60D4D1C5A68
+	for <lists+linux-pci@lfdr.de>; Tue,  5 May 2020 17:03:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729301AbgEEPAa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 May 2020 11:00:30 -0400
-Received: from mga17.intel.com ([192.55.52.151]:9436 "EHLO mga17.intel.com"
+        id S1729808AbgEEPDX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 May 2020 11:03:23 -0400
+Received: from foss.arm.com ([217.140.110.172]:42644 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729235AbgEEPAa (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 5 May 2020 11:00:30 -0400
-IronPort-SDR: UkgUxOjEMrlqM7SMObA7/TEM06wS/tTb7mdlZkoR62YOx+2HBMrrAZaSpPDOG3nfM243Dukk3/
- N1cuA5y5BSVg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2020 08:00:29 -0700
-IronPort-SDR: qEd+L4dnkzbKUZTLsOk9W9F5SOQpgrAW/lZ94JgjXqELHPDyNVeMHqidivc1GBS7NoSacJjEDy
- 5xupdVqsZ8Sg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,355,1583222400"; 
-   d="scan'208";a="461419689"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga006.fm.intel.com with ESMTP; 05 May 2020 08:00:29 -0700
-Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.7.201.137])
-        by linux.intel.com (Postfix) with ESMTP id 73A6658048A;
-        Tue,  5 May 2020 08:00:29 -0700 (PDT)
-Message-ID: <b2c9bfa6a93ba504f36f64ed9c860d67ff8839e6.camel@linux.intel.com>
-Subject: Re: [PATCH 1/3] pci: Add Designated Vendor Specific Capability
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        alexander.h.duyck@intel.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org
-Date:   Tue, 05 May 2020 08:00:29 -0700
-In-Reply-To: <CAHp75VcAA3DmjZnnpg=XdiKWtWWZBXeOguqEC7JSNYZmawCYSg@mail.gmail.com>
-References: <20200505013206.11223-1-david.e.box@linux.intel.com>
-         <20200505013206.11223-2-david.e.box@linux.intel.com>
-         <CAHp75VcAA3DmjZnnpg=XdiKWtWWZBXeOguqEC7JSNYZmawCYSg@mail.gmail.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+        id S1729832AbgEEPDX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 5 May 2020 11:03:23 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B10C01FB;
+        Tue,  5 May 2020 08:03:22 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2B4BB3F68F;
+        Tue,  5 May 2020 08:03:21 -0700 (PDT)
+Date:   Tue, 5 May 2020 16:03:15 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Wei Hu <weh@microsoft.com>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, robh@kernel.org, bhelgaas@google.com,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, decui@microsoft.com,
+        mikelley@microsoft.com
+Subject: Re: [PATCH v2 1/2] PCI: hv: Fix the PCI HyperV probe failure path to
+ release resource properly
+Message-ID: <20200505150315.GA16228@e121166-lin.cambridge.arm.com>
+References: <20200501053617.24689-1-weh@microsoft.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200501053617.24689-1-weh@microsoft.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 2020-05-05 at 11:49 +0300, Andy Shevchenko wrote:
-> On Tue, May 5, 2020 at 4:32 AM David E. Box <
-> david.e.box@linux.intel.com> wrote:
-> > Add pcie dvsec extended capability id along with helper macros to
-> 
-> pcie -> PCIe
-> 
-> dvsec -> DVSEC (but here I'm not sure, what's official abbreviation
-> for this?)
+On Fri, May 01, 2020 at 01:36:17PM +0800, Wei Hu wrote:
+> Some error cases in hv_pci_probe() were not handled. Fix these error
+> paths to release the resourses and clean up the state properly.
 
-Okay. DVSEC is used in the ECN. I'll spell it here out as well.
+This patch does more than that. It adds a variable to store the
+number of slots actually allocated - I presume to free only
+allocated on slots on the exit path.
 
-> 
-> > retrieve information from the headers.
-> 
-> 
-> > https://members.pcisig.com/wg/PCI-SIG/document/12335
-> 
-> Perhaps
-> 
-> DocLink: ...
-> 
-> (as a tag)
+Two patches required I am afraid.
 
-Yes. Forgot to add this.
+> Signed-off-by: Wei Hu <weh@microsoft.com>
+> ---
+>  drivers/pci/controller/pci-hyperv.c | 20 ++++++++++++++++----
+>  1 file changed, 16 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index e15022ff63e3..e6fac0187722 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -480,6 +480,9 @@ struct hv_pcibus_device {
+>  
+>  	struct workqueue_struct *wq;
+>  
+> +	/* Highest slot of child device with resources allocated */
+> +	int wslot_res_allocated;
 
+I don't understand why you need an int rather than a u32.
+
+Furthermore, I think a bitmap is more appropriate for what this
+variable is used for.
+
+> +
+>  	/* hypercall arg, must not cross page boundary */
+>  	struct hv_retarget_device_interrupt retarget_msi_interrupt_params;
+>  
+> @@ -2847,7 +2850,7 @@ static int hv_send_resources_allocated(struct hv_device *hdev)
+>  	struct hv_pci_dev *hpdev;
+>  	struct pci_packet *pkt;
+>  	size_t size_res;
+> -	u32 wslot;
+> +	int wslot;
+>  	int ret;
+>  
+>  	size_res = (hbus->protocol_version < PCI_PROTOCOL_VERSION_1_2)
+> @@ -2900,6 +2903,8 @@ static int hv_send_resources_allocated(struct hv_device *hdev)
+>  				comp_pkt.completion_status);
+>  			break;
+>  		}
+> +
+> +		hbus->wslot_res_allocated = wslot;
+>  	}
+>  
+>  	kfree(pkt);
+> @@ -2918,10 +2923,10 @@ static int hv_send_resources_released(struct hv_device *hdev)
+>  	struct hv_pcibus_device *hbus = hv_get_drvdata(hdev);
+>  	struct pci_child_message pkt;
+>  	struct hv_pci_dev *hpdev;
+> -	u32 wslot;
+> +	int wslot;
+>  	int ret;
+>  
+> -	for (wslot = 0; wslot < 256; wslot++) {
+> +	for (wslot = hbus->wslot_res_allocated; wslot >= 0; wslot--) {
+>  		hpdev = get_pcichild_wslot(hbus, wslot);
+>  		if (!hpdev)
+>  			continue;
+> @@ -2936,8 +2941,12 @@ static int hv_send_resources_released(struct hv_device *hdev)
+>  				       VM_PKT_DATA_INBAND, 0);
+>  		if (ret)
+>  			return ret;
+> +
+> +		hbus->wslot_res_allocated = wslot - 1;
+
+Do you really need to set it at every loop iteration ?
+
+Moreover, I think a bitmap is better suited for what you are doing,
+given that you may skip some loop indexes on !hpdev.
+
+>  	}
+>  
+> +	hbus->wslot_res_allocated = -1;
+> +
+>  	return 0;
+>  }
+>  
+> @@ -3037,6 +3046,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+>  	if (!hbus)
+>  		return -ENOMEM;
+>  	hbus->state = hv_pcibus_init;
+> +	hbus->wslot_res_allocated = -1;
+>  
+>  	/*
+>  	 * The PCI bus "domain" is what is called "segment" in ACPI and other
+> @@ -3136,7 +3146,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+>  
+>  	ret = hv_pci_allocate_bridge_windows(hbus);
+>  	if (ret)
+> -		goto free_irq_domain;
+> +		goto exit_d0;
+>  
+>  	ret = hv_send_resources_allocated(hdev);
+>  	if (ret)
+> @@ -3154,6 +3164,8 @@ static int hv_pci_probe(struct hv_device *hdev,
+>  
+>  free_windows:
+>  	hv_pci_free_bridge_windows(hbus);
+> +exit_d0:
+> +	(void) hv_pci_bus_exit(hdev, true);
+
+Remove the (void) cast.
+
+Lorenzo
+
+>  free_irq_domain:
+>  	irq_domain_remove(hbus->irq_domain);
+>  free_fwnode:
+> -- 
+> 2.20.1
+> 
