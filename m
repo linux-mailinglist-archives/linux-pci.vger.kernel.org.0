@@ -2,142 +2,227 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C01511C61D8
-	for <lists+linux-pci@lfdr.de>; Tue,  5 May 2020 22:16:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5883C1C62A1
+	for <lists+linux-pci@lfdr.de>; Tue,  5 May 2020 23:09:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728584AbgEEUQS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 May 2020 16:16:18 -0400
-Received: from mga07.intel.com ([134.134.136.100]:17834 "EHLO mga07.intel.com"
+        id S1728076AbgEEVJQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 May 2020 17:09:16 -0400
+Received: from mga01.intel.com ([192.55.52.88]:40999 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727785AbgEEUQR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 5 May 2020 16:16:17 -0400
-IronPort-SDR: Ed3clJRLkSEFP9PsnuTp4NXbordS9j25n90/QdN+VkhOzYvUx4aE84Zq7mvDtJZ20dY/IyTZhw
- tNsiipAbmlDw==
+        id S1726350AbgEEVJP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 5 May 2020 17:09:15 -0400
+IronPort-SDR: l6AVyi6acyij8Bbd/3UDWHcHEFvyAaUbpT+MFH8DrHCjRkjDViEWkESDocEeKFCBWBnmMdNMuO
+ fA7rnh4+UDWg==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2020 13:16:16 -0700
-IronPort-SDR: +PMTPGEsUOJ8I/GGDGQrnbeGVvU8kXGjPRg/T/JvFXytEtiIyLN7zQqY2UWeLl1FjMUzGgCHYg
- a+XoYrFq/Yqg==
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2020 14:09:15 -0700
+IronPort-SDR: tR5H6gfso9+YUtdMqdKx1tjSAcYenZZWDu+V7lyzZxdScza+kgvEZaYMjzGNsap61llwsCPMCl
+ YcQvDc83Olpw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,356,1583222400"; 
-   d="scan'208";a="251004329"
-Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.25])
-  by fmsmga008.fm.intel.com with ESMTP; 05 May 2020 13:16:16 -0700
-Date:   Tue, 5 May 2020 13:16:16 -0700
-From:   "Raj, Ashok" <ashok.raj@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     "Raj, Ashok" <ashok.raj@linux.intel.com>,
-        Evan Green <evgreen@chromium.org>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>, x86@kernel.org,
-        linux-pci <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Ghorai, Sukumar" <sukumar.ghorai@intel.com>,
-        "Amara, Madhusudanarao" <madhusudanarao.amara@intel.com>,
-        "Nandamuri, Srikanth" <srikanth.nandamuri@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: MSI interrupt for xhci still lost on 5.6-rc6 after cpu hotplug
-Message-ID: <20200505201616.GA15481@otc-nc-03>
-References: <20200501184326.GA17961@araj-mobl1.jf.intel.com>
- <878si6rx7f.fsf@nanos.tec.linutronix.de>
+   d="scan'208";a="434639700"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga005.jf.intel.com with ESMTP; 05 May 2020 14:09:15 -0700
+Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.7.201.137])
+        by linux.intel.com (Postfix) with ESMTP id 7283F580378;
+        Tue,  5 May 2020 14:09:15 -0700 (PDT)
+Message-ID: <dabb105d548746f26608c5a19b6b8529cf5529b8.camel@linux.intel.com>
+Subject: Re: [PATCH 3/3] platform/x86: Intel PMT Telemetry capability driver
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        alexander.h.duyck@intel.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Date:   Tue, 05 May 2020 14:09:15 -0700
+In-Reply-To: <CAHp75VdnVg7q-Nr-3cO-NyKzk0ckfauOso3yDM4qUF3ofSK_VQ@mail.gmail.com>
+References: <20200505013206.11223-1-david.e.box@linux.intel.com>
+         <20200505023149.11630-1-david.e.box@linux.intel.com>
+         <20200505023149.11630-2-david.e.box@linux.intel.com>
+         <CAHp75VdnVg7q-Nr-3cO-NyKzk0ckfauOso3yDM4qUF3ofSK_VQ@mail.gmail.com>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <878si6rx7f.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, May 05, 2020 at 09:36:04PM +0200, Thomas Gleixner wrote:
-> Ashok,
+On Tue, 2020-05-05 at 16:49 +0300, Andy Shevchenko wrote:
+> On Tue, May 5, 2020 at 5:32 AM David E. Box <
+> david.e.box@linux.intel.com> wrote:
 > 
+> ...
 > 
-> > Now the second question with Interrupt Remapping Support:
-> >
-> > intel_ir_set_affinity->intel_ir_reconfigure_irte()-> modify_irte()
-> >
-> > The flush of Interrupt Entry Cache (IEC) should ensure, if any interrupts
-> > were in flight, they made it to the previous CPU, and any new interrupts
-> > must be delivered to the new CPU.
-> >
-> > Question is do we need a check similar to the legacy MSI handling
-> >
-> > 	if (lapic_vector_set_in_irr())
-> > 	    handle interrupt? 
-> >
-> > Is there a reason we don't check if the interrupt delivered to previous
-> > CPU in intel_ir_set_affinity()? Or is the send_cleanup_vector() sends
-> > an IPI to perform the cleanup?
-> >
-> > It appears that maybe send_cleanup_vector() sends IPI to the old cpu
-> > and that somehow ensures the device interrupt handler actually getting
-> > called? I lost my track somewhere down there :)
+> > Register mappings are not provided by the driver. Instead, a GUID
+> > is read
+> > from a header for each endpoint. The GUID identifies the device and
+> > is to
+> > be used with an XML, provided by the vendor, to discover the
+> > available set
+> > of metrics and their register mapping.  This allows firmware
+> > updates to
+> > modify the register space without needing to update the driver
+> > every time
+> > with new mappings. Firmware writes a new GUID in this case to
+> > specify the
+> > new mapping.  Software tools with access to the associated XML file
+> > can
+> > then interpret the changes.
 > 
-> The way it works is:
-> 
->     1) New vector on different CPU is allocated
-> 
->     2) New vector is installed
-> 
->     3) When the first interrupt on the new CPU arrives then the cleanup
->        IPI is sent to the previous CPU which tears down the old vector
-> 
-> So if the interrupt is sent to the original CPU just before #2 then this
-> will be correctly handled on that CPU after the set affinity code
-> reenables interrupts.
+> Is old hardware going to support this in the future?
+> (I have in mind Apollo Lake / Broxton)
 
-I'll have this test tried out.. but in msi_set_affinity() the check below
-for lapic_vector_set_in_irr(cfg->vector), this is the new vector correct? 
-don't we want to check for old_cfg.vector instead?
-
-msi_set_affinit ()
-{
-....
-
-
-        unlock_vector_lock();
-
-        /*
-         * Check whether the transition raced with a device interrupt and
-         * is pending in the local APICs IRR. It is safe to do this outside
-         * of vector lock as the irq_desc::lock of this interrupt is still
-         * held and interrupts are disabled: The check is not accessing the
-         * underlying vector store. It's just checking the local APIC's
-         * IRR.
-         */
-        if (lapic_vector_set_in_irr(cfg->vector))
-                irq_data_get_irq_chip(irqd)->irq_retrigger(irqd);
-
+I don't know of any plans for this.
 
 > 
-> Can you try the patch below?
+> > This module manages access to all PMT Telemetry endpoints on a
+> > system,
+> > regardless of the device exporting them. It creates an
+> > intel_pmt_telem
 > 
-> Thanks,
+> Name is not the best we can come up with. Would anyone else use PMT?
+> Would it be vendor-agnostic ABI?
+> (For example, I know that MIPI standardizes tracing protocols, like
+> STM, do we have any plans to standardize this one?)
+
+Not at this time. The technology may be used as a feature on non-Intel
+devices, but it is Intel owned. Hence the use of DVSEC which allows
+hardware to enumerate and get driver support for IP from other vendors.
+
 > 
->         tglx
+> telem -> telemetry.
 > 
-> 8<--------------
->  drivers/pci/msi.c |    2 ++
->  1 file changed, 2 insertions(+)
+> > class to manage the list. For each endpoint, sysfs files provide
+> > GUID and
+> > size information as well as a pointer to the parent device the
+> > telemetry
+> > comes from. Software may discover the association between endpoints
+> > and
+> > devices by iterating through the list in sysfs, or by looking for
+> > the
+> > existence of the class folder under the device of interest.  A
+> > device node
+> > of the same name allows software to then map the telemetry space
+> > for direct
+> > access.
 > 
-> --- a/drivers/pci/msi.c
-> +++ b/drivers/pci/msi.c
-> @@ -323,6 +323,7 @@ void __pci_write_msi_msg(struct msi_desc
->  		writel(msg->address_lo, base + PCI_MSIX_ENTRY_LOWER_ADDR);
->  		writel(msg->address_hi, base + PCI_MSIX_ENTRY_UPPER_ADDR);
->  		writel(msg->data, base + PCI_MSIX_ENTRY_DATA);
-> +		readl(base + PCI_MSIX_ENTRY_DATA);
->  	} else {
->  		int pos = dev->msi_cap;
->  		u16 msgctl;
-> @@ -343,6 +344,7 @@ void __pci_write_msi_msg(struct msi_desc
->  			pci_write_config_word(dev, pos + PCI_MSI_DATA_32,
->  					      msg->data);
->  		}
-> +		pci_read_config_word(dev, pos + PCI_MSI_FLAGS, &msgctl);
->  	}
->  
->  skip:
+> ...
+> 
+> > +       tristate "Intel PMT telemetry driver"
+> 
+> I think user should understand what is it from the title (hint: spell
+> PMT fully).
+> 
+> ...
+> 
+> >  obj-$(CONFIG_PMC_ATOM)                 += pmc_atom.o
+> > +obj-$(CONFIG_INTEL_PMT_TELEM)          += intel_pmt_telem.o
+> 
+> Keep this and Kconfig section in order with the other stuff.
+> 
+> ...
+> 
+> bits.h?
+> 
+> > +#include <linux/cdev.h>
+> > +#include <linux/intel-dvsec.h>
+> > +#include <linux/io-64-nonatomic-lo-hi.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/module.h>
+> > +#include <linux/pci.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/slab.h>
+> > +#include <linux/uaccess.h>
+> > +#include <linux/xarray.h>
+> 
+> ...
+> 
+> > +/* platform device name to bind to driver */
+> > +#define TELEM_DRV_NAME         "pmt_telemetry"
+> 
+> Shouldn't be part of MFD header?
+
+Can place in the dvsec header shared by MFD and drivers.
+
+> 
+> ...
+> 
+> > +#define TELEM_TBIR_MASK                0x7
+> 
+> GENMASK() ?
+> 
+> > +struct pmt_telem_priv {
+> > +       struct device                   *dev;
+> > +       struct intel_dvsec_header       *dvsec;
+> > +       struct telem_header             header;
+> > +       unsigned long                   base_addr;
+> > +       void __iomem                    *disc_table;
+> > +       struct cdev                     cdev;
+> > +       dev_t                           devt;
+> > +       int                             devid;
+> > +};
+> 
+> ...
+> 
+> > +       unsigned long phys = priv->base_addr;
+> > +       unsigned long pfn = PFN_DOWN(phys);
+> > +       unsigned long psize;
+> > +
+> > +       psize = (PFN_UP(priv->base_addr + priv->header.size) - pfn)
+> > * PAGE_SIZE;
+> > +       if (vsize > psize) {
+> > +               dev_err(priv->dev, "Requested mmap size is too
+> > large\n");
+> > +               return -EINVAL;
+> > +       }
+> 
+> ...
+> 
+> 
+> > +static ssize_t guid_show(struct device *dev, struct
+> > device_attribute *attr,
+> > +                        char *buf)
+> > +{
+> > +       struct pmt_telem_priv *priv = dev_get_drvdata(dev);
+> > +
+> > +       return sprintf(buf, "0x%x\n", priv->header.guid);
+> > +}
+> 
+> So, it's not a GUID but rather some custom number? Can we actually do
+> a real GUID / UUID here?
+
+I wish but this is the name it was called. We should have pushed back
+more on this. My concern now in calling the attribute something
+different is that it will not align with public documentation.
+
+...
+
+> 
+> > +       /* Local access and BARID only for now */
+> > +       switch (priv->header.access_type) {
+> > +       case TELEM_ACCESS_LOCAL:
+> > +               if (priv->header.tbir) {
+> > +                       dev_err(&pdev->dev,
+> > +                               "Unsupported BAR index %d for
+> > access type %d\n",
+> > +                               priv->header.tbir, priv-
+> > >header.access_type);
+> > +                       return -EINVAL;
+> > +               }
+> > +               fallthrough;
+> 
+> What's the point?
+
+The next case has the break. That case is only there to validate that
+it's not the default which would be an error. Will switch this to break
+though to make it explicit.
+
+Ack on everything else. Thanks.
+
