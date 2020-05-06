@@ -2,235 +2,281 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 73BEC1C7087
-	for <lists+linux-pci@lfdr.de>; Wed,  6 May 2020 14:43:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 331B21C7194
+	for <lists+linux-pci@lfdr.de>; Wed,  6 May 2020 15:21:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728280AbgEFMnP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 May 2020 08:43:15 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3867 "EHLO huawei.com"
+        id S1728172AbgEFNVl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 May 2020 09:21:41 -0400
+Received: from mail-eopbgr1310117.outbound.protection.outlook.com ([40.107.131.117]:52428
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725887AbgEFMnP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 6 May 2020 08:43:15 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 872B597135142961F3A0;
-        Wed,  6 May 2020 20:43:13 +0800 (CST)
-Received: from localhost.localdomain (10.67.165.24) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 6 May 2020 20:43:05 +0800
-From:   Yicong Yang <yangyicong@hisilicon.com>
-To:     <helgaas@kernel.org>, <linux-pci@vger.kernel.org>
-CC:     <kvalo@codeaurora.org>, <andreas.noever@gmail.com>,
-        <rjw@rjwysocki.net>, <linux-wireless@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <mika.westerberg@linux.intel.com>,
-        <linuxarm@huawei.com>, <yangyicong@hisilicon.com>
-Subject: [PATCH v2] PCI: Use pci_pcie_find_root_port() to get root port
-Date:   Wed, 6 May 2020 20:42:56 +0800
-Message-ID: <1588768976-4852-1-git-send-email-yangyicong@hisilicon.com>
-X-Mailer: git-send-email 2.8.1
+        id S1728090AbgEFNVl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 6 May 2020 09:21:41 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KCCm/CuGPIgXlifHnMVC/khgum6QGtqEqzwP4rktjI523vS5/BLP7LjCSzX9SbDBcvQiyIYLMMMwDGRmSjGkPLwsheCoijTcTFKjLlQpKHPhSB/pw5CYRTyHEkHahiS3ASkXkwxwzctSsXDFonDN4bhnWm1dAeEpZapOoPXriikEAZVQNIvFjxGItQtmiD7lczQ+kS/Kk/et+EtPNn5l9Ttre+KTqOgFP0ud+r1j6FVIAuK67/p/peZki0yBc+NQQXR/lKEh9XymIn252RVkhrwIprmnjzLMcAc1oYVDUfZ5AJRurc2cweKpExvOxUs+2ZIQmN9DWnXjTK5ase5FvA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VQqeicCpdAc0+mUuitr2poiiA5kOfQDjneEu/Hl+xaY=;
+ b=dN3P5+sbJcuyLupUKtPpTaxe76JbxecfcXR4DH1XCpbEJBG6Vk366aE/+mNTMhHiuC6YaLFNgzg5i2t7/qf6oUsG2dlx9xKO/jq6+dX1XYwCNTF86YLPexvi1fslkHB2s0/Bio1B1/SYpy8aRynzwSrIbUqTLpytgGwTfRGs+JKZjMqyMuyMnG1hkfAlvrjOSod0CGADpTnMeNaqlX6G92N79Rsw31VqL9WRXTmJAK165cB74zQoejZJwUGFpVQwFpsRwSVysL+5LyeC/Uy4Uq5mB/OITpBU8B443zpae1A+gWjpqaVb9PwbXh3moBhSnhYzyeAtUjtJ8TcrQQ8YPQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VQqeicCpdAc0+mUuitr2poiiA5kOfQDjneEu/Hl+xaY=;
+ b=ck6DpKrpIYfDCHczBGhceTBd9F2eIpOCneu7V46qLLADp2U2XJUrbYcKjGjc2IHScnunoKhaTcllLxstzHs+Vz7GFr+P4T0FL1WwJvNifhwSsjABxrmhwp+yxzD1tWuDHioUOYJyQJZSXxpnwoRZZZMnV8G042vpaDNzQ4M0juU=
+Received: from SG2P153MB0213.APCP153.PROD.OUTLOOK.COM (2603:1096:4:8c::10) by
+ SG2P153MB0270.APCP153.PROD.OUTLOOK.COM (2603:1096:4:ad::11) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3000.6; Wed, 6 May 2020 13:21:33 +0000
+Received: from SG2P153MB0213.APCP153.PROD.OUTLOOK.COM
+ ([fe80::9979:a66f:c953:ce10]) by SG2P153MB0213.APCP153.PROD.OUTLOOK.COM
+ ([fe80::9979:a66f:c953:ce10%6]) with mapi id 15.20.3000.011; Wed, 6 May 2020
+ 13:21:33 +0000
+From:   Wei Hu <weh@microsoft.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: RE: [PATCH v2 1/2] PCI: hv: Fix the PCI HyperV probe failure path to
+ release resource properly
+Thread-Topic: [PATCH v2 1/2] PCI: hv: Fix the PCI HyperV probe failure path to
+ release resource properly
+Thread-Index: AQHWH3qEBLEBr0YlaECi2yeFzC7HIaiZnaWAgADcDDCAAHUFgIAAE4fg
+Date:   Wed, 6 May 2020 13:21:32 +0000
+Message-ID: <SG2P153MB0213216D3C150AA4758FCBB8BBA40@SG2P153MB0213.APCP153.PROD.OUTLOOK.COM>
+References: <20200501053617.24689-1-weh@microsoft.com>
+ <20200505150315.GA16228@e121166-lin.cambridge.arm.com>
+ <SG2P153MB02136EA9764D340F3D81DF2DBBA40@SG2P153MB0213.APCP153.PROD.OUTLOOK.COM>
+ <20200506110930.GA31068@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20200506110930.GA31068@e121166-lin.cambridge.arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=weh@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-05-06T13:21:31.0626998Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=d44992dc-f522-438b-bf8e-b8ba39ee1998;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: arm.com; dkim=none (message not signed)
+ header.d=none;arm.com; dmarc=none action=none header.from=microsoft.com;
+x-originating-ip: [2404:f801:9000:1a:6feb::496b]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 2ed6245f-36c9-466b-4911-08d7f1c06546
+x-ms-traffictypediagnostic: SG2P153MB0270:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <SG2P153MB0270DF74344A605B1DAD34B1BBA40@SG2P153MB0270.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 03950F25EC
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 7sgRLpsYGz9XQAa2vwsyXN1abnxRg39CClhNzobCyU6hd15bLHeNIwhel09yP0TInxYBgFAit1Rn5BMhF5NQtEgN9yBxYKoD2LHEpUCP9h91atPMZmp/UQT88QNks+d/Igc6H4Zy9NsvQd6/GwJqB/Sa58RYiJA33Nj/PMIdUdBDPrDvc/1ohsqowpg5xUgGiyc52nRHatAbbPp/eUQ44qYXfAh9VQzo30t0yLS3/bIeIbkasgJ/FXvCmxKDDlQ6nLgT9piwDk51asRQwqzcXFiZjRlR3RVXDerNZGHnPmg0V3fKOyQ1yBneQI4nTqK4Ue1wPsEmmKe+Kp87xhd+oUttdJ+z8vxdF67GCCYtlSxBlxVgXHhJoj3ykDZJOxq6MnMZIuTWPTWtPLltIblybikUtWqUscq1dbt+5SOh34tbVgIw1d5upSIMw9fKCEBwU/aqZauMUy95sNy6/JuoIPO1vt7UxUME4jB4gefBolt6rihHpTt0SIZPwnmWZGni5J3TYvECouh4E8ujFpuSIQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SG2P153MB0213.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(346002)(366004)(376002)(396003)(33430700001)(186003)(53546011)(7696005)(6506007)(82950400001)(82960400001)(33656002)(8676002)(8936002)(9686003)(6916009)(55016002)(5660300002)(33440700001)(107886003)(54906003)(316002)(478600001)(10290500003)(86362001)(4326008)(71200400001)(8990500004)(66446008)(66476007)(66946007)(66556008)(64756008)(76116006)(2906002)(52536014);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: RB5R7jPnmoB2m9DHCkIbHOGzMt9/vqF/3Ng2o13RbNI692OMBex44Li0KOq4bmBvhFD/E6GbG+UKyYn5RPQkqHrh1SRKd7aMzZGIp41pQZAFnCWH7mA8GyLMIu1nIQrHX23+/5/UNilg9Xb8gMmoguldX8PbyOjxlOwTvq5bpHZkD54pv6Yg0M+nsZL9AEyeh6wTMCKpyJ8WS2tMR9KotjUSvYFT142T6bjS12EgHE2XZd3rthp3eBTuNNpJrZ0x3A7Gpyh6VSJH+2EjMMzSGtafp7hYW1oaQYCwSyIQuMK9mxQhUDLp58erbRE4BoNyfWluQ7pMiHCYlfPm3csl1L9Vezrs/OV+Akimy0ga1nqfeWIJMgM9DJho4iUegBvv8eppDnMT0ZMsg71Xm1FAEvpJI0G/RXiohegnabiqCbsYBKq8PUhj5OtoI6uAh2KomJojZFD1k3KPW4X+huUluy+kHsF+1YqZkZpAOGp9gIEdaI61yC0NnOLLt7gU50ux4+N5l7PD1F0PG6cBLuyQCsQKvmhjrMf7atQZgxs0TUJ3P2rvdrFIStMRDqgRhz2QEhWNx0JqNAy2Evp3YIIw6iOLcbDl/TPWe9UgnxfktxyeOKzQbI8R1NYmxKImWJ6oKp6OhIOQp0R88KyjX6bLCiNDg16MAbEzmuzBlOOY6o0iAEp+dhnI2X1GlOg9oRUCL4WQKiHZruMJ/OBBEuEjWAgrH6AoBuNleEu3jNP8vFEhjRZ0CvQhpLdqIwwS0WAvNRRjX4Ijw0aDFNKfMbvro8cKKW7A9bkXv+Z/kABejfAEGIGBkuzjTMu/6nLWmQNLt+BoaKrEhwZJuzJAetCchw==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.165.24]
-X-CFilter-Loop: Reflected
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2ed6245f-36c9-466b-4911-08d7f1c06546
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 May 2020 13:21:32.6836
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 4OzGXxDMD4zUFuuDEEKdFzg2L5FH0xMxMzxTLygSbVO+fCn2oh504RiJ14k+xR/QFYMqEoU7y/IyZK338K6kLw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2P153MB0270
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Previously we use pcie_find_root_port() to get root port from a pcie
-device, use pci_find_pcie_root_port() to get root port from a pci
-device, which increase the complexity.
-
-Unify the two functions and use pci_pcie_find_root_port() to get root
-port from both pci device and pcie device. Then there is not need to
-distinguish the type of the device.
-
-Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
-Acked-by: Kalle Valo <kvalo@codeaurora.org> // for wireless
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com> // for thunderbolt
----
-Change since v1:
-- Add Mika's Ack for thunderbolt part
-- Add description for pci_pcie_find_root_port()
-
- drivers/net/wireless/intel/iwlwifi/pcie/trans.c |  2 +-
- drivers/pci/pci-acpi.c                          |  4 ++--
- drivers/pci/pci.c                               | 24 ------------------------
- drivers/pci/pcie/aer_inject.c                   |  2 +-
- drivers/pci/probe.c                             |  2 +-
- drivers/pci/quirks.c                            |  2 +-
- drivers/thunderbolt/switch.c                    |  4 ++--
- include/linux/pci.h                             | 17 ++++++++++-------
- 8 files changed, 18 insertions(+), 39 deletions(-)
-
-diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-index 38d8fe2..556cb8c 100644
---- a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-@@ -158,7 +158,7 @@ void iwl_trans_pcie_dump_regs(struct iwl_trans *trans)
-
- 	/* Print root port AER registers */
- 	pos = 0;
--	pdev = pcie_find_root_port(pdev);
-+	pdev = pci_pcie_find_root_port(pdev);
- 	if (pdev)
- 		pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_ERR);
- 	if (pos) {
-diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-index 0c02d50..9316533 100644
---- a/drivers/pci/pci-acpi.c
-+++ b/drivers/pci/pci-acpi.c
-@@ -246,7 +246,7 @@ static acpi_status decode_type1_hpx_record(union acpi_object *record,
-
- static bool pcie_root_rcb_set(struct pci_dev *dev)
- {
--	struct pci_dev *rp = pcie_find_root_port(dev);
-+	struct pci_dev *rp = pci_pcie_find_root_port(dev);
- 	u16 lnkctl;
-
- 	if (!rp)
-@@ -948,7 +948,7 @@ static bool acpi_pci_bridge_d3(struct pci_dev *dev)
- 	 * Look for a special _DSD property for the root port and if it
- 	 * is set we know the hierarchy behind it supports D3 just fine.
- 	 */
--	root = pci_find_pcie_root_port(dev);
-+	root = pci_pcie_find_root_port(dev);
- 	if (!root)
- 		return false;
-
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index d828ca8..fc5e7b6 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -695,30 +695,6 @@ struct resource *pci_find_resource(struct pci_dev *dev, struct resource *res)
- EXPORT_SYMBOL(pci_find_resource);
-
- /**
-- * pci_find_pcie_root_port - return PCIe Root Port
-- * @dev: PCI device to query
-- *
-- * Traverse up the parent chain and return the PCIe Root Port PCI Device
-- * for a given PCI Device.
-- */
--struct pci_dev *pci_find_pcie_root_port(struct pci_dev *dev)
--{
--	struct pci_dev *bridge, *highest_pcie_bridge = dev;
--
--	bridge = pci_upstream_bridge(dev);
--	while (bridge && pci_is_pcie(bridge)) {
--		highest_pcie_bridge = bridge;
--		bridge = pci_upstream_bridge(bridge);
--	}
--
--	if (pci_pcie_type(highest_pcie_bridge) != PCI_EXP_TYPE_ROOT_PORT)
--		return NULL;
--
--	return highest_pcie_bridge;
--}
--EXPORT_SYMBOL(pci_find_pcie_root_port);
--
--/**
-  * pci_wait_for_pending - wait for @mask bit(s) to clear in status word @pos
-  * @dev: the PCI device to operate on
-  * @pos: config space offset of status word
-diff --git a/drivers/pci/pcie/aer_inject.c b/drivers/pci/pcie/aer_inject.c
-index 6988fe7..c3bfc1b5 100644
---- a/drivers/pci/pcie/aer_inject.c
-+++ b/drivers/pci/pcie/aer_inject.c
-@@ -332,7 +332,7 @@ static int aer_inject(struct aer_error_inj *einj)
- 	dev = pci_get_domain_bus_and_slot(einj->domain, einj->bus, devfn);
- 	if (!dev)
- 		return -ENODEV;
--	rpdev = pcie_find_root_port(dev);
-+	rpdev = pci_pcie_find_root_port(dev);
- 	if (!rpdev) {
- 		pci_err(dev, "Root port not found\n");
- 		ret = -ENODEV;
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 512cb43..50f7733 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -2015,7 +2015,7 @@ static void pci_configure_relaxed_ordering(struct pci_dev *dev)
- 	 * For now, we only deal with Relaxed Ordering issues with Root
- 	 * Ports. Peer-to-Peer DMA is another can of worms.
- 	 */
--	root = pci_find_pcie_root_port(dev);
-+	root = pci_pcie_find_root_port(dev);
- 	if (!root)
- 		return;
-
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 29f473e..ac62675 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -4253,7 +4253,7 @@ DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_AMD, 0x1a02, PCI_CLASS_NOT_DEFINED,
-  */
- static void quirk_disable_root_port_attributes(struct pci_dev *pdev)
- {
--	struct pci_dev *root_port = pci_find_pcie_root_port(pdev);
-+	struct pci_dev *root_port = pci_pcie_find_root_port(pdev);
-
- 	if (!root_port) {
- 		pci_warn(pdev, "PCIe Completion erratum may cause device errors\n");
-diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
-index a2ce990..90844c1 100644
---- a/drivers/thunderbolt/switch.c
-+++ b/drivers/thunderbolt/switch.c
-@@ -263,7 +263,7 @@ static void nvm_authenticate_start_dma_port(struct tb_switch *sw)
- 	 * itself. To be on the safe side keep the root port in D0 during
- 	 * the whole upgrade process.
- 	 */
--	root_port = pci_find_pcie_root_port(sw->tb->nhi->pdev);
-+	root_port = pci_pcie_find_root_port(sw->tb->nhi->pdev);
- 	if (root_port)
- 		pm_runtime_get_noresume(&root_port->dev);
- }
-@@ -272,7 +272,7 @@ static void nvm_authenticate_complete_dma_port(struct tb_switch *sw)
- {
- 	struct pci_dev *root_port;
-
--	root_port = pci_find_pcie_root_port(sw->tb->nhi->pdev);
-+	root_port = pci_pcie_find_root_port(sw->tb->nhi->pdev);
- 	if (root_port)
- 		pm_runtime_put(&root_port->dev);
- }
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 3840a54..51881a1 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -1011,7 +1011,6 @@ void pci_bus_add_device(struct pci_dev *dev);
- void pci_read_bridge_bases(struct pci_bus *child);
- struct resource *pci_find_parent_resource(const struct pci_dev *dev,
- 					  struct resource *res);
--struct pci_dev *pci_find_pcie_root_port(struct pci_dev *dev);
- u8 pci_swizzle_interrupt_pin(const struct pci_dev *dev, u8 pin);
- int pci_get_interrupt_pin(struct pci_dev *dev, struct pci_dev **bridge);
- u8 pci_common_swizzle(struct pci_dev *dev, u8 *pinp);
-@@ -2124,15 +2123,19 @@ static inline int pci_pcie_type(const struct pci_dev *dev)
- 	return (pcie_caps_reg(dev) & PCI_EXP_FLAGS_TYPE) >> 4;
- }
-
--static inline struct pci_dev *pcie_find_root_port(struct pci_dev *dev)
-+/**
-+ * pci_pcie_find_root_port - Get the PCIe root port device
-+ * @dev: PCI device
-+ *
-+ * Traverse up the parent chain and return the PCIe Root Port PCI Device
-+ * for a given PCI/PCIe Device.
-+ */
-+static inline struct pci_dev *pci_pcie_find_root_port(struct pci_dev *dev)
- {
--	while (1) {
--		if (!pci_is_pcie(dev))
--			break;
-+	dev = pci_physfn(dev);
-+	while (dev) {
- 		if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT)
- 			return dev;
--		if (!dev->bus->self)
--			break;
- 		dev = dev->bus->self;
- 	}
- 	return NULL;
---
-2.8.1
-
+VGhhbmtzIGZvciB5b3VyIGVtYWlsLiBTZWUgbXkgY29tbWVudHMgaW5saW5lLg0KDQo+IC0tLS0t
+T3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IExvcmVuem8gUGllcmFsaXNpIDxsb3Jlbnpv
+LnBpZXJhbGlzaUBhcm0uY29tPg0KPiBTZW50OiBXZWRuZXNkYXksIE1heSA2LCAyMDIwIDc6MTAg
+UE0NCj4gVG86IFdlaSBIdSA8d2VoQG1pY3Jvc29mdC5jb20+DQo+IENjOiBLWSBTcmluaXZhc2Fu
+IDxreXNAbWljcm9zb2Z0LmNvbT47IEhhaXlhbmcgWmhhbmcNCj4gPGhhaXlhbmd6QG1pY3Jvc29m
+dC5jb20+OyBTdGVwaGVuIEhlbW1pbmdlciA8c3RoZW1taW5AbWljcm9zb2Z0LmNvbT47DQo+IHdl
+aS5saXVAa2VybmVsLm9yZzsgcm9iaEBrZXJuZWwub3JnOyBiaGVsZ2Fhc0Bnb29nbGUuY29tOyBs
+aW51eC0NCj4gaHlwZXJ2QHZnZXIua2VybmVsLm9yZzsgbGludXgtcGNpQHZnZXIua2VybmVsLm9y
+ZzsgbGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IERleHVhbiBDdWkgPGRlY3VpQG1p
+Y3Jvc29mdC5jb20+OyBNaWNoYWVsIEtlbGxleQ0KPiA8bWlrZWxsZXlAbWljcm9zb2Z0LmNvbT4N
+Cj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MiAxLzJdIFBDSTogaHY6IEZpeCB0aGUgUENJIEh5cGVy
+ViBwcm9iZSBmYWlsdXJlIHBhdGggdG8NCj4gcmVsZWFzZSByZXNvdXJjZSBwcm9wZXJseQ0KPiAN
+Cj4gT24gV2VkLCBNYXkgMDYsIDIwMjAgYXQgMDU6MzY6NDZBTSArMDAwMCwgV2VpIEh1IHdyb3Rl
+Og0KPiA+IEhpIExvcmVuem8sDQo+ID4NCj4gPiBUaGFua3MgZm9yIHlvdXIgcmV2aWV3LiBQbGVh
+c2Ugc2VlIG15IGNvbW1lbnRzIGlubGluZS4NCj4gPg0KPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNz
+YWdlLS0tLS0NCj4gPiA+IEZyb206IExvcmVuem8gUGllcmFsaXNpIDxsb3JlbnpvLnBpZXJhbGlz
+aUBhcm0uY29tPg0KPiA+ID4gU2VudDogVHVlc2RheSwgTWF5IDUsIDIwMjAgMTE6MDMgUE0NCj4g
+PiA+IFRvOiBXZWkgSHUgPHdlaEBtaWNyb3NvZnQuY29tPg0KPiA+ID4gQ2M6IEtZIFNyaW5pdmFz
+YW4gPGt5c0BtaWNyb3NvZnQuY29tPjsgSGFpeWFuZyBaaGFuZw0KPiA+ID4gPGhhaXlhbmd6QG1p
+Y3Jvc29mdC5jb20+OyBTdGVwaGVuIEhlbW1pbmdlcg0KPiA+ID4gPHN0aGVtbWluQG1pY3Jvc29m
+dC5jb20+OyB3ZWkubGl1QGtlcm5lbC5vcmc7IHJvYmhAa2VybmVsLm9yZzsNCj4gPiA+IGJoZWxn
+YWFzQGdvb2dsZS5jb207IGxpbnV4LSBoeXBlcnZAdmdlci5rZXJuZWwub3JnOw0KPiA+ID4gbGlu
+dXgtcGNpQHZnZXIua2VybmVsLm9yZzsgbGludXgtIGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IERl
+eHVhbiBDdWkNCj4gPiA+IDxkZWN1aUBtaWNyb3NvZnQuY29tPjsgTWljaGFlbCBLZWxsZXkgPG1p
+a2VsbGV5QG1pY3Jvc29mdC5jb20+DQo+ID4gPiBTdWJqZWN0OiBSZTogW1BBVENIIHYyIDEvMl0g
+UENJOiBodjogRml4IHRoZSBQQ0kgSHlwZXJWIHByb2JlDQo+ID4gPiBmYWlsdXJlIHBhdGggdG8g
+cmVsZWFzZSByZXNvdXJjZSBwcm9wZXJseQ0KPiA+ID4NCj4gPiA+IE9uIEZyaSwgTWF5IDAxLCAy
+MDIwIGF0IDAxOjM2OjE3UE0gKzA4MDAsIFdlaSBIdSB3cm90ZToNCj4gPiA+ID4gU29tZSBlcnJv
+ciBjYXNlcyBpbiBodl9wY2lfcHJvYmUoKSB3ZXJlIG5vdCBoYW5kbGVkLiBGaXggdGhlc2UNCj4g
+PiA+ID4gZXJyb3IgcGF0aHMgdG8gcmVsZWFzZSB0aGUgcmVzb3Vyc2VzIGFuZCBjbGVhbiB1cCB0
+aGUgc3RhdGUgcHJvcGVybHkuDQo+ID4gPg0KPiA+ID4gVGhpcyBwYXRjaCBkb2VzIG1vcmUgdGhh
+biB0aGF0LiBJdCBhZGRzIGEgdmFyaWFibGUgdG8gc3RvcmUgdGhlDQo+ID4gPiBudW1iZXIgb2Yg
+c2xvdHMgYWN0dWFsbHkgYWxsb2NhdGVkIC0gSSBwcmVzdW1lIHRvIGZyZWUgb25seSBhbGxvY2F0
+ZWQgb24gc2xvdHMNCj4gb24gdGhlIGV4aXQgcGF0aC4NCj4gPiA+DQo+ID4gPiBUd28gcGF0Y2hl
+cyByZXF1aXJlZCBJIGFtIGFmcmFpZC4NCj4gPg0KPiA+IFdlbGwsIGFkZGluZyB0aGlzIHZhcmlh
+YmxlIGlzIG5lZWRlZCB0byBtYWtlIHRoZSBjYWxsIG9mICIodm9pZCkNCj4gaHZfcGNpX2J1c19l
+eGl0KGhkZXYsIHRydWUpIg0KPiANCj4gSSBkb24ndCB1bmRlcnN0YW5kIHdoeSAtIGl0IGlzIG5v
+dCBjbGVhciBmcm9tIHRoZSBjb21taXQgbG9nIGFuZCB0aGUgY29kZSwNCj4gcGxlYXNlIGV4cGxh
+aW4gaXQgc2luY2UgaXQgaXMgbm90IG9idmlvdXMuDQo+IA0KSHZfcGNpX2J1c19leGl0KCkgY2Fs
+bHMgaHZfc2VuZF9yZXNvdXJjZXNfcmVsZWFzZWQoKSB0byByZWxlYXNlIGFsbCBjaGlsZCByZXNv
+dXJjZXMuDQpUaGVzZSBjaGlsZCByZXNvdXJjZXMgd2VyZSBhbGxvY2F0ZWQgaW4gaHZfc2VuZF9y
+ZXNvdXJjZXNfYWxsb2NhdGVkKCkuIA0KSHZfc2VuZF9yZXNvdXJjZXNfYWxsb2NhdGVkKCkgY291
+bGQgZmFpbCBpbiB0aGUgbWlkZGxlLCBsZWF2aW5nIHNvbWUgY2hpbGQgcmVzb3VyY2VzDQphbGxv
+Y2F0ZWQgYW5kIHJlc3Qgbm90LiBXaXRob3V0IGFkZGluZyB0aGlzIHZhcmlhYmxlIHRvIHJlY29y
+ZCB0aGUgaGlnaGVzdCBzbG90IG51bWJlciB0aGF0DQpyZXNvdXJjZSBoYXMgYmVlbiBzdWNjZXNz
+ZnVsbHkgYWxsb2NhdGVkLCBjYWxsaW5nIGh2X3NlbmRfcmVzb3VyY2VzX3JlbGVhc2VkKCkgY291
+bGQgDQpjYXVzZSBzcHVyaW91cyByZXNvdXJjZSByZWxlYXNlIHJlcXVlc3RzIGJlaW5nIHNlbnQg
+dG8gaHlwZXJ2aXNvci4gIA0KDQpUaGlzIGhhZCBiZWVuIGZpbmUgc2luY2UgaHZfcGNpX2J1c19l
+eGl0KCkgd2FzIG5ldmVyIGNhbGxlZCBpbiBlcnJvciBwYXRoIGJlZm9yZSB0aGlzIHBhdGNoIHdh
+cw0KaW50cm9kdWNlZC4gVG8gYWRkIHRoaXMgY2FsbCB0byBjbGVhbiB0aGUgcGNpIHN0YXRlIGlu
+IHRoZSBlcnJvciBwYXRoLCB3ZSBuZWVkIHRvIGtub3cgdGhlIHN0YXJ0aW5nDQpwb2ludCBpbiBj
+aGlsZCBkZXZpY2UgdGhhdCByZXNvdXJjZSBoYXMgbm90IGJlZW4gYWxsb2NhdGVkLiBIZW5jZSB0
+aGlzIHZhcmlhYmxlDQppcyB1c2VkIGluIGh2X3NlbmRfcmVzb3VyY2VzX2FsbG9jYXRlZCgpIHRv
+IHJlY29yZCB0aGlzIHBvaW50IGFuZCBpbg0KaHZfc2VuZF9yZXNvdXJjZV9yZWxlYXNlZCgpIHRv
+IHN0YXJ0IGRlYWxsb2NhdGluZyBjaGlsZCByZXNvdXJjZXMuDQoNCkkgY2FuIGFkZCB0byB0aGUg
+Y29tbWl0IGxvZyBpZiB5b3UgYXJlIGZpbmUgd2l0aCB0aGlzIGV4cGxhbmF0aW9uLiANCiANCj4g
+PiBhdCB0aGUgZW5kIHRvIHdvcmsgYW5kIGNsZWFuIHVwIHRoZSBQQ0kgc3RhdGUgaW4gdGhlIGZh
+aWx1cmUgcGF0aC4NCj4gPiBKdXN0IGFkZGluZyB0aGlzIHZhcmlhYmxlIHdvdWxkIG5vdCBtYWtl
+IGFueSBjaGFuZ2VzLiBTbyBJIHRoaW5rIGl0IG1heSBiZQ0KPiBiZXR0ZXIgdG8gcHV0IHRoZW0g
+aW4gc2luZ2xlIHBhdGNoPw0KPiA+DQo+ID4gPg0KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBXZWkg
+SHUgPHdlaEBtaWNyb3NvZnQuY29tPg0KPiA+ID4gPiAtLS0NCj4gPiA+ID4gIGRyaXZlcnMvcGNp
+L2NvbnRyb2xsZXIvcGNpLWh5cGVydi5jIHwgMjAgKysrKysrKysrKysrKysrKy0tLS0NCj4gPiA+
+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxNiBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQ0KPiA+
+ID4gPg0KPiA+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2ktaHlw
+ZXJ2LmMNCj4gPiA+ID4gYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL3BjaS1oeXBlcnYuYw0KPiA+
+ID4gPiBpbmRleCBlMTUwMjJmZjYzZTMuLmU2ZmFjMDE4NzcyMiAxMDA2NDQNCj4gPiA+ID4gLS0t
+IGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2ktaHlwZXJ2LmMNCj4gPiA+ID4gKysrIGIvZHJp
+dmVycy9wY2kvY29udHJvbGxlci9wY2ktaHlwZXJ2LmMNCj4gPiA+ID4gQEAgLTQ4MCw2ICs0ODAs
+OSBAQCBzdHJ1Y3QgaHZfcGNpYnVzX2RldmljZSB7DQo+ID4gPiA+DQo+ID4gPiA+ICAJc3RydWN0
+IHdvcmtxdWV1ZV9zdHJ1Y3QgKndxOw0KPiA+ID4gPg0KPiA+ID4gPiArCS8qIEhpZ2hlc3Qgc2xv
+dCBvZiBjaGlsZCBkZXZpY2Ugd2l0aCByZXNvdXJjZXMgYWxsb2NhdGVkICovDQo+ID4gPiA+ICsJ
+aW50IHdzbG90X3Jlc19hbGxvY2F0ZWQ7DQo+ID4gPg0KPiA+ID4gSSBkb24ndCB1bmRlcnN0YW5k
+IHdoeSB5b3UgbmVlZCBhbiBpbnQgcmF0aGVyIHRoYW4gYSB1MzIuDQo+ID4gPg0KPiA+ID4gRnVy
+dGhlcm1vcmUsIEkgdGhpbmsgYSBiaXRtYXAgaXMgbW9yZSBhcHByb3ByaWF0ZSBmb3Igd2hhdCB0
+aGlzDQo+ID4gPiB2YXJpYWJsZSBpcyB1c2VkIGZvci4NCj4gPg0KPiA+IFNvIGl0IGNhbiB1c2Ug
+YSBuZWdhdGl2ZSB2YWx1ZSAoLTEgaW4gdGhpcyBjYXNlKSB0byBpbmRpY2F0ZWQgbm9uZSBvZg0K
+PiA+IGFueSByZXNvdXJjZXMgaGFzIGJlZW4gYWxsb2NhdGVkLiBDdXJyZW50bHkgdmFsdWUgYmV0
+d2VlbiAwLTI1NQ0KPiA+IGluZGljYXRpbmcgc29tZSByZXNvdXJjZXMgaGF2ZSBiZWVuIGFsbG9j
+YXRlZC4gT2YgY291cnNlIEkgY2FuIHVzZQ0KPiA+IDB4ZmZmZmZmZmYgdG8gaW5kaWNhdGUgdGhh
+dCBpZiBpdCB3ZXJlIHUzMi4gQnV0IGl0IHdvdWxkbid0IG1ha2UgbXVjaCBkaWZmZXJlbmNlLA0K
+PiB3b3VsZCBpdD8NCj4gDQo+IEl0IGlzIGZpbmUgYnkgbWUgLSBJIHdvdWxkIG5vdCBoYXZlIHdy
+aXR0ZW4gaXQgdGhpcyB3YXkgYnV0IGl0IGRvZXMgbm90IG1hdHRlci4NCj4gDQo+ID4gSXQgd291
+bGQgdGFrZSAzMiBieXRlcyBmb3IgdG90YWwgMjU2IGNoaWxkIHNsb3RzIGluIGJpdG1hcCwgd2hp
+bGUgaXQNCj4gPiBvbmx5IHRha2VzIDQgYnl0ZXMgdXNpbmcgaW50LiBJdCBpcyBub3QgaW4gY3Jp
+dGljYWwgcGF0aCBzbyBzY2FubmluZw0KPiA+IGZyb20gdGhlIGxvY2F0aW9uIG9uZSBieSBvbmUg
+aXMgbm90IGEgYmlnIGRlYWwuDQo+IA0KPiBJIHN1Z2dlc3RlZCBhIGJpdG1hcCBmb3IgY29ycmVj
+dG5lc3MgLSBhIHNsb3QgbnVtYmVyIG1heSBpbmNsdWRlIHNsb3RzIHRoYXQgYXMNCj4gZmFyIGFz
+IEkgY2FuIHJlYWQgdGhlIGNvZGUgZmFpbGVkIGdldF9wY2ljaGlsZF9zbG90KCkuDQo+IA0KPiBJ
+dCBpcyBub3QgY2xlYXIgd2hhdCB0aGlzIHBhdGNoIGlzIGRvaW5nIGluIHRoaXMgbG9vcCwgdGhh
+dCdzIGNlcnRhaW4uDQo+IA0KR2V0X3BjaWNoaWxkX3dzbG90KCkganVzdCB0ZWxscyBpZiBhIHBj
+aSBjaGlsZCBkZXZpY2UgZXhpc3RzIHVuZGVyIHRoaXMgc2xvdCBudW1iZXIuIElmDQp0aGVyZSBp
+cyBubyBjaGlsZCBkZXZpY2UsIGl0IGp1c3QgY29udGludWUgdG8gbG9vayBvbiB0aGUgbmV4dCBz
+bG90IG51bWJlci4gSWYgaXQgZG9lcw0KZXhpc3RzLCB0aGUgY29kZSBzZW5kcyByZXF1ZXN0IHRv
+IGh5cGVydmlzb3IgZm9yIHJlc291cmNlIGFsbG9jYXRpb24uIElmIGl0IHN1Y2NlZWRzLA0Kd2Ug
+dXBkYXRlIHRoZSB3c2xvdF9yZXNfYWxsb2NhdGVkIGFjY29yZGluZ2x5Lg0KDQpJIGhvcGUgdGhp
+cyBhbG9uZyB3aXRoIHRoZSBleHBsYW5hdGlvbiBlYXJsaWVyIG1ha2VzIGl0IGNsZWFyLg0KDQo+
+ID4gPg0KPiA+ID4gPiArDQo+ID4gPiA+ICAJLyogaHlwZXJjYWxsIGFyZywgbXVzdCBub3QgY3Jv
+c3MgcGFnZSBib3VuZGFyeSAqLw0KPiA+ID4gPiAgCXN0cnVjdCBodl9yZXRhcmdldF9kZXZpY2Vf
+aW50ZXJydXB0DQo+ID4gPiA+IHJldGFyZ2V0X21zaV9pbnRlcnJ1cHRfcGFyYW1zOw0KPiA+ID4g
+Pg0KPiA+ID4gPiBAQCAtMjg0Nyw3ICsyODUwLDcgQEAgc3RhdGljIGludA0KPiA+ID4gPiBodl9z
+ZW5kX3Jlc291cmNlc19hbGxvY2F0ZWQoc3RydWN0DQo+ID4gPiBodl9kZXZpY2UgKmhkZXYpDQo+
+ID4gPiA+ICAJc3RydWN0IGh2X3BjaV9kZXYgKmhwZGV2Ow0KPiA+ID4gPiAgCXN0cnVjdCBwY2lf
+cGFja2V0ICpwa3Q7DQo+ID4gPiA+ICAJc2l6ZV90IHNpemVfcmVzOw0KPiA+ID4gPiAtCXUzMiB3
+c2xvdDsNCj4gPiA+ID4gKwlpbnQgd3Nsb3Q7DQo+ID4gPiA+ICAJaW50IHJldDsNCj4gPiA+ID4N
+Cj4gPiA+ID4gIAlzaXplX3JlcyA9IChoYnVzLT5wcm90b2NvbF92ZXJzaW9uIDwgUENJX1BST1RP
+Q09MX1ZFUlNJT05fMV8yKQ0KPiA+ID4gQEANCj4gPiA+ID4gLTI5MDAsNiArMjkwMyw4IEBAIHN0
+YXRpYyBpbnQgaHZfc2VuZF9yZXNvdXJjZXNfYWxsb2NhdGVkKHN0cnVjdA0KPiA+ID4gPiBodl9k
+ZXZpY2UNCj4gPiA+ICpoZGV2KQ0KPiA+ID4gPiAgCQkJCWNvbXBfcGt0LmNvbXBsZXRpb25fc3Rh
+dHVzKTsNCj4gPiA+ID4gIAkJCWJyZWFrOw0KPiA+ID4gPiAgCQl9DQo+ID4gPiA+ICsNCj4gPiA+
+ID4gKwkJaGJ1cy0+d3Nsb3RfcmVzX2FsbG9jYXRlZCA9IHdzbG90Ow0KPiA+ID4gPiAgCX0NCj4g
+PiA+ID4NCj4gPiA+ID4gIAlrZnJlZShwa3QpOw0KPiA+ID4gPiBAQCAtMjkxOCwxMCArMjkyMywx
+MCBAQCBzdGF0aWMgaW50DQo+ID4gPiA+IGh2X3NlbmRfcmVzb3VyY2VzX3JlbGVhc2VkKHN0cnVj
+dA0KPiA+ID4gaHZfZGV2aWNlICpoZGV2KQ0KPiA+ID4gPiAgCXN0cnVjdCBodl9wY2lidXNfZGV2
+aWNlICpoYnVzID0gaHZfZ2V0X2RydmRhdGEoaGRldik7DQo+ID4gPiA+ICAJc3RydWN0IHBjaV9j
+aGlsZF9tZXNzYWdlIHBrdDsNCj4gPiA+ID4gIAlzdHJ1Y3QgaHZfcGNpX2RldiAqaHBkZXY7DQo+
+ID4gPiA+IC0JdTMyIHdzbG90Ow0KPiA+ID4gPiArCWludCB3c2xvdDsNCj4gPiA+ID4gIAlpbnQg
+cmV0Ow0KPiA+ID4gPg0KPiA+ID4gPiAtCWZvciAod3Nsb3QgPSAwOyB3c2xvdCA8IDI1Njsgd3Ns
+b3QrKykgew0KPiA+ID4gPiArCWZvciAod3Nsb3QgPSBoYnVzLT53c2xvdF9yZXNfYWxsb2NhdGVk
+OyB3c2xvdCA+PSAwOyB3c2xvdC0tKSB7DQo+ID4gPiA+ICAJCWhwZGV2ID0gZ2V0X3BjaWNoaWxk
+X3dzbG90KGhidXMsIHdzbG90KTsNCj4gPiA+ID4gIAkJaWYgKCFocGRldikNCj4gPiA+ID4gIAkJ
+CWNvbnRpbnVlOw0KPiA+ID4gPiBAQCAtMjkzNiw4ICsyOTQxLDEyIEBAIHN0YXRpYyBpbnQNCj4g
+PiA+ID4gaHZfc2VuZF9yZXNvdXJjZXNfcmVsZWFzZWQoc3RydWN0DQo+ID4gPiBodl9kZXZpY2Ug
+KmhkZXYpDQo+ID4gPiA+ICAJCQkJICAgICAgIFZNX1BLVF9EQVRBX0lOQkFORCwgMCk7DQo+ID4g
+PiA+ICAJCWlmIChyZXQpDQo+ID4gPiA+ICAJCQlyZXR1cm4gcmV0Ow0KPiA+ID4gPiArDQo+ID4g
+PiA+ICsJCWhidXMtPndzbG90X3Jlc19hbGxvY2F0ZWQgPSB3c2xvdCAtIDE7DQo+ID4gPg0KPiA+
+ID4gRG8geW91IHJlYWxseSBuZWVkIHRvIHNldCBpdCBhdCBldmVyeSBsb29wIGl0ZXJhdGlvbiA/
+DQo+ID4gPg0KPiA+ID4gTW9yZW92ZXIsIEkgdGhpbmsgYSBiaXRtYXAgaXMgYmV0dGVyIHN1aXRl
+ZCBmb3Igd2hhdCB5b3UgYXJlIGRvaW5nLA0KPiA+ID4gZ2l2ZW4gdGhhdCB5b3UgbWF5IHNraXAg
+c29tZSBsb29wIGluZGV4ZXMgb24gIWhwZGV2Lg0KPiA+ID4NCj4gPiBUaGUgdmFsdWUgaXMgc2V0
+IGluIHRoZSBsb29wIHdoZW5ldmVyIGEgcmVzb3VyY2Ugd2FzIHN1Y2Nlc3NmdWxseQ0KPiA+IHJl
+bGVhc2VkLiBJdCBjb3VsZCBoYXBwZW4gdGhhdCBpdCBmYWlsZWQgaW4gdGhlIG5leHQgaXRlcmF0
+aW9uIHNvIHRoZQ0KPiA+IGxhc3Qgb25lIHdoaWNoIGhhZCBzdWNjZWVkZWQgd291bGQgYmUgcmVj
+b3JkZWQgaW4gdGhpcyB2YXJpYWJsZS4gSXQgaXMNCj4gPiBuZWVkZWQgIGF0IHRoZSBlbmQgb2Yg
+bG9vcCB3aGVuIHRoaXMgaXRlcmF0aW9uIHN1Y2NlZWRzLg0KPiANCj4gT2sgdW5kZXJzdG9vZC4N
+Cj4gDQo+ID4gT25jZSBhZ2FpbiBzaW5jZSBpdCBpcyBub3QgaW4gdGhlIGNyaXRpY2FsIHBhdGgs
+IGp1c3QgdXNpbmcgYW4gc2lnbmVkDQo+ID4gaW50ZWdlciBpcyBzdHJhaWdodGZvcndhcmQsIGxl
+c3MgZXJyb3IgcHJvbmUgYW5kIGEgYml0IGVhc2llciB0bw0KPiA+IG1haW50YWluIHRoYW4gYml0
+bWFwIGluIG15IG9waW5pb24uIPCfmIoNCj4gPg0KPiANCj4gTGVzcyBlcnJvciBwcm9uZSwgbm90
+IHN1cmUsIHNlZSBhYm92ZSAtIGl0IGlzIHlvdXIgY29kZSBzbyB5b3UgY2hvb3NlIGJ1dCBwbGVh
+c2UNCj4gZXhwbGFpbiB0aGlzIGNoYW5nZSBiZXR0ZXIsIGl0IGlzIG5vdCBvYnZpb3VzLg0KDQpJ
+IGhvcGUgdGhlIGV4cGxhbmF0aW9ucyBlYXJsaWVyIG1ha2UgaXQgYSBsaXR0bGUgYmV0dGVyIHRv
+IHVuZGVyc3RhbmQuDQoNCj4gDQo+ID4gPiA+ICAJfQ0KPiA+ID4gPg0KPiA+ID4gPiArCWhidXMt
+PndzbG90X3Jlc19hbGxvY2F0ZWQgPSAtMTsNCj4gPiA+ID4gKw0KPiA+ID4gPiAgCXJldHVybiAw
+Ow0KPiA+ID4gPiAgfQ0KPiA+ID4gPg0KPiA+ID4gPiBAQCAtMzAzNyw2ICszMDQ2LDcgQEAgc3Rh
+dGljIGludCBodl9wY2lfcHJvYmUoc3RydWN0IGh2X2RldmljZSAqaGRldiwNCj4gPiA+ID4gIAlp
+ZiAoIWhidXMpDQo+ID4gPiA+ICAJCXJldHVybiAtRU5PTUVNOw0KPiA+ID4gPiAgCWhidXMtPnN0
+YXRlID0gaHZfcGNpYnVzX2luaXQ7DQo+ID4gPiA+ICsJaGJ1cy0+d3Nsb3RfcmVzX2FsbG9jYXRl
+ZCA9IC0xOw0KPiA+ID4gPg0KPiA+ID4gPiAgCS8qDQo+ID4gPiA+ICAJICogVGhlIFBDSSBidXMg
+ImRvbWFpbiIgaXMgd2hhdCBpcyBjYWxsZWQgInNlZ21lbnQiIGluIEFDUEkgYW5kDQo+ID4gPiA+
+IG90aGVyIEBAIC0zMTM2LDcgKzMxNDYsNyBAQCBzdGF0aWMgaW50IGh2X3BjaV9wcm9iZShzdHJ1
+Y3QNCj4gPiA+ID4gaHZfZGV2aWNlICpoZGV2LA0KPiA+ID4gPg0KPiA+ID4gPiAgCXJldCA9IGh2
+X3BjaV9hbGxvY2F0ZV9icmlkZ2Vfd2luZG93cyhoYnVzKTsNCj4gPiA+ID4gIAlpZiAocmV0KQ0K
+PiA+ID4gPiAtCQlnb3RvIGZyZWVfaXJxX2RvbWFpbjsNCj4gPiA+ID4gKwkJZ290byBleGl0X2Qw
+Ow0KPiA+ID4gPg0KPiA+ID4gPiAgCXJldCA9IGh2X3NlbmRfcmVzb3VyY2VzX2FsbG9jYXRlZCho
+ZGV2KTsNCj4gPiA+ID4gIAlpZiAocmV0KQ0KPiA+ID4gPiBAQCAtMzE1NCw2ICszMTY0LDggQEAg
+c3RhdGljIGludCBodl9wY2lfcHJvYmUoc3RydWN0IGh2X2RldmljZQ0KPiA+ID4gPiAqaGRldiwN
+Cj4gPiA+ID4NCj4gPiA+ID4gIGZyZWVfd2luZG93czoNCj4gPiA+ID4gIAlodl9wY2lfZnJlZV9i
+cmlkZ2Vfd2luZG93cyhoYnVzKTsNCj4gPiA+ID4gK2V4aXRfZDA6DQo+ID4gPiA+ICsJKHZvaWQp
+IGh2X3BjaV9idXNfZXhpdChoZGV2LCB0cnVlKTsNCj4gPiA+DQo+ID4gPiBSZW1vdmUgdGhlICh2
+b2lkKSBjYXN0Lg0KPiA+ID4NCj4gPg0KPiA+IFNvbWUgdG9vbHMgKG1heWJlIGxpbnQ/KSBjb3Vs
+ZCBnZW5lcmF0ZSBlcnJvci93YXJuaW5nIG1lc3NhZ2VzDQo+ID4gYXNzdW1pbmcgdGhlIGNvZGUg
+ZmFpbHMgdG8gY2hlY2sgdGhlIHJldHVybiB2YWx1ZSB3aXRob3V0IHN1Y2ggY2FzdC4NCj4gPiBM
+ZWF2aW5nIHRoZSBjYXN0IGluIHBsYWNlIGp1c3QgaW5kaWNhdGVzIHRoYXQgdGhlIHJldHVybiB2
+YWx1ZSBpcyBkZWxpYmVyYXRlbHkNCj4gaWdub3JlZC4NCj4gDQo+IEkgdW5kZXJzdGFuZCB0aGF0
+IC0gdGhlIHF1ZXN0aW9uIGlzIHdoeSBpdCBpcyBPSyB0byBpZ25vcmUgaXQgaW4gdGhpcyBzcGVj
+aWZpYyBjYXNlLg0KPg0KDQpTaW5jZSBpdCBpcyBhbHJlYWR5IGluIHRoZSBlcnJvciBwYXRoLCBj
+aGVja2luZyB0aGUgcmV0dXJuIHZhbHVlIGlzIG5vdCBuZWNlc3NhcnkuDQpUaGUgZWFybGllciBm
+YWlsdXJlIHBvaW50IGlzIG1vcmUgaW1wb3J0YW50IHRvIGJlIHJldHVybmVkIHRvIHRoZSBjYWxs
+ZXIuIA0KIA0KPiBNYXliZSBhZGRpbmcgYSB3cmFwcGVyIGFyb3VuZCBodl9wY2lfYnVzX2V4aXQo
+KSBjYW4gaGVscCwgSSBhbSBmaW5lIHdpdGggaXQsDQo+IGp1c3QgdHJ5aW5nIHRvIGhlbHAuDQoN
+CkRvIHlvdSBtZWFuIG1ha2luZyB0aGUgKHZvaWQpIGNhc3QgaW4gd3JhcHBlciBmdW5jdGlvbj8g
+T3IgY2hlY2tpbmcgdGhlIHJldHVybiB2YWx1ZQ0KaW4gdGhlIHdyYXBwZXIgZnVuY3Rpb24gYW5k
+IGlnbm9yZSBpdD8gIEVpdGhlciB3YXkgSSB0aGluayBpdCBtaWdodCBub3QgYmUgbmVjZXNzYXJ5
+Lg0KDQpUaGFua3MsDQpXZWkNCg0K
