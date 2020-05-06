@@ -2,120 +2,300 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E74C1C6361
-	for <lists+linux-pci@lfdr.de>; Tue,  5 May 2020 23:47:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A54391C65B3
+	for <lists+linux-pci@lfdr.de>; Wed,  6 May 2020 03:58:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728914AbgEEVre (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 May 2020 17:47:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35306 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728076AbgEEVrd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 May 2020 17:47:33 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E24BC061A0F;
-        Tue,  5 May 2020 14:47:33 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jW5PT-0005g4-5n; Tue, 05 May 2020 23:47:27 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 9B1FE1001F5; Tue,  5 May 2020 23:47:26 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     "Raj\, Ashok" <ashok.raj@intel.com>
-Cc:     "Raj\, Ashok" <ashok.raj@linux.intel.com>,
-        Evan Green <evgreen@chromium.org>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>, x86@kernel.org,
-        linux-pci <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Ghorai\, Sukumar" <sukumar.ghorai@intel.com>,
-        "Amara\, Madhusudanarao" <madhusudanarao.amara@intel.com>,
-        "Nandamuri\, Srikanth" <srikanth.nandamuri@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: MSI interrupt for xhci still lost on 5.6-rc6 after cpu hotplug
-In-Reply-To: <20200505201616.GA15481@otc-nc-03>
-References: <20200501184326.GA17961@araj-mobl1.jf.intel.com> <878si6rx7f.fsf@nanos.tec.linutronix.de> <20200505201616.GA15481@otc-nc-03>
-Date:   Tue, 05 May 2020 23:47:26 +0200
-Message-ID: <875zdarr4h.fsf@nanos.tec.linutronix.de>
+        id S1728717AbgEFB6K (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 May 2020 21:58:10 -0400
+Received: from mga03.intel.com ([134.134.136.65]:27946 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728642AbgEFB6K (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 5 May 2020 21:58:10 -0400
+IronPort-SDR: MMbFnsH+uio7h/D5LHpIllmQMFShD2xICea6QPD9VGx+ziX0RMLUGVH3Usr3thO63WpNqSgsKa
+ 5M623L7XTTjg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2020 18:58:06 -0700
+IronPort-SDR: n5ZtOa2PrwghjAeXHxrnn5h3x4b+t9Hk2ecbni9/FJzCheWJVhfONQao784uyTevSkr5Q+AT8k
+ KyBQuRrpkYPg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,357,1583222400"; 
+   d="scan'208";a="249635912"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga007.fm.intel.com with ESMTP; 05 May 2020 18:58:05 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jW9K0-0005f3-K6; Wed, 06 May 2020 09:58:04 +0800
+Date:   Wed, 06 May 2020 09:57:32 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:pci/misc] BUILD SUCCESS
+ 198938ec966d45c47eb7c1f6d2a4ac82c12bf5ce
+Message-ID: <5eb2198c.3klbCBuWNK33jK6Y%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Ashok,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/misc
+branch HEAD: 198938ec966d45c47eb7c1f6d2a4ac82c12bf5ce  PCI: Check for platform_get_irq() failure consistently
 
-"Raj, Ashok" <ashok.raj@intel.com> writes:
-> On Tue, May 05, 2020 at 09:36:04PM +0200, Thomas Gleixner wrote:
->> The way it works is:
->> 
->>     1) New vector on different CPU is allocated
->> 
->>     2) New vector is installed
->> 
->>     3) When the first interrupt on the new CPU arrives then the cleanup
->>        IPI is sent to the previous CPU which tears down the old vector
->> 
->> So if the interrupt is sent to the original CPU just before #2 then this
->> will be correctly handled on that CPU after the set affinity code
->> reenables interrupts.
->
-> I'll have this test tried out.. but in msi_set_affinity() the check below
-> for lapic_vector_set_in_irr(cfg->vector), this is the new vector correct? 
-> don't we want to check for old_cfg.vector instead?
->
-> msi_set_affinit ()
-> {
-> ....
->         unlock_vector_lock();
->
->         /*
->          * Check whether the transition raced with a device interrupt and
->          * is pending in the local APICs IRR. It is safe to do this outside
->          * of vector lock as the irq_desc::lock of this interrupt is still
->          * held and interrupts are disabled: The check is not accessing the
->          * underlying vector store. It's just checking the local APIC's
->          * IRR.
->          */
->         if (lapic_vector_set_in_irr(cfg->vector))
->                 irq_data_get_irq_chip(irqd)->irq_retrigger(irqd);
+elapsed time: 484m
 
-No. This catches the transitional interrupt to the new vector on the
-original CPU, i.e. the one which is running that code.
+configs tested: 241
+configs skipped: 0
 
-Again the steps are:
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
- 1) Allocate new vector on new CPU
+arm64                            allyesconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm                               allnoconfig
+arm                           efm32_defconfig
+arm                         at91_dt_defconfig
+arm                        shmobile_defconfig
+arm64                               defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                           sunxi_defconfig
+arm                        multi_v7_defconfig
+arm                              allmodconfig
+sparc                            allyesconfig
+riscv                             allnoconfig
+ia64                          tiger_defconfig
+powerpc                    adder875_defconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                             alldefconfig
+i386                                defconfig
+i386                              debian-10.3
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                        generic_defconfig
+ia64                         bigsur_defconfig
+ia64                             allyesconfig
+ia64                             alldefconfig
+m68k                       m5475evb_defconfig
+m68k                             allmodconfig
+m68k                       bvme6000_defconfig
+m68k                           sun3_defconfig
+m68k                          multi_defconfig
+nios2                         3c120_defconfig
+nios2                         10m50_defconfig
+c6x                        evmc6678_defconfig
+c6x                              allyesconfig
+openrisc                 simple_smp_defconfig
+openrisc                    or1ksim_defconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                                defconfig
+alpha                               defconfig
+h8300                       h8s-sim_defconfig
+h8300                     edosk2674_defconfig
+xtensa                          iss_defconfig
+h8300                    h8300h-sim_defconfig
+xtensa                       common_defconfig
+arc                                 defconfig
+arc                              allyesconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+mips                            ar7_defconfig
+mips                             allyesconfig
+mips                         64r6el_defconfig
+mips                              allnoconfig
+mips                           32r2_defconfig
+mips                             allmodconfig
+mips                malta_kvm_guest_defconfig
+mips                         tb0287_defconfig
+mips                       capcella_defconfig
+mips                           ip32_defconfig
+mips                  decstation_64_defconfig
+mips                      loongson3_defconfig
+mips                          ath79_defconfig
+mips                        bcm63xx_defconfig
+parisc                            allnoconfig
+parisc                generic-64bit_defconfig
+parisc                generic-32bit_defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                      chrp32_defconfig
+powerpc                             defconfig
+powerpc                       holly_defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+powerpc                           allnoconfig
+powerpc                  mpc866_ads_defconfig
+powerpc                    amigaone_defconfig
+powerpc                     ep8248e_defconfig
+powerpc                          g5_defconfig
+powerpc                     mpc512x_defconfig
+m68k                 randconfig-a001-20200503
+mips                 randconfig-a001-20200503
+nds32                randconfig-a001-20200503
+alpha                randconfig-a001-20200503
+parisc               randconfig-a001-20200503
+riscv                randconfig-a001-20200503
+m68k                 randconfig-a001-20200505
+mips                 randconfig-a001-20200505
+nds32                randconfig-a001-20200505
+parisc               randconfig-a001-20200505
+alpha                randconfig-a001-20200505
+riscv                randconfig-a001-20200505
+h8300                randconfig-a001-20200503
+nios2                randconfig-a001-20200503
+microblaze           randconfig-a001-20200503
+c6x                  randconfig-a001-20200503
+sparc64              randconfig-a001-20200503
+s390                 randconfig-a001-20200505
+xtensa               randconfig-a001-20200505
+sh                   randconfig-a001-20200505
+openrisc             randconfig-a001-20200505
+csky                 randconfig-a001-20200505
+xtensa               randconfig-a001-20200503
+openrisc             randconfig-a001-20200503
+csky                 randconfig-a001-20200503
+x86_64               randconfig-a003-20200505
+x86_64               randconfig-a001-20200505
+i386                 randconfig-a001-20200505
+i386                 randconfig-a003-20200505
+i386                 randconfig-a002-20200505
+i386                 randconfig-b003-20200503
+x86_64               randconfig-b002-20200503
+i386                 randconfig-b001-20200503
+x86_64               randconfig-b003-20200503
+x86_64               randconfig-b001-20200503
+i386                 randconfig-b002-20200503
+i386                 randconfig-b003-20200505
+x86_64               randconfig-b002-20200505
+i386                 randconfig-b001-20200505
+x86_64               randconfig-b001-20200505
+x86_64               randconfig-b003-20200505
+i386                 randconfig-b002-20200505
+i386                 randconfig-b003-20200502
+i386                 randconfig-b001-20200502
+x86_64               randconfig-b003-20200502
+x86_64               randconfig-b001-20200502
+i386                 randconfig-b002-20200502
+x86_64               randconfig-c002-20200502
+i386                 randconfig-c002-20200502
+i386                 randconfig-c001-20200502
+i386                 randconfig-c003-20200502
+x86_64               randconfig-c001-20200503
+x86_64               randconfig-c002-20200503
+i386                 randconfig-c002-20200503
+x86_64               randconfig-c003-20200503
+i386                 randconfig-c001-20200503
+i386                 randconfig-c003-20200503
+x86_64               randconfig-d001-20200505
+i386                 randconfig-d003-20200505
+i386                 randconfig-d001-20200505
+x86_64               randconfig-d003-20200505
+x86_64               randconfig-d002-20200505
+i386                 randconfig-d002-20200505
+x86_64               randconfig-d001-20200503
+i386                 randconfig-d003-20200503
+x86_64               randconfig-d003-20200503
+i386                 randconfig-d001-20200503
+x86_64               randconfig-d002-20200503
+i386                 randconfig-d002-20200503
+i386                 randconfig-e003-20200505
+x86_64               randconfig-e002-20200505
+x86_64               randconfig-e003-20200505
+x86_64               randconfig-e001-20200505
+i386                 randconfig-e002-20200505
+i386                 randconfig-e001-20200505
+x86_64               randconfig-e003-20200503
+x86_64               randconfig-e002-20200503
+i386                 randconfig-e003-20200503
+x86_64               randconfig-e001-20200503
+i386                 randconfig-e002-20200503
+i386                 randconfig-e001-20200503
+i386                 randconfig-f003-20200503
+x86_64               randconfig-f002-20200503
+i386                 randconfig-f001-20200503
+i386                 randconfig-f002-20200503
+i386                 randconfig-f003-20200505
+x86_64               randconfig-f001-20200505
+x86_64               randconfig-f003-20200505
+i386                 randconfig-f001-20200505
+i386                 randconfig-f002-20200505
+x86_64               randconfig-g003-20200503
+i386                 randconfig-g003-20200503
+i386                 randconfig-g002-20200503
+x86_64               randconfig-g001-20200503
+i386                 randconfig-g001-20200503
+x86_64               randconfig-g003-20200506
+i386                 randconfig-g003-20200506
+i386                 randconfig-g002-20200506
+x86_64               randconfig-g001-20200506
+i386                 randconfig-g001-20200506
+x86_64               randconfig-g002-20200506
+i386                 randconfig-g003-20200505
+i386                 randconfig-g002-20200505
+i386                 randconfig-g001-20200505
+x86_64               randconfig-g002-20200505
+x86_64               randconfig-a002-20200503
+i386                 randconfig-a002-20200503
+i386                 randconfig-a003-20200503
+i386                 randconfig-a001-20200503
+ia64                 randconfig-a001-20200505
+powerpc              randconfig-a001-20200505
+arm                  randconfig-a001-20200505
+ia64                 randconfig-a001-20200506
+arm64                randconfig-a001-20200506
+arc                  randconfig-a001-20200506
+powerpc              randconfig-a001-20200506
+arm                  randconfig-a001-20200506
+sparc                randconfig-a001-20200506
+ia64                 randconfig-a001-20200503
+arm64                randconfig-a001-20200503
+arc                  randconfig-a001-20200503
+arm                  randconfig-a001-20200503
+sparc                randconfig-a001-20200503
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+s390                       zfcpdump_defconfig
+s390                          debug_defconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                             alldefconfig
+s390                                defconfig
+sh                          rsk7269_defconfig
+sh                               allmodconfig
+sh                            titan_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                                allnoconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+um                                  defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
 
- 2) Set new vector on original CPU
-
- 3) Set new vector on new CPU
-
-So we have 3 points where an interrupt can fire:
-
- A) Before #2
-
- B) After #2 and before #3
-
- C) After #3
-
-#A is hitting the old vector which is still valid on the old CPU and
-   will be handled once interrupts are enabled with the correct irq
-   descriptor - Normal operation (same as with maskable MSI)
-
-#B This must be checked in the IRR because the there is no valid vector
-   on the old CPU.
-
-#C is handled on the new vector on the new CPU
-
-Thanks,
-
-        tglx
-
- 
-
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
