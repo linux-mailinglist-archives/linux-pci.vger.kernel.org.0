@@ -2,28 +2,28 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 445061C7D82
-	for <lists+linux-pci@lfdr.de>; Thu,  7 May 2020 00:42:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 487781C7DD3
+	for <lists+linux-pci@lfdr.de>; Thu,  7 May 2020 01:27:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730090AbgEFWmb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 May 2020 18:42:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51010 "EHLO mail.kernel.org"
+        id S1727819AbgEFX1d (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 May 2020 19:27:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729654AbgEFWma (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 6 May 2020 18:42:30 -0400
+        id S1726555AbgEFX1d (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 6 May 2020 19:27:33 -0400
 Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94B512075E;
-        Wed,  6 May 2020 22:42:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDB2620736;
+        Wed,  6 May 2020 23:27:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588804950;
-        bh=UaeCzXF3gxehCWoev+4woXreftwS3km7FRXYYZNVyW0=;
+        s=default; t=1588807652;
+        bh=xTCXmC5HFmHln29DXmkLrGOAgBXfP+Th2u7ltB1hof0=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=eco718RTIYLy77DqsH8+nRdjWFxXBXDrXCU4osL4eMhby/q94BX2CMkc1LgYVlqy1
-         4ewOAaAYCgsGn1zmzUDiJySXvlpJVdBZht21YH7bzpqI71JsXd0bR8Mp1h/JEzAnVd
-         1IrKWygXGdTLUTfMvclkgYVcUZTWj3oKIWNHDJo0=
-Date:   Wed, 6 May 2020 17:42:28 -0500
+        b=1f1jEblbynU/syY5JNyhj8bhjheFO88dqVV6LMnpEf6vIksiQDhnqrZpgHaIrgKVk
+         27LOlrmUGDtDdRbvuPGe4r27gbYQPHCQ8QJats1OzEblepP28q4aPrLTTHQd68oopf
+         KB6zaqhvcwstZ9IDJ9VFHBi42t20neb5H0GvcWfY=
+Date:   Wed, 6 May 2020 18:27:30 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Mika Westerberg <mika.westerberg@linux.intel.com>
 Cc:     Bjorn Helgaas <bhelgaas@google.com>,
@@ -32,7 +32,7 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         linux-pci@vger.kernel.org
 Subject: Re: [PATCH] PCI: Do not use pcie_get_speed_cap() to determine when
  to start waiting
-Message-ID: <20200506224228.GA458845@bjorn-Precision-5520>
+Message-ID: <20200506232730.GA461230@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -49,70 +49,93 @@ On Thu, Apr 16, 2020 at 11:32:45AM +0300, Mika Westerberg wrote:
 > 
 > These PCIe downstream ports the second link capability (PCI_EXP_LNKCAP2)
 > announces support for speeds > 5 GT/s but it is then capped by the
-> second link control (PCI_EXP_LNKCTL2) register to 2.5 GT/s. This
-> possiblity was not considered in pci_bridge_wait_for_secondary_bus() so
-> it ended up waiting for 1100 ms as these ports do not support active
-> link layer reporting either.
-> 
-> PCIe spec 5.0 section 6.6.1 mandates that we must wait minimum of 100 ms
-> before sending configuration request to the device below, if the port
-> does not support speeds > 5 GT/s, and if it does we first need to wait
-> for the data link layer to become active before waiting for that 100 ms.
-> 
-> PCIe spec 5.0 section 7.5.3.6 further says that all downstream ports
-> that support speeds > 5 GT/s must support active link layer reporting so
-> instead of looking for the speed we can check for the active link layer
-> reporting capability and determine how to wait based on that (as they go
-> hand in hand).
-
-I can't quite tell what the defect is here.
-
-I assume you're talking about this text from sec 6.6.1:
-
-  - With a Downstream Port that does not support Link speeds greater
-    than 5.0 GT/s, software must wait a minimum of 100 ms before
-    sending a Configuration Request to the device immediately below
-    that Port.
-
-  - With a Downstream Port that supports Link speeds greater than 5.0
-    GT/s, software must wait a minimum of 100 ms after Link training
-    completes before sending a Configuration Request to the device
-    immediately below that Port. Software can determine when Link
-    training completes by polling the Data Link Layer Link Active bit
-    or by setting up an associated interrupt (see Section 6.7.3.3 ).
-
-I don't understand what Link Control 2 has to do with this.  The spec
-talks about ports *supporting* certain link speeds, which sounds to me
-like the Link Capabilities.  It doesn't say anything about the current
-or target link speed.
+> second link control (PCI_EXP_LNKCTL2) register to 2.5 GT/s.
 
 > Link: https://bugzilla.kernel.org/show_bug.cgi?id=206837
-> Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> ---
->  drivers/pci/pci.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 595fcf59843f..d9d9ff5b968e 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -4822,7 +4822,13 @@ void pci_bridge_wait_for_secondary_bus(struct pci_dev *dev)
->  	if (!pcie_downstream_port(dev))
->  		return;
->  
-> -	if (pcie_get_speed_cap(dev) <= PCIE_SPEED_5_0GT) {
-> +	/*
-> +	 * Since PCIe spec mandates that all downstream ports that support
-> +	 * speeds greater than 5 GT/s must support data link layer active
-> +	 * reporting so we use that here to determine when the delay should
-> +	 * be issued.
-> +	 */
-> +	if (!dev->link_active_reporting) {
->  		pci_dbg(dev, "waiting %d ms for downstream link\n", delay);
->  		msleep(delay);
->  	} else {
-> -- 
-> 2.25.1
-> 
+
+Slight tangent: The bugzilla mentions that lspci doesn't decode
+LNKCAP2: https://github.com/pciutils/pciutils/issues/38
+
+Can you try the lspci patch below and see if it matches what you
+expect?  It works for me, but I don't understand the kernel issue yet,
+so I might be missing something.
+
+commit e2bdd75bbaf6 ("lspci: Decode PCIe Link Capabilities 2")
+Author: Bjorn Helgaas <bhelgaas@google.com>
+Date:   Wed May 6 18:05:55 2020 -0500
+
+    lspci: Decode PCIe Link Capabilities 2
+    
+    Decode Link Capabilities 2, which includes the Supported Link Speeds
+    Vector.
+    
+    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+
+diff --git a/lib/header.h b/lib/header.h
+index bfdcc80..3332b32 100644
+--- a/lib/header.h
++++ b/lib/header.h
+@@ -901,6 +901,9 @@
+ #define  PCI_EXP_DEV2_OBFF(x)		(((x) >> 13) & 3) /* OBFF enabled */
+ #define PCI_EXP_DEVSTA2			0x2a	/* Device Status */
+ #define PCI_EXP_LNKCAP2			0x2c	/* Link Capabilities */
++#define  PCI_EXP_LNKCAP2_SPEED(x)	(((x) >> 1) & 0x7f)
++#define  PCI_EXP_LNKCAP2_CROSSLINK	0x00000100 /* Crosslink Supported */
++#define  PCI_EXP_LNKCAP2_DRS		0x80000000 /* Device Readiness Status */
+ #define PCI_EXP_LNKCTL2			0x30	/* Link Control */
+ #define  PCI_EXP_LNKCTL2_SPEED(x)	((x) & 0xf) /* Target Link Speed */
+ #define  PCI_EXP_LNKCTL2_CMPLNC		0x0010	/* Enter Compliance */
+diff --git a/ls-caps.c b/ls-caps.c
+index a6705eb..585b208 100644
+--- a/ls-caps.c
++++ b/ls-caps.c
+@@ -1151,6 +1151,29 @@ static void cap_express_dev2(struct device *d, int where, int type)
+     }
+ }
+ 
++static const char *cap_express_link2_speed_cap(int vector)
++{
++  /*
++   * Per PCIe r5.0, sec 8.2.1, a device must support 2.5GT/s and is not
++   * permitted to skip support for any data rates between 2.5GT/s and the
++   * highest supported rate.
++   */
++  if (vector & 0x60)
++    return "RsvdP";
++  else if (vector & 0x10)
++    return "2.5-32GT/s";
++  else if (vector & 0x08)
++    return "2.5-16GT/s";
++  else if (vector & 0x04)
++    return "2.5-8GT/s";
++  else if (vector & 0x02)
++    return "2.5-5GT/s";
++  else if (vector & 0x01)
++    return "2.5GT/s";
++
++  return "Unknown";
++}
++
+ static const char *cap_express_link2_speed(int type)
+ {
+   switch (type)
+@@ -1204,10 +1227,19 @@ static const char *cap_express_link2_transmargin(int type)
+ 
+ static void cap_express_link2(struct device *d, int where, int type)
+ {
++  u32 l;
+   u16 w;
+ 
+   if (!((type == PCI_EXP_TYPE_ENDPOINT || type == PCI_EXP_TYPE_LEG_END) &&
+ 	(d->dev->dev != 0 || d->dev->func != 0))) {
++    /* Link Capabilities 2 was reserved before PCIe r3.0 */
++    l = get_conf_long(d, where + PCI_EXP_LNKCAP2);
++    if (l) {
++      printf("\t\tLnkCap2: Supported Link Speeds: %s, Crosslink%c DRS%c\n",
++	  cap_express_link2_speed_cap(PCI_EXP_LNKCAP2_SPEED(l)),
++	  FLAG(l, PCI_EXP_LNKCAP2_CROSSLINK),
++	  FLAG(l, PCI_EXP_LNKCAP2_DRS));
++    }
+     w = get_conf_word(d, where + PCI_EXP_LNKCTL2);
+     printf("\t\tLnkCtl2: Target Link Speed: %s, EnterCompliance%c SpeedDis%c",
+ 	cap_express_link2_speed(PCI_EXP_LNKCTL2_SPEED(w)),
