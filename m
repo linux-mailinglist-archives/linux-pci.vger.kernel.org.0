@@ -2,269 +2,184 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 15F2F1C7A77
-	for <lists+linux-pci@lfdr.de>; Wed,  6 May 2020 21:48:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 380881C7C02
+	for <lists+linux-pci@lfdr.de>; Wed,  6 May 2020 23:10:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728336AbgEFTsq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 May 2020 15:48:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39224 "EHLO mail.kernel.org"
+        id S1729622AbgEFVKY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 May 2020 17:10:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726649AbgEFTsq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 6 May 2020 15:48:46 -0400
+        id S1729598AbgEFVKU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 6 May 2020 17:10:20 -0400
 Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1FB020747;
-        Wed,  6 May 2020 19:48:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF6682076D;
+        Wed,  6 May 2020 21:10:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588794525;
-        bh=fAixgbf/SDTe2MwXWJsOVDkrMMpL9mIMkL98Dg4f778=;
+        s=default; t=1588799420;
+        bh=zki508vDte8jI4EKebOmcvesA3luXzs60n8vNDoAJj0=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=dyEotBRVguGX6MhpwLsv0GOH1uXuUGp0Otj80NdOxzPUhYCUAwrzggPxApDdBd64z
-         srKHrN/4aOAgSpz6vg2+XdWl+Mtu1uwha/XsEdOq1hyG5QW1LAPN/ssHx5aIKk3Wfu
-         O6mbdKJs5x2DPyXHN7d0foiZxENUP8UxmM06nuos=
-Date:   Wed, 6 May 2020 14:48:42 -0500
+        b=edtLBBPcqWjnDxL5cTONTtcf0+s4af1kkpqPbPXwjFev7IJhxQbnABP2Vp6OxVH15
+         djW1S/4/Az8Gy2EDn9MC6IHzl/lpbCzO8BMKyVzuXmIHt/S0pugN+RTLYK6m6O91Km
+         ufexdmpugeboApXPZ5DSguh/+4Px+1Zdv85P9ojc=
+Date:   Wed, 6 May 2020 16:10:18 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Yicong Yang <yangyicong@hisilicon.com>
-Cc:     linux-pci@vger.kernel.org, kvalo@codeaurora.org,
-        andreas.noever@gmail.com, rjw@rjwysocki.net,
-        linux-wireless@vger.kernel.org, linux-usb@vger.kernel.org,
-        mika.westerberg@linux.intel.com, linuxarm@huawei.com
-Subject: Re: [PATCH v2] PCI: Use pci_pcie_find_root_port() to get root port
-Message-ID: <20200506194842.GA443456@bjorn-Precision-5520>
+To:     Niklas Schnelle <schnelle@linux.ibm.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Pierre Morel <pmorel@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>
+Subject: Re: [RFC 1/2] PCI/IOV: Introduce pci_iov_sysfs_link() function
+Message-ID: <20200506211018.GA454697@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1588768976-4852-1-git-send-email-yangyicong@hisilicon.com>
+In-Reply-To: <20200506154139.90609-2-schnelle@linux.ibm.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, May 06, 2020 at 08:42:56PM +0800, Yicong Yang wrote:
-> Previously we use pcie_find_root_port() to get root port from a pcie
-> device, use pci_find_pcie_root_port() to get root port from a pci
-> device, which increase the complexity.
-> 
-> Unify the two functions and use pci_pcie_find_root_port() to get root
-> port from both pci device and pcie device. Then there is not need to
-> distinguish the type of the device.
-> 
-> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
-> Acked-by: Kalle Valo <kvalo@codeaurora.org> // for wireless
-> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com> // for thunderbolt
+On Wed, May 06, 2020 at 05:41:38PM +0200, Niklas Schnelle wrote:
+> currently pci_iov_add_virtfn() scans the SR-IOV bars, adds the VF to the
+> bus and also creates the sysfs links between the newly added VF and its
+> parent PF.
 
-When I first looked at this, I got distracted because I think many of
-the calls of these functions should go away.  That's out of scope
-right now, but I'll just mention them for the archives:
+s/currently/Currently/
+s/bars/BARs/
 
-  - iwl_trans_pcie_dump_regs() dumps AER registers, which should be
-    done by the PCI core, not by the driver.
+> With pdev->no_vf_scan fencing off the entire pci_iov_add_virtfn() call
+> s390 as the sole pdev->no_vf_scan user thus ends up missing these sysfs
+> links which are required for example by QEMU/libvirt.
+> Instead of duplicating the code introduce a new pci_iov_sysfs_link()
+> function for establishing sysfs links.
 
-  - pcie_root_rcb_set() looks up the Root Port's RCB setting, which
-    could easily be inherited.
+This looks like two paragraphs missing the blank line between.
 
-  - aer_inject().  I'm not convinced anybody uses this, and we have
-    the ACPI EINJ path, which should test a lot more of the path.
+This whole thing is not "introducing" any new functionality; it's
+"refactoring" to move existing functionality around and make it
+callable separately.
 
-  - acpi_pci_bridge_d3() looks up the "HotPlugSupportInD3", which
-    probably could also be inherited.
+> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
 
-  - pci_configure_relaxed_ordering() looks up the Root Port's Relaxed
-    Ordering support, which could be inherited.
+With the fixes above and a few below:
+
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
 > ---
-> Change since v1:
-> - Add Mika's Ack for thunderbolt part
-> - Add description for pci_pcie_find_root_port()
+>  drivers/pci/iov.c   | 36 ++++++++++++++++++++++++------------
+>  include/linux/pci.h |  8 ++++++++
+>  2 files changed, 32 insertions(+), 12 deletions(-)
 > 
->  drivers/net/wireless/intel/iwlwifi/pcie/trans.c |  2 +-
->  drivers/pci/pci-acpi.c                          |  4 ++--
->  drivers/pci/pci.c                               | 24 ------------------------
->  drivers/pci/pcie/aer_inject.c                   |  2 +-
->  drivers/pci/probe.c                             |  2 +-
->  drivers/pci/quirks.c                            |  2 +-
->  drivers/thunderbolt/switch.c                    |  4 ++--
->  include/linux/pci.h                             | 17 ++++++++++-------
->  8 files changed, 18 insertions(+), 39 deletions(-)
-> 
-> diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-> index 38d8fe2..556cb8c 100644
-> --- a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-> +++ b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-> @@ -158,7 +158,7 @@ void iwl_trans_pcie_dump_regs(struct iwl_trans *trans)
-> 
->  	/* Print root port AER registers */
->  	pos = 0;
-> -	pdev = pcie_find_root_port(pdev);
-> +	pdev = pci_pcie_find_root_port(pdev);
->  	if (pdev)
->  		pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_ERR);
->  	if (pos) {
-> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> index 0c02d50..9316533 100644
-> --- a/drivers/pci/pci-acpi.c
-> +++ b/drivers/pci/pci-acpi.c
-> @@ -246,7 +246,7 @@ static acpi_status decode_type1_hpx_record(union acpi_object *record,
-> 
->  static bool pcie_root_rcb_set(struct pci_dev *dev)
+> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> index 4d1f392b05f9..d0ddf5f5484c 100644
+> --- a/drivers/pci/iov.c
+> +++ b/drivers/pci/iov.c
+> @@ -113,7 +113,6 @@ resource_size_t pci_iov_resource_size(struct pci_dev *dev, int resno)
+>  static void pci_read_vf_config_common(struct pci_dev *virtfn)
 >  {
-> -	struct pci_dev *rp = pcie_find_root_port(dev);
-> +	struct pci_dev *rp = pci_pcie_find_root_port(dev);
->  	u16 lnkctl;
-> 
->  	if (!rp)
-> @@ -948,7 +948,7 @@ static bool acpi_pci_bridge_d3(struct pci_dev *dev)
->  	 * Look for a special _DSD property for the root port and if it
->  	 * is set we know the hierarchy behind it supports D3 just fine.
->  	 */
-> -	root = pci_find_pcie_root_port(dev);
-> +	root = pci_pcie_find_root_port(dev);
->  	if (!root)
->  		return false;
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index d828ca8..fc5e7b6 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -695,30 +695,6 @@ struct resource *pci_find_resource(struct pci_dev *dev, struct resource *res)
->  EXPORT_SYMBOL(pci_find_resource);
-> 
->  /**
-> - * pci_find_pcie_root_port - return PCIe Root Port
-> - * @dev: PCI device to query
-> - *
-> - * Traverse up the parent chain and return the PCIe Root Port PCI Device
-> - * for a given PCI Device.
-> - */
-> -struct pci_dev *pci_find_pcie_root_port(struct pci_dev *dev)
-> -{
-> -	struct pci_dev *bridge, *highest_pcie_bridge = dev;
+>  	struct pci_dev *physfn = virtfn->physfn;
 > -
-> -	bridge = pci_upstream_bridge(dev);
-> -	while (bridge && pci_is_pcie(bridge)) {
-> -		highest_pcie_bridge = bridge;
-> -		bridge = pci_upstream_bridge(bridge);
-> -	}
-> -
-> -	if (pci_pcie_type(highest_pcie_bridge) != PCI_EXP_TYPE_ROOT_PORT)
-> -		return NULL;
-> -
-> -	return highest_pcie_bridge;
-> -}
-> -EXPORT_SYMBOL(pci_find_pcie_root_port);
-> -
-> -/**
->   * pci_wait_for_pending - wait for @mask bit(s) to clear in status word @pos
->   * @dev: the PCI device to operate on
->   * @pos: config space offset of status word
-> diff --git a/drivers/pci/pcie/aer_inject.c b/drivers/pci/pcie/aer_inject.c
-> index 6988fe7..c3bfc1b5 100644
-> --- a/drivers/pci/pcie/aer_inject.c
-> +++ b/drivers/pci/pcie/aer_inject.c
-> @@ -332,7 +332,7 @@ static int aer_inject(struct aer_error_inj *einj)
->  	dev = pci_get_domain_bus_and_slot(einj->domain, einj->bus, devfn);
->  	if (!dev)
->  		return -ENODEV;
-> -	rpdev = pcie_find_root_port(dev);
-> +	rpdev = pci_pcie_find_root_port(dev);
->  	if (!rpdev) {
->  		pci_err(dev, "Root port not found\n");
->  		ret = -ENODEV;
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 512cb43..50f7733 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -2015,7 +2015,7 @@ static void pci_configure_relaxed_ordering(struct pci_dev *dev)
->  	 * For now, we only deal with Relaxed Ordering issues with Root
->  	 * Ports. Peer-to-Peer DMA is another can of worms.
->  	 */
-> -	root = pci_find_pcie_root_port(dev);
-> +	root = pci_pcie_find_root_port(dev);
->  	if (!root)
->  		return;
-> 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 29f473e..ac62675 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -4253,7 +4253,7 @@ DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_AMD, 0x1a02, PCI_CLASS_NOT_DEFINED,
->   */
->  static void quirk_disable_root_port_attributes(struct pci_dev *pdev)
->  {
-> -	struct pci_dev *root_port = pci_find_pcie_root_port(pdev);
-> +	struct pci_dev *root_port = pci_pcie_find_root_port(pdev);
-> 
->  	if (!root_port) {
->  		pci_warn(pdev, "PCIe Completion erratum may cause device errors\n");
-> diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
-> index a2ce990..90844c1 100644
-> --- a/drivers/thunderbolt/switch.c
-> +++ b/drivers/thunderbolt/switch.c
-> @@ -263,7 +263,7 @@ static void nvm_authenticate_start_dma_port(struct tb_switch *sw)
->  	 * itself. To be on the safe side keep the root port in D0 during
->  	 * the whole upgrade process.
->  	 */
-> -	root_port = pci_find_pcie_root_port(sw->tb->nhi->pdev);
-> +	root_port = pci_pcie_find_root_port(sw->tb->nhi->pdev);
->  	if (root_port)
->  		pm_runtime_get_noresume(&root_port->dev);
+>  	/*
+>  	 * Some config registers are the same across all associated VFs.
+>  	 * Read them once from VF0 so we can skip reading them from the
+> @@ -133,12 +132,34 @@ static void pci_read_vf_config_common(struct pci_dev *virtfn)
+>  			     &physfn->sriov->subsystem_device);
 >  }
-> @@ -272,7 +272,7 @@ static void nvm_authenticate_complete_dma_port(struct tb_switch *sw)
+>  
+> +int pci_iov_sysfs_link(struct pci_dev *dev,
+> +		struct pci_dev *virtfn, int id)
+> +{
+> +	int rc;
+> +	char buf[VIRTFN_ID_LEN];
+
+Swap the order so these are declared in the order they're used below.
+
+> +	sprintf(buf, "virtfn%u", id);
+> +	rc = sysfs_create_link(&dev->dev.kobj, &virtfn->dev.kobj, buf);
+> +	if (rc)
+> +		goto failed;
+> +	rc = sysfs_create_link(&virtfn->dev.kobj, &dev->dev.kobj, "physfn");
+> +	if (rc)
+> +		goto failed1;
+> +
+> +	kobject_uevent(&virtfn->dev.kobj, KOBJ_CHANGE);
+> +
+> +	return 0;
+
+Add a blank link here to separate the "success" return from the error
+paths.
+
+> +failed1:
+> +	sysfs_remove_link(&dev->dev.kobj, buf);
+> +failed:
+> +	return rc;
+> +}
+> +
+>  int pci_iov_add_virtfn(struct pci_dev *dev, int id)
 >  {
->  	struct pci_dev *root_port;
-> 
-> -	root_port = pci_find_pcie_root_port(sw->tb->nhi->pdev);
-> +	root_port = pci_pcie_find_root_port(sw->tb->nhi->pdev);
->  	if (root_port)
->  		pm_runtime_put(&root_port->dev);
->  }
+>  	int i;
+>  	int rc = -ENOMEM;
+>  	u64 size;
+> -	char buf[VIRTFN_ID_LEN];
+>  	struct pci_dev *virtfn;
+>  	struct resource *res;
+>  	struct pci_sriov *iov = dev->sriov;
+> @@ -182,23 +203,14 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
+>  	}
+>  
+>  	pci_device_add(virtfn, virtfn->bus);
+> -
+> -	sprintf(buf, "virtfn%u", id);
+> -	rc = sysfs_create_link(&dev->dev.kobj, &virtfn->dev.kobj, buf);
+> +	rc = pci_iov_sysfs_link(dev, virtfn, id);
+>  	if (rc)
+>  		goto failed1;
+> -	rc = sysfs_create_link(&virtfn->dev.kobj, &dev->dev.kobj, "physfn");
+> -	if (rc)
+> -		goto failed2;
+> -
+> -	kobject_uevent(&virtfn->dev.kobj, KOBJ_CHANGE);
+>  
+>  	pci_bus_add_device(virtfn);
+>  
+>  	return 0;
+>  
+> -failed2:
+> -	sysfs_remove_link(&dev->dev.kobj, buf);
+>  failed1:
+>  	pci_stop_and_remove_bus_device(virtfn);
+>  	pci_dev_put(dev);
 > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 3840a54..51881a1 100644
+> index 83ce1cdf5676..e97d27ac350a 100644
 > --- a/include/linux/pci.h
 > +++ b/include/linux/pci.h
-> @@ -1011,7 +1011,6 @@ void pci_bus_add_device(struct pci_dev *dev);
->  void pci_read_bridge_bases(struct pci_bus *child);
->  struct resource *pci_find_parent_resource(const struct pci_dev *dev,
->  					  struct resource *res);
-> -struct pci_dev *pci_find_pcie_root_port(struct pci_dev *dev);
->  u8 pci_swizzle_interrupt_pin(const struct pci_dev *dev, u8 pin);
->  int pci_get_interrupt_pin(struct pci_dev *dev, struct pci_dev **bridge);
->  u8 pci_common_swizzle(struct pci_dev *dev, u8 *pinp);
-> @@ -2124,15 +2123,19 @@ static inline int pci_pcie_type(const struct pci_dev *dev)
->  	return (pcie_caps_reg(dev) & PCI_EXP_FLAGS_TYPE) >> 4;
+> @@ -2048,6 +2048,8 @@ int pci_iov_virtfn_devfn(struct pci_dev *dev, int id);
+>  
+>  int pci_enable_sriov(struct pci_dev *dev, int nr_virtfn);
+>  void pci_disable_sriov(struct pci_dev *dev);
+> +
+> +int pci_iov_sysfs_link(struct pci_dev *dev, struct pci_dev *virtfn, int id);
+>  int pci_iov_add_virtfn(struct pci_dev *dev, int id);
+>  void pci_iov_remove_virtfn(struct pci_dev *dev, int id);
+>  int pci_num_vf(struct pci_dev *dev);
+> @@ -2073,6 +2075,12 @@ static inline int pci_iov_virtfn_devfn(struct pci_dev *dev, int id)
 >  }
-> 
-> -static inline struct pci_dev *pcie_find_root_port(struct pci_dev *dev)
-> +/**
-> + * pci_pcie_find_root_port - Get the PCIe root port device
-> + * @dev: PCI device
-> + *
-> + * Traverse up the parent chain and return the PCIe Root Port PCI Device
-> + * for a given PCI/PCIe Device.
-> + */
-> +static inline struct pci_dev *pci_pcie_find_root_port(struct pci_dev *dev)
+>  static inline int pci_enable_sriov(struct pci_dev *dev, int nr_virtfn)
+>  { return -ENODEV; }
+> +
+> +static inline int pci_iov_sysfs_link(struct pci_dev *dev,
+> +		struct pci_dev *virtfn, int id)
 
-The point of this is to find a Root Port regardless of whether "dev"
-is PCI or PCIe.  So I think pcie_find_root_port() is sufficient; we
-don't need both "pci" and "pcie" in the name.
+Align the second line with the args in the first line, as the rest of
+this file does.
 
+> +{
+> +	return -ENODEV;
+> +}
+>  static inline int pci_iov_add_virtfn(struct pci_dev *dev, int id)
 >  {
-> -	while (1) {
-> -		if (!pci_is_pcie(dev))
-> -			break;
-> +	dev = pci_physfn(dev);
-> +	while (dev) {
->  		if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT)
->  			return dev;
-> -		if (!dev->bus->self)
-> -			break;
->  		dev = dev->bus->self;
-
-Why not use pci_upstream_bridge() here?
-
->  	}
->  	return NULL;
-> --
-> 2.8.1
+>  	return -ENOSYS;
+> -- 
+> 2.17.1
 > 
