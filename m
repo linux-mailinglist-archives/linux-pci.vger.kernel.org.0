@@ -2,128 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A7C2E1C6E5A
-	for <lists+linux-pci@lfdr.de>; Wed,  6 May 2020 12:27:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D9AED1C6EA4
+	for <lists+linux-pci@lfdr.de>; Wed,  6 May 2020 12:43:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728943AbgEFK1p convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Wed, 6 May 2020 06:27:45 -0400
-Received: from mga14.intel.com ([192.55.52.115]:29055 "EHLO mga14.intel.com"
+        id S1726908AbgEFKnF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 May 2020 06:43:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728713AbgEFK1o (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 6 May 2020 06:27:44 -0400
-IronPort-SDR: ag+EIYoBR4TVmXtX0WzlfT7BJzQlj/KzLh3belSJjnNk++1+b7qalEMpUjPj9Q2HgHiMIYOs1P
- 5MrsgL/O6jow==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2020 03:27:44 -0700
-IronPort-SDR: GUoiCivGoWEh00L1AYi7caXVsRR8Ir6+hS6yJ7Kdnc1B/DhsaZ5KbxJl3siUuW2Zssx26Lc+dC
- i6VhSvMUWXgQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,358,1583222400"; 
-   d="scan'208";a="369757094"
-Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
-  by fmsmga001.fm.intel.com with ESMTP; 06 May 2020 03:27:44 -0700
-Received: from fmsmsx602.amr.corp.intel.com (10.18.126.82) by
- FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 6 May 2020 03:27:44 -0700
-Received: from fmsmsx602.amr.corp.intel.com (10.18.126.82) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 6 May 2020 03:27:43 -0700
-Received: from shsmsx108.ccr.corp.intel.com (10.239.4.97) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Wed, 6 May 2020 03:27:43 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.210]) by
- SHSMSX108.ccr.corp.intel.com ([169.254.8.95]) with mapi id 14.03.0439.000;
- Wed, 6 May 2020 18:27:40 +0800
-From:   "Tian, Kevin" <kevin.tian@intel.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>,
-        "Dey, Megha" <megha.dey@linux.intel.com>
-CC:     "Jiang, Dave" <dave.jiang@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: RE: [PATCH RFC 04/15] drivers/base: Add support for a new IMS irq
- domain
-Thread-Topic: [PATCH RFC 04/15] drivers/base: Add support for a new IMS irq
- domain
-Thread-Index: AQHWGDVoji+pYTNAZUCFs9wcRhPwDaiGoCsAgAy5aQCAAyNRgIAABFYAgAABv4CAABuEAIAAxfiAgAOJvpA=
-Date:   Wed, 6 May 2020 10:27:40 +0000
-Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D903AED@SHSMSX104.ccr.corp.intel.com>
-References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
- <158751205175.36773.1874642824360728883.stgit@djiang5-desk3.ch.intel.com>
- <20200423201118.GA29567@ziepe.ca>
- <35f701d9-1034-09c7-8117-87fb8796a017@linux.intel.com>
- <20200503222513.GS26002@ziepe.ca>
- <1ededeb8-deff-4db7-40e5-1d5e8a800f52@linux.intel.com>
- <20200503224659.GU26002@ziepe.ca>
- <8ff2aace-0697-b8ef-de68-1bcc49d6727f@linux.intel.com>
- <20200504121401.GV26002@ziepe.ca>
-In-Reply-To: <20200504121401.GV26002@ziepe.ca>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S1725824AbgEFKnF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 6 May 2020 06:43:05 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9094220663;
+        Wed,  6 May 2020 10:43:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588761784;
+        bh=qjFxbQJhwnjLswkECG7XON/LpTe8nEe02+5NBDCvjtA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=cSbK4h9sQzP5m7pYiJdwdOo8ET3iaMr1rZpcO1x03ZxG4zrp7HgG27gc5E7iKlYBV
+         z2CtAHjpeUw4uiCUovjFTfPrPUqzcEN6baYqdqmiSR5ifUKXGAwuafruomAwTALY0U
+         9LXU2MHGZNFu4pBSupEbhF2T4zGWwTpkr0kniM8g=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jWHW2-009vEj-UY; Wed, 06 May 2020 11:43:03 +0100
+Date:   Wed, 6 May 2020 11:43:01 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     linux-pci@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Kevin Hilman <khilman@baylibre.com>,
+        Yue Wang <yue.wang@Amlogic.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH] PCI: amlogic: meson: Don't use FAST_LINK_MODE to set up
+ link
+Message-ID: <20200506114301.7288c02d@why>
+In-Reply-To: <20200429164230.309922-1-maz@kernel.org>
+References: <20200429164230.309922-1-maz@kernel.org>
+Organization: Approximate
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: linux-pci@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bhelgaas@google.com, robh@kernel.org, lorenzo.pieralisi@arm.com, khilman@baylibre.com, yue.wang@Amlogic.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> From: Jason Gunthorpe <jgg@ziepe.ca>
-> Sent: Monday, May 4, 2020 8:14 PM
+On Wed, 29 Apr 2020 17:42:30 +0100
+Marc Zyngier <maz@kernel.org> wrote:
+
+> My vim3l board stubbornly refuses to play ball with a bog
+> standard PCIe switch (ASM1184e), spitting all kind of errors
+> ranging from link never coming up to crazy things like downstream
+> ports falling off the face of the planet.
 > 
-> On Sun, May 03, 2020 at 05:25:28PM -0700, Dey, Megha wrote:
-> > > > The use case if when we have a device assigned to a guest and we
-> > > > want to allocate IMS(platform-msi) interrupts for that
-> > > > guest-assigned device. Currently, this is abstracted through a mdev
-> > > > interface.
-> > >
-> > > And the mdev has the pci_device internally, so it should simply pass
-> > > that pci_device to the platform_msi machinery.
-> >
-> > hmm i am not sure I follow this. mdev has a pci_device internally? which
-> > struct are you referring to here?
+> Upon investigating how the PCIe RC is configured, I found the
+> following nugget: the Sysnopsys DWC PCIe Reference Manual, in the
+> section dedicated to the PLCR register, describes bit 7 (FAST_LINK_MODE)
+> as:
 > 
-> mdev in general may not, but any ADI trying to use mdev will
-> necessarily have access to a struct pci_device.
+> "Sets all internal timers to fast mode for simulation purposes."
+> 
+> I completely understand the need for setting this bit from a simulation
+> perspective, but what I have on my desk is actual silicon, which
+> expects timers to have a nominal value (and I expect this is the
+> case for most people).
+> 
+> Making sure the FAST_LINK_MODE bit is cleared when configuring the RC
+> solves this problem.
+> 
+> Fixes: 9c0ef6d34fdb ("PCI: amlogic: Add the Amlogic Meson PCIe controller driver")
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> ---
+>  drivers/pci/controller/dwc/pci-meson.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
+> index 3715dceca1bf..ca59ba9e0ecd 100644
+> --- a/drivers/pci/controller/dwc/pci-meson.c
+> +++ b/drivers/pci/controller/dwc/pci-meson.c
+> @@ -289,11 +289,11 @@ static void meson_pcie_init_dw(struct meson_pcie *mp)
+>  	meson_cfg_writel(mp, val, PCIE_CFG0);
+>  
+>  	val = meson_elb_readl(mp, PCIE_PORT_LINK_CTRL_OFF);
+> -	val &= ~LINK_CAPABLE_MASK;
+> +	val &= ~(LINK_CAPABLE_MASK | FAST_LINK_MODE);
+>  	meson_elb_writel(mp, val, PCIE_PORT_LINK_CTRL_OFF);
+>  
+>  	val = meson_elb_readl(mp, PCIE_PORT_LINK_CTRL_OFF);
+> -	val |= LINK_CAPABLE_X1 | FAST_LINK_MODE;
+> +	val |= LINK_CAPABLE_X1;
+>  	meson_elb_writel(mp, val, PCIE_PORT_LINK_CTRL_OFF);
+>  
+>  	val = meson_elb_readl(mp, PCIE_GEN2_CTRL_OFF);
 
-Agree here. Mdev is just driver internal concept. It doesn't make sense to
-expose it in driver/base, just like how we avoided exposing mdev in iommu
-layer.
+Yue, Kevin: any comment on this?
 
-Megha, every mdev/ADI has a parent device, which is the struct pci_device
-that Jason refers to. In irq domain level, it only needs to care about the
-PCI device and related IMS management. It doesn't matter whether the
-allocated IMS entry is used for a mdev or by parent driver itself.
+I found that the issue is reproducible even without a PCIe switch,
+depending on the single device I plug in this machine (an Intel SSD
+works fine, while a Marvell Ethernet adapter never shows up) as the
+LTSSM times out much earlier than it really should (HW timers running
+too quickly). Applying this patch makes every single device I have
+lying around work fine.
 
-Thanks
-Kevin
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
