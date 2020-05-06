@@ -2,118 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C82611C7CBB
-	for <lists+linux-pci@lfdr.de>; Wed,  6 May 2020 23:42:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 445061C7D82
+	for <lists+linux-pci@lfdr.de>; Thu,  7 May 2020 00:42:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730206AbgEFVl5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 May 2020 17:41:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33866 "EHLO mail.kernel.org"
+        id S1730090AbgEFWmb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 May 2020 18:42:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730307AbgEFVl4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 6 May 2020 17:41:56 -0400
+        id S1729654AbgEFWma (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 6 May 2020 18:42:30 -0400
 Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 872D02078C;
-        Wed,  6 May 2020 21:41:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94B512075E;
+        Wed,  6 May 2020 22:42:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588801315;
-        bh=hIXvI2c1b1nXaKYGCPmnNib4tAE0InuTDY3Z91LsdGo=;
+        s=default; t=1588804950;
+        bh=UaeCzXF3gxehCWoev+4woXreftwS3km7FRXYYZNVyW0=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=d0/Xa402U/z6EWAhW42wFq4bziSEcX3F9e+jL2DylN/Xh10llEClo0hr8wWUB5Mvs
-         Sqq58juRQBt2RR+JFshuMqpdvhDnwDDvsrIzpwF395LbLdoDhD15GIQm24JAcv4U3R
-         WIQd8Ua8fuFJQ1duRIS4cxSgca3ropmfKd40x4bg=
-Date:   Wed, 6 May 2020 16:41:54 -0500
+        b=eco718RTIYLy77DqsH8+nRdjWFxXBXDrXCU4osL4eMhby/q94BX2CMkc1LgYVlqy1
+         4ewOAaAYCgsGn1zmzUDiJySXvlpJVdBZht21YH7bzpqI71JsXd0bR8Mp1h/JEzAnVd
+         1IrKWygXGdTLUTfMvclkgYVcUZTWj3oKIWNHDJo0=
+Date:   Wed, 6 May 2020 17:42:28 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Bryce Willey <bryce.steven.willey@gmail.com>
-Cc:     corbet@lwn.net, linux-doc@vger.kernel.org,
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
         linux-pci@vger.kernel.org
-Subject: Re: [PATCH] Documentation: PCI: gave unique labels to sections
-Message-ID: <20200506214154.GA456677@bjorn-Precision-5520>
+Subject: Re: [PATCH] PCI: Do not use pcie_get_speed_cap() to determine when
+ to start waiting
+Message-ID: <20200506224228.GA458845@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200503214926.23748-1-bryce.steven.willey@gmail.com>
+In-Reply-To: <20200416083245.73957-1-mika.westerberg@linux.intel.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-s/gave/Give/ (in subject)
-
-On Sun, May 03, 2020 at 05:49:26PM -0400, Bryce Willey wrote:
-> From: Bryce Willey <Bryce.Steven.Willey@gmail.com>
+On Thu, Apr 16, 2020 at 11:32:45AM +0300, Mika Westerberg wrote:
+> Kai-Heng Feng reported that it takes long time (>1s) to resume
+> Thunderbolt connected PCIe devices from both runtime suspend and system
+> sleep (s2idle).
 > 
-> Made subsection label more specific to avoid sphinx warnings
-
-s/Made/Make/
-s/label/labels/
-s/warnings/warnings./
-
-> Exact warning:
->  Documentation/PCI/endpoint/pci-endpoint.rst:208: WARNING: duplicate label
-> pci/endpoint/pci-endpoint:other apis, other instance in Documentation/PCI/endpoint/pci-endpoint.rst
+> These PCIe downstream ports the second link capability (PCI_EXP_LNKCAP2)
+> announces support for speeds > 5 GT/s but it is then capped by the
+> second link control (PCI_EXP_LNKCTL2) register to 2.5 GT/s. This
+> possiblity was not considered in pci_bridge_wait_for_secondary_bus() so
+> it ended up waiting for 1100 ms as these ports do not support active
+> link layer reporting either.
 > 
-> Signed-off-by: Bryce Willey <Bryce.Steven.Willey@gmail.com>
+> PCIe spec 5.0 section 6.6.1 mandates that we must wait minimum of 100 ms
+> before sending configuration request to the device below, if the port
+> does not support speeds > 5 GT/s, and if it does we first need to wait
+> for the data link layer to become active before waiting for that 100 ms.
+> 
+> PCIe spec 5.0 section 7.5.3.6 further says that all downstream ports
+> that support speeds > 5 GT/s must support active link layer reporting so
+> instead of looking for the speed we can check for the active link layer
+> reporting capability and determine how to wait based on that (as they go
+> hand in hand).
 
-I assume Lorenzo will pick this up, since he's merged most of the
-recent Documentation/PCI/endpoint changes, and he'll likely fix the
-nits above.  FWIW,
+I can't quite tell what the defect is here.
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+I assume you're talking about this text from sec 6.6.1:
 
+  - With a Downstream Port that does not support Link speeds greater
+    than 5.0 GT/s, software must wait a minimum of 100 ms before
+    sending a Configuration Request to the device immediately below
+    that Port.
+
+  - With a Downstream Port that supports Link speeds greater than 5.0
+    GT/s, software must wait a minimum of 100 ms after Link training
+    completes before sending a Configuration Request to the device
+    immediately below that Port. Software can determine when Link
+    training completes by polling the Data Link Layer Link Active bit
+    or by setting up an associated interrupt (see Section 6.7.3.3 ).
+
+I don't understand what Link Control 2 has to do with this.  The spec
+talks about ports *supporting* certain link speeds, which sounds to me
+like the Link Capabilities.  It doesn't say anything about the current
+or target link speed.
+
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=206837
+> Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 > ---
->  Documentation/PCI/endpoint/pci-endpoint.rst | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
+>  drivers/pci/pci.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/PCI/endpoint/pci-endpoint.rst b/Documentation/PCI/endpoint/pci-endpoint.rst
-> index 0e2311b5617b..7536be445db8 100644
-> --- a/Documentation/PCI/endpoint/pci-endpoint.rst
-> +++ b/Documentation/PCI/endpoint/pci-endpoint.rst
-> @@ -78,8 +78,8 @@ by the PCI controller driver.
->     Cleanup the pci_epc_mem structure allocated during pci_epc_mem_init().
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 595fcf59843f..d9d9ff5b968e 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -4822,7 +4822,13 @@ void pci_bridge_wait_for_secondary_bus(struct pci_dev *dev)
+>  	if (!pcie_downstream_port(dev))
+>  		return;
 >  
->  
-> -APIs for the PCI Endpoint Function Driver
-> -~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> +EPC APIs for the PCI Endpoint Function Driver
-> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->  
->  This section lists the APIs that the PCI Endpoint core provides to be used
->  by the PCI endpoint function driver.
-> @@ -117,8 +117,8 @@ by the PCI endpoint function driver.
->     The PCI endpoint function driver should use pci_epc_mem_free_addr() to
->     free the memory space allocated using pci_epc_mem_alloc_addr().
->  
-> -Other APIs
-> -~~~~~~~~~~
-> +Other EPC APIs
-> +~~~~~~~~~~~~~~
->  
->  There are other APIs provided by the EPC library. These are used for binding
->  the EPF device with EPC device. pci-ep-cfs.c can be used as reference for
-> @@ -160,8 +160,8 @@ PCI Endpoint Function(EPF) Library
->  The EPF library provides APIs to be used by the function driver and the EPC
->  library to provide endpoint mode functionality.
->  
-> -APIs for the PCI Endpoint Function Driver
-> -~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> +EPF APIs for the PCI Endpoint Function Driver
-> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->  
->  This section lists the APIs that the PCI Endpoint core provides to be used
->  by the PCI endpoint function driver.
-> @@ -204,8 +204,8 @@ by the PCI endpoint controller library.
->     The PCI endpoint controller library invokes pci_epf_linkup() when the
->     EPC device has established the connection to the host.
->  
-> -Other APIs
-> -~~~~~~~~~~
-> +Other EPF APIs
-> +~~~~~~~~~~~~~~
->  
->  There are other APIs provided by the EPF library. These are used to notify
->  the function driver when the EPF device is bound to the EPC device.
+> -	if (pcie_get_speed_cap(dev) <= PCIE_SPEED_5_0GT) {
+> +	/*
+> +	 * Since PCIe spec mandates that all downstream ports that support
+> +	 * speeds greater than 5 GT/s must support data link layer active
+> +	 * reporting so we use that here to determine when the delay should
+> +	 * be issued.
+> +	 */
+> +	if (!dev->link_active_reporting) {
+>  		pci_dbg(dev, "waiting %d ms for downstream link\n", delay);
+>  		msleep(delay);
+>  	} else {
 > -- 
-> 2.17.1
+> 2.25.1
 > 
