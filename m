@@ -2,118 +2,237 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D9AED1C6EA4
-	for <lists+linux-pci@lfdr.de>; Wed,  6 May 2020 12:43:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AFE421C6EF0
+	for <lists+linux-pci@lfdr.de>; Wed,  6 May 2020 13:09:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbgEFKnF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 May 2020 06:43:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37414 "EHLO mail.kernel.org"
+        id S1727861AbgEFLJw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 May 2020 07:09:52 -0400
+Received: from foss.arm.com ([217.140.110.172]:34104 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725824AbgEFKnF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 6 May 2020 06:43:05 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9094220663;
-        Wed,  6 May 2020 10:43:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588761784;
-        bh=qjFxbQJhwnjLswkECG7XON/LpTe8nEe02+5NBDCvjtA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=cSbK4h9sQzP5m7pYiJdwdOo8ET3iaMr1rZpcO1x03ZxG4zrp7HgG27gc5E7iKlYBV
-         z2CtAHjpeUw4uiCUovjFTfPrPUqzcEN6baYqdqmiSR5ifUKXGAwuafruomAwTALY0U
-         9LXU2MHGZNFu4pBSupEbhF2T4zGWwTpkr0kniM8g=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jWHW2-009vEj-UY; Wed, 06 May 2020 11:43:03 +0100
-Date:   Wed, 6 May 2020 11:43:01 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     linux-pci@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Kevin Hilman <khilman@baylibre.com>,
-        Yue Wang <yue.wang@Amlogic.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH] PCI: amlogic: meson: Don't use FAST_LINK_MODE to set up
- link
-Message-ID: <20200506114301.7288c02d@why>
-In-Reply-To: <20200429164230.309922-1-maz@kernel.org>
-References: <20200429164230.309922-1-maz@kernel.org>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1728052AbgEFLJv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 6 May 2020 07:09:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9EC111FB;
+        Wed,  6 May 2020 04:09:50 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 196F23F71F;
+        Wed,  6 May 2020 04:09:48 -0700 (PDT)
+Date:   Wed, 6 May 2020 12:09:39 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Wei Hu <weh@microsoft.com>
+Cc:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: Re: [PATCH v2 1/2] PCI: hv: Fix the PCI HyperV probe failure path to
+ release resource properly
+Message-ID: <20200506110930.GA31068@e121166-lin.cambridge.arm.com>
+References: <20200501053617.24689-1-weh@microsoft.com>
+ <20200505150315.GA16228@e121166-lin.cambridge.arm.com>
+ <SG2P153MB02136EA9764D340F3D81DF2DBBA40@SG2P153MB0213.APCP153.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: linux-pci@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bhelgaas@google.com, robh@kernel.org, lorenzo.pieralisi@arm.com, khilman@baylibre.com, yue.wang@Amlogic.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <SG2P153MB02136EA9764D340F3D81DF2DBBA40@SG2P153MB0213.APCP153.PROD.OUTLOOK.COM>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 29 Apr 2020 17:42:30 +0100
-Marc Zyngier <maz@kernel.org> wrote:
+On Wed, May 06, 2020 at 05:36:46AM +0000, Wei Hu wrote:
+> Hi Lorenzo,
+> 
+> Thanks for your review. Please see my comments inline. 
+> 
+> > -----Original Message-----
+> > From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > Sent: Tuesday, May 5, 2020 11:03 PM
+> > To: Wei Hu <weh@microsoft.com>
+> > Cc: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
+> > <haiyangz@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
+> > wei.liu@kernel.org; robh@kernel.org; bhelgaas@google.com; linux-
+> > hyperv@vger.kernel.org; linux-pci@vger.kernel.org; linux-
+> > kernel@vger.kernel.org; Dexuan Cui <decui@microsoft.com>; Michael Kelley
+> > <mikelley@microsoft.com>
+> > Subject: Re: [PATCH v2 1/2] PCI: hv: Fix the PCI HyperV probe failure path to
+> > release resource properly
+> > 
+> > On Fri, May 01, 2020 at 01:36:17PM +0800, Wei Hu wrote:
+> > > Some error cases in hv_pci_probe() were not handled. Fix these error
+> > > paths to release the resourses and clean up the state properly.
+> > 
+> > This patch does more than that. It adds a variable to store the number of slots
+> > actually allocated - I presume to free only allocated on slots on the exit path.
+> > 
+> > Two patches required I am afraid.
+> 
+> Well, adding this variable is needed to make the call of "(void) hv_pci_bus_exit(hdev, true)" 
 
-> My vim3l board stubbornly refuses to play ball with a bog
-> standard PCIe switch (ASM1184e), spitting all kind of errors
-> ranging from link never coming up to crazy things like downstream
-> ports falling off the face of the planet.
+I don't understand why - it is not clear from the commit log and the
+code, please explain it since it is not obvious.
+
+> at the end to work and clean up the PCI state in the failure path. Just adding this variable
+> would not make any changes. So I think it may be better to put them in single patch?
 > 
-> Upon investigating how the PCIe RC is configured, I found the
-> following nugget: the Sysnopsys DWC PCIe Reference Manual, in the
-> section dedicated to the PLCR register, describes bit 7 (FAST_LINK_MODE)
-> as:
+> > 
+> > > Signed-off-by: Wei Hu <weh@microsoft.com>
+> > > ---
+> > >  drivers/pci/controller/pci-hyperv.c | 20 ++++++++++++++++----
+> > >  1 file changed, 16 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/drivers/pci/controller/pci-hyperv.c
+> > > b/drivers/pci/controller/pci-hyperv.c
+> > > index e15022ff63e3..e6fac0187722 100644
+> > > --- a/drivers/pci/controller/pci-hyperv.c
+> > > +++ b/drivers/pci/controller/pci-hyperv.c
+> > > @@ -480,6 +480,9 @@ struct hv_pcibus_device {
+> > >
+> > >  	struct workqueue_struct *wq;
+> > >
+> > > +	/* Highest slot of child device with resources allocated */
+> > > +	int wslot_res_allocated;
+> > 
+> > I don't understand why you need an int rather than a u32.
+> > 
+> > Furthermore, I think a bitmap is more appropriate for what this variable is used
+> > for.
 > 
-> "Sets all internal timers to fast mode for simulation purposes."
-> 
-> I completely understand the need for setting this bit from a simulation
-> perspective, but what I have on my desk is actual silicon, which
-> expects timers to have a nominal value (and I expect this is the
-> case for most people).
-> 
-> Making sure the FAST_LINK_MODE bit is cleared when configuring the RC
-> solves this problem.
-> 
-> Fixes: 9c0ef6d34fdb ("PCI: amlogic: Add the Amlogic Meson PCIe controller driver")
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> ---
->  drivers/pci/controller/dwc/pci-meson.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
-> index 3715dceca1bf..ca59ba9e0ecd 100644
-> --- a/drivers/pci/controller/dwc/pci-meson.c
-> +++ b/drivers/pci/controller/dwc/pci-meson.c
-> @@ -289,11 +289,11 @@ static void meson_pcie_init_dw(struct meson_pcie *mp)
->  	meson_cfg_writel(mp, val, PCIE_CFG0);
+> So it can use a negative value (-1 in this case) to indicated none of any resources
+> has been allocated. Currently value between 0-255 indicating some resources 
+> have been allocated. Of course I can use 0xffffffff to indicate that if it were u32. But
+> it wouldn't make much difference, would it?
+
+It is fine by me - I would not have written it this way but it does
+not matter.
+
+> It would take 32 bytes for total 256 child slots in bitmap, while it only takes 4 bytes 
+> using int. It is not in critical path so scanning from the location one by one is not a big
+> deal.
+
+I suggested a bitmap for correctness - a slot number may include slots
+that as far as I can read the code failed get_pcichild_slot().
+
+It is not clear what this patch is doing in this loop, that's certain.
+
+> > 
+> > > +
+> > >  	/* hypercall arg, must not cross page boundary */
+> > >  	struct hv_retarget_device_interrupt retarget_msi_interrupt_params;
+> > >
+> > > @@ -2847,7 +2850,7 @@ static int hv_send_resources_allocated(struct
+> > hv_device *hdev)
+> > >  	struct hv_pci_dev *hpdev;
+> > >  	struct pci_packet *pkt;
+> > >  	size_t size_res;
+> > > -	u32 wslot;
+> > > +	int wslot;
+> > >  	int ret;
+> > >
+> > >  	size_res = (hbus->protocol_version < PCI_PROTOCOL_VERSION_1_2)
+> > @@
+> > > -2900,6 +2903,8 @@ static int hv_send_resources_allocated(struct hv_device
+> > *hdev)
+> > >  				comp_pkt.completion_status);
+> > >  			break;
+> > >  		}
+> > > +
+> > > +		hbus->wslot_res_allocated = wslot;
+> > >  	}
+> > >
+> > >  	kfree(pkt);
+> > > @@ -2918,10 +2923,10 @@ static int hv_send_resources_released(struct
+> > hv_device *hdev)
+> > >  	struct hv_pcibus_device *hbus = hv_get_drvdata(hdev);
+> > >  	struct pci_child_message pkt;
+> > >  	struct hv_pci_dev *hpdev;
+> > > -	u32 wslot;
+> > > +	int wslot;
+> > >  	int ret;
+> > >
+> > > -	for (wslot = 0; wslot < 256; wslot++) {
+> > > +	for (wslot = hbus->wslot_res_allocated; wslot >= 0; wslot--) {
+> > >  		hpdev = get_pcichild_wslot(hbus, wslot);
+> > >  		if (!hpdev)
+> > >  			continue;
+> > > @@ -2936,8 +2941,12 @@ static int hv_send_resources_released(struct
+> > hv_device *hdev)
+> > >  				       VM_PKT_DATA_INBAND, 0);
+> > >  		if (ret)
+> > >  			return ret;
+> > > +
+> > > +		hbus->wslot_res_allocated = wslot - 1;
+> > 
+> > Do you really need to set it at every loop iteration ?
+> > 
+> > Moreover, I think a bitmap is better suited for what you are doing, given that
+> > you may skip some loop indexes on !hpdev.
+> >
+> The value is set in the loop whenever a resource was successfully released. It could
+> happen that it failed in the next iteration so the last one which had succeeded would be
+> recorded in this variable. It is needed  at the end of loop when this 
+> iteration succeeds. 
+
+Ok understood.
+
+> Once again since it is not in the critical path, just using an signed integer is straightforward, 
+> less error prone and a bit easier to maintain than bitmap in my opinion. 😊
 >  
->  	val = meson_elb_readl(mp, PCIE_PORT_LINK_CTRL_OFF);
-> -	val &= ~LINK_CAPABLE_MASK;
-> +	val &= ~(LINK_CAPABLE_MASK | FAST_LINK_MODE);
->  	meson_elb_writel(mp, val, PCIE_PORT_LINK_CTRL_OFF);
->  
->  	val = meson_elb_readl(mp, PCIE_PORT_LINK_CTRL_OFF);
-> -	val |= LINK_CAPABLE_X1 | FAST_LINK_MODE;
-> +	val |= LINK_CAPABLE_X1;
->  	meson_elb_writel(mp, val, PCIE_PORT_LINK_CTRL_OFF);
->  
->  	val = meson_elb_readl(mp, PCIE_GEN2_CTRL_OFF);
 
-Yue, Kevin: any comment on this?
+Less error prone, not sure, see above - it is your code so you choose
+but please explain this change better, it is not obvious.
 
-I found that the issue is reproducible even without a PCIe switch,
-depending on the single device I plug in this machine (an Intel SSD
-works fine, while a Marvell Ethernet adapter never shows up) as the
-LTSSM times out much earlier than it really should (HW timers running
-too quickly). Applying this patch makes every single device I have
-lying around work fine.
+> > >  	}
+> > >
+> > > +	hbus->wslot_res_allocated = -1;
+> > > +
+> > >  	return 0;
+> > >  }
+> > >
+> > > @@ -3037,6 +3046,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+> > >  	if (!hbus)
+> > >  		return -ENOMEM;
+> > >  	hbus->state = hv_pcibus_init;
+> > > +	hbus->wslot_res_allocated = -1;
+> > >
+> > >  	/*
+> > >  	 * The PCI bus "domain" is what is called "segment" in ACPI and
+> > > other @@ -3136,7 +3146,7 @@ static int hv_pci_probe(struct hv_device
+> > > *hdev,
+> > >
+> > >  	ret = hv_pci_allocate_bridge_windows(hbus);
+> > >  	if (ret)
+> > > -		goto free_irq_domain;
+> > > +		goto exit_d0;
+> > >
+> > >  	ret = hv_send_resources_allocated(hdev);
+> > >  	if (ret)
+> > > @@ -3154,6 +3164,8 @@ static int hv_pci_probe(struct hv_device *hdev,
+> > >
+> > >  free_windows:
+> > >  	hv_pci_free_bridge_windows(hbus);
+> > > +exit_d0:
+> > > +	(void) hv_pci_bus_exit(hdev, true);
+> > 
+> > Remove the (void) cast.
+> > 
+> 
+> Some tools (maybe lint?) could generate error/warning messages assuming the code fails 
+> to check the return value without such cast. Leaving the cast in place just indicates that
+> the return value is deliberately ignored.  
 
-Thanks,
+I understand that - the question is why it is OK to ignore it in this
+specific case.
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Maybe adding a wrapper around hv_pci_bus_exit() can help, I am fine with
+it, just trying to help.
+
+Lorenzo
