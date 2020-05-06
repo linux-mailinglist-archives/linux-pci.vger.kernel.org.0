@@ -2,95 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CB7281C742C
-	for <lists+linux-pci@lfdr.de>; Wed,  6 May 2020 17:21:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B55EA1C74F9
+	for <lists+linux-pci@lfdr.de>; Wed,  6 May 2020 17:33:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729334AbgEFPVe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 May 2020 11:21:34 -0400
-Received: from foss.arm.com ([217.140.110.172]:38946 "EHLO foss.arm.com"
+        id S1729774AbgEFPdr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 May 2020 11:33:47 -0400
+Received: from foss.arm.com ([217.140.110.172]:39578 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729264AbgEFPVd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 6 May 2020 11:21:33 -0400
+        id S1729411AbgEFPdr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 6 May 2020 11:33:47 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F2E2CD6E;
-        Wed,  6 May 2020 08:21:32 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B02E4D6E;
+        Wed,  6 May 2020 08:33:46 -0700 (PDT)
 Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6BA333F68F;
-        Wed,  6 May 2020 08:21:31 -0700 (PDT)
-Date:   Wed, 6 May 2020 16:21:26 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CC0003F68F;
+        Wed,  6 May 2020 08:33:45 -0700 (PDT)
+Date:   Wed, 6 May 2020 16:33:40 +0100
 From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     Wei Hu <weh@microsoft.com>, KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dexuan Cui <decui@microsoft.com>
-Subject: Re: [PATCH v2 1/2] PCI: hv: Fix the PCI HyperV probe failure path to
- release resource properly
-Message-ID: <20200506152126.GA2911@e121166-lin.cambridge.arm.com>
-References: <20200501053617.24689-1-weh@microsoft.com>
- <20200505150315.GA16228@e121166-lin.cambridge.arm.com>
- <SG2P153MB02136EA9764D340F3D81DF2DBBA40@SG2P153MB0213.APCP153.PROD.OUTLOOK.COM>
- <20200506110930.GA31068@e121166-lin.cambridge.arm.com>
- <SG2P153MB0213216D3C150AA4758FCBB8BBA40@SG2P153MB0213.APCP153.PROD.OUTLOOK.COM>
- <MW2PR2101MB1052F033623F91A0FF991DE4D7A40@MW2PR2101MB1052.namprd21.prod.outlook.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci <linux-pci@vger.kernel.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH] PCI: pcie-rcar: Cache PHY init function pointer
+Message-ID: <20200506153340.GA2978@e121166-lin.cambridge.arm.com>
+References: <20200426123148.56051-1-marek.vasut@gmail.com>
+ <20200428083231.GC12459@e121166-lin.cambridge.arm.com>
+ <717765f1-b5be-a436-20d6-d0a95f58cbdc@gmail.com>
+ <20200505180214.GA18468@e121166-lin.cambridge.arm.com>
+ <a7971547-869a-b3ca-5934-4ce5028aacf1@gmail.com>
+ <20200506085736.GA30251@e121166-lin.cambridge.arm.com>
+ <CAMuHMdUB2JySwcw0PCEFKNrvmOhF5q=CG265wm1a=Pivn-fWLQ@mail.gmail.com>
+ <20200506091928.GA2805@red-moon.cambridge.arm.com>
+ <CAMuHMdVYOmDMKEiYmT0hFhVL46K4fLCRykpixyDPFPxrMsN75g@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <MW2PR2101MB1052F033623F91A0FF991DE4D7A40@MW2PR2101MB1052.namprd21.prod.outlook.com>
+In-Reply-To: <CAMuHMdVYOmDMKEiYmT0hFhVL46K4fLCRykpixyDPFPxrMsN75g@mail.gmail.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, May 06, 2020 at 02:55:17PM +0000, Michael Kelley wrote:
-
-[...]
-
-> > Hv_pci_bus_exit() calls hv_send_resources_released() to release all child resources.
-> > These child resources were allocated in hv_send_resources_allocated().
-> > Hv_send_resources_allocated() could fail in the middle, leaving some child resources
-> > allocated and rest not. Without adding this variable to record the highest slot number that
-> > resource has been successfully allocated, calling hv_send_resources_released() could
-> > cause spurious resource release requests being sent to hypervisor.
-> > 
-> > This had been fine since hv_pci_bus_exit() was never called in error path before this patch
-> > was
-> > introduced. To add this call to clean the pci state in the error path, we need to know the
-> > starting
-> > point in child device that resource has not been allocated. Hence this variable
-> > is used in hv_send_resources_allocated() to record this point and in
-> > hv_send_resource_released() to start deallocating child resources.
-> > 
-> > I can add to the commit log if you are fine with this explanation.
-> > 
+On Wed, May 06, 2020 at 12:22:13PM +0200, Geert Uytterhoeven wrote:
+> Hi Lorenzo,
 > 
-> FWIW, I think of this patch as follows:
+> On Wed, May 6, 2020 at 11:19 AM Lorenzo Pieralisi
+> <lorenzo.pieralisi@arm.com> wrote:
+> > On Wed, May 06, 2020 at 11:02:31AM +0200, Geert Uytterhoeven wrote:
+> > > On Wed, May 6, 2020 at 10:57 AM Lorenzo Pieralisi
+> > > <lorenzo.pieralisi@arm.com> wrote:
+> > > > On Tue, May 05, 2020 at 08:35:04PM +0200, Marek Vasut wrote:
+> > > > > On 5/5/20 8:02 PM, Lorenzo Pieralisi wrote:
+> > > > > > On Fri, May 01, 2020 at 10:42:06PM +0200, Marek Vasut wrote:
+> > > > > >> On 4/28/20 10:32 AM, Lorenzo Pieralisi wrote:
+> > > > > >>> On Sun, Apr 26, 2020 at 02:31:47PM +0200, marek.vasut@gmail.com wrote:
+> > > > > >>>> From: Marek Vasut <marek.vasut+renesas@gmail.com>
+> > > > > >>>>
+> > > > > >>>> The PHY initialization function pointer does not change during the
+> > > > > >>>> lifetime of the driver instance, it is therefore sufficient to get
+> > > > > >>>> the pointer in .probe(), cache it in driver private data, and just
+> > > > > >>>> call the function through the cached pointer in .resume().
+> > > > > >>>>
+> > > > > >>>> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+> > > > > >>>> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > > > > >>>> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > > > > >>>> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> > > > > >>>> Cc: Wolfram Sang <wsa@the-dreams.de>
+> > > > > >>>> Cc: linux-renesas-soc@vger.kernel.org
+> > > > > >>>> ---
+> > > > > >>>> NOTE: Based on git://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git
+> > > > > >>>>       branch pci/rcar
+> > > > > >>>> NOTE: The driver tag is now 'pcie-rcar' to distinguish it from pci-rcar-gen2.c
+> > > > > >>>> ---
+> > > > > >>>>  drivers/pci/controller/pcie-rcar.c | 10 ++++------
+> > > > > >>>>  1 file changed, 4 insertions(+), 6 deletions(-)
+> > > > > >>>
+> > > > > >>> Squashed in https://patchwork.kernel.org/patch/11438665
+> > > > > >>
+> > > > > >> Thanks
+> > > > > >>
+> > > > > >>> Do you want me to rename the $SUBJECT (and the branch name while at it)
+> > > > > >>> in the patches in my pci/rcar branch ("PCI: pcie-rcar: ...") to start
+> > > > > >>> the commit subject tag renaming from this cycle (and in the interim you
+> > > > > >>> send a rename for the drivers files ?)
+> > > > > >>
+> > > > > >> I don't really have a particular preference either way. I can keep
+> > > > > >> marking the drivers with pcie-rcar and pci-rcar tags if that helps
+> > > > > >> discern them.
+> > > > > >
+> > > > > > So:
+> > > > > >
+> > > > > > - "rcar" for the PCIe driver
+> > > > >
+> > > > > Wouldn't it be better to mark this rcar-pcie , so it's clear it's the
+> > > > > PCIe driver ?
+> > > >
+> > > > All other drivers in drivers/pci/controller are PCIe but don't require
+> > > > an extra tag to clarify it - that's the rationale behind "rcar".
+> > > >
+> > > > How does that sound ?
+> > >
+> > > Are there any other platforms that have two different drivers for the same
+> > > platform, one for PCI, and one for PCIe?
+> >
+> > I don't think so - nonetheless it's time we agreed on something and be
+> > done with it. Bjorn expressed his opinion on this and unless we have a
+> > compelling reason not to follow it IMO it'd be better to take it.
+> >
+> > I don't think using rcar-pcie is a disaster either.
+> >
+> > Let me know how you want to proceed, thanks.
 > 
-> In some error cases in hv_pci_probe(), allocated resources are not
-> freed.  Fix this by adding a field to keep track of the high water mark
-> for slots that have resources allocated to them.  In case of an error, this
-> high water mark is used to know which slots have resources that
-> must be released.  Since slots are numbered starting with zero, a
-> value of -1 indicates no slots have been allocated resources.  There
-> may be unused slots in the range between slot 0 and the high
-> water mark slot, but these slots are already ignored by the existing code
-> in the allocate and release loops with the call to get_pcichild_wslot().
+> /me has just returned from a bike ride, so it's time for a bike-shed
+> 
+> "PCI: rcar:" for pcie-rcar.c, "PCI: rcar-gen2:" (or "PCI: rcar2"?) for
+> pci-rcar-gen2.c?
 
-That's much clearer now - please add these bits of info to the commit
-log, it is essential that developers can find an explanation for a
-change like this one there IMO.
-
-Overall the code changes are fine, I am not a big fan of the (void)
-cast (I don't think error codes should be ignored) but it is acceptable,
-in this context.
-
-Thank you for taking some time to review the code together.
+Fine by me, all agreed ?
 
 Lorenzo
