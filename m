@@ -2,136 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 67DC81C6E46
-	for <lists+linux-pci@lfdr.de>; Wed,  6 May 2020 12:22:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A7C2E1C6E5A
+	for <lists+linux-pci@lfdr.de>; Wed,  6 May 2020 12:27:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728776AbgEFKWj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 May 2020 06:22:39 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:46973 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728731AbgEFKWZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 May 2020 06:22:25 -0400
-Received: by mail-ot1-f67.google.com with SMTP id z25so792420otq.13;
-        Wed, 06 May 2020 03:22:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BurvM2DFY77+V4rdngZWkTUo6VGvTp2UFuKmFwpCU4U=;
-        b=bz0UDVDmxt4UQQJoWrqPJJBuCE5igiVZ7epb6uzNQeA4AoJJhIjHY0LzdAkOjLCm8D
-         NxTgApRVA8eVwRiYMMPmwGQGpGAeanEwMMTyOvEkZ1xANSZmyvHNW+xLtpe5L19/sl0i
-         KSYVJrmSYxMNZs2hPp7+GLYx1PL8gYoeNT1KbdIFZUPynbNt2rTJJvglLLDzGVsknbiO
-         H1gIs+IFjUJtBC2e6TYwP0rXSBywj2sa02t+QszS2FtpH2CWWaSaSwPwvOKkNe2jxah8
-         R+r+hqID6NL6Mfj6qIztlIC07wqnWvfLndcCXlamFlv2u/IzsriXbzuMf7KMWNJ3Grg8
-         mygg==
-X-Gm-Message-State: AGi0PuaFteSEhPfvZZWJKxlXLr369irno2HfNRusDYIT/WDr98yw3O7T
-        KkngOg1N0oFur93kwsynCH+dv0I+zo/H1wnLTfo=
-X-Google-Smtp-Source: APiQypJHvOc1V6n8+mlqIuXjXsaxhVbrlGwALmXEoLE71Enpv8NrI6Ubqyxl2YsOCpIHGbpUPzCdu9/3v6KGlUIQjZU=
-X-Received: by 2002:a9d:564:: with SMTP id 91mr6036144otw.250.1588760544185;
- Wed, 06 May 2020 03:22:24 -0700 (PDT)
+        id S1728943AbgEFK1p convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Wed, 6 May 2020 06:27:45 -0400
+Received: from mga14.intel.com ([192.55.52.115]:29055 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728713AbgEFK1o (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 6 May 2020 06:27:44 -0400
+IronPort-SDR: ag+EIYoBR4TVmXtX0WzlfT7BJzQlj/KzLh3belSJjnNk++1+b7qalEMpUjPj9Q2HgHiMIYOs1P
+ 5MrsgL/O6jow==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2020 03:27:44 -0700
+IronPort-SDR: GUoiCivGoWEh00L1AYi7caXVsRR8Ir6+hS6yJ7Kdnc1B/DhsaZ5KbxJl3siUuW2Zssx26Lc+dC
+ i6VhSvMUWXgQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,358,1583222400"; 
+   d="scan'208";a="369757094"
+Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
+  by fmsmga001.fm.intel.com with ESMTP; 06 May 2020 03:27:44 -0700
+Received: from fmsmsx602.amr.corp.intel.com (10.18.126.82) by
+ FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 6 May 2020 03:27:44 -0700
+Received: from fmsmsx602.amr.corp.intel.com (10.18.126.82) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 6 May 2020 03:27:43 -0700
+Received: from shsmsx108.ccr.corp.intel.com (10.239.4.97) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Wed, 6 May 2020 03:27:43 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.210]) by
+ SHSMSX108.ccr.corp.intel.com ([169.254.8.95]) with mapi id 14.03.0439.000;
+ Wed, 6 May 2020 18:27:40 +0800
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>,
+        "Dey, Megha" <megha.dey@linux.intel.com>
+CC:     "Jiang, Dave" <dave.jiang@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Lin, Jing" <jing.lin@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: RE: [PATCH RFC 04/15] drivers/base: Add support for a new IMS irq
+ domain
+Thread-Topic: [PATCH RFC 04/15] drivers/base: Add support for a new IMS irq
+ domain
+Thread-Index: AQHWGDVoji+pYTNAZUCFs9wcRhPwDaiGoCsAgAy5aQCAAyNRgIAABFYAgAABv4CAABuEAIAAxfiAgAOJvpA=
+Date:   Wed, 6 May 2020 10:27:40 +0000
+Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D903AED@SHSMSX104.ccr.corp.intel.com>
+References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
+ <158751205175.36773.1874642824360728883.stgit@djiang5-desk3.ch.intel.com>
+ <20200423201118.GA29567@ziepe.ca>
+ <35f701d9-1034-09c7-8117-87fb8796a017@linux.intel.com>
+ <20200503222513.GS26002@ziepe.ca>
+ <1ededeb8-deff-4db7-40e5-1d5e8a800f52@linux.intel.com>
+ <20200503224659.GU26002@ziepe.ca>
+ <8ff2aace-0697-b8ef-de68-1bcc49d6727f@linux.intel.com>
+ <20200504121401.GV26002@ziepe.ca>
+In-Reply-To: <20200504121401.GV26002@ziepe.ca>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <20200426123148.56051-1-marek.vasut@gmail.com> <20200428083231.GC12459@e121166-lin.cambridge.arm.com>
- <717765f1-b5be-a436-20d6-d0a95f58cbdc@gmail.com> <20200505180214.GA18468@e121166-lin.cambridge.arm.com>
- <a7971547-869a-b3ca-5934-4ce5028aacf1@gmail.com> <20200506085736.GA30251@e121166-lin.cambridge.arm.com>
- <CAMuHMdUB2JySwcw0PCEFKNrvmOhF5q=CG265wm1a=Pivn-fWLQ@mail.gmail.com> <20200506091928.GA2805@red-moon.cambridge.arm.com>
-In-Reply-To: <20200506091928.GA2805@red-moon.cambridge.arm.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 6 May 2020 12:22:13 +0200
-Message-ID: <CAMuHMdVYOmDMKEiYmT0hFhVL46K4fLCRykpixyDPFPxrMsN75g@mail.gmail.com>
-Subject: Re: [PATCH] PCI: pcie-rcar: Cache PHY init function pointer
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Marek Vasut <marek.vasut@gmail.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Lorenzo,
-
-On Wed, May 6, 2020 at 11:19 AM Lorenzo Pieralisi
-<lorenzo.pieralisi@arm.com> wrote:
-> On Wed, May 06, 2020 at 11:02:31AM +0200, Geert Uytterhoeven wrote:
-> > On Wed, May 6, 2020 at 10:57 AM Lorenzo Pieralisi
-> > <lorenzo.pieralisi@arm.com> wrote:
-> > > On Tue, May 05, 2020 at 08:35:04PM +0200, Marek Vasut wrote:
-> > > > On 5/5/20 8:02 PM, Lorenzo Pieralisi wrote:
-> > > > > On Fri, May 01, 2020 at 10:42:06PM +0200, Marek Vasut wrote:
-> > > > >> On 4/28/20 10:32 AM, Lorenzo Pieralisi wrote:
-> > > > >>> On Sun, Apr 26, 2020 at 02:31:47PM +0200, marek.vasut@gmail.com wrote:
-> > > > >>>> From: Marek Vasut <marek.vasut+renesas@gmail.com>
-> > > > >>>>
-> > > > >>>> The PHY initialization function pointer does not change during the
-> > > > >>>> lifetime of the driver instance, it is therefore sufficient to get
-> > > > >>>> the pointer in .probe(), cache it in driver private data, and just
-> > > > >>>> call the function through the cached pointer in .resume().
-> > > > >>>>
-> > > > >>>> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-> > > > >>>> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > > > >>>> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > > > >>>> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-> > > > >>>> Cc: Wolfram Sang <wsa@the-dreams.de>
-> > > > >>>> Cc: linux-renesas-soc@vger.kernel.org
-> > > > >>>> ---
-> > > > >>>> NOTE: Based on git://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git
-> > > > >>>>       branch pci/rcar
-> > > > >>>> NOTE: The driver tag is now 'pcie-rcar' to distinguish it from pci-rcar-gen2.c
-> > > > >>>> ---
-> > > > >>>>  drivers/pci/controller/pcie-rcar.c | 10 ++++------
-> > > > >>>>  1 file changed, 4 insertions(+), 6 deletions(-)
-> > > > >>>
-> > > > >>> Squashed in https://patchwork.kernel.org/patch/11438665
-> > > > >>
-> > > > >> Thanks
-> > > > >>
-> > > > >>> Do you want me to rename the $SUBJECT (and the branch name while at it)
-> > > > >>> in the patches in my pci/rcar branch ("PCI: pcie-rcar: ...") to start
-> > > > >>> the commit subject tag renaming from this cycle (and in the interim you
-> > > > >>> send a rename for the drivers files ?)
-> > > > >>
-> > > > >> I don't really have a particular preference either way. I can keep
-> > > > >> marking the drivers with pcie-rcar and pci-rcar tags if that helps
-> > > > >> discern them.
-> > > > >
-> > > > > So:
-> > > > >
-> > > > > - "rcar" for the PCIe driver
-> > > >
-> > > > Wouldn't it be better to mark this rcar-pcie , so it's clear it's the
-> > > > PCIe driver ?
+> From: Jason Gunthorpe <jgg@ziepe.ca>
+> Sent: Monday, May 4, 2020 8:14 PM
+> 
+> On Sun, May 03, 2020 at 05:25:28PM -0700, Dey, Megha wrote:
+> > > > The use case if when we have a device assigned to a guest and we
+> > > > want to allocate IMS(platform-msi) interrupts for that
+> > > > guest-assigned device. Currently, this is abstracted through a mdev
+> > > > interface.
 > > >
-> > > All other drivers in drivers/pci/controller are PCIe but don't require
-> > > an extra tag to clarify it - that's the rationale behind "rcar".
-> > >
-> > > How does that sound ?
+> > > And the mdev has the pci_device internally, so it should simply pass
+> > > that pci_device to the platform_msi machinery.
 > >
-> > Are there any other platforms that have two different drivers for the same
-> > platform, one for PCI, and one for PCIe?
->
-> I don't think so - nonetheless it's time we agreed on something and be
-> done with it. Bjorn expressed his opinion on this and unless we have a
-> compelling reason not to follow it IMO it'd be better to take it.
->
-> I don't think using rcar-pcie is a disaster either.
->
-> Let me know how you want to proceed, thanks.
+> > hmm i am not sure I follow this. mdev has a pci_device internally? which
+> > struct are you referring to here?
+> 
+> mdev in general may not, but any ADI trying to use mdev will
+> necessarily have access to a struct pci_device.
 
-/me has just returned from a bike ride, so it's time for a bike-shed
+Agree here. Mdev is just driver internal concept. It doesn't make sense to
+expose it in driver/base, just like how we avoided exposing mdev in iommu
+layer.
 
-"PCI: rcar:" for pcie-rcar.c, "PCI: rcar-gen2:" (or "PCI: rcar2"?) for
-pci-rcar-gen2.c?
+Megha, every mdev/ADI has a parent device, which is the struct pci_device
+that Jason refers to. In irq domain level, it only needs to care about the
+PCI device and related IMS management. It doesn't matter whether the
+allocated IMS entry is used for a mdev or by parent driver itself.
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Thanks
+Kevin
