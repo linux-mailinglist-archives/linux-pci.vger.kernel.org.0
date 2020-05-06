@@ -2,242 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 304531C7528
-	for <lists+linux-pci@lfdr.de>; Wed,  6 May 2020 17:41:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 074551C774D
+	for <lists+linux-pci@lfdr.de>; Wed,  6 May 2020 18:59:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729684AbgEFPlt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 May 2020 11:41:49 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58040 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729668AbgEFPlr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 May 2020 11:41:47 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 046FbqXe174249;
-        Wed, 6 May 2020 11:41:46 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30uf8j4gat-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 06 May 2020 11:41:46 -0400
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 046Ff01h189626;
-        Wed, 6 May 2020 11:41:45 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30uf8j4g9r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 06 May 2020 11:41:45 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 046Ff5iO004062;
-        Wed, 6 May 2020 15:41:43 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma05fra.de.ibm.com with ESMTP id 30s0g5ktt6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 06 May 2020 15:41:43 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 046FeUAg58130922
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 6 May 2020 15:40:30 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8F36DA4053;
-        Wed,  6 May 2020 15:41:40 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5BE9CA4057;
-        Wed,  6 May 2020 15:41:40 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  6 May 2020 15:41:40 +0000 (GMT)
-From:   Niklas Schnelle <schnelle@linux.ibm.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Pierre Morel <pmorel@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>
-Subject: [RFC 2/2] s390/pci: create links between PFs and VFs
-Date:   Wed,  6 May 2020 17:41:39 +0200
-Message-Id: <20200506154139.90609-3-schnelle@linux.ibm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200506154139.90609-1-schnelle@linux.ibm.com>
-References: <20200506154139.90609-1-schnelle@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-05-06_08:2020-05-05,2020-05-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
- impostorscore=0 spamscore=0 priorityscore=1501 malwarescore=0 mlxscore=0
- lowpriorityscore=0 adultscore=0 mlxlogscore=999 phishscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005060122
+        id S1729341AbgEFQ7m (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 May 2020 12:59:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60806 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727984AbgEFQ7m (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 6 May 2020 12:59:42 -0400
+Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E967206B9;
+        Wed,  6 May 2020 16:59:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588784381;
+        bh=YQF8j6KEhKwnPtrb6xBuYQlIxEGfDwEBnvs9W1vNn5o=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Bl/BVxAIVr56QFXAv9pnp6WQVrobs8g8Fxbpjue97jbM3xUKp1LmbIWG0OzkQz6SG
+         3wMYuc/FKPnPY+h5O78/axkASCAUKmnjLu+6rF7I2xwYKnhz9vssaDdUqDxEDadMq5
+         UnpDauki8tXFFxoEwrygyfQ0bjdH5ZBL1bCjNpYo=
+Date:   Wed, 6 May 2020 11:59:38 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH] PCI: pcie-rcar: Cache PHY init function pointer
+Message-ID: <20200506165938.GA435967@bjorn-Precision-5520>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200506153340.GA2978@e121166-lin.cambridge.arm.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On s390 PCI Virtual Functions (VFs) are scanned by firmware and are made
-available to Linux via the hot-plug interface. As such the common code
-path of doing the scan directly using the parent Physical Function (PF)
-is not used and fenced off with the no_vf_scan attribute.
+On Wed, May 06, 2020 at 04:33:40PM +0100, Lorenzo Pieralisi wrote:
+> On Wed, May 06, 2020 at 12:22:13PM +0200, Geert Uytterhoeven wrote:
+> > Hi Lorenzo,
+> > 
+> > On Wed, May 6, 2020 at 11:19 AM Lorenzo Pieralisi
+> > <lorenzo.pieralisi@arm.com> wrote:
+> > > On Wed, May 06, 2020 at 11:02:31AM +0200, Geert Uytterhoeven wrote:
+> > > > On Wed, May 6, 2020 at 10:57 AM Lorenzo Pieralisi
+> > > > <lorenzo.pieralisi@arm.com> wrote:
+> > > > > On Tue, May 05, 2020 at 08:35:04PM +0200, Marek Vasut wrote:
+> > > > > > On 5/5/20 8:02 PM, Lorenzo Pieralisi wrote:
+> > > > > > > On Fri, May 01, 2020 at 10:42:06PM +0200, Marek Vasut wrote:
+> > > > > > >> On 4/28/20 10:32 AM, Lorenzo Pieralisi wrote:
+> > > > > > >>> On Sun, Apr 26, 2020 at 02:31:47PM +0200, marek.vasut@gmail.com wrote:
+> > > > > > >>>> From: Marek Vasut <marek.vasut+renesas@gmail.com>
+> > > > > > >>>>
+> > > > > > >>>> The PHY initialization function pointer does not change during the
+> > > > > > >>>> lifetime of the driver instance, it is therefore sufficient to get
+> > > > > > >>>> the pointer in .probe(), cache it in driver private data, and just
+> > > > > > >>>> call the function through the cached pointer in .resume().
+> > > > > > >>>>
+> > > > > > >>>> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+> > > > > > >>>> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > > > > > >>>> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > > > > > >>>> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> > > > > > >>>> Cc: Wolfram Sang <wsa@the-dreams.de>
+> > > > > > >>>> Cc: linux-renesas-soc@vger.kernel.org
+> > > > > > >>>> ---
+> > > > > > >>>> NOTE: Based on git://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git
+> > > > > > >>>>       branch pci/rcar
+> > > > > > >>>> NOTE: The driver tag is now 'pcie-rcar' to distinguish it from pci-rcar-gen2.c
+> > > > > > >>>> ---
+> > > > > > >>>>  drivers/pci/controller/pcie-rcar.c | 10 ++++------
+> > > > > > >>>>  1 file changed, 4 insertions(+), 6 deletions(-)
+> > > > > > >>>
+> > > > > > >>> Squashed in https://patchwork.kernel.org/patch/11438665
+> > > > > > >>
+> > > > > > >> Thanks
+> > > > > > >>
+> > > > > > >>> Do you want me to rename the $SUBJECT (and the branch name while at it)
+> > > > > > >>> in the patches in my pci/rcar branch ("PCI: pcie-rcar: ...") to start
+> > > > > > >>> the commit subject tag renaming from this cycle (and in the interim you
+> > > > > > >>> send a rename for the drivers files ?)
+> > > > > > >>
+> > > > > > >> I don't really have a particular preference either way. I can keep
+> > > > > > >> marking the drivers with pcie-rcar and pci-rcar tags if that helps
+> > > > > > >> discern them.
+> > > > > > >
+> > > > > > > So:
+> > > > > > >
+> > > > > > > - "rcar" for the PCIe driver
+> > > > > >
+> > > > > > Wouldn't it be better to mark this rcar-pcie , so it's clear it's the
+> > > > > > PCIe driver ?
+> > > > >
+> > > > > All other drivers in drivers/pci/controller are PCIe but don't require
+> > > > > an extra tag to clarify it - that's the rationale behind "rcar".
+> > > > >
+> > > > > How does that sound ?
+> > > >
+> > > > Are there any other platforms that have two different drivers for the same
+> > > > platform, one for PCI, and one for PCIe?
+> > >
+> > > I don't think so - nonetheless it's time we agreed on something and be
+> > > done with it. Bjorn expressed his opinion on this and unless we have a
+> > > compelling reason not to follow it IMO it'd be better to take it.
+> > >
+> > > I don't think using rcar-pcie is a disaster either.
+> > >
+> > > Let me know how you want to proceed, thanks.
+> > 
+> > /me has just returned from a bike ride, so it's time for a bike-shed
+> > 
+> > "PCI: rcar:" for pcie-rcar.c, "PCI: rcar-gen2:" (or "PCI: rcar2"?) for
+> > pci-rcar-gen2.c?
+> 
+> Fine by me, all agreed ?
 
-Even if the partition created the VFs itself e.g. using the sriov_numvfs
-attribute of a PF, the PF/VF links thus need to be established after the
-fact. To do this when a VF is plugged we scan through all functions on
-the same zbus and test whether they are the parent PF in which case we
-establish the necessary links.
-
-With these links established there is now no more need to fence off
-pci_iov_remove_virtfn() for pdev->no_vf_scan as the common code now
-works fine.
-
-Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
----
- arch/s390/include/asm/pci.h     |  3 +-
- arch/s390/include/asm/pci_clp.h |  3 +-
- arch/s390/pci/pci_bus.c         | 69 ++++++++++++++++++++++++++++++++-
- arch/s390/pci/pci_clp.c         |  1 +
- drivers/pci/iov.c               |  3 --
- 5 files changed, 73 insertions(+), 6 deletions(-)
-
-diff --git a/arch/s390/include/asm/pci.h b/arch/s390/include/asm/pci.h
-index c1558cf071b8..99b92c3e46b0 100644
---- a/arch/s390/include/asm/pci.h
-+++ b/arch/s390/include/asm/pci.h
-@@ -131,7 +131,8 @@ struct zpci_dev {
- 	u8		port;
- 	u8		rid_available	: 1;
- 	u8		has_hp_slot	: 1;
--	u8		reserved	: 6;
-+	u8		is_physfn	: 1;
-+	u8		reserved	: 5;
- 	unsigned int	devfn;		/* DEVFN part of the RID*/
- 
- 	struct mutex lock;
-diff --git a/arch/s390/include/asm/pci_clp.h b/arch/s390/include/asm/pci_clp.h
-index 896ee41e23e3..1651b5610b0f 100644
---- a/arch/s390/include/asm/pci_clp.h
-+++ b/arch/s390/include/asm/pci_clp.h
-@@ -95,7 +95,8 @@ struct clp_rsp_query_pci {
- 	u16 vfn;			/* virtual fn number */
- 	u16			:  3;
- 	u16 rid_avail		:  1;
--	u16			:  2;
-+	u16 is_physfn		:  1;
-+	u16 reserved		:  1;
- 	u16 mio_addr_avail	:  1;
- 	u16 util_str_avail	:  1;	/* utility string available? */
- 	u16 pfgid		:  8;	/* pci function group id */
-diff --git a/arch/s390/pci/pci_bus.c b/arch/s390/pci/pci_bus.c
-index 542c6b8f56df..52d79a2f6722 100644
---- a/arch/s390/pci/pci_bus.c
-+++ b/arch/s390/pci/pci_bus.c
-@@ -126,6 +126,64 @@ static struct zpci_bus *zpci_bus_alloc(int pchid)
- 	return zbus;
- }
- 
-+#ifdef CONFIG_PCI_IOV
-+static int zpci_bus_link_virtfn(struct pci_dev *pdev,
-+		struct pci_dev *virtfn, int vfid)
-+{
-+	int rc;
-+
-+	virtfn->physfn = pci_dev_get(pdev);
-+	rc = pci_iov_sysfs_link(pdev, virtfn, vfid);
-+	if (rc) {
-+		pci_dev_put(pdev);
-+		virtfn->physfn = NULL;
-+		return rc;
-+	}
-+	return 0;
-+}
-+
-+static int zpci_bus_setup_virtfn(struct zpci_bus *zbus,
-+		struct pci_dev *virtfn, int vfn)
-+{
-+	int i, cand_devfn;
-+	struct zpci_dev *zdev;
-+	struct pci_dev *pdev;
-+	int vfid = vfn - 1; /* Linux' vfid's start at 0 vfn at 1*/
-+	int rc = 0;
-+
-+	virtfn->is_virtfn = 1;
-+	virtfn->multifunction = 0;
-+	WARN_ON(vfid < 0);
-+	/* If the parent PF for the given VF is also configured in the
-+	 * instance, it must be on the same zbus.
-+	 * We can then identify the parent PF by checking what
-+	 * devfn the VF would have if it belonged to that PF using the PF's
-+	 * stride and offset. Only if this candidate devfn matches the
-+	 * actual devfn will we link both functions.
-+	 */
-+	for (i = 0; i < ZPCI_FUNCTIONS_PER_BUS; i++) {
-+		zdev = zbus->function[i];
-+		if (zdev && zdev->is_physfn) {
-+			pdev = pci_get_slot(zbus->bus, zdev->devfn);
-+			cand_devfn = pci_iov_virtfn_devfn(pdev, vfid);
-+			if (cand_devfn == virtfn->devfn) {
-+				rc = zpci_bus_link_virtfn(pdev, virtfn, vfid);
-+				break;
-+			}
-+		}
-+	}
-+	return rc;
-+}
-+#else
-+static inline int zpci_bus_setup_virtfn(struct zpci_bus *zbus,
-+		struct pci_dev *virtfn, int vfn)
-+{
-+	virtfn->is_virtfn = 1;
-+	virtfn->multifunction = 0;
-+	return 0;
-+}
-+#endif
-+
- static int zpci_bus_add_device(struct zpci_bus *zbus, struct zpci_dev *zdev)
- {
- 	struct pci_bus *bus;
-@@ -157,11 +215,20 @@ static int zpci_bus_add_device(struct zpci_bus *zbus, struct zpci_dev *zdev)
- 
- 	pdev = pci_scan_single_device(bus, zdev->devfn);
- 	if (pdev) {
--		pdev->multifunction = 1;
-+		if (!zdev->is_physfn) {
-+			rc = zpci_bus_setup_virtfn(zbus, pdev, zdev->vfn);
-+			if (rc)
-+				goto failed_with_pdev;
-+		}
- 		pci_bus_add_device(pdev);
- 	}
- 
- 	return 0;
-+
-+failed_with_pdev:
-+	pci_stop_and_remove_bus_device(pdev);
-+	pci_dev_put(pdev);
-+	return rc;
- }
- 
- static void zpci_bus_add_devices(struct zpci_bus *zbus)
-diff --git a/arch/s390/pci/pci_clp.c b/arch/s390/pci/pci_clp.c
-index 9b318824a134..d7bd3c287cf7 100644
---- a/arch/s390/pci/pci_clp.c
-+++ b/arch/s390/pci/pci_clp.c
-@@ -159,6 +159,7 @@ static int clp_store_query_pci_fn(struct zpci_dev *zdev,
- 	zdev->uid = response->uid;
- 	zdev->fmb_length = sizeof(u32) * response->fmb_len;
- 	zdev->rid_available = response->rid_avail;
-+	zdev->is_physfn = response->is_physfn;
- 	if (!s390_pci_no_rid && zdev->rid_available)
- 		zdev->devfn = response->rid & ZPCI_RID_MASK_DEVFN;
- 
-diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-index d0ddf5f5484c..d932495b0407 100644
---- a/drivers/pci/iov.c
-+++ b/drivers/pci/iov.c
-@@ -569,9 +569,6 @@ static void sriov_del_vfs(struct pci_dev *dev)
- 	struct pci_sriov *iov = dev->sriov;
- 	int i;
- 
--	if (dev->no_vf_scan)
--		return;
--
- 	for (i = 0; i < iov->num_VFs; i++)
- 		pci_iov_remove_virtfn(dev, i);
- }
--- 
-2.17.1
-
+Sounds good to me.
