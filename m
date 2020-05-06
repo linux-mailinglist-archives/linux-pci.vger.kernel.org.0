@@ -2,300 +2,191 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A54391C65B3
-	for <lists+linux-pci@lfdr.de>; Wed,  6 May 2020 03:58:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DF1911C6640
+	for <lists+linux-pci@lfdr.de>; Wed,  6 May 2020 05:22:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728717AbgEFB6K (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 May 2020 21:58:10 -0400
-Received: from mga03.intel.com ([134.134.136.65]:27946 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728642AbgEFB6K (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 5 May 2020 21:58:10 -0400
-IronPort-SDR: MMbFnsH+uio7h/D5LHpIllmQMFShD2xICea6QPD9VGx+ziX0RMLUGVH3Usr3thO63WpNqSgsKa
- 5M623L7XTTjg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2020 18:58:06 -0700
-IronPort-SDR: n5ZtOa2PrwghjAeXHxrnn5h3x4b+t9Hk2ecbni9/FJzCheWJVhfONQao784uyTevSkr5Q+AT8k
- KyBQuRrpkYPg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,357,1583222400"; 
-   d="scan'208";a="249635912"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga007.fm.intel.com with ESMTP; 05 May 2020 18:58:05 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jW9K0-0005f3-K6; Wed, 06 May 2020 09:58:04 +0800
-Date:   Wed, 06 May 2020 09:57:32 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/misc] BUILD SUCCESS
- 198938ec966d45c47eb7c1f6d2a4ac82c12bf5ce
-Message-ID: <5eb2198c.3klbCBuWNK33jK6Y%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1726495AbgEFDWZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 May 2020 23:22:25 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:47710 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725900AbgEFDWZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 May 2020 23:22:25 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0463MGLY018236;
+        Tue, 5 May 2020 22:22:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588735336;
+        bh=+l9g+vvaMAa3ISpy32FUOkycsSQuNXMcAXMcDkFvLlQ=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=xag0cpQd3UUbSz3qG8U8KD8r1CvzgCC3AihLmD8oUQKtakPJIS/y2AyH+roXovQfj
+         2S0b8rqZed79s8HhfFXkrEV+rgkKo4FJiN4bx09j+UJzE+zooUZdMudGJ8GQSfrJxf
+         aqOADqTPqKE9phOW7RYkgJ+EeiQ2AKurUbVuUdS8=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0463MGp5069015
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 5 May 2020 22:22:16 -0500
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 5 May
+ 2020 22:22:16 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 5 May 2020 22:22:16 -0500
+Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0463MD5R076978;
+        Tue, 5 May 2020 22:22:14 -0500
+Subject: Re: [PATCH v2 2/4] PCI: cadence: Use "dma-ranges" instead of
+ "cdns,no-bar-match-nbits" property
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     Tom Joseph <tjoseph@cadence.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200417114322.31111-1-kishon@ti.com>
+ <20200417114322.31111-3-kishon@ti.com>
+ <20200501144645.GB7398@e121166-lin.cambridge.arm.com>
+ <dc581c5b-11de-f4b3-e928-208b9293e391@arm.com>
+ <2472c182-834c-d2c1-175e-4d73898aef35@ti.com>
+ <4f333ceb-2809-c4ae-4ae3-33a83c612cd3@arm.com>
+ <cf9c2dcc-57e8-cfa0-e3b4-55ff5113341f@ti.com>
+Message-ID: <da933b0d-ee17-5bca-3763-1d73c7ed6bfc@ti.com>
+Date:   Wed, 6 May 2020 08:52:13 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <cf9c2dcc-57e8-cfa0-e3b4-55ff5113341f@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/misc
-branch HEAD: 198938ec966d45c47eb7c1f6d2a4ac82c12bf5ce  PCI: Check for platform_get_irq() failure consistently
+Hi Robin,
 
-elapsed time: 484m
+On 5/4/2020 6:23 PM, Kishon Vijay Abraham I wrote:
+> Hi Robin,
+> 
+> On 5/4/2020 4:24 PM, Robin Murphy wrote:
+>> On 2020-05-04 9:44 am, Kishon Vijay Abraham I wrote:
+>>> Hi Robin,
+>>>
+>>> On 5/1/2020 9:24 PM, Robin Murphy wrote:
+>>>> On 2020-05-01 3:46 pm, Lorenzo Pieralisi wrote:
+>>>>> [+Robin - to check on dma-ranges intepretation]
+>>>>>
+>>>>> I would need RobH and Robin to review this.
+>>>>>
+>>>>> Also, An ACK from Tom is required - for the whole series.
+>>>>>
+>>>>> On Fri, Apr 17, 2020 at 05:13:20PM +0530, Kishon Vijay Abraham I wrote:
+>>>>>> Cadence PCIe core driver (host mode) uses "cdns,no-bar-match-nbits"
+>>>>>> property to configure the number of bits passed through from PCIe
+>>>>>> address to internal address in Inbound Address Translation register.
+>>>>>>
+>>>>>> However standard PCI dt-binding already defines "dma-ranges" to
+>>>>>> describe the address range accessible by PCIe controller. Parse
+>>>>>> "dma-ranges" property to configure the number of bits passed
+>>>>>> through from PCIe address to internal address in Inbound Address
+>>>>>> Translation register.
+>>>>>>
+>>>>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>>>>> ---
+>>>>>>    drivers/pci/controller/cadence/pcie-cadence-host.c | 13 +++++++++++--
+>>>>>>    1 file changed, 11 insertions(+), 2 deletions(-)
+>>>>>>
+>>>>>> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c
+>>>>>> b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>>>>>> index 9b1c3966414b..60f912a657b9 100644
+>>>>>> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+>>>>>> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>>>>>> @@ -206,8 +206,10 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>>>>>>        struct device *dev = rc->pcie.dev;
+>>>>>>        struct platform_device *pdev = to_platform_device(dev);
+>>>>>>        struct device_node *np = dev->of_node;
+>>>>>> +    struct of_pci_range_parser parser;
+>>>>>>        struct pci_host_bridge *bridge;
+>>>>>>        struct list_head resources;
+>>>>>> +    struct of_pci_range range;
+>>>>>>        struct cdns_pcie *pcie;
+>>>>>>        struct resource *res;
+>>>>>>        int ret;
+>>>>>> @@ -222,8 +224,15 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>>>>>>        rc->max_regions = 32;
+>>>>>>        of_property_read_u32(np, "cdns,max-outbound-regions",
+>>>>>> &rc->max_regions);
+>>>>>>    -    rc->no_bar_nbits = 32;
+>>>>>> -    of_property_read_u32(np, "cdns,no-bar-match-nbits", &rc->no_bar_nbits);
+>>>>>> +    if (!of_pci_dma_range_parser_init(&parser, np))
+>>>>>> +        if (of_pci_range_parser_one(&parser, &range))
+>>>>>> +            rc->no_bar_nbits = ilog2(range.size);
+>>>>
+>>>> You probably want "range.pci_addr + range.size" here just in case the bottom of
+>>>> the window is ever non-zero. Is there definitely only ever a single inbound
+>>>> window to consider?
+>>>
+>>> Cadence IP has 3 inbound address translation registers, however we use only 1
+>>> inbound address translation register to map the entire 32 bit or 64 bit address
+>>> region.
+>>
+>> OK, if anything that further strengthens the argument for deprecating a single
+>> "number of bits" property in favour of ranges that accurately describe the
+>> window(s). However it also suggests that other users in future might have some
+>> expectation that specifying "dma-ranges" with up to 3 entries should work to
+>> allow a more restrictive inbound configuration. Thus it would be desirable to
+>> make the code a little more robust here - even if we don't support multiple
+>> windows straight off, it would still be better to implement it in a way that
+>> can be cleanly extended later, and at least say something if more ranges are
+>> specified rather than just silently ignoring them.
+> 
+> I looked at this further in the Cadence user doc. The three inbound ATU entries
+> are for BAR0, BAR1 in RC configuration space and the third one is for NO MATCH
+> BAR when there is no matching found in RC BARs. Right now we always configure
+> the NO MATCH BAR. Would it be possible describe at BAR granularity in dma-ranges?
 
-configs tested: 241
-configs skipped: 0
+I was thinking if I could use something like
+dma-ranges = <0x02000000 0x0 0x0 0x0 0x0 0x00000 0x0>, //For BAR0 IB mapping
+	     <0x02000000 0x0 0x0 0x0 0x0 0x00000 0x0>, //For BAR1 IB mapping
+	     <0x02000000 0x0 0x0 0x0 0x0 0x10000 0x0>; //NO MATCH BAR
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+This way the driver can tell the 1st tuple is for BAR0, 2nd is for BAR1 and
+last is for NO MATCH. In the above case both BAR0 and BAR1 is just empty and
+doesn't have valid values as we use only the NO MATCH BAR.
 
-arm64                            allyesconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm                               allnoconfig
-arm                           efm32_defconfig
-arm                         at91_dt_defconfig
-arm                        shmobile_defconfig
-arm64                               defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                           sunxi_defconfig
-arm                        multi_v7_defconfig
-arm                              allmodconfig
-sparc                            allyesconfig
-riscv                             allnoconfig
-ia64                          tiger_defconfig
-powerpc                    adder875_defconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                             alldefconfig
-i386                                defconfig
-i386                              debian-10.3
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                        generic_defconfig
-ia64                         bigsur_defconfig
-ia64                             allyesconfig
-ia64                             alldefconfig
-m68k                       m5475evb_defconfig
-m68k                             allmodconfig
-m68k                       bvme6000_defconfig
-m68k                           sun3_defconfig
-m68k                          multi_defconfig
-nios2                         3c120_defconfig
-nios2                         10m50_defconfig
-c6x                        evmc6678_defconfig
-c6x                              allyesconfig
-openrisc                 simple_smp_defconfig
-openrisc                    or1ksim_defconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                                defconfig
-alpha                               defconfig
-h8300                       h8s-sim_defconfig
-h8300                     edosk2674_defconfig
-xtensa                          iss_defconfig
-h8300                    h8300h-sim_defconfig
-xtensa                       common_defconfig
-arc                                 defconfig
-arc                              allyesconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-mips                            ar7_defconfig
-mips                             allyesconfig
-mips                         64r6el_defconfig
-mips                              allnoconfig
-mips                           32r2_defconfig
-mips                             allmodconfig
-mips                malta_kvm_guest_defconfig
-mips                         tb0287_defconfig
-mips                       capcella_defconfig
-mips                           ip32_defconfig
-mips                  decstation_64_defconfig
-mips                      loongson3_defconfig
-mips                          ath79_defconfig
-mips                        bcm63xx_defconfig
-parisc                            allnoconfig
-parisc                generic-64bit_defconfig
-parisc                generic-32bit_defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                      chrp32_defconfig
-powerpc                             defconfig
-powerpc                       holly_defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-powerpc                           allnoconfig
-powerpc                  mpc866_ads_defconfig
-powerpc                    amigaone_defconfig
-powerpc                     ep8248e_defconfig
-powerpc                          g5_defconfig
-powerpc                     mpc512x_defconfig
-m68k                 randconfig-a001-20200503
-mips                 randconfig-a001-20200503
-nds32                randconfig-a001-20200503
-alpha                randconfig-a001-20200503
-parisc               randconfig-a001-20200503
-riscv                randconfig-a001-20200503
-m68k                 randconfig-a001-20200505
-mips                 randconfig-a001-20200505
-nds32                randconfig-a001-20200505
-parisc               randconfig-a001-20200505
-alpha                randconfig-a001-20200505
-riscv                randconfig-a001-20200505
-h8300                randconfig-a001-20200503
-nios2                randconfig-a001-20200503
-microblaze           randconfig-a001-20200503
-c6x                  randconfig-a001-20200503
-sparc64              randconfig-a001-20200503
-s390                 randconfig-a001-20200505
-xtensa               randconfig-a001-20200505
-sh                   randconfig-a001-20200505
-openrisc             randconfig-a001-20200505
-csky                 randconfig-a001-20200505
-xtensa               randconfig-a001-20200503
-openrisc             randconfig-a001-20200503
-csky                 randconfig-a001-20200503
-x86_64               randconfig-a003-20200505
-x86_64               randconfig-a001-20200505
-i386                 randconfig-a001-20200505
-i386                 randconfig-a003-20200505
-i386                 randconfig-a002-20200505
-i386                 randconfig-b003-20200503
-x86_64               randconfig-b002-20200503
-i386                 randconfig-b001-20200503
-x86_64               randconfig-b003-20200503
-x86_64               randconfig-b001-20200503
-i386                 randconfig-b002-20200503
-i386                 randconfig-b003-20200505
-x86_64               randconfig-b002-20200505
-i386                 randconfig-b001-20200505
-x86_64               randconfig-b001-20200505
-x86_64               randconfig-b003-20200505
-i386                 randconfig-b002-20200505
-i386                 randconfig-b003-20200502
-i386                 randconfig-b001-20200502
-x86_64               randconfig-b003-20200502
-x86_64               randconfig-b001-20200502
-i386                 randconfig-b002-20200502
-x86_64               randconfig-c002-20200502
-i386                 randconfig-c002-20200502
-i386                 randconfig-c001-20200502
-i386                 randconfig-c003-20200502
-x86_64               randconfig-c001-20200503
-x86_64               randconfig-c002-20200503
-i386                 randconfig-c002-20200503
-x86_64               randconfig-c003-20200503
-i386                 randconfig-c001-20200503
-i386                 randconfig-c003-20200503
-x86_64               randconfig-d001-20200505
-i386                 randconfig-d003-20200505
-i386                 randconfig-d001-20200505
-x86_64               randconfig-d003-20200505
-x86_64               randconfig-d002-20200505
-i386                 randconfig-d002-20200505
-x86_64               randconfig-d001-20200503
-i386                 randconfig-d003-20200503
-x86_64               randconfig-d003-20200503
-i386                 randconfig-d001-20200503
-x86_64               randconfig-d002-20200503
-i386                 randconfig-d002-20200503
-i386                 randconfig-e003-20200505
-x86_64               randconfig-e002-20200505
-x86_64               randconfig-e003-20200505
-x86_64               randconfig-e001-20200505
-i386                 randconfig-e002-20200505
-i386                 randconfig-e001-20200505
-x86_64               randconfig-e003-20200503
-x86_64               randconfig-e002-20200503
-i386                 randconfig-e003-20200503
-x86_64               randconfig-e001-20200503
-i386                 randconfig-e002-20200503
-i386                 randconfig-e001-20200503
-i386                 randconfig-f003-20200503
-x86_64               randconfig-f002-20200503
-i386                 randconfig-f001-20200503
-i386                 randconfig-f002-20200503
-i386                 randconfig-f003-20200505
-x86_64               randconfig-f001-20200505
-x86_64               randconfig-f003-20200505
-i386                 randconfig-f001-20200505
-i386                 randconfig-f002-20200505
-x86_64               randconfig-g003-20200503
-i386                 randconfig-g003-20200503
-i386                 randconfig-g002-20200503
-x86_64               randconfig-g001-20200503
-i386                 randconfig-g001-20200503
-x86_64               randconfig-g003-20200506
-i386                 randconfig-g003-20200506
-i386                 randconfig-g002-20200506
-x86_64               randconfig-g001-20200506
-i386                 randconfig-g001-20200506
-x86_64               randconfig-g002-20200506
-i386                 randconfig-g003-20200505
-i386                 randconfig-g002-20200505
-i386                 randconfig-g001-20200505
-x86_64               randconfig-g002-20200505
-x86_64               randconfig-a002-20200503
-i386                 randconfig-a002-20200503
-i386                 randconfig-a003-20200503
-i386                 randconfig-a001-20200503
-ia64                 randconfig-a001-20200505
-powerpc              randconfig-a001-20200505
-arm                  randconfig-a001-20200505
-ia64                 randconfig-a001-20200506
-arm64                randconfig-a001-20200506
-arc                  randconfig-a001-20200506
-powerpc              randconfig-a001-20200506
-arm                  randconfig-a001-20200506
-sparc                randconfig-a001-20200506
-ia64                 randconfig-a001-20200503
-arm64                randconfig-a001-20200503
-arc                  randconfig-a001-20200503
-arm                  randconfig-a001-20200503
-sparc                randconfig-a001-20200503
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-s390                       zfcpdump_defconfig
-s390                          debug_defconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                             alldefconfig
-s390                                defconfig
-sh                          rsk7269_defconfig
-sh                               allmodconfig
-sh                            titan_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                                allnoconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-um                                  defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
+However I'm not able to use for_each_of_pci_range() in Cadence driver to get
+the configuration for each BAR, since the for loop gets invoked only once since
+of_pci_range_parser_one() merges contiguous addresses.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Do you think I should extend the flags cell to differentiate between BAR0, BAR1
+and NO MATCH BAR? Can you suggest any other alternatives?
+
+Thanks
+Kishon
+
+>>
+>>>> I believe that pci_parse_request_of_pci_ranges() could do the actual parsing
+>>>> for you, but I suppose plumbing that in plus processing the resulting
+>>>> dma_ranges resource probably ends up a bit messier than the concise open-coding
+>>>> here.
+>>>
+>>> right, pci_parse_request_of_pci_ranges() parses "ranges" property and is used
+>>> for outbound configuration, whereas here we parse "dma-ranges" property and is
+>>> used for inbound configuration.
+>>
+>> If you give it a valid third argument it *also* parses "dma-ranges" into a list
+>> of inbound regions. This is already used by various other drivers for
+>> equivalent inbound window setup, which is what I was hinting at before, but
+>> given the extensibility argument above I'm now going to actively suggest
+>> following that pattern for consistency.
+> yeah, just got to know about this.
+> 
+> Thanks
+> Kishon
+> 
