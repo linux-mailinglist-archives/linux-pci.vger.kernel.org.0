@@ -2,137 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9AFFD1C6C67
-	for <lists+linux-pci@lfdr.de>; Wed,  6 May 2020 11:07:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DCBC21C6C49
+	for <lists+linux-pci@lfdr.de>; Wed,  6 May 2020 10:57:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728679AbgEFJHL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 May 2020 05:07:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56064 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728704AbgEFJHL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 May 2020 05:07:11 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5ECBC061A0F
-        for <linux-pci@vger.kernel.org>; Wed,  6 May 2020 02:07:10 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id x17so1254290wrt.5
-        for <linux-pci@vger.kernel.org>; Wed, 06 May 2020 02:07:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=Aiduif4RtZ3ykWn249hRR5linftwParx0QJwaKRAtTw=;
-        b=nhMQ/TAeFlNsi1DTivZ31i47dUo9jwW21xouSdv26IJNk7qWwO9+PA3TPagTtlo8Ir
-         epWJcSi4HM504jBnP/yXrakH0qMIGPSgDV08HsdoJ53Izz/uqEcpr2RrjYkC9KOd6RNw
-         MX2wOzkpo4s8EcC6FGSu70oFTTHBmnf9eQ3YLGXjBm9IgaoUjiMXJkvwPG8HchHt42Lf
-         tgjV07MB89QmTzzfATJTh1+1iL1lVil/8dvZ0Kzg50FTB01MSbUb2SRCisvmazXaWpmr
-         MHHq0jy+SOxWwM0tQt2oGa26f/zGWCV755gZPrrsauYx/a5E1LR7B5R7L+Jpf+Ts7TlJ
-         2nNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=Aiduif4RtZ3ykWn249hRR5linftwParx0QJwaKRAtTw=;
-        b=nzH1ymaP7Fqu4U/tFhP8eHTOkFrzqEBdONXB55dxrKXjiXk/1gCz5sF5nl1PubHi7B
-         GrKAMH68UlZo5+sUxgryM3tNuSnoTOCz2LJiasGZ5nK14pf2TFUCvVVM/gU4e4mBJ1fD
-         7KmHlEMiwdWq21z5awPmGqCLKO3DgZQi5R5sRkRlO2DNfI214gZZwBknP/llnezJfaIe
-         11CVqzhVZjMTNy2zvnv9q3DfMLBwNhFvE9UgIym0YyEDW2GTlVYdUZxvcFFCF6mraMK5
-         7xqepz4d43fY9+EKu0MPalgk0Lm3mObKNLMNBOGAYFNBjdcdgZgX0eu6VQFr7w89mC+F
-         Okcw==
-X-Gm-Message-State: AGi0Pube8PNP6sMXmM29rMZAaGXZCveXYPC0tModqB3OHFvRW8JefNDM
-        RLOmyPuzn1ahMtv0tl+K/bNglXGZJ6qkpA==
-X-Google-Smtp-Source: APiQypIJLmoLC2KcW4UqL5rSGfd2QfvE7WZ6FQI3H4I3pUnZoo1x3UO0dED1uKCwfg7FEZWkixw/6w==
-X-Received: by 2002:adf:d0d1:: with SMTP id z17mr8290516wrh.295.1588756028871;
-        Wed, 06 May 2020 02:07:08 -0700 (PDT)
-Received: from net.saheed (540018A9.dsl.pool.telekom.hu. [84.0.24.169])
-        by smtp.gmail.com with ESMTPSA id 7sm1788578wra.50.2020.05.06.02.07.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 May 2020 02:07:08 -0700 (PDT)
-Subject: Re: [PATCH RFC] PCI: Set PCIBIOS_* error values to generic error
- number
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     bjorn@helgaas.com, yangyicong@hisilicon.com,
-        skhan@linuxfoundation.org, linux-pci@vger.kernel.org
-References: <20200505210404.GA379346@bjorn-Precision-5520>
-From:   Saheed Bolarinwa <refactormyself@gmail.com>
-Message-ID: <fe3223b8-fbf4-93d4-808b-9e7b2ba7a6c5@gmail.com>
-Date:   Wed, 6 May 2020 10:07:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1728877AbgEFI5q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 May 2020 04:57:46 -0400
+Received: from foss.arm.com ([217.140.110.172]:59704 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728870AbgEFI5q (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 6 May 2020 04:57:46 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6C54A30E;
+        Wed,  6 May 2020 01:57:45 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 86B5E3F71F;
+        Wed,  6 May 2020 01:57:44 -0700 (PDT)
+Date:   Wed, 6 May 2020 09:57:36 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Marek Vasut <marek.vasut@gmail.com>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH] PCI: pcie-rcar: Cache PHY init function pointer
+Message-ID: <20200506085736.GA30251@e121166-lin.cambridge.arm.com>
+References: <20200426123148.56051-1-marek.vasut@gmail.com>
+ <20200428083231.GC12459@e121166-lin.cambridge.arm.com>
+ <717765f1-b5be-a436-20d6-d0a95f58cbdc@gmail.com>
+ <20200505180214.GA18468@e121166-lin.cambridge.arm.com>
+ <a7971547-869a-b3ca-5934-4ce5028aacf1@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200505210404.GA379346@bjorn-Precision-5520>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a7971547-869a-b3ca-5934-4ce5028aacf1@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello Bjorn,
+On Tue, May 05, 2020 at 08:35:04PM +0200, Marek Vasut wrote:
+> On 5/5/20 8:02 PM, Lorenzo Pieralisi wrote:
+> > On Fri, May 01, 2020 at 10:42:06PM +0200, Marek Vasut wrote:
+> >> On 4/28/20 10:32 AM, Lorenzo Pieralisi wrote:
+> >>> On Sun, Apr 26, 2020 at 02:31:47PM +0200, marek.vasut@gmail.com wrote:
+> >>>> From: Marek Vasut <marek.vasut+renesas@gmail.com>
+> >>>>
+> >>>> The PHY initialization function pointer does not change during the
+> >>>> lifetime of the driver instance, it is therefore sufficient to get
+> >>>> the pointer in .probe(), cache it in driver private data, and just
+> >>>> call the function through the cached pointer in .resume().
+> >>>>
+> >>>> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+> >>>> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> >>>> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> >>>> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> >>>> Cc: Wolfram Sang <wsa@the-dreams.de>
+> >>>> Cc: linux-renesas-soc@vger.kernel.org
+> >>>> ---
+> >>>> NOTE: Based on git://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git
+> >>>>       branch pci/rcar
+> >>>> NOTE: The driver tag is now 'pcie-rcar' to distinguish it from pci-rcar-gen2.c
+> >>>> ---
+> >>>>  drivers/pci/controller/pcie-rcar.c | 10 ++++------
+> >>>>  1 file changed, 4 insertions(+), 6 deletions(-)
+> >>>
+> >>> Squashed in https://patchwork.kernel.org/patch/11438665
+> >>
+> >> Thanks
+> >>
+> >>> Do you want me to rename the $SUBJECT (and the branch name while at it)
+> >>> in the patches in my pci/rcar branch ("PCI: pcie-rcar: ...") to start
+> >>> the commit subject tag renaming from this cycle (and in the interim you
+> >>> send a rename for the drivers files ?)
+> >>
+> >> I don't really have a particular preference either way. I can keep
+> >> marking the drivers with pcie-rcar and pci-rcar tags if that helps
+> >> discern them.
+> > 
+> > So:
+> > 
+> > - "rcar" for the PCIe driver
+> 
+> Wouldn't it be better to mark this rcar-pcie , so it's clear it's the
+> PCIe driver ?
 
-On 5/5/20 11:04 PM, Bjorn Helgaas wrote:
-> On Tue, May 05, 2020 at 07:15:13PM +0200, refactormyself@gmail.com wrote:
->> From: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
->>
->> PCIe capability accessors return 0 on success, otherwise it could return
->> either a negative or positive error value. Positive error values are from
->> PCIBIOS_* error values. This behaviour contradicts that of PCI config.
->> accessors which only returns PCIBIOS_* error values.
->>
->> There is no caller of these accessors that directly utilize the returned
->> positive error values. They either use pcibios_err_to_errno() to convert
->> it to a generic error value or simply pass it on or in some cases discard
->> any positive error value.
-> We *do* still need to check all the callers to see that they do the
-> right thing.  The intent of a patch like this one is that it causes no
-> functional change -- everything should work exactly the same before
-> and after the patch.
->
-> For example, the case we talked about earlier in this chain:
->
->    local_pci_probe
->      pci_drv->probe(..)
->        init_one                        # hfi1_pci_driver.probe method
->          hfi1_init_dd
->            pcie_speeds
->              pcie_capability_read_dword
->
-> Before this patch, pcie_capability_read_dword() could return:
->
->    - 0 (success)
->    - a negative value (e.g., -EINVAL)
->    - a positive value (e.g., PCIBIOS_BAD_REGISTER_NUMBER (0x87))
->
-> The positive return value would cause local_pci_probe() to warn that
-> "Driver probe function unexpectedly returned %d".
->
-> After this patch, pcie_capability_read_dword() will never return a
-> positive value because PCIBIOS_BAD_REGISTER_NUMBER is now -EFAULT, and
-> local_pci_probe() will no longer warn.
->
-> In this case, that's a bug fix, but we don't want bugs to be silently,
-> magically fixed by patches that don't seem to be connected to the
-> problem.
->
-> So we need to account for that somehow.  We could:
->
->    - Add a preparatory patch that calls pcibios_err_to_errno() from
->      pcie_speeds() as I mentioned before.  Of course, we plan to remove
->      that soon anyway.
->
->    - Maybe call pcibios_err_to_errno() inside
->      pcie_capability_read_dword()?
->
-> We really need to identify all places that have this problem so we can
-> see which way makes more sense.
->
-> Can you start posting these to linux-pci so they're visible on the
-> mailing list?  Sometimes other folks have great ideas, like Yicong's.
->
-I will start working on it.
+All other drivers in drivers/pci/controller are PCIe but don't require
+an extra tag to clarify it - that's the rationale behind "rcar".
 
-Thank you.
+How does that sound ?
 
-Saheed
+> > - "rcar-pci" or "rcar-legacy" for the pci-rcar-gen2.c (preference ?
+> >   there is no urgency, no commit queued to rename, it is for future
+> >   code)
+> 
+> rcar-pci , since the Gen2 controller surely isn't legacy.
 
+Ok
+
+> > Are we OK with that ? If yes I will rewrite the commits subjects
+> > and push out an updated pci/rcar branch.
+> > 
+> > ...DT bindings commit subjects - should I change their tag subject
+> > too ?
+
+I shall leave DT bindings as they are then.
+
+Lorenzo
