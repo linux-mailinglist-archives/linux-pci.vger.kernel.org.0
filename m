@@ -2,111 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D75331C9BF3
-	for <lists+linux-pci@lfdr.de>; Thu,  7 May 2020 22:16:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8925C1C9BE5
+	for <lists+linux-pci@lfdr.de>; Thu,  7 May 2020 22:15:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728514AbgEGUQH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 May 2020 16:16:07 -0400
-Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:47600 "EHLO
-        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728596AbgEGUQG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 May 2020 16:16:06 -0400
-Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
-        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 4D56130C07C;
-        Thu,  7 May 2020 13:15:29 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 4D56130C07C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-        s=dkimrelay; t=1588882529;
-        bh=oFHk9VaUvsDwZCOGkYPtno7t1fm1Qk5TvgnXILVu774=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g6WaUiIYt7T8JBD5hNN4dnAYffCjzYDtC1OPxx+CsAyVzyC1rKGHqKYwFYl0qwsn6
-         NqNl5BXxDUxd6qLir88ZrPxmM/j75k8dm4JA4PtuKaaynO1bw7nUXzaTet8rMSSQMv
-         VBhT1XeL7Lt4iEFSq3UgmeCiX9XH0Jr7CGA7G/KY=
-Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
-        by mail-irv-17.broadcom.com (Postfix) with ESMTP id 682E5140069;
-        Thu,  7 May 2020 13:16:03 -0700 (PDT)
-From:   Jim Quinlan <james.quinlan@broadcom.com>
-To:     james.quinlan@broadcom.com
-Cc:     Jim Quinlan <james.quinlan@broadcom.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM BCM7XXX ARM
-        ARCHITECTURE),
-        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-pci@vger.kernel.org (open list:PCI NATIVE HOST BRIDGE AND
-        ENDPOINT DRIVERS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3 4/4] PCI: brcmstb: Disable L0s component of ASPM if requested
-Date:   Thu,  7 May 2020 16:15:43 -0400
-Message-Id: <20200507201544.43432-5-james.quinlan@broadcom.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200507201544.43432-1-james.quinlan@broadcom.com>
-References: <20200507201544.43432-1-james.quinlan@broadcom.com>
+        id S1726531AbgEGUPr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 May 2020 16:15:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54716 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726320AbgEGUPr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 7 May 2020 16:15:47 -0400
+Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F613216FD;
+        Thu,  7 May 2020 20:15:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588882546;
+        bh=Nn0Un6aRpakEtuYOCqVgYcTF+qUJFwkYBRemF7H3LDc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=HsihGvs9E1JHhScXJwwRqnIX05f4Gdr8v3nBGOynUPJrvFOAzHEhc1KMZokZz1hY/
+         4VrhsP5Yu/fkBU7y44yj8nwf5D+4WsA8KLiL4yP9EprqkrlAQZzsh2GQCU9lYe5Lkb
+         5hvvOlgjmqu9I9o4lT3nTIMjrjaZQoGGyAKguDqQ=
+Date:   Thu, 7 May 2020 15:15:44 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: Replace zero-length array with flexible-array
+Message-ID: <20200507201544.GA23633@bjorn-Precision-5520>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200507190544.GA15633@embeddedor>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Jim Quinlan <jquinlan@broadcom.com>
+On Thu, May 07, 2020 at 02:05:44PM -0500, Gustavo A. R. Silva wrote:
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+> 
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+> 
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> sizeof(flexible-array-member) triggers a warning because flexible array
+> members have incomplete type[1]. There are some instances of code in
+> which the sizeof operator is being incorrectly/erroneously applied to
+> zero-length arrays and the result is zero. Such instances may be hiding
+> some bugs. So, this work (flexible-array member conversions) will also
+> help to get completely rid of those sorts of issues.
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Some informal internal experiments has shown that the BrcmSTB ASPM L0s
-savings may introduce an undesirable noise signal on some customers'
-boards.  In addition, L0s was found lacking in realized power savings,
-especially relative to the L1 ASPM component.  This is BrcmSTB's
-experience and may not hold for others.  At any rate, if the
-'aspm-no-l0s' property is present L0s will be disabled.
+Applied to pci/misc for v5.8, thanks!
 
-Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-Acked-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
----
- drivers/pci/controller/pcie-brcmstb.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+I assume this takes care of everything in drivers/pci/, right?  I'd
+like to do them all at once, so if there are others, send another
+patch and I'll squash them.  I took a quick look but didn't see any.
 
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index 5b0dec5971b8..73020b4ff090 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -41,6 +41,9 @@
- #define PCIE_RC_CFG_PRIV1_ID_VAL3			0x043c
- #define  PCIE_RC_CFG_PRIV1_ID_VAL3_CLASS_CODE_MASK	0xffffff
- 
-+#define PCIE_RC_CFG_PRIV1_LINK_CAPABILITY			0x04dc
-+#define  PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK	0xc00
-+
- #define PCIE_RC_DL_MDIO_ADDR				0x1100
- #define PCIE_RC_DL_MDIO_WR_DATA				0x1104
- #define PCIE_RC_DL_MDIO_RD_DATA				0x1108
-@@ -693,7 +696,7 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
- 	int num_out_wins = 0;
- 	u16 nlw, cls, lnksta;
- 	int i, ret;
--	u32 tmp;
-+	u32 tmp, aspm_support;
- 
- 	/* Reset the bridge */
- 	brcm_pcie_bridge_sw_init_set(pcie, 1);
-@@ -803,6 +806,15 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
- 		num_out_wins++;
- 	}
- 
-+	/* Don't advertise L0s capability if 'aspm-no-l0s' */
-+	aspm_support = PCIE_LINK_STATE_L1;
-+	if (!of_property_read_bool(pcie->np, "aspm-no-l0s"))
-+		aspm_support |= PCIE_LINK_STATE_L0S;
-+	tmp = readl(base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
-+	u32p_replace_bits(&tmp, aspm_support,
-+		PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK);
-+	writel(tmp, base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
-+
- 	/*
- 	 * For config space accesses on the RC, show the right class for
- 	 * a PCIe-PCIe bridge (the default setting is to be EP mode).
--- 
-2.17.1
-
+> ---
+>  drivers/pci/pci.c   |    2 +-
+>  include/linux/pci.h |    4 ++--
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 595fcf59843f..bb78f580814e 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -1578,7 +1578,7 @@ EXPORT_SYMBOL(pci_restore_state);
+>  
+>  struct pci_saved_state {
+>  	u32 config_space[16];
+> -	struct pci_cap_saved_data cap[0];
+> +	struct pci_cap_saved_data cap[];
+>  };
+>  
+>  /**
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 83ce1cdf5676..0453ee458ab1 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -279,7 +279,7 @@ struct pci_cap_saved_data {
+>  	u16		cap_nr;
+>  	bool		cap_extended;
+>  	unsigned int	size;
+> -	u32		data[0];
+> +	u32		data[];
+>  };
+>  
+>  struct pci_cap_saved_state {
+> @@ -532,7 +532,7 @@ struct pci_host_bridge {
+>  			resource_size_t start,
+>  			resource_size_t size,
+>  			resource_size_t align);
+> -	unsigned long	private[0] ____cacheline_aligned;
+> +	unsigned long	private[] ____cacheline_aligned;
+>  };
+>  
+>  #define	to_pci_host_bridge(n) container_of(n, struct pci_host_bridge, dev)
+> 
