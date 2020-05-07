@@ -2,188 +2,148 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E3E121C8146
-	for <lists+linux-pci@lfdr.de>; Thu,  7 May 2020 07:03:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED5F01C836F
+	for <lists+linux-pci@lfdr.de>; Thu,  7 May 2020 09:29:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725783AbgEGFDb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 May 2020 01:03:31 -0400
-Received: from mail-eopbgr760092.outbound.protection.outlook.com ([40.107.76.92]:22353
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725763AbgEGFDb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 7 May 2020 01:03:31 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Go0GHRPJjjODy7rYDaELbrn596ysCoRRXlzKbKQdWq8aFvelc+d0a+LkDadAGn9+JA0+DX3WZXt7rI8dYK+Dl1WSNXuUXV4YEXDykIYW/ZikreKb6/ZTuHtemfMf2lXsSv7L76k9k9QB3DVv9dqw4uE14GgjhQhMg4lE4+uXBzkxliRWNcsPLM0c5oj2Om4SewTmLhMrIgKeUNID3DdilxrVCtsF5XUroCU7WBYy26fpRJsmwULst4Uh5I5psG0UExIf2JqNNkwEFH4Wtdm/mJtxggA0ucfsvrcmHzwqcpYlg8yQu6hZUomAr2V0C2uv0wCLiQkmhU/+XwAm4vZHtA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kKFVlzUIW4xVhlfs4E5qk5bCEg1g3RRToHvxtByxeKU=;
- b=a+L70UaxBVsxSVo+WiZEY8l2uU1BDy4aaGF8RYBIj3iOil5SG98l17AeC1rnK1mBjvcGK6hsN7ayIyCVAsK5tfbTeOZsNQFfElH2hnA3M5kCL1TXjYWQJniGTZcs/98mLWo37vpD5Oz+LSa7aQcBnT+rl/Y/qE7kYzoeVt49CYjffXueiv+KdYBbZpVsrPm/3zBcpulEX6KCWBjRw8qfGoF3D4m3/v1HefPMRpeKTcdpYT+gmnrqsxy9Yrdv3yQBphIR5j98fXmEbwKPPRzSnubc7+aX6Nh0+OEyWcW37nnqN7K+GaltVJEkHY7DmRKpb6GuDh5Gd65xBHeAY0JxrQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kKFVlzUIW4xVhlfs4E5qk5bCEg1g3RRToHvxtByxeKU=;
- b=iJA+AxpGiWTrPf8xdEGI1onAX9VIKwNWA+yC7zxbCed3OEktKmz3RnEV3xYfXB/ynt5ARTx63SUI87d4RboxAQW+74fLEfIrjKwlP1IVGTU+dX/GkloDMa1x2g/YcenFasd1dIpz9rAdnTcbSAzh0G6X9fw1HoUyC+GHqiIGJ5w=
-Authentication-Results: microsoft.com; dkim=none (message not signed)
- header.d=none;microsoft.com; dmarc=none action=none
- header.from=microsoft.com;
-Received: from SN6PR2101MB1021.namprd21.prod.outlook.com (2603:10b6:805:8::12)
- by SN4PR2101MB1584.namprd21.prod.outlook.com (2603:10b6:803:43::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.3; Thu, 7 May
- 2020 05:03:28 +0000
-Received: from SN6PR2101MB1021.namprd21.prod.outlook.com
- ([fe80::a9e6:4244:f67e:c55]) by SN6PR2101MB1021.namprd21.prod.outlook.com
- ([fe80::a9e6:4244:f67e:c55%6]) with mapi id 15.20.3000.004; Thu, 7 May 2020
- 05:03:28 +0000
-From:   Wei Hu <weh@microsoft.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, lorenzo.pieralisi@arm.com, robh@kernel.org,
-        bhelgaas@google.com, linux-hyperv@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        decui@microsoft.com, mikelley@microsoft.com
-Cc:     Wei Hu <weh@microsoft.com>
-Subject: [PATCH v3 2/2] PCI: hv: Retry PCI bus D0 entry when the first attempt failed with invalid device state
-Date:   Thu,  7 May 2020 13:03:00 +0800
-Message-Id: <20200507050300.10974-1-weh@microsoft.com>
-X-Mailer: git-send-email 2.20.1
-Reply-To: weh@microsoft.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR02CA0046.apcprd02.prod.outlook.com
- (2603:1096:3:18::34) To SN6PR2101MB1021.namprd21.prod.outlook.com
- (2603:10b6:805:8::12)
+        id S1725802AbgEGH3q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 May 2020 03:29:46 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42255 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725819AbgEGH3p (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 May 2020 03:29:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588836583;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=WqHWm03cdWE9AeodDX2gtE5xAzgCwXmdJaTKNX0BlUA=;
+        b=eeVEUetIdm7Dj0XSGmNhpOJH3qJ2W/CubleUNBObLQSUTv53iM6valDLMsjt6t0qQJzSuM
+        QP8iRXOewI0uAAaucE4alWo8PSrb15CcL61eXQwgR6N6UEua7F5b8NRvpfUBmN466+9AOY
+        GCCLiF1MNODXAL5fAsPXQn9PIn1LNek=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-458-9obbNRY2Opm1XuuQYQtYMQ-1; Thu, 07 May 2020 03:29:36 -0400
+X-MC-Unique: 9obbNRY2Opm1XuuQYQtYMQ-1
+Received: by mail-wm1-f71.google.com with SMTP id s12so2817298wmj.6
+        for <linux-pci@vger.kernel.org>; Thu, 07 May 2020 00:29:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=WqHWm03cdWE9AeodDX2gtE5xAzgCwXmdJaTKNX0BlUA=;
+        b=lI/LjzYbZcurxhG6WA80WWuBY8TyegYO6GwS0rUns/SyIHxS/V3nM+ySffgKv02N04
+         pMlBQzk05xKBLY9BaWmb6L7tFe41NjH2nCdfmdxyr2rU5POBuPKwZNAmy3UyYTv+aulM
+         GAJ53jac5fjxZJkt/NSBiaMN3GJfKOky3ZB9hfFGYMfJHRj+qchnO8xtl1kzlNA8LmPm
+         7836gXVYhSVZWlDdeYWRTe+Ckz1PlI5oeEZMEF11HiHNmphxmE59U5jm3ezRTSPBXZJg
+         4MnD1JKyzrYQCFya0GRos8AWBnJXT6nJOeB8NBhwnIyjTLfXhfSTJsxM8o2ipY6RNhxW
+         4y8w==
+X-Gm-Message-State: AGi0PuaNnb5t2Hht1KjW+z2b24gBiwA79ACb14fRvad2vMYe5KdOq6EY
+        NCL8Rtnl7PBHY5trPtzGGXKjoK4H0vcJG49mOh/x8VY0AHWQWVr768YKCIEOChrZHNvjqPPNnAR
+        bsQ9dM4Yn0OyjVRN89gOK
+X-Received: by 2002:a5d:49cb:: with SMTP id t11mr13722760wrs.91.1588836574140;
+        Thu, 07 May 2020 00:29:34 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKW/afKgcN6Ys3SlaqvJeC2tMA76ui4ITX8WaKt12BBr/x/h/A/RJ6Rv71x5W9jITqlLYoytg==
+X-Received: by 2002:a5d:49cb:: with SMTP id t11mr13722718wrs.91.1588836573396;
+        Thu, 07 May 2020 00:29:33 -0700 (PDT)
+Received: from localhost.localdomain ([151.29.188.60])
+        by smtp.gmail.com with ESMTPSA id z11sm6487512wro.48.2020.05.07.00.29.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 May 2020 00:29:32 -0700 (PDT)
+Date:   Thu, 7 May 2020 09:29:30 +0200
+From:   Juri Lelli <juri.lelli@redhat.com>
+To:     linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-rt-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Claudio Scordino <c.scordino@evidence.eu.com>,
+        Luca Abeni <luca.abeni@santannapisa.it>,
+        Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>
+Subject: Re: [ANNOUNCE][CFP] Power Management and Scheduling in the Linux
+ Kernel IV edition (OSPM-summit 2020)
+Message-ID: <20200507072930.GM17381@localhost.localdomain>
+References: <20191219103500.GC13724@localhost.localdomain>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from weh-g1-u1904d-testwin10.corp.microsoft.com (167.220.255.113) by SG2PR02CA0046.apcprd02.prod.outlook.com (2603:1096:3:18::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.28 via Frontend Transport; Thu, 7 May 2020 05:03:24 +0000
-X-Mailer: git-send-email 2.20.1
-X-Originating-IP: [167.220.255.113]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 41a8155d-8c26-43c0-7e78-08d7f243fac2
-X-MS-TrafficTypeDiagnostic: SN4PR2101MB1584:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SN4PR2101MB1584F24C18FBCF112CD328B0BBA50@SN4PR2101MB1584.namprd21.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 03965EFC76
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: rTFzUuomV3TsTRGTJ9WUhbgKRKfwAG2sx6p/mrJmRUeAQtoFA5PZn4LRNAOh/yuDU1Av0brp/EjFSFv3oY+RH8lvxrrhfxeq8O2Mieis7Vj04osxUBxxzw/geQeb3GC619jNqBATQvuurBP0utgrQNTTM8cm/G3nmgLcdjGC7QTmf10uPu5zMAz0uxV6bR1aqqA4/e2JelEi8LyL/WlbiEf3g47gIQ1C87jMAQDMDKyVVaLBDs9vbFLZISV5viauBk6TP9I9sSLvTSQ1W5Tj6ySyBllq1bBLJwYHFZ5eRLEDOCcA7DiaCWdYt9XO+j3PBclnUGbJaOAi6rplgZ5++t8j5IclZNCyiBaWB5Tv8tHJyWwvDxLFCtST6fOVYifBXKWH/QUeuZO8w05pTaApeZbJTWkfL5GxXoDBFs7jd7BAy09rgJ/j/5IRSHA5HNycNSCiKukd372k98n95wjTscZSgvYSSCGq4aliJwS1fVZHT4Bn8kh0h8OfWEY5xqzMA+gTw6nFc1r9VcpgKWdUsaDV8RCfax8OcaP2NESTZaI=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR2101MB1021.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(366004)(346002)(376002)(136003)(33430700001)(82950400001)(5660300002)(2616005)(956004)(478600001)(10290500003)(316002)(1076003)(83300400001)(83280400001)(83320400001)(83310400001)(83290400001)(66946007)(3450700001)(82960400001)(4326008)(6636002)(107886003)(26005)(7696005)(52116002)(36756003)(33440700001)(86362001)(6666004)(66476007)(8676002)(186003)(6486002)(66556008)(2906002)(16526019)(8936002)(921003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: cBANEynu1zzzef11M3ERjNFrxelnlcXxkHOHex38IiKK4+sHsofeo631xowm9BCjVCARC+HrJd8MPZB94m3pUaoPg6Q+CaxlMcGktMd3X1L/2bzVsQdrEZf6WSs5WXwRZRN/u+75cX+CPRlGxFLf/aeWdUGwNRimB2Yk49LJaZINu6ehkgHFWZxBTZTrKo9ejTCwyHBaS4vAq+HY5RFJo7kXFXc9KaH8svzefDI4Rp4rYfbCh9YMsl7m0dsggL9eTEjr5NsiJmQ0Z8bWbdZFTgHq7+e3/zbtZHOesN4t0Dj92fSGe5gvvyUeugHBBzs6P5LLLmG+5onEQXiYgNsXQzYM9FmqxdJ3/mc9768WNpmo6rIHdwbMbOX5Y+IWerN8iGyjFr4NXnpjIEKHy9Et4ScjmrGQql8uIAvClhB7s77QS7dVF07ICXrkfcdXPTkXr50w7IiLpb6dduZPuHHj++M85fuGTc5ekJUPJydtvitcS+EcyjB/w0nZFiKt+gC9l9nF0Xa1M7G54CZV+WkkSBfH/cZVz6whjtBvNvHn7yeNHGkcfLQu0CLBayVJviKi1KS4GIUozRYUkC/FmLCFmKdgONhplt7lt1/9MR+z+qmusC7dU0+Oq6rXcwKFKWbzvloxL03pANMuCIUWRqkEyigFT+PD201+BYSwN38PRqwouVssj3QIPuYhD+TB5RERegRT120Eeb2JpcEU6QmT85wZlxa0HqdWq5iGl4ASeyo5vG5xUO0IFPk1bh6OPYTqCxmjjdo+72ApuZxykUqwzJC6zIwBeUPa4yvdkrVlpV6w50bHBwWj875M4wFos4wp
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 41a8155d-8c26-43c0-7e78-08d7f243fac2
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2020 05:03:28.3283
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: vKOTRcy6upIjrPsp8xmzhmAJtZIFY61HslCGcWSZLr45ChorV6FlW11xorYUq9RDyQnfOsxHYOsbQgdsuNRB7Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR2101MB1584
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191219103500.GC13724@localhost.localdomain>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-In the case of kdump, the PCI device was not cleanly shut down
-before the kdump kernel starts. This causes the initial
-attempt of entering D0 state in the kdump kernel to fail with
-invalid device state returned from Hyper-V host.
-When this happens, explicitly call PCI bus exit and retry to
-enter the D0 state.
+Hello,
 
-Signed-off-by: Wei Hu <weh@microsoft.com>
----
-    v2: Incorporate review comments from Michael Kelley, Dexuan Cui and
-    Bjorn Helgaas
+On 19/12/19 11:35, Juri Lelli wrote:
+> Power Management and Scheduling in the Linux Kernel (OSPM-summit) IV edition
+> 
+> May 11-13, 2019
+> Scuola Superiore Sant'Anna
+> Pisa, Italy
+> 
 
- drivers/pci/controller/pci-hyperv.c | 40 +++++++++++++++++++++++++++--
- 1 file changed, 38 insertions(+), 2 deletions(-)
+Quick reminder that OSPM-summit IV edition is happening next week!
 
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index e6fac0187722..92092a47d3af 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -2739,6 +2739,8 @@ static void hv_free_config_window(struct hv_pcibus_device *hbus)
- 	vmbus_free_mmio(hbus->mem_config->start, PCI_CONFIG_MMIO_LENGTH);
- }
- 
-+static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs);
-+
- /**
-  * hv_pci_enter_d0() - Bring the "bus" into the D0 power state
-  * @hdev:	VMBus's tracking struct for this root PCI bus
-@@ -2751,8 +2753,10 @@ static int hv_pci_enter_d0(struct hv_device *hdev)
- 	struct pci_bus_d0_entry *d0_entry;
- 	struct hv_pci_compl comp_pkt;
- 	struct pci_packet *pkt;
-+	bool retry = true;
- 	int ret;
- 
-+enter_d0_retry:
- 	/*
- 	 * Tell the host that the bus is ready to use, and moved into the
- 	 * powered-on state.  This includes telling the host which region
-@@ -2779,6 +2783,38 @@ static int hv_pci_enter_d0(struct hv_device *hdev)
- 	if (ret)
- 		goto exit;
- 
-+	/*
-+	 * In certain case (Kdump) the pci device of interest was
-+	 * not cleanly shut down and resource is still held on host
-+	 * side, the host could return invalid device status.
-+	 * We need to explicitly request host to release the resource
-+	 * and try to enter D0 again.
-+	 */
-+	if (comp_pkt.completion_status < 0 && retry) {
-+		retry = false;
-+
-+		dev_err(&hdev->device, "Retrying D0 Entry\n");
-+
-+		/*
-+		 * Hv_pci_bus_exit() calls hv_send_resource_released()
-+		 * to free up resources of its child devices.
-+		 * In the kdump kernel we need to set the
-+		 * wslot_res_allocated to 255 so it scans all child
-+		 * devices to release resources allocated in the
-+		 * normal kernel before panic happened.
-+		 */
-+		hbus->wslot_res_allocated = 255;
-+
-+		ret = hv_pci_bus_exit(hdev, true);
-+
-+		if (ret == 0) {
-+			kfree(pkt);
-+			goto enter_d0_retry;
-+		}
-+		dev_err(&hdev->device,
-+			"Retrying D0 failed with ret %d\n", ret);
-+	}
-+
- 	if (comp_pkt.completion_status < 0) {
- 		dev_err(&hdev->device,
- 			"PCI Pass-through VSP failed D0 Entry with status %x\n",
-@@ -3185,7 +3221,7 @@ static int hv_pci_probe(struct hv_device *hdev,
- 	return ret;
- }
- 
--static int hv_pci_bus_exit(struct hv_device *hdev, bool hibernating)
-+static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
- {
- 	struct hv_pcibus_device *hbus = hv_get_drvdata(hdev);
- 	struct {
-@@ -3203,7 +3239,7 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool hibernating)
- 	if (hdev->channel->rescind)
- 		return 0;
- 
--	if (!hibernating) {
-+	if (!keep_devs) {
- 		/* Delete any children which might still exist. */
- 		dr = kzalloc(sizeof(*dr), GFP_KERNEL);
- 		if (dr && hv_pci_start_relations_work(hbus, dr))
--- 
-2.20.1
+Not in Pisa (for obvious reasons :-/), but online, kindly hosted on LWN
+BigBlueButton server. Thanks a lot to Jon and LWN for this opportunity.
+
+> .:: FOCUS
+> 
+> The IV edition of the Power Management and Scheduling in the Linux
+> Kernel (OSPM) summit aims at fostering discussions on power management
+> and (real-time) scheduling techniques. Summit will be held in Pisa
+> (Italy) on May 11-13, 2020.
+> 
+> Although scheduler techniques for reducing energy consumption while
+> meeting performance and latency requirements are the prime interest of
+> the summit, we welcome anybody interested in having discussions on the
+> broader scope of real-time systems, real-time and non-real-time
+> scheduling, tooling, debugging and tracing.
+> 
+> Feel free to have a look at what happened previous years:
+> 
+>  I   edition - https://lwn.net/Articles/721573/
+>  II  edition - https://lwn.net/Articles/754923/
+>  III edition - https://lwn.net/Articles/793281/
+
+[...]
+
+> .:: ATTENDING
+> 
+> Attending the OSPM-summit is free of charge, but registration to the
+> event is mandatory. The event can allow a maximum of 50 people (so, be
+> sure to register early!). Registrations open on February 24th, 2020.
+> 
+> To register fill in the registration form available at
+> https://forms.gle/7LfFY8oNyRxV1wuQ7
+
+Since we don't have real rooms constraints, registration is still open.
+Everybody is more then welcome to join us. Please use the form above to
+register. Details about how to join will be provided after registration
+completes. You can also reach out to me directly.
+
+Schedule (still subject to small changes) is available at
+https://bit.ly/2WAtsjy (CEST tz).
+
+> .:: ORGANIZERS (in alphabetical order)
+> 
+> Luca Abeni (SSSA)
+> Tommaso Cucinotta (SSSA)
+> Dietmar Eggemann (Arm)
+> Sudeep Holla (Arm)
+> Juri Lelli (Red Hat)
+> Lorenzo Pieralisi (Arm)
+> Morten Rasmussen (Arm)
+> Claudio Scordino (Evidence SRL)
+
+Thanks also a lot to Scuola Superiore Sant'Anna of Pisa, Arm and
+Evidence for helping put this together for the 4th consecutive year.
+
+Looking forward to meet you all soon.. virtually. :-)
+
+Best,
+
+Juri
 
