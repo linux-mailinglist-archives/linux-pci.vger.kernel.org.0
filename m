@@ -2,105 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D0FF1C86B5
-	for <lists+linux-pci@lfdr.de>; Thu,  7 May 2020 12:30:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F7DB1C873F
+	for <lists+linux-pci@lfdr.de>; Thu,  7 May 2020 12:49:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725903AbgEGKan (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 May 2020 06:30:43 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:32611 "EHLO
+        id S1726514AbgEGKt1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 May 2020 06:49:27 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:28588 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725809AbgEGKan (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 May 2020 06:30:43 -0400
+        by vger.kernel.org with ESMTP id S1725900AbgEGKt1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 May 2020 06:49:27 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588847441;
+        s=mimecast20190719; t=1588848565;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8jYlXVIeYwPIAaTa/8NGwUOA9TXF5pyDMIzCVjgMxm8=;
-        b=ZIFuDpaoUEQQRUqzMnDI//N7av9iJMXl3E3F1ASzbW4xCHBNtieHHoBeds1ERLVdbq7xqS
-        euIXxMBb70koZE+lXZ3IVRL/jKkxqgu71xe4E9OiGF3Os+H1eTueBdWtUv7tdwklQuftuy
-        SG6NWd5YBBLAm6q0P5HjHXxY1+EK+ag=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-143-BRBD9VtDMeaajR5zdxxhLA-1; Thu, 07 May 2020 06:30:40 -0400
-X-MC-Unique: BRBD9VtDMeaajR5zdxxhLA-1
-Received: by mail-wm1-f69.google.com with SMTP id n127so2291358wme.4
-        for <linux-pci@vger.kernel.org>; Thu, 07 May 2020 03:30:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8jYlXVIeYwPIAaTa/8NGwUOA9TXF5pyDMIzCVjgMxm8=;
-        b=bwUQfN1trPAqKrX1uJ0lS2ei8UKk2ZFBBGG6sYSjhd25cFymn8NyT/k7J5kpEAeyg/
-         +QMEXbjBlisYf2wjBgfgjpJD0m2X/KqYip0hSJzJEVq/pdeLmL7qTecnY++t0yF7Juux
-         B06p/JhJX/a3HaSwqnHf2fLVwLDtoxYaHe8lbYG81A4WcATp2CjllV1QnNUm1GLZBU0R
-         7wop9fYx7uE++6NxWU41MAWzSYURh7swhcRtU7l6nC75n+zq4zbBdG3hyQMIjKtrjgTJ
-         WFYYHiu7ZGI11d14+Ywrj+DkmlEOy2wXzx4kWJM2hLtUZCfnoJBuL0HD+X24NWbnXmSv
-         ITMg==
-X-Gm-Message-State: AGi0Pubg+IeyYMMEkrYfu9gyZqPGU3kFgTPb+4+h4y8wnZWkq1SYv1Wi
-        mzLfRjqxY1CWdFIk0e0LZvfAhoVSciR7bghYtbUcOcZBhK9wWkiysdztp0EEeN5S0rEL/DcOuI9
-        4j0V9BGKiQpTFFc/Xa7LD
-X-Received: by 2002:a5d:5642:: with SMTP id j2mr3913179wrw.52.1588847439015;
-        Thu, 07 May 2020 03:30:39 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLYsFyxuTZc14Fgz1L9YXfTpaCsMoR+ZYvt4JlYFVWwq/uNI7MbYeDdYuumr/g0A43oTs6NUA==
-X-Received: by 2002:a5d:5642:: with SMTP id j2mr3913158wrw.52.1588847438835;
-        Thu, 07 May 2020 03:30:38 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id q187sm7512995wma.41.2020.05.07.03.30.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 May 2020 03:30:38 -0700 (PDT)
-Subject: Re: [PATCH 1/3] ACPI / utils: Add acpi_evaluate_reg() helper
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=BEUh2QIFXXLvv2dwamDy5GA1DUcQGCNNDhH7clDR2zQ=;
+        b=FCfPm5yZ8bhotFH2D3EZW/nJYj/q+HXyRGCDFDfghFpLv18IvspBPjFy/6+uTZy/M1Pj4X
+        gx8hmEqw94NuIRVeGBiFAdGEvZD8UGW57UKqrYlaMKwFSAV1NMoA7Y/KtKZM+p4WoAfroF
+        5Wtr7SvQtLD5fxQ1kscodfVGyoC5pNE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-379-a2fs5XMLMgOxBCmmrwq2cw-1; Thu, 07 May 2020 06:49:21 -0400
+X-MC-Unique: a2fs5XMLMgOxBCmmrwq2cw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4228D80183C;
+        Thu,  7 May 2020 10:49:20 +0000 (UTC)
+Received: from x1.localdomain.com (ovpn-115-120.ams2.redhat.com [10.36.115.120])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 51C6060C81;
+        Thu,  7 May 2020 10:49:18 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
         Len Brown <lenb@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-References: <20200505132128.19476-1-hdegoede@redhat.com>
- <20200505132128.19476-2-hdegoede@redhat.com>
- <20200505154205.GR185537@smile.fi.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <3a8682dc-5423-d057-4289-929a84f28f94@redhat.com>
-Date:   Thu, 7 May 2020 12:30:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: [PATCH v2 1/2] ACPI / utils: Add acpi_evaluate_reg() helper
+Date:   Thu,  7 May 2020 12:49:16 +0200
+Message-Id: <20200507104917.116589-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200505154205.GR185537@smile.fi.intel.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+With a recent fix to the pinctrl-cherryview driver we now have
+2 drivers open-coding the parameter building / passing for calling
+_REG on an ACPI handle.
 
-On 5/5/20 5:42 PM, Andy Shevchenko wrote:
-> On Tue, May 05, 2020 at 03:21:26PM +0200, Hans de Goede wrote:
->> With a recent fix to the pinctrl-cherryview driver we know have
->> 2 drivers open-coding the parameter building / passing for calling
->> _REG on an ACPI handle.
->>
->> Add a helper for this, so that these 2 drivers can be converted to this
->> helper.
-> 
-> Suggested-by?
+Add a helper for this, so that these 2 drivers can be converted to this
+helper.
 
-Right sorry about that I will fix this for v2.
+Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+Changes in v2:
+- Fix spelling error in commit message
+- Add Andy's Suggested-by and Reviewed-by
+---
+ drivers/acpi/utils.c    | 25 +++++++++++++++++++++++++
+ include/acpi/acpi_bus.h |  1 +
+ 2 files changed, 26 insertions(+)
 
- >> + * @function: Parameter to pass to _REG one of ACPI_REG_CONNECT or
- >> + *            ACPI_REG_DISCONNECT
- >
- > Is it enum or definitions? If former can we refer to it?
-
-These are #define-s.
-
-Regards,
-
-Hans
+diff --git a/drivers/acpi/utils.c b/drivers/acpi/utils.c
+index 804ac0df58ec..838b719ec7ce 100644
+--- a/drivers/acpi/utils.c
++++ b/drivers/acpi/utils.c
+@@ -605,6 +605,31 @@ acpi_status acpi_evaluate_lck(acpi_handle handle, in=
+t lock)
+ 	return status;
+ }
+=20
++/**
++ * acpi_evaluate_reg: Evaluate _REG method to register OpRegion presence
++ * @handle: ACPI device handle
++ * @space_id: ACPI address space id to register OpRegion presence for
++ * @function: Parameter to pass to _REG one of ACPI_REG_CONNECT or
++ *            ACPI_REG_DISCONNECT
++ *
++ * Evaluate device's _REG method to register OpRegion presence.
++ */
++acpi_status acpi_evaluate_reg(acpi_handle handle, u8 space_id, u32 funct=
+ion)
++{
++	struct acpi_object_list arg_list;
++	union acpi_object params[2];
++
++	params[0].type =3D ACPI_TYPE_INTEGER;
++	params[0].integer.value =3D space_id;
++	params[1].type =3D ACPI_TYPE_INTEGER;
++	params[1].integer.value =3D function;
++	arg_list.count =3D 2;
++	arg_list.pointer =3D params;
++
++	return acpi_evaluate_object(handle, "_REG", &arg_list, NULL);
++}
++EXPORT_SYMBOL(acpi_evaluate_reg);
++
+ /**
+  * acpi_evaluate_dsm - evaluate device's _DSM method
+  * @handle: ACPI device handle
+diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
+index a92bea7184a8..5afb6ceb284f 100644
+--- a/include/acpi/acpi_bus.h
++++ b/include/acpi/acpi_bus.h
+@@ -44,6 +44,7 @@ acpi_status acpi_execute_simple_method(acpi_handle hand=
+le, char *method,
+ 				       u64 arg);
+ acpi_status acpi_evaluate_ej0(acpi_handle handle);
+ acpi_status acpi_evaluate_lck(acpi_handle handle, int lock);
++acpi_status acpi_evaluate_reg(acpi_handle handle, u8 space_id, u32 funct=
+ion);
+ bool acpi_ata_match(acpi_handle handle);
+ bool acpi_bay_match(acpi_handle handle);
+ bool acpi_dock_match(acpi_handle handle);
+--=20
+2.26.0
 
