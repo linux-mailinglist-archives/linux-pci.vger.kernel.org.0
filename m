@@ -2,117 +2,186 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D81BB1C966B
-	for <lists+linux-pci@lfdr.de>; Thu,  7 May 2020 18:25:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 38C261C9735
+	for <lists+linux-pci@lfdr.de>; Thu,  7 May 2020 19:11:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbgEGQZp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 May 2020 12:25:45 -0400
-Received: from mga11.intel.com ([192.55.52.93]:21311 "EHLO mga11.intel.com"
+        id S1726531AbgEGRLa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 May 2020 13:11:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726470AbgEGQZp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 7 May 2020 12:25:45 -0400
-IronPort-SDR: dx3xesLci+fKG1o5vNeaJDaI7mzsELKq/xcLU16yRnXtFQsCozExJxOuBCMmtUdnBMG/5NmP6w
- SbUgNO+Q9pzg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 09:25:44 -0700
-IronPort-SDR: UI2DdPDFZfRj74OALBpuW41w58LXZwgsjf3LGqDj+vALiCsEHXQU/Sa9YbL1TRdZwaxVQulhgj
- S1oqukCmHM3Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,364,1583222400"; 
-   d="scan'208";a="278651044"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga002.jf.intel.com with ESMTP; 07 May 2020 09:25:43 -0700
-Date:   Thu, 7 May 2020 09:31:50 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, joro@8bytes.org, catalin.marinas@arm.com,
-        will@kernel.org, robin.murphy@arm.com, kevin.tian@intel.com,
-        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
-        christian.koenig@amd.com, felix.kuehling@amd.com,
-        zhangfei.gao@linaro.org, jgg@ziepe.ca, xuzaibo@huawei.com,
-        fenghua.yu@intel.com, hch@infradead.org,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v6 17/25] iommu/arm-smmu-v3: Implement
- iommu_sva_bind/unbind()
-Message-ID: <20200507093150.6da9d6fb@jacob-builder>
-In-Reply-To: <20200505091531.GA203922@myrica>
-References: <20200430143424.2787566-1-jean-philippe@linaro.org>
-        <20200430143424.2787566-18-jean-philippe@linaro.org>
-        <20200430141617.6ad4be4c@jacob-builder>
-        <20200504164351.GJ170104@myrica>
-        <20200504134723.54e2ebcd@jacob-builder>
-        <20200505091531.GA203922@myrica>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        id S1726074AbgEGRLa (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 7 May 2020 13:11:30 -0400
+Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3198F2083B;
+        Thu,  7 May 2020 17:11:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588871489;
+        bh=ji9miQsvojjWPiHau4ve0YmAWTu9UG3t4rvaQ+hPCYs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=v9vR9w8b4e4h1ZxmT7hO5RahiR/PrHwTMrDV+YgsVse6Eu+KLvV5yAK/FZ0qYOFrT
+         Hl2sd/B/9FIzTgiLL8MUsAPRpEN8XLnL0wka+oQ9fpuBUcY7Z7bfTGhTT7CYxpKXfd
+         gaEpRsRBSkoZAVvYbPQH7jAINkwdHfHfmJ+kkQzI=
+Date:   Thu, 7 May 2020 12:11:27 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     bjorn@helgaas.com, Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI: Do not use pcie_get_speed_cap() to determine when
+ to start waiting
+Message-ID: <20200507171127.GA7761@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200507134627.GY487496@lahna.fi.intel.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 5 May 2020 11:15:31 +0200
-Jean-Philippe Brucker <jean-philippe@linaro.org> wrote:
+On Thu, May 07, 2020 at 04:46:27PM +0300, Mika Westerberg wrote:
+> On Thu, May 07, 2020 at 08:33:27AM -0500, Bjorn Helgaas wrote:
+> > On Thu, May 7, 2020 at 7:36 AM Mika Westerberg
+> > <mika.westerberg@linux.intel.com> wrote:
+> > >
+> > > On Thu, May 07, 2020 at 07:24:37AM -0500, Bjorn Helgaas wrote:
+> > > > On Thu, May 7, 2020 at 6:45 AM Mika Westerberg
+> > > > <mika.westerberg@linux.intel.com> wrote:
+> > > > >
+> > > > > On Wed, May 06, 2020 at 05:42:28PM -0500, Bjorn Helgaas wrote:
+> > > > > > On Thu, Apr 16, 2020 at 11:32:45AM +0300, Mika Westerberg wrote:
+> > > > > > > Kai-Heng Feng reported that it takes long time (>1s) to resume
+> > > > > > > Thunderbolt connected PCIe devices from both runtime suspend and system
+> > > > > > > sleep (s2idle).
+> > > > > > >
+> > > > > > > These PCIe downstream ports the second link capability (PCI_EXP_LNKCAP2)
+> > > > > > > announces support for speeds > 5 GT/s but it is then capped by the
+> > > > > > > second link control (PCI_EXP_LNKCTL2) register to 2.5 GT/s. This
+> > > > > > > possiblity was not considered in pci_bridge_wait_for_secondary_bus() so
+> > > > > > > it ended up waiting for 1100 ms as these ports do not support active
+> > > > > > > link layer reporting either.
+> > > > > > >
+> > > > > > > PCIe spec 5.0 section 6.6.1 mandates that we must wait minimum of 100 ms
+> > > > > > > before sending configuration request to the device below, if the port
+> > > > > > > does not support speeds > 5 GT/s, and if it does we first need to wait
+> > > > > > > for the data link layer to become active before waiting for that 100 ms.
+> > > > > > >
+> > > > > > > PCIe spec 5.0 section 7.5.3.6 further says that all downstream ports
+> > > > > > > that support speeds > 5 GT/s must support active link layer reporting so
+> > > > > > > instead of looking for the speed we can check for the active link layer
+> > > > > > > reporting capability and determine how to wait based on that (as they go
+> > > > > > > hand in hand).
+> > > > > >
+> > > > > > I can't quite tell what the defect is here.
+> > > > > >
+> > > > > > I assume you're talking about this text from sec 6.6.1:
+> > > > > >
+> > > > > >   - With a Downstream Port that does not support Link speeds greater
+> > > > > >     than 5.0 GT/s, software must wait a minimum of 100 ms before
+> > > > > >     sending a Configuration Request to the device immediately below
+> > > > > >     that Port.
+> > > > > >
+> > > > > >   - With a Downstream Port that supports Link speeds greater than 5.0
+> > > > > >     GT/s, software must wait a minimum of 100 ms after Link training
+> > > > > >     completes before sending a Configuration Request to the device
+> > > > > >     immediately below that Port. Software can determine when Link
+> > > > > >     training completes by polling the Data Link Layer Link Active bit
+> > > > > >     or by setting up an associated interrupt (see Section 6.7.3.3 ).
+> > > > > >
+> > > > > > I don't understand what Link Control 2 has to do with this.  The spec
+> > > > > > talks about ports *supporting* certain link speeds, which sounds to me
+> > > > > > like the Link Capabilities.  It doesn't say anything about the current
+> > > > > > or target link speed.
+> > > > >
+> > > > > PCIe 5.0 page 764 recommends using Supported Link Speeds Vector in Link
+> > > > > Capabilities 2 register and that's what pcie_get_speed_cap() is doing.
+> > > > >
+> > > > > However, we can avoid figuring the speed altogether by checking the
+> > > > > dev->link_active_reporting instead because that needs to be implemented
+> > > > > by all Downstream Ports that supports speeds > 5 GT/s (PCIe 5.0 page 735).
+> > > >
+> > > > I understand that part.  But the code as-is matches sec 6.6.1, which
+> > > > makes it easy to understand.  Checking link_active_reporting instead
+> > > > makes it harder to understand because it makes it one step removed
+> > > > from 6.6.1.  And link_active_reporting must be set for ports that
+> > > > support > 5 GT/s, but it must *also* be set in some hotplug cases, so
+> > > > that further complicates the connection between it and 6.6.1.
+> > > >
+> > > > And apparently there's an actual defect, and I don't understand what
+> > > > that is yet.  It sounds like we agree that pcie_get_speed_cap() is
+> > > > doing the right thing.  Is there something in
+> > > > pci_bridge_wait_for_secondary_bus() that doesn't match sec 6.6.1?
+> > >
+> > > The defect is that some downstream PCIe ports on a system Kai-Heng is
+> > > using have Supported Link Speeds Vector with > 5GT/s and it does not
+> > > support active link reporting so the currect code ends up waiting 1100 ms
+> > > slowing down resume time.
 
-> On Mon, May 04, 2020 at 01:47:23PM -0700, Jacob Pan wrote:
-> > > > > +	arm_smmu_write_ctx_desc(smmu_domain, mm->pasid,
-> > > > > &invalid_cd); +
-> > > > > +	arm_smmu_tlb_inv_asid(smmu_domain->smmu,
-> > > > > smmu_mn->cd->asid);
-> > > > > +	/* TODO: invalidate ATS */
-> > > > > +    
-> > > > If mm release is called after tlb invalidate range, is it still
-> > > > necessary to invalidate again?    
-> > > 
-> > > No, provided all mappings from the address space are unmapped and
-> > > invalidated. I'll double check, but in my tests invalidate range
-> > > didn't seem to be called for all mappings on mm exit, so I
-> > > believe we do need this.
-> > >   
-> > I think it is safe to invalidate again. There was a concern that mm
-> > release may delete IOMMU driver from the notification list and miss
-> > tlb invalidate range. I had a hard time to confirm that with ftrace
-> > while killing a process, many lost events.
-> >   
-> 
-> If it helps, I have a test that generates small DMA transactions on a
-> SMMU model. This is the trace for a job on a 8kB mmap'd buffer:
-> 
->   smmu_bind_alloc: dev=0000:00:03.0 pasid=1
->   dev_fault: IOMMU:0000:00:03.0 type=2 reason=0
-> addr=0x0000ffff860e6000 pasid=1 group=74 flags=3 prot=2
-> dev_page_response: IOMMU:0000:00:03.0 code=0 pasid=1 group=74
-> dev_fault: IOMMU:0000:00:03.0 type=2 reason=0 addr=0x0000ffff860e7000
-> pasid=1 group=143 flags=3 prot=2 dev_page_response:
-> IOMMU:0000:00:03.0 code=0 pasid=1 group=143 smmu_mm_invalidate:
-> pasid=1 start=0xffff860e6000 end=0xffff860e8000 smmu_mm_invalidate:
-> pasid=1 start=0xffff860e6000 end=0xffff860e8000 smmu_mm_invalidate:
-> pasid=1 start=0xffff860e8000 end=0xffff860ea000 smmu_mm_invalidate:
-> pasid=1 start=0xffff860e8000 end=0xffff860ea000 smmu_unbind_free:
-> dev=0000:00:03.0 pasid=1
-> 
-> And this is the same job, but the process immediately kills itself
-> after launching it.
-> 
->   smmu_bind_alloc: dev=0000:00:03.0 pasid=1
->   dev_fault: IOMMU:0000:00:03.0 type=2 reason=0
-> addr=0x0000ffffb9d15000 pasid=1 group=259 flags=3 prot=2
-> smmu_mm_release: pasid=1 dev_page_response: IOMMU:0000:00:03.0 code=0
-> pasid=1 group=259 dev_fault: IOMMU:0000:00:03.0 type=2 reason=0
-> addr=0x0000ffffb9d15000 pasid=1 group=383 flags=3 prot=2
-> dev_page_response: IOMMU:0000:00:03.0 code=1 pasid=1 group=383
-> smmu_unbind_free: dev=0000:00:03.0 pasid=1
-> 
-> We don't get any invalidate_range notification in this case.
-> 
-Thanks for the confirmation. We do need to invalidate here.
+Ah.  From the lspci and dmesg instrumentation in the bugzilla, I
+guess:
 
-> Thanks,
-> Jean
+  04:00.0 Thunderbolt Downstream Port to [bus 05]
+    LnkCap: Speed 2.5GT/s, LLActRep-
+    LnkSta: Speed 2.5GT/s
+    LnkCap2: Supported Link Speeds: 2.5-8GT/s
+    LnkCtl2: Target Link Speed: 2.5GT/s
+  04:02.0 Thunderbolt Downstream Port to [bus 39]
+    LnkCap: Speed 2.5GT/s, LLActRep-
+    LnkSta: Speed 2.5GT/s
+    LnkCap2: Supported Link Speeds: 2.5-8GT/s
+    LnkCtl2: Target Link Speed: 2.5GT/s
 
-[Jacob Pan]
+So per the Link Cap 2 Supported Link Speeds Vector, both devices
+support up to 8GT/s, but neither one advertises Data Link Layer Link
+Active Reporting Capable in Link Cap.
+
+The Root Port to the NVIDIA GPU is similar; it advertises 8GT/s
+support but not LLActRep:
+
+  00:01.0 Root Port to [bus 01]
+    LnkCap: Speed 8GT/s, LLActRep-
+    LnkSta: Speed 8GT/s
+    LnkCap2: Supported Link Speeds: 2.5-8GT/s
+    LnkCtl2: Target Link Speed: 8GT/s
+
+The fact that all three of these don't match what I expect makes me
+wonder if I'm reading the spec wrong or lspci is decoding something
+wrong.
+
+For the Thunderbolt ports we could make the argument (as I think
+you're suggesting) that the "supported link speed" is really the
+minimum of the "Link Cap 2 Supported Link Speed" and the "Link Control
+2 Target Link Speed".
+
+But even that wouldn't explain why 00:01.0 doesn't advertise LLActRep+
+when it is actually running at 8GT/s.
+
+> > That sounds like a hardware defect that should be worked around with a
+> > quirk or something.  If we just restructure the code to avoid the
+> > problem, we're likely to reintroduce it later because there's no hint
+> > in the code about this problem.
+> 
+> That's why I added the comment there to explain this.
+> 
+> Can you propose a patch following what you were thinking that solves
+> this so Kai-Heng can try it out?
+> 
+> > > The Target Link Speed of this port (in Link Control 2) has the speed
+> > > capped to 2.5 GT/s.
+> > 
+> > I saw you mentioned this before, but I don't understand yet why it's
+> > relevant.  The spec says "supported,", not "current" or "target".
+> 
+> Because my interpretation of this part of the spec is that supported
+> speed is supported up to what is set in target speed. In other words you
+> can have 8GT/s there in the supported vector and the hardware/firmware
+> can force the target to be lower therefore the link speed is always
+> capped by that.
+> 
+> I'm not talking about "current" here. Only "supported" and "target".
+
+Kai-Heng, would you mind attaching the "sudo lspci -vvxxxx" output to
+the bugzilla?  I can use that to test my lspci patch.
