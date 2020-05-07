@@ -2,125 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8925C1C9BE5
-	for <lists+linux-pci@lfdr.de>; Thu,  7 May 2020 22:15:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C1811C9C06
+	for <lists+linux-pci@lfdr.de>; Thu,  7 May 2020 22:17:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbgEGUPr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 May 2020 16:15:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54716 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726320AbgEGUPr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 7 May 2020 16:15:47 -0400
-Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F613216FD;
-        Thu,  7 May 2020 20:15:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588882546;
-        bh=Nn0Un6aRpakEtuYOCqVgYcTF+qUJFwkYBRemF7H3LDc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=HsihGvs9E1JHhScXJwwRqnIX05f4Gdr8v3nBGOynUPJrvFOAzHEhc1KMZokZz1hY/
-         4VrhsP5Yu/fkBU7y44yj8nwf5D+4WsA8KLiL4yP9EprqkrlAQZzsh2GQCU9lYe5Lkb
-         5hvvOlgjmqu9I9o4lT3nTIMjrjaZQoGGyAKguDqQ=
-Date:   Thu, 7 May 2020 15:15:44 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: Replace zero-length array with flexible-array
-Message-ID: <20200507201544.GA23633@bjorn-Precision-5520>
+        id S1726514AbgEGUR6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 May 2020 16:17:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47210 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726367AbgEGUR5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 May 2020 16:17:57 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EDD2C05BD43;
+        Thu,  7 May 2020 13:17:57 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id r26so8305515wmh.0;
+        Thu, 07 May 2020 13:17:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=RGbtCswDTgsFLypisMjHemhGa1gfh6xqfnI2J9mGaYg=;
+        b=R8QxXSAb86c/ioq5vI1vsHGKZAkJnzS0DjY/yFt4eMsepV8vaoHS7ZCD83RtZ/885H
+         TxzAt2Cte98AukbnMPo/tifw8WNX4jiywLIHbptOiZigyefuc0CvUA5MkOtVtBxaqIGq
+         28BfQPRl7QrOU5sTJBZUZkpEoXENQdthEOrYEBeA8BiI5nh9g32reDAGMkTQTBx51I2c
+         iXasH7C4hOpwVoKs5JSUhkMUm2KlWVp3ZRyBYoSj3pQ3sL86cGXRr7U5edt3AT0+3i5Y
+         tGijdyZsEJal8BjKIYa/ta6q2A7x0hPVAc5BhcrJyavNicNvpBoUBwphuj767IOzFX1/
+         xZWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=RGbtCswDTgsFLypisMjHemhGa1gfh6xqfnI2J9mGaYg=;
+        b=XBlM1dPQqrTbhOlzQ/g9qCU8NN01jD7F6bzIJybkgor87hs+g6TNXrNqbVK9k6MBxf
+         IUjDWARtep77jv6uhmoRseucBWLQWlz4QwqVp8NNYYMq04VKp6DRCYhVPetGCcRstyOm
+         0SN5XYrF0Gvu3/DeDyb6mzIYR6nGZ7RAENcovibSIuNqVofLzA9PL6F8HFqPYv69ZYRq
+         rt1SgVVWuCjxOciJ6VyP7OW/1oz+DagOWtFXrw5Kt6B8pxVHEWSkB5FP3y1KflY1z66I
+         98hReRVoySYFv1UVHK5i5qPjsWGOm5YwQKzSt04+cVCPzV7RFDDxVkMHXA51IzKemVnb
+         WP8A==
+X-Gm-Message-State: AGi0PuaJ1c57BUoGK2pV5bBn7h0VGRxLLdb2DhB3V4UoyTUKMVsAoepd
+        L64TmTzowof9B9H2qvnVN7pEIkug
+X-Google-Smtp-Source: APiQypKwYfOoUWjK0tabjGOtcz+Wjakktm4C1Yp0U1VLzErywtiaT2qObR3zUpmGxLPYLmn62ifkmA==
+X-Received: by 2002:a1c:4d18:: with SMTP id o24mr11401308wmh.141.1588882675802;
+        Thu, 07 May 2020 13:17:55 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id u74sm9942459wmu.13.2020.05.07.13.17.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 07 May 2020 13:17:55 -0700 (PDT)
+Subject: Re: [PATCH v3 1/4] PCI: brcmstb: Don't clk_put() a managed clock
+To:     Jim Quinlan <james.quinlan@broadcom.com>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200507201544.43432-1-james.quinlan@broadcom.com>
+ <20200507201544.43432-2-james.quinlan@broadcom.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <8c8ac461-c6e9-0362-a30c-eab48cfbdae1@gmail.com>
+Date:   Thu, 7 May 2020 13:17:50 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507190544.GA15633@embeddedor>
+In-Reply-To: <20200507201544.43432-2-james.quinlan@broadcom.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, May 07, 2020 at 02:05:44PM -0500, Gustavo A. R. Silva wrote:
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
-> 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
-> 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> sizeof(flexible-array-member) triggers a warning because flexible array
-> members have incomplete type[1]. There are some instances of code in
-> which the sizeof operator is being incorrectly/erroneously applied to
-> zero-length arrays and the result is zero. Such instances may be hiding
-> some bugs. So, this work (flexible-array member conversions) will also
-> help to get completely rid of those sorts of issues.
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Applied to pci/misc for v5.8, thanks!
 
-I assume this takes care of everything in drivers/pci/, right?  I'd
-like to do them all at once, so if there are others, send another
-patch and I'll squash them.  I took a quick look but didn't see any.
+On 5/7/2020 1:15 PM, Jim Quinlan wrote:
+> From: Jim Quinlan <jquinlan@broadcom.com>
+> 
+> clk_put() was being invoked on a clock obtained by
+> devm_clk_get_optional().
+> 
+> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
+> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+> Acked-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
-> ---
->  drivers/pci/pci.c   |    2 +-
->  include/linux/pci.h |    4 ++--
->  2 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 595fcf59843f..bb78f580814e 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -1578,7 +1578,7 @@ EXPORT_SYMBOL(pci_restore_state);
->  
->  struct pci_saved_state {
->  	u32 config_space[16];
-> -	struct pci_cap_saved_data cap[0];
-> +	struct pci_cap_saved_data cap[];
->  };
->  
->  /**
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 83ce1cdf5676..0453ee458ab1 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -279,7 +279,7 @@ struct pci_cap_saved_data {
->  	u16		cap_nr;
->  	bool		cap_extended;
->  	unsigned int	size;
-> -	u32		data[0];
-> +	u32		data[];
->  };
->  
->  struct pci_cap_saved_state {
-> @@ -532,7 +532,7 @@ struct pci_host_bridge {
->  			resource_size_t start,
->  			resource_size_t size,
->  			resource_size_t align);
-> -	unsigned long	private[0] ____cacheline_aligned;
-> +	unsigned long	private[] ____cacheline_aligned;
->  };
->  
->  #define	to_pci_host_bridge(n) container_of(n, struct pci_host_bridge, dev)
-> 
+This one should also have:
+
+Fixes: c0452137034b ("PCI: brcmstb: Add Broadcom STB PCIe host
+controller driver")
+
+not sure if Bjorn can add it while applying.
+-- 
+Florian
