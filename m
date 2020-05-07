@@ -2,134 +2,170 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AF5D81C8AAE
-	for <lists+linux-pci@lfdr.de>; Thu,  7 May 2020 14:24:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E9EA81C8ACE
+	for <lists+linux-pci@lfdr.de>; Thu,  7 May 2020 14:33:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725953AbgEGMYu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 May 2020 08:24:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57930 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725923AbgEGMYt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 May 2020 08:24:49 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0D52C05BD43
-        for <linux-pci@vger.kernel.org>; Thu,  7 May 2020 05:24:49 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id j8so329502iog.13
-        for <linux-pci@vger.kernel.org>; Thu, 07 May 2020 05:24:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=xfIlSnOQy3CR4jNlb8aE97dXOuPyWJPOGrlRnKVaPnI=;
-        b=WB+J4PuV0AbOAXmMxMVAJ7BeeVwWt26/KwH3lIAoXHq3te4HOGAu0Dna89hXzoThbM
-         wb+J+T4ertElZeiPav3rwCjK04Iqfl4ryrxHjFUVzDi9SIqRbWdN4C+c5Xn9QZerboLR
-         dgl2d13+wUbgBbDehPwGr8uvoSNNwWmZxcp9MYvsa5IwAawMzK+Js1NUmQW/bSEM8t5F
-         pAVtMTHxHWhlVch+CfMqIXPBJrVnPuR3HRZnuz6UeQ0doYHbuBUgURdN1hc1Hq0DDisQ
-         vPf4r2G1tqZnb2xBWQOC2O9GNklkPSSwh2uenXGNOzCd2XvN/5DwwsGnE4CBTtwxFoF6
-         jGFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=xfIlSnOQy3CR4jNlb8aE97dXOuPyWJPOGrlRnKVaPnI=;
-        b=EyuOS+o4nto/f6mX9FkRV9+KvrbdcCn5MuW7KkOc+qzaHCeGsA+Sye4BSgr+ed9Wqe
-         Fo4vmvQ3E7ufXPh+PeTd6EWEHO9z0uZp5o/MsF5TlYToze5NJiZn1MHQY6jCkHmNnMhA
-         xEj31Idtu79NV6DxrdMyRqNzwolnYBFKeYrlPTLI3OQdRJHabnKQyEQc4hi8H+BX8K9H
-         cDaoy1yM4WJW63p9gWe09kSOZCM7CvBfAKv1UMPZCrnVPMS23OF0UCND0lnRft2hv7ar
-         AjASwl2i8Rsq8UZYJkZG09hWGMwlQtgEJ5KlnpBgfMZTUyOxP1jrsu9cFZHu3AJ3B+6N
-         bXCw==
-X-Gm-Message-State: AGi0PuYJbu+ckHZtJGL2WAgrPbwSgQVyOSOjro86wwa4152plE5rKS+/
-        U2H5egz5/gFX8YkH/FYQ4zsrUTLx2oxb6VYJ9LE=
-X-Google-Smtp-Source: APiQypL8y7F+XSclNV6i0vv9/2qqSSy2GrkzQfT5AQ7GxdtdhCu/F4BnNv2yjX0zRW6CxCHCL4ulk9OGkFTaEHyA4aw=
-X-Received: by 2002:a02:966a:: with SMTP id c97mr13741776jai.106.1588854289094;
- Thu, 07 May 2020 05:24:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200416083245.73957-1-mika.westerberg@linux.intel.com>
- <20200506224228.GA458845@bjorn-Precision-5520> <20200507114553.GH487496@lahna.fi.intel.com>
-In-Reply-To: <20200507114553.GH487496@lahna.fi.intel.com>
-Reply-To: bjorn@helgaas.com
-From:   Bjorn Helgaas <bjorn.helgaas@gmail.com>
-Date:   Thu, 7 May 2020 07:24:37 -0500
-Message-ID: <CABhMZUVsYUc7o-LLSdy1XzD55zTJk74A6JdSftHdxVJs2-LWFQ@mail.gmail.com>
-Subject: Re: [PATCH] PCI: Do not use pcie_get_speed_cap() to determine when to
- start waiting
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        id S1726074AbgEGMda (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 May 2020 08:33:30 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:14923 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725947AbgEGMd3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 May 2020 08:33:29 -0400
+X-IronPort-AV: E=Sophos;i="5.73,363,1583161200"; 
+   d="scan'208";a="46498096"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 07 May 2020 21:33:27 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 2013B400C089;
+        Thu,  7 May 2020 21:33:22 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Tom Joseph <tjoseph@cadence.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v10 0/8] Add endpoint driver for R-Car PCIe controller
+Date:   Thu,  7 May 2020 13:33:11 +0100
+Message-Id: <1588854799-13710-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, May 7, 2020 at 6:45 AM Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
->
-> On Wed, May 06, 2020 at 05:42:28PM -0500, Bjorn Helgaas wrote:
-> > On Thu, Apr 16, 2020 at 11:32:45AM +0300, Mika Westerberg wrote:
-> > > Kai-Heng Feng reported that it takes long time (>1s) to resume
-> > > Thunderbolt connected PCIe devices from both runtime suspend and system
-> > > sleep (s2idle).
-> > >
-> > > These PCIe downstream ports the second link capability (PCI_EXP_LNKCAP2)
-> > > announces support for speeds > 5 GT/s but it is then capped by the
-> > > second link control (PCI_EXP_LNKCTL2) register to 2.5 GT/s. This
-> > > possiblity was not considered in pci_bridge_wait_for_secondary_bus() so
-> > > it ended up waiting for 1100 ms as these ports do not support active
-> > > link layer reporting either.
-> > >
-> > > PCIe spec 5.0 section 6.6.1 mandates that we must wait minimum of 100 ms
-> > > before sending configuration request to the device below, if the port
-> > > does not support speeds > 5 GT/s, and if it does we first need to wait
-> > > for the data link layer to become active before waiting for that 100 ms.
-> > >
-> > > PCIe spec 5.0 section 7.5.3.6 further says that all downstream ports
-> > > that support speeds > 5 GT/s must support active link layer reporting so
-> > > instead of looking for the speed we can check for the active link layer
-> > > reporting capability and determine how to wait based on that (as they go
-> > > hand in hand).
-> >
-> > I can't quite tell what the defect is here.
-> >
-> > I assume you're talking about this text from sec 6.6.1:
-> >
-> >   - With a Downstream Port that does not support Link speeds greater
-> >     than 5.0 GT/s, software must wait a minimum of 100 ms before
-> >     sending a Configuration Request to the device immediately below
-> >     that Port.
-> >
-> >   - With a Downstream Port that supports Link speeds greater than 5.0
-> >     GT/s, software must wait a minimum of 100 ms after Link training
-> >     completes before sending a Configuration Request to the device
-> >     immediately below that Port. Software can determine when Link
-> >     training completes by polling the Data Link Layer Link Active bit
-> >     or by setting up an associated interrupt (see Section 6.7.3.3 ).
-> >
-> > I don't understand what Link Control 2 has to do with this.  The spec
-> > talks about ports *supporting* certain link speeds, which sounds to me
-> > like the Link Capabilities.  It doesn't say anything about the current
-> > or target link speed.
->
-> PCIe 5.0 page 764 recommends using Supported Link Speeds Vector in Link
-> Capabilities 2 register and that's what pcie_get_speed_cap() is doing.
->
-> However, we can avoid figuring the speed altogether by checking the
-> dev->link_active_reporting instead because that needs to be implemented
-> by all Downstream Ports that supports speeds > 5 GT/s (PCIe 5.0 page 735).
+Hi All,
 
-I understand that part.  But the code as-is matches sec 6.6.1, which
-makes it easy to understand.  Checking link_active_reporting instead
-makes it harder to understand because it makes it one step removed
-from 6.6.1.  And link_active_reporting must be set for ports that
-support > 5 GT/s, but it must *also* be set in some hotplug cases, so
-that further complicates the connection between it and 6.6.1.
+This patch series adds support for endpoint driver for R-Car PCIe controller on
+R-Car/RZ-G2x SoC's, this also extends the epf framework to handle multiple windows
+supported by the controller for mapping PCI address locally.
 
-And apparently there's an actual defect, and I don't understand what
-that is yet.  It sounds like we agree that pcie_get_speed_cap() is
-doing the right thing.  Is there something in
-pci_bridge_wait_for_secondary_bus() that doesn't match sec 6.6.1?
+Note:
+The rockchip/dwc endpoint drivers are build tested only and was tested on cadence
+by Kishon (https://lkml.org/lkml/2020/5/6/1535)
 
-Bjorn
+Changes for v10:
+* Rebased patches on top of pci/rcar branch on tree
+  https://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git
+* Made pci_epc_get_matching_window() as static
+* Included Ack's from Kishon for patches 4/8 and 5/8
+* Included Reviewed-by tag from Shimoda-san for patches 4/8 and 5/8
+
+Changes for v9:
+* Rebased patches on top of v5.7.rc1
+* Replaced mdelay(1) with usleep_range(1000, 1001) in rcar_pcie_ep_assert_intx()
+* Added a check for max_functions read from DT to restrict with
+  RCAR_EPC_MAX_FUNCTIONS
+* Replaced MSICAP0_MMENUM with MSICAP0_MMESE
+* Retry ioremap for other windows on failure in pci_epc_mem_alloc_addr()
+* Fixed looping for number windows in pci_epc_mem_exit()
+* Set maximum to 1 for max-functions in DT binding (I have restored the acks
+  from  Rob and Shimoda-san)
+* Sorted the entry in MAINTAINERS
+
+Changes for v8:
+* Dropped adding R8A774C0 (0x002d) pci-id in pci_ids.h
+* Fixed typo in commit message for patch 2/8
+* Reworded commit message for patch 5/8 as suggested by Bjorn
+* Split up patch to add pci_epc_mem_init() interface to add page_size argument
+  as suggested by Bjorn.
+
+Changes for v7:
+* Fixed review comments pointed by Shimoda-san
+  1] Made DT bindings dual licensed, added Shimoda-san as maintainer and fixed
+     the example as its built with #{address,size}-cells = <1>. I have still
+     restored the Ack from Rob and Shimoda-san with these changes.
+  2] Split up the patches so that they can be picked up by respective subsystem
+     patches 1/4-9/11 are now part of this series.
+  3] Dropped altering a comment in pci-epc.h
+  4] Used a local variable align_size in pci_epc_mem_alloc_addr() so that size
+     variable doesn't get overwritten in the loop.
+  5] Replaced i-=1 with i--
+  6] Replaced rcar with R-Car in patch subject and description.
+  7] Set MACCTLR in init() callback
+
+Changes for v6:
+1] Rebased patches on endpoint branch of https://git.kernel.org/pub/
+   scm/linux/kernel/git/lpieralisi/pci.git/
+2] Fixed review comments from Shimoda-san
+   a] Made sure defconfig changes were in separate patch
+   b] Created rcar_pcie_host/rcar_pcie_ep structures
+   c] Added pci-id for R8A774C0
+   d] Added entry in MAINTAINERS for dt-binding
+   e] Dropped unnecessary braces
+3] Added support for msi.
+
+Changes for v5:
+1] Rebased patches on next branch of https://git.kernel.org/pub/scm/
+   linux/kernel/git/helgaas/pci.git
+2] Fixed review comments reported by Kishon while fetching the matching
+   window in function pci_epc_get_matching_window()
+3] Fixed review comments reported by Bjorn
+   a] Split patch up first patch so that its easier to review and incremental
+   b] Fixed typos
+4] Included Reviewed tag from Rob for the dt-binding patch
+5] Fixed issue reported by Nathan for assigning variable to itself
+
+Changes for v4:
+1] Fixed dtb_check error reported by Rob
+2] Fixed review comments reported by Kishon
+   a] Dropped pci_epc_find_best_fit_window()
+   b] Fixed initializing mem ptr in __pci_epc_mem_init()
+   c] Dropped map_size from pci_epc_mem_window structure
+
+Changes for v3:
+1] Fixed review comments from Bjorn and Kishon.
+3] Converted to DT schema
+
+Changes for v2:
+1] Fixed review comments from Biju for dt-bindings to include an example
+   for a tested platform.
+2] Fixed review comments from Kishon to extend the features of outbound
+   regions in epf framework.
+3] Added support to parse outbound-ranges in OF.
+
+Lad Prabhakar (8):
+  PCI: rcar: Rename pcie-rcar.c to pcie-rcar-host.c
+  PCI: rcar: Move shareable code to a common file
+  PCI: rcar: Fix calculating mask for PCIEPAMR register
+  PCI: endpoint: Pass page size as argument to pci_epc_mem_init()
+  PCI: endpoint: Add support to handle multiple base for mapping
+    outbound memory
+  dt-bindings: PCI: rcar: Add bindings for R-Car PCIe endpoint
+    controller
+  PCI: rcar: Add endpoint mode support
+  MAINTAINERS: Add file patterns for rcar PCI device tree bindings
+
+ .../devicetree/bindings/pci/rcar-pci-ep.yaml  |   77 +
+ MAINTAINERS                                   |    1 +
+ drivers/pci/controller/Kconfig                |   18 +
+ drivers/pci/controller/Makefile               |    3 +-
+ .../pci/controller/cadence/pcie-cadence-ep.c  |    2 +-
+ .../pci/controller/dwc/pcie-designware-ep.c   |   16 +-
+ drivers/pci/controller/pcie-rcar-ep.c         |  563 ++++++++
+ drivers/pci/controller/pcie-rcar-host.c       | 1130 +++++++++++++++
+ drivers/pci/controller/pcie-rcar.c            | 1268 +----------------
+ drivers/pci/controller/pcie-rcar.h            |  140 ++
+ drivers/pci/controller/pcie-rockchip-ep.c     |    2 +-
+ drivers/pci/endpoint/pci-epc-mem.c            |  204 ++-
+ include/linux/pci-epc.h                       |   38 +-
+ 13 files changed, 2150 insertions(+), 1312 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
+ create mode 100644 drivers/pci/controller/pcie-rcar-ep.c
+ create mode 100644 drivers/pci/controller/pcie-rcar-host.c
+ create mode 100644 drivers/pci/controller/pcie-rcar.h
+
+-- 
+2.17.1
+
