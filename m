@@ -2,84 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 721F51C9A08
-	for <lists+linux-pci@lfdr.de>; Thu,  7 May 2020 20:55:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FF001C9A43
+	for <lists+linux-pci@lfdr.de>; Thu,  7 May 2020 21:01:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728606AbgEGSzN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 May 2020 14:55:13 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:39924 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727904AbgEGSzN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 May 2020 14:55:13 -0400
-Received: by mail-ot1-f68.google.com with SMTP id m13so5432214otf.6;
-        Thu, 07 May 2020 11:55:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UwYYGNzYe2kxY79h+ETMMs0ZcfM9ltMxZYor/BkhBJM=;
-        b=HHNFYMoJRUNuz+qO82vyrKkniaBPG+6eH70E2goza2R84STXVjCTrPW6xUrpa6BP3Z
-         s1CjI4kyAqvca2L0facjLgaKMVnStgPAE3iYruHnhiqBeHMBPWNIJ0CBw7NO1APKZWhr
-         xE2EeAWCsV7Kgdt/p3Bpie26jy7QlwcFasJ/ALHfBQH55iAFpBCE6QGjEwVLQYBm/dqm
-         cKOHoIttSHcFrbI2Pd7Q4ur7kfloXX1N7bMdfQaSNdKJqfgvdt3Fdn1Mnt8snFrjqfZs
-         jfmktg35zhWVJyfArE1Jn9I1U+Orrzf7XC5G08ppk/JnpECOf/kP38Yf/LmprRwP2wZc
-         TWsg==
-X-Gm-Message-State: AGi0PuaV3QZABY4h7G8BObqhUUSU0UWekFg6yoSyQexto/+sdrnSJoC6
-        w+TTa/W4G5F8j5NGpTPZPg==
-X-Google-Smtp-Source: APiQypKjijNorzsZ2dMMQG79xGnq6uhyLhE113wETl7HLQYF6IWQzqVm7SjGi2gTa9qDY0cJ7JepHg==
-X-Received: by 2002:a05:6830:1316:: with SMTP id p22mr10842049otq.223.1588877711170;
-        Thu, 07 May 2020 11:55:11 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id y17sm1675843oou.13.2020.05.07.11.55.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 11:55:10 -0700 (PDT)
-Received: (nullmailer pid 1054 invoked by uid 1000);
-        Thu, 07 May 2020 18:55:09 -0000
-Date:   Thu, 7 May 2020 13:55:09 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Jaedon Shin <jaedon.shin@gmail.com>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-gpio@vger.kernel.org, linux-pci@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jaedon Shin <jaedon.shin@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Gregory Fong <gregory.0xf0@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>
-Subject: Re: [PATCH v2 2/2] PCI: brcmstb: Drop clk_put when probe fails and
- remove
-Message-ID: <20200507185509.GA913@bogus>
-References: <20200221033640.55163-1-jaedon.shin@gmail.com>
- <20200221033640.55163-3-jaedon.shin@gmail.com>
+        id S1728131AbgEGTBS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 May 2020 15:01:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60998 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726320AbgEGTBS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 7 May 2020 15:01:18 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F2912083B;
+        Thu,  7 May 2020 19:01:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588878077;
+        bh=Bd9ng0ejT5N0guis1pv/eylwB+4g3fX/7CGGNiSv4ns=;
+        h=Date:From:To:Cc:Subject:From;
+        b=K9d07fSnZ94nYK4zmbNDVzIrF6tgyErVnZUYBrXhugNE/ywoecfMuGXt9YpBaXCQC
+         HtAZHWFFviBG1b8/8rkAWY3CaQxa9ZCM20CFYZQHTWL4DUWXFYrELuqcOr50D3wckM
+         DUH3q20sCUwcbSd18JfFmWd9/EW7iqTl/itSkzVQ=
+Date:   Thu, 7 May 2020 14:05:44 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] PCI: Replace zero-length array with flexible-array
+Message-ID: <20200507190544.GA15633@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200221033640.55163-3-jaedon.shin@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 21 Feb 2020 12:36:40 +0900, Jaedon Shin wrote:
-> devm_clk_get* APIs are device managed and get freed automatically when
-> the device detaches. so there is no reason to explicitly call clk_put()
-> in probe or remove functions.
-> 
-> Fixes: c0452137034b ("PCI: brcmstb: Add Broadcom STB PCIe host
-> controller driver")
-> Signed-off-by: Jaedon Shin <jaedon.shin@gmail.com>
-> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-> Acked-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> ---
->  drivers/pci/controller/pcie-brcmstb.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-Acked-by: Rob Herring <robh@kernel.org>
+struct foo {
+        int stuff;
+        struct boo array[];
+};
+
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
+
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
+
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
+
+sizeof(flexible-array-member) triggers a warning because flexible array
+members have incomplete type[1]. There are some instances of code in
+which the sizeof operator is being incorrectly/erroneously applied to
+zero-length arrays and the result is zero. Such instances may be hiding
+some bugs. So, this work (flexible-array member conversions) will also
+help to get completely rid of those sorts of issues.
+
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/pci/pci.c   |    2 +-
+ include/linux/pci.h |    4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 595fcf59843f..bb78f580814e 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -1578,7 +1578,7 @@ EXPORT_SYMBOL(pci_restore_state);
+ 
+ struct pci_saved_state {
+ 	u32 config_space[16];
+-	struct pci_cap_saved_data cap[0];
++	struct pci_cap_saved_data cap[];
+ };
+ 
+ /**
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 83ce1cdf5676..0453ee458ab1 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -279,7 +279,7 @@ struct pci_cap_saved_data {
+ 	u16		cap_nr;
+ 	bool		cap_extended;
+ 	unsigned int	size;
+-	u32		data[0];
++	u32		data[];
+ };
+ 
+ struct pci_cap_saved_state {
+@@ -532,7 +532,7 @@ struct pci_host_bridge {
+ 			resource_size_t start,
+ 			resource_size_t size,
+ 			resource_size_t align);
+-	unsigned long	private[0] ____cacheline_aligned;
++	unsigned long	private[] ____cacheline_aligned;
+ };
+ 
+ #define	to_pci_host_bridge(n) container_of(n, struct pci_host_bridge, dev)
+
