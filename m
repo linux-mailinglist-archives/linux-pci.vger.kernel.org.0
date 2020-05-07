@@ -2,93 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B27291C9DF2
-	for <lists+linux-pci@lfdr.de>; Thu,  7 May 2020 23:53:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BC5C41C9E4F
+	for <lists+linux-pci@lfdr.de>; Fri,  8 May 2020 00:20:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbgEGVw7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 May 2020 17:52:59 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:35817 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726437AbgEGVw7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 May 2020 17:52:59 -0400
-Received: by mail-ot1-f67.google.com with SMTP id k110so5900245otc.2;
-        Thu, 07 May 2020 14:52:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CU/jhaPmhAqWWMxE+0ciw1zj8C+7RdKkmDqSPqeUli8=;
-        b=ECf0ToFO/iFtn71D4Kvx0tUpUrFRTQFNS8AwPf1AEerJpYWqShI01SNy/ud8UUea88
-         xDkqT/WojV6XxNF6HczHC/1IhoNkYRxkBsWABoP2mED4eouVtBAyeDCI+lrVYo0nbxW/
-         4Evwul7yLpuDrnTXV4fBN6uzGQFhDXqv0ulcglcX8P72RlAbElH9cggm6V4vlGRYpMea
-         ErW5nNRZvh1H9pb6fRdGOZw0Vwm99f9aOh23YhMFNdShOIC3lqYNe+bI6zlEpfhmCR/O
-         PTABrbBdr6OhJyzECgQmnyKcuP3Cjq1g4JyO+rT6kZm1K5U7/N2Y0JN5D9kXPg2PDo+t
-         zVxQ==
-X-Gm-Message-State: AGi0PuYoFJOtqifihA2XGYureuniW90G7TYOvf6T25RkkPVAJMAqlKS1
-        TkNs88uDjz/1tTqYSxiteg==
-X-Google-Smtp-Source: APiQypI1zeZzisqllNqDsttAgfTLEwQGuSYUTjKm2oOFsg8op6zupqbBMYh9erodVZ5cDOxXvTFLIw==
-X-Received: by 2002:a9d:592:: with SMTP id 18mr11812118otd.337.1588888378253;
-        Thu, 07 May 2020 14:52:58 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id w62sm1680584oia.32.2020.05.07.14.52.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 14:52:57 -0700 (PDT)
-Received: (nullmailer pid 8285 invoked by uid 1000);
-        Thu, 07 May 2020 21:52:56 -0000
-Date:   Thu, 7 May 2020 16:52:56 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
-        helgaas@kernel.org, linux-kernel@vger.kernel.org,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        tim.gover@raspberrypi.org, linux-pci@vger.kernel.org,
-        linux-usb@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v8 4/4] USB: pci-quirks: Add Raspberry Pi 4 quirk
-Message-ID: <20200507215256.GA8228@bogus>
-References: <20200505161318.26200-1-nsaenzjulienne@suse.de>
- <20200505161318.26200-5-nsaenzjulienne@suse.de>
+        id S1726579AbgEGWT4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 May 2020 18:19:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53362 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726437AbgEGWT4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 7 May 2020 18:19:56 -0400
+Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 113672082E;
+        Thu,  7 May 2020 22:19:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588889995;
+        bh=/VazbYPf8Ao1AjTLIv5tPrNXtqvkoTOm4G4776Dbhc8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=K0bH3KsYmxPVYkHl5vugmjzs8QQS0ryro2WGbz1InP5bfiyhgeqo7uIjtDfrwUQql
+         hmjEv0gWWIyrW1tK0QWJgeiSSD/EbH8MVXgdC4G2qqdO2cA+3VMpJT2pkEUI6pDnbV
+         EUaZrlAOaX0ccGQmfgTnvFWhkcuqFP5GborudZyI=
+Date:   Thu, 7 May 2020 17:19:53 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     bhelgaas@google.com, Heiner Kallweit <hkallweit1@gmail.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Yicong Yang <yangyicong@hisilicon.com>,
+        Krzysztof Wilczynski <kw@linux.com>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] PCI/ASPM: Enable ASPM for bridge-to-bridge link
+Message-ID: <20200507221953.GA36865@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200505161318.26200-5-nsaenzjulienne@suse.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200505173423.26968-1-kai.heng.feng@canonical.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue,  5 May 2020 18:13:17 +0200, Nicolas Saenz Julienne wrote:
-> On the Raspberry Pi 4, after a PCI reset, VL805's firmware may either be
-> loaded directly from an EEPROM or, if not present, by the SoC's
-> VideoCore. Inform VideoCore that VL805 was just reset.
+On Wed, May 06, 2020 at 01:34:21AM +0800, Kai-Heng Feng wrote:
+> The TI PCIe-to-PCI bridge prevents the Intel SoC from entering power
+> state deeper than PC3 due to disabled ASPM, consumes lots of unnecessary
+> power. On Windows ASPM L1 is enabled on the device and its upstream
+> bridge, so it can make the Intel SoC reach PC8 or PC10 to save lots of
+> power.
 > 
-> Also, as this creates a dependency between USB_PCI and VideoCore's
-> firmware interface, and since USB_PCI can't be set as a module neither
-> this can. Reflect that on the firmware interface Kconfg.
+> In short, ASPM always gets disabled on bridge-to-bridge link.
 > 
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> ---
+> The special case was part of first ASPM introduction patch, commit
+> 7d715a6c1ae5 ("PCI: add PCI Express ASPM support"). However, it didn't
+> explain why ASPM needs to be disabled in special bridge-to-bridge case.
 > 
-> Changes since v5:
->  - Fix Kconfig issue with allmodconfig
+> Let's remove the the special case, as PCIe spec already envisioned ASPM
+> on bridge-to-bridge link.
 > 
-> Changes since v4:
->  - Do not split up error message
-> 
-> Changes since v3:
->  - Add more complete error message
-> 
-> Changes since v1:
->  - Make RASPBERRYPI_FIRMWARE dependent on this quirk to make sure it
->    gets compiled when needed.
-> 
->  drivers/firmware/Kconfig      |  3 ++-
->  drivers/usb/host/pci-quirks.c | 16 ++++++++++++++++
->  2 files changed, 18 insertions(+), 1 deletion(-)
-> 
+> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207571
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Applied to pci/aspm for v5.8, thanks!
+
+I did keep your Reviewed-by, Mika.  If the fact that this applies only
+to the PCIe-to-PCI/PCI-X case makes your reviewed-by invalid, just let
+me know and I'll drop it.
+
+> ---
+> v3:
+>  - Remove the special case completely.
+> 
+> v2: 
+>  - Enable ASPM on root complex <-> bridge <-> bridge, instead of using
+>    quirk.
+>  drivers/pci/pcie/aspm.c | 10 ----------
+>  1 file changed, 10 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> index 2378ed692534..b17e5ffd31b1 100644
+> --- a/drivers/pci/pcie/aspm.c
+> +++ b/drivers/pci/pcie/aspm.c
+> @@ -628,16 +628,6 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+>  
+>  	/* Setup initial capable state. Will be updated later */
+>  	link->aspm_capable = link->aspm_support;
+> -	/*
+> -	 * If the downstream component has pci bridge function, don't
+> -	 * do ASPM for now.
+> -	 */
+> -	list_for_each_entry(child, &linkbus->devices, bus_list) {
+> -		if (pci_pcie_type(child) == PCI_EXP_TYPE_PCI_BRIDGE) {
+> -			link->aspm_disable = ASPM_STATE_ALL;
+> -			break;
+> -		}
+> -	}
+>  
+>  	/* Get and check endpoint acceptable latencies */
+>  	list_for_each_entry(child, &linkbus->devices, bus_list) {
+> -- 
+> 2.17.1
+> 
