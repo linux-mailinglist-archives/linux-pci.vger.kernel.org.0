@@ -2,106 +2,71 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B627B1C9B42
-	for <lists+linux-pci@lfdr.de>; Thu,  7 May 2020 21:41:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E1121C9B4D
+	for <lists+linux-pci@lfdr.de>; Thu,  7 May 2020 21:44:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbgEGTlp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 May 2020 15:41:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41540 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726320AbgEGTlp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 May 2020 15:41:45 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C22CC05BD43;
-        Thu,  7 May 2020 12:41:45 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jWmOn-0004f0-9z; Thu, 07 May 2020 21:41:37 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 7396E102652; Thu,  7 May 2020 21:41:36 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     "Raj\, Ashok" <ashok.raj@intel.com>
-Cc:     "Raj\, Ashok" <ashok.raj@linux.intel.com>,
-        Evan Green <evgreen@chromium.org>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>, x86@kernel.org,
-        linux-pci <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
+        id S1726367AbgEGToy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 May 2020 15:44:54 -0400
+Received: from mail-oo1-f67.google.com ([209.85.161.67]:46631 "EHLO
+        mail-oo1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726326AbgEGTox (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 May 2020 15:44:53 -0400
+Received: by mail-oo1-f67.google.com with SMTP id x16so1612063oop.13;
+        Thu, 07 May 2020 12:44:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=0knBIBoZa1fhrLfHhlBCmtkeQd++JrRt2MMqGHWeht4=;
+        b=Id+sZt+Q7KtKxF6wBuntet0URgMgjhgyBP9w1OBfSktNIz0ImDgQg07WQqREO4/B9u
+         zcPtgStd+1aKP3VOw/8R9g4teNp+vUsgPWtP4Gky/zw9yHaCTQlRYZtGFS/B6d9LLSo7
+         fsCI+YSk9pap17tc93wdZC41FB9+KtyhU/t30H6gbfjc0VrYeUWn5uinlN/xUl+1Vozc
+         ynYIu+ciDkeAYAVBvo2dHWNSbyrSoyc0UPoRDupvxQUV2DO1hWBQbkAQj+09mvp7Rfim
+         RUlmYeDKsgtwvxgO74sUHYMsaAky5UPlevwqW4LIgScSY5ymIa9aRR0AFtK5kYPCHykZ
+         90pQ==
+X-Gm-Message-State: AGi0PuYb8sp/xbGrxvUblmCao0LoCSr9uowNvrWRd49wE1pGB8q1iXtQ
+        K9aG1nZMzTJnuTA8s3NABg==
+X-Google-Smtp-Source: APiQypKQ9hchUvLCeIFKV8nt8CxTJKxHp3QhpkCDcIIPl6JnFmMIu3D8onuZ4Ff/MLkNAMvH/ik6eg==
+X-Received: by 2002:a4a:a54a:: with SMTP id s10mr13421411oom.73.1588880691546;
+        Thu, 07 May 2020 12:44:51 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id t186sm1646722oif.13.2020.05.07.12.44.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 May 2020 12:44:50 -0700 (PDT)
+Received: (nullmailer pid 26367 invoked by uid 1000);
+        Thu, 07 May 2020 19:44:49 -0000
+Date:   Thu, 7 May 2020 14:44:49 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        "Ghorai\, Sukumar" <sukumar.ghorai@intel.com>,
-        "Amara\, Madhusudanarao" <madhusudanarao.amara@intel.com>,
-        "Nandamuri\, Srikanth" <srikanth.nandamuri@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: MSI interrupt for xhci still lost on 5.6-rc6 after cpu hotplug
-In-Reply-To: <20200507175715.GA22426@otc-nc-03>
-References: <20200501184326.GA17961@araj-mobl1.jf.intel.com> <878si6rx7f.fsf@nanos.tec.linutronix.de> <20200505201616.GA15481@otc-nc-03> <875zdarr4h.fsf@nanos.tec.linutronix.de> <20200507121850.GB85463@otc-nc-03> <87wo5nj48a.fsf@nanos.tec.linutronix.de> <20200507175715.GA22426@otc-nc-03>
-Date:   Thu, 07 May 2020 21:41:36 +0200
-Message-ID: <87blmzedn3.fsf@nanos.tec.linutronix.de>
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: tegra: Fix reporting GPIO error value
+Message-ID: <20200507194449.GA26252@bogus>
+References: <20200414102512.27506-1-pali@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200414102512.27506-1-pali@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Ashok,
-
-"Raj, Ashok" <ashok.raj@intel.com> writes:
+On Tue, 14 Apr 2020 12:25:12 +0200, =?UTF-8?q?Pali=20Roh=C3=A1r?= wrote:
+> Error code is stored in rp->reset_gpio and not in err variable.
 > 
-> I think i got mixed up with logical apic id and logical cpu :-(
+> Signed-off-by: Pali Rohár <pali@kernel.org>
+> ---
+>  drivers/pci/controller/pci-tegra.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
 
-Stuff happens.
-
->           <idle>-0     [000] d.h.    44.376659: msi_set_affinity: quirk[1] new vector allocated, new apic = 2 vector = 33 this apic = 0
->           <idle>-0     [000] d.h.    44.376684: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 0 Nvec 33 Napic 2
-
->           <idle>-0     [000] d.h.    44.376685: xhci_irq: xhci irq
-
->           <idle>-0     [001] d.h.    44.376750: msi_set_affinity: quirk[1] new vector allocated, new apic = 2 vector = 33 this apic = 2
->           <idle>-0     [001] d.h.    44.376774: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 2 Nvec 33 Napic 2
-
->           <idle>-0     [001] d.h.    44.376776: xhci_irq: xhci irq
->           <idle>-0     [001] d.h.    44.395824: xhci_irq: xhci irq
-
->            <...>-14    [001] d..1    44.400666: msi_set_affinity: quirk[1] new vector allocated, new apic = 6 vector = 33 this apic = 2
->            <...>-14    [001] d..1    44.400691: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 2 Nvec 33 Napic 6
-
->           <idle>-0     [003] d.h.    44.421021: xhci_irq: xhci irq
->           <idle>-0     [003] d.h.    44.421135: xhci_irq: xhci irq
-
->      migration/3-24    [003] d..1    44.421784: msi_set_affinity: quirk[1] new vector allocated, new apic = 0 vector = 33 this apic = 6
->      migration/3-24    [003] d..1    44.421803: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 6 Nvec 33 Napic 0
-
-So this last one is a direct update. Straight forward moving it from one
-to the other CPU on the same vector number.
-
-And that's the case where we either expect the interrupt to come in on
-CPU3 or on CPU0.
-
-There is actually an example in the trace:
-
-	<idle>-0     [000] d.h.    40.616467: msi_set_affinity: quirk[1] new vector allocated, new apic = 2 vector = 33 this apic = 0
-	<idle>-0     [000] d.h.    40.616488: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 0 Nvec 33 Napic 2
-	<idle>-0     [000] d.h.    40.616488: xhci_irq: xhci irq
-	<idle>-0     [001] d.h.    40.616504: xhci_irq: xhci irq
-
->      migration/3-24    [003] d..1    44.421784: msi_set_affinity: quirk[1] new vector allocated, new apic = 0 vector = 33 this apic = 6
->      migration/3-24    [003] d..1    44.421803: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 6 Nvec 33 Napic 0
-
-But as this last one is the migration thread, aka stomp machine, I
-assume this is a hotplug operation. Which means the CPU cannot handle
-interrupts anymore. In that case we check the old vector on the
-unplugged CPU in fixup_irqs() and do the retrigger from there.
-Can you please add tracing to that one as well?
-
-Thanks,
-
-        tglx
-
-
-
-
+Acked-by: Rob Herring <robh@kernel.org>
