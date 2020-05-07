@@ -2,76 +2,144 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A38551C9C57
-	for <lists+linux-pci@lfdr.de>; Thu,  7 May 2020 22:27:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C54801C9CD7
+	for <lists+linux-pci@lfdr.de>; Thu,  7 May 2020 22:58:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728045AbgEGU14 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 May 2020 16:27:56 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39314 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726320AbgEGU1z (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 May 2020 16:27:55 -0400
-Received: by mail-ot1-f66.google.com with SMTP id m13so5679306otf.6;
-        Thu, 07 May 2020 13:27:55 -0700 (PDT)
+        id S1726480AbgEGU6g (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 May 2020 16:58:36 -0400
+Received: from mail-oo1-f65.google.com ([209.85.161.65]:38182 "EHLO
+        mail-oo1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726268AbgEGU6g (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 May 2020 16:58:36 -0400
+Received: by mail-oo1-f65.google.com with SMTP id i9so1671875ool.5;
+        Thu, 07 May 2020 13:58:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ln2E/jvReZq9WnHJIz5sFnJWJFU3r566YgUAK7BxH3c=;
-        b=Na8lwbiXBV5ptJcpEw0IKA2SmvcAzLIR5MPACTvdjy1/ZqOLIXRBJhgDCNA+emLC63
-         euqRLQ4gHFbq9Uc4pyCob67GX5pRh+C/lV99tGrahHb5u/QLQ0hp+cGOd+KE2tOT+wvD
-         OIRqwWdBvCuXHHW5uiLIVR7SOwrET/4w6Sob0LmGMEzTiE8DaCwkT9vGCZZuQTxTMvc5
-         gyNtW8sYmECxH+ChfhRr5rNBfCnF89Z3IOVllejoYT55Nwt8e9IqtTaeK2Km9/lstoOH
-         DR2KiC2Ur2xvh18Rc54rvDJKoXxT2v1gfIf48ogx2bx4uLmho5rQhb7H/bnMVG0FSpzJ
-         SHHw==
-X-Gm-Message-State: AGi0Pubrhm9nvqAzQmImyIDn3EkUB8vwnLqPJJNF15Urylwjl6ECk5n6
-        EGYnOkrVNSjl027zgf9kNw==
-X-Google-Smtp-Source: APiQypKx/+0vAYYfToTPh9BTuoAyIx1XP/EVGGtjl4K9DLnqWKUm7OqAxftP3FPyEX4UUrd0KuCqog==
-X-Received: by 2002:a9d:4113:: with SMTP id o19mr11603329ote.354.1588883274822;
-        Thu, 07 May 2020 13:27:54 -0700 (PDT)
+        bh=Lxk5gbj1SH/yPDCschhz+W4w8vALXa+wNd/bFZoLVl0=;
+        b=nmzny55/ZJR1POywt0YxyR96mUHPFJ1LYiPeP18aCAtwtT9oe3pd9TJENsrTi3rE8n
+         AfTTs1UZ44Eq3XM9pGdeVh0FFGPOAiiPBL2cvuujwAlF5zraEfz6yZgpmVgx0pRzP/wL
+         TK0X5w8XETaGs8m1QCbPkoDV6jfNl+ZvrgOariJwpF7sCEjkWJt/+HtHoijXkKKHLaDG
+         Efy08EfVLaseBZ0T42upyW8Q6lffROOmmuO6MZ1sYmjkRY448+qyicXF6+aWNWGQHr60
+         pqHsjO86KZsYFflwtNRwxjYz2EHLBHzVNyqVX7HZ9OA2WLgSwIHbUFEx0NWEvMPDyWuk
+         B76Q==
+X-Gm-Message-State: AGi0PuaFXPOteTwncD7nqNmmuohooHNZi2tr40jxkmceqTXEKeAwdOLQ
+        B7/DqHP8AHDtXqr6G66XYQ==
+X-Google-Smtp-Source: APiQypLifuetw0ez5PKSz9qoxtY5MpD6KduLwlCg+SknYXTPTZ6gRRj5HTrEHT0ksAh3kG0Gap+XAg==
+X-Received: by 2002:a4a:d136:: with SMTP id n22mr13431215oor.85.1588885113933;
+        Thu, 07 May 2020 13:58:33 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id z13sm1621472oth.10.2020.05.07.13.27.53
+        by smtp.gmail.com with ESMTPSA id v9sm1650909oib.56.2020.05.07.13.58.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 13:27:54 -0700 (PDT)
-Received: (nullmailer pid 21941 invoked by uid 1000);
-        Thu, 07 May 2020 20:27:53 -0000
-Date:   Thu, 7 May 2020 15:27:53 -0500
+        Thu, 07 May 2020 13:58:33 -0700 (PDT)
+Received: (nullmailer pid 11452 invoked by uid 1000);
+        Thu, 07 May 2020 20:58:31 -0000
+Date:   Thu, 7 May 2020 15:58:31 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Tom Joseph <tjoseph@cadence.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+To:     Wei Liu <wei.liu@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] PCI: cadence: Fix to read 32-bit Vendor ID/Device
- ID property from DT
-Message-ID: <20200507202753.GA21833@bogus>
-References: <20200417114322.31111-1-kishon@ti.com>
- <20200417114322.31111-5-kishon@ti.com>
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>
+Subject: Re: [PATCH] PCI: export and use pci_msi_get_hwirq in pci-hyperv.c
+Message-ID: <20200507205831.GA30988@bogus>
+References: <20200422195818.35489-1-wei.liu@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200417114322.31111-5-kishon@ti.com>
+In-Reply-To: <20200422195818.35489-1-wei.liu@kernel.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 17 Apr 2020 17:13:22 +0530, Kishon Vijay Abraham I wrote:
-> The PCI Bus Binding specification (IEEE Std 1275-1994 Revision 2.1 [1])
-> defines both Vendor ID and Device ID to be 32-bits. Fix
-> pcie-cadence-host.c driver to read 32-bit Vendor ID and Device ID
-> properties from device tree.
+On Wed, Apr 22, 2020 at 07:58:15PM +0000, Wei Liu wrote:
+> There is a functionally identical function in pci-hyperv.c. Drop it and
+> use pci_msi_get_hwirq instead.
 > 
-> [1] -> https://www.devicetree.org/open-firmware/bindings/pci/pci2_1.pdf
+> This requires exporting pci_msi_get_hwirq and declaring it in msi.h.
 > 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> No functional change intended.
+> 
+> Signed-off-by: Wei Liu <wei.liu@kernel.org>
 > ---
->  drivers/pci/controller/cadence/pcie-cadence-host.c | 4 ++--
->  drivers/pci/controller/cadence/pcie-cadence.h      | 4 ++--
->  2 files changed, 4 insertions(+), 4 deletions(-)
-> 
+>  arch/x86/include/asm/msi.h          | 4 ++++
+>  arch/x86/kernel/apic/msi.c          | 5 +++--
+>  drivers/pci/controller/pci-hyperv.c | 8 +-------
+>  3 files changed, 8 insertions(+), 9 deletions(-)
 
-Acked-by: Rob Herring <robh@kernel.org>
+Would be better if done in a way to remove an x86 dependency. 
+
+I guess this would do it:
+
+#define pci_msi_get_hwirq NULL
+
+when GENERIC_MSI_DOMAIN_OPS is enabled.
+
+> 
+> diff --git a/arch/x86/include/asm/msi.h b/arch/x86/include/asm/msi.h
+> index 25ddd0916bb2..353b80122b2e 100644
+> --- a/arch/x86/include/asm/msi.h
+> +++ b/arch/x86/include/asm/msi.h
+> @@ -11,4 +11,8 @@ int pci_msi_prepare(struct irq_domain *domain, struct device *dev, int nvec,
+>  
+>  void pci_msi_set_desc(msi_alloc_info_t *arg, struct msi_desc *desc);
+>  
+> +struct msi_domain_info;
+> +irq_hw_number_t pci_msi_get_hwirq(struct msi_domain_info *info,
+> +				  msi_alloc_info_t *arg);
+> +
+>  #endif /* _ASM_X86_MSI_H */
+> diff --git a/arch/x86/kernel/apic/msi.c b/arch/x86/kernel/apic/msi.c
+> index 159bd0cb8548..56dcdd912564 100644
+> --- a/arch/x86/kernel/apic/msi.c
+> +++ b/arch/x86/kernel/apic/msi.c
+> @@ -204,11 +204,12 @@ void native_teardown_msi_irq(unsigned int irq)
+>  	irq_domain_free_irqs(irq, 1);
+>  }
+>  
+> -static irq_hw_number_t pci_msi_get_hwirq(struct msi_domain_info *info,
+> -					 msi_alloc_info_t *arg)
+> +irq_hw_number_t pci_msi_get_hwirq(struct msi_domain_info *info,
+> +				  msi_alloc_info_t *arg)
+>  {
+>  	return arg->msi_hwirq;
+>  }
+> +EXPORT_SYMBOL_GPL(pci_msi_get_hwirq);
+>  
+>  int pci_msi_prepare(struct irq_domain *domain, struct device *dev, int nvec,
+>  		    msi_alloc_info_t *arg)
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index e6020480a28b..2b4a6452095f 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -1520,14 +1520,8 @@ static struct irq_chip hv_msi_irq_chip = {
+>  	.irq_unmask		= hv_irq_unmask,
+>  };
+>  
+> -static irq_hw_number_t hv_msi_domain_ops_get_hwirq(struct msi_domain_info *info,
+> -						   msi_alloc_info_t *arg)
+> -{
+> -	return arg->msi_hwirq;
+> -}
+> -
+>  static struct msi_domain_ops hv_msi_ops = {
+> -	.get_hwirq	= hv_msi_domain_ops_get_hwirq,
+> +	.get_hwirq	= pci_msi_get_hwirq,
+>  	.msi_prepare	= pci_msi_prepare,
+>  	.set_desc	= pci_msi_set_desc,
+>  	.msi_free	= hv_msi_free,
+> -- 
+> 2.20.1
+> 
