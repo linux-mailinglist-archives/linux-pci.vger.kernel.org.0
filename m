@@ -2,140 +2,166 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 487781C7DD3
-	for <lists+linux-pci@lfdr.de>; Thu,  7 May 2020 01:27:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 09BD11C7F72
+	for <lists+linux-pci@lfdr.de>; Thu,  7 May 2020 02:57:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727819AbgEFX1d (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 May 2020 19:27:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34408 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726555AbgEFX1d (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 6 May 2020 19:27:33 -0400
-Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDB2620736;
-        Wed,  6 May 2020 23:27:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588807652;
-        bh=xTCXmC5HFmHln29DXmkLrGOAgBXfP+Th2u7ltB1hof0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=1f1jEblbynU/syY5JNyhj8bhjheFO88dqVV6LMnpEf6vIksiQDhnqrZpgHaIrgKVk
-         27LOlrmUGDtDdRbvuPGe4r27gbYQPHCQ8QJats1OzEblepP28q4aPrLTTHQd68oopf
-         KB6zaqhvcwstZ9IDJ9VFHBi42t20neb5H0GvcWfY=
-Date:   Wed, 6 May 2020 18:27:30 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        id S1725966AbgEGA5S (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 May 2020 20:57:18 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:56855 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725887AbgEGA5S (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 May 2020 20:57:18 -0400
+Received: from 1.general.jvosburgh.us.vpn ([10.172.68.206] helo=famine.localdomain)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <jay.vosburgh@canonical.com>)
+        id 1jWUpi-0002UG-9x; Thu, 07 May 2020 00:56:14 +0000
+Received: by famine.localdomain (Postfix, from userid 1000)
+        id 8E1326C567; Wed,  6 May 2020 17:56:12 -0700 (PDT)
+Received: from famine (localhost [127.0.0.1])
+        by famine.localdomain (Postfix) with ESMTP id 88D57AC1DB;
+        Wed,  6 May 2020 17:56:12 -0700 (PDT)
+From:   Jay Vosburgh <jay.vosburgh@canonical.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Kuppuswamy\, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
         linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: Do not use pcie_get_speed_cap() to determine when
- to start waiting
-Message-ID: <20200506232730.GA461230@bjorn-Precision-5520>
+Subject: Re: [PATCH] PCI/ERR: Resolve regression in pcie_do_recovery
+In-reply-to: <20200506203249.GA453633@bjorn-Precision-5520>
+References: <20200506203249.GA453633@bjorn-Precision-5520>
+Comments: In-reply-to Bjorn Helgaas <helgaas@kernel.org>
+   message dated "Wed, 06 May 2020 15:32:49 -0500."
+X-Mailer: MH-E 8.6+git; nmh 1.6; GNU Emacs 27.0.50
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200416083245.73957-1-mika.westerberg@linux.intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <18608.1588812972.1@famine>
+Date:   Wed, 06 May 2020 17:56:12 -0700
+Message-ID: <18609.1588812972@famine>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 11:32:45AM +0300, Mika Westerberg wrote:
-> Kai-Heng Feng reported that it takes long time (>1s) to resume
-> Thunderbolt connected PCIe devices from both runtime suspend and system
-> sleep (s2idle).
-> 
-> These PCIe downstream ports the second link capability (PCI_EXP_LNKCAP2)
-> announces support for speeds > 5 GT/s but it is then capped by the
-> second link control (PCI_EXP_LNKCTL2) register to 2.5 GT/s.
+Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=206837
+>On Wed, May 06, 2020 at 11:08:35AM -0700, Jay Vosburgh wrote:
+>> Jay Vosburgh <jay.vosburgh@canonical.com> wrote:
+>> 
+>> >"Kuppuswamy, Sathyanarayanan" wrote:
+>> >
+>> >>Hi Jay,
+>> >>
+>> >>On 4/29/20 6:15 PM, Kuppuswamy, Sathyanarayanan wrote:
+>> >>>
+>> >>>
+>> >>> On 4/29/20 5:42 PM, Jay Vosburgh wrote:
+[...]
+>> >>> I think this issue is related to the issue discussed in following
+>> >>> thread (DPC non-hotplug support).
+>> >>>
+>> >>> https://lkml.org/lkml/2020/3/28/328
+>> >>>
+>> >>> If my assumption is correct, you are dealing with devices which are
+>> >>> not hotplug capable. If the devices are hotplug capable then you don't
+>> >>> need to proceed to report_slot_reset(), since hotplug handler will
+>> >>> remove/re-enumerate the devices correctly.
+>> >
+>> >	Correct, this particular device (a network card) is in a
+>> >non-hotplug slot.
+>> >
+>> >>Can you check whether following fix works for you?
+>> >
+>> >	Yes, it does.
+>> >
+>> >	I fixed up the whitespace and made a minor change to add braces
+>> >in what look like the correct places around the "if (reset_link)" block;
+>> >the patch I tested with is below.  I'll also install this on another
+>> >machine with hotplug capable slots to test there as well.
+>> 
+>> 	We've tested the below patch on a couple of different machines
+>> and devices (network card, NVMe device) and it appears to solve the
+>> recovery issue in our testing.
+>> 
+>> 	Is there anything further we need to do, or can this be
+>> considered for inclusion upstream at this time?
+>
+>Can somebody please post a clean version of what we should merge?
+>There was the initial patch plus a follow-up fix, so it's not clear
+>where we ended up.
+>
+>Bjorn
 
-Slight tangent: The bugzilla mentions that lspci doesn't decode
-LNKCAP2: https://github.com/pciutils/pciutils/issues/38
+	Below is the patch we tested, from Sathyanarayanan's test patch
+(slightly edited to clarify ambiguous "if else" nesting), along with an
+edited version of the commit log from my original patch.  I have not
+seen a Signed-off-by from Sathyanarayanan, so I didn't include one here.
 
-Can you try the lspci patch below and see if it matches what you
-expect?  It works for me, but I don't understand the kernel issue yet,
-so I might be missing something.
+	One question I have is that, after the patch is applied, the
+"status" filled in by pci_walk_bus(... report_frozen_detected ...) is
+discarded regardless of its value.  Is that correct behavior in all
+cases?  The original issue I was trying to solve was that the status set
+by report_frozen_detected was thrown away starting with 6d2c89441571
+("PCI/ERR: Update error status after reset_link()"), causing a
+_NEED_RESET to be lost.  With the below patch, all cases of
+pci_channel_io_frozen will call reset_link unconditionally.
 
-commit e2bdd75bbaf6 ("lspci: Decode PCIe Link Capabilities 2")
-Author: Bjorn Helgaas <bhelgaas@google.com>
-Date:   Wed May 6 18:05:55 2020 -0500
+	-J
 
-    lspci: Decode PCIe Link Capabilities 2
-    
-    Decode Link Capabilities 2, which includes the Supported Link Speeds
-    Vector.
-    
-    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH] PCI/ERR: Resolve regression in pcie_do_recovery
 
-diff --git a/lib/header.h b/lib/header.h
-index bfdcc80..3332b32 100644
---- a/lib/header.h
-+++ b/lib/header.h
-@@ -901,6 +901,9 @@
- #define  PCI_EXP_DEV2_OBFF(x)		(((x) >> 13) & 3) /* OBFF enabled */
- #define PCI_EXP_DEVSTA2			0x2a	/* Device Status */
- #define PCI_EXP_LNKCAP2			0x2c	/* Link Capabilities */
-+#define  PCI_EXP_LNKCAP2_SPEED(x)	(((x) >> 1) & 0x7f)
-+#define  PCI_EXP_LNKCAP2_CROSSLINK	0x00000100 /* Crosslink Supported */
-+#define  PCI_EXP_LNKCAP2_DRS		0x80000000 /* Device Readiness Status */
- #define PCI_EXP_LNKCTL2			0x30	/* Link Control */
- #define  PCI_EXP_LNKCTL2_SPEED(x)	((x) & 0xf) /* Target Link Speed */
- #define  PCI_EXP_LNKCTL2_CMPLNC		0x0010	/* Enter Compliance */
-diff --git a/ls-caps.c b/ls-caps.c
-index a6705eb..585b208 100644
---- a/ls-caps.c
-+++ b/ls-caps.c
-@@ -1151,6 +1151,29 @@ static void cap_express_dev2(struct device *d, int where, int type)
-     }
- }
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
  
-+static const char *cap_express_link2_speed_cap(int vector)
-+{
-+  /*
-+   * Per PCIe r5.0, sec 8.2.1, a device must support 2.5GT/s and is not
-+   * permitted to skip support for any data rates between 2.5GT/s and the
-+   * highest supported rate.
-+   */
-+  if (vector & 0x60)
-+    return "RsvdP";
-+  else if (vector & 0x10)
-+    return "2.5-32GT/s";
-+  else if (vector & 0x08)
-+    return "2.5-16GT/s";
-+  else if (vector & 0x04)
-+    return "2.5-8GT/s";
-+  else if (vector & 0x02)
-+    return "2.5-5GT/s";
-+  else if (vector & 0x01)
-+    return "2.5GT/s";
+	Commit 6d2c89441571 ("PCI/ERR: Update error status after
+reset_link()"), introduced a regression, as pcie_do_recovery will
+discard the status result from report_frozen_detected.  This can cause a
+failure to recover if _NEED_RESET is returned by report_frozen_detected
+and report_slot_reset is not invoked.
+
+	Such an event can be induced for testing purposes by reducing
+the Max_Payload_Size of a PCIe bridge to less than that of a device
+downstream from the bridge, and then initating I/O through the device,
+resulting in oversize transactions.  In the presence of DPC, this
+results in a containment event and attempted reset and recovery via
+pcie_do_recovery.  After 6d2c89441571 report_slot_reset is not invoked,
+and the device does not recover.
+
+Fixes: 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
+
+
+diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+index 14bb8f54723e..db80e1ecb2dc 100644
+--- a/drivers/pci/pcie/err.c
++++ b/drivers/pci/pcie/err.c
+@@ -165,13 +165,24 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+ 	pci_dbg(dev, "broadcast error_detected message\n");
+ 	if (state == pci_channel_io_frozen) {
+ 		pci_walk_bus(bus, report_frozen_detected, &status);
+-		status = reset_link(dev);
+-		if (status != PCI_ERS_RESULT_RECOVERED) {
++		status = PCI_ERS_RESULT_NEED_RESET;
++	} else {
++		pci_walk_bus(bus, report_normal_detected, &status);
++	}
 +
-+  return "Unknown";
-+}
++	if (status == PCI_ERS_RESULT_NEED_RESET) {
++		if (reset_link) {
++			if (reset_link(dev) != PCI_ERS_RESULT_RECOVERED)
++				status = PCI_ERS_RESULT_DISCONNECT;
++		} else {
++			if (pci_bus_error_reset(dev))
++				status = PCI_ERS_RESULT_DISCONNECT;
++		}
 +
- static const char *cap_express_link2_speed(int type)
- {
-   switch (type)
-@@ -1204,10 +1227,19 @@ static const char *cap_express_link2_transmargin(int type)
++		if (status == PCI_ERS_RESULT_DISCONNECT) {
+ 			pci_warn(dev, "link reset failed\n");
+ 			goto failed;
+ 		}
+-	} else {
+-		pci_walk_bus(bus, report_normal_detected, &status);
+ 	}
  
- static void cap_express_link2(struct device *d, int where, int type)
- {
-+  u32 l;
-   u16 w;
- 
-   if (!((type == PCI_EXP_TYPE_ENDPOINT || type == PCI_EXP_TYPE_LEG_END) &&
- 	(d->dev->dev != 0 || d->dev->func != 0))) {
-+    /* Link Capabilities 2 was reserved before PCIe r3.0 */
-+    l = get_conf_long(d, where + PCI_EXP_LNKCAP2);
-+    if (l) {
-+      printf("\t\tLnkCap2: Supported Link Speeds: %s, Crosslink%c DRS%c\n",
-+	  cap_express_link2_speed_cap(PCI_EXP_LNKCAP2_SPEED(l)),
-+	  FLAG(l, PCI_EXP_LNKCAP2_CROSSLINK),
-+	  FLAG(l, PCI_EXP_LNKCAP2_DRS));
-+    }
-     w = get_conf_word(d, where + PCI_EXP_LNKCTL2);
-     printf("\t\tLnkCtl2: Target Link Speed: %s, EnterCompliance%c SpeedDis%c",
- 	cap_express_link2_speed(PCI_EXP_LNKCTL2_SPEED(w)),
+ 	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
+
+
+---
+	-Jay Vosburgh, jay.vosburgh@canonical.com
