@@ -2,99 +2,87 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CFA941C88BC
-	for <lists+linux-pci@lfdr.de>; Thu,  7 May 2020 13:46:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 073321C88E3
+	for <lists+linux-pci@lfdr.de>; Thu,  7 May 2020 13:51:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726267AbgEGLp6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 May 2020 07:45:58 -0400
-Received: from mga02.intel.com ([134.134.136.20]:50098 "EHLO mga02.intel.com"
+        id S1727785AbgEGLum (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 May 2020 07:50:42 -0400
+Received: from mga01.intel.com ([192.55.52.88]:59334 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725903AbgEGLp6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 7 May 2020 07:45:58 -0400
-IronPort-SDR: XIovQShjHh8MHLIfsVC63GdeJSV/RGi+gejMSdrib2gFhmylJzdZZHh+9q1n8HyCYwWA3RAYrl
- u4mQPMDUmwng==
+        id S1727769AbgEGLuj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 7 May 2020 07:50:39 -0400
+IronPort-SDR: K8gq3h49VHpmZS0MqG+na4IjNG4n8aYqR44k2kPT7ga/PdFvCxmtm3VS4/lVxK7fQe9PcX4MJu
+ I5+IApngKnPA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 04:45:57 -0700
-IronPort-SDR: +nDk2/RkZmDenVuvmek/5fqVEHbbR00JOTcZUQz4bZMW9S+bK1Gkc2XUl5LLnOedEgz+FKnd/U
- BD2XXnbrojTA==
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 04:50:39 -0700
+IronPort-SDR: 8bD02u6o+OKmozbXo9UsSMMfj9zmgxWFMnYTnkoWDvJi3GAkjFa/S1BKe4rDWplcn9g2Bgpyfn
+ 2caRx6V10iYg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,363,1583222400"; 
-   d="scan'208";a="370094079"
+   d="scan'208";a="370094733"
 Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 07 May 2020 04:45:54 -0700
-Received: by lahna (sSMTP sendmail emulation); Thu, 07 May 2020 14:45:53 +0300
-Date:   Thu, 7 May 2020 14:45:53 +0300
+  by fmsmga001.fm.intel.com with SMTP; 07 May 2020 04:50:35 -0700
+Received: by lahna (sSMTP sendmail emulation); Thu, 07 May 2020 14:50:34 +0300
+Date:   Thu, 7 May 2020 14:50:34 +0300
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: Do not use pcie_get_speed_cap() to determine when
- to start waiting
-Message-ID: <20200507114553.GH487496@lahna.fi.intel.com>
-References: <20200416083245.73957-1-mika.westerberg@linux.intel.com>
- <20200506224228.GA458845@bjorn-Precision-5520>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>, bhelgaas@google.com,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Yicong Yang <yangyicong@hisilicon.com>,
+        Krzysztof Wilczynski <kw@linux.com>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] PCI/ASPM: Enable ASPM for bridge-to-bridge link
+Message-ID: <20200507115034.GI487496@lahna.fi.intel.com>
+References: <20200506061438.GR487496@lahna.fi.intel.com>
+ <20200506212947.GA455758@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200506224228.GA458845@bjorn-Precision-5520>
+In-Reply-To: <20200506212947.GA455758@bjorn-Precision-5520>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, May 06, 2020 at 05:42:28PM -0500, Bjorn Helgaas wrote:
-> On Thu, Apr 16, 2020 at 11:32:45AM +0300, Mika Westerberg wrote:
-> > Kai-Heng Feng reported that it takes long time (>1s) to resume
-> > Thunderbolt connected PCIe devices from both runtime suspend and system
-> > sleep (s2idle).
+On Wed, May 06, 2020 at 04:29:47PM -0500, Bjorn Helgaas wrote:
+> On Wed, May 06, 2020 at 09:14:38AM +0300, Mika Westerberg wrote:
+> > On Wed, May 06, 2020 at 01:34:21AM +0800, Kai-Heng Feng wrote:
+> > > The TI PCIe-to-PCI bridge prevents the Intel SoC from entering power
+> > > state deeper than PC3 due to disabled ASPM, consumes lots of unnecessary
+> > > power. On Windows ASPM L1 is enabled on the device and its upstream
+> > > bridge, so it can make the Intel SoC reach PC8 or PC10 to save lots of
+> > > power.
+> > > 
+> > > In short, ASPM always gets disabled on bridge-to-bridge link.
 > > 
-> > These PCIe downstream ports the second link capability (PCI_EXP_LNKCAP2)
-> > announces support for speeds > 5 GT/s but it is then capped by the
-> > second link control (PCI_EXP_LNKCTL2) register to 2.5 GT/s. This
-> > possiblity was not considered in pci_bridge_wait_for_secondary_bus() so
-> > it ended up waiting for 1100 ms as these ports do not support active
-> > link layer reporting either.
-> > 
-> > PCIe spec 5.0 section 6.6.1 mandates that we must wait minimum of 100 ms
-> > before sending configuration request to the device below, if the port
-> > does not support speeds > 5 GT/s, and if it does we first need to wait
-> > for the data link layer to become active before waiting for that 100 ms.
-> > 
-> > PCIe spec 5.0 section 7.5.3.6 further says that all downstream ports
-> > that support speeds > 5 GT/s must support active link layer reporting so
-> > instead of looking for the speed we can check for the active link layer
-> > reporting capability and determine how to wait based on that (as they go
-> > hand in hand).
+> > Excelent finding :) I've heard several reports complaining that we can't
+> > enter PC10 when TBT is enabled and I guess this explains it.
 > 
-> I can't quite tell what the defect is here.
+> I'm curious about this.  I first read this patch as affecting
+> garden-variety Links between a Root Port or Downstream Port and the
+> Upstream Port of a switch.  But the case we're talking about is
+> specifically when the downstream device is PCI_EXP_TYPE_PCI_BRIDGE,
+> i.e., a PCIe to PCI/PCI-X bridge, not a switch.
 > 
-> I assume you're talking about this text from sec 6.6.1:
-> 
->   - With a Downstream Port that does not support Link speeds greater
->     than 5.0 GT/s, software must wait a minimum of 100 ms before
->     sending a Configuration Request to the device immediately below
->     that Port.
-> 
->   - With a Downstream Port that supports Link speeds greater than 5.0
->     GT/s, software must wait a minimum of 100 ms after Link training
->     completes before sending a Configuration Request to the device
->     immediately below that Port. Software can determine when Link
->     training completes by polling the Data Link Layer Link Active bit
->     or by setting up an associated interrupt (see Section 6.7.3.3 ).
-> 
-> I don't understand what Link Control 2 has to do with this.  The spec
-> talks about ports *supporting* certain link speeds, which sounds to me
-> like the Link Capabilities.  It doesn't say anything about the current
-> or target link speed.
+> AFAICT, a Link to a PCI bridge is still a normal Link and ASPM should
+> still work.  I'm sort of surprised that you'd find such a PCIe to
+> PCI/PCI-X bridge in a Thunderbolt topology, but maybe that's a common
+> thing?
 
-PCIe 5.0 page 764 recommends using Supported Link Speeds Vector in Link
-Capabilities 2 register and that's what pcie_get_speed_cap() is doing.
+It actually is not common and now that you mention I'm wondering how
+this can help at all. I also thought this applies to all ports which
+would explain the issue we have but if it only applies to PCIe to
+PCI/PCI-X bridge it should not make any difference in TBT systems.
 
-However, we can avoid figuring the speed altogether by checking the
-dev->link_active_reporting instead because that needs to be implemented
-by all Downstream Ports that supports speeds > 5 GT/s (PCIe 5.0 page 735).
+> I guess "PC8" and "PC10" are some sort of Intel-specific power states?
+
+Package C-state 8 and Package C-state 10. These are power states the
+whole (Intel) CPU package can enter when individual CPU cores are in
+correct low power states.
