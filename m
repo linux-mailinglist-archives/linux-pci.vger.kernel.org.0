@@ -2,41 +2,41 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 163E71C9CEE
-	for <lists+linux-pci@lfdr.de>; Thu,  7 May 2020 23:05:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EDEC71C9CF5
+	for <lists+linux-pci@lfdr.de>; Thu,  7 May 2020 23:07:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726320AbgEGVF1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 May 2020 17:05:27 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:41966 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726218AbgEGVF0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 May 2020 17:05:26 -0400
-Received: by mail-ot1-f67.google.com with SMTP id c3so5777838otp.8;
-        Thu, 07 May 2020 14:05:26 -0700 (PDT)
+        id S1726320AbgEGVHQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 May 2020 17:07:16 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:33847 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726218AbgEGVHQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 May 2020 17:07:16 -0400
+Received: by mail-oi1-f194.google.com with SMTP id c12so5515932oic.1;
+        Thu, 07 May 2020 14:07:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=GIj6kxDR7LGNuMotCOajJTwyR96cZe3Qpni2Sj/PoIY=;
-        b=l1447p3gnOCNtkWw6U2Vu+6hvNC9desFaXzPss625l+w/mM/gaJJR0VUkUAot79vs9
-         8bbiBzoN0YgBySrbZS73PgupapeMyPJkn6WcDva4qohpguygt2oZ3hy9NDiE2aIC2Jzu
-         Z3KBZzE4fD8lYrnGDmOLpB3+UwnG9UAZHRUXWdKb/LkLLqoPuH7ctouNg6hO25OfqO59
-         I9VEn9m8wZesTn5tePjyRaVe7A78AzV1nfxKCm47zBlZvjPDGactrktURIA+BdgfBeaX
-         ygzr/3toYJSm0IChVGL+gvr89CJ3QS8m6E6aeBA9eT3x5FPnjkG8UqnVgG/XQbnENEIM
-         qGEQ==
-X-Gm-Message-State: AGi0PuanioIEmGB/tzVX9Bba9EU5+0KvMkL5Ia7xO1vW0fi/7SJ2WLJB
-        3/Xbw4KZLqUknOVzLlinG/Uf774=
-X-Google-Smtp-Source: APiQypJdtsPrvNlnN0TthkAX/I+9RMU6sL0lnI0AMoufaSaLCpUUL+uGICO4QBCt32XId2EnXg1yQw==
-X-Received: by 2002:a05:6830:1592:: with SMTP id i18mr12868544otr.190.1588885525673;
-        Thu, 07 May 2020 14:05:25 -0700 (PDT)
+        bh=9/DVS+dary5bcN5wwyGQLe4r2M44cjfHRGvR6cavOks=;
+        b=NwEk+5LRPrR8gY60b+mbxZB/zAfRmakJC3m05NqiVduCPUfMzJS2rZJV+z41Ru3f6L
+         TQ1WjKj2bjgMISCUewNEYMQim2GvbyNXNdf67hR8wzhV5GV3ga1yNwurTiaiWDKvpK6Y
+         WzNE7YPjqhgpknH4FQdEXNicfu3YlbXWJUfGZo6MLLMfSMfPK7kbTTJclIxtWeSfS3FM
+         kL9cM1CWZ7uSmt0cDhVMFcp73cJaUE3KzfRtlipCBebuH2wMrz8i0PsN7k9YGBRPKCdH
+         bliBsmbxeRVXhWxAa+87xu35QZPMtgo7mddn/JeWBNntT2b6xkiluIOvljNbi05KaFCD
+         rMGQ==
+X-Gm-Message-State: AGi0PubPXrkSwQ8hzIySUVT7YISOKZNpsWHbLK3+n0AK1mVWiWdBF77e
+        IY8i5DcE74CKYwRVAH585g==
+X-Google-Smtp-Source: APiQypIBgpIqcuerq6AtzGUWximQsZ+IdSaqx8tmt01/OcNReArRLM+RM4D3CN2f1QAlzqb1M54l8A==
+X-Received: by 2002:aca:ec51:: with SMTP id k78mr8258261oih.60.1588885635412;
+        Thu, 07 May 2020 14:07:15 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e13sm1619297otj.46.2020.05.07.14.05.24
+        by smtp.gmail.com with ESMTPSA id 4sm1770225oog.3.2020.05.07.14.07.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 14:05:24 -0700 (PDT)
-Received: (nullmailer pid 23601 invoked by uid 1000);
-        Thu, 07 May 2020 21:05:23 -0000
-Date:   Thu, 7 May 2020 16:05:23 -0500
+        Thu, 07 May 2020 14:07:14 -0700 (PDT)
+Received: (nullmailer pid 26846 invoked by uid 1000);
+        Thu, 07 May 2020 21:07:13 -0000
+Date:   Thu, 7 May 2020 16:07:13 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
 Cc:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
@@ -51,38 +51,54 @@ Cc:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
         Tomasz Maciej Nowak <tmn505@gmail.com>,
         Xogium <contact@xogium.me>, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 01/12] PCI: aardvark: Train link immediately after
- enabling training
-Message-ID: <20200507210523.GA23539@bogus>
+Subject: Re: [PATCH v4 02/12] PCI: aardvark: Don't blindly enable ASPM L0s
+ and don't write to read-only register
+Message-ID: <20200507210713.GA26756@bogus>
 References: <20200430080625.26070-1-pali@kernel.org>
- <20200430080625.26070-2-pali@kernel.org>
+ <20200430080625.26070-3-pali@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200430080625.26070-2-pali@kernel.org>
+In-Reply-To: <20200430080625.26070-3-pali@kernel.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 30 Apr 2020 10:06:14 +0200, =?UTF-8?q?Pali=20Roh=C3=A1r?= wrote:
-> Adding even 100ms (PCI_PM_D3COLD_WAIT) delay between enabling link
-> training and starting link training causes detection issues with some
-> buggy cards (such as Compex WLE900VX).
+On Thu, 30 Apr 2020 10:06:15 +0200, =?UTF-8?q?Pali=20Roh=C3=A1r?= wrote:
+> Trying to change Link Status register does not have any effect as this
+> is a read-only register. Trying to overwrite bits for Negotiated Link
+> Width does not make sense.
 > 
-> Move the code which enables link training immediately before the one
-> which starts link traning.
+> In future proper change of link width can be done via Lane Count Select
+> bits in PCIe Control 0 register.
 > 
-> This fixes detection issues of Compex WLE900VX card on Turris MOX after
-> cold boot.
+> Trying to unconditionally enable ASPM L0s via ASPM Control bits in Link
+> Control register is wrong. There should be at least some detection if
+> endpoint supports L0s as isn't mandatory.
 > 
-> Fixes: f4c7d053d7f7 ("PCI: aardvark: Wait for endpoint to be ready...")
+> Moreover ASPM Control bits in Link Control register are controlled by
+> pcie/aspm.c code which sets it according to system ASPM settings,
+> immediately after aardvark driver probes. So setting these bits by
+> aardvark driver has no long running effect.
+> 
+> Remove code which touches ASPM L0s bits from this driver and let
+> kernel's ASPM implementation to set ASPM state properly.
+> 
+> Some users are reporting issues that this code is problematic for some
+> Intel wifi cards and removing it fixes them, see e.g.:
+> https://bugzilla.kernel.org/show_bug.cgi?id=196339
+> 
+> If problems with Intel wifi cards occur even after this commit, then
+> pcie/aspm.c code could be modified / hooked to not enable ASPM L0s state
+> for affected problematic cards.
+> 
 > Signed-off-by: Pali Rohár <pali@kernel.org>
 > ---
->  drivers/pci/controller/pci-aardvark.c | 15 +++++++++------
->  1 file changed, 9 insertions(+), 6 deletions(-)
+>  drivers/pci/controller/pci-aardvark.c | 4 ----
+>  1 file changed, 4 deletions(-)
 > 
 
 Acked-by: Rob Herring <robh@kernel.org>
