@@ -2,68 +2,70 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 052611C974A
-	for <lists+linux-pci@lfdr.de>; Thu,  7 May 2020 19:20:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F5541C9826
+	for <lists+linux-pci@lfdr.de>; Thu,  7 May 2020 19:44:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726308AbgEGRUp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 May 2020 13:20:45 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49292 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726222AbgEGRUp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 7 May 2020 13:20:45 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 1EA45AD93;
-        Thu,  7 May 2020 17:20:45 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        id S1727904AbgEGRot (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 May 2020 13:44:49 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:40638 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727903AbgEGRot (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 May 2020 13:44:49 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 34B2C1C0257; Thu,  7 May 2020 19:44:47 +0200 (CEST)
+Date:   Thu, 7 May 2020 19:44:46 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Jeremy Linton <jeremy.linton@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Jim Quinlan <james.quinlan@broadcom.com>
-Cc:     s.nawrocki@samsung.com, tim.gover@raspberrypi.com,
         Bjorn Helgaas <bhelgaas@google.com>,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI: brcmstb: Assert fundamental reset on initialization
-Date:   Thu,  7 May 2020 19:20:20 +0200
-Message-Id: <20200507172020.18000-1-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.26.2
+        Rob Herring <robh+dt@kernel.org>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH v9 0/8] Add endpoint driver for R-Car PCIe controller
+Message-ID: <20200507174446.GC1216@bug>
+References: <1587666159-6035-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1587666159-6035-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-While preparing the driver for upstream this detail was missed.
+Hi!
 
-If not asserted during the initialization process, devices connected on
-the bus will not be made aware of the internal reset happening. This,
-potentially resulting in unexpected behavior.
 
-Fixes: c0452137034b ("PCI: brcmstb: Add Broadcom STB PCIe host controller driver")
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
----
- drivers/pci/controller/pcie-brcmstb.c | 1 +
- 1 file changed, 1 insertion(+)
+> R-Car/RZ-G2x SoC's, this also extends the epf framework to handle multiple windows
+> supported by the controller for mapping PCI address locally.
+> 
+> Note:
+> The cadence/rockchip/designware endpoint drivers are build tested only.
+> 
+> Changes for v9 (Re-spun this series as there were minimal changes requested):
+...
+> * Replaced mdelay(1) with usleep_range(1000, 1001) in rcar_pcie_ep_assert_intx()
 
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index 0b97b94c4a9a..795a03be4150 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -699,6 +699,7 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
- 
- 	/* Reset the bridge */
- 	brcm_pcie_bridge_sw_init_set(pcie, 1);
-+	brcm_pcie_perst_set(pcie, 1);
- 
- 	usleep_range(100, 200);
- 
+Are you sure that is good idea? You are requesting 1ms sleep time with 1us tolerance,
+I dont believe common systems can do that.
+
+Best regards,
+									Pavel
+
 -- 
-2.26.2
-
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
