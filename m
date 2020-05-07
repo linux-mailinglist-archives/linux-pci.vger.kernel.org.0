@@ -2,151 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5392A1C9B2F
-	for <lists+linux-pci@lfdr.de>; Thu,  7 May 2020 21:34:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B627B1C9B42
+	for <lists+linux-pci@lfdr.de>; Thu,  7 May 2020 21:41:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726514AbgEGTem (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 May 2020 15:34:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40454 "EHLO
+        id S1726860AbgEGTlp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 May 2020 15:41:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726470AbgEGTem (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 May 2020 15:34:42 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55D05C05BD43;
-        Thu,  7 May 2020 12:34:41 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id w7so6961281wre.13;
-        Thu, 07 May 2020 12:34:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:references:in-reply-to:subject:date:message-id
-         :mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=kpyi58vu3gyX1xletAErxrrxhzwdDbnywpgMBtapFQ4=;
-        b=AsZDz773E3K0yRR+5s1xS9m240dLj0UQolFlBX+E8jwJrIV1aKWIgfq/YI0jhF6qeZ
-         e+eCJvHtqcdZMyRw6znep+gfyVw6140lXt/F5/90BAGbJ66Sj+KdArEM97epOVhIt6lB
-         uFYvJYyKrPoKMqsHqLOOwmMcLgmHwCl7zdri95gVyzFcKyC1TjhaN+qHeK6YnDUPWFxU
-         R94xmOTPGs2SueHVOEz6VAO0kW9ke3aY2fmUjtBn5sxoIpNSQYs6yI/jpeYS1IpbJJgZ
-         v5nuRoBXN1G1VjQRrZFeM+qJgzLMpjOC5xBerinaJKfVBZ7cLpWD/Fc6ONbGVkld6pEU
-         gFTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
-         :message-id:mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=kpyi58vu3gyX1xletAErxrrxhzwdDbnywpgMBtapFQ4=;
-        b=LA+LHCe2tvYI1HB60XQtP7doTJEhaiUPiHNO4yX69RAFXNxEKzCPdRlruUtI2pd2FL
-         +qXYaMLX1/TbYhdE/RsZ8IXf1FLbQyKEu4IWBZmmlvSrajvYtHT7yfItNq3vnWroh8Tk
-         f+BCq+OHAqD7f5hXemYpelDrOYSTBw4F9czRDwHG14ygEchya3E7E0OxSbe8WAO+No2i
-         /JGcclD/UacTC8Qc4YMPDp4DUGTwm5fMgBLAxDQkE+ucqcI720rQ66uGK5KUrYxmG5Dc
-         T7XevJQncCotyZ/HGUP6igdmJkWwvWX3id4WodSarF1ND1Pkse6tojG2YnINTNxeHJ06
-         bwBQ==
-X-Gm-Message-State: AGi0PuZ9Pus9rnoXGTvYi2aZkYnDRmAJYOU5iqt8DSstGIi9ApqTzO9B
-        ymXnkTAfOt1pi5uYCp9kXG9kHFvDwgXlolfy
-X-Google-Smtp-Source: APiQypIwIR8SgYTDuadIC6JKuy4zOUybN888CaaszC8gq5a8zpwRWoOlU0QUmViKL23NCxX9jIn0Kg==
-X-Received: by 2002:adf:f4c4:: with SMTP id h4mr18035443wrp.142.1588880079925;
-        Thu, 07 May 2020 12:34:39 -0700 (PDT)
-Received: from AnsuelXPS (host186-254-dynamic.3-87-r.retail.telecomitalia.it. [87.3.254.186])
-        by smtp.gmail.com with ESMTPSA id k4sm5181128wmf.41.2020.05.07.12.34.37
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 07 May 2020 12:34:39 -0700 (PDT)
-From:   <ansuelsmth@gmail.com>
-To:     "'Rob Herring'" <robh@kernel.org>
-Cc:     "'Bjorn Andersson'" <bjorn.andersson@linaro.org>,
-        "'Andy Gross'" <agross@kernel.org>,
-        "'Bjorn Helgaas'" <bhelgaas@google.com>,
-        "'Mark Rutland'" <mark.rutland@arm.com>,
-        "'Stanimir Varbanov'" <svarbanov@mm-sol.com>,
-        "'Lorenzo Pieralisi'" <lorenzo.pieralisi@arm.com>,
-        "'Andrew Murray'" <amurray@thegoodpenguin.co.uk>,
-        "'Philipp Zabel'" <p.zabel@pengutronix.de>,
-        <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200430220619.3169-1-ansuelsmth@gmail.com> <20200430220619.3169-9-ansuelsmth@gmail.com> <20200507181044.GA15159@bogus>
-In-Reply-To: <20200507181044.GA15159@bogus>
-Subject: R: [PATCH v3 08/11] devicetree: bindings: pci: document PARF params bindings
-Date:   Thu, 7 May 2020 21:34:35 +0200
-Message-ID: <062301d624a6$8be610d0$a3b23270$@gmail.com>
+        by vger.kernel.org with ESMTP id S1726320AbgEGTlp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 May 2020 15:41:45 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C22CC05BD43;
+        Thu,  7 May 2020 12:41:45 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jWmOn-0004f0-9z; Thu, 07 May 2020 21:41:37 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 7396E102652; Thu,  7 May 2020 21:41:36 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     "Raj\, Ashok" <ashok.raj@intel.com>
+Cc:     "Raj\, Ashok" <ashok.raj@linux.intel.com>,
+        Evan Green <evgreen@chromium.org>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>, x86@kernel.org,
+        linux-pci <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Ghorai\, Sukumar" <sukumar.ghorai@intel.com>,
+        "Amara\, Madhusudanarao" <madhusudanarao.amara@intel.com>,
+        "Nandamuri\, Srikanth" <srikanth.nandamuri@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>
+Subject: Re: MSI interrupt for xhci still lost on 5.6-rc6 after cpu hotplug
+In-Reply-To: <20200507175715.GA22426@otc-nc-03>
+References: <20200501184326.GA17961@araj-mobl1.jf.intel.com> <878si6rx7f.fsf@nanos.tec.linutronix.de> <20200505201616.GA15481@otc-nc-03> <875zdarr4h.fsf@nanos.tec.linutronix.de> <20200507121850.GB85463@otc-nc-03> <87wo5nj48a.fsf@nanos.tec.linutronix.de> <20200507175715.GA22426@otc-nc-03>
+Date:   Thu, 07 May 2020 21:41:36 +0200
+Message-ID: <87blmzedn3.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: it
-Thread-Index: AQH0plL6ngkayUAAEEU7BifA9vEwhgIhhTlHAlRDbrmoPFDTgA==
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> On Fri, May 01, 2020 at 12:06:15AM +0200, Ansuel Smith wrote:
-> > It is now supported the editing of Tx De-Emphasis, Tx Swing and
-> > Rx equalization params on ipq8064. Document this new optional params.
-> >
-> > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> > ---
-> >  .../devicetree/bindings/pci/qcom,pcie.txt     | 36 +++++++++++++++++++
-> >  1 file changed, 36 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> > index 6efcef040741..8cc5aea8a1da 100644
-> > --- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> > +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> > @@ -254,6 +254,42 @@
-> >  			- "perst-gpios"	PCIe endpoint reset signal line
-> >  			- "wake-gpios"	PCIe endpoint wake signal line
-> >
-> > +- qcom,tx-deemph-gen1:
-> > +	Usage: optional (available for ipq/apq8064)
-> > +	Value type: <u32>
-> > +	Definition: Gen1 De-emphasis value.
-> > +		    For ipq806x should be set to 24.
-> 
-> Unless these need to be tuned per board, then the compatible string for
-> ipq806x should imply all these settings.
-> 
+Ashok,
 
-It was requested by v2 to make this settings tunable. These don't change are
-all the same for every ipq806x SoC. The original implementation had this 
-value hardcoded for ipq806x. Should I restore this and drop this patch? 
-Anyway thanks for the review. 
+"Raj, Ashok" <ashok.raj@intel.com> writes:
+> 
+> I think i got mixed up with logical apic id and logical cpu :-(
 
-> > +
-> > +- qcom,tx-deemph-gen2-3p5db:
-> > +	Usage: optional (available for ipq/apq8064)
-> > +	Value type: <u32>
-> > +	Definition: Gen2 (3.5db) De-emphasis value.
-> > +		    For ipq806x should be set to 24.
-> > +
-> > +- qcom,tx-deemph-gen2-6db:
-> > +	Usage: optional (available for ipq/apq8064)
-> > +	Value type: <u32>
-> > +	Definition: Gen2 (6db) De-emphasis value.
-> > +		    For ipq806x should be set to 34.
-> > +
-> > +- qcom,tx-swing-full:
-> > +	Usage: optional (available for ipq/apq8064)
-> > +	Value type: <u32>
-> > +	Definition: TX launch amplitude swing_full value.
-> > +		    For ipq806x should be set to 120.
-> > +
-> > +- qcom,tx-swing-low:
-> > +	Usage: optional (available for ipq/apq8064)
-> > +	Value type: <u32>
-> > +	Definition: TX launch amplitude swing_low value.
-> > +		    For ipq806x should be set to 120.
-> > +
-> > +- qcom,rx0-eq:
-> > +	Usage: optional (available for ipq/apq8064)
-> > +	Value type: <u32>
-> > +	Definition: RX0 equalization value.
-> > +		    For ipq806x should be set to 4.
-> > +
-> >  * Example for ipq/apq8064
-> >  	pcie@1b500000 {
-> >  		compatible = "qcom,pcie-apq8064", "qcom,pcie-ipq8064",
-> "snps,dw-pcie";
-> > --
-> > 2.25.1
-> >
+Stuff happens.
+
+>           <idle>-0     [000] d.h.    44.376659: msi_set_affinity: quirk[1] new vector allocated, new apic = 2 vector = 33 this apic = 0
+>           <idle>-0     [000] d.h.    44.376684: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 0 Nvec 33 Napic 2
+
+>           <idle>-0     [000] d.h.    44.376685: xhci_irq: xhci irq
+
+>           <idle>-0     [001] d.h.    44.376750: msi_set_affinity: quirk[1] new vector allocated, new apic = 2 vector = 33 this apic = 2
+>           <idle>-0     [001] d.h.    44.376774: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 2 Nvec 33 Napic 2
+
+>           <idle>-0     [001] d.h.    44.376776: xhci_irq: xhci irq
+>           <idle>-0     [001] d.h.    44.395824: xhci_irq: xhci irq
+
+>            <...>-14    [001] d..1    44.400666: msi_set_affinity: quirk[1] new vector allocated, new apic = 6 vector = 33 this apic = 2
+>            <...>-14    [001] d..1    44.400691: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 2 Nvec 33 Napic 6
+
+>           <idle>-0     [003] d.h.    44.421021: xhci_irq: xhci irq
+>           <idle>-0     [003] d.h.    44.421135: xhci_irq: xhci irq
+
+>      migration/3-24    [003] d..1    44.421784: msi_set_affinity: quirk[1] new vector allocated, new apic = 0 vector = 33 this apic = 6
+>      migration/3-24    [003] d..1    44.421803: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 6 Nvec 33 Napic 0
+
+So this last one is a direct update. Straight forward moving it from one
+to the other CPU on the same vector number.
+
+And that's the case where we either expect the interrupt to come in on
+CPU3 or on CPU0.
+
+There is actually an example in the trace:
+
+	<idle>-0     [000] d.h.    40.616467: msi_set_affinity: quirk[1] new vector allocated, new apic = 2 vector = 33 this apic = 0
+	<idle>-0     [000] d.h.    40.616488: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 0 Nvec 33 Napic 2
+	<idle>-0     [000] d.h.    40.616488: xhci_irq: xhci irq
+	<idle>-0     [001] d.h.    40.616504: xhci_irq: xhci irq
+
+>      migration/3-24    [003] d..1    44.421784: msi_set_affinity: quirk[1] new vector allocated, new apic = 0 vector = 33 this apic = 6
+>      migration/3-24    [003] d..1    44.421803: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 6 Nvec 33 Napic 0
+
+But as this last one is the migration thread, aka stomp machine, I
+assume this is a hotplug operation. Which means the CPU cannot handle
+interrupts anymore. In that case we check the old vector on the
+unplugged CPU in fixup_irqs() and do the retrigger from there.
+Can you please add tracing to that one as well?
+
+Thanks,
+
+        tglx
+
+
+
 
