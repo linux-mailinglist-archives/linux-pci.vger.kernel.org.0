@@ -2,118 +2,248 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A1421C8086
-	for <lists+linux-pci@lfdr.de>; Thu,  7 May 2020 05:33:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 722411C80D4
+	for <lists+linux-pci@lfdr.de>; Thu,  7 May 2020 06:23:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726267AbgEGDdI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 May 2020 23:33:08 -0400
-Received: from mga06.intel.com ([134.134.136.31]:39002 "EHLO mga06.intel.com"
+        id S1726320AbgEGEXk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 May 2020 00:23:40 -0400
+Received: from mga11.intel.com ([192.55.52.93]:38800 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725879AbgEGDdI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 6 May 2020 23:33:08 -0400
-IronPort-SDR: u+O5SXq0D1d4fJWDlUkBF7LDa2FoDuSaWGjvk7otAcJE7dehVbK9m3DLCKKe2ovvtkQ4ppDVDN
- Z3mQRouwUD1w==
+        id S1725802AbgEGEXk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 7 May 2020 00:23:40 -0400
+IronPort-SDR: T3WZV/YROzSe2aLAtPI+J4MurzPulK0dWON1Vq2sXDdZ+lgajmMhZuUayqpud1j/Zw5GR3hvjx
+ kg6I5YsoK//w==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2020 20:33:07 -0700
-IronPort-SDR: LLROTNw6PCNmZ27qFr0GAJ7AKDnxWByT4e3Rr6GTwB3Wk51WQBWovidx+E4jbvLYFQvQt1OPOH
- EpiFc/4YKy+A==
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2020 21:23:39 -0700
+IronPort-SDR: t0Ge35B9v84KvZBAmt5jr/ZtSc+em6/sCVQM4ZlRt5E+E5CMwsZ+PfCM3rMFsMaTADEEGXYmnY
+ wtzPxt33iHxg==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,361,1583222400"; 
-   d="scan'208";a="249967520"
-Received: from cchia2-mobl1.amr.corp.intel.com (HELO localhost.localdomain) ([10.255.230.47])
-  by fmsmga007.fm.intel.com with ESMTP; 06 May 2020 20:33:06 -0700
-From:   sathyanarayanan.kuppuswamy@linux.intel.com
-To:     bhelgaas@google.com
-Cc:     jay.vosburgh@canonical.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ashok.raj@intel.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: [PATCH v1 1/1] PCI/ERR: Handle fatal error recovery for non-hotplug capable devices
-Date:   Wed,  6 May 2020 20:32:59 -0700
-Message-Id: <f4bbacd3af453285271c8fc733652969e11b84f8.1588821160.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <18609.1588812972@famine>
-References: <18609.1588812972@famine>
+X-IronPort-AV: E=Sophos;i="5.73,362,1583222400"; 
+   d="scan'208";a="284858266"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga004.fm.intel.com with ESMTP; 06 May 2020 21:23:38 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jWY4P-000Gws-Jy; Thu, 07 May 2020 12:23:37 +0800
+Date:   Thu, 07 May 2020 12:23:16 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:next] BUILD SUCCESS caf76ec7adb06c46ec89f7a381d3694acf5d0156
+Message-ID: <5eb38d34.FKe2LcadQPty55tY%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  next
+branch HEAD: caf76ec7adb06c46ec89f7a381d3694acf5d0156  Merge branch 'remotes/lorenzo/pci/v3-semi'
 
-If there are non-hotplug capable devices connected to a given
-port, then during the fatal error recovery(triggered by DPC or
-AER), after calling reset_link() function, we cannot rely on
-hotplug handler to detach and re-enumerate the device drivers
-in the affected bus. Instead, we will have to let the error
-recovery handler call report_slot_reset() for all devices in
-the bus to notify about the reset operation. Although this is
-only required for non hot-plug capable devices, doing it for
-hotplug capable devices should not affect the functionality.
+elapsed time: 480m
 
-Along with above issue, this fix also applicable to following
-issue.
+configs tested: 190
+configs skipped: 0
 
-Commit 6d2c89441571 ("PCI/ERR: Update error status after
-reset_link()") added support to store status of reset_link()
-call. Although this fixed the error recovery issue observed if
-the initial value of error status is PCI_ERS_RESULT_DISCONNECT
-or PCI_ERS_RESULT_NO_AER_DRIVER, it also discarded the status
-result from report_frozen_detected. This can cause a failure to
-recover if _NEED_RESET is returned by report_frozen_detected and
-report_slot_reset is not invoked.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Such an event can be induced for testing purposes by reducing the
-Max_Payload_Size of a PCIe bridge to less than that of a device
-downstream from the bridge, and then initiating I/O through the
-device, resulting in oversize transactions.  In the presence of DPC,
-this results in a containment event and attempted reset and recovery
-via pcie_do_recovery.  After 6d2c89441571 report_slot_reset is not
-invoked, and the device does not recover.
+arm64                            allyesconfig
+arm64                            allmodconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm64                             allnoconfig
+sparc                            allyesconfig
+m68k                             allyesconfig
+ia64                             allyesconfig
+i386                              allnoconfig
+s390                             allmodconfig
+csky                             allyesconfig
+mips                             allyesconfig
+riscv                               defconfig
+sparc                               defconfig
+powerpc                             defconfig
+s390                             alldefconfig
+h8300                            allmodconfig
+m68k                             allmodconfig
+ia64                             alldefconfig
+sparc64                          allmodconfig
+um                                  defconfig
+um                               allmodconfig
+nds32                               defconfig
+i386                             allyesconfig
+i386                             alldefconfig
+i386                                defconfig
+i386                              debian-10.3
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+m68k                           sun3_defconfig
+m68k                          multi_defconfig
+m68k                                defconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                             allnoconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+microblaze                       allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                         64r6el_defconfig
+mips                              allnoconfig
+mips                           32r2_defconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                          allyesconfig
+powerpc                          alldefconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+m68k                 randconfig-a001-20200506
+mips                 randconfig-a001-20200506
+nds32                randconfig-a001-20200506
+parisc               randconfig-a001-20200506
+alpha                randconfig-a001-20200506
+riscv                randconfig-a001-20200506
+m68k                 randconfig-a001-20200507
+mips                 randconfig-a001-20200507
+nds32                randconfig-a001-20200507
+parisc               randconfig-a001-20200507
+alpha                randconfig-a001-20200507
+riscv                randconfig-a001-20200507
+h8300                randconfig-a001-20200506
+nios2                randconfig-a001-20200506
+microblaze           randconfig-a001-20200506
+c6x                  randconfig-a001-20200506
+sparc64              randconfig-a001-20200506
+h8300                randconfig-a001-20200507
+nios2                randconfig-a001-20200507
+microblaze           randconfig-a001-20200507
+c6x                  randconfig-a001-20200507
+sparc64              randconfig-a001-20200507
+s390                 randconfig-a001-20200506
+xtensa               randconfig-a001-20200506
+sh                   randconfig-a001-20200506
+openrisc             randconfig-a001-20200506
+csky                 randconfig-a001-20200506
+xtensa               randconfig-a001-20200507
+sh                   randconfig-a001-20200507
+openrisc             randconfig-a001-20200507
+csky                 randconfig-a001-20200507
+i386                 randconfig-b003-20200506
+i386                 randconfig-b001-20200506
+x86_64               randconfig-b001-20200506
+x86_64               randconfig-b003-20200506
+i386                 randconfig-b002-20200506
+i386                 randconfig-b003-20200507
+x86_64               randconfig-b002-20200507
+i386                 randconfig-b001-20200507
+x86_64               randconfig-b001-20200507
+x86_64               randconfig-b003-20200507
+i386                 randconfig-b002-20200507
+x86_64               randconfig-a003-20200506
+x86_64               randconfig-a001-20200506
+x86_64               randconfig-a002-20200506
+i386                 randconfig-a001-20200506
+i386                 randconfig-a002-20200506
+i386                 randconfig-a003-20200506
+x86_64               randconfig-c002-20200507
+x86_64               randconfig-c001-20200507
+i386                 randconfig-c002-20200507
+i386                 randconfig-c003-20200507
+x86_64               randconfig-c003-20200507
+i386                 randconfig-c001-20200507
+i386                 randconfig-d003-20200506
+i386                 randconfig-d001-20200506
+x86_64               randconfig-d002-20200506
+i386                 randconfig-d002-20200506
+x86_64               randconfig-d001-20200507
+i386                 randconfig-d003-20200507
+i386                 randconfig-d001-20200507
+x86_64               randconfig-d003-20200507
+x86_64               randconfig-d002-20200507
+i386                 randconfig-d002-20200507
+i386                 randconfig-e003-20200506
+x86_64               randconfig-e003-20200506
+x86_64               randconfig-e001-20200506
+i386                 randconfig-e002-20200506
+i386                 randconfig-e001-20200506
+i386                 randconfig-e003-20200507
+x86_64               randconfig-e003-20200507
+x86_64               randconfig-e002-20200507
+x86_64               randconfig-e001-20200507
+i386                 randconfig-e002-20200507
+i386                 randconfig-e001-20200507
+i386                 randconfig-f003-20200507
+x86_64               randconfig-f002-20200507
+i386                 randconfig-f001-20200507
+i386                 randconfig-f002-20200507
+x86_64               randconfig-g003-20200506
+i386                 randconfig-g003-20200506
+i386                 randconfig-g002-20200506
+x86_64               randconfig-g001-20200506
+i386                 randconfig-g001-20200506
+x86_64               randconfig-g002-20200506
+i386                 randconfig-h002-20200506
+i386                 randconfig-h001-20200506
+i386                 randconfig-h003-20200506
+x86_64               randconfig-h002-20200506
+x86_64               randconfig-h003-20200506
+x86_64               randconfig-h001-20200506
+x86_64               randconfig-a002-20200507
+i386                 randconfig-a001-20200507
+i386                 randconfig-a002-20200507
+i386                 randconfig-a003-20200507
+ia64                 randconfig-a001-20200506
+arm64                randconfig-a001-20200506
+arc                  randconfig-a001-20200506
+powerpc              randconfig-a001-20200506
+arm                  randconfig-a001-20200506
+sparc                randconfig-a001-20200506
+ia64                 randconfig-a001-20200507
+arm64                randconfig-a001-20200507
+arc                  randconfig-a001-20200507
+arm                  randconfig-a001-20200507
+sparc                randconfig-a001-20200507
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                                defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+um                               allyesconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
 
-[original patch is from jay.vosburgh@canonical.com]
-[original patch link https://lore.kernel.org/linux-pci/18609.1588812972@famine/]
-Fixes: 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
-Signed-off-by: Jay Vosburgh <jay.vosburgh@canonical.com>
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 ---
- drivers/pci/pcie/err.c | 19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-index 14bb8f54723e..db80e1ecb2dc 100644
---- a/drivers/pci/pcie/err.c
-+++ b/drivers/pci/pcie/err.c
-@@ -165,13 +165,24 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
- 	pci_dbg(dev, "broadcast error_detected message\n");
- 	if (state == pci_channel_io_frozen) {
- 		pci_walk_bus(bus, report_frozen_detected, &status);
--		status = reset_link(dev);
--		if (status != PCI_ERS_RESULT_RECOVERED) {
-+		status = PCI_ERS_RESULT_NEED_RESET;
-+	} else {
-+		pci_walk_bus(bus, report_normal_detected, &status);
-+	}
-+
-+	if (status == PCI_ERS_RESULT_NEED_RESET) {
-+		if (reset_link) {
-+			if (reset_link(dev) != PCI_ERS_RESULT_RECOVERED)
-+				status = PCI_ERS_RESULT_DISCONNECT;
-+		} else {
-+			if (pci_bus_error_reset(dev))
-+				status = PCI_ERS_RESULT_DISCONNECT;
-+		}
-+
-+		if (status == PCI_ERS_RESULT_DISCONNECT) {
- 			pci_warn(dev, "link reset failed\n");
- 			goto failed;
- 		}
--	} else {
--		pci_walk_bus(bus, report_normal_detected, &status);
- 	}
- 
- 	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
--- 
-2.17.1
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
