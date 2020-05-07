@@ -2,166 +2,164 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 09BD11C7F72
-	for <lists+linux-pci@lfdr.de>; Thu,  7 May 2020 02:57:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F7FC1C8031
+	for <lists+linux-pci@lfdr.de>; Thu,  7 May 2020 04:53:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725966AbgEGA5S (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 May 2020 20:57:18 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:56855 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725887AbgEGA5S (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 May 2020 20:57:18 -0400
-Received: from 1.general.jvosburgh.us.vpn ([10.172.68.206] helo=famine.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <jay.vosburgh@canonical.com>)
-        id 1jWUpi-0002UG-9x; Thu, 07 May 2020 00:56:14 +0000
-Received: by famine.localdomain (Postfix, from userid 1000)
-        id 8E1326C567; Wed,  6 May 2020 17:56:12 -0700 (PDT)
-Received: from famine (localhost [127.0.0.1])
-        by famine.localdomain (Postfix) with ESMTP id 88D57AC1DB;
-        Wed,  6 May 2020 17:56:12 -0700 (PDT)
-From:   Jay Vosburgh <jay.vosburgh@canonical.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Kuppuswamy\, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI/ERR: Resolve regression in pcie_do_recovery
-In-reply-to: <20200506203249.GA453633@bjorn-Precision-5520>
-References: <20200506203249.GA453633@bjorn-Precision-5520>
-Comments: In-reply-to Bjorn Helgaas <helgaas@kernel.org>
-   message dated "Wed, 06 May 2020 15:32:49 -0500."
-X-Mailer: MH-E 8.6+git; nmh 1.6; GNU Emacs 27.0.50
+        id S1727946AbgEGCxA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 May 2020 22:53:00 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:33928 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726770AbgEGCxA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 May 2020 22:53:00 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0472qPD2001465;
+        Wed, 6 May 2020 21:52:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588819945;
+        bh=77R+KN0P7OsXUgS4duR3XXp1coR50qLJMaCXXlSV/To=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=RxrFmj2xHI3XzwRDd6EzTkWMyRLVoJV6Gv7++CFw3vBoFCNYGBoD1neud85nJ/7Ui
+         H4tk3kZFbkYIgVmPyDe4Y6M8dRGXJ2gD/vNMdLpf7k0jNXbSVu12/OJlC3NKQdOZDP
+         pAViwat4VydyzOnRRomoWgYymz3/TFYv8phPKH54=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0472qPMY045107;
+        Wed, 6 May 2020 21:52:25 -0500
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 6 May
+ 2020 21:52:25 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 6 May 2020 21:52:25 -0500
+Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0472qJsC110440;
+        Wed, 6 May 2020 21:52:20 -0500
+Subject: Re: [PATCH v9 4/8] PCI: endpoint: Pass page size as argument to
+ pci_epc_mem_init()
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>
+CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-renesas-soc@vger.kernel.org>,
+        <linux-rockchip@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>
+References: <1587666159-6035-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1587666159-6035-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <8986f0a7-8e23-71d5-d718-def48a28dfc8@ti.com>
+Date:   Thu, 7 May 2020 08:22:19 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <18608.1588812972.1@famine>
-Date:   Wed, 06 May 2020 17:56:12 -0700
-Message-ID: <18609.1588812972@famine>
+In-Reply-To: <1587666159-6035-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Bjorn Helgaas <helgaas@kernel.org> wrote:
-
->On Wed, May 06, 2020 at 11:08:35AM -0700, Jay Vosburgh wrote:
->> Jay Vosburgh <jay.vosburgh@canonical.com> wrote:
->> 
->> >"Kuppuswamy, Sathyanarayanan" wrote:
->> >
->> >>Hi Jay,
->> >>
->> >>On 4/29/20 6:15 PM, Kuppuswamy, Sathyanarayanan wrote:
->> >>>
->> >>>
->> >>> On 4/29/20 5:42 PM, Jay Vosburgh wrote:
-[...]
->> >>> I think this issue is related to the issue discussed in following
->> >>> thread (DPC non-hotplug support).
->> >>>
->> >>> https://lkml.org/lkml/2020/3/28/328
->> >>>
->> >>> If my assumption is correct, you are dealing with devices which are
->> >>> not hotplug capable. If the devices are hotplug capable then you don't
->> >>> need to proceed to report_slot_reset(), since hotplug handler will
->> >>> remove/re-enumerate the devices correctly.
->> >
->> >	Correct, this particular device (a network card) is in a
->> >non-hotplug slot.
->> >
->> >>Can you check whether following fix works for you?
->> >
->> >	Yes, it does.
->> >
->> >	I fixed up the whitespace and made a minor change to add braces
->> >in what look like the correct places around the "if (reset_link)" block;
->> >the patch I tested with is below.  I'll also install this on another
->> >machine with hotplug capable slots to test there as well.
->> 
->> 	We've tested the below patch on a couple of different machines
->> and devices (network card, NVMe device) and it appears to solve the
->> recovery issue in our testing.
->> 
->> 	Is there anything further we need to do, or can this be
->> considered for inclusion upstream at this time?
->
->Can somebody please post a clean version of what we should merge?
->There was the initial patch plus a follow-up fix, so it's not clear
->where we ended up.
->
->Bjorn
-
-	Below is the patch we tested, from Sathyanarayanan's test patch
-(slightly edited to clarify ambiguous "if else" nesting), along with an
-edited version of the commit log from my original patch.  I have not
-seen a Signed-off-by from Sathyanarayanan, so I didn't include one here.
-
-	One question I have is that, after the patch is applied, the
-"status" filled in by pci_walk_bus(... report_frozen_detected ...) is
-discarded regardless of its value.  Is that correct behavior in all
-cases?  The original issue I was trying to solve was that the status set
-by report_frozen_detected was thrown away starting with 6d2c89441571
-("PCI/ERR: Update error status after reset_link()"), causing a
-_NEED_RESET to be lost.  With the below patch, all cases of
-pci_channel_io_frozen will call reset_link unconditionally.
-
-	-J
-
-Subject: [PATCH] PCI/ERR: Resolve regression in pcie_do_recovery
-
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
- 
-	Commit 6d2c89441571 ("PCI/ERR: Update error status after
-reset_link()"), introduced a regression, as pcie_do_recovery will
-discard the status result from report_frozen_detected.  This can cause a
-failure to recover if _NEED_RESET is returned by report_frozen_detected
-and report_slot_reset is not invoked.
-
-	Such an event can be induced for testing purposes by reducing
-the Max_Payload_Size of a PCIe bridge to less than that of a device
-downstream from the bridge, and then initating I/O through the device,
-resulting in oversize transactions.  In the presence of DPC, this
-results in a containment event and attempted reset and recovery via
-pcie_do_recovery.  After 6d2c89441571 report_slot_reset is not invoked,
-and the device does not recover.
-
-Fixes: 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
 
 
-diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-index 14bb8f54723e..db80e1ecb2dc 100644
---- a/drivers/pci/pcie/err.c
-+++ b/drivers/pci/pcie/err.c
-@@ -165,13 +165,24 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
- 	pci_dbg(dev, "broadcast error_detected message\n");
- 	if (state == pci_channel_io_frozen) {
- 		pci_walk_bus(bus, report_frozen_detected, &status);
--		status = reset_link(dev);
--		if (status != PCI_ERS_RESULT_RECOVERED) {
-+		status = PCI_ERS_RESULT_NEED_RESET;
-+	} else {
-+		pci_walk_bus(bus, report_normal_detected, &status);
-+	}
-+
-+	if (status == PCI_ERS_RESULT_NEED_RESET) {
-+		if (reset_link) {
-+			if (reset_link(dev) != PCI_ERS_RESULT_RECOVERED)
-+				status = PCI_ERS_RESULT_DISCONNECT;
-+		} else {
-+			if (pci_bus_error_reset(dev))
-+				status = PCI_ERS_RESULT_DISCONNECT;
-+		}
-+
-+		if (status == PCI_ERS_RESULT_DISCONNECT) {
- 			pci_warn(dev, "link reset failed\n");
- 			goto failed;
- 		}
--	} else {
--		pci_walk_bus(bus, report_normal_detected, &status);
- 	}
- 
- 	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
+On 4/23/2020 11:52 PM, Lad Prabhakar wrote:
+> pci_epc_mem_init() internally used page size equal to *PAGE_SIZE* to
+> manage the address space so instead just pass the page size as a
+> argument to pci_epc_mem_init().
+> 
+> Also make pci_epc_mem_init() as a C function instead of a macro function
+> in preparation for adding support for pci-epc-mem core to handle multiple
+> windows.
+> 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-
----
-	-Jay Vosburgh, jay.vosburgh@canonical.com
+Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  drivers/pci/controller/cadence/pcie-cadence-ep.c | 2 +-
+>  drivers/pci/controller/pcie-rockchip-ep.c        | 2 +-
+>  drivers/pci/endpoint/pci-epc-mem.c               | 7 +++++++
+>  include/linux/pci-epc.h                          | 5 ++---
+>  4 files changed, 11 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> index 1c173dad67d1..1c15c8352125 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> @@ -450,7 +450,7 @@ int cdns_pcie_ep_setup(struct cdns_pcie_ep *ep)
+>  		epc->max_functions = 1;
+>  
+>  	ret = pci_epc_mem_init(epc, pcie->mem_res->start,
+> -			       resource_size(pcie->mem_res));
+> +			       resource_size(pcie->mem_res), PAGE_SIZE);
+>  	if (ret < 0) {
+>  		dev_err(dev, "failed to initialize the memory space\n");
+>  		goto err_init;
+> diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/pcie-rockchip-ep.c
+> index d743b0a48988..5eaf36629a75 100644
+> --- a/drivers/pci/controller/pcie-rockchip-ep.c
+> +++ b/drivers/pci/controller/pcie-rockchip-ep.c
+> @@ -615,7 +615,7 @@ static int rockchip_pcie_ep_probe(struct platform_device *pdev)
+>  	rockchip_pcie_write(rockchip, BIT(0), PCIE_CORE_PHY_FUNC_CFG);
+>  
+>  	err = pci_epc_mem_init(epc, rockchip->mem_res->start,
+> -			       resource_size(rockchip->mem_res));
+> +			       resource_size(rockchip->mem_res), PAGE_SIZE);
+>  	if (err < 0) {
+>  		dev_err(dev, "failed to initialize the memory space\n");
+>  		goto err_uninit_port;
+> diff --git a/drivers/pci/endpoint/pci-epc-mem.c b/drivers/pci/endpoint/pci-epc-mem.c
+> index abfac1109a13..cdd1d3821249 100644
+> --- a/drivers/pci/endpoint/pci-epc-mem.c
+> +++ b/drivers/pci/endpoint/pci-epc-mem.c
+> @@ -93,6 +93,13 @@ return ret;
+>  }
+>  EXPORT_SYMBOL_GPL(__pci_epc_mem_init);
+>  
+> +int pci_epc_mem_init(struct pci_epc *epc, phys_addr_t base,
+> +		     size_t size, size_t page_size)
+> +{
+> +	return __pci_epc_mem_init(epc, base, size, page_size);
+> +}
+> +EXPORT_SYMBOL_GPL(pci_epc_mem_init);
+> +
+>  /**
+>   * pci_epc_mem_exit() - cleanup the pci_epc_mem structure
+>   * @epc: the EPC device that invoked pci_epc_mem_exit
+> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
+> index e0ed9d01f6e5..5bc1de65849e 100644
+> --- a/include/linux/pci-epc.h
+> +++ b/include/linux/pci-epc.h
+> @@ -137,9 +137,6 @@ struct pci_epc_features {
+>  #define devm_pci_epc_create(dev, ops)    \
+>  		__devm_pci_epc_create((dev), (ops), THIS_MODULE)
+>  
+> -#define pci_epc_mem_init(epc, phys_addr, size)	\
+> -		__pci_epc_mem_init((epc), (phys_addr), (size), PAGE_SIZE)
+> -
+>  static inline void epc_set_drvdata(struct pci_epc *epc, void *data)
+>  {
+>  	dev_set_drvdata(&epc->dev, data);
+> @@ -195,6 +192,8 @@ unsigned int pci_epc_get_first_free_bar(const struct pci_epc_features
+>  struct pci_epc *pci_epc_get(const char *epc_name);
+>  void pci_epc_put(struct pci_epc *epc);
+>  
+> +int pci_epc_mem_init(struct pci_epc *epc, phys_addr_t base,
+> +		     size_t size, size_t page_size);
+>  int __pci_epc_mem_init(struct pci_epc *epc, phys_addr_t phys_addr, size_t size,
+>  		       size_t page_size);
+>  void pci_epc_mem_exit(struct pci_epc *epc);
+> 
