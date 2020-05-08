@@ -2,195 +2,178 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C7E3B1CA68C
-	for <lists+linux-pci@lfdr.de>; Fri,  8 May 2020 10:50:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 265421CA6E0
+	for <lists+linux-pci@lfdr.de>; Fri,  8 May 2020 11:15:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727106AbgEHIuJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 8 May 2020 04:50:09 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:41720 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726616AbgEHIuI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 May 2020 04:50:08 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0488nxZa022814;
-        Fri, 8 May 2020 03:49:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588927799;
-        bh=nFghFOfFxxTQ0U6s3YjWv+wmzQW14b3h6ZM7+7LguQ8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=nRq9rVQvhSzEtW3DpM1hJjaVNLQNbQ66OBRQ76f/JyVisfgiGFsK3IOaZJ+kwVzro
-         62egDJ2whOl9LRDdPo0Eofem9QUXH2046gi9+1W7ZRQutIi0iZIg66A7iAVTRjDjLq
-         y211NVuc9bTuzJZCRzzkQyu/HOolPW8YpUGZx7vE=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0488nx3R088070
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 8 May 2020 03:49:59 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 8 May
- 2020 03:49:59 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 8 May 2020 03:49:59 -0500
-Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0488nuw1112647;
-        Fri, 8 May 2020 03:49:57 -0500
-Subject: Re: [PATCH v2 2/4] PCI: cadence: Use "dma-ranges" instead of
- "cdns,no-bar-match-nbits" property
-To:     Rob Herring <robh@kernel.org>
-CC:     Robin Murphy <robin.murphy@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200417114322.31111-1-kishon@ti.com>
- <20200417114322.31111-3-kishon@ti.com>
- <20200501144645.GB7398@e121166-lin.cambridge.arm.com>
- <dc581c5b-11de-f4b3-e928-208b9293e391@arm.com>
- <2472c182-834c-d2c1-175e-4d73898aef35@ti.com>
- <4f333ceb-2809-c4ae-4ae3-33a83c612cd3@arm.com>
- <cf9c2dcc-57e8-cfa0-e3b4-55ff5113341f@ti.com>
- <da933b0d-ee17-5bca-3763-1d73c7ed6bfc@ti.com> <20200507202658.GA29938@bogus>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <f22cca60-40a8-571d-d5fa-50d05281cc3f@ti.com>
-Date:   Fri, 8 May 2020 14:19:55 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1726627AbgEHJPb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 8 May 2020 05:15:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55436 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725379AbgEHJPa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 May 2020 05:15:30 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E6B6C05BD43;
+        Fri,  8 May 2020 02:15:30 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id h12so5012469pjz.1;
+        Fri, 08 May 2020 02:15:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eKkhrk4E3z/J/HnHCF+SvfVo/ybkk/5bCJ0Ex8N1MvU=;
+        b=fhKmMGbVL5IEtAFU/YkO2oimO/cRAHn6wTWXCQ0mGA2e7ztddgwBAdtlgaxkRHSxWL
+         xCWrCWW7lJVp/58LIr+Rm86UxKPBoFpVlrt+kXuAyq8JV1l4UBy0GUCe918PbhQgtkz+
+         1yHlkxms/5j9t2FTgkg/OwaaGEe2SwUEQ/vLyJFvZnKDOgh27pM0pBEBp46zRCsexsbN
+         JhU39a3nbvt/dU1cN6XEQi5xS3EqmuybwNBzyZdyO9R7Z5vzBI17urZ777ADjYM8ey0j
+         Y0T1wMEH7vxKappxfKGywd/lNlfMQ65xFCG7FSw2ymM1qneljIyMBKvX9/qThPyUgrIW
+         /NTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eKkhrk4E3z/J/HnHCF+SvfVo/ybkk/5bCJ0Ex8N1MvU=;
+        b=pqJctcST/92XUUnC3DtBkjsjrDFmdBYDAjLaj1+P3lKX8GWAvNYBX4XMVq2mtQNXNO
+         S1/F7klVKYEx18QSew8hBpRLwOWExetjGpN/ZMLxReinuh+v7n3HJlD1xDBy8ms1uBix
+         xTdv7Fb4YmZK1FMUQZ47SWIdZVCRSFUT3+rP8xMyeWFGCugckSk666Dueaa0e8rcfVe0
+         M/08AjyehPyj1bTmsWYNlYC5o8dqbO+ljrOZNHEVmtJybHLhTJGH8XCd9jmL6pwdsjpp
+         t1gAK894MGvYFcbCigykVboWSAuz3O9/YadrI3Swh9HQ4wG6E/XiP52z+AhU7iinR4Xa
+         +2HA==
+X-Gm-Message-State: AGi0Puabln7FMQh/rC7nE3Ne+udwJqTe3mLzwiOXlBxZSr+MwBx6RcC3
+        ej0na464x3UG2N7mQF8rzMBIMBQcRZOFR/7ir5tuKjto
+X-Google-Smtp-Source: APiQypKpSxKXrTzyvk2KxnwclHCHT/1cEx9yoOzaFS1C2ETvpqiB6XHhII+kyjQVi+6e4b/JoeAtZSdZ8XXV4y7eWlg=
+X-Received: by 2002:a17:90b:94a:: with SMTP id dw10mr5133773pjb.228.1588929329467;
+ Fri, 08 May 2020 02:15:29 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200507202658.GA29938@bogus>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200505013206.11223-1-david.e.box@linux.intel.com> <20200508021844.6911-3-david.e.box@linux.intel.com>
+In-Reply-To: <20200508021844.6911-3-david.e.box@linux.intel.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 8 May 2020 12:15:22 +0300
+Message-ID: <CAHp75VfSUFh5rtieJZnfjTJCTpmONHGu3R_T0xU3CnuFv80x7g@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] mfd: Intel Platform Monitoring Technology support
+To:     "David E. Box" <david.e.box@linux.intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Rob,
+On Fri, May 8, 2020 at 5:18 AM David E. Box <david.e.box@linux.intel.com> wrote:
+>
+> Intel Platform Monitoring Technology (PMT) is an architecture for
+> enumerating and accessing hardware monitoring facilities. PMT supports
+> multiple types of monitoring capabilities. This driver creates platform
+> devices for each type so that they may be managed by capability specific
+> drivers (to be introduced). Capabilities are discovered using PCIe DVSEC
+> ids. Support is included for the 3 current capability types, Telemetry,
+> Watcher, and Crashlog. The features are available on new Intel platforms
+> starting from Tiger Lake for which support is added. Tiger Lake however
+> will not support Watcher and Crashlog even though the capabilities appear
+> on the device. So add a quirk facility and use it to disable them.
 
-On 5/8/2020 1:56 AM, Rob Herring wrote:
-> On Wed, May 06, 2020 at 08:52:13AM +0530, Kishon Vijay Abraham I wrote:
->> Hi Robin,
->>
->> On 5/4/2020 6:23 PM, Kishon Vijay Abraham I wrote:
->>> Hi Robin,
->>>
->>> On 5/4/2020 4:24 PM, Robin Murphy wrote:
->>>> On 2020-05-04 9:44 am, Kishon Vijay Abraham I wrote:
->>>>> Hi Robin,
->>>>>
->>>>> On 5/1/2020 9:24 PM, Robin Murphy wrote:
->>>>>> On 2020-05-01 3:46 pm, Lorenzo Pieralisi wrote:
->>>>>>> [+Robin - to check on dma-ranges intepretation]
->>>>>>>
->>>>>>> I would need RobH and Robin to review this.
->>>>>>>
->>>>>>> Also, An ACK from Tom is required - for the whole series.
->>>>>>>
->>>>>>> On Fri, Apr 17, 2020 at 05:13:20PM +0530, Kishon Vijay Abraham I wrote:
->>>>>>>> Cadence PCIe core driver (host mode) uses "cdns,no-bar-match-nbits"
->>>>>>>> property to configure the number of bits passed through from PCIe
->>>>>>>> address to internal address in Inbound Address Translation register.
->>>>>>>>
->>>>>>>> However standard PCI dt-binding already defines "dma-ranges" to
->>>>>>>> describe the address range accessible by PCIe controller. Parse
->>>>>>>> "dma-ranges" property to configure the number of bits passed
->>>>>>>> through from PCIe address to internal address in Inbound Address
->>>>>>>> Translation register.
->>>>>>>>
->>>>>>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->>>>>>>> ---
->>>>>>>>    drivers/pci/controller/cadence/pcie-cadence-host.c | 13 +++++++++++--
->>>>>>>>    1 file changed, 11 insertions(+), 2 deletions(-)
->>>>>>>>
->>>>>>>> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c
->>>>>>>> b/drivers/pci/controller/cadence/pcie-cadence-host.c
->>>>>>>> index 9b1c3966414b..60f912a657b9 100644
->>>>>>>> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
->>>>>>>> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
->>>>>>>> @@ -206,8 +206,10 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->>>>>>>>        struct device *dev = rc->pcie.dev;
->>>>>>>>        struct platform_device *pdev = to_platform_device(dev);
->>>>>>>>        struct device_node *np = dev->of_node;
->>>>>>>> +    struct of_pci_range_parser parser;
->>>>>>>>        struct pci_host_bridge *bridge;
->>>>>>>>        struct list_head resources;
->>>>>>>> +    struct of_pci_range range;
->>>>>>>>        struct cdns_pcie *pcie;
->>>>>>>>        struct resource *res;
->>>>>>>>        int ret;
->>>>>>>> @@ -222,8 +224,15 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->>>>>>>>        rc->max_regions = 32;
->>>>>>>>        of_property_read_u32(np, "cdns,max-outbound-regions",
->>>>>>>> &rc->max_regions);
->>>>>>>>    -    rc->no_bar_nbits = 32;
->>>>>>>> -    of_property_read_u32(np, "cdns,no-bar-match-nbits", &rc->no_bar_nbits);
->>>>>>>> +    if (!of_pci_dma_range_parser_init(&parser, np))
->>>>>>>> +        if (of_pci_range_parser_one(&parser, &range))
->>>>>>>> +            rc->no_bar_nbits = ilog2(range.size);
->>>>>>
->>>>>> You probably want "range.pci_addr + range.size" here just in case the bottom of
->>>>>> the window is ever non-zero. Is there definitely only ever a single inbound
->>>>>> window to consider?
->>>>>
->>>>> Cadence IP has 3 inbound address translation registers, however we use only 1
->>>>> inbound address translation register to map the entire 32 bit or 64 bit address
->>>>> region.
->>>>
->>>> OK, if anything that further strengthens the argument for deprecating a single
->>>> "number of bits" property in favour of ranges that accurately describe the
->>>> window(s). However it also suggests that other users in future might have some
->>>> expectation that specifying "dma-ranges" with up to 3 entries should work to
->>>> allow a more restrictive inbound configuration. Thus it would be desirable to
->>>> make the code a little more robust here - even if we don't support multiple
->>>> windows straight off, it would still be better to implement it in a way that
->>>> can be cleanly extended later, and at least say something if more ranges are
->>>> specified rather than just silently ignoring them.
->>>
->>> I looked at this further in the Cadence user doc. The three inbound ATU entries
->>> are for BAR0, BAR1 in RC configuration space and the third one is for NO MATCH
->>> BAR when there is no matching found in RC BARs. Right now we always configure
->>> the NO MATCH BAR. Would it be possible describe at BAR granularity in dma-ranges?
->>
->> I was thinking if I could use something like
->> dma-ranges = <0x02000000 0x0 0x0 0x0 0x0 0x00000 0x0>, //For BAR0 IB mapping
->> 	     <0x02000000 0x0 0x0 0x0 0x0 0x00000 0x0>, //For BAR1 IB mapping
->> 	     <0x02000000 0x0 0x0 0x0 0x0 0x10000 0x0>; //NO MATCH BAR
->>
->> This way the driver can tell the 1st tuple is for BAR0, 2nd is for BAR1 and
->> last is for NO MATCH. In the above case both BAR0 and BAR1 is just empty and
->> doesn't have valid values as we use only the NO MATCH BAR.
->>
->> However I'm not able to use for_each_of_pci_range() in Cadence driver to get
->> the configuration for each BAR, since the for loop gets invoked only once since
->> of_pci_range_parser_one() merges contiguous addresses.
-> 
-> NO_MATCH_BAR could just be the last entry no matter how many? Who cares 
-> if they get merged? Maybe each BAR has max size and dma-ranges could 
-> exceed that, but if so you have to handle that and split them again.
+Thank you for an update.
+Some nitpicks below.
 
-Each of RP_BAR0, RP_BAR1 and RP_NO_BAR has separate register to be configured.
-If they get merged, we'll loose info on which of the registers to be
-configured. Cadence IP specifies maximum size of BAR0 as 256GB, maximum size of
-BAR1 as 2 GB. However when I specify dma-ranges like below and use
-for_each_of_pci_range(&parser, &range), the first range itself is 258.
+...
 
-dma-ranges = <0x02000000 0x00 0x0 0x00 0x0 0x40 0x00000000>, /* BAR0 256 GB */
-	     <0x02000000 0x40 0x0 0x40 0x0 0x00 0x80000000>; /* BAR1 2 GB */
-> 
->> Do you think I should extend the flags cell to differentiate between BAR0, BAR1
->> and NO MATCH BAR? Can you suggest any other alternatives?
-> 
-> If you just have 1 region, then just 1 entry makes sense to me. Why 
-> can't you use BAR0 in that case?
+> +       case DVSEC_INTEL_ID_TELEM:
 
-Well, Cadence has specified a max size for each BAR. I think we could specify a
-single region (48 bits in my case) in dma-ranges and let the driver decide how
-to split it among BAR0, BAR1 and NO_MATCH_BAR?
+Is this from the spec? Or can we also spell TELEMETRY ?
 
-Thanks
-Kishon
+> +               name = TELEM_DEV_NAME;
+
+Ditto for all occurrences.
+
+> +               break;
+
+...
+
+> +       cell = devm_kcalloc(&pdev->dev, header->num_entries,
+> +                           sizeof(*cell), GFP_KERNEL);
+
+I think if you use temporary
+  struct device *dev = &pdev->dev;
+you may squeeze this to one line and make others smaller as well.
+
+> +       if (!cell)
+> +               return -ENOMEM;
+
+...
+
+> +               res->start = pdev->resource[header->tbir].start +
+> +                            header->offset +
+> +                            (i * (INTEL_DVSEC_ENTRY_SIZE << 2));
+
+Outer parentheses are redundant. And perhaps last two lines can be one.
+
+...
+
+> +static int
+> +pmt_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> +{
+> +       u16 vid;
+> +       u32 table;
+
+> +       int ret, pos = 0, last_pos = 0;
+
+Redundant assignment of pos.
+
+> +       while ((pos = pci_find_next_ext_capability(pdev, pos, PCI_EXT_CAP_ID_DVSEC))) {
+> +               pci_read_config_word(pdev, pos + PCI_DVSEC_HEADER1, &vid);
+> +               if (vid != PCI_VENDOR_ID_INTEL)
+> +                       continue;
+> +
+
+> +               last_pos = pos;
+
+Can we simple use a boolean flag?
+
+> +       }
+> +
+> +       if (!last_pos) {
+> +               dev_err(&pdev->dev, "No supported PMT capabilities found.\n");
+> +               return -ENODEV;
+> +       }
+
+> +}
+
+...
+
+> +};
+
+> +
+
+Extra blank line.
+
+> +module_pci_driver(pmt_pci_driver);
+
+...
+
++ bits.h since GENMASK() is in use.
+
+> +#include <linux/types.h>
+
+...
+
+> +enum pmt_quirks {
+> +       /* Watcher capability not supported */
+> +       PMT_QUIRK_NO_WATCHER    = (1 << 0),
+
+BIT() ?
+
+> +
+> +       /* Crashlog capability not supported */
+> +       PMT_QUIRK_NO_CRASHLOG   = (1 << 1),
+
+BIT() ?
+
+> +};
+
+-- 
+With Best Regards,
+Andy Shevchenko
