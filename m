@@ -2,38 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 793341CA1F1
-	for <lists+linux-pci@lfdr.de>; Fri,  8 May 2020 06:16:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 80B221CA3C6
+	for <lists+linux-pci@lfdr.de>; Fri,  8 May 2020 08:23:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725681AbgEHEQ5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 8 May 2020 00:16:57 -0400
-Received: from mga02.intel.com ([134.134.136.20]:3336 "EHLO mga02.intel.com"
+        id S1726924AbgEHGXC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 8 May 2020 02:23:02 -0400
+Received: from mga03.intel.com ([134.134.136.65]:37086 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725550AbgEHEQ5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 8 May 2020 00:16:57 -0400
-IronPort-SDR: QBaWw4XGr9S8zB9NLQBPzZ3/s7cNIxWv6x5Dc1oiLAhOac3OsUmFXYMynTd8gZH6bDr+Sfqlt3
- 8wmkFAs67VWQ==
+        id S1726325AbgEHGXC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 8 May 2020 02:23:02 -0400
+IronPort-SDR: Bb5vVhMtEDYq9FPGdh3BqaW8pyvh/QcyfcdL/aDBqc+dd9wyWbE7zY+MCYgJxcmvmI1hKTDqJg
+ HaNZAKRBmz6w==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 21:16:56 -0700
-IronPort-SDR: idjzT/XPJk8Ex/Eikferyni6x+Sdu6NxZNaTY0KPhsrNzPxPX3IyJw11fcetiaJMR9FTxlpmmt
- L5ksYO+IKm2w==
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 23:23:01 -0700
+IronPort-SDR: 3dYiBju5TEnbK5AFvHxjtIW9PTxKgwAxJu8SgeSD5O7oToPlXjvf5HC9Xn/H1l5c3EmmolNup8
+ ggHPJT5HkIZA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,366,1583222400"; 
-   d="scan'208";a="251715942"
+   d="scan'208";a="339610497"
 Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga008.fm.intel.com with ESMTP; 07 May 2020 21:16:55 -0700
+  by orsmga001.jf.intel.com with ESMTP; 07 May 2020 23:23:00 -0700
 Received: from kbuild by lkp-server01 with local (Exim 4.89)
         (envelope-from <lkp@intel.com>)
-        id 1jWuRS-000I7c-DL; Fri, 08 May 2020 12:16:54 +0800
-Date:   Fri, 08 May 2020 12:16:46 +0800
+        id 1jWwPT-000BuX-Kt; Fri, 08 May 2020 14:22:59 +0800
+Date:   Fri, 08 May 2020 14:22:09 +0800
 From:   kbuild test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/misc] BUILD SUCCESS
- a88f8c176147d9778330082fcc34b7107da756aa
-Message-ID: <5eb4dd2e.Bp9dtEeh55n8nlrF%lkp@intel.com>
+Subject: [pci:pci/aspm] BUILD SUCCESS
+ 66ff14e59e8a30690755b08bc3042359703fb07a
+Message-ID: <5eb4fa91.WWODo2BXDVb8XiVw%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -43,20 +43,10 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/misc
-branch HEAD: a88f8c176147d9778330082fcc34b7107da756aa  PCI: Replace zero-length array with flexible-array
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/aspm
+branch HEAD: 66ff14e59e8a30690755b08bc3042359703fb07a  PCI/ASPM: Allow ASPM on links to PCIe-to-PCI/PCI-X Bridges
 
-Warning in current branch:
-
-drivers/pci/controller/dwc/pcie-tegra194.c:2194:2-9: line 2194 is redundant because platform_get_irq() already prints an error
-
-Warning ids grouped by kconfigs:
-
-recent_errors
-`-- x86_64-allyesconfig
-    `-- drivers-pci-controller-dwc-pcie-tegra194.c:line-is-redundant-because-platform_get_irq()-already-prints-an-error
-
-elapsed time: 484m
+elapsed time: 482m
 
 configs tested: 101
 configs skipped: 1
@@ -74,15 +64,14 @@ arm64                            allmodconfig
 arm64                             allnoconfig
 sparc                            allyesconfig
 m68k                             allyesconfig
-mips                             allmodconfig
 sh                                allnoconfig
 sparc64                             defconfig
 c6x                              allyesconfig
+nds32                             allnoconfig
 sparc                               defconfig
-riscv                            allyesconfig
-m68k                                defconfig
+mips                             allmodconfig
+um                                  defconfig
 sh                               allmodconfig
-openrisc                            defconfig
 parisc                           allyesconfig
 i386                              allnoconfig
 i386                             allyesconfig
@@ -95,12 +84,13 @@ ia64                             allyesconfig
 m68k                             allmodconfig
 m68k                              allnoconfig
 m68k                           sun3_defconfig
+m68k                                defconfig
 nios2                               defconfig
 nios2                            allyesconfig
+openrisc                            defconfig
 c6x                               allnoconfig
 openrisc                         allyesconfig
 nds32                               defconfig
-nds32                             allnoconfig
 csky                             allyesconfig
 csky                                defconfig
 alpha                               defconfig
@@ -123,9 +113,6 @@ powerpc                          allyesconfig
 powerpc                          rhel-kconfig
 powerpc                          allmodconfig
 powerpc                           allnoconfig
-x86_64               randconfig-a004-20200507
-x86_64               randconfig-a006-20200507
-x86_64               randconfig-a002-20200507
 i386                 randconfig-a005-20200507
 i386                 randconfig-a004-20200507
 i386                 randconfig-a001-20200507
@@ -144,6 +131,10 @@ i386                 randconfig-a014-20200507
 i386                 randconfig-a011-20200507
 i386                 randconfig-a015-20200507
 i386                 randconfig-a013-20200507
+x86_64               randconfig-a004-20200507
+x86_64               randconfig-a006-20200507
+x86_64               randconfig-a002-20200507
+riscv                            allyesconfig
 riscv                             allnoconfig
 riscv                               defconfig
 riscv                            allmodconfig
@@ -157,7 +148,6 @@ sparc64                          allmodconfig
 um                               allmodconfig
 um                                allnoconfig
 um                               allyesconfig
-um                                  defconfig
 x86_64                                   rhel
 x86_64                               rhel-7.6
 x86_64                    rhel-7.6-kselftests
