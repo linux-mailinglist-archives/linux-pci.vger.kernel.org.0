@@ -2,94 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E5E851CA508
-	for <lists+linux-pci@lfdr.de>; Fri,  8 May 2020 09:21:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D65B51CA54F
+	for <lists+linux-pci@lfdr.de>; Fri,  8 May 2020 09:38:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727789AbgEHHVC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 8 May 2020 03:21:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37670 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727788AbgEHHVB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 May 2020 03:21:01 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E219C05BD43
-        for <linux-pci@vger.kernel.org>; Fri,  8 May 2020 00:21:01 -0700 (PDT)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <pza@pengutronix.de>)
-        id 1jWxJS-0001g6-HU; Fri, 08 May 2020 09:20:50 +0200
-Received: from pza by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <pza@pengutronix.de>)
-        id 1jWxJR-0002Lo-IX; Fri, 08 May 2020 09:20:49 +0200
-Date:   Fri, 8 May 2020 09:20:49 +0200
-From:   Philipp Zabel <pza@pengutronix.de>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sham Muthayyan <smuthayy@codeaurora.org>,
-        stable@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 04/11] PCI: qcom: add missing reset for ipq806x
-Message-ID: <20200508072049.GA31261@pengutronix.de>
-References: <20200430220619.3169-1-ansuelsmth@gmail.com>
- <20200430220619.3169-5-ansuelsmth@gmail.com>
+        id S1726612AbgEHHiD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 8 May 2020 03:38:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45156 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726036AbgEHHiD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 8 May 2020 03:38:03 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 303AD206D5;
+        Fri,  8 May 2020 07:38:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588923482;
+        bh=HgSffkZ3pjQDj7iS38C707e8soAKo3/5HEBzFLGlmGU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CiYMAXyOOzjj5TJpsGy3geryC12x8gjVFEBMUeV570xP5rrJAfXg8C7lWeo/UXS3n
+         hpGS+w0y5NN/8N2zg/q2WXmSRS1ac9NobH5JQ/DXBiAxlv5QSAN7j6RjgY13sImqS3
+         3p3sBNVDwbtvl4fylYuSRr7o9wvh1CdCOp199cDA=
+Date:   Fri, 8 May 2020 09:38:00 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     bhelgaas@google.com, Jiri Slaby <jslaby@suse.com>,
+        Je Yen Tam <je.yen.tam@ni.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jay Dolan <jay.dolan@accesio.com>,
+        Denis Efremov <efremov@linux.com>,
+        "Ji-Ze Hong (Peter Hong)" <hpeter@gmail.com>,
+        Chuhong Yuan <hslester96@gmail.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH 1/2] serial: 8250_pci: Move Pericom IDs to pci_ids.h
+Message-ID: <20200508073800.GC3374631@kroah.com>
+References: <20200508065343.32751-1-kai.heng.feng@canonical.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200430220619.3169-5-ansuelsmth@gmail.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 09:18:34 up 78 days, 14:49, 108 users,  load average: 0.06, 0.16,
- 0.24
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: pza@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
+In-Reply-To: <20200508065343.32751-1-kai.heng.feng@canonical.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Ansuel,
-
-On Fri, May 01, 2020 at 12:06:11AM +0200, Ansuel Smith wrote:
-> Add missing ext reset used by ipq8064 SoC in PCIe qcom driver.
+On Fri, May 08, 2020 at 02:53:40PM +0800, Kai-Heng Feng wrote:
+> Move the IDs to pci_ids.h so it can be used by next patch.
 > 
-> Fixes: 82a823833f4e PCI: qcom: Add Qualcomm PCIe controller driver
-> Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> Cc: stable@vger.kernel.org # v4.5+
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 > ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 7a8901efc031..921030a64bab 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-[...]
-> @@ -347,6 +353,12 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
->  		goto err_deassert_ahb;
->  	}
->  
-> +	ret = reset_control_deassert(res->ext_reset);
-> +	if (ret) {
-> +		dev_err(dev, "cannot assert ext reset\n");
-                                     ^
-This probably should say "cannot deassert ext reset". Apart from this,
+>  drivers/tty/serial/8250/8250_pci.c | 6 ------
+>  include/linux/pci_ids.h            | 6 ++++++
+>  2 files changed, 6 insertions(+), 6 deletions(-)
 
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-
-regards
-Philipp
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
