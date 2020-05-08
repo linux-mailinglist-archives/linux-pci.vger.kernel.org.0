@@ -2,54 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 265421CA6E0
-	for <lists+linux-pci@lfdr.de>; Fri,  8 May 2020 11:15:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 121A61CA79D
+	for <lists+linux-pci@lfdr.de>; Fri,  8 May 2020 11:58:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726627AbgEHJPb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 8 May 2020 05:15:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55436 "EHLO
+        id S1725825AbgEHJ6A (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 8 May 2020 05:58:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725379AbgEHJPa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 May 2020 05:15:30 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E6B6C05BD43;
-        Fri,  8 May 2020 02:15:30 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id h12so5012469pjz.1;
-        Fri, 08 May 2020 02:15:30 -0700 (PDT)
+        with ESMTP id S1725815AbgEHJ57 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 May 2020 05:57:59 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A475CC05BD43;
+        Fri,  8 May 2020 02:57:59 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id n11so642133pgl.9;
+        Fri, 08 May 2020 02:57:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=eKkhrk4E3z/J/HnHCF+SvfVo/ybkk/5bCJ0Ex8N1MvU=;
-        b=fhKmMGbVL5IEtAFU/YkO2oimO/cRAHn6wTWXCQ0mGA2e7ztddgwBAdtlgaxkRHSxWL
-         xCWrCWW7lJVp/58LIr+Rm86UxKPBoFpVlrt+kXuAyq8JV1l4UBy0GUCe918PbhQgtkz+
-         1yHlkxms/5j9t2FTgkg/OwaaGEe2SwUEQ/vLyJFvZnKDOgh27pM0pBEBp46zRCsexsbN
-         JhU39a3nbvt/dU1cN6XEQi5xS3EqmuybwNBzyZdyO9R7Z5vzBI17urZ777ADjYM8ey0j
-         Y0T1wMEH7vxKappxfKGywd/lNlfMQ65xFCG7FSw2ymM1qneljIyMBKvX9/qThPyUgrIW
-         /NTQ==
+        bh=tjZGpQQz1E9D9ntXLHWSOTiEsgDXrE90sF5Lmj5BRhk=;
+        b=IG6gEzq/4wkHGOnuFiRCuqpEn/oZQmz9LbjBV+72nxibg+wBRustulpwUu9JcC/8y/
+         0Yo9cfi0ODAx6reFBqsva5aHFrBEMYjwSOEc2Y5drUHOubr1pEm4JaGBkZQDNj4QONiw
+         GMG47Dryv+hDCR1RpY9sORJoGVLHRGlZmm0hTh63iXlOoLSTlKSRvHO+OU2ml7VSe1rG
+         LrPS4fxehkBLT4YEwjGQRYX9cfjbc2qfqLd6i9IrI7pU36R+b1GMMSjNjvFzRkCxxH2n
+         /hwC5aUnorfR8LNkoTvkaGhdthhS1ogX8loZhLokbhj/dL+VXcsKUX0BhrW3f5sxtiE2
+         ardw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=eKkhrk4E3z/J/HnHCF+SvfVo/ybkk/5bCJ0Ex8N1MvU=;
-        b=pqJctcST/92XUUnC3DtBkjsjrDFmdBYDAjLaj1+P3lKX8GWAvNYBX4XMVq2mtQNXNO
-         S1/F7klVKYEx18QSew8hBpRLwOWExetjGpN/ZMLxReinuh+v7n3HJlD1xDBy8ms1uBix
-         xTdv7Fb4YmZK1FMUQZ47SWIdZVCRSFUT3+rP8xMyeWFGCugckSk666Dueaa0e8rcfVe0
-         M/08AjyehPyj1bTmsWYNlYC5o8dqbO+ljrOZNHEVmtJybHLhTJGH8XCd9jmL6pwdsjpp
-         t1gAK894MGvYFcbCigykVboWSAuz3O9/YadrI3Swh9HQ4wG6E/XiP52z+AhU7iinR4Xa
-         +2HA==
-X-Gm-Message-State: AGi0Puabln7FMQh/rC7nE3Ne+udwJqTe3mLzwiOXlBxZSr+MwBx6RcC3
-        ej0na464x3UG2N7mQF8rzMBIMBQcRZOFR/7ir5tuKjto
-X-Google-Smtp-Source: APiQypKpSxKXrTzyvk2KxnwclHCHT/1cEx9yoOzaFS1C2ETvpqiB6XHhII+kyjQVi+6e4b/JoeAtZSdZ8XXV4y7eWlg=
-X-Received: by 2002:a17:90b:94a:: with SMTP id dw10mr5133773pjb.228.1588929329467;
- Fri, 08 May 2020 02:15:29 -0700 (PDT)
+        bh=tjZGpQQz1E9D9ntXLHWSOTiEsgDXrE90sF5Lmj5BRhk=;
+        b=dtoBV5GUymBoudb02Zdgif+qDZBM+YunHkCS3C1Il1rTz3oLxOOgacrzoCXMAjj3jA
+         VpKxD/duGuqRfl52PNKzFWNEJnGtQZa8Z69vZte/tbSwwLW8aZdFFZn+9niNQPr+R2xo
+         QobLRRNoV3Vn6nH//GJCxiW8csQCpF3i2I6Cxch+gf7T6IywtwttVqCoX3FNHwgf2tTD
+         Oiif/pQ+YFdY1h891RvRE7dXw8m2ohoncnje4D5llxlFK4JjCOy1RX2qahW3zqeXjcoT
+         VEpZdKxrHJ3L0I6xYLL6TQe9aP06yzrWzYc9WRSxdrvVgSiD4VI7XeQa465w0E0hh4e9
+         xK4Q==
+X-Gm-Message-State: AGi0PuYqRdOh95Tqo1RpUQmTNZ40z6rwDNMYH0uYZeE4AhhOuhIOUQoF
+        k7DPi3+lKTbEm2lxuiYQZ9E7uo2olV89J0N9ywQ=
+X-Google-Smtp-Source: APiQypL3/5fd22LIgXmXE3iL/j4DrPu8BdoW+eTHqcCp83dwGfjU04MNFVRjyGB8kNkcgW5FVXV58TrGPdMjdx+5pLY=
+X-Received: by 2002:a62:5ec7:: with SMTP id s190mr1978432pfb.130.1588931879077;
+ Fri, 08 May 2020 02:57:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200505013206.11223-1-david.e.box@linux.intel.com> <20200508021844.6911-3-david.e.box@linux.intel.com>
-In-Reply-To: <20200508021844.6911-3-david.e.box@linux.intel.com>
+References: <20200505013206.11223-1-david.e.box@linux.intel.com> <20200508021844.6911-4-david.e.box@linux.intel.com>
+In-Reply-To: <20200508021844.6911-4-david.e.box@linux.intel.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 8 May 2020 12:15:22 +0300
-Message-ID: <CAHp75VfSUFh5rtieJZnfjTJCTpmONHGu3R_T0xU3CnuFv80x7g@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] mfd: Intel Platform Monitoring Technology support
+Date:   Fri, 8 May 2020 12:57:52 +0300
+Message-ID: <CAHp75VcrjFUgUe6Vo8baT969cGzE4MFX6pFL1Vr5HOun=Cm0fA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] platform/x86: Intel PMT Telemetry capability driver
 To:     "David E. Box" <david.e.box@linux.intel.com>
 Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Andy Shevchenko <andy@infradead.org>,
@@ -65,115 +65,56 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 On Fri, May 8, 2020 at 5:18 AM David E. Box <david.e.box@linux.intel.com> wrote:
 >
-> Intel Platform Monitoring Technology (PMT) is an architecture for
-> enumerating and accessing hardware monitoring facilities. PMT supports
-> multiple types of monitoring capabilities. This driver creates platform
-> devices for each type so that they may be managed by capability specific
-> drivers (to be introduced). Capabilities are discovered using PCIe DVSEC
-> ids. Support is included for the 3 current capability types, Telemetry,
-> Watcher, and Crashlog. The features are available on new Intel platforms
-> starting from Tiger Lake for which support is added. Tiger Lake however
-> will not support Watcher and Crashlog even though the capabilities appear
-> on the device. So add a quirk facility and use it to disable them.
+> PMT Telemetry is a capability of the Intel Platform Monitoring Technology.
+> The Telemetry capability provides access to device telemetry metrics that
+> provide hardware performance data to users from continuous, memory mapped,
+> read-only register spaces.
+>
+> Register mappings are not provided by the driver. Instead, a GUID is read
+> from a header for each endpoint. The GUID identifies the device and is to
+> be used with an XML, provided by the vendor, to discover the available set
+> of metrics and their register mapping.  This allows firmware updates to
+> modify the register space without needing to update the driver every time
+> with new mappings. Firmware writes a new GUID in this case to specify the
+> new mapping.  Software tools with access to the associated XML file can
+> then interpret the changes.
+>
+> This module manages access to all PMT Telemetry endpoints on a system,
+> regardless of the device exporting them. It creates a pmt_telemetry class
+> to manage the list. For each endpoint, sysfs files provide GUID and size
+> information as well as a pointer to the parent device the telemetry comes
+> from. Software may discover the association between endpoints and devices
+> by iterating through the list in sysfs, or by looking for the existence of
 
-Thank you for an update.
-Some nitpicks below.
+ABI needs documentation.
 
-...
-
-> +       case DVSEC_INTEL_ID_TELEM:
-
-Is this from the spec? Or can we also spell TELEMETRY ?
-
-> +               name = TELEM_DEV_NAME;
-
-Ditto for all occurrences.
-
-> +               break;
-
-...
-
-> +       cell = devm_kcalloc(&pdev->dev, header->num_entries,
-> +                           sizeof(*cell), GFP_KERNEL);
-
-I think if you use temporary
-  struct device *dev = &pdev->dev;
-you may squeeze this to one line and make others smaller as well.
-
-> +       if (!cell)
-> +               return -ENOMEM;
+> the class folder under the device of interest.  A device node of the same
+> name allows software to then map the telemetry space for direct access.
 
 ...
 
-> +               res->start = pdev->resource[header->tbir].start +
-> +                            header->offset +
-> +                            (i * (INTEL_DVSEC_ENTRY_SIZE << 2));
+> +config INTEL_PMT_TELEM
 
-Outer parentheses are redundant. And perhaps last two lines can be one.
+TELEMETRY
 
 ...
 
-> +static int
-> +pmt_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> +{
-> +       u16 vid;
-> +       u32 table;
+> +obj-$(CONFIG_INTEL_PMT_TELEM)          += intel_pmt_telem.o
 
-> +       int ret, pos = 0, last_pos = 0;
+telemetry
 
-Redundant assignment of pos.
+(Inside the file it's fine to have telem)
 
-> +       while ((pos = pci_find_next_ext_capability(pdev, pos, PCI_EXT_CAP_ID_DVSEC))) {
-> +               pci_read_config_word(pdev, pos + PCI_DVSEC_HEADER1, &vid);
-> +               if (vid != PCI_VENDOR_ID_INTEL)
-> +                       continue;
-> +
+...
 
-> +               last_pos = pos;
-
-Can we simple use a boolean flag?
-
-> +       }
-> +
-> +       if (!last_pos) {
-> +               dev_err(&pdev->dev, "No supported PMT capabilities found.\n");
+> +       priv->dvsec = dev_get_platdata(&pdev->dev);
+> +       if (!priv->dvsec) {
+> +               dev_err(&pdev->dev, "Platform data not found\n");
 > +               return -ENODEV;
 > +       }
 
-> +}
+I don't see how is it being used?
 
-...
-
-> +};
-
-> +
-
-Extra blank line.
-
-> +module_pci_driver(pmt_pci_driver);
-
-...
-
-+ bits.h since GENMASK() is in use.
-
-> +#include <linux/types.h>
-
-...
-
-> +enum pmt_quirks {
-> +       /* Watcher capability not supported */
-> +       PMT_QUIRK_NO_WATCHER    = (1 << 0),
-
-BIT() ?
-
-> +
-> +       /* Crashlog capability not supported */
-> +       PMT_QUIRK_NO_CRASHLOG   = (1 << 1),
-
-BIT() ?
-
-> +};
-
--- 
+--
 With Best Regards,
 Andy Shevchenko
