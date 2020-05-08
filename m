@@ -2,198 +2,175 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B3361CBAFD
-	for <lists+linux-pci@lfdr.de>; Sat,  9 May 2020 00:58:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B7C11CBB27
+	for <lists+linux-pci@lfdr.de>; Sat,  9 May 2020 01:16:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728245AbgEHW6Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 8 May 2020 18:58:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33206 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726843AbgEHW6Y (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 8 May 2020 18:58:24 -0400
-Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 376B524953;
-        Fri,  8 May 2020 22:58:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588978703;
-        bh=mfS9dtKv+xub55eHBF7xSL2aNKvhWNd6YLMGciZw3uE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=BQEXt8+cCXcfmE2SDAm7PUoJvMqREghbHQdsHEgEIsm9wTFbR61CAICG4rYAiQeMF
-         6zPScOS0LGUUFmiMzvQjs5/OuFjwIyPB8y/abwzDUMGonr6PNRpt4zkEKwVfWdFxyO
-         kVV4jl6r1IXSRUnAh9uM7s9KrYsZbJ4ZpTqFkDJk=
-Date:   Fri, 8 May 2020 17:58:21 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     bjorn@helgaas.com, Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: Do not use pcie_get_speed_cap() to determine when
- to start waiting
-Message-ID: <20200508225821.GA99686@bjorn-Precision-5520>
-MIME-Version: 1.0
+        id S1727983AbgEHXQW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 8 May 2020 19:16:22 -0400
+Received: from mail-eopbgr30067.outbound.protection.outlook.com ([40.107.3.67]:8257
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727110AbgEHXQV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 8 May 2020 19:16:21 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nLrjdxw7JmiYgcF7QdB7XMT4GN4xtlvIV/h+9e97Wwd6i83nHepm06lImFU3ZPxWqu4vOmXueSNsf1vP2r/dvnKamnbDqU83L2cVd2QTFd8wvjdUkRhDfOBAU/ZelN3b7ws0bY/eWTTvwOvh9LAIcHMWSCMS7sgs7mjYhqFE6npaolonfqIHJ/yx44LowHo5CpTE8J8yfo0FY7zK1+5IuZn9jNXex9v00XP1r2/sfndoGh+tXQAsRN8GfWWga2lO7iRCbYokORfdpl8QW4FsWcUChvRMGImpuEmS5JOqYiU3L40jFllLTftRap1Qd3o947c4Nz+CkVYILS4RF6/HmQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Fl0zvTYOlzDtJJSS/Z5crPAhewvW7pyxdfloWZFMmBE=;
+ b=ZoAAVU0TCsmZdbV7mfbCSL+dMnapYvBaDZIxG/aV9jZfaUVaQGlYRR1GkFNdhIfZLRpgOanipO5Gr/s9yF0LsdmRVdUo/HyzD4RHeFt77ADlgKj2BufbxwypFufn4rgQWQeN1z+2XC4UURiNwHu6wpug2u19SxIgK6GcCDRuIcnNJO5ieW6cAVSO2PS3ROG8KBvQmV6SpL1Od7MyBkWjALW3Vi3o/fhWl3LxSHbZjLHcORvEWclkdSEPg9u+YbdUuFL64JkyBQhTxDhOA9FmIpp6YZpTaZ5Mbla4Q0nTOGyFftk4UTdh8OAxWYZuqXqef3MEwByWCrxx+alc9v3snA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Fl0zvTYOlzDtJJSS/Z5crPAhewvW7pyxdfloWZFMmBE=;
+ b=S49VdNIoGYs/i6KSKas/UyALJHDlEFQ3Z6uRIYkebEsKfEh/dC9PXQpMwV1mm+5BEQW3Ug5s0QMOqBtcEuzyfsJ9OuA/+RLa2ji5itVkH+EH/SWul/HAbUgYulMnOw1fnBeyyRfHOYjdGAPwDL7IAyte8a/VDC5bMDrCuHXdaqI=
+Authentication-Results: intel.com; dkim=none (message not signed)
+ header.d=none;intel.com; dmarc=none action=none header.from=mellanox.com;
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
+ by VI1PR05MB3198.eurprd05.prod.outlook.com (2603:10a6:802:1c::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.29; Fri, 8 May
+ 2020 23:16:15 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::a47b:e3cd:7d6d:5d4e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::a47b:e3cd:7d6d:5d4e%6]) with mapi id 15.20.2979.030; Fri, 8 May 2020
+ 23:16:15 +0000
+Date:   Fri, 8 May 2020 20:16:10 -0300
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     "Raj, Ashok" <ashok.raj@intel.com>
+Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "megha.dey@linux.intel.com" <megha.dey@linux.intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Lin, Jing" <jing.lin@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
+ support for the idxd driver.
+Message-ID: <20200508231610.GO19158@mellanox.com>
+References: <AADFC41AFE54684AB9EE6CBC0274A5D19D8A808B@SHSMSX104.ccr.corp.intel.com>
+ <20200424181203.GU13640@mellanox.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D8C5486@SHSMSX104.ccr.corp.intel.com>
+ <20200426191357.GB13640@mellanox.com>
+ <20200426214355.29e19d33@x1.home>
+ <20200427115818.GE13640@mellanox.com>
+ <20200427071939.06aa300e@x1.home>
+ <20200427132218.GG13640@mellanox.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D8E34AA@SHSMSX104.ccr.corp.intel.com>
+ <20200508204710.GA78778@otc-nc-03>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200507171127.GA7761@bjorn-Precision-5520>
+In-Reply-To: <20200508204710.GA78778@otc-nc-03>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: BL0PR03CA0026.namprd03.prod.outlook.com
+ (2603:10b6:208:2d::39) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (142.68.57.212) by BL0PR03CA0026.namprd03.prod.outlook.com (2603:10b6:208:2d::39) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.27 via Frontend Transport; Fri, 8 May 2020 23:16:14 +0000
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1jXCDy-0005Wg-Og; Fri, 08 May 2020 20:16:10 -0300
+X-Originating-IP: [142.68.57.212]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 9a609eb6-784f-4038-5127-08d7f3a5cddb
+X-MS-TrafficTypeDiagnostic: VI1PR05MB3198:|VI1PR05MB3198:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR05MB31986FC9C828291DD6A2D7E4CFA20@VI1PR05MB3198.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-Forefront-PRVS: 039735BC4E
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: B0RG2zlxnQco2QmbnHl+hJUEpM7fuS/CuLcMgDzTzoOZbzxRMF0kECGMu4r8p17Kj7Zc+Mbr4c7px6jfL6a3Teww85Kjh5MEbKSxbL6mFnzlMadYGwwn7Vz81nKDV7DTY1ejhRrOAxp5XUXyUYCbjUzuftLTStTUymH5bYbWByWUWH1KJXLsWWFNNBu/eXyIgdPhnICnAevCfs9jcDjukDl2X4qpwRUoKjYScCm7Nns2iApbPcMHm0tpX5woMKs+WvMPPrshn8K60T+IFyPSCJtGFH5C3iondvHi6byd4GZ05R/rxSx/FbLF6a4i8u9lYKj9PAxFSfVrfzMJ59GYkZF9jS+ubDMAaYlj+s8SfQdvQbbRq6yZz9Ox2ysey6PeNvrUYAy8+YigNEVwVM5gXWZB/lcWdfQ0ddGiHrDmyZucLoJzK1qYExNuota8wkuWGyICjynFKikO5ghXDoyOZrWPU4R4dMo6BnrE0VeBpz7MohV5bhXrQW0E2YpXJB6+mx51PKsLse+yyDV/e6RjkDqrLiEz/+PBwOBX0Tcqc5Qd+YXIh94jDjG6m2KakORY
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(136003)(366004)(39860400002)(396003)(33430700001)(2906002)(86362001)(6916009)(9786002)(33656002)(7416002)(26005)(9746002)(478600001)(66476007)(186003)(66946007)(316002)(2616005)(66556008)(1076003)(36756003)(33440700001)(8676002)(4326008)(52116002)(8936002)(54906003)(5660300002)(24400500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: C1q7QXLPnwTdV7XeytOFEValLmyunejnYF9/vCygp/enrJM0XF1O9jqf86xZIonsbELZ3DNcOA1LPVCjpQvemO5pf6nOFLHEBLVdVzV/37El28ix/GzNi1oALktB55CbOkis5QmXDDB1/+GoN2mIoO49I4VzVz3TlfMTaZQgvkzBiob0OTpjRpAB8kVymDSdny84KoTAU3vXZKwCw5DfEeZmKpypdtsc8mLBS3drVuGg1cNPsYCpxXjcsotMN8MbcsXUbI5eDHxjArhBeB4cN6zf9bM1Pm/iSmSBFk8qb06s+NOZSq78joFAmUTvkTreHfNo/tcY0fEr7hcMe7DdHEH4c+j1ZdhYbjhJ9e2uWefZcjtDYw/HUu4teslGalEoky3P3BuOUO2g/IjpWbQTxj6mI+lY+Dp5T80998SPFbQqLPVU/jQDhxwE2HZNMqIwLdiKTV3vYb1xGw0ODowa9idHRfEla/net74X5z7nRCZo9ZDmVm63V4nD7HUryGkl
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9a609eb6-784f-4038-5127-08d7f3a5cddb
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2020 23:16:15.6434
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: jy5TMlb4z4AvopOE62igzwaATtIPX1iUe+XJitc6/iTOWMjDmHkItxO2E+nduXPUPWWTQqHuDen3FR/IeaOtvQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB3198
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, May 07, 2020 at 12:11:27PM -0500, Bjorn Helgaas wrote:
-> On Thu, May 07, 2020 at 04:46:27PM +0300, Mika Westerberg wrote:
-> > On Thu, May 07, 2020 at 08:33:27AM -0500, Bjorn Helgaas wrote:
-> > > On Thu, May 7, 2020 at 7:36 AM Mika Westerberg
-> > > <mika.westerberg@linux.intel.com> wrote:
-> > > >
-> > > > On Thu, May 07, 2020 at 07:24:37AM -0500, Bjorn Helgaas wrote:
-> > > > > On Thu, May 7, 2020 at 6:45 AM Mika Westerberg
-> > > > > <mika.westerberg@linux.intel.com> wrote:
-> > > > > >
-> > > > > > On Wed, May 06, 2020 at 05:42:28PM -0500, Bjorn Helgaas wrote:
-> > > > > > > On Thu, Apr 16, 2020 at 11:32:45AM +0300, Mika Westerberg wrote:
-> > > > > > > > Kai-Heng Feng reported that it takes long time (>1s) to resume
-> > > > > > > > Thunderbolt connected PCIe devices from both runtime suspend and system
-> > > > > > > > sleep (s2idle).
-> > > > > > > >
-> > > > > > > > These PCIe downstream ports the second link capability (PCI_EXP_LNKCAP2)
-> > > > > > > > announces support for speeds > 5 GT/s but it is then capped by the
-> > > > > > > > second link control (PCI_EXP_LNKCTL2) register to 2.5 GT/s. This
-> > > > > > > > possiblity was not considered in pci_bridge_wait_for_secondary_bus() so
-> > > > > > > > it ended up waiting for 1100 ms as these ports do not support active
-> > > > > > > > link layer reporting either.
-> > > > > > > >
-> > > > > > > > PCIe spec 5.0 section 6.6.1 mandates that we must wait minimum of 100 ms
-> > > > > > > > before sending configuration request to the device below, if the port
-> > > > > > > > does not support speeds > 5 GT/s, and if it does we first need to wait
-> > > > > > > > for the data link layer to become active before waiting for that 100 ms.
-> > > > > > > >
-> > > > > > > > PCIe spec 5.0 section 7.5.3.6 further says that all downstream ports
-> > > > > > > > that support speeds > 5 GT/s must support active link layer reporting so
-> > > > > > > > instead of looking for the speed we can check for the active link layer
-> > > > > > > > reporting capability and determine how to wait based on that (as they go
-> > > > > > > > hand in hand).
-> > > > > > >
-> > > > > > > I can't quite tell what the defect is here.
-> > > > > > >
-> > > > > > > I assume you're talking about this text from sec 6.6.1:
-> > > > > > >
-> > > > > > >   - With a Downstream Port that does not support Link speeds greater
-> > > > > > >     than 5.0 GT/s, software must wait a minimum of 100 ms before
-> > > > > > >     sending a Configuration Request to the device immediately below
-> > > > > > >     that Port.
-> > > > > > >
-> > > > > > >   - With a Downstream Port that supports Link speeds greater than 5.0
-> > > > > > >     GT/s, software must wait a minimum of 100 ms after Link training
-> > > > > > >     completes before sending a Configuration Request to the device
-> > > > > > >     immediately below that Port. Software can determine when Link
-> > > > > > >     training completes by polling the Data Link Layer Link Active bit
-> > > > > > >     or by setting up an associated interrupt (see Section 6.7.3.3 ).
-> > > > > > >
-> > > > > > > I don't understand what Link Control 2 has to do with this.  The spec
-> > > > > > > talks about ports *supporting* certain link speeds, which sounds to me
-> > > > > > > like the Link Capabilities.  It doesn't say anything about the current
-> > > > > > > or target link speed.
-> > > > > >
-> > > > > > PCIe 5.0 page 764 recommends using Supported Link Speeds Vector in Link
-> > > > > > Capabilities 2 register and that's what pcie_get_speed_cap() is doing.
-> > > > > >
-> > > > > > However, we can avoid figuring the speed altogether by checking the
-> > > > > > dev->link_active_reporting instead because that needs to be implemented
-> > > > > > by all Downstream Ports that supports speeds > 5 GT/s (PCIe 5.0 page 735).
-> > > > >
-> > > > > I understand that part.  But the code as-is matches sec 6.6.1, which
-> > > > > makes it easy to understand.  Checking link_active_reporting instead
-> > > > > makes it harder to understand because it makes it one step removed
-> > > > > from 6.6.1.  And link_active_reporting must be set for ports that
-> > > > > support > 5 GT/s, but it must *also* be set in some hotplug cases, so
-> > > > > that further complicates the connection between it and 6.6.1.
-> > > > >
-> > > > > And apparently there's an actual defect, and I don't understand what
-> > > > > that is yet.  It sounds like we agree that pcie_get_speed_cap() is
-> > > > > doing the right thing.  Is there something in
-> > > > > pci_bridge_wait_for_secondary_bus() that doesn't match sec 6.6.1?
-> > > >
-> > > > The defect is that some downstream PCIe ports on a system Kai-Heng is
-> > > > using have Supported Link Speeds Vector with > 5GT/s and it does not
-> > > > support active link reporting so the currect code ends up waiting 1100 ms
-> > > > slowing down resume time.
-> 
-> Ah.  From the lspci and dmesg instrumentation in the bugzilla, I
-> guess:
-> 
->   04:00.0 Thunderbolt Downstream Port to [bus 05]
->     LnkCap: Speed 2.5GT/s, LLActRep-
->     LnkSta: Speed 2.5GT/s
->     LnkCap2: Supported Link Speeds: 2.5-8GT/s
->     LnkCtl2: Target Link Speed: 2.5GT/s
->   04:02.0 Thunderbolt Downstream Port to [bus 39]
->     LnkCap: Speed 2.5GT/s, LLActRep-
->     LnkSta: Speed 2.5GT/s
->     LnkCap2: Supported Link Speeds: 2.5-8GT/s
->     LnkCtl2: Target Link Speed: 2.5GT/s
-> 
-> So per the Link Cap 2 Supported Link Speeds Vector, both devices
-> support up to 8GT/s, but neither one advertises Data Link Layer Link
-> Active Reporting Capable in Link Cap.
-> 
-> The Root Port to the NVIDIA GPU is similar; it advertises 8GT/s
-> support but not LLActRep:
-> 
->   00:01.0 Root Port to [bus 01]
->     LnkCap: Speed 8GT/s, LLActRep-
->     LnkSta: Speed 8GT/s
->     LnkCap2: Supported Link Speeds: 2.5-8GT/s
->     LnkCtl2: Target Link Speed: 8GT/s
-> 
-> The fact that all three of these don't match what I expect makes me
-> wonder if I'm reading the spec wrong or lspci is decoding something
-> wrong.
-> 
-> For the Thunderbolt ports we could make the argument (as I think
-> you're suggesting) that the "supported link speed" is really the
-> minimum of the "Link Cap 2 Supported Link Speed" and the "Link Control
-> 2 Target Link Speed".
-> 
-> But even that wouldn't explain why 00:01.0 doesn't advertise LLActRep+
-> when it is actually running at 8GT/s.
+On Fri, May 08, 2020 at 01:47:10PM -0700, Raj, Ashok wrote:
 
-FWIW, I posted a question about this to the PCI-SIG forum.  I don't
-have high hopes because that's a really low-bandwidth channel.
+> Even when uaccel was under development, one of the options
+> was to use VFIO as the transport, goal was the same i.e to keep
+> the user space have one interface. 
 
-> > > That sounds like a hardware defect that should be worked around with a
-> > > quirk or something.  If we just restructure the code to avoid the
-> > > problem, we're likely to reintroduce it later because there's no hint
-> > > in the code about this problem.
-> > 
-> > That's why I added the comment there to explain this.
-> > 
-> > Can you propose a patch following what you were thinking that solves
-> > this so Kai-Heng can try it out?
+I feel a bit out of the loop here, uaccel isn't in today's kernel is
+it? I've heard about it for a while, it sounds very similar to RDMA,
+so I hope they took some of my advice...
 
-I think your patch actually makes a lot more *sense* than the language
-in the spec does.  For the second rule:
+> But the needs of generic user space application is significantly
+> different from exporting a more functional device model to guest,
+> which isn't full emulated device. which is why VFIO didn't make
+> sense for native use.
 
-  With a Downstream Port that supports Link speeds greater than 5.0
-  GT/s, software must wait a minimum of 100 ms after Link training
-  completes before sending a Configuration Request to the device
-  immediately below that Port. Software can determine when Link
-  training completes by polling the Data Link Layer Link Active bit or
-  by setting up an associated interrupt (see Section 6.7.3.3).
+I'm not sure this is true. We've done these kinds of emulated SIOV
+like things already and there is a huge overlap between what a generic
+user application needs and what the VMM neds. Actually almost a
+perfect subset except for interrupt remapping (which is quite
+trivial).
 
-we have to be able to tell when Link training completes, then wait
-100ms.  For us to tell when training is complete, Data Link Layer Link
-Active must be implemented, and the spec says it should be implemented
-iff Data Link Layer Link Active Reporting Capable bit is set.
+The things vfio focuses on, like groups and managing a real config
+space just don't apply here.
 
-The 6.6.1 language about "greater than 5.0 GT/s" is one step removed.
-What we really care about is Data Link Layer Link Active, not the link
-speed.  It seems like the spec would be much clearer if it said:
+> And when we move things from VFIO which is already established
+> as a general device model and accepted by multiple VMM's it gives
+> instant footing without a whole redesign. 
 
-  With a Downstream Port that implements the Data Link Layer Link
-  Active bit, software must wait a minimum of 100 ms after Link training
-  completes ...
+Yes, I understand, but I think you need to get more people to support
+this idea. From my standpoint this is taking secure lean VMMs and
+putting emulation code back into them, except in a more dangerous
+kernel location. This does not seem like a net win to me.
 
-Bjorn
+You'd be much better to have some userspace library scheme instead of
+being completely tied to a kernel interface for modularity.
+
+> When we move things from VFIO to uaccel to bolt on the functionality
+> like VFIO, I suspect we would be moving code/functionality from VFIO
+> to Uaccel. I don't know what the net gain would be.
+
+Most of VFIO functionality is already decomposed inside the kernel,
+and you need most of it to do secure user access anyhow.
+
+> For mdev, would you agree we can keep the current architecture,
+> and investigate moving some emulation code to user space (say even for
+> standard vfio_pci) and then expand scope later.
+
+I won't hard NAK this, but I think you need more people to support
+this general idea of more emulation code in the kernel to go ahead -
+particularly since this is one of many future drivers along this
+design.
+
+It would be good to hear from the VMM teams that this is what they
+want (and why), for instance.
+
+Jason
