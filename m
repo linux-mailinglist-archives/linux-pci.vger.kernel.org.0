@@ -2,90 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DDCC61CA8EF
-	for <lists+linux-pci@lfdr.de>; Fri,  8 May 2020 13:04:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BB9E41CA9A5
+	for <lists+linux-pci@lfdr.de>; Fri,  8 May 2020 13:34:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726618AbgEHLEr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 8 May 2020 07:04:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44180 "EHLO
+        id S1726618AbgEHLej (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 8 May 2020 07:34:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726598AbgEHLEr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 May 2020 07:04:47 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C59BAC05BD43;
-        Fri,  8 May 2020 04:04:46 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jX0nt-0003Gx-Pc; Fri, 08 May 2020 13:04:29 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 18DC8101175; Fri,  8 May 2020 13:04:29 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     "Raj\, Ashok" <ashok.raj@intel.com>
-Cc:     "Raj\, Ashok" <ashok.raj@linux.intel.com>,
-        Evan Green <evgreen@chromium.org>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>, x86@kernel.org,
-        linux-pci <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
+        by vger.kernel.org with ESMTP id S1726616AbgEHLej (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 May 2020 07:34:39 -0400
+Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 683B3C05BD43;
+        Fri,  8 May 2020 04:34:39 -0700 (PDT)
+Received: from localhost.localdomain (unknown [142.147.94.151])
+        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 88D6E20CE6;
+        Fri,  8 May 2020 11:34:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
+        t=1588937677; bh=BsYKKDVjGrGZ45XtSJs9R6ZJaKv6eacQRLmTdmKpjC0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=DWQuGz/YAvGylUx5HdviGbZu227tAzJ0dwIx0KqVuCtVXt9R5hnYj5aZeaAhp+jCt
+         iwfE8fwRFXNFLVA2AuibSjrc9J0irQtmOqupkrdM4uIn2Tl9IsdvchqGxgwBp7+u5x
+         ZLM79gfSVwPRmFUUY1ykmt1dnaoTiQxV+QgESx1Peyzlbn/XlSqE6LX0H9aAbOVHkb
+         PT5OvW6RXDy3lBFMFhh6LqHNu599YiJAp4kbUHOsfzoC4zJwaKKxGR8EqKwjDugqdB
+         vcvfJREmD95uHSG3SVtswsWHsrPssb98oS8NEVlzrmxZI3ffLRpiDZGoJyDW2PUhQM
+         tfx9ljlyzjssA==
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     maz@kernel.org
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        "Ghorai\, Sukumar" <sukumar.ghorai@intel.com>,
-        "Amara\, Madhusudanarao" <madhusudanarao.amara@intel.com>,
-        "Nandamuri\, Srikanth" <srikanth.nandamuri@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: MSI interrupt for xhci still lost on 5.6-rc6 after cpu hotplug
-In-Reply-To: <20200508005528.GB61703@otc-nc-03>
-Date:   Fri, 08 May 2020 13:04:29 +0200
-Message-ID: <87368almbm.fsf@nanos.tec.linutronix.de>
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Paul Burton <paulburton@kernel.org>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org
+Subject: [PATCH v8 1/5] PCI: Don't disable decoding when mmio_always_on is set
+Date:   Fri,  8 May 2020 19:34:01 +0800
+Message-Id: <20200508113414.3091532-1-jiaxun.yang@flygoat.com>
+X-Mailer: git-send-email 2.26.0.rc2
+In-Reply-To: <20200427060551.1372591-1-jiaxun.yang@flygoat.com>
+References: <20200427060551.1372591-1-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Ashok,
+Don't disable MEM/IO decoding when a device have both non_compliant_bars
+and mmio_always_on.
 
-"Raj, Ashok" <ashok.raj@intel.com> writes:
->> But as this last one is the migration thread, aka stomp machine, I
->> assume this is a hotplug operation. Which means the CPU cannot handle
->> interrupts anymore. In that case we check the old vector on the
->> unplugged CPU in fixup_irqs() and do the retrigger from there.
->> Can you please add tracing to that one as well?
->
-> New tracelog attached. It just happened once.
+That would allow us quirk devices with junk in BARs but can't disable
+their decoding.
 
-Correct and it worked as expected.
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+---
+ drivers/pci/probe.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-     migration/3-24    [003] d..1   275.665751: msi_set_affinity: quirk[1] new vector allocated, new apic = 4 vector = 36 this apic = 6
-     migration/3-24    [003] d..1   275.665776: msi_set_affinity: Redirect to new vector 36 on old apic 6
-     migration/3-24    [003] d..1   275.665789: msi_set_affinity: Transition to new target apic 4 vector 36
-     migration/3-24    [003] d..1   275.665790: msi_set_affinity: Update Done [IRR 0]: irq 123 Nvec 36 Napic 4
-     migration/3-24    [003] d..1   275.666792: fixup_irqs: retrigger vector 33 irq 123
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 77b8a145c39b..d9c2c3301a8a 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1822,7 +1822,7 @@ int pci_setup_device(struct pci_dev *dev)
+ 	/* Device class may be changed after fixup */
+ 	class = dev->class >> 8;
+ 
+-	if (dev->non_compliant_bars) {
++	if (dev->non_compliant_bars && !dev->mmio_always_on) {
+ 		pci_read_config_word(dev, PCI_COMMAND, &cmd);
+ 		if (cmd & (PCI_COMMAND_IO | PCI_COMMAND_MEMORY)) {
+ 			pci_info(dev, "device has non-compliant BARs; disabling IO/MEM decoding\n");
+-- 
+2.26.0.rc2
 
-So looking at your trace further down, the problem is not the last
-one. It dies already before that:
-
-           <...>-14    [001] d..1   284.901587: msi_set_affinity: quirk[1] new vector allocated, new apic = 6 vector = 33 this apic = 2
-           <...>-14    [001] d..1   284.901604: msi_set_affinity: Direct Update: irq 123 Ovec=33 Oapic 2 Nvec 33 Napic 6
-           
-Here, the interrupts stop coming in and that's just a regular direct
-update, i.e. same vector, different CPU. The update below is updating a
-dead device already.
-
-     migration/3-24    [003] d..1   284.924960: msi_set_affinity: quirk[1] new vector allocated, new apic = 4 vector = 36 this apic = 6
-     migration/3-24    [003] d..1   284.924987: msi_set_affinity: Redirect to new vector 36 on old apic 6
-     migration/3-24    [003] d..1   284.924999: msi_set_affinity: Transition to new target apic 4 vector 36
-     migration/3-24    [003] d..1   284.925000: msi_set_affinity: Update Done [IRR 0]: irq 123 Nvec 36 Napic 4
-
-TBH, I can't see anything what's wrong here from the kernel side and as
-this is new silicon and you're the only ones reporting this it seems
-that this is something which is specific to that particular
-hardware. Have you talked to the hardware people about this?
-
-Thanks,
-
-        tglx
