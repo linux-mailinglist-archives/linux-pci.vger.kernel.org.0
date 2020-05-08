@@ -2,138 +2,149 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E1ED1CBA56
-	for <lists+linux-pci@lfdr.de>; Sat,  9 May 2020 00:00:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 474951CBA66
+	for <lists+linux-pci@lfdr.de>; Sat,  9 May 2020 00:04:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727910AbgEHWAe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 8 May 2020 18:00:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33844 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727882AbgEHWAe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 May 2020 18:00:34 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0313AC061A0C;
-        Fri,  8 May 2020 15:00:34 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id g13so3632579wrb.8;
-        Fri, 08 May 2020 15:00:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:references:in-reply-to:subject:date:message-id
-         :mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=xOmnLWYGmk7Cao6x1GQJnELOggocIQqrtI1UISSIhY4=;
-        b=OG6y8Q3CTyvuqWZwebHQsVYGxzT1iEbIw7ZjLiavNWd6O1qC5eT9mYaa5IXA2e6OuD
-         UIWP8uhnVLbtyTZYxhg25tXLfX3ZA05OUeuEGgHLaNCMSqYTaPfRQ2R52EE1mkPVHp+E
-         CaQ7pt4ZSamjkDc1B5hdb3Mzq05xKzyQKN/njw6lTrmM6h3hLV2qOpTGCEMbHoYJYkaZ
-         9vTdSYzHCokzC756OXOveAOFrBOJHn0biiNV56d4BAmHyhG/MKEk5gUkrOBb55IAHbR5
-         snbB3hkG2JCbJ17Ih2L6dymj1XE3e5+FPxOV65uPNgS27sXk/cgcNcfpE4aVsioKoyV5
-         HBrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
-         :message-id:mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=xOmnLWYGmk7Cao6x1GQJnELOggocIQqrtI1UISSIhY4=;
-        b=M2e0ZkQFJPJKRYDln4vGaVGePsE3KsfIdIVwp3DMwny/8xcFqd/GBanPobX9XhiVTZ
-         /psov2w1ODD5mUUp30LifKlYNgB2XhuvbasTK6dlWRKWDDWdh9RcgqNDRDuuxh8ZCjYE
-         r0dkkEZmR3BuUcYS9A7IkZCt1ZNjUijuGnklLhTgh4bdzNaytpD1aSfXvkwlUXTStPU4
-         9i5971OXr9Wxm4dmfRBzz6em/xxpQ7ChIY1RrGgnFbRTBJqq0w+O0U+NKQpvEPj6KaEo
-         EHotnIvUnvigav++vJ1Vrhuc9yCTSOvKyTZOCGBsbc6z4LeKNVtACKD91x+1N4eBWuCB
-         4SnQ==
-X-Gm-Message-State: AGi0Pub7aWROfepxskfyLzjWGXRAaOjdoRXUJ1LUwd1vBY16FVtEXdJ7
-        H2kCGZQzhs3DWndtdqtiECs=
-X-Google-Smtp-Source: APiQypLFC+sCfhEPJQKEKeZiSHIpA2zKXjg8olq2UWaEJD0i4oV9iZ7WIyEaXgleFcD72u8wfu9FfA==
-X-Received: by 2002:adf:e9d0:: with SMTP id l16mr4945242wrn.69.1588975232479;
-        Fri, 08 May 2020 15:00:32 -0700 (PDT)
-Received: from AnsuelXPS (host186-254-dynamic.3-87-r.retail.telecomitalia.it. [87.3.254.186])
-        by smtp.gmail.com with ESMTPSA id q2sm3419042wrx.60.2020.05.08.15.00.30
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 08 May 2020 15:00:31 -0700 (PDT)
-From:   <ansuelsmth@gmail.com>
-To:     "'Rob Herring'" <robh@kernel.org>
-Cc:     "'Bjorn Andersson'" <bjorn.andersson@linaro.org>,
-        "'Sham Muthayyan'" <smuthayy@codeaurora.org>,
-        "'Andy Gross'" <agross@kernel.org>,
-        "'Bjorn Helgaas'" <bhelgaas@google.com>,
-        "'Mark Rutland'" <mark.rutland@arm.com>,
-        "'Stanimir Varbanov'" <svarbanov@mm-sol.com>,
-        "'Lorenzo Pieralisi'" <lorenzo.pieralisi@arm.com>,
-        "'Andrew Murray'" <amurray@thegoodpenguin.co.uk>,
-        "'Philipp Zabel'" <p.zabel@pengutronix.de>,
-        <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200430220619.3169-1-ansuelsmth@gmail.com> <20200430220619.3169-10-ansuelsmth@gmail.com> <20200507181314.GA21663@bogus>
-In-Reply-To: <20200507181314.GA21663@bogus>
-Subject: R: [PATCH v3 09/11] PCI: qcom: add ipq8064 rev2 variant and set tx term offset
-Date:   Sat, 9 May 2020 00:00:29 +0200
-Message-ID: <012d01d62584$17658bd0$4630a370$@gmail.com>
+        id S1728037AbgEHWET (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 8 May 2020 18:04:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54558 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727095AbgEHWET (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 8 May 2020 18:04:19 -0400
+Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48981214D8;
+        Fri,  8 May 2020 22:04:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588975458;
+        bh=avZYZU8DXmnKvpPLGgUx20xCLw9v/4nfaCqlduZjnv4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=KBavIX4Pysh7EosejxjixI0cFqB9BEaEdy0QPxU3GCLD3fv51XYL6ZPBg4+wru/Er
+         iTF08hKBfdE59zWgKOUG/OGLxgDA1qqRMG98awwWJ9J3AeALSzdxn3dxeHUiW9TRZN
+         3oQrr5y84xuut4/pP2vgOKnUpc03F7YuEfgeVuOw=
+Date:   Fri, 8 May 2020 17:04:16 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     maz@kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Paul Burton <paulburton@kernel.org>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org
+Subject: Re: [PATCH v8 5/5] MIPS: Loongson64: Switch to generic PCI driver
+Message-ID: <20200508220416.GA96874@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: it
-Thread-Index: AQH0plL6ngkayUAAEEU7BifA9vEwhgKDdr3rAmN2QquoOn3wEA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200508113414.3091532-5-jiaxun.yang@flygoat.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> On Fri, May 01, 2020 at 12:06:16AM +0200, Ansuel Smith wrote:
-> > From: Sham Muthayyan <smuthayy@codeaurora.org>
-> >
-> > Add tx term offset support to pcie qcom driver need in some revision of
-> > the ipq806x SoC.
-> > Ipq8064 have tx term offset set to 7.
-> > Ipq8064-v2 revision and ipq8065 have the tx term offset set to 0.
-> >
-> > Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
-> > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> > ---
-> >  drivers/pci/controller/dwc/pcie-qcom.c | 15 +++++++++++++++
-> >  1 file changed, 15 insertions(+)
-> >
-> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c
-> b/drivers/pci/controller/dwc/pcie-qcom.c
-> > index da8058fd1925..372d2c8508b5 100644
-> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > @@ -45,6 +45,9 @@
-> >  #define PCIE_CAP_CPL_TIMEOUT_DISABLE		0x10
-> >
-> >  #define PCIE20_PARF_PHY_CTRL			0x40
-> > +#define PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK	GENMASK(12,
-> 16)
-> > +#define PHY_CTRL_PHY_TX0_TERM_OFFSET(x)		((x) << 16)
-> > +
-> >  #define PCIE20_PARF_PHY_REFCLK			0x4C
-> >  #define PHY_REFCLK_SSP_EN			BIT(16)
-> >  #define PHY_REFCLK_USE_PAD			BIT(12)
-> > @@ -118,6 +121,7 @@ struct qcom_pcie_resources_2_1_0 {
-> >  	u32 tx_swing_full;
-> >  	u32 tx_swing_low;
-> >  	u32 rx0_eq;
-> > +	u8 phy_tx0_term_offset;
-> >  };
-> >
-> >  struct qcom_pcie_resources_1_0_0 {
-> > @@ -318,6 +322,11 @@ static int
-> qcom_pcie_get_resources_2_1_0(struct qcom_pcie *pcie)
-> >  	if (IS_ERR(res->ext_reset))
-> >  		return PTR_ERR(res->ext_reset);
-> >
-> > +	if (of_device_is_compatible(dev->of_node, "qcom,pcie-ipq8064"))
-> > +		res->phy_tx0_term_offset = 7;
+On Fri, May 08, 2020 at 07:34:05PM +0800, Jiaxun Yang wrote:
+> We can now enable generic PCI driver in Kconfig, and remove legacy
+> PCI driver code.
 > 
-> Based on my other comments, you'll want to turn this into match data.
-> 
+> Radeon vbios quirk is moved to the platform folder to fit the
+> new structure.
 
-I don't understand what you mean here. I really can't think of another way
-to set this only for qcom,pci-ipq8064 as ipq8064-v2 and apq8064 use the
-same get resource function. Should I create a different get_resources for
-the other 2 device?
- 
-> > +	else
-> > +		res->phy_tx0_term_offset = 0;
-> > +
+> diff --git a/arch/mips/loongson64/vbios_quirk.c b/arch/mips/loongson64/vbios_quirk.c
+> new file mode 100644
+> index 000000000000..1f0a462aeddd
+> --- /dev/null
+> +++ b/arch/mips/loongson64/vbios_quirk.c
+> @@ -0,0 +1,29 @@
+> +// SPDX-License-Identifier: GPL-2.0
 
+In arch/mips/pci/fixup-loongson3.c, pci_fixup_radeon() was under "GPL
+version 2 or (at your option) any later version."
+
+Documentation/process/license-rules.rst says that corresponds to
+GPL-2.0+, not GPL-2.0.
+
+> +static void pci_fixup_radeon(struct pci_dev *pdev)
+> +{
+> ...
+> +}
+
+> diff --git a/arch/mips/pci/fixup-loongson3.c b/arch/mips/pci/fixup-loongson3.c
+> deleted file mode 100644
+> index 8a741c2c6685..000000000000
+> --- a/arch/mips/pci/fixup-loongson3.c
+> +++ /dev/null
+> @@ -1,71 +0,0 @@
+> -/*
+> - * fixup-loongson3.c
+> - *
+> - * Copyright (C) 2012 Lemote, Inc.
+> - * Author: Xiang Yu, xiangy@lemote.com
+> - *         Chen Huacai, chenhc@lemote.com
+> - *
+> - * This program is free software; you can redistribute  it and/or modify it
+> - * under  the terms of  the GNU General  Public License as published by the
+> - * Free Software Foundation;  either version 2 of the  License, or (at your
+> - * option) any later version.
+> - *
+> - * THIS  SOFTWARE  IS PROVIDED   ``AS  IS'' AND   ANY  EXPRESS OR IMPLIED
+> - * WARRANTIES,   INCLUDING, BUT NOT  LIMITED  TO, THE IMPLIED WARRANTIES OF
+> - * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN
+> - * NO  EVENT  SHALL   THE AUTHOR  BE    LIABLE FOR ANY   DIRECT, INDIRECT,
+> - * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+> - * NOT LIMITED   TO, PROCUREMENT OF  SUBSTITUTE GOODS  OR SERVICES; LOSS OF
+> - * USE, DATA,  OR PROFITS; OR  BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+> - * ANY THEORY OF LIABILITY, WHETHER IN  CONTRACT, STRICT LIABILITY, OR TORT
+> - * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+> - * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+> - *
+> - */
+> -
+> -#include <linux/pci.h>
+> -#include <boot_param.h>
+> -
+> -static void print_fixup_info(const struct pci_dev *pdev)
+> -{
+> -	dev_info(&pdev->dev, "Device %x:%x, irq %d\n",
+> -			pdev->vendor, pdev->device, pdev->irq);
+> -}
+> -
+> -int pcibios_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
+> -{
+> -	print_fixup_info(dev);
+> -	return dev->irq;
+> -}
+> -
+> -static void pci_fixup_radeon(struct pci_dev *pdev)
+> -{
+> -	struct resource *res = &pdev->resource[PCI_ROM_RESOURCE];
+> -
+> -	if (res->start)
+> -		return;
+> -
+> -	if (!loongson_sysconf.vgabios_addr)
+> -		return;
+> -
+> -	pci_disable_rom(pdev);
+> -	if (res->parent)
+> -		release_resource(res);
+> -
+> -	res->start = virt_to_phys((void *) loongson_sysconf.vgabios_addr);
+> -	res->end   = res->start + 256*1024 - 1;
+> -	res->flags = IORESOURCE_MEM | IORESOURCE_ROM_SHADOW |
+> -		     IORESOURCE_PCI_FIXED;
+> -
+> -	dev_info(&pdev->dev, "BAR %d: assigned %pR for Radeon ROM\n",
+> -		 PCI_ROM_RESOURCE, res);
+> -}
+> -
+> -DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_ATI, PCI_ANY_ID,
+> -				PCI_CLASS_DISPLAY_VGA, 8, pci_fixup_radeon);
+> -
+> -/* Do platform specific device initialization at pci_enable_device() time */
+> -int pcibios_plat_dev_init(struct pci_dev *dev)
+> -{
+> -	return 0;
+> -}
