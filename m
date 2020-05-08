@@ -2,310 +2,146 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C16E1CAE2A
-	for <lists+linux-pci@lfdr.de>; Fri,  8 May 2020 15:10:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 268331CAEE1
+	for <lists+linux-pci@lfdr.de>; Fri,  8 May 2020 15:16:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730666AbgEHNHO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 8 May 2020 09:07:14 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:48474 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730636AbgEHNHN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 May 2020 09:07:13 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 048D74PE088083;
-        Fri, 8 May 2020 08:07:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588943224;
-        bh=tDC1pjicYjkUm+KPLaJb1qehvPKazM9rDiMFSqZ4yQ4=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=EjKbh+Z7iN1NOlO7sVNZ6eCv51YzOA6gDOeBA0ovesAObpj9mYYT4XZ3fa//2ycl2
-         6zt4rC4jpkhVEhrsXR4chSnwJkkMos5iptoaxXk4C2Z6U89qxhk5sZ0zNoZBm6iPDL
-         CzG/qda4Hr2PSJ5uTzXcW6gKhmAE2V+W8i/EahH0=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 048D73nH105107
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 8 May 2020 08:07:03 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 8 May
- 2020 08:07:03 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 8 May 2020 08:07:03 -0500
-Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 048D6kYo018673;
-        Fri, 8 May 2020 08:07:00 -0500
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
+        id S1729526AbgEHNLz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 8 May 2020 09:11:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35788 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730192AbgEHNLx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 May 2020 09:11:53 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C16E8C05BD43;
+        Fri,  8 May 2020 06:11:52 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id w7so1761245wre.13;
+        Fri, 08 May 2020 06:11:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=m6PwKC0GGKuK1AQCcfQJuTFB4k9S8lgpVMeQgt9tC7M=;
+        b=sqIriFNWfo+C01cQSiy2PlZsONvClgfMh/XyGoUm/jLV/eavxNsd/+2a5uGsdcB44r
+         08CaTwxdgLKC2JffT68IPYyTue5HyS9eH7ikLBpla/57s3BTJ+4xsSdXN4lB3na5eevA
+         CU52bAJODnMyBLF4UKg3SNbnLnbTZ5SKthIznITkqTJXinHtcLkbRNX8JReg1QaupdQV
+         cDrc6R8rX2Vhblj5n5irkd+lIEr+EzDpTuCZr0XiosydNi7WpW6h0IwUd6FVtjb21Pio
+         4DCv5Y4bL+ZpYojiw9dEDJSTyH/Fp/ehE9FQ9AlEMv3hxGbM+I53QvUWJ1w+FrKvEuyX
+         0eaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=m6PwKC0GGKuK1AQCcfQJuTFB4k9S8lgpVMeQgt9tC7M=;
+        b=mb/gXF7O61HCOv4YtEn3mhuGnkbDvQOs7KaPX0JineUjtEeer+ZLz6ejbAgVcSX8D6
+         teDefBB4Hu1r7tAWxU4oXTjzsYIMYkTioOeA/S5RT7CD7I+89yssEblEW0X5lqi1mJhv
+         FJlT7k7Z2c1yZQXl0JMCSu17fAtQ+fwsfvRm8DdiUNNuqh9LCrU8KS2DMmYAYLCxzJ+U
+         nICeNwndIX9HK0/Kc/4dstNYTYioTZJb7c+5d6kxqUVol9VwJz/DW8xkGUYkly9w739Q
+         TblMDIA5QnjAvhoVWAkAmjLyKHkS6Jx3Lg4qJHS3gakkgvA8ZOTcle4DHMmVwSWo84xS
+         KZZQ==
+X-Gm-Message-State: AGi0PuYebcIvlEKFcb082/srDUGTRoxTHokwnjUmvuD9Mdt8Rf0dGHR7
+        BQ0aDVrL0WX86h7qjuMj1hE2dQ8OVMNUu0sM
+X-Google-Smtp-Source: APiQypIDsTyVBV8sQuS/K/6cCNcKKifc+7wFf6IB98XX1bm8I0BIRm6w640Gs6sWGa5I5em0HqkaiA==
+X-Received: by 2002:adf:efcc:: with SMTP id i12mr2830699wrp.325.1588943511317;
+        Fri, 08 May 2020 06:11:51 -0700 (PDT)
+Received: from [10.8.0.6] ([5.2.67.190])
+        by smtp.gmail.com with ESMTPSA id 88sm3139115wrq.77.2020.05.08.06.11.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 08 May 2020 06:11:50 -0700 (PDT)
+Subject: Re: [PATCH v4 00/12] PCI: aardvark: Fix support for Turris MOX and
+ Compex wifi cards
+To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Tom Joseph <tjoseph@cadence.com>
-CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kishon@ti.com>
-Subject: [PATCH v3 4/4] PCI: cadence: Use "dma-ranges" instead of "cdns,no-bar-match-nbits" property
-Date:   Fri, 8 May 2020 18:36:46 +0530
-Message-ID: <20200508130646.23939-5-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200508130646.23939-1-kishon@ti.com>
-References: <20200508130646.23939-1-kishon@ti.com>
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Remi Pommarel <repk@triplefau.lt>,
+        =?UTF-8?Q?Marek_Beh=c3=ban?= <marek.behun@nic.cz>,
+        Xogium <contact@xogium.me>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org
+References: <20200430080625.26070-1-pali@kernel.org>
+From:   Tomasz Maciej Nowak <tmn505@gmail.com>
+Message-ID: <6ff6d161-adba-9e5c-5a4a-1bfa49de0fc4@gmail.com>
+Date:   Fri, 8 May 2020 15:11:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20200430080625.26070-1-pali@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Cadence PCIe core driver (host mode) uses "cdns,no-bar-match-nbits"
-property to configure the number of bits passed through from PCIe
-address to internal address in Inbound Address Translation register.
-This only used the NO MATCH BAR.
+W dniu 30.04.2020 o 10:06, Pali Rohár pisze:
+> Hello,
+> 
+> this is the fourth version of the patch series for Armada 3720 PCIe
+> controller (aardvark). It's main purpose is to fix some bugs regarding
+> buggy ath10k cards, but we also found out some suspicious stuff about
+> the driver and the SOC itself, which we try to address.
+> 
+> Patches are available also in my git branch pci-aardvark:
+> https://git.kernel.org/pub/scm/linux/kernel/git/pali/linux.git/log/?h=pci-aardvark
+> 
+> Changes since v3:
+> - do not change return value of of_pci_get_max_link_speed() function
+> - mark zero 'max-link-speed' as invalid
+> - silently use gen3 speed when 'max-link-speed' as invalid
+> 
+> Changes since v2:
+> - move PCIe max-link-speed property to armada-37xx.dtsi
+> - replace custom macros by standard linux/pci_regs.h macros
+> - increase PERST delay to 10ms (needed for initialized Compex WLE900VX)
+> - disable link training before PERST (needed for Compex WLE900VX)
+> - change of_pci_get_max_link_speed() function to signal -ENOENT
+> - handle errors from of_pci_get_max_link_speed() function
+> - updated comments, commit titles and messages
+> 
+> Changes since v1:
+> - commit titles and messages were reviewed and some of them were rewritten
+> - patches 1 and 5 from v1 which touch PCIe speed configuration were
+>   reworked into one patch
+> - patch 2 from v1 was removed, it is not needed anymore
+> - patch 7 from v1 now touches the device tree of armada-3720-db
+> - a patch was added that tries to enable PCIe PHY via generic-phy API
+>   (if a phandle to the PHY is found in the device tree)
+> - a patch describing the new PCIe node DT properties was added
+> - a patch was added that moves the PHY phandle from board device trees
+>   to armada-37xx.dtsi
+> 
+> Marek and Pali
+> 
+> Marek Behún (5):
+>   PCI: aardvark: Improve link training
+>   PCI: aardvark: Add PHY support
+>   dt-bindings: PCI: aardvark: Describe new properties
+>   arm64: dts: marvell: armada-37xx: Set pcie_reset_pin to gpio function
+>   arm64: dts: marvell: armada-37xx: Move PCIe comphy handle property
+> 
+> Pali Rohár (7):
+>   PCI: aardvark: Train link immediately after enabling training
+>   PCI: aardvark: Don't blindly enable ASPM L0s and don't write to
+>     read-only register
+>   PCI: of: Zero max-link-speed value is invalid
+>   PCI: aardvark: Issue PERST via GPIO
+>   PCI: aardvark: Add FIXME comment for PCIE_CORE_CMD_STATUS_REG access
+>   PCI: aardvark: Replace custom macros by standard linux/pci_regs.h
+>     macros
+>   arm64: dts: marvell: armada-37xx: Move PCIe max-link-speed property
 
-However standard PCI dt-binding already defines "dma-ranges" to
-describe the address ranges accessible by PCIe controller. Add support
-in Cadence PCIe host driver to parse dma-ranges and configure the
-inbound regions for BAR0, BAR1 and NO MATCH BAR. Cadence IP specifies
-maximum size for BAR0 as 256GB, maximum size for BAR1 as 2 GB, so if
-the dma-ranges specifies a size larger than the maximum allowed, the
-driver will split and configure the BARs.
+Hi.
+The PCI interface seems to work fine as in the first series, so
 
-Legacy device tree binding compatibility is maintained by retaining
-support for "cdns,no-bar-match-nbits".
+Tested-by: Tomasz Maciej Nowak <tmn505@gmail.com>
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- .../controller/cadence/pcie-cadence-host.c    | 141 ++++++++++++++++--
- drivers/pci/controller/cadence/pcie-cadence.h |  17 ++-
- 2 files changed, 141 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-index 6ecebb79057a..2485ecd8434d 100644
---- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-+++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-@@ -11,6 +11,12 @@
- 
- #include "pcie-cadence.h"
- 
-+static u64 cdns_rp_bar_max_size[] = {
-+	[RP_BAR0] = _ULL(128 * SZ_2G),
-+	[RP_BAR1] = SZ_2G,
-+	[RP_NO_BAR] = SZ_64T,
-+};
-+
- void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
- 			       int where)
- {
-@@ -106,6 +112,117 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
- 	return 0;
- }
- 
-+static void cdns_pcie_host_bar_ib_config(struct cdns_pcie_rc *rc,
-+					 enum cdns_pcie_rp_bar bar,
-+					 u64 cpu_addr, u32 aperture)
-+{
-+	struct cdns_pcie *pcie = &rc->pcie;
-+	u32 addr0, addr1;
-+
-+	addr0 = CDNS_PCIE_AT_IB_RP_BAR_ADDR0_NBITS(aperture) |
-+		(lower_32_bits(cpu_addr) & GENMASK(31, 8));
-+	addr1 = upper_32_bits(cpu_addr);
-+	cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_RP_BAR_ADDR0(bar), addr0);
-+	cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_RP_BAR_ADDR1(bar), addr1);
-+}
-+
-+static int cdns_pcie_host_bar_config(struct cdns_pcie_rc *rc,
-+				     struct resource_entry *entry,
-+				     enum cdns_pcie_rp_bar *index)
-+{
-+	u64 cpu_addr, pci_addr, size, winsize;
-+	struct cdns_pcie *pcie = &rc->pcie;
-+	struct device *dev = pcie->dev;
-+	enum cdns_pcie_rp_bar bar;
-+	unsigned long flags;
-+	u32 aperture;
-+	u32 value;
-+
-+	cpu_addr = entry->res->start;
-+	flags = entry->res->flags;
-+	pci_addr = entry->res->start - entry->offset;
-+	size = resource_size(entry->res);
-+	bar = *index;
-+
-+	if (entry->offset) {
-+		dev_err(dev, "Cannot map PCI addr: %llx to CPU addr: %llx\n",
-+			pci_addr, cpu_addr);
-+		return -EINVAL;
-+	}
-+
-+	value = cdns_pcie_readl(pcie, CDNS_PCIE_LM_RC_BAR_CFG);
-+	while (size > 0) {
-+		if (bar > RP_NO_BAR) {
-+			dev_err(dev, "Failed to map inbound regions!\n");
-+			return -EINVAL;
-+		}
-+
-+		winsize = size;
-+		if (size > cdns_rp_bar_max_size[bar])
-+			winsize = cdns_rp_bar_max_size[bar];
-+
-+		aperture = ilog2(winsize);
-+
-+		cdns_pcie_host_bar_ib_config(rc, bar, cpu_addr, aperture);
-+
-+		if (bar == RP_NO_BAR)
-+			break;
-+
-+		if (winsize + cpu_addr >= SZ_4G) {
-+			if (!(flags & IORESOURCE_PREFETCH))
-+				value |= LM_RC_BAR_CFG_CTRL_MEM_64BITS(bar);
-+			value |= LM_RC_BAR_CFG_CTRL_PREF_MEM_64BITS(bar);
-+		} else {
-+			if (!(flags & IORESOURCE_PREFETCH))
-+				value |= LM_RC_BAR_CFG_CTRL_MEM_32BITS(bar);
-+			value |= LM_RC_BAR_CFG_CTRL_PREF_MEM_32BITS(bar);
-+		}
-+
-+		value |= LM_RC_BAR_CFG_APERTURE(bar, aperture);
-+
-+		size -= winsize;
-+		cpu_addr += winsize;
-+		bar++;
-+	}
-+	cdns_pcie_writel(pcie, CDNS_PCIE_LM_RC_BAR_CFG, value);
-+	*index = bar;
-+
-+	return 0;
-+}
-+
-+static int cdns_pcie_host_map_dma_ranges(struct cdns_pcie_rc *rc)
-+{
-+	enum cdns_pcie_rp_bar bar = RP_BAR0;
-+	struct cdns_pcie *pcie = &rc->pcie;
-+	struct device *dev = pcie->dev;
-+	struct device_node *np = dev->of_node;
-+	struct pci_host_bridge *bridge;
-+	struct resource_entry *entry;
-+	u32 no_bar_nbits = 32;
-+	int err;
-+
-+	bridge = pci_host_bridge_from_priv(rc);
-+	if (!bridge)
-+		return -ENOMEM;
-+
-+	if (list_empty(&bridge->dma_ranges)) {
-+		of_property_read_u32(np, "cdns,no-bar-match-nbits",
-+				     &no_bar_nbits);
-+		cdns_pcie_host_bar_ib_config(rc, RP_NO_BAR, 0x0, no_bar_nbits);
-+		return 0;
-+	}
-+
-+	resource_list_for_each_entry(entry, &bridge->dma_ranges) {
-+		err = cdns_pcie_host_bar_config(rc, entry, &bar);
-+		if (err) {
-+			dev_err(dev, "Fail to configure IB using dma-ranges\n");
-+			return err;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
- {
- 	struct cdns_pcie *pcie = &rc->pcie;
-@@ -160,16 +277,9 @@ static int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
- 		r++;
- 	}
- 
--	/*
--	 * Set Root Port no BAR match Inbound Translation registers:
--	 * needed for MSI and DMA.
--	 * Root Port BAR0 and BAR1 are disabled, hence no need to set their
--	 * inbound translation registers.
--	 */
--	addr0 = CDNS_PCIE_AT_IB_RP_BAR_ADDR0_NBITS(rc->no_bar_nbits);
--	addr1 = 0;
--	cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_RP_BAR_ADDR0(RP_NO_BAR), addr0);
--	cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_RP_BAR_ADDR1(RP_NO_BAR), addr1);
-+	err = cdns_pcie_host_map_dma_ranges(rc);
-+	if (err)
-+		return err;
- 
- 	return 0;
- }
-@@ -179,10 +289,16 @@ static int cdns_pcie_host_init(struct device *dev,
- 			       struct cdns_pcie_rc *rc)
- {
- 	struct resource *bus_range = NULL;
-+	struct pci_host_bridge *bridge;
- 	int err;
- 
-+	bridge = pci_host_bridge_from_priv(rc);
-+	if (!bridge)
-+		return -ENOMEM;
-+
- 	/* Parse our PCI ranges and request their resources */
--	err = pci_parse_request_of_pci_ranges(dev, resources, NULL, &bus_range);
-+	err = pci_parse_request_of_pci_ranges(dev, resources,
-+					      &bridge->dma_ranges, &bus_range);
- 	if (err)
- 		return err;
- 
-@@ -239,9 +355,6 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
- 	pcie = &rc->pcie;
- 	pcie->is_rc = true;
- 
--	rc->no_bar_nbits = 32;
--	of_property_read_u32(np, "cdns,no-bar-match-nbits", &rc->no_bar_nbits);
--
- 	rc->vendor_id = 0xffff;
- 	of_property_read_u32(np, "vendor-id", &rc->vendor_id);
- 
-diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-index f349f5828a58..336237a7025c 100644
---- a/drivers/pci/controller/cadence/pcie-cadence.h
-+++ b/drivers/pci/controller/cadence/pcie-cadence.h
-@@ -92,6 +92,20 @@
- #define  CDNS_PCIE_LM_BAR_CFG_CTRL_MEM_64BITS		0x6
- #define  CDNS_PCIE_LM_BAR_CFG_CTRL_PREFETCH_MEM_64BITS	0x7
- 
-+#define LM_RC_BAR_CFG_CTRL_DISABLED(bar)		\
-+		(CDNS_PCIE_LM_BAR_CFG_CTRL_DISABLED << (((bar) * 8) + 6))
-+#define LM_RC_BAR_CFG_CTRL_IO_32BITS(bar)		\
-+		(CDNS_PCIE_LM_BAR_CFG_CTRL_IO_32BITS << (((bar) * 8) + 6))
-+#define LM_RC_BAR_CFG_CTRL_MEM_32BITS(bar)		\
-+		(CDNS_PCIE_LM_BAR_CFG_CTRL_MEM_32BITS << (((bar) * 8) + 6))
-+#define LM_RC_BAR_CFG_CTRL_PREF_MEM_32BITS(bar)	\
-+	(CDNS_PCIE_LM_BAR_CFG_CTRL_PREFETCH_MEM_32BITS << (((bar) * 8) + 6))
-+#define LM_RC_BAR_CFG_CTRL_MEM_64BITS(bar)		\
-+		(CDNS_PCIE_LM_BAR_CFG_CTRL_MEM_64BITS << (((bar) * 8) + 6))
-+#define LM_RC_BAR_CFG_CTRL_PREF_MEM_64BITS(bar)	\
-+	(CDNS_PCIE_LM_BAR_CFG_CTRL_PREFETCH_MEM_64BITS << (((bar) * 8) + 6))
-+#define LM_RC_BAR_CFG_APERTURE(bar, aperture)		\
-+					(((aperture) - 2) << ((bar) * 8))
- 
- /*
-  * Endpoint Function Registers (PCI configuration space for endpoint functions)
-@@ -266,8 +280,6 @@ struct cdns_pcie {
-  * @bus_range: first/last buses behind the PCIe host controller
-  * @cfg_base: IO mapped window to access the PCI configuration space of a
-  *            single function at a time
-- * @no_bar_nbits: Number of bits to keep for inbound (PCIe -> CPU) address
-- *                translation (nbits sets into the "no BAR match" register)
-  * @vendor_id: PCI vendor ID
-  * @device_id: PCI device ID
-  */
-@@ -276,7 +288,6 @@ struct cdns_pcie_rc {
- 	struct resource		*cfg_res;
- 	struct resource		*bus_range;
- 	void __iomem		*cfg_base;
--	u32			no_bar_nbits;
- 	u32			vendor_id;
- 	u32			device_id;
- };
 -- 
-2.17.1
-
+TMN
