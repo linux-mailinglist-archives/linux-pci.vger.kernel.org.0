@@ -2,151 +2,195 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 65DCB1CA635
-	for <lists+linux-pci@lfdr.de>; Fri,  8 May 2020 10:39:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C7E3B1CA68C
+	for <lists+linux-pci@lfdr.de>; Fri,  8 May 2020 10:50:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726618AbgEHIjq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 8 May 2020 04:39:46 -0400
-Received: from mx.socionext.com ([202.248.49.38]:6264 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726638AbgEHIjq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 8 May 2020 04:39:46 -0400
-Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 08 May 2020 17:39:44 +0900
-Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
-        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 6E0DB60057;
-        Fri,  8 May 2020 17:39:44 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Fri, 8 May 2020 17:39:44 +0900
-Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id E913F1A12B9;
-        Fri,  8 May 2020 17:39:43 +0900 (JST)
-Received: from [10.213.29.153] (unknown [10.213.29.153])
-        by yuzu.css.socionext.com (Postfix) with ESMTP id 1AB5F120136;
-        Fri,  8 May 2020 17:39:43 +0900 (JST)
-Subject: Re: [PATCH v3 1/2] dt-bindings: PCI: Add UniPhier PCIe endpoint
- controller description
-To:     Bjorn Helgaas <bhelgaas@google.com>,
+        id S1727106AbgEHIuJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 8 May 2020 04:50:09 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:41720 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726616AbgEHIuI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 May 2020 04:50:08 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0488nxZa022814;
+        Fri, 8 May 2020 03:49:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588927799;
+        bh=nFghFOfFxxTQ0U6s3YjWv+wmzQW14b3h6ZM7+7LguQ8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=nRq9rVQvhSzEtW3DpM1hJjaVNLQNbQ66OBRQ76f/JyVisfgiGFsK3IOaZJ+kwVzro
+         62egDJ2whOl9LRDdPo0Eofem9QUXH2046gi9+1W7ZRQutIi0iZIg66A7iAVTRjDjLq
+         y211NVuc9bTuzJZCRzzkQyu/HOolPW8YpUGZx7vE=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0488nx3R088070
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 8 May 2020 03:49:59 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 8 May
+ 2020 03:49:59 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 8 May 2020 03:49:59 -0500
+Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0488nuw1112647;
+        Fri, 8 May 2020 03:49:57 -0500
+Subject: Re: [PATCH v2 2/4] PCI: cadence: Use "dma-ranges" instead of
+ "cdns,no-bar-match-nbits" property
+To:     Rob Herring <robh@kernel.org>
+CC:     Robin Murphy <robin.murphy@arm.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-References: <1584956454-8829-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1584956454-8829-2-git-send-email-hayashi.kunihiko@socionext.com>
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Message-ID: <9af851d6-03a2-1c4f-1749-4ebd2ce0465c@socionext.com>
-Date:   Fri, 8 May 2020 17:39:42 +0900
+        Tom Joseph <tjoseph@cadence.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200417114322.31111-1-kishon@ti.com>
+ <20200417114322.31111-3-kishon@ti.com>
+ <20200501144645.GB7398@e121166-lin.cambridge.arm.com>
+ <dc581c5b-11de-f4b3-e928-208b9293e391@arm.com>
+ <2472c182-834c-d2c1-175e-4d73898aef35@ti.com>
+ <4f333ceb-2809-c4ae-4ae3-33a83c612cd3@arm.com>
+ <cf9c2dcc-57e8-cfa0-e3b4-55ff5113341f@ti.com>
+ <da933b0d-ee17-5bca-3763-1d73c7ed6bfc@ti.com> <20200507202658.GA29938@bogus>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <f22cca60-40a8-571d-d5fa-50d05281cc3f@ti.com>
+Date:   Fri, 8 May 2020 14:19:55 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <1584956454-8829-2-git-send-email-hayashi.kunihiko@socionext.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200507202658.GA29938@bogus>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2020/03/23 18:40, Kunihiko Hayashi wrote:
-> Add DT bindings for PCIe controller implemented in UniPhier SoCs
-> when configured in endpoint mode. This controller is based on
-> the DesignWare PCIe core.
+Hi Rob,
+
+On 5/8/2020 1:56 AM, Rob Herring wrote:
+> On Wed, May 06, 2020 at 08:52:13AM +0530, Kishon Vijay Abraham I wrote:
+>> Hi Robin,
+>>
+>> On 5/4/2020 6:23 PM, Kishon Vijay Abraham I wrote:
+>>> Hi Robin,
+>>>
+>>> On 5/4/2020 4:24 PM, Robin Murphy wrote:
+>>>> On 2020-05-04 9:44 am, Kishon Vijay Abraham I wrote:
+>>>>> Hi Robin,
+>>>>>
+>>>>> On 5/1/2020 9:24 PM, Robin Murphy wrote:
+>>>>>> On 2020-05-01 3:46 pm, Lorenzo Pieralisi wrote:
+>>>>>>> [+Robin - to check on dma-ranges intepretation]
+>>>>>>>
+>>>>>>> I would need RobH and Robin to review this.
+>>>>>>>
+>>>>>>> Also, An ACK from Tom is required - for the whole series.
+>>>>>>>
+>>>>>>> On Fri, Apr 17, 2020 at 05:13:20PM +0530, Kishon Vijay Abraham I wrote:
+>>>>>>>> Cadence PCIe core driver (host mode) uses "cdns,no-bar-match-nbits"
+>>>>>>>> property to configure the number of bits passed through from PCIe
+>>>>>>>> address to internal address in Inbound Address Translation register.
+>>>>>>>>
+>>>>>>>> However standard PCI dt-binding already defines "dma-ranges" to
+>>>>>>>> describe the address range accessible by PCIe controller. Parse
+>>>>>>>> "dma-ranges" property to configure the number of bits passed
+>>>>>>>> through from PCIe address to internal address in Inbound Address
+>>>>>>>> Translation register.
+>>>>>>>>
+>>>>>>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>>>>>>> ---
+>>>>>>>>    drivers/pci/controller/cadence/pcie-cadence-host.c | 13 +++++++++++--
+>>>>>>>>    1 file changed, 11 insertions(+), 2 deletions(-)
+>>>>>>>>
+>>>>>>>> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c
+>>>>>>>> b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>>>>>>>> index 9b1c3966414b..60f912a657b9 100644
+>>>>>>>> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+>>>>>>>> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>>>>>>>> @@ -206,8 +206,10 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>>>>>>>>        struct device *dev = rc->pcie.dev;
+>>>>>>>>        struct platform_device *pdev = to_platform_device(dev);
+>>>>>>>>        struct device_node *np = dev->of_node;
+>>>>>>>> +    struct of_pci_range_parser parser;
+>>>>>>>>        struct pci_host_bridge *bridge;
+>>>>>>>>        struct list_head resources;
+>>>>>>>> +    struct of_pci_range range;
+>>>>>>>>        struct cdns_pcie *pcie;
+>>>>>>>>        struct resource *res;
+>>>>>>>>        int ret;
+>>>>>>>> @@ -222,8 +224,15 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>>>>>>>>        rc->max_regions = 32;
+>>>>>>>>        of_property_read_u32(np, "cdns,max-outbound-regions",
+>>>>>>>> &rc->max_regions);
+>>>>>>>>    -    rc->no_bar_nbits = 32;
+>>>>>>>> -    of_property_read_u32(np, "cdns,no-bar-match-nbits", &rc->no_bar_nbits);
+>>>>>>>> +    if (!of_pci_dma_range_parser_init(&parser, np))
+>>>>>>>> +        if (of_pci_range_parser_one(&parser, &range))
+>>>>>>>> +            rc->no_bar_nbits = ilog2(range.size);
+>>>>>>
+>>>>>> You probably want "range.pci_addr + range.size" here just in case the bottom of
+>>>>>> the window is ever non-zero. Is there definitely only ever a single inbound
+>>>>>> window to consider?
+>>>>>
+>>>>> Cadence IP has 3 inbound address translation registers, however we use only 1
+>>>>> inbound address translation register to map the entire 32 bit or 64 bit address
+>>>>> region.
+>>>>
+>>>> OK, if anything that further strengthens the argument for deprecating a single
+>>>> "number of bits" property in favour of ranges that accurately describe the
+>>>> window(s). However it also suggests that other users in future might have some
+>>>> expectation that specifying "dma-ranges" with up to 3 entries should work to
+>>>> allow a more restrictive inbound configuration. Thus it would be desirable to
+>>>> make the code a little more robust here - even if we don't support multiple
+>>>> windows straight off, it would still be better to implement it in a way that
+>>>> can be cleanly extended later, and at least say something if more ranges are
+>>>> specified rather than just silently ignoring them.
+>>>
+>>> I looked at this further in the Cadence user doc. The three inbound ATU entries
+>>> are for BAR0, BAR1 in RC configuration space and the third one is for NO MATCH
+>>> BAR when there is no matching found in RC BARs. Right now we always configure
+>>> the NO MATCH BAR. Would it be possible describe at BAR granularity in dma-ranges?
+>>
+>> I was thinking if I could use something like
+>> dma-ranges = <0x02000000 0x0 0x0 0x0 0x0 0x00000 0x0>, //For BAR0 IB mapping
+>> 	     <0x02000000 0x0 0x0 0x0 0x0 0x00000 0x0>, //For BAR1 IB mapping
+>> 	     <0x02000000 0x0 0x0 0x0 0x0 0x10000 0x0>; //NO MATCH BAR
+>>
+>> This way the driver can tell the 1st tuple is for BAR0, 2nd is for BAR1 and
+>> last is for NO MATCH. In the above case both BAR0 and BAR1 is just empty and
+>> doesn't have valid values as we use only the NO MATCH BAR.
+>>
+>> However I'm not able to use for_each_of_pci_range() in Cadence driver to get
+>> the configuration for each BAR, since the for loop gets invoked only once since
+>> of_pci_range_parser_one() merges contiguous addresses.
 > 
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
->   .../devicetree/bindings/pci/uniphier-pcie-ep.txt   | 53 ++++++++++++++++++++++
->   MAINTAINERS                                        |  2 +-
->   2 files changed, 54 insertions(+), 1 deletion(-)
->   create mode 100644 Documentation/devicetree/bindings/pci/uniphier-pcie-ep.txt
+> NO_MATCH_BAR could just be the last entry no matter how many? Who cares 
+> if they get merged? Maybe each BAR has max size and dma-ranges could 
+> exceed that, but if so you have to handle that and split them again.
+
+Each of RP_BAR0, RP_BAR1 and RP_NO_BAR has separate register to be configured.
+If they get merged, we'll loose info on which of the registers to be
+configured. Cadence IP specifies maximum size of BAR0 as 256GB, maximum size of
+BAR1 as 2 GB. However when I specify dma-ranges like below and use
+for_each_of_pci_range(&parser, &range), the first range itself is 258.
+
+dma-ranges = <0x02000000 0x00 0x0 0x00 0x0 0x40 0x00000000>, /* BAR0 256 GB */
+	     <0x02000000 0x40 0x0 0x40 0x0 0x00 0x80000000>; /* BAR1 2 GB */
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/uniphier-pcie-ep.txt b/Documentation/devicetree/bindings/pci/uniphier-pcie-ep.txt
-> new file mode 100644
-> index 0000000..072dc78
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/uniphier-pcie-ep.txt
-> @@ -0,0 +1,53 @@
-> +Socionext UniPhier PCIe endpoint controller bindings
-> +
-> +This describes the devicetree bindings for PCIe endpoint controller
-> +implemented on Socionext UniPhier SoCs.
-> +
-> +UniPhier PCIe endpoint controller is based on the Synopsys DesignWare
-> +PCI core. It shares common functions with the PCIe DesignWare core driver
-> +and inherits common properties defined in
-> +Documentation/devicetree/bindings/pci/designware-pcie.txt.
-> +
-> +Required properties:
-> +- compatible: Should be
-> +	"socionext,uniphier-pro5-pcie-ep" for Pro5 SoC
-> +- reg: Specifies offset and length of the register set for the device.
-> +	According to the reg-names, appropriate register sets are required.
-> +- reg-names: Must include the following entries:
-> +	"dbi"        - controller configuration registers
-> +	"dbi2"       - controller configuration registers for shadow
-> +	"link"       - SoC-specific glue layer registers
-> +	"addr_space" - PCIe configuration space
-> +- clocks: A phandle to the clock gate for PCIe glue layer including
-> +	the endpoint controller.
-> +- clock-names: Should contain the following:
-> +	"gio", "link" - for Pro5 SoC
-> +- resets: A phandle to the reset line for PCIe glue layer including
-> +	the endpoint controller.
-> +- reset-names: Should contain the following:
-> +	"gio", "link" - for Pro5 SoC
-> +
-> +Optional properties:
-> +- phys: A phandle to generic PCIe PHY. According to the phy-names, appropriate
-> +	phys are required.
-> +- phy-names: Must be "pcie-phy".
-> +
-> +Example:
-> +
-> +	pcie_ep: pcie-ep@66000000 {
-> +		compatible = "socionext,uniphier-pro5-pcie-ep",
-> +			     "snps,dw-pcie-ep";
-> +		status = "disabled";
-> +		reg-names = "dbi", "dbi2", "link", "addr_space";
-> +		reg = <0x66000000 0x1000>, <0x66001000 0x1000>,
-> +		      <0x66010000 0x10000>, <0x67000000 0x400000>;
-> +		clock-names = "gio", "link";
-> +		clocks = <&sys_clk 12>, <&sys_clk 24>;
-> +		reset-names = "gio", "link";
-> +		clocks = <&sys_rst 12>, <&sys_rst 24>;
-
-This example contains a mistake. I'll fix it.
-
-> +		num-ib-windows = <16>;
-> +		num-ob-windows = <16>;
-> +		num-lanes = <4>;
-> +		phy-names = "pcie-phy";
-> +		phys = <&pcie_phy>;
-> +	};
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 50e8b90..01a4631 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -13151,7 +13151,7 @@ PCIE DRIVER FOR SOCIONEXT UNIPHIER
->   M:	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
->   L:	linux-pci@vger.kernel.org
->   S:	Maintained
-> -F:	Documentation/devicetree/bindings/pci/uniphier-pcie.txt
-> +F:	Documentation/devicetree/bindings/pci/uniphier-pcie*.txt
->   F:	drivers/pci/controller/dwc/pcie-uniphier.c
->   
->   PCIE DRIVER FOR ST SPEAR13XX
+>> Do you think I should extend the flags cell to differentiate between BAR0, BAR1
+>> and NO MATCH BAR? Can you suggest any other alternatives?
 > 
+> If you just have 1 region, then just 1 entry makes sense to me. Why 
+> can't you use BAR0 in that case?
 
-It is my chance to convert this to dt-schema.
-I'll fix above and send dt-schema version in next.
+Well, Cadence has specified a max size for each BAR. I think we could specify a
+single region (48 bits in my case) in dma-ranges and let the driver decide how
+to split it among BAR0, BAR1 and NO_MATCH_BAR?
 
-Thank you,
-  
----
-Best Regards
-Kunihiko Hayashi
+Thanks
+Kishon
