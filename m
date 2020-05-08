@@ -2,68 +2,170 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1577E1CA0FA
-	for <lists+linux-pci@lfdr.de>; Fri,  8 May 2020 04:33:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 793341CA1F1
+	for <lists+linux-pci@lfdr.de>; Fri,  8 May 2020 06:16:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726598AbgEHCdI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 May 2020 22:33:08 -0400
-Received: from mga03.intel.com ([134.134.136.65]:24675 "EHLO mga03.intel.com"
+        id S1725681AbgEHEQ5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 8 May 2020 00:16:57 -0400
+Received: from mga02.intel.com ([134.134.136.20]:3336 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726542AbgEHCdH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 7 May 2020 22:33:07 -0400
-IronPort-SDR: JpiOjZMAx1VEWhrhxW4tw7+sd4lWd6sXOwmh6NGR9JE5J9gupi4oAS2DjX7mpO6TmqZnxc+26x
- 8loIe/BBEdzQ==
+        id S1725550AbgEHEQ5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 8 May 2020 00:16:57 -0400
+IronPort-SDR: QBaWw4XGr9S8zB9NLQBPzZ3/s7cNIxWv6x5Dc1oiLAhOac3OsUmFXYMynTd8gZH6bDr+Sfqlt3
+ 8wmkFAs67VWQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 19:33:07 -0700
-IronPort-SDR: VkCetOwwKVpAsN2JwLOJxdE/61ZHx0CBjsTOcR3Tgjurdg2otwHp/i5NsiTDtVcojYr1Dlv98H
- ZZNBXjGAHwnQ==
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 21:16:56 -0700
+IronPort-SDR: idjzT/XPJk8Ex/Eikferyni6x+Sdu6NxZNaTY0KPhsrNzPxPX3IyJw11fcetiaJMR9FTxlpmmt
+ L5ksYO+IKm2w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,366,1583222400"; 
-   d="scan'208";a="278805860"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga002.jf.intel.com with ESMTP; 07 May 2020 19:33:07 -0700
-Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.7.201.137])
-        by linux.intel.com (Postfix) with ESMTP id 652CE580609;
-        Thu,  7 May 2020 19:33:07 -0700 (PDT)
-Message-ID: <9c46a0be9c6d2097df1523711b33b0b7094a5ce4.camel@linux.intel.com>
-Subject: Re: [PATCH 3/3] platform/x86: Intel PMT Telemetry capability driver
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        alexander.h.duyck@intel.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Date:   Thu, 07 May 2020 19:33:07 -0700
-In-Reply-To: <CAHp75VdnVg7q-Nr-3cO-NyKzk0ckfauOso3yDM4qUF3ofSK_VQ@mail.gmail.com>
-References: <20200505013206.11223-1-david.e.box@linux.intel.com>
-         <20200505023149.11630-1-david.e.box@linux.intel.com>
-         <20200505023149.11630-2-david.e.box@linux.intel.com>
-         <CAHp75VdnVg7q-Nr-3cO-NyKzk0ckfauOso3yDM4qUF3ofSK_VQ@mail.gmail.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+   d="scan'208";a="251715942"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga008.fm.intel.com with ESMTP; 07 May 2020 21:16:55 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jWuRS-000I7c-DL; Fri, 08 May 2020 12:16:54 +0800
+Date:   Fri, 08 May 2020 12:16:46 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:pci/misc] BUILD SUCCESS
+ a88f8c176147d9778330082fcc34b7107da756aa
+Message-ID: <5eb4dd2e.Bp9dtEeh55n8nlrF%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 2020-05-05 at 16:49 +0300, Andy Shevchenko wrote:
-> ...
-> 
-> > +       /* TODO: replace with device properties??? */
-> 
-> So, please, fulfill. swnode I guess is what you are looking for.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/misc
+branch HEAD: a88f8c176147d9778330082fcc34b7107da756aa  PCI: Replace zero-length array with flexible-array
 
-I kept the platform data in v2 because swnode properties doesn't look
-like a good fit. We are only passing information that was read from the
-pci device. It is not hard coded, platform specific data.
+Warning in current branch:
 
-David
+drivers/pci/controller/dwc/pcie-tegra194.c:2194:2-9: line 2194 is redundant because platform_get_irq() already prints an error
 
+Warning ids grouped by kconfigs:
+
+recent_errors
+`-- x86_64-allyesconfig
+    `-- drivers-pci-controller-dwc-pcie-tegra194.c:line-is-redundant-because-platform_get_irq()-already-prints-an-error
+
+elapsed time: 484m
+
+configs tested: 101
+configs skipped: 1
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+sparc                            allyesconfig
+m68k                             allyesconfig
+mips                             allmodconfig
+sh                                allnoconfig
+sparc64                             defconfig
+c6x                              allyesconfig
+sparc                               defconfig
+riscv                            allyesconfig
+m68k                                defconfig
+sh                               allmodconfig
+openrisc                            defconfig
+parisc                           allyesconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+nios2                               defconfig
+nios2                            allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+microblaze                       allyesconfig
+microblaze                        allnoconfig
+mips                             allyesconfig
+mips                              allnoconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a004-20200507
+x86_64               randconfig-a006-20200507
+x86_64               randconfig-a002-20200507
+i386                 randconfig-a005-20200507
+i386                 randconfig-a004-20200507
+i386                 randconfig-a001-20200507
+i386                 randconfig-a002-20200507
+i386                 randconfig-a003-20200507
+i386                 randconfig-a006-20200507
+x86_64               randconfig-a015-20200507
+x86_64               randconfig-a014-20200507
+x86_64               randconfig-a012-20200507
+x86_64               randconfig-a013-20200507
+x86_64               randconfig-a011-20200507
+x86_64               randconfig-a016-20200507
+i386                 randconfig-a012-20200507
+i386                 randconfig-a016-20200507
+i386                 randconfig-a014-20200507
+i386                 randconfig-a011-20200507
+i386                 randconfig-a015-20200507
+i386                 randconfig-a013-20200507
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                               allmodconfig
+um                                allnoconfig
+um                               allyesconfig
+um                                  defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
