@@ -2,54 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 121A61CA79D
-	for <lists+linux-pci@lfdr.de>; Fri,  8 May 2020 11:58:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB1AE1CA7B2
+	for <lists+linux-pci@lfdr.de>; Fri,  8 May 2020 11:59:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725825AbgEHJ6A (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 8 May 2020 05:58:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33818 "EHLO
+        id S1726951AbgEHJ7e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 8 May 2020 05:59:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbgEHJ57 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 May 2020 05:57:59 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A475CC05BD43;
-        Fri,  8 May 2020 02:57:59 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id n11so642133pgl.9;
-        Fri, 08 May 2020 02:57:59 -0700 (PDT)
+        with ESMTP id S1726948AbgEHJ7e (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 May 2020 05:59:34 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21F9CC05BD43;
+        Fri,  8 May 2020 02:59:34 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id z1so694278pfn.3;
+        Fri, 08 May 2020 02:59:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=tjZGpQQz1E9D9ntXLHWSOTiEsgDXrE90sF5Lmj5BRhk=;
-        b=IG6gEzq/4wkHGOnuFiRCuqpEn/oZQmz9LbjBV+72nxibg+wBRustulpwUu9JcC/8y/
-         0Yo9cfi0ODAx6reFBqsva5aHFrBEMYjwSOEc2Y5drUHOubr1pEm4JaGBkZQDNj4QONiw
-         GMG47Dryv+hDCR1RpY9sORJoGVLHRGlZmm0hTh63iXlOoLSTlKSRvHO+OU2ml7VSe1rG
-         LrPS4fxehkBLT4YEwjGQRYX9cfjbc2qfqLd6i9IrI7pU36R+b1GMMSjNjvFzRkCxxH2n
-         /hwC5aUnorfR8LNkoTvkaGhdthhS1ogX8loZhLokbhj/dL+VXcsKUX0BhrW3f5sxtiE2
-         ardw==
+        bh=S+BJjmZtifOI5jGhDeai3W5Hb7iEmuSquXtaADjE/3w=;
+        b=NwY3EyoprWx6jUqNizab8yi7ZowKUuwaV8YsBMlSLo+nw05xEZDmLC5EYprEaGLviB
+         AZkR5sSDbN7T8b/GCaagOER9sfzBHvYKOh52GxngyzxTyPkq30Tk2M47ANDCkjDpEn2q
+         /UYGlAPjuJLBSu+OqwB77q0l3CL6jEyEADRZiSisukOvD+L5IJTc74kfZpaKZJEqqYLF
+         N7rAurzQXV/rrCMuOnXbKxizWSr1DNy8Iwf5MxiyyjIHYHFUkIAjxeTvZOednCC+t1nu
+         nEpyJw+3u5XzwlTFgIOgGF7gny5VTYidnDa7OgWWUy4x79bTXyOdF3rAmEqBeYqu8CCk
+         UrcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=tjZGpQQz1E9D9ntXLHWSOTiEsgDXrE90sF5Lmj5BRhk=;
-        b=dtoBV5GUymBoudb02Zdgif+qDZBM+YunHkCS3C1Il1rTz3oLxOOgacrzoCXMAjj3jA
-         VpKxD/duGuqRfl52PNKzFWNEJnGtQZa8Z69vZte/tbSwwLW8aZdFFZn+9niNQPr+R2xo
-         QobLRRNoV3Vn6nH//GJCxiW8csQCpF3i2I6Cxch+gf7T6IywtwttVqCoX3FNHwgf2tTD
-         Oiif/pQ+YFdY1h891RvRE7dXw8m2ohoncnje4D5llxlFK4JjCOy1RX2qahW3zqeXjcoT
-         VEpZdKxrHJ3L0I6xYLL6TQe9aP06yzrWzYc9WRSxdrvVgSiD4VI7XeQa465w0E0hh4e9
-         xK4Q==
-X-Gm-Message-State: AGi0PuYqRdOh95Tqo1RpUQmTNZ40z6rwDNMYH0uYZeE4AhhOuhIOUQoF
-        k7DPi3+lKTbEm2lxuiYQZ9E7uo2olV89J0N9ywQ=
-X-Google-Smtp-Source: APiQypL3/5fd22LIgXmXE3iL/j4DrPu8BdoW+eTHqcCp83dwGfjU04MNFVRjyGB8kNkcgW5FVXV58TrGPdMjdx+5pLY=
-X-Received: by 2002:a62:5ec7:: with SMTP id s190mr1978432pfb.130.1588931879077;
- Fri, 08 May 2020 02:57:59 -0700 (PDT)
+        bh=S+BJjmZtifOI5jGhDeai3W5Hb7iEmuSquXtaADjE/3w=;
+        b=EDHrhi/OFcQIzSC3KQsvNzSgbii5QizQcHztqqbu6oGvBrsZKI7TQm7qVGQ+XE7gjH
+         gM7oQIPoXgHtBRvAyd9Lfkt81DE+dJpv/+yfrw8EDiK3TfbHd4CvOiDGnTrSO0RJteXR
+         NS71Z0V6BYzyTB2idHAwukBP1v7anqEJ53Ucmaqyad6TPEJYknaf8dG/xXeBTtyC4kKD
+         j5oHc8P14FeT4vqWYUcnESeaAY0+qZFAPj7Ri+hbjyE0C3ELYxV/+EgKN/+6MmGP6qws
+         8LQCt9uOXGuBubixgYivh4dryltAwj+CvYPPVe45KluDvtwn5n0sTOjsEw8f40IRAHdt
+         Og1Q==
+X-Gm-Message-State: AGi0PuZ5mLb+Sw0q4pETHSjj2NPcszq+82v+vpI6TrOvQXYCL2yct3na
+        7+V7JAC4y+uLQkcOst0lnwO2vHu3kbduIqM4Cf8=
+X-Google-Smtp-Source: APiQypKFZTzfECRBxxLzLcaQcOy/X376LZ+Bvw7Lb3Z7Ut10fgtcqR+zmqToo16LQkK9RY8ByuDgO/aCjwkRcJv5sFQ=
+X-Received: by 2002:a62:f908:: with SMTP id o8mr2009157pfh.170.1588931973494;
+ Fri, 08 May 2020 02:59:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200505013206.11223-1-david.e.box@linux.intel.com> <20200508021844.6911-4-david.e.box@linux.intel.com>
-In-Reply-To: <20200508021844.6911-4-david.e.box@linux.intel.com>
+References: <20200505013206.11223-1-david.e.box@linux.intel.com> <20200508021844.6911-1-david.e.box@linux.intel.com>
+In-Reply-To: <20200508021844.6911-1-david.e.box@linux.intel.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 8 May 2020 12:57:52 +0300
-Message-ID: <CAHp75VcrjFUgUe6Vo8baT969cGzE4MFX6pFL1Vr5HOun=Cm0fA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] platform/x86: Intel PMT Telemetry capability driver
+Date:   Fri, 8 May 2020 12:59:27 +0300
+Message-ID: <CAHp75VfDzcQeWKHGF9Z=1=j8Tn+BhZJ6mMOrRfuZ1d5J1jsWDw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] Intel Platform Monitoring Technology
 To:     "David E. Box" <david.e.box@linux.intel.com>
 Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Andy Shevchenko <andy@infradead.org>,
@@ -65,56 +65,99 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 On Fri, May 8, 2020 at 5:18 AM David E. Box <david.e.box@linux.intel.com> wrote:
 >
-> PMT Telemetry is a capability of the Intel Platform Monitoring Technology.
-> The Telemetry capability provides access to device telemetry metrics that
-> provide hardware performance data to users from continuous, memory mapped,
-> read-only register spaces.
+> Intel Platform Monitoring Technology (PMT) is an architecture for
+> enumerating and accessing hardware monitoring capabilities on a device.
+> With customers increasingly asking for hardware telemetry, engineers not
+> only have to figure out how to measure and collect data, but also how to
+> deliver it and make it discoverable. The latter may be through some device
+> specific method requiring device specific tools to collect the data. This
+> in turn requires customers to manage a suite of different tools in order to
+> collect the differing assortment of monitoring data on their systems.  Even
+> when such information can be provided in kernel drivers, they may require
+> constant maintenance to update register mappings as they change with
+> firmware updates and new versions of hardware. PMT provides a solution for
+> discovering and reading telemetry from a device through a hardware agnostic
+> framework that allows for updates to systems without requiring patches to
+> the kernel or software tools.
 >
-> Register mappings are not provided by the driver. Instead, a GUID is read
-> from a header for each endpoint. The GUID identifies the device and is to
-> be used with an XML, provided by the vendor, to discover the available set
-> of metrics and their register mapping.  This allows firmware updates to
-> modify the register space without needing to update the driver every time
-> with new mappings. Firmware writes a new GUID in this case to specify the
-> new mapping.  Software tools with access to the associated XML file can
-> then interpret the changes.
+> PMT defines several capabilities to support collecting monitoring data from
+> hardware. All are discoverable as separate instances of the PCIE Designated
+> Vendor extended capability (DVSEC) with the Intel vendor code. The DVSEC ID
+> field uniquely identifies the capability. Each DVSEC also provides a BAR
+> offset to a header that defines capability-specific attributes, including
+> GUID, feature type, offset and length, as well as configuration settings
+> where applicable. The GUID uniquely identifies the register space of any
+> monitor data exposed by the capability. The GUID is associated with an XML
+> file from the vendor that describes the mapping of the register space along
+> with properties of the monitor data. This allows vendors to perform
+> firmware updates that can change the mapping (e.g. add new metrics) without
+> requiring any changes to drivers or software tools. The new mapping is
+> confirmed by an updated GUID, read from the hardware, which software uses
+> with a new XML.
 >
-> This module manages access to all PMT Telemetry endpoints on a system,
-> regardless of the device exporting them. It creates a pmt_telemetry class
-> to manage the list. For each endpoint, sysfs files provide GUID and size
-> information as well as a pointer to the parent device the telemetry comes
-> from. Software may discover the association between endpoints and devices
-> by iterating through the list in sysfs, or by looking for the existence of
+> The current capabilities defined by PMT are Telemetry, Watcher, and
+> Crashlog.  The Telemetry capability provides access to a continuous block
+> of read only data. The Watcher capability provides access to hardware
+> sampling and tracing features. Crashlog provides access to device crash
+> dumps.  While there is some relationship between capabilities (Watcher can
+> be configured to sample from the Telemetry data set) each exists as stand
+> alone features with no dependency on any other. The design therefore splits
+> them into individual, capability specific drivers. MFD is used to create
+> platform devices for each capability so that they may be managed by their
+> own driver. The PMT architecture is (for the most part) agnostic to the
+> type of device it can collect from. Devices nodes are consequently generic
+> in naming, e.g. /dev/telem<n> and /dev/smplr<n>. Each capability driver
+> creates a class to manage the list of devices supporting it.  Software can
+> determine which devices support a PMT feature by searching through each
+> device node entry in the sysfs class folder. It can additionally determine
+> if a particular device supports a PMT feature by checking for a PMT class
+> folder in the device folder.
+>
+> This patch set provides support for the PMT framework, along with support
+> for Telemetry on Tiger Lake.
+>
 
-ABI needs documentation.
+Some nitpicks per individual patches, also you forgot to send the
+series to PDx86 mailing list and its maintainers (only me included).
 
-> the class folder under the device of interest.  A device node of the same
-> name allows software to then map the telemetry space for direct access.
+> Changes from V1:
+>
+>         - In the telemetry driver, set the device in device_create() to
+>           the parent pci device (the monitoring device) for clear
+>           association in sysfs. Was set before to the platform device
+>           created by the pci parent.
+>         - Move telem struct into driver and delete unneeded header file.
+>         - Start telem device numbering from 0 instead of 1. 1 was used
+>           due to anticipated changes, no longer needed.
+>         - Use helper macros suggested by Andy S.
+>         - Rename class to pmt_telemetry, spelling out full name
+>         - Move monitor device name defines to common header
+>         - Coding style, spelling, and Makefile/MAINTAINERS ordering fixes
+>
+> David E. Box (3):
+>   PCI: Add #defines for Designated Vendor-Specific Capability
+>   mfd: Intel Platform Monitoring Technology support
+>   platform/x86: Intel PMT Telemetry capability driver
+>
+>  MAINTAINERS                            |   6 +
+>  drivers/mfd/Kconfig                    |  10 +
+>  drivers/mfd/Makefile                   |   1 +
+>  drivers/mfd/intel_pmt.c                | 170 ++++++++++++
+>  drivers/platform/x86/Kconfig           |  10 +
+>  drivers/platform/x86/Makefile          |   1 +
+>  drivers/platform/x86/intel_pmt_telem.c | 362 +++++++++++++++++++++++++
+>  include/linux/intel-dvsec.h            |  48 ++++
+>  include/uapi/linux/pci_regs.h          |   5 +
+>  9 files changed, 613 insertions(+)
+>  create mode 100644 drivers/mfd/intel_pmt.c
+>  create mode 100644 drivers/platform/x86/intel_pmt_telem.c
+>  create mode 100644 include/linux/intel-dvsec.h
+>
+> --
+> 2.20.1
+>
 
-...
 
-> +config INTEL_PMT_TELEM
-
-TELEMETRY
-
-...
-
-> +obj-$(CONFIG_INTEL_PMT_TELEM)          += intel_pmt_telem.o
-
-telemetry
-
-(Inside the file it's fine to have telem)
-
-...
-
-> +       priv->dvsec = dev_get_platdata(&pdev->dev);
-> +       if (!priv->dvsec) {
-> +               dev_err(&pdev->dev, "Platform data not found\n");
-> +               return -ENODEV;
-> +       }
-
-I don't see how is it being used?
-
---
+-- 
 With Best Regards,
 Andy Shevchenko
