@@ -2,83 +2,160 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 042231CB52D
-	for <lists+linux-pci@lfdr.de>; Fri,  8 May 2020 18:49:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 04F151CB5AC
+	for <lists+linux-pci@lfdr.de>; Fri,  8 May 2020 19:17:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726756AbgEHQtY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 8 May 2020 12:49:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41542 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726750AbgEHQtY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 May 2020 12:49:24 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E748C061A0C;
-        Fri,  8 May 2020 09:49:24 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jX6BX-0005gy-W0; Fri, 08 May 2020 18:49:16 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 4DCC9101175; Fri,  8 May 2020 18:49:15 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     "Raj\, Ashok" <ashok.raj@intel.com>
-Cc:     "Raj\, Ashok" <ashok.raj@linux.intel.com>,
-        Evan Green <evgreen@chromium.org>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>, x86@kernel.org,
-        linux-pci <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
+        id S1726906AbgEHRRd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 8 May 2020 13:17:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52978 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726756AbgEHRRd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 8 May 2020 13:17:33 -0400
+Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 253BE21775;
+        Fri,  8 May 2020 17:17:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588958252;
+        bh=AmScCZpZxiRrJNvHWkz9TKJv6t/f/ZRNkLLPkkZ3I8Q=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=UJRtPzmVwMWVnflrX3KDmQSe9RghPB6FFqzryHss0CmhasZffpCJ6w7TrGX91nj0t
+         h1Px988c9VKfcx2bSGVHdGHjXSco6eahi9hxaDwfTOjjfnksyMZYJfddu7O5c0vD9p
+         nI3RS0gDNSuAXsGv8bG79vY/AsMZ2P8uFEfJeuJA=
+Date:   Fri, 8 May 2020 12:17:30 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     maz@kernel.org, Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        "Ghorai\, Sukumar" <sukumar.ghorai@intel.com>,
-        "Amara\, Madhusudanarao" <madhusudanarao.amara@intel.com>,
-        "Nandamuri\, Srikanth" <srikanth.nandamuri@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: MSI interrupt for xhci still lost on 5.6-rc6 after cpu hotplug
-In-Reply-To: <20200508160958.GA19631@otc-nc-03>
-References: <20200508005528.GB61703@otc-nc-03> <87368almbm.fsf@nanos.tec.linutronix.de> <20200508160958.GA19631@otc-nc-03>
-Date:   Fri, 08 May 2020 18:49:15 +0200
-Message-ID: <87h7wqjrsk.fsf@nanos.tec.linutronix.de>
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Paul Burton <paulburton@kernel.org>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org
+Subject: Re: [PATCH v8 2/5] PCI: Add Loongson PCI Controller support
+Message-ID: <20200508171730.GA77036@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200508113414.3091532-2-jiaxun.yang@flygoat.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Ashok,
+On Fri, May 08, 2020 at 07:34:02PM +0800, Jiaxun Yang wrote:
+> This controller can be found on Loongson-2K SoC, Loongson-3
+> systems with RS780E/LS7A PCH.
+> 
+> The RS780E part of code was previously located at
+> arch/mips/pci/ops-loongson3.c and now it can use generic PCI
+> driver implementation.
+> 
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-"Raj, Ashok" <ashok.raj@intel.com> writes:
-> On Fri, May 08, 2020 at 01:04:29PM +0200, Thomas Gleixner wrote:
->> TBH, I can't see anything what's wrong here from the kernel side and as
->> this is new silicon and you're the only ones reporting this it seems
->> that this is something which is specific to that particular
->> hardware. Have you talked to the hardware people about this?
->> 
->
-> After chasing it, I'm also trending to think that way. We had a question
-> about the moderation timer and how its affecting this behavior.
-> Mathias tried to turn off the moderation timer, and we are still able to 
-> see this hang. We are reaching out to the HW folks to get a handle on this.
->
-> With legacy MSI we can have these races and kernel is trying to do the
-> song and dance, but we see this happening even when IR is turned on.
-> Which is perplexing. I think when we have IR, once we do the change vector 
-> and flush the interrupt entry cache, if there was an outstandng one in 
-> flight it should be in IRR. Possibly should be clearned up by the
-> send_cleanup_vector() i suppose.
+> +static void system_bus_quirk(struct pci_dev *pdev)
+> +{
+> +	u16 tmp;
+> +
+> +	/* 
+> +	 * System buses on Loongson system contain garbage in BARs
+> +	 * but their decoding need to be enabled to ensure devices
+> +	 * under system buses are reachable. In most cases it should
+> +	 * be done by the firmware.
 
-Ouch. With IR this really should never happen and yes the old vector
-will catch one which was raised just before the migration disabled the
-IR entry. During the change nothing can go wrong because the entry is
-disabled and only reenabled after it's flushed which will send a pending
-one to the new vector.
+This isn't a very satisfying explanation because devices that have
+decoding enabled can interfere with other devices in the system, and I
+can't tell whether that's a problem here.
 
-But if you see the issue with IR as well, then there is something wrong
-with the local APICs in that CPU.
+What happens when you turn on MEM/IO decoding below?  Does the device
+decode any address space?  How do we know what it is?  Is it related
+to the BAR contents?
 
-Thanks,
+I'm a little dubious about the need for the PCI_COMMAND write because
+the previous version didn't do it (since it incorrectly wrote to
+PCI_STATUS), and I assume that version worked.
 
-        tglx
+> +	pdev->mmio_always_on = 1;
+> +	pdev->non_compliant_bars = 1;
+> +	/* Enable MEM & IO Decoding */
+> +	pci_read_config_word(pdev, PCI_COMMAND, &tmp);
+> +	tmp |= PCI_COMMAND_IO | PCI_COMMAND_MEMORY;
+> +	pci_write_config_word(pdev, PCI_COMMAND, tmp);
+
+
+> +}
+> +
+
+Omit this blank line.
+
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+> +			DEV_LS2K_APB, system_bus_quirk);
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+> +			DEV_LS7A_CONF, system_bus_quirk);
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+> +			DEV_LS7A_LPC, system_bus_quirk);
+> +
+> +static void loongson_mrrs_quirk(struct pci_dev *dev)
+> +{
+> +	struct pci_bus *bus = dev->bus;
+> +	struct pci_dev *bridge;
+> +	static const struct pci_device_id bridge_devids[] = {
+> +		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_0) },
+> +		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_1) },
+> +		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_2) },
+> +		{ 0, },
+> +	};
+> +
+> +
+
+Remove one of these blank lines.
+
+> +	/* look for the matching bridge */
+> +	while (!pci_is_root_bus(bus)) {
+> +		bridge = bus->self;
+> +		bus = bus->parent;
+> +		/*
+> +		 * Some Loongson PCIe ports have a h/w limitation of
+> +		 * 256 bytes maximum read request size. They can't handle
+> +		 * anything larger than this. So force this limit on
+> +		 * any devices attached under these ports.
+> +		 */
+> +		if (pci_match_id(bridge_devids, bridge)) {
+> +			if (pcie_get_readrq(dev) > 256) {
+> +				pci_info(dev, "limiting MRRS to 256\n");
+> +				pcie_set_readrq(dev, 256);
+> +			}
+> +			break;
+> +		}
+> +	}
+> +}
+> +DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, loongson_mrrs_quirk);
+
+> +void __iomem *pci_loongson_map_bus(struct pci_bus *bus, unsigned int devfn,
+> +			       int where)
+> +{
+> +	unsigned char busnum = bus->number;
+> +	struct pci_host_bridge *bridge = pci_find_host_bridge(bus);
+> +	struct loongson_pci *priv =  pci_host_bridge_priv(bridge);
+> +
+> +	/*
+> +	 * Do not read more than one device on the bus other than
+> +	 * the host bridge.
+
+s/host bridge/root bus/ ?
+
+IIUC, the test below assumes the root bus is bus 0, which is not
+necessarily the case.  Many other .*_map_bus() implementations have
+similar tests for devices on the root bus:
+
+  al_pcie_map_bus(...)
+  {
+    if (bus->number == cfg->busr.start) {
+
+> +	if (priv->flags & FLAG_DEV_FIX && bus->primary != 0 &&
+> +		PCI_SLOT(devfn) > 0)
+> +		return NULL;
