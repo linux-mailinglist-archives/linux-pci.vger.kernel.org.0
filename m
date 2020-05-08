@@ -2,84 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B1FF61CA497
-	for <lists+linux-pci@lfdr.de>; Fri,  8 May 2020 08:54:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 258111CA493
+	for <lists+linux-pci@lfdr.de>; Fri,  8 May 2020 08:53:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgEHGyA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 8 May 2020 02:54:00 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:58490 "EHLO
+        id S1726083AbgEHGxz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 8 May 2020 02:53:55 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:58485 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725971AbgEHGyA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 May 2020 02:54:00 -0400
+        with ESMTP id S1725971AbgEHGxy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 May 2020 02:53:54 -0400
 Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
         by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.86_2)
         (envelope-from <kai.heng.feng@canonical.com>)
-        id 1jWwtI-0004Yb-Ck; Fri, 08 May 2020 06:53:48 +0000
+        id 1jWwtL-0004ZC-VT; Fri, 08 May 2020 06:53:52 +0000
 From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
 To:     bhelgaas@google.com
 Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, Je Yen Tam <je.yen.tam@ni.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jay Dolan <jay.dolan@accesio.com>,
-        Denis Efremov <efremov@linux.com>,
-        "Ji-Ze Hong (Peter Hong)" <hpeter@gmail.com>,
-        Chuhong Yuan <hslester96@gmail.com>,
-        linux-serial@vger.kernel.org (open list:SERIAL DRIVERS),
-        linux-kernel@vger.kernel.org (open list),
-        linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM)
-Subject: [PATCH 1/2] serial: 8250_pci: Move Pericom IDs to pci_ids.h
-Date:   Fri,  8 May 2020 14:53:40 +0800
-Message-Id: <20200508065343.32751-1-kai.heng.feng@canonical.com>
+        linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 2/2] PCI: Prevent Pericom USB controller OHCI/EHCI PME# defect
+Date:   Fri,  8 May 2020 14:53:41 +0800
+Message-Id: <20200508065343.32751-2-kai.heng.feng@canonical.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200508065343.32751-1-kai.heng.feng@canonical.com>
+References: <20200508065343.32751-1-kai.heng.feng@canonical.com>
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Move the IDs to pci_ids.h so it can be used by next patch.
+Both Pericom OHCI and EHCI devices support PME# from all power states:
+06:00.0 USB controller [0c03]: Pericom Semiconductor PI7C9X442SL USB OHCI Controller [12d8:400e] (rev 01) (prog-if 10 [OHCI])
+	Subsystem: Pericom Semiconductor PI7C9X442SL USB OHCI Controller [12d8:400e]
+	Control: I/O+ Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B- DisINTx-
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+	Interrupt: pin A routed to IRQ 17
+	Region 0: Memory at a5502000 (32-bit, non-prefetchable) [size=4K]
+	Capabilities: [80] Power Management version 3
+		Flags: PMEClk- DSI- D1+ D2+ AuxCurrent=375mA PME(D0+,D1+,D2+,D3hot+,D3cold+)
+		Status: D3 NoSoftRst+ PME-Enable+ DSel=0 DScale=0 PME-
+
+06:00.2 USB controller [0c03]: Pericom Semiconductor PI7C9X442SL USB EHCI Controller [12d8:400f] (rev 01) (prog-if 20 [EHCI])
+	Subsystem: Pericom Semiconductor PI7C9X442SL USB EHCI Controller [12d8:400f]
+	Control: I/O+ Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B- DisINTx-
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+	Interrupt: pin C routed to IRQ 19
+	Region 0: Memory at a5500000 (32-bit, non-prefetchable) [size=256]
+	Capabilities: [80] Power Management version 3
+		Flags: PMEClk- DSI- D1+ D2+ AuxCurrent=375mA PME(D0+,D1+,D2+,D3hot+,D3cold+)
+		Status: D3 NoSoftRst+ PME-Enable+ DSel=0 DScale=0 PME-
+
+Though my original approach [1] appears to work, further testing shows
+that there is a 20% chance PME# won't be asserted when USB device is
+plugged.
+
+So remove the PME support for both devices to make USB plugging works.
+
+[1] https://lore.kernel.org/lkml/20191227092405.29588-1-kai.heng.feng@canonical.com/
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=205981
 
 Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 ---
- drivers/tty/serial/8250/8250_pci.c | 6 ------
- include/linux/pci_ids.h            | 6 ++++++
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ drivers/pci/quirks.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/tty/serial/8250/8250_pci.c b/drivers/tty/serial/8250/8250_pci.c
-index 0804469ff052..1a74d511b02a 100644
---- a/drivers/tty/serial/8250/8250_pci.c
-+++ b/drivers/tty/serial/8250/8250_pci.c
-@@ -1869,12 +1869,6 @@ pci_moxa_setup(struct serial_private *priv,
- #define PCIE_DEVICE_ID_WCH_CH384_4S	0x3470
- #define PCIE_DEVICE_ID_WCH_CH382_2S	0x3253
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index ca9ed5774eb1..db2590243f0d 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5568,6 +5568,18 @@ static void pci_fixup_no_d0_pme(struct pci_dev *dev)
+ }
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x2142, pci_fixup_no_d0_pme);
  
--#define PCI_VENDOR_ID_PERICOM			0x12D8
--#define PCI_DEVICE_ID_PERICOM_PI7C9X7951	0x7951
--#define PCI_DEVICE_ID_PERICOM_PI7C9X7952	0x7952
--#define PCI_DEVICE_ID_PERICOM_PI7C9X7954	0x7954
--#define PCI_DEVICE_ID_PERICOM_PI7C9X7958	0x7958
--
- #define PCI_VENDOR_ID_ACCESIO			0x494f
- #define PCI_DEVICE_ID_ACCESIO_PCIE_COM_2SDB	0x1051
- #define PCI_DEVICE_ID_ACCESIO_MPCIE_COM_2S	0x1053
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index 1dfc4e1dcb94..9a57e6717e5c 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -1832,6 +1832,12 @@
- #define PCI_VENDOR_ID_NVIDIA_SGS	0x12d2
- #define PCI_DEVICE_ID_NVIDIA_SGS_RIVA128 0x0018
- 
-+#define PCI_VENDOR_ID_PERICOM			0x12D8
-+#define PCI_DEVICE_ID_PERICOM_PI7C9X7951	0x7951
-+#define PCI_DEVICE_ID_PERICOM_PI7C9X7952	0x7952
-+#define PCI_DEVICE_ID_PERICOM_PI7C9X7954	0x7954
-+#define PCI_DEVICE_ID_PERICOM_PI7C9X7958	0x7958
++/*
++ * Device [12d8:0x400e] and [12d8:0x400f]
++ * PME# doesn't always get asserted on all power states claim to support PME#
++ */
++static void pci_fixup_no_pme(struct pci_dev *dev)
++{
++	pci_info(dev, "PME# isn't reliable, disabling it\n");
++	dev->pme_support = 0;
++}
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_PERICOM, 0x400e, pci_fixup_no_pme);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_PERICOM, 0x400f, pci_fixup_no_pme);
 +
- #define PCI_SUBVENDOR_ID_CHASE_PCIFAST		0x12E0
- #define PCI_SUBDEVICE_ID_CHASE_PCIFAST4		0x0031
- #define PCI_SUBDEVICE_ID_CHASE_PCIFAST8		0x0021
+ static void apex_pci_fixup_class(struct pci_dev *pdev)
+ {
+ 	pdev->class = (PCI_CLASS_SYSTEM_OTHER << 8) | pdev->class;
 -- 
 2.17.1
 
