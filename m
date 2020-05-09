@@ -2,145 +2,164 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D57E51CC3B0
-	for <lists+linux-pci@lfdr.de>; Sat,  9 May 2020 20:32:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D8E21CC411
+	for <lists+linux-pci@lfdr.de>; Sat,  9 May 2020 21:20:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728162AbgEIScD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 9 May 2020 14:32:03 -0400
-Received: from mga09.intel.com ([134.134.136.24]:38362 "EHLO mga09.intel.com"
+        id S1727995AbgEITU3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 9 May 2020 15:20:29 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46314 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727950AbgEIScD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 9 May 2020 14:32:03 -0400
-IronPort-SDR: eNkFMxpewH7ijpUDFI0Cj4ANA2NB8rfuOXa1TsiQLCsn6ad7RWE1xqrQk1EAeJLrip3vpXW1Yv
- fUwFi/EPiCsw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2020 11:32:02 -0700
-IronPort-SDR: 6hj9GX8oqvRZhJssiHdgzwR3mLFoahEZ0QGDjBFyrNOXcjnMUUXayooKGXAQiu6CEmSGUAEpXH
- M7QK6F8ws1qA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,372,1583222400"; 
-   d="scan'208";a="285811940"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 09 May 2020 11:32:01 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jXUGW-00073G-Jj; Sun, 10 May 2020 02:32:00 +0800
-Date:   Sun, 10 May 2020 02:31:52 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/pm] BUILD SUCCESS
- 19efd16da8dae71f7a37fbfbf347ce6479c1f7c5
-Message-ID: <5eb6f718.MvobfJqguZ03r0n1%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1727938AbgEITU3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 9 May 2020 15:20:29 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id C5D12AB99;
+        Sat,  9 May 2020 19:20:29 +0000 (UTC)
+Message-ID: <cae7a4e19281fa3a7a0f89bd7812212c8e2e829f.camel@suse.de>
+Subject: Re: [PATCH v8 2/4] firmware: raspberrypi: Introduce vl805 init
+ routine
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Stefan Wahren <wahrenst@gmx.net>
+Cc:     Rob Herring <robh@kernel.org>, f.fainelli@gmail.com,
+        Scott Branden <sbranden@broadcom.com>,
+        Ray Jui <rjui@broadcom.com>, linux-usb@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        tim.gover@raspberrypi.org, helgaas@kernel.org,
+        linux-rpi-kernel@lists.infradead.org, gregkh@linuxfoundation.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org
+Date:   Sat, 09 May 2020 21:20:24 +0200
+In-Reply-To: <c9449111-f646-3925-36e6-f4492ad5f90a@gmx.net>
+References: <20200505161318.26200-1-nsaenzjulienne@suse.de>
+         <20200505161318.26200-3-nsaenzjulienne@suse.de>
+         <20200507214859.GA562@bogus> <c9449111-f646-3925-36e6-f4492ad5f90a@gmx.net>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-NYv+jnSD7ETBXidQR5XT"
+User-Agent: Evolution 3.36.2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
 Sender: linux-pci-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/pm
-branch HEAD: 19efd16da8dae71f7a37fbfbf347ce6479c1f7c5  PCI: Avoid Pericom USB controller OHCI/EHCI PME# defect
 
-elapsed time: 1236m
+--=-NYv+jnSD7ETBXidQR5XT
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-configs tested: 86
-configs skipped: 1
+On Sat, 2020-05-09 at 12:02 +0200, Stefan Wahren wrote:
+> Hi Nicolas,
+>=20
+> Am 07.05.20 um 23:48 schrieb Rob Herring:
+> > On Tue,  5 May 2020 18:13:15 +0200, Nicolas Saenz Julienne wrote:
+> > > The Raspberry Pi 4 gets its USB functionality from VL805, a PCIe chip
+> > > that implements xHCI. After a PCI reset, VL805's firmware may either =
+be
+> > > loaded directly from an EEPROM or, if not present, by the SoC's
+> > > co-processor, VideoCore. RPi4's VideoCore OS contains both the non pu=
+blic
+> > > firmware load logic and the VL805 firmware blob. The function this pa=
+tch
+> > > introduces triggers the aforementioned process.
+> > >=20
+> > > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > >=20
+> > > ---
+> > >=20
+> > > Change since v7:
+> > > - Use usleep_delay()
+> > > - Add comment about PCI errors
+> > > - Don't wait on error
+> > > - Typos
+> > >=20
+> > > Change since v6:
+> > > - Add test to avoid loading the firmware when not needed
+> > > - Since we have it around, print VL805's firmware version, it'll make
+> > > debugging easier in the future
+> > > - Correct typos
+> > > - Add a clearer view of HW topology in patch description
+> > >=20
+> > > Changes since v4:
+> > > - Inline function definition when RASPBERRYPI_FIRMWARE is not defined
+> > >=20
+> > > Changes since v1:
+> > > - Move include into .c file and add forward declaration to .h
+> > >=20
+> > >  drivers/firmware/raspberrypi.c             | 61 ++++++++++++++++++++=
+++
+> > >  include/soc/bcm2835/raspberrypi-firmware.h |  7 +++
+> > >  2 files changed, 68 insertions(+)
+> > >=20
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+>=20
+> i modified the code a little bit for testing, but also successfully
+> tested it without my modifications:
+>=20
+> diff --git a/drivers/firmware/raspberrypi.c b/drivers/firmware/raspberryp=
+i.c
+> index 0d1422b..f3f4c2d 100644
+> --- a/drivers/firmware/raspberrypi.c
+> +++ b/drivers/firmware/raspberrypi.c
+> @@ -337,8 +337,10 @@ int rpi_firmware_init_vl805(struct pci_dev *pdev)
+>          * further down the line.
+>          */
+>         pci_read_config_dword(pdev, VL805_PCI_CONFIG_VERSION_OFFSET,
+> &version);
+> -       if (version)
+> -               goto exit;
+> +       if (version) {
+> +               pci_info(pdev, "VL805 EEPROM firmware version %08x\n",
+> version);
+> +               return 0;
+> +       }
+> =20
+>         dev_addr =3D pdev->bus->number << 20 | PCI_SLOT(pdev->devfn) << 1=
+5 |
+>                    PCI_FUNC(pdev->devfn) << 12;
+> @@ -353,9 +355,8 @@ int rpi_firmware_init_vl805(struct pci_dev *pdev)
+> =20
+>         pci_read_config_dword(pdev, VL805_PCI_CONFIG_VERSION_OFFSET,
+>                               &version);
+> -exit:
+> -       pci_info(pdev, "VL805 firmware version %08x\n", version);
+> =20
+> +       pci_info(pdev, "VL805 RAM firmware version %08x\n", version);
+>         return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(rpi_firmware_init_vl805);
+>=20
+> Here are the my results with 3x Raspberry Pi 4:
+>=20
+> VL805 EEPROM firmware version 000137ad
+> VL805 EEPROM firmware version 00013701
+> VL805 RAM firmware version 000137ad
+>=20
+> So the whole patch series is:
+>=20
+> Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Thanks for taking the time!
 
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-sparc                            allyesconfig
-m68k                             allyesconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-i386                              allnoconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-microblaze                       allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-nios2                               defconfig
-nios2                            allyesconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a012-20200509
-i386                 randconfig-a014-20200509
-i386                 randconfig-a016-20200509
-i386                 randconfig-a011-20200509
-i386                 randconfig-a013-20200509
-i386                 randconfig-a015-20200509
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-sparc64                          allmodconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-um                               allmodconfig
-um                                allnoconfig
-um                               allyesconfig
-um                                  defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
+Regards,
+Nicolas
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+
+--=-NYv+jnSD7ETBXidQR5XT
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl63AngACgkQlfZmHno8
+x/5TSAf7BczpOl3QIubfrvp77qkSKnOA+Vb+zg5XlulurMIug2l+pqDVUw0G/+Gp
+uwxEH4O0JxRg83lzCVFnP3Occ7dH5q5GA2yzBpcgVYvRLmlXw7NECJ1CqfAuB56S
+YDSBEQk1Pm4fcAIufJCJ8hH25TxuMXoK+2qEq2WYY7x9RY3FiarvCFw+XV4ayX4n
+s4rf/5spkVR3L1t6fMxmD6TQaGBwc6Ww2VFDTwJSTMjqxgU7iNHmjypv7XxaLuYl
+MkvpDgAyxuxI0R/MblN/rdNO2Fd2LCAQi5rU3VvEfcrrq6fm5YIt5sxnHzAOMfvK
+aIuwkpFCcR+EWHlJ7pQ4+dYrITgvPg==
+=iV4L
+-----END PGP SIGNATURE-----
+
+--=-NYv+jnSD7ETBXidQR5XT--
+
